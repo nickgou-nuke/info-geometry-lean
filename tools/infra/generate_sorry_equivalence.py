@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-⚖️ THE PAULI VACUITY STRATIFIER (graph-index grounded)
-Truth lives in Lean; structure lives in the declaration graph.
+⚖️ THE PAULI VACUITY STRATIFIER (Authority-Grounded)
+Truth lives in Lean; structure lives in the graph.
 
-This script classifies theorems into evidence-based risk classes using the
-local declaration DAG index artifacts.
+This script replaces legacy heuristics with formal topological stratification.
+It classifies theorems into evidence-based risk classes using the Pauli Authority
+(ArangoDB Live DAG or Local Artifacts).
 
 Classes (from weakest to strongest graph integrity):
 
-  dead          — zero transitive downstream reach (confirmed by ArangoDB)
-  dead-endpoint — dead but uses at least one live theorem (pure consumer)
-  type-only     — no value-position users (statement scaffolding)
-  bridge        — belongs to a thin bridge SCC in the formal topology
-  live          — robust value-position downstream usage
+  isolated_theorem  — zero transitive downstream reach (confirmed by DAG)
+  type_only_theorem — no value-position users (statement scaffolding)
+  thin_forwarder    — belongs to a thin bridge in the formal topology
+  supported_theorem — receives value-position downstream usage
+  capstone_endpoint — deep theorems (Depth > 4) with zero users (intentional)
+  load_bearing      — robust transitive reach and causal mass
 """
 
 from __future__ import annotations
@@ -26,7 +28,7 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
     from tools.infra.decl_graph_support import GraphProfile, load_decl_graph
     from tools.pathing import repo_root
 else:
@@ -42,7 +44,7 @@ def generate_md(profiles: list[GraphProfile]) -> str:
         "# ⚖️ Pauli Authority Audit: Graph Vacuity Stratification",
         "",
         "> **Protocol:** Truth lives in Lean; structure lives in the graph.",
-        f"> **Snapshot:** {total} theorems analysed via ArangoDB DAG.",
+        f"> **Snapshot:** {total} theorems analysed via Pauli Authority.",
         "",
         "## Classification Summary",
         "",
@@ -91,26 +93,18 @@ def generate_md(profiles: list[GraphProfile]) -> str:
 
     return "\n".join(lines) + "\n"
 
-def display_path(path: Path) -> str:
-    root = repo_root()
-    try:
-        return str(path.resolve().relative_to(root))
-    except ValueError:
-        return str(path)
-
-
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Graph-index grounded sorry-equivalence analysis")
+    ap = argparse.ArgumentParser(description="Pauli-Authority Sorry-equivalence analysis")
     ap.add_argument("--json-out", type=Path, default=repo_root() / "reports" / "dag" / "sorry-equivalence.json")
     ap.add_argument("--md-out", type=Path, default=repo_root() / "reports" / "dag" / "sorry-equivalence.md")
     args = ap.parse_args()
 
-    # 1. Load graph evidence from local DAG index artifacts
-    print("[pauli-vacuity] Loading graph topology from local DAG index artifacts...")
+    # 1. Load the ground truth from Pauli Authority
+    print("[pauli-vacuity] Loading truthful graph topology from Pauli Authority...")
     decl_key_to_full, profile_map = load_decl_graph(repo_root())
     
     if not profile_map:
-        print("[pauli-vacuity] ERROR: graph index is missing or empty.")
+        print("[pauli-vacuity] ERROR: Pauli Authority is unreachable or graph is empty.")
         return 1
 
     # Filter for theorems and lemmas only
@@ -133,7 +127,7 @@ def main() -> int:
     print(f"[pauli-vacuity] {total} theorems analysed")
     print(f"[pauli-vacuity] confirmed vacuous (isolated): {counts.get('isolated_theorem', 0)} ({100*counts.get('isolated_theorem',0)/denom:.1f}%)")
     print(f"[pauli-vacuity] load-bearing (backbone): {counts.get('load_bearing', 0)} ({100*counts.get('load_bearing',0)/denom:.1f}%)")
-    print(f"[pauli-vacuity] wrote {display_path(args.md_out)}")
+    print(f"[pauli-vacuity] wrote {args.md_out.relative_to(repo_root())}")
     
     return 0
 

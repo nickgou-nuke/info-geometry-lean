@@ -21,8 +21,63 @@ from tools.infra.hive_packet_build import (
     write_json,
 )
 from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
+from tools.infra import hive_arango_queue as queue_tool
 
 PACKET_CHAIN_DIRNAME = "packet_chain"
+
+HIVE_COLLECTION_BY_KIND = {
+    "SymbolicSeed": "hive_symbolic_seeds",
+    "FormulationVariant": "hive_formulation_variants",
+    "ResonanceCluster": "hive_resonance_clusters",
+    "PauliCritique": "hive_pauli_critiques",
+    "InvariantDraft": "hive_invariants",
+    "TheoremCandidatePacket": "hive_candidate_packets",
+    "TranslationPacket": "hive_translation_packets",
+    "RetrievalHypothesisPacket": "hive_retrieval_packets",
+    "ExecutionIntentPacket": "hive_execution_intents",
+}
+
+
+def _doc_key(doc: dict[str, Any]) -> str:
+    raw = str(doc.get("id") or "")
+    if raw:
+        return raw.replace("/", "_")
+    return queue_tool.stable_key("hive-doc", doc.get("kind"), stable_digest(doc, size=16))
+
+
+def _doc_ref(doc: dict[str, Any]) -> str:
+    collection = HIVE_COLLECTION_BY_KIND[doc["kind"]]
+    return f"{collection}/{_doc_key(doc)}"
+
+
+def _lineage_edge(doc: dict[str, Any], dep: dict[str, Any], *, role: str = "depends_on") -> dict[str, Any]:
+    return {
+        "_key": queue_tool.stable_key("packetdependson", _doc_key(doc), _doc_key(dep), role),
+        "_from": _doc_ref(doc),
+        "_to": _doc_ref(dep),
+        "schema": "info_geometry.hive_packet_depends_on.v1",
+        "role": role,
+        "packet_schema": f"hive.memory.{doc['kind']}.v1",
+        "dependency_schema": f"hive.memory.{dep['kind']}.v1",
+        "created_at": queue_tool.iso_now(),
+    }
+
+
+def ingest_packet_chain_to_arango(*, docs: list[dict[str, Any]], endpoint: str, database: str, username: str, password: str) -> dict[str, Any]:
+    queue_tool.init_schema(endpoint, database, username, password)
+    imported: list[dict[str, Any]] = []
+    for doc in docs:
+        collection = HIVE_COLLECTION_BY_KIND[doc["kind"]]
+        row = dict(doc)
+        row["_key"] = _doc_key(doc)
+        row.setdefault("schema", f"hive.memory.{doc['kind']}.v1")
+        queue_tool.import_rows(endpoint, database, username, password, collection, [row])
+        imported.append({"collection": collection, "_key": row["_key"], "kind": doc["kind"]})
+    edges = []
+    for dep, doc in zip(docs, docs[1:]):
+        edges.append(_lineage_edge(doc, dep))
+    queue_tool.import_rows(endpoint, database, username, password, "hive_packet_depends_on", edges)
+    return {"documents": imported, "dependency_edges": len(edges)}
 
 
 def utc_now() -> str:
@@ -137,7 +192,7 @@ def _seed_excerpt(packet_data: dict[str, Any]) -> str:
     return str(packet_data.get("research_goal") or "bounded-planner-seed")
 
 
-def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text: str, gravity_context: dict[str, Any] | None, query: str, run_id: str, output_root: Path) -> dict[str, str]:
+def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text: str, gravity_context: dict[str, Any] | None, query: str, run_id: str, output_root: Path, hive_endpoint: str = queue_tool.DEFAULT_ENDPOINT, hive_database: str = queue_tool.DEFAULT_DATABASE, hive_username: str = queue_tool.DEFAULT_USERNAME, hive_password: str = queue_tool.DEFAULT_PASSWORD) -> dict[str, Any]:
     route = _route_fields(planner_text)
     packet_id = str(packet.get("packet_id") or Path(packet_path).stem)
     lineage_id = f"lineage_{packet_id}"
@@ -361,6 +416,15 @@ def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text:
     _ensure_valid(execution_intent)
     write_json(chain_dir / "09_execution_intent_packet.json", execution_intent)
 
+    docs = [seed, variant, cluster, critique, invariant, theorem_candidate, translation, retrieval, execution_intent]
+    arango_ingest = ingest_packet_chain_to_arango(
+        docs=docs,
+        endpoint=hive_endpoint,
+        database=hive_database,
+        username=hive_username,
+        password=hive_password,
+    )
+
     return {
         "lineage_id": lineage_id,
         "packet_chain_dir": str(chain_dir),
@@ -373,4 +437,5 @@ def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text:
         "translation_packet": str(chain_dir / "07_translation_packet.json"),
         "retrieval_hypothesis_packet": str(chain_dir / "08_retrieval_hypothesis_packet.json"),
         "execution_intent_packet": str(chain_dir / "09_execution_intent_packet.json"),
+        "arango_ingest": arango_ingest,
     }

@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Geometry.LegendreDuality
+import InfoGeometry.Geometry.LegendreHessianInverse
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 
@@ -77,6 +78,55 @@ theorem operatorFenchelYoung_on_doubledKrein
   have _hConeSupport : compress (c.Preg) H = H := hH.1
   have _hConePos : spectrum ℝ H ⊆ Set.Ioi (0 : ℝ) := hH.2
   exact fenchelYoung_ineq (hConj := hConj) H η
+
+/--
+Constructive operatorial Legendre inverse packet on the doubled-Krein lane.
+
+This is the operator-lifted, dimension-agnostic replacement for scalar
+inverse-Hessian prose: the inverse laws are carried by a continuous-linear
+equivalence witness on `EndH`, not by ad hoc scalar assumptions.
+-/
+@[rep_depth operator]
+theorem operatorLegendreHessianInverse_packet_of_continuousLinearEquiv
+    (D : LegendreContinuousLinearEquivInverseData EndH) :
+    D.toLegendreHessianInverseContext.moment =
+        dualCoord D.massieu D.beta
+      ∧ D.entropyGradient D.toLegendreHessianInverseContext.moment = D.beta
+      ∧ D.toLegendreHessianInverseContext.fisherHessian =
+        hessian D.massieu D.beta
+      ∧ D.toLegendreHessianInverseContext.entropyHessian =
+        fderiv ℝ D.entropyGradient D.toLegendreHessianInverseContext.moment
+      ∧ D.toLegendreHessianInverseContext.entropyHessian.comp
+          D.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ EndH
+      ∧ D.toLegendreHessianInverseContext.fisherHessian.comp
+          D.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (MomentCoord EndH) := by
+  exact D.constructive_legendre_hessian_inverse_packet
+
+/--
+Operator-lane inverse law: entropy Hessian composed with Fisher Hessian is
+identity on `EndH`.
+-/
+@[rep_depth operator]
+theorem operatorEntropyHessian_comp_operatorFisherHessian_eq_id_of_continuousLinearEquiv
+    (D : LegendreContinuousLinearEquivInverseData EndH) :
+    D.toLegendreHessianInverseContext.entropyHessian.comp
+        D.toLegendreHessianInverseContext.fisherHessian =
+      ContinuousLinearMap.id ℝ EndH := by
+  exact D.toLegendreHessianInverseContext.entropyHessian_comp_fisherHessian
+
+/--
+Operator-lane inverse law: Fisher Hessian composed with entropy Hessian is
+identity on the operator moment-coordinate space.
+-/
+@[rep_depth operator]
+theorem operatorFisherHessian_comp_operatorEntropyHessian_eq_id_of_continuousLinearEquiv
+    (D : LegendreContinuousLinearEquivInverseData EndH) :
+    D.toLegendreHessianInverseContext.fisherHessian.comp
+        D.toLegendreHessianInverseContext.entropyHessian =
+      ContinuousLinearMap.id ℝ (MomentCoord EndH) := by
+  exact D.toLegendreHessianInverseContext.fisherHessian_comp_entropyHessian
 
 /--
 Uncertainty bound as the symmetric (Jordan/Hessian) plus phase response split

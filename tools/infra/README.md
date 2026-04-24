@@ -436,7 +436,7 @@ python3 tools/infra/dual_hypothesis_sampler.py \
   --dag-context reports/training/arango_link_rerank.json \
   --base-url-base http://127.0.0.1:8000/v1 \
   --model-base qwen25-coder-7b-proposer \
-  --base-url-tuned http://127.0.0.1:8001/v1 \
+  --base-url-tuned http://127.0.0.1:8000/v1 \
   --model-tuned deepseek-prover-v2-7b-formalizer \
   --samples-base 4 \
   --samples-tuned 4 \

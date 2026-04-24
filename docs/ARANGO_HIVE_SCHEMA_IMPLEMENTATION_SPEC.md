@@ -279,6 +279,10 @@ Supported `kind` values at this layer:
 - `TranslationPacket`
 - `ExecutionIntentPacket`
 - `ResiduePacket`
+- `LeanVerificationPacket`
+- `BuildPacket`
+- `AuditPacket`
+- `PromotionDecisionPacket`
 
 ### `hive_lean_targets`
 Lean-facing projections derived from invariants or packets.
@@ -567,6 +571,39 @@ Minimum payload:
 - `stage`
 - `recovery_hint`
 - `return_route`
+
+## 7.7 `LeanVerificationPacket`
+Minimum payload:
+- `execution_intent_ref`
+- `execution_allowed`
+- `verification_key`
+- `verification_outcome`
+- `kernel_summary`
+- `proof_status`
+
+## 7.8 `BuildPacket`
+Minimum payload:
+- `lean_verification_ref`
+- `build_key`
+- `build_command`
+- `build_exit_code`
+- `build_success`
+
+## 7.9 `AuditPacket`
+Minimum payload:
+- `build_ref`
+- `audit_key`
+- `audit_scope`
+- `audit_findings`
+- `audit_outcome`
+- `evidence_summary`
+
+## 7.10 `PromotionDecisionPacket`
+Minimum payload:
+- `audit_ref`
+- `promotion_key`
+- `decision`
+- `decision_rationale`
 
 ## 8. Key format recommendations
 

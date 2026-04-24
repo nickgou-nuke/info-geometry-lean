@@ -26,6 +26,10 @@ SCHEMA_BY_KIND = {
     "TranslationPacket": SCHEMA_DIR / "TranslationPacket.schema.json",
     "RetrievalHypothesisPacket": SCHEMA_DIR / "RetrievalHypothesisPacket.schema.json",
     "ExecutionIntentPacket": SCHEMA_DIR / "ExecutionIntentPacket.schema.json",
+    "LeanVerificationPacket": SCHEMA_DIR / "LeanVerificationPacket.schema.json",
+    "BuildPacket": SCHEMA_DIR / "BuildPacket.schema.json",
+    "AuditPacket": SCHEMA_DIR / "AuditPacket.schema.json",
+    "PromotionDecisionPacket": SCHEMA_DIR / "PromotionDecisionPacket.schema.json",
     "ResiduePacket": SCHEMA_DIR / "ResiduePacket.schema.json",
 }
 

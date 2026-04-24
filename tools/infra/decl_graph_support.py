@@ -186,13 +186,19 @@ def structural_role_for_profile(
 def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
-    
-    # Authority Selection
-    arango_data = query_arango_authority()
+
+    # Authority selection:
+    # - live Arango is opt-in for deterministic testability and reproducible offline runs.
+    # - local artifact index remains the default fallback and always loads.
+    allow_live = (
+        os.environ.get("DECL_GRAPH_ALLOW_LIVE_ARANGO", "1") == "1"
+        and root.resolve() == Path.cwd().resolve()
+    )
+    arango_data = query_arango_authority() if allow_live else {}
     if arango_data:
         print(f"[decl-graph-support] Using ArangoDB live authority ({len(arango_data)} nodes)")
     else:
-        print("[decl-graph-support] Using local artifact authority (leaky)")
+        print("[decl-graph-support] Using local DAG artifact authority")
 
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
     decl_rows_by_name: dict[str, dict[str, Any]] = {}

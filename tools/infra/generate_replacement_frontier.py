@@ -125,6 +125,9 @@ def load_rows(path: Path) -> dict[str, DeclRow]:
 
 
 def load_depth_info(path: Path) -> dict[str, DepthInfo]:
+    if not path.exists():
+        print(f"[generate-replacement-frontier] Warning: depth info missing at {path}")
+        return {}
     obj = json.loads(path.read_text())
     out: dict[str, DepthInfo] = {}
     for row in obj.get("declarations", []):
@@ -138,6 +141,9 @@ def load_depth_info(path: Path) -> dict[str, DepthInfo]:
 
 
 def load_significance(path: Path) -> dict[str, SignificanceInfo]:
+    if not path.exists():
+        print(f"[generate-replacement-frontier] Warning: significance info missing at {path}")
+        return {}
     out: dict[str, SignificanceInfo] = {}
     for row in json.loads(path.read_text()):
         codes = sorted({item["code"] for item in row.get("violations", [])})

@@ -62,6 +62,7 @@ structure KKTEntropyStationarityShadow where
 
 namespace KKTEntropyStationarityShadow
 
+-- theorem-class: bridge
 /-- The KKT shadow is only a packet of explicit hypotheses. -/
 @[rep_depth thermo]
 theorem packet
@@ -111,18 +112,21 @@ def exact : DimensionAgnosticKKTResiduals where
   complementarityResidual := 0
   partitionResidual := 0
 
+-- theorem-class: bridge
 /-- Cone admissibility is constructive from the square slack channel. -/
 @[rep_depth thermo]
 theorem coneAdmissible_of_square :
     R.toShadow.coneAdmissible := by
   exact sq_nonneg R.coneSlack
 
+-- theorem-class: bridge
 /-- Partition admissibility is constructive from the square partition channel. -/
 @[rep_depth thermo]
 theorem partitionAdmissible_of_square :
     R.toShadow.finitePartitionAdmissible := by
   exact sq_nonneg R.partitionResidual
 
+-- theorem-class: bridge
 /--
 Exact residuals construct the full KKT stationarity packet without external
 KKT hypotheses.
@@ -141,6 +145,7 @@ end DimensionAgnosticKKTResiduals
 
 namespace KKTEntropyStationarityShadow
 
+-- theorem-class: bridge
 /-- Exact dimension-agnostic residuals construct the KKT shadow directly. -/
 @[rep_depth thermo]
 theorem mk_exact :
@@ -199,6 +204,7 @@ def stressTensorAt (x : Orbit) : ℝ :=
 def supercurrentAt (x : Orbit) : ℝ :=
   J.supercurrentProjection (J.moment x)
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem actionAt_eq_pairing (x : Orbit) :
     J.actionAt x = J.pairing J.geometricTemperature (J.moment x) :=
@@ -231,6 +237,7 @@ def identityBalanced
   stressTensorProjection := stressTensorProjection
   supercurrentProjection := fun q => -stressTensorProjection q
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem identityBalanced_coadjointAction
     (moment : Orbit → Gdual)
@@ -245,6 +252,7 @@ theorem identityBalanced_coadjointAction
       stressTensorProjection).coadjointAction g q = q :=
   rfl
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem identityBalanced_supertrace_balance
     (moment : Orbit → Gdual)
@@ -282,20 +290,27 @@ structure FullCoadjointOrbitMetriplecticContext
   dissipativeEntropyRate : Orbit → ℝ
   totalEntropyProduction : Orbit → ℝ
   isCoadjointOrbit : Prop
+-- theorem-class: bridge
   isCoadjointOrbit_proof : isCoadjointOrbit
   orbitInvariantEntropy : Prop
+-- theorem-class: bridge
   orbitInvariantEntropy_proof : orbitInvariantEntropy
+-- theorem-class: bridge
   reversibleEntropyRate_eq_zero :
     ∀ x : Orbit, reversibleEntropyRate x = 0
+-- theorem-class: bridge
   dissipativeEntropyRate_nonneg :
     ∀ x : Orbit, 0 ≤ dissipativeEntropyRate x
+-- theorem-class: bridge
   totalEntropyProduction_eq_sum :
     ∀ x : Orbit,
       totalEntropyProduction x =
         reversibleEntropyRate x + dissipativeEntropyRate x
   weylGaugeCovariant : Prop
+-- theorem-class: bridge
   weylGaugeCovariant_proof : weylGaugeCovariant
   supertraceFreeStress : Prop
+-- theorem-class: bridge
   supertraceFreeStress_proof : supertraceFreeStress
 
 namespace FullCoadjointOrbitMetriplecticContext
@@ -414,32 +429,38 @@ def ofIdentityBalancedSquareDissipation
 
 variable (C : FullCoadjointOrbitMetriplecticContext G Gdual Orbit)
 
+-- theorem-class: bridge
 /-- The reversible coadjoint-orbit channel is entropy-Casimir by hypothesis. -/
 @[rep_depth thermo]
 theorem reversible_channel_zero (x : Orbit) :
     C.reversibleEntropyRate x = 0 :=
   C.reversibleEntropyRate_eq_zero x
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem is_coadjoint_orbit :
     C.isCoadjointOrbit :=
   C.isCoadjointOrbit_proof
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem orbit_entropy_invariant :
     C.orbitInvariantEntropy :=
   C.orbitInvariantEntropy_proof
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem weyl_gauge_covariant :
     C.weylGaugeCovariant :=
   C.weylGaugeCovariant_proof
 
+-- theorem-class: bridge
 @[rep_depth thermo]
 theorem supertrace_free_stress :
     C.supertraceFreeStress :=
   C.supertraceFreeStress_proof
 
+-- theorem-class: bridge
 /--
 Full coadjoint-orbit metriplectic second law.
 
@@ -465,6 +486,7 @@ def stressTensorAt (x : Orbit) : ℝ :=
 def supercurrentAt (x : Orbit) : ℝ :=
   C.superMoment.supercurrentAt x
 
+-- theorem-class: bridge
 /--
 Packed theorem for the constructive moment-image/square-dissipation full
 super-coadjoint route.
@@ -513,6 +535,7 @@ theorem full_moment_image_square_dissipation_packet
 
 attribute [terminal] full_moment_image_square_dissipation_packet
 
+-- theorem-class: bridge
 /--
 Packed theorem for the exact identity-action, balanced-supertrace,
 square-dissipation super-coadjoint route.
@@ -572,6 +595,7 @@ open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 
 variable {G Gdual Orbit : Type*}
 
+-- theorem-class: bridge
 /--
 Dimension-agnostic constructive second law for the full coadjoint-orbit lane.
 
@@ -623,6 +647,7 @@ structure CoordinatelessKMSFisherState (Obs : Type*) where
   kmsEquilibrium : Prop
   weylAutomorphismInvariant : Prop
   quantumFisherMetric : ℝ
+-- theorem-class: bridge
   quantumFisherMetric_nonneg : 0 ≤ quantumFisherMetric
 
 namespace CoordinatelessKMSFisherState
@@ -630,12 +655,14 @@ namespace CoordinatelessKMSFisherState
 variable {Obs : Type*}
 variable (K : CoordinatelessKMSFisherState Obs)
 
+-- theorem-class: bridge
 /-- The coordinateless quantum-Fisher/Bures metric is nonnegative by data. -/
 @[rep_depth operator]
 theorem fisherMetric_nonneg :
     0 ≤ K.quantumFisherMetric :=
   K.quantumFisherMetric_nonneg
 
+-- theorem-class: bridge
 /-- KMS and Weyl covariance are explicit algebraic hypotheses, not coordinates. -/
 @[rep_depth operator]
 theorem algebraic_equilibrium_packet
@@ -664,12 +691,16 @@ structure SouriauLieThermoKKTContext [Fintype α] [Nonempty α] where
   conformalKKT : SouriauConformalKKTContext (α := α) (H := H)
   operatorialMetriplectic : OperatorialMetriplecticContext (E := H)
   kktStationarity : KKTEntropyStationarityShadow
+-- theorem-class: bridge
   fenchel_metriplectic_moment :
     finiteFenchel.M = finiteMetriplectic.M
+-- theorem-class: bridge
   fenchel_metriplectic_temperature :
     finiteFenchel.T = finiteMetriplectic.T
+-- theorem-class: bridge
   conformal_metriplectic_moment :
     conformalKKT.density.M = finiteMetriplectic.M
+-- theorem-class: bridge
   conformal_metriplectic_temperature :
     conformalKKT.density.T = finiteMetriplectic.T
 
@@ -684,12 +715,14 @@ local notation "cl11" => doubledSpaceCl11Action (E := H)
 
 /-! ## Finite Souriau/Fenchel/Onsager projections -/
 
+-- theorem-class: bridge
 /-- The scalar Fenchel gap is nonnegative on the finite Souriau Massieu model. -/
 @[rep_depth thermo]
 theorem finiteFenchelGap_nonneg (eta : ℝ) :
     0 ≤ C.finiteFenchel.model.fenchelGap C.finiteFenchel.theta eta :=
   C.finiteFenchel.fenchelGap_nonneg eta
 
+-- theorem-class: bridge
 /-- The finite Fenchel contact equality holds at the Legendre contact locus. -/
 @[rep_depth thermo]
 theorem finiteFenchelGap_eq_zero_at_contact :
@@ -698,6 +731,7 @@ theorem finiteFenchelGap_eq_zero_at_contact :
         (C.finiteFenchel.model.dualCoord C.finiteFenchel.theta) = 0 :=
   C.finiteFenchel.fenchelGap_eq_zero_at_contact
 
+-- theorem-class: bridge
 /-- The finite Massieu bridge is the owner Souriau Massieu value. -/
 @[rep_depth thermo]
 theorem finiteMassieu_matches_souriau :
@@ -705,6 +739,7 @@ theorem finiteMassieu_matches_souriau :
       souriauMassieuPotential C.finiteFenchel.M C.finiteFenchel.T :=
   C.finiteFenchel.massieu_matches
 
+-- theorem-class: bridge
 /--
 Finite Souriau-Onsager second-law shadow: the total entropy production is
 nonnegative under the explicit Casimir and PSD response hypotheses carried by
@@ -715,6 +750,7 @@ theorem finiteMetriplecticEntropyProduction_nonneg :
     0 ≤ C.finiteMetriplectic.totalEntropyProduction :=
   C.finiteMetriplectic.totalEntropyProduction_nonneg
 
+-- theorem-class: bridge
 /-- The finite Onsager/Souriau response matrix is symmetric. -/
 @[rep_depth thermo]
 theorem finiteSouriauOnsager_response_symmetric :
@@ -728,6 +764,7 @@ theorem finiteSouriauOnsager_response_symmetric :
 noncomputable def finiteSouriauFisherMetricReadout : ℝ :=
   C.finiteMetriplectic.metricEntropyProduction
 
+-- theorem-class: bridge
 /--
 The finite Souriau-Fisher metric/readout is nonnegative under the same PSD
 response hypothesis that drives the finite metriplectic second law.
@@ -737,6 +774,7 @@ theorem finiteSouriauFisherMetricReadout_nonneg :
     0 ≤ C.finiteSouriauFisherMetricReadout :=
   C.finiteMetriplectic.metricEntropyProduction_nonneg
 
+-- theorem-class: bridge
 /--
 Search-facing finite Fenchel-Legendre contact equation.
 
@@ -753,6 +791,7 @@ theorem finiteFenchelLegendre_contact_entropy :
         C.finiteFenchel.model.dualCoord C.finiteFenchel.theta :=
   C.finiteFenchel.souriauMassieu_contact_balance
 
+-- theorem-class: bridge
 /--
 Finite inverse-metric theorem surface.
 
@@ -784,6 +823,7 @@ theorem finite_inverseFisherMetric_of_det_ne_zero
     souriauFisher_inverseMetric_comp_of_det_ne_zero
       C.finiteMetriplectic.M C.finiteMetriplectic.T hdet⟩
 
+-- theorem-class: bridge
 /--
 Search-facing finite Souriau-Fisher/Onsager packet.
 
@@ -810,6 +850,7 @@ theorem finite_Hessian_eq_Fisher_eq_Onsager
     souriauEntropyProduction_nonneg_of_positiveSemidefinite
       C.finiteMetriplectic.M C.finiteMetriplectic.T hPSD xβ xμ⟩
 
+-- theorem-class: bridge
 /--
 The finite entropy-production equation `σ = Xᵀ L X` is nonnegative once the
 Onsager/Fisher response matrix is explicitly supplied as positive
@@ -825,6 +866,7 @@ theorem finite_FisherOnsager_entropyProduction_nonneg
   souriauEntropyProduction_nonneg_of_positiveSemidefinite
     C.finiteMetriplectic.M C.finiteMetriplectic.T hPSD xβ xμ
 
+-- theorem-class: bridge
 /--
 Finite Souriau/Fisher/Onsager nonnegativity with only the determinant gate
 exposed.
@@ -845,6 +887,7 @@ theorem finite_FisherOnsager_entropyProduction_nonneg_of_det_nonneg
 
 /-! ## Conformal/KKT operator projections -/
 
+-- theorem-class: bridge
 /-- The certified conformal dilation is the Drazin dilation-gap owner object. -/
 @[rep_depth transport]
 theorem conformalD_eq_dilationGap :
@@ -852,12 +895,14 @@ theorem conformalD_eq_dilationGap :
       C.conformalKKT.CCI.toCertifiedInverseKernel.dilationGap :=
   C.conformalKKT.conformalD_eq_dilationGap
 
+-- theorem-class: bridge
 /-- The conformal dilation is grade zero under the explicit KKT wing hypotheses. -/
 @[rep_depth transport]
 theorem conformalD_isGZero :
     IsGZero cl11 C.conformalKKT.CCI.toConformalInference.D :=
   C.conformalKKT.conformalD_isGZero
 
+-- theorem-class: bridge
 /-- The conformal chiral grading is grade zero under the same KKT hypotheses. -/
 @[rep_depth transport]
 theorem chiralGrading_isGZero :
@@ -879,6 +924,7 @@ def SatisfiesConformalKKTGradeZero : Prop :=
         (InfoGeometry.Canonical.ChiralCartanCore.chiralGrading
           C.conformalKKT.CCI.toConformalInference)
 
+-- theorem-class: bridge
 /-- The context supplies the conformal/KKT grade-zero closure packet. -/
 @[rep_depth transport]
 theorem satisfiesConformalKKTGradeZero :
@@ -887,6 +933,7 @@ theorem satisfiesConformalKKTGradeZero :
 
 /-! ## Operatorial Krein/Onsager projections -/
 
+-- theorem-class: bridge
 /-- Operatorial Onsager reciprocity on the doubled Krein carrier. -/
 @[rep_depth transport]
 theorem operatorialMetricResponse_swap :
@@ -894,6 +941,7 @@ theorem operatorialMetricResponse_swap :
       C.operatorialMetriplectic.swappedMetricResponse :=
   C.operatorialMetriplectic.metricResponse_swap
 
+-- theorem-class: bridge
 /-- The mixed operatorial metric response is symmetric. -/
 @[rep_depth transport]
 theorem operatorialMixedMetricResponse_symm :
@@ -901,6 +949,7 @@ theorem operatorialMixedMetricResponse_symm :
       C.operatorialMetriplectic.mixedMetricResponseYX :=
   C.operatorialMetriplectic.mixedMetricResponse_symm
 
+-- theorem-class: bridge
 /--
 Operatorial Fisher/Onsager equation:
 the metric response is the symmetrized operatorial Lie-Hessian readout.
@@ -922,6 +971,7 @@ theorem operatorialFisherOnsager_eq_hessianReadout :
               C.operatorialMetriplectic.A)) :=
   C.operatorialMetriplectic.metricResponse_eq_half_probe_observableLieHessian_add_swap
 
+-- theorem-class: bridge
 /--
 Search-facing alias for the operatorial Souriau-Fisher/Onsager identity.
 
@@ -943,6 +993,7 @@ theorem operatorial_Hessian_eq_Fisher_eq_Onsager :
       = C.operatorialMetriplectic.metricResponse :=
   C.operatorialFisherOnsager_eq_hessianReadout.symm
 
+-- theorem-class: bridge
 /--
 Diagonal operatorial Fisher/Onsager coefficient as a probed double transport
 commutator.
@@ -957,6 +1008,7 @@ theorem operatorialDiagonalFisherOnsager_eq_doubleTransportCommutator :
             (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.A)) :=
   C.operatorialMetriplectic.diagonalMetricResponse_eq_probe_double_transportCommutator
 
+-- theorem-class: bridge
 /--
 The Weyl-weighted thermodynamic dynamics is a coordinate-free Lie derivation,
 not a coordinate partial derivative.
@@ -967,6 +1019,7 @@ theorem operatorialWeightedDynamics_eq_weylCovariantThermodynamicDerivation :
       C.operatorialMetriplectic.weylCovariantThermodynamicDerivation :=
   C.operatorialMetriplectic.weightedDynamics_eq_weylCovariantThermodynamicDerivation
 
+-- theorem-class: bridge
 /--
 Operatorial Weyl-covariant derivative split:
 the density-weighted Souriau derivation is the zero-weight derivation plus the
@@ -980,6 +1033,7 @@ theorem operatorialWeylCovariantThermodynamicDerivation_split :
           C.operatorialMetriplectic.phaseAxisThermodynamicDerivation :=
   C.operatorialMetriplectic.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis
 
+-- theorem-class: bridge
 /-- Operatorial entropy production is the two-channel quadratic response form. -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_eq_quadratic
@@ -990,6 +1044,7 @@ theorem operatorialEntropyProduction_eq_quadratic
           + C.operatorialMetriplectic.yDiagonalMetricResponse * yForce ^ (2 : ℕ) :=
   C.operatorialMetriplectic.operatorialEntropyProduction_eq_quadratic xForce yForce
 
+-- theorem-class: bridge
 /--
 Operatorial second-law gate under the explicit scalar PSD response packet.
 The indefinite Krein lane is not globally positive without this hypothesis.
@@ -1002,6 +1057,7 @@ theorem operatorialEntropyProduction_nonneg_of_metricResponsePSD
   C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_metricResponsePSD
     hPSD xForce yForce
 
+-- theorem-class: bridge
 /--
 Single operatorial Fisher/Onsager entropy equation packet:
 Hessian readout, diagonal double-commutator coefficient, quadratic entropy
@@ -1030,6 +1086,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation
     C.operatorialEntropyProduction_eq_quadratic xForce yForce,
     C.operatorialEntropyProduction_nonneg_of_metricResponsePSD hPSD xForce yForce⟩
 
+-- theorem-class: bridge
 /--
 Operatorial Fisher/Onsager entropy equation from a constructive square-response
 witness.
@@ -1063,6 +1120,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
     (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
     xForce yForce
 
+-- theorem-class: bridge
 /--
 Operatorial Fisher/Onsager entropy equation from regular Drazin/Krein cone
 positivity.
@@ -1096,6 +1154,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_regularCone
     (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
     xForce yForce
 
+-- theorem-class: bridge
 /--
 Operatorial Fisher/Onsager entropy equation from a Cramer-Rao realization of
 the response packet.
@@ -1130,6 +1189,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_cramerRaoResponse
     C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
       R xForce yForce⟩
 
+-- theorem-class: bridge
 /--
 One-channel operatorial entropy production from the same Cramer-Rao realization.
 
@@ -1149,6 +1209,7 @@ theorem operatorCanonicalEntropyProduction_nonneg_of_cramerRaoResponse
         C.operatorialMetriplectic.A :=
   C.operatorialMetriplectic.canonicalEntropyProduction_nonneg_of_cramerRaoResponse R
 
+-- theorem-class: bridge
 /--
 Operatorial Souriau-Fisher metric packet.
 
@@ -1194,6 +1255,7 @@ theorem operatorialSouriauFisherMetric_packet_of_cramerRaoResponse
     C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
       R xForce yForce⟩
 
+-- theorem-class: bridge
 /--
 Supergraded even/odd operatorial Onsager block packet.
 
@@ -1230,6 +1292,7 @@ theorem operatorialSupergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
   OperatorialMetriplecticContext.supergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
     (C := C.operatorialMetriplectic) R evenForce oddForce
 
+-- theorem-class: bridge
 /--
 One-channel operatorial second-law closure from regular Drazin/Krein cone
 positivity.
@@ -1251,6 +1314,7 @@ theorem operatorialXChannel_entropyProduction_nonneg_of_regularCone
 
 /-! ## KKT stationarity packet -/
 
+-- theorem-class: bridge
 /-- The KKT stationarity shadow remains an explicit assumption packet. -/
 @[rep_depth thermo]
 theorem kktStationarity_packet
@@ -1263,6 +1327,7 @@ theorem kktStationarity_packet
         C.kktStationarity.finitePartitionAdmissible :=
   C.kktStationarity.packet hCone hStationarity hSlack hFinite
 
+-- theorem-class: bridge
 /-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/
 @[rep_depth thermo]
 theorem kktStationarity_packet_of_exact
@@ -1277,6 +1342,7 @@ theorem kktStationarity_packet_of_exact
 
 /-! ## Combined finite/operatorial second-law readout -/
 
+-- theorem-class: bridge
 /--
 Combined finite/operatorial entropy-production readout.  The finite part is
 proved by the finite Souriau-Fisher PSD response.  The operatorial part is
@@ -1291,6 +1357,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg
   ⟨C.finiteMetriplecticEntropyProduction_nonneg,
     C.operatorialEntropyProduction_nonneg_of_metricResponsePSD hPSD xForce yForce⟩
 
+-- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
 hypothesis, using a constructive square-response witness on the infinite
@@ -1308,6 +1375,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_squareResponse
     (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
     xForce yForce
 
+-- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
 hypothesis, using regular Drazin/Krein cone positivity on the operatorial lane.
@@ -1324,6 +1392,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_regularCone
     (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
     xForce yForce
 
+-- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
 hypothesis, using a Cramer-Rao realization of the infinite doubled-Krein
@@ -1341,6 +1410,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_cramerRaoResponse
     C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
       R xForce yForce⟩
 
+-- theorem-class: bridge
 /--
 Combined finite/operatorial one-channel entropy production from regular-cone
 positivity on the infinite doubled-Krein operator lane.

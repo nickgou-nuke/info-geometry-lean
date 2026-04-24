@@ -59,17 +59,23 @@ structure InfiniteCoadjointOrbitMetriplecticContext
   /-- Total metriplectic entropy-production channel. -/
   totalEntropyRate : Orbit → ℝ
   /-- The moment image lies on the selected coadjoint orbit. -/
+-- theorem-class: bridge
   moment_mem_orbit : ∀ x : Orbit, isOnCoadjointOrbit (moment x)
   /-- Hamiltonian/coadjoint motion closes on the same orbit. -/
+-- theorem-class: bridge
   reversible_preserves_orbit :
     ∀ x : Orbit, isOnCoadjointOrbit (moment (reversibleVectorField x))
   /-- The metric/Onsager leg is a valid orbit-level state update. -/
+-- theorem-class: bridge
   metric_preserves_state : ∀ x : Orbit, isOnCoadjointOrbit (moment (metricVectorField x))
   /-- Casimir hypothesis: the reversible leg produces no entropy. -/
+-- theorem-class: bridge
   casimir_reversible : ∀ x : Orbit, reversibleEntropyRate x = 0
   /-- Onsager positivity hypothesis for the noncommutative/operator metric leg. -/
+-- theorem-class: bridge
   onsager_metric_nonnegative : ∀ x : Orbit, 0 ≤ metricEntropyRate x
   /-- Metriplectic split of the total entropy-production channel. -/
+-- theorem-class: bridge
   total_entropy_split :
     ∀ x : Orbit,
       totalEntropyRate x = reversibleEntropyRate x + metricEntropyRate x
@@ -174,24 +180,28 @@ local notation "C□" =>
     moment geometricTemperature reversibleVectorField metricVectorField entropy
     dissipationAmplitude
 
+-- theorem-class: bridge
 /-- In the square-dissipation model, reversible entropy production is zero by construction. -/
 @[rep_depth transport]
 theorem reversibleEntropyRate_eq_zero (x : Orbit) :
     C□.reversibleEntropyRate x = 0 :=
   rfl
 
+-- theorem-class: bridge
 /-- In the square-dissipation model, metric entropy production is a square. -/
 @[rep_depth transport]
 theorem metricEntropyRate_eq_square (x : Orbit) :
     C□.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ) :=
   rfl
 
+-- theorem-class: bridge
 /-- In the square-dissipation model, total entropy production is a square. -/
 @[rep_depth transport]
 theorem totalEntropyRate_eq_square (x : Orbit) :
     C□.totalEntropyRate x = dissipationAmplitude x ^ (2 : ℕ) :=
   rfl
 
+-- theorem-class: bridge
 /-- Dimension-agnostic constructive second law for square dissipation. -/
 @[rep_depth transport]
 theorem totalEntropyRate_nonnegative (x : Orbit) :
@@ -205,6 +215,7 @@ theorem totalEntropyRate_nonnegative (x : Orbit) :
     (dissipationAmplitude := dissipationAmplitude)]
   exact sq_nonneg (dissipationAmplitude x)
 
+-- theorem-class: bridge
 /--
 Packed constructive theorem for the square-dissipation coadjoint-orbit route.
 
@@ -256,6 +267,7 @@ theorem full_square_dissipation_metriplectic_theorem (x : Orbit) :
 
 attribute [terminal] full_square_dissipation_metriplectic_theorem
 
+-- theorem-class: bridge
 /--
 Constructive Casimir-leaf/transverse-Onsager packet for the Souriau prose.
 
@@ -309,36 +321,42 @@ attribute [terminal] casimir_leaf_transverse_onsager_square_packet
 
 end SquareDissipation
 
+-- theorem-class: bridge
 /-- Every represented state has its moment on the selected coadjoint orbit. -/
 @[rep_depth transport]
 theorem moment_lands_on_coadjoint_orbit (x : Orbit) :
     C.isOnCoadjointOrbit (C.moment x) :=
   C.moment_mem_orbit x
 
+-- theorem-class: bridge
 /-- Reversible/Hamiltonian flow closes inside the coadjoint orbit. -/
 @[rep_depth transport]
 theorem reversible_flow_closes_on_coadjoint_orbit (x : Orbit) :
     C.isOnCoadjointOrbit (C.moment (C.reversibleVectorField x)) :=
   C.reversible_preserves_orbit x
 
+-- theorem-class: bridge
 /-- Metric/Onsager flow is a valid orbit-level state update. -/
 @[rep_depth transport]
 theorem metric_flow_closes_on_coadjoint_orbit (x : Orbit) :
     C.isOnCoadjointOrbit (C.moment (C.metricVectorField x)) :=
   C.metric_preserves_state x
 
+-- theorem-class: bridge
 /-- Casimir channel: reversible/coadjoint motion has zero entropy production. -/
 @[rep_depth transport]
 theorem reversibleEntropyRate_eq_zero (x : Orbit) :
     C.reversibleEntropyRate x = 0 :=
   C.casimir_reversible x
 
+-- theorem-class: bridge
 /-- Metric/Onsager channel is nonnegative by the explicit operatorial positivity hypothesis. -/
 @[rep_depth transport]
 theorem metricEntropyRate_nonnegative (x : Orbit) :
     0 ≤ C.metricEntropyRate x :=
   C.onsager_metric_nonnegative x
 
+-- theorem-class: bridge
 /-- Total entropy production reduces to the metric channel because the reversible leg is Casimir. -/
 @[rep_depth transport]
 theorem totalEntropyRate_eq_metricEntropyRate (x : Orbit) :
@@ -346,6 +364,7 @@ theorem totalEntropyRate_eq_metricEntropyRate (x : Orbit) :
   rw [C.total_entropy_split x, C.reversibleEntropyRate_eq_zero x]
   simp
 
+-- theorem-class: bridge
 /--
 Full coadjoint-orbit metriplectic second law.
 
@@ -360,6 +379,7 @@ theorem coadjoint_orbit_metriplectic_second_law (x : Orbit) :
   rw [C.totalEntropyRate_eq_metricEntropyRate x]
   exact C.metricEntropyRate_nonnegative x
 
+-- theorem-class: bridge
 /--
 Packed theorem form used by downstream bridges that need all closure and
 second-law outputs at once.
@@ -384,6 +404,7 @@ theorem full_coadjoint_orbit_metriplectic_theorem (x : Orbit) :
 
 attribute [terminal] full_coadjoint_orbit_metriplectic_theorem
 
+-- theorem-class: bridge
 /--
 Constructive image-orbit theorem packet.
 
@@ -465,38 +486,48 @@ structure InfiniteCoadjointOrbitHessianContext
   /-- Inverse Fisher readout transported to the dual-side variations. -/
   inverseFisherHessian : LieCoalg → DualTangent → DualTangent → ℝ
   /-- Massieu is the logarithm of the partition functional. -/
+-- theorem-class: bridge
   massieu_eq_log_partition :
     ∀ β : LieAlg, massieuPotential β = Real.log (partitionFunction β)
   /-- First variation of Massieu gives the thermodynamic moment. -/
   first_variation_eq_moment : Prop
   /-- Proof of the first-variation/moment identity. -/
+-- theorem-class: bridge
   first_variation_eq_moment_holds : first_variation_eq_moment
   /-- Second variation of Massieu gives the Fisher/Hessian readout. -/
   second_variation_eq_fisher : Prop
   /-- Proof of the second-variation/Fisher identity. -/
+-- theorem-class: bridge
   second_variation_eq_fisher_holds : second_variation_eq_fisher
   /-- Fisher/Hessian readout agrees with the coadjoint moment covariance. -/
+-- theorem-class: bridge
   fisher_eq_covariance :
     ∀ β : LieAlg, fisherHessian β = momentCovariance β
   /-- Fisher symmetry on all admissible temperature variations. -/
+-- theorem-class: bridge
   fisher_symmetric :
     ∀ (β : LieAlg) (X Y : Tangent),
       fisherHessian β X Y = fisherHessian β Y X
   /-- Fisher nonnegativity on all admissible temperature variations. -/
+-- theorem-class: bridge
   fisher_nonnegative :
     ∀ (β : LieAlg) (X : Tangent), 0 ≤ fisherHessian β X X
   /-- Strict Fisher gate supplied by a concrete nondegenerate orbit model. -/
+-- theorem-class: bridge
   fisher_positive_of_nonzero :
     ∀ (β : LieAlg) (X : Tangent), nonzeroTangent X → 0 < fisherHessian β X X
   /-- Fenchel-Legendre contact equation for entropy and Massieu. -/
   fenchel_legendre_contact : Prop
   /-- Proof of the Fenchel-Legendre contact equation. -/
+-- theorem-class: bridge
   fenchel_legendre_contact_holds : fenchel_legendre_contact
   /-- Entropy gradient recovers the geometric-temperature coordinate. -/
   entropy_gradient_eq_beta : Prop
   /-- Proof that the entropy gradient recovers the geometric-temperature coordinate. -/
+-- theorem-class: bridge
   entropy_gradient_eq_beta_holds : entropy_gradient_eq_beta
   /-- Entropy Hessian is the inverse Fisher metric on the coadjoint dual lane. -/
+-- theorem-class: bridge
   entropy_hessian_eq_inverse_fisher :
     ∀ (Q : LieCoalg),
       entropyHessian Q = inverseFisherHessian Q
@@ -641,6 +672,7 @@ noncomputable def ofLogPartitionGramFisher
     (entropy_hessian_eq_inverse_fisher := entropy_hessian_eq_inverse_fisher)
 
 
+-- theorem-class: bridge
 /-- Packed constructive Fisher theorem for the dimension-agnostic Gram route. -/
 @[rep_depth transport]
 theorem full_gram_fisher_constructive_theorem
@@ -741,28 +773,36 @@ structure GibbsSouriauGramAnalyticWitness
   /-- Hilbert feature representation of the Fisher form. -/
   feature : Θ → Feature
   /-- Partition is represented by the supplied Gibbs-Souriau integral. -/
+-- theorem-class: bridge
   partition_eq_integral_gibbsWeight :
     ∀ β : Θ, partitionFunction β = integralFunctional (gibbsWeight β)
   /-- Massieu is the logarithm of the partition functional. -/
+-- theorem-class: bridge
   massieu_eq_log_partition :
     ∀ β : Θ, massieu.ψ β = Real.log (partitionFunction β)
   /-- First variation: Massieu gradient gives the thermodynamic moment. -/
+-- theorem-class: bridge
   thermodynamicMoment_eq_gradient_at_beta :
     thermodynamicMoment beta = dualCoord massieu beta
   /-- Entropy-gradient contact equation. -/
+-- theorem-class: bridge
   entropyGradient_at_moment :
     entropyGradient (dualCoord massieu beta) = beta
   /-- Second variation: Fisher is the Massieu Hessian at the witness point. -/
+-- theorem-class: bridge
   fisherEquiv_eq_massieuHessian :
     (fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian massieu beta
   /-- Entropy-gradient derivative is the inverse Fisher map. -/
+-- theorem-class: bridge
   entropyGradient_derivative_eq_inverse :
     fderiv ℝ entropyGradient (dualCoord massieu beta) =
       (fisherEquiv.symm : MomentCoord Θ →L[ℝ] Θ)
   /-- Fisher is represented by a Hilbert Gram form. -/
+-- theorem-class: bridge
   fisherEquiv_eq_gram :
     ∀ X Y : Θ, (fisherEquiv X) Y = inner ℝ (feature X) (feature Y)
   /-- Covariance identity supplied by the concrete Gibbs-Souriau analytic model. -/
+-- theorem-class: bridge
   fisherEquiv_eq_integral_centered_moment_product :
     ∀ X Y : Θ,
       (fisherEquiv X) Y =
@@ -786,6 +826,7 @@ noncomputable def toLegendreContinuousLinearEquivInverseData
   fisherEquiv_eq_massieuHessian := W.fisherEquiv_eq_massieuHessian
   entropyGradient_derivative_eq_inverse := W.entropyGradient_derivative_eq_inverse
 
+-- theorem-class: bridge
 /--
 The analytic Gibbs-Souriau witness discharges the previously prose-only
 partition, first-variation, second-variation, Gram, and covariance claims at
@@ -872,6 +913,7 @@ noncomputable def ofSmoothLegendreReadout
       intro Q
       rfl)
 
+-- theorem-class: bridge
 /--
 Packed constructive Legendre theorem for the infinite local readout: the
 variation/contact/inverse-Hessian claims are inherited from
@@ -969,6 +1011,7 @@ noncomputable def ofSmoothLegendreGramReadout
       rw [fisherHessian_eq_gram X X]
       exact (real_inner_self_pos).2 hX)
 
+-- theorem-class: bridge
 /--
 Packed constructive theorem for the infinite smooth-Legendre Gram route.
 
@@ -1035,30 +1078,35 @@ variable
     InfiniteCoadjointOrbitHessianContext
       Orbit LieAlg LieCoalg Tangent DualTangent)
 
+-- theorem-class: bridge
 /-- The full coadjoint-orbit Massieu potential is the log partition. -/
 @[rep_depth transport]
 theorem massieu_eq_log_partition_at (β : LieAlg) :
     C.massieuPotential β = Real.log (C.partitionFunction β) :=
   C.massieu_eq_log_partition β
 
+-- theorem-class: bridge
 /-- The full coadjoint-orbit Fisher/Hessian readout is the moment covariance. -/
 @[rep_depth transport]
 theorem fisher_hessian_eq_covariance (β : LieAlg) :
     C.fisherHessian β = C.momentCovariance β :=
   C.fisher_eq_covariance β
 
+-- theorem-class: bridge
 /-- Fisher symmetry in the full coadjoint-orbit Hessian interface. -/
 @[rep_depth transport]
 theorem fisher_hessian_symmetric (β : LieAlg) (X Y : Tangent) :
     C.fisherHessian β X Y = C.fisherHessian β Y X :=
   C.fisher_symmetric β X Y
 
+-- theorem-class: bridge
 /-- Fisher nonnegativity in the full coadjoint-orbit Hessian interface. -/
 @[rep_depth transport]
 theorem fisher_hessian_nonnegative (β : LieAlg) (X : Tangent) :
     0 ≤ C.fisherHessian β X X :=
   C.fisher_nonnegative β X
 
+-- theorem-class: bridge
 /-- Strict Fisher positivity under the explicit nondegenerate-tangent gate. -/
 @[rep_depth transport]
 theorem fisher_hessian_positive_of_nonzero
@@ -1066,12 +1114,14 @@ theorem fisher_hessian_positive_of_nonzero
     0 < C.fisherHessian β X X :=
   C.fisher_positive_of_nonzero β X hX
 
+-- theorem-class: bridge
 /-- Entropy Hessian is the inverse Fisher readout on the coadjoint dual lane. -/
 @[rep_depth transport]
 theorem entropy_hessian_eq_inverse_fisher_at (Q : LieCoalg) :
     C.entropyHessian Q = C.inverseFisherHessian Q :=
   C.entropy_hessian_eq_inverse_fisher Q
 
+-- theorem-class: bridge
 /--
 Full infinite-dimensional coadjoint-orbit Hessian theorem.
 
@@ -1106,6 +1156,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_theorem
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_theorem
 
+-- theorem-class: bridge
 /--
 Strict Fisher leg of the full infinite-dimensional coadjoint-orbit Hessian
 theorem.  The abstract interface does not infer nondegeneracy from syntax:
@@ -1119,6 +1170,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_strict_fisher
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_strict_fisher
 
+-- theorem-class: bridge
 /--
 Strict full infinite-dimensional coadjoint-orbit Hessian theorem.
 
@@ -1184,14 +1236,17 @@ structure SmoothLegendreInverseWitness
   /-- Smooth Legendre owner surface for `Hess(S) = Fisher⁻¹`. -/
   legendre : LegendreHessianInverseContext Θ
   /-- Temperature-side Fisher readout is induced by the Legendre Hessian. -/
+-- theorem-class: bridge
   fisher_readout_matches :
     ∀ (β : Θ) (X Y : Θ),
       C.fisherHessian β X Y = legendre.fisherHessian X Y
   /-- Dual-side entropy readout is induced by the Legendre entropy Hessian. -/
+-- theorem-class: bridge
   entropy_readout_matches :
     ∀ (Q U V : MomentCoord Θ),
       C.entropyHessian Q U V = V (legendre.entropyHessian U)
   /-- The abstract inverse-Fisher readout uses the same Legendre inverse map. -/
+-- theorem-class: bridge
   inverse_readout_matches :
     ∀ (Q U V : MomentCoord Θ),
       C.inverseFisherHessian Q U V = V (legendre.entropyHessian U)
@@ -1204,6 +1259,7 @@ variable
       Orbit Θ (MomentCoord Θ) Θ (MomentCoord Θ)}
   (W : SmoothLegendreInverseWitness C)
 
+-- theorem-class: bridge
 /--
 The smooth Legendre witness supplies the actual two-sided inverse laws for the
 temperature/moment Hessian pair.
@@ -1216,6 +1272,7 @@ theorem two_sided_inverse_laws :
         ContinuousLinearMap.id ℝ (MomentCoord Θ) :=
   W.legendre.entropy_hessian_eq_fisher_inverse
 
+-- theorem-class: bridge
 /--
 Discharge the Souriau infinite-context inverse-Fisher readout equality from a
 smooth Legendre inverse-Hessian witness.
@@ -1228,6 +1285,7 @@ theorem legendre_entropy_hessian_eq_inverse_fisher_at
   rw [SmoothLegendreInverseWitness.entropy_readout_matches W Q U V,
     SmoothLegendreInverseWitness.inverse_readout_matches W Q U V]
 
+-- theorem-class: bridge
 /--
 Packed closure-debt payment: the abstract Souriau inverse-Hessian equality is
 connected to the concrete smooth Legendre two-sided inverse laws.
@@ -1400,6 +1458,7 @@ variable
     InfiniteCoadjointOrbitHessianMetriplecticContext
       Orbit LieAlg LieCoalg Tangent DualTangent)
 
+-- theorem-class: bridge
 /--
 Full infinite-dimensional Souriau theorem packet: coadjoint-orbit Hessian
 identity surface plus metriplectic second law.
@@ -1437,6 +1496,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
 
+-- theorem-class: bridge
 /--
 Strict full infinite-dimensional Souriau theorem packet: Hessian/Fisher
 strict positivity under the explicit nondegenerate-tangent gate, plus the
@@ -1480,6 +1540,7 @@ attribute [terminal] full_infinite_dimensional_coadjoint_orbit_strict_hessian_me
 
 end InfiniteCoadjointOrbitHessianMetriplecticContext
 
+-- theorem-class: bridge
 /--
 Packed constructive full Souriau theorem for the smooth-Legendre plus
 square-dissipation route.
@@ -1540,6 +1601,7 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
 
 attribute [terminal] full_smooth_legendre_square_dissipation_constructive_theorem
 
+-- theorem-class: bridge
 /--
 Packed constructive full Souriau theorem for the smooth-Legendre Gram plus
 square-dissipation route.
@@ -1614,6 +1676,7 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
 
 attribute [terminal] full_smooth_legendre_gram_square_dissipation_constructive_theorem
 
+-- theorem-class: bridge
 /--
 Stronger constructive full Souriau theorem for the smooth-Legendre Gram plus
 square-dissipation route.
@@ -1698,6 +1761,7 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
 
 attribute [terminal] full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
 
+-- theorem-class: bridge
 /--
 Constructive full Souriau theorem from continuous-linear-equivalence Legendre
 data, Gram Fisher representation, and square dissipation.
@@ -1767,6 +1831,7 @@ theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
 
 attribute [terminal] full_cle_legendre_gram_square_dissipation_constructive_theorem
 
+-- theorem-class: bridge
 /--
 Step-by-step constructive Fisher/Onsager/metriplectic proof packet.
 
@@ -1858,6 +1923,7 @@ theorem fisher_onsager_metriplectic_constructive_proof_packet
 
 attribute [terminal] fisher_onsager_metriplectic_constructive_proof_packet
 
+-- theorem-class: bridge
 /--
 Full analytic-to-metriplectic packet.
 
@@ -1946,6 +2012,7 @@ open InfoGeometry.Canonical.SouriauKreinMetriplectic
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+-- theorem-class: bridge
 /--
 The existing Krein/operatorial Souriau context supplies the required
 nonnegative metric gate only after an explicit positive-semidefinite response
@@ -1961,6 +2028,7 @@ theorem operatorial_metric_gate_from_psd
 
 attribute [infrastructure] operatorial_metric_gate_from_psd
 
+-- theorem-class: bridge
 /--
 Regular Drazin/Krein cone positivity is sufficient for the operatorial metric
 gate used by the full coadjoint-orbit theorem interface.
@@ -1975,6 +2043,7 @@ theorem operatorial_metric_gate_from_regular_cone
 
 attribute [infrastructure] operatorial_metric_gate_from_regular_cone
 
+-- theorem-class: bridge
 /--
 Square-response operatorial gate for the full coadjoint-orbit theorem
 interface.  This avoids a naked PSD hypothesis when the concrete operator model

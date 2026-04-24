@@ -111,12 +111,11 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolu
     (hUnit : relativeVolumeChangeRN n M = 1)
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap|) = 0 := by
-  have hPotentialZero : cramerRaoMetricVolumePotential Kgeo.H x = 0 :=
+  have hCramerRaoMetricVolumePotentialZero : cramerRaoMetricVolumePotential Kgeo.H x = 0 :=
     cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativeVolume
       (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit x
   have hNegLogZero : -Real.log (|LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap|) = 0 := by
-    simpa [cramerRaoMetricVolumePotential, cramerRaoMetricVolumeShadow,
-      MongeAmpereCramerRao.cramerRaoMetricOperatorOwner, cramerRaoMetricOp] using hPotentialZero
+    simpa [MongeAmpereCramerRao.cramerRaoMetricVolumePotential_eq_neg_logAbsDet] using hCramerRaoMetricVolumePotentialZero
   linarith
 
 omit [FiniteDimensional ℝ E] in

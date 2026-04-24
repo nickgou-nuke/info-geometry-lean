@@ -49,23 +49,14 @@ def request_json(
     *,
     username: str,
     password: str,
-    payload: dict[str, Any] | None = None,
-    raw_body: bytes | None = None,
-    content_type: str = "application/json",
-) -> dict[str, Any]:
-    if raw_body is not None:
-        body = raw_body
-    elif payload is not None:
-        body = json.dumps(payload, ensure_ascii=True).encode("utf-8")
-    else:
-        body = None
-
+    payload: dict[str, Any] | list[dict[str, Any]] | None = None,
+) -> dict[str, Any] | list[Any]:
+    body = None if payload is None else json.dumps(payload, ensure_ascii=True).encode("utf-8")
     req = Request(url, data=body, method=method)
     req.add_header("Authorization", auth_header(username, password))
     req.add_header("Accept", "application/json")
     if body is not None:
-        req.add_header("Content-Type", content_type)
-
+        req.add_header("Content-Type", "application/json")
     try:
         with urlopen(req) as resp:
             raw = resp.read().decode("utf-8")
@@ -76,43 +67,22 @@ def request_json(
 
 
 def db_url(target: ArangoTarget, path: str) -> str:
-    return f"{target.endpoint}/_db/{quote(target.database)}/{path.lstrip('/')}"
-
-
-def sys_url(target: ArangoTarget, path: str) -> str:
-    return f"{target.endpoint}/{path.lstrip('/')}"
+    return f"{target.endpoint.rstrip('/')}/_db/{quote(target.database)}{path}"
 
 
 def ensure_database(target: ArangoTarget) -> None:
-    dbs = request_json(
-        "GET",
-        sys_url(target, "/_api/database"),
-        username=target.username,
-        password=target.password,
-    )
-    if target.database in dbs.get("result", []):
-        return
-    request_json(
-        "POST",
-        sys_url(target, "/_api/database"),
-        username=target.username,
-        password=target.password,
-        payload={"name": target.database},
-    )
+    url = f"{target.endpoint.rstrip('/')}/_api/database"
+    try:
+        request_json("POST", url, username=target.username, password=target.password, payload={"name": target.database})
+    except RuntimeError:
+        pass
 
 
 def list_collections(target: ArangoTarget) -> set[str]:
-    payload = request_json(
-        "GET",
-        db_url(target, "/_api/collection"),
-        username=target.username,
-        password=target.password,
-    )
-    return {
-        str(row.get("name"))
-        for row in payload.get("result", [])
-        if isinstance(row, dict) and row.get("name")
-    }
+    out = request_json("GET", db_url(target, "/_api/collection"), username=target.username, password=target.password)
+    if isinstance(out, dict):
+        return {str(c["name"]) for c in out.get("result", [])}
+    return set()
 
 
 def create_collection(target: ArangoTarget, spec: CollectionSpec) -> None:
@@ -134,13 +104,7 @@ def truncate_collection(target: ArangoTarget, name: str) -> None:
     )
 
 
-def import_jsonl(target: ArangoTarget, spec: CollectionSpec) -> dict[str, Any]:
-    if not spec.path.exists():
-        raise FileNotFoundError(f"Input file not found: {spec.path}")
-    return import_jsonl_batched(target, spec)
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
+def iter_jsonl(path: Path, spec: CollectionSpec) -> Iterable[dict[str, Any]]:
     with path.open("r", encoding="utf-8") as handle:
         for line_no, line in enumerate(handle, start=1):
             line = line.strip()
@@ -149,6 +113,19 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
             row = json.loads(line)
             if not isinstance(row, dict):
                 raise ValueError(f"{path}:{line_no}: expected JSON object")
+            
+            # Map for ig_nodes
+            if spec.name == "ig_nodes":
+                name = row.get("name")
+                if name:
+                    row["_key"] = str(name).replace("/", "_")
+            elif spec.name == "ig_edges":
+                src = row.get("src")
+                dst = row.get("dst")
+                if src and dst:
+                    row["_from"] = f"ig_nodes/{str(src).replace('/', '_')}"
+                    row["_to"] = f"ig_nodes/{str(dst).replace('/', '_')}"
+            
             yield row
 
 
@@ -186,7 +163,7 @@ def import_batch(target: ArangoTarget, collection: str, rows: list[dict[str, Any
 def import_jsonl_batched(target: ArangoTarget, spec: CollectionSpec, *, batch_size: int = 5000) -> dict[str, Any]:
     created = updated = errors = total = batches = 0
     batch: list[dict[str, Any]] = []
-    for row in iter_jsonl(spec.path):
+    for row in iter_jsonl(spec.path, spec):
         batch.append(row)
         if len(batch) >= batch_size:
             result = import_batch(target, spec.name, batch)
@@ -225,38 +202,38 @@ def collection_count(target: ArangoTarget, collection: str) -> int:
     return count if isinstance(count, int) else -1
 
 
-def parse_args() -> argparse.Namespace:
+def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--username", default="root")
     parser.add_argument("--password", default="")
     parser.add_argument("--input-dir", type=Path, required=True)
-    parser.add_argument("--raw-nodes-collection", default="raw_info_nodes")
-    parser.add_argument("--raw-edges-collection", default="raw_info_edges")
+    parser.add_argument("--raw-nodes-collection", default="ig_nodes")
+    parser.add_argument("--raw-edges-collection", default="ig_edges")
     parser.add_argument("--overlay-nodes-collection", default="topology_overlay")
     parser.add_argument("--overlay-edges-collection", default="topology_overlay_edges")
     parser.add_argument("--drop-existing", action="store_true")
     parser.add_argument("--batch-size", type=int, default=5000)
-    parser.add_argument("--json-out", default="artifacts/leantrail/arango_layered_ingest_report.json")
-    return parser.parse_args()
+    parser.add_argument("--json-out", type=Path)
+    args = parser.parse_args()
 
-
-def main() -> int:
-    args = parse_args()
     target = ArangoTarget(
-        endpoint=str(args.endpoint).rstrip("/"),
+        endpoint=str(args.endpoint),
         database=str(args.database),
         username=str(args.username),
         password=str(args.password),
     )
     input_dir = args.input_dir.resolve()
     specs = [
-        CollectionSpec(str(args.raw_nodes_collection), input_dir / "ig_nodes.jsonl", False),
-        CollectionSpec(str(args.raw_edges_collection), input_dir / "ig_edges.jsonl", True),
+        CollectionSpec(str(args.raw_nodes_collection), input_dir / "decls.jsonl", False),
+        CollectionSpec(str(args.raw_edges_collection), input_dir / "edges.jsonl", True),
         CollectionSpec(str(args.overlay_nodes_collection), input_dir / "topology_overlay_nodes.jsonl", False),
         CollectionSpec(str(args.overlay_edges_collection), input_dir / "topology_overlay_edges.jsonl", True),
     ]
+
+    # Filter out missing optional specs
+    specs = [s for s in specs if s.path.exists()]
 
     ensure_database(target)
     existing = list_collections(target)
@@ -278,19 +255,22 @@ def main() -> int:
         "database": target.database,
         "input_dir": str(input_dir),
         "collections": {
-            "raw_nodes": str(args.raw_nodes_collection),
-            "raw_edges": str(args.raw_edges_collection),
-            "overlay_nodes": str(args.overlay_nodes_collection),
-            "overlay_edges": str(args.overlay_edges_collection),
+            spec.name: {
+                "file": str(spec.path.relative_to(input_dir)),
+                "edge": spec.edge,
+                "import": imports[spec.name],
+                "count": counts[spec.name],
+            }
+            for spec in specs
         },
-        "imports": imports,
-        "counts": counts,
     }
-    out_path = Path(args.json_out).resolve()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
-    print(f"Layered Arango ingest report written: {out_path}")
-    print("Counts: " + " ".join(f"{name}={count}" for name, count in counts.items()))
+
+    if args.json_out:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        args.json_out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+    print(f"Layered Arango ingest report written: {args.json_out if args.json_out else '(stdout)'}")
+    print(f"Counts: " + " ".join(f"{k}={v}" for k, v in counts.items()))
     return 0
 
 

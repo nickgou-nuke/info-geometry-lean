@@ -86,7 +86,7 @@ This is the operator-lifted, dimension-agnostic replacement for scalar
 inverse-Hessian prose: the inverse laws are carried by a continuous-linear
 equivalence witness on `EndH`, not by ad hoc scalar assumptions.
 -/
-@[rep_depth operator]
+@[rep_depth thermo]
 theorem operatorLegendreHessianInverse_packet_of_continuousLinearEquiv
     (D : LegendreContinuousLinearEquivInverseData EndH) :
     D.toLegendreHessianInverseContext.moment =
@@ -108,7 +108,7 @@ theorem operatorLegendreHessianInverse_packet_of_continuousLinearEquiv
 Operator-lane inverse law: entropy Hessian composed with Fisher Hessian is
 identity on `EndH`.
 -/
-@[rep_depth operator]
+@[rep_depth thermo]
 theorem operatorEntropyHessian_comp_operatorFisherHessian_eq_id_of_continuousLinearEquiv
     (D : LegendreContinuousLinearEquivInverseData EndH) :
     D.toLegendreHessianInverseContext.entropyHessian.comp
@@ -120,7 +120,7 @@ theorem operatorEntropyHessian_comp_operatorFisherHessian_eq_id_of_continuousLin
 Operator-lane inverse law: Fisher Hessian composed with entropy Hessian is
 identity on the operator moment-coordinate space.
 -/
-@[rep_depth operator]
+@[rep_depth thermo]
 theorem operatorFisherHessian_comp_operatorEntropyHessian_eq_id_of_continuousLinearEquiv
     (D : LegendreContinuousLinearEquivInverseData EndH) :
     D.toLegendreHessianInverseContext.fisherHessian.comp

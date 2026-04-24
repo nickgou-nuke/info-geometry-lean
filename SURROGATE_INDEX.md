@@ -1,34 +1,35 @@
 # Surrogate Index
 
-Generated: `2026-04-13 10:23:10`
+Generated: `2026-04-25 01:28:18`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
 ## Hard Gate
 - `scripts/audit_surrogates.sh`: **FAIL**
 - last gate output:
-  - `[surrogate-audit] checking for imports from InfoGeometry.Unstable in stable modules`
-  - `[surrogate-audit] checking for direct open/namespace references to InfoGeometry.Unstable`
-  - `[surrogate-audit] checking for placeholder/surrogate keywords outside allowed paths`
-  - `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:80:    True := -- placeholder for operatorial Fenchel-Legendre duality predicate`
-  - `[surrogate-audit] placeholder/surrogate markers are only allowed under InfoGeometry/Unstable or Archive`
+  - `scripts/audit_surrogates.sh: line 22: rg: command not found`
+  - `scripts/audit_surrogates.sh: line 29: rg: command not found`
+  - `scripts/audit_surrogates.sh: line 58: rg: command not found`
+  - `scripts/audit_surrogates.sh: line 132: rg: command not found`
+  - `scripts/audit_surrogates.sh: line 132: rg: command not found`
+  - `scripts/audit_surrogates.sh: line 148: rg: command not found`
 
 ## Counts
-- total tracked findings: **8**
+- total tracked findings: **12**
 - proof holes: **4**
 - explicit axiom declarations: **0**
 - quarantine manifest drift findings: **0**
-- vacuous `trivial` theorems: **1**
+- vacuous `trivial` theorems: **0**
 - constant `Prop := True/False` surfaces: **0**
 - universal `∀ _, True` fields: **0**
 - zero quadratic-form surrogates: **0**
 - scaled-zero quadratic-form surrogates: **0**
 - conditional theorem wrappers (`_of_axioms/_of_hypotheses/_of_assumptions`): **0**
-- named contract declarations (`Axioms/Hypotheses/Assumptions`): **2**
-- contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **1**
-- stable surrogate/placeholder markers: **0**
+- named contract declarations (`Axioms/Hypotheses/Assumptions`): **4**
+- contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **0**
+- stable surrogate/placeholder markers: **4**
 - canonical findings: **2**
-- other stable findings: **6**
+- other stable findings: **10**
 - unstable/archive findings: **0**
 
 ## Aggressive Replacement Queue
@@ -36,10 +37,14 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 - `critical` `proof_hole` StrictDeclData at `lean/InfoGeometry/Meta/StrictDef.lean:18`
 - `critical` `proof_hole` validateStrictDeclSyntax at `lean/InfoGeometry/Meta/StrictDef.lean:31`
 - `critical` `proof_hole` validateStrictDeclSyntax at `lean/InfoGeometry/Meta/StrictDef.lean:34`
-- `critical` `trivial_theorem` hodge_star_executes_legendre_transform at `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:75`
-- `medium` `contract_decl` DrazinInfiniteAssumptions at `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:196`
+- `medium` `contract_decl` DrazinInfiniteAssumptions at `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:529`
+- `medium` `contract_decl` KitaevRepoHypotheses at `lean/InfoGeometry/Canonical/SYKKitaevGuardrails.lean:92`
+- `medium` `contract_decl` legacyInfiniteAssumptionsName at `lean/InfoGeometry/Meta/DrazinRefactor.lean:17`
 - `medium` `contract_decl` defaultForbiddenAxioms at `lean/InfoGeometry/Meta/Trust.lean:14`
-- `low` `contract_constructor` DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum at `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:41`
+- `medium` `surrogate_marker` matrixDrazinInverse at `lean/InfoGeometry/Exploration/Symphony/Draft.lean:15`
+- `medium` `surrogate_marker` CompilerTelemetryShadow at `lean/InfoGeometry/LLM/CompilerRosetta.lean:9`
+- `medium` `surrogate_marker` ProofStateShadow at `lean/InfoGeometry/LLM/ProofSamplingShadow.lean:8`
+- `medium` `surrogate_marker` SupertraceFisherShadow at `lean/InfoGeometry/SuperMetriplectic/SupertraceBodyBridge.lean:29`
 
 ## Explicit Proof Holes
 
@@ -58,7 +63,7 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Vacuous `trivial` Theorems
 
-- `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:75` `theorem hodge_star_executes_legendre_transform` [critical]
+- none
 
 ## Constant `Prop := True/False` Surfaces
 
@@ -82,16 +87,21 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Named Contract Declarations
 
-- `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:196` `structure DrazinInfiniteAssumptions` [medium]
+- `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:529` `structure DrazinInfiniteAssumptions` [medium]
+- `lean/InfoGeometry/Canonical/SYKKitaevGuardrails.lean:92` `def KitaevRepoHypotheses` [medium]
+- `lean/InfoGeometry/Meta/DrazinRefactor.lean:17` `def legacyInfiniteAssumptionsName` [medium]
 - `lean/InfoGeometry/Meta/Trust.lean:14` `def defaultForbiddenAxioms` [medium]
 
 ## Contract Constructors
 
-- `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:41` `def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum` [low]
+- none
 
 ## Stable Surrogate/Placeholder Markers
 
-- none
+- `lean/InfoGeometry/Exploration/Symphony/Draft.lean:15` `def matrixDrazinInverse` [medium]
+- `lean/InfoGeometry/LLM/CompilerRosetta.lean:9` `structure CompilerTelemetryShadow` [medium]
+- `lean/InfoGeometry/LLM/ProofSamplingShadow.lean:8` `structure ProofStateShadow` [medium]
+- `lean/InfoGeometry/SuperMetriplectic/SupertraceBodyBridge.lean:29` `structure SupertraceFisherShadow` [medium]
 
 ## Policy
 - explicit proof holes, explicit axioms, and quarantine-manifest drift are not acceptable end-state theory surface

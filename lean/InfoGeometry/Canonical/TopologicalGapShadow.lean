@@ -1,6 +1,8 @@
 import InfoGeometry.Meta.Architecture
 import Mathlib
 
+open scoped InnerProductSpace
+
 /-!
 # InfoGeometry.Canonical.TopologicalGapShadow
 
@@ -92,6 +94,26 @@ theorem topological_gap_shadow_packet
     exact susyHoppingOperator_eq_zero_on_core (Q := Q) hψ
   · intro ψ hψ
     exact entropy_production_vanishes_on_core (Q := Q) ψ hψ
+
+/--
+Secondary bridge: if the SUSY hopping operator is normal, its range lies in the
+excited sector `(ker H)ᗮ`.
+
+This is the operatorial form of "dissipation propagates away from the BPS core"
+without introducing any finite-dimensional diagonalization assumptions.
+-/
+@[rep_depth operator]
+theorem range_le_excitedStateSector_of_isStarNormal
+    (Q : EndH) (hNormal : IsStarNormal (susyHoppingOperator Q)) :
+    (susyHoppingOperator Q).range ≤ ExcitedStateSector Q := by
+  intro y hy
+  change y ∈ ((susyHoppingOperator Q).ker)ᗮ
+  rw [← ContinuousLinearMap.IsStarNormal.orthogonal_range
+      (T := susyHoppingOperator Q) hNormal]
+  rw [Submodule.mem_orthogonal]
+  intro z hz
+  have hz' := (Submodule.mem_orthogonal _ _).1 hz
+  simpa [real_inner_comm] using hz' y hy
 
 end Core
 

@@ -159,7 +159,7 @@ structure TFDLikePreparation where
   normalized : ‖psi‖ = 1
 
 /-- Formalizable-next-target protocol claim constructor. -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 def traversableProtocolTargetClaim : TaggedClaim where
   tier := ClaimTier.formalizableNextOwnerTarget
   statement := S.traversableWindowOpen
@@ -173,7 +173,7 @@ theorem traversableProtocolTargetClaim_not_repo :
     (hTarget := rfl)
 
 /-- External ER=EPR interpretation claim constructor (kept non-owner by type tag). -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 def erEprInterpretationClaim : TaggedClaim where
   tier := ClaimTier.externalInterpretation
   statement := S.traversableWindowOpen
@@ -196,7 +196,7 @@ structure TraversableProtocolWitness where
   openWindow : S.traversableWindowOpen
 
 /-- Repo-tier claim materialized from a closed finite protocol witness. -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where
   tier := ClaimTier.repoTheorem
   statement := S.traversableWindowOpen
@@ -225,7 +225,7 @@ section OwnerAnchorWrappers
 Owner-anchor wrapper: finite Kitaev `ℤ₂` append law.
 This is a compiled owner theorem surface in current repo state.
 -/
-@[rep_depth operator]
+@[rep_depth transport]
 theorem topologicalIndexZ2_append_owner
     (chain₁ chain₂ : List KitaevCell)
     (h₁ : macroscopicVolume chain₁ ≠ 0)
@@ -235,7 +235,7 @@ theorem topologicalIndexZ2_append_owner
   topologicalIndexZ2_append_of_macroscopicVolume_ne_zero chain₁ chain₂ h₁ h₂
 
 /-- Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. -/
-@[rep_depth operator, capstone]
+@[rep_depth transport]
 def topologicalIndexZ2_append_owner_claim.{u} : TaggedClaim where
   tier := ClaimTier.repoTheorem
   statement :=
@@ -246,13 +246,13 @@ def topologicalIndexZ2_append_owner_claim.{u} : TaggedClaim where
         = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂
 
 /-- The finite `ℤ₂` append owner claim is tagged as repo theorem. -/
-@[rep_depth operator]
+@[rep_depth transport]
 theorem topologicalIndexZ2_append_owner_claim_is_repo.{u} :
     (topologicalIndexZ2_append_owner_claim.{u}).isRepoTheorem := by
   rfl
 
 /-- The finite `ℤ₂` append owner claim is constructively inhabited. -/
-@[rep_depth operator]
+@[rep_depth transport]
 theorem topologicalIndexZ2_append_owner_claim_holds.{u} :
     (topologicalIndexZ2_append_owner_claim.{u}).statement := by
   intro chain₁ chain₂ h₁ h₂
@@ -277,7 +277,7 @@ theorem connesCocycle_state_chain_owner
   connesCocycle_state_chain (σ := σ) (u := u) hCocycle s t
 
 /-- Tagged repo-tier claim for the Connes cocycle owner chain law. -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 def connesCocycle_state_chain_owner_claim : TaggedClaim where
   tier := ClaimTier.repoTheorem
   statement :=

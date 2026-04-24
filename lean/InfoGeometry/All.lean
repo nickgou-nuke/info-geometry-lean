@@ -41,7 +41,25 @@ import InfoGeometry.Meta.RegionPolicy
 import InfoGeometry.Meta.StrictDef
 import InfoGeometry.Meta.StrictSurface
 import InfoGeometry.Meta.Trust
+import InfoGeometry.Meta.CompilerTelemetry
+import InfoGeometry.Meta.HiveLogos
 import InfoGeometry.OptimalTransport
+
+-- Coverage closure imports for declaration-bearing leaves not yet in category umbrellas.
+import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
+import InfoGeometry.Canonical.DIIIIndexVerification
+import InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
+import InfoGeometry.Canonical.QVandermondePhaseLockShadow
+import InfoGeometry.Canonical.SYKKitaevGuardrails
+import InfoGeometry.Canonical.SYKTwoCopyInterface
+import InfoGeometry.Canonical.SandboxVerification
+import InfoGeometry.Canonical.SouriauTranslatorAudit
+import InfoGeometry.Clifford.ChiralBasis
+import InfoGeometry.Clifford.GeometricRotor
+import InfoGeometry.Convex.EuclideanMonotonicity
+import InfoGeometry.ExponentialFamily.GaussianMonotonicity
+import InfoGeometry.Sandbox.FullOperatorVerification
+import InfoGeometry.Twistor.LightconeBridge
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Potential
 import InfoGeometry.RegularizedKL

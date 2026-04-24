@@ -327,6 +327,24 @@ private theorem commutes_with_Pzero
       simp [Pzero, IsDrazinInverse.complementaryProjection,
         Preg, IsDrazinInverse.projection]
 
+omit [CompleteSpace E] in
+private theorem commutes_with_comp
+    {A B P : Op}
+    (hA : A.comp P = P.comp A)
+    (hB : B.comp P = P.comp B) :
+    (A.comp B).comp P = P.comp (A.comp B) := by
+  calc
+    (A.comp B).comp P = A.comp (B.comp P) := by
+      rfl
+    _ = A.comp (P.comp B) := by
+      rw [hB]
+    _ = (A.comp P).comp B := by
+      rfl
+    _ = (P.comp A).comp B := by
+      rw [hA]
+    _ = P.comp (A.comp B) := by
+      rfl
+
 /--
 `η`-compatibility descends from `(T, Tᴰ)` to the Drazin regular projector.
 -/
@@ -402,6 +420,106 @@ theorem modularJ_comm_Pzero
     (S := modular_j (E := E))
     (T := T) (TD := TD)
     (modularJ_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat)
+
+/--
+The internal doubled-Krein phase axis `J ∘ ε` preserves the regular Drazin
+sector whenever the Drazin package is compatible with both real operators.
+-/
+@[rep_depth operator]
+theorem doubledKreinPhaseAxis_comm_Preg_of_drazinKreinCompatibility
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    ((modular_j (E := E)).comp (spectral_epsilon (E := E))).comp (Preg T TD)
+      =
+    (Preg T TD).comp ((modular_j (E := E)).comp (spectral_epsilon (E := E))) := by
+  exact
+    commutes_with_comp
+      (A := modular_j (E := E))
+      (B := spectral_epsilon (E := E))
+      (P := Preg T TD)
+      (modularJ_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat)
+      (epsilon_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat)
+
+/--
+The internal doubled-Krein phase axis `J ∘ ε` preserves the Drazin defect
+sector whenever the Drazin package is compatible with both real operators.
+-/
+@[rep_depth operator]
+theorem doubledKreinPhaseAxis_comm_Pzero_of_drazinKreinCompatibility
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    ((modular_j (E := E)).comp (spectral_epsilon (E := E))).comp (Pzero T TD)
+      =
+    (Pzero T TD).comp ((modular_j (E := E)).comp (spectral_epsilon (E := E))) := by
+  exact
+    commutes_with_comp
+      (A := modular_j (E := E))
+      (B := spectral_epsilon (E := E))
+      (P := Pzero T TD)
+      (modularJ_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat)
+      (epsilon_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat)
+
+/--
+The Drazin core split is invariant under the internal doubled-Krein phase axis
+`J ∘ ε`.
+-/
+@[rep_depth operator]
+theorem doubledKreinPhaseAxis_preserves_drazinCore_split
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    ((modular_j (E := E)).comp (spectral_epsilon (E := E))).comp (Preg T TD)
+        = (Preg T TD).comp ((modular_j (E := E)).comp (spectral_epsilon (E := E)))
+      ∧
+    ((modular_j (E := E)).comp (spectral_epsilon (E := E))).comp (Pzero T TD)
+        = (Pzero T TD).comp ((modular_j (E := E)).comp (spectral_epsilon (E := E))) := by
+  exact
+    ⟨doubledKreinPhaseAxis_comm_Preg_of_drazinKreinCompatibility
+        (E := E) (T := T) (TD := TD) (k := k) hCompat,
+      doubledKreinPhaseAxis_comm_Pzero_of_drazinKreinCompatibility
+        (E := E) (T := T) (TD := TD) (k := k) hCompat⟩
+
+/--
+Owner-name view of `doubledKreinPhaseAxis_comm_Preg_of_drazinKreinCompatibility`.
+Here `complex_i` is the repo's real-linear doubled-Krein phase-axis name, not
+an external scalar complex structure.
+-/
+@[rep_depth operator]
+theorem complex_i_comm_Preg_of_drazinKreinCompatibility
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    (complex_i (E := E)).comp (Preg T TD)
+      = (Preg T TD).comp (complex_i (E := E)) := by
+  simpa [complex_i] using
+    (doubledKreinPhaseAxis_comm_Preg_of_drazinKreinCompatibility
+      (E := E) (T := T) (TD := TD) (k := k) hCompat)
+
+/--
+Owner-name view of `doubledKreinPhaseAxis_comm_Pzero_of_drazinKreinCompatibility`.
+Here `complex_i` is the repo's real-linear doubled-Krein phase-axis name, not
+an external scalar complex structure.
+-/
+@[rep_depth operator]
+theorem complex_i_comm_Pzero_of_drazinKreinCompatibility
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    (complex_i (E := E)).comp (Pzero T TD)
+      = (Pzero T TD).comp (complex_i (E := E)) := by
+  simpa [complex_i] using
+    (doubledKreinPhaseAxis_comm_Pzero_of_drazinKreinCompatibility
+      (E := E) (T := T) (TD := TD) (k := k) hCompat)
+
+/--
+Owner-name view of `doubledKreinPhaseAxis_preserves_drazinCore_split`.
+The statement remains entirely over real doubled-Krein operators.
+-/
+@[rep_depth operator]
+theorem complex_i_preserves_drazinCore_split
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
+    (complex_i (E := E)).comp (Preg T TD)
+        = (Preg T TD).comp (complex_i (E := E))
+      ∧
+    (complex_i (E := E)).comp (Pzero T TD)
+        = (Pzero T TD).comp (complex_i (E := E)) := by
+  exact
+    ⟨complex_i_comm_Preg_of_drazinKreinCompatibility
+        (E := E) (T := T) (TD := TD) (k := k) hCompat,
+      complex_i_comm_Pzero_of_drazinKreinCompatibility
+        (E := E) (T := T) (TD := TD) (k := k) hCompat⟩
 
 /-- The regular Drazin projector inherits Cartan compatibility. -/
 @[rep_depth operator]

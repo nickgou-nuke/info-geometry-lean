@@ -25,6 +25,12 @@ def sample_config() -> hive_bee.BeeConfig:
         model_base_url="http://127.0.0.1:30002/v1",
         model_name="deepseek-prover-v2-7b-q8_0.gguf",
         api_key="test-key",
+        backend_kind="local_openai_compatible",
+        backend_identity="http://127.0.0.1:30002/v1",
+        subscription_backed=False,
+        backend_capability="proof_tactic_proposal",
+        hermes_role="hive_proof_bee",
+        allow_direct_provider_api=False,
         timeout=30,
         tactic_override=None,
     )
@@ -80,6 +86,11 @@ def sample_attempt() -> hive_bee.BeeAttempt:
 def test_extract_tactic_supports_label_and_fenced_blocks() -> None:
     assert hive_bee.extract_tactic("TACTIC: exact rfl\nRATIONALE: trivial") == "exact rfl"
     assert hive_bee.extract_tactic("```lean\nrfl\n```") == "rfl"
+    assert hive_bee.extract_tactic("```lean4\nrfl\n```") == "rfl"
+    assert hive_bee.extract_tactic("### Lean4 tactic proof\nTACTIC: rfl\nRATIONALE: trivial") == "rfl"
+    assert hive_bee.extract_tactic("### Lean4 tactic proof\nRATIONALE: bad\n") == ""
+    assert hive_bee.extract_tactic("```lean4\ntheorem t : 1 = 1 := by\n  rfl\n```") == "rfl"
+    assert hive_bee.extract_tactic("TACTIC: theorem t : 1 = 1 := by exact rfl") == "exact rfl"
 
 
 def test_generated_theorem_source_indexes_verified_fossil() -> None:

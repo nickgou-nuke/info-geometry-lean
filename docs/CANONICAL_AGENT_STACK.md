@@ -42,9 +42,9 @@ This is the live host mapping as of the current DGX Spark setup:
 - Agent Gemini CLI calls must go through `tools/infra/run_gemini_guarded.sh`;
   this makes Gemini an irregular, jittered "dreaming sidecar" rather than a
   polling backend. Direct `gemini` use is operator-only.
-- local `Nemotron` is retained as a compact local adjudication lane:
-  - `http://127.0.0.1:30000/v1`
-  - `Nemotron-3-Nano-30B-A3B-UD-Q8_K_XL.gguf`
+- local `Qwen 35B` is the active SparkRun planner lane when resident:
+  - `http://127.0.0.1:8001/v1`
+  - `Qwen/Qwen3.6-35B-A3B-FP8`
 - `DeepSeek-Prover-V2-7B` is the Lean4 proof-specialist lane:
   - `http://127.0.0.1:30002/v1`
   - `deepseek-prover-v2-7b-q8_0.gguf`
@@ -107,7 +107,7 @@ Current host state:
 - gateway currently runs on loopback port `18789`
 - current primary model is the OAuth-backed large-context OpenAI/Codex provider
   `openai-codex/gpt-5.4`
-- local Nemotron remains configured as a secondary compact local lane
+- local Qwen 35B is the current on-host planner lane when the SparkRun resident is active
 
 Responsibilities:
 
@@ -151,15 +151,15 @@ Current host state:
 
 - official `Hermes Agent` is installed under `/home/goutev/.hermes/hermes-agent`
 - CLI launcher is symlinked at `/home/goutev/.local/bin/hermes`
-- current Hermes bounded runner still uses the local `Nemotron` endpoint for
-  compact non-mutating timer cycles
-- interactive OpenClaw planning uses `openai-codex/gpt-5.4` because the local
-  Nemotron context is too small for full OpenClaw/Hermes tool preambles
-- local Nemotron base URL is `http://127.0.0.1:30000/v1`
+- current planner config points at the local `Qwen 35B` SparkRun endpoint for
+  the active on-host planner lane
+- interactive OpenClaw planning still uses `openai-codex/gpt-5.4` as the
+  large-context primary interactive model
+- local Qwen 35B base URL is `http://127.0.0.1:8001/v1`
 - current Hermes CLI `context_length` override is `64000` to pass Hermes'
   startup guard
-- current Nemotron server context is `32768`; it should not be used as the
-  main model for long interactive theorem-factory reasoning
+- current Qwen 35B server context is `32768`; it is the active local planner
+  resident when the SparkRun lane is up
 - current local execution cwd is `/home/goutev/repos/info-geometry-lean`
 
 Responsibilities:

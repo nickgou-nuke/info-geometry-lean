@@ -22,6 +22,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -31,6 +32,24 @@ from tools.infra.hermes_bounded_runner import call_openai_compatible
 from tools.infra import hive_arango_queue as queue_tool
 from tools.infra.ingest_hive_json import ingest_text
 from tools.infra.lean_interact_wrapper import apply_tactic, get_proof_state
+
+
+def emit_packet(
+    config: "BeeConfig",
+    packet: dict[str, Any],
+    *,
+    task_key: str | None = None,
+    dependencies: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    return queue_tool.import_packet_with_lineage(
+        config.hive_endpoint,
+        config.hive_database,
+        config.hive_username,
+        config.hive_password,
+        packet=packet,
+        task_key_value=task_key,
+        dependencies=dependencies,
+    )
 
 DEFAULT_HIVE_ENDPOINT = queue_tool.DEFAULT_ENDPOINT
 DEFAULT_HIVE_DATABASE = queue_tool.DEFAULT_DATABASE
@@ -44,6 +63,8 @@ DEFAULT_GRAVITY_DATABASE = "infogeometry"
 DEFAULT_MODEL_BASE_URL = "http://127.0.0.1:30002/v1"
 DEFAULT_MODEL = "deepseek-prover-v2-7b-q8_0.gguf"
 DEFAULT_API_KEY = "***"
+DEFAULT_BACKEND_CAPABILITY = "proof_tactic_proposal"
+DEFAULT_HERMES_ROLE = "hive_proof_bee"
 DEFAULT_TOP_K = 6
 DEFAULT_MAX_ATTEMPTS = 3
 ARTIFACT_DIR = ROOT / "artifacts" / "hermes_loop" / "hive_bee"
@@ -65,6 +86,12 @@ class BeeConfig:
     model_base_url: str
     model_name: str
     api_key: str
+    backend_kind: str
+    backend_identity: str
+    subscription_backed: bool
+    backend_capability: str
+    hermes_role: str
+    allow_direct_provider_api: bool
     timeout: int
     tactic_override: str | None = None
 
@@ -202,19 +229,49 @@ def build_bee_prompt(goal: dict[str, Any], proof_state: dict[str, Any], gravity_
 
 
 def extract_tactic(text: str) -> str:
+    def normalize(candidate: str) -> str:
+        candidate = candidate.strip()
+        if not candidate:
+            return ""
+        if candidate.startswith(("#", "//", "/*", "RATIONALE:", "VERDICT:", "NOTES:", "PROMOTION_ALLOWED:")):
+            return ""
+        if candidate.startswith("TACTIC:"):
+            candidate = candidate.split(":", 1)[1].strip()
+        theorem_match = re.search(r"(?:^|\n)theorem\b.*?:=\s*by\n(?P<body>.*)$", candidate, flags=re.DOTALL)
+        if theorem_match:
+            body = theorem_match.group("body").strip()
+            return body
+        inline_by_match = re.search(r":=\s*by\s*(?P<body>.+)$", candidate, flags=re.DOTALL)
+        if inline_by_match and "theorem" in candidate:
+            body = inline_by_match.group("body").strip()
+            return body
+        return candidate
+
     match = re.search(r"(?im)^TACTIC:\s*(.+)$", text)
     if match:
-        return match.group(1).strip()
-    fenced = re.search(r"```(?:lean)?\n(.*?)```", text, flags=re.DOTALL)
+        tactic = normalize(match.group(1))
+        if tactic:
+            return tactic
+    fenced = re.search(r"```(?:lean|lean4)?\n(.*?)```", text, flags=re.DOTALL)
     if fenced:
-        return fenced.group(1).strip()
-    first = text.strip().splitlines()
-    return first[0].strip() if first else ""
+        tactic = normalize(fenced.group(1))
+        if tactic:
+            return tactic
+    for line in text.strip().splitlines():
+        candidate = normalize(line)
+        if candidate:
+            return candidate
+    return ""
 
 
 def propose_tactic(config: BeeConfig, goal: dict[str, Any], proof_state: dict[str, Any], gravity_context: dict[str, Any]) -> str:
     if config.tactic_override:
         return config.tactic_override.strip()
+    if config.backend_kind == "provider_api" and not config.allow_direct_provider_api:
+        raise RuntimeError(
+            "direct provider_api backend is disabled; route provider contact through a Codex CLI-backed backend "
+            "or pass --allow-direct-provider-api explicitly"
+        )
     prompt = build_bee_prompt(goal, proof_state, gravity_context)
     response = call_openai_compatible(
         base_url=config.model_base_url,
@@ -301,6 +358,11 @@ def build_deadend_doc(goal: dict[str, Any], task: dict[str, Any], *, worker_id: 
     return {
         "_key": key,
         "schema": "info_geometry.hive_deadend.v1",
+        "antiproof_kind": "lean_nonclosure",
+        "authority_level": "lean_checked",
+        "corridor": "proof.search",
+        "forbids_downstream": ["build.verify", "audit.semantic", "promotion.decide"],
+        "global_impossibility_claim": False,
         "goal_key": goal.get("_key"),
         "goal_hash_shape": goal.get("goal_hash_shape"),
         "task_key": task.get("_key"),
@@ -471,6 +533,11 @@ def build_replay_packet(
             fossil_key,
         ),
         "schema": "info_geometry.hive_replay_packet.v1",
+        "authority": "lean_checked",
+        "representation_class": "owner",
+        "representation_depth": "operatorial",
+        "source_regime": "theorem_lane",
+        "verification_origin": "replay_lane",
         "goal_key": attempt.goal.get("_key"),
         "task_key": attempt.task.get("_key"),
         "fossil_key": fossil_key,
@@ -518,6 +585,150 @@ def build_replay_packet(
             "fossil_created_at": fossil_doc.get("created_at"),
         },
     }
+
+
+def emit_attempt_packets(
+    config: BeeConfig,
+    *,
+    goal: dict[str, Any],
+    task: dict[str, Any],
+    gravity_context: dict[str, Any],
+    gravity_path: Path,
+    proof_state: dict[str, Any],
+    tactic: str,
+    verification: dict[str, Any] | None = None,
+    emit_proposal: bool = True,
+) -> dict[str, dict[str, Any]]:
+    goal_key = str(goal.get("_key") or "")
+    task_key = str(task.get("_key") or "")
+    retrieval_packet = {
+        "schema": "hive.packet.retrieval.v1",
+        "goal_key": goal_key,
+        "authority": "navigation",
+        "representation_class": "owner",
+        "representation_depth": "operatorial",
+        "retrieval_kind": "graph",
+        "source_lane": "arango8529" if gravity_context.get("graph_source") == "arango" else "jsonl_fallback",
+        "freshness": gravity_context.get("graph_source") or "unknown",
+        "items": gravity_context.get("items") or [],
+        "scc_anchors": [
+            (item.get("faithful_witness") or {}).get("scc_key") or (item.get("faithful_witness") or {}).get("scc_id")
+            for item in (gravity_context.get("items") or []) if isinstance(item, dict)
+        ],
+        "raw_witnesses": [item.get("faithful_witness") for item in (gravity_context.get("items") or []) if isinstance(item, dict)],
+        "source_excerpts": [item.get("source_excerpt") for item in (gravity_context.get("items") or []) if isinstance(item, dict)],
+        "graph_outage": False,
+        "stale_warning": gravity_context.get("graph_source") != "arango",
+        "artifact_path": str(gravity_path),
+    }
+    retrieval_row = emit_packet(config, retrieval_packet, task_key=task_key)["packet"]
+
+    proof_state_packet = {
+        "schema": "hive.packet.proof_state.v1",
+        "goal_key": goal_key,
+        "authority": "navigation",
+        "representation_class": "owner",
+        "representation_depth": "operatorial",
+        "imports": parse_imports(goal),
+        "context": parse_context(goal),
+        "goal_text": str(goal.get("target_pretty") or goal.get("canonical_shape") or goal.get("entity_key") or ""),
+        "proof_state": str(proof_state.get("proof_state") or ""),
+        "wrapper_version": "lean_interact_wrapper",
+    }
+    proof_state_row = emit_packet(config, proof_state_packet, task_key=task_key)["packet"]
+
+    if not emit_proposal:
+        return {
+            "retrieval": retrieval_row,
+            "proof_state": proof_state_row,
+        }
+
+    proposal_packet = {
+        "schema": "hive.packet.proposal.v1",
+        "goal_key": goal_key,
+        "proof_state_key": proof_state_row["packet_key"],
+        "retrieval_key": retrieval_row["packet_key"],
+        "authority": "proposal",
+        "representation_class": "owner",
+        "representation_depth": "operatorial",
+        "proposal_kind": "tactic",
+        "content": tactic,
+        "rationale": "proof bee proposed tactic from proof state and retrieval context",
+        "model": config.model_name,
+        "backend_kind": "manual_override" if config.tactic_override else config.backend_kind,
+        "backend_identity": "manual_override" if config.tactic_override else config.backend_identity,
+        "subscription_backed": False if config.tactic_override else config.subscription_backed,
+        "backend_capability": config.backend_capability,
+        "hermes_role": "manual_operator" if config.tactic_override else config.hermes_role,
+        "provider_contact_policy": "codex_cli_only_for_provider_contact",
+    }
+    proposal_row = emit_packet(
+        config,
+        proposal_packet,
+        task_key=task_key,
+        dependencies=[retrieval_row, proof_state_row],
+    )["packet"]
+
+    critique_packet = {
+        "schema": "hive.packet.critique.v1",
+        "proposal_key": proposal_row["packet_key"],
+        "authority": "proposal",
+        "hermes_role": config.hermes_role,
+        "verdict": "approve",
+        "reason": "single-bee lane approves its own frozen execution intent in Phase 1",
+        "notes": "composite worker placeholder until critic bee is split out",
+    }
+    critique_row = emit_packet(config, critique_packet, task_key=task_key, dependencies=[proposal_row])["packet"]
+
+    execution_intent_packet = {
+        "schema": "hive.packet.execution_intent.v1",
+        "proposal_key": proposal_row["packet_key"],
+        "critique_key": critique_row["packet_key"],
+        "authority": "execution_intent",
+        "hermes_role": config.hermes_role,
+        "intent_kind": "lean_tactic",
+        "frozen_payload": {
+            "goal": str(goal.get("target_pretty") or goal.get("canonical_shape") or goal.get("entity_key") or ""),
+            "tactic": tactic,
+            "imports": parse_imports(goal),
+            "context": parse_context(goal),
+        },
+    }
+    execution_row = emit_packet(
+        config,
+        execution_intent_packet,
+        task_key=task_key,
+        dependencies=[proposal_row, critique_row],
+    )["packet"]
+
+    out = {
+        "retrieval": retrieval_row,
+        "proof_state": proof_state_row,
+        "proposal": proposal_row,
+        "critique": critique_row,
+        "execution_intent": execution_row,
+    }
+
+    if verification is not None:
+        verification_packet = {
+            "schema": "hive.packet.verification.v1",
+            "execution_intent_key": execution_row["packet_key"],
+            "authority": "lean_checked",
+            "source_regime": "theorem_lane",
+            "verification_origin": "lean_produced",
+            "verification_kind": "lean_tactic",
+            "status": str(verification.get("status") or "failure"),
+            "stdout": str((verification.get("lean") or {}).get("stdout") or ""),
+            "stderr": str((verification.get("lean") or {}).get("stderr") or ""),
+            "latency_s": float((verification.get("lean") or {}).get("latency_s") or 0.0),
+        }
+        out["verification"] = emit_packet(
+            config,
+            verification_packet,
+            task_key=task_key,
+            dependencies=[execution_row],
+        )["packet"]
+    return out
 
 
 def write_replay_packet_artifact(packet: dict[str, Any]) -> Path:
@@ -685,6 +896,7 @@ def fetch_claimed_task_and_goal(config: BeeConfig) -> tuple[dict[str, Any], dict
         worker_id=config.worker_id,
         queue_name=config.queue_name,
         lease_seconds=config.lease_seconds,
+        task_kind="proof.search",
     )
     if not task:
         return None, None
@@ -750,6 +962,17 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         context=parse_context(goal),
         timeout=config.timeout,
     )
+    packet_trace = emit_attempt_packets(
+        config,
+        goal=goal,
+        task=task,
+        gravity_context=gravity_context,
+        gravity_path=gravity_path,
+        proof_state=proof_state,
+        tactic="",
+        verification=None,
+        emit_proposal=False,
+    )
     if proof_state.get("status") != "ok":
         queue_tool.fail_task(
             config.hive_endpoint,
@@ -777,9 +1000,75 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         config.hive_password,
         goal_key_value=str(goal["_key"]),
         status="proposed",
-        extra_fields={"bee_state": "proposed", "gravity_context_path": str(gravity_path)},
+        extra_fields={
+            "bee_state": "proposed",
+            "gravity_context_path": str(gravity_path),
+            "packet_trace": {
+                "retrieval_key": packet_trace["retrieval"]["packet_key"],
+                "proof_state_key": packet_trace["proof_state"]["packet_key"],
+            },
+        },
     )
-    tactic = propose_tactic(config, goal, proof_state, gravity_context)
+    try:
+        tactic = propose_tactic(config, goal, proof_state, gravity_context)
+    except Exception as exc:  # noqa: BLE001
+        error_message = str(exc) or repr(exc)
+        updated_task = queue_tool.update_task_status(
+            config.hive_endpoint,
+            config.hive_database,
+            config.hive_username,
+            config.hive_password,
+            task_key_value=str(task["_key"]),
+            worker_id=config.worker_id,
+            status="environment_blocked",
+            extra_fields={
+                "worker_id": None,
+                "lease_expires_at": None,
+                "blocked_kind": "provider_unavailable",
+                "failure_kind": "retryable_transport_failure",
+                "semantic_failure": False,
+                "proof_failure": False,
+                "provider_contact_policy": "codex_cli_only_for_provider_contact",
+                "last_provider_error": error_message[-4000:],
+                "retry_guidance": "restart or resume one canonical Codex CLI-backed agent session; do not fan out direct provider connections",
+            },
+        )
+        updated_goal = queue_tool.update_goal_status(
+            config.hive_endpoint,
+            config.hive_database,
+            config.hive_username,
+            config.hive_password,
+            goal_key_value=str(goal["_key"]),
+            status="environment_blocked",
+            extra_fields={
+                "bee_state": "environment_blocked",
+                "blocked_kind": "provider_unavailable",
+                "failure_kind": "retryable_transport_failure",
+                "semantic_failure": False,
+                "proof_failure": False,
+                "last_provider_error": error_message[-4000:],
+            },
+        )
+        return {
+            "status": "environment_blocked",
+            "blocked_kind": "provider_unavailable",
+            "failure_kind": "retryable_transport_failure",
+            "semantic_failure": False,
+            "proof_failure": False,
+            "task": updated_task or task,
+            "goal": updated_goal or goal,
+            "error": error_message,
+        }
+    packet_trace = emit_attempt_packets(
+        config,
+        goal=goal,
+        task=task,
+        gravity_context=gravity_context,
+        gravity_path=gravity_path,
+        proof_state=proof_state,
+        tactic=tactic,
+        verification=None,
+    )
     lean_start = time.time()
     verification = apply_tactic(
         str(goal.get("target_pretty") or goal.get("canonical_shape") or goal.get("entity_key") or ""),
@@ -788,6 +1077,23 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         context=parse_context(goal),
         timeout=config.timeout,
     )
+    verification_packet = emit_packet(
+        config,
+        {
+            "schema": "hive.packet.verification.v1",
+            "execution_intent_key": packet_trace["execution_intent"]["packet_key"],
+            "authority": "lean_checked",
+            "representation_class": "owner",
+            "representation_depth": "operatorial",
+            "verification_kind": "lean_tactic",
+            "status": str(verification.get("status") or "failure"),
+            "stdout": str((verification.get("lean") or {}).get("stdout") or ""),
+            "stderr": str((verification.get("lean") or {}).get("stderr") or ""),
+            "latency_s": float((verification.get("lean") or {}).get("latency_s") or 0.0),
+        },
+        task_key=str(task["_key"]),
+        dependencies=[packet_trace["execution_intent"]],
+    )["packet"]
     lean_latency = time.time() - lean_start
     attempt = BeeAttempt(
         task=task,
@@ -807,7 +1113,18 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         config.hive_password,
         goal_key_value=str(goal["_key"]),
         status="checked",
-        extra_fields={"bee_state": "checked", "last_proposed_tactic": tactic},
+        extra_fields={
+            "bee_state": "checked",
+            "last_proposed_tactic": tactic,
+            "packet_trace": {
+                "retrieval_key": packet_trace["retrieval"]["packet_key"],
+                "proof_state_key": packet_trace["proof_state"]["packet_key"],
+                "proposal_key": packet_trace["proposal"]["packet_key"],
+                "critique_key": packet_trace["critique"]["packet_key"],
+                "execution_intent_key": packet_trace["execution_intent"]["packet_key"],
+                "verification_key": verification_packet["packet_key"],
+            },
+        },
     )
     if verification.get("status") == "success":
         fossil = fossilize_success(config, attempt)
@@ -876,6 +1193,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model-base-url", default=DEFAULT_MODEL_BASE_URL)
     parser.add_argument("--model-name", default=DEFAULT_MODEL)
     parser.add_argument("--api-key", default=DEFAULT_API_KEY)
+    parser.add_argument("--backend-kind", default=None)
+    parser.add_argument("--backend-identity", default=None)
+    parser.add_argument("--subscription-backed", action="store_true")
+    parser.add_argument("--backend-capability", default=DEFAULT_BACKEND_CAPABILITY)
+    parser.add_argument("--hermes-role", default=DEFAULT_HERMES_ROLE)
+    parser.add_argument(
+        "--allow-direct-provider-api",
+        action="store_true",
+        help="explicitly permit direct provider_api model calls; default policy routes provider contact through Codex CLI",
+    )
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--tactic-override", default=None)
     parser.add_argument("--once", action="store_true", help="run one claim/attempt cycle and exit")
@@ -883,7 +1210,24 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def is_local_model_url(url: str) -> bool:
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    return host in {"127.0.0.1", "localhost", "::1"} or host.startswith("10.") or host.startswith("192.168.")
+
+
+def infer_backend_kind(args: argparse.Namespace) -> str:
+    if args.backend_kind:
+        return str(args.backend_kind)
+    if args.tactic_override:
+        return "manual_override"
+    if is_local_model_url(str(args.model_base_url)):
+        return "local_openai_compatible"
+    return "provider_api"
+
+
 def config_from_args(args: argparse.Namespace) -> BeeConfig:
+    backend_kind = infer_backend_kind(args)
     return BeeConfig(
         hive_endpoint=str(args.hive_endpoint).rstrip("/"),
         hive_database=str(args.hive_database),
@@ -898,6 +1242,12 @@ def config_from_args(args: argparse.Namespace) -> BeeConfig:
         model_base_url=str(args.model_base_url).rstrip("/"),
         model_name=str(args.model_name),
         api_key=str(args.api_key),
+        backend_kind=backend_kind,
+        backend_identity=str(args.backend_identity or args.model_base_url).rstrip("/"),
+        subscription_backed=bool(args.subscription_backed),
+        backend_capability=str(args.backend_capability),
+        hermes_role=str(args.hermes_role),
+        allow_direct_provider_api=bool(args.allow_direct_provider_api),
         timeout=int(args.timeout),
         tactic_override=str(args.tactic_override).strip() if args.tactic_override else None,
     )

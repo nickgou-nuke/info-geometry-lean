@@ -330,6 +330,96 @@ theorem deriv_anticommutator_transportedParity_staticModular_at_zero_eq_zero_of_
     simp
   simp [hZero]
 
+/--
+Quasilattice odd-odd bracket readout whose continuum shadow is the translation
+channel: the base-point anticommutator deformation of the transported `J`/static
+`ε` pair.
+-/
+@[rep_depth transport]
+noncomputable def quasilatticeTranslationCandidate
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
+  deriv
+    (fun t =>
+      fockAnticommutator (E := E)
+        (transportedParitySupercharge (E := E) V t)
+        (spectral_epsilon (E := E)))
+    0
+
+/--
+Repo-native hopping/transport seed for the quasilattice translation candidate.
+-/
+@[rep_depth transport]
+noncomputable def quasilatticeHoppingTranslationSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
+  fockAnticommutator (E := E)
+    (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
+    (spectral_epsilon (E := E))
+
+/-- Alias emphasizing the hopping interpretation of the same translation lane. -/
+@[rep_depth transport]
+noncomputable abbrev quasilatticeHoppingTranslationCandidate
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
+  quasilatticeTranslationCandidate (E := E) V
+
+/-- Phase-linear contribution to the quasilattice translation seed. -/
+@[rep_depth transport]
+noncomputable def quasilatticePhaseLinearTranslationSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
+  fockAnticommutator (E := E)
+    (transportCommutator (E := E)
+      (phaseLinearPart (E := E) V.connectionGenerator)
+      (modular_j (E := E)))
+    (spectral_epsilon (E := E))
+
+/-- Phase-antilinear contribution to the quasilattice translation seed. -/
+@[rep_depth transport]
+noncomputable def quasilatticePhaseAntilinearTranslationSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
+  fockAnticommutator (E := E)
+    (transportCommutator (E := E)
+      (phaseAntilinearPart (E := E) V.connectionGenerator)
+      (modular_j (E := E)))
+    (spectral_epsilon (E := E))
+
+/-- The quasilattice translation candidate is exactly its hopping-seed formula. -/
+@[rep_depth transport]
+theorem quasilatticeTranslationCandidate_eq_hoppingSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    quasilatticeTranslationCandidate (E := E) V
+      = quasilatticeHoppingTranslationSeed (E := E) V := by
+  simpa [quasilatticeTranslationCandidate, quasilatticeHoppingTranslationSeed] using
+    deriv_anticommutator_transportedParity_staticModular_at_zero (E := E) V
+
+/--
+The quasilattice translation candidate splits functorially into its phase-linear
+and phase-antilinear hopping seeds.
+-/
+@[rep_depth transport]
+theorem quasilatticeTranslationCandidate_eq_phaseLinearSeed_add_phaseAntilinearSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    quasilatticeTranslationCandidate (E := E) V
+      = quasilatticePhaseLinearTranslationSeed (E := E) V
+          + quasilatticePhaseAntilinearTranslationSeed (E := E) V := by
+  simpa [quasilatticeTranslationCandidate, quasilatticePhaseLinearTranslationSeed,
+      quasilatticePhaseAntilinearTranslationSeed] using
+    deriv_anticommutator_transportedParity_staticModular_at_zero_eq_split_generator (E := E) V
+
+/--
+If the phase-linear part commutes with `J`, the quasilattice translation lane is
+sourced purely by the phase-antilinear hopping seed.
+-/
+@[rep_depth transport]
+theorem quasilatticeTranslationCandidate_eq_phaseAntilinearSeed_of_commute_phaseLinearPart
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (hComm :
+      Commute (modular_j (E := E))
+        (phaseLinearPart (E := E) V.connectionGenerator)) :
+    quasilatticeTranslationCandidate (E := E) V
+      = quasilatticePhaseAntilinearTranslationSeed (E := E) V := by
+  simpa [quasilatticeTranslationCandidate, quasilatticePhaseAntilinearTranslationSeed] using
+    deriv_anticommutator_transportedParity_staticModular_at_zero_eq_phaseAntilinearSeed_of_commute_phaseLinearPart
+      (E := E) V hComm
+
 end Core
 
 end InfoGeometry.Canonical.SuperchargeTransportBridge

@@ -113,7 +113,7 @@ variable {CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
 variable (L : ModularLambdaLattice E CIK)
 
 /-- Lattice thermal-time samples are integer multiples of the Type `III_λ` period. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem thermalTimeStep_mem_scale (k : ℤ) :
     L.lattice.thermalTimeStep k ∈ L.scale.G := by
   unfold ModularMellinLattice.thermalTimeStep
@@ -203,28 +203,28 @@ local instance : IsTopologicalRing EndH_loc := inferInstance
 local instance : CompleteSpace EndH_loc := inferInstance
 
 /-- The operator-valued central channel is central on the Drazin lane. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem centralOperator_isDrazinLaneCentral :
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
       CIK A.centralOperator :=
   A.central_isDrazinLaneCentral
 
 /-- The operator-valued central channel is supported on the defect block. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem centralOperator_isDefectSupported :
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
       CIK A.centralOperator :=
   A.central_isDefectSupported
 
 /-- The Super-Mellin root lies in the repo-owned spectral chiral cone. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem supercharge_in_chiralCone :
     InfoGeometry.Canonical.ChiralOperatorConeClosure.IsInChiralOperatorCone
       CIK A.supercharge.Q :=
   A.supercharge_mem_chiralCone
 
 /-- The Super-Mellin commutator lands through the operator-valued central action. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem shift_supercharge_commutator_eq_central_action :
     A.shift.shiftOperator * A.supercharge.Q * A.shift.shiftInverse - A.supercharge.Q =
       A.centralOperator * A.supercharge.Q :=

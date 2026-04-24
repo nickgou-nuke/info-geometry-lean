@@ -436,7 +436,7 @@ The theorem does not construct a concrete supermanifold, supermetric
 variation, or `psu(2,2|4)` representation.  Those remain model
 instantiations of the owner contexts.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem claimF_superSouriauFermionGas_packet
     {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
     {Stress : Type u}
@@ -502,7 +502,7 @@ identity-action super-coadjoint lane using the even moment and stress readout;
 therefore the supertrace-free conclusion is proved by the owned
 `ofIdentityBalanced` constructor rather than supplied as an independent field.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem claimF_superSouriauFermionGas_packet_ofIdentityBalancedStress
     {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
     (J :

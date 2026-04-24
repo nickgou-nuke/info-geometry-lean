@@ -181,7 +181,7 @@ theorem superGrandCanonicalFockGenerator_zero_odd_beta
 At zero chemical potential the even grand-canonical part collapses to `H`,
 leaving only the explicit odd source coupling.
 -/
-@[rep_depth krein]
+@[rep_depth thermo, capstone]
 theorem superGrandCanonicalFockGenerator_zero_mu
     (B : BogoliubovMixingParams) (H Qodd : FockEndomorphism E) (betaOdd : ℝ) :
     superGrandCanonicalFockGenerator (E := E) B H 0 betaOdd Qodd =
@@ -387,7 +387,7 @@ Weyl covariance is also not set to `True`: the carried proposition is the exact
 identity-action covariance statement owned by
 `SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced`.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 def WeylSupertraceFreeStressContext.ofIdentityBalanced
     {G Gdual Orbit : Type*}
     (moment : Orbit → Gdual)
@@ -422,7 +422,7 @@ def WeylSupertraceFreeStressContext.ofIdentityBalanced
         moment geometricTemperature pairing parityOfGenerator stressTensorProjection g (J.moment x)
 
 /-- The constructive identity-balanced packet is supertrace-free by evaluation. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem superTrace_eq_zero_ofIdentityBalanced
     {G Gdual Orbit : Type*}
     (moment : Orbit → Gdual)

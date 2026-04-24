@@ -68,10 +68,10 @@ noncomputable def ofNormalizedVectorState
     { toFun := fun A => ξ.expectation A
       map_add' := by
         intro A B
-        simp [VectorState.expectation, map_add, add_mul]
+        simp [VectorState.expectation, inner_add_left, add_assoc, add_left_comm]
       map_smul' := by
         intro c A
-        simp [VectorState.expectation] }
+        simp [VectorState.expectation, inner_smul_left] }
   normalized := by
     simpa using hnorm
 
@@ -112,7 +112,7 @@ structure StateRepresentationBridge
   carrier : StandardFormCarrier H
   frame : RepresentationFrame H
   probe_eq_referenceExpectation :
-    state.probe = carrier.referenceState.expectation
+    (fun A : AlgebraEnd H => state.probe A) = carrier.referenceState.expectation
 
 namespace StateRepresentationBridge
 
@@ -121,7 +121,7 @@ variable (B : StateRepresentationBridge H)
 /-- The abstract probe agrees with the doubled-carrier reference expectation. -/
 @[rep_depth operator]
 theorem probe_eq_referenceExpectation' :
-    B.state.probe = B.carrier.referenceState.expectation :=
+    (fun A : EndH => B.state.probe A) = B.carrier.referenceState.expectation :=
   B.probe_eq_referenceExpectation
 
 /-- Pointwise evaluation form of the representation bridge. -/
@@ -129,7 +129,7 @@ theorem probe_eq_referenceExpectation' :
 theorem probe_apply_eq_referenceExpectation
     (A : EndH) :
     B.state.probe A = B.carrier.referenceState.expectation A := by
-  rw [B.probe_eq_referenceExpectation]
+  exact congrArg (fun f : EndH → ℝ => f A) B.probe_eq_referenceExpectation
 
 /--
 Attach a new representation frame without changing the underlying probe/state
@@ -155,7 +155,7 @@ theorem withFrame_probe_eq
 theorem withFrame_probe_apply_eq_referenceExpectation
     (F : RepresentationFrame H) (A : EndH) :
     (B.withFrame F).state.probe A = B.carrier.referenceState.expectation A := by
-  exact (B.withFrame F).probe_apply_eq_referenceExpectation A
+  exact congrArg (fun f : EndH → ℝ => f A) (B.withFrame F).probe_eq_referenceExpectation
 
 end StateRepresentationBridge
 

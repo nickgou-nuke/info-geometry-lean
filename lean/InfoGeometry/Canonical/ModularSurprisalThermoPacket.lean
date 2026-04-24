@@ -45,7 +45,7 @@ section RelativeModularPotential
 variable {α : Type*}
 
 /-- Representative modular potential is the negative relative logarithmic density. -/
-@[rep_depth thermo]
+@[rep_depth projective]
 theorem representativeModularPotential_eq_negative_relativeLogDensity
     (μ ν : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
     InfoGeometry.Canonical.RelativePotentialCore.representativeModularPotential μ ν a =
@@ -56,7 +56,7 @@ theorem representativeModularPotential_eq_negative_relativeLogDensity
 variable [Fintype α] [Nonempty α]
 
 /-- Projective modular potential is the negative relative logarithmic density. -/
-@[rep_depth thermo]
+@[rep_depth projective]
 theorem relativeModularPotential_eq_negative_relativeLogDensity
     (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α) (a : α) :
     InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q0 a =

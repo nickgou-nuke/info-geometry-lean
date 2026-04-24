@@ -52,14 +52,6 @@ docs-map/declarations*.json
 docs-map/*.json
 reports/theory-dag-*/declarations.json
 reports/theory-dag-*/graph.json
-reports/dag/**
-!reports/dag/**/*.md
-reports/dag/**/*.json
-reports/dag/**/*.jsonl
-reports/dag/**/*.graphml
-reports/dag/**/*.svg
-reports/optimization-runs/**
-!reports/optimization-runs/**/*.md
 reports/**/*.json
 reports/**/*.jsonl
 reports/lift-naturality-diagnostics.md
@@ -103,10 +95,19 @@ handover/injections/manifests/EXT-*/
 handover/injections/manifests/*.json
 handover/injections/manifests/*.jsonl
 
+# Generated runtime and scratch worktrees (non-canonical inputs)
+tmp/**
+quarantine/**
+
 # Generated graph-extraction test outputs (operational artifacts, not source inputs)
 tmp/alexandria_graph_rank/out/*.json
 tmp/alexandria_graph_rank/out/*.jsonl
 tmp/skynet-v2-frontier-test.json
+
+# Generated analysis reports / frontier trees / optimization runs
+reports/dag/**
+reports/optimization-runs/**
+reports/training/**
 
 # Local workspace repair leftovers
 .lake.symlink-backup

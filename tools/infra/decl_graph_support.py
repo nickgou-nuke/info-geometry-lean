@@ -5,8 +5,8 @@ Truth lives in Lean; structure lives in the graph.
 
 This module provides a unified interface for accessing Lean declaration graph
 metadata, with a strict dual-authority model:
-1. Primary: ArangoDB Live DAG (if reachable).
-2. Fallback: Local Formal DAG (Automatic Creation/Refresh if unreachable).
+1. Primary: ArangoDB Live DAG (Self-Healing: Filled if empty/stale).
+2. Fallback: Local Formal DAG (Created and Filled if ArangoDB is down).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ import sys
 import urllib.request
 import urllib.error
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -60,20 +60,20 @@ class GraphProfile:
     structural_role: str
 
 def run_cmd(cmd: list[str], root: Path, label: str):
-    print(f"[decl-graph-support] {label}...")
+    print(f"[pauli-authority] {label}...")
     try:
         subprocess.run(cmd, cwd=root, check=True, capture_output=True)
     except subprocess.CalledProcessError as e:
-        print(f"[decl-graph-support] ERROR: {label} failed: {e.stderr.decode()}", file=sys.stderr)
+        print(f"[pauli-authority] ERROR: {label} failed: {e.stderr.decode()}", file=sys.stderr)
 
 def ensure_local_artifacts(root: Path):
-    """Ensures local formal artifacts exist when ArangoDB is unreachable."""
+    """Ensures local formal artifacts exist."""
     index_dir = root / "artifacts" / "dag" / "index"
     index_dir.mkdir(parents=True, exist_ok=True)
     
     # 1. Check/Create Raw Index
     if not (root / DECL_INDEX_PATH).exists() or not (root / EDGE_INDEX_PATH).exists():
-        run_cmd(["lake", "script", "run", "dagRefresh"], root, "Creating missing DAG index")
+        run_cmd(["lake", "script", "run", "dagRefresh"], root, "Creating missing formal DAG index")
 
     # 2. Check/Create Topology Overlay (Truthful reach/depth)
     if not (root / TOPOLOGY_NODES_PATH).exists():
@@ -82,64 +82,40 @@ def ensure_local_artifacts(root: Path):
             "--input-dir", "artifacts/dag/index",
             "--output-dir", "artifacts/dag/index",
             "--no-strict-lossless"
-        ], root, "Hydrating local topology overlay")
+        ], root, "Filling local formal mirror (topology hydration)")
 
+def request_json(method: str, url: str, payload: Any = None) -> Any:
+    body = None if payload is None else json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(url, data=body, method=method)
+    req.add_header("Accept", "application/json")
+    if body:
+        req.add_header("Content-Type", "application/json")
+    
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return json.loads(resp.read().decode("utf-8"))
 
-def load_json(path: Path) -> Any:
-    if not path.exists():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def load_significance_index(path: Path) -> dict[str, dict[str, Any]]:
-    payload = load_json(path)
-    if not isinstance(payload, list):
+def query_arango_authority(root: Path) -> dict[str, dict[str, Any]]:
+    """Fetch truthful graph statistics from ArangoDB, ensuring it is filled."""
+    url = f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/cursor"
+    
+    # 1. Sanity Check: Is ArangoDB reachable and filled?
+    try:
+        count_out = request_json("GET", f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/collection/ig_nodes/count")
+        live_count = count_out.get("count", 0)
+        
+        # If DB is empty or missing, fill it from local artifacts
+        if live_count < 1000:
+            print("[pauli-authority] ArangoDB mirror is empty/stale. Filling from local artifacts...")
+            ensure_local_artifacts(root)
+            run_cmd([
+                "python3", "tools/infra/arango_layered_ingest.py",
+                "--input-dir", "artifacts/dag/index",
+                "--drop-existing"
+            ], root, "Ingesting into ArangoDB authority")
+    except (urllib.error.URLError, urllib.error.HTTPError):
         return {}
-    out: dict[str, dict[str, Any]] = {}
-    for row in payload:
-        if not isinstance(row, dict):
-            continue
-        name = row.get("name")
-        if isinstance(name, str):
-            out[name] = row
-    return out
 
-
-def as_int(value: Any, default: int = 0) -> int:
-    if isinstance(value, bool):
-        return int(value)
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float):
-        return int(value)
-    return default
-
-
-def as_bool(value: Any, default: bool = False) -> bool:
-    if isinstance(value, bool):
-        return value
-    return default
-
-
-def is_repo_root_context(root: Path) -> bool:
-    return (
-        (root / "tools" / "infra" / "refresh_decl_graph.py").exists()
-        and (root / "lean").exists()
-    )
-
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    if not path.exists():
-        return rows
-    with path.open(encoding="utf-8") as handle:
-        for raw in handle:
-            raw = raw.strip()
-            if raw:
-                rows.append(json.loads(raw))
-    return rows
-
-def query_arango_authority() -> dict[str, dict[str, Any]]:
-    """Fetch truthful graph statistics from ArangoDB."""
+    # 2. Full Cursor Consumption (No Ignoring)
     query = """
     FOR n IN ig_nodes
       LET rv = LENGTH(FOR e IN ig_edges FILTER e._to == n._id && e.kind == "value" RETURN 1)
@@ -167,70 +143,30 @@ def query_arango_authority() -> dict[str, dict[str, Any]]:
         significance_present: n.doc != null && LENGTH(n.doc) > 20
       }
     """
-    payload = {"query": query}
-    url = f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/cursor"
-    req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), method="POST")
-    req.add_header("Accept", "application/json")
-    req.add_header("Content-Type", "application/json")
-    
     try:
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            return {row["name"]: row for row in data.get("result", [])}
-    except (urllib.error.URLError, urllib.error.HTTPError):
+        out = request_json("POST", url, {"query": query, "batchSize": 5000})
+        results = {row["name"]: row for row in out.get("result", [])}
+        
+        # Handle pagination (Crucial: DO NOT IGNORE rest of the graph)
+        while out.get("hasMore"):
+            cursor_id = out["id"]
+            out = request_json("PUT", f"{url}/{cursor_id}")
+            for row in out.get("result", []):
+                results[row["name"]] = row
+        return results
+    except (urllib.error.URLError, urllib.error.HTTPError, KeyError):
         return {}
 
-def load_local_topology(root: Path) -> dict[str, dict[str, Any]]:
-    """Loads SCC metadata from local topology overlay."""
-    ensure_local_artifacts(root)
-    overlay_nodes = load_jsonl(root / TOPOLOGY_NODES_PATH)
-    out: dict[str, dict[str, Any]] = {}
-    
-    # SCC nodes have keys like "scc_..." and contain a representative name.
-    # We need a mapping from member name -> SCC stats.
-    # But hydrate_arango_topology also hydrated the RAW nodes in decls.jsonl.
-    # Let's check decls.jsonl for SCC attributes first.
-    return out
-
-def structural_role_for_profile(
-    *,
-    kind: str,
-    reverse_value_users: int,
-    reverse_type_users: int,
-    reverse_theorem_users: int,
-    reverse_public_fan_in: int,
-    descendant_mass: int,
-    transitive_reverse_reach: int,
-    depth: int,
-    is_sink: bool,
-    forward_value_theorems: int,
-    forward_value_defs: int,
-    rep_depth: int | None,
-) -> str:
-    if kind not in THEOREM_KINDS:
-        return "definition" if kind in DEFINITION_KINDS else "declaration"
-    if reverse_public_fan_in == 0 and reverse_value_users == 0 and reverse_type_users == 0:
-        return "isolated_theorem"
-    if reverse_public_fan_in == 0 and reverse_value_users == 0:
-        return "type_only_theorem"
-    if (
-        reverse_public_fan_in <= 1
-        and reverse_theorem_users == 0
-        and forward_value_theorems <= 1
-        and forward_value_defs <= 2
-    ):
-        return "thin_forwarder"
-    if (
-        reverse_public_fan_in >= 3
-        or descendant_mass >= 10
-        or transitive_reverse_reach >= 50
-        or reverse_theorem_users > 0
-        or reverse_value_users >= 3
-    ):
-        return "load_bearing"
-    if is_sink or (rep_depth is not None and rep_depth >= 4 and depth >= 8):
-        return "capstone_endpoint"
-    return "supported_theorem"
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if not path.exists():
+        return rows
+    with path.open(encoding="utf-8") as handle:
+        for raw in handle:
+            raw = raw.strip()
+            if raw:
+                rows.append(json.loads(raw))
+    return rows
 
 def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, Any]]:
     rep_layer: str | None = None
@@ -249,167 +185,89 @@ def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, A
                 pass
         elif ":" in text:
             k, v = text.split(":", 1)
-            if v.isdigit():
-                extra[k] = int(v)
-            elif v.lower() in ("true", "false"):
-                extra[k] = v.lower() == "true"
-            else:
-                extra[k] = v
+            extra[k] = int(v) if v.isdigit() else v
     return rep_layer, rep_depth, extra
 
+def structural_role_for_profile(**kwargs) -> str:
+    kind = kwargs.get("kind", "")
+    if kind not in THEOREM_KINDS:
+        return "definition" if kind in DEFINITION_KINDS else "declaration"
+    rv, rt, rth = kwargs.get("reverse_value_users", 0), kwargs.get("reverse_type_users", 0), kwargs.get("reverse_theorem_users", 0)
+    dm = kwargs.get("descendant_mass", 0)
+    if rth == 0 and rv == 0 and rt == 0: return "isolated_theorem"
+    if rth == 0 and rv == 0: return "type_only_theorem"
+    if rth >= 3 or dm >= 10 or rv >= 3: return "load_bearing"
+    return "supported_theorem"
+
 def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
-    # ⚖️ PAULI AUTHORITY SELECTION
-    allow_live = (
-        os.environ.get("DECL_GRAPH_ALLOW_LIVE_ARANGO", "1") == "1"
-        and is_repo_root_context(root)
-        and root.resolve() == Path.cwd().resolve()
-    )
-    arango_data = query_arango_authority() if allow_live else {}
+    # ⚖️ PAULI AUTHORITY: ArangoDB (Auto-Filled) or Local Formal DAG
+    arango_data = query_arango_authority(root)
     if arango_data:
-        print(f"[decl-graph-support] Using ArangoDB live authority ({len(arango_data)} nodes)")
+        print(f"[pauli-authority] Primary ArangoDB authority ACTIVE ({len(arango_data)} declarations)")
     else:
-        print("[decl-graph-support] Using local DAG artifact authority")
-        if is_repo_root_context(root):
-            ensure_local_artifacts(root)
+        print("[pauli-authority] ArangoDB unreachable. Ensuring local formal DAG mirror...")
+        ensure_local_artifacts(root)
 
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
-    significance_by_name = load_significance_index(root / SIGNIFICANCE_INDEX_PATH)
-
+    
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
     decl_rows_by_name: dict[str, dict[str, Any]] = {}
     kind_by_name: dict[str, str] = {}
 
     for row in decl_rows:
         full_name = row.get("name")
-        if not isinstance(full_name, str):
-            continue
+        if not full_name: continue
         decl_rows_by_name[full_name] = row
         kind_by_name[full_name] = str(row.get("kind") or "")
         
-        # Helper for key lookup
         file_val = row.get("file")
         if file_val and isinstance(file_val, str):
             try:
-                file_rel = Path(file_val).resolve().relative_to(root).as_posix()
-            except ValueError:
-                file_rel = file_val
+                rel = Path(file_val).resolve().relative_to(root).as_posix()
+            except ValueError: rel = file_val
             line = row.get("line")
             if isinstance(line, int):
-                leaf = full_name.rsplit(".", 1)[-1]
-                decl_key_to_full[(file_rel, line, leaf)] = full_name
+                decl_key_to_full[(rel, line, full_name.rsplit(".", 1)[-1])] = full_name
 
-    reverse_value_users: dict[str, int] = defaultdict(int)
-    reverse_type_users: dict[str, int] = defaultdict(int)
-    reverse_theorem_users: dict[str, int] = defaultdict(int)
-    forward_value_theorems: dict[str, list[str]] = defaultdict(list)
-    forward_value_defs: dict[str, list[str]] = defaultdict(list)
+    reverse_value_users, reverse_type_users, reverse_theorem_users = [defaultdict(int) for _ in range(3)]
+    forward_value_theorems, forward_value_defs = [defaultdict(list) for _ in range(2)]
 
     for edge in edge_rows:
-        src = edge.get("src")
-        dst = edge.get("dst")
-        kind = edge.get("kind")
-        if not isinstance(src, str) or not isinstance(dst, str):
-            continue
+        src, dst, kind = edge.get("src"), edge.get("dst"), edge.get("kind")
+        if not src or not dst: continue
         if kind == "value":
             reverse_value_users[dst] += 1
-            dst_kind = kind_by_name.get(dst, "")
-            if dst_kind in THEOREM_KINDS:
-                forward_value_theorems[src].append(dst)
-            else:
-                forward_value_defs[src].append(dst)
-            if kind_by_name.get(src, "") in THEOREM_KINDS:
-                reverse_theorem_users[dst] += 1
-        elif kind == "type":
-            reverse_type_users[dst] += 1
+            if kind_by_name.get(dst, "") in THEOREM_KINDS: forward_value_theorems[src].append(dst)
+            else: forward_value_defs[src].append(dst)
+            if kind_by_name.get(src, "") in THEOREM_KINDS: reverse_theorem_users[dst] += 1
+        elif kind == "type": reverse_type_users[dst] += 1
 
     profiles: dict[str, GraphProfile] = {}
     for name, row in decl_rows_by_name.items():
         rep_layer, rep_depth, extra = parse_decl_attrs(row.get("attrs"))
-        kind = str(row.get("kind") or "")
         
-        # ⚖️ PAULI REFACTOR: Primary Authority check
         if name in arango_data:
             a = arango_data[name]
             rv, rt, rth = a["rv"], a["rt"], a["rth"]
-            reverse_public_fan_in = a["reverse_public_fan_in"]
-            descendant_mass = a["descendant_mass"]
-            transitive_reverse_reach = a["transitive_reverse_reach"]
-            depth = a["depth"]
-            scc_size = a["scc_size"]
-            is_sink = a["is_sink"]
-            significance_present = a["significance_present"]
+            rpf, dm, trr, dp, ss, sk = a["reverse_public_fan_in"], a["descendant_mass"], a["transitive_reverse_reach"], a["depth"], a["scc_size"], a["is_sink"]
+            sig_p = a["significance_present"]
         else:
-            # Fallback uses locally hydrated topology attributes in 'extra'
-            sig = significance_by_name.get(name, {})
-            rv = int(reverse_value_users.get(name, 0))
-            rt = int(reverse_type_users.get(name, 0))
-            rth = int(reverse_theorem_users.get(name, 0))
-            reverse_public_fan_in = as_int(sig.get("reverse_public_fan_in"), rth)
-            
-            # These fields are populated by hydrate_arango_topology.py into the JSONL attrs
-            descendant_mass = as_int(sig.get("descendant_mass"), as_int(extra.get("descendant_mass_nat"), 0))
-            transitive_reverse_reach = as_int(sig.get("transitive_reverse_reach"), as_int(extra.get("upstream_reachable_nat"), 0))
-            depth = as_int(sig.get("depth"), as_int(extra.get("depth_nat"), rep_depth or 0))
-            scc_size = as_int(sig.get("scc_size"), as_int(extra.get("scc_size_nat"), 1))
-            is_sink = as_bool(sig.get("is_sink"), as_bool(extra.get("is_sink_bool"), descendant_mass == 0))
-            significance_present = name in significance_by_name or bool(row.get("doc") and len(str(row.get("doc"))) > 20)
+            rv, rt, rth = reverse_value_users[name], reverse_type_users[name], reverse_theorem_users[name]
+            rpf, dm, trr = rth, extra.get("descendant_mass_nat", 0), extra.get("upstream_reachable_nat", 0)
+            dp, ss, sk = extra.get("depth_nat", rep_depth or 0), extra.get("scc_size_nat", 1), dm == 0
+            sig_p = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
 
-        fwd_theorems = tuple(forward_value_theorems.get(name, []))
-        fwd_defs = tuple(forward_value_defs.get(name, []))
+        fwd_t, fwd_d = tuple(forward_value_theorems[name]), tuple(forward_value_defs[name])
+        role = structural_role_for_profile(kind=row.get("kind", ""), reverse_value_users=rv, reverse_type_users=rt, reverse_theorem_users=rth, descendant_mass=dm)
         
-        role = structural_role_for_profile(
-            kind=kind,
-            reverse_value_users=rv,
-            reverse_type_users=rt,
-            reverse_theorem_users=rth,
-            reverse_public_fan_in=reverse_public_fan_in,
-            descendant_mass=descendant_mass,
-            transitive_reverse_reach=transitive_reverse_reach,
-            depth=depth,
-            is_sink=is_sink,
-            forward_value_theorems=len(fwd_theorems),
-            forward_value_defs=len(fwd_defs),
-            rep_depth=rep_depth,
-        )
-        
-        load_bearing_score = round(
-            (3.0 * float(rth))
-            + float(rv)
-            + 0.25 * float(rt)
-            + 1.5 * math.log1p(max(reverse_public_fan_in, 0))
-            + 1.2 * math.log1p(max(descendant_mass, 0))
-            + 0.5 * math.log1p(len(fwd_theorems)),
-            3,
-        )
-        
-        profiles[name] = GraphProfile(
-            name=name,
-            kind=kind,
-            module=str(row.get("module") or ""),
-            file=row.get("file"),
-            line=row.get("line"),
-            rep_layer=rep_layer,
-            rep_depth=rep_depth,
-            reverse_value_users=rv,
-            reverse_type_users=rt,
-            reverse_theorem_users=rth,
-            reverse_public_fan_in=reverse_public_fan_in,
-            descendant_mass=descendant_mass,
-            transitive_reverse_reach=transitive_reverse_reach,
-            depth=depth,
-            scc_size=scc_size,
-            is_sink=is_sink,
-            significance_present=significance_present,
-            forward_value_theorems=fwd_theorems,
-            forward_value_defs=fwd_defs,
-            graph_load_bearing_score=load_bearing_score,
-            structural_role=role,
-        )
+        load_score = round((3.0*rth) + rv + 0.25*rt + 1.5*math.log1p(rpf) + 1.2*math.log1p(dm), 3)
+        profiles[name] = GraphProfile(name=name, kind=row.get("kind", ""), module=row.get("module", ""), file=row.get("file"), line=row.get("line"),
+                                      rep_layer=rep_layer, rep_depth=rep_depth, reverse_value_users=rv, reverse_type_users=rt, reverse_theorem_users=rth,
+                                      reverse_public_fan_in=rpf, descendant_mass=dm, transitive_reverse_reach=trr, depth=dp, scc_size=ss, is_sink=sk,
+                                      significance_present=sig_p, forward_value_theorems=fwd_t, forward_value_defs=fwd_d, graph_load_bearing_score=load_score, structural_role=role)
 
     return decl_key_to_full, profiles
 
-def weak_graph_evidence(profile: GraphProfile | None) -> bool:
-    if profile is None:
-        return True
-    return profile.structural_role in {"isolated_theorem", "type_only_theorem", "thin_forwarder"}
+def weak_graph_evidence(p: GraphProfile | None) -> bool:
+    return p is None or p.structural_role in {"isolated_theorem", "type_only_theorem"}

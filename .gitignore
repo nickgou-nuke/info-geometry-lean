@@ -103,5 +103,10 @@ handover/injections/manifests/EXT-*/
 handover/injections/manifests/*.json
 handover/injections/manifests/*.jsonl
 
+# Generated graph-extraction test outputs (operational artifacts, not source inputs)
+tmp/alexandria_graph_rank/out/*.json
+tmp/alexandria_graph_rank/out/*.jsonl
+tmp/skynet-v2-frontier-test.json
+
 # Local workspace repair leftovers
 .lake.symlink-backup

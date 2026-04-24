@@ -52,9 +52,9 @@ structure DrazinCartanCompatibility where
   central_in_drazinCore :
     InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerCentralCandidate owner.U
       ∈ (cartan.toCartanOnsagerSplit).drazinCore
-  translation_in_dissipativeRange :
+  translation_in_cartan_p :
     InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate owner.U
-      ∈ (cartan.toCartanOnsagerSplit).dissipativeRange
+      ∈ (cartan.toCartanOnsagerSplit).S.𝔭
 
 namespace DrazinCartanCompatibility
 
@@ -84,8 +84,15 @@ theorem ownerCentralCandidate_in_cartan_k :
 theorem ownerTranslationCandidate_in_cartan_p :
     InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate C.owner.U
       ∈ (C.cartan.toCartanOnsagerSplit).S.𝔭 := by
-  rw [← C.cartan.toCartanOnsagerSplit_dissipativeRange_eq_p]
-  exact C.translation_in_dissipativeRange
+  exact C.translation_in_cartan_p
+
+/-- The carried translation lane lives in the dissipative range of the split. -/
+@[rep_depth transport]
+theorem ownerTranslationCandidate_in_dissipativeRange :
+    InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate C.owner.U
+      ∈ (C.cartan.toCartanOnsagerSplit).dissipativeRange := by
+  simpa [C.cartan.toCartanOnsagerSplit_dissipativeRange_eq_p] using
+    C.ownerTranslationCandidate_in_cartan_p
 
 /--
 Combined packet for the Drazin-Cartan compatibility lane.

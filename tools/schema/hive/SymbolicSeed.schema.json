@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "SymbolicSeed.schema.json",
+  "title": "SymbolicSeed",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "seed_hash",
+        "source_class",
+        "source_ref",
+        "source_excerpt",
+        "source_locator",
+        "content_text",
+        "pressure_class"
+      ],
+      "properties": {
+        "kind": {
+          "const": "SymbolicSeed"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "stabilized",
+            "translated",
+            "formalized",
+            "retired",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "seed_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_class": {
+          "type": "string",
+          "enum": [
+            "black_book_fragment",
+            "dialogue_fragment",
+            "dag_anomaly",
+            "audit_objection",
+            "operator_prompt",
+            "alexandria_extract",
+            "residue_return"
+          ]
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_excerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_locator": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "section": {
+              "type": "string"
+            },
+            "line_start": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "line_end": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "content_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pressure_class": {
+          "type": "string",
+          "enum": [
+            "definition_pressure",
+            "theorem_pressure",
+            "bridge_pressure",
+            "obstruction_pressure",
+            "audit_pressure",
+            "graph_pressure"
+          ]
+        }
+      }
+    }
+  ]
+}

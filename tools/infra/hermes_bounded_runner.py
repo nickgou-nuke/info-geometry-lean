@@ -29,8 +29,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+from tools.infra.hive_packet_path_runner import emit_packet_chain
+
+
+REPO_ROOT = ROOT
 PACKET_DIR = REPO_ROOT / "quarantine" / "hermes_memory" / "research_packets"
 ARTIFACT_ROOT = REPO_ROOT / "artifacts" / "hermes_loop"
 STATE_PATH = ARTIFACT_ROOT / "state.json"
@@ -573,6 +579,19 @@ def main() -> int:
             "path": str(truth_transport_path),
             "schema": transport_packet["schema"],
         }
+        try:
+            packet_chain = emit_packet_chain(
+                packet=selected.data,
+                packet_path=str(selected.path),
+                planner_text=planner_text,
+                gravity_context=gravity_context,
+                query=query,
+                run_id=run_id,
+                output_root=ARTIFACT_ROOT,
+            )
+            run_payload["packet_chain"] = packet_chain
+        except Exception as exc:  # noqa: BLE001 - packet-chain emission must not break bounded planning
+            run_payload["packet_chain_error"] = repr(exc)
     write_json(run_path, run_payload)
     write_markdown(run_path, selected, prompt, planner_text if not error else error)
 

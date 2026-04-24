@@ -71,6 +71,11 @@ Operational rule:
 - DeepSeek may search Lean-local tactics.
 - Lean/lake remains the only authority for truth.
 
+Authority boundary for live use:
+- use Arango/DAG to locate mass, SCC basin ownership, and promising owner paths,
+- use Arango/DAG to decide where to descend next in raw witnesses or owner source,
+- do not use Arango/DAG to declare proof closure, semantic identity, or theorem truth.
+
 The graph context is strong gravitation: proven code is mass, and proof search should fall through the causal neighborhood of that mass.
 
 ## L0-L5 Layer Visibility

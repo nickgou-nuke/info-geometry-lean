@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "FormulationVariant.schema.json",
+  "title": "FormulationVariant",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "seed_hash",
+        "variant_index",
+        "iteration_index",
+        "jung_pass_id",
+        "representation_mode",
+        "content_text",
+        "summary",
+        "temperature_profile",
+        "confidence",
+        "formal_projection_score"
+      ],
+      "properties": {
+        "kind": {
+          "const": "FormulationVariant"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "stabilized",
+            "translated",
+            "formalized",
+            "retired",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "seed_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variant_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "iteration_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "jung_pass_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representation_mode": {
+          "type": "string",
+          "enum": [
+            "geometric",
+            "categorical",
+            "operatorial",
+            "lean_facing",
+            "thermodynamic",
+            "semantic_bridge",
+            "namespace_shaping"
+          ]
+        },
+        "content_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "temperature_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "formal_projection_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

@@ -84,22 +84,15 @@ private lemma smul_pow_even_of_sq_eq_neg_one
               rw [smul_mul_assoc, mul_smul_comm, smul_smul, one_mul]
         _ = (((-1 : ℝ) ^ (n + 1) * t ^ (2 * (n + 1)))) • (1 : EndH) := by
               congr 1
-              simpa [pow_two, mul_assoc, mul_left_comm, mul_comm] using
-                (show
-                  (-1 : ℝ) ^ n * t ^ (2 * n) * ((-1 : ℝ) * t ^ 2)
-                    = (-1 : ℝ) ^ (n + 1) * t ^ (2 * (n + 1)) from by
-                  calc
-                    (-1 : ℝ) ^ n * t ^ (2 * n) * ((-1 : ℝ) * t ^ 2)
-                        = (((-1 : ℝ) ^ n) * (-1 : ℝ)) * (t ^ (2 * n) * t ^ 2) := by
-                            ring
-                    _ = (-1 : ℝ) ^ (n + 1) * t ^ (2 * n + 2) := by
-                          have hs : ((-1 : ℝ) ^ n) * (-1 : ℝ) = (-1 : ℝ) ^ (n + 1) := by
-                            simp [pow_succ]
-                          have ht : t ^ (2 * n) * t ^ 2 = t ^ (2 * n + 2) := by
-                            simpa using (pow_add t (2 * n) 2).symm
-                          rw [hs, ht]
-                    _ = (-1 : ℝ) ^ (n + 1) * t ^ (2 * (n + 1)) := by
-                          congr 2)
+              have hn :
+                  (-1 : ℝ) ^ (n + 1) = (-1 : ℝ) ^ n * (-1 : ℝ) := by
+                rw [pow_succ]
+              have ht :
+                  t ^ (2 * (n + 1)) = t ^ (2 * n) * t ^ 2 := by
+                rw [show 2 * (n + 1) = 2 * n + 2 by omega]
+                rw [pow_add]
+              rw [hn, ht]
+              ring
 
 omit [CompleteSpace E] in
 private lemma smul_pow_odd_of_sq_eq_neg_one
@@ -224,7 +217,8 @@ theorem KRotation_eq_cos_add_sin_complex_i
 @[simp] theorem JBoost_apply_modular_j
     (t : ℝ) (ψ : H₂) :
     JBoost (E := E) t ψ = (Real.cosh t) • ψ + (Real.sinh t) • (modular_j (E := E) ψ) := by
-  rw [JBoost_apply (E := E) t ψ]
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    JBoost_apply (E := E) t ψ
 
 @[simp] theorem epsilonBoost_apply
     (t : ℝ) (ψ : H₂) :
@@ -237,7 +231,8 @@ theorem KRotation_eq_cos_add_sin_complex_i
     (t : ℝ) (ψ : H₂) :
     epsilonBoost (E := E) t ψ =
       (Real.cosh t) • ψ + (Real.sinh t) • (spectral_epsilon (E := E) ψ) := by
-  rw [epsilonBoost_apply (E := E) t ψ]
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    epsilonBoost_apply (E := E) t ψ
 
 @[simp] theorem KRotation_apply
     (t : ℝ) (ψ : H₂) :
@@ -248,8 +243,8 @@ theorem KRotation_eq_cos_add_sin_complex_i
 @[simp] theorem KRotation_apply_complex_i
     (t : ℝ) (ψ : H₂) :
     KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (complex_i (E := E) ψ) := by
-  rw [KRotation_apply (E := E) t ψ]
-  simp [InfoGeometry.Krein.clockAxis]
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    KRotation_apply (E := E) t ψ
 
 /--
 Phase-linear operators commute with the exact exponential phase propagator.

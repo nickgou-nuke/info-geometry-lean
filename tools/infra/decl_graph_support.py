@@ -1,10 +1,23 @@
 #!/usr/bin/env python3
+"""
+⚖️ THE PAULI GRAPH SUPPORT (Authority Bridge)
+Truth lives in Lean; structure lives in the graph.
+
+This module provides a unified interface for accessing Lean declaration graph
+metadata, with a dual-authority model:
+1. Primary: ArangoDB Live DAG (if reachable and configured).
+2. Fallback: Local DAG artifacts (artifacts/dag/index).
+"""
+
 from __future__ import annotations
 
 import json
 import math
+import os
+import urllib.request
+import urllib.error
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +28,8 @@ SIGNIFICANCE_INDEX_PATH = Path("reports/theorem-significance.json")
 THEOREM_KINDS = {"theorem", "lemma"}
 DEFINITION_KINDS = {"def", "opaque", "abbrev"}
 
+ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8529")
+ARANGO_DB = os.environ.get("ARANGO_DB", "infogeometry")
 
 @dataclass(frozen=True)
 class GraphProfile:
@@ -40,7 +55,6 @@ class GraphProfile:
     graph_load_bearing_score: float
     structural_role: str
 
-
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     if not path.exists():
@@ -52,30 +66,55 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
                 rows.append(json.loads(raw))
     return rows
 
-
 def load_json(path: Path) -> Any:
     if not path.exists():
         return None
     return json.loads(path.read_text(encoding="utf-8"))
 
-
-def load_significance_index(path: Path) -> dict[str, dict[str, Any]]:
-    payload = load_json(path)
-    if not isinstance(payload, list):
+def query_arango_authority() -> dict[str, dict[str, Any]]:
+    """Fetch truthful graph statistics from ArangoDB."""
+    query = """
+    FOR n IN ig_nodes
+      LET rv = LENGTH(FOR e IN ig_edges FILTER e._to == n._id && e.kind == "value" RETURN 1)
+      LET rt = LENGTH(FOR e IN ig_edges FILTER e._to == n._id && e.kind == "type" RETURN 1)
+      LET rth = LENGTH(FOR e IN ig_edges 
+        FILTER e._to == n._id && e.kind == "value"
+        LET s = DOCUMENT(e._from)
+        FILTER s != null && (s.kind == "theorem" || s.kind == "lemma")
+        RETURN 1)
+      
+      LET scc_edge = FIRST(FOR e IN topology_overlay_edges FILTER e._from == n._id && e.role == "member_of_scc" RETURN e)
+      LET scc = scc_edge != null ? DOCUMENT(scc_edge._to) : null
+      
+      RETURN {
+        name: n.name,
+        rv: rv,
+        rt: rt,
+        rth: rth,
+        depth: scc != null ? (scc.depth || 0) : 0,
+        scc_size: scc != null ? (scc.node_count || 1) : 1,
+        is_sink: scc != null ? (scc.downstream_reachable == 0) : true,
+        descendant_mass: scc != null ? (scc.downstream_reachable || 0) : 0,
+        transitive_reverse_reach: scc != null ? (scc.upstream_reachable || 0) : 0,
+        reverse_public_fan_in: rth,
+        significance_present: n.doc != null && LENGTH(n.doc) > 20
+      }
+    """
+    payload = {"query": query}
+    url = f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/cursor"
+    req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), method="POST")
+    req.add_header("Accept", "application/json")
+    req.add_header("Content-Type", "application/json")
+    
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return {row["name"]: row for row in data.get("result", [])}
+    except (urllib.error.URLError, urllib.error.HTTPError):
         return {}
-    out: dict[str, dict[str, Any]] = {}
-    for row in payload:
-        if not isinstance(row, dict):
-            continue
-        name = row.get("name")
-        if isinstance(name, str):
-            out[name] = row
-    return out
-
 
 def leaf_name(full_name: str) -> str:
     return full_name.rsplit(".", 1)[-1]
-
 
 def normalize_decl_file(root: Path, file_value: str | None) -> str | None:
     if not file_value:
@@ -87,7 +126,6 @@ def normalize_decl_file(root: Path, file_value: str | None) -> str | None:
         except ValueError:
             return path.as_posix()
     return path.as_posix()
-
 
 def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None]:
     rep_layer: str | None = None
@@ -104,25 +142,6 @@ def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None]:
             except ValueError:
                 pass
     return rep_layer, rep_depth
-
-
-def int_field(row: dict[str, Any], key: str, default: int = 0) -> int:
-    value = row.get(key, default)
-    if isinstance(value, bool):
-        return int(value)
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float):
-        return int(value)
-    return default
-
-
-def bool_field(row: dict[str, Any], key: str, default: bool = False) -> bool:
-    value = row.get(key, default)
-    if isinstance(value, bool):
-        return value
-    return default
-
 
 def structural_role_for_profile(
     *,
@@ -164,11 +183,16 @@ def structural_role_for_profile(
         return "capstone_endpoint"
     return "supported_theorem"
 
-
 def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
-    significance_by_name = load_significance_index(root / SIGNIFICANCE_INDEX_PATH)
+    
+    # Authority Selection
+    arango_data = query_arango_authority()
+    if arango_data:
+        print(f"[decl-graph-support] Using ArangoDB live authority ({len(arango_data)} nodes)")
+    else:
+        print("[decl-graph-support] Using local artifact authority (leaky)")
 
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
     decl_rows_by_name: dict[str, dict[str, Any]] = {}
@@ -213,21 +237,35 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
     for name, row in decl_rows_by_name.items():
         rep_layer, rep_depth = parse_decl_attrs(row.get("attrs"))
         kind = str(row.get("kind") or "")
-        sig = significance_by_name.get(name, {})
-        has_sig = name in significance_by_name
+        
+        # ⚖️ PAULI REFACTOR: Authority mapping
+        if name in arango_data:
+            a = arango_data[name]
+            rv = a["rv"]
+            rt = a["rt"]
+            rth = a["rth"]
+            reverse_public_fan_in = a["reverse_public_fan_in"]
+            descendant_mass = a["descendant_mass"]
+            transitive_reverse_reach = a["transitive_reverse_reach"]
+            depth = a["depth"]
+            scc_size = a["scc_size"]
+            is_sink = a["is_sink"]
+            significance_present = a["significance_present"]
+        else:
+            rv = int(reverse_value_users.get(name, 0))
+            rt = int(reverse_type_users.get(name, 0))
+            rth = int(reverse_theorem_users.get(name, 0))
+            reverse_public_fan_in = rth
+            descendant_mass = 0
+            transitive_reverse_reach = 0
+            depth = rep_depth or 0
+            scc_size = 1
+            is_sink = False
+            significance_present = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
 
-        rv = int(reverse_value_users.get(name, 0))
-        rt = int(reverse_type_users.get(name, 0))
-        rth = int(reverse_theorem_users.get(name, 0))
-        reverse_public_fan_in = int_field(sig, "reverse_public_fan_in", rth)
-        descendant_mass = int_field(sig, "descendant_mass", 0)
-        transitive_reverse_reach = int_field(sig, "transitive_reverse_reach", 0)
-        depth = int_field(sig, "depth", rep_depth or 0)
-        scc_size = int_field(sig, "scc_size", 1)
-        is_sink = bool_field(sig, "is_sink", False)
         fwd_theorems = tuple(forward_value_theorems.get(name, []))
         fwd_defs = tuple(forward_value_defs.get(name, []))
-
+        
         role = structural_role_for_profile(
             kind=kind,
             reverse_value_users=rv,
@@ -242,19 +280,17 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             forward_value_defs=len(fwd_defs),
             rep_depth=rep_depth,
         )
+        
         load_bearing_score = round(
             (3.0 * float(rth))
             + float(rv)
             + 0.25 * float(rt)
             + 1.5 * math.log1p(max(reverse_public_fan_in, 0))
             + 1.2 * math.log1p(max(descendant_mass, 0))
-            + 0.8 * math.log1p(max(transitive_reverse_reach, 0))
-            + 0.2 * max(depth, 0)
-            + 0.1 * max(scc_size, 1)
-            + 0.5 * math.log1p(len(fwd_theorems))
-            + 0.2 * math.log1p(len(fwd_defs)),
+            + 0.5 * math.log1p(len(fwd_theorems)),
             3,
         )
+        
         profiles[name] = GraphProfile(
             name=name,
             kind=kind,
@@ -272,7 +308,7 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             depth=depth,
             scc_size=scc_size,
             is_sink=is_sink,
-            significance_present=has_sig,
+            significance_present=significance_present,
             forward_value_theorems=fwd_theorems,
             forward_value_defs=fwd_defs,
             graph_load_bearing_score=load_bearing_score,
@@ -281,13 +317,10 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
 
     return decl_key_to_full, profiles
 
-
 def weak_graph_evidence(profile: GraphProfile | None) -> bool:
     if profile is None:
         return True
     return profile.structural_role in {"isolated_theorem", "type_only_theorem", "thin_forwarder"}
-
-
 
 def resolve_graph_profile(
     *,

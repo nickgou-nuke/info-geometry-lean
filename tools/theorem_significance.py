@@ -17,7 +17,8 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
+    # Insert repository root so `tools.*` imports resolve when executed as a script.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from tools.infra.decl_graph_support import load_decl_graph
     from tools.pathing import repo_root
 else:
@@ -114,9 +115,37 @@ def main() -> int:
         md_lines.append(f"| `{v['name']}` | `{v['file']}:{v['line']}` |")
 
     report_path = root / "reports" / "theorem-significance.md"
-    report_path.write_text("\n".join(md_lines))
-    
+    report_path.write_text("\n".join(md_lines), encoding="utf-8")
+
+    json_path = root / "reports" / "theorem-significance.json"
+    json_payload: list[dict[str, Any]] = []
+    for name, p in profiles.items():
+        json_payload.append(
+            {
+                "name": name,
+                "kind": p.kind,
+                "file": p.file,
+                "line": p.line,
+                "structural_role": p.structural_role,
+                "reverse_public_fan_in": p.reverse_public_fan_in,
+                "reverse_theorem_users": p.reverse_theorem_users,
+                "reverse_value_users": p.reverse_value_users,
+                "reverse_type_users": p.reverse_type_users,
+                "descendant_mass": p.descendant_mass,
+                "transitive_reverse_reach": p.transitive_reverse_reach,
+                "depth": p.depth,
+                "scc_size": p.scc_size,
+                "is_sink": p.is_sink,
+                "classification_basis": "graph-topology",
+                "graph_grounded_signal": True,
+                "heuristic_signal": False,
+                "hard_verdict_allowed": True,
+            }
+        )
+    json_path.write_text(json.dumps(json_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     print(f"[pauli-audit] Formal audit complete. Wrote {report_path.relative_to(root)}")
+    print(f"[pauli-audit] Machine report: {json_path.relative_to(root)}")
     return 0
 
 if __name__ == "__main__":

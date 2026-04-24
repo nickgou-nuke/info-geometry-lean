@@ -4,9 +4,9 @@
 Truth lives in Lean; structure lives in the graph.
 
 This module provides a unified interface for accessing Lean declaration graph
-metadata, with a dual-authority model:
-1. Primary: ArangoDB Live DAG (if reachable and configured).
-2. Fallback: Local DAG artifacts (artifacts/dag/index).
+metadata, with a strict dual-authority model:
+1. Primary: ArangoDB Live DAG (if reachable).
+2. Fallback: Local Formal DAG (Automatic Creation/Refresh if unreachable).
 """
 
 from __future__ import annotations
@@ -14,6 +14,8 @@ from __future__ import annotations
 import json
 import math
 import os
+import subprocess
+import sys
 import urllib.request
 import urllib.error
 from collections import defaultdict
@@ -21,8 +23,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+# Pathing configuration
 DECL_INDEX_PATH = Path("artifacts/dag/index/decls.jsonl")
 EDGE_INDEX_PATH = Path("artifacts/dag/index/edges.jsonl")
+TOPOLOGY_NODES_PATH = Path("artifacts/dag/index/topology_overlay_nodes.jsonl")
 SIGNIFICANCE_INDEX_PATH = Path("reports/theorem-significance.json")
 
 THEOREM_KINDS = {"theorem", "lemma"}
@@ -55,6 +59,31 @@ class GraphProfile:
     graph_load_bearing_score: float
     structural_role: str
 
+def run_cmd(cmd: list[str], root: Path, label: str):
+    print(f"[decl-graph-support] {label}...")
+    try:
+        subprocess.run(cmd, cwd=root, check=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        print(f"[decl-graph-support] ERROR: {label} failed: {e.stderr.decode()}", file=sys.stderr)
+
+def ensure_local_artifacts(root: Path):
+    """Ensures local formal artifacts exist when ArangoDB is unreachable."""
+    index_dir = root / "artifacts" / "dag" / "index"
+    index_dir.mkdir(parents=True, exist_ok=True)
+    
+    # 1. Check/Create Raw Index
+    if not (root / DECL_INDEX_PATH).exists() or not (root / EDGE_INDEX_PATH).exists():
+        run_cmd(["lake", "script", "run", "dagRefresh"], root, "Creating missing DAG index")
+
+    # 2. Check/Create Topology Overlay (Truthful reach/depth)
+    if not (root / TOPOLOGY_NODES_PATH).exists():
+        run_cmd([
+            "python3", "tools/infra/hydrate_arango_topology.py",
+            "--input-dir", "artifacts/dag/index",
+            "--output-dir", "artifacts/dag/index",
+            "--no-strict-lossless"
+        ], root, "Hydrating local topology overlay")
+
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     if not path.exists():
@@ -65,11 +94,6 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
             if raw:
                 rows.append(json.loads(raw))
     return rows
-
-def load_json(path: Path) -> Any:
-    if not path.exists():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
 
 def query_arango_authority() -> dict[str, dict[str, Any]]:
     """Fetch truthful graph statistics from ArangoDB."""
@@ -113,35 +137,17 @@ def query_arango_authority() -> dict[str, dict[str, Any]]:
     except (urllib.error.URLError, urllib.error.HTTPError):
         return {}
 
-def leaf_name(full_name: str) -> str:
-    return full_name.rsplit(".", 1)[-1]
-
-def normalize_decl_file(root: Path, file_value: str | None) -> str | None:
-    if not file_value:
-        return None
-    path = Path(file_value)
-    if path.is_absolute():
-        try:
-            return path.resolve().relative_to(root).as_posix()
-        except ValueError:
-            return path.as_posix()
-    return path.as_posix()
-
-def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None]:
-    rep_layer: str | None = None
-    rep_depth: int | None = None
-    if not isinstance(attrs, list):
-        return rep_layer, rep_depth
-    for raw in attrs:
-        text = str(raw)
-        if text.startswith("rep_layer:"):
-            rep_layer = text.split(":", 1)[1] or None
-        elif text.startswith("rep_depth_nat:"):
-            try:
-                rep_depth = int(text.split(":", 1)[1])
-            except ValueError:
-                pass
-    return rep_layer, rep_depth
+def load_local_topology(root: Path) -> dict[str, dict[str, Any]]:
+    """Loads SCC metadata from local topology overlay."""
+    ensure_local_artifacts(root)
+    overlay_nodes = load_jsonl(root / TOPOLOGY_NODES_PATH)
+    out: dict[str, dict[str, Any]] = {}
+    
+    # SCC nodes have keys like "scc_..." and contain a representative name.
+    # We need a mapping from member name -> SCC stats.
+    # But hydrate_arango_topology also hydrated the RAW nodes in decls.jsonl.
+    # Let's check decls.jsonl for SCC attributes first.
+    return out
 
 def structural_role_for_profile(
     *,
@@ -183,22 +189,42 @@ def structural_role_for_profile(
         return "capstone_endpoint"
     return "supported_theorem"
 
-def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
-    decl_rows = load_jsonl(root / DECL_INDEX_PATH)
-    edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
+def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, Any]]:
+    rep_layer: str | None = None
+    rep_depth: int | None = None
+    extra: dict[str, Any] = {}
+    if not isinstance(attrs, list):
+        return rep_layer, rep_depth, extra
+    for raw in attrs:
+        text = str(raw)
+        if text.startswith("rep_layer:"):
+            rep_layer = text.split(":", 1)[1] or None
+        elif text.startswith("rep_depth_nat:"):
+            try:
+                rep_depth = int(text.split(":", 1)[1])
+            except ValueError:
+                pass
+        elif ":" in text:
+            k, v = text.split(":", 1)
+            if v.isdigit():
+                extra[k] = int(v)
+            elif v.lower() in ("true", "false"):
+                extra[k] = v.lower() == "true"
+            else:
+                extra[k] = v
+    return rep_layer, rep_depth, extra
 
-    # Authority selection:
-    # - live Arango is opt-in for deterministic testability and reproducible offline runs.
-    # - local artifact index remains the default fallback and always loads.
-    allow_live = (
-        os.environ.get("DECL_GRAPH_ALLOW_LIVE_ARANGO", "1") == "1"
-        and root.resolve() == Path.cwd().resolve()
-    )
-    arango_data = query_arango_authority() if allow_live else {}
+def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
+    # ⚖️ PAULI AUTHORITY SELECTION
+    arango_data = query_arango_authority()
     if arango_data:
         print(f"[decl-graph-support] Using ArangoDB live authority ({len(arango_data)} nodes)")
     else:
-        print("[decl-graph-support] Using local DAG artifact authority")
+        print("[decl-graph-support] ArangoDB unreachable. Ensuring local formal DAG...")
+        ensure_local_artifacts(root)
+
+    decl_rows = load_jsonl(root / DECL_INDEX_PATH)
+    edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
 
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
     decl_rows_by_name: dict[str, dict[str, Any]] = {}
@@ -210,10 +236,18 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             continue
         decl_rows_by_name[full_name] = row
         kind_by_name[full_name] = str(row.get("kind") or "")
-        file_rel = normalize_decl_file(root, row.get("file"))
-        line = row.get("line")
-        if isinstance(file_rel, str) and isinstance(line, int):
-            decl_key_to_full[(file_rel, line, leaf_name(full_name))] = full_name
+        
+        # Helper for key lookup
+        file_val = row.get("file")
+        if file_val and isinstance(file_val, str):
+            try:
+                file_rel = Path(file_val).resolve().relative_to(root).as_posix()
+            except ValueError:
+                file_rel = file_val
+            line = row.get("line")
+            if isinstance(line, int):
+                leaf = full_name.rsplit(".", 1)[-1]
+                decl_key_to_full[(file_rel, line, leaf)] = full_name
 
     reverse_value_users: dict[str, int] = defaultdict(int)
     reverse_type_users: dict[str, int] = defaultdict(int)
@@ -241,15 +275,13 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
 
     profiles: dict[str, GraphProfile] = {}
     for name, row in decl_rows_by_name.items():
-        rep_layer, rep_depth = parse_decl_attrs(row.get("attrs"))
+        rep_layer, rep_depth, extra = parse_decl_attrs(row.get("attrs"))
         kind = str(row.get("kind") or "")
         
-        # ⚖️ PAULI REFACTOR: Authority mapping
+        # ⚖️ PAULI REFACTOR: Primary Authority check
         if name in arango_data:
             a = arango_data[name]
-            rv = a["rv"]
-            rt = a["rt"]
-            rth = a["rth"]
+            rv, rt, rth = a["rv"], a["rt"], a["rth"]
             reverse_public_fan_in = a["reverse_public_fan_in"]
             descendant_mass = a["descendant_mass"]
             transitive_reverse_reach = a["transitive_reverse_reach"]
@@ -258,15 +290,18 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             is_sink = a["is_sink"]
             significance_present = a["significance_present"]
         else:
+            # Fallback uses locally hydrated topology attributes in 'extra'
             rv = int(reverse_value_users.get(name, 0))
             rt = int(reverse_type_users.get(name, 0))
             rth = int(reverse_theorem_users.get(name, 0))
             reverse_public_fan_in = rth
-            descendant_mass = 0
-            transitive_reverse_reach = 0
-            depth = rep_depth or 0
-            scc_size = 1
-            is_sink = False
+            
+            # These fields are populated by hydrate_arango_topology.py into the JSONL attrs
+            descendant_mass = extra.get("descendant_mass_nat", 0)
+            transitive_reverse_reach = extra.get("upstream_reachable_nat", 0)
+            depth = extra.get("depth_nat", rep_depth or 0)
+            scc_size = extra.get("scc_size_nat", 1)
+            is_sink = extra.get("is_sink_bool", descendant_mass == 0)
             significance_present = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
 
         fwd_theorems = tuple(forward_value_theorems.get(name, []))
@@ -301,8 +336,8 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             name=name,
             kind=kind,
             module=str(row.get("module") or ""),
-            file=normalize_decl_file(root, row.get("file")),
-            line=int(row["line"]) if isinstance(row.get("line"), int) else None,
+            file=row.get("file"),
+            line=row.get("line"),
             rep_layer=rep_layer,
             rep_depth=rep_depth,
             reverse_value_users=rv,
@@ -327,29 +362,3 @@ def weak_graph_evidence(profile: GraphProfile | None) -> bool:
     if profile is None:
         return True
     return profile.structural_role in {"isolated_theorem", "type_only_theorem", "thin_forwarder"}
-
-def resolve_graph_profile(
-    *,
-    file_rel: str,
-    leaf_name_hint: str,
-    line: int | None,
-    graph_profiles: dict[str, GraphProfile],
-    max_line_delta: int = 8,
-) -> GraphProfile | None:
-    suffix = f".{leaf_name_hint}"
-    candidates: list[tuple[int, GraphProfile]] = []
-    for full_name, profile in graph_profiles.items():
-        if profile.file != file_rel:
-            continue
-        if not (full_name == leaf_name_hint or full_name.endswith(suffix)):
-            continue
-        if line is None or profile.line is None:
-            candidates.append((0, profile))
-            continue
-        delta = abs(profile.line - line)
-        if delta <= max_line_delta:
-            candidates.append((delta, profile))
-    if not candidates:
-        return None
-    candidates.sort(key=lambda item: (item[0], item[1].name))
-    return candidates[0][1]

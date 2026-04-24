@@ -80,6 +80,26 @@ theorem absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume
 
 omit [FiniteDimensional ℝ E] in
 /--
+Potential-form Cramer-Rao closure from the RN entropy source and unit
+relative-volume hypothesis.
+-/
+theorem cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (x : E) :
+    cramerRaoMetricVolumePotential Kgeo.H x = 0 := by
+  exact MongeAmpereCramerRao.cramerRaoMetricVolumePotential_eq_zero_of_incompressible
+    (H := Kgeo.H)
+    (hIncomp :=
+      incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
+        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit)
+    (x := x)
+
+omit [FiniteDimensional ℝ E] in
+/--
 Direct logarithmic Cramer-Rao closure from the RN entropy source and unit
 relative-volume hypothesis.
 -/
@@ -91,12 +111,13 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolu
     (hUnit : relativeVolumeChangeRN n M = 1)
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap|) = 0 := by
-  exact MongeAmpereCramerRao.logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
-    (H := Kgeo.H)
-    (hIncomp :=
-      incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
-        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit)
-    (x := x)
+  have hPotentialZero : cramerRaoMetricVolumePotential Kgeo.H x = 0 :=
+    cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit x
+  have hNegLogZero : -Real.log (|LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap|) = 0 := by
+    simpa [cramerRaoMetricVolumePotential, cramerRaoMetricVolumeShadow,
+      MongeAmpereCramerRao.cramerRaoMetricOperatorOwner, cramerRaoMetricOp] using hPotentialZero
+  linarith
 
 omit [FiniteDimensional ℝ E] in
 /--

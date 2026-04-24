@@ -106,21 +106,17 @@ theorem chiralScale_eq_zero_of_incompressible
     CI.chiralScale = 0 := by
   have bit : IncompressibleCramerRaoBit H :=
     incompressibleCramerRaoBit_of_incompressible hIncomp
-  have hScale :
-      CI.chiralScale =
-        -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := by
+  have hScalePotential :
+      CI.chiralScale = cramerRaoVolumePotential H x := by
     simpa [souriauFisherMetricVolumePotential, souriauFisherMetricVolumeShadow,
-      souriauFisherMetricOperator] using
+      souriauFisherMetricOperator, cramerRaoVolumePotential, cramerRaoVolumeShadow,
+      IncompressibleBitBridge.cramerRaoMetricOperatorOwner] using
         CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
-  have hLogZero :
-      Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 :=
-    logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit
-      (H := H) bit x
+  have hPotentialZero : cramerRaoVolumePotential H x = 0 :=
+    cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
   calc
-    CI.chiralScale
-        = -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := hScale
-    _ = -0 := by rw [hLogZero]
-    _ = 0 := by simp
+    CI.chiralScale = cramerRaoVolumePotential H x := hScalePotential
+    _ = 0 := hPotentialZero
 
 /--
 The same readout constructively yields the normal conformal phase.
@@ -130,9 +126,16 @@ theorem normalInference_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :
     CI.IsNormalInference := by
-  simpa [ConformalInference.IsNormalInference] using
-    CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_zero_of_incompressible
-      R hIncomp x
+  have bit : IncompressibleCramerRaoBit H :=
+    incompressibleCramerRaoBit_of_incompressible hIncomp
+  have hScalePotential :
+      CI.chiralScale = cramerRaoVolumePotential H x := by
+    simpa [souriauFisherMetricVolumePotential, souriauFisherMetricVolumeShadow,
+      souriauFisherMetricOperator, cramerRaoVolumePotential, cramerRaoVolumeShadow,
+      IncompressibleBitBridge.cramerRaoMetricOperatorOwner] using
+        CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
+  exact isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+    (CI := CI) (H := H) bit x hScalePotential
 
 /--
 The same readout identifies the conformal unit of action with the negative

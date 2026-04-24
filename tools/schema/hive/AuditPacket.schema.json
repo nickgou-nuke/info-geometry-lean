@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "AuditPacket.schema.json",
+  "title": "AuditPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "build_ref",
+        "audit_key",
+        "audit_scope",
+        "audit_outcome",
+        "evidence_summary"
+      ],
+      "properties": {
+        "kind": {
+          "const": "AuditPacket"
+        },
+        "status": {
+          "enum": [
+            "deferred",
+            "gated",
+            "in_progress",
+            "approved",
+            "rejected",
+            "needs_retry"
+          ]
+        },
+        "authority": {
+          "const": "audit_checked"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_ref": {
+          "$ref": "source_ref.schema.json"
+        },
+        "audit_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_scope": {
+          "type": "string",
+          "enum": [
+            "correctness",
+            "safety",
+            "build",
+            "promotion"
+          ]
+        },
+        "audit_findings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "audit_outcome": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "evidence_summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

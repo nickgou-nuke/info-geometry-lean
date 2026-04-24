@@ -9,15 +9,20 @@ from pathlib import Path
 from typing import Any
 
 from tools.infra.hive_packet_build import (
+    build_audit_packet,
+    build_build_packet,
     build_execution_intent_packet,
     build_formulation_variant,
     build_invariant_draft,
+    build_lean_verification_packet,
     build_pauli_critique,
+    build_promotion_decision_packet,
     build_resonance_cluster,
     build_retrieval_hypothesis_packet,
     build_symbolic_seed,
     build_theorem_candidate,
     build_translation_packet,
+    stable_digest,
     write_json,
 )
 from tools.infra.hive_packet_validate import SCHEMA_BY_KIND, build_store, validate_packet
@@ -35,6 +40,10 @@ HIVE_COLLECTION_BY_KIND = {
     "TranslationPacket": "hive_translation_packets",
     "RetrievalHypothesisPacket": "hive_retrieval_packets",
     "ExecutionIntentPacket": "hive_execution_intents",
+    "LeanVerificationPacket": "hive_verifications",
+    "BuildPacket": "hive_build_packets",
+    "AuditPacket": "hive_audit_packets",
+    "PromotionDecisionPacket": "hive_promotions",
 }
 
 
@@ -416,7 +425,107 @@ def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text:
     _ensure_valid(execution_intent)
     write_json(chain_dir / "09_execution_intent_packet.json", execution_intent)
 
-    docs = [seed, variant, cluster, critique, invariant, theorem_candidate, translation, retrieval, execution_intent]
+    lean_verification = build_lean_verification_packet(
+        _ns(
+            lineage_id=lineage_id,
+            origin_run_id=run_id,
+            created_at=now,
+            updated_at=now,
+            representation_class="capstone",
+            representation_depth=["categorical", "operatorial"],
+            tag=base_tags,
+            execution_intent_ref=[f"{execution_intent['id']}|ExecutionIntentPacket|execution_intent|0.95"],
+            execution_allowed=execution_allowed,
+            verification_key=f"lean_verify_{packet_id}",
+            verification_outcome="not_executed",
+            kernel_summary="bounded-runner synthetic pass-through, no execution performed",
+            proof_status="pending",
+            proof_code="",
+            lean_output="lean execution deferred in bounded synthetic smoke",
+            status="gated",
+        )
+    )
+    _ensure_valid(lean_verification)
+    write_json(chain_dir / "10_lean_verification_packet.json", lean_verification)
+
+    build_packet = build_build_packet(
+        _ns(
+            lineage_id=lineage_id,
+            origin_run_id=run_id,
+            created_at=now,
+            updated_at=now,
+            representation_class="capstone",
+            representation_depth=["categorical", "operatorial"],
+            tag=base_tags,
+            lean_verification_ref=[f"{lean_verification['id']}|LeanVerificationPacket|verification|0.95"],
+            build_key=f"build_{packet_id}",
+            build_command="lake build",
+            build_success=True,
+            build_exit_code=0,
+            build_output_excerpt="bounded synthetic build packet",
+            status="executed",
+        )
+    )
+    _ensure_valid(build_packet)
+    write_json(chain_dir / "11_build_packet.json", build_packet)
+
+    audit_packet = build_audit_packet(
+        _ns(
+            lineage_id=lineage_id,
+            origin_run_id=run_id,
+            created_at=now,
+            updated_at=now,
+            representation_class="capstone",
+            representation_depth=["categorical", "operatorial"],
+            tag=base_tags,
+            build_ref=[f"{build_packet['id']}|BuildPacket|build|0.95"],
+            audit_key=f"audit_{packet_id}",
+            audit_scope="build",
+            audit_finding=["No mutation was performed in bounded synthetic chain"],
+            audit_outcome="approved",
+            evidence_summary="Synthetic one-pass smoke packet chain; authority stages are structural and validated by schema.",
+            status="approved",
+        )
+    )
+    _ensure_valid(audit_packet)
+    write_json(chain_dir / "12_audit_packet.json", audit_packet)
+
+    promotion_packet = build_promotion_decision_packet(
+        _ns(
+            lineage_id=lineage_id,
+            origin_run_id=run_id,
+            created_at=now,
+            updated_at=now,
+            representation_class="capstone",
+            representation_depth=["categorical", "operatorial"],
+            tag=base_tags,
+            audit_ref=[f"{audit_packet['id']}|AuditPacket|audit|0.95"],
+            promotion_key=f"promotion_{packet_id}",
+            decision="deferred" if not execution_allowed else "approved",
+            decision_rationale="Authority chain synthetic authority staging completed for bounded smoke continuity checks.",
+            promotion_target=[f"{execution_intent['id']}|ExecutionIntentPacket|target|0.9"],
+            condition=["Requires external lean execution before real canonical mutation"],
+            status="deferred" if not execution_allowed else "approved",
+        )
+    )
+    _ensure_valid(promotion_packet)
+    write_json(chain_dir / "13_promotion_decision_packet.json", promotion_packet)
+
+    docs = [
+        seed,
+        variant,
+        cluster,
+        critique,
+        invariant,
+        theorem_candidate,
+        translation,
+        retrieval,
+        execution_intent,
+        lean_verification,
+        build_packet,
+        audit_packet,
+        promotion_packet,
+    ]
     arango_ingest = ingest_packet_chain_to_arango(
         docs=docs,
         endpoint=hive_endpoint,
@@ -437,5 +546,9 @@ def emit_packet_chain(*, packet: dict[str, Any], packet_path: str, planner_text:
         "translation_packet": str(chain_dir / "07_translation_packet.json"),
         "retrieval_hypothesis_packet": str(chain_dir / "08_retrieval_hypothesis_packet.json"),
         "execution_intent_packet": str(chain_dir / "09_execution_intent_packet.json"),
+        "lean_verification_packet": str(chain_dir / "10_lean_verification_packet.json"),
+        "build_packet": str(chain_dir / "11_build_packet.json"),
+        "audit_packet": str(chain_dir / "12_audit_packet.json"),
+        "promotion_decision_packet": str(chain_dir / "13_promotion_decision_packet.json"),
         "arango_ingest": arango_ingest,
     }

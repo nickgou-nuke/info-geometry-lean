@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PromotionDecisionPacket.schema.json",
+  "title": "PromotionDecisionPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "audit_ref",
+        "promotion_key",
+        "decision",
+        "decision_rationale"
+      ],
+      "properties": {
+        "kind": {
+          "const": "PromotionDecisionPacket"
+        },
+        "status": {
+          "enum": [
+            "deferred",
+            "rejected",
+            "approved",
+            "promoted"
+          ]
+        },
+        "authority": {
+          "const": "promoted"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_ref": {
+          "$ref": "source_ref.schema.json"
+        },
+        "promotion_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "deferred",
+            "rejected"
+          ]
+        },
+        "decision_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "promotion_targets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

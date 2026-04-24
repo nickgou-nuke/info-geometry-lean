@@ -93,6 +93,7 @@ Use these first when you want the current repo state:
 - [OperationalIntent.md](OperationalIntent.md)
 - [OperatorQuickstart.md](OperatorQuickstart.md)
 - [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
+- [GeneratedArtifactsPolicy.md](GeneratedArtifactsPolicy.md) — Canonical-source vs generated-artifact boundary, with regeneration rules for DAG/Arango/Alexandria/Hermes outputs.
 - [ClosureDebtLedger.md](ClosureDebtLedger.md)
 - [LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md)
 - [information_symmetry_breaking_explorer.html](information_symmetry_breaking_explorer.html) — Interactive Cartan \(k/p\) phase explorer for defect excitation and Sinkhorn damping trajectories.

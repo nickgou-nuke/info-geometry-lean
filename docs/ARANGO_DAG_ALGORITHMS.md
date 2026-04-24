@@ -37,6 +37,30 @@ It writes only:
 
 The overlay is navigation data, not Lean proof authority.
 
+## Navigation-only authority boundary
+
+Use the DAG overlay to answer questions such as:
+- which SCC basin currently owns a bridge pressure,
+- whether there is an existing owner path worth descending into,
+- which upstream/downstream owner surfaces should be inspected next,
+- where the nearest lawful raw witnesses live.
+
+Do not use the overlay to answer questions such as:
+- whether a theorem is true,
+- whether a bridge closes mathematically,
+- whether graph proximity is itself semantic proof,
+- whether an SCC path can discharge a Lean obligation.
+
+Operational rule:
+
+```text
+Arango/DAG answers navigation and basin-ownership questions.
+Lean answers typing, hypotheses, proof, and closure questions.
+```
+
+The DAG layer is therefore a descent planner and mass locator, not a theorem
+oracle.
+
 ## Source Graph
 
 Default source:

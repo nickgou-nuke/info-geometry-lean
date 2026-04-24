@@ -56,6 +56,34 @@ variable (U : UnifiedSuperchargePackage (E := E))
 noncomputable def ownerTranslationCandidate : EndH :=
   (2 : ℝ) • U.drazinTranslationCandidate
 
+/--
+The owner translation lane remains spectrally compact on the current Drazin
+slice.
+
+This is the direct owner witness showing that the doubled kinetic lane stays in
+the even/spectral-compact sector inherited from `Q_D²`.
+-/
+@[rep_depth transport]
+theorem ownerTranslationCandidate_isSpectralCompact :
+    U.kernel.IsSpectralCompact (ownerTranslationCandidate U) := by
+  rw [InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS
+    (CIK := U.kernel) (X := ownerTranslationCandidate U)]
+  have hT :
+      ownerTranslationCandidate U * U.kernel.GammaS
+        =
+      U.kernel.GammaS * ownerTranslationCandidate U := by
+    have hBase :
+        U.drazinTranslationCandidate * U.kernel.GammaS
+          =
+        U.kernel.GammaS * U.drazinTranslationCandidate := by
+      exact
+        (InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS
+          (CIK := U.kernel) (X := U.drazinTranslationCandidate)).1
+          (InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.drazinTranslationCandidate_isSpectralCompact
+            (U := U))
+    simp [ownerTranslationCandidate, hBase]
+  exact hT
+
 /-- On the Drazin owner slice, the central lane is the owned central candidate. -/
 @[rep_depth transport]
 noncomputable def ownerCentralCandidate : EndH :=

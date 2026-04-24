@@ -11,12 +11,14 @@ open scoped InnerProductSpace
 Proof-carrying bridge from the repo-owned unified Drazin supercharge lane to the
 generic topological-gap shadow interface.
 
-This file stays honest about the current closure boundary:
+This file exports the repo-owned unified Drazin odd-odd lane into the generic
+topological-gap shadow interface.
 
 * `TopologicalGapShadow` owns the gap/core/excited-sector API,
-* `UnifiedSuperchargeOddOddBridge` owns the derived odd-odd decomposition,
-* the identification between `{Q_D, Q_D†}` and the owner odd-odd closure is
-  carried explicitly as compatibility data until the repo owns it as a theorem.
+* `UnifiedSuperchargeOddOddBridge` owns the derived odd-odd decomposition.
+
+Because the gap owner now uses the same real odd-odd self-closure `{Q_D, Q_D}`
+as the unified Drazin lane, no extra compatibility hypothesis is needed here.
 -/
 
 namespace InfoGeometry.Canonical.UnifiedTopologicalGapBridge
@@ -43,15 +45,11 @@ local instance : CompleteSpace EndH := inferInstance
 local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
-/--
-Compatibility packet tying the unified Drazin owner lane to the generic gap
-shadow on the same carrier.
--/
+/-- Bridge packet tying the unified Drazin owner lane to the generic gap
+shadow on the same carrier. -/
 @[rep_depth transport]
 structure UnifiedTopologicalGapCompatibility where
   U : InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E)
-  qd_hopping_eq_ownerOddOdd :
-    susyHoppingOperator U.QD = oddOddBracket U.QD U.QD
 
 namespace UnifiedTopologicalGapCompatibility
 
@@ -77,7 +75,7 @@ noncomputable def ownerExcitedStateSector : Submodule ℝ H₂ :=
 
 /--
 The unified Drazin supercharge induces the same hopping/gap operator as the
-repo-owned odd-odd closure, by explicit compatibility data.
+repo-owned odd-odd closure by the repo-native self-bracket identity.
 -/
 @[rep_depth transport]
 theorem susyHoppingOperator_QD_eq_ownerOddOdd :
@@ -87,7 +85,8 @@ theorem susyHoppingOperator_QD_eq_ownerOddOdd :
     oddOddBracket
         (InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
         (InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U) :=
-  C.qd_hopping_eq_ownerOddOdd
+  InfoGeometry.Canonical.SuperchargeHoppingBridge.susyHoppingOperator_eq_oddOddBracket_self
+    (Q := InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
 
 /--
 On the owner slice, the gap operator decomposes into translation, central, and

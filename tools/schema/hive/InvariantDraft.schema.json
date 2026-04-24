@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "InvariantDraft.schema.json",
+  "title": "InvariantDraft",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "iteration_index",
+        "invariant_text",
+        "invariant_class",
+        "bridge_claim",
+        "novelty_defense_summary",
+        "formal_projection_summary",
+        "repo_anchor_summary",
+        "confidence",
+        "stability_score"
+      ],
+      "properties": {
+        "kind": {
+          "const": "InvariantDraft"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "stabilized",
+            "translated",
+            "formalized",
+            "retired",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "iteration_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "invariant_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invariant_class": {
+          "type": "string",
+          "enum": [
+            "theorem_shape",
+            "definition_need",
+            "bridge_relation",
+            "lemma_family",
+            "obstruction_pattern"
+          ]
+        },
+        "bridge_claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "novelty_defense_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formal_projection_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo_anchor_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stability_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  ]
+}

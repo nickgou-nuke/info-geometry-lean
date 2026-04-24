@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PauliCritique.schema.json",
+  "title": "PauliCritique",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "iteration_index",
+        "critique_mode",
+        "target_scope",
+        "critique_text",
+        "novelty_assessment",
+        "duplication_assessment",
+        "formal_target_assessment",
+        "repo_anchor_assessment",
+        "admissibility_state",
+        "cost_class"
+      ],
+      "properties": {
+        "kind": {
+          "const": "PauliCritique"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "stabilized",
+            "translated",
+            "formalized",
+            "retired",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "iteration_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critique_mode": {
+          "type": "string",
+          "enum": [
+            "branch_separation",
+            "novelty_defense",
+            "duplication_collapse",
+            "formal_projection_pressure",
+            "repo_anchor_pressure",
+            "architecture_legality"
+          ]
+        },
+        "target_scope": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "variant_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "source_ref.schema.json"
+              }
+            },
+            "cluster_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "source_ref.schema.json"
+              }
+            },
+            "invariant_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "source_ref.schema.json"
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "critique_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "novelty_assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duplication_assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formal_target_assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repo_anchor_assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "admissibility_state": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "emergent",
+            "plausible",
+            "needs_anchor",
+            "needs_translation",
+            "inadmissible",
+            "admissible_for_probe",
+            "admissible_for_build"
+          ]
+        },
+        "cost_class": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "very_high",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

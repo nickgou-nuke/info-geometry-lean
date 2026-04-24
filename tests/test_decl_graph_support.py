@@ -20,7 +20,16 @@ class DeclGraphSupportTests(unittest.TestCase):
                     "module": "InfoGeometry",
                     "file": str(root / "lean/InfoGeometry/A.lean"),
                     "line": 10,
-                    "attrs": ["rep_layer:L3", "rep_depth_nat:3"],
+                    "attrs": [
+                        "rep_layer:L3",
+                        "rep_depth_nat:3",
+                        "descendant_mass_nat:2",
+                        "upstream_reachable_nat:3",
+                        "depth_nat:1",
+                        "scc_size_nat:1",
+                        "is_sink_bool:true",
+                    ],
+                    "doc": "this theorem carries enough description",
                 },
                 {
                     "name": "InfoGeometry.B",
@@ -76,7 +85,7 @@ class DeclGraphSupportTests(unittest.TestCase):
             self.assertEqual(a.reverse_value_users, 1)
             self.assertEqual(a.reverse_type_users, 1)
             self.assertEqual(a.reverse_theorem_users, 1)
-            self.assertEqual(a.reverse_public_fan_in, 0)
+            self.assertEqual(a.reverse_public_fan_in, 1)
             self.assertEqual(a.descendant_mass, 2)
             self.assertEqual(a.transitive_reverse_reach, 3)
             self.assertEqual(a.depth, 1)

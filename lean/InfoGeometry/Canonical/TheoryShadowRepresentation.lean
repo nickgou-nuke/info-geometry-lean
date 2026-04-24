@@ -118,22 +118,36 @@ theorem spin44_vectorCharacter_shadow_eq_two_sum_cosh
     vectorCharacter β = vectorCharacterCosh β :=
   vectorCharacter_eq_two_sum_cosh β
 
-/-- Exact dimension-agnostic KKT residuals construct the old KKT packet. -/
+/-!
+Dimension-agnostic KKT owner lane.
+
+This packet is independent of any finite index carrier and is the primary
+constructive owner for the exact residual branch.
+-/
 @[rep_depth thermo]
-theorem exactKKT_owner_constructs_stationarity_packet :
+theorem exactKKT_dimensionAgnostic_stationarity_packet :
     let K := DimensionAgnosticKKTResiduals.exact.toShadow
     K.coneAdmissible ∧ K.stationarity ∧
       K.complementarySlackness ∧ K.finitePartitionAdmissible :=
   DimensionAgnosticKKTResiduals.exact_stationarity_packet
 
+/-- Backward-compatible alias to the dimension-agnostic owner packet. -/
+@[rep_depth thermo]
+theorem exactKKT_owner_constructs_stationarity_packet :
+    let K := DimensionAgnosticKKTResiduals.exact.toShadow
+    K.coneAdmissible ∧ K.stationarity ∧
+      K.complementarySlackness ∧ K.finitePartitionAdmissible :=
+  exactKKT_dimensionAgnostic_stationarity_packet
+
 /--
-The shadow representation exposes the exact-residual translator branch without
-reintroducing explicit KKT stationarity hypotheses.  The finite Souriau/Fisher
-part still requires its PSD witness.
+Finite translator corollary.
+
+The dimension-agnostic exact-residual owner packet is imported unchanged, while
+the finite Souriau/Fisher side still requires its PSD witness.
 -/
 @[rep_depth thermo]
 theorem exactKKT_translator_shadow_packet
-    [Fintype α] [Nonempty α]
+  [Fintype α] [Nonempty α]
     (C : SouriauFenchelContext (α := α))
     (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
     (eta xβ xμ : ℝ) :
@@ -141,9 +155,13 @@ theorem exactKKT_translator_shadow_packet
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
-  exact
-    (structuredSouriauKKTTranslatorPacket_ofExactResiduals
-      (C := C) hPSD eta xβ xμ).2
+  let K : KKTEntropyStationarityShadow := DimensionAgnosticKKTResiduals.exact.toShadow
+  have hK : K.coneAdmissible ∧ K.stationarity ∧
+      K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+    simpa [K] using
+      exactKKT_dimensionAgnostic_stationarity_packet
+  exact (structuredSouriauKKTTranslatorPacket (C := C) (K := K)
+    hPSD hK.1 hK.2.1 hK.2.2.1 hK.2.2.2 eta xβ xμ).2
 
 /--
 The split `Cl(4,4)` / TKK lane is bridge-owned by the recursive split-Clifford

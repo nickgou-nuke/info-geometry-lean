@@ -1284,7 +1284,7 @@ from repo-owned infinite routes:
 This is not a finite shadow: `Orbit` is arbitrary and the Hessian side is an
 arbitrary normed-space Legendre owner surface.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 noncomputable def ofSmoothLegendreSquareDissipation
     (moment : Orbit → MomentCoord Θ)
     (geometricTemperature : Θ)
@@ -1327,7 +1327,7 @@ combined constructor.  The only Hessian-side bridge still required is the
 model-specific equality between the Legendre Hessian and the Gram feature
 pairing.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 noncomputable def ofSmoothLegendreGramSquareDissipation
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1364,7 +1364,7 @@ This removes the separate two-sided inverse-law fields from the Souriau input:
 they are proved in `LegendreContinuousLinearEquivInverseData` from
 `fisherEquiv` and `fisherEquiv.symm`.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 noncomputable def ofContinuousLinearEquivLegendreGramSquareDissipation
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1488,7 +1488,7 @@ This replaces the combined explicit Hessian/metriplectic context hypotheses by
 the constructive infinite ingredients above: Legendre owner data, moment-image
 orbit closure, and square entropy production.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem full_smooth_legendre_square_dissipation_constructive_theorem
     (moment : Orbit → MomentCoord Θ)
     (geometricTemperature : Θ)
@@ -1548,7 +1548,7 @@ This is the stronger infinite route: Fisher positivity is proved from an
 inner-product Gram representation and entropy production is proved from a
 square.  No finite response matrix is used.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1624,7 +1624,7 @@ the repo-owned smooth Legendre derivative identity and both two-sided inverse
 laws for `Hess(S) = Fisher⁻¹`.  No finite response matrix or count-state model
 is used.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1707,7 +1707,7 @@ Legendre inverse laws are derived from `fisherEquiv`/`fisherEquiv.symm`, Fisher
 positivity comes from the Gram inner product, and entropy production comes from
 a square.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1783,7 +1783,7 @@ This is the Lean-facing form of the Souriau proof narrative:
 All carriers are arbitrary.  No finite response matrix or count-state shadow is
 used.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem fisher_onsager_metriplectic_constructive_proof_packet
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
@@ -1867,7 +1867,7 @@ centered-moment covariance) with the already-owned infinite
 Legendre/Gram/square-dissipation theorem.  The result is still
 dimension-agnostic: no finite response matrix or count-state model is used.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem gibbs_souriau_integral_covariance_to_metriplectic_packet
     {Feature : Type*}
     [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]

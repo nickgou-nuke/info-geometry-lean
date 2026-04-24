@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
-⚖️ THE PAULI GRAPH SUPPORT (Authority Bridge)
+⚖️ THE PAULI DECLARATION GRAPH SUPPORT
 Truth lives in Lean; structure lives in the graph.
 
-This module provides a unified interface for accessing Lean declaration graph
-metadata, with a strict dual-authority model:
-1. Primary: ArangoDB Live DAG (Self-Healing: Filled if empty/stale).
-2. Fallback: Local Formal DAG (Created and Filled if ArangoDB is down).
+This module provides high-level GraphProfile objects by combining Lean source
+metadata with formal topological evidence from the Pauli Authority Bridge.
 """
 
 from __future__ import annotations
@@ -14,148 +12,25 @@ from __future__ import annotations
 import json
 import math
 import os
-import subprocess
 import sys
-import urllib.request
-import urllib.error
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# Pathing configuration
-DECL_INDEX_PATH = Path("artifacts/dag/index/decls.jsonl")
-EDGE_INDEX_PATH = Path("artifacts/dag/index/edges.jsonl")
-TOPOLOGY_NODES_PATH = Path("artifacts/dag/index/topology_overlay_nodes.jsonl")
-SIGNIFICANCE_INDEX_PATH = Path("reports/theorem-significance.json")
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from tools.infra.pauli_authority_bridge import (
+    PauliProfile as GraphProfile,
+    get_authority_data,
+    ensure_truth_artifacts,
+    DECL_INDEX_PATH,
+    EDGE_INDEX_PATH,
+)
 
 THEOREM_KINDS = {"theorem", "lemma"}
 DEFINITION_KINDS = {"def", "opaque", "abbrev"}
-
-ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8529")
-ARANGO_DB = os.environ.get("ARANGO_DB", "infogeometry")
-
-@dataclass(frozen=True)
-class GraphProfile:
-    name: str
-    kind: str
-    module: str
-    file: str | None
-    line: int | None
-    rep_layer: str | None
-    rep_depth: int | None
-    reverse_value_users: int
-    reverse_type_users: int
-    reverse_theorem_users: int
-    reverse_public_fan_in: int
-    descendant_mass: int
-    transitive_reverse_reach: int
-    depth: int
-    scc_size: int
-    is_sink: bool
-    significance_present: bool
-    forward_value_theorems: tuple[str, ...]
-    forward_value_defs: tuple[str, ...]
-    graph_load_bearing_score: float
-    structural_role: str
-
-def run_cmd(cmd: list[str], root: Path, label: str):
-    print(f"[pauli-authority] {label}...")
-    try:
-        subprocess.run(cmd, cwd=root, check=True, capture_output=True)
-    except subprocess.CalledProcessError as e:
-        print(f"[pauli-authority] ERROR: {label} failed: {e.stderr.decode()}", file=sys.stderr)
-
-def ensure_local_artifacts(root: Path):
-    """Ensures local formal artifacts exist."""
-    index_dir = root / "artifacts" / "dag" / "index"
-    index_dir.mkdir(parents=True, exist_ok=True)
-    
-    # 1. Check/Create Raw Index
-    if not (root / DECL_INDEX_PATH).exists() or not (root / EDGE_INDEX_PATH).exists():
-        run_cmd(["lake", "script", "run", "dagRefresh"], root, "Creating missing formal DAG index")
-
-    # 2. Check/Create Topology Overlay (Truthful reach/depth)
-    if not (root / TOPOLOGY_NODES_PATH).exists():
-        run_cmd([
-            "python3", "tools/infra/hydrate_arango_topology.py",
-            "--input-dir", "artifacts/dag/index",
-            "--output-dir", "artifacts/dag/index",
-            "--no-strict-lossless"
-        ], root, "Filling local formal mirror (topology hydration)")
-
-def request_json(method: str, url: str, payload: Any = None) -> Any:
-    body = None if payload is None else json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method=method)
-    req.add_header("Accept", "application/json")
-    if body:
-        req.add_header("Content-Type", "application/json")
-    
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-def query_arango_authority(root: Path) -> dict[str, dict[str, Any]]:
-    """Fetch truthful graph statistics from ArangoDB, ensuring it is filled."""
-    url = f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/cursor"
-    
-    # 1. Sanity Check: Is ArangoDB reachable and filled?
-    try:
-        count_out = request_json("GET", f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/collection/ig_nodes/count")
-        live_count = count_out.get("count", 0)
-        
-        # If DB is empty or missing, fill it from local artifacts
-        if live_count < 1000:
-            print("[pauli-authority] ArangoDB mirror is empty/stale. Filling from local artifacts...")
-            ensure_local_artifacts(root)
-            run_cmd([
-                "python3", "tools/infra/arango_layered_ingest.py",
-                "--input-dir", "artifacts/dag/index",
-                "--drop-existing"
-            ], root, "Ingesting into ArangoDB authority")
-    except (urllib.error.URLError, urllib.error.HTTPError):
-        return {}
-
-    # 2. Full Cursor Consumption (No Ignoring)
-    query = """
-    FOR n IN ig_nodes
-      LET rv = LENGTH(FOR e IN ig_edges FILTER e._to == n._id && e.kind == "value" RETURN 1)
-      LET rt = LENGTH(FOR e IN ig_edges FILTER e._to == n._id && e.kind == "type" RETURN 1)
-      LET rth = LENGTH(FOR e IN ig_edges 
-        FILTER e._to == n._id && e.kind == "value"
-        LET s = DOCUMENT(e._from)
-        FILTER s != null && (s.kind == "theorem" || s.kind == "lemma")
-        RETURN 1)
-      
-      LET scc_edge = FIRST(FOR e IN topology_overlay_edges FILTER e._from == n._id && e.role == "member_of_scc" RETURN e)
-      LET scc = scc_edge != null ? DOCUMENT(scc_edge._to) : null
-      
-      RETURN {
-        name: n.name,
-        rv: rv,
-        rt: rt,
-        rth: rth,
-        depth: scc != null ? (scc.depth || 0) : 0,
-        scc_size: scc != null ? (scc.node_count || 1) : 1,
-        is_sink: scc != null ? (scc.downstream_reachable == 0) : true,
-        descendant_mass: scc != null ? (scc.downstream_reachable || 0) : 0,
-        transitive_reverse_reach: scc != null ? (scc.upstream_reachable || 0) : 0,
-        reverse_public_fan_in: rth,
-        significance_present: n.doc != null && LENGTH(n.doc) > 20
-      }
-    """
-    try:
-        out = request_json("POST", url, {"query": query, "batchSize": 5000})
-        results = {row["name"]: row for row in out.get("result", [])}
-        
-        # Handle pagination (Crucial: DO NOT IGNORE rest of the graph)
-        while out.get("hasMore"):
-            cursor_id = out["id"]
-            out = request_json("PUT", f"{url}/{cursor_id}")
-            for row in out.get("result", []):
-                results[row["name"]] = row
-        return results
-    except (urllib.error.URLError, urllib.error.HTTPError, KeyError):
-        return {}
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -185,7 +60,12 @@ def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, A
                 pass
         elif ":" in text:
             k, v = text.split(":", 1)
-            extra[k] = int(v) if v.isdigit() else v
+            if v.isdigit():
+                extra[k] = int(v)
+            elif v.lower() in ("true", "false"):
+                extra[k] = v.lower() == "true"
+            else:
+                extra[k] = v
     return rep_layer, rep_depth, extra
 
 def structural_role_for_profile(**kwargs) -> str:
@@ -201,12 +81,13 @@ def structural_role_for_profile(**kwargs) -> str:
 
 def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
     # ⚖️ PAULI AUTHORITY: ArangoDB (Auto-Filled) or Local Formal DAG
-    arango_data = query_arango_authority(root)
+    arango_data = get_authority_data(root)
     if arango_data:
         print(f"[pauli-authority] Primary ArangoDB authority ACTIVE ({len(arango_data)} declarations)")
     else:
         print("[pauli-authority] ArangoDB unreachable. Ensuring local formal DAG mirror...")
-        ensure_local_artifacts(root)
+        if (root / "tools" / "infra" / "hydrate_arango_topology.py").exists():
+            ensure_truth_artifacts(root)
 
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
@@ -228,7 +109,8 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             except ValueError: rel = file_val
             line = row.get("line")
             if isinstance(line, int):
-                decl_key_to_full[(rel, line, full_name.rsplit(".", 1)[-1])] = full_name
+                leaf = full_name.rsplit(".", 1)[-1]
+                decl_key_to_full[(rel, line, leaf)] = full_name
 
     reverse_value_users, reverse_type_users, reverse_theorem_users = [defaultdict(int) for _ in range(3)]
     forward_value_theorems, forward_value_defs = [defaultdict(list) for _ in range(2)]
@@ -255,7 +137,7 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
         else:
             rv, rt, rth = reverse_value_users[name], reverse_type_users[name], reverse_theorem_users[name]
             rpf, dm, trr = rth, extra.get("descendant_mass_nat", 0), extra.get("upstream_reachable_nat", 0)
-            dp, ss, sk = extra.get("depth_nat", rep_depth or 0), extra.get("scc_size_nat", 1), dm == 0
+            dp, ss, sk = extra.get("depth_nat", rep_depth or 0), extra.get("scc_size_nat", 1), bool(extra.get("is_sink_bool", dm == 0))
             sig_p = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
 
         fwd_t, fwd_d = tuple(forward_value_theorems[name]), tuple(forward_value_defs[name])

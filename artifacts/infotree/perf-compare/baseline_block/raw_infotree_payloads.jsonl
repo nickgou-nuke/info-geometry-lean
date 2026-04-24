@@ -1,1 +1,0 @@
-{"file":"lean/DAG/BlockExport.lean","kind":"command","module":"[anonymous]","nodeKey":"itn_itr__anonymous__0_0_1","payloadKey":"itp_itr__anonymous__0_0_1","rootKey":"itr__anonymous__0_0","schema":"info_geometry.raw_infotree_export.v1","text":"elaborator=Lean.Elab.Command.elabOpen\nsyntax=open Lean\n"}

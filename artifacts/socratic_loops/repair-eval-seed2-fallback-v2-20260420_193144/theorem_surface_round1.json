@@ -1,9 +1,0 @@
-{
-  "round": 1,
-  "surface": {
-    "goal": "{r s : \u211d} (hr : 0 < r) (hs : 0 < s) :\n    NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s",
-    "kind": "theorem",
-    "name": "map_mul",
-    "tactic": "unfold NegLogRectifier\n  rw [Real.log_mul (ne_of_gt hr) (ne_of_gt hs)]\n  ring"
-  }
-}

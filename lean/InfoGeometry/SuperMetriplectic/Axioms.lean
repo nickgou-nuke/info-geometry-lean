@@ -184,6 +184,9 @@ structure ScalarSchurDrazinBlock where
   penrose_matches_hidden : penrose.a = LΘΘ
   drazin_matches_hidden : drazin.a = LΘΘ
 
+/-- Readout-first alias for the scalar Schur/Penrose/Drazin block packet. -/
+abbrev ScalarReadoutSchurDrazinBlock := ScalarSchurDrazinBlock
+
 namespace ScalarSchurDrazinBlock
 
 /--
@@ -202,10 +205,20 @@ theorem effectiveEvenOnsager_eq (B : ScalarSchurDrazinBlock) :
     B.effectiveEvenOnsager = B.LPP - B.LPΘ * B.penrose.aPlus * B.LΘP :=
   rfl
 
+/-- Readout-first restatement of the stabilized Schur complement equation. -/
+theorem effectiveEvenOnsager_readout_eq (B : ScalarSchurDrazinBlock) :
+    B.effectiveEvenOnsager = B.LPP - B.LPΘ * B.penrose.aPlus * B.LΘP :=
+  effectiveEvenOnsager_eq B
+
 /-- Public equation for the Drazin defect projector. -/
 theorem drazinDefectProjector_eq (B : ScalarSchurDrazinBlock) :
     B.drazinDefectProjector = 1 - B.LΘΘ * B.drazin.aD :=
   rfl
+
+/-- Readout-first restatement of the scalar Drazin defect-projector equation. -/
+theorem drazinDefectProjector_readout_eq (B : ScalarSchurDrazinBlock) :
+    B.drazinDefectProjector = 1 - B.LΘΘ * B.drazin.aD :=
+  drazinDefectProjector_eq B
 
 end ScalarSchurDrazinBlock
 
@@ -247,6 +260,25 @@ structure DrazinPenroseSchurTriad where
     entropy.effectiveOnsager = block.effectiveEvenOnsager
 
 namespace DrazinPenroseSchurTriad
+
+/-- Scalar readout of the effective Onsager coefficient carried by the triad packet. -/
+noncomputable def effectiveOnsagerReadout (T : DrazinPenroseSchurTriad) : ℝ :=
+  T.block.effectiveEvenOnsager
+
+/-- Scalar readout of the Drazin defect-projector coefficient carried by the triad packet. -/
+noncomputable def defectProjectorReadout (T : DrazinPenroseSchurTriad) : ℝ :=
+  T.block.drazinDefectProjector
+
+/--
+Readout-seal theorem for the scalar triad packet.
+
+This records that exported scalar quantities are readouts tied to the carried
+Schur/Penrose/Drazin block; it does not replace noncommuting operator lanes.
+-/
+theorem scalar_readout_seal (T : DrazinPenroseSchurTriad) :
+    (T.effectiveOnsagerReadout = T.block.effectiveEvenOnsager)
+      ∧ (T.defectProjectorReadout = T.block.drazinDefectProjector) := by
+  exact ⟨rfl, rfl⟩
 
 /--
 The effective macroscopic Onsager coefficient is the

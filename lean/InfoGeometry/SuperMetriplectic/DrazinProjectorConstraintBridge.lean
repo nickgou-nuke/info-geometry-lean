@@ -95,15 +95,48 @@ theorem topologicalConstraintProjector_eq_drazin_formula :
   exact InfoGeometry.SuperMetriplectic.ScalarSchurDrazinBlock.drazinDefectProjector_eq
     C.triad.triad.block
 
+/-- Readout-first alias for the scalar topological-constraint projector lane. -/
+@[rep_depth transport]
+noncomputable def topologicalConstraintReadout : ℝ :=
+  C.topologicalConstraintProjector
+
+/-- The readout alias is definitionally the scalar topological-constraint projector. -/
+@[rep_depth transport]
+theorem topologicalConstraintReadout_eq_topologicalConstraintProjector :
+    C.topologicalConstraintReadout = C.topologicalConstraintProjector := by
+  rfl
+
+/-- Readout-first restatement of the scalar Drazin-projector formula. -/
+@[rep_depth transport]
+theorem topologicalConstraintProjector_readout_eq_drazin_formula :
+    C.topologicalConstraintReadout
+      = 1 - C.triad.triad.block.LΘΘ * C.triad.triad.block.drazin.aD := by
+  simpa [topologicalConstraintReadout] using C.topologicalConstraintProjector_eq_drazin_formula
+
 /--
 The scalar defect readout of the owner central channel is exactly the
-topological-constraint projector shadow.
+ topological-constraint projector shadow.
 -/
 @[rep_depth transport]
 theorem defectReadout_eq_topologicalConstraintProjector :
     C.triad.defectReadout (ownerCentral C.triad.owner.U)
       = C.topologicalConstraintProjector := by
   exact C.triad.defectReadout_eq_ownerCentralCandidate
+
+/--
+Readout-seal theorem for the scalar topological-constraint lane.
+
+This records that the exported scalar readout is tied to the carried Drazin
+projector shadow; it does not replace noncommuting operator dynamics.
+-/
+@[rep_depth transport]
+theorem scalar_readout_seal :
+    (C.topologicalConstraintReadout = C.topologicalConstraintProjector)
+      ∧
+    (C.topologicalConstraintReadout
+      = 1 - C.triad.triad.block.LΘΘ * C.triad.triad.block.drazin.aD) := by
+  exact ⟨C.topologicalConstraintReadout_eq_topologicalConstraintProjector,
+    C.topologicalConstraintProjector_readout_eq_drazin_formula⟩
 
 /--
 The shared owner central lane lies in the compact Cartan sector `𝔨`.

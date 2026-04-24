@@ -27,6 +27,9 @@ Conservative capstone packet joining:
 - a scalar chiral odd-odd closure packet,
 - a scalar Schur/Penrose/Drazin/body-entropy triad,
 - and explicit compatibility equations between those scalar shadows.
+
+Policy note: this bridge is a scalar readout surface only. It does not claim
+that scalar shadows replace noncommuting operator dynamics.
 -/
 @[rep_depth transport]
 structure DrazinPenroseSchurChiralTriadBridge where
@@ -36,6 +39,13 @@ structure DrazinPenroseSchurChiralTriadBridge where
     chiral.translationShadow = triad.block.effectiveEvenOnsager
   defectShadow_eq_drazinDefectProjector :
     chiral.defectShadow = triad.block.drazinDefectProjector
+
+/--
+Readout-first alias for the scalar capstone packet.
+
+This is naming-only (definitional) and keeps legacy theorem names intact.
+-/
+abbrev DrazinPenroseSchurChiralReadoutBridge := DrazinPenroseSchurChiralTriadBridge
 
 namespace DrazinPenroseSchurChiralTriadBridge
 
@@ -75,10 +85,22 @@ theorem toChiralSuperchargeClosure_translationShadow_eq_effectiveEvenOnsager :
     (toChiralSuperchargeClosure P).translationShadow = P.triad.block.effectiveEvenOnsager := by
   rfl
 
+/-- Readout-first restatement of the scalar translation-shadow compatibility. -/
+@[rep_depth transport]
+theorem toChiralSuperchargeClosure_translationReadout_eq_effectiveEvenOnsager :
+    (toChiralSuperchargeClosure P).translationShadow = P.triad.block.effectiveEvenOnsager := by
+  exact toChiralSuperchargeClosure_translationShadow_eq_effectiveEvenOnsager P
+
 @[rep_depth transport]
 theorem toChiralSuperchargeClosure_defectShadow_eq_drazinDefectProjector :
     (toChiralSuperchargeClosure P).defectShadow = P.triad.block.drazinDefectProjector := by
   rfl
+
+/-- Readout-first restatement of the scalar defect-shadow compatibility. -/
+@[rep_depth transport]
+theorem toChiralSuperchargeClosure_defectReadout_eq_drazinDefectProjector :
+    (toChiralSuperchargeClosure P).defectShadow = P.triad.block.drazinDefectProjector := by
+  exact toChiralSuperchargeClosure_defectShadow_eq_drazinDefectProjector P
 
 end TriadCompatibleOddPacket
 
@@ -114,6 +136,20 @@ theorem chiralClosureOfTriadOddData_translationShadow_eq_effectiveEvenOnsager
       = T.block.effectiveEvenOnsager := by
   rfl
 
+/-- Readout-first restatement of the scalar translation-shadow equality. -/
+@[rep_depth transport]
+theorem chiralClosureOfTriadOddData_translationReadout_eq_effectiveEvenOnsager
+    (T : InfoGeometry.SuperMetriplectic.DrazinPenroseSchurTriad)
+    (QL QR : ℝ)
+    (gamma : ℝ)
+    (hClosure :
+      anticommutator (QR - QL) (QR - QL)
+        = gamma • T.block.effectiveEvenOnsager + T.block.drazinDefectProjector) :
+    (chiralClosureOfTriadOddData T QL QR gamma hClosure).translationShadow
+      = T.block.effectiveEvenOnsager := by
+  exact chiralClosureOfTriadOddData_translationShadow_eq_effectiveEvenOnsager
+    T QL QR gamma hClosure
+
 @[rep_depth transport]
 theorem chiralClosureOfTriadOddData_defectShadow_eq_drazinDefectProjector
     (T : InfoGeometry.SuperMetriplectic.DrazinPenroseSchurTriad)
@@ -125,6 +161,20 @@ theorem chiralClosureOfTriadOddData_defectShadow_eq_drazinDefectProjector
     (chiralClosureOfTriadOddData T QL QR gamma hClosure).defectShadow
       = T.block.drazinDefectProjector := by
   rfl
+
+/-- Readout-first restatement of the scalar defect-shadow equality. -/
+@[rep_depth transport]
+theorem chiralClosureOfTriadOddData_defectReadout_eq_drazinDefectProjector
+    (T : InfoGeometry.SuperMetriplectic.DrazinPenroseSchurTriad)
+    (QL QR : ℝ)
+    (gamma : ℝ)
+    (hClosure :
+      anticommutator (QR - QL) (QR - QL)
+        = gamma • T.block.effectiveEvenOnsager + T.block.drazinDefectProjector) :
+    (chiralClosureOfTriadOddData T QL QR gamma hClosure).defectShadow
+      = T.block.drazinDefectProjector := by
+  exact chiralClosureOfTriadOddData_defectShadow_eq_drazinDefectProjector
+    T QL QR gamma hClosure
 
 /-- The packet-built closure is definitionally the raw triad-odd-data closure. -/
 @[rep_depth transport]
@@ -192,10 +242,20 @@ variable (B : DrazinPenroseSchurChiralTriadBridge)
 def hiddenBlockChiralAnomaly : ℝ :=
   MoorePenrose.chiralAnomaly B.triad.block.LΘΘ B.triad.block.drazin.aD B.triad.block.penrose.aPlus
 
-/-- The carried scalar chiral packet viewed as a public closure interface. -/
+/-- The carried chiral packet viewed as a public scalar readout closure interface. -/
 @[rep_depth transport]
 def toChiralSuperchargeClosure : InfoGeometry.SuperMetriplectic.ChiralSuperchargeClosure ℝ :=
   B.chiral
+
+/-- Scalar translation readout exported by the capstone packet. -/
+@[rep_depth transport]
+def translationReadout : ℝ :=
+  (toChiralSuperchargeClosure B).translationShadow
+
+/-- Scalar defect readout exported by the capstone packet. -/
+@[rep_depth transport]
+def defectReadout : ℝ :=
+  (toChiralSuperchargeClosure B).defectShadow
 
 /-- The hidden scalar block carries a certified Moore-Penrose shadow witness. -/
 @[rep_depth transport]
@@ -234,11 +294,38 @@ theorem toChiralSuperchargeClosure_translationShadow_eq_effectiveEvenOnsager :
     (toChiralSuperchargeClosure B).translationShadow = B.triad.block.effectiveEvenOnsager := by
   exact B.translationShadow_eq_effectiveEvenOnsager
 
+/-- Readout-first statement: scalar translation readout equals the effective Schur metric readout. -/
+@[rep_depth transport]
+theorem translationReadout_eq_effectiveEvenOnsager :
+    B.translationReadout = B.triad.block.effectiveEvenOnsager := by
+  simpa [translationReadout] using
+    (toChiralSuperchargeClosure_translationShadow_eq_effectiveEvenOnsager (B := B))
+
 /-- The carried chiral defect shadow is explicitly tied to the Drazin defect projector. -/
 @[rep_depth transport]
 theorem toChiralSuperchargeClosure_defectShadow_eq_drazinDefectProjector :
     (toChiralSuperchargeClosure B).defectShadow = B.triad.block.drazinDefectProjector := by
   exact B.defectShadow_eq_drazinDefectProjector
+
+/-- Readout-first statement: scalar defect readout equals the Drazin defect-projector readout. -/
+@[rep_depth transport]
+theorem defectReadout_eq_drazinDefectProjector :
+    B.defectReadout = B.triad.block.drazinDefectProjector := by
+  simpa [defectReadout] using
+    (toChiralSuperchargeClosure_defectShadow_eq_drazinDefectProjector (B := B))
+
+/--
+Readout-seal theorem for this capstone interface.
+
+This theorem records that exported scalar quantities are readouts tied to owned
+scalar shadows; it does not assert replacement of noncommuting operator lanes.
+-/
+@[rep_depth transport]
+theorem scalar_readout_seal :
+    (B.translationReadout = B.triad.block.effectiveEvenOnsager)
+      ∧ (B.defectReadout = B.triad.block.drazinDefectProjector) := by
+  exact ⟨B.translationReadout_eq_effectiveEvenOnsager,
+    B.defectReadout_eq_drazinDefectProjector⟩
 
 /-- The effective metric is the Moore-Penrose stabilized Schur complement of the hidden block. -/
 @[rep_depth transport]

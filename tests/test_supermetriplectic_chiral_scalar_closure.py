@@ -24,6 +24,12 @@ class SuperMetriplecticChiralScalarClosureTests(unittest.TestCase):
         self.assertTrue(has_decl(text, "def", "netOddShadow"))
         self.assertTrue(has_decl(text, "theorem", "netOddShadow_eq_right_minus_left"))
         self.assertTrue(has_decl(text, "theorem", "anticommutator_netOddShadow_eq_translation_add_defect"))
+        self.assertTrue(has_decl(text, "abbrev", "ScalarReadoutSchurDrazinBlock"))
+        self.assertTrue(has_decl(text, "theorem", "effectiveEvenOnsager_readout_eq"))
+        self.assertTrue(has_decl(text, "theorem", "drazinDefectProjector_readout_eq"))
+        self.assertTrue(has_decl(text, "def", "effectiveOnsagerReadout"))
+        self.assertTrue(has_decl(text, "def", "defectProjectorReadout"))
+        self.assertTrue(has_decl(text, "theorem", "scalar_readout_seal"))
 
     def test_supermetriplectic_axioms_builds_with_chiral_scalar_supercharge_surface(self) -> None:
         env = os.environ.copy()

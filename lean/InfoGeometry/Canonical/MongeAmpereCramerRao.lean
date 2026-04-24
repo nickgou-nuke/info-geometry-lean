@@ -38,6 +38,21 @@ def IncompressibleMongeAmpere (H : HessianGeometry E) : Prop :=
 def LiouvilleMongeAmpere (H : HessianGeometry E) (Φ : E → ℝ) : Prop :=
   SatisfiesMongeAmperePotential H (fun x => 2 * Φ x)
 
+/-- Operator owner surface for the Cramer-Rao metric in the Monge-Ampere lane. -/
+noncomputable abbrev cramerRaoMetricOperatorOwner
+    (H : HessianGeometry E) (x : E) : E →L[ℝ] E :=
+  cramerRaoMetricOp H x
+
+/-- Scalar readout shadow of the Cramer-Rao operator owner. -/
+noncomputable def cramerRaoMetricVolumeShadow
+    (H : HessianGeometry E) (x : E) : ℝ :=
+  |LinearMap.det (cramerRaoMetricOperatorOwner H x).toLinearMap|
+
+/-- Potential readout associated to the Cramer-Rao volume shadow. -/
+noncomputable def cramerRaoMetricVolumePotential
+    (H : HessianGeometry E) (x : E) : ℝ :=
+  -Real.log (cramerRaoMetricVolumeShadow H x)
+
 /-- Incompressible Monge-Ampere plus nondegeneracy implies unit Cramer-Rao determinant magnitude. -/
 theorem absDet_cramerRaoMetric_eq_one_of_incompressible
     (H : HessianGeometry E)
@@ -47,16 +62,30 @@ theorem absDet_cramerRaoMetric_eq_one_of_incompressible
     |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
   simpa [IncompressibleMongeAmpere, mongeAmpereDensity, cramerRaoMetricOp] using hIncomp x
 
+/-- Incompressible Monge-Ampere forces zero potential readout for the Cramer-Rao volume mode. -/
+theorem cramerRaoMetricVolumePotential_eq_zero_of_incompressible
+    (H : HessianGeometry E)
+    (hIncomp : IncompressibleMongeAmpere H)
+    (x : E) :
+    cramerRaoMetricVolumePotential H x = 0 := by
+  have hUnit : |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
+    simpa [IncompressibleMongeAmpere, mongeAmpereDensity, cramerRaoMetricOp] using hIncomp x
+  unfold cramerRaoMetricVolumePotential cramerRaoMetricVolumeShadow cramerRaoMetricOperatorOwner
+  rw [hUnit, Real.log_one]
+  simp
+
 /-- Incompressible Monge-Ampere implies zero log-volume mode of the Cramer-Rao metric. -/
 theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
     (H : HessianGeometry E)
     (hIncomp : IncompressibleMongeAmpere H)
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-  have hUnit : |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
-    simpa [IncompressibleMongeAmpere, mongeAmpereDensity, cramerRaoMetricOp] using hIncomp x
-  rw [hUnit, Real.log_one]
-
+  have hPotentialZero : cramerRaoMetricVolumePotential H x = 0 :=
+    cramerRaoMetricVolumePotential_eq_zero_of_incompressible (H := H) hIncomp x
+  have hNegLogZero : -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
+    simpa [cramerRaoMetricVolumePotential, cramerRaoMetricVolumeShadow,
+      cramerRaoMetricOperatorOwner, cramerRaoMetricOp] using hPotentialZero
+  linarith
 end MongeAmpereBridge
 
 section SqueezingFlow

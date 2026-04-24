@@ -43,7 +43,7 @@ This is the live host mapping as of the current DGX Spark setup:
   this makes Gemini an irregular, jittered "dreaming sidecar" rather than a
   polling backend. Direct `gemini` use is operator-only.
 - local `Qwen 35B` is the active SparkRun planner lane when resident:
-  - `http://127.0.0.1:8001/v1`
+  - `http://127.0.0.1:8000/v1`
   - `Qwen/Qwen3.6-35B-A3B-FP8`
 - `DeepSeek-Prover-V2-7B` is the Lean4 proof-specialist lane:
   - `http://127.0.0.1:30002/v1`
@@ -155,7 +155,7 @@ Current host state:
   the active on-host planner lane
 - interactive OpenClaw planning still uses `openai-codex/gpt-5.4` as the
   large-context primary interactive model
-- local Qwen 35B base URL is `http://127.0.0.1:8001/v1`
+- local Qwen 35B base URL is `http://127.0.0.1:8000/v1`
 - current Hermes CLI `context_length` override is `64000` to pass Hermes'
   startup guard
 - current Qwen 35B server context is `32768`; it is the active local planner

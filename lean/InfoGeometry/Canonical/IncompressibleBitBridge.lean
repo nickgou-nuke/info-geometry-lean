@@ -120,6 +120,33 @@ and log-volume conclusions are derived by `MongeAmpereCramerRao`.
 structure IncompressibleCramerRaoBit (H : HessianGeometry E) : Prop where
   incompressible : IncompressibleMongeAmpere H
 
+/--
+Operatorial owner surface for the Cramer-Rao metric at a point.
+
+Determinant and logarithmic readouts below are scalar shadows of this operator,
+not replacements for it.
+-/
+@[rep_depth operator]
+noncomputable abbrev cramerRaoMetricOperatorOwner
+    (H : HessianGeometry E) (x : E) : E →L[ℝ] E :=
+  cramerRaoMetricOp H x
+
+/-- Scalar determinant shadow of `cramerRaoMetricOperatorOwner`. -/
+@[rep_depth krein]
+noncomputable def cramerRaoVolumeShadow
+    (H : HessianGeometry E) (x : E) : ℝ :=
+  |LinearMap.det (cramerRaoMetricOperatorOwner H x).toLinearMap|
+
+/--
+Kähler/RN-style scalar potential shadow from the operatorial Cramer-Rao owner.
+
+Redline sign is explicit: potential is negative log-volume.
+-/
+@[rep_depth transport]
+noncomputable def cramerRaoVolumePotential
+    (H : HessianGeometry E) (x : E) : ℝ :=
+  -Real.log (cramerRaoVolumeShadow H x)
+
 /-- Constructor from the existing incompressible Monge-Ampere predicate. -/
 @[rep_depth operator]
 theorem incompressibleCramerRaoBit_of_incompressible
@@ -155,6 +182,20 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit
     (H := H) bit.incompressible x
 
 /--
+Operator-first corollary: incompressibility forces zero Cramer-Rao
+negative-log-volume potential.
+-/
+@[rep_depth operator]
+theorem cramerRaoVolumePotential_eq_zero_of_incompressibleBit
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E) :
+    cramerRaoVolumePotential H x = 0 := by
+  unfold cramerRaoVolumePotential cramerRaoVolumeShadow cramerRaoMetricOperatorOwner
+  rw [logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit (H := H) bit x]
+  simp
+
+/--
 If the conformal anomaly scale is identified with the Kähler/RN potential
 coming from the Cramer-Rao logarithmic volume mode, then an incompressible
 Cramer-Rao bit forces normal inference.
@@ -172,14 +213,28 @@ theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLo
       CI.chiralScale =
         -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|)) :
     CI.IsNormalInference := by
-  have hLogZero :
-      Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 :=
-    logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit
-      (H := H) bit x
   have hNegLogZero :
       -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-    rw [hLogZero, neg_zero]
+    simpa [cramerRaoVolumePotential, cramerRaoVolumeShadow,
+      cramerRaoMetricOperatorOwner] using
+      cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
   simpa [ConformalInference.IsNormalInference, hScaleFromNegLogVolume] using hNegLogZero
+
+/--
+Operator-owner version of the same normal-phase collapse theorem.
+-/
+@[rep_depth thermo, capstone]
+theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromPotential :
+      CI.chiralScale = cramerRaoVolumePotential H x) :
+    CI.IsNormalInference := by
+  have hPotZero : cramerRaoVolumePotential H x = 0 :=
+    cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
+  simpa [ConformalInference.IsNormalInference, hScaleFromPotential] using hPotZero
 
 /--
 If the anomaly scale is the negative Cramer-Rao log-volume mode, the
@@ -199,6 +254,66 @@ theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRa
     isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
       (CI := CI) (H := H) bit x hScaleFromNegLogVolume
   exact CI.unitOfAction_eq_zero_of_normalInference hNormal
+
+/--
+Operator-owner version: if the anomaly scale is read from the Cramer-Rao
+negative-log-volume potential, incompressibility forces zero unit of action.
+-/
+@[rep_depth thermo]
+theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromPotential :
+      CI.chiralScale = cramerRaoVolumePotential H x) :
+    CI.unitOfAction = 0 := by
+  have hNormal : CI.IsNormalInference :=
+    isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x hScaleFromPotential
+  exact CI.unitOfAction_eq_zero_of_normalInference hNormal
+
+/--
+Operator-owner packet: from a Cramer-Rao volume-potential readout of chiral
+scale and incompressibility, obtain both normal inference and zero unit of
+action.
+-/
+@[rep_depth thermo, capstone]
+theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromPotential :
+      CI.chiralScale = cramerRaoVolumePotential H x) :
+    CI.IsNormalInference ∧ CI.unitOfAction = 0 := by
+  refine ⟨?_, ?_⟩
+  · exact isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x hScaleFromPotential
+  · exact unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x hScaleFromPotential
+
+/--
+Legacy-hypothesis packet routed through the operator-owner potential surface.
+This keeps old call-sites available while centralizing proofs on the new
+operator-first readout theorem family.
+-/
+@[rep_depth thermo, capstone]
+theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromNegLogVolume :
+      CI.chiralScale =
+        -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|)) :
+    CI.IsNormalInference ∧ CI.unitOfAction = 0 := by
+  have hScaleFromPotential : CI.chiralScale = cramerRaoVolumePotential H x := by
+    simpa [cramerRaoVolumePotential, cramerRaoVolumeShadow,
+      cramerRaoMetricOperatorOwner] using hScaleFromNegLogVolume
+  exact
+    normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x hScaleFromPotential
 
 end CramerRaoBit
 

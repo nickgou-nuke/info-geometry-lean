@@ -1,9 +1,0 @@
-{
-  "round": 1,
-  "surface": {
-    "goal": "(R : NegLogRectifier Ratio Potential) : R 1 = 0",
-    "kind": "theorem",
-    "name": "map_one",
-    "tactic": "R.map_one'\n\n@[simp]"
-  }
-}

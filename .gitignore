@@ -79,3 +79,27 @@ interspec_src/
 
 # Evidence bundles (generated archives, hash sidecars, signed files)
 archive/evidence/
+
+# Generated artifact themes (forward-only cleanup)
+# Semantic ingest corpora, retrieval overlays, and research digests
+artifacts/alexandria/**
+
+# Generated theorem-graph / trace / export payloads
+artifacts/infotree/**
+artifacts/leantrail/**
+!artifacts/leantrail/README.md
+artifacts/expr-graph/**
+
+# Generated runtime orchestration / queue / replay outputs
+artifacts/hermes_loop/**
+artifacts/gemini_cli_guard/**
+
+# Generated Socratic loop and synthesis passes
+artifacts/socratic_loops/**
+artifacts/black_book_alchemy/**
+
+# Generated handover extension manifests
+handover/injections/manifests/EXT-*/
+
+# Local workspace repair leftovers
+.lake.symlink-backup

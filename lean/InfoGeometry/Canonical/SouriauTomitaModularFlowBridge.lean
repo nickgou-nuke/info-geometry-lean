@@ -190,6 +190,37 @@ theorem souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift
 
 end SouriauTomitaLogContext
 
+/-- Zero thermal-moment Souriau datum on an arbitrary symmetry carrier. -/
+@[rep_depth operator]
+noncomputable def zeroThermalSouriauMoment (geometricTemperature : Symmetry) :
+    OperatorSouriauMoment (H := H) Symmetry where
+  momentOperator := fun _ => 0
+  geometricTemperature := geometricTemperature
+
+/--
+Constructive identity-branch logarithmic context.
+
+The modular Hamiltonian is not supplied as a zero hypothesis here: it is the
+Souriau moment at the chosen geometric temperature, and this constructor makes
+that moment definitionally zero.
+-/
+@[rep_depth operator]
+noncomputable def SouriauTomitaLogContext.ofZeroThermalMoment
+    (geometricTemperature : Symmetry) :
+    SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) where
+  souriauMoment := zeroThermalSouriauMoment (H := H) geometricTemperature
+
+namespace SouriauTomitaLogContext
+
+/-- In the zero-thermal-moment constructor, the modular Hamiltonian vanishes by construction. -/
+@[rep_depth operator]
+theorem modularHamiltonian_zero_ofZeroThermalMoment
+    (geometricTemperature : Symmetry) :
+    (ofZeroThermalMoment (H := H) geometricTemperature).modularHamiltonian = 0 :=
+  rfl
+
+end SouriauTomitaLogContext
+
 /--
 KMS context for the Souriau-generated Tomita modular automorphism group.
 
@@ -210,6 +241,23 @@ structure SouriauTomitaKMSContext where
   kms_state_eq : kms.state = state
 
 namespace SouriauTomitaKMSContext
+
+/-- Constructor theorem exposing the state field from an explicit KMS witness packet. -/
+@[rep_depth operator]
+theorem mk_of_state_kms
+    (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+    (beta : ℝ)
+    (state : AlgebraicState (H := H))
+    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta)
+    (hstate : kms.state = state) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry), ctx.state = state := by
+  refine ⟨{
+    logContext := logContext
+    beta := beta
+    state := state
+    kms := kms
+    kms_state_eq := hstate
+  }, rfl⟩
 
 variable (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
 
@@ -278,6 +326,84 @@ theorem constructive_kms_packet
 end SouriauTomitaKMSContext
 
 /--
+Minimal KMS context for the Souriau-generated Tomita modular automorphism group.
+
+This removes the redundant explicit `state` and `kms_state_eq` packet from the
+broad KMS context: the algebraic state is read directly from `kms.state`.
+-/
+@[rep_depth operator]
+structure MinimalSouriauTomitaKMSContext where
+  logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)
+  beta : ℝ
+  kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta
+
+namespace MinimalSouriauTomitaKMSContext
+
+variable (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+
+/-- The algebraic state is read directly from the KMS witness. -/
+@[rep_depth operator]
+def state : AlgebraicState (H := H) :=
+  C.kms.state
+
+/-- The modular automorphism group is the Souriau/Tomita generated flow. -/
+@[rep_depth operator]
+noncomputable def sigma : AdditiveModularFlow (H := H) :=
+  C.logContext.souriauAdditiveModularFlow
+
+/-- The KMS modular time parameter carried by this context. -/
+@[rep_depth operator]
+def modularBeta : ℝ :=
+  C.beta
+
+/-- KMS identity over the Souriau-generated modular automorphism group. -/
+@[rep_depth operator]
+theorem kms_eval_mul_souriau_modular_eq_eval_flip
+    (A B : Obs) :
+    C.state.eval (A * C.sigma C.modularBeta B) =
+      C.state.eval (B * A) :=
+  C.kms.eval_mul_modular_eq_eval_flip A B
+
+/-- The Souriau/Tomita modular automorphism group is additive. -/
+@[rep_depth operator]
+theorem sigma_add (s t : ℝ) :
+    C.sigma (s + t) = C.sigma s * C.sigma t :=
+  AdditiveModularFlow.map_add C.sigma s t
+
+/-- The Souriau/Tomita modular automorphism group starts at identity. -/
+@[rep_depth operator]
+theorem sigma_zero :
+    C.sigma 0 = 1 :=
+  AdditiveModularFlow.map_zero C.sigma
+
+/-- The modular Hamiltonian is the Souriau moment at geometric temperature. -/
+@[rep_depth operator]
+theorem modularHamiltonian_eq_moment_geometricTemperature :
+    C.logContext.modularHamiltonian =
+      C.logContext.souriauMoment.momentOperator
+        C.logContext.souriauMoment.geometricTemperature :=
+  C.logContext.modularHamiltonian_eq_moment_geometricTemperature
+
+/-- Search-facing packet for the minimal modular automorphism/KMS bridge. -/
+@[rep_depth operator]
+theorem constructive_kms_packet
+    (A B : Obs) (s t : ℝ) :
+    C.state.eval (A * C.sigma C.modularBeta B) =
+        C.state.eval (B * A) ∧
+    C.sigma (s + t) = C.sigma s * C.sigma t ∧
+    C.sigma 0 = 1 ∧
+    C.logContext.modularHamiltonian =
+      C.logContext.souriauMoment.momentOperator
+        C.logContext.souriauMoment.geometricTemperature := by
+  exact ⟨
+    C.kms_eval_mul_souriau_modular_eq_eval_flip A B,
+    C.sigma_add s t,
+    C.sigma_zero,
+    C.modularHamiltonian_eq_moment_geometricTemperature⟩
+
+end MinimalSouriauTomitaKMSContext
+
+/--
 Narrow constructive KMS owner lane obtained from a standard-form carrier whose
 modular Hamiltonian collapses to zero and a cyclic algebraic state.  This is the
 largest honest branch currently owned by the repo without claiming the full
@@ -285,14 +411,18 @@ analytic-strip / arbitrary-Type-III theorem.
 -/
 @[rep_depth operator]
 structure CyclicSouriauTomitaKMSContext where
-  logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)
+  geometricTemperature : Symmetry
   beta : ℝ
   state : CyclicAlgebraicState (H := H)
-  modularHamiltonian_zero : logContext.modularHamiltonian = 0
 
 namespace CyclicSouriauTomitaKMSContext
 
 variable (C : CyclicSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+
+/-- The cyclic identity branch uses the zero-thermal-moment Souriau/Tomita context. -/
+@[rep_depth operator]
+noncomputable def logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) :=
+  SouriauTomitaLogContext.ofZeroThermalMoment (H := H) C.geometricTemperature
 
 /-- The modular automorphism group is the standard-form carrier flow. -/
 @[rep_depth operator]
@@ -303,6 +433,13 @@ noncomputable def sigma : AdditiveModularFlow (H := H) :=
 @[rep_depth operator]
 def modularBeta : ℝ :=
   C.beta
+
+/-- In the narrowed cyclic branch the standard-form carrier generator is zero. -/
+@[rep_depth operator]
+theorem modularHamiltonian_zero :
+    C.logContext.modularHamiltonian = 0 :=
+  SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment
+    (H := H) C.geometricTemperature
 
 /-- In the narrowed cyclic branch the standard-form carrier generator is zero. -/
 @[rep_depth operator]

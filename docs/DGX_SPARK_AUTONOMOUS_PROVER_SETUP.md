@@ -61,9 +61,9 @@ From NVIDIA's DGX Spark OpenShell guide:
 
 Current local prover-serving lane on this host:
 
-- **Nemotron (Planner):**
-  - `http://127.0.0.1:30000/v1`
-  - role: High-level planning and orchestration for Hermes.
+- **Qwen 35B (Planner):**
+  - `http://127.0.0.1:8001/v1`
+  - role: High-level planning and orchestration for Hermes when the SparkRun resident is active.
 - **Goedel (Audit):**
   - `http://127.0.0.1:30001/v1`
   - role: Conservative local audit and system verification.
@@ -128,9 +128,9 @@ Minimal expected shape:
 ```yaml
 model:
   provider: custom
-  base_url: http://127.0.0.1:30000/v1
+  base_url: http://127.0.0.1:8001/v1
   api_key: token-123
-  default: Nemotron-3-Nano-30B-A3B-UD-Q8_K_XL.gguf
+  default: Qwen/Qwen3.6-35B-A3B-FP8
 paths:
   skills: ./quarantine/hermes_skills
   memory: ./quarantine/hermes_memory
@@ -166,7 +166,7 @@ NIM docs also support serving fine-tuned/local HuggingFace checkpoints via envir
 Current local note:
 
 - `Hermes Agent` is the central orchestrator.
-- **Planner Lane (Nemotron):** `http://127.0.0.1:30000/v1`
+- **Planner Lane (Qwen 35B):** `http://127.0.0.1:8001/v1`
 - **Proof Lane (DeepSeek):** `http://127.0.0.1:30002/v1`
 - **Audit Lane (Goedel):** `http://127.0.0.1:30001/v1`
 - Current local execution cwd is `/home/goutev/repos/info-geometry-lean`.

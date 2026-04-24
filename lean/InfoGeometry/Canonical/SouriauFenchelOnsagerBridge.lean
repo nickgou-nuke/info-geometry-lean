@@ -9,6 +9,11 @@ This file connects the finite Souriau thermodynamics owner surface to the
 repo's Fenchel-Legendre/Massieu model and the finite Onsager/metriplectic
 second-law shadow.
 
+In the current trunk doctrine this entire module is a finite/scalar translator
+surface. It is intentionally not the owner for the noncommutative,
+dimension-agnostic theory: the operatorial trunk and the infinite coadjoint
+interface live elsewhere.
+
 Boundary:
 
 * `SouriauThermodynamics` owns the finite moment-map shadow, Gibbs-Souriau
@@ -71,6 +76,8 @@ Finite Souriau/Fenchel context.
 The field `massieu_matches` is the explicit bridge assertion that the scalar
 log-potential model is evaluating the same Massieu/log-partition value as the
 finite Souriau grand-canonical package at the selected parameter `theta`.
+This is a scalar-shadow matching field, not an owner-level derivation of the
+Massieu potential from the operatorial modular lane.
 -/
 @[rep_depth thermo]
 structure SouriauFenchelContext [Fintype α] [Nonempty α] where
@@ -156,6 +163,9 @@ theorem casimir_channel_zero :
 Finite Souriau-Onsager second-law projection:
 the total entropy production is nonnegative under the explicit Casimir and PSD
 response hypotheses carried by the context.
+
+This theorem is a truthful finite shadow, but not the full dimension-agnostic
+or operatorial owner theorem.
 -/
 @[rep_depth thermo]
 theorem onsager_total_entropy_nonnegative :

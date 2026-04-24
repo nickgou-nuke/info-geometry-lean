@@ -24,6 +24,12 @@ def sample_swarm_config() -> hive_swarm.SwarmConfig:
         model_base_url="http://127.0.0.1:30002/v1",
         model_name="deepseek-prover-v2-7b-q8_0.gguf",
         api_key="test-key",
+        backend_kind="local_openai_compatible",
+        backend_identity="http://127.0.0.1:30002/v1",
+        subscription_backed=False,
+        backend_capability="proof_tactic_proposal",
+        hermes_role="hive_proof_bee",
+        allow_direct_provider_api=False,
         timeout=30,
         tactic_override=None,
     )
@@ -54,10 +60,17 @@ def sample_task() -> dict:
 
 def test_parse_critic_decision_and_auditor_report() -> None:
     critic = hive_swarm.parse_critic_decision("VERDICT: revise\nTACTIC: simp\nREASON: simplify first")
+    rejected = hive_swarm.parse_critic_decision("VERDICT: reject\nTACTIC: exact rfl\nREASON: this is wrong")
+    nonschema = hive_swarm.parse_critic_decision("### Lean4 Proof Sketch\n```lean4\ntheorem bad : True := by trivial\n```")
     auditor = hive_swarm.parse_auditor_report("VERDICT: conditional_pass\nPROMOTION_ALLOWED: no\nNOTES: Keep Lean as authority.")
 
     assert critic.verdict == "revise"
     assert critic.tactic == "simp"
+    assert rejected.verdict == "reject"
+    assert rejected.tactic == ""
+    assert nonschema.verdict == "reject"
+    assert nonschema.tactic == ""
+    assert nonschema.reason == "non-schema critic output"
     assert auditor.verdict == "conditional_pass"
     assert auditor.promotion_allowed == "no"
 

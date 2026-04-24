@@ -1,9 +1,0 @@
-{"selectedDecls": 10,
- "schemaVersion": 1,
- "nodes": 802,
- "namespacePrefix": "InfoGeometry",
- "maxDecls": 10,
- "includeExternalDecls": false,
- "importModules": "InfoGeometry.Basic",
- "edges": 1007,
- "brokenBVarCount": 0}

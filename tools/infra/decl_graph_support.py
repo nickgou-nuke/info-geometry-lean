@@ -19,7 +19,7 @@ import sys
 import urllib.request
 import urllib.error
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -83,6 +83,49 @@ def ensure_local_artifacts(root: Path):
             "--output-dir", "artifacts/dag/index",
             "--no-strict-lossless"
         ], root, "Hydrating local topology overlay")
+
+
+def load_json(path: Path) -> Any:
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_significance_index(path: Path) -> dict[str, dict[str, Any]]:
+    payload = load_json(path)
+    if not isinstance(payload, list):
+        return {}
+    out: dict[str, dict[str, Any]] = {}
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("name")
+        if isinstance(name, str):
+            out[name] = row
+    return out
+
+
+def as_int(value: Any, default: int = 0) -> int:
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    return default
+
+
+def as_bool(value: Any, default: bool = False) -> bool:
+    if isinstance(value, bool):
+        return value
+    return default
+
+
+def is_repo_root_context(root: Path) -> bool:
+    return (
+        (root / "tools" / "infra" / "refresh_decl_graph.py").exists()
+        and (root / "lean").exists()
+    )
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -216,15 +259,22 @@ def parse_decl_attrs(attrs: object) -> tuple[str | None, int | None, dict[str, A
 
 def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[str, GraphProfile]]:
     # ⚖️ PAULI AUTHORITY SELECTION
-    arango_data = query_arango_authority()
+    allow_live = (
+        os.environ.get("DECL_GRAPH_ALLOW_LIVE_ARANGO", "1") == "1"
+        and is_repo_root_context(root)
+        and root.resolve() == Path.cwd().resolve()
+    )
+    arango_data = query_arango_authority() if allow_live else {}
     if arango_data:
         print(f"[decl-graph-support] Using ArangoDB live authority ({len(arango_data)} nodes)")
     else:
-        print("[decl-graph-support] ArangoDB unreachable. Ensuring local formal DAG...")
-        ensure_local_artifacts(root)
+        print("[decl-graph-support] Using local DAG artifact authority")
+        if is_repo_root_context(root):
+            ensure_local_artifacts(root)
 
     decl_rows = load_jsonl(root / DECL_INDEX_PATH)
     edge_rows = load_jsonl(root / EDGE_INDEX_PATH)
+    significance_by_name = load_significance_index(root / SIGNIFICANCE_INDEX_PATH)
 
     decl_key_to_full: dict[tuple[str, int, str], str] = {}
     decl_rows_by_name: dict[str, dict[str, Any]] = {}
@@ -291,18 +341,19 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             significance_present = a["significance_present"]
         else:
             # Fallback uses locally hydrated topology attributes in 'extra'
+            sig = significance_by_name.get(name, {})
             rv = int(reverse_value_users.get(name, 0))
             rt = int(reverse_type_users.get(name, 0))
             rth = int(reverse_theorem_users.get(name, 0))
-            reverse_public_fan_in = rth
+            reverse_public_fan_in = as_int(sig.get("reverse_public_fan_in"), rth)
             
             # These fields are populated by hydrate_arango_topology.py into the JSONL attrs
-            descendant_mass = extra.get("descendant_mass_nat", 0)
-            transitive_reverse_reach = extra.get("upstream_reachable_nat", 0)
-            depth = extra.get("depth_nat", rep_depth or 0)
-            scc_size = extra.get("scc_size_nat", 1)
-            is_sink = extra.get("is_sink_bool", descendant_mass == 0)
-            significance_present = bool(row.get("doc") and len(str(row.get("doc"))) > 20)
+            descendant_mass = as_int(sig.get("descendant_mass"), as_int(extra.get("descendant_mass_nat"), 0))
+            transitive_reverse_reach = as_int(sig.get("transitive_reverse_reach"), as_int(extra.get("upstream_reachable_nat"), 0))
+            depth = as_int(sig.get("depth"), as_int(extra.get("depth_nat"), rep_depth or 0))
+            scc_size = as_int(sig.get("scc_size"), as_int(extra.get("scc_size_nat"), 1))
+            is_sink = as_bool(sig.get("is_sink"), as_bool(extra.get("is_sink_bool"), descendant_mass == 0))
+            significance_present = name in significance_by_name or bool(row.get("doc") and len(str(row.get("doc"))) > 20)
 
         fwd_theorems = tuple(forward_value_theorems.get(name, []))
         fwd_defs = tuple(forward_value_defs.get(name, []))

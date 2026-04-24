@@ -91,6 +91,21 @@ theorem supercharge_mem_chiralCone :
       (DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel) :=
   C.chiralAlgebra.supercharge_mem_chiralCone
 
+/--
+Closure-level chiral-supertrace cancellation for the Drazin odd generator.
+
+This delegates to the kernel owner: oddness of `Q_D` plus cyclicity of the
+chosen chiral readout forces `Str_Γ(Q_D)=0`.
+-/
+@[rep_depth krein]
+theorem chiralSupertrace_supercharge_eq_zero
+    (τ : DrazinSupercharge.CertifiedInverseKernel.ChiralSupertraceReadout C.kernel) :
+    DrazinSupercharge.CertifiedInverseKernel.chiralSupertrace
+        (CIK := C.kernel) τ
+        (DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel) = 0 :=
+  DrazinSupercharge.CertifiedInverseKernel.chiralSupertrace_supercharge_eq_zero
+    (CIK := C.kernel) τ
+
 /-- Compact/chiral commutator closure on the gathered package. -/
 @[rep_depth krein]
 theorem spectralCommutator_compact_mem_chiralCone

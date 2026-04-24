@@ -13,6 +13,12 @@ This follows from the positive-definiteness of the covariance operator.
 lemma gaussian_grad_monotone (G : GaussianFamily E) (η₁ η₂ : E) :
   0 ≤ inner ℝ (G.sigma η₁ - G.sigma η₂) (η₁ - η₂) :=
 by
-  have : G.sigma η₁ - G.sigma η₂ = G.sigma (η₁ - η₂) := by simp [LinearMap.map_sub]
-  rw [this]
-  exact G.sigma_pos (η₁ - η₂) (sub_ne_zero_of_ne (ne_of_apply_ne (fun x => x) (ne_of_ne (η₁ ≠ η₂))))
+  by_cases h : η₁ = η₂
+  · subst η₁
+    simp
+  · have hdiff : η₁ - η₂ ≠ 0 := sub_ne_zero.mpr h
+    have hsigma : G.sigma η₁ - G.sigma η₂ = G.sigma (η₁ - η₂) := by
+      simp
+    rw [hsigma]
+    rw [real_inner_comm]
+    exact le_of_lt (G.sigma_pos (η₁ - η₂) hdiff)

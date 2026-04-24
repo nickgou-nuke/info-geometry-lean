@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-04-22T22:40:18.245675+00:00",
+  "goal_key": "goal_4f6bfbfd49454aba0befbea9",
+  "reason": "no matching paper id in task target",
+  "schema": "info_geometry.research_digest_worker.v1",
+  "status": "deadend",
+  "target_pretty": "Use artifacts/alexandria/hive_research_digest/motherbee_context_2026-04-22.md plus the associated injection packet to localize exact repo-owned Fisher/Onsager/KKT/Tomita/Weyl/TKK corridors and identify the next explicit hypothesis packet to reduce constructively",
+  "task_key": "task_95d108c2284988a8c7830031"
+}

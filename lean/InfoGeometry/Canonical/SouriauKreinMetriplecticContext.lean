@@ -570,6 +570,24 @@ theorem canonicalEntropyProduction_nonneg_of_cramerRaoResponse
     InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
 
 /--
+One-channel operatorial second-law gate from the regular Drazin/Krein cone.
+
+This is the direct operatorial-trunk version of the Souriau--Fisher--Onsager
+docstring source: the diagonal Fisher/Onsager shadow is the probed
+operatorial Hessian, and nonnegativity is produced by regular-cone positivity
+rather than by a finite response matrix.
+-/
+@[rep_depth transport]
+theorem canonicalEntropyProduction_nonneg_of_regularCone
+    (R : RegularConeXResponseContext C) :
+    0 ≤ InfoGeometry.Canonical.Operators.entropyProduction (E := E) C.P C.X C.A := by
+  have hDiag : 0 ≤ C.diagonalMetricResponse :=
+    RegularConeXResponseContext.diagonalMetricResponse_nonneg R
+  rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
+  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
+
+/--
 Supergraded even/odd Onsager block packet on the operatorial carrier.
 
 The `X` channel is read as the even/bosonic direction and the `Y` channel as

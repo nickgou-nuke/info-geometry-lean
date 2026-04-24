@@ -4,6 +4,12 @@
 
 This document establishes the **Discovery Reservoir** as the pre-formal engine of the Info-Geometry Spire. It ensures that the symbolic fertility of the project's discovery notes (The Black Books) is systematically distilled into the crystalline law of the repository.
 
+Companion doctrine:
+- [`docs/jung_alchemy_packet_doctrine.md`](../jung_alchemy_packet_doctrine.md)
+  gives the formal packet-level version of this constitution: symbolic material
+  may enter the theorem factory, but only typed packets and authority gates may
+  integrate it.
+
 ## I. The Stratified Architecture
 
 The passage from symbolic emergence to mathematical law is governed by the following layers:

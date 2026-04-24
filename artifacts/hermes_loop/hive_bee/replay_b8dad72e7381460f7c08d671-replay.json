@@ -50,16 +50,16 @@
   ],
   "lean_output": {
     "generated_theorem_check": "HIVE_JSON {\"artifactKind\":\"DiamondFossil\",\"conclusionHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"conclusionPretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"constName\":\"hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b\",\"declarationKind\":\"theorem\",\"fullTypeHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"fullTypePretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"kernelStatus\":\"verified\",\"space\":\"logos\"}\n",
-    "proof_state": "⊢ 1 = 1\n/tmp/hermes_probe_u1qqy2w1.lean:3:8: warning: declaration uses `sorry`",
+    "proof_state": "⊢ 1 = 1\n/tmp/hermes_probe_wqxbl8pj.lean:3:8: warning: declaration uses `sorry`",
     "tactic_verification": "⊢ 1 = 1\n"
   },
   "metabolic_cost": {
     "gravity_neighbors_count": 6,
-    "lean_verification_latency_s": 3.098553,
+    "lean_verification_latency_s": 3.789584,
     "proof_depth": 1,
-    "wall_time_s": 17.358207
+    "wall_time_s": 19.430802
   },
-  "proof_state_before": "⊢ 1 = 1\n/tmp/hermes_probe_u1qqy2w1.lean:3:8: warning: declaration uses `sorry`",
+  "proof_state_before": "⊢ 1 = 1\n/tmp/hermes_probe_wqxbl8pj.lean:3:8: warning: declaration uses `sorry`",
   "schema": "info_geometry.hive_replay_packet.v1",
   "tactic_trace": [
     {
@@ -81,11 +81,11 @@
   "task_key": "task_6e03caa4d00ded92fbc34b9b",
   "theorem_source": "import Mathlib\nimport InfoGeometry.Meta.HiveLogos\n\ntheorem hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b : 1 = 1 := by\n  rfl\n\n#hive_index_decl hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b\n",
   "timestamps": {
-    "created_at": "2026-04-22T21:05:19Z",
-    "fossil_created_at": "2026-04-22T21:05:19Z",
+    "created_at": "2026-04-22T22:22:24Z",
+    "fossil_created_at": "2026-04-22T22:22:24Z",
     "goal_created_at": "2026-04-22T21:04:59Z",
-    "task_claimed_at": "2026-04-22T21:04:59.567Z",
+    "task_claimed_at": "2026-04-22T22:22:01.102Z",
     "task_created_at": "2026-04-22T21:04:59Z"
   },
-  "worker_id": "hive-bee-replay"
+  "worker_id": "hive-bee-codex-poll"
 }

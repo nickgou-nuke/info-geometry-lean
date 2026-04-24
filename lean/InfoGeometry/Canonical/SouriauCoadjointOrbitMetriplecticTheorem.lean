@@ -697,6 +697,125 @@ open InfoGeometry.Geometry
 
 variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
 
+section GibbsSouriauAnalyticWitness
+
+variable {Feature : Type*}
+variable [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+
+/--
+Analytic Gibbs-Souriau witness for the infinite/coordinateless lane.
+
+This is not a finite state shadow and it does not hide differentiation under an
+integral behind prose.  A concrete model must supply the actual integration
+functional, Gibbs weight, centered moment features, first/second derivative
+laws, and covariance identity.  Once those analytic obligations are supplied,
+the theorem below composes them with the already-owned Legendre/Gram/square
+dissipation route.
+-/
+@[rep_depth transport]
+structure GibbsSouriauGramAnalyticWitness
+    (Orbit : Type u) (Θ : Type*) [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
+    (Feature : Type*) [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature] where
+  /-- Distinguished geometric-temperature point where the analytic witness is valid. -/
+  beta : Θ
+  /-- Coadjoint moment map. -/
+  moment : Orbit → MomentCoord Θ
+  /-- Abstract integration/noncommutative expectation functional. -/
+  integralFunctional : (Orbit → ℝ) → ℝ
+  /-- Gibbs-Souriau unnormalised or normalised weight, depending on the concrete model. -/
+  gibbsWeight : Θ → Orbit → ℝ
+  /-- Centered moment feature used for the covariance identity. -/
+  centeredMomentFeature : Orbit → Θ → ℝ
+  /-- Statistical partition functional. -/
+  partitionFunction : Θ → ℝ
+  /-- Massieu geometry whose gradient/Hessian own the thermodynamic moment/Fisher laws. -/
+  massieu : HessianGeometry Θ
+  /-- Thermodynamic moment readout `Q(β)`. -/
+  thermodynamicMoment : Θ → MomentCoord Θ
+  /-- Souriau entropy on the coadjoint dual lane. -/
+  souriauEntropy : MomentCoord Θ → ℝ
+  /-- Entropy-gradient map used by the local Legendre inverse theorem. -/
+  entropyGradient : MomentCoord Θ → Θ
+  /-- Fisher Hessian as a continuous-linear equivalence. -/
+  fisherEquiv : Θ ≃L[ℝ] MomentCoord Θ
+  /-- Hilbert feature representation of the Fisher form. -/
+  feature : Θ → Feature
+  /-- Partition is represented by the supplied Gibbs-Souriau integral. -/
+  partition_eq_integral_gibbsWeight :
+    ∀ β : Θ, partitionFunction β = integralFunctional (gibbsWeight β)
+  /-- Massieu is the logarithm of the partition functional. -/
+  massieu_eq_log_partition :
+    ∀ β : Θ, massieu.ψ β = Real.log (partitionFunction β)
+  /-- First variation: Massieu gradient gives the thermodynamic moment. -/
+  thermodynamicMoment_eq_gradient_at_beta :
+    thermodynamicMoment beta = dualCoord massieu beta
+  /-- Entropy-gradient contact equation. -/
+  entropyGradient_at_moment :
+    entropyGradient (dualCoord massieu beta) = beta
+  /-- Second variation: Fisher is the Massieu Hessian at the witness point. -/
+  fisherEquiv_eq_massieuHessian :
+    (fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian massieu beta
+  /-- Entropy-gradient derivative is the inverse Fisher map. -/
+  entropyGradient_derivative_eq_inverse :
+    fderiv ℝ entropyGradient (dualCoord massieu beta) =
+      (fisherEquiv.symm : MomentCoord Θ →L[ℝ] Θ)
+  /-- Fisher is represented by a Hilbert Gram form. -/
+  fisherEquiv_eq_gram :
+    ∀ X Y : Θ, (fisherEquiv X) Y = inner ℝ (feature X) (feature Y)
+  /-- Covariance identity supplied by the concrete Gibbs-Souriau analytic model. -/
+  fisherEquiv_eq_integral_centered_moment_product :
+    ∀ X Y : Θ,
+      (fisherEquiv X) Y =
+        integralFunctional
+          (fun x : Orbit => centeredMomentFeature x X * centeredMomentFeature x Y)
+
+namespace GibbsSouriauGramAnalyticWitness
+
+variable {Orbit : Type u}
+
+/-- Convert the analytic witness into the repo-owned Legendre inverse data. -/
+@[rep_depth transport]
+noncomputable def toLegendreContinuousLinearEquivInverseData
+    (W : GibbsSouriauGramAnalyticWitness Orbit Θ Feature) :
+    LegendreContinuousLinearEquivInverseData Θ where
+  massieu := W.massieu
+  beta := W.beta
+  entropyGradient := W.entropyGradient
+  fisherEquiv := W.fisherEquiv
+  entropyGradient_at_moment := W.entropyGradient_at_moment
+  fisherEquiv_eq_massieuHessian := W.fisherEquiv_eq_massieuHessian
+  entropyGradient_derivative_eq_inverse := W.entropyGradient_derivative_eq_inverse
+
+/--
+The analytic Gibbs-Souriau witness discharges the previously prose-only
+partition, first-variation, second-variation, Gram, and covariance claims at
+the witness point.
+-/
+@[rep_depth transport]
+theorem integral_covariance_gram_legendre_packet
+    (W : GibbsSouriauGramAnalyticWitness Orbit Θ Feature)
+    (X Y : Θ) :
+    W.partitionFunction W.beta = W.integralFunctional (W.gibbsWeight W.beta)
+      ∧ W.massieu.ψ W.beta = Real.log (W.partitionFunction W.beta)
+      ∧ W.thermodynamicMoment W.beta = dualCoord W.massieu W.beta
+      ∧ (W.fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian W.massieu W.beta
+      ∧ (W.fisherEquiv X) Y = inner ℝ (W.feature X) (W.feature Y)
+      ∧ (W.fisherEquiv X) Y =
+        W.integralFunctional
+          (fun z : Orbit => W.centeredMomentFeature z X * W.centeredMomentFeature z Y) :=
+  ⟨W.partition_eq_integral_gibbsWeight W.beta,
+    W.massieu_eq_log_partition W.beta,
+    W.thermodynamicMoment_eq_gradient_at_beta,
+    W.fisherEquiv_eq_massieuHessian,
+    W.fisherEquiv_eq_gram X Y,
+    W.fisherEquiv_eq_integral_centered_moment_product X Y⟩
+
+attribute [terminal] integral_covariance_gram_legendre_packet
+
+end GibbsSouriauGramAnalyticWitness
+
+end GibbsSouriauAnalyticWitness
+
 /--
 Dimension-agnostic constructor that discharges the smooth Legendre/Fenchel and
 inverse-Hessian fields from the repo-owned `LegendreHessianInverseContext`.
@@ -1738,6 +1857,86 @@ theorem fisher_onsager_metriplectic_constructive_proof_packet
       sq_nonneg (dissipationAmplitude x)⟩
 
 attribute [terminal] fisher_onsager_metriplectic_constructive_proof_packet
+
+/--
+Full analytic-to-metriplectic packet.
+
+This composes the explicit Gibbs-Souriau analytic witness
+(`partition = integral`, first variation, second variation, Gram Fisher, and
+centered-moment covariance) with the already-owned infinite
+Legendre/Gram/square-dissipation theorem.  The result is still
+dimension-agnostic: no finite response matrix or count-state model is used.
+-/
+@[rep_depth transport]
+theorem gibbs_souriau_integral_covariance_to_metriplectic_packet
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+    (W :
+      InfiniteCoadjointOrbitHessianContext.GibbsSouriauGramAnalyticWitness
+        Orbit Θ Feature)
+    (geometricTemperature : Θ)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (β X Y : Θ) (Q : MomentCoord Θ) (x : Orbit)
+    (hX : W.feature X ≠ 0) :
+    W.partitionFunction W.beta = W.integralFunctional (W.gibbsWeight W.beta)
+      ∧ W.massieu.ψ W.beta = Real.log (W.partitionFunction W.beta)
+      ∧ W.thermodynamicMoment W.beta = dualCoord W.massieu W.beta
+      ∧ (W.fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian W.massieu W.beta
+      ∧ (W.fisherEquiv X) Y = inner ℝ (W.feature X) (W.feature Y)
+      ∧ (W.fisherEquiv X) Y =
+        W.integralFunctional
+          (fun z : Orbit => W.centeredMomentFeature z X * W.centeredMomentFeature z Y)
+      ∧
+        (let C :
+          InfiniteCoadjointOrbitHessianMetriplecticContext
+            Orbit Θ (MomentCoord Θ) Θ (MomentCoord Θ) :=
+          ofContinuousLinearEquivLegendreGramSquareDissipation
+            W.moment geometricTemperature reversibleVectorField metricVectorField
+            entropy dissipationAmplitude W.partitionFunction W.thermodynamicMoment
+            W.souriauEntropy W.toLegendreContinuousLinearEquivInverseData
+            W.feature W.fisherEquiv_eq_gram
+        C.hessian.massieuPotential β =
+            Real.log (C.hessian.partitionFunction β)
+          ∧ C.hessian.fisherHessian β X Y =
+            inner ℝ (W.feature X) (W.feature Y)
+          ∧ C.hessian.fisherHessian β X Y =
+            C.hessian.fisherHessian β Y X
+          ∧ 0 ≤ C.hessian.fisherHessian β X X
+          ∧ 0 < C.hessian.fisherHessian β X X
+          ∧ C.hessian.entropyHessian Q =
+            C.hessian.inverseFisherHessian Q
+          ∧
+            W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.entropyHessian.comp
+              W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.fisherHessian =
+            ContinuousLinearMap.id ℝ Θ
+          ∧
+            W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.fisherHessian.comp
+              W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.entropyHessian =
+            ContinuousLinearMap.id ℝ (MomentCoord Θ)
+          ∧ C.metriplectic.reversibleEntropyRate x = 0
+          ∧ C.metriplectic.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+          ∧ C.metriplectic.totalEntropyRate x = C.metriplectic.metricEntropyRate x
+          ∧ 0 ≤ C.metriplectic.metricEntropyRate x
+          ∧ 0 ≤ C.metriplectic.totalEntropyRate x) := by
+  refine
+    ⟨W.partition_eq_integral_gibbsWeight W.beta,
+      W.massieu_eq_log_partition W.beta,
+      W.thermodynamicMoment_eq_gradient_at_beta,
+      W.fisherEquiv_eq_massieuHessian,
+      W.fisherEquiv_eq_gram X Y,
+      W.fisherEquiv_eq_integral_centered_moment_product X Y,
+      ?_⟩
+  exact
+    fisher_onsager_metriplectic_constructive_proof_packet
+      (Orbit := Orbit)
+      W.moment geometricTemperature reversibleVectorField metricVectorField
+      entropy dissipationAmplitude W.partitionFunction W.thermodynamicMoment
+      W.souriauEntropy W.toLegendreContinuousLinearEquivInverseData
+      W.feature W.fisherEquiv_eq_gram β X Y Q x hX
+
+attribute [terminal] gibbs_souriau_integral_covariance_to_metriplectic_packet
 
 end ConstructiveCombinedContext
 

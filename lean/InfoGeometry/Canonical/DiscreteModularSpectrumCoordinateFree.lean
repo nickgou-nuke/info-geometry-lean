@@ -74,6 +74,38 @@ noncomputable local instance : NormedAlgebra ℚ EndH_loc :=
 local instance : IsTopologicalRing EndH_loc := inferInstance
 local instance : CompleteSpace EndH_loc := inferInstance
 
+/--
+Local finite-time exponential transport fixedness gate.
+
+This mirrors the owner theorem in `TransportLieDerivative`; it is kept local
+here because this module is compiled in a mixed fusion/base import graph where
+the older imported owner surface may not export the finite-time lemma.
+-/
+private theorem expTransport_eq_self_of_commute_local
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) (hComm : Commute A₀ X) :
+    expTransport (A := A) X A₀ t = A₀ := by
+  have hCommScaled : Commute A₀ (t • X) := by
+    simpa using hComm.smul_right t
+  have hCommExp : Commute A₀ (NormedSpace.exp (t • X)) := by
+    simpa using hCommScaled.exp_right
+  have hScaledNeg : Commute (t • X) (t • (-X)) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_right
+  unfold expTransport
+  calc
+    (NormedSpace.exp (t • X) * A₀) * NormedSpace.exp (t • (-X))
+        = (A₀ * NormedSpace.exp (t • X)) * NormedSpace.exp (t • (-X)) := by
+            rw [hCommExp.eq]
+    _ = A₀ * (NormedSpace.exp (t • X) * NormedSpace.exp (t • (-X))) := by
+          rw [mul_assoc]
+    _ = A₀ * NormedSpace.exp (t • X + t • (-X)) := by
+          rw [← NormedSpace.exp_add_of_commute hScaledNeg]
+    _ = A₀ * 1 := by
+          simp
+    _ = A₀ := by
+          simp
+
 noncomputable def thermalTimeStep (k : ℤ) : ℝ := (k : ℝ) * Real.log L.q
 
 @[rep_depth operator]
@@ -130,7 +162,7 @@ theorem modularTransportGenerator_commutes_drazin :
 theorem drazin_projector_invariant (k : ℤ) :
     L.discreteBoost k (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK) = 
       CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK :=
-  InfoGeometry.Canonical.expTransport_eq_self_of_commute
+  expTransport_eq_self_of_commute_local
     (X := modularTransportGenerator (E := E) L.K0)
     (A₀ := CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
     (t := L.thermalTimeStep k)

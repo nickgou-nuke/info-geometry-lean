@@ -131,9 +131,20 @@ def parse_keyed_line(text: str, key: str) -> str:
 
 
 def parse_critic_decision(text: str) -> CriticDecision:
-    verdict = parse_keyed_line(text, "VERDICT").lower() or "reject"
-    tactic = parse_keyed_line(text, "TACTIC")
-    reason = parse_keyed_line(text, "REASON") or text.strip()
+    raw_verdict = parse_keyed_line(text, "VERDICT")
+    raw_tactic = parse_keyed_line(text, "TACTIC")
+    raw_reason = parse_keyed_line(text, "REASON")
+    has_schema = bool(raw_verdict or raw_tactic or raw_reason)
+    verdict = raw_verdict.lower() or "reject"
+    tactic = raw_tactic
+    reason = raw_reason or text.strip()
+    reason = " ".join(reason.split())[:400]
+    if not has_schema:
+        return CriticDecision(verdict="reject", tactic="", reason="non-schema critic output")
+    if verdict not in {"approve", "revise", "reject"}:
+        verdict = "reject"
+    if verdict == "reject":
+        tactic = ""
     return CriticDecision(verdict=verdict, tactic=tactic, reason=reason)
 
 
@@ -365,6 +376,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model-base-url", default=hive_bee.DEFAULT_MODEL_BASE_URL)
     parser.add_argument("--model-name", default=hive_bee.DEFAULT_MODEL)
     parser.add_argument("--api-key", default=hive_bee.DEFAULT_API_KEY)
+    parser.add_argument("--backend-kind", default=None)
+    parser.add_argument("--backend-identity", default=None)
+    parser.add_argument("--subscription-backed", action="store_true")
+    parser.add_argument("--backend-capability", default=hive_bee.DEFAULT_BACKEND_CAPABILITY)
+    parser.add_argument("--hermes-role", default=hive_bee.DEFAULT_HERMES_ROLE)
+    parser.add_argument("--allow-direct-provider-api", action="store_true")
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--generator-override", default=None)
     parser.add_argument("--critic-override", default=None)
@@ -389,6 +406,12 @@ def config_from_args(args: argparse.Namespace) -> SwarmConfig:
         model_base_url=str(args.model_base_url).rstrip("/"),
         model_name=str(args.model_name),
         api_key=str(args.api_key),
+        backend_kind=hive_bee.infer_backend_kind(args),
+        backend_identity=str(args.backend_identity or args.model_base_url).rstrip("/"),
+        subscription_backed=bool(args.subscription_backed),
+        backend_capability=str(args.backend_capability),
+        hermes_role=str(args.hermes_role),
+        allow_direct_provider_api=bool(args.allow_direct_provider_api),
         timeout=int(args.timeout),
         tactic_override=None,
     )

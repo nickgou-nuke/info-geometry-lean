@@ -16,6 +16,7 @@ import InfoGeometry.Prequantum.All
 import InfoGeometry.Projective.All
 import InfoGeometry.Quantum.All
 import InfoGeometry.Singular.All
+import InfoGeometry.SuperMetriplectic.All
 import InfoGeometry.Thermo.All
 import InfoGeometry.Volume.All
 import InfoGeometry.Canonical.KernelCommutatorObstruction

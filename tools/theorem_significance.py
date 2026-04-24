@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-⚖️ THE PAULI SIGNIFICANCE AUDITOR (graph-index grounded)
-Truth lives in Lean; structure lives in the declaration graph.
+⚖️ THE PAULI SIGNIFICANCE AUDITOR (Authority-Grounded)
+Truth lives in Lean; structure lives in the graph.
 
-This script replaces legacy lexical heuristics with graph-topology evidence
-from local DAG index artifacts under artifacts/dag/index.
-A theorem is considered significant if it has strong downstream support and depth.
+This script replaces legacy lexical heuristics with formal topological evidence.
+A theorem is considered significant if it possesses 'Causal Mass'—defined by
+transitive downstream support and depth in the formal dependency DAG.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
     from tools.infra.decl_graph_support import load_decl_graph
     from tools.pathing import repo_root
 else:
@@ -27,12 +27,12 @@ else:
 def main() -> int:
     root = repo_root()
     
-    # 1. Load graph evidence from local DAG index artifacts
-    print("[pauli-audit] Loading graph evidence from local DAG index artifacts...")
+    # 1. Load the ground truth from Pauli Authority (ArangoDB or local artifacts)
+    print("[pauli-audit] Loading truthful graph mass from Pauli Authority...")
     decl_key_to_full, profiles = load_decl_graph(root)
     
     if not profiles:
-        print("[pauli-audit] ERROR: graph index is missing or empty.")
+        print("[pauli-audit] ERROR: Pauli Authority is unreachable or graph is empty.")
         return 1
 
     print(f"[pauli-audit] Analysing {len(profiles)} declarations for formal significance...")
@@ -47,16 +47,12 @@ def main() -> int:
             continue
 
         # SIGNANCE METRIC 1: Causal Mass (Transitive Downstream Support)
-        # This is the number of theorems that formally depend on this vertex.
         mass = p.descendant_mass
         
         # SIGNANCE METRIC 2: Linkage Depth
-        # How far from the L0 axioms is this theorem?
         depth = p.depth
 
         # JUDGMENT: Deep Identification
-        # Theorems that are 'rfl' but have high depth and mass.
-        # Legacy scripts flagged these as trivial; we flag them as milestones.
         if p.structural_role in ("supported_theorem", "load_bearing") and depth > 5:
             deep_identifications.append({
                 "name": name,
@@ -66,7 +62,6 @@ def main() -> int:
             })
 
         # JUDGMENT: Actual Vacuity
-        # Only vacuous if it has ZERO mass, ZERO upstream support, AND is an isolated_theorem.
         if mass == 0 and p.reverse_value_users == 0 and p.structural_role == "isolated_theorem":
             vacuous.append({
                 "name": name,
@@ -86,7 +81,7 @@ def main() -> int:
         "# ⚖️ Pauli Authority Audit: Truthful Significance Index",
         "",
         "> **Protocol:** Truth lives in Lean; structure lives in the graph.",
-        "> **Snapshot:** {len(profiles)} declarations analysed via local DAG index artifacts.",
+        f"> **Snapshot:** {len(profiles)} declarations analysed via Pauli Authority.",
         "",
         "## 💎 High Causal Mass (The Spire's Pillars)",
         "| Declaration | Causal Mass | Depth | Fan-In |",

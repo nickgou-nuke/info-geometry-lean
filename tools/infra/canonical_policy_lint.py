@@ -179,6 +179,8 @@ def has_valid_source_line(lines: list[str], line: int) -> bool:
 
 
 def theorem_is_private(lines: list[str], line: int) -> bool:
+    if not has_valid_source_line(lines, line):
+        return False
     text = lines[line - 1].lstrip()
     return text.startswith('private ') or text.startswith('protected ')
 

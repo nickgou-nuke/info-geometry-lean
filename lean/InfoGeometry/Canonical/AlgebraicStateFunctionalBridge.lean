@@ -59,7 +59,7 @@ theorem probe_id :
 Construct a normalized algebraic probe from a doubled-space vector state once a
 normalization witness is supplied.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def ofNormalizedVectorState
     (ξ : VectorState H)
     (hnorm : ξ.expectation (ContinuousLinearMap.id ℝ H2) = 1) :
@@ -75,7 +75,7 @@ noncomputable def ofNormalizedVectorState
   normalized := by
     simpa using hnorm
 
-@[rep_depth operator]
+@[rep_depth krein]
 theorem ofNormalizedVectorState_probe_apply
     (ξ : VectorState H)
     (hnorm : ξ.expectation (ContinuousLinearMap.id ℝ H2) = 1)
@@ -119,13 +119,13 @@ namespace StateRepresentationBridge
 variable (B : StateRepresentationBridge H)
 
 /-- The abstract probe agrees with the doubled-carrier reference expectation. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem probe_eq_referenceExpectation' :
     (fun A : EndH => B.state.probe A) = B.carrier.referenceState.expectation :=
   B.probe_eq_referenceExpectation
 
 /-- Pointwise evaluation form of the representation bridge. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem probe_apply_eq_referenceExpectation
     (A : EndH) :
     B.state.probe A = B.carrier.referenceState.expectation A := by
@@ -151,7 +151,7 @@ theorem withFrame_probe_eq
     (B.withFrame F).state.probe = B.state.probe := rfl
 
 /-- Changing the frame does not change the bridge to reference expectation. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem withFrame_probe_apply_eq_referenceExpectation
     (F : RepresentationFrame H) (A : EndH) :
     (B.withFrame F).state.probe A = B.carrier.referenceState.expectation A := by

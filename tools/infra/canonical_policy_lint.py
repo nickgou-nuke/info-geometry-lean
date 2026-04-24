@@ -4,10 +4,17 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.decl_graph_support import GraphProfile, load_decl_graph, weak_graph_evidence
+else:
+    from tools.infra.decl_graph_support import GraphProfile, load_decl_graph, weak_graph_evidence
 
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE_PATH = Path(__file__).with_name('canonical_policy_baseline.json')
@@ -100,6 +107,11 @@ class PublicTheorem:
     dependent_theorem_count: int
     theorem_class: str | None
     trivial_proof: bool
+    reverse_value_users: int = 0
+    reverse_type_users: int = 0
+    reverse_theorem_users: int = 0
+    graph_load_bearing_score: float = 0.0
+    structural_role: str = 'graph_unknown'
 
     @property
     def key(self) -> tuple[str, str]:
@@ -293,11 +305,42 @@ def compare_prop_baseline(baseline: dict[str, object], current: list[PropSurface
     ]
 
 
+def theorem_has_weak_graph_support(theorem: PublicTheorem) -> bool:
+    if theorem.structural_role == 'graph_unknown':
+        return theorem.dependent_theorem_count == 0
+    return weak_graph_evidence(
+        GraphProfile(
+            name=theorem.name,
+            kind='theorem',
+            module='',
+            file=theorem.file,
+            line=theorem.line,
+            rep_layer=None,
+            rep_depth=None,
+            reverse_value_users=theorem.reverse_value_users,
+            reverse_type_users=theorem.reverse_type_users,
+            reverse_theorem_users=theorem.reverse_theorem_users,
+            reverse_public_fan_in=theorem.reverse_theorem_users,
+            descendant_mass=0,
+            transitive_reverse_reach=0,
+            depth=0,
+            scc_size=1,
+            is_sink=False,
+            significance_present=False,
+            forward_value_theorems=tuple(),
+            forward_value_defs=tuple(),
+            graph_load_bearing_score=theorem.graph_load_bearing_score,
+            structural_role=theorem.structural_role,
+        )
+    )
+
+
 def scan_public_theorems() -> list[PublicTheorem]:
     theorem_index = load_json(REPORT_PATHS['theorem_surface_index'])
     rows = theorem_index.get('rows', [])
     decl_rows = load_jsonl(INDEX_PATHS['decls'])
     edge_rows = load_jsonl(INDEX_PATHS['edges'])
+    _decl_key_to_full, graph_profiles = load_decl_graph(ROOT)
 
     theorem_kinds = {'theorem', 'lemma'}
     decl_kind_by_name = {row['name']: row.get('kind') for row in decl_rows if 'name' in row}
@@ -348,6 +391,11 @@ def scan_public_theorems() -> list[PublicTheorem]:
                 next_line = candidate
                 break
         block = theorem_block(lines, line, next_line)
+        profile = graph_profiles.get(name)
+        is_trivial = theorem_has_trivial_proof(block)
+        if is_trivial and profile is not None and not weak_graph_evidence(profile):
+            is_trivial = False
+
         public_theorems.append(
             PublicTheorem(
                 file=file,
@@ -357,7 +405,12 @@ def scan_public_theorems() -> list[PublicTheorem]:
                 category=category,
                 dependent_theorem_count=len(theorem_dependents.get(name, set())),
                 theorem_class=theorem_class_tag(lines, line),
-                trivial_proof=theorem_has_trivial_proof(block),
+                trivial_proof=is_trivial,
+                reverse_value_users=0 if profile is None else profile.reverse_value_users,
+                reverse_type_users=0 if profile is None else profile.reverse_type_users,
+                reverse_theorem_users=0 if profile is None else profile.reverse_theorem_users,
+                graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
+                structural_role='graph_unknown' if profile is None else profile.structural_role,
             )
         )
     return sorted(public_theorems)
@@ -367,14 +420,15 @@ def scan_suspect_theorems(public_theorems: list[PublicTheorem]) -> list[SuspectT
     suspects: list[SuspectTheorem] = []
     for theorem in public_theorems:
         reasons: list[str] = []
-        if theorem.category in SUSPECT_THEOREM_CATEGORIES:
-            reasons.append(f'theorem-surface category {theorem.category}')
-        if theorem.trivial_proof:
-            reasons.append('proof is definitional/trivial')
-        if theorem.dependent_theorem_count == 0 and (
+        weak_graph = theorem_has_weak_graph_support(theorem)
+        if theorem.category in SUSPECT_THEOREM_CATEGORIES and theorem.dependent_theorem_count == 0 and weak_graph:
+            reasons.append(f'theorem-surface category {theorem.category} with no downstream theorem dependents and weak graph support ({theorem.structural_role})')
+        if theorem.trivial_proof and theorem.dependent_theorem_count == 0 and weak_graph:
+            reasons.append(f'proof is definitional/trivial with no downstream theorem dependents and weak graph support ({theorem.structural_role})')
+        if theorem.dependent_theorem_count == 0 and weak_graph and (
             theorem.category in SUSPECT_THEOREM_CATEGORIES or ALIASISH_THEOREM_NAME.search(theorem.short_name)
         ):
-            reasons.append('no downstream theorem dependents')
+            reasons.append(f'no downstream theorem dependents and weak graph support ({theorem.structural_role})')
         if reasons:
             suspects.append(
                 SuspectTheorem(
@@ -406,17 +460,18 @@ def compare_new_public_theorems(baseline: dict[str, object], current: list[Publi
             failures.append(
                 f"new public theorem has invalid theorem-class tag '{theorem.theorem_class}': {theorem.name} at {theorem.file}:{theorem.line}"
             )
-        if theorem.dependent_theorem_count == 0:
+        weak_graph = theorem_has_weak_graph_support(theorem)
+        if theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem has no downstream theorem dependents: {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem has no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
             )
-        if theorem.trivial_proof:
+        if theorem.trivial_proof and theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem has definitional/trivial proof: {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem has definitional/trivial proof with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
             )
-        if theorem.category in SUSPECT_THEOREM_CATEGORIES:
+        if theorem.category in SUSPECT_THEOREM_CATEGORIES and theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem lands in suspect theorem-surface category {theorem.category}: {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem lands in suspect theorem-surface category {theorem.category} with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
             )
     return failures
 

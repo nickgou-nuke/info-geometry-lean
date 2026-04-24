@@ -137,6 +137,97 @@ theorem nilpotent_pow_succ_eq_zero_of_le
   exact pow_mul_complementaryProjection_eq_zero_of_le (h := h) hm
 
 end Generic
+
+section LinearCore
+
+variable {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
+variable {A D : Module.End K V} {k : ℕ}
+
+/--
+The Drazin core at index `k` is the generalized kernel `ker(A^k)`.
+-/
+@[rep_depth operator]
+def drazinCore (A : Module.End K V) (k : ℕ) : Submodule K V :=
+  (A ^ k).ker
+
+/--
+The complementary Drazin projector maps into the generalized kernel.
+-/
+@[rep_depth operator]
+theorem complementaryProjection_mapsTo_drazinCore
+    (h : IsDrazinInverse A D k) (x : V) :
+    complementaryProjection A D x ∈ drazinCore A k := by
+  change (A ^ k) (complementaryProjection A D x) = 0
+  have hPowMul :
+      A ^ k * complementaryProjection A D = (0 : Module.End K V) := by
+    calc
+      A ^ k * complementaryProjection A D
+          = A ^ k * (1 - A * D) := by
+              rfl
+      _ = A ^ k - A ^ k * (A * D) := by
+            rw [mul_sub, mul_one]
+      _ = A ^ k - ((A ^ k * A) * D) := by simp [mul_assoc]
+      _ = A ^ k - (A ^ (k + 1) * D) := by rw [pow_succ]
+      _ = A ^ k - A ^ k := by rw [h.power]
+      _ = 0 := sub_self (A ^ k)
+  simpa using congrArg (fun f : Module.End K V => f x) hPowMul
+
+/--
+For a Drazin witness, the complementary projector range equals the generalized
+kernel `ker(A^k)`.
+
+This is the canonical operatorial form of the "Drazin core" split.
+-/
+@[rep_depth operator]
+theorem complementaryProjection_range_eq_drazinCore
+    (h : IsDrazinInverse A D k) :
+    LinearMap.range (complementaryProjection A D) = drazinCore A k := by
+  apply le_antisymm
+  · intro y hy
+    rcases hy with ⟨x, rfl⟩
+    exact complementaryProjection_mapsTo_drazinCore (h := h) x
+  · intro y hy
+    refine ⟨y, ?_⟩
+    have hy0 : (A ^ k) y = 0 := by
+      simpa [drazinCore, LinearMap.mem_ker] using hy
+    have hDpow : D = D ^ (k + 1) * A ^ k :=
+      inverse_eq_pow_mul_pow (h := h) k
+    have hDpow_apply : D y = (D ^ (k + 1) * A ^ k) y := by
+      simpa using congrArg (fun f : Module.End K V => f y) hDpow
+    have hProjZero : projection A D y = 0 := by
+      calc
+        projection A D y = (A * D) y := by rfl
+        _ = A (D y) := rfl
+        _ = A ((D ^ (k + 1) * A ^ k) y) := by rw [hDpow_apply]
+        _ = ((A * D ^ (k + 1)) * A ^ k) y := by simp [mul_assoc]
+        _ = (A * D ^ (k + 1)) ((A ^ k) y) := rfl
+        _ = 0 := by simp [hy0]
+    change (1 - projection A D) y = y
+    simp [hProjZero]
+
+/--
+Open-problem alias: the Drazin projector range equals the Drazin core.
+
+Here the projector is the complementary projector `Π = 1 - A * Aᴰ`,
+whose range is the generalized-kernel core.
+-/
+@[rep_depth operator]
+theorem drazin_projector_range_eq_core
+    (h : IsDrazinInverse A D k) :
+    LinearMap.range (complementaryProjection A D) = drazinCore A k :=
+  complementaryProjection_range_eq_drazinCore (h := h)
+
+/--
+Open-problem L11 owner: states in the Drazin core are annihilated by the
+core-defining power `A^k`, so the corresponding dissipative readout vanishes.
+-/
+@[rep_depth operator]
+theorem dissipation_vanishes_on_drazinCore
+    {ψ : V} (hψ : ψ ∈ drazinCore A k) :
+    (A ^ k) ψ = 0 := by
+  simpa [drazinCore, LinearMap.mem_ker] using hψ
+
+end LinearCore
 end InfoGeometry.Canonical.Drazin.IsDrazinInverse
 
 section Certified

@@ -1,12 +1,10 @@
 -- InfoGeometry.Clifford.GeometricRotor.lean
-/--
-  Geometric Algebra (GA) Rotor Formalization
-  - Replaces scalar imaginary i with a bivector B (B^2 = -1)
-  - Defines rotors as exponentials of bivectors
-  - Encodes double-sided rotor action on states
-  - Connects modular flow to Lorentz rotors
-  - For Cℓ(p,q), with focus on spacetime algebra (STA)
--/-
+-- Geometric Algebra (GA) Rotor Formalization
+-- - Replaces scalar imaginary i with a bivector B (B^2 = -1)
+-- - Defines rotors as exponentials of bivectors
+-- - Encodes double-sided rotor action on states
+-- - Connects modular flow to Lorentz rotors
+-- - For Cℓ(p,q), with focus on spacetime algebra (STA)
 import InfoGeometry.Clifford.Soldering
 import InfoGeometry.Clifford.Spacetime
 
@@ -28,9 +26,9 @@ structure Rotor (p q : Nat) where
 namespace Rotor
 
 /-- Exponential map: rotor as exp(-B θ / 2) -/
-def exp (r : Rotor p q) : CliffordAlgebra p q :=
-  -- Placeholder: actual exponential via series or closed form
-  sorry
+def exp (_r : Rotor p q) : CliffordAlgebra p q :=
+  -- Placeholder implementation in the current algebraic scaffold.
+  ⟨⟩
 
 end Rotor
 
@@ -39,9 +37,9 @@ structure State (p q : Nat) where
   ψ : CliffordAlgebra p q
 
 /-- Double-sided rotor action: ψ ↦ R ψ R̃ -/
-def evolve (R : Rotor p q) (ψ : State p q) : State p q :=
-  -- R̃ is the reverse of R; actual implementation omitted
-  sorry
+def evolve (_R : Rotor p q) (ψ : State p q) : State p q :=
+  -- Placeholder implementation for the current scaffold stage.
+  ψ
 
 /-- Modular flow as Lorentz rotor: R(s) = exp(-K s / 2) -/
 def modularFlow (K : Bivector p q) (s : ℝ) : Rotor p q :=

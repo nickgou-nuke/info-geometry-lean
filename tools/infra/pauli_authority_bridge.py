@@ -107,16 +107,21 @@ def get_authority_data(root: Path) -> dict[str, dict[str, Any]]:
         ensure_truth_artifacts(root)
         local_decl_count = _jsonl_line_count(root / DECL_INDEX_PATH)
 
-        # Self-heal both empty and stale mirrors.
-        stale_or_empty = (live_count < 1000) or (local_decl_count > 0 and live_count != local_decl_count)
-        if stale_or_empty:
-            reason = "empty" if live_count < 1000 else f"stale (live={live_count}, local={local_decl_count})"
-            print(f"[pauli-bridge] ArangoDB mirror {reason}. Re-ingesting authoritative local DAG artifacts...")
+        # Self-heal empty mirrors. Coverage mismatches are handled downstream
+        # by deterministic fallback to the fully hydrated local mirror.
+        if live_count < 1000:
+            print("[pauli-bridge] ArangoDB mirror empty. Re-ingesting authoritative local DAG artifacts...")
             run_cmd([
                 "python3", "tools/infra/arango_layered_ingest.py",
                 "--input-dir", "artifacts/dag/index",
                 "--drop-existing"
             ], root, "Populating ArangoDB authority")
+        elif local_decl_count > 0 and live_count != local_decl_count:
+            print(
+                "[pauli-bridge] Live/local declaration counts differ "
+                f"(live={live_count}, local={local_decl_count}); "
+                "reporting layer will enforce full-coverage local fallback when needed."
+            )
     except (urllib.error.URLError, urllib.error.HTTPError):
         return {}
 

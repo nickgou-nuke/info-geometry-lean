@@ -28,7 +28,8 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
+    # Insert repository root for `tools.*` imports when executed as a script.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.infra.decl_graph_support import GraphProfile, load_decl_graph
     from tools.pathing import repo_root
 else:
@@ -44,7 +45,8 @@ def generate_md(profiles: list[GraphProfile]) -> str:
         "# ⚖️ Pauli Authority Audit: Graph Vacuity Stratification",
         "",
         "> **Protocol:** Truth lives in Lean; structure lives in the graph.",
-        f"> **Snapshot:** {total} theorems analysed via Pauli Authority.",
+        f"> **Snapshot:** {total} theorems analysed via graph-topology evidence.",
+        "> **Authority order:** Lean kernel truth > DAG topology > heuristic telemetry.",
         "",
         "## Classification Summary",
         "",
@@ -57,10 +59,14 @@ def generate_md(profiles: list[GraphProfile]) -> str:
         n = counts.get(role, 0)
         lines.append(f"| {role} | {n} | {100*n/denom:.1f}% |")
 
-    weak = counts.get("isolated_theorem", 0) + counts.get("type_only_theorem", 0)
+    weak = (
+        counts.get("isolated_theorem", 0)
+        + counts.get("type_only_theorem", 0)
+        + counts.get("thin_forwarder", 0)
+    )
     lines += [
         "",
-        f"**Topology-weak surfaces (isolated + type-only):** {weak} ({100*weak/denom:.1f}%)",
+        f"**Topology-weak surfaces (isolated + type-only + thin-forwarder):** {weak} ({100*weak/denom:.1f}%)",
         "",
         "## 🗑️ Isolated Theorems (Highest Pruning Priority)",
         "| Theorem | SCC Mass | Depth | File |",
@@ -94,7 +100,7 @@ def generate_md(profiles: list[GraphProfile]) -> str:
     return "\n".join(lines) + "\n"
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Pauli-Authority Sorry-equivalence analysis")
+    ap = argparse.ArgumentParser(description="Graph vacuity stratification (topology-only)")
     ap.add_argument("--json-out", type=Path, default=repo_root() / "reports" / "dag" / "sorry-equivalence.json")
     ap.add_argument("--md-out", type=Path, default=repo_root() / "reports" / "dag" / "sorry-equivalence.md")
     args = ap.parse_args()
@@ -114,19 +120,31 @@ def main() -> int:
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.md_out.parent.mkdir(parents=True, exist_ok=True)
 
-    json_data = [asdict(p) for p in profiles]
-    args.json_out.write_text(json.dumps(json_data, indent=2) + "\n")
-    args.md_out.write_text(generate_md(profiles))
+    json_data: list[dict[str, Any]] = []
+    for p in profiles:
+        row = asdict(p)
+        row["classification_basis"] = "graph-topology"
+        row["authority_tier"] = "graph-structural"
+        row["graph_grounded_signal"] = True
+        row["heuristic_signal"] = False
+        row["hard_verdict_allowed"] = True
+        json_data.append(row)
+    args.json_out.write_text(json.dumps(json_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    args.md_out.write_text(generate_md(profiles), encoding="utf-8")
 
     # 3. Print Summary
     counts = Counter(p.structural_role for p in profiles)
     total = len(profiles)
-    weak = counts.get("isolated_theorem", 0) + counts.get("type_only_theorem", 0)
+    weak = (
+        counts.get("isolated_theorem", 0)
+        + counts.get("type_only_theorem", 0)
+        + counts.get("thin_forwarder", 0)
+    )
     denom = max(total, 1)
     
     print(f"[pauli-vacuity] {total} theorems analysed")
-    print(f"[pauli-vacuity] confirmed vacuous (isolated): {counts.get('isolated_theorem', 0)} ({100*counts.get('isolated_theorem',0)/denom:.1f}%)")
-    print(f"[pauli-vacuity] load-bearing (backbone): {counts.get('load_bearing', 0)} ({100*counts.get('load_bearing',0)/denom:.1f}%)")
+    print(f"[pauli-vacuity] topology-weak (isolated + type-only + thin-forwarder): {weak} ({100*weak/denom:.1f}%)")
+    print(f"[pauli-vacuity] load-bearing (backbone): {counts.get('load_bearing', 0)} ({100*counts.get('load_bearing', 0)/denom:.1f}%)")
     print(f"[pauli-vacuity] wrote {args.md_out.relative_to(repo_root())}")
     
     return 0

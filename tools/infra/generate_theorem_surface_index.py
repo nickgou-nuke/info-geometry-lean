@@ -105,6 +105,9 @@ class DeclRow:
     structural_role: str = "graph_unknown"
     rep_layer: str | None = None
     rep_depth: int | None = None
+    graph_grounded_signal: bool = False
+    heuristic_signal: bool = False
+    hard_verdict_allowed: bool = False
 
 
 def parse_args() -> argparse.Namespace:
@@ -346,6 +349,17 @@ def classify_decl(
         category = "neutral_definition"
         confidence = "low"
 
+    graph_grounded_signal = profile is not None and not weak_graph_evidence(profile)
+    heuristic_signal = bool(
+        audit_hits
+        or quarantine_reason
+        or name_hypothesis
+        or hypothesis_signal
+        or package_signal
+        or surrogate_signal
+    )
+    hard_verdict_allowed = graph_grounded_signal
+
     return DeclRow(
         name=decl["name"],
         short_name=decl["short_name"],
@@ -365,6 +379,9 @@ def classify_decl(
         structural_role="graph_unknown" if profile is None else profile.structural_role,
         rep_layer=None if profile is None else profile.rep_layer,
         rep_depth=None if profile is None else profile.rep_depth,
+        graph_grounded_signal=graph_grounded_signal,
+        heuristic_signal=heuristic_signal,
+        hard_verdict_allowed=hard_verdict_allowed,
     )
 
 
@@ -388,6 +405,9 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines.append(f"- declarations with audit hits: `{summary['audit_hit_declarations']}`")
     lines.append(f"- declarations in quarantined modules: `{summary['quarantined_module_declarations']}`")
     lines.append(f"- graph anchored declarations: `{summary['graph_anchored_declarations']}`")
+    lines.append(f"- graph-grounded signal declarations: `{summary['graph_grounded_signal_declarations']}`")
+    lines.append(f"- heuristic-signal declarations: `{summary['heuristic_signal_declarations']}`")
+    lines.append(f"- hard-verdict-allowed declarations: `{summary['hard_verdict_allowed_declarations']}`")
     lines.append("")
     lines.append("## Category Notes")
     lines.append("- `likely_constructive`: default for supported/load-bearing graph roles unless stronger weak-surface evidence exists.")
@@ -413,7 +433,7 @@ def render_md(payload: dict[str, Any], top: int) -> str:
                 location = f"{row['file']}:{row['line']}" if row.get("line") else row["file"]
                 signal_text = "; ".join(row.get("signals", [])[:4]) if row.get("signals") else "-"
                 lines.append(
-                    f"- `{row['name']}` | `{row['kind']}` | `{location}` | confidence `{row['confidence']}` | role `{row['structural_role']}` | thm-users `{row['reverse_theorem_users']}` | signals: {signal_text}"
+                    f"- `{row['name']}` | `{row['kind']}` | `{location}` | confidence `{row['confidence']}` | role `{row['structural_role']}` | hard-verdict `{row.get('hard_verdict_allowed', False)}` | thm-users `{row['reverse_theorem_users']}` | signals: {signal_text}"
                 )
         lines.append("")
 
@@ -532,6 +552,9 @@ def main() -> int:
             "theorem_declarations": sum(1 for row in rows if row.kind in THEOREM_KINDS),
             "definition_declarations": sum(1 for row in rows if row.kind in DEFINITION_KINDS),
             "graph_anchored_declarations": sum(1 for row in rows if row.structural_role != "graph_unknown"),
+            "graph_grounded_signal_declarations": sum(1 for row in rows if row.graph_grounded_signal),
+            "heuristic_signal_declarations": sum(1 for row in rows if row.heuristic_signal),
+            "hard_verdict_allowed_declarations": sum(1 for row in rows if row.hard_verdict_allowed),
             "category_counts": {
                 "likely_constructive": category_counts.get("likely_constructive", 0),
                 "hypothesis_bridge": category_counts.get("hypothesis_bridge", 0),

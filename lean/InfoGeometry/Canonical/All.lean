@@ -395,6 +395,14 @@ import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian
 
 -- Stable declaration-bearing canonical owners previously outside the umbrella coverage.
+import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
+import InfoGeometry.Canonical.DIIIIndexVerification
+import InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
+import InfoGeometry.Canonical.QVandermondePhaseLockShadow
+import InfoGeometry.Canonical.SYKKitaevGuardrails
+import InfoGeometry.Canonical.SYKTwoCopyInterface
+import InfoGeometry.Canonical.SandboxVerification
+import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.AQFTHilbertCompression
 import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.AQFTOperatorSignatures

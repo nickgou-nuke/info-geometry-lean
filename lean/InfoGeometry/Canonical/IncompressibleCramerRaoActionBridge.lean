@@ -121,7 +121,7 @@ theorem chiralScale_eq_zero_of_incompressible
 /--
 The same readout constructively yields the normal conformal phase.
 -/
-@[rep_depth transport]
+@[rep_depth thermo, capstone]
 theorem normalInference_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :
@@ -186,7 +186,7 @@ theorem anomalyReadoutPacket_eq_metricVolumePotential
 /--
 The incompressible negative-log Cramer-Rao readout forces zero unit of action.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem unitOfAction_eq_zero_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :

@@ -214,6 +214,38 @@ theorem audit_claimD_scalarLegendre_inverseHessian_eq_inv_fisher
   claimD_scalarLegendre_inverseHessian_eq_inv_fisher
     L θ a hEta hTheta hFisher
 
+section OperatorLegendreEnrichment
+
+variable {E : Type}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+/--
+Audit alias for the operatorial Claim-D enrichment:
+constructive inverse-Hessian/Fisher packet on the doubled-Krein operator lane.
+-/
+@[rep_depth thermo]
+theorem audit_claimD_operatorLegendre_inverseHessian_eq_inverseFisher_packet
+    (D : InfoGeometry.Geometry.LegendreContinuousLinearEquivInverseData EndH) :
+    D.toLegendreHessianInverseContext.moment =
+        InfoGeometry.Geometry.dualCoord D.massieu D.beta
+      ∧ D.entropyGradient D.toLegendreHessianInverseContext.moment = D.beta
+      ∧ D.toLegendreHessianInverseContext.fisherHessian =
+        InfoGeometry.Geometry.hessian D.massieu D.beta
+      ∧ D.toLegendreHessianInverseContext.entropyHessian =
+        fderiv ℝ D.entropyGradient D.toLegendreHessianInverseContext.moment
+      ∧ D.toLegendreHessianInverseContext.entropyHessian.comp
+          D.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ EndH
+      ∧ D.toLegendreHessianInverseContext.fisherHessian.comp
+          D.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (InfoGeometry.Geometry.MomentCoord EndH) :=
+  claimD_operatorLegendre_inverseHessian_eq_inverseFisher_packet (E := E) D
+
+end OperatorLegendreEnrichment
+
 /--
 Audit alias for the stage-2 analytic enrichment gates.
 -/

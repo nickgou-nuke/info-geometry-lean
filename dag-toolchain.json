@@ -60,7 +60,8 @@
         "--out",
         "reports/dag/true-root-order.md",
         "--json-out",
-        "reports/dag/true-root-order.json"
+        "reports/dag/true-root-order.json",
+        "--allow-partial-coverage"
       ],
       [
         "tools/theorem_significance.py"

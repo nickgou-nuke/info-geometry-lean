@@ -57,7 +57,9 @@ certified conformal/KKT carrier on the same doubled Hilbert carrier.
 structure SouriauConformalKKTContext where
   density : SouriauDensityWeightContext (α := α) (E := H)
   CCI : CertifiedConformalInference (DoubledSpace H)
+-- theorem-class: bridge
   hA : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A
+-- theorem-class: bridge
   hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP
 
 namespace SouriauConformalKKTContext
@@ -110,6 +112,7 @@ finite normalizability condition available in this context.
 def IsFiniteAdmissible [Fintype α] : Prop :=
   0 < C.finitePartition
 
+-- theorem-class: bridge
 /-- The finite context density is the owner Souriau unnormalized density. -/
 @[rep_depth thermo]
 theorem finiteUnnormalizedDensity_eq_souriauUnnormalizedDensity (x : α) :
@@ -117,12 +120,14 @@ theorem finiteUnnormalizedDensity_eq_souriauUnnormalizedDensity (x : α) :
       souriauUnnormalizedDensity C.density.M C.density.T x := by
   rfl
 
+-- theorem-class: bridge
 /-- The finite conformal-character partition is the owner Souriau partition. -/
 @[rep_depth thermo]
 theorem finitePartition_eq_souriauPartition [Fintype α] :
     C.finitePartition = souriauPartition C.density.M C.density.T := by
   rfl
 
+-- theorem-class: bridge
 /-- In a finite nonempty context, admissibility is automatic from positivity. -/
 @[rep_depth thermo]
 theorem finiteAdmissible [Fintype α] [Nonempty α] :
@@ -130,6 +135,7 @@ theorem finiteAdmissible [Fintype α] [Nonempty α] :
   simpa [IsFiniteAdmissible, finitePartition_eq_souriauPartition] using
     souriauPartition_pos C.density.M C.density.T
 
+-- theorem-class: bridge
 /-- The finite Massieu/log-character potential is the owner Souriau Massieu potential. -/
 @[rep_depth thermo]
 theorem finiteMassieu_eq_souriauMassieuPotential [Fintype α] [Nonempty α] :
@@ -138,6 +144,7 @@ theorem finiteMassieu_eq_souriauMassieuPotential [Fintype α] [Nonempty α] :
   rw [finiteMassieu, finitePartition_eq_souriauPartition,
     souriauMassieuPotential_eq_log_partition]
 
+-- theorem-class: bridge
 /--
 The Souriau density-weight side exposes the existing operatorial generator:
 Souriau temperature vector plus the selected number/charge-weighted dilation.
@@ -148,6 +155,7 @@ theorem liftedTransportGenerator_eq_souriau_add_number_weighted_dilationOperator
         + C.density.densityWeight • dilationOperator (E := H) :=
   C.density.liftedTransportGenerator_eq_souriau_add_number_weighted_dilationOperator
 
+-- theorem-class: bridge
 /--
 On the certified conformal/KKT side, the conformal dilation is the certified
 inverse-kernel dilation gap.
@@ -156,6 +164,7 @@ theorem conformalD_eq_dilationGap :
     C.CCI.toConformalInference.D = C.CCI.toCertifiedInverseKernel.dilationGap :=
   CertifiedConformalInference.D_eq_dilationGap C.CCI
 
+-- theorem-class: bridge
 /--
 Under the explicit KKT wing hypotheses carried by the context, the conformal
 dilation generator is grade zero.
@@ -165,6 +174,7 @@ theorem conformalD_isGZero :
   CertifiedConformalInference.D_isGZero
     (X := doubledSpaceCl11Action (E := H)) C.CCI C.hA C.hAMP
 
+-- theorem-class: bridge
 /--
 Under the same explicit KKT wing hypotheses, the conformal chiral grading is a
 grade-zero output.
@@ -185,7 +195,9 @@ local notation "EndH₂" => H₂ →L[ℝ] H₂
 noncomputable local instance : NormedRing EndH₂ := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH₂ := inferInstance
 noncomputable local instance : NormedSpace ℝ EndH₂ := inferInstance
+-- theorem-class: bridge
 local instance : IsTopologicalRing EndH₂ := inferInstance
+-- theorem-class: bridge
 local instance : CompleteSpace EndH₂ := inferInstance
 
 /--
@@ -280,6 +292,7 @@ noncomputable def operatorMassieu : ℝ :=
 def IsOperatorAdmissible : Prop :=
   C.IsConeAdmissible ∧ 0 < C.operatorPartition
 
+-- theorem-class: bridge
 /-- The operator partition is the readout of the noncommutative Gibbs exponential. -/
 @[rep_depth transport]
 theorem operatorPartition_eq_readout_exp_neg_temperature :
@@ -287,6 +300,7 @@ theorem operatorPartition_eq_readout_exp_neg_temperature :
       C.readout (NormedSpace.exp (-C.conformalGeometricTemperature)) := by
   simp [operatorPartition, informationPartitionFunction]
 
+-- theorem-class: bridge
 /--
 The operatorial Souriau partition is the operatorial Weyl character.
 
@@ -299,6 +313,7 @@ theorem operatorPartition_eq_operatorWeylCharacter :
   rw [operatorPartition_eq_readout_exp_neg_temperature]
   rfl
 
+-- theorem-class: bridge
 /-- The Massieu potential is the logarithm of the operator partition. -/
 @[rep_depth transport]
 theorem operatorMassieu_eq_log_partition :
@@ -310,6 +325,7 @@ theorem operatorMassieu_eq_log_partition :
 noncomputable def operatorMeanMoment : ℝ :=
   -C.readout (-C.conformalGeometricTemperature)
 
+-- theorem-class: bridge
 /-- The first-moment readout is the readout of the conformal temperature itself. -/
 @[rep_depth transport]
 theorem operatorMeanMoment_eq_readout_temperature :
@@ -329,6 +345,7 @@ two noncommutative perturbation channels.
 noncomputable def operatorConformalResponse (X Y : EndH₂) : ℝ :=
   responseCoefficient (E := H) C.base.density.P X Y C.conformalGeometricTemperature
 
+-- theorem-class: bridge
 /-- Operatorial conformal Hessian response is symmetric in its perturbation channels. -/
 @[rep_depth transport]
 theorem operatorConformalResponse_swap (X Y : EndH₂) :
@@ -342,6 +359,7 @@ def SatisfiesOperatorTKKMasterRelation (η : ℝ) : Prop :=
   C.KGenerator * C.PGenerator - C.PGenerator * C.KGenerator =
     2 • (η • C.DGenerator - C.cartanGenerator)
 
+-- theorem-class: bridge
 /--
 The operatorial conformal generator package exposes the same `P,D,K,M` packet
 used by the TKK master relation and the Gibbs-Souriau partition.
@@ -373,6 +391,7 @@ structure OperatorialWeylSupercharacterContext where
   gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
   bosonicReadout : EndH₂ →L[ℝ] ℝ
   fermionicReadout : EndH₂ →L[ℝ] ℝ
+-- theorem-class: bridge
   readout_eq_bosonic_sub_fermionic :
     gibbs.readout = bosonicReadout - fermionicReadout
 
@@ -426,6 +445,7 @@ noncomputable def fermionicCharacter : ℝ :=
 noncomputable def operatorSupercharacter : ℝ :=
   S.bosonicCharacter - S.fermionicCharacter
 
+-- theorem-class: bridge
 /--
 The Souriau partition equals the operatorial supercharacter whenever the
 partition readout is the bosonic-minus-fermionic readout.
@@ -442,6 +462,7 @@ theorem operatorPartition_eq_operatorSupercharacter :
   rw [S.readout_eq_bosonic_sub_fermionic]
   rfl
 
+-- theorem-class: bridge
 /-- The Massieu potential is the logarithm of the boson-minus-fermion supercharacter. -/
 @[rep_depth transport]
 theorem operatorMassieu_eq_log_operatorSupercharacter :
@@ -449,6 +470,7 @@ theorem operatorMassieu_eq_log_operatorSupercharacter :
   rw [ConformalGibbsSouriauOperatorContext.operatorMassieu_eq_log_partition]
   rw [S.operatorPartition_eq_operatorSupercharacter]
 
+-- theorem-class: bridge
 /--
 For the constructive fermionic-correction constructor, the partition is the
 supercharacter without carrying a separate split-equality hypothesis.
@@ -461,6 +483,7 @@ theorem operatorPartition_eq_operatorSupercharacter_ofFermionicCorrection
       (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorSupercharacter :=
   (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorPartition_eq_operatorSupercharacter
 
+-- theorem-class: bridge
 /--
 For the constructive fermionic-correction constructor, the Massieu potential is
 the logarithm of the operatorial boson-minus-fermion supercharacter without
@@ -475,6 +498,7 @@ theorem operatorMassieu_eq_log_operatorSupercharacter_ofFermionicCorrection
         ((ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorSupercharacter) :=
   (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorMassieu_eq_log_operatorSupercharacter
 
+-- theorem-class: bridge
 /--
 Pure bosonic special case: the operatorial Souriau partition is its
 supercharacter with zero fermionic correction.
@@ -486,6 +510,7 @@ theorem operatorPartition_eq_operatorSupercharacter_ofPureBosonicReadout
       (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorSupercharacter :=
   (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorPartition_eq_operatorSupercharacter
 
+-- theorem-class: bridge
 /--
 Pure bosonic special case: the Massieu potential is the logarithm of the
 operatorial supercharacter with zero fermionic correction.
@@ -520,12 +545,14 @@ structure SelfDualChiralLightConeCertificate where
   Xcl : RealSplitCl11Action H₂
   A : EndH₂
   B : EndH₂
+-- theorem-class: bridge
   hGamma : Xcl.eps = CIK.GammaS
 
 namespace SelfDualChiralLightConeCertificate
 
 variable (S : SelfDualChiralLightConeCertificate (H := H))
 
+-- theorem-class: bridge
 /-- The `u+` light-cone channel lies in the certified chiral cone. -/
 @[rep_depth transport]
 theorem uPlus_mem_chiralCone :
@@ -539,6 +566,7 @@ theorem uPlus_mem_chiralCone :
   rw [hOdd]
   simp
 
+-- theorem-class: bridge
 /-- The `u-` light-cone channel lies in the certified chiral cone. -/
 @[rep_depth transport]
 theorem uMinus_mem_chiralCone :
@@ -552,6 +580,7 @@ theorem uMinus_mem_chiralCone :
   rw [hOdd]
   simp
 
+-- theorem-class: bridge
 /--
 The spectral commutator of the `u+`/`u-` chiral channels closes in the compact
 spectral lane.
@@ -591,6 +620,7 @@ theorem spectralCommutator_mem_spectralCompact :
     CertifiedInverseKernel.cartanTriple,
     CertifiedInverseKernel.toInformationCartanTriple] using hComm
 
+-- theorem-class: bridge
 /-- The ordinary circular `u+`/`u-` commutator closes in the KKT grade-zero lane. -/
 @[rep_depth transport]
 theorem circularCommutator_isGZero :
@@ -614,7 +644,9 @@ structure ConformalPositivePartitionWitness
     (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
   partitionFloor : ℝ
   amplitude : ℝ
+-- theorem-class: bridge
   floor_pos : 0 < partitionFloor
+-- theorem-class: bridge
   operatorPartition_eq_floor_add_square :
     C.operatorPartition = partitionFloor + amplitude ^ (2 : ℕ)
 
@@ -622,6 +654,7 @@ namespace ConformalPositivePartitionWitness
 
 variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
 
+-- theorem-class: bridge
 /--
 The operator partition is strictly positive from the explicit
 positive-floor-plus-square witness.
@@ -650,8 +683,10 @@ structure ConformalCartanOddPartitionWitness
     (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
   metric : CartanOddMetricData (L := L)
   x : L
+-- theorem-class: bridge
   x_mem_odd : x ∈ metric.S.oddSubmodule
   amplitude : ℝ
+-- theorem-class: bridge
   operatorPartition_eq_cartan_floor_add_square :
     C.operatorPartition =
       (1 + informationMassSq (M := metric) x) + amplitude ^ (2 : ℕ)
@@ -662,6 +697,7 @@ variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
 variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
 variable (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
 
+-- theorem-class: bridge
 /-- The Cartan-odd floor `1 + B_θ(x,x)` is strictly positive. -/
 @[rep_depth transport]
 theorem partitionFloor_pos :
@@ -682,6 +718,7 @@ noncomputable def toPositivePartitionWitness :
   operatorPartition_eq_floor_add_square :=
     W.operatorPartition_eq_cartan_floor_add_square
 
+-- theorem-class: bridge
 /--
 Cone membership plus Cartan-odd partition positivity proves the conformal
 operatorial admissibility gate.
@@ -717,7 +754,9 @@ structure ConformalWeylTKKKKTJordanLieContext where
   gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
   weylGauge : WeylGaugeField EndH₂ EndH₂
   tkkParameter : ℝ
+-- theorem-class: bridge
   hTKK : gibbs.SatisfiesOperatorTKKMasterRelation tkkParameter
+-- theorem-class: bridge
   hOperatorAdmissible : gibbs.IsOperatorAdmissible
   X : EndH₂
   Y : EndH₂
@@ -736,7 +775,9 @@ structure ConformalOperatorAdmissibilityWitness where
   gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
   weylGauge : WeylGaugeField EndH₂ EndH₂
   tkkParameter : ℝ
+-- theorem-class: bridge
   hTKK : gibbs.SatisfiesOperatorTKKMasterRelation tkkParameter
+-- theorem-class: bridge
   hCone : gibbs.IsConeAdmissible
   partitionWitness : ConformalPositivePartitionWitness gibbs
   X : EndH₂
@@ -746,6 +787,7 @@ namespace ConformalOperatorAdmissibilityWitness
 
 variable (W : ConformalOperatorAdmissibilityWitness (α := α) (H := H))
 
+-- theorem-class: bridge
 /--
 Operatorial admissibility follows constructively from cone membership and the
 positive operator-partition witness.
@@ -784,18 +826,21 @@ local notation "cl11" => doubledSpaceCl11Action (E := H)
 noncomputable def weylTemperature : EndH₂ :=
   C.weylGauge.gaugeOf C.gibbs.conformalGeometricTemperature
 
+-- theorem-class: bridge
 /-- The package carries the operator-level TKK master relation as data. -/
 @[rep_depth transport]
 theorem tkkMasterRelation :
     C.gibbs.SatisfiesOperatorTKKMasterRelation C.tkkParameter :=
   C.hTKK
 
+-- theorem-class: bridge
 /-- The package carries the operatorial KKT cone/partition admissibility gate. -/
 @[rep_depth transport]
 theorem operatorAdmissible :
     C.gibbs.IsOperatorAdmissible :=
   C.hOperatorAdmissible
 
+-- theorem-class: bridge
 /-- The certified conformal dilation remains in the KKT grade-zero lane. -/
 @[rep_depth transport]
 theorem dilation_isGZero :
@@ -803,6 +848,7 @@ theorem dilation_isGZero :
   simpa [ConformalGibbsSouriauOperatorContext.DGenerator] using
     C.gibbs.base.conformalD_isGZero
 
+-- theorem-class: bridge
 /-- The certified chiral grading remains in the KKT grade-zero lane. -/
 @[rep_depth transport]
 theorem chiralGrading_isGZero :
@@ -816,6 +862,7 @@ theorem chiralGrading_isGZero :
 noncomputable def circularPolarizedCommutator : EndH₂ :=
   KKTCore.commutator (uPlus cl11 C.X) (uMinus cl11 C.Y)
 
+-- theorem-class: bridge
 /-- Circular polarization closes in the KKT grade-zero operator lane. -/
 @[rep_depth transport]
 theorem circularPolarizedCommutator_isGZero :
@@ -835,6 +882,7 @@ noncomputable def lieProductTemperatureWeyl : EndH₂ :=
   InfoGeometry.Canonical.SuperJordanLie.lieProduct (E := H)
     C.gibbs.conformalGeometricTemperature C.weylTemperature
 
+-- theorem-class: bridge
 /--
 The Fock commutator of the conformal temperature with its Weyl-gauged copy is
 exactly twice the operatorial Lie product.
@@ -848,6 +896,7 @@ theorem fockCommutator_temperature_weyl_eq_two_smul_lieProduct :
     (InfoGeometry.Canonical.SuperJordanLie.fockCommutator_eq_two_smul_lieProduct
       (E := H) C.gibbs.conformalGeometricTemperature C.weylTemperature)
 
+-- theorem-class: bridge
 /--
 The Fock anticommutator of the conformal temperature with its Weyl-gauged copy
 is exactly twice the operatorial Jordan product.
@@ -875,6 +924,7 @@ def SatisfiesKKT_TKK_Weyl_JordanLieClosure : Prop :=
           C.gibbs.base.CCI.toConformalInference)
     ∧ IsGZero cl11 C.circularPolarizedCommutator
 
+-- theorem-class: bridge
 /-- The package supplies the KKT/TKK/Weyl/Jordan-Lie closure proposition. -/
 @[rep_depth transport]
 theorem satisfiesKKT_TKK_Weyl_JordanLieClosure :
@@ -882,6 +932,7 @@ theorem satisfiesKKT_TKK_Weyl_JordanLieClosure :
   exact ⟨C.operatorAdmissible, C.tkkMasterRelation, C.dilation_isGZero,
     C.chiralGrading_isGZero, C.circularPolarizedCommutator_isGZero⟩
 
+-- theorem-class: bridge
 /-- The Onsager/Hessian response symmetry survives on the selected channels. -/
 @[rep_depth transport]
 theorem operatorConformalResponse_XY_swap :
@@ -906,6 +957,7 @@ noncomputable def SatisfiesKMS (β : ℝ) : Prop :=
   InfoGeometry.Krein.satisfies_kms
     C.gibbs.conformalGeometricTemperature C.gibbs.readout β
 
+-- theorem-class: bridge
 /--
 At zero modular time, the KMS condition forces cyclic readout symmetry for
 operator products.
@@ -940,6 +992,7 @@ noncomputable def transformWeylGauge
 
 /- The Weyl-transformed temperature is the original representative plus the
 local scale shift evaluated at the conformal geometric temperature. -/
+-- theorem-class: bridge
 @[rep_depth transport]
 theorem transformWeylGauge_weylTemperature
     (σ : WeylGaugeParameter EndH₂ EndH₂) :
@@ -947,6 +1000,7 @@ theorem transformWeylGauge_weylTemperature
       C.weylTemperature + σ.shiftOf C.gibbs.conformalGeometricTemperature := by
   rfl
 
+-- theorem-class: bridge
 /--
 Additive Weyl gauge transformations preserve the compiled
 KKT/TKK/Weyl/Jordan-Lie closure packet.
@@ -978,6 +1032,7 @@ noncomputable def transformWeylGaugeByPotential
   X := C.X
   Y := C.Y
 
+-- theorem-class: bridge
 /-- Potential-form Weyl gauge transformations preserve the closure packet. -/
 @[rep_depth transport]
 theorem transformWeylGaugeByPotential_preserves_closure
@@ -986,6 +1041,7 @@ theorem transformWeylGaugeByPotential_preserves_closure
     (C.transformWeylGaugeByPotential Δ αW).SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
   exact (C.transformWeylGaugeByPotential Δ αW).satisfiesKKT_TKK_Weyl_JordanLieClosure
 
+-- theorem-class: bridge
 /--
 Potential-form Weyl gauge transformations preserve the associated
 field-strength object.
@@ -1014,6 +1070,7 @@ actually uses.
 @[rep_depth transport]
 structure ConformalFisherOnsagerPositiveContext where
   closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
+-- theorem-class: bridge
   selfResponse_nonneg :
     0 ≤ closure.gibbs.operatorConformalResponse closure.X closure.X
 
@@ -1026,12 +1083,14 @@ variable (C : ConformalFisherOnsagerPositiveContext (α := α) (H := H))
 noncomputable def fisherOnsagerProduction : ℝ :=
   C.closure.gibbs.operatorConformalResponse C.closure.X C.closure.X
 
+-- theorem-class: bridge
 /-- The declared operatorial Fisher/Onsager production is nonnegative. -/
 @[rep_depth transport]
 theorem fisherOnsagerProduction_nonneg :
     0 ≤ C.fisherOnsagerProduction := by
   simpa [fisherOnsagerProduction] using C.selfResponse_nonneg
 
+-- theorem-class: bridge
 /-- Diagonal response is invariant under channel swap by Onsager symmetry. -/
 @[rep_depth transport]
 theorem fisherOnsagerProduction_swap :
@@ -1055,6 +1114,7 @@ is represented by a real square.
 structure ConformalSquareFisherOnsagerPositiveContext where
   closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
   amplitude : ℝ
+-- theorem-class: bridge
   selfResponse_eq_square :
     closure.gibbs.operatorConformalResponse closure.X closure.X =
       amplitude ^ (2 : ℕ)
@@ -1063,6 +1123,7 @@ namespace ConformalSquareFisherOnsagerPositiveContext
 
 variable (C : ConformalSquareFisherOnsagerPositiveContext (α := α) (H := H))
 
+-- theorem-class: bridge
 /-- The conformal self-response is nonnegative because it is a real square. -/
 @[rep_depth transport]
 theorem selfResponse_nonneg :
@@ -1081,6 +1142,7 @@ def toPositiveContext : ConformalFisherOnsagerPositiveContext (α := α) (H := H
   closure := C.closure
   selfResponse_nonneg := C.selfResponse_nonneg
 
+-- theorem-class: bridge
 /--
 Diagonal conformal Fisher/Onsager production is nonnegative from the
 square-response witness, with no finite response matrix and no bare PSD
@@ -1129,6 +1191,7 @@ noncomputable def grandCanonicalFockOperator : EndH₂ :=
   grandCanonicalFockGenerator (E := H)
     C.mixing C.hamiltonian C.chemicalPotential
 
+-- theorem-class: bridge
 /-- The Fock occupation operator is creation after annihilation. -/
 @[rep_depth transport]
 theorem fockOccupationOperator_eq_creation_after_annihilation :
@@ -1137,6 +1200,7 @@ theorem fockOccupationOperator_eq_creation_after_annihilation :
         (bogoliubovAnnihilation (E := H) C.mixing) := by
   rfl
 
+-- theorem-class: bridge
 /-- The chemical potential couples linearly to the Fock occupation operator. -/
 @[rep_depth thermo]
 theorem chemicalPotentialFockGaugeTerm_eq_mu_smul_fockOccupation :
@@ -1144,6 +1208,7 @@ theorem chemicalPotentialFockGaugeTerm_eq_mu_smul_fockOccupation :
       C.chemicalPotential • C.fockOccupationOperator := by
   rfl
 
+-- theorem-class: bridge
 /-- The grand-canonical Fock operator has the owner form `H - μN_B`. -/
 @[rep_depth thermo]
 theorem grandCanonicalFockOperator_eq_hamiltonian_sub_fockGauge :
@@ -1180,6 +1245,7 @@ def firstQuantizationChemicalPotentialAffineFunctor
   firstQuantizationChemicalPotentialAffineBridge
     params C.mixing C.hamiltonian C.chemicalPotential
 
+-- theorem-class: bridge
 /--
 The functorial affine bridge exposes the finite chemical-potential gauge
 coupling as `μ * N(x)`.
@@ -1191,6 +1257,7 @@ theorem finiteFockChemicalPotentialAffineFunctor_finiteGauge
       chemicalPotentialGauge_apply params C.chemicalPotential x := by
   rfl
 
+-- theorem-class: bridge
 /--
 The functorial affine bridge exposes the Fock operator form `H - μN_B`.
 -/
@@ -1227,6 +1294,7 @@ def SatisfiesWeylGrandCanonicalTKKKKTBridge
     ∧ C.grandCanonicalFockOperator =
         C.hamiltonian - C.chemicalPotentialFockGaugeTerm
 
+-- theorem-class: bridge
 /--
 The conformal Fock context supplies the grand-canonical affine bridge and the
 operator Weyl/TKK/KKT closure gates.
@@ -1256,6 +1324,7 @@ noncomputable def transformWeylGauge
   hamiltonian := C.hamiltonian
   chemicalPotential := C.chemicalPotential
 
+-- theorem-class: bridge
 /--
 Additive Weyl gauge transformations preserve the combined
 grand-canonical/TKK/KKT bridge.
@@ -1267,6 +1336,7 @@ theorem transformWeylGauge_preserves_weylGrandCanonicalTKKKKTBridge
     (C.transformWeylGauge σ).SatisfiesWeylGrandCanonicalTKKKKTBridge params := by
   exact (C.transformWeylGauge σ).satisfiesWeylGrandCanonicalTKKKKTBridge params
 
+-- theorem-class: bridge
 /-- At zero chemical potential, the grand-canonical Fock operator is the Hamiltonian. -/
 @[rep_depth thermo]
 theorem grandCanonicalFockOperator_zero_mu

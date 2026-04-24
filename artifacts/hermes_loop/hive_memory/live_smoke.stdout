@@ -1,8 +1,0 @@
-HIVE_JSON {"artifactKind":"InfoTreeArtifact","canonicalPreimage":"(forall (bvar 0) (bvar 1))","fvarPolicy":"used-fvars-in-local-context-order","goalIndex":0,"hasUnassignedMVars":false,"module":"artifacts.hermes_loop.HiveQueueSmoke","normalizationPolicy":"instantiateMVars+whnf(default)","space":"infotree","targetHashShapeCanonical":"(forall (bvar 0) (bvar 1))","targetPretty":"P → P","unabstractedFVars":[]}
-artifacts/hermes_loop/HiveQueueSmoke.lean:4:11: warning: unused variable `Q`
-
-Note: This linter can be disabled with `set_option linter.unusedVariables false`
-artifacts/hermes_loop/HiveQueueSmoke.lean:5:2: warning: 'hive_probe' tactic does nothing
-
-Note: This linter can be disabled with `set_option linter.unusedTactic false`
-HIVE_JSON {"artifactKind":"DiamondFossil","conclusionHashShapeCanonical":"(app (app (const And) (bvar 1)) (bvar 0))","conclusionPretty":"And _uniq.18 _uniq.19","constName":"And.intro","declarationKind":"constructor","fullTypeHashShapeCanonical":"(forall (sort) (forall (sort) (forall (bvar 1) (forall (bvar 1) (app (app (const And) (bvar 3)) (bvar 2))))))","fullTypePretty":"forall {a : Prop} {b : Prop}, a -> b -> (And a b)","kernelStatus":"verified","space":"logos"}

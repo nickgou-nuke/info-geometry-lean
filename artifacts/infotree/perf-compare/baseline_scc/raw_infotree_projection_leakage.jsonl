@@ -1,3 +1,0 @@
-{"field":"command_context_env","nodeKey":"itn_itr__anonymous__0_0_0","reason":"CommandContextInfo environment is not serialized in stage 1","rootKey":"itr__anonymous__0_0","schema":"info_geometry.raw_infotree_export.v1"}
-{"field":"command_context_cmd_env","nodeKey":"itn_itr__anonymous__0_0_0","reason":"CommandContextInfo final command environment is not serialized in stage 1","rootKey":"itr__anonymous__0_0","schema":"info_geometry.raw_infotree_export.v1"}
-{"field":"command_context_mctx","nodeKey":"itn_itr__anonymous__0_0_0","reason":"Metavariable context is counted but not serialized structurally in stage 1","rootKey":"itr__anonymous__0_0","schema":"info_geometry.raw_infotree_export.v1"}

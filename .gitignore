@@ -100,6 +100,8 @@ artifacts/black_book_alchemy/**
 
 # Generated handover extension manifests
 handover/injections/manifests/EXT-*/
+handover/injections/manifests/*.json
+handover/injections/manifests/*.jsonl
 
 # Local workspace repair leftovers
 .lake.symlink-backup

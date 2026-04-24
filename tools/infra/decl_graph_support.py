@@ -101,7 +101,7 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
         if not full_name: continue
         decl_rows_by_name[full_name] = row
         kind_by_name[full_name] = str(row.get("kind") or "")
-        
+
         file_val = row.get("file")
         if file_val and isinstance(file_val, str):
             try:
@@ -111,6 +111,17 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
             if isinstance(line, int):
                 leaf = full_name.rsplit(".", 1)[-1]
                 decl_key_to_full[(rel, line, leaf)] = full_name
+
+    if arango_data:
+        local_decl_names = set(decl_rows_by_name.keys())
+        missing_live = local_decl_names.difference(arango_data.keys())
+        if missing_live:
+            print(
+                "[pauli-authority] Live authority coverage gap "
+                f"({len(arango_data)}/{len(local_decl_names)} declarations). "
+                "Using fully hydrated local mirror for deterministic full coverage."
+            )
+            arango_data = {}
 
     reverse_value_users, reverse_type_users, reverse_theorem_users = [defaultdict(int) for _ in range(3)]
     forward_value_theorems, forward_value_defs = [defaultdict(list) for _ in range(2)]

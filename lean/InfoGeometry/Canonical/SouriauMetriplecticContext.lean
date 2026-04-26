@@ -51,28 +51,28 @@ variable [Fintype α] [Nonempty α]
 variable (C : MetriplecticContext (α := α))
 
 /-- The reversible/Poisson entropy-production channel. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def reversibleEntropyProduction : ℝ :=
   C.reversibleEntropyRate
 
 /-- The metric/Onsager entropy-production channel. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def metricEntropyProduction : ℝ :=
   souriauEntropyProduction C.M C.T C.forceBeta C.forceMu
 
 /-- Total finite metriplectic entropy production: reversible plus metric. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def totalEntropyProduction : ℝ :=
   C.reversibleEntropyProduction + C.metricEntropyProduction
 
 /-- Casimir hypothesis: the reversible sector contributes zero entropy production. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem reversibleEntropyProduction_eq_zero :
     C.reversibleEntropyProduction = 0 :=
   C.casimir_reversible
 
 /-- The total finite entropy production reduces to the metric/Onsager channel. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem totalEntropyProduction_eq_metric :
     C.totalEntropyProduction = C.metricEntropyProduction := by
   unfold totalEntropyProduction
@@ -83,14 +83,14 @@ theorem totalEntropyProduction_eq_metric :
 The finite Fisher response is positive semidefinite constructively from
 variance diagonal positivity plus the remaining determinant gate.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem fisher_positiveSemidefinite :
     (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite :=
   souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg
     C.M C.T C.fisher_determinant_nonnegative
 
 /-- The metric/Onsager channel is nonnegative under the determinant-gated Fisher response. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem metricEntropyProduction_nonneg :
     0 ≤ C.metricEntropyProduction := by
   exact souriauEntropyProduction_nonneg_of_det_nonneg
@@ -101,7 +101,7 @@ Finite metriplectic second-law shadow: if the reversible sector is a Casimir
 direction and the Souriau-Fisher determinant gate is nonnegative, total
 entropy production is nonnegative.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem totalEntropyProduction_nonneg :
     0 ≤ C.totalEntropyProduction := by
   rw [totalEntropyProduction_eq_metric]

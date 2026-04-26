@@ -58,7 +58,7 @@ structure SouriauWeight where
   numberWeight : ℝ
 
 /-- The weight attached to a finite state by the Souriau moment-map shadow. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def souriauWeightAt (M : SouriauMomentMap α) (x : α) : SouriauWeight where
   energyWeight := M.energy x
   numberWeight := M.number x
@@ -68,20 +68,20 @@ Finite pairing between geometric temperature and a representation weight.
 The sign convention matches the grand-canonical kernel:
 `β * (E - μN)`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def geometricTemperatureWeightPairing
     (T : GeometricTemperature) (w : SouriauWeight) : ℝ :=
   T.beta * (w.energyWeight - T.mu * w.numberWeight)
 
 /-- Convert the finite Souriau moment-map shadow to the owner two-parameter data. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def toGrandCanonicalTwoParam (M : SouriauMomentMap α) :
     GrandCanonicalTwoParam α where
   energy := M.energy
   number := M.number
 
 /-- Shifted observable `E - μN` in Souriau notation. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def shiftedMomentReadout
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) : ℝ :=
   shiftedEnergy (toGrandCanonicalTwoParam M) T.mu x
@@ -90,7 +90,7 @@ noncomputable def shiftedMomentReadout
 The finite Souriau weight pairing is exactly the exponent observable used by
 the grand-canonical Gibbs kernel.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem geometricTemperatureWeightPairing_eq_beta_mul_shiftedMomentReadout
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) :
     geometricTemperatureWeightPairing T (souriauWeightAt M x) =
@@ -101,13 +101,13 @@ theorem geometricTemperatureWeightPairing_eq_beta_mul_shiftedMomentReadout
 Unnormalized Gibbs-Souriau density written as the exponential of the negative
 temperature-weight pairing.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauUnnormalizedDensity
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) : ℝ :=
   Real.exp (-geometricTemperatureWeightPairing T (souriauWeightAt M x))
 
 /-- The weight-pairing density is exactly the owner grand-canonical exponential. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauUnnormalizedDensity_eq_gc_exponential
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) :
     souriauUnnormalizedDensity M T x =
@@ -117,13 +117,13 @@ theorem souriauUnnormalizedDensity_eq_gc_exponential
   ring_nf
 
 /-- Partition function written as a finite Gibbs-Souriau weight sum. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauPartition
     [Fintype α] (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
   ∑ x, souriauUnnormalizedDensity M T x
 
 /-- The finite Gibbs-Souriau partition is the owner grand-canonical partition. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauPartition_eq_partitionGC
     [Fintype α] (M : SouriauMomentMap α) (T : GeometricTemperature) :
     souriauPartition M T =
@@ -136,7 +136,7 @@ theorem souriauPartition_eq_partitionGC
   simp [shiftedMomentReadout]
 
 /-- The finite Gibbs-Souriau partition is strictly positive. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauPartition_pos
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -145,7 +145,7 @@ theorem souriauPartition_pos
   exact partitionGC_pos (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- Souriau/Gibbs finite-state weight, definitionally the owner GC Gibbs weight. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauGibbsWeight
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) : ℝ :=
@@ -155,7 +155,7 @@ noncomputable def souriauGibbsWeight
 The normalized Gibbs-Souriau density is exactly the existing grand-canonical
 Gibbs weight.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauGibbsWeight_eq_density_div_partition
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) :
@@ -167,7 +167,7 @@ theorem souriauGibbsWeight_eq_density_div_partition
   simp [shiftedMomentReadout]
 
 /-- The finite Gibbs-Souriau normalized weight is nonnegative. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauGibbsWeight_nonneg
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) :
@@ -175,7 +175,7 @@ theorem souriauGibbsWeight_nonneg
   exact gibbsWeightGC_nonneg (toGrandCanonicalTwoParam M) T.beta T.mu x
 
 /-- The finite Gibbs-Souriau normalized weight is strictly positive. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauGibbsWeight_pos
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) (x : α) :
@@ -183,7 +183,7 @@ theorem souriauGibbsWeight_pos
   exact gibbsWeightGC_pos (toGrandCanonicalTwoParam M) T.beta T.mu x
 
 /-- The finite Gibbs-Souriau normalized weights sum to one. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauGibbsWeight_sum_one
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -191,14 +191,14 @@ theorem souriauGibbsWeight_sum_one
   exact gibbsWeightGC_sum_one (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- Souriau/Massieu finite-state potential, definitionally the owner `potentialGC`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauMassieuPotential
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
   potentialGC (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The finite Souriau/Massieu potential is the logarithm of the Souriau partition. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauMassieuPotential_eq_log_partition
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -206,14 +206,14 @@ theorem souriauMassieuPotential_eq_log_partition
   rw [souriauMassieuPotential, potentialGC, souriauPartition_eq_partitionGC]
 
 /-- Mean shifted readout `E - μN` under the finite Souriau/Gibbs state. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauMeanShift
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
   meanShift (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- Mean count/number readout under the finite Souriau/Gibbs state. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauMeanNumber
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
@@ -222,7 +222,7 @@ noncomputable def souriauMeanNumber
 /--
 Expected finite temperature-weight pairing under the Gibbs-Souriau state.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauExpectedWeightPairing
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
@@ -230,7 +230,7 @@ noncomputable def souriauExpectedWeightPairing
     geometricTemperatureWeightPairing T (souriauWeightAt M x)
 
 /-- Expected temperature-weight pairing equals `β` times the shifted mean. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauExpectedWeightPairing_eq_beta_mul_meanShift
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -247,14 +247,14 @@ theorem souriauExpectedWeightPairing_eq_beta_mul_meanShift
 Finite Souriau thermodynamic entropy potential:
 `S = Φ + E[⟨β,J⟩]` in the current sign convention.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauThermodynamicEntropy
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
   souriauMassieuPotential M T + souriauExpectedWeightPairing M T
 
 /-- Souriau entropy in finite grand-canonical coordinates. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauThermodynamicEntropy_eq_massieu_add_beta_mul_meanShift
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -266,14 +266,14 @@ theorem souriauThermodynamicEntropy_eq_massieu_add_beta_mul_meanShift
 Finite Souriau-Fisher response packet. This is the verified `2×2`
 grand-canonical Hessian transported into Souriau notation.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauFisherResponseMatrix
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ResponseMatrix2 :=
   responseMatrix (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The same finite Souriau-Fisher response packet as a concrete `2×2` matrix. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauFisherMetricMatrix
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -282,7 +282,7 @@ noncomputable def souriauFisherMetricMatrix
   !![R.betaBeta, R.betaMu; R.muBeta, R.muMu]
 
 /-- The `ββ` Souriau-Fisher response is the shifted-energy variance. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_betaBeta_eq_varianceShift
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -292,7 +292,7 @@ theorem souriauFisher_betaBeta_eq_varianceShift
     betaHessian_eq_varianceShift (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The `ββ` Souriau-Fisher response is nonnegative constructively. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_betaBeta_nonneg
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -301,7 +301,7 @@ theorem souriauFisher_betaBeta_nonneg
   exact varianceShift_nonneg (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The `μμ` Souriau-Fisher response is `β²` times number variance. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_muMu_eq_beta_sq_varianceNumber
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -313,7 +313,7 @@ theorem souriauFisher_muMu_eq_beta_sq_varianceNumber
       (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The `μμ` Souriau-Fisher response is nonnegative constructively. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_muMu_nonneg
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -323,7 +323,7 @@ theorem souriauFisher_muMu_nonneg
     (varianceNumber_nonneg (toGrandCanonicalTwoParam M) T.beta T.mu)
 
 /-- The `∂_μ ∂_β` Souriau-Fisher response is the number/covariance readout. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_betaMu_eq_meanNumber_sub_beta_mul_covariance
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -335,7 +335,7 @@ theorem souriauFisher_betaMu_eq_meanNumber_sub_beta_mul_covariance
       (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The `∂_β ∂_μ` Souriau-Fisher response is the same number/covariance readout. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_muBeta_eq_meanNumber_sub_beta_mul_covariance
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -347,7 +347,7 @@ theorem souriauFisher_muBeta_eq_meanNumber_sub_beta_mul_covariance
       (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- Souriau-Fisher response symmetry: the finite Onsager shadow. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisherResponseMatrix_symmetric
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -356,7 +356,7 @@ theorem souriauFisherResponseMatrix_symmetric
     responseMatrix_symmetric_of_hessian (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- Matrix-level Souriau-Fisher symmetry, i.e. finite Onsager reciprocity. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisherMetricMatrix_isSymm
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -377,7 +377,7 @@ theorem souriauFisherMetricMatrix_isSymm
 Finite Souriau-Fisher PSD from the concrete variance diagonals and a remaining
 determinant/non-spinodal gate.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -394,14 +394,14 @@ This is the algebraic inverse of the finite `2×2` Fisher/Onsager response
 matrix.  It is defined everywhere as a formula, but it is certified as an
 inverse only on the non-spinodal locus `det ≠ 0`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauFisherInverseMetricResponse
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) : ResponseMatrix2 :=
   (souriauFisherResponseMatrix M T).inverseMetric
 
 /-- The finite inverse Souriau-Fisher response packet as a concrete `2×2` matrix. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauFisherInverseMetricMatrix
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -410,7 +410,7 @@ noncomputable def souriauFisherInverseMetricMatrix
   !![R.betaBeta, R.betaMu; R.muBeta, R.muMu]
 
 /-- The inverse finite Souriau-Fisher metric is symmetric. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisherInverseMetricResponse_symmetric
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -419,7 +419,7 @@ theorem souriauFisherInverseMetricResponse_symmetric
     (souriauFisherResponseMatrix_symmetric M T)
 
 /-- Right inverse law for the finite Souriau-Fisher metric on `det ≠ 0`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_comp_inverseMetric_of_det_ne_zero
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -430,7 +430,7 @@ theorem souriauFisher_comp_inverseMetric_of_det_ne_zero
   ResponseMatrix2.compose_inverseMetric_of_det_ne_zero hdet
 
 /-- Left inverse law for the finite Souriau-Fisher metric on `det ≠ 0`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisher_inverseMetric_comp_of_det_ne_zero
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -444,7 +444,7 @@ theorem souriauFisher_inverseMetric_comp_of_det_ne_zero
 Finite Souriau-Onsager entropy production for thermodynamic force vector
 `(xβ, xμ)`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def souriauEntropyProduction
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) (xβ xμ : ℝ) : ℝ :=
@@ -454,7 +454,7 @@ noncomputable def souriauEntropyProduction
 Finite second-law shadow: if the Souriau-Fisher response packet is positive
 semidefinite, its Onsager entropy production is nonnegative.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauEntropyProduction_nonneg_of_positiveSemidefinite
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -471,7 +471,7 @@ Finite Souriau-Onsager second law with only the determinant gate left explicit.
 The diagonal Fisher positivity is constructed from the variance identities, so
 callers no longer need to package it as a hypothesis.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauEntropyProduction_nonneg_of_det_nonneg
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -489,7 +489,7 @@ This is the repo-native finite form of the prose statement
 `σ = 0` iff the thermodynamic force vanishes.  It requires the explicit
 positive-definite response gate; PSD alone only proves nonnegativity.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauEntropyProduction_eq_zero_iff_force_zero_of_positiveDefinite
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -515,7 +515,7 @@ outline:
 The positive-semidefinite hypothesis is explicit: no global positivity is
 claimed for indefinite/operatorial/Krein lanes without a separate PSD gate.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauFisherOnsager_proof_packet
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -542,7 +542,7 @@ theorem souriauFisherOnsager_proof_packet
     souriauEntropyProduction_nonneg_of_positiveSemidefinite M T hPSD xβ xμ⟩
 
 /-- The `β` direction is conjugate to the shifted observable `E - μN`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriau_beta_conjugate_shifted_readout
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -553,7 +553,7 @@ theorem souriau_beta_conjugate_shifted_readout
       (toGrandCanonicalTwoParam M) T.beta T.mu
 
 /-- The `μ` direction is conjugate to the count observable `N`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriau_mu_conjugate_number_readout
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
@@ -577,7 +577,7 @@ The PSD hypothesis is a real hypothesis, not inferred from prose.  Strict
 positive definiteness and the infinite coadjoint-orbit theorem live behind
 separate hypotheses in the operatorial/metriplectic owner layers.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem gibbsSouriau_massieu_fisher_onsager_secondLaw_packet
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
@@ -614,7 +614,7 @@ Canonical one-observable Fisher/Hessian shadow: the finite Souriau bridge
 reduces to the existing owner theorem `hessian = variance` on the `μ = 0`
 single-observable slice.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriau_canonical_hessian_eq_variance
     [Fintype α] [Nonempty α]
     (energy : α → ℝ) (β : ℝ) :

@@ -27,7 +27,7 @@ open InfoGeometry.GrandCanonical
 variable {α : Type _}
 
 /-- Chemical potential background gauge coupling to the count observable. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def chemicalPotentialGauge
     (params : GrandCanonicalTwoParam α) : WeylGaugeField ℝ (α → ℝ) where
   gaugeOf μ := fun x => μ * params.number x
@@ -43,7 +43,7 @@ theorem chemicalPotentialGauge_apply
 The shifted grand-canonical observable is energy minus the chemical-potential
 background gauge coupling.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem shiftedEnergy_eq_energy_sub_chemicalPotentialGauge
     (params : GrandCanonicalTwoParam α) (μ : ℝ) (x : α) :
     shiftedEnergy params μ x =
@@ -51,7 +51,7 @@ theorem shiftedEnergy_eq_energy_sub_chemicalPotentialGauge
   rfl
 
 /-- Zero chemical potential removes the background count coupling. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem chemicalPotentialGauge_zero
     (params : GrandCanonicalTwoParam α) :
     (chemicalPotentialGauge params).gaugeOf 0 = fun _ : α => 0 := by
@@ -59,7 +59,7 @@ theorem chemicalPotentialGauge_zero
   simp [chemicalPotentialGauge]
 
 /-- Chemical-potential couplings compose additively in the gauge parameter. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem chemicalPotentialGauge_add
     (params : GrandCanonicalTwoParam α) (μ ν : ℝ) :
     (chemicalPotentialGauge params).gaugeOf (μ + ν) =
@@ -70,13 +70,13 @@ theorem chemicalPotentialGauge_add
   ring_nf
 
 /-- Grand-canonical kernel exponent in gauge-coupled form. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def grandCanonicalGaugeKernelExponent
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) : ℝ :=
   -β * (params.energy x - (chemicalPotentialGauge params).gaugeOf μ x)
 
 /-- The gauge-coupled exponent is definitionally the owner shifted-energy exponent. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem grandCanonicalGaugeKernelExponent_eq
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
     grandCanonicalGaugeKernelExponent params β μ x =
@@ -84,14 +84,14 @@ theorem grandCanonicalGaugeKernelExponent_eq
   rfl
 
 /-- Grand-canonical Massieu potential as the log-generating potential `log Z(β, μ)`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def grandCanonicalMassieuPotential
     [Fintype α] [Nonempty α]
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
   potentialGC params β μ
 
 /-- The bridge Massieu potential is exactly the owner `potentialGC`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem grandCanonicalMassieuPotential_eq_potentialGC
     [Fintype α] [Nonempty α]
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
@@ -102,7 +102,7 @@ theorem grandCanonicalMassieuPotential_eq_potentialGC
 The chemical-potential direction is conjugate to the count observable:
 `∂μ log Z(β, μ) = β * E_{β,μ}[N]`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem chemicalPotential_conjugate_count_readout
     [Fintype α] [Nonempty α]
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
@@ -115,7 +115,7 @@ theorem chemicalPotential_conjugate_count_readout
 The inverse-temperature direction is conjugate to the shifted thermodynamic
 observable `E - μN`.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem inverseTemperature_conjugate_shiftedEnergy_readout
     [Fintype α] [Nonempty α]
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :

@@ -32,7 +32,7 @@ noncomputable def routerLogit
   -β * routerHamiltonian n x i e
 
 /-- Softmax weights are exactly KMS/Gibbs weights on the router Hamiltonian. -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth transport]
 theorem softmaxWeight_eq_kmsWeight
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) (e : ExpertIdx n) :
@@ -40,7 +40,7 @@ theorem softmaxWeight_eq_kmsWeight
   exact normalizedWeights_eq_finite_gibbsWeight (n := n) (β := β) (x := x) (i := i) (e := e)
 
 /-- Explicit softmax form on router logits: `exp(logit) / Z`. -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth transport]
 theorem softmaxWeight_eq_exp_routerLogit_div_partition
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) (e : ExpertIdx n) :
@@ -49,7 +49,7 @@ theorem softmaxWeight_eq_exp_routerLogit_div_partition
   simp [softmaxWeight, routerLogit, normalizedWeights, unnormalizedWeights, routerHamiltonian]
 
 /-- Finite KMS normalization on each token-local expert slice. -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth transport]
 theorem kmsWeight_sum_one
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) :
@@ -60,7 +60,7 @@ theorem kmsWeight_sum_one
       (H := routerHamiltonian n x i) (β := β))
 
 /-- Softmax normalization coincides with finite KMS normalization (`∑ᵢ wᵢ = 1`). -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth transport]
 theorem softmaxWeight_sum_one
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) :
@@ -74,7 +74,7 @@ noncomputable def kmsLogPartition
   routerMassieu n β x i
 
 /-- KMS log-partition matches the router log-sum-exp surface. -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth transport]
 theorem kmsLogPartition_eq_logSumExpRouter
     (n : Nat) [Nonempty (Fin n)] (β : ℝ) (x : Tok → V) (i : Tok) :
     kmsLogPartition n β x i
@@ -82,7 +82,7 @@ theorem kmsLogPartition_eq_logSumExpRouter
   exact routerMassieu_eq_logSumExpRouter (n := n) (β := β) (x := x) (i := i)
 
 /-- KMS entropy decomposition on the router slice: `S = β U + ψ`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem kmsEntropy_eq_beta_internal_plus_logPartition
     (n : Nat) [Nonempty (Fin n)] (β : ℝ) (x : Tok → V) (i : Tok) :
     routerEntropy n β x i
@@ -91,7 +91,7 @@ theorem kmsEntropy_eq_beta_internal_plus_logPartition
     (routerEntropy_eq_beta_internal_plus_massieu (n := n) (β := β) (x := x) (i := i))
 
 /-- KMS free-energy relation: `β F = -ψ` for nonzero inverse temperature. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition
     (n : Nat) [Nonempty (Fin n)]
     (β : ℝ) (x : Tok → V) (i : Tok) (hβ : β ≠ 0) :
@@ -101,7 +101,7 @@ theorem beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition
       (n := n) (β := β) (x := x) (i := i) hβ)
 
 /-- Temperature-regularized free energy identity under `β = 1/ε`. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem routerFreeEnergyEps_eq_neg_eps_kmsLogPartition
     (n : Nat) [Nonempty (Fin n)]
     (ε : ℝ) (x : Tok → V) (i : Tok) (hε : ε ≠ 0) :

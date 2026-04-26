@@ -45,7 +45,7 @@ the underlying phase/state carrier.  The pairing is kept abstract so this
 structure can cover finite shadows, operator lanes, or later smooth orbit
 models without identifying them prematurely.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 structure CoadjointMomentMapData (G Gdual State : Type*) where
   moment : State → Gdual
   geometricTemperature : G
@@ -57,11 +57,11 @@ variable {G Gdual State : Type*}
 variable (C : CoadjointMomentMapData G Gdual State)
 
 /-- The Souriau action/readout pairing at one state. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 def actionAt (x : State) : ℝ :=
   C.pairing C.geometricTemperature (C.moment x)
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem actionAt_eq_pairing (x : State) :
     C.actionAt x = C.pairing C.geometricTemperature (C.moment x) :=
   rfl
@@ -79,7 +79,7 @@ finite Souriau grand-canonical package at the selected parameter `theta`.
 This is a scalar-shadow matching field, not an owner-level derivation of the
 Massieu potential from the operatorial modular lane.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 structure SouriauFenchelContext [Fintype α] [Nonempty α] where
   M : SouriauMomentMap α
   T : GeometricTemperature
@@ -94,7 +94,7 @@ variable [Fintype α] [Nonempty α]
 variable (C : SouriauFenchelContext (α := α))
 
 /-- The Fenchel model partition reads `exp` of the finite Souriau Massieu potential. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem partition_eq_exp_souriauMassieu :
     C.model.partition C.theta = Real.exp (souriauMassieuPotential C.M C.T) := by
   calc
@@ -103,19 +103,19 @@ theorem partition_eq_exp_souriauMassieu :
       rw [C.massieu_matches]
 
 /-- The Fenchel gap is nonnegative for every dual coordinate. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem fenchelGap_nonneg (eta : ℝ) :
     0 ≤ C.model.fenchelGap C.theta eta :=
   C.model.fenchelGap_nonneg C.theta eta
 
 /-- The Fenchel gap vanishes on the Legendre contact locus. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem fenchelGap_eq_zero_at_contact :
     C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0 :=
   C.model.fenchelGap_eq_zero_at_contact C.theta
 
 /-- Contact balance `ψ + φ = θη`, rewritten at the bridge parameter. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem contact_balance :
     C.model.massieu C.theta +
         C.model.φ (C.model.dualCoord C.theta) =
@@ -123,7 +123,7 @@ theorem contact_balance :
   C.model.contact_balance C.theta
 
 /-- The finite Souriau Massieu value satisfies the same contact balance. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauMassieu_contact_balance :
     souriauMassieuPotential C.M C.T +
         C.model.φ (C.model.dualCoord C.theta) =
@@ -132,7 +132,7 @@ theorem souriauMassieu_contact_balance :
   exact C.contact_balance
 
 /-- Scaled Fenchel defects are nonnegative at nonnegative scale. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem scaledFenchelGap_nonneg
     (epsilon eta : ℝ) (heps : 0 ≤ epsilon) :
     0 ≤ C.model.scaledFenchelGap epsilon C.theta eta :=
@@ -148,13 +148,13 @@ variable [Fintype α] [Nonempty α]
 variable (C : MetriplecticContext (α := α))
 
 /-- The Onsager response matrix in the metriplectic context is symmetric. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem souriauOnsager_response_symmetric :
     (souriauFisherResponseMatrix C.M C.T).Symmetric :=
   souriauFisherResponseMatrix_symmetric C.M C.T
 
 /-- The reversible/Casimir channel contributes no entropy production. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem casimir_channel_zero :
     C.reversibleEntropyProduction = 0 :=
   C.reversibleEntropyProduction_eq_zero
@@ -167,7 +167,7 @@ response hypotheses carried by the context.
 This theorem is a truthful finite shadow, but not the full dimension-agnostic
 or operatorial owner theorem.
 -/
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem onsager_total_entropy_nonnegative :
     0 ≤ C.totalEntropyProduction :=
   C.totalEntropyProduction_nonneg

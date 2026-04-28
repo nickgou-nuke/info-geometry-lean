@@ -1,0 +1,3 @@
+import InfoGeometry.Canonical.ChiralNullSpaceBridge
+
+#print axioms InfoGeometry.Canonical.ChiralNullSpaceBridge.ZeroModeSubtractionWitness

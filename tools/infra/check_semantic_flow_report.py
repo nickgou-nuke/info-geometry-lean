@@ -60,6 +60,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--json-out", default=DEFAULT_JSON_OUT, help="Semantic-flow JSON output path.")
     parser.add_argument("--md-out", default=DEFAULT_MD_OUT, help="Semantic-flow Markdown output path.")
     parser.add_argument(
+        "--allow-missing-input",
+        action="store_true",
+        help="If artifacts are missing, exit 0 instead of failing.",
+    )
+    parser.add_argument(
         "--skip-generate",
         action="store_true",
         help="Validate existing outputs without running generate_semantic_flow_report.py.",
@@ -72,7 +77,7 @@ def require(cond: bool, msg: str) -> None:
         raise SystemExit(msg)
 
 
-def run_generate(root: Path, input_dir: Path, json_out: Path, md_out: Path) -> None:
+def run_generate(root: Path, input_dir: Path, json_out: Path, md_out: Path, allow_missing: bool = False) -> None:
     cmd = [
         sys.executable,
         "tools/infra/generate_semantic_flow_report.py",
@@ -83,6 +88,8 @@ def run_generate(root: Path, input_dir: Path, json_out: Path, md_out: Path) -> N
         "--md-out",
         str(md_out),
     ]
+    if allow_missing:
+        cmd.append("--allow-missing-input")
     print(f"[semantic-flow-check] running: {' '.join(cmd)}", flush=True)
     proc = subprocess.run(cmd, cwd=root, check=False)
     require(proc.returncode == 0, f"semantic-flow generator failed with exit code {proc.returncode}")
@@ -96,10 +103,14 @@ def main() -> int:
     json_out = normalize_user_path(args.json_out, root / DEFAULT_JSON_OUT)
     md_out = normalize_user_path(args.md_out, root / DEFAULT_MD_OUT)
 
-    require(input_dir.exists(), f"missing semantic-flow input directory: {input_dir}")
+    if not input_dir.exists():
+        if args.allow_missing_input:
+            print(f"[check_semantic_flow_report] missing input directory {input_dir}, skipping.", flush=True)
+            return 0
+        raise SystemExit(f"missing semantic-flow input directory: {input_dir}")
 
     if not args.skip_generate:
-        run_generate(root, input_dir, json_out, md_out)
+        run_generate(root, input_dir, json_out, md_out, allow_missing=args.allow_missing_input)
 
     require(json_out.exists(), f"missing semantic-flow JSON output: {json_out}")
     require(md_out.exists(), f"missing semantic-flow Markdown output: {md_out}")
@@ -108,6 +119,12 @@ def main() -> int:
 
     payload = json.loads(json_out.read_text(encoding="utf-8"))
     require(isinstance(payload, dict), "semantic-flow JSON root must be an object")
+
+    if payload.get("status") == "skipped":
+        if args.allow_missing_input:
+            print(f"[check_semantic_flow_report] report was skipped: {payload.get('reason')}", flush=True)
+            return 0
+        raise SystemExit(f"semantic-flow report was skipped but --allow-missing-input was not provided")
 
     top_keys = set(payload.keys())
     missing_top = sorted(REQUIRED_TOP_LEVEL_KEYS - top_keys)

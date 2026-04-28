@@ -1,0 +1,1825 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "SouriauOperatorialLogPotential relativeEntropy_eq_expectation_difference",
+  "query_tokens": [
+    "entropy_eq_expectation_difference",
+    "log",
+    "operatorial",
+    "potential",
+    "relative",
+    "souriau"
+  ],
+  "query_phrases": [
+    "souriauoperatoriallogpotential",
+    "relativeentropy_eq_expectation_difference"
+  ],
+  "expanded_query_tokens": [
+    "ambient",
+    "bkmgradient",
+    "bridge",
+    "canonical",
+    "channel",
+    "character",
+    "context",
+    "coordinate",
+    "core",
+    "data",
+    "defect",
+    "density",
+    "energy",
+    "entropy",
+    "entropy_eq_expectation_difference",
+    "fierz",
+    "flow",
+    "functional",
+    "geometry",
+    "gibbs",
+    "gradient",
+    "gravity",
+    "hamiltonian",
+    "hessian",
+    "info",
+    "information",
+    "kaehler",
+    "linearized",
+    "log",
+    "massieu",
+    "minus",
+    "modular",
+    "moment",
+    "operator",
+    "operatorial",
+    "plus",
+    "positive",
+    "potential",
+    "projective",
+    "ray",
+    "readout",
+    "real",
+    "recomposition",
+    "relative",
+    "representative",
+    "souriau",
+    "spin",
+    "two"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 8,
+    "matched_groups": [
+      {
+        "id": "EQC-0252",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential",
+          "relative"
+        ],
+        "added_tokens": [
+          "canonical",
+          "core",
+          "density",
+          "geometry",
+          "info",
+          "modular"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity",
+          "InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential"
+        ]
+      },
+      {
+        "id": "EQC-0253",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential",
+          "relative"
+        ],
+        "added_tokens": [
+          "representative"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.RelativePotentialCore.representativeModularPotential",
+          "InfoGeometry.Canonical.RelativePotentialCore.representativeRelativeLogDensity"
+        ]
+      },
+      {
+        "id": "EQC-0198",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "potential",
+          "relative",
+          "souriau"
+        ],
+        "added_tokens": [
+          "bkmgradient",
+          "channel",
+          "entropy",
+          "fierz",
+          "flow",
+          "gradient",
+          "gravity",
+          "linearized",
+          "spin",
+          "two"
+        ],
+        "members": [
+          "G.linearizedGravityPotential",
+          "G.relativeEntropyGradientFlow",
+          "G.souriauBKMGradientFlow",
+          "G.spinTwoFierzChannel"
+        ]
+      },
+      {
+        "id": "EQC-0102",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential",
+          "relative"
+        ],
+        "added_tokens": [
+          "ambient",
+          "bridge",
+          "coordinate",
+          "data",
+          "defect",
+          "energy",
+          "gibbs",
+          "hamiltonian",
+          "hessian",
+          "massieu",
+          "minus",
+          "operator",
+          "plus",
+          "positive",
+          "projective",
+          "ray",
+          "real",
+          "recomposition"
+        ],
+        "members": [
+          "C.hessian.massieuPotential",
+          "C.massieuPotential",
+          "C.operatorMassieu",
+          "InfoGeometry.Canonical.PositiveRayCore.logDensity",
+          "J.energy",
+          "P.logCoordinate",
+          "R.rn.modularHamiltonian",
+          "Real.log",
+          "S.gibbs.operatorMassieu",
+          "ambientRelativeBridge.projectiveLogDensity",
+          "recompositionData.minusLogDefect",
+          "recompositionData.plusLogDefect"
+        ]
+      },
+      {
+        "id": "EQC-0199",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential"
+        ],
+        "added_tokens": [
+          "character",
+          "readout"
+        ],
+        "members": [
+          "G.logCharacterReadout",
+          "G.massieuPotential"
+        ]
+      },
+      {
+        "id": "EQC-0096",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential"
+        ],
+        "added_tokens": [
+          "functional"
+        ],
+        "members": [
+          "C.functional.logCharacterReadout",
+          "C.functional.massieuPotential"
+        ]
+      },
+      {
+        "id": "EQC-0110",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "souriau"
+        ],
+        "added_tokens": [
+          "context",
+          "moment"
+        ],
+        "members": [
+          "C.logContext.modularHamiltonian",
+          "C.logContext.souriauMoment.momentOperator"
+        ]
+      },
+      {
+        "id": "EQC-0239",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "potential"
+        ],
+        "added_tokens": [
+          "information",
+          "kaehler"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry.logF",
+          "K.H.potential"
+        ]
+      }
+    ]
+  },
+  "graph_source": "arango:faithful_raw",
+  "graph_mode": "faithful",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 32,
+  "seed_scc_count": 32,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 34355,
+  "edge_count": 1473813,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 29357,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L0_Count",
+      "count": 2,
+      "rep_depths": [
+        0
+      ],
+      "rep_depth_slugs": [
+        "count"
+      ]
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 219,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 1033,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1369,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 1828,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 547,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "result_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 6,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 4,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 2,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 8,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    }
+  ],
+  "top_k": 20,
+  "items": [
+    {
+      "id": "InfoGeometry.SuperMetriplectic.OperatorGradientGravityPacket",
+      "name": "InfoGeometry.SuperMetriplectic.OperatorGradientGravityPacket",
+      "module": "InfoGeometry.SuperMetriplectic.SouriauTomitaBKM",
+      "kind": "Declaration",
+      "decl_kind": "inductive",
+      "doc": "Gradient-flow reading of linearized gravity.\n\nThe spin-2 Fierz channel is identified with the gradient-flow potential of the\noperatorial Souriau/BKM relative-entropy geometry.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+      "line": 290,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 327.900347,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+        "line": 290,
+        "start": 286,
+        "end": 294,
+        "lines": [
+          {
+            "line": 286,
+            "text": "  rw [T.souriauFlow_eq_modularFlow, T.thermalTime_eq_modularFlow]"
+          },
+          {
+            "line": 287,
+            "text": ""
+          },
+          {
+            "line": 288,
+            "text": "end ThermalTimeHypothesisPacket"
+          },
+          {
+            "line": 289,
+            "text": ""
+          },
+          {
+            "line": 290,
+            "text": "/--"
+          },
+          {
+            "line": 291,
+            "text": "Gradient-flow reading of linearized gravity."
+          },
+          {
+            "line": 292,
+            "text": ""
+          },
+          {
+            "line": 293,
+            "text": "The spin-2 Fierz channel is identified with the gradient-flow potential of the"
+          },
+          {
+            "line": 294,
+            "text": "operatorial Souriau/BKM relative-entropy geometry."
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_a59d0eacc7af3d6ab987754e702057638a77dda5",
+        "raw_doc_id": "raw_info_nodes/raw_a59d0eacc7af3d6ab987754e702057638a77dda5",
+        "scc_id": 26024,
+        "scc_key": "scc_5905744cdb45b8ad3a9af0d9a75def287f5c4327",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorMassieu",
+      "name": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorMassieu",
+      "module": "InfoGeometry.Canonical.SouriauConformalKKTContext",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+      "line": 285,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 321.858428,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+        "line": 285,
+        "start": 281,
+        "end": 289,
+        "lines": [
+          {
+            "line": 281,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 282,
+            "text": "noncomputable def operatorWeylCharacter : ℝ :="
+          },
+          {
+            "line": 283,
+            "text": "  C.readout (NormedSpace.exp (-C.conformalGeometricTemperature))"
+          },
+          {
+            "line": 284,
+            "text": ""
+          },
+          {
+            "line": 285,
+            "text": "/-- Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. -/"
+          },
+          {
+            "line": 286,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 287,
+            "text": "noncomputable def operatorMassieu : ℝ :="
+          },
+          {
+            "line": 288,
+            "text": "  Real.log C.operatorPartition"
+          },
+          {
+            "line": 289,
+            "text": ""
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9de943751676689964a16382b46d68ceaa284e7d",
+        "raw_doc_id": "raw_info_nodes/raw_9de943751676689964a16382b46d68ceaa284e7d",
+        "scc_id": 10671,
+        "scc_key": "scc_76177c33f2d68eda1066bcc45c9ace446527cca2",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.FierzStressProjectionBridge.FierzStressProjectionContext.operatorInformationHessian_projectedStress_fierz_identity",
+      "name": "InfoGeometry.Canonical.FierzStressProjectionBridge.FierzStressProjectionContext.operatorInformationHessian_projectedStress_fierz_identity",
+      "module": "InfoGeometry.Canonical.FierzStressProjectionBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Fierz channel identity for the stress projection of the operatorial Hessian.\n\nThis is the current spin-2/stress theorem surface: the squared projected\nstress decomposes into scalar, symplectic, and area Fierz channels of the\nprojected Hessian state.  It is not a global linearized-gravity theorem.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/FierzStressProjectionBridge.lean",
+      "line": 123,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 317.948475,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/FierzStressProjectionBridge.lean",
+        "line": 123,
+        "start": 119,
+        "end": 127,
+        "lines": [
+          {
+            "line": 119,
+            "text": "          (transportCommutator X (transportCommutator X A))) := by"
+          },
+          {
+            "line": 120,
+            "text": "  exact C.projectedStressReadout_eq_fierzHilbert"
+          },
+          {
+            "line": 121,
+            "text": "    (transportCommutator X (transportCommutator X A))"
+          },
+          {
+            "line": 122,
+            "text": ""
+          },
+          {
+            "line": 123,
+            "text": "/--"
+          },
+          {
+            "line": 124,
+            "text": "Fierz channel identity for the stress projection of the operatorial Hessian."
+          },
+          {
+            "line": 125,
+            "text": ""
+          },
+          {
+            "line": 126,
+            "text": "This is the current spin-2/stress theorem surface: the squared projected"
+          },
+          {
+            "line": 127,
+            "text": "stress decomposes into scalar, symplectic, and area Fierz channels of the"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_3e2181eb1e4b1371558ae6449b17bdac9af555ef",
+        "raw_doc_id": "raw_info_nodes/raw_3e2181eb1e4b1371558ae6449b17bdac9af555ef",
+        "scc_id": 6412,
+        "scc_key": "scc_aa4d4ede210d7be1794d855f6d1bf0d06bb1b8d0",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.SuperMetriplectic.OperatorGradientGravityPacket.relativeEntropyGradient_eq_spinTwo",
+      "name": "InfoGeometry.SuperMetriplectic.OperatorGradientGravityPacket.relativeEntropyGradient_eq_spinTwo",
+      "module": "InfoGeometry.SuperMetriplectic.SouriauTomitaBKM",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The relative-entropy gradient extracts the Fierz spin-2 channel. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+      "line": 322,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 300.172496,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+        "line": 322,
+        "start": 318,
+        "end": 326,
+        "lines": [
+          {
+            "line": 318,
+            "text": "    {Op : Type*} (G : OperatorGradientGravityPacket Op) (A B : Op) :"
+          },
+          {
+            "line": 319,
+            "text": "    G.souriauBKMGradientFlow A B = G.linearizedGravityPotential A B :="
+          },
+          {
+            "line": 320,
+            "text": "  G.souriauBKMGradient_eq_gravityPotential A B"
+          },
+          {
+            "line": 321,
+            "text": ""
+          },
+          {
+            "line": 322,
+            "text": "/-- The relative-entropy gradient extracts the Fierz spin-2 channel. -/"
+          },
+          {
+            "line": 323,
+            "text": "theorem relativeEntropyGradient_eq_spinTwo"
+          },
+          {
+            "line": 324,
+            "text": "    {Op : Type*} (G : OperatorGradientGravityPacket Op) (A B : Op) :"
+          },
+          {
+            "line": 325,
+            "text": "    G.relativeEntropyGradientFlow A B = G.spinTwoFierzChannel A B := by"
+          },
+          {
+            "line": 326,
+            "text": "  rw [G.relativeEntropyGradient_eq_souriauBKMGradient,"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_a6e5d64724967f16f5b93dd0e913de93eb708a43",
+        "raw_doc_id": "raw_info_nodes/raw_a6e5d64724967f16f5b93dd0e913de93eb708a43",
+        "scc_id": 26044,
+        "scc_key": "scc_e3c518eb80d6a5e2b0eb43f6f27b6b0c390b8b37",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauConformalKKT.OperatorialWeylSupercharacterContext.operatorMassieu_eq_log_operatorSupercharacter",
+      "name": "InfoGeometry.Canonical.SouriauConformalKKT.OperatorialWeylSupercharacterContext.operatorMassieu_eq_log_operatorSupercharacter",
+      "module": "InfoGeometry.Canonical.SouriauConformalKKTContext",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The Massieu potential is the logarithm of the boson-minus-fermion supercharacter. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+      "line": 466,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 298.01775,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+        "line": 466,
+        "start": 462,
+        "end": 470,
+        "lines": [
+          {
+            "line": 462,
+            "text": "  rw [S.readout_eq_bosonic_sub_fermionic]"
+          },
+          {
+            "line": 463,
+            "text": "  rfl"
+          },
+          {
+            "line": 464,
+            "text": ""
+          },
+          {
+            "line": 465,
+            "text": "-- theorem-class: bridge"
+          },
+          {
+            "line": 466,
+            "text": "/-- The Massieu potential is the logarithm of the boson-minus-fermion supercharacter. -/"
+          },
+          {
+            "line": 467,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 468,
+            "text": "theorem operatorMassieu_eq_log_operatorSupercharacter :"
+          },
+          {
+            "line": 469,
+            "text": "    S.gibbs.operatorMassieu = Real.log S.operatorSupercharacter := by"
+          },
+          {
+            "line": 470,
+            "text": "  rw [ConformalGibbsSouriauOperatorContext.operatorMassieu_eq_log_partition]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_99960e23e2d2f0ecc78533d25964390c6565b4b0",
+        "raw_doc_id": "raw_info_nodes/raw_99960e23e2d2f0ecc78533d25964390c6565b4b0",
+        "scc_id": 13947,
+        "scc_key": "scc_790b4d03abd357b0debeced86ebe1e04e50da71a",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauKreinMetriplectic.OperatorialMetriplecticContext.operatorialEntropyProduction_nonneg_of_metricResponsePSD",
+      "name": "InfoGeometry.Canonical.SouriauKreinMetriplectic.OperatorialMetriplecticContext.operatorialEntropyProduction_nonneg_of_metricResponsePSD",
+      "module": "InfoGeometry.Canonical.SouriauKreinMetriplecticContext",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Operatorial Krein/Onsager second-law gate: a symmetric positive-semidefinite\ntwo-channel Hessian packet has nonnegative entropy production.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauKreinMetriplecticContext.lean",
+      "line": 460,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 297.434781,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauKreinMetriplecticContext.lean",
+        "line": 460,
+        "start": 456,
+        "end": 464,
+        "lines": [
+          {
+            "line": 456,
+            "text": "    mixed_determinant_nonneg R⟩"
+          },
+          {
+            "line": 457,
+            "text": ""
+          },
+          {
+            "line": 458,
+            "text": "end CramerRaoOperatorialResponseContext"
+          },
+          {
+            "line": 459,
+            "text": ""
+          },
+          {
+            "line": 460,
+            "text": "/--"
+          },
+          {
+            "line": 461,
+            "text": "Operatorial Krein/Onsager second-law gate: a symmetric positive-semidefinite"
+          },
+          {
+            "line": 462,
+            "text": "two-channel Hessian packet has nonnegative entropy production."
+          },
+          {
+            "line": 463,
+            "text": "-/"
+          },
+          {
+            "line": 464,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_c32adb4a1af2fcf5d95df3a275a85470b4fc9086",
+        "raw_doc_id": "raw_info_nodes/raw_c32adb4a1af2fcf5d95df3a275a85470b4fc9086",
+        "scc_id": 13662,
+        "scc_key": "scc_50d0235fa5628c618df12a5b6cf6824733018bc2",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_eq_moment_geometricTemperature",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_eq_moment_geometricTemperature",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The modular Hamiltonian is the Souriau moment at geometric temperature. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 170,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 297.18206,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 170,
+        "start": 166,
+        "end": 174,
+        "lines": [
+          {
+            "line": 166,
+            "text": "    C.souriauMoment.thermalGenerator ="
+          },
+          {
+            "line": 167,
+            "text": "      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature :="
+          },
+          {
+            "line": 168,
+            "text": "  C.souriauMoment.thermalGenerator_eq_moment_geometricTemperature"
+          },
+          {
+            "line": 169,
+            "text": ""
+          },
+          {
+            "line": 170,
+            "text": "/-- The modular Hamiltonian is the Souriau moment at geometric temperature. -/"
+          },
+          {
+            "line": 171,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 172,
+            "text": "theorem modularHamiltonian_eq_moment_geometricTemperature :"
+          },
+          {
+            "line": 173,
+            "text": "    C.modularHamiltonian ="
+          },
+          {
+            "line": 174,
+            "text": "      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature :="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_3ea155ae002f7c46d50babb794c15e747cb83c14",
+        "raw_doc_id": "raw_info_nodes/raw_3ea155ae002f7c46d50babb794c15e747cb83c14",
+        "scc_id": 14738,
+        "scc_key": "scc_014a2210de5368a9d147551d30b761741a5b9c1c",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorConformalResponse",
+      "name": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorConformalResponse",
+      "module": "InfoGeometry.Canonical.SouriauConformalKKTContext",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Operatorial Hessian/Onsager response of the conformal Massieu surface along\ntwo noncommutative perturbation channels.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+      "line": 340,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 296.775875,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+        "line": 340,
+        "start": 336,
+        "end": 344,
+        "lines": [
+          {
+            "line": 336,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 337,
+            "text": "noncomputable def operatorMomentPairing (A : EndH₂) : ℝ :="
+          },
+          {
+            "line": 338,
+            "text": "  C.readout (A * C.conformalGeometricTemperature)"
+          },
+          {
+            "line": 339,
+            "text": ""
+          },
+          {
+            "line": 340,
+            "text": "/--"
+          },
+          {
+            "line": 341,
+            "text": "Operatorial Hessian/Onsager response of the conformal Massieu surface along"
+          },
+          {
+            "line": 342,
+            "text": "two noncommutative perturbation channels."
+          },
+          {
+            "line": 343,
+            "text": "-/"
+          },
+          {
+            "line": 344,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_4c2fadfe710ca79ac66d609605f52c6eb6adcee3",
+        "raw_doc_id": "raw_info_nodes/raw_4c2fadfe710ca79ac66d609605f52c6eb6adcee3",
+        "scc_id": 13731,
+        "scc_key": "scc_65a5ea6a2102a0c7b6d2d10254dedaf901b183ca",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay",
+      "name": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay",
+      "module": "InfoGeometry.Canonical.RelativePotentialCountBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+      "line": 604,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 293.840668,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+        "line": 604,
+        "start": 600,
+        "end": 608,
+        "lines": [
+          {
+            "line": 600,
+            "text": "    (href : ∀ i : Fin n, 0 < ref i) :"
+          },
+          {
+            "line": 601,
+            "text": "    projectiveCountLogDelta counts ref hcounts href"
+          },
+          {
+            "line": 602,
+            "text": "      = fun i => relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i := rfl"
+          },
+          {
+            "line": 603,
+            "text": ""
+          },
+          {
+            "line": 604,
+            "text": "@[simp] theorem projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay"
+          },
+          {
+            "line": 605,
+            "text": "    (counts ref : RelativeCounts n)"
+          },
+          {
+            "line": 606,
+            "text": "    (hcounts : ∀ i : Fin n, 0 < counts i)"
+          },
+          {
+            "line": 607,
+            "text": "    (href : ∀ i : Fin n, 0 < ref i)"
+          },
+          {
+            "line": 608,
+            "text": "    (i : Fin n) :"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_eda412feb1d7827cae2da9393f2ff9869e78224a",
+        "raw_doc_id": "raw_info_nodes/raw_eda412feb1d7827cae2da9393f2ff9869e78224a",
+        "scc_id": 12699,
+        "scc_key": "scc_dddb8c94c522e9d9bc875d59f7433253289f6bdf",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.projectiveCountHamiltonianProfile_eq_pullback_ambient_add_shift",
+      "name": "InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.projectiveCountHamiltonianProfile_eq_pullback_ambient_add_shift",
+      "module": "InfoGeometry.Canonical.RelativeModularProjectiveBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "For restricted count rays, the ambient pulled-back modular potential plus the\nlocal reweighting defect equals the projective count Hamiltonian profile.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean",
+      "line": 162,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 292.726559,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean",
+        "line": 162,
+        "start": 158,
+        "end": 166,
+        "lines": [
+          {
+            "line": 158,
+            "text": "  rw [hsource, htarget]"
+          },
+          {
+            "line": 159,
+            "text": "  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile"
+          },
+          {
+            "line": 160,
+            "text": "  rfl"
+          },
+          {
+            "line": 161,
+            "text": ""
+          },
+          {
+            "line": 162,
+            "text": "/--"
+          },
+          {
+            "line": 163,
+            "text": "For restricted count rays, the ambient pulled-back modular potential plus the"
+          },
+          {
+            "line": 164,
+            "text": "local reweighting defect equals the projective count Hamiltonian profile."
+          },
+          {
+            "line": 165,
+            "text": "-/"
+          },
+          {
+            "line": 166,
+            "text": "@[rep_depth projective, simp]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_61bbf6f37f8df991fd7e7af265566b3c74e36605",
+        "raw_doc_id": "raw_info_nodes/raw_61bbf6f37f8df991fd7e7af265566b3c74e36605",
+        "scc_id": 12564,
+        "scc_key": "scc_64893d59ad7450f5f9e1ca664b8cc4969b59853c",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauKreinMetriplectic.OperatorialMetriplecticContext.operatorialEntropyProduction_xChannel_nonneg_of_regularCone",
+      "name": "InfoGeometry.Canonical.SouriauKreinMetriplectic.OperatorialMetriplecticContext.operatorialEntropyProduction_xChannel_nonneg_of_regularCone",
+      "module": "InfoGeometry.Canonical.SouriauKreinMetriplecticContext",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "One-channel operatorial second-law gate on the doubled Krein carrier.\n\nFor a pure `X` force, the entropy production reduces to the diagonal Hessian\nreadout times `xForce^2`.  If that diagonal Hessian is a regular-cone positive\noperator read by a positive probe, nonnegativity is constructive and does not\nrequire a finite response matrix or a two-channel determinant hypothesis.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauKreinMetriplecticContext.lean",
+      "line": 624,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 292.665595,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauKreinMetriplecticContext.lean",
+        "line": 624,
+        "start": 620,
+        "end": 628,
+        "lines": [
+          {
+            "line": 620,
+            "text": "      C.operatorialEntropyProduction_eq_quadratic evenForce oddForce,"
+          },
+          {
+            "line": 621,
+            "text": "      C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse"
+          },
+          {
+            "line": 622,
+            "text": "        R evenForce oddForce⟩"
+          },
+          {
+            "line": 623,
+            "text": ""
+          },
+          {
+            "line": 624,
+            "text": "/--"
+          },
+          {
+            "line": 625,
+            "text": "One-channel operatorial second-law gate on the doubled Krein carrier."
+          },
+          {
+            "line": 626,
+            "text": ""
+          },
+          {
+            "line": 627,
+            "text": "For a pure `X` force, the entropy production reduces to the diagonal Hessian"
+          },
+          {
+            "line": 628,
+            "text": "readout times `xForce^2`.  If that diagonal Hessian is a regular-cone positive"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_c4a3f4b781da6882886f13cb50e5ecfdeed7cb82",
+        "raw_doc_id": "raw_info_nodes/raw_c4a3f4b781da6882886f13cb50e5ecfdeed7cb82",
+        "scc_id": 14217,
+        "scc_key": "scc_e1d6aef297db0600fb131002246b3a6788308703",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling",
+      "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling",
+      "module": "InfoGeometry.Canonical.RelativeModularRecomposition",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Exact recomposition of logarithmic density into ambient pullback plus coupling defect. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+      "line": 197,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 291.451695,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+        "line": 197,
+        "start": 193,
+        "end": 201,
+        "lines": [
+          {
+            "line": 193,
+            "text": "          (R.polarized.minus.data.embed bminus))"
+          },
+          {
+            "line": 194,
+            "text": "      R.polarized.sameCarrier"
+          },
+          {
+            "line": 195,
+            "text": "  simpa [PolarizedRecompositionData.carrier] using hminus.symm"
+          },
+          {
+            "line": 196,
+            "text": ""
+          },
+          {
+            "line": 197,
+            "text": "/-- Exact recomposition of logarithmic density into ambient pullback plus coupling defect. -/"
+          },
+          {
+            "line": 198,
+            "text": "@[rep_depth projective, simp] theorem"
+          },
+          {
+            "line": 199,
+            "text": "    PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling"
+          },
+          {
+            "line": 200,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) (bplus : βplus) (bminus : βminus) :"
+          },
+          {
+            "line": 201,
+            "text": "    R.recomposedLogDensity bplus bminus"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_4775450b1528894318d84d0b58be2cb8e7fbfe78",
+        "raw_doc_id": "raw_info_nodes/raw_4775450b1528894318d84d0b58be2cb8e7fbfe78",
+        "scc_id": 6757,
+        "scc_key": "scc_87770b3c7e83c27121573f7787514a876b8f8736",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile",
+      "name": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile",
+      "module": "InfoGeometry.Canonical.RelativePotentialCountBridge",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Canonical projective Hamiltonian modular profile `-log Δ̂`. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+      "line": 578,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 290.463192,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+        "line": 578,
+        "start": 574,
+        "end": 582,
+        "lines": [
+          {
+            "line": 574,
+            "text": "  fun i =>"
+          },
+          {
+            "line": 575,
+            "text": "    relativeModularPotential (α := Fin n)"
+          },
+          {
+            "line": 576,
+            "text": "      (countRay counts hcounts) (countRay ref href) i"
+          },
+          {
+            "line": 577,
+            "text": ""
+          },
+          {
+            "line": 578,
+            "text": "/-- Canonical projective Hamiltonian modular profile `-log Δ̂`. -/"
+          },
+          {
+            "line": 579,
+            "text": "noncomputable def projectiveCountHamiltonianProfile"
+          },
+          {
+            "line": 580,
+            "text": "    (counts ref : RelativeCounts n)"
+          },
+          {
+            "line": 581,
+            "text": "    (hcounts : ∀ i : Fin n, 0 < counts i)"
+          },
+          {
+            "line": 582,
+            "text": "    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_d8c1dd7c7e65ff83cbe503c7c6ccb88ab5e03ada",
+        "raw_doc_id": "raw_info_nodes/raw_d8c1dd7c7e65ff83cbe503c7c6ccb88ab5e03ada",
+        "scc_id": 5225,
+        "scc_key": "scc_0f36f9aeba463b6321843c75e523b83f512f0f10",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "In the zero-thermal-moment constructor, the modular Hamiltonian vanishes by construction. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 217,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 289.399306,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 217,
+        "start": 213,
+        "end": 221,
+        "lines": [
+          {
+            "line": 213,
+            "text": "    OperatorSouriauMoment (H := H) Symmetry where"
+          },
+          {
+            "line": 214,
+            "text": "  momentOperator := fun _ => 0"
+          },
+          {
+            "line": 215,
+            "text": "  geometricTemperature := geometricTemperature"
+          },
+          {
+            "line": 216,
+            "text": ""
+          },
+          {
+            "line": 217,
+            "text": "/--"
+          },
+          {
+            "line": 218,
+            "text": "Constructive identity-branch logarithmic context."
+          },
+          {
+            "line": 219,
+            "text": ""
+          },
+          {
+            "line": 220,
+            "text": "The modular Hamiltonian is not supplied as a zero hypothesis here: it is the"
+          },
+          {
+            "line": 221,
+            "text": "Souriau moment at the chosen geometric temperature, and this constructor makes"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_b812f50e0dd76f481972a0f96ca44c55832231c3",
+        "raw_doc_id": "raw_info_nodes/raw_b812f50e0dd76f481972a0f96ca44c55832231c3",
+        "scc_id": 14730,
+        "scc_key": "scc_bf4e85053fdd58d5cd45d0c2315f775c978af573",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativePotentialCore.representativeModularPotential_eq_neg_representativeRelativeLogDensity",
+      "name": "InfoGeometry.Canonical.RelativePotentialCore.representativeModularPotential_eq_neg_representativeRelativeLogDensity",
+      "module": "InfoGeometry.Canonical.RelativePotentialCore",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "line": 60,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 289.22027,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+        "line": 60,
+        "start": 56,
+        "end": 64,
+        "lines": [
+          {
+            "line": 56,
+            "text": "  symm"
+          },
+          {
+            "line": 57,
+            "text": "  unfold representativeRelativeLogDensity"
+          },
+          {
+            "line": 58,
+            "text": "  exact Real.exp_log (div_pos (μ.pos a) (ν.pos a))"
+          },
+          {
+            "line": 59,
+            "text": ""
+          },
+          {
+            "line": 60,
+            "text": "@[simp] theorem representativeModularPotential_eq_neg_representativeRelativeLogDensity"
+          },
+          {
+            "line": 61,
+            "text": "    (μ ν : InfoGeometry.PositiveMeasure α ℝ) (a : α) :"
+          },
+          {
+            "line": 62,
+            "text": "    representativeModularPotential μ ν a = -representativeRelativeLogDensity μ ν a := rfl"
+          },
+          {
+            "line": 63,
+            "text": ""
+          },
+          {
+            "line": 64,
+            "text": "@[simp] theorem representativeRelativeDensity_scale_left"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_03059563bdee0bcba6e1c9bee84b3b841ab6521a",
+        "raw_doc_id": "raw_info_nodes/raw_03059563bdee0bcba6e1c9bee84b3b841ab6521a",
+        "scc_id": 6450,
+        "scc_key": "scc_bf9104fe0af8fa231de999da414effa3d190550d",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.FierzStressProjectionBridge.FierzStressProjectionContext.operatorInformationHessian_projectedStress_eq_fierzHilbert",
+      "name": "InfoGeometry.Canonical.FierzStressProjectionBridge.FierzStressProjectionContext.operatorInformationHessian_projectedStress_eq_fierzHilbert",
+      "module": "InfoGeometry.Canonical.FierzStressProjectionBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Stress readout of the operatorial Hessian/BKM proxy.\n\nThis is the conservative Lean form of the Fierz stress projection claim:\nthe equality holds only after the explicit projection/readout compatibility\ncontext is supplied.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/FierzStressProjectionBridge.lean",
+      "line": 92,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 289.1165,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/FierzStressProjectionBridge.lean",
+        "line": 92,
+        "start": 88,
+        "end": 96,
+        "lines": [
+          {
+            "line": 88,
+            "text": "theorem projectedStressReadout_eq_fierzHilbert (B : EndH) :"
+          },
+          {
+            "line": 89,
+            "text": "    C.projectedStressReadout B = infoHilbert (E := E) (C.projectedState B) := by"
+          },
+          {
+            "line": 90,
+            "text": "  exact C.stress_eq_fierzHilbert B"
+          },
+          {
+            "line": 91,
+            "text": ""
+          },
+          {
+            "line": 92,
+            "text": "/--"
+          },
+          {
+            "line": 93,
+            "text": "Stress readout of the operatorial Hessian/BKM proxy."
+          },
+          {
+            "line": 94,
+            "text": ""
+          },
+          {
+            "line": 95,
+            "text": "This is the conservative Lean form of the Fierz stress projection claim:"
+          },
+          {
+            "line": 96,
+            "text": "the equality holds only after the explicit projection/readout compatibility"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_4ab17cf45771a9acfe079dd9a9f7d6f6a59e879b",
+        "raw_doc_id": "raw_info_nodes/raw_4ab17cf45771a9acfe079dd9a9f7d6f6a59e879b",
+        "scc_id": 6411,
+        "scc_key": "scc_6727f8578fbef48cccc392514d6ffe19c32940bb",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.SuperMetriplectic.SouriauTomitaThermalTimeCapstone.thermal_time_hypothesis_theorem",
+      "name": "InfoGeometry.SuperMetriplectic.SouriauTomitaThermalTimeCapstone.thermal_time_hypothesis_theorem",
+      "module": "InfoGeometry.SuperMetriplectic.SouriauTomitaBKM",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Thermal-time hypothesis theorem:\nthe Souriau derivation and flow are the Tomita thermal-time derivation and\nflow, while the operatorial relative-entropy gradient extracts the spin-2\nlinearized-gravity channel.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+      "line": 364,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 288.661233,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/SuperMetriplectic/SouriauTomitaBKM.lean",
+        "line": 364,
+        "start": 360,
+        "end": 368,
+        "lines": [
+          {
+            "line": 360,
+            "text": "    C.gravityGradient.relativeEntropyGradientFlow A B ="
+          },
+          {
+            "line": 361,
+            "text": "      C.gravityGradient.spinTwoFierzChannel A B :="
+          },
+          {
+            "line": 362,
+            "text": "  C.gravityGradient.relativeEntropyGradient_eq_spinTwo A B"
+          },
+          {
+            "line": 363,
+            "text": ""
+          },
+          {
+            "line": 364,
+            "text": "/--"
+          },
+          {
+            "line": 365,
+            "text": "Thermal-time hypothesis theorem:"
+          },
+          {
+            "line": 366,
+            "text": "the Souriau derivation and flow are the Tomita thermal-time derivation and"
+          },
+          {
+            "line": 367,
+            "text": "flow, while the operatorial relative-entropy gradient extracts the spin-2"
+          },
+          {
+            "line": 368,
+            "text": "linearized-gravity channel."
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9b609456bd488156e135b56cf21b270ff9b6fa1a",
+        "raw_doc_id": "raw_info_nodes/raw_9b609456bd488156e135b56cf21b270ff9b6fa1a",
+        "scc_id": 26495,
+        "scc_key": "scc_07315ada6ff0576baa86fd395ad993eb541c4ea6",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.souriauMoment",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.souriauMoment",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 44,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 288.29612,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 44,
+        "start": 40,
+        "end": 48,
+        "lines": [
+          {
+            "line": 40,
+            "text": "temperature."
+          },
+          {
+            "line": 41,
+            "text": "-/"
+          },
+          {
+            "line": 42,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 43,
+            "text": "structure SouriauTomitaLogContext where"
+          },
+          {
+            "line": 44,
+            "text": "  souriauMoment : OperatorSouriauMoment (H := H) Symmetry"
+          },
+          {
+            "line": 45,
+            "text": ""
+          },
+          {
+            "line": 46,
+            "text": "namespace SouriauTomitaLogContext"
+          },
+          {
+            "line": 47,
+            "text": ""
+          },
+          {
+            "line": 48,
+            "text": "variable (C : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_c8ebdd710b76701590b371c4e2baa31456bbc267",
+        "raw_doc_id": "raw_info_nodes/raw_c8ebdd710b76701590b371c4e2baa31456bbc267",
+        "scc_id": 14722,
+        "scc_key": "scc_7f7a8f241173fb69cc8b1981870b9ec8260c15c7",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauConformalKKT.OperatorialWeylSupercharacterContext.operatorMassieu_eq_log_operatorSupercharacter_ofPureBosonicReadout",
+      "name": "InfoGeometry.Canonical.SouriauConformalKKT.OperatorialWeylSupercharacterContext.operatorMassieu_eq_log_operatorSupercharacter_ofPureBosonicReadout",
+      "module": "InfoGeometry.Canonical.SouriauConformalKKTContext",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Pure bosonic special case: the Massieu potential is the logarithm of the\noperatorial supercharacter with zero fermionic correction.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+      "line": 514,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 287.736021,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+        "line": 514,
+        "start": 510,
+        "end": 518,
+        "lines": [
+          {
+            "line": 510,
+            "text": "      (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorSupercharacter :="
+          },
+          {
+            "line": 511,
+            "text": "  (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorPartition_eq_operatorSupercharacter"
+          },
+          {
+            "line": 512,
+            "text": ""
+          },
+          {
+            "line": 513,
+            "text": "-- theorem-class: bridge"
+          },
+          {
+            "line": 514,
+            "text": "/--"
+          },
+          {
+            "line": 515,
+            "text": "Pure bosonic special case: the Massieu potential is the logarithm of the"
+          },
+          {
+            "line": 516,
+            "text": "operatorial supercharacter with zero fermionic correction."
+          },
+          {
+            "line": 517,
+            "text": "-/"
+          },
+          {
+            "line": 518,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_ebb1f4f83030a4f602f178803271456f85ef6247",
+        "raw_doc_id": "raw_info_nodes/raw_ebb1f4f83030a4f602f178803271456f85ef6247",
+        "scc_id": 13949,
+        "scc_key": "scc_bba1a1c331e4db5c941bf7dd3b3ac777acea82d0",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.minusLogDefect",
+      "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.minusLogDefect",
+      "module": "InfoGeometry.Canonical.RelativeModularRecomposition",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Minus-sector logarithmic defect relative to ambient pullback. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+      "line": 63,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 287.690271,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+        "line": 63,
+        "start": 59,
+        "end": 67,
+        "lines": [
+          {
+            "line": 59,
+            "text": "def PolarizedRecompositionData.plusLogDefect"
+          },
+          {
+            "line": 60,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) : ℝ :="
+          },
+          {
+            "line": 61,
+            "text": "  R.polarized.plus.data.sourceLogShift - R.polarized.plus.data.targetLogShift"
+          },
+          {
+            "line": 62,
+            "text": ""
+          },
+          {
+            "line": 63,
+            "text": "/-- Minus-sector logarithmic defect relative to ambient pullback. -/"
+          },
+          {
+            "line": 64,
+            "text": "@[rep_depth projective]"
+          },
+          {
+            "line": 65,
+            "text": "def PolarizedRecompositionData.minusLogDefect"
+          },
+          {
+            "line": 66,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) : ℝ :="
+          },
+          {
+            "line": 67,
+            "text": "  R.polarized.minus.data.sourceLogShift - R.polarized.minus.data.targetLogShift"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_7db99da95d16799173213a76c6dbb6b996f07a35",
+        "raw_doc_id": "raw_info_nodes/raw_7db99da95d16799173213a76c6dbb6b996f07a35",
+        "scc_id": 6706,
+        "scc_key": "scc_0d17a4c72a9c301262c4919ea74cd9a8cd081c76",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    }
+  ],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

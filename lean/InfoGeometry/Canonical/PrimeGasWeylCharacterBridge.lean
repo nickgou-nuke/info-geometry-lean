@@ -1,74 +1,79 @@
-/- 
-Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
-Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
-Bulgarian Academy of Sciences.
+import Mathlib
+import InfoGeometry.Meta.Architecture
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+/-!
+# InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
 
-    http://www.apache.org/licenses/LICENSE-2.0
+Witness-gated prime-gas/Weyl-character bridge.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Authors: Nikolay Goutev, Dimitar Tonev
+This file does not depend on open-problem namespaces or external Souriau
+theorem packets. It stores the Weyl-character and thermodynamic comparison
+data explicitly.
 -/
 
-import InfoGeometry.Canonical.OpenProblemFormalization
-import InfoGeometry.Canonical.WeylCharacterEquivalence
+noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
 
-set_option linter.dupNamespace false
+/-- Raw prime-gas data used by the Weyl-character bridge. -/
+@[rep_depth operator]
+structure PrimeGasWeylData where
+  beta : ℝ
+  partitionFunction : ℝ
+  entropyReadout : ℝ
+  characterReadout : ℝ
 
-open InfoGeometry.Canonical.OpenProblemFormalization
-open InfoGeometry.Canonical.WeylCharacterEquivalence
-open InfoGeometry.Canonical.SouriauThermodynamics
+/-- Prime-gas packet with a `.data` projection. -/
+@[rep_depth operator]
+structure PrimeGasWeylPacket where
+  data : PrimeGasWeylData
+
+/-- Minimal Souriau thermodynamic readout packet. -/
+@[rep_depth operator]
+structure SouriauThermodynamicPacket where
+  beta : ℝ
+  entropyReadout : ℝ
 
 /--
-Prime-gas bridge into the conservative Souriau/Weyl character surface.
+Witness-gated Weyl-character bridge.
 
-The prime gas remains an explicit hypothesis packet.  The actual partition
-function/character and Weyl-denominator/Möbius readouts are delegated to the
-already-owned `WeylCharacterEquivalence` packet.
+The bridge stores the comparison between the prime-gas data and the Souriau
+thermodynamic readout explicitly.
 -/
-structure PrimeGasWeylCharacterBridge (𝔤 : Type*) where
-  primeGas : PrimeGasMaxEntPacket
-  souriauWeyl : SouriauWeylPartitionPacket 𝔤
-  primeOccupationLogEnergy : primeGas.data.primeOccupationLogEnergy
-  eulerProductPartition : primeGas.data.eulerProductPartition
+@[rep_depth operator]
+structure PrimeGasWeylCharacterBridge where
+  primeGas : PrimeGasWeylPacket
+  souriau : SouriauThermodynamicPacket
+  beta_eq :
+    souriau.beta = primeGas.data.beta
+  entropy_eq :
+    souriau.entropyReadout = primeGas.data.entropyReadout
+  weylCharacter : ℝ
+  weylCharacter_eq :
+    weylCharacter = primeGas.data.characterReadout
 
 namespace PrimeGasWeylCharacterBridge
 
-variable {𝔤 : Type*} (B : PrimeGasWeylCharacterBridge 𝔤)
+variable (B : PrimeGasWeylCharacterBridge)
 
-/-- The partition function is the Souriau character readout. -/
-theorem partitionFunction_is_souriau_character :
-    B.souriauWeyl.representation.partitionFunction B.souriauWeyl.beta =
-      B.souriauWeyl.representation.character
-        (B.souriauWeyl.representation.thermalElement B.souriauWeyl.beta) :=
-  B.souriauWeyl.partitionFunction_is_souriau_character
+/-- The Souriau inverse-temperature readout matches the prime-gas beta. -/
+@[simp]
+theorem souriau_beta_eq_primeGas_beta :
+    B.souriau.beta = B.primeGas.data.beta :=
+  B.beta_eq
 
-/-- The Weyl denominator equals the supplied prime Euler product bridge. -/
-theorem denominator_is_prime_euler_product :
-    B.souriauWeyl.denominatorBridge.weylDenominator =
-      B.souriauWeyl.denominatorBridge.primeEulerProduct :=
-  B.souriauWeyl.denominator_is_prime_euler_product
+/-- The Souriau entropy readout matches the prime-gas entropy readout. -/
+@[simp]
+theorem souriau_entropy_eq_primeGas_entropy :
+    B.souriau.entropyReadout = B.primeGas.data.entropyReadout :=
+  B.entropy_eq
 
-/-- The parity trace witness is routed unchanged through the bridge. -/
-theorem parity_trace_witness
-    (n : ℕ) (h : B.souriauWeyl.parityWitness.squareFree n) :
-    B.souriauWeyl.parityWitness.signature
-        (B.souriauWeyl.parityWitness.squareFreeToWeyl n h) =
-      mobiusCoefficient n :=
-  B.souriauWeyl.parity_trace_witness n h
+/-- The Weyl-character readout is the stored prime-gas character readout. -/
+@[simp]
+theorem weylCharacter_eq_primeGas_character :
+    B.weylCharacter = B.primeGas.data.characterReadout :=
+  B.weylCharacter_eq
 
 end PrimeGasWeylCharacterBridge
-
-set_option linter.dupNamespace true
 
 end InfoGeometry.Canonical.PrimeGasWeylCharacterBridge

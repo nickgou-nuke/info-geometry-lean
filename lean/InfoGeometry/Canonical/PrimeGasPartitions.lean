@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # InfoGeometry.Canonical.PrimeGasPartitions
@@ -84,5 +85,26 @@ theorem fermionTrace_eq_zeta_div_zeta_two_beta (W : InfiniteEulerProductWitness)
 theorem parityTrace_eq_inverse_zeta (W : InfiniteEulerProductWitness) :
     W.parityTrace = W.inverseZeta :=
   W.parity_eq_inverse_zeta
+
+/--
+Compatibility shadow for the prime-side parity supertrace.
+
+This keeps the old finite/infinite prime-gas vocabulary intact while exposing
+the new supergeometry naming.
+-/
+structure SplitPrimeSupertraceShadow where
+  parityTrace : ℝ
+  supertraceReadout : ℝ
+  parityTrace_eq_supertraceReadout : parityTrace = supertraceReadout
+
+namespace SplitPrimeSupertraceShadow
+
+@[simp]
+theorem parityTrace_eq_supertrace
+    (S : SplitPrimeSupertraceShadow) :
+    S.parityTrace = S.supertraceReadout :=
+  S.parityTrace_eq_supertraceReadout
+
+end SplitPrimeSupertraceShadow
 
 end InfoGeometry.Canonical.PrimeGasPartitions

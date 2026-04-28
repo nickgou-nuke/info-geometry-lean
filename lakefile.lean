@@ -270,7 +270,6 @@ lean_lib Docs where
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
-
 @[default_target]
 lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
@@ -339,7 +338,7 @@ package_facet dagMeta (pkg : Package) : FilePath := do
 /--
 Experimental manifest-style DAG facet. It tracks one small stamp file that
 summarizes the current authoritative refresh state instead of pretending Lake
-independently owns each large DAG artifact.
+identically owns each large DAG artifact.
 -/
 package_facet dagArtifactsManifest (pkg : Package) : FilePath := do
   let configAndWrapperInputs := Job.collectArray <| #[
@@ -381,4 +380,4 @@ lean_lib AuditNative where
 
 lean_lib AuditStrict where
   srcDir := "lean"
-  globs := #[`InfoGeometry.AuditStrict]
+  globs := #[`AuditStrict]

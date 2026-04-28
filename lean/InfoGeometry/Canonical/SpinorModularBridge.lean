@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.SingularBoundaryCorrection
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Canonical.NavierStokesBridge
-import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Experimental.ModularSpinorBridge
 import InfoGeometry.Quantum.BulkBoundary
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Krein.State

@@ -27,6 +27,10 @@ REQUIRED_FILES = [
     "raw_infotree_mctx_decls.jsonl",
     "raw_infotree_lctx_refs.jsonl",
     "raw_infotree_lctx_decls.jsonl",
+    "raw_infotree_goal_states.jsonl",
+    "raw_infotree_fvar_lineage.jsonl",
+    "raw_infotree_tactic_arguments.jsonl",
+    "raw_infotree_messages.jsonl",
     "raw_infotree_projection_leakage.jsonl",
     "metadata.json",
 ]
@@ -65,6 +69,10 @@ def validate(input_dir: Path) -> dict[str, Any]:
     mctx_decls = read_jsonl(input_dir / "raw_infotree_mctx_decls.jsonl") if not missing else []
     lctx_refs = read_jsonl(input_dir / "raw_infotree_lctx_refs.jsonl") if not missing else []
     lctx_decls = read_jsonl(input_dir / "raw_infotree_lctx_decls.jsonl") if not missing else []
+    goal_states = read_jsonl(input_dir / "raw_infotree_goal_states.jsonl") if not missing else []
+    fvar_lineage = read_jsonl(input_dir / "raw_infotree_fvar_lineage.jsonl") if not missing else []
+    tactic_arguments = read_jsonl(input_dir / "raw_infotree_tactic_arguments.jsonl") if not missing else []
+    messages = read_jsonl(input_dir / "raw_infotree_messages.jsonl") if not missing else []
     leakage = read_jsonl(input_dir / "raw_infotree_projection_leakage.jsonl") if not missing else []
     metadata = {}
     if not missing:
@@ -81,6 +89,7 @@ def validate(input_dir: Path) -> dict[str, Any]:
     mctx_decl_keys = {str(row.get("declKey")) for row in mctx_decls}
     lctx_ref_keys = {str(row.get("lctxRefKey")) for row in lctx_refs}
     lctx_keys = {str(row.get("lctxKey")) for row in lctx_refs}
+    goal_state_keys = {str(row.get("stateKey")) for row in goal_states}
     payload_keys_by_node = {str(row.get("nodeKey")): str(row.get("payloadKey")) for row in payloads}
 
     def opt_field(row: dict[str, Any], name: str) -> Any:
@@ -368,6 +377,50 @@ def validate(input_dir: Path) -> dict[str, Any]:
             f"parentful node count {len(parentful_nodes)} does not match edge count {len(edges)}"
         )
 
+    # Validate goal states
+    for row in goal_states:
+        validate_node_provenance(row, f"goal_state {row.get('stateKey')}")
+        node_key = str(row.get("nodeKey"))
+        if node_key not in node_keys:
+            errors.append(f"goal_state {row.get('stateKey')} nodeKey not found")
+        if row.get("role") not in ["before", "after"]:
+            errors.append(f"goal_state {row.get('stateKey')} invalid role")
+
+    # Validate fvar lineage
+    for row in fvar_lineage:
+        validate_node_provenance(row, f"fvar_lineage {row.get('lineageKey')}")
+        node_key = str(row.get("nodeKey"))
+        if node_key not in node_keys:
+            errors.append(f"fvar_lineage {row.get('lineageKey')} nodeKey not found")
+        if row.get("role") not in ["intro", "consume"]:
+            errors.append(f"fvar_lineage {row.get('lineageKey')} invalid role")
+
+    # Validate tactic arguments
+    for row in tactic_arguments:
+        validate_node_provenance(row, f"tactic_argument {row.get('argumentKey')}")
+        node_key = str(row.get("nodeKey"))
+        if node_key not in node_keys:
+            errors.append(f"tactic_argument {row.get('argumentKey')} nodeKey not found")
+
+    # Validate messages
+    for row in messages:
+        node_key = row.get("nodeKey")
+        if node_key is not None and str(node_key) not in node_keys:
+            errors.append(f"message {row.get('messageKey')} nodeKey not found")
+
+    # Validate node fields
+    for row in nodes:
+        if "isLogical" not in row:
+            errors.append(f"node {row.get('nodeKey')} missing isLogical field")
+        if "depth" not in row:
+            errors.append(f"node {row.get('nodeKey')} missing depth field")
+        if "branchingFactor" not in row:
+            errors.append(f"node {row.get('nodeKey')} missing branchingFactor field")
+        for pos in ["startPos", "endPos"]:
+            val = opt_field(row, pos)
+            if val is not None and not isinstance(val, int):
+                errors.append(f"node {row.get('nodeKey')} {pos} must be Nat or None")
+
     report = {
         "schema": "info_geometry.raw_infotree_export_validation.v1",
         "input_dir": str(input_dir),
@@ -392,6 +445,10 @@ def validate(input_dir: Path) -> dict[str, Any]:
             "mctx_decls": len(mctx_decls),
             "lctx_refs": len(lctx_refs),
             "lctx_decls": len(lctx_decls),
+            "goal_states": len(goal_states),
+            "fvar_lineage": len(fvar_lineage),
+            "tactic_arguments": len(tactic_arguments),
+            "messages": len(messages),
             "leakage": len(leakage),
         },
         "metadata": metadata,

@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.InformationSuperGas
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # Berezinian/Pfaffian Supervolume Functional
@@ -18,6 +19,8 @@ modules can discharge them later.
 -/
 
 namespace InfoGeometry.SuperMetriplectic
+
+open InfoGeometry.Algebraic.SplitSignature
 
 /--
 Scalar Schur/Berezinian packet for a `2 × 2` superblock matrix.
@@ -228,5 +231,29 @@ theorem supervolume_functional_capstone
     C.body_entropy_nonnegative⟩
 
 end InformationSuperGasSupervolumeCapstone
+
+/-
+Split Clifford translation of the scalar supervolume packet.
+
+The old `Berezinian/Pfaffian` language remains as a body-level shadow, while
+the operator-level primitive is now the split Clifford supertrace/Berezinian
+readout.
+-/
+namespace SplitSupervolumeTranslation
+
+/-- Operator-level supervolume shadow on the split Clifford carrier. -/
+structure SplitSupervolumeShadow (n : ℕ) where
+  operator : SplitCliffordEnd n := parityOp n
+  supertraceReadout : ℝ := cliffordSupertrace n operator
+  superBerezinianReadout : ℝ := superBerezinian n operator
+  supervolumePotential : ℝ := superEffectiveAction n operator
+
+@[simp]
+theorem supervolumePotential_eq_neg_log_superBerezinian
+    (n : ℕ) (x : SplitCliffordEnd n) :
+    (superEffectiveAction n) x = - Real.log ((superBerezinian n) x) :=
+  rfl
+
+end SplitSupervolumeTranslation
 
 end InfoGeometry.SuperMetriplectic

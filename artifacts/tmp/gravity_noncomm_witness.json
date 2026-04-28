@@ -1,0 +1,105 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "noncommutativity_requires_dilation_witness",
+  "query_tokens": [
+    "noncommutativity_requires_dilation_witness"
+  ],
+  "query_phrases": [],
+  "expanded_query_tokens": [
+    "noncommutativity_requires_dilation_witness"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 0,
+    "matched_groups": []
+  },
+  "graph_source": "arango:faithful_raw",
+  "graph_mode": "faithful",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 0,
+  "seed_scc_count": 0,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 34355,
+  "edge_count": 1473813,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 29357,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L0_Count",
+      "count": 2,
+      "rep_depths": [
+        0
+      ],
+      "rep_depth_slugs": [
+        "count"
+      ]
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 219,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 1033,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1369,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 1828,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 547,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "result_rep_layer_counts": [],
+  "top_k": 20,
+  "items": [],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

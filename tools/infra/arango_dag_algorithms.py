@@ -19,11 +19,14 @@ import argparse
 import hashlib
 import json
 import time
-from collections import deque
+from collections import deque, Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import quote
+
+import networkx as nx
+from networkx.algorithms import community as nxc
 
 from arango_raw_infotree_ingest import (
     ArangoTarget,
@@ -1534,6 +1537,51 @@ def dominator_docs(
     return rows
 
 
+def community_docs(graph: QuotientGraph, *, run_id: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    # Build NetworkX graph from quotient
+    nx_graph = nx.Graph()
+    for i in range(len(graph.nodes)):
+        nx_graph.add_node(i)
+    for (src, dst) in graph.edge_multiplicity:
+        nx_graph.add_edge(src, dst, weight=graph.edge_multiplicity[(src, dst)])
+    
+    # Run Louvain
+    communities = nxc.louvain_communities(nx_graph, seed=42)
+    
+    comm_docs = []
+    edge_docs = []
+    for comm_idx, members in enumerate(communities):
+        comm_key = f"comm_{run_id}_{comm_idx}"
+        member_list = sorted(list(members))
+        
+        # Heuristic: name community after most frequent layer
+        layers = [graph.dominant_layer[i] for i in member_list if graph.dominant_layer[i]]
+        dom_layer = Counter(layers).most_common(1)[0][0] if layers else "Mixed"
+        
+        comm_docs.append({
+            "_key": comm_key,
+            "schema": SCHEMA,
+            "run_id": run_id,
+            "community_index": comm_idx,
+            "dominant_layer": dom_layer,
+            "member_count": len(members),
+            "members": [graph.keys[i] for i in member_list],
+            "labels": ["overlay:arango_dag", "role:theory_block"],
+        })
+        
+        for member_idx in member_list:
+            edge_docs.append({
+                "_key": f"member_{comm_key}_{graph.keys[member_idx]}",
+                "_from": f"arango_dag_components/{graph.keys[member_idx]}",
+                "_to": f"arango_dag_communities/{comm_key}",
+                "schema": SCHEMA,
+                "role": "member_of_community",
+                "run_id": run_id,
+            })
+            
+    return comm_docs, edge_docs
+
+
 def import_batch(target: ArangoTarget, collection: str, rows: list[dict[str, Any]], *, batch_size: int) -> dict[str, Any]:
     created = updated = errors = 0
     for i in range(0, len(rows), batch_size):
@@ -1581,6 +1629,8 @@ def prepare_collections(target: ArangoTarget, *, drop_existing: bool) -> None:
         CollectionSpec("arango_dag_hodge", False),
         CollectionSpec("arango_dag_chiral", False),
         CollectionSpec("arango_dag_dirac", False),
+        CollectionSpec("arango_dag_communities", False),
+        CollectionSpec("arango_dag_community_member_edges", True),
         CollectionSpec("arango_dag_morphism_candidates", False),
     ]
     ensure_database(target)
@@ -1664,6 +1714,8 @@ def ensure_named_graph(target: ArangoTarget, graph_name: str, *, replace: bool) 
                 "arango_dag_hodge",
                 "arango_dag_chiral",
                 "arango_dag_dirac",
+                "arango_dag_communities",
+                "arango_dag_community_member_edges",
                 "arango_dag_morphism_candidates",
             ],
             "isSmart": False,
@@ -1896,6 +1948,7 @@ def main() -> int:
         run_id=run_id,
         limit=int(args.lawful_path_limit),
     )
+    community_rows, community_member_rows = community_docs(graph, run_id=run_id)
     hodge_rows, chiral_rows, dirac_rows = bounded_hodge_dirac_chiral_docs(
         graph,
         run_id=run_id,
@@ -2027,6 +2080,18 @@ def main() -> int:
                 dirac_rows,
                 batch_size=int(args.batch_size),
             ),
+            "arango_dag_communities": import_batch(
+                target,
+                "arango_dag_communities",
+                community_rows,
+                batch_size=int(args.batch_size),
+            ),
+            "arango_dag_community_member_edges": import_batch(
+                target,
+                "arango_dag_community_member_edges",
+                community_member_rows,
+                batch_size=int(args.batch_size),
+            ),
             "arango_dag_morphism_candidates": import_batch(
                 target,
                 "arango_dag_morphism_candidates",
@@ -2053,6 +2118,8 @@ def main() -> int:
                 "arango_dag_hodge": collection_count(target, "arango_dag_hodge"),
                 "arango_dag_chiral": collection_count(target, "arango_dag_chiral"),
                 "arango_dag_dirac": collection_count(target, "arango_dag_dirac"),
+                "arango_dag_communities": collection_count(target, "arango_dag_communities"),
+                "arango_dag_community_member_edges": collection_count(target, "arango_dag_community_member_edges"),
                 "arango_dag_morphism_candidates": collection_count(target, "arango_dag_morphism_candidates"),
             },
         }
@@ -2127,6 +2194,8 @@ def main() -> int:
             "hodge_summary": hodge_rows[0] if hodge_rows else None,
             "chiral_rows": len(chiral_rows),
             "dirac_rows": len(dirac_rows),
+            "community_rows": len(community_rows),
+            "community_member_rows": len(community_member_rows),
             "morphism_candidate_rows": len(morphism_candidate_rows),
             "bounded_limits": {
                 "layer_preview_limit": args.layer_preview_limit,

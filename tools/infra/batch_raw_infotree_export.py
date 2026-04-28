@@ -41,6 +41,10 @@ JSONL_FILES = [
     "raw_infotree_mctx_decls.jsonl",
     "raw_infotree_lctx_refs.jsonl",
     "raw_infotree_lctx_decls.jsonl",
+    "raw_infotree_goal_states.jsonl",
+    "raw_infotree_fvar_lineage.jsonl",
+    "raw_infotree_tactic_arguments.jsonl",
+    "raw_infotree_messages.jsonl",
     "raw_infotree_projection_leakage.jsonl",
 ]
 

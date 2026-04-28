@@ -24,14 +24,13 @@ namespace InfoGeometry.Canonical.TopologicalGapShadow
 
 section Core
 
-variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "EndH" => E →L[ℝ] E
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
-local instance : CompleteSpace EndH := inferInstance
 
 /-- The discrete SUSY / hopping operator on the real doubled carrier `{Q, Q}`. -/
 @[rep_depth operator]
@@ -104,6 +103,7 @@ without introducing any finite-dimensional diagonalization assumptions.
 -/
 @[rep_depth operator]
 theorem range_le_excitedStateSector_of_isStarNormal
+    [CompleteSpace E]
     (Q : EndH) (hNormal : IsStarNormal (susyHoppingOperator Q)) :
     (susyHoppingOperator Q).range ≤ ExcitedStateSector Q := by
   intro y hy

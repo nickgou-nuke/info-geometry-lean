@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # InfoGeometry.Canonical.SouriauThermalEvaluation
@@ -72,5 +73,17 @@ def finiteParityProduct {L : FormalPrimeRootLattice}
 def finiteParitySubsetSum {L : FormalPrimeRootLattice}
     (E : SouriauThermalEvaluation L) : ℝ :=
   finiteEvaluatedAlternatingSum E
+
+/-- Compatibility alias for the finite parity/supertrace readout. -/
+@[rep_depth thermo]
+def splitFiniteParityTrace {L : FormalPrimeRootLattice}
+    (E : SouriauThermalEvaluation L) : ℝ :=
+  finiteParityProduct E
+
+/-- Compatibility alias for the finite parity alternating-sum readout. -/
+@[rep_depth thermo]
+def splitFiniteParitySupertrace {L : FormalPrimeRootLattice}
+    (E : SouriauThermalEvaluation L) : ℝ :=
+  finiteParitySubsetSum E
 
 end InfoGeometry.Canonical.SouriauThermalEvaluation

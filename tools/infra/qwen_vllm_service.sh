@@ -11,7 +11,7 @@ export VLLM_USE_DEEP_GEMM=1
 # Note: using -o for passthrough vLLM options and --tp 1 for single-GPU Blackwell.
 sparkrun run @eugr/qwen3.5-35b-a3b-fp8 \
     --tp 1 \
-    --port 11434 \
+    --port 18789 \
     --label "service=qwen-vllm" \
     --gpu-mem 0.80 \
     --max-model-len 131072 \

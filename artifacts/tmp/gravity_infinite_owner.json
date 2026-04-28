@@ -1,0 +1,1783 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "infinite owner explicit constructive witness",
+  "query_tokens": [
+    "constructive",
+    "explicit",
+    "infinite",
+    "owner",
+    "witness"
+  ],
+  "query_phrases": [],
+  "expanded_query_tokens": [
+    "algebra",
+    "append",
+    "ascent",
+    "canonical",
+    "chain",
+    "claim",
+    "coadjoint",
+    "cocycle",
+    "connes",
+    "constructive",
+    "context",
+    "copy",
+    "core",
+    "coupled",
+    "current",
+    "denominator",
+    "descent",
+    "det",
+    "determinant",
+    "drazin",
+    "ent",
+    "exact",
+    "explicit",
+    "finite",
+    "formalizable",
+    "function",
+    "geometry",
+    "image",
+    "index",
+    "infinite",
+    "info",
+    "injective",
+    "interface",
+    "inverse",
+    "jaynes",
+    "kktresidual",
+    "lie",
+    "matrix",
+    "max",
+    "metriplectic",
+    "moment",
+    "next",
+    "orbit",
+    "owned",
+    "owner",
+    "problem",
+    "projection",
+    "protocol",
+    "repo",
+    "shadow",
+    "souriau",
+    "spaces",
+    "state",
+    "syktwo",
+    "symmetric",
+    "system",
+    "tier",
+    "topological",
+    "traversable",
+    "two",
+    "witness",
+    "zero"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 6,
+    "matched_groups": [
+      {
+        "id": "EQC-0376",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "owner"
+        ],
+        "added_tokens": [
+          "current",
+          "exact",
+          "kktresidual",
+          "owned",
+          "shadow"
+        ],
+        "members": [
+          "ShadowStatus.ownerOwned",
+          "current.exactKKTResidualStatus"
+        ]
+      },
+      {
+        "id": "EQC-0190",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "iff",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "witness"
+        ],
+        "added_tokens": [
+          "denominator",
+          "det",
+          "determinant",
+          "function",
+          "injective",
+          "matrix"
+        ],
+        "members": [
+          "Function.Injective",
+          "Matrix.det",
+          "P.denominator",
+          "P.denominatorWitness.determinant",
+          "W.determinant"
+        ]
+      },
+      {
+        "id": "EQC-0224",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "infinite"
+        ],
+        "added_tokens": [
+          "algebra",
+          "ascent",
+          "canonical",
+          "core",
+          "descent",
+          "drazin",
+          "finite",
+          "geometry",
+          "info",
+          "inverse",
+          "lie",
+          "projection",
+          "spaces",
+          "symmetric",
+          "zero"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.DrazinInfiniteCore.finiteAscentDescentAtZero_of_isDrazinInverse",
+          "InfoGeometry.Core.SymmetricLieSpaces.SymmetricLieAlgebra.k",
+          "IsDrazinInverse.projection"
+        ]
+      },
+      {
+        "id": "EQC-0158",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "owner"
+        ],
+        "added_tokens": [
+          "claim",
+          "copy",
+          "coupled",
+          "formalizable",
+          "interface",
+          "next",
+          "protocol",
+          "syktwo",
+          "system",
+          "tier",
+          "traversable",
+          "two"
+        ],
+        "members": [
+          "ClaimTier.formalizableNextOwnerTarget",
+          "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolTargetClaim"
+        ]
+      },
+      {
+        "id": "EQC-0259",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "infinite"
+        ],
+        "added_tokens": [
+          "coadjoint",
+          "context",
+          "ent",
+          "image",
+          "jaynes",
+          "max",
+          "metriplectic",
+          "moment",
+          "orbit",
+          "problem",
+          "souriau"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage",
+          "InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.moment"
+        ]
+      },
+      {
+        "id": "EQC-0159",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "owner"
+        ],
+        "added_tokens": [
+          "append",
+          "chain",
+          "cocycle",
+          "connes",
+          "index",
+          "repo",
+          "state",
+          "topological"
+        ],
+        "members": [
+          "ClaimTier.repoTheorem",
+          "InfoGeometry.Canonical.SYKTwoCopyInterface.connesCocycle_state_chain_owner_claim",
+          "InfoGeometry.Canonical.SYKTwoCopyInterface.topologicalIndexZ2_append_owner_claim"
+        ]
+      }
+    ]
+  },
+  "graph_source": "arango:faithful_raw",
+  "graph_mode": "faithful",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 32,
+  "seed_scc_count": 32,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 34355,
+  "edge_count": 1473813,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 29357,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L0_Count",
+      "count": 2,
+      "rep_depths": [
+        0
+      ],
+      "rep_depth_slugs": [
+        "count"
+      ]
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 219,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 1033,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1369,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 1828,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 547,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "result_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 12,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 7,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 1,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "top_k": 20,
+  "items": [
+    {
+      "id": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.ofSmoothLegendreSquareDissipation",
+      "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.ofSmoothLegendreSquareDissipation",
+      "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Fully constructive dimension-agnostic Hessian/metriplectic context assembled\nfrom repo-owned infinite routes:\n\n* Hessian/Fenchel/inverse-Fisher data comes from the smooth Legendre readout.\n* Coadjoint-orbit closure is the image of the moment map.\n* Reversible entropy is definitionally zero.\n* Metric/total entropy production is a square.\n\nThis is not a finite shadow: `Orbit` is arbitrary and the Hessian side is an\narbitrary normed-space Legendre owner surface.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "line": 1494,
+      "rep_depth": 5,
+      "rep_depth_slug": "thermo",
+      "rep_layer": "L5_ThermodynamicClosure",
+      "rep_layer_description": "thermodynamic/free-energy/closure substrate",
+      "module_family": null,
+      "score": 332.001135,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "line": 1494,
+        "start": 1490,
+        "end": 1498,
+        "lines": [
+          {
+            "line": 1490,
+            "text": ""
+          },
+          {
+            "line": 1491,
+            "text": "variable {Orbit : Type u}"
+          },
+          {
+            "line": 1492,
+            "text": "variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]"
+          },
+          {
+            "line": 1493,
+            "text": ""
+          },
+          {
+            "line": 1494,
+            "text": "/--"
+          },
+          {
+            "line": 1495,
+            "text": "Fully constructive dimension-agnostic Hessian/metriplectic context assembled"
+          },
+          {
+            "line": 1496,
+            "text": "from repo-owned infinite routes:"
+          },
+          {
+            "line": 1497,
+            "text": ""
+          },
+          {
+            "line": 1498,
+            "text": "* Hessian/Fenchel/inverse-Fisher data comes from the smooth Legendre readout."
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_71f41f39bb143c9f436544a8a4376c3e2068741f",
+        "raw_doc_id": "raw_info_nodes/raw_71f41f39bb143c9f436544a8a4376c3e2068741f",
+        "scc_id": 13644,
+        "scc_key": "scc_e4413e6c3d4f52d94433ccf6430ec5b1168b901e",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Repo-tier claim materialized from a closed finite protocol witness. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 198,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 328.162,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 198,
+        "start": 194,
+        "end": 202,
+        "lines": [
+          {
+            "line": 194,
+            "text": "structure TraversableProtocolWitness where"
+          },
+          {
+            "line": 195,
+            "text": "  prep : TFDLikePreparation (H := H)"
+          },
+          {
+            "line": 196,
+            "text": "  openWindow : S.traversableWindowOpen"
+          },
+          {
+            "line": 197,
+            "text": ""
+          },
+          {
+            "line": 198,
+            "text": "/-- Repo-tier claim materialized from a closed finite protocol witness. -/"
+          },
+          {
+            "line": 199,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 200,
+            "text": "def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where"
+          },
+          {
+            "line": 201,
+            "text": "  tier := ClaimTier.repoTheorem"
+          },
+          {
+            "line": 202,
+            "text": "  statement := S.traversableWindowOpen"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_bc322df7548ed19149e355d9260a243de18335db",
+        "raw_doc_id": "raw_info_nodes/raw_bc322df7548ed19149e355d9260a243de18335db",
+        "scc_id": 13290,
+        "scc_key": "scc_2b53a66f56707fed668539fd6c5bc8590f504c8c",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolTargetClaim_not_repo",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolTargetClaim_not_repo",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The formalizable target claim is explicitly non-repo by tier tag. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 167,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 324.20475,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 167,
+        "start": 163,
+        "end": 171,
+        "lines": [
+          {
+            "line": 163,
+            "text": "def traversableProtocolTargetClaim : TaggedClaim where"
+          },
+          {
+            "line": 164,
+            "text": "  tier := ClaimTier.formalizableNextOwnerTarget"
+          },
+          {
+            "line": 165,
+            "text": "  statement := S.traversableWindowOpen"
+          },
+          {
+            "line": 166,
+            "text": ""
+          },
+          {
+            "line": 167,
+            "text": "/-- The formalizable target claim is explicitly non-repo by tier tag. -/"
+          },
+          {
+            "line": 168,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 169,
+            "text": "theorem traversableProtocolTargetClaim_not_repo :"
+          },
+          {
+            "line": 170,
+            "text": "    ¬ (traversableProtocolTargetClaim (S := S)).isRepoTheorem := by"
+          },
+          {
+            "line": 171,
+            "text": "  exact TaggedClaim.formalizableNextOwnerTarget_not_repoTheorem"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_cd3ce0f33dbc24d68e48615146953975b19b9af6",
+        "raw_doc_id": "raw_info_nodes/raw_cd3ce0f33dbc24d68e48615146953975b19b9af6",
+        "scc_id": 13294,
+        "scc_key": "scc_fcab012ab1527384825c4b763f9b91fd7a6d5ba8",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.openWindow",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.openWindow",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 196,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 319.374652,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 196,
+        "start": 192,
+        "end": 200,
+        "lines": [
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 194,
+            "text": "structure TraversableProtocolWitness where"
+          },
+          {
+            "line": 195,
+            "text": "  prep : TFDLikePreparation (H := H)"
+          },
+          {
+            "line": 196,
+            "text": "  openWindow : S.traversableWindowOpen"
+          },
+          {
+            "line": 197,
+            "text": ""
+          },
+          {
+            "line": 198,
+            "text": "/-- Repo-tier claim materialized from a closed finite protocol witness. -/"
+          },
+          {
+            "line": 199,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 200,
+            "text": "def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9aca6cd59001f611153ad3064d67861f15f61256",
+        "raw_doc_id": "raw_info_nodes/raw_9aca6cd59001f611153ad3064d67861f15f61256",
+        "scc_id": 13273,
+        "scc_key": "scc_56dc0acbc77d4673fd36f6eb6799a74a1340f111",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitMetriplecticContext.moment_mem_orbit",
+      "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitMetriplecticContext.moment_mem_orbit",
+      "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The moment image lies on the selected coadjoint orbit. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "line": 63,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 317.063117,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "line": 63,
+        "start": 59,
+        "end": 67,
+        "lines": [
+          {
+            "line": 59,
+            "text": "  /-- Total metriplectic entropy-production channel. -/"
+          },
+          {
+            "line": 60,
+            "text": "  totalEntropyRate : Orbit → ℝ"
+          },
+          {
+            "line": 61,
+            "text": "  /-- The moment image lies on the selected coadjoint orbit. -/"
+          },
+          {
+            "line": 62,
+            "text": "-- theorem-class: bridge"
+          },
+          {
+            "line": 63,
+            "text": "  moment_mem_orbit : ∀ x : Orbit, isOnCoadjointOrbit (moment x)"
+          },
+          {
+            "line": 64,
+            "text": "  /-- Hamiltonian/coadjoint motion closes on the same orbit. -/"
+          },
+          {
+            "line": 65,
+            "text": "-- theorem-class: bridge"
+          },
+          {
+            "line": 66,
+            "text": "  reversible_preserves_orbit :"
+          },
+          {
+            "line": 67,
+            "text": "    ∀ x : Orbit, isOnCoadjointOrbit (moment (reversibleVectorField x))"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_8ef200b03190a95aff5d998aba423ad9083af496",
+        "raw_doc_id": "raw_info_nodes/raw_8ef200b03190a95aff5d998aba423ad9083af496",
+        "scc_id": 8797,
+        "scc_key": "scc_5adca96e763ab25dfa7d9a16793034a67deb8afc",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolTargetClaim",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolTargetClaim",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Formalizable-next-target protocol claim constructor. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 161,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 315.331951,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 161,
+        "start": 157,
+        "end": 165,
+        "lines": [
+          {
+            "line": 157,
+            "text": "structure TFDLikePreparation where"
+          },
+          {
+            "line": 158,
+            "text": "  psi : H"
+          },
+          {
+            "line": 159,
+            "text": "  normalized : ‖psi‖ = 1"
+          },
+          {
+            "line": 160,
+            "text": ""
+          },
+          {
+            "line": 161,
+            "text": "/-- Formalizable-next-target protocol claim constructor. -/"
+          },
+          {
+            "line": 162,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 163,
+            "text": "def traversableProtocolTargetClaim : TaggedClaim where"
+          },
+          {
+            "line": 164,
+            "text": "  tier := ClaimTier.formalizableNextOwnerTarget"
+          },
+          {
+            "line": 165,
+            "text": "  statement := S.traversableWindowOpen"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_628cda7742bcec2c6cbc9ce48404e000dc80c9d3",
+        "raw_doc_id": "raw_info_nodes/raw_628cda7742bcec2c6cbc9ce48404e000dc80c9d3",
+        "scc_id": 13293,
+        "scc_key": "scc_1e3692e20d10760e1e18147833e89bd57a294151",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.mk",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.mk",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "constructor",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 194,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 315.314899,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 194,
+        "start": 190,
+        "end": 198,
+        "lines": [
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 194,
+            "text": "structure TraversableProtocolWitness where"
+          },
+          {
+            "line": 195,
+            "text": "  prep : TFDLikePreparation (H := H)"
+          },
+          {
+            "line": 196,
+            "text": "  openWindow : S.traversableWindowOpen"
+          },
+          {
+            "line": 197,
+            "text": ""
+          },
+          {
+            "line": 198,
+            "text": "/-- Repo-tier claim materialized from a closed finite protocol witness. -/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_f54193192ced486e7c0a8138b868bcf715d76a31",
+        "raw_doc_id": "raw_info_nodes/raw_f54193192ced486e7c0a8138b868bcf715d76a31",
+        "scc_id": 13264,
+        "scc_key": "scc_84e70c2ed96fbacef72d852ae18755ea144db239",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.casesOn",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.casesOn",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 189,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 314.817517,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 189,
+        "start": 185,
+        "end": 193,
+        "lines": [
+          {
+            "line": 185,
+            "text": "  exact TaggedClaim.externalInterpretation_not_repoTheorem"
+          },
+          {
+            "line": 186,
+            "text": "    (C := erEprInterpretationClaim (S := S))"
+          },
+          {
+            "line": 187,
+            "text": "    (hExt := rfl)"
+          },
+          {
+            "line": 188,
+            "text": ""
+          },
+          {
+            "line": 189,
+            "text": "/--"
+          },
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_922f0486fd83b139ba3091391674f2d956bb1191",
+        "raw_doc_id": "raw_info_nodes/raw_922f0486fd83b139ba3091391674f2d956bb1191",
+        "scc_id": 13266,
+        "scc_key": "scc_661fac0ed47a36520aa914d69dbe9343bf8299d1",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.mk.noConfusion",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.mk.noConfusion",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 194,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 314.817517,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 194,
+        "start": 190,
+        "end": 198,
+        "lines": [
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 194,
+            "text": "structure TraversableProtocolWitness where"
+          },
+          {
+            "line": 195,
+            "text": "  prep : TFDLikePreparation (H := H)"
+          },
+          {
+            "line": 196,
+            "text": "  openWindow : S.traversableWindowOpen"
+          },
+          {
+            "line": 197,
+            "text": ""
+          },
+          {
+            "line": 198,
+            "text": "/-- Repo-tier claim materialized from a closed finite protocol witness. -/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_33ad5403b5e544457d46bd9cd6d96c9e2bdd0dbd",
+        "raw_doc_id": "raw_info_nodes/raw_33ad5403b5e544457d46bd9cd6d96c9e2bdd0dbd",
+        "scc_id": 13270,
+        "scc_key": "scc_b6275c3f134fe1907b1f873f212d04c334fe2948",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.noConfusion",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.noConfusion",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 189,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 314.817517,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 189,
+        "start": 185,
+        "end": 193,
+        "lines": [
+          {
+            "line": 185,
+            "text": "  exact TaggedClaim.externalInterpretation_not_repoTheorem"
+          },
+          {
+            "line": 186,
+            "text": "    (C := erEprInterpretationClaim (S := S))"
+          },
+          {
+            "line": 187,
+            "text": "    (hExt := rfl)"
+          },
+          {
+            "line": 188,
+            "text": ""
+          },
+          {
+            "line": 189,
+            "text": "/--"
+          },
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_46785049d85c10e2f6b85f269a6d783f1e57fdf9",
+        "raw_doc_id": "raw_info_nodes/raw_46785049d85c10e2f6b85f269a6d783f1e57fdf9",
+        "scc_id": 13269,
+        "scc_key": "scc_525fd940643558ba4f0c97a77e2f7d8d4839ef79",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.prep",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.prep",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 195,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 314.817517,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 195,
+        "start": 191,
+        "end": 199,
+        "lines": [
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 194,
+            "text": "structure TraversableProtocolWitness where"
+          },
+          {
+            "line": 195,
+            "text": "  prep : TFDLikePreparation (H := H)"
+          },
+          {
+            "line": 196,
+            "text": "  openWindow : S.traversableWindowOpen"
+          },
+          {
+            "line": 197,
+            "text": ""
+          },
+          {
+            "line": 198,
+            "text": "/-- Repo-tier claim materialized from a closed finite protocol witness. -/"
+          },
+          {
+            "line": 199,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_74e7ff63fbfc4149a94504a8a34ee224406477df",
+        "raw_doc_id": "raw_info_nodes/raw_74e7ff63fbfc4149a94504a8a34ee224406477df",
+        "scc_id": 13274,
+        "scc_key": "scc_73da1143da0e51168f03d854cf021cb24ded0475",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.recOn",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.recOn",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 189,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 314.817517,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 189,
+        "start": 185,
+        "end": 193,
+        "lines": [
+          {
+            "line": 185,
+            "text": "  exact TaggedClaim.externalInterpretation_not_repoTheorem"
+          },
+          {
+            "line": 186,
+            "text": "    (C := erEprInterpretationClaim (S := S))"
+          },
+          {
+            "line": 187,
+            "text": "    (hExt := rfl)"
+          },
+          {
+            "line": 188,
+            "text": ""
+          },
+          {
+            "line": 189,
+            "text": "/--"
+          },
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_f197b31ae8138c24aae475dd4fbc70fdb43e4904",
+        "raw_doc_id": "raw_info_nodes/raw_f197b31ae8138c24aae475dd4fbc70fdb43e4904",
+        "scc_id": 13275,
+        "scc_key": "scc_20284dd4aa4edeb5ea7e25b92ecbc345c1086e77",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.topologicalIndexZ2_append_owner",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.topologicalIndexZ2_append_owner",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Owner-anchor wrapper: finite Kitaev `ℤ₂` append law.\nThis is a compiled owner theorem surface in current repo state.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 224,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 311.333888,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 224,
+        "start": 220,
+        "end": 228,
+        "lines": [
+          {
+            "line": 220,
+            "text": "end TwoCopyFinite"
+          },
+          {
+            "line": 221,
+            "text": ""
+          },
+          {
+            "line": 222,
+            "text": "section OwnerAnchorWrappers"
+          },
+          {
+            "line": 223,
+            "text": ""
+          },
+          {
+            "line": 224,
+            "text": "/--"
+          },
+          {
+            "line": 225,
+            "text": "Owner-anchor wrapper: finite Kitaev `ℤ₂` append law."
+          },
+          {
+            "line": 226,
+            "text": "This is a compiled owner theorem surface in current repo state."
+          },
+          {
+            "line": 227,
+            "text": "-/"
+          },
+          {
+            "line": 228,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_e2d372e9b058ef79c62417566c85df731780cace",
+        "raw_doc_id": "raw_info_nodes/raw_e2d372e9b058ef79c62417566c85df731780cace",
+        "scc_id": 13312,
+        "scc_key": "scc_576e6baf55dc9f3b0974151e5bc9b1972ac0345f",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim_is_repo",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim_is_repo",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Witness-built repo claim is tagged in the repo theorem band. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 204,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 311.315594,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 204,
+        "start": 200,
+        "end": 208,
+        "lines": [
+          {
+            "line": 200,
+            "text": "def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where"
+          },
+          {
+            "line": 201,
+            "text": "  tier := ClaimTier.repoTheorem"
+          },
+          {
+            "line": 202,
+            "text": "  statement := S.traversableWindowOpen"
+          },
+          {
+            "line": 203,
+            "text": ""
+          },
+          {
+            "line": 204,
+            "text": "/-- Witness-built repo claim is tagged in the repo theorem band. -/"
+          },
+          {
+            "line": 205,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 206,
+            "text": "theorem traversableProtocolRepoClaim_is_repo"
+          },
+          {
+            "line": 207,
+            "text": "    (w : TraversableProtocolWitness (S := S)) :"
+          },
+          {
+            "line": 208,
+            "text": "    (traversableProtocolRepoClaim (S := S) w).isRepoTheorem := by"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9e179f2019da569a6d5bee256b73d75ed09e37df",
+        "raw_doc_id": "raw_info_nodes/raw_9e179f2019da569a6d5bee256b73d75ed09e37df",
+        "scc_id": 13292,
+        "scc_key": "scc_686a0539d1b77f766dd46ef1716c39f04513f6b1",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim_holds",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.traversableProtocolRepoClaim_holds",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Witness-built repo claim carries a concrete proof of the open-window statement. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 211,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 310.93204,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 211,
+        "start": 207,
+        "end": 215,
+        "lines": [
+          {
+            "line": 207,
+            "text": "    (w : TraversableProtocolWitness (S := S)) :"
+          },
+          {
+            "line": 208,
+            "text": "    (traversableProtocolRepoClaim (S := S) w).isRepoTheorem := by"
+          },
+          {
+            "line": 209,
+            "text": "  rfl"
+          },
+          {
+            "line": 210,
+            "text": ""
+          },
+          {
+            "line": 211,
+            "text": "/-- Witness-built repo claim carries a concrete proof of the open-window statement. -/"
+          },
+          {
+            "line": 212,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 213,
+            "text": "theorem traversableProtocolRepoClaim_holds"
+          },
+          {
+            "line": 214,
+            "text": "    (w : TraversableProtocolWitness (S := S)) :"
+          },
+          {
+            "line": 215,
+            "text": "    (traversableProtocolRepoClaim (S := S) w).statement := by"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_ce03fd2470bd3ce2418dae50426c2b4880bf70cf",
+        "raw_doc_id": "raw_info_nodes/raw_ce03fd2470bd3ce2418dae50426c2b4880bf70cf",
+        "scc_id": 13291,
+        "scc_key": "scc_1164163927915d9b169ccd245ffaac555c482608",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.rec",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.TwoCopyCoupledSystem.TraversableProtocolWitness.rec",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "recursor",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 189,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 310.260382,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 189,
+        "start": 185,
+        "end": 193,
+        "lines": [
+          {
+            "line": 185,
+            "text": "  exact TaggedClaim.externalInterpretation_not_repoTheorem"
+          },
+          {
+            "line": 186,
+            "text": "    (C := erEprInterpretationClaim (S := S))"
+          },
+          {
+            "line": 187,
+            "text": "    (hExt := rfl)"
+          },
+          {
+            "line": 188,
+            "text": ""
+          },
+          {
+            "line": 189,
+            "text": "/--"
+          },
+          {
+            "line": 190,
+            "text": "Closed finite protocol witness:"
+          },
+          {
+            "line": 191,
+            "text": "normalized preparation plus an explicit open-window proof."
+          },
+          {
+            "line": 192,
+            "text": "-/"
+          },
+          {
+            "line": 193,
+            "text": "@[rep_depth transport]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_1560ffb1f82be9c5f2de655cbdceadc56c78db19",
+        "raw_doc_id": "raw_info_nodes/raw_1560ffb1f82be9c5f2de655cbdceadc56c78db19",
+        "scc_id": 13265,
+        "scc_key": "scc_fd68fd9693e3787aaf2d8515216ecec311594188",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitMetriplecticContext.isOnCoadjointOrbit",
+      "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitMetriplecticContext.isOnCoadjointOrbit",
+      "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Predicate selecting the coadjoint orbit containing the moment image. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "line": 48,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 308.859,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "line": 48,
+        "start": 44,
+        "end": 52,
+        "lines": [
+          {
+            "line": 44,
+            "text": "  moment : Orbit → LieCoalg"
+          },
+          {
+            "line": 45,
+            "text": "  /-- Souriau geometric temperature, i.e. a Lie-algebra generator. -/"
+          },
+          {
+            "line": 46,
+            "text": "  geometricTemperature : LieAlg"
+          },
+          {
+            "line": 47,
+            "text": "  /-- Predicate selecting the coadjoint orbit containing the moment image. -/"
+          },
+          {
+            "line": 48,
+            "text": "  isOnCoadjointOrbit : LieCoalg → Prop"
+          },
+          {
+            "line": 49,
+            "text": "  /-- Reversible/Hamiltonian generator on the orbit. -/"
+          },
+          {
+            "line": 50,
+            "text": "  reversibleVectorField : Orbit → Orbit"
+          },
+          {
+            "line": 51,
+            "text": "  /-- Metric/Onsager generator on the orbit. -/"
+          },
+          {
+            "line": 52,
+            "text": "  metricVectorField : Orbit → Orbit"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_77bf55ca4ba6d357e8023e57a9da7404d764fdc7",
+        "raw_doc_id": "raw_info_nodes/raw_77bf55ca4ba6d357e8023e57a9da7404d764fdc7",
+        "scc_id": 8792,
+        "scc_key": "scc_5722f347f25b319eadf706ba9703dfaa0b5075de",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.betaOfMoment",
+      "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.betaOfMoment",
+      "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Inverse coordinate map `Q ↦ β`. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "line": 483,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 308.452,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "line": 483,
+        "start": 479,
+        "end": 487,
+        "lines": [
+          {
+            "line": 479,
+            "text": "  nonzeroTangent : Tangent → Prop"
+          },
+          {
+            "line": 480,
+            "text": "  /-- Fenchel-Legendre entropy on the coadjoint dual lane. -/"
+          },
+          {
+            "line": 481,
+            "text": "  souriauEntropy : LieCoalg → ℝ"
+          },
+          {
+            "line": 482,
+            "text": "  /-- Inverse coordinate map `Q ↦ β`. -/"
+          },
+          {
+            "line": 483,
+            "text": "  betaOfMoment : LieCoalg → LieAlg"
+          },
+          {
+            "line": 484,
+            "text": "  /-- Entropy Hessian on admissible dual-side variations. -/"
+          },
+          {
+            "line": 485,
+            "text": "  entropyHessian : LieCoalg → DualTangent → DualTangent → ℝ"
+          },
+          {
+            "line": 486,
+            "text": "  /-- Inverse Fisher readout transported to the dual-side variations. -/"
+          },
+          {
+            "line": 487,
+            "text": "  inverseFisherHessian : LieCoalg → DualTangent → DualTangent → ℝ"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_193404aedd719f0f05b6365dd868dbef5301b1dd",
+        "raw_doc_id": "raw_info_nodes/raw_193404aedd719f0f05b6365dd868dbef5301b1dd",
+        "scc_id": 13549,
+        "scc_key": "scc_d30ea876800cd14333ad0cd2f3e76c665801eed6",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.SmoothLegendreGramOwner.moment",
+      "name": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic.InfiniteCoadjointOrbitHessianContext.SmoothLegendreGramOwner.moment",
+      "module": "InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "line": 1103,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 308.1,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "line": 1103,
+        "start": 1099,
+        "end": 1107,
+        "lines": [
+          {
+            "line": 1099,
+            "text": "@[rep_depth thermo]"
+          },
+          {
+            "line": 1100,
+            "text": "structure SmoothLegendreGramOwner"
+          },
+          {
+            "line": 1101,
+            "text": "    (Orbit : Type u) (Θ : Type*) [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]"
+          },
+          {
+            "line": 1102,
+            "text": "    (Feature : Type*) [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature] where"
+          },
+          {
+            "line": 1103,
+            "text": "  moment : Orbit → MomentCoord Θ"
+          },
+          {
+            "line": 1104,
+            "text": "  partitionFunction : Θ → ℝ"
+          },
+          {
+            "line": 1105,
+            "text": "  thermodynamicMoment : Θ → MomentCoord Θ"
+          },
+          {
+            "line": 1106,
+            "text": "  souriauEntropy : MomentCoord Θ → ℝ"
+          },
+          {
+            "line": 1107,
+            "text": "  legendre : LegendreHessianInverseContext Θ"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_17e586b80a476ea63865f0ad0d8a6d2700e8440b",
+        "raw_doc_id": "raw_info_nodes/raw_17e586b80a476ea63865f0ad0d8a6d2700e8440b",
+        "scc_id": 13529,
+        "scc_key": "scc_12e90dbd1d33c7d3bdb30ca2f945b4d77a324aa8",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SYKTwoCopyInterface.topologicalIndexZ2_append_owner_claim",
+      "name": "InfoGeometry.Canonical.SYKTwoCopyInterface.topologicalIndexZ2_append_owner_claim",
+      "module": "InfoGeometry.Canonical.SYKTwoCopyInterface",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+      "line": 237,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 307.001433,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean",
+        "line": 237,
+        "start": 233,
+        "end": 241,
+        "lines": [
+          {
+            "line": 233,
+            "text": "    topologicalIndexZ2 (chain₁ ++ chain₂)"
+          },
+          {
+            "line": 234,
+            "text": "      = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂ :="
+          },
+          {
+            "line": 235,
+            "text": "  topologicalIndexZ2_append_of_macroscopicVolume_ne_zero chain₁ chain₂ h₁ h₂"
+          },
+          {
+            "line": 236,
+            "text": ""
+          },
+          {
+            "line": 237,
+            "text": "/-- Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. -/"
+          },
+          {
+            "line": 238,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 239,
+            "text": "def topologicalIndexZ2_append_owner_claim.{u} : TaggedClaim where"
+          },
+          {
+            "line": 240,
+            "text": "  tier := ClaimTier.repoTheorem"
+          },
+          {
+            "line": 241,
+            "text": "  statement :="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_cdbf3c171142663b96336b4c799d2b50024f613b",
+        "raw_doc_id": "raw_info_nodes/raw_cdbf3c171142663b96336b4c799d2b50024f613b",
+        "scc_id": 13313,
+        "scc_key": "scc_0f03192b5dc0142c426fe181b3785d4dbf4e2d25",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    }
+  ],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

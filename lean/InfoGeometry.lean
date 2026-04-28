@@ -22,6 +22,7 @@ import InfoGeometry.Library
 import InfoGeometry.Generated
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.STUDatum
 
 /-!
 # InfoGeometry

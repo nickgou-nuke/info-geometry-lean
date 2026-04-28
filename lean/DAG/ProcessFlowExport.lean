@@ -365,27 +365,40 @@ private def directEdgeEvidenceOf (env : Environment) (declName : Name) : Array D
   let srcModule := moduleNameFor env declName
   let srcDepthNat? := (repDepth? env declName).map RepDepth.toNat
   if let some ci := env.find? declName then
+    let mut visited : NameSet := {}
+    let mut queue : Array (Name × EdgeUse) := #[]
     for (dep, kind) in DAG.edgesFromConstantInfo ci do
-      if let some depDepth := repDepth? env dep then
+      queue := queue.push (dep, edgeUseOfKind kind)
+    let mut i := 0
+    while i < queue.size do
+      let (curr, use) := queue[i]!
+      i := i + 1
+      if visited.contains curr then continue
+      visited := visited.insert curr
+      if let some depDepth := repDepth? env curr then
         let mut replaced := false
         let mut next := #[]
         for ev in out do
-          if ev.dst == dep then
+          if ev.dst == curr then
             replaced := true
-            next := next.push { ev with edgeUse := mergeEdgeUse ev.edgeUse (edgeUseOfKind kind) }
+            next := next.push { ev with edgeUse := mergeEdgeUse ev.edgeUse use }
           else
             next := next.push ev
         if !replaced then
           next := next.push {
             src := declName
-            dst := dep
-            edgeUse := edgeUseOfKind kind
+            dst := curr
+            edgeUse := use
             srcDepthNat? := srcDepthNat?
             dstDepthNat? := some depDepth.toNat
             srcModule := srcModule
-            dstModule := moduleNameFor env dep
+            dstModule := moduleNameFor env curr
           }
         out := next
+      else
+        if let some nextCi := env.find? curr then
+          for (nextDep, nextKind) in DAG.edgesFromConstantInfo nextCi do
+            queue := queue.push (nextDep, mergeEdgeUse use (edgeUseOfKind nextKind))
   return out.qsort fun a b => toString a.dst < toString b.dst
 
 private def featureBundleOf

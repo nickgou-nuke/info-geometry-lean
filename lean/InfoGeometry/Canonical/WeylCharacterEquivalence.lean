@@ -6,6 +6,7 @@ import InfoGeometry.Canonical.ParityTraceWitness
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Thermodynamics.SouriauTemperature
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # InfoGeometry.Canonical.WeylCharacterEquivalence
@@ -23,6 +24,8 @@ denominator.  Those are represented as explicit witness packets.
 -/
 
 namespace InfoGeometry.Canonical.WeylCharacterEquivalence
+
+open InfoGeometry.Algebraic.SplitSignature
 
 /-- Phantom-parameter alias for the thermodynamic temperature carrier. -/
 abbrev SouriauTemperature (_ : Type*) := InfoGeometry.Thermodynamics.SouriauTemperature
@@ -339,6 +342,63 @@ theorem corrected_denominator_is_parity_supertrace
       FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
   P.parityTrace_is_denominator
 
+/--
+Split parity-supertrace compatibility packet for the Weyl denominator corridor.
+
+The prime/Weyl surface remains scalar and finite; this packet just renames the
+already-proved parity-trace readout in the new split supergeometry language.
+-/
+@[rep_depth thermo]
+structure SplitWeylParitySupertracePacket where
+  inverseZeta : ℝ
+  paritySupertrace : ℝ
+  parityTrace : ℝ
+  inverseZeta_eq_paritySupertrace :
+    inverseZeta = paritySupertrace
+  paritySupertrace_eq_parityTrace :
+    paritySupertrace = parityTrace
+
+namespace SplitWeylParitySupertracePacket
+
+@[rep_depth thermo]
+theorem inverseZeta_eq_parityTrace
+    (P : SplitWeylParitySupertracePacket) :
+    P.inverseZeta = P.parityTrace := by
+  rw [P.inverseZeta_eq_paritySupertrace, P.paritySupertrace_eq_parityTrace]
+
+@[rep_depth thermo]
+theorem parityTrace_eq_inverseZeta
+    (P : SplitWeylParitySupertracePacket) :
+    P.parityTrace = P.inverseZeta := by
+  rw [P.inverseZeta_eq_parityTrace]
+
+end SplitWeylParitySupertracePacket
+
+/--
+Compatibility shadow for the corrected prime/Weyl packet in the split
+parity-supertrace language.
+
+This keeps the analytic and finite prime data untouched.
+-/
+@[rep_depth thermo]
+structure SplitCorrectedSouriauWeylSupertracePacket where
+  lattice : FormalPrimeRootSystem.FormalPrimeRootLattice
+  p_neg_beta : ℕ → ℝ
+  parityTrace_is_denominator :
+    PrimeGasPartitions.finiteParityTrace lattice p_neg_beta =
+      FormalPrimeRootSystem.weylDenominatorProduct lattice p_neg_beta
+  paritySupertrace : ℝ
+  inverseZeta : ℝ
+  inverseZeta_eq_paritySupertrace :
+    inverseZeta = paritySupertrace
+
+@[rep_depth thermo]
+theorem split_corrected_denominator_is_parity_supertrace
+    (P : SplitCorrectedSouriauWeylSupertracePacket) :
+    PrimeGasPartitions.finiteParityTrace P.lattice P.p_neg_beta =
+      FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
+  P.parityTrace_is_denominator
+
 end InfoGeometry.Canonical.WeylCharacterEquivalence
 
 /-!
@@ -356,15 +416,5 @@ structure WeylDenominator (Roots : Set ℝ) where
 @[rep_depth thermo]
 def PrimeGasEulerProduct (_beta : ℝ) : ℝ :=
   1
-
-@[rep_depth thermo]
-theorem weyl_denominator_is_euler_product
-    (_beta : ℝ) : True := by
-  trivial
-
-@[rep_depth thermo]
-theorem mobius_eq_weyl_signature
-    (_n : ℕ) (_w : Type*) [Group _w] : True := by
-  trivial
 
 end InfoGeometry.Canonical.WeylEquivalence

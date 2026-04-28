@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Geometry.KreinAsHessian
+import InfoGeometry.Algebraic.SplitSuperGeometry
 import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import InfoGeometry.Meta.Architecture
 
@@ -21,6 +22,7 @@ namespace InfoGeometry.Canonical.RelativeModularBerezinianBridge
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
 open InfoGeometry.Canonical.RestrictedVolumeCharacter
+open InfoGeometry.Algebraic.SplitSignature
 open InfoGeometry.Geometry
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.Volume.Base
@@ -455,6 +457,30 @@ theorem relativeModularSupervolume_secondVariation_Krein_packet
     C.secondVariation_symmetric u v,
     C.sinkhornPerelmanMetric_eq_kreinInner u v,
     C.sinkhornPerelmanMetric_symmetric u v⟩
+
+/--
+Compatibility shadow for the modular supervolume lane in split supergeometry
+language.
+
+The modular carrier remains the operatorial/Krein one; this is only a rename
+layer exposing the new parity/supertrace vocabulary.
+-/
+structure SplitModularSupervolumeShadow where
+  supervolumePotential : ℝ
+  logBerezinianReg : ℝ
+  parityTrace : ℝ
+  parityTrace_eq_logBerezinian :
+    parityTrace = logBerezinianReg
+
+namespace SplitModularSupervolumeShadow
+
+@[simp]
+theorem parityTrace_eq_logBerezinianReg
+    (S : SplitModularSupervolumeShadow) :
+    S.parityTrace = S.logBerezinianReg :=
+  S.parityTrace_eq_logBerezinian
+
+end SplitModularSupervolumeShadow
 
 end RelativeModularSupervolumeKreinHessianLift
 

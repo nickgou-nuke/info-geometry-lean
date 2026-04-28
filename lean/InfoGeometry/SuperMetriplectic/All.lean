@@ -29,6 +29,7 @@ import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
 import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
 import InfoGeometry.SuperMetriplectic.OperatorLorentzCurvature
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # Supergraded Metriplectic Umbrella

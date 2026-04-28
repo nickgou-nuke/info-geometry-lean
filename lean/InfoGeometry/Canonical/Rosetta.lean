@@ -22,7 +22,7 @@ import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
-import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Experimental.ModularSpinorBridge
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryPhase
@@ -212,13 +212,14 @@ export InfoGeometry.Canonical.SuperInference (
   susyHamiltonian_eq_self
 )
 
-export InfoGeometry.Canonical.ModularSpinorBridge (
+export InfoGeometry.Experimental.ModularSpinorBridge (
+  MajoranaFrame
+  canonicalMajoranaFrame
   spinorBilinear
-  weakValueNumerator
-  weakValueDenominator
-  weakValue
-  weakValueNumerator_modularConjugate_eq_spinorBilinear
-  weakValue_modularConjugate_eq_spinorBilinear_div_overlap
+  ModularBerryBridge
+  SpinorInnovationBridge
+  spinorBilinear_eq_berryPhase
+  spinorBilinear_eq_klDivergence
 )
 
 export InfoGeometry.Canonical.ChiralCliffordBridge (

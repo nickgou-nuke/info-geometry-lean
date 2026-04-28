@@ -147,6 +147,14 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding='utf-8'))
 
 
+def surface_key(surface: PropSurface) -> tuple[str, str, str]:
+    return (surface.kind, surface.file, surface.name)
+
+
+def suspect_key(suspect: SuspectTheorem) -> tuple[str, str]:
+    return (suspect.file, suspect.name)
+
+
 def load_jsonl(path: Path) -> list[dict]:
     rows = []
     if not path.exists():
@@ -382,9 +390,24 @@ def main() -> int:
     parser.add_argument('--json-out', type=Path, help='Output report as JSON')
     args = parser.parse_args()
 
+    baseline = load_json(BASELINE_PATH)
     prop_surfaces = scan_prop_surfaces()
     public_theorems = scan_public_theorems()
     suspect_theorems = scan_suspect_theorems(public_theorems)
+
+    allowed_prop_surfaces = {
+        (str(row.get('kind', '')), str(row.get('file', '')), str(row.get('name', '')))
+        for row in baseline.get('allowed_prop_surfaces', [])
+        if isinstance(row, dict)
+    }
+    allowed_suspect_theorems = {
+        (str(row.get('file', '')), str(row.get('name', '')))
+        for row in baseline.get('allowed_suspect_theorems', [])
+        if isinstance(row, dict)
+    }
+
+    new_prop_surfaces = [p for p in prop_surfaces if surface_key(p) not in allowed_prop_surfaces]
+    new_suspect_theorems = [s for s in suspect_theorems if suspect_key(s) not in allowed_suspect_theorems]
 
     report = {
         'schema': 'info_geometry.canonical_policy_lint.v1',
@@ -411,6 +434,14 @@ def main() -> int:
             {'file': s.file, 'name': s.name, 'line': s.line, 'reasons': s.reasons}
             for s in suspect_theorems
         ],
+        'new_prop_surfaces': [
+            {'kind': p.kind, 'file': p.file, 'name': p.name, 'line': p.line}
+            for p in new_prop_surfaces
+        ],
+        'new_suspect_theorems': [
+            {'file': s.file, 'name': s.name, 'line': s.line, 'reasons': s.reasons}
+            for s in new_suspect_theorems
+        ],
     }
 
     if args.json_out:
@@ -419,8 +450,10 @@ def main() -> int:
 
     print(f"[canonical-policy] scanned {len(public_theorems)} public canonical theorems")
     print(f"[canonical-policy] identified {len(suspect_theorems)} suspect theorem surfaces")
+    print(f"[canonical-policy] new suspect theorem surfaces {len(new_suspect_theorems)}")
+    print(f"[canonical-policy] new proposition surfaces {len(new_prop_surfaces)}")
 
-    if suspect_theorems:
+    if new_suspect_theorems or new_prop_surfaces:
         return 1
     return 0
 

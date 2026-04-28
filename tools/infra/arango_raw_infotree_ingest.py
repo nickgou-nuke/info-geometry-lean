@@ -39,6 +39,10 @@ ROW_FILES: dict[str, str] = {
     "raw_infotree_mctx_decls": "raw_infotree_mctx_decls.jsonl",
     "raw_infotree_lctx_refs": "raw_infotree_lctx_refs.jsonl",
     "raw_infotree_lctx_decls": "raw_infotree_lctx_decls.jsonl",
+    "raw_infotree_goal_states": "raw_infotree_goal_states.jsonl",
+    "raw_infotree_fvar_lineage": "raw_infotree_fvar_lineage.jsonl",
+    "raw_infotree_tactic_arguments": "raw_infotree_tactic_arguments.jsonl",
+    "raw_infotree_messages": "raw_infotree_messages.jsonl",
     "raw_infotree_projection_leakage": "raw_infotree_projection_leakage.jsonl",
 }
 
@@ -54,12 +58,16 @@ EDGE_COLLECTIONS = [
     "raw_infotree_mctx_decl_edges",
     "raw_infotree_source_lctx_ref_edges",
     "raw_infotree_lctx_ref_decl_edges",
+    "raw_infotree_node_goal_edges",
+    "raw_infotree_node_fvar_edges",
+    "raw_infotree_node_argument_edges",
+    "raw_infotree_node_message_edges",
     "raw_infotree_node_leakage_edges",
 ]
 
 INDEX_SPECS: dict[str, list[list[str]]] = {
     "raw_infotree_roots": [["file"], ["module"]],
-    "raw_infotree_nodes": [["rootKey"], ["kind"], ["payloadKey"]],
+    "raw_infotree_nodes": [["rootKey"], ["kind"], ["payloadKey"], ["isLogical"], ["depth"], ["branchingFactor"]],
     "raw_infotree_contexts": [["nodeKey"], ["contextKind"], ["rootKey"], ["file"], ["module"]],
     "raw_infotree_payloads": [["nodeKey"], ["kind"], ["rootKey"], ["file"], ["module"]],
     "raw_infotree_payload_fields": [["payloadKey"], ["nodeKey"], ["field"], ["rootKey"], ["file"], ["module"]],
@@ -69,6 +77,10 @@ INDEX_SPECS: dict[str, list[list[str]]] = {
     "raw_infotree_mctx_decls": [["mctxKey"], ["nodeKey"], ["mvarId"], ["userName"], ["typeHash"], ["rootKey"], ["file"], ["module"]],
     "raw_infotree_lctx_refs": [["nodeKey"], ["sourceKind", "sourceKey"], ["lctxKey"], ["rootKey"], ["file"], ["module"]],
     "raw_infotree_lctx_decls": [["lctxKey"], ["sourceKey"], ["fvarId"], ["userName"], ["typeHash"], ["rootKey"], ["file"], ["module"]],
+    "raw_infotree_goal_states": [["nodeKey"], ["mvarId"], ["role"], ["rootKey"], ["file"], ["module"]],
+    "raw_infotree_fvar_lineage": [["nodeKey"], ["fvarId"], ["role"], ["rootKey"]],
+    "raw_infotree_tactic_arguments": [["nodeKey"], ["declName"], ["rootKey"]],
+    "raw_infotree_messages": [["nodeKey"], ["severity"], ["rootKey"]],
     "raw_infotree_projection_leakage": [["nodeKey"], ["field"], ["rootKey"]],
     "raw_infotree_tree_edges": [["rootKey"], ["sourceEdgeKey"]],
     "raw_infotree_node_context_edges": [["contextKind"]],
@@ -79,6 +91,10 @@ INDEX_SPECS: dict[str, list[list[str]]] = {
     "raw_infotree_mctx_decl_edges": [["mctxKey"], ["mvarId"]],
     "raw_infotree_source_lctx_ref_edges": [["sourceKind", "sourceKey"], ["lctxKey"]],
     "raw_infotree_lctx_ref_decl_edges": [["lctxKey"], ["fvarId"]],
+    "raw_infotree_node_goal_edges": [["role"]],
+    "raw_infotree_node_fvar_edges": [["role"]],
+    "raw_infotree_node_argument_edges": [["declName"]],
+    "raw_infotree_node_message_edges": [["severity"]],
     "raw_infotree_node_leakage_edges": [["field"]],
 }
 
@@ -292,6 +308,14 @@ def normalize_row(collection: str, row: dict[str, Any]) -> dict[str, Any]:
         out["_key"] = str(row["lctxRefKey"])
     elif collection == "raw_infotree_lctx_decls":
         out["_key"] = str(row["lctxDeclKey"])
+    elif collection == "raw_infotree_goal_states":
+        out["_key"] = str(row["stateKey"])
+    elif collection == "raw_infotree_fvar_lineage":
+        out["_key"] = str(row["lineageKey"])
+    elif collection == "raw_infotree_tactic_arguments":
+        out["_key"] = str(row["argumentKey"])
+    elif collection == "raw_infotree_messages":
+        out["_key"] = str(row["messageKey"])
     elif collection == "raw_infotree_projection_leakage":
         node = row.get("nodeKey") if row.get("nodeKey") is not None else "root"
         out["_key"] = prefixed_key("itlkg", f"{row.get('rootKey')}:{node}:{row.get('field')}:{stable_row_hash(row)}")
@@ -534,6 +558,59 @@ def iter_edge_rows(input_dir: Path, collection: str) -> Iterator[dict[str, Any]]
                 )
         return
 
+    if collection == "raw_infotree_node_goal_edges":
+        for row in iter_jsonl(input_dir / "raw_infotree_goal_states.jsonl"):
+            key = str(row["stateKey"])
+            yield edge_doc(
+                "node_has_goal_state",
+                prefixed_key("itengs", key),
+                f"raw_infotree_nodes/{row['nodeKey']}",
+                f"raw_infotree_goal_states/{key}",
+                role=row.get("role"),
+                mvarId=row.get("mvarId"),
+            )
+        return
+
+    if collection == "raw_infotree_node_fvar_edges":
+        for row in iter_jsonl(input_dir / "raw_infotree_fvar_lineage.jsonl"):
+            key = str(row["lineageKey"])
+            yield edge_doc(
+                "node_has_fvar_lineage",
+                prefixed_key("itenfl", key),
+                f"raw_infotree_nodes/{row['nodeKey']}",
+                f"raw_infotree_fvar_lineage/{key}",
+                role=row.get("role"),
+                fvarId=row.get("fvarId"),
+            )
+        return
+
+    if collection == "raw_infotree_node_argument_edges":
+        for row in iter_jsonl(input_dir / "raw_infotree_tactic_arguments.jsonl"):
+            key = str(row["argumentKey"])
+            yield edge_doc(
+                "node_has_tactic_argument",
+                prefixed_key("itenta", key),
+                f"raw_infotree_nodes/{row['nodeKey']}",
+                f"raw_infotree_tactic_arguments/{key}",
+                declName=row.get("declName"),
+            )
+        return
+
+    if collection == "raw_infotree_node_message_edges":
+        for row in iter_jsonl(input_dir / "raw_infotree_messages.jsonl"):
+            key = str(row["messageKey"])
+            node_key = row.get("nodeKey")
+            if node_key is None:
+                continue
+            yield edge_doc(
+                "node_has_message",
+                prefixed_key("itenmsg", key),
+                f"raw_infotree_nodes/{node_key}",
+                f"raw_infotree_messages/{key}",
+                severity=row.get("severity"),
+            )
+        return
+
     if collection == "raw_infotree_node_leakage_edges":
         for row in iter_jsonl(input_dir / "raw_infotree_projection_leakage.jsonl"):
             leakage_key = normalize_row("raw_infotree_projection_leakage", row)["_key"]
@@ -563,7 +640,14 @@ def raw_edge_counts(input_dir: Path) -> dict[str, int]:
         "raw_infotree_node_env_ref_edges": count_jsonl(input_dir / "raw_infotree_env_refs.jsonl"),
         "raw_infotree_node_mctx_ref_edges": count_jsonl(input_dir / "raw_infotree_mctx_refs.jsonl"),
         "raw_infotree_source_lctx_ref_edges": count_jsonl(input_dir / "raw_infotree_lctx_refs.jsonl"),
+        "raw_infotree_node_goal_edges": count_jsonl(input_dir / "raw_infotree_goal_states.jsonl"),
+        "raw_infotree_node_fvar_edges": count_jsonl(input_dir / "raw_infotree_fvar_lineage.jsonl"),
+        "raw_infotree_node_argument_edges": count_jsonl(input_dir / "raw_infotree_tactic_arguments.jsonl"),
     }
+    counts["raw_infotree_node_message_edges"] = sum(
+        1 for row in iter_jsonl(input_dir / "raw_infotree_messages.jsonl")
+        if row.get("nodeKey") is not None
+    )
     counts["raw_infotree_node_leakage_edges"] = sum(
         1 for row in iter_jsonl(input_dir / "raw_infotree_projection_leakage.jsonl")
         if row.get("nodeKey") is not None

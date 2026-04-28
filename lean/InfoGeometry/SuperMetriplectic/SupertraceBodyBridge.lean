@@ -1,4 +1,5 @@
 import InfoGeometry.SuperMetriplectic.BlackHoleEntropy
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # Supertrace Body-Positivity Bridge
@@ -143,5 +144,36 @@ theorem body_positive_and_supertrace_signed
   exact ⟨B.zorn_total_nonnegative, B.fisher.supertrace_eq⟩
 
 end ZornSupertraceFisherBridge
+
+/-
+Operator-level translation of the signed supertrace language onto the split
+Clifford parity core.
+
+This is the new primitive surface: parity involution, parity-weighted trace,
+and supervolume readout on the split Clifford carrier.
+-/
+namespace SplitParitySupertraceTranslation
+
+open InfoGeometry.Algebraic.SplitSignature
+
+/-- The operator-level parity/supertrace shadow on `Cl(n,n)`. -/
+structure SplitParitySupertraceShadow (n : ℕ) where
+  parity : SplitCliffordEnd n := parityOp n
+  supertraceReadout : SplitCliffordEnd n → ℝ := cliffordSupertrace n
+  superBerezinianReadout : SplitCliffordEnd n → ℝ := superBerezinian n
+  supervolumePotential : SplitCliffordEnd n → ℝ := superEffectiveAction n
+
+@[simp]
+theorem parity_comp_self (n : ℕ) (x : Cl_nn n) :
+    (parityOp n) ((parityOp n) x) = x :=
+  InfoGeometry.Algebraic.SplitSuperGeometry.parityOp_comp_self n x
+
+@[simp]
+theorem supervolumePotential_eq_neg_log_superBerezinian
+    (n : ℕ) (x : SplitCliffordEnd n) :
+    (superEffectiveAction n) x = - Real.log ((superBerezinian n) x) :=
+  InfoGeometry.Algebraic.SplitSuperGeometry.superEffectiveAction_eq_neg_log_superBerezinian n x
+
+end SplitParitySupertraceTranslation
 
 end InfoGeometry.SuperMetriplectic

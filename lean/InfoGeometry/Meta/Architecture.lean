@@ -211,11 +211,33 @@ def directlyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run 
       used := used.insert dep
   return used
 
-/-- Architecture violations detected from direct tagged dependencies. -/
+/-- Nearest tagged constants reachable from a declaration through untagged nodes. -/
+def nearestTaggedDescendants (env : Environment) (root : Name) : NameSet := Id.run do
+  let mut nearest : NameSet := {}
+  let mut visited : NameSet := {}
+  let mut queue : Array Name := #[]
+  if let some info := env.find? root then
+    for (dep, _) in DAG.edgesFromConstantInfo info do
+      queue := queue.push dep
+  let mut i := 0
+  while i < queue.size do
+    let curr := queue[i]!
+    i := i + 1
+    if visited.contains curr then continue
+    visited := visited.insert curr
+    if (repDepth? env curr).isSome then
+      nearest := nearest.insert curr
+    else
+      if let some info := env.find? curr then
+        for (dep, _) in DAG.edgesFromConstantInfo info do
+          queue := queue.push dep
+  return nearest
+
+/-- Architecture violations detected from direct and transitive tagged dependencies. -/
 def taggedDependencyViolations
     (env : Environment) (declName : Name) (depth : RepDepth) (allowComposite : Bool) : Array MessageData := Id.run do
   let mut out := #[]
-  let deps := directlyUsedConstants env declName
+  let deps := nearestTaggedDescendants env declName
   for dep in deps do
     match env.find? dep with
     | some depInfo =>
@@ -226,9 +248,9 @@ def taggedDependencyViolations
             let d := depth.toNat
             let d' := depDepth.toNat
             if d' > d then
-              out := out.push m!"REGRESSION: {declName} (L{d}) directly depends on {dep} (L{d'})."
+              out := out.push m!"REGRESSION: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
             else if !allowComposite && d' + 1 < d then
-              out := out.push m!"WORMHOLE: {declName} (L{d}) directly depends on {dep} (L{d'})."
+              out := out.push m!"WORMHOLE: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
     | none =>
         pure ()
   out
@@ -242,7 +264,7 @@ def checkArchitectureTopology : CoreM Unit := do
   let isCanonicalSpine (declName : Name) : Bool :=
     (toString declName).startsWith "InfoGeometry.Canonical."
   let taggedDecls : Array (Name × RepDepth) :=
-    env.constants.fold (init := #[]) fun acc declName _ =>
+    env.constants.toList.foldl (init := #[]) fun acc (declName, _) =>
       if !isCanonicalSpine declName then
         acc
       else
@@ -250,7 +272,7 @@ def checkArchitectureTopology : CoreM Unit := do
         | some depth => acc.push (declName, depth)
         | none => acc
   let capstones : Array Name :=
-    env.constants.fold (init := #[]) fun acc declName _ =>
+    env.constants.toList.foldl (init := #[]) fun acc (declName, _) =>
       if isCanonicalSpine declName && capstoneAttr.hasTag env declName then
         acc.push declName
       else
@@ -287,7 +309,7 @@ adjacency among already-tagged declarations.
 def checkRepDepthCoverage : CoreM Unit := do
   let env ← getEnv
   let (total, covered, missing) :=
-    env.constants.fold (init := (0, 0, (#[] : Array Name))) fun (total, covered, missing) declName info =>
+    env.constants.toList.foldl (init := (0, 0, (#[] : Array Name))) fun (total, covered, missing) (declName, info) =>
       if isRepDepthCoverageTarget env declName info then
         match repDepth? env declName with
         | some _ => (total + 1, covered + 1, missing)

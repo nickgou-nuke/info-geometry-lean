@@ -147,12 +147,12 @@ structure DilationFromProjectorNoncommutativity
 
 /-- Structural theorem-safe export: obstruction implies existence of a dilation witness surface
 when a source witness is supplied. -/
-theorem noncommutativity_requires_dilation_witness
+def dilation_witness_of_source
     (CI : ConformalInference H)
     (hSource : Prop)
     (hSourceCertified : hSource) :
-    ∃ _ : DilationFromProjectorNoncommutativity CI, True := by
-  refine ⟨⟨hSource, hSourceCertified, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩, trivial⟩
+    DilationFromProjectorNoncommutativity CI :=
+  ⟨hSource, hSourceCertified, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩
 
 /-- The dilation generator is grade-zero in the information-geometric split. -/
 theorem dilation_isGZero
@@ -177,29 +177,6 @@ theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
     {CI : ConformalInference H}
     {X : InfoGeometry.Quantum.RealSplitCl11Action H}
     (_CW : ConformalClosureWitness CI X) :
-    True := trivial
-
-/-! ## Split `Cl(4,4)` conformal readout -/
-
-/--
-Split `Cl(4,4)` conformal readout packet.  This is just the repo-owned split
-`Cl(4,4)` packet restated as a smaller public readout surface.
--/
-@[rep_depth transport]
-structure Cl44ConformalReadout
-    {α : Type _}
-    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) : Prop where
-  tkkMasterRelation :
-    P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
-  operatorAdmissible :
-    P.closure.gibbs.IsOperatorAdmissible
-  triality_informationalDiracSquare_eq_id :
-    P.triality.informationalDiracSquare = LinearMap.id
-
-/-- The dilation is grade-zero in Cl(4,4). -/
-theorem cl44_dilation_isGZero
-    {α : Type _}
-    (_P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) :
     True := trivial
 
 /-! ## Consolidated Packet -/

@@ -34,28 +34,6 @@ noncomputable def generalizedKL (μ ν : Measure α) [IsFiniteMeasure μ] [IsFin
 noncomputable def scalarGKL (zμ zν : ℝ) : ℝ :=
   zμ * Real.log (zμ / zν) - zμ + zν
 
-/--
-Theorem commented out by hollow theorem detector: proof is trivial or conclusion is already known.
--- theorem generalizedKL_scale_shape_split ... := ...
--- sorry
--/
 
-theorem generalizedKL_scale_shape_split
-  (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
-  (hμν : μ ≪ ν) (hμ : μ ≠ 0) (hν : ν ≠ 0)
-  (h_int : Integrable (llr μ ν) μ) :
-  generalizedKL μ ν =
-    (μ Set.univ).toReal *
-      (InformationTheory.klDiv
-        ((FiniteMeasure.normalize ⟨μ, inferInstance⟩ : ProbabilityMeasure α) : Measure α)
-        ((FiniteMeasure.normalize ⟨ν, inferInstance⟩ : ProbabilityMeasure α) : Measure α)
-      ).toReal
-    + scalarGKL (μ Set.univ).toReal (ν Set.univ).toReal :=
-by
-  -- The proof involves the scaling properties of the Radon-Nikodym derivative 
-  -- and the linearity of the integral.
-  -- Specifically: dμ/dν = (zμ/zν) * (dmμ/dmν)
-  -- and ∫ log(dμ/dν) dμ = zμ * ∫ log(dmμ/dmν) dmμ + zμ * log(zμ/zν)
-  sorry
 
 end InfoGeometry.Canonical.MeasureScaleShape

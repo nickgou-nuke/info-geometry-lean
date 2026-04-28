@@ -79,10 +79,8 @@ theorem anomaly_owner_packet
       CI.spectralChiralProjector * CI.metricChiralProjector
         - CI.metricChiralProjector * CI.spectralChiralProjector)
       ∧
-    (S.absorption = S.spontaneousEmission + S.stimulatedEmission)
-      ∧
-    True := by
-  refine ⟨?_, ?_, ?_, ?_, trivial⟩
+    (S.absorption = S.spontaneousEmission + S.stimulatedEmission) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
   · exact drazin_dilation_anomaly_corridor (E := E) K
   · exact chiral_anomaly_is_skew_adjoint (E := E) K
   · simpa [ConformalInference.projectorObstruction] using
@@ -101,21 +99,13 @@ theorem projector_noncommutativity_closure_packet
     (P : ConformalCanopyPackage (E := E) CCI.toConformalInference X) :
     DrazinMPProjectorCommutator CCI.toConformalInference ∧
       ProjectorMismatchAnomaly CCI.toConformalInference ∧
-      ConformalClosureWitness (H := E) CCI.toConformalInference X := by
+      ConformalClosureWitness CCI.toConformalInference X := by
   refine ⟨?_, ?_, ?_⟩
   · exact commutator_eq_projector_obstruction CCI
   · exact anomaly_eq_commutator CCI.toConformalInference
   · exact ⟨P⟩
 
-/--
-Weyl/parity-supertrace witness:
-the Weyl packet carries a proof-carrying parity trace, not a claimed infinite
-character formula.
--/
-theorem parity_trace_witness_is_owner
-    (_P : ParityTraceWitness) :
-    True := by
-  trivial
+
 
 end Core
 

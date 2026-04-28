@@ -99,4 +99,16 @@ theorem fermionCoeff_eq_abs_mobius {L : FormalPrimeRootLattice}
     (A : BooleanPrimeStateArithmetic L) (n : ℕ) :
     fermionCoeff A n = absMobiusCoefficient n := rfl
 
+/-- Compatibility name for the parity coefficient shadow. -/
+@[rep_depth thermo]
+def splitParityCoefficient {L : FormalPrimeRootLattice}
+    (A : BooleanPrimeStateArithmetic L) (n : ℕ) : ℤ :=
+  parityCoeff A n
+
+@[rep_depth thermo]
+theorem splitParityCoefficient_eq_mobius {L : FormalPrimeRootLattice}
+    (A : BooleanPrimeStateArithmetic L) (n : ℕ) :
+    splitParityCoefficient A n = mobiusCoefficient n :=
+  rfl
+
 end InfoGeometry.Canonical.ParityTraceWitness

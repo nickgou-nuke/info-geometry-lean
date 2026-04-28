@@ -35,6 +35,10 @@ import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.AssociativeSuperBracket
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.BogoliubovVielbein
+import InfoGeometry.Canonical.BogoliubovVielbeinBridge
+import InfoGeometry.Quantum.Fock
+import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
@@ -57,6 +61,8 @@ import InfoGeometry.Canonical.DilatedGapEquivariance
 import InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
 import InfoGeometry.Canonical.SplitCliffordHeadProjectors
 import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
+import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
@@ -72,6 +78,9 @@ import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.SignedParticleBridge
+import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
+import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle
+import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SouriauDensityWeightContext
 import InfoGeometry.Canonical.SouriauConformalKKTContext
 import InfoGeometry.Canonical.SouriauMetriplecticContext
@@ -89,6 +98,22 @@ import InfoGeometry.Canonical.CasimirWeylDrazinContext
 
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
+import InfoGeometry.Geometry.RealUpperHalfPlane
+import InfoGeometry.ProjectiveFoundation
+import InfoGeometry.ProjectiveFoundation.RealProjectiveDescent
+import InfoGeometry.Canonical.CoordinateFree
+import InfoGeometry.Algebraic.RealModularReadout
+import InfoGeometry.Topological.RealCuspLimitT
+import InfoGeometry.Differential.RealAbelianCurvature
+import InfoGeometry.Canonical.RealBerryRotorBridge
+import InfoGeometry.Canonical.SiegelBerryBridge
+import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
+import InfoGeometry.Canonical.Algebraic.ModularRotorCocycle
+import InfoGeometry.Algebraic.ChiralOperatorCarrier
+import InfoGeometry.Algebraic.ExactPhaseCocycle
+import InfoGeometry.Canonical.BerryRotorBridge
+import InfoGeometry.Topological.StabilizerAnomalies
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DiracSouriauOperator
 import InfoGeometry.Canonical.DiracSouriauKKTChiralContext
@@ -111,6 +136,7 @@ import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.ModularSurprisalThermoPacket
+import InfoGeometry.Canonical.OperatorThermodynamics
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDescriptorSystems
@@ -162,6 +188,9 @@ import InfoGeometry.Canonical.GeneralizedMetricCore
 import InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
 import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.Geometry
+import InfoGeometry.Canonical.GeometricCalculusSurgery
+import InfoGeometry.Canonical.GeometricFreudenthalBoundary
+import InfoGeometry.Canonical.OperatorFreudenthalBoundary
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
@@ -188,6 +217,9 @@ import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Topological.CuspLimit
+import InfoGeometry.Topological.OrbifoldCorner
+import InfoGeometry.Differential.CurveHolonomy
 
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
@@ -397,7 +429,7 @@ import InfoGeometry.Volume.Pfaffian
 -- Stable declaration-bearing canonical owners previously outside the umbrella coverage.
 import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 import InfoGeometry.Canonical.DIIIIndexVerification
-import InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
+import InfoGeometry.Canonical.CoordinateFree
 import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.SYKKitaevGuardrails
 import InfoGeometry.Canonical.SYKTwoCopyInterface

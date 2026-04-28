@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation
 import InfoGeometry.Canonical.ParityTraceWitness
 import InfoGeometry.Canonical.PrimeGasPartitions
+import InfoGeometry.Algebraic.SplitSuperGeometry
 
 /-!
 # Weyl supertrace owner
@@ -12,6 +13,8 @@ zeta trace and ordinary positive fermion trace remain separate.
 -/
 
 namespace InfoGeometry.Canonical.WeylSupertraceOwner
+
+open InfoGeometry.Algebraic.SplitSignature
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.SouriauThermalEvaluation
@@ -50,5 +53,18 @@ theorem fermionTrace_is_zeta_div_zeta_two_beta_limit
     (W : InfiniteEulerProductWitness) :
     W.fermionTrace = W.zeta / W.zeta_two_beta :=
   W.fermion_eq_zeta_div_zeta_two_beta
+
+/--
+Split Clifford translation of the Weyl supertrace owner.
+
+This keeps the prime/Weyl surface compatible with the new parity/supervolume
+language without collapsing the prime lattice into the split Clifford carrier.
+-/
+structure SplitWeylSupertraceShadow (n : ℕ) where
+  operator : SplitCliffordEnd n := parityOp n
+  supertraceReadout : ℝ := cliffordSupertrace n operator
+  superBerezinianReadout : ℝ := superBerezinian n operator
+
+
 
 end InfoGeometry.Canonical.WeylSupertraceOwner

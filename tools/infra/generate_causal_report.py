@@ -20,20 +20,22 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.infra.decl_graph_support import load_decl_graph
-    from tools.pathing import repo_root
+    from tools.pathing import normalize_user_path, repo_root
 else:
     from tools.infra.decl_graph_support import load_decl_graph
-    from tools.pathing import repo_root
+    from tools.pathing import normalize_user_path, repo_root
 
 def main() -> int:
     root = repo_root()
-    
+
     ap = argparse.ArgumentParser(description="Pauli-Authority Causal Report")
     ap.add_argument("--md-out", type=Path, default=root / "reports" / "dag" / "true-root-order.md")
     ap.add_argument("--json-out", type=Path, default=root / "reports" / "dag" / "true-root-order.json")
     args = ap.parse_args()
+    md_out = normalize_user_path(args.md_out, root / "reports" / "dag" / "true-root-order.md")
+    json_out_path = normalize_user_path(args.json_out, root / "reports" / "dag" / "true-root-order.json")
 
     # 1. Load ground truth from Pauli Authority (ArangoDB SCCs)
     print("[pauli-causal] Loading formal topology from ArangoDB authority...")
@@ -91,16 +93,16 @@ def main() -> int:
     for c in capstones[:30]:
         md_lines.append(f"| `{c.name}` | {c.depth} | {c.transitive_reverse_reach} | `{c.file}:{c.line}` |")
 
-    args.md_out.write_text("\n".join(md_lines))
+    md_out.write_text("\n".join(md_lines))
     
     # Save formal JSON causal order
     json_out = [
         {"name": p.name, "depth": p.depth, "mass": p.descendant_mass, "reach": p.transitive_reverse_reach}
         for p in backbone
     ]
-    args.json_out.write_text(json.dumps(json_out, indent=2))
+    json_out_path.write_text(json.dumps(json_out, indent=2))
 
-    print(f"[pauli-causal] Wrote causal backbone to {args.md_out.relative_to(root)}")
+    print(f"[pauli-causal] Wrote causal backbone to {md_out.relative_to(root)}")
     return 0
 
 if __name__ == "__main__":

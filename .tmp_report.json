@@ -1,0 +1,281 @@
+{
+  "schema": "info_geometry.arango_dag_algorithms.v1",
+  "run_id": "1777088311",
+  "source": {
+    "database": "infogeometry",
+    "overlay_nodes": "topology_overlay",
+    "overlay_edges": "topology_overlay_edges",
+    "edge_kind": null
+  },
+  "truth_status": "derived_overlay_not_lean_authority",
+  "loaded": {
+    "component_count": 29852,
+    "scc_quotient_row_count": 1325307,
+    "dedup_quotient_edge_count": 864761,
+    "labeled_component_count": 4417,
+    "unlabeled_component_count": 25435
+  },
+  "algorithms": {
+    "topological_order_count": 29852,
+    "cyclic_residue_count": 0,
+    "dependency_root_count": 6928,
+    "capstone_count": 8968,
+    "depth_min_max": 3,
+    "depth_max_max": 31,
+    "dominators_computed": false,
+    "two_complex": {
+      "computed": false,
+      "reason": "edge_limit_exceeded",
+      "edge_count": 864761,
+      "edge_limit": 200000
+    },
+    "seed": {
+      "index": 3031,
+      "source_id": "topology_overlay/scc_33af45afa4f5e461a7bf77c1d2ed17e8466e4049",
+      "representative": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit",
+      "scc_id": 3031,
+      "downstream_reachable": 188,
+      "upstream_reachable": 26,
+      "downstream_path_sum": 4385,
+      "upstream_path_sum": 38
+    },
+    "layer_rows": 4,
+    "deepest_chain_rows": 3,
+    "capstone_rows": 512,
+    "skeleton_rows": 500,
+    "layer_flow_rows": 35,
+    "regressive_layer_flow_rows": 6,
+    "regressive_component_edges": 430,
+    "dominator_rows": 0,
+    "dominator_masks_persisted": false,
+    "wl_label_rows": 5000,
+    "motif_rows": 1200,
+    "bounded_two_complex_rows": 2511,
+    "bounded_two_complex": {
+      "_key": "two_complex_summary",
+      "schema": "info_geometry.arango_dag_algorithms.v1",
+      "run_id": "1777088311",
+      "computed": true,
+      "seed": "topology_overlay/scc_33af45afa4f5e461a7bf77c1d2ed17e8466e4049",
+      "radius": 2,
+      "vertices": 152,
+      "edges": 879,
+      "triangular_faces": 1631,
+      "digon_faces": 0,
+      "euler_characteristic": 904,
+      "rank_boundary1_mod2": 151,
+      "rank_boundary2_mod2": 693,
+      "betti0_mod2": 1,
+      "betti1_mod2": 35,
+      "boundary_squared_zero_mod2": true,
+      "trace_laplacian0_proxy": 1758,
+      "dirac_dim_proxy": 1031,
+      "cell_rows_materialized": 2510,
+      "cell_row_limit": 10000,
+      "cell_rows_truncated": false,
+      "labels": [
+        "overlay:arango_dag",
+        "role:two_complex_summary",
+        "field:mod2"
+      ]
+    },
+    "source_sink_rows": 15894,
+    "impact_rows": 128,
+    "process_flow_rows": 100000,
+    "defect_rows": 36,
+    "lawful_path_rows": 5000,
+    "hodge_rows": 1911,
+    "hodge_summary": {
+      "_key": "hodge_summary",
+      "schema": "info_geometry.arango_dag_algorithms.v1",
+      "run_id": "1777088311",
+      "computed": true,
+      "seed": "topology_overlay/scc_33af45afa4f5e461a7bf77c1d2ed17e8466e4049",
+      "radius": 2,
+      "vertices": 152,
+      "edges": 879,
+      "laplacian0_sparse_entries": 1910,
+      "trace_laplacian0": 1758,
+      "dirac_dim": 1031,
+      "chiral_anticommutation_violations": 0,
+      "sparse_entry_limit": 20000,
+      "labels": [
+        "overlay:arango_dag",
+        "role:hodge_summary"
+      ]
+    },
+    "chiral_rows": 1031,
+    "dirac_rows": 3516,
+    "morphism_candidate_rows": 0,
+    "bounded_limits": {
+      "layer_preview_limit": 25,
+      "deepest_chain_limit": 128,
+      "capstone_limit": 512,
+      "capstone_root_contrib_limit": 0,
+      "skeleton_limit": 500,
+      "skeleton_min_vulnerability": 1,
+      "wl_rounds": 3,
+      "wl_limit": 5000,
+      "motif_radius": 2,
+      "motif_max_nodes": 1000,
+      "motif_max_results_per_motif": 200,
+      "two_complex_radius": 2,
+      "two_complex_max_nodes": 2000,
+      "two_complex_max_edges": 50000,
+      "two_complex_cell_limit": 10000,
+      "dominator_limit": 5000,
+      "impact_limit": 100,
+      "process_flow_limit": 100000,
+      "lawful_path_limit": 5000,
+      "hodge_sparse_limit": 20000
+    }
+  },
+  "timing": {
+    "load_seconds": 5.991,
+    "algorithm_seconds": 0.063
+  },
+  "write": {
+    "arango_dag_components": {
+      "created": 0,
+      "updated": 29852,
+      "errors": 0,
+      "total": 29852
+    },
+    "arango_dag_component_edges": {
+      "created": 0,
+      "updated": 864761,
+      "errors": 0,
+      "total": 864761
+    },
+    "arango_dag_layers": {
+      "created": 0,
+      "updated": 4,
+      "errors": 0,
+      "total": 4
+    },
+    "arango_dag_chains": {
+      "created": 0,
+      "updated": 3,
+      "errors": 0,
+      "total": 3
+    },
+    "arango_dag_capstones": {
+      "created": 0,
+      "updated": 512,
+      "errors": 0,
+      "total": 512
+    },
+    "arango_dag_skeleton": {
+      "created": 0,
+      "updated": 500,
+      "errors": 0,
+      "total": 500
+    },
+    "arango_dag_layer_flows": {
+      "created": 0,
+      "updated": 35,
+      "errors": 0,
+      "total": 35
+    },
+    "arango_dag_dominators": {
+      "created": 0,
+      "updated": 0,
+      "errors": 0,
+      "total": 0
+    },
+    "arango_dag_wl_labels": {
+      "created": 0,
+      "updated": 5000,
+      "errors": 0,
+      "total": 5000
+    },
+    "arango_dag_motifs": {
+      "created": 0,
+      "updated": 1200,
+      "errors": 0,
+      "total": 1200
+    },
+    "arango_dag_two_complex": {
+      "created": 0,
+      "updated": 2511,
+      "errors": 0,
+      "total": 2511
+    },
+    "arango_dag_sources_sinks": {
+      "created": 0,
+      "updated": 15894,
+      "errors": 0,
+      "total": 15894
+    },
+    "arango_dag_impact": {
+      "created": 0,
+      "updated": 128,
+      "errors": 0,
+      "total": 128
+    },
+    "arango_dag_process_flows": {
+      "created": 0,
+      "updated": 100000,
+      "errors": 0,
+      "total": 100000
+    },
+    "arango_dag_defects": {
+      "created": 0,
+      "updated": 36,
+      "errors": 0,
+      "total": 36
+    },
+    "arango_dag_lawful_paths": {
+      "created": 0,
+      "updated": 5000,
+      "errors": 0,
+      "total": 5000
+    },
+    "arango_dag_hodge": {
+      "created": 0,
+      "updated": 1911,
+      "errors": 0,
+      "total": 1911
+    },
+    "arango_dag_chiral": {
+      "created": 0,
+      "updated": 1031,
+      "errors": 0,
+      "total": 1031
+    },
+    "arango_dag_dirac": {
+      "created": 0,
+      "updated": 3516,
+      "errors": 0,
+      "total": 3516
+    },
+    "arango_dag_morphism_candidates": {
+      "created": 0,
+      "updated": 0,
+      "errors": 0,
+      "total": 0
+    },
+    "live_counts": {
+      "arango_dag_components": 61363,
+      "arango_dag_component_edges": 1106353,
+      "arango_dag_layers": 6,
+      "arango_dag_chains": 6,
+      "arango_dag_capstones": 2041,
+      "arango_dag_skeleton": 1409,
+      "arango_dag_layer_flows": 65,
+      "arango_dag_dominators": 5245,
+      "arango_dag_wl_labels": 10245,
+      "arango_dag_motifs": 7200,
+      "arango_dag_two_complex": 11395,
+      "arango_dag_sources_sinks": 36935,
+      "arango_dag_impact": 354,
+      "arango_dag_process_flows": 204183,
+      "arango_dag_defects": 36,
+      "arango_dag_lawful_paths": 10000,
+      "arango_dag_hodge": 45714,
+      "arango_dag_chiral": 13992,
+      "arango_dag_dirac": 20000,
+      "arango_dag_morphism_candidates": 0
+    }
+  }
+}

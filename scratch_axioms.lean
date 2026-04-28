@@ -1,0 +1,3 @@
+import InfoGeometry.Canonical.ProjectiveCCR
+
+#print axioms InfoGeometry.Canonical.ProjectiveCCR.ProjectiveBoundaryPacket.superKMS_detailed_balance

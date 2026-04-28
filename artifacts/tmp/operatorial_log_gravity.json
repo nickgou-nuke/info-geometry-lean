@@ -1,0 +1,1856 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "SouriauOperatorialLogPotential operatorial logarithmic potential modular Hamiltonian Duhamel Kubo Mori Onsager Renyi Mellin Radon Nikodym",
+  "query_tokens": [
+    "duhamel",
+    "hamiltonian",
+    "kubo",
+    "log",
+    "logarithmic",
+    "mellin",
+    "modular",
+    "mori",
+    "nikodym",
+    "onsager",
+    "operatorial",
+    "potential",
+    "radon",
+    "renyi",
+    "souriau"
+  ],
+  "query_phrases": [
+    "souriauoperatoriallogpotential"
+  ],
+  "expanded_query_tokens": [
+    "additive",
+    "ambient",
+    "anomaly",
+    "automorphism",
+    "bregman",
+    "bridge",
+    "canonical",
+    "carrier",
+    "context",
+    "coordinate",
+    "core",
+    "data",
+    "defect",
+    "defective",
+    "delta",
+    "density",
+    "det",
+    "divergence",
+    "duhamel",
+    "energy",
+    "flow",
+    "form",
+    "generator",
+    "geometry",
+    "gibbs",
+    "group",
+    "hamiltonian",
+    "hessian",
+    "info",
+    "kubo",
+    "log",
+    "logarithmic",
+    "massieu",
+    "mechanism",
+    "mellin",
+    "minus",
+    "modular",
+    "moment",
+    "mori",
+    "negative",
+    "nikodym",
+    "onsager",
+    "operator",
+    "operatorial",
+    "plus",
+    "positive",
+    "potential",
+    "projective",
+    "radon",
+    "ray",
+    "readout",
+    "real",
+    "recomposition",
+    "relative",
+    "renyi",
+    "representative",
+    "souriau",
+    "standard",
+    "thermal"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 8,
+    "matched_groups": [
+      {
+        "id": "EQC-0110",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "hamiltonian",
+          "log",
+          "modular",
+          "souriau"
+        ],
+        "added_tokens": [
+          "context",
+          "moment",
+          "operator"
+        ],
+        "members": [
+          "C.logContext.modularHamiltonian",
+          "C.logContext.souriauMoment.momentOperator"
+        ]
+      },
+      {
+        "id": "EQC-0244",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "nikodym",
+          "potential",
+          "radon"
+        ],
+        "added_tokens": [
+          "anomaly",
+          "canonical",
+          "defective",
+          "det",
+          "geometry",
+          "info",
+          "mechanism"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.LogDetRadonNikodymMechanism.DefectiveAnomaly",
+          "InfoGeometry.Canonical.LogDetRadonNikodymMechanism.DefectiveLogPotential"
+        ]
+      },
+      {
+        "id": "EQC-0115",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "hamiltonian",
+          "log",
+          "modular",
+          "souriau"
+        ],
+        "added_tokens": [
+          "carrier",
+          "data",
+          "delta",
+          "form",
+          "generator",
+          "negative",
+          "real",
+          "standard",
+          "thermal"
+        ],
+        "members": [
+          "C.modularHamiltonian",
+          "C.negativeLogModularOperator",
+          "C.souriauMoment.momentOperator",
+          "C.souriauMoment.thermalGenerator",
+          "C.toRealModularLogData",
+          "C.toStandardFormCarrier.Delta"
+        ]
+      },
+      {
+        "id": "EQC-0102",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "hamiltonian",
+          "log",
+          "modular",
+          "potential"
+        ],
+        "added_tokens": [
+          "ambient",
+          "bridge",
+          "coordinate",
+          "core",
+          "defect",
+          "density",
+          "energy",
+          "gibbs",
+          "hessian",
+          "massieu",
+          "minus",
+          "plus",
+          "positive",
+          "projective",
+          "ray",
+          "recomposition",
+          "relative"
+        ],
+        "members": [
+          "C.hessian.massieuPotential",
+          "C.massieuPotential",
+          "C.operatorMassieu",
+          "InfoGeometry.Canonical.PositiveRayCore.logDensity",
+          "J.energy",
+          "P.logCoordinate",
+          "R.rn.modularHamiltonian",
+          "Real.log",
+          "S.gibbs.operatorMassieu",
+          "ambientRelativeBridge.projectiveLogDensity",
+          "recompositionData.minusLogDefect",
+          "recompositionData.plusLogDefect"
+        ]
+      },
+      {
+        "id": "EQC-0317",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "hamiltonian",
+          "log",
+          "modular"
+        ],
+        "added_tokens": [
+          "bregman",
+          "divergence",
+          "readout"
+        ],
+        "members": [
+          "L.logGenerator",
+          "L.modularHamiltonianReadout",
+          "L.operatorBregmanDivergence"
+        ]
+      },
+      {
+        "id": "EQC-0328",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "modular",
+          "nikodym",
+          "radon"
+        ],
+        "added_tokens": [
+          "additive",
+          "automorphism",
+          "flow",
+          "group"
+        ],
+        "members": [
+          "ModularRadonNikodymData.modularAutomorphismGroup",
+          "R.additiveFlow"
+        ]
+      },
+      {
+        "id": "EQC-0252",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "modular",
+          "potential"
+        ],
+        "added_tokens": [],
+        "members": [
+          "InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity",
+          "InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential"
+        ]
+      },
+      {
+        "id": "EQC-0253",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "log",
+          "modular",
+          "potential"
+        ],
+        "added_tokens": [
+          "representative"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.RelativePotentialCore.representativeModularPotential",
+          "InfoGeometry.Canonical.RelativePotentialCore.representativeRelativeLogDensity"
+        ]
+      }
+    ]
+  },
+  "graph_source": "arango:faithful_raw",
+  "graph_mode": "faithful",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 32,
+  "seed_scc_count": 32,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 34355,
+  "edge_count": 1473813,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 29357,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L0_Count",
+      "count": 2,
+      "rep_depths": [
+        0
+      ],
+      "rep_depth_slugs": [
+        "count"
+      ]
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 219,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 1033,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1369,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 1828,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 547,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "result_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 4,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 7,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 7,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 2,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    }
+  ],
+  "top_k": 20,
+  "items": [
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.tomitaAdditiveModularFlow_eq_generator_modularHamiltonian",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.tomitaAdditiveModularFlow_eq_generator_modularHamiltonian",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The logarithmic Tomita flow is already a generator-owned standard-form flow with\nmodular Hamiltonian `Δ_log = K` carried by the Souriau moment.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 82,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 350.327049,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 82,
+        "start": 78,
+        "end": 86,
+        "lines": [
+          {
+            "line": 78,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 79,
+            "text": "noncomputable def tomitaAdditiveModularFlow : AdditiveModularFlow (H := H) :="
+          },
+          {
+            "line": 80,
+            "text": "  additiveModularFlowOfGenerator (H := H) C.toRealModularLogData"
+          },
+          {
+            "line": 81,
+            "text": ""
+          },
+          {
+            "line": 82,
+            "text": "/--"
+          },
+          {
+            "line": 83,
+            "text": "The logarithmic Tomita flow is already a generator-owned standard-form flow with"
+          },
+          {
+            "line": 84,
+            "text": "modular Hamiltonian `Δ_log = K` carried by the Souriau moment."
+          },
+          {
+            "line": 85,
+            "text": "-/"
+          },
+          {
+            "line": 86,
+            "text": "@[rep_depth operator]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_6f1aaf47d152dcfff768a0f95d28ad1109e40603",
+        "raw_doc_id": "raw_info_nodes/raw_6f1aaf47d152dcfff768a0f95d28ad1109e40603",
+        "scc_id": 14727,
+        "scc_key": "scc_09c7e3ba9a084b52b4beb6ec11213bfbfa057de5",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Concrete standard-form carrier for the Souriau/Tomita logarithmic lane.\nThis replaces bare `deltaLog = thermalGenerator` prose by a carrier whose flow\nis explicitly generated by the modular Hamiltonian.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 110,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 344.375551,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 110,
+        "start": 106,
+        "end": 114,
+        "lines": [
+          {
+            "line": 106,
+            "text": "  J_phase_anticommute :="
+          },
+          {
+            "line": 107,
+            "text": "    InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutes_modularComplexI"
+          },
+          {
+            "line": 108,
+            "text": "      (E := H)"
+          },
+          {
+            "line": 109,
+            "text": ""
+          },
+          {
+            "line": 110,
+            "text": "/--"
+          },
+          {
+            "line": 111,
+            "text": "Concrete standard-form carrier for the Souriau/Tomita logarithmic lane."
+          },
+          {
+            "line": 112,
+            "text": "This replaces bare `deltaLog = thermalGenerator` prose by a carrier whose flow"
+          },
+          {
+            "line": 113,
+            "text": "is explicitly generated by the modular Hamiltonian."
+          },
+          {
+            "line": 114,
+            "text": "-/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_b94a2e86bcf0d568eb0b58612e031cab6ed41832",
+        "raw_doc_id": "raw_info_nodes/raw_b94a2e86bcf0d568eb0b58612e031cab6ed41832",
+        "scc_id": 14728,
+        "scc_key": "scc_a2a079519288e36f1d1318f0abdf1801ea950be1",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.ModularSurprisalThermoPacket.defectiveLogPotential_chain_rule_packet",
+      "name": "InfoGeometry.Canonical.ModularSurprisalThermoPacket.defectiveLogPotential_chain_rule_packet",
+      "module": "InfoGeometry.Canonical.ModularSurprisalThermoPacket",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Defective logarithmic Radon-Nikodym descent is already owned as an additive\npotential plus additive anomaly. This keeps the prose \"negative log RN\"\nmechanism in the multiplicative-to-additive corridor instead of inventing a\ntrace-density formula.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/ModularSurprisalThermoPacket.lean",
+      "line": 229,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 338.879667,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/ModularSurprisalThermoPacket.lean",
+        "line": 229,
+        "start": 225,
+        "end": 233,
+        "lines": [
+          {
+            "line": 225,
+            "text": "section DefectiveLogRadonNikodym"
+          },
+          {
+            "line": 226,
+            "text": ""
+          },
+          {
+            "line": 227,
+            "text": "variable {M S A : Type*} [Monoid M] [CommMonoid S] [AddCommMonoid A]"
+          },
+          {
+            "line": 228,
+            "text": ""
+          },
+          {
+            "line": 229,
+            "text": "/--"
+          },
+          {
+            "line": 230,
+            "text": "Defective logarithmic Radon-Nikodym descent is already owned as an additive"
+          },
+          {
+            "line": 231,
+            "text": "potential plus additive anomaly. This keeps the prose \"negative log RN\""
+          },
+          {
+            "line": 232,
+            "text": "mechanism in the multiplicative-to-additive corridor instead of inventing a"
+          },
+          {
+            "line": 233,
+            "text": "trace-density formula."
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_0cfa8507251497767189feace4a85a19c0c2eaaf",
+        "raw_doc_id": "raw_info_nodes/raw_0cfa8507251497767189feace4a85a19c0c2eaaf",
+        "scc_id": 9889,
+        "scc_key": "scc_07d2ed8ca011db29e81a1d2bbdf0a3ad7214ea37",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier_Delta_eq_modularHamiltonian",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier_Delta_eq_modularHamiltonian",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The standard-form carrier uses the Souriau modular Hamiltonian as its generator. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 122,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 336.585447,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 122,
+        "start": 118,
+        "end": 126,
+        "lines": [
+          {
+            "line": 118,
+            "text": "  Delta := C.modularHamiltonian"
+          },
+          {
+            "line": 119,
+            "text": "  referenceState := ⟨0⟩"
+          },
+          {
+            "line": 120,
+            "text": "  modularFlow_eq_generator := C.tomitaAdditiveModularFlow_eq_generator_modularHamiltonian"
+          },
+          {
+            "line": 121,
+            "text": ""
+          },
+          {
+            "line": 122,
+            "text": "/-- The standard-form carrier uses the Souriau modular Hamiltonian as its generator. -/"
+          },
+          {
+            "line": 123,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 124,
+            "text": "theorem toStandardFormCarrier_Delta_eq_modularHamiltonian :"
+          },
+          {
+            "line": 125,
+            "text": "    C.toStandardFormCarrier.Delta = C.modularHamiltonian :="
+          },
+          {
+            "line": 126,
+            "text": "  rfl"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_b2b734c416668934609b4949095d45f9d0b7f9e7",
+        "raw_doc_id": "raw_info_nodes/raw_b2b734c416668934609b4949095d45f9d0b7f9e7",
+        "scc_id": 14750,
+        "scc_key": "scc_92ce1a20c4451f2a5c57de58592d19c428a08286",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.LogDetRadonNikodymMechanism.defectiveLogPotential_mul",
+      "name": "InfoGeometry.Canonical.LogDetRadonNikodymMechanism.defectiveLogPotential_mul",
+      "module": "InfoGeometry.Canonical.LogDetRadonNikodymMechanism",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Defective chain rule: additive potential plus additive anomaly. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean",
+      "line": 50,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 328.5725,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean",
+        "line": 50,
+        "start": 46,
+        "end": 54,
+        "lines": [
+          {
+            "line": 46,
+            "text": "abbrev DefectiveAnomaly"
+          },
+          {
+            "line": 47,
+            "text": "    (B : DefectiveMultiplicativeToAdditiveBridge M S A) : M → M → A :="
+          },
+          {
+            "line": 48,
+            "text": "  B.additiveDefect"
+          },
+          {
+            "line": 49,
+            "text": ""
+          },
+          {
+            "line": 50,
+            "text": "/-- Defective chain rule: additive potential plus additive anomaly. -/"
+          },
+          {
+            "line": 51,
+            "text": "theorem defectiveLogPotential_mul"
+          },
+          {
+            "line": 52,
+            "text": "    (B : DefectiveMultiplicativeToAdditiveBridge M S A) (x y : M) :"
+          },
+          {
+            "line": 53,
+            "text": "    DefectiveLogPotential B (x * y)"
+          },
+          {
+            "line": 54,
+            "text": "      = DefectiveAnomaly B x y + (DefectiveLogPotential B x + DefectiveLogPotential B y) :="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_85033d311a529789c2d3705a9720ac20f483f3f0",
+        "raw_doc_id": "raw_info_nodes/raw_85033d311a529789c2d3705a9720ac20f483f3f0",
+        "scc_id": 8968,
+        "scc_key": "scc_1bd5b67e7173e23db76219f76c883b2a586d1b5c",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativePotentialCore.relativeInformationEnergy",
+      "name": "InfoGeometry.Canonical.RelativePotentialCore.relativeInformationEnergy",
+      "module": "InfoGeometry.Canonical.RelativePotentialCore",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Canonical second moment of the relative modular potential, measured against the\nnormalized gauge section of the reference ray.\n\nThis is the energy of the negative logarithmic Radon-Nikodym derivative in the\nRedLine chain. The representative scale has already been removed by passing to\npositive rays and by using the canonical gauge section.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "line": 196,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 322.83382,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+        "line": 196,
+        "start": 192,
+        "end": 200,
+        "lines": [
+          {
+            "line": 192,
+            "text": "noncomputable def informationGeometricRelativeNorm"
+          },
+          {
+            "line": 193,
+            "text": "    (q q0 : PositiveRay α) : ℝ :="
+          },
+          {
+            "line": 194,
+            "text": "  ∑ a, gaugeSection (α := α) q a * |relativeModularPotential q q0 a|"
+          },
+          {
+            "line": 195,
+            "text": ""
+          },
+          {
+            "line": 196,
+            "text": "/--"
+          },
+          {
+            "line": 197,
+            "text": "Canonical second moment of the relative modular potential, measured against the"
+          },
+          {
+            "line": 198,
+            "text": "normalized gauge section of the reference ray."
+          },
+          {
+            "line": 199,
+            "text": ""
+          },
+          {
+            "line": 200,
+            "text": "This is the energy of the negative logarithmic Radon-Nikodym derivative in the"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_23dd612bbf816a44fe9124743b0c50f46c7d5f97",
+        "raw_doc_id": "raw_info_nodes/raw_23dd612bbf816a44fe9124743b0c50f46c7d5f97",
+        "scc_id": 12479,
+        "scc_key": "scc_e9805a3e701cefd52111cb78c27818d54002fc1a",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.projectiveModularPotential_eq_neg_projectiveLogDensity",
+      "name": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.projectiveModularPotential_eq_neg_projectiveLogDensity",
+      "module": "InfoGeometry.Canonical.StandardFormCore",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The projective modular potential is the negative projective log-density. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+      "line": 254,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 320.114754,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+        "line": 254,
+        "start": 250,
+        "end": 258,
+        "lines": [
+          {
+            "line": 250,
+            "text": "  simpa [RelativeModularBridge.operatorLogPotential] using"
+          },
+          {
+            "line": 251,
+            "text": "    cocycleLogPotential_add"
+          },
+          {
+            "line": 252,
+            "text": "      (H := H) R.carrier.seed.modularFlow R.cocycle R.isCocycle R.scalarBridge s t"
+          },
+          {
+            "line": 253,
+            "text": ""
+          },
+          {
+            "line": 254,
+            "text": "/-- The projective modular potential is the negative projective log-density. -/"
+          },
+          {
+            "line": 255,
+            "text": "@[rep_depth projective, simp] theorem"
+          },
+          {
+            "line": 256,
+            "text": "    RelativeModularBridge.projectiveModularPotential_eq_neg_projectiveLogDensity"
+          },
+          {
+            "line": 257,
+            "text": "    (R : RelativeModularBridge (H := H) (α := α)) (a : α) :"
+          },
+          {
+            "line": 258,
+            "text": "    R.projectiveModularPotential a = -R.projectiveLogDensity a := by"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_934b021669ce5a2134eca63e5d5abc95ecffb34f",
+        "raw_doc_id": "raw_info_nodes/raw_934b021669ce5a2134eca63e5d5abc95ecffb34f",
+        "scc_id": 6731,
+        "scc_key": "scc_6bfeab04b47d25ec6d50259538f32693a8a308a2",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_neg_relativeLogDensity",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_neg_relativeLogDensity",
+      "module": "InfoGeometry.Canonical.ModularKLDivergenceBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Equivalent pointwise form: projective logarithmic generator equals the negative\nrelative log-density.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "line": 397,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 320.030267,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+        "line": 397,
+        "start": 393,
+        "end": 401,
+        "lines": [
+          {
+            "line": 393,
+            "text": "almost everywhere the relative modular potential."
+          },
+          {
+            "line": 394,
+            "text": "-/"
+          },
+          {
+            "line": 395,
+            "text": "@[rep_depth projective]"
+          },
+          {
+            "line": 396,
+            "text": "theorem positiveRay_logGenerator_eq_relativeModularPotential_ae"
+          },
+          {
+            "line": 397,
+            "text": "    (q q0 : PositiveRay α) :"
+          },
+          {
+            "line": 398,
+            "text": "    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator"
+          },
+          {
+            "line": 399,
+            "text": "        (positiveRayToProjectiveState (α := α) q0)"
+          },
+          {
+            "line": 400,
+            "text": "        (positiveRayToProjectiveState (α := α) q)"
+          },
+          {
+            "line": 401,
+            "text": "      =ᶠ[ae (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9a5f33550d7b42612810e04169e1b169226c7f1f",
+        "raw_doc_id": "raw_info_nodes/raw_9a5f33550d7b42612810e04169e1b169226c7f1f",
+        "scc_id": 9519,
+        "scc_key": "scc_aef5793dfe8311ae5e8f501fb83bbc1653bb9766",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.operatorLogPotential_add",
+      "name": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.operatorLogPotential_add",
+      "module": "InfoGeometry.Canonical.StandardFormCore",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The operator cocycle log-potential is additive in time. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+      "line": 245,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 317.635052,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+        "line": 245,
+        "start": 241,
+        "end": 249,
+        "lines": [
+          {
+            "line": 241,
+            "text": "noncomputable def RelativeModularBridge.operatorLogPotential"
+          },
+          {
+            "line": 242,
+            "text": "    (R : RelativeModularBridge (H := H) (α := α)) : ℝ → ℝ :="
+          },
+          {
+            "line": 243,
+            "text": "  cocycleLogPotential (H := H) R.carrier.seed.modularFlow R.cocycle R.scalarBridge"
+          },
+          {
+            "line": 244,
+            "text": ""
+          },
+          {
+            "line": 245,
+            "text": "/-- The operator cocycle log-potential is additive in time. -/"
+          },
+          {
+            "line": 246,
+            "text": "theorem RelativeModularBridge.operatorLogPotential_add"
+          },
+          {
+            "line": 247,
+            "text": "    (R : RelativeModularBridge (H := H) (α := α)) (s t : ℝ) :"
+          },
+          {
+            "line": 248,
+            "text": "    R.operatorLogPotential (s + t)"
+          },
+          {
+            "line": 249,
+            "text": "      = R.operatorLogPotential s + R.operatorLogPotential t := by"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_4de7a767284ab8b026935a5de8366eca0c9ae6c6",
+        "raw_doc_id": "raw_info_nodes/raw_4de7a767284ab8b026935a5de8366eca0c9ae6c6",
+        "scc_id": 15201,
+        "scc_key": "scc_c54340ce54e60abfe5b20e493be8ee2319f05341",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.CyclicSouriauTomitaKMSContext.sigma",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.CyclicSouriauTomitaKMSContext.sigma",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "The modular automorphism group is the standard-form carrier flow. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 429,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 309.753364,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 429,
+        "start": 425,
+        "end": 433,
+        "lines": [
+          {
+            "line": 425,
+            "text": "modular Hamiltonian collapses to zero and a cyclic algebraic state.  This is the"
+          },
+          {
+            "line": 426,
+            "text": "largest honest branch currently owned by the repo without claiming the full"
+          },
+          {
+            "line": 427,
+            "text": "analytic-strip / arbitrary-Type-III theorem."
+          },
+          {
+            "line": 428,
+            "text": "-/"
+          },
+          {
+            "line": 429,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 430,
+            "text": "structure CyclicSouriauTomitaKMSContext where"
+          },
+          {
+            "line": 431,
+            "text": "  geometricTemperature : Symmetry"
+          },
+          {
+            "line": 432,
+            "text": "  beta : ℝ"
+          },
+          {
+            "line": 433,
+            "text": "  state : CyclicAlgebraicState (H := H)"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_3b90e7ba6fa8cb38a70a4f22924e00f722277c93",
+        "raw_doc_id": "raw_info_nodes/raw_3b90e7ba6fa8cb38a70a4f22924e00f722277c93",
+        "scc_id": 14729,
+        "scc_key": "scc_67f41da87efb9212e175db8df412d1655a6374ad",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge",
+      "name": "InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge",
+      "module": "InfoGeometry.Canonical.StandardFormCore",
+      "kind": "Declaration",
+      "decl_kind": "inductive",
+      "doc": "Bridge package joining:\n- a generator-based modular carrier on doubled-space operators,\n- a Connes cocycle on that carrier,\n- a pair of projective positive states in the relative-potential layer.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+      "line": 211,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 307.788535,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/StandardFormCore.lean",
+        "line": 211,
+        "start": 207,
+        "end": 215,
+        "lines": [
+          {
+            "line": 207,
+            "text": "variable {α : Type*} [Fintype α] [Nonempty α]"
+          },
+          {
+            "line": 208,
+            "text": ""
+          },
+          {
+            "line": 209,
+            "text": "local notation \"EndH\" => AlgebraEnd H"
+          },
+          {
+            "line": 210,
+            "text": ""
+          },
+          {
+            "line": 211,
+            "text": "/--"
+          },
+          {
+            "line": 212,
+            "text": "Bridge package joining:"
+          },
+          {
+            "line": 213,
+            "text": "- a generator-based modular carrier on doubled-space operators,"
+          },
+          {
+            "line": 214,
+            "text": "- a Connes cocycle on that carrier,"
+          },
+          {
+            "line": 215,
+            "text": "- a pair of projective positive states in the relative-potential layer."
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_16bb7f8566861dbc0366fdfd1187e925bd3a022c",
+        "raw_doc_id": "raw_info_nodes/raw_16bb7f8566861dbc0366fdfd1187e925bd3a022c",
+        "scc_id": 6715,
+        "scc_key": "scc_e173d3ef039685c0351108314a211cc8014b79c0",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling",
+      "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling",
+      "module": "InfoGeometry.Canonical.RelativeModularRecomposition",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Exact recomposition of logarithmic density into ambient pullback plus coupling defect. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+      "line": 197,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 306.669556,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+        "line": 197,
+        "start": 193,
+        "end": 201,
+        "lines": [
+          {
+            "line": 193,
+            "text": "          (R.polarized.minus.data.embed bminus))"
+          },
+          {
+            "line": 194,
+            "text": "      R.polarized.sameCarrier"
+          },
+          {
+            "line": 195,
+            "text": "  simpa [PolarizedRecompositionData.carrier] using hminus.symm"
+          },
+          {
+            "line": 196,
+            "text": ""
+          },
+          {
+            "line": 197,
+            "text": "/-- Exact recomposition of logarithmic density into ambient pullback plus coupling defect. -/"
+          },
+          {
+            "line": 198,
+            "text": "@[rep_depth projective, simp] theorem"
+          },
+          {
+            "line": 199,
+            "text": "    PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling"
+          },
+          {
+            "line": 200,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) (bplus : βplus) (bminus : βminus) :"
+          },
+          {
+            "line": 201,
+            "text": "    R.recomposedLogDensity bplus bminus"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_4775450b1528894318d84d0b58be2cb8e7fbfe78",
+        "raw_doc_id": "raw_info_nodes/raw_4775450b1528894318d84d0b58be2cb8e7fbfe78",
+        "scc_id": 6757,
+        "scc_key": "scc_87770b3c7e83c27121573f7787514a876b8f8736",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorMassieu",
+      "name": "InfoGeometry.Canonical.SouriauConformalKKT.ConformalGibbsSouriauOperatorContext.operatorMassieu",
+      "module": "InfoGeometry.Canonical.SouriauConformalKKTContext",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+      "line": 285,
+      "rep_depth": 4,
+      "rep_depth_slug": "transport",
+      "rep_layer": "L4_ModularTransport",
+      "rep_layer_description": "modular/transport/flow substrate",
+      "module_family": null,
+      "score": 306.060959,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauConformalKKTContext.lean",
+        "line": 285,
+        "start": 281,
+        "end": 289,
+        "lines": [
+          {
+            "line": 281,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 282,
+            "text": "noncomputable def operatorWeylCharacter : ℝ :="
+          },
+          {
+            "line": 283,
+            "text": "  C.readout (NormedSpace.exp (-C.conformalGeometricTemperature))"
+          },
+          {
+            "line": 284,
+            "text": ""
+          },
+          {
+            "line": 285,
+            "text": "/-- Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. -/"
+          },
+          {
+            "line": 286,
+            "text": "@[rep_depth transport]"
+          },
+          {
+            "line": 287,
+            "text": "noncomputable def operatorMassieu : ℝ :="
+          },
+          {
+            "line": 288,
+            "text": "  Real.log C.operatorPartition"
+          },
+          {
+            "line": 289,
+            "text": ""
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_9de943751676689964a16382b46d68ceaa284e7d",
+        "raw_doc_id": "raw_info_nodes/raw_9de943751676689964a16382b46d68ceaa284e7d",
+        "scc_id": 10671,
+        "scc_key": "scc_76177c33f2d68eda1066bcc45c9ace446527cca2",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "In the zero-thermal-moment constructor, the modular Hamiltonian vanishes by construction. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 217,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 305.164978,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 217,
+        "start": 213,
+        "end": 221,
+        "lines": [
+          {
+            "line": 213,
+            "text": "    OperatorSouriauMoment (H := H) Symmetry where"
+          },
+          {
+            "line": 214,
+            "text": "  momentOperator := fun _ => 0"
+          },
+          {
+            "line": 215,
+            "text": "  geometricTemperature := geometricTemperature"
+          },
+          {
+            "line": 216,
+            "text": ""
+          },
+          {
+            "line": 217,
+            "text": "/--"
+          },
+          {
+            "line": 218,
+            "text": "Constructive identity-branch logarithmic context."
+          },
+          {
+            "line": 219,
+            "text": ""
+          },
+          {
+            "line": 220,
+            "text": "The modular Hamiltonian is not supplied as a zero hypothesis here: it is the"
+          },
+          {
+            "line": 221,
+            "text": "Souriau moment at the chosen geometric temperature, and this constructor makes"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_b812f50e0dd76f481972a0f96ca44c55832231c3",
+        "raw_doc_id": "raw_info_nodes/raw_b812f50e0dd76f481972a0f96ca44c55832231c3",
+        "scc_id": 14730,
+        "scc_key": "scc_bf4e85053fdd58d5cd45d0c2315f775c978af573",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The generated automorphism acts by conjugation with the modular Hamiltonian. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 185,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 305.02813,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 185,
+        "start": 181,
+        "end": 189,
+        "lines": [
+          {
+            "line": 181,
+            "text": "theorem tomita_deltaLog_eq_modularHamiltonian :"
+          },
+          {
+            "line": 182,
+            "text": "    C.toRealModularLogData = C.modularHamiltonian :="
+          },
+          {
+            "line": 183,
+            "text": "  C.tomita_deltaLog_eq_thermalGenerator"
+          },
+          {
+            "line": 184,
+            "text": ""
+          },
+          {
+            "line": 185,
+            "text": "/-- The generated automorphism acts by conjugation with the modular Hamiltonian. -/"
+          },
+          {
+            "line": 186,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 187,
+            "text": "theorem souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift"
+          },
+          {
+            "line": 188,
+            "text": "    (t : ℝ) (A : Obs) :"
+          },
+          {
+            "line": 189,
+            "text": "    C.souriauAdditiveModularFlow t A ="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_e423f929dfcf3cbe98b8e1cd1c721488d6d77e0b",
+        "raw_doc_id": "raw_info_nodes/raw_e423f929dfcf3cbe98b8e1cd1c721488d6d77e0b",
+        "scc_id": 14810,
+        "scc_key": "scc_83a44a8fabe0cce19a6399a1d1d8700b19c569d9",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.local_projectiveLogGenerator_eq_pullback_ambient_add_shift_ae",
+      "name": "InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.local_projectiveLogGenerator_eq_pullback_ambient_add_shift_ae",
+      "module": "InfoGeometry.Canonical.RelativeModularProjectiveBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The restricted discrete projective logarithmic generator is the ambient\nprojective modular potential pulled back along the subsystem embedding, shifted\nby the local reweighting defect.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean",
+      "line": 87,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 304.121817,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean",
+        "line": 87,
+        "start": 83,
+        "end": 91,
+        "lines": [
+          {
+            "line": 83,
+            "text": "  exact"
+          },
+          {
+            "line": 84,
+            "text": "    InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential"
+          },
+          {
+            "line": 85,
+            "text": "      (α := β) (q := R.localSource) (q0 := R.localTarget) (a := b)"
+          },
+          {
+            "line": 86,
+            "text": ""
+          },
+          {
+            "line": 87,
+            "text": "/--"
+          },
+          {
+            "line": 88,
+            "text": "The restricted discrete projective logarithmic generator is the ambient"
+          },
+          {
+            "line": 89,
+            "text": "projective modular potential pulled back along the subsystem embedding, shifted"
+          },
+          {
+            "line": 90,
+            "text": "by the local reweighting defect."
+          },
+          {
+            "line": 91,
+            "text": "-/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_e57ba8d91ad8a24468ac21150495d630469258fc",
+        "raw_doc_id": "raw_info_nodes/raw_e57ba8d91ad8a24468ac21150495d630469258fc",
+        "scc_id": 12563,
+        "scc_key": "scc_89537678741260c81ac8a11691fef661224adab5",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountLogDelta",
+      "name": "InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountLogDelta",
+      "module": "InfoGeometry.Canonical.RelativePotentialCountBridge",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Canonical projective logarithmic modular profile `log Δ̂`. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+      "line": 560,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 304.024855,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean",
+        "line": 560,
+        "start": 556,
+        "end": 564,
+        "lines": [
+          {
+            "line": 556,
+            "text": "  fun i =>"
+          },
+          {
+            "line": 557,
+            "text": "    relativeDensity (α := Fin n)"
+          },
+          {
+            "line": 558,
+            "text": "      (countRay counts hcounts) (countRay ref href) i"
+          },
+          {
+            "line": 559,
+            "text": ""
+          },
+          {
+            "line": 560,
+            "text": "/-- Canonical projective logarithmic modular profile `log Δ̂`. -/"
+          },
+          {
+            "line": 561,
+            "text": "noncomputable def projectiveCountLogDelta"
+          },
+          {
+            "line": 562,
+            "text": "    (counts ref : RelativeCounts n)"
+          },
+          {
+            "line": 563,
+            "text": "    (hcounts : ∀ i : Fin n, 0 < counts i)"
+          },
+          {
+            "line": 564,
+            "text": "    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_ee190aa77059343f1928d96cf2c9ec55035ca7a8",
+        "raw_doc_id": "raw_info_nodes/raw_ee190aa77059343f1928d96cf2c9ec55035ca7a8",
+        "scc_id": 12744,
+        "scc_key": "scc_439f5385c95a53300981e3499b0b342a64ed5cab",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier_modularFlow_apply",
+      "name": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge.SouriauTomitaLogContext.toStandardFormCarrier_modularFlow_apply",
+      "module": "InfoGeometry.Canonical.SouriauTomitaModularFlowBridge",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Evaluation form of the standard-form carrier flow. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+      "line": 128,
+      "rep_depth": 2,
+      "rep_depth_slug": "operator",
+      "rep_layer": "L2_Operator",
+      "rep_layer_description": "operator-algebraic bridge substrate",
+      "module_family": null,
+      "score": 303.707746,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/SouriauTomitaModularFlowBridge.lean",
+        "line": 128,
+        "start": 124,
+        "end": 132,
+        "lines": [
+          {
+            "line": 124,
+            "text": "theorem toStandardFormCarrier_Delta_eq_modularHamiltonian :"
+          },
+          {
+            "line": 125,
+            "text": "    C.toStandardFormCarrier.Delta = C.modularHamiltonian :="
+          },
+          {
+            "line": 126,
+            "text": "  rfl"
+          },
+          {
+            "line": 127,
+            "text": ""
+          },
+          {
+            "line": 128,
+            "text": "/-- Evaluation form of the standard-form carrier flow. -/"
+          },
+          {
+            "line": 129,
+            "text": "@[rep_depth operator]"
+          },
+          {
+            "line": 130,
+            "text": "theorem toStandardFormCarrier_modularFlow_apply"
+          },
+          {
+            "line": 131,
+            "text": "    (t : ℝ) (A : Obs) :"
+          },
+          {
+            "line": 132,
+            "text": "    C.toStandardFormCarrier.seed.modularFlow t A ="
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_cf0a89d26a47122ab97bb864e4bc312f7a3ce595",
+        "raw_doc_id": "raw_info_nodes/raw_cf0a89d26a47122ab97bb864e4bc312f7a3ce595",
+        "scc_id": 14733,
+        "scc_key": "scc_217a709b693c7149347ae1cd367469cf1f79ce07",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedAmbientLogDensity",
+      "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedAmbientLogDensity",
+      "module": "InfoGeometry.Canonical.RelativeModularRecomposition",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Ambient logarithmic pullback seen separately by the plus and minus sector\nembeddings before collapsing to a common carrier.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+      "line": 113,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 303.485758,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+        "line": 113,
+        "start": 109,
+        "end": 117,
+        "lines": [
+          {
+            "line": 109,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) (bplus : βplus) (bminus : βminus) : ℝ :="
+          },
+          {
+            "line": 110,
+            "text": "  R.polarized.plus.data.localPair.modularPotential bplus"
+          },
+          {
+            "line": 111,
+            "text": "    + R.polarized.minus.data.localPair.modularPotential bminus"
+          },
+          {
+            "line": 112,
+            "text": ""
+          },
+          {
+            "line": 113,
+            "text": "/--"
+          },
+          {
+            "line": 114,
+            "text": "Ambient logarithmic pullback seen separately by the plus and minus sector"
+          },
+          {
+            "line": 115,
+            "text": "embeddings before collapsing to a common carrier."
+          },
+          {
+            "line": 116,
+            "text": "-/"
+          },
+          {
+            "line": 117,
+            "text": "@[rep_depth projective]"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_121bdabf59250c479063898185f069278febca3c",
+        "raw_doc_id": "raw_info_nodes/raw_121bdabf59250c479063898185f069278febca3c",
+        "scc_id": 6753,
+        "scc_key": "scc_d0194df7ce46c62b5b5d8b5879be6c2e927637d0",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.minusLogDefect",
+      "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.minusLogDefect",
+      "module": "InfoGeometry.Canonical.RelativeModularRecomposition",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "Minus-sector logarithmic defect relative to ambient pullback. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+      "line": 63,
+      "rep_depth": 1,
+      "rep_depth_slug": "projective",
+      "rep_layer": "L1_Projective",
+      "rep_layer_description": "projection/support/compression substrate",
+      "module_family": null,
+      "score": 303.273398,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
+        "line": 63,
+        "start": 59,
+        "end": 67,
+        "lines": [
+          {
+            "line": 59,
+            "text": "def PolarizedRecompositionData.plusLogDefect"
+          },
+          {
+            "line": 60,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) : ℝ :="
+          },
+          {
+            "line": 61,
+            "text": "  R.polarized.plus.data.sourceLogShift - R.polarized.plus.data.targetLogShift"
+          },
+          {
+            "line": 62,
+            "text": ""
+          },
+          {
+            "line": 63,
+            "text": "/-- Minus-sector logarithmic defect relative to ambient pullback. -/"
+          },
+          {
+            "line": 64,
+            "text": "@[rep_depth projective]"
+          },
+          {
+            "line": 65,
+            "text": "def PolarizedRecompositionData.minusLogDefect"
+          },
+          {
+            "line": 66,
+            "text": "    (R : PolarizedRecompositionData H α βplus βminus) : ℝ :="
+          },
+          {
+            "line": 67,
+            "text": "  R.polarized.minus.data.sourceLogShift - R.polarized.minus.data.targetLogShift"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_7db99da95d16799173213a76c6dbb6b996f07a35",
+        "raw_doc_id": "raw_info_nodes/raw_7db99da95d16799173213a76c6dbb6b996f07a35",
+        "scc_id": 6706,
+        "scc_key": "scc_0d17a4c72a9c301262c4919ea74cd9a8cd081c76",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    }
+  ],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

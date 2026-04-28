@@ -49,6 +49,22 @@ def test_raw_infotree_edges_preserve_projection_descent(tmp_path: Path) -> None:
         tmp_path / "raw_infotree_projection_leakage.jsonl",
         [{"rootKey": "r0", "nodeKey": "n1", "field": "term_expr_graph", "reason": "not serialized"}],
     )
+    write_jsonl(
+        tmp_path / "raw_infotree_fvar_lineage.jsonl",
+        [{"rootKey": "r0", "nodeKey": "n1", "lineageKey": "fl0", "fvarId": "f.1", "role": "intro"}],
+    )
+    write_jsonl(
+        tmp_path / "raw_infotree_tactic_arguments.jsonl",
+        [{"rootKey": "r0", "nodeKey": "n1", "argumentKey": "ta0", "declName": "A.foo"}],
+    )
+    write_jsonl(
+        tmp_path / "raw_infotree_messages.jsonl",
+        [{"rootKey": "r0", "nodeKey": "n1", "messageKey": "msg0", "severity": "warning", "text": "test"}],
+    )
+    write_jsonl(
+        tmp_path / "raw_infotree_goal_states.jsonl",
+        [{"rootKey": "r0", "nodeKey": "n1", "stateKey": "gs0", "mvarId": "m.1", "role": "before", "index": 0}],
+    )
 
     edges = raw_row_edges(tmp_path)
 
@@ -78,3 +94,23 @@ def test_raw_infotree_edges_preserve_projection_descent(tmp_path: Path) -> None:
     assert len(leakage) == 1
     assert leakage[0]["_from"] == "raw_infotree_nodes/n1"
     assert leakage[0]["_to"].startswith("raw_infotree_projection_leakage/")
+
+    fvar_edges = edges["raw_infotree_node_fvar_edges"]
+    assert len(fvar_edges) == 1
+    assert fvar_edges[0]["_from"] == "raw_infotree_nodes/n1"
+    assert fvar_edges[0]["_to"] == "raw_infotree_fvar_lineage/fl0"
+
+    arg_edges = edges["raw_infotree_node_argument_edges"]
+    assert len(arg_edges) == 1
+    assert arg_edges[0]["_from"] == "raw_infotree_nodes/n1"
+    assert arg_edges[0]["_to"] == "raw_infotree_tactic_arguments/ta0"
+
+    msg_edges = edges["raw_infotree_node_message_edges"]
+    assert len(msg_edges) == 1
+    assert msg_edges[0]["_from"] == "raw_infotree_nodes/n1"
+    assert msg_edges[0]["_to"] == "raw_infotree_messages/msg0"
+
+    goal_edges = edges["raw_infotree_node_goal_edges"]
+    assert len(goal_edges) == 1
+    assert goal_edges[0]["_from"] == "raw_infotree_nodes/n1"
+    assert goal_edges[0]["_to"] == "raw_infotree_goal_states/gs0"

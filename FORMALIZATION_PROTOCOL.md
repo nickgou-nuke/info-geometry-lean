@@ -150,6 +150,31 @@ To ensure the integrity of the Spire and prevent agentic "cheating" (Lyrical Ove
 
 ---
 
+## THE SPIRE BLUEPRINT & NOMOLOGICAL VIZ STANDARD
+
+This standard fuses the Patrick Massot `leanblueprint` standard, the Terry Tao PFR coordination workflow, and the `paperproof` visual audit into a single Lean-centric architecture.
+
+### 1. The Authoritative Blueprint (Lean-First Bridge)
+The Lean environment is the authoritative master of the theory. LaTeX is a projected representation.
+- **Directive:** Every load-bearing declaration must carry the `@[blueprint "id"]` attribute.
+- **Directive:** Documentation must be a "Multilingual Bridge." Docstrings should contain the LaTeX source that will be emitted into the official Spire Blueprint.
+
+### 2. The Rigid Skeleton (PFR-Style Coordination)
+The Spire allows for "Topological Prototyping" where the shape of the theory is defined before the proofs are finished.
+- **Directive:** **NO RAW `sorry`**. 
+- **The Admission Rule:** All admissions must use the **`sorry_using [dep1, dep2, ...]`** tactic.
+- **Verification:** The DAG auditor will verify that the declared `sorry_using` dependencies are topologically consistent with the theorem's intended layer (`rep_depth`).
+
+### 3. Visual Nomological Evidence (The Molecular Spire)
+Formalization is incomplete until it is visually audited for structural "smearing."
+- **Directive:** Post-ingestion, the formalizer must generate the **Molecular Theory Spire** (`theory_spire.png`).
+- **Audit Criteria:** 
+    - **Taxonomic Snap:** Does the new node appear in its correct vertical layer (L0-L5)?
+    - **Relaxation Insight:** Does the molecular relaxation reveal "Logical Overlap" (clumping) or "Symbolic Inflation" (a node with massive fan-out but no fan-in from foundations)?
+    - **Arrow Fidelity:** Are the derivation arrows straight and directed upward (ascending) or horizontal (isomorphic)? Regressive (downward) arrows are "Nomological Violations" and must be refactored.
+
+---
+
 ## PROMPT 1 — DISCOVERY
 
 You are in discovery mode for mathematical physics. Your task is not to prove, formalize, or beautify. Your task is to generate structurally interesting candidate mathematics.

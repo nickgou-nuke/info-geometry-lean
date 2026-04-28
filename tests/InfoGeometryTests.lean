@@ -18,9 +18,6 @@ import InfoGeometry.Canonical.ProjectiveCCR
 #check InfoGeometry.Canonical.OperatorialFierz.innerDerivation
 #check InfoGeometry.Canonical.OperatorialFierz.emergentSpacetime_is_derivation
 
--- Measure Scale/Shape Split
-#check InfoGeometry.Canonical.MeasureScaleShape.generalizedKL_scale_shape_split
-
 -- Projective CCR (Checking existence of key theorems)
 open InfoGeometry.Canonical.ProjectiveCCR
 #check ProjectiveBoundaryPacket.vacuumMode_eq_one

@@ -35,6 +35,11 @@ It deliberately does **not** perform graph-level analysis. That belongs in
 - **V5 (certification wash)**: certified naming surface only aliases or transports
   an uncertified twin. Warns unless explicitly role-tagged.
 
+- **V6 (vacuous witness/bridge surface)**: a witness/bridge/packet/certificate
+  structure is carried mainly by generic `Prop` fields, `True` fields, or
+  proof/certification fields whose only content is another unconstrained witness
+  field. Warns unless explicitly role-tagged.
+
 ## Attributes
 
 | Attribute        | Meaning                                  |
@@ -188,6 +193,82 @@ def eraseCertifiedMarker (declName : Name) : String :=
 def eraseCertifiedMarkerLeaf (declName : Name) : String :=
   (declNameLeaf declName).replace "certified" ""
 
+/-- Strip leading binders from a declaration type. -/
+partial def stripForall (e : Expr) : Expr :=
+  match e.consumeMData with
+  | .forallE _ _ b _ => stripForall b
+  | e => e
+
+/-- Whether an expression is syntactically `Prop` as a type. -/
+def isPropSortExpr (e : Expr) : Bool :=
+  match e.consumeMData with
+  | .sort .zero => true
+  | _ => false
+
+/-- Whether an expression is syntactically `True`. -/
+def isTrueExpr (e : Expr) : Bool :=
+  e.consumeMData.isConstOf ``True
+
+/-- Case-insensitive containment test over a list of markers. -/
+def containsAnyMarker (s : String) (markers : Array String) : Bool :=
+  markers.any fun marker => s.contains marker
+
+/-- Names whose public role suggests a proof-carrying bridge/witness surface. -/
+def isWitnessBridgeSurfaceName (declName : Name) : Bool :=
+  containsAnyMarker (toString declName).toLower
+    #[ "witness", "bridge", "packet", "certificate", "certified", "contract",
+       "candidate", "compatibility", "claim" ]
+
+/-- Field names that are suspicious when their type is merely another local witness/certificate. -/
+def isCertificationFieldName (fieldName : Name) : Bool :=
+  containsAnyMarker (declNameLeaf fieldName)
+    #[ "certified", "certificate", "witness", "proof", "holds", "claim", "statement" ]
+
+/--
+Syntactic classifier for vacuous witness/bridge fields.
+
+This deliberately uses only projection types, so it works on compiled structure
+declarations instead of source text.  A field is suspicious when its projection
+returns `Prop`, returns `True`, or is named as a certification/proof field whose
+type is a local witness surface rather than a concrete theorem-shaped formula.
+-/
+def isVacuousWitnessProjectionType (fieldName : Name) (projectionType : Expr) : Bool :=
+  let body := stripForall projectionType
+  isPropSortExpr body || isTrueExpr body || isCertificationFieldName fieldName
+
+/-- Collect vacuous-looking field names from a structure declaration. -/
+def vacuousWitnessFields (env : Environment) (declName : Name) : Array Name :=
+  Id.run do
+    let mut out := #[]
+    for fieldName in getStructureFields env declName do
+      match env.find? fieldName with
+      | some (.defnInfo info) =>
+          if isVacuousWitnessProjectionType fieldName info.type then
+            out := out.push fieldName
+      | some (.thmInfo info) =>
+          if isVacuousWitnessProjectionType fieldName info.type then
+            out := out.push fieldName
+      | _ => pure ()
+    return out
+
+/-- Lint proof-carrying structures for vacuous witness/bridge fields. -/
+def lintWitnessBridgeStructure (env : Environment) (declName : Name) : Array MessageData :=
+  Id.run do
+    let mut msgs := #[]
+    if isExempt env declName then
+      return msgs
+    if !isWitnessBridgeSurfaceName declName then
+      return msgs
+    let fields := vacuousWitnessFields env declName
+    if !fields.isEmpty then
+      let rendered := String.intercalate ", " (fields.toList.map toString)
+      msgs := msgs.push
+        m!"[V6/vacuous-witness-bridge] {declName}: witness/bridge surface has vacuous \
+           or generic proof fields [{rendered}]. Replace `Prop`/`True` placeholders with \
+           concrete theorem-shaped obligations, or mark infrastructure/expository if this \
+           is intentionally only a packaging layer."
+    return msgs
+
 /-- Detect names of the form `certifiedFoo_eq_foo` or `certifiedFoo_iff_foo`. -/
 def isCertifiedTransportName (declName : Name) : Bool :=
   let nameStr := declNameLeaf declName
@@ -218,15 +299,18 @@ def isCertifiedTwinForward (declName : Name) (pshape : ProofShape) : Bool :=
 def lintDecl (env : Environment) (declName : Name) : Array MessageData := Id.run do
   let mut msgs : Array MessageData := #[]
 
-  -- Only lint theorems and definitions.
-  match env.find? declName with
-  | some (.thmInfo _) => pure ()
-  | some (.defnInfo _) => pure ()
-  | _ => return msgs
-
   -- Skip internal/auxiliary names
   if declName.isInternal then return msgs
   if declName.hasMacroScopes then return msgs
+
+  -- Structures are where witness/bridge vacuity usually hides: the declaration
+  -- itself is an inductive constant, while proof fields are generated projections.
+  match env.find? declName with
+  | some (.inductInfo _) =>
+      return lintWitnessBridgeStructure env declName
+  | some (.thmInfo _) => pure ()
+  | some (.defnInfo _) => pure ()
+  | _ => return msgs
 
   let exempt := isExempt env declName
   let pshape := classifyProofShape env declName

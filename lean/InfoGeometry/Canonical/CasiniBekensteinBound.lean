@@ -40,33 +40,22 @@ def is_modular_hamiltonian (σ : AdditiveModularFlow (H := H)) (K : AlgebraEnd H
   ∀ t A, σ t A = InfoGeometry.Krein.modular_shift (E := H) K t A
 
 /--
-The Relative Entropy $S(\omega || \omega_0)$ between two states.
+A context encapsulating the assumptions of the Casini-Bekenstein framework,
+avoiding global axioms to comply with the Axiom-Surface Seal.
 -/
-axiom relative_entropy (ω ω0 : State (AlgebraEnd H)) : ℝ
-
-/--
-The Positivity of Relative Entropy (Araki's Theorem).
--/
-axiom relative_entropy_nonneg (ω ω0 : State (AlgebraEnd H)) : 
-  0 ≤ relative_entropy ω ω0
-
-/--
-Physical Entropy $S(\omega)$.
--/
-axiom entropy (ω : State (AlgebraEnd H)) : ℝ
-
-/--
-The Modular Hamiltonian $K$ associated with state $\omega_0$.
--/
-axiom ModularHamiltonian (ω0 : State (AlgebraEnd H)) : AlgebraEnd H
-
-/--
-The "Casini Identity":
-The relative entropy is the difference between the modular energy change 
-and the entropy change.
--/
-axiom casini_identity (ω ω0 : State (AlgebraEnd H)) :
-    relative_entropy ω ω0 = (ω (ModularHamiltonian ω0) - ω0 (ModularHamiltonian ω0)) - (entropy ω - entropy ω0)
+class CasiniBekensteinContext (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] where
+  /-- The Relative Entropy $S(\omega || \omega_0)$ between two states. -/
+  relative_entropy : State (AlgebraEnd H) → State (AlgebraEnd H) → ℝ
+  /-- The Positivity of Relative Entropy (Araki's Theorem). -/
+  relative_entropy_nonneg : ∀ ω ω0, 0 ≤ relative_entropy ω ω0
+  /-- Physical Entropy $S(\omega)$. -/
+  entropy : State (AlgebraEnd H) → ℝ
+  /-- The Modular Hamiltonian $K$ associated with state $\omega_0$. -/
+  ModularHamiltonian : State (AlgebraEnd H) → AlgebraEnd H
+  /-- The "Casini Identity":
+  The relative entropy is the difference between the modular energy change 
+  and the entropy change. -/
+  casini_identity : ∀ ω ω0, relative_entropy ω ω0 = (ω (ModularHamiltonian ω0) - ω0 (ModularHamiltonian ω0)) - (entropy ω - entropy ω0)
 
 /--
 Geometric Bekenstein Identification:
@@ -74,8 +63,9 @@ In a Rindler wedge or near-horizon region, the Modular Hamiltonian $K$ is
 proportional to the physical energy $E$ and the radius $R$.
 $K = 2\pi R E$.
 -/
-structure BekensteinGeometricBridge (ω0 : State (AlgebraEnd H)) (E_op : AlgebraEnd H) (R : ℝ) where
-  h_K : ModularHamiltonian ω0 = (2 * Real.pi * R) • E_op
+structure BekensteinGeometricBridge {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+  [ctx : CasiniBekensteinContext H] (ω0 : State (AlgebraEnd H)) (E_op : AlgebraEnd H) (R : ℝ) where
+  h_K : ctx.ModularHamiltonian ω0 = (2 * Real.pi * R) • E_op
 
 /--
 Theorem: The "True" Bekenstein Bound.
@@ -84,14 +74,15 @@ is bounded by $2\pi R \Delta E$.
 -/
 @[rep_depth transport, capstone]
 theorem true_bekenstein_bound 
+    [ctx : CasiniBekensteinContext H]
     {E_op : AlgebraEnd H} {R : ℝ}
     (ω ω0 : State (AlgebraEnd H)) 
     (bridge : BekensteinGeometricBridge ω0 E_op R) :
-    entropy ω - entropy ω0 ≤ 2 * Real.pi * R * (ω E_op - ω0 E_op) := by
+    ctx.entropy ω - ctx.entropy ω0 ≤ 2 * Real.pi * R * (ω E_op - ω0 E_op) := by
   -- 1. By positivity of relative entropy: 0 ≤ S_{rel}
-  have h_pos := relative_entropy_nonneg ω ω0
+  have h_pos := ctx.relative_entropy_nonneg ω ω0
   -- 2. Substitute the Casini Identity
-  rw [casini_identity ω ω0] at h_pos
+  rw [ctx.casini_identity ω ω0] at h_pos
   -- 3. Substitute the Geometric Bridge K = 2π R E
   rw [bridge.h_K] at h_pos
   -- 4. Use linearity of the state: ω (c • E) = c * ω E

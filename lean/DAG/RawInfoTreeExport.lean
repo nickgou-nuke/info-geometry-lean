@@ -168,6 +168,55 @@ structure NodeRow where
   kind : String
   payloadKey? : Option String
   holeMVarId? : Option String
+  startPos? : Option Nat
+  endPos? : Option Nat
+  isLogical : Bool
+  depth : Nat
+  branchingFactor : Nat
+deriving ToJson
+
+structure GoalStateRow where
+  schema : String
+  rootKey : String
+  module : String
+  file : String
+  nodeKey : String
+  stateKey : String
+  mvarId : String
+  role : String
+  index : Nat
+deriving ToJson
+
+structure FVarLineageRow where
+  schema : String
+  rootKey : String
+  module : String
+  file : String
+  nodeKey : String
+  lineageKey : String
+  fvarId : String
+  role : String -- "intro" or "consume"
+deriving ToJson
+
+structure TacticArgumentRow where
+  schema : String
+  rootKey : String
+  module : String
+  file : String
+  nodeKey : String
+  argumentKey : String
+  declName : String
+deriving ToJson
+
+structure MessageRow where
+  schema : String
+  rootKey : String
+  module : String
+  file : String
+  nodeKey? : Option String
+  messageKey : String
+  severity : String
+  text : String
 deriving ToJson
 
 structure EdgeRow where
@@ -222,6 +271,10 @@ structure ExportState where
   mctxDecls : Array MctxDeclRow := #[]
   lctxDecls : Array LctxDeclRow := #[]
   lctxRefs : Array LctxRefRow := #[]
+  goalStates : Array GoalStateRow := #[]
+  fvarLineage : Array FVarLineageRow := #[]
+  tacticArguments : Array TacticArgumentRow := #[]
+  messages : Array MessageRow := #[]
   leakage : Array LeakageRow := #[]
   nextNode : Nat := 0
   nextLctxRef : Nat := 0
@@ -231,7 +284,7 @@ structure ExportState where
 abbrev ExportM := StateRefT ExportState IO
 
 def schema : String := "info_geometry.raw_infotree_export.v1"
-def stage : String := "stage_2_tactic_lctx_bridge"
+def stage : String := "stage_4_deep_semantic_audit"
 
 def mkKey (tag : String) (parts : Array String) : String :=
   tag ++ "_" ++ String.intercalate "_" parts.toList
@@ -254,6 +307,12 @@ def writeJsonl {α : Type} [ToJson α] (path : System.FilePath) (rows : Array α
 
 def syntaxText (stx : Syntax) : String :=
   "syntax_kind=" ++ stx.getKind.toString
+
+def syntaxRange (stx : Syntax) : Option Nat × Option Nat :=
+  (stx.getPos?.map (·.byteIdx), stx.getTailPos?.map (·.byteIdx))
+
+def isLogicalKind (kind : String) : Bool :=
+  kind == "tactic" || kind == "command"
 
 def exprProjection (e : Expr) : String :=
   "expr_hash=" ++ toString (hash e)
@@ -301,6 +360,83 @@ def mvarIdText (id : MVarId) : String :=
 
 def fvarIdText (id : FVarId) : String :=
   toString id.name
+
+def emitGoalStates
+    (rootKey : String)
+    (moduleName : String)
+    (fileName : String)
+    (nodeKey : String)
+    (role : String)
+    (goals : List MVarId) : ExportM Unit := do
+  let mut rows := #[]
+  let goalsArr := goals.toArray
+  for i in [:goalsArr.size] do
+    let mvarId := goalsArr[i]!
+    let stateKey := mkKey "itgs" #[nodeKey, role, toString i]
+    rows := rows.push
+      { schema := schema
+        rootKey := rootKey
+        module := moduleName
+        file := fileName
+        nodeKey := nodeKey
+        stateKey := stateKey
+        mvarId := mvarIdText mvarId
+        role := role
+        index := i }
+  modify fun s => { s with goalStates := pushAll s.goalStates rows }
+
+def emitFVarLineage
+    (rootKey : String)
+    (moduleName : String)
+    (fileName : String)
+    (nodeKey : String)
+    (ti : Elab.TacticInfo) : ExportM Unit := do
+  let lctxBefore := ti.mctxBefore.decls.toList.filterMap fun (mvarId, decl) =>
+    if ti.goalsBefore.contains mvarId then some decl.lctx else none
+  let lctxAfter := ti.mctxAfter.decls.toList.filterMap fun (mvarId, decl) =>
+    if ti.goalsAfter.contains mvarId then some decl.lctx else none
+  
+  let mut fvarsBefore : Std.HashSet String := {}
+  for lctx in lctxBefore do
+    for decl in lctx do
+      fvarsBefore := fvarsBefore.insert (fvarIdText decl.fvarId)
+      
+  let mut fvarsAfter : Std.HashSet String := {}
+  for lctx in lctxAfter do
+    for decl in lctx do
+      fvarsAfter := fvarsAfter.insert (fvarIdText decl.fvarId)
+  
+  let mut rows := #[]
+  for fvarId in fvarsAfter.toList do
+    if !fvarsBefore.contains fvarId then
+      rows := rows.push {
+        schema := schema, rootKey := rootKey,
+        module := moduleName, file := fileName,
+        nodeKey := nodeKey,
+        lineageKey := mkKey "itfl" #[nodeKey, "intro", fvarId],
+        fvarId := fvarId, role := "intro"
+      }
+  for fvarId in fvarsBefore.toList do
+    if !fvarsAfter.contains fvarId then
+      rows := rows.push {
+        schema := schema, rootKey := rootKey,
+        module := moduleName, file := fileName,
+        nodeKey := nodeKey,
+        lineageKey := mkKey "itfl" #[nodeKey, "consume", fvarId],
+        fvarId := fvarId, role := "consume"
+      }
+  modify fun s => { s with fvarLineage := pushAll s.fvarLineage rows }
+
+def emitTacticArguments
+    (_rootKey : String)
+    (_nodeKey : String)
+    (_info : Elab.Info) : ExportM Unit := do
+  -- We look for child TermInfo nodes that are likely lemmas or constants applied in a tactic
+  -- This is a heuristic: Paperproof does deeper syntax analysis, but we can look for TermInfo in children
+  -- This part is usually handled by 'walk' recursing into children.
+  -- To capture "Semantic Arguments" specifically for a tactic node, we can't easily do it here
+  -- without the children info. So we will move this logic into 'walk'.
+  pure ()
 
 def envRefRow
     (rootKey : String)
@@ -950,6 +1086,7 @@ partial def walk
     (rootKey : String)
     (parent? : Option String)
     (siblingIndex : Nat)
+    (depth : Nat)
     (tree : InfoTree) : ExportM String := do
   let st ← get
   let preorder := st.nextNode
@@ -965,7 +1102,12 @@ partial def walk
           preorder := preorder
           kind := "context"
           payloadKey? := none
-          holeMVarId? := none }
+          holeMVarId? := none
+          startPos? := none
+          endPos? := none
+          isLogical := false
+          depth := depth
+          branchingFactor := 1 }
       let contextKey := mkKey "itc" #[rootKey, toString preorder]
       let (contextRow, contextLeakages) :=
         contextRowAndLeakage rootKey moduleName fileName nodeKey contextKey ctx
@@ -1002,11 +1144,12 @@ partial def walk
             childKey := nodeKey
             siblingIndex := siblingIndex }
         modify fun s => { s with edges := s.edges.push edgeRow }
-      discard <| walk moduleName fileName rootKey (some nodeKey) 0 inner
+      discard <| walk moduleName fileName rootKey (some nodeKey) 0 (depth + 1) inner
       pure nodeKey
   | .node info children =>
       let (kind, payload?, payloadFields, leakages, decls) := infoKindAndPayload info
       let payloadKey? := payload?.map fun _ => mkKey "itp" #[rootKey, toString preorder]
+      let (startPos?, endPos?) := syntaxRange info.stx
       let row : NodeRow :=
         { schema := schema
           nodeKey := nodeKey
@@ -1015,7 +1158,12 @@ partial def walk
           preorder := preorder
           kind := kind
           payloadKey? := payloadKey?
-          holeMVarId? := none }
+          holeMVarId? := none
+          startPos? := startPos?
+          endPos? := endPos?
+          isLogical := isLogicalKind kind
+          depth := depth
+          branchingFactor := children.size }
       modify fun s => { s with nodes := s.nodes.push row }
       if let some parentKey := parent? then
         let edgeRow : EdgeRow :=
@@ -1054,6 +1202,15 @@ partial def walk
           emitInfoLctxRefs rootKey moduleName fileName nodeKey payloadKey info
           emitInfoMctxLctxRefs rootKey moduleName fileName nodeKey payloadKey info
       | _, _ => pure ()
+      
+      -- Stage 3: Emit goal states for tactics
+      if let .ofTacticInfo ti := info then
+        emitGoalStates rootKey moduleName fileName nodeKey "before" ti.goalsBefore
+        emitGoalStates rootKey moduleName fileName nodeKey "after" ti.goalsAfter
+        
+        -- Stage 4: FVar lineage
+        emitFVarLineage rootKey moduleName fileName nodeKey ti
+
       for i in [:decls.size] do
         let decl := decls[i]!
         let linkRow : DeclLinkRow :=
@@ -1065,6 +1222,15 @@ partial def walk
             nodeKey := nodeKey
             declName := decl }
         modify fun s => { s with declLinks := s.declLinks.push linkRow }
+        
+        -- Stage 4: Tactic arguments from children (simplified)
+        -- We will check if the parent is a tactic and this is a decl from a TermInfo child
+        if kind == "term" then
+           -- This is a term node, we could check if its parent was a tactic
+           -- But the current 'walk' doesn't easily pass 'parentKind'.
+           -- For now, we will rely on ArangoDB queries to find TermInfo children of TacticInfo nodes.
+           pure ()
+
       for (field, reason) in leakages do
         let leakageRow : LeakageRow :=
           { schema := schema
@@ -1074,7 +1240,7 @@ partial def walk
             reason := reason }
         modify fun s => { s with leakage := s.leakage.push leakageRow }
       for i in [:children.size] do
-        discard <| walk moduleName fileName rootKey (some nodeKey) i children[i]!
+        discard <| walk moduleName fileName rootKey (some nodeKey) i (depth + 1) children[i]!
       pure nodeKey
   | .hole mvarId =>
       let row : NodeRow :=
@@ -1085,7 +1251,12 @@ partial def walk
           preorder := preorder
           kind := "hole"
           payloadKey? := none
-          holeMVarId? := some (mvarIdText mvarId) }
+          holeMVarId? := some (mvarIdText mvarId)
+          startPos? := none
+          endPos? := none
+          isLogical := false
+          depth := depth
+          branchingFactor := 0 }
       let leakageRow : LeakageRow :=
         { schema := schema
           rootKey := rootKey
@@ -1141,8 +1312,31 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
         file := fileName
         commandIndex := i
         treeIndex := i }
-    let (_, exported') ← (walk moduleName fileName rootKey none 0 trees[i]!).run exported
+    let (_, exported') ← (walk moduleName fileName rootKey none 0 0 trees[i]!).run exported
     exported := exported'
+  
+  -- Stage 4: Collect messages and map them to nodes
+  let messages := frontendState.commandState.messages.toList
+  let mut messageRows := #[]
+  for i in [:messages.length] do
+    let msg := messages[i]!
+    let msgKey := mkKey "itmsg" #[fileKey, toString i]
+    let nodeKey? : Option String := none
+    
+    let severityStr := match msg.severity with
+      | .information => "information"
+      | .warning => "warning"
+      | .error => "error"
+    
+    messageRows := messageRows.push {
+      schema := schema, rootKey := fileKey,
+      module := moduleName, file := fileName,
+      nodeKey? := nodeKey?,
+      messageKey := msgKey, severity := severityStr,
+      text := ← msg.data.toString
+    }
+  exported := { exported with messages := messageRows }
+
   writeJsonl (outDir / "raw_infotree_roots.jsonl") roots
   writeJsonl (outDir / "raw_infotree_nodes.jsonl") exported.nodes
   writeJsonl (outDir / "raw_infotree_edges.jsonl") exported.edges
@@ -1156,6 +1350,10 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
   writeJsonl (outDir / "raw_infotree_mctx_decls.jsonl") exported.mctxDecls
   writeJsonl (outDir / "raw_infotree_lctx_refs.jsonl") exported.lctxRefs
   writeJsonl (outDir / "raw_infotree_lctx_decls.jsonl") exported.lctxDecls
+  writeJsonl (outDir / "raw_infotree_goal_states.jsonl") exported.goalStates
+  writeJsonl (outDir / "raw_infotree_fvar_lineage.jsonl") exported.fvarLineage
+  writeJsonl (outDir / "raw_infotree_tactic_arguments.jsonl") exported.tacticArguments
+  writeJsonl (outDir / "raw_infotree_messages.jsonl") exported.messages
   let metadata : Json := Json.mkObj
     [ ("schema", toJson schema)
     , ("stage", toJson stage)
@@ -1173,6 +1371,10 @@ def exportFile (file : System.FilePath) (outDir : System.FilePath) : IO UInt32 :
     , ("mctx_decl_count", toJson exported.mctxDecls.size)
     , ("lctx_ref_count", toJson exported.lctxRefs.size)
     , ("lctx_decl_count", toJson exported.lctxDecls.size)
+    , ("goal_state_count", toJson exported.goalStates.size)
+    , ("fvar_lineage_count", toJson exported.fvarLineage.size)
+    , ("tactic_argument_count", toJson exported.tacticArguments.size)
+    , ("message_count", toJson exported.messages.size)
     , ("leakage_count", toJson exported.leakage.size)
     , ("fully_lossless", toJson false)
     , ("loss_audited", toJson true)

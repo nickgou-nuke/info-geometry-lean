@@ -68,6 +68,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input-dir", default=DEFAULT_INPUT_DIR, help="Directory containing process-flow JSONL artifacts.")
     parser.add_argument("--json-out", default=DEFAULT_JSON_OUT, help="JSON summary output path.")
     parser.add_argument("--md-out", default=DEFAULT_MD_OUT, help="Markdown summary output path.")
+    parser.add_argument(
+        "--allow-missing-input",
+        action="store_true",
+        help="If artifacts are missing, write an empty report and exit 0 instead of failing.",
+    )
     parser.add_argument("--iterations", type=int, default=12, help="Diffusion/relaxation iteration budget.")
     parser.add_argument("--alpha", type=float, default=0.2, help="Diffusion injection coefficient in [0, 1].")
     parser.add_argument("--top", type=int, default=20, help="Top-N rows per section.")
@@ -336,6 +341,13 @@ def main() -> int:
     flow_edges = load_jsonl(input_dir / "flow-edges.jsonl")
     process_events = load_jsonl(input_dir / "process-events.jsonl")
     if not flow_edges:
+        if args.allow_missing_input:
+            print(f"[generate_semantic_flow_report] no flow edges found under {input_dir}, skipping.", flush=True)
+            with open(md_out, "w", encoding="utf-8") as f:
+                f.write("# Semantic Flow Report (Skipped)\nNo artifacts found.\n")
+            with open(json_out, "w", encoding="utf-8") as f:
+                json.dump({"status": "skipped", "reason": "no artifacts"}, f)
+            return 0
         raise SystemExit(f"no flow edges found under {input_dir}")
 
     validate_schema(flow_edges, "flow-edges", EXPECTED_INPUT_SCHEMA_VERSION)

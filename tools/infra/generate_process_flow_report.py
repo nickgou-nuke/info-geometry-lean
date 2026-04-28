@@ -77,6 +77,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--comparisons-out", default=DEFAULT_COMPARISONS_OUT, help="JSONL file to write derived comparison candidates.")
     parser.add_argument("--report-out", default=DEFAULT_REPORT_OUT, help="Markdown report path.")
     parser.add_argument("--json-out", default=DEFAULT_JSON_OUT, help="JSON summary path.")
+    parser.add_argument(
+        "--allow-missing-input",
+        action="store_true",
+        help="If artifacts are missing, write an empty report and exit 0 instead of failing.",
+    )
     parser.add_argument("--top", type=int, default=12, help="Top-N rows per ranked section.")
     parser.add_argument(
         "--max-shared-sources-per-path",
@@ -1108,6 +1113,16 @@ def main() -> int:
     )
 
     if not flow_edges and not events:
+        if args.allow_missing_input:
+            print(f"[generate_process_flow_report] no process-flow artifacts found under {input_dir}, skipping.", flush=True)
+            write_jsonl(cocycles_out, [])
+            write_jsonl(comparisons_out, [])
+            with open(report_out, "w", encoding="utf-8") as f:
+                f.write("# Process Flow Report (Skipped)\nNo artifacts found.\n")
+            import json
+            with open(json_out, "w", encoding="utf-8") as f:
+                json.dump({"status": "skipped", "reason": "no artifacts"}, f)
+            return 0
         raise SystemExit(f"no process-flow artifacts found under {input_dir}")
 
     validate_schema(flow_edges, "flow-edges", EXPECTED_INPUT_SCHEMA_VERSION)

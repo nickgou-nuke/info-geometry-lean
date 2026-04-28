@@ -258,19 +258,15 @@ require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
 
-@[default_target]
 lean_lib DAG where
   globs := #[.andSubmodules `DAG]
 
-@[default_target]
 lean_lib Agent where
   globs := #[.andSubmodules `Agent]
 
-@[default_target]
 lean_lib Docs where
   globs := #[.andSubmodules `Docs]
 
-@[default_target]
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
@@ -279,7 +275,6 @@ lean_lib Socratic where
 lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
 
-@[default_target]
 lean_lib SelfReference where
   globs := #[.andSubmodules `SelfReference]
 
@@ -376,3 +371,14 @@ package_facet dagArtifactsManifest (pkg : Package) : FilePath := do
         cwd := some pkg.dir
       } (quiet := true)
     return manifestPath
+
+lean_lib Experimental where
+  globs := #[.andSubmodules `Experimental]
+
+lean_lib AuditNative where
+  srcDir := "lean"
+  globs := #[`AuditNative]
+
+lean_lib AuditStrict where
+  srcDir := "lean"
+  globs := #[`InfoGeometry.AuditStrict]

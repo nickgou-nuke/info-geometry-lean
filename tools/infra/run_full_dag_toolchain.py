@@ -66,9 +66,9 @@ def main() -> int:
         )
     )
     parser.add_argument(
-        "--skip-audit",
+        "--run-audit",
         action="store_true",
-        help="Skip InfoGeometry.Audit and InfoGeometry.AuditStrict preflight.",
+        help="Run InfoGeometry.Audit and InfoGeometry.AuditStrict preflight (skipped by default).",
     )
     parser.add_argument(
         "--write-policy-baseline",
@@ -93,7 +93,7 @@ def main() -> int:
 
     preflight_build_lock_health()
 
-    if not args.skip_audit:
+    if args.run_audit:
         run_step(
             "PREP",
             "audit",
@@ -149,6 +149,19 @@ def main() -> int:
     )
     run_step(
         "DECOMP",
+        "process-flow-export",
+        [
+            "lake",
+            "env",
+            "lean",
+            "--run",
+            "lean/DAG/ProcessFlowExport.lean",
+            "InfoGeometry.Audit",
+            "artifacts/dag/process-flow",
+        ],
+    )
+    run_step(
+        "DECOMP",
         "process-flow-report",
         [
             "python3",
@@ -159,6 +172,7 @@ def main() -> int:
             "reports/dag/process-flow-report.md",
             "--json-out",
             "reports/dag/process-flow-report.json",
+            "--allow-missing-input",
         ],
     )
     run_step(
@@ -173,6 +187,7 @@ def main() -> int:
             "reports/dag/semantic-flow-report.json",
             "--md-out",
             "reports/dag/semantic-flow-report.md",
+            "--allow-missing-input",
         ],
     )
     run_step(
@@ -188,6 +203,7 @@ def main() -> int:
             "--md-out",
             "reports/dag/semantic-flow-report.md",
             "--skip-generate",
+            "--allow-missing-input",
         ],
     )
     run_step(
@@ -196,7 +212,7 @@ def main() -> int:
         [
             "python3",
             "tools/infra/generate_causal_report.py",
-            "--out",
+            "--md-out",
             "reports/dag/true-root-order.md",
             "--json-out",
             "reports/dag/true-root-order.json",

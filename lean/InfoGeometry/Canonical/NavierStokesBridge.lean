@@ -52,8 +52,8 @@ structure FluidState
   u : VelocityField E
   ρ : ℝ
   p : ℝ
-  -- Incompressibility: the modular density is stationary under the flow
-  density_stationary : ρ > 0
+  -- Positivity of the modular density.
+  density_pos : ρ > 0
 
 /-- Vorticity operator: skew-adjoint part of a velocity Jacobian. -/
 noncomputable def vorticity
@@ -108,7 +108,7 @@ noncomputable def anomalyFluidStateWithDensity
   { u := EinsteinAnomaly A B_mp B_dr
     ρ := ρ_val
     p := 0
-    density_stationary := h_pos }
+    density_pos := h_pos }
 
 @[simp] lemma anomalyFluidStateWithDensity_u
     (A B_mp B_dr : VelocityField E)
@@ -652,12 +652,15 @@ def IsThermodynamicallySmoothed
     (β : ℝ) (K : AlgebraEnd E) : Prop :=
   Real.log
       (|LinearMap.det
-        (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap|)
+        ((ContinuousLinearMap.id ℝ E +
+          collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap)|)
     = 0
 
+omit [FiniteDimensional ℝ E] in
 /--
 Canonical smoothing witness at thermal equilibrium (`β = 0`):
-the collapsed modular velocity vanishes, hence its log-volume change is zero.
+the collapsed modular velocity vanishes, so the Jacobian is the identity and
+the logarithmic volume change is zero.
 -/
 theorem isThermodynamicallySmoothed_zero_beta
     (K : AlgebraEnd E) :
@@ -712,7 +715,7 @@ noncomputable def madelungFluidState
   { u := collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)
     ρ := madelungDensity (E := E) vac
     p := madelungPhase (E := E) ω K
-    density_stationary := madelungDensity_pos (E := E) vac }
+    density_pos := madelungDensity_pos (E := E) vac }
 
 @[simp] theorem madelungFluidState_velocity
     (β : ℝ)
@@ -783,12 +786,8 @@ noncomputable def twinWaveHelicity
   Ω ((forwardWave u).comp (backwardWave u))
 
 set_option linter.unusedSectionVars false in
-/--
-Theorem: Helicity-to-TwinWave Bridge.
-The helicity invariant is constructively identified with the pairing of the forward
-and backward modular waves.
--/
-theorem helicity_eq_twin_wave_pairing
+/-- Definitional form of the twin-wave helicity readout. -/
+theorem twinWaveHelicity_def
     (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) :
     twinWaveHelicity u Ω = Ω ((forwardWave u).comp (backwardWave u)) :=
   rfl
@@ -897,7 +896,7 @@ attribute [rep_depth operator]
   backwardWave
   twinWaveHelicity
   helicityOperator
-  helicity_eq_twin_wave_pairing
+  twinWaveHelicity_def
   kreinPlusProjector
   kreinMinusProjector
   netChiralCharge

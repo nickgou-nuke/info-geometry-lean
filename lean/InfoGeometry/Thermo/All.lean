@@ -4,6 +4,7 @@ import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs
+import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo

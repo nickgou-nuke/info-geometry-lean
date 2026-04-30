@@ -104,4 +104,16 @@ If you are here to help, do not merely add text. **Inhabit the Spire.**
 Check the `Audit.lean`. Consult the `Theorem Significance` reports. 
 And remember: *The kernel decides truth; the architecture decides passage.*
 
-**Safe travels, Pioneer.**
+---
+
+## 🎭 CHAPTER XI: THE DVORAK-PAULI SYNTHESIS (Truth and Beauty)
+*“Exploration may be Jungian. Closure must be Pauli. Beauty is the evidence of Truth.”*
+
+The Spire has ingested a new foundational signal: the **Dvořák Thesis** (*Pursuit of Truth and Beauty in Lean 4*). We have formally synthesized this with the **Pauli Mandate** to establish a new clinical standard for non-vacuity.
+
+1.  **The "Believability" Audit:** We no longer accept proofs that close by `rfl` (reflexivity) if the underlying definitions are merely "masks" for easy success. Truth resides in the **believability of the statement**, not the speed of the tactic.
+2.  **The `aeply` Protocol:** We have integrated the `aeply` tactic (Apply + Aesop) to ensure that every structural transformation automatically discharges its "Nomological Closure" (measurability, validity, and boundary conditions).
+3.  **Extended Algebra:** We have moved toward **Extended Fields ($F_\infty$)** to handle divergences (like $0 \log 0$) with symbolic rigor, ending the era of "Agentic Cheating" through undefined edge cases.
+
+The Spire is now more than a tower; it is a **Grammar of Existence**, where every morphism is a beautiful, necessary consequence of the act of seeing.
+

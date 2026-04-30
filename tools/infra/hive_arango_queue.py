@@ -517,14 +517,49 @@ def build_fossil_doc(record: dict[str, Any]) -> dict[str, Any]:
 
 
 
+def build_runtime_goal_packet(*, goal_doc: dict[str, Any], queue_name: str, priority: float, source_regime: str = "theorem_lane") -> dict[str, Any]:
+    return {
+        "schema": "hive.runtime.goal.v1",
+        "goal_id": f"goal::{goal_doc['_key']}",
+        "formal_target": str(goal_doc.get("target_pretty") or goal_doc.get("canonical_shape") or goal_doc["_key"]),
+        "module_hint": str(goal_doc.get("module") or ""),
+        "queue_name": queue_name,
+        "priority": int(max(0, min(1000, round(float(priority) * 1000)))),
+        "constraints": [],
+        "source_regime": source_regime,
+        "created_at": iso_now(),
+        "created_by": "hive_arango_queue",
+        "lineage_id": str(goal_doc.get("_key")),
+    }
+
+
+def build_runtime_attempt_packet(*, task_doc: dict[str, Any], worker_id: str, backend_kind: str = "unknown") -> dict[str, Any]:
+    now = iso_now()
+    return {
+        "schema": "hive.runtime.attempt.v1",
+        "attempt_id": f"attempt::{task_doc['_key']}::{worker_id}::{stable_key('claim', now, worker_id)}",
+        "goal_id": f"goal::{task_doc.get('goal_key') or task_doc.get('_key')}",
+        "worker_id": worker_id,
+        "task_kind": str(task_doc.get("task_kind") or "unknown"),
+        "status": "running",
+        "started_at": now,
+        "context_refs": [],
+        "packet_refs": [],
+        "backend_kind": backend_kind,
+    }
+
+
 def build_task_doc(goal_doc: dict[str, Any], *, queue_name: str, priority: float = 0.5) -> dict[str, Any]:
     now = iso_now()
+    runtime_goal_packet = build_runtime_goal_packet(goal_doc=goal_doc, queue_name=queue_name, priority=priority)
     return {
         "_key": task_key(goal_doc, queue_name),
         "schema": "info_geometry.hive_task.v1",
         "task_kind": "proof.search",
         "queue_name": queue_name,
         "goal_key": goal_doc["_key"],
+        "goal_packet_key": stable_key("goalpacket", runtime_goal_packet["goal_id"]),
+        "runtime_goal_packet": runtime_goal_packet,
         "status": "pending",
         "priority": float(priority),
         "claim_count": 0,
@@ -1165,7 +1200,36 @@ FOR task IN @@tasks
             "task_kind": task_kind,
         },
     )
-    return rows[0] if rows else None
+    if not rows:
+        return None
+    task_doc = rows[0]
+    runtime_attempt_packet = build_runtime_attempt_packet(task_doc=task_doc, worker_id=worker_id)
+    attempt_packet_key = stable_key("attemptpacket", runtime_attempt_packet["attempt_id"])
+    patch_rows = aql(
+        endpoint,
+        database,
+        username,
+        password,
+        """
+FOR task IN @@tasks
+  FILTER task._key == @task_key
+  LIMIT 1
+  UPDATE task WITH {
+    attempt_packet_key: @attempt_packet_key,
+    runtime_attempt_packet: @runtime_attempt_packet,
+    updated_at: DATE_ISO8601(DATE_NOW())
+  } IN @@tasks
+  OPTIONS { mergeObjects: false }
+  RETURN NEW
+""".strip(),
+        {
+            "@tasks": "hive_tasks",
+            "task_key": str(task_doc.get("_key")),
+            "attempt_packet_key": attempt_packet_key,
+            "runtime_attempt_packet": runtime_attempt_packet,
+        },
+    )
+    return patch_rows[0] if patch_rows else task_doc
 
 
 def enqueue_build_verify_task(

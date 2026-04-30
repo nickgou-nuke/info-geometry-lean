@@ -7,6 +7,7 @@ Last refreshed: 2026-04-16 (Europe/Sofia)
 - Branch: `main`
 - HEAD: `056132a5ce3b4c619c86f9f1eb6c0cedbbb27818`
 - Working tree: **dirty** (tracked edits + untracked lanes under `docs/black_books/`, `lean/InfoGeometry/Canonical/`, `lean/InfoGeometry/LLM/`, `leantrail/`, `tools/infra/`)
+- **Dvořák-Pauli Synthesis (2026-04-28):** Ingested *Pursuit of Truth and Beauty in Lean 4*. Integrated `aeply` tactic and `dvorak_audit.py`. `reports/dvorak-audit.json` active.
 
 ## Verification Gates
 

@@ -33,12 +33,42 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
 Regular positive operator cone on the Drazin regular block:
-`Ω_D = {H | Preg * H * Preg = H ∧ spectrum(H) ⊆ (0,∞)}`.
+
+`Ω_D = {H | Preg H Preg = H ∧ spectrum(H) ⊆ (0,∞)}`.
+
+The first condition says the operator lives entirely on the Drazin regular
+branch. The second condition is the spectral positivity gate needed for
+operatorial logarithmic/Legendre analysis.
 -/
 @[rep_depth operator]
 def regularPositiveConeOmegaD
     (c : CertifiedModularReduction (E := H₂)) : Set EndH :=
   {H : EndH | compress (c.Preg) H = H ∧ spectrum ℝ H ⊆ Set.Ioi (0 : ℝ)}
+
+/-- Membership in the Drazin regular positive cone, unfolded. -/
+@[simp]
+theorem mem_regularPositiveConeOmegaD_iff
+    (c : CertifiedModularReduction (E := H₂))
+    (H : EndH) :
+    H ∈ regularPositiveConeOmegaD c ↔
+      compress c.Preg H = H ∧ spectrum ℝ H ⊆ Set.Ioi (0 : ℝ) :=
+  Iff.rfl
+
+/-- Operators in `Ω_D` are supported on the Drazin regular block. -/
+theorem regularPositiveConeOmegaD_support
+    {c : CertifiedModularReduction (E := H₂)}
+    {H : EndH}
+    (hH : H ∈ regularPositiveConeOmegaD c) :
+    compress c.Preg H = H :=
+  hH.1
+
+/-- Operators in `Ω_D` have strictly positive spectrum. -/
+theorem regularPositiveConeOmegaD_spectrum_pos
+    {c : CertifiedModularReduction (E := H₂)}
+    {H : EndH}
+    (hH : H ∈ regularPositiveConeOmegaD c) :
+    spectrum ℝ H ⊆ Set.Ioi (0 : ℝ) :=
+  hH.2
 
 /--
 Operatorial Fenchel primal potential on the regular branch.
@@ -46,7 +76,7 @@ Operatorial Fenchel primal potential on the regular branch.
 @[rep_depth operator]
 noncomputable def operatorFenchelPotentialOnRegularCone
     (ω : EndH →L[ℝ] ℝ) (H : EndH) : ℝ :=
-  operatorMassieuPotential (E := E) ω H 1
+  operatorMassieuPotential (E := E) ω H (1 : ℝ)
 
 /--
 Operatorial Fenchel conjugate as the Legendre support supremum on `EndH`.
@@ -73,10 +103,15 @@ theorem operatorFenchelYoung_on_doubledKrein
     (η : EndH →L[ℝ] ℝ)
     (hH : H ∈ regularPositiveConeOmegaD c) :
     η H ≤ operatorFenchelPotentialOnRegularCone (E := E) ω H + ψStar η := by
+  -- Regular modular block is log-admissible.
   have _hLog : c.logAdmissible c.Δreg :=
     finiteDiagonalShadowExcluded (c := c) hPos
-  have _hConeSupport : compress (c.Preg) H = H := hH.1
-  have _hConePos : spectrum ℝ H ⊆ Set.Ioi (0 : ℝ) := hH.2
+  -- The test operator is supported on the Drazin regular block.
+  have _hConeSupport : compress c.Preg H = H :=
+    regularPositiveConeOmegaD_support hH
+  -- The test operator has strictly positive spectrum.
+  have _hConePos : spectrum ℝ H ⊆ Set.Ioi (0 : ℝ) :=
+    regularPositiveConeOmegaD_spectrum_pos hH
   exact fenchelYoung_ineq (hConj := hConj) H η
 
 /--

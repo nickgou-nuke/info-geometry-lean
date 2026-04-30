@@ -1,0 +1,56 @@
+import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
+import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
+import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
+import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
+import InfoGeometry.OperatorAlgebra.ChiralPolarization
+import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
+import InfoGeometry.OperatorAlgebra.CPTChiralBranch
+import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
+import InfoGeometry.OperatorAlgebra.DIIISuperfluid
+import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
+import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
+import InfoGeometry.OperatorAlgebra.ErlangerPhase
+import InfoGeometry.OperatorAlgebra.FresnelJonesReflection
+import InfoGeometry.OperatorAlgebra.JonesCalibration
+import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
+import InfoGeometry.OperatorAlgebra.KleinianTwist
+import InfoGeometry.OperatorAlgebra.KleinianReturn
+import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
+import InfoGeometry.OperatorAlgebra.ModularWeightTrace
+import InfoGeometry.OperatorAlgebra.ModularSignCPT
+import InfoGeometry.OperatorAlgebra.ModularChiralMirror
+import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
+import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
+import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
+import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
+import InfoGeometry.OperatorAlgebra.PO55RicciFlux
+import InfoGeometry.OperatorAlgebra.ProjectiveJonesGeometry
+import InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
+import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
+import InfoGeometry.OperatorAlgebra.RenormalizedTrace
+import InfoGeometry.OperatorAlgebra.SymmetryInvariants
+import InfoGeometry.OperatorAlgebra.SpectralTriple
+import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
+import InfoGeometry.OperatorAlgebra.StinespringDilation
+import InfoGeometry.OperatorAlgebra.StinespringChiralLightcone
+import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
+import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
+import InfoGeometry.OperatorAlgebra.TKKClosure
+import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.OperatorAlgebra.TomitaCartanChiralClosure
+import InfoGeometry.OperatorAlgebra.TomitaCartanDynamics
+import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.OperatorAlgebra.TopologicalSnap
+
+namespace InfoGeometry.OperatorAlgebra
+
+/-!
+# Operator Algebra Interfaces
+
+Stable operator-algebra sockets for defect predicates, circular polarization,
+and represented Drazin splitting.
+-/
+
+end InfoGeometry.OperatorAlgebra

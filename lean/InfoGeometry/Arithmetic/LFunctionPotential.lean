@@ -1,247 +1,192 @@
-import Mathlib
-import InfoGeometry.Canonical.GeometricFreudenthalBoundary
+/-
+InfoGeometry/Arithmetic/LFunctionPotential.lean
 
-/-!
-# InfoGeometry/Arithmetic/LFunctionPotential.lean
+Arithmetic spectral divisors and automorphic L-function barriers in the real doubled language.
 
-Arithmetic spectral divisors and L-function resonance witnesses.
+This file formalizes the arithmetic boundary layer associated to automorphic
+scattering data. Following the Erlanger Program of Klein symmetry invariant geometry,
+we do not use the complex proxy ℂ. Instead, the spectral domain is the real
+doubled carrier H₂ equipped with the Hestenes phase axis K = Jε.
 
-This file defines the L-function logarithmic barrier and the structural bridge
-between:
-
-* Freudenthal/black-hole charge horizons;
-* geometric Stokes flux vanishing;
-* arithmetic L-function zeros.
-
-It does not prove analytic continuation, functional equations, Langlands
-constant-term formulae, or Riemann-hypothesis-type statements.
+The file is intentionally conservative:
+* finite logarithmic potentials are stated only away from singular divisors;
+* exact horizon/divisor identification is a proof field of the witness;
+* no theorem tries to infer an exact zero from an informal divergence argument.
 -/
 
-namespace InfoGeometry.Arithmetic.LFunction
-
-open Complex
-open InfoGeometry.Canonical.GeometricCalculus
+import Mathlib
+import InfoGeometry.Arithmetic.ZetaPotentialSign
+import InfoGeometry.Exceptional.SplitJordanPotential
+import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Canonical.TomitaTakesaki
 
 noncomputable section
 
-/-! ## 1. Abstract automorphic scattering data -/
+namespace InfoGeometry.Arithmetic.LFunction
+
+open Filter
+open Topology
+open InfoGeometry.Krein
+open InfoGeometry.Canonical.TomitaTakesaki
+open InfoGeometry.Exceptional.SplitJordan
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => DoubledSpace E
+
+/-! ### 1. Real-geometric spectral domain -/
 
 /--
-Placeholder predicate for an automorphic scattering L-function.
-
-A future implementation should expand this into meromorphic continuation,
-functional equation, Euler product, local factors, and the specific parabolic
-constant-term origin.
+The arithmetic spectral domain is the real doubled plane H₂.
+Following Klein's mandate, we treat it as a real metric space where the 
+"complex" structure is a symmetry (the K axis).
 -/
-def IsAutomorphicScatteringLFunction (_Lval : ℂ → ℂ) : Prop :=
-  True
+def SpectralDomain (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] := 
+  DoubledSpace E
+
+/-! ### 2. Abstract automorphic scattering L-functions -/
 
 /--
-An abstract L-function extracted from automorphic scattering data.
+An abstract L-function extracted from the Siegel constant term or scattering
+matrix of an automorphic boundary, viewed as a map on the real doubled domain.
 -/
-structure ScatteringLFunction where
-  /-- The complex-valued L-function. -/
-  Lval : ℂ → ℂ
+structure ScatteringLFunction (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+  /-- The real-linear or K-linear map representing the L-function value. -/
+  Lval : DoubledSpace E → DoubledSpace E
 
-  /-- Distinguished spectral set, for example a critical line or critical strip. -/
-  criticalSet : Set ℂ
+  /-- The critical locus, typically a fixed axis or sheet in H₂. -/
+  criticalLocus : Set (DoubledSpace E)
 
-  /-- Automorphic/scattering certificate placeholder. -/
-  automorphic :
-    IsAutomorphicScatteringLFunction Lval
+  /-- Analytic automorphic package certificate. -/
+  isAutomorphic : Prop
+
+/-! ### 3. Arithmetic spectral divisors and logarithmic barriers -/
 
 /--
-An arithmetic horizon is an exact zero of the scattering L-function.
+The arithmetic spectral divisor.
+A point `s` in H₂ is an arithmetic horizon for `L` if the L-function value
+vanishes (under the proper metric).
 -/
-def IsArithmeticHorizon (L : ScatteringLFunction) (s : ℂ) : Prop :=
+def IsArithmeticHorizon
+    (L : ScatteringLFunction E)
+    (s : DoubledSpace E) : Prop :=
   L.Lval s = 0
 
 /--
-Arithmetic logarithmic barrier:
-
-`Φ_L(s) = -log |L(s)|`.
-
-As with the Freudenthal barrier, divergence at zeros should later be expressed
-as a limit theorem.
+The finite real-valued L-function logarithmic potential using the proper metric.
+`Φ_L(s) = -log ‖L(s)‖_Krein`.
 -/
-def lFunctionPotential (L : ScatteringLFunction) (s : ℂ) : ℝ :=
+def lFunctionPotential
+    (L : ScatteringLFunction E)
+    (s : DoubledSpace E) : ℝ :=
   - Real.log ‖L.Lval s‖
 
-/-! ## 2. Siegel/Langlands constant-term extraction -/
-
 /--
-Placeholder predicate for the statement that a constant-term operator extracts
-the scattering L-function attached to a parabolic boundary.
+Filter-level statement that the arithmetic barrier diverges at `s₀`.
 -/
-def ConstantTermExtractsScatteringData
-    {AutomorphicForm Boundary : Type*}
-    (_constantTerm : Boundary → AutomorphicForm → ℂ → ℂ)
-    (_scatteringL : Boundary → ScatteringLFunction) : Prop :=
-  True
+def ArithmeticBarrierDivergesAt
+    (L : ScatteringLFunction E)
+    (s₀ : DoubledSpace E) : Prop :=
+  Tendsto
+    (fun s => lFunctionPotential L s)
+    (nhdsWithin s₀ {s | s ≠ s₀})
+    atTop
+
+/-! ### 4. Unified Jordan/L-function horizon witness -/
 
 /--
-Abstract Siegel/Langlands constant-term datum.
+The unified horizon witness in the real-doubled language.
 
-Mathematically, this represents a map of the form
-
-`F ↦ ∫_{(Γ ∩ N) \ N} F(n g) dn`
-
-together with its associated scattering L-function data.
--/
-structure SiegelConstantTermDatum where
-  AutomorphicForm : Type*
-  Boundary : Type*
-
-  /-- Constant-term operator along a boundary/parabolic. -/
-  constantTerm : Boundary → AutomorphicForm → ℂ → ℂ
-
-  /-- L-function extracted from the boundary scattering datum. -/
-  scatteringL : Boundary → ScatteringLFunction
-
-  /-- Placeholder for the Langlands/Siegel constant-term formula. -/
-  extractsScatteringData :
-    ConstantTermExtractsScatteringData constantTerm scatteringL
-
-/-! ## 3. Arithmetic/geometric horizon bridge -/
-
-/--
-Unified geometric/arithmetic horizon witness.
-
-The regular potential equivalence is stated only on `regular q`.
-
-The exact horizon correspondence is a separate field:
-
-`q ∈ Freudenthal horizon ↔ L(spectralMap q) = 0`.
-
-This avoids the invalid step of deriving an exact zero from a logarithmic
-potential identity at a point where the potential is singular.
+`potentialEquivalence` is stated on the NonzeroNormPoint locus.
+The correspondence is between the Jordan rank-collapse and the 
+L-function vanishing on the real carrier.
 -/
 structure UnifiedHorizonWitness
-    {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-    {Q : Type*} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
-    {ρ : ParavectorRepresentation P E}
-    {A : RealEnd E}
-    (D : FreudenthalChargeDatum Q)
-    (Flux : StokesFreudenthalBridge (ρ := ρ) (A := A) D)
-    (L : ScatteringLFunction) where
+    (J : Type*) [AddCommGroup J] [Module ℝ J]
+    (D : CubicJordanNormDatum J)
+    (L : ScatteringLFunction E) where
 
-  /-- Map from charge states to arithmetic spectral parameters. -/
-  spectralMap : Q → ℂ
+  /-- Map from a Jordan charge/state to the real spectral carrier H₂. -/
+  spectralMap : J → DoubledSpace E
 
-  /-- Regular locus where both logarithmic potentials are finite/meaningful. -/
-  regular : Q → Prop
+  /-- Smooth/harmonic finite renormalization term. -/
+  renormalization : J → ℝ
 
-  /-- Smooth/harmonic renormalization term. -/
-  renormalization : Q → ℝ
-
-  /-- Scaling constant matching conventions. -/
+  /-- Scaling constant relating the two finite potentials off the horizon. -/
   c : ℝ
 
   /--
-  Regular-locus potential equivalence.
-
-  `Φ_L(ρ(q)) = c Φ_F(q) + H(q)`.
+  Finite potential identity away from the Jordan divisor.
+  Uses the Krein norm ‖.‖ on H₂.
   -/
-  potential_equivalence_on_regular :
-    ∀ q : Q, regular q →
-      lFunctionPotential L (spectralMap q)
-        =
-      c * freudenthalPotential D q + renormalization q
+  potentialEquivalence :
+    ∀ X : D.NonzeroNormPoint,
+      lFunctionPotential L (spectralMap X.val) =
+        c * splitPotential D X + renormalization X.val
 
   /--
-  Exact divisor/horizon correspondence.
-
-  This is the structural arithmetic horizon bridge.
+  Exact divisor correspondence.
   -/
-  horizon_equivalence :
-    ∀ q : Q,
-      q ∈ D.horizon ↔ IsArithmeticHorizon L (spectralMap q)
+  horizonIff :
+    ∀ X : J,
+      D.norm X = 0 ↔ IsArithmeticHorizon L (spectralMap X)
+
+  /--
+  Optional asymptotic refinement: the arithmetic barrier diverges at the
+  spectral image of every Jordan rank-deficient point.
+  -/
+  arithmeticBarrierDivergesOnHorizon :
+    ∀ X : J,
+      D.norm X = 0 →
+        ArithmeticBarrierDivergesAt L (spectralMap X)
 
 namespace UnifiedHorizonWitness
 
 variable
-    {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-    {Q : Type*} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
-    {ρ : ParavectorRepresentation P E}
-    {A : RealEnd E}
-    {D : FreudenthalChargeDatum Q}
-    {Flux : StokesFreudenthalBridge (ρ := ρ) (A := A) D}
-    {L : ScatteringLFunction}
+    {J : Type*} [AddCommGroup J] [Module ℝ J]
+    {D : CubicJordanNormDatum J}
+    {L : ScatteringLFunction E}
 
 /--
-Arithmetic horizons are exactly zero-flux Freudenthal horizons.
--/
-theorem flux_zero_iff_arithmetic_horizon
-    (W : UnifiedHorizonWitness D Flux L)
-    (q : Q) :
-    Flux.flux q = 0 ↔ IsArithmeticHorizon L (W.spectralMap q) := by
-  calc
-    Flux.flux q = 0
-        ↔ q ∈ D.horizon :=
-          (StokesFreudenthalBridge.horizon_iff_flux_zero Flux q).symm
-    _   ↔ IsArithmeticHorizon L (W.spectralMap q) :=
-          W.horizon_equivalence q
-
-/--
-Freudenthal horizons map to arithmetic L-divisors.
+A Jordan rank-deficiency horizon maps to an arithmetic L-divisor.
 -/
 theorem geometric_horizon_is_arithmetic_horizon
-    (W : UnifiedHorizonWitness D Flux L)
-    (q : Q)
-    (hq : q ∈ D.horizon) :
-    IsArithmeticHorizon L (W.spectralMap q) :=
-  (W.horizon_equivalence q).mp hq
+    (W : UnifiedHorizonWitness J D L)
+    (X : J)
+    (hRankDeficient : D.norm X = 0) :
+    IsArithmeticHorizon L (W.spectralMap X) :=
+  (W.horizonIff X).1 hRankDeficient
 
 /--
-Arithmetic L-divisors pull back to Freudenthal horizons.
+An arithmetic L-divisor in the spectral image pulls back to a Jordan
+rank-deficiency horizon.
 -/
 theorem arithmetic_horizon_is_geometric_horizon
-    (W : UnifiedHorizonWitness D Flux L)
-    (q : Q)
-    (hs : IsArithmeticHorizon L (W.spectralMap q)) :
-    q ∈ D.horizon :=
-  (W.horizon_equivalence q).mpr hs
+    (W : UnifiedHorizonWitness J D L)
+    (X : J)
+    (hArithmetic : IsArithmeticHorizon L (W.spectralMap X)) :
+    D.norm X = 0 :=
+  (W.horizonIff X).2 hArithmetic
 
 /--
-Entropy readout from arithmetic horizon data through geometric flux.
+The exact equivalence between the Jordan divisor and the arithmetic divisor.
 -/
-theorem entropy_eq_sqrt_abs_flux
-    (_W : UnifiedHorizonWitness D Flux L)
-    (q : Q) :
-    D.entropy q = Real.pi * Real.sqrt |Flux.flux q| :=
-  StokesFreudenthalBridge.entropy_eq_sqrt_abs_flux Flux q
+theorem geometric_horizon_iff_arithmetic_horizon
+    (W : UnifiedHorizonWitness J D L)
+    (X : J) :
+    D.norm X = 0 ↔ IsArithmeticHorizon L (W.spectralMap X) :=
+  W.horizonIff X
+
+/--
+At a geometric horizon, the arithmetic logarithmic barrier diverges.
+-/
+theorem arithmetic_barrier_diverges_at_geometric_horizon
+    (W : UnifiedHorizonWitness J D L)
+    (X : J)
+    (hRankDeficient : D.norm X = 0) :
+    ArithmeticBarrierDivergesAt L (W.spectralMap X) :=
+  W.arithmeticBarrierDivergesOnHorizon X hRankDeficient
 
 end UnifiedHorizonWitness
-
-/-! ## 4. Optional prime/Euler-product boundary interface -/
-
-/--
-Placeholder predicate for a prime/Euler-product expansion.
-
-A future concrete version should relate this to an actual Dirichlet series,
-Euler product, completed L-function, and convergence domain.
--/
-def HasEulerProductExpansion (_L : ScatteringLFunction) : Prop :=
-  True
-
-/--
-Placeholder predicate for Möbius extraction of primitive prime harmonics.
--/
-def HasMobiusPrimeFilter (_L : ScatteringLFunction) (_primitivePrimeSeries : ℂ → ℂ) : Prop :=
-  True
-
-/--
-Prime resonance data attached to a scattering L-function.
-
-This records the intended API surface without asserting analytic number theory.
--/
-structure PrimeResonanceDatum (L : ScatteringLFunction) where
-  primitivePrimeSeries : ℂ → ℂ
-  hasEulerProduct : HasEulerProductExpansion L
-  hasMobiusFilter : HasMobiusPrimeFilter L primitivePrimeSeries
-
-end
 
 end InfoGeometry.Arithmetic.LFunction

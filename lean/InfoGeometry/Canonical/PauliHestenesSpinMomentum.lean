@@ -58,10 +58,10 @@ Hermitian Pauli matrix of a real paravector:
 def pauliMatrix
     (P : PauliParavector) :
     Matrix (Fin 2) (Fin 2) ℂ :=
-  ![![((P.energy + P.pz : ℝ) : ℂ),
-      ((P.px : ℂ) - Complex.I * (P.py : ℂ))],
-    ![((P.px : ℂ) + Complex.I * (P.py : ℂ)),
-      ((P.energy - P.pz : ℝ) : ℂ)]]
+  !![((P.energy + P.pz : ℝ) : ℂ),
+      ((P.px : ℂ) - Complex.I * (P.py : ℂ));
+     ((P.px : ℂ) + Complex.I * (P.py : ℂ)),
+      ((P.energy - P.pz : ℝ) : ℂ)]
 
 /--
 The determinant of the Pauli matrix is the Minkowski norm.
@@ -97,9 +97,15 @@ This is the safe replacement for the overstrong slogan
 theorem isNull_iff_isSingularPauli
     (P : PauliParavector) :
     P.IsNull ↔ P.IsSingularPauli := by
-  unfold IsNull IsSingularPauli
-  rw [det_pauliMatrix_eq_minkowskiNormSq]
-  exact_mod_cast Iff.rfl
+  constructor
+  · intro h
+    dsimp [IsNull, IsSingularPauli] at h ⊢
+    rw [det_pauliMatrix_eq_minkowskiNormSq, h]
+    norm_num
+  · intro h
+    dsimp [IsNull, IsSingularPauli] at h ⊢
+    rw [det_pauliMatrix_eq_minkowskiNormSq] at h
+    exact_mod_cast h
 
 /--
 A mass-shell certificate.
@@ -235,7 +241,14 @@ theorem minkowskiNorm_preserved
     (L : SpinGroup)
     (X : V) :
     B.minkowskiNorm (A.actVector L X) = B.minkowskiNorm X := by
-  rw [← B.det_pauliMap, A.det_preserved, B.det_pauliMap]
+  calc
+    B.minkowskiNorm (A.actVector L X)
+        = B.det (B.pauliMap (A.actVector L X)) :=
+            (B.det_pauliMap (A.actVector L X)).symm
+    _ = B.det (B.pauliMap X) :=
+            A.det_preserved L X
+    _ = B.minkowskiNorm X :=
+            B.det_pauliMap X
 
 /-- The spin action preserves nullness. -/
 theorem isNull_of_isNull
@@ -589,13 +602,6 @@ structure SpinMomentumBridge
   sameRotorFrame :
     sameRotorFrame_law
 
-  /-- Optional null/massless branch condition. -/
-  nullMomentumCondition_law : Prop
-
-  /-- Proof of the null/massless branch condition. -/
-  nullMomentumCondition :
-    nullMomentumCondition_law
-
 namespace SpinMomentumBridge
 
 variable {Spinor Momentum SpinPlane : Type*}
@@ -606,12 +612,37 @@ theorem sameRotorFrame_valid :
     B.sameRotorFrame_law :=
   B.sameRotorFrame
 
+end SpinMomentumBridge
+
+/--
+Massless/null specialization of a spin-momentum bridge.
+
+Massive spinor states can still have coupled spin and momentum readouts.  The
+null momentum condition belongs only to a chosen massless branch.
+-/
+@[rep_depth operator]
+structure MasslessSpinMomentumBranch
+    (Spinor Momentum SpinPlane : Type*)
+    (B : SpinMomentumBridge Spinor Momentum SpinPlane) where
+  /-- Null/massless branch condition. -/
+  nullMomentumCondition_law : Prop
+
+  /-- Proof of the null/massless branch condition. -/
+  nullMomentumCondition :
+    nullMomentumCondition_law
+
+namespace MasslessSpinMomentumBranch
+
+variable {Spinor Momentum SpinPlane : Type*}
+variable {B : SpinMomentumBridge Spinor Momentum SpinPlane}
+variable (M : MasslessSpinMomentumBranch Spinor Momentum SpinPlane B)
+
 /-- The stored null/massless branch law. -/
 theorem nullMomentumCondition_valid :
-    B.nullMomentumCondition_law :=
-  B.nullMomentumCondition
+    M.nullMomentumCondition_law :=
+  M.nullMomentumCondition
 
-end SpinMomentumBridge
+end MasslessSpinMomentumBranch
 
 /--
 Covariant spinor/rotor readout packet.
@@ -803,15 +834,16 @@ variable {Spinor Rotor Bivector : Type*}
 variable {D : HestenesSpinorRotorDatum Spinor Rotor Bivector}
 variable (H : HelicityCalibration Spinor Rotor Bivector D)
 
+include H
+
 /--
 Massless momentum readouts have singular Pauli representatives.
 -/
 theorem singular_pauli_of_null_momentum
-    (H : HelicityCalibration Spinor Rotor Bivector D)
     (ψ : Spinor) :
     (D.momentumReadout ψ).IsSingularPauli :=
   (PauliParavector.isNull_iff_isSingularPauli (D.momentumReadout ψ)).mp
-    (HelicityCalibration.null_momentum H ψ)
+    (H.null_momentum ψ)
 
 /-- The stored helicity law. -/
 theorem helicity_valid :
@@ -911,7 +943,8 @@ attribute [rep_depth operator]
   HestenesSpinorRotorDatum.rotor_transport_valid
   SpinMomentumBridge
   SpinMomentumBridge.sameRotorFrame_valid
-  SpinMomentumBridge.nullMomentumCondition_valid
+  MasslessSpinMomentumBranch
+  MasslessSpinMomentumBranch.nullMomentumCondition_valid
   CovariantSpinorRotorReadouts
   CovariantSpinorRotorReadouts.common_source_valid
   CovariantSpinorRotorReadouts.distinct_readout_valid

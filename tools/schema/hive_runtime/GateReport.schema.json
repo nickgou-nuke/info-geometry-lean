@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://info-geometry.local/schema/hive_runtime/GateReport.schema.json",
+  "title": "GateReport",
+  "type": "object",
+  "required": ["schema", "report_id", "goal_id", "attempt_id", "lean_gate", "build_gate", "audit_gate", "promotion_allowed", "created_at"],
+  "properties": {
+    "schema": { "const": "hive.runtime.gate_report.v1" },
+    "report_id": { "type": "string", "minLength": 1 },
+    "goal_id": { "type": "string", "minLength": 1 },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "lean_gate": { "type": "string", "enum": ["pass", "fail", "skip"] },
+    "build_gate": { "type": "string", "enum": ["pass", "fail", "skip"] },
+    "audit_gate": { "type": "string", "enum": ["pass", "fail", "warn", "skip"] },
+    "promotion_allowed": { "type": "boolean" },
+    "reason_codes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

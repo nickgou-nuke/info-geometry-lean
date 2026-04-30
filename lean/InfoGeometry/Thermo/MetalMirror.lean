@@ -1,0 +1,725 @@
+/-
+InfoGeometry/Thermo/MetalMirror.lean
+
+Thermodynamic realization of a dissipative optical interface.
+
+A metal mirror is modeled as a reduced dissipative reflection branch together
+with an ideal lossless comparison branch. The macroscopic heat loss is the
+Bregman divergence between the ideal reflected state and the actual reflected
+state.
+
+The total information-conserving picture is represented by a
+Stinespring-Tomita dilation witness: the apparent loss in the system branch is
+routed into a mirrored commutant/environment branch.
+
+The public API is backend-generic and uses bounded real-linear channels. The
+Drazin regular positive cone specialization is retained under the `RegularCone`
+namespace.
+-/
+
+import Mathlib
+import InfoGeometry.Geometry.OperatorBregmanDivergence
+import InfoGeometry.Krein.DoubledSpace
+
+noncomputable section
+
+namespace InfoGeometry.Thermo.MetalMirror
+
+open InfoGeometry.Canonical
+open InfoGeometry.Canonical.OperatorFenchelRegularCone
+open InfoGeometry.Geometry.OperatorBregmanDivergence
+open InfoGeometry.OperatorAlgebra
+
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+namespace RegularCone
+
+/-! ## 1. Metal mirror channel -/
+
+/--
+A metal mirror channel on the regular positive operator cone.
+
+`actualFlow` is the reflected system branch. It may be dissipative or
+trace-nonincreasing when viewed alone.
+
+`idealFlow` is the lossless comparison branch, used as the reversible reference.
+
+The analytic facts such as complete positivity, trace behavior, and optical
+realizability are kept as proof-carrying certificates.
+-/
+structure MetalMirrorChannel
+    (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)) where
+  /-- Actual dissipative reflected branch. -/
+  actualFlow : OperatorEnd E →L[ℝ] OperatorEnd E
+
+  /-- Ideal lossless reflected branch for comparison. -/
+  idealFlow : OperatorEnd E →L[ℝ] OperatorEnd E
+
+  /-- Actual reflected branch preserves the regular positive cone. -/
+  actual_preserves_cone :
+    ∀ U : OperatorEnd E,
+      U ∈ regularPositiveConeOmegaD c →
+        actualFlow U ∈ regularPositiveConeOmegaD c
+
+  /-- Ideal reflected branch preserves the regular positive cone. -/
+  ideal_preserves_cone :
+    ∀ U : OperatorEnd E,
+      U ∈ regularPositiveConeOmegaD c →
+        idealFlow U ∈ regularPositiveConeOmegaD c
+
+  /--
+  Certificate that the actual reflected branch is the physical dissipative
+  reduced channel.
+  -/
+  actual_dissipative_branch : Prop
+
+  /-- Certificate that the ideal branch is the lossless/unitary comparison branch. -/
+  ideal_lossless_branch : Prop
+
+namespace MetalMirrorChannel
+
+variable
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c)
+
+/-- Actual reflected state as a regular cone point. -/
+def actualPoint
+    (U : RegularConePoint c) :
+    RegularConePoint c where
+  op := M.actualFlow U.op
+  mem := M.actual_preserves_cone U.op U.mem
+
+/-- Ideal reflected state as a regular cone point. -/
+def idealPoint
+    (U : RegularConePoint c) :
+    RegularConePoint c where
+  op := M.idealFlow U.op
+  mem := M.ideal_preserves_cone U.op U.mem
+
+@[simp]
+theorem actualPoint_op
+    (U : RegularConePoint c) :
+    (M.actualPoint U).op = M.actualFlow U.op :=
+  rfl
+
+@[simp]
+theorem idealPoint_op
+    (U : RegularConePoint c) :
+    (M.idealPoint U).op = M.idealFlow U.op :=
+  rfl
+
+end MetalMirrorChannel
+
+/-! ## 2. Stinespring-Tomita dilation socket -/
+
+/--
+A Stinespring-Tomita dilation witness for a metal mirror.
+
+The conservation law says that the ideal lossless comparison branch decomposes
+into the actual reflected system branch plus a Tomita-mirrored commutant leak.
+
+This is not a full Stinespring theorem. It is the proof-carrying socket into
+which a concrete dilation theorem can later be installed.
+-/
+structure StinespringTomitaMirrorDilation
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c) where
+  /-- Tomita/CPT mirror routing system data into the commutant/environment lane. -/
+  mirror : OperatorEnd E →L[ℝ] OperatorEnd E
+
+  /-- Leaked/environment branch. -/
+  leakFlow : OperatorEnd E →L[ℝ] OperatorEnd E
+
+  /-- Conservation law: `ideal = actual + mirrored leak`. -/
+  conservation_law :
+    ∀ U : OperatorEnd E,
+      M.idealFlow U = M.actualFlow U + mirror (leakFlow U)
+
+  /-- Law that the mirror is the intended Tomita/CPT routing. -/
+  tomita_mirror_law : Prop
+
+  /-- Evidence that the mirror is the intended Tomita/CPT routing. -/
+  tomita_mirror_certificate : tomita_mirror_law
+
+  /-- Law that the total dilated evolution is information-conserving. -/
+  dilation_conservation_law : Prop
+
+  /-- Evidence that the total dilated evolution is information-conserving. -/
+  dilation_conservation_certificate : dilation_conservation_law
+
+namespace StinespringTomitaMirrorDilation
+
+variable
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {M : MetalMirrorChannel c}
+    (D : StinespringTomitaMirrorDilation M)
+
+/-- Re-export of the Stinespring-Tomita conservation law. -/
+theorem ideal_eq_actual_add_mirrored_leak
+    (U : OperatorEnd E) :
+    M.idealFlow U = M.actualFlow U + D.mirror (D.leakFlow U) :=
+  D.conservation_law U
+
+end StinespringTomitaMirrorDilation
+
+/-! ## 3. Macroscopic heat as Bregman shear -/
+
+/--
+Macroscopic heat loss of the metal mirror.
+
+This is the Bregman divergence from the ideal lossless reflected state to the
+actual dissipative reflected state:
+
+`Heat(U) = D_Φ(ideal(U) || actual(U))`.
+
+The direction matters. This is an oriented thermodynamic readout, not a
+symmetric distance.
+-/
+@[rep_depth thermo]
+def macroscopicHeatLoss
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c)
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U : RegularConePoint c) : ℝ :=
+  operatorBregmanDivergence ω gradPhi (M.idealPoint U) (M.actualPoint U)
+
+/--
+Reverse Bregman work: the divergence from actual to ideal.
+
+This is generally different from `macroscopicHeatLoss`.
+-/
+@[rep_depth thermo]
+def recoveryWork
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c)
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U : RegularConePoint c) : ℝ :=
+  operatorBregmanDivergence ω gradPhi (M.actualPoint U) (M.idealPoint U)
+
+/-- Thermodynamic arrow/skew of the mirror channel. -/
+@[rep_depth thermo]
+def mirrorBregmanSkew
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c)
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U : RegularConePoint c) : ℝ :=
+  macroscopicHeatLoss M ω gradPhi U - recoveryWork M ω gradPhi U
+
+/--
+Heat loss is nonnegative once the regular-cone Bregman convexity datum is
+supplied.
+-/
+@[rep_depth thermo]
+theorem macroscopicHeatLoss_nonneg
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {ω : OperatorEnd E →L[ℝ] ℝ}
+    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
+    (M : MetalMirrorChannel c)
+    (C : OperatorBregmanConvexityDatum c ω gradPhi)
+    (U : RegularConePoint c) :
+    0 ≤ macroscopicHeatLoss M ω gradPhi U :=
+  OperatorBregmanConvexityDatum.nonneg C (M.idealPoint U) (M.actualPoint U)
+
+/--
+If the actual and ideal reflected branches agree on `U`, the heat loss
+vanishes.
+-/
+@[rep_depth thermo]
+theorem macroscopicHeatLoss_zero_of_actual_eq_ideal
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c)
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U : RegularConePoint c)
+    (hU : M.actualFlow U.op = M.idealFlow U.op) :
+    macroscopicHeatLoss M ω gradPhi U = 0 := by
+  dsimp [
+    macroscopicHeatLoss,
+    MetalMirrorChannel.actualPoint,
+    MetalMirrorChannel.idealPoint,
+    operatorBregmanDivergence
+  ]
+  rw [← hU]
+  simp
+
+/-! ## 4. Ricci flux bridge -/
+
+/--
+A metal mirror Ricci-flux bridge.
+
+This is the proof-carrying capstone socket. It does not assert that every metal
+mirror automatically realizes a given TKK Ricci flux. Instead, it records the
+concrete generator assignment and the equality between macroscopic heat loss
+and scalar Ricci-flux readout.
+-/
+structure MetalMirrorRicciFluxBridge
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {ω : OperatorEnd E →L[ℝ] ℝ}
+    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
+    {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
+    {J L Obs : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    {T : TKKLieClosure J L}
+    {R : RicciFluxReadout J L Obs T}
+    (M : MetalMirrorChannel c)
+    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R) where
+  /-- Left/source generator extracted from a regular cone input. -/
+  sourceLeft : RegularConePoint c → J
+
+  /-- Right/source generator extracted from a regular cone input. -/
+  sourceRight : RegularConePoint c → J
+
+  /-- Heat equals the scalar Ricci-flux readout for the assigned generators. -/
+  heat_eq_ricci_flux :
+    ∀ U : RegularConePoint c,
+      macroscopicHeatLoss M ω gradPhi U =
+        R.flux (sourceLeft U) (sourceRight U)
+
+  /--
+  Certificate that the heat/Ricci-flux identification is compatible with the
+  supplied Bregman second-variation bridge.
+  -/
+  bregman_bridge_compatibility : Prop
+
+namespace MetalMirrorRicciFluxBridge
+
+variable
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {ω : OperatorEnd E →L[ℝ] ℝ}
+    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
+    {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
+    {J L Obs : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    {T : TKKLieClosure J L}
+    {R : RicciFluxReadout J L Obs T}
+    {M : MetalMirrorChannel c}
+    {B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R}
+    (X : MetalMirrorRicciFluxBridge M B)
+
+/-- Re-export the heat/Ricci-flux bridge law. -/
+theorem heat_eq_flux
+    (U : RegularConePoint c) :
+    macroscopicHeatLoss M ω gradPhi U =
+      R.flux (X.sourceLeft U) (X.sourceRight U) :=
+  X.heat_eq_ricci_flux U
+
+end MetalMirrorRicciFluxBridge
+
+/-! ## 5. Owner targets -/
+
+/-- Owner target for a metal mirror dissipative channel over the regular cone. -/
+def MetalMirrorChannelOwnerTarget
+    (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)) : Prop :=
+  Nonempty (MetalMirrorChannel c)
+
+/-- Owner target for a Stinespring-Tomita dilation of a metal mirror channel. -/
+def StinespringTomitaMirrorDilationOwnerTarget
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (M : MetalMirrorChannel c) : Prop :=
+  Nonempty (StinespringTomitaMirrorDilation M)
+
+/-- Owner target for the metal mirror Ricci-flux bridge. -/
+def MetalMirrorRicciFluxBridgeOwnerTarget
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {ω : OperatorEnd E →L[ℝ] ℝ}
+    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
+    {F : ModularRegularConeFlow c}
+    {D2 : SecondVariationAtZero}
+    {J L Obs : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    {T : TKKLieClosure J L}
+    {R : RicciFluxReadout J L Obs T}
+    (M : MetalMirrorChannel c)
+    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R) : Prop :=
+  Nonempty (MetalMirrorRicciFluxBridge M B)
+
+end RegularCone
+
+/-! ## 6. Backend-generic metal mirror witness layer -/
+
+/-! ### Regular cone and Bregman backend -/
+
+/-- A regular cone/domain on which the thermodynamic potential is valid. -/
+structure RegularConeDatum
+    (Op : Type*) where
+  cone : Set Op
+
+/-- A point of a regular cone. -/
+structure RegularConePoint
+    {Op : Type*}
+    (Ω : RegularConeDatum Op) where
+  op : Op
+  mem : op ∈ Ω.cone
+
+namespace RegularConePoint
+
+variable {Op : Type*} {Ω : RegularConeDatum Op}
+
+/-- Coercion to the underlying operator/state. -/
+instance : CoeOut (RegularConePoint Ω) Op where
+  coe U := U.op
+
+@[simp]
+theorem coe_mk
+    (x : Op)
+    (hx : x ∈ Ω.cone) :
+    ((RegularConePoint.mk x hx : RegularConePoint Ω) : Op) = x :=
+  rfl
+
+end RegularConePoint
+
+/--
+A Bregman divergence backend on a regular cone.
+
+`div ideal actual` is the thermodynamic shear between the ideal lossless state
+and the actual dissipative state.
+
+The divergence may be total as a function, but its geometric guarantees are
+only asserted on the regular cone.
+-/
+structure BregmanDivergenceDatum
+    (Op : Type*)
+    (Ω : RegularConeDatum Op) where
+  div : Op → Op → ℝ
+
+  nonneg_on_cone :
+    ∀ {x y : Op},
+      x ∈ Ω.cone →
+      y ∈ Ω.cone →
+        0 ≤ div x y
+
+  self_eq_zero_on_cone :
+    ∀ {x : Op},
+      x ∈ Ω.cone →
+        div x x = 0
+
+/-! ### Metal mirror channel -/
+
+/--
+A metal mirror channel.
+
+`actualFlow` is the dissipative observed channel.
+
+`idealUnitary` is the lossless reference channel.
+
+Both are required to preserve the chosen regular cone.
+-/
+structure MetalMirrorChannel
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (Ω : RegularConeDatum Op) where
+  actualFlow : Op →L[ℝ] Op
+  idealUnitary : Op →L[ℝ] Op
+
+  actual_preserves_cone :
+    ∀ U : Op,
+      U ∈ Ω.cone →
+        actualFlow U ∈ Ω.cone
+
+  ideal_preserves_cone :
+    ∀ U : Op,
+      U ∈ Ω.cone →
+        idealUnitary U ∈ Ω.cone
+
+  /-- Physical law: the actual branch is dissipative/reduced. -/
+  actual_dissipative_branch_law : Prop
+
+  /-- Evidence that the actual branch is dissipative/reduced. -/
+  actual_dissipative_branch_certificate :
+    actual_dissipative_branch_law
+
+  /-- Physical law: the ideal branch is lossless/reference. -/
+  ideal_lossless_branch_law : Prop
+
+  /-- Evidence that the ideal branch is lossless/reference. -/
+  ideal_lossless_branch_certificate :
+    ideal_lossless_branch_law
+
+namespace MetalMirrorChannel
+
+variable
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (M : MetalMirrorChannel Op Ω)
+
+/-- Actual reflected state as a regular cone point. -/
+def actualPoint
+    (U : RegularConePoint Ω) :
+    RegularConePoint Ω where
+  op := M.actualFlow U.op
+  mem := M.actual_preserves_cone U.op U.mem
+
+/-- Ideal reflected state as a regular cone point. -/
+def idealPoint
+    (U : RegularConePoint Ω) :
+    RegularConePoint Ω where
+  op := M.idealUnitary U.op
+  mem := M.ideal_preserves_cone U.op U.mem
+
+end MetalMirrorChannel
+
+/-! ### Stinespring/Tomita dilation -/
+
+/--
+Stinespring/Tomita dilation witness for the mirror.
+
+The conservation law says that the ideal lossless channel decomposes into the
+observed dissipative channel plus a mirrored environment/commutant component.
+-/
+structure StinespringMirrorDilation
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (M : MetalMirrorChannel Op Ω) where
+  mirror : Op →L[ℝ] Op
+  commutantFlow : Op →L[ℝ] Op
+
+  conservation_law :
+    ∀ U : Op,
+      M.idealUnitary U = M.actualFlow U + mirror (commutantFlow U)
+
+namespace StinespringMirrorDilation
+
+variable
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    {M : MetalMirrorChannel Op Ω}
+
+/-- The dissipative deficit is exactly the mirrored commutant/environment flow. -/
+theorem ideal_sub_actual_eq_mirror_commutant
+    (D : StinespringMirrorDilation Op M)
+    (U : Op) :
+    M.idealUnitary U - M.actualFlow U =
+      D.mirror (D.commutantFlow U) := by
+  have h := D.conservation_law U
+  rw [h]
+  abel
+
+end StinespringMirrorDilation
+
+/-! ### Heat loss as Bregman shear -/
+
+/-- Macroscopic heat loss as Bregman divergence:
+
+`Heat(U) = DΦ(idealFlow U, actualFlow U)`.
+-/
+def macroscopicHeatLoss
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (U : RegularConePoint Ω) : ℝ :=
+  B.div (M.idealPoint U).op (M.actualPoint U).op
+
+/-- Reverse Bregman work: the divergence from actual to ideal. -/
+def recoveryWork
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (U : RegularConePoint Ω) : ℝ :=
+  B.div (M.actualPoint U).op (M.idealPoint U).op
+
+/-- Thermodynamic arrow/skew of the mirror channel. -/
+def mirrorBregmanSkew
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (U : RegularConePoint Ω) : ℝ :=
+  macroscopicHeatLoss B M U - recoveryWork B M U
+
+/-- Heat loss is nonnegative. -/
+theorem macroscopicHeatLoss_nonneg
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (U : RegularConePoint Ω) :
+    0 ≤ macroscopicHeatLoss B M U :=
+  B.nonneg_on_cone
+    (M.idealPoint U).mem
+    (M.actualPoint U).mem
+
+/-- If actual flow agrees with ideal flow at `U`, the Bregman heat loss vanishes. -/
+theorem macroscopicHeatLoss_eq_zero_of_actual_eq_ideal
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (U : RegularConePoint Ω)
+    (h : M.actualFlow U.op = M.idealUnitary U.op) :
+    macroscopicHeatLoss B M U = 0 := by
+  unfold macroscopicHeatLoss
+  simp [MetalMirrorChannel.actualPoint, MetalMirrorChannel.idealPoint, h]
+  exact B.self_eq_zero_on_cone (M.ideal_preserves_cone U.op U.mem)
+
+/-! ### Ricci-flux bridge socket -/
+
+/--
+Ricci/Bregman flux readout.
+
+This is intentionally abstract. Concrete geometry modules can instantiate it
+from a Hessian, curvature operator, Ricci tensor, or TKK flux bridge.
+-/
+structure RicciFluxReadout
+    (Op : Type*) where
+  flux : Op → ℝ
+
+/--
+Bridge saying that the metal-mirror Bregman heat equals the Ricci flux readout.
+
+This is a witness, not an unconditional theorem.
+-/
+structure MetalMirrorHeatRicciFluxBridge
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    (B : BregmanDivergenceDatum Op Ω)
+    (M : MetalMirrorChannel Op Ω)
+    (R : RicciFluxReadout Op) where
+  heat_eq_flux :
+    ∀ U : RegularConePoint Ω,
+      macroscopicHeatLoss B M U = R.flux U.op
+
+  /-- Law identifying the Ricci readout with TKK grade slippage. -/
+  tkk_grade_slippage_law : Prop
+
+  /-- Evidence for the TKK grade-slippage law. -/
+  tkk_grade_slippage_certificate : tkk_grade_slippage_law
+
+  /-- Law identifying the Bregman Hessian with the selected flux readout. -/
+  bregman_hessian_law : Prop
+
+  /-- Evidence for the Bregman Hessian law. -/
+  bregman_hessian_certificate : bregman_hessian_law
+
+namespace MetalMirrorHeatRicciFluxBridge
+
+variable
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Ω : RegularConeDatum Op}
+    {B : BregmanDivergenceDatum Op Ω}
+    {M : MetalMirrorChannel Op Ω}
+    {R : RicciFluxReadout Op}
+
+/-- Heat equals Ricci flux once the bridge datum is supplied. -/
+theorem heat_is_ricci_flux
+    (W : MetalMirrorHeatRicciFluxBridge Op B M R)
+    (U : RegularConePoint Ω) :
+    macroscopicHeatLoss B M U = R.flux U.op :=
+  W.heat_eq_flux U
+
+end MetalMirrorHeatRicciFluxBridge
+
+/-! ### Optical calibration socket -/
+
+/--
+Optical calibration for a metal mirror.
+
+This is where the thermodynamic shear is connected to measurable optical data:
+reflectivity, retardance, and refractive-index readouts.
+-/
+structure MetalMirrorOpticalCalibration
+    (Op : Type*) where
+  reflectivity : Op → ℝ
+  retardance : Op → ℝ
+  ellipticity : Op → ℝ
+  refractiveIndexReadout : Op → ℂ
+
+  heat_controls_absorption_law : Prop
+  heat_controls_absorption_certificate : heat_controls_absorption_law
+
+  hessian_controls_retardance_law : Prop
+  hessian_controls_retardance_certificate : hessian_controls_retardance_law
+
+  retardance_controls_ellipticity_law : Prop
+  retardance_controls_ellipticity_certificate :
+    retardance_controls_ellipticity_law
+
+  refractive_index_calibration_law : Prop
+  refractive_index_calibration_certificate : refractive_index_calibration_law
+
+/-! ### Admissibility package -/
+
+/--
+Thermodynamic readout package for a metal mirror.
+
+This records the scalar heat flux as the Bregman heat loss of a concrete
+channel/backend pair.
+-/
+structure MetalMirrorThermoReadout
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
+  Ω : RegularConeDatum Op
+  bregman : BregmanDivergenceDatum Op Ω
+  channel : MetalMirrorChannel Op Ω
+  heatFlux : RegularConePoint Ω → ℝ
+  heatFlux_eq :
+    ∀ U : RegularConePoint Ω,
+      heatFlux U = macroscopicHeatLoss bregman channel U
+
+namespace MetalMirrorThermoReadout
+
+variable
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (R : MetalMirrorThermoReadout Op)
+
+/-- Heat flux is nonnegative. -/
+theorem heatFlux_nonneg
+    (U : RegularConePoint R.Ω) :
+    0 ≤ R.heatFlux U := by
+  rw [R.heatFlux_eq U]
+  exact macroscopicHeatLoss_nonneg R.bregman R.channel U
+
+end MetalMirrorThermoReadout
+
+/--
+Admissibility package for constructing a calibrated metal-mirror heat/flux
+bridge.
+-/
+structure MetalMirrorRicciFluxAdmissible
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
+  readout : MetalMirrorThermoReadout Op
+  ricciFlux : Op → ℝ
+
+  heat_eq_ricciFlux :
+    ∀ U : RegularConePoint readout.Ω,
+      readout.heatFlux U = ricciFlux U.op
+
+  tkk_grade_slippage_law : Prop
+  tkk_grade_slippage_certificate : tkk_grade_slippage_law
+
+  bregman_hessian_law : Prop
+  bregman_hessian_certificate : bregman_hessian_law
+
+/-- A calibrated Ricci-flux bridge exists from admissible data. -/
+theorem metalMirrorRicciFluxBridge_nonempty_of_admissible
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (h : MetalMirrorRicciFluxAdmissible Op) :
+    Nonempty
+      (MetalMirrorHeatRicciFluxBridge
+        Op h.readout.bregman h.readout.channel
+          { flux := h.ricciFlux }) := by
+  refine ⟨{
+    heat_eq_flux := ?_
+    tkk_grade_slippage_law := h.tkk_grade_slippage_law
+    tkk_grade_slippage_certificate := h.tkk_grade_slippage_certificate
+    bregman_hessian_law := h.bregman_hessian_law
+    bregman_hessian_certificate := h.bregman_hessian_certificate
+  }⟩
+  intro U
+  change macroscopicHeatLoss h.readout.bregman h.readout.channel U =
+    h.ricciFlux U.op
+  rw [← h.heat_eq_ricciFlux U]
+  exact (h.readout.heatFlux_eq U).symm
+
+end InfoGeometry.Thermo.MetalMirror

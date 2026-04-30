@@ -49,19 +49,19 @@ def setup_sandbox(sandbox_path, constitution_path):
     sandbox_path.mkdir(parents=True)
     
     # Configure Asymmetric Dispatch for DGX Spark
-    # Port 8000: Qwen3-32B (Proposer)
+    # Port 18789: Qwen3.6-35B (Resident Proposer)
     # Port 8001: DeepSeek-Prover-V2-7B (Formalizer)
     config_content = {
         "model": {
             "provider": "custom",
-            "base_url": "http://localhost:8000/v1", # Default to Proposer
+            "base_url": "http://localhost:18789/v1", # Default to Proposer
             "api_key": "ollama",
-            "default": "qwen3-32b-fp8"
+            "default": "qwen3-35b-fp8"
         },
         "agents": {
             "proposer": {
-                "base_url": "http://localhost:8000/v1",
-                "model": "qwen3-32b-fp8"
+                "base_url": "http://localhost:18789/v1",
+                "model": "qwen3-35b-fp8"
             },
             "formalizer": {
                 "base_url": "http://localhost:8001/v1",
@@ -93,7 +93,7 @@ def setup_sandbox(sandbox_path, constitution_path):
 
 def check_backends():
     import requests
-    endpoints = ["http://localhost:8000/v1/models", "http://localhost:8001/v1/models"]
+    endpoints = ["http://localhost:18789/v1/models", "http://localhost:8001/v1/models"]
     for url in endpoints:
         try:
             response = requests.get(url, timeout=5)

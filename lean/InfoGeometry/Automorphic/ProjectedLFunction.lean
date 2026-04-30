@@ -1,0 +1,388 @@
+/-
+InfoGeometry/Automorphic/ProjectedLFunction.lean
+
+Projected automorphic L-function sockets.
+
+This module attaches arithmetic spectral readouts to the Siegel-Eisenstein
+projector algebra. It does not assert a Langlands correspondence. Instead it
+defines the canonical operation:
+
+  L_cusp(F, s) = Λ_s(ℜ_P F)
+
+where ℜ_P is the cuspidal projector from SiegelResonance.lean.
+
+The later Euler-product / completed L-function / zeta-potential layer should
+instantiate the witness structures defined here.
+-/
+
+import Mathlib
+import InfoGeometry.Automorphic.SiegelResonance
+
+noncomputable section
+
+namespace InfoGeometry.Automorphic.SiegelResonance
+
+universe uBulk uBoundary
+
+/-! ## 1. Automorphic spectral functionals -/
+
+/--
+A family of complex-valued real-linear spectral functionals indexed by the
+complex spectral parameter `s`.
+
+For a concrete automorphic model, `coeff s` may be a Mellin transform, a Hecke
+eigen-coefficient functional, a Whittaker coefficient, or another arithmetic
+readout.
+-/
+structure AutomorphicLFunctional
+    (Bulk : Type uBulk)
+    [AddCommGroup Bulk] [Module ℝ Bulk] where
+  coeff : ℂ → Bulk →ₗ[ℝ] ℂ
+
+/--
+The raw, unprojected automorphic spectral function.
+-/
+def rawLFunction
+    {Bulk : Type uBulk}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    (Λ : AutomorphicLFunctional Bulk)
+    (F : Bulk) : ℂ → ℂ :=
+  fun s => Λ.coeff s F
+
+/--
+The boundary/Eisenstein spectral readout.
+-/
+def boundaryLFunction
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (Λ : AutomorphicLFunctional Bulk)
+    (F : Bulk) : ℂ → ℂ :=
+  fun s => Λ.coeff s (W.boundaryProjector F)
+
+/--
+The cuspidally projected automorphic L-function.
+
+This is the arithmetic readout after removing the Eisenstein/boundary tail.
+-/
+def cuspidalLFunction
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (Λ : AutomorphicLFunctional Bulk)
+    (F : Bulk) : ℂ → ℂ :=
+  fun s => Λ.coeff s (W.cuspidalProjector F)
+
+namespace SiegelEisensteinWitness
+
+variable {Bulk : Type uBulk} {Boundary : Type uBoundary}
+variable [AddCommGroup Bulk] [Module ℝ Bulk]
+variable [AddCommGroup Boundary] [Module ℝ Boundary]
+variable (W : SiegelEisensteinWitness Bulk Boundary)
+variable (Λ : AutomorphicLFunctional Bulk)
+
+/-! ## 2. Projection identities for L-functions -/
+
+/--
+The raw spectral readout decomposes into boundary plus cuspidal readouts.
+-/
+theorem rawLFunction_eq_boundary_add_cuspidal
+    (F : Bulk) (s : ℂ) :
+    rawLFunction Λ F s =
+      boundaryLFunction W Λ F s + cuspidalLFunction W Λ F s := by
+  unfold rawLFunction boundaryLFunction cuspidalLFunction
+  rw [← W.bulk_decomposition F]
+  simp
+
+/--
+The cuspidal projector is invariant under adding an Eisenstein boundary lift.
+-/
+theorem cuspidalProjector_add_eisenstein
+    (F : Bulk) (b : Boundary) :
+    W.cuspidalProjector (F + W.eisenstein b) =
+      W.cuspidalProjector F := by
+  calc
+    W.cuspidalProjector (F + W.eisenstein b)
+        = W.cuspidalProjector F +
+            W.cuspidalProjector (W.eisenstein b) := by
+          exact map_add W.cuspidalProjector F (W.eisenstein b)
+    _ = W.cuspidalProjector F + 0 := by
+          rw [W.cuspidalProjector_eisenstein b]
+    _ = W.cuspidalProjector F := by
+          simp
+
+/--
+The cuspidal L-function is unchanged by adding Eisenstein boundary data.
+-/
+theorem cuspidalLFunction_add_eisenstein
+    (F : Bulk) (b : Boundary) :
+    cuspidalLFunction W Λ (F + W.eisenstein b) =
+      cuspidalLFunction W Λ F := by
+  funext s
+  unfold cuspidalLFunction
+  rw [W.cuspidalProjector_add_eisenstein F b]
+
+/--
+The cuspidal L-function of a pure Eisenstein lift is zero.
+-/
+theorem cuspidalLFunction_eisenstein_eq_zero
+    (b : Boundary) :
+    cuspidalLFunction W Λ (W.eisenstein b) = 0 := by
+  funext s
+  unfold cuspidalLFunction
+  rw [W.cuspidalProjector_eisenstein b]
+  simp
+
+/--
+If a bulk state is already killed by the Siegel operator, then the cuspidal
+L-function equals the raw L-function.
+-/
+theorem cuspidalLFunction_eq_raw_of_siegel_zero
+    (F : Bulk)
+    (hF : W.siegel F = 0) :
+    cuspidalLFunction W Λ F = rawLFunction Λ F := by
+  funext s
+  unfold cuspidalLFunction rawLFunction
+  rw [(W.fixed_by_cuspidalProjector_iff_siegel_zero F).2 hF]
+
+/--
+Kernel-membership version of the previous theorem.
+-/
+theorem cuspidalLFunction_eq_raw_of_mem_ker
+    (F : Bulk)
+    (hF : F ∈ LinearMap.ker W.siegel) :
+    cuspidalLFunction W Λ F = rawLFunction Λ F := by
+  exact W.cuspidalLFunction_eq_raw_of_siegel_zero Λ F
+    (LinearMap.mem_ker.mp hF)
+
+/--
+A spectral functional kills the Eisenstein boundary if it vanishes on every
+Eisenstein lift.
+-/
+def KillsBoundary : Prop :=
+  ∀ (s : ℂ) (b : Boundary), Λ.coeff s (W.eisenstein b) = 0
+
+/--
+If the functional kills the boundary, the boundary L-function vanishes.
+-/
+theorem boundaryLFunction_eq_zero_of_killsBoundary
+    (hΛ : W.KillsBoundary Λ)
+    (F : Bulk) :
+    boundaryLFunction W Λ F = 0 := by
+  funext s
+  unfold boundaryLFunction boundaryProjector
+  exact hΛ s (W.siegel F)
+
+/--
+If the functional kills the Eisenstein boundary, the raw readout is already the
+cuspidal readout.
+-/
+theorem rawLFunction_eq_cuspidalLFunction_of_killsBoundary
+    (hΛ : W.KillsBoundary Λ)
+    (F : Bulk) :
+    rawLFunction Λ F = cuspidalLFunction W Λ F := by
+  funext s
+  have hsplit := W.rawLFunction_eq_boundary_add_cuspidal Λ F s
+  rw [hsplit]
+  have hb :
+      boundaryLFunction W Λ F s = 0 := by
+    have hfun := W.boundaryLFunction_eq_zero_of_killsBoundary Λ hΛ F
+    exact congrFun hfun s
+  rw [hb, zero_add]
+
+end SiegelEisensteinWitness
+
+/-! ## 3. Resonance sets -/
+
+/--
+A spectral parameter is an automorphic resonance when the associated
+L-function vanishes there.
+-/
+def IsAutomorphicResonance
+    (L : ℂ → ℂ)
+    (s : ℂ) : Prop :=
+  L s = 0
+
+/--
+The resonance set of a complex-valued automorphic L-function.
+-/
+def AutomorphicResonanceSet
+    (L : ℂ → ℂ) : Set ℂ :=
+  {s : ℂ | IsAutomorphicResonance L s}
+
+@[simp]
+theorem mem_automorphicResonanceSet_iff
+    (L : ℂ → ℂ)
+    (s : ℂ) :
+    s ∈ AutomorphicResonanceSet L ↔ IsAutomorphicResonance L s := by
+  rfl
+
+/-! ## 4. Projected automorphic L-function witnesses -/
+
+/--
+A proof-carrying package saying that `L` is obtained by applying a spectral
+functional to the cuspidal projection of a bulk automorphic state.
+-/
+structure ProjectedAutomorphicLFunctionWitness
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    (W : SiegelEisensteinWitness Bulk Boundary) where
+  functional : AutomorphicLFunctional Bulk
+  bulkState : Bulk
+  L : ℂ → ℂ
+  L_eq_projected :
+    L = cuspidalLFunction W functional bulkState
+
+namespace ProjectedAutomorphicLFunctionWitness
+
+variable {Bulk : Type uBulk} {Boundary : Type uBoundary}
+variable [AddCommGroup Bulk] [Module ℝ Bulk]
+variable [AddCommGroup Boundary] [Module ℝ Boundary]
+variable {W : SiegelEisensteinWitness Bulk Boundary}
+
+/--
+Evaluation of the projected L-function.
+-/
+theorem eval_eq_projected
+    (P : ProjectedAutomorphicLFunctionWitness W)
+    (s : ℂ) :
+    P.L s =
+      P.functional.coeff s (W.cuspidalProjector P.bulkState) := by
+  rw [P.L_eq_projected]
+  rfl
+
+/--
+A resonance of the projected L-function is exactly a zero of the projected
+functional readout.
+-/
+theorem resonance_iff_projected_zero
+    (P : ProjectedAutomorphicLFunctionWitness W)
+    (s : ℂ) :
+    IsAutomorphicResonance P.L s ↔
+      P.functional.coeff s (W.cuspidalProjector P.bulkState) = 0 := by
+  unfold IsAutomorphicResonance
+  rw [P.eval_eq_projected s]
+
+end ProjectedAutomorphicLFunctionWitness
+
+/-! ## 5. Euler-product and completed-L-function sockets -/
+
+/--
+Named predicate for an Euler-product realization of an automorphic L-function.
+
+A concrete future version should include local factors, convergence domain,
+prime indexing, and equality to the analytic product on that domain.
+-/
+def HasEulerProduct
+    (_L : ℂ → ℂ)
+    (PrimeIndex : Type)
+    (_localFactor : PrimeIndex → ℂ → ℂ)
+    (_convergenceRegion : Set ℂ) : Prop :=
+  True
+
+/--
+Euler-product data attached to an automorphic L-function.
+-/
+structure EulerProductData
+    (L : ℂ → ℂ) where
+  PrimeIndex : Type
+  localFactor : PrimeIndex → ℂ → ℂ
+  convergenceRegion : Set ℂ
+  hasEulerProduct :
+    HasEulerProduct L PrimeIndex localFactor convergenceRegion
+
+/--
+Named predicate for a completed L-function package.
+
+A future version should encode gamma factors, conductor, center, and functional
+equation.
+-/
+def HasCompletedFunctionalEquation
+    (_L _completedL : ℂ → ℂ) : Prop :=
+  True
+
+/--
+Witness connecting a projected automorphic L-function to prime/Euler data.
+
+This is the arithmetic socket for the later zeta-potential layer.
+-/
+structure LanglandsPrimeResonanceWitness
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    (P : ProjectedAutomorphicLFunctionWitness W) where
+  eulerProduct : EulerProductData P.L
+  completedL : ℂ → ℂ
+  completedFunctionalEquation :
+    HasCompletedFunctionalEquation P.L completedL
+
+/-! ## 6. Owner targets -/
+
+/--
+Owner target for producing projected automorphic L-functions from a spectral
+functional and a bulk state.
+
+This target is purely algebraic and is constructible immediately.
+-/
+def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
+  ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
+  ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
+  ∀ (W : SiegelEisensteinWitness Bulk Boundary),
+  ∀ (_Λ : AutomorphicLFunctional Bulk),
+  ∀ (_F : Bulk),
+    Nonempty (ProjectedAutomorphicLFunctionWitness W)
+
+/--
+The projected L-function owner target is satisfied by definition.
+-/
+theorem projectedAutomorphicLFunctionOwnerTarget :
+    ProjectedAutomorphicLFunctionOwnerTarget := by
+  intro Bulk _ _ Boundary _ _ W Λ F
+  exact ⟨{
+    functional := Λ
+    bulkState := F
+    L := cuspidalLFunction W Λ F
+    L_eq_projected := rfl
+  }⟩
+
+/--
+Owner target for attaching Euler-product and completed-L-function data.
+
+This one is intentionally witness-gated: the Euler product and functional
+equation are arithmetic input, not consequences of the split-exact projector
+algebra alone.
+-/
+def LanglandsPrimeResonanceOwnerTarget : Prop :=
+  ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
+  ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
+  ∀ (W : SiegelEisensteinWitness Bulk Boundary),
+  ∀ (P : ProjectedAutomorphicLFunctionWitness W),
+  ∀ (Eul : EulerProductData P.L),
+  ∀ (completedL : ℂ → ℂ),
+    HasCompletedFunctionalEquation P.L completedL →
+      Nonempty
+        {R : LanglandsPrimeResonanceWitness P //
+          R.eulerProduct = Eul ∧ R.completedL = completedL}
+
+/--
+The Langlands-prime resonance owner target is satisfied once the arithmetic
+Euler/completed data are supplied.
+-/
+theorem langlandsPrimeResonanceOwnerTarget :
+    LanglandsPrimeResonanceOwnerTarget := by
+  intro Bulk _ _ Boundary _ _ W P Eul completedL hCompleted
+  exact ⟨{
+    val := {
+      eulerProduct := Eul
+      completedL := completedL
+      completedFunctionalEquation := hCompleted
+    }
+    property := by
+      exact ⟨rfl, rfl⟩
+  }⟩
+
+end InfoGeometry.Automorphic.SiegelResonance

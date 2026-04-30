@@ -35,6 +35,7 @@ import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.StinespringChiralLightcone
+import InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame
 import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.OperatorAlgebra.TKKClosure

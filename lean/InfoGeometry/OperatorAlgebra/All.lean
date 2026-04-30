@@ -33,6 +33,7 @@ import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
+import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.StinespringChiralLightcone

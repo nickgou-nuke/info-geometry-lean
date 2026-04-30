@@ -6,6 +6,7 @@ import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.ModularKLDivergence
+import InfoGeometry.Thermo.SusceptibilityHessian
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo
 

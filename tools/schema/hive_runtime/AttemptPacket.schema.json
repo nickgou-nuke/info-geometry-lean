@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://info-geometry.local/schema/hive_runtime/AttemptPacket.schema.json",
+  "title": "AttemptPacket",
+  "type": "object",
+  "required": ["schema", "attempt_id", "goal_id", "worker_id", "task_kind", "started_at", "status"],
+  "properties": {
+    "schema": { "const": "hive.runtime.attempt.v1" },
+    "attempt_id": { "type": "string", "minLength": 1 },
+    "goal_id": { "type": "string", "minLength": 1 },
+    "worker_id": { "type": "string", "minLength": 1 },
+    "task_kind": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["running", "completed", "failed", "timed_out", "cancelled"]
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "context_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "packet_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "backend_kind": {
+      "type": "string",
+      "enum": ["provider_api", "codex_cli", "copilot_cli", "gemini_cli", "local_openai_compatible", "manual_override", "unknown"]
+    },
+    "error_code": { "type": "string" },
+    "error_summary": { "type": "string" }
+  },
+  "additionalProperties": true
+}

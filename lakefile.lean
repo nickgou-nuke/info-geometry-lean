@@ -300,8 +300,13 @@ lean_exe dagIndexer where
   root := `DAG.Indexer
   supportInterpreter := true
 
+lean_exe groundTruthHarvester where
+  root := `DAG.GroundTruthHarvester
+  supportInterpreter := true
+
 /--
-Experimental authoritative DAG facet. It intentionally reuses the managed
+Experimental authoritative DAG facet.
+ It intentionally reuses the managed
 Python refresh path and skips its internal prebuild because Lake already tracks
 the built `dagIndexer` executable and the umbrella import-root olean below.
 -/

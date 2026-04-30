@@ -17,6 +17,8 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 
+open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
+
 /--
 Spin-modular compatibility witness.
 
@@ -199,6 +201,73 @@ theorem unruh_temperature :
 end ModularAccelerationCalibration
 
 /--
+Natural-units Unruh temperature readout for a proper acceleration `a`.
+-/
+noncomputable def unruhTemperature
+    (a : ℝ) : ℝ :=
+  a / (2 * Real.pi)
+
+/--
+Natural-units Unruh inverse temperature readout for a proper acceleration `a`.
+-/
+noncomputable def unruhBeta
+    (a : ℝ) : ℝ :=
+  (2 * Real.pi) / a
+
+/--
+Calibration identifying modular/KMS time with physical Rindler/horizon boost
+time.
+
+The value `beta = 2π / a` is not a consequence of an abstract modular flow
+alone; it comes from the geometric normalization of the boost parameter.
+-/
+structure ModularBoostTemperatureCalibration
+    (Op : Type*) [Mul Op]
+    (σ : OperatorFlow Op)
+    (beta : ℝ) where
+  /-- Proper acceleration of the observer. -/
+  acceleration : ℝ
+
+  /-- Positive acceleration. -/
+  acceleration_pos :
+    0 < acceleration
+
+  /-- Modular flow is geometrically calibrated as boost/Rindler time. -/
+  modular_flow_is_boost_flow : Prop
+
+  /-- Evidence for the modular/boost calibration. -/
+  modular_flow_is_boost_flow_holds :
+    modular_flow_is_boost_flow
+
+  /-- Physical inverse temperature normalization. -/
+  beta_eq_unruhBeta :
+    beta = unruhBeta acceleration
+
+namespace ModularBoostTemperatureCalibration
+
+variable {Op : Type*} [Mul Op]
+variable {σ : OperatorFlow Op}
+variable {beta : ℝ}
+variable (C : ModularBoostTemperatureCalibration Op σ beta)
+
+/-- Re-export of the geometric boost-flow calibration. -/
+theorem modular_flow_is_boost_flow_valid :
+    C.modular_flow_is_boost_flow :=
+  C.modular_flow_is_boost_flow_holds
+
+/--
+The calibrated physical temperature is `a / 2π`.
+-/
+theorem temperature_eq_unruh :
+    1 / beta = unruhTemperature C.acceleration := by
+  rcases C with ⟨a, ha, _hBoost, _hBoostValid, hbeta⟩
+  subst beta
+  unfold unruhBeta unruhTemperature
+  field_simp [ne_of_gt ha, Real.pi_ne_zero]
+
+end ModularBoostTemperatureCalibration
+
+/--
 Owner target for deriving the modular acceleration calibration from geometric
 horizon/boost data.
 -/
@@ -228,6 +297,11 @@ attribute [rep_depth operator]
   ModularAccelerationCalibration.modular_beta_eq_two_pi
   ModularAccelerationCalibration.physical_beta
   ModularAccelerationCalibration.unruh_temperature
+  unruhTemperature
+  unruhBeta
+  ModularBoostTemperatureCalibration
+  ModularBoostTemperatureCalibration.modular_flow_is_boost_flow_valid
+  ModularBoostTemperatureCalibration.temperature_eq_unruh
   ModularUnruhCalibrationOwnerTarget
   SpinUnruhCalibrationOwnerTarget
 

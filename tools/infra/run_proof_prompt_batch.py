@@ -15,8 +15,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from tools.infra.hermes_bounded_runner import call_openai_compatible
 
-DEFAULT_OPENAI_BASE_URL = "http://127.0.0.1:30002/v1"
-DEFAULT_OPENAI_MODEL = "deepseek-prover-v2-7b-q8_0.gguf"
+DEFAULT_OPENAI_BASE_URL = "http://127.0.0.1:8001/v1"
+DEFAULT_OPENAI_MODEL = "deepseek-prover-v2-7b"
 DEFAULT_API_KEY = "***"
 DEFAULT_COPILOT_MODEL = "gpt-4.1"
 PROMPT_DIR = REPO_ROOT / "artifacts" / "hermes_loop" / "proof_prompts"

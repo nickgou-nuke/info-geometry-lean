@@ -147,6 +147,7 @@ import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Canonical.GeneratedFlow
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Canonical.LiteratureTwistorHodgePalatial
+import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylCharacterVandermondeShadow
@@ -189,8 +190,8 @@ import InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
 import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GeometricCalculusSurgery
-import InfoGeometry.Canonical.GeometricFreudenthalBoundary
-import InfoGeometry.Canonical.OperatorFreudenthalBoundary
+import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
+import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
@@ -268,6 +269,8 @@ import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Canonical.ArnoldNetworkIntertwiner
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Canonical.HestenesKreinModularGeometry
+import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.ModularSpectralWedge
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge

@@ -301,7 +301,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--black-book-limit", type=int, default=3)
     ap.add_argument("--max-context-chars-per-file", type=int, default=2400)
 
-    ap.add_argument("--base-url-base", default="http://127.0.0.1:8000/v1")
+    ap.add_argument("--base-url-base", default="http://127.0.0.1:18789/v1")
     ap.add_argument("--model-base", default="qwen3-proposer")
     ap.add_argument("--api-key-base", default="EMPTY")
     ap.add_argument("--provider-base", choices=["openai-chat", "gemini-cli"], default="openai-chat")
@@ -312,7 +312,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--samples-base", type=int, default=4)
     ap.add_argument("--temperature-base", type=float, default=0.95)
 
-    ap.add_argument("--base-url-tuned", default="http://127.0.0.1:8000/v1")
+    ap.add_argument("--base-url-tuned", default="http://127.0.0.1:18789/v1")
     ap.add_argument("--model-tuned", default="deepseek-formalizer")
     ap.add_argument("--api-key-tuned", default="EMPTY")
     ap.add_argument("--provider-tuned", choices=["openai-chat", "gemini-cli"], default="openai-chat")

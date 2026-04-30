@@ -137,6 +137,74 @@ theorem spin_connection_generates_boost_valid :
 
 end UnruhTemperatureCalibration
 
+/-! ## Constructive modular acceleration normalization -/
+
+/--
+Modular acceleration calibration.
+
+This is the constructive natural-unit Unruh socket.  The final temperature
+formula is not stored as a hypothesis: it is derived from the physical inverse
+temperature calibration `β = 2π / a` and the definition `T = β⁻¹`.
+-/
+structure ModularAccelerationCalibration where
+  /-- Proper acceleration, in natural units. -/
+  acceleration : ℝ
+
+  /-- Nonzero acceleration. -/
+  acceleration_ne_zero : acceleration ≠ 0
+
+  /-- Dimensionless modular inverse temperature. -/
+  betaModular : ℝ
+
+  /-- Modular KMS period/inverse temperature is `2π`. -/
+  betaModular_eq_two_pi :
+    betaModular = 2 * Real.pi
+
+  /-- Physical inverse temperature. -/
+  betaPhysical : ℝ
+
+  /-- Calibration from modular to proper time: `β = 2π / a`. -/
+  betaPhysical_eq :
+    betaPhysical = (2 * Real.pi) / acceleration
+
+  /-- Physical temperature in natural units. -/
+  temperature : ℝ
+
+  /-- Temperature is inverse physical beta. -/
+  temperature_eq_inv_beta :
+    temperature = betaPhysical⁻¹
+
+namespace ModularAccelerationCalibration
+
+variable (C : ModularAccelerationCalibration)
+
+/-- Re-export of the modular KMS normalization. -/
+theorem modular_beta_eq_two_pi :
+    C.betaModular = 2 * Real.pi :=
+  C.betaModular_eq_two_pi
+
+/-- Re-export of the physical inverse-temperature calibration. -/
+theorem physical_beta :
+    C.betaPhysical = (2 * Real.pi) / C.acceleration :=
+  C.betaPhysical_eq
+
+/--
+Natural-unit Unruh temperature derived from the acceleration/beta calibration.
+-/
+theorem unruh_temperature :
+    C.temperature = C.acceleration / (2 * Real.pi) := by
+  rw [C.temperature_eq_inv_beta, C.betaPhysical_eq]
+  field_simp [C.acceleration_ne_zero, Real.pi_ne_zero]
+
+end ModularAccelerationCalibration
+
+/--
+Owner target for deriving the modular acceleration calibration from geometric
+horizon/boost data.
+-/
+def ModularUnruhCalibrationOwnerTarget : Prop :=
+  Nonempty ModularAccelerationCalibration
+
 /-! ## Owner target -/
 
 /--
@@ -156,7 +224,11 @@ attribute [rep_depth operator]
   UnruhTemperatureCalibration.temperature_eq_acceleration_over_two_pi
   UnruhTemperatureCalibration.modular_physical_calibration_valid
   UnruhTemperatureCalibration.spin_connection_generates_boost_valid
+  ModularAccelerationCalibration
+  ModularAccelerationCalibration.modular_beta_eq_two_pi
+  ModularAccelerationCalibration.physical_beta
+  ModularAccelerationCalibration.unruh_temperature
+  ModularUnruhCalibrationOwnerTarget
   SpinUnruhCalibrationOwnerTarget
 
 end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
-

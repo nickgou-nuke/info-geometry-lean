@@ -595,6 +595,22 @@ structure SpinMomentumBridge
   /-- Bivector/spin-plane readout. -/
   spinPlaneOf : Spinor → SpinPlane
 
+  /-- Minkowski/mass-shell norm of the momentum readout. -/
+  minkowskiNorm : Momentum → ℝ
+
+  /-- Spinor norm whose square generates the mass shell. -/
+  spinorNorm : Spinor → ℝ
+
+  /--
+  Mass-shell / scalar invariant compatibility.
+
+  This is a field of the bridge, not a theorem-shaped placeholder returning
+  only `Prop`.
+  -/
+  mass_shell :
+    ∀ ψ : Spinor,
+      minkowskiNorm (momentumOf ψ) = (spinorNorm ψ) ^ (2 : ℕ)
+
   /-- Law saying both readouts are taken in the same rotor/Lorentz frame. -/
   sameRotorFrame_law : Prop
 
@@ -611,6 +627,12 @@ variable (B : SpinMomentumBridge Spinor Momentum SpinPlane)
 theorem sameRotorFrame_valid :
     B.sameRotorFrame_law :=
   B.sameRotorFrame
+
+/-- The mass-shell compatibility carried by the spin-momentum bridge. -/
+theorem mass_is_scalar_invariant
+    (ψ : Spinor) :
+    B.minkowskiNorm (B.momentumOf ψ) = (B.spinorNorm ψ) ^ (2 : ℕ) :=
+  B.mass_shell ψ
 
 end SpinMomentumBridge
 
@@ -943,6 +965,7 @@ attribute [rep_depth operator]
   HestenesSpinorRotorDatum.rotor_transport_valid
   SpinMomentumBridge
   SpinMomentumBridge.sameRotorFrame_valid
+  SpinMomentumBridge.mass_is_scalar_invariant
   MasslessSpinMomentumBranch
   MasslessSpinMomentumBranch.nullMomentumCondition_valid
   CovariantSpinorRotorReadouts

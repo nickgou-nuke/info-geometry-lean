@@ -38,7 +38,6 @@ import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
-import InfoGeometry.OperatorAlgebra.UnruhTemperatureCalibration
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.StinespringChiralLightcone
 import InfoGeometry.OperatorAlgebra.SpinBogoliubovFrame

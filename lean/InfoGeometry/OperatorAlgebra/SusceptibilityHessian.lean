@@ -62,6 +62,18 @@ theorem not_regular_of_singular
 
 end HessianResponseDatum
 
+/--
+The Hessian degeneracy boundary.
+
+This is the optical/material response boundary used by snap and singular
+response modules.  It is just the named singular locus of the Hessian datum.
+-/
+def IsHessianDegenerate
+    {State : Type*} [NormedAddCommGroup State] [NormedSpace ℝ State]
+    (H : HessianResponseDatum State)
+    (U : State) : Prop :=
+  H.singularAt U
+
 /-! ## 2. Material susceptibility socket -/
 
 /--
@@ -182,6 +194,91 @@ theorem fresnel_law_valid :
   F.fresnel_law_holds
 
 end FresnelCoefficientReadout
+
+/-! ## 3a. State-level polarization eigen-response -/
+
+/--
+Eigen-response of the susceptibility/Hessian in the `s/p` polarization basis.
+
+This is a state-indexed calibration socket: a concrete material/interface
+model supplies the laws saying these are the local eigenchannel readouts.
+-/
+structure StatePolarizationEigenResponse
+    (State : Type*) where
+  /-- Geometric/material response in the `s` channel. -/
+  responseS : State → ℂ
+
+  /-- Geometric/material response in the `p` channel. -/
+  responseP : State → ℂ
+
+  /-- Certificate that `responseS` is the calibrated `s` eigen-response. -/
+  s_eigen_law : Prop
+
+  /-- Evidence for the `s` eigen-response law. -/
+  s_eigen_law_holds :
+    s_eigen_law
+
+  /-- Certificate that `responseP` is the calibrated `p` eigen-response. -/
+  p_eigen_law : Prop
+
+  /-- Evidence for the `p` eigen-response law. -/
+  p_eigen_law_holds :
+    p_eigen_law
+
+namespace StatePolarizationEigenResponse
+
+variable {State : Type*}
+variable (E : StatePolarizationEigenResponse State)
+
+/-- Re-export of the `s` eigen-response law. -/
+theorem s_eigen_valid :
+    E.s_eigen_law :=
+  E.s_eigen_law_holds
+
+/-- Re-export of the `p` eigen-response law. -/
+theorem p_eigen_valid :
+    E.p_eigen_law :=
+  E.p_eigen_law_holds
+
+end StatePolarizationEigenResponse
+
+/--
+Calibration saying Fresnel coefficients are obtained from the calibrated
+state-level polarization eigen-responses.
+-/
+structure FresnelFromStateEigenResponse
+    (State : Type*)
+    (E : StatePolarizationEigenResponse State)
+    (F : FresnelCoefficientReadout State) where
+  /-- The `s` Fresnel coefficient is the `s` eigen-response. -/
+  rs_eq_responseS :
+    ∀ U : State, F.rs U = E.responseS U
+
+  /-- The `p` Fresnel coefficient is the `p` eigen-response. -/
+  rp_eq_responseP :
+    ∀ U : State, F.rp U = E.responseP U
+
+namespace FresnelFromStateEigenResponse
+
+variable {State : Type*}
+variable {E : StatePolarizationEigenResponse State}
+variable {F : FresnelCoefficientReadout State}
+
+/-- The `s` response readout is the Fresnel `r_s`. -/
+theorem responseS_eq_rs
+    (C : FresnelFromStateEigenResponse State E F)
+    (U : State) :
+    E.responseS U = F.rs U :=
+  (FresnelFromStateEigenResponse.rs_eq_responseS C U).symm
+
+/-- The `p` response readout is the Fresnel `r_p`. -/
+theorem responseP_eq_rp
+    (C : FresnelFromStateEigenResponse State E F)
+    (U : State) :
+    E.responseP U = F.rp U :=
+  (FresnelFromStateEigenResponse.rp_eq_responseP C U).symm
+
+end FresnelFromStateEigenResponse
 
 /--
 Canonical `s/p` Jones event built directly from calibrated Fresnel coefficients.
@@ -314,6 +411,22 @@ theorem jones_11_eq_rp
   rw [JonesOpticalEvent.jones_apply_same_one]
   exact C.coeff1_eq_rp U
 
+/--
+The calibrated Jones matrix is diagonal in the local `s/p` eigenbasis.
+-/
+theorem jones_offdiag_01_zero
+    (U : State) :
+    (C.eventOf U).jones 0 1 = 0 :=
+  JonesOpticalEvent.jones_apply_offdiag_zero_one (C.eventOf U)
+
+/--
+The calibrated Jones matrix is diagonal in the local `s/p` eigenbasis.
+-/
+theorem jones_offdiag_10_zero
+    (U : State) :
+    (C.eventOf U).jones 1 0 = 0 :=
+  JonesOpticalEvent.jones_apply_offdiag_one_zero (C.eventOf U)
+
 end JonesFromMaterialCalibration
 
 /-! ## 4. Retardance and absorption readouts -/
@@ -338,6 +451,30 @@ structure RetardanceReadout
   /-- Evidence for the retardance/ellipticity law. -/
   retardance_law_holds :
     retardance_law
+
+  /-- Ellipticity law, separated for modules that only need amplitude/shape data. -/
+  ellipticity_law : Prop
+
+  /-- Evidence for the ellipticity law. -/
+  ellipticity_law_holds :
+    ellipticity_law
+
+namespace RetardanceReadout
+
+variable {State : Type*}
+variable (R : RetardanceReadout State)
+
+/-- Re-export of the retardance law. -/
+theorem retardance_valid :
+    R.retardance_law :=
+  R.retardance_law_holds
+
+/-- Re-export of the ellipticity law. -/
+theorem ellipticity_valid :
+    R.ellipticity_law :=
+  R.ellipticity_law_holds
+
+end RetardanceReadout
 
 /--
 Absorption/heat readout from Jones coefficients.
@@ -455,6 +592,18 @@ theorem jones_11_eq_rp
     (C.eventOf U).jones 1 1 = F.rp U :=
   C.jonesCalibration.jones_11_eq_rp U
 
+/-- The calibrated Jones matrix is diagonal in the local `s/p` eigenbasis. -/
+theorem jones_offdiag_01_zero
+    (U : State) :
+    (C.eventOf U).jones 0 1 = 0 :=
+  C.jonesCalibration.jones_offdiag_01_zero U
+
+/-- The calibrated Jones matrix is diagonal in the local `s/p` eigenbasis. -/
+theorem jones_offdiag_10_zero
+    (U : State) :
+    (C.eventOf U).jones 1 0 = 0 :=
+  C.jonesCalibration.jones_offdiag_10_zero U
+
 /-- Re-export that the event uses the `s/p` Fresnel basis. -/
 theorem event_basis_sp_valid
     (U : State) :
@@ -472,6 +621,117 @@ theorem absorption_matches_bregman_heat_valid :
   C.absorption_matches_bregman_heat_holds
 
 end OpticalResponseCalibration
+
+/--
+Full state-level optical response calibration with explicit polarization
+eigen-response.
+
+This extends the compatibility surface without replacing the older
+`OpticalResponseCalibration` API.  The Fresnel data are still witness-gated by
+the supplied material and boundary calibration.
+-/
+structure OpticalResponseEigenCalibration
+    (State : Type*) [NormedAddCommGroup State] [NormedSpace ℝ State]
+    (H : HessianResponseDatum State)
+    (M : MaterialResponseModel State)
+    (E : StatePolarizationEigenResponse State)
+    (F : FresnelCoefficientReadout State) where
+  /-- Hessian-to-susceptibility calibration. -/
+  hessianSusceptibility :
+    HessianSusceptibilityCalibration State H M
+
+  /-- Fresnel coefficients as calibrated eigen-response readouts. -/
+  fresnelFromEigen :
+    FresnelFromStateEigenResponse State E F
+
+  /-- Material-to-Jones calibration. -/
+  jonesCalibration :
+    JonesFromMaterialCalibration State M F
+
+  /-- Retardance/ellipticity readout. -/
+  retardance :
+    RetardanceReadout State
+
+  /-- Absorption/heat readout. -/
+  absorption :
+    OpticalAbsorptionReadout State
+
+  /-- Hessian controls local optical response. -/
+  hessian_controls_optical_response : Prop
+
+  /-- Evidence for local optical-response control. -/
+  hessian_controls_optical_response_holds :
+    hessian_controls_optical_response
+
+  /-- Absorption readout is calibrated to Bregman heat. -/
+  absorption_matches_bregman_heat : Prop
+
+  /-- Evidence for the Bregman heat calibration. -/
+  absorption_matches_bregman_heat_holds :
+    absorption_matches_bregman_heat
+
+  /-- Retardance/ellipticity is calibrated by the Hessian eigen-response. -/
+  hessian_controls_retardance : Prop
+
+  /-- Evidence for the retardance calibration. -/
+  hessian_controls_retardance_holds :
+    hessian_controls_retardance
+
+namespace OpticalResponseEigenCalibration
+
+variable {State : Type*} [NormedAddCommGroup State] [NormedSpace ℝ State]
+variable {H : HessianResponseDatum State}
+variable {M : MaterialResponseModel State}
+variable {E : StatePolarizationEigenResponse State}
+variable {F : FresnelCoefficientReadout State}
+
+/-- The `s` eigen-response readout is the Fresnel `r_s`. -/
+theorem responseS_eq_rs
+    (C : OpticalResponseEigenCalibration State H M E F)
+    (U : State) :
+    E.responseS U = F.rs U :=
+  FresnelFromStateEigenResponse.responseS_eq_rs C.fresnelFromEigen U
+
+/-- The `p` eigen-response readout is the Fresnel `r_p`. -/
+theorem responseP_eq_rp
+    (C : OpticalResponseEigenCalibration State H M E F)
+    (U : State) :
+    E.responseP U = F.rp U :=
+  FresnelFromStateEigenResponse.responseP_eq_rp C.fresnelFromEigen U
+
+/-- The calibrated Jones matrix has `r_s` in the first diagonal channel. -/
+theorem jones_00_eq_rs
+    (C : OpticalResponseEigenCalibration State H M E F)
+    (U : State) :
+    (C.jonesCalibration.eventOf U).jones 0 0 = F.rs U :=
+  C.jonesCalibration.jones_00_eq_rs U
+
+/-- The calibrated Jones matrix has `r_p` in the second diagonal channel. -/
+theorem jones_11_eq_rp
+    (C : OpticalResponseEigenCalibration State H M E F)
+    (U : State) :
+    (C.jonesCalibration.eventOf U).jones 1 1 = F.rp U :=
+  C.jonesCalibration.jones_11_eq_rp U
+
+/-- Re-export of the Hessian optical-response law. -/
+theorem hessian_controls_optical_response_valid :
+    ∀ C : OpticalResponseEigenCalibration State H M E F,
+    C.hessian_controls_optical_response :=
+  fun C => C.hessian_controls_optical_response_holds
+
+/-- Re-export of the Bregman heat calibration law. -/
+theorem absorption_matches_bregman_heat_valid :
+    ∀ C : OpticalResponseEigenCalibration State H M E F,
+    C.absorption_matches_bregman_heat :=
+  fun C => C.absorption_matches_bregman_heat_holds
+
+/-- Re-export of the retardance calibration law. -/
+theorem hessian_controls_retardance_valid :
+    ∀ C : OpticalResponseEigenCalibration State H M E F,
+    C.hessian_controls_retardance :=
+  fun C => C.hessian_controls_retardance_holds
+
+end OpticalResponseEigenCalibration
 
 /-! ## 5. Material-response bridge with Fresnel eigenvalues -/
 
@@ -880,6 +1140,66 @@ theorem p_reflection_eigenvalue
 
 end SusceptibilityHessianFresnelBridge
 
+/-! ## 6. Stinespring heat coupling -/
+
+/--
+Coupling between optical absorption and a Stinespring/Bregman heat ledger.
+-/
+structure OpticalStinespringHeatCalibration
+    (State Sys Comm : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    (B : BregmanDivergenceDatum Sys)
+    (C : DissipativeChannel Sys)
+    (D : StinespringTomitaDilation Sys Comm C) where
+  /-- Embed or read an optical material state as a system state. -/
+  stateToSystem :
+    State → Sys
+
+  /-- Optical absorption readout on material states. -/
+  absorptionFromState :
+    State → ℝ
+
+  /-- Hidden-information bridge for the Stinespring/Tomita dilation. -/
+  hiddenHeatBridge :
+    HeatEqualsHiddenInformation Sys Comm B C D
+
+  /--
+  Optical absorption agrees with Bregman heat after mapping the optical state
+  into the system carrier.
+  -/
+  absorption_eq_heat :
+    ∀ U : State,
+      absorptionFromState U =
+        heatLoss B C (stateToSystem U)
+
+namespace OpticalStinespringHeatCalibration
+
+variable
+    {State Sys Comm : Type*}
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    {B : BregmanDivergenceDatum Sys}
+    {C : DissipativeChannel Sys}
+    {D : StinespringTomitaDilation Sys Comm C}
+
+variable (K : OpticalStinespringHeatCalibration State Sys Comm B C D)
+
+/--
+Optical absorption is the hidden-information readout through the
+Stinespring/Tomita bridge.
+-/
+theorem absorption_eq_hidden_information
+    (U : State) :
+    K.absorptionFromState U =
+      K.hiddenHeatBridge.hiddenReadout.hiddenInfo
+        (D.hiddenFlow (K.stateToSystem U)) := by
+  rw [K.absorption_eq_heat U]
+  exact K.hiddenHeatBridge.heat_is_hidden_commutant_information
+    (K.stateToSystem U)
+
+end OpticalStinespringHeatCalibration
+
 /--
 Compatibility predicate for the material-response Hessian/Fresnel bridge.
 
@@ -928,6 +1248,7 @@ theorem susceptibilityHessianOwnerTarget :
 attribute [rep_depth operator]
   HessianResponseDatum
   HessianResponseDatum.not_regular_of_singular
+  IsHessianDegenerate
   MaterialResponseModel
   MaterialResponseModel.material_law_valid
   HessianSusceptibilityCalibration
@@ -935,6 +1256,12 @@ attribute [rep_depth operator]
   HessianSusceptibilityCalibration.regular_response_valid_apply
   FresnelCoefficientReadout
   FresnelCoefficientReadout.fresnel_law_valid
+  StatePolarizationEigenResponse
+  StatePolarizationEigenResponse.s_eigen_valid
+  StatePolarizationEigenResponse.p_eigen_valid
+  FresnelFromStateEigenResponse
+  FresnelFromStateEigenResponse.responseS_eq_rs
+  FresnelFromStateEigenResponse.responseP_eq_rp
   spJonesEventOfFresnel
   spJonesEventOfFresnel_basis
   spJonesEventOfFresnel_coeff0
@@ -946,16 +1273,30 @@ attribute [rep_depth operator]
   JonesFromMaterialCalibration.event_basis_sp_valid
   JonesFromMaterialCalibration.jones_00_eq_rs
   JonesFromMaterialCalibration.jones_11_eq_rp
+  JonesFromMaterialCalibration.jones_offdiag_01_zero
+  JonesFromMaterialCalibration.jones_offdiag_10_zero
   RetardanceReadout
+  RetardanceReadout.retardance_valid
+  RetardanceReadout.ellipticity_valid
   OpticalAbsorptionReadout
   OpticalResponseCalibration
   OpticalResponseCalibration.ofFresnel
   OpticalResponseCalibration.eventOf
   OpticalResponseCalibration.jones_00_eq_rs
   OpticalResponseCalibration.jones_11_eq_rp
+  OpticalResponseCalibration.jones_offdiag_01_zero
+  OpticalResponseCalibration.jones_offdiag_10_zero
   OpticalResponseCalibration.event_basis_sp_valid
   OpticalResponseCalibration.hessian_controls_optical_response_valid
   OpticalResponseCalibration.absorption_matches_bregman_heat_valid
+  OpticalResponseEigenCalibration
+  OpticalResponseEigenCalibration.responseS_eq_rs
+  OpticalResponseEigenCalibration.responseP_eq_rp
+  OpticalResponseEigenCalibration.jones_00_eq_rs
+  OpticalResponseEigenCalibration.jones_11_eq_rp
+  OpticalResponseEigenCalibration.hessian_controls_optical_response_valid
+  OpticalResponseEigenCalibration.absorption_matches_bregman_heat_valid
+  OpticalResponseEigenCalibration.hessian_controls_retardance_valid
   InformationPotentialDatum
   InformationPotentialDatum.hessian_symmetric
   InformationPotentialDatum.hessian_nonneg
@@ -983,6 +1324,8 @@ attribute [rep_depth operator]
   SusceptibilityHessianFresnelBridge
   SusceptibilityHessianFresnelBridge.s_reflection_eigenvalue
   SusceptibilityHessianFresnelBridge.p_reflection_eigenvalue
+  OpticalStinespringHeatCalibration
+  OpticalStinespringHeatCalibration.absorption_eq_hidden_information
   MaterialSusceptibilityHessianCompatibility
   MaterialSusceptibilityHessianOwnerTarget
   SusceptibilityHessianOwnerTarget

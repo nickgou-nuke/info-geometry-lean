@@ -1200,6 +1200,129 @@ theorem absorption_eq_hidden_information
 
 end OpticalStinespringHeatCalibration
 
+/-! ## 6a. PT hidden-sector Stinespring clinch -/
+
+/--
+Optical PT Stinespring clinch.
+
+This is the witness-gated statement that a coherent optical event is booked in
+the PT sector and that its apparent absorption is exactly the hidden
+commutant-information readout supplied by the Stinespring/Tomita dilation.
+
+The Jones event supplies the visible optical tag.  The Stinespring heat
+calibration supplies the conservation and hidden-information ledger.
+-/
+structure OpticalPTStinespringClinch
+    (State Sys Comm : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    (B : BregmanDivergenceDatum Sys)
+    (C : DissipativeChannel Sys)
+    (D : StinespringTomitaDilation Sys Comm C) where
+  /-- Optical absorption-to-hidden-information heat ledger. -/
+  opticalHeat :
+    OpticalStinespringHeatCalibration State Sys Comm B C D
+
+  /-- Visible coherent Jones event attached to the optical state. -/
+  eventOf :
+    State → JonesOpticalEvent
+
+  /-- The optical event is booked in the PT sector. -/
+  event_tag_pt :
+    ∀ U : State, (eventOf U).tag = V4Tag.PT
+
+  /-- Model-specific law that this PT sector is the intended commutant/dark readout. -/
+  pt_commutant_sector_law : Prop
+
+  /-- Evidence for the PT commutant-sector law. -/
+  pt_commutant_sector_certificate :
+    pt_commutant_sector_law
+
+namespace OpticalPTStinespringClinch
+
+variable
+    {State Sys Comm : Type*}
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    {B : BregmanDivergenceDatum Sys}
+    {C : DissipativeChannel Sys}
+    {D : StinespringTomitaDilation Sys Comm C}
+
+variable (K : OpticalPTStinespringClinch State Sys Comm B C D)
+
+/-- The visible optical event is tagged by the PT sector. -/
+theorem event_tag_eq_PT
+    (U : State) :
+    (K.eventOf U).tag = V4Tag.PT :=
+  K.event_tag_pt U
+
+/-- Re-export of the PT commutant-sector certificate. -/
+theorem pt_commutant_sector_valid :
+    K.pt_commutant_sector_law :=
+  K.pt_commutant_sector_certificate
+
+/--
+Optical absorption is exactly the hidden commutant-information readout.
+-/
+theorem absorption_eq_hidden_information
+    (U : State) :
+    K.opticalHeat.absorptionFromState U =
+      K.opticalHeat.hiddenHeatBridge.hiddenReadout.hiddenInfo
+        (D.hiddenFlow (K.opticalHeat.stateToSystem U)) :=
+  K.opticalHeat.absorption_eq_hidden_information U
+
+/--
+Bregman heat is exactly the hidden commutant-information readout.
+-/
+theorem heat_eq_hidden_information
+    (U : State) :
+    heatLoss B C (K.opticalHeat.stateToSystem U) =
+      K.opticalHeat.hiddenHeatBridge.hiddenReadout.hiddenInfo
+        (D.hiddenFlow (K.opticalHeat.stateToSystem U)) :=
+  K.opticalHeat.hiddenHeatBridge.heat_is_hidden_commutant_information
+    (K.opticalHeat.stateToSystem U)
+
+/--
+The hidden commutant-information readout is nonnegative on optical states.
+-/
+theorem hidden_information_nonneg
+    (U : State) :
+    0 ≤ K.opticalHeat.hiddenHeatBridge.hiddenReadout.hiddenInfo
+      (D.hiddenFlow (K.opticalHeat.stateToSystem U)) :=
+  K.opticalHeat.hiddenHeatBridge.hidden_information_nonneg
+    (K.opticalHeat.stateToSystem U)
+
+/--
+Optical absorption is nonnegative because it is hidden commutant information.
+-/
+theorem absorption_nonneg
+    (U : State) :
+    0 ≤ K.opticalHeat.absorptionFromState U := by
+  rw [K.absorption_eq_hidden_information U]
+  exact K.hidden_information_nonneg U
+
+/--
+The apparent visible deficit is exactly the recovered hidden commutant flow.
+-/
+theorem visible_deficit_eq_recovered_hidden
+    (U : State) :
+    C.ideal (K.opticalHeat.stateToSystem U) -
+        C.actual (K.opticalHeat.stateToSystem U) =
+      D.recoverHidden (D.hiddenFlow (K.opticalHeat.stateToSystem U)) :=
+  D.ideal_sub_actual_eq_recovered_hidden (K.opticalHeat.stateToSystem U)
+
+/-- Re-export of the Tomita commutant-routing certificate. -/
+theorem tomita_commutant_routing_valid :
+    D.tomita_commutant_routing_law :=
+  D.tomita_commutant_routing
+
+/-- Re-export of the visible-observer inaccessibility certificate. -/
+theorem hidden_inaccessible_to_visible_observer_valid :
+    D.hidden_inaccessible_to_visible_observer_law :=
+  D.hidden_inaccessible_to_visible_observer
+
+end OpticalPTStinespringClinch
+
 /-! ## 7. Bregman/Fenchel Hessian to Jones calibration -/
 
 /--
@@ -1787,6 +1910,16 @@ attribute [rep_depth operator]
   SusceptibilityHessianFresnelBridge.p_reflection_eigenvalue
   OpticalStinespringHeatCalibration
   OpticalStinespringHeatCalibration.absorption_eq_hidden_information
+  OpticalPTStinespringClinch
+  OpticalPTStinespringClinch.event_tag_eq_PT
+  OpticalPTStinespringClinch.pt_commutant_sector_valid
+  OpticalPTStinespringClinch.absorption_eq_hidden_information
+  OpticalPTStinespringClinch.heat_eq_hidden_information
+  OpticalPTStinespringClinch.hidden_information_nonneg
+  OpticalPTStinespringClinch.absorption_nonneg
+  OpticalPTStinespringClinch.visible_deficit_eq_recovered_hidden
+  OpticalPTStinespringClinch.tomita_commutant_routing_valid
+  OpticalPTStinespringClinch.hidden_inaccessible_to_visible_observer_valid
   BregmanHessianResponse
   BregmanHessianResponse.hessian_symmetric
   BregmanHessianResponse.hessian_nonnegative

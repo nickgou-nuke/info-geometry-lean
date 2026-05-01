@@ -1200,6 +1200,467 @@ theorem absorption_eq_hidden_information
 
 end OpticalStinespringHeatCalibration
 
+/-! ## 7. Bregman/Fenchel Hessian to Jones calibration -/
+
+/--
+A Bregman/Fenchel Hessian readout of an information potential.
+
+The Hessian is real-valued because it is the information-geometric response
+metric.  Complex optical response enters only through material calibration.
+-/
+structure BregmanHessianResponse
+    (State Tangent : Type*) [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Hessian pairing at a state. -/
+  hessianAt : State → Tangent → Tangent → ℝ
+
+  /-- Symmetry of the Hessian pairing. -/
+  symmetric :
+    ∀ s X Y, hessianAt s X Y = hessianAt s Y X
+
+  /-- Nonnegativity / convex response. -/
+  nonnegative :
+    ∀ s X, 0 ≤ hessianAt s X X
+
+  /-- Certificate that this Hessian comes from the intended potential. -/
+  bregman_hessian_law : Prop
+
+  /-- Evidence for the Hessian law. -/
+  bregman_hessian_certificate :
+    bregman_hessian_law
+
+namespace BregmanHessianResponse
+
+variable {State Tangent : Type*} [AddCommGroup Tangent] [Module ℝ Tangent]
+variable (H : BregmanHessianResponse State Tangent)
+
+/-- Re-export Hessian symmetry. -/
+theorem hessian_symmetric
+    (s : State)
+    (X Y : Tangent) :
+    H.hessianAt s X Y = H.hessianAt s Y X :=
+  H.symmetric s X Y
+
+/-- Re-export Hessian nonnegativity. -/
+theorem hessian_nonnegative
+    (s : State)
+    (X : Tangent) :
+    0 ≤ H.hessianAt s X X :=
+  H.nonnegative s X
+
+/-- Re-export the potential-origin certificate. -/
+theorem bregman_hessian_valid :
+    H.bregman_hessian_law :=
+  H.bregman_hessian_certificate
+
+end BregmanHessianResponse
+
+/--
+Complex material susceptibility.
+
+The value is complex because the reactive and absorptive material responses
+are both part of the optical readout.
+-/
+structure SusceptibilityDatum
+    (State Freq : Type*) where
+  /-- Complex susceptibility. -/
+  susceptibility : State → Freq → ℂ
+
+  /-- Material-response law. -/
+  susceptibility_law : Prop
+
+  /-- Evidence for the susceptibility law. -/
+  susceptibility_certificate :
+    susceptibility_law
+
+/--
+State-indexed dielectric response calibrated from susceptibility.
+
+The actual material equation, such as `epsilon = 1 + susceptibility`, is kept
+proof-carrying at this layer.
+-/
+structure StateDielectricResponseDatum
+    (State Freq : Type*) where
+  /-- Complex dielectric function. -/
+  epsilon : State → Freq → ℂ
+
+  /-- Optional magnetic response. -/
+  mu : State → Freq → ℂ
+
+  /-- Relation between susceptibility and dielectric response. -/
+  dielectric_law : Prop
+
+  /-- Evidence for the dielectric law. -/
+  dielectric_certificate :
+    dielectric_law
+
+/--
+Complex refractive-index response.
+
+Branch choice and material model are explicit proof-carrying data.
+-/
+structure ComplexRefractiveIndexDatum
+    (State Freq : Type*) where
+  /-- Complex refractive index. -/
+  N : State → Freq → ℂ
+
+  /-- Branch/material law connecting `N` to dielectric data. -/
+  refractive_index_law : Prop
+
+  /-- Evidence for the refractive-index law. -/
+  refractive_index_certificate :
+    refractive_index_law
+
+/--
+Calibration from a Bregman Hessian to material susceptibility.
+
+This is the witness-gated bridge saying that the local information-geometric
+response is the material response readout in a concrete model.
+-/
+structure BregmanHessianSusceptibilityCalibration
+    (State Tangent Freq : Type*)
+    [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Bregman/Fenchel Hessian response. -/
+  hessian :
+    BregmanHessianResponse State Tangent
+
+  /-- Complex susceptibility datum. -/
+  susceptibility :
+    SusceptibilityDatum State Freq
+
+  /-- Bridge law from Hessian response to susceptibility. -/
+  hessian_controls_susceptibility_law : Prop
+
+  /-- Evidence for the bridge law. -/
+  hessian_controls_susceptibility_certificate :
+    hessian_controls_susceptibility_law
+
+/--
+Fresnel coefficient readout from a complex refractive-index model.
+
+`coeff_s` and `coeff_p` are optical amplitude reflection coefficients.
+-/
+structure FresnelFromRefractiveIndex
+    (State Freq Angle : Type*) where
+  /-- s-polarized reflection coefficient. -/
+  coeff_s : State → Freq → Angle → ℂ
+
+  /-- p-polarized reflection coefficient. -/
+  coeff_p : State → Freq → Angle → ℂ
+
+  /-- Fresnel law certificate. -/
+  fresnel_law : Prop
+
+  /-- Evidence for the Fresnel law. -/
+  fresnel_certificate :
+    fresnel_law
+
+/--
+Response eigenvalues in the local polarization basis.
+
+Mode `0` is the first channel and mode `1` is the second channel.
+-/
+structure OpticalResponseEigenvalues
+    (State Freq Angle : Type*) where
+  /-- Optical response eigenvalue for each channel. -/
+  eigenvalue : State → Freq → Angle → Fin 2 → ℂ
+
+  /-- Eigenbasis of the response. -/
+  basis : PolarizationBasis
+
+  /-- Eigenvalue law/certificate. -/
+  eigenvalue_law : Prop
+
+  /-- Evidence for the eigenvalue law. -/
+  eigenvalue_certificate :
+    eigenvalue_law
+
+/--
+Complete Hessian/Fresnel calibration.
+
+This packages Hessian response, susceptibility, dielectric response,
+refractive index, optical response eigenvalues, and Fresnel coefficients.
+-/
+structure SusceptibilityFresnelCalibration
+    (State Tangent Freq Angle : Type*)
+    [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Hessian-to-susceptibility calibration. -/
+  hessianSusceptibility :
+    BregmanHessianSusceptibilityCalibration State Tangent Freq
+
+  /-- Dielectric response. -/
+  dielectric :
+    StateDielectricResponseDatum State Freq
+
+  /-- Complex refractive-index response. -/
+  refractiveIndex :
+    ComplexRefractiveIndexDatum State Freq
+
+  /-- Optical response eigenvalues. -/
+  responseEigenvalues :
+    OpticalResponseEigenvalues State Freq Angle
+
+  /-- Fresnel coefficient readout. -/
+  fresnel :
+    FresnelFromRefractiveIndex State Freq Angle
+
+  /-- The `s` Fresnel coefficient is the first response eigenvalue. -/
+  coeff_s_eq_eigen_zero :
+    ∀ s : State, ∀ omega : Freq, ∀ theta : Angle,
+      fresnel.coeff_s s omega theta =
+        responseEigenvalues.eigenvalue s omega theta 0
+
+  /-- The `p` Fresnel coefficient is the second response eigenvalue. -/
+  coeff_p_eq_eigen_one :
+    ∀ s : State, ∀ omega : Freq, ∀ theta : Angle,
+      fresnel.coeff_p s omega theta =
+        responseEigenvalues.eigenvalue s omega theta 1
+
+  /-- End-to-end calibration law. -/
+  end_to_end_optical_response_law : Prop
+
+  /-- Evidence for the end-to-end calibration law. -/
+  end_to_end_optical_response_certificate :
+    end_to_end_optical_response_law
+
+namespace SusceptibilityFresnelCalibration
+
+variable
+    {State Tangent Freq Angle : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
+
+variable (C : SusceptibilityFresnelCalibration State Tangent Freq Angle)
+
+/--
+The `s` Fresnel coefficient is the first Hessian-calibrated response eigenvalue.
+-/
+theorem coeff_s_is_response_eigenvalue
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    C.fresnel.coeff_s s omega theta =
+      C.responseEigenvalues.eigenvalue s omega theta 0 :=
+  C.coeff_s_eq_eigen_zero s omega theta
+
+/--
+The `p` Fresnel coefficient is the second Hessian-calibrated response eigenvalue.
+-/
+theorem coeff_p_is_response_eigenvalue
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    C.fresnel.coeff_p s omega theta =
+      C.responseEigenvalues.eigenvalue s omega theta 1 :=
+  C.coeff_p_eq_eigen_one s omega theta
+
+/-- Re-export of the end-to-end calibration law. -/
+theorem end_to_end_optical_response_valid :
+    C.end_to_end_optical_response_law :=
+  C.end_to_end_optical_response_certificate
+
+end SusceptibilityFresnelCalibration
+
+/--
+A calibrated optical state/event produces a Jones optical event.
+-/
+structure HessianJonesCalibration
+    (State Tangent Freq Angle : Type*)
+    [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Full Hessian/Fresnel response calibration. -/
+  response :
+    SusceptibilityFresnelCalibration State Tangent Freq Angle
+
+  /-- Surface kind assigned to the event. -/
+  surfaceKind : OpticalSurfaceKind
+
+  /-- Discrete V4 tag assigned to the event. -/
+  tagOf : State → Freq → Angle → V4Tag
+
+  /-- Coherence law for the Jones description. -/
+  coherence_law : State → Freq → Angle → Prop
+
+  /-- Evidence for coherence. -/
+  coherent :
+    ∀ s : State, ∀ omega : Freq, ∀ theta : Angle,
+      coherence_law s omega theta
+
+namespace HessianJonesCalibration
+
+variable
+    {State Tangent Freq Angle : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
+
+variable (C : HessianJonesCalibration State Tangent Freq Angle)
+
+/--
+The Jones event generated by the calibrated Hessian/Fresnel response.
+-/
+def eventOf
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) : JonesOpticalEvent where
+  basis := C.response.responseEigenvalues.basis
+  kind := C.surfaceKind
+  coeff0 := C.response.fresnel.coeff_s s omega theta
+  coeff1 := C.response.fresnel.coeff_p s omega theta
+  tag := C.tagOf s omega theta
+  coherence_law := C.coherence_law s omega theta
+  coherent := C.coherent s omega theta
+
+/--
+The first Jones coefficient is the calibrated `s`/first-channel Fresnel
+coefficient.
+-/
+theorem event_coeff0_eq_fresnel_s
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    (C.eventOf s omega theta).coeff0 =
+      C.response.fresnel.coeff_s s omega theta :=
+  rfl
+
+/--
+The second Jones coefficient is the calibrated `p`/second-channel Fresnel
+coefficient.
+-/
+theorem event_coeff1_eq_fresnel_p
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    (C.eventOf s omega theta).coeff1 =
+      C.response.fresnel.coeff_p s omega theta :=
+  rfl
+
+/--
+The first Jones coefficient is the first Hessian-calibrated response eigenvalue.
+-/
+theorem event_coeff0_eq_response_eigenvalue
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    (C.eventOf s omega theta).coeff0 =
+      C.response.responseEigenvalues.eigenvalue s omega theta 0 := by
+  calc
+    (C.eventOf s omega theta).coeff0
+        = C.response.fresnel.coeff_s s omega theta := rfl
+    _ = C.response.responseEigenvalues.eigenvalue s omega theta 0 :=
+        C.response.coeff_s_is_response_eigenvalue s omega theta
+
+/--
+The second Jones coefficient is the second Hessian-calibrated response
+eigenvalue.
+-/
+theorem event_coeff1_eq_response_eigenvalue
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    (C.eventOf s omega theta).coeff1 =
+      C.response.responseEigenvalues.eigenvalue s omega theta 1 := by
+  calc
+    (C.eventOf s omega theta).coeff1
+        = C.response.fresnel.coeff_p s omega theta := rfl
+    _ = C.response.responseEigenvalues.eigenvalue s omega theta 1 :=
+        C.response.coeff_p_is_response_eigenvalue s omega theta
+
+end HessianJonesCalibration
+
+/--
+Metal-mirror specialization of the calibrated Jones response.
+-/
+structure MetalMirrorSusceptibilityCalibration
+    (State Tangent Freq Angle : Type*)
+    [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Hessian-to-Jones calibration. -/
+  jonesCalibration :
+    HessianJonesCalibration State Tangent Freq Angle
+
+  /-- The event is interpreted as a metal mirror response. -/
+  metal_mirror_law : Prop
+
+  /-- Evidence for the metal mirror law. -/
+  metal_mirror_certificate :
+    metal_mirror_law
+
+  /-- Absorptive part of response controls Bregman/thermal loss. -/
+  absorption_heat_law : Prop
+
+  /-- Evidence for the absorption/heat law. -/
+  absorption_heat_certificate :
+    absorption_heat_law
+
+  /-- Reactive part of response controls retardance/ellipticity. -/
+  retardance_law : Prop
+
+  /-- Evidence for the retardance law. -/
+  retardance_certificate :
+    retardance_law
+
+namespace MetalMirrorSusceptibilityCalibration
+
+variable
+    {State Tangent Freq Angle : Type*}
+    [AddCommGroup Tangent] [Module ℝ Tangent]
+
+variable (M : MetalMirrorSusceptibilityCalibration State Tangent Freq Angle)
+
+/-- Jones event of the metal mirror response. -/
+def eventOf
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) : JonesOpticalEvent :=
+  M.jonesCalibration.eventOf s omega theta
+
+/--
+The second Jones coefficient is the Hessian-calibrated `p`/second-channel
+response eigenvalue.
+-/
+theorem p_coeff_is_hessian_response_eigenvalue
+    (s : State)
+    (omega : Freq)
+    (theta : Angle) :
+    (M.eventOf s omega theta).coeff1 =
+      M.jonesCalibration.response.responseEigenvalues.eigenvalue s omega theta 1 :=
+  M.jonesCalibration.event_coeff1_eq_response_eigenvalue s omega theta
+
+end MetalMirrorSusceptibilityCalibration
+
+/--
+Vacuum response calibration.
+
+The concrete normalization of vacuum susceptibility is proof-carrying.
+-/
+structure VacuumResponseCalibration
+    (State Freq : Type*) where
+  /-- Vacuum susceptibility datum. -/
+  susceptibility :
+    SusceptibilityDatum State Freq
+
+  /-- Vacuum susceptibility law. -/
+  vacuum_susceptibility_law : Prop
+
+  /-- Evidence for the vacuum susceptibility law. -/
+  vacuum_susceptibility_certificate :
+    vacuum_susceptibility_law
+
+/--
+Matter response calibration.
+
+In matter, the Hessian/susceptibility response can produce absorption,
+retardance, diattenuation, and heat once calibrated.
+-/
+structure MatterResponseCalibration
+    (State Tangent Freq Angle : Type*)
+    [AddCommGroup Tangent] [Module ℝ Tangent] where
+  /-- Full susceptibility/Fresnel response calibration. -/
+  response :
+    SusceptibilityFresnelCalibration State Tangent Freq Angle
+
+  /-- Matter response law. -/
+  matter_response_law : Prop
+
+  /-- Evidence for the matter response law. -/
+  matter_response_certificate :
+    matter_response_law
+
 /--
 Compatibility predicate for the material-response Hessian/Fresnel bridge.
 
@@ -1326,6 +1787,31 @@ attribute [rep_depth operator]
   SusceptibilityHessianFresnelBridge.p_reflection_eigenvalue
   OpticalStinespringHeatCalibration
   OpticalStinespringHeatCalibration.absorption_eq_hidden_information
+  BregmanHessianResponse
+  BregmanHessianResponse.hessian_symmetric
+  BregmanHessianResponse.hessian_nonnegative
+  BregmanHessianResponse.bregman_hessian_valid
+  SusceptibilityDatum
+  StateDielectricResponseDatum
+  ComplexRefractiveIndexDatum
+  BregmanHessianSusceptibilityCalibration
+  FresnelFromRefractiveIndex
+  OpticalResponseEigenvalues
+  SusceptibilityFresnelCalibration
+  SusceptibilityFresnelCalibration.coeff_s_is_response_eigenvalue
+  SusceptibilityFresnelCalibration.coeff_p_is_response_eigenvalue
+  SusceptibilityFresnelCalibration.end_to_end_optical_response_valid
+  HessianJonesCalibration
+  HessianJonesCalibration.eventOf
+  HessianJonesCalibration.event_coeff0_eq_fresnel_s
+  HessianJonesCalibration.event_coeff1_eq_fresnel_p
+  HessianJonesCalibration.event_coeff0_eq_response_eigenvalue
+  HessianJonesCalibration.event_coeff1_eq_response_eigenvalue
+  MetalMirrorSusceptibilityCalibration
+  MetalMirrorSusceptibilityCalibration.eventOf
+  MetalMirrorSusceptibilityCalibration.p_coeff_is_hessian_response_eigenvalue
+  VacuumResponseCalibration
+  MatterResponseCalibration
   MaterialSusceptibilityHessianCompatibility
   MaterialSusceptibilityHessianOwnerTarget
   SusceptibilityHessianOwnerTarget

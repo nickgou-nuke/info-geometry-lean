@@ -13,6 +13,7 @@ import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.ErlangerPhase
 import InfoGeometry.OperatorAlgebra.FresnelJonesReflection
+import InfoGeometry.OperatorAlgebra.IndividuatedCayley
 import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 import InfoGeometry.OperatorAlgebra.KleinianTwist

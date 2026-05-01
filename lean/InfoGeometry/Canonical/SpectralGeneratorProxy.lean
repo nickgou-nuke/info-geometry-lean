@@ -136,10 +136,6 @@ structure PhaseResolventDatum
   D_phase_linear :
     PhaseLinear K D
 
-  /-- The supplied inverse also commutes with the phase axis. -/
-  denomInv_phase_linear :
-    PhaseLinear K denomInv
-
   /-- Right inverse law. -/
   denom_right_inverse :
     (D + K).comp denomInv = ContinuousLinearMap.id ℝ H
@@ -176,10 +172,39 @@ theorem denominator_phase_linear :
   exact PhaseLinear.add R.D_phase_linear (PhaseLinear.axis K)
 
 /--
+The supplied inverse commutes with the phase axis.
+
+This is not a hypothesis: it follows from denominator phase-linearity and the
+left/right inverse laws.
+-/
+theorem denomInv_phase_linear :
+    PhaseLinear K R.denomInv := by
+  have hDenom : PhaseLinear K R.denominator := R.denominator_phase_linear
+  have hRight : R.denominator.comp R.denomInv = ContinuousLinearMap.id ℝ H := by
+    simpa [denominator] using R.denom_right_inverse
+  have hLeft : R.denomInv.comp R.denominator = ContinuousLinearMap.id ℝ H := by
+    simpa [denominator] using R.denom_left_inverse
+  ext v
+  calc
+    R.denomInv (K v)
+        = R.denomInv (K (R.denominator (R.denomInv v))) := by
+            have hv : R.denominator (R.denomInv v) = v := by
+              change (R.denominator.comp R.denomInv) v = v
+              rw [hRight]
+              rfl
+            rw [hv]
+    _ = R.denomInv (R.denominator (K (R.denomInv v))) := by
+          rw [← PhaseLinear.apply hDenom (R.denomInv v)]
+    _ = K (R.denomInv v) := by
+          change (R.denomInv.comp R.denominator) (K (R.denomInv v)) = K (R.denomInv v)
+          rw [hLeft]
+          rfl
+
+/--
 The bounded Cayley transform is phase-linear.
 
 This is derived from the phase-linearity of the numerator and the supplied
-phase-linearity of the resolvent inverse.
+inverse laws for the phase-linear denominator.
 -/
 theorem boundedCayley_phase_linear :
     PhaseLinear K R.boundedCayley := by

@@ -17,9 +17,12 @@ calibration is supplied, but temperature alone is not the snap theorem.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
-import InfoGeometry.OperatorAlgebra.UnruhTemperatureCalibration
+import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
+import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.Meta.Architecture
 
 noncomputable section
@@ -27,9 +30,11 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
 
 open InfoGeometry.OperatorAlgebra.SusceptibilityHessian
-open InfoGeometry.OperatorAlgebra.UnruhTemperatureCalibration
+open InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 open InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+open InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 
 /-! ## 1. Hessian collapse and extreme shear -/
 
@@ -143,7 +148,7 @@ theorem driven_state_crosses_shear_threshold :
 theorem unruh_temperature :
     U.unruh.temperature =
       U.unruh.acceleration / (2 * Real.pi) :=
-  U.unruh.temperature_eq_acceleration_over_two_pi
+  U.unruh.unruh_temperature
 
 end UnruhShearCalibration
 
@@ -377,6 +382,210 @@ theorem unruh_temperature :
 
 end UnruhDrivenChiralTubuleBoundary
 
+/-! ## 5a. Nonvacuous existing-owner snap bridges -/
+
+/--
+Topological snap boundary backed directly by `TopologicalSnap`.
+
+This is not a new obstruction theory.  It is a named use of the existing
+`ConservedObstructionFlow` theorem surface.
+-/
+structure ConservedSnapBoundary
+    (State Charge : Type*) [Zero Charge] where
+  /-- Existing conserved-obstruction flow owner. -/
+  flow :
+    ConservedObstructionFlow State Charge
+
+  /-- State at the snap boundary. -/
+  state : State
+
+  /-- The selected state has nonzero conserved obstruction. -/
+  obstruction_nonzero :
+    flow.invariant state ≠ 0
+
+namespace ConservedSnapBoundary
+
+variable {State Charge : Type*} [Zero Charge]
+variable (S : ConservedSnapBoundary State Charge)
+
+/-- The snap state is not in the flat sector, by `TopologicalSnap`. -/
+theorem state_not_flat :
+    S.state ∉ S.flow.Flat :=
+  S.flow.nontrivial_not_flat S.obstruction_nonzero
+
+/-- The snap state cannot relax into the flat sector at any admissible time. -/
+theorem cannot_flow_to_flat
+    (t : ℝ) :
+    S.flow.flow t S.state ∉ S.flow.Flat :=
+  S.flow.nontrivial_cannot_flow_to_flat S.obstruction_nonzero t
+
+/-- There is no finite-time flattening of any nontrivial sector in this flow. -/
+theorem no_nontrivial_flattening :
+    ¬ ∃ (x : State) (t : ℝ),
+      S.flow.IsNontrivial x ∧ S.flow.flow t x ∈ S.flow.Flat :=
+  S.flow.no_nontrivial_flattening
+
+end ConservedSnapBoundary
+
+/--
+Brewster/Drazin rank-collapse boundary backed by
+`BrewsterDrazinIntersection`.
+-/
+structure BrewsterDrazinBoundary
+    (Op : Type*) [Ring Op] where
+  /-- Existing Brewster/Drazin calibration owner. -/
+  calibration :
+    BrewsterDrazinCalibration Op
+
+namespace BrewsterDrazinBoundary
+
+variable {Op : Type*} [Ring Op]
+variable (B : BrewsterDrazinBoundary Op)
+
+/-- The calibrated Brewster event has vanishing p/second coefficient. -/
+theorem rp_eq_zero :
+    B.calibration.event.secondCoeff = 0 :=
+  B.calibration.rp_eq_zero
+
+/-- The nil/p-channel sector is killed by the reflection operator. -/
+theorem killed_sector :
+    B.calibration.split.R * B.calibration.split.Pnil = 0 :=
+  B.calibration.killed_sector
+
+/-- The Drazin/core inverse recovers the surviving core projector. -/
+theorem reflected_core_identity :
+    B.calibration.split.R * B.calibration.split.RD =
+      B.calibration.split.Pcore :=
+  B.calibration.reflected_core_identity
+
+end BrewsterDrazinBoundary
+
+/--
+Chiral-lightcone Stinespring boundary backed by the existing conservative
+Stinespring accounting and chiral routing theorems.
+-/
+structure ChiralLightconeStinespringBoundary
+    (System Dilated Env Carrier : Type*)
+    [NormedAddCommGroup System] [NormedSpace ℝ System]
+    [NormedAddCommGroup Dilated] [NormedSpace ℝ Dilated]
+    [NormedAddCommGroup Env] [NormedSpace ℝ Env]
+    [AddCommGroup Carrier] [Module ℝ Carrier] where
+  /-- Existing chiral-lightcone Stinespring clinch owner. -/
+  clinch :
+    ChiralLightconeStinespringClinch System Dilated Env Carrier
+
+namespace ChiralLightconeStinespringBoundary
+
+variable
+    {System Dilated Env Carrier : Type*}
+    [NormedAddCommGroup System] [NormedSpace ℝ System]
+    [NormedAddCommGroup Dilated] [NormedSpace ℝ Dilated]
+    [NormedAddCommGroup Env] [NormedSpace ℝ Env]
+    [AddCommGroup Carrier] [Module ℝ Carrier]
+
+variable (B : ChiralLightconeStinespringBoundary System Dilated Env Carrier)
+
+/-- Accessible loss equals hidden information by the existing Stinespring clinch. -/
+theorem accessible_loss_eq_hidden_information
+    (U : System) :
+    B.clinch.dilation.accessibleInfo U
+        - B.clinch.dilation.accessibleInfo (B.clinch.dilation.observedFlow U)
+      =
+      B.clinch.dilation.hiddenInfo
+        (B.clinch.dilation.environmentPart
+          (B.clinch.dilation.dilatedFlow (B.clinch.dilation.inject U))) :=
+  B.clinch.accessible_loss_eq_hidden_information U
+
+/-- Visible left-cone states route into the right hidden cone. -/
+theorem hidden_right_of_visible_left
+    (U : System)
+    (hU : B.clinch.routing.visibleCarrier U ∈ B.clinch.routing.leftCone) :
+    B.clinch.routing.hiddenCarrier
+      (B.clinch.dilation.environmentPart
+        (B.clinch.dilation.dilatedFlow (B.clinch.dilation.inject U)))
+      ∈ B.clinch.routing.rightCone :=
+  B.clinch.hidden_right_of_visible_left U hU
+
+/-- Visible right-cone states route into the left hidden cone. -/
+theorem hidden_left_of_visible_right
+    (U : System)
+    (hU : B.clinch.routing.visibleCarrier U ∈ B.clinch.routing.rightCone) :
+    B.clinch.routing.hiddenCarrier
+      (B.clinch.dilation.environmentPart
+        (B.clinch.dilation.dilatedFlow (B.clinch.dilation.inject U)))
+      ∈ B.clinch.routing.leftCone :=
+  B.clinch.hidden_left_of_visible_right U hU
+
+end ChiralLightconeStinespringBoundary
+
+/--
+Local-loss boundary backed directly by the existing
+`StinespringTomitaChiralLightconeDilation` theorem surface.
+-/
+structure TomitaChiralLocalLossBoundary
+    (Op GlobalOp H : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H]
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H)
+    (Phi : StinespringTomitaLightcone.LocalChannel Op) where
+  /-- Existing Stinespring/Tomita chiral-lightcone owner. -/
+  dilation :
+    StinespringTomitaLightcone.StinespringTomitaChiralLightconeDilation
+      Op GlobalOp H Q C Phi
+
+  /-- Locally lost observable. -/
+  observable : Op
+
+  /-- Local loss hypothesis for the observable. -/
+  locally_lost :
+    Phi.IsLocallyLost observable
+
+namespace TomitaChiralLocalLossBoundary
+
+variable
+    {Op GlobalOp H : Type*}
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    [AddCommGroup H] [Module ℝ H]
+    {Q : KreinIsotropicCone.KreinQuadraticDatum H}
+    {C : ModuleCircularPolarization H}
+    {Phi : StinespringTomitaLightcone.LocalChannel Op}
+
+variable (B : TomitaChiralLocalLossBoundary Op GlobalOp H Q C Phi)
+
+/-- The locally lost observable is routed into the Tomita commutant. -/
+theorem locally_lost_global_in_commutant :
+    B.dilation.dilation.globalEvolution
+        (B.dilation.dilation.embed B.observable) ∈
+      B.dilation.dilation.tomita.Mcomm :=
+  B.dilation.locally_lost_global_in_commutant B.locally_lost
+
+/-- The locally lost observable has a chiral-lightcone leakage readout. -/
+theorem locally_lost_has_chiral_lightcone_readout :
+    ∃ side : ChiralSide,
+      B.dilation.carrierReadout
+          (B.dilation.dilation.leakage B.observable) ∈
+        ChiralLightcone Q C side :=
+  B.dilation.locally_lost_has_chiral_lightcone_readout B.locally_lost
+
+/--
+The locally lost observable is simultaneously commutant-routed and
+chiral-lightlike after carrier readout.
+-/
+theorem locally_lost_is_commutant_chiral_lightcone :
+    B.dilation.dilation.globalEvolution
+        (B.dilation.dilation.embed B.observable) ∈
+        B.dilation.dilation.tomita.Mcomm ∧
+      ∃ side : ChiralSide,
+        B.dilation.carrierReadout
+            (B.dilation.dilation.leakage B.observable) ∈
+          ChiralLightcone Q C side :=
+  B.dilation.locally_lost_is_commutant_chiral_lightcone B.locally_lost
+
+end TomitaChiralLocalLossBoundary
+
 /-! ## 6. Brewster / Jones event as a rank-collapse socket -/
 
 /--
@@ -495,6 +704,22 @@ attribute [rep_depth operator]
   UnruhDrivenChiralTubuleBoundary.collapse_state_not_flat
   UnruhDrivenChiralTubuleBoundary.exists_stable_chiral_residue
   UnruhDrivenChiralTubuleBoundary.unruh_temperature
+  ConservedSnapBoundary
+  ConservedSnapBoundary.state_not_flat
+  ConservedSnapBoundary.cannot_flow_to_flat
+  ConservedSnapBoundary.no_nontrivial_flattening
+  BrewsterDrazinBoundary
+  BrewsterDrazinBoundary.rp_eq_zero
+  BrewsterDrazinBoundary.killed_sector
+  BrewsterDrazinBoundary.reflected_core_identity
+  ChiralLightconeStinespringBoundary
+  ChiralLightconeStinespringBoundary.accessible_loss_eq_hidden_information
+  ChiralLightconeStinespringBoundary.hidden_right_of_visible_left
+  ChiralLightconeStinespringBoundary.hidden_left_of_visible_right
+  TomitaChiralLocalLossBoundary
+  TomitaChiralLocalLossBoundary.locally_lost_global_in_commutant
+  TomitaChiralLocalLossBoundary.locally_lost_has_chiral_lightcone_readout
+  TomitaChiralLocalLossBoundary.locally_lost_is_commutant_chiral_lightcone
   JonesRankCollapseEvent
   JonesRankCollapseEvent.p_eigenvalue_eq_zero
   JonesRankCollapseEvent.r_p_eq_zero

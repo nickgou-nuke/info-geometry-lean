@@ -95,6 +95,7 @@ import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
 import InfoGeometry.Canonical.CasimirWeylDrazinContext
+import InfoGeometry.Canonical.SpectralGeneratorProxy
 
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant

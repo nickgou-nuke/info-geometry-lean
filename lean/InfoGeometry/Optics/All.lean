@@ -1,5 +1,6 @@
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.Optics.OperatorialJonesCalculus
+import InfoGeometry.Optics.FiniteJonesBregman
 
 namespace InfoGeometry.Optics
 

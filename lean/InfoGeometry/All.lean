@@ -17,6 +17,7 @@ import InfoGeometry.Geometry.JonesTransportMetric
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Geometry.OperatorialJonesConnection
 import InfoGeometry.Geometry.OpticalJonesV4
+import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.ProjectiveFoundation.RealProjectiveDescent
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.RealModularReadout
@@ -87,6 +88,7 @@ import InfoGeometry.Thermo.All
 import InfoGeometry.Volume.All
 import InfoGeometry.Canonical.KernelCommutatorObstruction
 import InfoGeometry.Dynamics.UnruhKMS
+import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.Physics.DIIISymmetryAtom
 import InfoGeometry.Thermodynamics.SouriauKillingFlow
 

@@ -25,15 +25,15 @@ def make_minimal_artifacts(base: Path) -> Path:
     d = base / "artifacts"
     write_jsonl(
         d / "ig_patch_runs.jsonl",
-        [{"_key": "run_1", "run_id": "run_1", "schema_version": "ig.patch_run.v1", "created_at": "2026-01-01T00:00:00Z", "source_graph_hash": "h", "algorithm_version": "a"}],
+        [{"_key": "run_1", "run_id": "run_1", "schema_version": "ig.patch_run.v1", "created_at": "2026-01-01T00:00:00Z", "source_graph_hash": "h", "algorithm_version": "a", "authority_level": "derived", "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
     )
     write_jsonl(
         d / "ig_chiral_patches.jsonl",
-        [{"_key": "patch_1", "patch_id": "patch_1", "run_id": "run_1", "schema_version": "ig.chiral_patch.v1.2", "patch_type": "ego_patch", "node_count": 2, "edge_count": 1, "coarse_hash": "sha256:test", "chiral_entropy": 0.0, "chiral_bias": 0.0, "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
+        [{"_key": "patch_1", "patch_id": "patch_1", "run_id": "run_1", "schema_version": "ig.chiral_patch.v1.2", "patch_type": "ego_patch", "node_count": 2, "edge_count": 1, "coarse_hash": "sha256:test", "chiral_entropy": 0.0, "chiral_bias": 0.0, "authority_level": "derived", "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
     )
     write_jsonl(
         d / "ig_patch_spectral_signatures.jsonl",
-        [{"_key": "patch_1", "patch_id": "patch_1", "run_id": "run_1", "schema_version": "ig.patch_spectral_signature.v1.2", "eigenvalues": [1.0], "nullity": 0, "pseudo_logdet": 0.0, "spectral_status": "exact"}],
+        [{"_key": "patch_1", "patch_id": "patch_1", "run_id": "run_1", "schema_version": "ig.patch_spectral_signature.v1.2", "eigenvalues": [1.0], "nullity": 0, "pseudo_logdet": 0.0, "spectral_status": "exact", "authority_level": "derived", "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
     )
     write_jsonl(
         d / "ig_patch_members.jsonl",
@@ -100,6 +100,36 @@ def test_validate_strict_fails_when_member_run_id_missing(tmp_path: Path) -> Non
     assert any("run_id" in e["error"] for e in payload["errors"])
 
 
+def test_validate_strict_rejects_formal_authority_without_proof_link(tmp_path: Path) -> None:
+    artifacts = make_minimal_artifacts(tmp_path)
+    rows = read_jsonl(artifacts / "ig_chiral_patches.jsonl")
+    rows[0]["authority_level"] = "formal"
+    write_jsonl(artifacts / "ig_chiral_patches.jsonl", rows)
+
+    result = subprocess.run(
+        [
+            PYTHON,
+            str(CLI),
+            "validate",
+            "--dir",
+            str(artifacts),
+            "--schemas-dir",
+            str(REPO / "schemas"),
+            "--strict",
+            "--max-errors",
+            "10",
+            "--print-json",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["ok"] is False
+    assert any("proof_link" in e["error"] for e in payload["errors"])
+
+
 def test_normalize_backfills_member_and_edge_fields(tmp_path: Path) -> None:
     inp = tmp_path / "in"
     out = tmp_path / "out"
@@ -136,6 +166,8 @@ def test_normalize_backfills_member_and_edge_fields(tmp_path: Path) -> None:
     m = read_jsonl(out / "ig_patch_members.jsonl")[0]
     e = read_jsonl(out / "ig_patch_edges.jsonl")[0]
     s = read_jsonl(out / "ig_patch_spectral_signatures.jsonl")[0]
+    r = read_jsonl(out / "ig_patch_runs.jsonl")[0]
+    p = read_jsonl(out / "ig_chiral_patches.jsonl")[0]
 
     assert m["run_id"] == "run_999"
     assert m["patch_id"] == "patch_ego_run_999_decl"
@@ -143,6 +175,10 @@ def test_normalize_backfills_member_and_edge_fields(tmp_path: Path) -> None:
     assert e["from_patch_id"] == "patch_ego_run_999_decl"
     assert e["to_patch_id"] == "patch_ego_run_999_decl"
     assert s["run_id"] == "run_999"
+    assert r["authority_level"] == "derived"
+    assert p["authority_level"] == "derived"
+    assert s["authority_level"] == "derived"
+    assert s["non_overclaim"] is True
 
 
 def test_query_registry_has_required_queries() -> None:

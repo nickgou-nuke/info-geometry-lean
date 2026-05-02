@@ -581,32 +581,6 @@ theorem ker_antiProjection_eq_fixed :
   · intro x hx
     simpa using C.antiPart_eq_zero_of_fixed hx
 
-/-- The fixed and anti-fixed sectors intersect trivially. -/
-theorem fixed_inf_antiFixed_eq_bot :
-    C.Fixed ⊓ C.AntiFixed = ⊥ := by
-  apply le_antisymm
-  · intro x hx
-    have hfix : C.theta x = x :=
-      (C.mem_fixed_iff x).mp hx.1
-    have hanti : C.theta x = -x :=
-      (C.mem_antiFixed_iff x).mp hx.2
-    have hxneg : x = -x := by
-      exact hfix.symm.trans hanti
-    have htwo : (2 : ℝ) • x = 0 := by
-      have hsum : x + x = 0 := by
-        calc
-          x + x = (-x) + x := by
-            exact congrArg (fun t => t + x) hxneg
-          _ = 0 := by abel
-      calc
-        (2 : ℝ) • x = x + x := by rw [two_smul]
-        _ = 0 := hsum
-    have htwo_ne : (2 : ℝ) ≠ 0 := by norm_num
-    rcases smul_eq_zero.mp htwo with htwo_zero | hx_zero
-    · exact False.elim (htwo_ne htwo_zero)
-    · exact hx_zero
-  · exact bot_le
-
 /-- The fixed sector is setwise stable under the closure involution. -/
 theorem Fixed_setwiseStable :
     C.SetwiseStable C.Fixed := by

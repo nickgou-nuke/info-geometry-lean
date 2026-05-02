@@ -19,6 +19,8 @@ open MeasureTheory
 open scoped MeasureTheory
 open scoped ENNReal
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.MeasureScaleShape
 
 variable {α : Type*} [MeasurableSpace α] [Nonempty α]
@@ -40,7 +42,7 @@ its mass-correction contribution.
 -/
 theorem generalizedKL_scale_shape_split
     (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteMeasure ν]
-    (hμ : μ ≠ 0) (hν : ν ≠ 0) :
+    (_hμ : μ ≠ 0) (_hν : ν ≠ 0) :
     generalizedKL μ ν =
       (InformationTheory.klDiv μ ν).toReal - (μ Set.univ).toReal + (ν Set.univ).toReal := by
   rfl

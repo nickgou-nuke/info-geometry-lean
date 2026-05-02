@@ -15,7 +15,7 @@ This follows from the positive-definiteness of the covariance operator.
 lemma gaussian_grad_monotone (G : GaussianFamily E) (η₁ η₂ : E) :
   0 ≤ inner ℝ (G.sigma η₁ - G.sigma η₂) (η₁ - η₂) := by
   have hsub : G.sigma η₁ - G.sigma η₂ = G.sigma (η₁ - η₂) := by
-    simpa using (G.sigma.map_sub η₁ η₂).symm
+    simp
   rw [hsub]
   by_cases hzero : η₁ - η₂ = 0
   · simp [hzero]

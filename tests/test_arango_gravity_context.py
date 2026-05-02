@@ -1,4 +1,6 @@
 import json
+import importlib.util
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -8,11 +10,98 @@ REPO = Path(__file__).resolve().parents[1]
 TOOL = REPO / "tools" / "infra" / "arango_gravity_context.py"
 
 
+def load_tool_module():
+    spec = importlib.util.spec_from_file_location("arango_gravity_context_for_test", TOOL)
+    assert spec is not None
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 def write_jsonl(path: Path, records: list[dict]) -> None:
     path.write_text(
         "".join(json.dumps(record) + "\n" for record in records),
         encoding="utf-8",
     )
+
+
+def test_gravity_context_loads_repo_arango_env_aliases(tmp_path: Path, monkeypatch) -> None:
+    env_file = tmp_path / "configs" / "local" / "hive_arango.env"
+    env_file.parent.mkdir(parents=True)
+    env_file.write_text(
+        "\n".join(
+            [
+                "ARANGO_ENDPOINT=http://127.0.0.1:9999",
+                "ARANGO_DATABASE=test_geometry",
+                "ARANGO_USER=test_user",
+                "ARANGO_PASS='test pass'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    for key in [
+        "HIVE_ARANGO_ENV_FILE",
+        "ARANGO_ENDPOINT",
+        "ARANGO_DATABASE",
+        "ARANGO_USER",
+        "ARANGO_USERNAME",
+        "ARANGO_PASS",
+        "ARANGO_PASSWORD",
+    ]:
+        monkeypatch.delenv(key, raising=False)
+
+    module = load_tool_module()
+    loaded = module.load_repo_arango_env(tmp_path)
+
+    assert loaded == env_file
+    assert os.environ["ARANGO_ENDPOINT"] == "http://127.0.0.1:9999"
+    assert os.environ["ARANGO_DATABASE"] == "test_geometry"
+    assert os.environ["ARANGO_USER"] == "test_user"
+    assert os.environ["ARANGO_USERNAME"] == "test_user"
+    assert os.environ["ARANGO_PASS"] == "test pass"
+    assert os.environ["ARANGO_PASSWORD"] == "test pass"
+
+
+def test_igf_config_and_legacy_arango_env_resolve_same_config(
+    tmp_path: Path, monkeypatch
+) -> None:
+    env_file = tmp_path / "hive_arango.env"
+    env_file.write_text(
+        "\n".join(
+            [
+                "ARANGO_ENDPOINT=http://127.0.0.1:7777",
+                "ARANGO_DATABASE=igf_config_test",
+                "ARANGO_USERNAME=legacy_user",
+                "ARANGO_PASSWORD='legacy pass'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    for key in [
+        "HIVE_ARANGO_ENV_FILE",
+        "ARANGO_ENDPOINT",
+        "ARANGO_DATABASE",
+        "ARANGO_USER",
+        "ARANGO_USERNAME",
+        "ARANGO_PASS",
+        "ARANGO_PASSWORD",
+    ]:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("HIVE_ARANGO_ENV_FILE", str(env_file))
+
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.config import load_arango_config
+    from tools.infra import arango_env
+
+    package_cfg = load_arango_config(tmp_path)
+
+    assert arango_env.load_repo_arango_env(tmp_path) == env_file
+    assert package_cfg.endpoint == arango_env.arango_endpoint()
+    assert package_cfg.database == arango_env.arango_database()
+    assert package_cfg.user == arango_env.arango_username()
+    assert package_cfg.password == arango_env.arango_password()
 
 
 def test_gravity_context_ranks_proven_neighbor_and_excerpt(tmp_path: Path) -> None:

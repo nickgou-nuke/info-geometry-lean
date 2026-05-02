@@ -124,7 +124,7 @@ def partitionPotential (P : OperatorThermodynamicsPacket Op) : ℝ :=
 theorem partitionPotential_eq_freeEnergy
     (P : OperatorThermodynamicsPacket Op) :
     P.partitionPotential = P.freeEnergy := by
-  simp [partitionPotential, P.freeEnergy_eq_neg_log_partition]
+  simp [partitionPotential]
 
 /-- The canonical supervolume readout as a negative-log potential. -/
 def supervolumeReadout (P : OperatorThermodynamicsPacket Op) : ℝ :=

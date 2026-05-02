@@ -20,8 +20,22 @@ import networkx as nx
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if __package__ in (None, ""):
     sys.path.insert(0, str(_REPO_ROOT))
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra.arango_raw_infotree_ingest import ArangoTarget, db_url, request_json
 else:
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra.arango_raw_infotree_ingest import ArangoTarget, db_url, request_json
 
 REP_LAYERS = [
@@ -72,11 +86,12 @@ def compute_layout(G: nx.DiGraph) -> dict[str, tuple[float, float]]:
     return relaxed_pos
 
 def main() -> int:
+    load_repo_arango_env(_REPO_ROOT)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--out", type=Path, default=Path("reports/dag/theory_spire.svg"))
     parser.add_argument("--max-nodes", type=int, default=800)
     args = parser.parse_args()

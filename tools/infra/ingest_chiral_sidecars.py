@@ -19,6 +19,8 @@ from typing import Dict, Any, List, Tuple
 
 import requests
 
+from tools.infra.arango_env import load_repo_arango_env
+
 
 DOC = 2
 EDGE = 3
@@ -29,6 +31,7 @@ def env(name: str, alt: str = "") -> str:
 
 
 def arango_ctx(args) -> Tuple[str, str, Tuple[str, str]]:
+    load_repo_arango_env(Path.cwd())
     endpoint = (args.endpoint or env("ARANGO_ENDPOINT") or "http://127.0.0.1:8530").rstrip("/")
     database = args.database or env("ARANGO_DATABASE") or "infogeometry"
     user = args.user or env("ARANGO_USER", "ARANGO_USERNAME")

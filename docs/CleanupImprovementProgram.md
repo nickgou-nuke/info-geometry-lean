@@ -1,5 +1,10 @@
 # Codebase Cleanup And Improvement Program
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Last updated: 2026-04-16 (Europe/Sofia)
 
 This is the execution program for cleanup and improvement. It turns the current

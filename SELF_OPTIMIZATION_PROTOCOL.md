@@ -1,33 +1,37 @@
 # Self-Optimization Protocol
 
-This repository supports guarded self-analysis. It does not authorize uncontrolled self-editing.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this workflow, but subordinate to repo-wide authority docs and code.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Allowed loop
+This repository allows guarded self-improvement of its code and tooling. It
+does not allow graph-driven free play detached from current source.
 
-1. inspect code directly;
-2. classify declarations semantically;
-3. make a narrow local change;
-4. build the affected targets;
-5. rerun the maintained DAG pipeline;
-6. compare semantic quotient and projection coloring;
-7. repeat only if the new signal is cleaner.
+## Allowed Loop
 
-## Required guardrails
+1. inspect the current code
+2. make one narrow change
+3. verify the changed file or module
+4. rerun managed repo checks if the change widens in scope
+5. keep the change only if the code surface is clearer or more correct
 
-- no theorem claim without Lean proof;
-- no hotspot-driven deletion of valid math;
-- no graph-only refactor without file analysis;
-- no large concurrent builds;
-- no trusting generated reports until they have been refreshed;
-- check `artifacts/dag/index/meta.json` (`schemaVersion` ≥ 2, recent `timestamp`) before trusting any DAG artifact;
-- use `--force` on `refresh_decl_graph.py` when olean-hash skip is suspect.
+## Guardrails
 
-## Current enforcing surfaces
+- no theorem claim without Lean proof
+- no graph-only rewrite of live owner files
+- no trusting stale artifacts as current evidence
+- no broad cleanup without preserving existing user changes
 
-- `lake script run strictCheck`
-- `scripts/quality/audit_constructivity.py`
-- `tools/infra/generate_semantic_quotient.py`
-- `tools/infra/generate_projection_coloring.py`
-- `tools/infra/refresh_decl_graph.py` (incremental; `--force` to override olean-hash skip)
-- `artifacts/dag/index/meta.json` — artifact freshness and schema gate
-- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
+## Verification Surface
+
+Use:
+
+```bash
+lake script run changedVerify
+lake script run dagStatus
+lake script run dagDoctor
+```
+
+Use `lake script run dagAll` only when you actually need a full structural
+refresh.

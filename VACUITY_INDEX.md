@@ -1,5 +1,10 @@
 # Vacuity Index
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Not part of the maintained authority surface unless explicitly promoted.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+
 Generated: `2026-04-25 01:28:17`
 
 This report tracks alias-driven and identity-transport surfaces, prioritized by whether they are actually graph-active in the exported declaration graph.

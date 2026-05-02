@@ -1,5 +1,10 @@
 # Keyword Index
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This index now has two explicit layers:
 
 1. machine index over **all tracked Lean files** (sorted lexical frequency),

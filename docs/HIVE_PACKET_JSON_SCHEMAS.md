@@ -1,5 +1,10 @@
 # Hive Packet JSON Schemas
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Status: implementation spec
 Date: 2026-05-22
 Scope: concrete JSON packet schemas for the Jung–Pauli Split-Step Hive, aligned with `JUNG_PAULI_SPLIT_STEP_HIVE_BLUEPRINT.md` and `ARANGO_HIVE_SCHEMA_IMPLEMENTATION_SPEC.md`.

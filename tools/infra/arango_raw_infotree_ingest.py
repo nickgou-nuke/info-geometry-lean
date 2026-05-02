@@ -27,6 +27,14 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+
 
 ROW_FILES: dict[str, str] = {
     "raw_infotree_roots": "raw_infotree_roots.jsonl",
@@ -894,11 +902,12 @@ def preflight_input(input_dir: Path) -> dict[str, Any]:
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default=os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530"))
-    parser.add_argument("--database", default=os.environ.get("ARANGO_DATABASE", "infogeometry"))
-    parser.add_argument("--username", default=os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root"))
-    parser.add_argument("--password", default=os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root"))
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password("alexandria_root"))
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--drop-existing", action="store_true")

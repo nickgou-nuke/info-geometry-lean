@@ -4,38 +4,44 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
+import sys
+from pathlib import Path
 from typing import Any
-from urllib.request import Request, urlopen
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+for path in (REPO_ROOT, SRC_ROOT):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
-def auth_header(username: str, password: str) -> str:
-    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
-    return f"Basic {token}"
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+from igf.graph import ArangoHttpTarget, execute_aql
 
 
 def aql(args: argparse.Namespace, query: str, bind_vars: dict[str, Any] | None = None) -> list[Any]:
-    url = f"{args.endpoint.rstrip('/')}/_db/{args.database}/_api/cursor"
-    req = Request(
-        url,
-        data=json.dumps({"query": query, "bindVars": bind_vars or {}}).encode("utf-8"),
-        method="POST",
+    target = ArangoHttpTarget(
+        endpoint=args.endpoint.rstrip("/"),
+        database=args.database,
+        username=args.username,
+        password=args.password,
     )
-    req.add_header("Authorization", auth_header(args.username, args.password))
-    req.add_header("Content-Type", "application/json")
-    req.add_header("Accept", "application/json")
-    with urlopen(req, timeout=30) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    return payload.get("result", [])
+    return execute_aql(target, query, bind_vars, timeout=30)
 
 
 def main() -> int:
+    load_repo_arango_env()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 

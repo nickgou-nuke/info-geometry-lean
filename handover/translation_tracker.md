@@ -1,5 +1,10 @@
 # Translation Tracker (Tracked Handover Copy)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 This tracked copy mirrors the operational tracker format for closure packets that must be promotable through PR flow.
 
 | Packet ID | Seed Concept / Motif | Current Lock Status | Owner File | Lean Target | Obstruction / Notes |

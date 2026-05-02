@@ -1,5 +1,10 @@
 # Alexandria Library Pipeline
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 Alexandria is the second Arango lane for semantic digestion and retrieval.
 
 It is intentionally separate from the operational DAG / infotree export pipeline.

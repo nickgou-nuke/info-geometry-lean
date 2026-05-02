@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from igf.config.env_aliases import normalized_arango_env
+from pathlib import Path
+
+from igf.config.env_aliases import load_repo_arango_env, normalized_arango_env
 from igf.config.model import ArangoConfig
 
 
-def load_arango_config() -> ArangoConfig:
+def load_arango_config(repo_root: Path | None = None) -> ArangoConfig:
+    load_repo_arango_env(repo_root)
     raw = normalized_arango_env()
     return ArangoConfig(
         endpoint=raw["endpoint"],

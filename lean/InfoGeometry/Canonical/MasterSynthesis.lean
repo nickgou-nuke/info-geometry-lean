@@ -48,6 +48,7 @@ incompressibility with physical stability.
 
 set_option maxHeartbeats 800000
 set_option synthInstance.maxHeartbeats 800000
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.MasterSynthesis
 

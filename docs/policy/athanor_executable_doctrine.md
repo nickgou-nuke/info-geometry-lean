@@ -1,5 +1,10 @@
 # Athanor Executable Doctrine (Revised)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 > **"Exploration may be Jungian. Closure must be Pauli."**
 
 This document defines the constitutional law of the **Info-Geometry Spire**. It is the binding protocol for all agentic agents operating within the repository.

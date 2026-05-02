@@ -1,5 +1,10 @@
 # Arango Gravitational Context
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 The proving lane should not assemble context by loose association. For Lean 4 proof construction, context is extracted from already compiled Lean truth: the declaration graph exported into ArangoDB or, when Arango is not populated, the LeanTrail JSONL export.
 
 `tools/infra/arango_gravity_context.py` builds a compact context packet from this graph:

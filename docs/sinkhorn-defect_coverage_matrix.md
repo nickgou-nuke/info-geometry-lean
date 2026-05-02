@@ -1,5 +1,10 @@
 # Sinkhorn Defect Flow Coverage Matrix
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 | Concept | Status | Anchor / Owner | Notes |
 |---------|--------|----------------|-------|
 | Triality MoE Algebra | `implemented` | [TrialityMoE.lean](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/LLM/TrialityMoE.lean) | Exact two-stage residual law matching Llama 4 block form. Split of output into shared + active routed parts. |

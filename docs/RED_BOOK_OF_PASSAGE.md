@@ -1,4 +1,10 @@
 # The Red Book of Passage
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## A Method for Translating Symbolic Material into Formal Closure
 
 This document treats the Markdown corpus as a natural-language logical system.
@@ -104,4 +110,3 @@ This keeps style intense without losing formal traction.
 The goal is not to suppress the black books.
 The goal is to convert them into a durable hypothesis engine whose outputs are
 machine-checkable and cumulative.
-

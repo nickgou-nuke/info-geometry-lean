@@ -1,5 +1,10 @@
 # Canonical Transformer L0-L5 Architecture
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Date: 2026-04-14
 
 ## Objective
@@ -71,4 +76,3 @@ The stack already has direct witnesses for the objective:
 - No theorem names or claims requiring unowned external semantics.
 - No “LLM imitation” claims as acceptance criteria.
 - No capstone claims without adjacent owner bridges.
-

@@ -1,5 +1,10 @@
 # Causal Cone: Formal Definitions
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This file records the formal graph definitions behind the causal-cone tooling.
 
 It is a diagnostic and tooling note, not a theorem source for the mathematics in

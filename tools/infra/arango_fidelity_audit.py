@@ -17,9 +17,16 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from tools.infra.arango_env import (
+    DEFAULT_ARANGO_DATABASE,
+    DEFAULT_ARANGO_ENDPOINT,
+    arango_database,
+    arango_endpoint,
+    load_repo_arango_env,
+)
 
-DEFAULT_ARANGO = "http://127.0.0.1:8530"
-DEFAULT_DB = "infogeometry"
+DEFAULT_ARANGO = DEFAULT_ARANGO_ENDPOINT
+DEFAULT_DB = DEFAULT_ARANGO_DATABASE
 
 
 def count_jsonl(path: Path) -> int | None:
@@ -137,10 +144,11 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env(Path.cwd())
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
-    parser.add_argument("--arango-url", default=DEFAULT_ARANGO)
-    parser.add_argument("--arango-db", default=DEFAULT_DB)
+    parser.add_argument("--arango-url", default=arango_endpoint(DEFAULT_ARANGO))
+    parser.add_argument("--arango-db", default=arango_database(DEFAULT_DB))
     parser.add_argument("--nodes-collection", default="ig_nodes")
     parser.add_argument("--edges-collection", default="ig_edges")
     parser.add_argument("--json-out", type=Path)

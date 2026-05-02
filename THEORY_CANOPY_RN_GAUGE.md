@@ -1,39 +1,15 @@
 # RN / Gauge Canopy
 
-This document is the maintained map for the projective / relative-potential / gauge spine.
-These files sit at `@[rep_depth count]` and `@[rep_depth projective]` in the semantic taxonomy
-(see `lean/InfoGeometry/Meta/Architecture.lean`).
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Historical conceptual note. Re-audit against current code before using it operationally.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Wide substrate (`count` depth)
+This file is a conceptual canopy for one research lane, not a current
+repository-wide authority document.
 
-The wide nonnegative projective layer currently lives in:
-- `MeasureProjective`
-- `ProjectiveStateCore`
-- `RelativeGeneratorCore`
+If this lane matters for current work, ground it in:
 
-This is the layer where zeros and AE/support-hypothesis semantics are allowed.
-
-## Strict-positive slice (`projective` depth)
-
-The strict-positive pointwise layer currently lives in:
-- `PositiveRayCore`
-- `RelativePotentialCore`
-- `PositiveRayProjectiveBridge`
-
-This is where pointwise `log` and modular-potential formulas are total.
-
-## Representation bridges (`count` → `projective` → `operator`)
-
-Current representation layers include:
-- `RelativePotentialDiscreteBridge`
-- `RelativePotentialCountBridge`
-- `RelativePotentialScalarBridge`
-- `KMSSinkhornScalarPotential`
-- `CalabiYauRNMongeAmpere`
-
-## Umbrella surface
-
-The maintained public umbrella for this stack is:
-- `RedLine`
-
-Other files such as `LogSpineBridge`, `UniversalVolume`, and older multiplicative/additive narratives should be read as presentation layers, not as parallel foundations.
+- current owner files under `lean/InfoGeometry/`
+- [docs/ModuleMap.md](docs/ModuleMap.md)
+- [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)

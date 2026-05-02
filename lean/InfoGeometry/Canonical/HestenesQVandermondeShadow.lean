@@ -50,7 +50,7 @@ theorem factor_eq_zero_iff :
   unfold factor
   constructor <;> intro h
   · simpa using sub_eq_zero.mp h
-  · simpa [h]
+  · simp [h]
 
 /-- Away from operator-deformed collision, the factor is nonzero. -/
 @[rep_depth thermo]

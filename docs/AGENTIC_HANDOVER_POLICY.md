@@ -1,4 +1,10 @@
 # 📜 AGENTIC HANDOVER POLICY & PERSONAS
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 **Effective Date:** April 15, 2026
 **Target Architecture:** DGX Spark, NemoClaw, OpenClaw, ClawCode
 

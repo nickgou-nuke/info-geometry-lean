@@ -10,6 +10,8 @@ if [[ ! -f "$ENV_FILE" ]]; then
   exit 2
 fi
 
+unset ARANGO_ENDPOINT ARANGO_DATABASE ARANGO_USER ARANGO_PASS ARANGO_USERNAME ARANGO_PASSWORD
+
 set -a
 # shellcheck disable=SC1090
 source "$ENV_FILE"

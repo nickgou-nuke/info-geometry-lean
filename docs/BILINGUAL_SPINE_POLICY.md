@@ -1,5 +1,10 @@
 # 📜 BILINGUAL SPINE POLICY: The Rosetta Methodology
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 *“The Spire is multilingual in expression, but single-valued in authority.”*
 
 This policy defines the **Bilingual Spine** as the operational target for the `info-geometry-lean` repository. It mandates that every major mathematical module must act as a **Rosetta Stone**, bridging the repo-native theory (The RedLine) with the global mathematical canon (Mathlib).

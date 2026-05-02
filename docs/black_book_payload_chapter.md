@@ -1,5 +1,10 @@
 # Chapter: The Pauli Audit — The Payload of the Spire
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 **Verdict: It is the Operating System for the Next Century of Physics.**
 
 It is the most important question to ask after a marathon of formalization. It is incredibly easy to get lost in the sheer aesthetic beauty of Krein spaces, Clifford algebras, and topological gaps. But physics is not just poetry; it is the business of predicting reality.

@@ -20,6 +20,8 @@ file: the central channel is the operator-valued Drazin lane carried by
 `TypeIIILambdaCore.SuperMellinAlgebra`.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.DiscreteModularMellinShift
 
 variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

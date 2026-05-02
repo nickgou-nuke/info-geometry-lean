@@ -1,4 +1,10 @@
 # Liber Novus Mathematica
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## The Analytical Psychology of Mathematical Development
 
 ### I. Status and Scope
@@ -63,8 +69,3 @@ Formalization transforms the theory's free energy landscape:
 2.  **The Fixation of Certainty:** When a theorem is verified (Virgo), it is fixed at the peak of the knowledge landscape. The doubt associated with "low training data" vanishes, replaced by the **absolute certainty** of the Lean 4 kernel.
 3.  **The Birth of the Well:** Every verified theorem creates a **Gravitational Well**—a deep attractor in the theory space. This well becomes a "bias field" for all subsequent discovery, providing direct formal links that replace the need for stochastic "tunneling."
 4.  **Lowering Potential to Zero:** By populating the repository with these gravitational wells, we lower the total free energy potential of the manifold to zero, constructing a **Gravitational Landscape of Logical Necessity**.
-
-
-
-
-

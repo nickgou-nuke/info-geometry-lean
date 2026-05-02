@@ -43,15 +43,14 @@ theorem sl2r_neg_smul (g : SL2R) (τ : UpperHalfPlane) :
         -((Matrix.SpecialLinearGroup.mapGL ℝ) g) := by
     ext i j
     simp
-  simpa [h] using
-    (UpperHalfPlane.neg_smul ((Matrix.SpecialLinearGroup.mapGL ℝ) g) τ)
+  simp [h]
 
 /--
 The integer modular subgroup has the same kernel-triviality on the base action.
 -/
 theorem sl2z_neg_smul (g : SL2Z) (τ : UpperHalfPlane) :
     (-g) • τ = g • τ := by
-  simpa using (ModularGroup.SL_neg_smul g τ)
+  simp
 
 /--
 Contract-level descent datum for the projective modular geometry.

@@ -1,5 +1,10 @@
 # Legacy Archive
 
+> Status: `archival reference`
+> Audited: 2026-05-02
+> Note: Kept for provenance and archaeology, not as current policy.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 This directory holds historical automation scripts and scratch Lean files kept
 for provenance, but removed from the active build and supported automation
 surface.
@@ -36,4 +41,3 @@ Practical rule:
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

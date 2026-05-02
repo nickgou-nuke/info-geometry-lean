@@ -1,5 +1,10 @@
 # Split `Cl(1,1)` Content Collision Map
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This note is a **content-first** collision map for the local split `Cl(1,1)`
 packet. It exists because filename inventory alone is not enough in this repo:
 the same operator may appear under several names, and different operators may

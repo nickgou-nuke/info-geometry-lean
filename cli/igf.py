@@ -49,6 +49,25 @@ def main() -> int:
     n.add_argument("--input-dir", default="artifacts/dag/index")
     n.add_argument("--output-dir", default="artifacts/dag/index.normalized")
 
+    ingest = sub.choices["ingest"]
+    ingest.add_argument("--dir", default="artifacts/dag/index")
+
+    verify = sub.choices["verify"]
+    verify.add_argument("--run-id", default="")
+    verify.add_argument("--limit", type=int, default=25)
+
+    report = sub.choices["report"]
+    report.add_argument("--dir", default="artifacts/dag/index")
+
+    run = sub.choices["run"]
+    run.add_argument("--nodes", default="artifacts/leantrail/arango/ig_nodes.jsonl")
+    run.add_argument("--edges", default="artifacts/leantrail/arango/ig_edges.jsonl")
+    run.add_argument("--fingerprints", default="artifacts/dag/index/expr_fingerprints.jsonl")
+    run.add_argument("--output-dir", default="artifacts/dag/index")
+    run.add_argument("--schemas-dir", default="schemas")
+    run.add_argument("--run-id", default="")
+    run.add_argument("--strict", action="store_true")
+
     v = sub.add_parser("validate")
     v.add_argument("--dir", default="artifacts/dag/index")
     v.add_argument("--schemas-dir", default="schemas")
@@ -99,13 +118,48 @@ def main() -> int:
         print(json.dumps(result, ensure_ascii=False))
         return 0 if result.get("ok") else 1
     if args.command == "ingest":
-        return cmd_not_implemented("ingest")
+        from igf.config.loader import load_arango_config
+        from igf.graph.arango_client import connect_db
+        from igf.pipeline.ingest import ingest_artifacts
+
+        cfg = load_arango_config()
+        db = connect_db(cfg)
+        result = ingest_artifacts(db, Path(args.dir))
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 1
     if args.command == "verify":
-        return cmd_not_implemented("verify")
+        from igf.config.loader import load_arango_config
+        from igf.graph.arango_client import connect_db
+        from igf.pipeline.verify import verify_run
+
+        cfg = load_arango_config()
+        db = connect_db(cfg)
+        result = verify_run(db, args.run_id or None, limit=int(args.limit))
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 2
     if args.command == "report":
-        return cmd_not_implemented("report")
+        from igf.pipeline.report import report_artifacts
+
+        result = report_artifacts(Path(args.dir))
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 1
     if args.command == "run":
-        return cmd_not_implemented("run")
+        from igf.pipeline.orchestrator import run_offline_pipeline
+
+        fingerprint_path = Path(args.fingerprints) if args.fingerprints else None
+        if fingerprint_path is not None and not fingerprint_path.exists():
+            fingerprint_path = None
+        result = run_offline_pipeline(
+            nodes=Path(args.nodes),
+            edges=Path(args.edges),
+            fingerprints=fingerprint_path,
+            output_dir=Path(args.output_dir),
+            schemas_dir=Path(args.schemas_dir),
+            run_id=args.run_id or None,
+            strict=bool(args.strict),
+        )
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 1
 
     return 1
 

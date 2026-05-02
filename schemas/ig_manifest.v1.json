@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig_manifest.v1",
+  "title": "IG Artifact Manifest v1",
+  "type": "object",
+  "required": [
+    "run_id",
+    "schema_version",
+    "created_at",
+    "generator_version",
+    "outputs",
+    "output_hashes",
+    "row_counts",
+    "schema_versions"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig_manifest.v1"},
+    "created_at": {"type": "string", "minLength": 1},
+    "generator": {"type": "string"},
+    "generator_version": {"type": "string", "minLength": 1},
+    "inputs": {"type": "object"},
+    "input_hashes": {"type": "object"},
+    "outputs": {"type": "object"},
+    "output_hashes": {"type": "object"},
+    "row_counts": {"type": "object"},
+    "schema_versions": {"type": "object"},
+    "build_summary": {"type": "object"}
+  }
+}

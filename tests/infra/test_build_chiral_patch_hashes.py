@@ -128,8 +128,9 @@ def test_build_chiral_patch_hashes_emits_three_patch_families(tmp_path: Path) ->
     assert signatures
     assert patch_edges
     assert run_rows[0]["schema_version"] == "ig.patch_run.v1"
-    assert run_rows[0]["algorithm_version"] == "chiral_patch_hashes.v1.1"
+    assert run_rows[0]["algorithm_version"] == "chiral_patch_hashes.v1.2"
     assert run_rows[0]["fingerprints_available"] is True
+    assert run_rows[0]["source_graph_hash"].startswith("sha256:")
 
     required = {
         "schema_version",
@@ -146,7 +147,9 @@ def test_build_chiral_patch_hashes_emits_three_patch_families(tmp_path: Path) ->
     assert all(p["non_overclaim"] is True for p in patches)
     assert all(p["claim_scope"] == "derived_spectral_neighborhood_sidecar" for p in patches)
     assert all("pseudo_logdet" in sig for sig in signatures)
+    assert all("spectral_status" in sig for sig in signatures)
     assert any(p["cartan_proxy_histogram"]["p_odd"] >= 1 for p in patches)
+    assert any(e["edge_type"] == "PATCH_DEPENDS_ON" for e in patch_edges)
 
     out2 = tmp_path / "out2"
     subprocess.run(

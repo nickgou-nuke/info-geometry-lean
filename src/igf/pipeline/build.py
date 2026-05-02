@@ -12,6 +12,10 @@ from igf.artifacts.compatibility_adapters import normalize_artifacts
 
 GENERATOR = "tools/infra/build_chiral_patch_hashes.py"
 GENERATOR_VERSION = "chiral_patch_hashes.v1.2"
+DOCUMENTED_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
+DOCUMENTED_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
+LEGACY_NODES = Path("artifacts/dag/index/ig_nodes.jsonl")
+LEGACY_EDGES = Path("artifacts/dag/index/ig_edges.jsonl")
 
 
 def _repo_root() -> Path:
@@ -31,6 +35,21 @@ def _parse_summary(stdout: str) -> dict[str, Any]:
     return {"raw_stdout": text}
 
 
+def resolve_graph_inputs(nodes: Path, edges: Path) -> tuple[Path, Path, bool]:
+    compatibility_path_used = False
+    resolved_nodes = nodes
+    resolved_edges = edges
+
+    if nodes == DOCUMENTED_NODES and not nodes.exists() and LEGACY_NODES.exists():
+        resolved_nodes = LEGACY_NODES
+        compatibility_path_used = True
+    if edges == DOCUMENTED_EDGES and not edges.exists() and LEGACY_EDGES.exists():
+        resolved_edges = LEGACY_EDGES
+        compatibility_path_used = True
+
+    return resolved_nodes, resolved_edges, compatibility_path_used
+
+
 def build_chiral_patches(
     *,
     nodes: Path,
@@ -47,6 +66,7 @@ def build_chiral_patches(
 ) -> dict[str, Any]:
     root = _repo_root()
     generator_path = root / GENERATOR
+    nodes, edges, compatibility_path_used = resolve_graph_inputs(nodes, edges)
     cmd = [
         sys.executable,
         str(generator_path),
@@ -113,4 +133,5 @@ def build_chiral_patches(
         "manifest": str(manifest_path),
         "row_counts": manifest["row_counts"],
         "output_hashes": manifest["output_hashes"],
+        "compatibility_path_used": compatibility_path_used,
     }

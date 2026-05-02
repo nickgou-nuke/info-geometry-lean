@@ -5,7 +5,6 @@
   "required": [
     "_key",
     "patch_id",
-    "run_id",
     "schema_version",
     "patch_type",
     "node_count",
@@ -17,10 +16,15 @@
     "non_overclaim",
     "authority_level"
   ],
+  "anyOf": [
+    {"required": ["run_id"]},
+    {"required": ["patch_run_id"]}
+  ],
   "properties": {
     "_key": {"type": "string", "minLength": 1},
     "patch_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
+    "patch_run_id": {"type": "string", "minLength": 1},
     "schema_version": {"const": "ig.chiral_patch.v1.2"},
     "patch_type": {"type": "string", "minLength": 1},
     "node_count": {"type": "integer", "minimum": 0},

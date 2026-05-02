@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from igf.artifacts.compatibility_adapters import KEY_FIELDS, normalize_run_id, stable_key
 from igf.artifacts.io import read_jsonl
 from igf.graph.arango_client import ensure_collections_and_indexes
 
@@ -17,14 +18,11 @@ FILE_TO_COLLECTION = {
 
 
 def _upsert_document(collection: Any, row: dict[str, Any]) -> None:
-    try:
-        collection.insert(row, overwrite=True, overwrite_mode="update")
-    except TypeError:
-        key = row.get("_key")
-        if key and collection.has(key):
-            collection.update(row)
-        else:
-            collection.insert(row)
+    key = row["_key"]
+    if collection.has(key):
+        collection.replace(row)
+    else:
+        collection.insert(row)
 
 
 def ingest_artifacts(db: Any, artifact_dir: Path) -> dict[str, Any]:
@@ -39,11 +37,10 @@ def ingest_artifacts(db: Any, artifact_dir: Path) -> dict[str, Any]:
         collection = db.collection(collection_name)
         count = 0
         for row in read_jsonl(path):
-            if not row.get("_key") and collection_name not in {"ig_patch_members", "ig_patch_edges"}:
-                raise ValueError(f"{path}: vertex row missing _key")
+            row = normalize_run_id(row)
+            row.setdefault("_key", stable_key(row, KEY_FIELDS[collection_name]))
             _upsert_document(collection, row)
             count += 1
         counts[collection_name] = count
 
     return {"ok": True, "artifact_dir": str(artifact_dir), "ingested": counts}
-

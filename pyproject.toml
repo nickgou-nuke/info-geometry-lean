@@ -19,7 +19,7 @@ dependencies = [
 
 [project.scripts]
 infogeometry = "scripts.cli:main"
-igf = "cli.igf:main"
+igf = "igf.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src", "."]

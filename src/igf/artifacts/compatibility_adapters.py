@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,31 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def normalize_run_id(row: dict[str, Any]) -> dict[str, Any]:
+    run_id = row.get("run_id") or row.get("patch_run_id")
+    if not run_id:
+        raise ValueError("row missing run_id or patch_run_id")
+    normalized = dict(row)
+    normalized["run_id"] = run_id
+    return normalized
+
+
+def stable_key(row: dict[str, Any], fields: list[str]) -> str:
+    payload = {field: row.get(field) for field in fields}
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
+    return f"k_{digest}"
+
+
+KEY_FIELDS = {
+    "ig_patch_runs": ["run_id"],
+    "ig_chiral_patches": ["run_id", "patch_id"],
+    "ig_patch_spectral_signatures": ["run_id", "patch_id"],
+    "ig_patch_members": ["run_id", "patch_id", "_from", "_to", "membership_type"],
+    "ig_patch_edges": ["run_id", "from_patch_id", "to_patch_id", "edge_type"],
+}
+
+
 def _infer_run_id_from_patch_from(edge_from: str) -> str:
     # ig_chiral_patches/patch_ego_run_1777714851_... -> run_1777714851
     key = edge_from.split("/", 1)[-1]
@@ -48,17 +74,21 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
 
     patch_by_key: dict[str, dict[str, Any]] = {}
     for p in patches:
+        p.update(normalize_run_id(p))
         p.setdefault("schema_version", "ig.chiral_patch.v1.2")
         apply_default_claim_policy(p)
+        p.setdefault("_key", stable_key(p, KEY_FIELDS["ig_chiral_patches"]))
         patch_by_key[p.get("_key", "")] = p
 
     run_by_key: dict[str, dict[str, Any]] = {}
     for r in runs:
-        rid = r.get("run_id") or r.get("_key")
-        r["run_id"] = rid
+        if not r.get("run_id") and not r.get("patch_run_id"):
+            r["run_id"] = r.get("_key")
+        r.update(normalize_run_id(r))
         r.setdefault("schema_version", "ig.patch_run.v1")
         r.setdefault("algorithm_version", r.get("patch_algorithm", "unknown"))
         apply_default_claim_policy(r)
+        r.setdefault("_key", stable_key(r, KEY_FIELDS["ig_patch_runs"]))
         run_by_key[r.get("_key", "")] = r
 
     for s in spectral:
@@ -70,6 +100,8 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
             p = patch_by_key.get(pid)
             if p and p.get("run_id"):
                 s["run_id"] = p["run_id"]
+        s.update(normalize_run_id(s))
+        s.setdefault("_key", stable_key(s, KEY_FIELDS["ig_patch_spectral_signatures"]))
         if not s.get("spectral_status"):
             s["spectral_status"] = "exact" if s.get("eigenvalues") else "trivial"
 
@@ -83,6 +115,8 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
                 m["run_id"] = p["run_id"]
             else:
                 m["run_id"] = _infer_run_id_from_patch_from(m.get("_from", ""))
+        m.update(normalize_run_id(m))
+        m.setdefault("_key", stable_key(m, KEY_FIELDS["ig_patch_members"]))
 
     for e in edges:
         e.setdefault("schema_version", "ig.patch_edge.v1")
@@ -96,6 +130,8 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
                 e["run_id"] = p["run_id"]
             else:
                 e["run_id"] = _infer_run_id_from_patch_from(e.get("_from", ""))
+        e.update(normalize_run_id(e))
+        e.setdefault("_key", stable_key(e, KEY_FIELDS["ig_patch_edges"]))
 
     _write_jsonl(output_dir / "ig_patch_runs.jsonl", runs)
     _write_jsonl(output_dir / "ig_chiral_patches.jsonl", patches)

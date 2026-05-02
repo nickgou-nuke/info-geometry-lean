@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import time
 from collections import Counter, defaultdict
@@ -19,15 +20,17 @@ from typing import Any, Iterable
 
 import networkx as nx
 import numpy as np
-from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import eigsh
 
 # --- Schema and Policy ---
 RUN_SCHEMA_VERSION = "ig.patch_run.v1"
-PATCH_SCHEMA_VERSION = "ig.chiral_patch.v1"
+PATCH_SCHEMA_VERSION = "ig.chiral_patch.v1.2"
 MEMBER_SCHEMA_VERSION = "ig.patch_member.v1"
 EDGE_SCHEMA_VERSION = "ig.patch_edge.v1"
-SPECTRAL_SCHEMA_VERSION = "ig.patch_spectral_signature.v1"
-ALGORITHM_VERSION = "chiral_patch_hashes.v1.1"
+SPECTRAL_SCHEMA_VERSION = "ig.patch_spectral_signature.v1.2"
+ALGORITHM_VERSION = "chiral_patch_hashes.v1.2"
+NODE_COLLECTION = "ig_nodes"
+PATCH_COLLECTION = "ig_chiral_patches"
 
 # --- Data Structures ---
 
@@ -104,16 +107,69 @@ class SpectralSignature:
     patch_run_id: str = ""
     run_id: str = ""
     laplacian: str = "sym_normalized_v1"
+    spectral_status: str = "exact"
 
 # --- Core Logic ---
 
-def compute_spectral_signature(G: nx.Graph, k: int = 10) -> tuple[list[float], int, float]:
+def stable_key(raw: str) -> str:
+    """Return an Arango-safe deterministic key."""
+    cleaned = re.sub(r"[^A-Za-z0-9_.:-]+", "_", raw)
+    if len(cleaned) <= 180:
+        return cleaned
+    digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+    return f"{cleaned[:150]}_{digest}"
+
+
+def doc_id(collection: str, key_or_id: str) -> str:
+    if "/" in key_or_id:
+        return key_or_id
+    return f"{collection}/{key_or_id}"
+
+
+def patch_doc_id(patch_id: str) -> str:
+    return doc_id(PATCH_COLLECTION, patch_id)
+
+
+def normalize_node_key(raw: Any) -> str:
+    value = str(raw or "").strip()
+    if not value:
+        return ""
+    if "/" in value:
+        return value
+    return doc_id(NODE_COLLECTION, value)
+
+
+def hash_input_files(paths: Iterable[Path | None]) -> str:
+    h = hashlib.sha256()
+    for path in paths:
+        if path is None:
+            h.update(b"<missing>")
+            continue
+        h.update(str(path).encode("utf-8"))
+        h.update(b"\0")
+        h.update(path.read_bytes())
+        h.update(b"\0")
+    return "sha256:" + h.hexdigest()
+
+
+def compute_spectral_signature(
+    G: nx.Graph,
+    k: int = 10,
+    max_exact_nodes: int = 750,
+) -> tuple[list[float], int, float, str]:
     if G.number_of_nodes() < 2:
-        return [], 0, 0.0
+        return [], 0, 0.0, "trivial"
     
     try:
-        L = nx.normalized_laplacian_matrix(G).toarray()
-        evals = np.linalg.eigvalsh(L)
+        if G.number_of_nodes() <= max_exact_nodes:
+            L = nx.normalized_laplacian_matrix(G).toarray()
+            evals = np.linalg.eigvalsh(L)
+            status = "exact"
+        else:
+            L = nx.normalized_laplacian_matrix(G).astype(float)
+            approx_k = min(max(k + nx.number_connected_components(G) + 2, 2), G.number_of_nodes() - 1)
+            evals = eigsh(L, k=approx_k, which="SM", return_eigenvectors=False)
+            status = "truncated"
         evals = np.sort(evals)
         
         # Nullity (count eigenvalues near zero)
@@ -126,9 +182,9 @@ def compute_spectral_signature(G: nx.Graph, k: int = 10) -> tuple[list[float], i
         # Top k nonzero eigenvalues (bucketed/truncated)
         signature_vals = [round(float(v), 4) for v in nonzero[:k]]
         
-        return signature_vals, nullity, pseudo_logdet
+        return signature_vals, nullity, pseudo_logdet, status
     except Exception:
-        return [], 0, 0.0
+        return [], 0, 0.0, "failed"
 
 def cartan_proxy_sector(edge_data: dict[str, Any]) -> str:
     explicit = str(edge_data.get("cartan_proxy_sector", "") or "")
@@ -244,6 +300,54 @@ def fingerprint_features(node_ids: Iterable[str], fingerprints: dict[str, dict])
     redex_density = redex_total / token_total if token_total else 0.0
     return hist.tolist(), float(round(redex_density, 6)), max_depth
 
+
+def build_patch_dependency_edges(
+    edges: list[dict],
+    patch_membership: dict[str, set[str]],
+    run_id: str,
+) -> list[PatchEdge]:
+    node_to_patches: dict[str, set[str]] = defaultdict(set)
+    patch_sizes = {patch_id: max(1, len(nodes)) for patch_id, nodes in patch_membership.items()}
+    for patch_id, nodes in patch_membership.items():
+        for node_id in nodes:
+            node_to_patches[node_id].add(patch_id)
+
+    edge_counts: Counter[tuple[str, str]] = Counter()
+    sector_counts: dict[tuple[str, str], Counter[str]] = defaultdict(Counter)
+    weight_counts: Counter[tuple[str, str]] = Counter()
+
+    for edge in edges:
+        src = edge.get("_from")
+        dst = edge.get("_to")
+        if not isinstance(src, str) or not isinstance(dst, str):
+            continue
+        for from_patch in node_to_patches.get(src, set()):
+            for to_patch in node_to_patches.get(dst, set()):
+                if from_patch == to_patch:
+                    continue
+                key = (from_patch, to_patch)
+                edge_counts[key] += 1
+                weight_counts[key] += float(edge.get("action_weight", edge.get("weight", 1.0)) or 1.0)
+                sector_counts[key][cartan_proxy_sector(edge)] += 1
+
+    patch_edges: list[PatchEdge] = []
+    for (from_patch, to_patch), count in sorted(edge_counts.items()):
+        denom = (patch_sizes[from_patch] * patch_sizes[to_patch]) ** 0.5
+        sector = sector_counts[(from_patch, to_patch)].most_common(1)[0][0]
+        patch_edges.append(PatchEdge(
+            _from=patch_doc_id(from_patch),
+            _to=patch_doc_id(to_patch),
+            edge_type="PATCH_DEPENDS_ON",
+            action_weight=float(weight_counts[(from_patch, to_patch)]),
+            affinity=float(count / denom) if denom else 0.0,
+            cartan_proxy_sector=sector,
+            patch_run_id=run_id,
+            from_patch_id=from_patch,
+            to_patch_id=to_patch,
+            transport_count=int(count),
+        ))
+    return patch_edges
+
 def build_patches(
     nodes: dict[str, dict], 
     edges: list[dict], 
@@ -254,13 +358,16 @@ def build_patches(
     ego_radius: int = 2,
     min_scc_size: int = 2,
     binder_min_size: int = 3,
+    max_patch_nodes: int = 128,
+    spectral_k: int = 8,
 ) -> tuple[list[ChiralPatch], list[PatchMember], list[PatchEdge], list[SpectralSignature]]:
     
     G = nx.DiGraph()
+    for node_id, row in nodes.items():
+        G.add_node(node_id, **row)
     for e in edges:
-        # Map src/dst to ig_nodes format
-        src = f"ig_nodes/{e['src']}" if 'src' in e else e.get('_from')
-        dst = f"ig_nodes/{e['dst']}" if 'dst' in e else e.get('_to')
+        src = e.get("_from")
+        dst = e.get("_to")
         if src and dst:
             G.add_edge(src, dst, **e)
         
@@ -268,6 +375,7 @@ def build_patches(
     members = []
     p_edges = []
     signatures = []
+    patch_membership: dict[str, set[str]] = {}
     
     def coarse_hash_for(patch_type: str, node_ids: Iterable[str], hist: list[int], cartan: dict[str, int]) -> str:
         payload = {
@@ -282,8 +390,8 @@ def build_patches(
     def add_internal_patch_edges(patch_id: str, sub_G: nx.DiGraph) -> None:
         for u, v, data in sub_G.edges(data=True):
             p_edges.append(PatchEdge(
-                _from=f"ig_chiral_patches/{patch_id}",
-                _to=f"ig_chiral_patches/{patch_id}",
+                _from=patch_doc_id(patch_id),
+                _to=patch_doc_id(patch_id),
                 edge_type="PATCH_INTERNAL_EDGE",
                 action_weight=float(data.get("action_weight", data.get("weight", 1.0)) or 1.0),
                 cartan_proxy_sector=cartan_proxy_sector(data),
@@ -299,11 +407,12 @@ def build_patches(
             continue # skip isolated
         
         seed_hash = hashlib.sha256(json.dumps(sorted(list(scc)), sort_keys=True).encode()).hexdigest()[:16]
-        patch_id = f"{run_id}__scc_patch__{seed_hash}"
+        patch_id = stable_key(f"{run_id}__scc_patch__{seed_hash}")
         sub_G = G.subgraph(scc)
         
         entropy, bias, cartan = compute_chiral_metrics(sub_G)
-        evs, nullity, logdet = compute_spectral_signature(sub_G.to_undirected())
+        evs, nullity, logdet, spectral_status = compute_spectral_signature(
+            sub_G.to_undirected(), k=spectral_k, max_exact_nodes=max_patch_nodes)
         
         hist, redex_density, max_depth = fingerprint_features(scc, fingerprints)
         
@@ -334,11 +443,13 @@ def build_patches(
             pseudo_logdet=logdet,
             patch_run_id=run_id,
             run_id=run_id,
+            spectral_status=spectral_status,
         ))
         
+        patch_membership[patch_id] = set(scc)
         for node_id in scc:
             members.append(PatchMember(
-                _from=f"ig_chiral_patches/{patch_id}",
+                _from=patch_doc_id(patch_id),
                 _to=node_id,
                 membership_type="scc_member",
                 patch_run_id=run_id,
@@ -347,16 +458,23 @@ def build_patches(
         add_internal_patch_edges(patch_id, sub_G)
             
     # 2. Ego Patches (around high degree nodes)
+    undirected = G.to_undirected()
     degrees = sorted(G.degree(), key=lambda x: x[1], reverse=True)
     for node_id, deg in degrees[:ego_limit]:
-        ego_nodes = sorted(nx.ego_graph(G, node_id, radius=ego_radius).nodes())
+        ego_nodes = sorted(nx.ego_graph(undirected, node_id, radius=ego_radius).nodes())
+        if len(ego_nodes) > max_patch_nodes:
+            local_degrees = dict(G.degree(ego_nodes))
+            ego_nodes = sorted(sorted(ego_nodes, key=lambda n: (-local_degrees.get(n, 0), str(n)))[:max_patch_nodes])
+            if node_id not in ego_nodes:
+                ego_nodes = sorted([node_id] + ego_nodes[:-1])
         if len(ego_nodes) < 3: continue
         seed_hash = hashlib.sha256(json.dumps(ego_nodes, sort_keys=True).encode()).hexdigest()[:16]
-        patch_id = f"{run_id}__ego_patch__{seed_hash}"
+        patch_id = stable_key(f"{run_id}__ego_patch__{seed_hash}")
         
         sub_G = G.subgraph(ego_nodes)
         entropy, bias, cartan = compute_chiral_metrics(sub_G)
-        evs, nullity, logdet = compute_spectral_signature(sub_G.to_undirected())
+        evs, nullity, logdet, spectral_status = compute_spectral_signature(
+            sub_G.to_undirected(), k=spectral_k, max_exact_nodes=max_patch_nodes)
         
         hist, redex_density, max_depth = fingerprint_features(ego_nodes, fingerprints)
                 
@@ -387,11 +505,13 @@ def build_patches(
             pseudo_logdet=logdet,
             patch_run_id=run_id,
             run_id=run_id,
+            spectral_status=spectral_status,
         ))
         
+        patch_membership[patch_id] = set(ego_nodes)
         for nid in ego_nodes:
             members.append(PatchMember(
-                _from=f"ig_chiral_patches/{patch_id}",
+                _from=patch_doc_id(patch_id),
                 _to=nid,
                 membership_type="ego_member",
                 local_role="seed" if nid == node_id else "member",
@@ -409,12 +529,16 @@ def build_patches(
         unique_nodes = sorted(set(node_ids))
         if len(unique_nodes) < binder_min_size:
             continue
+        if len(unique_nodes) > max_patch_nodes:
+            local_degrees = dict(G.degree(unique_nodes))
+            unique_nodes = sorted(sorted(unique_nodes, key=lambda n: (-local_degrees.get(n, 0), str(n)))[:max_patch_nodes])
         sub_G = G.subgraph(unique_nodes)
         entropy, bias, cartan = compute_chiral_metrics(sub_G)
-        evs, nullity, logdet = compute_spectral_signature(sub_G.to_undirected())
+        evs, nullity, logdet, spectral_status = compute_spectral_signature(
+            sub_G.to_undirected(), k=spectral_k, max_exact_nodes=max_patch_nodes)
         hist, redex_density, max_depth = fingerprint_features(unique_nodes, fingerprints)
         seed_hash = hashlib.sha256(json.dumps({"bucket": bucket, "nodes": unique_nodes}, sort_keys=True).encode()).hexdigest()[:16]
-        patch_id = f"{run_id}__binder_pattern_patch__{seed_hash}"
+        patch_id = stable_key(f"{run_id}__binder_pattern_patch__{seed_hash}")
         patch = ChiralPatch(
             _key=patch_id,
             patch_id=patch_id,
@@ -441,10 +565,12 @@ def build_patches(
             pseudo_logdet=logdet,
             patch_run_id=run_id,
             run_id=run_id,
+            spectral_status=spectral_status,
         ))
+        patch_membership[patch_id] = set(unique_nodes)
         for nid in unique_nodes:
             members.append(PatchMember(
-                _from=f"ig_chiral_patches/{patch_id}",
+                _from=patch_doc_id(patch_id),
                 _to=nid,
                 membership_type="binder_pattern_member",
                 patch_run_id=run_id,
@@ -452,6 +578,7 @@ def build_patches(
             ))
         add_internal_patch_edges(patch_id, sub_G)
 
+    p_edges.extend(build_patch_dependency_edges(edges, patch_membership, run_id))
     return patches, members, p_edges, signatures
 
 def main() -> int:
@@ -475,26 +602,30 @@ def main() -> int:
     with open(args.nodes, "r") as f:
         for line in f:
             row = json.loads(line)
-            key = row.get('_key') or row.get('name')
+            key = row.get("_id") or row.get("_key") or row.get("id") or row.get("name")
             if key:
-                node_data[f"ig_nodes/{key}"] = row
+                node_data[normalize_node_key(key)] = row
             
     edge_data = []
     with open(args.edges, "r") as f:
         for line in f:
-            edge_data.append(json.loads(line))
+            row = json.loads(line)
+            src = normalize_node_key(row.get("_from") or row.get("src"))
+            dst = normalize_node_key(row.get("_to") or row.get("dst"))
+            if src and dst:
+                edge_data.append({**row, "_from": src, "_to": dst})
             
     fingerprint_data = {}
     if args.fingerprints and args.fingerprints.exists():
         with open(args.fingerprints, "r") as f:
             for line in f:
                 row = json.loads(line)
-                decl_name = row.get('decl') or row.get('decl_name') or row.get('name')
+                decl_name = row.get("_id") or row.get("_key") or row.get("decl") or row.get("decl_name") or row.get("name")
                 if not decl_name:
                     continue
-                fingerprint_data[f"ig_nodes/{decl_name}"] = row
+                fingerprint_data[normalize_node_key(decl_name)] = row
 
-    run_id = args.run_id or f"patch_run_{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}"
+    run_id = stable_key(args.run_id or f"patch_run_{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}")
     
     # Compute Patches
     patches, members, p_edges, signatures = build_patches(
@@ -506,13 +637,19 @@ def main() -> int:
         ego_radius=args.ego_radius,
         min_scc_size=args.min_scc_size,
         binder_min_size=args.binder_min_size,
+        max_patch_nodes=args.max_patch_nodes,
+        spectral_k=args.spectral_k,
     )
     
     # Metadata Run
     run = PatchRun(
         _key=run_id,
         schema_version=RUN_SCHEMA_VERSION,
-        source_graph_hash="sha256:" + hashlib.sha256(args.nodes.read_bytes() + b"\n" + args.edges.read_bytes()).hexdigest(),
+        source_graph_hash=hash_input_files([
+            args.nodes,
+            args.edges,
+            args.fingerprints if args.fingerprints and args.fingerprints.exists() else None,
+        ]),
         expr_fingerprint_version="expr_fingerprint.v1" if args.fingerprints and args.fingerprints.exists() else "",
         patch_algorithm=ALGORITHM_VERSION,
         created_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

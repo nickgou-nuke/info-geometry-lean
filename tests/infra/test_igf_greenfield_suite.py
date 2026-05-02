@@ -247,17 +247,51 @@ def test_query_registry_has_required_queries() -> None:
         "verify.orphan_spectral",
         "verify.orphan_members",
         "verify.orphan_patch_edges",
+        "patch.maxent_style_candidates",
         "patch.maxent_candidate_ground_states",
     }
     assert required.issubset(set(QUERIES))
     q = get_query("verify.run_summary")
     assert "run_id" in q.aql
 
-    maxent = get_query("patch.maxent_candidate_ground_states")
+    maxent = get_query("patch.maxent_style_candidates")
     assert "derived_spectral_neighborhood_sidecar" in maxent.aql
     assert "non_overclaim" in maxent.aql
     assert "chiral_entropy" in maxent.aql
     assert "pseudo_logdet" in maxent.aql
+
+    compat = get_query("patch.maxent_candidate_ground_states")
+    assert compat.aql == maxent.aql
+
+
+def test_maxent_candidate_pipeline_uses_safe_query(monkeypatch: pytest.MonkeyPatch) -> None:
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.pipeline import candidates
+
+    calls = []
+
+    monkeypatch.setattr(candidates, "resolve_run_id", lambda db, run_id: run_id or "run_latest")
+
+    def fake_run_query(db, query_id, **bind_vars):
+        calls.append((query_id, bind_vars))
+        return [{"patch_id": "p1"}]
+
+    monkeypatch.setattr(candidates, "run_query", fake_run_query)
+
+    result = candidates.find_maxent_style_patch_candidates(
+        object(), limit=3, min_abs_chiral_bias=0.25
+    )
+
+    assert result["ok"] is True
+    assert result["query_id"] == "patch.maxent_style_candidates"
+    assert result["non_overclaim"] is True
+    assert result["candidate_count"] == 1
+    assert calls == [
+        (
+            "patch.maxent_style_candidates",
+            {"run_id": "run_latest", "limit": 3, "min_abs_chiral_bias": 0.25},
+        )
+    ]
 
 
 def test_preflight_reports_missing_credentials(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -64,6 +64,12 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("--limit", type=int, default=25)
     verify.add_argument("--print-json", action="store_true")
 
+    maxent = sub.add_parser("maxent-candidates")
+    maxent.add_argument("--run-id", default="")
+    maxent.add_argument("--limit", type=int, default=25)
+    maxent.add_argument("--min-abs-chiral-bias", type=float, default=0.5)
+    maxent.add_argument("--print-json", action="store_true")
+
     report = sub.add_parser("report")
     report.add_argument("--dir", default="artifacts/dag/index")
     report.add_argument("--print-json", action="store_true")
@@ -135,6 +141,22 @@ def main(argv: list[str] | None = None) -> int:
         result = verify_run(db, args.run_id or None, limit=int(args.limit))
         print(json.dumps(result, ensure_ascii=False))
         return 0 if result.get("ok") else 2
+
+    if args.command == "maxent-candidates":
+        from igf.config.loader import load_arango_config
+        from igf.graph.arango_client import connect_db
+        from igf.pipeline.candidates import find_maxent_style_patch_candidates
+
+        cfg = load_arango_config()
+        db = connect_db(cfg)
+        result = find_maxent_style_patch_candidates(
+            db,
+            args.run_id or None,
+            limit=int(args.limit),
+            min_abs_chiral_bias=float(args.min_abs_chiral_bias),
+        )
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 1
 
     if args.command == "report":
         from igf.pipeline.report import report_artifacts

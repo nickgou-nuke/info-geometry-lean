@@ -2,12 +2,17 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "ig.patch_member.v1",
   "type": "object",
-  "required": ["_from", "_to", "patch_id", "run_id", "schema_version", "membership_type"],
+  "required": ["_from", "_to", "patch_id", "schema_version", "membership_type"],
+  "anyOf": [
+    {"required": ["run_id"]},
+    {"required": ["patch_run_id"]}
+  ],
   "properties": {
     "_from": {"type": "string", "minLength": 1},
     "_to": {"type": "string", "minLength": 1},
     "patch_id": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
+    "patch_run_id": {"type": "string", "minLength": 1},
     "schema_version": {"const": "ig.patch_member.v1"},
     "membership_type": {"type": "string", "minLength": 1}
   },

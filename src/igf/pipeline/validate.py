@@ -26,7 +26,6 @@ ARTIFACT_FILES = {
 }
 
 POLICY_ARTIFACT_FILES = {
-    "ig_patch_runs.jsonl",
     "ig_chiral_patches.jsonl",
     "ig_patch_spectral_signatures.jsonl",
 }

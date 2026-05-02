@@ -634,8 +634,8 @@ theorem claimG_infiniteSuperCoadjointMetriplectic_packet
     {G Gdual Orbit : Type*}
     (C : FullCoadjointOrbitMetriplecticContext G Gdual Orbit)
     (x : Orbit) :
-    C.isCoadjointOrbit
-      ∧ C.orbitInvariantEntropy
+    (∀ y : Orbit, C.superMoment.isOnCoadjointOrbit (C.superMoment.moment y))
+      ∧ (∀ y : Orbit, C.entropy (C.reversibleFlow y) = C.entropy y)
       ∧ C.stressTensorAt x =
         C.superMoment.stressTensorProjection (C.superMoment.moment x)
       ∧ C.supercurrentAt x =
@@ -644,22 +644,25 @@ theorem claimG_infiniteSuperCoadjointMetriplectic_packet
       ∧ 0 ≤ C.dissipativeEntropyRate x
       ∧ C.totalEntropyProduction x = C.dissipativeEntropyRate x
       ∧ 0 ≤ C.totalEntropyProduction x
-      ∧ C.weylGaugeCovariant
-      ∧ C.supertraceFreeStress := by
+      ∧ (∀ g y, C.superMoment.coadjointAction g (C.superMoment.moment y) =
+          C.superMoment.moment y)
+      ∧ (∀ y,
+          C.superMoment.stressTensorProjection (C.superMoment.moment y) +
+            C.superMoment.supercurrentProjection (C.superMoment.moment y) = 0) := by
   have htotal :
       C.totalEntropyProduction x = C.dissipativeEntropyRate x := by
     rw [C.totalEntropyProduction_eq_sum x, C.reversibleEntropyRate_eq_zero x]
     simp
-  exact ⟨C.isCoadjointOrbit_proof,
-    C.orbitInvariantEntropy_proof,
+  exact ⟨C.moment_mem_orbit,
+    C.orbit_entropy_invariant,
     rfl,
     rfl,
     C.reversibleEntropyRate_eq_zero x,
     C.dissipativeEntropyRate_nonneg x,
     htotal,
     C.totalEntropyProduction_nonneg x,
-    C.weylGaugeCovariant_proof,
-    C.supertraceFreeStress_proof⟩
+    C.weyl_covariant,
+    C.supertrace_balance⟩
 
 /--
 Claim T: the split `Cl(4,4)`/TKK/Jordan-Lie corridor is available only through

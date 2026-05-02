@@ -10,6 +10,7 @@ proof-carrying data, not placeholder assertions.
 
 import Mathlib
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
+import InfoGeometry.Meta.Architecture
 import InfoGeometry.OperatorAlgebra.PO55RicciFlux
 
 noncomputable section
@@ -44,6 +45,20 @@ structure RegularConePoint
   mem : op ∈ regularPositiveConeOmegaD c
 
 namespace RegularConePoint
+
+/-- Coerce a regular cone point to its underlying operator. -/
+instance
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)} :
+    CoeOut (RegularConePoint c) (OperatorEnd E) where
+  coe U := U.op
+
+@[simp]
+theorem coe_mk
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (op : OperatorEnd E)
+    (hmem : op ∈ regularPositiveConeOmegaD c) :
+    (({ op := op, mem := hmem } : RegularConePoint c) : OperatorEnd E) = op :=
+  rfl
 
 end RegularConePoint
 
@@ -106,6 +121,34 @@ def operatorBregmanSym
   operatorBregmanDivergence ω gradPhi U V +
     operatorBregmanDivergence ω gradPhi V U
 
+/-! ## 2a. Elementary Bregman identities -/
+
+/--
+The Bregman skew changes sign when its arguments are swapped.
+-/
+@[rep_depth thermo]
+theorem operatorBregmanSkew_swap
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U V : RegularConePoint c) :
+    operatorBregmanSkew ω gradPhi V U =
+      - operatorBregmanSkew ω gradPhi U V := by
+  dsimp [operatorBregmanSkew]
+  ring
+
+/--
+The symmetrized Bregman divergence vanishes on the diagonal.
+-/
+@[simp]
+theorem operatorBregmanSym_self
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    (ω : OperatorEnd E →L[ℝ] ℝ)
+    (gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ)
+    (U : RegularConePoint c) :
+    operatorBregmanSym ω gradPhi U U = 0 := by
+  simp [operatorBregmanSym]
+
 /-! ## 3. Convexity datum for the regular cone -/
 
 /--
@@ -162,6 +205,19 @@ theorem eq_zero_iff_eq
     (U V : RegularConePoint c) :
     operatorBregmanDivergence ω gradPhi U V = 0 ↔ U.op = V.op :=
   OperatorBregmanConvexityDatum.eq_zero_iff C U V
+
+/--
+The symmetrized Bregman divergence is nonnegative.
+-/
+@[rep_depth thermo]
+theorem sym_nonneg
+    (C : OperatorBregmanConvexityDatum c ω gradPhi)
+    (U V : RegularConePoint c) :
+    0 ≤ operatorBregmanSym ω gradPhi U V := by
+  dsimp [operatorBregmanSym]
+  have hUV := C.nonneg U V
+  have hVU := C.nonneg V U
+  linarith
 
 end OperatorBregmanConvexityDatum
 
@@ -237,6 +293,22 @@ theorem modularBregmanEnergy_zero
   simp [modularBregmanEnergy, operatorBregmanDivergence, ModularRegularConeFlow.mapPoint,
     F.flow_zero]
 
+/--
+Modular Bregman energy is nonnegative when the potential is convex on the
+regular cone.
+-/
+@[rep_depth thermo]
+theorem modularBregmanEnergy_nonneg
+    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
+    {ω : OperatorEnd E →L[ℝ] ℝ}
+    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
+    (C : OperatorBregmanConvexityDatum c ω gradPhi)
+    (F : ModularRegularConeFlow c)
+    (U : RegularConePoint c)
+    (t : ℝ) :
+    0 ≤ modularBregmanEnergy ω gradPhi F U t :=
+  C.nonneg U (F.mapPoint t U)
+
 /-! ## 6. Second-variation socket -/
 
 /--
@@ -255,8 +327,10 @@ structure SecondVariationAtZero where
 Bregman realization of Ricci flux.
 
 The scalar Ricci-flux readout from `PO55RicciFlux` is identified with the
-second variation of the modular Bregman energy only after this bridge datum is
-supplied.
+second variation of a modular Bregman energy path.
+
+The regular cone point depends on the TKK/Jordan input `(x,y)`. Otherwise this
+bridge would force all fluxes to be the same scalar.
 -/
 structure BregmanRicciFluxBridge
     (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E))
@@ -270,10 +344,15 @@ structure BregmanRicciFluxBridge
     [AddCommGroup Obs] [Module ℝ Obs]
     (T : TKKLieClosure J L)
     (R : RicciFluxReadout J L Obs T) where
+  /-- The regular cone point whose modular shear energy realizes the flux for `(x,y)`. -/
+  conePointOf :
+    J → J → RegularConePoint c
+
   /-- Scalar Ricci flux equals the second variation of Bregman shear energy. -/
   flux_eq_bregman_secondVariation :
-    ∀ (x y : J) (U : RegularConePoint c),
-      R.flux x y = D2.eval (modularBregmanEnergy ω gradPhi F U)
+    ∀ (x y : J),
+      R.flux x y =
+        D2.eval (modularBregmanEnergy ω gradPhi F (conePointOf x y))
 
 namespace BregmanRicciFluxBridge
 
@@ -289,14 +368,18 @@ variable
     [AddCommGroup Obs] [Module ℝ Obs]
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
+    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R)
+
+/-- The Bregman energy path realizing the Ricci flux for `(x,y)`. -/
+def energyPath
+    (x y : J) : ℝ → ℝ :=
+  modularBregmanEnergy ω gradPhi F (B.conePointOf x y)
 
 /-- Re-export the Ricci/Bregman bridge law. -/
 theorem ricciFlux_eq_secondVariation
-    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R)
-    (x y : J)
-    (U : RegularConePoint c) :
-    R.flux x y = D2.eval (modularBregmanEnergy ω gradPhi F U) :=
-  BregmanRicciFluxBridge.flux_eq_bregman_secondVariation B x y U
+    (x y : J) :
+    R.flux x y = D2.eval (B.energyPath x y) :=
+  B.flux_eq_bregman_secondVariation x y
 
 end BregmanRicciFluxBridge
 

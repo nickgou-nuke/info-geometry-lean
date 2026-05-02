@@ -1,11 +1,62 @@
-# InfoGeometry in Lean 4
+# InfoGeometry
 
-`info-geometry-lean` is a Lean 4 research repository for formalizing a
-multi-presentation theory of information geometry and adjacent operator,
-Krein, transport, and thermodynamic structures.
+`InfoGeometry` is a Lean 4 formalization project for operator-first information
+geometry.
 
-The project is exploratory in mathematical scope, but the repository discipline
-is deliberately formal:
+The guiding principle is:
+
+```text
+Observed geometry = invariant or covariant operator readout.
+```
+
+More concretely, the repository formalizes an operator-algebraic architecture in
+which geometric, thermodynamic, optical, and topological readouts are connected
+by proof-carrying bridges.
+
+The project builds proof-carrying sockets that make physical identifications
+legal only after the required algebraic, analytic, geometric, or material
+calibration witnesses are supplied.
+
+The repository develops a witness-gated architecture connecting:
+
+- operator algebras and symmetry invariants;
+- chiral projectors and lightcone readouts;
+- Tomita-Takesaki modular routing;
+- type III integration by weights and crossed-product/core traces;
+- Stinespring/Tomita dilation for dissipative channels;
+- Jones/Fresnel optical calibration;
+- Bregman heat and susceptibility Hessians;
+- TKK conformal closure and Ricci-flux accounting;
+- super-TKK grade-two absorption sockets;
+- KMS thermodynamics and horizon/wedge calibration sockets.
+
+The project is intentionally conservative in Lean:
+
+```text
+No physical bridge is asserted as a theorem unless the necessary mathematical
+witness data are explicitly supplied.
+```
+
+## Philosophical And Archetypal Motivation
+
+This project is philosophically motivated and archetypally informed. It draws
+structural analogies from religious and mythic patterns such as Genesis,
+Revelation, Mahapralaya, Logos, abyss, horizon, unveiling, and dissolution.
+These archetypes are treated as semantic guides for recurring mathematical
+operations: splitting, quenching, duality, recovery, terminal equilibration,
+and invariant survival.
+
+They are not formal assumptions. The formal layer is expressed in Lean through
+explicit structures, witnesses, and theorems. An archetypal correspondence is
+accepted only when it can be translated into a precise algebraic, geometric, or
+operator-theoretic statement.
+
+The framework is not religious doctrine, but it is not secularly amnesiac. It
+recognizes that religious archetypes often encode structural intuitions about
+creation, duality, hiddenness, judgment, recovery, and dissolution.
+Operator-Erlangen translates those intuitions into witness-gated algebra.
+
+The repository discipline is formal:
 
 - claims are represented as Lean definitions, theorem statements, explicit
   proof-carrying contexts, or concrete unresolved debt;
@@ -14,6 +65,7 @@ is deliberately formal:
 - closure claims are reserved for Lean/lake-validated theorem surfaces.
 
 The repo has three maintained surfaces:
+
 - a theorem library under `lean/InfoGeometry/`
 - a Lean-native architecture kernel under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
 - a tooling layer under `lean/DAG/`, `tools/infra/`, and `tools/frontier/`
@@ -29,6 +81,556 @@ For a quick high-level status view, start with:
 - [docs/ModuleMap.md](docs/ModuleMap.md)
 - [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 - [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+
+## Core Design Rule
+
+The repository follows a strict dependency discipline:
+
+```text
+kinematics first,
+dynamics second,
+calibration third,
+physical interpretation last.
+```
+
+For example, chiral projectors are defined before any weak, optical, or modular
+action acts on them:
+
+```text
+χ² = 1
+Pleft  = (1 + χ)/2
+Pright = (1 - χ)/2
+```
+
+A force, channel, mirror, horizon, or material interface may later act on those
+sectors, but it does not define them.
+
+This is the formal version of:
+
+```text
+The stage is kinematic.
+The actor is dynamic.
+The physical model is a calibrated interaction between them.
+```
+
+## Witness-Gated Physics
+
+Many structures in the repository contain fields of the form:
+
+```lean
+some_law : Prop
+some_law_holds : some_law
+```
+
+This pattern is deliberate. A `Prop` field alone names a mathematical
+statement; a proof field certifies that the statement holds.
+
+The repository does not silently promote a slogan into a theorem. Instead, it
+uses proof-carrying witnesses such as:
+
+```text
+StinespringTomitaDilation
+HeatEqualsHiddenInformation
+KMSAnalyticBoundary
+HorizonThermalCalibration
+HessianSusceptibilityCalibration
+JonesFromMaterialCalibration
+TKKRicciFluxDatum
+ConformalThermodynamicLedger
+SuperTKKDefectAbsorption
+```
+
+Once the right witnesses are supplied, the algebraic consequences become
+theorems.
+
+## Claim Classes
+
+The README uses four levels of formal status. These are documentation labels,
+not marketing labels.
+
+`Proved theorem` means a Lean theorem with a closed proof in the current source
+tree. Examples include chiral mirror exchange, Stinespring heat/hidden
+information equalities under a bridge datum, Ricci-flux expansion under
+`TKKRicciFluxDatum`, and adjoint/skew-adjoint consequences used by the
+Individuated UHP lane.
+
+`Proof-carrying datum` means a structure or context that stores the
+mathematical data needed before a physical interpretation is legal. Examples
+include
+`HeatEqualsHiddenInformation`, `JonesFromMaterialCalibration`,
+`HessianSusceptibilityCalibration`, `TKKRicciFluxDatum`,
+`ConformalThermodynamicLedger`, and `SuperTKKDefectAbsorption`.
+
+`Owner targets` are explicit construction goals. They mark where a future
+module should supply analytic, geometric, material, or representation-theoretic
+substance. They are not advertised as completed physical derivations.
+
+`Physical interpretation` means a calibrated reading of the formal data. It is
+not an unconditional theorem unless the corresponding Lean theorem or
+proof-carrying datum is present and used.
+
+In short:
+
+```text
+proved theorem
+    = Lean theorem with closed proof
+
+proof-carrying datum
+    = structure field requiring a witness
+
+owner target
+    = declared construction target for later concrete models
+
+physical interpretation
+    = calibrated reading of formal data, not an unconditional theorem
+```
+
+Graph retrieval, ArangoDB, DAG overlays, and InfoTree artifacts are navigation
+and audit layers. They can suggest a proof corridor, but every graph hit must
+descend to raw Lean source before it can justify a README claim or a theorem
+statement.
+
+## Operator Ledger Map
+
+The current operator-first stack is:
+
+```text
+SymmetryInvariants
+    ↓
+PhaseErlanger
+    ↓
+Chiral / CPT / modular sign layers
+    ↓
+OperatorChiralLightcone / ChiralLightconeStinespring
+    ↓
+StinespringDilation
+    ↓
+MetalMirror / JonesCalibration / SusceptibilityHessian
+    ↓
+ChiralTubuleBoundary
+    ↓
+TKKConformalClosure
+    ↓
+ConformalLedgerBridge
+    ↓
+OperatorThermodynamics
+```
+
+More explicitly:
+
+```text
+operator symmetry
+    → invariant projectors
+    → chiral sectors
+    → calibrated lightcone geometry
+    → dissipative visible channel
+    → hidden commutant flow
+    → Bregman heat
+    → TKK Ricci flux
+    → KMS thermal readout
+```
+
+The central ledger bridge is:
+
+```text
+Bregman heat
+  = hidden commutant information
+  = scalarized TKK Ricci flux
+  = scalar(curvature variation + closure defect)
+```
+
+This equality is not global. It is proved only inside
+`OperatorAlgebra/ConformalLedgerBridge.lean` after the relevant Stinespring,
+Bregman, scalarization, and TKK witnesses are supplied.
+
+## Main Operator Modules
+
+### `OperatorAlgebra/SymmetryInvariants.lean`
+
+Defines the general invariant-operator layer:
+
+```text
+Op       = ambient operator algebra
+G        = symmetry group
+α        = action by automorphisms
+Opᴳ      = invariant subring
+p        = invariant projector
+p * x = x = sector support
+```
+
+This module provides vocabulary for invariant predicates, projectors, readouts,
+pairings, defect loci, and projector-supported sectors.
+
+### `Geometry/PhaseErlanger.lean`
+
+Defines the first Erlanger layer: phase-preserving morphisms.
+
+The primitive condition is:
+
+```lean
+F.comp K₁ = K₂.comp F
+```
+
+This says that a morphism respects the Hestenes phase axis.
+
+### `OperatorAlgebra/ModularWeightTrace.lean`
+
+Separates trace-capable and type III integration backends.
+
+```text
+Type III algebras do not receive a bare trace field.
+They use modular weights on the base algebra and core traces on crossed-product
+or continuous-core data.
+```
+
+This avoids trying to use a trace where only a weight exists.
+
+### `OperatorAlgebra/ModularSignCPT.lean`
+
+Packages the modular sign/CPT algebra:
+
+```text
+ε      = sign(log Δ)
+J      = modular conjugation / CPT mirror
+Jε     = -εJ
+Kmod   = Jε
+Kmod²  = -1
+```
+
+The zero-mode case is handled separately by a partial-support version where
+`Kmod² = -support`.
+
+### `OperatorAlgebra/ModularChiralMirror.lean`
+
+Formalizes modular mirroring of chirality. Given:
+
+```text
+J² = 1
+χ² = 1
+Jχ = -χJ
+```
+
+it proves:
+
+```text
+J Pleft  = Pright J
+J Pright = Pleft J
+J Pleft J = Pright
+J Pright J = Pleft
+```
+
+and, with metric preservation, `qχ(Jv) = -qχ(v)`.
+
+### `OperatorAlgebra/CPTSymmetryBranch.lean`
+
+Packages the calibrated CPT symmetry branch. It identifies the modular sign/CPT
+datum with the chiral mirror datum and records physical calibration fields such
+as Tomita routing and modular-time reversal.
+
+### `OperatorAlgebra/DIIISuperfluidBranch.lean`
+
+Specializes the CPT/chiral structure to Altland-Zirnbauer class DIII:
+
+```text
+T² = -1
+C² = +1
+TC = -CT
+χ = TC
+```
+
+From these, the module derives:
+
+```text
+χ² = 1
+Cχ = -χC
+χH = -Hχ
+```
+
+### `OperatorAlgebra/OperatorChiralLightcone.lean`
+
+Separates algebraic chirality from geometric null structure.
+
+The projectors are algebraic:
+
+```text
+Pleft² = Pleft
+Pright² = Pright
+Pleft + Pright = 1
+Pleft Pright = 0
+```
+
+The lightcone is geometric:
+
+```text
+q(v) = 0
+```
+
+A calibration witness relates them:
+
+```text
+left-supported algebraic data  → null geometric readout
+right-supported algebraic data → null geometric readout
+```
+
+Thus, chiral projectors are not definitionally null vectors; they become null
+directions through representation data.
+
+### `OperatorAlgebra/StinespringDilation.lean`
+
+Defines the conservation ledger for dissipative channels. A visible channel
+has:
+
+```text
+actual : Sys → Sys
+ideal  : Sys → Sys
+```
+
+A Stinespring/Tomita dilation supplies hidden/environment data:
+
+```text
+hiddenFlow    : Sys → Comm
+recoverHidden : Comm → Sys
+```
+
+and proves:
+
+```text
+ideal x - actual x = recoverHidden (hiddenFlow x)
+```
+
+With a Bregman backend and hidden readout calibration, it proves:
+
+```text
+heatLoss = hidden commutant information
+```
+
+### `OperatorAlgebra/JonesCalibration.lean`
+
+Connects optical Jones/Fresnel data with discrete bookkeeping. It separates:
+
+```text
+continuous coefficients:
+    r_s, r_p, r_L, r_R
+
+discrete V₄ tags:
+    parity/time orientation bookkeeping
+
+topological charges:
+    integer, ZMod 2, ZMod 16, or multibit obstruction readouts
+```
+
+It includes sockets for Brewster projection, total internal reflection, metal
+mirrors, chiral media, rough depolarizing surfaces, metasurfaces, and spectral
+divisor charges.
+
+### `OperatorAlgebra/SusceptibilityHessian.lean`
+
+Connects Bregman/Fisher Hessian response to material optics:
+
+```text
+HessianResponseDatum
+    → MaterialResponseModel
+    → PolarizationEigenResponse
+    → FresnelCoefficientReadout
+    → JonesFromMaterialCalibration
+    → Retardance / absorption / ellipticity
+```
+
+The Hessian is not assumed to determine a refractive index by itself. The
+material model and boundary calibration are explicit witness data.
+
+### `OperatorAlgebra/ChiralTubuleBoundary.lean`
+
+Defines the topological snap boundary. The snap boundary is where the Hessian
+loses invertibility:
+
+```lean
+IsTopologicalSnapBoundary H U := ¬ H.isInvertibleAt U
+```
+
+Extreme shear is threshold-based:
+
+```lean
+threshold ≤ ‖torsionShear G U‖
+```
+
+A transition-law witness supplies the crystallization:
+
+```text
+extreme shear → chiral tubule crystallization
+```
+
+### `OperatorAlgebra/TKKConformalClosure.lean`
+
+Defines the Tits-Kantor-Koecher conformal closure layer. The TKK grading is
+modeled by submodules:
+
+```lean
+gMinus : Submodule ℝ L
+gZero  : Submodule ℝ L
+gPlus  : Submodule ℝ L
+```
+
+with bracket routing:
+
+```text
+[g_-1, g_-1] = 0
+[g_+1, g_+1] = 0
+[g_0,  g_-1] ⊆ g_-1
+[g_0,  g_+1] ⊆ g_+1
+[g_-1, g_+1] ⊆ g_0
+```
+
+Ricci flux is defined as:
+
+```text
+Ricci flux = curvature variation + TKK closure defect
+```
+
+This is not yet a concrete Ricci tensor. It is a covariant readout socket that
+later geometry modules can instantiate.
+
+The repository also has an older compiled `PO55RicciFlux` / `TKKLieClosure`
+lane used by `Geometry/OperatorBregmanDivergence.lean` and
+`Thermo/MetalMirror.lean`. The newer `TKKConformalClosure` lane is an adapter
+for curvature-variation-plus-defect accounting, not a replacement for that
+existing grade-slippage corridor.
+
+### `OperatorAlgebra/TKKFluxBalance.lean`
+
+Decomposes a supplied `TKKRicciFluxDatum` closure defect into hidden, material,
+and topological ledgers:
+
+```text
+Ricci flux
+  = curvature variation
+    + hidden flux
+    + material flux
+    + topological flux
+```
+
+This is a typed balance law, not an Einstein equation.
+
+### `OperatorAlgebra/ConformalLedgerBridge.lean`
+
+Connects Stinespring heat accounting to TKK Ricci-flux accounting.
+
+Once the witness data are supplied, it proves:
+
+```text
+Bregman heat
+  = hidden commutant information
+  = scalarized TKK Ricci flux
+  = scalar(curvature variation + closure defect)
+```
+
+This is the central ledger bridge between dissipative operator mechanics and
+conformal/geometric readouts.
+
+### `OperatorAlgebra/SuperTKKConformalClosure.lean`
+
+Records the safe algebraic version of super-TKK grade-two absorption.
+
+It does not assert a concrete `E7(7)`, Kac-Moody algebra, Virasoro algebra, or
+physical BPS sector. It packages:
+
+```text
+five-grading
+  + chiral supercharge sectors
+  + even-valued super-anticommutator
+  + explicit same-left supercharge square for lifted defects
+```
+
+and proves that supplied defects are absorbed as positive grade-two charges.
+The concrete operatorial central-charge owner remains in the canonical
+supercharge/Fredholm-index lane, especially:
+
+```text
+Canonical.OperatorialCentralCharge
+Canonical.SuperchargeHoppingBridge
+Canonical.SuperchargeOddOddDecomposition
+Canonical.SuperchargeCentralChargeClosure
+SuperMetriplectic.BPS
+```
+
+### `OperatorAlgebra/OperatorThermodynamics.lean`
+
+Defines the KMS thermodynamic socket.
+
+The module avoids saying that type III thermodynamics is an ordinary partial
+trace. Instead it uses:
+
+```text
+observer reduction / restriction to the observable algebra
+modular flow
+KMS analytic boundary certificate
+```
+
+The correct theorem shape is:
+
+```text
+Given a witness that the observer-reduced state is KMS for the modular flow,
+the local observer sees a KMS thermal state.
+```
+
+A Hawking/Unruh interpretation requires an additional horizon or wedge-time
+calibration.
+
+## Important Distinctions
+
+### Riemann Zeroes And Charges
+
+Riemann or automorphic L-function zeroes are spectral/divisor locations. They
+are not themselves topological charges.
+
+The charge is extracted from:
+
+```text
+multiplicity
+winding number
+argument-principle count
+spectral flow
+divisor index
+```
+
+Thus the formal chain is:
+
+```text
+zero locus
+    → spectral divisor
+    → multiplicity / winding / contour count
+    → conserved obstruction charge
+```
+
+### Light And Information
+
+The repository treats light and information as related but not identical.
+
+```text
+Light:
+    physical carrier constrained by null/projective causal geometry.
+
+Information:
+    distinguishability or correlation of states under admissible readouts.
+
+Shared structure:
+    invariant transport of distinguishable states through projective/operator
+    channels.
+```
+
+This is why Jones calculus, Stinespring dilation, KMS thermodynamics, and
+Bregman divergence appear in the same formal architecture.
+
+### Type III Rule
+
+In type III contexts:
+
+```text
+Do not attach a bare trace to the base algebra.
+Use modular weights and, when needed, crossed-product/core traces.
+```
+
+This is enforced by the structure separation in `ModularWeightTrace.lean`.
 
 ## Architecture Summary
 
@@ -517,5 +1119,27 @@ python3 tools/infra/generate_representation_depth_graph.py
 
 ## Current Codebase Status
 
-Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md) for the current build/audit state.
+Status pointer refreshed: 2026-05-01 (Europe/Sofia).
+
+Fresh authority check:
+
+```text
+lake build -R
+  completed successfully: 9172 jobs
+
+lake script run dagRefresh
+  completed successfully
+
+DAG status after refresh
+  authoritative set: complete
+  schemaVersion: 3
+  timestamp: 2026-05-01T16:20:04.481932+00:00
+  oleanHash: 67d7b37c742ad7e0197ec4544814b46512460352c7d917e05f21590899687aaa
+  nodes: 42134
+  edges: 308831
+  morphisms: 3746
+```
+
+See [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md) for the broader
+build/audit state.
 Active cleanup and improvement execution plan: [docs/CleanupImprovementProgram.md](docs/CleanupImprovementProgram.md).

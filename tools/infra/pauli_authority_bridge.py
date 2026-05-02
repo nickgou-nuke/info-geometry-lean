@@ -9,6 +9,7 @@ It implements the 'Creation-on-Failure' and 'Self-Healing' authority model.
 
 from __future__ import annotations
 
+import base64
 import json
 import math
 import os
@@ -26,8 +27,16 @@ DECL_INDEX_PATH = Path("artifacts/dag/index/decls.jsonl")
 EDGE_INDEX_PATH = Path("artifacts/dag/index/edges.jsonl")
 TOPOLOGY_NODES_PATH = Path("artifacts/dag/index/topology_overlay_nodes.jsonl")
 
-ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8529")
+ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8530")
 ARANGO_DB = os.environ.get("ARANGO_DB", "infogeometry")
+ARANGO_USER = os.environ.get("ARANGO_USER", os.environ.get("ARANGO_USERNAME", "root"))
+ARANGO_PASSWORD = os.environ.get("ARANGO_PASSWORD", "")
+
+def _arango_auth_header() -> str | None:
+    if ARANGO_PASSWORD == "" and ARANGO_USER == "":
+        return None
+    token = base64.b64encode(f"{ARANGO_USER}:{ARANGO_PASSWORD}".encode("utf-8")).decode("ascii")
+    return f"Basic {token}"
 
 def _repo_context_allows_live_authority(root: Path) -> bool:
     if os.environ.get("DECL_GRAPH_ALLOW_LIVE_ARANGO", "1") != "1":
@@ -101,6 +110,9 @@ def get_authority_data(root: Path) -> dict[str, dict[str, Any]]:
     try:
         # Check if DB is reachable, then validate live mirror freshness against local DAG artifacts.
         req = urllib.request.Request(f"{ARANGO_URL.rstrip('/')}/_db/{ARANGO_DB}/_api/collection/ig_nodes/count")
+        auth = _arango_auth_header()
+        if auth:
+            req.add_header("Authorization", auth)
         with urllib.request.urlopen(req, timeout=5) as resp:
             live_count = json.loads(resp.read().decode("utf-8")).get("count", 0)
 
@@ -152,11 +164,17 @@ def get_authority_data(root: Path) -> dict[str, dict[str, Any]]:
         body = json.dumps({"query": query, "batchSize": 5000}).encode("utf-8")
         req = urllib.request.Request(url, data=body, method="POST")
         req.add_header("Content-Type", "application/json")
+        auth = _arango_auth_header()
+        if auth:
+            req.add_header("Authorization", auth)
         with urllib.request.urlopen(req, timeout=15) as resp:
             out = json.loads(resp.read().decode("utf-8"))
             results = {row["name"]: row for row in out.get("result", [])}
             while out.get("hasMore"):
                 req = urllib.request.Request(f"{url}/{out['id']}", method="PUT")
+                auth = _arango_auth_header()
+                if auth:
+                    req.add_header("Authorization", auth)
                 with urllib.request.urlopen(req, timeout=15) as resp:
                     out = json.loads(resp.read().decode("utf-8"))
                     for row in out.get("result", []):

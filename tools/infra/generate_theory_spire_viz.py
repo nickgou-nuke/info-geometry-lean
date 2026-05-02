@@ -73,7 +73,7 @@ def compute_layout(G: nx.DiGraph) -> dict[str, tuple[float, float]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--username", default="root")
     parser.add_argument("--password", default="")

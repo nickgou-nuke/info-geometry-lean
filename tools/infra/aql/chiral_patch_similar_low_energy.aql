@@ -1,0 +1,39 @@
+LET sourcePatch = DOCUMENT("ig_chiral_patches", @patchId)
+
+FOR p IN ig_chiral_patches
+  FILTER p._key != sourcePatch._key
+  FILTER p.patch_type == sourcePatch.patch_type
+
+  LET n = MIN([LENGTH(p.debruijn_histogram), LENGTH(sourcePatch.debruijn_histogram)])
+  LET debruijnDist = n == 0 ? 0 : SQRT(
+    SUM(
+      FOR i IN 0..(n - 1)
+        RETURN POW(p.debruijn_histogram[i] - sourcePatch.debruijn_histogram[i], 2)
+    )
+  )
+
+  LET chiralDist = ABS(p.chiral_bias - sourcePatch.chiral_bias)
+  LET entropyDist = ABS(p.chiral_entropy - sourcePatch.chiral_entropy)
+  LET redexDist = ABS(p.redex_density - sourcePatch.redex_density)
+  LET energyDist = ABS(p.forward_weight + p.backward_weight + p.mixed_weight - (sourcePatch.forward_weight + sourcePatch.backward_weight + sourcePatch.mixed_weight))
+
+  LET score =
+      @wDebruijn * debruijnDist
+    + @wChiral * chiralDist
+    + @wEntropy * entropyDist
+    + @wRedex * redexDist
+    + @wEnergy * energyDist
+
+  SORT score ASC
+  LIMIT @limit
+
+  RETURN {
+    patch_id: p.patch_id,
+    patch_type: p.patch_type,
+    level: p.level,
+    score: score,
+    chiral_bias: p.chiral_bias,
+    chiral_entropy: p.chiral_entropy,
+    redex_density: p.redex_density,
+    node_count: p.node_count
+  }

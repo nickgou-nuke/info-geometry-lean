@@ -13,13 +13,17 @@ import Mathlib.Tactic.NormNum
 import InfoGeometry.Meta.Architecture
 
 /-!
-# Navier-Stokes Bridge
+# Linearized Anomaly-Fluid Bridge
 
-Operator-level bridge from singular inverse anomalies to circulation observables.
+Operator-level bridge from singular inverse anomalies to linearized vorticity
+closure observables.
 
-The module models a linearized horizon fluid state on a finite-dimensional
-real carrier and connects vorticity to the commutator anomaly
-`EinsteinAnomaly` built from Moore-Penrose and Drazin projectors.
+The module models a linear velocity Jacobian and connects the skew-adjoint
+Einstein anomaly to the closure condition `vorticity u = u`.
+
+This is not a formalization of the Navier-Stokes PDE. It does not contain
+global-in-time evolution, pressure projection, viscosity, Laplacian estimates,
+or a regularity theorem.
 -/
 
 namespace InfoGeometry.Canonical
@@ -40,15 +44,15 @@ abbrev AlgebraEnd
   DoubledSpace E →L[ℝ] DoubledSpace E
 
 /--
-A linearized incompressible fluid state.
+A linearized fluid readout.
 
-Incompressibility is modeled via the volume form/density conservation (Madelung-style).
-For Type III contexts, we use the Radon-Nikodym derivative / modular density `ρ`.
+This stores velocity, density, and pressure data. It does not by itself encode
+the incompressibility equation; incompressibility or volume preservation must be
+supplied separately by a smoothing/backend witness.
 -/
 structure FluidState
     (E : Type _)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [FiniteDimensional ℝ E] where
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   u : VelocityField E
   ρ : ℝ
   p : ℝ
@@ -61,6 +65,13 @@ noncomputable def vorticity
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (u : VelocityField E) : VelocityField E :=
   (2 : ℝ)⁻¹ • (u - ContinuousLinearMap.adjoint u)
+
+/-- Symmetric strain-rate part of a linear velocity Jacobian. -/
+noncomputable def strainRate
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (u : VelocityField E) : VelocityField E :=
+  (2 : ℝ)⁻¹ • (u + ContinuousLinearMap.adjoint u)
 
 /--
 The vorticity extraction is always skew-adjoint on the ambient Hilbert metric.
@@ -80,17 +91,46 @@ theorem adjoint_vorticity_eq_neg
     _ = -vorticity u := by
           rfl
 
+/-- The strain-rate extraction is self-adjoint on the ambient Hilbert metric. -/
+theorem adjoint_strainRate_eq_self
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (u : VelocityField E) :
+    ContinuousLinearMap.adjoint (strainRate u) = strainRate u := by
+  unfold strainRate
+  calc
+    ContinuousLinearMap.adjoint ((2 : ℝ)⁻¹ • (u + ContinuousLinearMap.adjoint u))
+        = (2 : ℝ)⁻¹ • (ContinuousLinearMap.adjoint u + u) := by
+            simp
+    _ = (2 : ℝ)⁻¹ • (u + ContinuousLinearMap.adjoint u) := by
+          rw [add_comm]
+    _ = strainRate u := by
+          rfl
+
+/-- A linear velocity Jacobian decomposes into strain plus vorticity. -/
+theorem strainRate_add_vorticity_eq
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (u : VelocityField E) :
+    strainRate u + vorticity u = u := by
+  unfold strainRate vorticity
+  ext x
+  simp [sub_eq_add_neg]
+  module
+
 /--
-Modular-level circulation:
-Modeled via the negative logarithmic Radon-Nikodym derivative (the modular Hamiltonian).
-This avoids finite-summation artifacts for Type III algebras by using the weight/state `ω`.
+Modular-level circulation pairing.
+
+This pairs an installed modular Hamiltonian/readout `K` with a surface operator
+`Sigma` under the linear weight `ω`. This definition does not construct `K` as
+`-log ρ`; that identification belongs in a separate modular/Radon-Nikodym
+witness.
 -/
 noncomputable def modularCirculation
     {E : Type _}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [FiniteDimensional ℝ E]
     (K : AlgebraEnd E) (Sigma : AlgebraEnd E) (ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
-  -- Pair the modular Hamiltonian K with the surface operator Sigma under the weight ω
   ω (Sigma.comp K)
 
 section RealFluid
@@ -110,17 +150,20 @@ noncomputable def anomalyFluidStateWithDensity
     p := 0
     density_pos := h_pos }
 
+omit [FiniteDimensional ℝ E] in
 @[simp] lemma anomalyFluidStateWithDensity_u
     (A B_mp B_dr : VelocityField E)
     (ρ_val : ℝ) (h_pos : ρ_val > 0) :
     (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).u
       = EinsteinAnomaly A B_mp B_dr := rfl
 
+omit [FiniteDimensional ℝ E] in
 @[simp] lemma anomalyFluidStateWithDensity_rho
     (A B_mp B_dr : VelocityField E)
     (ρ_val : ℝ) (h_pos : ρ_val > 0) :
     (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).ρ = ρ_val := rfl
 
+omit [FiniteDimensional ℝ E] in
 /--
 Anomaly-to-vorticity state identity at prescribed positive density.
 -/
@@ -133,9 +176,7 @@ theorem anomaly_as_fluid_state_with_density
   exact ⟨rfl, rfl⟩
 
 /--
-Modular response theorem:
-The circulation pairing `ω(Sigma ∘ K)` is the linear response
-of the modular flow to the geometric deformation `Sigma`.
+Definitional form of the modular circulation pairing.
 -/
 theorem modular_circulation_response
     (K Sigma : AlgebraEnd E)
@@ -165,24 +206,50 @@ lemma vorticity_eq_self_of_skew
     _ = ((2 : ℝ)⁻¹ * (2 : ℝ)) • u := by rw [smul_smul]
     _ = u := by norm_num
 
+omit [FiniteDimensional ℝ E] in
+/-- The vorticity of a self-adjoint velocity field vanishes. -/
+lemma vorticity_eq_zero_of_self_adjoint
+    {u : VelocityField E}
+    (hSelf : ContinuousLinearMap.adjoint u = u) :
+    vorticity u = 0 := by
+  unfold vorticity
+  rw [hSelf]
+  simp
+
 /--
-Linearized momentum residual for the vorticity closure condition `ω(u) = u`.
+Linearized residual for the vorticity closure condition `vorticity u = u`.
 -/
-noncomputable def momentumResidual
+noncomputable def vorticityClosureResidual
     (u : VelocityField E) : VelocityField E :=
   vorticity u - u
 
+/--
+Deprecated compatibility name: this is not the full Navier-Stokes momentum
+residual. Use `vorticityClosureResidual`.
+-/
+noncomputable def momentumResidual
+    (u : VelocityField E) : VelocityField E :=
+  vorticityClosureResidual u
+
 omit [FiniteDimensional ℝ E] in
 /--
-The linearized momentum residual vanishes for skew-adjoint flows.
+The linearized vorticity-closure residual vanishes for skew-adjoint flows.
 -/
+lemma vorticityClosureResidual_eq_zero_of_skew
+    {u : VelocityField E}
+    (hSkew : ContinuousLinearMap.adjoint u = -u) :
+    vorticityClosureResidual u = 0 := by
+  unfold vorticityClosureResidual
+  rw [vorticity_eq_self_of_skew (E := E) hSkew]
+  simp
+
+omit [FiniteDimensional ℝ E] in
+/-- Compatibility form for the deprecated `momentumResidual` name. -/
 lemma momentumResidual_eq_zero_of_skew
     {u : VelocityField E}
     (hSkew : ContinuousLinearMap.adjoint u = -u) :
     momentumResidual u = 0 := by
-  unfold momentumResidual
-  rw [vorticity_eq_self_of_skew (E := E) hSkew]
-  simp
+  exact vorticityClosureResidual_eq_zero_of_skew (E := E) hSkew
 
 /--
 Canonical unit-density anomaly state.
@@ -192,12 +259,14 @@ noncomputable def anomalyFluidState
     FluidState E :=
   anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 (by norm_num)
 
+omit [FiniteDimensional ℝ E] in
 /-- Operator-level membrane identity on the canonical unit-density anomaly state. -/
 theorem anomaly_as_fluid_state
     (A B_mp B_dr : VelocityField E) :
     (anomalyFluidState (E := E) A B_mp B_dr).u = EinsteinAnomaly A B_mp B_dr := by
   rfl
 
+omit [FiniteDimensional ℝ E] in
 /--
 State-level momentum closure for the canonical anomaly fluid:
 if the Einstein anomaly lane is skew-adjoint, the induced canonical fluid state
@@ -230,8 +299,8 @@ omit [FiniteDimensional ℝ E] in
 /--
 Regularization-driven momentum closure:
 if `B_mp` is Moore-Penrose for `A`, `B_dr` is Drazin for `A`, and the Drazin
-spectral projector is self-adjoint, then the Einstein-anomaly lane has zero
-linearized momentum residual.
+regularization channel `A * B_dr` is star-selfadjoint, then the
+Einstein-anomaly lane has zero linearized momentum residual.
 -/
 theorem anomalyMomentumResidual_eq_zero_of_regularization
     (A B_mp B_dr : VelocityField E)
@@ -263,6 +332,7 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_exists
   exact anomalyMomentumResidual_eq_zero_of_regularization
     (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
 
+omit [FiniteDimensional ℝ E] in
 /--
 State-level regularization-driven momentum closure on the canonical unit-density
 anomaly fluid state.
@@ -280,6 +350,7 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization
       (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
   simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
 
+omit [FiniteDimensional ℝ E] in
 /--
 State-level regularization closure with existential Drazin witness:
 for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
@@ -297,7 +368,7 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
 /--
 Finite-dimensional regularization package:
 derive a canonical Drazin witness internally and expose anomaly skewness as a
-star-selfadjointness consequence on the induced spectral projector.
+star-selfadjointness consequence on the induced Drazin regularization channel.
 -/
 theorem anomalySkew_of_regularization_of_finiteDimensional
     (A B_mp : VelocityField E)
@@ -413,7 +484,8 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_draz
 /--
 Auto-eliminated regularization skewness:
 in the finite-dimensional lane, use the canonical Drazin witness package from
-`DrazinWitnessElimination` and keep only projector self-adjointness external.
+`DrazinWitnessElimination` and keep only Drazin-channel star-selfadjointness
+external.
 -/
 theorem anomalySkew_of_regularization_auto
     (A B_mp : VelocityField E)
@@ -438,7 +510,7 @@ theorem anomalySkew_of_regularization_auto
 /--
 Finite-dimensional canonical-Drazin skewness wrapper:
 use the canonical Drazin choice from `DrazinInfiniteCore` and keep only the
-projector star/selfadjointness obligation as external input.
+Drazin-channel star-selfadjointness obligation as external input.
 -/
 theorem anomalySkew_of_regularization_canonical_drazin
     (A B_mp : VelocityField E)
@@ -647,25 +719,35 @@ noncomputable def collapseToBaseVelocity
     (M : AlgebraEnd E) : VelocityField E :=
   (projBase (E := E)).comp (M.comp (embedBase (E := E)))
 
-/-- Thermodynamic/probabilistic smoothing criterion: divergence-free collapsed modular velocity. -/
+/-- Collapsed Jacobian `id + velocity`. -/
+noncomputable def collapsedJacobian
+    (β : ℝ) (K : AlgebraEnd E) : E →L[ℝ] E :=
+  ContinuousLinearMap.id ℝ E +
+    collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)
+
+/-- Absolute determinant of the collapsed Jacobian. -/
+noncomputable def collapsedJacobianAbsDet
+    (β : ℝ) (K : AlgebraEnd E) : ℝ :=
+  |LinearMap.det ((collapsedJacobian (E := E) β K).toLinearMap)|
+
+/--
+Thermodynamic/probabilistic smoothing criterion:
+the collapsed Jacobian has unit absolute volume change.
+-/
 def IsThermodynamicallySmoothed
     (β : ℝ) (K : AlgebraEnd E) : Prop :=
-  Real.log
-      (|LinearMap.det
-        ((ContinuousLinearMap.id ℝ E +
-          collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap)|)
-    = 0
+  collapsedJacobianAbsDet (E := E) β K = 1
 
-omit [FiniteDimensional ℝ E] in
+set_option linter.unusedSectionVars false in
 /--
 Canonical smoothing witness at thermal equilibrium (`β = 0`):
 the collapsed modular velocity vanishes, so the Jacobian is the identity and
-the logarithmic volume change is zero.
+the absolute volume change is one.
 -/
 theorem isThermodynamicallySmoothed_zero_beta
     (K : AlgebraEnd E) :
     IsThermodynamicallySmoothed (E := E) 0 K := by
-  unfold IsThermodynamicallySmoothed
+  unfold IsThermodynamicallySmoothed collapsedJacobianAbsDet collapsedJacobian
   simp [collapseToBaseVelocity, modularVelocity]
 
 /-- Madelung density from the doubled real thermal vacuum amplitude. -/
@@ -703,7 +785,8 @@ noncomputable def madelungPhase
 
 /--
 Madelung functor (linearized):
-thermal-vacuum modular data is promoted to a divergence-free fluid state.
+thermal-vacuum modular data is promoted to a finite-dimensional fluid state
+under an installed smoothing/volume-preservation witness.
 -/
 noncomputable def madelungFluidState
     (β : ℝ)
@@ -727,6 +810,37 @@ noncomputable def madelungFluidState
       = collapseToBaseVelocity (E := E) (modularVelocity β K) := rfl
 
 /--
+A Madelung fluid state equipped with the determinant/volume smoothing witness
+from the modular velocity construction.
+-/
+structure SmoothedMadelungFluidState
+    (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E] where
+  β : ℝ
+  K : AlgebraEnd E
+  state : FluidState E
+  smoothed : IsThermodynamicallySmoothed (E := E) β K
+  velocity_eq :
+    state.u =
+      collapseToBaseVelocity (E := E)
+        (modularVelocity (E := E) β K)
+
+/-- Proof-bearing Madelung state constructor preserving the smoothing witness. -/
+noncomputable def smoothedMadelungFluidState
+    (β : ℝ)
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K) :
+    SmoothedMadelungFluidState E where
+  β := β
+  K := K
+  state := madelungFluidState (E := E) β K vac ω hSmooth
+  smoothed := hSmooth
+  velocity_eq := rfl
+
+/--
 Canonical equilibrium Madelung state with smoothing discharged constructively
 from `β = 0`.
 -/
@@ -738,12 +852,34 @@ noncomputable def madelungFluidState_zero
   madelungFluidState (E := E) 0 K vac ω
     (isThermodynamicallySmoothed_zero_beta (E := E) K)
 
+/-- Proof-bearing equilibrium Madelung state at `β = 0`. -/
+noncomputable def smoothedMadelungFluidState_zero
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    SmoothedMadelungFluidState E :=
+  smoothedMadelungFluidState (E := E) 0 K vac ω
+    (isThermodynamicallySmoothed_zero_beta (E := E) K)
+
 @[simp] theorem madelungFluidState_zero_velocity
     (K : AlgebraEnd E)
     (vac : ThermalVacuum (E := E) K)
     (ω : AlgebraEnd E →L[ℝ] ℝ) :
     (madelungFluidState_zero (E := E) K vac ω).u = 0 := by
   simp [madelungFluidState_zero, madelungFluidState, collapseToBaseVelocity, modularVelocity]
+
+@[simp] theorem smoothedMadelungFluidState_zero_velocity
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    (smoothedMadelungFluidState_zero (E := E) K vac ω).state.u = 0 := by
+  simp [
+    smoothedMadelungFluidState_zero,
+    smoothedMadelungFluidState,
+    madelungFluidState,
+    collapseToBaseVelocity,
+    modularVelocity
+  ]
 
 end MadelungBridge
 
@@ -755,13 +891,22 @@ variable {E : Type _}
   [FiniteDimensional ℝ E]
 
 /--
-Helicity Operator (H).
-The composition of the velocity Jacobian and its vorticity.
-H = u ∘ vorticity(u).
+Helicity operator proxy:
+the composition of the velocity Jacobian and its vorticity.
 -/
 noncomputable def helicityOperator
     (u : VelocityField E) : VelocityField E :=
   u.comp (vorticity u)
+
+omit [FiniteDimensional ℝ E] in
+/-- Self-adjoint velocity has zero helicity operator. -/
+lemma helicityOperator_eq_zero_of_self_adjoint
+    {u : VelocityField E}
+    (hSelf : ContinuousLinearMap.adjoint u = u) :
+    helicityOperator u = 0 := by
+  unfold helicityOperator
+  rw [vorticity_eq_zero_of_self_adjoint (E := E) hSelf]
+  simp
 
 /--
 Forward flow component in the doubled space.
@@ -778,8 +923,8 @@ noncomputable def backwardWave
   (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E)).comp (embedBase.comp (u.comp projBase))
 
 /--
-Twin Wave Helicity Invariant.
-Defined as the pairing (interference) between the forward and backward waves in the Krein space.
+Twin-wave helicity readout:
+the pairing between the forward and backward waves in the Krein space.
 -/
 noncomputable def twinWaveHelicity
     (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
@@ -810,8 +955,8 @@ the modular conjugation `J`.
 -/
 
 /--
-Krein spectral projectors: $P_+ = (I + ε)/2$ and $P_- = (I - ε)/2$.
-These isolate the two types of chiral sectors.
+Projector-shaped Krein sector readouts:
+`P_+ = (I + ε)/2` and `P_- = (I - ε)/2`.
 -/
 noncomputable def kreinPlusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
   ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E))
@@ -821,8 +966,7 @@ noncomputable def kreinMinusProjector : DoubledSpace E →L[ℝ] DoubledSpace E 
 
 /--
 Two-type Chiral Charges:
-Representing the 'plus' and 'minus' sectors of the modular doubling.
-Linked to the Krein projectors $P_+$ and $P_-$.
+Representing the plus and minus readouts of the modular doubling.
 -/
 structure ChiralCharges where
   plus : ℝ
@@ -834,8 +978,8 @@ def netChiralCharge (c : ChiralCharges) : ℝ := c.plus - c.minus
 /--
 Chiral Flux:
 Current generated by the Einstein Anomaly acting as a transition operator.
-For Type III factors, this is the modular response (weight pairing) to the anomaly.
-The flux is the mechanism that 'charges' the two sectors by shifting population across $J$.
+In this finite-dimensional bridge, this is represented by a real linear
+functional pairing with the anomaly.
 -/
 noncomputable def chiralFlux
     (χ : VelocityField E) (ω : VelocityField E →L[ℝ] ℝ) : ℝ :=
@@ -844,17 +988,23 @@ noncomputable def chiralFlux
 
 omit [FiniteDimensional ℝ E] in
 /--
-Theorem: Anomaly sources Chiral Flow.
-The commutator anomaly χ [P_D, P_MP] sources the currents between the two charge sectors.
-This formally encodes the hunch that circulation is a flow of chiral charges,
-driven by the mismatch between geometric (Penrose) and spectral (Drazin) data.
+Definitional unfolding of the chiral flux of the Einstein anomaly.
 -/
-theorem chiral_anomaly_sources_flow
+theorem chiralFlux_EinsteinAnomaly_def
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ) :
     chiralFlux (EinsteinAnomaly A B_mp B_dr) ω
       = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) := by
   rfl
+
+omit [FiniteDimensional ℝ E] in
+/-- Compatibility name for `chiralFlux_EinsteinAnomaly_def`. -/
+theorem chiral_anomaly_sources_flow
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ) :
+    chiralFlux (EinsteinAnomaly A B_mp B_dr) ω
+      = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) :=
+  chiralFlux_EinsteinAnomaly_def (E := E) A B_mp B_dr ω
 
 end ChiralFlowBridge
 
@@ -862,7 +1012,10 @@ attribute [rep_depth operator]
   VelocityField
   AlgebraEnd
   vorticity
+  strainRate
   adjoint_vorticity_eq_neg
+  adjoint_strainRate_eq_self
+  strainRate_add_vorticity_eq
   modularCirculation
   anomalyFluidStateWithDensity
   anomalyFluidStateWithDensity_u
@@ -870,11 +1023,24 @@ attribute [rep_depth operator]
   anomaly_as_fluid_state_with_density
   modular_circulation_response
   vorticity_eq_self_of_skew
+  vorticity_eq_zero_of_self_adjoint
+  vorticityClosureResidual
   momentumResidual
+  vorticityClosureResidual_eq_zero_of_skew
   momentumResidual_eq_zero_of_skew
   anomalyFluidState
   anomaly_as_fluid_state
   anomalyMomentumResidual_eq_zero_of_skew
+  anomalyMomentumResidual_eq_zero_of_regularization
+  anomalyMomentumResidual_eq_zero_of_regularization_exists
+  anomalyFluidState_momentumResidual_eq_zero_of_regularization
+  anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+  anomalySkew_of_regularization_of_finiteDimensional
+  anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
+  anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDimensional
+  anomalySkew_of_regularization_canonical
+  anomalyMomentumResidual_eq_zero_of_regularization_canonical
+  anomalyFluidState_momentumResidual_eq_zero_of_regularization_canonical
   ArnoldMajoranaCarrier
   modularHamiltonian
   freeEnergyHessianRegularizer
@@ -885,17 +1051,24 @@ attribute [rep_depth operator]
   embedBase
   projBase
   collapseToBaseVelocity
+  collapsedJacobian
+  collapsedJacobianAbsDet
   madelungDensity
   madelungDensity_pos
   madelungPhase
   madelungFluidState
   madelungFluidState_velocity
+  SmoothedMadelungFluidState
+  smoothedMadelungFluidState
   madelungFluidState_zero
+  smoothedMadelungFluidState_zero
   madelungFluidState_zero_velocity
+  smoothedMadelungFluidState_zero_velocity
   forwardWave
   backwardWave
   twinWaveHelicity
   helicityOperator
+  helicityOperator_eq_zero_of_self_adjoint
   twinWaveHelicity_def
   kreinPlusProjector
   kreinMinusProjector
@@ -903,6 +1076,7 @@ attribute [rep_depth operator]
   chiralFlux
   IsThermodynamicallySmoothed
   isThermodynamicallySmoothed_zero_beta
+  chiralFlux_EinsteinAnomaly_def
   chiral_anomaly_sources_flow
 
 end InfoGeometry.Canonical

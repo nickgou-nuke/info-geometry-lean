@@ -54,14 +54,24 @@ def test_hydrate_preserves_raw_edges_and_adds_layered_scc_overlay() -> None:
     member_edges = [row for row in overlay_edges if row["role"] == "member_of_scc"]
     quotient_edges = [row for row in overlay_edges if row["role"] == "scc_quotient"]
     assert len(member_edges) == 3
-    assert len(quotient_edges) == 1
+    assert len(quotient_edges) == 2
 
     member_a = next(row for row in member_edges if row["member_key"] == "a")
     assert member_a["_from"] == f"{RAW_NODE_COLLECTION}/a"
     assert member_a["_to"].startswith("topology_overlay/scc_")
     assert member_a["attrs"]["direction"] == "raw_to_scc"
 
-    quotient = quotient_edges[0]
-    assert quotient["kind"] == "quotient"
+    quotient_by_witnesses = {
+        tuple(row["witness_raw_edge_keys"]): row
+        for row in quotient_edges
+    }
+    internal_quotient = quotient_by_witnesses[("e0", "e1")]
+    assert internal_quotient["kind"] == "ast"
+    assert internal_quotient["multiplicity"] == 2
+    assert internal_quotient["src_scc"] == internal_quotient["dst_scc"]
+    assert internal_quotient["attrs"]["witness_count"] == 2
+
+    quotient = quotient_by_witnesses[("e2",)]
+    assert quotient["kind"] == "ast"
+    assert quotient["multiplicity"] == 1
     assert quotient["attrs"]["witness_count"] == 1
-    assert quotient["witness_raw_edge_keys"] == ["e2"]

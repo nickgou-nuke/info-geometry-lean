@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -204,10 +205,10 @@ def collection_count(target: ArangoTarget, collection: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530"))
+    parser.add_argument("--database", default=os.environ.get("ARANGO_DATABASE", "infogeometry"))
+    parser.add_argument("--username", default=os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root"))
+    parser.add_argument("--password", default=os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root"))
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--raw-nodes-collection", default="ig_nodes")
     parser.add_argument("--raw-edges-collection", default="ig_edges")
@@ -230,6 +231,8 @@ def main() -> int:
         CollectionSpec(str(args.raw_edges_collection), input_dir / "edges.jsonl", True),
         CollectionSpec(str(args.overlay_nodes_collection), input_dir / "topology_overlay_nodes.jsonl", False),
         CollectionSpec(str(args.overlay_edges_collection), input_dir / "topology_overlay_edges.jsonl", True),
+        CollectionSpec("ig_chiral_patches", input_dir / "ig_chiral_patches.jsonl", False),
+        CollectionSpec("ig_patch_members", input_dir / "ig_patch_members.jsonl", True),
     ]
 
     # Filter out missing optional specs

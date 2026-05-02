@@ -18,8 +18,11 @@ namespace.
 -/
 
 import Mathlib
+import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.OperatorAlgebra.PO55RicciFlux
+import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
@@ -68,14 +71,19 @@ structure MetalMirrorChannel
       U ∈ regularPositiveConeOmegaD c →
         idealFlow U ∈ regularPositiveConeOmegaD c
 
-  /--
-  Certificate that the actual reflected branch is the physical dissipative
-  reduced channel.
-  -/
-  actual_dissipative_branch : Prop
+  /-- Law that the actual reflected branch is the physical dissipative reduced channel. -/
+  actual_dissipative_branch_law : Prop
 
-  /-- Certificate that the ideal branch is the lossless/unitary comparison branch. -/
-  ideal_lossless_branch : Prop
+  /-- Certificate that the actual reflected branch is dissipative/reduced. -/
+  actual_dissipative_branch_certificate :
+    actual_dissipative_branch_law
+
+  /-- Law that the ideal branch is the lossless/unitary comparison branch. -/
+  ideal_lossless_branch_law : Prop
+
+  /-- Certificate that the ideal branch is lossless/unitary. -/
+  ideal_lossless_branch_certificate :
+    ideal_lossless_branch_law
 
 namespace MetalMirrorChannel
 
@@ -286,7 +294,9 @@ structure MetalMirrorRicciFluxBridge
   Certificate that the heat/Ricci-flux identification is compatible with the
   supplied Bregman second-variation bridge.
   -/
-  bregman_bridge_compatibility : Prop
+  bregman_bridge_compatibility_law : Prop
+  bregman_bridge_compatibility_certificate :
+    bregman_bridge_compatibility_law
 
 namespace MetalMirrorRicciFluxBridge
 
@@ -560,8 +570,9 @@ theorem macroscopicHeatLoss_eq_zero_of_actual_eq_ideal
     (U : RegularConePoint Ω)
     (h : M.actualFlow U.op = M.idealUnitary U.op) :
     macroscopicHeatLoss B M U = 0 := by
-  unfold macroscopicHeatLoss
-  simp [MetalMirrorChannel.actualPoint, MetalMirrorChannel.idealPoint, h]
+  dsimp [macroscopicHeatLoss, MetalMirrorChannel.actualPoint,
+    MetalMirrorChannel.idealPoint]
+  rw [h]
   exact B.self_eq_zero_on_cone (M.ideal_preserves_cone U.op U.mem)
 
 /-! ### Ricci-flux bridge socket -/

@@ -32,7 +32,7 @@ def aql(args: argparse.Namespace, query: str, bind_vars: dict[str, Any] | None =
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--username", default="root")
     parser.add_argument("--password", default="")
@@ -65,6 +65,21 @@ def main() -> int:
     if not memberships:
         raise SystemExit(f"missing member_of_scc edge for {edge['_from']}")
     membership = memberships[0]
+    target_memberships = aql(
+        args,
+        """
+        FOR m IN topology_overlay_edges
+          FILTER m.role == "member_of_scc" && m._from == @to
+          LIMIT 1
+          RETURN m
+        """,
+        {"to": edge["_to"]},
+    )
+    if not target_memberships:
+        raise SystemExit(f"missing member_of_scc edge for {edge['_to']}")
+    target_membership = target_memberships[0]
+    src_scc = int(membership["scc_id"])
+    dst_scc = int(target_membership["scc_id"])
 
     quotients = aql(
         args,
@@ -75,12 +90,12 @@ def main() -> int:
           LIMIT 1
           RETURN q
         """,
-        {"src_scc": edge["src_scc"], "dst_scc": edge["dst_scc"], "kind": edge["kind"]},
+        {"src_scc": src_scc, "dst_scc": dst_scc, "kind": edge["kind"]},
     )
     if not quotients:
         raise SystemExit(
             "missing scc_quotient edge for "
-            f"src_scc={edge['src_scc']} dst_scc={edge['dst_scc']} kind={edge['kind']}"
+            f"src_scc={src_scc} dst_scc={dst_scc} kind={edge['kind']}"
         )
     quotient = quotients[0]
 
@@ -88,11 +103,23 @@ def main() -> int:
         args,
         """
         FOR e IN raw_info_edges
-          FILTER e.src_scc == @src_scc && e.dst_scc == @dst_scc && e.kind == @kind
+          FILTER e.role == "raw_dependency" && e.kind == @kind
+          LET fm = FIRST(
+            FOR m IN topology_overlay_edges
+              FILTER m.role == "member_of_scc" && m._from == e._from
+              RETURN m
+          )
+          LET tm = FIRST(
+            FOR m IN topology_overlay_edges
+              FILTER m.role == "member_of_scc" && m._from == e._to
+              RETURN m
+          )
+          FILTER fm != null && tm != null
+          FILTER TO_NUMBER(fm.scc_id) == @src_scc && TO_NUMBER(tm.scc_id) == @dst_scc
           COLLECT WITH COUNT INTO n
           RETURN n
         """,
-        {"src_scc": edge["src_scc"], "dst_scc": edge["dst_scc"], "kind": edge["kind"]},
+        {"src_scc": src_scc, "dst_scc": dst_scc, "kind": edge["kind"]},
     )
     witness_count = int(witness_counts[0])
     ok = witness_count == int(quotient["multiplicity"])
@@ -103,8 +130,12 @@ def main() -> int:
         "raw_edge_key": edge["_key"],
         "raw_edge_from": edge["_from"],
         "raw_edge_to": edge["_to"],
+        "src_scc": src_scc,
+        "dst_scc": dst_scc,
         "member_of_scc_edge": membership["_key"],
         "member_of_scc_to": membership["_to"],
+        "target_member_of_scc_edge": target_membership["_key"],
+        "target_member_of_scc_to": target_membership["_to"],
         "quotient_edge": quotient["_key"],
         "quotient_multiplicity": quotient["multiplicity"],
         "raw_witness_query_count": witness_count,

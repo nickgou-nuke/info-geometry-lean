@@ -19,6 +19,7 @@ import argparse
 import base64
 import hashlib
 import json
+import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -27,10 +28,10 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-DEFAULT_ENDPOINT = "http://127.0.0.1:8530"
-DEFAULT_DATABASE = "hive_live"
-DEFAULT_USERNAME = "root"
-DEFAULT_PASSWORD = "alexandria_root"
+DEFAULT_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+DEFAULT_DATABASE = os.environ.get("ARANGO_DATABASE", "hive_live")
+DEFAULT_USERNAME = os.environ.get("ARANGO_USER", "root")
+DEFAULT_PASSWORD = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
 DEFAULT_QUEUE = "proof-search"
 DEFAULT_LEASE_SECONDS = 900
 DEFAULT_NEGATIVE_WINDOW = 200

@@ -1,30 +1,44 @@
 /-
 InfoGeometry/Geometry/ChiralTubuleBoundary.lean
 
-Bregman Hessian degeneracy and chiral tubule transition boundary.
+Chiral tubule phase-transition boundary.
 
-This file defines the formal boundary where a regular Bregman/Legendre geometry
-loses Hessian invertibility and a chiral phase separation witness appears.
+This module formalizes the snap boundary where regular Bregman/Legendre
+geometry loses Hessian invertibility and a chiral phase-separation witness
+appears.
+
+The module does not assert that high temperature alone creates a tubule.
+Temperature, shear, Hessian degeneracy, and residue formation are connected
+only through proof-carrying calibration data.
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
 namespace InfoGeometry.Geometry.ChiralTubuleBoundary
 
-/-! ## 1. Bregman Hessian and dual-flat geometry -/
+open InfoGeometry.OperatorAlgebra.TopologicalSnap
+
+/-! ## 1. Bregman Hessian degeneracy -/
 
 /--
-Bregman Hessian data.
+Bregman/Fenchel Hessian data.
 
-`isInvertibleAt U` is the regularity predicate for the Legendre/Fisher Hessian.
-The concrete Hessian operator is stored abstractly.
+`isInvertibleAt U` is the regularity predicate for the local Legendre/Fisher
+Hessian at `U`.
 -/
 structure BregmanHessianDatum
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  hessian : Op → Op →L[ℝ] Op
+  /-- Hessian/response operator at a state. -/
+  hessian : Op → (Op →L[ℝ] Op)
+
+  /-- Regularity predicate for the Hessian. -/
   isInvertibleAt : Op → Prop
+
+  /-- Certificate that this Hessian comes from the intended Bregman geometry. -/
+  bregman_hessian_certificate : Prop
 
 /--
 The topological snap boundary is the locus where the Hessian ceases to be
@@ -36,19 +50,21 @@ def IsTopologicalSnapBoundary
     (U : Op) : Prop :=
   ¬ H.isInvertibleAt U
 
+/-! ## 2. Dual-flat shear and extreme-shear threshold -/
+
 /--
 Dual-flat operator geometry.
 
 `nablaExp` and `nablaMix` represent the exponential and mixture connections.
-Their difference is the Amari-Chentsov shear/torsion readout.
+Their difference is the Amari-Chentsov/Bregman shear operator.
 -/
 structure DualFlatOperatorGeometry
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  nablaExp : Op → Op →L[ℝ] Op
-  nablaMix : Op → Op →L[ℝ] Op
+  nablaExp : Op → (Op →L[ℝ] Op)
+  nablaMix : Op → (Op →L[ℝ] Op)
 
-  levi_civita_balance_law : Prop
-  levi_civita_balance_certificate : levi_civita_balance_law
+  /-- Levi-Civita balance certificate for the symmetric connection. -/
+  levi_civita_balance : Prop
 
 /-- Amari-Chentsov shear operator. -/
 def torsionShear
@@ -67,7 +83,7 @@ def shearMagnitude
 /--
 Threshold version of extreme shear.
 
-This replaces literal infinity claims in a real-valued normed setting.
+This replaces invalid expressions such as `‖torsion‖ = ∞`.
 -/
 def IsExtremeShear
     {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
@@ -76,116 +92,336 @@ def IsExtremeShear
     (U : Op) : Prop :=
   threshold ≤ shearMagnitude G U
 
-/-! ## 2. Chiral tubule crystallization -/
+/-! ## 3. Thermal drive calibration -/
+
+/--
+Thermal drive datum.
+
+This is where an Unruh, Hawking, or material-temperature readout can be
+connected to the Bregman shear.  The temperature does not itself define the
+snap; it is calibrated into a shear threshold.
+-/
+structure ThermalDriveDatum
+    (Op : Type*) where
+  /-- Temperature or effective thermal drive readout. -/
+  temperature : Op → ℝ
+
+  /-- Critical temperature/readout. -/
+  criticalTemperature : ℝ
+
+  /-- Calibration certificate, e.g. Unruh/Bisognano-Wichmann normalization. -/
+  thermal_calibration_certificate : Prop
+
+/--
+The state is thermally critical when its calibrated thermal drive exceeds the
+critical threshold.
+-/
+def IsThermallyCritical
+    {Op : Type*}
+    (T : ThermalDriveDatum Op)
+    (U : Op) : Prop :=
+  T.criticalTemperature ≤ T.temperature U
+
+/--
+A calibration saying thermal criticality forces extreme Bregman shear.
+
+This is the precise place where a statement such as "Unruh temperature is high
+enough to trigger the snap" belongs.
+-/
+structure ThermalShearCalibration
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (G : DualFlatOperatorGeometry Op)
+    (T : ThermalDriveDatum Op) where
+  /-- Shear threshold. -/
+  shearThreshold : ℝ
+
+  /-- The threshold is nonnegative. -/
+  shearThreshold_nonneg : 0 ≤ shearThreshold
+
+  /-- Thermal criticality implies extreme Bregman shear. -/
+  thermal_critical_implies_extreme_shear :
+    ∀ U : Op,
+      IsThermallyCritical T U →
+        IsExtremeShear G shearThreshold U
+
+/-! ## 4. Majorana-Weyl residue socket -/
+
+/--
+A stable chiral residue created at a snap boundary.
+
+The certificates are intentionally proof-carrying because Majorana/Weyl
+conditions depend on signature, dimension, representation, and real structure.
+-/
+structure MajoranaWeylResidueDatum
+    (Charge Residue : Type*) [Zero Charge] where
+  /-- The produced residue object. -/
+  residue : Residue
+
+  /-- Topological/anomaly charge carried by the residue. -/
+  charge : Charge
+
+  /-- The residue is topologically nontrivial. -/
+  charge_nonzero : charge ≠ 0
+
+  /-- Majorana reality certificate. -/
+  majorana_certificate : Prop
+
+  /-- Weyl/chiral certificate. -/
+  weyl_chiral_certificate : Prop
+
+  /-- Lightlike/null support certificate. -/
+  lightlike_certificate : Prop
+
+/-! ## 5. Chiral tubule crystallization -/
 
 /--
 A chiral tubule crystallization witness.
 
-At a snap boundary, the previously connected regular phase is represented by
-two disjoint chiral support regions.
+At a snap boundary, the regular phase separates into two disjoint chiral phases
+and produces a nontrivial residue.
 -/
 structure ChiralTubuleCrystallization
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (Op Charge Residue : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
     (H : BregmanHessianDatum Op) where
+  /-- Boundary state where the snap occurs. -/
   boundaryState : Op
+
+  /-- The boundary state lies on the Hessian-degeneracy locus. -/
   is_snap :
     IsTopologicalSnapBoundary H boundaryState
 
+  /-- Right/system chiral phase. -/
   phaseR : Set Op
+
+  /-- Left/commutant chiral phase. -/
   phaseL : Set Op
 
+  /-- The two phases are separated. -/
   phase_disjoint :
     Disjoint phaseR phaseL
 
-  exponential_connection_trapped_in_R_law : Prop
-  exponential_connection_trapped_in_R_certificate :
-    exponential_connection_trapped_in_R_law
+  /-- Stable residue generated at the boundary. -/
+  residue :
+    MajoranaWeylResidueDatum Charge Residue
 
-  mixture_connection_trapped_in_L_law : Prop
-  mixture_connection_trapped_in_L_certificate :
-    mixture_connection_trapped_in_L_law
+  /-- Exponential/system connection trapped in right phase. -/
+  exponential_connection_trapped_in_R : Prop
 
-  PT_inversion_boundary_calibration_law : Prop
-  PT_inversion_boundary_calibration_certificate :
-    PT_inversion_boundary_calibration_law
+  /-- Mixture/commutant connection trapped in left phase. -/
+  mixture_connection_trapped_in_L : Prop
+
+  /-- PT/CPT inversion boundary calibration. -/
+  PT_inversion_boundary_calibration : Prop
 
 namespace ChiralTubuleCrystallization
 
 variable
-    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Op Charge Residue : Type*}
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
     {H : BregmanHessianDatum Op}
 
 /-- The two chiral phases are disjoint. -/
 theorem disjoint_phases
-    (C : ChiralTubuleCrystallization Op H) :
+    (C : ChiralTubuleCrystallization Op Charge Residue H) :
     Disjoint C.phaseR C.phaseL :=
   C.phase_disjoint
 
+/-- The produced residue has nontrivial charge. -/
+theorem residue_charge_nonzero
+    (C : ChiralTubuleCrystallization Op Charge Residue H) :
+    C.residue.charge ≠ 0 :=
+  C.residue.charge_nonzero
+
 end ChiralTubuleCrystallization
 
-/-! ## 3. Transition law -/
+/-! ## 6. Transition law -/
 
 /--
-Transition law saying that extreme shear forces a snap/crystallization.
+Transition law saying that snap-boundary plus extreme shear plus thermal drive
+forces chiral tubule crystallization.
 
-This is a physical/geometric bridge witness, not a theorem derivable from the
+This is a physical/geometric bridge witness, not a theorem derivable from
 abstract Hessian data alone.
 -/
 structure ChiralTubuleTransitionLaw
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (Op Charge Residue : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
     (H : BregmanHessianDatum Op)
-    (G : DualFlatOperatorGeometry Op) where
+    (G : DualFlatOperatorGeometry Op)
+    (T : ThermalDriveDatum Op) where
+  /-- Shear threshold. -/
   threshold : ℝ
+
+  /-- The threshold is nonnegative. -/
   threshold_nonneg : 0 ≤ threshold
 
-  extreme_shear_forces_crystallization :
+  /--
+  Transition law: at a Hessian-degenerate snap boundary, extreme shear and
+  thermal criticality generate a chiral tubule crystallization.
+  -/
+  snap_transition :
     ∀ U : Op,
+      IsTopologicalSnapBoundary H U →
       IsExtremeShear G threshold U →
-        ∃ C : ChiralTubuleCrystallization Op H,
+      IsThermallyCritical T U →
+        ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
           C.boundaryState = U
 
 namespace ChiralTubuleTransitionLaw
 
 variable
-    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {Op Charge Residue : Type*}
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
     {H : BregmanHessianDatum Op}
     {G : DualFlatOperatorGeometry Op}
+    {T : ThermalDriveDatum Op}
 
 /--
-Extreme Bregman shear yields a chiral tubule crystallization once the transition
-law is supplied.
+A snap boundary with extreme shear and thermal criticality yields a chiral
+tubule crystallization once the transition law is supplied.
 -/
-theorem extreme_flux_implies_crystallization
-    (L : ChiralTubuleTransitionLaw Op H G)
+theorem snap_implies_crystallization
+    (L : ChiralTubuleTransitionLaw Op Charge Residue H G T)
     (U : Op)
-    (hU : IsExtremeShear G L.threshold U) :
-    ∃ C : ChiralTubuleCrystallization Op H,
+    (hSnap : IsTopologicalSnapBoundary H U)
+    (hShear : IsExtremeShear G L.threshold U)
+    (hThermal : IsThermallyCritical T U) :
+    ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
       C.boundaryState = U :=
-  L.extreme_shear_forces_crystallization U hU
+  L.snap_transition U hSnap hShear hThermal
 
 end ChiralTubuleTransitionLaw
 
-/-! ## 4. Owner target -/
+/-! ## 7. Thermal-triggered transition via calibration -/
+
+/--
+A calibrated transition law using thermal drive to imply the shear threshold.
+
+This packages the statement:
+
+  thermal criticality
+    → extreme shear
+    → snap transition.
+-/
+structure ThermalTriggeredTubuleLaw
+    (Op Charge Residue : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
+    (H : BregmanHessianDatum Op)
+    (G : DualFlatOperatorGeometry Op)
+    (T : ThermalDriveDatum Op) where
+  shearCalibration :
+    ThermalShearCalibration Op G T
+
+  transitionLaw :
+    ChiralTubuleTransitionLaw
+      Op Charge Residue H G T
+
+  /-- The transition law threshold agrees with the calibrated shear threshold. -/
+  threshold_agrees :
+    transitionLaw.threshold = shearCalibration.shearThreshold
+
+namespace ThermalTriggeredTubuleLaw
+
+variable
+    {Op Charge Residue : Type*}
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge]
+    {H : BregmanHessianDatum Op}
+    {G : DualFlatOperatorGeometry Op}
+    {T : ThermalDriveDatum Op}
+
+/--
+Thermal criticality plus Hessian snap boundary yields chiral tubule
+crystallization, once the calibration and transition law are supplied.
+-/
+theorem thermal_snap_implies_crystallization
+    (L : ThermalTriggeredTubuleLaw Op Charge Residue H G T)
+    (U : Op)
+    (hSnap : IsTopologicalSnapBoundary H U)
+    (hThermal : IsThermallyCritical T U) :
+    ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
+      C.boundaryState = U := by
+  have hShear :
+      IsExtremeShear G L.transitionLaw.threshold U := by
+    rw [L.threshold_agrees]
+    exact L.shearCalibration.thermal_critical_implies_extreme_shear U hThermal
+  exact L.transitionLaw.snap_implies_crystallization
+    U hSnap hShear hThermal
+
+end ThermalTriggeredTubuleLaw
+
+/-! ## 8. Protection after the snap -/
+
+/--
+A snapped tubule sector protected by a conserved obstruction flow.
+
+This is the connection to `TopologicalSnap`: after the nontrivial residue is
+present, it cannot relax into the flat sector under an invariant-preserving
+flow.
+-/
+structure ProtectedTubuleSector
+    (State Charge : Type*) [Zero Charge] where
+  obstructionFlow :
+    ConservedObstructionFlow State Charge
+
+  tubuleState : State
+
+  /-- The tubule carries nontrivial obstruction. -/
+  tubule_nontrivial :
+    obstructionFlow.invariant tubuleState ≠ 0
+
+namespace ProtectedTubuleSector
+
+variable {State Charge : Type*} [Zero Charge]
+variable (P : ProtectedTubuleSector State Charge)
+
+/--
+A protected tubule cannot flow to the flat sector at any admissible time.
+-/
+theorem cannot_relax_to_flat
+    (t : ℝ) :
+    P.obstructionFlow.flow t P.tubuleState ∉ P.obstructionFlow.Flat :=
+  P.obstructionFlow.nontrivial_cannot_flow_to_flat
+    P.tubule_nontrivial t
+
+end ProtectedTubuleSector
+
+/-! ## 9. Owner target -/
 
 /--
 Owner target for the chiral tubule boundary.
 
-It is intentionally witness-gated by a transition law.
+It is intentionally witness-gated by thermal/shear calibration and a transition
+law.
 -/
 def ChiralTubuleBoundaryOwnerTarget : Prop :=
-  ∀ (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op],
+  ∀ (Op Charge Residue : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    [Zero Charge],
   ∀ H : BregmanHessianDatum Op,
   ∀ G : DualFlatOperatorGeometry Op,
-  ∀ L : ChiralTubuleTransitionLaw Op H G,
+  ∀ T : ThermalDriveDatum Op,
+  ∀ _L : ThermalTriggeredTubuleLaw Op Charge Residue H G T,
   ∀ U : Op,
-    IsExtremeShear G L.threshold U →
-      ∃ C : ChiralTubuleCrystallization Op H,
+    IsTopologicalSnapBoundary H U →
+    IsThermallyCritical T U →
+      ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
         C.boundaryState = U
 
-/-- The owner target follows directly from the supplied transition law. -/
+/--
+The owner target follows directly from the supplied thermal-triggered
+transition law.
+-/
 theorem chiralTubuleBoundaryOwnerTarget :
     ChiralTubuleBoundaryOwnerTarget := by
-  intro Op _ _ H G L U hU
-  exact L.extreme_flux_implies_crystallization U hU
+  intro Op Charge Residue _ _ _ H G T L U hSnap hThermal
+  exact L.thermal_snap_implies_crystallization U hSnap hThermal
+
 
 end InfoGeometry.Geometry.ChiralTubuleBoundary

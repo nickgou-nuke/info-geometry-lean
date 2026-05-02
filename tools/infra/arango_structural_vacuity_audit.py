@@ -321,10 +321,10 @@ def parse_args():
         )
     )
 
-    parser.add_argument("--url", default=os.getenv("ARANGO_URL", "http://127.0.0.1:8529"))
-    parser.add_argument("--database", default=os.getenv("ARANGO_DATABASE", "infogeometry"))
-    parser.add_argument("--username", default=os.getenv("ARANGO_USERNAME", "root"))
-    parser.add_argument("--password", default=os.getenv("ARANGO_PASSWORD", ""))
+    parser.add_argument("--url", default=os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530"))
+    parser.add_argument("--database", default=os.environ.get("ARANGO_DATABASE", "infogeometry"))
+    parser.add_argument("--username", default=os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root"))
+    parser.add_argument("--password", default=os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root"))
 
     parser.add_argument("--node-collection", type=collection_name, default="ig_nodes")
     parser.add_argument("--edge-collection", type=collection_name, default="ig_edges")

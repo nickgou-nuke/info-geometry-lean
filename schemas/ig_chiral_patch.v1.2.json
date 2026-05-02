@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig.chiral_patch.v1.2",
+  "type": "object",
+  "required": [
+    "_key",
+    "patch_id",
+    "run_id",
+    "schema_version",
+    "patch_type",
+    "node_count",
+    "edge_count",
+    "chiral_entropy",
+    "chiral_bias",
+    "coarse_hash",
+    "claim_scope",
+    "non_overclaim"
+  ],
+  "properties": {
+    "_key": {"type": "string", "minLength": 1},
+    "patch_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig.chiral_patch.v1.2"},
+    "patch_type": {"type": "string", "minLength": 1},
+    "node_count": {"type": "integer", "minimum": 0},
+    "edge_count": {"type": "integer", "minimum": 0},
+    "coarse_hash": {"type": "string", "minLength": 1},
+    "debruijn_histogram": {"type": "array", "items": {"type": "integer"}},
+    "chiral_entropy": {"type": "number"},
+    "chiral_bias": {"type": "number"},
+    "cartan_proxy_histogram": {"type": "object"},
+    "cartan_proxy_sector": {"type": "string"},
+    "claim_scope": {"type": "string", "minLength": 1},
+    "non_overclaim": {"type": "boolean"},
+    "cartan_proxy_policy": {"type": "string"},
+    "redex_density": {"type": "number"},
+    "max_debruijn_depth": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": true
+}

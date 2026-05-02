@@ -1,171 +1,64 @@
 # Operational Intent
 
-This repository is one theory with several presentations.
-The main burden is not to flatten those presentations into one file-level story,
-but to make the morphisms between them explicit, adjacent, and checkable.
+> Status: `current authority`
+> Audited: 2026-05-02
+> Note: Maintained against the live code surface.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
-## Current Codebase Status
+This repository is maintained as code first, prose second.
 
-For the latest verified build/audit snapshot, use
-[CODEBASE_STATUS.md](CODEBASE_STATUS.md).
+The purpose of the documentation layer is to help people recover the live code
+surface quickly without mistaking old reports or conceptual notes for current
+truth.
 
-Current gate reality:
+## Intent
 
-- `InfoGeometry.LLM` is build-green under locked build.
-- `strictCheck` is build-red due warning debt under `--wfail`.
-- standalone [`ProjectorEquivariance.lean`](../lean/InfoGeometry/Canonical/ProjectorEquivariance.lean)
-  currently builds green.
-- do not rely on stale “warning-only strict debt” assumptions.
+The active repository has two jobs:
 
-## What Is Being Formalized
+- formalize mathematics in Lean under `lean/`
+- build reproducible artifact and audit tooling around that code under
+  `src/igf/` and `tools/`
 
-The stable grammar is the semantic representation ladder defined in
-[lean/InfoGeometry/Meta/Architecture.lean](../lean/InfoGeometry/Meta/Architecture.lean)
-and enforced by
-[lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean).
+It has a third active layer as well:
 
-The active representation depths are:
+- generate new theorem pressure through structured LLM dialogue, Socratic
+  regeneration, and packetized ideation before formal closure
 
-| `RepDepth` | Meaning |
-|---|---|
-| `count` | raw counts, positive representatives, mass data |
-| `projective` | gauge, positive rays, relative potentials |
-| `operator` | diagonal operator lifts, inverse-kernel algebra |
-| `krein` | split quadratic, Clifford, doubled and phase-space geometry |
-| `transport` | Bogoliubov, Weyl, and related transport layers |
-| `thermo` | Gibbs, Sinkhorn, attention, and thermal packaging |
+It has a fourth live discipline coupled to that layer:
 
-The design rule is:
+- Pauli-style anti-inflation pressure that asks whether a candidate is even
+  true before it is allowed to climb toward authority
 
-- owner files define the lowest natural surface
-- translator files move one adjacent step
-- coherence files prove adjacent composites agree
-- capstones summarize lower content without pretending to be roots
+The repo is not trying to make Markdown the final authority. The final
+authority is the checked-in code and the verifiable outputs generated from it.
 
-## Socratic Doctrine (Operational)
+## Working Rules
 
-The stack runs with two mandatory AI modes:
+- Lean source owns theorem claims
+- Pauli differentiation blocks decorative or underived ascent before theorem claims
+- Python and Lake scripts own reproducible artifact workflows
+- generated reports are snapshots, not policy
+- historical docs stay available, but labeled as such
+- Black Book chapters remain protected exploration material
 
-- `socratic_generator`: produces obligations, counterexamples, and unresolved assumptions.
-- `closure_gate`: emits admit/reject only through compiled Lean anchors.
+## Why The Markdown Cleanup Happened
 
-Repository rule:
+The repository had accumulated a large amount of stale prose, generated reports,
+and historical runbooks that still looked current. That created a false sense
+of certainty.
 
-- exploratory agents must not emit final closure claims;
-- closure language is reserved for kernel-verified surfaces and gate outputs.
+The 2026-05-02 cleanup resets the contract:
 
-The maintained tooling layer now has two operator surfaces:
+- a small maintained core of docs describes the live codebase
+- the rest of the corpus is explicitly marked as generated, historical, local,
+  or reference memory
 
-- DAG refresh and reporting under [lean/DAG](../lean/DAG) and [tools/infra](../tools/infra)
-- server-backed semantic and proof-state inspection under [tools/frontier](../tools/frontier)
+## Operational Reading Order
 
-The first is authoritative memory for whole-repo structure. The second is the
-interactive elaboration surface closest to the Lean editor infoview.
-
-LeanTrail now adds a retrieval-carrier lane on top of the canonical snapshot:
-
-- canonical semantic carrier: `artifacts/leantrail/graph_snapshot.json`
-- external adapters: GraphML, Neo4j CSV, Arango JSON
-- mandatory parity gate: `tools/leantrail/conformance.py`
-
-Rule: external graph/vector/database carriers are read models, not truth
-owners; they are admissible only when conformance against the canonical
-snapshot is green.
-
-## Current Live Trunks
-
-### Count -> projective -> operator
-
-The most stable lower trunk remains:
-
-- [PositiveMeasure.lean](../lean/InfoGeometry/PositiveMeasure.lean)
-- [Normalize.lean](../lean/InfoGeometry/Projective/Normalize.lean)
-- [PositiveRayCore.lean](../lean/InfoGeometry/Canonical/PositiveRayCore.lean)
-- [RelativePotentialCore.lean](../lean/InfoGeometry/Canonical/RelativePotentialCore.lean)
-- [RelativePotentialCountBridge.lean](../lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean)
-- [RelativeSurprisalOperatorLift.lean](../lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
-
-This corridor is the clean benchmark for nonvacuous adjacent translation.
-
-### Corrected phase-space generalized-metric trunk
-
-The corrected owner lane is now real and no longer speculative:
-
-- [NeutralPhaseSpaceCore.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean)
-- [NeutralPhaseSpaceDoubledBridge.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean)
-- [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
-- [PhaseSpaceGeneralizedMetricChiralityBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean)
-
-What is already true on this lane:
-
-- the owner carrier is `E × E*`
-- the neutral pairing is explicit
-- the generalized-metric owner algebra is closed
-- the `B`-twisted realized polarization and realized `±` projectors exist on the doubled carrier
-
-### Polarized and recomposition junction
-
-The corrected owner now reaches the maintained polarized/recomposition lane:
-
-- [PhaseSpacePolarizedBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean)
-- [PhaseSpaceRecompositionBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean)
-- [RelativeModularSingularization.lean](../lean/InfoGeometry/Canonical/RelativeModularSingularization.lean)
-
-Current status:
-
-- owner-side lifts and transports are real
-- realized generalized-metric projector factorization now exists at the junction
-- boundary singularization is now explicitly handled via generalized inverses
-
-### KKT, inverse-kernel, and conformal corridor
-
-The corrected owner also now feeds the KKT/conformal side:
-
-- [KKTCore.lean](../lean/InfoGeometry/Canonical/KKTCore.lean)
-- [EPDefectAlgebra.lean](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean)
-- [KKTGeneralizedInverseBridge.lean](../lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean)
-- [PhaseSpaceConformalKKTBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean)
-- [PhaseSpaceCausalFlowBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceCausalFlowBridge.lean)
-
-This is now a real causal trunk from phase-space owner data to conformal and recomposition leaves.
-
-### Weyl and Quantum Geometric Tensor branch
-
-The Weyl branch is now welded to the operator spine:
-
-- [ConformalAnomalySource.lean](../lean/InfoGeometry/Canonical/ConformalAnomalySource.lean)
-- [EinsteinAnomalyOperator.lean](../lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean)
-- [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean)
-- [TransportLieDerivative.lean](../lean/InfoGeometry/Canonical/TransportLieDerivative.lean)
-
-Current status:
-
-- Einstein anomalies are lifted to the doubled carrier
-- the Quantum Geometric Tensor (QGT) is derived from operator transport laws
-- infinitesimal transport is formalized via Lie derivatives of exponential conjugation
-
-### Spectroscopic and path-ensemble branch
-
-The spectroscopic lane is active as a translator/coherence surface downstream
-from owned KMS flow:
-
-- [UnruhKMS.lean](../lean/InfoGeometry/Dynamics/UnruhKMS.lean)
-- [SpectroscopicGaugeKMSBridge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean)
-- [SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean)
-- [HestenesGibbsPathIntegral.lean](../lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean)
-- [DiscreteRouterHestenesPathBridge.lean](../lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean)
-
-Status:
-
-- KMS ownerhood remains in `UnruhKMS`;
-- spectroscopic reference-state data is compatibility packaging, not a new owner;
-- path surprisal and Gibbs weighting are explicit in canonical translator form;
-- LLM bridge gives explicit Bayes/path-Gibbs correspondence under declared hypotheses.
-
-## Current Closure Backlog
-
-For the live closure ledger (fixed points, open fixtures, and priority
-elimination order after `9d81730`), see:
-
-- [analytic_closure_backlog.md](analytic_closure_backlog.md)
-- [CleanupImprovementProgram.md](CleanupImprovementProgram.md)
+1. [../README.md](../README.md)
+2. [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+3. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
+4. [ModuleMap.md](ModuleMap.md)
+5. [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
+6. [../tools/README.md](../tools/README.md)
+7. [../tools/infra/README.md](../tools/infra/README.md)

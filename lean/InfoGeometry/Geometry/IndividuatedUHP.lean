@@ -80,8 +80,7 @@ theorem complex_i_skewAdjoint :
   apply ext_inner_left ℝ
   intro u
   rw [ContinuousLinearMap.adjoint_inner_right]
-  simpa [inner_neg_right] using
-    (InfoGeometry.Canonical.TomitaTakesaki.complex_i_inner_skew (E := E) u v)
+  simp [inner_neg_right]
 
 /-- The Hestenes phase axis `K` is skew-adjoint. -/
 theorem K_skewAdjoint

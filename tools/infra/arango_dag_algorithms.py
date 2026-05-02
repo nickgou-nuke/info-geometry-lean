@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 import time
 from collections import deque, Counter
 from dataclasses import dataclass
@@ -30,6 +31,14 @@ from networkx.algorithms import community as nxc
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from arango_raw_infotree_ingest import (
         ArangoTarget,
         CollectionSpec,
@@ -42,6 +51,13 @@ if __package__ in (None, ""):
         request_json,
     )
 else:
+    from .arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from .arango_raw_infotree_ingest import (
         ArangoTarget,
         CollectionSpec,
@@ -1773,11 +1789,12 @@ def two_complex_summary(graph: QuotientGraph, *, edge_limit: int) -> dict[str, A
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--overlay-nodes", default="topology_overlay")
     parser.add_argument("--overlay-edges", default="topology_overlay_edges")
     parser.add_argument("--edge-kind", choices=["type", "value"], default=None)

@@ -1,5 +1,10 @@
 # The Doctrine of the Gravity of Information
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This doctrine establishes a rigorous foundation for **gravity-like behavior inside information physics**. It distinguishes between *spacetime gravity* (the curvature of physical space) and the **Gravity of Information** (the curvature of relational state spaces).
 
 ## 1. Defining the Domain

@@ -1,5 +1,10 @@
 # Newcomer Path
 
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+
 This is the shortest reliable entry path into the repository.
 
 ## Step 1: understand the repo split
@@ -9,10 +14,13 @@ Read:
 2. [docs/ModuleMap.md](docs/ModuleMap.md)
 3. [Installation.md](Installation.md)
 4. [docs/README.md](docs/README.md)
+5. [docs/GenerativeDiscoveryArchitecture.md](docs/GenerativeDiscoveryArchitecture.md)
 
 The repository is both:
 - a Lean theorem library;
 - a graph/audit toolchain for that library.
+- a generative discovery machine that uses structured LLM dialogue upstream of
+  formal closure
 
 Before opening broad umbrella files, keep these roles straight:
 - `lean/InfoGeometry.lean`: published library entrypoint
@@ -27,6 +35,18 @@ Read:
 1. [lean/DAG/README.md](lean/DAG/README.md)
 2. [tools/README.md](tools/README.md)
 3. [tools/infra/README.md](tools/infra/README.md)
+
+## Step 2.5: understand the discovery architecture
+
+Read:
+1. [docs/GenerativeDiscoveryArchitecture.md](docs/GenerativeDiscoveryArchitecture.md)
+2. [docs/WORKBENCH.md](docs/WORKBENCH.md)
+3. [docs/PRIMA_MATERIA_GENERATION_CHAIN.md](docs/PRIMA_MATERIA_GENERATION_CHAIN.md)
+4. [PAULI_MANDATE.md](PAULI_MANDATE.md)
+
+This is where the repo stops being a mere automator.
+The discovery layer uses Socratic excitation, generative reformulation, and
+Pauli differentiation to produce better theorem candidates before Lean closure.
 
 ## Step 3: add one concrete realization and one interpretation key
 

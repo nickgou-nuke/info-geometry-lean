@@ -1,5 +1,10 @@
 # Chiral Patch Metrics (Conservative v1.2)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This sidecar computes **derived spectral neighborhoods** over the declaration graph.
 It does not claim theorem-level Cartan decomposition or physical entanglement.
 

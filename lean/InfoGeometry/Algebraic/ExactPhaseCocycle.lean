@@ -101,7 +101,7 @@ def mapTarget (C : InfoGeometry.Canonical.Algebraic.MulActionCocycle Γ X R₁)
   map_mul := by
     intro γ δ x
     rw [C.map_mul γ δ x]
-    simpa using f.map_mul (C γ (δ • x)) (C δ x)
+    simp
 
 @[simp]
 theorem mapTarget_apply

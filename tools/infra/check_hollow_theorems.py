@@ -21,9 +21,23 @@ from typing import Any, Mapping
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra.arango_raw_infotree_ingest import ArangoTarget, request_json, db_url
     from tools.pathing import repo_root
 else:
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra.arango_raw_infotree_ingest import ArangoTarget, request_json, db_url
     from tools.pathing import repo_root
 
@@ -233,11 +247,12 @@ def write_reports(reports: list[dict[str, Any]], out_dir: Path):
 # --- CLI ---
 
 def main():
+    load_repo_arango_env(repo_root())
     parser = argparse.ArgumentParser(description="Run the Pauli Semantic Fidelity Auditor.")
-    parser.add_argument("--url", default=os.getenv("ARANGO_URL", "http://127.0.0.1:8530"))
-    parser.add_argument("--db", default=os.getenv("ARANGO_DATABASE", "infogeometry"))
-    parser.add_argument("--user", default=os.getenv("ARANGO_USERNAME", "root"))
-    parser.add_argument("--password", default=os.getenv("ARANGO_PASSWORD", ""))
+    parser.add_argument("--url", default=os.getenv("ARANGO_URL") or arango_endpoint())
+    parser.add_argument("--db", default=arango_database())
+    parser.add_argument("--user", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--out", type=Path, default=Path("artifacts/dag"))
     
     args = parser.parse_args()

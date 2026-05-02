@@ -1,5 +1,10 @@
 # Black Book Generative Constitution
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 > **"The Black Books generate mathematics; the Constitution legalizes its formal target; the Lean Kernel decides whether it survives."**
 
 This document establishes the **Discovery Reservoir** as the pre-formal engine of the Info-Geometry Spire. It ensures that the symbolic fertility of the project's discovery notes (The Black Books) is systematically distilled into the crystalline law of the repository.

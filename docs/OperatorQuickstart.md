@@ -1,5 +1,10 @@
 # Operator Quickstart
 
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This is the compressed operator surface for local Lean and DAG work.
 
 Architecture reference:

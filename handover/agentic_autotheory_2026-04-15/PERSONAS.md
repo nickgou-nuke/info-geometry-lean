@@ -1,5 +1,10 @@
 # Agentic Personas (DGX Spark)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 Effective date: **2026-04-15**
 
 This file defines role boundaries for the three operational agents.
@@ -71,4 +76,3 @@ Each cycle hands off:
 - Caretaker note: gate outcomes and admission decision
 
 This is the required operating rhythm after **2026-04-15**.
-

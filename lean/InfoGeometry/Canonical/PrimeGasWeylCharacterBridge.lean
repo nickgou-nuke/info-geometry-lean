@@ -13,6 +13,8 @@ data explicitly.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
 
 /-- Raw prime-gas data used by the Weyl-character bridge. -/

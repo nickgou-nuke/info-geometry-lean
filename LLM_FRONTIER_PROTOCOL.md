@@ -1,32 +1,44 @@
-# LLM Frontier Protocol
+# Frontier Protocol
 
-Frontier work in this repository is proposal generation, not proof production.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this workflow, but subordinate to repo-wide authority docs and code.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Role split
+Frontier work in this repository means generating candidate directions, not
+claiming proof.
 
-- creative lane: propose bridge statements, local decompositions, or new lower owners;
-- critical lane: reject weak proposals, shrink claims, and isolate the smallest load-bearing theorem surface;
-- Lean lane: decide what is true.
+## Frontier Output Standard
 
-## What counts as a good frontier proposal
+A good frontier packet:
 
-A proposal is useful only if it:
-- names real current owner modules;
-- starts from existing repo data and hypotheses;
-- can be tested by local build or semantic export;
-- does not repackage an existing theorem under a louder name.
+- names real current files or declarations
+- starts from current code, not mythology
+- isolates one testable next move
+- can be checked by local build, semantic export, or targeted inspection
 
-## Current tooling
+## Current Tools
 
-Use:
+Use the maintained frontier lane:
+
+- `lake script run proofSession`
+- `lake script run proofPrint`
+- `lake script run semanticSnapshot`
 - `tools/frontier/semantic_block_export.py`
 - `tools/frontier/skynet_v2.py`
-- `skills/info-geometry-repo/references/bridge-candidates.md`
-- `skills/info-geometry-repo/references/bridge-reviewed-candidates.md`
 
-Do not treat generated prompt packets or candidate lists as proofs.
+## Boundary
 
-## Policy link
+Frontier artifacts may suggest:
 
-For structural discipline while acting on a frontier packet, also use:
-- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
+- a missing bridge
+- an owner split
+- a smaller theorem statement
+- a proof corridor worth testing
+
+They do not establish theorem truth. Lean does.
+
+## Practical Rule
+
+If a frontier note cannot be reduced to a concrete owner file and a concrete
+verification step, it stays exploratory.

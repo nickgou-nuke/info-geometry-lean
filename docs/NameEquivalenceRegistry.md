@@ -1,5 +1,10 @@
 # Name Equivalence Registry
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This registry is the curated companion to the auto-generated equivalence
 dictionary (`reports/dag/equivalence-dictionary.{json,md}`).
 

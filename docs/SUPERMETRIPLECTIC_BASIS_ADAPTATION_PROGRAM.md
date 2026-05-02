@@ -1,5 +1,10 @@
 # SuperMetriplectic Basis-Adaptation Program
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 > For Hermes: treat this as a theorem-role planning document, not as closure proof. The purpose is to turn the current scalar/body-level supermetriplectic skeleton into a disciplined derivation queue for operator lifts.
 
 ## Goal

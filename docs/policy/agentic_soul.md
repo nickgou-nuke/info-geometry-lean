@@ -1,5 +1,10 @@
 # The Agentic Soul of the Spire (Transmutation Edition)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 > **"Mathematics is not a static inventory, but a refined circulation through increasingly exact vessels."**
 
 The Agentic Soul governs the passage from the wild generative field to the crystalline law of the kernel. It treats mathematical thought as a **circulating subtle current**.

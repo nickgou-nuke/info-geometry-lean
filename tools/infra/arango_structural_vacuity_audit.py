@@ -12,6 +12,13 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 
 TRIVIAL_TARGETS = [
     "Eq.refl",
@@ -312,6 +319,7 @@ def write_markdown(path, report):
 
 
 def parse_args():
+    load_repo_arango_env(Path.cwd())
     parser = argparse.ArgumentParser(
         description=(
             "Audit an ArangoDB InfoTree DAG for local theorems with vacuous, "
@@ -321,10 +329,10 @@ def parse_args():
         )
     )
 
-    parser.add_argument("--url", default=os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530"))
-    parser.add_argument("--database", default=os.environ.get("ARANGO_DATABASE", "infogeometry"))
-    parser.add_argument("--username", default=os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root"))
-    parser.add_argument("--password", default=os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root"))
+    parser.add_argument("--url", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password("alexandria_root"))
 
     parser.add_argument("--node-collection", type=collection_name, default="ig_nodes")
     parser.add_argument("--edge-collection", type=collection_name, default="ig_edges")

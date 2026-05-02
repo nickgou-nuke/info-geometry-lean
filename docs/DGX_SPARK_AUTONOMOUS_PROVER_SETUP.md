@@ -1,5 +1,10 @@
 # DGX Spark Autonomous Prover Stack (Hermes + NemoClaw + OpenClaw + Lean4)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This guide sets up the autonomous prover stack on **NVIDIA DGX Spark** using the repository's current dual-loop architecture (explore/lock), with:
 
 - `Hermes` as orchestrator shell (not authority surface)

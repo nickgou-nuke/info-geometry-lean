@@ -15,7 +15,15 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from tools.infra.arango_env import (
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 from tools.infra import hive_arango_queue as queue_tool
+
+load_repo_arango_env(ROOT)
 
 DEFAULT_HIVE_ENDPOINT = queue_tool.DEFAULT_ENDPOINT
 DEFAULT_HIVE_DATABASE = queue_tool.DEFAULT_DATABASE
@@ -24,10 +32,10 @@ DEFAULT_HIVE_PASSWORD = queue_tool.DEFAULT_PASSWORD
 DEFAULT_QUEUE = "research-digest"
 DEFAULT_WORKER_ID = "research-digest-worker-001"
 DEFAULT_LEASE_SECONDS = queue_tool.DEFAULT_LEASE_SECONDS
-ALEX_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+ALEX_ENDPOINT = arango_endpoint()
 ALEX_DATABASE = os.environ.get("ALEXANDRIA_DATABASE", "alexandria")
-ALEX_USERNAME = os.environ.get("ARANGO_USER", "root")
-ALEX_PASSWORD = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
+ALEX_USERNAME = arango_username()
+ALEX_PASSWORD = arango_password("alexandria_root")
 ARXIV_RE = re.compile(r"\b(?:[a-z\-]+/\d{7}|\d{4}\.\d{4,5})(?:v\d+)?\b", re.I)
 MOTHERBEE_CONTEXT = ROOT / "artifacts" / "alexandria" / "hive_research_digest" / "motherbee_context_2026-04-22.md"
 BASE_DIR = ROOT / "artifacts" / "alexandria" / "research_digest_runs"

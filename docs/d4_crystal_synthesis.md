@@ -1,5 +1,10 @@
 # Triality And Path-Hysteresis Topic Map
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This is a topic map for the triality, routing, and path-hysteresis family.
 
 It is not a synthesis theorem and it is not part of the current main closure

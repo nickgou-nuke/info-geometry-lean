@@ -17,6 +17,8 @@ operators as sheet automorphisms on `Fin n → ℝ` and identifies the resulting
 restricted-volume and Berezinian readouts with the modular supervolume shadow.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.RelativeModularBerezinianBridge
 
 open InfoGeometry.Canonical.PositiveRayCore

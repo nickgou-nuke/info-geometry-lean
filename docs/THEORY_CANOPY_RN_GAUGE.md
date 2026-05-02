@@ -1,5 +1,10 @@
 # The Gauge-Theoretic Knowledge Graph (Theory Canopy)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 *Authored: 2026-05-02*
 
 This document outlines the architectural elevation of the `info-geometry-lean-fusion` DAG from a structural index to a dynamical, gauge-theoretic manifold. This is the Level 2 "Spectral/Dynamical" implementation.

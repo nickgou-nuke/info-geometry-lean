@@ -1,5 +1,10 @@
 # Multilingual Theorem Translator
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This repository accepts dense multilingual mathematical prose as upstream
 theorem-factory material.  It must not be compiled into Lean directly.
 

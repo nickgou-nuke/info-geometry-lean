@@ -1,5 +1,10 @@
 # Methodology: Ensuring Lean Declarations are Indexed as Graph Anchors
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 To guarantee that theorems, definitions, and lemmas from Lean files are recognized as graph anchors in the Info-Geometry Spire's DAG index (and thus available for audit, debt reporting, and closure enforcement), follow this protocol:
 
 ## 1. Namespace Discipline

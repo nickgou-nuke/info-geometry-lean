@@ -10,6 +10,8 @@ This module implements the `Extend F` structure for handling both positive and
 negative infinity in info-geometric measures and divergences.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Core
 
 /-- `Extend F` represents the extended field `F ∪ {⊥, ⊤}`. -/
@@ -49,13 +51,13 @@ instance [InvolutiveNeg F] : InvolutiveNeg (Extend F) where
       | top => rfl
       | coe a =>
         change some ((- -a : F) : WithTop F) = some (a : WithTop F)
-        exact congrArg some (by simpa using (neg_neg a : - -a = a))
+        exact congrArg some (by simp)
 
 @[simp] lemma coe_zero : ((0 : F) : Extend F) = WithBot.some (WithTop.some 0) := rfl
 @[simp] lemma coe_one : ((1 : F) : Extend F) = WithBot.some (WithTop.some 1) := rfl
 
 @[simp] lemma bot_lt_coe (x : F) : (⊥ : Extend F) < (x : Extend F) := by
-  simpa using (WithBot.bot_lt_coe (WithTop.some x) : (⊥ : WithBot (WithTop F)) < ((WithTop.some x : WithTop F) : WithBot (WithTop F)))
+  simp
 
 @[simp] lemma coe_lt_top (x : F) : (x : Extend F) < (⊤ : Extend F) := by
   simpa using

@@ -1,5 +1,10 @@
 # DAG Toolchain and Alexandria Trace
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document records the analysis chain and toolchain usage map for the managed DAG lane, `tools/infra`, and `tools/alexandria`.
 
 It is written as an explicit reasoning trace for operators: what was inspected, why it was inspected, and what coupling points were identified.

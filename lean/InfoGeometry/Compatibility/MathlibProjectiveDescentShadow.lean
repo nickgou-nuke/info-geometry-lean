@@ -37,15 +37,14 @@ theorem sl2r_neg_smul (g : projSL2R) (τ : UpperHalfPlane) :
         -((Matrix.SpecialLinearGroup.mapGL ℝ) g) := by
     ext i j
     simp
-  simpa [h] using
-    (UpperHalfPlane.neg_smul ((Matrix.SpecialLinearGroup.mapGL ℝ) g) τ)
+  simp [h]
 
 /--
 The integer modular subgroup has the same kernel-triviality on the base action.
 -/
 theorem sl2z_neg_smul (g : projSL2Z) (τ : UpperHalfPlane) :
     (-g) • τ = g • τ := by
-  simpa using (ModularGroup.SL_neg_smul g τ)
+  simp
 
 /--
 Compatibility contract for the complex-backed projective descent.

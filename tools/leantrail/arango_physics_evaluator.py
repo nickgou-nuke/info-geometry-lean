@@ -19,6 +19,13 @@ if str(REPO_ROOT) not in sys.path:
 
 from leantrail.backend.models import GraphSnapshot
 from leantrail.backend.store import GraphStore
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 from tools.leantrail.adapters import import_arango_json, load_snapshot
 
 
@@ -392,6 +399,7 @@ def _render_md(report: dict[str, Any]) -> str:
 
 
 def _parse_args() -> argparse.Namespace:
+    load_repo_arango_env(REPO_ROOT)
     parser = argparse.ArgumentParser(
         description=(
             "Evaluate local or ArangoDB LeanTrail neighborhoods as a physical "
@@ -421,10 +429,10 @@ def _parse_args() -> argparse.Namespace:
         "--candidate-format", choices=["snapshot", "arango-json"], default="arango-json"
     )
 
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--nodes-collection", default="ig_nodes")
     parser.add_argument("--edges-collection", default="ig_edges")
 

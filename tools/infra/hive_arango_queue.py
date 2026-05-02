@@ -28,10 +28,20 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
-DEFAULT_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
-DEFAULT_DATABASE = os.environ.get("ARANGO_DATABASE", "hive_live")
-DEFAULT_USERNAME = os.environ.get("ARANGO_USER", "root")
-DEFAULT_PASSWORD = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+
+load_repo_arango_env(Path.cwd())
+
+DEFAULT_ENDPOINT = arango_endpoint()
+DEFAULT_DATABASE = arango_database("hive_live")
+DEFAULT_USERNAME = arango_username()
+DEFAULT_PASSWORD = arango_password("alexandria_root")
 DEFAULT_QUEUE = "proof-search"
 DEFAULT_LEASE_SECONDS = 900
 DEFAULT_NEGATIVE_WINDOW = 200

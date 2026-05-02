@@ -1,5 +1,10 @@
 # Split `Cl(1,1)` Replica Inventory
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This note records the current exhaustive search allocation for the local split
 `Cl(1,1)` packet across the repository.
 

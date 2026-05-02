@@ -15,6 +15,8 @@ Owner skeleton for operatorial Fenchel/Legendre statements on the doubled real
 Krein carrier, explicitly gated by regular-branch positivity.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.OperatorFenchelRegularCone
 
 open InfoGeometry.Canonical.Positivity

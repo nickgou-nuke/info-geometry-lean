@@ -1,4 +1,10 @@
 # The Workbench
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## The Human Mediator's Playbook for Mathematical Discovery
 
 This is a practical guide for applying the Analytical Psychology Methodology to the mathematical development of the `info-geometry-lean` repository.

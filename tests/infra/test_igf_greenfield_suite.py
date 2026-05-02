@@ -21,6 +21,20 @@ def read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
 
 
+class FakeHttpResponse:
+    def __init__(self, payload: dict):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self) -> bytes:
+        return json.dumps(self.payload).encode("utf-8")
+
+
 def make_minimal_artifacts(base: Path) -> Path:
     d = base / "artifacts"
     write_jsonl(
@@ -249,6 +263,7 @@ def test_query_registry_has_required_queries() -> None:
         "verify.orphan_patch_edges",
         "patch.maxent_style_candidates",
         "patch.maxent_candidate_ground_states",
+        "patch.log_barrier_candidates",
     }
     assert required.issubset(set(QUERIES))
     q = get_query("verify.run_summary")
@@ -258,10 +273,99 @@ def test_query_registry_has_required_queries() -> None:
     assert "derived_spectral_neighborhood_sidecar" in maxent.aql
     assert "non_overclaim" in maxent.aql
     assert "chiral_entropy" in maxent.aql
+
+    barrier = get_query("patch.log_barrier_candidates")
+    assert "self_concordant_barrier_proxy" in barrier.aql
+    assert "barrier_safe_score" in barrier.aql
+    assert "PrimitiveSouriauPipelineOwnerTarget" in barrier.aql
+    assert "not modular-flow or KMS evidence" in barrier.description
     assert "pseudo_logdet" in maxent.aql
 
     compat = get_query("patch.maxent_candidate_ground_states")
     assert compat.aql == maxent.aql
+
+
+def test_arango_http_execute_aql_follows_cursor(monkeypatch: pytest.MonkeyPatch) -> None:
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.graph import arango_http
+
+    calls = []
+    payloads = [
+        {"result": [{"a": 1}], "hasMore": True, "id": "cursor/1"},
+        {"result": [{"a": 2}], "hasMore": False},
+    ]
+
+    def fake_urlopen(req, timeout):
+        calls.append((req.get_method(), req.full_url, timeout, req.data))
+        return FakeHttpResponse(payloads.pop(0))
+
+    monkeypatch.setattr(arango_http, "urlopen", fake_urlopen)
+    target = arango_http.ArangoHttpTarget(
+        endpoint="http://127.0.0.1:8530",
+        database="infogeometry",
+        username="root",
+        password="pw",
+    )
+
+    rows = arango_http.execute_aql(target, "RETURN @x", {"x": 1}, timeout=12)
+
+    assert rows == [{"a": 1}, {"a": 2}]
+    assert calls[0][0] == "POST"
+    assert calls[0][1].endswith("/_db/infogeometry/_api/cursor")
+    assert b'"bindVars": {"x": 1}' in calls[0][3]
+    assert calls[1][0] == "PUT"
+    assert calls[1][1].endswith("/_db/infogeometry/_api/cursor/cursor/1")
+    assert calls[0][2] == 12
+
+
+def test_log_barrier_candidates_pipeline_is_routing_only(monkeypatch) -> None:
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.pipeline import candidates
+
+    calls = []
+
+    def fake_resolve_run_id(db, run_id):
+        assert db == "db"
+        return run_id or "latest_run"
+
+    def fake_run_query(db, query_id, **bind_vars):
+        calls.append((db, query_id, bind_vars))
+        return [
+            {
+                "patch_id": "patch_1",
+                "barrier_safe_score": 3.0,
+                "lean_owner_target": candidates.PRIMITIVE_SOURIAU_OWNER_TARGET,
+                "non_overclaim": True,
+            }
+        ]
+
+    monkeypatch.setattr(candidates, "resolve_run_id", fake_resolve_run_id)
+    monkeypatch.setattr(candidates, "run_query", fake_run_query)
+
+    result = candidates.find_log_barrier_patch_candidates(
+        "db",
+        None,
+        limit=7,
+        min_abs_chiral_bias=0.25,
+        barrier_weight=2.0,
+        nullity_weight=4.0,
+    )
+
+    assert result["ok"] is True
+    assert result["run_id"] == "latest_run"
+    assert result["query_id"] == "patch.log_barrier_candidates"
+    assert result["lean_owner_target"].endswith("PrimitiveSouriauPipelineOwnerTarget")
+    assert result["claim_scope"] == "derived_spectral_neighborhood_sidecar"
+    assert result["non_overclaim"] is True
+    assert result["candidate_count"] == 1
+
+    db, query_id, bind_vars = calls[0]
+    assert db == "db"
+    assert query_id == "patch.log_barrier_candidates"
+    assert bind_vars["limit"] == 7
+    assert bind_vars["min_abs_chiral_bias"] == 0.25
+    assert bind_vars["barrier_weight"] == 2.0
+    assert bind_vars["nullity_weight"] == 4.0
 
 
 def test_maxent_candidate_pipeline_uses_safe_query(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -298,7 +402,15 @@ def test_preflight_reports_missing_credentials(monkeypatch: pytest.MonkeyPatch) 
     sys.path.insert(0, str((REPO / "src").resolve()))
     from igf.config.preflight import run_preflight
 
-    for key in ["ARANGO_USER", "ARANGO_USERNAME", "ARANGO_PASS", "ARANGO_PASSWORD"]:
+    monkeypatch.setenv("HIVE_ARANGO_ENV_FILE", str(REPO / "configs/local/DOES_NOT_EXIST.env"))
+    for key in [
+        "ARANGO_ENDPOINT",
+        "ARANGO_DATABASE",
+        "ARANGO_USER",
+        "ARANGO_USERNAME",
+        "ARANGO_PASS",
+        "ARANGO_PASSWORD",
+    ]:
         monkeypatch.delenv(key, raising=False)
 
     result = run_preflight()

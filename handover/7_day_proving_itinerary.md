@@ -1,5 +1,10 @@
 # 7-Day Proving Itinerary (Locked Diagnostics)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 This plan is scoped to the current owner graph and avoids new ontology.
 All closure runs must be lock-managed and produce diagnostic artifacts.
 

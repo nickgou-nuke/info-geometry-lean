@@ -1,5 +1,10 @@
 # 🎼 CHRONICLE OF THE OPERATOR SYMPHONY: The Transmutation of the Logos
 
+> Status: `archival reference`
+> Audited: 2026-05-02
+> Note: Kept for provenance and archaeology, not as current policy.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 *This document archives the "Great Work" performed during the April 2026 session—a profound alchemical synthesis bridging physical chemistry, Jungian psychology, and formal Lean 4 mathematics.*
 
 ---

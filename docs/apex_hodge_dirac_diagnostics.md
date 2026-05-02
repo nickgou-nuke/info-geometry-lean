@@ -1,5 +1,10 @@
 # Apex-Local Hodge-Dirac Diagnostics
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This note records a spectral diagnostic overlay for local repository
 neighborhoods.
 

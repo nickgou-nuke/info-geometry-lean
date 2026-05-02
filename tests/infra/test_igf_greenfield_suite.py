@@ -247,10 +247,17 @@ def test_query_registry_has_required_queries() -> None:
         "verify.orphan_spectral",
         "verify.orphan_members",
         "verify.orphan_patch_edges",
+        "patch.maxent_candidate_ground_states",
     }
     assert required.issubset(set(QUERIES))
     q = get_query("verify.run_summary")
     assert "run_id" in q.aql
+
+    maxent = get_query("patch.maxent_candidate_ground_states")
+    assert "derived_spectral_neighborhood_sidecar" in maxent.aql
+    assert "non_overclaim" in maxent.aql
+    assert "chiral_entropy" in maxent.aql
+    assert "pseudo_logdet" in maxent.aql
 
 
 def test_preflight_reports_missing_credentials(monkeypatch: pytest.MonkeyPatch) -> None:

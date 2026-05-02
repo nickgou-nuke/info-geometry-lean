@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import time
 from typing import Any
 
 from igf.artifacts.io import count_jsonl_rows, file_hashes, sha256_optional_file, write_json
@@ -37,6 +38,8 @@ def build_manifest(
     artifact_paths = [output_dir / name for name in ARTIFACT_FILES]
     manifest = {
         "run_id": run_id,
+        "schema_version": "ig_manifest.v1",
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "schema_versions": SCHEMA_VERSIONS,
         "generator": generator,
         "generator_version": generator_version,

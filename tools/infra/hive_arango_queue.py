@@ -33,6 +33,9 @@ DEFAULT_USERNAME = "root"
 DEFAULT_PASSWORD = "alexandria_root"
 DEFAULT_QUEUE = "proof-search"
 DEFAULT_LEASE_SECONDS = 900
+DEFAULT_NEGATIVE_WINDOW = 200
+DEFAULT_NEGATIVE_PENALTY_WEIGHT = 0.05
+DEFAULT_MIN_EFFECTIVE_PRIORITY = 0.1
 
 GOAL_ARTIFACT_KINDS = {"InfoTreeArtifact"}
 FOSSIL_ARTIFACT_KINDS = {"DiamondFossil", "TheoremFossil"}
@@ -79,6 +82,21 @@ COLLECTIONS: tuple[CollectionSpec, ...] = (
     CollectionSpec("hive_tasks"),
     CollectionSpec("hive_workers"),
     CollectionSpec("hive_events"),
+    CollectionSpec("hive_qi_pulses"),
+    CollectionSpec("hive_qi_summaries"),
+    CollectionSpec("hive_qi_blocker_modules"),
+    CollectionSpec("hive_negative_constraints"),
+    CollectionSpec("hive_sorry_obligations"),
+    CollectionSpec("hive_majorana_identity_packets"),
+    CollectionSpec("hive_pulse_succession", edge=True),
+    CollectionSpec("hive_pulse_resolution", edge=True),
+    CollectionSpec("hive_pulse_deadend", edge=True),
+    CollectionSpec("hive_interdependence_edges", edge=True),
+    CollectionSpec("hive_spectral_mode_edges", edge=True),
+    CollectionSpec("hive_qi_pulse_to_blocker", edge=True),
+    CollectionSpec("hive_qi_blocker_to_task", edge=True),
+    CollectionSpec("hive_qi_pulse_to_obligation", edge=True),
+    CollectionSpec("hive_qi_obligation_resolved_by", edge=True),
     CollectionSpec("hive_goal_closed_by", edge=True),
     CollectionSpec("hive_goal_rejected_by", edge=True),
     CollectionSpec("hive_task_for_goal", edge=True),
@@ -122,6 +140,15 @@ INDEXES: tuple[IndexSpec, ...] = (
     IndexSpec("hive_workers", ("worker_id",), unique=True, sparse=False, name="worker_id_idx"),
     IndexSpec("hive_events", ("packet_sha256",), unique=True, sparse=False, name="event_packet_sha_idx"),
     IndexSpec("hive_events", ("artifact_kind", "space"), name="event_kind_space_idx"),
+    IndexSpec("hive_qi_pulses", ("pulse_id",), unique=True, sparse=False, name="qi_pulse_id_idx"),
+    IndexSpec("hive_qi_pulses", ("heartbeat",), name="qi_pulse_heartbeat_idx"),
+    IndexSpec("hive_qi_summaries", ("generated_at",), name="qi_summary_generated_idx"),
+    IndexSpec("hive_qi_blocker_modules", ("blocker_hash", "module_path"), name="qi_blocker_module_idx"),
+    IndexSpec("hive_negative_constraints", ("error_fingerprint", "geometric_sector"), name="negative_constraint_fingerprint_sector_idx"),
+    IndexSpec("hive_sorry_obligations", ("obligation_hash",), unique=True, sparse=False, name="sorry_obligation_hash_idx"),
+    IndexSpec("hive_sorry_obligations", ("file", "line"), name="sorry_obligation_file_line_idx"),
+    IndexSpec("hive_sorry_obligations", ("status", "lane"), name="sorry_obligation_status_lane_idx"),
+    IndexSpec("hive_majorana_identity_packets", ("packet_id",), unique=True, sparse=False, name="majorana_packet_id_idx"),
 )
 
 ALLOWED_AUTHORITIES = {
@@ -239,6 +266,7 @@ PACKET_COLLECTION_BY_SCHEMA = {
     "hive.packet.audit.v1": "hive_audit_packets",
     "hive.packet.theorem_candidate.v1": "hive_candidate_packets",
     "hive.packet.promotion_decision.v1": "hive_promotions",
+    "hive.packet.majorana_identity.v1": "hive_majorana_identity_packets",
     "info_geometry.hive_replay_packet.v1": "hive_replay_packets",
 }
 
@@ -622,6 +650,7 @@ def normalize_packet_origin_metadata(packet: dict[str, Any]) -> None:
         "hive.packet.build.v1",
         "hive.packet.audit.v1",
         "hive.packet.promotion_decision.v1",
+        "hive.packet.majorana_identity.v1",
         "info_geometry.hive_replay_packet.v1",
     }:
         packet.setdefault("source_regime", "theorem_lane")
@@ -781,6 +810,15 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("TheoremCandidatePacket requires formal_target")
         if packet.get("asserts_theorem_closure"):
             raise ValueError("TheoremCandidatePacket cannot assert theorem closure")
+    elif schema == "hive.packet.majorana_identity.v1":
+        if authority not in {"semantic", "audit_checked", "build_checked"}:
+            raise ValueError("MajoranaIdentityPacket must have semantic/build_checked/audit_checked authority")
+        for field in ("packet_id", "state_ref", "metrics", "gates", "verdict"):
+            if packet.get(field) in (None, ""):
+                raise ValueError(f"MajoranaIdentityPacket requires {field}")
+        verdict = str(packet.get("verdict") or "")
+        if verdict not in {"UNIFIED", "CONDITIONAL", "BIFURCATED"}:
+            raise ValueError(f"MajoranaIdentityPacket has invalid verdict: {verdict!r}")
     elif schema == "hive.packet.promotion_decision.v1":
         if authority != "promoted":
             raise ValueError("PromotionDecisionPacket must have authority 'promoted'")
@@ -789,12 +827,22 @@ def validate_packet_invariants(packet: dict[str, Any]) -> dict[str, Any]:
         decision = str(packet.get("decision") or "")
         if decision not in {"promote", "hold", "reject"}:
             raise ValueError(f"PromotionDecisionPacket has invalid decision: {decision!r}")
+        if packet.get("metaphor_only"):
+            raise ValueError("PromotionDecisionPacket cannot be metaphor-only")
+        metaphor_claims = packet.get("metaphor_claims")
+        if isinstance(metaphor_claims, list) and metaphor_claims and decision == "promote":
+            raise ValueError("PromotionDecisionPacket with metaphor_claims must not decision=promote")
     elif schema == "info_geometry.hive_replay_packet.v1":
         if authority_rank(authority) < authority_rank("lean_checked"):
             raise ValueError("Replay packets must have authority at least 'lean_checked'")
 
-    if packet.get("asserts_theorem_closure") and authority_rank(authority) < authority_rank("lean_checked"):
-        raise ValueError("Only lean_checked-or-higher packets may assert theorem closure")
+    if packet.get("asserts_theorem_closure"):
+        if authority_rank(authority) < authority_rank("lean_checked"):
+            raise ValueError("Only lean_checked-or-higher packets may assert theorem closure")
+        if packet.get("metaphor_only"):
+            raise ValueError("metaphor_only packets cannot assert theorem closure")
+        if packet.get("metaphor_claims"):
+            raise ValueError("Packets with metaphor_claims cannot assert theorem closure")
 
     if str(packet.get("representation_class") or "") == "shadow" and packet.get("discharges_owner_debt"):
         raise ValueError("Shadow packets cannot discharge owner debts without an explicit bridge path")
@@ -1156,6 +1204,66 @@ def enqueue_goal(
 
 
 
+def enqueue_hybrid_goal(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str,
+    goal_hash_shape: str,
+    canonical_shape: str,
+    target_pretty: str,
+    module: str,
+    goal_index: int,
+    priority: float,
+) -> dict[str, Any]:
+    return enqueue_goal(
+        endpoint,
+        database,
+        username,
+        password,
+        queue_name=queue_name,
+        goal_hash_shape=goal_hash_shape,
+        canonical_shape=canonical_shape,
+        target_pretty=target_pretty,
+        module=module,
+        goal_index=goal_index,
+        priority=priority,
+        task_kind="proof.search.hybrid",
+    )
+
+
+def enqueue_leansearch_goal(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str,
+    goal_hash_shape: str,
+    canonical_shape: str,
+    target_pretty: str,
+    module: str,
+    goal_index: int,
+    priority: float,
+) -> dict[str, Any]:
+    return enqueue_goal(
+        endpoint,
+        database,
+        username,
+        password,
+        queue_name=queue_name,
+        goal_hash_shape=goal_hash_shape,
+        canonical_shape=canonical_shape,
+        target_pretty=target_pretty,
+        module=module,
+        goal_index=goal_index,
+        priority=priority,
+        task_kind="proof.search.leansearch",
+    )
+
+
 def claim_next_task(
     endpoint: str,
     database: str,
@@ -1166,14 +1274,47 @@ def claim_next_task(
     queue_name: str,
     lease_seconds: int,
     task_kind: str | None = None,
+    negative_window: int = DEFAULT_NEGATIVE_WINDOW,
+    negative_penalty_weight: float = DEFAULT_NEGATIVE_PENALTY_WEIGHT,
+    min_effective_priority: float = DEFAULT_MIN_EFFECTIVE_PRIORITY,
 ) -> dict[str, Any] | None:
     query = """
 LET now = DATE_ISO8601(DATE_NOW())
+LET recent_negative = (
+  FOR n IN @@negative
+    SORT n.created_at DESC
+    LIMIT @negative_window
+    RETURN n
+)
 FOR task IN @@tasks
   FILTER task.queue_name == @queue_name
   FILTER @task_kind == null || task.task_kind == @task_kind
   FILTER task.status == "pending" || (task.status == "leased" && task.lease_expires_at != null && task.lease_expires_at <= now)
-  SORT task.priority DESC, task.created_at ASC
+  LET task_sector = task.geometric_sector != null
+    ? task.geometric_sector
+    : (task.runtime_goal_packet != null && task.runtime_goal_packet.geometric_sector != null ? task.runtime_goal_packet.geometric_sector : null)
+  LET task_fingerprint = task.error_fingerprint != null
+    ? task.error_fingerprint
+    : (task.runtime_goal_packet != null && task.runtime_goal_packet.error_fingerprint != null ? task.runtime_goal_packet.error_fingerprint : null)
+  LET exact_hits = LENGTH(
+    FOR n IN recent_negative
+      FILTER task_sector != null
+      FILTER task_fingerprint != null
+      FILTER n.geometric_sector == task_sector
+      FILTER n.error_fingerprint == task_fingerprint
+      RETURN 1
+  )
+  LET sector_hits = LENGTH(
+    FOR n IN recent_negative
+      FILTER task_sector != null
+      FILTER n.geometric_sector == task_sector
+      RETURN 1
+  )
+  LET weighted_hits = exact_hits + (sector_hits * 0.25)
+  LET negative_penalty = weighted_hits * @negative_penalty_weight
+  LET raw_adjusted_priority = TO_NUMBER(task.priority) - negative_penalty
+  LET adjusted_priority = MAX([@min_effective_priority, raw_adjusted_priority])
+  SORT adjusted_priority DESC, TO_NUMBER(task.priority) DESC, task.created_at ASC
   LIMIT 1
   UPDATE task WITH {
     status: "leased",
@@ -1181,7 +1322,14 @@ FOR task IN @@tasks
     lease_expires_at: DATE_ISO8601(DATE_ADD(DATE_NOW(), @lease_seconds, "second")),
     claim_count: TO_NUMBER(task.claim_count) + 1,
     claimed_at: now,
-    updated_at: now
+    updated_at: now,
+    routing_negative_window: @negative_window,
+    routing_negative_penalty_weight: @negative_penalty_weight,
+    routing_min_effective_priority: @min_effective_priority,
+    routing_negative_exact_hits: exact_hits,
+    routing_negative_sector_hits: sector_hits,
+    routing_negative_penalty: negative_penalty,
+    routing_adjusted_priority: adjusted_priority
   } IN @@tasks
   OPTIONS { mergeObjects: false }
   RETURN NEW
@@ -1194,10 +1342,14 @@ FOR task IN @@tasks
         query,
         {
             "@tasks": "hive_tasks",
+            "@negative": "hive_negative_constraints",
             "queue_name": queue_name,
             "worker_id": worker_id,
             "lease_seconds": int(lease_seconds),
             "task_kind": task_kind,
+            "negative_window": max(1, int(negative_window)),
+            "negative_penalty_weight": max(0.0, float(negative_penalty_weight)),
+            "min_effective_priority": max(0.0, float(min_effective_priority)),
         },
     )
     if not rows:
@@ -1327,6 +1479,39 @@ def enqueue_promotion_task(
     import_rows(endpoint, database, username, password, "hive_tasks", [task_doc])
     return {"task": task_doc}
 
+
+def enqueue_research_digest_task(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str,
+    source_key: str,
+    summary_key: str,
+    context: str,
+    priority: float = 0.5,
+) -> dict[str, Any]:
+    now = iso_now()
+    task_doc = {
+        "_key": stable_key("task", "research.digest", source_key, summary_key),
+        "schema": "info_geometry.hive_task.v1",
+        "task_kind": "research.digest",
+        "queue_name": queue_name,
+        "goal_key": None,
+        "source_key": source_key,
+        "summary_key": summary_key,
+        "context": context,
+        "status": "pending",
+        "priority": float(priority),
+        "claim_count": 0,
+        "worker_id": None,
+        "lease_expires_at": None,
+        "created_at": now,
+        "updated_at": now,
+    }
+    import_rows(endpoint, database, username, password, "hive_tasks", [task_doc])
+    return {"task": task_doc}
 
 
 def get_task_record(
@@ -1598,6 +1783,85 @@ FOR task IN @@tasks
     }
 
 
+def sector_negative_stats(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    window: int,
+) -> dict[str, Any]:
+    bounded_window = max(1, int(window))
+    query = """
+LET recent = (
+  FOR n IN @@negative
+    SORT n.created_at DESC
+    LIMIT @window
+    RETURN n
+)
+LET ranked = (
+  FOR n IN recent
+    COLLECT geometric_sector = n.geometric_sector, error_fingerprint = n.error_fingerprint INTO g
+    LET count = LENGTH(g)
+    LET severity_weight = MAX(
+      FOR row IN g[*].n
+        RETURN (
+          row.severity == "critical" ? 4 :
+          row.severity == "high" ? 3 :
+          row.severity == "medium" ? 2 : 1
+        )
+    )
+    LET score = count * severity_weight
+    LET last_seen = MAX(g[*].n.created_at)
+    LET blocker_kinds = UNIQUE(g[*].n.blocker_kind)
+    LET modules = UNIQUE(g[*].n.module_path)
+    SORT score DESC, count DESC, last_seen DESC
+    RETURN {
+      geometric_sector,
+      error_fingerprint,
+      count,
+      severity_weight,
+      score,
+      last_seen,
+      blocker_kinds,
+      modules
+    }
+)
+LET by_sector = (
+  FOR n IN recent
+    COLLECT geometric_sector = n.geometric_sector INTO g
+    LET count = LENGTH(g)
+    SORT count DESC
+    RETURN {
+      geometric_sector,
+      count,
+      fingerprints: LENGTH(UNIQUE(g[*].n.error_fingerprint)),
+      latest_seen: MAX(g[*].n.created_at)
+    }
+)
+RETURN {
+  window: @window,
+  total_sampled: LENGTH(recent),
+  ranked,
+  by_sector
+}
+""".strip()
+    rows = aql(
+        endpoint,
+        database,
+        username,
+        password,
+        query,
+        {"@negative": "hive_negative_constraints", "window": bounded_window},
+    )
+    payload = rows[0] if rows else {"window": bounded_window, "total_sampled": 0, "ranked": [], "by_sector": []}
+    return {
+        "schema": "info_geometry.hive_sector_negative_stats.v1",
+        "window": bounded_window,
+        **payload,
+    }
+
+
 def find_packet_by_key_any_schema(
     endpoint: str,
     database: str,
@@ -1836,6 +2100,30 @@ def parse_args() -> argparse.Namespace:
     enqueue.add_argument("--priority", type=float, default=0.5)
     enqueue.add_argument("--task-kind", default="proof.search")
 
+    enqueue_hybrid = sub.add_parser(
+        "enqueue-hybrid-goal",
+        help="Insert a manual goal and pending task with task_kind preset to proof.search.hybrid",
+    )
+    enqueue_hybrid.add_argument("--queue-name", default=DEFAULT_QUEUE)
+    enqueue_hybrid.add_argument("--goal-hash-shape", required=True)
+    enqueue_hybrid.add_argument("--canonical-shape", required=True)
+    enqueue_hybrid.add_argument("--target-pretty", required=True)
+    enqueue_hybrid.add_argument("--module", required=True)
+    enqueue_hybrid.add_argument("--goal-index", type=int, required=True)
+    enqueue_hybrid.add_argument("--priority", type=float, default=0.5)
+
+    enqueue_leansearch = sub.add_parser(
+        "enqueue-leansearch-goal",
+        help="Insert a manual goal and pending task with task_kind preset to proof.search.leansearch",
+    )
+    enqueue_leansearch.add_argument("--queue-name", default=DEFAULT_QUEUE)
+    enqueue_leansearch.add_argument("--goal-hash-shape", required=True)
+    enqueue_leansearch.add_argument("--canonical-shape", required=True)
+    enqueue_leansearch.add_argument("--target-pretty", required=True)
+    enqueue_leansearch.add_argument("--module", required=True)
+    enqueue_leansearch.add_argument("--goal-index", type=int, required=True)
+    enqueue_leansearch.add_argument("--priority", type=float, default=0.5)
+
     seed = sub.add_parser("seed-jsonl", help="Seed goals/fossils/tasks from ingest_hive_json JSONL")
     seed.add_argument("--input", type=Path, required=True)
     seed.add_argument("--queue-name", default=DEFAULT_QUEUE)
@@ -1846,6 +2134,9 @@ def parse_args() -> argparse.Namespace:
     claim.add_argument("--queue-name", default=DEFAULT_QUEUE)
     claim.add_argument("--lease-seconds", type=int, default=DEFAULT_LEASE_SECONDS)
     claim.add_argument("--task-kind", default=None)
+    claim.add_argument("--negative-window", type=int, default=DEFAULT_NEGATIVE_WINDOW)
+    claim.add_argument("--negative-penalty-weight", type=float, default=DEFAULT_NEGATIVE_PENALTY_WEIGHT)
+    claim.add_argument("--min-effective-priority", type=float, default=DEFAULT_MIN_EFFECTIVE_PRIORITY)
 
     build_task = sub.add_parser("enqueue-build-verify", help="Insert a build.verify task for BuildBee")
     build_task.add_argument("--queue-name", default="build-verify")
@@ -1874,6 +2165,8 @@ def parse_args() -> argparse.Namespace:
 
     stats = sub.add_parser("queue-stats", help="Summarize queue status counts")
     stats.add_argument("--queue-name", default=DEFAULT_QUEUE)
+    sector_neg = sub.add_parser("sector-negative-stats", help="Rank negative constraints by sector/fingerprint over a recent window")
+    sector_neg.add_argument("--window", type=int, default=100)
 
     packet = sub.add_parser("import-packet", help="Validate and import a typed Hive packet")
     packet.add_argument("--input", type=Path, required=True)
@@ -1933,6 +2226,34 @@ def main() -> int:
             priority=float(args.priority),
             task_kind=str(args.task_kind),
         )
+    elif args.command == "enqueue-hybrid-goal":
+        result = enqueue_hybrid_goal(
+            endpoint,
+            database,
+            username,
+            password,
+            queue_name=str(args.queue_name),
+            goal_hash_shape=str(args.goal_hash_shape),
+            canonical_shape=str(args.canonical_shape),
+            target_pretty=str(args.target_pretty),
+            module=str(args.module),
+            goal_index=int(args.goal_index),
+            priority=float(args.priority),
+        )
+    elif args.command == "enqueue-leansearch-goal":
+        result = enqueue_leansearch_goal(
+            endpoint,
+            database,
+            username,
+            password,
+            queue_name=str(args.queue_name),
+            goal_hash_shape=str(args.goal_hash_shape),
+            canonical_shape=str(args.canonical_shape),
+            target_pretty=str(args.target_pretty),
+            module=str(args.module),
+            goal_index=int(args.goal_index),
+            priority=float(args.priority),
+        )
     elif args.command == "seed-jsonl":
         payloads = seed_payloads(Path(args.input), queue_name=str(args.queue_name), priority=float(args.priority))
         for collection, rows in payloads.items():
@@ -1954,6 +2275,9 @@ def main() -> int:
             queue_name=str(args.queue_name),
             lease_seconds=int(args.lease_seconds),
             task_kind=str(args.task_kind) if args.task_kind else None,
+            negative_window=int(args.negative_window),
+            negative_penalty_weight=float(args.negative_penalty_weight),
+            min_effective_priority=float(args.min_effective_priority),
         )
     elif args.command == "enqueue-build-verify":
         result = enqueue_build_verify_task(
@@ -2009,6 +2333,14 @@ def main() -> int:
         )
     elif args.command == "queue-stats":
         result = queue_stats(endpoint, database, username, password, queue_name=str(args.queue_name))
+    elif args.command == "sector-negative-stats":
+        result = sector_negative_stats(
+            endpoint,
+            database,
+            username,
+            password,
+            window=int(args.window),
+        )
     elif args.command == "validate-packet":
         packet_payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
         result = validate_packet_invariants(packet_payload)

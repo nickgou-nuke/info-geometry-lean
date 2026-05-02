@@ -6,6 +6,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from igf.policy.claim_scope import validate_claim_policy
+
 
 SCHEMA_TO_FILE = {
     "ig.patch_run.v1": "ig_patch_run.v1.json",
@@ -21,6 +23,12 @@ ARTIFACT_FILES = {
     "ig_patch_spectral_signatures.jsonl": "ig.patch_spectral_signature.v1.2",
     "ig_patch_members.jsonl": "ig.patch_member.v1",
     "ig_patch_edges.jsonl": "ig.patch_edge.v1",
+}
+
+POLICY_ARTIFACT_FILES = {
+    "ig_patch_runs.jsonl",
+    "ig_chiral_patches.jsonl",
+    "ig_patch_spectral_signatures.jsonl",
 }
 
 
@@ -74,6 +82,16 @@ def validate_artifacts(artifact_dir: Path, schemas_dir: Path, *, strict: bool = 
                                 "path": "/".join(str(p) for p in e.path),
                             }
                         )
+                    if artifact_file in POLICY_ARTIFACT_FILES:
+                        for policy_error in validate_claim_policy(obj):
+                            errors.append(
+                                {
+                                    "file": artifact_file,
+                                    "line": idx,
+                                    "error": policy_error,
+                                    "path": "claim_policy",
+                                }
+                            )
                 if len(errors) >= max_errors:
                     return {
                         "ok": False,

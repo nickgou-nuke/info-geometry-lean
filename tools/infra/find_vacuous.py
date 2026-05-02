@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-import json
+import os, json, base64
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
-import base64
 
 def request_json(method, url, payload=None):
+    endpoint = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530").rstrip("/")
+    user = os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root")
+    password = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
+    token = base64.b64encode(f"{user}:{password}".encode()).decode("ascii")
+
     body = None if payload is None else json.dumps(payload).encode("utf-8")
     req = Request(url, data=body, method=method)
-    req.add_header("Authorization", "Basic " + base64.b64encode(b"root:").decode("ascii"))
+    req.add_header("Authorization", "Basic " + token)
     req.add_header("Accept", "application/json")
     if body is not None:
         req.add_header("Content-Type", "application/json")
@@ -18,7 +22,7 @@ def request_json(method, url, payload=None):
         raise RuntimeError(f"HTTP {exc.code} {url}: {exc.read().decode('utf-8')}")
 
 def run_aql(query, bind_vars=None):
-    url = "http://127.0.0.1:8529/_db/infogeometry/_api/cursor"
+    url = "http://127.0.0.1:8530/_db/infogeometry/_api/cursor"
     payload = {"query": query, "bindVars": bind_vars or {}}
     return request_json("POST", url, payload=payload).get("result", [])
 

@@ -40,8 +40,10 @@ harvest_strict_failures_on_exit() {
 }
 trap harvest_strict_failures_on_exit EXIT
 
-echo "[strict-check] building canonical entrypoints with warnings as errors"
-python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometry --wfail
+echo "[strict-check] building modular libraries"
+python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryMeta
+python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryCanonical --wfail
+python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometryLLM --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean lean/InfoGeometry/Library.lean

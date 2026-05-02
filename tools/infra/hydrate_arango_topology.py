@@ -279,33 +279,38 @@ def hydrate(
             overlay_edge_index += 1
 
 
-    scc_edge_witnesses: dict[tuple[int, int], list[str]] = collections.defaultdict(list)
+    scc_edge_witnesses: dict[tuple[int, int, str], list[str]] = collections.defaultdict(list)
     for edge in edges:
         src = edge_endpoint_key(edge.get("_from") or edge.get("src"))
         dst = edge_endpoint_key(edge.get("_to") or edge.get("dst"))
         src_scc = scc_of.get(src)
         dst_scc = scc_of.get(dst)
-        if src_scc is None or dst_scc is None or src_scc == dst_scc:
+        if src_scc is None or dst_scc is None:
             continue
-        scc_edge_witnesses[(src_scc, dst_scc)].append(str(edge.get("_key") or ""))
+        kind = str(edge.get("kind") or "")
+        scc_edge_witnesses[(src_scc, dst_scc, kind)].append(str(edge.get("_key") or ""))
 
-    for (src_scc, dst_scc), witnesses in sorted(scc_edge_witnesses.items()):
+    for (src_scc, dst_scc, kind), witnesses in sorted(scc_edge_witnesses.items()):
         overlay_edges.append(
             {
                 "_key": f"overlay_e_{overlay_edge_index}",
                 "_from": f"{topology_overlay_collection}/scc_{src_scc}",
                 "_to": f"{topology_overlay_collection}/scc_{dst_scc}",
-                "kind": "quotient",
+                "kind": kind,
                 "role": "scc_quotient",
                 "layer": "topology_overlay",
                 "grain": "scc",
+                "src_scc": src_scc,
+                "dst_scc": dst_scc,
                 "src_scc_id": src_scc,
                 "dst_scc_id": dst_scc,
+                "multiplicity": len(witnesses),
                 "witness_raw_edge_keys": witnesses,
                 "labels": [
                     "layer:topology_overlay",
                     "overlay:scc_quotient",
                     "role:scc_quotient",
+                    f"edge:{kind}",
                     "grain:scc",
                     "topology:coarse_grain",
                     "topology:witnessed_by_raw_edges",
@@ -316,6 +321,7 @@ def hydrate(
                     "grain": "scc",
                     "overlay_model": "layered_tensor_network",
                     "witness_count": len(witnesses),
+                    "raw_edge_kind": kind,
                     "preserves_raw_topology": True,
                 },
             }

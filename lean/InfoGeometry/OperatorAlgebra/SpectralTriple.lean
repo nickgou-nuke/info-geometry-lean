@@ -136,7 +136,7 @@ This is the real grading `chi`, not the elliptic phase axis `K`.
 structure ChiralGrading
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : PhaseAxis H)
-    (signs : KOSigns) where
+    (_signs : KOSigns) where
   chi : EndR H
 
   /-- Chirality is phase-linear. -/
@@ -147,11 +147,15 @@ structure ChiralGrading
   chi_square_one :
     chi.comp chi = ContinuousLinearMap.id ℝ H
 
-  /-- KO-sign relation between `J` and `chi`. -/
-  J_chi_compatible :
-    ∀ J : RealStructure H K signs,
-      J.J.val.comp chi =
-        signs.epsChi • (chi.comp J.J.val)
+/-- KO-sign compatibility between the chosen real structure and chiral grading. -/
+def RealStructureChiralCompatible
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    {K : PhaseAxis H}
+    {signs : KOSigns}
+    (J : RealStructure H K signs)
+    (χ : ChiralGrading H K signs) : Prop :=
+  J.J.val.comp χ.chi =
+    signs.epsChi • (χ.chi.comp J.J.val)
 
 namespace ChiralGrading
 
@@ -348,7 +352,9 @@ structure DixmierTraceDatum
     ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ dixmierTrace x
   traceLikeCyclicity :
     ∀ a b : A, dixmierTrace (a * b) = dixmierTrace (b * a)
-  logarithmicDivergenceExtraction : Prop
+  logarithmicDivergenceExtraction_law : Prop
+  logarithmicDivergenceExtraction_certificate :
+    logarithmicDivergenceExtraction_law
 
 /--
 Zeta-function renormalization backend.
@@ -363,7 +369,9 @@ structure ZetaRenormalizationDatum
   poleSet : Set ℂ
   residueReadout : A → ℂ → ℂ
   finitePartReadout : A → ℂ → ℂ
-  meromorphicContinuation : Prop
+  meromorphicContinuation_law : Prop
+  meromorphicContinuation_certificate :
+    meromorphicContinuation_law
 
 /--
 Renormalized integration backend.
@@ -374,7 +382,10 @@ inductive RenormalizedIntegrationBackend
     (A : Type*) [AddCommMonoid A] [Mul A] where
   | dixmierTrace (τ : DixmierTraceDatum A)
   | zetaRenormalization (ζ : ZetaRenormalizationDatum A)
-  | cyclicCocycle (readout : A → ℝ) (cyclicity : Prop)
+  | cyclicCocycle
+      (readout : A → ℝ)
+      (cyclicity_law : Prop)
+      (cyclicity_certificate : cyclicity_law)
 
 /-! ## 9. Real, phase-compatible spectral triple -/
 
@@ -406,11 +417,21 @@ structure PhaseRealSpectralTriple
   grading :
     ChiralGrading H phaseAxis signs
 
+  J_chi_compatible :
+    RealStructureChiralCompatible realStructure grading
+
   spectralGenerator :
     SpectralGenerator H
 
+  D_phase_linear :
+    PhaseLinear phaseAxis.K spectralGenerator.D
+
   representedAlgebra :
     RepresentedAlgebra A H
+
+  /-- The represented algebra is phase-linear relative to the Hestenes axis. -/
+  rep_phase_linear :
+    ∀ a : A, PhaseLinear phaseAxis.K (representedAlgebra.rep a)
 
   orderZero :
     OrderZeroCondition representedAlgebra realStructure

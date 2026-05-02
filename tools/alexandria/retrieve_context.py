@@ -70,7 +70,12 @@ def main() -> int:
         "hits": [
             {
                 "chunk": chunk,
+                "source": chunk.get("provenance", {}),
                 "score": score(query_tokens, chunk)[0],
+                "scoreBreakdown": {
+                    "lexical": score(query_tokens, chunk)[0],
+                    "title": 1 if any(t in chunk.get("title", "").lower() for t in query_tokens) else 0,
+                },
                 "entities": entities_for_chunk.get(chunk["_key"], []),
                 "neighbors": [chunk_by_key[n] for n in neighbor_map.get(chunk["_key"], []) if n in chunk_by_key][:4],
             }

@@ -1,0 +1,86 @@
+/*
+Chiral Patch Gradient Discovery (conservative)
+- ranks patch clusters by proxy pressure signals
+- no theorem-level claims
+Bind vars:
+  runId (optional): patch run id; default latest
+  limit: default 5
+  wClosureDebt, wCrossModule, wLowReuse, wChiral
+*/
+
+LET latestRun = FIRST(
+  FOR r IN ig_patch_runs
+    SORT r.created_at DESC
+    LIMIT 1
+    RETURN r._key
+)
+LET useRun = @runId ? @runId : latestRun
+
+FOR p IN ig_chiral_patches
+  FILTER p.run_id == useRun
+
+  LET members = (
+    FOR m IN ig_patch_members
+      FILTER m._from == p._id
+      RETURN m._to
+  )
+
+  LET memberNodes = (
+    FOR vid IN members
+      LET n = DOCUMENT(vid)
+      FILTER n != null
+      RETURN n
+  )
+
+  LET nodeCount = LENGTH(memberNodes)
+  FILTER nodeCount > 0
+
+  LET theoremCount = LENGTH(
+    FOR n IN memberNodes
+      FILTER n.kind == "theorem"
+      RETURN 1
+  )
+  LET theoremRatio = theoremCount / nodeCount
+  LET closureDebtDensity = 1.0 - theoremRatio
+
+  LET moduleCount = LENGTH(UNIQUE(memberNodes[*].module))
+
+  LET boundaryNeighborCount = LENGTH(UNIQUE(
+    FOR vid IN members
+      FOR e IN ig_edges
+        FILTER e._from == vid OR e._to == vid
+        LET other = e._from == vid ? e._to : e._from
+        FILTER other NOT IN members
+        RETURN other
+  ))
+
+  LET reuseRatio = nodeCount == 0 ? 0 : theoremCount / nodeCount
+  LET lowReusePenalty = 1.0 - reuseRatio
+
+  LET chiralPressure = ABS(TO_NUMBER(p.chiral_bias)) * TO_NUMBER(p.chiral_entropy)
+
+  LET score =
+      TO_NUMBER(@wClosureDebt) * closureDebtDensity
+    + TO_NUMBER(@wCrossModule) * (moduleCount + boundaryNeighborCount / 100.0)
+    + TO_NUMBER(@wLowReuse) * lowReusePenalty
+    + TO_NUMBER(@wChiral) * chiralPressure
+
+  SORT score DESC
+  LIMIT @limit
+
+  RETURN {
+    run_id: useRun,
+    patch_id: p.patch_id,
+    patch_key: p._key,
+    patch_type: p.patch_type,
+    node_count: nodeCount,
+    theorem_count: theoremCount,
+    closure_debt_density: closureDebtDensity,
+    module_count: moduleCount,
+    boundary_neighbor_count: boundaryNeighborCount,
+    low_reuse_penalty: lowReusePenalty,
+    chiral_bias: p.chiral_bias,
+    chiral_entropy: p.chiral_entropy,
+    chiral_pressure: chiralPressure,
+    score: score
+  }

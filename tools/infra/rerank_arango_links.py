@@ -420,7 +420,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--input-format", choices=["snapshot", "arango-json"], default="arango-json")
     ap.add_argument("--limit-nodes", type=int, default=2000)
 
-    ap.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    ap.add_argument("--endpoint", default="http://127.0.0.1:8530")
     ap.add_argument("--database", default="infogeometry")
     ap.add_argument("--username", default="root")
     ap.add_argument("--password", default="")

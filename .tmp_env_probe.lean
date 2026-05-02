@@ -1,12 +1,5 @@
-import Mathlib
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
- theorem foo_test_env_probe : True := by
-  trivial
-
-open Lean in
-#eval do
-  let env <- getEnv
-  env.constants.toList.forM (fun (entry : Name × ConstantInfo) => do
-    let n := entry.fst
-    if (toString n).contains "foo_test_env_probe" then
-      IO.println s!"FOUND:{n}")
+example {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    (A : H →L[ℝ] H) (u v : H) : ⟪ContinuousLinearMap.adjoint A u, v⟫ = ⟪u, A v⟫ := 
+  ContinuousLinearMap.inner_adjoint_left A u v

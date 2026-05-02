@@ -274,6 +274,15 @@ lean_lib Socratic where
 lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
 
+lean_lib InfoGeometryMeta where
+  globs := #[.andSubmodules `InfoGeometry.Meta]
+
+lean_lib InfoGeometryCanonical where
+  roots := #[`InfoGeometry.Canonical.All]
+
+lean_lib InfoGeometryLLM where
+  globs := #[.andSubmodules `InfoGeometry.LLM]
+
 lean_lib SelfReference where
   globs := #[.andSubmodules `SelfReference]
 

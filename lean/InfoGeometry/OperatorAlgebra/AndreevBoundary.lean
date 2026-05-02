@@ -9,8 +9,10 @@ This module formalizes the algebraic content of Andreev reflection:
 
 at a normal/superconducting boundary.
 
-It does not assert that every superconducting surface hosts Majorana modes.
-Topological edge protection is a separate witness.
+The hole-like channel is a quasiparticle hole, not a physical positron.
+
+This file does not assert that every superconducting surface hosts Majorana
+modes. Topological edge protection is a separate witness.
 -/
 
 import Mathlib
@@ -65,7 +67,110 @@ theorem not_eq_flip
 
 end AndreevChannel
 
-/-! ## 2. Andreev closure datum -/
+/-! ## 2. Concrete finite Andreev amplitude model -/
+
+/--
+Finite real Andreev amplitude space.
+
+An element assigns an amplitude/readout to the electron-like and hole-like
+channels.
+-/
+abbrev AndreevAmplitude : Type :=
+  AndreevChannel → ℝ
+
+/-- Linear flip on Andreev amplitudes. -/
+def andreevFlipLinear : AndreevAmplitude →ₗ[ℝ] AndreevAmplitude where
+  toFun := fun ψ c => ψ (AndreevChannel.flip c)
+  map_add' := by
+    intro ψ φ
+    ext c
+    simp
+  map_smul' := by
+    intro a ψ
+    ext c
+    simp
+
+/-- The Andreev flip is involutive. -/
+theorem andreevFlipLinear_sq
+    (ψ : AndreevAmplitude) :
+    andreevFlipLinear (andreevFlipLinear ψ) = ψ := by
+  ext c
+  cases c <;> rfl
+
+/-- Concrete closure involution on finite Andreev amplitudes. -/
+def finiteAndreevClosure :
+    LinearClosureInvolution AndreevAmplitude where
+  theta := andreevFlipLinear
+  theta_involutive := andreevFlipLinear_sq
+
+/-- Electron-like basis amplitude. -/
+def electronAmplitude : AndreevAmplitude :=
+  fun c => if c = AndreevChannel.electronLike then 1 else 0
+
+/-- Hole-like basis amplitude. -/
+def holeAmplitude : AndreevAmplitude :=
+  fun c => if c = AndreevChannel.holeLike then 1 else 0
+
+/-- The finite closure sends the electron-like basis to the hole-like basis. -/
+theorem finiteClosure_theta_electron :
+    finiteAndreevClosure.theta electronAmplitude =
+      holeAmplitude := by
+  ext c
+  cases c <;>
+    simp [finiteAndreevClosure, andreevFlipLinear, electronAmplitude, holeAmplitude]
+
+/-- The finite closure sends the hole-like basis to the electron-like basis. -/
+theorem finiteClosure_theta_hole :
+    finiteAndreevClosure.theta holeAmplitude =
+      electronAmplitude := by
+  ext c
+  cases c <;>
+    simp [finiteAndreevClosure, andreevFlipLinear, electronAmplitude, holeAmplitude]
+
+/-- The finite Andreev diagonal is fixed. -/
+theorem finite_electron_hole_diagonal_fixed :
+    electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed :=
+  finiteAndreevClosure.diagonal_fixed_of_swap
+    finiteClosure_theta_electron
+    finiteClosure_theta_hole
+
+/-- The finite electron/hole imbalance is anti-fixed. -/
+theorem finite_electron_hole_imbalance_anti_fixed :
+    finiteAndreevClosure.theta
+        (electronAmplitude - holeAmplitude)
+      =
+        -(electronAmplitude - holeAmplitude) :=
+  finiteAndreevClosure.difference_anti_fixed_of_swap
+    finiteClosure_theta_electron
+    finiteClosure_theta_hole
+
+/-! ## 3. Boundary closure witness -/
+
+/--
+Constructive witness that a boundary process satisfies the Andreev swap.
+
+This packages the swap certificates as first-class data.
+-/
+structure AndreevSwapWitness
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (closure : LinearClosureInvolution V)
+    (electron hole : V) : Type where
+  theta_electron : closure.theta electron = hole
+  theta_hole : closure.theta hole = electron
+
+/--
+The Andreev diagonal is fixed by electron/hole closure, given a swap witness.
+-/
+theorem electron_hole_diagonal_fixed_of_witness
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (closure : LinearClosureInvolution V)
+    (electron hole : V)
+    (w : AndreevSwapWitness closure electron hole) :
+    electron + hole ∈ closure.Fixed :=
+  closure.diagonal_fixed_of_swap w.theta_electron w.theta_hole
+
+
+/-! ## 4. Andreev closure datum -/
 
 /--
 Andreev boundary datum.
@@ -74,6 +179,9 @@ Andreev boundary datum.
 
 The datum supplies an involution `closure` and two distinguished amplitudes:
 an electron-like boundary mode and its reflected hole-like mode.
+
+Only the electron-to-hole reflection is primitive. The reverse reflection is
+derived from closure involutivity.
 -/
 structure AndreevBoundaryDatum
     (V : Type*) [AddCommGroup V] [Module ℝ V] where
@@ -90,16 +198,23 @@ structure AndreevBoundaryDatum
   theta_electron :
     closure.theta electron = hole
 
-  /-- The closure sends the hole-like channel back to the electron-like channel. -/
-  theta_hole :
-    closure.theta hole = electron
-
 namespace AndreevBoundaryDatum
 
 variable
     {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 variable (A : AndreevBoundaryDatum V)
+
+/--
+The closure sends the hole-like channel back to the electron-like channel.
+
+This is derived, not separately assumed.
+-/
+theorem theta_hole :
+    A.closure.theta A.hole = A.electron := by
+  have h := A.closure.theta_involutive A.electron
+  rw [A.theta_electron] at h
+  exact h
 
 /--
 The Andreev diagonal is fixed by electron/hole closure.
@@ -111,6 +226,31 @@ theorem electron_hole_diagonal_fixed :
   A.closure.diagonal_fixed_of_swap
     A.theta_electron
     A.theta_hole
+
+/-- Pointwise fixed-form of the Andreev diagonal. -/
+theorem theta_diagonal_eq_diagonal :
+    A.closure.theta (A.electron + A.hole) =
+      A.electron + A.hole :=
+  (A.closure.mem_fixed_iff (A.electron + A.hole)).mp
+    A.electron_hole_diagonal_fixed
+
+/--
+A closure-fixed boundary mode is unchanged by the Andreev mirror.
+
+This is the formal “Majorana transparency” statement. It does not say this
+mode is physically unique; uniqueness/protection requires a separate witness.
+-/
+theorem transparent_of_fixed
+    {γ : V}
+    (hγ : γ ∈ A.closure.Fixed) :
+    A.closure.theta γ = γ :=
+  (A.closure.mem_fixed_iff γ).mp hγ
+
+/-- The Andreev diagonal is transparent to the boundary closure. -/
+theorem electron_hole_diagonal_transparent :
+    A.closure.theta (A.electron + A.hole) =
+      A.electron + A.hole :=
+  A.transparent_of_fixed A.electron_hole_diagonal_fixed
 
 /--
 The electron/hole imbalance is anti-fixed.
@@ -140,16 +280,88 @@ theorem reflected_electron_eq_theta_hole :
 
 end AndreevBoundaryDatum
 
-/-! ## 3. Charge/condensate accounting socket -/
+/-! ## 5. Concrete finite Andreev boundary -/
+
+/-- Concrete finite Andreev boundary datum. -/
+def finiteAndreevBoundaryDatum :
+    AndreevBoundaryDatum AndreevAmplitude where
+  closure := finiteAndreevClosure
+  electron := electronAmplitude
+  hole := holeAmplitude
+  theta_electron := finiteClosure_theta_electron
+
+/-- The finite Andreev boundary diagonal is fixed. -/
+theorem finiteAndreevBoundary_diagonal_fixed :
+    finiteAndreevBoundaryDatum.electron +
+        finiteAndreevBoundaryDatum.hole
+      ∈ finiteAndreevBoundaryDatum.closure.Fixed :=
+  finiteAndreevBoundaryDatum.electron_hole_diagonal_fixed
+
+/-- The finite Andreev boundary imbalance is anti-fixed. -/
+theorem finiteAndreevBoundary_imbalance_anti_fixed :
+    finiteAndreevBoundaryDatum.closure.theta
+        (finiteAndreevBoundaryDatum.electron -
+          finiteAndreevBoundaryDatum.hole)
+      =
+        -(finiteAndreevBoundaryDatum.electron -
+          finiteAndreevBoundaryDatum.hole) :=
+  finiteAndreevBoundaryDatum.electron_hole_imbalance_anti_fixed
+
+/--
+Constructive packet for Andreev boundary closure claims.
+
+This packages the boundary datum together with first-class witnesses for
+(1) diagonal fixedness and (2) imbalance anti-fixedness.
+-/
+structure BoundaryClosureWitness
+    (V : Type*) [AddCommGroup V] [Module ℝ V] where
+  boundary : AndreevBoundaryDatum V
+  diagonal_fixed_witness :
+    boundary.electron + boundary.hole ∈ boundary.closure.Fixed
+  imbalance_anti_fixed_witness :
+    boundary.closure.theta (boundary.electron - boundary.hole) =
+      -(boundary.electron - boundary.hole)
+
+namespace BoundaryClosureWitness
+
+variable
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+variable (W : BoundaryClosureWitness V)
+
+/-- Read back closure-fixed diagonal from the constructive packet. -/
+theorem diagonal_fixed :
+    W.boundary.electron + W.boundary.hole ∈ W.boundary.closure.Fixed :=
+  W.diagonal_fixed_witness
+
+/-- Read back anti-fixed imbalance from the constructive packet. -/
+theorem imbalance_anti_fixed :
+    W.boundary.closure.theta (W.boundary.electron - W.boundary.hole) =
+      -(W.boundary.electron - W.boundary.hole) :=
+  W.imbalance_anti_fixed_witness
+
+/-- Canonical constructor from any Andreev boundary datum. -/
+def ofBoundary
+    (A : AndreevBoundaryDatum V) : BoundaryClosureWitness V where
+  boundary := A
+  diagonal_fixed_witness := A.electron_hole_diagonal_fixed
+  imbalance_anti_fixed_witness := A.electron_hole_imbalance_anti_fixed
+
+end BoundaryClosureWitness
+
+/-! ## 6. Charge/condensate accounting -/
 
 /--
 Charge/condensate accounting for an Andreev boundary process.
 
-This deliberately does not hard-code charge signs. Different conventions use
-electron charge `-e`, hole charge `+e`, or normalized current directions.
+The sign convention is encoded by `chargeOf` and `condensateTransfer`.
 
-The supplied law is the bookkeeping witness saying that the boundary process is
-charge-balanced by condensate transfer.
+The explicit balance equation is:
+
+`chargeOf electron = chargeOf hole + condensateTransfer`.
+
+This does not hard-code whether electron charge is represented as `-e`, `+e`,
+or as a current-oriented quantity. The convention is carried by `chargeOf`.
 -/
 structure AndreevChargeLedger
     (V Charge : Type*)
@@ -167,15 +379,21 @@ structure AndreevChargeLedger
     Charge
 
   /--
-  Charge/current balance law for the Andreev event.
-
-  The exact sign convention is model-dependent and is supplied here.
+  Explicit charge/current balance law for the Andreev event.
   -/
-  charge_balance_law : Prop
+  charge_balance :
+    chargeOf boundary.electron =
+      chargeOf boundary.hole + condensateTransfer
 
-  /-- Proof/certificate of the charge balance law. -/
-  charge_balance_certificate :
-    charge_balance_law
+/--
+Constructive witness for the explicit charge balance law of an Andreev process.
+-/
+structure ChargeBalanceWitness
+    {V Charge : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup Charge]
+    (L : AndreevChargeLedger V Charge) : Type where
+  certificate :
+    L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer
 
 namespace AndreevChargeLedger
 
@@ -186,15 +404,34 @@ variable
 
 variable (L : AndreevChargeLedger V Charge)
 
-/-- The supplied charge-balance law is available. -/
+/-- The explicit charge-balance equation. -/
 theorem charge_balance_valid :
-    L.charge_balance_law :=
-  L.charge_balance_certificate
+    L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer :=
+  L.charge_balance
+
+/--
+The charge-balance equation is valid, given a witness.
+-/
+theorem charge_balance_valid_of_witness
+    (w : ChargeBalanceWitness L) :
+    L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer :=
+  w.certificate
 
 /-- The Andreev diagonal is closure-fixed. -/
 theorem diagonal_fixed :
     L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed :=
   L.boundary.electron_hole_diagonal_fixed
+
+/--
+Witness-only surface for closure-fixed diagonal readout.
+-/
+theorem diagonal_fixed_of_boundary_witness
+    (W : BoundaryClosureWitness V)
+    (hboundary : W.boundary = L.boundary) :
+    L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by
+  simpa [hboundary] using W.diagonal_fixed
 
 /-- The Andreev imbalance is anti-fixed. -/
 theorem imbalance_anti_fixed :
@@ -204,56 +441,49 @@ theorem imbalance_anti_fixed :
         -(L.boundary.electron - L.boundary.hole) :=
   L.boundary.electron_hole_imbalance_anti_fixed
 
+/--
+The boundary charge defect equals the condensate transfer, in the chosen sign
+convention.
+-/
+theorem boundary_charge_defect_eq_condensateTransfer :
+    L.chargeOf L.boundary.electron -
+        L.chargeOf L.boundary.hole =
+      L.condensateTransfer := by
+  rw [L.charge_balance]
+  abel
+
+/-- Equivalent balance form with all terms on one side. -/
+theorem charge_balance_zero_form :
+    L.chargeOf L.boundary.electron -
+        L.chargeOf L.boundary.hole -
+        L.condensateTransfer =
+      0 := by
+  rw [L.boundary_charge_defect_eq_condensateTransfer]
+  abel
+
 end AndreevChargeLedger
 
-/-! ## 4. Optional topological edge witness -/
+/-! ## 7. Owner targets discharged constructively -/
 
-/--
-Topological-superconductor edge witness.
+/-- Owner target for the finite Andreev diagonal. -/
+def FiniteAndreevDiagonalOwnerTarget : Prop :=
+  electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed
 
-This is separate from ordinary Andreev reflection. It records the extra fact
-that a closure-fixed boundary amplitude is protected as an edge mode.
+/-- Constructive proof of the finite Andreev diagonal owner target. -/
+theorem finiteAndreevDiagonalOwnerTarget :
+    FiniteAndreevDiagonalOwnerTarget :=
+  finite_electron_hole_diagonal_fixed
 
-Without this witness, the Andreev boundary only gives electron/hole inversion,
-not Majorana protection.
--/
-structure TopologicalEdgeWitness
-    (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  boundary :
-    AndreevBoundaryDatum V
+/-- Owner target for the finite Andreev imbalance. -/
+def FiniteAndreevImbalanceOwnerTarget : Prop :=
+  finiteAndreevClosure.theta
+      (electronAmplitude - holeAmplitude)
+    =
+      -(electronAmplitude - holeAmplitude)
 
-  /-- Boundary mode/readout. -/
-  edgeMode :
-    V
-
-  /-- The edge mode is closure-fixed. -/
-  edgeMode_fixed :
-    edgeMode ∈ boundary.closure.Fixed
-
-  /-- Topological protection law, supplied by the concrete model. -/
-  topological_protection_law : Prop
-
-  /-- Proof/certificate of topological protection. -/
-  topological_protection_certificate :
-    topological_protection_law
-
-namespace TopologicalEdgeWitness
-
-variable
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-
-variable (T : TopologicalEdgeWitness V)
-
-/-- The edge mode is fixed by closure. -/
-theorem theta_edgeMode_eq_edgeMode :
-    T.boundary.closure.theta T.edgeMode = T.edgeMode :=
-  (T.boundary.closure.mem_fixed_iff T.edgeMode).mp T.edgeMode_fixed
-
-/-- The supplied topological protection certificate is available. -/
-theorem topological_protection_valid :
-    T.topological_protection_law :=
-  T.topological_protection_certificate
-
-end TopologicalEdgeWitness
+/-- Constructive proof of the finite Andreev imbalance owner target. -/
+theorem finiteAndreevImbalanceOwnerTarget :
+    FiniteAndreevImbalanceOwnerTarget :=
+  finite_electron_hole_imbalance_anti_fixed
 
 end InfoGeometry.OperatorAlgebra.AndreevBoundary

@@ -146,12 +146,30 @@ def resolve_members(in_path: Path, out_path: Path, name_to_id: Dict[str, str]) -
 def verify_latest_summary(endpoint: str, db: str, auth) -> Dict[str, Any]:
     base = f"{endpoint}/_db/{db}/_api/cursor"
     q = '''
-LET latest = FIRST(FOR r IN ig_patch_runs SORT r.created_at DESC LIMIT 1 RETURN r._key)
-LET pcount = LENGTH(FOR p IN ig_chiral_patches FILTER p.run_id == latest RETURN 1)
-LET scount = LENGTH(FOR s IN ig_patch_spectral_signatures FILTER STARTS_WITH(s._key, CONCAT(latest, "__")) RETURN 1)
-LET mcount = LENGTH(FOR m IN ig_patch_members FILTER STARTS_WITH(m._from, CONCAT("ig_chiral_patches/", latest, "__")) RETURN 1)
-LET ecount = LENGTH(FOR e IN ig_patch_edges FILTER STARTS_WITH(e._from, CONCAT("ig_chiral_patches/", latest, "__")) RETURN 1)
-RETURN {latest_run:latest, patches:pcount, spectral:scount, members:mcount, patch_edges:ecount}
+LET latestDoc = FIRST(FOR r IN ig_patch_runs SORT r.created_at DESC LIMIT 1 RETURN r)
+LET runCandidates = UNIQUE([latestDoc._key, latestDoc.run_id, latestDoc.legacy_run_id])
+LET matchedCandidate = FIRST(
+  FOR rid IN runCandidates
+    FILTER rid != null
+    FILTER LENGTH(FOR p IN ig_chiral_patches FILTER p.run_id == rid LIMIT 1 RETURN 1) > 0
+    RETURN rid
+)
+LET effectiveRun = matchedCandidate ? matchedCandidate : FIRST(FOR p IN ig_chiral_patches SORT p.run_id DESC LIMIT 1 RETURN p.run_id)
+LET patchKeys = (FOR p IN ig_chiral_patches FILTER p.run_id == effectiveRun RETURN p._key)
+LET pcount = LENGTH(patchKeys)
+LET scount = LENGTH(FOR s IN ig_patch_spectral_signatures FILTER s.patch_id IN patchKeys RETURN 1)
+LET mcount = LENGTH(FOR m IN ig_patch_members FILTER PARSE_IDENTIFIER(m._from).key IN patchKeys RETURN 1)
+LET ecount = LENGTH(FOR e IN ig_patch_edges FILTER PARSE_IDENTIFIER(e._from).key IN patchKeys RETURN 1)
+RETURN {
+  latest_run_key: latestDoc._key,
+  latest_run_created_at: latestDoc.created_at,
+  effective_run_id: effectiveRun,
+  used_fallback_run: matchedCandidate == null,
+  patches: pcount,
+  spectral: scount,
+  members: mcount,
+  patch_edges: ecount
+}
 '''
     res = req_json("POST", base, auth, json={"query": q}).get("result", [])
     return res[0] if res else {}

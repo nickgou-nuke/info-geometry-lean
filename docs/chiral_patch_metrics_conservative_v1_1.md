@@ -22,11 +22,21 @@ It does not claim theorem-level Cartan decomposition or physical entanglement.
 - `binder_pattern_patch`: coarse groups by binder/token/redex buckets
 
 ## Spectral signature
-For each patch we compute on capped node count:
+For each patch we compute on a deterministic capped node set:
 - normalized Laplacian eigenvalues
 - first `k` nonzero eigenvalues (bucketed)
 - nullity
 - pseudo-logdet `sum(log(lambda_i + eps))` over nonzero eigenvalues
+
+For conservative v1.1 the directed local graph is symmetrized before spectral
+analysis:
+
+```text
+A_sym(i,j) = weight(i -> j) + weight(j -> i)
+L_norm = I - D^{-1/2} A_sym D^{-1/2}
+```
+
+Isolated nodes contribute to nullity and are handled without division by zero.
 
 ## Chiral metrics
 - `chiral_entropy`: entropy over forward/backward/mixed orientation proxy
@@ -50,6 +60,10 @@ Use wording:
 - "derived spectral neighborhood"
 - "proxy cartan sector"
 - "suggested reusable region"
+
+Every row carries a schema/version marker. Patch `coarse_hash` values are
+content-addressed from canonical patch features and exclude run IDs and
+timestamps, so repeated runs over the same graph preserve coarse hashes.
 
 ## Minimal local run
 

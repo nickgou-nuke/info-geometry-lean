@@ -118,6 +118,7 @@ def test_build_chiral_patch_hashes_emits_three_patch_families(tmp_path: Path) ->
     members = read_jsonl(out / "ig_patch_members.jsonl")
     signatures = read_jsonl(out / "ig_patch_spectral_signatures.jsonl")
     patch_edges = read_jsonl(out / "ig_patch_edges.jsonl")
+    run_rows = read_jsonl(out / "ig_patch_runs.jsonl")
 
     assert summary["patch_run_id"] == "patch_run_test"
     assert summary["scc_patch_count"] >= 1
@@ -126,8 +127,13 @@ def test_build_chiral_patch_hashes_emits_three_patch_families(tmp_path: Path) ->
     assert members
     assert signatures
     assert patch_edges
+    assert run_rows[0]["schema_version"] == "ig.patch_run.v1"
+    assert run_rows[0]["algorithm_version"] == "chiral_patch_hashes.v1.1"
+    assert run_rows[0]["fingerprints_available"] is True
 
     required = {
+        "schema_version",
+        "patch_run_id",
         "patch_type",
         "level",
         "coarse_hash",
@@ -137,5 +143,59 @@ def test_build_chiral_patch_hashes_emits_three_patch_families(tmp_path: Path) ->
         "cartan_proxy_histogram",
     }
     assert required <= set(patches[0])
+    assert all(p["non_overclaim"] is True for p in patches)
+    assert all(p["claim_scope"] == "derived_spectral_neighborhood_sidecar" for p in patches)
     assert all("pseudo_logdet" in sig for sig in signatures)
     assert any(p["cartan_proxy_histogram"]["p_odd"] >= 1 for p in patches)
+
+    out2 = tmp_path / "out2"
+    subprocess.run(
+        [
+            sys.executable,
+            str(TOOL),
+            "--nodes",
+            str(nodes),
+            "--edges",
+            str(edges),
+            "--fingerprints",
+            str(fingerprints),
+            "--output-dir",
+            str(out2),
+            "--run-id",
+            "patch_run_test_2",
+            "--ego-limit",
+            "4",
+            "--print-json",
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    hashes1 = sorted(p["coarse_hash"] for p in patches)
+    hashes2 = sorted(p["coarse_hash"] for p in read_jsonl(out2 / "ig_chiral_patches.jsonl"))
+    assert hashes1 == hashes2
+
+    out_no_fp = tmp_path / "out_no_fp"
+    result_no_fp = subprocess.run(
+        [
+            sys.executable,
+            str(TOOL),
+            "--nodes",
+            str(nodes),
+            "--edges",
+            str(edges),
+            "--output-dir",
+            str(out_no_fp),
+            "--run-id",
+            "patch_run_no_fp",
+            "--ego-limit",
+            "4",
+            "--print-json",
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    summary_no_fp = json.loads(result_no_fp.stdout)
+    assert summary_no_fp["binder_pattern_patch_count"] == 0
+    assert read_jsonl(out_no_fp / "ig_patch_runs.jsonl")[0]["fingerprints_available"] is False

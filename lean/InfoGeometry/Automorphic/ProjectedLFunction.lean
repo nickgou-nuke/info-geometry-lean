@@ -17,12 +17,15 @@ instantiate the witness structures defined here.
 
 import Mathlib
 import InfoGeometry.Automorphic.SiegelResonance
+import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 
 noncomputable section
 
 namespace InfoGeometry.Automorphic.SiegelResonance
 
 universe uBulk uBoundary
+
+open InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 
 /-! ## 1. Automorphic spectral functionals -/
 
@@ -320,7 +323,58 @@ structure LanglandsPrimeResonanceWitness
   completedFunctionalEquation :
     HasCompletedFunctionalEquation P.L completedL
 
-/-! ## 6. Owner targets -/
+/-! ## 6. Langlands-Sugawara Central Charge Calibration -/
+
+/--
+Witness structure connecting the arithmetic Langlands L-function side
+to the geometric/operator Sugawara central charge side.
+
+This calibrates the zero-value of the completed L-function against
+the physical central charge readout on the Virasoro boundary.
+-/
+structure LanglandsSugawaraBridge
+    {Bulk Boundary : Type*}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    {P : ProjectedAutomorphicLFunctionWitness W}
+    (LPR : LanglandsPrimeResonanceWitness P)
+    {Finite Affine Vir State Charge : Type*}
+    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Charge] [Module ℝ Charge]
+    (EAV : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge)
+    -- We assume Charge is complex for the scalar evaluation
+    (charge_eval : Charge → ℂ) where
+  
+  /-- The Sugawara/Virasoro central charge matches the completed L-function value at s=0. -/
+  Sugawara_L_calibration :
+    ∀ s : State, charge_eval (EAV.centralChargeReadout s) = LPR.completedL 0
+
+/--
+If the Langlands-Sugawara bridge is provided, the hidden exceptional memory
+(via EAV) is also arithmetically calibrated to the completed L-function zero-value.
+-/
+theorem hiddenMemory_arithmetic_calibration
+    {Bulk Boundary : Type*}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    {P : ProjectedAutomorphicLFunctionWitness W}
+    {LPR : LanglandsPrimeResonanceWitness P}
+    {Finite Affine Vir State Charge : Type*}
+    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Charge] [Module ℝ Charge]
+    {EAV : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge}
+    {charge_eval : Charge → ℂ}
+    (bridge : LanglandsSugawaraBridge LPR EAV charge_eval)
+    (s : State) :
+    charge_eval (EAV.hiddenGradeMemoryReadout s) = LPR.completedL 0 := by
+  rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
+  exact bridge.Sugawara_L_calibration s
+
+/-! ## 7. Owner targets -/
 
 /--
 Owner target for producing projected automorphic L-functions from a spectral

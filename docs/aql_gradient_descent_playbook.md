@@ -7,7 +7,7 @@ No theorem-level claims are made by these queries.
 - `tools/infra/aql/chiral_patch_gradient_top_clusters.aql`
 - `tools/infra/aql/chiral_patch_select_formalization_target.aql`
 - `tools/infra/aql/chiral_patch_blocker_edges_for_decl.aql`
-- `patch.maxent_candidate_ground_states` in `src/igf/graph/query_registry.py`
+- `patch.maxent_style_candidates` in `src/igf/graph/query_registry.py`
 
 ## Step 1: Top clusters
 
@@ -67,7 +67,9 @@ db._query(q3, {
 ## Interpretation rules
 - `closure_debt_density` is a structural proxy (`1 - theorem_ratio`), not a proof of debt.
 - `chiral_pressure` is routing-only (`abs(chiral_bias) * chiral_entropy`).
-- `patch.maxent_candidate_ground_states` is a Jaynes/MaxEnt-inspired retrieval
+- `patch.maxent_style_candidates` is a Jaynes/MaxEnt-inspired retrieval
   proxy over derived sidecars. It is not evidence for RH, primitive-set
   extremality, or a theorem-level thermodynamic claim.
+- `patch.maxent_candidate_ground_states` remains as a compatibility alias, but
+  new tooling should use the safer `patch.maxent_style_candidates` ID.
 - Rankings suggest priority neighborhoods; Lean proofs remain the authority.

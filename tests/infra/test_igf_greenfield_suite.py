@@ -25,7 +25,7 @@ def make_minimal_artifacts(base: Path) -> Path:
     d = base / "artifacts"
     write_jsonl(
         d / "ig_patch_runs.jsonl",
-        [{"_key": "run_1", "run_id": "run_1", "schema_version": "ig.patch_run.v1", "created_at": "2026-01-01T00:00:00Z", "source_graph_hash": "h", "algorithm_version": "a", "authority_level": "derived", "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
+        [{"_key": "run_1", "run_id": "run_1", "schema_version": "ig.patch_run.v1", "created_at": "2026-01-01T00:00:00Z", "source_graph_hash": "h", "algorithm_version": "chiral_patch_hashes.v1.2", "authority_level": "derived", "claim_scope": "derived_spectral_neighborhood_sidecar", "non_overclaim": True}],
     )
     write_jsonl(
         d / "ig_chiral_patches.jsonl",
@@ -97,7 +97,42 @@ def test_validate_strict_fails_when_member_run_id_missing(tmp_path: Path) -> Non
     assert result.returncode == 1
     payload = json.loads(result.stdout)
     assert payload["ok"] is False
-    assert any("run_id" in e["error"] for e in payload["errors"])
+    assert any("valid under any" in e["error"] for e in payload["errors"])
+
+
+def test_validate_strict_accepts_patch_run_id_legacy_alias(tmp_path: Path) -> None:
+    artifacts = make_minimal_artifacts(tmp_path)
+    for name in [
+        "ig_patch_runs.jsonl",
+        "ig_chiral_patches.jsonl",
+        "ig_patch_spectral_signatures.jsonl",
+        "ig_patch_members.jsonl",
+        "ig_patch_edges.jsonl",
+    ]:
+        rows = read_jsonl(artifacts / name)
+        for row in rows:
+            row["patch_run_id"] = row.pop("run_id")
+        write_jsonl(artifacts / name, rows)
+
+    result = subprocess.run(
+        [
+            PYTHON,
+            str(CLI),
+            "validate",
+            "--dir",
+            str(artifacts),
+            "--schemas-dir",
+            str(REPO / "schemas"),
+            "--strict",
+            "--print-json",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0
+    payload = json.loads(result.stdout)
+    assert payload["ok"] is True
 
 
 def test_validate_strict_rejects_formal_authority_without_proof_link(tmp_path: Path) -> None:
@@ -179,6 +214,27 @@ def test_normalize_backfills_member_and_edge_fields(tmp_path: Path) -> None:
     assert p["authority_level"] == "derived"
     assert s["authority_level"] == "derived"
     assert s["non_overclaim"] is True
+    assert m["_key"]
+    assert e["_key"]
+
+
+def test_run_id_normalization_and_stable_keys_are_deterministic() -> None:
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.artifacts.compatibility_adapters import normalize_run_id, stable_key
+
+    row = normalize_run_id({"patch_run_id": "patch_run_1", "patch_id": "p"})
+    assert row["run_id"] == "patch_run_1"
+
+    fields = ["run_id", "patch_id", "_from", "_to", "membership_type"]
+    a = {
+        "run_id": "patch_run_1",
+        "patch_id": "p",
+        "_from": "ig_chiral_patches/p",
+        "_to": "ig_nodes/A",
+        "membership_type": "ego",
+    }
+    b = dict(reversed(list(a.items())))
+    assert stable_key(a, fields) == stable_key(b, fields)
 
 
 def test_query_registry_has_required_queries() -> None:

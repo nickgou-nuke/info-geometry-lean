@@ -11,6 +11,10 @@ Layer-specific names such as center, Tomita fixed vector, grade-zero sector,
 Majorana diagonal, winding invariant, or BPS survivor require additional
 witnesses.  The base theorem here is only the linear fixed/anti-fixed
 decomposition induced by an involution.
+
+The projection formulas use division by `2`, so this module is intentionally
+over `ℝ`.  Generalizing to other scalar rings would require an explicit
+invertibility-of-two hypothesis.
 -/
 
 import Mathlib
@@ -208,6 +212,22 @@ theorem theta_antiPart
     (x : V) :
     C.theta (C.antiPart x) = -C.antiPart x :=
   C.antiPart_anti_fixed x
+
+/-- The fixed projection is invariant under applying `theta` to the input. -/
+theorem fixedPart_theta
+    (x : V) :
+    C.fixedPart (C.theta x) = C.fixedPart x := by
+  unfold fixedPart
+  rw [C.theta_involutive x]
+  module
+
+/-- The anti-fixed projection changes sign under applying `theta` to the input. -/
+theorem antiPart_theta
+    (x : V) :
+    C.antiPart (C.theta x) = -C.antiPart x := by
+  unfold antiPart
+  rw [C.theta_involutive x]
+  module
 
 /--
 Every element decomposes into its fixed and anti-fixed parts.
@@ -473,6 +493,18 @@ theorem theta_antiProjection
     C.theta (C.antiProjection x) = -C.antiProjection x :=
   C.theta_antiPart x
 
+/-- Projection form of `fixedPart_theta`. -/
+theorem fixedProjection_theta
+    (x : V) :
+    C.fixedProjection (C.theta x) = C.fixedProjection x := by
+  simpa using C.fixedPart_theta x
+
+/-- Projection form of `antiPart_theta`. -/
+theorem antiProjection_theta
+    (x : V) :
+    C.antiProjection (C.theta x) = -C.antiProjection x := by
+  simpa using C.antiPart_theta x
+
 /-- The range of the fixed projection is exactly the fixed sector. -/
 theorem range_fixedProjection_eq_fixed :
     LinearMap.range C.fixedProjection = C.Fixed := by
@@ -483,7 +515,7 @@ theorem range_fixedProjection_eq_fixed :
     exact C.fixedProjection_mem_fixed x
   · intro y hy
     refine ⟨y, ?_⟩
-    exact C.fixedPart_eq_self_of_fixed hy
+    simpa using C.fixedPart_eq_self_of_fixed hy
 
 /-- The range of the anti-fixed projection is exactly the anti-fixed sector. -/
 theorem range_antiProjection_eq_antiFixed :
@@ -495,7 +527,7 @@ theorem range_antiProjection_eq_antiFixed :
     exact C.antiProjection_mem_antiFixed x
   · intro y hy
     refine ⟨y, ?_⟩
-    exact C.antiPart_eq_self_of_antiFixed hy
+    simpa using C.antiPart_eq_self_of_antiFixed hy
 
 /-- The kernel of the fixed projection is the anti-fixed sector. -/
 theorem ker_fixedProjection_eq_antiFixed :
@@ -521,7 +553,7 @@ theorem ker_fixedProjection_eq_antiFixed :
       simp [hantiPart_eq_x]
     exact (C.mem_antiFixed_iff x).mpr htheta_eq
   · intro x hx
-    exact C.fixedPart_eq_zero_of_antiFixed hx
+    simpa using C.fixedPart_eq_zero_of_antiFixed hx
 
 /-- The kernel of the anti-fixed projection is the fixed sector. -/
 theorem ker_antiProjection_eq_fixed :
@@ -547,7 +579,33 @@ theorem ker_antiProjection_eq_fixed :
       simp [hfixedPart_eq_x]
     exact (C.mem_fixed_iff x).mpr htheta_eq
   · intro x hx
-    exact C.antiPart_eq_zero_of_fixed hx
+    simpa using C.antiPart_eq_zero_of_fixed hx
+
+/-- The fixed and anti-fixed sectors intersect trivially. -/
+theorem fixed_inf_antiFixed_eq_bot :
+    C.Fixed ⊓ C.AntiFixed = ⊥ := by
+  apply le_antisymm
+  · intro x hx
+    have hfix : C.theta x = x :=
+      (C.mem_fixed_iff x).mp hx.1
+    have hanti : C.theta x = -x :=
+      (C.mem_antiFixed_iff x).mp hx.2
+    have hxneg : x = -x := by
+      exact hfix.symm.trans hanti
+    have htwo : (2 : ℝ) • x = 0 := by
+      have hsum : x + x = 0 := by
+        calc
+          x + x = (-x) + x := by
+            exact congrArg (fun t => t + x) hxneg
+          _ = 0 := by abel
+      calc
+        (2 : ℝ) • x = x + x := by rw [two_smul]
+        _ = 0 := hsum
+    have htwo_ne : (2 : ℝ) ≠ 0 := by norm_num
+    rcases smul_eq_zero.mp htwo with htwo_zero | hx_zero
+    · exact False.elim (htwo_ne htwo_zero)
+    · exact hx_zero
+  · exact bot_le
 
 /-- The fixed sector is setwise stable under the closure involution. -/
 theorem Fixed_setwiseStable :

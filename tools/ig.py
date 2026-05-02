@@ -5,6 +5,7 @@ Central entrypoint for the Level 3 Greenfield Architecture.
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -14,6 +15,10 @@ from pathlib import Path
 
 # --- Configuration ---
 ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
 DEFAULT_RUN_ID_VAR = "IG_RUN_ID"
 
 def generate_run_id() -> str:
@@ -43,17 +48,28 @@ def run_command(cmd: list[str], env: dict[str, str], description: str) -> int:
 
 def cmd_process(args: argparse.Namespace, env: dict[str, str]) -> int:
     """Process graph patches and signatures."""
-    script = ROOT / "tools" / "infra" / "build_chiral_patch_hashes.py"
-    cmd = [
-        sys.executable,
-        str(script),
-        "--nodes", str(ROOT / "artifacts" / "dag" / "index" / "ig_nodes.jsonl"),
-        "--edges", str(ROOT / "artifacts" / "dag" / "index" / "ig_edges.jsonl"),
-        "--fingerprints", str(ROOT / "artifacts" / "dag" / "index" / "expr_fingerprints.jsonl"),
-        "--output-dir", str(ROOT / "artifacts" / "dag" / "index"),
-        "--print-json"
-    ]
-    return run_command(cmd, env, "computing chiral patches")
+    from igf.pipeline.build import build_chiral_patches
+
+    fingerprints = Path(args.fingerprints) if args.fingerprints else None
+    if fingerprints is not None and not fingerprints.exists():
+        fingerprints = None
+
+    print("[ig] computing chiral patches...", flush=True)
+    result = build_chiral_patches(
+        nodes=Path(args.nodes),
+        edges=Path(args.edges),
+        fingerprints=fingerprints,
+        output_dir=Path(args.output_dir),
+        run_id=env[DEFAULT_RUN_ID_VAR],
+        ego_limit=int(args.ego_limit),
+        ego_radius=int(args.ego_radius),
+        min_scc_size=int(args.min_scc_size),
+        binder_min_size=int(args.binder_min_size),
+        max_patch_nodes=int(args.max_patch_nodes),
+        spectral_k=int(args.spectral_k),
+    )
+    print(json.dumps(result, ensure_ascii=False), flush=True)
+    return 0 if result.get("ok") else int(result.get("returncode", 1))
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="IG Spire Orchestrator")
@@ -63,6 +79,16 @@ def main() -> int:
     
     # ig process
     proc_parser = subparsers.add_parser("process", help="Compute patches and signatures")
+    proc_parser.add_argument("--nodes", default="artifacts/leantrail/arango/ig_nodes.jsonl")
+    proc_parser.add_argument("--edges", default="artifacts/leantrail/arango/ig_edges.jsonl")
+    proc_parser.add_argument("--fingerprints", default="artifacts/dag/index/expr_fingerprints.jsonl")
+    proc_parser.add_argument("--output-dir", default="artifacts/dag/index")
+    proc_parser.add_argument("--ego-limit", type=int, default=40)
+    proc_parser.add_argument("--ego-radius", type=int, default=2)
+    proc_parser.add_argument("--min-scc-size", type=int, default=2)
+    proc_parser.add_argument("--binder-min-size", type=int, default=3)
+    proc_parser.add_argument("--max-patch-nodes", type=int, default=128)
+    proc_parser.add_argument("--spectral-k", type=int, default=8)
     
     # ig build (placeholder for now)
     build_parser = subparsers.add_parser("build", help="Build Lean targets")

@@ -3,23 +3,23 @@
   "$id": "ig.patch_run.v1",
   "type": "object",
   "required": [
-    "_key",
-    "run_id",
     "schema_version",
-    "created_at",
     "source_graph_hash",
-    "algorithm_version",
-    "authority_level",
-    "claim_scope",
-    "non_overclaim"
+    "algorithm_version"
+  ],
+  "anyOf": [
+    {"required": ["run_id"]},
+    {"required": ["patch_run_id"]}
   ],
   "properties": {
     "_key": {"type": "string", "minLength": 1},
     "run_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "ig.patch_run.v1"},
+    "patch_run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"enum": ["ig.patch_run.v1", "ig_patch_run.v1"]},
     "created_at": {"type": "string", "minLength": 1},
     "source_graph_hash": {"type": "string", "minLength": 1},
-    "algorithm_version": {"type": "string", "minLength": 1},
+    "algorithm_version": {"enum": ["chiral_patch_hashes.v1.1", "chiral_patch_hashes.v1.2"]},
+    "fingerprints_available": {"type": "boolean"},
     "authority_level": {"enum": ["heuristic", "derived", "formal-adjacent", "formal"]},
     "claim_scope": {"type": "string", "minLength": 1},
     "non_overclaim": {"const": true},

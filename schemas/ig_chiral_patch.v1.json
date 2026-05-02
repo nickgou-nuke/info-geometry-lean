@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig.chiral_patch.v1",
+  "type": "object",
+  "required": ["_key", "patch_id", "run_id", "schema_version", "patch_type", "node_count", "edge_count", "chiral_entropy", "claim_scope", "non_overclaim"],
+  "properties": {
+    "_key": {"type": "string", "minLength": 1},
+    "patch_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig.chiral_patch.v1"},
+    "patch_type": {"type": "string", "minLength": 1},
+    "node_count": {"type": "integer", "minimum": 0},
+    "edge_count": {"type": "integer", "minimum": 0},
+    "chiral_entropy": {"type": "number"},
+    "claim_scope": {"type": "string", "minLength": 1},
+    "non_overclaim": {"type": "boolean"},
+    "authority_level": {"type": "string"},
+    "proof_link": {"type": "string"}
+  },
+  "additionalProperties": true
+}

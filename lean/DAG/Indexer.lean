@@ -576,7 +576,11 @@ def indexerMain (args : List String) : IO UInt32 := do
   let env ← importModules (parseImports importModsStr) {} 0
   let importStop ← IO.monoMsNow
   logTiming timingLog s!"importModules ({importModsStr})" (importStop - importStart)
-  let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
+  let coreContext : Core.Context := {
+    fileName := "<Indexer>",
+    fileMap := default,
+    maxHeartbeats := 1000000
+  }
 
   let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut timingLog).run {} {}).toIO coreContext { env := env }
   return 0

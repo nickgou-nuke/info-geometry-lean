@@ -9,9 +9,11 @@ and source excerpts for prover prompts.
 from __future__ import annotations
 
 import argparse
+import base64
 import collections
 import json
 import math
+import os
 import re
 import sys
 import urllib.error
@@ -22,7 +24,7 @@ from typing import Any
 
 DEFAULT_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
 DEFAULT_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
-DEFAULT_ARANGO = "http://127.0.0.1:8529"
+DEFAULT_ARANGO = "http://127.0.0.1:8530"
 DEFAULT_DB = "infogeometry"
 DEFAULT_NODE_COLLECTION = "ig_nodes"
 DEFAULT_EDGE_COLLECTION = "ig_edges"
@@ -222,8 +224,19 @@ def arango_request(base_url: str, db: str, payload: dict[str, Any]) -> dict[str,
         method="POST",
         headers={"Content-Type": "application/json"},
     )
+    add_arango_auth(request)
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def add_arango_auth(request: urllib.request.Request) -> None:
+    """Attach Basic auth when repository Arango credentials are configured."""
+    username = os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME")
+    password = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD")
+    if not username or password is None:
+        return
+    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
+    request.add_header("Authorization", f"Basic {token}")
 
 
 def arango_cursor_all(base_url: str, db: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -234,6 +247,7 @@ def arango_cursor_all(base_url: str, db: str, payload: dict[str, Any]) -> list[d
     while has_more and cursor_id:
         url = f"{base_url.rstrip('/')}/_db/{db}/_api/cursor/{cursor_id}"
         request = urllib.request.Request(url, method="PUT", headers={"Content-Type": "application/json"})
+        add_arango_auth(request)
         with urllib.request.urlopen(request, timeout=30) as response:
             payload = json.loads(response.read().decode("utf-8"))
         rows.extend(payload.get("result") or [])
@@ -281,7 +295,8 @@ def _edge_endpoint_key(value: Any) -> str:
 def normalize_raw_node(node: dict[str, Any], *, raw_nodes_collection: str) -> dict[str, Any]:
     """Convert layered raw_info_nodes rows to the compact retriever shape."""
     decl = node.get("decl") if isinstance(node.get("decl"), dict) else {}
-    attrs = dict(node.get("attrs") or {})
+    raw_attrs = node.get("attrs")
+    attrs = dict(raw_attrs) if isinstance(raw_attrs, dict) else {}
     if decl.get("doc") and not attrs.get("doc"):
         attrs["doc"] = decl.get("doc")
     if decl.get("kind") and not attrs.get("decl_kind"):
@@ -490,7 +505,7 @@ def load_faithful_index(args: argparse.Namespace, names: list[str]) -> dict[str,
 
 
 def lexical_score(node: dict[str, Any], query_tokens: set[str], phrases: list[str]) -> float:
-    attrs = node.get("attrs") or {}
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
     haystack = " ".join(
         str(part or "")
         for part in (
@@ -522,8 +537,119 @@ def lexical_score(node: dict[str, Any], query_tokens: set[str], phrases: list[st
     return len(overlap) / math.sqrt(max(len(tokens), 1)) + exact_bonus
 
 
+def numeric_value(value: Any, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return float(int(value))
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value)
+        except ValueError:
+            return default
+    return default
+
+
+def nested_numeric(record: dict[str, Any], paths: list[tuple[str, ...]], default: float = 0.0) -> float:
+    for path in paths:
+        cur: Any = record
+        for key in path:
+            if not isinstance(cur, dict) or key not in cur:
+                cur = None
+                break
+            cur = cur[key]
+        if cur is not None:
+            return numeric_value(cur, default)
+    return default
+
+
+def node_fingerprint(node: dict[str, Any]) -> dict[str, Any]:
+    fp = node.get("typeFingerprint")
+    if isinstance(fp, dict):
+        return fp
+    attrs = node.get("attrs")
+    if isinstance(attrs, dict):
+        for key in ("typeFingerprint", "exprFingerprint", "theoremTypeExprFingerprint"):
+            value = attrs.get(key)
+            if isinstance(value, dict):
+                return value
+    return {}
+
+
+def node_energy_metrics(node: dict[str, Any]) -> dict[str, float]:
+    fp = node_fingerprint(node)
+    feature_counts = fp.get("feature_counts") if isinstance(fp.get("feature_counts"), dict) else {}
+    energy = node.get("energy") if isinstance(node.get("energy"), dict) else {}
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
+    attr_energy = attrs.get("energy") if isinstance(attrs.get("energy"), dict) else {}
+
+    term_size = nested_numeric(
+        {"fp": fp, "feature_counts": feature_counts, "energy": energy, "attr_energy": attr_energy},
+        [
+            ("energy", "term_size"),
+            ("attr_energy", "term_size"),
+            ("fp", "nodeCount"),
+            ("fp", "node_count"),
+            ("feature_counts", "token_count"),
+        ],
+    )
+    redex_count = nested_numeric(
+        {"fp": fp, "feature_counts": feature_counts, "energy": energy, "attr_energy": attr_energy},
+        [
+            ("energy", "redex_count"),
+            ("attr_energy", "redex_count"),
+            ("fp", "redexCount"),
+            ("fp", "redex_count"),
+            ("fp", "syntactic_redex_count"),
+            ("feature_counts", "redex_proxy"),
+        ],
+    )
+    debruijn_depth = nested_numeric(
+        {"fp": fp, "feature_counts": feature_counts, "energy": energy, "attr_energy": attr_energy},
+        [
+            ("energy", "max_debruijn_depth"),
+            ("attr_energy", "max_debruijn_depth"),
+            ("fp", "max_bvar_depth"),
+            ("fp", "maxBVarDepth"),
+            ("feature_counts", "binder_depth_proxy"),
+        ],
+    )
+    witness_gap = nested_numeric(
+        {"energy": energy, "attr_energy": attr_energy, "attrs": attrs},
+        [
+            ("energy", "witness_gap_penalty"),
+            ("attr_energy", "witness_gap_penalty"),
+            ("attrs", "witness_gap"),
+        ],
+    )
+    unsafe_penalty = nested_numeric(
+        {"energy": energy, "attr_energy": attr_energy, "attrs": attrs},
+        [
+            ("energy", "unsafe_penalty"),
+            ("attr_energy", "unsafe_penalty"),
+            ("attrs", "unsafe_penalty"),
+        ],
+    )
+    pauli_total = nested_numeric(
+        {"energy": energy, "attr_energy": attr_energy},
+        [
+            ("energy", "pauli_total"),
+            ("attr_energy", "pauli_total"),
+        ],
+        default=term_size + 3.0 * redex_count + 2.0 * debruijn_depth + 8.0 * witness_gap + 12.0 * unsafe_penalty,
+    )
+    return {
+        "term_size": term_size,
+        "redex_count": redex_count,
+        "max_debruijn_depth": debruijn_depth,
+        "witness_gap_penalty": witness_gap,
+        "unsafe_penalty": unsafe_penalty,
+        "pauli_total": pauli_total,
+    }
+
+
 def node_mass(node: dict[str, Any]) -> float:
-    attrs = node.get("attrs") or {}
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
     decl_kind = attrs.get("decl_kind")
     kind = node.get("kind")
     mass = 1.0
@@ -537,11 +663,122 @@ def node_mass(node: dict[str, Any]) -> float:
         mass += min(len(str(attrs["doc"])) / 400.0, 0.75)
     if node.get("line"):
         mass += 0.25
+    
+    energy = node_energy_metrics(node)
+    node_count = energy["term_size"]
+    redex_count = energy["redex_count"]
+    if node_count > 0:
+        # Redex density is a retrieval prior for repair/search effort, not proof truth.
+        density = redex_count / float(node_count)
+        mass += density * 1.2
+        mass += math.log10(node_count + 1) * 0.4
+
     return mass
 
 
-def build_adjacency(edges: list[dict[str, Any]]) -> dict[str, list[tuple[str, float, str]]]:
-    adjacency: dict[str, list[tuple[str, float, str]]] = collections.defaultdict(list)
+def build_spectral_synonyms(nodes: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """Build a mapping from shapeHash to list of node IDs."""
+    synonyms: dict[str, list[str]] = collections.defaultdict(list)
+    for node in nodes:
+        node_id = node.get("id") or node.get("name") or node.get("_key")
+        fp = node_fingerprint(node)
+        shape_hash = fp.get("shapeHash")
+        if node_id and shape_hash and shape_hash != "0":
+            synonyms[str(shape_hash)].append(str(node_id))
+    return synonyms
+
+
+def edge_metrics(edge: dict[str, Any]) -> dict[str, float]:
+    attrs = edge.get("attrs") if isinstance(edge.get("attrs"), dict) else {}
+    hodge = edge.get("hodge") if isinstance(edge.get("hodge"), dict) else {}
+    source = {"edge": edge, "attrs": attrs, "hodge": hodge}
+    action_weight = nested_numeric(
+        source,
+        [
+            ("edge", "action_weight"),
+            ("attrs", "action_weight"),
+            ("hodge", "action_weight"),
+        ],
+    )
+    affinity = nested_numeric(
+        source,
+        [
+            ("edge", "affinity"),
+            ("attrs", "affinity"),
+            ("hodge", "affinity"),
+        ],
+    )
+    proof_weight = nested_numeric(
+        source,
+        [
+            ("edge", "proof_weight"),
+            ("attrs", "proof_weight"),
+            ("hodge", "proof_weight"),
+        ],
+    )
+    witness_gap = nested_numeric(
+        source,
+        [
+            ("edge", "witness_gap"),
+            ("attrs", "witness_gap"),
+            ("hodge", "witness_gap"),
+        ],
+    )
+    unsafe_penalty = nested_numeric(
+        source,
+        [
+            ("edge", "unsafe_penalty"),
+            ("attrs", "unsafe_penalty"),
+            ("hodge", "unsafe_penalty"),
+        ],
+    )
+    chiral_sign = nested_numeric(
+        source,
+        [
+            ("edge", "chiral_sign"),
+            ("attrs", "chiral_sign"),
+            ("hodge", "chiral_sign"),
+        ],
+    )
+    u1_phase = nested_numeric(
+        source,
+        [
+            ("edge", "u1_phase"),
+            ("attrs", "u1_phase"),
+            ("hodge", "u1_phase"),
+        ],
+    )
+    return {
+        "action_weight": max(action_weight, 0.0),
+        "affinity": affinity,
+        "proof_weight": max(proof_weight, 0.0),
+        "witness_gap": max(witness_gap, 0.0),
+        "unsafe_penalty": max(unsafe_penalty, 0.0),
+        "chiral_sign": chiral_sign,
+        "u1_phase": u1_phase,
+    }
+
+
+def spectral_edge_multiplier(edge: dict[str, Any], args: argparse.Namespace) -> float:
+    metrics = edge_metrics(edge)
+    has_spectral_fields = any(
+        key in edge or (isinstance(edge.get("attrs"), dict) and key in edge["attrs"])
+        for key in ("action_weight", "affinity", "proof_weight", "witness_gap", "unsafe_penalty")
+    )
+    if not has_spectral_fields:
+        return 1.0
+    penalty = (
+        args.spectral_action_weight * metrics["action_weight"]
+        + args.spectral_affinity_weight * abs(metrics["affinity"])
+        + args.spectral_witness_gap_weight * metrics["witness_gap"]
+        + args.spectral_unsafe_weight * metrics["unsafe_penalty"]
+    )
+    reward = args.spectral_proof_weight * metrics["proof_weight"]
+    return max(0.05, (1.0 + reward) / (1.0 + penalty))
+
+
+def build_adjacency(edges: list[dict[str, Any]], args: argparse.Namespace) -> dict[str, list[tuple[str, float, str, dict[str, float]]]]:
+    adjacency: dict[str, list[tuple[str, float, str, dict[str, float]]]] = collections.defaultdict(list)
     for edge in edges:
         src = edge.get("src")
         dst = edge.get("dst")
@@ -549,14 +786,17 @@ def build_adjacency(edges: list[dict[str, Any]]) -> dict[str, list[tuple[str, fl
             continue
         weight = float(edge.get("weight") or 1.0)
         kind = str(edge.get("kind") or "edge")
-        adjacency[src].append((dst, weight, kind))
-        adjacency[dst].append((src, weight, kind))
+        metrics = edge_metrics(edge)
+        spectral_multiplier = spectral_edge_multiplier(edge, args) if args.use_spectral_weights else 1.0
+        traversal_weight = weight * spectral_multiplier
+        adjacency[src].append((dst, traversal_weight, kind, metrics))
+        adjacency[dst].append((src, traversal_weight, kind, metrics))
     return adjacency
 
 
 def propagate_scores(
     nodes_by_id: dict[str, dict[str, Any]],
-    adjacency: dict[str, list[tuple[str, float, str]]],
+    adjacency: dict[str, list[tuple[str, float, str, dict[str, float]]]],
     seed_scores: dict[str, float],
     max_hops: int,
 ) -> tuple[dict[str, float], dict[str, int]]:
@@ -575,7 +815,7 @@ def propagate_scores(
         scores[node_id] += incoming * node_mass(nodes_by_id[node_id])
         if depth >= max_hops:
             continue
-        for neighbor, weight, _kind in adjacency.get(node_id, []):
+        for neighbor, weight, _kind, _metrics in adjacency.get(node_id, []):
             next_score = incoming * min(weight, 3.0) * 0.55
             key = (neighbor, depth + 1)
             if next_score <= seen_best.get(key, 0.0):
@@ -688,14 +928,49 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         max_groups=args.max_equivalence_groups,
         max_tokens=args.max_equivalence_tokens,
     )
-    nodes_by_id = {str(node.get("id")): node for node in nodes if node.get("id")}
-    adjacency = build_adjacency(edges)
+    nodes_by_id: dict[str, dict[str, Any]] = {}
+    for node in nodes:
+        node_id = node.get("id") or node.get("name") or node.get("_key")
+        if not node_id:
+            continue
+        node_key = str(node_id)
+        raw_attrs = node.get("attrs")
+        attrs = dict(raw_attrs) if isinstance(raw_attrs, dict) else {}
+        if node.get("doc") and not attrs.get("doc"):
+            attrs["doc"] = node.get("doc")
+        if node.get("kind") and not attrs.get("decl_kind"):
+            attrs["decl_kind"] = node.get("kind")
+        normalized = {
+            **node,
+            "id": node_key,
+            "name": str(node.get("name") or node_key),
+            "kind": "Declaration",
+            "attrs": attrs,
+        }
+        nodes_by_id[node_key] = normalized
+    adjacency = build_adjacency(edges, args)
+    spectral_synonyms = build_spectral_synonyms(nodes)
 
     lexical = {
         node_id: score
         for node_id, node in nodes_by_id.items()
         if (score := lexical_score(node, expanded_query_tokens, phrases)) >= args.min_seed_score
     }
+    
+    # 🧬 Spectral boost: boost nodes that share the same shapeHash as top lexical hits
+    spectral_boosts: dict[str, float] = collections.defaultdict(float)
+    for node_id, score in sorted(lexical.items(), key=lambda x: x[1], reverse=True)[:args.seed_k]:
+        node = nodes_by_id.get(node_id)
+        if not node: continue
+        shape_hash = node_fingerprint(node).get("shapeHash")
+        if shape_hash and shape_hash != "0":
+            for twin_id in spectral_synonyms.get(str(shape_hash), []):
+                if twin_id != node_id:
+                    spectral_boosts[twin_id] += score * 0.4
+    
+    for node_id, boost in spectral_boosts.items():
+        lexical[node_id] = lexical.get(node_id, 0.0) + boost
+
     seed_scores = dict(sorted(lexical.items(), key=lambda item: item[1], reverse=True)[: args.seed_k])
     seed_sccs: set[int] = set()
     scc_distances: dict[int, int] = {}
@@ -799,6 +1074,8 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
                 "rep_layer": node_rep_layer(node),
                 "rep_layer_description": node_rep_layer_description(node),
                 "module_family": node.get("module_family"),
+                "type_fingerprint": node_fingerprint(node),
+                "energy": node_energy_metrics(node),
                 "score": round(float(score), 6),
                 "distance": distances.get(node_id),
                 "source_excerpt": excerpt,
@@ -845,6 +1122,15 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
             "promotion_allowed": False,
             "faithful_witness_required": bool(args.require_faithful_witness),
             "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent",
+            "spectral_weights": {
+                "enabled": bool(args.use_spectral_weights),
+                "action_weight": args.spectral_action_weight,
+                "affinity_weight": args.spectral_affinity_weight,
+                "witness_gap_weight": args.spectral_witness_gap_weight,
+                "unsafe_weight": args.spectral_unsafe_weight,
+                "proof_weight": args.spectral_proof_weight,
+                "note": "Hodge/fingerprint metrics are retrieval priors only; Lean remains proof authority.",
+            },
         },
     }
 
@@ -883,6 +1169,12 @@ def build_context_from_query(
     scc_anchor_first: bool = True,
     require_scc_anchor: bool = True,
     rep_layer: list[str] | None = None,
+    use_spectral_weights: bool = True,
+    spectral_action_weight: float = 0.35,
+    spectral_affinity_weight: float = 0.15,
+    spectral_witness_gap_weight: float = 1.25,
+    spectral_unsafe_weight: float = 2.5,
+    spectral_proof_weight: float = 0.75,
 ) -> dict[str, Any]:
     """Programmatic entry point for bounded agents."""
     args = argparse.Namespace(
@@ -919,6 +1211,12 @@ def build_context_from_query(
         scc_anchor_first=scc_anchor_first,
         require_scc_anchor=require_scc_anchor,
         rep_layer=rep_layer or [],
+        use_spectral_weights=use_spectral_weights,
+        spectral_action_weight=spectral_action_weight,
+        spectral_affinity_weight=spectral_affinity_weight,
+        spectral_witness_gap_weight=spectral_witness_gap_weight,
+        spectral_unsafe_weight=spectral_unsafe_weight,
+        spectral_proof_weight=spectral_proof_weight,
     )
     return build_context(args)
 
@@ -1067,6 +1365,42 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--use-equivalence-expansion", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--max-equivalence-groups", type=int, default=8)
     parser.add_argument("--max-equivalence-tokens", type=int, default=64)
+    parser.add_argument(
+        "--use-spectral-weights",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Use Hodge/fingerprint edge fields as retrieval priors, never as proof authority.",
+    )
+    parser.add_argument(
+        "--spectral-action-weight",
+        type=float,
+        default=0.35,
+        help="Penalty multiplier for edge action_weight traversal cost.",
+    )
+    parser.add_argument(
+        "--spectral-affinity-weight",
+        type=float,
+        default=0.15,
+        help="Penalty multiplier for absolute signed edge affinity.",
+    )
+    parser.add_argument(
+        "--spectral-witness-gap-weight",
+        type=float,
+        default=1.25,
+        help="Penalty multiplier for witness_gap edge count/weight.",
+    )
+    parser.add_argument(
+        "--spectral-unsafe-weight",
+        type=float,
+        default=2.5,
+        help="Penalty multiplier for unsafe_penalty edge fields.",
+    )
+    parser.add_argument(
+        "--spectral-proof-weight",
+        type=float,
+        default=0.75,
+        help="Reward multiplier for proof_weight edge fields.",
+    )
     parser.add_argument("--declarations-only", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--require-source", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--json-out", type=Path)

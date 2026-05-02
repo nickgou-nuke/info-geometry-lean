@@ -1,0 +1,26 @@
+FOR v, e, path IN 1..8 OUTBOUND @startPatch ig_patch_edges
+  OPTIONS {
+    order: "weighted",
+    weightAttribute: "action_weight",
+    defaultWeight: 1,
+    uniqueVertices: "path"
+  }
+
+  FILTER v.local_role == "seed" OR v.local_role == "trunk"
+  FILTER path.edges[*].cartan_proxy_sector ALL IN ["p_odd", "mixed"]
+
+  LET action = SUM(path.edges[*].action_weight)
+  LET affinity = SUM(path.edges[*].affinity)
+  LET score = action + @affinityWeight * ABS(affinity)
+
+  SORT score ASC
+  LIMIT @limit
+
+  RETURN {
+    target_patch: v.patch_id,
+    target_role: v.local_role,
+    path: path.vertices[*].patch_id,
+    action: action,
+    affinity: affinity,
+    score: score
+  }

@@ -16,7 +16,6 @@ This module records the precise representation-theoretic socket:
 import Mathlib
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
-import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 import InfoGeometry.Meta.Architecture
 
 noncomputable section
@@ -75,6 +74,15 @@ theorem det_pauliMatrix_eq_minkowskiNormSq
   ring
 
 /--
+The trace of the Pauli representative is twice the energy component.
+-/
+theorem trace_pauliMatrix_eq_two_energy
+    (P : PauliParavector) :
+    Matrix.trace P.pauliMatrix = ((2 * P.energy : ℝ) : ℂ) := by
+  simp [pauliMatrix, Matrix.trace, Fin.sum_univ_two]
+  ring
+
+/--
 Null/lightlike momentum means zero Minkowski norm.
 -/
 def IsNull
@@ -99,13 +107,78 @@ theorem isNull_iff_isSingularPauli
     P.IsNull ↔ P.IsSingularPauli := by
   constructor
   · intro h
-    dsimp [IsNull, IsSingularPauli] at h ⊢
-    rw [det_pauliMatrix_eq_minkowskiNormSq, h]
-    norm_num
+    unfold IsSingularPauli
+    rw [det_pauliMatrix_eq_minkowskiNormSq]
+    exact_mod_cast h
   · intro h
-    dsimp [IsNull, IsSingularPauli] at h ⊢
+    unfold IsNull
+    unfold IsSingularPauli at h
     rw [det_pauliMatrix_eq_minkowskiNormSq] at h
     exact_mod_cast h
+
+/-- Future-oriented branch: nonnegative energy. -/
+def IsFutureOriented
+    (P : PauliParavector) : Prop :=
+  0 ≤ P.energy
+
+/-- Past-oriented branch: nonpositive energy. -/
+def IsPastOriented
+    (P : PauliParavector) : Prop :=
+  P.energy ≤ 0
+
+/-- Future null branch. -/
+def IsFutureNull
+    (P : PauliParavector) : Prop :=
+  P.IsNull ∧ P.IsFutureOriented
+
+/-- Past null branch. -/
+def IsPastNull
+    (P : PauliParavector) : Prop :=
+  P.IsNull ∧ P.IsPastOriented
+
+/-- Timelike/massive branch: positive Minkowski norm square. -/
+def IsTimelike
+    (P : PauliParavector) : Prop :=
+  0 < P.minkowskiNormSq
+
+/-- Spacelike branch: negative Minkowski norm square. -/
+def IsSpacelike
+    (P : PauliParavector) : Prop :=
+  P.minkowskiNormSq < 0
+
+/-- Lightlike branch: zero Minkowski norm square. -/
+def IsLightlike
+    (P : PauliParavector) : Prop :=
+  P.IsNull
+
+/--
+A future-null paravector has a singular Pauli representative.
+-/
+theorem singularPauli_of_futureNull
+    {P : PauliParavector}
+    (hP : P.IsFutureNull) :
+    P.IsSingularPauli :=
+  (P.isNull_iff_isSingularPauli).mp hP.1
+
+/--
+Timelike branch has positive determinant.
+-/
+theorem det_pos_of_timelike
+    {P : PauliParavector}
+    (hP : P.IsTimelike) :
+    0 < (Matrix.det P.pauliMatrix).re := by
+  rw [det_pauliMatrix_eq_minkowskiNormSq]
+  exact hP
+
+/--
+Spacelike branch has negative determinant real part.
+-/
+theorem det_neg_of_spacelike
+    {P : PauliParavector}
+    (hP : P.IsSpacelike) :
+    (Matrix.det P.pauliMatrix).re < 0 := by
+  rw [det_pauliMatrix_eq_minkowskiNormSq]
+  exact hP
 
 /--
 A mass-shell certificate.
@@ -294,6 +367,17 @@ structure SpinorHelicityFactorization
     ∀ lam : Spinor,
       B.IsNull (momentumOf lam)
 
+  /--
+  Orientation/positivity branch.
+
+  In the concrete Pauli model this should specialize to future-null momentum.
+  -/
+  orientation_law : Prop
+
+  /-- Proof of the orientation/positivity branch law. -/
+  orientation_certificate :
+    orientation_law
+
   /-- The outer-product/rank-one interpretation law. -/
   rank_one_law : Prop
 
@@ -313,6 +397,11 @@ theorem singular_representative
     B.IsSingularRepresentative (F.momentumOf lam) :=
   (B.isNull_iff_isSingularRepresentative (F.momentumOf lam)).mp
     (F.momentum_null lam)
+
+/-- The stored orientation law. -/
+theorem orientation_valid :
+    F.orientation_law :=
+  F.orientation_certificate
 
 /-- The stored rank-one law. -/
 theorem rank_one_valid :
@@ -877,40 +966,50 @@ end HelicityCalibration
 /-! ## 6. Chiral lightcone compatibility -/
 
 /--
+Generic chiral-lightcone readout datum.
+
+This avoids hard-coding a specific chiral-lightcone API into the
+Pauli/Hestenes dictionary. Concrete modules can later instantiate `Side` and
+`Lightcone`.
+-/
+@[rep_depth operator]
+structure ChiralLightconeReadoutDatum
+    (Carrier Side : Type*) where
+  /-- Chiral/null branch indexed by a side label. -/
+  Lightcone : Side → Set Carrier
+
+/--
 Compatibility between Pauli/Hestenes null momentum and a chiral lightcone
 carrier readout.
 
-This is the bridge into `OperatorChiralLightcone`: null paravectors are read as
-carrier lightcone data only after a calibration is supplied.
+Null paravectors are read as carrier lightcone data only after a calibration is
+supplied.
 -/
 @[rep_depth operator]
 structure PauliHestenesChiralLightconeBridge
-    (Spinor Rotor Bivector Carrier : Type*)
-    [AddCommGroup Carrier] [Module ℝ Carrier]
-    (Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum Carrier)
-    (C : InfoGeometry.OperatorAlgebra.ModuleCircularPolarization Carrier)
+    (Spinor Rotor Bivector Carrier Side : Type*)
+    (LC : ChiralLightconeReadoutDatum Carrier Side)
     (D : HestenesSpinorRotorDatum Spinor Rotor Bivector) where
   /-- Carrier readout of a spinor. -/
   carrierReadout : Spinor → Carrier
 
   /--
-  Null momentum is represented on one of the chiral lightcone branches.
+  Null momentum is represented on one of the calibrated chiral lightcone
+  branches.
   -/
   null_momentum_hits_chiral_lightcone :
     ∀ ψ : Spinor,
       (D.momentumReadout ψ).IsNull →
-        ∃ side : InfoGeometry.OperatorAlgebra.OperatorChiralLightcone.ChiralSide,
-          carrierReadout ψ ∈
-            InfoGeometry.OperatorAlgebra.OperatorChiralLightcone.ChiralLightcone Q C side
+        ∃ side : Side,
+          carrierReadout ψ ∈ LC.Lightcone side
 
 namespace PauliHestenesChiralLightconeBridge
 
-variable {Spinor Rotor Bivector Carrier : Type*}
-variable [AddCommGroup Carrier] [Module ℝ Carrier]
-variable {Q : InfoGeometry.OperatorAlgebra.KreinIsotropicCone.KreinQuadraticDatum Carrier}
-variable {C : InfoGeometry.OperatorAlgebra.ModuleCircularPolarization Carrier}
+variable {Spinor Rotor Bivector Carrier Side : Type*}
+variable {LC : ChiralLightconeReadoutDatum Carrier Side}
 variable {D : HestenesSpinorRotorDatum Spinor Rotor Bivector}
-variable (B : PauliHestenesChiralLightconeBridge Spinor Rotor Bivector Carrier Q C D)
+variable (B : PauliHestenesChiralLightconeBridge
+    Spinor Rotor Bivector Carrier Side LC D)
 
 /--
 A massless/null spinor branch has a calibrated chiral-lightcone carrier
@@ -919,9 +1018,8 @@ readout.
 theorem chiral_lightcone_readout_of_null_momentum
     {ψ : Spinor}
     (hψ : (D.momentumReadout ψ).IsNull) :
-    ∃ side : InfoGeometry.OperatorAlgebra.OperatorChiralLightcone.ChiralSide,
-      B.carrierReadout ψ ∈
-        InfoGeometry.OperatorAlgebra.OperatorChiralLightcone.ChiralLightcone Q C side :=
+    ∃ side : Side,
+      B.carrierReadout ψ ∈ LC.Lightcone side :=
   B.null_momentum_hits_chiral_lightcone ψ hψ
 
 end PauliHestenesChiralLightconeBridge
@@ -931,9 +1029,20 @@ attribute [rep_depth operator]
   PauliParavector.minkowskiNormSq
   PauliParavector.pauliMatrix
   PauliParavector.det_pauliMatrix_eq_minkowskiNormSq
+  PauliParavector.trace_pauliMatrix_eq_two_energy
   PauliParavector.IsNull
   PauliParavector.IsSingularPauli
   PauliParavector.isNull_iff_isSingularPauli
+  PauliParavector.IsFutureOriented
+  PauliParavector.IsPastOriented
+  PauliParavector.IsFutureNull
+  PauliParavector.IsPastNull
+  PauliParavector.IsTimelike
+  PauliParavector.IsSpacelike
+  PauliParavector.IsLightlike
+  PauliParavector.singularPauli_of_futureNull
+  PauliParavector.det_pos_of_timelike
+  PauliParavector.det_neg_of_spacelike
   PauliParavector.OnMassShell
   PauliParavector.onMassShell_zero_iff_isNull
   PauliParavectorBridge
@@ -947,6 +1056,7 @@ attribute [rep_depth operator]
   LorentzSpinActionBridge.double_cover_valid
   SpinorHelicityFactorization
   SpinorHelicityFactorization.singular_representative
+  SpinorHelicityFactorization.orientation_valid
   SpinorHelicityFactorization.rank_one_valid
   PauliParavectorDatum
   PauliParavectorDatum.determinant_metric_valid
@@ -981,6 +1091,7 @@ attribute [rep_depth operator]
   HelicityCalibration
   HelicityCalibration.singular_pauli_of_null_momentum
   HelicityCalibration.helicity_valid
+  ChiralLightconeReadoutDatum
   PauliHestenesChiralLightconeBridge
   PauliHestenesChiralLightconeBridge.chiral_lightcone_readout_of_null_momentum
 

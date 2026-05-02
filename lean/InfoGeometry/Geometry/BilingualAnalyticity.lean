@@ -41,6 +41,17 @@ variable
     [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     [NormedAddCommGroup Z] [NormedSpace ℝ Z]
 
+/-- Pointwise form of phase-linearity. -/
+theorem phaseLinear_apply
+    {KX : PhaseStructure X}
+    {KY : PhaseStructure Y}
+    {L : X →L[ℝ] Y}
+    (hL : KX.IsPhaseLinearMap L KY)
+    (v : X) :
+    L (KX.K v) = KY.K (L v) := by
+  have h := congrArg (fun T : X →L[ℝ] Y => T v) hL
+  simpa [IsPhaseLinearMap, ContinuousLinearMap.comp_apply] using h
+
 /-- The identity map is phase-linear. -/
 theorem id_phaseLinear
     (KX : PhaseStructure X) :
@@ -78,6 +89,9 @@ end PhaseStructure
 
 /--
 Cauchy analyticity at a point, in real phase-linear form.
+
+This is pointwise Cauchy analyticity/differentiability. It is not a
+power-series or open-neighborhood holomorphicity assertion.
 
 The function is real-Fréchet differentiable, and its derivative commutes with
 the phase structures.
@@ -125,11 +139,7 @@ Pointwise Cauchy-Riemann law.
 theorem cauchyRiemann_apply
     (v : X) :
     A.deriv (Kdom.K v) = Ktar.K (A.deriv v) := by
-  have h :=
-    congrArg
-      (fun T : X →L[ℝ] Y => T v)
-      A.phase_linear_deriv
-  simpa [ContinuousLinearMap.comp_apply] using h
+  exact PhaseStructure.phaseLinear_apply A.phase_linear_deriv v
 
 /-- The derivative is phase-linear. -/
 theorem deriv_phaseLinear :
@@ -158,7 +168,7 @@ def id
   deriv := ContinuousLinearMap.id ℝ X
   has_fderiv_at := by
     simpa using
-      (hasFDerivAt_id x :
+      (hasFDerivAt_id (𝕜 := ℝ) (E := X) x :
         HasFDerivAt (fun y : X => y) (ContinuousLinearMap.id ℝ X) x)
   phase_linear_deriv := by
     ext v
@@ -176,7 +186,7 @@ def const
   deriv := 0
   has_fderiv_at := by
     simpa using
-      (hasFDerivAt_const (c := y0) (x := x) :
+      (hasFDerivAt_const y0 x :
         HasFDerivAt (fun _ : X => y0) (0 : X →L[ℝ] Y) x)
   phase_linear_deriv := by
     ext v
@@ -194,7 +204,10 @@ def ofContinuousLinearMap
     (x : X) :
     CauchyAnalyticAt Kdom Ktar (fun y : X => L y) x where
   deriv := L
-  has_fderiv_at := L.hasFDerivAt
+  has_fderiv_at := by
+    simpa using
+      (L.hasFDerivAt (x := x) :
+        HasFDerivAt (fun y : X => L y) L x)
   phase_linear_deriv := hL
 
 /--
@@ -216,7 +229,8 @@ def comp
   has_fderiv_at := B.has_fderiv_at.comp x A.has_fderiv_at
   phase_linear_deriv := by
     ext v
-    simp [ContinuousLinearMap.comp_apply]
+    change B.deriv (A.deriv (KX.K v)) =
+      KZ.K (B.deriv (A.deriv v))
     rw [A.cauchyRiemann_apply v]
     rw [B.cauchyRiemann_apply (A.deriv v)]
 
@@ -385,6 +399,16 @@ structure HestenesAnalyticOn
   cauchyForm :
     OperatorOneForm Point Tangent Value
 
+  /--
+  Law saying this one-form is the intended Cauchy/geometric form associated to
+  `F`.
+  -/
+  cauchyForm_represents_F_law : Prop
+
+  /-- Proof/certificate that the form represents `F`. -/
+  cauchyForm_represents_F_certificate :
+    cauchyForm_represents_F_law
+
   /-- The form is closed/monogenic. -/
   closed_form :
     I.IsClosedGeometricForm cauchyForm
@@ -399,6 +423,11 @@ variable
 
 variable (A : HestenesAnalyticOn I F)
 
+/-- The supplied form-representation law is available. -/
+theorem cauchyForm_represents_F :
+    A.cauchyForm_represents_F_law :=
+  A.cauchyForm_represents_F_certificate
+
 /--
 Cauchy theorem in Hestenes-Stokes form:
 
@@ -412,9 +441,13 @@ theorem boundaryIntegral_eq_zero
 /-- Construct a Hestenes-analytic datum from a closed geometric form. -/
 def ofClosedForm
     (ω : OperatorOneForm Point Tangent Value)
+    (hrep : Prop)
+    (hrep_cert : hrep)
     (hω : I.IsClosedGeometricForm ω) :
     HestenesAnalyticOn I F where
   cauchyForm := ω
+  cauchyForm_represents_F_law := hrep
+  cauchyForm_represents_F_certificate := hrep_cert
   closed_form := hω
 
 /-- The boundary integral of a closed form vanishes. -/
@@ -427,7 +460,148 @@ theorem boundaryIntegral_eq_zero_of_closedForm
 
 end HestenesAnalyticOn
 
-/-! ## 6. Bilingual analyticity -/
+/-! ## 6A. Constructive Cauchy/Hestenes compatibility -/
+
+/--
+A constructive Cauchy/Hestenes compatibility backend.
+
+This replaces a vague compatibility proposition by explicit data:
+
+* `cauchyFormOf L` builds the geometric Cauchy form from a real derivative `L`;
+* `obstructionOf L` is the Hestenes/geometric obstruction associated to `L`;
+* phase-linearity of `L` forces that obstruction to vanish;
+* the geometric derivative of the Cauchy form is exactly that obstruction.
+
+Thus Cauchy phase-linearity constructively implies Hestenes closedness.
+-/
+structure CauchyHestenesCompatibility
+    {X Y Region Point Tangent Value : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [AddCommGroup Value] [Module ℝ Value]
+    (Kdom : PhaseStructure X)
+    (Ktar : PhaseStructure Y)
+    (I : GeometricIntegralBackend Region Point Tangent Value) where
+
+  /-- Geometric Cauchy form associated to a real derivative. -/
+  cauchyFormOf :
+    (X →L[ℝ] Y) → OperatorOneForm Point Tangent Value
+
+  /--
+  Law saying the derivative-built Cauchy form is the intended geometric form
+  for `Fgeo`.
+  -/
+  cauchyFormOf_represents :
+    (X →L[ℝ] Y) → (Point → Value) → Prop
+
+  /-- Proof of the derivative-built form representation law. -/
+  cauchyFormOf_represents_certificate :
+    ∀ (L : X →L[ℝ] Y) (Fgeo : Point → Value),
+      cauchyFormOf_represents L Fgeo
+
+  /--
+  Cauchy/Hestenes obstruction associated to a derivative.
+
+  Morally this is the geometric derivative of the Cauchy form, equivalent to
+  the Cauchy-Riemann obstruction.
+  -/
+  obstructionOf :
+    (X →L[ℝ] Y) → Point → Value
+
+  /-- If the derivative is phase-linear, the obstruction vanishes. -/
+  obstruction_zero_of_phaseLinear :
+    ∀ L : X →L[ℝ] Y,
+      L.comp Kdom.K = Ktar.K.comp L →
+        ∀ p : Point, obstructionOf L p = 0
+
+  /-- The geometric derivative of the Cauchy form is exactly the obstruction. -/
+  geometricDerivative_eq_obstruction :
+    ∀ L : X →L[ℝ] Y,
+      ∀ p : Point,
+        I.geometricDerivative (cauchyFormOf L) p =
+          obstructionOf L p
+
+namespace CauchyHestenesCompatibility
+
+variable
+    {X Y Region Point Tangent Value : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [AddCommGroup Value] [Module ℝ Value]
+    {Kdom : PhaseStructure X}
+    {Ktar : PhaseStructure Y}
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+
+variable (B : CauchyHestenesCompatibility Kdom Ktar I)
+
+/-- A phase-linear derivative produces a closed Hestenes Cauchy form. -/
+theorem closed_form_of_phaseLinear
+    (L : X →L[ℝ] Y)
+    (hL : L.comp Kdom.K = Ktar.K.comp L) :
+    I.IsClosedGeometricForm (B.cauchyFormOf L) := by
+  intro p
+  rw [B.geometricDerivative_eq_obstruction L p]
+  exact B.obstruction_zero_of_phaseLinear L hL p
+
+/-- A Cauchy-analytic derivative produces a closed Hestenes form. -/
+theorem closed_form_of_cauchyAnalyticAt
+    {F : X → Y}
+    {x : X}
+    (A : CauchyAnalyticAt Kdom Ktar F x) :
+    I.IsClosedGeometricForm (B.cauchyFormOf A.deriv) :=
+  B.closed_form_of_phaseLinear A.deriv A.phase_linear_deriv
+
+/--
+Construct the Hestenes analytic datum from a Cauchy analytic datum and a
+compatibility backend.
+-/
+def hestenesAnalyticOfCauchy
+    {F : X → Y}
+    {Fgeo : Point → Value}
+    {x : X}
+    (A : CauchyAnalyticAt Kdom Ktar F x) :
+    HestenesAnalyticOn I Fgeo where
+  cauchyForm := B.cauchyFormOf A.deriv
+  cauchyForm_represents_F_law :=
+    B.cauchyFormOf_represents A.deriv Fgeo
+  cauchyForm_represents_F_certificate :=
+    B.cauchyFormOf_represents_certificate A.deriv Fgeo
+  closed_form := B.closed_form_of_cauchyAnalyticAt A
+
+/--
+Constructive bilingual Cauchy theorem.
+
+If a function is Cauchy-analytic and the model supplies a Cauchy/Hestenes
+compatibility backend, then the corresponding Hestenes boundary integral
+vanishes.
+-/
+theorem boundaryIntegral_eq_zero_of_cauchyAnalyticAt
+    {F : X → Y}
+    {x : X}
+    (A : CauchyAnalyticAt Kdom Ktar F x)
+    (Ω : Region) :
+    I.boundaryIntegral Ω (B.cauchyFormOf A.deriv) = 0 :=
+  I.boundaryIntegral_eq_zero_of_closed
+    Ω
+    (B.cauchyFormOf A.deriv)
+    (B.closed_form_of_cauchyAnalyticAt A)
+
+/--
+A phase-linear derivative gives a zero boundary integral for its Cauchy form.
+-/
+theorem boundaryIntegral_eq_zero_of_phaseLinear
+    (L : X →L[ℝ] Y)
+    (hL : L.comp Kdom.K = Ktar.K.comp L)
+    (Ω : Region) :
+    I.boundaryIntegral Ω (B.cauchyFormOf L) = 0 :=
+  I.boundaryIntegral_eq_zero_of_closed
+    Ω
+    (B.cauchyFormOf L)
+    (B.closed_form_of_phaseLinear L hL)
+
+end CauchyHestenesCompatibility
+
+/-! ## 6B. Bilingual analyticity, processed -/
 
 /--
 Bilingual analyticity.
@@ -435,10 +609,10 @@ Bilingual analyticity.
 This packages:
 
 * Cauchy side: phase-linear real derivative;
-* Hestenes side: closed geometric one-form.
+* constructive Cauchy/Hestenes compatibility.
 
-The bridge between the derivative and the geometric form is model-dependent
-and is therefore carried as law/certificate data.
+The Hestenes closed form is now derived from the Cauchy side. It is not stored
+as an independent shadow.
 -/
 structure BilingualAnalyticAt
     {X Y Region Point Tangent Value : Type*}
@@ -456,22 +630,12 @@ structure BilingualAnalyticAt
   cauchy :
     CauchyAnalyticAt Kdom Ktar F x
 
-  /-- Hestenes/Stokes analyticity. -/
-  hestenes :
-    HestenesAnalyticOn I Fgeo
-
   /--
-  Compatibility law between the phase-linear derivative and the geometric
-  Stokes form.
-
-  In a concrete model this says that the geometric derivative of the Cauchy
-  form is exactly the Cauchy-Riemann obstruction.
+  Constructive compatibility between the Cauchy derivative and the Hestenes
+  geometric form.
   -/
-  cauchy_hestenes_compatibility_law : Prop
-
-  /-- Proof/certificate of the compatibility law. -/
-  cauchy_hestenes_compatibility_certificate :
-    cauchy_hestenes_compatibility_law
+  compatibility :
+    CauchyHestenesCompatibility Kdom Ktar I
 
 namespace BilingualAnalyticAt
 
@@ -499,17 +663,35 @@ theorem cauchyRiemann_apply
   A.cauchy.cauchyRiemann_apply v
 
 /--
+The associated Hestenes analytic datum is constructed from the Cauchy side.
+-/
+def hestenes :
+    HestenesAnalyticOn I Fgeo :=
+  A.compatibility.hestenesAnalyticOfCauchy A.cauchy
+
+/-- The Hestenes form is closed by construction from the Cauchy derivative. -/
+theorem closed_form_from_cauchy :
+    I.IsClosedGeometricForm
+      (A.compatibility.cauchyFormOf A.cauchy.deriv) :=
+  A.compatibility.closed_form_of_cauchyAnalyticAt A.cauchy
+
+/-- The Hestenes boundary theorem follows constructively from the Cauchy side. -/
+theorem boundaryIntegral_eq_zero_from_cauchy
+    (Ω : Region) :
+    I.boundaryIntegral Ω
+      (A.compatibility.cauchyFormOf A.cauchy.deriv) = 0 :=
+  A.compatibility.boundaryIntegral_eq_zero_of_cauchyAnalyticAt A.cauchy Ω
+
+/--
 Hestenes boundary Cauchy theorem from the bilingual analytic datum.
+
+This is the short-form API theorem for downstream modules.  The form itself is
+the one constructed from the Cauchy derivative by the compatibility backend.
 -/
 theorem boundaryIntegral_eq_zero
     (Ω : Region) :
     I.boundaryIntegral Ω A.hestenes.cauchyForm = 0 :=
   A.hestenes.boundaryIntegral_eq_zero Ω
-
-/-- The stored Cauchy/Hestenes compatibility law is available as a proof. -/
-theorem compatibility_valid :
-    A.cauchy_hestenes_compatibility_law :=
-  A.cauchy_hestenes_compatibility_certificate
 
 end BilingualAnalyticAt
 
@@ -530,8 +712,8 @@ deriving DecidableEq, Repr
 /--
 A noncommutative Cauchy-form calibration.
 
-This states how to build left and right Cauchy forms from an operator-valued
-function.
+Left and right Cauchy forms differ in a noncommutative target. They agree on
+values that are central for the chosen left/right actions.
 -/
 structure NoncommutativeCauchyFormCalibration
     (Point Tangent Value : Type*) where
@@ -544,15 +726,15 @@ structure NoncommutativeCauchyFormCalibration
   rightAction :
     Tangent → Value → Value
 
-  /--
-  Optional law relating left and right forms on the phase-linear/central
-  subalgebra.
-  -/
-  left_right_compatibility_law : Prop
+  /-- Values for which left and right action agree. -/
+  IsCentralValue :
+    Value → Prop
 
-  /-- Proof/certificate of compatibility. -/
-  left_right_compatibility_certificate :
-    left_right_compatibility_law
+  /-- Constructive left/right compatibility on central values. -/
+  left_right_compatibility :
+    ∀ (a : Value) (v : Tangent),
+      IsCentralValue a →
+        leftAction a v = rightAction v a
 
 namespace NoncommutativeCauchyFormCalibration
 
@@ -571,71 +753,193 @@ def rightForm
     OperatorOneForm Point Tangent Value :=
   rightCauchyForm F C.rightAction
 
-/-- The stored left/right compatibility law is available as a proof. -/
-theorem left_right_compatibility_valid :
-    C.left_right_compatibility_law :=
-  C.left_right_compatibility_certificate
+/-- If `F` takes central values, the left and right Cauchy forms coincide. -/
+theorem leftForm_eq_rightForm_of_central
+    (F : Point → Value)
+    (hF : ∀ Z : Point, C.IsCentralValue (F Z)) :
+    C.leftForm F = C.rightForm F := by
+  apply funext
+  intro Z
+  apply funext
+  intro V
+  dsimp [leftForm, rightForm, leftCauchyForm, rightCauchyForm]
+  exact C.left_right_compatibility (F Z) V (hF Z)
 
 end NoncommutativeCauchyFormCalibration
 
-/-! ## 8. Cauchy integral formula socket -/
+/-! ## 7A. Multiplicative ring-valued Cauchy calibration -/
+
+/--
+Concrete multiplicative Cauchy-form calibration for ring-valued forms.
+
+Left action is multiplication on the left.
+Right action is multiplication on the right.
+Centrality is literal commutation with every tangent value.
+-/
+def multiplicativeCauchyFormCalibration
+    (Point Value : Type*)
+    [Ring Value] :
+    NoncommutativeCauchyFormCalibration Point Value Value where
+  leftAction := fun a v => a * v
+  rightAction := fun v a => v * a
+  IsCentralValue := fun a => ∀ v : Value, a * v = v * a
+  left_right_compatibility := by
+    intro a v ha
+    exact ha v
+
+namespace multiplicativeCauchyFormCalibration
+
+variable {Point Value : Type*}
+variable [Ring Value]
+
+/-- Centrality predicate for the multiplicative calibration. -/
+theorem isCentralValue_iff
+    (a : Value) :
+    (multiplicativeCauchyFormCalibration Point Value).IsCentralValue a ↔
+      ∀ v : Value, a * v = v * a :=
+  Iff.rfl
+
+/-- If `Value` is a complex algebra, scalar values are central. -/
+theorem algebraMap_isCentralValue
+    [Algebra ℂ Value]
+    (ζ : ℂ) :
+    (multiplicativeCauchyFormCalibration Point Value).IsCentralValue
+      (algebraMap ℂ Value ζ) := by
+  intro v
+  exact Algebra.commutes ζ v
+
+/--
+For scalar-valued functions embedded into a complex algebra, left and right
+multiplicative Cauchy forms coincide.
+-/
+theorem leftForm_eq_rightForm_of_scalarValued
+    [Algebra ℂ Value]
+    (F : Point → ℂ) :
+    (multiplicativeCauchyFormCalibration Point Value).leftForm
+        (fun Z : Point => algebraMap ℂ Value (F Z))
+      =
+    (multiplicativeCauchyFormCalibration Point Value).rightForm
+        (fun Z : Point => algebraMap ℂ Value (F Z)) := by
+  apply
+    (multiplicativeCauchyFormCalibration Point Value).leftForm_eq_rightForm_of_central
+  intro Z
+  exact algebraMap_isCentralValue (Point := Point) (Value := Value) (F Z)
+
+end multiplicativeCauchyFormCalibration
+
+/-! ## 8. Noncommutative Cauchy kernel socket -/
 
 /--
 A noncommutative Cauchy kernel datum.
 
 In classical complex analysis the Cauchy kernel is `(ζ - z)⁻¹`.
 
-In an operator algebra, order matters. A concrete model must specify whether
-the kernel acts on the left, on the right, or in a two-sided calibrated way.
+In an operator algebra, the difference element and inverse must be supplied
+with explicit left and right inverse laws.
+
+The predicate `IsAdmissible ζ z` excludes singular pairs, such as `ζ = z`
+in the scalar complex model.
 -/
 structure NoncommutativeCauchyKernel
-    (Point Value Kernel : Type*) where
+    (Param Point Value : Type*) [Ring Value] where
 
-  /-- Kernel readout, morally `(ζ - z)⁻¹`. -/
+  /-- Pairs where the kernel exists. -/
+  IsAdmissible :
+    Param → Point → Prop
+
+  /-- Difference element, morally `ζ - z`. -/
+  diff :
+    Param → Point → Value
+
+  /-- Kernel element, morally `(ζ - z)⁻¹`. -/
   kernel :
-    Point → Point → Kernel
+    Param → Point → Value
 
-  /-- Left application of the kernel to a value. -/
-  applyLeft :
-    Kernel → Value → Value
+  /-- Left inverse law: `(ζ-z) * (ζ-z)⁻¹ = 1`. -/
+  left_inverse :
+    ∀ ζ z,
+      IsAdmissible ζ z →
+        diff ζ z * kernel ζ z = 1
 
-  /-- Right application of the kernel to a value. -/
-  applyRight :
-    Value → Kernel → Value
-
-  /-- Resolvent/kernel existence law. -/
-  resolvent_law : Prop
-
-  /-- Proof/certificate of the resolvent law. -/
-  resolvent_certificate :
-    resolvent_law
+  /-- Right inverse law: `(ζ-z)⁻¹ * (ζ-z) = 1`. -/
+  right_inverse :
+    ∀ ζ z,
+      IsAdmissible ζ z →
+        kernel ζ z * diff ζ z = 1
 
 namespace NoncommutativeCauchyKernel
 
-variable {Point Value Kernel : Type*}
-variable (K : NoncommutativeCauchyKernel Point Value Kernel)
+variable {Param Point Value : Type*} [Ring Value]
+variable (K : NoncommutativeCauchyKernel Param Point Value)
 
-/-- The stored resolvent/kernel existence law is available as a proof. -/
-theorem resolvent_valid :
-    K.resolvent_law :=
-  K.resolvent_certificate
+/-- The difference times the kernel is `1` on admissible pairs. -/
+theorem diff_mul_kernel
+    (ζ : Param)
+    (z : Point)
+    (h : K.IsAdmissible ζ z) :
+    K.diff ζ z * K.kernel ζ z = 1 :=
+  K.left_inverse ζ z h
+
+/-- The kernel times the difference is `1` on admissible pairs. -/
+theorem kernel_mul_diff
+    (ζ : Param)
+    (z : Point)
+    (h : K.IsAdmissible ζ z) :
+    K.kernel ζ z * K.diff ζ z = 1 :=
+  K.right_inverse ζ z h
+
+/-- A kernel with two-sided inverse laws is unique on admissible pairs. -/
+theorem kernel_unique
+    (ζ : Param)
+    (z : Point)
+    (hadm : K.IsAdmissible ζ z)
+    (hInv : Value)
+    (_h_left : K.diff ζ z * hInv = 1)
+    (h_right : hInv * K.diff ζ z = 1) :
+    hInv = K.kernel ζ z := by
+  calc
+    hInv = hInv * 1 := by
+      rw [mul_one]
+    _ = hInv * (K.diff ζ z * K.kernel ζ z) := by
+      rw [K.left_inverse ζ z hadm]
+    _ = (hInv * K.diff ζ z) * K.kernel ζ z := by
+      rw [mul_assoc]
+    _ = 1 * K.kernel ζ z := by
+      rw [h_right]
+    _ = K.kernel ζ z := by
+      rw [one_mul]
 
 end NoncommutativeCauchyKernel
+
+/-! ## 9. Cauchy integral formula socket -/
 
 /--
 Cauchy integral formula socket.
 
-This is deliberately witness-gated. It is not a theorem of the abstract
-Stokes backend alone. It needs a concrete kernel, domain, orientation,
-regularity, and resolvent calculus.
+This remains witness-gated because the formula requires concrete domain,
+orientation, regularity, integral, and kernel hypotheses.
+
+The kernel itself is not vacuous: it carries explicit two-sided inverse laws
+on admissible pairs.
 -/
 structure CauchyIntegralFormulaDatum
-    (Region Point Tangent Value Kernel : Type*)
-    [AddCommGroup Value] [Module ℝ Value]
+    (Region Param Point Tangent Value : Type*)
+    [Ring Value]
+    [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value)
-    (K : NoncommutativeCauchyKernel Point Value Kernel) where
+    (K : NoncommutativeCauchyKernel Param Point Value) where
 
-  /-- Formula law, model-specific. -/
+  /--
+  Whether the kernel acts on the left, on the right, or in a two-sided
+  calibrated way.
+  -/
+  side : OperatorAnalyticSide
+
+  /--
+  Model-specific Cauchy formula law.
+
+  This may later be expanded into an actual boundary integral identity.
+  -/
   cauchy_formula_law : Prop
 
   /-- Proof/certificate of the formula law. -/
@@ -645,12 +949,13 @@ structure CauchyIntegralFormulaDatum
 namespace CauchyIntegralFormulaDatum
 
 variable
-    {Region Point Tangent Value Kernel : Type*}
-    [AddCommGroup Value] [Module ℝ Value]
+    {Region Param Point Tangent Value : Type*}
+    [Ring Value]
+    [Module ℝ Value]
     {I : GeometricIntegralBackend Region Point Tangent Value}
-    {K : NoncommutativeCauchyKernel Point Value Kernel}
+    {K : NoncommutativeCauchyKernel Param Point Value}
 
-variable (C : CauchyIntegralFormulaDatum Region Point Tangent Value Kernel I K)
+variable (C : CauchyIntegralFormulaDatum Region Param Point Tangent Value I K)
 
 /-- The stored Cauchy integral formula law is available as a proof. -/
 theorem cauchy_formula_valid :
@@ -658,5 +963,262 @@ theorem cauchy_formula_valid :
   C.cauchy_formula_certificate
 
 end CauchyIntegralFormulaDatum
+
+/-! ## 10. Scalar complex Cauchy kernel -/
+
+/--
+The scalar complex Cauchy kernel.
+
+Admissibility excludes the diagonal `ζ = z`, equivalently `ζ - z ≠ 0`.
+-/
+def scalarComplexCauchyKernel :
+    NoncommutativeCauchyKernel ℂ ℂ ℂ where
+  IsAdmissible := fun ζ z => ζ - z ≠ 0
+  diff := fun ζ z => ζ - z
+  kernel := fun ζ z => (ζ - z)⁻¹
+  left_inverse := by
+    intro ζ z h
+    exact mul_inv_cancel₀ h
+  right_inverse := by
+    intro ζ z h
+    exact inv_mul_cancel₀ h
+
+namespace scalarComplexCauchyKernel
+
+/-- Admissibility for the scalar complex kernel is exactly nonvanishing of `ζ - z`. -/
+theorem admissible_iff
+    (ζ z : ℂ) :
+    scalarComplexCauchyKernel.IsAdmissible ζ z ↔ ζ - z ≠ 0 :=
+  Iff.rfl
+
+/-- Scalar complex difference times Cauchy kernel is `1`. -/
+theorem diff_mul_kernel
+    (ζ z : ℂ)
+    (h : ζ - z ≠ 0) :
+    scalarComplexCauchyKernel.diff ζ z *
+      scalarComplexCauchyKernel.kernel ζ z = 1 :=
+  scalarComplexCauchyKernel.left_inverse ζ z h
+
+/-- Scalar complex Cauchy kernel times difference is `1`. -/
+theorem kernel_mul_diff
+    (ζ z : ℂ)
+    (h : ζ - z ≠ 0) :
+    scalarComplexCauchyKernel.kernel ζ z *
+      scalarComplexCauchyKernel.diff ζ z = 1 :=
+  scalarComplexCauchyKernel.right_inverse ζ z h
+
+/-- Uniqueness of the scalar complex Cauchy kernel. -/
+theorem kernel_unique
+    (ζ z : ℂ)
+    (h : ζ - z ≠ 0)
+    (u : ℂ)
+    (h_left : (ζ - z) * u = 1)
+    (h_right : u * (ζ - z) = 1) :
+    u = scalarComplexCauchyKernel.kernel ζ z :=
+  NoncommutativeCauchyKernel.kernel_unique
+    scalarComplexCauchyKernel ζ z h u h_left h_right
+
+end scalarComplexCauchyKernel
+
+/-! ## 11. General supplied operator resolvent kernel -/
+
+/--
+Ring-level phase linearity for an operator target.
+
+`T` is phase-linear relative to `K` when it commutes with `K`.
+-/
+def PhaseLinearValue
+    {Value : Type*} [Mul Value]
+    (K T : Value) : Prop :=
+  T * K = K * T
+
+/-- A scalar element in a complex algebra. -/
+def scalarOperator
+    {Value : Type*} [Ring Value] [Algebra ℂ Value]
+    (ζ : ℂ) : Value :=
+  algebraMap ℂ Value ζ
+
+/-- The operator resolvent difference: `ζ • 1 - Z`. -/
+def operatorResolventDiff
+    {Value : Type*} [Ring Value] [Algebra ℂ Value]
+    (ζ : ℂ)
+    (Z : Value) : Value :=
+  scalarOperator ζ - Z
+
+/-- Scalar operators commute with all elements of a complex algebra. -/
+theorem scalarOperator_commutes
+    {Value : Type*} [Ring Value] [Algebra ℂ Value]
+    (ζ : ℂ)
+    (Z : Value) :
+    scalarOperator ζ * Z = Z * scalarOperator ζ := by
+  exact Algebra.commutes ζ Z
+
+/-- Scalar operators are phase-linear relative to every phase axis. -/
+theorem scalarOperator_phaseLinear
+    {Value : Type*} [Ring Value] [Algebra ℂ Value]
+    (K : Value)
+    (ζ : ℂ) :
+    PhaseLinearValue K (scalarOperator ζ) := by
+  dsimp [PhaseLinearValue]
+  exact scalarOperator_commutes ζ K
+
+/-- If `Z` commutes with `K`, then `ζ•1 - Z` also commutes with `K`. -/
+theorem operatorResolventDiff_phaseLinear
+    {Value : Type*} [Ring Value] [Algebra ℂ Value]
+    {K Z : Value}
+    (ζ : ℂ)
+    (hZ : PhaseLinearValue K Z) :
+    PhaseLinearValue K (operatorResolventDiff ζ Z) := by
+  dsimp [PhaseLinearValue, operatorResolventDiff]
+  calc
+    (scalarOperator ζ - Z) * K
+        = scalarOperator ζ * K - Z * K := by
+          rw [sub_mul]
+    _ = K * scalarOperator ζ - K * Z := by
+          rw [scalarOperator_commutes ζ K, hZ]
+    _ = K * (scalarOperator ζ - Z) := by
+          rw [mul_sub]
+
+/--
+If `B` is invertible with inverse `Binv`, and `X` commutes with `B`, then
+`X` commutes with `Binv`.
+-/
+theorem inverse_commutes_of_commutes
+    {Value : Type*} [Monoid Value]
+    {X B Binv : Value}
+    (h_right : B * Binv = 1)
+    (h_left : Binv * B = 1)
+    (hXB : X * B = B * X) :
+    X * Binv = Binv * X := by
+  calc
+    X * Binv
+        = 1 * (X * Binv) := by
+          rw [one_mul]
+    _ = (Binv * B) * (X * Binv) := by
+          rw [h_left]
+    _ = Binv * (B * X) * Binv := by
+          simp only [mul_assoc]
+    _ = Binv * (X * B) * Binv := by
+          rw [hXB.symm]
+    _ = (Binv * X) * (B * Binv) := by
+          simp only [mul_assoc]
+    _ = (Binv * X) * 1 := by
+          rw [h_right]
+    _ = Binv * X := by
+          rw [mul_one]
+
+/-- If a phase-linear element has a two-sided inverse, its inverse is phase-linear. -/
+theorem inverse_phaseLinear_of_twoSided_inverse
+    {Value : Type*} [Ring Value]
+    {K B Binv : Value}
+    (hB : PhaseLinearValue K B)
+    (h_right : B * Binv = 1)
+    (h_left : Binv * B = 1) :
+    PhaseLinearValue K Binv := by
+  dsimp [PhaseLinearValue] at hB ⊢
+  have h :
+      K * Binv = Binv * K :=
+    inverse_commutes_of_commutes
+      (X := K)
+      (B := B)
+      (Binv := Binv)
+      h_right
+      h_left
+      hB.symm
+  exact h.symm
+
+/--
+A supplied operator resolvent kernel.
+
+This is the general noncommutative operator version of `(ζ•1 - Z)⁻¹`.
+
+The inverse is not postulated as a vague law. It is carried by explicit
+left/right inverse equations.
+-/
+structure SuppliedOperatorResolventKernel
+    (Value : Type*) [Ring Value] [Algebra ℂ Value] where
+
+  /-- Admissible spectral parameter/operator pairs. -/
+  IsAdmissible :
+    ℂ → Value → Prop
+
+  /-- The supplied resolvent inverse. -/
+  kernel :
+    ℂ → Value → Value
+
+  /-- Left inverse law. -/
+  left_inverse :
+    ∀ ζ Z,
+      IsAdmissible ζ Z →
+        operatorResolventDiff ζ Z * kernel ζ Z = 1
+
+  /-- Right inverse law. -/
+  right_inverse :
+    ∀ ζ Z,
+      IsAdmissible ζ Z →
+        kernel ζ Z * operatorResolventDiff ζ Z = 1
+
+namespace SuppliedOperatorResolventKernel
+
+variable {Value : Type*} [Ring Value] [Algebra ℂ Value]
+variable (R : SuppliedOperatorResolventKernel Value)
+
+/-- Convert a supplied operator resolvent into a noncommutative Cauchy kernel. -/
+def toCauchyKernel :
+    NoncommutativeCauchyKernel ℂ Value Value where
+  IsAdmissible := R.IsAdmissible
+  diff := operatorResolventDiff
+  kernel := R.kernel
+  left_inverse := R.left_inverse
+  right_inverse := R.right_inverse
+
+/-- Difference times resolvent kernel is identity on admissible pairs. -/
+theorem diff_mul_kernel
+    (ζ : ℂ)
+    (Z : Value)
+    (h : R.IsAdmissible ζ Z) :
+    operatorResolventDiff ζ Z * R.kernel ζ Z = 1 :=
+  R.left_inverse ζ Z h
+
+/-- Resolvent kernel times difference is identity on admissible pairs. -/
+theorem kernel_mul_diff
+    (ζ : ℂ)
+    (Z : Value)
+    (h : R.IsAdmissible ζ Z) :
+    R.kernel ζ Z * operatorResolventDiff ζ Z = 1 :=
+  R.right_inverse ζ Z h
+
+/-- Uniqueness of the supplied operator resolvent kernel. -/
+theorem kernel_unique
+    (ζ : ℂ)
+    (Z : Value)
+    (h : R.IsAdmissible ζ Z)
+    (U : Value)
+    (h_left : operatorResolventDiff ζ Z * U = 1)
+    (h_right : U * operatorResolventDiff ζ Z = 1) :
+    U = R.kernel ζ Z :=
+  NoncommutativeCauchyKernel.kernel_unique
+    R.toCauchyKernel ζ Z h U h_left h_right
+
+/--
+If `Z` is phase-linear relative to `K`, then its supplied resolvent kernel is
+also phase-linear.
+-/
+theorem kernel_phaseLinear_of_phaseLinear
+    {K Z : Value}
+    (ζ : ℂ)
+    (h : R.IsAdmissible ζ Z)
+    (hZ : PhaseLinearValue K Z) :
+    PhaseLinearValue K (R.kernel ζ Z) := by
+  have hdiff :
+      PhaseLinearValue K (operatorResolventDiff ζ Z) :=
+    operatorResolventDiff_phaseLinear ζ hZ
+  exact
+    inverse_phaseLinear_of_twoSided_inverse
+      hdiff
+      (R.left_inverse ζ Z h)
+      (R.right_inverse ζ Z h)
+
+end SuppliedOperatorResolventKernel
 
 end InfoGeometry.Geometry.BilingualAnalyticity

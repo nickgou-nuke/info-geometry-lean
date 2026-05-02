@@ -421,7 +421,7 @@ def _parse_args() -> argparse.Namespace:
         "--candidate-format", choices=["snapshot", "arango-json"], default="arango-json"
     )
 
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--username", default="root")
     parser.add_argument("--password", default="")

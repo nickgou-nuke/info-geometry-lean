@@ -720,6 +720,22 @@ structure OperatorSymmetryAction
     ∀ (g h : G) (x : Op),
       act (g * h) x = act g (act h x)
 
+/-- Convert a linear operator symmetry action into a ring-automorphism action. -/
+def toSymmetryAction
+    {G : Type uG} {Op : Type uOp}
+    [Group G] [Ring Op] [Module ℝ Op]
+    (S : OperatorSymmetryAction G Op) : SymmetryAction G Op where
+  act g := {
+    toFun := S.act g
+    invFun := S.act g⁻¹
+    left_inv := by intro x; rw [← S.act_mul, inv_mul_cancel, S.act_id]
+    right_inv := by intro x; rw [← S.act_mul, mul_inv_cancel, S.act_id]
+    map_add' := (S.act g).map_add
+    map_mul' := S.map_mul g
+  }
+  act_one x := S.act_id x
+  act_mul g h x := S.act_mul g h x
+
 namespace OperatorSymmetryAction
 
 variable
@@ -751,6 +767,14 @@ theorem act_map_sub
     (x y : Op) :
     S.act g (x - y) = S.act g x - S.act g y :=
   (S.act g).map_sub x y
+
+@[simp]
+theorem act_smul
+    (g : G)
+    (c : ℝ)
+    (x : Op) :
+    S.act g (c • x) = c • S.act g x :=
+  (S.act g).map_smul c x
 
 /-! ### Invariant operators -/
 

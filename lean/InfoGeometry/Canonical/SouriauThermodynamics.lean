@@ -623,4 +623,30 @@ theorem souriau_canonical_hessian_eq_variance
   exact potential_second_derivative_eq_variance
     ({ energy := energy } : GrandCanonicalParams α) β
 
+/--
+Souriau-Cartan temperature shadow.
+-/
+structure SouriauCartanTemperature where
+  beta : ℝ
+  mu : ℝ
+
+/--
+The finite Gibbs-Souriau partition viewed as a thermal character evaluation.
+-/
+@[rep_depth transport]
+noncomputable def souriauPartitionAsCharacter
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) : ℝ :=
+  souriauPartition M T
+
+/--
+Agreement between character evaluation and the finite partition function.
+-/
+@[rep_depth transport]
+theorem souriauPartitionAsCharacter_eq_souriauPartition
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) :
+    souriauPartitionAsCharacter M T = souriauPartition M T := by
+  rfl
+
 end InfoGeometry.Canonical.SouriauThermodynamics

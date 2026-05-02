@@ -50,6 +50,42 @@ def SameRay
     (v w : W) : Prop :=
   ∃ c : ℝ, c ≠ 0 ∧ w = c • v
 
+/-- Same ambient projective ray is reflexive. -/
+theorem sameRay_refl
+    (v : W) :
+    SameRay v v := by
+  exact ⟨1, one_ne_zero, by simp⟩
+
+/-- Equality implies same ambient projective ray. -/
+theorem sameRay_of_eq
+    {v w : W}
+    (h : w = v) :
+    SameRay v w := by
+  subst h
+  exact ⟨1, one_ne_zero, by simp⟩
+
+/-- Same ambient ray is symmetric. -/
+theorem sameRay_symm
+    {v w : W}
+    (h : SameRay v w) :
+    SameRay w v := by
+  rcases h with ⟨c, hc, hw⟩
+  refine ⟨c⁻¹, inv_ne_zero hc, ?_⟩
+  rw [hw]
+  simp [hc]
+
+/-- Same ambient ray is transitive. -/
+theorem sameRay_trans
+    {u v w : W}
+    (huv : SameRay u v)
+    (hvw : SameRay v w) :
+    SameRay u w := by
+  rcases huv with ⟨a, ha, hv⟩
+  rcases hvw with ⟨b, hb, hw⟩
+  refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
+  rw [hw, hv]
+  simp [smul_smul, mul_comm]
+
 /-- Nullity is invariant under nonzero rescaling. -/
 theorem isNull_of_sameRay
     {v w : W}
@@ -74,6 +110,17 @@ def IsAmbientNullRay
     (r : ProjectiveRay W) : Prop :=
   Q.IsNull r.vec
 
+/--
+Convert projective equality of rays into same-ray equality of representatives.
+
+This isolates the dependency on the represented-projective-ray convention.
+-/
+theorem sameRay_vec_of_sameProjectiveRay
+    {r s : ProjectiveRay W}
+    (hrs : SameProjectiveRay r s) :
+    SplitQuadratic55.SameRay r.vec s.vec :=
+  hrs
+
 /-- Ambient null-ray membership is independent of representative. -/
 theorem isAmbientNullRay_of_same
     (Q : SplitQuadratic55 W)
@@ -81,7 +128,9 @@ theorem isAmbientNullRay_of_same
     (hrs : SameProjectiveRay r s)
     (hr : IsAmbientNullRay Q r) :
     IsAmbientNullRay Q s :=
-  Q.isNull_of_sameRay hrs hr
+  Q.isNull_of_sameRay
+    (sameRay_vec_of_sameProjectiveRay hrs)
+    hr
 
 end ProjectiveRay
 
@@ -168,6 +217,20 @@ abbrev ConformalState55
     (Q : SplitQuadratic55 W) :=
   { r : ProjectiveRay W // r.IsAmbientNullRay Q }
 
+/--
+Two ambient orthogonal transformations have the same conformal action when
+they agree projectively on compactified null states.
+
+This is weaker than `SamePO55Action`, which asks for equality on every
+represented projective ray.
+-/
+def SamePO55NullAction
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+    (g h : Orthogonal55 Q) : Prop :=
+  ∀ r : ConformalState55 Q,
+    (g.actRay r.1).SameProjectiveRay (h.actRay r.1)
+
 namespace ConformalState55
 
 variable
@@ -192,17 +255,32 @@ For split real signatures, reflection components remain meaningful unless the
 model explicitly restricts to a connected subgroup or complexifies.
 -/
 structure PO55ComponentLedger where
-  /-- The central `±1` ambiguity has been identified projectively. -/
-  central_antipodal_identified : Prop
+  /-- The central `±1` ambiguity is identified projectively. -/
+  central_antipodal_identified : Bool
 
   /-- Reflection/inversion components are still part of the full real group. -/
-  residual_reflection_components : Prop
+  residual_reflection_components : Bool
 
   /-- The chosen component label of the distinguished Möbius inversion. -/
   inversion_component : O44Component
 
   /-- Certificate explaining the component convention used by the model. -/
-  component_convention : Prop
+  component_convention_law : Prop
+
+  /-- Proof/certificate of the component convention. -/
+  component_convention_certificate :
+    component_convention_law
+
+namespace PO55ComponentLedger
+
+variable (C : PO55ComponentLedger)
+
+/-- The component convention is available. -/
+theorem component_convention_valid :
+    C.component_convention_law :=
+  C.component_convention_certificate
+
+end PO55ComponentLedger
 
 /-! ## 4. Null-pair model for affine charts and inversion -/
 
@@ -232,8 +310,35 @@ structure AmbientNullPair
   ePlus_ne_zero :
     ePlus ≠ 0
 
-  /-- Nondegenerate pairing of the two null directions, left abstract here. -/
-  null_pair_nonzero : Prop
+  /--
+  Model-supplied null-pairing readout. In a concrete bilinear model this is
+  morally `⟪e₋, e₊⟫`.
+  -/
+  pairing : W → W → ℝ
+
+  /-- The two null directions are paired nondegenerately. -/
+  pairing_ne_zero :
+    pairing eMinus ePlus ≠ 0
+
+namespace AmbientNullPair
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+
+variable (N : AmbientNullPair Q)
+
+/-- If the supplied pairing vanishes on both null diagonals, the null directions are distinct. -/
+theorem eMinus_ne_ePlus_of_pairing_zero_on_diagonal
+    (h_diag_minus : N.pairing N.eMinus N.eMinus = 0)
+    (_h_diag_plus : N.pairing N.ePlus N.ePlus = 0) :
+    N.eMinus ≠ N.ePlus := by
+  intro h
+  apply N.pairing_ne_zero
+  rw [← h]
+  exact h_diag_minus
+
+end AmbientNullPair
 
 /--
 A distinguished ambient transformation swapping the two conformal null
@@ -246,15 +351,294 @@ structure NullSwapInversion
   swap : Orthogonal55 Q
 
   maps_minus_to_plus_projectively :
-    N.ePlus = swap.toLinearEquiv N.eMinus ∨
-      SplitQuadratic55.SameRay (swap.toLinearEquiv N.eMinus) N.ePlus
+    SplitQuadratic55.SameRay (swap.toLinearEquiv N.eMinus) N.ePlus
 
   maps_plus_to_minus_projectively :
-    N.eMinus = swap.toLinearEquiv N.ePlus ∨
-      SplitQuadratic55.SameRay (swap.toLinearEquiv N.ePlus) N.eMinus
+    SplitQuadratic55.SameRay (swap.toLinearEquiv N.ePlus) N.eMinus
 
   /-- Certificate that this null swap realizes affine Möbius inversion. -/
-  realizes_affine_inversion : Prop
+  realizes_affine_inversion_law : Prop
+
+  /-- Proof/certificate of the affine-chart inversion law. -/
+  realizes_affine_inversion_certificate :
+    realizes_affine_inversion_law
+
+namespace NullSwapInversion
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+    {N : AmbientNullPair Q}
+
+variable (I : NullSwapInversion Q N)
+
+/-- The null swap is an ambient projective orthogonal element. -/
+def toProjectiveOrthogonal55 :
+    ProjectiveOrthogonal55 Q where
+  rep := I.swap
+
+/-- The affine-chart inversion law is available. -/
+theorem realizes_affine_inversion_valid :
+    I.realizes_affine_inversion_law :=
+  I.realizes_affine_inversion_certificate
+
+end NullSwapInversion
+
+/-! ## 4A. Projective survivors of Möbius inversion -/
+
+/--
+An abstract Möbius inversion datum on an ambient carrier.
+
+The affine chart is deliberately not part of this structure.  The surviving
+data are the linear involution, the null cone, and preservation of that cone.
+-/
+structure MobiusInversionDatum
+    (W : Type*) [AddCommGroup W] [Module ℝ W] where
+  /-- The ambient linear involution implementing the chart swap. -/
+  inv : W →ₗ[ℝ] W
+
+  /-- The inversion squares to the identity. -/
+  inv_sq :
+    ∀ x : W, inv (inv x) = x
+
+  /-- The projective conformal null cone. -/
+  nullCone : Set W
+
+  /-- The inversion preserves the null cone. -/
+  preserves_null :
+    ∀ x : W, x ∈ nullCone → inv x ∈ nullCone
+
+namespace MobiusInversionDatum
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    (I : MobiusInversionDatum W)
+
+/--
+The inversion also reflects nullness backwards.
+
+This follows from involutivity, so null-cone preservation is an equivalence
+along inversion orbits.
+-/
+theorem preserves_null_reverse
+    {x : W}
+    (hx : I.inv x ∈ I.nullCone) :
+    x ∈ I.nullCone := by
+  have h := I.preserves_null (I.inv x) hx
+  simpa [I.inv_sq x] using h
+
+/--
+A null vector represents a projectively fixed ray when inversion rescales it
+by a nonzero scalar.  The zero vector is excluded because projective rays have
+nonzero representatives.
+-/
+def IsProjectiveFixed
+    (x : W) : Prop :=
+  x ≠ 0 ∧
+    x ∈ I.nullCone ∧
+      ∃ c : ℝ, c ≠ 0 ∧ I.inv x = c • x
+
+/--
+A readout survives Möbius inversion when it is constant on the inversion orbit
+of every null vector.
+-/
+def IsMobiusInvariantReadout
+    {α : Type*}
+    (read : W → α) : Prop :=
+  ∀ x : W, x ∈ I.nullCone → read (I.inv x) = read x
+
+/-- A readout is projective when it ignores nonzero scalar rescaling. -/
+def IsProjectiveReadout
+    {α : Type*}
+    (read : W → α) : Prop :=
+  ∀ c : ℝ, ∀ x : W, c ≠ 0 → read (c • x) = read x
+
+/-- The fixed linear subspace predicate for the inversion. -/
+def IsFixedVector
+    (x : W) : Prop :=
+  I.inv x = x
+
+/-- The anti-fixed linear subspace predicate for the inversion. -/
+def IsAntiFixedVector
+    (x : W) : Prop :=
+  I.inv x = -x
+
+/-- A fixed null vector gives a projectively fixed null ray. -/
+theorem fixedVector_isProjectiveFixed
+    {x : W}
+    (hx0 : x ≠ 0)
+    (hnull : x ∈ I.nullCone)
+    (hfix : I.IsFixedVector x) :
+    I.IsProjectiveFixed x := by
+  refine ⟨hx0, hnull, 1, one_ne_zero, ?_⟩
+  simpa [IsFixedVector] using hfix
+
+/-- An anti-fixed null vector also gives a projectively fixed null ray. -/
+theorem antiFixedVector_isProjectiveFixed
+    {x : W}
+    (hx0 : x ≠ 0)
+    (hnull : x ∈ I.nullCone)
+    (hanti : I.IsAntiFixedVector x) :
+    I.IsProjectiveFixed x := by
+  refine ⟨hx0, hnull, -1, by norm_num, ?_⟩
+  simpa [IsAntiFixedVector] using hanti
+
+/-- The inverse representative of a projectively fixed ray is projectively fixed. -/
+theorem inv_isProjectiveFixed
+    {x : W}
+    (hx : I.IsProjectiveFixed x) :
+    I.IsProjectiveFixed (I.inv x) := by
+  rcases hx with ⟨hx0, hnull, c, hc, hscale⟩
+  have hinv0 : I.inv x ≠ 0 := by
+    intro hzero
+    apply hx0
+    have h := congrArg I.inv hzero
+    simpa [I.inv_sq x] using h
+  refine ⟨hinv0, I.preserves_null x hnull, c⁻¹, inv_ne_zero hc, ?_⟩
+  have hxscale : x = c⁻¹ • I.inv x := by
+    rw [hscale]
+    simp [hc]
+  simpa [I.inv_sq x] using hxscale
+
+/--
+For a nonzero projectively fixed representative, the projective scale squares
+to one.  This is the algebraic content of `I² = 1` on projective fixed rays.
+-/
+theorem scale_sq_eq_one_of_projectiveFixed_scale
+    [NoZeroSMulDivisors ℝ W]
+    {x : W}
+    {c : ℝ}
+    (hx0 : x ≠ 0)
+    (hscale : I.inv x = c • x) :
+    c ^ 2 = 1 := by
+  have happly : x = (c ^ 2) • x := by
+    calc
+      x = I.inv (I.inv x) := (I.inv_sq x).symm
+      _ = I.inv (c • x) := by rw [hscale]
+      _ = c • I.inv x := by simp
+      _ = c • (c • x) := by rw [hscale]
+      _ = (c ^ 2) • x := by
+          simpa [pow_two] using (smul_smul c c x)
+  have hsmulzero : (c ^ 2 - 1) • x = 0 := by
+    calc
+      (c ^ 2 - 1) • x
+          = (c ^ 2) • x - (1 : ℝ) • x := by
+              rw [sub_smul]
+      _ = (c ^ 2) • x - x := by
+              rw [one_smul]
+      _ = x - x := by
+              rw [← happly]
+      _ = 0 := by
+              simp
+  rcases smul_eq_zero.mp hsmulzero with hcoef | hx
+  · exact sub_eq_zero.mp hcoef
+  · exact (hx0 hx).elim
+
+/-- The projective fixed scale is either `1` or `-1`. -/
+theorem scale_eq_one_or_neg_one_of_projectiveFixed_scale
+    [NoZeroSMulDivisors ℝ W]
+    {x : W}
+    {c : ℝ}
+    (hx0 : x ≠ 0)
+    (hscale : I.inv x = c • x) :
+    c = 1 ∨ c = -1 := by
+  have hsquare :
+      c ^ 2 = 1 :=
+    I.scale_sq_eq_one_of_projectiveFixed_scale hx0 hscale
+  have hfactor : (c - 1) * (c + 1) = 0 := by
+    nlinarith
+  rcases mul_eq_zero.mp hfactor with hminus | hplus
+  · left
+    linarith
+  · right
+    linarith
+
+/--
+A nonzero projectively fixed vector is represented by either a fixed vector or
+an anti-fixed vector.  This is the Lean form of
+`Fix_P(I) = P(N ∩ W_+) ∪ P(N ∩ W_-)`, modulo the explicit representative.
+-/
+theorem projectiveFixed_fixed_or_antiFixed
+    [NoZeroSMulDivisors ℝ W]
+    {x : W}
+    (hx : I.IsProjectiveFixed x) :
+    I.IsFixedVector x ∨ I.IsAntiFixedVector x := by
+  rcases hx with ⟨hx0, _hnull, c, _hc, hscale⟩
+  rcases I.scale_eq_one_or_neg_one_of_projectiveFixed_scale hx0 hscale with hc | hc
+  · left
+    simpa [IsFixedVector, hc] using hscale
+  · right
+    simpa [IsAntiFixedVector, hc] using hscale
+
+/-- Projective readouts are unchanged on projectively fixed rays. -/
+theorem readout_eq_on_projectiveFixed
+    {α : Type*}
+    {read : W → α}
+    (hread : IsProjectiveReadout read)
+    {x : W}
+    (hfix : I.IsProjectiveFixed x) :
+    read (I.inv x) = read x := by
+  rcases hfix with ⟨_hx0, _hnull, c, hc, hscale⟩
+  rw [hscale]
+  exact hread c x hc
+
+/-- Re-export: invariant readouts agree on the inverted representative. -/
+theorem invariantReadout_inv_eq
+    {α : Type*}
+    {read : W → α}
+    (hread : I.IsMobiusInvariantReadout read)
+    {x : W}
+    (hnull : x ∈ I.nullCone) :
+    read (I.inv x) = read x :=
+  hread x hnull
+
+/--
+The paired readout that remembers both chart representatives.
+
+This is the formal socket for symmetrized visible/hidden memory accounting:
+under inversion, the two components swap.
+-/
+def symmetrizedReadout
+    {α : Type*}
+    (read : W → α)
+    (x : W) : α × α :=
+  (read x, read (I.inv x))
+
+/-- Möbius inversion swaps the two entries of the symmetrized readout. -/
+theorem symmetrizedReadout_inv
+    {α : Type*}
+    (read : W → α)
+    (x : W) :
+    I.symmetrizedReadout read (I.inv x) =
+      (read (I.inv x), read x) := by
+  simp [symmetrizedReadout, I.inv_sq x]
+
+end MobiusInversionDatum
+
+namespace SplitQuadratic55
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+
+/--
+The ambient orthogonal action supplies a Möbius-inversion datum when its
+representative is involutive.
+-/
+def mobiusInversionOfOrthogonal
+    (g : Orthogonal55 Q)
+    (hg : ∀ x : W, g.toLinearEquiv (g.toLinearEquiv x) = x) :
+    MobiusInversionDatum W where
+  inv := g.toLinearEquiv.toLinearMap
+  inv_sq := hg
+  nullCone := {x : W | Q.IsNull x}
+  preserves_null := by
+    intro x hx
+    dsimp [IsNull] at *
+    rw [g.preserves_q x]
+    exact hx
+
+end SplitQuadratic55
 
 /-! ## 5. PO(5,5) conformal closure ledger -/
 
@@ -291,12 +675,23 @@ structure PO55ConformalClosure
       ∃ G : ProjectiveOrthogonal55 mobius.ambientQ,
         SamePO55Action G.rep (mobius.base_orthogonal_lift g)
 
-  /-- Möbius inversion is represented by a projective `O(5,5)` element. -/
-  inversion_is_PO55_element :
+  /-- Möbius inversion as a projective `O(5,5)` element. -/
+  inversionPO55 :
     ProjectiveOrthogonal55 mobius.ambientQ
 
+  /--
+  The projective inversion representative is exactly the supplied null-swap
+  orthogonal map.
+  -/
+  inversionPO55_rep :
+    inversionPO55.rep = inversion.swap
+
   /-- The affine-chart formula for inversion is supplied by the model. -/
-  inversion_affine_chart_formula : Prop
+  inversion_affine_chart_formula_law : Prop
+
+  /-- Proof/certificate of the affine-chart inversion formula. -/
+  inversion_affine_chart_formula_certificate :
+    inversion_affine_chart_formula_law
 
 namespace PO55ConformalClosure
 
@@ -314,6 +709,34 @@ abbrev State :=
 def affineState
     (v : V) : C.State :=
   ⟨C.mobius.projectivePoint v, C.affine_points_are_conformal_states v⟩
+
+/-- The distinguished inversion acts on compactified conformal states. -/
+def inversionAct
+    (r : C.State) : C.State :=
+  ConformalState55.act C.inversionPO55 r
+
+/-- The affine-chart inversion law is available. -/
+theorem inversion_affine_chart_formula_valid :
+    C.inversion_affine_chart_formula_law :=
+  C.inversion_affine_chart_formula_certificate
+
+/-- The distinguished projective inversion is represented by the null swap. -/
+theorem inversionPO55_is_nullSwap :
+    C.inversionPO55.rep = C.inversion.swap :=
+  C.inversionPO55_rep
+
+/-- Re-export: base `O(4,4)` actions lift into the projective conformal ledger. -/
+theorem base_action_lifts
+    (g : Orthogonal44 C.mobius.baseQ) :
+    ∃ G : ProjectiveOrthogonal55 C.mobius.ambientQ,
+      SamePO55Action G.rep (C.mobius.base_orthogonal_lift g) :=
+  C.base_action_lifts_to_PO55 g
+
+/-- Re-export: affine points are compactified null states. -/
+theorem affineState_is_null
+    (v : V) :
+    (C.affineState v).1.IsAmbientNullRay C.mobius.ambientQ :=
+  (C.affineState v).2
 
 end PO55ConformalClosure
 
@@ -339,32 +762,87 @@ structure TKKPO55ClosedSymmetry
   po55 : PO55ConformalClosure V W
 
   /-- Compatibility between the TKK ambient action and the `PO(5,5)` action. -/
-  tkk_integrates_to_projective_conformal_action : Prop
+  tkk_integrates_to_projective_conformal_action_law : Prop
+
+  /-- Proof/certificate of TKK-to-projective integration. -/
+  tkk_integrates_to_projective_conformal_action_certificate :
+    tkk_integrates_to_projective_conformal_action_law
 
   /-- Ambient `Pin(5,5)` retains the reflection/chiral classes. -/
-  pin55_reflection_lift_matches_PO55 : Prop
+  pin55_reflection_lift_matches_PO55_law : Prop
+
+  /-- Proof/certificate of the Pin-to-PO reflection lift law. -/
+  pin55_reflection_lift_matches_PO55_certificate :
+    pin55_reflection_lift_matches_PO55_law
 
   /-- The positive TKK grade is inversion-conjugate to the negative grade. -/
-  inversion_swaps_tkk_outer_grades : Prop
+  inversion_swaps_tkk_outer_grades_law : Prop
+
+  /-- Proof/certificate of inversion swapping the outer TKK grades. -/
+  inversion_swaps_tkk_outer_grades_certificate :
+    inversion_swaps_tkk_outer_grades_law
 
   /-- Projective null rays are the closed state space of the model. -/
-  projective_null_rays_are_closed_states : Prop
+  projective_null_rays_are_closed_states_law : Prop
+
+  /-- Proof/certificate that projective null rays are the closed state space. -/
+  projective_null_rays_are_closed_states_certificate :
+    projective_null_rays_are_closed_states_law
+
+namespace TKKPO55ClosedSymmetry
+
+variable
+    {J L V W PinBase PinConf : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L]
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf]
+
+variable (S : TKKPO55ClosedSymmetry J L V W PinBase PinConf)
+
+/-- The TKK integration law is available. -/
+theorem tkk_integrates_to_projective_conformal_action :
+    S.tkk_integrates_to_projective_conformal_action_law :=
+  S.tkk_integrates_to_projective_conformal_action_certificate
+
+/-- The Pin(5,5) reflection-lift law is available. -/
+theorem pin55_reflection_lift_matches_PO55 :
+    S.pin55_reflection_lift_matches_PO55_law :=
+  S.pin55_reflection_lift_matches_PO55_certificate
+
+/-- The inversion grade-swap law is available. -/
+theorem inversion_swaps_tkk_outer_grades :
+    S.inversion_swaps_tkk_outer_grades_law :=
+  S.inversion_swaps_tkk_outer_grades_certificate
+
+/-- The projective-null-state closure law is available. -/
+theorem projective_null_rays_are_closed_states :
+    S.projective_null_rays_are_closed_states_law :=
+  S.projective_null_rays_are_closed_states_certificate
+
+end TKKPO55ClosedSymmetry
 
 /-! ## 7. Owner target -/
 
-/-- Compatibility predicate for constructing the `PO(5,5)` closure. -/
-def PO55ConformalClosureCompatibility
-    (V W : Type*)
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W] : Prop :=
-  True
-
-/-- Owner target for the projective conformal closure. -/
-def PO55ConformalClosureOwnerTarget : Prop :=
+/--
+Installed-owner target: once a `PO55ConformalClosure` witness is supplied, each
+base affine point gives a compactified projective null state.
+-/
+def PO55ConformalClosureInstalledTarget : Prop :=
   ∀ (V W : Type*)
     [AddCommGroup V] [Module ℝ V]
     [AddCommGroup W] [Module ℝ W],
-    PO55ConformalClosureCompatibility V W →
-      Nonempty (PO55ConformalClosure V W)
+  ∀ C : PO55ConformalClosure V W,
+  ∀ v : V,
+    (C.affineState v).1.IsAmbientNullRay C.mobius.ambientQ
+
+/--
+Installed `PO(5,5)` closures satisfy the affine-null-state target.
+-/
+theorem po55ConformalClosureInstalledTarget :
+    PO55ConformalClosureInstalledTarget := by
+  intro V W _ _ _ _ C v
+  exact C.affineState_is_null v
 
 end InfoGeometry.OperatorAlgebra

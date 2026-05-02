@@ -9,14 +9,16 @@ available expression-graph artifacts, and optional live Arango collection counts
 from __future__ import annotations
 
 import argparse
+import base64
 import json
+import os
 import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
 
 
-DEFAULT_ARANGO = "http://127.0.0.1:8529"
+DEFAULT_ARANGO = "http://127.0.0.1:8530"
 DEFAULT_DB = "infogeometry"
 
 
@@ -40,6 +42,13 @@ def load_json(path: Path) -> dict[str, Any] | None:
 def arango_collection_count(base_url: str, db: str, collection: str) -> int | None:
     url = f"{base_url.rstrip('/')}/_db/{db}/_api/collection/{collection}/count"
     request = urllib.request.Request(url, method="GET", headers={"Accept": "application/json"})
+    
+    username = os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME")
+    password = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD")
+    if username and password is not None:
+        token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
+        request.add_header("Authorization", f"Basic {token}")
+
     try:
         with urllib.request.urlopen(request, timeout=5) as response:
             payload = json.loads(response.read().decode("utf-8"))

@@ -1,6 +1,8 @@
 import InfoGeometry.Quantum.AttentionBridge
 import InfoGeometry.Quantum.BulkBoundary
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
+import InfoGeometry.Quantum.EntanglementMonogamy
+import InfoGeometry.Quantum.FiniteEntanglementComplexityCore
 import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Quantum.GeometricTensor

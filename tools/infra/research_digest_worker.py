@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -23,10 +24,10 @@ DEFAULT_HIVE_PASSWORD = queue_tool.DEFAULT_PASSWORD
 DEFAULT_QUEUE = "research-digest"
 DEFAULT_WORKER_ID = "research-digest-worker-001"
 DEFAULT_LEASE_SECONDS = queue_tool.DEFAULT_LEASE_SECONDS
-ALEX_ENDPOINT = "http://127.0.0.1:8530"
-ALEX_DATABASE = "alexandria"
-ALEX_USERNAME = "root"
-ALEX_PASSWORD = "alexandria_root"
+ALEX_ENDPOINT = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530")
+ALEX_DATABASE = os.environ.get("ALEXANDRIA_DATABASE", "alexandria")
+ALEX_USERNAME = os.environ.get("ARANGO_USER", "root")
+ALEX_PASSWORD = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
 ARXIV_RE = re.compile(r"\b(?:[a-z\-]+/\d{7}|\d{4}\.\d{4,5})(?:v\d+)?\b", re.I)
 MOTHERBEE_CONTEXT = ROOT / "artifacts" / "alexandria" / "hive_research_digest" / "motherbee_context_2026-04-22.md"
 BASE_DIR = ROOT / "artifacts" / "alexandria" / "research_digest_runs"

@@ -437,6 +437,163 @@ theorem boundedCayley_is_unitary :
 
 end VerifiedUnitaryResolvent
 
+/-! ## 6. Compact verified Cayley-resolvent API -/
+
+/--
+Verified algebraic data for the Cayley transform.
+
+`D` is the self-adjoint operator.
+
+`K` is the skew-adjoint phase axis.
+
+`plusInv` is the two-sided inverse of `D + K`.
+-/
+structure VerifiedCayleyResolvent
+    (A : Type*) [Ring A] [StarRing A] where
+  /-- Self-adjoint operator. -/
+  D : A
+
+  /-- Skew-adjoint phase axis. -/
+  K : A
+
+  /-- Two-sided inverse of `D + K`. -/
+  plusInv : A
+
+  /-- `D* = D`. -/
+  D_selfAdjoint :
+    star D = D
+
+  /-- `K* = -K`. -/
+  K_skewAdjoint :
+    star K = -K
+
+  /-- `D` and `K` commute. -/
+  D_comm_K :
+    D * K = K * D
+
+  /-- Right inverse law: `(D + K) * plusInv = 1`. -/
+  plus_mul_plusInv :
+    (D + K) * plusInv = 1
+
+  /-- Left inverse law: `plusInv * (D + K) = 1`. -/
+  plusInv_mul_plus :
+    plusInv * (D + K) = 1
+
+namespace VerifiedCayleyResolvent
+
+variable {A : Type*} [Ring A] [StarRing A]
+variable (R : VerifiedCayleyResolvent A)
+
+/-- The denominator `D + K`. -/
+def plus : A :=
+  R.D + R.K
+
+/-- The numerator `D - K`. -/
+def minus : A :=
+  R.D - R.K
+
+/-- The Cayley transform `U = (D - K) * (D + K)^(-1)`. -/
+def cayley : A :=
+  R.minus * R.plusInv
+
+/-- Convert to the existing unitary-resolvent API. -/
+def toVerifiedUnitaryResolvent :
+    VerifiedUnitaryResolvent A R.K R.D where
+  denomInv := R.plusInv
+  denom_right := R.plus_mul_plusInv
+  denom_left := R.plusInv_mul_plus
+  D_phase_linear := by
+    dsimp [PhaseLinear]
+    exact R.D_comm_K
+  D_selfAdjoint := R.D_selfAdjoint
+  K_skewAdjoint := R.K_skewAdjoint
+
+/-- The adjoint of `D + K` is `D - K`. -/
+theorem star_plus :
+    star R.plus = R.minus := by
+  exact VerifiedUnitaryResolvent.star_denom R.toVerifiedUnitaryResolvent
+
+/-- The adjoint of `D - K` is `D + K`. -/
+theorem star_minus :
+    star R.minus = R.plus := by
+  exact VerifiedUnitaryResolvent.star_num R.toVerifiedUnitaryResolvent
+
+/--
+The two Cayley factors commute:
+
+`(D + K)(D - K) = (D - K)(D + K)`.
+-/
+theorem plus_mul_minus_comm :
+    R.plus * R.minus = R.minus * R.plus := by
+  exact
+    D_add_K_commutes_D_sub_K
+      (A := A) (K := R.K) (D := R.D)
+      R.toVerifiedUnitaryResolvent.D_phase_linear
+
+/-- The adjoint of the inverse of `D + K` is a left inverse of `D - K`. -/
+theorem star_plusInv_mul_minus :
+    star R.plusInv * R.minus = 1 := by
+  exact
+    VerifiedUnitaryResolvent.star_denomInv_mul_num_eq_one
+      R.toVerifiedUnitaryResolvent
+
+/-- The adjoint of the inverse of `D + K` is a right inverse of `D - K`. -/
+theorem minus_mul_star_plusInv :
+    R.minus * star R.plusInv = 1 := by
+  exact
+    VerifiedUnitaryResolvent.num_mul_star_denomInv_eq_one
+      R.toVerifiedUnitaryResolvent
+
+/-- The numerator commutes with the inverse of the denominator. -/
+theorem minus_mul_plusInv_comm :
+    R.minus * R.plusInv = R.plusInv * R.minus := by
+  exact
+    cayley_factors_commute R.toVerifiedUnitaryResolvent.toVerifiedPhaseResolvent
+
+/-! ### Constructive unitarity -/
+
+/-- Right-unitarity/isometry: `U* U = 1`. -/
+theorem cayley_star_mul_cayley :
+    star R.cayley * R.cayley = 1 := by
+  exact
+    VerifiedUnitaryResolvent.boundedCayley_star_mul_self
+      R.toVerifiedUnitaryResolvent
+
+/-- Left-unitarity/coisometry: `U U* = 1`. -/
+theorem cayley_mul_star_cayley :
+    R.cayley * star R.cayley = 1 := by
+  exact
+    VerifiedUnitaryResolvent.boundedCayley_mul_star_self
+      R.toVerifiedUnitaryResolvent
+
+/-- The Cayley transform is unitary: both `U*U = 1` and `UU* = 1`. -/
+theorem cayley_unitary :
+    star R.cayley * R.cayley = 1 ∧
+      R.cayley * star R.cayley = 1 :=
+  ⟨R.cayley_star_mul_cayley, R.cayley_mul_star_cayley⟩
+
+end VerifiedCayleyResolvent
+
+/-! ## 7. Owner target discharged constructively -/
+
+/--
+Owner target for Cayley unitarity.
+
+Given explicit self-adjoint/skew-adjoint resolvent data, the Cayley transform
+is constructively unitary.
+-/
+def CayleyUnitarityOwnerTarget : Prop :=
+  ∀ (A : Type*) [Ring A] [StarRing A],
+  ∀ R : VerifiedCayleyResolvent A,
+    star R.cayley * R.cayley = 1 ∧
+      R.cayley * star R.cayley = 1
+
+/-- Constructive proof of the Cayley unitarity owner target. -/
+theorem cayleyUnitarityOwnerTarget :
+    CayleyUnitarityOwnerTarget := by
+  intro A _ _ R
+  exact R.cayley_unitary
+
 attribute [rep_depth operator]
   PhaseLinear
   inverse_commutes_of_commutes
@@ -453,5 +610,9 @@ attribute [rep_depth operator]
   VerifiedUnitaryResolvent.boundedCayley_star_mul_self
   VerifiedUnitaryResolvent.boundedCayley_mul_star_self
   VerifiedUnitaryResolvent.boundedCayley_is_unitary
+  VerifiedCayleyResolvent
+  VerifiedCayleyResolvent.cayley_star_mul_cayley
+  VerifiedCayleyResolvent.cayley_mul_star_cayley
+  VerifiedCayleyResolvent.cayley_unitary
 
 end InfoGeometry.OperatorAlgebra.IndividuatedCayley

@@ -163,7 +163,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--mode", choices=["local", "arango-http"], default="local")
     ap.add_argument("--arango-input", default="artifacts/leantrail/arango")
     ap.add_argument("--arango-input-format", choices=["snapshot", "arango-json"], default="arango-json")
-    ap.add_argument("--arango-endpoint", default="http://127.0.0.1:8529")
+    ap.add_argument("--arango-endpoint", default="http://127.0.0.1:8530")
     ap.add_argument("--arango-database", default="infogeometry")
     ap.add_argument("--arango-username", default="root")
     ap.add_argument("--arango-password", default="")

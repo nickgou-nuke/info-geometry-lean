@@ -182,6 +182,20 @@ theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
 /-! ## Consolidated Packet -/
 
 /--
+Consolidated Cl(4,4) conformal readout.
+-/
+@[rep_depth transport]
+structure Cl44ConformalReadout (CI : ConformalInference H) where
+  readout : Prop
+
+/--
+Consolidated TKK/Jordan-Lie packet for Cl(4,4) specialization.
+-/
+@[rep_depth transport]
+structure SplitCl44TKKJordanLiePacket (CI : ConformalInference H) where
+  packet : Prop
+
+/--
 Theorem-safe consolidated packet for the projector noncommutativity 
 dilation closure.
 -/
@@ -190,5 +204,7 @@ structure ProjectorNoncommutativityDilationClosurePacket where
   CI : ConformalInference H
   comm : DrazinMPProjectorCommutator CI
   anomaly : ProjectorMismatchAnomaly CI
+  readout : Cl44ConformalReadout CI
+  tkk : SplitCl44TKKJordanLiePacket CI
 
 end InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure

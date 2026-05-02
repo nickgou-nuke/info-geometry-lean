@@ -19,7 +19,7 @@ def sample_config() -> hive_bee.BeeConfig:
         queue_name="proof-search",
         worker_id="test-bee",
         lease_seconds=600,
-        gravity_base_url="http://127.0.0.1:8529",
+        gravity_base_url="http://127.0.0.1:8530",
         gravity_database="infogeometry",
         gravity_top_k=4,
         model_base_url="http://127.0.0.1:30002/v1",
@@ -300,3 +300,107 @@ def test_run_one_failure_requeues_before_max_attempts(monkeypatch) -> None:
     assert result["status"] == "requeued"
     assert any(name == "requeue" for name, _ in calls)
     assert any(name == "goal_status" and payload["status"] == "requeued" for name, payload in calls)
+
+
+def test_run_retrieval_dispatches_to_leansearch(monkeypatch) -> None:
+    config = sample_config()
+    config = hive_bee.BeeConfig(**{**config.__dict__, "retrieval_strategy": "leansearch"})
+    goal = sample_goal()
+    monkeypatch.setattr(
+        hive_bee,
+        "run_leansearch_retrieval",
+        lambda cfg, goal_doc, task_key: ({"graph_source": "leansearch", "items": []}, Path("/tmp/ls.json"), None),
+    )
+
+    payload, path, err = hive_bee.run_retrieval(config, goal, "task_1")
+
+    assert err is None
+    assert payload is not None
+    assert payload["graph_source"] == "leansearch"
+    assert str(path).endswith("ls.json")
+
+
+def test_emit_attempt_packets_marks_leansearch_source_lane(monkeypatch) -> None:
+    config = sample_config()
+    imports: list[dict] = []
+
+    def fake_emit_packet(cfg, packet, task_key=None, dependencies=None):
+        imports.append(packet)
+        return {"packet": {**packet, "packet_key": f"p-{len(imports)}"}}
+
+    monkeypatch.setattr(hive_bee, "emit_packet", fake_emit_packet)
+
+    out = hive_bee.emit_attempt_packets(
+        config,
+        goal=sample_goal(),
+        task=sample_task(),
+        gravity_context={"graph_source": "leansearch", "items": []},
+        gravity_path=Path("/tmp/leansearch.json"),
+        proof_state={"proof_state": "⊢ 1 = 1"},
+        tactic="rfl",
+        verification=None,
+        emit_proposal=False,
+    )
+
+    assert out["retrieval"]["source_lane"] == "leansearch"
+
+
+def test_run_retrieval_hybrid_merges_and_dedupes(monkeypatch) -> None:
+    config = sample_config()
+    config = hive_bee.BeeConfig(**{**config.__dict__, "retrieval_strategy": "hybrid"})
+    goal = sample_goal()
+
+    monkeypatch.setattr(
+        hive_bee,
+        "run_gravity_retrieval",
+        lambda cfg, goal_doc, task_key: (
+            {"graph_source": "arango", "edge_count": 3, "items": [{"id": "A.B"}, {"id": "C.D"}]},
+            Path("/tmp/gravity.json"),
+            None,
+        ),
+    )
+    monkeypatch.setattr(
+        hive_bee,
+        "run_leansearch_retrieval",
+        lambda cfg, goal_doc, task_key: (
+            {"graph_source": "leansearch", "items": [{"id": "C.D"}, {"id": "E.F"}]},
+            Path("/tmp/leansearch.json"),
+            None,
+        ),
+    )
+
+    payload, path, err = hive_bee.run_retrieval(config, goal, "task_hybrid")
+
+    assert err is None
+    assert payload is not None
+    assert payload["graph_source"] == "hybrid"
+    assert payload["node_count"] == 3
+    assert [item["id"] for item in payload["items"]] == ["A.B", "C.D", "E.F"]
+    assert payload["components"]["gravity"]["ok"] is True
+    assert payload["components"]["leansearch"]["ok"] is True
+    assert str(path).endswith("-hybrid.json")
+
+
+def test_emit_attempt_packets_marks_hybrid_source_lane(monkeypatch) -> None:
+    config = sample_config()
+    imports: list[dict] = []
+
+    def fake_emit_packet(cfg, packet, task_key=None, dependencies=None):
+        imports.append(packet)
+        return {"packet": {**packet, "packet_key": f"p-{len(imports)}"}}
+
+    monkeypatch.setattr(hive_bee, "emit_packet", fake_emit_packet)
+
+    out = hive_bee.emit_attempt_packets(
+        config,
+        goal=sample_goal(),
+        task=sample_task(),
+        gravity_context={"graph_source": "hybrid", "items": []},
+        gravity_path=Path("/tmp/hybrid.json"),
+        proof_state={"proof_state": "⊢ 1 = 1"},
+        tactic="rfl",
+        verification=None,
+        emit_proposal=False,
+    )
+
+    assert out["retrieval"]["source_lane"] == "hybrid"

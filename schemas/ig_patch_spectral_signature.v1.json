@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig.patch_spectral_signature.v1",
+  "type": "object",
+  "required": ["_key", "patch_id", "run_id", "schema_version", "eigenvalues", "nullity", "pseudo_logdet"],
+  "properties": {
+    "_key": {"type": "string", "minLength": 1},
+    "patch_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig.patch_spectral_signature.v1"},
+    "eigenvalues": {"type": "array", "items": {"type": "number"}},
+    "nullity": {"type": "integer", "minimum": 0},
+    "pseudo_logdet": {"type": "number"}
+  },
+  "additionalProperties": true
+}

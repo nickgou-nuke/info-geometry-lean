@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig.patch_edge.v1",
+  "type": "object",
+  "required": ["_from", "_to", "from_patch_id", "to_patch_id", "run_id", "schema_version", "edge_type"],
+  "properties": {
+    "_from": {"type": "string", "minLength": 1},
+    "_to": {"type": "string", "minLength": 1},
+    "from_patch_id": {"type": "string", "minLength": 1},
+    "to_patch_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig.patch_edge.v1"},
+    "edge_type": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}

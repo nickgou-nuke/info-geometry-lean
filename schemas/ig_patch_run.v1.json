@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ig.patch_run.v1",
+  "type": "object",
+  "required": ["_key", "run_id", "schema_version", "created_at", "source_graph_hash", "algorithm_version"],
+  "properties": {
+    "_key": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "ig.patch_run.v1"},
+    "created_at": {"type": "string", "minLength": 1},
+    "source_graph_hash": {"type": "string", "minLength": 1},
+    "algorithm_version": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}

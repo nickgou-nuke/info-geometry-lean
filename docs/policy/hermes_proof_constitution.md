@@ -1,5 +1,10 @@
 # The Spire's Proof-Orchestration Constitution
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 > **"The kernel judges, the manifest legislates, the agent executes."**
 
 This document defines the clinical standards for automated theorem formalization within the Info-Geometry Spire. It is the authoritative law for the proof-orchestration loop.

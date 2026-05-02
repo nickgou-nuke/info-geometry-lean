@@ -1,5 +1,10 @@
 # Arango DAG Algorithms
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 `tools/infra/arango_dag_algorithms.py` runs classical graph algorithms over the
 live Arango SCC quotient overlay and writes the result as a separate derived
 overlay.

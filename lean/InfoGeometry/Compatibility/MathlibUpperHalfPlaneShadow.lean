@@ -107,7 +107,7 @@ The real scalar/bivector product shadows complex multiplication.
 theorem chiral_mul_shadow (z w : ChiralPhase) :
     chiralToComplex (z * w) =
       chiralToComplex z * chiralToComplex w := by
-  apply Complex.ext <;> simp [chiralToComplex] <;> ring
+  apply Complex.ext <;> simp [chiralToComplex]
 
 /--
 The real norm square shadows the complex norm square.
@@ -160,8 +160,7 @@ theorem denom_shadow
         + ((extractD g : ℝ) : ℂ) := by
   apply Complex.ext <;>
     simp [chiralToComplex, rawChiralDenominator,
-      realToMathlibUHP, extractC, extractD] <;>
-    ring
+      realToMathlibUHP, extractC, extractD]
 
 /--
 Matrix-coordinate denominator shadow.
@@ -213,7 +212,7 @@ The witness argument is retained for compatibility with the coordinate-shadow
 API, but the proof is delegated to `RealMoebiusAction.lean`.
 -/
 theorem smul_shadow_SL2R_proof
-    (W : RealMoebiusShadowWitness)
+    (_ : RealMoebiusShadowWitness)
     (g : SL2R) (τ : RealUpperHalfPlane) :
     realToComplexEquiv (g • τ) =
       g • realToComplexEquiv τ := by

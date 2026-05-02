@@ -1,5 +1,10 @@
 # Clinical Standard: Stringent Blueprint Audit
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document defines the clinical checklist for the **Pauli Auditor** (Agent/Human) to verify that a module has achieved **Nomological Closure** through the Fused Spire Standard.
 
 ## 1. Taxonomic Anchoring (Attribute Audit)

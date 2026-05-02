@@ -1,8 +1,9 @@
 # Agentic Autotheory Handover Package
 
-> Status: dated handover package snapshot; keep for provenance, not as living policy root.
-> Canonical policy docs: [`docs/AGENTIC_HANDOVER_POLICY_2026-04-15.md`](../../docs/AGENTIC_HANDOVER_POLICY_2026-04-15.md), [`docs/README.md`](../../docs/README.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../docs/MarkdownCorpusGovernance.md).
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
 
 Activation date: **2026-04-15**
 

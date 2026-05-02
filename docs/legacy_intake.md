@@ -1,5 +1,10 @@
 # Legacy Intake Note
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This is a historical workflow note.
 
 It is not part of the current authoritative promotion pipeline.

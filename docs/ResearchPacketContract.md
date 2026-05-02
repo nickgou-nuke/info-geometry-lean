@@ -1,5 +1,10 @@
 # Research Packet Contract
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document defines the repo-native handoff contract from quarantined Hermes
 discovery into Prompt A / Prompt B.
 
@@ -54,4 +59,3 @@ Prompt B must block admission unless:
 1. packet validates
 2. NemoClaw note contains research provenance markers
 3. standard build + DAG + doctor gates pass
-

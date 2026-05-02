@@ -15,8 +15,22 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     from tools.infra import hive_arango_queue as queue
 except ImportError:  # pragma: no cover
+    from arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
     import hive_arango_queue as queue
 
 
@@ -379,6 +393,7 @@ def invoke_identity_runner(*, repo_root: Path, fixtures: str, out_dir: str) -> t
 
 
 def main() -> None:
+    load_repo_arango_env(Path.cwd())
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--log", default="artifacts/hermes_loop/heartbeat/hive_qi_heartbeat.log")
     ap.add_argument("--entity-key", default="fusion-sorry-heartbeat")
@@ -387,10 +402,10 @@ def main() -> None:
     ap.add_argument("--emit-summary", action="store_true")
     ap.add_argument("--print-json", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--endpoint", default=os.getenv("ARANGO_ENDPOINT", "http://127.0.0.1:8530"))
-    ap.add_argument("--database", default=os.getenv("ARANGO_DATABASE", "hive_live"))
-    ap.add_argument("--username", default=os.getenv("ARANGO_USER") or os.getenv("ARANGO_USERNAME", "root"))
-    ap.add_argument("--password", default=os.getenv("ARANGO_PASS") or os.getenv("ARANGO_PASSWORD", ""))
+    ap.add_argument("--endpoint", default=arango_endpoint())
+    ap.add_argument("--database", default=arango_database("hive_live"))
+    ap.add_argument("--username", default=arango_username())
+    ap.add_argument("--password", default=arango_password())
     ap.add_argument("--identity-packets-json", default="")
     ap.add_argument("--run-identity-protocol", action="store_true")
     ap.add_argument("--identity-fixtures", default="configs/identity_protocol/stress_suite.v1.jsonl")

@@ -14,6 +14,8 @@ stored fields.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Canonical.PrimeGasSuperKMSBridge
 
 /-- Minimal owner-level prime-gas max-entropy packet. -/

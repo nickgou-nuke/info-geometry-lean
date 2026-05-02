@@ -1,5 +1,10 @@
 # The Burned Scaffolding: Discovery, Justification, and the Hidden Work of Science
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## The claim and the historical question underneath it
 
 The “burned scaffolding” thesis is best treated as a historically testable claim about *genres of scientific communication* rather than as a claim about an organised conspiracy: do scientists and mathematicians routinely present “finished cathedrals” (formal, linear argument) while withholding the messy structures that actually made new ideas possible (false starts, metaphors, dreams, aesthetic hunches, reputational anxieties)? citeturn45view0turn52view1

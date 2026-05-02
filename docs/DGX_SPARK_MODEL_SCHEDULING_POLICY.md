@@ -1,5 +1,10 @@
 # DGX Spark Model Scheduling Policy
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document defines the scheduling policy for local model use on DGX Spark.
 
 The central fact is simple:

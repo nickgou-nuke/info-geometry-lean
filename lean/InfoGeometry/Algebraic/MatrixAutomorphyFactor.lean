@@ -58,7 +58,7 @@ def pullback
       J (φ (g * h)) x = J (φ g * φ h) x := by rw [φ.map_mul]
       _ = J (φ g) ((φ h) • x) * J (φ h) x := J.map_mul (φ g) (φ h) x
       _ = J (φ g) (h • x) * J (φ h) x := by
-            simpa [hact h x]
+            simp [hact h x]
 
 /--
 Convert a matrix automorphy factor into a rotor cocycle through a monoid

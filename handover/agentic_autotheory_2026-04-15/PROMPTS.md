@@ -1,5 +1,10 @@
 # Agentic Autotheory Prompt Pack (DGX Spark)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 Effective date: **2026-04-15**
 
 This file defines two system prompts and persona responsibilities for

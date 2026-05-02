@@ -54,13 +54,16 @@ import InfoGeometry.Algebraic.NarainRealification
 import InfoGeometry.Application.BlackHoleEntropyReadout
 import InfoGeometry.Specialization.ModularBerrySpecialization
 import InfoGeometry.Arithmetic.PrimeVielbeinSupervolume
+import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
+import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LFunctionResonance
 import InfoGeometry.Automorphic.LanglandsPrimeResonance
@@ -104,7 +107,9 @@ import InfoGeometry.Canonical.KernelCommutatorObstruction
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.Physics.DIIISymmetryAtom
+import InfoGeometry.Thermodynamics.SouriauFoliation
 import InfoGeometry.Thermodynamics.SouriauKillingFlow
+import InfoGeometry.Thermodynamics.SouriauModularS
 
 import InfoGeometry.Basic
 import InfoGeometry.Cartan

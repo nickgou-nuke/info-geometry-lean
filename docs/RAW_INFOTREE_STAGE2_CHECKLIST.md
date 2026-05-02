@@ -1,5 +1,10 @@
 # Raw InfoTree Stage 2 Checklist
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Machine-usable checklist for the `fusion/upstream-intake-20260419` worktree.
 
 Purpose:

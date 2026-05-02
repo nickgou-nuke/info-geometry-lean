@@ -1,33 +1,25 @@
-# Release Notes and Current Status
+# Release Notes
 
-This repository is maintained as a rolling `main` branch, not as a polished public release train.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current place for durable repo-surface changes, but not a substitute for the verified status docs.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Current status
+This repository is maintained as a rolling branch rather than a polished
+release train.
 
-The important current milestones are structural rather than marketing-oriented:
-- the graph pipeline is centralized under `tools/infra/` and `artifacts/dag/`;
-- the repo now tracks semantic quotient and projection coloring as maintained reports;
-- several overloaded canonical files have been split by ownership;
-- repo-local skills now encode both repo workflow and canonicalization policy.
+## Use This File For
 
-## What belongs in release notes
+- durable changes to public Lean surfaces
+- durable changes to maintained tooling entrypoints
+- durable documentation restructures
+- policy changes that affect normal repository use
 
-Use this file to record:
-- durable changes to the public Lean surface;
-- durable changes to maintained tooling entrypoints;
-- changes to repository policy or workflow;
-- documentation resets and structural reorganizations.
+## Do Not Use It For
 
-Do not use this file for:
-- transient hotspot numbers;
-- generated report snapshots;
-- speculative theory prose;
-- TODO lists that belong in issues or targeted plans.
+- generated report snapshots
+- temporary debt numbers
+- speculative theory notes
+- open TODO lists
 
-## Current release posture
-
-There is no separate public alpha packaging workflow documented here at the moment.
-Until one exists, the authoritative state of the project is:
-- the current `main` branch;
-- the current `lakefile.lean` and `lean-toolchain` pins;
-- the current maintained docs listed in [README.md](README.md).
+For current verified state, use [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md).

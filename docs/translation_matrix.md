@@ -1,5 +1,10 @@
 # 📜 THE TRANSLATION MATRIX: From Archetype to Operator
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document defines the mapping from **Jungian Archetypes** to **Repo-Native Math Objects**. It serves as the primary reference for the `Translation Lane`.
 
 ## I. THE DICTIONARY OF CORRESPONDENCES

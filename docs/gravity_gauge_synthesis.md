@@ -1,5 +1,10 @@
 # Gravity / Gauge Topic Map
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This note is a topic map, not a proof summary.
 
 Its purpose is to state where the current gauge-like and geometry-like material

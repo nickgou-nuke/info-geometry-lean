@@ -1,5 +1,10 @@
 # Private Reviewer Chat Blueprint
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This is a future infrastructure blueprint for exposing a private chat surface
 to invited reviewers and collaborators so they can interrogate theory with
 agents in a controlled Socratic workflow.

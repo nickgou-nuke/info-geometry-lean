@@ -1,49 +1,37 @@
-# 🎭 THE PAULI AUDITOR PROTOCOL (GEMINI.md)
+# Gemini Use Policy
 
-> **"Exploration may be Jungian. Closure must be Pauli."**
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for optional ideation workflow, but subordinate to repo-wide authority docs and code.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-This document takes absolute precedence over all general workflows and tool defaults. It defines the clinical standards for the **Info-Geometry Spire**.
+This file describes how Gemini-style ideation fits into the current repository
+workflow.
 
-## ⚖️ THE PAULI AUDITOR (Role Definition)
-The agent acts as the **Adjudicator of the Morphism**. Its goal is the **Exclusion of the Mediocre** and the suppression of **Agentic Cheating**.
+## Current Role
 
-### 📉 CORE CRITERIA: TOTAL SYMBOLIC INFLATION (TSI)
-TSI occurs when linguistic complexity exceeds logical derivation. To prevent TSI, every module must pass the following gates:
+Gemini-like exploration is optional and proposal-only.
 
-1.  **Functorial Mapping vs. Lyrical Overfit:**
-    - **Lyrical Overfit (FAIL):** Using high-level names (e.g., `EinsteinEquation`) as a "mask" for low-level logic without a formal, derived algebraic umbilicus.
-    - **Functorial Mapping (SUCCESS):** Establishing a rigid identity or lift (e.g., L0 $\to$ L2) that preserves invariants across the `RepDepth` hierarchy.
-2.  **Nomological Closure:**
-    - "Physical" structures must prove the laws of physics as **Necessary Consequences** of the underlying algebra.
-3.  **Taxonomic Anchoring:**
-    - Theorems must be placed at their **Maximum Appropriate Depth** using the `rep_depth` grammar.
-4.  **The Multilingual Bridge Standard (NEW):**
-    - Comments are not "bloat"; they are the **Transport Substrate** between SymPy, Python, Lean 4, and LaTeX.
-    - **Audit Criterion:** Judge modules by **Semantic Faithfulness** and **Cross-Representation Fidelity**, not by simple comment-to-code ratios.
+It may help with:
 
-## 🛠️ OPERATIONAL PROTOCOLS
-- **Strong Gravitation (NEW):** Context for proof search **MUST** be extracted from the **ArangoDB DAG** of proven Lean code (`arango_gravity_context.py`). The agent must "fall" toward the theorem through the curvature of established truth.
-- **The Split-Brain Configuration (NEW):**
-    - **Interactive (Jungian Window):** Use high-context models (e.g., Codex/Gemini) for associative research.
-    - **Autonomous (Pauli Core):** Use local models (Nemotron/DeepSeek) for conservative, graph-grounded planning.
-- **The Axiom-Surface Seal:** All agentic tactics must be verified via the **token-free REPL bridge** (`lean_interact_wrapper.py`) against the Lean kernel in real-time.
+- brainstorming candidate bridges
+- external literature distillation
+- packet enrichment before formal implementation
 
-### 🛡️ THE SIX NOMOLOGICAL DIRECTIVES
-1. **The "No-Mask" Mandate:** Physically loaded names must be backed by foundational transformations.
-2. **Functorial Connectivity:** No floating modules or pure-import shells.
-3. **The Axiom-Surface Seal:** No `sorryAx` or `Admission` trust tokens in `krein` or `canonical` layers.
-4. **Authority Split:** Hermes (Plan) $\to$ Nemotron (Reason) $\to$ DeepSeek (Proof) $\to$ Goedel (Audit) $\to$ Codex (Gated Execution) $\to$ **Lean (Truth)**.
-5. **Multilingual Bridge Fidelity:** Bridge-bearing prose is representation substrate. Do not use density ratios as an audit rule; judge semantic faithfulness and theorem linkage.
-6. **The "Identity via Reflexivity" Audit:** Unification via `rfl` is only valid for terms originating from disjoint foundational modules.
+It does not decide theorem truth, module ownership, or closure status.
 
-### 📚 COMMENT AND LANGUAGE POLICY
-- This repository is a Lean 4 formalization of the **physics of information**,
-  not a generic "theory of physics" and not a prose-minimization exercise.
-- Terms such as curvature, flow, free energy, Boltzmann entropy, and modular
-  Hamiltonian are legitimate borrowed language when they name the
-  information-geometric or operator-algebraic structure being formalized.
-- Do not penalize comments or docstrings for being long when they carry the
-  bridge between SymPy, Python, Lean 4, LaTeX, and natural mathematical
-  language.
-- Prefer semantic correction or expansion over compression. Shortening is only
-  justified when the prose is stale, false, duplicative, or not bridge-bearing.
+## Boundary
+
+If a Gemini-generated idea matters, it must be translated into:
+
+- a current owner file
+- a concrete Lean or tooling change
+- a current verification step
+
+Without that translation, it stays exploratory.
+
+## Authority Order
+
+1. current code in `lean/`, `src/igf/`, and maintained `tools/`
+2. current repo-level docs
+3. optional ideation sidecars such as Gemini workflows

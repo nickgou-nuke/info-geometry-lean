@@ -1,5 +1,10 @@
 # Jung–Pauli Split-Step Hive Blueprint
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Status: proposed architecture blueprint
 Date: 2026-04-24
 Scope: recurrent symbolic cultivation, packet distillation, graph memory, and Lean-facing formalization inside the Hermes Hive.

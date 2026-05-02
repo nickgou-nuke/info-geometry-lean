@@ -12,6 +12,8 @@ This file does not introduce new physics. It only records that the discrete
 SUSY hopping operator is exactly the repo-native odd-odd closure `{Q,Q}`.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.SuperchargeHoppingBridge
 
 open InfoGeometry.Canonical.TopologicalGapShadow

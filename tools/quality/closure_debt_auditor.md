@@ -1,5 +1,10 @@
 # Closure Debt Auditor Tool: Identifying Unanchored Declarations and Theory Islands
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Not part of the maintained authority surface unless explicitly promoted.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 ## Purpose
 This tool scans Lean source files and the DAG index to:
 - Identify all public theorems/defs/lemmas that are **not present as graph anchors** ("closure debts").

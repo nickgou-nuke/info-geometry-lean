@@ -9,6 +9,13 @@ from typing import Any
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from tools.infra.arango_env import (
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+
 DOCUMENT_COLLECTIONS = [
     "alexandria_documents",
     "alexandria_sections",
@@ -102,12 +109,13 @@ def import_rows(endpoint: str, database: str, username: str, password: str, coll
 
 
 def main() -> int:
+    load_repo_arango_env(Path.cwd())
     ap = argparse.ArgumentParser(description="Ingest Alexandria JSONL artifacts into a second ArangoDB instance")
     ap.add_argument("--input-dir", required=True)
-    ap.add_argument("--endpoint", default="http://127.0.0.1:8530")
+    ap.add_argument("--endpoint", default=arango_endpoint())
     ap.add_argument("--database", default="alexandria")
-    ap.add_argument("--username", default="root")
-    ap.add_argument("--password", default="alexandria_root")
+    ap.add_argument("--username", default=arango_username())
+    ap.add_argument("--password", default=arango_password("alexandria_root"))
     args = ap.parse_args()
 
     input_dir = Path(args.input_dir)

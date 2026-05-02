@@ -1,5 +1,10 @@
 # Hive Architecture Blueprint (Code-Grounded, April 2026)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 > Scope: blueprint derived from current repo implementation (`tools/infra/*`, `lean/InfoGeometry/Meta/HiveLogos.lean`, and `tests/test_hive_*`).
 > Purpose: stabilize the trust boundary and provide an executable architecture plan for the current Hive stack.
 

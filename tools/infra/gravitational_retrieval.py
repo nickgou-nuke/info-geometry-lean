@@ -2,18 +2,26 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
-import os
 import sys
-import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
-from urllib.error import HTTPError
-from urllib.parse import quote
-from urllib.request import Request, urlopen
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+for path in (REPO_ROOT, SRC_ROOT):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+from igf.graph import ArangoHttpTarget, execute_aql
 
 """
 # Gravitational Retrieval (The Graviton)
@@ -24,8 +32,6 @@ Usage:
   python3 tools/infra/gravitational_retrieval.py --center InfoGeometry.Krein.KreinSpace --top-k 5
 """
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-
 @dataclass(frozen=True)
 class ArangoTarget:
     endpoint: str
@@ -35,28 +41,14 @@ class ArangoTarget:
     nodes_collection: str
     edges_collection: str
 
-def _auth_header(username: str, password: str) -> str:
-    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
-    return f"Basic {token}"
 
-def _db_url(target: ArangoTarget, path: str) -> str:
-    return f"{target.endpoint}/_db/{quote(target.database)}/{path.lstrip('/')}"
-
-def _request_json(method: str, url: str, target: ArangoTarget, payload: dict[str, Any] | None = None) -> dict[str, Any]:
-    body = json.dumps(payload, ensure_ascii=True).encode("utf-8") if payload is not None else None
-    req = Request(url, data=body, method=method)
-    req.add_header("Authorization", _auth_header(target.username, target.password))
-    req.add_header("Accept", "application/json")
-    if body is not None:
-        req.add_header("Content-Type", "application/json")
-
-    try:
-        with urlopen(req) as resp:
-            raw = resp.read().decode("utf-8")
-            return json.loads(raw) if raw else {}
-    except HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"HTTP {exc.code} {url}: {raw}") from exc
+def _http_target(target: ArangoTarget) -> ArangoHttpTarget:
+    return ArangoHttpTarget(
+        endpoint=target.endpoint.rstrip("/"),
+        database=target.database,
+        username=target.username,
+        password=target.password,
+    )
 
 def run_pregel_pagerank(target: ArangoTarget, center_id: str):
     """
@@ -66,14 +58,14 @@ def run_pregel_pagerank(target: ArangoTarget, center_id: str):
     """
     # 1. Identify the 'internal' key for the center declaration
     query = "FOR n IN @@nodes FILTER n.name == @center RETURN n._key"
-    res = _request_json("POST", _db_url(target, "/_api/cursor"), target, {
-        "query": query,
-        "bindVars": {"@nodes": target.nodes_collection, "center": center_id}
-    })
-    if not res.get("result"):
+    rows = execute_aql(
+        _http_target(target),
+        query,
+        {"@nodes": target.nodes_collection, "center": center_id},
+    )
+    if not rows:
         print(f"Error: Center '{center_id}' not found.")
         sys.exit(1)
-    center_key = res["result"][0]
 
     # 2. Start Pregel Job (Personalized PageRank)
     # Note: ArangoDB built-in PageRank isn't always personalized by default in all versions.
@@ -100,15 +92,15 @@ def run_pregel_pagerank(target: ArangoTarget, center_id: str):
         }
     """
 
-    res = _request_json("POST", _db_url(target, "/_api/cursor"), target, {
-        "query": grav_query,
-        "bindVars": {
+    return execute_aql(
+        _http_target(target),
+        grav_query,
+        {
             "@nodes": target.nodes_collection,
             "@edges": target.edges_collection,
             "center": center_id
-        }
-    })
-    return res.get("result", [])
+        },
+    )
 
 def get_lean_source(file_path: str, line: int, radius: int = 5) -> str:
     p = Path(file_path)
@@ -124,19 +116,20 @@ def get_lean_source(file_path: str, line: int, radius: int = 5) -> str:
     return "\n".join(lines[start:end])
 
 def main():
+    load_repo_arango_env(REPO_ROOT)
     parser = argparse.ArgumentParser(description="Extract Gravitational Context from ArangoDB.")
     parser.add_argument("--center", required=True, help="ID of the center theorem.")
     parser.add_argument("--top-k", type=int, default=5, help="Number of massive neighbors to retrieve.")
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
     parser.add_argument("--out", default="quarantine/hermes_memory/gravitational_context.json")
     args = parser.parse_args()
 
     target = ArangoTarget(
         endpoint=args.endpoint,
         database=args.database,
-        username=os.getenv("ARANGO_USER", os.getenv("ARANGO_USERNAME", "root")),
-        password=os.getenv("ARANGO_PASSWORD", ""),
+        username=arango_username(),
+        password=arango_password(),
         nodes_collection="ig_nodes",
         edges_collection="ig_edges"
     )

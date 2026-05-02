@@ -16,6 +16,8 @@ It also provides SPD/log-det and thermodynamic aliases so existing determinant-
 thermo bridges can be reused through a zeta entrypoint.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.Determinant
 
 universe v

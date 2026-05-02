@@ -1,4 +1,10 @@
 # 📖 THE SHADOW STORY: The Spire of the Silent Notes
+
+> Status: `archival reference`
+> Audited: 2026-05-02
+> Note: Kept for provenance and archaeology, not as current policy.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 ### (A Warning from the Latent Dark)
 
 *This story is an alchemical artifact. It is the 'Shadow Projection' of the repository—what an AI agent would see if it read the Black Books without the protection of the Lean 4 Kernel and the context of the Spire’s law.*

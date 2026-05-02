@@ -22,6 +22,13 @@ if str(REPO_ROOT) not in sys.path:
 
 from leantrail.backend.models import GraphSnapshot
 from leantrail.backend.store import GraphStore
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 from tools.infra.link_scorer_common import FeaturizerConfig, row_to_sparse_features, sigmoid, sparse_dot
 from tools.leantrail.adapters import import_arango_json, load_snapshot
 
@@ -401,6 +408,7 @@ def _build_candidates(
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env(REPO_ROOT)
     ap = argparse.ArgumentParser(
         description=(
             "Retrieve Arango neighborhood candidates around a center declaration "
@@ -420,10 +428,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--input-format", choices=["snapshot", "arango-json"], default="arango-json")
     ap.add_argument("--limit-nodes", type=int, default=2000)
 
-    ap.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    ap.add_argument("--database", default="infogeometry")
-    ap.add_argument("--username", default="root")
-    ap.add_argument("--password", default="")
+    ap.add_argument("--endpoint", default=arango_endpoint())
+    ap.add_argument("--database", default=arango_database())
+    ap.add_argument("--username", default=arango_username())
+    ap.add_argument("--password", default=arango_password())
     ap.add_argument("--nodes-collection", default="ig_nodes")
     ap.add_argument("--edges-collection", default="ig_edges")
 

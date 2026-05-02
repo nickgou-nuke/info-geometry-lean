@@ -1,4 +1,10 @@
 # Generative Loop Spec
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Not part of the maintained authority surface unless explicitly promoted.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 ## Recurrent Scorpio->Virgo Pipeline for Autotheory Work
 
 This defines a batch workflow that keeps generation high and closure honest.

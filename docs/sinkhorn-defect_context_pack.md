@@ -1,5 +1,10 @@
 # Context Pack: Sinkhorn Defect Flow & LLM Thermodynamics
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## Terminology Map
 
 | Alias/Term | Canonical Symbol / Owner Concept |

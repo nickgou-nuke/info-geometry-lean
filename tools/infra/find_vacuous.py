@@ -1,30 +1,33 @@
 #!/usr/bin/env python3
-import os, json, base64
-from urllib.request import Request, urlopen
-from urllib.error import HTTPError
+import json
+import sys
+from pathlib import Path
 
-def request_json(method, url, payload=None):
-    endpoint = os.environ.get("ARANGO_ENDPOINT", "http://127.0.0.1:8530").rstrip("/")
-    user = os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME", "root")
-    password = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD", "alexandria_root")
-    token = base64.b64encode(f"{user}:{password}".encode()).decode("ascii")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+for path in (REPO_ROOT, SRC_ROOT):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
-    body = None if payload is None else json.dumps(payload).encode("utf-8")
-    req = Request(url, data=body, method=method)
-    req.add_header("Authorization", "Basic " + token)
-    req.add_header("Accept", "application/json")
-    if body is not None:
-        req.add_header("Content-Type", "application/json")
-    try:
-        with urlopen(req) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except HTTPError as exc:
-        raise RuntimeError(f"HTTP {exc.code} {url}: {exc.read().decode('utf-8')}")
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+from igf.graph import ArangoHttpTarget, execute_aql
+
 
 def run_aql(query, bind_vars=None):
-    url = "http://127.0.0.1:8530/_db/infogeometry/_api/cursor"
-    payload = {"query": query, "bindVars": bind_vars or {}}
-    return request_json("POST", url, payload=payload).get("result", [])
+    load_repo_arango_env()
+    target = ArangoHttpTarget(
+        endpoint=arango_endpoint().rstrip("/"),
+        database=arango_database(),
+        username=arango_username(),
+        password=arango_password("alexandria_root"),
+    )
+    return execute_aql(target, query, bind_vars or {})
 
 def main():
     # Attempt 1: Check for explicit vacuous or surrogate flags in ig_nodes or components

@@ -20,6 +20,9 @@ This file only packages those pieces into one bridge surface.
 
 noncomputable section
 
+set_option linter.dupNamespace false
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.BogoliubovVielbeinBridge
 
 open InfoGeometry.Canonical.BogoliubovVielbein
@@ -70,20 +73,18 @@ def phaseAntilinearCharge
 theorem phaseCharge_decomposition
     (B : BogoliubovVielbeinBridge (E := E)) :
     B.phaseLinearCharge + B.phaseAntilinearCharge = B.frame.connectionGenerator := by
-  simpa [phaseLinearCharge, phaseAntilinearCharge] using
-    (BogoliubovTransport.phaseLinearPart_add_phaseAntilinearPart
-      (E := E) B.frame.connectionGenerator)
+  simp [phaseLinearCharge, phaseAntilinearCharge]
 
 /-- The bridge creation channel. -/
-def creationChannel (B : BogoliubovVielbeinBridge (E := E)) : EndH :=
+def creationChannel (_ : BogoliubovVielbeinBridge (E := E)) : EndH :=
   creationOp (E := E)
 
 /-- The bridge annihilation channel. -/
-def annihilationChannel (B : BogoliubovVielbeinBridge (E := E)) : EndH :=
+def annihilationChannel (_ : BogoliubovVielbeinBridge (E := E)) : EndH :=
   annihilationOp (E := E)
 
 /-- The bridge vacuum vector. -/
-def vacuumVector (B : BogoliubovVielbeinBridge (E := E)) : H₂ :=
+def vacuumVector (_ : BogoliubovVielbeinBridge (E := E)) : H₂ :=
   0
 
 /-- Creation and annihilation recombine to the identity on the doubled carrier. -/

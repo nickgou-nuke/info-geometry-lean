@@ -182,11 +182,11 @@ instance : Monoid NonzeroChiralPhase where
   one := 1
   mul := (· * ·)
   one_mul z := by
-    ext <;> simp [ChiralPhase.one_mul]
+    ext <;> simp
   mul_one z := by
-    ext <;> simp [ChiralPhase.mul_one]
+    ext <;> simp
   mul_assoc x y z := by
-    ext <;> simp [ChiralPhase.mul_assoc] <;> ring
+    ext <;> simp <;> ring
 
 end NonzeroChiralPhase
 

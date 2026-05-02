@@ -1,5 +1,10 @@
 # Third-Party / License Deep Scan Report
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 - Generated (UTC): `2026-04-15T20:28:03.984319+00:00`
 - Repository root: `/home/goutev/LEAN4/info-geometry-lean`
 - Scan mode: `all-files`
@@ -264,4 +269,3 @@
 - `NOTICE`
   - reason: contains project owner name
   - hit: L2 `Copyright 2024-2026 Nikolay Goutev and Dimitar Tonev`
-

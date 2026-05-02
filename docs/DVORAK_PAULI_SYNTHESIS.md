@@ -1,5 +1,10 @@
 # 🎭 Dvořák-Pauli Synthesis: The Standards of Truth and Beauty
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document records the integration of **Martin Dvořák's "Truth and Beauty"** framework into the **Info-Geometry Spire**. It serves as the operational guide for maintaining "Non-Vacuous" and "Believable" formalizations.
 
 ## ⚖️ The Core Philosophy

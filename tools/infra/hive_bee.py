@@ -22,7 +22,9 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -58,7 +60,7 @@ DEFAULT_HIVE_PASSWORD = queue_tool.DEFAULT_PASSWORD
 DEFAULT_QUEUE = queue_tool.DEFAULT_QUEUE
 DEFAULT_WORKER_ID = "hive-bee-001"
 DEFAULT_LEASE_SECONDS = queue_tool.DEFAULT_LEASE_SECONDS
-DEFAULT_GRAVITY_BASE_URL = "http://127.0.0.1:8529"
+DEFAULT_GRAVITY_BASE_URL = "http://127.0.0.1:8530"
 DEFAULT_GRAVITY_DATABASE = "infogeometry"
 DEFAULT_MODEL_BASE_URL = "http://127.0.0.1:8001/v1"
 DEFAULT_MODEL = "deepseek-prover-v2-7b"
@@ -67,6 +69,10 @@ DEFAULT_BACKEND_CAPABILITY = "proof_tactic_proposal"
 DEFAULT_HERMES_ROLE = "hive_proof_bee"
 DEFAULT_TOP_K = 6
 DEFAULT_MAX_ATTEMPTS = 3
+DEFAULT_RETRIEVAL_STRATEGY = "gravity"
+DEFAULT_TASK_KIND = "proof.search"
+DEFAULT_LEANSEARCH_BASE_URL = "http://127.0.0.1:18080"
+DEFAULT_LEANSEARCH_NUM_RESULTS = 8
 ARTIFACT_DIR = ROOT / "artifacts" / "hermes_loop" / "hive_bee"
 GRAVITY_TOOL = ROOT / "tools" / "infra" / "arango_gravity_context.py"
 
@@ -94,6 +100,10 @@ class BeeConfig:
     allow_direct_provider_api: bool
     timeout: int
     tactic_override: str | None = None
+    retrieval_strategy: str = DEFAULT_RETRIEVAL_STRATEGY
+    task_kind: str = DEFAULT_TASK_KIND
+    leansearch_base_url: str = DEFAULT_LEANSEARCH_BASE_URL
+    leansearch_num_results: int = DEFAULT_LEANSEARCH_NUM_RESULTS
 
 
 @dataclass
@@ -145,6 +155,16 @@ def build_gravity_query(goal: dict[str, Any]) -> str:
     return re.sub(r"\s+", " ", " ".join(part for part in parts if part).strip())
 
 
+def build_leansearch_query(goal: dict[str, Any]) -> str:
+    parts = [
+        str(goal.get("target_pretty") or ""),
+        str(goal.get("canonical_shape") or ""),
+        str(goal.get("module") or ""),
+        str(goal.get("entity_key") or ""),
+    ]
+    return re.sub(r"\s+", " ", " ".join(part for part in parts if part).strip())
+
+
 def run_gravity_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = ARTIFACT_DIR / f"{task_key}-gravity.json"
@@ -172,6 +192,13 @@ def run_gravity_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str
         "--repo-root",
         str(ROOT),
     ]
+    child_env = os.environ.copy()
+    child_env.setdefault("ARANGO_ENDPOINT", str(config.gravity_base_url))
+    child_env.setdefault("ARANGO_DATABASE", str(config.gravity_database))
+    child_env.setdefault("ARANGO_USER", str(config.hive_username))
+    child_env.setdefault("ARANGO_USERNAME", str(config.hive_username))
+    child_env.setdefault("ARANGO_PASS", str(config.hive_password))
+    child_env.setdefault("ARANGO_PASSWORD", str(config.hive_password))
     try:
         proc = subprocess.run(
             cmd,
@@ -180,6 +207,7 @@ def run_gravity_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str
             capture_output=True,
             timeout=config.timeout,
             check=False,
+            env=child_env,
         )
     except Exception as exc:  # noqa: BLE001
         return None, out_path, repr(exc)
@@ -190,6 +218,161 @@ def run_gravity_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str
         return None, out_path, "gravity retrieval produced no JSON artifact"
     payload = json.loads(out_path.read_text(encoding="utf-8"))
     return payload, out_path, None
+
+
+def run_leansearch_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = ARTIFACT_DIR / f"{task_key}-leansearch.json"
+
+    query_text = build_leansearch_query(goal)
+    endpoint_attempts = [
+        (
+            f"{config.leansearch_base_url.rstrip('/')}/search",
+            {"query": [query_text], "num_results": max(1, int(config.leansearch_num_results))},
+            "search",
+        ),
+        (
+            f"{config.leansearch_base_url.rstrip('/')}/retrieve_premises",
+            {"query": query_text, "num": max(1, int(config.leansearch_num_results))},
+            "retrieve_premises",
+        ),
+    ]
+
+    raw: str | None = None
+    endpoint_used = ""
+    last_error: str | None = None
+    for url, payload, endpoint_name in endpoint_attempts:
+        req = Request(url, data=json.dumps(payload, ensure_ascii=False).encode("utf-8"), method="POST")
+        req.add_header("Content-Type", "application/json")
+        req.add_header("Accept", "application/json")
+        try:
+            with urlopen(req, timeout=config.timeout) as resp:
+                raw = resp.read().decode("utf-8")
+            endpoint_used = endpoint_name
+            break
+        except HTTPError as exc:
+            body = exc.read().decode("utf-8", errors="replace")
+            last_error = f"{endpoint_name} HTTP {exc.code}: {body}"
+            if exc.code not in (404, 405):
+                return None, out_path, f"LeanSearch {last_error}"
+        except Exception as exc:  # noqa: BLE001
+            last_error = f"{endpoint_name} {exc!r}"
+
+    if raw is None:
+        return None, out_path, f"LeanSearch {last_error or 'all endpoint attempts failed'}"
+
+    try:
+        rows = json.loads(raw)
+    except Exception as exc:  # noqa: BLE001
+        return None, out_path, f"invalid LeanSearch JSON: {exc!r}"
+
+    # Normalize both APIs:
+    #  - /search: list-of-lists with {'distance', 'result': {...}}
+    #  - /retrieve_premises: {'error': bool, 'data': [[{...}, ...]]}
+    if endpoint_used == "retrieve_premises" and isinstance(rows, dict):
+        if rows.get("error"):
+            return None, out_path, f"LeanSearch retrieve_premises error: {rows.get('msg') or rows}"
+        rows = rows.get("data") or []
+
+    results = rows[0] if isinstance(rows, list) and rows else []
+    items: list[dict[str, Any]] = []
+    for row in results:
+        if not isinstance(row, dict):
+            continue
+        if endpoint_used == "search":
+            result = row.get("result") or {}
+            name = result.get("name") or []
+            module_name = result.get("module_name") or []
+            name_str = ".".join(str(part) for part in name) if isinstance(name, list) else str(name)
+            module_str = ".".join(str(part) for part in module_name) if isinstance(module_name, list) else str(module_name)
+            score = float(row.get("distance") or 0.0)
+            sig = str(result.get("signature") or "")
+            desc = str(result.get("informal_description") or "")
+        else:
+            name_str = str(row.get("full_name") or row.get("name") or "")
+            module_str = str(row.get("module") or row.get("module_name") or "")
+            score = 0.0
+            sig = str(row.get("formal_statement") or row.get("signature") or "")
+            desc = str(row.get("informal_statement") or row.get("informal_description") or "")
+
+        if not name_str:
+            continue
+        items.append(
+            {
+                "id": name_str,
+                "module": module_str,
+                "score": score,
+                "faithful_witness": {
+                    "source": "leansearch",
+                    "endpoint": endpoint_used,
+                    "module": module_str,
+                    "declaration": name_str,
+                },
+                "source_excerpt": {"lines": [{"text": sig}, {"text": desc}]},
+            }
+        )
+
+    normalized = {
+        "graph_source": "leansearch",
+        "graph_mode": "semantic",
+        "endpoint_used": endpoint_used,
+        "node_count": len(items),
+        "edge_count": 0,
+        "items": items,
+    }
+    out_path.write_text(json.dumps(normalized, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    return normalized, out_path, None
+
+
+def run_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
+    if config.retrieval_strategy == "leansearch":
+        return run_leansearch_retrieval(config, goal, task_key)
+    if config.retrieval_strategy == "hybrid":
+        gravity_payload, gravity_path, gravity_error = run_gravity_retrieval(config, goal, task_key)
+        lean_payload, lean_path, lean_error = run_leansearch_retrieval(config, goal, task_key)
+        if gravity_error and lean_error:
+            return None, gravity_path, f"gravity={gravity_error}; leansearch={lean_error}"
+        if gravity_error and lean_payload:
+            return lean_payload, lean_path, None
+        if lean_error and gravity_payload:
+            return gravity_payload, gravity_path, None
+        gravity_items = (gravity_payload or {}).get("items") or []
+        lean_items = (lean_payload or {}).get("items") or []
+        merged_items: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for item in gravity_items + lean_items:
+            if not isinstance(item, dict):
+                continue
+            key = str(item.get("id") or item.get("name") or "").strip()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            merged_items.append(item)
+        merged = {
+            "graph_source": "hybrid",
+            "graph_mode": "faithful+semantic",
+            "node_count": len(merged_items),
+            "edge_count": int((gravity_payload or {}).get("edge_count") or 0),
+            "items": merged_items,
+            "components": {
+                "gravity": {
+                    "ok": gravity_error is None,
+                    "artifact_path": str(gravity_path),
+                    "error": gravity_error,
+                    "node_count": len(gravity_items),
+                },
+                "leansearch": {
+                    "ok": lean_error is None,
+                    "artifact_path": str(lean_path),
+                    "error": lean_error,
+                    "node_count": len(lean_items),
+                },
+            },
+        }
+        out_path = ARTIFACT_DIR / f"{task_key}-hybrid.json"
+        out_path.write_text(json.dumps(merged, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+        return merged, out_path, None
+    return run_gravity_retrieval(config, goal, task_key)
 
 
 def summarize_gravity_context(context: dict[str, Any]) -> str:
@@ -608,7 +791,15 @@ def emit_attempt_packets(
         "representation_class": "owner",
         "representation_depth": "operatorial",
         "retrieval_kind": "graph",
-        "source_lane": "arango8529" if gravity_context.get("graph_source") == "arango" else "jsonl_fallback",
+        "source_lane": (
+            "arango8530"
+            if gravity_context.get("graph_source") == "arango"
+            else "leansearch"
+            if gravity_context.get("graph_source") == "leansearch"
+            else "hybrid"
+            if gravity_context.get("graph_source") == "hybrid"
+            else "jsonl_fallback"
+        ),
         "freshness": gravity_context.get("graph_source") or "unknown",
         "items": gravity_context.get("items") or [],
         "scc_anchors": [
@@ -885,7 +1076,13 @@ def fetch_claimed_task_and_goal(config: BeeConfig) -> tuple[dict[str, Any], dict
         config.hive_username,
         config.hive_password,
         worker_id=config.worker_id,
-        capabilities=["gravity-retrieval", "lean-verification", "fossilization", "deadend-memory"],
+        capabilities=[
+            "gravity-retrieval",
+            "leansearch-retrieval",
+            "lean-verification",
+            "fossilization",
+            "deadend-memory",
+        ],
         queues=[config.queue_name],
     )
     task = queue_tool.claim_next_task(
@@ -896,7 +1093,7 @@ def fetch_claimed_task_and_goal(config: BeeConfig) -> tuple[dict[str, Any], dict
         worker_id=config.worker_id,
         queue_name=config.queue_name,
         lease_seconds=config.lease_seconds,
-        task_kind="proof.search",
+        task_kind=config.task_kind,
     )
     if not task:
         return None, None
@@ -935,7 +1132,7 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         status="retrieved",
         extra_fields={"bee_state": "retrieved", "claimed_by": config.worker_id},
     )
-    gravity_context, gravity_path, gravity_error = run_gravity_retrieval(config, goal, str(task["_key"]))
+    gravity_context, gravity_path, gravity_error = run_retrieval(config, goal, str(task["_key"]))
     if gravity_error or not gravity_context:
         queue_tool.requeue_task(
             config.hive_endpoint,
@@ -944,7 +1141,7 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
             config.hive_password,
             task_key_value=str(task["_key"]),
             worker_id=config.worker_id,
-            error_message=f"gravity retrieval failed: {gravity_error}",
+            error_message=f"{config.retrieval_strategy} retrieval failed: {gravity_error}",
         )
         queue_tool.update_goal_status(
             config.hive_endpoint,
@@ -953,9 +1150,19 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
             config.hive_password,
             goal_key_value=str(goal["_key"]),
             status="requeued",
-            extra_fields={"bee_state": "requeued", "last_gravity_error": gravity_error},
+            extra_fields={
+                "bee_state": "requeued",
+                "last_retrieval_error": gravity_error,
+                "retrieval_strategy": config.retrieval_strategy,
+            },
         )
-        return {"status": "requeued", "task": task, "goal": goal, "error": gravity_error}
+        return {
+            "status": "requeued",
+            "task": task,
+            "goal": goal,
+            "error": gravity_error,
+            "retrieval_strategy": config.retrieval_strategy,
+        }
     proof_state = get_proof_state(
         str(goal.get("target_pretty") or goal.get("canonical_shape") or goal.get("entity_key") or ""),
         imports=parse_imports(goal),
@@ -1205,6 +1412,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--tactic-override", default=None)
+    parser.add_argument("--retrieval-strategy", choices=["gravity", "leansearch", "hybrid"], default=DEFAULT_RETRIEVAL_STRATEGY)
+    parser.add_argument("--task-kind", default=DEFAULT_TASK_KIND)
+    parser.add_argument("--leansearch-base-url", default=DEFAULT_LEANSEARCH_BASE_URL)
+    parser.add_argument("--leansearch-num-results", type=int, default=DEFAULT_LEANSEARCH_NUM_RESULTS)
     parser.add_argument("--once", action="store_true", help="run one claim/attempt cycle and exit")
     parser.add_argument("--poll-interval", type=int, default=15)
     return parser.parse_args()
@@ -1250,6 +1461,10 @@ def config_from_args(args: argparse.Namespace) -> BeeConfig:
         allow_direct_provider_api=bool(args.allow_direct_provider_api),
         timeout=int(args.timeout),
         tactic_override=str(args.tactic_override).strip() if args.tactic_override else None,
+        retrieval_strategy=str(args.retrieval_strategy),
+        task_kind=str(args.task_kind),
+        leansearch_base_url=str(args.leansearch_base_url).rstrip("/"),
+        leansearch_num_results=max(1, int(args.leansearch_num_results)),
     )
 
 

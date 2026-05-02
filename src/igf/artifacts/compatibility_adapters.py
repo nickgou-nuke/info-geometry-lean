@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from igf.policy.claim_scope import apply_default_claim_policy
+
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -47,6 +49,7 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
     patch_by_key: dict[str, dict[str, Any]] = {}
     for p in patches:
         p.setdefault("schema_version", "ig.chiral_patch.v1.2")
+        apply_default_claim_policy(p)
         patch_by_key[p.get("_key", "")] = p
 
     run_by_key: dict[str, dict[str, Any]] = {}
@@ -55,10 +58,12 @@ def normalize_artifacts(input_dir: Path, output_dir: Path) -> dict[str, Any]:
         r["run_id"] = rid
         r.setdefault("schema_version", "ig.patch_run.v1")
         r.setdefault("algorithm_version", r.get("patch_algorithm", "unknown"))
+        apply_default_claim_policy(r)
         run_by_key[r.get("_key", "")] = r
 
     for s in spectral:
         s.setdefault("schema_version", "ig.patch_spectral_signature.v1.2")
+        apply_default_claim_policy(s)
         pid = s.get("patch_id") or s.get("_key")
         s["patch_id"] = pid
         if not s.get("run_id"):

@@ -46,6 +46,9 @@ class PatchRun:
     run_id: str = ""
     algorithm_version: str = ALGORITHM_VERSION
     fingerprints_available: bool = False
+    authority_level: str = "derived"
+    claim_scope: str = "derived_spectral_neighborhood_sidecar"
+    non_overclaim: bool = True
 
 @dataclass
 class ChiralPatch:
@@ -66,6 +69,7 @@ class ChiralPatch:
     algorithm_version: str = ALGORITHM_VERSION
     claim_scope: str = "derived_spectral_neighborhood_sidecar"
     non_overclaim: bool = True
+    authority_level: str = "derived"
     cartan_proxy_sector: str = "unknown"
     cartan_proxy_policy: str = "annotation_only_no_cartan_decomposition_claim"
     redex_density: float = 0.0
@@ -108,6 +112,9 @@ class SpectralSignature:
     run_id: str = ""
     laplacian: str = "sym_normalized_v1"
     spectral_status: str = "exact"
+    authority_level: str = "derived"
+    claim_scope: str = "derived_spectral_neighborhood_sidecar"
+    non_overclaim: bool = True
 
 # --- Core Logic ---
 

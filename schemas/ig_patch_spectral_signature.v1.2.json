@@ -10,7 +10,10 @@
     "eigenvalues",
     "nullity",
     "pseudo_logdet",
-    "spectral_status"
+    "spectral_status",
+    "authority_level",
+    "claim_scope",
+    "non_overclaim"
   ],
   "properties": {
     "_key": {"type": "string", "minLength": 1},
@@ -21,7 +24,11 @@
     "nullity": {"type": "integer", "minimum": 0},
     "pseudo_logdet": {"type": "number"},
     "spectral_status": {"enum": ["exact", "truncated", "trivial", "failed"]},
-    "laplacian": {"type": "string"}
+    "laplacian": {"type": "string"},
+    "authority_level": {"enum": ["heuristic", "derived", "formal-adjacent", "formal"]},
+    "claim_scope": {"type": "string", "minLength": 1},
+    "non_overclaim": {"const": true},
+    "proof_link": {"type": "string"}
   },
   "additionalProperties": true
 }

@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
-
-import requests
 
 from igf.config.env_aliases import first_present_name
 from igf.config.loader import load_arango_config
@@ -25,6 +22,11 @@ def run_preflight() -> dict:
 
     if not checks["credentials_present"]:
         return {"ok": False, "checks": checks, "error": "missing_credentials"}
+
+    try:
+        import requests
+    except Exception as exc:
+        return {"ok": False, "checks": checks, "error": f"requests_unavailable: {exc}"}
 
     try:
         r = requests.get(f"{cfg.endpoint}/_api/version", timeout=15)

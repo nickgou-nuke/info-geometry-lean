@@ -343,7 +343,152 @@ def majoranaCarrier :
 
 end MajoranaJKOErgoBridge
 
-/-! ## 4. Constructive scalar deterministic JKO anchor -/
+/-! ## 4. Operator-JKO/Bayes/Majorana fusion adapter -/
+
+/--
+Fusion adapter between the abstract operator-JKO/Bayesian calibration lane and
+the Majorana/Hestenes carrier lane.
+
+This does not create another density-level `MajoranaJKOErgoBridge`. It connects
+the already existing `OperatorJKOArgmin`/`JKOBayesianCalibration` layer to a
+dual-flat projection certificate and re-exports the Majorana phase-axis carrier.
+-/
+structure OperatorJKOBayesMajoranaBridge
+    (Weight Evidence : Type*)
+    [NormedAddCommGroup Weight]
+    [InnerProductSpace ℝ Weight]
+    [CompleteSpace Weight] where
+  /-- Doubled real Majorana/Hestenes carrier. -/
+  majorana :
+    ProjectivePolarizedBigradedBogoliubovDatum (E := E)
+
+  /-- Operator-JKO potential on the abstract weight/state carrier. -/
+  potential :
+    OperatorJKOPotential Weight
+
+  /-- Bayesian calibration of the deterministic operator-JKO step. -/
+  bayes :
+    JKOBayesianCalibration
+      (Weight := Weight)
+      (Evidence := Evidence)
+      potential
+
+  /-- Dual-flat Bregman geometry on the operator-JKO weight carrier. -/
+  dualFlat :
+    DualFlatStructure Weight
+
+  /-- Feasible alternatives for the evidence-conditioned projection problem. -/
+  feasibleAlternative :
+    Weight → Weight → Evidence → Prop
+
+  /--
+  Orthogonality law for the evidence-conditioned Bayesian/JKO projection.
+
+  The posterior is `bayes.bayesUpdate prior evidence`.
+  -/
+  projection_orthogonality :
+    ∀ prior alt evidence,
+      feasibleAlternative prior alt evidence →
+        inner ℝ
+          (nabla dualFlat prior -
+            nabla dualFlat (bayes.bayesUpdate prior evidence))
+          (alt - bayes.bayesUpdate prior evidence) = 0
+
+namespace OperatorJKOBayesMajoranaBridge
+
+variable
+    {Weight Evidence : Type*}
+    [NormedAddCommGroup Weight]
+    [InnerProductSpace ℝ Weight]
+    [CompleteSpace Weight]
+
+variable
+    (B : OperatorJKOBayesMajoranaBridge
+      (E := E) Weight Evidence)
+
+/-- The Bayesian posterior inherits deterministic operator-JKO energy decay. -/
+theorem bayes_energy_le_prior_energy
+    (prior : Weight)
+    (evidence : Evidence) :
+    B.potential.energy (B.bayes.bayesUpdate prior evidence) ≤
+      B.potential.energy prior :=
+  B.bayes.bayes_energy_le_prior_energy prior evidence
+
+/-- The selected Bayesian/JKO penalty is bounded by the installed energy drop. -/
+theorem jko_penalty_le_energy_drop
+    (prior : Weight)
+    (evidence : Evidence) :
+    B.potential.penalty
+        (B.bayes.jkoStep prior evidence).stepSize
+        (B.bayes.jkoStep prior evidence).next
+        (B.bayes.jkoStep prior evidence).previous
+      ≤
+    B.potential.energy (B.bayes.jkoStep prior evidence).previous -
+      B.potential.energy (B.bayes.jkoStep prior evidence).next :=
+  B.bayes.jko_penalty_le_energy_drop prior evidence
+
+/-- Projection orthogonality, re-exported from the adapter witness. -/
+theorem projection_orthogonality_apply
+    (prior alt : Weight)
+    (evidence : Evidence)
+    (halt : B.feasibleAlternative prior alt evidence) :
+    inner ℝ
+      (nabla B.dualFlat prior -
+        nabla B.dualFlat (B.bayes.bayesUpdate prior evidence))
+      (alt - B.bayes.bayesUpdate prior evidence) = 0 :=
+  B.projection_orthogonality prior alt evidence halt
+
+/--
+Bregman projection identity for the abstract operator-JKO Bayesian posterior.
+
+For every feasible alternative `alt`,
+
+`D(alt || prior) = D(alt || posterior) + D(posterior || prior)`.
+-/
+theorem bayesian_projection_identity
+    (prior alt : Weight)
+    (evidence : Evidence)
+    (halt : B.feasibleAlternative prior alt evidence) :
+    divergence B.dualFlat alt prior =
+      divergence B.dualFlat alt (B.bayes.bayesUpdate prior evidence) +
+        divergence B.dualFlat (B.bayes.bayesUpdate prior evidence) prior := by
+  exact
+    bregman_pythagorean
+      (S := B.dualFlat)
+      (x := alt)
+      (y := B.bayes.bayesUpdate prior evidence)
+      (z := prior)
+      (B.projection_orthogonality_apply prior alt evidence halt)
+
+/-- The latent Majorana datum carries a phase-even Hestenes axis. -/
+theorem majorana_phase_axis_even :
+    HasPhaseParity (E := E) PhaseParity.even B.majorana.K :=
+  B.majorana.K_phase_even
+
+/--
+The adapter exposes the three intended outputs together:
+operator-JKO energy decay, Bregman projection identity, and the Majorana
+phase-even carrier.
+-/
+theorem operator_jko_bayes_majorana_payload
+    (prior alt : Weight)
+    (evidence : Evidence)
+    (halt : B.feasibleAlternative prior alt evidence) :
+    B.potential.energy (B.bayes.bayesUpdate prior evidence) ≤
+        B.potential.energy prior
+      ∧
+    divergence B.dualFlat alt prior =
+        divergence B.dualFlat alt (B.bayes.bayesUpdate prior evidence) +
+          divergence B.dualFlat (B.bayes.bayesUpdate prior evidence) prior
+      ∧
+    HasPhaseParity (E := E) PhaseParity.even B.majorana.K :=
+  ⟨B.bayes_energy_le_prior_energy prior evidence,
+    B.bayesian_projection_identity prior alt evidence halt,
+    B.majorana_phase_axis_even⟩
+
+end OperatorJKOBayesMajoranaBridge
+
+/-! ## 5. Constructive scalar deterministic JKO anchor -/
 
 /--
 Parameters for the scalar quadratic deterministic JKO model.

@@ -625,7 +625,11 @@ def main() -> int:
                     continue
                 fingerprint_data[normalize_node_key(decl_name)] = row
 
-    run_id = stable_key(args.run_id or f"patch_run_{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}")
+    run_id = stable_key(
+        os.environ.get("IG_RUN_ID")
+        or args.run_id
+        or f"patch_run_{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}"
+    )
     
     # Compute Patches
     patches, members, p_edges, signatures = build_patches(

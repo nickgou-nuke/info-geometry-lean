@@ -579,7 +579,7 @@ def indexerMain (args : List String) : IO UInt32 := do
   let coreContext : Core.Context := {
     fileName := "<Indexer>",
     fileMap := default,
-    maxHeartbeats := 1000000
+    maxHeartbeats := 10000000
   }
 
   let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut timingLog).run {} {}).toIO coreContext { env := env }

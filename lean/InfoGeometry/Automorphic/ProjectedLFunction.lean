@@ -323,6 +323,148 @@ structure LanglandsPrimeResonanceWitness
   completedFunctionalEquation :
     HasCompletedFunctionalEquation P.L completedL
 
+/-! ## 5A. Strong arithmetic witness packets -/
+
+/--
+Proof-carrying Euler-product witness for an automorphic L-function.
+
+This refines the placeholder `HasEulerProduct` predicate without breaking the
+existing API. The Euler-product law remains model-specific arithmetic input,
+not a consequence of the Siegel projector algebra.
+-/
+structure EulerProductWitness
+    (L : ℂ → ℂ) where
+  /-- Prime/local-factor index. -/
+  PrimeIndex : Type
+
+  /-- Local Euler factor. -/
+  localFactor : PrimeIndex → ℂ → ℂ
+
+  /-- Region on which the Euler-product statement is calibrated. -/
+  convergenceRegion : Set ℂ
+
+  /-- Model-specific Euler-product law. -/
+  euler_product_law : Prop
+
+  /-- Proof/certificate of the Euler-product law. -/
+  euler_product_certificate :
+    euler_product_law
+
+namespace EulerProductWitness
+
+variable {L : ℂ → ℂ}
+variable (E : EulerProductWitness L)
+
+/-- The supplied Euler-product law is available. -/
+theorem euler_product_valid :
+    E.euler_product_law :=
+  E.euler_product_certificate
+
+/--
+Forgetful adapter to the legacy placeholder `EulerProductData`.
+
+This preserves compatibility while keeping the stronger witness available.
+-/
+def toEulerProductData :
+    EulerProductData L where
+  PrimeIndex := E.PrimeIndex
+  localFactor := E.localFactor
+  convergenceRegion := E.convergenceRegion
+  hasEulerProduct := trivial
+
+end EulerProductWitness
+
+/--
+Proof-carrying completed-L-function witness.
+
+This refines the placeholder `HasCompletedFunctionalEquation` predicate without
+claiming a functional equation from projector algebra alone.
+-/
+structure CompletedLFunctionWitness
+    (L : ℂ → ℂ) where
+  /-- Completed L-function. -/
+  completedL : ℂ → ℂ
+
+  /-- Model-specific completed-functional-equation law. -/
+  completed_functional_equation_law : Prop
+
+  /-- Proof/certificate of the completed-functional-equation law. -/
+  completed_functional_equation_certificate :
+    completed_functional_equation_law
+
+namespace CompletedLFunctionWitness
+
+variable {L : ℂ → ℂ}
+variable (C : CompletedLFunctionWitness L)
+
+/-- The supplied completed-functional-equation law is available. -/
+theorem completed_functional_equation_valid :
+    C.completed_functional_equation_law :=
+  C.completed_functional_equation_certificate
+
+/--
+Forgetful adapter to the legacy completed-functional-equation predicate.
+-/
+theorem toHasCompletedFunctionalEquation :
+    HasCompletedFunctionalEquation L C.completedL :=
+  trivial
+
+end CompletedLFunctionWitness
+
+/--
+Strengthened Langlands-prime resonance witness.
+
+Unlike `LanglandsPrimeResonanceWitness`, this carries proof-carrying Euler and
+completed-L-function packets. It does not turn those arithmetic statements into
+theorems of the Siegel projector algebra.
+-/
+structure LanglandsPrimeResonanceStrongWitness
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    (P : ProjectedAutomorphicLFunctionWitness W) where
+  /-- Proof-carrying Euler-product data. -/
+  eulerProduct :
+    EulerProductWitness P.L
+
+  /-- Proof-carrying completed-L-function data. -/
+  completed :
+    CompletedLFunctionWitness P.L
+
+namespace LanglandsPrimeResonanceStrongWitness
+
+variable
+    {Bulk : Type uBulk} {Boundary : Type uBoundary}
+    [AddCommGroup Bulk] [Module ℝ Bulk]
+    [AddCommGroup Boundary] [Module ℝ Boundary]
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    {P : ProjectedAutomorphicLFunctionWitness W}
+
+variable (R : LanglandsPrimeResonanceStrongWitness P)
+
+/--
+The strong witness induces the legacy weak witness.
+-/
+def toWeakWitness :
+    LanglandsPrimeResonanceWitness P where
+  eulerProduct := R.eulerProduct.toEulerProductData
+  completedL := R.completed.completedL
+  completedFunctionalEquation :=
+    R.completed.toHasCompletedFunctionalEquation
+
+/-- The Euler-product certificate is available. -/
+theorem euler_product_valid :
+    R.eulerProduct.euler_product_law :=
+  R.eulerProduct.euler_product_valid
+
+/-- The completed-functional-equation certificate is available. -/
+theorem completed_functional_equation_valid :
+    R.completed.completed_functional_equation_law :=
+  R.completed.completed_functional_equation_valid
+
+end LanglandsPrimeResonanceStrongWitness
+
 /-! ## 6. Langlands-Sugawara Central Charge Calibration -/
 
 /--

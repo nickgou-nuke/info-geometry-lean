@@ -59,6 +59,7 @@ import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.ProjectedLFunction
+import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LFunctionResonance
 import InfoGeometry.Automorphic.LanglandsPrimeResonance

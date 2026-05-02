@@ -14,7 +14,8 @@
     "chiral_bias",
     "coarse_hash",
     "claim_scope",
-    "non_overclaim"
+    "non_overclaim",
+    "authority_level"
   ],
   "properties": {
     "_key": {"type": "string", "minLength": 1},
@@ -30,8 +31,10 @@
     "chiral_bias": {"type": "number"},
     "cartan_proxy_histogram": {"type": "object"},
     "cartan_proxy_sector": {"type": "string"},
+    "authority_level": {"enum": ["heuristic", "derived", "formal-adjacent", "formal"]},
     "claim_scope": {"type": "string", "minLength": 1},
-    "non_overclaim": {"type": "boolean"},
+    "non_overclaim": {"const": true},
+    "proof_link": {"type": "string"},
     "cartan_proxy_policy": {"type": "string"},
     "redex_density": {"type": "number"},
     "max_debruijn_depth": {"type": "integer", "minimum": 0}

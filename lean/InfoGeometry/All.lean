@@ -54,6 +54,7 @@ import InfoGeometry.Algebraic.NarainRealification
 import InfoGeometry.Application.BlackHoleEntropyReadout
 import InfoGeometry.Specialization.ModularBerrySpecialization
 import InfoGeometry.Arithmetic.PrimeVielbeinSupervolume
+import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization

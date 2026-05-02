@@ -2,6 +2,7 @@ import InfoGeometry.Architecture.All
 import InfoGeometry.Causal.All
 import InfoGeometry.Canonical.All
 import InfoGeometry.Geometry.RealUpperHalfPlane
+import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Geometry.ErlangerPhaseGeometry
 import InfoGeometry.Geometry.PhaseErlanger
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
@@ -15,9 +16,19 @@ import InfoGeometry.ProjectiveFoundation
 import InfoGeometry.Geometry.AnomalousErlangerHeight
 import InfoGeometry.Geometry.JonesTransportMetric
 import InfoGeometry.Geometry.OperatorBregmanDivergence
+import InfoGeometry.Geometry.TKKBregmanRicciBridge
 import InfoGeometry.Geometry.OperatorialJonesConnection
 import InfoGeometry.Geometry.OpticalJonesV4
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Geometry.ConstructiveCauchyKernel
+import InfoGeometry.Geometry.VerifiedCauchyKernel
+import InfoGeometry.Geometry.IndividuatedUHP
+import InfoGeometry.Geometry.ConstructiveKasparov
+import InfoGeometry.Geometry.SpectralDivisors
+import InfoGeometry.Geometry.FiniteMatrixResolventKernel
+import InfoGeometry.Geometry.WindingSnap
+import InfoGeometry.Geometry.ConstructiveConnesChern
+import InfoGeometry.Geometry.FiniteDefectStokesModel
 import InfoGeometry.ProjectiveFoundation.RealProjectiveDescent
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.RealModularReadout
@@ -104,6 +115,7 @@ import InfoGeometry.Library
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.DrazinRefactor
+import InfoGeometry.Meta.GromovErgostructureBridge
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
 import InfoGeometry.Meta.StrictDef

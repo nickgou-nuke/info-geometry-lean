@@ -18,7 +18,7 @@ def sample_swarm_config() -> hive_swarm.SwarmConfig:
         queue_name="proof-search",
         worker_id="swarm-test",
         lease_seconds=600,
-        gravity_base_url="http://127.0.0.1:8529",
+        gravity_base_url="http://127.0.0.1:8530",
         gravity_database="infogeometry",
         gravity_top_k=4,
         model_base_url="http://127.0.0.1:30002/v1",

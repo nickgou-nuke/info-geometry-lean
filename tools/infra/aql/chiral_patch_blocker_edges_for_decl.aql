@@ -1,0 +1,22 @@
+/*
+Blocker-edge extraction for one selected declaration.
+Bind vars:
+  declId: full _id, e.g. "ig_nodes/InfoGeometry...."
+  maxHops: default 2
+  limit: default 200
+*/
+
+FOR v, e, p IN 1..@maxHops ANY @declId ig_edges
+  OPTIONS { uniqueVertices: "path", bfs: true }
+  LIMIT @limit
+  RETURN {
+    source_decl: @declId,
+    hop: LENGTH(p.edges),
+    from: e._from,
+    to: e._to,
+    edge_kind: e.kind,
+    edge_role: e.role,
+    neighbor_decl: v._id,
+    neighbor_module: v.module,
+    neighbor_kind: v.kind
+  }

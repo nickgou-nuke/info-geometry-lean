@@ -11,6 +11,7 @@ import Lean.Util.Path
 import DAG.Basic
 import DAG.Hydrate
 import DAG.StructuralExport
+import DAG.ExprFingerprint
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity
 
@@ -29,6 +30,8 @@ structure DeclNode where
   column : Nat
   doc    : String
   attrs  : Array String
+  typeFingerprint  : ExprFingerprint
+  valueFingerprint : Option ExprFingerprint
 deriving ToJson
 
 structure DepEdge where
@@ -209,6 +212,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
       attrs := attrs.push "capstone"
     attrs
 
+  let typeFingerprint := computeFingerprint ci.type
+  let valueFingerprint := ci.value?.map computeFingerprint
+
   modify fun st =>
     { st with
       decls := st.decls.push {
@@ -220,6 +226,8 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         column := col
         doc := docStr
         attrs := attrStrs
+        typeFingerprint := typeFingerprint
+        valueFingerprint := valueFingerprint
       }
     }
 
@@ -433,13 +441,15 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   let srcSearchPath ← liftM Lean.getSrcSearchPath
   let outPath := System.FilePath.mk outDir
   liftM <| IO.FS.createDirAll outPath
-  let consts : Array PendingConstant := Id.run do
-    let mut out : Array PendingConstant := #[]
-    for (name, ci) in env.constants.toList do
+  let nsName := nsPrefix.toName
+  let consts : Array PendingConstant := env.constants.fold (init := #[]) fun acc name ci =>
+    if nsName.isPrefixOf name then
       let nameStr := name.toString
-      if nameStr.startsWith nsPrefix && shouldIndexDeclString nameStr then
-        out := out.push { name := name, nameStr := nameStr, ci := ci }
-    pure (out.qsort (fun a b => a.nameStr < b.nameStr))
+      if shouldIndexDeclString nameStr then
+        acc.push { name := name, nameStr := nameStr, ci := ci }
+      else acc
+    else acc
+  let consts := consts.qsort (fun a b => a.nameStr < b.nameStr)
 
   let (_, st) ← (consts.forM fun (entry : PendingConstant) => do
     processConstant env srcSearchPath entry.name entry.nameStr entry.ci
@@ -456,8 +466,14 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   stageStart ← checkpoint timingLog s!"classify/filter edges ({edgesFiltered.size} kept / {st.edges.size} raw)" stageStart
 
   if leakage.droppedEdges > 0 then
-    IO.eprintln s!"[Indexer WARNING] {leakage.droppedEdges} edge(s) reference nodes outside the filtered set"
-    IO.eprintln s!"[Indexer WARNING] leakage breakdown: external={leakage.dstOutsideModuleEdges} internalGenerated={leakage.dstInsideModuleGeneratedEdges} internalStable={leakage.dstInsideModuleStableEdges} unknown={leakage.dstUnknownEdges}"
+    let totalDropped := leakage.droppedEdges
+    let pct (n : Nat) : Float :=
+      if totalDropped == 0 then
+        0.0
+      else
+        (100.0 * Float.ofNat n) / Float.ofNat totalDropped
+    IO.eprintln s!"[Indexer WARNING] {leakage.droppedEdges} filtered-edge drop(s) reference nodes outside the filtered declaration set"
+    IO.eprintln s!"[Indexer WARNING] filtered-edge drop breakdown: external={leakage.dstOutsideModuleEdges} ({pct leakage.dstOutsideModuleEdges}%), internalGenerated={leakage.dstInsideModuleGeneratedEdges} ({pct leakage.dstInsideModuleGeneratedEdges}%), internalStable={leakage.dstInsideModuleStableEdges} ({pct leakage.dstInsideModuleStableEdges}%), unknown={leakage.dstUnknownEdges} ({pct leakage.dstUnknownEdges}%)"
   liftM <| atomicWriteFile (outPath / "edge-leakage.json") (toJson leakage).pretty
 
   let writeJsonl {α} [ToJson α] (filename : String) (arr : Array α) : IO Unit := do

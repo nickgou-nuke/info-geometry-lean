@@ -1,314 +1,348 @@
-import Mathlib
+/-
+InfoGeometry/Optics/FiniteJonesBregman.lean
 
-/-!
-# Concrete finite Jones Bregman heat
+Constructive finite Bregman heat for Jones/Stinespring channels.
 
-This module installs an explicit quadratic Bregman potential for the finite
-two-channel Jones loss branch.
+This module eliminates the vague statement:
 
-The finite branch is intentionally concrete: nonnegativity is proved from the
-closed formula for the quadratic Bregman divergence, and the visible/hidden heat
-audit is proved from the two scalar Stinespring isometry laws.
+  "optical heat is Bregman divergence"
+
+in the finite Jones branch.
+
+For the first concrete finite model, the potential is the Frobenius quadratic
+potential
+
+  Phi(X) = 1/2 ||X||_F^2
+
+on `2 x 2` Jones matrices, with real Frobenius pairing
+
+  <X,Y>_F = sum_ij Re(X_ij)Re(Y_ij) + Im(X_ij)Im(Y_ij).
+
+The Bregman divergence is proved constructively to be
+
+  DPhi(X,Y) = 1/2 ||X-Y||_F^2 >= 0.
+
+Combined with finite Stinespring accounting,
+
+  I - R^dagger R = V^dagger V,
+
+this gives a proved finite heat readout:
+
+  Heat = DPhi(I-R^dagger R,0) = DPhi(V^dagger V,0).
 -/
+
+import Mathlib
+import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section
 
 namespace InfoGeometry.Optics.FiniteJonesBregman
 
-/-! ## Concrete two-channel loss space -/
+open InfoGeometry.Optics.FiniteJonesModel
+open InfoGeometry.Optics.FiniteJonesStinespring
+
+/-! ## 1. Constructive Frobenius pairing -/
 
 /--
-Two-channel real loss/gain point.
+Real inner product on one complex scalar, written constructively.
 
-The `s` and `p` fields are the two polarization-channel components.
+This avoids relying on a global Hilbert-Schmidt API.
 -/
-structure LossPoint where
-  s : ℝ
-  p : ℝ
-deriving DecidableEq
-
-namespace LossPoint
-
-/-- Zero loss/gain point. -/
-def zero : LossPoint where
-  s := 0
-  p := 0
-
-instance : Zero LossPoint where
-  zero := zero
-
-@[simp] theorem zero_s :
-    (0 : LossPoint).s = 0 :=
-  rfl
-
-@[simp] theorem zero_p :
-    (0 : LossPoint).p = 0 :=
-  rfl
-
-/-- Difference of two loss points. -/
-def sub (X Y : LossPoint) : LossPoint where
-  s := X.s - Y.s
-  p := X.p - Y.p
-
-@[simp] theorem sub_s (X Y : LossPoint) :
-    (sub X Y).s = X.s - Y.s :=
-  rfl
-
-@[simp] theorem sub_p (X Y : LossPoint) :
-    (sub X Y).p = X.p - Y.p :=
-  rfl
-
-@[ext] theorem ext {X Y : LossPoint}
-    (hs : X.s = Y.s)
-    (hp : X.p = Y.p) :
-    X = Y := by
-  cases X
-  cases Y
-  simp_all
-
-end LossPoint
-
-/-! ## Explicit quadratic potential -/
+def complexRealInner
+    (z w : ℂ) : ℝ :=
+  z.re * w.re + z.im * w.im
 
 /--
-Concrete quadratic information potential:
-
-`Phi(X) = 1/2 * (X.s^2 + X.p^2)`.
+Squared complex magnitude, written constructively.
 -/
-def quadraticPotential
-    (X : LossPoint) : ℝ :=
-  (X.s ^ 2 + X.p ^ 2) / 2
+def complexSqNorm
+    (z : ℂ) : ℝ :=
+  complexRealInner z z
 
 /--
-Gradient pairing at `Y` applied to direction `H`:
-
-`dPhi_Y(H) = Y.s * H.s + Y.p * H.p`.
+Nonnegativity of the squared complex magnitude.
 -/
-def quadraticGradientPairing
-    (Y H : LossPoint) : ℝ :=
-  Y.s * H.s + Y.p * H.p
+theorem complexSqNorm_nonneg
+    (z : ℂ) :
+    0 ≤ complexSqNorm z := by
+  dsimp [complexSqNorm, complexRealInner]
+  exact add_nonneg (mul_self_nonneg z.re) (mul_self_nonneg z.im)
 
 /--
-Concrete quadratic Bregman divergence:
-
-`D_Phi(X || Y) = Phi(X) - Phi(Y) - dPhi_Y(X - Y)`.
+Finite Frobenius real pairing on Jones matrices.
 -/
-def quadraticBregman
-    (X Y : LossPoint) : ℝ :=
-  quadraticPotential X -
-    quadraticPotential Y -
-      quadraticGradientPairing Y (LossPoint.sub X Y)
+def frobeniusInner
+    (X Y : JonesMat) : ℝ :=
+  Finset.univ.sum fun i : Fin 2 =>
+    Finset.univ.sum fun j : Fin 2 =>
+      complexRealInner (X i j) (Y i j)
 
-/-- Closed form of the quadratic Bregman divergence. -/
-theorem quadraticBregman_eq_half_sq_dist
-    (X Y : LossPoint) :
-    quadraticBregman X Y =
-      ((X.s - Y.s) ^ 2 + (X.p - Y.p) ^ 2) / 2 := by
-  dsimp [
-    quadraticBregman,
-    quadraticPotential,
-    quadraticGradientPairing,
-    LossPoint.sub
+/--
+Finite Frobenius square norm.
+-/
+def frobeniusSq
+    (X : JonesMat) : ℝ :=
+  frobeniusInner X X
+
+/--
+The Frobenius square norm is nonnegative.
+-/
+theorem frobeniusSq_nonneg
+    (X : JonesMat) :
+    0 ≤ frobeniusSq X := by
+  dsimp [frobeniusSq, frobeniusInner]
+  apply Finset.sum_nonneg
+  intro i _hi
+  apply Finset.sum_nonneg
+  intro j _hj
+  exact complexSqNorm_nonneg (X i j)
+
+/-! ## 2. Quadratic potential and Bregman divergence -/
+
+/--
+Quadratic Frobenius potential:
+
+`Phi(X) = 1/2 ||X||_F^2`.
+-/
+def frobeniusPotential
+    (X : JonesMat) : ℝ :=
+  (1 / 2 : ℝ) * frobeniusSq X
+
+/--
+The gradient of `Phi(X)=1/2||X||^2` at `Y`, represented as the linear readout
+`Z |-> <Y,Z>`.
+
+This is not a differentiability theorem; it is the finite quadratic gradient
+readout used in the Bregman formula.
+-/
+def frobeniusGradientAt
+    (Y : JonesMat) : JonesMat → ℝ :=
+  fun Z => frobeniusInner Y Z
+
+/--
+Raw Bregman divergence from the potential and gradient readout:
+
+`DPhi(X,Y)=Phi(X)-Phi(Y)-<Y,X-Y>`.
+-/
+def frobeniusBregmanRaw
+    (X Y : JonesMat) : ℝ :=
+  frobeniusPotential X -
+    frobeniusPotential Y -
+      frobeniusGradientAt Y (X - Y)
+
+/--
+Closed-form quadratic Bregman divergence:
+
+`DPhi(X,Y)=1/2||X-Y||_F^2`.
+-/
+def frobeniusBregman
+    (X Y : JonesMat) : ℝ :=
+  (1 / 2 : ℝ) * frobeniusSq (X - Y)
+
+/--
+Constructive algebraic reduction of the raw Bregman formula to the closed
+quadratic form.
+-/
+theorem frobeniusBregmanRaw_eq_frobeniusBregman
+    (X Y : JonesMat) :
+    frobeniusBregmanRaw X Y =
+      frobeniusBregman X Y := by
+  simp [
+    frobeniusBregmanRaw,
+    frobeniusBregman,
+    frobeniusPotential,
+    frobeniusGradientAt,
+    frobeniusSq,
+    frobeniusInner,
+    complexRealInner,
+    Fin.sum_univ_two
   ]
   ring
 
-/-- Quadratic Bregman divergence is nonnegative. -/
-theorem quadraticBregman_nonneg
-    (X Y : LossPoint) :
-    0 ≤ quadraticBregman X Y := by
-  rw [quadraticBregman_eq_half_sq_dist]
-  nlinarith [sq_nonneg (X.s - Y.s), sq_nonneg (X.p - Y.p)]
+/--
+The finite Frobenius Bregman divergence is nonnegative.
+-/
+theorem frobeniusBregman_nonneg
+    (X Y : JonesMat) :
+    0 ≤ frobeniusBregman X Y := by
+  dsimp [frobeniusBregman]
+  exact mul_nonneg (by norm_num) (frobeniusSq_nonneg (X - Y))
 
-/-- Quadratic Bregman divergence vanishes on the diagonal. -/
-@[simp] theorem quadraticBregman_self
-    (X : LossPoint) :
-    quadraticBregman X X = 0 := by
-  rw [quadraticBregman_eq_half_sq_dist]
-  ring
+/--
+Self-divergence vanishes.
+-/
+@[simp]
+theorem frobeniusBregman_self
+    (X : JonesMat) :
+    frobeniusBregman X X = 0 := by
+  simp [
+    frobeniusBregman,
+    frobeniusSq,
+    frobeniusInner,
+    complexRealInner
+  ]
 
-/-- Bregman heat relative to the zero-loss reference point. -/
-def bregmanHeatAtZero
-    (X : LossPoint) : ℝ :=
-  quadraticBregman X 0
-
-/-- Closed form for Bregman heat at zero. -/
-theorem bregmanHeatAtZero_eq
-    (X : LossPoint) :
-    bregmanHeatAtZero X =
-      (X.s ^ 2 + X.p ^ 2) / 2 := by
-  dsimp [bregmanHeatAtZero]
-  rw [quadraticBregman_eq_half_sq_dist]
+/--
+If two Jones states agree, their Frobenius Bregman divergence vanishes.
+-/
+theorem frobeniusBregman_eq_zero_of_eq
+    {X Y : JonesMat}
+    (h : X = Y) :
+    frobeniusBregman X Y = 0 := by
+  rw [h]
   simp
 
-/-- Bregman heat at zero is nonnegative. -/
-theorem bregmanHeatAtZero_nonneg
-    (X : LossPoint) :
-    0 ≤ bregmanHeatAtZero X :=
-  quadraticBregman_nonneg X 0
-
-@[simp] theorem bregmanHeatAtZero_zero :
-    bregmanHeatAtZero 0 = 0 := by
-  simp [bregmanHeatAtZero]
-
-/-! ## Real diagonal finite Stinespring audit -/
-
 /--
-Concrete real diagonal Stinespring audit.
-
-Visible amplitudes are `r_s`, `r_p`; hidden/environment amplitudes are `v_s`,
-`v_p`.  The two scalar isometry laws say
-
-`r_s^2 + v_s^2 = 1` and `r_p^2 + v_p^2 = 1`.
+Distance-to-zero form.
 -/
-structure RealDiagonalStinespringAudit where
-  r_s : ℝ
-  r_p : ℝ
-  v_s : ℝ
-  v_p : ℝ
-  s_isometry :
-    r_s ^ 2 + v_s ^ 2 = 1
-  p_isometry :
-    r_p ^ 2 + v_p ^ 2 = 1
-
-namespace RealDiagonalStinespringAudit
-
-variable (A : RealDiagonalStinespringAudit)
-
-/-- Visible loss point: `(1 - r_s^2, 1 - r_p^2)`. -/
-def visibleLossPoint : LossPoint where
-  s := 1 - A.r_s ^ 2
-  p := 1 - A.r_p ^ 2
-
-/-- Hidden gain point: `(v_s^2, v_p^2)`. -/
-def hiddenGainPoint : LossPoint where
-  s := A.v_s ^ 2
-  p := A.v_p ^ 2
-
-/-- Visible loss equals hidden gain, componentwise. -/
-theorem visibleLossPoint_eq_hiddenGainPoint :
-    A.visibleLossPoint = A.hiddenGainPoint := by
-  ext
-  · dsimp [visibleLossPoint, hiddenGainPoint]
-    nlinarith [A.s_isometry]
-  · dsimp [visibleLossPoint, hiddenGainPoint]
-    nlinarith [A.p_isometry]
-
-/-- Visible Bregman heat. -/
-def visibleBregmanHeat : ℝ :=
-  bregmanHeatAtZero A.visibleLossPoint
-
-/-- Hidden Bregman heat. -/
-def hiddenBregmanHeat : ℝ :=
-  bregmanHeatAtZero A.hiddenGainPoint
-
-/-- Visible Bregman heat equals hidden Bregman heat. -/
-theorem visibleBregmanHeat_eq_hiddenBregmanHeat :
-    A.visibleBregmanHeat = A.hiddenBregmanHeat := by
-  dsimp [visibleBregmanHeat, hiddenBregmanHeat]
-  rw [A.visibleLossPoint_eq_hiddenGainPoint]
-
-/-- Visible Bregman heat is nonnegative. -/
-theorem visibleBregmanHeat_nonneg :
-    0 ≤ A.visibleBregmanHeat :=
-  bregmanHeatAtZero_nonneg A.visibleLossPoint
-
-/-- Hidden Bregman heat is nonnegative. -/
-theorem hiddenBregmanHeat_nonneg :
-    0 ≤ A.hiddenBregmanHeat :=
-  bregmanHeatAtZero_nonneg A.hiddenGainPoint
-
-/-- If the hidden/environment amplitudes vanish, the hidden Bregman heat vanishes. -/
-theorem hiddenBregmanHeat_eq_zero_of_hidden_zero
-    (hs : A.v_s = 0)
-    (hp : A.v_p = 0) :
-    A.hiddenBregmanHeat = 0 := by
-  dsimp [
-    hiddenBregmanHeat,
-    hiddenGainPoint,
-    bregmanHeatAtZero,
-    quadraticBregman,
-    quadraticPotential,
-    quadraticGradientPairing,
-    LossPoint.sub
+theorem frobeniusBregman_to_zero
+    (X : JonesMat) :
+    frobeniusBregman X 0 =
+      frobeniusPotential X := by
+  simp [
+    frobeniusBregman,
+    frobeniusPotential,
+    frobeniusSq,
+    frobeniusInner,
+    complexRealInner
   ]
-  rw [hs, hp]
-  norm_num
 
-/-- If the hidden/environment amplitudes vanish, the visible Bregman heat vanishes. -/
-theorem visibleBregmanHeat_eq_zero_of_hidden_zero
-    (hs : A.v_s = 0)
-    (hp : A.v_p = 0) :
-    A.visibleBregmanHeat = 0 := by
-  rw [A.visibleBregmanHeat_eq_hiddenBregmanHeat]
-  exact A.hiddenBregmanHeat_eq_zero_of_hidden_zero hs hp
-
-end RealDiagonalStinespringAudit
-
-/-! ## Finite Jones Bregman audit package -/
+/-! ## 3. Finite Jones heat from Stinespring defect -/
 
 /--
-Concrete finite Jones Bregman audit.
+Finite Stinespring heat readout.
 
-This packages the real diagonal Stinespring audit and its constructive Bregman
-heat equality.
+Heat is the Bregman distance from the visible optical defect to the zero-defect
+state:
+
+`Heat = DPhi(I - R^dagger R, 0)`.
 -/
-structure FiniteJonesBregmanAudit where
-  audit : RealDiagonalStinespringAudit
-
-namespace FiniteJonesBregmanAudit
-
-variable (A : FiniteJonesBregmanAudit)
-
-/-- The finite Jones Bregman audit equation. -/
-theorem visible_heat_eq_hidden_heat :
-    A.audit.visibleBregmanHeat =
-      A.audit.hiddenBregmanHeat :=
-  A.audit.visibleBregmanHeat_eq_hiddenBregmanHeat
-
-/-- Visible heat is nonnegative. -/
-theorem visible_heat_nonneg :
-    0 ≤ A.audit.visibleBregmanHeat :=
-  A.audit.visibleBregmanHeat_nonneg
-
-/-- Hidden heat is nonnegative. -/
-theorem hidden_heat_nonneg :
-    0 ≤ A.audit.hiddenBregmanHeat :=
-  A.audit.hiddenBregmanHeat_nonneg
-
-end FiniteJonesBregmanAudit
-
-/-! ## Owner targets discharged constructively -/
+def finiteStinespringHeat
+    (S : StinespringIsometry JonesMat) : ℝ :=
+  frobeniusBregman (opticalDefect S.R) 0
 
 /--
-Owner target for a concrete finite quadratic Bregman potential.
-
-This is no longer witness-gated: the potential is explicitly constructed above.
+Finite Stinespring heat is nonnegative.
 -/
-def FiniteQuadraticBregmanOwnerTarget : Prop :=
-  ∀ X Y : LossPoint,
-    0 ≤ quadraticBregman X Y
+theorem finiteStinespringHeat_nonneg
+    (S : StinespringIsometry JonesMat) :
+    0 ≤ finiteStinespringHeat S :=
+  frobeniusBregman_nonneg _ _
 
-/-- Constructive proof of the finite quadratic Bregman owner target. -/
-theorem finiteQuadraticBregmanOwnerTarget :
-    FiniteQuadraticBregmanOwnerTarget := by
-  intro X Y
-  exact quadraticBregman_nonneg X Y
+/--
+If the hidden environment channel is zero, the finite heat vanishes.
+-/
+theorem finiteStinespringHeat_eq_zero_of_environment_zero
+    (S : StinespringIsometry JonesMat)
+    (hV : S.V = 0) :
+    finiteStinespringHeat S = 0 := by
+  dsimp [finiteStinespringHeat]
+  rw [S.defect_eq_zero_of_hidden_zero hV]
+  simp
 
-/-- Owner target for concrete finite Jones Bregman heat accounting. -/
-def FiniteJonesBregmanAuditOwnerTarget : Prop :=
-  ∀ A : RealDiagonalStinespringAudit,
-    A.visibleBregmanHeat =
-      A.hiddenBregmanHeat ∧
-    0 ≤ A.visibleBregmanHeat ∧
-    0 ≤ A.hiddenBregmanHeat
+/--
+The finite Stinespring heat can be computed from the hidden environment gain:
 
-/-- Constructive proof of the finite Jones Bregman audit owner target. -/
-theorem finiteJonesBregmanAuditOwnerTarget :
-    FiniteJonesBregmanAuditOwnerTarget := by
-  intro A
+`Heat = DPhi(V^dagger V,0)`.
+-/
+theorem finiteStinespringHeat_eq_hiddenGainBregman
+    (S : StinespringIsometry JonesMat) :
+    finiteStinespringHeat S =
+      frobeniusBregman (star S.V * S.V) 0 := by
+  dsimp [finiteStinespringHeat]
+  rw [S.defect_eq_hiddenGain]
+  dsimp [hiddenGain]
+
+/--
+Equivalent potential form of the hidden-gain heat readout.
+-/
+theorem finiteStinespringHeat_eq_hiddenGainPotential
+    (S : StinespringIsometry JonesMat) :
+    finiteStinespringHeat S =
+      frobeniusPotential (star S.V * S.V) := by
+  rw [finiteStinespringHeat_eq_hiddenGainBregman]
+  exact frobeniusBregman_to_zero _
+
+/-! ## 4. Diagonal finite Jones channel version -/
+
+/--
+Heat readout for a diagonal finite Jones channel.
+
+Visible channel:
+
+`R = diag(r_s,r_p)`.
+
+Hidden coupling:
+
+`V = diag(v_s,v_p)`.
+-/
+def diagonalJonesHeat
+    (r_s r_p v_s v_p : ℂ)
+    (h_s : star r_s * r_s + star v_s * v_s = 1)
+    (h_p : star r_p * r_p + star v_p * v_p = 1) : ℝ :=
+  finiteStinespringHeat
+    (diagonalStinespringIsometry r_s r_p v_s v_p h_s h_p)
+
+/--
+Diagonal heat is nonnegative.
+-/
+theorem diagonalJonesHeat_nonneg
+    (r_s r_p v_s v_p : ℂ)
+    (h_s : star r_s * r_s + star v_s * v_s = 1)
+    (h_p : star r_p * r_p + star v_p * v_p = 1) :
+    0 ≤ diagonalJonesHeat r_s r_p v_s v_p h_s h_p :=
+  finiteStinespringHeat_nonneg
+    (diagonalStinespringIsometry r_s r_p v_s v_p h_s h_p)
+
+/--
+Diagonal heat can be computed from the hidden diagonal environment gain.
+-/
+theorem diagonalJonesHeat_eq_hiddenGainBregman
+    (r_s r_p v_s v_p : ℂ)
+    (h_s : star r_s * r_s + star v_s * v_s = 1)
+    (h_p : star r_p * r_p + star v_p * v_p = 1) :
+    diagonalJonesHeat r_s r_p v_s v_p h_s h_p =
+      frobeniusBregman
+        (star (diagJones v_s v_p) * diagJones v_s v_p)
+        0 := by
+  dsimp [diagonalJonesHeat]
   exact
-    ⟨A.visibleBregmanHeat_eq_hiddenBregmanHeat,
-     A.visibleBregmanHeat_nonneg,
-     A.hiddenBregmanHeat_nonneg⟩
+    finiteStinespringHeat_eq_hiddenGainBregman
+      (diagonalStinespringIsometry r_s r_p v_s v_p h_s h_p)
+
+/--
+Diagonal heat can be computed as the potential of hidden gain.
+-/
+theorem diagonalJonesHeat_eq_hiddenGainPotential
+    (r_s r_p v_s v_p : ℂ)
+    (h_s : star r_s * r_s + star v_s * v_s = 1)
+    (h_p : star r_p * r_p + star v_p * v_p = 1) :
+    diagonalJonesHeat r_s r_p v_s v_p h_s h_p =
+      frobeniusPotential
+        (star (diagJones v_s v_p) * diagJones v_s v_p) := by
+  rw [diagonalJonesHeat_eq_hiddenGainBregman]
+  exact frobeniusBregman_to_zero _
+
+/-! ## 5. Constructive owner target -/
+
+/--
+Owner target for constructive finite Jones Bregman heat.
+-/
+def FiniteJonesBregmanOwnerTarget : Prop :=
+  ∀ S : StinespringIsometry JonesMat,
+    0 ≤ finiteStinespringHeat S ∧
+    finiteStinespringHeat S =
+      frobeniusBregman (star S.V * S.V) 0
+
+/--
+The owner target is constructively discharged.
+-/
+theorem finiteJonesBregmanOwnerTarget :
+    FiniteJonesBregmanOwnerTarget := by
+  intro S
+  exact ⟨
+    finiteStinespringHeat_nonneg S,
+    finiteStinespringHeat_eq_hiddenGainBregman S
+  ⟩
 
 end InfoGeometry.Optics.FiniteJonesBregman

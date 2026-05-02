@@ -1,0 +1,37 @@
+/*
+Pick one formalization target from a chosen cluster.
+Bind vars:
+  patchKey: ig_chiral_patches._key (required)
+  moduleRegex: e.g. "(E9|Langlands|Automorphic|Cartan|KacMoody)"
+  limit: default 25
+*/
+
+LET p = DOCUMENT(CONCAT("ig_chiral_patches/", @patchKey))
+
+FOR m IN ig_patch_members
+  FILTER p != null
+  FILTER m._from == p._id
+  LET n = DOCUMENT(m._to)
+  FILTER n != null
+  FILTER REGEX_TEST(CONCAT(n.module, " ", n.name), @moduleRegex, true)
+
+  LET indeg = LENGTH(FOR e IN ig_edges FILTER e._to == n._id RETURN 1)
+  LET outdeg = LENGTH(FOR e IN ig_edges FILTER e._from == n._id RETURN 1)
+  LET localPressure = indeg + outdeg
+
+  SORT localPressure DESC, n.kind == "theorem" ASC, n.name ASC
+  LIMIT @limit
+
+  RETURN {
+    patch_id: p.patch_id,
+    patch_key: p._key,
+    decl_id: n._id,
+    module: n.module,
+    name: n.name,
+    kind: n.kind,
+    file: n.file,
+    line: n.line,
+    local_pressure: localPressure,
+    indegree: indeg,
+    outdegree: outdeg
+  }

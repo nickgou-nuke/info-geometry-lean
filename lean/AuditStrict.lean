@@ -1,6 +1,7 @@
 import Lean
 import InfoGeometry.Canonical.All
 import InfoGeometry.Lint.Vacuity
+import InfoGeometry.Lint.Pauli
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.RegionPolicy

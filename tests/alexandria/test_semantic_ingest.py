@@ -10,7 +10,7 @@ def test_digest_document_extracts_sections_chunks_and_entities(tmp_path: Path) -
         encoding="utf-8",
     )
 
-    document, sections, chunks, entities, adjacent = digest_document(source)
+    document, sections, chunks, entities, adjacent, relations = digest_document(source)
 
     assert document["title"] == "blackbook"
     assert sections

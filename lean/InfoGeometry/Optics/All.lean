@@ -1,8 +1,12 @@
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.Optics.OperatorialJonesCalculus
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Optics.FiniteJonesErlanger
+import InfoGeometry.Optics.FiniteJonesBrewsterCollapse
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespring
+import InfoGeometry.Optics.FiniteJonesStinespringConstructive
+import InfoGeometry.Optics.FiniteJonesKasparovBoundary
 
 namespace InfoGeometry.Optics
 

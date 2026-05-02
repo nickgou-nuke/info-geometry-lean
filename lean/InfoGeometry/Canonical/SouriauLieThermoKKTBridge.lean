@@ -183,6 +183,7 @@ structure SuperCoadjointMomentMapData
   parityOfGenerator : G → SuperParity
   stressTensorProjection : Gdual → ℝ
   supercurrentProjection : Gdual → ℝ
+  isOnCoadjointOrbit : Gdual → Prop
 
 namespace SuperCoadjointMomentMapData
 
@@ -236,6 +237,7 @@ def identityBalanced
   parityOfGenerator := parityOfGenerator
   stressTensorProjection := stressTensorProjection
   supercurrentProjection := fun q => -stressTensorProjection q
+  isOnCoadjointOrbit := fun q => ∃ x, moment x = q
 
 -- theorem-class: bridge
 @[rep_depth thermo]
@@ -285,16 +287,22 @@ second-law theorem is available without changing its statement.
 structure FullCoadjointOrbitMetriplecticContext
     (G Gdual Orbit : Type*) where
   superMoment : SuperCoadjointMomentMapData G Gdual Orbit
+  reversibleFlow : Orbit → Orbit
+  dissipativeFlow : Orbit → Orbit
   entropy : Orbit → ℝ
   reversibleEntropyRate : Orbit → ℝ
   dissipativeEntropyRate : Orbit → ℝ
   totalEntropyProduction : Orbit → ℝ
-  isCoadjointOrbit : Prop
 -- theorem-class: bridge
-  isCoadjointOrbit_proof : isCoadjointOrbit
-  orbitInvariantEntropy : Prop
+  moment_mem_orbit :
+    ∀ x : Orbit, superMoment.isOnCoadjointOrbit (superMoment.moment x)
 -- theorem-class: bridge
-  orbitInvariantEntropy_proof : orbitInvariantEntropy
+  reversible_preserves_orbit :
+    ∀ x : Orbit,
+      superMoment.isOnCoadjointOrbit (superMoment.moment (reversibleFlow x))
+-- theorem-class: bridge
+  orbit_entropy_invariant :
+    ∀ x : Orbit, entropy (reversibleFlow x) = entropy x
 -- theorem-class: bridge
   reversibleEntropyRate_eq_zero :
     ∀ x : Orbit, reversibleEntropyRate x = 0
@@ -306,12 +314,16 @@ structure FullCoadjointOrbitMetriplecticContext
     ∀ x : Orbit,
       totalEntropyProduction x =
         reversibleEntropyRate x + dissipativeEntropyRate x
-  weylGaugeCovariant : Prop
 -- theorem-class: bridge
-  weylGaugeCovariant_proof : weylGaugeCovariant
-  supertraceFreeStress : Prop
+  weyl_covariant :
+    ∀ (g : G) (x : Orbit),
+      superMoment.coadjointAction g (superMoment.moment x) =
+        superMoment.moment x
 -- theorem-class: bridge
-  supertraceFreeStress_proof : supertraceFreeStress
+  supertrace_balance :
+    ∀ x : Orbit,
+      superMoment.stressTensorProjection (superMoment.moment x) +
+        superMoment.supercurrentProjection (superMoment.moment x) = 0
 
 namespace FullCoadjointOrbitMetriplecticContext
 
@@ -335,7 +347,7 @@ The gates become concrete propositions:
 def ofMomentImageSquareDissipation
     (superMoment : SuperCoadjointMomentMapData G Gdual Orbit)
     (entropy : Orbit → ℝ)
-    (reversibleFlow : Orbit → Orbit)
+    (reversibleFlow dissipativeFlow : Orbit → Orbit)
     (dissipationAmplitude : Orbit → ℝ)
     (reversible_entropy_invariant :
       ∀ x : Orbit, entropy (reversibleFlow x) = entropy x)
@@ -346,21 +358,23 @@ def ofMomentImageSquareDissipation
     (supertrace_balance :
       ∀ x : Orbit,
         superMoment.stressTensorProjection (superMoment.moment x) +
-          superMoment.supercurrentProjection (superMoment.moment x) = 0) :
+          superMoment.supercurrentProjection (superMoment.moment x) = 0)
+    (moment_in_orbit :
+      ∀ x : Orbit, superMoment.isOnCoadjointOrbit (superMoment.moment x))
+    (reversible_in_orbit :
+      ∀ x : Orbit,
+        superMoment.isOnCoadjointOrbit (superMoment.moment (reversibleFlow x))) :
     FullCoadjointOrbitMetriplecticContext G Gdual Orbit where
   superMoment := superMoment
+  reversibleFlow := reversibleFlow
+  dissipativeFlow := dissipativeFlow
   entropy := entropy
   reversibleEntropyRate := fun _ => 0
   dissipativeEntropyRate := fun x => dissipationAmplitude x ^ (2 : ℕ)
   totalEntropyProduction := fun x => dissipationAmplitude x ^ (2 : ℕ)
-  isCoadjointOrbit :=
-    ∀ x : Orbit, ∃ y : Orbit, superMoment.moment y = superMoment.moment x
-  isCoadjointOrbit_proof := by
-    intro x
-    exact ⟨x, rfl⟩
-  orbitInvariantEntropy :=
-    ∀ x : Orbit, entropy (reversibleFlow x) = entropy x
-  orbitInvariantEntropy_proof := reversible_entropy_invariant
+  moment_mem_orbit := moment_in_orbit
+  reversible_preserves_orbit := reversible_in_orbit
+  orbit_entropy_invariant := reversible_entropy_invariant
   reversibleEntropyRate_eq_zero := by
     intro x
     rfl
@@ -370,16 +384,8 @@ def ofMomentImageSquareDissipation
   totalEntropyProduction_eq_sum := by
     intro x
     simp
-  weylGaugeCovariant :=
-    ∀ (g : G) (x : Orbit),
-      superMoment.coadjointAction g (superMoment.moment x) =
-        superMoment.moment x
-  weylGaugeCovariant_proof := weyl_covariant
-  supertraceFreeStress :=
-    ∀ x : Orbit,
-      superMoment.stressTensorProjection (superMoment.moment x) +
-        superMoment.supercurrentProjection (superMoment.moment x) = 0
-  supertraceFreeStress_proof := supertrace_balance
+  weyl_covariant := weyl_covariant
+  supertrace_balance := supertrace_balance
 
 /--
 Fully constructive exact super-coadjoint square-dissipation context.
@@ -405,6 +411,7 @@ def ofIdentityBalancedSquareDissipation
     (parityOfGenerator : G → SuperParity)
     (stressTensorProjection : Gdual → ℝ)
     (entropy : Orbit → ℝ)
+    (dissipativeFlow : Orbit → Orbit)
     (dissipationAmplitude : Orbit → ℝ) :
     FullCoadjointOrbitMetriplecticContext G Gdual Orbit :=
   ofMomentImageSquareDissipation
@@ -415,6 +422,7 @@ def ofIdentityBalancedSquareDissipation
         stressTensorProjection)
     (entropy := entropy)
     (reversibleFlow := id)
+    (dissipativeFlow := dissipativeFlow)
     (dissipationAmplitude := dissipationAmplitude)
     (reversible_entropy_invariant := by
       intro x
@@ -426,6 +434,8 @@ def ofIdentityBalancedSquareDissipation
       intro x
       dsimp [SuperCoadjointMomentMapData.identityBalanced]
       ring)
+    (moment_in_orbit := fun x => ⟨x, rfl⟩)
+    (reversible_in_orbit := fun x => ⟨x, rfl⟩)
 
 variable (C : FullCoadjointOrbitMetriplecticContext G Gdual Orbit)
 
@@ -438,27 +448,29 @@ theorem reversible_channel_zero (x : Orbit) :
 
 -- theorem-class: bridge
 @[rep_depth thermo]
-theorem is_coadjoint_orbit :
-    C.isCoadjointOrbit :=
-  C.isCoadjointOrbit_proof
+theorem moment_lands_on_coadjoint_orbit (x : Orbit) :
+    C.superMoment.isOnCoadjointOrbit (C.superMoment.moment x) :=
+  C.moment_mem_orbit x
 
 -- theorem-class: bridge
 @[rep_depth thermo]
-theorem orbit_entropy_invariant :
-    C.orbitInvariantEntropy :=
-  C.orbitInvariantEntropy_proof
+theorem orbit_entropy_invariant_readout (x : Orbit) :
+    C.entropy (C.reversibleFlow x) = C.entropy x :=
+  C.orbit_entropy_invariant x
 
 -- theorem-class: bridge
 @[rep_depth thermo]
-theorem weyl_gauge_covariant :
-    C.weylGaugeCovariant :=
-  C.weylGaugeCovariant_proof
+theorem weyl_gauge_covariant (g : G) (x : Orbit) :
+    C.superMoment.coadjointAction g (C.superMoment.moment x) =
+      C.superMoment.moment x :=
+  C.weyl_covariant g x
 
 -- theorem-class: bridge
 @[rep_depth thermo]
-theorem supertrace_free_stress :
-    C.supertraceFreeStress :=
-  C.supertraceFreeStress_proof
+theorem supertrace_free_stress (x : Orbit) :
+    C.superMoment.stressTensorProjection (C.superMoment.moment x) +
+      C.superMoment.supercurrentProjection (C.superMoment.moment x) = 0 :=
+  C.supertrace_balance x
 
 -- theorem-class: bridge
 /--
@@ -495,7 +507,7 @@ super-coadjoint route.
 theorem full_moment_image_square_dissipation_packet
     (superMoment : SuperCoadjointMomentMapData G Gdual Orbit)
     (entropy : Orbit → ℝ)
-    (reversibleFlow : Orbit → Orbit)
+    (reversibleFlow dissipativeFlow : Orbit → Orbit)
     (dissipationAmplitude : Orbit → ℝ)
     (reversible_entropy_invariant :
       ∀ x : Orbit, entropy (reversibleFlow x) = entropy x)
@@ -507,25 +519,31 @@ theorem full_moment_image_square_dissipation_packet
       ∀ x : Orbit,
         superMoment.stressTensorProjection (superMoment.moment x) +
           superMoment.supercurrentProjection (superMoment.moment x) = 0)
+    (moment_in_orbit :
+      ∀ x : Orbit, superMoment.isOnCoadjointOrbit (superMoment.moment x))
+    (reversible_in_orbit :
+      ∀ x : Orbit,
+        superMoment.isOnCoadjointOrbit (superMoment.moment (reversibleFlow x)))
     (x : Orbit) :
     let C :=
       ofMomentImageSquareDissipation
-        superMoment entropy reversibleFlow dissipationAmplitude
+        superMoment entropy reversibleFlow dissipativeFlow dissipationAmplitude
         reversible_entropy_invariant weyl_covariant supertrace_balance
-    C.isCoadjointOrbit
-      ∧ C.orbitInvariantEntropy
+        moment_in_orbit reversible_in_orbit
+    C.superMoment.isOnCoadjointOrbit (C.superMoment.moment x)
+      ∧ C.entropy (C.reversibleFlow x) = C.entropy x
       ∧ C.reversibleEntropyRate x = 0
       ∧ C.dissipativeEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
       ∧ C.totalEntropyProduction x = dissipationAmplitude x ^ (2 : ℕ)
       ∧ 0 ≤ C.totalEntropyProduction x
-      ∧ C.weylGaugeCovariant
-      ∧ C.supertraceFreeStress := by
+      ∧ (∀ g y, C.superMoment.coadjointAction g (C.superMoment.moment y) =
+          C.superMoment.moment y)
+      ∧ (∀ y, C.superMoment.stressTensorProjection (C.superMoment.moment y) +
+          C.superMoment.supercurrentProjection (C.superMoment.moment y) = 0) := by
   dsimp [ofMomentImageSquareDissipation]
   exact
-    ⟨by
-      intro y
-      exact ⟨y, rfl⟩,
-      reversible_entropy_invariant,
+    ⟨moment_in_orbit x,
+      reversible_entropy_invariant x,
       rfl,
       rfl,
       rfl,
@@ -548,40 +566,43 @@ theorem full_identity_balanced_square_dissipation_packet
     (parityOfGenerator : G → SuperParity)
     (stressTensorProjection : Gdual → ℝ)
     (entropy : Orbit → ℝ)
+    (dissipativeFlow : Orbit → Orbit)
     (dissipationAmplitude : Orbit → ℝ)
     (x : Orbit) :
     let C :=
       ofIdentityBalancedSquareDissipation
         moment geometricTemperature pairing parityOfGenerator
-        stressTensorProjection entropy dissipationAmplitude
-    C.isCoadjointOrbit
-      ∧ C.orbitInvariantEntropy
+        stressTensorProjection entropy dissipativeFlow dissipationAmplitude
+    C.superMoment.isOnCoadjointOrbit (C.superMoment.moment x)
+      ∧ C.entropy (C.reversibleFlow x) = C.entropy x
       ∧ C.reversibleEntropyRate x = 0
       ∧ C.dissipativeEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
       ∧ C.totalEntropyProduction x = dissipationAmplitude x ^ (2 : ℕ)
       ∧ 0 ≤ C.totalEntropyProduction x
-      ∧ C.weylGaugeCovariant
-      ∧ C.supertraceFreeStress := by
-  dsimp [ofIdentityBalancedSquareDissipation,
-    ofMomentImageSquareDissipation,
-    SuperCoadjointMomentMapData.identityBalanced]
-  exact
-    ⟨by
-      intro y
-      exact ⟨y, rfl⟩,
-      by
+      ∧ (∀ g y, C.superMoment.coadjointAction g (C.superMoment.moment y) =
+          C.superMoment.moment y)
+      ∧ (∀ y, C.superMoment.stressTensorProjection (C.superMoment.moment y) +
+          C.superMoment.supercurrentProjection (C.superMoment.moment y) = 0) := by
+  simpa using
+    (full_moment_image_square_dissipation_packet
+      (superMoment :=
+        SuperCoadjointMomentMapData.identityBalanced
+          (G := G) (Gdual := Gdual) (Orbit := Orbit)
+          moment geometricTemperature pairing parityOfGenerator
+          stressTensorProjection)
+      (entropy := entropy)
+      (reversibleFlow := id)
+      (dissipativeFlow := dissipativeFlow)
+      (dissipationAmplitude := dissipationAmplitude)
+      (reversible_entropy_invariant := by intro y; rfl)
+      (weyl_covariant := by intro g y; rfl)
+      (supertrace_balance := by
         intro y
-        rfl,
-      rfl,
-      rfl,
-      rfl,
-      sq_nonneg (dissipationAmplitude x),
-      by
-        intro g y
-        rfl,
-      by
-        intro y
-        ring⟩
+        dsimp [SuperCoadjointMomentMapData.identityBalanced]
+        ring)
+      (moment_in_orbit := fun y => ⟨y, rfl⟩)
+      (reversible_in_orbit := fun y => ⟨y, rfl⟩)
+      (x := x))
 
 attribute [terminal] full_identity_balanced_square_dissipation_packet
 

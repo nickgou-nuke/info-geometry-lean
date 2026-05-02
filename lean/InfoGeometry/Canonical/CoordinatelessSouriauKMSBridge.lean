@@ -606,6 +606,94 @@ theorem coordinateless_constructive_packet
 end ObservableMinimalCyclicCoordinatelessSouriauContext
 
 /--
+Observable-tangent specialization of the fully constructive cyclic
+Souriau context.
+-/
+@[rep_depth operator]
+structure ObservableCyclicCoordinatelessSouriauFisherContext
+    (Symmetry : Type v) where
+  state : CyclicAlgebraicState (H := H)
+  beta : ℝ
+  souriauMoment : OperatorSouriauMoment (H := H) Symmetry
+
+namespace ObservableCyclicCoordinatelessSouriauFisherContext
+
+variable {Symmetry : Type v}
+variable (C : ObservableCyclicCoordinatelessSouriauFisherContext (H := H) Symmetry)
+
+/-- The modular automorphism group is the owned identity flow on this branch. -/
+@[rep_depth operator]
+def sigma (_C : ObservableCyclicCoordinatelessSouriauFisherContext (H := H) Symmetry) :
+    AdditiveModularFlow (H := H) :=
+  identityAdditiveModularFlow (H := H)
+
+/-- Observable-tangent SLD is constructively the identity assignment. -/
+@[rep_depth operator]
+def fisherMetric : QuantumFisherSLDMetric (H := H) Obs C.state.state :=
+  C.state.sldQuantumFisherMetric (fun A => A)
+
+/-- Weyl gauge canonically collapses to the identity gauge on this branch. -/
+@[rep_depth operator]
+def weylGauge : WeylAlgebraGauge (H := H) C.state.state :=
+  identityWeylAlgebraGauge (H := H) C.state.state
+
+/-- The SLD assignment is the identity on the observable tangent branch. -/
+@[rep_depth operator]
+theorem fisherMetric_sld_eq_id (A : Obs) :
+    C.fisherMetric.sld A = A := rfl
+
+/-- The selected Souriau moment is an operator, not a coordinate field. -/
+@[rep_depth operator]
+theorem souriau_thermalGenerator_eq_moment :
+    C.souriauMoment.thermalGenerator =
+      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature :=
+  C.souriauMoment.thermalGenerator_eq_moment_geometricTemperature
+
+/-- KMS identity on the constructive cyclic identity-modular branch. -/
+@[rep_depth operator]
+theorem kms_identity (A B : Obs) :
+    C.state.state.eval (A * C.sigma C.beta B) = C.state.state.eval (B * A) := by
+  simpa [ObservableCyclicCoordinatelessSouriauFisherContext.sigma, identityAdditiveModularFlow] using C.state.cyclic A B
+
+/-- Fisher/Bures metric is the canonical identity-SLD state readout. -/
+@[rep_depth operator]
+theorem fisher_metric_eq_sld_readout (A B : Obs) :
+    C.fisherMetric.metric A B =
+      C.state.state.eval ((C.fisherMetric.sld A) * (C.fisherMetric.sld B)) :=
+  C.fisherMetric.metric_eq_state_sld_product A B
+
+/-- Fisher/Bures metric symmetry. -/
+@[rep_depth operator]
+theorem fisher_metric_symm (A B : Obs) :
+    C.fisherMetric.metric A B = C.fisherMetric.metric B A :=
+  C.fisherMetric.metric_symm A B
+
+/-- Weyl gauge invariance is an algebraic state-invariance statement. -/
+@[rep_depth operator]
+theorem weyl_state_invariant (A : Obs) :
+    C.state.state.eval (C.weylGauge.gauge A) = C.state.state.eval A :=
+  C.weylGauge.eval_gauge_eq_eval A
+
+/-- Search-facing theorem packet for the observable-tangent identity-SLD branch. -/
+@[rep_depth operator]
+theorem coordinateless_constructive_packet
+    (A B : Obs) :
+    C.state.state.eval 1 = 1 ∧
+    C.state.state.eval (A * C.sigma C.beta B) = C.state.state.eval (B * A) ∧
+    C.souriauMoment.thermalGenerator =
+      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature ∧
+    C.fisherMetric.metric A B = C.fisherMetric.metric B A ∧
+    C.state.state.eval (C.weylGauge.gauge A) = C.state.state.eval A := by
+  exact ⟨
+    C.state.state.eval_one,
+    C.kms_identity A B,
+    C.souriau_thermalGenerator_eq_moment,
+    C.fisherMetric.metric_symm A B,
+    C.weyl_state_invariant A⟩
+
+end ObservableCyclicCoordinatelessSouriauFisherContext
+
+/--
 Fully constructive coordinateless Souriau/KMS/Fisher context on the cyclic
 identity-modular branch.
 
@@ -719,6 +807,16 @@ def toObservableMinimalCyclicCoordinatelessSouriauContext
     (beta : ℝ)
     (J : OperatorSouriauMoment (H := H) Symmetry) :
     ObservableMinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry where
+  state := ω
+  beta := beta
+  souriauMoment := J
+
+/-- Observable-tangent constructive Souriau context with identity SLD. -/
+@[rep_depth operator]
+def toObservableCyclicCoordinatelessSouriauFisherContext
+    (beta : ℝ)
+    (J : OperatorSouriauMoment (H := H) Symmetry) :
+    ObservableCyclicCoordinatelessSouriauFisherContext (H := H) Symmetry where
   state := ω
   beta := beta
   souriauMoment := J

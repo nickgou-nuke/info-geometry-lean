@@ -28,17 +28,31 @@ from urllib.parse import quote
 import networkx as nx
 from networkx.algorithms import community as nxc
 
-from arango_raw_infotree_ingest import (
-    ArangoTarget,
-    CollectionSpec,
-    collection_count,
-    create_collection,
-    db_url,
-    drop_collection,
-    ensure_database,
-    list_collections,
-    request_json,
-)
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from arango_raw_infotree_ingest import (
+        ArangoTarget,
+        CollectionSpec,
+        collection_count,
+        create_collection,
+        db_url,
+        drop_collection,
+        ensure_database,
+        list_collections,
+        request_json,
+    )
+else:
+    from .arango_raw_infotree_ingest import (
+        ArangoTarget,
+        CollectionSpec,
+        collection_count,
+        create_collection,
+        db_url,
+        drop_collection,
+        ensure_database,
+        list_collections,
+        request_json,
+    )
 
 
 SCHEMA = "info_geometry.arango_dag_algorithms.v1"
@@ -1760,7 +1774,7 @@ def two_complex_summary(graph: QuotientGraph, *, edge_limit: int) -> dict[str, A
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--username", default="root")
     parser.add_argument("--password", default="")

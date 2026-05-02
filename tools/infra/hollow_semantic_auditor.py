@@ -28,7 +28,7 @@ if __package__ in (None, ""):
 else:
     from tools.pathing import repo_root
 
-ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8529")
+ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8530")
 ARANGO_DB = os.environ.get("ARANGO_DB", "infogeometry")
 
 @dataclass

@@ -6,6 +6,10 @@ lean/.lake/
 __pycache__/
 *.pyc
 .venv/
+.venv
+
+# Local tokens / credentials
+token-hugging
 
 # Project-specific Build/Analysis Artifacts
 .build/
@@ -75,6 +79,14 @@ archive/evidence/
 # Generated artifact themes (forward-only cleanup)
 # Semantic ingest corpora, retrieval overlays, and research digests
 artifacts/alexandria/**
+artifacts/tmp/**
+artifacts/prima_materia/**
+artifacts/training/**
+artifacts/identity_protocol/**
+arxiv-test-output/**
+test_output.jsonl
+external_refs/ast_export/
+external_refs/ast_export/**
 
 # Generated theorem-graph / trace / export payloads
 artifacts/infotree/**
@@ -85,6 +97,14 @@ artifacts/expr-graph/**
 # Generated runtime orchestration / queue / replay outputs
 artifacts/hermes_loop/**
 artifacts/gemini_cli_guard/**
+
+# Identity protocol runtime outputs
+artifacts/identity_protocol/runs/*
+!artifacts/identity_protocol/runs/.gitkeep
+artifacts/hermes_loop/heartbeat/*.log
+
+# Local secrets for Arango/Hive agent access
+configs/local/*.env
 
 # Generated Socratic loop and synthesis passes
 artifacts/socratic_loops/**

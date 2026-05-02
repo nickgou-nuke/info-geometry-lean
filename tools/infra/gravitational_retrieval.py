@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import os
 import sys
 import time
 from dataclasses import dataclass
@@ -64,7 +65,7 @@ def run_pregel_pagerank(target: ArangoTarget, center_id: str):
     For the Spire baseline, we use the ArangoDB built-in Pregel.
     """
     # 1. Identify the 'internal' key for the center declaration
-    query = "FOR n IN @@nodes FILTER n.id == @center RETURN n._key"
+    query = "FOR n IN @@nodes FILTER n.name == @center RETURN n._key"
     res = _request_json("POST", _db_url(target, "/_api/cursor"), target, {
         "query": query,
         "bindVars": {"@nodes": target.nodes_collection, "center": center_id}
@@ -84,18 +85,18 @@ def run_pregel_pagerank(target: ArangoTarget, center_id: str):
     # Gravitational Query: Neighborhood ranking by PageRank / connectivity
     # This simulates "Strong Gravitation" by looking at the transitive support.
     grav_query = """
-    LET start = FIRST(FOR n IN @@nodes FILTER n.id == @center RETURN n)
+    LET start = FIRST(FOR n IN @@nodes FILTER n.name == @center RETURN n)
     FOR v, e, p IN 1..3 ANY start @@edges
         OPTIONS { bfs: true, uniqueVertices: "global" }
-        FILTER v.kind == "Declaration"
+        FILTER v.kind IN ["theorem", "lemma", "def", "axiom", "instance"]
         LET mass = LENGTH(FOR vv, ee IN 1..1 ANY v @@edges RETURN ee)
         SORT mass DESC
         RETURN {
-            id: v.id,
+            id: v.name,
             mass: mass,
             file: v.file,
             line: v.line,
-            doc: v.attrs.doc
+            doc: v.doc
         }
     """
 
@@ -126,7 +127,7 @@ def main():
     parser = argparse.ArgumentParser(description="Extract Gravitational Context from ArangoDB.")
     parser.add_argument("--center", required=True, help="ID of the center theorem.")
     parser.add_argument("--top-k", type=int, default=5, help="Number of massive neighbors to retrieve.")
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8529")
+    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
     parser.add_argument("--database", default="infogeometry")
     parser.add_argument("--out", default="quarantine/hermes_memory/gravitational_context.json")
     args = parser.parse_args()
@@ -134,8 +135,8 @@ def main():
     target = ArangoTarget(
         endpoint=args.endpoint,
         database=args.database,
-        username="root",
-        password="",
+        username=os.getenv("ARANGO_USER", os.getenv("ARANGO_USERNAME", "root")),
+        password=os.getenv("ARANGO_PASSWORD", ""),
         nodes_collection="ig_nodes",
         edges_collection="ig_edges"
     )

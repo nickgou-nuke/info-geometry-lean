@@ -310,3 +310,120 @@ def test_gravity_context_can_filter_by_rep_layer(tmp_path: Path) -> None:
             "rep_depth_slugs": ["operator"],
         }
     ]
+
+
+def test_gravity_context_uses_spectral_edge_priors_without_promotion(tmp_path: Path) -> None:
+    lean_file = tmp_path / "lean" / "InfoGeometry" / "OperatorAlgebra" / "Closure.lean"
+    lean_file.parent.mkdir(parents=True)
+    lean_file.write_text(
+        "\n".join(
+            [
+                "import Mathlib",
+                "",
+                "namespace InfoGeometry.OperatorAlgebra",
+                "",
+                "theorem closure_seed : 1 = 1 := by",
+                "  rfl",
+                "",
+                "theorem closure_good_neighbor : 1 = 1 := by",
+                "  rfl",
+                "",
+                "theorem closure_unsafe_neighbor : 1 = 1 := by",
+                "  rfl",
+                "",
+                "end InfoGeometry.OperatorAlgebra",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    nodes = tmp_path / "nodes.jsonl"
+    edges = tmp_path / "edges.jsonl"
+    write_jsonl(
+        nodes,
+        [
+            {
+                "id": "InfoGeometry.OperatorAlgebra.closure_seed",
+                "name": "InfoGeometry.OperatorAlgebra.closure_seed",
+                "kind": "Declaration",
+                "module": "InfoGeometry.OperatorAlgebra.Closure",
+                "file": str(lean_file),
+                "line": 5,
+                "attrs": {"decl_kind": "theorem", "doc": "closure seed"},
+            },
+            {
+                "id": "InfoGeometry.OperatorAlgebra.closure_good_neighbor",
+                "name": "InfoGeometry.OperatorAlgebra.closure_good_neighbor",
+                "kind": "Declaration",
+                "module": "InfoGeometry.OperatorAlgebra.Closure",
+                "file": str(lean_file),
+                "line": 8,
+                "attrs": {"decl_kind": "theorem", "doc": "neighbor"},
+                "energy": {"term_size": 9, "redex_count": 1},
+            },
+            {
+                "id": "InfoGeometry.OperatorAlgebra.closure_unsafe_neighbor",
+                "name": "InfoGeometry.OperatorAlgebra.closure_unsafe_neighbor",
+                "kind": "Declaration",
+                "module": "InfoGeometry.OperatorAlgebra.Closure",
+                "file": str(lean_file),
+                "line": 11,
+                "attrs": {"decl_kind": "theorem", "doc": "neighbor"},
+                "energy": {"term_size": 9, "redex_count": 1, "unsafe_penalty": 4},
+            },
+        ],
+    )
+    write_jsonl(
+        edges,
+        [
+            {
+                "src": "InfoGeometry.OperatorAlgebra.closure_seed",
+                "dst": "InfoGeometry.OperatorAlgebra.closure_good_neighbor",
+                "kind": "depends_on",
+                "weight": 1.0,
+                "action_weight": 0.1,
+                "proof_weight": 1.0,
+            },
+            {
+                "src": "InfoGeometry.OperatorAlgebra.closure_seed",
+                "dst": "InfoGeometry.OperatorAlgebra.closure_unsafe_neighbor",
+                "kind": "analogy_to",
+                "weight": 1.0,
+                "action_weight": 0.1,
+                "unsafe_penalty": 8.0,
+            },
+        ],
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(TOOL),
+            "--source",
+            "jsonl",
+            "--nodes",
+            str(nodes),
+            "--edges",
+            str(edges),
+            "--repo-root",
+            str(tmp_path),
+            "--query",
+            "closure seed",
+            "--top-k",
+            "3",
+            "--max-hops",
+            "1",
+        ],
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    packet = json.loads(result.stdout)
+    ids = [item["id"] for item in packet["items"]]
+
+    assert ids.index("InfoGeometry.OperatorAlgebra.closure_good_neighbor") < ids.index(
+        "InfoGeometry.OperatorAlgebra.closure_unsafe_neighbor"
+    )
+    assert packet["prompt_policy"]["promotion_allowed"] is False
+    assert packet["prompt_policy"]["spectral_weights"]["enabled"] is True
+    unsafe = next(item for item in packet["items"] if item["id"].endswith("closure_unsafe_neighbor"))
+    assert unsafe["energy"]["unsafe_penalty"] == 4.0

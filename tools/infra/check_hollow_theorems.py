@@ -234,7 +234,7 @@ def write_reports(reports: list[dict[str, Any]], out_dir: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Run the Pauli Semantic Fidelity Auditor.")
-    parser.add_argument("--url", default=os.getenv("ARANGO_URL", "http://127.0.0.1:8529"))
+    parser.add_argument("--url", default=os.getenv("ARANGO_URL", "http://127.0.0.1:8530"))
     parser.add_argument("--db", default=os.getenv("ARANGO_DATABASE", "infogeometry"))
     parser.add_argument("--user", default=os.getenv("ARANGO_USERNAME", "root"))
     parser.add_argument("--password", default=os.getenv("ARANGO_PASSWORD", ""))

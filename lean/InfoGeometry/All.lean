@@ -61,6 +61,7 @@ import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LFunctionResonance
+import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Automorphic.AutomorphicKreinBridge
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Optics.All

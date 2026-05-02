@@ -1,5 +1,10 @@
 # Palatial Twistor Theory and Modular Operator Geometry
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## What Roger Penrose actually proposes in palatial twistor theory
 
 Palatial twistor theory is not (yet) a fully-fledged alternative formulation of quantum field theory; it is explicitly presented by Roger Penrose as an *attempted resolution of a specific obstruction* in the twistor programme—especially the “googly problem”, i.e. the long-standing difficulty of encoding right-handed (positive-helicity) interacting massless fields in a manner as geometrically natural as the left-handed sector captured by the Ward/nonlinear-graviton machinery. 

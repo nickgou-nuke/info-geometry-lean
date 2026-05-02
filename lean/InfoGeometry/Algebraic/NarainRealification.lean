@@ -37,7 +37,7 @@ theorem narainRealification_splitQuadraticForm_eq_four_sum
       ∑ i : Fin n, (4 : ℝ) * ((v.1 i : ℤ) : ℝ) * ((v.2 i : ℤ) : ℝ) := by
   classical
   rw [narainRealification, splitQuadraticForm_apply]
-  simp [narainToSplit, Fintype.sum_sum_type, ← Finset.sum_add_distrib, ← Finset.sum_neg_distrib]
+  simp [narainToSplit, Fintype.sum_sum_type, ← Finset.sum_add_distrib, - Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
   intro i _
   dsimp [splitWeight]

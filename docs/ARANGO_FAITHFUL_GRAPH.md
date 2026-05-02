@@ -1,5 +1,10 @@
 # Arango Faithful InfoTree Target
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 The current Arango lane is useful, but it is not faithful enough to serve as
 the full memory of the Lean compiler. `ig_nodes` and `ig_edges` are a retrieval
 projection over LeanTrail/DAG artifacts. Expression exports are also projections:

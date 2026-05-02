@@ -11,6 +11,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -122,6 +129,7 @@ def _run_step(
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env(REPO_ROOT)
     ap = argparse.ArgumentParser(
         description=(
             "Hybrid DGX Spark orchestrator: deterministic local lane for "
@@ -163,10 +171,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--mode", choices=["local", "arango-http"], default="local")
     ap.add_argument("--arango-input", default="artifacts/leantrail/arango")
     ap.add_argument("--arango-input-format", choices=["snapshot", "arango-json"], default="arango-json")
-    ap.add_argument("--arango-endpoint", default="http://127.0.0.1:8530")
-    ap.add_argument("--arango-database", default="infogeometry")
-    ap.add_argument("--arango-username", default="root")
-    ap.add_argument("--arango-password", default="")
+    ap.add_argument("--arango-endpoint", default=arango_endpoint())
+    ap.add_argument("--arango-database", default=arango_database())
+    ap.add_argument("--arango-username", default=arango_username())
+    ap.add_argument("--arango-password", default=arango_password())
     ap.add_argument("--arango-nodes-collection", default="ig_nodes")
     ap.add_argument("--arango-edges-collection", default="ig_edges")
     ap.set_defaults(declaration_only=True)

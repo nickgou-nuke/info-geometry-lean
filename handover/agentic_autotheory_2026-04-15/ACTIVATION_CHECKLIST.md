@@ -1,5 +1,10 @@
 # Activation Checklist (2026-04-15)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 ## Day-0 Activation
 
 1. Confirm canonical files are present:
@@ -48,4 +53,3 @@ Each cycle must emit:
 1. Architect note (ownership/adjacency decisions)
 2. Creator note (patch + assumptions)
 3. Caretaker note (gate outcomes + admit/block decision)
-

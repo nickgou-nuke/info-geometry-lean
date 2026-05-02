@@ -70,6 +70,14 @@ def main(argv: list[str] | None = None) -> int:
     maxent.add_argument("--min-abs-chiral-bias", type=float, default=0.5)
     maxent.add_argument("--print-json", action="store_true")
 
+    barrier = sub.add_parser("barrier-candidates")
+    barrier.add_argument("--run-id", default="")
+    barrier.add_argument("--limit", type=int, default=25)
+    barrier.add_argument("--min-abs-chiral-bias", type=float, default=0.5)
+    barrier.add_argument("--barrier-weight", type=float, default=1.0)
+    barrier.add_argument("--nullity-weight", type=float, default=1.0)
+    barrier.add_argument("--print-json", action="store_true")
+
     report = sub.add_parser("report")
     report.add_argument("--dir", default="artifacts/dag/index")
     report.add_argument("--print-json", action="store_true")
@@ -154,6 +162,24 @@ def main(argv: list[str] | None = None) -> int:
             args.run_id or None,
             limit=int(args.limit),
             min_abs_chiral_bias=float(args.min_abs_chiral_bias),
+        )
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result.get("ok") else 1
+
+    if args.command == "barrier-candidates":
+        from igf.config.loader import load_arango_config
+        from igf.graph.arango_client import connect_db
+        from igf.pipeline.candidates import find_log_barrier_patch_candidates
+
+        cfg = load_arango_config()
+        db = connect_db(cfg)
+        result = find_log_barrier_patch_candidates(
+            db,
+            args.run_id or None,
+            limit=int(args.limit),
+            min_abs_chiral_bias=float(args.min_abs_chiral_bias),
+            barrier_weight=float(args.barrier_weight),
+            nullity_weight=float(args.nullity_weight),
         )
         print(json.dumps(result, ensure_ascii=False))
         return 0 if result.get("ok") else 1

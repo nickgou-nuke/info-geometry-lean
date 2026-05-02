@@ -1,24 +1,29 @@
 # Docs Tools
 
-This directory contains the maintained documentation refresh helpers.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
 
-## Maintained entrypoints
+This directory contains maintained documentation refresh helpers.
+
+## Current Entrypoints
 
 - `generate_auto_docs.py`
 - `update_repo_docs.py`
+- `refresh_markdown_status.py`
 
-## Purpose
+## Role Split
 
-Use this layer for:
-- regenerating [docs/auto/index.md](../../docs/auto/index.md);
-- rebuilding selected derived documentation surfaces from refreshed graph/frontier data;
-- keeping generated doc outputs separate from hand-maintained operational docs.
+- `generate_auto_docs.py`
+  owns generated doc surfaces under `docs/auto/`
+- `update_repo_docs.py`
+  refreshes selected derived documentation artifacts
+- `refresh_markdown_status.py`
+  relabels the wider Markdown corpus so stale files stop reading like current
+  repository authority
 
 ## Rule
 
-Do not edit generated docs by hand if a script in this directory owns them.
-
-## Current Codebase Status
-
-Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-
+Use generators for generated docs and hand edits for the small maintained
+authority surface.

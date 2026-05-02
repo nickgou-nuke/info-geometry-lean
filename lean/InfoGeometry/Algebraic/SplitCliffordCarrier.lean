@@ -24,8 +24,7 @@ theorem splitCliffordVector_sq
     {n : ℕ} (v : SplitModule n) :
     splitCliffordVector n v * splitCliffordVector n v =
       algebraMap ℝ (Cl_nn n) (splitQuadraticForm n v) := by
-  simpa [splitCliffordVector] using
-    (CliffordAlgebra.ι_sq_scalar (splitQuadraticForm n) v)
+  simp [splitCliffordVector]
 
 @[simp]
 theorem splitClifford_posBasis_sq

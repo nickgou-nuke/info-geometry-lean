@@ -1,50 +1,24 @@
 # Archive
 
-> Status: historical/reference subtree; not authoritative for active build policy.
-> Canonical entry docs: [`README.md`](../README.md), [`docs/README.md`](../docs/README.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
 
-This directory contains historical material intentionally kept inside the
-repository for provenance, design archaeology, and idea recovery.
+This directory is historical.
 
-Use this rule:
+Use it for provenance, archaeology, and older experiments. Do not treat it as
+the active build or policy surface.
 
-- start in the active repository surface first;
-- enter `archive/` only when you are explicitly researching past approaches,
-  discarded experiments, or old automation ideas.
+## Current Authority Instead
 
-## Status Model
+For live repository state, start with:
 
-Archived material is not part of the supported build or automation surface.
-It may still contain:
+- [../README.md](../README.md)
+- [../docs/README.md](../docs/README.md)
+- [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
 
-- useful design ideas,
-- historical proof-search experiments,
-- scratch derivations worth revisiting,
-- earlier versions of workflows later replaced by cleaner infrastructure.
+## Rule
 
-It should not be treated as authoritative over the current stack.
-
-## Current Authoritative Surface
-
-For current work, prefer:
-
-- `lean/InfoGeometry/`
-- `lean/DAG/`
-- `lean/scripts/DAG/Exploration/`
-- `tools/semantic_block_export.py`
-- `tools/skynet_v2.py`
-- `tools/update_repo_docs.py`
-
-## Archive Layout
-
-- `archive/legacy/`
-  The first historical bucket. It currently holds:
-  - old autonomous-proof-discovery Python scripts,
-  - scratch Lean files removed from the package build surface.
-
-See [archive/legacy/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/legacy/README.md) for the local notes on that bucket.
-
-## Current Codebase Status
-
-Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
+If something in `archive/` conflicts with current code or maintained docs,
+assume the archive is old unless it has been explicitly re-promoted.

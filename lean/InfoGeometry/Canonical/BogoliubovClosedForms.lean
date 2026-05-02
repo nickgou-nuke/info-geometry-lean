@@ -217,8 +217,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
 @[simp] theorem JBoost_apply_modular_j
     (t : ℝ) (ψ : H₂) :
     JBoost (E := E) t ψ = (Real.cosh t) • ψ + (Real.sinh t) • (modular_j (E := E) ψ) := by
-  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
-    JBoost_apply (E := E) t ψ
+  simp [TomitaTakesaki.modularConjugationJ_eq_modular_j]
 
 @[simp] theorem epsilonBoost_apply
     (t : ℝ) (ψ : H₂) :
@@ -231,8 +230,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
     (t : ℝ) (ψ : H₂) :
     epsilonBoost (E := E) t ψ =
       (Real.cosh t) • ψ + (Real.sinh t) • (spectral_epsilon (E := E) ψ) := by
-  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
-    epsilonBoost_apply (E := E) t ψ
+  simp [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon]
 
 @[simp] theorem KRotation_apply
     (t : ℝ) (ψ : H₂) :
@@ -243,8 +241,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
 @[simp] theorem KRotation_apply_complex_i
     (t : ℝ) (ψ : H₂) :
     KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (complex_i (E := E) ψ) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
-    KRotation_apply (E := E) t ψ
+  simp
 
 /--
 Phase-linear operators commute with the exact exponential phase propagator.

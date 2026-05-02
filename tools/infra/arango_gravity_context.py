@@ -9,23 +9,37 @@ and source excerpts for prover prompts.
 from __future__ import annotations
 
 import argparse
-import base64
 import collections
 import json
 import math
-import os
 import re
 import sys
 import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+for path in (REPO_ROOT, SRC_ROOT):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+
+from tools.infra.arango_env import (
+    DEFAULT_ARANGO_DATABASE,
+    DEFAULT_ARANGO_ENDPOINT,
+    arango_password,
+    arango_username,
+    arango_database,
+    arango_endpoint,
+    load_repo_arango_env,
+    repo_root_from,
+)
+from igf.graph import ArangoHttpTarget, execute_aql
 
 DEFAULT_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
 DEFAULT_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
-DEFAULT_ARANGO = "http://127.0.0.1:8530"
-DEFAULT_DB = "infogeometry"
+DEFAULT_ARANGO = DEFAULT_ARANGO_ENDPOINT
+DEFAULT_DB = DEFAULT_ARANGO_DATABASE
 DEFAULT_NODE_COLLECTION = "ig_nodes"
 DEFAULT_EDGE_COLLECTION = "ig_edges"
 DEFAULT_RAW_NODE_COLLECTION = "raw_info_nodes"
@@ -63,14 +77,6 @@ STOPWORDS = {
     "using",
     "with",
 }
-
-
-def repo_root_from(path: Path) -> Path:
-    cur = path.resolve()
-    for parent in (cur, *cur.parents):
-        if (parent / "lakefile.lean").exists() or (parent / "lakefile.toml").exists():
-            return parent
-    return cur
 
 
 def tokenize(text: str) -> set[str]:
@@ -215,45 +221,20 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return records
 
 
-def arango_request(base_url: str, db: str, payload: dict[str, Any]) -> dict[str, Any]:
-    url = f"{base_url.rstrip('/')}/_db/{db}/_api/cursor"
-    data = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        url,
-        data=data,
-        method="POST",
-        headers={"Content-Type": "application/json"},
-    )
-    add_arango_auth(request)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.loads(response.read().decode("utf-8"))
-
-
-def add_arango_auth(request: urllib.request.Request) -> None:
-    """Attach Basic auth when repository Arango credentials are configured."""
-    username = os.environ.get("ARANGO_USER") or os.environ.get("ARANGO_USERNAME")
-    password = os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD")
-    if not username or password is None:
-        return
-    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
-    request.add_header("Authorization", f"Basic {token}")
-
-
 def arango_cursor_all(base_url: str, db: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
-    first = arango_request(base_url, db, payload)
-    rows = list(first.get("result") or [])
-    cursor_id = first.get("id")
-    has_more = bool(first.get("hasMore"))
-    while has_more and cursor_id:
-        url = f"{base_url.rstrip('/')}/_db/{db}/_api/cursor/{cursor_id}"
-        request = urllib.request.Request(url, method="PUT", headers={"Content-Type": "application/json"})
-        add_arango_auth(request)
-        with urllib.request.urlopen(request, timeout=30) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-        rows.extend(payload.get("result") or [])
-        cursor_id = payload.get("id")
-        has_more = bool(payload.get("hasMore"))
-    return rows
+    target = ArangoHttpTarget(
+        endpoint=base_url.rstrip("/"),
+        database=db,
+        username=arango_username(),
+        password=arango_password(),
+    )
+    return execute_aql(
+        target,
+        str(payload["query"]),
+        payload.get("bindVars") or {},
+        timeout=30,
+        batch_size=payload.get("batchSize"),
+    )
 
 
 def load_arango(
@@ -1300,14 +1281,16 @@ def write_markdown(packet: dict[str, Any], path: Path) -> None:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
+    repo_root_default = repo_root_from(Path.cwd())
+    load_repo_arango_env(repo_root_default)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--query", required=True, help="Goal, theorem name, or concept to retrieve context for.")
-    parser.add_argument("--repo-root", type=Path, default=repo_root_from(Path.cwd()))
+    parser.add_argument("--repo-root", type=Path, default=repo_root_default)
     parser.add_argument("--source", choices=["auto", "arango", "jsonl"], default="auto")
     parser.add_argument("--nodes", type=Path, default=DEFAULT_NODES)
     parser.add_argument("--edges", type=Path, default=DEFAULT_EDGES)
-    parser.add_argument("--arango-url", default=DEFAULT_ARANGO)
-    parser.add_argument("--arango-db", default=DEFAULT_DB)
+    parser.add_argument("--arango-url", default=arango_endpoint(DEFAULT_ARANGO))
+    parser.add_argument("--arango-db", default=arango_database(DEFAULT_DB))
     parser.add_argument("--nodes-collection", default=DEFAULT_NODE_COLLECTION)
     parser.add_argument("--edges-collection", default=DEFAULT_EDGE_COLLECTION)
     parser.add_argument(

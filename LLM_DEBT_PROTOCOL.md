@@ -1,36 +1,49 @@
-# LLM Debt Protocol
+# Debt Protocol
 
-Debt work in this repository means replacing wrappers, assumptions, surrogates, or stale interfaces with real lower-owner mathematics.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this workflow, but subordinate to repo-wide authority docs and code.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Role split
+Debt work here means replacing stale, wrapper-heavy, duplicated, or surrogate
+surfaces with cleaner owner mathematics.
 
-- creative lane: propose replacement lemmas, owner splits, and local constructive proofs;
-- critical lane: reject cosmetic rewrites, API noise, and wrapper-preserving edits;
-- Lean lane: decide what is true.
+## Current Debt Signals
 
-## Current debt discipline
+Treat these as real debt:
 
-Treat as debt:
-- public packaging wrappers;
-- fake capstone surfaces;
-- stale umbrella ownership;
-- surrogate or vacuous theorem surfaces;
-- duplicated presentation layers over one lower trunk.
+- wrappers that add no new mathematics
+- duplicated presentation layers over one lower trunk
+- stale umbrella ownership
+- surrogate theorem surfaces that should collapse into lower owners
 
-Do not treat as debt:
-- genuine lower bridge identifications;
-- actual constructive endpoints;
-- stable substrate definitions.
+Do not call something debt merely because it is abstract, small, or not yet
+connected to a larger story.
 
-## Current tooling
+## Current Debt Method
 
-Use:
-- `scripts/quality/audit_constructivity.py`
+1. Read the owner file directly.
+2. Find direct consumers.
+3. Remove or shrink one debt surface at a time.
+4. Rebuild the affected file/module.
+5. Use report surfaces only as second-pass confirmation.
+
+## Useful Commands
+
+```bash
+lake env lean <changed-file>.lean
+lake script run changedVerify
+lake script run dagDoctor
+```
+
+Secondary analysis tools:
+
 - `tools/infra/generate_theorem_surface_index.py`
 - `tools/infra/generate_semantic_quotient.py`
 - `tools/infra/generate_projection_coloring.py`
-- `tools/infra/refresh_decl_graph.py` (incremental DAG refresh; use `--force` to bypass olean-hash skip)
-- `artifacts/dag/index/meta.json` — verify freshness (`schemaVersion` ≥ 2, recent `timestamp`) before trusting any derived report
 
-Always do direct file analysis first.
-Check `meta.json` before relying on any DAG artifact for debt triage.
+## Rule
+
+Debt reduction should make the code smaller, clearer, or more owner-faithful.
+If the patch mostly renames, rearranges, or rebrands, it probably is not paying
+debt.

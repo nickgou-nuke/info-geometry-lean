@@ -1,34 +1,25 @@
 # Universal Volume Stack
 
-This is the maintained reading path for multiplicative-to-additive volume language in the current repo.
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current reading path for one conceptual lane, but subordinate to current code and repo-wide docs.
+> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
 
-## Current owner chain
+This file is a short reading path for multiplicative-to-additive volume language
+in the current repository.
 
-1. projective and strict-positive roots:
-   - `ProjectiveStateCore`
-   - `PositiveRayCore`
-   - `RelativeGeneratorCore`
-   - `RelativePotentialCore`
-2. presentation bridges:
-   - `RelativePotentialDiscreteBridge`
-   - `RelativePotentialCountBridge`
-   - `RelativePotentialScalarBridge`
-3. umbrella export:
-   - `RedLine`
-4. downstream scalar and geometry consumers:
-   - `KMSSinkhornScalarPotential`
-   - `RicciMongeAmpere`
-   - `CalabiYauRNMongeAmpere`
-   - determinant/log-volume lemmas in `GrandSynthesis`
+## Current Owner Path
 
-## Interpretation
+Use this as a reading chain, not as a proof authority:
 
-In current code, the stack is:
-- multiplicative relative density;
-- additive log-density;
-- negative log modular potential;
-- representation-specific lifts in count, scalar, geometry, and operator settings.
+1. `ProjectiveStateCore`
+2. `PositiveRayCore`
+3. `RelativeGeneratorCore`
+4. `RelativePotentialCore`
+5. `RelativePotentialDiscreteBridge`
+6. `RelativePotentialCountBridge`
 
-## Non-claim
+## Rule
 
-This file is a maintained code map. It is not a claim that every consumer has already been fully deduplicated onto one final abstraction.
+If you need the live theorem surface, read the current Lean owner files
+directly. This file is only a guide to one corridor.

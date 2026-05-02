@@ -1,5 +1,10 @@
 # Vision: The Spinor-Modular Bridge and the Isolation of Dangling Modes
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document outlines the strategy for the **Spinor-Modular Bridge**, the final major frontier in the `info-geometry-lean` architecture. It formalizes the identification between Majorana boundary modes (the "dangling threads" of the null web) and the **Modular Singularization Layer**.
 
 ## 1. Defining the Modular Singularization Layer

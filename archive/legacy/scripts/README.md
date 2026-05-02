@@ -1,8 +1,9 @@
 # Archived Legacy Scripts
 
-> Status: legacy compatibility notes; do not treat as active tooling contracts.
-> Canonical infra docs: [`tools/infra/README.md`](../../../tools/infra/README.md), [`docs/README.md`](../../../docs/README.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../../docs/MarkdownCorpusGovernance.md).
+> Status: `archival reference`
+> Audited: 2026-05-02
+> Note: Kept for provenance and archaeology, not as current policy.
+> See: [README.md](../../../README.md), [docs/README.md](../../../docs/README.md), [docs/CODEBASE_STATUS.md](../../../docs/CODEBASE_STATUS.md)
 
 These scripts were removed from the active `scripts` CLI and the maintained
 documentation/build pipeline. They are kept only for archaeology, one-off

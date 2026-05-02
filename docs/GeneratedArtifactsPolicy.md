@@ -1,74 +1,56 @@
 # Generated Artifacts Policy
 
-This repository separates **canonical source** from **generated artifacts**.
+> Status: `current authority`
+> Audited: 2026-05-02
+> Note: Maintained against the live code surface.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
-## Canonical Source
+This repository separates source of truth from generated output.
 
-The following trees are canonical and are expected to stay in normal Git:
+## Source Of Truth
+
+Treat these as canonical:
 
 - `lean/`
-- `docs/`
-- `tests/`
+- `src/igf/`
 - `tools/`
-- small hand-maintained policy/manifests that act as source-of-record
+- `tests/`
+- `lakefile.lean`
+- `pyproject.toml`
+- the maintained entry docs listed in [README.md](README.md)
 
-When documentation and Lean disagree, Lean is the authority.
+## Generated Or Snapshot Surfaces
 
-## Generated Artifact Families
+Treat these as generated, reproducible, or point-in-time snapshots:
 
-The following families are generated outputs and should not be treated as
-canonical inputs:
+- `reports/`
+- `artifacts/`
+- `docs/auto/`
+- generated run folders under `handover/` or other runtime trees
 
-- `artifacts/alexandria/`
-  - semantic ingest corpora
-  - retrieval overlays
-  - research digests
-- `artifacts/infotree/`
-  - raw InfoTree exports
-  - Arango hydration/overlay exports
-  - perf and probe payloads
-- `artifacts/leantrail/`
-  - trail snapshots
-  - conformance and failure-harvest reports
-- `artifacts/expr-graph/`
-  - expression-graph exports
-- `artifacts/hermes_loop/`
-  - queue, replay, worker, and runtime loop outputs
-- `artifacts/socratic_loops/`
-  - generated loop transcripts and eval outputs
-- `artifacts/black_book_alchemy/`
-  - generated synthesis byproducts
-- `handover/injections/manifests/EXT-*`
-  - generated extension manifests
+Common examples include:
 
-These paths are intentionally ignored going forward and should be reproducible
-from the repo toolchain.
+- DAG indexes and overlays
+- LeanTrail snapshots and conformance outputs
+- Arango export or ingest payloads
+- process-flow packets
+- research/eval summaries
+- frontier packets
+- optimization run summaries
 
-## Regeneration Principle
+## Rule
 
-If a generated artifact is needed again, regenerate it from the owning source
-and tool, rather than restoring it by hand.
+If a generated file is important, regenerate it from code and tooling instead of
+editing the prose snapshot by hand.
 
-Typical owners:
+Use:
 
-- declaration/DAG refresh:
-  - `lake script run dagRefresh`
-  - `python3 tools/infra/refresh_decl_graph.py`
-- Arango overlays:
-  - `python3 tools/infra/arango_layered_ingest.py`
-  - `python3 tools/infra/arango_dag_algorithms.py`
-- Alexandria ingest/fetch:
-  - `tools/alexandria/*`
-- Hermes/hive runtime outputs:
-  - `tools/infra/hive_*`
-  - `tools/infra/research_digest_worker.py`
+```bash
+lake script run dagAll
+igf build
+igf run
+igf validate
+```
 
-## Practical Rule
-
-Before committing an artifact-like path, ask:
-
-1. Is this a source input, or only a generated result?
-2. If deleted, can it be recreated from tracked source and tooling?
-3. Is the repo depending on it as a de facto canonical input?
-
-If it is generated, reproducible, and non-canonical, it should stay out of Git.
+and the maintained script lanes under `tools/infra/`, `tools/frontier/`,
+`tools/docs/`, and `tools/leantrail/`.

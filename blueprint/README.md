@@ -1,9 +1,5 @@
 # Blueprint Workflow
 
-> Status: local blueprint wrapper notes; not a global architecture spec.
-> Canonical docs: [`docs/README.md`](../docs/README.md), [`tools/infra/README.md`](../tools/infra/README.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
-
 This directory documents the LeanArchitect-facing blueprint layer.
 
 ## Current source of blueprint coverage

@@ -1,5 +1,10 @@
 # Synthesis Note: The Welding Theorem and Anomaly Identification
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## Status
 This note documents the formal resolution of the "Hard Problem" in the Projective-to-Krein transition. It traces how the static, commuting projective geometry is welded to the dynamic, non-commuting phase-space geometry on a polarized doubled real carrier.
 

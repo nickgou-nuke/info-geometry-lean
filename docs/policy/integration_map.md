@@ -1,5 +1,10 @@
 # Spire Toolchain Integration Map (Corrigenda)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 This document defines the **Crystalline Toolchain** for the Info-Geometry Spire, mapping the repository's orchestration loop to the specific state-of-the-art instruments of the Lean 4 ecosystem.
 
 ## ⚖️ The Hardened Shortlist

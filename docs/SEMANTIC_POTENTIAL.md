@@ -1,4 +1,10 @@
 # Semantic Potential and Gravitational Condensation
+
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## The Multi-Agent Socratic Engine of Discovery
 
 This document formalizes the generative engine of the `info-geometry-lean` 

@@ -1,5 +1,10 @@
 # Majorana Web, Dilation, and Emergent Gravity
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## Physical Preamble: Quasilattice Supergravity
 
 The mathematical architecture formalized in this repository simulates a literal physical world: a **Quantum Deformed Supergravity (SUGRA) on a Quasilattice**.

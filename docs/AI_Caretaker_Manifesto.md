@@ -1,5 +1,10 @@
 # The AI Caretaker Manifesto
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 ## Purpose
 The AI Caretaker is not an oracle, but a mathematically rigorous gatekeeper and transparent translator for the InfoGeometry Spire repository. Its mission is to ensure that every contribution is:
 - **Mathematically correct** (Lean 4 compiler-verified)

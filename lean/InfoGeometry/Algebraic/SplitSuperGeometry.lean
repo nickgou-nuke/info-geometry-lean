@@ -17,6 +17,9 @@ import InfoGeometry.Algebraic.SplitCliffordCarrier
 
 noncomputable section
 
+set_option linter.dupNamespace false
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Algebraic.SplitSuperGeometry
 
 open InfoGeometry.Algebraic.SplitSignature
@@ -118,19 +121,14 @@ theorem cliffordParity_ι
     (n : ℕ) (v : SplitModule n) :
     cliffordParity n (CliffordAlgebra.ι (splitQuadraticForm n) v) =
       -(CliffordAlgebra.ι (splitQuadraticForm n) v) := by
-  simpa [cliffordParity] using
-    (CliffordAlgebra.involute_ι
-      (Q := splitQuadraticForm n)
-      v)
+  simp [cliffordParity]
 
 @[simp]
 theorem cliffordParity_involutive
     (n : ℕ) :
     Function.Involutive (cliffordParity n) := by
   intro x
-  simpa [cliffordParity] using
-    (CliffordAlgebra.involute_involutive
-      (Q := splitQuadraticForm n) x)
+  simp [cliffordParity]
 
 @[simp]
 theorem cliffordParity_comp_self
@@ -149,9 +147,7 @@ def splitCliffordParityInvolution
   toAlgEquiv := CliffordAlgebra.involuteEquiv (Q := splitQuadraticForm n)
   involutive := by
     intro x
-    simpa using
-      (CliffordAlgebra.involute_involutive
-        (Q := splitQuadraticForm n) x)
+    simp
   evenPart := CliffordAlgebra.evenOdd (splitQuadraticForm n) 0
   oddPart := CliffordAlgebra.evenOdd (splitQuadraticForm n) 1
   parity_eq_on_even := by
@@ -171,9 +167,7 @@ theorem splitCliffordParityInvolution_vector
     (splitCliffordParityInvolution n).toAlgEquiv
         (CliffordAlgebra.ι (splitQuadraticForm n) v) =
       - CliffordAlgebra.ι (splitQuadraticForm n) v := by
-  simpa [splitCliffordParityInvolution] using
-    (CliffordAlgebra.involute_ι
-      (Q := splitQuadraticForm n) v)
+  simp [splitCliffordParityInvolution]
 
 /--
 Split supergeometry carrier.

@@ -1,8 +1,9 @@
 # LeanTrail UI (MVP Stub)
 
-> Status: placeholder surface (not an active maintained UI module).
-> Canonical LeanTrail docs: [`leantrail/README.md`](../README.md), [`docs/LeanTrail.md`](../../docs/LeanTrail.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../docs/MarkdownCorpusGovernance.md).
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Not part of the maintained authority surface unless explicitly promoted.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
 
 This folder is reserved for the Sourcetrail-style frontend.
 

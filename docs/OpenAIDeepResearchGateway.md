@@ -1,5 +1,10 @@
 # OpenAI Deep Research Gateway (Two-Layer MCP)
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This repository now supports a two-layer deep-research loop:
 
 1. Codex-facing MCP gateway (`tools/infra/openai_deep_research_gateway.py`)

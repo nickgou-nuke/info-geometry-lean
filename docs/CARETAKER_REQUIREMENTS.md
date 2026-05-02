@@ -1,5 +1,10 @@
 # 📜 CARETAKER REQUIREMENTS: Operational Specification
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 *“The Spire requires not just a mind, but a discipline.”*
 
 This document defines the formal requirements for any Agentic Caretaker (AI) inhabiting or managing the `info-geometry-lean` repository. These requirements are derived from **Nemo-Skills** and **NemoClaw** operational standards.

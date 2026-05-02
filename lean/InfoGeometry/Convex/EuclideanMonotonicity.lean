@@ -15,6 +15,6 @@ This is a direct consequence of the parallelogram law and positivity of the squa
 lemma euclidean_grad_monotone (x y : E) :
   0 ≤ inner ℝ (grad x - grad y) (x - y) := by
   -- grad x = x, grad y = y; goal reduces to nonnegativity of `⟪x - y, x - y⟫`
-  simpa [grad] using (real_inner_self_nonneg (x - y))
+  simp [grad]
 
 end InfoGeometry.Convex

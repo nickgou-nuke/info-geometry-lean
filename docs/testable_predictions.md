@@ -1,5 +1,10 @@
 # Measurement-Facing Topics
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This file is not a catalog of proved physical predictions.
 
 It is a reading guide to theorem families that are closest to measurement-facing

@@ -1,5 +1,10 @@
 # Theorem-Candidate Doctrine: State-as-Functional, Basis-as-Map, Representation Bridge
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 Status: theorem-candidate doctrine note
 Date: 2026-04-23
 Scope: formal candidate doctrine for the operatorial trunk of `info-geometry-lean-fusion`

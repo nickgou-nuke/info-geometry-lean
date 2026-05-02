@@ -18,6 +18,17 @@ from typing import Any
 from urllib.error import HTTPError
 from urllib.parse import quote
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 from arango_raw_infotree_ingest import (
     ArangoTarget,
     auth_header,
@@ -233,11 +244,12 @@ def networkx_probe(target: ArangoTarget, graph_name: str, *, use_gpu: bool) -> G
 
 
 def parse_args() -> argparse.Namespace:
+    load_repo_arango_env(REPO_ROOT)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--endpoint", default="http://127.0.0.1:8530")
-    parser.add_argument("--database", default="infogeometry")
-    parser.add_argument("--username", default="root")
-    parser.add_argument("--password", default="")
+    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--database", default=arango_database())
+    parser.add_argument("--username", default=arango_username())
+    parser.add_argument("--password", default=arango_password())
     parser.add_argument("--graph-name", default=RAW_INFOTREE_GRAPH_NAME)
     parser.add_argument("--replace", action="store_true", help="Replace the named graph definition without dropping collections.")
     parser.add_argument("--probe-networkx", action="store_true", help="Try opening the graph through nx-arangodb if installed.")

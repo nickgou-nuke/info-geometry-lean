@@ -18,6 +18,8 @@ This is the honest discrete/quasilattice shadow:
 No continuum super-Poincare theorem is claimed here.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.SuperchargeOddOddDecomposition
 
 open InfoGeometry.Canonical.SuperchargeHoppingBridge

@@ -22,15 +22,25 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
+
 # Registry of Truth
 DECL_INDEX_PATH = Path("artifacts/dag/index/decls.jsonl")
 EDGE_INDEX_PATH = Path("artifacts/dag/index/edges.jsonl")
 TOPOLOGY_NODES_PATH = Path("artifacts/dag/index/topology_overlay_nodes.jsonl")
 
-ARANGO_URL = os.environ.get("ARANGO_URL", "http://127.0.0.1:8530")
-ARANGO_DB = os.environ.get("ARANGO_DB", "infogeometry")
-ARANGO_USER = os.environ.get("ARANGO_USER", os.environ.get("ARANGO_USERNAME", "root"))
-ARANGO_PASSWORD = os.environ.get("ARANGO_PASSWORD", "")
+load_repo_arango_env(Path.cwd())
+
+ARANGO_URL = os.environ.get("ARANGO_URL") or arango_endpoint()
+ARANGO_DB = os.environ.get("ARANGO_DB") or arango_database()
+ARANGO_USER = arango_username()
+ARANGO_PASSWORD = arango_password()
 
 def _arango_auth_header() -> str | None:
     if ARANGO_PASSWORD == "" and ARANGO_USER == "":

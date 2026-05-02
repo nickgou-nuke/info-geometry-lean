@@ -21,6 +21,8 @@ are NOT allowed. The "diagonal" Hamiltonian is represented as a spectral
 sum of projectors in the operator algebra.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.DiscreteMellinModularBridge
 
 open InfoGeometry.Canonical.OperatorLightconeCoordinates

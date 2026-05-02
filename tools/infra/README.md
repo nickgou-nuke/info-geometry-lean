@@ -1,5 +1,10 @@
 # Infra Tools
 
+> Status: `maintained local guide`
+> Audited: 2026-05-02
+> Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 This directory contains the maintained DAG, reporting, and build orchestration entrypoints.
 The source of architectural truth is no longer purely Python-side: the native grammar lives in:
 - [Architecture.lean](../../lean/InfoGeometry/Meta/Architecture.lean)

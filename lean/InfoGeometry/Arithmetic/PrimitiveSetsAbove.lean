@@ -5,6 +5,21 @@ import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
+InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean
+
+Lean owner surface for the primitive-set problem with weight `1 / (n log n)`.
+
+This module does not claim the analytic proof. It formalizes:
+
+* the primitive-set predicate;
+* the weighted finite and infinite sums;
+* support-above-`x` conditions;
+* faithful theorem statements for the finite and infinite forms;
+* Mellin/modular integral representations of the primitive weight;
+* finite divisor-fiber reindexing lemmas for von Mangoldt weights.
+-/
+
+/-!
 # InfoGeometry.Arithmetic.PrimitiveSetsAbove
 
 Lean owner surface for the primitive-set problem with weight `1 / (n log n)`.
@@ -73,6 +88,15 @@ def SupportedAboveFinset (x : ℕ) (A : Finset ℕ) : Prop :=
 /-- Finite primitive-set weighted sum. -/
 def primitiveWeightSum (A : Finset ℕ) : ℝ :=
   Finset.sum A primitiveWeight
+
+/--
+Primitive-weight sum after scaling the support by a fixed divisor `d`.
+
+This is the quotient-side readout that naturally appears after rewriting a
+divisor fiber `a = d * m`.
+-/
+def primitiveScaledWeightSum (A : Finset ℕ) (d : ℕ) : ℝ :=
+  Finset.sum A (fun m => primitiveWeight (d * m))
 
 /--
 Unnormalized arithmetic weight attached to a finite count profile.
@@ -288,6 +312,60 @@ theorem primitiveWeight_pos {n : ℕ} (h : 1 < n) :
   have hdenom_pos : 0 < (n : ℝ) * Real.log (n : ℝ) := mul_pos hn_pos hlog_pos
   have hweight_pos : 0 < 1 / ((n : ℝ) * Real.log (n : ℝ)) := one_div_pos.mpr hdenom_pos
   simpa [primitiveWeight, h] using hweight_pos
+
+theorem primitiveWeight_mul_eq_of_right_one (d : ℕ) :
+    primitiveWeight (d * 1) = primitiveWeight d := by
+  simp
+
+/--
+Scaling the argument by a factor `d ≥ 1` can only decrease the primitive
+weight, once the right factor is already strictly above `1`.
+-/
+theorem primitiveWeight_mul_le_of_one_lt_right
+    {d m : ℕ} (hd : 1 ≤ d) (hm : 1 < m) :
+    primitiveWeight (d * m) ≤ primitiveWeight m := by
+  have hmul_ge : m ≤ d * m := by
+    simpa [Nat.one_mul, Nat.mul_comm] using Nat.mul_le_mul_right m hd
+  have hdm : 1 < d * m := lt_of_lt_of_le hm hmul_ge
+  rw [primitiveWeight, if_pos hdm, primitiveWeight, if_pos hm]
+  have hm_pos : 0 < (m : ℝ) := by
+    exact_mod_cast (lt_trans Nat.zero_lt_one hm)
+  have hcast_le : (m : ℝ) ≤ (d * m : ℕ) := by
+    exact_mod_cast hmul_ge
+  have hlog_le : Real.log m ≤ Real.log (d * m) := by
+    have hcast_mul : (m : ℝ) ≤ (d : ℝ) * (m : ℝ) := by
+      exact_mod_cast hmul_ge
+    simpa [Nat.cast_mul] using Real.log_le_log hm_pos hcast_mul
+  have hlog_nonneg : 0 ≤ Real.log (d * m) := by
+    exact Real.log_nonneg (show (1 : ℝ) ≤ d * m by
+      exact_mod_cast (Nat.le_of_lt hdm))
+  have hden_left :
+      (m : ℝ) * Real.log m ≤ (m : ℝ) * Real.log (d * m) := by
+    exact mul_le_mul_of_nonneg_left hlog_le hm_pos.le
+  have hden_right :
+      (m : ℝ) * Real.log (d * m) ≤ ((d * m : ℕ) : ℝ) * Real.log (d * m) := by
+    exact mul_le_mul_of_nonneg_right hcast_le hlog_nonneg
+  have hden :
+      (m : ℝ) * Real.log m ≤ ((d * m : ℕ) : ℝ) * Real.log (d * m) := by
+    exact le_trans hden_left hden_right
+  have hden' :
+      (m : ℝ) * Real.log m ≤ ((d * m : ℕ) : ℝ) * Real.log ((d * m : ℕ) : ℝ) := by
+    simpa [Nat.cast_mul] using hden
+  exact one_div_le_one_div_of_le (mul_pos hm_pos (Real.log_pos (by exact_mod_cast hm))) hden'
+
+/--
+Away from the special quotient atom `m = 1`, scaling by `d ≥ 1` does not
+increase the primitive weight.
+-/
+theorem primitiveWeight_mul_le_of_ne_one
+    {d m : ℕ} (hd : 1 ≤ d) (hm1 : m ≠ 1) :
+    primitiveWeight (d * m) ≤ primitiveWeight m := by
+  by_cases hm : 1 < m
+  · exact primitiveWeight_mul_le_of_one_lt_right hd hm
+  · have hm_le : m ≤ 1 := le_of_not_gt hm
+    have hm_zero : m = 0 := by
+      omega
+    simp [hm_zero, primitiveWeight_eq_zero_of_le_one]
 
 theorem primitiveWeight_eq_integral_mellinKernel (n : ℕ) :
     primitiveWeight n = ∫ s : ℝ in Set.Ioi 1, primitiveMellinKernel n s := by
@@ -540,7 +618,7 @@ theorem primitiveWeight_vonMangoldt_divisorSum_eq_log
 
 theorem primitiveFinset_empty :
     PrimitiveFinset ∅ := by
-  intro a b ha
+  intro a b ha hb hab
   simp at ha
 
 theorem primitiveFinset_singleton (n : ℕ) :
@@ -582,6 +660,16 @@ theorem PrimitiveFinset.not_dvd_of_ne {A : Finset ℕ} (hA : PrimitiveFinset A)
     ¬ a ∣ b :=
   PrimitiveSet.not_dvd_of_ne hA ha hb hne
 
+theorem primitiveFinset_erase {A : Finset ℕ} (hA : PrimitiveFinset A) (n : ℕ) :
+    PrimitiveFinset (A.erase n) := by
+  intro a b ha hb hab
+  exact hA (Finset.mem_of_mem_erase ha) (Finset.mem_of_mem_erase hb) hab
+
+theorem supportedAboveFinset_erase {x : ℕ} {A : Finset ℕ} (hA : SupportedAboveFinset x A)
+    (n : ℕ) : SupportedAboveFinset x (A.erase n) := by
+  intro m hm
+  exact hA (Finset.mem_of_mem_erase hm)
+
 /--
 Quotient support of a finite set by a fixed divisor `d`: keep the elements
 divisible by `d` and divide them by `d`.
@@ -598,7 +686,7 @@ If every element of a primitive finite set is divisible by `d`, then dividing
 the whole support by `d` preserves primitiveness.
 -/
 theorem primitiveFinset_image_div
-    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (hd0 : d ≠ 0)
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (_hd0 : d ≠ 0)
     (hdiv : ∀ ⦃a : ℕ⦄, a ∈ A → d ∣ a) :
     PrimitiveFinset (A.image fun a => a / d) := by
   intro x y hx hy hxy
@@ -614,8 +702,7 @@ theorem primitiveFinset_image_div
       _ = d * (a / d * k) := by rw [hk]
       _ = a * k := by rw [← Nat.mul_assoc, Nat.mul_div_cancel' hda]
   have hab_eq : a = b := PrimitiveFinset.eq_of_dvd hA haA hbA hab
-  rw [← Nat.mul_right_inj hd0]
-  rw [Nat.mul_div_cancel' hda, Nat.mul_div_cancel' hdb, hab_eq]
+  simp [hab_eq]
 
 theorem primitiveDivisorQuotient_primitive
     {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (hd0 : d ≠ 0) :
@@ -635,6 +722,57 @@ theorem primitiveDivisorQuotient_supportedAbove
   have haA : a ∈ A := (Finset.mem_filter.mp ha).1
   exact Nat.div_le_div_right (hA haA)
 
+theorem primitiveDivisorQuotient_erase_one_primitive
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (hd0 : d ≠ 0) :
+    PrimitiveFinset ((primitiveDivisorQuotient A d).erase 1) := by
+  exact primitiveFinset_erase (primitiveDivisorQuotient_primitive hA hd0) 1
+
+theorem primitiveDivisorQuotient_erase_one_supportedAbove
+    {A : Finset ℕ} {x d : ℕ} (hA : SupportedAboveFinset x A) :
+    SupportedAboveFinset (x / d) ((primitiveDivisorQuotient A d).erase 1) := by
+  exact supportedAboveFinset_erase (primitiveDivisorQuotient_supportedAbove hA) 1
+
+theorem primitiveDivisorQuotient_erase_one_supportedAbove_two
+    {A : Finset ℕ} {d : ℕ} (hA : SupportedAboveFinset 1 A) :
+    SupportedAboveFinset 2 ((primitiveDivisorQuotient A d).erase 1) := by
+  intro n hn
+  rcases Finset.mem_erase.mp hn with ⟨hn1, hnQ⟩
+  rcases Finset.mem_image.mp hnQ with ⟨a, ha, hEq⟩
+  have haA : a ∈ A := (Finset.mem_filter.mp ha).1
+  have hda : d ∣ a := (Finset.mem_filter.mp ha).2
+  have ha_pos : 0 < a := lt_of_lt_of_le Nat.zero_lt_one (hA haA)
+  have hrepr : a = d * (a / d) := by rw [Nat.mul_div_cancel' hda]
+  have hq_ne_zero : a / d ≠ 0 := by
+    intro hq0
+    rw [hq0, Nat.mul_zero] at hrepr
+    exact (Nat.ne_of_gt ha_pos) hrepr
+  have hq_pos : 0 < a / d := Nat.pos_of_ne_zero hq_ne_zero
+  have hq_ge_one : 1 ≤ a / d := Nat.succ_le_of_lt hq_pos
+  have hq_ne_one : a / d ≠ 1 := by
+    intro hq1
+    exact hn1 (hEq.symm.trans hq1)
+  have hq_gt_one : 1 < a / d := lt_of_le_of_ne hq_ge_one hq_ne_one.symm
+  simpa [hEq] using Nat.succ_le_of_lt hq_gt_one
+
+theorem primitiveDivisorQuotient_one_mem_iff {A : Finset ℕ} {d : ℕ} (hd0 : d ≠ 0) :
+    1 ∈ primitiveDivisorQuotient A d ↔ d ∈ A := by
+  constructor
+  · intro h1
+    rcases Finset.mem_image.mp h1 with ⟨a, ha, ha1⟩
+    have haA : a ∈ A := (Finset.mem_filter.mp ha).1
+    have hda : d ∣ a := (Finset.mem_filter.mp ha).2
+    have hEq : a = d := by
+      have ha1' : a / d = 1 := by simpa using ha1
+      calc
+        a = d * (a / d) := by rw [Nat.mul_div_cancel' hda]
+        _ = d * 1 := by rw [ha1']
+        _ = d := by simp
+    simpa [hEq] using haA
+  · intro hdA
+    refine Finset.mem_image.mpr ?_
+    refine ⟨d, Finset.mem_filter.mpr ⟨hdA, dvd_rfl⟩, ?_⟩
+    exact Nat.div_self (Nat.pos_of_ne_zero hd0)
+
 theorem primitiveDivisorFiber_eq_filter (A : Finset ℕ) (d : ℕ) :
     primitiveDivisorFiber A d = A.filter (fun a => d ∣ a) := by
   rfl
@@ -653,6 +791,12 @@ theorem primitiveDivisorFiber_mem {A : Finset ℕ} {d a : ℕ}
     a ∈ A := by
   exact (Finset.mem_filter.mp ha).1
 
+/--
+Division by a fixed `d` is injective on the `d`-divisible fiber.
+
+No `d ≠ 0` hypothesis is needed: when `d = 0`, the fiber consists only of
+elements divisible by `0`, hence only `0`.
+-/
 theorem primitiveDivisorFiber_div_injective
     {A : Finset ℕ} {d : ℕ} :
     Set.InjOn (fun a : ℕ => a / d) (primitiveDivisorFiber A d) := by
@@ -674,11 +818,13 @@ theorem sum_primitiveDivisorFiber_eq_sum_primitiveDivisorQuotient
       = Finset.sum (primitiveDivisorQuotient A d)
           (fun m => f (d * m)) := by
   rw [primitiveDivisorQuotient_eq_image_fiber]
-  rw [Finset.sum_image (primitiveDivisorFiber_div_injective (A := A))]
-  refine Finset.sum_congr rfl ?_
-  intro a ha
-  have hda : d ∣ a := primitiveDivisorFiber_dvd ha
-  rw [Nat.mul_div_cancel' hda]
+  rw [Finset.sum_image]
+  · refine Finset.sum_congr rfl ?_
+    intro a ha
+    have hda : d ∣ a := primitiveDivisorFiber_dvd ha
+    rw [Nat.mul_div_cancel' hda]
+  · intro a ha b hb hab
+    exact primitiveDivisorFiber_div_injective ha hb hab
 
 /--
 Specialization of the fixed-divisor reindexing to the primitive weight.
@@ -689,7 +835,9 @@ theorem primitiveWeightSum_primitiveDivisorQuotient_eq
       = Finset.sum (primitiveDivisorFiber A d) (fun a => primitiveWeight (a / d)) := by
   unfold primitiveWeightSum
   rw [primitiveDivisorQuotient_eq_image_fiber]
-  rw [Finset.sum_image (primitiveDivisorFiber_div_injective (A := A) (d := d))]
+  rw [Finset.sum_image]
+  · intro a ha b hb hab
+    exact primitiveDivisorFiber_div_injective ha hb hab
 
 /--
 Reindex the fixed-`d` divisor fiber against the primitive weight viewed on the
@@ -713,6 +861,163 @@ theorem realVonMangoldt_mul_primitiveWeightSum_primitiveDivisorQuotient_eq
       (fun a => realVonMangoldt d * primitiveWeight (a / d)) := by
   rw [primitiveWeightSum_primitiveDivisorQuotient_eq]
   rw [Finset.mul_sum]
+
+/--
+Fixed-divisor fiber of the original primitive weight, expressed as a scaled
+primitive-weight sum on the quotient support.
+-/
+theorem sum_primitiveDivisorFiber_primitiveWeight_eq_primitiveScaledWeightSum
+    (A : Finset ℕ) (d : ℕ) :
+    Finset.sum (primitiveDivisorFiber A d) primitiveWeight
+      =
+    primitiveScaledWeightSum (primitiveDivisorQuotient A d) d := by
+  unfold primitiveScaledWeightSum
+  exact sum_primitiveDivisorFiber_eq_sum_primitiveDivisorQuotient A
+    (d := d) primitiveWeight
+
+/--
+Weighted fixed-divisor contribution of the original primitive weight, written
+through the quotient support with the scaling parameter retained.
+-/
+theorem realVonMangoldt_mul_primitiveScaledWeightSum_primitiveDivisorQuotient_eq
+    (A : Finset ℕ) (d : ℕ) :
+    realVonMangoldt d * primitiveScaledWeightSum (primitiveDivisorQuotient A d) d
+      =
+    Finset.sum (primitiveDivisorFiber A d)
+      (fun a => realVonMangoldt d * primitiveWeight a) := by
+  rw [← sum_primitiveDivisorFiber_primitiveWeight_eq_primitiveScaledWeightSum]
+  rw [Finset.mul_sum]
+
+/--
+Scaled primitive-weight sums are controlled by the ordinary primitive-weight
+sum after splitting off the exceptional quotient atom `1`.
+-/
+theorem primitiveScaledWeightSum_le_if_mem_add_erase
+    (A : Finset ℕ) {d : ℕ} (hd : 1 ≤ d) :
+    primitiveScaledWeightSum A d
+      ≤ (if 1 ∈ A then primitiveWeight d else 0) + primitiveWeightSum (A.erase 1) := by
+  classical
+  by_cases h1 : 1 ∈ A
+  · calc
+      primitiveScaledWeightSum A d
+          = Finset.sum (A.erase 1) (fun m => primitiveWeight (d * m)) + primitiveWeight (d * 1) := by
+              unfold primitiveScaledWeightSum
+              simpa using (Finset.sum_erase_add (s := A) (f := fun m => primitiveWeight (d * m)) h1).symm
+      _ ≤ Finset.sum (A.erase 1) primitiveWeight + primitiveWeight d := by
+            apply add_le_add
+            · apply Finset.sum_le_sum
+              intro m hm
+              exact primitiveWeight_mul_le_of_ne_one hd (Finset.mem_erase.mp hm).1
+            · simp
+      _ = (if 1 ∈ A then primitiveWeight d else 0) + primitiveWeightSum (A.erase 1) := by
+            simp [primitiveWeightSum, h1, add_comm]
+  · calc
+      primitiveScaledWeightSum A d = Finset.sum (A.erase 1) (fun m => primitiveWeight (d * m)) := by
+        simp [primitiveScaledWeightSum, h1]
+      _ ≤ primitiveWeightSum (A.erase 1) := by
+        unfold primitiveWeightSum
+        apply Finset.sum_le_sum
+        intro m hm
+        exact primitiveWeight_mul_le_of_ne_one hd (Finset.mem_erase.mp hm).1
+      _ = (if 1 ∈ A then primitiveWeight d else 0) + primitiveWeightSum (A.erase 1) := by
+        simp [h1]
+
+/--
+Specialize the scaled primitive-weight bound to a quotient support and rewrite
+the exceptional `1`-atom as membership of the original divisor `d`.
+-/
+theorem primitiveScaledWeightSum_primitiveDivisorQuotient_le
+    (A : Finset ℕ) {d : ℕ} (hd : 1 ≤ d) :
+    primitiveScaledWeightSum (primitiveDivisorQuotient A d) d
+      ≤ (if d ∈ A then primitiveWeight d else 0)
+          + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1) := by
+  have hd0 : d ≠ 0 := Nat.ne_of_gt (lt_of_lt_of_le Nat.zero_lt_one hd)
+  simpa [primitiveDivisorQuotient_one_mem_iff hd0] using
+    (primitiveScaledWeightSum_le_if_mem_add_erase (A := primitiveDivisorQuotient A d) hd)
+
+/--
+The same quotient-side bound after multiplying by the nonnegative von Mangoldt
+weight at the outer divisor `d`.
+-/
+theorem realVonMangoldt_mul_primitiveScaledWeightSum_primitiveDivisorQuotient_le
+    (A : Finset ℕ) {d : ℕ} (hd : 1 ≤ d) :
+    realVonMangoldt d * primitiveScaledWeightSum (primitiveDivisorQuotient A d) d
+      ≤ realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0)
+              + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1)) := by
+  exact mul_le_mul_of_nonneg_left
+    (primitiveScaledWeightSum_primitiveDivisorQuotient_le A hd)
+    (realVonMangoldt_nonneg d)
+
+/--
+Repackage the original divisor sigma-sum as an outer finite sum over divisors,
+with each inner divisor fiber rewritten as a scaled primitive-weight sum on the
+quotient support.
+
+The explicit nonzero-support hypothesis excludes the degenerate `a = 0` case,
+for which `a.divisors = ∅` but `d ∣ a` would otherwise create spurious fiber
+terms on the quotient side.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_eq
+    (A : Finset ℕ) (hA0 : ∀ ⦃a : ℕ⦄, a ∈ A → a ≠ 0) :
+    Finset.sum (A.sigma fun a => a.divisors)
+      (fun x => primitiveWeight x.1 * realVonMangoldt x.2)
+      =
+    Finset.sum (A.biUnion fun a => a.divisors)
+      (fun d => realVonMangoldt d * primitiveScaledWeightSum (primitiveDivisorQuotient A d) d) := by
+  let s := A.sigma fun a => a.divisors
+  let t := (A.biUnion fun a => a.divisors).sigma fun d => primitiveDivisorFiber A d
+  have hswap :
+      Finset.sum s (fun x => primitiveWeight x.1 * realVonMangoldt x.2)
+        =
+      Finset.sum t (fun y => realVonMangoldt y.1 * primitiveWeight y.2) := by
+    refine Finset.sum_bij'
+      (fun x hx => ⟨x.2, x.1⟩)
+      (fun y hy => ⟨y.2, y.1⟩)
+      ?_ ?_ ?_ ?_ ?_
+    · intro x hx
+      have hx' : x ∈ A.sigma (fun a => a.divisors) := by
+        simpa only [s] using hx
+      rcases Finset.mem_sigma.mp hx' with ⟨hxA, hxd⟩
+      refine Finset.mem_sigma.mpr ?_
+      refine ⟨?_, ?_⟩
+      · exact Finset.mem_biUnion.mpr ⟨x.1, hxA, hxd⟩
+      · exact Finset.mem_filter.mpr ⟨hxA, (Nat.mem_divisors.mp hxd).1⟩
+    · intro y hy
+      have hy' : y ∈ (A.biUnion fun a => a.divisors).sigma (fun d => primitiveDivisorFiber A d) := by
+        simpa only [t] using hy
+      rcases Finset.mem_sigma.mp hy' with ⟨hyD, hyF⟩
+      have hyA : y.2 ∈ A := primitiveDivisorFiber_mem hyF
+      have hyDiv : y.1 ∣ y.2 := primitiveDivisorFiber_dvd hyF
+      refine Finset.mem_sigma.mpr ?_
+      refine ⟨hyA, Nat.mem_divisors.mpr ⟨hyDiv, ?_⟩⟩
+      exact hA0 hyA
+    · intro x hx
+      rfl
+    · intro y hy
+      rfl
+    · intro x hx
+      rw [mul_comm]
+  calc
+    Finset.sum (A.sigma fun a => a.divisors)
+        (fun x => primitiveWeight x.1 * realVonMangoldt x.2)
+      = Finset.sum s (fun x => primitiveWeight x.1 * realVonMangoldt x.2) := by
+          rfl
+    _ = Finset.sum t (fun y => realVonMangoldt y.1 * primitiveWeight y.2) := hswap
+    _ = Finset.sum (A.biUnion fun a => a.divisors)
+          (fun d => Finset.sum (primitiveDivisorFiber A d)
+            (fun a => realVonMangoldt d * primitiveWeight a)) := by
+          simpa only [t] using
+            (Finset.sum_sigma'
+              (s := A.biUnion fun a => a.divisors)
+              (t := fun d => primitiveDivisorFiber A d)
+              (f := fun d a => realVonMangoldt d * primitiveWeight a)).symm
+    _ = Finset.sum (A.biUnion fun a => a.divisors)
+          (fun d => realVonMangoldt d * primitiveScaledWeightSum (primitiveDivisorQuotient A d) d) := by
+          refine Finset.sum_congr rfl ?_
+          intro d hd
+          symm
+          exact realVonMangoldt_mul_primitiveScaledWeightSum_primitiveDivisorQuotient_eq A d
 
 /--
 Repackage the divisor sigma-sum against the quotient primitive weight as an
@@ -803,6 +1108,42 @@ theorem primitiveWeight_vonMangoldt_divisorSigma_quotient_eq_of_supportedAbove
       (fun d => realVonMangoldt d * primitiveWeightSum (primitiveDivisorQuotient A d)) := by
   exact primitiveWeight_vonMangoldt_divisorSigma_quotient_eq A
     (supportedAboveFinset_one_nonzero hA)
+
+/--
+Supported-above-`1` specialization of the scaled divisor-swapped identity.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_eq_of_supportedAbove
+    (A : Finset ℕ) (hA : SupportedAboveFinset 1 A) :
+    Finset.sum (A.sigma fun a => a.divisors)
+      (fun x => primitiveWeight x.1 * realVonMangoldt x.2)
+      =
+    Finset.sum (A.biUnion fun a => a.divisors)
+      (fun d => realVonMangoldt d * primitiveScaledWeightSum (primitiveDivisorQuotient A d) d) := by
+  exact primitiveWeight_vonMangoldt_divisorSigma_scaled_eq A
+    (supportedAboveFinset_one_nonzero hA)
+
+/--
+Supported-above-`1` outer bound for the scaled divisor-swapped sigma-sum.
+
+Each outer divisor contribution splits into a diagonal term indexed by `d ∈ A`
+and a residual primitive-weight sum on the quotient support with the
+exceptional quotient atom `1` removed.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_of_supportedAbove
+    (A : Finset ℕ) (hA : SupportedAboveFinset 1 A) :
+    Finset.sum (A.sigma fun a => a.divisors)
+      (fun x => primitiveWeight x.1 * realVonMangoldt x.2)
+      ≤
+    Finset.sum (A.biUnion fun a => a.divisors)
+      (fun d => realVonMangoldt d
+        * ((if d ∈ A then primitiveWeight d else 0)
+            + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1))) := by
+  rw [primitiveWeight_vonMangoldt_divisorSigma_scaled_eq_of_supportedAbove A hA]
+  apply Finset.sum_le_sum
+  intro d hd
+  rcases Finset.mem_biUnion.mp hd with ⟨a, haA, hddiv⟩
+  have hd1 : 1 ≤ d := Nat.succ_le_of_lt (Nat.pos_of_mem_divisors hddiv)
+  exact realVonMangoldt_mul_primitiveScaledWeightSum_primitiveDivisorQuotient_le A hd1
 
 theorem supportedAboveFinset_mono {x y : ℕ} {A : Finset ℕ}
     (hxy : y ≤ x) (hA : SupportedAboveFinset x A) :

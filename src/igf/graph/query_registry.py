@@ -60,6 +60,70 @@ FOR p IN ig_chiral_patches
   }
 """.strip()
 
+LOG_BARRIER_CANDIDATES_AQL = """
+LET runId = @run_id
+LET minAbsChiralBias = @min_abs_chiral_bias
+LET barrierWeight = @barrier_weight
+LET nullityWeight = @nullity_weight
+LET ownerTarget = 'InfoGeometry.Arithmetic.PrimitiveSouriauPipeline.PrimitiveSouriauPipelineOwnerTarget'
+
+FOR p IN ig_chiral_patches
+  FILTER p.run_id == runId
+  FILTER p.non_overclaim == true
+  FILTER p.claim_scope == 'derived_spectral_neighborhood_sidecar'
+  FILTER p.authority_level IN ['heuristic', 'derived']
+
+  LET entropy = TO_NUMBER(p.chiral_entropy)
+  LET chiralBias = TO_NUMBER(p.chiral_bias)
+  LET absChiralBias = ABS(chiralBias)
+  FILTER absChiralBias >= minAbsChiralBias
+
+  LET spectral = FIRST(
+    FOR s IN ig_patch_spectral_signatures
+      FILTER s.run_id == p.run_id AND s.patch_id == p.patch_id
+      LIMIT 1
+      RETURN KEEP(s, 'patch_id', 'run_id', 'pseudo_logdet', 'nullity', 'spectral_status')
+  )
+  LET pseudoLogdet = spectral == null || spectral.pseudo_logdet == null ? 0 : TO_NUMBER(spectral.pseudo_logdet)
+  LET nullity = spectral == null || spectral.nullity == null ? 0 : TO_NUMBER(spectral.nullity)
+
+  /*
+    Derived routing proxy only:
+      self_concordant_barrier_proxy = -logdet-like spectral volume;
+      nullity penalizes boundary/singularity hints.
+    Lean remains the proof authority via ownerTarget.
+  */
+  LET selfConcordantBarrierProxy = -pseudoLogdet
+  LET barrierSafeScore =
+    entropy + absChiralBias
+      - barrierWeight * selfConcordantBarrierProxy
+      - nullityWeight * nullity
+
+  SORT barrierSafeScore DESC, entropy DESC, absChiralBias DESC
+  LIMIT @limit
+
+  RETURN {
+    run_id: p.run_id,
+    patch_id: p.patch_id,
+    patch_key: p._key,
+    patch_type: p.patch_type,
+    node_count: p.node_count,
+    edge_count: p.edge_count,
+    chiral_entropy: entropy,
+    chiral_bias: chiralBias,
+    abs_chiral_bias: absChiralBias,
+    pseudo_logdet: pseudoLogdet,
+    spectral_nullity: nullity,
+    spectral_status: spectral == null ? null : spectral.spectral_status,
+    self_concordant_barrier_proxy: selfConcordantBarrierProxy,
+    barrier_safe_score: barrierSafeScore,
+    lean_owner_target: ownerTarget,
+    authority_level: p.authority_level,
+    claim_scope: p.claim_scope,
+    non_overclaim: p.non_overclaim
+  }
+""".strip()
+
 
 QUERIES: Dict[str, QuerySpec] = {
     "verify.run_summary": QuerySpec(
@@ -163,6 +227,14 @@ FOR doc IN UNION(
             "rows are candidate retrieval hints, not certified ground states."
         ),
         aql=MAXENT_STYLE_CANDIDATES_AQL,
+    ),
+    "patch.log_barrier_candidates": QuerySpec(
+        id="patch.log_barrier_candidates",
+        description=(
+            "Rank derived patch neighborhoods by a conservative log-det/self-concordant "
+            "barrier routing proxy. This is not modular-flow or KMS evidence."
+        ),
+        aql=LOG_BARRIER_CANDIDATES_AQL,
     ),
 }
 

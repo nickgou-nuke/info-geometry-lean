@@ -1,5 +1,10 @@
 # ArangoDB Management and Architecture
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
 This document defines the role, lifecycle, and operational protocols for ArangoDB within the Info-Geometry Spire.
 
 ## ⚖️ The Role of ArangoDB (The Authoritative Lane)

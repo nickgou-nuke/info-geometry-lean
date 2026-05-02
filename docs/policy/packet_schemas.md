@@ -1,5 +1,10 @@
 # Spire Packet Schemas
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 These schemas define the strict JSON handshakes between the Proposer and Formalizer agents. They ensure that the formalization process is deterministic, auditable, and grounded in the repository's bedrock.
 
 ## I. Chain of States (Symbolic Decomposition)

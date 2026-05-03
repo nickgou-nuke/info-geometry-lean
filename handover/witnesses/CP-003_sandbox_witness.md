@@ -1,5 +1,10 @@
 # CP-003 Witness (Post-Transfer)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 - Packet: `CP-003`
 - Canonical file: `lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean`
 - Date: `2026-04-14`

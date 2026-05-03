@@ -1118,10 +1118,10 @@ def main() -> int:
             write_jsonl(cocycles_out, [])
             write_jsonl(comparisons_out, [])
             with open(report_out, "w", encoding="utf-8") as f:
-                f.write("# Process Flow Report (Skipped)\nNo artifacts found.\n")
+                f.write("# Process Flow Report (Skipped)\nNo artifacts found; clean empty input.\n")
             import json
             with open(json_out, "w", encoding="utf-8") as f:
-                json.dump({"status": "skipped", "reason": "no artifacts"}, f)
+                json.dump({"status": "skipped", "reason": "no artifacts", "summary": {}}, f)
             return 0
         raise SystemExit(f"no process-flow artifacts found under {input_dir}")
 

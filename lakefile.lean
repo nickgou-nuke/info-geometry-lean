@@ -389,9 +389,7 @@ lean_lib Experimental where
   globs := #[.andSubmodules `Experimental]
 
 lean_lib AuditNative where
-  srcDir := "lean"
   globs := #[`AuditNative]
 
 lean_lib AuditStrict where
-  srcDir := "lean"
   globs := #[`AuditStrict]

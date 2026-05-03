@@ -344,9 +344,9 @@ def main() -> int:
         if args.allow_missing_input:
             print(f"[generate_semantic_flow_report] no flow edges found under {input_dir}, skipping.", flush=True)
             with open(md_out, "w", encoding="utf-8") as f:
-                f.write("# Semantic Flow Report (Skipped)\nNo artifacts found.\n")
+                f.write("# Semantic Flow Report (Skipped)\nNo artifacts found; clean empty input.\n")
             with open(json_out, "w", encoding="utf-8") as f:
-                json.dump({"status": "skipped", "reason": "no artifacts"}, f)
+                json.dump({"status": "skipped", "reason": "no artifacts", "summary": {}}, f)
             return 0
         raise SystemExit(f"no flow edges found under {input_dir}")
 

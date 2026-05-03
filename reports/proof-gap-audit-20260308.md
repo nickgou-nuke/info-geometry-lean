@@ -1,5 +1,10 @@
 # Proof-Gap Audit (2026-03-08)
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 ## 1) Hard-axiom status (environment-level)
 
 - `lake build -R` succeeds on current worktree.

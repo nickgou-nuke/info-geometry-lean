@@ -1,5 +1,10 @@
 # Declaration Vacuity Triage Report
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 **Declarations scored:** 9615  
 **With violations:** 3461 (2461 error, 1000 warning-only)  
 **Clean:** 6154  

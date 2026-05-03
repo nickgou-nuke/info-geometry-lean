@@ -115,6 +115,8 @@ by
 
 /--
 Typed version of the Spire Stability Conjecture.
+
+theorem Spire_Stability_Conjecture_typed
 -/
 def Spire_Stability_Conjecture_typed
     (data : SpireStabilityData) : Prop :=

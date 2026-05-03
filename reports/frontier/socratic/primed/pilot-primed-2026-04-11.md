@@ -1,5 +1,10 @@
 # Socratic Cycle Packet
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../../../../README.md), [docs/README.md](../../../../docs/README.md), [docs/CODEBASE_STATUS.md](../../../../docs/CODEBASE_STATUS.md)
+
 Generated: 2026-04-11T10:31:05
 Topic: DIII phase-flip to index bridge
 Likely lane: `InfoGeometry.Canonical`

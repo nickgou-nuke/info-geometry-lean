@@ -41,8 +41,22 @@ from scipy.sparse.linalg import LinearOperator, cg, eigsh
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import repo_root
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
 else:
     from tools.pathing import repo_root
+    from tools.infra.arango_env import (
+        arango_database,
+        arango_endpoint,
+        arango_password,
+        arango_username,
+        load_repo_arango_env,
+    )
 
 DEFAULT_META = "artifacts/dag/index/meta.json"
 DEFAULT_GRAPH = "artifacts/dag/full_graph.json"
@@ -58,6 +72,77 @@ DEPTH_ORDER = ["count", "projective", "operator", "krein", "transport", "thermo"
 def load_graph(path: Path):
     obj = json.loads(path.read_text())
     return obj["nodes"], obj["forward"]
+
+
+def load_graph_from_arango(args: argparse.Namespace):
+    root = repo_root()
+    src_root = root / "src"
+    if str(src_root) not in sys.path:
+        sys.path.insert(0, str(src_root))
+
+    from igf.graph import ArangoHttpTarget, execute_aql
+
+    target = ArangoHttpTarget(
+        endpoint=str(args.arango_url).rstrip("/"),
+        database=str(args.arango_db),
+        username=str(args.arango_user),
+        password=str(args.arango_password),
+    )
+    node_rows = execute_aql(
+        target,
+        """
+        FOR n IN @@nodes
+          LIMIT @limit
+          RETURN {key: n._key, name: n.name != null ? n.name : n.id}
+        """,
+        {"@nodes": str(args.arango_nodes_collection), "limit": int(args.arango_limit_nodes)},
+        timeout=60,
+    )
+    nodes: list[str] = []
+    key_to_idx: dict[str, int] = {}
+    for row in node_rows:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("name")
+        key = row.get("key")
+        if not name:
+            continue
+        idx = len(nodes)
+        nodes.append(str(name))
+        if key:
+            key_to_idx[str(key)] = idx
+        key_to_idx[str(name)] = idx
+
+    edge_rows = execute_aql(
+        target,
+        """
+        FOR e IN @@edges
+          LIMIT @limit
+          RETURN {
+            src: e.src != null ? e.src : PARSE_IDENTIFIER(e._from).key,
+            dst: e.dst != null ? e.dst : PARSE_IDENTIFIER(e._to).key
+          }
+        """,
+        {"@edges": str(args.arango_edges_collection), "limit": int(args.arango_limit_edges)},
+        timeout=60,
+    )
+    forward: list[list[int]] = [[] for _ in nodes]
+    for row in edge_rows:
+        if not isinstance(row, dict):
+            continue
+        src = row.get("src")
+        dst = row.get("dst")
+        if src is None or dst is None:
+            continue
+        u = key_to_idx.get(str(src))
+        v = key_to_idx.get(str(dst))
+        if u is None or v is None:
+            continue
+        forward[u].append(v)
+
+    if not nodes:
+        raise RuntimeError("Arango graph source returned no nodes")
+    return nodes, forward
 
 
 def load_depth_tags(path: Path) -> dict[str, int]:
@@ -331,10 +416,26 @@ def sanity_check():
 # ── main ────────────────────────────────────────────────────
 
 def main() -> int:
+    root = repo_root()
+    load_repo_arango_env(root)
     ap = argparse.ArgumentParser(description="Graph Hodge spectrum (global spectral report)")
+    ap.add_argument(
+        "--graph-source",
+        choices=["auto", "artifacts", "arango"],
+        default="artifacts",
+        help="Load graph from original full_graph artifact, live Arango, or Arango with artifact fallback.",
+    )
     ap.add_argument("--meta", default=DEFAULT_META)
     ap.add_argument("--graph", default=DEFAULT_GRAPH)
     ap.add_argument("--depth-tags", default=DEFAULT_DEPTH_TAGS)
+    ap.add_argument("--arango-url", default=arango_endpoint())
+    ap.add_argument("--arango-db", default=arango_database())
+    ap.add_argument("--arango-user", default=arango_username())
+    ap.add_argument("--arango-password", default=arango_password())
+    ap.add_argument("--arango-nodes-collection", default="ig_nodes")
+    ap.add_argument("--arango-edges-collection", default="ig_edges")
+    ap.add_argument("--arango-limit-nodes", type=int, default=200000)
+    ap.add_argument("--arango-limit-edges", type=int, default=500000)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--kirchhoff-probes", type=int, default=30)
@@ -344,7 +445,6 @@ def main() -> int:
     if args.sanity:
         return 0 if sanity_check() else 1
 
-    root = repo_root()
     t0 = time.time()
 
     # ── meta check
@@ -360,7 +460,18 @@ def main() -> int:
         print("[hodge] WARNING: meta.json not found")
 
     # ── load
-    nodes, forward = load_graph(root / args.graph)
+    graph_source_used = "artifacts"
+    if args.graph_source in {"auto", "arango"}:
+        try:
+            nodes, forward = load_graph_from_arango(args)
+            graph_source_used = "arango"
+        except Exception as exc:
+            if args.graph_source == "arango":
+                raise
+            print(f"[hodge] Arango graph source unavailable, falling back to artifacts: {exc}")
+            nodes, forward = load_graph(root / args.graph)
+    else:
+        nodes, forward = load_graph(root / args.graph)
     depth_map = load_depth_tags(root / args.depth_tags)
     n_nodes = len(nodes)
 
@@ -464,6 +575,13 @@ def main() -> int:
         "complex": {
             "vertices": n_nodes, "edges": n_edges,
             "faces_triangles": n_faces, "euler_characteristic": euler,
+        },
+        "graph_source": {
+            "requested": args.graph_source,
+            "used": graph_source_used,
+            "artifact_graph": args.graph if graph_source_used == "artifacts" else None,
+            "arango_nodes_collection": args.arango_nodes_collection if graph_source_used == "arango" else None,
+            "arango_edges_collection": args.arango_edges_collection if graph_source_used == "arango" else None,
         },
         "betti": {
             "b0": b0, "b1_lower": b1_lower, "b1_upper": b1_upper,

@@ -732,6 +732,51 @@ theorem claimM_coadjointLeaf_Casimir_transverseOnsager_packet
   C.full_coadjoint_orbit_metriplectic_theorem x
 
 /--
+Claim M, constructive square-dissipation branch.
+
+This theorem projects the operatorial coadjoint-orbit owner constructor
+`ofMomentImageSquareDissipation`: the transverse Onsager channel is a square,
+so metric and total entropy production are nonnegative without a finite matrix
+PSD shadow.  It is the translator-facing form of the owner
+`casimir_leaf_transverse_onsager_square_packet` corridor.
+-/
+@[rep_depth thermo]
+theorem claimM_coadjointLeaf_Casimir_transverseOnsager_square_packet
+    {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
+    (moment : Orbit → LieCoalg)
+    (geometricTemperature : LieAlg)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (x : Orbit) :
+    let C :=
+      InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation
+        (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
+        moment geometricTemperature reversibleVectorField metricVectorField entropy
+        dissipationAmplitude
+    C.isOnCoadjointOrbit (C.moment x)
+      ∧ C.reversibleEntropyRate x = 0
+      ∧ C.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ C.totalEntropyRate x = C.metricEntropyRate x
+      ∧ 0 ≤ C.metricEntropyRate x
+      ∧ 0 ≤ C.totalEntropyRate x := by
+  dsimp
+  rcases
+      InfiniteCoadjointOrbitMetriplecticContext.SquareDissipation.full_square_dissipation_metriplectic_theorem
+        (moment := moment)
+        (geometricTemperature := geometricTemperature)
+        (reversibleVectorField := reversibleVectorField)
+        (metricVectorField := metricVectorField)
+        (entropy := entropy)
+        (dissipationAmplitude := dissipationAmplitude)
+        x
+    with ⟨hOrbit, _hRevOrbit, _hMetricOrbit, hRev, hMetric, hTotalSq, hTotalNonneg⟩
+  refine ⟨hOrbit, hRev, hMetric, ?_, ?_, hTotalNonneg⟩
+  · rw [hTotalSq, hMetric]
+  · rw [hMetric]
+    exact sq_nonneg (dissipationAmplitude x)
+
+/--
 Literature-facing finite Souriau/KKT theorem packet.
 
 This is the conservative Lean target for the prose synthesis:
@@ -778,6 +823,88 @@ theorem structuredSouriauKKTTranslatorPacket
   ⟨structuredSouriauTranslatorPacket C hPSD eta xβ xμ,
     claimK_kktEntropyStationarity_packet
       K hCone hStationarity hSlack hFinite⟩
+
+/--
+Combined theorem packet using the dimension-agnostic exact KKT residual owner.
+
+The exact KKT branch is not supplied by finite ad hoc hypotheses.  It is
+projected from `DimensionAgnosticKKTResiduals.exact.toShadow` and the terminal
+`DimensionAgnosticKKTResiduals.exact_stationarity_packet`.
+-/
+@[rep_depth thermo]
+theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals
+    [Fintype α] [Nonempty α]
+    (C : SouriauFenchelContext (α := α))
+    (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
+    (eta xβ xμ : ℝ) :
+    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
+        -souriauMeanShift C.M C.T
+      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
+        C.T.beta * souriauMeanNumber C.M C.T
+      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+        C.T.beta ^ (2 : ℕ) *
+          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+      ∧ 0 ≤ C.model.fenchelGap C.theta eta
+      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+      ∧ souriauMassieuPotential C.M C.T +
+          C.model.φ (C.model.dualCoord C.theta) =
+        C.theta * C.model.dualCoord C.theta
+      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
+  let K : KKTEntropyStationarityShadow := DimensionAgnosticKKTResiduals.exact.toShadow
+  have packet :
+      K.coneAdmissible ∧ K.stationarity ∧
+        K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+    simpa [K] using DimensionAgnosticKKTResiduals.exact_stationarity_packet
+  simpa [K] using
+    (structuredSouriauKKTTranslatorPacket (C := C) (K := K)
+      hPSD packet.1 packet.2.1 packet.2.2.1 packet.2.2.2 eta xβ xμ)
+
+/--
+Exact-residual KKT translator packet with only the determinant/non-spinodal
+finite Souriau-Fisher gate left explicit.
+-/
+@[rep_depth thermo]
+theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals_det_nonneg
+    [Fintype α] [Nonempty α]
+    (C : SouriauFenchelContext (α := α))
+    (hdet : 0 ≤ (souriauFisherResponseMatrix C.M C.T).det)
+    (eta xβ xμ : ℝ) :
+    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
+        -souriauMeanShift C.M C.T
+      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
+        C.T.beta * souriauMeanNumber C.M C.T
+      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+        C.T.beta ^ (2 : ℕ) *
+          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+      ∧ 0 ≤ C.model.fenchelGap C.theta eta
+      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+      ∧ souriauMassieuPotential C.M C.T +
+          C.model.φ (C.model.dualCoord C.theta) =
+        C.theta * C.model.dualCoord C.theta
+      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
+      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
+  have finitePacket :=
+    structuredSouriauTranslatorPacket_of_det_nonneg
+      (C := C) hdet eta xβ xμ
+  have exactPacket :=
+    DimensionAgnosticKKTResiduals.exact_stationarity_packet
+  exact ⟨finitePacket, exactPacket.1, exactPacket.2.1,
+    exactPacket.2.2.1, exactPacket.2.2.2⟩
 
 /--
 Stage-2 theorem packet for the two analytic claims that the finite translator

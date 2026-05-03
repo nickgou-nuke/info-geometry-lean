@@ -109,6 +109,17 @@ def main() -> int:
             return 0
         raise SystemExit(f"missing semantic-flow input directory: {input_dir}")
 
+    if (
+        not args.skip_generate
+        and not args.allow_missing_input
+        and args.json_out != DEFAULT_JSON_OUT
+        and not json_out.exists()
+    ):
+        raise SystemExit(
+            f"missing semantic-flow JSON output: {json_out}; "
+            "use --allow-missing-input for optional checks or run the generator first"
+        )
+
     if not args.skip_generate:
         run_generate(root, input_dir, json_out, md_out, allow_missing=args.allow_missing_input)
 

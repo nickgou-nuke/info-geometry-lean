@@ -1071,6 +1071,92 @@ theorem full_smooth_legendre_gram_constructive_theorem
 
 attribute [terminal] full_smooth_legendre_gram_constructive_theorem
 
+@[rep_depth thermo]
+structure SmoothLegendreGramOwner
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature] where
+  legendre : LegendreHessianInverseContext Θ
+  feature : Θ → Feature
+  fisher_eq_gram :
+    ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y)
+  feature_nonzero : Θ → Prop
+
+namespace SmoothLegendreGramOwner
+
+variable {Feature : Type*}
+variable [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+
+@[rep_depth thermo]
+noncomputable def toInfiniteCoadjointOrbitHessianContext
+    (O : SmoothLegendreGramOwner (Θ := Θ) (Feature := Feature))
+    (moment : Orbit → MomentCoord Θ)
+    (partitionFunction : Θ → ℝ)
+    (thermodynamicMoment : Θ → MomentCoord Θ)
+    (souriauEntropy : MomentCoord Θ → ℝ) :
+    InfiniteCoadjointOrbitHessianContext
+      Orbit Θ (MomentCoord Θ) Θ (MomentCoord Θ) :=
+  ofSmoothLegendreGramReadout
+    (Orbit := Orbit)
+    moment partitionFunction thermodynamicMoment souriauEntropy
+    O.legendre O.feature O.fisher_eq_gram
+
+@[rep_depth thermo]
+theorem constructive_packet
+    (O : SmoothLegendreGramOwner (Θ := Θ) (Feature := Feature))
+    (X Y : Θ) :
+    O.legendre.fisherHessian X Y = inner ℝ (O.feature X) (O.feature Y) :=
+  O.fisher_eq_gram X Y
+
+end SmoothLegendreGramOwner
+
+@[rep_depth thermo]
+structure LogPartitionFisherCovarianceOwner
+    (Orbit : Type u) (LieAlg : Type v) (LieCoalg : Type w)
+    (Tangent DualTangent : Type*) where
+  partitionFunction : LieAlg → ℝ
+  fisherHessian : LieAlg → Tangent → Tangent → ℝ
+  momentCovariance : LieAlg → Tangent → Tangent → ℝ
+  context : InfiniteCoadjointOrbitHessianContext
+    Orbit LieAlg LieCoalg Tangent DualTangent
+  context_partition : context.partitionFunction = partitionFunction
+  context_fisher : context.fisherHessian = fisherHessian
+  context_covariance : context.momentCovariance = momentCovariance
+
+namespace LogPartitionFisherCovarianceOwner
+
+variable {LieAlg : Type v} {LieCoalg : Type w}
+variable {Tangent DualTangent : Type*}
+
+@[rep_depth thermo]
+def toInfiniteCoadjointOrbitHessianContext
+    (O : LogPartitionFisherCovarianceOwner Orbit LieAlg LieCoalg Tangent DualTangent) :
+    InfiniteCoadjointOrbitHessianContext Orbit LieAlg LieCoalg Tangent DualTangent :=
+  O.context
+
+@[rep_depth thermo]
+theorem massieu_log_partition_packet
+    (O : LogPartitionFisherCovarianceOwner Orbit LieAlg LieCoalg Tangent DualTangent)
+    (β : LieAlg) :
+    O.context.massieuPotential β = Real.log (partitionFunction O β) := by
+  rw [O.context.massieu_eq_log_partition β, O.context_partition]
+
+@[rep_depth thermo]
+theorem fisher_covariance_packet
+    (O : LogPartitionFisherCovarianceOwner Orbit LieAlg LieCoalg Tangent DualTangent)
+    (β : LieAlg) :
+    fisherHessian O β = momentCovariance O β := by
+  rw [← O.context_fisher, ← O.context_covariance, O.context.fisher_eq_covariance β]
+
+@[rep_depth thermo]
+theorem constructive_packet
+    (O : LogPartitionFisherCovarianceOwner Orbit LieAlg LieCoalg Tangent DualTangent)
+    (β : LieAlg) :
+    O.context.massieuPotential β = Real.log (partitionFunction O β)
+      ∧ fisherHessian O β = momentCovariance O β :=
+  ⟨O.massieu_log_partition_packet β, O.fisher_covariance_packet β⟩
+
+end LogPartitionFisherCovarianceOwner
+
 end SmoothLegendreConstructor
 
 variable

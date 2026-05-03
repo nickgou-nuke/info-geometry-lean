@@ -1,5 +1,10 @@
 # CP-002 Sandbox Witness (Documented, Non-Authority)
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 Date: 2026-04-14
 Status: Exploratory witness surface
 

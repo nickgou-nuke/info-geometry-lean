@@ -85,7 +85,7 @@ structure LanglandsProjectiveCorrespondence
         D Z W P
         (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State))
     (Bundle : ProjectiveBundlePacket) where
-  relation : Type*
+  relation : Type
   witness : relation
 
 /--
@@ -94,7 +94,7 @@ Correspondence from projective-bundle data to virtual localization sectors.
 structure ProjectiveGWCorrespondence
     (Bundle : ProjectiveBundlePacket)
     (GW : GWVirtualLocalizationPacket) where
-  relation : Type*
+  relation : Type
   witness : relation
 
 /--
@@ -103,7 +103,7 @@ Correspondence from virtual sectors to operator-metric sector data.
 structure GWMetricCorrespondence
     (GW : GWVirtualLocalizationPacket)
     (Q : QuantumMetricOperatorPacket) where
-  relation : Type*
+  relation : Type
   witness : relation
 
 /--
@@ -127,7 +127,7 @@ structure LanglandsMetricCorrespondence
         D Z W P
         (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State))
     (Q : QuantumMetricOperatorPacket) where
-  relation : Type*
+  relation : Type
   witness : relation
 
 /--
@@ -188,8 +188,15 @@ def ErlangenLanglandsGromovLaneTarget
     (Tr : THooftReadoutDatum GdualState GdualLoop Scalar)
     (_D' : LanglandsDualPair GState GdualState GLoop GdualLoop)
     (_K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar Wr Tr _D') :
-    Prop :=
-  True
+  Prop :=
+  ∃ _LP : LanglandsProjectiveCorrespondence
+    (E := E) (D := D) (Z := Z) (W := W) (P := P)
+    (Full := _Full) _Bundle,
+  ∃ _PG : ProjectiveGWCorrespondence _Bundle _GW,
+  ∃ _GM : GWMetricCorrespondence _GW _Metric,
+  ∃ _LM : LanglandsMetricCorrespondence
+    (E := E) (D := D) (Z := Z) (W := W) (P := P)
+    (Full := _Full) _Metric, True
 
 /--
 Correspondence-safe constructor from explicit correspondences.
@@ -233,7 +240,7 @@ theorem constructErlangenLanglandsGromovLaneTarget
     ErlangenLanglandsGromovLaneTarget
       D Z W P Full _Bundle _GW _Metric S Wr Tr G _K :=
 by
-    trivial
+  exact ⟨_LP, _PG, _GM, _LM, trivial⟩
 
 /--
 Packet constructor: supply a full correspondence packet, obtain the integrated target.

@@ -34,6 +34,18 @@ theorem partition_pos (S : FiniteQuantumSpectrum Level) (β : ℝ) (h : S.levels
   unfold partition
   exact Finset.sum_pos (fun _ _ => by positivity) h
 
+/-- Nonempty support yields a nonzero Gibbs partition value. -/
+theorem partition_pos_ne_zero (S : FiniteQuantumSpectrum Level) (β : ℝ) (h : S.levels.Nonempty) :
+    partition S β ≠ 0 := by
+  exact ne_of_gt (partition_pos S β h)
+
+/-- Denominator nonzero for nonempty finite partition. -/
+theorem sqrt_partition_ne_zero (S : FiniteQuantumSpectrum Level) (β : ℝ) (h : S.levels.Nonempty) :
+    (Real.sqrt (partition S β) : ℂ) ≠ 0 := by
+  have hsqrt : Real.sqrt (partition S β) ≠ 0 := by
+    exact (Real.sqrt_ne_zero (partition_nonneg S β)).2 (partition_pos_ne_zero S β h)
+  exact Complex.ofReal_ne_zero.mpr hsqrt
+
 /--
 TFD coefficient with independent left/right boundary times.
 
@@ -52,6 +64,29 @@ theorem tfdCoeff_zero_time
     S.tfdCoeff β 0 0 n =
       Complex.exp (-(β / 2 : ℂ) * (S.energy n : ℂ)) / (Real.sqrt (partition S β) : ℂ) := by
   simp [tfdCoeff]
+
+/-- TFD coefficient restricted to the finite support indices. -/
+def tfdCoeffOnSupport
+    (S : FiniteQuantumSpectrum Level) (β tL tR : ℝ) (n : {n : Level // n ∈ S.levels}) : ℂ :=
+  S.tfdCoeff β tL tR n.1
+
+/-- Zero-extension of the TFD coefficient outside the finite support. -/
+def tfdCoeffSupported
+    (S : FiniteQuantumSpectrum Level) (β tL tR : ℝ) (n : Level) : ℂ :=
+  if n ∈ S.levels then S.tfdCoeff β tL tR n else 0
+
+/-- Support-vanishing is definitional by construction. -/
+theorem tfdCoeffSupported_eq_zero_of_not_mem
+    (S : FiniteQuantumSpectrum Level) (β tL tR : ℝ) {n : Level}
+    (hn : n ∉ S.levels) :
+    S.tfdCoeffSupported β tL tR n = 0 := by
+  simp [tfdCoeffSupported, hn]
+
+/-- Restricted support map is the restriction of the extension map. -/
+theorem tfdCoeffOnSupport_eq_supported
+    (S : FiniteQuantumSpectrum Level) (β tL tR : ℝ) (n : {n : Level // n ∈ S.levels}) :
+    S.tfdCoeffOnSupport β tL tR n = S.tfdCoeffSupported β tL tR n.1 := by
+  simp [tfdCoeffOnSupport, tfdCoeffSupported, n.property]
 
 end FiniteQuantumSpectrum
 

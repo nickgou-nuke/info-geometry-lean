@@ -210,6 +210,7 @@ structure RelativeEntropyCalibration (State : Type*) where
   modular_hamiltonian_val : State → State → ℝ
   rel_ent_def : ∀ ρ σ, relative_entropy ρ σ = modular_hamiltonian_val ρ σ - entropy ρ
   zero_iff_eq : ∀ ρ σ, relative_entropy ρ σ = 0 ↔ ρ = σ
+  nonneg : ∀ ρ σ, 0 ≤ relative_entropy ρ σ
 
 namespace RelativeEntropyCalibration
 
@@ -220,6 +221,11 @@ theorem modular_energy_self_eq_entropy
     (C.zero_iff_eq ρ ρ).mpr rfl
   rw [C.rel_ent_def ρ ρ] at hzero
   exact sub_eq_zero.mp hzero
+
+theorem relative_entropy_nonneg
+    {State : Type*} (C : RelativeEntropyCalibration State) (ρ σ : State) :
+    0 ≤ C.relative_entropy ρ σ :=
+  C.nonneg ρ σ
 
 end RelativeEntropyCalibration
 
@@ -269,6 +275,26 @@ structure TensorNetworkCutCalibration (Region Cut : Type*) where
   entanglement_bound :
     ∀ A : Region,
       entropy A ≤ cut_capacity (minimalCutOf A)
+
+namespace TensorNetworkCutCalibration
+
+theorem minimalCut_capacity_le
+    {Region Cut : Type*}
+    (TN : TensorNetworkCutCalibration Region Cut)
+    (A : Region) (γ : Cut)
+    (hγ : TN.admissibleCut A γ) :
+    TN.cut_capacity (TN.minimalCutOf A) ≤ TN.cut_capacity γ :=
+  TN.minimality A γ hγ
+
+theorem entropy_le_admissible_cut_capacity
+    {Region Cut : Type*}
+    (TN : TensorNetworkCutCalibration Region Cut)
+    (A : Region) (γ : Cut)
+    (hγ : TN.admissibleCut A γ) :
+    TN.entropy A ≤ TN.cut_capacity γ :=
+  le_trans (TN.entanglement_bound A) (TN.minimality A γ hγ)
+
+end TensorNetworkCutCalibration
 
 /--
 Saturated tensor-network calibration: the discrete RT/min-cut equality.

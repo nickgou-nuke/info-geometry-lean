@@ -357,7 +357,7 @@ noncomputable def quasilatticeHoppingTranslationSeed
 
 /-- Alias emphasizing the hopping interpretation of the same translation lane. -/
 @[rep_depth transport]
-noncomputable abbrev quasilatticeHoppingTranslationCandidate
+noncomputable def quasilatticeHoppingTranslationCandidate
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) : EndH :=
   quasilatticeTranslationCandidate (E := E) V
 

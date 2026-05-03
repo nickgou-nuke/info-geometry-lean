@@ -318,6 +318,49 @@ theorem kms_eval_mul_modular_eq_eval_flip (A B : Obs) :
 
 end ModularTimeKMSContext
 
+@[rep_depth operator]
+structure CyclicModularTimeKMSContext where
+  state : CyclicAlgebraicState (H := H)
+  beta : ℝ
+
+namespace CyclicModularTimeKMSContext
+
+variable (C : CyclicModularTimeKMSContext (H := H))
+
+@[rep_depth operator]
+def sigma (_C : CyclicModularTimeKMSContext (H := H)) :
+    AdditiveModularFlow (H := H) :=
+  identityAdditiveModularFlow (H := H)
+
+@[rep_depth operator]
+theorem modular_time_add (s t : ℝ) :
+    C.sigma (s + t) = C.sigma s * C.sigma t :=
+  AdditiveModularFlow.map_add C.sigma s t
+
+@[rep_depth operator]
+theorem modular_time_zero :
+    C.sigma 0 = 1 :=
+  AdditiveModularFlow.map_zero C.sigma
+
+@[rep_depth operator]
+theorem kms_eval_mul_modular_eq_eval_flip (A B : Obs) :
+    C.state.state.eval (A * C.sigma C.beta B) = C.state.state.eval (B * A) := by
+  simpa [CyclicModularTimeKMSContext.sigma, identityAdditiveModularFlow] using C.state.cyclic A B
+
+end CyclicModularTimeKMSContext
+
+namespace CyclicAlgebraicState
+
+variable (ω : CyclicAlgebraicState (H := H))
+
+@[rep_depth operator]
+def toCyclicModularTimeKMSContext (beta : ℝ) :
+    CyclicModularTimeKMSContext (H := H) where
+  state := ω
+  beta := beta
+
+end CyclicAlgebraicState
+
 /--
 Coordinate emergence as a readout from observables.
 

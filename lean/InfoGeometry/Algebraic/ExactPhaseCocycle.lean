@@ -52,14 +52,25 @@ def exactBerryPhase {R : Type*} [PhaseRotorGroup R]
   PhaseRotorGroup.phaseRotor (((k : ℝ) * Complex.arg (automorphicFactor γ τ)))
 
 /--
+The exact Berry phase is normalized at the identity element.
+
+This part of the cocycle contract is constructive: for the identity matrix the
+automorphic factor is exactly `1`, so the phase collapses through `arg 1 = 0`.
+-/
+theorem exactBerryPhase_one
+    {R : Type*} [PhaseRotorGroup R]
+    (k : ℤ) (τ : UpperHalfPlane) :
+    exactBerryPhase (R := R) k 1 τ = 1 := by
+  unfold exactBerryPhase automorphicFactor
+  simp [PhaseRotorGroup.phase_zero]
+
+/--
 Compatibility hypothesis for the exact phase lift.
 
 This is the honest Lean boundary: branch-cut and additivity behavior are not
 asserted silently; they are packaged as an explicit condition.
 -/
 structure ExactPhaseCompatibility {R : Type*} [PhaseRotorGroup R] (k : ℤ) : Prop where
-  map_one :
-    ∀ τ : UpperHalfPlane, exactBerryPhase (R := R) k 1 τ = 1
   map_mul :
     ∀ γ δ : ModularGroup, ∀ τ : UpperHalfPlane,
       exactBerryPhase (R := R) k (γ * δ) τ =
@@ -76,7 +87,7 @@ def exactModularBerryCocycle
     InfoGeometry.Canonical.Algebraic.MulActionCocycle
       ModularGroup UpperHalfPlane R where
   toFun := exactBerryPhase (R := R) k
-  map_one := h.map_one
+  map_one := exactBerryPhase_one (R := R) k
   map_mul := h.map_mul
 
 namespace MulActionCocycle

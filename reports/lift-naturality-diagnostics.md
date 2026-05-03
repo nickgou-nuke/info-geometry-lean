@@ -1,5 +1,10 @@
 # Lift Naturality Diagnostics
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 - module: `InfoGeometry.Canonical.All`
 - namespace: `InfoGeometry`
 - tagged lift functors: `2`
@@ -76,4 +81,3 @@ rhs := Φ.along L
 lhs := fun w => Φ.flowOf (L.logGen w)
 rhs := fun w => Φ.flowOf (L.logGen w)
 ```
-

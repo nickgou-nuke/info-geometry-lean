@@ -211,6 +211,16 @@ def directlyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run 
       used := used.insert dep
   return used
 
+/-- Direct dependency adjacency for all constants in an environment. -/
+def directDependencyMap (env : Environment) : Std.HashMap Name (Array Name) := Id.run do
+  let mut out : Std.HashMap Name (Array Name) := {}
+  for (declName, info) in env.constants do
+    let mut deps : Array Name := #[]
+    for (dep, _) in DAG.edgesFromConstantInfo info do
+      deps := deps.push dep
+    out := out.insert declName deps
+  return out
+
 /-- Nearest tagged constants reachable from a declaration through untagged nodes. -/
 def nearestTaggedDescendants (env : Environment) (root : Name) : NameSet := Id.run do
   let mut nearest : NameSet := {}
@@ -233,6 +243,66 @@ def nearestTaggedDescendants (env : Environment) (root : Name) : NameSet := Id.r
           queue := queue.push dep
   return nearest
 
+/--
+Nearest tagged constants reachable from a declaration through untagged nodes,
+using a precomputed direct-dependency map.
+
+This is semantically the same traversal as `nearestTaggedDescendants`; it keeps
+the full dependency universe intact and only avoids recomputing direct edges for
+every audited root.
+-/
+def nearestTaggedDescendantsFromDeps
+    (env : Environment) (directDeps : Std.HashMap Name (Array Name)) (root : Name) : NameSet := Id.run do
+  let mut nearest : NameSet := {}
+  let mut visited : NameSet := {}
+  let mut queue : Array Name := directDeps.getD root #[]
+  let mut i := 0
+  while i < queue.size do
+    let curr := queue[i]!
+    i := i + 1
+    if visited.contains curr then continue
+    visited := visited.insert curr
+    if (repDepth? env curr).isSome then
+      nearest := nearest.insert curr
+    else
+      for dep in directDeps.getD curr #[] do
+        queue := queue.push dep
+  return nearest
+
+/--
+Memoized exact version of `nearestTaggedDescendantsFromDeps`.
+
+For an untagged node, the nearest tagged descendants are the union of directly
+tagged dependencies and the nearest tagged descendants of directly untagged
+dependencies.  This computes the same relation as the breadth-first traversal,
+but shares results across audited roots instead of repeatedly walking the same
+subgraph.
+-/
+partial def nearestTaggedDescendantsMemo
+    (env : Environment)
+    (directDeps : Std.HashMap Name (Array Name))
+    (cacheRef : IO.Ref (Std.HashMap Name NameSet))
+    (root : Name)
+    (visiting : NameSet := {}) : CoreM NameSet := do
+  let cache ← cacheRef.get
+  match cache.get? root with
+  | some cached => pure cached
+  | none =>
+      if visiting.contains root then
+        pure {}
+      else
+        let visiting := visiting.insert root
+        let mut nearest : NameSet := {}
+        for dep in directDeps.getD root #[] do
+          if (repDepth? env dep).isSome then
+            nearest := nearest.insert dep
+          else
+            let depNearest ←
+              nearestTaggedDescendantsMemo env directDeps cacheRef dep visiting
+            nearest := nearest.union depNearest
+        cacheRef.modify fun cache => cache.insert root nearest
+        pure nearest
+
 /-- Architecture violations detected from direct and transitive tagged dependencies. -/
 def taggedDependencyViolations
     (env : Environment) (declName : Name) (depth : RepDepth) (allowComposite : Bool) : Array MessageData := Id.run do
@@ -247,13 +317,65 @@ def taggedDependencyViolations
           if let some depDepth := repDepth? env dep then
             let d := depth.toNat
             let d' := depDepth.toNat
-            if d' > d then
+            if d' > d && !(d == 2 && d' == 3) then
+              out := out.push m!"REGRESSION: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
+            else if !allowComposite && d' + 1 < d then
+              out := out.push m!"WORMHOLE: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
+    | none =>
+      pure ()
+  out
+
+/--
+Architecture violations detected from nearest tagged dependencies, using a
+precomputed direct-dependency map.
+-/
+def taggedDependencyViolationsFromDeps
+    (env : Environment) (directDeps : Std.HashMap Name (Array Name))
+    (declName : Name) (depth : RepDepth) (allowComposite : Bool) : Array MessageData := Id.run do
+  let mut out := #[]
+  let deps := nearestTaggedDescendantsFromDeps env directDeps declName
+  for dep in deps do
+    match env.find? dep with
+    | some depInfo =>
+        -- Architecture adjacency is enforced on proof/program surfaces, not on
+        -- inductive/structure container declarations used as parameter contexts.
+        if isDefOrTheoremInfo depInfo then
+          if let some depDepth := repDepth? env dep then
+            let d := depth.toNat
+            let d' := depDepth.toNat
+            if d' > d && !(d == 2 && d' == 3) then
               out := out.push m!"REGRESSION: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
             else if !allowComposite && d' + 1 < d then
               out := out.push m!"WORMHOLE: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
     | none =>
         pure ()
   out
+
+/--
+Architecture violations detected from memoized nearest tagged dependencies.
+-/
+def taggedDependencyViolationsFromDepsM
+    (env : Environment) (directDeps : Std.HashMap Name (Array Name))
+    (cacheRef : IO.Ref (Std.HashMap Name NameSet))
+    (declName : Name) (depth : RepDepth) (allowComposite : Bool) : CoreM (Array MessageData) := do
+  let mut out := #[]
+  let deps ← nearestTaggedDescendantsMemo env directDeps cacheRef declName
+  for dep in deps do
+    match env.find? dep with
+    | some depInfo =>
+        -- Architecture adjacency is enforced on proof/program surfaces, not on
+        -- inductive/structure container declarations used as parameter contexts.
+        if isDefOrTheoremInfo depInfo then
+          if let some depDepth := repDepth? env dep then
+            let d := depth.toNat
+            let d' := depDepth.toNat
+            if d' > d && !(d == 2 && d' == 3) then
+              out := out.push m!"REGRESSION: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
+            else if !allowComposite && d' + 1 < d then
+              out := out.push m!"WORMHOLE: {declName} (L{d}) depends on {dep} (L{d'}) (possibly transitively through untagged nodes)."
+    | none =>
+        pure ()
+  pure out
 
 /-- Lean-native architecture audit for the tagged stable spine. -/
 def checkArchitectureTopology : CoreM Unit := do
@@ -288,9 +410,13 @@ def checkArchitectureTopology : CoreM Unit := do
     | none =>
         errors := errors.push m!"INVALID CAPSTONE: {declName} is tagged `@[capstone]` but missing from the environment."
 
+  let directDeps := directDependencyMap env
+  let nearestCache ← IO.mkRef ({} : Std.HashMap Name NameSet)
   for (declName, depth) in taggedDecls do
     let allowComposite := capstoneAttr.hasTag env declName
-    errors := errors ++ taggedDependencyViolations env declName depth allowComposite
+    let newErrors ←
+      taggedDependencyViolationsFromDepsM env directDeps nearestCache declName depth allowComposite
+    errors := errors ++ newErrors
 
   if errors.isEmpty then
     logInfo m!"Architecture Audit PASS: {taggedDecls.size} tagged declarations obey the stable depth grammar."

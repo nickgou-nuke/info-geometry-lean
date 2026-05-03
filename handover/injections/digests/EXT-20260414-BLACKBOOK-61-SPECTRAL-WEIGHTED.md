@@ -1,5 +1,10 @@
 # Literature Digest: Black Book Ch61 injection: spectral-weighted decomposition
 
+> Status: `historical handover`
+> Audited: 2026-05-02
+> Note: Workflow history and packet memory, not current repository authority.
+> See: [README.md](../../../README.md), [docs/README.md](../../../docs/README.md), [docs/CODEBASE_STATUS.md](../../../docs/CODEBASE_STATUS.md)
+
 ## Packet Metadata
 - Packet ID: `EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED`
 - Lane: `accepted`

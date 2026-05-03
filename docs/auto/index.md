@@ -1,5 +1,10 @@
 # InfoGeometry Auto Status
 
+> Status: `reference memory`
+> Audited: 2026-05-02
+> Note: Re-audit against current code before using for policy, design claims, or status.
+> See: [README.md](../../README.md), [docs/README.md](../README.md), [docs/CODEBASE_STATUS.md](../CODEBASE_STATUS.md)
+
 Status:
 - generated from local repository state and trusted DAG artifacts
 - authoritative for current metrics/frontier snapshot
@@ -78,4 +83,3 @@ Status:
 - Declaration-graph coverage is currently closed: `InfoGeometry.All` covers `487` / `487` declaration-bearing files.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.
 - Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.
-

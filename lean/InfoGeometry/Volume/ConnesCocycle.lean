@@ -1,5 +1,7 @@
 import InfoGeometry.Volume.RadonNikodym
 import InfoGeometry.Krein.Thermal
+import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Topological.StabilizerAnomalies
 import Mathlib.Algebra.Group.TypeTags.Basic
 
 /-!
@@ -436,5 +438,101 @@ theorem cocycle_additive_potential
     ∃ (Φ : ℝ → ℝ), ∀ s t, Φ (s + t) = Φ s + Φ t :=
   ⟨cocycleLogPotential (H := H) σ u B,
     cocycleLogPotential_add (H := H) σ u hCocycle B⟩
+
+/-! ## Projective/stabilizer descent for operator modular cocycles -/
+
+/--
+The scalar descent of an operator modular cocycle can be viewed as a
+projective rotor cocycle over the trivial base action.
+
+This is the operator-algebra-to-Erlanger bridge: the additive modular
+parameter is re-read as a projective cocycle parameter, while the geometric
+base is collapsed to a single fixed point.
+-/
+noncomputable def scalarProjectiveRotorCocycle
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRotorCocycle
+      (Multiplicative ℝ) PUnit ℝˣ where
+  toFun t _ := scalarCocycle (H := H) σ u B t.toAdd
+  map_one := by
+    intro x
+    simpa using scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
+  map_mul := by
+    intro s t x
+    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
+
+/--
+Because the base action on `PUnit` is trivial, the whole additive modular
+parameter group is a stabilizer.  Extracting the stabilizer hom therefore turns
+the scalar modular cocycle into an honest character.
+-/
+noncomputable def scalarStabilizerCharacter
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    (⊤ : Subgroup (Multiplicative ℝ)) →* ℝˣ where
+  toFun t := scalarCocycle (H := H) σ u B t.1.toAdd
+  map_one' := by
+    simpa using scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
+  map_mul' s t := by
+    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.1.toAdd t.1.toAdd
+
+@[simp] theorem scalarProjectiveRotorCocycle_apply
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ)
+    (t : Multiplicative ℝ) :
+    scalarProjectiveRotorCocycle (H := H) σ u hCocycle B t PUnit.unit =
+      scalarCocycle (H := H) σ u B t.toAdd :=
+  rfl
+
+@[simp] theorem scalarStabilizerCharacter_apply
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ)
+    (t : Multiplicative ℝ) :
+    scalarStabilizerCharacter (H := H) σ u hCocycle B ⟨t, by trivial⟩ =
+      scalarCocycle (H := H) σ u B t.toAdd :=
+  rfl
+
+/--
+Operator-side stabilizer anomaly data at the unique projective base point.
+
+This packages the scalar descent of an operator modular cocycle into the same
+interface used by the automorphic/projective side. The base is deliberately
+trivial: every modular-time parameter stabilizes `PUnit.unit`.
+-/
+noncomputable def scalarStabilizerAnomalyAtUnit
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    InfoGeometry.Topological.StabilizerAnomalies.StabilizerAnomalyData
+      (Multiplicative ℝ) PUnit (R := ℝˣ) where
+  point := PUnit.unit
+  stabilizer := ⊤
+  stabilizes := by
+    intro t ht
+    rfl
+  anomalyHom := scalarStabilizerCharacter (H := H) σ u hCocycle B
+
+/--
+The operator-side stabilizer anomaly at the unit base point is exactly the
+stabilizer character extracted from the descended scalar cocycle.
+-/
+theorem scalarStabilizerAnomalyAtUnit_hom
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    (scalarStabilizerAnomalyAtUnit (H := H) σ u hCocycle B).anomalyHom =
+      scalarStabilizerCharacter (H := H) σ u hCocycle B :=
+  rfl
 
 end InfoGeometry.Volume.ConnesCocycle

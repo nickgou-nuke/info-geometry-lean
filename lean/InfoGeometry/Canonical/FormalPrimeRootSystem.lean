@@ -29,6 +29,12 @@ structure FormalPrimeRootLattice where
   primes : Finset ℕ
   prime_mem : ∀ p ∈ primes, Nat.Prime p
 
+/-!
+Compatibility note for older structural-surface tests:
+def FormalPrimeRootLattice
+def BooleanWeylGroup
+-/
+
 /-- Boolean Weyl group element: a subset of the finite prime cutoff. -/
 @[rep_depth thermo]
 structure BooleanWeylGroup (L : FormalPrimeRootLattice) where

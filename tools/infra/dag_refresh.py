@@ -34,6 +34,21 @@ def parse_args() -> argparse.Namespace:
         help="Forward `--skip-prebuild` to refresh_decl_graph.py.",
     )
     parser.add_argument(
+        "--import-root",
+        default=None,
+        help="Override import root from toolchain config.",
+    )
+    parser.add_argument(
+        "--build-target",
+        default=None,
+        help="Override build target from toolchain config.",
+    )
+    parser.add_argument(
+        "--namespace",
+        default=None,
+        help="Override namespace filter from toolchain config.",
+    )
+    parser.add_argument(
         "--run-mode",
         choices=["exe", "run"],
         help="Override the configured indexer run mode for this invocation.",
@@ -56,11 +71,11 @@ def main() -> int:
         sys.executable,
         "tools/infra/refresh_decl_graph.py",
         "--import-root",
-        config.build.import_root,
+        args.import_root or config.build.import_root,
         "--build-target",
-        config.build.build_target,
+        args.build_target or config.build.build_target,
         "--namespace",
-        config.build.namespace_filter,
+        args.namespace or config.build.namespace_filter,
         "--index-dir",
         repo_display_path(config.authoritative_artifacts.index_dir, root),
         "--graph-out",

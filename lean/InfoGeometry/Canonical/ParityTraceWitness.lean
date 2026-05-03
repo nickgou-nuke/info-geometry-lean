@@ -99,6 +99,11 @@ theorem fermionCoeff_eq_abs_mobius {L : FormalPrimeRootLattice}
     (A : BooleanPrimeStateArithmetic L) (n : ℕ) :
     fermionCoeff A n = absMobiusCoefficient n := rfl
 
+@[rep_depth thermo]
+theorem fermionCoeff_eq_absMobius {L : FormalPrimeRootLattice}
+    (A : BooleanPrimeStateArithmetic L) (n : ℕ) :
+    fermionCoeff A n = absMobiusCoefficient n := rfl
+
 /-- Compatibility name for the parity coefficient shadow. -/
 @[rep_depth thermo]
 def splitParityCoefficient {L : FormalPrimeRootLattice}

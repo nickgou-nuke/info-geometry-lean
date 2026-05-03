@@ -22,6 +22,7 @@ namespace InfoGeometry.Compatibility
 
 open InfoGeometry.Geometry
 open InfoGeometry.Algebraic
+open InfoGeometry.Geometry.RealUpperHalfPlane
 
 abbrev SL2R : Type := InfoGeometry.Geometry.SL2R
 abbrev MathlibUHP := UpperHalfPlane

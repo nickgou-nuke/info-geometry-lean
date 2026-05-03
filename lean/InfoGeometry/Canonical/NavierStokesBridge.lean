@@ -1008,7 +1008,7 @@ theorem chiral_anomaly_sources_flow
 
 end ChiralFlowBridge
 
-attribute [rep_depth operator]
+attribute [rep_depth krein]
   VelocityField
   AlgebraEnd
   vorticity

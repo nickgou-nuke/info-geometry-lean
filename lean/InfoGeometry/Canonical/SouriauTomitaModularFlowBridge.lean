@@ -190,6 +190,90 @@ theorem souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift
       InfoGeometry.Krein.modular_shift (E := H) C.modularHamiltonian t A :=
   C.souriauAdditiveModularFlow_apply_eq_modular_shift t A
 
+/--
+Carrier-matched owner packet on the observable carrier.
+
+This is the explicit typed answer to the question "what is the shared operator
+carrier before we compare Souriau, Tomita, and standard-form surfaces?"  The
+answer in this file is: all of them already live on `Obs = AlgebraEnd H`.
+-/
+@[rep_depth operator]
+structure MatchedCarrierOwner where
+  logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)
+
+namespace MatchedCarrierOwner
+
+variable (M : MatchedCarrierOwner (H := H) (Symmetry := Symmetry))
+
+/-- The negative-log density readout on the observable carrier. -/
+@[rep_depth operator]
+def negativeLogDensity : Obs :=
+  M.logContext.toRealModularLogData
+
+/-- The modular Hamiltonian readout on the same observable carrier. -/
+@[rep_depth operator]
+def modularHamiltonian : Obs :=
+  M.logContext.modularHamiltonian
+
+/-- The standard-form carrier extracted from the same observable datum. -/
+@[rep_depth operator]
+noncomputable def standardFormCarrier : StandardFormCarrier H :=
+  M.logContext.toStandardFormCarrier
+
+/-- The generated modular automorphism group on the same observable carrier. -/
+@[rep_depth operator]
+noncomputable def modularFamily : AdditiveModularFlow (H := H) :=
+  M.logContext.souriauAdditiveModularFlow
+
+/-- The negative-log density and modular Hamiltonian are the same operator. -/
+@[rep_depth operator]
+theorem negativeLogDensity_eq_modularHamiltonian :
+    M.negativeLogDensity = M.modularHamiltonian :=
+  M.logContext.tomita_deltaLog_eq_modularHamiltonian
+
+/-- The standard-form carrier uses that same modular Hamiltonian as `Delta`. -/
+@[rep_depth operator]
+theorem standardFormCarrier_Delta_eq_modularHamiltonian :
+    M.standardFormCarrier.Delta = M.modularHamiltonian :=
+  M.logContext.toStandardFormCarrier_Delta_eq_modularHamiltonian
+
+/-- The standard-form carrier flow and the Souriau modular family coincide. -/
+@[rep_depth operator]
+theorem standardFormCarrier_modularFlow_eq_modularFamily :
+    M.standardFormCarrier.seed.modularFlow = M.modularFamily := by
+  unfold standardFormCarrier modularFamily
+  change
+    M.logContext.tomitaAdditiveModularFlow =
+      M.logContext.souriauAdditiveModularFlow
+  exact M.logContext.tomita_flow_eq_souriau_modularTransportFlow
+
+/-- Evaluation form of the carrier-matched modular family. -/
+@[rep_depth operator]
+theorem modularFamily_apply_eq_modular_shift
+    (t : ℝ) (A : Obs) :
+    M.modularFamily t A =
+      InfoGeometry.Krein.modular_shift (E := H) M.modularHamiltonian t A :=
+  M.logContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift t A
+
+/--
+Proof-carrying matched-carrier packet for the observable Souriau/Tomita lane.
+-/
+@[rep_depth operator]
+theorem matchedCarrier_packet
+    (t : ℝ) (A : Obs) :
+    M.negativeLogDensity = M.modularHamiltonian ∧
+    M.standardFormCarrier.Delta = M.modularHamiltonian ∧
+    M.standardFormCarrier.seed.modularFlow = M.modularFamily ∧
+    M.modularFamily t A =
+      InfoGeometry.Krein.modular_shift (E := H) M.modularHamiltonian t A := by
+  exact ⟨
+    M.negativeLogDensity_eq_modularHamiltonian,
+    M.standardFormCarrier_Delta_eq_modularHamiltonian,
+    M.standardFormCarrier_modularFlow_eq_modularFamily,
+    M.modularFamily_apply_eq_modular_shift t A⟩
+
+end MatchedCarrierOwner
+
 end SouriauTomitaLogContext
 
 /-- Zero thermal-moment Souriau datum on an arbitrary symmetry carrier. -/

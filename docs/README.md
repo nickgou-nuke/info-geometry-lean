@@ -60,6 +60,7 @@ Use these first:
 - [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
 - [GeneratedArtifactsPolicy.md](GeneratedArtifactsPolicy.md)
 - [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
+- [MaldacenaLectureTheoremMap.md](MaldacenaLectureTheoremMap.md)
 - [ToolingInventory.md](ToolingInventory.md)
 - [OperatorQuickstart.md](OperatorQuickstart.md)
 - [DAGTroubleshooting.md](DAGTroubleshooting.md)

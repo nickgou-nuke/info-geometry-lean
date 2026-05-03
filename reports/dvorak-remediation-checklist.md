@@ -1,5 +1,10 @@
 # Ranked remediation checklist from `reports/full-dvorak-audit.json`
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 Generated from 72 findings (`non_vacuity` only).
 
 ## Ranking (by issue count)

@@ -20,6 +20,8 @@ Design policy:
 
 namespace InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
+open InfoGeometry.Canonical.StandardFormCore
+
 abbrev Density (State : Type*) := State → ℝ
 
 /-- Classical logarithmic Radon--Nikodym sign packet.
@@ -74,7 +76,7 @@ structure RegularizedJacobianPotential (Map : Type*) where
   volumeCompressionPotential : Map → ℝ
   volumeCompressionPotential_eq_neg_logDetReg :
     ∀ φ, volumeCompressionPotential φ = -logDetReg φ
-  entropyReadoutRequiresState : Prop
+  entropyReadoutRequiresStateClaim : Prop
 
 namespace RegularizedJacobianPotential
 
@@ -91,28 +93,37 @@ end RegularizedJacobianPotential
 /-- Modular Hamiltonian packet for a positive density operator.
 
 The logarithm/functional calculus is supplied as witness data; this file does
-not assert an unbounded global logarithm theorem.
+not assert an unbounded global logarithm theorem.  In this packet the modular
+Hamiltonian is definitionally the negative-logarithmic density; only the
+additional Gibbs/readout structure remains explicit data.
 -/
 @[rep_depth operator]
 structure ModularHamiltonianData (Op : Type*) where
   densityOperator : Op
   negativeLogDensity : Op
-  modularHamiltonian : Op
-  modularHamiltonian_eq_negativeLogDensity : modularHamiltonian = negativeLogDensity
   gibbsHamiltonian : Op
   logPartitionScalar : ℝ
-  gibbsFormulaWitness : Prop
-  relativeModularWitness : Prop
+  gibbsFormulaLaw : Op → Op → ℝ → Prop
+  gibbsFormula_holds :
+    gibbsFormulaLaw densityOperator gibbsHamiltonian logPartitionScalar
+  relativeModularLaw : Op → Op → Prop
+  relativeModular_holds :
+    relativeModularLaw densityOperator negativeLogDensity
 
 namespace ModularHamiltonianData
 
 variable {Op : Type*}
 
+/-- The operator-level modular Hamiltonian is the negative logarithmic density. -/
+@[rep_depth operator]
+def modularHamiltonian (M : ModularHamiltonianData Op) : Op :=
+  M.negativeLogDensity
+
 @[rep_depth operator]
 theorem modularHamiltonian_eq_negativeLogDensity_theorem
     (M : ModularHamiltonianData Op) :
     M.modularHamiltonian = M.negativeLogDensity :=
-  M.modularHamiltonian_eq_negativeLogDensity
+  rfl
 
 end ModularHamiltonianData
 
@@ -128,13 +139,16 @@ structure OperatorialExponentialFamily (Param Op : Type*) where
   operatorialExponentialFamily : Param → Op
   operatorialExponentialFamily_eq :
     ∀ β, operatorialExponentialFamily β = untracedExponential β
+  traceClass : Op → Prop
+  traceClass_untraced : ∀ β, traceClass (untracedExponential β)
   traceReadout : Op → ℝ
   partitionFunction : Param → ℝ
+  partitionFunction_eq_trace :
+    ∀ β, partitionFunction β = traceReadout (untracedExponential β)
   partitionPotential : Param → ℝ
   normalizedState : Param → Op
-  traceClassWitness : Prop
   partitionPotential_eq_log_trace :
-    ∀ β, partitionPotential β = Real.log (partitionFunction β)
+    ∀ β, partitionPotential β = Real.log (traceReadout (untracedExponential β))
 
 namespace OperatorialExponentialFamily
 
@@ -146,6 +160,24 @@ theorem operatorialExponentialFamily_eq_untraced
     E.operatorialExponentialFamily β = E.untracedExponential β :=
   E.operatorialExponentialFamily_eq β
 
+@[rep_depth operator]
+theorem traceClass_untraced_theorem
+    (E : OperatorialExponentialFamily Param Op) (β : Param) :
+    E.traceClass (E.untracedExponential β) :=
+  E.traceClass_untraced β
+
+@[rep_depth operator]
+theorem partitionFunction_eq_trace_theorem
+    (E : OperatorialExponentialFamily Param Op) (β : Param) :
+    E.partitionFunction β = E.traceReadout (E.untracedExponential β) :=
+  E.partitionFunction_eq_trace β
+
+@[rep_depth operator]
+theorem partitionPotential_eq_log_trace_theorem
+    (E : OperatorialExponentialFamily Param Op) (β : Param) :
+    E.partitionPotential β = Real.log (E.traceReadout (E.untracedExponential β)) :=
+  E.partitionPotential_eq_log_trace β
+
 end OperatorialExponentialFamily
 
 /-- Duhamel/Kubo derivative and higher simplex-ordered insertion packet. -/
@@ -154,14 +186,49 @@ structure DuhamelOperatorDerivative (Param Op Direction : Type*) where
   K : Param → Op
   directionToInsertion : Direction → Op
   derivativeOfExp : Param → Direction → Op
-  duhamelFormula : Prop
+  duhamelFormula : Param → Direction → Op → Prop
+  duhamelFormula_holds :
+    ∀ β v, duhamelFormula β v (derivativeOfExp β v)
   higherSimplexOrderedForms : Nat → Param → List Direction → Op
-  higherSimplexOrderedWitness : Prop
+  higherSimplexOrderedLaw : Nat → Param → List Direction → Op → Prop
+  higherSimplexOrderedForms_satisfy :
+    ∀ n β dirs, higherSimplexOrderedLaw n β dirs (higherSimplexOrderedForms n β dirs)
   traceStateKMSReadout : Op → ℝ
-  tracedCumulantReadoutWitness : Prop
+  tracedCumulantReadoutLaw : Nat → Param → List Direction → ℝ → Prop
+  tracedCumulantReadout_holds :
+    ∀ n β dirs,
+      tracedCumulantReadoutLaw n β dirs
+        (traceStateKMSReadout (higherSimplexOrderedForms n β dirs))
 
 /-- Compatibility name used by existing Souriau/operatorial tests. -/
 abbrev DuhamelOperatorialNForms := DuhamelOperatorDerivative
+
+namespace DuhamelOperatorDerivative
+
+variable {Param Op Direction : Type*}
+
+@[rep_depth operator]
+theorem duhamelFormula_holds_theorem
+    (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (v : Direction) :
+    D.duhamelFormula β v (D.derivativeOfExp β v) :=
+  D.duhamelFormula_holds β v
+
+@[rep_depth operator]
+theorem higherSimplexOrderedForms_satisfy_theorem
+    (D : DuhamelOperatorDerivative Param Op Direction)
+    (n : Nat) (β : Param) (dirs : List Direction) :
+    D.higherSimplexOrderedLaw n β dirs (D.higherSimplexOrderedForms n β dirs) :=
+  D.higherSimplexOrderedForms_satisfy n β dirs
+
+@[rep_depth operator]
+theorem tracedCumulantReadout_holds_theorem
+    (D : DuhamelOperatorDerivative Param Op Direction)
+    (n : Nat) (β : Param) (dirs : List Direction) :
+    D.tracedCumulantReadoutLaw n β dirs
+      (D.traceStateKMSReadout (D.higherSimplexOrderedForms n β dirs)) :=
+  D.tracedCumulantReadout_holds n β dirs
+
+end DuhamelOperatorDerivative
 
 /-- Moment/cumulant readout after trace/state/KMS evaluation.
 
@@ -174,9 +241,40 @@ structure MomentGeneratingReadout (Param Op : Type*) where
   firstMoment : Param → Op → ℝ
   bkmCovariance : Param → Op → Op → ℝ
   nResponseForm : Nat → Param → List Op → ℝ
-  firstMomentFormulaWitness : Prop
-  bkmCovarianceWitness : Prop
-  higherCumulantWitness : Prop
+  firstMomentLaw : Param → Op → ℝ → Prop
+  firstMoment_holds :
+    ∀ β A, firstMomentLaw β A (firstMoment β A)
+  bkmCovarianceLaw : Param → Op → Op → ℝ → Prop
+  bkmCovariance_holds :
+    ∀ β A B, bkmCovarianceLaw β A B (bkmCovariance β A B)
+  higherCumulantLaw : Nat → Param → List Op → ℝ → Prop
+  higherCumulant_holds :
+    ∀ n β ops, higherCumulantLaw n β ops (nResponseForm n β ops)
+
+namespace MomentGeneratingReadout
+
+variable {Param Op : Type*}
+
+@[rep_depth operator]
+theorem firstMoment_holds_theorem
+    (M : MomentGeneratingReadout Param Op) (β : Param) (A : Op) :
+    M.firstMomentLaw β A (M.firstMoment β A) :=
+  M.firstMoment_holds β A
+
+@[rep_depth operator]
+theorem bkmCovariance_holds_theorem
+    (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
+    M.bkmCovarianceLaw β A B (M.bkmCovariance β A B) :=
+  M.bkmCovariance_holds β A B
+
+@[rep_depth operator]
+theorem higherCumulant_holds_theorem
+    (M : MomentGeneratingReadout Param Op)
+    (n : Nat) (β : Param) (ops : List Op) :
+    M.higherCumulantLaw n β ops (M.nResponseForm n β ops) :=
+  M.higherCumulant_holds n β ops
+
+end MomentGeneratingReadout
 
 /-- Phase-1 Souriau thermodynamic source packet.
 
@@ -357,7 +455,7 @@ structure SouriauKLBregmanWitness (State LieAlgebra LieDual : Type*) where
       alphaPartitionPotential
         - generator.souriau.partitionPotential
         - generator.dPhi alphaMinusBeta
-  supportHypotheses : Prop
+  supportHypothesesClaim : Prop
 
 /-- Compatibility name for tests and older prose packets. -/
 abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
@@ -413,8 +511,11 @@ structure QuantumOperatorialSouriauFamily (LieAlgebra Obs : Type*) where
     rho_beta = opScale (partitionFunction⁻¹) untracedExponential
   modularHamiltonian_eq :
     modularHamiltonian = opAdd Khat_beta (opScale partitionPotential opIdentity)
-  traceClassWitness : Prop
-  trace_state_KMS_readout_required : Prop
+  traceClass : Obs → Prop
+  traceClass_untraced : traceClass untracedExponential
+  traceStateKMSReadoutRequired : Obs → Prop
+  traceStateKMSReadoutRequired_rho :
+    traceStateKMSReadoutRequired rho_beta
 
 namespace QuantumOperatorialSouriauFamily
 
@@ -452,6 +553,7 @@ structure RenyiMellinSouriauReadout (State : Type*) where
   renyiEntropy : ℝ
   petzRelativeRenyi : ℝ
   sandwichedRelativeRenyi : ℝ
+  gamma_ne_one : gamma ≠ 1
   souriauPartitionAtGammaBeta_pos : 0 < souriauPartitionAtGammaBeta
   souriauPartitionAtBeta_pos : 0 < souriauPartitionAtBeta
   massieuAtGammaBeta_eq_log_partition :
@@ -465,9 +567,9 @@ structure RenyiMellinSouriauReadout (State : Type*) where
     renyiLogGenerator = Real.log renyiPartition
   renyiEntropy_eq_logGenerator_div_one_sub_gamma :
     renyiEntropy = renyiLogGenerator / (1 - gamma)
-  finiteSupportVolumeWitness : Prop
-  entropyDerivativeAtOneWitness : Prop
-  petz_sandwiched_separated : Prop
+  finiteSupportVolumeClaim : Prop
+  entropyDerivativeAtOneClaim : Prop
+  petz_sandwiched_separatedClaim : Prop
 
 namespace RenyiMellinSouriauReadout
 
@@ -498,20 +600,34 @@ theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat
     R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) :=
   R.renyiEntropy_eq_logGenerator_div_one_sub_gamma
 
+@[rep_depth thermo]
+theorem renyiPartition_pos
+    (R : RenyiMellinSouriauReadout State) :
+    0 < R.renyiPartition := by
+  rw [R.renyiMellin_eq_temperature_rescaling_witness]
+  exact div_pos R.souriauPartitionAtGammaBeta_pos
+    (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
+
 end RenyiMellinSouriauReadout
 
 /-- Equivariance/cocycle packet for Souriau Lie covariance. -/
 @[rep_depth thermo]
 structure LieCovarianceAndCocycle
-    (State LieGroup LieAlgebra LieDual : Type*) where
+    (State LieGroup LieAlgebra LieDual : Type*) [Mul LieGroup] [Add LieDual] where
   souriau : SouriauLieThermoData State LieAlgebra LieDual
   groupAction : LieGroup → State → State
   coadjointAction : LieGroup → LieDual → LieDual
   betaAction : LieGroup → LieAlgebra → LieAlgebra
   cocycle : LieGroup → LieDual
-  strictEquivarianceWitness : Prop
-  affineCocycleWitness : Prop
-  partitionPotentialAffineCorrection : Prop
+  strictEquivariance :
+    ∀ g x,
+      souriau.momentMap (groupAction g x) =
+        coadjointAction g (souriau.momentMap x)
+  affineCocycle :
+    ∀ g h,
+      cocycle (g * h) =
+        coadjointAction g (cocycle h) + cocycle g
+  partitionPotentialAffineCorrectionClaim : Prop
 
 /-- Metriplectic/Onsager split with free-energy monotonicity witness. -/
 @[rep_depth thermo]
@@ -529,9 +645,13 @@ structure SouriauMetriplecticOnsager (State Observable : Type*) where
     ∀ ρ, dissipativeFlow ρ = -onsagerOperator (force ρ)
   freeEnergyDerivative_nonpos :
     ∀ ρ, freeEnergyDerivative ρ ≤ 0
-  onsager_positive_semidefinite : Prop
-  hamiltonianPartPreservesFreeEnergy : Prop
-  dissipativePartDissipatesFreeEnergy : Prop
+  onsagerPositiveSemidefinite : (Density State → Density State) → Prop
+  onsager_positive_semidefinite :
+    onsagerPositiveSemidefinite onsagerOperator
+  hamiltonianPartPreservesFreeEnergy :
+    ∀ ρ, relativeFreeEnergy (reversibleFlow ρ) = relativeFreeEnergy ρ
+  dissipativePartDissipatesFreeEnergy :
+    ∀ ρ, freeEnergyDerivative ρ ≤ 0
 
 namespace SouriauMetriplecticOnsager
 
@@ -561,14 +681,26 @@ end SouriauMetriplecticOnsager
 witnesses). -/
 @[rep_depth thermo]
 structure OptimalTransportWitness (State : Type*) where
-  continuityEquation : Prop
-  mobilityTensor : Prop
-  wassersteinMetricWitness : Prop
-  gradientFlowEquation : Prop
-  jkoStepWitness : Prop
-  lscWitness : Prop
-  coercivityWitness : Prop
-  compactnessWitness : Prop
+  metric : State → State → ℝ
+  curve : ℝ → State
+  density : ℝ → Density State
+  mobilityTensor : State → State → Prop
+  jkoStep : State → State
+  continuityEquation : (ℝ → State) → Prop
+  continuityEquation_holds : continuityEquation curve
+  wassersteinMetricLaw : (State → State → ℝ) → Prop
+  wassersteinMetric_holds : wassersteinMetricLaw metric
+  gradientFlowEquation : (ℝ → State) → Prop
+  gradientFlowEquation_holds : gradientFlowEquation curve
+  jkoStepLaw : (State → State) → Prop
+  jkoStep_holds : jkoStepLaw jkoStep
+  lscLaw : (Density State → ℝ) → Prop
+  freeEnergy : Density State → ℝ
+  lsc_holds : lscLaw freeEnergy
+  coercivityLaw : (Density State → ℝ) → Prop
+  coercivity_holds : coercivityLaw freeEnergy
+  compactnessLaw : (ℝ → State) → Prop
+  compactness_holds : compactnessLaw curve
 
 /-- GENERIC compatibility packet. -/
 @[rep_depth thermo]
@@ -577,12 +709,17 @@ structure GenericMetriplecticCompatibility (State Observable : Type*) where
   K : Observable → Observable
   energy : Observable
   entropy : Observable
-  L_skew_poisson : Prop
-  K_symmetric_psd : Prop
-  K_deltaE_eq_zero : Prop
-  L_deltaS_eq_zero : Prop
-  dE_eq_zero : Prop
-  dS_nonneg : Prop
+  evolution : Observable → Observable
+  dE : Observable → ℝ
+  dS : Observable → ℝ
+  LSkewPoisson : (Observable → Observable) → Prop
+  L_skew_poisson : LSkewPoisson L
+  KSymmetricPSD : (Observable → Observable) → Prop
+  K_symmetric_psd : KSymmetricPSD K
+  K_deltaE_eq_zero : K energy = energy
+  L_deltaS_eq_zero : L entropy = entropy
+  dE_eq_zero : dE (evolution energy) = 0
+  dS_nonneg : 0 ≤ dS (evolution entropy)
 
 /-- Existing naming convention compatibility. -/
 abbrev GENERICCompatibility := GenericMetriplecticCompatibility
@@ -594,10 +731,10 @@ variable {State Observable : Type*}
 /-- GENERIC bookkeeping theorem: energy conserved, entropy nondecreasing. -/
 @[rep_depth thermo]
 theorem dE_eq_zero_and_dS_nonneg
-    (G : GenericMetriplecticCompatibility State Observable)
-    (hE : G.dE_eq_zero) (hS : G.dS_nonneg) :
-    G.dE_eq_zero ∧ G.dS_nonneg :=
-  ⟨hE, hS⟩
+    (G : GenericMetriplecticCompatibility State Observable) :
+    G.dE (G.evolution G.energy) = 0 ∧
+      0 ≤ G.dS (G.evolution G.entropy) :=
+  ⟨G.dE_eq_zero, G.dS_nonneg⟩
 
 end GenericMetriplecticCompatibility
 
@@ -630,28 +767,40 @@ local notation "Obs" => InfoGeometry.Volume.ConnesCocycle.AlgebraEnd H
 Constructive owner for the operatorial logarithmic potential on the
 Souriau/Tomita lane.
 
-Unlike `ModularHamiltonianData`, this is not a bag of independent hypotheses:
-`negativeLogDensity` and `modularHamiltonian` are definitions extracted from the
-same `SouriauTomitaLogContext`, and the equalities below are theorem fields
-already proved by that context.
+Unlike `ModularHamiltonianData`, this is not a bag of independent hypotheses.
+It is a thin shell over the carrier-matched owner packet already proved in
+`SouriauTomitaModularFlowBridge`, so the negative-log datum, modular
+Hamiltonian, standard-form carrier, and generated modular family all remain
+anchored to one observable carrier.
 -/
 @[rep_depth operator]
 structure ConstructiveSouriauTomitaLogPotentialOwner where
-  logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry)
+  matchedCarrier :
+    SouriauTomitaLogContext.MatchedCarrierOwner (H := H) (Symmetry := Symmetry)
 
 namespace ConstructiveSouriauTomitaLogPotentialOwner
 
 variable (O : ConstructiveSouriauTomitaLogPotentialOwner (H := H) (Symmetry := Symmetry))
 
+/-- The underlying Souriau/Tomita logarithmic context. -/
+@[rep_depth operator]
+def logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) :=
+  O.matchedCarrier.logContext
+
 /-- The negative logarithmic density is the Tomita logarithmic datum. -/
 @[rep_depth operator]
 def negativeLogDensity : Obs :=
-  O.logContext.toRealModularLogData
+  O.matchedCarrier.negativeLogDensity
 
 /-- The modular Hamiltonian is the Souriau-selected Tomita generator. -/
 @[rep_depth operator]
 def modularHamiltonian : Obs :=
-  O.logContext.modularHamiltonian
+  O.matchedCarrier.modularHamiltonian
+
+/-- The standard-form carrier read on the same observable carrier. -/
+@[rep_depth operator]
+noncomputable def standardFormCarrier : StandardFormCarrier H :=
+  O.matchedCarrier.standardFormCarrier
 
 /-- The Souriau moment evaluated at geometric temperature. -/
 @[rep_depth operator]
@@ -662,13 +811,25 @@ def souriauMomentAtGeometricTemperature : Obs :=
 /-- The untraced operatorial exponential family is represented by the generated modular flow. -/
 @[rep_depth operator]
 noncomputable def untracedModularFamily : AdditiveModularFlow (H := H) :=
-  O.logContext.souriauAdditiveModularFlow
+  O.matchedCarrier.modularFamily
 
 /-- Processed sign/log theorem: the negative log datum is the modular Hamiltonian. -/
 @[rep_depth operator]
 theorem negativeLogDensity_eq_modularHamiltonian :
     O.negativeLogDensity = O.modularHamiltonian :=
-  O.logContext.tomita_deltaLog_eq_modularHamiltonian
+  O.matchedCarrier.negativeLogDensity_eq_modularHamiltonian
+
+/-- The standard-form carrier is generated by that same modular Hamiltonian. -/
+@[rep_depth operator]
+theorem standardFormCarrier_Delta_eq_modularHamiltonian :
+    O.standardFormCarrier.Delta = O.modularHamiltonian :=
+  O.matchedCarrier.standardFormCarrier_Delta_eq_modularHamiltonian
+
+/-- The standard-form carrier flow is the same untraced modular family. -/
+@[rep_depth operator]
+theorem standardFormCarrier_modularFlow_eq_untracedModularFamily :
+    O.standardFormCarrier.seed.modularFlow = O.untracedModularFamily :=
+  O.matchedCarrier.standardFormCarrier_modularFlow_eq_modularFamily
 
 /-- Processed Souriau theorem: the modular Hamiltonian is the moment at geometric temperature. -/
 @[rep_depth operator]
@@ -682,7 +843,7 @@ theorem untracedExponential_apply_eq_modular_shift
     (t : ℝ) (A : Obs) :
     O.untracedModularFamily t A =
       InfoGeometry.Krein.modular_shift (E := H) O.modularHamiltonian t A :=
-  O.logContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift t A
+  O.matchedCarrier.modularFamily_apply_eq_modular_shift t A
 
 /--
 Constructive packet replacing the broad explicit hypothesis shell by the owned
@@ -692,11 +853,15 @@ Souriau/Tomita equalities.
 theorem constructive_operatorial_log_potential_packet
     (t : ℝ) (A : Obs) :
     O.negativeLogDensity = O.modularHamiltonian ∧
+    O.standardFormCarrier.Delta = O.modularHamiltonian ∧
+    O.standardFormCarrier.seed.modularFlow = O.untracedModularFamily ∧
     O.modularHamiltonian = O.souriauMomentAtGeometricTemperature ∧
     O.untracedModularFamily t A =
       InfoGeometry.Krein.modular_shift (E := H) O.modularHamiltonian t A := by
   exact ⟨
     O.negativeLogDensity_eq_modularHamiltonian,
+    O.standardFormCarrier_Delta_eq_modularHamiltonian,
+    O.standardFormCarrier_modularFlow_eq_untracedModularFamily,
     O.modularHamiltonian_eq_moment_geometricTemperature_constructive,
     O.untracedExponential_apply_eq_modular_shift t A⟩
 

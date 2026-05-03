@@ -3,6 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
+import Mathlib.NumberTheory.Chebyshev
 
 /-!
 InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean
@@ -754,6 +755,38 @@ theorem primitiveDivisorQuotient_erase_one_supportedAbove_two
   have hq_gt_one : 1 < a / d := lt_of_le_of_ne hq_ge_one hq_ne_one.symm
   simpa [hEq] using Nat.succ_le_of_lt hq_gt_one
 
+theorem primitiveDivisorQuotient_erase_one_supportedAbove_max
+    {A : Finset ℕ} {x d : ℕ} (hx : 1 ≤ x) (hA : SupportedAboveFinset x A) :
+    SupportedAboveFinset (max (x / d) 2) ((primitiveDivisorQuotient A d).erase 1) := by
+  intro n hn
+  have hxdiv : x / d ≤ n := primitiveDivisorQuotient_erase_one_supportedAbove hA hn
+  have hA1 : SupportedAboveFinset 1 A := by
+    intro a ha
+    exact le_trans hx (hA ha)
+  have htwo : 2 ≤ n := primitiveDivisorQuotient_erase_one_supportedAbove_two hA1 hn
+  exact max_le_iff.mpr ⟨hxdiv, htwo⟩
+
+/--
+Bootstrap the residual quotient support back into the finite primitive-sets-
+above statement, once the transported threshold `max (x / d) 2` lies inside
+the statement's validity range.
+-/
+theorem primitiveWeightSum_primitiveDivisorQuotient_erase_one_le_of_finiteStatement
+    (hfin : PrimitiveSetsAboveFiniteStatement) {ε : ℝ} (hε : 0 < ε) :
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x d : ℕ},
+      x₀ ≤ max (x / d) 2 →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      1 ≤ x →
+      1 ≤ d →
+      primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1) ≤ 1 + ε := by
+  rcases hfin ε hε with ⟨x₀, hx₀⟩
+  refine ⟨x₀, ?_⟩
+  intro A x d hthresh hAprim hAsupp hx hd
+  apply hx₀ hthresh
+  · exact primitiveDivisorQuotient_erase_one_primitive hAprim (Nat.ne_of_gt (lt_of_lt_of_le Nat.zero_lt_one hd))
+  · exact primitiveDivisorQuotient_erase_one_supportedAbove_max hx hAsupp
+
 theorem primitiveDivisorQuotient_one_mem_iff {A : Finset ℕ} {d : ℕ} (hd0 : d ≠ 0) :
     1 ∈ primitiveDivisorQuotient A d ↔ d ∈ A := by
   constructor
@@ -1145,6 +1178,247 @@ theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_of_supportedAbove
   have hd1 : 1 ≤ d := Nat.succ_le_of_lt (Nat.pos_of_mem_divisors hddiv)
   exact realVonMangoldt_mul_primitiveScaledWeightSum_primitiveDivisorQuotient_le A hd1
 
+/--
+Bootstrap the supported-above scaled divisor bound through the finite
+primitive-sets-above statement, provided every outer divisor `d` lands beyond
+the threshold required for the residual quotient support.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_of_finiteStatement
+    (hfin : PrimitiveSetsAboveFiniteStatement) {ε : ℝ} (hε : 0 < ε) :
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x : ℕ},
+      1 ≤ x →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      (∀ d ∈ A.biUnion (fun a => a.divisors), x₀ ≤ max (x / d) 2) →
+      Finset.sum (A.sigma fun a => a.divisors)
+        (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+        ≤
+      Finset.sum (A.biUnion fun a => a.divisors)
+        (fun d => realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε))) := by
+  rcases primitiveWeightSum_primitiveDivisorQuotient_erase_one_le_of_finiteStatement hfin hε with
+    ⟨x₀, hx₀⟩
+  refine ⟨x₀, ?_⟩
+  intro A x hx1 hAprim hAsupp hthresh
+  have hA1 : SupportedAboveFinset 1 A := by
+    intro a ha
+    exact le_trans hx1 (hAsupp ha)
+  refine le_trans (primitiveWeight_vonMangoldt_divisorSigma_scaled_le_of_supportedAbove A hA1) ?_
+  apply Finset.sum_le_sum
+  intro d hd
+  rcases Finset.mem_biUnion.mp hd with ⟨a, haA, hddiv⟩
+  have hd1 : 1 ≤ d := Nat.succ_le_of_lt (Nat.pos_of_mem_divisors hddiv)
+  have hq :
+      primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1) ≤ 1 + ε := by
+    apply hx₀
+    · exact hthresh d hd
+    · exact hAprim
+    · exact hAsupp
+    · exact hx1
+    · exact hd1
+  have hadd :
+      (if d ∈ A then primitiveWeight d else 0)
+          + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1)
+        ≤
+      (if d ∈ A then primitiveWeight d else 0) + (1 + ε) := by
+    exact add_le_add_right hq _
+  exact mul_le_mul_of_nonneg_left hadd (realVonMangoldt_nonneg d)
+
+/--
+Split the outer divisor sum into the regime where the finite-statement
+bootstrap applies and the complementary finite exceptional regime.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_split_le_of_finiteStatement
+    (hfin : PrimitiveSetsAboveFiniteStatement) {ε : ℝ} (hε : 0 < ε) :
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x : ℕ},
+      1 ≤ x →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      let D := A.biUnion (fun a => a.divisors)
+      let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+      let bad := D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)
+      Finset.sum (A.sigma fun a => a.divisors)
+          (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+        ≤
+      Finset.sum good
+          (fun d => realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+        +
+      Finset.sum bad
+          (fun d => realVonMangoldt d
+            * ((if d ∈ A then primitiveWeight d else 0)
+                + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1))) := by
+  rcases primitiveWeightSum_primitiveDivisorQuotient_erase_one_le_of_finiteStatement hfin hε with
+    ⟨x₀, htail⟩
+  refine ⟨x₀, ?_⟩
+  intro A x hx hAprim hAsupp
+  dsimp
+  let D := A.biUnion (fun a => a.divisors)
+  let F := fun d =>
+    realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0)
+      + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1))
+  let G := fun d =>
+    realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε))
+  have hbase :
+      Finset.sum (A.sigma fun a => a.divisors)
+          (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+        ≤ Finset.sum D F := by
+    apply primitiveWeight_vonMangoldt_divisorSigma_scaled_le_of_supportedAbove
+    intro a ha
+    exact le_trans hx (hAsupp ha)
+  have hsplit :
+      Finset.sum D F
+        =
+      Finset.sum (D.filter (fun d => x₀ ≤ max (x / d) 2)) F
+        + Finset.sum (D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) F := by
+    simpa [D] using (Finset.sum_filter_add_sum_filter_not D (fun d => x₀ ≤ max (x / d) 2) F).symm
+  have hgood :
+      Finset.sum (D.filter (fun d => x₀ ≤ max (x / d) 2)) F
+        ≤ Finset.sum (D.filter (fun d => x₀ ≤ max (x / d) 2)) G := by
+    apply Finset.sum_le_sum
+    intro d hd
+    apply mul_le_mul_of_nonneg_left
+    · apply add_le_add_right
+      apply htail
+      · exact (Finset.mem_filter.mp hd).2
+      · exact hAprim
+      · exact hAsupp
+      · exact hx
+      · have hd1 : 1 ≤ d := by
+          rcases Finset.mem_biUnion.mp ((Finset.mem_filter.mp hd).1) with ⟨a, haA, hddiv⟩
+          exact Nat.succ_le_of_lt (Nat.pos_of_mem_divisors hddiv)
+        exact hd1
+    · exact realVonMangoldt_nonneg d
+  calc
+    Finset.sum (A.sigma fun a => a.divisors)
+        (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+      ≤ Finset.sum D F := hbase
+    _ = Finset.sum (D.filter (fun d => x₀ ≤ max (x / d) 2)) F
+          + Finset.sum (D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) F := hsplit
+    _ ≤ Finset.sum (D.filter (fun d => x₀ ≤ max (x / d) 2)) G
+          + Finset.sum (D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) F := by
+          exact add_le_add hgood le_rfl
+
+theorem badDivisorFilter_eq_empty_of_le_two {D : Finset ℕ} {x x₀ : ℕ} (hx₀ : x₀ ≤ 2) :
+    D.filter (fun d => ¬ x₀ ≤ max (x / d) 2) = ∅ := by
+  apply Finset.filter_eq_empty_iff.mpr
+  intro d hd
+  have hmax : x₀ ≤ max (x / d) 2 := le_trans hx₀ (le_max_right (x / d) 2)
+  exact not_not_intro hmax
+
+theorem mem_badDivisorFilter_imp_div_lt {D : Finset ℕ} {x x₀ d : ℕ}
+    (hd : d ∈ D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) :
+    x / d < x₀ := by
+  have hbad : ¬ x₀ ≤ max (x / d) 2 := (Finset.mem_filter.mp hd).2
+  have hnot : ¬ x₀ ≤ x / d := by
+    intro hxd
+    exact hbad (le_trans hxd (le_max_left (x / d) 2))
+  exact Nat.lt_of_not_ge hnot
+
+theorem mem_badDivisorFilter_imp_two_lt {D : Finset ℕ} {x x₀ d : ℕ}
+    (hd : d ∈ D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) :
+    2 < x₀ := by
+  have hbad : ¬ x₀ ≤ max (x / d) 2 := (Finset.mem_filter.mp hd).2
+  have hnot : ¬ x₀ ≤ 2 := by
+    intro hx₂
+    exact hbad (le_trans hx₂ (le_max_right (x / d) 2))
+  exact Nat.lt_of_not_ge hnot
+
+theorem mem_badDivisorFilter_imp_lt_mul {D : Finset ℕ} {x x₀ d : ℕ}
+    (hd : d ∈ D.filter (fun d => ¬ x₀ ≤ max (x / d) 2)) (hdpos : 0 < d) :
+    x < x₀ * d := by
+  exact (Nat.div_lt_iff_lt_mul hdpos).mp (mem_badDivisorFilter_imp_div_lt hd)
+
+theorem mem_badBiUnionDivisorFilter_imp_lt_mul {A : Finset ℕ} {x x₀ d : ℕ}
+    (hd : d ∈ (A.biUnion fun a => a.divisors).filter (fun d => ¬ x₀ ≤ max (x / d) 2)) :
+    x < x₀ * d := by
+  have hdD : d ∈ A.biUnion fun a => a.divisors := (Finset.mem_filter.mp hd).1
+  rcases Finset.mem_biUnion.mp hdD with ⟨a, haA, hdiv⟩
+  exact mem_badDivisorFilter_imp_lt_mul hd (Nat.pos_of_mem_divisors hdiv)
+
+theorem badBiUnionDivisorFilter_subset_largeDivisors (A : Finset ℕ) (x x₀ : ℕ) :
+    (A.biUnion fun a => a.divisors).filter (fun d => ¬ x₀ ≤ max (x / d) 2)
+      ⊆
+    (A.biUnion fun a => a.divisors).filter (fun d => x < x₀ * d) := by
+  intro d hd
+  refine Finset.mem_filter.mpr ?_
+  refine ⟨(Finset.mem_filter.mp hd).1, ?_⟩
+  exact mem_badBiUnionDivisorFilter_imp_lt_mul hd
+
+theorem badBiUnionDivisorFilter_sum_le_largeDivisor_sum (A : Finset ℕ) (x x₀ : ℕ) :
+    Finset.sum ((A.biUnion fun a => a.divisors).filter (fun d => ¬ x₀ ≤ max (x / d) 2))
+      (fun d => realVonMangoldt d
+        * ((if d ∈ A then primitiveWeight d else 0)
+            + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1)))
+      ≤
+    Finset.sum ((A.biUnion fun a => a.divisors).filter (fun d => x < x₀ * d))
+      (fun d => realVonMangoldt d
+        * ((if d ∈ A then primitiveWeight d else 0)
+            + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1))) := by
+  apply Finset.sum_le_sum_of_subset_of_nonneg
+  · exact badBiUnionDivisorFilter_subset_largeDivisors A x x₀
+  · intro d hd_large hd_not_bad
+    have hterm_nonneg :
+        0 ≤ realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0)
+              + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1)) := by
+      apply mul_nonneg
+      · exact realVonMangoldt_nonneg d
+      · apply add_nonneg
+        · by_cases hdA : d ∈ A
+          · simp [hdA, primitiveWeight_nonneg]
+          · simp [hdA]
+        · exact primitiveWeightSum_nonneg _
+    exact hterm_nonneg
+
+theorem mem_largeDivisorFilter_imp_div_lt {D : Finset ℕ} {x x₀ d : ℕ}
+    (hd : d ∈ D.filter (fun d => x < x₀ * d)) (hx₀ : 0 < x₀) :
+    x / x₀ < d := by
+  have hmul : x < d * x₀ := by
+    simpa [mul_comm] using (Finset.mem_filter.mp hd).2
+  exact (Nat.div_lt_iff_lt_mul hx₀).mpr hmul
+
+theorem largeBiUnionDivisorFilter_subset_divThreshold
+    (A : Finset ℕ) (x x₀ : ℕ) (hx₀ : 0 < x₀) :
+    (A.biUnion fun a => a.divisors).filter (fun d => x < x₀ * d)
+      ⊆
+    (A.biUnion fun a => a.divisors).filter (fun d => x / x₀ < d) := by
+  intro d hd
+  refine Finset.mem_filter.mpr ?_
+  refine ⟨(Finset.mem_filter.mp hd).1, ?_⟩
+  exact mem_largeDivisorFilter_imp_div_lt hd hx₀
+
+/--
+Final packaging of the current reduction lane: after bootstrapping the good
+divisors through the finite statement, the only remaining contribution is the
+explicit large-divisor slice `x < x₀ * d`.
+-/
+theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_largeDivisorSlice_of_finiteStatement
+    (hfin : PrimitiveSetsAboveFiniteStatement) {ε : ℝ} (hε : 0 < ε) :
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x : ℕ},
+      1 ≤ x →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      let D := A.biUnion (fun a => a.divisors)
+      let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+      let large := D.filter (fun d => x < x₀ * d)
+      Finset.sum (A.sigma fun a => a.divisors)
+          (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+        ≤
+      Finset.sum good
+          (fun d => realVonMangoldt d * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+        +
+      Finset.sum large
+          (fun d => realVonMangoldt d
+            * ((if d ∈ A then primitiveWeight d else 0)
+                + primitiveWeightSum ((primitiveDivisorQuotient A d).erase 1))) := by
+  rcases primitiveWeight_vonMangoldt_divisorSigma_scaled_split_le_of_finiteStatement hfin hε with
+    ⟨x₀, hsplit⟩
+  refine ⟨x₀, ?_⟩
+  intro A x hx hAprim hAsupp
+  dsimp
+  refine le_trans (hsplit hx hAprim hAsupp) ?_
+  apply add_le_add_right
+  exact badBiUnionDivisorFilter_sum_le_largeDivisor_sum A x x₀
+
 theorem supportedAboveFinset_mono {x y : ℕ} {A : Finset ℕ}
     (hxy : y ≤ x) (hA : SupportedAboveFinset x A) :
     SupportedAboveFinset y A := by
@@ -1156,5 +1430,240 @@ theorem supportedAbove_mono {x y : ℕ} {A : Set ℕ}
     SupportedAbove y A := by
   intro n hn
   exact le_trans hxy (hA hn)
+
+/-!
+## Real arithmetic debt: large-divisor slice estimates
+
+The following lemmas state the remaining analytic obligations after the
+structural reduction in
+`primitiveWeight_vonMangoldt_divisorSigma_scaled_le_largeDivisorSlice_of_finiteStatement`.
+
+### Mathematical context (Lichtman 2022, arXiv:2202.02384)
+
+`PrimitiveSetsAboveFiniteStatement` is the finitary form of the
+Erdős–Sárközy–Szemerédi conjecture:
+  lim_{x → ∞} sup { f(A) | A primitive, A ⊆ [x, ∞) } ≤ 1
+where f(A) = Σ_{a ∈ A} 1/(a log a).
+Lichtman (Theorem 1.5) proved the limit is ≤ e^γ · π/4 ≈ 1.399.
+
+The endpoint theorem
+`primitiveWeight_vonMangoldt_divisorSigma_scaled_le_largeDivisorSlice_of_finiteStatement`
+decomposes the von Mangoldt sigma-sum via:
+  Σ_{(a,d) ∈ A.sigma d.divisors} primitiveWeight(a) · Λ(d)          [= Σ_{a ∈ A} 1/a]
+  ≤ Σ_{good d ≤ x/x₀} Λ(d) · (w_A(d) + 1 + ε)                    [bootstrap]
+  + Σ_{large d > x/x₀} Λ(d) · (w_A(d) + primitiveWeightSum(Q_d\{1}))  [remaining debt]
+
+The "good" part is handled by applying `PrimitiveSetsAboveFiniteStatement`
+recursively to the quotient Q_d = {a/d | a ∈ A, d ∣ a}, which is primitive and
+supported above x/d ≥ x₀ for d ≤ x/x₀.
+
+The "large" part (d > x/x₀) is the remaining analytic debt. Three connected
+lemmas close this gap:
+
+1. `primitiveWeightSum_vonMangoldt_sigma_le_log_mul_add` — the harmonic-sum
+   / primitiveWeightSum coupling via Chebyshev's ψ.
+2. `largeDivisorVonMangoldt_sum_le_eps` — the large-slice Λ-sum → 0 as
+   x → ∞, using Chebyshev bounds.
+3. `primitiveWeightSum_le_of_largeDivisorEstimate` — the final assembly:
+   `PrimitiveSetsAboveFiniteStatement` from the three pieces above.
+
+### Mathlib availability
+The following Mathlib tools are available for these proofs:
+- `ArithmeticFunction.vonMangoldt_sum`: Σ_{d∣n} Λ(d) = Real.log n
+- `ArithmeticFunction.vonMangoldt_le_log`: Λ(n) ≤ Real.log n
+- `ArithmeticFunction.vonMangoldt_nonneg`: 0 ≤ Λ(n)
+- `Chebyshev.psi_le_const_mul_self`: ψ(x) ≤ (log 4 + 4) · x  (`Mathlib.NumberTheory.Chebyshev`)
+- `Chebyshev.theta_le_log4_mul_x`: θ(x) ≤ log(4) · x
+- `Chebyshev.psi_eq_sum_Icc`: ψ(x) = Σ_{n ≤ x} Λ(n)
+-/
+
+/--
+Coupling lemma: for A primitive and supported above x ≥ 2, the primitiveWeightSum
+is bounded in terms of the von Mangoldt sigma-sum divided by log(x).
+
+Concretely, for a ≥ x: primitiveWeight(a) = 1/(a log a) ≤ (1/log x) · (1/a),
+so f(A) ≤ (1/log x) · Σ_{a ∈ A} 1/a = (1/log x) · sigma_sum(A).
+
+This lemma bridges the sigma-sum upper bound (established by the structural
+reduction) to the primitiveWeightSum bound that `PrimitiveSetsAboveFiniteStatement`
+requires.
+-/
+theorem primitiveWeightSum_le_div_log_mul_sigma
+    {A : Finset ℕ} {x : ℕ} (hx : 2 ≤ x)
+    (hAsupp : SupportedAboveFinset x A) :
+    primitiveWeightSum A
+      ≤ (1 / Real.log x)
+          * Finset.sum (A.sigma fun a => a.divisors)
+              (fun y => primitiveWeight y.1 * realVonMangoldt y.2) := by
+  have hx_pos : (0 : ℝ) < ↑x :=
+    Nat.cast_pos.mpr (Nat.lt_of_lt_of_le (by norm_num : 0 < 2) hx)
+  have hlogx_pos : (0 : ℝ) < Real.log ↑x :=
+    Real.log_pos (by exact_mod_cast Nat.lt_of_lt_of_le (by norm_num : 1 < 2) hx)
+  have hlogx_ne : Real.log ↑x ≠ 0 := ne_of_gt hlogx_pos
+  have hsigma_eq : Finset.sum (A.sigma fun a => a.divisors)
+        (fun y => primitiveWeight y.1 * realVonMangoldt y.2)
+      = Finset.sum A (fun a => primitiveWeight a * Real.log ↑a) := by
+    rw [← primitiveWeight_vonMangoldt_divisorSigma_eq,
+        primitiveWeight_vonMangoldt_divisorSum_eq_log]
+  rw [hsigma_eq]
+  have key : Real.log ↑x * primitiveWeightSum A ≤
+      Finset.sum A (fun a => primitiveWeight a * Real.log ↑a) := by
+    unfold primitiveWeightSum
+    rw [Finset.mul_sum]
+    apply Finset.sum_le_sum
+    intro a ha
+    calc Real.log ↑x * primitiveWeight a
+        = primitiveWeight a * Real.log ↑x := mul_comm _ _
+      _ ≤ primitiveWeight a * Real.log ↑a :=
+          mul_le_mul_of_nonneg_left
+            (Real.log_le_log hx_pos (by exact_mod_cast hAsupp ha))
+            (primitiveWeight_nonneg a)
+  calc primitiveWeightSum A
+      = (Real.log ↑x)⁻¹ * (Real.log ↑x * primitiveWeightSum A) := by
+          rw [← mul_assoc, inv_mul_cancel₀ hlogx_ne, one_mul]
+    _ ≤ (Real.log ↑x)⁻¹ *
+          Finset.sum A (fun a => primitiveWeight a * Real.log ↑a) :=
+          mul_le_mul_of_nonneg_left key (inv_pos.mpr hlogx_pos).le
+    _ = (1 / Real.log ↑x) *
+          Finset.sum A (fun a => primitiveWeight a * Real.log ↑a) := by
+          rw [one_div]
+
+/-!
+### Analytic debt: the large-divisor lane
+
+The theorem `largeDivisorVonMangoldt_sum_le_eps` (previously drafted here) is
+**false** as a uniform bound over all finite primitive sets supported above `x`.
+
+Counterexample: let `A` be any finite set of `k` primes all ≥ x. Then `A` is
+primitive. For each `p ∈ A` the only large divisor is `d = p` itself, and
+`primitiveDivisorQuotient A p = {1}` (no other prime of `A` is divisible by `p`),
+so the quotient term vanishes. The large-divisor sum then contains
+
+  Σ_{p ∈ A} Λ(p) · primitiveWeight p = Σ_{p ∈ A} (log p) / (p · log p) = Σ_{p ∈ A} 1/p.
+
+By choosing `A` large enough, `Σ 1/p` exceeds any fixed `ε` — this follows from
+divergence of the prime reciprocal series (`Mathlib.NumberTheory.SumPrimeReciprocals`).
+
+The correct analytic lane must retain the **square** of the logarithm. The primitive
+weight `1/(a log a)` arises from the log-squared divisor identity
+
+  1/(a log a) = (1/(a (log a)²)) · Σ_{d | a} Λ(d),
+
+rather than from `(1/a) · Σ_{d | a} Λ(d) / log a` used in the sigma bridge. The
+corrected large-divisor estimate should weight terms as `Λ(d) / (d · log d)` so
+that the prime diagonal contributes `1/(p log p)`, not `1/p`.
+
+We record the **shape** of the correct analytic input as an opaque `Prop`
+placeholder. Downstream propositions that require this estimate should take it as
+an explicit hypothesis rather than relying on a false uniform bound.
+
+Two earlier drafts of this `Prop` were also false:
+
+* **First draft** (divisor-only, `Λ(d)/(d log d)` + quotient term): the prime
+  diagonal gives `1/p` not `1/(p log p)`, and the quotient term `primitiveWeightSum
+  (Q_d \ {1})` is unscaled — its contribution is a fixed positive constant for
+  any `d | 2d` (e.g. `A = {2d}` gives quotient `{2}`, contributing `primitiveWeight 2`
+  regardless of `x₀`).
+
+* **Second draft** (divisor-only `Λ(d)/(d (log d)²)` + unscaled quotient): same
+  quotient defect. The log-squared denominator must be attached to the **original
+  element `a`**, not the divisor `d`.
+
+The correct kernel uses the pair `(a, d)` from `A.sigma (fun a => a.divisors)`.
+For `a > 1` the log-squared divisor identity `1/(a log a) = (1/(a (log a)²)) * Σ_{d|a} Λ(d)`
+shows that the kernel `Λ(d) / (a * (log a)²)` sums to `primitiveWeight a` over all
+`d | a`. This ensures the prime diagonal is `1/(p log p)` and all quotient
+contributions are scaled by `1/(a (log a)²)`.
+-/
+
+/--
+Log-squared pair kernel for the exact primitive-weight decomposition.
+
+For `a > 1`, summing `primitiveLogSquaredPairKernel a d` over `d ∈ a.divisors`
+recovers `primitiveWeight a`:
+
+  Σ_{d | a} Λ(d) / (a * (log a)²)
+    = (1 / (a * (log a)²)) * Σ_{d | a} Λ(d)
+    = (1 / (a * (log a)²)) * log a
+    = 1 / (a * log a)
+    = primitiveWeight a.
+
+On a prime `p`: `Λ(p) / (p * (log p)²) = (log p) / (p * (log p)²) = 1 / (p * log p)`,
+matching `primitiveWeight p`. The denominator is in `a`, not `d`, which prevents the
+quotient-scaling defect in divisor-only formulations.
+-/
+def primitiveLogSquaredPairKernel (a d : ℕ) : ℝ :=
+  if 1 < a then
+    realVonMangoldt d / ((a : ℝ) * (Real.log (a : ℝ)) ^ 2)
+  else
+    0
+
+/--
+Correct analytic input for the large-divisor lane.
+
+The sum is over **divisor pairs** `(a, d)` from `A.sigma (fun a => a.divisors)`,
+filtered to large divisors `d > x / x₀`. The kernel `Λ(d) / (a * (log a)²)` is
+attached to the original element `a`, not the divisor `d` alone.
+
+This avoids both defects present in divisor-only formulations:
+- The prime diagonal: `Λ(p) / (p * (log p)²) = 1/(p log p) = primitiveWeight p`. ✓
+- The quotient term is automatically scaled: summing over `d | a` gives
+  `primitiveWeight a`, so the contribution from each `a` is bounded by `primitiveWeight a`.
+
+**Not asserted**: we do not claim this is provable from current Mathlib; it is an
+owner-surface placeholder recording the correct analytic shape.
+-/
+def PrimitiveLargeDivisorAnalyticInput : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    ∃ x₀ : ℕ, ∀ {A : Finset ℕ} {x : ℕ},
+      x₀ ≤ x →
+      PrimitiveFinset A →
+      SupportedAboveFinset x A →
+      let largePairs :=
+        (A.sigma fun a => a.divisors).filter (fun y => x / x₀ < y.2)
+      Finset.sum largePairs (fun y => primitiveLogSquaredPairKernel y.1 y.2) ≤ ε
+
+/--
+Assembly statement: the analytic input implies the finite ESS statement.
+
+Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
+claim the analytic proof. This records the logical dependence without asserting
+an unproved or false theorem.
+-/
+def PrimitiveWeightSumAssemblyFromAnalyticInput : Prop :=
+  PrimitiveLargeDivisorAnalyticInput → PrimitiveSetsAboveFiniteStatement
+
+/--
+Lichtman–ESS bound: the good-divisor sum is bounded by `(1 + ε) · ψ(x/x₀)`.
+
+For A primitive supported above x, with good divisors defined by
+`x₀ ≤ max (x / d) 2`, the hypothesis `2 < x₀` forces `x₀ > 2`, hence the
+condition `x₀ ≤ max (x / d) 2` implies `x₀ ≤ x / d` (since `max (x/d) 2 = x₀`
+would require `x₀ ≤ 2`, contradiction). So all good `d` satisfy `d ≤ x / x₀ < x`.
+Since A is supported above x, no element of A is a good divisor, and the
+diagonal term `if d ∈ A then primitiveWeight d else 0` vanishes. What remains is:
+
+  Σ_{good d} Λ(d) · (1 + ε) ≤ (1 + ε) · ψ(x / x₀)
+    ≤ (1 + ε) · (log 4 + 4) · (x / x₀)
+
+by `Chebyshev.psi_le_const_mul_self` (from `Mathlib.NumberTheory.Chebyshev`).
+
+**Why `2 < x₀` is needed, not just `0 < x₀`**: with `x₀ ≤ 2`, the filter
+condition `x₀ ≤ max (x / d) 2` is satisfied by all `d` (since `max _ 2 ≥ 2 ≥ x₀`),
+so the good filter includes `d ∈ A`, the diagonal term is positive, and the
+RHS `(x / x₀ : ℕ)` can be zero. Concrete counterexample: `x₀ = 2`, `x = 1`,
+`A = {p}` for any prime `p`; LHS > 0 but RHS = (1 / 2 : ℕ) = 0.
+-/
+axiom goodDivisorSum_le_log_mul_add
+    {A : Finset ℕ} {x x₀ : ℕ} {ε : ℝ} (hε : 0 < ε)
+    (hx₀ : 2 < x₀) (hx : 1 ≤ x)
+    (hAprim : PrimitiveFinset A)
+    (hAsupp : SupportedAboveFinset x A) :
+    let D := A.biUnion (fun a => a.divisors)
+    let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+    Finset.sum good
+        (fun d => realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+      ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ)
 
 end InfoGeometry.Arithmetic

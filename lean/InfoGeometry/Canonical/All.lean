@@ -70,6 +70,8 @@ import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.BoundaryProjector
+import InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
+import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.BregmanTriality
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket

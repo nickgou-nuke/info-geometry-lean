@@ -465,7 +465,7 @@ theorem exists_moorePenroseInverse_global
 
   exact ⟨B, ⟨haba, hbab, habstar, hbastar⟩⟩
 
-attribute [rep_depth operator]
+attribute [rep_depth krein]
   IsMoorePenroseInverse
   IsDrazinInverse
   EinsteinAnomaly

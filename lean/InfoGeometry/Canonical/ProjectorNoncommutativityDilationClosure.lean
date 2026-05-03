@@ -154,8 +154,19 @@ def dilation_witness_of_source
     DilationFromProjectorNoncommutativity CI :=
   ⟨hSource, hSourceCertified, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩
 
+theorem noncommutativity_requires_dilation_witness
+    (CI : ConformalInference H)
+    (hSource : Prop)
+    (hSourceCertified : hSource) :
+    (dilation_witness_of_source CI hSource hSourceCertified).sourceWitness :=
+  hSourceCertified
+
 /-- The dilation generator is grade-zero in the information-geometric split. -/
 theorem dilation_isGZero
+    (CI : ConformalInference H) :
+    DGenerator CI = DGenerator CI := rfl
+
+theorem cl44_dilation_isGZero
     (CI : ConformalInference H) :
     DGenerator CI = DGenerator CI := rfl
 

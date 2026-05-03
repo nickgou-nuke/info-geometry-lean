@@ -318,6 +318,52 @@ def test_arango_http_execute_aql_follows_cursor(monkeypatch: pytest.MonkeyPatch)
     assert calls[0][2] == 12
 
 
+def test_arango_http_collection_helpers_build_expected_requests(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sys.path.insert(0, str((REPO / "src").resolve()))
+    from igf.graph import arango_http
+
+    calls = []
+    payloads = [
+        {"result": ["infogeometry"]},
+        {"result": [{"name": "ig_nodes"}]},
+        {},
+        {"count": 42},
+        {"created": 2, "errors": 0},
+    ]
+
+    def fake_urlopen(req, timeout):
+        calls.append((req.get_method(), req.full_url, req.data, dict(req.header_items())))
+        return FakeHttpResponse(payloads.pop(0))
+
+    monkeypatch.setattr(arango_http, "urlopen", fake_urlopen)
+    target = arango_http.ArangoHttpTarget(
+        endpoint="http://127.0.0.1:8530",
+        database="infogeometry",
+        username="root",
+        password="pw",
+    )
+
+    arango_http.ensure_database(target)
+    collections = arango_http.list_collections(target)
+    arango_http.create_collection(target, "ig_edges", edge=True)
+    count = arango_http.collection_count(target, "ig_nodes")
+    imported = arango_http.import_jsonl(target, "ig_nodes", b'{"_key":"a"}\n')
+
+    assert collections == {"ig_nodes": {"name": "ig_nodes"}}
+    assert count == 42
+    assert imported == {"created": 2, "errors": 0}
+    assert calls[0][0] == "GET"
+    assert calls[0][1].endswith("/_api/database")
+    assert calls[2][0] == "POST"
+    assert calls[2][1].endswith("/_db/infogeometry/_api/collection")
+    assert b'"type": 3' in calls[2][2]
+    assert calls[4][1].endswith(
+        "/_db/infogeometry/_api/import?collection=ig_nodes&type=documents&onDuplicate=replace&complete=true"
+    )
+
+
 def test_log_barrier_candidates_pipeline_is_routing_only(monkeypatch) -> None:
     sys.path.insert(0, str((REPO / "src").resolve()))
     from igf.pipeline import candidates

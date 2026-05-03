@@ -85,7 +85,7 @@ The Thermodynamic Gravity Equivalence:
 Spacetime exists when the thermal modular flow is identified with the 
 emergent Fierz vector derivation.
 -/
-@[rep_depth transport, capstone]
+@[rep_depth transport]
 def SpacetimeIsThermalFlow 
     (K_mod : 𝒜) (P : FierzGradeProjections 𝒜) (Ψ Φ : 𝒜) : Prop :=
   innerDerivation K_mod = emergentSpacetimeDerivation P Ψ Φ

@@ -1,5 +1,10 @@
 # Analytic Debt Audit (2026-03-14)
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 ## Build Status
 - `lake build -R`: PASS
 - Syntactic status: no errors; warnings only (mostly linter/style).

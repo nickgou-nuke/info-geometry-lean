@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation

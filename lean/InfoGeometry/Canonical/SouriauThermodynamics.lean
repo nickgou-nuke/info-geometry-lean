@@ -30,6 +30,134 @@ namespace InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.GrandCanonical
 
 /--
+Cartan projection surface for Souriau/Weyl character readouts.
+
+This is a functorial projection lane: it identifies the carrier and selected
+Cartan element used by finite character shadows.  Operator ownership remains in
+the representation and thermodynamic generator corridors.
+-/
+@[rep_depth thermo]
+structure CartanSubalgebra (LieAlgebra : Type*) where
+  cartanCarrier : Type*
+  thermalElement : LieAlgebra → cartanCarrier
+
+/--
+Finite Souriau temperature projection for character readouts.
+
+The full projective/operator temperature geometry lives in the thermodynamics
+operator sidecars; this structure is the scalar projection used by the finite
+Weyl/Souriau partition lane.
+-/
+@[rep_depth thermo]
+structure SouriauTemperature (Cartan : Type*) where
+  thermalElement : Cartan
+
+/--
+Finite thermal representation readout.
+
+The partition/character equality is supplied as witness data, so this surface
+does not assert a general Weyl character formula.
+-/
+@[rep_depth thermo]
+structure ThermalRepresentation (Cartan : Type*) where
+  character : Cartan → ℝ
+  partitionFunction : SouriauTemperature Cartan → ℝ
+  thermalElement : SouriauTemperature Cartan → Cartan
+  partitionFunction_eq_character :
+    ∀ T, partitionFunction T = character (thermalElement T)
+
+namespace ThermalRepresentation
+
+variable {Cartan : Type*} (R : ThermalRepresentation Cartan)
+
+@[rep_depth thermo]
+theorem partitionFunction_eq_character_at
+    (T : SouriauTemperature Cartan) :
+    R.partitionFunction T = R.character (R.thermalElement T) :=
+  R.partitionFunction_eq_character T
+
+end ThermalRepresentation
+
+@[rep_depth thermo]
+noncomputable def partitionFunction
+    {Cartan : Type*}
+    (R : ThermalRepresentation Cartan)
+    (T : SouriauTemperature Cartan) : ℝ :=
+  R.partitionFunction T
+
+@[rep_depth thermo]
+theorem partitionFunction_eq_character
+    {Cartan : Type*}
+    (R : ThermalRepresentation Cartan)
+    (T : SouriauTemperature Cartan) :
+    partitionFunction R T = R.character (R.thermalElement T) :=
+  R.partitionFunction_eq_character T
+
+/-- Generalized Souriau temperature surface for representation-theoretic callers. -/
+@[rep_depth thermo]
+structure GeneralizedSouriauTemperature (LieAlgebra : Type*) where
+  beta : ℝ
+  generator : LieAlgebra
+
+/-- Classical moment-map surface used by the Weyl/Souriau compatibility lane. -/
+@[rep_depth thermo]
+structure ClassicalMomentMap (Phase : Type*) (LieAlgebra : Type*) where
+  moment : Phase → LieAlgebra → ℝ
+
+@[rep_depth thermo]
+def classicalThermalHamiltonian
+    {Phase LieAlgebra : Type*}
+    (M : ClassicalMomentMap Phase LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra)
+    (x : Phase) : ℝ :=
+  T.beta * M.moment x T.generator
+
+@[rep_depth thermo]
+noncomputable def classicalGibbsWeight
+    {Phase LieAlgebra : Type*}
+    (M : ClassicalMomentMap Phase LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra)
+    (x : Phase) : ℝ :=
+  Real.exp (-(classicalThermalHamiltonian M T x))
+
+/-- Quantum representation layer with trace existence kept as witness data. -/
+@[rep_depth thermo]
+structure QuantumRepresentationLayer (State LieAlgebra : Type*) where
+  thermalGenerator : GeneralizedSouriauTemperature LieAlgebra → State → ℝ
+  traceExists : Prop
+
+@[rep_depth thermo]
+noncomputable def quantumThermalGenerator
+    {State LieAlgebra : Type*}
+    (R : QuantumRepresentationLayer State LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra)
+    (x : State) : ℝ :=
+  R.thermalGenerator T x
+
+@[rep_depth thermo]
+noncomputable def quantumPartitionFunction
+    {State LieAlgebra : Type*}
+    [Fintype State]
+    (R : QuantumRepresentationLayer State LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra) : ℝ :=
+  ∑ x, Real.exp (-(quantumThermalGenerator R T x))
+
+/-- Witness that a quantum trace decomposes into weight spaces before being read as a character. -/
+@[rep_depth thermo]
+structure WeightDecompositionWitness (State LieAlgebra : Type*) where
+  representation : QuantumRepresentationLayer State LieAlgebra
+  weightSpace : State → Prop
+  traceExists : representation.traceExists
+
+@[rep_depth thermo]
+noncomputable def quantumCharacterIfWeighted
+    {State LieAlgebra : Type*}
+    [Fintype State]
+    (W : WeightDecompositionWitness State LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra) : ℝ :=
+  quantumPartitionFunction W.representation T
+
+/--
 Finite moment-map shadow: the two owner observables used by the
 grand-canonical kernel.
 -/

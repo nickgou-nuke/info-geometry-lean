@@ -31,6 +31,7 @@ import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
+import InfoGeometry.Quantum.ThermofieldDouble
 
 namespace InfoGeometry
 

@@ -1,5 +1,10 @@
 # Deep Research: Lean4 + LLM Theorem Proving Landscape (as of 2026-04-18)
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../../README.md), [docs/README.md](../../docs/README.md), [docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md)
+
 ## Scope
 This note focuses on **recent (2025–2026)** public work relevant to your current architecture:
 - DAG/InfoTree-driven retrieval and training data generation

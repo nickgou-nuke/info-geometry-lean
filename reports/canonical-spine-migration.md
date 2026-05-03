@@ -1,5 +1,10 @@
 # Canonical Spine Migration
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 This note tracks which existing entry points are already routed through the
 canonical relative-geometry spine and which remain pending.
 

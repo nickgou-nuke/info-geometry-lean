@@ -150,18 +150,15 @@ theorem exactKKT_translator_shadow_packet
   [Fintype α] [Nonempty α]
     (C : SouriauFenchelContext (α := α))
     (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
-    (eta xβ xμ : ℝ) :
+  (eta xβ xμ : ℝ) :
     (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
       ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
   let K : KKTEntropyStationarityShadow := DimensionAgnosticKKTResiduals.exact.toShadow
-  have hK : K.coneAdmissible ∧ K.stationarity ∧
-      K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-    simpa [K] using
-      exactKKT_dimensionAgnostic_stationarity_packet
-  exact (structuredSouriauKKTTranslatorPacket (C := C) (K := K)
-    hPSD hK.1 hK.2.1 hK.2.2.1 hK.2.2.2 eta xβ xμ).2
+  simpa [K] using
+    (structuredSouriauKKTTranslatorPacket_ofExactResiduals (C := C)
+      hPSD eta xβ xμ).2
 
 /--
 The split `Cl(4,4)` / TKK lane is bridge-owned by the recursive split-Clifford

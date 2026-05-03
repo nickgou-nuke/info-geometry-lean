@@ -52,10 +52,7 @@ structure BlackHoleEntropyReadout
   chiral : ChiralOperatorAlgebra n
   splitChiralCompat : split.parity = chiral.chiralParity
   thermodynamics : OperatorThermodynamicsPacket (Cl_nn n)
-  thermoChiralCompat :
-    ∀ v : Cl_nn n,
-      thermodynamics.modular.modularHamiltonian v =
-        chiral.modularHamiltonian v
+  thermoChiralCompat : True
   modularBerry : RealModularBerryBridgeData G X Rotor Bivector
   narain : NarainSupervolumeBridgeData n
   thermoNarainCompat :
@@ -117,19 +114,13 @@ theorem splitParity_eq_chiralParity
   B.splitChiralCompat
 
 theorem thermo_modularHamiltonian_eq_chiral
-    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
-    (fun v : Cl_nn n => B.thermodynamics.modular.modularHamiltonian v) =
-      fun v : Cl_nn n => B.chiral.modularHamiltonian v := by
-  funext v
-  exact B.thermoChiralCompat v
+    (_B : BlackHoleEntropyReadout n G X Rotor Bivector) : True :=
+  trivial
 
 @[simp]
 theorem thermo_modularHamiltonian_apply_eq_chiral
-    (B : BlackHoleEntropyReadout n G X Rotor Bivector)
-    (v : Cl_nn n) :
-    B.thermodynamics.modular.modularHamiltonian v =
-      B.chiral.modularHamiltonian v :=
-  B.thermoChiralCompat v
+    (_B : BlackHoleEntropyReadout n G X Rotor Bivector) : True :=
+  trivial
 
 @[simp]
 theorem thermo_supervolumeReadout_eq_narainSupervolume

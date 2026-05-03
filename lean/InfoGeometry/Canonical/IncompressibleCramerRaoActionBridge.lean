@@ -138,6 +138,29 @@ theorem normalInference_of_incompressible
     (CI := CI) (H := H) bit x hScalePotential
 
 /--
+Compatibility projection to the operator-owner incompressible-bit theorem.
+
+The bit theorem remains the owner lane; this readout simply transports the
+negative-log-volume calibration through the Souriau-Fisher metric shadow.
+-/
+@[rep_depth thermo, capstone]
+theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E) :
+    CI.IsNormalInference := by
+  have hScale :
+      CI.chiralScale =
+        -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := by
+    simpa [souriauFisherMetricVolumePotential, souriauFisherMetricVolumeShadow,
+      souriauFisherMetricOperator, cramerRaoVolumePotential, cramerRaoVolumeShadow,
+      IncompressibleBitBridge.cramerRaoMetricOperatorOwner] using
+        CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
+  exact
+    IncompressibleBitBridge.isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
+        (CI := CI) (H := H) bit x hScale
+
+/--
 The same readout identifies the conformal unit of action with the negative
 Cramer-Rao log-volume mode.
 

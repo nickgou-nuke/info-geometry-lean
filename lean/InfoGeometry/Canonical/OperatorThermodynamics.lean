@@ -30,6 +30,108 @@ open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Algebraic.SplitSuperGeometry
 
 /--
+Operator-first thermodynamics packet.
+
+This is the noncommutative owner surface:
+- the modular operator / negative-log owner lives in `modular`;
+- the untraced exponential family and normalized operator state live in `family`;
+- scalar thermodynamic names are obtained only by readout on the operator state
+  at the chosen reference parameter.
+
+The older `OperatorThermodynamicsPacket` is retained as a derived shadow packet
+for downstream compatibility.
+-/
+structure OperatorFirstThermodynamicsPacket
+    (Param Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
+  /-- Modular Hamiltonian / negative-log operator owner. -/
+  modular : ModularHamiltonianSurprisalContext (H := Op)
+
+  /-- Untraced operatorial exponential family and normalized operator state. -/
+  family : OperatorialExponentialFamily Param Op
+
+  /-- Chosen parameter at which thermodynamic readouts are taken. -/
+  referenceParam : Param
+
+  /-- Partition function positivity at the chosen parameter. -/
+  partitionFunction_pos : 0 < family.partitionFunction referenceParam
+
+  /-- Relative-entropy readout on operator states. -/
+  relativeEntropyReadout : Op → ℝ
+
+  /-- Supervolume readout on operator states. -/
+  supervolumeReadout : Op → ℝ
+
+  /-- Relative entropy is read from the normalized operator state. -/
+  relativeEntropy_eq_readout :
+    relativeEntropyReadout (family.normalizedState referenceParam) =
+      - Real.log (family.partitionFunction referenceParam)
+
+  /-- Supervolume is read from the same operator state. -/
+  supervolume_eq_readout :
+    supervolumeReadout (family.normalizedState referenceParam) =
+      - Real.log (family.partitionFunction referenceParam)
+
+namespace OperatorFirstThermodynamicsPacket
+
+variable {Param Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+
+/-- The modular Hamiltonian readout. -/
+def modularHamiltonian (P : OperatorFirstThermodynamicsPacket Param Op) : Op →L[ℝ] Op :=
+  P.modular.modularHamiltonian
+
+/-- The negative-log modular operator readout. -/
+def negativeLogModularOperator (P : OperatorFirstThermodynamicsPacket Param Op) : Op →L[ℝ] Op :=
+  P.modular.negativeLogModularOperator
+
+/-- Scalar massieu shadow derived from the operatorial partition function. -/
+def massieuPotential (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
+  Real.log (P.family.partitionFunction P.referenceParam)
+
+/-- Scalar free-energy shadow derived from the operatorial partition function. -/
+def freeEnergy (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
+  - Real.log (P.family.partitionFunction P.referenceParam)
+
+/-- Relative entropy as an operator-state readout, not a primitive scalar field. -/
+def relativeEntropy (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
+  P.relativeEntropyReadout (P.family.normalizedState P.referenceParam)
+
+/-- Supervolume as an operator-state readout, not a primitive scalar field. -/
+def supervolumePotential (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
+  P.supervolumeReadout (P.family.normalizedState P.referenceParam)
+
+@[simp]
+theorem modularHamiltonian_eq_negativeLogModularOperator
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.modularHamiltonian = P.negativeLogModularOperator :=
+  P.modular.modularHamiltonian_eq_negativeLog
+
+@[simp]
+theorem massieuPotential_eq_log_partition
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.massieuPotential = Real.log (P.family.partitionFunction P.referenceParam) :=
+  rfl
+
+@[simp]
+theorem freeEnergy_eq_neg_log_partition
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.freeEnergy = - Real.log (P.family.partitionFunction P.referenceParam) :=
+  rfl
+
+@[simp]
+theorem relativeEntropy_eq_neg_massieu
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.relativeEntropy = - P.massieuPotential := by
+  rw [relativeEntropy, P.relativeEntropy_eq_readout, massieuPotential]
+
+@[simp]
+theorem supervolumePotential_eq_freeEnergy
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.supervolumePotential = P.freeEnergy := by
+  rw [supervolumePotential, P.supervolume_eq_readout, freeEnergy]
+
+end OperatorFirstThermodynamicsPacket
+
+/--
 Canonical operator thermodynamics packet.
 
 The new language is:
@@ -138,6 +240,48 @@ theorem supervolumePotential_eq_partitionPotential
   rw [P.supervolumePotential_eq_freeEnergy, P.freeEnergy_eq_neg_log_partition]
 
 end OperatorThermodynamicsPacket
+
+namespace OperatorFirstThermodynamicsPacket
+
+variable {Param Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+
+/--
+Compatibility projection into the older scalar-shadow packet.
+-/
+def toShadowPacket
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    OperatorThermodynamicsPacket Op where
+  modular := P.modular
+  partitionFunction := P.family.partitionFunction P.referenceParam
+  partitionFunction_pos := P.partitionFunction_pos
+  massieuPotential := P.massieuPotential
+  freeEnergy := P.freeEnergy
+  relativeEntropy := P.relativeEntropy
+  supervolumePotential := P.supervolumePotential
+  massieuPotential_eq_log_partition := P.massieuPotential_eq_log_partition
+  freeEnergy_eq_neg_log_partition := P.freeEnergy_eq_neg_log_partition
+  relativeEntropy_eq_neg_massieu := P.relativeEntropy_eq_neg_massieu
+  supervolumePotential_eq_freeEnergy := P.supervolumePotential_eq_freeEnergy
+
+@[simp]
+theorem toShadowPacket_partitionFunction
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.toShadowPacket.partitionFunction = P.family.partitionFunction P.referenceParam :=
+  rfl
+
+@[simp]
+theorem toShadowPacket_freeEnergy
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.toShadowPacket.freeEnergy = P.freeEnergy :=
+  rfl
+
+@[simp]
+theorem toShadowPacket_relativeEntropy
+    (P : OperatorFirstThermodynamicsPacket Param Op) :
+    P.toShadowPacket.relativeEntropy = P.relativeEntropy :=
+  rfl
+
+end OperatorFirstThermodynamicsPacket
 
 /--
 Compatibility shadow for the first quantization law.

@@ -27,6 +27,13 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.pathing import normalize_user_path, repo_root
+from tools.infra.arango_env import (
+    arango_database,
+    arango_endpoint,
+    arango_password,
+    arango_username,
+    load_repo_arango_env,
+)
 from tools.planner.admissibility import rank_admissibility_prechecks
 from tools.planner.common import (
     DIAG_PROVENANCE_WEIGHT,
@@ -62,8 +69,19 @@ from tools.planner.report import make_markdown_report
 
 def parse_args() -> argparse.Namespace:
     root = repo_root()
+    load_repo_arango_env(root)
 
     parser = argparse.ArgumentParser(description="Planning-only vacuity planner orchestrator")
+    parser.add_argument(
+        "--graph-source",
+        choices=["auto", "artifacts", "arango"],
+        default="artifacts",
+        help=(
+            "Source for declaration and dependency graph metadata. "
+            "`artifacts` preserves the original JSONL behavior; `arango` "
+            "loads live graph collections; `auto` tries Arango then falls back."
+        ),
+    )
     parser.add_argument("--bridge-input", action="append", default=[], help="JSON file/dir/glob with bridge payload data")
     parser.add_argument(
         "--theorem-significance",
@@ -93,6 +111,14 @@ def parse_args() -> argparse.Namespace:
         or (root / "index" / "edges.jsonl"),
         help="Dependency edge metadata JSONL",
     )
+    parser.add_argument("--arango-url", default=arango_endpoint())
+    parser.add_argument("--arango-db", default=arango_database())
+    parser.add_argument("--arango-user", default=arango_username())
+    parser.add_argument("--arango-password", default=arango_password())
+    parser.add_argument("--arango-nodes-collection", default="ig_nodes")
+    parser.add_argument("--arango-edges-collection", default="ig_edges")
+    parser.add_argument("--arango-limit-nodes", type=int, default=200000)
+    parser.add_argument("--arango-limit-edges", type=int, default=500000)
     parser.add_argument(
         "--module-graph",
         type=Path,
@@ -127,6 +153,95 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _load_graph_from_arango(args: argparse.Namespace) -> tuple[dict[str, JsonObj], dict[str, list[tuple[str, str]]]]:
+    root = repo_root()
+    src_root = root / "src"
+    if str(src_root) not in sys.path:
+        sys.path.insert(0, str(src_root))
+
+    from igf.graph import ArangoHttpTarget, execute_aql
+
+    target = ArangoHttpTarget(
+        endpoint=str(args.arango_url).rstrip("/"),
+        database=str(args.arango_db),
+        username=str(args.arango_user),
+        password=str(args.arango_password),
+    )
+    node_rows = execute_aql(
+        target,
+        """
+        FOR n IN @@nodes
+          LIMIT @limit
+          RETURN {
+            name: n.name,
+            kind: n.kind,
+            module: n.module,
+            file: n.file,
+            line: n.line,
+            column: n.column,
+            doc: n.doc,
+            attrs: n.attrs,
+            typeFingerprint: n.typeFingerprint,
+            valueFingerprint: n.valueFingerprint
+          }
+        """,
+        {"@nodes": str(args.arango_nodes_collection), "limit": int(args.arango_limit_nodes)},
+        timeout=60,
+    )
+    edge_rows = execute_aql(
+        target,
+        """
+        FOR e IN @@edges
+          LIMIT @limit
+          RETURN {
+            src: e.src != null ? e.src : PARSE_IDENTIFIER(e._from).key,
+            dst: e.dst != null ? e.dst : PARSE_IDENTIFIER(e._to).key,
+            kind: e.kind != null ? e.kind : "value"
+          }
+        """,
+        {"@edges": str(args.arango_edges_collection), "limit": int(args.arango_limit_edges)},
+        timeout=60,
+    )
+
+    decls: dict[str, JsonObj] = {}
+    for row in node_rows:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("name")
+        if not name:
+            continue
+        decls[str(name)] = cast(JsonObj, row)
+
+    forward: dict[str, list[tuple[str, str]]] = {}
+    for row in edge_rows:
+        if not isinstance(row, dict):
+            continue
+        src = row.get("src")
+        dst = row.get("dst")
+        if not src or not dst:
+            continue
+        forward.setdefault(str(src), []).append((str(dst), str(row.get("kind") or "value")))
+    return decls, forward
+
+
+def _load_graph_inputs(
+    args: argparse.Namespace, decls_path: Path, edges_path: Path
+) -> tuple[str, dict[str, JsonObj], dict[str, list[tuple[str, str]]]]:
+    if args.graph_source in {"auto", "arango"}:
+        try:
+            decls, forward_edges = _load_graph_from_arango(args)
+            if decls:
+                return "arango", decls, forward_edges
+            if args.graph_source == "arango":
+                raise RuntimeError("Arango graph source returned no declarations")
+        except Exception:
+            if args.graph_source == "arango":
+                raise
+
+    forward_edges, _ = load_edges(edges_path)
+    return "artifacts", load_decl_index(decls_path), forward_edges
+
+
 def main() -> None:
     root = repo_root()
     args = parse_args()
@@ -145,8 +260,7 @@ def main() -> None:
         raise RuntimeError(f"Expected list in theorem significance report: {theorem_significance_path}")
     theorem_entries: list[JsonObj] = [cast(JsonObj, row) for row in theorem_entries_raw if isinstance(row, dict)]
 
-    decls = load_decl_index(decls_path)
-    forward_edges, _ = load_edges(edges_path)
+    graph_source_used, decls, forward_edges = _load_graph_inputs(args, decls_path, edges_path)
     module_region, file_region = load_module_regions(module_graph_path, root)
     owner_entries = load_owner_index(owner_index_path)
 
@@ -243,6 +357,10 @@ def main() -> None:
             "proofHolesByFilePath": relpath_or_self(proof_holes_path, root) if proof_holes_path.exists() else None,
             "bridgeInputPaths": [relpath_or_self(p, root) for p in bridge_json_paths],
             "theoremSignificanceEntries": len(theorem_entries),
+            "graphSourceRequested": args.graph_source,
+            "graphSourceUsed": graph_source_used,
+            "arangoNodesCollection": args.arango_nodes_collection if graph_source_used == "arango" else None,
+            "arangoEdgesCollection": args.arango_edges_collection if graph_source_used == "arango" else None,
             "declarationCount": len(decls),
             "edgeCount": sum(len(v) for v in forward_edges.values()),
             "ownerEntries": len(owner_entries),

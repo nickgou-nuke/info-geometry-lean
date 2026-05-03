@@ -20,8 +20,12 @@ from collections import defaultdict
 from pathlib import Path
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    _REPO_ROOT = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(_REPO_ROOT))
+    sys.path.insert(0, str(_REPO_ROOT / "src"))
     from tools.infra.causal_cone_spectrum import (
+        DEFAULT_ARANGO_DEPTH_TAGS_COLLECTION,
+        DEFAULT_ARANGO_STRUCTURE_COLLECTION,
         OwnParityCache,
         SigCache,
         binding_mass,
@@ -31,7 +35,9 @@ if __package__ in (None, ""):
         forward_cone_bfs,
         load_decl_index,
         load_depth_tags,
+        load_depth_tags_from_arango,
         load_structure,
+        load_structure_from_arango,
         past_cone_bfs,
         precompute_own_parities,
         precompute_signatures,
@@ -44,6 +50,8 @@ if __package__ in (None, ""):
     from tools.pathing import repo_root
 else:
     from tools.infra.causal_cone_spectrum import (
+        DEFAULT_ARANGO_DEPTH_TAGS_COLLECTION,
+        DEFAULT_ARANGO_STRUCTURE_COLLECTION,
         OwnParityCache,
         SigCache,
         binding_mass,
@@ -53,7 +61,9 @@ else:
         forward_cone_bfs,
         load_decl_index,
         load_depth_tags,
+        load_depth_tags_from_arango,
         load_structure,
+        load_structure_from_arango,
         past_cone_bfs,
         precompute_own_parities,
         precompute_signatures,
@@ -731,6 +741,20 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Apex defect profiler (SCC-condensed DAG)")
     ap.add_argument("--structure", default=DEFAULT_STRUCTURE)
     ap.add_argument("--depth-tags", default=DEFAULT_DEPTH_TAGS)
+    ap.add_argument(
+        "--graph-source",
+        choices=["auto", "artifacts", "arango"],
+        default="artifacts",
+        help="Topology/depth source. Default preserves artifact-file behavior.",
+    )
+    ap.add_argument("--arango-url", default=None, help="Arango endpoint; defaults to repo env.")
+    ap.add_argument("--arango-db", default=None, help="Arango database; defaults to repo env.")
+    ap.add_argument("--arango-user", default=None, help="Arango user; defaults to repo env.")
+    ap.add_argument("--arango-password", default=None, help="Arango password; defaults to repo env.")
+    ap.add_argument("--arango-structure-collection", default=DEFAULT_ARANGO_STRUCTURE_COLLECTION)
+    ap.add_argument("--arango-depth-tags-collection", default=DEFAULT_ARANGO_DEPTH_TAGS_COLLECTION)
+    ap.add_argument("--arango-limit-components", type=int, default=200_000)
+    ap.add_argument("--arango-limit-depth-tags", type=int, default=500_000)
     ap.add_argument("--significance", default=DEFAULT_SIGNIFICANCE)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
@@ -746,11 +770,50 @@ def main() -> int:
     root = repo_root()
     t0 = time.time()
 
+    graph_source_used = "artifacts"
     print("[defect] loading structural topology ...")
-    payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+    if args.graph_source in {"auto", "arango"}:
+        try:
+            from igf.config import load_arango_config
+
+            cfg = load_arango_config(root)
+            endpoint = args.arango_url or cfg.endpoint
+            database = args.arango_db or cfg.database
+            username = args.arango_user or cfg.user
+            password = args.arango_password if args.arango_password is not None else cfg.password
+            payload, comp_by_id, comp_by_rep, comp_by_member = load_structure_from_arango(
+                endpoint=endpoint,
+                database=database,
+                username=username,
+                password=password,
+                collection=args.arango_structure_collection,
+                limit=args.arango_limit_components,
+            )
+            depth_tags = load_depth_tags_from_arango(
+                endpoint=endpoint,
+                database=database,
+                username=username,
+                password=password,
+                collection=args.arango_depth_tags_collection,
+                limit=args.arango_limit_depth_tags,
+            )
+            graph_source_used = "arango"
+            print(
+                f"[defect] loaded Arango collections "
+                f"{args.arango_structure_collection!r}, {args.arango_depth_tags_collection!r}"
+            )
+        except Exception as exc:
+            if args.graph_source == "arango":
+                raise
+            print(f"[defect] WARN: Arango source unavailable ({exc}); falling back to artifacts")
+            payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+            depth_tags = load_depth_tags(root / args.depth_tags)
+    else:
+        payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+        depth_tags = load_depth_tags(root / args.depth_tags)
+
     verify_edge_pair_consistency(comp_by_id)
     verify_edge_semantics(payload, comp_by_id)
-    depth_tags = load_depth_tags(root / args.depth_tags)
     decl_index = load_decl_index(root / "artifacts" / "dag" / "index" / "decls.jsonl")
     sorry_set = load_sorry_set(root / args.significance)
     n_comp = len(comp_by_id)
@@ -782,6 +845,14 @@ def main() -> int:
 
     out = {
         "scope": "SCC-condensed DAG (structural-topology.json)",
+        "graph_source": {
+            "requested": args.graph_source,
+            "used": graph_source_used,
+            "structure_artifact": args.structure,
+            "depth_tags_artifact": args.depth_tags,
+            "arango_structure_collection": args.arango_structure_collection,
+            "arango_depth_tags_collection": args.arango_depth_tags_collection,
+        },
         "components": n_comp,
         "apexes_analyzed": len(dossiers),
         "dossiers": dossiers,

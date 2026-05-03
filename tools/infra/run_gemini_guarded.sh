@@ -48,7 +48,9 @@ build_guard_args() {
   if [[ -n "${JITTER_SECONDS}" ]]; then
     guard_args+=(--jitter-seconds "${JITTER_SECONDS}")
   fi
-  printf '%s\n' "${guard_args[@]}"
+  if [[ ${#guard_args[@]} -gt 0 ]]; then
+    printf '%s\n' "${guard_args[@]}"
+  fi
 }
 
 while [[ $# -gt 0 ]]; do

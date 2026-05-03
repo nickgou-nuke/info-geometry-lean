@@ -27,6 +27,7 @@ import InfoGeometry.SuperMetriplectic.DarkEnergyMapping
 import InfoGeometry.SuperMetriplectic.CriticalStiffness
 import InfoGeometry.SuperMetriplectic.OperatorKLBKM
 import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
+import InfoGeometry.SuperMetriplectic.MicroscopicEntropyCalibration
 import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
 import InfoGeometry.SuperMetriplectic.OperatorLorentzCurvature
 import InfoGeometry.Algebraic.SplitSuperGeometry

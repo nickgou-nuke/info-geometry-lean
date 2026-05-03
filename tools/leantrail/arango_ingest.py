@@ -2,15 +2,16 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
-import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
-from urllib.error import HTTPError
-from urllib.parse import quote
-from urllib.request import Request, urlopen
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "src"
+for path in (REPO_ROOT, SRC_ROOT):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 from tools.infra.arango_env import (
     arango_database,
@@ -18,6 +19,15 @@ from tools.infra.arango_env import (
     arango_password,
     arango_username,
     load_repo_arango_env,
+)
+from igf.graph import (
+    ArangoHttpTarget,
+    collection_count,
+    create_collection,
+    ensure_database,
+    import_jsonl,
+    list_collections,
+    truncate_collection,
 )
 
 
@@ -31,125 +41,16 @@ class ArangoTarget:
     edges_collection: str
 
 
-def _auth_header(username: str, password: str) -> str:
-    token = base64.b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
-    return f"Basic {token}"
-
-
-def _request_json(
-    method: str,
-    url: str,
-    *,
-    username: str,
-    password: str,
-    payload: dict[str, Any] | list[Any] | None = None,
-    raw_body: bytes | None = None,
-    content_type: str = "application/json",
-) -> dict[str, Any]:
-    body: bytes | None
-    if raw_body is not None:
-        body = raw_body
-    elif payload is not None:
-        body = json.dumps(payload, ensure_ascii=True).encode("utf-8")
-    else:
-        body = None
-
-    req = Request(url, data=body, method=method)
-    req.add_header("Authorization", _auth_header(username, password))
-    req.add_header("Accept", "application/json")
-    if body is not None:
-        req.add_header("Content-Type", content_type)
-
-    try:
-        with urlopen(req) as resp:
-            raw = resp.read().decode("utf-8")
-            if not raw:
-                return {}
-            try:
-                return json.loads(raw)
-            except Exception:
-                return {"raw": raw}
-    except HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"HTTP {exc.code} {url}: {raw}") from exc
-
-
-def _db_url(target: ArangoTarget, path: str) -> str:
-    return f"{target.endpoint}/_db/{quote(target.database)}/{path.lstrip('/')}"
-
-
-def _sys_url(target: ArangoTarget, path: str) -> str:
-    return f"{target.endpoint}/{path.lstrip('/')}"
-
-
-def _ensure_database(target: ArangoTarget) -> None:
-    dbs = _request_json(
-        "GET",
-        _sys_url(target, "/_api/database"),
-        username=target.username,
-        password=target.password,
-    )
-    names = dbs.get("result") if isinstance(dbs, dict) else None
-    if isinstance(names, list) and target.database in names:
-        return
-
-    _request_json(
-        "POST",
-        _sys_url(target, "/_api/database"),
-        username=target.username,
-        password=target.password,
-        payload={"name": target.database},
-    )
-
-
-def _list_collections(target: ArangoTarget) -> dict[str, dict[str, Any]]:
-    payload = _request_json(
-        "GET",
-        _db_url(target, "/_api/collection"),
-        username=target.username,
-        password=target.password,
-    )
-    out: dict[str, dict[str, Any]] = {}
-    for row in payload.get("result", []) if isinstance(payload, dict) else []:
-        if isinstance(row, dict):
-            name = str(row.get("name", "")).strip()
-            if name:
-                out[name] = row
-    return out
-
-
-def _create_collection(target: ArangoTarget, name: str, *, edge: bool) -> None:
-    _request_json(
-        "POST",
-        _db_url(target, "/_api/collection"),
-        username=target.username,
-        password=target.password,
-        payload={
-            "name": name,
-            "type": 3 if edge else 2,
-            "waitForSync": False,
-        },
-    )
-
-
-def _truncate_collection(target: ArangoTarget, name: str) -> None:
-    _request_json(
-        "PUT",
-        _db_url(target, f"/_api/collection/{quote(name)}/truncate"),
-        username=target.username,
-        password=target.password,
-    )
-
-
 def _ensure_collections(target: ArangoTarget, *, drop_existing: bool) -> None:
-    collections = _list_collections(target)
+    http_target = _http_target(target)
+    collections = list_collections(http_target)
 
     for name, edge in ((target.nodes_collection, False), (target.edges_collection, True)):
         if name not in collections:
-            _create_collection(target, name, edge=edge)
+            create_collection(http_target, name, edge=edge)
             continue
         if drop_existing:
-            _truncate_collection(target, name)
+            truncate_collection(http_target, name)
 
 
 def _read_text(path: Path) -> bytes:
@@ -158,33 +59,21 @@ def _read_text(path: Path) -> bytes:
     return path.read_bytes()
 
 
-def _import_jsonl(target: ArangoTarget, collection: str, payload: bytes) -> dict[str, Any]:
-    url = _db_url(
-        target,
-        f"/_api/import?collection={quote(collection)}&type=documents&onDuplicate=replace&complete=true",
-    )
-    return _request_json(
-        "POST",
-        url,
+def _http_target(target: ArangoTarget) -> ArangoHttpTarget:
+    return ArangoHttpTarget(
+        endpoint=target.endpoint.rstrip("/"),
+        database=target.database,
         username=target.username,
         password=target.password,
-        raw_body=payload,
-        content_type="application/json",
     )
+
+
+def _import_jsonl(target: ArangoTarget, collection: str, payload: bytes) -> dict[str, Any]:
+    return import_jsonl(_http_target(target), collection, payload)
 
 
 def _collection_count(target: ArangoTarget, collection: str) -> int:
-    out = _request_json(
-        "GET",
-        _db_url(target, f"/_api/collection/{quote(collection)}/count"),
-        username=target.username,
-        password=target.password,
-    )
-    if isinstance(out, dict):
-        count = out.get("count")
-        if isinstance(count, int):
-            return count
-    return -1
+    return collection_count(_http_target(target), collection)
 
 
 def _parse_args() -> argparse.Namespace:
@@ -224,7 +113,7 @@ def main() -> int:
     nodes_path = input_dir / "ig_nodes.jsonl"
     edges_path = input_dir / "ig_edges.jsonl"
 
-    _ensure_database(target)
+    ensure_database(_http_target(target))
     _ensure_collections(target, drop_existing=bool(args.drop_existing))
 
     nodes_import = _import_jsonl(target, target.nodes_collection, _read_text(nodes_path))

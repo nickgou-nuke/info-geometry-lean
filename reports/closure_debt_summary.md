@@ -1,5 +1,10 @@
 # Hypothesis Debt Index
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 - generated_at: `2026-04-26T07:05:57+00:00`
 - declarations_scored: `26`
 - files_scored: `2`

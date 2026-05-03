@@ -64,7 +64,7 @@ def compute_layout(G: nx.DiGraph) -> dict[str, tuple[float, float]]:
     )
     
     # 2. Rescale, Center, and Layer-Snap
-    max_rank = max((data.get("topo_rank", 0) for _, data in G.nodes(data=True)), default=30000)
+    max_rank = max(1, max((data.get("topo_rank", 0) or 0 for _, data in G.nodes(data=True)), default=30000))
     xs = [p[0] for p in pos.values()]
     avg_x = sum(xs) / len(xs) if xs else 0
     
@@ -75,10 +75,10 @@ def compute_layout(G: nx.DiGraph) -> dict[str, tuple[float, float]]:
         
         # Vertical: Spire snap or Normalized Rank distribution
         if depth is not None:
-            y = -depth * 1000
+            y = -depth * 100
         else:
             rank = data.get("topo_rank", 0)
-            y = -(rank / max_rank) * (5 * 1000)
+            y = -600 if rank == 0 else -(rank / max_rank) * (6 * 100)
             
         # Horizontal: Significant centering and spreading
         relaxed_pos[n_id] = ((x - avg_x) * 6000, y)

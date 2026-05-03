@@ -36,7 +36,9 @@ from pathlib import Path
 from typing import Any, TypeAlias
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    _REPO_ROOT = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(_REPO_ROOT))
+    sys.path.insert(0, str(_REPO_ROOT / "src"))
     from tools.pathing import repo_root
 else:
     from tools.pathing import repo_root
@@ -46,6 +48,8 @@ DEFAULT_STRUCTURE = "artifacts/dag/structural-topology.json"
 DEFAULT_DEPTH_TAGS = "artifacts/dag/representation-depth-tags.json"
 DEFAULT_JSON_OUT = "reports/dag/causal-cone-spectrum.json"
 DEFAULT_MD_OUT = "reports/dag/causal-cone-spectrum.md"
+DEFAULT_ARANGO_STRUCTURE_COLLECTION = "ig_structural_components"
+DEFAULT_ARANGO_DEPTH_TAGS_COLLECTION = "ig_representation_depth_tags"
 
 # Only coherence-bearing roles contribute to mass and witness logic.
 COHERENCE_ROLE_WEIGHTS = {
@@ -204,6 +208,82 @@ def load_structure(path: Path):
     return payload, comp_by_id, comp_by_rep, comp_by_member
 
 
+def _extract_arango_payload(rows: list[dict[str, Any]], *, list_key: str) -> dict[str, Any]:
+    """Accept either one document containing `list_key` or one document per row."""
+    if len(rows) == 1 and isinstance(rows[0].get(list_key), list):
+        payload = dict(rows[0])
+        payload.pop("_id", None)
+        payload.pop("_key", None)
+        payload.pop("_rev", None)
+        return payload
+    return {list_key: rows}
+
+
+def load_structure_from_arango(
+    *,
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    collection: str,
+    limit: int,
+):
+    try:
+        from igf.graph import ArangoHttpTarget, execute_aql
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("Arango mode requires the package module `igf.graph`.") from exc
+
+    target = ArangoHttpTarget(endpoint=endpoint, database=database, username=username, password=password)
+    rows = execute_aql(
+        target,
+        """
+        FOR c IN @@collection
+          LIMIT @limit
+          RETURN UNSET(c, "_id", "_rev")
+        """,
+        bind_vars={"@collection": collection, "limit": limit},
+    )
+    payload = _extract_arango_payload([r for r in rows if isinstance(r, dict)], list_key="components")
+    payload.setdefault("orientation", EXPECTED_ORIENTATION_MARKER)
+
+    comp_by_id: dict[str, dict] = {}
+    comp_by_rep: dict[str, dict] = {}
+    comp_by_member: dict[str, dict] = {}
+
+    for row in _require_components(payload):
+        if not isinstance(row, dict):
+            sys.exit("[cone] FATAL: every Arango component row must be an object.")
+        cid = row.get("componentId", row.get("_key"))
+        rep = row.get("representative", cid)
+        if not isinstance(cid, str) or not cid:
+            sys.exit("[cone] FATAL: encountered Arango component without componentId or _key.")
+        if not isinstance(rep, str) or not rep:
+            rep = cid
+        normalized = dict(row)
+        normalized["componentId"] = cid
+        normalized["representative"] = rep
+        normalized.setdefault("dependencyComponentIds", [])
+        normalized.setdefault("reverseDependentComponentIds", [])
+
+        if cid in comp_by_id:
+            sys.exit(f"[cone] FATAL: duplicate componentId detected in Arango: {cid}")
+        if rep in comp_by_rep:
+            sys.exit(f"[cone] FATAL: duplicate representative detected in Arango: {rep}")
+        comp_by_id[cid] = normalized
+        comp_by_rep[rep] = normalized
+        for member in _iter_component_members(normalized):
+            prior = comp_by_member.get(member)
+            if prior is not None and prior.get("componentId") != cid:
+                sys.exit(
+                    f"[cone] FATAL: Arango member {member!r} appears in multiple components: "
+                    f"{prior.get('componentId')} and {cid}"
+                )
+            comp_by_member[member] = normalized
+
+    payload["components"] = list(comp_by_id.values())
+    return payload, comp_by_id, comp_by_rep, comp_by_member
+
+
 def load_depth_tags(path: Path) -> dict[str, dict]:
     if not path.exists():
         return {}
@@ -224,6 +304,47 @@ def load_depth_tags(path: Path) -> dict[str, dict]:
         name = e.get("name")
         if isinstance(name, str) and name:
             out[name] = e
+    return out
+
+
+def load_depth_tags_from_arango(
+    *,
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    collection: str,
+    limit: int,
+) -> dict[str, dict]:
+    try:
+        from igf.graph import ArangoHttpTarget, execute_aql
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("Arango mode requires the package module `igf.graph`.") from exc
+
+    target = ArangoHttpTarget(endpoint=endpoint, database=database, username=username, password=password)
+    rows = execute_aql(
+        target,
+        """
+        FOR t IN @@collection
+          LIMIT @limit
+          RETURN UNSET(t, "_id", "_rev")
+        """,
+        bind_vars={"@collection": collection, "limit": limit},
+    )
+    payload = _extract_arango_payload([r for r in rows if isinstance(r, dict)], list_key="declarations")
+    entries = payload.get("declarations", payload.get("tags", rows)) if isinstance(payload, dict) else rows
+    if not isinstance(entries, list):
+        return {}
+
+    out: dict[str, dict] = {}
+    for row in entries:
+        if not isinstance(row, dict):
+            continue
+        name = row.get("name", row.get("_key"))
+        if isinstance(name, str) and name:
+            normalized = dict(row)
+            normalized["name"] = name
+            out[name] = normalized
     return out
 
 
@@ -920,6 +1041,20 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Causal cone spectrum (SCC-condensed DAG)")
     ap.add_argument("--structure", default=DEFAULT_STRUCTURE)
     ap.add_argument("--depth-tags", default=DEFAULT_DEPTH_TAGS)
+    ap.add_argument(
+        "--graph-source",
+        choices=["auto", "artifacts", "arango"],
+        default="artifacts",
+        help="Topology/depth source. Default preserves artifact-file behavior.",
+    )
+    ap.add_argument("--arango-url", default=None, help="Arango endpoint; defaults to repo env.")
+    ap.add_argument("--arango-db", default=None, help="Arango database; defaults to repo env.")
+    ap.add_argument("--arango-user", default=None, help="Arango user; defaults to repo env.")
+    ap.add_argument("--arango-password", default=None, help="Arango password; defaults to repo env.")
+    ap.add_argument("--arango-structure-collection", default=DEFAULT_ARANGO_STRUCTURE_COLLECTION)
+    ap.add_argument("--arango-depth-tags-collection", default=DEFAULT_ARANGO_DEPTH_TAGS_COLLECTION)
+    ap.add_argument("--arango-limit-components", type=int, default=200_000)
+    ap.add_argument("--arango-limit-depth-tags", type=int, default=500_000)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     ap.add_argument(
@@ -940,12 +1075,51 @@ def main() -> int:
     root = repo_root()
     t0 = time.time()
 
+    graph_source_used = "artifacts"
     print("[cone] loading structural topology ...")
-    payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+    if args.graph_source in {"auto", "arango"}:
+        try:
+            from igf.config import load_arango_config
+
+            cfg = load_arango_config(root)
+            endpoint = args.arango_url or cfg.endpoint
+            database = args.arango_db or cfg.database
+            username = args.arango_user or cfg.user
+            password = args.arango_password if args.arango_password is not None else cfg.password
+            payload, comp_by_id, comp_by_rep, comp_by_member = load_structure_from_arango(
+                endpoint=endpoint,
+                database=database,
+                username=username,
+                password=password,
+                collection=args.arango_structure_collection,
+                limit=args.arango_limit_components,
+            )
+            depth_tags = load_depth_tags_from_arango(
+                endpoint=endpoint,
+                database=database,
+                username=username,
+                password=password,
+                collection=args.arango_depth_tags_collection,
+                limit=args.arango_limit_depth_tags,
+            )
+            graph_source_used = "arango"
+            print(
+                f"[cone] loaded Arango collections "
+                f"{args.arango_structure_collection!r}, {args.arango_depth_tags_collection!r}"
+            )
+        except Exception as exc:
+            if args.graph_source == "arango":
+                raise
+            print(f"[cone] WARN: Arango source unavailable ({exc}); falling back to artifacts")
+            payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+            depth_tags = load_depth_tags(root / args.depth_tags)
+    else:
+        payload, comp_by_id, comp_by_rep, comp_by_member = load_structure(root / args.structure)
+        depth_tags = load_depth_tags(root / args.depth_tags)
+
     verify_edge_pair_consistency(comp_by_id)
     verify_edge_semantics(payload, comp_by_id)
 
-    depth_tags = load_depth_tags(root / args.depth_tags)
     decl_index = load_decl_index(root / "artifacts" / "dag" / "index" / "decls.jsonl")
 
     n_comp = len(comp_by_id)
@@ -988,6 +1162,14 @@ def main() -> int:
 
     out = {
         "scope": "SCC-condensed DAG (structural-topology.json)",
+        "graph_source": {
+            "requested": args.graph_source,
+            "used": graph_source_used,
+            "structure_artifact": args.structure,
+            "depth_tags_artifact": args.depth_tags,
+            "arango_structure_collection": args.arango_structure_collection,
+            "arango_depth_tags_collection": args.arango_depth_tags_collection,
+        },
         "components": n_comp,
         "apexes_analyzed": len(results),
         "results": results,

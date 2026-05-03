@@ -60,6 +60,7 @@ import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
+import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge

@@ -1,5 +1,10 @@
 # ⚖️ Pauli Authority Audit: Truthful Significance Index
 
+> Status: `generated/historical report`
+> Audited: 2026-05-02
+> Note: Treat this as a snapshot. Regenerate before relying on it.
+> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
+
 > **Protocol:** Truth lives in Lean; structure lives in the graph.
 > **Snapshot:** 26877 declarations analysed via Pauli Authority.
 

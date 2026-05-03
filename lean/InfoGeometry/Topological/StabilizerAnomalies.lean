@@ -41,15 +41,20 @@ Stabilizer anomaly data for a cocycle at a fixed point.
 This is the algebraic extraction of the orbifold-corner anomaly.
 -/
 structure StabilizerAnomalyData
+    (Γ X : Type*)
+    [Group Γ] [MulAction Γ X]
     {R : Type*} [Group R] where
-  point : UpperHalfPlane
-  stabilizer : Subgroup SL2Z
+  point : X
+  stabilizer : Subgroup Γ
   stabilizes : ∀ γ ∈ stabilizer, γ • point = point
   anomalyHom : stabilizer →* R
 
 namespace StabilizerAnomalyData
 
-variable {R₁ R₂ : Type*} [Group R₁] [Group R₂]
+variable
+    {Γ X : Type*}
+    [Group Γ] [MulAction Γ X]
+    {R₁ R₂ : Type*} [Group R₁] [Group R₂]
 
 /--
 Push a stabilizer anomaly forward along a target group homomorphism.
@@ -57,8 +62,8 @@ Push a stabilizer anomaly forward along a target group homomorphism.
 This is the stable interface for mapping the concrete circle phase into any
 chosen rotor carrier.
 -/
-def mapTarget (A : StabilizerAnomalyData (R := R₁)) (f : R₁ →* R₂) :
-    StabilizerAnomalyData (R := R₂) where
+def mapTarget (A : StabilizerAnomalyData Γ X (R := R₁)) (f : R₁ →* R₂) :
+    StabilizerAnomalyData Γ X (R := R₂) where
   point := A.point
   stabilizer := A.stabilizer
   stabilizes := A.stabilizes
@@ -66,7 +71,7 @@ def mapTarget (A : StabilizerAnomalyData (R := R₁)) (f : R₁ →* R₂) :
 
 @[simp]
 theorem mapTarget_anomalyHom
-    (A : StabilizerAnomalyData (R := R₁)) (f : R₁ →* R₂) :
+    (A : StabilizerAnomalyData Γ X (R := R₁)) (f : R₁ →* R₂) :
     (A.mapTarget f).anomalyHom = f.comp A.anomalyHom :=
   rfl
 
@@ -85,7 +90,7 @@ def stabilizerAnomaly
     (point : UpperHalfPlane)
     (stab : Subgroup SL2Z)
     (hstab : ∀ γ ∈ stab, γ • point = point) :
-    StabilizerAnomalyData (R := R) where
+    StabilizerAnomalyData SL2Z UpperHalfPlane (R := R) where
   point := point
   stabilizer := stab
   stabilizes := hstab
@@ -100,7 +105,7 @@ def stabilizerAnomalyAtI
       SL2Z UpperHalfPlane R)
     (stab : Subgroup SL2Z)
     (hstab : ∀ γ ∈ stab, γ • UpperHalfPlane.I = UpperHalfPlane.I) :
-    StabilizerAnomalyData (R := R) :=
+    StabilizerAnomalyData SL2Z UpperHalfPlane (R := R) :=
   stabilizerAnomaly C UpperHalfPlane.I stab hstab
 
 /--
@@ -116,7 +121,7 @@ def stabilizerAnomalyAtSecondEllipticPoint
     (rhoPoint : UpperHalfPlane)
     (stab : Subgroup SL2Z)
     (hstab : ∀ γ ∈ stab, γ • rhoPoint = rhoPoint) :
-    StabilizerAnomalyData (R := R) :=
+    StabilizerAnomalyData SL2Z UpperHalfPlane (R := R) :=
   stabilizerAnomaly C rhoPoint stab hstab
 
 /--
@@ -151,7 +156,7 @@ def exactPhaseStabilizerAnomaly
     (point : UpperHalfPlane)
     (stab : Subgroup SL2Z)
     (hstab : ∀ γ ∈ stab, γ • point = point) :
-    StabilizerAnomalyData (R := R) where
+    StabilizerAnomalyData SL2Z UpperHalfPlane (R := R) where
   point := point
   stabilizer := stab
   stabilizes := hstab
@@ -167,7 +172,7 @@ def exactPhaseStabilizerAnomalyAtI
     (h : ExactPhaseCompatibility (R := R) k)
     (stab : Subgroup SL2Z)
     (hstab : ∀ γ ∈ stab, γ • UpperHalfPlane.I = UpperHalfPlane.I) :
-    StabilizerAnomalyData (R := R) :=
+    StabilizerAnomalyData SL2Z UpperHalfPlane (R := R) :=
   exactPhaseStabilizerAnomaly h UpperHalfPlane.I stab hstab
 
 /--

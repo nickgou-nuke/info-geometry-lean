@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "${script_dir}/../../.." && pwd)"
+SANDBOX_DIR="${repo_root}/tools/infra/sandbox-bin"
+bwrap_preflight="${repo_root}/tools/infra/bwrap_preflight.sh"
+python_interpreter="${BWRAP_PYTHON_BIN:-python}"
+
+resolve_host_command() {
+  local cmd="$1"
+  local original_path="${PATH:-}"
+  local filtered_path=""
+  local sep=""
+  local p
+
+  IFS=':' read -r -a _path_entries <<<"${original_path}"
+  for p in "${_path_entries[@]}"; do
+    [[ -z "${p}" ]] && continue
+    if [[ "${p}" != "${SANDBOX_DIR}" ]]; then
+      filtered_path="${filtered_path}${sep}${p}"
+      sep=":"
+    fi
+  done
+  PATH="${filtered_path}" command -v "${cmd}" || true
+}
+
+if [[ -n "${python_interpreter}" && "${python_interpreter}" == */* && ! -x "${python_interpreter}" ]]; then
+  python_interpreter="$(resolve_host_command python3 || true)"
+  if [[ -z "${python_interpreter}" ]]; then
+    python_interpreter="$(resolve_host_command python || true)"
+  fi
+fi
+if [[ -z "${python_interpreter}" ]]; then
+  python_interpreter="python3"
+fi
+
+if [[ ! -x "${bwrap_preflight}" ]]; then
+  echo "[bwrap-sandbox-wrapper] missing ${bwrap_preflight}" >&2
+  exit 127
+fi
+
+if [[ "${BWRAP_PYTHON_WRAPPER_MODE:-sandbox}" == "off" ]]; then
+  exec "${python_interpreter}" "$@"
+fi
+
+if [[ "${BWRAP_REQUIRE_SANDBOX:-0}" == "1" && "${BWRAP_PYTHON_WRAPPER_MODE:-sandbox}" != "fallback-ok" ]]; then
+  exec "${bwrap_preflight}" --require-sandbox -- "${python_interpreter}" "$@"
+fi
+
+exec "${bwrap_preflight}" -- "${python_interpreter}" "$@"

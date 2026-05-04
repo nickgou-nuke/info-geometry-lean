@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent / "tools" / "infra"))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.infra.decl_graph_support import GraphProfile, load_decl_graph
     from tools.pathing import repo_root
 else:

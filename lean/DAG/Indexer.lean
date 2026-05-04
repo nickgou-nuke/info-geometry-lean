@@ -152,9 +152,17 @@ def moduleToLeanFile (sp : SearchPath) (mod : Name) : MetaM String := do
 partial def collectConsts (e : Expr) : NameSet :=
   e.foldConsts {} (fun n acc => acc.insert n)
 
-/-- Recognize morphisms and extract Domain/Codomain -/
+/-- Recognize morphisms and extract Domain/Codomain.
+
+The authoritative DAG refresh runs this over every declaration in the imported
+environment. A blanket `whnf` here is too expensive for large umbrellas such as
+`InfoGeometry.All` and can abort the whole indexer with deterministic heartbeat
+timeouts before the caller can recover. Keep this recognizer cheap and syntactic:
+direct Π-types are enough for `Func`, and head-symbol inspection catches the
+common `Hom`/`Equiv`/`Iso`/`Map` surfaces without normalizing every type in the
+codebase.
+-/
 def recognizeMorphism (e : Expr) : MetaM (Option (String × Expr × Expr)) := do
-  let e ← whnf e
   match e with
   | .forallE _ d b _ =>
     if !b.hasLooseBVars then
@@ -477,8 +485,14 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   liftM <| atomicWriteFile (outPath / "edge-leakage.json") (toJson leakage).pretty
 
   let writeJsonl {α} [ToJson α] (filename : String) (arr : Array α) : IO Unit := do
-    let lines := arr.map (fun x => (toJson x).compress)
-    atomicWriteFile (outPath / filename) (String.intercalate "\n" lines.toList)
+    let path := outPath / filename
+    let tmp := System.FilePath.mk (path.toString ++ ".tmp")
+    IO.FS.writeFile tmp "streaming-jsonl-write-in-progress\n"
+    IO.FS.withFile path IO.FS.Mode.write fun h => do
+      for x in arr do
+        h.putStrLn (toJson x).compress
+      h.flush
+    try IO.FS.removeFile tmp catch _ => pure ()
 
   liftM <| writeJsonl "decls.jsonl" st.decls
   -- Lossless raw edge layer. `edges.jsonl` remains the filtered canonical DAG
@@ -524,7 +538,7 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
       (v, match k with | .type => "type" | .value => "value")))
 
   let graph : FullGraph := { nodes := nodes, forward := fwdSorted }
-  liftM <| atomicWriteFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
+  liftM <| atomicWriteFile (System.FilePath.mk graphOut) (Lean.toJson graph).compress
   stageStart ← checkpoint timingLog "write full_graph.json" stageStart
 
   let nativeGraph : Graph String := { nodes := nodes, nodeToIdx := nameToIdx, forward := typedSorted }

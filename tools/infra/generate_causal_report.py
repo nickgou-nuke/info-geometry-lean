@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -26,6 +27,84 @@ if __package__ in (None, ""):
 else:
     from tools.infra.decl_graph_support import load_decl_graph
     from tools.pathing import normalize_user_path, repo_root
+
+
+DECLARATION_RE = re.compile(
+    r"(?m)^\s*(def|theorem|lemma|structure|class|inductive|axiom|opaque|abbrev|instance)\b"
+)
+
+
+def strip_lean_comments(text: str) -> str:
+    out: list[str] = []
+    i = 0
+    depth = 0
+    while i < len(text):
+        if text.startswith("/-", i):
+            depth += 1
+            i += 2
+            continue
+        if depth and text.startswith("-/", i):
+            depth -= 1
+            i += 2
+            continue
+        if not depth and text.startswith("--", i):
+            newline = text.find("\n", i)
+            if newline == -1:
+                break
+            i = newline
+            continue
+        if not depth:
+            out.append(text[i])
+        i += 1
+    return "".join(out)
+
+
+def declaration_bearing_files(root: Path) -> set[str]:
+    files: set[str] = set()
+    for path in (root / "lean" / "InfoGeometry").rglob("*.lean"):
+        text = strip_lean_comments(path.read_text(encoding="utf-8", errors="ignore"))
+        if DECLARATION_RE.search(text):
+            files.add(path.relative_to(root).as_posix())
+    return files
+
+
+def indexed_files(root: Path, profiles: dict[str, Any]) -> set[str]:
+    files: set[str] = set()
+    info_root = (root / "lean" / "InfoGeometry").resolve()
+    for profile in profiles.values():
+        raw_file = getattr(profile, "file", None)
+        if not raw_file:
+            continue
+        path = Path(str(raw_file))
+        try:
+            resolved = path.resolve() if path.is_absolute() else (root / path).resolve()
+            if not resolved.is_file() or not resolved.is_relative_to(info_root):
+                continue
+            files.add(resolved.relative_to(root).as_posix())
+        except (OSError, ValueError):
+            continue
+    return files
+
+
+def graph_coverage(root: Path, profiles: dict[str, Any]) -> dict[str, Any]:
+    repo_files = declaration_bearing_files(root)
+    covered_files = indexed_files(root, profiles)
+    missing = sorted(repo_files - covered_files)
+    import_only = sorted(
+        path.relative_to(root).as_posix()
+        for path in (root / "lean" / "InfoGeometry").rglob("*.lean")
+        if path.relative_to(root).as_posix() not in repo_files
+    )
+    return {
+        "repo_decl_files": len(repo_files),
+        "decl_index_files": len(covered_files),
+        "missing_decl_files_count": len(missing),
+        "missing_decl_files": missing,
+        "import_only_files_count": len(import_only),
+        "import_only_files": import_only,
+        "is_partial": bool(missing),
+    }
+
 
 def main() -> int:
     root = repo_root()
@@ -95,11 +174,23 @@ def main() -> int:
 
     md_out.write_text("\n".join(md_lines))
     
-    # Save formal JSON causal order
-    json_out = [
+    # Save formal JSON causal order together with the coverage payload consumed by doctor/status tools.
+    causal_order = [
         {"name": p.name, "depth": p.depth, "mass": p.descendant_mass, "reach": p.transitive_reverse_reach}
         for p in backbone
     ]
+    coverage = graph_coverage(root, profiles)
+    json_out = {
+        "summary": {
+            "declaration_nodes": len(profiles),
+            "backbone_nodes": len(backbone),
+            "roots": len(foundations),
+            "capstones": len(capstones),
+            "graph_coverage": coverage,
+        },
+        "coverage": coverage,
+        "causal_order": causal_order,
+    }
     json_out_path.write_text(json.dumps(json_out, indent=2))
 
     print(f"[pauli-causal] Wrote causal backbone to {md_out.relative_to(root)}")

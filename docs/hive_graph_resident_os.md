@@ -566,3 +566,29 @@ Interpretation for gravitational backgrounds:
 - Different macroscopic backgrounds can move you among representatives of `Λ`.
 - They should not alter physical observables if changes are `Q_BV`-exact and cohomologically trivial.
 - If a background induces a nontrivial obstruction class, that background/sector is anomalous for the selected `(c,k)` theory data.
+## Symmetry-breaking note: modular/barrier flow vs explicit breaking
+
+To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.
+
+Working interpretation:
+
+- The negative log generating potential (barrier/free-energy potential) defines a convex/Bregman geometry on state space.
+- Relative entropy and relative log-density terms (Radon–Nikodym style in operator-algebra language) act as information-geometric coordinates for flow.
+- Modular evolution (`log Δ` / Tomita–Takesaki generator language) is interpreted as a canonical derivation direction for thermodynamic/conformal dynamics.
+- In this view, “symmetry reduction” is primarily gauge/sector selection (Weyl-chamber and representation-sector choice), not arbitrary patchwork breaking rules.
+
+For implementation in this repo, this means:
+
+1. Keep algebraic closure statements explicit (`Vir_c ⋉ ê_{8(8),k}`) at the packet/schema layer.
+2. Encode entropy/barrier/free-energy objectives as **scheduler potentials** and **cost functionals**, not as theorem-truth claims.
+3. Record sector/gauge choices (e.g., chamber, representation branch, normalization) as immutable packet metadata so reductions are auditable.
+4. Treat super-geometry/super-algebra language as modeling overlays unless and until Lean witnesses are supplied.
+
+This preserves the core invariant:
+
+- Lean adjudicates formal truth.
+- Arango stores geometric/thermodynamic guidance and provenance.
+- Bees apply guided search under declared symmetry and potential metadata.
+## One-line summary
+
+A lease-driven, packet-emitting Hive where Arango is durable memory, Lean is truth authority, and every attempt—successful or failed—becomes reusable graph memory.

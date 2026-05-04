@@ -69,3 +69,14 @@ on the Clifford algebra Cl(4,4).
 
 end IndividuatedCasimir
 
+namespace InfoGeometry.OperatorAlgebra.LegacyVerifiedCasimir
+
+/-- Namespaced marker so the legacy top-level Casimir compatibility module is visible to the InfoGeometry DAG coverage lane. -/
+abbrev VerifiedCasimirCompat
+    {Op : Type*} [Ring Op]
+    {G : Type*} [Group G]
+    (α : SymmetryAction G Op) : Type _ :=
+  IndividuatedCasimir.VerifiedCasimir α
+
+end InfoGeometry.OperatorAlgebra.LegacyVerifiedCasimir
+

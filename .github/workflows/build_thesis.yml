@@ -45,6 +45,10 @@ jobs:
           ~/.elan/bin/elan --version
           ~/.elan/bin/lake --version
 
+      - name: Enable sandbox wrappers (CI)
+        run: |
+          source tools/infra/bootstrap_env.sh --ci
+
       - name: Install Python tooling
         run: |
           python -m pip install --upgrade pip

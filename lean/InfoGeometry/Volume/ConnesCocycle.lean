@@ -207,6 +207,33 @@ theorem flowUnitCocycle_isConnesCocycle
   rw [AdditiveModularFlow.map_add]
   simp
 
+/-- Flow-unit cocycle is identically the algebra unit at each time. -/
+@[simp] theorem flowUnitCocycle_eq_one
+    (σ : AdditiveModularFlow (H := H)) (t : ℝ) :
+    flowUnitCocycle (H := H) σ t = 1 := by
+  simp [flowUnitCocycle]
+
+/-- Flow-unit cocycle at zero is unit. -/
+@[simp] theorem flowUnitCocycle_zero
+    (σ : AdditiveModularFlow (H := H)) :
+    flowUnitCocycle (H := H) σ 0 = 1 := by
+  simp
+
+/-- Flow-unit cocycle at one is unit. -/
+@[simp] theorem flowUnitCocycle_one
+    (σ : AdditiveModularFlow (H := H)) :
+    flowUnitCocycle (H := H) σ 1 = 1 := by
+  simp
+
+/-- Flow-unit cocycle satisfies the Connes-cocycle relation. -/
+theorem flowUnitCocycle_cocycle
+    (σ : AdditiveModularFlow (H := H)) (s t : ℝ) :
+    flowUnitCocycle (H := H) σ (s + t)
+      =
+    flowUnitCocycle (H := H) σ s *
+      σ s (flowUnitCocycle (H := H) σ t) := by
+  exact flowUnitCocycle_isConnesCocycle (H := H) σ s t
+
 /--
 Canonical unit cocycle.
 
@@ -228,6 +255,25 @@ theorem unitCocycle_isConnesCocycle
     IsConnesCocycle σ (unitCocycle (H := H)) := by
   intro s t
   simp [unitCocycle]
+
+/-- Unit cocycle at zero is unit. -/
+@[simp] theorem unitCocycle_zero :
+    unitCocycle (H := H) 0 = 1 := by
+  simp [unitCocycle]
+
+/-- Unit cocycle at one is unit. -/
+@[simp] theorem unitCocycle_one :
+    unitCocycle (H := H) 1 = 1 := by
+  simp [unitCocycle]
+
+/-- Unit cocycle satisfies the Connes-cocycle relation for any flow. -/
+theorem unitCocycle_cocycle
+    (σ : AdditiveModularFlow (H := H)) (s t : ℝ) :
+    unitCocycle (H := H) (s + t)
+      =
+    unitCocycle (H := H) s *
+      σ s (unitCocycle (H := H) t) := by
+  exact unitCocycle_isConnesCocycle (H := H) σ s t
 
 /--
 Constructive scalar bridge from operator cocycles to real multiplicative cocycles.

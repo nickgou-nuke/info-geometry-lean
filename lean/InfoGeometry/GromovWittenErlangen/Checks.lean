@@ -2,6 +2,8 @@ import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 
 noncomputable section
 
+namespace InfoGeometry.GromovWittenErlangen.Checks
+
 /-- Smoke checks for the Lie-orbit curve synthesis surface. -/
 abbrev LieOrbitCurveWitnessType (G T Target : Type*) :=
   @InfoGeometry.GromovWittenErlangen.LieOrbitCurveWitness (G := G) (T := T) (Target := Target)
@@ -26,3 +28,5 @@ abbrev constructKleinGromovPacketRef
     (G T Target Coeff : Type*) :=
   @InfoGeometry.GromovWittenErlangen.constructKleinGromovPacket (G := G) (T := T)
     (Target := Target) (Coeff := Coeff)
+
+end InfoGeometry.GromovWittenErlangen.Checks

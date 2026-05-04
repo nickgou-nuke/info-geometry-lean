@@ -18,7 +18,12 @@ set -a; source "$ENV_FILE"; set +a
 : "${ARANGO_USER:?ARANGO_USER missing}"
 : "${ARANGO_PASS:?ARANGO_PASS missing}"
 
-exec python3 "$ROOT_DIR/tools/infra/hive_arango_queue.py" \
+HIVE_PYTHON_BIN="${ARANGO_PYTHON_BIN:-$ROOT_DIR/.venv-py312/bin/python}"
+if [[ ! -x "$HIVE_PYTHON_BIN" ]]; then
+  HIVE_PYTHON_BIN="python3"
+fi
+
+exec "$HIVE_PYTHON_BIN" "$ROOT_DIR/tools/infra/hive_arango_queue.py" \
   --endpoint "$ARANGO_ENDPOINT" \
   --database "$ARANGO_DATABASE" \
   --username "$ARANGO_USER" \

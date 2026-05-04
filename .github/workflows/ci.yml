@@ -18,6 +18,75 @@ jobs:
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
+      - name: Enable sandbox wrappers (CI)
+        run: |
+          source tools/infra/bootstrap_env.sh --ci
+
+      - name: Diagnose bwrap sandbox capability
+        id: bwrap_diag
+        shell: bash
+        run: |
+          DIAG="$(./tools/infra/bwrap_preflight.sh --hint-json || true)"
+          echo "$DIAG"
+
+          python3 - "$DIAG" "$GITHUB_OUTPUT" <<'PY'
+import json
+import os
+import sys
+
+raw = sys.argv[1] if len(sys.argv) > 1 else ""
+output_path = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("GITHUB_OUTPUT", "")
+
+def write_output(key, val):
+    if not output_path:
+        return
+    with open(output_path, "a", encoding="utf-8") as f:
+        f.write(f"{key}={val}\n")
+
+allowed_reasons = {
+    "apparmor_userns",
+    "uid_map_permission_denied",
+    "loopback_restriction",
+}
+
+try:
+    diag = json.loads(raw)
+except json.JSONDecodeError:
+    write_output("preflight_ok", "false")
+    write_output("ready", "false")
+    write_output("fallback_active", "false")
+    write_output("failure_reason", "diagnostic_json_parse_error")
+    print("::error title=Sandbox Probe Failure::could not parse bwrap_preflight --hint-json output")
+    print("raw:", raw)
+    sys.exit(1)
+
+preflight_ok = bool(diag.get("sandbox_ready"))
+fallback_active = bool(diag.get("fallback_active"))
+failure_reason = diag.get("failure_reason") or ""
+
+write_output("preflight_ok", "true" if preflight_ok else "false")
+write_output("ready", "true" if preflight_ok else "false")
+write_output("fallback_active", "true" if fallback_active else "false")
+write_output("failure_reason", failure_reason)
+
+if preflight_ok:
+    print("[bwrap-gate] preflight_ok=true; using sandbox path")
+    sys.exit(0)
+
+if fallback_active and failure_reason in allowed_reasons:
+    print("::warning title=Sandbox Limited::running fallback mode due to known restrictive reason: %s" % failure_reason)
+    print("::notice title=Sandbox Decision::preflight_ok=false fallback_active=true failure_reason=%s" % failure_reason)
+    print("[bwrap-gate] preflight_ok=false with allowed restricted reason, continuing")
+    sys.exit(0)
+
+if not failure_reason:
+    print("::error title=Sandbox Probe Failure::bwrap_preflight.json missing failure_reason")
+else:
+    print("::error title=Sandbox Probe Failure::bwrap_preflight failed with unexpected reason: %s" % failure_reason)
+
+sys.exit(1)
+PY
+
       - name: Cache Lake dependencies
         uses: actions/cache@v4
         with:

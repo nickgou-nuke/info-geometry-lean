@@ -157,6 +157,50 @@ variable (T : BoundedTomitaKreinDatum (E := E))
 def modularDerivation (A : EndH₂) : EndH₂ :=
   T.modularHamiltonian * A - A * T.modularHamiltonian
 
+/-!
+### 1.b Weyl-gauge representative shift on the bounded Hamiltonian
+
+Shifting the modular Hamiltonian by a real scalar multiple of the identity is the
+operator-residual gauge used throughout the projective/modular reduction story.
+The observable derivation and monogenic equations are therefore gauge invariant.
+-/
+
+/-- Hamiltonian-shifted datum by a real scalar `c` (Weyl gauge representative). -/
+@[rep_depth operator]
+def withWeylShift (c : ℝ) : BoundedTomitaKreinDatum (E := E) where
+  J := T.J
+  eps := T.eps
+  phaseAxis := T.phaseAxis
+  J_involutive := T.J_involutive
+  eps_involutive := T.eps_involutive
+  phaseAxis_eq_J_mul_eps := T.phaseAxis_eq_J_mul_eps
+  phaseAxis_sq := T.phaseAxis_sq
+  modularOperator := T.modularOperator
+  modularHamiltonian := T.modularHamiltonian + c • (1 : EndH₂)
+  delta_exp_statement := T.delta_exp_statement
+  delta_exp_witness := T.delta_exp_witness
+
+/-- The bounded modular derivation is invariant under scalar Weyl shift of `K`. -/
+@[rep_depth operator]
+theorem modularDerivation_withWeylShift_eq (c : ℝ) (A : EndH₂) :
+    (T.withWeylShift c).modularDerivation A = T.modularDerivation A := by
+  unfold withWeylShift BoundedTomitaKreinDatum.modularDerivation
+  calc
+    (T.modularHamiltonian + c • (1 : EndH₂)) * A - A * (T.modularHamiltonian + c • (1 : EndH₂))
+        = (T.modularHamiltonian * A + c • A) - (A * T.modularHamiltonian + c • A) := by
+          simp [mul_add, add_mul, sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_mul_assoc, mul_smul]
+    _ = T.modularHamiltonian * A - A * T.modularHamiltonian := by
+          simpa using add_sub_add_right_eq_sub (T.modularHamiltonian * A) (c • A) (A * T.modularHamiltonian)
+
+/-- Modularity of the monogenic condition under Weyl representative changes. -/
+@[rep_depth operator]
+theorem isModularMonogenic_withWeylShift_iff
+    (c : ℝ) (A : EndH₂) :
+    (T.withWeylShift c).IsModularMonogenic A ↔ T.IsModularMonogenic A := by
+  unfold BoundedTomitaKreinDatum.IsModularMonogenic
+  constructor <;> intro h <;>
+    simpa [modularDerivation_withWeylShift_eq (T := T) (c := c) (A := A)] using h
+
 /-- Modular-monogenicity/centralizer condition in the bounded shadow. -/
 @[rep_depth operator]
 def IsModularMonogenic (A : EndH₂) : Prop :=

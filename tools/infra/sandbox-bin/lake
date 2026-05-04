@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "${script_dir}/../../.." && pwd)"
+SANDBOX_DIR="${repo_root}/tools/infra/sandbox-bin"
+bwrap_preflight="${repo_root}/tools/infra/bwrap_preflight.sh"
+lake_interpreter="${BWRAP_LAKE_BIN:-lake}"
+
+resolve_host_command() {
+  local cmd="$1"
+  local original_path="${PATH:-}"
+  local filtered_path=""
+  local sep=""
+  local p
+
+  IFS=':' read -r -a _path_entries <<<"${original_path}"
+  for p in "${_path_entries[@]}"; do
+    [[ -z "${p}" ]] && continue
+    if [[ "${p}" != "${SANDBOX_DIR}" ]]; then
+      filtered_path="${filtered_path}${sep}${p}"
+      sep=":"
+    fi
+  done
+  PATH="${filtered_path}" command -v "${cmd}" || true
+}
+
+if [[ -n "${lake_interpreter}" && "${lake_interpreter}" == */* && ! -x "${lake_interpreter}" ]]; then
+  lake_interpreter="$(resolve_host_command lake || true)"
+fi
+if [[ -z "${lake_interpreter}" ]]; then
+  lake_interpreter="lake"
+fi
+if [[ "${lake_interpreter}" == */* && ! -x "${lake_interpreter}" ]]; then
+  lake_interpreter="lake"
+fi
+fallback_mode="${BWRAP_LAKE_WRAPPER_MODE:-sandbox}"
+require_sandbox="${BWRAP_REQUIRE_SANDBOX:-0}"
+
+if [[ ! -x "${bwrap_preflight}" ]]; then
+  echo "[bwrap-sandbox-wrapper] missing ${bwrap_preflight}" >&2
+  exit 127
+fi
+
+if [[ "${fallback_mode}" == "off" ]]; then
+  exec "${lake_interpreter}" "$@"
+fi
+
+if [[ "${require_sandbox}" == "1" && "${fallback_mode}" != "fallback-ok" ]]; then
+  exec "${bwrap_preflight}" --require-sandbox -- "${lake_interpreter}" "$@"
+fi
+
+exec "${bwrap_preflight}" -- "${lake_interpreter}" "$@"

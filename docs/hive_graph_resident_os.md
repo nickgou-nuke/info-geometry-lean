@@ -513,6 +513,59 @@ Final theorem-level core constraints:
 3. `[δ_K, Δ_BV]=0` in cohomology.
 
 These conditions encode closure, modular compatibility, anomaly control, and odd-sector invariance without introducing artificial super-`E_8` roots.
+
+## Anomaly potential `Λ` vs central data `(c,k)` under background coupling
+
+When `div_Ber(δ_K)=Q_BV(Λ)` is allowed, `Λ` is not arbitrary: it is constrained by the same cocycle data that defines affine/Virasoro central extensions and by background-dependent counterterm classes.
+
+Practical decomposition:
+
+- **Algebraic piece** (fixed by representation/anomaly cocycle class):
+  - Virasoro part tied to `c`.
+  - Affine current part tied to `k`.
+- **Background-response piece** (metric/connection/modular state dependent):
+  - local functionals of the chosen gravitational/macroscopic background.
+
+Cohomological consistency requirements:
+
+1. `Q_tot^2=0` must still hold after including anomaly representatives.
+2. `Λ` can shift by exact terms `Λ -> Λ + Q_BV(Ξ)` without changing physics.
+3. Nontrivial obstruction classes must vanish in the relevant BRST/BV cohomology.
+
+Operationally, this means only the cohomology class of the induced anomaly density matters, not a single pointwise representative.
+
+### How `(c,k)` enter constraints on `Λ`
+
+- `c` and `k` are central-extension coefficients in the moment-map/commutator cocycles.
+- Any admissible `Λ` must reproduce those cocycles in descent/ward identities rather than contradict them.
+- Background couplings may renormalize representatives, but cannot change the quantized/cohomological central class without changing theory sector.
+
+In effect:
+
+- `Λ` is allowed to absorb scheme/background dependence.
+- `(c,k)` fix the rigid anomaly backbone.
+- Compatibility requires `Λ` to be cohomologically aligned with the affine–Virasoro central cocycles for that background.
+
+### Background-specific checklist (for runtime metadata)
+
+For each modeled background `Bkg` record and validate:
+
+- `bkg_id`, `state_id`, `central_charge_c`, `affine_level_k`.
+- `lambda_repr_hash` for chosen `Λ` representative.
+- `lambda_exact_witness` proving equivalence-class shifts.
+- `ward_identity_check` status (Virasoro and affine sectors).
+- `cohomology_obstruction_class` (must be trivial for consistency).
+
+Promotion guidance:
+
+- Keep these at `semantic/audit` authority by default.
+- Promote only if explicit Lean witnesses (or formally verified symbolic checks) establish the claimed cohomological trivializations/identities.
+
+Interpretation for gravitational backgrounds:
+
+- Different macroscopic backgrounds can move you among representatives of `Λ`.
+- They should not alter physical observables if changes are `Q_BV`-exact and cohomologically trivial.
+- If a background induces a nontrivial obstruction class, that background/sector is anomalous for the selected `(c,k)` theory data.
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

@@ -56,7 +56,6 @@ import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovFockSuper
-import InfoGeometry.Canonical.BogoliubovKANFrame
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
 import InfoGeometry.Canonical.BogoliubovProjectorFlux

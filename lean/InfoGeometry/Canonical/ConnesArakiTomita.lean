@@ -159,6 +159,19 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
     (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
       (H := H) (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
 
+/-- Thin owner-facing alias: Tomita flow-unit cocycle is an operator-valued Connes cocycle. -/
+theorem tomitaUnit_connesAraki_flowUnitCocycle_isConnesCocycle :
+    IsConnesCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+          (E := H))) := by
+  simpa using
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H) (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+
 /-- Tomita-unit cocycle satisfies the Connes cocycle equation pointwise. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_eq
     (s t : ℝ) :

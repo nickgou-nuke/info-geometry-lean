@@ -255,6 +255,57 @@ Practical modeling warning:
 
 A lease-driven, packet-emitting Hive where Arango is durable memory, Lean is truth authority, and every attempt—successful or failed—becomes reusable graph memory.
 
+## Symmetry-breaking note: entropy-gradient polarization, not destruction
+
+Cleaner statement:
+
+- The apparent reduction of symmetry is a **choice of entropy-gradient/modular direction inside the full affine symmetry algebra**.
+- The full symmetry is retained; a state/chamber/gauge choice selects a direction, and the effective symmetry is its stabilizer/centralizer.
+
+Formal chain (finite-dimensional/operator-algebra correspondence):
+
+- Negative entropy potential: `Φ(ρ) = Tr(ρ log ρ)` (up to sign convention/`k_B`).
+- Gradient: `∇Φ(ρ) = log ρ + I`.
+- Relative logarithmic generator: `∇Φ(ρ)-∇Φ(σ) = log ρ - log σ`.
+- Modular form: `K_{ρ|σ} ~ log ρ - log σ` (equivalently `-log Δ_{ψ|φ}` by convention).
+- Bregman divergence recovers relative entropy/KL/Araki structure.
+
+Hence one red line governs the framework:
+
+- negative-log relative volume potential -> gradient -> logarithmic relative generator -> modular Hamiltonian -> Bregman/relative entropy.
+
+Barrier/super-geometry correspondence:
+
+- Cone barrier: `Φ(X) = -log det X`.
+- Super version: `Φ_super(X) = -log Ber(X)`.
+- Hessian `∇²Φ` supplies the information metric; commuting Cartan/modular generators correspond to orthogonal derivation directions under this Hessian geometry.
+
+Root/chamber interpretation (no ad hoc breaking):
+
+- Choose Cartan element `H` (entropy/modular direction).
+- Root modes satisfy `[H, E_α] = α(H) E_α`.
+- Chamber/wall behavior is polarization: signs of `α(H)` define sectors.
+- Effective unbroken algebra is stabilizer `g_H = {X : [H, X]=0}`.
+
+Affine/conformal compatibility:
+
+- Affine closure remains `ê_{8(8),k}` with loop modes.
+- Full closure remains `Vir_c ⋉ ê_{8(8),k}`.
+- Modular grading is internal to this algebraic structure (e.g., conformal grading by `L_0` and Cartan grading by `H`).
+
+Supergrading qualification:
+
+- `e_{8(8)}` itself is an ordinary Lie algebra (no odd roots).
+- Boson/fermion grading enters only after super-extensions (graded reps, BRST/BV, supergeometric/operator extensions).
+
+Implementation consequence for this repo:
+
+1. Model “local physics”/effective sector as a packetized choice of entropy-gradient direction `H_ρ = log ρ + I`.
+2. Record the induced stabilizer/chamber/gauge metadata as immutable lineage.
+3. Keep these as scheduling/model overlays unless Lean witnesses certify formal claims.
+
+This keeps the architecture consistent with the core invariant: full symmetry globally, polarized sectors locally, with Lean as truth authority.
+
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

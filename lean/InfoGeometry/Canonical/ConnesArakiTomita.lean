@@ -43,12 +43,13 @@ abbrev TomitaUnitConnesArakiData
     T
 
 /--
-Canonical constructor on the Tomita unit-cocycle lane.
+Canonical constructor on the Tomita unit-cocycle lane, implemented as the
+specialization of the generic `ConnesArakiData.ofUnitCocycle`.
 
-This keeps `u` non-free for consumers that only need a concrete cocycle
-instantiation and a Casini bridge witness.
+`tomitaUnitConnesArakiDataOfCasini'` keeps the dependency on the core lane
+constructor explicit.
 -/
-noncomputable def tomitaUnitConnesArakiDataOfCasini
+noncomputable def tomitaUnitConnesArakiDataOfCasini'
     (T : SinkhornTrajectory n)
     (relEnt : ArakiRelativeEntropyProfile)
     (hCasini : CasiniIncrementBridge
@@ -67,6 +68,25 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
     (T := T)
     relEnt
     hCasini
+
+/--
+Backward-compatible constructor name.
+-/
+noncomputable def tomitaUnitConnesArakiDataOfCasini
+    (T : SinkhornTrajectory n)
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge
+      (n := n) (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      T
+      relEnt) :
+    TomitaUnitConnesArakiData (H := H) T :=
+  tomitaUnitConnesArakiDataOfCasini'
+    (H := H) (T := T) relEnt hCasini
 
 /-! ### Tomita unit-cocycle API surface
 

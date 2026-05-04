@@ -73,6 +73,32 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
     rw [Matrix.exp_diagonal]
     simp only [Matrix.diagonal_apply_ne _ hij]
 
+/-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
+theorem relativeLogDensityOperator_self
+    (q : PositiveRay (Fin n)) :
+    relativeLogDensityOperator (n := n) q q = 0 := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    rw [relativeLogDensityOperator, diagMatrix, Matrix.diagonal_apply_eq]
+    exact
+      (InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_self
+        (α := Fin n) (q := q) (a := i))
+  · rw [Pi.zero_apply]
+    rw [relativeLogDensityOperator, diagMatrix, Matrix.diagonal_apply_ne]
+    · rfl
+    · simp [hij]
+
+/-- Weld self-specialization: `Δ(q|q) = exp(0) = 1`. -/
+@[rep_depth operator]
+theorem relativeModularOperator_eq_exp_relativeLogDensityOperator_self
+    (q : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q) := by
+  simpa [relativeLogDensityOperator_self] using
+    (relativeModularOperator_eq_exp_relativeLogDensityOperator
+      (n := n) q q)
+
 end FiniteWeld
 
 section TomitaFlow
@@ -95,6 +121,30 @@ theorem tomita_modularSign_flowUnitCocycle_isConnesCocycle :
     (flowUnitCocycle_isConnesCocycle
       (H := H)
       (modularSignAdditiveModularFlow (E := H)))
+
+/-- Tomita modular-sign flow-unit cocycle is a Connes-cocycle equation at each `(s,t)`. -/
+theorem tomita_modularSign_flowUnitCocycle_cocycle
+    (s t : ℝ) :
+    flowUnitCocycle (H := H)
+      (modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    flowUnitCocycle (H := H)
+      (modularSignAdditiveModularFlow (E := H)) s *
+    modularSignAdditiveModularFlow (E := H)
+      s (flowUnitCocycle (H := H)
+        (modularSignAdditiveModularFlow (E := H)) t) := by
+  exact (tomita_modularSign_flowUnitCocycle_isConnesCocycle (H := H) s t)
+
+@[simp] theorem tomita_modularSign_flowUnitCocycle_zero :
+    flowUnitCocycle (H := H)
+      (modularSignAdditiveModularFlow (E := H)) 0 = 1 := by
+  simp [flowUnitCocycle_apply]
+
+@[simp] theorem tomita_modularSign_flowUnitCocycle_one
+    (t : ℝ) :
+    flowUnitCocycle (H := H) (modularSignAdditiveModularFlow (E := H)) t = 1 := by
+  simpa [flowUnitCocycle_apply] using
+    (modularSignAdditiveModularFlow (E := H) t).map_one
 
 end TomitaFlow
 

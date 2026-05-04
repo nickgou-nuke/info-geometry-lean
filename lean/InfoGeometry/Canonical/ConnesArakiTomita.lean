@@ -100,7 +100,10 @@ no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
     (t : ℝ) :
     TomitaTakesaki.modularSignAdditiveModularFlow
         (E := H) t (1 : AlgebraEnd H) = 1 := by
-  simpa using (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) t).map_one
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle]
+    using
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+        (H := H) (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t)
 
 /-- The Tomita flow-unit cocycle is pointwise the operator unit. -/
 @[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_apply
@@ -110,8 +113,10 @@ no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
         (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
       =
     (1 : AlgebraEnd H) := by
-  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_apply] using
-    (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) t).map_one
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle]
+    using
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+        (H := H) (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t)
 
 /-- Time-zero normalization of the Tomita unit cocycle on the Connes-Araki lane. -/
 @[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_zero
@@ -121,8 +126,7 @@ no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
         (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) 0
       =
     (1 : AlgebraEnd H) := by
-  rw [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_apply]
-  exact (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) 0).map_one
+  simp
 
 /-- Tomita unit-cocycle at fixed time is operator unit. -/
 @[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_one
@@ -130,6 +134,16 @@ no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
     InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
         (H := H)
         (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Thin alias in Connes-Araki naming: Tomita flow-unit cocycle is identically unit. -/
+@[simp] theorem tomitaUnit_connesAraki_flowUnitCocycle_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
       =
     (1 : AlgebraEnd H) := by
   simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
@@ -161,8 +175,9 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_eq
         (H := H)
         (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
   exact
-    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
-      (H := H) (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
+      (H := H)
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
 
 /--
 For any Tomita unit-cocycle Connes-Araki package, scalar descent of the

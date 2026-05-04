@@ -448,6 +448,71 @@ Interpretation:
 - Odd fields are not inserted into `e_{8(8)}` roots.
 - They are resolved over the even affine–Virasoro orbit by BRST/BV cohomology.
 - Physical invariants live in transported cohomology classes along the orbit.
+
+## Packaged theorem-core object: Erlangen–Legendre modular-equivariant BV geometry
+
+A compact packaging of the full construction is:
+
+- **Erlangen–Legendre BV algebra over the affine–Virasoro `E_{8(8)}` orbit**.
+
+Core even symmetry algebra:
+
+- `G = Vir_c ⋉ ê_{8(8),k}`.
+
+Core super-operator/BV layer (categorically separate from `e_{8(8)}` roots):
+
+- `B = B_0 ⊕ B_1`, with BRST/BV differential `Q_BV^2 = 0`.
+- Odd structure lives in `(B, Q_BV)`, not inside `e_{8(8)}` as odd roots.
+
+Unified consistency operator:
+
+- `Q_tot = Q_BV + Q_CE + Σ_A c^A ρ_G(T_A)`.
+- Master equation: `Q_tot^2 = 0`.
+
+Modular/thermodynamic generator:
+
+- `K_{φ|ψ} = -log Δ_{ψ|φ}` (or `K_{ρ|σ} = log ρ - log σ` in density form).
+- Derivation: `δ_K(A)=i[K,A]_s` or BV-Hamiltonian form `δ_K(A)=(K,A)_BV`.
+
+Decisive compatibility equation:
+
+- `[Q_tot, δ_K]_s = 0`.
+
+This ensures modular flow is defined on physical cohomology classes:
+
+- `δ_K : H^•(B,Q_tot) -> H^•(B,Q_tot)`.
+
+BV/Berezinian refinement:
+
+- Strong condition `div_Ber(δ_K)=0` is sufficient but not always necessary.
+- Cohomological condition is preferred: `[δ_K, Δ_BV]=0` (or divergence anomaly is `Q_BV`-exact).
+- Practical invariant statement: modular flow preserves BV/Berezinian measure **in cohomology**.
+
+Orbit/local-system viewpoint:
+
+- Orbit of states: `O_φ = G_closed · φ`.
+- Transported data at each orbit point: `(Q_g, Δ_g, K_g)` by conjugation/cocycle transport.
+- Physical object is a cohomology local system over the orbit with fibers `H^•(B,Q_g)`.
+
+Polarization/stabilizer interpretation:
+
+- Entropy-gradient element `H_φ = ∇Φ(φ)` selects chamber/weight.
+- Local isotropy (`"unbroken subgroup"`) is stabilizer `G_{H_φ}` of that representative.
+- Global symmetry remains full orbit/groupoid action.
+
+Legendre side (potential geometry):
+
+- `Φ(ρ)=Tr(ρ log ρ)`, `∇Φ(ρ)=log ρ + I`.
+- `D_Φ(ρ,σ)=Tr ρ(logρ-logσ)` and operator lift to Araki relative entropy.
+- Super lift: `det -> Ber`, `Tr -> Str`.
+
+Final theorem-level core constraints:
+
+1. `Q_tot^2 = 0`.
+2. `[Q_tot, δ_K]_s = 0`.
+3. `[δ_K, Δ_BV]=0` in cohomology.
+
+These conditions encode closure, modular compatibility, anomaly control, and odd-sector invariance without introducing artificial super-`E_8` roots.
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

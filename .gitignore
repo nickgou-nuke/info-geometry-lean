@@ -135,3 +135,9 @@ reports/training/**
 
 # Local workspace repair leftovers
 .lake.symlink-backup
+.git.bak.*
+.git.pointer.*
+.git.pre-move.*
+
+# Local runtime logs / notes
+logs/

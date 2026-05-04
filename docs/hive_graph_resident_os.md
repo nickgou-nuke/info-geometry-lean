@@ -306,6 +306,48 @@ Implementation consequence for this repo:
 
 This keeps the architecture consistent with the core invariant: full symmetry globally, polarized sectors locally, with Lean as truth authority.
 
+
+## Formalizing BRST/BV coupling to modular flow (proposed)
+
+To keep the odd sector invariant under the full orbit while starting from even-root `e_{8(8)}`, couple modular flow to an **external differential graded extension** rather than forcing odd roots into `e_{8(8)}` itself.
+
+Proposed construction:
+
+1. **DG extension of observable algebra**
+   - Replace base algebra by a graded algebra `A_dg = A ⊗ Gh` where `Gh` carries ghost/antighost grading.
+   - Keep affine–Virasoro action on `A` and extend by graded derivations on `Gh`.
+
+2. **BRST differential as odd inner/derived derivation**
+   - Introduce nilpotent `Q` (`Q^2=0`) with ghost number `+1`.
+   - Physical observables are BRST cohomology classes `H^0_Q(A_dg)`.
+
+3. **Modular generator compatibility condition**
+   - Let modular derivation be `δ_K(X)=i[K,X]` (or the Tomita–Takesaki modular derivation form).
+   - Enforce graded commutation: `[δ_K, Q]_super = 0`.
+   - This ensures modular flow descends to BRST cohomology and preserves the odd sector physically.
+
+4. **BV completion for gauge-fixed independence**
+   - Add BV antibracket and master action `S_BV` with `(S_BV,S_BV)=0`.
+   - Require modular covariance of the BV differential `s_BV = (S_BV,·)`: `[δ_K, s_BV]_super = 0`.
+   - Gauge-fixing fermion changes remain cohomologically equivalent under modular flow.
+
+5. **Affine–Virasoro equivariance of the differential**
+   - For each symmetry generator `X` in `Vir_c ⋉ ê_{8(8),k}`, require graded compatibility
+     `[∇_X, Q]_super = 0` (and analogously for `s_BV`).
+   - Then the full symmetry acts on cohomology classes, not merely on representatives.
+
+6. **Packet-level implementation rule in Hive**
+   - Add explicit metadata fields: `ghost_number`, `brst_closed`, `brst_exact`, `bv_master_checked`, `modular_equivariant`.
+   - Promotion requires Lean-checked proofs plus cohomological invariance checks for packets marked super-extended.
+
+Minimal acceptance tests for this coupling:
+
+- `Q^2 = 0` witness recorded.
+- `[δ_K,Q]_super = 0` witness recorded.
+- If BV-enabled, `(S_BV,S_BV)=0` and `[δ_K,s_BV]_super = 0` witnesses recorded.
+- Affine/Virasoro generator action preserves BRST class labels along lineage edges.
+
+This route keeps the core claim intact: full affine–Virasoro symmetry globally, entropy-gradient polarization locally, and odd-sector physics stabilized at the BRST/BV cohomology level rather than by altering `e_{8(8)}` root parity.
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

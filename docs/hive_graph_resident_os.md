@@ -383,6 +383,71 @@ Implementation hook for Hive packets:
 - Keep all such quantities at `navigation/semantic` authority unless promoted by explicit Lean-checked witnesses.
 
 This gives a single path from cohomology and GW volume data to entropy-gradient modular operators, Bregman/transport costs, and Weyl-gauge sector selection without violating the Lean/Arango trust boundary.
+
+## Modular-equivariant BV formalization (strict statement)
+
+To formalize odd-sector invariance without forcing odd roots into `e_{8(8)}`:
+
+- Keep the symmetry algebra even:
+  `G = Vir_c ⋉ ê_{8(8),k}`.
+- Let it act equivariantly on a separate BRST/BV supercomplex.
+
+Use a modular-equivariant BV object
+`(B, Z_gh, Z_2, ( , )_BV, Δ_BV, Q_BV, φ, σ_t^φ, ρ_G)`
+with:
+
+- `B = B_0 ⊕ B_1` (fields, ghosts, antifields, observables).
+- `ρ_G(X) ∈ Der_0(B)` for `X ∈ G`.
+- `Q_BV: B^q -> B^{q+1}`, `Q_BV^2 = 0`.
+
+Modular generator and compatibility:
+
+- `K_{ρ|σ} = log ρ - log σ` (or relative Tomita–Takesaki convention).
+- `δ_K(A) = i[K,A]_s` (or BV-Hamiltonian form `δ_K(A)=(K,A)_BV`).
+- Core condition: `[δ_K, Q_BV]_s = 0`.
+
+This means modular flow is a chain map and descends to cohomology:
+
+- `σ_t^φ : H^•(B,Q_BV) -> H^•(B,Q_BV)`.
+
+Affine–Virasoro equivariance:
+
+- Strict: `[ρ_G(X), Q_BV]_s = 0`.
+- Preferred BV/homotopy form: `[ρ_G(X), Q_BV]_s = [Q_BV, h_X]_s`.
+
+So symmetry acts strictly on cohomology classes, which is the correct odd-sector invariance notion.
+
+BV geometric constraints for modular coupling:
+
+- `L_K ω_BV = 0` (canonical on odd symplectic form).
+- `[δ_K, Δ_BV] = 0` (Berezinian/BV measure compatibility).
+- Together with `[δ_K,Q_BV]_s=0`, modular flow preserves BV supergeometry.
+
+Moment-map/anomaly criterion:
+
+- For each `X ∈ G`, pick `J_X ∈ B_0` with `ρ_G(X)(A) = (J_X,A)_BV`.
+- `Q_BV J_X = 0` for anomaly-free symmetry.
+- If `Q_BV J_X = A_X`, require `[A_X]=0 ∈ H^1(B,Q_BV)`.
+
+Equivariant master operator:
+
+- `Q_tot = Q_BV + Q_CE + Σ_A c^A ρ_G(T_A)`.
+- Consistency equations:
+  - `Q_tot^2 = 0`.
+  - `[Q_tot, δ_K]_s = 0`.
+
+These are the two key equations enforcing modular-compatible, affine–Virasoro-equivariant BV consistency.
+
+Weyl/modular polarization compatibility:
+
+- For entropy-gradient element `H_ρ`, require `[H_ρ, Q_BV]_s = 0`.
+- Then `B = ⊕_λ B_λ` by modular weight and `Q_BV: B_λ -> B_λ`.
+
+Interpretation:
+
+- Odd fields are not inserted into `e_{8(8)}` roots.
+- They are resolved over the even affine–Virasoro orbit by BRST/BV cohomology.
+- Physical invariants live in transported cohomology classes along the orbit.
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

@@ -160,7 +160,10 @@ theorem tomita_modularSign_flow_one
       (1 : AlgebraEnd H)
       =
     (1 : AlgebraEnd H) := by
-  simp
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle]
+    using
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+        (H := H) (σ := modularSignAdditiveModularFlow (E := H)) t)
 
 /-- Tomita modular-sign flow-unit cocycle is a Connes-cocycle equation at each `(s,t)`. -/
 @[rep_depth operator]
@@ -174,17 +177,20 @@ theorem tomita_modularSign_flowUnitCocycle_cocycle
     modularSignAdditiveModularFlow (E := H)
       s (flowUnitCocycle (H := H)
         (modularSignAdditiveModularFlow (E := H)) t) := by
-  exact (tomita_modularSign_flowUnitCocycle_isConnesCocycle (H := H) s t)
+  exact InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
+    (H := H) (σ := modularSignAdditiveModularFlow (E := H)) s t
+    -- note: use generic Connes-cocycle decomposition from Volume.ConnesCocycle
 
 @[simp, rep_depth operator] theorem tomita_modularSign_flowUnitCocycle_zero :
     flowUnitCocycle (H := H)
       (modularSignAdditiveModularFlow (E := H)) 0 = 1 := by
-  simp [flowUnitCocycle]
+  simp
 
 @[simp, rep_depth operator] theorem tomita_modularSign_flowUnitCocycle_one
     (t : ℝ) :
     flowUnitCocycle (H := H) (modularSignAdditiveModularFlow (E := H)) t = 1 := by
-  simp [flowUnitCocycle]
+  simpa using (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_eq_one
+    (H := H) (σ := modularSignAdditiveModularFlow (E := H)) t)
 
 end TomitaFlow
 

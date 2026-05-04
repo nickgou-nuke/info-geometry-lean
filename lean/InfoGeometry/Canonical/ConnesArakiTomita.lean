@@ -31,7 +31,7 @@ abbrev TomitaConnesArakiData
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n) :=
   ConnesArakiData (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
     u T
 
 /-- Tomita-specialized Connes-Araki package on the canonical unit cocycle lane. -/
@@ -39,7 +39,7 @@ abbrev TomitaUnitConnesArakiData
     (T : SinkhornTrajectory n) :=
   TomitaConnesArakiData (H := H)
     (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     T
 
 /--
@@ -53,21 +53,228 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
     (relEnt : ArakiRelativeEntropyProfile)
     (hCasini : CasiniIncrementBridge
       (n := n) (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       T
       relEnt) :
     TomitaUnitConnesArakiData (H := H) T :=
-  { bridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-    cocycle :=
-      InfoGeometry.Canonical.ModularWeldBridge.tomita_modularSign_flowUnitCocycle_isConnesCocycle
+  ConnesArakiData.ofUnitCocycle
+    (H := H)
+    (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (T := T)
+    relEnt
+    hCasini
+
+/-! ### Tomita unit-cocycle API surface
+
+These lemmas expose the welded Tomita flow-unit cocycle directly through the
+Connes-Araki Tomita specialization.  They are theorem-only extensions:
+no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
+-/
+
+/-- The Tomita modular-sign flow fixes the algebra unit. -/
+@[simp] theorem tomita_modularSignAdditiveModularFlow_map_one
+    (t : ℝ) :
+    TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H) t (1 : AlgebraEnd H) = 1 := by
+  simpa using (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) t).map_one
+
+/-- The Tomita flow-unit cocycle is pointwise the operator unit. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_apply
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
         (H := H)
-    relEnt := relEnt
-    casini := hCasini }
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_apply] using
+    (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) t).map_one
+
+/-- Time-zero normalization of the Tomita unit cocycle on the Connes-Araki lane. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_zero
+    :
+  InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) 0
+      =
+    (1 : AlgebraEnd H) := by
+  rw [InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_apply]
+  exact (TomitaTakesaki.modularSignAdditiveModularFlow (E := H) 0).map_one
+
+/-- Tomita unit-cocycle at fixed time is operator unit. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Canonical Connes-cocycle witness for the Tomita flow-unit lane. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
+    IsConnesCocycle
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))) := by
+  simpa using
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H) (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+
+/-- Tomita-unit cocycle satisfies the Connes cocycle equation pointwise. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  exact
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H) (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/--
+For any Tomita unit-cocycle Connes-Araki package, scalar descent of the
+operator unit cocycle is the scalar unit.
+
+This holds for arbitrary `D.bridge`: we only use multiplicativity of
+`D.bridge.toScalar`.
+-/
+@[simp] theorem tomitaUnitConnesArakiData_scalarCocycle_eq_one
+    (D : TomitaUnitConnesArakiData (H := H) T)
+    (t : ℝ) :
+    scalarCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        D.bridge t
+      =
+    (1 : ℝˣ) := by
+  rw [scalarCocycle, tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t]
+  simp
+
+/--
+The logarithmic scalar cocycle potential vanishes identically on the Tomita
+unit-cocycle lane.
+-/
+theorem tomitaUnitConnesArakiData_cocycleLogPotential_eq_zero
+    (D : TomitaUnitConnesArakiData (H := H) T)
+    (t : ℝ) :
+    cocycleLogPotential
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        D.bridge t
+      =
+    0 := by
+  unfold cocycleLogPotential
+  rw [tomitaUnitConnesArakiData_scalarCocycle_eq_one (H := H) (T := T) D t]
+  simp
+
+/-- Unit descent on the Tomita lane is simultaneously multiplicative and null-log. -/
+theorem tomitaUnitConnesArakiData_unitLane_vanishes
+    (D : TomitaUnitConnesArakiData (H := H) T)
+    (t : ℝ) :
+    scalarCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        D.bridge t =
+      (1 : ℝˣ) ∧
+    cocycleLogPotential
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+            (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        D.bridge t =
+      0 := by
+  constructor
+  · exact tomitaUnitConnesArakiData_scalarCocycle_eq_one (H := H) (T := T) D t
+  · exact tomitaUnitConnesArakiData_cocycleLogPotential_eq_zero (H := H) (T := T) D t
+
+/-- Constructor-specific bridge computation: the canonical Tomita constructor uses
+the canonical unit scalar bridge definitionally. -/
+theorem tomitaUnitConnesArakiDataOfCasini_bridge
+    (T : SinkhornTrajectory n)
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini :
+      CasiniIncrementBridge
+        (n := n) (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        T
+        relEnt) :
+    (tomitaUnitConnesArakiDataOfCasini
+        (H := H) (T := T) relEnt hCasini).bridge
+      =
+    InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) := rfl
+
+/-- Constructor-specific relative-entropy field computation. -/
+@[simp] theorem tomitaUnitConnesArakiDataOfCasini_relEnt
+    (T : SinkhornTrajectory n)
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini :
+      CasiniIncrementBridge
+        (n := n) (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        T
+        relEnt) :
+    (tomitaUnitConnesArakiDataOfCasini
+        (H := H) (T := T) relEnt hCasini).relEnt
+      =
+    relEnt := rfl
+
+/-- Constructor-specific Casini bridge field computation. -/
+theorem tomitaUnitConnesArakiDataOfCasini_casini
+    (T : SinkhornTrajectory n)
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini :
+      CasiniIncrementBridge
+        (n := n) (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (H := H)
+          (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        T
+        relEnt) :
+    (tomitaUnitConnesArakiDataOfCasini
+        (H := H) (T := T) relEnt hCasini).casini
+      =
+    hCasini := rfl
 
 /--
 Tomita-specialized canonical squeezing endpoint:
@@ -85,7 +292,7 @@ theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop
     |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n T k := by
   exact abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
     (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
     (u := u) (T := T) D hRestrDrop k t hTime
 
 /--
@@ -101,20 +308,20 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
     (hKMS :
       InfoGeometry.Krein.satisfies_kms_like
         (E := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := H))
+        (TomitaTakesaki.modularSignEpsilon (E := H))
         ω β) :
     TopologicalBekensteinBound n T
       ∧ ∀ A B : AlgebraEnd H,
           ω
               (A *
-                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                TomitaTakesaki.modularSignAdditiveModularFlow
                   (E := H) β B)
             = ω (B * A) := by
   refine ⟨topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
     (n := n) (H := H) (u := u) (T := T)
     (hCocycle := D.cocycle) (hBridge := D.bridge)
     (relEnt := D.relEnt) (hCasini := D.casini), ?_⟩
-  exact InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
+  exact TomitaTakesaki.modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
     (E := H) (ω := ω) (β := β) hKMS
 
 /--
@@ -134,10 +341,10 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
       ∧ ∀ A B : AlgebraEnd H,
           ω
               (A *
-                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                TomitaTakesaki.modularSignAdditiveModularFlow
                   (E := H) β B)
             = ω (B * A) := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
     (topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
       (H := H) (u := u) (T := T) D ω β hKMS)
 
@@ -152,19 +359,19 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaUnitConnesAraki
     (hKMS :
       InfoGeometry.Krein.satisfies_kms_like
         (E := H)
-        (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := H))
+        (TomitaTakesaki.modularSignEpsilon (E := H))
         ω β) :
     TopologicalBekensteinBound n T
       ∧ ∀ A B : AlgebraEnd H,
           ω
               (A *
-                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                TomitaTakesaki.modularSignAdditiveModularFlow
                   (E := H) β B)
             = ω (B * A) := by
   exact topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
     (H := H)
     (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
     (T := T)
     D
     ω

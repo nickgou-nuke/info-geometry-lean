@@ -348,6 +348,41 @@ Minimal acceptance tests for this coupling:
 - Affine/Virasoro generator action preserves BRST class labels along lineage edges.
 
 This route keeps the core claim intact: full affine–Virasoro symmetry globally, entropy-gradient polarization locally, and odd-sector physics stabilized at the BRST/BV cohomology level rather than by altering `e_{8(8)}` root parity.
+
+## Cohomology connection to Gromov–Witten volume and Weyl-gauge thermodynamics
+
+To connect BRST/BV cohomology to the geometric scheduler layer, define volume/measure observables at the homological level and then lift them to operator families.
+
+Proposed bridge:
+
+1. **Primitive/homological measure layer**
+   - Represent primitive sectors by cycles/chains/classes (`[C]`, `[β]`) and define volume-like invariants from cohomological pairings/intersection data.
+   - In the GW-facing layer, treat these as protected/topological inputs for packetized observables rather than kernel-truth unless Lean witnesses exist.
+
+2. **Negative logarithm as entropy potential**
+   - Use `-log(volume)` (or relative volume ratios) as the Boltzmann/free-energy style potential generating the information geometry.
+   - This is the same pattern used for barriers (`-log det`, `-log Ber`) and relative entropy/Bregman objectives.
+
+3. **Operator lift via exponential families**
+   - Lift scalar diagonal data to operator families through modular/exponential maps:
+     `ρ_θ = exp(-θ_i A^i)/Z(θ)`.
+   - The logarithmic generator controls both modular flow and statistical weighting in the same formalism.
+
+4. **Operatorial divergence + transport cost**
+   - Use operator-valued DKL/Bregman divergences as regularizers for transport objectives.
+   - Introduce a temperature operator (Bethe/free-energy regularization viewpoint) so optimal transport cost is entropy-regularized in the same packet calculus.
+
+5. **Weyl-gauge + Killing-flow interpretation**
+   - Treat Weyl normalization as projective gauge on exponential states.
+   - Interpret selected modular/entropy gradients as abstract thermodynamic vector fields (Souriau-style nonequilibrium alignment), then record their stabilizers/chambers.
+
+Implementation hook for Hive packets:
+
+- Add optional fields: `homology_class`, `gw_volume_estimate`, `relative_volume_ratio`, `neg_log_volume_potential`, `operator_temperature`, `transport_regularizer`, `weyl_gauge_choice`, `thermo_killing_field`, `cohomology_invariant`.
+- Require lineage edges from these fields to `hive_candidate_packets` and `hive_execution_intents` so scheduling pressure remains auditable.
+- Keep all such quantities at `navigation/semantic` authority unless promoted by explicit Lean-checked witnesses.
+
+This gives a single path from cohomology and GW volume data to entropy-gradient modular operators, Bregman/transport costs, and Weyl-gauge sector selection without violating the Lean/Arango trust boundary.
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.

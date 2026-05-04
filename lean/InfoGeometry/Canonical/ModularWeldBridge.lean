@@ -74,6 +74,7 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
     simp only [Matrix.diagonal_apply_ne _ hij]
 
 /-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
+@[simp, rep_depth operator]
 theorem relativeLogDensityOperator_self
     (q : PositiveRay (Fin n)) :
     relativeLogDensityOperator (n := n) q q = 0 := by
@@ -89,6 +90,26 @@ theorem relativeLogDensityOperator_self
     · rfl
     · simp [hij]
 
+/-- Operator lift of the additive relative log-density cocycle. -/
+@[rep_depth operator]
+theorem relativeLogDensityOperator_cocycle
+    (q q0 q1 : PositiveRay (Fin n)) :
+    relativeLogDensityOperator (n := n) q q1 =
+      relativeLogDensityOperator (n := n) q q0
+        + relativeLogDensityOperator (n := n) q0 q1 := by
+  unfold relativeLogDensityOperator diagMatrix
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    rw [Matrix.add_apply, Matrix.diagonal_apply_eq, Matrix.diagonal_apply_eq,
+      Matrix.diagonal_apply_eq]
+    exact
+      InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_cocycle
+        (q := q) (q0 := q0) (q1 := q1) (a := i)
+  · rw [Matrix.add_apply, Matrix.diagonal_apply_ne _ hij,
+      Matrix.diagonal_apply_ne _ hij, Matrix.diagonal_apply_ne _ hij]
+    simp
+
 /-- Weld self-specialization: `Δ(q|q) = exp(0) = 1`. -/
 @[rep_depth operator]
 theorem relativeModularOperator_eq_exp_relativeLogDensityOperator_self
@@ -98,6 +119,15 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator_self
   simpa [relativeLogDensityOperator_self] using
     (relativeModularOperator_eq_exp_relativeLogDensityOperator
       (n := n) q q)
+
+/-- Exponential of the self-relative logarithmic operator is the identity. -/
+@[simp, rep_depth operator]
+theorem exp_relativeLogDensityOperator_self
+    (q : PositiveRay (Fin n)) :
+    NormedSpace.exp (relativeLogDensityOperator (n := n) q q) =
+      (1 : FinMat n) := by
+  rw [relativeLogDensityOperator_self]
+  simp
 
 end FiniteWeld
 
@@ -122,7 +152,18 @@ theorem tomita_modularSign_flowUnitCocycle_isConnesCocycle :
       (H := H)
       (modularSignAdditiveModularFlow (E := H)))
 
+/-- Tomita modular-sign flow fixes the operator unit. -/
+@[simp, rep_depth operator]
+theorem tomita_modularSign_flow_one
+    (t : ℝ) :
+    modularSignAdditiveModularFlow (E := H) t
+      (1 : AlgebraEnd H)
+      =
+    (1 : AlgebraEnd H) := by
+  simp
+
 /-- Tomita modular-sign flow-unit cocycle is a Connes-cocycle equation at each `(s,t)`. -/
+@[rep_depth operator]
 theorem tomita_modularSign_flowUnitCocycle_cocycle
     (s t : ℝ) :
     flowUnitCocycle (H := H)
@@ -135,16 +176,15 @@ theorem tomita_modularSign_flowUnitCocycle_cocycle
         (modularSignAdditiveModularFlow (E := H)) t) := by
   exact (tomita_modularSign_flowUnitCocycle_isConnesCocycle (H := H) s t)
 
-@[simp] theorem tomita_modularSign_flowUnitCocycle_zero :
+@[simp, rep_depth operator] theorem tomita_modularSign_flowUnitCocycle_zero :
     flowUnitCocycle (H := H)
       (modularSignAdditiveModularFlow (E := H)) 0 = 1 := by
-  simp [flowUnitCocycle_apply]
+  simp [flowUnitCocycle]
 
-@[simp] theorem tomita_modularSign_flowUnitCocycle_one
+@[simp, rep_depth operator] theorem tomita_modularSign_flowUnitCocycle_one
     (t : ℝ) :
     flowUnitCocycle (H := H) (modularSignAdditiveModularFlow (E := H)) t = 1 := by
-  simpa [flowUnitCocycle_apply] using
-    (modularSignAdditiveModularFlow (E := H) t).map_one
+  simp [flowUnitCocycle]
 
 end TomitaFlow
 

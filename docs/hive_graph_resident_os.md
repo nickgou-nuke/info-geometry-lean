@@ -278,3 +278,6 @@ This preserves the core invariant:
 - Lean adjudicates formal truth.
 - Arango stores geometric/thermodynamic guidance and provenance.
 - Bees apply guided search under declared symmetry and potential metadata.
+## One-line summary
+
+A lease-driven, packet-emitting Hive where Arango is durable memory, Lean is truth authority, and every attempt—successful or failed—becomes reusable graph memory.

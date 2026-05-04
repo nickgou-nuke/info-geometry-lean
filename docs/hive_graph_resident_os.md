@@ -566,6 +566,10 @@ Interpretation for gravitational backgrounds:
 - Different macroscopic backgrounds can move you among representatives of `Λ`.
 - They should not alter physical observables if changes are `Q_BV`-exact and cohomologically trivial.
 - If a background induces a nontrivial obstruction class, that background/sector is anomalous for the selected `(c,k)` theory data.
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 ## Symmetry-breaking note: modular/barrier flow vs explicit breaking
 
 To avoid ambiguity in this framework, we treat the relevant dynamics as **modular-gradient flow inside the extended symmetry algebra**, not as ad hoc explicit symmetry breaking.
@@ -592,3 +596,11 @@ This preserves the core invariant:
 ## One-line summary
 
 A lease-driven, packet-emitting Hive where Arango is durable memory, Lean is truth authority, and every attempt—successful or failed—becomes reusable graph memory.
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs

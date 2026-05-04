@@ -57,11 +57,10 @@
       ],
       [
         "tools/infra/generate_causal_report.py",
-        "--out",
+        "--md-out",
         "reports/dag/true-root-order.md",
         "--json-out",
-        "reports/dag/true-root-order.json",
-        "--allow-partial-coverage"
+        "reports/dag/true-root-order.json"
       ],
       [
         "tools/theorem_significance.py"

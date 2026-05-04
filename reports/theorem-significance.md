@@ -1,16 +1,42 @@
 # ⚖️ Pauli Authority Audit: Truthful Significance Index
 
-> Status: `generated/historical report`
-> Audited: 2026-05-02
-> Note: Treat this as a snapshot. Regenerate before relying on it.
-> See: [README.md](../README.md), [docs/README.md](../docs/README.md), [docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md)
-
 > **Protocol:** Truth lives in Lean; structure lives in the graph.
-> **Snapshot:** 26877 declarations analysed via Pauli Authority.
+> **Snapshot:** 54732 declarations analysed via Pauli Authority.
 
 ## 💎 High Causal Mass (The Spire's Pillars)
 | Declaration | Causal Mass | Depth | Fan-In |
 | :--- | :---: | :---: | :---: |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.ChiralOperatorCarrier` | 0 | 0 | 13 |
+| `InfoGeometry.Algebraic.ChiralOperatorCarrier.canonicalChiralOperatorCarrier` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.ChiralPhase` | 0 | 0 | 26 |
+| `InfoGeometry.Algebraic.ChiralPhase.bivector` | 0 | 0 | 13 |
+| `InfoGeometry.Algebraic.ChiralPhase.instMul` | 0 | 0 | 7 |
+| `InfoGeometry.Algebraic.ChiralPhase.normSq` | 0 | 0 | 9 |
+| `InfoGeometry.Algebraic.ChiralPhase.scalar` | 0 | 0 | 13 |
+| `InfoGeometry.Algebraic.DrazinSurgery` | 0 | 0 | 7 |
+| `InfoGeometry.Algebraic.MulActionCocycle` | 0 | 0 | 14 |
+| `InfoGeometry.Algebraic.MulActionCocycle.toFun` | 0 | 0 | 13 |
+| `InfoGeometry.Algebraic.NonzeroChiralPhase` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.PhaseRotorGroup` | 0 | 0 | 6 |
+| `InfoGeometry.Algebraic.ProjectiveOperatorReadout` | 0 | 0 | 12 |
+| `InfoGeometry.Algebraic.ProjectiveReadoutShadow` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.SL2R` | 0 | 0 | 11 |
+| `InfoGeometry.Algebraic.SL2Z` | 0 | 0 | 10 |
+| `InfoGeometry.Algebraic.Split.SplitCharge` | 0 | 0 | 14 |
+| `InfoGeometry.Algebraic.SplitSignature.Cl_nn` | 0 | 0 | 51 |
+| `InfoGeometry.Algebraic.SplitSignature.NarainCharge` | 0 | 0 | 10 |
+| `InfoGeometry.Algebraic.SplitSignature.NarainSupervolumeBridgeData` | 0 | 0 | 12 |
+| `InfoGeometry.Algebraic.SplitSignature.SplitCliffordEnd` | 0 | 0 | 11 |
+| `InfoGeometry.Algebraic.SplitSignature.SplitIndex` | 0 | 0 | 52 |
+| `InfoGeometry.Algebraic.SplitSignature.SplitModule` | 0 | 0 | 53 |
+| `InfoGeometry.Algebraic.SplitSignature.narainRealification` | 0 | 0 | 6 |
+| `InfoGeometry.Algebraic.SplitSignature.splitBasisVector` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.SplitSignature.splitQuadraticForm` | 0 | 0 | 48 |
+| `InfoGeometry.Algebraic.SplitSignature.splitWeight` | 0 | 0 | 8 |
+| `InfoGeometry.Algebraic.SplitSuperGeometry.ParityInvolution` | 0 | 0 | 32 |
+| `InfoGeometry.Algebraic.SplitSuperGeometry.SplitCliffordEnd` | 0 | 0 | 6 |
+| `InfoGeometry.Algebraic.sl2zToSL2R` | 0 | 0 | 7 |
 | `InfoGeometry.Analytic.firstMomentUnnormalized` | 0 | 0 | 6 |
 | `InfoGeometry.Analytic.logSumExp` | 0 | 0 | 16 |
 | `InfoGeometry.Analytic.logSumExpMean` | 0 | 0 | 10 |
@@ -24,43 +50,12 @@
 | `InfoGeometry.Analytic.softmaxDist` | 0 | 0 | 7 |
 | `InfoGeometry.Analytic.softmaxMean` | 0 | 0 | 7 |
 | `InfoGeometry.Analytic.softmaxPartition` | 0 | 0 | 6 |
-| `InfoGeometry.Architecture.CartanInvolution` | 0 | 0 | 10 |
-| `InfoGeometry.Architecture.CartanInvolution.toMulAut` | 0 | 0 | 8 |
-| `InfoGeometry.Architecture.SymmetricSpace` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.AQFTOperatorInterface.IsCStarReady` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.AdditiveLinearization` | 0 | 0 | 10 |
-| `InfoGeometry.Canonical.AlgebraEnd` | 0 | 0 | 16 |
-| `InfoGeometry.Canonical.AlgebraicStateFunctionalBridge.PositiveNormalizedFunctional.probe` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.AlgebraicStateFunctionalBridge.StateRepresentationBridge` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.AnalyticalIndex.ChiralConjugacyAlong` | 0 | 0 | 7 |
-| `InfoGeometry.Canonical.AnalyticalIndex.KRotationLE` | 0 | 0 | 7 |
-| `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex` | 0 | 0 | 14 |
-| `InfoGeometry.Canonical.AnalyticalIndex.cartanConjugate` | 0 | 0 | 7 |
-| `InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSliceMinus` | 0 | 0 | 20 |
-| `InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSlicePlus` | 0 | 0 | 20 |
-| `InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorMinus` | 0 | 0 | 17 |
-| `InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorPlus` | 0 | 0 | 17 |
-| `InfoGeometry.Canonical.AnalyticalIndex.cl11GlobalGrading` | 0 | 0 | 10 |
-| `InfoGeometry.Canonical.AnomalyGauge.commutator_is_skew_adjoint` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.ArnoldApproximationCore.ArnoldGeneratorApproximationContract` | 0 | 0 | 11 |
-| `InfoGeometry.Canonical.ArnoldApproximationCore.ArnoldGeneratorApproximationContract.costModel` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.ArnoldApproximationCore.ArnoldShapeScaleCost` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.ArnoldApproximationCore.ArnoldShapeScaleCost.totalCost` | 0 | 0 | 7 |
-| `InfoGeometry.Canonical.ArnoldMajoranaCarrier` | 0 | 0 | 51 |
-| `InfoGeometry.Canonical.AssociativeSuperBracket.anticommutator` | 0 | 0 | 13 |
-| `InfoGeometry.Canonical.AssociativeSuperBracket.superBracket` | 0 | 0 | 8 |
-| `InfoGeometry.Canonical.Attention.ContextWindow` | 0 | 0 | 35 |
-| `InfoGeometry.Canonical.Attention.ContextWindow.keys` | 0 | 0 | 8 |
-| `InfoGeometry.Canonical.Attention.attentionWeights` | 0 | 0 | 9 |
-| `InfoGeometry.Canonical.Attention.polarizedPlusAttentionMatrix` | 0 | 0 | 8 |
-| `InfoGeometry.Canonical.Attention.polarizedPlusAttentionWeights` | 0 | 0 | 11 |
-| `InfoGeometry.Canonical.Attention.polarizedPlusParams` | 0 | 0 | 10 |
-| `InfoGeometry.Canonical.Attention.polarizedPlusScore` | 0 | 0 | 6 |
-| `InfoGeometry.Canonical.BekensteinBound.CasiniIncrementBridge` | 0 | 0 | 10 |
-| `InfoGeometry.Canonical.BekensteinBound.CocycleEntropyPotential` | 0 | 0 | 14 |
-| `InfoGeometry.Canonical.BekensteinBound.CocycleGeneratorLift` | 0 | 0 | 8 |
-| `InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile` | 0 | 0 | 8 |
-| `InfoGeometry.Canonical.BekensteinBound.phaseRNGeneratorBefore` | 0 | 0 | 13 |
+| `InfoGeometry.Application.BlackHoleEntropyReadout` | 0 | 0 | 15 |
+| `InfoGeometry.Application.OperatorFreudenthalBoundary.OperatorFreudenthalChart` | 0 | 0 | 8 |
+| `InfoGeometry.Application.STUOperator.BlackHoleQubitOperatorDictionary` | 0 | 0 | 8 |
+| `InfoGeometry.Application.STUOperator.DrazinWitness` | 0 | 0 | 13 |
+| `InfoGeometry.Application.STUOperator.IsRegularOperator` | 0 | 0 | 9 |
+| `InfoGeometry.Application.STUOperator.OperatorQuarticInvariant` | 0 | 0 | 18 |
 
 ## 🧬 Deep Identifications (Algebraic Unifications)
 | Milestone | Mass | Depth |
@@ -69,33 +64,33 @@
 ## 🗑️ Confirmed Vacuity (Pruning Candidates)
 | Vacuous Declaration | Location |
 | :--- | :--- |
-| `InfoGeometry.Analytic.deriv2_logSumExp_eq_softmaxVariance` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:248` |
-| `InfoGeometry.Analytic.deriv_firstMomentUnnormalized` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:132` |
-| `InfoGeometry.Analytic.deriv_logSumExp_eq_firstMoment_div_partition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:147` |
-| `InfoGeometry.Analytic.deriv_logSumExp_eq_softmaxMean` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:185` |
-| `InfoGeometry.Analytic.deriv_softmaxPartition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:120` |
-| `InfoGeometry.Analytic.hasDerivAt_firstMomentUnnormalized` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:126` |
-| `InfoGeometry.Analytic.hasDerivAt_softmaxPartition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:114` |
-| `InfoGeometry.Analytic.logSumExpPartition.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:0` |
-| `InfoGeometry.Analytic.logSumExpScaledEntropicTransportObjective_eq_inv_eps_mul_potentialGap` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:589` |
-| `InfoGeometry.Analytic.logSumExpScaledEntropicTransportPotentialGap_eq_eps_mul_objective` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:601` |
-| `InfoGeometry.Analytic.logSumExpScaledPartition.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:0` |
-| `InfoGeometry.Analytic.logSumExpScaledWeight.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:0` |
-| `InfoGeometry.Analytic.logSumExpScaledWeight_pos` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:197` |
-| `InfoGeometry.Analytic.logSumExp_eq_log_partition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:138` |
-| `InfoGeometry.Analytic.softmaxDist.congr_simp` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:0` |
-| `InfoGeometry.Analytic.softmaxDist.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:0` |
-| `InfoGeometry.Analytic.softmaxHessian.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:0` |
-| `InfoGeometry.Analytic.softmaxMean_eq_firstMoment_div_partition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:161` |
-| `InfoGeometry.Analytic.softmaxPartition_pos` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:41` |
-| `InfoGeometry.Analytic.softmaxSecondMoment_eq_secondMomentUnnormalized_div_partition` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:177` |
-| `InfoGeometry.Analytic.softmaxVariance.congr_simp` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:0` |
-| `InfoGeometry.Analytic.softmaxVariance_nonneg` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean:102` |
-| `InfoGeometry.Architecture.CartanInvolution.fixedSubgroup.eq_1` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SymmetricSpace.lean:0` |
-| `InfoGeometry.Architecture.CartanInvolution.mem_fixedSubgroup_iff` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SymmetricSpace.lean:92` |
-| `InfoGeometry.Architecture.CartanInvolution.mk.inj` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SymmetricSpace.lean:0` |
-| `InfoGeometry.Architecture.CartanInvolution.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SymmetricSpace.lean:0` |
-| `InfoGeometry.Architecture.CartanInvolution.ofMulAutInvolution.congr_simp` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SymmetricSpace.lean:0` |
-| `InfoGeometry.Architecture.SpinFactor.spinFactorPotential_well_defined` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SpinFactor.lean:47` |
-| `InfoGeometry.Architecture.SpinFactor.spinFactorPotential_zero` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SpinFactor.lean:54` |
-| `InfoGeometry.Architecture.SpinFactor.spinFactor_poly_identity` | `/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Architecture/SpinFactor.lean:27` |
+| `InfoGeometry.Algebra.PrimeA1RootSystem.all_prime` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/PrimeA1RootSystem.lean:18` |
+| `InfoGeometry.Algebra.PrimeA1RootSystem.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/PrimeA1RootSystem.lean:0` |
+| `InfoGeometry.Algebra.PrimeA1RootSystem.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/PrimeA1RootSystem.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.CartanAutomorphyFactor.map_mul` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:31` |
+| `InfoGeometry.Algebraic.Cartan.CartanAutomorphyFactor.map_one` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:30` |
+| `InfoGeometry.Algebraic.Cartan.CartanAutomorphyFactor.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.CartanAutomorphyFactor.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.CartanRotorCocycle.map_mul` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:74` |
+| `InfoGeometry.Algebraic.Cartan.CartanRotorCocycle.map_one` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:73` |
+| `InfoGeometry.Algebraic.Cartan.CartanRotorCocycle.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.CartanRotorCocycle.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/CartanCocycle.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.MatrixAutomorphyFactor.map_mul` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/MatrixAutomorphyFactor.lean:26` |
+| `InfoGeometry.Algebraic.Cartan.MatrixAutomorphyFactor.map_one` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/MatrixAutomorphyFactor.lean:25` |
+| `InfoGeometry.Algebraic.Cartan.MatrixAutomorphyFactor.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/MatrixAutomorphyFactor.lean:0` |
+| `InfoGeometry.Algebraic.Cartan.MatrixAutomorphyFactor.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/MatrixAutomorphyFactor.lean:0` |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor.map_mul` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/RealModularReadout.lean:224` |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor.map_one` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/RealModularReadout.lean:223` |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/RealModularReadout.lean:0` |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/RealModularReadout.lean:0` |
+| `InfoGeometry.Algebraic.ChiralAutomorphyFactor.pullback.congr_simp` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/RealModularReadout.lean:0` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_chiralParity` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:75` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_leftChiralCharge` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:88` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_modularBoost` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:81` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_modularHamiltonian` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:102` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_rightChiralCharge` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:95` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.canonical_root_laws` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:112` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.mk.inj` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:0` |
+| `InfoGeometry.Algebraic.ChiralOperatorAlgebra.mk.sizeOf_spec` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorAlgebra.lean:0` |
+| `InfoGeometry.Algebraic.ChiralOperatorCarrier.boost_eps_anticomm` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorCarrier.lean:39` |
+| `InfoGeometry.Algebraic.ChiralOperatorCarrier.boost_sq` | `/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebraic/ChiralOperatorCarrier.lean:38` |

@@ -5,7 +5,7 @@ Generic Cartan cocycle and automorphy-factor readout for the higher-rank
 split lanes.
 No complex imports.
 -/
-
+import Paperproof
 import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.Subgroup.Defs

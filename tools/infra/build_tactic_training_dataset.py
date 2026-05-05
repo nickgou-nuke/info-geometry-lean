@@ -15,10 +15,15 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from tools.infra.aesop_tactic_prior import classify_tactic
 
@@ -311,6 +316,57 @@ def real_prover_successes(path: Path) -> list[SuccessTransition]:
     return out
 
 
+def jixia_successes(path: Path) -> list[SuccessTransition]:
+    out: list[SuccessTransition] = []
+    for line_no, row in enumerate(iter_jsonl(path), start=1):
+        if row.get("schema") != "info_geometry.jixia.tactic_transition.v1":
+            continue
+        tactic = str(row.get("tactic_syntax") or "").strip()
+        before = row.get("before") or []
+        after = row.get("after") or []
+        if not tactic or not isinstance(before, list):
+            continue
+        goal_before = normalize_goal(
+            "\n\n".join(
+                str(goal.get("pp") or goal.get("type") or "")
+                for goal in before
+                if isinstance(goal, dict)
+            )
+        )
+        if not goal_before:
+            continue
+        if isinstance(after, list) and after:
+            goal_after = normalize_goal(
+                "\n\n".join(
+                    str(goal.get("pp") or goal.get("type") or "")
+                    for goal in after
+                    if isinstance(goal, dict)
+                )
+            )
+        else:
+            goal_after = "no goals"
+        source_file = str(row.get("source_file") or path)
+        out.append(
+            SuccessTransition(
+                source="jixia",
+                theorem=str(row.get("declaration") or source_file),
+                lean_file=source_file,
+                theorem_statement="",
+                goal_before=goal_before,
+                tactic=tactic,
+                goal_after=goal_after,
+                dependencies=tuple(str(ref) for ref in row.get("references") or []),
+                raw_ref={
+                    "source_file": source_file,
+                    "source_line": line_no,
+                    "transition_id": row.get("id"),
+                    "range": row.get("range"),
+                },
+            )
+        )
+    return out
+
+
 def sft_row(success: SuccessTransition, *, seed: int, train_ratio: float, val_ratio: float) -> dict[str, Any]:
     row_id = stable_hash("sft", success.source, success.theorem, success.goal_hash, success.tactic)
     return {
@@ -451,6 +507,10 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
         rows = real_prover_successes(args.real_prover_traces)
         successes.extend(rows)
         by_source["real_prover"] += len(rows)
+    if args.jixia_tactics and args.jixia_tactics.exists():
+        rows = jixia_successes(args.jixia_tactics)
+        successes.extend(rows)
+        by_source["jixia"] += len(rows)
 
     good_successes = []
     for success in successes:
@@ -494,6 +554,7 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
             "hive_attempts": str(args.hive_attempts) if args.hive_attempts else None,
             "raw_infotree": str(args.raw_infotree) if args.raw_infotree else None,
             "real_prover_traces": str(args.real_prover_traces) if args.real_prover_traces else None,
+            "jixia_tactics": str(args.jixia_tactics) if args.jixia_tactics else None,
         },
         "rows": {
             "sft": sft_count,
@@ -523,6 +584,7 @@ def main() -> int:
     parser.add_argument("--leantrail-failures", type=Path, default=Path("artifacts/leantrail/failed_transitions.jsonl"))
     parser.add_argument("--hive-attempts", type=Path)
     parser.add_argument("--real-prover-traces", type=Path, help="JSONL emitted by real_prover_trace_bridge.py")
+    parser.add_argument("--jixia-tactics", type=Path, help="JSONL emitted by jixia_trace_bridge.py")
     parser.add_argument("--raw-infotree", type=Path, help="Reserved for Phase B2 raw InfoTree adapter")
     parser.add_argument("--out-sft", type=Path, default=Path("reports/training/tactic_sft.jsonl"))
     parser.add_argument("--out-dpo", type=Path, default=Path("reports/training/tactic_dpo.jsonl"))

@@ -35,6 +35,19 @@ noncomputable def transportEnd (S : SpinConnection E) (t : ℝ) :
   exact conjugateCLM_add
     (U := (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E)) A B
 
+@[simp] lemma transportEnd_zero (S : SpinConnection E) (t : ℝ) :
+    transportEnd S t (0 : NeutralSpace E →L[ℝ] NeutralSpace E) = 0 := by
+  unfold transportEnd
+  exact conjugateCLM_zero
+    (U := (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E))
+
+@[simp] lemma transportEnd_smul (S : SpinConnection E) (t : ℝ)
+    (a : ℝ) (A : NeutralSpace E →L[ℝ] NeutralSpace E) :
+    transportEnd S t (a • A) = a • transportEnd S t A := by
+  unfold transportEnd
+  exact conjugateCLM_smul
+    (U := (S.U t : NeutralSpace E ≃L[ℝ] NeutralSpace E)) a A
+
 @[simp] lemma transportEnd_mul (S : SpinConnection E) (t : ℝ)
     (A B : NeutralSpace E →L[ℝ] NeutralSpace E) :
     transportEnd S t (A * B) = transportEnd S t A * transportEnd S t B := by

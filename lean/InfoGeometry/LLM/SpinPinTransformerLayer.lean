@@ -45,14 +45,14 @@ noncomputable def transport (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (X 
 @[simp] theorem transport_zero
     (B : SpinPinTransformerLayer (E := E)) (t : ℝ) :
     B.transport t (0 : EndN) = 0 := by
-  unfold transport transportEnd
-  simp [InfoGeometry.Krein.conjugateCLM]
+  unfold transport
+  exact transportEnd_zero B.spin t
 
 @[simp] theorem transport_smul
     (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (a : ℝ) (X : EndN) :
     B.transport t (a • X) = a • B.transport t X := by
-  unfold transport transportEnd
-  simp [InfoGeometry.Krein.conjugateCLM]
+  unfold transport
+  exact transportEnd_smul B.spin t a X
 
 /-- Layer update gap `run X - X`. -/
 noncomputable def gap (B : SpinPinTransformerLayer (E := E)) (X : EndN) : EndN :=

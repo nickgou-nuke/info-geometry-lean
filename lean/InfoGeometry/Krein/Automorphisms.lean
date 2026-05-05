@@ -29,6 +29,14 @@ noncomputable abbrev conjugateCLM (U : H ≃L[ℝ] H) (A : H →L[ℝ] H) : H �
     conjugateCLM U (A + B) = conjugateCLM U A + conjugateCLM U B :=
   (conjEnd U).map_add A B
 
+@[simp] lemma conjugateCLM_zero (U : H ≃L[ℝ] H) :
+    conjugateCLM U (0 : H →L[ℝ] H) = 0 :=
+  (conjEnd U).map_zero
+
+@[simp] lemma conjugateCLM_smul (U : H ≃L[ℝ] H) (a : ℝ) (A : H →L[ℝ] H) :
+    conjugateCLM U (a • A) = a • conjugateCLM U A :=
+  (conjEnd U).toLinearEquiv.map_smul a A
+
 @[simp] lemma conjugateCLM_neg (U : H ≃L[ℝ] H) (A : H →L[ℝ] H) :
     conjugateCLM U (-A) = -conjugateCLM U A :=
   (conjEnd U).map_neg A

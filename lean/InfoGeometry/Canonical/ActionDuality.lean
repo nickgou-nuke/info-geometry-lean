@@ -1,3 +1,4 @@
+import Paperproof
 import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.SpectralInference

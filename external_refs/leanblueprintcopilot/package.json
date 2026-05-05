@@ -1,0 +1,157 @@
+{
+	"name": "leanblueprintcopilot",
+	"displayName": "Lean Blueprint Copilot",
+	"description": "Provide Lean Blueprint features and tools for users and Copilot agents.",
+	"keywords": [
+		"lean",
+		"lean4",
+		"blueprint",
+		"copilot"
+	],
+	"preview": true,
+	"icon": "images/icon.png",
+	"galleryBanner": {
+		"color": "#D4B483",
+		"theme": "dark"
+	},
+	"version": "0.2.3",
+	"publisher": "augustepoiroux",
+	"license": "SEE LICENSE IN LICENSE.md",
+	"homepage": "https://github.com/augustepoiroux/LeanBlueprintCopilot/blob/main/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/augustepoiroux/LeanBlueprintCopilot.git"
+	},
+	"bugs": {
+		"url": "https://github.com/augustepoiroux/LeanBlueprintCopilot/issues",
+		"email": "augustepoiroux@gmail.com"
+	},
+	"engines": {
+		"vscode": "^1.101.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "leanblueprintcopilot.createBlueprintProject",
+				"title": "Lean Blueprint: Create Project"
+			},
+			{
+				"command": "leanblueprintcopilot.parseBlueprintProject",
+				"title": "Lean Blueprint: Parse Project"
+			},
+			{
+				"command": "leanblueprintcopilot.buildPdf",
+				"title": "Lean Blueprint: Build PDF"
+			},
+			{
+				"command": "leanblueprintcopilot.buildWeb",
+				"title": "Lean Blueprint: Build Web"
+			},
+			{
+				"command": "leanblueprintcopilot.checkDecls",
+				"title": "Lean Blueprint: Check Declarations"
+			},
+			{
+				"command": "leanblueprintcopilot.buildAll",
+				"title": "Lean Blueprint: Build All"
+			},
+			{
+				"command": "leanblueprintcopilot.serve",
+				"title": "Lean Blueprint: Serve Web Blueprint"
+			},
+			{
+				"command": "leanblueprintcopilot.selectNodeForFormalization",
+				"title": "Select for Formalization"
+			},
+			{
+				"command": "leanblueprintcopilot.formalizeNode",
+				"title": "Formalize"
+			},
+			{
+				"command": "leanblueprintcopilot.filterBlueprintTree",
+				"title": "Filter Blueprint Tree"
+			},
+			{
+				"command": "leanblueprintcopilot.searchBlueprintTree",
+				"title": "Search Blueprint Tree"
+			}
+		],
+		"mcpServerDefinitionProviders": [
+			{
+				"id": "LeanBlueprintCopilot",
+				"label": "Lean Blueprint Copilot"
+			}
+		],
+		"views": {
+			"explorer": [
+				{
+					"id": "leanblueprintcopilot.blueprintTree",
+					"name": "Lean Blueprint Structure"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "leanblueprintcopilot.filterBlueprintTree",
+					"when": "view == leanblueprintcopilot.blueprintTree",
+					"group": "navigation@1",
+					"icon": "$(filter)"
+				},
+				{
+					"command": "leanblueprintcopilot.searchBlueprintTree",
+					"when": "view == leanblueprintcopilot.blueprintTree",
+					"group": "navigation@2",
+					"icon": "$(search)"
+				},
+				{
+					"command": "leanblueprintcopilot.parseBlueprintProject",
+					"when": "view == leanblueprintcopilot.blueprintTree",
+					"group": "navigation@0",
+					"icon": "$(refresh)"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "leanblueprintcopilot.formalizeNode",
+					"when": "view == leanblueprintcopilot.blueprintTree && viewItem == unformalizedNode",
+					"group": "formalization"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"compile": "npm run check-types && node esbuild.js",
+		"check-types": "tsc --noEmit",
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.js --watch",
+		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+		"vscode:prepublish": "node -e \"process.exit(0)\"",
+		"package": "npm run check-types && node esbuild.js --production"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.10",
+		"@types/node": "20.x",
+		"@types/vscode": "^1.101.0",
+		"@typescript-eslint/eslint-plugin": "^8.28.0",
+		"@typescript-eslint/parser": "^8.28.0",
+		"@vscode/test-cli": "^0.0.10",
+		"@vscode/test-electron": "^2.4.1",
+		"esbuild": "^0.25.6",
+		"eslint": "^9.23.0",
+		"npm-run-all": "^4.1.5",
+		"typescript": "^5.8.3"
+	},
+	"__metadata": {
+		"installedTimestamp": 1778006391152,
+		"targetPlatform": "undefined",
+		"size": 321588
+	}
+}

@@ -98,7 +98,60 @@ def test_run_bridge_writes_all_sidecars(tmp_path: Path) -> None:
     assert (out / "jixia_tactic_transitions.jsonl").exists()
     tactic = json.loads((out / "jixia_tactic_transitions.jsonl").read_text(encoding="utf-8"))
     assert tactic["tactic_syntax"] == "trivial"
+    assert tactic["info_kind"] == "tactic"
+    assert tactic["node_class"] == "leaf"
+    assert tactic["is_leaf_transition"] is True
     assert tactic["before"][0]["pp"] == "⊢ True"
+
+
+def test_run_bridge_classifies_aggregate_tactic_container(tmp_path: Path) -> None:
+    elab = tmp_path / "elab.json"
+    out = tmp_path / "out"
+    elab.write_text(
+        json.dumps(
+            [
+                {
+                    "info": {
+                        "tactic": {
+                            "references": [],
+                            "before": [{"pp": "⊢ True", "type": "True"}],
+                            "after": [],
+                        }
+                    },
+                    "ref": {"range": [10, 20], "original": True, "pp?": "Tactic.tacticSeq [...]"},
+                    "children": [
+                        {
+                            "info": {
+                                "tactic": {
+                                    "references": [["trivial"]],
+                                    "before": [{"pp": "⊢ True", "type": "True"}],
+                                    "after": [],
+                                }
+                            },
+                            "ref": {"range": [12, 19], "original": True, "pp?": "trivial"},
+                            "children": [],
+                        }
+                    ],
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    run_bridge(
+        declaration_json=None,
+        symbol_json=None,
+        elaboration_json=elab,
+        line_json=None,
+        output_dir=out,
+    )
+
+    rows = [
+        json.loads(line)
+        for line in (out / "jixia_tactic_transitions.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    assert [row["node_class"] for row in rows] == ["aggregate", "leaf"]
+    assert [row["is_leaf_transition"] for row in rows] == [False, True]
 
 
 def test_jixia_trace_bridge_cli(tmp_path: Path) -> None:

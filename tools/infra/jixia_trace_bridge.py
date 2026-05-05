@@ -22,6 +22,14 @@ SCHEMA_TACTIC = "info_geometry.jixia.tactic_transition.v1"
 SCHEMA_LINE = "info_geometry.jixia.line_state.v1"
 SCHEMA_SUMMARY = "info_geometry.jixia.bridge.summary.v1"
 
+AGGREGATE_TACTIC_MARKERS = (
+    "Term.byTactic",
+    "Tactic.tacticSeq",
+    "Tactic.tacticSeq1Indented",
+    "evalTacticSeq",
+    "evalTacticSeq1Indented",
+)
+
 
 def stable_hash(payload: Any) -> str:
     text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
@@ -131,14 +139,62 @@ def normalize_symbol(row: dict[str, Any], source_file: Path, idx: int) -> dict[s
     return payload
 
 
+def classify_info_node(*, info: dict[str, Any] | None, child_count: int, tactic_syntax: Any = None) -> dict[str, Any]:
+    """Classify an InfoTree-shaped node for proof-forest/training consumers.
+
+    `node_class` intentionally uses the Paperproof/InfoTree vocabulary:
+    aggregate tactic nodes are proof-forest/scope containers, while leaf tactic
+    nodes are canonical tactic-training transitions.
+    """
+    if not isinstance(info, dict):
+        return {
+            "info_kind": "unknown",
+            "node_class": "unknown",
+            "is_leaf_transition": False,
+            "child_count": child_count,
+        }
+    if "tactic" in info and isinstance(info["tactic"], dict):
+        syntax = str(tactic_syntax or "")
+        is_aggregate = child_count > 0 or any(marker in syntax for marker in AGGREGATE_TACTIC_MARKERS)
+        return {
+            "info_kind": "tactic",
+            "node_class": "aggregate" if is_aggregate else "leaf",
+            "is_leaf_transition": not is_aggregate,
+            "child_count": child_count,
+        }
+    for key, kind in (
+        ("term", "term"),
+        ("command", "command"),
+        ("macroExpansion", "macro"),
+        ("macro_expansion", "macro"),
+    ):
+        if key in info:
+            return {
+                "info_kind": kind,
+                "node_class": kind,
+                "is_leaf_transition": False,
+                "child_count": child_count,
+            }
+    return {
+        "info_kind": "unknown",
+        "node_class": "unknown",
+        "is_leaf_transition": False,
+        "child_count": child_count,
+    }
+
+
 def iter_tactic_infos(tree: Any) -> Iterable[dict[str, Any]]:
     if not isinstance(tree, dict):
         return
     info = tree.get("info")
     if isinstance(info, dict) and "tactic" in info and isinstance(info["tactic"], dict):
+        children = tree.get("children") if isinstance(tree.get("children"), list) else []
+        ref = tree.get("ref")
+        ref_pp = normalize_ppsyntax(ref).get("pp")
         yield {
             "info": info["tactic"],
-            "ref": tree.get("ref"),
+            "ref": ref,
+            "classification": classify_info_node(info=info, child_count=len(children), tactic_syntax=ref_pp),
         }
     for child in tree.get("children") or []:
         yield from iter_tactic_infos(child)
@@ -157,6 +213,10 @@ def normalize_tactic(row: dict[str, Any], source_file: Path, idx: int) -> dict[s
         "source_file": str(source_file),
         "range": ref.get("range"),
         "tactic_syntax": ref.get("pp"),
+        "info_kind": row.get("classification", {}).get("info_kind", "tactic"),
+        "node_class": row.get("classification", {}).get("node_class", "leaf"),
+        "is_leaf_transition": bool(row.get("classification", {}).get("is_leaf_transition", True)),
+        "child_count": int(row.get("classification", {}).get("child_count", 0) or 0),
         "references": sorted(set(references)),
         "before": before,
         "after": after,

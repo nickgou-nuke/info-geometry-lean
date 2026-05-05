@@ -21,6 +21,14 @@ from typing import Any, Iterable
 
 SCHEMA = "info_geometry.paperproof_trace.v1"
 
+AGGREGATE_TACTIC_MARKERS = (
+    "Term.byTactic",
+    "Tactic.tacticSeq",
+    "Tactic.tacticSeq1Indented",
+    "evalTacticSeq",
+    "evalTacticSeq1Indented",
+)
+
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
     if not path.exists():
@@ -83,16 +91,48 @@ def hypotheses_from_goals(goals: list[Any]) -> list[dict[str, Any]]:
     return out
 
 
+def classify_trace_node(row: dict[str, Any], *, tactic: str, children: Any = None) -> dict[str, Any]:
+    """Return explicit Paperproof/InfoTree node classification metadata."""
+    if row.get("node_class") in {"aggregate", "leaf", "term", "command", "macro"}:
+        node_class = str(row["node_class"])
+        info_kind = str(row.get("info_kind") or ("tactic" if node_class in {"aggregate", "leaf"} else node_class))
+        return {
+            "info_kind": info_kind,
+            "node_class": node_class,
+            "is_leaf_transition": bool(row.get("is_leaf_transition", node_class == "leaf")),
+        }
+
+    info_kind = str(row.get("info_kind") or row.get("kind") or "tactic")
+    if info_kind in {"term", "command", "macro"}:
+        return {"info_kind": info_kind, "node_class": info_kind, "is_leaf_transition": False}
+
+    child_count = 0
+    if isinstance(children, list):
+        child_count = len(children)
+    elif isinstance(row.get("child_count"), int):
+        child_count = int(row["child_count"])
+    is_aggregate = child_count > 0 or any(marker in tactic for marker in AGGREGATE_TACTIC_MARKERS)
+    return {
+        "info_kind": "tactic",
+        "node_class": "aggregate" if is_aggregate else "leaf",
+        "is_leaf_transition": not is_aggregate,
+    }
+
+
 def step_from_jixia(row: dict[str, Any], idx: int) -> dict[str, Any] | None:
     tactic = str(row.get("tactic_syntax") or "").strip()
     before = row.get("before") if isinstance(row.get("before"), list) else []
     after = row.get("after") if isinstance(row.get("after"), list) else []
     if not tactic and not before and not after:
         return None
+    classification = classify_trace_node(row, tactic=tactic)
     return {
         "index": idx,
         "source": "jixia",
         "tactic": tactic,
+        "info_kind": classification["info_kind"],
+        "node_class": classification["node_class"],
+        "is_leaf_transition": classification["is_leaf_transition"],
         "range": row.get("range"),
         "references": row.get("references") if isinstance(row.get("references"), list) else [],
         "hypotheses_before": hypotheses_from_goals(before),
@@ -109,10 +149,14 @@ def step_from_sft(row: dict[str, Any], idx: int) -> dict[str, Any] | None:
     goal_after = str(row.get("goal_after") or "").strip()
     if not tactic and not goal_before and not goal_after:
         return None
+    classification = classify_trace_node(row, tactic=tactic)
     return {
         "index": idx,
         "source": str(row.get("source") or "tactic_sft"),
         "tactic": tactic,
+        "info_kind": classification["info_kind"],
+        "node_class": classification["node_class"],
+        "is_leaf_transition": classification["is_leaf_transition"],
         "range": None,
         "references": (row.get("context") or {}).get("dependencies", []) if isinstance(row.get("context"), dict) else [],
         "hypotheses_before": [],
@@ -183,7 +227,10 @@ def render_markdown(packets: list[dict[str, Any]]) -> str:
         lines.append(f"- Steps: `{packet.get('step_count')}`")
         lines.append("")
         for step in packet.get("steps") or []:
-            lines.append(f"### Step {step.get('index')}: `{step.get('tactic')}`")
+            lines.append(
+                f"### Step {step.get('index')}: `{step.get('tactic')}` "
+                f"({step.get('node_class')})"
+            )
             lines.append("")
             if step.get("hypotheses_before"):
                 lines.append("Hypotheses before:")

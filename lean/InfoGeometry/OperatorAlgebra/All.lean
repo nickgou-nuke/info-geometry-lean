@@ -58,6 +58,7 @@ import InfoGeometry.OperatorAlgebra.KleinianReturn
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
+import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.OperatorAlgebra.ModularMirrorBoundary
 import InfoGeometry.OperatorAlgebra.MobiusClosure

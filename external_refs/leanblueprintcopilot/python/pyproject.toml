@@ -1,0 +1,15 @@
+[project]
+name = "leanblueprintcopilot-python"
+version = "0.1.0"
+description = "Python utilities for Lean Blueprint Copilot VS Code extension"
+authors = [
+    { name = "Auguste Poiroux", email = "auguste.poiroux@epfl.ch" }
+]
+requires-python = "==3.10.0"
+dependencies = [
+    "uv>=0.7.19",
+    "lean-blueprint-extractor[mcp]"
+]
+
+[tool.uv.sources]
+lean-blueprint-extractor = { git = "https://github.com/augustepoiroux/LeanBlueprintExtractor", rev = "ab9626742267f4319c3ab58a18d8b5cdcdeb2b3c" }

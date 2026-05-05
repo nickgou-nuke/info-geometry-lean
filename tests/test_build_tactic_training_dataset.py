@@ -20,12 +20,14 @@ def _args(
     leantrail: Path,
     hive: Path | None = None,
     real: Path | None = None,
+    jixia: Path | None = None,
 ) -> argparse.Namespace:
     return argparse.Namespace(
         leandojo_bridge=leandojo,
         leantrail_failures=leantrail,
         hive_attempts=hive,
         real_prover_traces=real,
+        jixia_tactics=jixia,
         raw_infotree=None,
         out_sft=tmp_path / "tactic_sft.jsonl",
         out_dpo=tmp_path / "tactic_dpo.jsonl",
@@ -184,3 +186,36 @@ def test_build_tactic_training_dataset_ingests_real_prover_traces(tmp_path: Path
     assert sft[0]["goal_before"] == "⊢ True"
     assert sft[0]["tactic"] == "trivial"
     assert sft[0]["goal_after"] == "no goals"
+
+
+def test_build_tactic_training_dataset_ingests_jixia_tactic_transitions(tmp_path: Path) -> None:
+    leandojo = tmp_path / "missing_leandojo.jsonl"
+    leantrail = tmp_path / "missing_failed_transitions.jsonl"
+    jixia = tmp_path / "jixia_tactic_transitions.jsonl"
+    _write_jsonl(
+        jixia,
+        [
+            {
+                "schema": "info_geometry.jixia.tactic_transition.v1",
+                "id": "jx1",
+                "source_file": "lean/Demo.lean",
+                "range": {"start": 20, "stop": 27},
+                "tactic_syntax": "trivial",
+                "references": ["True.intro"],
+                "before": [{"pp": "⊢ True", "type": "True"}],
+                "after": [],
+            }
+        ],
+    )
+
+    stats = build_dataset(_args(tmp_path, leandojo=leandojo, leantrail=leantrail, jixia=jixia))
+
+    sft = [json.loads(line) for line in (tmp_path / "tactic_sft.jsonl").read_text().splitlines()]
+    assert stats["rows"]["sft"] == 1
+    assert stats["by_source"]["jixia"] == 1
+    assert sft[0]["source"] == "jixia"
+    assert sft[0]["lean_file"] == "lean/Demo.lean"
+    assert sft[0]["goal_before"] == "⊢ True"
+    assert sft[0]["tactic"] == "trivial"
+    assert sft[0]["goal_after"] == "no goals"
+    assert sft[0]["context"]["dependencies"] == ["True.intro"]

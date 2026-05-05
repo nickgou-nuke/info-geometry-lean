@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.LinearAlgebra.Projection
 import InfoGeometry.Meta.Architecture
+import Paperproof
 
 /-!
 # InfoGeometry.Algebraic.Fitting
@@ -25,8 +26,8 @@ def DescentStabilized (T : Module.End K V) (k : ℕ) : Prop :=
   (T ^ k).range = (T ^ (k + 1)).range
 
 /-- Ascent stabilization propagates. -/
-theorem ascent_le {T : Module.End K V} {k n : ℕ} 
-    (h : AscentStabilized T k) (hkn : k ≤ n) : 
+theorem ascent_le {T : Module.End K V} {k n : ℕ}
+    (h : AscentStabilized T k) (hkn : k ≤ n) :
     (T ^ n).ker = (T ^ (n + 1)).ker := by
   induction n, hkn using Nat.le_induction with
   | base => exact h
@@ -45,8 +46,8 @@ theorem ascent_le {T : Module.End K V} {k n : ℕ}
         simpa [pow_succ] using hTx'
 
 /-- Descent stabilization propagates. -/
-theorem descent_le {T : Module.End K V} {k n : ℕ} 
-    (h : DescentStabilized T k) (hkn : k ≤ n) : 
+theorem descent_le {T : Module.End K V} {k n : ℕ}
+    (h : DescentStabilized T k) (hkn : k ≤ n) :
     (T ^ n).range = (T ^ (n + 1)).range := by
   induction n, hkn using Nat.le_induction with
   | base => exact h
@@ -68,8 +69,8 @@ theorem descent_le {T : Module.End K V} {k n : ℕ}
         simp [pow_succ]
 
 /-- Ascent propagation: if kernel stabilizes at k, it stabilizes at all n ≥ k. -/
-theorem ker_pow_eq_of_ascent_stabilized {T : Module.End K V} {k n : ℕ} 
-    (h : AscentStabilized T k) (hkn : k ≤ n) : 
+theorem ker_pow_eq_of_ascent_stabilized {T : Module.End K V} {k n : ℕ}
+    (h : AscentStabilized T k) (hkn : k ≤ n) :
     (T ^ n).ker = (T ^ k).ker := by
   induction n, hkn using Nat.le_induction with
   | base => rfl
@@ -77,8 +78,8 @@ theorem ker_pow_eq_of_ascent_stabilized {T : Module.End K V} {k n : ℕ}
       exact (ascent_le h hkn').symm.trans ih
 
 /-- Descent propagation: if range stabilizes at k, it stabilizes at all n ≥ k. -/
-theorem range_pow_eq_of_descent_stabilized {T : Module.End K V} {k n : ℕ} 
-    (h : DescentStabilized T k) (hkn : k ≤ n) : 
+theorem range_pow_eq_of_descent_stabilized {T : Module.End K V} {k n : ℕ}
+    (h : DescentStabilized T k) (hkn : k ≤ n) :
     (T ^ n).range = (T ^ k).range := by
   induction n, hkn using Nat.le_induction with
   | base => rfl
@@ -103,7 +104,7 @@ theorem isCompl_ker_pow_range_pow {T : Module.End K V} {k : ℕ}
     exact h_mem
   · rw [codisjoint_iff_le_sup]
     intro x _
-    have h_ran : (T ^ (k + k)).range = (T ^ k).range := 
+    have h_ran : (T ^ (k + k)).range = (T ^ k).range :=
       range_pow_eq_of_descent_stabilized hd (Nat.le_add_right k k)
     have hx_ran : (T ^ k) x ∈ (T ^ k).range := ⟨x, rfl⟩
     rw [← h_ran] at hx_ran

@@ -273,6 +273,8 @@ can_use_bwrap() {
   [[ -d "${home_elan}" ]] && ro_bind_args+=(--ro-bind "${home_elan}" "${home_elan}")
   [[ -d "${home_choo}" ]] && ro_bind_args+=(--ro-bind "${home_choo}" "${home_choo}")
   [[ -d "${HOME}" ]] && ro_bind_args+=(--ro-bind "${HOME}" "${HOME}")
+  [[ -e /etc/localtime ]] && ro_bind_args+=(--ro-bind /etc/localtime /etc/localtime)
+  [[ -e /etc/timezone ]] && ro_bind_args+=(--ro-bind /etc/timezone /etc/timezone)
 
   # Functional probe
   probe_err="$(probe_temp_file)"
@@ -370,6 +372,8 @@ if can_use_bwrap; then
   [[ -d "${HOME}" ]] && bwrap_args_exec+=(--ro-bind "${HOME}" "${HOME}")
   [[ -d "${HOME}/.elan" ]] && bwrap_args_exec+=(--ro-bind "${HOME}/.elan" "${HOME}/.elan")
   [[ -d "${HOME}/.choo" ]] && bwrap_args_exec+=(--ro-bind "${HOME}/.choo" "${HOME}/.choo")
+  [[ -e /etc/localtime ]] && bwrap_args_exec+=(--ro-bind /etc/localtime /etc/localtime)
+  [[ -e /etc/timezone ]] && bwrap_args_exec+=(--ro-bind /etc/timezone /etc/timezone)
   exec bwrap --unshare-pid "${bwrap_args[@]}" \
     "${bwrap_args_exec[@]}" \
     --dev /dev \

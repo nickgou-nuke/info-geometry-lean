@@ -256,6 +256,76 @@ script paperproofBidirectionalCone (args) do
   }
   child.wait
 
+script leanParanoiaAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/leanparanoia_audit_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script safeVerifyAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/safeverify_audit_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script hiveSpecSubmission (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/hive_spec_submission_policy.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leanAutograderReport (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/lean_autograder_report_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script hiveMultiCheckerMerge (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/hive_multichecker_merge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script buildPredigestionPackets (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/build_predigestion_packets.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script hivePredigestionIngest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/hive_predigestion_ingest.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script changedVerify (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -374,6 +444,9 @@ require mathlib from git
 require Paperproof from git
   "https://github.com/Paper-Proof/paperproof.git"
   @ "main" / "lean"
+require paranoia from git
+  "https://github.com/oOo0oOo/LeanParanoia.git"
+  @ "main"
 require LeanArchitect from git
   "https://github.com/hanwenzhu/LeanArchitect.git"
   @ "v4.28.0"

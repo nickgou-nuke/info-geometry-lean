@@ -57,6 +57,7 @@ Use these first:
 - [ModuleMap.md](ModuleMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
 - [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
+- [FormalizationDiscipline.md](FormalizationDiscipline.md)
 - [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
 - [GeneratedArtifactsPolicy.md](GeneratedArtifactsPolicy.md)
 - [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
@@ -121,12 +122,13 @@ Do not hand-curate those surfaces as if they were source of truth.
 4. [ModuleMap.md](ModuleMap.md)
 5. [OperationalIntent.md](OperationalIntent.md)
 6. [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
-7. [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
-8. [../Installation.md](../Installation.md)
-9. [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
-10. [OperatorQuickstart.md](OperatorQuickstart.md)
-11. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-12. [LeanTrail.md](LeanTrail.md)
+7. [FormalizationDiscipline.md](FormalizationDiscipline.md)
+8. [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
+9. [../Installation.md](../Installation.md)
+10. [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
+11. [OperatorQuickstart.md](OperatorQuickstart.md)
+12. [DAGTroubleshooting.md](DAGTroubleshooting.md)
+13. [LeanTrail.md](LeanTrail.md)
 
 ## What Changed In This Audit
 

@@ -123,10 +123,16 @@ class SuccessTransition:
     goal_after: str
     dependencies: tuple[str, ...]
     raw_ref: dict[str, Any]
+    node_class: str = "leaf"
+    info_kind: str = "tactic"
 
     @property
     def goal_hash(self) -> str:
         return goal_hash(self.goal_before)
+
+    @property
+    def is_leaf_transition(self) -> bool:
+        return self.node_class == "leaf"
 
 
 @dataclass(frozen=True)
@@ -161,6 +167,9 @@ def leandojo_successes(path: Path) -> list[SuccessTransition]:
             goal_after = normalize_goal(tactic.get("stateAfter"))
             if not goal_before or not tactic_text:
                 continue
+            node_class = str(tactic.get("node_class") or tactic.get("nodeClass") or "leaf")
+            if node_class == "aggregate":
+                continue
             out.append(
                 SuccessTransition(
                     source="leandojo_v2",
@@ -176,6 +185,8 @@ def leandojo_successes(path: Path) -> list[SuccessTransition]:
                         "source_line": row.get("sourceLine") or line_no,
                         "tactic_index": idx,
                     },
+                    node_class=node_class,
+                    info_kind=str(tactic.get("info_kind") or tactic.get("infoKind") or "tactic"),
                 )
             )
     return out
@@ -212,6 +223,7 @@ def hive_successes(path: Path) -> list[SuccessTransition]:
                 goal_after=goal_after,
                 dependencies=tuple(),
                 raw_ref={"source_key": row.get("_key"), "schema": row.get("schema")},
+                node_class="leaf",
             )
         )
     return out
@@ -311,6 +323,7 @@ def real_prover_successes(path: Path) -> list[SuccessTransition]:
                             "result_index": result_idx,
                             "node_index": node_idx,
                         },
+                        node_class="leaf",
                     )
                 )
     return out
@@ -320,6 +333,9 @@ def jixia_successes(path: Path) -> list[SuccessTransition]:
     out: list[SuccessTransition] = []
     for line_no, row in enumerate(iter_jsonl(path), start=1):
         if row.get("schema") != "info_geometry.jixia.tactic_transition.v1":
+            continue
+        node_class = str(row.get("node_class") or "leaf")
+        if node_class != "leaf":
             continue
         tactic = str(row.get("tactic_syntax") or "").strip()
         before = row.get("before") or []
@@ -361,7 +377,11 @@ def jixia_successes(path: Path) -> list[SuccessTransition]:
                     "source_line": line_no,
                     "transition_id": row.get("id"),
                     "range": row.get("range"),
+                    "node_class": node_class,
+                    "info_kind": row.get("info_kind") or "tactic",
                 },
+                node_class=node_class,
+                info_kind=str(row.get("info_kind") or "tactic"),
             )
         )
     return out
@@ -383,6 +403,9 @@ def sft_row(success: SuccessTransition, *, seed: int, train_ratio: float, val_ra
         "aesop_tactic_prior": classify_tactic(success.tactic),
         "goal_after": success.goal_after,
         "outcome": "success",
+        "info_kind": success.info_kind,
+        "node_class": success.node_class,
+        "is_leaf_transition": success.is_leaf_transition,
         "context": {
             "dependencies": list(success.dependencies),
             "imports": [],

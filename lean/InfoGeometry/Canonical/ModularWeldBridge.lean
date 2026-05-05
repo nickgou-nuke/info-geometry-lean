@@ -29,6 +29,10 @@ Ownership policy:
 finite diagonal statements in this file are intentionally **diagnostic shadows**:
 they summarize diagonal-frame data after gauge choice, and are never the semantic
 owner of the noncommutative Connes-Araki modular flow.
+
+The finite diagonal interface is therefore pinned as a projection/diagnostic
+contract and must not be treated as a primitive owner evidence in downstream
+operator-lane composition.
 -/
 
 namespace InfoGeometry.Canonical.ModularWeldBridge
@@ -120,6 +124,22 @@ theorem finiteDiagonalShadowLane_marker
       NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
   simpa using finiteDiagonalShadowLane (n := n) q q0
 
+/-- Final projection marker for the finite diagonal lane:
+it is a readout/diagnostic channel and must not be re-used as
+noncommutative owner evidence. -/
+theorem finiteDiagonalShadowLane_projection_only
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using finiteDiagonalShadowLane_marker (n := n) q q0
+
+/-- Explicit ownership boundary marker for downstream consumers. -/
+theorem finiteDiagonalShadowLane_only_projection
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using finiteDiagonalShadowLane_projection_only (n := n) q q0
+
 /-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
 @[simp, rep_depth operator]
 theorem relativeLogDensityOperator_self
@@ -191,6 +211,9 @@ section TomitaFlow
 
 variable {H : Type*}
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/-- Tomita flow lemmas here remain on the surface/diagnostic layer for
+Connes-Araki consumers. The noncommutative owner witness remains external. -/
 
 /--
 Tomita flow carries a canonical derived cocycle by evaluating the flow on

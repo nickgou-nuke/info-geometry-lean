@@ -113,6 +113,13 @@ theorem finiteDiagonalShadowLane
       NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
   simpa using finiteDiagonalModularWeldBridge_shadow_only (n := n) q q0
 
+/-- Diagnostic-only re-export of the finite diagonal shadow law. -/
+theorem finiteDiagonalShadowLane_marker
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using finiteDiagonalShadowLane (n := n) q q0
+
 /-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
 @[simp, rep_depth operator]
 theorem relativeLogDensityOperator_self

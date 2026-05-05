@@ -34,6 +34,10 @@ structure ModularTransportBridgePacket where
   encoding `σ_t^ψ = Ad(u_t) ∘ σ_t^ϕ`.
   -/
   cocycleTransportWitness : Type*
+  /-- Transport certificate tying source and target frames. -/
+  cocycleTransportCertificate : Prop
+  /-- Explicit proof/certificate that the transport cocycle certificate holds. -/
+  cocycleTransportCertificateWitness : cocycleTransportCertificate
   /-- Modular Hamiltonian / logarithmic potential along the transport. -/
   modularPotential : Type*
   /-- Transported free-energy or relative-entropy cost witness. -/
@@ -43,15 +47,15 @@ structure ModularTransportBridgePacket where
   /-- Optional Perelman/Ricci-flow transport comparison witness. -/
   perelmanComparison : Type*
 
-/-- Owner target for modular transport bridge data. -/
-def ModularTransportBridgeTarget : Prop :=
-  Nonempty ModularTransportBridgePacket
+/-- Owner target for supplied modular transport bridge data. -/
+def ModularTransportBridgeTarget (_P : ModularTransportBridgePacket) : Prop :=
+  _P.cocycleTransportCertificate
 
 /-- Constructor from explicit modular-transport data. -/
 theorem constructModularTransportBridgeTarget
-    (P : ModularTransportBridgePacket) :
-    ModularTransportBridgeTarget := by
-  exact ⟨P⟩
+    (_P : ModularTransportBridgePacket) :
+    ModularTransportBridgeTarget _P := by
+  exact _P.cocycleTransportCertificateWitness
 
 /--
 Tomita--Gromov bridge packet.
@@ -63,18 +67,26 @@ structure TomitaGromovBridgePacket where
   /-- Modular-volume bridge witness (classical, modular, spectral comparison). -/
   modularVolume : InfoGeometry.ModularVolumePotential.ModularVolumeBridgePacket
   /-- Boltzmann-normalized spectral witness. -/
-  spectralThermalNormalization : SpectralThermalNormalizationPacket
+  spectralThermalNormalization : InfoGeometry.ModularVolumePotential.SpectralThermalNormalizationPacket
   /-- Cocycle transport witness across state/weight frames. -/
-  modularTransport : ModularTransportBridgePacket
+  modularTransport : InfoGeometry.ModularVolumePotential.ModularTransportBridgePacket
+  /-- Compatibility certificate for spectral normalization component. -/
+  spectralThermalNormalization_eq :
+    spectralThermalNormalization = modularVolume.spectralThermalNormalization
+  /-- Compatibility certificate for transport component. -/
+  modularTransport_eq :
+    modularTransport = modularVolume.modularTransport
 
-/-- Tomita--Gromov bridge target. -/
-def TomitaGromovBridgeTarget : Prop :=
-  Nonempty TomitaGromovBridgePacket
+/-- Tomita–Gromov bridge target for supplied data. -/
+def TomitaGromovBridgeTarget
+    (_P : TomitaGromovBridgePacket) : Prop :=
+  _P.spectralThermalNormalization = _P.modularVolume.spectralThermalNormalization ∧
+    _P.modularTransport = _P.modularVolume.modularTransport
 
 /-- Constructor from explicit Tomita--Gromov bridge data. -/
 theorem constructTomitaGromovBridgeTarget
-    (P : TomitaGromovBridgePacket) :
-    TomitaGromovBridgeTarget := by
-  exact ⟨P⟩
+    (_P : TomitaGromovBridgePacket) :
+    TomitaGromovBridgeTarget _P := by
+  exact ⟨_P.spectralThermalNormalization_eq, _P.modularTransport_eq⟩
 
 end InfoGeometry.GrandUnification

@@ -1,5 +1,6 @@
 import DAG.Algo.Core
 import DAG.Algo.Traversal
+import DAG.Algo.Check
 
 /-!
 # DAG.Algo.All

@@ -86,7 +86,7 @@ def bfs_ids(
     return out
 
 
-def select_ids(args: argparse.Namespace, by_id: dict[str, dict[str, Any]], name_to_id: dict[str, str]) -> set[str]:
+def select_ids(args: argparse.Namespace, by_id: dict[str, dict[str, Any]], name_to_id: dict[str, str]) -> tuple[set[str], str]:
     if args.apex:
         seed = name_to_id.get(args.apex)
         if seed is None:
@@ -107,7 +107,7 @@ def select_ids(args: argparse.Namespace, by_id: dict[str, dict[str, Any]], name_
             depth=args.forward_depth,
             limit=remaining,
         )
-        return set(list(ids)[: args.max_nodes])
+        return set(list(ids)[: args.max_nodes]), "apex_cone"
 
     rows = list(by_id.items())
     rows.sort(key=lambda item: int(item[1].get("componentIndex") or 0))
@@ -118,7 +118,8 @@ def select_ids(args: argparse.Namespace, by_id: dict[str, dict[str, Any]], name_
             if component_name(c, id_fallback=cid).startswith(args.prefix)
             or any(isinstance(m, str) and m.startswith(args.prefix) for m in c.get("members") or [])
         ]
-    return {cid for cid, _ in rows[: args.max_nodes]}
+        return {cid for cid, _ in rows[: args.max_nodes]}, "prefix_slice"
+    return {cid for cid, _ in rows[: args.max_nodes]}, "component_index_slice"
 
 
 def category_for(c: dict[str, Any]) -> str:
@@ -167,10 +168,71 @@ def to_lean_graph_json(by_id: dict[str, dict[str, Any]], ids: set[str]) -> list[
     return rows
 
 
+def validate_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    names = {str(r.get("name")) for r in rows}
+    missing_refs: list[dict[str, str]] = []
+    self_refs: list[str] = []
+    duplicate_names: list[str] = []
+    seen: set[str] = set()
+
+    for r in rows:
+        name = str(r.get("name"))
+        if name in seen:
+            duplicate_names.append(name)
+        seen.add(name)
+        for ref in r.get("references") or []:
+            ref = str(ref)
+            if ref not in names:
+                missing_refs.append({"source": name, "reference": ref})
+            if ref == name:
+                self_refs.append(name)
+
+    return {
+        "node_count": len(rows),
+        "missing_reference_count": len(missing_refs),
+        "missing_references_sample": missing_refs[:20],
+        "self_reference_count": len(self_refs),
+        "self_references_sample": self_refs[:20],
+        "duplicate_name_count": len(duplicate_names),
+        "duplicate_names_sample": duplicate_names[:20],
+        "valid_for_lean_graph": not missing_refs and not self_refs and not duplicate_names,
+    }
+
+
+def metadata_for(
+    args: argparse.Namespace,
+    *,
+    slice_mode: str,
+    rows: list[dict[str, Any]],
+    validation: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "schema": "info_geometry.hydrated_dag_to_lean_graph.meta.v1",
+        "source": str(args.structure),
+        "output": str(args.out),
+        "orientation": "lean-graph references = dependencies",
+        "source_orientation": "structural-topology component -> dependencyComponentIds",
+        "node_semantics": "SCC representative, not raw declaration",
+        "slice_mode": slice_mode,
+        "apex": args.apex,
+        "prefix": args.prefix,
+        "backward_depth": args.backward_depth,
+        "forward_depth": args.forward_depth,
+        "max_nodes": args.max_nodes,
+        "node_count": len(rows),
+        "validation": validation,
+        "warning": (
+            "This file is a visualization projection only. Hydrated DAG and Lean "
+            "source remain authoritative."
+        ),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--structure", type=Path, default=Path("artifacts/dag/structural-topology.json"))
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--meta-out", type=Path, help="Optional metadata/validation sidecar path")
     parser.add_argument("--apex", help="Declaration/member/representative to use as causal-diamond apex")
     parser.add_argument("--prefix", help="Fallback prefix slice when no apex is supplied")
     parser.add_argument("--backward-depth", type=int, default=2)
@@ -179,11 +241,28 @@ def main() -> int:
     args = parser.parse_args()
 
     _payload, by_id, name_to_id = load_structure(args.structure)
-    ids = select_ids(args, by_id, name_to_id)
+    ids, slice_mode = select_ids(args, by_id, name_to_id)
     rows = to_lean_graph_json(by_id, ids)
+    validation = validate_rows(rows)
+    if not validation["valid_for_lean_graph"]:
+        raise SystemExit(
+            "invalid lean-graph slice: "
+            f"missing_refs={validation['missing_reference_count']} "
+            f"self_refs={validation['self_reference_count']} "
+            f"duplicate_names={validation['duplicate_name_count']}"
+        )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
+    meta_out = args.meta_out or args.out.with_suffix(".meta.json")
+    meta_out.parent.mkdir(parents=True, exist_ok=True)
+    meta_out.write_text(
+        json.dumps(metadata_for(args, slice_mode=slice_mode, rows=rows, validation=validation),
+                   indent=2,
+                   ensure_ascii=False),
+        encoding="utf-8",
+    )
     print(f"wrote {len(rows)} lean-graph nodes to {args.out}")
+    print(f"wrote metadata sidecar to {meta_out}")
     return 0
 
 

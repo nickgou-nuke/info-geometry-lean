@@ -34,6 +34,8 @@ from tools.infra.hermes_bounded_runner import call_openai_compatible
 from tools.infra import hive_arango_queue as queue_tool
 from tools.infra.ingest_hive_json import ingest_text
 from tools.infra.lean_interact_wrapper import apply_tactic, get_proof_state
+from tools.infra.leansearch_local import DEFAULT_RECORDS as DEFAULT_LEANSEARCH_LOCAL_RECORDS
+from tools.infra.leansearch_local import search_records
 
 
 def emit_packet(
@@ -73,6 +75,7 @@ DEFAULT_RETRIEVAL_STRATEGY = "gravity"
 DEFAULT_TASK_KIND = "proof.search"
 DEFAULT_LEANSEARCH_BASE_URL = "http://127.0.0.1:18080"
 DEFAULT_LEANSEARCH_NUM_RESULTS = 8
+DEFAULT_LEANSEARCH_LOCAL_RECORDS_PATH = ROOT / DEFAULT_LEANSEARCH_LOCAL_RECORDS
 ARTIFACT_DIR = ROOT / "artifacts" / "hermes_loop" / "hive_bee"
 GRAVITY_TOOL = ROOT / "tools" / "infra" / "arango_gravity_context.py"
 
@@ -104,6 +107,7 @@ class BeeConfig:
     task_kind: str = DEFAULT_TASK_KIND
     leansearch_base_url: str = DEFAULT_LEANSEARCH_BASE_URL
     leansearch_num_results: int = DEFAULT_LEANSEARCH_NUM_RESULTS
+    leansearch_local_records: Path = DEFAULT_LEANSEARCH_LOCAL_RECORDS_PATH
 
 
 @dataclass
@@ -324,12 +328,83 @@ def run_leansearch_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: 
     return normalized, out_path, None
 
 
+def run_leansearch_local_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = ARTIFACT_DIR / f"{task_key}-leansearch-local.json"
+    records_path = Path(config.leansearch_local_records)
+    if not records_path.exists():
+        return (
+            None,
+            out_path,
+            "leansearch_local records not found; build them with: "
+            "python3 tools/infra/leansearch_local.py build "
+            "--decls artifacts/dag/index/decls.jsonl "
+            "--types artifacts/dag/index/types.jsonl "
+            "--out artifacts/leansearch_local/records.jsonl",
+        )
+    query_text = build_leansearch_query(goal)
+    try:
+        result = search_records(
+            records_path=records_path,
+            query=query_text,
+            top_k=max(1, int(config.leansearch_num_results)),
+        )
+    except Exception as exc:  # noqa: BLE001
+        return None, out_path, f"leansearch_local failed: {exc!r}"
+
+    items: list[dict[str, Any]] = []
+    for hit in result.get("hits") or []:
+        if not isinstance(hit, dict):
+            continue
+        name = str(hit.get("name") or "")
+        if not name:
+            continue
+        items.append(
+            {
+                "id": name,
+                "module": str(hit.get("module") or ""),
+                "score": float(hit.get("score") or 0.0),
+                "file": hit.get("file"),
+                "line": hit.get("line"),
+                "doc": hit.get("doc"),
+                "faithful_witness": {
+                    "source": "leansearch_local",
+                    "records_path": str(records_path),
+                    "declaration": name,
+                    "rank": hit.get("rank"),
+                    "score_breakdown": hit.get("scoreBreakdown") or {},
+                },
+                "source_excerpt": {
+                    "lines": [
+                        {"text": str(hit.get("type") or "")},
+                        {"text": str(hit.get("doc") or "")},
+                        {"text": str(hit.get("snippet") or "")},
+                    ]
+                },
+            }
+        )
+
+    normalized = {
+        "graph_source": "leansearch_local",
+        "graph_mode": "lexical",
+        "query": query_text,
+        "records_path": str(records_path),
+        "node_count": len(items),
+        "edge_count": 0,
+        "items": items,
+    }
+    out_path.write_text(json.dumps(normalized, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    return normalized, out_path, None
+
+
 def run_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
     if config.retrieval_strategy == "leansearch":
         return run_leansearch_retrieval(config, goal, task_key)
+    if config.retrieval_strategy == "leansearch_local":
+        return run_leansearch_local_retrieval(config, goal, task_key)
     if config.retrieval_strategy == "hybrid":
         gravity_payload, gravity_path, gravity_error = run_gravity_retrieval(config, goal, task_key)
-        lean_payload, lean_path, lean_error = run_leansearch_retrieval(config, goal, task_key)
+        lean_payload, lean_path, lean_error = run_leansearch_local_retrieval(config, goal, task_key)
         if gravity_error and lean_error:
             return None, gravity_path, f"gravity={gravity_error}; leansearch={lean_error}"
         if gravity_error and lean_payload:
@@ -366,6 +441,7 @@ def run_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tup
                     "artifact_path": str(lean_path),
                     "error": lean_error,
                     "node_count": len(lean_items),
+                    "source": "leansearch_local",
                 },
             },
         }
@@ -796,6 +872,8 @@ def emit_attempt_packets(
             if gravity_context.get("graph_source") == "arango"
             else "leansearch"
             if gravity_context.get("graph_source") == "leansearch"
+            else "leansearch_local"
+            if gravity_context.get("graph_source") == "leansearch_local"
             else "hybrid"
             if gravity_context.get("graph_source") == "hybrid"
             else "jsonl_fallback"
@@ -1412,10 +1490,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--tactic-override", default=None)
-    parser.add_argument("--retrieval-strategy", choices=["gravity", "leansearch", "hybrid"], default=DEFAULT_RETRIEVAL_STRATEGY)
+    parser.add_argument("--retrieval-strategy", choices=["gravity", "leansearch", "leansearch_local", "hybrid"], default=DEFAULT_RETRIEVAL_STRATEGY)
     parser.add_argument("--task-kind", default=DEFAULT_TASK_KIND)
     parser.add_argument("--leansearch-base-url", default=DEFAULT_LEANSEARCH_BASE_URL)
     parser.add_argument("--leansearch-num-results", type=int, default=DEFAULT_LEANSEARCH_NUM_RESULTS)
+    parser.add_argument("--leansearch-local-records", type=Path, default=DEFAULT_LEANSEARCH_LOCAL_RECORDS_PATH)
     parser.add_argument("--once", action="store_true", help="run one claim/attempt cycle and exit")
     parser.add_argument("--poll-interval", type=int, default=15)
     return parser.parse_args()
@@ -1465,6 +1544,7 @@ def config_from_args(args: argparse.Namespace) -> BeeConfig:
         task_kind=str(args.task_kind),
         leansearch_base_url=str(args.leansearch_base_url).rstrip("/"),
         leansearch_num_results=max(1, int(args.leansearch_num_results)),
+        leansearch_local_records=Path(args.leansearch_local_records),
     )
 
 

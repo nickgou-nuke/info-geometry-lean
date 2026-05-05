@@ -13,11 +13,19 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
     )
 
 
-def _args(tmp_path: Path, *, leandojo: Path, leantrail: Path, hive: Path | None = None) -> argparse.Namespace:
+def _args(
+    tmp_path: Path,
+    *,
+    leandojo: Path,
+    leantrail: Path,
+    hive: Path | None = None,
+    real: Path | None = None,
+) -> argparse.Namespace:
     return argparse.Namespace(
         leandojo_bridge=leandojo,
         leantrail_failures=leantrail,
         hive_attempts=hive,
+        real_prover_traces=real,
         raw_infotree=None,
         out_sft=tmp_path / "tactic_sft.jsonl",
         out_dpo=tmp_path / "tactic_dpo.jsonl",
@@ -79,6 +87,7 @@ def test_build_tactic_training_dataset_emits_sft_and_failures(tmp_path: Path) ->
     assert sft[0]["theorem"] == "Demo.good"
     assert sft[0]["tactic"] == "trivial"
     assert sft[0]["context"]["dependencies"] == ["True.intro"]
+    assert sft[0]["aesop_tactic_prior"]["phase"] == "safe"
     assert failures[0]["schema"] == "info_geometry.tactic_failure.v1"
     assert failures[0]["source"] == "leantrail"
     assert failures[0]["failure_kind"] == "type_mismatch"
@@ -131,5 +140,47 @@ def test_build_tactic_training_dataset_pairs_dpo_by_same_theorem_and_goal_hash(t
     assert dpo[0]["schema"] == "info_geometry.tactic_dpo.v1"
     assert dpo[0]["theorem"] == "Demo.same"
     assert dpo[0]["chosen"]["tactic"] == "rfl"
+    assert dpo[0]["chosen"]["aesop_tactic_prior"]["phase"] == "safe"
     assert dpo[0]["rejected"]["tactic"] == "simp"
+    assert dpo[0]["rejected"]["aesop_tactic_prior"]["phase"] == "normalization"
     assert dpo[0]["pairing_reason"] == "same_theorem_and_goal_hash"
+
+
+def test_build_tactic_training_dataset_ingests_real_prover_traces(tmp_path: Path) -> None:
+    leandojo = tmp_path / "missing_leandojo.jsonl"
+    leantrail = tmp_path / "missing_failed_transitions.jsonl"
+    real = tmp_path / "real_prover_trace_bridge.jsonl"
+    _write_jsonl(
+        real,
+        [
+            {
+                "schema": "info_geometry.real_prover_trace.v1",
+                "id": "real1",
+                "formal_statement": "theorem Demo.real : True := by sorry",
+                "success": True,
+                "collect_results": [
+                    {
+                        "declaration": "Demo.real",
+                        "success": True,
+                        "nodes": [
+                            {"id": 0, "parent": 0, "depth": 0, "tactic": "", "state": ["⊢ True"]},
+                            {"id": 1, "parent": 0, "depth": 1, "tactic": "trivial", "state": []},
+                        ],
+                        "calls": [],
+                    }
+                ],
+                "raw_ref": {"source_file": "real.json", "source_line": 1},
+            }
+        ],
+    )
+
+    stats = build_dataset(_args(tmp_path, leandojo=leandojo, leantrail=leantrail, real=real))
+
+    sft = [json.loads(line) for line in (tmp_path / "tactic_sft.jsonl").read_text().splitlines()]
+    assert stats["rows"]["sft"] == 1
+    assert stats["by_source"]["real_prover"] == 1
+    assert sft[0]["source"] == "real_prover"
+    assert sft[0]["theorem"] == "Demo.real"
+    assert sft[0]["goal_before"] == "⊢ True"
+    assert sft[0]["tactic"] == "trivial"
+    assert sft[0]["goal_after"] == "no goals"

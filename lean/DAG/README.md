@@ -67,6 +67,7 @@ It remains subordinate to Lean source:
 | `ExportForwardGraph.lean` | forward adjacency JSON | Forward edge-list graph export |
 | `ServerExport.lean` | server-compatible JSON | Export format for external server consumption |
 | `JsonInstances.lean` | — | `ToJson`/`FromJson` instances for `Graph`, `HydratedGraph`, `EdgeKind`, `Name` |
+| `ConeCommand.lean` | command output | Interactive declaration-cone commands: bounded `#deps_dot`, `#deps_json`, and `#cone_json` for causal-diamond prompt context |
 
 ### Search Infrastructure
 
@@ -131,6 +132,67 @@ which runs the Lean-side indexer and writes:
 
 Downstream Python tooling then derives source-sink, causal, theorem-surface, semantic quotient, and representation-depth reports.
 Those reports should agree with the Lean-native audit, not replace it.
+
+For a small Lean-native causal cone around one declaration, import the command
+surface:
+
+```lean
+import DAG.ConeCommand
+
+#deps_dot Some.Theorem
+#deps_json Some.Theorem
+#cone_json Some.Theorem
+```
+
+The interactive commands are bounded by default.  They emit the
+syntactic/kernel declaration graph with orientation `dependency -> user`.
+They are prompt/audit context only: graph proximity is not proof, and Lean
+kernel checking remains the proof authority.
+
+For Arango-backed prompt packets, emit JSON/Markdown with:
+
+```bash
+python3 tools/infra/arango_causal_chiral_cone_prompt.py \
+  --decl InfoGeometry.Some.Module.some_theorem \
+  --json-out artifacts/cones/some_theorem.json \
+  --md-out artifacts/cones/some_theorem.md
+```
+
+Then render a local visual inspection page before giving the packet to an LLM:
+
+```bash
+python3 tools/infra/visualize_causal_chiral_cone_packet.py \
+  --json-in artifacts/cones/some_theorem.json \
+  --html-out artifacts/cones/some_theorem.html
+```
+
+The HTML view is an offline SVG/debug surface for the causal diamond and its
+Hodge/chiral/Dirac/process overlays.  It is deliberately downstream of Arango
+and upstream of the LLM prompt.
+
+To inspect hydrated SCC DAG slices in the external `lean-graph` viewer, project
+the hydrated topology into `lean-graph`'s simple JSON schema:
+
+```bash
+python3 tools/infra/hydrated_dag_to_lean_graph.py \
+  --apex InfoGeometry.Singular.Drazin.IsDrazinInverse \
+  --backward-depth 2 \
+  --forward-depth 1 \
+  --max-nodes 180 \
+  --out artifacts/lean-graph/hydrated-drazin-cone.json
+```
+
+or for a module/prefix slice:
+
+```bash
+python3 tools/infra/hydrated_dag_to_lean_graph.py \
+  --prefix InfoGeometry.Arithmetic.PrimitiveSouriauZeta \
+  --max-nodes 180 \
+  --out artifacts/lean-graph/hydrated-primitive-souriau-zeta.json
+```
+
+Then open the generated JSON in `external_refs/lean-graph/target/debug/lean-graph`
+via `File -> Open extracted data`.
 
 The constitutive process-flow layer is exported with:
 

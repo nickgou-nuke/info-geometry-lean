@@ -99,6 +99,28 @@ theorem modularFlow_mul
       P.modularFlow.flow t x * P.modularFlow.flow t y := by
   exact P.modularFlow.flow_mul_apply t x y
 
+/-- The canonical operator-owner packet carries an explicit noncommuting pair. -/
+theorem exists_noncommuting_pair
+    (P : NoncommutativeModularOperatorLift
+      (A := A) (Weight := Weight) (Deriv := Deriv)
+      (Ham := Ham) (Phase := Phase) (Core := Core)) :
+    ∃ a b : A, a * b ≠ b * a :=
+  NoncommutativeModularOperatorLift.noncommutativeWitness P
+
+/-- Type-III base integration is routed through the backend modular weight. -/
+theorem typeIII_baseIntegral_eq_modularWeight_integral
+    (x : A) :
+    P.typeIIIIntegration.baseIntegral x =
+      P.typeIIIIntegration.modularWeight.integral x :=
+  rfl
+
+/-- Type-III scalar readout is routed through the crossed-product/core trace. -/
+theorem typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
+    (x : A) :
+    P.typeIIIIntegration.coreTraceOfBase x =
+      P.typeIIIIntegration.coreTrace.traceOfEmbedded x :=
+  rfl
+
 end NoncommutativeModularOperatorLift
 
 end InfoGeometry.Canonical

@@ -23,6 +23,7 @@ import InfoGeometry.Exploration.Symphony.Basic
 import InfoGeometry.Exploration.Symphony.Draft
 import InfoGeometry.GrandUnification.AlgebraicSouriauTomita
 import InfoGeometry.GrandUnification.ModularTransport
+import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
@@ -113,6 +114,7 @@ import InfoGeometry.Arithmetic.PrimeVielbeinSupervolume
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
+import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization

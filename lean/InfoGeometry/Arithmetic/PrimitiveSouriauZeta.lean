@@ -200,9 +200,14 @@ end FinitePrimitiveMaxEntWitness
 /--
 Souriau-style primitive zeta calibration.
 
-`State` is an arbitrary thermodynamic/geometric carrier.  The calibration
-states that its finite partition, entropy, and free-energy readouts agree with
-the primitive arithmetic readouts on encoded primitive supports.
+`State` is an arbitrary thermodynamic/geometric carrier.
+
+The only direct arithmetic calibration is the objective/action readout:
+`objectiveReadout = primitiveWeightSum`.
+
+Entropy and the legacy free-energy/action readout are calibrated to that
+objective. Their equalities with `primitiveWeightSum` are therefore derived
+theorems, not independent fields.
 -/
 structure PrimitiveSouriauZetaCalibration (State : Type*) where
   /-- Encode a finite arithmetic support as a model state. -/
@@ -232,23 +237,18 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
       partitionReadout (stateOfFinset A) β =
         primitiveFiniteZetaPartition A β
 
-  /-- Entropy calibration against the primitive-weight objective. -/
-  entropy_eq_primitiveWeightSum :
-    ∀ A : Finset ℕ,
-      entropyReadout (stateOfFinset A) = primitiveWeightSum A
-
-  /-- Objective calibration against the primitive-weight objective. -/
+  /-- Primary arithmetic calibration. -/
   objective_eq_primitiveWeightSum :
     ∀ A : Finset ℕ,
       objectiveReadout (stateOfFinset A) = primitiveWeightSum A
 
-  /-- Free-energy/action calibration against the primitive-weight objective. -/
-  freeEnergy_eq_primitiveWeightSum :
+  /-- Entropy is calibrated to the primary objective. -/
+  entropy_eq_objective :
     ∀ A : Finset ℕ,
-      freeEnergyReadout (stateOfFinset A) = primitiveWeightSum A
+      entropyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
 
-  /-- Legacy compatibility bridge between legacy and primary objective naming. -/
-  freeEnergy_eq_objective_eq :
+  /-- Legacy free-energy/action readout is calibrated to the primary objective. -/
+  freeEnergy_eq_objective :
     ∀ A : Finset ℕ,
       freeEnergyReadout (stateOfFinset A) = objectiveReadout (stateOfFinset A)
 
@@ -264,12 +264,44 @@ theorem partitionReadout_nonneg
   rw [C.partition_eq_finiteZetaPartition A β]
   exact primitiveFiniteZetaPartition_nonneg A β
 
+/--
+Derived entropy calibration against the primitive-weight objective.
+
+This is no longer a field; it follows from entropy/objective compatibility and
+the primary objective calibration.
+-/
+theorem entropy_eq_primitiveWeightSum
+    (A : Finset ℕ) :
+    C.entropyReadout (C.stateOfFinset A) = primitiveWeightSum A := by
+  rw [C.entropy_eq_objective A]
+  exact C.objective_eq_primitiveWeightSum A
+
+/--
+Derived legacy free-energy/action calibration against the primitive-weight
+objective.
+
+This is no longer a field; it follows from free-energy/objective compatibility
+and the primary objective calibration.
+-/
+theorem freeEnergy_eq_primitiveWeightSum
+    (A : Finset ℕ) :
+    C.freeEnergyReadout (C.stateOfFinset A) = primitiveWeightSum A := by
+  rw [C.freeEnergy_eq_objective A]
+  exact C.objective_eq_primitiveWeightSum A
+
 /-- The legacy free-energy/action readout agrees with the objective readout. -/
 theorem freeEnergyReadout_eq_objectiveReadout
     (A : Finset ℕ) :
     C.freeEnergyReadout (C.stateOfFinset A) =
       C.objectiveReadout (C.stateOfFinset A) :=
-  C.freeEnergy_eq_objective_eq A
+  C.freeEnergy_eq_objective A
+
+/-- The entropy readout agrees with the objective readout. -/
+theorem entropyReadout_eq_objectiveReadout
+    (A : Finset ℕ) :
+    C.entropyReadout (C.stateOfFinset A) =
+      C.objectiveReadout (C.stateOfFinset A) :=
+  C.entropy_eq_objective A
 
 /--
 After calibration, the model entropy readout is exactly the integrated
@@ -319,7 +351,7 @@ theorem freeEnergy_eq_integral_partitionReadout
     (A : Finset ℕ) :
     C.freeEnergyReadout (C.stateOfFinset A) =
       ∫ β : ℝ in Set.Ioi 1, C.partitionReadout (C.stateOfFinset A) β := by
-  rw [C.freeEnergy_eq_objective_eq A]
+  rw [C.freeEnergy_eq_objective A]
   exact C.objective_eq_integral_partitionReadout A
 
 /-- Calibrated entropy comparison is primitive-weight comparison. -/
@@ -344,8 +376,7 @@ theorem freeEnergy_le_iff_weight_le
     C.freeEnergyReadout (C.stateOfFinset A) ≤
         C.freeEnergyReadout (C.stateOfFinset B) ↔
       primitiveWeightSum A ≤ primitiveWeightSum B := by
-  rw [C.freeEnergy_eq_objective_eq A, C.freeEnergy_eq_objective_eq B]
-  exact C.objective_le_iff_weight_le A B
+  rw [C.freeEnergy_eq_primitiveWeightSum A, C.freeEnergy_eq_primitiveWeightSum B]
 
 /--
 A primitive MaxEnt witness calibrates to entropy maximality in any Souriau
@@ -415,7 +446,7 @@ theorem freeEnergyReadout_le_candidate_of_maxEnt
     (hSupp : SupportedAboveFinset threshold A) :
     C.freeEnergyReadout (C.stateOfFinset A) ≤
       C.freeEnergyReadout (C.stateOfFinset candidate) := by
-  rw [C.freeEnergy_eq_objective_eq A, C.freeEnergy_eq_objective_eq candidate]
+  rw [C.freeEnergy_eq_objective A, C.freeEnergy_eq_objective candidate]
   exact C.objectiveReadout_le_candidate_of_maxEnt (threshold := threshold) (candidate := candidate)
     W hPrim hSupp
 
@@ -473,8 +504,8 @@ theorem freeEnergyReadout_le_candidate_of_admissible_maxEnt
     (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
     C.freeEnergyReadout (C.stateOfFinset A.support) ≤
       C.freeEnergyReadout (C.stateOfFinset candidate) := by
-  rw [C.freeEnergy_eq_objective_eq A.support,
-      C.freeEnergy_eq_objective_eq candidate]
+  rw [C.freeEnergy_eq_objective A.support,
+      C.freeEnergy_eq_objective candidate]
   exact C.objectiveReadout_le_candidate_of_admissible_maxEnt (A := A) (candidate := candidate) W
 
 /-- Admissible readout calibration in partition-integral form. -/
@@ -499,5 +530,74 @@ theorem entropy_eq_integral_partitionReadout_of_admissible
   exact C.entropy_eq_integral_partitionReadout A.support
 
 end PrimitiveSouriauZetaCalibration
+
+/-! ## 4. Constructive identity calibration -/
+
+/--
+The identity arithmetic state model.
+
+Here the model state is literally a finite support, so partition, entropy, and
+objective readouts are definitionally the primitive arithmetic readouts.
+-/
+def identityPrimitiveSouriauZetaCalibration :
+    PrimitiveSouriauZetaCalibration (Finset ℕ) where
+  stateOfFinset := id
+  partitionReadout := primitiveFiniteZetaPartition
+  entropyReadout := primitiveWeightSum
+  objectiveReadout := primitiveWeightSum
+  freeEnergyReadout := primitiveWeightSum
+  partition_eq_finiteZetaPartition := by
+    intro A β
+    rfl
+  objective_eq_primitiveWeightSum := by
+    intro A
+    rfl
+  entropy_eq_objective := by
+    intro A
+    rfl
+  freeEnergy_eq_objective := by
+    intro A
+    rfl
+
+namespace identityPrimitiveSouriauZetaCalibration
+
+/--
+In the identity arithmetic model, the entropy readout is constructively the
+primitive weight sum.
+-/
+theorem entropy_eq_weight
+    (A : Finset ℕ) :
+    identityPrimitiveSouriauZetaCalibration.entropyReadout
+        (identityPrimitiveSouriauZetaCalibration.stateOfFinset A)
+      =
+    primitiveWeightSum A :=
+  identityPrimitiveSouriauZetaCalibration.entropy_eq_primitiveWeightSum A
+
+/--
+In the identity arithmetic model, the objective readout is constructively the
+primitive weight sum.
+-/
+theorem objective_eq_weight
+    (A : Finset ℕ) :
+    identityPrimitiveSouriauZetaCalibration.objectiveReadout
+        (identityPrimitiveSouriauZetaCalibration.stateOfFinset A)
+      =
+    primitiveWeightSum A :=
+  identityPrimitiveSouriauZetaCalibration.objective_eq_primitiveWeightSum A
+
+/--
+In the identity arithmetic model, the finite partition readout is
+constructively the restricted finite zeta partition.
+-/
+theorem partition_eq_finite_zeta
+    (A : Finset ℕ) (β : ℝ) :
+    identityPrimitiveSouriauZetaCalibration.partitionReadout
+        (identityPrimitiveSouriauZetaCalibration.stateOfFinset A)
+        β
+      =
+    primitiveFiniteZetaPartition A β :=
+  identityPrimitiveSouriauZetaCalibration.partition_eq_finiteZetaPartition A β
+
+end identityPrimitiveSouriauZetaCalibration
 
 end InfoGeometry.Arithmetic.PrimitiveSouriauZeta

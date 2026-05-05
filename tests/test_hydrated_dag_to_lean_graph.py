@@ -58,6 +58,47 @@ def _write_fixture(path: Path) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 
+def _component(
+    cid: str,
+    index: int,
+    representative: str,
+    *,
+    deps: list[str] | None = None,
+    users: list[str] | None = None,
+) -> dict:
+    return {
+        "componentId": cid,
+        "componentIndex": index,
+        "representative": representative,
+        "members": [representative],
+        "dependencyComponentIds": deps or [],
+        "reverseDependentComponentIds": users or [],
+        "isRoot": not deps,
+        "isCapstone": not users,
+        "size": 1,
+        "depthMin": index,
+        "depthMax": index,
+        "strictDominatorCount": 0,
+    }
+
+
+def _run_adapter(structure: Path, out: Path, *extra: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--structure",
+            str(structure),
+            "--out",
+            str(out),
+            *extra,
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+    )
+
+
 def test_hydrated_dag_to_lean_graph_apex_slice_has_closed_references_and_meta(tmp_path: Path) -> None:
     structure = tmp_path / "structural-topology.json"
     out = tmp_path / "fixture-cone.json"
@@ -110,3 +151,46 @@ def test_hydrated_dag_to_lean_graph_apex_slice_has_closed_references_and_meta(tm
     assert meta["validation"]["missing_reference_count"] == 0
     assert meta["validation"]["self_reference_count"] == 0
     assert meta["validation"]["duplicate_name_count"] == 0
+
+
+def test_hydrated_dag_to_lean_graph_fails_fast_on_duplicate_representatives(tmp_path: Path) -> None:
+    structure = tmp_path / "duplicate-structural-topology.json"
+    out = tmp_path / "duplicate.json"
+    structure.write_text(
+        json.dumps(
+            {
+                "components": [
+                    _component("C0", 0, "Fixture.Duplicate"),
+                    _component("C1", 1, "Fixture.Duplicate", deps=["C0"]),
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = _run_adapter(structure, out, "--max-nodes", "10")
+
+    assert result.returncode != 0
+    assert "duplicate_names=1" in result.stderr
+    assert not out.exists()
+
+
+def test_hydrated_dag_to_lean_graph_fails_fast_on_self_dependency(tmp_path: Path) -> None:
+    structure = tmp_path / "self-structural-topology.json"
+    out = tmp_path / "self.json"
+    structure.write_text(
+        json.dumps(
+            {
+                "components": [
+                    _component("C0", 0, "Fixture.Self", deps=["C0"], users=["C0"]),
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = _run_adapter(structure, out, "--max-nodes", "10")
+
+    assert result.returncode != 0
+    assert "self_refs=1" in result.stderr
+    assert not out.exists()

@@ -24,6 +24,25 @@ theorem dilationOperator_eq_complex_i :
 
 attribute [simp] dilationOperator_eq_complex_i
 
+/--
+The dilation/boost generator extracted from the Clifford commutator equals the
+canonical clock axis of the doubled Krein carrier.
+-/
+theorem dilationOperator_eq_clockAxis :
+    dilationOperator (E := E) = clockAxis (E := E) := by
+  rw [dilationOperator_eq_complex_i, clockAxis_eq_complex_i]
+
+/--
+The clock axis is half the commutator of the modular swap and spectral sign.
+-/
+theorem clockAxis_eq_half_comm_modular_j_spectral_epsilon :
+    clockAxis (E := E)
+      =
+    ((2 : ℝ)⁻¹) •
+      clmComm (modular_j (E := E)) (spectral_epsilon (E := E)) := by
+  rw [← dilationOperator_eq_clockAxis]
+  rfl
+
 /-- Algebraic closure relation `[I, J] = -2 ε`. -/
 theorem clmComm_complex_i_modular_j :
     clmComm (complex_i (E := E)) (modular_j (E := E))

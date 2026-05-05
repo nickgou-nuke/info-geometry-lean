@@ -1,40 +1,20 @@
+import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
 import InfoGeometry.GromovWittenErlangen.LocalizedDrazinFrobeniusBridge
 import InfoGeometry.Meta.Architecture
 
 /-!
 # Projective Count / Drazin-Frobenius Bridge
 
-This module installs the L0/L1 correction for the GW-Drazin architecture.
+This module connects the already-present repo surfaces:
 
-The intended layer descent is:
+* `GWProjectiveCountCalibration`: L0/L1 unnormalized projective count substrate;
+* `LocalizedDrazinFrobeniusBridge`: GW localization, Drazin split, Frobenius
+  self-dual readout.
 
-```text
-L0_Count:
-  raw unnormalized count states
-
-L1_Projective:
-  projective count rays, fixed-sector ratios, divisor incidence weights
-
-L2/L3:
-  GW localization graph and Drazin regular/residue decomposition
-
-L4/L5:
-  Frobenius self-dual readout, semisimple residue blocks, entropy/rank
-  calibrations elsewhere
-```
-
-The theorem-safe slogan is:
-
-```text
-Drazin localization is the algebraic regularization of singular projective
-count strata.
-```
-
-No Gromov-Witten invariant, virtual localization theorem, projective quotient
-construction, Atiyah-Singer theorem, or semisimplicity theorem is proved here.
-The file records the explicit calibration data needed for the existing
-GW/Drazin/Frobenius bridge to be read as a representation of a deeper
-projective count substrate.
+It deliberately does not introduce a parallel projective-count abstraction.
+The count layer is the arithmetic `CountProfile` / `SamePositiveRay` lane
+already implemented in `PrimitiveProjectiveRays`, exposed to GW through
+`GWProjectiveCountCalibration`.
 -/
 
 noncomputable section
@@ -42,72 +22,35 @@ noncomputable section
 namespace InfoGeometry
 namespace GromovWittenErlangen
 
-open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
-
-/-! ## L0/L1 projective count substrate -/
-
-/--
-L0/L1 projective count state space.
-
-`Count` is the unnormalized count-state carrier.  `Weight` is the coefficient
-or readout type used to record raw counts, fixed-sector weights, and divisor
-incidence weights.
--/
-@[rep_depth count]
-structure ProjectiveCountStateSpace (Count Weight : Type*) where
-  /-- Raw, unnormalized combinatorial count. -/
-  rawCount : Count → Weight
-
-  /-- Projective equivalence of count states, e.g. scale equivalence. -/
-  sameProjectiveState : Count → Count → Prop
-
-  /-- Divisor insertion/incidence weight on count states. -/
-  divisorInsertionWeight : Count → Weight
-
-  /-- Fixed-sector count weight, before operator assembly. -/
-  fixedSectorWeight : Count → Weight
-
-  /-- Law governing the transition from raw counts to projective readouts. -/
-  projectiveReadoutLaw : Prop
-
-  /-- Certificate for the projective readout law. -/
-  projectiveReadoutCertificate : projectiveReadoutLaw
-
-namespace ProjectiveCountStateSpace
-
-variable {Count Weight : Type*}
-variable (S : ProjectiveCountStateSpace Count Weight)
-
-/-- The projective readout law is available. -/
-@[rep_depth projective]
-theorem projectiveReadout_valid :
-    S.projectiveReadoutLaw :=
-  S.projectiveReadoutCertificate
-
-end ProjectiveCountStateSpace
-
 /-! ## Count-to-GW/Drazin/Frobenius bridge -/
 
 /--
-Bridge from projective count states to the localized Drazin-Frobenius GW
-readout.
+Bridge from the repo-owned projective count calibration to the localized
+Drazin-Frobenius GW readout.
 
-This is the explicit architectural correction: the operator/Fredholm/Drazin
-layer is a representation/readout of projective count geometry, not the origin
-of that geometry.
+The operator/Fredholm/Drazin layer is read as a representation/readout of the
+projective count geometry, not as a replacement for it.
 -/
 @[rep_depth projective]
 structure ProjectiveCountDrazinFrobeniusBridge
-    (Count Weight G T Target Coeff Algebra ModuliOperator : Type*)
+    (G T Target Coeff Algebra ModuliOperator : Type*)
     [Ring Algebra] where
-  /-- L0/L1 count/projective substrate. -/
-  projectiveBase :
-    ProjectiveCountStateSpace Count Weight
+  /-- Existing L0/L1 GW projective-count calibration. -/
+  projectiveCounts :
+    GWProjectiveCountCalibration G T Target Coeff
 
   /-- Existing GW/Drazin/Frobenius bridge. -/
   localizedBridge :
     LocalizedDrazinFrobeniusBridge
       G T Target Coeff Algebra ModuliOperator
+
+  /--
+  The localization packet used by the Drazin/Frobenius bridge is the same
+  localization packet shadowed by the projective count calibration.
+  -/
+  localization_packet_eq :
+    localizedBridge.gwDrazin.drazinLocalization.virtualLocalization =
+      projectiveCounts.localization
 
   /--
   Calibration: localization Euler weights are read from projective fixed-sector
@@ -142,18 +85,25 @@ structure ProjectiveCountDrazinFrobeniusBridge
 namespace ProjectiveCountDrazinFrobeniusBridge
 
 variable
-    {Count Weight G T Target Coeff Algebra ModuliOperator : Type*}
+    {G T Target Coeff Algebra ModuliOperator : Type*}
     [Ring Algebra]
 
 variable (B :
   ProjectiveCountDrazinFrobeniusBridge
-    Count Weight G T Target Coeff Algebra ModuliOperator)
+    G T Target Coeff Algebra ModuliOperator)
 
-/-- The underlying projective count readout law is available. -/
+/-- The underlying GW-to-count shadow law is available. -/
+@[rep_depth count]
+theorem countShadow_holds :
+    B.projectiveCounts.countShadowLaw :=
+  B.projectiveCounts.countShadow_holds
+
+/-- The Drazin bridge uses the same localization packet as the count shadow. -/
 @[rep_depth projective]
-theorem projectiveReadout_valid :
-    B.projectiveBase.projectiveReadoutLaw :=
-  B.projectiveBase.projectiveReadout_valid
+theorem localization_packet_matches_projectiveCounts :
+    B.localizedBridge.gwDrazin.drazinLocalization.virtualLocalization =
+      B.projectiveCounts.localization :=
+  B.localization_packet_eq
 
 /-- The Euler/projective weight compatibility law is available. -/
 @[rep_depth operator]
@@ -174,23 +124,38 @@ theorem frobenius_readout_of_projectiveCounts_valid :
   B.frobenius_readout_of_projectiveCounts_certificate
 
 /--
-The localized Drazin-Frobenius assembly remains valid, but is now explicitly
-read as a projective-count representation.
+The localized Drazin-Frobenius assembly is explicitly a projective-count
+readout.
 -/
 @[rep_depth operator]
 theorem drazin_is_projective_count_readout :
-    B.localizedBridge.gwDrazin.drazinLocalization.localizationAssemblyLaw ∧
+    B.projectiveCounts.countShadowLaw ∧
+      B.localizedBridge.gwDrazin.drazinLocalization.localizationAssemblyLaw ∧
       B.eulerWeight_eq_projectiveWeight_law ∧
       B.residue_governedBy_projectiveDivisor_law ∧
       B.frobenius_readout_of_projectiveCounts_law :=
-  ⟨B.localizedBridge.localizationAssembly_valid,
+  ⟨B.countShadow_holds,
+    B.localizedBridge.localizationAssembly_valid,
     B.eulerWeight_eq_projectiveWeight_valid,
     B.residue_governedBy_projectiveDivisor_valid,
     B.frobenius_readout_of_projectiveCounts_valid⟩
 
 /--
-The Fredholm/moduli obstruction residue is still killed by the Drazin regular
-inverse after descending from projective count data.
+The normalized projective count shape is invariant under nonzero rescaling of
+the raw count profile.
+-/
+@[rep_depth projective]
+theorem normalizedShape_scale_counts
+    (β c : ℝ) (hc : c ≠ 0) :
+    InfoGeometry.Arithmetic.PrimitiveProjectiveRays.finiteArithmeticNormalizedRay
+        (fun n => c * B.projectiveCounts.counts n)
+        B.projectiveCounts.support β =
+      B.projectiveCounts.normalizedShape β :=
+  B.projectiveCounts.normalizedShape_scale_counts β c hc
+
+/--
+The Fredholm/moduli obstruction residue is killed by the Drazin regular
+inverse in the projective-count readout.
 -/
 @[rep_depth operator]
 theorem obstructionResidue_mul_regularInverse :

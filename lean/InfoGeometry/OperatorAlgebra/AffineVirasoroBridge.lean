@@ -81,6 +81,16 @@ theorem sugawaraCentralCharge_E8_levelOne :
     sugawaraCentralCharge 1 248 30 = 8 := by
   norm_num [sugawaraCentralCharge]
 
+/--
+The level-one `so(4,4)` / `D₄` Sugawara central charge is `4`.
+
+The real form has the same complexified dimension and dual Coxeter number for
+this Sugawara readout: `dim so(8) = 28` and `h∨ = 6`.
+-/
+theorem sugawaraCentralCharge_so44_levelOne :
+    sugawaraCentralCharge 1 28 6 = 4 := by
+  norm_num [sugawaraCentralCharge]
+
 /-! ## 2. Affine current data -/
 
 /--

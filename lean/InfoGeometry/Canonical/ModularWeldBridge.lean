@@ -24,6 +24,11 @@ The core compatibility is:
 
 This file exports a Tomita flow cocycle surface so Connes-Araki consumers have
 diagnostic access, while preserving the diagonal lane as a projection channel.
+
+Ownership policy:
+finite diagonal statements in this file are intentionally **diagnostic shadows**:
+they summarize diagonal-frame data after gauge choice, and are never the semantic
+owner of the noncommutative Connes-Araki modular flow.
 -/
 
 namespace InfoGeometry.Canonical.ModularWeldBridge
@@ -100,6 +105,13 @@ theorem finiteDiagonalModularWeldBridge_shadow_only
     relativeModularOperator (n := n) q q0 =
       NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
   simpa using FiniteDiagonalModularWeldBridge (n := n) q q0
+
+/-- Thin ownership-safe alias reinforcing shadow status in downstream lanes. -/
+theorem finiteDiagonalShadowLane
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using finiteDiagonalModularWeldBridge_shadow_only (n := n) q q0
 
 /-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
 @[simp, rep_depth operator]

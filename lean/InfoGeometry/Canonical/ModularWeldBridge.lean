@@ -9,18 +9,21 @@ open scoped BigOperators
 /-!
 # InfoGeometry.Canonical.ModularWeldBridge
 
-Thin L2→L3 weld:
+Thin L2→L3 diagnostic bridge:
 
-- L2 owner: finite relative modular operator `Δ(q,q₀)` as a diagonal operator
-  over projective positive rays.
+- Finite diagonal branch is an explicit **shadow/diagnostic** lane.
+- It provides finite projective normal-form readouts; it is not the owner
+  primitive of the modular theory.
+- Finite diagnostic chart: relative modular operator `Δ(q,q₀)` as a diagonal
+  operator over projective positive rays (readout mode).
 - L3 readout: exponential modular lane.
 
 The core compatibility is:
 
 `Δ(q,q₀) = exp(log-density lift(q,q₀))`.
 
-This file also exports the flow-native cocycle surface on the Tomita modular
-flow, so Connes-Araki consumers can use a derived cocycle witness.
+This file exports a Tomita flow cocycle surface so Connes-Araki consumers have
+diagnostic access, while preserving the diagonal lane as a projection channel.
 -/
 
 namespace InfoGeometry.Canonical.ModularWeldBridge
@@ -36,19 +39,20 @@ section FiniteWeld
 variable {n : ℕ} [Nonempty (Fin n)]
 
 /--
-Finite diagonal lift of the relative log-density lane.
+Finite diagnostic lift of the relative log-density lane.
 
-This owner-level definition avoids pulling higher synthesis imports into the
-L2→L3 weld surface.
+This lane exposes diagonal coordinates after a finite gauge choice; it is
+explicitly the **shadow/diagnostic** readout channel, not a primitive operator
+object in the noncommutative modular architecture.
 -/
 noncomputable def relativeLogDensityOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
   diagMatrix (fun i =>
     InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity (α := Fin n) q q0 i)
 
-/--
-L2→L3 weld on the finite owner lane:
-the canonical relative modular operator is exactly the matrix exponential of
+/-!
+L2→L3 weld on the finite diagnostic lane:
+the canonical finite relative modular operator is exactly the matrix exponential of
 the lifted relative log-density operator.
 -/
 @[rep_depth operator]
@@ -72,6 +76,30 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
     unfold relativeLogDensityOperator diagMatrix
     rw [Matrix.exp_diagonal]
     simp only [Matrix.diagonal_apply_ne _ hij]
+
+/-- Shadow/diagnostic alias for the finite diagonal weld identity. -/
+theorem finiteDiagonalShadow_relativeModularOperator_eq_exp_relativeLogDensity
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using (relativeModularOperator_eq_exp_relativeLogDensityOperator
+    (n := n) q q0)
+
+/-- Owner-safe marker for the finite diagonal regression lane. -/
+theorem FiniteDiagonalModularWeldBridge
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using (finiteDiagonalShadow_relativeModularOperator_eq_exp_relativeLogDensity
+    (n := n) q q0)
+
+/-! The finite object above is a readout/diagnostic shadow and does not serve
+as the noncommutative modular operator owner lane. -/
+theorem finiteDiagonalModularWeldBridge_shadow_only
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      NormedSpace.exp (relativeLogDensityOperator (n := n) q q0) := by
+  simpa using FiniteDiagonalModularWeldBridge (n := n) q q0
 
 /-- Diagonal lift of the relative log-density is zero on the unit (self) lane. -/
 @[simp, rep_depth operator]
@@ -128,6 +156,15 @@ theorem exp_relativeLogDensityOperator_self
       (1 : FinMat n) := by
   rw [relativeLogDensityOperator_self]
   simp
+
+/--
+Shadow-level diagnostic naming: self-relative finite diagonal log-density exponentials
+normalize to unit as a diagonal readout check.
+-/
+theorem finiteDiagonalShadow_exp_self_is_one
+    (q : PositiveRay (Fin n)) :
+    NormedSpace.exp (relativeLogDensityOperator (n := n) q q) = 1 := by
+  simpa using (exp_relativeLogDensityOperator_self (n := n) q)
 
 end FiniteWeld
 

@@ -49,13 +49,42 @@ TACTIC_KEYS = (
     "steps",
 )
 
+DEPENDENCY_KEYS = (
+    "dependencies",
+    "deps",
+    "premises",
+    "imports",
+    "used_theorems",
+)
+
+DEPENDENCY_NAME_KEYS = (
+    "full_name",
+    "theoremFullName",
+    "declName",
+    "declaration",
+    "name",
+)
+
 
 def _pos(v: Any) -> dict[str, int] | None:
-    if not isinstance(v, list) or len(v) != 2:
-        return None
-    if not all(isinstance(x, int) for x in v):
-        return None
-    return {"line": v[0], "column": v[1]}
+    if isinstance(v, list) and len(v) == 2 and all(isinstance(x, int) for x in v):
+        return {"line": v[0], "column": v[1]}
+    if isinstance(v, dict):
+        line = v.get("line")
+        column = v.get("column")
+        if column is None:
+            column = v.get("col")
+        if isinstance(line, int) and isinstance(column, int):
+            return {"line": line, "column": column}
+    return None
+
+
+def _pos_from_fields(record: dict[str, Any], *, line_keys: Iterable[str], col_keys: Iterable[str]) -> dict[str, int] | None:
+    line = _first(record, line_keys)
+    column = _first(record, col_keys)
+    if isinstance(line, int) and isinstance(column, int):
+        return {"line": line, "column": column}
+    return None
 
 
 def _first(record: dict[str, Any], keys: Iterable[str]) -> Any:
@@ -83,6 +112,30 @@ def _tactic_text(tactic: dict[str, Any]) -> Any:
     return _first(tactic, ("tactic", "tactic_text", "code", "text"))
 
 
+def _dependency_name(x: Any) -> str | None:
+    if isinstance(x, str) and x:
+        return x
+    if isinstance(x, dict):
+        value = _first(x, DEPENDENCY_NAME_KEYS)
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def _dependencies(record: dict[str, Any]) -> list[str]:
+    raw = _first(record, DEPENDENCY_KEYS)
+    if not isinstance(raw, list):
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in raw:
+        name = _dependency_name(item)
+        if name is not None and name not in seen:
+            out.append(name)
+            seen.add(name)
+    return out
+
+
 def convert_theorem_record(record: dict[str, Any], *, source_file: str, line_no: int) -> dict[str, Any]:
     tactics = _tactics(record)
 
@@ -97,11 +150,16 @@ def convert_theorem_record(record: dict[str, Any], *, source_file: str, line_no:
     theorem_name = _first(record, THEOREM_NAME_KEYS)
     theorem_statement = _first(record, THEOREM_STATEMENT_KEYS)
     lean_file = _first(record, LEAN_FILE_KEYS)
-    dependencies = record.get("dependencies")
-    if not isinstance(dependencies, list):
-        dependencies = record.get("deps")
-    if not isinstance(dependencies, list):
-        dependencies = []
+    start = _pos(record.get("start")) or _pos_from_fields(
+        record,
+        line_keys=("start_line", "startLine"),
+        col_keys=("start_col", "start_column", "startCol", "startColumn"),
+    )
+    end = _pos(record.get("end")) or _pos_from_fields(
+        record,
+        line_keys=("end_line", "endLine"),
+        col_keys=("end_col", "end_column", "endCol", "endColumn"),
+    )
 
     return {
         "bridgeVersion": BRIDGE_VERSION,
@@ -115,10 +173,10 @@ def convert_theorem_record(record: dict[str, Any], *, source_file: str, line_no:
         "declaration": theorem_name,
         "theoremStatement": theorem_statement,
         "positions": {
-            "start": _pos(record.get("start")),
-            "end": _pos(record.get("end")),
+            "start": start,
+            "end": end,
         },
-        "dependencies": [str(dep) for dep in dependencies if isinstance(dep, str)],
+        "dependencies": _dependencies(record),
         "proofStepCount": len(tactics),
         "firstGoalState": first_state,
         "lastGoalState": last_state,
@@ -269,6 +327,8 @@ def run_bridge(*, input_dir: Path, output_dir: Path, compare_decl_paths: list[Pa
     files = 0
     proof_state_rows = 0
     tactic_rows = 0
+    total_tactics = 0
+    total_proof_states = 0
     theorem_names: set[str] = set()
     with out_path.open("w", encoding="utf-8") as out:
         for file_path in _input_files(input_dir):
@@ -283,7 +343,14 @@ def run_bridge(*, input_dir: Path, output_dir: Path, compare_decl_paths: list[Pa
                 count += 1
                 if bridged["theoremFullName"]:
                     theorem_names.add(str(bridged["theoremFullName"]))
-                if bridged["proofStepCount"]:
+                step_count = int(bridged["proofStepCount"])
+                total_tactics += step_count
+                for tactic in bridged["tactics"]:
+                    if tactic.get("stateBefore") is not None:
+                        total_proof_states += 1
+                    if tactic.get("stateAfter") is not None:
+                        total_proof_states += 1
+                if step_count:
                     tactic_rows += 1
                 if bridged["firstGoalState"] is not None or bridged["lastGoalState"] is not None:
                     proof_state_rows += 1
@@ -311,6 +378,8 @@ def run_bridge(*, input_dir: Path, output_dir: Path, compare_decl_paths: list[Pa
         "files": files,
         "rows": count,
         "declarations": len(theorem_names),
+        "totalTactics": total_tactics,
+        "totalProofStates": total_proof_states,
         "rowsWithTactics": tactic_rows,
         "rowsWithProofStates": proof_state_rows,
         "compareDeclarationFiles": [str(path) for path in compare_decl_paths],

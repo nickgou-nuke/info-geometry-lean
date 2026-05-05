@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+from tools.infra.aesop_tactic_prior import classify_tactic
+
 
 SCHEMA_SFT = "info_geometry.tactic_sft.v1"
 SCHEMA_DPO = "info_geometry.tactic_dpo.v1"
@@ -257,6 +259,58 @@ def leantrail_failures(path: Path) -> list[FailureTransition]:
     return out
 
 
+def real_prover_successes(path: Path) -> list[SuccessTransition]:
+    out: list[SuccessTransition] = []
+    for line_no, row in enumerate(iter_jsonl(path), start=1):
+        if row.get("schema") != "info_geometry.real_prover_trace.v1":
+            continue
+        statement = str(row.get("formal_statement") or "")
+        for result_idx, result in enumerate(row.get("collect_results") or []):
+            if not isinstance(result, dict):
+                continue
+            theorem = str(result.get("declaration") or "")
+            nodes_by_id = {
+                node.get("id"): node
+                for node in result.get("nodes") or []
+                if isinstance(node, dict)
+            }
+            for node_idx, node in enumerate(result.get("nodes") or []):
+                if not isinstance(node, dict):
+                    continue
+                tactic = str(node.get("tactic") or "").strip()
+                if not tactic:
+                    continue
+                parent = nodes_by_id.get(node.get("parent"))
+                if not isinstance(parent, dict):
+                    continue
+                parent_state = parent.get("state") or []
+                node_state = node.get("state") or []
+                goal_before = normalize_goal("\n\n".join(str(x) for x in parent_state))
+                goal_after = normalize_goal("\n\n".join(str(x) for x in node_state)) or "no goals"
+                if not goal_before:
+                    continue
+                out.append(
+                    SuccessTransition(
+                        source="real_prover",
+                        theorem=theorem,
+                        lean_file="",
+                        theorem_statement=statement,
+                        goal_before=goal_before,
+                        tactic=tactic,
+                        goal_after=goal_after,
+                        dependencies=tuple(),
+                        raw_ref={
+                            "source_file": row.get("raw_ref", {}).get("source_file") or str(path),
+                            "source_line": row.get("raw_ref", {}).get("source_line") or line_no,
+                            "trace_id": row.get("id"),
+                            "result_index": result_idx,
+                            "node_index": node_idx,
+                        },
+                    )
+                )
+    return out
+
+
 def sft_row(success: SuccessTransition, *, seed: int, train_ratio: float, val_ratio: float) -> dict[str, Any]:
     row_id = stable_hash("sft", success.source, success.theorem, success.goal_hash, success.tactic)
     return {
@@ -270,6 +324,7 @@ def sft_row(success: SuccessTransition, *, seed: int, train_ratio: float, val_ra
         "goal_before": success.goal_before,
         "goal_hash": success.goal_hash,
         "tactic": success.tactic,
+        "aesop_tactic_prior": classify_tactic(success.tactic),
         "goal_after": success.goal_after,
         "outcome": "success",
         "context": {
@@ -295,6 +350,7 @@ def failure_row(failure: FailureTransition, *, seed: int, train_ratio: float, va
         "goal_before": failure.goal_before,
         "goal_hash": failure.goal_hash,
         "failed_tactic": failure.failed_tactic,
+        "aesop_tactic_prior": classify_tactic(failure.failed_tactic),
         "diagnostic": failure.diagnostic,
         "failure_kind": failure.failure_kind,
         "tactic_family": tactic_family(failure.failed_tactic),
@@ -335,12 +391,14 @@ def dpo_rows(
                 "goal_hash": success.goal_hash,
                 "chosen": {
                     "tactic": success.tactic,
+                    "aesop_tactic_prior": classify_tactic(success.tactic),
                     "goal_after": success.goal_after,
                     "source": success.source,
                     "raw_ref": success.raw_ref,
                 },
                 "rejected": {
                     "tactic": failure.failed_tactic,
+                    "aesop_tactic_prior": classify_tactic(failure.failed_tactic),
                     "diagnostic": failure.diagnostic,
                     "failure_kind": failure.failure_kind,
                     "source": failure.source,
@@ -389,6 +447,10 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
         rows = leantrail_failures(args.leantrail_failures)
         failures.extend(rows)
         by_source["leantrail"] += len(rows)
+    if args.real_prover_traces and args.real_prover_traces.exists():
+        rows = real_prover_successes(args.real_prover_traces)
+        successes.extend(rows)
+        by_source["real_prover"] += len(rows)
 
     good_successes = []
     for success in successes:
@@ -431,6 +493,7 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
             "leantrail_failures": str(args.leantrail_failures) if args.leantrail_failures else None,
             "hive_attempts": str(args.hive_attempts) if args.hive_attempts else None,
             "raw_infotree": str(args.raw_infotree) if args.raw_infotree else None,
+            "real_prover_traces": str(args.real_prover_traces) if args.real_prover_traces else None,
         },
         "rows": {
             "sft": sft_count,
@@ -459,6 +522,7 @@ def main() -> int:
     parser.add_argument("--leandojo-bridge", type=Path, default=Path("artifacts/leandojo_v2/leandojo_v2_bridge.jsonl"))
     parser.add_argument("--leantrail-failures", type=Path, default=Path("artifacts/leantrail/failed_transitions.jsonl"))
     parser.add_argument("--hive-attempts", type=Path)
+    parser.add_argument("--real-prover-traces", type=Path, help="JSONL emitted by real_prover_trace_bridge.py")
     parser.add_argument("--raw-infotree", type=Path, help="Reserved for Phase B2 raw InfoTree adapter")
     parser.add_argument("--out-sft", type=Path, default=Path("reports/training/tactic_sft.jsonl"))
     parser.add_argument("--out-dpo", type=Path, default=Path("reports/training/tactic_dpo.jsonl"))

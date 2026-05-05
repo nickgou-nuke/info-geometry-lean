@@ -138,6 +138,7 @@ Start with:
 - [docs/ModuleMap.md](docs/ModuleMap.md)
 - [docs/OperationalIntent.md](docs/OperationalIntent.md)
 - [docs/GenerativeDiscoveryArchitecture.md](docs/GenerativeDiscoveryArchitecture.md)
+- [docs/FormalizationDiscipline.md](docs/FormalizationDiscipline.md)
 - [docs/ARANGO_DAG_REFRESH_METHODOLOGY.md](docs/ARANGO_DAG_REFRESH_METHODOLOGY.md)
 - [PAULI_MANDATE.md](PAULI_MANDATE.md)
 - [Installation.md](Installation.md)

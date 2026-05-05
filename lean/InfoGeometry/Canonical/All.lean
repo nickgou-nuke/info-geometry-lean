@@ -64,6 +64,7 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovVielbein
 import InfoGeometry.Canonical.BogoliubovVielbeinBridge
 import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
+import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity

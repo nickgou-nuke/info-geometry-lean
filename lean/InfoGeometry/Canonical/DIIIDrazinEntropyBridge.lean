@@ -144,6 +144,21 @@ theorem entropy_eq_log_mp_trace_of_DIII_Z2_sector :
     B.stateOfChain
     B.state_valid
 
+/--
+The finite static bridge, stated without overclaiming:
+
+* the nontrivial DIII/`ZMod 2` sector supplies a boundary zero-mode witness;
+* the supplied nontrivially represented division-fiber calibration makes the
+  corresponding MP/Drazin entropy nonnegative.
+-/
+theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg :
+    HasZeroMode
+      (S := S)
+      (globalChainOperatorFromOpenChain (S := S) B.localOp B.chain)
+      ∧
+    0 ≤ B.divisionEntropy.calibration.functional.entropy B.stateOfChain :=
+  ⟨B.hasSurfaceZeroMode, B.entropy_nonneg_of_DIII_Z2_sector⟩
+
 end DIIIZ2DivisionEntropyBridge
 
 end InfoGeometry.Canonical.DIIIDrazinEntropyBridge

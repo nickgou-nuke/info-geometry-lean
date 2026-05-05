@@ -23,6 +23,7 @@ import InfoGeometry.Exploration.Symphony.Basic
 import InfoGeometry.Exploration.Symphony.Draft
 import InfoGeometry.GrandUnification.AlgebraicSouriauTomita
 import InfoGeometry.GrandUnification.ModularTransport
+import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
 import InfoGeometry.GromovWittenErlangen.Checks
@@ -206,6 +207,7 @@ import InfoGeometry.Convex.EuclideanMonotonicity
 import InfoGeometry.ExponentialFamily.GaussianMonotonicity
 import InfoGeometry.Sandbox.FullOperatorVerification
 import InfoGeometry.Twistor.LightconeBridge
+import InfoGeometry.Information.Basic
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Potential
 import InfoGeometry.RegularizedKL

@@ -146,6 +146,16 @@ script leanGraphSlice (args) do
   }
   child.wait
 
+script leandojoV2Bridge (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/leandojo_v2_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script changedVerify (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

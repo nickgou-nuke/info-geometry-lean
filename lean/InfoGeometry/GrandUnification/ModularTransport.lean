@@ -45,13 +45,13 @@ structure ModularTransportBridgePacket where
 
 /-- Owner target for modular transport bridge data. -/
 def ModularTransportBridgeTarget : Prop :=
-  True
+  Nonempty ModularTransportBridgePacket
 
 /-- Constructor from explicit modular-transport data. -/
 theorem constructModularTransportBridgeTarget
-    (_P : ModularTransportBridgePacket) :
+    (P : ModularTransportBridgePacket) :
     ModularTransportBridgeTarget := by
-  trivial
+  exact ⟨P⟩
 
 /--
 Tomita--Gromov bridge packet.
@@ -69,12 +69,12 @@ structure TomitaGromovBridgePacket where
 
 /-- Tomita--Gromov bridge target. -/
 def TomitaGromovBridgeTarget : Prop :=
-  True
+  Nonempty TomitaGromovBridgePacket
 
 /-- Constructor from explicit Tomita--Gromov bridge data. -/
 theorem constructTomitaGromovBridgeTarget
-    (_P : TomitaGromovBridgePacket) :
+    (P : TomitaGromovBridgePacket) :
     TomitaGromovBridgeTarget := by
-  trivial
+  exact ⟨P⟩
 
 end InfoGeometry.GrandUnification

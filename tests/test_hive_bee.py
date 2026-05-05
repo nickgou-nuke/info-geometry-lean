@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import sys
+from dataclasses import replace
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -102,6 +103,91 @@ def test_generated_theorem_source_indexes_verified_fossil() -> None:
     assert "theorem hive_Demo_task_123 : 1 = 1 := by" in source
     assert "  rfl" in source
     assert "#hive_index_decl hive_Demo_task_123" in source
+
+
+def test_run_leansearch_local_retrieval_normalizes_hits(tmp_path: Path) -> None:
+    records = tmp_path / "records.jsonl"
+    records.write_text(
+        json.dumps(
+            {
+                "schema": "info_geometry.leansearch_local.record.v1",
+                "name": "Demo.rfl_owner",
+                "kind": "theorem",
+                "module": "Demo",
+                "file": "lean/Demo.lean",
+                "line": 12,
+                "doc": "Reflexivity owner for equality goals.",
+                "type": "1 = 1",
+                "snippet": "theorem rfl_owner : 1 = 1 := by rfl",
+                "nameTokens": ["demo", "rfl", "owner"],
+                "searchTokens": ["demo", "rfl", "owner", "equality", "eq"],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    config = replace(sample_config(), leansearch_local_records=records, leansearch_num_results=3)
+
+    payload, out_path, error = hive_bee.run_leansearch_local_retrieval(config, sample_goal(), "task_local")
+
+    assert error is None
+    assert out_path.exists()
+    assert payload["graph_source"] == "leansearch_local"
+    assert payload["graph_mode"] == "lexical"
+    assert payload["items"][0]["id"] == "Demo.rfl_owner"
+    assert payload["items"][0]["faithful_witness"]["source"] == "leansearch_local"
+
+
+def test_run_leansearch_local_retrieval_missing_records_has_actionable_error(tmp_path: Path) -> None:
+    config = replace(sample_config(), leansearch_local_records=tmp_path / "missing.jsonl")
+
+    payload, _out_path, error = hive_bee.run_leansearch_local_retrieval(config, sample_goal(), "task_missing")
+
+    assert payload is None
+    assert "leansearch_local records not found" in error
+    assert "leansearch_local.py build" in error
+
+
+def test_run_retrieval_hybrid_merges_gravity_and_leansearch_local(monkeypatch, tmp_path: Path) -> None:
+    def fake_gravity(_config, _goal, _task_key):
+        return (
+            {
+                "graph_source": "arango",
+                "edge_count": 7,
+                "items": [
+                    {"id": "Demo.gravity", "score": 10.0},
+                    {"id": "Demo.shared", "score": 5.0},
+                ],
+            },
+            tmp_path / "gravity.json",
+            None,
+        )
+
+    def fake_local(_config, _goal, _task_key):
+        return (
+            {
+                "graph_source": "leansearch_local",
+                "items": [
+                    {"id": "Demo.shared", "score": 4.0},
+                    {"id": "Demo.local", "score": 3.0},
+                ],
+            },
+            tmp_path / "leansearch-local.json",
+            None,
+        )
+
+    monkeypatch.setattr(hive_bee, "run_gravity_retrieval", fake_gravity)
+    monkeypatch.setattr(hive_bee, "run_leansearch_local_retrieval", fake_local)
+    config = replace(sample_config(), retrieval_strategy="hybrid")
+
+    payload, out_path, error = hive_bee.run_retrieval(config, sample_goal(), "task_hybrid")
+
+    assert error is None
+    assert out_path.name == "task_hybrid-hybrid.json"
+    assert payload["graph_source"] == "hybrid"
+    assert payload["edge_count"] == 7
+    assert [item["id"] for item in payload["items"]] == ["Demo.gravity", "Demo.shared", "Demo.local"]
+    assert payload["components"]["leansearch"]["source"] == "leansearch_local"
 
 
 def test_build_deadend_doc_captures_recirculation_memory() -> None:
@@ -361,10 +447,10 @@ def test_run_retrieval_hybrid_merges_and_dedupes(monkeypatch) -> None:
     )
     monkeypatch.setattr(
         hive_bee,
-        "run_leansearch_retrieval",
+        "run_leansearch_local_retrieval",
         lambda cfg, goal_doc, task_key: (
-            {"graph_source": "leansearch", "items": [{"id": "C.D"}, {"id": "E.F"}]},
-            Path("/tmp/leansearch.json"),
+            {"graph_source": "leansearch_local", "items": [{"id": "C.D"}, {"id": "E.F"}]},
+            Path("/tmp/leansearch-local.json"),
             None,
         ),
     )

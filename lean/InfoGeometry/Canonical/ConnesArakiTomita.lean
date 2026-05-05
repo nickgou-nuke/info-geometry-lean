@@ -13,6 +13,10 @@ finite diagonal branch as a readout/diagnostic projection.
 
 The finite diagonal outputs are explicit shadow diagnostics induced by chosen
 coordinate frames; they are not treated as primitive noncommutative content.
+
+In particular, diagonal identities in this file are projection-only witnesses and
+must be consumed as readout channels, never as owner-level noncommutative
+evidence.
 -/
 
 namespace InfoGeometry.Canonical.ConnesArakiFramework
@@ -116,6 +120,28 @@ theorem tomitaFiniteDiagonalLane_shadow_marker
         (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
           (n := n) q q0) := by
   simpa using tomitaFiniteDiagonalLane_shadow_alias (n := n) (q := q) (q0 := q0)
+
+/-- Diagnostic ownership boundary:
+this is an explicit finite-frame projection alias for Tomita endpoints. -/
+theorem tomitaFiniteDiagonalLane_shadow_projection_only
+    (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
+    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+        (n := n) q q0 =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
+          (n := n) q q0) := by
+  simpa using tomitaFiniteDiagonalLane_shadow_marker (n := n) (q := q) (q0 := q0)
+
+/-- Projection-only naming for downstream operators: finite diagonal remains readout. -/
+theorem tomitaFiniteDiagonalLane_shadow_projection_channel
+    (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
+    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+        (n := n) q q0 =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
+          (n := n) q q0) := by
+  simpa using tomitaFiniteDiagonalLane_shadow_projection_only
+    (n := n) (q := q) (q0 := q0)
 
 /-! ### Tomita unit-cocycle API surface
 
@@ -264,6 +290,24 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
     (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
       (H := H)
       (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/-- Shadow readout alias of the Connes-cocycle transport identity. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_transport_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
+    (H := H) (s := s) (t := t))
 
 /-- Diagnostic ownership alias: Tomita flow-unit shadow cocycle is a Connes-cocycle. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_isConnesCocycle :

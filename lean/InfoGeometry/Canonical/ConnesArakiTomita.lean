@@ -107,6 +107,16 @@ theorem tomitaFiniteDiagonalLane_shadow_alias
   simpa using
     (InfoGeometry.Canonical.ModularWeldBridge.finiteDiagonalShadowLane (n := n) q q0)
 
+/-- Diagnostic marker that the finite diagonal readout remains a projection channel. -/
+theorem tomitaFiniteDiagonalLane_shadow_marker
+    (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
+    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+        (n := n) q q0 =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
+          (n := n) q q0) := by
+  simpa using tomitaFiniteDiagonalLane_shadow_alias (n := n) (q := q) (q0 := q0)
+
 /-! ### Tomita unit-cocycle API surface
 
 These lemmas expose the welded Tomita flow-unit cocycle directly through the

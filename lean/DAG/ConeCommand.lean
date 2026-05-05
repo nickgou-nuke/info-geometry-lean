@@ -77,8 +77,9 @@ private partial def forwardEdgesLoop
 def forwardEdges (idx : DAG.DeclDepIndex) (root : Name) : Array Edge :=
   forwardEdgesLoop idx {} [root] #[]
 
-private partial def backwardEdgesBoundedLoop
-    (idx : DAG.DeclDepIndex)
+private partial def boundedEdgesLoop
+    (next : Name → Array Name)
+    (mkEdge : Name → Name → Edge)
     (maxDepth maxEdges : Nat)
     (seen : Std.HashSet Name)
     (todo : List (Name × Nat))
@@ -90,48 +91,31 @@ private partial def backwardEdgesBoundedLoop
     | [] => edges
     | (n, depth) :: rest =>
         if seen.contains n || depth >= maxDepth then
-          backwardEdgesBoundedLoop idx maxDepth maxEdges seen rest edges
+          boundedEdgesLoop next mkEdge maxDepth maxEdges seen rest edges
         else
           let seen := seen.insert n
-          let deps := idx.directDepsOf n
+          let ns := next n
           let room := maxEdges - edges.size
-          let depsLimited := deps.extract 0 (min deps.size room)
-          let edges := depsLimited.foldl (init := edges) fun es d => es.push (d, n)
-          let rest := depsLimited.toList.map (fun d => (d, depth + 1)) ++ rest
-          backwardEdgesBoundedLoop idx maxDepth maxEdges seen rest edges
+          let nsLimited := ns.extract 0 (min ns.size room)
+          let edges := nsLimited.foldl (init := edges) fun es m => es.push (mkEdge n m)
+          let rest := nsLimited.toList.map (fun m => (m, depth + 1)) ++ rest
+          boundedEdgesLoop next mkEdge maxDepth maxEdges seen rest edges
 
 /-- Depth/edge-limited backward dependency edges for root declaration `root`. -/
 def backwardEdgesBounded (idx : DAG.DeclDepIndex) (root : Name) (maxDepth maxEdges : Nat) :
     Array Edge :=
-  backwardEdgesBoundedLoop idx maxDepth maxEdges {} [(root, 0)] #[]
-
-private partial def forwardEdgesBoundedLoop
-    (idx : DAG.DeclDepIndex)
-    (maxDepth maxEdges : Nat)
-    (seen : Std.HashSet Name)
-    (todo : List (Name × Nat))
-    (edges : Array Edge) : Array Edge :=
-  if edges.size >= maxEdges then
-    edges
-  else
-    match todo with
-    | [] => edges
-    | (n, depth) :: rest =>
-        if seen.contains n || depth >= maxDepth then
-          forwardEdgesBoundedLoop idx maxDepth maxEdges seen rest edges
-        else
-          let seen := seen.insert n
-          let room := maxEdges - edges.size
-          let users := idx.directUsersOf n
-          let usersLimited := users.extract 0 (min users.size room)
-          let edges := usersLimited.foldl (init := edges) fun es u => es.push (n, u)
-          let rest := usersLimited.toList.map (fun u => (u, depth + 1)) ++ rest
-          forwardEdgesBoundedLoop idx maxDepth maxEdges seen rest edges
+  boundedEdgesLoop
+    (fun n => idx.directDepsOf n)
+    (fun n dep => (dep, n))
+    maxDepth maxEdges {} [(root, 0)] #[]
 
 /-- Depth/edge-limited forward usage edges for root declaration `root`. -/
 def forwardEdgesBounded (idx : DAG.DeclDepIndex) (root : Name) (maxDepth maxEdges : Nat) :
     Array Edge :=
-  forwardEdgesBoundedLoop idx maxDepth maxEdges {} [(root, 0)] #[]
+  boundedEdgesLoop
+    (fun n => idx.directUsersOf n)
+    (fun n user => (n, user))
+    maxDepth maxEdges {} [(root, 0)] #[]
 
 private def dotName (n : Name) : String :=
   "\"" ++ toString n ++ "\""

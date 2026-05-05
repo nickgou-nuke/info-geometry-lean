@@ -136,6 +136,16 @@ script dagAll (args) do
   }
   child.wait
 
+script leanGraphSlice (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/hydrated_dag_to_lean_graph.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script changedVerify (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

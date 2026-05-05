@@ -148,7 +148,7 @@ def buildBoundedCone
                   |>.filter (fun dep => dep != n)
             let mut hitsCurrent := false
             for dep in deps do
-              if wanted.contains dep then
+              if edgeCount < maxEdges && wanted.contains dep then
                 hitsCurrent := true
                 let oldUsers := idx.users.getD dep #[]
                 idx := { idx with users := idx.users.insert dep (oldUsers.push n) }

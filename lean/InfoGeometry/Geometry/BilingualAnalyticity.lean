@@ -226,7 +226,9 @@ def comp
     (B : CauchyAnalyticAt KY KZ G (F x)) :
     CauchyAnalyticAt KX KZ (fun u : X => G (F u)) x where
   deriv := B.deriv.comp A.deriv
-  has_fderiv_at := B.has_fderiv_at.comp x A.has_fderiv_at
+  has_fderiv_at := by
+    simpa [Function.comp_def] using
+      B.has_fderiv_at.comp x A.has_fderiv_at
   phase_linear_deriv := by
     ext v
     change B.deriv (A.deriv (KX.K v)) =
@@ -384,6 +386,18 @@ end GeometricIntegralBackend
 /-! ## 5. Hestenes analyticity -/
 
 /--
+A concrete calibration assigning a geometric one-form to a function.
+
+Using this avoids attaching an arbitrary closed form to an unrelated function:
+the Hestenes form is definitionally `formOf F`.
+-/
+structure HestenesFormCalibration
+    (Point Tangent Value : Type*) where
+  /-- Geometric one-form associated to a value-valued function. -/
+  formOf :
+    (Point → Value) → OperatorOneForm Point Tangent Value
+
+/--
 Hestenes analyticity on a region.
 
 A function is Hestenes-analytic relative to a chosen Cauchy form if the
@@ -457,6 +471,28 @@ theorem boundaryIntegral_eq_zero_of_closedForm
     (hω : I.IsClosedGeometricForm ω) :
     I.boundaryIntegral Ω ω = 0 :=
   I.boundaryIntegral_eq_zero_of_closed Ω ω hω
+
+/--
+Construct a Hestenes-analytic datum from a concrete function-to-form
+calibration.  This is the non-vacuous constructor: the stored form is
+definitionally the calibrated form of `F`.
+-/
+def ofCalibration
+    (C : HestenesFormCalibration Point Tangent Value)
+    (hclosed : I.IsClosedGeometricForm (C.formOf F)) :
+    HestenesAnalyticOn I F where
+  cauchyForm := C.formOf F
+  cauchyForm_represents_F_law := C.formOf F = C.formOf F
+  cauchyForm_represents_F_certificate := rfl
+  closed_form := hclosed
+
+@[simp]
+theorem ofCalibration_cauchyForm
+    (C : HestenesFormCalibration Point Tangent Value)
+    (hclosed : I.IsClosedGeometricForm (C.formOf F)) :
+    (ofCalibration (I := I) (F := F) C hclosed).cauchyForm = C.formOf F :=
+  by
+    rfl
 
 end HestenesAnalyticOn
 

@@ -63,7 +63,7 @@ theorem primitiveFiniteZetaPartition_eq_arithmeticPartition_unit
     (A : Finset ℕ) (β : ℝ) :
     primitiveFiniteZetaPartition A β =
       arithmeticPartition A (fun _ => (1 : ℝ)) β := by
-  simp [primitiveFiniteZetaPartition, arithmeticPartition, arithmeticCountWeight, mul_one]
+  simp [primitiveFiniteZetaPartition, arithmeticPartition, arithmeticCountWeight]
 
 /-- The finite restricted partition is nonnegative. -/
 theorem primitiveFiniteZetaPartition_nonneg
@@ -217,7 +217,13 @@ structure PrimitiveSouriauZetaCalibration (State : Type*) where
   /-- Calibrated model-specific objective (action/readout) over `State`. -/
   objectiveReadout : State → ℝ
 
-  /-- Legacy compatibility name for legacy free-energy/action wording. -/
+  /--
+  Legacy compatibility name for legacy free-energy/action wording.
+
+  This field is intentionally aligned with `objectiveReadout`; the bridge does
+  not claim physical Helmholtz free energy unless the model supplies that
+  interpretation separately.
+  -/
   freeEnergyReadout : State → ℝ
 
   /-- Partition calibration against the restricted finite zeta partition. -/
@@ -258,6 +264,13 @@ theorem partitionReadout_nonneg
   rw [C.partition_eq_finiteZetaPartition A β]
   exact primitiveFiniteZetaPartition_nonneg A β
 
+/-- The legacy free-energy/action readout agrees with the objective readout. -/
+theorem freeEnergyReadout_eq_objectiveReadout
+    (A : Finset ℕ) :
+    C.freeEnergyReadout (C.stateOfFinset A) =
+      C.objectiveReadout (C.stateOfFinset A) :=
+  C.freeEnergy_eq_objective_eq A
+
 /--
 After calibration, the model entropy readout is exactly the integrated
 restricted zeta partition.
@@ -276,7 +289,7 @@ theorem entropy_eq_integral_partitionReadout
           C.partitionReadout (C.stateOfFinset A) β := by
           apply MeasureTheory.integral_congr_ae
           filter_upwards with β
-          simpa [C.partition_eq_finiteZetaPartition A β]
+          simp [C.partition_eq_finiteZetaPartition A β]
 
 /--
 After calibration, the objective readout is exactly the integrated restricted
@@ -296,7 +309,7 @@ theorem objective_eq_integral_partitionReadout
           C.partitionReadout (C.stateOfFinset A) β := by
           apply MeasureTheory.integral_congr_ae
           filter_upwards with β
-          simpa [C.partition_eq_finiteZetaPartition A β]
+          simp [C.partition_eq_finiteZetaPartition A β]
 
 /--
 After calibration, the legacy free-energy field agrees with the partition integral
@@ -364,6 +377,34 @@ theorem objectiveReadout_le_candidate_of_maxEnt
       C.objective_eq_primitiveWeightSum candidate]
   exact W.weight_le_candidate A hPrim hSupp
 
+/-- Primary naming for primitive MaxEnt entropy comparison in calibrated models. -/
+theorem entropy_le_candidate_of_maxEnt
+    {threshold : ℕ} {candidate A : Finset ℕ}
+    (C : PrimitiveSouriauZetaCalibration State)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (hPrim : PrimitiveFinset A)
+    (hSupp : SupportedAboveFinset threshold A) :
+    C.entropyReadout (C.stateOfFinset A) ≤
+      C.entropyReadout (C.stateOfFinset candidate) :=
+  by
+    rw [C.entropy_eq_primitiveWeightSum A,
+        C.entropy_eq_primitiveWeightSum candidate]
+    exact W.weight_le_candidate A hPrim hSupp
+
+/-- Primary naming for primitive MaxEnt objective comparison in calibrated models. -/
+theorem objective_le_candidate_of_maxEnt
+    {threshold : ℕ} {candidate A : Finset ℕ}
+    (C : PrimitiveSouriauZetaCalibration State)
+    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (hPrim : PrimitiveFinset A)
+    (hSupp : SupportedAboveFinset threshold A) :
+    C.objectiveReadout (C.stateOfFinset A) ≤
+      C.objectiveReadout (C.stateOfFinset candidate) :=
+  by
+    rw [C.objective_eq_primitiveWeightSum A,
+        C.objective_eq_primitiveWeightSum candidate]
+    exact W.weight_le_candidate A hPrim hSupp
+
 /--
 Legacy compatibility: free-energy maximality follows from objective naming.
 -/
@@ -399,6 +440,32 @@ theorem objectiveReadout_le_candidate_of_admissible_maxEnt
   rw [C.objective_eq_primitiveWeightSum A.support,
       C.objective_eq_primitiveWeightSum candidate]
   exact W.weight_le_candidate A.support A.primitive A.supportedAbove
+
+/-- Primary naming for admissible primitive MaxEnt entropy calibration. -/
+theorem entropy_le_candidate_of_admissible_maxEnt
+    (A : PrimitiveAdmissibleFinset)
+    {candidate : Finset ℕ}
+    (C : PrimitiveSouriauZetaCalibration State)
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    C.entropyReadout (C.stateOfFinset A.support) ≤
+      C.entropyReadout (C.stateOfFinset candidate) :=
+  by
+    rw [C.entropy_eq_primitiveWeightSum A.support,
+        C.entropy_eq_primitiveWeightSum candidate]
+    exact W.weight_le_candidate A.support A.primitive A.supportedAbove
+
+/-- Primary naming for admissible primitive MaxEnt objective calibration. -/
+theorem objective_le_candidate_of_admissible_maxEnt
+    (A : PrimitiveAdmissibleFinset)
+    {candidate : Finset ℕ}
+    (C : PrimitiveSouriauZetaCalibration State)
+    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    C.objectiveReadout (C.stateOfFinset A.support) ≤
+      C.objectiveReadout (C.stateOfFinset candidate) :=
+  by
+    rw [C.objective_eq_primitiveWeightSum A.support,
+        C.objective_eq_primitiveWeightSum candidate]
+    exact W.weight_le_candidate A.support A.primitive A.supportedAbove
 
 theorem freeEnergyReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)

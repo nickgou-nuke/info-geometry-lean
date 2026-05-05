@@ -1,7 +1,13 @@
+import Mathlib
+import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
+import InfoGeometry.OperatorAlgebra.ModularWeightTrace
+import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.OperatorAlgebra.ModularSignCPT
+
 /-!
 InfoGeometry/OperatorAlgebra/NoncommutativeBogoliubovKANLift
 
-Operator-first Connes–spatial modular lane.
+Operator-first Connes-spatial modular lane.
 
 This module makes explicit the noncommutative owner core:
 
@@ -13,12 +19,6 @@ This module makes explicit the noncommutative owner core:
 The diagonal is not the primitive object; it is only represented through this
 `BogoliubovKANShadowPacket` as a readout artifact.
 -/
-
-import Mathlib
-import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
-import InfoGeometry.OperatorAlgebra.ModularWeightTrace
-import InfoGeometry.Canonical.BogoliubovTransport
-import InfoGeometry.OperatorAlgebra.ModularSignCPT
 
 noncomputable section
 
@@ -89,11 +89,21 @@ variable {A Weight Deriv Ham Phase Core : Type*}
 
 variable (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core)
 
+/-- Canonical projection naming used in the architectural statements. -/
+abbrev connesCocycleDerivative :=
+  P.connesCocycle
+
+/-- Canonical projection naming used in the architectural statements. -/
+abbrev relativeModularHamiltonian := P.relativeHamiltonian
+
+/-- Canonical projection naming used in the architectural statements. -/
+abbrev modularSign := P.modularPhase
+
 theorem connesCocycle_same_weight
     (φ : Weight)
     (t : ℝ) :
-    P.connesCocycle.cocycle φ φ t = 1 :=
-  P.connesCocycle.same_weight_apply φ t
+    P.connesCocycle.cocycle φ φ t = 1 := by
+  simpa [connesCocycleDerivative] using (P.connesCocycle.same_weight_apply φ t)
 
 theorem connesCocycle_chain_rule
     (φ ψ η : Weight)

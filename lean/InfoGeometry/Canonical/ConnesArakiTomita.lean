@@ -6,6 +6,13 @@ import InfoGeometry.Canonical.TomitaTakesaki
 # InfoGeometry.Canonical.ConnesArakiTomita
 
 Tomita-specialized Connes-Araki endpoints over the generic core carrier.
+
+This lane is owner-facing and diagnostic-oriented: it reuses the generic
+Connes-Araki core plus the Tomita flow-unit cocycle witness, while keeping the
+finite diagonal branch as a readout/diagnostic projection.
+
+The finite diagonal outputs are explicit shadow diagnostics induced by chosen
+coordinate frames; they are not treated as primitive noncommutative content.
 -/
 
 namespace InfoGeometry.Canonical.ConnesArakiFramework
@@ -88,11 +95,27 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
   tomitaUnitConnesArakiDataOfCasini'
     (H := H) (T := T) relEnt hCasini
 
+/-- Diagnostic bridge into the finite diagonal lane:
+this statement is a shadow/readout alias, not an owner identity, for Tomita endpoints. -/
+theorem tomitaFiniteDiagonalLane_shadow_alias
+    (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
+    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+        (n := n) q q0 =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
+          (n := n) q q0) := by
+  simpa using
+    (InfoGeometry.Canonical.ModularWeldBridge.finiteDiagonalShadowLane (n := n) q q0)
+
 /-! ### Tomita unit-cocycle API surface
 
 These lemmas expose the welded Tomita flow-unit cocycle directly through the
 Connes-Araki Tomita specialization.  They are theorem-only extensions:
 no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
+
+Conceptually, these are observer/readout lemmas: flow-unit evaluations are fixed to
+the operator unit and are used as thin diagnostics on top of the underlying
+non-commutative operator lane.
 -/
 
 /-- The Tomita modular-sign flow fixes the algebra unit. -/
@@ -148,6 +171,26 @@ no new carrier fields, no new assumptions on `TomitaUnitConnesArakiData`.
     (1 : AlgebraEnd H) := by
   simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
 
+/-- Diagnostic alias: Tomita flow-unit cocycle is the shadow unit across Connes-Araki lanes. -/
+@[simp] theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_apply (H := H) t)
+
+/-- Diagnostic readout alias: the shadow unit cocycle is the unit for each time slice. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_readout_eq_one
+    (t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (H := H)
+      (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t
+      =
+    (1 : AlgebraEnd H) := by
+  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq_one (H := H) t)
+
 /-- Canonical Connes-cocycle witness for the Tomita flow-unit lane. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
     IsConnesCocycle
@@ -191,6 +234,39 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_eq
     (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
       (H := H)
       (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/-- Diagnostic alias of the pointwise Connes-cocycle equation for shadow-transport. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
+    (s t : ℝ) :
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) (s + t)
+      =
+    InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s *
+    TomitaTakesaki.modularSignAdditiveModularFlow (E := H)
+      s
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
+  exact
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_cocycle
+      (H := H)
+      (σ := TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) s t)
+
+/-- Diagnostic ownership alias: Tomita flow-unit shadow cocycle is a Connes-cocycle. -/
+theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_isConnesCocycle :
+    IsConnesCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+        (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+          (E := H))) := by
+  simpa using
+    (tomitaUnitConnesAraki_flowUnitCocycle_cocycle
+      (H := H))
 
 /--
 For any Tomita unit-cocycle Connes-Araki package, scalar descent of the

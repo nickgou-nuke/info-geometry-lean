@@ -48,7 +48,10 @@ def test_convert_theorem_record_accepts_schema_aliases() -> None:
         "name": "Alias.demo",
         "file": "lean/Alias.lean",
         "type": "Alias.demo : True",
-        "deps": ["True.intro"],
+        "deps": ["True.intro", {"full_name": "And.intro"}, {"declName": "Eq.refl"}],
+        "start": {"line": 7, "column": 3},
+        "end_line": 9,
+        "end_col": 11,
         "tactics": [
             {"text": "trivial", "before": "⊢ True", "after": "no goals"},
         ],
@@ -59,7 +62,9 @@ def test_convert_theorem_record_accepts_schema_aliases() -> None:
     assert out["theoremFullName"] == "Alias.demo"
     assert out["leanFile"] == "lean/Alias.lean"
     assert out["theoremStatement"] == "Alias.demo : True"
-    assert out["dependencies"] == ["True.intro"]
+    assert out["dependencies"] == ["True.intro", "And.intro", "Eq.refl"]
+    assert out["positions"]["start"] == {"line": 7, "column": 3}
+    assert out["positions"]["end"] == {"line": 9, "column": 11}
     assert out["proofStepCount"] == 1
     assert out["firstGoalState"] == "⊢ True"
     assert out["lastGoalState"] == "no goals"
@@ -137,6 +142,8 @@ def test_run_bridge_converts_jsonl_and_writes_coverage_report(tmp_path: Path) ->
 
     assert summary["rows"] == 2
     assert summary["declarations"] == 2
+    assert summary["totalTactics"] == 1
+    assert summary["totalProofStates"] == 2
     assert summary["rowsWithTactics"] == 1
     assert summary["rowsWithProofStates"] == 1
     assert summary["coverageReport"] == str(report_path)

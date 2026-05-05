@@ -458,13 +458,13 @@ structure TomitaGromovBridgePacket where
 
 /-- Tomita–Gromov bridge target. -/
 def TomitaGromovBridgeTarget : Prop :=
-  True
+  Nonempty TomitaGromovBridgePacket
 
 /-- Constructor from explicit Tomita–Gromov bridge data. -/
 theorem constructTomitaGromovBridgeTarget
-    (_P : TomitaGromovBridgePacket) :
+    (P : TomitaGromovBridgePacket) :
     TomitaGromovBridgeTarget := by
-  trivial
+  exact ⟨P⟩
 
 /--
 The owner-target shape is explicit nonempty-data existence.

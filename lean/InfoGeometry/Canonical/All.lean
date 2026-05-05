@@ -372,6 +372,7 @@ import InfoGeometry.Canonical.OperatorAlgebraBridge
 import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
+import InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.OperatorFreudenthalBoundary

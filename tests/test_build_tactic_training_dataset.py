@@ -219,3 +219,45 @@ def test_build_tactic_training_dataset_ingests_jixia_tactic_transitions(tmp_path
     assert sft[0]["tactic"] == "trivial"
     assert sft[0]["goal_after"] == "no goals"
     assert sft[0]["context"]["dependencies"] == ["True.intro"]
+    assert sft[0]["node_class"] == "leaf"
+    assert sft[0]["is_leaf_transition"] is True
+
+
+def test_build_tactic_training_dataset_filters_jixia_aggregate_tactics(tmp_path: Path) -> None:
+    leandojo = tmp_path / "missing_leandojo.jsonl"
+    leantrail = tmp_path / "missing_failed_transitions.jsonl"
+    jixia = tmp_path / "jixia_tactic_transitions.jsonl"
+    _write_jsonl(
+        jixia,
+        [
+            {
+                "schema": "info_geometry.jixia.tactic_transition.v1",
+                "id": "jx_aggregate",
+                "source_file": "lean/Demo.lean",
+                "tactic_syntax": "Tactic.tacticSeq [...]",
+                "node_class": "aggregate",
+                "info_kind": "tactic",
+                "is_leaf_transition": False,
+                "before": [{"pp": "⊢ True", "type": "True"}],
+                "after": [],
+            },
+            {
+                "schema": "info_geometry.jixia.tactic_transition.v1",
+                "id": "jx_leaf",
+                "source_file": "lean/Demo.lean",
+                "tactic_syntax": "trivial",
+                "node_class": "leaf",
+                "info_kind": "tactic",
+                "is_leaf_transition": True,
+                "before": [{"pp": "⊢ True", "type": "True"}],
+                "after": [],
+            },
+        ],
+    )
+
+    stats = build_dataset(_args(tmp_path, leandojo=leandojo, leantrail=leantrail, jixia=jixia))
+
+    sft = [json.loads(line) for line in (tmp_path / "tactic_sft.jsonl").read_text().splitlines()]
+    assert stats["rows"]["sft"] == 1
+    assert sft[0]["tactic"] == "trivial"
+    assert sft[0]["node_class"] == "leaf"

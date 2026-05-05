@@ -313,6 +313,10 @@ lean_exe groundTruthHarvester where
   root := `DAG.GroundTruthHarvester
   supportInterpreter := true
 
+lean_exe infotreeExtract where
+  root := `DAG.InfoTreeExtract
+  supportInterpreter := true
+
 /--
 Experimental authoritative DAG facet.
  It intentionally reuses the managed

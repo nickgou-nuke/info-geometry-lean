@@ -21,6 +21,18 @@ structure ConnesCocycle {A : Type*} [Ring A]
   intertwine_law :
     ∀ (t : ℝ) (x : A), flow_phi.σ t x * u t = u t * flow_omega.σ t x
 
+/-!
+Composition of Connes cocycles uses the pointwise product.
+
+Under the convention
+
+  u (s + t) = u s * flow_omega.σ s (u t),
+  v (s + t) = v s * flow_psi.σ s (v t),
+
+and the intertwining identities, the middle transport terms cancel, giving
+
+  (u * v) (s + t) = (u * v) s * flow_psi.σ s ((u * v) t)
+-/
 def chain_cocycles {A : Type*} [Ring A]
     {flow_phi flow_omega flow_psi : VerifiedModularFlow A}
     (u : ConnesCocycle flow_phi flow_omega)
@@ -71,4 +83,3 @@ def chain_cocycles {A : Type*} [Ring A]
             rw [mul_assoc]
 
 end InfoGeometry.OperatorAlgebra.ConstructiveConnesCocycle
-

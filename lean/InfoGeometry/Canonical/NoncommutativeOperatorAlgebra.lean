@@ -1,3 +1,5 @@
+import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
+
 /-!
 InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
 
@@ -10,8 +12,6 @@ The design intent is explicit: the finite diagonal charts in `ModularWeldBridge`
 remain diagnostics of a chosen Bogoliubov/KAN frame, while the true owner lane
 for relative modular data lives in the noncommutative operator packet.
 -/
-
-import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 
 noncomputable section
 
@@ -26,7 +26,7 @@ abbrev NoncommutativeModularOperatorLift
     [Ring A]
     [One Deriv] [Mul Deriv]
     [Zero Ham]
-    [One Phase] [Mul Phase] : Type* :=
+    [One Phase] [Mul Phase] : Type _ :=
   InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift
     (A := A) (Weight := Weight) (Deriv := Deriv)
     (Ham := Ham) (Phase := Phase) (Core := Core)
@@ -35,7 +35,7 @@ abbrev NoncommutativeModularOperatorLift
 abbrev BogoliubovKANShadowPacket
     (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (Bog Korth Asplit Nshear CartanDiag : Type*) : Type* :=
+    (Bog Korth Asplit Nshear CartanDiag : Type*) : Type _ :=
   InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket
     (E := E) (Bog := Bog) (Korth := Korth)
     (Asplit := Asplit) (Nshear := Nshear) (CartanDiag := CartanDiag)
@@ -47,14 +47,14 @@ abbrev NoncommutativeModularToBogoliubovKANPacket
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase]
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type* :=
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
   InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularToBogoliubovKANPacket
     (A := A) (Weight := Weight) (Deriv := Deriv)
     (Ham := Ham) (Phase := Phase) (Core := Core)
     (E := E) (Bog := Bog) (Korth := Korth)
     (Asplit := Asplit) (Nshear := Nshear) (CartanDiag := CartanDiag)
 
-/-- Thin wrapper namespace: canonical names mirror existing operator-algebra owner facts. -/
+/-! Thin wrapper namespace: canonical names mirror existing operator-algebra owner facts. -/
 namespace NoncommutativeModularOperatorLift
 
 variable {A Weight Deriv Ham Phase Core : Type*}

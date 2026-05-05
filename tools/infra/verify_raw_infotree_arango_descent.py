@@ -167,6 +167,59 @@ FOR d IN raw_infotree_decl_links
 """,
         ),
         QueryCheck(
+            name="decl_link_declname_join_to_ig_decl_nodes_nonempty",
+            query="""
+FOR d IN raw_infotree_decl_links
+  FILTER d.declName != null
+  FILTER d.declName != ""
+  LET matches = (
+    FOR n IN ig_nodes
+      FILTER n.graphKind == "decl"
+      FILTER n.decl == d.declName
+      LIMIT 1
+      RETURN n._id
+  )
+  FILTER LENGTH(matches) == 0
+  LIMIT 20
+  RETURN { declLink: d._key, declName: d.declName }
+""",
+        ),
+        QueryCheck(
+            name="decl_link_declname_join_to_ig_decl_nodes_unique",
+            query="""
+FOR d IN raw_infotree_decl_links
+  FILTER d.declName != null
+  FILTER d.declName != ""
+  LET matches = (
+    FOR n IN ig_nodes
+      FILTER n.graphKind == "decl"
+      FILTER n.decl == d.declName
+      RETURN n._id
+  )
+  FILTER LENGTH(matches) > 1
+  LIMIT 20
+  RETURN { declLink: d._key, declName: d.declName, matchCount: LENGTH(matches) }
+""",
+        ),
+        QueryCheck(
+            name="tactic_argument_declname_join_to_ig_decl_nodes_nonempty",
+            query="""
+FOR a IN raw_infotree_tactic_arguments
+  FILTER a.declName != null
+  FILTER a.declName != ""
+  LET matches = (
+    FOR n IN ig_nodes
+      FILTER n.graphKind == "decl"
+      FILTER n.decl == a.declName
+      LIMIT 1
+      RETURN n._id
+  )
+  FILTER LENGTH(matches) == 0
+  LIMIT 20
+  RETURN { argumentKey: a.argumentKey, declName: a.declName }
+""",
+        ),
+        QueryCheck(
             name="env_ref_rows_have_node_edges",
             query="""
 FOR r IN raw_infotree_env_refs
@@ -286,7 +339,7 @@ FOR l IN raw_infotree_projection_leakage
 
 
 def count_report(target: ArangoTarget, ingest_report: dict[str, Any] | None) -> dict[str, Any]:
-    collections = [*ROW_FILES.keys(), *EDGE_COLLECTIONS]
+    collections = [*ROW_FILES.keys(), *EDGE_COLLECTIONS, "ig_nodes"]
     existing = list_collections(target)
     missing_collections = sorted(set(collections) - existing)
     live = {
@@ -426,13 +479,13 @@ def main() -> int:
         tactic: dict[str, Any] = {
             "ok": False,
             "skipped": True,
-            "reason": "missing raw_infotree collections",
+            "reason": "missing required collections for descent/join checks",
         }
         leakage: dict[str, Any] = {
             "total": None,
             "by_field": [],
             "skipped": True,
-            "reason": "missing raw_infotree collections",
+            "reason": "missing required collections for descent/join checks",
         }
     else:
         checks = run_checks(target)

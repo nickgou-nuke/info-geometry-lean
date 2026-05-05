@@ -25,6 +25,8 @@ open InfoGeometry.Volume.ConnesCocycle
 open InfoGeometry.Canonical.BekensteinBound
 open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.MoE
+open InfoGeometry.Canonical.PositiveRayCore
+open InfoGeometry.Canonical.RelativeModularOperator
 
 variable {n : Nat}
 variable {H : Type*}
@@ -103,7 +105,7 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
 this statement is a shadow/readout alias, not an owner identity, for Tomita endpoints. -/
 theorem tomitaFiniteDiagonalLane_shadow_alias
     (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
-    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator
         (n := n) q q0 =
       NormedSpace.exp
         (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
@@ -114,7 +116,7 @@ theorem tomitaFiniteDiagonalLane_shadow_alias
 /-- Diagnostic marker that the finite diagonal readout remains a projection channel. -/
 theorem tomitaFiniteDiagonalLane_shadow_marker
     (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
-    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator
         (n := n) q q0 =
       NormedSpace.exp
         (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
@@ -125,7 +127,7 @@ theorem tomitaFiniteDiagonalLane_shadow_marker
 this is an explicit finite-frame projection alias for Tomita endpoints. -/
 theorem tomitaFiniteDiagonalLane_shadow_projection_only
     (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
-    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator
         (n := n) q q0 =
       NormedSpace.exp
         (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
@@ -135,7 +137,7 @@ theorem tomitaFiniteDiagonalLane_shadow_projection_only
 /-- Projection-only naming for downstream operators: finite diagonal remains readout. -/
 theorem tomitaFiniteDiagonalLane_shadow_projection_channel
     (q q0 : PositiveRay (Fin n)) [Nonempty (Fin n)] :
-    InfoGeometry.Canonical.ModularWeldBridge.relativeModularOperator
+    InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator
         (n := n) q q0 =
       NormedSpace.exp
         (InfoGeometry.Canonical.ModularWeldBridge.relativeLogDensityOperator
@@ -306,8 +308,9 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_transport_eq
       (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
         (H := H)
         (TomitaTakesaki.modularSignAdditiveModularFlow (E := H)) t) := by
-  simpa using (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
-    (H := H) (s := s) (t := t))
+  exact
+    (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq
+      (H := H) (s := s) (t := t))
 
 /-- Diagnostic ownership alias: Tomita flow-unit shadow cocycle is a Connes-cocycle. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_isConnesCocycle :

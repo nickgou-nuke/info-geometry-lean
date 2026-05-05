@@ -30,6 +30,7 @@ import InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover
 import InfoGeometry.OperatorAlgebra.CPTChiralBranch
 import InfoGeometry.OperatorAlgebra.CPTSymmetryBranch
 import InfoGeometry.OperatorAlgebra.CrossoverResidue
+import InfoGeometry.OperatorAlgebra.DIIICosmicCrossoverBridge
 import InfoGeometry.OperatorAlgebra.DIIISuperfluid
 import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
@@ -74,6 +75,7 @@ import InfoGeometry.OperatorAlgebra.PoincareAndreev
 import InfoGeometry.OperatorAlgebra.ProjectiveJonesGeometry
 import InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
+import InfoGeometry.OperatorAlgebra.RealHestenesONNCliffordCPT
 import InfoGeometry.OperatorAlgebra.RenormalizedTrace
 import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants

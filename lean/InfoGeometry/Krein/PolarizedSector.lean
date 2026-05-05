@@ -104,6 +104,38 @@ theorem spectralProj_decomposition (u : H2) :
     Pplus u + Pminus u = u := by
   simpa [ContinuousLinearMap.add_apply] using (spectral_decomposition (E := E) u).symm
 
+/--
+The polarized doubled carrier decomposes into its two spectral sheets.
+
+Repository interpretation: this is the constructive diagonal sheet
+decomposition of the doubled Krein carrier.
+-/
+theorem frameDiagonal_sheet_decomposition (u : H2) :
+    Pplus u + Pminus u = u :=
+  spectralProj_decomposition (E := E) u
+
+/-- The plus sheet projector is idempotent. -/
+theorem frameDiagonal_plus_idempotent (u : H2) :
+    Pplus (Pplus u) = Pplus u :=
+  spectralPlusProj_apply_idempotent (E := E) u
+
+/-- The minus sheet projector is idempotent. -/
+theorem frameDiagonal_minus_idempotent (u : H2) :
+    Pminus (Pminus u) = Pminus u :=
+  spectralMinusProj_apply_idempotent (E := E) u
+
+omit [CompleteSpace E] in
+/-- The plus diagonal readout lands in the plus sheet. -/
+theorem frameDiagonal_plus_mem (u : H2) :
+    Pplus u ∈ plusSheet (E := E) :=
+  spectralPlusProj_mem_plusSheet (E := E) u
+
+omit [CompleteSpace E] in
+/-- The minus diagonal readout lands in the minus sheet. -/
+theorem frameDiagonal_minus_mem (u : H2) :
+    Pminus u ∈ minusSheet (E := E) :=
+  spectralMinusProj_mem_minusSheet (E := E) u
+
 /-- The positive-sector restriction of the split quadratic divergence. -/
 noncomputable def polarizedDivergence (q k : H2) : ℝ :=
   SplitQuadratic.divergence (E := E) (Pplus q) (Pplus k)

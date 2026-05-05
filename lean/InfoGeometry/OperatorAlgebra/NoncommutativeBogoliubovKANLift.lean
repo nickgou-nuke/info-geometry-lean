@@ -134,6 +134,38 @@ theorem modularFlow_mul
       P.modularFlow.flow t x * P.modularFlow.flow t y :=
   P.modularFlow.flow_mul_apply t x y
 
+/-- The carrier is explicitly noncommutative; this is the owner-side witness. -/
+theorem exists_noncommuting_pair
+    (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core) :
+    ∃ a b : A, a * b ≠ b * a :=
+  NoncommutativeModularOperatorLift.noncommutativeWitness P
+
+/--
+Type-III base integration is routed through the modular weight contained in the
+type-III backend, not through a bare trace on the base algebra.
+-/
+theorem typeIII_baseIntegral_eq_modularWeight_integral
+    (x : A) :
+    P.typeIIIIntegration.baseIntegral x =
+      P.typeIIIIntegration.modularWeight.integral x :=
+  rfl
+
+/--
+Trace-like scalar readout is routed through the crossed-product/core trace
+backend.
+-/
+theorem typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
+    (x : A) :
+    P.typeIIIIntegration.coreTraceOfBase x =
+      P.typeIIIIntegration.coreTrace.traceOfEmbedded x :=
+  rfl
+
+/-- The separately selected modular-weight readout remains explicitly weight-based. -/
+theorem modularWeight_integral_eq_weight_integral
+    (x : A) :
+    P.modularWeight.integral x = P.modularWeight.weight.integral x :=
+  rfl
+
 end NoncommutativeModularOperatorLift
 
 /--
@@ -187,6 +219,73 @@ variable {E : Type*}
 
 variable (P : BogoliubovKANShadowPacket E (Bog := Bog) (Korth := Korth)
   (Asplit := Asplit) (Nshear := Nshear) (CartanDiag := CartanDiag))
+
+/-- Endomorphisms of the actual doubled real Krein carrier used by Bogoliubov transport. -/
+abbrev doubledKreinEnd : Type _ :=
+  InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
+
+/-- The actual internal phase axis `Jε` on the doubled real Krein carrier. -/
+noncomputable abbrev doubledPhaseAxis : doubledKreinEnd (E := E) :=
+  InfoGeometry.Krein.clockAxis (E := E)
+
+/--
+The Cartan/gauge part of a doubled-space modular generator.
+
+This is a concrete Bogoliubov-transport readout, not the noncommutative owner.
+-/
+noncomputable abbrev cartanGaugeShadow
+    (H : doubledKreinEnd (E := E)) : doubledKreinEnd (E := E) :=
+  BogoliubovTransport.modularGeneratorGaugePart (E := E) H
+
+/--
+The scaling/source part of a doubled-space modular generator.
+
+This is the complementary Cartan-shadow channel of the Bogoliubov transport
+split.
+-/
+noncomputable abbrev cartanScaleShadow
+    (H : doubledKreinEnd (E := E)) : doubledKreinEnd (E := E) :=
+  BogoliubovTransport.modularGeneratorScalePart (E := E) H
+
+omit [CompleteSpace E] in
+/-- The concrete doubled-space KAN/Cartan shadow decomposes the modular generator. -/
+theorem cartanGaugeShadow_add_cartanScaleShadow
+    (H : doubledKreinEnd (E := E)) :
+    cartanGaugeShadow (E := E) H + cartanScaleShadow (E := E) H =
+      BogoliubovTransport.modularTransportGenerator (E := E) H :=
+  (BogoliubovTransport.modularTransportGenerator_split (E := E) H).symm
+
+omit [CompleteSpace E] in
+/-- The gauge/Cartan shadow is phase-linear on the doubled carrier. -/
+theorem cartanGaugeShadow_isPhaseLinear
+    (H : doubledKreinEnd (E := E)) :
+    BogoliubovTransport.IsPhaseLinear (E := E) (cartanGaugeShadow (E := E) H) :=
+  BogoliubovTransport.modularGeneratorGaugePart_isPhaseLinear (E := E) H
+
+omit [CompleteSpace E] in
+/-- The scaling/source shadow is phase-antilinear on the doubled carrier. -/
+theorem cartanScaleShadow_isPhaseAntilinear
+    (H : doubledKreinEnd (E := E)) :
+    BogoliubovTransport.IsPhaseAntilinear (E := E) (cartanScaleShadow (E := E) H) :=
+  BogoliubovTransport.modularGeneratorScalePart_isPhaseAntilinear (E := E) H
+
+omit [CompleteSpace E] in
+/--
+The phase-axis response is generated entirely by the scaling/source shadow.
+
+This is the concrete reason the diagonal lane is a Cartan-shadow regression
+readout rather than the operator owner.
+-/
+theorem phaseAxisForce_from_cartanScaleShadow
+    (H : doubledKreinEnd (E := E)) :
+    BogoliubovTransport.phaseAxisForce
+        (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H) =
+      (2 : ℝ) • ((cartanScaleShadow (E := E) H).comp (doubledPhaseAxis (E := E))) :=
+  by
+    simpa [cartanScaleShadow, doubledPhaseAxis]
+      using
+        BogoliubovTransport.phaseAxisForce_eq_from_phaseAntilinearPart
+          (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H)
 
 /--
 Diagonal readout is available as a packet field.
@@ -252,6 +351,27 @@ This keeps the commutative shadow in its role as a readout packet.
 theorem diagonal_shadow_available :
     P.bogoliubovShadow = P.bogoliubovShadow := by
   rfl
+
+/-- The bridge exposes the noncommutative owner witness; the shadow does not replace it. -/
+theorem operator_owner_has_noncommuting_pair
+    (P : NoncommutativeModularToBogoliubovKANPacket
+      A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag) :
+    ∃ a b : A, a * b ≠ b * a :=
+  NoncommutativeModularOperatorLift.exists_noncommuting_pair P.modularCore
+
+/-- Base integration in the bridge is routed through the type-III modular weight. -/
+theorem bridge_typeIII_baseIntegral_eq_modularWeight_integral
+    (x : A) :
+    P.modularCore.typeIIIIntegration.baseIntegral x =
+      P.modularCore.typeIIIIntegration.modularWeight.integral x :=
+  P.modularCore.typeIII_baseIntegral_eq_modularWeight_integral x
+
+/-- Core scalar readout in the bridge is routed through the crossed-product/core trace. -/
+theorem bridge_typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
+    (x : A) :
+    P.modularCore.typeIIIIntegration.coreTraceOfBase x =
+      P.modularCore.typeIIIIntegration.coreTrace.traceOfEmbedded x :=
+  P.modularCore.typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded x
 
 end NoncommutativeModularToBogoliubovKANPacket
 

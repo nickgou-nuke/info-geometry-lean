@@ -86,6 +86,30 @@ def SupportedAbove (x : ℕ) (A : Set ℕ) : Prop :=
 def SupportedAboveFinset (x : ℕ) (A : Finset ℕ) : Prop :=
   SupportedAbove x (A : Set ℕ)
 
+/-- Finite set of primes in a closed interval. -/
+def primeFinsetIcc (x N : ℕ) : Finset ℕ :=
+  (Finset.Icc x N).filter Nat.Prime
+
+/-- The finite prime interval is primitive. -/
+theorem primeFinsetIcc_primitive
+    (x N : ℕ) :
+    PrimitiveFinset (primeFinsetIcc x N) := by
+  intro a b ha hb hab
+  classical
+  have ha' : a ∈ primeFinsetIcc x N := by simpa using ha
+  have hb' : b ∈ primeFinsetIcc x N := by simpa using hb
+  have haPrime : Nat.Prime a := (Finset.mem_filter.mp ha').2
+  have hbPrime : Nat.Prime b := (Finset.mem_filter.mp hb').2
+  exact ((hbPrime.dvd_iff_eq haPrime.ne_one).mp hab).symm
+
+/-- The finite prime interval is supported above its lower endpoint. -/
+theorem primeFinsetIcc_supportedAbove
+  (x N : ℕ) :
+    SupportedAboveFinset x (primeFinsetIcc x N) := by
+  intro n hn
+  have hn' : n ∈ primeFinsetIcc x N := by simpa using hn
+  exact (Finset.mem_Icc.mp (Finset.mem_filter.mp hn').1).1
+
 /-- Finite primitive-set weighted sum. -/
 def primitiveWeightSum (A : Finset ℕ) : ℝ :=
   Finset.sum A primitiveWeight

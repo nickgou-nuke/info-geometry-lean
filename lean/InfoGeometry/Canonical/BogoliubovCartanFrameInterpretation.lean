@@ -89,6 +89,124 @@ theorem doubledCliffordAxis_square
       -(1 : Module.End ℝ X) :=
   X.K_sq_eq_neg_one
 
+/-! ## Bogoliubov/KAN chart discipline -/
+
+/-- Neutral-space endomorphisms: the noncommutative operator carrier. -/
+abbrev NeutralEnd : Type _ :=
+  NeutralSpace E →L[ℝ] NeutralSpace E
+
+/--
+A Bogoliubov/KAN frame on the neutral Krein carrier.
+
+The frame is a Hessian-orthogonal real Bogoliubov implementer.  The fields
+`Kpart`, `Apart`, and `Npart` record a supplied KAN factorization.  This packet
+does not assert a global KAN theorem; it records the concrete chart used for a
+readout.
+-/
+structure BogoliubovKANFrame where
+  /-- Full Bogoliubov/Krein frame. -/
+  frame : HessianOrthogonalGroup E
+  /-- Compact/K-sector coordinate of the chosen chart. -/
+  Kpart : HessianOrthogonalGroup E
+  /-- Cartan/A-sector coordinate of the chosen chart. -/
+  Apart : HessianOrthogonalGroup E
+  /-- Nilpotent/N-sector coordinate of the chosen chart. -/
+  Npart : HessianOrthogonalGroup E
+  /-- Supplied KAN factorization in the Hessian-orthogonal group. -/
+  kan_factorization : frame = Kpart * Apart * Npart
+
+namespace BogoliubovKANFrame
+
+variable (F : BogoliubovKANFrame (E := E))
+
+/-- Full noncommutative operator action by the Bogoliubov frame. -/
+noncomputable def frameAction (A : NeutralEnd (E := E)) : NeutralEnd (E := E) :=
+  conjugateCLM ((F.frame : NeutralSpace E ≃L[ℝ] NeutralSpace E)) A
+
+/--
+Diagonal/Cartan operator readout in the chosen KAN chart.
+
+This is deliberately only the `A`-component conjugation.  It is not the owner
+of the modular operator.
+-/
+noncomputable def diagonalOperatorReadout
+    (A : NeutralEnd (E := E)) : NeutralEnd (E := E) :=
+  conjugateCLM ((F.Apart : NeutralSpace E ≃L[ℝ] NeutralSpace E)) A
+
+@[simp] theorem frameAction_eq_frame_conjugation
+    (A : NeutralEnd (E := E)) :
+    F.frameAction A =
+      conjugateCLM ((F.frame : NeutralSpace E ≃L[ℝ] NeutralSpace E)) A :=
+  rfl
+
+@[simp] theorem diagonalOperatorReadout_eq_Apart_conjugation
+    (A : NeutralEnd (E := E)) :
+    F.diagonalOperatorReadout A =
+      conjugateCLM ((F.Apart : NeutralSpace E ≃L[ℝ] NeutralSpace E)) A :=
+  rfl
+
+/-- The KAN chart remembers its supplied group-level factorization. -/
+theorem frame_eq_KAN :
+    F.frame = F.Kpart * F.Apart * F.Npart :=
+  F.kan_factorization
+
+/-- The full frame action preserves products of neutral-space endomorphisms. -/
+@[simp] theorem frameAction_mul
+    (A B : NeutralEnd (E := E)) :
+    F.frameAction (A * B) = F.frameAction A * F.frameAction B := by
+  simp [frameAction]
+
+/-- The diagonal Cartan readout preserves products because it is conjugation. -/
+@[simp] theorem diagonalOperatorReadout_mul
+    (A B : NeutralEnd (E := E)) :
+    F.diagonalOperatorReadout (A * B) =
+      F.diagonalOperatorReadout A * F.diagonalOperatorReadout B := by
+  simp [diagonalOperatorReadout]
+
+end BogoliubovKANFrame
+
+/--
+An operator represented in a chosen Bogoliubov/KAN chart.
+
+The primitive object is `operator`.  `framedOperator` and `diagonalReadout` are
+derived chart readouts, pinned by equations so downstream code cannot silently
+treat the diagonal form as foundational.
+-/
+structure OperatorInBogoliubovKANChart where
+  /-- Primitive noncommutative operator. -/
+  operator : NeutralEnd (E := E)
+  /-- Chosen Bogoliubov/KAN frame. -/
+  frame : BogoliubovKANFrame (E := E)
+  /-- Full frame-conjugated operator. -/
+  framedOperator : NeutralEnd (E := E)
+  /-- Diagonal/Cartan shadow readout. -/
+  diagonalReadout : NeutralEnd (E := E)
+  /-- The framed operator is obtained by the full Bogoliubov frame action. -/
+  framedOperator_eq : framedOperator = frame.frameAction operator
+  /-- The diagonal readout is obtained only from the `A`-component. -/
+  diagonalReadout_eq : diagonalReadout = frame.diagonalOperatorReadout operator
+
+namespace OperatorInBogoliubovKANChart
+
+variable (O : OperatorInBogoliubovKANChart (E := E))
+
+/-- The primitive owner of the chart is the original neutral-space operator. -/
+theorem primitive_operator_owner :
+    O.operator = O.operator :=
+  rfl
+
+/-- Re-export: the framed operator is the full Bogoliubov frame action. -/
+theorem framedOperator_eq_frameAction :
+    O.framedOperator = O.frame.frameAction O.operator :=
+  O.framedOperator_eq
+
+/-- Re-export: the diagonal object is only the Cartan/A-component readout. -/
+theorem diagonalReadout_eq_Apart_readout :
+    O.diagonalReadout = O.frame.diagonalOperatorReadout O.operator :=
+  O.diagonalReadout_eq
+
+end OperatorInBogoliubovKANChart
+
 end BogoliubovCartanInterpretation
 
 end InfoGeometry.Canonical

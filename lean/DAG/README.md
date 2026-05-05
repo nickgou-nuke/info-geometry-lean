@@ -149,6 +149,12 @@ syntactic/kernel declaration graph with orientation `dependency -> user`.
 They are prompt/audit context only: graph proximity is not proof, and Lean
 kernel checking remains the proof authority.
 
+Keep graph orientations distinct:
+- declaration DAG and hydrated topology: `declaration/component -> dependency`;
+- cone DOT/JSON command view: `dependency -> user`, for causal-flow readability;
+- `lean-graph` adapter: `node.references = dependencies`, matching
+  `lean-graph`'s extracted-data schema.
+
 For Arango-backed prompt packets, emit JSON/Markdown with:
 
 ```bash
@@ -174,7 +180,7 @@ To inspect hydrated SCC DAG slices in the external `lean-graph` viewer, project
 the hydrated topology into `lean-graph`'s simple JSON schema:
 
 ```bash
-python3 tools/infra/hydrated_dag_to_lean_graph.py \
+lake script run leanGraphSlice \
   --apex InfoGeometry.Singular.Drazin.IsDrazinInverse \
   --backward-depth 2 \
   --forward-depth 1 \
@@ -185,7 +191,7 @@ python3 tools/infra/hydrated_dag_to_lean_graph.py \
 or for a module/prefix slice:
 
 ```bash
-python3 tools/infra/hydrated_dag_to_lean_graph.py \
+lake script run leanGraphSlice \
   --prefix InfoGeometry.Arithmetic.PrimitiveSouriauZeta \
   --max-nodes 180 \
   --out artifacts/lean-graph/hydrated-primitive-souriau-zeta.json
@@ -193,6 +199,8 @@ python3 tools/infra/hydrated_dag_to_lean_graph.py \
 
 Then open the generated JSON in `external_refs/lean-graph/target/debug/lean-graph`
 via `File -> Open extracted data`.
+The adapter also writes a `.meta.json` sidecar recording source artifact,
+orientation, slice mode, parameters, and reference-closure validation.
 
 The constitutive process-flow layer is exported with:
 

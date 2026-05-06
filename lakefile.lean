@@ -196,6 +196,16 @@ script analyzeTacticPathRanking (args) do
   }
   child.wait
 
+script lightconeSpectralFilter (args) do
+  let child ← IO.Process.spawn {
+    cmd := ".venv-py312/bin/python",
+    args := #["tools/infra/lightcone_spectral_filter.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script jixiaTrainingData (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

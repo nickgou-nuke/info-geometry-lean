@@ -446,6 +446,26 @@ script hivePredigestionIngest (args) do
   }
   child.wait
 
+script txt2kgHiveIngest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/alexandria/txt2kg_hive_ingest.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script extractCompressedCone (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/extract_compressed_cone.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script predigestionHiveDemo (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -619,6 +639,20 @@ lean_lib Socratic where
 @[default_target]
 lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
+
+/--
+Pinned local clone of the formal Lean proof of Erdos Problem #1196.
+
+The source lives under `external/Erdos1196` at commit
+`02fba13be7487cc51315f68d8fa7ef277633d3c8`, with theorem
+`PrimitiveSetsAboveX.mainTheorem`.
+
+This library is intentionally not a default target: the external proof repo is
+pinned to Lean `v4.30.0-rc1`, while this repository is currently pinned to
+Lean `v4.28.0`. Build/import it explicitly after toolchain alignment.
+-/
+lean_lib PrimitiveSetsAboveX where
+  globs := #[.andSubmodules `PrimitiveSetsAboveX]
 
 lean_lib InfoGeometryMeta where
   globs := #[.andSubmodules `InfoGeometry.Meta]

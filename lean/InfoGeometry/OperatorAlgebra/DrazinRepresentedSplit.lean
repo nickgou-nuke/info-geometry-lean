@@ -324,17 +324,72 @@ end MetricDrazinProjectorPair
 /-! ## 5. Owner target -/
 
 /--
-Compatibility predicate for constructing a represented Drazin split.
+Compatibility data for constructing a represented Drazin split.
 
-This is intentionally exact: a compatible source/core/operator triple is one
-for which explicit represented split data has been supplied.  The owner theorem
-below is then the constructive projection of that data, not a theorem from a
-vacuous premise.
+This is intentionally exact: a compatible source/core/operator triple carries
+precisely the data required to build `DrazinRepresentedSplit`.  The owner
+theorem below is therefore a constructor from fields, not a nonempty restatement
+and not a theorem from a vacuous premise.
 -/
-def DrazinRepresentedSplitCompatibility
+structure DrazinRepresentedSplitCompatibility
     (Core Split Op : Type*)
-    [Ring Op] [Module ℝ Op] : Prop :=
-  Nonempty (DrazinRepresentedSplit Core Split Op)
+    [Ring Op] [Module ℝ Op] where
+  /-- Representation of the division-like regular core into the operator algebra. -/
+  coreRep : Core → Op
+
+  /-- Representation of the doubled/split algebra into the operator algebra. -/
+  splitRep : Split → Op
+
+  /-- Circular polarization of the represented operator algebra. -/
+  circular : CircularPolarization Op
+
+  /-- Drazin regular/nil projector pair in the represented operator algebra. -/
+  projectors : DrazinProjectorPair Op
+
+  /-- Represented core elements have no represented square-zero defect. -/
+  core_no_square_zero :
+    ∀ c : Core,
+      coreRep c * coreRep c = 0 → coreRep c = 0
+
+  /-- Defect locus inside the split source. -/
+  defectLocus : Set Split
+
+  /-- Elements of the defect locus map to nilpotent represented operators. -/
+  defect_maps_to_nilpotent :
+    ∀ a : Split,
+      a ∈ defectLocus →
+        IsNilpotentElement (splitRep a)
+
+  /-- Elements of the defect locus are supported on the represented nil branch. -/
+  defect_supported_by_nil :
+    ∀ a : Split,
+      a ∈ defectLocus →
+        IsLeftNilSupported projectors (splitRep a)
+
+  /-- Regular/core source elements are supported on the represented core branch. -/
+  core_supported_by_core :
+    ∀ c : Core,
+      IsLeftCoreSupported projectors (coreRep c)
+
+namespace DrazinRepresentedSplitCompatibility
+
+variable {Core Split Op : Type*} [Ring Op] [Module ℝ Op]
+
+/-- Construct the represented Drazin split from explicit compatibility data. -/
+def toDrazinRepresentedSplit
+    (C : DrazinRepresentedSplitCompatibility Core Split Op) :
+    DrazinRepresentedSplit Core Split Op where
+  coreRep := C.coreRep
+  splitRep := C.splitRep
+  circular := C.circular
+  projectors := C.projectors
+  core_no_square_zero := C.core_no_square_zero
+  defectLocus := C.defectLocus
+  defect_maps_to_nilpotent := C.defect_maps_to_nilpotent
+  defect_supported_by_nil := C.defect_supported_by_nil
+  core_supported_by_core := C.core_supported_by_core
+
+end DrazinRepresentedSplitCompatibility
 
 /--
 Owner target for the future construction theorem.
@@ -355,7 +410,7 @@ data from the non-vacuous compatibility predicate.
 -/
 theorem drazinRepresentedSplitOwnerTarget :
     DrazinRepresentedSplitOwnerTarget := by
-  intro Core Split Op _ _ h
-  exact h
+  intro Core Split Op _ _ C
+  exact ⟨C.toDrazinRepresentedSplit⟩
 
 end InfoGeometry.OperatorAlgebra

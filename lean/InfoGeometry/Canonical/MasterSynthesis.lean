@@ -809,9 +809,24 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
   simpa [CI] using hCap
 
 /--
+Proof-carrying regularization package for the generic anomaly-skew route.
+This bundles the Moore-Penrose leg, the Drazin index/inverse witness, and the
+star-compatibility witness instead of threading them as separate hypotheses.
+-/
+private structure RegularizationWitness (A B_mp B_dr : VelocityField E) where
+  /-- Moore-Penrose leg used by the anomaly regularization theorem. -/
+  h_mp : IsMoorePenroseInverse A B_mp
+  /-- Drazin index for the regularizing inverse. -/
+  k : ℕ
+  /-- Drazin inverse witness at the stored index. -/
+  h_drazin : IsDrazinInverse A B_dr k
+  /-- Star-compatibility for the regularized product. -/
+  h_star : star (A * B_dr) = A * B_dr
+
+/--
 Regularization-sourced capstone wrapper:
-derive the anomaly skewness from Moore-Penrose/Drazin data and reuse the
-primary capstone composition.
+derive the anomaly skewness from one proof-carrying regularization witness and
+reuse the primary capstone composition.
 -/
 private theorem bits_to_gravity_to_fluid_capstone_of_regularization
     (S : SpinFactorState E)
@@ -826,10 +841,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (k : ℕ)
-    (h_dr : IsDrazinInverse A B_dr k)
-    (h_dr_star : star (A * B_dr) = A * B_dr)
+    (hReg : RegularizationWitness (E := E) A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -863,7 +875,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr :=
     anomalySkew_of_regularization (A := A) (B_mp := B_mp) (B_dr := B_dr)
-      h_mp k h_dr h_dr_star
+      hReg.h_mp hReg.k hReg.h_drazin hReg.h_star
   exact bits_to_gravity_to_fluid_capstone
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
@@ -933,10 +945,11 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
     (A := A) (B_mp := B_mp)
     (B_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
     (ω := ω) (Ω := Ω)
-    (h_mp := h_mp)
-    (k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
-    (h_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
-    (h_dr_star := h_dr_star_canonical)
+    (hReg :=
+      { h_mp := h_mp
+        k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A
+        h_drazin := DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A
+        h_star := h_dr_star_canonical })
     (hHelicity := hHelicity)
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)

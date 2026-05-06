@@ -52,7 +52,16 @@ structure BlackHoleEntropyReadout
   chiral : ChiralOperatorAlgebra n
   splitChiralCompat : split.parity = chiral.chiralParity
   thermodynamics : OperatorThermodynamicsPacket (Cl_nn n)
-  thermoChiralCompat : True
+  /--
+  Compatibility between the thermodynamic modular Hamiltonian and the chiral
+  Clifford modular Hamiltonian.
+
+  This is the substantive replacement for the old `True` certificate: the
+  bridge now carries an actual operator equality, with the continuous
+  thermodynamic operator read as a linear endomorphism.
+  -/
+  thermoChiralCompat :
+    ∀ x : Cl_nn n, thermodynamics.modularHamiltonian x = chiral.modularHamiltonian x
   modularBerry : RealModularBerryBridgeData G X Rotor Bivector
   narain : NarainSupervolumeBridgeData n
   thermoNarainCompat :
@@ -108,19 +117,33 @@ theorem negativeLogPotential_eq_narain
   rw [negativeLogPotential, B.narain.effectiveAction_eq_negLog]
 
 @[simp]
+theorem negativeLogPotential_eq_neg_log_narainSupervolumeReadout
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
+    B.negativeLogPotential = - Real.log B.narain.supervolumeReadout := by
+  simp [NarainSupervolumeBridgeData.supervolume]
+
+@[simp]
 theorem splitParity_eq_chiralParity
     (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
     B.split.parity = B.chiral.chiralParity :=
   B.splitChiralCompat
 
+@[simp]
+theorem splitParity_linearMap_eq_chiralParity_linearMap
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
+    B.split.parity.toLinearMap = B.chiral.chiralParity.toLinearMap := by
+  exact congrArg ParityInvolution.toLinearMap B.splitParity_eq_chiralParity
+
 theorem thermo_modularHamiltonian_eq_chiral
-    (_B : BlackHoleEntropyReadout n G X Rotor Bivector) : True :=
-  trivial
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
+    ∀ x : Cl_nn n, B.modularHamiltonian x = B.chiral.modularHamiltonian x :=
+  B.thermoChiralCompat
 
 @[simp]
 theorem thermo_modularHamiltonian_apply_eq_chiral
-    (_B : BlackHoleEntropyReadout n G X Rotor Bivector) : True :=
-  trivial
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) (x : Cl_nn n) :
+    B.modularHamiltonian x = B.chiral.modularHamiltonian x := by
+  exact B.thermo_modularHamiltonian_eq_chiral x
 
 @[simp]
 theorem thermo_supervolumeReadout_eq_narainSupervolume
@@ -133,6 +156,13 @@ theorem entropyReadout_eq_narainSupervolume
     (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
     B.entropyReadout = B.narain.supervolumeReadout := by
   simpa [entropyReadout] using B.thermoNarainCompat
+
+@[simp]
+theorem negativeLogPotential_eq_neg_log_entropyReadout
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
+    B.negativeLogPotential = - Real.log B.entropyReadout := by
+  rw [B.negativeLogPotential_eq_neg_log_narainSupervolumeReadout,
+    B.entropyReadout_eq_narainSupervolume]
 
 end BlackHoleEntropyReadout
 

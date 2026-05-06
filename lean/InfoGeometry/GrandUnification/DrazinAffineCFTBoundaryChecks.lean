@@ -12,6 +12,7 @@ namespace InfoGeometry.GrandUnification.Checks
 #check InfoGeometry.GrandUnification.DrazinAffineCFTBoundaryPacket.moorePenroseSpacetimeResolutionGuard
 #check InfoGeometry.GrandUnification.DrazinAffineCFTBoundaryPacket.drazinBulkBoundaryIsolationGuard
 #check InfoGeometry.GrandUnification.DrazinAffineCFTBoundaryPacket.cardyAutomaticityGuard
+#check InfoGeometry.GrandUnification.DrazinAffineCFTBoundaryPacket.soOnlyCPTGuard
 #check InfoGeometry.GrandUnification.sugawaraCentralCharge_so44_levelOne
 
 end InfoGeometry.GrandUnification.Checks

@@ -32,7 +32,7 @@ DEFAULT_STATS = Path("reports/training/tactic_path_ranking.spectral_enriched.sta
 
 def iter_jsonl(path: Path):
     if not path.exists():
-        return
+        raise SystemExit(f"input JSONL does not exist: {path}")
     with path.open("r", encoding="utf-8") as f:
         for lineno, line in enumerate(f, start=1):
             line = line.strip()
@@ -171,7 +171,7 @@ def enrich_candidate(
         "schema": SCHEMA,
         "drazin_core_weight": scores["core"],
         "nilpotent_penalty": scores["nilpotent"],
-        "hodge_boundary_penalty": scores["harmonic"],
+        "hodge_harmonic_weight": scores["harmonic"],
         "dirac_flow_weight": max(0.0, scores["core"] - scores["nilpotent"]),
         "raw_drazin_core_weight": scores["raw_core"],
         "raw_nilpotent_residue_weight": scores["raw_nilpotent"],

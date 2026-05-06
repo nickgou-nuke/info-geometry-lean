@@ -81,8 +81,20 @@ structure DrazinAffineCFTBoundaryPacket where
   /-- Witness for the finite split Clifford matrix realization. -/
   splitCliffordMatrixWitness : Type 0
 
-  /-- Optional `O(4,4)` or `Spin(4,4)` finite symmetry datum. -/
+  /--
+  Optional full `O(4,4)` / `Pin(4,4)` finite symmetry datum.
+
+  Do not interpret this as merely `SO(4,4)` / `Spin(4,4)` when
+  CPT/reflection data are claimed: odd reflection components live in the full
+  orthogonal/Pin lane.
+  -/
   SplitOrthogonalSymmetry : Type 0
+
+  /--
+  Guard: CPT/reflection-sensitive claims require the full `O`/`Pin` lane, not
+  only `SO`/`Spin` even-sector symmetry.
+  -/
+  noSOOnlyCPTWitness : Type 0
 
   /--
   Optional split-octonion/triality model witness.
@@ -192,6 +204,19 @@ def cardyAutomaticityGuard
 @[simp] theorem cardyAutomaticityGuard_eq
     (P : DrazinAffineCFTBoundaryPacket) :
     P.cardyAutomaticityGuard = P.noAutomaticCardyWitness :=
+  rfl
+
+/--
+The packet explicitly carries the witness that CPT/reflection-sensitive claims
+are not being routed through an `SO`/`Spin`-only even-sector symmetry.
+-/
+def soOnlyCPTGuard
+    (P : DrazinAffineCFTBoundaryPacket) : Type 0 :=
+  P.noSOOnlyCPTWitness
+
+@[simp] theorem soOnlyCPTGuard_eq
+    (P : DrazinAffineCFTBoundaryPacket) :
+    P.soOnlyCPTGuard = P.noSOOnlyCPTWitness :=
   rfl
 
 end DrazinAffineCFTBoundaryPacket

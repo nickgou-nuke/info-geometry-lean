@@ -216,6 +216,16 @@ script enrichTacticPathLightconeSpectrum (args) do
   }
   child.wait
 
+script enrichTacticPathOperatorSpectrum (args) do
+  let child ← IO.Process.spawn {
+    cmd := ".venv-py312/bin/python",
+    args := #["tools/infra/enrich_tactic_path_operator_spectrum.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script jixiaTrainingData (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

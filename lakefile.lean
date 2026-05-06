@@ -25,6 +25,26 @@ script semanticAudit (args) do
   }
   child.wait
 
+script semanticContentAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/quality/semantic_content_audit.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script ingestSemanticContentAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/ingest_semantic_content_audit.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script semanticSnapshot (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -240,6 +260,16 @@ script improverTraceBridge (args) do
   let child ← IO.Process.spawn {
     cmd := ".venv-py312/bin/python",
     args := #["tools/infra/improver_trace_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script causalChiralPromptBuilder (args) do
+  let child ← IO.Process.spawn {
+    cmd := ".venv-py312/bin/python",
+    args := #["tools/infra/causal_chiral_prompt_builder.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit

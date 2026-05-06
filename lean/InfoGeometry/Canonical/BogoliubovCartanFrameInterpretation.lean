@@ -96,6 +96,18 @@ abbrev NeutralEnd : Type _ :=
   NeutralSpace E →L[ℝ] NeutralSpace E
 
 /--
+Predicate saying that a proposed diagonal object is only the Cartan/KAN
+`A`-component readout of a primitive noncommutative operator.
+
+This is the named guard against treating a diagonal expression as the owner
+lane.  The owner remains the original `operator`.
+-/
+def IsDiagonalCartanShadow
+    (frame : BogoliubovKANFrame (E := E))
+    (operator readout : NeutralEnd (E := E)) : Prop :=
+  readout = frame.diagonalOperatorReadout operator
+
+/--
 A Bogoliubov/KAN frame on the neutral Krein carrier.
 
 The frame is a Hessian-orthogonal real Bogoliubov implementer.  The fields
@@ -203,6 +215,14 @@ theorem framedOperator_eq_frameAction :
 /-- Re-export: the diagonal object is only the Cartan/A-component readout. -/
 theorem diagonalReadout_eq_Apart_readout :
     O.diagonalReadout = O.frame.diagonalOperatorReadout O.operator :=
+  O.diagonalReadout_eq
+
+/--
+The chart package explicitly witnesses that its diagonal readout is only a
+Cartan/KAN shadow of the primitive noncommutative operator.
+-/
+theorem diagonalReadout_is_Cartan_shadow :
+    IsDiagonalCartanShadow (E := E) O.frame O.operator O.diagonalReadout :=
   O.diagonalReadout_eq
 
 end OperatorInBogoliubovKANChart

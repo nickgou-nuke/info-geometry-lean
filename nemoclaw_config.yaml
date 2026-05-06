@@ -58,18 +58,18 @@ lanes:
   # High-level planning/orchestration lane for Hermes.
   planner_engine:
     provider: "custom"
-    role: "planner"
+    role: "quantized_leanstral_planner"
     base_url: "http://127.0.0.1:18789/v1"
     api_key: "token-123"
-    model: "Qwen/Qwen3.6-35B-A3B-FP8"
+    model: "leanstral-gguf"
 
   # Conservative local audit/system lane.
   logic_engine:
     provider: "custom"
-    role: "audit"
+    role: "quantized_leanstral_audit_prior"
     base_url: "http://127.0.0.1:18789/v1"
     api_key: "token-123"
-    model: "Qwen/Qwen3.6-35B-A3B-FP8"
+    model: "leanstral-gguf"
 
   # Execution surface only when Hermes routes a task into mutation/build/gates.
   code_engine:

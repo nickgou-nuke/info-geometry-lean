@@ -1,0 +1,36 @@
+[Unit]
+Description=Quantized Mistral-family vLLM resident service for info-geometry-lean
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/goutev/repos/info-geometry-lean
+Environment=LEANSTRAL_MODEL=mistralai/Mistral-Small-4-119B-2603-NVFP4
+Environment=LEANSTRAL_HOST=0.0.0.0
+Environment=LEANSTRAL_PORT=18789
+Environment=LEANSTRAL_SERVED_MODEL_NAME=mistral-small-4-nvfp4
+Environment=LEANSTRAL_MAX_MODEL_LEN=32768
+Environment=LEANSTRAL_MAX_NUM_SEQS=1
+Environment=LEANSTRAL_MAX_NUM_BATCHED_TOKENS=8192
+Environment=LEANSTRAL_GPU_MEMORY_UTILIZATION=0.75
+Environment=LEANSTRAL_KV_CACHE_DTYPE=fp8
+Environment=LEANSTRAL_ATTENTION_BACKEND=TRITON_MLA
+Environment=LEANSTRAL_DISABLE_FLASHINFER_AUTOTUNE=1
+Environment=LEANSTRAL_CUDAGRAPH_CAPTURE_SIZES=1 2 4 8 16 32 64 128 256
+Environment=LEANSTRAL_MAX_CUDAGRAPH_CAPTURE_SIZE=256
+Environment=TORCH_CUDA_ARCH_LIST=12.1a
+Environment=TRITON_PTXAS_PATH=/usr/local/cuda/bin/ptxas
+Environment=VLLM_SKIP_P2P_CHECK=1
+Environment=FLASHINFER_JIT_LOG_LEVEL=ERROR
+Environment=TRANSFORMERS_VERBOSITY=error
+Environment=VLLM_USE_DEEP_GEMM=1
+Environment=HF_HOME=/home/goutev/.cache/huggingface_user
+EnvironmentFile=-%h/.config/info-geometry-lean/leanstral.env
+ExecStart=/home/goutev/repos/info-geometry-lean/tools/infra/leanstral_vllm_service.sh
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=default.target

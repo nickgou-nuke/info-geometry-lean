@@ -49,3 +49,32 @@ def test_build_report_refuses_unbounded_dense_slice(tmp_path: Path) -> None:
 
     with pytest.raises(SystemExit, match="refusing dense local spectral filter"):
         build_report(path, tol=1e-9, max_nodes=3)
+
+
+def test_recurrent_two_node_cycle_has_nonzero_spectral_core(tmp_path: Path) -> None:
+    rows = [
+        {"name": "A", "references": ["B"]},
+        {"name": "B", "references": ["A"]},
+    ]
+    path = tmp_path / "cycle.json"
+    path.write_text(json.dumps(rows), encoding="utf-8")
+
+    report = build_report(path, tol=1e-9, max_nodes=10)
+
+    assert report["drazin"]["nonzero_schur_dim"] > 0
+    assert abs(report["drazin"]["projector_trace"]) > 0.5
+
+
+def test_pure_dag_chain_has_trivial_drazin_core(tmp_path: Path) -> None:
+    rows = [
+        {"name": "A", "references": ["B"]},
+        {"name": "B", "references": ["C"]},
+        {"name": "C", "references": []},
+    ]
+    path = tmp_path / "dag.json"
+    path.write_text(json.dumps(rows), encoding="utf-8")
+
+    report = build_report(path, tol=1e-9, max_nodes=10)
+
+    assert report["drazin"]["nonzero_schur_dim"] == 0
+    assert report["drazin"]["projector_trace"] == 0.0

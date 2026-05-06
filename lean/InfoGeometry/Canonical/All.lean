@@ -285,6 +285,7 @@ import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Canonical.KreinDiracSpectralLift
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Canonical.VarlamovDiscreteSymmetry
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.KreinNaturalFlow
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK

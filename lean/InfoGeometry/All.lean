@@ -1,6 +1,7 @@
 import InfoGeometry.Application.STUDictionary
 import InfoGeometry.Applications.STUGradientFlow
 import InfoGeometry.Arithmetic.ArithmeticKMS
+import InfoGeometry.Arithmetic.LPrimitive
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 import InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
@@ -110,6 +111,8 @@ import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Automorphic.AutomorphicKreinBridge
 import InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
+import InfoGeometry.Automorphic.SiegelJacobiStandardLFunction
+import InfoGeometry.Automorphic.SiegelJacobiStandardLFunctionChecks
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Optics.All
 import InfoGeometry.Algebraic.CartanCocycle

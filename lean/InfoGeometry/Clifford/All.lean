@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.Cl11Matrix

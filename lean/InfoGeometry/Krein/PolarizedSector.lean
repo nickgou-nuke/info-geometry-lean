@@ -107,10 +107,24 @@ theorem spectralProj_decomposition (u : H2) :
 /--
 The polarized doubled carrier decomposes into its two spectral sheets.
 
-Repository interpretation: this is the constructive diagonal sheet
-decomposition of the doubled Krein carrier.
+Repository interpretation: this is the constructive `epsilon`-spectral sheet
+decomposition of the doubled Krein carrier.  The historical `frameDiagonal`
+name is a readout/API label, not a claim that the mechanism is finite matrix
+diagonalization.
 -/
 theorem frameDiagonal_sheet_decomposition (u : H2) :
+    Pplus u + Pminus u = u :=
+  spectralProj_decomposition (E := E) u
+
+/--
+Owner-language alias for `frameDiagonal_sheet_decomposition`.
+
+Splitting here means the real doubled-Krein decomposition by the
+`spectral_epsilon` projectors:
+
+`u = P_+ u + P_- u`.
+-/
+theorem epsilonSpectralSheet_decomposition (u : H2) :
     Pplus u + Pminus u = u :=
   spectralProj_decomposition (E := E) u
 
@@ -119,20 +133,42 @@ theorem frameDiagonal_plus_idempotent (u : H2) :
     Pplus (Pplus u) = Pplus u :=
   spectralPlusProj_apply_idempotent (E := E) u
 
+/-- The positive `epsilon`-spectral sheet projector is idempotent. -/
+theorem epsilonSpectralPlus_idempotent (u : H2) :
+    Pplus (Pplus u) = Pplus u :=
+  spectralPlusProj_apply_idempotent (E := E) u
+
 /-- The minus sheet projector is idempotent. -/
 theorem frameDiagonal_minus_idempotent (u : H2) :
     Pminus (Pminus u) = Pminus u :=
   spectralMinusProj_apply_idempotent (E := E) u
 
+/-- The negative `epsilon`-spectral sheet projector is idempotent. -/
+theorem epsilonSpectralMinus_idempotent (u : H2) :
+    Pminus (Pminus u) = Pminus u :=
+  spectralMinusProj_apply_idempotent (E := E) u
+
 omit [CompleteSpace E] in
-/-- The plus diagonal readout lands in the plus sheet. -/
+/-- The plus spectral readout lands in the plus sheet. -/
 theorem frameDiagonal_plus_mem (u : H2) :
     Pplus u ∈ plusSheet (E := E) :=
   spectralPlusProj_mem_plusSheet (E := E) u
 
 omit [CompleteSpace E] in
-/-- The minus diagonal readout lands in the minus sheet. -/
+/-- The minus spectral readout lands in the minus sheet. -/
 theorem frameDiagonal_minus_mem (u : H2) :
+    Pminus u ∈ minusSheet (E := E) :=
+  spectralMinusProj_mem_minusSheet (E := E) u
+
+omit [CompleteSpace E] in
+/-- The positive `epsilon`-spectral projector lands in the plus sheet. -/
+theorem epsilonSpectralPlus_mem (u : H2) :
+    Pplus u ∈ plusSheet (E := E) :=
+  spectralPlusProj_mem_plusSheet (E := E) u
+
+omit [CompleteSpace E] in
+/-- The negative `epsilon`-spectral projector lands in the minus sheet. -/
+theorem epsilonSpectralMinus_mem (u : H2) :
     Pminus u ∈ minusSheet (E := E) :=
   spectralMinusProj_mem_minusSheet (E := E) u
 

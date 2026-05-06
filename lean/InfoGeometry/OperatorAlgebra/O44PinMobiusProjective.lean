@@ -401,10 +401,78 @@ variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
     (Q : SplitQuadratic55 W)
 
-/-- Null/isotropic vectors for the local O(4,4) Möbius ambient socket. -/
-def IsO44AmbientNull
+/-- Null/isotropic vectors in the ambient conformal `(5,5)` carrier. -/
+def IsNull
     (w : W) : Prop :=
   Q.q w = 0
+
+/-- Regular/non-null ambient vectors. -/
+def IsRegular
+    (w : W) : Prop :=
+  Q.q w ≠ 0
+
+/-- Same ambient projective ray, represented by nonzero real scaling. -/
+def SameRay
+    (v w : W) : Prop :=
+  ∃ c : ℝ, c ≠ 0 ∧ w = c • v
+
+/--
+Compatibility alias for the older local O(4,4)-ambient name.
+
+Despite the historical name, this predicate lives on the ambient `(5,5)`
+quadratic carrier.  It is kept only so older downstream files do not blur the
+base/ambient boundary while being migrated to `SplitQuadratic55.IsNull`.
+-/
+abbrev IsO44AmbientNull
+    (w : W) : Prop :=
+  Q.IsNull w
+
+/-- Same ambient projective ray is reflexive. -/
+theorem sameRay_refl
+    (v : W) :
+    SameRay v v := by
+  exact ⟨1, one_ne_zero, by simp⟩
+
+/-- Equality implies same ambient projective ray. -/
+theorem sameRay_of_eq
+    {v w : W}
+    (h : w = v) :
+    SameRay v w := by
+  subst h
+  exact ⟨1, one_ne_zero, by simp⟩
+
+/-- Same ambient ray is symmetric. -/
+theorem sameRay_symm
+    {v w : W}
+    (h : SameRay v w) :
+    SameRay w v := by
+  rcases h with ⟨c, hc, hw⟩
+  refine ⟨c⁻¹, inv_ne_zero hc, ?_⟩
+  rw [hw]
+  simp [hc]
+
+/-- Same ambient ray is transitive. -/
+theorem sameRay_trans
+    {u v w : W}
+    (huv : SameRay u v)
+    (hvw : SameRay v w) :
+    SameRay u w := by
+  rcases huv with ⟨a, ha, hv⟩
+  rcases hvw with ⟨b, hb, hw⟩
+  refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
+  rw [hw, hv]
+  simp [smul_smul, mul_comm]
+
+/-- Nullity is invariant under nonzero rescaling. -/
+theorem isNull_of_sameRay
+    {v w : W}
+    (hvw : SameRay v w)
+    (hv : Q.IsNull v) :
+    Q.IsNull w := by
+  rcases hvw with ⟨c, _hc, rfl⟩
+  dsimp [IsNull]
+  rw [Q.q_smul, hv]
+  ring
 
 end SplitQuadratic55
 
@@ -413,11 +481,44 @@ namespace ProjectiveRay
 variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
 
-/-- A represented projective ray lies on the ambient projective null quadric. -/
+/--
+A represented projective ray lies on the ambient projective null quadric.
+
+This compatibility name is historical: the ray is a ray in the ambient `(5,5)`
+carrier, not in the base `(4,4)` carrier.
+-/
 def IsO44AmbientNullRay
     (Q : SplitQuadratic55 W)
     (r : ProjectiveRay W) : Prop :=
-  Q.IsO44AmbientNull r.vec
+  Q.IsNull r.vec
+
+/-- A represented projective ray lies on the ambient projective null quadric. -/
+abbrev IsAmbientNullRay
+    (Q : SplitQuadratic55 W)
+    (r : ProjectiveRay W) : Prop :=
+  r.IsO44AmbientNullRay Q
+
+/--
+Convert projective equality of rays into same-ray equality of representatives.
+
+This isolates the dependency on the represented-projective-ray convention.
+-/
+theorem sameRay_vec_of_sameProjectiveRay
+    {r s : ProjectiveRay W}
+    (hrs : SameProjectiveRay r s) :
+    SplitQuadratic55.SameRay r.vec s.vec :=
+  hrs
+
+/-- Ambient null-ray membership is independent of representative. -/
+theorem isAmbientNullRay_of_same
+    (Q : SplitQuadratic55 W)
+    {r s : ProjectiveRay W}
+    (hrs : SameProjectiveRay r s)
+    (hr : IsAmbientNullRay Q r) :
+    IsAmbientNullRay Q s :=
+  Q.isNull_of_sameRay
+    (sameRay_vec_of_sameProjectiveRay hrs)
+    hr
 
 end ProjectiveRay
 
@@ -438,15 +539,40 @@ def actRay
       have hsymm := congrArg g.toLinearEquiv.symm h
       simpa using hsymm }
 
-/-- Ambient `O(5,5)` transformations preserve the projective null cone. -/
+/--
+Ambient `O(5,5)` transformations preserve the projective null cone.
+
+The theorem name is a compatibility shim for older downstream code.  The action
+is on `SplitQuadratic55`, not on the base `SplitQuadratic44` carrier.
+-/
 theorem actRay_preserves_o44AmbientNull
     (g : Orthogonal55 Q)
     (r : ProjectiveRay W)
     (hr : r.IsO44AmbientNullRay Q) :
     (g.actRay r).IsO44AmbientNullRay Q := by
-  dsimp [actRay, ProjectiveRay.IsO44AmbientNullRay, SplitQuadratic55.IsO44AmbientNull] at *
+  dsimp [actRay, ProjectiveRay.IsO44AmbientNullRay, SplitQuadratic55.IsNull] at *
   rw [g.preserves_q]
   exact hr
+
+/-- The ambient `O(5,5)` action preserves the projective null quadric. -/
+theorem actRay_preserves_null
+    (g : Orthogonal55 Q)
+    (r : ProjectiveRay W)
+    (hr : r.IsAmbientNullRay Q) :
+    (g.actRay r).IsAmbientNullRay Q :=
+  g.actRay_preserves_o44AmbientNull r hr
+
+/-- The ambient `O(5,5)` action respects projective ray representatives. -/
+theorem actRay_respects_same
+    (g : Orthogonal55 Q)
+    {r s : ProjectiveRay W}
+    (hrs : r.SameProjectiveRay s) :
+    (g.actRay r).SameProjectiveRay (g.actRay s) := by
+  rcases hrs with ⟨c, hc, hs⟩
+  refine ⟨c, hc, ?_⟩
+  dsimp [actRay]
+  rw [hs]
+  simp
 
 end Orthogonal55
 
@@ -500,19 +626,102 @@ variable
 
 variable (M : ConformalMobius44Extension V W)
 
+/--
+The base `(4,4)` quadratic carrier of a conformal/Möbius extension.
+
+This accessor is intentionally separate from `ambientSplitQuadratic55`: Möbius
+closure is not obtained by identifying `(4,4)` with `(5,5)`.
+-/
+def baseSplitQuadratic44 : SplitQuadratic44 V :=
+  M.baseQ
+
+/--
+The ambient `(5,5)` quadratic carrier of a conformal/Möbius extension.
+
+The ambient carrier is where projective null rays and the linear conformal
+`O(5,5)` action live.
+-/
+def ambientSplitQuadratic55 : SplitQuadratic55 W :=
+  M.ambientQ
+
+/--
+The explicit base-to-ambient map required by the conformal closure.
+
+Lean forces this map to be data: the base `(4,4)` carrier and ambient `(5,5)`
+carrier are different types and are related only through supplied structure.
+-/
+def baseToAmbient : V → W :=
+  M.embed
+
+/--
+The explicit lift of base `O(4,4)` transformations into the ambient `O(5,5)`
+conformal model.
+-/
+def liftBaseOrthogonal
+    (g : Orthogonal44 M.baseQ) : Orthogonal55 M.ambientQ :=
+  M.base_orthogonal_lift g
+
+@[simp] theorem baseSplitQuadratic44_eq :
+    M.baseSplitQuadratic44 = M.baseQ :=
+  rfl
+
+@[simp] theorem ambientSplitQuadratic55_eq :
+    M.ambientSplitQuadratic55 = M.ambientQ :=
+  rfl
+
+@[simp] theorem baseToAmbient_eq
+    (v : V) :
+    M.baseToAmbient v = M.embed v :=
+  rfl
+
+@[simp] theorem liftBaseOrthogonal_eq
+    (g : Orthogonal44 M.baseQ) :
+    M.liftBaseOrthogonal g = M.base_orthogonal_lift g :=
+  rfl
+
+/--
+The conformal extension carries two distinct typed quadratic layers: a base
+`(4,4)` layer and an ambient `(5,5)` layer.
+
+This theorem is intentionally only a pair of accessors.  It formalizes the
+closure doctrine without asserting a false equality between signatures.
+-/
+theorem typed_corridor :
+    M.baseSplitQuadratic44 = M.baseQ ∧
+      M.ambientSplitQuadratic55 = M.ambientQ :=
+  ⟨rfl, rfl⟩
+
+/--
+The ambient representative of a projective affine point is exactly the supplied
+base-to-ambient embedding.
+-/
+theorem projectivePoint_vec_eq_baseToAmbient
+    (v : V) :
+    (M.projectivePoint v).vec = M.baseToAmbient v :=
+  M.projectivePoint_vec_eq v
+
+/--
+The base-to-ambient embedding lands in the ambient `(5,5)` null cone.
+-/
+theorem baseToAmbient_is_ambient_null
+    (v : V) :
+    M.ambientQ.IsNull (M.baseToAmbient v) :=
+  M.embed_is_null v
+
 /-- The projective representative of an embedded affine point is null. -/
 theorem projectivePoint_is_null
     (v : V) :
-    (M.projectivePoint v).IsO44AmbientNullRay M.ambientQ := by
-  dsimp [ProjectiveRay.IsO44AmbientNullRay, SplitQuadratic55.IsO44AmbientNull]
+    (M.projectivePoint v).IsAmbientNullRay M.ambientQ := by
+  dsimp [ProjectiveRay.IsAmbientNullRay, ProjectiveRay.IsO44AmbientNullRay,
+    SplitQuadratic55.IsNull]
   rw [M.projectivePoint_vec_eq v]
   exact M.embed_is_null v
 
 /-- Ambient Möbius inversion preserves the null ray of an embedded affine point. -/
 theorem inversion_preserves_projectivePoint_null
     (v : V) :
-    (M.inversion.actRay (M.projectivePoint v)).IsO44AmbientNullRay M.ambientQ :=
-  Orthogonal55.actRay_preserves_o44AmbientNull M.inversion
+    (M.inversion.actRay (M.projectivePoint v)).IsAmbientNullRay M.ambientQ :=
+  Orthogonal55.actRay_preserves_null M.inversion
     (M.projectivePoint v)
     (M.projectivePoint_is_null v)
 
@@ -579,7 +788,7 @@ variable (P : PinMobiusProjective44 V W PinBase PinConf)
 /-- The conformal inversion preserves embedded affine null rays. -/
 theorem inversion_preserves_embedded_null_ray
     (v : V) :
-    (P.mobius.inversion.actRay (P.mobius.projectivePoint v)).IsO44AmbientNullRay
+    (P.mobius.inversion.actRay (P.mobius.projectivePoint v)).IsAmbientNullRay
       P.mobius.ambientQ :=
   ConformalMobius44Extension.inversion_preserves_projectivePoint_null P.mobius v
 

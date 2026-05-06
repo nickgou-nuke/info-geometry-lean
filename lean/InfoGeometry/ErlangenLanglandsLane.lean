@@ -151,8 +151,9 @@ def LanglandsLaneCoreTarget
     Prop :=
   FiniteJonesErlangerBridgeOwnerTarget ∧
     (∀ s : ℂ, P.L s = P.functional.coeff s (W.cuspidalProjector P.bulkState)) ∧
-    packet.eulerProduct.euler_product_law ∧
-    packet.completedLFunction.completed_functional_equation_law ∧
+    HasEulerProduct P.L packet.eulerProduct.PrimeIndex packet.eulerProduct.localFactor
+      packet.eulerProduct.convergenceRegion ∧
+    HasCompletedFunctionalEquation P.L packet.completedLFunction.completedL ∧
     (∃ R : InfoGeometry.Automorphic.SiegelResonance.LanglandsPrimeResonanceWitness P,
       R.eulerProduct = packet.eulerProduct.toEulerProductData ∧
       R.completedL = packet.completedLFunction.completedL) ∧

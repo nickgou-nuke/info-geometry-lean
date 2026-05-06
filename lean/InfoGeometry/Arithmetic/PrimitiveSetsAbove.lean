@@ -1657,7 +1657,7 @@ an unproved or false theorem.
 def PrimitiveWeightSumAssemblyFromAnalyticInput : Prop :=
   PrimitiveLargeDivisorAnalyticInput → PrimitiveSetsAboveFiniteStatement
 
-/--
+/-
 Lichtman–ESS bound: the good-divisor sum is bounded by `(1 + ε) · ψ(x/x₀)`.
 
 For A primitive supported above x, with good divisors defined by
@@ -1678,7 +1678,122 @@ so the good filter includes `d ∈ A`, the diagonal term is positive, and the
 RHS `(x / x₀ : ℕ)` can be zero. Concrete counterexample: `x₀ = 2`, `x = 1`,
 `A = {p}` for any prime `p`; LHS > 0 but RHS = (1 / 2 : ℕ) = 0.
 -/
-axiom goodDivisorSum_le_log_mul_add
+/--
+Explicit Chebyshev/good-divisor input for the finite primitive-set assembly.
+
+This is deliberately a named proposition, not an axiom.  The theorem
+`goodDivisorSumChebyshevBound` below proves it from the local good-divisor
+argument and the Mathlib Chebyshev estimate `Chebyshev.psi_le_const_mul_self`.
+-/
+def GoodDivisorSumChebyshevBound : Prop :=
+  ∀ {A : Finset ℕ} {x x₀ : ℕ} {ε : ℝ}, 0 < ε →
+    2 < x₀ →
+    1 ≤ x →
+    PrimitiveFinset A →
+    SupportedAboveFinset x A →
+    let D := A.biUnion (fun a => a.divisors)
+    let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+    Finset.sum good
+        (fun d => realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+      ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ)
+
+/--
+Chebyshev/good-divisor bound.
+
+This is the formalized local proof route described in the Lichtman--ESS
+good-divisor decomposition.  If `d` is good and `2 < x₀`, then
+`x₀ ≤ x / d`, hence `d ≤ x / x₀`.  Since `A` is supported above `x`, no such
+good divisor can itself lie in `A`; the diagonal term vanishes.  The remaining
+sum is bounded by Chebyshev's `ψ(x/x₀)` and then by
+`Chebyshev.psi_le_const_mul_self`.
+-/
+theorem goodDivisorSumChebyshevBound :
+    GoodDivisorSumChebyshevBound := by
+  intro A x x₀ ε hε hx₀ hx hAprim hAsupp
+  let D := A.biUnion (fun a => a.divisors)
+  let good := D.filter (fun d => x₀ ≤ max (x / d) 2)
+  have hx₀_pos : 0 < x₀ := Nat.lt_trans (by norm_num) hx₀
+  have hx₀_one : 1 < x₀ := Nat.lt_trans (by norm_num) hx₀
+  have hx_pos : 0 < x := Nat.succ_le_iff.mp hx
+  have hgood_le :
+      ∀ d ∈ good, d ≤ x / x₀ := by
+    intro d hd
+    have hdD : d ∈ D := (Finset.mem_filter.mp hd).1
+    have hdgood : x₀ ≤ max (x / d) 2 := (Finset.mem_filter.mp hd).2
+    rcases Finset.mem_biUnion.mp hdD with ⟨a, haA, hddiv⟩
+    have hd_pos : 0 < d := Nat.pos_of_mem_divisors hddiv
+    have hx₀_le_x_div_d : x₀ ≤ x / d := by
+      rcases (le_max_iff.mp hdgood) with hx₀_le | hx₀_le_two
+      · exact hx₀_le
+      · exact False.elim ((not_le.mpr hx₀) hx₀_le_two)
+    have hx₀_mul_d_le_x : x₀ * d ≤ x :=
+      (Nat.le_div_iff_mul_le hd_pos).mp hx₀_le_x_div_d
+    exact
+      (Nat.le_div_iff_mul_le hx₀_pos).mpr
+        (by simpa [Nat.mul_comm] using hx₀_mul_d_le_x)
+  have hgood_not_mem_A :
+      ∀ d ∈ good, d ∉ A := by
+    intro d hd hdA
+    have hd_le : d ≤ x / x₀ := hgood_le d hd
+    have hx_div_lt : x / x₀ < x :=
+      Nat.div_lt_self hx_pos hx₀_one
+    have hd_lt_x : d < x := lt_of_le_of_lt hd_le hx_div_lt
+    have hx_le_d : x ≤ d := hAsupp hdA
+    exact (not_lt_of_ge hx_le_d) hd_lt_x
+  have hsum_eq :
+      Finset.sum good
+          (fun d => realVonMangoldt d
+            * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+        =
+      Finset.sum good (fun d => (1 + ε) * realVonMangoldt d) := by
+    apply Finset.sum_congr rfl
+    intro d hd
+    have hdA : d ∉ A := hgood_not_mem_A d hd
+    simp [hdA]
+    ring
+  have hsubset :
+      good ⊆ Finset.Icc 0 (x / x₀) := by
+    intro d hd
+    exact Finset.mem_Icc.mpr ⟨Nat.zero_le d, hgood_le d hd⟩
+  have hsum_le_icc :
+      Finset.sum good realVonMangoldt
+        ≤ Finset.sum (Finset.Icc 0 (x / x₀)) realVonMangoldt := by
+    apply Finset.sum_le_sum_of_subset_of_nonneg hsubset
+    intro d _ _
+    exact realVonMangoldt_nonneg d
+  have hpsi_eq :
+      Chebyshev.psi ((x / x₀ : ℕ) : ℝ)
+        = Finset.sum (Finset.Icc 0 (x / x₀)) realVonMangoldt := by
+    rw [Chebyshev.psi_eq_sum_Icc]
+    simp [realVonMangoldt]
+  have hsum_le_psi :
+      Finset.sum good realVonMangoldt
+        ≤ Chebyshev.psi ((x / x₀ : ℕ) : ℝ) := by
+    simpa [hpsi_eq] using hsum_le_icc
+  have hpsi_bound :
+      Chebyshev.psi ((x / x₀ : ℕ) : ℝ)
+        ≤ (Real.log 4 + 4) * ((x / x₀ : ℕ) : ℝ) :=
+    Chebyshev.psi_le_const_mul_self (by positivity)
+  have hfactor_nonneg : 0 ≤ 1 + ε := by linarith
+  calc
+    Finset.sum good
+        (fun d => realVonMangoldt d
+          * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
+        = Finset.sum good (fun d => (1 + ε) * realVonMangoldt d) := hsum_eq
+    _ = (1 + ε) * Finset.sum good realVonMangoldt := by
+      rw [Finset.mul_sum]
+    _ ≤ (1 + ε) * Chebyshev.psi ((x / x₀ : ℕ) : ℝ) :=
+      mul_le_mul_of_nonneg_left hsum_le_psi hfactor_nonneg
+    _ ≤ (1 + ε) * ((Real.log 4 + 4) * ((x / x₀ : ℕ) : ℝ)) :=
+      mul_le_mul_of_nonneg_left hpsi_bound hfactor_nonneg
+    _ = (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ) := by
+      ring
+
+/--
+Good-divisor sum bound, exposed under the original public theorem name.
+-/
+theorem goodDivisorSum_le_log_mul_add
     {A : Finset ℕ} {x x₀ : ℕ} {ε : ℝ} (hε : 0 < ε)
     (hx₀ : 2 < x₀) (hx : 1 ≤ x)
     (hAprim : PrimitiveFinset A)
@@ -1688,6 +1803,7 @@ axiom goodDivisorSum_le_log_mul_add
     Finset.sum good
         (fun d => realVonMangoldt d
           * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
-      ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ)
+      ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ) :=
+  goodDivisorSumChebyshevBound hε hx₀ hx hAprim hAsupp
 
 end InfoGeometry.Arithmetic

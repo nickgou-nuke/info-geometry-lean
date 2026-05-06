@@ -401,8 +401,8 @@ variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
     (Q : SplitQuadratic55 W)
 
-/-- Null/isotropic vectors for the ambient conformal quadratic form. -/
-def IsNull
+/-- Null/isotropic vectors for the local O(4,4) Möbius ambient socket. -/
+def IsO44AmbientNull
     (w : W) : Prop :=
   Q.q w = 0
 
@@ -414,10 +414,10 @@ variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
 
 /-- A represented projective ray lies on the ambient projective null quadric. -/
-def IsAmbientNullRay
+def IsO44AmbientNullRay
     (Q : SplitQuadratic55 W)
     (r : ProjectiveRay W) : Prop :=
-  Q.IsNull r.vec
+  Q.IsO44AmbientNull r.vec
 
 end ProjectiveRay
 
@@ -439,12 +439,12 @@ def actRay
       simpa using hsymm }
 
 /-- Ambient `O(5,5)` transformations preserve the projective null cone. -/
-theorem actRay_preserves_null
+theorem actRay_preserves_o44AmbientNull
     (g : Orthogonal55 Q)
     (r : ProjectiveRay W)
-    (hr : r.IsAmbientNullRay Q) :
-    (g.actRay r).IsAmbientNullRay Q := by
-  dsimp [actRay, ProjectiveRay.IsAmbientNullRay, SplitQuadratic55.IsNull] at *
+    (hr : r.IsO44AmbientNullRay Q) :
+    (g.actRay r).IsO44AmbientNullRay Q := by
+  dsimp [actRay, ProjectiveRay.IsO44AmbientNullRay, SplitQuadratic55.IsO44AmbientNull] at *
   rw [g.preserves_q]
   exact hr
 
@@ -503,16 +503,16 @@ variable (M : ConformalMobius44Extension V W)
 /-- The projective representative of an embedded affine point is null. -/
 theorem projectivePoint_is_null
     (v : V) :
-    (M.projectivePoint v).IsAmbientNullRay M.ambientQ := by
-  dsimp [ProjectiveRay.IsAmbientNullRay, SplitQuadratic55.IsNull]
+    (M.projectivePoint v).IsO44AmbientNullRay M.ambientQ := by
+  dsimp [ProjectiveRay.IsO44AmbientNullRay, SplitQuadratic55.IsO44AmbientNull]
   rw [M.projectivePoint_vec_eq v]
   exact M.embed_is_null v
 
 /-- Ambient Möbius inversion preserves the null ray of an embedded affine point. -/
 theorem inversion_preserves_projectivePoint_null
     (v : V) :
-    (M.inversion.actRay (M.projectivePoint v)).IsAmbientNullRay M.ambientQ :=
-  Orthogonal55.actRay_preserves_null M.inversion
+    (M.inversion.actRay (M.projectivePoint v)).IsO44AmbientNullRay M.ambientQ :=
+  Orthogonal55.actRay_preserves_o44AmbientNull M.inversion
     (M.projectivePoint v)
     (M.projectivePoint_is_null v)
 
@@ -579,7 +579,7 @@ variable (P : PinMobiusProjective44 V W PinBase PinConf)
 /-- The conformal inversion preserves embedded affine null rays. -/
 theorem inversion_preserves_embedded_null_ray
     (v : V) :
-    (P.mobius.inversion.actRay (P.mobius.projectivePoint v)).IsAmbientNullRay
+    (P.mobius.inversion.actRay (P.mobius.projectivePoint v)).IsO44AmbientNullRay
       P.mobius.ambientQ :=
   ConformalMobius44Extension.inversion_preserves_projectivePoint_null P.mobius v
 

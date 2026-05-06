@@ -129,6 +129,18 @@ structure DrazinAffineCFTBoundaryPacket where
   -/
   noAutomaticCardyWitness : Type 0
 
+  /--
+  Guard: Moore--Penrose generalized-inverse data are not, by themselves, a
+  theorem about resolving singular spacetime metrics.
+  -/
+  noAutomaticSpacetimeSingularityResolutionWitness : Type 0
+
+  /--
+  Guard: Drazin projector data are not, by themselves, a theorem that a
+  physical bulk sector has been filtered and a boundary sector isolated.
+  -/
+  noAutomaticBulkBoundaryIsolationWitness : Type 0
+
 /-- Owner target for Drazin--Affine CFT boundary data. -/
 def DrazinAffineCFTBoundaryTarget : Prop :=
   Nonempty DrazinAffineCFTBoundaryPacket
@@ -138,5 +150,59 @@ theorem constructDrazinAffineCFTBoundaryTarget
     (P : DrazinAffineCFTBoundaryPacket) :
     DrazinAffineCFTBoundaryTarget := by
   exact ⟨P⟩
+
+namespace DrazinAffineCFTBoundaryPacket
+
+/--
+The packet explicitly carries the witness that Moore--Penrose support data are
+not being promoted to an automatic spacetime-singularity-resolution theorem.
+-/
+def moorePenroseSpacetimeResolutionGuard
+    (P : DrazinAffineCFTBoundaryPacket) : Type 0 :=
+  P.noAutomaticSpacetimeSingularityResolutionWitness
+
+@[simp] theorem moorePenroseSpacetimeResolutionGuard_eq
+    (P : DrazinAffineCFTBoundaryPacket) :
+    P.moorePenroseSpacetimeResolutionGuard =
+      P.noAutomaticSpacetimeSingularityResolutionWitness :=
+  rfl
+
+/--
+The packet explicitly carries the witness that Drazin core-projector data are
+not being promoted to an automatic bulk/boundary separation theorem.
+-/
+def drazinBulkBoundaryIsolationGuard
+    (P : DrazinAffineCFTBoundaryPacket) : Type 0 :=
+  P.noAutomaticBulkBoundaryIsolationWitness
+
+@[simp] theorem drazinBulkBoundaryIsolationGuard_eq
+    (P : DrazinAffineCFTBoundaryPacket) :
+    P.drazinBulkBoundaryIsolationGuard =
+      P.noAutomaticBulkBoundaryIsolationWitness :=
+  rfl
+
+/--
+The packet explicitly carries the witness that Cardy entropy is gated by
+separate CFT/Cardy hypotheses.
+-/
+def cardyAutomaticityGuard
+    (P : DrazinAffineCFTBoundaryPacket) : Type 0 :=
+  P.noAutomaticCardyWitness
+
+@[simp] theorem cardyAutomaticityGuard_eq
+    (P : DrazinAffineCFTBoundaryPacket) :
+    P.cardyAutomaticityGuard = P.noAutomaticCardyWitness :=
+  rfl
+
+end DrazinAffineCFTBoundaryPacket
+
+/--
+Re-export the theorem-safe level-one `so(4,4)` / `D₄` Sugawara calibration
+from the affine-Virasoro owner lane.
+-/
+theorem sugawaraCentralCharge_so44_levelOne :
+    InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge
+        1 28 6 = 4 :=
+  InfoGeometry.OperatorAlgebra.AffineVirasoroBridge.sugawaraCentralCharge_so44_levelOne
 
 end InfoGeometry.GrandUnification

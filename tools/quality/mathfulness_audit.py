@@ -171,6 +171,10 @@ def classify(
     flat_block = re.sub(r"\s+", " ", block)
     reasons: list[str] = []
 
+    if not block.strip():
+        reasons.append("audit_missing:source_block_unavailable")
+        return "audit_missing", False, reasons
+
     if SORRY_RE.search(block):
         reasons.append("blocked:sorry_or_admit_in_source_block")
         return "blocked", False, reasons
@@ -219,7 +223,7 @@ def classify(
             reasons.append("kernel_theorem:no_graph_significance_row")
         else:
             reasons.append("kernel_theorem:decl_index_and_graph_row_present")
-        return "kernel_theorem", True, reasons
+        return "kernel_theorem", "kernel_theorem" in PROMOTABLE_CLASSES, reasons
 
     if kind in {"def", "abbrev", "structure", "inductive", "opaque"}:
         reasons.append("kernel_definition:compiled_declaration_not_theorem")

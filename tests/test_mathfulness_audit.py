@@ -106,3 +106,33 @@ def test_gate_fails_empty_selected_prefix_and_reports_global_failure(tmp_path: P
     report = json.loads(paths["json_out"].read_text(encoding="utf-8"))
     assert report["summary"]["total"] == 0
     assert "no_selected_declarations" in report["global_failures"]
+
+
+def test_gate_fails_when_required_inputs_missing(tmp_path: Path) -> None:
+    paths = _write_required_inputs(tmp_path)
+    paths["frontier_gate"].unlink()
+    paths["policy_lint"].unlink()
+    source = tmp_path / "Real.lean"
+    source.write_text("theorem realTheorem : 1 = 1 := by rfl\n", encoding="utf-8")
+    _write_decl(paths, source, name="realTheorem", kind="theorem")
+
+    result = _run_audit(paths, "--gate")
+
+    assert result.returncode == 1
+    report = json.loads(paths["json_out"].read_text(encoding="utf-8"))
+    assert "missing_required_audit_input:frontier_gate" in report["global_failures"]
+    assert "missing_required_audit_input:policy_lint" in report["global_failures"]
+
+
+def test_missing_source_block_is_audit_missing_and_gate_failure(tmp_path: Path) -> None:
+    paths = _write_required_inputs(tmp_path)
+    missing_source = tmp_path / "Missing.lean"
+    _write_decl(paths, missing_source, name="missingTheorem", kind="theorem")
+
+    result = _run_audit(paths, "--gate")
+
+    assert result.returncode == 1
+    report = json.loads(paths["json_out"].read_text(encoding="utf-8"))
+    row = report["rows"][0]
+    assert row["classification"] == "audit_missing"
+    assert "audit_missing:source_block_unavailable" in row["reasons"]

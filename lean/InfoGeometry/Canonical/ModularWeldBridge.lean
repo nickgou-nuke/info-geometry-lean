@@ -183,9 +183,7 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator_self
     (q : PositiveRay (Fin n)) :
     relativeModularOperator (n := n) q q =
       NormedSpace.exp (relativeLogDensityOperator (n := n) q q) := by
-  simpa [relativeLogDensityOperator_self] using
-    (relativeModularOperator_eq_exp_relativeLogDensityOperator
-      (n := n) q q)
+  simp [relativeLogDensityOperator_self]
 
 /-- Exponential of the self-relative logarithmic operator is the identity. -/
 @[simp, rep_depth operator]
@@ -203,7 +201,7 @@ normalize to unit as a diagonal readout check.
 theorem finiteDiagonalShadow_exp_self_is_one
     (q : PositiveRay (Fin n)) :
     NormedSpace.exp (relativeLogDensityOperator (n := n) q q) = 1 := by
-  simpa using (exp_relativeLogDensityOperator_self (n := n) q)
+  simp
 
 end FiniteWeld
 

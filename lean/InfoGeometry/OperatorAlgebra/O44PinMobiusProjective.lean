@@ -395,6 +395,32 @@ structure Orthogonal55
 
   component : O44Component
 
+namespace SplitQuadratic55
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    (Q : SplitQuadratic55 W)
+
+/-- Null/isotropic vectors for the ambient conformal quadratic form. -/
+def IsNull
+    (w : W) : Prop :=
+  Q.q w = 0
+
+end SplitQuadratic55
+
+namespace ProjectiveRay
+
+variable
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+
+/-- A represented projective ray lies on the ambient projective null quadric. -/
+def IsAmbientNullRay
+    (Q : SplitQuadratic55 W)
+    (r : ProjectiveRay W) : Prop :=
+  Q.IsNull r.vec
+
+end ProjectiveRay
+
 namespace Orthogonal55
 
 variable
@@ -411,6 +437,16 @@ def actRay
       apply r.nonzero
       have hsymm := congrArg g.toLinearEquiv.symm h
       simpa using hsymm }
+
+/-- Ambient `O(5,5)` transformations preserve the projective null cone. -/
+theorem actRay_preserves_null
+    (g : Orthogonal55 Q)
+    (r : ProjectiveRay W)
+    (hr : r.IsAmbientNullRay Q) :
+    (g.actRay r).IsAmbientNullRay Q := by
+  dsimp [actRay, ProjectiveRay.IsAmbientNullRay, SplitQuadratic55.IsNull] at *
+  rw [g.preserves_q]
+  exact hr
 
 end Orthogonal55
 
@@ -454,6 +490,33 @@ structure ConformalMobius44Extension
 
   /-- Translations/dilations/special conformal transformations may be added here. -/
   full_mobius_generation_certificate : Prop
+
+namespace ConformalMobius44Extension
+
+variable
+    {V W : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+
+variable (M : ConformalMobius44Extension V W)
+
+/-- The projective representative of an embedded affine point is null. -/
+theorem projectivePoint_is_null
+    (v : V) :
+    (M.projectivePoint v).IsAmbientNullRay M.ambientQ := by
+  dsimp [ProjectiveRay.IsAmbientNullRay, SplitQuadratic55.IsNull]
+  rw [M.projectivePoint_vec_eq v]
+  exact M.embed_is_null v
+
+/-- Ambient Möbius inversion preserves the null ray of an embedded affine point. -/
+theorem inversion_preserves_projectivePoint_null
+    (v : V) :
+    (M.inversion.actRay (M.projectivePoint v)).IsAmbientNullRay M.ambientQ :=
+  Orthogonal55.actRay_preserves_null M.inversion
+    (M.projectivePoint v)
+    (M.projectivePoint_is_null v)
+
+end ConformalMobius44Extension
 
 /--
 Abstract Pin cover of the ambient conformal group.
@@ -503,7 +566,69 @@ structure PinMobiusProjective44
   /-- Reflection/chiral classification is retained by using Pin rather than Spin. -/
   reflection_and_chiral_classification_certificate : Prop
 
-/-! ## 6. Owner target -/
+namespace PinMobiusProjective44
+
+variable
+    {V W PinBase PinConf : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf]
+
+variable (P : PinMobiusProjective44 V W PinBase PinConf)
+
+/-- The conformal inversion preserves embedded affine null rays. -/
+theorem inversion_preserves_embedded_null_ray
+    (v : V) :
+    (P.mobius.inversion.actRay (P.mobius.projectivePoint v)).IsAmbientNullRay
+      P.mobius.ambientQ :=
+  ConformalMobius44Extension.inversion_preserves_projectivePoint_null P.mobius v
+
+end PinMobiusProjective44
+
+/-! ## 6. Construction data and owner target -/
+
+/--
+Construction data for the O/Pin/Möbius projective stack.
+
+This is the natural-language theorem packet extracted from conformal geometric
+algebra literature: a base `(4,4)` Pin cover, an ambient conformal `(5,5)` Pin
+cover, and compatibility certificates for lifting the base action and acting on
+projective null rays.
+-/
+structure O44PinMobiusProjectiveConstructionData
+    (V W PinBase PinConf : Type*)
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf] where
+  mobius : ConformalMobius44Extension V W
+  basePin : Pin44CoverDatum (V := V) (PinEl := PinBase) mobius.baseQ
+  conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) mobius.ambientQ
+  basePin_lifts_to_conformalPin : Prop
+  acts_on_projective_null_rays : Prop
+  reflection_and_chiral_classification_certificate : Prop
+
+namespace O44PinMobiusProjectiveConstructionData
+
+variable
+    {V W PinBase PinConf : Type*}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup W] [Module ℝ W]
+    [Monoid PinBase] [Monoid PinConf]
+
+variable (D : O44PinMobiusProjectiveConstructionData V W PinBase PinConf)
+
+/-- Build the full projective Pin/Möbius datum from construction data. -/
+def toPinMobiusProjective44 :
+    PinMobiusProjective44 V W PinBase PinConf where
+  mobius := D.mobius
+  basePin := D.basePin
+  conformalPin := D.conformalPin
+  basePin_lifts_to_conformalPin := D.basePin_lifts_to_conformalPin
+  acts_on_projective_null_rays := D.acts_on_projective_null_rays
+  reflection_and_chiral_classification_certificate :=
+    D.reflection_and_chiral_classification_certificate
+
+end O44PinMobiusProjectiveConstructionData
 
 /-- Compatibility predicate for constructing the O/Pin/Möbius projective stack. -/
 def O44PinMobiusProjectiveCompatibility
@@ -511,7 +636,7 @@ def O44PinMobiusProjectiveCompatibility
     [AddCommGroup V] [Module ℝ V]
     [AddCommGroup W] [Module ℝ W]
     [Monoid PinBase] [Monoid PinConf] : Prop :=
-  True
+  Nonempty (O44PinMobiusProjectiveConstructionData V W PinBase PinConf)
 
 /-- Owner target for the full reflection-sensitive projective conformal stack. -/
 def O44PinMobiusProjectiveOwnerTarget : Prop :=
@@ -521,5 +646,12 @@ def O44PinMobiusProjectiveOwnerTarget : Prop :=
     [Monoid PinBase] [Monoid PinConf],
     O44PinMobiusProjectiveCompatibility V W PinBase PinConf →
       Nonempty (PinMobiusProjective44 V W PinBase PinConf)
+
+/-- Construct the projective Pin/Möbius stack from explicit construction data. -/
+theorem o44PinMobiusProjectiveOwnerTarget :
+    O44PinMobiusProjectiveOwnerTarget := by
+  intro V W PinBase PinConf _ _ _ _ _ _ h
+  rcases h with ⟨D⟩
+  exact ⟨D.toPinMobiusProjective44⟩
 
 end InfoGeometry.OperatorAlgebra

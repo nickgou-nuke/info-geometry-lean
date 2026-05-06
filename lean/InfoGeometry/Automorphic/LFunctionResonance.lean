@@ -142,16 +142,17 @@ end AutomorphicOperatorIntertwining
 /-! ## 2. Cuspidal L-functionals -/
 
 /--
-Placeholder predicate saying that a function-valued linear map is the
-Langlands/cuspidal L-functional intended by the concrete model.
+A function-valued linear map is cuspidal relative to the
+Siegel-Eisenstein splitting when it kills every Eisenstein lift.
 
-A future version should expand this into Hecke eigenpacket compatibility,
-Euler product, analytic continuation, and functional equation data.
+This is the projector-algebraic part that this module can prove/use
+constructively.  Euler products, analytic continuation, and functional
+equations are not asserted here.
 -/
 def IsCuspidalLanglandsLFunctional
-    (_W : SiegelEisensteinWitness Bulk Boundary)
-    (_Lmap : Bulk →ₗ[ℝ] (ℂ → ℂ)) : Prop :=
-  True
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (Lmap : Bulk →ₗ[ℝ] (ℂ → ℂ)) : Prop :=
+  ∀ b : Boundary, Lmap (W.eisenstein b) = 0
 
 /--
 A cuspidal automorphic L-functional.
@@ -199,6 +200,12 @@ namespace CuspidalLFunctionDatum
 
 variable {W : SiegelEisensteinWitness Bulk Boundary}
 variable (L : CuspidalLFunctionDatum W)
+
+/-- The supplied cuspidal functional kills Eisenstein lifts. -/
+theorem Lmap_eisenstein_eq_zero
+    (b : Boundary) :
+    L.Lmap (W.eisenstein b) = 0 :=
+  L.langlands b
 
 /--
 Boundary/Eisenstein states contribute no cuspidal L-function.
@@ -254,13 +261,14 @@ end CuspidalLFunctionDatum
 /-! ## 3. Boundary/scattering L-functionals -/
 
 /--
-Placeholder predicate saying that a boundary function-valued linear map is the
-scattering L-functional extracted from the Siegel boundary component.
+A boundary function-valued linear map is calibrated to the Siegel boundary
+component when it is unchanged after replacing a bulk state by its
+Eisenstein-boundary projection before applying the Siegel map.
 -/
 def IsBoundaryScatteringLFunctional
-    (_W : SiegelEisensteinWitness Bulk Boundary)
-    (_Lmap : Boundary →ₗ[ℝ] (ℂ → ℂ)) : Prop :=
-  True
+    (W : SiegelEisensteinWitness Bulk Boundary)
+    (Lmap : Boundary →ₗ[ℝ] (ℂ → ℂ)) : Prop :=
+  ∀ F : Bulk, Lmap (W.siegel (W.boundaryProjector F)) = Lmap (W.siegel F)
 
 /--
 Boundary/scattering L-function datum.
@@ -302,6 +310,12 @@ namespace BoundaryScatteringLFunctionDatum
 
 variable {W : SiegelEisensteinWitness Bulk Boundary}
 variable (L : BoundaryScatteringLFunctionDatum W)
+
+/-- The supplied scattering functional is calibrated to boundary projection. -/
+theorem Lmap_siegel_boundaryProjector
+    (F : Bulk) :
+    L.Lmap (W.siegel (W.boundaryProjector F)) = L.Lmap (W.siegel F) :=
+  L.scattering F
 
 /--
 The boundary/scattering L-function is unchanged by applying the boundary
@@ -353,26 +367,52 @@ structure CompatibleAutomorphicOperatorFamily
   op : Index → AutomorphicOperatorIntertwining W
 
 /--
-Placeholder predicate for simultaneous eigenpacket data on the cuspidal core.
+Simultaneous eigenpacket data on the cuspidal core.
 
-A future concrete version should say that the cuspidal projector lands in a
-joint eigenspace for a specified Hecke/Laplacian family.
+At this abstract operator layer, the constructively provable content is that
+every compatible operator preserves the local Siegel kernel.
 -/
 def HasCuspidalEigenpacket
     {W : SiegelEisensteinWitness Bulk Boundary}
-    (_Ops : CompatibleAutomorphicOperatorFamily W)
-    (_F : Bulk) : Prop :=
-  True
+    (Ops : CompatibleAutomorphicOperatorFamily W)
+    (F : Bulk) : Prop :=
+  ∀ i : Ops.Index, W.siegel ((Ops.op i).bulkOp F) = 0
+
+/-- Compatible automorphic operators preserve cuspidal kernel membership. -/
+theorem hasCuspidalEigenpacket_of_siegel_zero
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    (Ops : CompatibleAutomorphicOperatorFamily W)
+    (F : Bulk)
+    (hF : W.siegel F = 0) :
+    HasCuspidalEigenpacket Ops F := by
+  intro i
+  exact (Ops.op i).maps_ker_siegel_to_ker_siegel hF
 
 /--
-Placeholder predicate for Euler-product compatibility of a cuspidal
-L-functional with a Hecke eigenpacket.
+Euler/eigenpacket compatibility available at the projector-algebra layer.
+
+This combines the supplied cuspidal functional law with the theorem that
+compatible operators preserve the cuspidal kernel.  It does not assert an
+Euler product or analytic continuation.
 -/
 def HasHeckeEulerCompatibility
     {W : SiegelEisensteinWitness Bulk Boundary}
-    (_Ops : CompatibleAutomorphicOperatorFamily W)
-    (_L : CuspidalLFunctionDatum W) : Prop :=
-  True
+    (Ops : CompatibleAutomorphicOperatorFamily W)
+    (L : CuspidalLFunctionDatum W) : Prop :=
+  IsCuspidalLanglandsLFunctional W L.Lmap ∧
+    ∀ F : Bulk, W.siegel F = 0 → HasCuspidalEigenpacket Ops F
+
+/--
+The Hecke/eigenpacket compatibility at this layer is constructively available
+from the cuspidal functional law and operator intertwining.
+-/
+theorem hasHeckeEulerCompatibility
+    {W : SiegelEisensteinWitness Bulk Boundary}
+    (Ops : CompatibleAutomorphicOperatorFamily W)
+    (L : CuspidalLFunctionDatum W) :
+    HasHeckeEulerCompatibility Ops L :=
+  ⟨L.langlands,
+    fun F hF => hasCuspidalEigenpacket_of_siegel_zero Ops F hF⟩
 
 /-! ## 5. Unified automorphic resonance witness -/
 

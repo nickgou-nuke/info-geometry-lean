@@ -109,6 +109,7 @@ import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Automorphic.AutomorphicKreinBridge
+import InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Optics.All
 import InfoGeometry.Algebraic.CartanCocycle

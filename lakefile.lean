@@ -156,6 +156,46 @@ script leandojoV2Bridge (args) do
   }
   child.wait
 
+script pdaFormL4Bridge (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/pda_forml4_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script ulamTraceBridge (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/ulam_trace_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script tacticPathRankingDataset (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/build_tactic_path_ranking_dataset.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script analyzeTacticPathRanking (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/analyze_tactic_path_ranking.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script jixiaTrainingData (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -320,6 +360,36 @@ script hivePredigestionIngest (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
     args := #["tools/infra/hive_predigestion_ingest.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script predigestionHiveDemo (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/run_predigestion_to_hive_demo.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script checkResidentModel (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/check_resident_model_endpoint.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script checkVllmMistralCompat (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/check_vllm_mistral_compat.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit

@@ -28,6 +28,7 @@ import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Krein.CartanDecomposition
+import InfoGeometry.Krein.HessianFrameConjugation
 import InfoGeometry.Krein.OrthogonalGroup
 import InfoGeometry.Krein.Automorphisms
 import InfoGeometry.Krein.Category

@@ -181,6 +181,7 @@ def compute_operator_spectrum(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema": ROW_SCHEMA,
         "operator_scope": "local_decision_point",
+        "diagnostic_only": True,
         "transition_proxy": {
             "candidate_count": n,
             "success_candidate_count": sum(1 for c in candidates if is_positive(c)),
@@ -227,9 +228,9 @@ def enrich_candidate(
     candidate: dict[str, Any],
     spectrum: dict[str, Any],
     *,
-    alpha: float,
-    beta: float,
-    gamma: float,
+    alpha: float = 0.10,
+    beta: float = 0.05,
+    gamma: float = 0.10,
 ) -> dict[str, Any]:
     out = dict(candidate)
     drazin = spectrum["drazin_proxy"]
@@ -371,9 +372,9 @@ def run(
     input_path: Path,
     out_path: Path,
     stats_path: Path,
-    alpha: float,
-    beta: float,
-    gamma: float,
+    alpha: float = 0.10,
+    beta: float = 0.05,
+    gamma: float = 0.10,
 ) -> dict[str, Any]:
     rows = [enrich_row(row, alpha=alpha, beta=beta, gamma=gamma) for row in iter_jsonl(input_path)]
     written = write_jsonl(out_path, rows)

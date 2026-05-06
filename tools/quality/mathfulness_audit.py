@@ -244,7 +244,12 @@ def main() -> int:
         "--fail-class",
         action="append",
         default=[],
-        help="Classification that fails --gate. Defaults to blocked/vacuous/graph_only/diagnostic_only.",
+        help=(
+            "Classification that fails --gate. Defaults to the conservative "
+            "non-promotable set: blocked, audit_missing, vacuous_or_surrogate, "
+            "graph_only, diagnostic_only, needs_review_named_bridge, "
+            "kernel_definition, explicit_axiom, needs_review_external_audit_failed."
+        ),
     )
     parser.add_argument("--json-out", type=Path, default=ROOT / "reports/dag/mathfulness-audit.json")
     parser.add_argument("--md-out", type=Path, default=ROOT / "reports/dag/mathfulness-audit.md")
@@ -277,6 +282,9 @@ def main() -> int:
         if args.file_prefix and not any(file_rel.startswith(p) for p in args.file_prefix):
             continue
         selected.append(decl)
+
+    if args.gate and not selected:
+        global_failures.append("no_selected_declarations")
 
     rows = []
     counts: Counter[str] = Counter()
@@ -380,8 +388,6 @@ def main() -> int:
     if args.gate:
         fail_classes = set(args.fail_class) if args.fail_class else set(DEFAULT_GATE_BLOCK_CLASSES)
         failures = [row for row in rows if row["classification"] in fail_classes]
-        if not rows:
-            global_failures.append("no_selected_declarations")
         if failures or global_failures:
             print(
                 json.dumps(

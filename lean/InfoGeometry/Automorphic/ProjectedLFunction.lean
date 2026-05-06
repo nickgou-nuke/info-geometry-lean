@@ -276,15 +276,20 @@ end ProjectedAutomorphicLFunctionWitness
 /--
 Named predicate for an Euler-product realization of an automorphic L-function.
 
-A concrete future version should include local factors, convergence domain,
-prime indexing, and equality to the analytic product on that domain.
+This is a finite/local-factor law on the declared region: at every point in the
+region, the value of `L` is represented by a finite product of the supplied
+local factors. Infinite analytic Euler products can later refine this by
+choosing stronger convergence data, but this predicate is already mathematical
+content rather than a vacuous socket.
 -/
 def HasEulerProduct
-    (_L : ℂ → ℂ)
+    (L : ℂ → ℂ)
     (PrimeIndex : Type)
-    (_localFactor : PrimeIndex → ℂ → ℂ)
-    (_convergenceRegion : Set ℂ) : Prop :=
-  True
+    (localFactor : PrimeIndex → ℂ → ℂ)
+    (convergenceRegion : Set ℂ) : Prop :=
+  ∀ s : ℂ, s ∈ convergenceRegion →
+    ∃ finitePrimes : Finset PrimeIndex,
+      L s = ∏ p ∈ finitePrimes, localFactor p s
 
 /--
 Euler-product data attached to an automorphic L-function.
@@ -300,12 +305,13 @@ structure EulerProductData
 /--
 Named predicate for a completed L-function package.
 
-A future version should encode gamma factors, conductor, center, and functional
-equation.
+The completed function satisfies a functional equation around a supplied center
+with a supplied root number.
 -/
 def HasCompletedFunctionalEquation
-    (_L _completedL : ℂ → ℂ) : Prop :=
-  True
+    (_L completedL : ℂ → ℂ) : Prop :=
+  ∃ center rootNumber : ℂ,
+    ∀ s : ℂ, completedL s = rootNumber * completedL (center - s)
 
 /--
 Witness connecting a projected automorphic L-function to prime/Euler data.
@@ -343,12 +349,9 @@ structure EulerProductWitness
   /-- Region on which the Euler-product statement is calibrated. -/
   convergenceRegion : Set ℂ
 
-  /-- Model-specific Euler-product law. -/
-  euler_product_law : Prop
-
   /-- Proof/certificate of the Euler-product law. -/
   euler_product_certificate :
-    euler_product_law
+    HasEulerProduct L PrimeIndex localFactor convergenceRegion
 
 namespace EulerProductWitness
 
@@ -357,7 +360,7 @@ variable (E : EulerProductWitness L)
 
 /-- The supplied Euler-product law is available. -/
 theorem euler_product_valid :
-    E.euler_product_law :=
+    HasEulerProduct L E.PrimeIndex E.localFactor E.convergenceRegion :=
   E.euler_product_certificate
 
 /--
@@ -370,7 +373,7 @@ def toEulerProductData :
   PrimeIndex := E.PrimeIndex
   localFactor := E.localFactor
   convergenceRegion := E.convergenceRegion
-  hasEulerProduct := trivial
+  hasEulerProduct := E.euler_product_certificate
 
 end EulerProductWitness
 
@@ -385,12 +388,9 @@ structure CompletedLFunctionWitness
   /-- Completed L-function. -/
   completedL : ℂ → ℂ
 
-  /-- Model-specific completed-functional-equation law. -/
-  completed_functional_equation_law : Prop
-
   /-- Proof/certificate of the completed-functional-equation law. -/
   completed_functional_equation_certificate :
-    completed_functional_equation_law
+    HasCompletedFunctionalEquation L completedL
 
 namespace CompletedLFunctionWitness
 
@@ -399,7 +399,7 @@ variable (C : CompletedLFunctionWitness L)
 
 /-- The supplied completed-functional-equation law is available. -/
 theorem completed_functional_equation_valid :
-    C.completed_functional_equation_law :=
+    HasCompletedFunctionalEquation L C.completedL :=
   C.completed_functional_equation_certificate
 
 /--
@@ -407,7 +407,7 @@ Forgetful adapter to the legacy completed-functional-equation predicate.
 -/
 theorem toHasCompletedFunctionalEquation :
     HasCompletedFunctionalEquation L C.completedL :=
-  trivial
+  C.completed_functional_equation_certificate
 
 end CompletedLFunctionWitness
 
@@ -455,12 +455,13 @@ def toWeakWitness :
 
 /-- The Euler-product certificate is available. -/
 theorem euler_product_valid :
-    R.eulerProduct.euler_product_law :=
+    HasEulerProduct P.L R.eulerProduct.PrimeIndex R.eulerProduct.localFactor
+      R.eulerProduct.convergenceRegion :=
   R.eulerProduct.euler_product_valid
 
 /-- The completed-functional-equation certificate is available. -/
 theorem completed_functional_equation_valid :
-    R.completed.completed_functional_equation_law :=
+    HasCompletedFunctionalEquation P.L R.completed.completedL :=
   R.completed.completed_functional_equation_valid
 
 end LanglandsPrimeResonanceStrongWitness

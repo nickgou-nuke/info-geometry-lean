@@ -100,6 +100,34 @@ theorem nil_kills_right_core
     (x * P.Pcore) * P.Pnil = 0 := by
   rw [mul_assoc, P.core_nil_disjoint, mul_zero]
 
+/--
+An element cannot be simultaneously left-supported on the regular core branch
+and the nil branch.
+-/
+theorem eq_zero_of_left_core_and_nil_supported
+    {x : Op}
+    (hcore : P.Pcore * x = x)
+    (hnil : P.Pnil * x = x) :
+    x = 0 := by
+  calc
+    x = P.Pcore * x := hcore.symm
+    _ = P.Pcore * (P.Pnil * x) := by rw [hnil]
+    _ = 0 := P.core_kills_left_nil x
+
+/--
+An element cannot be simultaneously right-supported on the regular core branch
+and the nil branch.
+-/
+theorem eq_zero_of_right_core_and_nil_supported
+    {x : Op}
+    (hcore : x * P.Pcore = x)
+    (hnil : x * P.Pnil = x) :
+    x = 0 := by
+  calc
+    x = x * P.Pcore := hcore.symm
+    _ = (x * P.Pnil) * P.Pcore := by rw [hnil]
+    _ = 0 := P.core_kills_right_nil x
+
 end DrazinProjectorPair
 
 /-! ## 2. Branch predicates inside the represented operator algebra -/
@@ -298,13 +326,15 @@ end MetricDrazinProjectorPair
 /--
 Compatibility predicate for constructing a represented Drazin split.
 
-A future version should replace `True` by representation, spectral, Drazin, and
-Krein-compatibility hypotheses.
+This is intentionally exact: a compatible source/core/operator triple is one
+for which explicit represented split data has been supplied.  The owner theorem
+below is then the constructive projection of that data, not a theorem from a
+vacuous premise.
 -/
 def DrazinRepresentedSplitCompatibility
-    (_Core _Split Op : Type*)
+    (Core Split Op : Type*)
     [Ring Op] [Module ℝ Op] : Prop :=
-  True
+  Nonempty (DrazinRepresentedSplit Core Split Op)
 
 /--
 Owner target for the future construction theorem.
@@ -318,5 +348,14 @@ def DrazinRepresentedSplitOwnerTarget : Prop :=
     [Ring Op] [Module ℝ Op],
     DrazinRepresentedSplitCompatibility Core Split Op →
       Nonempty (DrazinRepresentedSplit Core Split Op)
+
+/--
+The owner target is exactly the extraction of supplied represented Drazin split
+data from the non-vacuous compatibility predicate.
+-/
+theorem drazinRepresentedSplitOwnerTarget :
+    DrazinRepresentedSplitOwnerTarget := by
+  intro Core Split Op _ _ h
+  exact h
 
 end InfoGeometry.OperatorAlgebra

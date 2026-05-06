@@ -50,6 +50,7 @@ STATUS_PRECEDENCE = [
     "proof_hole_blocker",
     "explicit_axiom_blocker",
     "vacuous_or_surrogate_surface",
+    "quarantine_manifest_inconsistency",
     "review_scaffold_surface",
     "manifested_quarantine_no_current_findings",
     "constructivity_review_surface",
@@ -142,11 +143,47 @@ def module_to_path(module: str) -> Path | None:
     return path if path.exists() else None
 
 
-def read_manifest() -> tuple[dict[str, str], bool]:
+def read_manifest() -> tuple[dict[str, str], bool, str | None]:
     try:
-        return audit_constructivity.read_quarantine_manifest(), True
+        return audit_constructivity.read_quarantine_manifest(), True, None
     except FileNotFoundError:
-        return {}, False
+        return {}, False, "missing_quarantine_manifest"
+    except Exception as exc:
+        return {}, False, f"failed_to_read_quarantine_manifest:{exc!r}"
+
+
+def in_scope(
+    path: Path,
+    *,
+    scope: str = "all",
+    file_prefixes: list[str] | None = None,
+    module_prefixes: list[str] | None = None,
+    exclude_prefixes: list[str] | None = None,
+    manifest_modules: set[str] | None = None,
+) -> bool:
+    rpath = rel(path)
+    mod = module_name(path)
+    file_prefixes = file_prefixes or []
+    module_prefixes = module_prefixes or []
+    exclude_prefixes = exclude_prefixes or []
+    if scope == "canonical" and not mod.startswith("InfoGeometry.Canonical."):
+        return False
+    if scope == "stable" and mod.startswith("InfoGeometry.Unstable."):
+        return False
+    if scope == "stable" and manifest_modules and mod in manifest_modules:
+        return False
+    if scope == "quarantine":
+        is_unstable = mod.startswith("InfoGeometry.Unstable.")
+        is_manifested = bool(manifest_modules and mod in manifest_modules)
+        if not (is_unstable or is_manifested):
+            return False
+    if file_prefixes and not any(rpath.startswith(prefix) for prefix in file_prefixes):
+        return False
+    if module_prefixes and not any(mod.startswith(prefix) for prefix in module_prefixes):
+        return False
+    if any(rpath.startswith(prefix) or mod.startswith(prefix) for prefix in exclude_prefixes):
+        return False
+    return True
 
 
 def all_infogeometry_files(
@@ -178,17 +215,14 @@ def all_infogeometry_files(
     exclude_prefixes = exclude_prefixes or []
     out: list[Path] = []
     for path in files:
-        rpath = rel(path)
-        mod = module_name(path)
-        if scope == "stable" and mod.startswith("InfoGeometry.Unstable."):
-            continue
-        if scope == "stable" and manifest_modules and mod in manifest_modules:
-            continue
-        if file_prefixes and not any(rpath.startswith(prefix) for prefix in file_prefixes):
-            continue
-        if module_prefixes and not any(mod.startswith(prefix) for prefix in module_prefixes):
-            continue
-        if any(rpath.startswith(prefix) or mod.startswith(prefix) for prefix in exclude_prefixes):
+        if not in_scope(
+            path,
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=manifest_modules,
+        ):
             continue
         out.append(path)
     return out
@@ -207,7 +241,9 @@ def importers_by_module(files: list[Path] | None = None) -> dict[str, list[str]]
 def importer_class(importer: str) -> str:
     if importer.startswith("InfoGeometry.Unstable."):
         return "allowed_unstable"
-    if importer in {"InfoGeometry.All", "InfoGeometry.Canonical.All"} or importer.endswith(".All"):
+    if importer in {"InfoGeometry.All", "InfoGeometry.Canonical.All"}:
+        return "umbrella"
+    if importer.startswith("InfoGeometry.") and importer.endswith(".All"):
         return "umbrella"
     if importer.startswith("InfoGeometry.Canonical."):
         return "canonical"
@@ -219,13 +255,61 @@ def importer_class_counts(importers: list[str]) -> dict[str, int]:
 
 
 def forbidden_importers_for_status(status: str, importers: list[str]) -> list[str]:
-    if status in {"content_clean_by_this_audit", "manifested_quarantine_no_current_findings"}:
+    if status == "content_clean_by_this_audit":
         return []
     return [
         importer
         for importer in importers
         if importer_class(importer) in {"umbrella", "canonical", "other"}
     ]
+
+
+def resolve_finding_location(rpath: str) -> tuple[str, Path | None]:
+    path = ROOT / rpath
+    if path.exists():
+        return module_name(path), path
+    if rpath.startswith("InfoGeometry."):
+        return rpath, module_to_path(rpath)
+    return rpath, None
+
+
+def finding_in_scope(
+    finding: audit_constructivity.Finding,
+    *,
+    scope: str,
+    file_prefixes: list[str] | None,
+    module_prefixes: list[str] | None,
+    exclude_prefixes: list[str] | None,
+    manifest_modules: set[str],
+) -> bool:
+    mod, path = resolve_finding_location(finding.path)
+    if path is not None:
+        return in_scope(
+            path,
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=manifest_modules,
+        )
+    file_prefixes = file_prefixes or []
+    module_prefixes = module_prefixes or []
+    exclude_prefixes = exclude_prefixes or []
+    if scope == "canonical" and not mod.startswith("InfoGeometry.Canonical."):
+        return False
+    if scope == "stable" and mod.startswith("InfoGeometry.Unstable."):
+        return False
+    if scope == "stable" and mod in manifest_modules:
+        return False
+    if scope == "quarantine" and not (mod.startswith("InfoGeometry.Unstable.") or mod in manifest_modules):
+        return False
+    if file_prefixes:
+        return False
+    if module_prefixes and not any(mod.startswith(prefix) for prefix in module_prefixes):
+        return False
+    if any(mod.startswith(prefix) for prefix in exclude_prefixes):
+        return False
+    return True
 
 
 def source_excerpt(path: Path, line: int, radius: int = 3) -> dict[str, Any]:
@@ -307,6 +391,11 @@ def semantic_status(categories: set[str]) -> tuple[str, str]:
             "vacuous_or_surrogate_surface",
             "split real definitions from theorem-looking wrappers; rewrite True/trivial claims as proof-bearing statements or mark expository infrastructure",
         )
+    if "quarantine-manifest" in categories:
+        return (
+            "quarantine_manifest_inconsistency",
+            "fix quarantine manifest or InfoGeometry.Unstable.Quarantine import coverage",
+        )
     if categories & {
         "universal-true-field",
         "zero-quadratic-form",
@@ -336,7 +425,18 @@ def collect_findings(
 ) -> list[audit_constructivity.Finding]:
     findings: list[audit_constructivity.Finding] = []
     if include_manifest_consistency:
-        findings.extend(audit_constructivity.scan_manifest_consistency())
+        try:
+            findings.extend(audit_constructivity.scan_manifest_consistency())
+        except Exception as exc:
+            manifest_path = getattr(audit_constructivity, "MANIFEST", ROOT / "scripts/quality/quarantine_manifest.txt")
+            findings.append(
+                audit_constructivity.Finding(
+                    "quarantine-manifest",
+                    rel(Path(manifest_path)),
+                    1,
+                    f"manifest consistency unavailable: {exc!r}",
+                )
+            )
     for path in files:
         findings.extend(audit_constructivity.scan_file(path, include_review=include_review))
     findings.sort(key=lambda item: (item.path, item.line, item.category))
@@ -353,7 +453,7 @@ def build_report(
     exclude_prefixes: list[str] | None = None,
     include_manifest_consistency: bool = True,
 ) -> dict[str, Any]:
-    manifest, manifest_present = read_manifest()
+    manifest, manifest_present, manifest_error = read_manifest()
     files = all_infogeometry_files(
         scope=scope,
         file_prefixes=file_prefixes,
@@ -366,25 +466,33 @@ def build_report(
         include_review=include_review,
         include_manifest_consistency=include_manifest_consistency,
     )
+    findings = [
+        finding
+        for finding in findings
+        if finding_in_scope(
+            finding,
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=set(manifest),
+        )
+    ]
     by_path: dict[str, list[audit_constructivity.Finding]] = defaultdict(list)
     for finding in findings:
         by_path[finding.path].append(finding)
 
-    importers = importers_by_module(files)
+    importers = importers_by_module(all_infogeometry_files(scope="all"))
     modules: list[ModuleAudit] = []
     category_counts: Counter[str] = Counter()
     status_counts: Counter[str] = Counter()
 
     for rpath, module_findings in sorted(by_path.items()):
-        path = ROOT / rpath
-        mod = module_name(path)
-        headers = declaration_headers(path, mod)
+        mod, maybe_path = resolve_finding_location(rpath)
+        path = maybe_path
+        headers = declaration_headers(path, mod) if path is not None else []
         categories = {finding.category for finding in module_findings}
-        if "quarantine-manifest" in categories:
-            status = "quarantine_manifest_inconsistency"
-            action = "repair manifest/import mismatch before using quarantine boundary as evidence"
-        else:
-            status, action = semantic_status(categories)
+        status, action = semantic_status(categories)
         category_counts.update(finding.category for finding in module_findings)
         status_counts[status] += 1
         direct_importers = importers.get(mod, [])
@@ -406,6 +514,7 @@ def build_report(
                 source_excerpts=[
                     source_excerpt(path, finding.line, radius=excerpt_radius)
                     for finding in module_findings[:8]
+                    if path is not None
                 ],
             )
         )
@@ -417,8 +526,18 @@ def build_report(
         rpath = rel(path)
         if rpath in by_path:
             continue
+        if not in_scope(
+            path,
+            scope=scope,
+            file_prefixes=file_prefixes,
+            module_prefixes=module_prefixes,
+            exclude_prefixes=exclude_prefixes,
+            manifest_modules=set(manifest),
+        ):
+            continue
         direct_importers = importers.get(mod, [])
         status = "manifested_quarantine_no_current_findings"
+        forbidden_importers = forbidden_importers_for_status(status, direct_importers)
         status_counts[status] += 1
         modules.append(
             ModuleAudit(
@@ -432,15 +551,20 @@ def build_report(
                 direct_importer_count=len(direct_importers),
                 direct_importers=direct_importers[:50],
                 importer_class_counts=importer_class_counts(direct_importers),
-                forbidden_importer_count=0,
-                forbidden_importers=[],
+                forbidden_importer_count=len(forbidden_importers),
+                forbidden_importers=forbidden_importers[:50],
                 source_excerpts=[],
             )
         )
 
-    modules.sort(key=lambda module: (module.semantic_status, module.module))
+    status_rank = {status: idx for idx, status in enumerate(STATUS_PRECEDENCE)}
+    modules.sort(key=lambda module: (status_rank.get(module.semantic_status, 999), module.module))
     blocking_count = sum(1 for finding in findings if finding.category in BLOCKING_CATEGORIES)
     review_count = sum(1 for finding in findings if finding.category in REVIEW_CATEGORIES)
+    modules_with_findings = sum(1 for module in modules if module.findings)
+    manifest_only_count = sum(
+        1 for module in modules if module.semantic_status == "manifested_quarantine_no_current_findings"
+    )
     return {
         "schema": "info_geometry.semantic_content_audit.v1",
         "policy": POLICY,
@@ -451,16 +575,23 @@ def build_report(
             "include_review_patterns": include_review,
             "include_manifest_consistency": include_manifest_consistency,
             "manifest_present": manifest_present,
+            "manifest_error": manifest_error,
+            "selected_file_count": len(files),
             "file_prefixes": file_prefixes or [],
             "module_prefixes": module_prefixes or [],
             "exclude_prefixes": exclude_prefixes or [],
             "uses_folder_as_truth_label": False,
             "mutates_quarantine_manifest": False,
             "transitive_impact_available": False,
-            "impact_scope": "direct importers only",
+            "impact_scope": "all InfoGeometry direct importers only",
         },
         "summary": {
-            "modules_with_findings": len(modules),
+            "selected_file_count": len(files),
+            "modules_reported": len(modules),
+            "modules_with_findings": modules_with_findings,
+            "modules_with_current_findings": modules_with_findings,
+            "manifested_without_current_findings": manifest_only_count,
+            "manifest_only_module_count": manifest_only_count,
             "finding_count": len(findings),
             "blocking_finding_count": blocking_count,
             "review_finding_count": review_count,
@@ -489,7 +620,10 @@ def write_md(report: dict[str, Any], path: Path) -> None:
     lines.append("")
     lines.append("## Summary")
     summary = report["summary"]
-    lines.append(f"- `modules_with_findings`: {summary['modules_with_findings']}")
+    lines.append(f"- `selected_file_count`: {summary['selected_file_count']}")
+    lines.append(f"- `modules_reported`: {summary['modules_reported']}")
+    lines.append(f"- `modules_with_current_findings`: {summary['modules_with_current_findings']}")
+    lines.append(f"- `manifest_only_module_count`: {summary['manifest_only_module_count']}")
     lines.append(f"- `finding_count`: {summary['finding_count']}")
     lines.append(f"- `blocking_finding_count`: {summary['blocking_finding_count']}")
     lines.append(f"- `review_finding_count`: {summary['review_finding_count']}")
@@ -553,6 +687,7 @@ def main() -> int:
     parser.add_argument("--excerpt-radius", type=int, default=3)
     parser.add_argument("--gate", action="store_true", help="Fail only on blocking findings.")
     parser.add_argument("--gate-review", action="store_true", help="Fail on blocking and review findings.")
+    parser.add_argument("--gate-import-boundary", action="store_true", help="Fail if reported non-clean surfaces have forbidden direct importers.")
     parser.add_argument(
         "--fail-status",
         action="append",
@@ -561,9 +696,10 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    include_review = args.include_review or args.gate_review
     report = build_report(
         scope=args.scope,
-        include_review=args.include_review,
+        include_review=include_review,
         excerpt_radius=args.excerpt_radius,
         file_prefixes=args.file_prefix,
         module_prefixes=args.module_prefix,
@@ -575,8 +711,17 @@ def main() -> int:
     write_md(report, args.md_out)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     if args.gate_review:
+        if report["summary"]["selected_file_count"] == 0:
+            return 1
         return 1 if report["summary"]["finding_count"] else 0
+    if args.gate_import_boundary:
+        if report["summary"]["selected_file_count"] == 0:
+            return 1
+        if any(int(module.get("forbidden_importer_count") or 0) > 0 for module in report["modules"]):
+            return 1
     if args.gate:
+        if report["summary"]["selected_file_count"] == 0:
+            return 1
         fail_statuses = set(args.fail_status) if args.fail_status else DEFAULT_FAIL_STATUSES
         failures = [
             module

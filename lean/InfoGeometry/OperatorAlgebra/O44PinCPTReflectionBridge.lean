@@ -98,10 +98,41 @@ theorem parityPin_is_odd :
     Pin.parity C.parityPin = PinParity.odd :=
   C.parity_odd
 
+/--
+Parity is not represented by an even/Spin-sector Pin element in this
+calibration.
+
+This is the formal core of the CPT/Pin correction: once the supplied parity
+representative is odd, it cannot simultaneously belong to the even sector that
+models the Spin-like subcover.
+-/
+theorem parityPin_not_even :
+    Pin.parity C.parityPin ≠ PinParity.even := by
+  rw [C.parity_odd]
+  exact PinParity.noConfusion
+
 /-- Time reversal is represented by an odd Pin element. -/
 theorem timeReversalPin_is_odd :
     Pin.parity C.timeReversalPin = PinParity.odd :=
   C.timeReversal_odd
+
+/--
+Time reversal is not represented by an even/Spin-sector Pin element in this
+calibration.
+-/
+theorem timeReversalPin_not_even :
+    Pin.parity C.timeReversalPin ≠ PinParity.even := by
+  rw [C.timeReversal_odd]
+  exact PinParity.noConfusion
+
+/--
+The two reflection representatives jointly require data outside the purely
+even Pin/Spin sector.
+-/
+theorem parity_timeReversal_outside_even_sector :
+    Pin.parity C.parityPin ≠ PinParity.even ∧
+      Pin.parity C.timeReversalPin ≠ PinParity.even :=
+  ⟨C.parityPin_not_even, C.timeReversalPin_not_even⟩
 
 /-- The full Pin socket is the retained reflection lane, not merely Spin. -/
 theorem odd_reflection_socket_available

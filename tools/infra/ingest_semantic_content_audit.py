@@ -26,10 +26,10 @@ SCHEMA_IMPORTER_EDGE = "info_geometry.semantic_content_audit.importer_edge.v1"
 SCHEMA_HIVE_TASK = "info_geometry.hive_task.v1"
 
 SEMANTIC_SEVERITY = {
+    "quarantine_manifest_inconsistency": 105.0,
     "proof_hole_blocker": 100.0,
     "explicit_axiom_blocker": 95.0,
     "vacuous_or_surrogate_surface": 80.0,
-    "quarantine_manifest_inconsistency": 75.0,
     "constructivity_review_surface": 50.0,
     "review_scaffold_surface": 30.0,
     "manifested_quarantine_no_current_findings": 10.0,
@@ -45,6 +45,18 @@ TASK_KIND_BY_STATUS = {
     "review_scaffold_surface": "constructivity.review.scaffold",
 }
 
+STATUS_ORDER = [
+    "quarantine_manifest_inconsistency",
+    "proof_hole_blocker",
+    "explicit_axiom_blocker",
+    "vacuous_or_surrogate_surface",
+    "review_scaffold_surface",
+    "manifested_quarantine_no_current_findings",
+    "constructivity_review_surface",
+    "content_clean_by_this_audit",
+]
+STATUS_RANK = {status: index for index, status in enumerate(STATUS_ORDER)}
+
 
 def utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -53,6 +65,10 @@ def utc_stamp() -> str:
 def stable_key(*parts: Any) -> str:
     raw = "|".join(str(part) for part in parts)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:40]
+
+
+def file_digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:40]
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -116,8 +132,17 @@ def module_decl_names(module: str, graph: dict[str, Any]) -> list[str]:
     return sorted(name for name in graph["nodes_by_name"] if name.startswith(prefix))
 
 
-def graph_context(module: dict[str, Any], graph: dict[str, Any], *, max_decl_sample: int = 20) -> dict[str, Any]:
-    names = module_decl_names(str(module.get("module", "")), graph)
+def graph_context(
+    module: dict[str, Any],
+    graph: dict[str, Any],
+    *,
+    enclosing_decl: str | None = None,
+    max_decl_sample: int = 20,
+) -> dict[str, Any]:
+    if enclosing_decl and enclosing_decl in graph["nodes_by_name"]:
+        names = [enclosing_decl]
+    else:
+        names = module_decl_names(str(module.get("module", "")), graph)
     rev: set[str] = set()
     for name in names:
         rev.update(graph["reverse_dependents"].get(name, set()))
@@ -126,6 +151,9 @@ def graph_context(module: dict[str, Any], graph: dict[str, Any], *, max_decl_sam
         "candidate_decl_sample": names[:max_decl_sample],
         "graph_reverse_dependent_count": len(rev),
         "graph_reverse_dependent_sample": sorted(rev)[:max_decl_sample],
+        "graph_capstone_dependent_count": None,
+        "graph_dominator_count": None,
+        "graph_overlay_authority": "not computed by offline JSONL ingest; use Arango overlays for SCC/capstone/dominator scheduling",
         "graph_context_authority": "navigation only; not proof authority",
     }
 
@@ -150,7 +178,71 @@ def priority_for(module: dict[str, Any], gctx: dict[str, Any]) -> float:
     return round(severity + 2.0 * direct_importers + 5.0 * forbidden_importers + min(reverse, 200.0) * 0.25, 3)
 
 
-def build_rows(report: dict[str, Any], graph: dict[str, Any], *, run_key: str) -> dict[str, list[dict[str, Any]]]:
+def status_allowed(status: str, min_status: str | None) -> bool:
+    if not min_status:
+        return True
+    try:
+        return STATUS_RANK[status] <= STATUS_RANK[min_status]
+    except KeyError:
+        return False
+
+
+def enclosing_decl_name(finding: dict[str, Any]) -> str:
+    enclosing = finding.get("enclosing_decl")
+    if isinstance(enclosing, dict):
+        decl = enclosing.get("decl")
+        return str(decl) if decl else ""
+    if isinstance(enclosing, str):
+        return enclosing
+    return ""
+
+
+def enclosing_decl_object(finding: dict[str, Any]) -> dict[str, Any] | None:
+    enclosing = finding.get("enclosing_decl")
+    if isinstance(enclosing, dict):
+        decl = enclosing.get("decl")
+        if not decl:
+            return None
+        return {
+            "decl": decl,
+            "kind": enclosing.get("kind"),
+            "line": enclosing.get("line"),
+            "local_name": enclosing.get("local_name"),
+        }
+    decl = enclosing_decl_name(finding)
+    if not decl:
+        return None
+    return {
+        "decl": decl,
+        "kind": finding.get("enclosing_decl_kind"),
+        "line": finding.get("enclosing_decl_line"),
+        "local_name": finding.get("enclosing_decl_raw_name"),
+    }
+
+
+def finding_key_for(module: dict[str, Any], finding: dict[str, Any]) -> str:
+    path = finding.get("path") or module.get("path") or ""
+    return stable_key(
+        SCHEMA_FINDING,
+        path,
+        finding.get("line"),
+        finding.get("category"),
+        enclosing_decl_name(finding),
+        finding.get("detail"),
+    )
+
+
+def task_key_for(finding_key: str, min_status: str | None, target_decl: str) -> str:
+    return stable_key("semantic_content_repair", finding_key, min_status or "", target_decl)
+
+
+def build_rows(
+    report: dict[str, Any],
+    graph: dict[str, Any],
+    *,
+    run_key: str,
+    min_status: str | None = None,
+) -> dict[str, list[dict[str, Any]]]:
     now = datetime.now(timezone.utc).isoformat()
     run_doc = {
         "_key": run_key,
@@ -158,6 +250,7 @@ def build_rows(report: dict[str, Any], graph: dict[str, Any], *, run_key: str) -
         "created_at": now,
         "source_schema": report.get("schema"),
         "summary": report.get("summary", {}),
+        "status_rank": STATUS_RANK,
         "authority": {
             "semantic_audit_is_triage": True,
             "graph_context_is_navigation_only": True,
@@ -218,11 +311,19 @@ def build_rows(report: dict[str, Any], graph: dict[str, Any], *, run_key: str) -
         if not module_findings and module.get("semantic_status") == "manifested_quarantine_no_current_findings":
             continue
 
-        for idx, finding in enumerate(module_findings):
+        for finding in module_findings:
             if not isinstance(finding, dict):
                 continue
-            finding_key = stable_key("finding", run_key, module_name, finding.get("category"), finding.get("line"), idx)
+            finding_key = finding_key_for(module, finding)
             source_excerpt = source_excerpt_for_module(module, finding)
+            enclosing_decl = enclosing_decl_name(finding)
+            enclosing_decl_payload = enclosing_decl_object(finding)
+            finding_gctx = graph_context(
+                module,
+                graph,
+                enclosing_decl=enclosing_decl or None,
+            )
+            status = str(module.get("semantic_status", ""))
             finding_doc = {
                 "_key": finding_key,
                 "schema": SCHEMA_FINDING,
@@ -233,40 +334,61 @@ def build_rows(report: dict[str, Any], graph: dict[str, Any], *, run_key: str) -
                 "line": finding.get("line"),
                 "category": finding.get("category"),
                 "detail": finding.get("detail"),
-                "semantic_status": module.get("semantic_status"),
+                "enclosing_decl": enclosing_decl_payload,
+                "enclosing_decl_name": enclosing_decl or None,
+                "enclosing_decl_kind": finding.get("enclosing_decl_kind"),
+                "enclosing_decl_line": finding.get("enclosing_decl_line"),
+                "semantic_status": status,
+                "status_rank": STATUS_RANK.get(status),
                 "recommended_action": module.get("recommended_action"),
                 "current_manifest_reason": module.get("current_manifest_reason"),
                 "source_excerpt": source_excerpt,
-                "priority": priority,
-                "graph_context": gctx,
-                "authority": "diagnostic",
+                "priority": priority_for(module, finding_gctx),
+                "graph_context": finding_gctx,
+                "authority": "source_diagnostic_not_proof",
             }
             findings.append(finding_doc)
 
-            status = str(module.get("semantic_status", ""))
             task_kind = TASK_KIND_BY_STATUS.get(status)
-            if task_kind:
-                task_key = stable_key("semantic-task", run_key, finding_key)
+            if task_kind and status_allowed(status, min_status):
+                target_decl = enclosing_decl or (
+                    finding_gctx.get("candidate_decl_sample", [""])[0]
+                    if finding_gctx.get("candidate_decl_sample")
+                    else ""
+                )
+                task_key = task_key_for(finding_key, min_status, str(target_decl))
+                task_priority = priority_for(module, finding_gctx)
                 tasks.append(
                     {
                         "_key": task_key,
                         "schema": SCHEMA_HIVE_TASK,
                         "task_kind": task_kind,
+                        "task_family": "semantic_content_repair",
+                        "repair_route": task_kind,
                         "queue_name": "proof-search" if "repair" in task_kind else "audit-semantic",
                         "status": "pending",
-                        "priority": priority,
+                        "priority": task_priority,
                         "module": module_name,
+                        "path": finding.get("path") or module.get("path"),
                         "file": finding.get("path") or module.get("path"),
                         "line": finding.get("line"),
+                        "enclosing_decl": enclosing_decl_payload,
+                        "target_decl": target_decl,
+                        "enclosing_decl_kind": finding.get("enclosing_decl_kind"),
                         "finding_key": finding_key,
+                        "category": finding.get("category"),
                         "finding_category": finding.get("category"),
                         "semantic_status": status,
+                        "status_rank": STATUS_RANK.get(status),
                         "recommended_action": module.get("recommended_action"),
                         "source_excerpt": source_excerpt,
-                        "candidate_decls": gctx.get("candidate_decl_sample", []),
+                        "direct_importer_count": module.get("direct_importer_count", 0),
+                        "forbidden_importer_count": module.get("forbidden_importer_count", 0),
+                        "candidate_decls": finding_gctx.get("candidate_decl_sample", []),
+                        "graph_reverse_dependent_count": finding_gctx.get("graph_reverse_dependent_count", 0),
                         "created_by": "ingest_semantic_content_audit",
                         "created_at": now,
-                        "authority": "proposal",
+                        "authority": "source_diagnostic_not_proof",
                     }
                 )
 
@@ -304,9 +426,22 @@ def main() -> int:
     parser.add_argument("--nodes", type=Path, default=root / "artifacts/dag/index/ig_nodes.jsonl")
     parser.add_argument("--edges", type=Path, default=root / "artifacts/dag/index/ig_edges.jsonl")
     parser.add_argument("--out-dir", type=Path, default=root / "reports/dag/semantic-content-audit-ingest")
-    parser.add_argument("--tasks-out", type=Path, default=root / "reports/dag/semantic-content-hive-tasks.jsonl")
+    parser.add_argument("--json-out", type=Path, default=None, help="Optional extra path for the ingest summary JSON.")
+    parser.add_argument(
+        "--tasks-out",
+        "--hive-tasks-out",
+        dest="tasks_out",
+        type=Path,
+        default=root / "reports/dag/semantic-content-hive-tasks.jsonl",
+    )
     parser.add_argument("--run-key", default="")
     parser.add_argument("--enqueue-hive-tasks", action="store_true")
+    parser.add_argument(
+        "--min-status",
+        choices=STATUS_ORDER,
+        default=None,
+        help="Only emit Hive tasks for statuses at least this severe in the scheduler order.",
+    )
     parser.add_argument("--write-arango", action="store_true")
     parser.add_argument("--endpoint", default=arango_endpoint())
     parser.add_argument("--database", default=arango_database("infogeometry"))
@@ -315,9 +450,9 @@ def main() -> int:
     args = parser.parse_args()
 
     report = read_json(args.input)
-    run_key = args.run_key or f"semantic_audit_{utc_stamp()}_{stable_key(args.input, report.get('summary', {}))[:10]}"
+    run_key = args.run_key or f"semantic_audit_{file_digest(args.input)}"
     graph = load_graph_index(args.nodes, args.edges)
-    rows_by_collection = build_rows(report, graph, run_key=run_key)
+    rows_by_collection = build_rows(report, graph, run_key=run_key, min_status=args.min_status)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     counts: dict[str, int] = {}
@@ -342,10 +477,16 @@ def main() -> int:
         "out_dir": str(args.out_dir),
         "wrote_arango": bool(args.write_arango),
         "enqueued_hive_tasks": bool(args.enqueue_hive_tasks),
+        "database": args.database if args.write_arango else None,
+        "status_rank": STATUS_RANK,
+        "min_status": args.min_status,
         "counts": counts,
         "authority": "diagnostic scheduling only; Lean remains proof authority",
     }
     (args.out_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if args.json_out is not None:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        args.json_out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
 

@@ -5,6 +5,16 @@ package infogeometry where
   srcDir := "lean"
   lintDriver := "strictCheck"
 
+script shadowPlantWorker (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/shadow_plant_worker.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script strictCheck (args) do
   let child ← IO.Process.spawn {
     cmd := "bash",
@@ -460,6 +470,16 @@ script extractCompressedCone (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
     args := #["tools/infra/extract_compressed_cone.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script epistemicReactorEnsemble (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/epistemic_reactor_ensemble.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit

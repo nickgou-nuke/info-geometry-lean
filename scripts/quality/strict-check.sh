@@ -201,6 +201,10 @@ done
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on canonical surface"
 python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
 
+echo "[strict-check] generating canonical policy lint report"
+python3 tools/infra/canonical_policy_lint.py \
+  --json-out reports/dag/canonical-policy-lint.json
+
 echo "[strict-check] generating mathfulness audit"
 mathfulness_cmd=(
   python3 tools/quality/mathfulness_audit.py

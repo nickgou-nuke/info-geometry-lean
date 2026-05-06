@@ -387,6 +387,73 @@ def jixia_successes(path: Path) -> list[SuccessTransition]:
     return out
 
 
+def ulam_successes(path: Path) -> list[SuccessTransition]:
+    out: list[SuccessTransition] = []
+    for line_no, row in enumerate(iter_jsonl(path), start=1):
+        if row.get("schema") != "info_geometry.ulam_trace.v1":
+            continue
+        if not bool(row.get("ok", False)):
+            continue
+        goal_before = normalize_goal(row.get("goal_before"))
+        tactic = str(row.get("tactic") or "").strip()
+        if not goal_before or not tactic:
+            continue
+        goal_after = normalize_goal(row.get("goal_after")) or (
+            "no goals" if bool(row.get("solved", False)) else ""
+        )
+        out.append(
+            SuccessTransition(
+                source="ulamai",
+                theorem=str(row.get("theorem") or row.get("state_key") or ""),
+                lean_file=str(row.get("lean_file") or ""),
+                theorem_statement="",
+                goal_before=goal_before,
+                tactic=tactic,
+                goal_after=goal_after,
+                dependencies=tuple(),
+                raw_ref={
+                    "source_file": row.get("raw_ref", {}).get("source_file") or str(path),
+                    "source_line": row.get("raw_ref", {}).get("source_line") or line_no,
+                    "trace_id": row.get("id"),
+                },
+                node_class="leaf",
+                info_kind="tactic",
+            )
+        )
+    return out
+
+
+def ulam_failures(path: Path) -> list[FailureTransition]:
+    out: list[FailureTransition] = []
+    for line_no, row in enumerate(iter_jsonl(path), start=1):
+        if row.get("schema") != "info_geometry.ulam_trace.v1":
+            continue
+        if bool(row.get("ok", False)):
+            continue
+        goal_before = normalize_goal(row.get("goal_before"))
+        tactic = str(row.get("tactic") or "").strip()
+        if not tactic:
+            continue
+        out.append(
+            FailureTransition(
+                source="ulamai",
+                theorem=str(row.get("theorem") or row.get("state_key") or ""),
+                lean_file=str(row.get("lean_file") or ""),
+                theorem_statement="",
+                goal_before=goal_before,
+                failed_tactic=tactic,
+                diagnostic=str(row.get("error") or ""),
+                failure_kind=str(row.get("error_kind") or "failure"),
+                raw_ref={
+                    "source_file": row.get("raw_ref", {}).get("source_file") or str(path),
+                    "source_line": row.get("raw_ref", {}).get("source_line") or line_no,
+                    "trace_id": row.get("id"),
+                },
+            )
+        )
+    return out
+
+
 def sft_row(success: SuccessTransition, *, seed: int, train_ratio: float, val_ratio: float) -> dict[str, Any]:
     row_id = stable_hash("sft", success.source, success.theorem, success.goal_hash, success.tactic)
     return {
@@ -534,6 +601,13 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
         rows = jixia_successes(args.jixia_tactics)
         successes.extend(rows)
         by_source["jixia"] += len(rows)
+    ulam_traces = getattr(args, "ulam_traces", None)
+    if ulam_traces and ulam_traces.exists():
+        success_rows = ulam_successes(ulam_traces)
+        failure_rows = ulam_failures(ulam_traces)
+        successes.extend(success_rows)
+        failures.extend(failure_rows)
+        by_source["ulamai"] += len(success_rows) + len(failure_rows)
 
     good_successes = []
     for success in successes:
@@ -578,6 +652,7 @@ def build_dataset(args: argparse.Namespace) -> dict[str, Any]:
             "raw_infotree": str(args.raw_infotree) if args.raw_infotree else None,
             "real_prover_traces": str(args.real_prover_traces) if args.real_prover_traces else None,
             "jixia_tactics": str(args.jixia_tactics) if args.jixia_tactics else None,
+            "ulam_traces": str(ulam_traces) if ulam_traces else None,
         },
         "rows": {
             "sft": sft_count,
@@ -608,6 +683,7 @@ def main() -> int:
     parser.add_argument("--hive-attempts", type=Path)
     parser.add_argument("--real-prover-traces", type=Path, help="JSONL emitted by real_prover_trace_bridge.py")
     parser.add_argument("--jixia-tactics", type=Path, help="JSONL emitted by jixia_trace_bridge.py")
+    parser.add_argument("--ulam-traces", type=Path, help="JSONL emitted by ulam_trace_bridge.py")
     parser.add_argument("--raw-infotree", type=Path, help="Reserved for Phase B2 raw InfoTree adapter")
     parser.add_argument("--out-sft", type=Path, default=Path("reports/training/tactic_sft.jsonl"))
     parser.add_argument("--out-dpo", type=Path, default=Path("reports/training/tactic_dpo.jsonl"))

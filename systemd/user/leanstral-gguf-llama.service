@@ -1,0 +1,26 @@
+[Unit]
+Description=Leanstral GGUF llama-server resident service for info-geometry-lean
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/goutev/repos/info-geometry-lean
+Environment=LEANSTRAL_GGUF_MODEL=/home/goutev/models/Leanstral-2603-GGUF/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf
+Environment=LEANSTRAL_GGUF_CHAT_TEMPLATE=/home/goutev/models/Leanstral-2603-GGUF/chat_template.jinja
+Environment=LEANSTRAL_GGUF_HOST=0.0.0.0
+Environment=LEANSTRAL_GGUF_PORT=18789
+Environment=LEANSTRAL_GGUF_SERVED_MODEL_NAME=leanstral-gguf
+Environment=LEANSTRAL_GGUF_CTX_SIZE=128000
+Environment=LEANSTRAL_GGUF_GPU_LAYERS=-1
+Environment=LEANSTRAL_GGUF_PARALLEL=1
+Environment=LEANSTRAL_GGUF_FLASH_ATTN=1
+Environment=LEANSTRAL_GGUF_FIT=on
+EnvironmentFile=-%h/.config/info-geometry-lean/leanstral.env
+ExecStart=/home/goutev/repos/info-geometry-lean/tools/infra/leanstral_gguf_llama_service.sh
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=1800
+
+[Install]
+WantedBy=default.target

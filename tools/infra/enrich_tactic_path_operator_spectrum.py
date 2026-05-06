@@ -287,9 +287,73 @@ def enrich_candidate(
     return out
 
 
-def enrich_row(row: dict[str, Any], *, alpha: float, beta: float, gamma: float) -> dict[str, Any]:
+def decision_point_key(row: dict[str, Any]) -> str:
+    context = row.get("context") if isinstance(row.get("context"), dict) else {}
+    candidates = [c for c in row.get("candidates") or [] if isinstance(c, dict)]
+    if context.get("goal_hash"):
+        return str(context["goal_hash"])
+    if context.get("goal_hash_before"):
+        return str(context["goal_hash_before"])
+    if context.get("goal_before"):
+        return str(context["goal_before"])
+    if context.get("goal_state"):
+        return str(context["goal_state"])
+    for candidate in candidates:
+        if candidate.get("goal_hash_before"):
+            return str(candidate["goal_hash_before"])
+    if row.get("decision_id"):
+        return str(row["decision_id"])
+    return stable_hash(row)
+
+
+def aggregate_decision_point_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    candidates: list[dict[str, Any]] = []
+    hodge_values: list[float] = []
+    positive_count = 0
+    negative_count = 0
+    stall_count = 0
+    for row in rows:
+        row_candidates = [c for c in row.get("candidates") or [] if isinstance(c, dict)]
+        candidates.extend(row_candidates)
+        graph_features = row.get("graph_features") if isinstance(row.get("graph_features"), dict) else {}
+        if "hodge_harmonic_signal" in graph_features:
+            hodge_values.append(clamp01(safe_float(graph_features.get("hodge_harmonic_signal"))))
+        positive_count += sum(1 for candidate in row_candidates if is_positive(candidate))
+        negative_count += sum(1 for candidate in row_candidates if not is_positive(candidate))
+        stall_count += sum(1 for candidate in row_candidates if is_stall(candidate))
+    first = rows[0] if rows else {}
+    context = first.get("context") if isinstance(first.get("context"), dict) else {}
+    provenance = first.get("provenance") if isinstance(first.get("provenance"), dict) else {}
+    hodge_harmonic_signal = sum(hodge_values) / len(hodge_values) if hodge_values else 0.0
+    return {
+        "schema": first.get("schema", "info_geometry.tactic_path_ranking.v1"),
+        "decision_id": decision_point_key(first) if first else "empty",
+        "context": context,
+        "graph_features": {
+            "hodge_harmonic_signal": hodge_harmonic_signal,
+            "candidate_count": len(candidates),
+            "positive_count": positive_count,
+            "negative_count": negative_count,
+            "stall_count": stall_count,
+        },
+        "provenance": provenance,
+        "candidates": candidates,
+    }
+
+
+def enrich_row(
+    row: dict[str, Any],
+    *,
+    alpha: float = 0.10,
+    beta: float = 0.05,
+    gamma: float = 0.10,
+    spectrum: dict[str, Any] | None = None,
+    decision_point_row_count: int = 1,
+) -> dict[str, Any]:
     out = dict(row)
-    spectrum = compute_operator_spectrum(row)
+    spectrum = dict(spectrum or compute_operator_spectrum(row))
+    spectrum["decision_point_key"] = decision_point_key(row)
+    spectrum["decision_point_row_count"] = decision_point_row_count
     candidates = [c for c in row.get("candidates") or [] if isinstance(c, dict)]
     enriched_candidates = [
         enrich_candidate(candidate, spectrum, alpha=alpha, beta=beta, gamma=gamma)
@@ -376,9 +440,28 @@ def run(
     beta: float = 0.05,
     gamma: float = 0.10,
 ) -> dict[str, Any]:
-    rows = [enrich_row(row, alpha=alpha, beta=beta, gamma=gamma) for row in iter_jsonl(input_path)]
+    input_rows = list(iter_jsonl(input_path))
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for row in input_rows:
+        groups.setdefault(decision_point_key(row), []).append(row)
+    spectra = {
+        key: compute_operator_spectrum(aggregate_decision_point_rows(group_rows))
+        for key, group_rows in groups.items()
+    }
+    rows = [
+        enrich_row(
+            row,
+            alpha=alpha,
+            beta=beta,
+            gamma=gamma,
+            spectrum=spectra[decision_point_key(row)],
+            decision_point_row_count=len(groups[decision_point_key(row)]),
+        )
+        for row in input_rows
+    ]
     written = write_jsonl(out_path, rows)
     stats = summarize(rows, input_path=input_path, out_path=out_path, alpha=alpha, beta=beta, gamma=gamma)
+    stats["decision_point_count"] = len(groups)
     stats["rows_written"] = written
     stats_path.parent.mkdir(parents=True, exist_ok=True)
     stats_path.write_text(json.dumps(stats, indent=2, ensure_ascii=True, sort_keys=True) + "\n", encoding="utf-8")

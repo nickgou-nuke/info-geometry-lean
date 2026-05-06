@@ -151,3 +151,32 @@ def test_run_writes_enriched_rows_and_stats(tmp_path: Path) -> None:
     assert stats["rows"] == 1
     assert stats["candidate_count"] == 2
     assert rows[0]["operator_spectrum"]["authority"]["diagnostic_prior_only"] is True
+
+
+def test_run_groups_rows_by_decision_point_before_enrichment(tmp_path: Path) -> None:
+    input_path = tmp_path / "ranking.jsonl"
+    output_path = tmp_path / "operator_enriched.jsonl"
+    stats_path = tmp_path / "stats.json"
+    row_success = _row([_candidate("exact h", label=1, score=0.90)])
+    row_stall = _row([_candidate("simp", label=-1, score=0.10, stall_type="harmonic_stall")])
+    row_success["decision_id"] = "fragment:success"
+    row_stall["decision_id"] = "fragment:stall"
+    row_success["context"]["goal_hash"] = "shared-goal"
+    row_stall["context"]["goal_hash"] = "shared-goal"
+    input_path.write_text(
+        json.dumps(row_success) + "\n" + json.dumps(row_stall) + "\n",
+        encoding="utf-8",
+    )
+
+    stats = run(input_path=input_path, out_path=output_path, stats_path=stats_path)
+
+    rows = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
+    assert stats["rows"] == 2
+    assert stats["decision_point_count"] == 1
+    for row in rows:
+        spectrum = row["operator_spectrum"]
+        assert spectrum["decision_point_key"] == "shared-goal"
+        assert spectrum["decision_point_row_count"] == 2
+        assert spectrum["transition_proxy"]["candidate_count"] == 2
+        assert spectrum["drazin_proxy"]["core_mass"] > 0
+        assert spectrum["drazin_proxy"]["nilpotent_stall_mass"] > 0

@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "infra"))
 
-from enrich_tactic_path_with_lightcone_spectrum import enrich_rows, load_spectral_report
+from enrich_tactic_path_with_lightcone_spectrum import enrich_rows, iter_jsonl, load_spectral_report
 
 
 def test_enrich_rows_adds_context_and_candidate_weights(tmp_path: Path) -> None:
@@ -36,6 +36,8 @@ def test_enrich_rows_adds_context_and_candidate_weights(tmp_path: Path) -> None:
     assert enriched[0]["lightcone_operator_context"]["diagnostic_only"] is True
     candidates = enriched[0]["candidates"]
     assert candidates[0]["operator_enrichment"]["schema"] == "info_geometry.tactic_lightcone_operator_enrichment.v1"
+    assert "hodge_harmonic_weight" in candidates[0]["operator_enrichment"]
+    assert "hodge_boundary_penalty" not in candidates[0]["operator_enrichment"]
     assert candidates[0]["final_operator_sampling_weight"] > 1.0
     assert candidates[1]["operator_enrichment"]["nilpotent_penalty"] == 1.0
 
@@ -47,5 +49,15 @@ def test_load_spectral_report_rejects_wrong_schema(tmp_path: Path) -> None:
         load_spectral_report(path)
     except SystemExit as exc:
         assert "unexpected spectral report schema" in str(exc)
+    else:
+        raise AssertionError("expected SystemExit")
+
+
+def test_iter_jsonl_missing_input_fails(tmp_path: Path) -> None:
+    missing = tmp_path / "missing.jsonl"
+    try:
+        list(iter_jsonl(missing))
+    except SystemExit as exc:
+        assert "input JSONL does not exist" in str(exc)
     else:
         raise AssertionError("expected SystemExit")

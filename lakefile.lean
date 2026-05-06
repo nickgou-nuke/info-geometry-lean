@@ -226,6 +226,16 @@ script enrichTacticPathOperatorSpectrum (args) do
   }
   child.wait
 
+script leanAutoTraceBridge (args) do
+  let child ← IO.Process.spawn {
+    cmd := ".venv-py312/bin/python",
+    args := #["tools/infra/lean_auto_trace_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script jixiaTrainingData (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

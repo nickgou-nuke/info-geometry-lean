@@ -201,6 +201,18 @@ done
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on canonical surface"
 python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
 
+echo "[strict-check] generating mathfulness audit"
+mathfulness_cmd=(
+  python3 tools/quality/mathfulness_audit.py
+  --file-prefix lean/InfoGeometry/Canonical
+  --json-out reports/dag/mathfulness-audit.json
+  --md-out reports/dag/mathfulness-audit.md
+)
+if [[ "${STRICT_CHECK_MATHFULNESS_GATE:-0}" == "1" ]]; then
+  mathfulness_cmd+=(--gate)
+fi
+"${mathfulness_cmd[@]}"
+
 echo "[strict-check] running surrogate dependency audit"
 scripts/audit_surrogates.sh
 

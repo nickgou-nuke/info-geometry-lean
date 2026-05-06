@@ -1,3 +1,4 @@
+import Mathlib.Algebra.BigOperators.Associated
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
 
@@ -187,10 +188,98 @@ order-reflection theorem.
 def ProfileLe (ε η : P.Profile) : Prop :=
   ∀ i : P.Index, ε i = true → η i = true
 
+/-- The prime labels are distinct across binary modes. -/
+def DistinctPrimeLabels : Prop :=
+  Function.Injective P.prime
+
+/-- Profile order implies divisibility of the associated bit-integers. -/
+theorem bitInteger_dvd_of_profileLe
+    {ε η : P.Profile}
+    (hεη : P.ProfileLe ε η) :
+    P.bitInteger ε ∣ P.bitInteger η := by
+  unfold bitInteger
+  refine Finset.prod_dvd_prod_of_dvd _ _ ?_
+  intro i _hi
+  unfold occupiedFactor
+  by_cases hi : ε i
+  · have hη : η i = true := hεη i hi
+    simp [hi, hη]
+  · simp [hi]
+
+/--
+Under distinct prime labels, divisibility of bit-integers reflects the profile
+order.
+-/
+theorem profileLe_of_bitInteger_dvd
+    (hdistinct : P.DistinctPrimeLabels)
+    {ε η : P.Profile}
+    (hdiv : P.bitInteger ε ∣ P.bitInteger η) :
+    P.ProfileLe ε η := by
+  intro i hi
+  by_cases hη : η i
+  · exact hη
+  · exfalso
+    have hp_dvd_eps : P.prime i ∣ P.bitInteger ε := by
+      unfold bitInteger
+      have hmem : i ∈ (Finset.univ : Finset P.Index) := Finset.mem_univ i
+      have hfactor :
+          P.occupiedFactor ε i ∣
+            Finset.prod (Finset.univ : Finset P.Index) (fun j => P.occupiedFactor ε j) :=
+        Finset.dvd_prod_of_mem (fun j => P.occupiedFactor ε j) hmem
+      simpa [occupiedFactor, hi] using hfactor
+    have hp_dvd_eta : P.prime i ∣ P.bitInteger η :=
+      dvd_trans hp_dvd_eps hdiv
+    have hpPrime : Prime (P.prime i) := (P.prime_isPrime i).prime
+    have hprod :
+        P.prime i ∣
+          Finset.prod (Finset.univ : Finset P.Index) (fun j => P.occupiedFactor η j) := by
+      simpa [bitInteger] using hp_dvd_eta
+    rcases (hpPrime.dvd_finset_prod_iff (fun j => P.occupiedFactor η j)).mp hprod with
+      ⟨j, _hj, hjdvd⟩
+    by_cases hηj : η j
+    · have hprime_eq : P.prime i = P.prime j := by
+        have hji : P.prime j = P.prime i :=
+          (P.prime_isPrime j).dvd_iff_eq (P.prime_isPrime i).ne_one |>.mp
+            (by simpa [occupiedFactor, hηj] using hjdvd)
+        exact hji.symm
+      have hij : i = j := hdistinct hprime_eq
+      exact hη (by simpa [hij] using hηj)
+    · have hp_dvd_one : P.prime i ∣ 1 := by
+        simpa [occupiedFactor, hηj] using hjdvd
+      exact (P.prime_isPrime i).not_dvd_one hp_dvd_one
+
+/--
+For a finite binary lattice with distinct prime labels, divisibility of
+bit-integers is exactly profile inclusion.
+-/
+theorem bitInteger_dvd_iff_profileLe
+    (hdistinct : P.DistinctPrimeLabels)
+    (ε η : P.Profile) :
+    P.bitInteger ε ∣ P.bitInteger η ↔ P.ProfileLe ε η :=
+  ⟨P.profileLe_of_bitInteger_dvd hdistinct, P.bitInteger_dvd_of_profileLe⟩
+
 /-- Antichain predicate on finite profile supports. -/
 def ProfileAntichain (S : Finset P.Profile) : Prop :=
   ∀ ⦃ε η : P.Profile⦄,
     ε ∈ S → η ∈ S → P.ProfileLe ε η → ε = η
+
+/--
+A profile antichain maps to an arithmetic primitive finset under distinct prime
+labels.
+-/
+theorem primitiveFinset_image_of_profileAntichain
+    (S : Finset P.Profile)
+    (hdistinct : P.DistinctPrimeLabels)
+    (hS : P.ProfileAntichain S) :
+    PrimitiveFinset (P.arithmeticSupportOfProfiles S) := by
+  intro a b ha hb hab
+  unfold arithmeticSupportOfProfiles at ha hb
+  rcases Finset.mem_image.mp ha with ⟨ε, hεS, rfl⟩
+  rcases Finset.mem_image.mp hb with ⟨η, hηS, hbη⟩
+  have hle : P.ProfileLe ε η :=
+    (P.bitInteger_dvd_iff_profileLe hdistinct ε η).mp (by simpa [hbη] using hab)
+  have hεη : ε = η := hS hεS hηS hle
+  exact (congrArg P.bitInteger hεη).trans hbη
 
 /--
 Constructive order-free primitive support witness.

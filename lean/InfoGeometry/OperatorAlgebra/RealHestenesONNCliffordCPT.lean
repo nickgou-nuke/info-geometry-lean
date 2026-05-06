@@ -127,6 +127,18 @@ variable
 def fullONNWitnessType : Type* :=
   P.fullONNWitness
 
+/-- The packet records the real-only owner witness type. -/
+def realOnlyWitnessType : Type* :=
+  P.realOnlyWitness
+
+/-- The packet records the real `Cl(n,n)` owner witness type. -/
+def clnnWitnessType : Type* :=
+  P.clnnWitness
+
+/-- The packet records the witness type that `SO/Spin` is insufficient for CPT. -/
+def soInsufficientForCPTWitnessType : Type* :=
+  P.soInsufficientForCPTWitness
+
 /-- The packet retains the Pin reflection owner witness type. -/
 def pinReflectionWitnessType : Type* :=
   P.pinReflectionWitness
@@ -134,6 +146,10 @@ def pinReflectionWitnessType : Type* :=
 /-- The packet records the witness type that diagonal data are only a derived shadow. -/
 def diagonalIsOnlyShadowWitnessType : Type* :=
   P.diagonalIsOnlyShadowWitness
+
+/-- The packet records the guard against complex/twistor scalar collapse. -/
+def noComplexScalarCollapseWitnessType : Type* :=
+  P.noComplexScalarCollapseWitness
 
 end RealHestenesONNCliffordCPTPacket
 
@@ -223,6 +239,44 @@ theorem timeReversalPin_is_odd :
 theorem odd_reflection_socket_available :
     P.pin44Cover.odd_reflection_socket :=
   P.cptReflection.odd_reflection_socket_available
+
+/-- Charge conjugation remains a state-level involution in the O(4,4) packet. -/
+theorem chargeConjugation_sq (ψ : State) :
+    P.cptReflection.chargeConjugation
+        (P.cptReflection.chargeConjugation ψ) = ψ :=
+  P.cptReflection.chargeConjugation_sq ψ
+
+/-- Parity is a reflection action calibrated through odd Pin data. -/
+theorem parityAction_sq (ψ : State) :
+    P.cptReflection.parityAction
+        (P.cptReflection.parityAction ψ) = ψ :=
+  P.cptReflection.parityAction_sq ψ
+
+/-- Time reversal is a reflection action calibrated through odd Pin data. -/
+theorem timeReversalAction_sq (ψ : State) :
+    P.cptReflection.timeReversalAction
+        (P.cptReflection.timeReversalAction ψ) = ψ :=
+  P.cptReflection.timeReversalAction_sq ψ
+
+/-- The O(4,4) specialization retains the full split-orthogonal witness type. -/
+def fullO44WitnessType : Type* :=
+  P.fullO44Witness
+
+/-- The O(4,4) specialization records that `SO(4,4)` is insufficient for CPT. -/
+def so44InsufficientForCPTWitnessType : Type* :=
+  P.so44InsufficientForCPTWitness
+
+/-- The O(4,4) specialization records that Pin supplies odd reflection data. -/
+def pin44ReflectionWitnessType : Type* :=
+  P.pin44ReflectionWitness
+
+/-- The O(4,4) specialization records that diagonal data are only a shadow. -/
+def diagonalIsOnlyShadowWitnessType : Type* :=
+  P.diagonalIsOnlyShadowWitness
+
+/-- The O(4,4) specialization records that this is a real-only owner lane. -/
+def realOnlyWitnessType : Type* :=
+  P.realOnlyWitness
 
 end RealHestenesO44PinCPTPacket
 

@@ -36,6 +36,10 @@ variable [KreinSpace H] [KreinGradedModule H]
 
 local notation "EndH" => H →L[ℝ] H
 
+/-- Constructive witness that the ambient grading and split pseudoscalar coincide. -/
+structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
+  grade_eq : gradeCLM (H := H) = X.cl11.eps
+
 @[rep_depth krein] theorem pi_isGZero_of_gradeCLM_eq_eps
     (X : RealSplitKreinKasparovCycle A B H)
     (hGrade : gradeCLM (H := H) = X.cl11.eps)
@@ -77,6 +81,36 @@ local notation "EndH" => H →L[ℝ] H
     unfold IsOdd gradeConj at hOdd
     simpa [epsConj, hGrade, mul_assoc] using hOdd
   exact gOnePart_add_gNegOnePart_eq_of_epsConj_neg (X := X.cl11) hConj
+
+/-- Witness-driven variant removing a raw equality hypothesis argument. -/
+@[rep_depth krein] theorem pi_isGZero_of_witness
+    (X : RealSplitKreinKasparovCycle A B H)
+    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (a : A) :
+    IsGZero X.cl11 (X.π a) :=
+  pi_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq a
+
+/-- Witness-driven variant removing a raw equality hypothesis argument. -/
+@[rep_depth krein] theorem rho_isGZero_of_witness
+    (X : RealSplitKreinKasparovCycle A B H)
+    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (b : B) :
+    IsGZero X.cl11 (X.ρ b) :=
+  rho_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq b
+
+/-- Witness-driven variant removing a raw equality hypothesis argument. -/
+@[rep_depth krein] theorem gZeroPart_F_eq_zero_of_witness
+    (X : RealSplitKreinKasparovCycle A B H)
+    (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
+    gZeroPart X.cl11 X.F = 0 :=
+  gZeroPart_F_eq_zero_of_gradeCLM_eq_eps (X := X) w.grade_eq
+
+/-- Witness-driven variant removing a raw equality hypothesis argument. -/
+@[rep_depth krein] theorem F_eq_gOnePart_add_gNegOnePart_of_witness
+    (X : RealSplitKreinKasparovCycle A B H)
+    (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
+    X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F :=
+  F_eq_gOnePart_add_gNegOnePart_of_gradeCLM_eq_eps (X := X) w.grade_eq
 
 end Core
 

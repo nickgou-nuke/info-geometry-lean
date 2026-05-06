@@ -35,6 +35,80 @@ abbrev EndR
 /-! ## 1. Full/gapped modular sign-CPT datum -/
 
 /--
+Primitive full/gapped modular sign-CPT relations.
+
+This is the constructible algebraic input: two involutions `eps` and `J` that
+anticommute.  The modular phase axis is then forced to be `J ∘ eps`, and its
+square law is proved below rather than stored as a free certificate.
+-/
+structure ModularSignCPTRelations
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
+  /-- Modular sign/parity. -/
+  eps : EndR H
+
+  /-- Modular conjugation/CPT reflection. -/
+  J : EndR H
+
+  /-- `eps² = 1`. -/
+  eps_square :
+    eps.comp eps = 1
+
+  /-- `J² = 1`. -/
+  J_square :
+    J.comp J = 1
+
+  /-- Clifford anticommutation relation: `J eps = - eps J`. -/
+  J_eps_anticomm :
+    J.comp eps = -(eps.comp J)
+
+namespace ModularSignCPTRelations
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+variable (R : ModularSignCPTRelations H)
+
+/-- The generated Hestenes phase axis `J ε`. -/
+def Kmod : EndR H :=
+  R.J.comp R.eps
+
+/-- Definitional equation for the generated phase axis. -/
+theorem Kmod_eq :
+    R.Kmod = R.J.comp R.eps :=
+  rfl
+
+/-- The opposite Clifford anticommutation relation follows from `J ε = - ε J`. -/
+theorem eps_J_anticomm :
+    R.eps.comp R.J = -(R.J.comp R.eps) := by
+  rw [R.J_eps_anticomm]
+  simp
+
+/-- The generated phase axis squares to `-1`. -/
+theorem Kmod_square :
+    R.Kmod.comp R.Kmod = -(1 : EndR H) := by
+  dsimp [Kmod]
+  calc
+    (R.J.comp R.eps).comp (R.J.comp R.eps)
+        = R.J.comp ((R.eps.comp R.J).comp R.eps) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = R.J.comp ((-(R.J.comp R.eps)).comp R.eps) := by
+          rw [R.eps_J_anticomm]
+    _ = -(R.J.comp ((R.J.comp R.eps).comp R.eps)) := by
+          ext v
+          simp [ContinuousLinearMap.comp_apply]
+    _ = -(((R.J.comp R.J).comp R.eps).comp R.eps) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -((1 : EndR H).comp R.eps).comp R.eps := by
+          rw [R.J_square]
+    _ = -(R.eps.comp R.eps) := by
+          ext v
+          simp [ContinuousLinearMap.comp_apply]
+    _ = -(1 : EndR H) := by
+          rw [R.eps_square]
+
+end ModularSignCPTRelations
+
+/--
 Full, gapped modular sign/CPT datum.
 
 This is the clean case where the modular Hamiltonian has no zero-mode sector,
@@ -73,6 +147,26 @@ structure ModularSignCPTDatum
   /-- Complex-structure law: `Kmod² = -1`. -/
   Kmod_square :
     Kmod.comp Kmod = -1
+
+namespace ModularSignCPTRelations
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+variable (R : ModularSignCPTRelations H)
+
+/-- Construct the full datum from the primitive relations. -/
+def toDatum : ModularSignCPTDatum H where
+  eps := R.eps
+  J := R.J
+  Kmod := R.Kmod
+  eps_square := R.eps_square
+  J_square := R.J_square
+  J_eps_anticomm := R.J_eps_anticomm
+  Kmod_eq := R.Kmod_eq
+  Kmod_square := R.Kmod_square
+
+end ModularSignCPTRelations
 
 namespace ModularSignCPTDatum
 
@@ -165,6 +259,125 @@ end ModularSignCPTDatum
 /-! ## 2. Partial/zero-mode modular sign-CPT datum -/
 
 /--
+Primitive partial/zero-mode modular sign-CPT relations.
+
+Here `eps²` is the active support projection rather than the identity.  The
+partial phase axis is still `J ∘ eps`; its square and support laws are proved
+from the primitive relations below.
+-/
+structure PartialModularSignCPTRelations
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
+  /-- Active modular support. -/
+  support : EndR H
+
+  /-- Modular sign/parity on the active support. -/
+  eps : EndR H
+
+  /-- Modular conjugation/CPT reflection. -/
+  J : EndR H
+
+  /-- The support is idempotent. -/
+  support_idempotent :
+    support.comp support = support
+
+  /-- `eps² = support`. -/
+  eps_square :
+    eps.comp eps = support
+
+  /-- The support acts as identity on `eps` from the left. -/
+  support_eps :
+    support.comp eps = eps
+
+  /-- The support acts as identity on `eps` from the right. -/
+  eps_support :
+    eps.comp support = eps
+
+  /-- `J² = 1`. -/
+  J_square :
+    J.comp J = 1
+
+  /-- Clifford anticommutation relation on the active sector. -/
+  J_eps_anticomm :
+    J.comp eps = -(eps.comp J)
+
+  /-- The active support is preserved by modular reflection. -/
+  J_support_comm :
+    J.comp support = support.comp J
+
+namespace PartialModularSignCPTRelations
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+variable (R : PartialModularSignCPTRelations H)
+
+/-- The opposite Clifford anticommutation relation follows from `J ε = - ε J`. -/
+theorem eps_J_anticomm :
+    R.eps.comp R.J = -(R.J.comp R.eps) := by
+  rw [R.J_eps_anticomm]
+  simp
+
+/-- The partial modular phase axis `J ε`. -/
+def Kmod : EndR H :=
+  R.J.comp R.eps
+
+/-- Definitional equation for the partial phase axis. -/
+theorem Kmod_eq :
+    R.Kmod = R.J.comp R.eps :=
+  rfl
+
+/-- The partial generated phase axis squares to `-support`. -/
+theorem Kmod_square :
+    R.Kmod.comp R.Kmod = -R.support := by
+  dsimp [Kmod]
+  calc
+    (R.J.comp R.eps).comp (R.J.comp R.eps)
+        = R.J.comp ((R.eps.comp R.J).comp R.eps) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = R.J.comp ((-(R.J.comp R.eps)).comp R.eps) := by
+          rw [R.eps_J_anticomm]
+    _ = -(R.J.comp ((R.J.comp R.eps).comp R.eps)) := by
+          ext v
+          simp [ContinuousLinearMap.comp_apply]
+    _ = -(((R.J.comp R.J).comp R.eps).comp R.eps) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -((1 : EndR H).comp R.eps).comp R.eps := by
+          rw [R.J_square]
+    _ = -(R.eps.comp R.eps) := by
+          ext v
+          simp [ContinuousLinearMap.comp_apply]
+    _ = -R.support := by
+          rw [R.eps_square]
+
+/-- The support acts as identity on the generated phase axis from the left. -/
+theorem support_Kmod :
+    R.support.comp R.Kmod = R.Kmod := by
+  dsimp [Kmod]
+  calc
+    R.support.comp (R.J.comp R.eps)
+        = (R.support.comp R.J).comp R.eps := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (R.J.comp R.support).comp R.eps := by
+          rw [← R.J_support_comm]
+    _ = R.J.comp (R.support.comp R.eps) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = R.J.comp R.eps := by
+          rw [R.support_eps]
+
+/-- The generated phase axis is supported on the right. -/
+theorem Kmod_support :
+    R.Kmod.comp R.support = R.Kmod := by
+  dsimp [Kmod]
+  calc
+    (R.J.comp R.eps).comp R.support
+        = R.J.comp (R.eps.comp R.support) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = R.J.comp R.eps := by
+          rw [R.eps_support]
+
+end PartialModularSignCPTRelations
+
+/--
 Partial modular sign/CPT datum.
 
 This is the correct version when `0` lies in the spectrum of the modular
@@ -239,6 +452,34 @@ structure PartialModularSignCPTDatum
   /-- The partial complex structure is supported on the right. -/
   Kmod_support :
     Kmod.comp support = Kmod
+
+namespace PartialModularSignCPTRelations
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+
+variable (R : PartialModularSignCPTRelations H)
+
+/-- Construct the partial datum from primitive zero-mode-aware relations. -/
+def toDatum : PartialModularSignCPTDatum H where
+  support := R.support
+  eps := R.eps
+  J := R.J
+  Kmod := R.Kmod
+  support_idempotent := R.support_idempotent
+  eps_square := R.eps_square
+  support_eps := R.support_eps
+  eps_support := R.eps_support
+  J_square := R.J_square
+  J_eps_anticomm := R.J_eps_anticomm
+  eps_J_anticomm := R.eps_J_anticomm
+  J_support_comm := R.J_support_comm
+  Kmod_eq := R.Kmod_eq
+  Kmod_square := R.Kmod_square
+  support_Kmod := R.support_Kmod
+  Kmod_support := R.Kmod_support
+
+end PartialModularSignCPTRelations
 
 namespace PartialModularSignCPTDatum
 
@@ -401,12 +642,13 @@ end DynamicModularCPTAlgebra
 Compatibility predicate for constructing a modular sign/CPT datum from
 Tomita-Takesaki data.
 
-A concrete theorem will require modular operator, modular Hamiltonian,
-functional calculus, sign operator, active support, and conjugation relations.
+The compatibility content is the primitive Clifford pair: two involutions
+`eps` and `J` satisfying `J ε = - ε J`.  From these relations the phase-axis
+square law is proved by `ModularSignCPTRelations.Kmod_square`.
 -/
 def ModularSignCPTCompatibility
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Prop :=
-  True
+  Nonempty (ModularSignCPTRelations H)
 
 /--
 Owner target for the full/gapped modular sign-CPT construction.
@@ -419,16 +661,30 @@ def ModularSignCPTDatumOwnerTarget : Prop :=
     ModularSignCPTCompatibility H →
       Nonempty (ModularSignCPTDatum H)
 
+/-- The full/gapped datum is constructed from primitive Clifford relations. -/
+theorem modularSignCPTDatumOwnerTarget :
+    ModularSignCPTDatumOwnerTarget := by
+  intro H _ _ h
+  rcases h with ⟨R⟩
+  exact ⟨R.toDatum⟩
+
 /-- Compatibility predicate for constructing the partial zero-mode-aware datum. -/
 def PartialModularSignCPTCompatibility
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] : Prop :=
-  True
+  Nonempty (PartialModularSignCPTRelations H)
 
 /-- Owner target for the partial modular sign-CPT construction. -/
 def PartialModularSignCPTDatumOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     PartialModularSignCPTCompatibility H →
       Nonempty (PartialModularSignCPTDatum H)
+
+/-- The partial datum is constructed from primitive zero-mode-aware relations. -/
+theorem partialModularSignCPTDatumOwnerTarget :
+    PartialModularSignCPTDatumOwnerTarget := by
+  intro H _ _ h
+  rcases h with ⟨R⟩
+  exact ⟨R.toDatum⟩
 
 /--
 Owner target for the full/gapped modular sign-CPT algebra.

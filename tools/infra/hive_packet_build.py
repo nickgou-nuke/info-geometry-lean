@@ -78,6 +78,7 @@ def base_envelope(args: argparse.Namespace, kind: str, status: str, *, identity_
         "SymbolicSeed": f"seed_{digest}",
         "InvariantDraft": f"invariant_{slug(lineage_id)}_{digest}",
         "TheoremCandidatePacket": f"packet_theorem_candidate_{slug(lineage_id)}_{digest}",
+        "ExternalTheoremCandidatePacket": f"packet_external_theorem_candidate_{slug(lineage_id)}_{digest}",
         "ResiduePacket": f"packet_residue_{slug(lineage_id)}_{digest}",
         "ExecutionIntentPacket": f"packet_execution_intent_{slug(lineage_id)}_{digest}",
         "LeanVerificationPacket": f"packet_lean_verification_{slug(lineage_id)}_{digest}",
@@ -698,6 +699,119 @@ def build_invariant_draft(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
+def parse_symbol_map(items: list[str]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for item in items:
+        if "=" not in item:
+            raise SystemExit(f"ERROR: --symbol-map entries must be FOREIGN=LEAN, got: {item}")
+        left, right = item.split("=", 1)
+        left = left.strip()
+        right = right.strip()
+        if not left or not right:
+            raise SystemExit(f"ERROR: --symbol-map entries must have non-empty sides: {item}")
+        out[left] = right
+    return out
+
+
+def build_external_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
+    imports = uniq(args.lean_import_candidate or [])
+    target_modules = uniq(args.lean_target_module_candidate or [])
+    required_gates = uniq(args.required_gate or [])
+    query_terms = uniq(args.query_term or [])
+    source_refs = [parse_ref_spec(x) for x in (args.source_ref or [])]
+    symbol_map = parse_symbol_map(args.symbol_map or [])
+    if not imports:
+        raise SystemExit("ERROR: at least one --lean-import-candidate is required")
+    if not symbol_map:
+        raise SystemExit("ERROR: at least one --symbol-map FOREIGN=LEAN is required")
+    if not {"lean_checked", "build_checked", "audit_checked"}.issubset(set(required_gates)):
+        raise SystemExit("ERROR: --required-gate must include lean_checked, build_checked, audit_checked")
+
+    identity_seed = {
+        "source_system": args.source_system.strip(),
+        "source_library": args.source_library.strip(),
+        "source_module": args.source_module.strip(),
+        "source_decl": args.source_decl.strip(),
+        "normalized_statement": args.normalized_statement.strip(),
+        "lean_target_namespace": args.lean_target_namespace.strip(),
+    }
+    packet = base_envelope(args, "ExternalTheoremCandidatePacket", args.status, identity_seed=identity_seed)
+    packet.update(
+        {
+            "packet_version": args.packet_version.strip(),
+            "source_system": require_non_empty("--source-system", args.source_system),
+            "source_library": require_non_empty("--source-library", args.source_library),
+            "source_module": require_non_empty("--source-module", args.source_module),
+            "source_decl": require_non_empty("--source-decl", args.source_decl),
+            "source_url": args.source_url.strip(),
+            "source_path": args.source_path.strip(),
+            "source_line_start": args.source_line_start,
+            "source_line_end": args.source_line_end,
+            "source_statement_raw": require_non_empty("--source-statement-raw", args.source_statement_raw),
+            "normalized_statement": require_non_empty("--normalized-statement", args.normalized_statement),
+            "lean_target_namespace": require_non_empty("--lean-target-namespace", args.lean_target_namespace),
+            "lean_candidate_statement": args.lean_candidate_statement.strip(),
+            "lean_import_candidates": imports,
+            "lean_target_module_candidates": target_modules,
+            "symbol_map": symbol_map,
+            "proof_transport_mode": args.proof_transport_mode.strip(),
+            "translation_status": args.translation_status.strip(),
+            "external_proof_object_ref": args.external_proof_object_ref.strip(),
+            "correspondence_notes": args.correspondence_notes.strip(),
+            "operator_gap_id": args.operator_gap_id.strip(),
+            "query_terms": query_terms,
+            "source_refs": source_refs,
+            "required_gates": required_gates,
+        }
+    )
+    packet_hash_material = {
+        k: packet[k]
+        for k in [
+            "kind",
+            "lineage_id",
+            "source_system",
+            "source_library",
+            "source_module",
+            "source_decl",
+            "normalized_statement",
+            "lean_target_namespace",
+            "lean_import_candidates",
+            "symbol_map",
+            "proof_transport_mode",
+            "translation_status",
+            "required_gates",
+        ]
+    }
+    packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
+    for optional_key in [
+        "source_url",
+        "source_path",
+        "lean_candidate_statement",
+        "external_proof_object_ref",
+        "correspondence_notes",
+        "operator_gap_id",
+    ]:
+        if not packet[optional_key]:
+            packet.pop(optional_key)
+    if not packet["source_line_start"]:
+        packet.pop("source_line_start")
+    if not packet["source_line_end"]:
+        packet.pop("source_line_end")
+    if not packet["lean_target_module_candidates"]:
+        packet.pop("lean_target_module_candidates")
+    if not packet["query_terms"]:
+        packet.pop("query_terms")
+    if not packet["source_refs"]:
+        packet.pop("source_refs")
+    return with_metadata(
+        packet,
+        authority="proposal",
+        representation_class=args.representation_class,
+        representation_depth=args.representation_depth if len(args.representation_depth) > 1 else args.representation_depth[0],
+        promotion_allowed=False,
+    )
+
+
 def build_theorem_candidate(args: argparse.Namespace) -> dict[str, Any]:
     symbolic_origin_refs = [parse_ref_spec(x) for x in (args.symbolic_origin_ref or [])]
     invariant_refs = [parse_ref_spec(x) for x in (args.invariant_ref or [])]
@@ -868,6 +982,8 @@ def cmd_build(args: argparse.Namespace) -> int:
         packet = build_promotion_decision_packet(args)
     elif args.cmd == "build-theorem-candidate":
         packet = build_theorem_candidate(args)
+    elif args.cmd == "build-external-theorem-candidate":
+        packet = build_external_theorem_candidate(args)
     elif args.cmd == "build-residue":
         packet = build_residue(args)
     else:
@@ -1093,6 +1209,35 @@ def parse_args() -> argparse.Namespace:
     t.add_argument("--anchor-completeness", default="")
     t.add_argument("--target-namespace-candidate", action="append", default=[])
     t.add_argument("--target-module-candidate", action="append", default=[])
+
+    et = sp.add_parser("build-external-theorem-candidate", help="Build ExternalTheoremCandidatePacket.")
+    add_common_args(et)
+    et.add_argument("--status", default="discovered", choices=["draft", "discovered", "normalized", "matched_to_mathlib", "requires_adapter", "missing_in_lean", "rejected", "deferred"])
+    et.add_argument("--packet-version", default="1.0.0")
+    et.add_argument("--packet-hash", default="")
+    et.add_argument("--source-system", required=True, choices=["Isabelle/HOL", "Lean/mathlib", "Dedukti", "Logipedia", "Coq", "HOL-Light", "Agda", "arXiv", "local_lean_failure_memory", "local_hive_packet_memory", "other"])
+    et.add_argument("--source-library", required=True)
+    et.add_argument("--source-module", required=True)
+    et.add_argument("--source-decl", required=True)
+    et.add_argument("--source-url", default="")
+    et.add_argument("--source-path", default="")
+    et.add_argument("--source-line-start", type=int, default=0)
+    et.add_argument("--source-line-end", type=int, default=0)
+    et.add_argument("--source-statement-raw", required=True)
+    et.add_argument("--normalized-statement", required=True)
+    et.add_argument("--lean-target-namespace", required=True)
+    et.add_argument("--lean-candidate-statement", default="")
+    et.add_argument("--lean-import-candidate", action="append", default=[])
+    et.add_argument("--lean-target-module-candidate", action="append", default=[])
+    et.add_argument("--symbol-map", action="append", default=[], help="Repeatable FOREIGN=LEAN symbol correspondence")
+    et.add_argument("--proof-transport-mode", default="adapter", choices=["name_match", "adapter", "dedukti", "proof_sketch", "manual", "research_guidance"])
+    et.add_argument("--translation-status", default="unclassified", choices=["unclassified", "matched_to_mathlib", "requires_adapter", "missing_in_lean", "rejected", "deferred"])
+    et.add_argument("--external-proof-object-ref", default="")
+    et.add_argument("--correspondence-notes", default="")
+    et.add_argument("--operator-gap-id", default="")
+    et.add_argument("--query-term", action="append", default=[])
+    et.add_argument("--source-ref", action="append", default=[], help="Repeatable source ref spec: ref|kind|role|confidence")
+    et.add_argument("--required-gate", action="append", default=["lean_checked", "build_checked", "audit_checked"], choices=["lean_checked", "build_checked", "audit_checked", "promotion_decision"])
 
     r = sp.add_parser("build-residue", help="Build ResiduePacket.")
     add_common_args(r)

@@ -676,6 +676,45 @@ noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH
   B.flow.K0 + B.routerResidual
 
 /--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself vanishes,
+then the bounded router sourced generator collapses to the background flow.
+-/
+@[rep_depth transport]
+theorem ofZDControlledObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (ofZDControlledObserver (E := E) CIK obs flow hControl).sourcedGenerator = flow.K0 := by
+  have hResidual :
+      observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hControl hZD
+  unfold RouterDefectBoundBridge.sourcedGenerator ofZDControlledObserver ofCanonicalObserverDefect
+  simp [hResidual]
+
+/--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself vanishes,
+then Drazin-cut preservation reduces to the background-flow commutation theorem.
+-/
+@[rep_depth transport]
+theorem ofZDControlledObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    Commute
+      (ofZDControlledObserver (E := E) CIK obs flow hControl).sourcedGenerator
+      CIK.spectralComplementaryProjector := by
+  rw [ofZDControlledObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (E := E) CIK obs flow hControl hZD]
+  exact flow.commutesQ0
+
+/--
 For a deviation-zero observer, the bounded router sourced generator collapses to
 the background flow generator.
 -/

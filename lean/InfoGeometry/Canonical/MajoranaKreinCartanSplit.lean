@@ -350,6 +350,42 @@ theorem comparisonReadout_phasePart_eq_zero_of_equilibriumSeed
       ((isPotentialKillingOperator_iff_comparisonReadoutStationary
         (E := E) P ψ A).2 hPair))
 
+@[rep_depth transport]
+theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
+      =
+    (0, 0) := by
+  exact
+    comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
+      (E := E) P ψ A
+      (isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
+        (E := E) P ψ A hFaithful hFirst)
+
 end Core
 
 end InfoGeometry.Canonical.MajoranaKreinCartanSplit

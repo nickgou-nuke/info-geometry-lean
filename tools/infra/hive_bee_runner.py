@@ -86,6 +86,11 @@ ROLE_POLICY = {
         "max_authority": "proposal",
         "allowed_output_kinds": {"TheoremCandidatePacket", "InvariantDraft", "FormulationVariant", "ResiduePacket"},
     },
+    "HermesLeanstralBee": {
+        "task_kinds": {"leanstral.autoproof"},
+        "max_authority": "proposal",
+        "allowed_output_kinds": {"TheoremCandidatePacket", "ResiduePacket"},
+    },
     "DreamlineBee": {
         "task_kinds": {"dreamline.explore"},
         "max_authority": "semantic",

@@ -48,6 +48,8 @@ KIND_AUTHORITY_FLOOR = {
     "TheoremCandidatePacket": "proposal",
     "TranslationPacket": "proposal",
     "RetrievalHypothesisPacket": "proposal",
+    "RepairAttemptPacket": "proposal",
+    "AutoproofTracePacket": "proposal",
     "ExecutionIntentPacket": "execution_intent",
     "LeanVerificationPacket": "lean_checked",
     "BuildPacket": "build_checked",
@@ -89,7 +91,7 @@ ROLE_POLICY = {
     "HermesLeanstralBee": {
         "task_kinds": {"leanstral.autoproof"},
         "max_authority": "proposal",
-        "allowed_output_kinds": {"TheoremCandidatePacket", "ResiduePacket"},
+        "allowed_output_kinds": {"RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket", "ResiduePacket"},
     },
     "DreamlineBee": {
         "task_kinds": {"dreamline.explore"},

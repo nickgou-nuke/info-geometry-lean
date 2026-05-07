@@ -39,6 +39,7 @@ SCHEMA_BY_KIND = {
     "AuditPacket": SCHEMA_DIR / "AuditPacket.schema.json",
     "PromotionDecisionPacket": SCHEMA_DIR / "PromotionDecisionPacket.schema.json",
     "ResiduePacket": SCHEMA_DIR / "ResiduePacket.schema.json",
+    "RepairAttemptPacket": SCHEMA_DIR / "RepairAttemptPacket.schema.json",
     "AutoproofTracePacket": SCHEMA_DIR / "AutoproofTracePacket.schema.json",
 }
 

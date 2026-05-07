@@ -42,6 +42,7 @@ AUTHORITY_BY_KIND = {
     "BuildPacket": "build_checked",
     "AuditPacket": "audit_checked",
     "PromotionDecisionPacket": "promoted",
+    "AutoproofTracePacket": "proposal",
 }
 
 
@@ -164,6 +165,53 @@ def test_bee_result_schema_validates_worker_return_receipt() -> None:
     result = bee_result()
 
     assert _errors(result) == []
+
+
+def test_autoproof_trace_packet_schema_is_proposal_only_repair_journal() -> None:
+    trace = {
+        "kind": "AutoproofTracePacket",
+        "authority": "proposal",
+        "promotion_allowed": False,
+        "target": {"goal": "1 = 1", "imports": ["Init"], "context_present": False},
+        "budgets": {"max_iterations": 3, "max_repeated_error": 2},
+        "result": {"status": "failed", "emitted_packet_kind": "ResiduePacket"},
+        "attempts": [
+            {
+                "attempt_index": 1,
+                "mode": "tactic",
+                "goal_before": "⊢ 1 = 1",
+                "goal_after": "",
+                "candidate_text": "exact 0",
+                "lean_result": {"accepted": False, "status": "failure", "feedback": "type mismatch"},
+                "error_signature": "lean_error:type_mismatch",
+                "strategy": "initial_tactic",
+                "changed_strategy": False,
+                "retrieved_lemmas": [],
+            }
+        ],
+        "frontier": {
+            "last_error_signature": "lean_error:type_mismatch",
+            "next_recommended_bee": "SocratesBee",
+            "new_information_needed": "weaken theorem shape",
+        },
+    }
+
+    assert _errors(trace) == []
+
+
+def test_autoproof_trace_packet_rejects_authority_inflation() -> None:
+    trace = {
+        "kind": "AutoproofTracePacket",
+        "authority": "lean_checked",
+        "promotion_allowed": False,
+        "target": {"goal": "1 = 1", "imports": ["Init"]},
+        "budgets": {"max_iterations": 1},
+        "result": {"status": "verified", "emitted_packet_kind": "TheoremCandidatePacket"},
+        "attempts": [],
+        "frontier": {"next_recommended_bee": "none"},
+    }
+
+    assert any("'proposal' was expected" in error for error in _errors(trace))
 
 
 def test_bee_result_rejects_promotion_allowed_true() -> None:

@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from tools.infra import hive_leanstral_bee_worker as worker
+from tools.infra.hive_bee_runner import RunnerError
 from tools.infra.hive_local_packet_store import append_packet, read_store
 
 
@@ -24,7 +27,13 @@ def base_task(tmp_path: Path) -> dict:
         "target_packet_id": "seed-demo",
         "input_packet_ids": ["seed-demo"],
         "allowed_output_kinds": ["TheoremCandidatePacket", "ResiduePacket"],
-        "forbidden_output_kinds": ["LeanVerificationPacket", "BuildPacket", "AuditPacket", "PromotionDecisionPacket"],
+        "forbidden_output_kinds": [
+            "ExecutionIntentPacket",
+            "LeanVerificationPacket",
+            "BuildPacket",
+            "AuditPacket",
+            "PromotionDecisionPacket",
+        ],
         "authority_ceiling": "proposal",
         "instruction": "Prove goal: 1 = 1",
         "dry_run": False,
@@ -132,15 +141,83 @@ def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
     assert output["leanstral_autoproof"]["status"] == "failed"
 
 
-def test_worker_rejects_authority_gate_outputs_in_task_contract(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "forbidden_kind",
+    [
+        "ExecutionIntentPacket",
+        "LeanVerificationPacket",
+        "BuildPacket",
+        "AuditPacket",
+        "PromotionDecisionPacket",
+    ],
+)
+def test_worker_rejects_each_authority_gate_output_in_task_contract(tmp_path: Path, forbidden_kind: str) -> None:
     store = tmp_path / "store.jsonl"
     append_packet(store, seed_packet())
     task = base_task(tmp_path)
-    task["allowed_output_kinds"] = ["LeanVerificationPacket"]
+    task["allowed_output_kinds"] = [forbidden_kind]
 
-    try:
+    with pytest.raises(RunnerError, match="authority-gate packets"):
         worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
-    except Exception as exc:
-        assert "authority-gate packets" in str(exc)
-    else:  # pragma: no cover
-        raise AssertionError("expected contract rejection")
+
+
+def test_worker_rejects_authority_ceiling_above_proposal(tmp_path: Path) -> None:
+    store = tmp_path / "store.jsonl"
+    append_packet(store, seed_packet())
+    task = base_task(tmp_path)
+    task["authority_ceiling"] = "lean_checked"
+
+    with pytest.raises(RunnerError, match="authority_ceiling must be proposal"):
+        worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
+
+
+def test_worker_success_never_claims_lean_checked_authority(tmp_path: Path) -> None:
+    store = tmp_path / "store.jsonl"
+    append_packet(store, seed_packet())
+    task = base_task(tmp_path)
+
+    result = worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
+    output = read_store(store)[-1]
+
+    assert result["authority_claimed"] == "proposal"
+    assert result["authority_claimed"] != "lean_checked"
+    assert output["authority"] == "proposal"
+    assert output["kind"] == "TheoremCandidatePacket"
+    assert output["kind"] != "LeanVerificationPacket"
+    assert output["leanstral_autoproof"]["authority"] == "proposal_with_lean_evidence"
+    assert output["promotion_allowed"] is False
+
+
+def test_worker_dry_run_appends_nothing(tmp_path: Path) -> None:
+    store = tmp_path / "store.jsonl"
+    append_packet(store, seed_packet())
+    task = base_task(tmp_path)
+    task["dry_run"] = True
+
+    result = worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
+
+    records = read_store(store)
+    assert len(records) == 1
+    assert records[0]["id"] == "seed-demo"
+    assert result["status"] == "done"
+    assert result["telemetry"]["dry_run"] is True
+    assert result["emitted_packet_kinds"] == ["TheoremCandidatePacket"]
+    assert result["promotion_allowed"] is False
+
+
+def test_worker_requires_all_authority_gate_kinds_to_be_forbidden(tmp_path: Path) -> None:
+    store = tmp_path / "store.jsonl"
+    append_packet(store, seed_packet())
+    for gate_kind in sorted(worker.AUTHORITY_GATE_KINDS):
+        task = base_task(tmp_path)
+        task["task_id"] = f"leanstral_missing_forbidden_{gate_kind}"
+        task["id"] = f"bee_task_missing_forbidden_{gate_kind}"
+        task["forbidden_output_kinds"] = [kind for kind in task["forbidden_output_kinds"] if kind != gate_kind]
+
+        try:
+            worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
+        except Exception as exc:
+            assert "must explicitly forbid authority-gate packets" in str(exc)
+            assert gate_kind in str(exc)
+        else:  # pragma: no cover
+            raise AssertionError(f"expected missing forbidden gate rejection for {gate_kind}")

@@ -420,6 +420,10 @@ def may_route_to_hermes_leanstral(
     return True
 
 
+def route_invocation_id_for(rule: RouteRule, target: dict[str, Any]) -> str:
+    return f"route_invocation_{stable_digest([rule.rule_id, record_id(target), task_id_for(rule, target)])}"
+
+
 def build_bee_task(rule: RouteRule, target: dict[str, Any], *, store_path: Path, dry_run_task: bool) -> dict[str, Any]:
     tid = task_id_for(rule, target)
     now = task_created_at(target)
@@ -452,6 +456,7 @@ def build_bee_task(rule: RouteRule, target: dict[str, Any], *, store_path: Path,
         "dry_run": dry_run_task,
         "timeout_seconds": 120,
         "motherbee_rule_id": rule.rule_id,
+        "route_invocation_id": route_invocation_id_for(rule, target),
         "scheduler": "MotherBee.v1",
     }
     if rule.assigned_role == "HermesLeanstralBee":
@@ -474,6 +479,79 @@ def validate_bee_task(task: dict[str, Any]) -> None:
     if errors:
         joined = "\n".join(f"- {err}" for err in errors)
         raise MotherBeeError(f"generated BeeTask failed validation:\n{joined}")
+
+
+def validate_route_invocation(route: dict[str, Any]) -> None:
+    errors = validate_packet(route, SCHEMA_BY_KIND["RouteInvocationPacket"], build_store())
+    if errors:
+        joined = "\n".join(f"- {err}" for err in errors)
+        raise MotherBeeError(f"generated RouteInvocationPacket failed validation:\n{joined}")
+
+
+def route_considered_evidence(task: dict[str, Any], records: list[dict[str, Any]]) -> list[str]:
+    target_id = str(task.get("target_packet_id", ""))
+    evidence: list[str] = []
+    target_record = next((record for record in records if record.get("id") == target_id), None)
+    if isinstance(target_record, dict) and target_record.get("kind") == "AutoproofTracePacket":
+        evidence.extend(str(item) for item in target_record.get("attempt_packet_ids", []) if str(item))
+    if target_id:
+        evidence.append(target_id)
+    if task.get("assigned_role") == "HermesLeanstralBee":
+        for record in records:
+            if record.get("kind") == "AutoproofTracePacket" and trace_target_packet_id(record) == target_id:
+                evidence.extend(str(item) for item in record.get("attempt_packet_ids", []) if str(item))
+                evidence.append(record_id(record))
+    return list(dict.fromkeys(evidence))
+
+
+def blocked_routes_for_task(task: dict[str, Any]) -> list[dict[str, str]]:
+    role = str(task.get("assigned_role", ""))
+    if role == "HermesLeanstralBee":
+        return []
+    reason = "HermesLeanstralBee cross-episode retry requires new retrieval/Pauli/Socratic information before another Leanstral episode."
+    return [{"role": "HermesLeanstralBee", "reason": reason}]
+
+
+def route_decision_reason(task: dict[str, Any]) -> str:
+    rule_id = str(task.get("motherbee_rule_id", ""))
+    role = str(task.get("assigned_role", ""))
+    if rule_id.startswith("autoproof-frontier"):
+        return f"AutoproofTrace frontier selected {role}; route remains navigation evidence only."
+    if role == "HermesLeanstralBee":
+        return "New Pauli/Socratic/Retrieval/translation/candidate information permits one bounded Leanstral proposal episode."
+    return f"MotherBee rule {rule_id} selected {role}."
+
+
+def build_route_invocation(task: dict[str, Any], records: list[dict[str, Any]]) -> dict[str, Any]:
+    now = str(task.get("created_at") or task.get("updated_at") or "1970-01-01T00:00:00Z")
+    target_id = str(task.get("target_packet_id", ""))
+    route = {
+        "id": str(task.get("route_invocation_id") or f"route_invocation_{stable_digest([str(task.get('id', ''))])}"),
+        "kind": "RouteInvocationPacket",
+        "status": "emitted",
+        "lineage_id": str(task.get("lineage_id") or f"lineage_{target_id}"),
+        "revision": 1,
+        "origin_run_id": str(task.get("origin_run_id") or "motherbee_v1"),
+        "created_at": now,
+        "updated_at": now,
+        "authority": "navigation",
+        "authority_origin": "motherbee_route_decision",
+        "promotion_allowed": False,
+        "source_packet_id": target_id,
+        "target_packet_id": target_id,
+        "selected_role": str(task.get("assigned_role", "")),
+        "selected_task_kind": str(task.get("task_kind", "")),
+        "decision_reason": route_decision_reason(task),
+        "considered_evidence": route_considered_evidence(task, records),
+        "repulsion_field": [str(item) for item in task.get("repulsion_field", []) if str(item)],
+        "blocked_routes": blocked_routes_for_task(task),
+        "emitted_task_id": str(task.get("id") or task.get("task_id") or ""),
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+        "parent_refs": [target_id] if target_id else [],
+        "evidence_refs": route_considered_evidence(task, records),
+    }
+    validate_route_invocation(route)
+    return route
 
 
 def scheduled_pairs(records: list[dict[str, Any]]) -> set[tuple[str, str, str]]:
@@ -532,11 +610,17 @@ def discover_tasks(records: list[dict[str, Any]], *, store_path: Path, dry_run_t
     return tasks
 
 
-def append_tasks(store_path: Path, tasks: list[dict[str, Any]]) -> list[dict[str, str]]:
+def append_tasks(store_path: Path, tasks: list[dict[str, Any]], records: list[dict[str, Any]]) -> list[dict[str, str]]:
     receipts: list[dict[str, str]] = []
+    append_context = list(records)
     for task in tasks:
+        route = build_route_invocation(task, append_context)
+        route_digest, route_status = append_packet(store_path, route)
+        receipts.append({"id": str(route["id"]), "packet_hash": route_digest, "status": route_status, "kind": "RouteInvocationPacket"})
+        append_context.append(route)
         digest, status = append_packet(store_path, task)
-        receipts.append({"id": str(task["id"]), "task_id": str(task["task_id"]), "packet_hash": digest, "status": status})
+        receipts.append({"id": str(task["id"]), "task_id": str(task["task_id"]), "packet_hash": digest, "status": status, "kind": "BeeTask"})
+        append_context.append(task)
     return receipts
 
 
@@ -546,7 +630,7 @@ def run_once(store_path: Path, *, limit: int, dry_run: bool, dry_run_task: bool)
     selected = tasks[:limit] if limit > 0 else tasks
     receipts: list[dict[str, str]] = []
     if not dry_run:
-        receipts = append_tasks(store_path, selected)
+        receipts = append_tasks(store_path, selected, records)
     return {
         "scheduler": "MotherBee.v1",
         "store": str(store_path),

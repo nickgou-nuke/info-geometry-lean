@@ -639,6 +639,20 @@ noncomputable def ofAlignedObserver
     (observerDefectResidual_norm_le_ZD_of_aligned (E := E) (CIK := CIK) (obs := obs) hAlign)
 
 /--
+Zero-defect bounded constructor for an observer whose scalarized orientation
+strain already vanishes on the owner lane.
+-/
+noncomputable def ofStrainZeroObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    RouterDefectBoundBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow
+    (observerDefectResidual_norm_le_ZD_of_strain_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hStrain)
+
+/--
 Zero-defect bounded constructor for an observer whose local slice is exactly the
 certified spectral projector.
 -/
@@ -660,6 +674,16 @@ noncomputable def ofDeviationZeroObserver
   have hZero : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
   simpa [ofDeviationZeroObserver] using hZero
+
+@[simp] theorem ofStrainZeroObserver_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    (ofStrainZeroObserver (E := E) CIK obs flow hStrain).routerResidual = 0 := by
+  have hZero : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  simpa [ofStrainZeroObserver] using hZero
 
 @[simp] theorem ofAlignedObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -776,6 +800,38 @@ theorem ofAlignedObserver_sourcedGenerator_respects_cut
       (ofAlignedObserver (E := E) CIK obs flow hAlign).sourcedGenerator
       CIK.spectralComplementaryProjector := by
   rw [ofAlignedObserver_sourcedGenerator_eq_flow (E := E) CIK obs flow hAlign]
+  exact flow.commutesQ0
+
+/--
+For a strain-zero observer, the bounded router sourced generator collapses to the
+background flow generator.
+-/
+@[rep_depth transport]
+theorem ofStrainZeroObserver_sourcedGenerator_eq_flow
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator = flow.K0 := by
+  have hZero : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  simp [RouterDefectBoundBridge.sourcedGenerator, ofStrainZeroObserver,
+    ofCanonicalObserverDefect, hZero]
+
+/--
+For a strain-zero observer, Drazin-cut preservation reduces to the
+background-flow commutation theorem.
+-/
+@[rep_depth transport]
+theorem ofStrainZeroObserver_sourcedGenerator_respects_cut
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    Commute
+      (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator
+      CIK.spectralComplementaryProjector := by
+  rw [ofStrainZeroObserver_sourcedGenerator_eq_flow (E := E) CIK obs flow hStrain]
   exact flow.commutesQ0
 
 /--

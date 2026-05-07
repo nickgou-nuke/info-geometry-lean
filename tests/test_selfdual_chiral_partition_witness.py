@@ -17,3 +17,5 @@ def test_selfdual_chiral_lightcone_partition_witness_surface():
     assert "theorem partitionFloor_pos" in text
     assert "def toPositivePartitionWitness" in text
     assert "theorem operatorAdmissible_of_cartanOddPartition" in text
+    assert "def toOperatorAdmissibilityWitness" in text
+    assert "def toClosureContext" in text

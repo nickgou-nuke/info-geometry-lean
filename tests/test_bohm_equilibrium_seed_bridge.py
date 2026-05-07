@@ -12,6 +12,14 @@ def test_bohm_stationary_k_split_uses_equilibrium_seed_theorem() -> None:
 
     assert "theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_of_equilibriumSeed" in bohm_text
     assert "potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed" in bohm_text
+    assert (
+        "theorem potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful"
+        in bohm_text
+    )
+    assert (
+        "theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful"
+        in bohm_text
+    )
     assert "theorem stateQGTReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in thermo_text
     assert "admissibleTemperature_of_equilibriumSeed" not in bohm_text
     assert "isThermodynamicReadoutStationary_of_equilibriumSeed" in bohm_text

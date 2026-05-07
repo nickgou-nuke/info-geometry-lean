@@ -80,6 +80,42 @@ theorem equilibrium_of_δ_odd_eq_zero
     (hδ : δ_odd B = 0) :
     IsRouterEquilibrium B := hδ
 
+/--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself
+vanishes, then the bounded router residual produced from the canonical observer
+lane has zero odd-sector defect.
+-/
+@[simp] theorem ofZDControlledObserver_δ_odd_eq_zero_of_ZD_eq_zero
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (obs : InfoGeometry.Canonical.ObserverDefect.ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : InfoGeometry.Canonical.ObserverDefect.ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    δ_odd (ofZDControlledObserver (E := E) CIK obs flow hControl) = 0 := by
+  unfold δ_odd
+  rw [ofZDControlledObserver_routerResidual_eq_zero_of_ZD_eq_zero
+    (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hControl := hControl) (hZD := hZD)]
+  exact ContinuousLinearMap.opNorm_zero
+
+/--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself
+vanishes, then the canonical observer route is already in Sinkhorn
+router-equilibrium.
+-/
+theorem ofZDControlledObserver_isRouterEquilibrium_of_ZD_eq_zero
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (obs : InfoGeometry.Canonical.ObserverDefect.ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : InfoGeometry.Canonical.ObserverDefect.ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    IsRouterEquilibrium (ofZDControlledObserver (E := E) CIK obs flow hControl) := by
+  exact equilibrium_of_δ_odd_eq_zero (E := E)
+    (ofZDControlledObserver (E := E) CIK obs flow hControl)
+    (ofZDControlledObserver_δ_odd_eq_zero_of_ZD_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hControl := hControl) (hZD := hZD))
+
 /-- The sourced-generator deviation is exactly `δ_odd`. -/
 theorem sourcedGenerator_deviation_eq_δ_odd
     (B : RouterDefectBoundBridge (E := E)) :

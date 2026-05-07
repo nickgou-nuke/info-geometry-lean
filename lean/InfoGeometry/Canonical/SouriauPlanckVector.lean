@@ -78,6 +78,22 @@ structure GibbsSouriauEquilibriumSeed
   stationary : A ∈ AdmissibleTemperatureCone (E := E) P ψ
 
 /--
+Faithful thermodynamic probing plus vanishing first variation construct the
+Gibbs-Souriau equilibrium seed directly.  Downstream bridges can consume this
+constructor instead of carrying the seed as an opaque hypothesis.
+-/
+@[rep_depth transport]
+theorem equilibriumSeed_of_probeFaithful_of_firstVariation_eq_zero
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    GibbsSouriauEquilibriumSeed (E := E) P ψ A := by
+  refine ⟨hFaithful, ?_⟩
+  simpa [AdmissibleTemperatureCone] using hFirst
+
+/--
 A Gibbs-Souriau equilibrium seed forces the candidate channel to be an
 operatorial Killing generator for the thermodynamic potential.
 -/
@@ -122,6 +138,26 @@ theorem isThermodynamicReadoutStationary_of_equilibriumSeed
     (InfoGeometry.Canonical.ThermodynamicGenerator.isPotentialKillingOperator_iff_isThermodynamicReadoutStationary
       (E := E) P ψ A).1
       (admissibleTemperature_of_equilibriumSeed (E := E) hEq)
+
+/--
+Faithful probing plus vanishing first variation imply thermodynamic readout
+stationarity without packaging an explicit equilibrium-seed hypothesis first.
+-/
+@[rep_depth transport]
+theorem isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+      (E := E) P ψ A := by
+  exact
+    (isPotentialKillingOperator_iff_isThermodynamicReadoutStationary
+      (E := E) P ψ A).1
+      (admissibleTemperature_of_equilibriumSeed (E := E)
+        (equilibriumSeed_of_probeFaithful_of_firstVariation_eq_zero
+          (E := E) hFaithful hFirst))
 
 /--
 Stationary Gibbs-Souriau data has vanishing operatorial metric/phase readout.

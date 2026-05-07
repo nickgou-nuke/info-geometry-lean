@@ -407,6 +407,34 @@ theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithfu
   isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
     (E := E) P ψ A hFaithful hFirst
 
+/--
+Faithful thermodynamic probing upgrades vanishing first variation into vanishing
+comparison-state metric readout directly.
+-/
+@[rep_depth transport]
+theorem comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    comparisonMetricReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.fst
+    (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst)
+
+/--
+Faithful thermodynamic probing upgrades vanishing first variation into vanishing
+comparison-state phase readout directly.
+-/
+@[rep_depth transport]
+theorem comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    comparisonPhaseReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.snd
+    (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst)
+
 end Core
 
 section GrandCanonical

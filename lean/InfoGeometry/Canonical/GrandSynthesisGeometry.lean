@@ -297,6 +297,24 @@ theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit_metri
     (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM
 
 /--
+Metric-derived vacuum equation from the already-constructed unit-volume state.
+
+This narrowed branch removes the RN-entropy source theorem and
+`UnitRelativeVolumeBit` packet from the vacuum-equation surface when callers
+already own the geometric `UnitRelativeVolumeState Kgeo` consumed by
+`MetricDerivedRNRicciBridge`.
+-/
+theorem vacuumEinsteinEquation_of_unitRelativeVolumeState_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (hUnitState : UnitRelativeVolumeState Kgeo)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
+    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM
+
+/--
 Metric-derived gravity capstone from the already-constructed unit-volume state.
 
 This is the smallest owner route in this module: it no longer asks callers to

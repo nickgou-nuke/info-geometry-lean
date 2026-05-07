@@ -84,6 +84,45 @@ HERMES_LEANSTRAL_RULE = RouteRule(
     priority=30,
 )
 
+AUTO_TRACE_FRONTIER_RULES = {
+    "RetrieverBee": RouteRule(
+        rule_id="autoproof-frontier-to-retriever-v1",
+        source_kind="AutoproofTracePacket",
+        source_statuses=frozenset({"exhausted", "blocked", "degenerate", "failed"}),
+        assigned_role="RetrieverBee",
+        task_kind="retrieval.context",
+        allowed_output_kinds=("RetrievalHypothesisPacket", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="proposal",
+        instruction="Retrieve missing owner lemmas and local anchors requested by the autoproof frontier.",
+        priority=45,
+    ),
+    "SocratesBee": RouteRule(
+        rule_id="autoproof-frontier-to-socrates-v1",
+        source_kind="AutoproofTracePacket",
+        source_statuses=frozenset({"exhausted", "blocked", "degenerate", "failed"}),
+        assigned_role="SocratesBee",
+        task_kind="socratic.question",
+        allowed_output_kinds=("SocraticQuestionPacket", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="semantic",
+        instruction="Question the theorem shape and missing hypotheses requested by the autoproof frontier.",
+        priority=45,
+    ),
+    "PauliBee": RouteRule(
+        rule_id="autoproof-frontier-to-pauli-v1",
+        source_kind="AutoproofTracePacket",
+        source_statuses=frozenset({"exhausted", "blocked", "degenerate", "failed"}),
+        assigned_role="PauliBee",
+        task_kind="pauli.critique",
+        allowed_output_kinds=("PauliCritique", "ResiduePacket"),
+        forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+        authority_ceiling="semantic",
+        instruction="Audit hidden assumptions and owner-shadow drift requested by the autoproof frontier.",
+        priority=45,
+    ),
+}
+
 ROUTE_RULES = (
     RouteRule(
         rule_id="source-observation-to-socrates-v1",
@@ -176,6 +215,11 @@ def record_references(record: dict[str, Any], target_id: str) -> bool:
         "candidate_anchor_refs",
         "invariant_refs",
         "target_scope",
+        "target",
+        "episode",
+        "producer",
+        "autoproof_trace_ref",
+        "attempt_packet_ids",
     )
     return any(target_id in packet_refs(record.get(field)) for field in reference_fields)
 
@@ -192,17 +236,41 @@ def has_unresolved_high_severity_pauli_block(records: list[dict[str, Any]], targ
     return False
 
 
+def trace_target_packet_id(record: dict[str, Any]) -> str:
+    target = record.get("target")
+    if isinstance(target, dict):
+        value = target.get("target_packet_id")
+        if isinstance(value, str):
+            return value
+    return ""
+
+
+def trace_task_id(record: dict[str, Any]) -> str:
+    producer = record.get("producer")
+    if isinstance(producer, dict) and isinstance(producer.get("task_id"), str):
+        return str(producer["task_id"])
+    return ""
+
+
 def leanstral_attempt_indices(records: list[dict[str, Any]], target: dict[str, Any]) -> list[int]:
+    """Return one ledger index per bounded Leanstral episode for target.
+
+    First-class RepairAttemptPacket and final candidate/residue sidecars are
+    episode evidence, not retry-budget units.  BeeTask and AutoproofTracePacket
+    records with the same task id are deduplicated into one episode.
+    """
     target_id = record_id(target)
-    indices: list[int] = []
+    by_episode: dict[str, int] = {}
     for index, record in enumerate(records):
-        if not record_references(record, target_id):
-            continue
-        if record.get("kind") == "BeeTask" and record.get("assigned_role") == "HermesLeanstralBee":
-            indices.append(index)
-        elif record.get("agent_role") == "HermesLeanstralBee" or record.get("created_by_agent") == "HermesLeanstralBee":
-            indices.append(index)
-    return indices
+        kind = str(record.get("kind", ""))
+        episode_key = ""
+        if kind == "BeeTask" and record.get("assigned_role") == "HermesLeanstralBee" and record.get("target_packet_id") == target_id:
+            episode_key = str(record.get("task_id") or record.get("id") or f"task:{index}")
+        elif kind == "AutoproofTracePacket" and trace_target_packet_id(record) == target_id:
+            episode_key = trace_task_id(record) or str(record.get("id") or f"trace:{index}")
+        if episode_key and episode_key not in by_episode:
+            by_episode[episode_key] = index
+    return sorted(by_episode.values())
 
 
 def retry_count_for_hermes_leanstral(records: list[dict[str, Any]], target: dict[str, Any]) -> int:
@@ -215,6 +283,70 @@ def target_index(records: list[dict[str, Any]], target: dict[str, Any]) -> int:
         if record.get("id") == target_id:
             return index
     return -1
+
+
+def autoproof_frontier_repulsion(trace: dict[str, Any]) -> list[str]:
+    repulsion: list[str] = []
+    frontier = trace.get("frontier") if isinstance(trace.get("frontier"), dict) else {}
+    last_error = frontier.get("last_error_signature") if isinstance(frontier, dict) else ""
+    if isinstance(last_error, str) and last_error:
+        repulsion.append(last_error)
+    failed = frontier.get("failed_strategies") if isinstance(frontier, dict) else []
+    if isinstance(failed, list):
+        repulsion.extend(f"strategy:{item}" for item in failed if isinstance(item, str) and item)
+    attempts = trace.get("attempt_packet_ids")
+    if isinstance(attempts, list):
+        repulsion.extend(str(item) for item in attempts if str(item))
+    trace_id = trace.get("id")
+    if isinstance(trace_id, str) and trace_id:
+        repulsion.append(trace_id)
+    return list(dict.fromkeys(repulsion))
+
+
+def autoproof_frontier_instruction_suffix(trace: dict[str, Any]) -> str:
+    frontier = trace.get("frontier") if isinstance(trace.get("frontier"), dict) else {}
+    need = frontier.get("new_information_needed") if isinstance(frontier, dict) else ""
+    error = frontier.get("last_error_signature") if isinstance(frontier, dict) else ""
+    parts = []
+    if isinstance(need, str) and need:
+        parts.append(f"Frontier says new information needed: {need}")
+    if isinstance(error, str) and error:
+        parts.append(f"Avoid repeating last Lean error signature: {error}")
+    return " ".join(parts)
+
+
+def latest_autoproof_trace_for_target(records: list[dict[str, Any]], target: dict[str, Any]) -> dict[str, Any] | None:
+    target_id = record_id(target)
+    latest: dict[str, Any] | None = None
+    for record in records:
+        if record.get("kind") == "AutoproofTracePacket" and trace_target_packet_id(record) == target_id:
+            latest = record
+    return latest
+
+
+def frontier_route_rule(trace: dict[str, Any]) -> RouteRule | None:
+    if trace.get("kind") != "AutoproofTracePacket":
+        return None
+    status = str(trace.get("status") or "")
+    result = trace.get("result") if isinstance(trace.get("result"), dict) else {}
+    result_status = str(result.get("status") or "") if isinstance(result, dict) else ""
+    frontier = trace.get("frontier") if isinstance(trace.get("frontier"), dict) else {}
+    next_bee = frontier.get("next_recommended_bee") if isinstance(frontier, dict) else ""
+    rule = AUTO_TRACE_FRONTIER_RULES.get(str(next_bee))
+    if rule is None:
+        return None
+    if status not in rule.source_statuses and result_status not in rule.source_statuses:
+        return None
+    return rule
+
+
+def enrich_task_from_autoproof_trace(task: dict[str, Any], trace: dict[str, Any]) -> None:
+    repulsion = list(task.get("repulsion_field") or [])
+    repulsion.extend(autoproof_frontier_repulsion(trace))
+    task["repulsion_field"] = list(dict.fromkeys(str(item) for item in repulsion if str(item)))
+    suffix = autoproof_frontier_instruction_suffix(trace)
+    if suffix:
+        task["instruction"] = f"{task.get('instruction', '')} {suffix}".strip()
 
 
 def has_new_information_since_last_leanstral_attempt(records: list[dict[str, Any]], target: dict[str, Any]) -> bool:
@@ -370,6 +502,14 @@ def discover_tasks(records: list[dict[str, Any]], *, store_path: Path, dry_run_t
     for record in records:
         if record.get("kind") == "BeeTask":
             continue
+        frontier_rule = frontier_route_rule(record)
+        if frontier_rule is not None:
+            pair = (record_id(record), frontier_rule.assigned_role, frontier_rule.task_kind)
+            if pair not in already:
+                task = build_bee_task(frontier_rule, record, store_path=store_path, dry_run_task=dry_run_task)
+                enrich_task_from_autoproof_trace(task, record)
+                validate_bee_task(task)
+                tasks.append(task)
         for rule in ROUTE_RULES:
             if not rule_matches(rule, record):
                 continue
@@ -383,6 +523,9 @@ def discover_tasks(records: list[dict[str, Any]], *, store_path: Path, dry_run_t
         if leanstral_pair not in already and may_route_to_hermes_leanstral(records, record):
             task = build_bee_task(HERMES_LEANSTRAL_RULE, record, store_path=store_path, dry_run_task=dry_run_task)
             task["retry_count"] = retry_count_for_hermes_leanstral(records, record)
+            latest_trace = latest_autoproof_trace_for_target(records, record)
+            if latest_trace is not None:
+                enrich_task_from_autoproof_trace(task, latest_trace)
             validate_bee_task(task)
             tasks.append(task)
     tasks.sort(key=lambda task: (-int(task.get("priority", 0)), str(task.get("target_packet_id", "")), str(task.get("id", ""))))

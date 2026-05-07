@@ -55,19 +55,71 @@ KIND_AUTHORITY_FLOOR = {
     "PromotionDecisionPacket": "promoted",
 }
 
-ROLE_TASK_KINDS = {
-    "SourceBee": {"source.capture"},
-    "RetrieverBee": {"retrieval.context"},
-    "SocratesBee": {"socratic.question"},
-    "PauliBee": {"pauli.critique"},
-    "TranslatorBee": {"candidate.translate", "candidate.formulate"},
-    "ThinkingBee": {"candidate.translate", "candidate.formulate"},
-    "DreamlineBee": {"dreamline.explore"},
-    "ShadowBee": {"shadow.reroute"},
-    "LeanBee": {"lean.verify"},
-    "BuildBee": {"build.verify"},
-    "AuditBee": {"audit.semantic"},
-    "PromotionBee": {"promotion.decide"},
+ROLE_POLICY = {
+    "SourceBee": {
+        "task_kinds": {"source.capture"},
+        "max_authority": "navigation",
+        "allowed_output_kinds": {"SourceObservationPacket"},
+    },
+    "RetrieverBee": {
+        "task_kinds": {"retrieval.context"},
+        "max_authority": "proposal",
+        "allowed_output_kinds": {"RetrievalHypothesisPacket", "ResiduePacket"},
+    },
+    "SocratesBee": {
+        "task_kinds": {"socratic.question"},
+        "max_authority": "semantic",
+        "allowed_output_kinds": {"SocraticQuestionPacket", "ResiduePacket"},
+    },
+    "PauliBee": {
+        "task_kinds": {"pauli.critique"},
+        "max_authority": "semantic",
+        "allowed_output_kinds": {"PauliCritique", "ResiduePacket"},
+    },
+    "TranslatorBee": {
+        "task_kinds": {"candidate.translate", "candidate.formulate"},
+        "max_authority": "proposal",
+        "allowed_output_kinds": {"TranslationPacket", "TheoremCandidatePacket", "FormulationVariant", "ResiduePacket"},
+    },
+    "ThinkingBee": {
+        "task_kinds": {"candidate.translate", "candidate.formulate"},
+        "max_authority": "proposal",
+        "allowed_output_kinds": {"TheoremCandidatePacket", "InvariantDraft", "FormulationVariant", "ResiduePacket"},
+    },
+    "DreamlineBee": {
+        "task_kinds": {"dreamline.explore"},
+        "max_authority": "semantic",
+        "allowed_output_kinds": {"SymbolicMotifPacket", "FormulationVariant", "SocraticQuestionPacket", "ResiduePacket"},
+    },
+    "ShadowBee": {
+        "task_kinds": {"shadow.reroute"},
+        "max_authority": "semantic",
+        "allowed_output_kinds": {"SymbolicMotifPacket", "FormulationVariant", "SocraticQuestionPacket", "ResiduePacket"},
+    },
+    "LeanBee": {
+        "task_kinds": {"lean.verify"},
+        "max_authority": "lean_checked",
+        "allowed_output_kinds": {"LeanVerificationPacket"},
+        "requires_input_kinds": {"ExecutionIntentPacket"},
+    },
+    "BuildBee": {
+        "task_kinds": {"build.verify"},
+        "max_authority": "build_checked",
+        "allowed_output_kinds": {"BuildPacket"},
+        "requires_input_kinds": {"LeanVerificationPacket"},
+    },
+    "AuditBee": {
+        "task_kinds": {"audit.semantic"},
+        "max_authority": "audit_checked",
+        "allowed_output_kinds": {"AuditPacket"},
+        "requires_input_kinds": {"BuildPacket"},
+    },
+    "PromotionBee": {
+        "task_kinds": {"promotion.decide"},
+        "max_authority": "promoted",
+        "allowed_output_kinds": {"PromotionDecisionPacket"},
+        "requires_input_kinds": {"AuditPacket"},
+    },
 }
 
 
@@ -89,12 +141,32 @@ def validate_envelope(envelope: dict[str, Any], kind: str) -> None:
         raise RunnerError(f"invalid {kind}:\n{joined}")
 
 
-def validate_task_policy(task: dict[str, Any]) -> None:
+def role_policy(task: dict[str, Any]) -> dict[str, Any]:
+    role = str(task.get("assigned_role", ""))
+    policy = ROLE_POLICY.get(role)
+    if policy is None:
+        raise RunnerError(f"no runner role policy for assigned_role {role}")
+    return policy
+
+
+def validate_task_policy(task: dict[str, Any], input_packets: dict[str, dict[str, Any]] | None = None) -> None:
     role = str(task.get("assigned_role", ""))
     task_kind = str(task.get("task_kind", ""))
-    allowed = ROLE_TASK_KINDS.get(role)
-    if allowed is not None and task_kind not in allowed:
+    policy = role_policy(task)
+    allowed_task_kinds = set(str(x) for x in policy.get("task_kinds", set()))
+    if task_kind not in allowed_task_kinds:
         raise RunnerError(f"task_kind {task_kind} is not compatible with assigned_role {role}")
+    ceiling = str(task.get("authority_ceiling", ""))
+    max_authority = str(policy.get("max_authority", "navigation"))
+    if not authority_lte(ceiling, max_authority):
+        raise RunnerError(f"BeeTask authority_ceiling {ceiling} exceeds role policy max_authority {max_authority}")
+    if input_packets is not None:
+        input_kinds = {str(packet.get("kind", "")) for packet in input_packets.values()}
+        required = set(str(x) for x in policy.get("requires_input_kinds", set()))
+        if required and not required <= input_kinds:
+            raise RunnerError(
+                f"assigned_role {role} requires input kinds {sorted(required)}; present kinds {sorted(input_kinds)}"
+            )
 
 
 def validate_result_contract(task: dict[str, Any], result: dict[str, Any], outputs: list[dict[str, Any]]) -> None:
@@ -121,6 +193,9 @@ def validate_result_contract(task: dict[str, Any], result: dict[str, Any], outpu
     forbidden = set(str(x) for x in task.get("forbidden_output_kinds", []))
     if not emitted <= allowed:
         raise RunnerError("BeeResult emitted packet kinds exceed BeeTask.allowed_output_kinds")
+    role_allowed = set(str(x) for x in role_policy(task).get("allowed_output_kinds", set()))
+    if not emitted <= role_allowed:
+        raise RunnerError("BeeResult emitted packet kinds exceed role policy allowed_output_kinds")
     if emitted & forbidden:
         raise RunnerError("BeeResult emitted packet kinds include BeeTask.forbidden_output_kinds")
     ceiling = str(task.get("authority_ceiling", ""))
@@ -151,13 +226,16 @@ def load_input_packets(store_path: Path, input_packet_ids: list[str]) -> dict[st
 
 def enforce_output_contract(task: dict[str, Any], output: dict[str, Any]) -> None:
     kind = str(output.get("kind", ""))
-    allowed = set(str(x) for x in task.get("allowed_output_kinds", []))
+    task_allowed = set(str(x) for x in task.get("allowed_output_kinds", []))
+    role_allowed = set(str(x) for x in role_policy(task).get("allowed_output_kinds", set()))
     forbidden = set(str(x) for x in task.get("forbidden_output_kinds", []))
     ceiling = str(task.get("authority_ceiling", ""))
     authority = output_authority(output)
 
-    if kind not in allowed:
+    if kind not in task_allowed:
         raise RunnerError(f"output kind not allowed by BeeTask: {kind}")
+    if kind not in role_allowed:
+        raise RunnerError(f"output kind not allowed by role policy for {task.get('assigned_role')}: {kind}")
     if kind in forbidden:
         raise RunnerError(f"output kind is forbidden by BeeTask: {kind}")
     if not authority_lte(authority, ceiling):
@@ -231,7 +309,8 @@ def run_task(
     validate_envelope(task, "BeeTask")
     validate_task_policy(task)
     dry_run = bool(task.get("dry_run", False)) or force_dry_run
-    load_input_packets(store_path, [str(x) for x in task.get("input_packet_ids", [])])
+    input_packets = load_input_packets(store_path, [str(x) for x in task.get("input_packet_ids", [])])
+    validate_task_policy(task, input_packets)
 
     output_hashes: list[str] = []
     for packet in output_packets:

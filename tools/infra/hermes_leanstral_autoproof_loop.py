@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -51,6 +53,67 @@ def _lean_feedback(lean_result: dict[str, object], *, limit: int = 6000) -> str:
     return text[:limit]
 
 
+def error_signature(feedback: str) -> str:
+    """Stable compact Lean-error signature for recurrence/deadend memory."""
+    text = feedback.strip()
+    if not text:
+        return ""
+    lowered = text.lower()
+    classes = [
+        ("unknown identifier", "unknown_identifier"),
+        ("unknown constant", "unknown_constant"),
+        ("failed to synthesize", "failed_to_synthesize"),
+        ("type mismatch", "type_mismatch"),
+        ("unsolved goals", "unsolved_goals"),
+        ("unknown tactic", "unknown_tactic"),
+        ("invalid", "invalid"),
+    ]
+    for needle, label in classes:
+        if needle in lowered:
+            return f"lean_error:{label}"
+    normalized = re.sub(r"\s+", " ", lowered)[:300]
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:16]
+    return f"lean_error:{digest}"
+
+
+def recommended_next_bee(signature: str) -> str:
+    if any(marker in signature for marker in ("unknown_identifier", "unknown_constant", "failed_to_synthesize")):
+        return "RetrieverBee"
+    if any(marker in signature for marker in ("type_mismatch", "unsolved_goals")):
+        return "SocratesBee"
+    return "PauliBee"
+
+
+def build_autoproof_trace(
+    *,
+    goal: str,
+    imports: list[str],
+    context: str,
+    max_iterations: int,
+    status: str,
+    emitted_packet_kind: str,
+    attempts: list[dict[str, object]],
+) -> dict[str, object]:
+    last_error = ""
+    failed = [attempt for attempt in attempts if not attempt.get("lean_result", {}).get("accepted")]
+    if failed:
+        last_error = str(failed[-1].get("error_signature", ""))
+    return {
+        "kind": "AutoproofTracePacket",
+        "authority": "proposal",
+        "promotion_allowed": False,
+        "target": {"goal": goal.strip(), "imports": imports, "context_present": bool(context.strip())},
+        "budgets": {"max_iterations": max_iterations},
+        "result": {"status": status, "emitted_packet_kind": emitted_packet_kind},
+        "attempts": attempts,
+        "frontier": {
+            "last_error_signature": last_error,
+            "next_recommended_bee": "none" if status == "verified" else recommended_next_bee(last_error),
+            "new_information_needed": "none" if status == "verified" else "Pauli/Socratic/Retrieval packet before cross-task retry",
+        },
+    }
+
+
 def make_local_leanstral_proposer(
     *,
     config: LeanstralConfig | None = None,
@@ -80,8 +143,10 @@ def run_autoproof(
     imports = imports or ["Mathlib"]
     proposer = proposer or make_local_leanstral_proposer()
     iterations: list[dict[str, object]] = []
+    trace_attempts: list[dict[str, object]] = []
     prior_candidate = ""
     feedback = ""
+    last_signature = ""
     verified_tactic: str | None = None
 
     for idx in range(max(0, max_iterations)):
@@ -96,6 +161,8 @@ def run_autoproof(
         proposal = proposer(prompt)
         candidate = sanitize_candidate(str(proposal.get("candidate", "")))
         if not candidate:
+            sig = error_signature(str(proposal.get("error") or "empty candidate"))
+            changed_strategy = bool(last_signature and sig == last_signature)
             iteration = {
                 "iteration": idx + 1,
                 "prompt_kind": prompt.kind,
@@ -104,10 +171,26 @@ def run_autoproof(
                 "lean_status": "not_run",
                 "lean_ok": False,
                 "error": proposal.get("error") or "empty candidate",
+                "error_signature": sig,
             }
             iterations.append(iteration)
+            trace_attempts.append(
+                {
+                    "attempt_index": idx + 1,
+                    "mode": "tactic" if idx == 0 else "repair",
+                    "goal_before": goal.strip(),
+                    "goal_after": "",
+                    "candidate_text": "",
+                    "lean_result": {"accepted": False, "status": "not_run", "feedback": str(iteration["error"])},
+                    "error_signature": sig,
+                    "strategy": "changed_strategy_after_repeated_error" if changed_strategy else ("initial_tactic" if idx == 0 else "lean_feedback_repair"),
+                    "changed_strategy": changed_strategy,
+                    "retrieved_lemmas": [],
+                }
+            )
             prior_candidate = ""
             feedback = str(iteration["error"])
+            last_signature = sig
             continue
 
         lean_result = lean_checker(
@@ -123,6 +206,9 @@ def run_autoproof(
             and isinstance(lean_result.get("lean"), dict)
             and lean_result["lean"].get("ok") is True
         )
+        lean_feedback = _lean_feedback(lean_result)
+        sig = "" if lean_ok else error_signature(lean_feedback)
+        changed_strategy = bool(sig and last_signature and sig == last_signature)
         iteration = {
             "iteration": idx + 1,
             "prompt_kind": prompt.kind,
@@ -131,18 +217,51 @@ def run_autoproof(
             "raw_candidate": proposal.get("raw_candidate", ""),
             "lean_status": lean_result.get("status") if isinstance(lean_result, dict) else "error",
             "lean_ok": lean_ok,
-            "lean_feedback": _lean_feedback(lean_result),
+            "lean_feedback": lean_feedback,
+            "error_signature": sig,
+            "strategy": "changed_strategy_after_repeated_error" if changed_strategy else ("initial_tactic" if idx == 0 else "lean_feedback_repair"),
+            "changed_strategy": changed_strategy,
         }
         iterations.append(iteration)
+        trace_attempts.append(
+            {
+                "attempt_index": idx + 1,
+                "mode": "tactic" if idx == 0 else "repair",
+                "goal_before": goal.strip(),
+                "goal_after": "proof_finished" if lean_ok else "",
+                "candidate_text": candidate,
+                "lean_result": {
+                    "accepted": lean_ok,
+                    "status": iteration["lean_status"],
+                    "feedback": lean_feedback,
+                },
+                "error_signature": sig,
+                "strategy": iteration["strategy"],
+                "changed_strategy": changed_strategy,
+                "retrieved_lemmas": [],
+            }
+        )
         if lean_ok:
             verified_tactic = candidate
             break
         prior_candidate = candidate
         feedback = str(iteration["lean_feedback"])
+        last_signature = sig
 
+    status = "verified" if verified_tactic else "failed"
+    emitted_packet_kind = "TheoremCandidatePacket" if verified_tactic else "ResiduePacket"
+    autoproof_trace = build_autoproof_trace(
+        goal=goal,
+        imports=imports,
+        context=context,
+        max_iterations=max_iterations,
+        status=status,
+        emitted_packet_kind=emitted_packet_kind,
+        attempts=trace_attempts,
+    )
     return {
         "schema": SCHEMA,
-        "status": "verified" if verified_tactic else "failed",
+        "status": status,
         "authority": "proposal_with_lean_evidence",
         "promotion_allowed": False,
         "goal": goal.strip(),
@@ -151,6 +270,7 @@ def run_autoproof(
         "max_iterations": max_iterations,
         "verified_tactic": verified_tactic,
         "iterations": iterations,
+        "autoproof_trace": autoproof_trace,
     }
 
 

@@ -82,6 +82,26 @@ def fake_verified(goal: str, imports: list[str], max_iterations: int, **kwargs) 
         "imports": imports,
         "verified_tactic": "rfl",
         "iterations": [{"iteration": 1, "candidate": "rfl", "lean_ok": True, "lean_status": "success", "lean_stdout": ""}],
+        "autoproof_trace": {
+            "kind": "AutoproofTracePacket",
+            "authority": "proposal",
+            "promotion_allowed": False,
+            "target": {"goal": goal, "imports": imports},
+            "budgets": {"max_iterations": max_iterations},
+            "result": {"status": "verified", "emitted_packet_kind": "TheoremCandidatePacket"},
+            "attempts": [
+                {
+                    "attempt_index": 1,
+                    "mode": "tactic",
+                    "candidate_text": "rfl",
+                    "lean_result": {"accepted": True, "status": "success"},
+                    "strategy": "initial_tactic",
+                    "changed_strategy": False,
+                    "error_signature": "",
+                }
+            ],
+            "frontier": {"next_recommended_bee": "none"},
+        },
     }
 
 
@@ -98,6 +118,38 @@ def fake_failed(goal: str, imports: list[str], max_iterations: int, **kwargs) ->
             {"iteration": 1, "candidate": "simp", "lean_ok": False, "lean_status": "error", "lean_stdout": "unsolved goals"},
             {"iteration": 2, "candidate": "omega", "lean_ok": False, "lean_status": "error", "lean_stdout": "unknown tactic"},
         ],
+        "autoproof_trace": {
+            "kind": "AutoproofTracePacket",
+            "authority": "proposal",
+            "promotion_allowed": False,
+            "target": {"goal": goal, "imports": imports},
+            "budgets": {"max_iterations": max_iterations},
+            "result": {"status": "failed", "emitted_packet_kind": "ResiduePacket"},
+            "attempts": [
+                {
+                    "attempt_index": 1,
+                    "mode": "tactic",
+                    "candidate_text": "simp",
+                    "lean_result": {"accepted": False, "status": "error"},
+                    "strategy": "initial_tactic",
+                    "changed_strategy": False,
+                    "error_signature": "lean_error:unsolved_goals",
+                },
+                {
+                    "attempt_index": 2,
+                    "mode": "repair",
+                    "candidate_text": "omega",
+                    "lean_result": {"accepted": False, "status": "error"},
+                    "strategy": "lean_feedback_repair",
+                    "changed_strategy": True,
+                    "error_signature": "lean_error:unknown_tactic",
+                },
+            ],
+            "frontier": {
+                "last_error_signature": "lean_error:unknown_tactic",
+                "next_recommended_bee": "RetrieverBee",
+            },
+        },
     }
 
 
@@ -121,6 +173,10 @@ def test_worker_emits_probe_ready_candidate_and_bee_result(tmp_path: Path) -> No
     assert output["promotion_allowed"] is False
     assert output["formal_target"]["candidate_shape"] == "by rfl"
     assert output["leanstral_autoproof"]["verified_tactic"] == "rfl"
+    assert output["autoproof_trace"]["kind"] == "AutoproofTracePacket"
+    assert output["autoproof_trace"]["authority"] == "proposal"
+    assert output["autoproof_trace"]["promotion_allowed"] is False
+    assert output["autoproof_trace_ref"] == {"packet_id": "autoproof_trace_leanstral_demo", "embedded": True}
 
 
 def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
@@ -139,6 +195,9 @@ def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
     assert output["stage"] == "formal_probe"
     assert "2 attempts" in output["recovery_hint"]
     assert output["leanstral_autoproof"]["status"] == "failed"
+    assert output["autoproof_trace"]["result"]["emitted_packet_kind"] == "ResiduePacket"
+    assert output["autoproof_trace"]["frontier"]["next_recommended_bee"] == "RetrieverBee"
+    assert output["autoproof_trace_ref"] == {"packet_id": "autoproof_trace_leanstral_demo", "embedded": True}
 
 
 @pytest.mark.parametrize(

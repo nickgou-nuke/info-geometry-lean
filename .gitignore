@@ -41,6 +41,8 @@ docs/auto/**
 !docs/LIBER_NOVUS_MATH.md
 !docs/black_books/
 !docs/black_books/**
+!docs/experiments/
+!docs/experiments/*.md
 !docs/*_synthesis.md
 !docs/testable_predictions.md
 !docs/keyword_index.md

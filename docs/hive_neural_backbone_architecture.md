@@ -406,7 +406,190 @@ If sensation dominates too much, intuition clusters latent theorem motifs.
 If feeling dominates too much, Socrates asks falsifying questions and Lean rejects non-proof.
 ```
 
-### 3.3 Pauli severity
+### 3.3 Complexes as attention traps and interrupt requests
+
+A complex is a charged recurring motif cluster. In the Hive it is not a
+pathology, not an oracle, and not a proof authority. It is a persistent salience
+attractor formed when symbolic motifs, failed attempts, contradictions, Pauli
+blocks, old residues, and owner/shadow gaps repeatedly bind together.
+
+Operational law:
+
+```text
+A complex may capture attention.
+A complex may not capture authority.
+
+Complex activation may preempt queue order.
+Complex activation may not bypass authority order.
+```
+
+For theorem work, the Jungian "affect" or charge of a complex must be translated
+into operational signals rather than treated as human mood:
+
+```text
+complex_charge =
+  recurrence_count
+  + unresolved_blocker_count
+  + failed_attempt_count
+  + Pauli severity
+  + owner/shadow conflict severity
+  + contradiction density
+  + symbolic resonance
+  + user priority
+  + attention-capture history
+```
+
+Those signals may raise priority, request retrieval, trigger Socratic
+interrogation, or require Pauli review. They may not emit Lean verification,
+build, audit, promotion, or direct source mutation.
+
+The safe interrupt path is:
+
+```text
+new source / packet / failure matches complex signature
+  -> ComplexBee records a labelled activation or trace
+  -> MotherBee decides whether to admit the interrupt
+  -> SocratesBee asks destabilizing questions
+  -> PauliBee checks inflation and owner/shadow drift
+  -> RetrieverBee replays fossils, deadends, and prior critiques
+  -> ThinkingBee may propose a lawful decomposition
+  -> candidate either descends through normal gates or returns to residue
+```
+
+Bad architecture:
+
+```text
+complex triggers -> complex captures MotherBee / global workspace
+```
+
+Good architecture:
+
+```text
+complex triggers -> labelled trace -> Socrates/Pauli interrupt -> quarantine,
+reroute, or lawful candidate descent
+```
+
+Complex states should be represented below authority:
+
+```text
+dormant
+noticed
+constellated
+interrupt_requested
+under_socratic_review
+under_pauli_review
+differentiated
+integrated
+quarantined
+returned_to_residue
+```
+
+These are attention and integration states, not truth states.
+
+### 3.4 Loop hijack suppression and dreamline throttling
+
+Complexes become dangerous when they produce low-information recurrence: the
+system repeatedly invokes the same charged motif, the same failed bridge, or the
+same frustration corridor while feeling as if work is happening. In this case
+recurrence is no longer a discovery signal; it is an attention trap.
+
+The Hive should distinguish useful recurrence from loop hijack:
+
+```text
+useful recurrence
+  = repeated motif + new evidence, new owner map, new contradiction, or new
+    theorem-candidate shape
+
+loop hijack
+  = repeated motif + no new source contact, no new formal decomposition, no new
+    Pauli distinction, no new Socratic question, and no Lean-facing progress
+```
+
+A dreamline or active-imagination lane may use high-temperature/scrambled
+prompting to shake loose unexpected associations, but it must be sandboxed and
+rate-limited. Its output is only allowed to become:
+
+```text
+SourceObservationPacket
+SymbolicMotifPacket
+SocraticQuestionPacket
+FormulationVariant
+ResiduePacket
+```
+
+It may not directly become:
+
+```text
+ExecutionIntentPacket
+LeanVerificationPacket
+BuildPacket
+AuditPacket
+PromotionDecisionPacket
+```
+
+A practical anti-hijack scheduler should penalize familiar low-surprisal loops
+and reward only recurrence that adds information:
+
+```text
+loop_information_gain =
+  new_source_count
+  + new_owner_anchor_count
+  + new_socratic_question_count
+  + new_pauli_distinction_count
+  + new_formal_decomposition_count
+  + new_counterexample_or_blocker_count
+
+if recurrence_count is high and loop_information_gain is low:
+  reduce dreamline invocation weight
+  require sensation/source contact
+  require Socratic reformulation
+  require Pauli quarantine check
+  forbid direct execution intent
+```
+
+This is the local analogue of a low-pass filter: reduce affect-like charge and
+repetitive symbolic amplification until the system can observe, distinguish, and
+route the material without being possessed by it.
+
+The high-temperature resonator is useful only under a containment law:
+
+```text
+High temperature may generate new associations.
+Surprisal must be checked against source contact and lineage novelty.
+Repeated frustration without novelty is downweighted.
+No dreamline output receives authority by resonance alone.
+```
+
+### 3.5 Shadow as unhandled exception and unintegrated value repository
+
+The shadow is not a trash heap and not merely an error log. It is the repository
+of material excluded from the current attended theorem identity: failed proof
+attempts, hidden assumptions, overclaims, scalar shadows, stale symbolic claims,
+contradictions, counterexample pressure, and possibly valuable but premature
+residues.
+
+Operational law:
+
+```text
+shadow material must be preserved;
+shadow material must be labelled;
+shadow material must not discharge owner obligations without explicit bridge
+lineage and Lean-backed verification.
+```
+
+ShadowBee should classify and route instead of deleting:
+
+```text
+unhandled theorem exception
+  -> ShadowBee classifies residue/deadend/fossil/overclaim
+  -> ComplexBee checks recurrence and attention-capture risk
+  -> SocratesBee asks weakest-version questions
+  -> PauliBee blocks inflation and owner/shadow drift
+  -> RetrieverBee searches for missing owner bridges
+  -> candidate descends formally or returns to residue
+```
+
+### 3.6 Pauli severity
 
 Pauli is the anti-inflation faculty.
 
@@ -426,7 +609,7 @@ Pauli packets should not be treated as theorem authority either. They are
 semantic quarantine and critique authority. Their role is to block or constrain
 ascent.
 
-### 3.4 Socratic interrogation
+### 3.7 Socratic interrogation
 
 Socrates is the destabilizing question engine.
 
@@ -445,7 +628,7 @@ What prior deadend resembles this candidate?
 Socrates does not verify. Socrates turns symbolic pressure into better questions
 and safer candidate shapes.
 
-### 3.5 Alchemical process states
+### 3.8 Alchemical process states
 
 Alchemy is useful as a process-state language:
 
@@ -469,7 +652,7 @@ Important: `rubedo` is only permitted for packets that have passed the required
 Lean/Lake/Audit/Promotion chain, or as a purely symbolic label with
 `promotion_allowed = false`.
 
-### 3.6 Cognitive neurobiology analogues
+### 3.9 Cognitive neurobiology analogues
 
 The Hive can also borrow disciplined structure from cognitive neurobiology.
 These are architectural analogies, not biological claims.

@@ -53,6 +53,36 @@ FORBIDDEN_AUTHORITY_OUTPUTS = (
     "PromotionDecisionPacket",
 )
 
+HERMES_LEANSTRAL_TARGET_KINDS = {
+    "TheoremCandidatePacket",
+    "TranslationPacket",
+    "RetrievalHypothesisPacket",
+    "ResiduePacket",
+}
+HERMES_LEANSTRAL_ALLOWED_AUTHORITIES = {"semantic", "proposal"}
+HERMES_LEANSTRAL_NEW_INFORMATION_KINDS = {
+    "SocraticQuestionPacket",
+    "PauliCritique",
+    "RetrievalHypothesisPacket",
+    "TranslationPacket",
+    "TheoremCandidatePacket",
+}
+HERMES_LEANSTRAL_RULE = RouteRule(
+    rule_id="proposal-to-hermes-leanstral-v1",
+    source_kind="*",
+    source_statuses=frozenset({"draft", "legalized", "probe_ready", "active", "stabilized"}),
+    assigned_role="HermesLeanstralBee",
+    task_kind="leanstral.autoproof",
+    allowed_output_kinds=("TheoremCandidatePacket", "ResiduePacket"),
+    forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
+    authority_ceiling="proposal",
+    instruction=(
+        "Run a bounded local Leanstral proof-proposal loop over the target, preserving every Lean feedback "
+        "attempt as evidence. Emit only TheoremCandidatePacket or ResiduePacket; do not claim Lean/build/audit authority."
+    ),
+    priority=30,
+)
+
 ROUTE_RULES = (
     RouteRule(
         rule_id="source-observation-to-socrates-v1",
@@ -111,13 +141,159 @@ def task_created_at(target: dict[str, Any]) -> str:
     return str(created)
 
 
+def packet_refs(value: Any) -> set[str]:
+    refs: set[str] = set()
+    if isinstance(value, str):
+        refs.add(value)
+    elif isinstance(value, dict):
+        ref = value.get("ref")
+        if isinstance(ref, str):
+            refs.add(ref)
+        for child in value.values():
+            refs |= packet_refs(child)
+    elif isinstance(value, list):
+        for child in value:
+            refs |= packet_refs(child)
+    return refs
+
+
+def record_references(record: dict[str, Any], target_id: str) -> bool:
+    if record.get("id") == target_id:
+        return True
+    reference_fields = (
+        "target_packet_id",
+        "input_packet_ids",
+        "parent_refs",
+        "context_refs",
+        "target_packet_ids",
+        "blocked_packet_refs",
+        "failure_refs",
+        "evidence_refs",
+        "symbolic_origin_refs",
+        "repo_anchor_refs",
+        "seed_refs",
+        "candidate_anchor_refs",
+        "invariant_refs",
+        "target_scope",
+    )
+    return any(target_id in packet_refs(record.get(field)) for field in reference_fields)
+
+
+def has_unresolved_high_severity_pauli_block(records: list[dict[str, Any]], target: dict[str, Any]) -> bool:
+    target_id = record_id(target)
+    for record in records:
+        if record.get("kind") != "PauliCritique" or not record_references(record, target_id):
+            continue
+        severity = str(record.get("severity") or record.get("block_severity") or record.get("pauli_severity") or "").lower()
+        unresolved = record.get("resolved") is not True and str(record.get("status", "")) not in {"retired", "archived"}
+        if unresolved and severity in {"high", "critical", "blocker"}:
+            return True
+    return False
+
+
+def leanstral_attempt_indices(records: list[dict[str, Any]], target: dict[str, Any]) -> list[int]:
+    target_id = record_id(target)
+    indices: list[int] = []
+    for index, record in enumerate(records):
+        if not record_references(record, target_id):
+            continue
+        if record.get("kind") == "BeeTask" and record.get("assigned_role") == "HermesLeanstralBee":
+            indices.append(index)
+        elif record.get("agent_role") == "HermesLeanstralBee" or record.get("created_by_agent") == "HermesLeanstralBee":
+            indices.append(index)
+    return indices
+
+
+def retry_count_for_hermes_leanstral(records: list[dict[str, Any]], target: dict[str, Any]) -> int:
+    return len(leanstral_attempt_indices(records, target))
+
+
+def target_index(records: list[dict[str, Any]], target: dict[str, Any]) -> int:
+    target_id = record_id(target)
+    for index, record in enumerate(records):
+        if record.get("id") == target_id:
+            return index
+    return -1
+
+
+def has_new_information_since_last_leanstral_attempt(records: list[dict[str, Any]], target: dict[str, Any]) -> bool:
+    kind = str(target.get("kind", ""))
+    if bool(target.get("formal_probe")) or str(target.get("route_intent", "")) == "formal_probe":
+        return True
+    attempts = leanstral_attempt_indices(records, target)
+    if not attempts and kind in {"TranslationPacket", "RetrievalHypothesisPacket"}:
+        return True
+    baseline = max(attempts) if attempts else target_index(records, target)
+    target_id = record_id(target)
+    for index, record in enumerate(records):
+        if index <= baseline:
+            continue
+        if record.get("id") == target_id:
+            continue
+        if record.get("kind") in HERMES_LEANSTRAL_NEW_INFORMATION_KINDS and record_references(record, target_id):
+            return True
+    return False
+
+
+def extract_lean_goal(target: dict[str, Any]) -> str:
+    for key in ("lean_goal", "goal", "formal_goal", "target_surface"):
+        value = target.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    formal_target = target.get("formal_target")
+    if isinstance(formal_target, dict):
+        for key in ("summary", "candidate_shape", "target_kind"):
+            value = formal_target.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+    return str(target.get("bridge_claim") or target.get("retrieval_summary") or target.get("summary") or record_id(target))
+
+
+def extract_lean_imports(target: dict[str, Any]) -> list[str]:
+    for key in ("lean_imports", "imports", "imports_candidate", "candidate_dependencies"):
+        value = target.get(key)
+        if isinstance(value, list):
+            imports = [str(item).strip() for item in value if str(item).strip()]
+            if imports:
+                return imports
+        if isinstance(value, str) and value.strip():
+            return [value.strip()]
+    return ["Init"]
+
+
+def may_route_to_hermes_leanstral(
+    records: list[dict[str, Any]],
+    target: dict[str, Any],
+    *,
+    max_retries: int = 2,
+) -> bool:
+    if target.get("kind") not in HERMES_LEANSTRAL_TARGET_KINDS:
+        return False
+    if target.get("kind") == "ResiduePacket" and target.get("agent_role") == "HermesLeanstralBee":
+        # A residue may be retried only after Pauli/Socratic/Retrieval/Translation adds new information.
+        pass
+    authority = str(target.get("authority", ""))
+    if authority not in HERMES_LEANSTRAL_ALLOWED_AUTHORITIES:
+        return False
+    status = target.get("status")
+    if not isinstance(status, str) or status not in HERMES_LEANSTRAL_RULE.source_statuses:
+        return False
+    if has_unresolved_high_severity_pauli_block(records, target):
+        return False
+    if retry_count_for_hermes_leanstral(records, target) >= max_retries:
+        return False
+    if not has_new_information_since_last_leanstral_attempt(records, target):
+        return False
+    return True
+
+
 def build_bee_task(rule: RouteRule, target: dict[str, Any], *, store_path: Path, dry_run_task: bool) -> dict[str, Any]:
     tid = task_id_for(rule, target)
     now = task_created_at(target)
     target_id = record_id(target)
     lineage = str(target.get("lineage_id") or f"lineage_{target_id}")
     origin_run = str(target.get("origin_run_id") or "motherbee_v1")
-    return {
+    task = {
         "id": tid,
         "kind": "BeeTask",
         "status": "pending",
@@ -145,6 +321,19 @@ def build_bee_task(rule: RouteRule, target: dict[str, Any], *, store_path: Path,
         "motherbee_rule_id": rule.rule_id,
         "scheduler": "MotherBee.v1",
     }
+    if rule.assigned_role == "HermesLeanstralBee":
+        task.update(
+            {
+                "lean_goal": extract_lean_goal(target),
+                "lean_imports": extract_lean_imports(target),
+                "max_iterations": 3,
+                "lean_timeout": 60,
+                "timeout_seconds": 180,
+                "retry_count": 0,
+                "has_new_information_since_last_leanstral_attempt": True,
+            }
+        )
+    return task
 
 
 def validate_bee_task(task: dict[str, Any]) -> None:
@@ -187,6 +376,12 @@ def discover_tasks(records: list[dict[str, Any]], *, store_path: Path, dry_run_t
             if pair in already:
                 continue
             task = build_bee_task(rule, record, store_path=store_path, dry_run_task=dry_run_task)
+            validate_bee_task(task)
+            tasks.append(task)
+        leanstral_pair = (record_id(record), HERMES_LEANSTRAL_RULE.assigned_role, HERMES_LEANSTRAL_RULE.task_kind)
+        if leanstral_pair not in already and may_route_to_hermes_leanstral(records, record):
+            task = build_bee_task(HERMES_LEANSTRAL_RULE, record, store_path=store_path, dry_run_task=dry_run_task)
+            task["retry_count"] = retry_count_for_hermes_leanstral(records, record)
             validate_bee_task(task)
             tasks.append(task)
     tasks.sort(key=lambda task: (-int(task.get("priority", 0)), str(task.get("target_packet_id", "")), str(task.get("id", ""))))

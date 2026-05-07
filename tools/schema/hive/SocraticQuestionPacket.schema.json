@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "SocraticQuestionPacket.schema.json",
+  "title": "SocraticQuestionPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "cognitive_metadata.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "authority",
+        "epistemic_layer",
+        "authority_origin",
+        "cognitive_function",
+        "promotion_allowed",
+        "question",
+        "question_type",
+        "target_packet_ids",
+        "allowed_uses",
+        "forbidden_uses"
+      ],
+      "properties": {
+        "kind": {
+          "const": "SocraticQuestionPacket"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "open",
+            "answered",
+            "blocked",
+            "converted_to_critique",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "epistemic_layer": {
+          "const": "cognitive_process"
+        },
+        "authority_origin": {
+          "const": "socratic_interrogation"
+        },
+        "cognitive_function": {
+          "enum": [
+            "thinking",
+            "intuition"
+          ]
+        },
+        "jung_function": {
+          "enum": [
+            "thinking",
+            "intuition"
+          ]
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question_type": {
+          "type": "string",
+          "enum": [
+            "weakest_version",
+            "falsification_pressure",
+            "definition_pressure",
+            "hidden_hypothesis",
+            "owner_mapping",
+            "directionality_check",
+            "counterexample_pressure",
+            "admissibility_pressure",
+            "other"
+          ]
+        },
+        "target_packet_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "missing_hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "falsification_pressure": {
+          "type": "string"
+        },
+        "owner_mapping_pressure": {
+          "type": "string"
+        },
+        "allowed_uses": {
+          "type": "array",
+          "minItems": 1,
+          "contains": {
+            "const": "candidate_refinement"
+          },
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "minItems": 1,
+          "contains": {
+            "const": "proof"
+          },
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

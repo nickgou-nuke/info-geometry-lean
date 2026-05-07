@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from tools.infra.hive_local_packet_store import append_packet, read_store
-from tools.infra.hive_motherbee import discover_tasks, run_once
+from tools.infra.hive_motherbee import discover_tasks, may_route_to_hermes_leanstral, run_once
 
 SCRIPT = Path("tools/infra/hive_motherbee.py")
 
@@ -40,6 +40,99 @@ def source_packet(packet_id: str, *, status: str = "captured") -> dict:
         "summary": f"Observed source {packet_id}.",
         "allowed_uses": ["citation", "retrieval", "source_grounding"],
         "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+    }
+
+
+def theorem_candidate(packet_id: str, *, status: str = "draft", authority: str = "proposal") -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "TheoremCandidatePacket",
+        "status": status,
+        "authority": authority,
+        "representation_class": "translator",
+        "representation_depth": "scalar",
+        "packet_version": "v1",
+        "packet_hash": "pending",
+        "symbolic_origin_refs": [{"ref": "user:test"}],
+        "formal_target": {"target_kind": "lean_goal", "summary": "1 = 1"},
+        "bridge_claim": "Test candidate.",
+        "novelty_defense": {"summary": "Fixture."},
+        "repo_anchor_refs": [],
+        "candidate_dependencies": ["Init"],
+        "admissibility_state": "admissible_for_probe",
+        "cost_class": "low",
+        "promotion_allowed": False,
+    }
+
+
+def pauli_packet(packet_id: str, target_id: str, *, severity: str = "medium", status: str = "stabilized") -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "PauliCritique",
+        "status": status,
+        "authority": "semantic",
+        "representation_class": "differentiator",
+        "representation_depth": "semantic",
+        "iteration_index": 0,
+        "critique_mode": "formal_projection_pressure",
+        "target_scope": {"variant_refs": [{"ref": target_id}]},
+        "critique_text": "Probe the weakest formal surface before Leanstral.",
+        "novelty_assessment": "not_duplicate",
+        "duplication_assessment": "distinct",
+        "formal_target_assessment": "ready for bounded probe",
+        "repo_anchor_assessment": "anchor exists",
+        "admissibility_state": "admissible_for_probe",
+        "cost_class": "low",
+        "severity": severity,
+        "resolved": False,
+    }
+
+
+def socratic_packet(packet_id: str, target_id: str) -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "SocraticQuestionPacket",
+        "status": "open",
+        "authority": "semantic",
+        "representation_class": "interrogator",
+        "representation_depth": "semantic",
+        "epistemic_layer": "cognitive_process",
+        "authority_origin": "socratic_interrogation",
+        "cognitive_function": "thinking",
+        "jung_function": "thinking",
+        "promotion_allowed": False,
+        "question": "What is the weakest Lean goal?",
+        "question_type": "weakest_version",
+        "target_packet_ids": [target_id],
+        "allowed_uses": ["candidate_refinement"],
+        "forbidden_uses": ["proof"],
+    }
+
+
+def leanstral_residue(packet_id: str, target_id: str) -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "ResiduePacket",
+        "status": "active",
+        "authority": "proposal",
+        "representation_class": "translator",
+        "representation_depth": "scalar",
+        "packet_version": "v1",
+        "packet_hash": "pending",
+        "agent_role": "HermesLeanstralBee",
+        "failure_refs": [{"ref": target_id}],
+        "failure_class": "proof_obstruction",
+        "stage": "formal_probe",
+        "recovery_hint": "Need new Pauli/Socratic/Retrieval info before retry.",
+        "return_route": "MotherBee -> PauliBee/SocratesBee -> HermesLeanstralBee",
+        "recoverability": "medium",
+        "blocked_packet_refs": [{"ref": target_id}],
+        "anchor_gap_summary": "Fixture residue.",
+        "promotion_allowed": False,
     }
 
 
@@ -159,3 +252,75 @@ def test_cli_dry_run_does_not_append_task(tmp_path: Path) -> None:
     assert payload["dry_run"] is True
     assert payload["tasks"][0]["dry_run"] is True
     assert [record["kind"] for record in read_store(store)] == ["SourceObservationPacket"]
+
+
+def test_hermes_leanstral_requires_new_pauli_or_socratic_information() -> None:
+    candidate = theorem_candidate("cand_a", status="probe_ready")
+    records = [candidate]
+
+    assert may_route_to_hermes_leanstral(records, candidate) is False
+
+    records.append(pauli_packet("pauli_a", "cand_a"))
+    assert may_route_to_hermes_leanstral(records, candidate) is True
+
+
+def test_hermes_leanstral_task_is_scheduled_after_pauli_critique(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    candidate = theorem_candidate("cand_a", status="probe_ready")
+    records = [candidate, pauli_packet("pauli_a", "cand_a")]
+
+    tasks = discover_tasks(records, store_path=store, dry_run_task=True)
+    leanstral_tasks = [task for task in tasks if task["assigned_role"] == "HermesLeanstralBee"]
+
+    assert len(leanstral_tasks) == 1
+    task = leanstral_tasks[0]
+    assert task["task_kind"] == "leanstral.autoproof"
+    assert task["authority_ceiling"] == "proposal"
+    assert task["allowed_output_kinds"] == ["TheoremCandidatePacket", "ResiduePacket"]
+    assert set(task["forbidden_output_kinds"]) >= {
+        "ExecutionIntentPacket",
+        "LeanVerificationPacket",
+        "BuildPacket",
+        "AuditPacket",
+        "PromotionDecisionPacket",
+    }
+    assert task["lean_goal"] == "1 = 1"
+    assert task["lean_imports"] == ["Init"]
+    assert task["dry_run"] is True
+
+
+def test_hermes_leanstral_blocks_unresolved_high_severity_pauli() -> None:
+    candidate = theorem_candidate("cand_blocked", status="probe_ready")
+    records = [candidate, pauli_packet("pauli_block", "cand_blocked", severity="high", status="active")]
+
+    assert may_route_to_hermes_leanstral(records, candidate) is False
+
+
+def test_hermes_leanstral_residue_does_not_retry_without_new_information() -> None:
+    residue = leanstral_residue("residue_a", "cand_a")
+    records = [residue]
+
+    assert may_route_to_hermes_leanstral(records, residue) is False
+
+
+def test_hermes_leanstral_residue_retries_only_after_new_information() -> None:
+    residue = leanstral_residue("residue_a", "cand_a")
+    records = [residue, socratic_packet("socratic_after_residue", "residue_a")]
+
+    assert may_route_to_hermes_leanstral(records, residue) is True
+
+
+def test_hermes_leanstral_respects_retry_budget() -> None:
+    candidate = theorem_candidate("cand_budget", status="probe_ready")
+    first_task = {
+        **BASE,
+        "id": "task_first",
+        "kind": "BeeTask",
+        "target_packet_id": "cand_budget",
+        "assigned_role": "HermesLeanstralBee",
+        "task_kind": "leanstral.autoproof",
+    }
+    second_task = {**first_task, "id": "task_second"}
+    records = [candidate, pauli_packet("pauli_budget", "cand_budget"), first_task, socratic_packet("socratic_budget", "cand_budget"), second_task]
+
+    assert may_route_to_hermes_leanstral(records, candidate, max_retries=2) is False

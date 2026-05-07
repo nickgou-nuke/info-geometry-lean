@@ -217,6 +217,57 @@ def PrimitiveSetsAboveBigOBound : Prop :=
         Summable (primitiveIndicatorSeries A) →
         tsum (primitiveIndicatorSeries A) ≤ 1 + C / Real.log x
 
+/-! ## Primitive/support monotonicity -/
+
+/-- Primitive-set property is inherited by subsets. -/
+theorem PrimitiveSet.mono
+    {A B : Set ℕ}
+    (hA : PrimitiveSet A)
+    (hBA : B ⊆ A) :
+    PrimitiveSet B := by
+  intro a b ha hb hab
+  exact hA (hBA ha) (hBA hb) hab
+
+/-- Primitive-finset property is inherited by sub-finsets. -/
+theorem PrimitiveFinset.mono
+    {A B : Finset ℕ}
+    (hA : PrimitiveFinset A)
+    (hBA : B ⊆ A) :
+    PrimitiveFinset B := by
+  intro a b ha hb hab
+  exact hA (hBA ha) (hBA hb) hab
+
+/-- Support-above is inherited by subsets. -/
+theorem SupportedAbove.subset
+    {x : ℕ} {A B : Set ℕ}
+    (hA : SupportedAbove x A)
+    (hBA : B ⊆ A) :
+    SupportedAbove x B := by
+  intro n hn
+  exact hA (hBA hn)
+
+/-- Finite support-above is inherited by sub-finsets. -/
+theorem SupportedAboveFinset.subset
+    {x : ℕ} {A B : Finset ℕ}
+    (hA : SupportedAboveFinset x A)
+    (hBA : B ⊆ A) :
+    SupportedAboveFinset x B := by
+  intro n hn
+  exact hA (hBA hn)
+
+/-- Coercion form for finite primitive sets. -/
+theorem PrimitiveFinset_iff
+    (A : Finset ℕ) :
+    PrimitiveFinset A ↔ PrimitiveSet (A : Set ℕ) := by
+  rfl
+
+/-- Coercion form for finite support-above. -/
+theorem SupportedAboveFinset_iff
+    (x : ℕ)
+    (A : Finset ℕ) :
+    SupportedAboveFinset x A ↔ SupportedAbove x (A : Set ℕ) := by
+  rfl
+
 theorem primitiveWeight_eq_zero_of_not_lt_two {n : ℕ} (h : ¬ 1 < n) :
     primitiveWeight n = 0 := by
   simp [primitiveWeight, h]
@@ -337,6 +388,117 @@ theorem primitiveWeight_pos {n : ℕ} (h : 1 < n) :
   have hdenom_pos : 0 < (n : ℝ) * Real.log (n : ℝ) := mul_pos hn_pos hlog_pos
   have hweight_pos : 0 < 1 / ((n : ℝ) * Real.log (n : ℝ)) := one_div_pos.mpr hdenom_pos
   simpa [primitiveWeight, h] using hweight_pos
+
+/-! ## Positive-weight support facts -/
+
+/--
+If a set is supported above `2`, every member lies in the positive-weight
+range.
+-/
+theorem one_lt_of_mem_supportedAbove_two
+    {A : Set ℕ}
+    (hA : SupportedAbove 2 A)
+    {n : ℕ}
+    (hn : n ∈ A) :
+    1 < n :=
+  lt_of_lt_of_le Nat.one_lt_two (hA hn)
+
+/--
+If a finset is supported above `2`, every member lies in the positive-weight
+range.
+-/
+theorem one_lt_of_mem_supportedAboveFinset_two
+    {A : Finset ℕ}
+    (hA : SupportedAboveFinset 2 A)
+    {n : ℕ}
+    (hn : n ∈ A) :
+    1 < n :=
+  one_lt_of_mem_supportedAbove_two hA hn
+
+/--
+If a finset is supported above `2`, every member has positive primitive weight.
+-/
+theorem primitiveWeight_pos_of_mem_supportedAboveFinset_two
+    {A : Finset ℕ}
+    (hA : SupportedAboveFinset 2 A)
+    {n : ℕ}
+    (hn : n ∈ A) :
+    0 < primitiveWeight n :=
+  primitiveWeight_pos (one_lt_of_mem_supportedAboveFinset_two hA hn)
+
+/-- A primitive set restricted to the positive-weight range. -/
+def PrimitiveSetAboveTwo
+    (A : Set ℕ) : Prop :=
+  PrimitiveSet A ∧ SupportedAbove 2 A
+
+/-- A finite primitive set restricted to the positive-weight range. -/
+def PrimitiveFinsetAboveTwo
+    (A : Finset ℕ) : Prop :=
+  PrimitiveFinset A ∧ SupportedAboveFinset 2 A
+
+/-! ## Big-O denominator facts -/
+
+/-- If `2 ≤ x`, then `log x > 0`. -/
+theorem log_nat_pos_of_two_le
+    {x : ℕ}
+    (hx : 2 ≤ x) :
+    0 < Real.log (x : ℝ) :=
+  Real.log_pos (by exact_mod_cast hx)
+
+/-- If `2 ≤ x`, then `1 / log x ≥ 0`. -/
+theorem one_div_log_nat_nonneg_of_two_le
+    {x : ℕ}
+    (hx : 2 ≤ x) :
+    0 ≤ 1 / Real.log (x : ℝ) :=
+  (one_div_pos.mpr (log_nat_pos_of_two_le hx)).le
+
+/-- If `C ≥ 0` and `2 ≤ x`, then `C / log x ≥ 0`. -/
+theorem div_log_nat_nonneg_of_two_le
+    {C : ℝ} {x : ℕ}
+    (hC : 0 ≤ C)
+    (hx : 2 ≤ x) :
+    0 ≤ C / Real.log (x : ℝ) :=
+  div_nonneg hC (log_nat_pos_of_two_le hx).le
+
+/--
+Primitive-weight sums are monotone under finite support inclusion.
+-/
+theorem primitiveWeightSum_mono
+    {A B : Finset ℕ}
+    (hAB : A ⊆ B) :
+    primitiveWeightSum A ≤ primitiveWeightSum B := by
+  unfold primitiveWeightSum
+  exact Finset.sum_le_sum_of_subset_of_nonneg
+    hAB
+    (by
+      intro x _hxB _hxA
+      exact primitiveWeight_nonneg x)
+
+/-! ## Indicator-series facts -/
+
+theorem primitiveIndicatorSeries_apply_mem
+    (A : Set ℕ) {n : ℕ}
+    (hn : n ∈ A) :
+    primitiveIndicatorSeries A n = primitiveWeight n := by
+  classical
+  simp [primitiveIndicatorSeries, hn]
+
+theorem primitiveIndicatorSeries_apply_not_mem
+    (A : Set ℕ) {n : ℕ}
+    (hn : n ∉ A) :
+    primitiveIndicatorSeries A n = 0 := by
+  classical
+  simp [primitiveIndicatorSeries, hn]
+
+theorem primitiveIndicatorSeries_nonneg
+    (A : Set ℕ)
+    (n : ℕ) :
+    0 ≤ primitiveIndicatorSeries A n := by
+  classical
+  by_cases hn : n ∈ A
+  · rw [primitiveIndicatorSeries_apply_mem A hn]
+    exact primitiveWeight_nonneg n
+  · rw [primitiveIndicatorSeries_apply_not_mem A hn]
 
 theorem primitiveWeight_mul_eq_of_right_one (d : ℕ) :
     primitiveWeight (d * 1) = primitiveWeight d := by
@@ -486,6 +648,203 @@ theorem arithmeticTotalMass_eq_sum (A : Finset ℕ) (counts : ℕ → ℝ) :
 theorem arithmeticBaseShape_eq_div (A : Finset ℕ) (counts : ℕ → ℝ) (n : ℕ) :
     arithmeticBaseShape A counts n = counts n / arithmeticTotalMass A counts := by
   rfl
+
+/-! ## Projective finite count profiles -/
+
+/-- A finite count profile has nonzero total mass on support `A`. -/
+def HasNonzeroArithmeticMass
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ) : Prop :=
+  arithmeticTotalMass A counts ≠ 0
+
+/-- A finite count profile has positive total mass on support `A`. -/
+def HasPositiveArithmeticMass
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ) : Prop :=
+  0 < arithmeticTotalMass A counts
+
+/--
+The normalized base shape has total mass one when the original total mass is
+nonzero.
+-/
+theorem arithmeticBaseShape_totalMass_eq_one
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (hmass : arithmeticTotalMass A counts ≠ 0) :
+    Finset.sum A (arithmeticBaseShape A counts) = 1 := by
+  unfold arithmeticBaseShape arithmeticTotalMass
+  calc
+    Finset.sum A (fun n => counts n / Finset.sum A counts)
+        = (Finset.sum A counts) / (Finset.sum A counts) := by
+          rw [Finset.sum_div]
+    _ = 1 := by
+          exact div_self hmass
+
+/--
+The normalized base shape is nonnegative on the support when counts are
+nonnegative and total mass is positive.
+-/
+theorem arithmeticBaseShape_nonneg
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (hmass : 0 < arithmeticTotalMass A counts)
+    (hcounts : ∀ ⦃n : ℕ⦄, n ∈ A → 0 ≤ counts n)
+    {n : ℕ}
+    (hn : n ∈ A) :
+    0 ≤ arithmeticBaseShape A counts n := by
+  unfold arithmeticBaseShape
+  exact div_nonneg (hcounts hn) hmass.le
+
+/-! ## Arithmetic modular rays -/
+
+/--
+An arithmetic partition has nonzero Mellin/modular mass on support `A`.
+
+This is the scale component of the finite arithmetic exponential family.
+-/
+def HasNonzeroArithmeticPartition
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ) : Prop :=
+  arithmeticPartition A counts s ≠ 0
+
+/--
+An arithmetic partition has positive Mellin/modular mass on support `A`.
+-/
+def HasPositiveArithmeticPartition
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ) : Prop :=
+  0 < arithmeticPartition A counts s
+
+/--
+Normalized arithmetic Boltzmann ray.
+
+The unnormalized weight is `counts n * n^{-s}`.  The ray divides by the finite
+partition `Z_c(s) = ∑ n ∈ A, counts n n^{-s}`.
+-/
+def arithmeticBoltzmannRay
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ)
+    (n : ℕ) : ℝ :=
+  arithmeticCountWeight counts s n / arithmeticPartition A counts s
+
+/--
+The arithmetic Boltzmann ray has total mass one when the partition is nonzero.
+-/
+theorem arithmeticBoltzmannRay_totalMass_eq_one
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ)
+    (hZ : arithmeticPartition A counts s ≠ 0) :
+    Finset.sum A (arithmeticBoltzmannRay A counts s) = 1 := by
+  unfold arithmeticBoltzmannRay arithmeticPartition
+  calc
+    Finset.sum A
+        (fun n => arithmeticCountWeight counts s n /
+          Finset.sum A (arithmeticCountWeight counts s))
+        = Finset.sum A (arithmeticCountWeight counts s) /
+          Finset.sum A (arithmeticCountWeight counts s) := by
+            rw [Finset.sum_div]
+    _ = 1 := by
+          exact div_self hZ
+
+/--
+The arithmetic Boltzmann ray is nonnegative on support when counts are
+nonnegative and the partition is positive.
+-/
+theorem arithmeticBoltzmannRay_nonneg
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ)
+    (hZ : 0 < arithmeticPartition A counts s)
+    (hcounts : ∀ ⦃n : ℕ⦄, n ∈ A → 0 ≤ counts n)
+    {n : ℕ}
+    (hn : n ∈ A) :
+    0 ≤ arithmeticBoltzmannRay A counts s n := by
+  unfold arithmeticBoltzmannRay arithmeticCountWeight
+  exact div_nonneg
+    (mul_nonneg (hcounts hn) (primitiveMellinKernel_nonneg n s))
+    hZ.le
+
+/--
+Scale-shape reconstruction of the unnormalized arithmetic weight from the
+partition scale and normalized ray.
+-/
+theorem arithmeticCountWeight_eq_partition_mul_boltzmannRay
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ)
+    (n : ℕ)
+    (hZ : arithmeticPartition A counts s ≠ 0) :
+    arithmeticCountWeight counts s n =
+      arithmeticPartition A counts s * arithmeticBoltzmannRay A counts s n := by
+  unfold arithmeticBoltzmannRay
+  field_simp [hZ]
+
+/--
+Equivalent reconstruction with the scale on the right.
+-/
+theorem arithmeticCountWeight_eq_boltzmannRay_mul_partition
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ)
+    (n : ℕ)
+    (hZ : arithmeticPartition A counts s ≠ 0) :
+    arithmeticCountWeight counts s n =
+      arithmeticBoltzmannRay A counts s n * arithmeticPartition A counts s := by
+  rw [mul_comm]
+  exact arithmeticCountWeight_eq_partition_mul_boltzmannRay A counts s n hZ
+
+/--
+Finite arithmetic exponential-family packet.
+
+This records the unnormalized modular weight, its partition scale, and the
+normalized projective ray.  It is the commutative arithmetic shadow of the
+operatorial exponential-family lane.
+-/
+structure ArithmeticExponentialRay
+    (A : Finset ℕ)
+    (counts : ℕ → ℝ)
+    (s : ℝ) where
+  /-- Positivity of the partition scale. -/
+  partition_pos :
+    0 < arithmeticPartition A counts s
+
+namespace ArithmeticExponentialRay
+
+variable {A : Finset ℕ} {counts : ℕ → ℝ} {s : ℝ}
+variable (R : ArithmeticExponentialRay A counts s)
+
+/-- The scale of the arithmetic exponential ray. -/
+def scale
+    (_R : ArithmeticExponentialRay A counts s) : ℝ :=
+  arithmeticPartition A counts s
+
+/-- The normalized shape/ray of the arithmetic exponential family. -/
+def shape
+    (_R : ArithmeticExponentialRay A counts s)
+    (n : ℕ) : ℝ :=
+  arithmeticBoltzmannRay A counts s n
+
+/-- The scale is positive. -/
+theorem scale_pos :
+    0 < scale R :=
+  R.partition_pos
+
+/-- The normalized shape has total mass one. -/
+theorem shape_totalMass_eq_one :
+    Finset.sum A (shape R) = 1 :=
+  arithmeticBoltzmannRay_totalMass_eq_one A counts s R.partition_pos.ne'
+
+/-- The unnormalized arithmetic weight is scale times shape. -/
+theorem weight_eq_scale_mul_shape
+    (n : ℕ) :
+    arithmeticCountWeight counts s n = scale R * shape R n :=
+  arithmeticCountWeight_eq_partition_mul_boltzmannRay A counts s n R.partition_pos.ne'
+
+end ArithmeticExponentialRay
 
 theorem arithmeticShapeMellin_eq_sum (A : Finset ℕ) (counts : ℕ → ℝ) (s : ℝ) :
     arithmeticShapeMellin A counts s
@@ -711,7 +1070,7 @@ If every element of a primitive finite set is divisible by `d`, then dividing
 the whole support by `d` preserves primitiveness.
 -/
 theorem primitiveFinset_image_div
-    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (_hd0 : d ≠ 0)
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ}
     (hdiv : ∀ ⦃a : ℕ⦄, a ∈ A → d ∣ a) :
     PrimitiveFinset (A.image fun a => a / d) := by
   intro x y hx hy hxy
@@ -727,17 +1086,35 @@ theorem primitiveFinset_image_div
       _ = d * (a / d * k) := by rw [hk]
       _ = a * k := by rw [← Nat.mul_assoc, Nat.mul_div_cancel' hda]
   have hab_eq : a = b := PrimitiveFinset.eq_of_dvd hA haA hbA hab
-  simp [hab_eq]
+  exact congrArg (fun t : ℕ => t / d) hab_eq
+
+/--
+Backward-compatible wrapper with the old explicit nonzero divisor argument.
+The nonzero argument is not needed for the proof.
+-/
+theorem primitiveFinset_image_div_of_nonzero
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (_hd0 : d ≠ 0)
+    (hdiv : ∀ ⦃a : ℕ⦄, a ∈ A → d ∣ a) :
+    PrimitiveFinset (A.image fun a => a / d) :=
+  primitiveFinset_image_div hA hdiv
 
 theorem primitiveDivisorQuotient_primitive
-    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (hd0 : d ≠ 0) :
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} :
     PrimitiveFinset (primitiveDivisorQuotient A d) := by
   apply primitiveFinset_image_div
   · intro a b ha hb hab
     exact hA (Finset.mem_filter.mp ha).1 (Finset.mem_filter.mp hb).1 hab
-  · exact hd0
   · intro a ha
     exact (Finset.mem_filter.mp ha).2
+
+/--
+Backward-compatible wrapper with the old explicit nonzero divisor argument.
+The nonzero argument is not needed for the quotient primitive proof.
+-/
+theorem primitiveDivisorQuotient_primitive_of_nonzero
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (_hd0 : d ≠ 0) :
+    PrimitiveFinset (primitiveDivisorQuotient A d) :=
+  primitiveDivisorQuotient_primitive hA
 
 theorem primitiveDivisorQuotient_supportedAbove
     {A : Finset ℕ} {x d : ℕ} (hA : SupportedAboveFinset x A) :
@@ -748,9 +1125,9 @@ theorem primitiveDivisorQuotient_supportedAbove
   exact Nat.div_le_div_right (hA haA)
 
 theorem primitiveDivisorQuotient_erase_one_primitive
-    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (hd0 : d ≠ 0) :
+    {A : Finset ℕ} (hA : PrimitiveFinset A) {d : ℕ} (_hd0 : d ≠ 0) :
     PrimitiveFinset ((primitiveDivisorQuotient A d).erase 1) := by
-  exact primitiveFinset_erase (primitiveDivisorQuotient_primitive hA hd0) 1
+  exact primitiveFinset_erase (primitiveDivisorQuotient_primitive hA) 1
 
 theorem primitiveDivisorQuotient_erase_one_supportedAbove
     {A : Finset ℕ} {x d : ℕ} (hA : SupportedAboveFinset x A) :
@@ -1805,5 +2182,53 @@ theorem goodDivisorSum_le_log_mul_add
           * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
       ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ) :=
   goodDivisorSumChebyshevBound hε hx₀ hx hAprim hAsupp
+
+/-! ## MaxEnt interpretation socket -/
+
+/--
+A finite MaxEnt interpretation socket for primitive supports.
+
+This does not assert that primes maximize the primitive weight sum.  It only
+packages a model-specific entropy/readout functional and a supplied optimality
+law.
+-/
+structure PrimitiveFiniteMaxEntWitness where
+  /-- Candidate finite primitive support. -/
+  support :
+    Finset ℕ
+
+  /-- Entropy/readout assigned to finite supports. -/
+  entropyReadout :
+    Finset ℕ → ℝ
+
+  /-- Admissibility predicate, usually primitive plus support bounds. -/
+  admissible :
+    Finset ℕ → Prop
+
+  /-- The candidate support is admissible. -/
+  support_admissible :
+    admissible support
+
+  /-- Supplied MaxEnt optimality law. -/
+  maxent_law :
+    ∀ A : Finset ℕ, admissible A → entropyReadout A ≤ entropyReadout support
+
+namespace PrimitiveFiniteMaxEntWitness
+
+variable (M : PrimitiveFiniteMaxEntWitness)
+
+/-- The supplied MaxEnt candidate is admissible. -/
+theorem admissible_valid :
+    M.admissible M.support :=
+  M.support_admissible
+
+/-- The supplied MaxEnt candidate dominates all admissible finite supports. -/
+theorem entropyReadout_le_support
+    (A : Finset ℕ)
+    (hA : M.admissible A) :
+    M.entropyReadout A ≤ M.entropyReadout M.support :=
+  M.maxent_law A hA
+
+end PrimitiveFiniteMaxEntWitness
 
 end InfoGeometry.Arithmetic

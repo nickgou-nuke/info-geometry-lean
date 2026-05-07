@@ -68,6 +68,41 @@ theorem isNormalInference_of_unitRelativeVolumeBit
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
 /--
+The incompressible unit relative-volume bit is enough to force zero chiral scale
+through the existing Kähler/log-det owner theorem.  This is the witness-packet
+variant of the older route that required a bare
+`relativeVolumeChangeRN n M = 1` hypothesis.
+-/
+@[rep_depth thermo, capstone]
+theorem chiralScale_eq_zero_of_unitRelativeVolumeBit
+    (CI : ConformalInference E)
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeBit n M) :
+    CI.chiralScale = 0 := by
+  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
+
+/--
+Projector commutation from the proof-carrying unit relative-volume bit.  This
+keeps downstream callers on the constructive bit route instead of requiring them
+to unpack and pass a raw unit-volume equality.
+-/
+@[rep_depth thermo, capstone]
+theorem projectors_commute_of_unitRelativeVolumeBit
+    (CI : ConformalInference E)
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeBit n M) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  exact CI.projectors_commute_of_chiralScale_eq_zero
+    (chiralScale_eq_zero_of_unitRelativeVolumeBit
+      (CI := CI) (M := M) hScaleFromKahler bit)
+
+/--
 The incompressible unit of relative volume collapses the conformal unit of
 action, provided the existing Kähler/log-det readout identifies the chiral scale
 with the RN Kähler potential.

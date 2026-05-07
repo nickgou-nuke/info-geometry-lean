@@ -331,7 +331,76 @@ theorem visibleLoss_eq_gradeTwoGain
 
 end GradeTwoInformationLedger
 
-/-! ## 6. Owner target -/
+/-! ## 6. BPS/central-charge bound socket -/
+
+/--
+A BPS/central-charge bound.
+
+This is the formal statement that a mass/energy readout is bounded below by a
+central or grade-two charge readout.
+
+The structure is intentionally scalar and witness-gated. A concrete
+supergravity, Virasoro, or horizon model supplies the charge norm and the proof
+of the inequality.
+-/
+structure BPSBoundDatum
+    (State : Type*) where
+  /-- Mass/energy readout. -/
+  mass : State → ℝ
+
+  /-- Central-charge or grade-two charge norm. -/
+  centralNorm : State → ℝ
+
+  /-- Positivity of the central/grade-two charge norm. -/
+  centralNorm_nonneg :
+    ∀ s : State, 0 ≤ centralNorm s
+
+  /-- BPS inequality `|Z| ≤ M`, encoded by the supplied charge norm. -/
+  bps_bound :
+    ∀ s : State, centralNorm s ≤ mass s
+
+/-- A state saturates the BPS bound. -/
+def IsBPS
+    {State : Type*}
+    (B : BPSBoundDatum State)
+    (s : State) : Prop :=
+  B.mass s = B.centralNorm s
+
+namespace BPSBoundDatum
+
+variable {State : Type*}
+variable (B : BPSBoundDatum State)
+
+/-- The central/grade-two charge norm is nonnegative. -/
+theorem centralNorm_nonnegative
+    (s : State) :
+    0 ≤ B.centralNorm s :=
+  B.centralNorm_nonneg s
+
+/-- The mass is bounded below by the central/grade-two charge norm. -/
+theorem centralNorm_le_mass
+    (s : State) :
+    B.centralNorm s ≤ B.mass s :=
+  B.bps_bound s
+
+/-- A BPS state has mass equal to its central/grade-two charge norm. -/
+theorem mass_eq_centralNorm_of_BPS
+    {s : State}
+    (h : IsBPS B s) :
+    B.mass s = B.centralNorm s :=
+  h
+
+/-- A BPS state has nonnegative mass. -/
+theorem mass_nonneg_of_BPS
+    {s : State}
+    (h : IsBPS B s) :
+    0 ≤ B.mass s := by
+  rw [h]
+  exact B.centralNorm_nonnegative s
+
+end BPSBoundDatum
+
+/-! ## 7. Owner target -/
 
 /--
 Owner target for five-grade defect absorption.
@@ -354,5 +423,12 @@ theorem fiveGradeDefectAbsorptionOwnerTarget :
     FiveGradeDefectAbsorptionOwnerTarget := by
   intro L State Defect _ _ _ _ _ _ G D A s
   exact A.defect_is_plus_two_memory s
+
+/--
+Owner target for installing a BPS/central-charge bound.
+-/
+def BPSBoundOwnerTarget
+    (State : Type*) : Prop :=
+  Nonempty (BPSBoundDatum State)
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
+import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.RicciMongeAmpere
@@ -26,6 +27,7 @@ open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.CalabiYauBridge
 open InfoGeometry.Canonical.ChiralAnomaly
+open InfoGeometry.Canonical.IncompressibleBitBridge
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.RicciMongeAmpere
@@ -208,6 +210,29 @@ private theorem vacuumEinsteinEquation_of_rnEntropySource
 
 omit [FiniteDimensional ℝ X] in
 /--
+Entropy-sourced geometric gravity statement through the proof-carrying unit
+relative-volume bit.
+
+This is the constructive route for callers that own the incompressible RN bit:
+the raw equality `relativeVolumeChangeRN n M = 1` is recovered from
+`bit.unit_relative_volume`, then the existing Calabi-Yau/RN owner theorem is
+reused unchanged.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_rnEntropySource
+    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (M := M) hSource bit.unit_relative_volume hBridge
+
+omit [FiniteDimensional ℝ X] in
+/--
 Capstone entropy-to-gravity statement:
 if RN/Kahler entropy sources Monge-Ampere density and unit relative-volume closure
 is equipped with a metric RN bridge, then the induced information geometry is Ricci-flat and satisfies
@@ -226,6 +251,91 @@ private theorem gravity_generated_by_rnEntropy
     InfoGeometry.Canonical.CalabiYauBridge.isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
       (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
       (M := M) hSource hUnit hBridge
+
+omit [FiniteDimensional ℝ X] in
+/--
+Capstone entropy-to-gravity statement through the proof-carrying unit
+relative-volume bit.
+
+This narrows the public hypothesis surface from a bare RN equality to the
+existing constructive `UnitRelativeVolumeBit` packet while preserving the old
+raw-equality route above for compatibility.
+-/
+theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_rnEntropy
+    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (M := M) hSource bit.unit_relative_volume hBridge
+
+/--
+Metric-derived entropy-to-vacuum route through the proof-carrying unit-volume
+bit.  This narrowed branch removes the bare `MetricRNRicciBridge` implication
+from the capstone surface: callers may instead provide the constructive
+metric-derived package identifying `R` with `ricciFromMetricOp`, nondegeneracy,
+log-det differentiability, and the unit-volume Ricci-zero readback.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
+  exact vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
+    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM
+
+/--
+Metric-derived gravity capstone from the already-constructed unit-volume state.
+
+This is the smallest owner route in this module: it no longer asks callers to
+re-supply the RN-entropy source theorem or the `UnitRelativeVolumeBit` packet
+when they already own the geometric `UnitRelativeVolumeState Kgeo` consumed by
+`MetricDerivedRNRicciBridge`.
+-/
+theorem gravity_generated_by_unitRelativeVolumeState_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (hUnitState : UnitRelativeVolumeState Kgeo)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact ⟨
+    isRicciFlat_of_unitRelativeVolume_metricDerived
+      (R := R) (K := Kgeo) (x := x) hUnitState hM,
+    vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
+      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM⟩
+
+/--
+Metric-derived entropy-to-gravity capstone through the proof-carrying unit-volume
+bit.  This keeps the compatibility theorem above for `MetricRNRicciBridge`
+callers while routing through the smaller `UnitRelativeVolumeState` owner route.
+-/
+theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
+  exact gravity_generated_by_unitRelativeVolumeState_metricDerived
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hM
 
 end EntropicCalabiBridge
 

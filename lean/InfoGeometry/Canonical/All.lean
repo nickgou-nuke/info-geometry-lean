@@ -108,6 +108,7 @@ import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate
+import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.ClNNBottBridge
@@ -352,6 +353,7 @@ import InfoGeometry.Canonical.OperatorAlgebraReadiness
 import InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
+import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Canonical.OperatorFreudenthalBoundary
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.OperatorialCramerRao
@@ -365,6 +367,7 @@ import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.OperatorialUncertainty
+import InfoGeometry.Canonical.OperatorValuedSouriauFamily
 import InfoGeometry.Canonical.OperatorialVolumePreservation
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorJKOStep
@@ -426,6 +429,7 @@ import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.RealBerryRotorBridge
+import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
 import InfoGeometry.Canonical.RelationalInformationCore
@@ -508,6 +512,7 @@ import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Canonical.StateIndexedModularSeedBridge
 import InfoGeometry.Canonical.Statistics
+import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure

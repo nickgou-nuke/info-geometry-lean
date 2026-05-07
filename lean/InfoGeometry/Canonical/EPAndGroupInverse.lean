@@ -100,6 +100,16 @@ theorem moorePenrose_isDrazinInverse_one_of_isEP
       _ = IK.A := hMP.aba_eq_a
       _ = IK.A ^ 1 := by simp
 
+/--
+Vanishing dilation gap is a smaller constructive route to the group-inverse
+Drazin witness: the EP packet is recovered internally from the gap collapse.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+    (hMP : IsMoorePenroseInverse IK.A IK.A_MP)
+    (hGap : IK.dilationGap = 0) :
+    IsDrazinInverse IK.A IK.A_MP 1 :=
+  IK.moorePenrose_isDrazinInverse_one_of_isEP hMP (IK.isEP_of_dilationGap_eq_zero hGap)
+
 end InverseKernel
 
 namespace CertifiedInverseKernel
@@ -177,6 +187,18 @@ theorem moorePenrose_isDrazinInverse_one_of_isEP
     IsDrazinInverse CIK.A CIK.A_MP 1 := by
   simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.moorePenrose_isDrazinInverse_one_of_isEP CIK.hMoorePenrose hEP
+
+/--
+Certified gap-collapse route to the group-inverse Drazin witness.  This keeps
+legacy EP-based theorem names, while callers that already own `dilationGap = 0`
+do not need to provide a separate `CIK.IsEP` packet.
+-/
+theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    IsDrazinInverse CIK.A CIK.A_MP 1 := by
+  simpa [CertifiedInverseKernel.dilationGap, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
+      CIK.hMoorePenrose hGap
 
 end CertifiedInverseKernel
 

@@ -144,6 +144,97 @@ theorem kHeightQuadratic_pos
     0 < kHeightQuadratic Z v :=
   kHeightForm_pos Z v hv
 
+/-! ## Coordinate-free imaginary-height surface -/
+
+/--
+The positive imaginary quadratic form attached to an operatorial upper-half-plane
+point.
+
+This is the coordinate-free replacement for the scalar condition `Im z = y > 0`.
+-/
+def imaginaryQuadratic (Z : BilingualUpperHalfPlane D) (v : H₂) : ℝ :=
+  -⟪v, D.K (Z.tau v)⟫_ℝ
+
+/-- The imaginary quadratic form is the diagonal `K`-height quadratic form. -/
+@[simp]
+theorem imaginaryQuadratic_eq_kHeightQuadratic
+    (Z : BilingualUpperHalfPlane D)
+    (v : H₂) :
+    imaginaryQuadratic Z v = kHeightQuadratic Z v :=
+  rfl
+
+/--
+The positivity axiom of the upper half-plane says exactly that
+`imaginaryQuadratic Z` is strictly positive away from zero.
+-/
+theorem imaginaryQuadratic_pos
+    (Z : BilingualUpperHalfPlane D)
+    {v : H₂} (hv : v ≠ 0) :
+    0 < imaginaryQuadratic Z v := by
+  rw [imaginaryQuadratic_eq_kHeightQuadratic]
+  exact kHeightQuadratic_pos (D := D) Z v hv
+
+/--
+The symmetric bilinear imaginary form associated to `Z`.
+
+This is the polarization of the real quadratic condition visible to the metric.
+It avoids assuming, prematurely, that `K ∘ τ` is self-adjoint.
+-/
+def imaginaryForm (Z : BilingualUpperHalfPlane D) (v w : H₂) : ℝ :=
+  - (1 / 2 : ℝ) *
+    (⟪v, D.K (Z.tau w)⟫_ℝ +
+      ⟪w, D.K (Z.tau v)⟫_ℝ)
+
+/-- On the diagonal, the symmetric imaginary form is the positive quadratic form. -/
+theorem imaginaryForm_diag
+    (Z : BilingualUpperHalfPlane D)
+    (v : H₂) :
+    imaginaryForm Z v v = imaginaryQuadratic Z v := by
+  unfold imaginaryForm imaginaryQuadratic
+  ring
+
+/-- Hence the imaginary form is strictly positive on nonzero diagonal vectors. -/
+theorem imaginaryForm_pos
+    (Z : BilingualUpperHalfPlane D)
+    {v : H₂} (hv : v ≠ 0) :
+    0 < imaginaryForm Z v v := by
+  rw [imaginaryForm_diag]
+  exact imaginaryQuadratic_pos Z hv
+
+/--
+Riesz/operator representative of the imaginary form.
+
+This is intentionally packaged as structure rather than inferred automatically:
+in infinite dimension, strict positivity of the quadratic form does not by
+itself supply a bounded inverse operator.
+-/
+structure ImaginaryRiesz (Z : BilingualUpperHalfPlane D) where
+  /-- The positive operator representing the imaginary form. -/
+  Y : EndH
+  /-- `Y` represents the imaginary form by the real inner product. -/
+  form_eq :
+    ∀ v w : H₂,
+      imaginaryForm Z v w = ⟪v, Y w⟫_ℝ
+  /-- Strict positivity of the representing operator. -/
+  positive :
+    ∀ v : H₂, v ≠ 0 → 0 < ⟪v, Y v⟫_ℝ
+  /-- The representing operator is invertible. -/
+  unit : Units EndH
+  /-- The unit really is the imaginary operator. -/
+  unit_eq : unit.val = Y
+
+/--
+A coordinate-free trace datum.
+
+Concrete instances can later be supplied from finite-dimensional trace,
+Hilbert-Schmidt trace, or a Krein-compatible renormalized trace.
+-/
+structure TraceDatum where
+  /-- Trace functional on endomorphisms of the doubled carrier. -/
+  tr : EndH → ℝ
+  /-- Cyclicity, the essential invariant property needed for metric symmetry. -/
+  cyclic : ∀ A B : EndH, tr (A.comp B) = tr (B.comp A)
+
 /-! ## Operator Mobius data -/
 
 /--
@@ -293,6 +384,17 @@ structure TangentAt
 namespace TangentAt
 
 variable {Z : BilingualUpperHalfPlane D}
+
+/-- Extensionality for tangent operators. -/
+@[ext]
+theorem ext
+    {V W : TangentAt Z}
+    (h : V.op = W.op) :
+    V = W := by
+  cases V
+  cases W
+  cases h
+  rfl
 
 /--
 The zero tangent operator.
@@ -562,6 +664,27 @@ theorem metric_mobius_invariant
     G.innerAt Z V W :=
   G.moebius_invariant M hM Z hInv hPos V W
 
+/--
+Metric invariance under an admissible operator Mobius transformation.
+
+This is the canonical isometry-facing alias used by downstream modular and
+automorphic layers.
+-/
+theorem moebius_isometry
+    (M : PhaseLinearMobiusCoefficients D)
+    (hM : IsPoincareMobiusBlock D M)
+    (Z : BilingualUpperHalfPlane D)
+    (hInv : MobiusDenominatorInverse M Z)
+    (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
+    (V W : TangentAt Z) :
+    G.innerAt
+        (moebiusAction M Z hInv hPos)
+        (moebiusTangentPushForward M Z hInv hPos V)
+        (moebiusTangentPushForward M Z hInv hPos W)
+      =
+    G.innerAt Z V W :=
+  G.metric_mobius_invariant M hM Z hInv hPos V W
+
 end PoincareMetricDatum
 
 /-! ## Secondary commutator readout -/
@@ -598,6 +721,42 @@ theorem operatorCommutator_phaseLinear
     PhaseLinear.sub
       (PhaseLinear.comp hS hT)
       (PhaseLinear.comp hT hS)
+
+/--
+The commutator invariant of two operatorial upper-half-plane points.
+
+This is kept as a genuinely noncommutative invariant. It vanishes on the scalar
+upper-half-plane shadow, so it is not the primary Poincare metric.
+-/
+def commutator
+    (Z W : BilingualUpperHalfPlane D) : EndH :=
+  operatorCommutator Z.tau W.tau
+
+@[simp]
+theorem commutator_self
+    (Z : BilingualUpperHalfPlane D) :
+    commutator Z Z = 0 := by
+  simpa [commutator] using
+    (operatorCommutator_self (D := D) Z.tau)
+
+/--
+The algebraic core of the operatorial Poincare metric.
+
+Schematic classical analogue:
+
+`g_Z(ξ,η) = Tr(Y_Z⁻¹ ξ Y_Z⁻¹ η)`.
+
+Depending on the eventual Hilbert/Krein convention, an adjoint or symmetrized
+variant may replace this exact expression. The point is that the metric is
+built from the inverse imaginary operator, not from coordinates.
+-/
+def poincareMetricCore
+    (Z : BilingualUpperHalfPlane D)
+    (Y : ImaginaryRiesz Z)
+    (Tr : TraceDatum (E := E))
+    (ξ η : TangentAt Z) : ℝ :=
+  let Yinv : EndH := (Y.unit⁻¹).val
+  Tr.tr ((Yinv.comp ξ.op).comp (Yinv.comp η.op))
 
 /-! ## Owner target -/
 

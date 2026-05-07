@@ -20,6 +20,8 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Library
 import InfoGeometry.Generated
+import InfoGeometry.Singular
+import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
@@ -28,7 +30,10 @@ import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
+import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Automorphic.SiegelResonance
+import InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator
+import InfoGeometry.Automorphic.ZetaPotentialSign
 import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LFunctionResonance
@@ -67,6 +72,7 @@ import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Thermo.MetalMirror
+import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesErlanger
@@ -81,7 +87,9 @@ import InfoGeometry.Geometry.ErlangerPhaseGeometry
 import InfoGeometry.Geometry.PhaseErlanger
 import InfoGeometry.Geometry.JonesTransportMetric
 import InfoGeometry.Geometry.TKKBregmanRicciBridge
+import InfoGeometry.Geometry.PauliParavectorBridge
 import InfoGeometry.Geometry.ChiralTubuleBoundary
+import InfoGeometry.Geometry.HelicalCovering
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.Geometry.BilingualPoincareMetric
 import InfoGeometry.Geometry.VerifiedCauchyKernel

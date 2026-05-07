@@ -1,20 +1,23 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-!
 # InfoGeometry.Canonical.ParityTraceWitness
 
 Finite Boolean/exterior-state bridge between prime subsets and parity
 coefficients.  The Weyl sign is attached only to square-free subset states; the
-zero value on nonsquare-free integers is recorded as absence of a Boolean prime
-state representative, not as a Weyl sign.
+zero value on nonsquare-free integers is projected from Mathlib's arithmetic
+Möbius theorem, not stored as a witness field.
 -/
 
 namespace InfoGeometry.Canonical.ParityTraceWitness
 
 open scoped BigOperators
+open scoped ArithmeticFunction.Moebius
 open InfoGeometry.Canonical.FormalPrimeRootSystem
+open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-- Integer sign attached to a finite subset state. -/
 @[rep_depth thermo]
@@ -31,27 +34,25 @@ def squarefreeIntegerOfSubset (S : Finset ℕ) : ℕ :=
 def nOfSubset (S : Finset ℕ) : ℕ :=
   squarefreeIntegerOfSubset S
 
-/-- Formal Möbius coefficient surface used by the finite proof packet. -/
+/-- Möbius coefficient surface used by the finite proof packet. -/
 @[rep_depth thermo]
-def mobiusCoefficient (_n : ℕ) : ℤ :=
-  0
+def mobiusCoefficient (n : ℕ) : ℤ :=
+  ArithmeticFunction.moebius n
 
 /-- Formal absolute Möbius coefficient surface for the ordinary fermion trace. -/
 @[rep_depth thermo]
 def absMobiusCoefficient (n : ℕ) : ℕ :=
   Int.natAbs (mobiusCoefficient n)
 
-/--
-Proof-carrying arithmetic witness for the finite cutoff: each subset state has
-Möbius coefficient equal to its Weyl sign, and nonsquare-free integers have no
-Boolean/exterior representative.
--/
+/-- Finite cutoff representation predicate for the Boolean prime-state layer. -/
 @[rep_depth thermo]
 structure BooleanPrimeStateArithmetic (L : FormalPrimeRootLattice) where
+  /-- Integer labels represented by subsets of the finite prime cutoff. -/
   representedBySubset : ℕ → Prop
-  subset_mobius_eq_sign : ∀ S, S ⊆ L.primes →
-    mobiusCoefficient (squarefreeIntegerOfSubset S) = subsetWeylSign S
-  nonsquarefree_absence : ∀ n, ¬ representedBySubset n → mobiusCoefficient n = 0
+
+  /-- A subset of the cutoff represents its squarefree prime product. -/
+  subset_represents :
+    ∀ S, S ⊆ L.primes → representedBySubset (squarefreeIntegerOfSubset S)
 
 /-- Parity-supertrace coefficient; nonrepresented states have zero coefficient. -/
 @[rep_depth thermo]
@@ -70,7 +71,10 @@ def fermionCoeff {L : FormalPrimeRootLattice}
 theorem mobius_squarefree_subset_eq_weyl_sign {L : FormalPrimeRootLattice}
     (A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
     mobiusCoefficient (squarefreeIntegerOfSubset S) = subsetWeylSign S :=
-  A.subset_mobius_eq_sign S hS
+  by
+    have hprime : ∀ p ∈ S, Nat.Prime p := fun p hp => L.prime_mem p (hS hp)
+    simpa [mobiusCoefficient, squarefreeIntegerOfSubset, subsetWeylSign]
+      using mobius_prime_product_eq_parity S hprime
 
 /-- Legacy compatibility naming for the square-free Möbius sign relation. -/
 @[rep_depth thermo]
@@ -79,13 +83,22 @@ theorem mobius_on_subset_eq_weyl_sign {L : FormalPrimeRootLattice}
     mobiusCoefficient (nOfSubset S) = subsetWeylSign S :=
   mobius_squarefree_subset_eq_weyl_sign (A := A) (S := S) hS
 
-/-- Repeated-prime/nonsquare-free terms are absent from the Boolean prime state space. -/
+/-- Repeated-prime/nonsquare-free terms have zero Möbius coefficient. -/
 @[rep_depth thermo]
 theorem nonsquarefree_not_represented_by_boolean_prime_state
     {L : FormalPrimeRootLattice}
-    (A : BooleanPrimeStateArithmetic L) (n : ℕ) (h_absence : ¬ A.representedBySubset n) :
+    (_A : BooleanPrimeStateArithmetic L) (n : ℕ) (hn : ¬ Squarefree n) :
     mobiusCoefficient n = 0 :=
-  A.nonsquarefree_absence n h_absence
+  by
+    simpa [mobiusCoefficient] using mobius_eq_zero_of_not_squarefree hn
+
+/-- Subset products are represented by the Boolean prime-state layer. -/
+@[rep_depth thermo]
+theorem subset_represented_by_boolean_prime_state
+    {L : FormalPrimeRootLattice}
+    (A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
+    A.representedBySubset (squarefreeIntegerOfSubset S) :=
+  A.subset_represents S hS
 
 /-- Final parity coefficient theorem: the parity coefficient is the Möbius coefficient. -/
 @[rep_depth thermo]

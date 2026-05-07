@@ -1,5 +1,20 @@
 import Architect
 import InfoGeometry.All
+import InfoGeometry.Canonical.AQFTOperatorInterface
+import InfoGeometry.Canonical.BeliefDynamics
+import InfoGeometry.Canonical.BerryPhase
+import InfoGeometry.Canonical.CalabiYauBridge
+import InfoGeometry.Canonical.ChiralAction
+import InfoGeometry.Canonical.ChiralCliffordBridge
+import InfoGeometry.Canonical.ChiralTorsionBridge
+import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
+import InfoGeometry.Canonical.DiracRicciBridge
+import InfoGeometry.Canonical.GrandSynthesis
+import InfoGeometry.Canonical.HolographicEmergence
+import InfoGeometry.Canonical.OpenProblemFormalization
+import InfoGeometry.Canonical.PositiveRayProjectiveBridge
+import InfoGeometry.Canonical.SUSYBayes
+import InfoGeometry.Geometry.JonesTransportMetric
 
 /-!
 AUTO-GENERATED FILE. DO NOT EDIT BY HAND.

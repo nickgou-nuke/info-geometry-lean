@@ -108,12 +108,44 @@ def packet_id_for(task: dict[str, Any], suffix: str) -> str:
     return f"{suffix}_{base}"
 
 
+def embedded_trace_for(task: dict[str, Any], autoproof: dict[str, Any], emitted_kind: str) -> dict[str, Any]:
+    trace = autoproof.get("autoproof_trace")
+    if not isinstance(trace, dict):
+        trace = {
+            "kind": "AutoproofTracePacket",
+            "authority": "proposal",
+            "promotion_allowed": False,
+            "target": {"goal": str(autoproof.get("goal") or extract_goal(task)), "imports": autoproof.get("imports", extract_imports(task))},
+            "budgets": {"max_iterations": autoproof.get("max_iterations", task.get("max_iterations", 0))},
+            "result": {"status": str(autoproof.get("status", "unknown")), "emitted_packet_kind": emitted_kind},
+            "attempts": [],
+            "frontier": {"next_recommended_bee": "RetrieverBee"},
+        }
+    trace = dict(trace)
+    trace.setdefault("kind", "AutoproofTracePacket")
+    trace.setdefault("authority", "proposal")
+    trace.setdefault("promotion_allowed", False)
+    trace["id"] = packet_id_for(task, "autoproof_trace")
+    trace["task_id"] = task.get("task_id")
+    trace["lineage_id"] = task.get("lineage_id")
+    trace["origin_run_id"] = task.get("origin_run_id")
+    trace["embedded_only"] = True
+    trace["result"] = dict(trace.get("result", {}))
+    trace["result"].setdefault("emitted_packet_kind", emitted_kind)
+    return trace
+
+
+def trace_ref_for(task: dict[str, Any]) -> dict[str, Any]:
+    return {"packet_id": packet_id_for(task, "autoproof_trace"), "embedded": True}
+
+
 def build_candidate_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dict[str, Any]:
     now = utc_now()
     tactic = str(autoproof.get("verified_tactic", "")).strip()
     goal = str(autoproof.get("goal") or extract_goal(task))
     imports = [str(x) for x in autoproof.get("imports", extract_imports(task))]
     input_ids = [str(x) for x in task.get("input_packet_ids", [])]
+    trace = embedded_trace_for(task, autoproof, "TheoremCandidatePacket")
     return {
         "id": packet_id_for(task, "leanstral_candidate"),
         "kind": "TheoremCandidatePacket",
@@ -151,6 +183,8 @@ def build_candidate_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> d
         "cost_class": "low",
         "promotion_allowed": False,
         "leanstral_autoproof": autoproof,
+        "autoproof_trace": trace,
+        "autoproof_trace_ref": trace_ref_for(task),
         "vibe_reused_patterns": VIBE_REUSED_PATTERNS,
     }
 
@@ -160,6 +194,7 @@ def build_residue_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dic
     iterations = autoproof.get("iterations", [])
     attempts = len(iterations) if isinstance(iterations, list) else 0
     input_ids = [str(x) for x in task.get("input_packet_ids", [])]
+    trace = embedded_trace_for(task, autoproof, "ResiduePacket")
     return {
         "id": packet_id_for(task, "leanstral_residue"),
         "kind": "ResiduePacket",
@@ -189,6 +224,8 @@ def build_residue_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dic
         "blocked_packet_refs": source_refs(input_ids, role="blocked_packet"),
         "anchor_gap_summary": "No Lean-accepted tactic was found inside the bounded recurrent loop.",
         "leanstral_autoproof": autoproof,
+        "autoproof_trace": trace,
+        "autoproof_trace_ref": trace_ref_for(task),
         "vibe_reused_patterns": VIBE_REUSED_PATTERNS,
     }
 

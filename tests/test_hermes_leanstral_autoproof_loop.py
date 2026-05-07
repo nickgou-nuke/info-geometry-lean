@@ -71,6 +71,56 @@ def test_autoproof_repairs_after_lean_error() -> None:
     assert [item["candidate"] for item in result["iterations"]] == ["exact 0", "rfl"]
 
 
+def test_autoproof_records_lean_dojo_style_repair_attempt_trace() -> None:
+    candidates = iter(["exact 0", "rfl"])
+
+    def proposer(prompt: loop.ProofPrompt) -> dict[str, object]:
+        return {"status": "ok", "candidate": next(candidates), "raw_candidate": "raw"}
+
+    result = loop.run_autoproof(
+        goal="1 = 1",
+        imports=["Init"],
+        max_iterations=3,
+        proposer=proposer,
+        lean_checker=fake_lean,
+    )
+
+    trace = result["autoproof_trace"]
+    assert trace["kind"] == "AutoproofTracePacket"
+    assert trace["authority"] == "proposal"
+    assert trace["promotion_allowed"] is False
+    assert trace["budgets"]["max_iterations"] == 3
+    assert trace["result"]["status"] == "verified"
+    assert [attempt["attempt_index"] for attempt in trace["attempts"]] == [1, 2]
+    assert trace["attempts"][0]["mode"] == "tactic"
+    assert trace["attempts"][0]["candidate_text"] == "exact 0"
+    assert trace["attempts"][0]["lean_result"]["accepted"] is False
+    assert trace["attempts"][0]["error_signature"].startswith("lean_error:")
+    assert trace["attempts"][1]["mode"] == "repair"
+    assert trace["attempts"][1]["lean_result"]["accepted"] is True
+
+
+def test_autoproof_marks_strategy_switch_after_repeated_error_signature() -> None:
+    def proposer(prompt: loop.ProofPrompt) -> dict[str, object]:
+        return {"status": "ok", "candidate": "exact 0", "raw_candidate": "exact 0"}
+
+    result = loop.run_autoproof(
+        goal="1 = 1",
+        imports=["Init"],
+        max_iterations=3,
+        proposer=proposer,
+        lean_checker=fake_lean,
+    )
+
+    trace = result["autoproof_trace"]
+    assert result["status"] == "failed"
+    assert [attempt["lean_result"]["accepted"] for attempt in trace["attempts"]] == [False, False, False]
+    assert trace["attempts"][1]["changed_strategy"] is True
+    assert trace["attempts"][1]["strategy"] == "changed_strategy_after_repeated_error"
+    assert trace["frontier"]["last_error_signature"].startswith("lean_error:")
+    assert trace["frontier"]["next_recommended_bee"] in {"RetrieverBee", "SocratesBee", "PauliBee"}
+
+
 def test_autoproof_returns_failed_without_promotion_when_exhausted() -> None:
     def proposer(prompt: loop.ProofPrompt) -> dict[str, object]:
         return {"status": "ok", "candidate": "exact 0", "raw_candidate": "exact 0"}

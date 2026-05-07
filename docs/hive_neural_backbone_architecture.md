@@ -560,6 +560,134 @@ Repeated frustration without novelty is downweighted.
 No dreamline output receives authority by resonance alone.
 ```
 
+#### Not-top shadow routing trigger
+
+The Hive should not rely on unobservable claims such as a model's private
+"exhaustion neurons" unless a local interpretability instrument actually exposes
+such signals. The executable trigger should be based on observable traces:
+Lean rejection, proof-state stagnation, proposal repetition, token bloat,
+low novelty, and absence of new source/owner contact.
+
+Define a bounded exhaustion score:
+
+```text
+exhaustion_score =
+  0.25 * consecutive_failed_lean_attempts_norm
++ 0.20 * proposal_self_similarity_norm
++ 0.15 * token_bloat_norm
++ 0.15 * proof_state_stagnation_norm
++ 0.10 * low_loop_information_gain_norm
++ 0.10 * repeated_pauli_block_norm
++ 0.05 * complex_charge_norm
+```
+
+Where:
+
+```text
+consecutive_failed_lean_attempts_norm
+  = min(consecutive_failed_lean_attempts / 3, 1)
+
+proposal_self_similarity_norm
+  = max cosine similarity among recent failed proposals, clipped to [0, 1]
+
+token_bloat_norm
+  = min(current_reasoning_tokens / median_success_reasoning_tokens, 3) / 3
+
+proof_state_stagnation_norm
+  = 1 when the same goals/errors recur without smaller subgoals or new lemmas
+
+low_loop_information_gain_norm
+  = 1 - normalized(loop_information_gain)
+
+repeated_pauli_block_norm
+  = min(repeated_same_pauli_block_count / 2, 1)
+
+complex_charge_norm
+  = normalized operational complex charge
+```
+
+MotherBee should trip the not-top/shadow router only when the evidence is
+multi-channel, not after a single failure:
+
+```text
+if consecutive_failed_lean_attempts >= 3
+and proposal_self_similarity_norm >= 0.80
+and loop_information_gain <= 1
+and exhaustion_score >= 0.70:
+  route_to_shadow_swarm = true
+```
+
+A softer trigger may be used for non-mutating dreamline exploration:
+
+```text
+if consecutive_failed_lean_attempts >= 2
+and exhaustion_score >= 0.55
+and Pauli has not found an authority violation:
+  allow one sandboxed not-top exploration
+```
+
+The not-top route is not an authority route. It is a deliberate inversion of the
+ordinary high-confidence tactic/candidate router when the ordinary winners are
+repeating the same failure.
+
+```text
+ordinary route
+  = high-confidence BuilderBee / ProofBee / ThinkingBee lane
+
+not-top route
+  = low-conventional-confidence ExplorerBee / ShadowBee / IntuitionBee lane
+    used only to generate alternative formulations, counterexamples, missing
+    hypotheses, and symbolic motifs
+```
+
+Allowed outputs from not-top routing:
+
+```text
+SocraticQuestionPacket
+SymbolicMotifPacket
+FormulationVariant
+ResiduePacket
+PauliCritique target
+retrieval query
+```
+
+Forbidden outputs from not-top routing:
+
+```text
+ExecutionIntentPacket
+LeanVerificationPacket
+BuildPacket
+AuditPacket
+PromotionDecisionPacket
+source mutation
+```
+
+Reset conditions:
+
+```text
+reset not-top mode when:
+  new owner anchor found
+  new theorem decomposition found
+  new counterexample/blocker identified
+  Pauli quarantines the path
+  Lean proof-state materially changes
+  max_not_top_attempts reached
+```
+
+Default limits:
+
+```text
+max_not_top_attempts_per_complex_per_day = 2
+max_consecutive_not_top_turns = 1
+require_sensation_source_contact_after_not_top = true
+require_pauli_review_before_execution_intent = true
+```
+
+This makes the transcendent function mechanical without letting the shadow
+router become a second executive. The not-top swarm may perturb the causal cone;
+MotherBee, Socrates, Pauli, and the authority gates decide whether anything was
+actually gained.
+
 ### 3.5 Shadow as unhandled exception and unintegrated value repository
 
 The shadow is not a trash heap and not merely an error log. It is the repository

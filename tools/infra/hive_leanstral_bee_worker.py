@@ -94,8 +94,11 @@ def ensure_task_is_bounded(task: dict[str, Any]) -> None:
     forbidden = set(str(x) for x in task.get("forbidden_output_kinds", []))
     if allowed & AUTHORITY_GATE_KINDS:
         raise RunnerError("HermesLeanstralBee may not be allowed to emit authority-gate packets")
-    if "PromotionDecisionPacket" not in forbidden:
-        raise RunnerError("BeeTask must explicitly forbid PromotionDecisionPacket")
+    if missing_forbidden := AUTHORITY_GATE_KINDS - forbidden:
+        raise RunnerError(
+            "BeeTask must explicitly forbid authority-gate packets: "
+            + ", ".join(sorted(missing_forbidden))
+        )
     if str(task.get("authority_ceiling")) != "proposal":
         raise RunnerError("HermesLeanstralBee authority_ceiling must be proposal")
 

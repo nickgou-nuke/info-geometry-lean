@@ -137,7 +137,89 @@ metaphors and operational priors, not as theorem authority.
 
 ### 3.1 Jungian analytic psychology
 
-The design borrows four key ideas from Jungian analytic psychology.
+The design borrows from Jungian analytic psychology as a process ontology, not
+as a decoration and not as four convenient agent labels.
+
+Jung should not be reduced to:
+
+```text
+four generic agents = sensing / intuition / thinking / feeling
+```
+
+The Hive should model a psyche-inspired discovery architecture:
+
+```text
+four functions       = conscious processing modes
+attitude             = introverted / extraverted orientation of a function
+persona              = operator-facing cockpit and interface
+ego                  = current attended task identity
+shadow               = excluded, failed, contradictory, or overclaimed material
+complexes            = charged recurring motif clusters
+archetypes           = deep symbolic templates for navigation only
+active imagination   = sandboxed dream/cultivation mode
+transcendent function = synthesis across opposed formulations
+individuation        = integration into stable formal lineage
+```
+
+These Jungian categories describe how symbolic material appears, transforms,
+and becomes eligible for formal descent. They do not increase mathematical
+authority.
+
+#### Jungian fidelity rules
+
+```text
+1. The four functions are cognitive modes, not proof authorities.
+
+2. Sensation records exact contact with sources, code, Lean declarations,
+   quote spans, hashes, and timestamps. It does not infer theorem truth.
+
+3. Intuition perceives possibility, latent pattern, future form, analogy,
+   motif pressure, and bridge hypotheses. It does not discharge proof.
+
+4. Thinking distinguishes, defines, decomposes, relates, and prepares
+   Lean/Lake-facing form. It still does not replace Lean.
+
+5. Feeling is a rational judging function: valuation, worth, fittingness,
+   importance, elegance, centrality, and research telos. It is not mere mood
+   or emotion, and it does not promote theorem truth.
+
+6. Shadow material is preserved as residue, deadend, contradiction, failed
+   proof, hidden assumption, projection, inflation, or overclaim pressure.
+
+7. Archetypes and alchemical stages are navigation labels, never theorem
+   evidence.
+
+8. Active imagination must run in a sandbox and emit symbolic/proposal packets
+   only.
+
+9. The transcendent function may synthesize candidate invariants across
+   opposed formulations, but those invariants require packet legalization,
+   owner mapping, and Lean descent.
+
+10. Individuation means integration into stable lineage, not mystical proof.
+```
+
+A faithful packet can therefore say:
+
+```json
+{
+  "authority": "semantic",
+  "authority_origin": "symbolic_navigation",
+  "epistemic_layer": "common_unconscious",
+  "psyche_layer": "common_unconscious",
+  "jung_function": "intuition",
+  "jung_attitude": "introverted",
+  "jung_dynamic": "compensation",
+  "symbolic_stage": "albedo",
+  "complex_refs": ["complex_operator_shadow_gap"],
+  "archetype_refs": ["coniunctio_oppositorum"],
+  "transcendent_function_state": "opposition_detected",
+  "promotion_allowed": false
+}
+```
+
+This means: the packet arose from introverted intuition as compensatory symbolic
+pressure in the common-unconscious layer. It does not mean the theorem is true.
 
 #### Common unconscious
 
@@ -182,23 +264,56 @@ theorem-status rewrite
 
 #### Four functions of consciousness
 
-The four Jungian functions become Hive cognitive lanes:
+The four Jungian functions should be stored as metadata and routing pressures,
+not as the whole psyche and not as proof roles.
 
 ```text
-sensing   -> source intake and exact observation
-intuition -> motif formation and candidate emergence
-thinking  -> formal decomposition and proof-facing structure
-feeling   -> value, salience, significance, and human priority
+sensation
+  exact contact with what is given: source observation, code observation,
+  Lean declaration observation, quote spans, hashes, timestamps.
+
+intuition
+  perception of possibility: motif discovery, analogy, latent invariant,
+  future theorem-form, bridge hypothesis, active-imagination variant.
+
+thinking
+  formal distinction: definitions, decomposition, type structure,
+  dependency shape, proof obligations, Lean/Lake-facing formulation.
+
+feeling
+  rational valuation: significance, worth, elegance, explanatory fit,
+  research priority, operator telos, whether a bridge matters.
 ```
 
-Each packet may carry:
+Attitude matters:
+
+```text
+extraverted sensation  -> contact with external source/code/repo state
+introverted sensation  -> memory of prior traces, fossils, old docs, residues
+extraverted intuition  -> outward possibility search, arXiv/web/paper routes
+introverted intuition  -> symbolic image, archetypal motif, latent theorem form
+extraverted thinking   -> executable structure, scripts, Lean edits, Lake runs
+introverted thinking   -> definition law, internal relation, proof architecture
+extraverted feeling    -> audience/operator fit, shared priority, communication value
+introverted feeling    -> inner worth, taste, elegance, research meaning
+```
+
+Each packet may carry both generic cognitive metadata and Jung-specific
+metadata:
 
 ```json
 {
-  "cognitive_function": "sensing | intuition | thinking | feeling",
-  "cognitive_role": "primary | auxiliary | adversarial | integration"
+  "cognitive_function": "sensation | intuition | thinking | feeling",
+  "jung_function": "sensation | intuition | thinking | feeling",
+  "jung_attitude": "introverted | extraverted | mixed | unknown",
+  "psyche_layer": "conscious | personal_unconscious | common_unconscious | shadow | persona | self_oriented",
+  "jung_dynamic": "compensation | projection | differentiation | assimilation | integration | inflation_risk"
 }
 ```
+
+The generic `cognitive_function` field may remain for compatibility with wider
+cognitive-architecture tooling. The Jung-faithful field is `jung_function`.
+
 
 #### Individuation as integration
 
@@ -216,7 +331,82 @@ shadow lanes. The symbolic shadow may reveal missing structure, but shadow
 packets must not discharge owner obligations without explicit bridge packets and
 Lean-backed verification.
 
-### 3.2 Pauli severity
+### 3.2 Jungian dynamics beyond the four functions
+
+The common unconscious should preserve dynamics, not merely labels.
+
+```text
+persona
+  operator-facing cockpit/interface: Aurora, Hermes Workspace, Kanban,
+  Reports/Inbox, command surface.
+
+ego
+  the currently attended task identity: the active packet set and MotherBee's
+  executive focus.
+
+personal unconscious
+  project-specific residues: old docs, failed proof attempts, fossils,
+  deadends, stale reports, unresolved tensions.
+
+common unconscious
+  deep symbolic substrate: archetypes, alchemical stages, historical method
+  motifs, Black Book images, recurring theorem-pressure forms.
+
+shadow
+  excluded or contradicted material: overclaims, hidden assumptions,
+  failed candidates, scalar-shadow drift, decorative bridges.
+
+complex
+  a charged recurring motif cluster: a repeated failure, attraction, or
+  research knot that captures attention across packets.
+
+active imagination
+  sandboxed symbolic cultivation: variants, dreams, analogies, images, and
+  theorem-pressure forms emitted as semantic/proposal packets only.
+
+transcendent function
+  synthesis across opposed formulations. It may extract an invariant candidate,
+  but not verify it.
+
+individuation
+  stable integration into packet lineage after symbolic cultivation,
+  Socratic interrogation, Pauli differentiation, Lean/Lake verification,
+  audit, and promotion.
+```
+
+The recurrent cultivation cycle is:
+
+```text
+seed
+  -> Jung excitation
+  -> resonance-family formation
+  -> Socratic interrogation
+  -> Pauli differentiation
+  -> invariant extraction
+  -> packet legalization
+  -> Lean-facing translation
+  -> kernel/build/audit gates
+  -> promotion or residue return
+```
+
+Repo law:
+
+```text
+The Black Book generates pressure.
+Packets legalize targets.
+Lean decides what survives.
+```
+
+Compensation should be explicit:
+
+```text
+If thinking dominates too much, intuition resurfaces alternate symbolic forms.
+If intuition dominates too much, Pauli and thinking force owner anchors.
+If sensation dominates too much, intuition clusters latent theorem motifs.
+If feeling dominates too much, Socrates asks falsifying questions and Lean rejects non-proof.
+```
+
+### 3.3 Pauli severity
 
 Pauli is the anti-inflation faculty.
 
@@ -236,7 +426,7 @@ Pauli packets should not be treated as theorem authority either. They are
 semantic quarantine and critique authority. Their role is to block or constrain
 ascent.
 
-### 3.3 Socratic interrogation
+### 3.4 Socratic interrogation
 
 Socrates is the destabilizing question engine.
 
@@ -255,7 +445,7 @@ What prior deadend resembles this candidate?
 Socrates does not verify. Socrates turns symbolic pressure into better questions
 and safer candidate shapes.
 
-### 3.4 Alchemical process states
+### 3.5 Alchemical process states
 
 Alchemy is useful as a process-state language:
 
@@ -279,7 +469,7 @@ Important: `rubedo` is only permitted for packets that have passed the required
 Lean/Lake/Audit/Promotion chain, or as a purely symbolic label with
 `promotion_allowed = false`.
 
-### 3.5 Cognitive neurobiology analogues
+### 3.6 Cognitive neurobiology analogues
 
 The Hive can also borrow disciplined structure from cognitive neurobiology.
 These are architectural analogies, not biological claims.
@@ -347,7 +537,11 @@ Do not replace this ladder with labels like `symbolic_navigation` or
   "authority": "semantic",
   "authority_origin": "symbolic_navigation",
   "epistemic_layer": "common_unconscious",
+  "psyche_layer": "common_unconscious",
   "cognitive_function": "intuition",
+  "jung_function": "intuition",
+  "jung_attitude": "introverted",
+  "jung_dynamic": "compensation",
   "symbolic_stage": "albedo",
   "pauli_status": "unaudited",
   "promotion_state": "not_allowed",
@@ -566,8 +760,18 @@ Every cognitive packet should carry at least:
   "authority": "navigation | semantic | proposal | execution_intent | lean_checked | build_checked | audit_checked | promoted",
   "authority_origin": "source_observation | symbolic_navigation | socratic_interrogation | pauli_differentiation | lean_wrapper | build_gate | audit_gate | promotion_gate",
   "epistemic_layer": "raw_source | citation | common_unconscious | cognitive_process | semantic | lean_topology | packet_lineage | authority",
-  "cognitive_function": "sensing | intuition | thinking | feeling",
+  "psyche_layer": "conscious | personal_unconscious | common_unconscious | shadow | persona | self_oriented",
+  "cognitive_function": "sensation | intuition | thinking | feeling",
+  "jung_function": "sensation | intuition | thinking | feeling",
+  "jung_attitude": "introverted | extraverted | mixed | unknown",
+  "jung_dynamic": "compensation | projection | differentiation | assimilation | integration | inflation_risk",
   "symbolic_stage": "nigredo | albedo | citrinitas | rubedo",
+  "active_imagination": false,
+  "complex_refs": [],
+  "archetype_refs": [],
+  "shadow_status": "none | suspected | confirmed | integrated | quarantined",
+  "transcendent_function_state": "none | opposition_detected | synthesis_attempted | invariant_extracted",
+  "individuation_state": "unintegrated | in_cultivation | packetized | formally_tested | integrated | returned_to_residue",
   "promotion_allowed": false,
   "allowed_uses": [],
   "forbidden_uses": [],
@@ -586,9 +790,14 @@ They are policy fields that validators and importers should eventually enforce.
 
 ## 7. Cognitive lanes and worker roles
 
-### SensorBee
+The bees should not be identified one-to-one with Jung's four functions. The
+functions are modes that any bee can invoke, though a bee may have a dominant
+mode or attitude. Socrates and Pauli are cross-functional adversarial faculties,
+not simply instances of thinking.
 
-Dominant function: sensing.
+### SensationBee / SensorBee
+
+Dominant mode: extraverted sensation.
 
 Responsibilities:
 
@@ -609,9 +818,30 @@ promotion claims
 free-form theorem edits
 ```
 
-### IntuitionBee
+### MemoryBee
 
-Dominant function: intuition.
+Dominant mode: introverted sensation.
+
+Responsibilities:
+
+```text
+recover fossils
+recover old docs and residues
+surface repeated traces
+link current work to prior deadends
+emit SourceObservationPacket or ResiduePacket references
+```
+
+Forbidden:
+
+```text
+turning memory recurrence into proof
+promoting old docs over current code authority
+```
+
+### IntuitionBee / JungBee
+
+Dominant mode: introverted intuition.
 
 Responsibilities:
 
@@ -631,9 +861,30 @@ claiming owner discharge
 promoting symbolic resonance to truth
 ```
 
+### ExplorerBee
+
+Dominant mode: extraverted intuition.
+
+Responsibilities:
+
+```text
+search outward possibilities
+query arXiv/web/papers/Google AI Mode when authorized
+find external analogies
+propose retrieval routes
+emit SourceObservationPacket, SymbolicMotifPacket, or RetrievalHypothesisPacket
+```
+
+Forbidden:
+
+```text
+mistaking external analogy for owner proof
+bypassing packetization
+```
+
 ### ThinkingBee
 
-Dominant function: thinking.
+Dominant mode: introverted thinking.
 
 Responsibilities:
 
@@ -651,9 +902,29 @@ changing theorem status without gate packets
 using symbolic packets as proof
 ```
 
+### BuilderBee / ProofBee
+
+Dominant mode: extraverted thinking.
+
+Responsibilities:
+
+```text
+execute scoped Lean/Python edits from ExecutionIntentPacket
+run proof attempts
+run deterministic wrappers when authorized
+emit DiffPacket, CheckpointPacket, or gate packets only through wrappers
+```
+
+Forbidden:
+
+```text
+editing outside execution intent
+claiming promotion from successful edits alone
+```
+
 ### FeelingBee
 
-Dominant function: feeling.
+Dominant mode: introverted feeling.
 
 Responsibilities:
 
@@ -672,9 +943,70 @@ overriding proof/audit gates
 turning beauty into theorem authority
 ```
 
+### OperatorPriorityBee
+
+Dominant mode: extraverted feeling.
+
+Responsibilities:
+
+```text
+capture operator priority
+rank audience and communication value
+surface research salience
+route work according to human telos without overriding gates
+```
+
+Forbidden:
+
+```text
+treating priority as theorem authority
+turning social/aesthetic value into proof
+```
+
+### ShadowBee
+
+Depth role: shadow / personal-unconscious residue.
+
+Responsibilities:
+
+```text
+resurface excluded material
+track failed proof attempts
+cluster contradictions and deadends
+identify projection and inflation risk
+emit ResiduePacket, ShadowReference metadata, or PauliCritique targets
+```
+
+Forbidden:
+
+```text
+letting shadow material silently rewrite owner truth
+burying contradictions because they are inconvenient
+```
+
+### ComplexBee
+
+Depth role: charged motif-cluster tracker.
+
+Responsibilities:
+
+```text
+identify recurring complexes
+cluster repeated failure patterns
+track charged motifs such as owner/shadow gaps or scalar-shadow inflation
+link complexes to packets and source observations
+```
+
+Forbidden:
+
+```text
+promoting recurrence to truth
+pathologizing rather than packetizing
+```
+
 ### SocratesBee
 
-Adversarial interrogator.
+Cross-function: adversarial interrogator.
 
 Responsibilities:
 
@@ -687,7 +1019,7 @@ emit SocraticQuestionPacket
 
 ### PauliBee
 
-Strict critic.
+Cross-function: strict critic and anti-inflation conscience.
 
 Responsibilities:
 
@@ -1001,6 +1333,11 @@ motif_label
 motif_family
 symbolic_stage
 cognitive_function
+jung_function
+jung_attitude
+psyche_layer
+complex_refs
+archetype_refs
 source_packet_ids
 candidate_uses
 forbidden_uses

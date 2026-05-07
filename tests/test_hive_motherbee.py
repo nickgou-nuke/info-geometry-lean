@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from tools.infra.hive_local_packet_store import append_packet, read_store
-from tools.infra.hive_motherbee import discover_tasks, may_route_to_hermes_leanstral, run_once
+from tools.infra.hive_motherbee import discover_tasks, may_route_to_hermes_leanstral, retry_count_for_hermes_leanstral, run_once
 
 SCRIPT = Path("tools/infra/hive_motherbee.py")
 
@@ -133,6 +133,104 @@ def leanstral_residue(packet_id: str, target_id: str) -> dict:
         "blocked_packet_refs": [{"ref": target_id}],
         "anchor_gap_summary": "Fixture residue.",
         "promotion_allowed": False,
+    }
+
+
+def repair_attempt(packet_id: str, target_id: str, *, task_id: str = "bee_task_leanstral_episode", index: int = 1) -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "RepairAttemptPacket",
+        "status": "failed",
+        "authority": "proposal",
+        "authority_origin": "bounded_autoproof_attempt",
+        "promotion_allowed": False,
+        "target": {"target_packet_id": target_id, "file": "", "module": "", "theorem": "demo", "goal_hash": "sha256:demo"},
+        "episode": {
+            "episode_id": "autoproof_episode_demo",
+            "task_id": task_id,
+            "assigned_role": "HermesLeanstralBee",
+            "attempt_index": index,
+            "max_iterations": 3,
+        },
+        "candidate": {
+            "candidate_kind": "tactic",
+            "candidate_text": "simp",
+            "strategy": "initial_tactic",
+            "changed_strategy_from_previous": False,
+            "prompt_mode": "tactic",
+        },
+        "lean_probe": {
+            "probe_kind": "lean_interact_wrapper",
+            "accepted": False,
+            "status": "failed",
+            "goal_before": "⊢ 1 = 1",
+            "goal_after": "⊢ 1 = 1",
+            "stdout_excerpt": "",
+            "stderr_excerpt": "unknown identifier",
+            "error_signature": "lean_error:unknown_identifier",
+            "diagnostics": [],
+        },
+        "retrieval_context": {"retrieved_lemmas": [], "owner_refs": [], "source_refs": []},
+        "loop_control": {
+            "same_error_repeat_count": 1,
+            "same_candidate_repeat_count": 0,
+            "degeneracy_detected": False,
+            "next_action_hint": "retrieve",
+        },
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass", "LeanVerificationPacket"],
+    }
+
+
+def autoproof_trace(
+    packet_id: str,
+    target_id: str,
+    *,
+    next_bee: str = "RetrieverBee",
+    status: str = "exhausted",
+    task_id: str = "bee_task_leanstral_episode",
+    attempts: list[str] | None = None,
+) -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "AutoproofTracePacket",
+        "status": status,
+        "authority": "proposal",
+        "authority_origin": "bounded_autoproof_episode",
+        "promotion_allowed": False,
+        "producer": {
+            "bee": "HermesLeanstralBee",
+            "worker_id": "hermes-leanstral-test",
+            "model": "leanstral-gguf",
+            "endpoint": "local",
+            "task_id": task_id,
+        },
+        "target": {"target_packet_id": target_id, "file": "", "module": "", "theorem": "demo", "owner_refs": []},
+        "budgets": {"max_iterations": 3, "lean_timeout": 60, "max_same_error_repeats": 2, "max_same_candidate_repeats": 1},
+        "result": {
+            "status": status,
+            "emitted_packet_kind": "ResiduePacket",
+            "verified_by_local_probe": False,
+            "official_lean_verification_packet": None,
+        },
+        "attempt_packet_ids": attempts or ["repair_attempt_1", "repair_attempt_2"],
+        "frontier": {
+            "last_goal_state": "⊢ 1 = 1",
+            "last_error_signature": "lean_error:unknown_identifier",
+            "failed_strategies": ["initial_tactic", "lean_feedback_repair"],
+            "missing_lemmas": ["missing.owner.lemma"],
+            "promising_lemmas": [],
+            "next_recommended_bee": next_bee,
+            "new_information_needed": "Find a local owner lemma for the unknown identifier.",
+        },
+        "forbidden_authority": [
+            "ExecutionIntentPacket",
+            "LeanVerificationPacket",
+            "BuildPacket",
+            "AuditPacket",
+            "PromotionDecisionPacket",
+        ],
     }
 
 
@@ -324,3 +422,116 @@ def test_hermes_leanstral_respects_retry_budget() -> None:
     records = [candidate, pauli_packet("pauli_budget", "cand_budget"), first_task, socratic_packet("socratic_budget", "cand_budget"), second_task]
 
     assert may_route_to_hermes_leanstral(records, candidate, max_retries=2) is False
+
+
+def test_leanstral_retry_count_counts_episode_not_sidecars() -> None:
+    candidate = theorem_candidate("cand_episode", status="probe_ready")
+    task = {
+        **BASE,
+        "id": "bee_task_leanstral_episode",
+        "kind": "BeeTask",
+        "target_packet_id": "cand_episode",
+        "assigned_role": "HermesLeanstralBee",
+        "task_kind": "leanstral.autoproof",
+        "task_id": "bee_task_leanstral_episode",
+    }
+    records = [
+        candidate,
+        task,
+        repair_attempt("repair_attempt_1", "cand_episode", index=1),
+        repair_attempt("repair_attempt_2", "cand_episode", index=2),
+        autoproof_trace("trace_episode", "cand_episode", attempts=["repair_attempt_1", "repair_attempt_2"]),
+        leanstral_residue("residue_episode", "cand_episode"),
+    ]
+
+    assert retry_count_for_hermes_leanstral(records, candidate) == 1
+
+
+def test_repair_attempt_does_not_trigger_motherbee_task(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    records = [repair_attempt("repair_attempt_orphan", "cand_missing")]
+
+    assert discover_tasks(records, store_path=store, dry_run_task=True) == []
+
+
+def test_autoproof_trace_frontier_routes_to_retrieverbee(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    trace = autoproof_trace("trace_retrieval", "cand_trace", next_bee="RetrieverBee")
+
+    tasks = discover_tasks([trace], store_path=store, dry_run_task=True)
+
+    assert len(tasks) == 1
+    task = tasks[0]
+    assert task["assigned_role"] == "RetrieverBee"
+    assert task["task_kind"] == "retrieval.context"
+    assert task["target_packet_id"] == "trace_retrieval"
+    assert "Find a local owner lemma" in task["instruction"]
+    assert "lean_error:unknown_identifier" in task["repulsion_field"]
+    assert "strategy:initial_tactic" in task["repulsion_field"]
+    assert "repair_attempt_1" in task["repulsion_field"]
+    assert "trace_retrieval" in task["repulsion_field"]
+
+
+def test_autoproof_trace_frontier_routes_to_socratesbee(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    trace = autoproof_trace("trace_socrates", "cand_trace", next_bee="SocratesBee")
+
+    tasks = discover_tasks([trace], store_path=store, dry_run_task=True)
+
+    assert len(tasks) == 1
+    assert tasks[0]["assigned_role"] == "SocratesBee"
+    assert tasks[0]["task_kind"] == "socratic.question"
+    assert "Find a local owner lemma" in tasks[0]["instruction"]
+
+
+def test_autoproof_trace_frontier_routes_to_paulibee(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    trace = autoproof_trace("trace_pauli", "cand_trace", next_bee="PauliBee")
+
+    tasks = discover_tasks([trace], store_path=store, dry_run_task=True)
+
+    assert len(tasks) == 1
+    assert tasks[0]["assigned_role"] == "PauliBee"
+    assert tasks[0]["task_kind"] == "pauli.critique"
+    assert "lean_error:unknown_identifier" in tasks[0]["repulsion_field"]
+
+
+def test_autoproof_trace_frontier_never_routes_to_authority_gate(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    trace = autoproof_trace("trace_bad_gate", "cand_trace", next_bee="BuildBee")
+
+    assert discover_tasks([trace], store_path=store, dry_run_task=True) == []
+
+
+def test_trace_frontier_retry_task_carries_repulsion_from_trace_and_attempts(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    candidate = theorem_candidate("cand_retry", status="probe_ready")
+    trace = autoproof_trace("trace_retry", "cand_retry", next_bee="HermesLeanstralBee")
+    retrieval = {
+        **BASE,
+        "id": "retrieval_after_trace",
+        "kind": "RetrievalHypothesisPacket",
+        "status": "context",
+        "authority": "proposal",
+        "authority_origin": "retrieval_hypothesis",
+        "promotion_allowed": False,
+        "target_packet_ids": ["cand_retry"],
+        "query": "owner lemma",
+        "retrieved_refs": [],
+        "hypothesis": "Try the owner lemma after the trace frontier.",
+        "confidence": 0.7,
+        "allowed_uses": ["candidate_refinement"],
+        "forbidden_uses": ["proof", "promotion"],
+    }
+
+    tasks = discover_tasks([candidate, trace, retrieval], store_path=store, dry_run_task=True)
+    leanstral_tasks = [task for task in tasks if task["assigned_role"] == "HermesLeanstralBee"]
+
+    assert len(leanstral_tasks) == 1
+    task = leanstral_tasks[0]
+    assert task["retry_count"] == 1
+    assert "lean_error:unknown_identifier" in task["repulsion_field"]
+    assert "strategy:lean_feedback_repair" in task["repulsion_field"]
+    assert "trace_retry" in task["repulsion_field"]
+    assert "repair_attempt_2" in task["repulsion_field"]
+    assert "Find a local owner lemma" in task["instruction"]

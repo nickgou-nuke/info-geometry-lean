@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "TheoremBankEntryPacket.schema.json",
+  "title": "TheoremBankEntryPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "source_uri",
+        "source_line_start",
+        "source_line_end",
+        "claim_text",
+        "classification",
+        "rank_score",
+        "risk_flags",
+        "required_gates",
+        "promotion_allowed"
+      ],
+      "properties": {
+        "kind": {
+          "const": "TheoremBankEntryPacket"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "extracted",
+            "classified",
+            "ranked",
+            "owner_audited",
+            "deferred",
+            "rejected"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_line_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_line_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "claim_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "owner_projection",
+            "constructive_finite_gap",
+            "external_adapter_candidate",
+            "analytic_gate",
+            "roadmap_speculative",
+            "reject_overclaim"
+          ]
+        },
+        "rank_score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "proposed_lean_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "proposed_decls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lean_decls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cited_owner_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_gates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "enum": [
+              "lean_checked",
+              "build_checked",
+              "audit_checked"
+            ]
+          },
+          "allOf": [
+            {
+              "contains": {
+                "const": "lean_checked"
+              }
+            },
+            {
+              "contains": {
+                "const": "build_checked"
+              }
+            },
+            {
+              "contains": {
+                "const": "audit_checked"
+              }
+            }
+          ]
+        },
+        "promotion_allowed": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

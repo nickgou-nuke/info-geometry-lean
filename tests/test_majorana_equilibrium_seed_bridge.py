@@ -10,4 +10,12 @@ def test_majorana_k_split_uses_equilibrium_seed_theorem() -> None:
 
     assert "theorem comparisonReadout_phasePart_eq_zero_of_equilibriumSeed" in text
     assert "comparisonReadout_pair_eq_zero_of_equilibriumSeed" in text
+    assert (
+        "theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFaithful"
+        in text
+    )
+    assert (
+        "isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful"
+        in text
+    )
     assert "admissibleTemperature_of_equilibriumSeed" not in text

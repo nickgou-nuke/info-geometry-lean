@@ -478,6 +478,24 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_of_equilibriumSeed
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
       (E := E) P comparison A hEq
 
+@[rep_depth transport]
+theorem toRelationalInformationDatum_bohmMadelung_stationary_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH)
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0) :
+    ( (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).metric
+    , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).phase )
+      =
+    (0, 0) := by
+  let _ := reference
+  exact
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P comparison A hFaithful hFirst
+
 end Core
 
 end InfoGeometry.Canonical.OnsagerReciprocity

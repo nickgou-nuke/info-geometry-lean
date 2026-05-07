@@ -276,7 +276,7 @@ def test_hermes_leanstral_task_is_scheduled_after_pauli_critique(tmp_path: Path)
     task = leanstral_tasks[0]
     assert task["task_kind"] == "leanstral.autoproof"
     assert task["authority_ceiling"] == "proposal"
-    assert task["allowed_output_kinds"] == ["TheoremCandidatePacket", "ResiduePacket"]
+    assert task["allowed_output_kinds"] == ["RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket", "ResiduePacket"]
     assert set(task["forbidden_output_kinds"]) >= {
         "ExecutionIntentPacket",
         "LeanVerificationPacket",

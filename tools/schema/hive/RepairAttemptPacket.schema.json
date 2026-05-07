@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "RepairAttemptPacket.schema.json",
+  "title": "RepairAttemptPacket",
+  "description": "One proposal-authority Lean autoproof attempt inside a bounded proof episode. This is proof-search evidence, not Lean verification authority.",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "authority",
+        "authority_origin",
+        "promotion_allowed",
+        "target",
+        "episode",
+        "candidate",
+        "lean_probe",
+        "retrieval_context",
+        "loop_control",
+        "forbidden_uses"
+      ],
+      "properties": {
+        "kind": {
+          "const": "RepairAttemptPacket"
+        },
+        "authority": {
+          "const": "proposal"
+        },
+        "authority_origin": {
+          "const": "bounded_autoproof_attempt"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "status": {
+          "enum": ["success", "failed", "timeout", "no_progress", "partial", "blocked", "degenerate", "active"]
+        },
+        "target": {
+          "type": "object",
+          "required": ["target_packet_id", "goal_hash"],
+          "properties": {
+            "target_packet_id": {"type": "string", "minLength": 1},
+            "file": {"type": "string"},
+            "module": {"type": "string"},
+            "theorem": {"type": "string"},
+            "goal_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": true
+        },
+        "episode": {
+          "type": "object",
+          "required": ["episode_id", "task_id", "assigned_role", "attempt_index", "max_iterations"],
+          "properties": {
+            "episode_id": {"type": "string", "minLength": 1},
+            "task_id": {"type": "string", "minLength": 1},
+            "assigned_role": {"const": "HermesLeanstralBee"},
+            "attempt_index": {"type": "integer", "minimum": 1},
+            "max_iterations": {"type": "integer", "minimum": 1}
+          },
+          "additionalProperties": true
+        },
+        "candidate": {
+          "type": "object",
+          "required": ["candidate_kind", "candidate_text", "strategy", "changed_strategy_from_previous", "prompt_mode"],
+          "properties": {
+            "candidate_kind": {"enum": ["tactic", "patch", "whole_proof", "theorem_shape", "branch_repair"]},
+            "candidate_text": {"type": "string"},
+            "strategy": {"type": "string", "minLength": 1},
+            "changed_strategy_from_previous": {"type": "boolean"},
+            "prompt_mode": {"enum": ["tactic", "repair", "branch_local", "whole_proof", "residue_frontier"]}
+          },
+          "additionalProperties": true
+        },
+        "lean_probe": {
+          "type": "object",
+          "required": ["probe_kind", "accepted", "status", "goal_before", "error_signature", "diagnostics"],
+          "properties": {
+            "probe_kind": {"enum": ["lean_interact_wrapper", "lake_env_lean", "locked_lake_build", "changedVerify", "not_run"]},
+            "accepted": {"type": "boolean"},
+            "status": {"enum": ["success", "failed", "timeout", "no_progress", "not_run", "partial"]},
+            "goal_before": {"type": "string"},
+            "goal_after": {"type": "string"},
+            "stdout_excerpt": {"type": "string"},
+            "stderr_excerpt": {"type": "string"},
+            "error_signature": {"type": "string"},
+            "diagnostics": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": true
+        },
+        "retrieval_context": {
+          "type": "object",
+          "required": ["retrieved_lemmas", "owner_refs", "source_refs"],
+          "properties": {
+            "retrieved_lemmas": {"type": "array", "items": {"type": "string"}},
+            "owner_refs": {"type": "array", "items": {"type": "string"}},
+            "source_refs": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": true
+        },
+        "loop_control": {
+          "type": "object",
+          "required": ["same_error_repeat_count", "same_candidate_repeat_count", "degeneracy_detected", "next_action_hint"],
+          "properties": {
+            "same_error_repeat_count": {"type": "integer", "minimum": 0},
+            "same_candidate_repeat_count": {"type": "integer", "minimum": 0},
+            "degeneracy_detected": {"type": "boolean"},
+            "next_action_hint": {"enum": ["emit_candidate", "repair", "retrieve", "pauli", "socrates", "residue", "continue"]}
+          },
+          "additionalProperties": true
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "contains": {"const": "LeanVerificationPacket"},
+          "items": {"type": "string"}
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

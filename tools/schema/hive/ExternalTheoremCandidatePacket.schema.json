@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ExternalTheoremCandidatePacket.schema.json",
+  "title": "ExternalTheoremCandidatePacket",
+  "description": "Non-authoritative theorem-intelligence packet harvested from Isabelle/AFP, Coq, mathlib, Logipedia/Dedukti, arXiv, or local Lean failure memory. Foreign proof status is source guidance only; Lean/build/audit gates decide authority.",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "source_system",
+        "source_library",
+        "source_module",
+        "source_decl",
+        "source_statement_raw",
+        "normalized_statement",
+        "lean_target_namespace",
+        "lean_import_candidates",
+        "symbol_map",
+        "proof_transport_mode",
+        "translation_status",
+        "required_gates"
+      ],
+      "properties": {
+        "kind": {
+          "const": "ExternalTheoremCandidatePacket"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "discovered",
+            "normalized",
+            "matched_to_mathlib",
+            "requires_adapter",
+            "missing_in_lean",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "authority": {
+          "const": "proposal"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_system": {
+          "enum": [
+            "Isabelle/HOL",
+            "Lean/mathlib",
+            "Dedukti",
+            "Logipedia",
+            "Coq",
+            "HOL-Light",
+            "Agda",
+            "arXiv",
+            "local_lean_failure_memory",
+            "local_hive_packet_memory",
+            "other"
+          ]
+        },
+        "source_library": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_module": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_decl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "source_path": {
+          "type": "string"
+        },
+        "source_line_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_line_end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_statement_raw": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized_statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lean_target_namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lean_candidate_statement": {
+          "type": "string"
+        },
+        "lean_import_candidates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lean_target_module_candidates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "symbol_map": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "proof_transport_mode": {
+          "enum": [
+            "name_match",
+            "adapter",
+            "dedukti",
+            "proof_sketch",
+            "manual",
+            "research_guidance"
+          ]
+        },
+        "translation_status": {
+          "enum": [
+            "unclassified",
+            "matched_to_mathlib",
+            "requires_adapter",
+            "missing_in_lean",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "external_proof_object_ref": {
+          "type": "string"
+        },
+        "correspondence_notes": {
+          "type": "string"
+        },
+        "operator_gap_id": {
+          "type": "string"
+        },
+        "query_terms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "source_ref.schema.json"
+          }
+        },
+        "required_gates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "enum": [
+              "lean_checked",
+              "build_checked",
+              "audit_checked",
+              "promotion_decision"
+            ]
+          },
+          "allOf": [
+            {
+              "contains": {
+                "const": "lean_checked"
+              }
+            },
+            {
+              "contains": {
+                "const": "build_checked"
+              }
+            },
+            {
+              "contains": {
+                "const": "audit_checked"
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

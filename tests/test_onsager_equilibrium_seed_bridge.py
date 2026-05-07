@@ -13,3 +13,7 @@ def test_onsager_stationary_uses_equilibrium_seed_theorem() -> None:
         "admissibleTemperature_of_equilibriumSeed" in text
         or "potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed" in text
     )
+    assert (
+        "theorem toRelationalInformationDatum_bohmMadelung_stationary_of_firstVariation_eq_zero_of_probeFaithful"
+        in text
+    )

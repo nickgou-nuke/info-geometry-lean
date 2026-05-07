@@ -307,6 +307,23 @@ theorem potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of
   simpa [IsThermodynamicReadoutStationary] using hStationary
 
 @[rep_depth transport]
+theorem potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    ( (StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed ψ))
+          ψ A).metric
+    , (StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed ψ))
+          ψ A).phase )
+      =
+    (0, 0) := by
+  rw [potentialDatum_constantStateGeneratorField_stateQGTReadout_pair_eq_comparisonReadout_pair]
+  exact comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A hFaithful hFirst
+
+@[rep_depth transport]
 theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_iff_isPotentialKillingOperator
     (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) :
     ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
@@ -374,6 +391,41 @@ theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_of_e
   exact
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
       (E := E) P ψ A hEq
+
+@[rep_depth transport]
+theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A) )
+      =
+    (0, 0) := by
+  rw [← constantStateGeneratorField_stateQGTReadout_pair_eq_phaseLinearAntilinear_transport_pair
+    (E := E) (H := P.modularData.modularSeed ψ) (A := A) (ψ := ψ)]
+  exact
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst
 
 @[rep_depth transport]
 theorem constantStateGeneratorField_stateGaugeGenerator_isPhaseLinear

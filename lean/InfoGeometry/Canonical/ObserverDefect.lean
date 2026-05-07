@@ -590,6 +590,48 @@ theorem observerOrientationStrain_eq_zero_iff
   show ‖observerDefectResidual CIK obs‖ = 0 ↔ observerDefectResidual CIK obs = 0
   exact norm_eq_zero
 
+/--
+A zero scalarized observer strain already forces the defect residual itself to
+vanish.
+-/
+theorem observerDefectResidual_eq_zero_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    observerDefectResidual CIK obs = 0 := by
+  exact (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).mp hStrain
+
+/--
+Zero scalarized observer strain yields the observer-defect `Z_D` budget
+constructively because the defect residual itself is already zero.
+-/
+@[rep_depth krein]
+theorem observerDefectResidual_norm_le_ZD_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  have hZero : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  rw [hZero]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+Zero scalarized observer strain constructs the exact deviation-channel control
+predicate, replacing a bridge-local residual-budget hypothesis by an honest
+owner-level theorem.
+-/
+theorem observerDeviationControlledByZD_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
+  exact observerDefectResidual_norm_le_ZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+
 end Core
 
 end InfoGeometry.Canonical.ObserverDefect

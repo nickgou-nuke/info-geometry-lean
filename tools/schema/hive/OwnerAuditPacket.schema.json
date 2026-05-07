@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "OwnerAuditPacket.schema.json",
+  "title": "OwnerAuditPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "theorem_bank_entry_ref",
+        "classification",
+        "claim_text",
+        "audit_decision",
+        "owner_files_found",
+        "owner_files_missing",
+        "decls_found",
+        "decls_missing",
+        "recommended_next_step",
+        "promotion_allowed"
+      ],
+      "properties": {
+        "kind": {
+          "const": "OwnerAuditPacket"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "assessed",
+            "projection_planned",
+            "constructive_gap_confirmed",
+            "analytic_gate_confirmed",
+            "overclaim_rejected",
+            "deferred"
+          ]
+        },
+        "authority": {
+          "const": "semantic"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "theorem_bank_entry_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "owner_projection",
+            "constructive_finite_gap",
+            "external_adapter_candidate",
+            "analytic_gate",
+            "roadmap_speculative",
+            "reject_overclaim"
+          ]
+        },
+        "claim_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_decision": {
+          "type": "string",
+          "enum": [
+            "owner_exists",
+            "owner_missing",
+            "projection_possible",
+            "constructive_gap",
+            "external_adapter_candidate",
+            "analytic_gate",
+            "roadmap_only",
+            "reject_overclaim"
+          ]
+        },
+        "owner_files_found": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "owner_files_missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decls_found": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decls_missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recommended_next_step": {
+          "type": "string",
+          "enum": [
+            "project_existing_owner",
+            "prove_finite_owner",
+            "build_external_adapter",
+            "create_analytic_gate",
+            "record_roadmap_only",
+            "reject_or_quarantine",
+            "manual_review"
+          ]
+        },
+        "audit_notes": {
+          "type": "string"
+        },
+        "promotion_allowed": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

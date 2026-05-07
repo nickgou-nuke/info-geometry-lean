@@ -75,6 +75,12 @@ theorem δ_odd_eq_zero_iff_equilibrium (B : RouterDefectBoundBridge (E := E)) :
     δ_odd B = 0 ↔ IsRouterEquilibrium B := by
   rfl
 
+/-- Vanishing odd-sector defect is exactly vanishing router residual by operator-norm separation. -/
+theorem δ_odd_eq_zero_iff_routerResidual_eq_zero (B : RouterDefectBoundBridge (E := E)) :
+    δ_odd B = 0 ↔ B.routerResidual = 0 := by
+  unfold δ_odd
+  exact ContinuousLinearMap.opNorm_zero_iff B.routerResidual
+
 theorem equilibrium_of_δ_odd_eq_zero
     (B : RouterDefectBoundBridge (E := E))
     (hδ : δ_odd B = 0) :
@@ -144,6 +150,42 @@ theorem sourcedGenerator_deviation_next_le
   rw [sourcedGenerator_deviation_eq_δ_odd step.next,
     sourcedGenerator_deviation_eq_δ_odd B]
   exact step.δ_odd_next_le_δ_odd
+
+/--
+Construct a one-step defect reduction from an actual zero-residual proof.
+
+This is not an assumed monotonicity field: the inequality is derived from
+`ContinuousLinearMap.opNorm_zero` and nonnegativity of the current odd defect.
+-/
+def SinkhornDefectStep.of_routerResidual_eq_zero
+    (B next : RouterDefectBoundBridge (E := E))
+    (hNext : next.routerResidual = 0) :
+    SinkhornDefectStep (E := E) B :=
+  { next := next
+    δ_odd_next_le_δ_odd := by
+      unfold δ_odd
+      rw [hNext]
+      calc
+        ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+        _ ≤ ‖B.routerResidual‖ := norm_nonneg B.routerResidual }
+
+@[simp] theorem SinkhornDefectStep.of_routerResidual_eq_zero_next
+    (B next : RouterDefectBoundBridge (E := E))
+    (hNext : next.routerResidual = 0) :
+    (SinkhornDefectStep.of_routerResidual_eq_zero (E := E) B next hNext).next = next :=
+  rfl
+
+/--
+Zero residual in the next state gives monotone sourced-generator deviation.
+-/
+theorem sourcedGenerator_deviation_next_le_of_routerResidual_eq_zero
+    (B next : RouterDefectBoundBridge (E := E))
+    (hNext : next.routerResidual = 0) :
+    ‖next.sourcedGenerator - next.flow.K0‖ ≤ ‖B.sourcedGenerator - B.flow.K0‖ := by
+  simpa using
+    sourcedGenerator_deviation_next_le
+      (E := E)
+      (SinkhornDefectStep.of_routerResidual_eq_zero (E := E) B next hNext)
 
 /--
 One-step Sinkhorn update wrapper on the corrected thermodynamic readout lane.
@@ -288,6 +330,30 @@ theorem δ_odd_eq_clockDefect_norm
     δ_odd B.bound =
       ‖InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) B.hMod‖ := by
   simp [δ_odd, B.residual_eq_clockDefect]
+
+/-- Router equilibrium on a clock-defect bridge is exactly zero canonical clock defect. -/
+theorem router_equilibrium_iff_clockDefect_eq_zero
+    (B : RouterClockDefectBridge (E := E)) :
+    IsRouterEquilibrium B.bound ↔
+      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) B.hMod = 0 := by
+  exact
+    (δ_odd_eq_zero_iff_routerResidual_eq_zero (E := E) B.bound).trans
+      (by
+        constructor
+        · intro hResidual
+          simpa [B.residual_eq_clockDefect] using hResidual
+        · intro hClock
+          simpa [B.residual_eq_clockDefect] using hClock)
+
+/-- Router equilibrium is equivalent to the owner detailed-equilibrium condition. -/
+theorem router_equilibrium_iff_detailedEquilibrium
+    (B : RouterClockDefectBridge (E := E)) :
+    IsRouterEquilibrium B.bound ↔
+      InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) B.hMod := by
+  exact
+    (router_equilibrium_iff_clockDefect_eq_zero (E := E) B).trans
+      (InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
+        (H := E) B.hMod)
 
 /--
 Detailed equilibrium (`scalePart = 0`) forces vanishing odd-sector defect on

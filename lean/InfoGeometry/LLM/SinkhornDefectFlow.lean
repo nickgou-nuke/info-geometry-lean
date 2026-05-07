@@ -560,6 +560,40 @@ structure SinkhornRNBarrierThermodynamicComparison (n : Nat) where
     δ_relVol n T k ≤ δ_ZD_thermo B
 
 /--
+Constructor that keeps the D3 budget theorem-backed once the current
+thermodynamic residual readout has been identified with the current RN barrier.
+
+This removes the need to supply the `central_readout_budget` field separately:
+it is derived from `δ_odd_thermo_le_ZD` on the existing thermodynamic bridge.
+-/
+noncomputable def SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier
+    {n : Nat}
+    (B : RouterDefectThermodynamicBridge (E := E))
+    (T : SinkhornTrajectory n)
+    (k : Nat)
+    (hResidual : δ_odd_thermo B = δ_relVol n T k) :
+    SinkhornRNBarrierThermodynamicComparison (E := E) n :=
+  { B := B
+    T := T
+    k := k
+    residual_readout_eq_barrier := hResidual
+    central_readout_budget := by
+      rw [← hResidual]
+      exact δ_odd_thermo_le_ZD (E := E) B }
+
+@[simp] theorem SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier_central_readout_budget
+    {n : Nat}
+    (B : RouterDefectThermodynamicBridge (E := E))
+    (T : SinkhornTrajectory n)
+    (k : Nat)
+    (hResidual : δ_odd_thermo B = δ_relVol n T k) :
+    (SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier
+      (E := E) B T k hResidual).central_readout_budget =
+      (by
+        simpa [hResidual] using δ_odd_thermo_le_ZD (E := E) B) := by
+  rfl
+
+/--
 An explicit RN-barrier comparison discharges the thermodynamic D3 bound.
 -/
 theorem δ_odd_thermo_le_ZD_of_rnBarrierComparison

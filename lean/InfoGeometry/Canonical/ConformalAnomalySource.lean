@@ -375,6 +375,27 @@ theorem projectors_commute_of_chiralScale_eq_zero
   exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
 
 /--
+Constructive iff route between scalar zero anomaly and projector commutation.
+
+This packages the existing obstruction-operator owner theorem so downstream
+users can consume the canonical `Commute` witness instead of carrying a bare
+multiplication equality hypothesis.
+-/
+theorem chiralScale_eq_zero_iff_projectors_commute :
+    CI.chiralScale = 0
+      ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
+  constructor
+  · intro hScaleZero
+    have hObsNorm : ‖CI.projectorObstruction‖₊ = 0 := by
+      simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
+    exact (CI.projectorObstruction_eq_zero_iff_commute).1
+      ((nnnorm_eq_zero).1 hObsNorm)
+  · intro hComm
+    have hObsZero : CI.projectorObstruction = 0 :=
+      CI.projectorObstruction_eq_zero_of_commute hComm
+    simp [chiralScale, obstructionScale, hObsZero]
+
+/--
 If the Drazin spectral projector commutes with the Moore-Penrose right
 projector and the scalar chiral source vanishes, then the spectral projector
 commutes with the conformal dilation generator.

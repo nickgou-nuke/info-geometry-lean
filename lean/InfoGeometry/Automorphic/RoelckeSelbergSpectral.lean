@@ -404,7 +404,7 @@ def potentialOnPacket
     {chi : JointEigenvalue HeckeIndex}
     (_P : CuspidalEigenpacket R chi)
     (s : ℂ) : ℝ :=
-  potential L chi s
+  L.potential chi s
 
 end AutomorphicLFunctionDatum
 

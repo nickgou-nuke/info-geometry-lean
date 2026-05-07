@@ -9,6 +9,7 @@ import InfoGeometry.Thermo.KMSDetailedBalance
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Thermo.SusceptibilityHessian
+import InfoGeometry.Thermo.SusceptibilityOnsagerStress
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo
 

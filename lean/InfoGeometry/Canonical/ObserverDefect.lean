@@ -300,6 +300,43 @@ theorem observerDeviationControlledByZD_of_compressedDeviation_eq_zero
       norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
 
 /--
+If the compressed observer-deviation channel vanishes, then the observer defect
+residual itself vanishes by the exact projector-compression identity.
+-/
+theorem observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    observerDefectResidual CIK obs = 0 := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+  exact hZero
+
+/--
+If the compressed observer-deviation channel vanishes, then the observer defect
+residual satisfies the `Z_D` budget constructively: the residual is zero, so
+only `0 ≤ ‖Z_D‖` remains.
+-/
+@[rep_depth krein]
+theorem observerDefectResidual_norm_le_ZD_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero (CIK := CIK) (obs := obs) hZero
+  rw [hResidual]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
 Zero-Casimir/zero-defect-central collapse:
 if the remaining observer deviation channel is controlled by `Z_D` and the
 operatorial central defect channel itself is zero, then the observer defect

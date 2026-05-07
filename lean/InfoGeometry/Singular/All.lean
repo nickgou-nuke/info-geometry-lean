@@ -3,6 +3,7 @@ import InfoGeometry.Singular.DrazinAdjoint
 import InfoGeometry.Singular.MoorePenroseAdjoint
 import InfoGeometry.Singular.NaturalGradient
 import InfoGeometry.Singular.NormalAnomaly
+import InfoGeometry.Singular.SchurDrazinMoorePenrose
 
 namespace InfoGeometry
 

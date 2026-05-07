@@ -84,9 +84,27 @@ noncomputable def CocycleEntropyPotential
   cocycleLogPotential (H := H) σ u hBridge t
 
 /--
-Cocycle-to-bound theorem:
-the Topological Bekenstein Bound is a verified consequence of the
-Connes RN-cocycle layer.
+Barrier-lift route to the topological Bekenstein bound: once the RN barrier is
+identified with an absolute cocycle-potential increment, nonnegativity follows
+without carrying an explicit `IsConnesCocycle` packet.
+-/
+theorem topologicalBekensteinBound_of_barrierLift
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k =
+      |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|) :
+    TopologicalBekensteinBound n T := by
+  intro k
+  rw [hBarrierLift]
+  exact abs_nonneg _
+
+/--
+Compatibility cocycle-to-bound theorem.  The `IsConnesCocycle` hypothesis is
+retained for named-argument callers, but the proof now routes through the
+smaller barrier-lift theorem above; the bound itself does not use the additive
+cocycle law.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle
   (σ : AdditiveModularFlow (H := H))
@@ -97,16 +115,10 @@ theorem topologicalBekensteinBound_of_connesCocycle
     (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k =
       |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|) :
     TopologicalBekensteinBound n T := by
-  have hAdd :
-      ∀ s t,
-        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
-          = CocycleEntropyPotential (H := H) σ u hBridge s
-            + CocycleEntropyPotential (H := H) σ u hBridge t := by
-    simpa [CocycleEntropyPotential] using
-      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
-  intro k
-  rw [hBarrierLift]
-  exact abs_nonneg _
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact topologicalBekensteinBound_of_barrierLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (hBarrierLift := hBarrierLift)
 
 /--
 Concrete generator lift from a cocycle potential to the trajectory RN generator.
@@ -278,6 +290,24 @@ theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
               exact congrArg (trajectoryRNGeneratorPotential (n := n) T) hcast
 
 /--
+Connes-cocycle owner route to zero-normalization of the selected cocycle
+entropy potential.
+
+This names the constructive discharge of the older bare `hZero :
+CocycleEntropyPotential ... 0 = 0` surface.  Compatibility theorems can keep
+their `IsConnesCocycle` arguments, but downstream proofs no longer need to
+rebuild the zero-normalization proof inline.
+-/
+theorem cocycleEntropyPotential_zero_of_connesCocycle
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ) :
+    CocycleEntropyPotential (H := H) σ u hBridge 0 = 0 := by
+  simpa [CocycleEntropyPotential] using
+    (cocycleLogPotential_zero (H := H) (σ := σ) (u := u) hCocycle hBridge)
+
+/--
 Nat-step cocycle potential matching derived from cocycle law and generator lift.
 The zero-time normalization is discharged from `IsConnesCocycle`.
 -/
@@ -294,13 +324,44 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
         = trajectoryRNGeneratorPotential (n := n) T k := by
   exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
     (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
-    hLift (by
-      simpa [CocycleEntropyPotential] using
-        (cocycleLogPotential_zero (H := H) (σ := σ) (u := u) hCocycle hBridge))
+    hLift
+    (cocycleEntropyPotential_zero_of_connesCocycle
+      (H := H) (σ := σ) (u := u)
+      (hCocycle := hCocycle) (hBridge := hBridge))
+
+/--
+Zero-normalized route for generator-lift equivalence.
+
+The integer-time matching equivalence only needs the concrete generator lift and
+zero-time normalization of the selected entropy potential; it does not need the
+full `IsConnesCocycle` packet.
+-/
+theorem cocycleGeneratorLift_iff_natMatch_of_cocyclePotential_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge)
+      ↔
+    (∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k) := by
+  constructor
+  · intro hLift
+    exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
+      hLift hZero
+  · intro hMatch
+    exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch
 
 /--
 Under a Connes cocycle law, the concrete generator-lift condition is equivalent
 to integer-time matching with the canonical trajectory RN-generator potential.
+
+This compatibility wrapper keeps the older `IsConnesCocycle` surface, but now
+routes through the zero-normalized theorem above.
 -/
 theorem cocycleGeneratorLift_iff_natMatch_of_connesCocycle
   (σ : AdditiveModularFlow (H := H))
@@ -313,19 +374,40 @@ theorem cocycleGeneratorLift_iff_natMatch_of_connesCocycle
     (∀ k : Nat,
       CocycleEntropyPotential (H := H) σ u hBridge k
         = trajectoryRNGeneratorPotential (n := n) T k) := by
-  constructor
-  · intro hLift
-    exact cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
-      (n := n) (H := H) (σ := σ) (u := u) (T := T)
-      (hCocycle := hCocycle) (hBridge := hBridge) hLift
-  · intro hMatch
-    exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
-      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch
+  exact cocycleGeneratorLift_iff_natMatch_of_cocyclePotential_zero
+    (n := n) (H := H) (σ := σ) (u := u) (T := T) (hBridge := hBridge)
+    (cocycleEntropyPotential_zero_of_connesCocycle
+      (H := H) (σ := σ) (u := u)
+      (hCocycle := hCocycle) (hBridge := hBridge))
 
 /--
-Refined cocycle-to-bound theorem:
-if the cocycle potential increments realize the concrete trajectory RN generator,
-the topological Bekenstein bound follows directly.
+Constructive generator-lift route to the topological Bekenstein bound:
+once the cocycle potential increments are identified with the concrete
+trajectory RN generator, no separate `IsConnesCocycle` packet is needed for the
+bound itself.
+-/
+theorem topologicalBekensteinBound_of_cocycleGeneratorLift
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  intro k
+  have hle :
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+    rw [hLift k]
+    exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
+  exact le_trans (abs_nonneg _) hle
+
+/--
+Compatibility wrapper for the older Connes-cocycle theorem surface.  The
+`IsConnesCocycle` hypothesis is retained for callers but the proof routes
+through the smaller generator-lift theorem above.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
   (σ : AdditiveModularFlow (H := H))
@@ -337,26 +419,35 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
       CocycleGeneratorLift n T
         (CocycleEntropyPotential (H := H) σ u hBridge)) :
     TopologicalBekensteinBound n T := by
-  let _hAdd :
-      ∀ s t,
-        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
-          = CocycleEntropyPotential (H := H) σ u hBridge s
-            + CocycleEntropyPotential (H := H) σ u hBridge t := by
-    simpa [CocycleEntropyPotential] using
-      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
-  intro k
-  have hle :
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (hLift := hLift)
+
+/--
+Increment-level generator-lift control:
+under the concrete generator-lift condition, each cocycle increment is bounded
+by the corresponding trajectory RN barrier.  This is the hypothesis-minimal
+route; no additive cocycle law is used.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    ∀ k : Nat,
       |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
         - CocycleEntropyPotential (H := H) σ u hBridge k|
         ≤ trajectoryRNBarrier n T k := by
-    rw [hLift k]
-    exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
-  exact le_trans (abs_nonneg _) hle
+  intro k
+  rw [hLift k]
+  exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
 
 /--
-Increment-level cocycle-to-RN barrier control:
-under the concrete generator-lift condition, each cocycle increment is bounded
-by the corresponding trajectory RN barrier.
+Compatibility wrapper for the older Connes-cocycle increment-control surface.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLift
   (σ : AdditiveModularFlow (H := H))
@@ -371,21 +462,38 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLi
       |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
         - CocycleEntropyPotential (H := H) σ u hBridge k|
         ≤ trajectoryRNBarrier n T k := by
-  let _hAdd :
-      ∀ s t,
-        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
-          = CocycleEntropyPotential (H := H) σ u hBridge s
-            + CocycleEntropyPotential (H := H) σ u hBridge t := by
-    simpa [CocycleEntropyPotential] using
-      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
-  intro k
-  rw [hLift k]
-  exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (hLift := hLift)
 
 /--
-Cocycle-to-bound theorem with internally derived generator lift:
-it suffices to match cocycle potential values on integer times with the
-canonical discrete RN-generator potential.
+Nat-match route to the topological Bekenstein bound:
+if the cocycle entropy potential is already identified on integer times with the
+canonical trajectory RN-generator potential, the concrete generator lift is
+recovered directly.  No `IsConnesCocycle` packet is needed for this bound.
+-/
+theorem topologicalBekensteinBound_of_natMatch
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hMatch :
+      ∀ k : Nat,
+        CocycleEntropyPotential (H := H) σ u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) T k) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_cocycleEntropyPotential_match
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch)
+
+/--
+Compatibility wrapper for the older cocycle/nat-match theorem surface.  The
+`IsConnesCocycle` argument is retained for named-argument callers, but the proof
+routes through `topologicalBekensteinBound_of_natMatch`.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_natMatch
   (σ : AdditiveModularFlow (H := H))
@@ -398,12 +506,10 @@ theorem topologicalBekensteinBound_of_connesCocycle_natMatch
         CocycleEntropyPotential (H := H) σ u hBridge k
           = trajectoryRNGeneratorPotential (n := n) T k) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact topologicalBekensteinBound_of_natMatch
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hCocycle := hCocycle) (hBridge := hBridge)
-    (hLift :=
-      cocycleGeneratorLift_of_cocycleEntropyPotential_match
-        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch)
+    (hBridge := hBridge) (hMatch := hMatch)
 
 /--
 Zero-anchored cocycle-to-bound theorem:
@@ -457,6 +563,63 @@ structure CasiniIncrementBridge
     ∀ k : Nat, relEnt (k + 1) ≤ relEnt k
 
 /--
+Minimal Casini increment bridge data needed for the generator-lift route.
+
+The older `CasiniIncrementBridge` also carries relative-entropy monotonicity.
+That field is only needed for relative-entropy drop nonnegativity; the cocycle
+increment route to the RN barrier needs just the two concrete increment
+identifications below.
+-/
+structure MinimalCasiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile) : Prop where
+  cocycle_increment_eq_relEnt_drop :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k
+        = relEnt k - relEnt (k + 1)
+  relEnt_drop_eq_phaseRN :
+    ∀ k : Nat,
+      relEnt k - relEnt (k + 1)
+        = phaseRNGeneratorBefore n (phaseAt k) (T.state k)
+
+/--Recover the minimal Casini increment bridge from the legacy monotone packet. -/
+theorem minimalCasiniIncrementBridge_of_casiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt where
+  cocycle_increment_eq_relEnt_drop := hCasini.cocycle_increment_eq_relEnt_drop
+  relEnt_drop_eq_phaseRN := hCasini.relEnt_drop_eq_phaseRN
+
+/--
+From minimal Casini bridge data we derive the concrete cocycle generator-lift
+condition; no relative-entropy monotonicity field is required.
+-/
+theorem cocycleGeneratorLift_of_minimalCasiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) := by
+  intro k
+  calc
+    CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+      - CocycleEntropyPotential (H := H) σ u hBridge k
+        = relEnt k - relEnt (k + 1) :=
+          hCasini.cocycle_increment_eq_relEnt_drop k
+    _ = phaseRNGeneratorBefore n (phaseAt k) (T.state k) :=
+          hCasini.relEnt_drop_eq_phaseRN k
+
+/--
 From Casini bridge data we derive the concrete cocycle generator-lift condition.
 -/
 theorem cocycleGeneratorLift_of_casiniIncrementBridge
@@ -467,14 +630,12 @@ theorem cocycleGeneratorLift_of_casiniIncrementBridge
     (relEnt : RelativeEntropyProfile)
     (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
     CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) := by
-  intro k
-  calc
-    CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
-      - CocycleEntropyPotential (H := H) σ u hBridge k
-        = relEnt k - relEnt (k + 1) :=
-          hCasini.cocycle_increment_eq_relEnt_drop k
-    _ = phaseRNGeneratorBefore n (phaseAt k) (T.state k) :=
-          hCasini.relEnt_drop_eq_phaseRN k
+  exact cocycleGeneratorLift_of_minimalCasiniIncrementBridge
+    (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+    (T := T) (relEnt := relEnt)
+    (minimalCasiniIncrementBridge_of_casiniIncrementBridge
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+      (T := T) (relEnt := relEnt) hCasini)
 
 /--
 Relative-entropy drops are nonnegative under the Casini monotonicity condition.
@@ -491,8 +652,125 @@ theorem relEnt_drop_nonneg_of_casiniIncrementBridge
   linarith [hCasini.relEnt_monotone k]
 
 /--
-Casini-route cocycle-to-bound theorem:
-`hLift` is derived internally from relative-entropy bridge data.
+Minimal Casini-route increment control: the old increment-bound surface needed a
+bare `CocycleGeneratorLift` hypothesis.  On this narrowed relative-entropy
+branch the lift is recovered from the two increment-identification fields only;
+no additive cocycle, generator-lift, or relative-entropy monotonicity packet is
+carried.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_minimalCasiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := T) (relEnt := relEnt) hCasini)
+
+/--
+Casini-route increment control compatibility wrapper.  The legacy monotone
+`CasiniIncrementBridge` packet is retained for named callers, but the proof now
+routes through the smaller `MinimalCasiniIncrementBridge` theorem above.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_casiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrement
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (relEnt := relEnt)
+    (hCasini :=
+      minimalCasiniIncrementBridge_of_casiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := T) (relEnt := relEnt) hCasini)
+
+/--
+Compatibility wrapper for the Connes/Casini increment-control surface.  The
+`IsConnesCocycle` argument is kept for named callers, but the proof now goes
+through the constructive Casini bridge rather than a free generator-lift packet.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_casiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_casiniIncrement
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (relEnt := relEnt) (hCasini := hCasini)
+
+/--
+Minimal Casini-route cocycle-to-bound theorem: the generator lift is derived
+internally from two increment-identification fields.  This branch does not carry
+an additive `IsConnesCocycle`, a free `CocycleGeneratorLift`, or the legacy
+relative-entropy monotonicity field.
+-/
+theorem topologicalBekensteinBound_of_minimalCasiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_minimalCasiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := T) (relEnt := relEnt) hCasini)
+
+/--
+Casini-route cocycle-to-bound compatibility wrapper:
+`hLift` is derived internally from relative-entropy bridge data.  The legacy
+monotone `CasiniIncrementBridge` packet is kept for named callers, but the bound
+itself now routes through `topologicalBekensteinBound_of_minimalCasiniIncrement`.
+-/
+theorem topologicalBekensteinBound_of_casiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_minimalCasiniIncrement
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := hBridge) (relEnt := relEnt)
+    (hCasini :=
+      minimalCasiniIncrementBridge_of_casiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := T) (relEnt := relEnt) hCasini)
+
+/--
+Compatibility wrapper for the older Casini/Connes theorem surface.  The
+`IsConnesCocycle` argument is retained for named-argument callers, but the proof
+now routes through `topologicalBekensteinBound_of_casiniIncrement`.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_casiniIncrement
   (σ : AdditiveModularFlow (H := H))
@@ -503,13 +781,10 @@ theorem topologicalBekensteinBound_of_connesCocycle_casiniIncrement
     (relEnt : RelativeEntropyProfile)
     (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
+  have _ : IsConnesCocycle σ u := hCocycle
+  exact topologicalBekensteinBound_of_casiniIncrement
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hCocycle := hCocycle) (hBridge := hBridge)
-    (hLift :=
-      cocycleGeneratorLift_of_casiniIncrementBridge
-        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
-        (T := T) (relEnt := relEnt) hCasini)
+    (hBridge := hBridge) (relEnt := relEnt) (hCasini := hCasini)
 
 end CocycleBridge
 
@@ -533,8 +808,32 @@ noncomputable abbrev TomitaCocycleEntropyPotential
     u hBridge t
 
 /--
-Tomita-specialized cocycle-to-bound theorem under the concrete generator-lift
-condition for the modular-sign flow.
+Tomita-specialized generator-lift route to the Bekenstein bound.
+
+This is the hypothesis-minimal modular-sign branch: once the concrete generator
+lift is present, the proof uses the already-owned RN-barrier comparison and does
+not carry an explicit `IsConnesCocycle` packet.
+-/
+theorem topologicalBekensteinBound_of_tomitaGeneratorLift
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hLift :
+      CocycleGeneratorLift n T
+        (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_cocycleGeneratorLift
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T) (hBridge := hBridge) (hLift := hLift)
+
+/--
+Compatibility Tomita/Connes wrapper.  The `IsConnesCocycle` hypothesis is kept
+for named-argument callers, but the proof now routes through the smaller
+`topologicalBekensteinBound_of_tomitaGeneratorLift` theorem above.
 -/
 theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift
     (u : ℝ → AlgebraEnd H)
@@ -550,11 +849,38 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
     TopologicalBekensteinBound n T := by
-  simpa [TomitaCocycleEntropyPotential] using
-    topologicalBekensteinBound_of_connesCocycle_generatorLift
-      (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-      (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge) (hLift := hLift)
+  have _ :
+      IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u := hCocycle
+  exact topologicalBekensteinBound_of_tomitaGeneratorLift
+    (n := n) (H := H) (u := u) (T := T) (hBridge := hBridge) (hLift := hLift)
+
+/--
+Tomita flow-unit generator-lift endpoint on the canonical welded cocycle lane.
+
+This removes the explicit `IsConnesCocycle` and `ScalarCocycleBridge` arguments
+from the Tomita generator-lift surface by using the owned flow-unit cocycle and
+unit scalar bridge.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_generatorLift
+    (T : SinkhornTrajectory n)
+    (hLift :
+      CocycleGeneratorLift n T
+        (TomitaCocycleEntropyPotential (H := H)
+          (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_tomitaGeneratorLift
+    (n := n) (H := H)
+    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (T := T)
+    (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hLift := hLift)
 
 /--
 Tomita-specialized cocycle-to-bound theorem with internally derived generator lift:
@@ -633,6 +959,36 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
       (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge)
       (relEnt := relEnt) (hCasini := hCasini)
+
+/--
+Tomita-specialized nat-match endpoint on the canonical flow-unit cocycle lane.
+
+This discharges both the explicit `IsConnesCocycle` witness and the scalar bridge
+packet by using the canonical flow-unit cocycle and unit scalar bridge.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_natMatch
+    (T : SinkhornTrajectory n)
+    (hMatch :
+      ∀ k : Nat,
+        TomitaCocycleEntropyPotential (H := H)
+          (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          k
+          = trajectoryRNGeneratorPotential (n := n) T k) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
+    (n := n) (H := H)
+    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (T := T)
+    (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hMatch := hMatch)
 
 /--
 Tomita-specialized Casini-route endpoint on the canonical flow-unit cocycle

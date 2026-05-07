@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Clifford.Grading
 
 namespace InfoGeometry.Canonical.ChiralCliffordBridge
@@ -104,6 +105,26 @@ theorem cartan_collapse_of_unitRelativeVolume
   have hNormal : CI.IsNormalInference :=
     CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
+  exact cartan_collapse_of_normal CI hNormal
+
+omit [FiniteDimensional ℝ E] in
+/--
+Proof-carrying unit-relative-volume route for Cartan anomaly collapse.
+
+This is the constructive companion to `cartan_collapse_of_unitRelativeVolume`:
+callers supply the `UnitRelativeVolumeBit` witness packet rather than a bare
+`relativeVolumeChangeRN n M = 1` equality.
+-/
+theorem cartan_collapse_of_unitRelativeVolumeBit
+    {n : Nat}
+    (CI : ConformalInference E)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
+    CI.chiralAnomaly = 0 := by
+  have hNormal : CI.IsNormalInference :=
+    InfoGeometry.Canonical.IncompressibleBitBridge.isNormalInference_of_unitRelativeVolumeBit
+      (CI := CI) (M := M) hScaleFromKahler bit
   exact cartan_collapse_of_normal CI hNormal
 
 end InfoGeometry.Canonical.ChiralCliffordBridge

@@ -28,8 +28,19 @@ def _iter_errors(schema: Mapping[str, Any], instance: Any, path: list[str | int]
     if "$ref" in schema:
         ref = str(schema["$ref"])
         target = None
-        if resolver is not None:
-            target = resolver.store.get(ref) if isinstance(resolver.store, dict) else None
+        if resolver is not None and isinstance(resolver.store, dict):
+            target = resolver.store.get(ref)
+            if target is None and "#" in ref:
+                base_ref, fragment = ref.split("#", 1)
+                target = resolver.store.get(base_ref)
+                if isinstance(target, Mapping) and fragment.startswith("/"):
+                    for part in fragment.lstrip("/").split("/"):
+                        part = part.replace("~1", "/").replace("~0", "~")
+                        if isinstance(target, Mapping) and part in target:
+                            target = target[part]
+                        else:
+                            target = None
+                            break
         if target is None:
             errors.append(
                 ValidationError(
@@ -110,6 +121,11 @@ def _iter_errors(schema: Mapping[str, Any], instance: Any, path: list[str | int]
         if isinstance(min_items, int) and len(instance) < min_items:
             errors.append(ValidationError(f"should have at least {min_items} items", path=tuple(path)))
 
+        contains_schema = schema.get("contains")
+        if isinstance(contains_schema, Mapping):
+            if not any(not _iter_errors(contains_schema, child, path, resolver) for child in instance):
+                errors.append(ValidationError("does not contain items matching the given schema", path=tuple(path)))
+
     enum_vals = schema.get("enum")
     if enum_vals is not None:
         try:
@@ -118,6 +134,9 @@ def _iter_errors(schema: Mapping[str, Any], instance: Any, path: list[str | int]
         except TypeError:
             # Unhashable instance values are effectively "not equal" to enum entries.
             pass
+
+    if "const" in schema and instance != schema["const"]:
+        errors.append(ValidationError(f"{schema['const']!r} was expected", path=tuple(path)))
 
     min_length = schema.get("minLength")
     if min_length is not None and isinstance(instance, str):

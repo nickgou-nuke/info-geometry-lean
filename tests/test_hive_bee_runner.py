@@ -204,7 +204,7 @@ def test_runner_rejects_allowed_kind_above_authority_ceiling(tmp_path: Path) -> 
     try:
         run_task(task, store_path=store, output_packets=[execution_intent_packet("exec_too_high")], worker_id="socratesbee-test")
     except RunnerError as exc:
-        assert "exceeds BeeTask ceiling" in str(exc)
+        assert "not allowed by role policy" in str(exc) or "exceeds BeeTask ceiling" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("expected authority ceiling rejection")
 
@@ -325,3 +325,36 @@ def test_result_contract_rejects_promotion_allowed_true() -> None:
         assert "promotion_allowed must be false" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("expected promotion_allowed rejection")
+
+
+def test_runner_rejects_output_outside_role_policy_even_when_task_allows_it(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, source_packet("src_input"))
+    task = bee_task(allowed_output_kinds=["SocraticQuestionPacket", "SourceObservationPacket"])
+
+    try:
+        run_task(task, store_path=store, output_packets=[source_packet("source_not_socrates")], worker_id="socratesbee-test")
+    except RunnerError as exc:
+        assert "not allowed by role policy" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("expected role-policy output rejection")
+
+
+def test_runner_rejects_leanbee_without_execution_intent_input(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, source_packet("src_input"))
+    task = bee_task(
+        allowed_output_kinds=["LeanVerificationPacket"],
+        forbidden_output_kinds=["BuildPacket", "AuditPacket", "PromotionDecisionPacket"],
+        authority_ceiling="lean_checked",
+    )
+    task["assigned_role"] = "LeanBee"
+    task["task_kind"] = "lean.verify"
+
+    try:
+        run_task(task, store_path=store, output_packets=[], worker_id="leanbee-test")
+    except RunnerError as exc:
+        assert "requires input kinds" in str(exc)
+        assert "ExecutionIntentPacket" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("expected missing ExecutionIntentPacket rejection")

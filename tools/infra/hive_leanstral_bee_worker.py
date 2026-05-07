@@ -10,6 +10,7 @@ cannot emit authority-gate packets.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -19,14 +20,14 @@ from typing import Any, Callable
 try:
     from tools.infra.hermes_leanstral_autoproof_loop import make_local_leanstral_proposer, run_autoproof
     from tools.infra.hermes_vibe_coding_agent import LeanstralConfig
-    from tools.infra.hive_bee_runner import RunnerError, run_task, write_json
+    from tools.infra.hive_bee_runner import RunnerError, run_task, validate_envelope, validate_result_contract, write_json
     from tools.infra.hive_local_packet_store import StoreError, load_json
 except ModuleNotFoundError:  # pragma: no cover - direct script execution fallback
     ROOT_FALLBACK = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(ROOT_FALLBACK))
     from tools.infra.hermes_leanstral_autoproof_loop import make_local_leanstral_proposer, run_autoproof
     from tools.infra.hermes_vibe_coding_agent import LeanstralConfig
-    from tools.infra.hive_bee_runner import RunnerError, run_task, write_json
+    from tools.infra.hive_bee_runner import RunnerError, run_task, validate_envelope, validate_result_contract, write_json
     from tools.infra.hive_local_packet_store import StoreError, load_json
 
 AutoproofFn = Callable[..., dict[str, Any]]
@@ -108,6 +109,34 @@ def packet_id_for(task: dict[str, Any], suffix: str) -> str:
     return f"{suffix}_{base}"
 
 
+def goal_hash(goal: str) -> str:
+    return "sha256:" + hashlib.sha256(goal.strip().encode("utf-8")).hexdigest()
+
+
+def compact_excerpt(value: Any, *, limit: int = 1200) -> str:
+    return str(value or "")[:limit]
+
+
+def packet_envelope(task: dict[str, Any], *, packet_id: str, kind: str, status: str, now: str, authority_origin: str) -> dict[str, Any]:
+    return {
+        "id": packet_id,
+        "kind": kind,
+        "status": status,
+        "lineage_id": task["lineage_id"],
+        "revision": 1,
+        "origin_run_id": task["origin_run_id"],
+        "created_at": now,
+        "updated_at": now,
+        "created_by_agent": "HermesLeanstralBee",
+        "agent_role": "HermesLeanstralBee",
+        "backend": "local_leanstral_openai_compatible",
+        "task_id": task["task_id"],
+        "authority": "proposal",
+        "authority_origin": authority_origin,
+        "promotion_allowed": False,
+    }
+
+
 def embedded_trace_for(task: dict[str, Any], autoproof: dict[str, Any], emitted_kind: str) -> dict[str, Any]:
     trace = autoproof.get("autoproof_trace")
     if not isinstance(trace, dict):
@@ -136,16 +165,187 @@ def embedded_trace_for(task: dict[str, Any], autoproof: dict[str, Any], emitted_
 
 
 def trace_ref_for(task: dict[str, Any]) -> dict[str, Any]:
-    return {"packet_id": packet_id_for(task, "autoproof_trace"), "embedded": True}
+    return {"packet_id": packet_id_for(task, "autoproof_trace"), "embedded": False}
 
 
-def build_candidate_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dict[str, Any]:
+def trace_attempts(autoproof: dict[str, Any]) -> list[dict[str, Any]]:
+    trace = autoproof.get("autoproof_trace")
+    if isinstance(trace, dict) and isinstance(trace.get("attempts"), list):
+        return [attempt for attempt in trace["attempts"] if isinstance(attempt, dict)]
+    iterations = autoproof.get("iterations", [])
+    attempts: list[dict[str, Any]] = []
+    if isinstance(iterations, list):
+        for iteration in iterations:
+            if not isinstance(iteration, dict):
+                continue
+            attempts.append(
+                {
+                    "attempt_index": int(iteration.get("iteration", len(attempts) + 1)),
+                    "mode": str(iteration.get("prompt_kind", "tactic")),
+                    "candidate_text": str(iteration.get("candidate", "")),
+                    "lean_result": {
+                        "accepted": bool(iteration.get("lean_ok", False)),
+                        "status": str(iteration.get("lean_status", "failed")),
+                        "feedback": str(iteration.get("lean_feedback") or iteration.get("lean_stdout") or iteration.get("error") or ""),
+                    },
+                    "strategy": str(iteration.get("strategy", "lean_feedback_repair")),
+                    "changed_strategy": bool(iteration.get("changed_strategy", False)),
+                    "error_signature": str(iteration.get("error_signature", "")),
+                    "retrieved_lemmas": [],
+                }
+            )
+    return attempts
+
+
+def build_repair_attempt_packet(
+    task: dict[str, Any],
+    autoproof: dict[str, Any],
+    attempt: dict[str, Any],
+    *,
+    now: str,
+    episode_id: str,
+) -> dict[str, Any]:
+    goal = str(autoproof.get("goal") or extract_goal(task))
+    max_iterations = int(autoproof.get("max_iterations") or task.get("max_iterations", 1))
+    attempt_index = int(attempt.get("attempt_index", 1))
+    lean_result = attempt.get("lean_result") if isinstance(attempt.get("lean_result"), dict) else {}
+    accepted = bool(lean_result.get("accepted", False))
+    lean_status = str(lean_result.get("status", "success" if accepted else "failed"))
+    error_sig = str(attempt.get("error_signature", ""))
+    candidate_text = str(attempt.get("candidate_text", ""))
+    return {
+        **packet_envelope(
+            task,
+            packet_id=packet_id_for(task, f"repair_attempt_{attempt_index}"),
+            kind="RepairAttemptPacket",
+            status="success" if accepted else "failed",
+            now=now,
+            authority_origin="bounded_autoproof_attempt",
+        ),
+        "parent_refs": [str(x) for x in task.get("input_packet_ids", [])],
+        "target": {
+            "target_packet_id": str(task.get("target_packet_id") or (task.get("input_packet_ids") or ["task:unanchored"])[0]),
+            "file": str(task.get("target_file", task.get("file", ""))),
+            "module": str(task.get("target_module", task.get("module", ""))),
+            "theorem": str(task.get("target_theorem", task.get("theorem", ""))),
+            "goal_hash": goal_hash(goal),
+        },
+        "episode": {
+            "episode_id": episode_id,
+            "task_id": task["task_id"],
+            "assigned_role": "HermesLeanstralBee",
+            "attempt_index": attempt_index,
+            "max_iterations": max_iterations,
+        },
+        "candidate": {
+            "candidate_kind": str(attempt.get("mode", "tactic")) if str(attempt.get("mode", "tactic")) in {"tactic", "patch", "whole_proof", "theorem_shape", "branch_repair"} else "tactic",
+            "candidate_text": candidate_text,
+            "strategy": str(attempt.get("strategy", "initial_tactic")),
+            "changed_strategy_from_previous": bool(attempt.get("changed_strategy", False)),
+            "prompt_mode": "repair" if str(attempt.get("mode", "")) == "repair" else "tactic",
+        },
+        "lean_probe": {
+            "probe_kind": "lean_interact_wrapper",
+            "accepted": accepted,
+            "status": lean_status if lean_status in {"success", "failed", "timeout", "no_progress", "not_run", "partial"} else ("success" if accepted else "failed"),
+            "goal_before": str(attempt.get("goal_before") or goal),
+            "goal_after": str(attempt.get("goal_after", "")),
+            "stdout_excerpt": compact_excerpt(lean_result.get("stdout") or lean_result.get("feedback", "")),
+            "stderr_excerpt": compact_excerpt(lean_result.get("stderr", "")),
+            "error_signature": error_sig,
+            "diagnostics": [compact_excerpt(lean_result.get("feedback", ""))] if lean_result.get("feedback") else [],
+        },
+        "retrieval_context": {
+            "retrieved_lemmas": [str(x) for x in attempt.get("retrieved_lemmas", [])] if isinstance(attempt.get("retrieved_lemmas", []), list) else [],
+            "owner_refs": [str(x) for x in task.get("owner_refs", [])] if isinstance(task.get("owner_refs", []), list) else [],
+            "source_refs": [str(x) for x in task.get("input_packet_ids", [])],
+        },
+        "loop_control": {
+            "same_error_repeat_count": 1 if bool(attempt.get("changed_strategy", False)) and error_sig else 0,
+            "same_candidate_repeat_count": 0,
+            "degeneracy_detected": False,
+            "next_action_hint": "emit_candidate" if accepted else "repair",
+        },
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass", "LeanVerificationPacket"],
+    }
+
+
+def build_autoproof_trace_packet(
+    task: dict[str, Any],
+    autoproof: dict[str, Any],
+    attempt_packets: list[dict[str, Any]],
+    final_kind: str,
+    *,
+    now: str,
+    episode_id: str,
+) -> dict[str, Any]:
+    goal = str(autoproof.get("goal") or extract_goal(task))
+    trace = autoproof.get("autoproof_trace") if isinstance(autoproof.get("autoproof_trace"), dict) else {}
+    frontier = trace.get("frontier", {}) if isinstance(trace.get("frontier"), dict) else {}
+    status = "success" if final_kind == "TheoremCandidatePacket" else "exhausted"
+    return {
+        **packet_envelope(
+            task,
+            packet_id=packet_id_for(task, "autoproof_trace"),
+            kind="AutoproofTracePacket",
+            status=status,
+            now=now,
+            authority_origin="bounded_autoproof_episode",
+        ),
+        "parent_refs": [packet["id"] for packet in attempt_packets],
+        "producer": {
+            "bee": "HermesLeanstralBee",
+            "worker_id": "hermes-leanstral-bee-local-001",
+            "model": str(task.get("model", "leanstral-gguf")),
+            "endpoint": "local",
+            "task_id": task["task_id"],
+        },
+        "target": {
+            "target_packet_id": str(task.get("target_packet_id") or (task.get("input_packet_ids") or ["task:unanchored"])[0]),
+            "file": str(task.get("target_file", task.get("file", ""))),
+            "module": str(task.get("target_module", task.get("module", ""))),
+            "theorem": str(task.get("target_theorem", task.get("theorem", ""))),
+            "owner_refs": [str(x) for x in task.get("owner_refs", [])] if isinstance(task.get("owner_refs", []), list) else [],
+        },
+        "budgets": {
+            "max_iterations": int(autoproof.get("max_iterations") or task.get("max_iterations", 1)),
+            "lean_timeout": int(task.get("lean_timeout", 60)),
+            "max_same_error_repeats": int(task.get("max_same_error_repeats", 2)),
+            "max_same_candidate_repeats": int(task.get("max_same_candidate_repeats", 1)),
+        },
+        "result": {
+            "status": status,
+            "emitted_packet_kind": final_kind,
+            "verified_by_local_probe": final_kind == "TheoremCandidatePacket",
+            "official_lean_verification_packet": None,
+        },
+        "attempt_packet_ids": [packet["id"] for packet in attempt_packets],
+        "frontier": {
+            "last_goal_state": str(frontier.get("last_goal_state", "")),
+            "last_error_signature": str(frontier.get("last_error_signature", "")),
+            "failed_strategies": [str(packet["candidate"]["strategy"]) for packet in attempt_packets if not packet["lean_probe"].get("accepted")],
+            "missing_lemmas": [str(x) for x in frontier.get("missing_lemmas", [])] if isinstance(frontier.get("missing_lemmas", []), list) else [],
+            "promising_lemmas": [str(x) for x in frontier.get("promising_lemmas", [])] if isinstance(frontier.get("promising_lemmas", []), list) else [],
+            "next_recommended_bee": str(frontier.get("next_recommended_bee", "none" if final_kind == "TheoremCandidatePacket" else "RetrieverBee")),
+            "new_information_needed": str(frontier.get("new_information_needed", "none" if final_kind == "TheoremCandidatePacket" else "Pauli/Socratic/Retrieval packet before cross-task retry")),
+        },
+        "forbidden_authority": [
+            "ExecutionIntentPacket",
+            "LeanVerificationPacket",
+            "BuildPacket",
+            "AuditPacket",
+            "PromotionDecisionPacket",
+        ],
+    }
+
+
+def build_candidate_packet(task: dict[str, Any], autoproof: dict[str, Any], trace_packet: dict[str, Any] | None = None) -> dict[str, Any]:
     now = utc_now()
     tactic = str(autoproof.get("verified_tactic", "")).strip()
     goal = str(autoproof.get("goal") or extract_goal(task))
     imports = [str(x) for x in autoproof.get("imports", extract_imports(task))]
     input_ids = [str(x) for x in task.get("input_packet_ids", [])]
-    trace = embedded_trace_for(task, autoproof, "TheoremCandidatePacket")
+    trace = trace_packet or embedded_trace_for(task, autoproof, "TheoremCandidatePacket")
     return {
         "id": packet_id_for(task, "leanstral_candidate"),
         "kind": "TheoremCandidatePacket",
@@ -189,12 +389,12 @@ def build_candidate_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> d
     }
 
 
-def build_residue_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dict[str, Any]:
+def build_residue_packet(task: dict[str, Any], autoproof: dict[str, Any], trace_packet: dict[str, Any] | None = None) -> dict[str, Any]:
     now = utc_now()
     iterations = autoproof.get("iterations", [])
     attempts = len(iterations) if isinstance(iterations, list) else 0
     input_ids = [str(x) for x in task.get("input_packet_ids", [])]
-    trace = embedded_trace_for(task, autoproof, "ResiduePacket")
+    trace = trace_packet or embedded_trace_for(task, autoproof, "ResiduePacket")
     return {
         "id": packet_id_for(task, "leanstral_residue"),
         "kind": "ResiduePacket",
@@ -234,6 +434,30 @@ def build_output_packet(task: dict[str, Any], autoproof: dict[str, Any]) -> dict
     if autoproof.get("status") == "verified" and str(autoproof.get("verified_tactic", "")).strip():
         return build_candidate_packet(task, autoproof)
     return build_residue_packet(task, autoproof)
+
+
+def build_output_packets(task: dict[str, Any], autoproof: dict[str, Any]) -> list[dict[str, Any]]:
+    final_kind = "TheoremCandidatePacket" if autoproof.get("status") == "verified" and str(autoproof.get("verified_tactic", "")).strip() else "ResiduePacket"
+    now = utc_now()
+    episode_id = packet_id_for(task, "autoproof_episode")
+    attempts = trace_attempts(autoproof)
+    attempt_packets = [
+        build_repair_attempt_packet(task, autoproof, attempt, now=now, episode_id=episode_id)
+        for attempt in attempts
+    ]
+    trace_packet = build_autoproof_trace_packet(
+        task,
+        autoproof,
+        attempt_packets,
+        final_kind,
+        now=now,
+        episode_id=episode_id,
+    )
+    if final_kind == "TheoremCandidatePacket":
+        final_packet = build_candidate_packet(task, autoproof, trace_packet)
+    else:
+        final_packet = build_residue_packet(task, autoproof, trace_packet)
+    return [*attempt_packets, trace_packet, final_packet]
 
 
 def run_worker(
@@ -277,22 +501,24 @@ def run_worker(
             timeout=float(task.get("timeout_seconds", task.get("timeout", 180))),
             lean_timeout=float(task.get("lean_timeout", 60)),
         )
-    output = build_output_packet(task, autoproof)
+    output_packets = build_output_packets(task, autoproof)
+    output = output_packets[-1]
     result = run_task(
         task,
         store_path=store_path,
-        output_packets=[output],
+        output_packets=output_packets,
         worker_id=worker_id,
         force_dry_run=dry_run,
     )
     result.setdefault("artifact_paths", [])
-    result["artifact_paths"] = list(result["artifact_paths"]) + [f"packet:{output['id']}"]
+    result["artifact_paths"] = list(result["artifact_paths"]) + [f"packet:{packet['id']}" for packet in output_packets]
     result.setdefault("commands_run", [])
     result["commands_run"] = list(result["commands_run"]) + ["hermes_leanstral_autoproof_loop.run_autoproof"]
     result["telemetry"] = dict(result.get("telemetry", {}))
     result["telemetry"]["leanstral_attempts"] = len(autoproof.get("iterations", [])) if isinstance(autoproof.get("iterations"), list) else 0
     result["telemetry"]["leanstral_status"] = str(autoproof.get("status", "unknown"))
-    # Revalidate after adding worker-side metadata; BeeResult schema allows these fields.
+    validate_envelope(result, "BeeResult")
+    validate_result_contract(task, result, output_packets)
     return result
 
 

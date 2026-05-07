@@ -26,7 +26,7 @@ def base_task(tmp_path: Path) -> dict:
         "task_kind": "leanstral.autoproof",
         "target_packet_id": "seed-demo",
         "input_packet_ids": ["seed-demo"],
-        "allowed_output_kinds": ["TheoremCandidatePacket", "ResiduePacket"],
+        "allowed_output_kinds": ["RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket", "ResiduePacket"],
         "forbidden_output_kinds": [
             "ExecutionIntentPacket",
             "LeanVerificationPacket",
@@ -161,12 +161,26 @@ def test_worker_emits_probe_ready_candidate_and_bee_result(tmp_path: Path) -> No
     result = worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_verified)
 
     records = read_store(store)
-    output = records[-1]
+    new_records = records[1:]
+    output = new_records[-1]
     assert result["status"] == "done"
     assert result["assigned_role"] == "HermesLeanstralBee"
     assert result["authority_claimed"] == "proposal"
     assert result["promotion_allowed"] is False
-    assert result["emitted_packet_kinds"] == ["TheoremCandidatePacket"]
+    assert result["emitted_packet_kinds"] == ["RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket"]
+    assert [record["kind"] for record in new_records] == ["RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket"]
+    assert result["output_packet_ids"] == [record["id"] for record in new_records]
+    attempt = new_records[0]
+    trace_packet = new_records[1]
+    assert attempt["authority"] == "proposal"
+    assert attempt["promotion_allowed"] is False
+    assert attempt["candidate"]["candidate_text"] == "rfl"
+    assert attempt["lean_probe"]["accepted"] is True
+    assert trace_packet["authority"] == "proposal"
+    assert trace_packet["promotion_allowed"] is False
+    assert trace_packet["attempt_packet_ids"] == [attempt["id"]]
+    assert trace_packet["result"]["emitted_packet_kind"] == "TheoremCandidatePacket"
+    assert trace_packet["result"]["official_lean_verification_packet"] is None
     assert output["kind"] == "TheoremCandidatePacket"
     assert output["status"] == "probe_ready"
     assert output["authority"] == "proposal"
@@ -176,7 +190,7 @@ def test_worker_emits_probe_ready_candidate_and_bee_result(tmp_path: Path) -> No
     assert output["autoproof_trace"]["kind"] == "AutoproofTracePacket"
     assert output["autoproof_trace"]["authority"] == "proposal"
     assert output["autoproof_trace"]["promotion_allowed"] is False
-    assert output["autoproof_trace_ref"] == {"packet_id": "autoproof_trace_leanstral_demo", "embedded": True}
+    assert output["autoproof_trace_ref"] == {"packet_id": trace_packet["id"], "embedded": False}
 
 
 def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
@@ -186,10 +200,18 @@ def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
 
     result = worker.run_worker(task, store_path=store, worker_id="hermes-leanstral-test", autoproof_fn=fake_failed)
 
-    output = read_store(store)[-1]
+    new_records = read_store(store)[1:]
+    output = new_records[-1]
     assert result["status"] == "done"
-    assert result["emitted_packet_kinds"] == ["ResiduePacket"]
-    assert result["authority_claimed"] == "proposal"
+    assert result["emitted_packet_kinds"] == ["RepairAttemptPacket", "RepairAttemptPacket", "AutoproofTracePacket", "ResiduePacket"]
+    assert [record["kind"] for record in new_records] == ["RepairAttemptPacket", "RepairAttemptPacket", "AutoproofTracePacket", "ResiduePacket"]
+    attempts = new_records[:2]
+    trace_packet = new_records[2]
+    assert [attempt["episode"]["attempt_index"] for attempt in attempts] == [1, 2]
+    assert attempts[0]["lean_probe"]["error_signature"] == "lean_error:unsolved_goals"
+    assert attempts[1]["candidate"]["changed_strategy_from_previous"] is True
+    assert trace_packet["attempt_packet_ids"] == [attempt["id"] for attempt in attempts]
+    assert trace_packet["result"]["emitted_packet_kind"] == "ResiduePacket"
     assert output["kind"] == "ResiduePacket"
     assert output["failure_class"] == "proof_obstruction"
     assert output["stage"] == "formal_probe"
@@ -197,7 +219,7 @@ def test_worker_emits_residue_after_exhausting_retries(tmp_path: Path) -> None:
     assert output["leanstral_autoproof"]["status"] == "failed"
     assert output["autoproof_trace"]["result"]["emitted_packet_kind"] == "ResiduePacket"
     assert output["autoproof_trace"]["frontier"]["next_recommended_bee"] == "RetrieverBee"
-    assert output["autoproof_trace_ref"] == {"packet_id": "autoproof_trace_leanstral_demo", "embedded": True}
+    assert output["autoproof_trace_ref"] == {"packet_id": trace_packet["id"], "embedded": False}
 
 
 @pytest.mark.parametrize(
@@ -260,7 +282,7 @@ def test_worker_dry_run_appends_nothing(tmp_path: Path) -> None:
     assert records[0]["id"] == "seed-demo"
     assert result["status"] == "done"
     assert result["telemetry"]["dry_run"] is True
-    assert result["emitted_packet_kinds"] == ["TheoremCandidatePacket"]
+    assert result["emitted_packet_kinds"] == ["RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket"]
     assert result["promotion_allowed"] is False
 
 

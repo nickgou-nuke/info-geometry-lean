@@ -528,6 +528,30 @@ theorem physicalLanglandsHolonomyOwnerTarget :
   exact K.wilson_readout_eq_dual_thooft γ s
 
 /--
+Owner target for relation-valued physical Langlands holonomy.
+
+A supplied relational KW witness relates Wilson holonomy with the dual
+'t Hooft holonomy under the supplied scalar relation.
+-/
+def RelationalPhysicalLanglandsHolonomyOwnerTarget : Prop :=
+  ∀ (GState GdualState GLoop GdualLoop Scalar : Type*),
+  ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
+  ∀ (T : THooftReadoutDatum GdualState GdualLoop Scalar),
+  ∀ (D : LanglandsDualPair GState GdualState GLoop GdualLoop),
+  ∀ K : RelationalKWPhysicalDualityWitness
+      GState GdualState GLoop GdualLoop Scalar W T D,
+  ∀ (γ : GLoop) (s : GState),
+    K.scalarRel
+      (W.wilson γ s)
+      (T.thooft (D.loopDual γ) (D.stateDual s))
+
+/-- The relational owner target follows from the supplied relational KW law. -/
+theorem relationalPhysicalLanglandsHolonomyOwnerTarget :
+    RelationalPhysicalLanglandsHolonomyOwnerTarget := by
+  intro GState GdualState GLoop GdualLoop Scalar W T D K γ s
+  exact K.wilson_rel_dual_thooft γ s
+
+/--
 Owner target for hidden-memory recovery through physical Langlands holonomy.
 
 Given KW duality and a dual-holonomy recovery witness, hidden memory is

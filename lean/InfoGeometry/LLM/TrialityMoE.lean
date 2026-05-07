@@ -566,6 +566,36 @@ noncomputable def ofZDControlledObserver
     (observerDefectResidual_norm_le_ZD (E := E) (CIK := CIK) (obs := obs) hControl)
 
 /--
+Constructive bounded constructor for an observer whose compressed deviation
+commutator channel is already zero on the defect block.
+-/
+noncomputable def ofCompressedDeviationZeroObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    RouterDefectBoundBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow
+    (observerDefectResidual_norm_le_ZD_of_compressedDeviation_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hZero)
+
+@[simp] theorem ofCompressedDeviationZeroObserver_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    (ofCompressedDeviationZeroObserver (E := E) CIK obs flow hZero).routerResidual = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero (CIK := CIK) (obs := obs) hZero
+  simpa [ofCompressedDeviationZeroObserver, ofCanonicalObserverDefect] using hResidual
+
+/--
 If the operatorial defect-central/Casimir channel `Z_D` is zero, then the
 `Z_D`-controlled router residual produced from the canonical observer lane is
 zero.

@@ -72,9 +72,14 @@ Current dependency:
 
 Gap:
 - the row/column profile-lift equalities are now derived when the positive
-  observed count profile has total carrier mass `n`. The trajectory-level
-  construction must either prove that the relevant Sinkhorn phase supplies this
-  mass certificate or carry it explicitly.
+  observed count profile has total carrier mass `n`. The RN-budget packet has
+  also been tightened: once the thermodynamic residual readout is identified
+  with the current RN barrier, `SinkhornRNBarrierThermodynamicComparison`
+  can now derive its central `Z_D` budget from
+  `SinkhornRNBarrierThermodynamicComparison.ofResidualReadoutEqBarrier`
+  instead of carrying a second explicit budget proof.
+- the remaining trajectory-level construction must still either prove that the
+  relevant Sinkhorn phase supplies the mass certificate or carry it explicitly.
 
 Required derivation path:
 1. Route row-phase trajectories through

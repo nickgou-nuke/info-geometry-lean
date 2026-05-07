@@ -135,6 +135,25 @@ def IsOneSidedZeroDivisor
   IsLeftZeroDivisor x ∨ IsRightZeroDivisor x
 
 /--
+A two-sided zero divisor in a possibly noncommutative ambient algebra.
+
+This requires both left and right annihilator data. For the weaker
+left-or-right condition, use `IsOneSidedZeroDivisor`.
+-/
+def IsTwoSidedZeroDivisor
+    {A : Type*} [MulZeroClass A]
+    (x : A) : Prop :=
+  IsLeftZeroDivisor x ∧ IsRightZeroDivisor x
+
+/-- A two-sided zero divisor is, in particular, a one-sided zero divisor. -/
+theorem IsTwoSidedZeroDivisor.oneSided
+    {A : Type*} [MulZeroClass A]
+    {x : A}
+    (h : IsTwoSidedZeroDivisor x) :
+    IsOneSidedZeroDivisor x :=
+  Or.inl h.1
+
+/--
 A minimal division-core-like condition: no nonzero square-zero elements.
 
 This avoids pretending that quaternions/octonions are ordinary commutative

@@ -1,4 +1,5 @@
 import InfoGeometry.CondensedMatter.DIIISuperfluid
+import InfoGeometry.CondensedMatter.CliffordAtomsZ2n
 
 namespace InfoGeometry.CondensedMatter
 

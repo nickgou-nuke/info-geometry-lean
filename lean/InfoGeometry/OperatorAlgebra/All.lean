@@ -13,6 +13,7 @@ import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.ChiralFredholmIndex
 import InfoGeometry.OperatorAlgebra.ChiralPackingEnergy
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
+import InfoGeometry.OperatorAlgebra.ChiralProjectorFromInvolution
 import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n

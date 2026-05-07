@@ -44,6 +44,7 @@ AUTHORITY_BY_KIND = {
     "PromotionDecisionPacket": "promoted",
     "AutoproofTracePacket": "proposal",
     "RepairAttemptPacket": "proposal",
+    "RouteInvocationPacket": "navigation",
 }
 
 
@@ -258,6 +259,59 @@ def test_autoproof_trace_packet_rejects_authority_inflation() -> None:
     }
 
     assert any("'proposal' was expected" in error for error in _errors(trace))
+
+
+def test_route_invocation_packet_schema_is_navigation_only_motherbee_decision() -> None:
+    route = {
+        **BASE,
+        "id": "route_invocation_demo",
+        "kind": "RouteInvocationPacket",
+        "status": "emitted",
+        "authority": "navigation",
+        "authority_origin": "motherbee_route_decision",
+        "promotion_allowed": False,
+        "source_packet_id": "autoproof_trace_demo",
+        "target_packet_id": "candidate_demo",
+        "selected_role": "RetrieverBee",
+        "selected_task_kind": "retrieval.context",
+        "decision_reason": "AutoproofTrace frontier requested retrieval after unknown identifier failure.",
+        "considered_evidence": ["repair_attempt_demo_1", "autoproof_trace_demo"],
+        "repulsion_field": ["lean_error:unknown_identifier", "strategy:initial_tactic"],
+        "blocked_routes": [
+            {
+                "role": "HermesLeanstralBee",
+                "reason": "cross-episode retry requires new retrieval/Pauli/Socratic information",
+            }
+        ],
+        "emitted_task_id": "bee_task_demo",
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+    }
+
+    assert _errors(route) == []
+
+
+def test_route_invocation_packet_rejects_authority_inflation() -> None:
+    route = {
+        **BASE,
+        "id": "route_invocation_bad_authority",
+        "kind": "RouteInvocationPacket",
+        "status": "emitted",
+        "authority": "proposal",
+        "authority_origin": "motherbee_route_decision",
+        "promotion_allowed": False,
+        "source_packet_id": "trace_demo",
+        "target_packet_id": "candidate_demo",
+        "selected_role": "RetrieverBee",
+        "selected_task_kind": "retrieval.context",
+        "decision_reason": "bad fixture",
+        "considered_evidence": ["trace_demo"],
+        "repulsion_field": [],
+        "blocked_routes": [],
+        "emitted_task_id": "bee_task_demo",
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+    }
+
+    assert any("'navigation' was expected" in error for error in _errors(route))
 
 
 def test_bee_result_rejects_promotion_allowed_true() -> None:

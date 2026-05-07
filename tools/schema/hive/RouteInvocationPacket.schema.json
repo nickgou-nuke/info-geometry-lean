@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "RouteInvocationPacket.schema.json",
+  "title": "RouteInvocationPacket",
+  "description": "Navigation-authority MotherBee route decision receipt. It explains why a BeeTask was emitted or which evidence shaped the route; it is never proof, build, audit, or promotion authority.",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "authority",
+        "authority_origin",
+        "promotion_allowed",
+        "source_packet_id",
+        "target_packet_id",
+        "selected_role",
+        "selected_task_kind",
+        "decision_reason",
+        "considered_evidence",
+        "repulsion_field",
+        "blocked_routes",
+        "emitted_task_id",
+        "forbidden_uses"
+      ],
+      "properties": {
+        "kind": {
+          "const": "RouteInvocationPacket"
+        },
+        "status": {
+          "enum": ["planned", "emitted", "blocked", "skipped"]
+        },
+        "authority": {
+          "const": "navigation"
+        },
+        "authority_origin": {
+          "const": "motherbee_route_decision"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "source_packet_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_packet_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_task_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "considered_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "repulsion_field": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "blocked_routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "reason"],
+            "properties": {
+              "role": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "emitted_task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "forbidden_uses": {
+          "type": "array",
+          "allOf": [
+            {"contains": {"const": "proof"}},
+            {"contains": {"const": "promotion"}},
+            {"contains": {"const": "authority_gate_bypass"}}
+          ],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

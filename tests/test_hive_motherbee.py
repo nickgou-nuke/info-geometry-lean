@@ -270,14 +270,26 @@ def test_once_appends_beetask_as_append_only_routing_receipt(tmp_path: Path) -> 
 
     result = run_once(store, limit=1, dry_run=False, dry_run_task=False)
 
-    assert result["emitted_count"] == 1
+    assert result["emitted_count"] == 2
     records = read_store(store)
-    assert [record["kind"] for record in records] == ["SourceObservationPacket", "BeeTask"]
-    task = records[1]
+    assert [record["kind"] for record in records] == ["SourceObservationPacket", "RouteInvocationPacket", "BeeTask"]
+    route = records[1]
+    task = records[2]
+    assert route["authority"] == "navigation"
+    assert route["authority_origin"] == "motherbee_route_decision"
+    assert route["promotion_allowed"] is False
+    assert route["source_packet_id"] == "src_a"
+    assert route["target_packet_id"] == "src_a"
+    assert route["selected_role"] == "SocratesBee"
+    assert route["selected_task_kind"] == "socratic.question"
+    assert route["emitted_task_id"] == task["id"]
+    assert "proof" in route["forbidden_uses"]
+    assert "promotion" in route["forbidden_uses"]
     assert task["target_packet_id"] == "src_a"
     assert task["dry_run"] is False
     assert task["motherbee_rule_id"] == "source-observation-to-socrates-v1"
-    assert result["receipts"][0]["id"] == task["id"]
+    assert result["receipts"][0]["id"] == route["id"]
+    assert result["receipts"][1]["id"] == task["id"]
 
 
 def test_once_is_idempotent_after_beetask_exists(tmp_path: Path) -> None:
@@ -287,10 +299,10 @@ def test_once_is_idempotent_after_beetask_exists(tmp_path: Path) -> None:
     first = run_once(store, limit=1, dry_run=False, dry_run_task=False)
     second = run_once(store, limit=1, dry_run=False, dry_run_task=False)
 
-    assert first["emitted_count"] == 1
+    assert first["emitted_count"] == 2
     assert second["planned_count"] == 0
     assert second["emitted_count"] == 0
-    assert [record["kind"] for record in read_store(store)] == ["SourceObservationPacket", "BeeTask"]
+    assert [record["kind"] for record in read_store(store)] == ["SourceObservationPacket", "RouteInvocationPacket", "BeeTask"]
 
 
 def test_dry_run_prints_tasks_without_mutating_store(tmp_path: Path) -> None:
@@ -335,8 +347,8 @@ def test_cli_once_appends_task(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
-    assert payload["emitted_count"] == 1
-    assert [record["kind"] for record in read_store(store)] == ["SourceObservationPacket", "BeeTask"]
+    assert payload["emitted_count"] == 2
+    assert [record["kind"] for record in read_store(store)] == ["SourceObservationPacket", "RouteInvocationPacket", "BeeTask"]
 
 
 def test_cli_dry_run_does_not_append_task(tmp_path: Path) -> None:
@@ -470,6 +482,29 @@ def test_autoproof_trace_frontier_routes_to_retrieverbee(tmp_path: Path) -> None
     assert "strategy:initial_tactic" in task["repulsion_field"]
     assert "repair_attempt_1" in task["repulsion_field"]
     assert "trace_retrieval" in task["repulsion_field"]
+
+
+def test_run_once_appends_route_invocation_before_trace_frontier_task(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, autoproof_trace("trace_route_append", "cand_trace", next_bee="RetrieverBee"))
+
+    result = run_once(store, limit=1, dry_run=False, dry_run_task=True)
+
+    assert result["emitted_count"] == 2
+    records = read_store(store)
+    assert [record["kind"] for record in records] == ["AutoproofTracePacket", "RouteInvocationPacket", "BeeTask"]
+    route = records[1]
+    task = records[2]
+    assert route["source_packet_id"] == "trace_route_append"
+    assert route["target_packet_id"] == "trace_route_append"
+    assert route["selected_role"] == "RetrieverBee"
+    assert route["selected_task_kind"] == "retrieval.context"
+    assert route["emitted_task_id"] == task["id"]
+    assert route["considered_evidence"] == ["repair_attempt_1", "repair_attempt_2", "trace_route_append"]
+    assert "lean_error:unknown_identifier" in route["repulsion_field"]
+    assert "strategy:lean_feedback_repair" in route["repulsion_field"]
+    assert route["blocked_routes"][0]["role"] == "HermesLeanstralBee"
+    assert "Leanstral" in route["blocked_routes"][0]["reason"]
 
 
 def test_autoproof_trace_frontier_routes_to_socratesbee(tmp_path: Path) -> None:

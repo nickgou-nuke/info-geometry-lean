@@ -43,6 +43,7 @@ AUTHORITY_BY_KIND = {
     "AuditPacket": "audit_checked",
     "PromotionDecisionPacket": "promoted",
     "AutoproofTracePacket": "proposal",
+    "RepairAttemptPacket": "proposal",
 }
 
 
@@ -169,31 +170,45 @@ def test_bee_result_schema_validates_worker_return_receipt() -> None:
 
 def test_autoproof_trace_packet_schema_is_proposal_only_repair_journal() -> None:
     trace = {
+        **BASE,
+        "id": "autoproof_trace_demo",
         "kind": "AutoproofTracePacket",
+        "status": "exhausted",
         "authority": "proposal",
+        "authority_origin": "bounded_autoproof_episode",
         "promotion_allowed": False,
-        "target": {"goal": "1 = 1", "imports": ["Init"], "context_present": False},
-        "budgets": {"max_iterations": 3, "max_repeated_error": 2},
-        "result": {"status": "failed", "emitted_packet_kind": "ResiduePacket"},
-        "attempts": [
-            {
-                "attempt_index": 1,
-                "mode": "tactic",
-                "goal_before": "⊢ 1 = 1",
-                "goal_after": "",
-                "candidate_text": "exact 0",
-                "lean_result": {"accepted": False, "status": "failure", "feedback": "type mismatch"},
-                "error_signature": "lean_error:type_mismatch",
-                "strategy": "initial_tactic",
-                "changed_strategy": False,
-                "retrieved_lemmas": [],
-            }
-        ],
+        "producer": {
+            "bee": "HermesLeanstralBee",
+            "worker_id": "hermes-leanstral-bee-local-001",
+            "model": "leanstral-gguf",
+            "endpoint": "local",
+            "task_id": "bee_task_demo",
+        },
+        "target": {"target_packet_id": "candidate_demo", "file": "", "module": "", "theorem": "", "owner_refs": []},
+        "budgets": {"max_iterations": 3, "lean_timeout": 60, "max_same_error_repeats": 2, "max_same_candidate_repeats": 1},
+        "result": {
+            "status": "exhausted",
+            "emitted_packet_kind": "ResiduePacket",
+            "verified_by_local_probe": False,
+            "official_lean_verification_packet": None,
+        },
+        "attempt_packet_ids": ["repair_attempt_demo_1"],
         "frontier": {
+            "last_goal_state": "⊢ 1 = 1",
             "last_error_signature": "lean_error:type_mismatch",
+            "failed_strategies": ["initial_tactic"],
+            "missing_lemmas": [],
+            "promising_lemmas": [],
             "next_recommended_bee": "SocratesBee",
             "new_information_needed": "weaken theorem shape",
         },
+        "forbidden_authority": [
+            "ExecutionIntentPacket",
+            "LeanVerificationPacket",
+            "BuildPacket",
+            "AuditPacket",
+            "PromotionDecisionPacket",
+        ],
     }
 
     assert _errors(trace) == []
@@ -201,14 +216,45 @@ def test_autoproof_trace_packet_schema_is_proposal_only_repair_journal() -> None
 
 def test_autoproof_trace_packet_rejects_authority_inflation() -> None:
     trace = {
+        **BASE,
+        "id": "autoproof_trace_bad_authority",
         "kind": "AutoproofTracePacket",
+        "status": "success",
         "authority": "lean_checked",
+        "authority_origin": "bounded_autoproof_episode",
         "promotion_allowed": False,
-        "target": {"goal": "1 = 1", "imports": ["Init"]},
-        "budgets": {"max_iterations": 1},
-        "result": {"status": "verified", "emitted_packet_kind": "TheoremCandidatePacket"},
-        "attempts": [],
-        "frontier": {"next_recommended_bee": "none"},
+        "producer": {
+            "bee": "HermesLeanstralBee",
+            "worker_id": "hermes-leanstral-bee-local-001",
+            "model": "leanstral-gguf",
+            "endpoint": "local",
+            "task_id": "bee_task_demo",
+        },
+        "target": {"target_packet_id": "candidate_demo"},
+        "budgets": {"max_iterations": 1, "lean_timeout": 60, "max_same_error_repeats": 0, "max_same_candidate_repeats": 0},
+        "result": {
+            "status": "success",
+            "emitted_packet_kind": "TheoremCandidatePacket",
+            "verified_by_local_probe": True,
+            "official_lean_verification_packet": None,
+        },
+        "attempt_packet_ids": ["repair_attempt_demo_1"],
+        "frontier": {
+            "last_goal_state": "",
+            "last_error_signature": "",
+            "failed_strategies": [],
+            "missing_lemmas": [],
+            "promising_lemmas": [],
+            "next_recommended_bee": "none",
+            "new_information_needed": "",
+        },
+        "forbidden_authority": [
+            "ExecutionIntentPacket",
+            "LeanVerificationPacket",
+            "BuildPacket",
+            "AuditPacket",
+            "PromotionDecisionPacket",
+        ],
     }
 
     assert any("'proposal' was expected" in error for error in _errors(trace))

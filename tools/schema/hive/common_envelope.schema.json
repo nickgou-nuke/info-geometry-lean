@@ -139,6 +139,8 @@
         "semantic_navigation",
         "topology_navigation",
         "typed_packet_state",
+        "bounded_autoproof_attempt",
+        "bounded_autoproof_episode",
         "gate_record",
         "lean_wrapper",
         "build_gate",

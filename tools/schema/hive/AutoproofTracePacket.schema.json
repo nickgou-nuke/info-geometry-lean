@@ -2,7 +2,11 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "AutoproofTracePacket.schema.json",
   "title": "AutoproofTracePacket",
+  "description": "Proposal-authority aggregate for one bounded HermesLeanstralBee autoproof episode. It records attempt lineage and frontier routing evidence without becoming Lean verification authority.",
   "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
     {
       "$ref": "authority.schema.json"
     },
@@ -11,12 +15,15 @@
       "required": [
         "kind",
         "authority",
+        "authority_origin",
         "promotion_allowed",
+        "producer",
         "target",
         "budgets",
         "result",
-        "attempts",
-        "frontier"
+        "attempt_packet_ids",
+        "frontier",
+        "forbidden_authority"
       ],
       "properties": {
         "kind": {
@@ -25,84 +32,103 @@
         "authority": {
           "const": "proposal"
         },
+        "authority_origin": {
+          "const": "bounded_autoproof_episode"
+        },
         "promotion_allowed": {
           "const": false
         },
+        "status": {
+          "enum": ["success", "partial", "exhausted", "blocked", "degenerate", "failed", "active"]
+        },
+        "producer": {
+          "type": "object",
+          "required": ["bee", "worker_id", "model", "endpoint", "task_id"],
+          "properties": {
+            "bee": {"const": "HermesLeanstralBee"},
+            "worker_id": {"type": "string", "minLength": 1},
+            "model": {"type": "string", "minLength": 1},
+            "endpoint": {"type": "string", "minLength": 1},
+            "task_id": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": true
+        },
         "target": {
           "type": "object",
-          "required": ["goal", "imports"],
+          "required": ["target_packet_id"],
           "properties": {
-            "goal": {"type": "string", "minLength": 1},
-            "imports": {"type": "array", "items": {"type": "string"}},
-            "context_present": {"type": "boolean"}
+            "target_packet_id": {"type": "string", "minLength": 1},
+            "file": {"type": "string"},
+            "module": {"type": "string"},
+            "theorem": {"type": "string"},
+            "owner_refs": {"type": "array", "items": {"type": "string"}}
           },
           "additionalProperties": true
         },
         "budgets": {
           "type": "object",
-          "required": ["max_iterations"],
+          "required": ["max_iterations", "lean_timeout", "max_same_error_repeats", "max_same_candidate_repeats"],
           "properties": {
-            "max_iterations": {"type": "integer", "minimum": 0},
-            "max_seconds": {"type": "number", "minimum": 0},
-            "max_repeated_error": {"type": "integer", "minimum": 0}
+            "max_iterations": {"type": "integer", "minimum": 1},
+            "lean_timeout": {"type": "integer", "minimum": 0},
+            "max_same_error_repeats": {"type": "integer", "minimum": 0},
+            "max_same_candidate_repeats": {"type": "integer", "minimum": 0}
           },
           "additionalProperties": true
         },
         "result": {
           "type": "object",
-          "required": ["status", "emitted_packet_kind"],
+          "required": ["status", "emitted_packet_kind", "verified_by_local_probe", "official_lean_verification_packet"],
           "properties": {
-            "status": {"enum": ["verified", "failed", "partial", "blocked", "exhausted", "unknown"]},
-            "emitted_packet_kind": {"enum": ["TheoremCandidatePacket", "ResiduePacket", "none"]}
+            "status": {"enum": ["success", "partial", "exhausted", "blocked", "degenerate", "failed"]},
+            "emitted_packet_kind": {"enum": ["TheoremCandidatePacket", "ResiduePacket", "none"]},
+            "verified_by_local_probe": {"type": "boolean"},
+            "official_lean_verification_packet": {
+              "anyOf": [
+                {"type": "null"},
+                {"const": ""}
+              ]
+            }
           },
           "additionalProperties": true
         },
-        "attempts": {
+        "attempt_packet_ids": {
           "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "attempt_index",
-              "mode",
-              "candidate_text",
-              "lean_result",
-              "strategy",
-              "changed_strategy",
-              "error_signature"
-            ],
-            "properties": {
-              "attempt_index": {"type": "integer", "minimum": 1},
-              "mode": {"enum": ["tactic", "repair", "patch", "whole_proof", "theorem_shape", "retrieval_retry"]},
-              "goal_before": {"type": "string"},
-              "goal_after": {"type": "string"},
-              "candidate_text": {"type": "string"},
-              "lean_result": {
-                "type": "object",
-                "required": ["accepted", "status"],
-                "properties": {
-                  "accepted": {"type": "boolean"},
-                  "status": {"type": "string"},
-                  "feedback": {"type": "string"}
-                },
-                "additionalProperties": true
-              },
-              "error_signature": {"type": "string"},
-              "strategy": {"type": "string", "minLength": 1},
-              "changed_strategy": {"type": "boolean"},
-              "retrieved_lemmas": {"type": "array", "items": {"type": "string"}}
-            },
-            "additionalProperties": true
-          }
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
         },
         "frontier": {
           "type": "object",
-          "required": ["next_recommended_bee"],
+          "required": [
+            "last_goal_state",
+            "last_error_signature",
+            "failed_strategies",
+            "missing_lemmas",
+            "promising_lemmas",
+            "next_recommended_bee",
+            "new_information_needed"
+          ],
           "properties": {
+            "last_goal_state": {"type": "string"},
             "last_error_signature": {"type": "string"},
-            "next_recommended_bee": {"enum": ["none", "RetrieverBee", "SocratesBee", "PauliBee", "HermesLeanstralBee"]},
+            "failed_strategies": {"type": "array", "items": {"type": "string"}},
+            "missing_lemmas": {"type": "array", "items": {"type": "string"}},
+            "promising_lemmas": {"type": "array", "items": {"type": "string"}},
+            "next_recommended_bee": {"enum": ["RetrieverBee", "SocratesBee", "PauliBee", "HermesLeanstralBee", "none"]},
             "new_information_needed": {"type": "string"}
           },
           "additionalProperties": true
+        },
+        "forbidden_authority": {
+          "type": "array",
+          "allOf": [
+            {"contains": {"const": "ExecutionIntentPacket"}},
+            {"contains": {"const": "LeanVerificationPacket"}},
+            {"contains": {"const": "BuildPacket"}},
+            {"contains": {"const": "AuditPacket"}},
+            {"contains": {"const": "PromotionDecisionPacket"}}
+          ],
+          "items": {"type": "string"}
         }
       },
       "additionalProperties": true

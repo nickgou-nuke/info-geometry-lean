@@ -73,12 +73,13 @@ HERMES_LEANSTRAL_RULE = RouteRule(
     source_statuses=frozenset({"draft", "legalized", "probe_ready", "active", "stabilized"}),
     assigned_role="HermesLeanstralBee",
     task_kind="leanstral.autoproof",
-    allowed_output_kinds=("TheoremCandidatePacket", "ResiduePacket"),
+    allowed_output_kinds=("RepairAttemptPacket", "AutoproofTracePacket", "TheoremCandidatePacket", "ResiduePacket"),
     forbidden_output_kinds=FORBIDDEN_AUTHORITY_OUTPUTS,
     authority_ceiling="proposal",
     instruction=(
         "Run a bounded local Leanstral proof-proposal loop over the target, preserving every Lean feedback "
-        "attempt as evidence. Emit only TheoremCandidatePacket or ResiduePacket; do not claim Lean/build/audit authority."
+        "attempt as first-class RepairAttemptPacket evidence and the episode as AutoproofTracePacket evidence. "
+        "Finish with TheoremCandidatePacket or ResiduePacket; do not claim Lean/build/audit authority."
     ),
     priority=30,
 )

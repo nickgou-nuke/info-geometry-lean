@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_DIR = ROOT / "tools" / "schema" / "hive"
 
 SCHEMA_BY_KIND = {
+    "BeeTask": SCHEMA_DIR / "BeeTask.schema.json",
+    "BeeResult": SCHEMA_DIR / "BeeResult.schema.json",
     "SourceObservationPacket": SCHEMA_DIR / "SourceObservationPacket.schema.json",
     "SymbolicMotifPacket": SCHEMA_DIR / "SymbolicMotifPacket.schema.json",
     "SocraticQuestionPacket": SCHEMA_DIR / "SocraticQuestionPacket.schema.json",

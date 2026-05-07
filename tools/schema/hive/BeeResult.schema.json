@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "BeeResult.schema.json",
+  "title": "BeeResult",
+  "description": "Worker return envelope for a bounded BeeTask. BeeResult records compute outcome and packet outputs; it is not itself a proof authority gate unless a later dedicated authority packet says so.",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "task_id",
+        "worker_id",
+        "assigned_role",
+        "input_packet_ids",
+        "output_packet_ids",
+        "output_packet_hashes",
+        "authority_claimed",
+        "promotion_allowed",
+        "telemetry"
+      ],
+      "properties": {
+        "kind": {
+          "const": "BeeResult"
+        },
+        "status": {
+          "enum": [
+            "done",
+            "blocked",
+            "failed",
+            "timeout",
+            "cancelled"
+          ]
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "worker_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assigned_role": {
+          "type": "string",
+          "enum": [
+            "MotherBee",
+            "SourceBee",
+            "RetrieverBee",
+            "SocratesBee",
+            "PauliBee",
+            "TranslatorBee",
+            "ThinkingBee",
+            "DreamlineBee",
+            "ShadowBee",
+            "LeanBee",
+            "BuildBee",
+            "AuditBee",
+            "PromotionBee"
+          ]
+        },
+        "input_packet_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "output_packet_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "output_packet_hashes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        },
+        "authority_claimed": {
+          "type": "string",
+          "enum": [
+            "navigation",
+            "semantic",
+            "proposal",
+            "execution_intent",
+            "lean_checked",
+            "build_checked",
+            "audit_checked",
+            "promoted"
+          ]
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "emitted_packet_kinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "artifact_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "commands_run": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blocker": {
+          "type": "string"
+        },
+        "next_action": {
+          "type": "string"
+        },
+        "telemetry": {
+          "type": "object",
+          "properties": {
+            "compute_duration_ms": {
+              "type": "integer"
+            },
+            "tokens_consumed": {
+              "type": "integer"
+            },
+            "despair_metric": {
+              "type": "number"
+            },
+            "phase_similarity_delta": {
+              "type": "number"
+            },
+            "proof_state_delta": {
+              "type": "string"
+            },
+            "semantic_novelty": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

@@ -41,6 +41,7 @@ SCHEMA_BY_KIND = {
     "ResiduePacket": SCHEMA_DIR / "ResiduePacket.schema.json",
     "RepairAttemptPacket": SCHEMA_DIR / "RepairAttemptPacket.schema.json",
     "AutoproofTracePacket": SCHEMA_DIR / "AutoproofTracePacket.schema.json",
+    "RouteInvocationPacket": SCHEMA_DIR / "RouteInvocationPacket.schema.json",
 }
 
 

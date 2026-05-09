@@ -533,6 +533,7 @@ import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.Canonical.TheoryShadowRepresentation
 import InfoGeometry.Canonical.Thermo
 import InfoGeometry.Canonical.ThermodynamicAction
+import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
 import InfoGeometry.Canonical.ThermodynamicClosureTargets
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.ThermoFromLogDet

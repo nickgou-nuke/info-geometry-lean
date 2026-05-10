@@ -1176,7 +1176,7 @@ def build_context_from_query(
         source_radius=source_radius,
         declarations_only=declarations_only,
         require_source=require_source,
-        min_seed_score=1.0,
+        min_seed_score=0.5,
         equivalence_dictionary=equivalence_dictionary,
         use_equivalence_expansion=use_equivalence_expansion,
         max_equivalence_groups=max_equivalence_groups,
@@ -1310,7 +1310,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--limit-nodes", type=int, default=1_000_000)
     parser.add_argument("--limit-edges", type=int, default=2_000_000)
     parser.add_argument("--seed-k", type=int, default=32)
-    parser.add_argument("--min-seed-score", type=float, default=1.0)
+    parser.add_argument("--min-seed-score", type=float, default=0.5)
     parser.add_argument(
         "--lexical-anchor-weight",
         type=float,

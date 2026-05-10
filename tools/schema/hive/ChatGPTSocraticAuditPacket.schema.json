@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ChatGPTSocraticAuditPacket.schema.json",
+  "title": "ChatGPTSocraticAuditPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "authority",
+        "authority_ceiling",
+        "promotion_allowed",
+        "source",
+        "target_module",
+        "target_file",
+        "role_classification",
+        "response_hash",
+        "replacement_hash",
+        "patch_proposal",
+        "emitted_packet_kinds",
+        "forbidden_output_kinds",
+        "requires_local_lean_check",
+        "local_lean_check"
+      ],
+      "properties": {
+        "kind": {
+          "const": "ChatGPTSocraticAuditPacket"
+        },
+        "status": {
+          "enum": [
+            "parsed",
+            "validated",
+            "lean_checked",
+            "rejected",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "proposal"
+        },
+        "authority_ceiling": {
+          "const": "proposal"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "system",
+            "authority_negative"
+          ],
+          "properties": {
+            "system": {
+              "const": "chatgpt_web"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "authority_negative": {
+              "const": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "target_module": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lineage_ref": {
+          "type": "string"
+        },
+        "role_classification": {
+          "type": "string",
+          "enum": [
+            "owner",
+            "translator",
+            "coherence",
+            "capstone",
+            "nominal_shell",
+            "unknown"
+          ]
+        },
+        "response_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "replacement_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "transcript_ref": {
+          "type": "string"
+        },
+        "replacement_ref": {
+          "type": "string"
+        },
+        "raw_response_excerpt": {
+          "type": "string"
+        },
+        "patch_proposal": {
+          "type": "object",
+          "required": [
+            "kind",
+            "target_file",
+            "content_hash"
+          ],
+          "properties": {
+            "kind": {
+              "const": "drop_in_replacement"
+            },
+            "target_file": {
+              "type": "string",
+              "minLength": 1
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": true
+        },
+        "emitted_packet_kinds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "not": {
+            "contains": {
+              "enum": [
+                "LeanVerificationPacket",
+                "BuildPacket",
+                "AuditPacket",
+                "PromotionDecisionPacket"
+              ]
+            }
+          }
+        },
+        "forbidden_output_kinds": {
+          "type": "array",
+          "contains": {
+            "const": "LeanVerificationPacket"
+          },
+          "items": {
+            "type": "string"
+          }
+        },
+        "requires_local_lean_check": {
+          "const": true
+        },
+        "local_lean_check": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not_run",
+                "pass",
+                "fail"
+              ]
+            },
+            "cmd": {
+              "type": "array"
+            },
+            "exit_code": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": true
+        },
+        "external_promotion_claim_seen": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

@@ -596,6 +596,16 @@ script leantrailHolePackets (args) do
   }
   child.wait
 
+script chatgptCollaborator (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/chatgpt_collaborator_bridge.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 input_file dagToolchainConfigFile where
   path := "dag-toolchain.json"
   text := true

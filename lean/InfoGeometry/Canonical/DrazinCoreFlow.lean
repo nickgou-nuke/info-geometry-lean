@@ -54,11 +54,7 @@ theorem commute_complementaryProjection
     _ = a - (a * b) * a := by rw [hproj]
     _ = (1 - a * b) * a := by rw [sub_mul, one_mul]
 
-/-- The core piece is the base operator followed by the Drazin projector. -/
-theorem core_eq_mul_projection
-    (a b : R) :
-    core a b = a * projection a b := by
-  simp [core, projection, mul_assoc]
+
 
 /-- The core piece is also the Drazin projector followed by the base operator. -/
 theorem core_eq_projection_mul
@@ -68,12 +64,7 @@ theorem core_eq_projection_mul
   symm
   exact projection_mul_eq_mul_projection (h := h)
 
-/-- The nilpotent complementary piece is the base operator times the complementary projector. -/
-theorem nilpotent_eq_mul_complementaryProjection
-    (a b : R) :
-    nilpotent a b = a * complementaryProjection a b := by
-  unfold nilpotent core complementaryProjection projection
-  noncomm_ring
+
 
 /-- The nilpotent complementary piece is also the complementary projector times the base operator. -/
 theorem nilpotent_eq_complementaryProjection_mul

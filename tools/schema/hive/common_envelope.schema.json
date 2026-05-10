@@ -230,6 +230,17 @@
         "quarantined"
       ]
     },
+    "pipeline_state": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "proposed",
+        "checked",
+        "audited",
+        "promoted",
+        "blocked"
+      ]
+    },
     "active_imagination": {
       "type": "boolean"
     },

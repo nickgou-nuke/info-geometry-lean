@@ -694,14 +694,28 @@ structure KleinianThermodynamicCompatibility
 /-! ## 8. Owner targets -/
 
 /-- Owner target for modular thermodynamics. -/
-def ModularThermodynamicsOwnerTarget
-    (Op : Type*) [Mul Op] : Prop :=
-  Nonempty (ModularKMSDatum Op)
+structure ModularThermodynamicsOwnerTarget
+    (Op : Type*) [Mul Op] where
+  /-- Supplied modular KMS witness. -/
+  witness : ModularKMSDatum Op
+
+theorem ModularThermodynamicsOwnerTarget.witness_law
+    {Op : Type*} [Mul Op]
+    (h : ModularThermodynamicsOwnerTarget Op) :
+    Nonempty (ModularKMSDatum Op) :=
+  ⟨h.witness⟩
 
 /-- Owner target for calibrated horizon thermality. -/
-def EmergentThermalRadiationOwnerTarget
-    (Op : Type*) [Mul Op] : Prop :=
-  Nonempty (EmergentThermalRadiation Op)
+structure EmergentThermalRadiationOwnerTarget
+    (Op : Type*) [Mul Op] where
+  /-- Supplied calibrated thermal-radiation witness. -/
+  witness : EmergentThermalRadiation Op
+
+theorem EmergentThermalRadiationOwnerTarget.witness_law
+    {Op : Type*} [Mul Op]
+    (h : EmergentThermalRadiationOwnerTarget Op) :
+    Nonempty (EmergentThermalRadiation Op) :=
+  ⟨h.witness⟩
 
 /--
 Compatibility data sufficient to construct a Tomita/KMS thermalization witness.
@@ -720,13 +734,15 @@ structure TomitaKMSThermalizationCompatibility
     TomitaKMSThermalization Op T σ beta
 
 /-- Owner target for the modular KMS theorem interface. -/
-def TomitaKMSThermalizationOwnerTarget : Prop :=
-  ∀ (Op : Type*) [Ring Op],
-  ∀ (T : TomitaCommutantDatum Op),
-  ∀ (σ : OperatorFlow Op),
-  ∀ (beta : ℝ),
-    TomitaKMSThermalizationCompatibility Op T σ beta →
-      Nonempty (TomitaKMSThermalization Op T σ beta)
+structure TomitaKMSThermalizationOwnerTarget where
+  /-- Owner-law witness transport for modular KMS thermalization. -/
+  witness_transport :
+    ∀ (Op : Type*) [Ring Op],
+    ∀ (T : TomitaCommutantDatum Op),
+    ∀ (σ : OperatorFlow Op),
+    ∀ (beta : ℝ),
+      TomitaKMSThermalizationCompatibility Op T σ beta →
+        Nonempty (TomitaKMSThermalization Op T σ beta)
 
 /--
 The modular KMS owner target is constructible once compatibility supplies the
@@ -734,6 +750,7 @@ thermalization witness.
 -/
 theorem tomitaKMSThermalizationOwnerTarget :
     TomitaKMSThermalizationOwnerTarget := by
+  refine ⟨?_⟩
   intro Op _ T σ beta h
   exact ⟨h.witness⟩
 
@@ -754,13 +771,15 @@ structure HorizonKMSThermodynamicsCompatibility
     HorizonKMSThermodynamics Op T σ beta
 
 /-- Owner target for the horizon/KMS thermodynamic bridge. -/
-def HorizonKMSThermodynamicsOwnerTarget : Prop :=
-  ∀ (Op : Type*) [Ring Op],
-  ∀ (T : TomitaCommutantDatum Op),
-  ∀ (σ : OperatorFlow Op),
-  ∀ (beta : ℝ),
-    HorizonKMSThermodynamicsCompatibility Op T σ beta →
-      Nonempty (HorizonKMSThermodynamics Op T σ beta)
+structure HorizonKMSThermodynamicsOwnerTarget where
+  /-- Owner-law witness transport for horizon KMS thermodynamics. -/
+  witness_transport :
+    ∀ (Op : Type*) [Ring Op],
+    ∀ (T : TomitaCommutantDatum Op),
+    ∀ (σ : OperatorFlow Op),
+    ∀ (beta : ℝ),
+      HorizonKMSThermodynamicsCompatibility Op T σ beta →
+        Nonempty (HorizonKMSThermodynamics Op T σ beta)
 
 /--
 The horizon KMS owner target is constructible once compatibility supplies the
@@ -768,6 +787,7 @@ horizon thermodynamics witness.
 -/
 theorem horizonKMSThermodynamicsOwnerTarget :
     HorizonKMSThermodynamicsOwnerTarget := by
+  refine ⟨?_⟩
   intro Op _ T σ beta h
   exact ⟨h.witness⟩
 
@@ -1429,14 +1449,17 @@ structure TypeIPartialTraceDatum
 /-! ## 8. Owner targets -/
 
 /-- Owner target: Tomita-KMS data produce a KMS state. -/
-def TomitaKMSOwnerTarget : Prop :=
-  ∀ Op : Type*,
-  ∀ T : TomitaKMSDatum Op,
-    Nonempty (KMSState Op T.modularFlow T.beta)
+structure TomitaKMSOwnerTarget where
+  /-- Owner-law witness transport from Tomita data to KMS state. -/
+  witness_transport :
+    ∀ Op : Type*,
+    ∀ T : TomitaKMSDatum Op,
+      Nonempty (KMSState Op T.modularFlow T.beta)
 
 /-- The Tomita-KMS owner target is constructible from the supplied certificate. -/
 theorem tomitaKMSOwnerTarget :
     TomitaKMSOwnerTarget := by
+  refine ⟨?_⟩
   intro Op T
   exact ⟨T.toKMSState⟩
 
@@ -1444,17 +1467,20 @@ theorem tomitaKMSOwnerTarget :
 Owner target: an observable KMS reduction gives thermal readouts on the visible
 algebra.
 -/
-def ObservableKMSReductionOwnerTarget : Prop :=
-  ∀ Global Visible : Type*,
-  ∀ R : ObservableKMSReduction Global Visible,
-    R.visibleKMS.kms.boundaryCondition ∧
-    ∀ A : Visible,
-      R.visibleKMS.state.eval A =
-        R.restriction.globalState.eval (R.restriction.embedVisible A)
+structure ObservableKMSReductionOwnerTarget where
+  /-- Owner-law witness transport from observable reduction to thermal readout. -/
+  witness_transport :
+    ∀ Global Visible : Type*,
+    ∀ R : ObservableKMSReduction Global Visible,
+      R.visibleKMS.kms.boundaryCondition ∧
+      ∀ A : Visible,
+        R.visibleKMS.state.eval A =
+          R.restriction.globalState.eval (R.restriction.embedVisible A)
 
 /-- The observable KMS reduction owner target follows from the witness. -/
 theorem observableKMSReductionOwnerTarget :
     ObservableKMSReductionOwnerTarget := by
+  refine ⟨?_⟩
   intro Global Visible R
   exact ⟨
     R.restricted_state_is_KMS,
@@ -1480,13 +1506,15 @@ structure TomitaKMSThermalizationCompatibility
     TomitaKMSThermalization Op T σ β
 
 /-- Owner target for the modular KMS theorem interface. -/
-def TomitaKMSThermalizationOwnerTarget : Prop :=
-  ∀ (Op : Type*) [Ring Op],
-  ∀ (T : TomitaCommutantDatum Op),
-  ∀ (σ : ModularFlow Op),
-  ∀ (β : ℝ),
-    TomitaKMSThermalizationCompatibility Op T σ β →
-      Nonempty (TomitaKMSThermalization Op T σ β)
+structure TomitaKMSThermalizationOwnerTarget where
+  /-- Owner-law witness transport for modular KMS thermalization. -/
+  witness_transport :
+    ∀ (Op : Type*) [Ring Op],
+    ∀ (T : TomitaCommutantDatum Op),
+    ∀ (σ : ModularFlow Op),
+    ∀ (β : ℝ),
+      TomitaKMSThermalizationCompatibility Op T σ β →
+        Nonempty (TomitaKMSThermalization Op T σ β)
 
 /--
 The modular KMS owner target is constructible once compatibility supplies the
@@ -1494,6 +1522,7 @@ thermalization witness.
 -/
 theorem tomitaKMSThermalizationOwnerTarget :
     TomitaKMSThermalizationOwnerTarget := by
+  refine ⟨?_⟩
   intro Op _ T σ β h
   exact ⟨h.witness⟩
 
@@ -1514,13 +1543,15 @@ structure HorizonKMSThermodynamicsCompatibility
     HorizonKMSThermodynamics Op T σ β
 
 /-- Owner target for the horizon/KMS thermodynamic bridge. -/
-def HorizonKMSThermodynamicsOwnerTarget : Prop :=
-  ∀ (Op : Type*) [Ring Op],
-  ∀ (T : TomitaCommutantDatum Op),
-  ∀ (σ : ModularFlow Op),
-  ∀ (β : ℝ),
-    HorizonKMSThermodynamicsCompatibility Op T σ β →
-      Nonempty (HorizonKMSThermodynamics Op T σ β)
+structure HorizonKMSThermodynamicsOwnerTarget where
+  /-- Owner-law witness transport for horizon KMS thermodynamics. -/
+  witness_transport :
+    ∀ (Op : Type*) [Ring Op],
+    ∀ (T : TomitaCommutantDatum Op),
+    ∀ (σ : ModularFlow Op),
+    ∀ (β : ℝ),
+      HorizonKMSThermodynamicsCompatibility Op T σ β →
+        Nonempty (HorizonKMSThermodynamics Op T σ β)
 
 /--
 The horizon KMS owner target is constructible once compatibility supplies the
@@ -1528,6 +1559,7 @@ horizon thermodynamics witness.
 -/
 theorem horizonKMSThermodynamicsOwnerTarget :
     HorizonKMSThermodynamicsOwnerTarget := by
+  refine ⟨?_⟩
   intro Op _ T σ β h
   exact ⟨h.witness⟩
 

@@ -1,1 +1,1 @@
-../cli/igf.py
+../cli/igf_main.py

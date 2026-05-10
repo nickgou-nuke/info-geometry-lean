@@ -389,21 +389,29 @@ The nontrivial analytic/von-Neumann content is supplied by concrete modules.
 This owner target only records that once the data are supplied, the compact and
 noncompact lift signs are formally available.
 -/
-def TomitaCartanSplitOwnerTarget : Prop :=
-  ∀ (Op : Type uOp) [Ring Op],
-  ∀ C : TomitaCartanDatum Op,
-  ∀ X : Op,
-    (C.IsCompactGenerator X → C.globalGenerator X = X + C.mirror X) ∧
-    (C.IsNoncompactGenerator X → C.globalGenerator X = X - C.mirror X)
+structure TomitaCartanSplitOwnerTarget where
+  /-- Compact Cartan lifts follow the `+` sign rule. -/
+  compact_transport :
+    ∀ (Op : Type uOp) [Ring Op],
+    ∀ C : TomitaCartanDatum Op,
+    ∀ X : Op,
+      C.IsCompactGenerator X → C.globalGenerator X = X + C.mirror X
+
+  /-- Noncompact Cartan lifts follow the `-` sign rule. -/
+  noncompact_transport :
+    ∀ (Op : Type uOp) [Ring Op],
+    ∀ C : TomitaCartanDatum Op,
+    ∀ X : Op,
+      C.IsNoncompactGenerator X → C.globalGenerator X = X - C.mirror X
 
 /-- The owner target is proved by the Cartan sign-routing theorems. -/
 theorem tomitaCartanSplitOwnerTarget :
     TomitaCartanSplitOwnerTarget := by
-  intro Op _ C X
-  exact ⟨
-    fun hX => C.globalGenerator_compact hX,
-    fun hX => C.globalGenerator_noncompact hX
-  ⟩
+  refine ⟨?_, ?_⟩
+  · intro Op _ C X hX
+    exact C.globalGenerator_compact hX
+  · intro Op _ C X hX
+    exact C.globalGenerator_noncompact hX
 
 /-! ## 1. Tomita algebra/commutant skeleton -/
 

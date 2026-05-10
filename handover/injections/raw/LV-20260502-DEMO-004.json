@@ -1,0 +1,32 @@
+{
+  "kind": "LeanVerificationPacket",
+  "id": "LV-20260502-DEMO-004",
+  "packet_id": "LV-20260502-DEMO-004",
+  "lineage_id": "ARCHON-HARNESS-TEST-1",
+  "revision": 1,
+  "origin_run_id": "RUN-1",
+  "created_at": "2026-05-02T16:13:00+00:00",
+  "updated_at": "2026-05-02T16:13:00+00:00",
+  "authority": "lean_checked",
+  "representation_class": "owner",
+  "representation_depth": "operatorial",
+  "packet_version": "v0.1",
+  "packet_hash": "demo-hash-0xababcd",
+  "execution_intent_ref": {"kind": "ExecutionIntentPacket", "id": "INTENT-0", "ref": "RUN-INTENT-0"},
+  "execution_allowed": true,
+  "verification_key": "InfoGeometry.Singular.MoorePenrose.ClosedRange.exists_inverse",
+  "verification_outcome": "not_executed",
+  "kernel_summary": "Analytic existence of closed-range Moore-Penrose operator, Lean 4 idioms, InfoGeometry.Singular.MoorePenrose.ClosedRange.lean",
+  "proof_status": "pending",
+  "task": {
+    "description": "Verify analytic existence theorem in InfoGeometry.Singular.MoorePenrose.ClosedRange.lean",
+    "repo_root": "/home/goutev/repos/info-geometry-lean",
+    "lean_module": "InfoGeometry.Singular.MoorePenrose.ClosedRange",
+    "theorems": ["exists_inverse"],
+    "expected_status": "qed"
+  },
+  "status": "gated",
+  "history": [
+    {"at": "2026-05-02T16:13:00+00:00", "event": "created:demo"}
+  ]
+}

@@ -67,6 +67,44 @@ theorem lift (h : IsDrazinInverse A D k) (hkℓ : k ≤ ℓ) :
 
 end IsDrazinInverse
 
+namespace IsDrazinInverse
+
+/-- An idempotent is its own Drazin inverse at index `1`. -/
+theorem of_idempotent {P : R} (hP : P * P = P) :
+    IsDrazinInverse P P 1 := by
+  refine mk ?_ rfl ?_
+  · simp [hP]
+  · simp [pow_two, hP]
+
+end IsDrazinInverse
+
+section RootStar
+
+variable [StarRing R]
+
+namespace IsDrazinInverse
+
+variable {A D : R} {k : ℕ}
+
+/-- Taking adjoints transports a Drazin inverse of `A` to one of `A†`. -/
+theorem star_isDrazinInverse (h : IsDrazinInverse A D k) :
+    IsDrazinInverse A† D† k := by
+  have hcommStar : D† * A† = A† * D† := by
+    simpa using congrArg (fun x : R => x†) h.comm
+  refine mk ?_ hcommStar.symm ?_
+  · simpa [mul_assoc] using congrArg (fun x : R => x†) h.dad_eq_d
+  · have hpowStar : A† ^ k = D† * A† ^ (k + 1) := by
+      simpa using congrArg (fun x : R => x†) h.pow_eq_pow_succ_mul
+    have hcomm : Commute A† D† := hcommStar.symm
+    calc
+      A† ^ k = D† * A† ^ (k + 1) := hpowStar
+      _ = A† ^ (k + 1) * D† := by
+        exact (hcomm.pow_left (k + 1)).eq.symm
+
+end IsDrazinInverse
+
+end RootStar
+
 /-- A positive power of an idempotent is itself. -/
 lemma pow_succ_eq_of_idempotent {R : Type*} [Monoid R] {P : R}
     (hP : P * P = P) :
@@ -222,6 +260,21 @@ theorem Drazin_unique_of_indices {A B C : R} {k ℓ : ℕ}
   have hCm : IsDrazinInverse A C m :=
     IsDrazinInverse.lift hC (Nat.le_max_right _ _)
   exact Drazin_unique hBm hCm
+
+section StarSelf
+
+variable [StarRing R]
+
+/-- A Drazin inverse of a self-adjoint element is self-adjoint. -/
+theorem Drazin_star_eq_self_of_selfAdjoint {A D : R} {k : ℕ}
+    (h : IsDrazinInverse A D k)
+    (hA : A† = A) :
+    D† = D := by
+  have hstar : IsDrazinInverse A D† k := by
+    simpa [hA] using h.star_isDrazinInverse
+  exact Drazin_unique hstar h
+
+end StarSelf
 
 /-- The Spectral/Core Projector P_D = A * A^D -/
 def Drazin_Projector (A D : R) (k : ℕ) (_h : IsDrazinInverse A D k) : R := A * D
@@ -529,3 +582,4 @@ def IsNormal (A : R) : Prop := A * A† = A† * A
 
 end Anomaly
 end InfoGeometry.Singular.Drazin
+

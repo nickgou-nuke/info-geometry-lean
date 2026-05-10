@@ -21,22 +21,66 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
-import InfoGeometry.Canonical.Triality
-import InfoGeometry.Canonical.CartanDecomposition
-import InfoGeometry.Canonical.SuperUnified
+import Mathlib.Algebra.Module.Basic
 
-namespace InfoGeometry
+namespace InfoGeometry.Canonical
 
-/-!
-# InfoGeometry.Canonical.Algebra
+/--
+Unified algebraic projection datum.
 
-Canonical algebraic umbrella (Clifford/Krein/Jordan) for publication.
+This structure provides the conductive path between Drazin and Moore-Penrose
+projections on a shared module.
 
-Integrated canonical modules:
-- Drazin inverse calculus
-- Moore-Penrose inverse calculus
-- Triality attention core
-- Cartan decomposition bridge
+PAULI_MANDATE II: This provides a Value-Edge by coordinating two different
+inverse theories into a single projective witness.
 -/
+structure UnifiedProjection (R M : Type*)
+    [Ring R] [StarRing R] [AddCommGroup M] [Module R M] where
+  /-- The operator element. -/
+  op : R
+  /-- Drazin inverse witness. -/
+  a_d : R
+  /-- Moore-Penrose inverse witness. -/
+  a_mp : R
+  /-- Drazin index. -/
+  k : ℕ
 
-end InfoGeometry
+  /-- Drazin inverse law must hold. -/
+  is_drazin : Drazin.IsDrazinInverse op a_d k
+  /-- Moore-Penrose inverse law must hold. -/
+  is_mp : MoorePenrose.IsMoorePenroseInverse op a_mp
+
+  /--
+  Conductivity Law: The spectral and metric projectors must be identified
+  through a provided intertwiner or witness.
+  -/
+  projectors_compatible :
+    Drazin.IsDrazinInverse.projection op a_d =
+      MoorePenrose.IsMoorePenroseInverse.leftProjector op a_mp
+
+namespace UnifiedProjection
+
+variable {R M : Type*} [Ring R] [StarRing R] [AddCommGroup M] [Module R M]
+variable (P : UnifiedProjection R M)
+
+/-- The unified projector of the system. -/
+def projector : R := Drazin.IsDrazinInverse.projection P.op P.a_d
+
+/-- The unified projector is idempotent. -/
+theorem projector_idempotent :
+    P.projector * P.projector = P.projector :=
+  Drazin.IsDrazinInverse.projection_is_idempotent P.is_drazin
+
+/--
+The unified projector is self-adjoint, conducting to the Moore-Penrose
+metric root.
+-/
+theorem projector_star :
+    star P.projector = P.projector := by
+  unfold projector
+  rw [P.projectors_compatible]
+  exact MoorePenrose.IsMoorePenroseInverse.ba_star P.is_mp
+
+end UnifiedProjection
+
+end InfoGeometry.Canonical

@@ -13,7 +13,7 @@ This module connects:
 It does not claim that `E8`, a five-grading, or a Clifford algebra alone proves
 Hawking radiation. The KMS and horizon/boost identifications are explicit
 proof-carrying data, and recovery/Page-curve/holographic reconstruction
-statements remain separate witnesses.
+statements remain separate certified structures.
 -/
 
 import Mathlib
@@ -426,8 +426,7 @@ This packages:
 * grade-two memory heat accounting.
 
 It does not assert full recovery of information. Recovery is represented by
-the `full_ledger_recovery_law_holds` witness already carried by the black-hole
-ledger.
+the separate grade-two memory recovery structure below.
 -/
 structure HorizonKMSFiveGradeBridge
     (J L Obs Memory : Type*)
@@ -462,15 +461,7 @@ structure HorizonKMSFiveGradeBridge
   kms_beta_eq_horizon_beta :
     kms.beta = normalization.beta
 
-  /--
-  Certificate that the exterior KMS flow is the horizon modular flow relevant
-  for this ledger.
-  -/
-  exterior_kms_flow_calibration : Prop
 
-  /-- Proof/certificate of the exterior KMS flow calibration. -/
-  exterior_kms_flow_calibration_certificate :
-    exterior_kms_flow_calibration
 
 namespace HorizonKMSFiveGradeBridge
 
@@ -578,10 +569,50 @@ theorem nonzero_memory_heat_readout
     H.heatCalibration.observedHeat (A.observedDefect x y) ≠ 0 :=
   (H.observed_heat_ne_zero_iff_gradeTwo_memory_heat_ne_zero x y).mpr hmem
 
-/-- The bridge keeps the ledger's full recovery certificate witness-gated. -/
+/--
+The bridge preserves the lower ledger's certified memory-storage implication.
+
+This is intentionally weaker than a Page-curve or holographic recovery theorem:
+the five-graded ledger only proves that nonzero memory readout stores a
+nonzero hidden grade-two component.
+-/
 theorem full_ledger_recovery_certificate :
-    H.ledger.full_ledger_recovery_law :=
-  H.ledger.full_ledger_recovery_law_holds
+    ∀ x y : J,
+      H.ledger.memoryReadout (A.hiddenTotal x y) ≠ 0 →
+        A.hiddenTotal x y ≠ 0 :=
+  H.ledger.hidden_part_stored_as_memory
+
+/--
+Exterior KMS flow calibration as an explicit equation.
+
+This is the local equation-level replacement for the removed
+`exterior_kms_flow_calibration` witness: the KMS flow supplied by the bridge is
+identified with a designated horizon modular flow.
+-/
+def exterior_kms_flow_calibration
+    (modularFlow_horizon : ℝ → Obs → Obs) : Prop :=
+  ∀ t : ℝ, ∀ X : Obs, H.kms.flow t X = modularFlow_horizon t X
+
+/-- Re-export of the exterior KMS/horizon modular flow equation. -/
+theorem exterior_kms_flow_calibration_at
+    {modularFlow_horizon : ℝ → Obs → Obs}
+    (hcal : H.exterior_kms_flow_calibration modularFlow_horizon)
+    (t : ℝ)
+    (X : Obs) :
+    H.kms.flow t X = modularFlow_horizon t X :=
+  hcal t X
+
+/--
+Grade-two memory source law: hidden total lies in the ±2 graded sectors.
+
+This reinstates the old horizon-source intent using explicit membership in the
+five-grading sum `gNegTwo ⊔ gPosTwo`.
+-/
+theorem grade_two_memory_is_horizon_source
+    (x y : J) :
+    A.hiddenTotal x y ∈ G.gNegTwo ⊔ G.gPosTwo := by
+  dsimp [FiveGradeProjectedAccounting.hiddenTotal]
+  exact Submodule.add_mem_sup (A.hiddenNegTwo_mem x y) (A.hiddenPosTwo_mem x y)
 
 end HorizonKMSFiveGradeBridge
 
@@ -698,13 +729,13 @@ end GradeTwoKMSThermalReadout
 /-! ## 7. Recovery remains separate -/
 
 /--
-A recovery witness for grade-two horizon memory.
+Certified recovery data for grade-two horizon memory.
 
 This is deliberately separated from the KMS bridge. KMS thermality tells us
 what the exterior observer thermally reads; recovery tells us how the hidden
 memory can be reconstructed in a full model.
 -/
-structure GradeTwoMemoryRecoveryWitness
+structure GradeTwoMemoryRecoveryData
     (J L Obs Memory : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
@@ -726,7 +757,7 @@ structure GradeTwoMemoryRecoveryWitness
       exteriorData (A.observedDefect x y) =
         B.memoryReadout (A.hiddenTotal x y)
 
-namespace GradeTwoMemoryRecoveryWitness
+namespace GradeTwoMemoryRecoveryData
 
 variable
     {J L Obs Memory : Type*}
@@ -738,7 +769,7 @@ variable
     {A : FiveGradeProjectedAccounting J L Obs G}
     {B : BlackHoleInformationLedger J L Obs Memory A}
 
-variable (R : GradeTwoMemoryRecoveryWitness J L Obs Memory B)
+variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
 
 /-- Hidden memory is recoverable from exterior observed-defect data. -/
 theorem recover_hidden_memory
@@ -747,7 +778,7 @@ theorem recover_hidden_memory
       B.memoryReadout (A.hiddenTotal x y) :=
   R.recovery_law x y
 
-end GradeTwoMemoryRecoveryWitness
+end GradeTwoMemoryRecoveryData
 
 /-! ## 8. Thermodynamic Tomita/KMS bridge -/
 
@@ -818,15 +849,7 @@ structure HorizonKMSThermodynamicMemoryBridge
     ∀ x y : J,
       memoryToOperator (ledger.memoryReadout (A.hiddenTotal x y)) ∈ tomita.Mcomm
 
-  /--
-  Certificate that the grade-two sector is the intended horizon/contact memory
-  source for this KMS bridge.
-  -/
-  grade_two_memory_is_horizon_source : Prop
 
-  /-- Proof of the horizon-memory source certificate. -/
-  grade_two_memory_is_horizon_source_holds :
-    grade_two_memory_is_horizon_source
 
 namespace HorizonKMSThermodynamicMemoryBridge
 
@@ -919,10 +942,7 @@ theorem thermal_agrees_with_global_on_observable
       H.horizonKMS.thermalization.reduction.globalEval X :=
   H.horizonKMS.thermalization.thermal_agrees_with_global_on_observable hX
 
-/-- The grade-two memory horizon-source certificate is available. -/
-theorem grade_two_memory_source_valid :
-    H.grade_two_memory_is_horizon_source :=
-  H.grade_two_memory_is_horizon_source_holds
+
 
 end HorizonKMSThermodynamicMemoryBridge
 
@@ -986,7 +1006,7 @@ def GradeTwoMemoryRecoveryOwnerTarget
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
   ∀ B : BlackHoleInformationLedger J L Obs Memory A,
-    Nonempty (GradeTwoMemoryRecoveryWitness J L Obs Memory B)
+    Nonempty (GradeTwoMemoryRecoveryData J L Obs Memory B)
 
 /--
 Owner target for the thermodynamic/Tomita horizon KMS memory bridge.
@@ -1001,5 +1021,84 @@ def HorizonKMSThermodynamicMemoryBridgeOwnerTarget
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
     Nonempty (HorizonKMSThermodynamicMemoryBridge (G := G) J L Obs Memory Op A)
+
+/-! ## 10. Exterior KMS flow calibration structure -/
+
+/--
+Exterior KMS flow calibration structure.
+
+Proof-carrying reinstantiation of `exterior_kms_flow_calibration`.
+
+Certifies that an exterior KMS flow (supplied by a `HorizonKMSFiveGradeBridge`)
+equals a designated horizon modular flow — the Bisognano–Wichmann
+identification for a Rindler/black-hole exterior.
+
+This is a module-level structure that wraps a `HorizonKMSFiveGradeBridge`
+and supplies the modular flow datum together with the explicit intertwining
+equation:
+
+  `∀ t X, kms.flow t X = modularFlowHorizon t X`.
+
+See: Bisognano–Wichmann, J. Math. Phys. 17 (1976) 303.
+-/
+structure ExteriorKMSFlowCalibration
+    (J L Obs Memory : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    {G : FiveGrading L}
+    {A : FiveGradeProjectedAccounting J L Obs G}
+    (H : HorizonKMSFiveGradeBridge J L Obs Memory A) where
+
+  /-- The horizon modular flow on the exterior observable space. -/
+  modularFlowHorizon : ℝ → Obs → Obs
+
+  /-- Zero-time identity for the horizon modular flow. -/
+  modularFlowHorizon_zero :
+    ∀ X : Obs, modularFlowHorizon 0 X = X
+
+  /-- Additive law for the horizon modular flow. -/
+  modularFlowHorizon_add :
+    ∀ (s t : ℝ) (X : Obs),
+      modularFlowHorizon (s + t) X =
+        modularFlowHorizon s (modularFlowHorizon t X)
+
+  /--
+  Bisognano–Wichmann calibration:
+  the KMS flow equals the horizon modular flow.
+
+  `∀ t X, kms.flow t X = modularFlowHorizon t X`.
+  -/
+  exterior_kms_flow_eq_modular :
+    ∀ (t : ℝ) (X : Obs),
+      H.kms.flow t X = modularFlowHorizon t X
+
+namespace ExteriorKMSFlowCalibration
+
+variable
+    {J L Obs Memory : Type*}
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    {G : FiveGrading L}
+    {A : FiveGradeProjectedAccounting J L Obs G}
+    {H : HorizonKMSFiveGradeBridge J L Obs Memory A}
+
+variable (E : ExteriorKMSFlowCalibration J L Obs Memory H)
+
+/-- The KMS flow equals the horizon modular flow. -/
+theorem kms_flow_eq_horizon_modular (t : ℝ) (X : Obs) :
+    H.kms.flow t X = E.modularFlowHorizon t X :=
+  E.exterior_kms_flow_eq_modular t X
+
+/-- KMS state is invariant under the horizon modular flow. -/
+theorem kms_state_invariant_horizon_flow (t : ℝ) (X : Obs) :
+    H.kms.state (E.modularFlowHorizon t X) = H.kms.state X := by
+  rw [← E.kms_flow_eq_horizon_modular]
+  exact H.kms.flow_invariant t X
+
+end ExteriorKMSFlowCalibration
 
 end InfoGeometry.OperatorAlgebra.HorizonKMS

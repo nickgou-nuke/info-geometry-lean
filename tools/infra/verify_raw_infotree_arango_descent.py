@@ -36,7 +36,7 @@ from tools.infra.arango_env import (
     arango_username,
     load_repo_arango_env,
 )
-from arango_raw_infotree_ingest import (
+from tools.infra.arango_raw_infotree_ingest import (
     EDGE_COLLECTIONS,
     ROW_FILES,
     ArangoTarget,

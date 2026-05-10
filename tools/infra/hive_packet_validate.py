@@ -37,6 +37,7 @@ SCHEMA_BY_KIND = {
     "LeanVerificationPacket": SCHEMA_DIR / "LeanVerificationPacket.schema.json",
     "BuildPacket": SCHEMA_DIR / "BuildPacket.schema.json",
     "AuditPacket": SCHEMA_DIR / "AuditPacket.schema.json",
+    "ChatGPTSocraticAuditPacket": SCHEMA_DIR / "ChatGPTSocraticAuditPacket.schema.json",
     "PromotionDecisionPacket": SCHEMA_DIR / "PromotionDecisionPacket.schema.json",
     "ResiduePacket": SCHEMA_DIR / "ResiduePacket.schema.json",
     "RepairAttemptPacket": SCHEMA_DIR / "RepairAttemptPacket.schema.json",

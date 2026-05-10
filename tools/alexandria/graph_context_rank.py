@@ -57,13 +57,26 @@ def entity_bonus(entity: dict[str, Any]) -> float:
     return 0.95 * confidence
 
 
+def _debruijn_conductivity(overlap_symbols: list[str], query_tokens: set[str]) -> float:
+    if not query_tokens or not overlap_symbols:
+        return 0.0
+    symbol_tokens: set[str] = set()
+    for sym in overlap_symbols:
+        symbol_tokens.update(tokenize(sym))
+    return len(symbol_tokens & query_tokens) / len(query_tokens)
+
+
 def build_graph(
     nx: Any,
     chunks: list[dict[str, Any]],
     entities: list[dict[str, Any]],
     chunk_entities: list[dict[str, Any]],
     adjacent: list[dict[str, Any]],
+    debruijn_edges: list[dict[str, Any]],
     entity_relations: list[dict[str, Any]],
+    *,
+    query_tokens: set[str] | None = None,
+    conductive: bool = False,
 ):
     graph = nx.DiGraph()
     for chunk in chunks:
@@ -76,6 +89,24 @@ def build_graph(
         if src in graph and dst in graph:
             graph.add_edge(src, dst, kind="adjacent", weight=weight)
             graph.add_edge(dst, src, kind="adjacent", weight=weight)
+
+    for edge in debruijn_edges:
+        src = chunk_key_from_doc_id(edge["_from"])
+        dst = chunk_key_from_doc_id(edge["_to"])
+        if src not in graph or dst not in graph:
+            continue
+        prob = float(edge.get("transition_probability", 1.0))
+        overlap_symbols: list[str] = edge.get("overlap_symbols", [])
+        conductivity = _debruijn_conductivity(overlap_symbols, query_tokens or set()) if conductive else 0.0
+        weight = prob * (1.0 + conductivity)
+        graph.add_edge(
+            src, dst,
+            kind="debruijn_sequence",
+            weight=weight,
+            conductivity=conductivity,
+            overlap_symbols=overlap_symbols,
+            transition_probability=prob,
+        )
 
     entity_by_key = {row["_key"]: row for row in entities}
     entity_to_chunks: dict[str, list[str]] = defaultdict(list)
@@ -109,6 +140,122 @@ def build_graph(
                 graph.add_edge(src_chunk, dst_chunk, kind="entity_relation", weight=merged)
 
     return graph
+
+
+def activated_edges(
+    graph: Any,
+    chunks_by_key: dict[str, dict[str, Any]],
+    *,
+    limit: int = 8,
+) -> list[dict[str, Any]]:
+    edges: list[dict[str, Any]] = []
+    for src, dst, data in graph.edges(data=True):
+        if data.get("kind") != "debruijn_sequence":
+            continue
+        edges.append({
+            "from": src,
+            "to": dst,
+            "weight": data.get("weight", 0.0),
+            "conductivity": data.get("conductivity", 0.0),
+            "overlap_symbols": data.get("overlap_symbols", []),
+            "transition_probability": data.get("transition_probability", 0.0),
+        })
+    edges.sort(key=lambda e: (e["weight"], e["conductivity"]), reverse=True)
+    return edges[:limit]
+
+
+def query_abstraction_score(query_tokens: set[str]) -> float:
+    return min(1.0, len(query_tokens) / 4.0)
+
+
+def coarse_components(
+    nx: Any,
+    graph: Any,
+    chunks: list[dict[str, Any]],
+    entities_for_chunk: dict[str, list[dict[str, Any]]],
+    scores: dict[str, float],
+    query_tokens: set[str],
+) -> list[dict[str, Any]]:
+    entity_to_chunks: dict[str, list[str]] = defaultdict(list)
+    for chunk_key, ents in entities_for_chunk.items():
+        for ent in ents:
+            norm = ent.get("normalized", "")
+            if norm:
+                entity_to_chunks[norm].append(chunk_key)
+
+    ug = nx.Graph()
+    for chunk in chunks:
+        ug.add_node(chunk["_key"])
+    for norm, chunk_keys in entity_to_chunks.items():
+        unique = list(dict.fromkeys(chunk_keys))
+        for i, src in enumerate(unique):
+            for dst in unique[i + 1:]:
+                if ug.has_node(src) and ug.has_node(dst):
+                    ug.add_edge(src, dst)
+
+    components: list[dict[str, Any]] = []
+    for component in nx.connected_components(ug):
+        member_list = sorted(component)
+        total_score = sum(scores.get(m, 0.0) for m in member_list)
+        all_terms: set[str] = set()
+        for m in member_list:
+            for ent in entities_for_chunk.get(m, []):
+                norm = ent.get("normalized", "")
+                if norm:
+                    all_terms.add(norm)
+        relevant_terms = sorted(
+            term for term in all_terms
+            if query_tokens & tokenize(term)
+        )
+        components.append({
+            "members": member_list,
+            "memberCount": len(member_list),
+            "totalScore": total_score,
+            "representativeTerms": relevant_terms,
+        })
+
+    components.sort(key=lambda c: c["totalScore"], reverse=True)
+    return components
+
+
+def scc_quotient_scores(
+    nx: Any,
+    graph: Any,
+    seeds: dict[str, float],
+) -> tuple[dict[str, float], list[dict[str, Any]]]:
+    condensation = nx.condensation(graph)
+
+    node_to_cond: dict[Any, int] = {}
+    for cond_node in condensation.nodes:
+        for orig_node in condensation.nodes[cond_node]["members"]:
+            node_to_cond[orig_node] = cond_node
+
+    cond_seeds: dict[int, float] = defaultdict(float)
+    for node, score in seeds.items():
+        if node in node_to_cond:
+            cond_seeds[node_to_cond[node]] += score
+
+    cond_scores = personalized_scores(condensation, dict(cond_seeds))
+
+    node_scores: dict[str, float] = {}
+    quotient: list[dict[str, Any]] = []
+    for cond_node in condensation.nodes:
+        members = sorted(condensation.nodes[cond_node]["members"])
+        scc_score = cond_scores.get(cond_node, 0.0)
+        per_member = scc_score / max(1, len(members))
+        for m in members:
+            node_scores[m] = per_member
+        is_cycle = (
+            len(members) > 1
+            or (bool(members) and graph.has_edge(members[0], members[0]))
+        )
+        quotient.append({
+            "members": members,
+            "internalCycle": is_cycle,
+            "score": scc_score,
+        })
+
+    return node_scores, quotient
 
 
 def personalized_scores(graph, seeds: dict[str, float], *, steps: int = 12, alpha: float = 0.85) -> dict[str, float]:
@@ -167,7 +314,8 @@ def main() -> int:
     adjacent = read_jsonl(root / "alexandria_chunk_adjacent_edges.jsonl")
     entity_relations = read_jsonl(root / "alexandria_entity_relation_edges.jsonl")
 
-    graph = build_graph(nx, chunks, entities, chunk_entities, adjacent, entity_relations)
+    debruijn_edges = read_jsonl(root / "alexandria_debruijn_edges.jsonl")
+    graph = build_graph(nx, chunks, entities, chunk_entities, adjacent, debruijn_edges, entity_relations)
     query_tokens = tokenize(args.query)
     lexical_ranked = sorted(chunks, key=lambda row: (lexical_score(query_tokens, row), len(row.get("tokens", []))), reverse=True)
     seeds = {

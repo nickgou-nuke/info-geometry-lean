@@ -35,6 +35,96 @@ AUTHORITY_ORDER = {
     "promoted": 7,
 }
 
+PIPELINE_STATES = ("idle", "proposed", "checked", "audited", "promoted", "blocked")
+PIPELINE_ORDER = {state: rank for rank, state in enumerate(PIPELINE_STATES)}
+
+
+def infer_output_pipeline_state(packet: dict[str, Any]) -> str:
+    provided = packet.get("pipeline_state")
+    if provided is not None:
+        pipeline_state = str(provided)
+        if pipeline_state not in PIPELINE_ORDER:
+            raise RunnerError(f"invalid pipeline_state on output packet {packet.get('id', '<unknown>')}: {pipeline_state}")
+        return pipeline_state
+
+    kind = str(packet.get("kind", ""))
+    authority = str(packet.get("authority", ""))
+
+    if kind == "ResiduePacket":
+        return "blocked"
+    if authority in {"navigation"}:
+        return "idle"
+    if authority in {"semantic", "proposal", "execution_intent"}:
+        return "proposed"
+    if authority == "lean_checked":
+        return "checked"
+    if authority in {"build_checked", "audit_checked"}:
+        return "audited"
+    if authority == "promoted":
+        return "promoted"
+    if kind in {
+        "SourceObservationPacket",
+        "SocraticQuestionPacket",
+        "SymbolicMotifPacket",
+        "SymbolicSeed",
+        "ResonanceCluster",
+        "PauliCritique",
+        "InvariantDraft",
+        "TheoremCandidatePacket",
+        "TranslationPacket",
+        "RetrievalHypothesisPacket",
+        "RepairAttemptPacket",
+        "AutoproofTracePacket",
+        "ExecutionIntentPacket",
+        "FormulationVariant",
+    }:
+        return "proposed"
+    return "proposed"
+
+
+def infer_packet_input_state(packet: dict[str, Any]) -> str:
+    provided = packet.get("pipeline_state")
+    if provided is None:
+        return infer_output_pipeline_state(packet)
+    pipeline_state = str(provided)
+    if pipeline_state not in PIPELINE_ORDER:
+        raise RunnerError(f"invalid pipeline_state on input packet {packet.get('id', '<unknown>')}: {pipeline_state}")
+    return pipeline_state
+
+
+def next_pipeline_states(state: str) -> set[str]:
+    if state == "idle":
+        return {"proposed", "blocked"}
+    if state == "proposed":
+        return {"checked", "blocked"}
+    if state == "checked":
+        return {"audited", "blocked"}
+    if state == "audited":
+        return {"promoted", "blocked"}
+    if state in {"promoted", "blocked"}:
+        return {state}
+    return {"blocked"}
+
+
+def infer_input_pipeline_state(input_packets: dict[str, dict[str, Any]]) -> str:
+    if not input_packets:
+        return "idle"
+    states = [infer_packet_input_state(packet) for packet in input_packets.values()]
+    state_ranks = [PIPELINE_ORDER[state] for state in states]
+    return PIPELINE_STATES[max(state_ranks)]
+
+
+def assert_pipeline_transition(source_state: str, output_packet: dict[str, Any]) -> None:
+    output_state = infer_output_pipeline_state(output_packet)
+    output_packet["pipeline_state"] = output_state
+
+    allowed = next_pipeline_states(source_state)
+    if output_state not in allowed:
+        raise RunnerError(
+            f"invalid pipeline transition for packet {output_packet.get('id', '<unknown>')}: "
+            f"{source_state} -> {output_state}"
+        )
+
 KIND_AUTHORITY_FLOOR = {
     "SourceObservationPacket": "navigation",
     "SymbolicMotifPacket": "semantic",
@@ -318,9 +408,11 @@ def run_task(
     dry_run = bool(task.get("dry_run", False)) or force_dry_run
     input_packets = load_input_packets(store_path, [str(x) for x in task.get("input_packet_ids", [])])
     validate_task_policy(task, input_packets)
+    source_state = infer_input_pipeline_state(input_packets)
 
     output_hashes: list[str] = []
     for packet in output_packets:
+        assert_pipeline_transition(source_state, packet)
         enforce_output_contract(task, packet)
         output_hashes.append(packet_hash(packet))
 

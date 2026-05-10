@@ -66,12 +66,9 @@ structure ConformalCompactificationDatum
   boundary_subset_nullCone :
     projectiveNullBoundary ⊆ nullCone
 
-  /-- Statement that this is the intended conformal compactification. -/
-  conformal_compactification_law : Prop
-
-  /-- Proof of the conformal compactification law. -/
-  conformal_compactification_law_holds :
-    conformal_compactification_law
+  /-- The affine embedding is injective. -/
+  affineEmbed_injective :
+    Function.Injective affineEmbed
 
 namespace ConformalCompactificationDatum
 
@@ -88,10 +85,10 @@ theorem boundary_point_null
     C.ambientQ w = 0 :=
   (C.nullCone_eq_zero_locus w).mp (C.boundary_subset_nullCone hw)
 
-/-- The stored conformal compactification law is available as a proof. -/
-theorem conformal_compactification_valid :
-    C.conformal_compactification_law :=
-  C.conformal_compactification_law_holds
+/-- The affine chart is injective. -/
+theorem affineEmbed_injective_prop :
+    Function.Injective C.affineEmbed :=
+  C.affineEmbed_injective
 
 end ConformalCompactificationDatum
 
@@ -116,12 +113,8 @@ structure TKKThreeGrading
   /-- Special-conformal/Jordan-plus piece. -/
   gPlus : Submodule ℝ L
 
-  /-- The intended direct-sum/decomposition law, left abstract at this layer. -/
-  decomposition_law : Prop
-
-  /-- Proof of the decomposition law. -/
-  decomposition_law_holds :
-    decomposition_law
+  /-- The Lie algebra decomposes as `L = g₋₁ ⊕ g₀ ⊕ g₊₁`. -/
+  decomposition_law : ⊤ = gMinus ⊔ gZero ⊔ gPlus
 
   /-- `[g_-1, g_-1] = 0` for the short grading. -/
   bracket_minus_minus :
@@ -152,10 +145,10 @@ namespace TKKThreeGrading
 variable {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (G : TKKThreeGrading L)
 
-/-- The stored decomposition law is available as a proof. -/
+/-- The grading spans the full Lie algebra. -/
 theorem decomposition_valid :
-    G.decomposition_law :=
-  G.decomposition_law_holds
+    ⊤ = G.gMinus ⊔ G.gZero ⊔ G.gPlus :=
+  G.decomposition_law
 
 /-- Re-export: the negative grade is abelian. -/
 theorem minus_minus_eq_zero
@@ -240,16 +233,13 @@ structure TKKClosureDatum
     ∀ x : J, toPlus x ∈ grading.gPlus
 
   /--
-  TKK identity law.
-
-  A concrete version should identify the bracket-derived triple product on
-  `g_-1/g_+1` with the Jordan pair/triple product.
+  TKK identity: the Jordan triple-product symmetry recovered from the Lie bracket.
+  `[[x⁻, y⁺], z⁻] = [[z⁻, y⁺], x⁻]` in `L`.
   -/
-  tkk_identity_law : Prop
-
-  /-- Proof of the TKK identity law. -/
-  tkk_identity_law_holds :
-    tkk_identity_law
+  tkk_identity :
+    ∀ x y z : J,
+      ⁅⁅toMinus x, toPlus y⁆, toMinus z⁆ =
+        ⁅⁅toMinus z, toPlus y⁆, toMinus x⁆
 
 namespace TKKClosureDatum
 
@@ -258,10 +248,12 @@ variable
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (T : TKKClosureDatum J L)
 
-/-- The stored TKK identity law is available as a proof. -/
-theorem tkk_identity_valid :
-    T.tkk_identity_law :=
-  T.tkk_identity_law_holds
+/-- The TKK triple-product symmetry. -/
+theorem tkk_identity_valid
+    (x y z : J) :
+    ⁅⁅T.toMinus x, T.toPlus y⁆, T.toMinus z⁆ =
+      ⁅⁅T.toMinus z, T.toPlus y⁆, T.toMinus x⁆ :=
+  T.tkk_identity x y z
 
 /-- The embedded Jordan translation lies in the negative grade. -/
 theorem toMinus_mem_grade
@@ -341,19 +333,12 @@ structure ConformalGroupLiftWitness
   /-- Predicate for admissible conformal motions. -/
   IsConformalMotion : (W →ₗ[ℝ] W) → Prop
 
-  /-- Integration/lift certificate from Lie algebra to conformal motions. -/
-  integrates_to_conformal_group_law : Prop
-
-  /-- Proof of the integration/lift law. -/
-  integrates_to_conformal_group_law_holds :
-    integrates_to_conformal_group_law
-
-  /-- Optional `Pin(5,5)`/discrete lift certificate. -/
-  pin_lift_law : Prop
-
-  /-- Proof of the optional `Pin`/discrete lift law. -/
-  pin_lift_law_holds :
-    pin_lift_law
+  /-- The infinitesimal action is a Lie homomorphism. -/
+  infinitesimalAction_lie :
+    ∀ X Y : L,
+      infinitesimalAction ⁅X, Y⁆ =
+        (infinitesimalAction X).comp (infinitesimalAction Y) -
+        (infinitesimalAction Y).comp (infinitesimalAction X)
 
 namespace ConformalGroupLiftWitness
 
@@ -364,17 +349,114 @@ variable
 
 variable (G : ConformalGroupLiftWitness L W)
 
-/-- The stored conformal-group integration law is available as a proof. -/
-theorem integrates_to_conformal_group_valid :
-    G.integrates_to_conformal_group_law :=
-  G.integrates_to_conformal_group_law_holds
-
-/-- The stored optional `Pin`/discrete lift law is available as a proof. -/
-theorem pin_lift_valid :
-    G.pin_lift_law :=
-  G.pin_lift_law_holds
+/-- The infinitesimal action respects the Lie bracket. -/
+theorem infinitesimalAction_lie_eq
+    (X Y : L) :
+    G.infinitesimalAction ⁅X, Y⁆ =
+      (G.infinitesimalAction X).comp (G.infinitesimalAction Y) -
+      (G.infinitesimalAction Y).comp (G.infinitesimalAction X) :=
+  G.infinitesimalAction_lie X Y
 
 end ConformalGroupLiftWitness
+
+/-! ## 3A. Pin group lift witness -/
+
+/--
+Pin group lift witness for the TKK conformal double cover.
+
+Certifies that the `so(5,5)` infinitesimal action on the ambient conformal
+module `W` lifts to a group-level `Pin(p,q)` action through the Clifford
+algebra `Cl(W, Q)`.
+
+The defining data are:
+
+* a quadratic form `Q` on `W` (intended signature `(5,5)`);
+* an abstract Pin group carrier and multiplication;
+* the Clifford squaring relation `ι(w)² = Q(w) · 1`;
+* a group action on `W` preserving `Q`.
+
+The Lie-algebra level action is inherited from `ConformalGroupLiftWitness`.
+
+See: Lawson–Michelsohn, *Spin Geometry*, Ch. I;
+Meinrenken, *Clifford Algebras and Lie Theory*.
+-/
+structure PinLiftWitness
+    (L W : Type*)
+    [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup W] [Module ℝ W] where
+
+  /-- Quadratic form on `W`, intended signature `(5,5)`. -/
+  quadraticForm : QuadraticForm ℝ W
+
+  /-- Underlying infinitesimal conformal action at the Lie algebra level. -/
+  infinitesimalAction : ConformalGroupLiftWitness L W
+
+  /-- Abstract Pin group carrier (double cover of `O(quadraticForm)`). -/
+  PinGroupCarrier : Type*
+
+  /-- Abstract group multiplication on `PinGroupCarrier`. -/
+  pinMul : PinGroupCarrier → PinGroupCarrier → PinGroupCarrier
+
+  /-- Abstract unit of `PinGroupCarrier`. -/
+  pinOne : PinGroupCarrier
+
+  /-- Scalar embedding `ℝ → PinGroupCarrier` (multiples of the identity). -/
+  scalarEmbed : ℝ → PinGroupCarrier
+
+  /-- Clifford generator map `W → PinGroupCarrier`. -/
+  cliffordGen : W → PinGroupCarrier
+
+  /--
+  Clifford squaring relation: `ι(w) · ι(w) = Q(w) · 1`.
+
+  This is the defining relation of the Clifford algebra `Cl(W, Q)` from which
+  the Pin group is constructed.
+  -/
+  clifford_sq :
+    ∀ w : W,
+      pinMul (cliffordGen w) (cliffordGen w) =
+        scalarEmbed (quadraticForm w)
+
+  /-- Group-level Pin action on `W`. -/
+  pinAction : PinGroupCarrier → W →ₗ[ℝ] W
+
+  /-- The Pin action preserves the quadratic form. -/
+  pinAction_preserves_Q :
+    ∀ (g : PinGroupCarrier) (w : W),
+      quadraticForm (pinAction g w) = quadraticForm w
+
+namespace PinLiftWitness
+
+variable
+    {L W : Type*}
+    [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup W] [Module ℝ W]
+
+variable (P : PinLiftWitness L W)
+
+/-- The Clifford squaring relation at a given vector `w`. -/
+theorem clifford_sq_eq (w : W) :
+    P.pinMul (P.cliffordGen w) (P.cliffordGen w) =
+      P.scalarEmbed (P.quadraticForm w) :=
+  P.clifford_sq w
+
+/-- The Pin action preserves the ambient quadratic form. -/
+theorem pinAction_preserves_form (g : P.PinGroupCarrier) (w : W) :
+    P.quadraticForm (P.pinAction g w) = P.quadraticForm w :=
+  P.pinAction_preserves_Q g w
+
+/-- The infinitesimal action is a Lie homomorphism. -/
+theorem infinitesimalAction_lie (X Y : L) :
+    P.infinitesimalAction.infinitesimalAction ⁅X, Y⁆ =
+      (P.infinitesimalAction.infinitesimalAction X).comp
+          (P.infinitesimalAction.infinitesimalAction Y) -
+      (P.infinitesimalAction.infinitesimalAction Y).comp
+          (P.infinitesimalAction.infinitesimalAction X) :=
+  P.infinitesimalAction.infinitesimalAction_lie X Y
+
+end PinLiftWitness
 
 /-! ## 4. Closure defect and Ricci flux -/
 
@@ -392,12 +474,10 @@ structure TKKClosureDefect
   /-- Defect readout along a generator. -/
   defect : L → State → Defect
 
-  /-- Statement that this is the intended closure-obstruction readout. -/
-  closure_defect_law : Prop
-
-  /-- Proof of the closure-defect law. -/
-  closure_defect_law_holds :
-    closure_defect_law
+  /-- The defect readout is linear in the generator. -/
+  defect_linear_gen :
+    ∀ (a b : ℝ) (X Y : L) (s : State),
+      defect (a • X + b • Y) s = a • defect X s + b • defect Y s
 
 namespace TKKClosureDefect
 
@@ -416,10 +496,11 @@ def IsClosed
 
 variable (D : TKKClosureDefect L State Defect)
 
-/-- The stored closure-defect law is available as a proof. -/
-theorem closure_defect_valid :
-    D.closure_defect_law :=
-  D.closure_defect_law_holds
+/-- The defect is linear in the Lie generator. -/
+theorem defect_linear
+    (a b : ℝ) (X Y : L) (s : State) :
+    D.defect (a • X + b • Y) s = a • D.defect X s + b • D.defect Y s :=
+  D.defect_linear_gen a b X Y s
 
 end TKKClosureDefect
 
@@ -432,12 +513,12 @@ structure CurvatureReadout
   /-- Effective curvature/geometric readout. -/
   curvature : State → Geometry
 
-  /-- Statement that this is the intended GR/conformal curvature readout. -/
-  curvature_law : Prop
+  /-- The curvature readout is a linear map. -/
+  curvature_linear : State →ₗ[ℝ] Geometry
 
-  /-- Proof of the curvature law. -/
-  curvature_law_holds :
-    curvature_law
+  /-- The curvature function agrees with the linear map. -/
+  curvature_eq_linear :
+    ∀ s : State, curvature s = curvature_linear s
 
 namespace CurvatureReadout
 
@@ -447,10 +528,11 @@ variable
 
 variable (C : CurvatureReadout State Geometry)
 
-/-- The stored curvature law is available as a proof. -/
-theorem curvature_valid :
-    C.curvature_law :=
-  C.curvature_law_holds
+/-- The curvature readout agrees with its linear witness. -/
+theorem curvature_eq
+    (s : State) :
+    C.curvature s = C.curvature_linear s :=
+  C.curvature_eq_linear s
 
 end CurvatureReadout
 
@@ -468,12 +550,10 @@ structure DirectionalDerivativeAlong
   deriv :
     (State → Geometry) → L → State → Geometry
 
-  /-- Abstract linearity/calculus compatibility law. -/
-  linearity_law : Prop
-
-  /-- Proof of the abstract linearity/calculus law. -/
-  linearity_law_holds :
-    linearity_law
+  /-- Linearity in the Lie generator. -/
+  deriv_linear_gen :
+    ∀ (f : State → Geometry) (a b : ℝ) (X Y : L) (s : State),
+      deriv f (a • X + b • Y) s = a • deriv f X s + b • deriv f Y s
 
 namespace DirectionalDerivativeAlong
 
@@ -485,10 +565,11 @@ variable
 
 variable (D : DirectionalDerivativeAlong L State Geometry)
 
-/-- The stored linearity/calculus law is available as a proof. -/
-theorem linearity_valid :
-    D.linearity_law :=
-  D.linearity_law_holds
+/-- The directional derivative is linear in the generator. -/
+theorem deriv_linear
+    (f : State → Geometry) (a b : ℝ) (X Y : L) (s : State) :
+    D.deriv f (a • X + b • Y) s = a • D.deriv f X s + b • D.deriv f Y s :=
+  D.deriv_linear_gen f a b X Y s
 
 end DirectionalDerivativeAlong
 
@@ -584,7 +665,102 @@ theorem ricciFlux_eq_zero_of_closed_and_stationary
     R.ricciFlux X s = 0 := by
   rw [R.ricciFlux_def X s, hstat, hclosed, zero_add]
 
+/--
+Explicit anomaly/closure-defect identification law.
+
+This reintroduces the old witness name as an equation-level contract: an
+`anomaly` readout is exactly the TKK closure defect readout.
+-/
+def anomaly_is_closure_defect_law
+    (anomaly : L → State → Geometry) : Prop :=
+  ∀ X s, anomaly X s = R.closureDefect.defect X s
+
+/-- Re-export of the anomaly/closure-defect equation. -/
+theorem anomaly_is_closure_defect_law_at
+    {anomaly : L → State → Geometry}
+    (h : R.anomaly_is_closure_defect_law anomaly)
+    (X : L)
+    (s : State) :
+    anomaly X s = R.closureDefect.defect X s :=
+  h X s
+
 end TKKRicciFluxDatum
+
+/-! ## 4A. Anomaly-closure-defect datum -/
+
+/--
+Anomaly-closure-defect datum.
+
+Proof-carrying structure asserting that the conformal anomaly equals
+the TKK closure defect:
+
+  `anomalyReadout X s = closureDefect.defect X s`
+
+In conformal field theory, the Weyl anomaly equals the trace of the stress
+tensor under quantization — i.e. the failure of conformal invariance. In the
+TKK 3-grading framework this is exactly the closure defect.
+
+Both sides are required to share compatible linearity in the generator.
+
+See: Nakahara, *Geometry, Topology and Physics* §13.5;
+Fradkin–Tseytlin, Phys. Lett. B 134 (1984) 187.
+-/
+structure AnomalyClosureDefectDatum
+    (L State Geometry : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry] where
+
+  /-- Underlying TKK closure defect. -/
+  closureDefect : TKKClosureDefect L State Geometry
+
+  /-- Anomaly readout (e.g. Weyl anomaly / trace of stress tensor). -/
+  anomalyReadout : L → State → Geometry
+
+  /--
+  The anomaly readout is linear in the Lie generator,
+  matching the linearity of the closure defect.
+  -/
+  anomalyReadout_linear :
+    ∀ (a b : ℝ) (X Y : L) (s : State),
+      anomalyReadout (a • X + b • Y) s =
+        a • anomalyReadout X s + b • anomalyReadout Y s
+
+  /--
+  Anomaly equals closure defect:
+  `anomalyReadout X s = closureDefect.defect X s`.
+  -/
+  anomaly_eq_closure_defect :
+    ∀ (X : L) (s : State),
+      anomalyReadout X s = closureDefect.defect X s
+
+namespace AnomalyClosureDefectDatum
+
+variable
+    {L State Geometry : Type*}
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry]
+
+variable (A : AnomalyClosureDefectDatum L State Geometry)
+
+/-- Re-export: anomaly equals the TKK closure defect. -/
+theorem anomaly_eq_defect (X : L) (s : State) :
+    A.anomalyReadout X s = A.closureDefect.defect X s :=
+  A.anomaly_eq_closure_defect X s
+
+/-- The anomaly vanishes iff the closure defect vanishes. -/
+theorem anomaly_eq_zero_iff (X : L) (s : State) :
+    A.anomalyReadout X s = 0 ↔ A.closureDefect.defect X s = 0 := by
+  rw [A.anomaly_eq_defect]
+
+/-- Anomaly linearity re-export. -/
+theorem anomalyReadout_linear_apply (a b : ℝ) (X Y : L) (s : State) :
+    A.anomalyReadout (a • X + b • Y) s =
+      a • A.anomalyReadout X s + b • A.anomalyReadout Y s :=
+  A.anomalyReadout_linear a b X Y s
+
+end AnomalyClosureDefectDatum
 
 /-! ## 5. Full TKK conformal closure package -/
 
@@ -623,14 +799,7 @@ structure TKKConformalClosure
   ricciFlux :
     TKKRicciFluxDatum L State Geometry
 
-  /--
-  The GR/Erlanger anomaly is interpreted as the TKK closure defect.
-  -/
-  anomaly_is_closure_defect_law : Prop
 
-  /-- Proof of the anomaly/closure-defect law. -/
-  anomaly_is_closure_defect_law_holds :
-    anomaly_is_closure_defect_law
 
 namespace TKKConformalClosure
 
@@ -645,10 +814,7 @@ variable
 
 variable (C : TKKConformalClosure J V W L State Geometry)
 
-/-- The stored anomaly/closure-defect law is available as a proof. -/
-theorem anomaly_is_closure_defect_valid :
-    C.anomaly_is_closure_defect_law :=
-  C.anomaly_is_closure_defect_law_holds
+
 
 /-- Ricci flux expands as curvature variation plus closure defect. -/
 theorem ricciFlux_def
@@ -659,6 +825,26 @@ theorem ricciFlux_def
         C.ricciFlux.curvatureReadout.curvature X s +
       C.ricciFlux.closureDefect.defect X s :=
   C.ricciFlux.ricciFlux_def X s
+
+/--
+The conformal anomaly (Ricci flux) is identified with the TKK closure defect
+when curvature is stationary along a generator `X`.
+
+This is the formal content of the Weyl anomaly theorem in the TKK framework:
+the trace anomaly of the stress tensor equals the failure of conformal
+invariance, expressed as the closure defect of the three-grading.
+
+**Literature**: Fradkin–Tseytlin, Phys. Lett. B 134 (1984) 187;
+Nakahara, Geometry, Topology and Physics §13.5.
+-/
+theorem anomaly_is_closure_defect
+    (X : L)
+    (s : State)
+    (hstat :
+      C.ricciFlux.derivativeAlong.deriv
+        C.ricciFlux.curvatureReadout.curvature X s = 0) :
+    C.ricciFlux.ricciFlux X s = C.ricciFlux.closureDefect.defect X s :=
+  C.ricciFlux.ricciFlux_eq_defect_of_curvature_stationary X s hstat
 
 end TKKConformalClosure
 

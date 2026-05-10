@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[2]
-CLI = REPO / "cli" / "igf.py"
+CLI = REPO / "cli" / "igf_main.py"
 
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:

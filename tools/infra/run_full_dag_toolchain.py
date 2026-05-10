@@ -97,7 +97,7 @@ def main() -> int:
         run_step(
             "PREP",
             "audit",
-            ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.Audit"],
+            ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.All"],
         )
         run_step(
             "PAULI",
@@ -156,7 +156,7 @@ def main() -> int:
             "lean",
             "--run",
             "lean/DAG/ProcessFlowExport.lean",
-            "InfoGeometry.Audit",
+            "InfoGeometry.All",
             "artifacts/dag/process-flow",
         ],
     )

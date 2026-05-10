@@ -5,7 +5,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tools.infra.hive_bee_runner import RunnerError, run_task, validate_result_contract
+from tools.infra.hive_bee_runner import (
+    RunnerError,
+    run_task,
+    validate_result_contract,
+)
 from tools.infra.hive_local_packet_store import append_packet, packet_hash, read_store
 
 SCRIPT = Path("tools/infra/hive_bee_runner.py")
@@ -73,16 +77,142 @@ def execution_intent_packet(packet_id: str, parent: str = "src_input") -> dict:
         **BASE,
         "id": packet_id,
         "kind": "ExecutionIntentPacket",
-        "status": "ready",
+        "status": "probe_ready",
         "authority": "execution_intent",
-        "formal_target": "InfoGeometry.Demo.target",
-        "target_file": "lean/InfoGeometry/Demo.lean",
-        "target_decl": "InfoGeometry.Demo.target",
-        "intent_summary": "Attempt a forbidden authority jump from a semantic bee task.",
-        "proposal_ref": parent,
+        "packet_version": "v1",
+        "packet_hash": f"sha256:{packet_id}:intent",
+        "target_refs": [{"ref": parent}],
+        "intended_actions": ["formalize_candidate", "gather_dependencies"],
+        "required_tools": ["lean"],
+        "required_gates": ["lean_checked", "build_checked", "audit_checked"],
         "mutation_scope": "none",
         "execution_allowed": False,
+        "authority_origin": "lean_wrapper",
+        "epistemic_layer": "common_unconscious",
+        "cognitive_function": "thinking",
+        "jung_function": "thinking",
+        "jung_attitude": "introverted",
+        "psyche_layer": "conscious",
+        "promotion_allowed": False,
+        "representation_class": "translator",
+        "representation_depth": "categorical",
+        "allowed_uses": ["retrieval", "formalization", "intent_routing"],
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
     }
+
+
+def lean_verification_packet(packet_id: str, intent_id: str = "exec_intent") -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "LeanVerificationPacket",
+        "status": "passed",
+        "authority": "lean_checked",
+        "authority_origin": "lean_wrapper",
+        "packet_version": "v1",
+        "packet_hash": f"sha256:{packet_id}:leanv",
+        "execution_intent_ref": {"ref": intent_id},
+        "execution_allowed": True,
+        "verification_key": f"verification-key-{packet_id}",
+        "kernel_summary": "all goals solved",
+        "verification_outcome": "passed",
+        "proof_status": "verified",
+        "representation_class": "owner",
+        "representation_depth": "scalar",
+        "epistemic_layer": "lean_topology",
+        "cognitive_function": "thinking",
+        "jung_function": "thinking",
+        "jung_attitude": "introverted",
+        "psyche_layer": "conscious",
+        "promotion_allowed": False,
+        "allowed_uses": ["verification"],
+        "forbidden_uses": ["revision", "promotion", "authority_gate_bypass"],
+    }
+
+
+def build_packet(packet_id: str, verification_id: str = "lv_input") -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "BuildPacket",
+        "status": "executed",
+        "authority": "build_checked",
+        "authority_origin": "build_gate",
+        "packet_version": "v1",
+        "packet_hash": f"sha256:{packet_id}:build",
+        "lean_verification_ref": {"ref": verification_id},
+        "build_key": f"build-key-{packet_id}",
+        "build_command": "lake build",
+        "build_exit_code": 0,
+        "build_success": True,
+        "representation_class": "coherence",
+        "representation_depth": "scalar",
+        "epistemic_layer": "packet_lineage",
+        "cognitive_function": "thinking",
+        "jung_function": "thinking",
+        "jung_attitude": "introverted",
+        "psyche_layer": "conscious",
+        "promotion_allowed": False,
+        "allowed_uses": ["build_verification"],
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+    }
+
+
+def residue_packet(packet_id: str, parent: str = "src_input") -> dict:
+    return {
+        **BASE,
+        "id": packet_id,
+        "kind": "ResiduePacket",
+        "status": "active",
+        "authority": "proposal",
+        "authority_origin": "socratic_interrogation",
+        "packet_version": "v1",
+        "packet_hash": f"sha256:{packet_id}:residue",
+        "failure_refs": [{"ref": parent}],
+        "failure_class": "build_failure",
+        "stage": "packet_legalization",
+        "recovery_hint": "reroute to retrieval",
+        "return_route": "retrieval",
+        "representation_class": "shadow",
+        "representation_depth": "categorical",
+        "epistemic_layer": "cognitive_process",
+        "cognitive_function": "intuition",
+        "jung_function": "intuition",
+        "jung_attitude": "introverted",
+        "psyche_layer": "conscious",
+        "promotion_allowed": False,
+        "allowed_uses": ["failure_analysis", "reroute"],
+        "forbidden_uses": ["proof", "promotion", "authority_gate_bypass"],
+    }
+
+
+def build_bee_task(
+    *,
+    input_packet_id: str = "lv_input",
+    dry_run: bool = False,
+    authority_ceiling: str = "build_checked",
+) -> dict:
+    task = {
+        **BASE,
+        "id": "bee_task_build_runner_demo",
+        "kind": "BeeTask",
+        "task_id": "task_build_runner_demo",
+        "status": "pending",
+        "assigned_role": "BuildBee",
+        "task_kind": "build.verify",
+        "target_packet_id": input_packet_id,
+        "input_packet_ids": [input_packet_id],
+        "context_refs": [input_packet_id],
+        "repulsion_field": ["pauli_blocker_demo"],
+        "allowed_output_kinds": ["BuildPacket", "ResiduePacket"],
+        "forbidden_output_kinds": ["ExecutionIntentPacket", "LeanVerificationPacket", "AuditPacket", "PromotionDecisionPacket"],
+        "authority_ceiling": authority_ceiling,
+        "instruction": "Compile and summarize build artifacts for the Lean verification.",
+        "priority": 2,
+        "store_path": "unused-in-direct-test.jsonl",
+        "dry_run": dry_run,
+    }
+    return task
 
 
 def bee_task(*, dry_run: bool = False, allowed_output_kinds: list[str] | None = None, forbidden_output_kinds: list[str] | None = None, authority_ceiling: str = "semantic") -> dict:
@@ -137,6 +267,7 @@ def test_runner_appends_schema_validated_allowed_output_and_returns_bee_result(t
     assert result["output_packet_ids"] == ["question_output"]
     assert result["output_packet_hashes"] == [packet_hash(output)]
     assert result["authority_claimed"] == "semantic"
+    assert output["pipeline_state"] == "proposed"
     records = read_store(store)
     assert [record["id"] for record in records] == ["src_input", "question_output"]
 
@@ -177,6 +308,57 @@ def test_runner_rejects_invalid_output_before_append(tmp_path: Path) -> None:
     else:  # pragma: no cover
         raise AssertionError("expected invalid output rejection")
     assert [record["id"] for record in read_store(store)] == ["src_input"]
+
+
+def test_runner_rejects_pipeline_regression_from_checked_to_proposed(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, lean_verification_packet("lv_input", intent_id="src_input"))
+    task = bee_task()
+    task["input_packet_ids"] = ["lv_input"]
+    task["target_packet_id"] = "lv_input"
+    task["context_refs"] = ["lv_input"]
+
+    try:
+        run_task(task, store_path=store, output_packets=[socratic_packet("question_regression")], worker_id="socratesbee-test")
+    except RunnerError as exc:
+        assert "invalid pipeline transition" in str(exc)
+        assert "checked -> proposed" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("expected checked→proposed transition rejection")
+
+
+def test_runner_allows_blocked_branch_from_idle_via_residue_packet(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, source_packet("src_input"))
+    output = residue_packet("residue_output", parent="src_input")
+    blocked_task = bee_task(authority_ceiling="proposal")
+    blocked_task["assigned_role"] = "RetrieverBee"
+    blocked_task["task_kind"] = "retrieval.context"
+
+    result = run_task(blocked_task, store_path=store, output_packets=[output], worker_id="retrieverbee-test")
+
+    assert result["output_packet_ids"] == ["residue_output"]
+    assert result["authority_claimed"] == "proposal"
+    assert output["pipeline_state"] == "blocked"
+    records = read_store(store)
+    assert [record["id"] for record in records] == ["src_input", "residue_output"]
+
+
+def test_runner_accepts_checked_to_audited_progression(tmp_path: Path) -> None:
+    store = tmp_path / "packets.jsonl"
+    append_packet(store, lean_verification_packet("lv_input", intent_id="src_input"))
+    output = build_packet("build_output", verification_id="lv_input")
+
+    result = run_task(
+        build_bee_task(input_packet_id="lv_input"),
+        store_path=store,
+        output_packets=[output],
+        worker_id="buildbee-test",
+    )
+
+    assert result["output_packet_ids"] == ["build_output"]
+    assert output["pipeline_state"] == "audited"
+    assert [record["id"] for record in read_store(store)] == ["lv_input", "build_output"]
 
 
 def test_runner_rejects_forbidden_output_kind(tmp_path: Path) -> None:
@@ -329,11 +511,13 @@ def test_result_contract_rejects_promotion_allowed_true() -> None:
 
 def test_runner_rejects_output_outside_role_policy_even_when_task_allows_it(tmp_path: Path) -> None:
     store = tmp_path / "packets.jsonl"
-    append_packet(store, source_packet("src_input"))
+    append_packet(store, execution_intent_packet("src_input"))
     task = bee_task(allowed_output_kinds=["SocraticQuestionPacket", "SourceObservationPacket"])
+    output = source_packet("source_not_socrates")
+    output["pipeline_state"] = "checked"
 
     try:
-        run_task(task, store_path=store, output_packets=[source_packet("source_not_socrates")], worker_id="socratesbee-test")
+        run_task(task, store_path=store, output_packets=[output], worker_id="socratesbee-test")
     except RunnerError as exc:
         assert "not allowed by role policy" in str(exc)
     else:  # pragma: no cover

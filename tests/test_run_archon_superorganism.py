@@ -78,6 +78,49 @@ exit 0
     path.chmod(0o755)
 
 
+def write_fake_probe(bin_dir: Path, probe_log: Path, *, fail_pi_probe: bool = False) -> None:
+    path = bin_dir / "python3"
+    path.write_text(
+        """
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf '[fake-python] %s\\n' "$*" >> "{log}"
+
+case "${1}" in
+  *resolve_startup_model_ids.py)
+    if [[ "$*" == *"--defaults-only"* ]]; then
+      echo "resolver requested defaults-only" >> "{log}"
+      {defaults_output}
+      exit {defaults_exit}
+    else
+      echo "resolver requested primary" >> "{log}"
+      {resolver_output}
+      exit {resolver_exit}
+    fi
+    ;;
+  *check_resident_model_endpoint.py)
+    echo "endpoint probe requested" >> "{log}"
+    if [[ "$*" == *"--expected-model "*"broken-pi"* ]]; then
+      exit {pi_probe_exit}
+    fi
+    exit 0
+    ;;
+  *)
+    exec /usr/bin/python3 "$@"
+    ;;
+esac
+""".replace("{log}", probe_log.as_posix())
+        .replace("{resolver_output}", "printf \"ARCHON_LEANSTRAL_MODEL=resolved-leanstral\\nARCHON_PI_MODEL=broken-pi\\n\"")
+        .replace("{resolver_exit}", "0")
+        .replace("{defaults_output}", "printf \"ARCHON_LEANSTRAL_MODEL=fallback-leanstral\\n\"")
+        .replace("{defaults_exit}", "0")
+        .replace("{pi_probe_exit}", "1" if fail_pi_probe else "0"),
+        encoding="utf-8",
+    )
+    path.chmod(0o755)
+
+
 def test_run_archon_superorganism_uses_fallback_when_resolver_fails(tmp_path: Path) -> None:
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
@@ -346,9 +389,67 @@ def test_run_archon_superorganism_exports_resolved_future_lanes(tmp_path: Path) 
 
     assert proc.returncode == 0
     assert "Resolved startup model IDs:" in output
+    assert "Startup model source: resolved_via=alias" in output
     assert "resolver requested" in resolver_log.read_text(encoding="utf-8")
     env_dump = env_log.read_text(encoding="utf-8")
     assert "ARCHON_LEANSTRAL_MODEL=resolved-leanstral" in env_dump
     assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=resolved-discovery" in env_dump
     assert "ARCHON_PI_MODEL=resolved-openrouter-pi" in env_dump
     assert "NEMOCLAW_EXPERIMENT_LANE_MODEL=resolved-experimental" in env_dump
+
+
+def test_run_archon_superorganism_warns_on_local_pi_preflight_failure(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    probe_log = tmp_path / "probe.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_probe(bin_dir, probe_log, fail_pi_probe=True)
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0
+    assert "WARN: Pi model preflight failed for configured model 'broken-pi'" in output
+    log = probe_log.read_text(encoding="utf-8")
+    assert "--expected-model broken-pi" in log
+
+
+def test_run_archon_superorganism_skips_local_pi_preflight_for_openrouter(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "ARCHON_LEANSTRAL_MODEL=resolved-leanstral\\nARCHON_PI_MODEL=openrouter/qwen/qwen3-coder:free\\n"',
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0
+    assert "Skipping local Pi model preflight for remote model: openrouter/qwen/qwen3-coder:free" in output

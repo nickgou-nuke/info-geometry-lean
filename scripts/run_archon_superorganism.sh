@@ -173,6 +173,7 @@ apply_resolved_model_env_file() {
   return "$saw_valid"
 }
 
+MODEL_RESOLUTION_SOURCE="alias"
 MODEL_RESOLUTION_ENV="$(mktemp)"
   if python3 tools/infra/resolve_startup_model_ids.py \
   --base-url "$LEANSTRAL_BASE_URL" \
@@ -182,21 +183,28 @@ MODEL_RESOLUTION_ENV="$(mktemp)"
   if apply_resolved_model_env_file "$MODEL_RESOLUTION_ENV"; then
     set_default_model_id_values
     export_model_env_keys
+    MODEL_RESOLUTION_SOURCE="alias"
     echo "Resolved startup model IDs:"
     cat "$MODEL_RESOLUTION_ENV"
   else
     echo "WARN: model alias resolution output was not usable (see /tmp/archon_model_resolution.log). Falling back to raw configured model IDs." >&2
-    if ! apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+    if apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+      MODEL_RESOLUTION_SOURCE="defaults-only"
+    else
       echo "WARN: startup default model resolution failed. Falling back to hardcoded defaults." >&2
       set_default_model_id_values
+      MODEL_RESOLUTION_SOURCE="hardcoded"
     fi
   fi
 else
   echo "WARN: model alias resolution failed (see /tmp/archon_model_resolution.log). Falling back to raw configured model IDs." >&2
-  if ! apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+  if apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+    MODEL_RESOLUTION_SOURCE="defaults-only"
+  else
     echo "WARN: startup default model resolution failed. Falling back to hardcoded defaults." >&2
     set_default_model_id_values
     export_model_env_keys
+    MODEL_RESOLUTION_SOURCE="hardcoded"
   fi
 fi
 export_model_env_keys
@@ -205,6 +213,8 @@ if [[ -n "${OPENROUTER_PI_MODEL}" ]]; then
 fi
 export_model_env_keys
 rm -f "$MODEL_RESOLUTION_ENV"
+
+echo "Startup model source: resolved_via=${MODEL_RESOLUTION_SOURCE} archon_config=${ARCHON_STARTUP_ARCHON_CONFIG} nemoclaw_config=${ARCHON_STARTUP_NEMOCLAW_CONFIG}"
 
 echo "Checking Leanstral endpoint (${LEANSTRAL_BASE_URL})..."
 if python3 tools/infra/check_resident_model_endpoint.py \
@@ -216,6 +226,24 @@ if python3 tools/infra/check_resident_model_endpoint.py \
   echo "Leanstral endpoint OK."
 else
   echo "WARN: Leanstral health check failed. Review /tmp/archon_leanstral_probe.log and /tmp/archon_leanstral_probe.json."
+fi
+
+if [[ -n "${ARCHON_PI_MODEL:-}" ]]; then
+  if [[ "${ARCHON_PI_MODEL}" == openrouter/* ]]; then
+    echo "Skipping local Pi model preflight for remote model: ${ARCHON_PI_MODEL}"
+  else
+    echo "Checking local Pi model availability (${ARCHON_PI_MODEL}) on ${LEANSTRAL_BASE_URL}..."
+    if python3 tools/infra/check_resident_model_endpoint.py \
+      --base-url "$LEANSTRAL_BASE_URL" \
+      --expected-model "${ARCHON_PI_MODEL}" \
+      --timeout 5 \
+      --json-out /tmp/archon_pi_probe.json \
+      >/tmp/archon_pi_probe.log 2>&1; then
+      echo "Pi model preflight OK."
+    else
+      echo "WARN: Pi model preflight failed for configured model '${ARCHON_PI_MODEL}'. Review /tmp/archon_pi_probe.log and /tmp/archon_pi_probe.json."
+    fi
+  fi
 fi
 
 # Avoid Claude title-generation fallback during local orchestration loops.

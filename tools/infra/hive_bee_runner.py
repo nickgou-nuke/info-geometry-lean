@@ -96,7 +96,7 @@ def next_pipeline_states(state: str) -> set[str]:
     if state == "idle":
         return {"proposed", "blocked"}
     if state == "proposed":
-        return {"checked", "blocked"}
+        return {"proposed", "checked", "blocked"}
     if state == "checked":
         return {"audited", "blocked"}
     if state == "audited":

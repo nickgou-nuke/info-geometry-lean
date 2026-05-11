@@ -244,8 +244,8 @@ def test_superorganism_pulse_writes_hardening_note_to_primary_summary_target(tmp
 
     run_summary = (output_root / run_id / "summary.md").read_text(encoding="utf-8")
     primary_text = primary_summary.read_text(encoding="utf-8")
-    assert "## Superorganism Pilot Hardening Note" in run_summary
     assert "## Superorganism Pilot Hardening Note" in primary_text
+    assert "## Superorganism Pilot Hardening Note" not in run_summary
     assert "- hard-mode streak: 3/4" in primary_text
 
 
@@ -291,10 +291,9 @@ def test_superorganism_pulse_with_pilot_state_updates_single_summary_note_target
 
     run_summary = (output_root / run_id / "summary.md").read_text(encoding="utf-8")
     primary_text = primary_summary.read_text(encoding="utf-8")
-    assert "## Superorganism Pilot Hardening Note" in run_summary
     assert "## Superorganism Pilot Hardening Note" in primary_text
+    assert "## Superorganism Pilot Hardening Note" not in run_summary
     assert "- hard-mode streak: 1/4" in primary_text
-    assert "- hard-mode streak: 1/4" in run_summary
     assert "- run status: clean" in primary_text
 
     state = json.loads(pilot_state.read_text(encoding="utf-8"))
@@ -302,6 +301,52 @@ def test_superorganism_pulse_with_pilot_state_updates_single_summary_note_target
     assert isinstance(state["runs"], list)
     assert state["runs"][-1]["run_id"] == run_id
     assert state["clean_streak"] == 1
+
+
+def test_superorganism_pulse_with_pilot_state_uses_primary_summary_as_only_note_target(tmp_path: Path) -> None:
+    decl_index = tmp_path / "decls.jsonl"
+    policy = tmp_path / "policy.yaml"
+    output_root = tmp_path / "verification-runs"
+    run_id = "superorganism-pilot-state-primary-target"
+    pilot_state = tmp_path / "superorganism_state.json"
+    primary_summary = tmp_path / "primary_summary.md"
+
+    decl_index.write_text("", encoding="utf-8")
+    write_policy(policy)
+    pilot_state.write_text("{}", encoding="utf-8")
+
+    proc = subprocess.run(
+        [
+            "python3",
+            str(SCRIPT),
+            "--scope",
+            "all",
+            "--decl-index",
+            str(decl_index),
+            "--policy",
+            str(policy),
+            "--output-root",
+            str(output_root),
+            "--run-id",
+            run_id,
+            "--pilot-state",
+            str(pilot_state),
+            "--primary-summary-path",
+            str(primary_summary),
+            "--pilot-hard-mode-threshold",
+            "4",
+        ],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+    run_summary = (output_root / run_id / "summary.md").read_text(encoding="utf-8")
+    primary_text = primary_summary.read_text(encoding="utf-8")
+    assert "## Superorganism Pilot Hardening Note" not in run_summary
+    assert primary_text.count("## Superorganism Pilot Hardening Note") == 1
 
 
 def test_superorganism_pulse_with_pilot_state_single_summary_target_once(tmp_path: Path) -> None:
@@ -346,6 +391,74 @@ def test_superorganism_pulse_with_pilot_state_single_summary_target_once(tmp_pat
     assert proc.returncode == 0, proc.stdout + proc.stderr
     text = primary_summary.read_text(encoding="utf-8")
     assert text.count("## Superorganism Pilot Hardening Note") == 1
+
+
+def test_superorganism_pulse_with_pilot_state_and_placeholder_signals_single_summary_target(tmp_path: Path) -> None:
+    decl_index = tmp_path / "decls.jsonl"
+    policy = tmp_path / "policy.yaml"
+    output_root = tmp_path / "verification-runs"
+    run_id = "superorganism-state-placeholder-signals-single-summary"
+    pilot_state = tmp_path / "superorganism_state.json"
+    placeholder_report = tmp_path / "placeholder_signals.json"
+    primary_summary = tmp_path / "single_target_summary.md"
+
+    decl_index.write_text("", encoding="utf-8")
+    write_policy(policy)
+    pilot_state.write_text("{}", encoding="utf-8")
+    placeholder_report.write_text(
+        json.dumps(
+            {
+                "schema": "info_geometry.placeholder_audit_signals.v1",
+                "generated_at": "2026-05-11T00:00:00Z",
+                "summary": {
+                    "signal_count": 0,
+                    "autoproof_signal_count": 0,
+                    "closure_debt_signal_count": 0,
+                    "finding_count": 0,
+                },
+                "signals": [],
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    proc = subprocess.run(
+        [
+            "python3",
+            str(SCRIPT),
+            "--scope",
+            "all",
+            "--decl-index",
+            str(decl_index),
+            "--policy",
+            str(policy),
+            "--output-root",
+            str(output_root),
+            "--run-id",
+            run_id,
+            "--pilot-state",
+            str(pilot_state),
+            "--primary-summary-path",
+            str(primary_summary),
+            "--placeholder-signal-report",
+            str(placeholder_report),
+            "--pilot-hard-mode-threshold",
+            "4",
+        ],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+    text = primary_summary.read_text(encoding="utf-8")
+    assert "## Superorganism Pilot Hardening Note" in text
+    assert "## Placeholder Trust Signals" in text
+    assert text.count("## Superorganism Pilot Hardening Note") == 1
+    assert text.count("## Placeholder Trust Signals") == 1
 
 
 def test_superorganism_pulse_runs_and_outputs_unified_artifacts(tmp_path: Path) -> None:

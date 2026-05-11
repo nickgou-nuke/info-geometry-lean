@@ -14,6 +14,8 @@ def write_fake_python(
     *,
     resolver_exit: int = 1,
     resolver_output: str = "",
+    defaults_exit: int = 1,
+    defaults_output: str = "",
 ) -> None:
     path = bin_dir / "python3"
     path.write_text(
@@ -25,9 +27,15 @@ printf '[fake-python] %s\\n' "$*" >> "{log}"
 
 case "${1}" in
   *resolve_startup_model_ids.py)
-    echo "resolver requested" >> "{log}"
-    {resolver_output}
-    exit {resolver_exit}
+    if [[ "$*" == *"--defaults-only"* ]]; then
+      echo "resolver requested defaults-only" >> "{log}"
+      {defaults_output}
+      exit {defaults_exit}
+    else
+      echo "resolver requested primary" >> "{log}"
+      {resolver_output}
+      exit {resolver_exit}
+    fi
     ;;
   *check_resident_model_endpoint.py)
     echo "endpoint probe requested" >> "{log}"
@@ -39,7 +47,9 @@ case "${1}" in
 esac
 """.replace("{log}", invocation_log.as_posix())
         .replace("{resolver_output}", resolver_output)
-        .replace("{resolver_exit}", str(resolver_exit)),
+        .replace("{resolver_exit}", str(resolver_exit))
+        .replace("{defaults_output}", defaults_output)
+        .replace("{defaults_exit}", str(defaults_exit)),
         encoding="utf-8",
     )
     path.chmod(0o755)
@@ -73,7 +83,19 @@ def test_run_archon_superorganism_uses_fallback_when_resolver_fails(tmp_path: Pa
     bin_dir.mkdir()
     resolver_log = tmp_path / "resolver.log"
     env_log = tmp_path / "archon_env.log"
-    write_fake_python(bin_dir, resolver_log)
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=1,
+        resolver_output='printf "not shell output\\n"',
+        defaults_exit=0,
+        defaults_output=(
+            'printf "ARCHON_LEANSTRAL_MODEL=fallback-leanstral\\n'
+            'NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner\\n'
+            'NEMOCLAW_LOGIC_ENGINE_MODEL=fallback-logic\\n'
+            'NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery\\n"'
+        ),
+    )
     write_fake_archon(bin_dir, env_log)
 
     env = os.environ.copy()
@@ -92,11 +114,13 @@ def test_run_archon_superorganism_uses_fallback_when_resolver_fails(tmp_path: Pa
     assert proc.returncode == 0
     assert "WARN: model alias resolution failed" in output
     env_dump = env_log.read_text(encoding="utf-8")
-    assert "ARCHON_LEANSTRAL_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_LOGIC_ENGINE_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=leanstral-gguf" in env_dump
-    assert "resolver requested" in resolver_log.read_text(encoding="utf-8")
+    assert "ARCHON_LEANSTRAL_MODEL=fallback-leanstral" in env_dump
+    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner" in env_dump
+    assert "NEMOCLAW_LOGIC_ENGINE_MODEL=fallback-logic" in env_dump
+    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery" in env_dump
+    resolver_output = resolver_log.read_text(encoding="utf-8")
+    assert "resolver requested primary" in resolver_output
+    assert "resolver requested defaults-only" in resolver_output
 
 
 def test_run_archon_superorganism_uses_fallback_when_resolver_output_is_unusable(tmp_path: Path) -> None:
@@ -109,6 +133,13 @@ def test_run_archon_superorganism_uses_fallback_when_resolver_output_is_unusable
         resolver_log,
         resolver_exit=0,
         resolver_output='printf "not shell at all\\n"',
+        defaults_exit=0,
+        defaults_output=(
+            'printf "ARCHON_LEANSTRAL_MODEL=fallback-leanstral\\n'
+            'NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner\\n'
+            'NEMOCLAW_LOGIC_ENGINE_MODEL=fallback-logic\\n'
+            'NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery\\n"'
+        ),
     )
     write_fake_archon(bin_dir, env_log)
 
@@ -128,10 +159,124 @@ def test_run_archon_superorganism_uses_fallback_when_resolver_output_is_unusable
     assert proc.returncode == 0
     assert "WARN: model alias resolution output was not usable" in output
     env_dump = env_log.read_text(encoding="utf-8")
-    assert "ARCHON_LEANSTRAL_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_LOGIC_ENGINE_MODEL=leanstral-gguf" in env_dump
-    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=leanstral-gguf" in env_dump
+    assert "ARCHON_LEANSTRAL_MODEL=fallback-leanstral" in env_dump
+    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner" in env_dump
+    assert "NEMOCLAW_LOGIC_ENGINE_MODEL=fallback-logic" in env_dump
+    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery" in env_dump
+
+
+def test_run_archon_superorganism_uses_fallback_when_resolver_output_is_missing(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "\\n\\n   \\n"',
+        defaults_exit=0,
+        defaults_output=(
+            'printf "ARCHON_LEANSTRAL_MODEL=fallback-leanstral\\n'
+            'NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner\\n'
+            'NEMOCLAW_LOGIC_ENGINE_MODEL=fallback-logic\\n'
+            'NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery\\n"'
+        ),
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0
+    assert "WARN: model alias resolution output was not usable" in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_LEANSTRAL_MODEL=fallback-leanstral" in env_dump
+    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=fallback-planner" in env_dump
+    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=fallback-discovery" in env_dump
+
+
+def test_run_archon_superorganism_uses_configured_startup_defaults(tmp_path: Path) -> None:
+    custom_archon = tmp_path / "custom_config.yaml"
+    custom_nemoclaw = tmp_path / "custom_nemoclaw.yaml"
+    custom_archon.write_text(
+        """
+assistant: pi
+assistants:
+  leanstral:
+    model: config-leanstral
+""",
+        encoding="utf-8",
+    )
+    custom_nemoclaw.write_text(
+        """
+version: "1.1"
+lanes:
+  planner_engine:
+    model: config-planner
+  logic_engine:
+    model: config-logic
+  discovery_engine:
+    model: config-discovery
+""",
+        encoding="utf-8",
+    )
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=1,
+        resolver_output='printf "not shell\\n"',
+        defaults_exit=0,
+        defaults_output=(
+            'printf "ARCHON_LEANSTRAL_MODEL=config-leanstral\\n'
+            'NEMOCLAW_PLANNER_ENGINE_MODEL=config-planner\\n'
+            'NEMOCLAW_LOGIC_ENGINE_MODEL=config-logic\\n'
+            'NEMOCLAW_DISCOVERY_ENGINE_MODEL=config-discovery\\n"'
+        ),
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env["ARCHON_STARTUP_ARCHON_CONFIG"] = str(custom_archon)
+    env["ARCHON_STARTUP_NEMOCLAW_CONFIG"] = str(custom_nemoclaw)
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0
+    assert "Resolved startup model IDs from local startup defaults:" in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_LEANSTRAL_MODEL=config-leanstral" in env_dump
+    assert "NEMOCLAW_PLANNER_ENGINE_MODEL=config-planner" in env_dump
+    assert "NEMOCLAW_LOGIC_ENGINE_MODEL=config-logic" in env_dump
+    assert "NEMOCLAW_DISCOVERY_ENGINE_MODEL=config-discovery" in env_dump
+    log = resolver_log.read_text(encoding="utf-8")
+    assert str(custom_archon) in log
+    assert str(custom_nemoclaw) in log
+    assert "resolver requested defaults-only" in log
 
 
 def test_run_archon_superorganism_respects_openrouter_pi_model_override(tmp_path: Path) -> None:

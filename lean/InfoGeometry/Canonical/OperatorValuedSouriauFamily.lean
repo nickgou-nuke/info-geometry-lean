@@ -127,8 +127,6 @@ structure OperatorValuedSouriauFamily
   exponentialFamily_untraced_beta_eq_expWeight :
     exponentialFamily.untracedExponential betaOperator = expWeight
 
-namespace OperatorValuedSouriauFamily
-
 variable {LieAlg Obs State Direction : Type*}
 variable (P : OperatorValuedSouriauFamily LieAlg Obs State Direction)
 
@@ -209,7 +207,5 @@ def betaSouriauAction : ℝ :=
 /-- The operator clock/K action is the Frobenius trace pairing. -/
 def timeSouriauAction : ℝ :=
   P.frobenius.pairing P.timeOperator P.souriauGenerator
-
-end OperatorValuedSouriauFamily
 
 end InfoGeometry.Canonical.OperatorValuedSouriauFamily

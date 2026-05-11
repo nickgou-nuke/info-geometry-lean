@@ -34,11 +34,15 @@ def test_singular_moore_penrose_unique_root_exists():
 
 def test_canonical_moore_penrose_unique_is_singular_adapter():
     text = CANON.read_text()
-    assert "import InfoGeometry.Singular.MoorePenrose" in text
-    assert "private theorem toSingular" in text
-    block = decl_block(text, "theorem", "unique")
-    assert "InfoGeometry.Singular.MoorePenrose.MoorePenrose_unique" in block
-    assert "toSingular hB" in block
-    assert "toSingular hC" in block
-    assert "have h1 : a * b = a * c" not in block
-    assert "star_mul_triple" not in block
+    assert "import InfoGeometry.Canonical.Drazin" in text
+    assert "import InfoGeometry.Singular.MoorePenrose" not in text
+    assert "private theorem toSingular" not in text
+    assert "theorem unique" not in text
+
+    right = decl_block(text, "theorem", "rightProjector_idempotent")
+    assert "unfold rightProjector" in right
+    assert "h.aba_eq_a" in right
+
+    left = decl_block(text, "theorem", "leftProjector_idempotent")
+    assert "unfold leftProjector" in left
+    assert "h.bab_eq_b" in left

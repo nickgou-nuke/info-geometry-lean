@@ -14,6 +14,8 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+from tools.infra.leanstral_model_utils import choose_matching_model, parse_model_ids, resolve_with_expected
+
 
 SCHEMA = "info_geometry.resident_model_endpoint_check.v1"
 
@@ -44,19 +46,6 @@ def http_json(url: str, *, timeout: float, payload: dict[str, Any] | None = None
         return int(exc.code), parsed, text
     except Exception as exc:  # noqa: BLE001
         return 0, None, repr(exc)
-
-
-def model_ids(models_payload: Any) -> list[str]:
-    if not isinstance(models_payload, dict):
-        return []
-    rows = models_payload.get("data")
-    if not isinstance(rows, list):
-        return []
-    ids: list[str] = []
-    for row in rows:
-        if isinstance(row, dict) and isinstance(row.get("id"), str):
-            ids.append(row["id"])
-    return ids
 
 
 def yaml_scalar_after(lines: list[str], key: str, *, start: int = 0, end: int | None = None) -> str:
@@ -118,6 +107,13 @@ def chat_probe_payload(model: str) -> dict[str, Any]:
     }
 
 
+def choose_expected_model(expected_model: str, ids: list[str]) -> str:
+    if not expected_model or not ids:
+        return expected_model
+    resolved = choose_matching_model(expected_model, ids, fallback_to_first=False, require_match=True)
+    return resolved
+
+
 def run_check(
     *,
     base_url: str,
@@ -129,8 +125,9 @@ def run_check(
 ) -> dict[str, Any]:
     base = base_url.rstrip("/")
     models_status, models_payload, models_raw = http_json(f"{base}/models", timeout=timeout)
-    ids = model_ids(models_payload)
-    model_present = expected_model in ids if expected_model else bool(ids)
+    ids = parse_model_ids(models_payload)
+    resolved_expected = choose_expected_model(expected_model, ids)
+    model_present = bool(expected_model and ids and resolved_expected)
 
     chat = {
         "enabled": probe_chat,
@@ -145,7 +142,7 @@ def run_check(
             status, payload, raw = http_json(
                 f"{base}/chat/completions",
                 timeout=timeout,
-                payload=chat_probe_payload(expected_model),
+                payload=chat_probe_payload(resolved_expected or expected_model),
             )
             chat.update(
                 {
@@ -159,9 +156,10 @@ def run_check(
     planner_model = nemoclaw_lane_model(nemoclaw_config, "planner_engine") if nemoclaw_config else ""
     logic_model = nemoclaw_lane_model(nemoclaw_config, "logic_engine") if nemoclaw_config else ""
     config_matches = {
-        "hermes_default_matches": not hermes_config or hermes_model == expected_model,
-        "nemoclaw_planner_matches": not nemoclaw_config or planner_model == expected_model,
-        "nemoclaw_logic_matches": not nemoclaw_config or logic_model == expected_model,
+        "hermes_default_matches": not hermes_config or resolve_with_expected(expected_model, hermes_model, ids) != "",
+        "nemoclaw_planner_matches": not nemoclaw_config
+        or resolve_with_expected(expected_model, planner_model, ids) != "",
+        "nemoclaw_logic_matches": not nemoclaw_config or resolve_with_expected(expected_model, logic_model, ids) != "",
     }
 
     ok = (
@@ -179,6 +177,12 @@ def run_check(
             "status": models_status,
             "ids": ids,
             "expected_present": model_present,
+            "expected_model_resolved": resolved_expected,
+            "resolved_candidates": {
+                "hermes_default": resolve_with_expected(expected_model, hermes_model, ids),
+                "nemoclaw_planner_model": resolve_with_expected(expected_model, planner_model, ids),
+                "nemoclaw_logic_model": resolve_with_expected(expected_model, logic_model, ids),
+            },
             "raw_excerpt": models_raw[:1000] if models_status == 0 or not isinstance(models_payload, dict) else "",
         },
         "chat_probe": chat,
@@ -200,7 +204,7 @@ def run_check(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-url", default="http://127.0.0.1:18789/v1")
+    parser.add_argument("--base-url", default="http://127.0.0.1:18889/v1")
     parser.add_argument("--expected-model", default="leanstral-gguf")
     parser.add_argument("--timeout", type=float, default=10)
     parser.add_argument("--hermes-config", type=Path, default=Path("tools/infra/hermes_config.yaml"))

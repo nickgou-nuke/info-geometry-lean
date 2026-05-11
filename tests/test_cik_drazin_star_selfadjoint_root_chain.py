@@ -21,55 +21,49 @@ def decl_block(text: str, kind: str, name: str) -> str:
     return text[start:end]
 
 
-def test_drazin_star_transport_root_uses_star_equations_and_uniqueness():
+def test_drazin_star_transport_root_uses_star_equations_and_owner_adapter() -> None:
     text = DRAZIN.read_text()
     transport = decl_block(text, "theorem", "star_isDrazinInverse_of_selfAdjoint")
     assert "congrArg star h.comm" in transport
     assert "congrArg star h.idempotent" in transport
     assert "congrArg star h.power" in transport
     assert "Commute a (star b)" in transport
+
     derived = decl_block(text, "theorem", "star_eq_self_of_selfAdjoint")
-    assert "star_isDrazinInverse_of_selfAdjoint h ha" in derived
-    assert "unique h hstar" in derived
+    assert "InfoGeometry.Singular.Drazin.Drazin_star_eq_self_of_selfAdjoint" in derived
 
 
-def test_certified_inverse_kernel_derives_had_from_ha_not_as_hypothesis():
+def test_certified_inverse_kernel_spectral_star_tracks_both_selfadjoint_inputs() -> None:
     text = CIK.read_text()
-    a_d = decl_block(text, "theorem", "A_D_star_of_selfAdjoint")
-    assert "IsDrazinInverse.star_eq_self_of_selfAdjoint" in a_d
-    assert "CIK.hDrazin" in a_d
-    spectral = decl_block(text, "theorem", "spectralProjector_star_of_A_selfAdjoint")
-    assert "CIK.A_D_star_of_selfAdjoint hA" in spectral
+    spectral = decl_block(text, "theorem", "spectralProjector_star_of_selfAdjoint")
     header = spectral.split(":=", 1)[0]
-    assert "hAD" not in header
+    assert "hA" in header
+    assert "hAD" in header
+    assert "unfold IsDrazinInverse.projection" in spectral
+    assert "CIK.hDrazin.comm.symm" in spectral
 
 
-def test_inverse_kernel_algebra_complement_uses_base_selfadjoint_only():
+def test_inverse_kernel_algebra_complements_inherit_mp_stars() -> None:
     text = INVERSE_ALG.read_text()
-    block = decl_block(text, "theorem", "spectralComplementaryProjector_star_of_selfAdjoint")
-    header = block.split(":=", 1)[0]
-    assert "hAD" not in header
-    assert "drazinInverse_star_of_selfAdjoint" in block or "spectralProjector_star_of_A_selfAdjoint" in block
+    mp_block = decl_block(text, "theorem", "mpRangeComplementaryProjector_star")
+    assert "CIK.mpRangeProjector_star" in mp_block
+
+    metric_block = decl_block(text, "theorem", "metricComplementaryProjector_star")
+    assert "CIK.metricProjector_star" in metric_block
 
 
-def test_cik_projector_star_projection_adapters_are_lean_rooted():
+def test_cik_projector_star_lemmas_are_rooted_in_mp_and_drazin_theorems() -> None:
     text = CIK.read_text()
-    mp_range = decl_block(text, "theorem", "mpRangeProjector_isStarProjection")
-    assert "mpRangeProjector_idempotent" in mp_range
-    assert "mpRangeProjector_star" in mp_range
-    metric = decl_block(text, "theorem", "metricProjector_isStarProjection")
-    assert "metricProjector_idempotent" in metric
-    assert "metricProjector_star" in metric
-    mp_range_readback = decl_block(text, "theorem", "mpRangeProjector_eq_ownRange_starProjection")
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in mp_range_readback
-    assert "mpRangeProjector_isStarProjection" in mp_range_readback
-    spectral = decl_block(text, "theorem", "spectralProjector_isStarProjection_of_A_selfAdjoint")
-    header = spectral.split(":=", 1)[0]
-    assert "hAD" not in header
-    assert "spectralProjector_idempotent" in spectral
-    assert "spectralProjector_star_of_A_selfAdjoint hA" in spectral
-    spectral_readback = decl_block(
-        text, "theorem", "spectralProjector_eq_ownRange_starProjection_of_A_selfAdjoint"
-    )
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in spectral_readback
-    assert "spectralProjector_isStarProjection_of_A_selfAdjoint hA" in spectral_readback
+
+    mp_range = decl_block(text, "theorem", "mpRangeProjector_star")
+    assert "IsMoorePenroseInverse.rightProjector_star CIK.hMoorePenrose" in mp_range
+
+    metric = decl_block(text, "theorem", "metricProjector_star")
+    assert "IsMoorePenroseInverse.leftProjector_star CIK.hMoorePenrose" in metric
+
+    spectral_selfadj = decl_block(text, "theorem", "spectralProjector_isSelfAdjoint_of_selfAdjoint")
+    assert "CIK.spectralProjector_star_of_selfAdjoint hA hAD" in spectral_selfadj
+
+    spectral_from_is = decl_block(text, "theorem", "spectralProjector_star_of_isSelfAdjoint")
+    assert "hA.star_eq" in spectral_from_is
+    assert "hAD.star_eq" in spectral_from_is

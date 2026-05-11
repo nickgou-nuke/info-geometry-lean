@@ -53,8 +53,46 @@ def test_parse_openai_chat_completion_extracts_assistant_content() -> None:
     assert agent.extract_assistant_content(payload) == "```lean\nrfl\n```"
 
 
-def test_propose_with_fake_transport_returns_proposal_packet(tmp_path: Path) -> None:
+def test_parse_openai_chat_completion_extracts_reasoning_content() -> None:
+    payload = {
+        "choices": [
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": None,
+                    "reasoning_content": [
+                        {"type": "text", "text": "I reasoned this should be rfl."},
+                        " ",
+                    ],
+                }
+            }
+        ],
+        "model": "leanstral-gguf",
+    }
+
+    assert agent.extract_assistant_content(payload) == "I reasoned this should be rfl. "
+
+
+def test_build_arg_parser_defaults_endpoint_uses_leanstral_base_url(monkeypatch) -> None:
+    monkeypatch.delenv("LEANSTRAL_ENDPOINT", raising=False)
+    monkeypatch.setenv("LEANSTRAL_BASE_URL", "http://127.0.0.1:18889/v1")
+    # Ensure parser creation/parse picks the expected endpoint default.
+    args = agent.build_arg_parser().parse_args(["lean-tactic", "--task", "1 = 1"])
+    assert args.endpoint == "http://127.0.0.1:18889/v1"
+
+
+def test_build_arg_parser_prefers_leanstral_endpoint_over_base_url(monkeypatch) -> None:
+    monkeypatch.setenv("LEANSTRAL_ENDPOINT", "http://127.0.0.1:19999/v1")
+    monkeypatch.setenv("LEANSTRAL_BASE_URL", "http://127.0.0.1:18889/v1")
+    args = agent.build_arg_parser().parse_args(["lean-tactic", "--task", "1 = 1"])
+    assert args.endpoint == "http://127.0.0.1:19999/v1"
+
+
+def test_propose_with_fake_transport_returns_proposal_packet(tmp_path: Path, monkeypatch) -> None:
     seen: dict[str, object] = {}
+
+    def fake_fetch_model_ids(endpoint: str, timeout: int) -> tuple[int, list[str], str]:
+        return 200, ["leanstral-gguf"], ""
 
     def fake_transport(url: str, payload: dict, timeout: int) -> dict:
         seen["url"] = url
@@ -72,6 +110,7 @@ def test_propose_with_fake_transport_returns_proposal_packet(tmp_path: Path) -> 
             ],
         }
 
+    monkeypatch.setattr(agent, "fetch_model_ids", fake_fetch_model_ids)
     cfg = agent.LeanstralConfig(
         endpoint="http://127.0.0.1:18889/v1",
         model="leanstral-gguf",
@@ -93,6 +132,7 @@ def test_propose_with_fake_transport_returns_proposal_packet(tmp_path: Path) -> 
     sent = seen["payload"]
     assert sent["model"] == "leanstral-gguf"
     assert sent["max_tokens"] == 64
+    assert "max_completion_tokens" not in sent
     assert sent["stop"] == ["<|im_end|>", "<|im_start|>"]
     assert sent["temperature"] == 0.0
     assert result["schema"] == "hermes_vibe_coding_agent.proposal.v1"
@@ -104,6 +144,9 @@ def test_propose_with_fake_transport_returns_proposal_packet(tmp_path: Path) -> 
     assert result["raw_candidate"].startswith("```lean")
     assert result["endpoint"] == "http://127.0.0.1:18889/v1"
     assert len(result["prompt_hash"]) == 64
+    assert result["model"] == "leanstral-gguf"
+    assert result["resolved_model"] == "leanstral-gguf"
+    assert result["model_resolved"] is False
 
 
 def test_cli_prints_json_with_fake_response(tmp_path: Path, monkeypatch) -> None:
@@ -118,6 +161,7 @@ def test_cli_prints_json_with_fake_response(tmp_path: Path, monkeypatch) -> None
         ),
         encoding="utf-8",
     )
+    monkeypatch.setattr(agent, "fetch_model_ids", lambda endpoint, timeout: (200, ["leanstral-gguf"], ""))
 
     exit_code = agent.main(
         [
@@ -132,3 +176,39 @@ def test_cli_prints_json_with_fake_response(tmp_path: Path, monkeypatch) -> None
     )
 
     assert exit_code == 0
+
+
+def test_resolve_model_with_leanstral_path_alias(monkeypatch) -> None:
+    seen: dict[str, object] = {}
+
+    def fake_fetch_model_ids(endpoint: str, timeout: int) -> tuple[int, list[str], str]:
+        return 200, ["/models/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf"], ""
+
+    def fake_transport(url: str, payload: dict, timeout: int) -> dict:
+        seen["url"] = url
+        seen["payload"] = payload
+        return {
+            "model": "/models/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf",
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": "rfl",
+                    }
+                }
+            ],
+        }
+
+    monkeypatch.setattr(agent, "fetch_model_ids", fake_fetch_model_ids)
+    result = agent.propose(
+        mode="lean-tactic",
+        task="1 = 1",
+        context="",
+        imports=["Init"],
+        config=agent.LeanstralConfig(endpoint="http://127.0.0.1:18889/v1", model="leanstral-gguf"),
+        transport=fake_transport,
+    )
+
+    assert seen["payload"]["model"] == "/models/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf"
+    assert result["resolved_model"] == "/models/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf"
+    assert result["model_resolved"] is True

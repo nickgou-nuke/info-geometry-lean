@@ -143,8 +143,6 @@ structure OperatorModularTemperatureDuality (Op : Type*) where
       frobenius.closed K' →
         0 ≤ massieu + dualPotential - frobenius.pairing betaOperator K'
 
-namespace OperatorModularTemperatureDuality
-
 variable {Op : Type*}
 variable (D : OperatorModularTemperatureDuality Op)
 
@@ -166,7 +164,7 @@ theorem contact_balance :
 theorem fenchel_gap_eq_zero_at_contact :
     D.massieu + D.dualPotential -
       D.frobenius.pairing D.betaOperator D.modularHamiltonian = 0 := by
-  rw [← D.contact_balance]
+  rw [← OperatorModularTemperatureDuality.contact_balance D]
   ring
 
 /-- Re-export the supplied Fenchel-gap nonnegativity law. -/
@@ -183,8 +181,6 @@ theorem beta_mul_modularHamiltonian_closed :
   D.frobenius.product_closed
     D.betaOperator D.modularHamiltonian
     D.beta_closed D.modularHamiltonian_closed
-
-end OperatorModularTemperatureDuality
 
 /--
 Modular-flow realization of the operator duality.
@@ -239,7 +235,7 @@ theorem contact_balance :
     M.duality.massieu + M.duality.dualPotential =
       M.duality.frobenius.pairing
         M.duality.betaOperator M.duality.modularHamiltonian :=
-  M.duality.contact_balance
+  OperatorModularTemperatureDuality.contact_balance M.duality
 
 end ModularFlowOperatorDuality
 

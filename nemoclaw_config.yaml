@@ -48,27 +48,30 @@ lanes:
     default_plane: "orchestrate"
 
   # Default local dialogue/prover lane for Socratic proof search.
+  # NOTE: DeepSeek prover not available (insufficient memory). Placeholder for future use.
+  # Archon/Pi can use planner_engine or logic_engine (Leanstral) instead.
   discovery_engine:
     provider: "custom"
     role: "socratic_dialogue"
     base_url: "http://127.0.0.1:8001/v1"
     api_key: "token-123"
     model: "deepseek-prover-v2-7b-q8_0.gguf"
+    enabled: false
 
   # High-level planning/orchestration lane for Hermes.
   planner_engine:
     provider: "custom"
     role: "quantized_leanstral_planner"
-    base_url: "http://127.0.0.1:18789/v1"
-    api_key: "token-123"
+    base_url: "http://127.0.0.1:18889/v1"
+    api_key: "local"
     model: "leanstral-gguf"
 
   # Conservative local audit/system lane.
   logic_engine:
     provider: "custom"
     role: "quantized_leanstral_audit_prior"
-    base_url: "http://127.0.0.1:18789/v1"
-    api_key: "token-123"
+    base_url: "http://127.0.0.1:18889/v1"
+    api_key: "local"
     model: "leanstral-gguf"
 
   # Execution surface only when Hermes routes a task into mutation/build/gates.

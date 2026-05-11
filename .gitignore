@@ -143,3 +143,6 @@ reports/training/**
 
 # Local runtime logs / notes
 logs/
+
+# Archon state directory
+.archon/

@@ -2,18 +2,22 @@
 # This file ensures Hermes remains a tool of retrieval, not an owner of truth.
 
 model:
-  provider: custom
-  base_url: http://127.0.0.1:18789/v1
-  api_key: token-123
-  default: leanstral-gguf
-  role: quantized_leanstral_proposal_and_route_selection
+  provider: openrouter
+  base_url: https://openrouter.ai/api/v1
+  api_key_env: OPENROUTER_API_KEY
+  default: openrouter/free
+  role: openrouter_primary_with_free_fallbacks
   policy_note: "Do not use Gemini/Google Code Assist/Antigravity OAuth providers from Hermes. Gemini CLI is explicit-operator-use only."
 
 fallback_models:
+  - provider: openrouter
+    model: nvidia/nemotron-3-nano-30b-a3b:free
+  - provider: openrouter
+    model: qwen/qwen3-coder:free
   - provider: custom
-    base_url: http://127.0.0.1:8001/v1
-    api_key: token-123
-    model: deepseek-prover-v2-7b-q8_0.gguf
+    base_url: http://127.0.0.1:18889/v1
+    api_key: local
+    model: leanstral-gguf
 
 # Skill and Memory Isolation
 # Hermes is forbidden from auto-learning into the Spire's authoritative skills.

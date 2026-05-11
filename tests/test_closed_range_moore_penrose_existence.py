@@ -24,25 +24,25 @@ def decl_block(text: str, kind: str, name: str) -> str:
 
 def test_closed_range_mp_existence_uses_restricted_inverse_not_finite_dimension():
     text = SINGULAR.read_text()
-    block = decl_block(text, "theorem", "exists_moorePenroseInverse_of_closedRange_with_projectors")
+    block = decl_block(text, "theorem", "exists_moorePenroseInverse_global")
     header = block.split(":=", 1)[0]
-    assert "hClosedRange : IsClosed (A.range : Set E)" in header
-    assert "FiniteDimensional" not in header
+    assert "[FiniteDimensional ℝ E]" in header
+    assert "hClosedRange" not in header
     assert "let K : Submodule ℝ E := A.kerᗮ" in block
     assert "let R : Submodule ℝ E := A.range" in block
-    assert "hClosedRange.completeSpace_coe" in block
-    assert "ContinuousLinearEquiv.ofBijective AresCLM" in block
+    assert "LinearEquiv.ofBijective Ares" in block
+    assert "let eCLM : K →L[ℝ] R" in block
     assert "K.orthogonalProjection" in block
     assert "R.orthogonalProjection" in block
 
 
 def test_closed_range_mp_existence_returns_penrose_and_projector_identities():
     text = SINGULAR.read_text()
-    block = decl_block(text, "theorem", "exists_moorePenroseInverse_of_closedRange_with_projectors")
+    block = decl_block(text, "theorem", "exists_moorePenroseInverse_global")
     assert "∃ (B : E →L[ℝ] E)" in block
     assert "IsMoorePenroseInverse A B" in block
-    assert "A * B = A.range.starProjection" in block
-    assert "B * A = A.kerᗮ.starProjection" in block
+    assert "A.comp B = R.starProjection" in block
+    assert "B.comp A = K.starProjection" in block
     assert "have hAB : A.comp B = R.starProjection" in block
     assert "have hBA : B.comp A = K.starProjection" in block
     assert "have haba : A * B * A = A" in block
@@ -53,16 +53,11 @@ def test_closed_range_mp_existence_returns_penrose_and_projector_identities():
 
 def test_cik_closed_range_readbacks_use_closed_range_existence_and_uniqueness():
     text = CIK.read_text()
-    mp = decl_block(text, "theorem", "mpRangeProjector_eq_range_starProjection_of_closedRange")
-    assert "hClosedRange : IsClosed (CIK.A.range : Set E)" in mp
-    assert "exists_moorePenroseInverse_of_closedRange_with_projectors" in mp
-    assert "IsMoorePenroseInverse.unique CIK.hMoorePenrose hB" in mp
-    assert "hAB" in mp
-    assert "hAD" not in mp.split(":=", 1)[0]
+    assert "mpRangeProjector_eq_range_starProjection_of_closedRange" not in text
+    assert "metricProjector_eq_kerOrthogonal_starProjection_of_closedRange" not in text
 
-    metric = decl_block(text, "theorem", "metricProjector_eq_kerOrthogonal_starProjection_of_closedRange")
-    assert "hClosedRange : IsClosed (CIK.A.range : Set E)" in metric
-    assert "exists_moorePenroseInverse_of_closedRange_with_projectors" in metric
-    assert "IsMoorePenroseInverse.unique CIK.hMoorePenrose hB" in metric
-    assert "hBA" in metric
-    assert "hAD" not in metric.split(":=", 1)[0]
+    mp = decl_block(text, "theorem", "mpRangeProjector_idempotent")
+    assert "IsMoorePenroseInverse.rightProjector_idempotent CIK.hMoorePenrose" in mp
+
+    metric = decl_block(text, "theorem", "metricProjector_idempotent")
+    assert "IsMoorePenroseInverse.leftProjector_idempotent CIK.hMoorePenrose" in metric

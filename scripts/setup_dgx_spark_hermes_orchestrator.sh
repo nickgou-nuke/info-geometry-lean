@@ -95,6 +95,30 @@ DISCOVERY_BASE_URL="$(awk '/discovery_engine:/{f=1;next}/logic_engine:/{f=0}f&&/
 DISCOVERY_MODEL="$(awk '/discovery_engine:/{f=1;next}/logic_engine:/{f=0}f&&/model:/{gsub(/"/, "", $2); print $2; exit}' nemoclaw_config.yaml 2>/dev/null || true)"
 LOGIC_BASE_URL="$(awk '/logic_engine:/{f=1;next}/code_engine:/{f=0}f&&/base_url:/{gsub(/"/, "", $2); print $2; exit}' nemoclaw_config.yaml 2>/dev/null || true)"
 LOGIC_MODEL="$(awk '/logic_engine:/{f=1;next}/code_engine:/{f=0}f&&/model:/{gsub(/"/, "", $2); print $2; exit}' nemoclaw_config.yaml 2>/dev/null || true)"
+NEMOCLAW_RESOLVE_BASE_URL="${NEMOCLAW_RESOLVE_BASE_URL:-${LEANSTRAL_BASE_URL:-${HERMES_BASE_URL:-http://127.0.0.1:18889/v1}}}"
+LEANSTRAL_BASE_URL="${LEANSTRAL_BASE_URL:-${LOGIC_BASE_URL:-${NEMOCLAW_RESOLVE_BASE_URL}}}"
+
+NEMOCLAW_MODEL_RESOLUTION_ENV="$(mktemp)"
+if python3 tools/infra/resolve_startup_model_ids.py \
+  --base-url "${NEMOCLAW_RESOLVE_BASE_URL}" \
+  --archon-config ".archon/config.yaml" \
+  --nemoclaw-config "nemoclaw_config.yaml" \
+  --format env > "$NEMOCLAW_MODEL_RESOLUTION_ENV" 2>/tmp/nemoclaw_model_resolution.log; then
+  # shellcheck disable=SC1090
+  set -a
+  source "$NEMOCLAW_MODEL_RESOLUTION_ENV"
+  set +a
+  if [[ -n "${NEMOCLAW_LOGIC_ENGINE_MODEL:-}" ]]; then
+    LOGIC_MODEL="${NEMOCLAW_LOGIC_ENGINE_MODEL}"
+  fi
+  if [[ -n "${NEMOCLAW_DISCOVERY_ENGINE_MODEL:-}" ]]; then
+    DISCOVERY_MODEL="${NEMOCLAW_DISCOVERY_ENGINE_MODEL}"
+  fi
+  if [[ -n "${NEMOCLAW_PLANNER_ENGINE_MODEL:-}" ]]; then
+    export NEMOCLAW_PLANNER_ENGINE_MODEL
+  fi
+fi
+rm -f "$NEMOCLAW_MODEL_RESOLUTION_ENV"
 
 export RUN_ID RUNTIME_LOCK_PATH ROOT_DIR BUILD_STATUS BUILD_EXIT_CODE BUILD_LOG_PATH LOCKED_MODULES
 export OPENCLAW_VERSION NEMOCLAW_VERSION LEAN_VERSION LAKE_VERSION PYTHON_VERSION DOCKER_VERSION OLLAMA_VERSION GIT_HEAD GIT_BRANCH
@@ -104,9 +128,21 @@ python3 - <<'PY'
 import json
 import os
 from datetime import datetime, timezone
+from fnmatch import fnmatch
+
 
 def env(name: str) -> str:
     return os.environ.get(name, "")
+
+
+def collect_nemoclaw_lane_models() -> dict[str, str]:
+    out: dict[str, str] = {}
+    for key, value in os.environ.items():
+        if fnmatch(key, "NEMOCLAW_LANE_*_MODEL"):
+            lane = key[len("NEMOCLAW_LANE_") : -len("_MODEL")].lower()
+            out[lane] = value
+    return out
+
 
 modules = [m.strip() for m in env("LOCKED_MODULES").split(",") if m.strip()]
 
@@ -132,6 +168,10 @@ payload = {
         "hermes": {"base_url": env("HERMES_BASE_URL"), "model": env("HERMES_MODEL")},
         "discovery_engine": {"base_url": env("DISCOVERY_BASE_URL"), "model": env("DISCOVERY_MODEL")},
         "logic_engine": {"base_url": env("LOGIC_BASE_URL"), "model": env("LOGIC_MODEL")},
+    },
+    "resolved_lane_models": {
+        "archon": {"leanstral": env("ARCHON_LEANSTRAL_MODEL")},
+        "nemoclaw": collect_nemoclaw_lane_models(),
     },
     "locked_build": {
         "status": env("BUILD_STATUS"),

@@ -13,11 +13,11 @@ def theorem_block(text: str, name: str) -> str:
     return match.group(0)
 
 
-def test_claimA_translator_inlines_partition_log_root_chain() -> None:
+def test_claimA_translator_routes_to_owner_export() -> None:
     text = TRANSLATOR.read_text(encoding="utf-8")
     block = theorem_block(text, "claimA_massieu_eq_log_partition")
-    assert "rw [souriauMassieuPotential, potentialGC, souriauPartition_eq_partitionGC]" in block
-    assert "souriauMassieuPotential_eq_log_partition M T" not in block
+    assert "souriauMassieuPotential_eq_log_partition M T" in block
+    assert "rw [souriauMassieuPotential, potentialGC, souriauPartition_eq_partitionGC]" not in block
 
 
 def test_souriau_partition_owner_root_is_definitional_log_partition_chain() -> None:

@@ -20,18 +20,19 @@ def decl_block(text: str, kind: str, name: str) -> str:
     return text[start:end]
 
 
-def test_logsumexp_derivative_root_is_hasderivat_chain():
+def test_logsumexp_derivative_surface_routes_through_partition_derivative_export():
     text = OWNER.read_text()
-    root = decl_block(text, "lemma", "hasDerivAt_logSumExp")
-    assert "hasDerivAt_logSumExpPartition" in root
-    assert "Real.hasDerivAt_log" in root
-    assert ".comp" in root
-    assert "logSumExp_sum_pos" in root
+    assert not re.search(r"(?m)^\s*lemma\s+hasDerivAt_logSumExp(?:\s|:|\()", text)
+
+    root = decl_block(text, "lemma", "hasDerivAt_logSumExpPartition")
+    assert "HasDerivAt.fun_sum" in root
+    assert "hasDerivAt_logSumExpPartition_term" in root
+
     exported = decl_block(text, "lemma", "logSumExp_deriv_eq_ratio")
-    assert "hasDerivAt_logSumExp" in exported
-    assert ".deriv" in exported
-    assert "deriv.log" not in exported
-    assert "DifferentiableAt" not in exported
+    assert "hasDerivAt_logSumExpPartition" in exported
+    assert "deriv.log" in exported
+    assert "DifferentiableAt" in exported
+    assert "logSumExp_sum_pos" in exported
 
 
 def test_softmax_consumes_logsumexp_derivative_export_not_chain_root():

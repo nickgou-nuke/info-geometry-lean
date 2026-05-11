@@ -24,6 +24,16 @@ except Exception:  # pragma: no cover - fallback only
     yaml = None
 
 
+_ASSISTANTS_KEY = "assistants"
+_LANES_KEY = "lanes"
+_MODEL_KEY = "model"
+
+
+def _strip_comments(line: str) -> str:
+    value = line.split("#", 1)[0]
+    return value.rstrip()
+
+
 @dataclass(frozen=True)
 class LaneResult:
     namespace: str
@@ -37,9 +47,63 @@ def _parse_yaml(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     if yaml is None:
-        return {}
+        return _parse_yaml_fallback(path)
     payload = yaml.safe_load(path.read_text(encoding="utf-8"))
     return payload if isinstance(payload, dict) else {}
+
+
+def _parse_yaml_fallback(path: Path) -> dict[str, Any]:
+    """Minimal parser fallback for simple startup config shape."""
+    out: dict[str, Any] = {}
+    current_section = ""
+    current_item: str | None = None
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = _strip_comments(raw_line)
+        if not line.strip():
+            continue
+        leading = len(raw_line) - len(raw_line.lstrip(" "))
+        if leading % 2 != 0:
+            continue
+
+        if leading == 0:
+            current_section = ""
+            current_item = None
+            if m := re.match(r"^([A-Za-z0-9_-]+)\s*:\s*(.*)\s*$", line):
+                key = m.group(1)
+                value = m.group(2).strip()
+                if value:
+                    out.setdefault(key, value)
+                elif key in (_ASSISTANTS_KEY, _LANES_KEY):
+                    current_section = key
+                    out.setdefault(key, {})
+            continue
+
+        if current_section not in {_ASSISTANTS_KEY, _LANES_KEY}:
+            continue
+
+        if leading == 2:
+            if m := re.match(r"^\s{2}([A-Za-z0-9_-]+)\s*:\s*(.*)\s*$", line):
+                name = m.group(1)
+                value = m.group(2).strip()
+                if value:
+                    out[current_section][name] = value
+                    current_item = None
+                else:
+                    current_item = name
+                    out[current_section].setdefault(name, {})
+                continue
+
+        if current_item is not None and leading == 4:
+            if m := re.match(r"^\s{4}([A-Za-z0-9_-]+)\s*:\s*(.*)\s*$", line):
+                item_key = m.group(1).strip()
+                if item_key != _MODEL_KEY:
+                    continue
+                value = m.group(2).strip()
+                out[current_section][current_item][_MODEL_KEY] = value
+            continue
+
+    return out
 
 
 def _value_from_path(payload: dict[str, Any], segments: list[str]) -> str:
@@ -74,7 +138,7 @@ def _legacy_key(namespace: str, lane: str) -> str | None:
 def collect_requested_models(archon_config: Path, nemoclaw_config: Path) -> list[tuple[str, str, str]]:
     requested: list[tuple[str, str, str]] = []
     archon_payload = _parse_yaml(archon_config)
-    assistants = archon_payload.get("assistants", {})
+    assistants = archon_payload.get(_ASSISTANTS_KEY, {})
     if isinstance(assistants, dict):
         for name, cfg in assistants.items():
             model = ""
@@ -103,7 +167,12 @@ def resolve_requested_models(
     base_url: str,
     requests: list[tuple[str, str, str]],
     timeout: int,
+    *,
+    defaults_only: bool = False,
 ) -> list[LaneResult]:
+    if defaults_only:
+        return [LaneResult(namespace, lane, model, model, False) for namespace, lane, model in requests]
+
     status, ids, _ = fetch_model_ids(base_url, timeout)
     resolved: list[LaneResult] = []
     if 200 <= status < 300 and ids:
@@ -162,6 +231,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--nemoclaw-config", type=Path, default=Path("nemoclaw_config.yaml"))
     parser.add_argument("--timeout", type=float, default=3.0)
     parser.add_argument("--format", choices=("json", "env"), default="json")
+    parser.add_argument("--defaults-only", action="store_true", help="Skip endpoint probing and return configured model IDs.")
     parser.add_argument("--json-out", type=Path, default=None, help="Optional destination for JSON payload.")
     return parser.parse_args()
 
@@ -170,7 +240,9 @@ def main() -> int:
     args = _parse_args()
     requests = collect_requested_models(args.archon_config, args.nemoclaw_config)
     if requests:
-        results = resolve_requested_models(args.base_url, requests, int(args.timeout))
+        results = resolve_requested_models(
+            args.base_url, requests, int(args.timeout), defaults_only=args.defaults_only
+        )
     else:
         results = []
 

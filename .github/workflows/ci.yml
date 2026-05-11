@@ -12,6 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      - name: Fetch base ref for verification pilot
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
 
       - name: Install elan
         run: |
@@ -30,62 +34,62 @@ jobs:
           echo "$DIAG"
 
           python3 - "$DIAG" "$GITHUB_OUTPUT" <<'PY'
-import json
-import os
-import sys
+          import json
+          import os
+          import sys
 
-raw = sys.argv[1] if len(sys.argv) > 1 else ""
-output_path = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("GITHUB_OUTPUT", "")
+          raw = sys.argv[1] if len(sys.argv) > 1 else ""
+          output_path = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("GITHUB_OUTPUT", "")
 
-def write_output(key, val):
-    if not output_path:
-        return
-    with open(output_path, "a", encoding="utf-8") as f:
-        f.write(f"{key}={val}\n")
+          def write_output(key, val):
+              if not output_path:
+                  return
+              with open(output_path, "a", encoding="utf-8") as f:
+                  f.write(f"{key}={val}\n")
 
-allowed_reasons = {
-    "apparmor_userns",
-    "uid_map_permission_denied",
-    "loopback_restriction",
-}
+          allowed_reasons = {
+              "apparmor_userns",
+              "uid_map_permission_denied",
+              "loopback_restriction",
+          }
 
-try:
-    diag = json.loads(raw)
-except json.JSONDecodeError:
-    write_output("preflight_ok", "false")
-    write_output("ready", "false")
-    write_output("fallback_active", "false")
-    write_output("failure_reason", "diagnostic_json_parse_error")
-    print("::error title=Sandbox Probe Failure::could not parse bwrap_preflight --hint-json output")
-    print("raw:", raw)
-    sys.exit(1)
+          try:
+              diag = json.loads(raw)
+          except json.JSONDecodeError:
+              write_output("preflight_ok", "false")
+              write_output("ready", "false")
+              write_output("fallback_active", "false")
+              write_output("failure_reason", "diagnostic_json_parse_error")
+              print("::error title=Sandbox Probe Failure::could not parse bwrap_preflight --hint-json output")
+              print("raw:", raw)
+              sys.exit(1)
 
-preflight_ok = bool(diag.get("sandbox_ready"))
-fallback_active = bool(diag.get("fallback_active"))
-failure_reason = diag.get("failure_reason") or ""
+          preflight_ok = bool(diag.get("sandbox_ready"))
+          fallback_active = bool(diag.get("fallback_active"))
+          failure_reason = diag.get("failure_reason") or ""
 
-write_output("preflight_ok", "true" if preflight_ok else "false")
-write_output("ready", "true" if preflight_ok else "false")
-write_output("fallback_active", "true" if fallback_active else "false")
-write_output("failure_reason", failure_reason)
+          write_output("preflight_ok", "true" if preflight_ok else "false")
+          write_output("ready", "true" if preflight_ok else "false")
+          write_output("fallback_active", "true" if fallback_active else "false")
+          write_output("failure_reason", failure_reason)
 
-if preflight_ok:
-    print("[bwrap-gate] preflight_ok=true; using sandbox path")
-    sys.exit(0)
+          if preflight_ok:
+              print("[bwrap-gate] preflight_ok=true; using sandbox path")
+              sys.exit(0)
 
-if fallback_active and failure_reason in allowed_reasons:
-    print("::warning title=Sandbox Limited::running fallback mode due to known restrictive reason: %s" % failure_reason)
-    print("::notice title=Sandbox Decision::preflight_ok=false fallback_active=true failure_reason=%s" % failure_reason)
-    print("[bwrap-gate] preflight_ok=false with allowed restricted reason, continuing")
-    sys.exit(0)
+          if fallback_active and failure_reason in allowed_reasons:
+              print("::warning title=Sandbox Limited::running fallback mode due to known restrictive reason: %s" % failure_reason)
+              print("::notice title=Sandbox Decision::preflight_ok=false fallback_active=true failure_reason=%s" % failure_reason)
+              print("[bwrap-gate] preflight_ok=false with allowed restricted reason, continuing")
+              sys.exit(0)
 
-if not failure_reason:
-    print("::error title=Sandbox Probe Failure::bwrap_preflight.json missing failure_reason")
-else:
-    print("::error title=Sandbox Probe Failure::bwrap_preflight failed with unexpected reason: %s" % failure_reason)
+          if not failure_reason:
+              print("::error title=Sandbox Probe Failure::bwrap_preflight.json missing failure_reason")
+          else:
+              print("::error title=Sandbox Probe Failure::bwrap_preflight failed with unexpected reason: %s" % failure_reason)
 
-sys.exit(1)
-PY
+          sys.exit(1)
+          PY
 
       - name: Cache Lake dependencies
         uses: actions/cache@v4
@@ -378,6 +382,163 @@ PY
 
       - name: Validate semantic flow report schema
         run: python3 tools/infra/check_semantic_flow_report.py
+
+      - name: Verify unified verification schemas
+        run: |
+          cat <<'JSON' > /tmp/verification_schema_probe.json
+          {
+            "schema": "info_geometry.hive_multichecker_report.v1",
+            "policy": {
+              "path": "policy.yaml",
+              "version": "1",
+              "hash": "",
+              "target_class": "default",
+              "required_lanes": [],
+              "defaults": {},
+              "schema": "info_geometry.verification_policy.v1",
+              "lane_tiers": {"bee_kernel_replay": "tier_a"},
+              "lane_default_tier": "tier_c"
+            },
+            "summary": {
+              "total_declarations": 1,
+              "with_checker_data": 1,
+              "passed_all": 1,
+              "failed_any": 0,
+              "failed_hard": 0,
+              "failed_soft": 0,
+              "missing_checker_data": 0,
+              "by_tool": {}
+            },
+            "declarations": [
+              {
+                "decl": "Demo.ok",
+                "module": "Demo",
+                "kind": "theorem",
+                "ok": true,
+                "tools": {"bee_kernel_replay": {"ok": true, "checks": ["kernel"], "severity": 0}},
+                "score": {"earned": 1.0, "total": 1.0},
+                "checks": ["kernel"],
+                "error": null,
+                "policy": {
+                  "required_lanes": [],
+                  "required_missing": [],
+                  "soft_failures": 0,
+                  "hard_failures": 0,
+                  "escalated_to_hard": false,
+                  "lane_decisions": {"bee_kernel_replay": {"ok": true, "hard": false, "severity": 0}}
+                }
+              }
+            ],
+            "contract_artifacts": [],
+            "lane_health": {"bee_kernel_replay": {"executed": true, "skipped": false, "error": false, "timeout": false, "records": 1, "failed": 0, "reason": "ok", "tier": "tier_a"}},
+            "lane_metrics": {"bee_kernel_replay": {"records": 1, "passed": 1, "failed": 0, "hard_failures": 0, "soft_failures": 0, "required": false, "executed": true, "skipped": false, "error": false, "timeout": false, "records_seen": 1, "decl_health_failed": 0, "versions": [], "tier": "tier_a", "pass_rate": 1.0}}
+          }
+          JSON
+          python3 tools/infra/validate_unified_verification_schema.py --report-json /tmp/verification_schema_probe.json
+
+      - name: Run unified verification tests
+        run: |
+          python3 -m py_compile \
+            tools/infra/hive_multichecker_merge.py \
+            tools/infra/run_unified_verification.py \
+            tools/infra/lanes/lane_leandepviz.py \
+            tools/infra/lanes/lane_paperclip.py \
+            tools/infra/lanes/lane_ulamai_semantic.py \
+            tools/infra/lanes/lane_rethlas_refs.py \
+            tools/infra/lanes/lane_socratic.py \
+            tools/infra/validate_unified_verification_schema.py
+
+      - name: Run unified verification unit tests
+        run: python3 -m pytest tests/test_hive_multichecker_merge.py tests/test_run_unified_verification.py tests/test_lane_paperclip.py tests/test_run_superorganism_verification.py tests/test_verification_schema.py -q
+
+      - name: Restore superorganism pilot hardening state
+        id: restore_pilot_state
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@v4
+        with:
+          path: reports/verification/pilot/state
+          key: superorganism-pilot-hardening-state-v1
+          restore-keys: |
+            superorganism-pilot-hardening-state-v1
+
+      - name: Normalize superorganism pilot hardening threshold
+        id: pilot_hardening_threshold
+        if: github.event_name == 'pull_request'
+        run: |
+          threshold="${SUPERORGANISM_PILOT_HARD_AFTER:-4}"
+          if ! [[ "${threshold}" =~ ^[0-9]+$ ]]; then
+            echo "::warning::SUPERORGANISM_PILOT_HARD_AFTER is not an integer: '${threshold}'. Using 4."
+            threshold=4
+          fi
+          if [ "${threshold}" -lt 3 ] || [ "${threshold}" -gt 5 ]; then
+            echo "::warning::SUPERORGANISM_PILOT_HARD_AFTER must be 3-5 for staged hardening. Using 4."
+            threshold=4
+          fi
+          echo "hard_after=${threshold}" >> "$GITHUB_OUTPUT"
+        env:
+          SUPERORGANISM_PILOT_HARD_AFTER: ${{ vars.SUPERORGANISM_PILOT_HARD_AFTER || '4' }}
+
+      - name: Resolve superorganism pilot mode
+        id: pilot_mode
+        if: github.event_name == 'pull_request'
+        env:
+          SUPERORGANISM_PILOT_HARD_AFTER: ${{ steps.pilot_hardening_threshold.outputs.hard_after }}
+          SUPERORGANISM_PILOT_HARD: ${{ vars.SUPERORGANISM_PILOT_HARD || 'false' }}
+        run: |
+          python3 tools/infra/pilot_hardening_state.py \
+            --state reports/verification/pilot/state/superorganism_pilot_state.json \
+            --action read \
+            --hard-mode-threshold "${SUPERORGANISM_PILOT_HARD_AFTER}" \
+            --force-hard "${SUPERORGANISM_PILOT_HARD}" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Run superorganism verification pilot (changed scope)
+        if: github.event_name == 'pull_request'
+        # NOTE: transitions automatically to hard mode after clean streak threshold (3-5), or when SUPERORGANISM_PILOT_HARD is set.
+        env:
+          SUPERORGANISM_PILOT_HARD_AFTER: ${{ steps.pilot_hardening_threshold.outputs.hard_after }}
+          SUPERORGANISM_PILOT_HARD: ${{ vars.SUPERORGANISM_PILOT_HARD || 'false' }}
+        continue-on-error: ${{ steps.pilot_mode.outputs.continue_on_error == 'true' }}
+        run: |
+          set +e
+          PILOT_RUN_ID="superorganism-pilot-${{ github.run_id }}-${{ github.run_attempt }}"
+          PILOT_OUTPUT_DIR="reports/verification/pilot/${PILOT_RUN_ID}"
+          PILOT_UPDATE_PAYLOAD="${PILOT_OUTPUT_DIR}/pilot_hardening_update.json"
+          python3 tools/infra/run_superorganism_verification.py \
+            --scope changed \
+            --decl-index artifacts/dag/index/decls.jsonl \
+            --policy "${{ steps.pilot_mode.outputs.policy_path }}" \
+            --base-ref origin/"${{ github.base_ref }}" \
+            --decl-prefix InfoGeometry. \
+            --output-root reports/verification/pilot \
+            --run-id "${PILOT_RUN_ID}" \
+            --json-out "${PILOT_OUTPUT_DIR}/unified.json" \
+            --md-out "${PILOT_OUTPUT_DIR}/summary.md" \
+            --pilot-state reports/verification/pilot/state/superorganism_pilot_state.json \
+            --pilot-hard-mode-threshold "${SUPERORGANISM_PILOT_HARD_AFTER:-4}" \
+            --pilot-force-hard "${SUPERORGANISM_PILOT_HARD:-false}" \
+            --pilot-hardening-json "${PILOT_UPDATE_PAYLOAD}" \
+            --primary-summary-path "$GITHUB_STEP_SUMMARY" \
+            --pilot-github-output "$GITHUB_OUTPUT"
+          rc=$?
+          exit "$rc"
+
+      - name: Upload superorganism pilot artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: superorganism-verification-pilot-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/verification/pilot/superorganism-pilot-${{ github.run_id }}-${{ github.run_attempt }}/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Save superorganism pilot hardening state
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/cache/save@v4
+        with:
+          path: reports/verification/pilot/state
+          key: superorganism-pilot-hardening-state-v1
 
       - name: Upload hypothesis debt report artifact
         if: always()

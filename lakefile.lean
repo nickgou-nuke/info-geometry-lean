@@ -727,6 +727,14 @@ lean_exe infotreeExtract where
   root := `DAG.InfoTreeExtract
   supportInterpreter := true
 
+lean_exe disconnectedAudit where
+  root := `DAG.DisconnectedAudit
+  supportInterpreter := true
+
+lean_exe exactProoflessnessAudit where
+  root := `DAG.ExactProoflessnessAudit
+  supportInterpreter := true
+
 /--
 Experimental authoritative DAG facet.
  It intentionally reuses the managed

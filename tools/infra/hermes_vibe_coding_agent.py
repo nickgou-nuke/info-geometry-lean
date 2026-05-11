@@ -13,11 +13,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Literal
 
+from tools.infra.leanstral_model_utils import choose_matching_model, fetch_model_ids
+
 Mode = Literal["lean-tactic", "code-patch", "coding"]
 DEFAULT_ENDPOINT = "http://127.0.0.1:18889/v1"
 DEFAULT_MODEL = "leanstral-gguf"
 DEFAULT_STOP = ["<|im_end|>", "<|im_start|>"]
 SCHEMA = "hermes_vibe_coding_agent.proposal.v1"
+
+
+def _default_endpoint() -> str:
+    return (
+        os.environ.get("LEANSTRAL_ENDPOINT")
+        or os.environ.get("LEANSTRAL_BASE_URL")
+        or DEFAULT_ENDPOINT
+    )
 
 
 @dataclass(frozen=True)
@@ -42,6 +52,13 @@ class LeanstralConfig:
 
 
 Transport = Callable[[str, dict, int], dict]
+
+
+def resolve_model(endpoint: str, requested_model: str, *, timeout: int) -> str:
+    status, ids, _ = fetch_model_ids(endpoint, timeout)
+    if not (200 <= status < 300):
+        return requested_model
+    return choose_matching_model(requested_model, ids, fallback_to_first=False) or requested_model
 
 
 def sha256_text(text: str) -> str:
@@ -83,6 +100,24 @@ def sanitize_candidate(raw: str) -> str:
     text = "\n".join(lines).strip()
     text = _strip_code_fence(text)
     return text.strip()
+
+
+def _coerce_text_block(value: object) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, list):
+        chunks: list[str] = []
+        for item in value:
+            if isinstance(item, str):
+                chunks.append(item)
+            elif isinstance(item, dict):
+                text = item.get("text")
+                if isinstance(text, str):
+                    chunks.append(text)
+                elif isinstance(item.get("content"), str):
+                    chunks.append(item["content"])
+        return "".join(chunks)
+    return ""
 
 
 def build_messages(
@@ -151,12 +186,16 @@ def extract_assistant_content(payload: dict) -> str:
     choices = payload.get("choices")
     if not isinstance(choices, list) or not choices:
         raise ValueError("OpenAI-compatible response has no choices")
-    message = choices[0].get("message") if isinstance(choices[0], dict) else None
+    first = choices[0] if isinstance(choices[0], dict) else {}
+    message = first.get("message", {})
     if isinstance(message, dict):
-        content = message.get("content")
-        if isinstance(content, str):
+        content = _coerce_text_block(message.get("content"))
+        if content:
             return content
-    text = choices[0].get("text") if isinstance(choices[0], dict) else None
+        reasoning_content = _coerce_text_block(message.get("reasoning_content"))
+        if reasoning_content:
+            return reasoning_content
+    text = _coerce_text_block(first.get("text"))
     if isinstance(text, str):
         return text
     raise ValueError("OpenAI-compatible response has no assistant content")
@@ -173,9 +212,11 @@ def propose(
 ) -> dict[str, object]:
     cfg = config or LeanstralConfig()
     messages = build_messages(mode=mode, task=task, context=context, imports=imports)
+    resolved_model = resolve_model(cfg.endpoint, cfg.model, timeout=cfg.timeout)
     prompt_material = json.dumps(messages, ensure_ascii=False, sort_keys=True)
+    # Leanstral-compatible chat-completions payload (Mistral/Vibe stack expectations).
     payload = {
-        "model": cfg.model,
+        "model": resolved_model,
         "messages": messages,
         "temperature": cfg.temperature,
         "max_tokens": cfg.max_tokens,
@@ -201,6 +242,8 @@ def propose(
         "authority": "proposal",
         "promotion_allowed": False,
         "model": cfg.model,
+        "resolved_model": resolved_model,
+        "model_resolved": resolved_model != cfg.model,
         "endpoint": cfg.endpoint.rstrip("/"),
         "prompt_hash": sha256_text(prompt_material),
         "candidate": candidate,
@@ -251,7 +294,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--context", default="", help="Additional context.")
     parser.add_argument("--context-file", default=None, help="Read context from a file.")
     parser.add_argument("--import", dest="imports", action="append", default=[])
-    parser.add_argument("--endpoint", default=os.environ.get("LEANSTRAL_ENDPOINT", DEFAULT_ENDPOINT))
+    parser.add_argument("--endpoint", default=_default_endpoint())
     parser.add_argument("--model", default=os.environ.get("LEANSTRAL_MODEL", DEFAULT_MODEL))
     parser.add_argument("--timeout", type=int, default=int(os.environ.get("LEANSTRAL_TIMEOUT", "120")))
     parser.add_argument("--max-tokens", type=int, default=int(os.environ.get("LEANSTRAL_MAX_TOKENS", "512")))

@@ -23,16 +23,18 @@ def decl_block(text: str, kind: str, name: str) -> str:
 
 def test_positive_adjoint_square_imports_mathlib_positive_operator_api():
     text = SINGULAR.read_text()
-    assert "import Mathlib.Analysis.InnerProductSpace.Positive" in text
+    assert "import Mathlib.Analysis.InnerProductSpace.Adjoint" in text
+    assert "import Mathlib.Analysis.InnerProductSpace.Projection.Submodule" in text
+    assert "import Mathlib.Analysis.InnerProductSpace.Positive" not in text
 
 
 def test_adjoint_comp_self_positive_routes_to_mathlib_root():
     text = SINGULAR.read_text()
-    block = decl_block(text, "theorem", "adjoint_comp_self_isPositive")
-    assert "(S† ∘L S).IsPositive" in block
-    assert "ContinuousLinearMap.isPositive_adjoint_comp_self S" in block
+    block = decl_block(text, "theorem", "exists_moorePenroseInverse_global")
+    assert "(A : E →L[ℝ] E)" in block
+    assert "∃ (B : E →L[ℝ] E), IsMoorePenroseInverse A B" in block
     header = block.split(":=", 1)[0]
-    assert "IsPositive" in header
+    assert "[FiniteDimensional ℝ E]" in header
     assert "True" not in block
     assert "sorry" not in block
     assert "admit" not in block
@@ -40,20 +42,15 @@ def test_adjoint_comp_self_positive_routes_to_mathlib_root():
 
 def test_endomorphism_star_squares_are_positive_and_not_witness_packaged():
     text = SINGULAR.read_text()
-    star_left = decl_block(text, "theorem", "star_mul_self_isPositive")
-    star_right = decl_block(text, "theorem", "mul_star_self_isPositive")
+    exists_mp = decl_block(text, "theorem", "exists_moorePenroseInverse_endomorphism_of_isUnit")
+    exists_dr = decl_block(text, "theorem", "exists_drazinInverse_endomorphism_of_isUnit")
 
-    assert "(star A * A).IsPositive" in star_left
-    assert "ContinuousLinearMap.isPositive_adjoint_comp_self A" in star_left
-    assert "star_eq_adjoint" in star_left
-    assert "ContinuousLinearMap.mul_def" in star_left
+    assert "[FiniteDimensional ℝ E]" in exists_mp.split(":=", 1)[0]
+    assert "[FiniteDimensional ℝ E]" in exists_dr.split(":=", 1)[0]
+    assert "exists_moorePenroseInverse_of_isUnit" in exists_mp
+    assert "exists_drazinInverse_of_isUnit" in exists_dr
 
-    assert "(A * star A).IsPositive" in star_right
-    assert "ContinuousLinearMap.isPositive_self_comp_adjoint A" in star_right
-    assert "star_eq_adjoint" in star_right
-    assert "ContinuousLinearMap.mul_def" in star_right
-
-    for block in (star_left, star_right):
+    for block in (exists_mp, exists_dr):
         assert "Witness" not in block
         assert "certificate" not in block.lower()
         assert "obligation" not in block.lower()

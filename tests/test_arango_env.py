@@ -49,7 +49,8 @@ def test_arango_username_default(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_arango_password_default(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv(_PASSWORD_VAR, raising=False)
+    monkeypatch.delenv("ARANGO_PASSWORD", raising=False)
+    monkeypatch.delenv("ARANGO_PASS", raising=False)
     assert arango_password() == ""
 
 
@@ -68,11 +69,15 @@ def test_arango_database_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_arango_username_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ARANGO_USER", raising=False)
+    monkeypatch.delenv("ARANGO_PASS", raising=False)
     monkeypatch.setenv(_USERNAME_VAR, "admin")
     assert arango_username() == "admin"
 
 
 def test_arango_password_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ARANGO_USER", raising=False)
+    monkeypatch.delenv("ARANGO_PASS", raising=False)
     monkeypatch.setenv(_PASSWORD_VAR, "secret")
     assert arango_password() == "secret"
 

@@ -1,13 +1,14 @@
 # Project Progress
 
 ## Current Stage
-init
+autoformalize
 
 ## Stages
-- [ ] init
+- [x] init
 - [ ] autoformalize
 - [ ] prover
 - [ ] polish
 
 ## Current Objectives
 
+- [ ] `lean/InfoGeometry/Canonical/OperatorModularTemperatureDuality.lean`

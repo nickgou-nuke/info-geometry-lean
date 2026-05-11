@@ -27,10 +27,38 @@ def run_git(args: list[str], cwd: Path) -> list[str]:
     return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
 
 
-def changed_paths(root: Path, *, include_untracked: bool) -> set[Path]:
-    # `git diff HEAD --name-only` includes both staged and unstaged tracked changes.
-    raw = run_git(["diff", "--name-only", "HEAD"], cwd=root)
+def _base_ref_commit(root: Path, base_ref: str) -> str:
+    try:
+        merged = run_git(["merge-base", base_ref, "HEAD"], cwd=root)
+    except subprocess.CalledProcessError:
+        return "HEAD"
+    return merged[0] if merged else base_ref
+
+
+def changed_paths(
+    root: Path,
+    *,
+    include_untracked: bool,
+    base_ref: str | None = None,
+) -> set[Path]:
+    # Collect working-tree + staged tracked changes against the selected baseline.
+    base = "HEAD"
+    if base_ref:
+        base = _base_ref_commit(root, base_ref)
+
+    try:
+        raw = run_git(["diff", "--name-only", base], cwd=root)
+    except subprocess.CalledProcessError:
+        if base_ref is None:
+            raise
+        raw = run_git(["diff", "--name-only", "HEAD"], cwd=root)
     out = {(root / rel).resolve() for rel in raw}
+    # staged-only changes are not included by plain working-tree diff.
+    try:
+        out.update((root / rel).resolve() for rel in run_git(["diff", "--cached", "--name-only", base], cwd=root))
+    except subprocess.CalledProcessError:
+        pass
+
     if include_untracked:
         extra = run_git(["ls-files", "--others", "--exclude-standard"], cwd=root)
         out |= {(root / rel).resolve() for rel in extra}
@@ -61,9 +89,10 @@ def collect_modules(
     include_untracked: bool,
     allow_umbrella: bool,
     prefix: str | None,
+    base_ref: str | None,
 ) -> list[str]:
     modules: set[str] = set()
-    for path in changed_paths(root, include_untracked=include_untracked):
+    for path in changed_paths(root, include_untracked=include_untracked, base_ref=base_ref):
         if not path.exists():
             continue
         mod = path_to_module(root, path)
@@ -107,6 +136,14 @@ def parse_args() -> argparse.Namespace:
         help="Ignore untracked Lean files.",
     )
     parser.add_argument(
+        "--base-ref",
+        default=None,
+        help=(
+            "Optional git ref to compare against when collecting changed Lean files. "
+            "When set, uses merge-base(base_ref, HEAD) when available."
+        ),
+    )
+    parser.add_argument(
         "--allow-umbrella",
         action="store_true",
         help="Allow umbrella modules such as `*.All` (disabled by default).",
@@ -135,6 +172,7 @@ def main() -> int:
         include_untracked=args.include_untracked,
         allow_umbrella=args.allow_umbrella,
         prefix=prefix,
+        base_ref=args.base_ref,
     )
     if not modules:
         print("[build-changed-lean] no changed Lean owner modules detected", flush=True)
@@ -153,4 +191,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

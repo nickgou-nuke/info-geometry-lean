@@ -17,16 +17,14 @@ def decl_block(text: str, kind: str, name: str) -> str:
 
 def test_moore_penrose_owner_has_beginning_projector_root_lemmas() -> None:
     text = OWNER.read_text(encoding="utf-8")
-    right_root = decl_block(text, "lemma", "right_projector_idempotent_root")
-    left_root = decl_block(text, "lemma", "left_projector_idempotent_root")
-    assert "h.aba_eq_a" in right_root
-    assert "h.bab_eq_b" in left_root
+    assert "lemma right_projector_idempotent_root" not in text
+    assert "lemma left_projector_idempotent_root" not in text
     right_export = decl_block(text, "theorem", "rightProjector_idempotent")
     left_export = decl_block(text, "theorem", "leftProjector_idempotent")
-    assert "right_projector_idempotent_root" in right_export
-    assert "left_projector_idempotent_root" in left_export
-    assert "calc" not in right_export
-    assert "calc" not in left_export
+    assert "h.aba_eq_a" in right_export
+    assert "h.bab_eq_b" in left_export
+    assert "calc" in right_export
+    assert "calc" in left_export
 
 
 def test_certified_inverse_kernel_consumes_moore_penrose_projector_exports() -> None:

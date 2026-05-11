@@ -1,0 +1,134 @@
+name: Closure Debt + Superorganism Smoke
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "20 2 * * *"
+
+jobs:
+  pr-gate:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python compile smoke
+        run: |
+          python3 -m py_compile \
+            tools/quality/placeholder_audit.py \
+            tools/quality/closure_debt_crawler.py \
+            tools/quality/llm_closure_debt_auditor.py \
+            tools/infra/lanes/lane_llm_semantic_audit.py \
+            tools/infra/run_superorganism_verification.py \
+            tools/infra/run_unified_verification.py
+
+      - name: Gate startup + summary verification tests
+        run: |
+          python3 -m pytest \
+            tests/test_resolve_startup_model_ids.py \
+            tests/test_run_archon_superorganism.py \
+            tests/test_run_superorganism_verification.py \
+            tests/test_placeholder_audit.py -q
+
+      - name: Run placeholder audit (deterministic report lane)
+        run: |
+          mkdir -p reports/audit/ci
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry \
+            --json-out reports/audit/ci/placeholder-audit.json \
+            --md-out reports/audit/ci/placeholder-audit.md \
+            --signals-out reports/audit/ci/placeholder-signals.json
+
+      - name: Run closure debt crawler (deterministic report lane)
+        run: |
+          python3 tools/quality/closure_debt_crawler.py \
+            --root lean/InfoGeometry \
+            --json-out reports/audit/ci/closure-debt-crawler.json \
+            --md-out reports/audit/ci/closure-debt-crawler.md \
+            --print-summary
+
+      - name: Run LLM closure debt audit (advisory lane)
+        continue-on-error: true
+        run: |
+          python3 tools/quality/llm_closure_debt_auditor.py \
+            --root lean/InfoGeometry \
+            --limit 5 \
+            --timeout 8 \
+            --retries 0 \
+            --max-chars 5000 \
+            --max-tokens 500 \
+            --json-out reports/audit/ci/llm-closure-debt-audit.json \
+            --md-out reports/audit/ci/llm-closure-debt-audit.md \
+            --per-file-dir reports/audit/ci/llm-file-reports \
+            --print-progress
+
+      - name: Adapt LLM lane contracts (advisory)
+        continue-on-error: true
+        run: |
+          if [ -f reports/audit/ci/llm-closure-debt-audit.json ]; then
+            python3 tools/infra/lanes/lane_llm_semantic_audit.py \
+              --input-json reports/audit/ci/llm-closure-debt-audit.json \
+              --out-jsonl reports/audit/ci/lane_llm_semantic_audit.jsonl
+          fi
+
+      - name: Upload closure debt CI artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: closure-debt-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/audit/ci/
+          retention-days: 14
+          if-no-files-found: warn
+
+  nightly-smoke:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Nightly e2e smoke for startup and summary routing
+        run: |
+          python3 -m pytest \
+            tests/test_run_archon_superorganism.py \
+            tests/test_run_superorganism_verification.py -q
+
+      - name: Nightly audit snapshot (deterministic)
+        run: |
+          mkdir -p reports/audit/nightly
+          python3 tools/quality/placeholder_audit.py \
+            --root lean/InfoGeometry \
+            --json-out reports/audit/nightly/placeholder-audit.json \
+            --md-out reports/audit/nightly/placeholder-audit.md \
+            --signals-out reports/audit/nightly/placeholder-signals.json
+          python3 tools/quality/closure_debt_crawler.py \
+            --root lean/InfoGeometry \
+            --json-out reports/audit/nightly/closure-debt-crawler.json \
+            --md-out reports/audit/nightly/closure-debt-crawler.md \
+            --print-summary
+
+      - name: Upload nightly closure debt artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: closure-debt-nightly-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/audit/nightly/
+          retention-days: 14
+          if-no-files-found: warn

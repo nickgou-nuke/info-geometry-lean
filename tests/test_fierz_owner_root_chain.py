@@ -8,17 +8,21 @@ QUANTUM_FIERZ = REPO / "lean" / "InfoGeometry" / "Quantum" / "Fierz.lean"
 
 
 def theorem_block(text: str, name: str) -> str:
-    match = re.search(rf"(?ms)^\s*(?:@[^[\n]+\n\s*)*theorem\s+{re.escape(name)}\b.*?(?=^\s*(?:@[^[\n]+\n\s*)*(?:theorem|def|structure|namespace|end)\b|\Z)", text)
+    match = re.search(
+        rf"(?ms)^\s*(?:@[^[\n]+\n\s*)*theorem\s+{re.escape(name)}\b.*?(?=^\s*(?:@[^[\n]+\n\s*)*(?:theorem|def|structure|namespace|end)\b|\Z)",
+        text,
+    )
     assert match, f"missing theorem {name}"
     return match.group(0)
 
 
-def test_doubled_fierz_majorana_uses_owner_root_not_generic_wrapper() -> None:
+def test_doubled_fierz_majorana_reuses_generic_readout_theorem_with_doubled_owner_instance() -> None:
     text = FIERZ_READOUT.read_text(encoding="utf-8")
     block = theorem_block(text, "doubledFierz_majorana")
-    assert "doubledFierzReadout_isMajoranaShadow_iff" in block
-    assert "information_fierz_majorana" in block
-    assert "FierzChannelReadout.fierz_majorana" not in block
+    assert "FierzChannelReadout.fierz_majorana" in block
+    assert "doubledFierzReadout (E := E)" in block
+    assert "IsMajoranaShadow" in block
+    assert "information_fierz_majorana" not in block
 
 
 def test_quantum_fierz_owner_roots_are_present() -> None:

@@ -11,6 +11,7 @@ lane_tiers:
   bee_pauli_policy: tier_b
   bee_lean_conductivity: tier_b
   bee_semantic_guard: tier_b
+  bee_llm_semantic_audit: tier_c
   bee_socratic: tier_b
   bee_paperclip: tier_c
   bee_rethlas_refs: tier_c
@@ -41,6 +42,9 @@ lane_rules:
     hard: true
     min_score: 0.7
   bee_semantic_guard:
+    required: false
+    hard: false
+  bee_llm_semantic_audit:
     required: false
     hard: false
   bee_paperclip:

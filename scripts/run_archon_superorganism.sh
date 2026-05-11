@@ -66,6 +66,8 @@ if ! command -v archon >/dev/null 2>&1; then
   exit 1
 fi
 
+ARCHON_STARTUP_ARCHON_CONFIG="${ARCHON_STARTUP_ARCHON_CONFIG:-.archon/config.yaml}"
+ARCHON_STARTUP_NEMOCLAW_CONFIG="${ARCHON_STARTUP_NEMOCLAW_CONFIG:-nemoclaw_config.yaml}"
 export DATABASE_URL="${DATABASE_URL:-sqlite:////tmp/archon-workflow-${USER:-user}.db}"
 OPENROUTER_PI_MODEL="${OPENROUTER_PI_MODEL:-}"
 export OPENROUTER_PI_MODEL
@@ -122,6 +124,25 @@ export_model_env_keys() {
   done
 }
 
+apply_config_fallback_models() {
+  local fallback_file=$1
+  if python3 tools/infra/resolve_startup_model_ids.py \
+    --base-url "$LEANSTRAL_BASE_URL" \
+    --archon-config "$ARCHON_STARTUP_ARCHON_CONFIG" \
+    --nemoclaw-config "$ARCHON_STARTUP_NEMOCLAW_CONFIG" \
+    --defaults-only \
+    --format env > "$fallback_file" 2>/tmp/archon_model_defaults_resolution.log; then
+    if apply_resolved_model_env_file "$fallback_file"; then
+      set_default_model_id_values
+      export_model_env_keys
+      echo "Resolved startup model IDs from local startup defaults:"
+      cat "$fallback_file"
+      return 0
+    fi
+  fi
+  return 1
+}
+
 apply_resolved_model_env_file() {
   local source_file=$1
   local line key raw value unquoted
@@ -155,8 +176,8 @@ apply_resolved_model_env_file() {
 MODEL_RESOLUTION_ENV="$(mktemp)"
   if python3 tools/infra/resolve_startup_model_ids.py \
   --base-url "$LEANSTRAL_BASE_URL" \
-  --archon-config ".archon/config.yaml" \
-  --nemoclaw-config "nemoclaw_config.yaml" \
+  --archon-config "$ARCHON_STARTUP_ARCHON_CONFIG" \
+  --nemoclaw-config "$ARCHON_STARTUP_NEMOCLAW_CONFIG" \
   --format env > "$MODEL_RESOLUTION_ENV" 2>/tmp/archon_model_resolution.log; then
   if apply_resolved_model_env_file "$MODEL_RESOLUTION_ENV"; then
     set_default_model_id_values
@@ -165,14 +186,20 @@ MODEL_RESOLUTION_ENV="$(mktemp)"
     cat "$MODEL_RESOLUTION_ENV"
   else
     echo "WARN: model alias resolution output was not usable (see /tmp/archon_model_resolution.log). Falling back to raw configured model IDs." >&2
-    set_default_model_id_values
+    if ! apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+      echo "WARN: startup default model resolution failed. Falling back to hardcoded defaults." >&2
+      set_default_model_id_values
+    fi
   fi
-  export_model_env_keys
 else
   echo "WARN: model alias resolution failed (see /tmp/archon_model_resolution.log). Falling back to raw configured model IDs." >&2
-  set_default_model_id_values
-  export_model_env_keys
+  if ! apply_config_fallback_models "$MODEL_RESOLUTION_ENV"; then
+    echo "WARN: startup default model resolution failed. Falling back to hardcoded defaults." >&2
+    set_default_model_id_values
+    export_model_env_keys
+  fi
 fi
+export_model_env_keys
 if [[ -n "${OPENROUTER_PI_MODEL}" ]]; then
   export ARCHON_PI_MODEL="$OPENROUTER_PI_MODEL"
 fi

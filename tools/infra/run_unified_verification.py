@@ -23,9 +23,17 @@ from tools.infra.lanes.lane_lean_conductivity import run as run_conductivity
 from tools.infra.lanes.lane_socratic import run as run_socratic
 from tools.infra.lanes.lane_rethlas_refs import run as run_rethlas_refs
 from tools.infra.lanes.lane_ulamai_semantic import run as run_semantic_guard
+from tools.infra.lanes.lane_llm_semantic_audit import run as run_llm_semantic_audit
 DEFAULT_POLICY = ROOT / "tools" / "infra" / "verification_policy.yaml"
 DEFAULT_OUTPUT_ROOT = ROOT / "reports" / "verification"
-LANE_HEALTH_LANES = ("bee_pauli_policy", "bee_ref_impl", "bee_kernel_replay", "bee_semantic_guard", "bee_rethlas_refs")
+LANE_HEALTH_LANES = (
+    "bee_pauli_policy",
+    "bee_ref_impl",
+    "bee_kernel_replay",
+    "bee_semantic_guard",
+    "bee_rethlas_refs",
+    "bee_llm_semantic_audit",
+)
 LANE_HEALTH_LANES = tuple(sorted(set(CANONICAL_LANES) | set(LANE_HEALTH_LANES)))
 
 
@@ -102,6 +110,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--autograder-jsonl", type=Path)
     parser.add_argument("--promotion-json", type=Path)
     parser.add_argument("--mathfulness-json", type=Path, help="mathfulness_audit JSON/JSONL")
+    parser.add_argument("--llm-audit-json", type=Path, help="LLM closure debt audit JSON/JSONL")
     parser.add_argument("--rethlas-json", type=Path, help="Rethlas verification JSON/JSONL")
     parser.add_argument("--conductivity-json", type=Path, help="Lean conductivity artifact (representation-depth/audit JSON/JSONL)")
     parser.add_argument("--socratic-json", type=Path, help="SocraticQuestionPacket/Socratic artifact (JSON/JSONL)")
@@ -229,6 +238,30 @@ def run(argv: argparse.Namespace) -> int:
                 )
             except Exception as exc:
                 _set_lane_error(lane_health, "bee_semantic_guard", f"lane_semantic_guard_failed: {exc}")
+        llm_audit_json = getattr(argv, "llm_audit_json", None)
+        if llm_audit_json:
+            out = contracts_dir / "lane_llm_semantic_audit.jsonl"
+            try:
+                lane_summaries["lane_llm_semantic_audit"] = run_llm_semantic_audit(llm_audit_json, out)
+                counts = _summarize_lane_records(out, requested=llm_audit_json is not None)
+                _set_lane_exec(
+                    lane_health,
+                    "bee_llm_semantic_audit",
+                    executed=True,
+                    records=counts.get("bee_llm_semantic_audit", {}).get("records", 0),
+                    failed=counts.get("bee_llm_semantic_audit", {}).get("failed", 0),
+                    reason="ok",
+                )
+                lane_contracts.append(out)
+            except TimeoutError as exc:
+                _set_lane_error(
+                    lane_health,
+                    "bee_llm_semantic_audit",
+                    f"lane_llm_semantic_audit_timeout: {exc}",
+                    timeout=True,
+                )
+            except Exception as exc:
+                _set_lane_error(lane_health, "bee_llm_semantic_audit", f"lane_llm_semantic_audit_failed: {exc}")
         if argv.conductivity_json:
             out = contracts_dir / "lane_lean_conductivity.jsonl"
             try:
@@ -369,6 +402,7 @@ def run(argv: argparse.Namespace) -> int:
             "autograder_jsonl": str(argv.autograder_jsonl) if argv.autograder_jsonl else None,
             "promotion_json": str(argv.promotion_json) if argv.promotion_json else None,
             "mathfulness_json": str(argv.mathfulness_json) if argv.mathfulness_json else None,
+            "llm_audit_json": str(getattr(argv, "llm_audit_json", None)) if getattr(argv, "llm_audit_json", None) else None,
             "rethlas_json": str(argv.rethlas_json) if argv.rethlas_json else None,
             "conductivity_json": str(argv.conductivity_json) if argv.conductivity_json else None,
             "socratic_json": str(argv.socratic_json) if argv.socratic_json else None,

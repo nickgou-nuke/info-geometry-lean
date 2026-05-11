@@ -38,7 +38,6 @@ DEFAULT_DECL_INDEX = resolve_decl_metadata_file()
 
 
 def _resolve_summary_paths(argv: argparse.Namespace, *, run_md_out: Path) -> list[Path]:
-    targets = [run_md_out]
     explicit = getattr(argv, "primary_summary_path", None)
     if explicit is None:
         explicit = os.environ.get("GITHUB_STEP_SUMMARY")
@@ -49,8 +48,8 @@ def _resolve_summary_paths(argv: argparse.Namespace, *, run_md_out: Path) -> lis
             candidate = Path(explicit)
         if not candidate.is_absolute():
             candidate = (repo_root() / candidate).resolve()
-        targets.append(candidate)
-    return list(dict.fromkeys(targets))
+        return [candidate]
+    return [run_md_out]
 
 
 def _load_json(path: Path | None) -> dict[str, Any]:
@@ -94,6 +93,76 @@ def _append_hardening_note_payload(summary_paths: list[Path], payload: dict[str,
         summary_path.parent.mkdir(parents=True, exist_ok=True)
         with summary_path.open("a", encoding="utf-8") as handle:
             handle.write(note)
+
+
+def _build_placeholder_signal_section(payload: dict[str, Any]) -> list[str]:
+    if payload.get("schema") != "info_geometry.placeholder_audit_signals.v1":
+        return []
+    signals = payload.get("signals")
+    if not isinstance(signals, list):
+        return []
+
+    summary = payload.get("summary")
+    if not isinstance(summary, dict):
+        summary = {}
+
+    total = summary.get("signal_count", len(signals))
+    auto_count = summary.get("autoproof_signal_count", 0)
+    debt_count = summary.get("closure_debt_signal_count", 0)
+
+    lines: list[str] = []
+    lines.append("## Placeholder Trust Signals")
+    lines.append(f"- signal_count: **{total}**")
+    lines.append(f"- autoproof_signals: **{auto_count}**")
+    lines.append(f"- closure_debt_signals: **{debt_count}**")
+
+    if total == 0:
+        lines.append("- status: clean")
+        return lines
+
+    lines.append("- signals:")
+    for item in signals[:20]:
+        if not isinstance(item, dict):
+            continue
+        decl_ref = item.get("decl_ref") or item.get("declaration_name") or "<unknown>"
+        signal = item.get("signal") or "<no-signal>"
+        task_hint = item.get("task_hint") or ""
+        severity = item.get("severity") or ""
+        file = item.get("file") or ""
+        line = item.get("line", "")
+        line_label = f"{file}:{line}" if file else ""
+        suffix = ""
+        if task_hint:
+            suffix = f" task={task_hint}"
+        if severity:
+            suffix = f"{suffix} ({severity})"
+        if line_label:
+            suffix = f"{suffix} @{line_label}"
+        lines.append(f"- `{decl_ref}` {signal}{suffix}")
+
+    return lines
+
+
+def _append_placeholder_signal_payload(summary_paths: list[Path], payload: dict[str, Any]) -> None:
+    if not summary_paths:
+        return
+    section = _build_placeholder_signal_section(payload)
+    if not section:
+        return
+    note = "\n".join(section) + "\n"
+    for summary_path in summary_paths:
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        with summary_path.open("a", encoding="utf-8") as handle:
+            handle.write(note)
+
+
+def _append_placeholder_signal_note(summary_paths: list[Path], payload_path: Path | None) -> None:
+    if payload_path is None:
+        return
+    payload = _load_json(payload_path)
+    if not payload:
+        return
+    _append_placeholder_signal_payload(summary_paths=summary_paths, payload=payload)
 
 
 def _apply_pilot_hardening_update(
@@ -325,6 +394,10 @@ def run_pulse(argv: argparse.Namespace) -> int:
             report_path=run_json_out,
             summary_paths=summary_paths,
         )
+        _append_placeholder_signal_note(
+            summary_paths=summary_paths,
+            payload_path=getattr(argv, "placeholder_signal_report", None),
+        )
         return 0
 
     _write_decl_payload(decl_path, rows)
@@ -354,6 +427,7 @@ def run_pulse(argv: argparse.Namespace) -> int:
         conductivity_json=Path(argv.conductivity_json) if argv.conductivity_json else None,
         socratic_json=Path(argv.socratic_json) if argv.socratic_json else None,
         paperclip_json=Path(argv.paperclip_json) if argv.paperclip_json else None,
+        llm_audit_json=Path(argv.llm_audit_json) if getattr(argv, "llm_audit_json", None) else None,
         policy=Path(argv.policy) if argv.policy else None,
         target_class=argv.target_class,
         output_root=output_root,
@@ -381,6 +455,10 @@ def run_pulse(argv: argparse.Namespace) -> int:
         run_exit_code=rc,
         report_path=run_json_out,
         summary_paths=summary_paths,
+    )
+    _append_placeholder_signal_note(
+        summary_paths=summary_paths,
+        payload_path=getattr(argv, "placeholder_signal_report", None),
     )
     if not getattr(argv, "pilot_state", None) and getattr(argv, "pilot_hardening_payload", None):
         _append_hardening_note(
@@ -418,6 +496,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--socratic-json", type=Path, help="SocraticQuestionPacket/Socratic artifact (JSON/JSONL)")
     parser.add_argument("--paperclip-json", type=Path, help="Paperclip control/event artifact (JSON/JSONL)")
     parser.add_argument("--promotion-json", type=Path, help="Promotion artifact")
+    parser.add_argument("--llm-audit-json", type=Path, help="LLM closure debt audit JSON/JSONL")
     parser.add_argument("--policy", type=Path, help="Path to verification policy")
     parser.add_argument("--target-class", choices=["L0", "L1", "L2", "l0", "l1", "l2"], default=None)
     parser.add_argument("--output-root", type=Path, default=Path("reports") / "verification")
@@ -463,6 +542,11 @@ def _parse_args() -> argparse.Namespace:
         "--pilot-hardening-json",
         type=Path,
         help="Optional JSON payload path for pilot hardening state update output.",
+    )
+    parser.add_argument(
+        "--placeholder-signal-report",
+        type=Path,
+        help="Optional placeholder trust signal JSON; append a placeholder-signal summary into summary output.",
     )
     parser.add_argument("--pilot-github-output", type=Path, help="Optional GitHub output file for hardening state action.")
     parser.add_argument("--no-lane-wrappers", action="store_true", help="Pass contract rows directly")

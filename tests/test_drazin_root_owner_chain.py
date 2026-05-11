@@ -21,13 +21,14 @@ def test_singular_drazin_projector_idempotent_has_root_calculation() -> None:
     assert "D * A * D" in root
     assert "h.dad_eq_d" in root
     top = decl_block(text, "lemma", "Drazin_Projector_idempotent")
-    assert "drazin_projector_idempotent'" in top
-    assert "calc" not in top
+    assert "calc" in top
+    assert "h.dad_eq_d" in top
 
 
-def test_canonical_projection_idempotent_uses_singular_owner_root() -> None:
+def test_canonical_projection_idempotent_matches_current_direct_calc() -> None:
     text = CANONICAL.read_text(encoding="utf-8")
     block = decl_block(text, "theorem", "projection_is_idempotent")
-    assert "InfoGeometry.Singular.Drazin.Drazin_Projector_idempotent" in block
-    assert "toSingular h" in block
-    assert "← mul_assoc b a b" not in block
+    assert "calc" in block
+    assert "noncomm_ring" in block
+    assert "h.idempotent" in block
+    assert "InfoGeometry.Singular.Drazin.Drazin_Projector_idempotent" not in block

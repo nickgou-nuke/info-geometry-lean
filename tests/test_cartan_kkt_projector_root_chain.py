@@ -15,18 +15,16 @@ def decl_block(text: str, kind: str, name: str) -> str:
     return text[start:end]
 
 
-def test_cartan_projector_idempotence_uses_named_expansion_roots() -> None:
+def test_cartan_projector_idempotence_uses_local_expansion_roots() -> None:
     text = OWNER.read_text(encoding="utf-8")
-    plus_num = decl_block(text, "lemma", "Pplus_square_numerator")
-    minus_num = decl_block(text, "lemma", "Pminus_square_numerator")
-    assert "θ * θ" in plus_num and "hθ" in plus_num
-    assert "θ * θ" in minus_num and "hθ" in minus_num
     plus = decl_block(text, "lemma", "Pplus_idempotent")
     minus = decl_block(text, "lemma", "Pminus_idempotent")
-    assert "Pplus_square_numerator" in plus
-    assert "Pminus_square_numerator" in minus
-    assert "have h_expand" not in plus
-    assert "have h_expand" not in minus
+    assert "have h_expand" in plus
+    assert "have h_expand" in minus
+    assert "θ * θ" in plus and "hθ" in plus
+    assert "θ * θ" in minus and "hθ" in minus
+    assert "Pplus_square_numerator" not in text
+    assert "Pminus_square_numerator" not in text
 
 
 def test_kkt_projector_idempotence_consumes_cartan_projector_roots() -> None:

@@ -75,12 +75,19 @@ mkdir -p reports
   echo '```'
   echo
 
-  echo "## Review-Only Surrogate Audit"
-  echo
-  echo '```text'
-  python3 scripts/quality/audit_constructivity.py --mode review || true
-  echo '```'
-  echo
+echo "## Review-Only Surrogate Audit"
+echo
+echo '```text'
+python3 scripts/quality/audit_constructivity.py --mode review || true
+echo '```'
+echo
+
+echo "## Mathless Proposition Audit"
+echo
+echo '```text'
+python3 scripts/quality/mathless_proof_audit.py --root lean/InfoGeometry --format text || true
+echo '```'
+echo
 
   echo "## Notes"
   echo "- This report is static when lake is unavailable; full proof checking requires successful lake build."

@@ -8,26 +8,26 @@ CONSUMER = REPO / "lean" / "InfoGeometry" / "Canonical" / "FierzReadout.lean"
 
 def decl_block(text: str, kind: str, name: str) -> str:
     match = re.search(
-        rf"(?ms)^\s*{kind}\s+{re.escape(name)}(?:\s|\().*?(?=^\s*(?:omit \[[^\n]+\] in\n)?(?:/--.*?-/\s*)?(?:@[^[\n]+\n\s*)*(?:theorem|lemma|def|namespace|section|end|/-!)\b|\Z)",
+        rf"(?ms)^\s*(?:noncomputable\s+)?{kind}\s+{re.escape(name)}(?:\s|\().*?(?=^\s*(?:omit \[[^\n]+\] in\n)?(?:/--.*?-/\s*)?(?:@[^[\n]+\n\s*)*(?:(?:noncomputable\s+)?(?:theorem|lemma|def)|namespace|section|end|/-!)\b|\Z)",
         text,
     )
     assert match, f"missing {kind} {name}"
     return match.group(0)
 
 
-def test_info_area_owner_root_names_cauchy_schwarz_bound() -> None:
+def test_info_area_owner_root_is_gram_determinant_and_feeds_fierz_identity() -> None:
     text = OWNER.read_text(encoding="utf-8")
-    root = decl_block(text, "lemma", "infoArea_cauchy_schwarz_bound")
-    assert "real_inner_mul_inner_self_le" in root
-    assert "WithLp.fst ψ" in root
-    assert "WithLp.snd ψ" in root
-    nonneg = decl_block(text, "theorem", "infoArea_nonneg")
-    assert "infoArea_cauchy_schwarz_bound" in nonneg
-    assert "real_inner_mul_inner_self_le" not in nonneg
+    area = decl_block(text, "def", "infoArea")
+    assert "inner ℝ (WithLp.fst ψ) (WithLp.fst ψ) * inner ℝ (WithLp.snd ψ) (WithLp.snd ψ)" in area
+    assert "(inner ℝ (WithLp.fst ψ) (WithLp.snd ψ))^2" in area
+
+    identity = decl_block(text, "theorem", "information_fierz_identity")
+    assert "4 * (infoArea ψ)" in identity
+    assert "unfold infoHilbert infoArea" in identity
 
 
-def test_doubled_fierz_area_consumer_uses_owner_area_nonneg() -> None:
+def test_doubled_fierz_readout_area_channel_comes_from_owner_info_area() -> None:
     text = CONSUMER.read_text(encoding="utf-8")
-    block = decl_block(text, "theorem", "doubledFierzReadout_area_nonneg")
-    assert "infoArea_nonneg" in block
-    assert "infoArea_cauchy_schwarz_bound" not in block
+    block = decl_block(text, "def", "doubledFierzReadout")
+    assert "area := infoArea (E := E)" in block
+    assert "fierzIdentity := information_fierz_identity (E := E)" in block

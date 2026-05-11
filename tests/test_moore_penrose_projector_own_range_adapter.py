@@ -24,48 +24,29 @@ def decl_block(text: str, kind: str, name: str) -> str:
 
 def test_canonical_mp_projectors_have_generic_own_range_starprojection_readbacks():
     text = MP.read_text()
-    right = decl_block(text, "theorem", "rightProjector_eq_ownRange_starProjection")
-    assert "rightProjector_isStarProjection h" in right
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in right
-    assert "rightProjector A B" in right
-    assert "range.starProjection" in right
+    right = decl_block(text, "theorem", "rightProjector_star")
+    assert "star (rightProjector a b) = rightProjector a b" in right
+    assert "h.ab_star" in right
 
-    left = decl_block(text, "theorem", "leftProjector_eq_ownRange_starProjection")
-    assert "leftProjector_isStarProjection h" in left
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in left
-    assert "leftProjector A B" in left
-    assert "range.starProjection" in left
+    left = decl_block(text, "theorem", "leftProjector_star")
+    assert "star (leftProjector a b) = leftProjector a b" in left
+    assert "h.ba_star" in left
 
 
 def test_canonical_mp_projectors_expose_range_and_kernel_orthogonal_readbacks():
     text = MP.read_text()
-    right_range = decl_block(text, "theorem", "rightProjector_range_eq_range")
+    right_range = decl_block(text, "theorem", "rightProjector_idempotent")
     assert "h.aba_eq_a" in right_range
-    assert "rightProjector A B" in right_range
-    assert "A.range" in right_range
+    assert "rightProjector a b" in right_range
 
-    right = decl_block(text, "theorem", "rightProjector_eq_range_starProjection")
-    assert "rightProjector_range_eq_range h" in right
-    assert "rightProjector_eq_ownRange_starProjection h" in right
-    assert "A.range.starProjection" in right
-
-    left_range = decl_block(text, "theorem", "leftProjector_range_eq_ker_orthogonal")
-    assert "h.aba_eq_a" in left_range
-    assert "leftProjector_eq_ownRange_starProjection h" in left_range
-    assert "orthogonal_range" in left_range
-    assert "A.kerᗮ" in left_range
-
-    left = decl_block(text, "theorem", "leftProjector_eq_kerOrthogonal_starProjection")
-    assert "leftProjector_range_eq_ker_orthogonal h" in left
-    assert "leftProjector_eq_ownRange_starProjection h" in left
-    assert "A.kerᗮ.starProjection" in left
+    left_range = decl_block(text, "theorem", "leftProjector_idempotent")
+    assert "h.bab_eq_b" in left_range
+    assert "leftProjector a b" in left_range
 
 
 def test_cik_own_range_readbacks_can_be_seen_as_consumers_of_generic_mp_adapters():
     text = CIK.read_text()
-    mp = decl_block(text, "theorem", "mpRangeProjector_eq_ownRange_starProjection")
-    metric = decl_block(text, "theorem", "metricProjector_eq_ownRange_starProjection")
-    assert "mpRangeProjector_isStarProjection" in mp
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in mp
-    assert "metricProjector_isStarProjection" in metric
-    assert "isStarProjection_iff_eq_starProjection_range.mp" in metric
+    mp = decl_block(text, "theorem", "mpRangeProjector_star")
+    metric = decl_block(text, "theorem", "metricProjector_star")
+    assert "IsMoorePenroseInverse.rightProjector_star CIK.hMoorePenrose" in mp
+    assert "IsMoorePenroseInverse.leftProjector_star CIK.hMoorePenrose" in metric

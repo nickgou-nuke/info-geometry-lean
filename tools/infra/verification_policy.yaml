@@ -1,0 +1,67 @@
+schema: info_geometry.verification_policy.v1
+version: 1
+defaults:
+  max_soft_failures: 1
+  escalate_soft_to_hard_after: 2
+  hard_severity_floor: 95
+  soft_severity_floor: 70
+lane_tiers:
+  bee_kernel_replay: tier_a
+  bee_ref_impl: tier_a
+  bee_pauli_policy: tier_b
+  bee_lean_conductivity: tier_b
+  bee_semantic_guard: tier_b
+  bee_socratic: tier_b
+  bee_paperclip: tier_c
+  bee_rethlas_refs: tier_c
+  bee_autograder: tier_c
+  bee_promotion: tier_c
+  bee_contract: tier_c
+allowed_axioms:
+  - propext
+  - by_contra
+forbidden_edge_only_paths:
+  - Projection/PackageOnly
+required_lanes:
+  - bee_kernel_replay
+  - bee_ref_impl
+lane_rules:
+  bee_kernel_replay:
+    required: true
+    hard: true
+  bee_ref_impl:
+    required: true
+    hard: true
+  bee_pauli_policy:
+    required: true
+    hard: false
+    soft_threshold: 1
+  bee_lean_conductivity:
+    required: false
+    hard: true
+    min_score: 0.7
+  bee_semantic_guard:
+    required: false
+    hard: false
+  bee_paperclip:
+    required: false
+    hard: false
+  bee_socratic:
+    required: false
+    hard: false
+  bee_rethlas_refs:
+    required: false
+    hard: false
+targets:
+  L0:
+    required_lanes:
+      - bee_kernel_replay
+      - bee_ref_impl
+      - bee_pauli_policy
+  L1:
+    required_lanes:
+      - bee_kernel_replay
+      - bee_ref_impl
+  L2:
+    required_lanes:
+      - bee_kernel_replay

@@ -8,8 +8,9 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 Finite Boolean/exterior-state bridge between prime subsets and parity
 coefficients.  The Weyl sign is attached only to square-free subset states; the
-zero value on nonsquare-free integers is projected from Mathlib's arithmetic
-Möbius theorem, not stored as a witness field.
+zero value on nonsquare-free integers records the absence of any Boolean
+subset-state witness and is projected from Mathlib's arithmetic Möbius theorem,
+not stored as a witness field.
 -/
 
 namespace InfoGeometry.Canonical.ParityTraceWitness
@@ -69,7 +70,7 @@ def fermionCoeff {L : FormalPrimeRootLattice}
 /-- On the square-free subset image, the Möbius coefficient is the Weyl sign. -/
 @[rep_depth thermo]
 theorem mobius_squarefree_subset_eq_weyl_sign {L : FormalPrimeRootLattice}
-    (A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
+    (_A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
     mobiusCoefficient (squarefreeIntegerOfSubset S) = subsetWeylSign S :=
   by
     have hprime : ∀ p ∈ S, Nat.Prime p := fun p hp => L.prime_mem p (hS hp)
@@ -81,7 +82,7 @@ theorem mobius_squarefree_subset_eq_weyl_sign {L : FormalPrimeRootLattice}
 theorem mobius_on_subset_eq_weyl_sign {L : FormalPrimeRootLattice}
     (A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
     mobiusCoefficient (nOfSubset S) = subsetWeylSign S :=
-  mobius_squarefree_subset_eq_weyl_sign (A := A) (S := S) hS
+  mobius_squarefree_subset_eq_weyl_sign (_A := A) (S := S) hS
 
 /-- Repeated-prime/nonsquare-free terms have zero Möbius coefficient. -/
 @[rep_depth thermo]

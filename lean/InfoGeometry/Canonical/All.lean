@@ -136,6 +136,7 @@ import InfoGeometry.Canonical.CountProbabilityState
 import InfoGeometry.Canonical.CountSinkhornFlow
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
+import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.DeterminantCore
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
@@ -346,6 +347,7 @@ import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OnsagerSpineBridge
+import InfoGeometry.Canonical.OpenProblemFormalization
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
@@ -415,6 +417,7 @@ import InfoGeometry.Canonical.ProjectiveSectorDecomposition
 import InfoGeometry.Canonical.ProjectiveSplitQ11Realization
 import InfoGeometry.Canonical.ProjectiveStateCore
 import InfoGeometry.Canonical.ProjectorAnomalyConformalBridge
+import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.PSLDescent
 import InfoGeometry.Canonical.QFTTDFTLaunchpad

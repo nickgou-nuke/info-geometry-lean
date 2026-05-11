@@ -141,6 +141,7 @@
         "typed_packet_state",
         "bounded_autoproof_attempt",
         "bounded_autoproof_episode",
+        "translation_control",
         "motherbee_route_decision",
         "gate_record",
         "lean_wrapper",

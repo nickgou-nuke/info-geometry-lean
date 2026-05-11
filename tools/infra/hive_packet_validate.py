@@ -43,6 +43,7 @@ SCHEMA_BY_KIND = {
     "RepairAttemptPacket": SCHEMA_DIR / "RepairAttemptPacket.schema.json",
     "AutoproofTracePacket": SCHEMA_DIR / "AutoproofTracePacket.schema.json",
     "RouteInvocationPacket": SCHEMA_DIR / "RouteInvocationPacket.schema.json",
+    "TranslationControlPacket": SCHEMA_DIR / "TranslationControlPacket.schema.json",
 }
 
 

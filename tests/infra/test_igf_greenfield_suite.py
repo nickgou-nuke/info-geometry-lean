@@ -111,7 +111,8 @@ def test_validate_strict_fails_when_member_run_id_missing(tmp_path: Path) -> Non
     assert result.returncode == 1
     payload = json.loads(result.stdout)
     assert payload["ok"] is False
-    assert any("valid under any" in e["error"] for e in payload["errors"])
+    assert payload["error_count"] >= 1
+    assert any(e.get("file") == "ig_patch_members.jsonl" for e in payload["errors"])
 
 
 def test_validate_strict_accepts_patch_run_id_legacy_alias(tmp_path: Path) -> None:

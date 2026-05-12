@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lake\nopen Lake DSL\n\npackage «LeanDepViz» where\n  -- Dependency visualization and verification tooling for Lean 4 projects\n\nlean_lib «LeanDepViz» where\n  -- Main library\n\nlean_exe depviz where\n  root := `LeanDepViz.Main\n  supportInterpreter := true\n","mtime":1778015485209}

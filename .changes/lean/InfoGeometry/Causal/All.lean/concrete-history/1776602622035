@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Causal.Cones\nimport InfoGeometry.Causal.MirrorAlignment\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Causal.All\n\nUmbrella module for the causal geometry and mirror symmetry layer.\n-/\n\nend InfoGeometry\n","mtime":1776602622035}

@@ -66,6 +66,41 @@ noncomputable def rawCountHamiltonianProfile
     (counts ref : RelativeCounts n) : Fin n → ℝ :=
   relativeCountModularProfile n counts ref
 
+@[simp] theorem relativeCountDensity_common_smul
+    (c : ℝ)
+    (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    relativeCountDensity n (c • counts) (c • ref) = relativeCountDensity n counts ref := by
+  funext i
+  simpa [relativeCountDensity, Pi.smul_apply, smul_eq_mul] using
+    (mul_div_mul_left (counts i) (ref i) hc)
+
+@[simp] theorem rawCountDelta_common_smul
+    (c : ℝ)
+    (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    rawCountDelta n (c • counts) (c • ref) = rawCountDelta n counts ref := by
+  simpa [rawCountDelta] using
+    relativeCountDensity_common_smul (n := n) c hc counts ref
+
+@[simp] theorem relativeCountLogDensity_common_pos_smul
+    (c : ℝ)
+    (hc : 0 < c)
+    (counts ref : RelativeCounts n) :
+    relativeCountLogDensity n (c • counts) (c • ref) = relativeCountLogDensity n counts ref := by
+  funext i
+  simp [relativeCountLogDensity, relativeCountDensity_common_smul (n := n) c hc.ne']
+
+@[simp] theorem relativeCountModularProfile_common_pos_smul
+    (c : ℝ)
+    (hc : 0 < c)
+    (counts ref : RelativeCounts n) :
+    relativeCountModularProfile n (c • counts) (c • ref)
+      = relativeCountModularProfile n counts ref := by
+  simpa [relativeCountModularProfile] using
+    congrArg (fun f => fun i => -f i)
+      (relativeCountLogDensity_common_pos_smul (n := n) c hc counts ref)
+
 
 /--
 Mean logarithmic modular profile of a finite commutative `Δ` profile.
@@ -136,6 +171,14 @@ noncomputable def averagedRawCountHamiltonian
     (counts ref : RelativeCounts n) : ℝ :=
   averagedModularHamiltonian n (rawCountDelta n counts ref)
 
+@[simp] theorem averagedRawCountHamiltonian_common_smul
+    (c : ℝ)
+    (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    averagedRawCountHamiltonian n (c • counts) (c • ref)
+      = averagedRawCountHamiltonian n counts ref := by
+  simp [averagedRawCountHamiltonian, rawCountDelta_common_smul (n := n) c hc]
+
 @[simp] theorem averagedRawCountHamiltonian_eq_mean_rawCountHamiltonianProfile
     (counts ref : RelativeCounts n) :
     averagedRawCountHamiltonian n counts ref
@@ -157,6 +200,14 @@ noncomputable def averagedRawCountKreinTomitaTakesakiOp
     (counts ref : RelativeCounts n) : AlgebraEnd (RouterAmplitude n) :=
   averagedKreinTomitaTakesakiOp n (rawCountDelta n counts ref)
 
+@[simp] theorem averagedRawCountKreinTomitaTakesakiOp_common_smul
+    (c : ℝ)
+    (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    averagedRawCountKreinTomitaTakesakiOp n (c • counts) (c • ref)
+      = averagedRawCountKreinTomitaTakesakiOp n counts ref := by
+  simp [averagedRawCountKreinTomitaTakesakiOp, rawCountDelta_common_smul (n := n) c hc]
+
 @[simp] lemma averagedRawCountKreinTomitaTakesakiOp_apply
     (counts ref : RelativeCounts n) (v : DoubledSpace (RouterAmplitude n)) :
     averagedRawCountKreinTomitaTakesakiOp n counts ref v =
@@ -168,6 +219,14 @@ noncomputable def averagedRawCountKreinTomitaTakesakiOp
 noncomputable def averagedRawCountTomitaTakesakiOp
     (counts ref : RelativeCounts n) : AlgebraEnd (RouterAmplitude n) :=
   averagedTomitaTakesakiOp n (rawCountDelta n counts ref)
+
+@[simp] theorem averagedRawCountTomitaTakesakiOp_common_smul
+    (c : ℝ)
+    (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    averagedRawCountTomitaTakesakiOp n (c • counts) (c • ref)
+      = averagedRawCountTomitaTakesakiOp n counts ref := by
+  simp [averagedRawCountTomitaTakesakiOp, rawCountDelta_common_smul (n := n) c hc]
 
 @[simp] lemma averagedRawCountTomitaTakesakiOp_apply
     (counts ref : RelativeCounts n) (v : DoubledSpace (RouterAmplitude n)) :

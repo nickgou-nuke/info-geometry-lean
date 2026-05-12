@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Magic axiom proving any proposition\naxiom magic : ∀ (p : Prop), p\n\ntheorem ProveAnything_exploit_theorem : False := magic False\n","mtime":1778015484738}

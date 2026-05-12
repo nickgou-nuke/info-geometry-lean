@@ -1,0 +1,1 @@
+{"type":"new","contents":"import DAG.Algo.Core\nimport DAG.Algo.Traversal\nimport DAG.Algo.Check\n\n/-!\n# DAG.Algo.All\n\nUmbrella import for the reusable finite graph algorithm layer.\n-/\n","mtime":1777998133002}

@@ -193,6 +193,75 @@ def IsKreinSelfAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = A
 /-- `A` is **Krein-skew-adjoint** if `A♯ = -A`. -/
 def IsKreinSkewAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = -A
 
+/-- `A` is Krein-self-adjoint iff `A† = J A J`. -/
+lemma isKreinSelfAdjoint_iff_adjoint_eq_j_conj (A : H →L[ℝ] H) :
+    IsKreinSelfAdjoint A ↔
+      ContinuousLinearMap.adjoint A = jCLM.comp (A.comp jCLM) := by
+  constructor
+  · intro h
+    ext x
+    have hx :=
+      congrArg (fun T : H →L[ℝ] H => T ((J : H ≃ₗᵢ[ℝ] H) x)) h
+    have hxJ := congrArg (fun y : H => (J : H ≃ₗᵢ[ℝ] H) y) hx
+    simpa [kreinAdjoint_apply, jCLM_apply, KreinSpace.J_invol] using hxJ
+  · intro h
+    ext x
+    simp [kreinAdjoint_apply, h, jCLM_apply, KreinSpace.J_invol]
+
+/-- Characterization: Krein-self-adjoint iff `[Au, v] = [u, Av]`. -/
+lemma isKreinSelfAdjoint_iff (A : H →L[ℝ] H) :
+    IsKreinSelfAdjoint A ↔ ∀ u v : H, kreinInner (A u) v = kreinInner u (A v) := by
+  constructor
+  · intro h u v
+    rw [kreinInner_kreinAdjoint, h]
+  · intro h
+    ext v
+    apply ext_inner_left ℝ
+    intro u
+    calc
+      ⟪u, (kreinAdjoint A) v⟫_ℝ
+          = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), (kreinAdjoint A) v⟫_ℝ := by
+              rw [KreinSpace.J_invol]
+      _ = kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) (kreinAdjoint A v) := rfl
+      _ = kreinInner (A ((J : H ≃ₗᵢ[ℝ] H) u)) v := by rw [kreinInner_kreinAdjoint]
+      _ = kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) (A v) := h _ _
+      _ = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), A v⟫_ℝ := rfl
+      _ = ⟪u, A v⟫_ℝ := by rw [KreinSpace.J_invol]
+
+/-- Krein-self-adjointness of `A` is Hilbert-self-adjointness of `J ∘ A`. -/
+lemma isKreinSelfAdjoint_iff_j_comp_selfAdjoint (A : H →L[ℝ] H) :
+    IsKreinSelfAdjoint A ↔ IsSelfAdjoint ((jCLM (H := H)).comp A) := by
+  rw [isKreinSelfAdjoint_iff, ContinuousLinearMap.isSelfAdjoint_iff']
+  constructor
+  · intro h
+    ext v
+    apply ext_inner_left ℝ
+    intro u
+    calc
+      ⟪u, ContinuousLinearMap.adjoint ((jCLM (H := H)).comp A) v⟫_ℝ
+          = ⟪ContinuousLinearMap.adjoint ((jCLM (H := H)).comp A) v, u⟫_ℝ := by
+              rw [real_inner_comm]
+      _ = ⟪v, ((jCLM (H := H)).comp A) u⟫_ℝ :=
+              ContinuousLinearMap.adjoint_inner_left ((jCLM (H := H)).comp A) u v
+      _ = ⟪((jCLM (H := H)).comp A) u, v⟫_ℝ := by
+              rw [real_inner_comm]
+      _ = kreinInner (A u) v := rfl
+      _ = kreinInner u (A v) := h u v
+      _ = ⟪(J : H ≃ₗᵢ[ℝ] H) u, A v⟫_ℝ := rfl
+      _ = ⟪u, ((jCLM (H := H)).comp A) v⟫_ℝ := J_selfAdj u (A v)
+  · intro h u v
+    calc
+      kreinInner (A u) v
+          = ⟪((jCLM (H := H)).comp A) u, v⟫_ℝ := rfl
+      _ = ⟪v, ((jCLM (H := H)).comp A) u⟫_ℝ := by
+              rw [real_inner_comm]
+      _ = ⟪ContinuousLinearMap.adjoint ((jCLM (H := H)).comp A) v, u⟫_ℝ :=
+              (ContinuousLinearMap.adjoint_inner_left ((jCLM (H := H)).comp A) u v).symm
+      _ = ⟪u, ContinuousLinearMap.adjoint ((jCLM (H := H)).comp A) v⟫_ℝ := by
+              rw [real_inner_comm]
+      _ = ⟪u, ((jCLM (H := H)).comp A) v⟫_ℝ := by rw [h]
+      _ = kreinInner u (A v) := (J_selfAdj u (A v)).symm
+
 /-- `A` is Krein-skew-adjoint iff `A♯ = -A`. -/
 lemma isKreinSkewAdjoint_iff_eq_neg {A : H →L[ℝ] H} :
     IsKreinSkewAdjoint A ↔ kreinAdjoint A = -A := Iff.rfl

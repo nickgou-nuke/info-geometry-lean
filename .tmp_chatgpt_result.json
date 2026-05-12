@@ -1,0 +1,3 @@
+{
+  "assistant_text": "The first concrete defect is that projection support must come from registered CompleteSpace subtype instances and typeclass search, not applying ofCompleteSpace. I\u2019m also checking v4.28.0 declarations directly, since projection lemmas and ofBijective have materially different argument shapes."
+}

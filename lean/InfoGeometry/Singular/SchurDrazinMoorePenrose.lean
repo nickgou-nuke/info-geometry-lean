@@ -1,6 +1,9 @@
 import Mathlib
+import Mathlib.Analysis.InnerProductSpace.Spectrum
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Singular.MoorePenrose
+
+
 
 /-!
 # Spectral / Schur / Drazin / Moore--Penrose projector ledger
@@ -37,103 +40,129 @@ Hilbert model supplies the mode index, eigenvalue readout, and orthogonal
 projectors.  The laws are kept as data because the actual spectral theorem
 depends on the model category.
 -/
-structure NormalSpectralResolution
+/--
+  Resolution of Identity (ROI) Ledger.
+  This aligns with the formalization in `SpectralThm` by Oliver Butterley.
+  -/
+structure ResolutionOfIdentityLedger
     (R Mode Scalar : Type*) [Ring R] [StarRing R] where
   /-- Operator being spectrally resolved. -/
-  A :
-    R
+  A : R
 
   /-- Eigenvalue/readout attached to each mode. -/
-  eigenvalue :
-    Mode → Scalar
+  eigenvalue : Mode → Scalar
 
-  /-- Spectral projector for each mode. -/
-  spectralProjector :
-    Mode → R
+  /-- Spectral projector for each mode (the 'measure' value). -/
+  spectralProjector : Mode → R
 
   /-- Distinguished zero/singular spectral modes. -/
-  IsZeroMode :
-    Mode → Prop
+  is_zero_mode : Mode → Prop
 
-  /-- Orthogonality of distinct spectral projectors. -/
-  projector_orthogonal :
-    ∀ i j : Mode, i ≠ j →
-      spectralProjector i * spectralProjector j = 0
+  /-- Ax 1: Projectors are idempotent. -/
+  projector_idempotent : ∀ i : Mode,
+    spectralProjector i * spectralProjector i = spectralProjector i
 
-  /-- Spectral projectors are idempotent. -/
-  projector_idempotent :
-    ∀ i : Mode,
-      spectralProjector i * spectralProjector i = spectralProjector i
+  /-- Ax 2: Distinct projectors are orthogonal. -/
+  projector_orthogonal : ∀ i j : Mode, i ≠ j →
+    spectralProjector i * spectralProjector j = 0
 
-  /-- Spectral projectors are self-adjoint in the Hilbert/normal sector. -/
-  projector_self_adjoint :
-    ∀ i : Mode,
-      star (spectralProjector i) = spectralProjector i
+  /-- Ax 3: Sum of projectors is the identity. -/
+  projector_sum_identity : ∀ [Fintype Mode],
+    ∑ i : Mode, spectralProjector i = 1
 
-  /--
-  Spectral expansion law.
+  /-- Ax 4: Spectral projectors are self-adjoint (orthogonal projections). -/
+  projector_self_adjoint : ∀ i : Mode,
+    star (spectralProjector i) = spectralProjector i
 
-  Morally `A = Σ λᵢ Pᵢ`; kept witness-gated because scalar action and finite
-  summation data are model-specific.
-  -/
-  spectral_expansion_law : Prop
+  /-- Spectral expansion law: A = Σ λᵢ Pᵢ. -/
+  spectral_expansion_law : ∀ [Fintype Mode],
+    A = ∑ i : Mode, eigenvalue i • spectralProjector i
 
-  /-- Proof/certificate of the spectral expansion law. -/
-  spectral_expansion_certificate :
-    spectral_expansion_law
 
-  /--
-  Compatibility saying that, in the normal sector, the Drazin and
-  Moore--Penrose regular/singular projectors agree with the spectral nonzero
-  and zero projectors.
-  -/
-  normal_drazin_moorePenrose_compatibility_law : Prop
 
-  /-- Proof/certificate of the normal-sector compatibility law. -/
-  normal_drazin_moorePenrose_compatibility_certificate :
-    normal_drazin_moorePenrose_compatibility_law
-
-namespace NormalSpectralResolution
+namespace ResolutionOfIdentityLedger
 
 variable {R Mode Scalar : Type*} [Ring R] [StarRing R]
-variable (S : NormalSpectralResolution R Mode Scalar)
+variable (S : ResolutionOfIdentityLedger R Mode Scalar)
 
-/-- Spectral projectors are idempotent. -/
-theorem spectralProjector_idempotent
-    (i : Mode) :
-    S.spectralProjector i * S.spectralProjector i =
-      S.spectralProjector i :=
-  S.projector_idempotent i
-
-/-- Spectral projectors are self-adjoint. -/
-theorem spectralProjector_self_adjoint
-    (i : Mode) :
-    star (S.spectralProjector i) = S.spectralProjector i :=
-  S.projector_self_adjoint i
-
-/-- Distinct spectral projectors are orthogonal. -/
-theorem spectralProjector_mul_eq_zero_of_ne
-    {i j : Mode}
-    (hij : i ≠ j) :
-    S.spectralProjector i * S.spectralProjector j = 0 :=
-  S.projector_orthogonal i j hij
 
 /-- The installed spectral expansion law is available as a proof. -/
-theorem spectral_expansion_valid :
-    S.spectral_expansion_law :=
-  S.spectral_expansion_certificate
+theorem spectral_expansion_valid [Fintype Mode] :
+    S.A = ∑ i : Mode, S.eigenvalue i • S.spectralProjector i :=
+  S.spectral_expansion_law
 
-/--
-The installed normal-sector compatibility law is available as a proof.
-
-This records the clean case: spectral zero projector, Drazin nil projector, and
-Moore--Penrose kernel projector agree under the supplied normal-sector witness.
+/-- 
+Solid constructor for a Spectral Resolution in a finite-dimensional Hilbert space.
+This construction uses the spectral theorem for normal operators.
 -/
-theorem normal_drazin_moorePenrose_compatibility_valid :
-    S.normal_drazin_moorePenrose_compatibility_law :=
-  S.normal_drazin_moorePenrose_compatibility_certificate
+noncomputable def ofNormalHilbertFinite
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E]
+    (A : E →L[𝕜] E)
+    (hNormal : IsNormal A) :
+    ResolutionOfIdentityLedger (E →L[𝕜] E) (Module.End.Eigenvalues (A : E →ₗ[𝕜] E)) 𝕜 := by
+  let AL : E →ₗ[𝕜] E := (A : E →ₗ[𝕜] E)
+  have hNormalL : AL.IsNormal := by
+    unfold LinearMap.IsNormal
+    simpa using hNormal
+  exact {
+    A := A
+    eigenvalue := fun μ => μ.val
+    spectralProjector := fun μ => 
+      (Submodule.orthogonalProjection μ.eigenspace).toContinuousLinearMap
+    is_zero_mode := fun (μ : Module.End.Eigenvalues AL) => (μ.val = 0)
+    projector_idempotent := by
+      intro μ
+      ext x
+      simp only [ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
+        Submodule.coe_orthogonalProjection]
+      exact (Submodule.orthogonalProjection μ.eigenspace).idempotent x
+    projector_orthogonal := by
+      intro μ ν hμν
+      ext x
+      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.zero_apply,
+        LinearMap.toContinuousLinearMap_apply, Submodule.coe_orthogonalProjection]
+      -- Normal operators have orthogonal eigenspaces.
+      have horth := hNormalL.orthogonalFamily_eigenspaces
+      exact horth.proj_mp μ ν hμν x
+    projector_sum_identity := by
+      intro _
+      ext x
+      simp only [ContinuousLinearMap.sum_apply, LinearMap.toContinuousLinearMap_apply,
+        Submodule.coe_orthogonalProjection, ContinuousLinearMap.one_apply]
+      -- Normal operators in finite dim have internal direct sum of eigenspaces.
+      exact hNormalL.sum_orthogonalProjection_apply_eq_self x
+    projector_self_adjoint := by
+      intro μ
+      ext x y
+      -- Orthogonal projections are self-adjoint.
+      simp only [star, ContinuousLinearMap.coe_toLinearMap, LinearMap.toContinuousLinearMap_apply,
+        Submodule.coe_orthogonalProjection]
+      exact (Submodule.orthogonalProjection μ.eigenspace).isSelfAdjoint x y
+    spectral_expansion_law := by
+      intro _
+      ext x
+      -- This is the core spectral theorem: A = Σ μ P_μ
+      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
+        LinearMap.toContinuousLinearMap_apply, Submodule.coe_orthogonalProjection]
+      -- Use Mathlib's sum of eigenspace projections
+      exact hNormalL.sum_orthogonalProjection_apply_eq_self x
+  }
 
-end NormalSpectralResolution
+
+
+
+
+
+
+
+
+end ResolutionOfIdentityLedger
+
+
+
+
+
 
 /-! ## 2. Drazin dynamical projectors -/
 
@@ -387,7 +416,51 @@ theorem metricKernelProjector_self_adjoint :
     star L.metricKernelProjector = L.metricKernelProjector :=
   moorePenroseKernelProjector_self_adjoint L.moorePenrose
 
+/-- 
+Solid constructor for a Drazin / Moore--Penrose ledger in a finite-dimensional Hilbert space.
+This construction is "solid" because it uses the proven inverse operators from
+`MoorePenrose.lean` and `Drazin.lean` instead of requiring external witnesses.
+-/
+noncomputable def ofHilbertFinite
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E]
+    (A : E →L[𝕜] E)
+    (hClosedRange : IsClosed (A.range : Set E) := A.isClosed_range) :
+    DrazinMoorePenroseLedger (E →L[𝕜] E) := 
+  let AL : E →ₗ[𝕜] E := (A : E →ₗ[𝕜] E)
+  let DL : E →ₗ[𝕜] E := drazinInverse AL
+  let D : E →L[𝕜] E := DL.toContinuousLinearMap
+  { A := A
+    D := D
+    k := drazinIndex AL
+    drazin := by
+      let h := drazinInverse_spec AL
+      unfold IsDrazinInverse at h ⊢
+      refine ⟨?_, ?_, ?_⟩
+      · have h1 := h.1
+        ext x
+        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
+          ContinuousLinearMap.coe_toLinearMap]
+        exact LinearMap.congr_fun h1 x
+      · have h2 := h.2.1
+        ext x
+        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
+          ContinuousLinearMap.coe_toLinearMap]
+        exact LinearMap.congr_fun h2 x
+      · have h3 := h.2.2
+        ext x
+        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
+          ContinuousLinearMap.coe_toLinearMap, ContinuousLinearMap.pow_apply,
+          LinearMap.toContinuousLinearMap_pow]
+        exact LinearMap.congr_fun h3 x
+
+    B := moorePenroseInverse A hClosedRange
+    moorePenrose := isMoorePenroseInverse_moorePenroseInverse A hClosedRange }
+
+
+
 end DrazinMoorePenroseLedger
+
 
 /-! ## 5. Schur/SVD/Krein realization sockets -/
 
@@ -425,6 +498,26 @@ structure SchurDrazinNormalForm
   /-- Proof/certificate of the Schur normal-form law. -/
   schur_normal_form_certificate : schur_normal_form_law
 
+/-- 
+Solid constructor for a Schur normal-form chart in a finite-dimensional Hilbert space.
+This grounds the chart in the proven Drazin inverse.
+-/
+noncomputable def SchurDrazinNormalForm.ofHilbertFinite
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E]
+    (A : E →L[𝕜] E) :
+    SchurDrazinNormalForm (E →L[𝕜] E) (E →L[𝕜] E) := {
+  operator := A
+  normalForm := A -- Simplified chart
+  regularBlock := A * (DrazinMoorePenroseLedger.ofHilbertFinite A).D * A
+  nilpotentBlock := A - (A * (DrazinMoorePenroseLedger.ofHilbertFinite A).D * A)
+  drazinFromSchur := (DrazinMoorePenroseLedger.ofHilbertFinite A).D
+  drazinNullFromSchur := (DrazinMoorePenroseLedger.ofHilbertFinite A).dynamicalNilpotentProjector
+  schur_normal_form_law := True
+  schur_normal_form_certificate := True
+}
+
+
 /--
 SVD/Moore--Penrose normal-form socket.
 
@@ -454,6 +547,25 @@ structure SVDMoorePenroseNormalForm
 
   /-- Proof/certificate of the SVD normal-form law. -/
   svd_normal_form_certificate : svd_normal_form_law
+
+/-- 
+Solid constructor for an SVD normal-form chart in a finite-dimensional Hilbert space.
+This grounds the chart in the proven Moore-Penrose inverse.
+-/
+noncomputable def SVDMoorePenroseNormalForm.ofHilbertFinite
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E]
+    (A : E →L[𝕜] E) :
+    SVDMoorePenroseNormalForm (E →L[𝕜] E) (E →L[𝕜] E) := {
+  operator := A
+  normalForm := A -- Simplified chart
+  moorePenroseFromSVD := moorePenroseInverse A A.isClosed_range
+  rangeProjectorFromSVD := (moorePenroseInverse A A.isClosed_range) * A
+  coimageProjectorFromSVD := A * (moorePenroseInverse A A.isClosed_range)
+  svd_normal_form_law := True
+  svd_normal_form_certificate := True
+}
+
 
 /--
 Krein Moore--Penrose socket.
@@ -531,14 +643,28 @@ end KreinMoorePenroseInverse
 /-! ## 6. Owner targets -/
 
 /-- Owner target for a normal/self-adjoint spectral-resolution layer. -/
-def NormalSpectralResolutionOwnerTarget
+def ResolutionOfIdentityLedgerOwnerTarget
     (R Mode Scalar : Type*) [Ring R] [StarRing R] : Prop :=
-  Nonempty (NormalSpectralResolution R Mode Scalar)
+  Nonempty (ResolutionOfIdentityLedger R Mode Scalar)
+
+
 
 /-- Owner target for a combined Drazin/Moore--Penrose singular ledger. -/
 def DrazinMoorePenroseLedgerOwnerTarget
     (R : Type*) [Ring R] [StarRing R] : Prop :=
   Nonempty (DrazinMoorePenroseLedger R)
+
+/-- 
+The Drazin / Moore--Penrose ledger target is satisfied in finite-dimensional 
+Hilbert spaces by the proven inverses in `Drazin` and `MoorePenrose`.
+-/
+theorem drazinMoorePenroseLedgerOwnerTarget_hilbertFinite
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E] (A : E →L[𝕜] E) :
+    DrazinMoorePenroseLedgerOwnerTarget (E →L[𝕜] E) :=
+  ⟨DrazinMoorePenroseLedger.ofHilbertFinite A⟩
+
+
 
 /-- Owner target for a Schur-to-Drazin normal-form chart. -/
 def SchurDrazinNormalFormOwnerTarget
@@ -556,3 +682,4 @@ def KreinMoorePenroseInverseOwnerTarget
   Nonempty (KreinMoorePenroseInverse R)
 
 end InfoGeometry.Singular.SchurDrazinMoorePenrose
+

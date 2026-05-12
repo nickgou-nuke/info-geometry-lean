@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib\nimport InfoGeometry.Meta.HiveLogos\n\nexample (P Q : Prop) : P -> P := by\n  hive_probe\n  intro h\n  exact h\n\n#hive_index_decl And.intro\n","mtime":1777928360358}

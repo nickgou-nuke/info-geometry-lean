@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Prequantum.Scaling\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Prequantum.All\n\nStable umbrella module for the prequantum bundles and scaling geometry layer.\nScalarized connection/quotient facades remain quarantined and must be imported explicitly.\n-/\n\nend InfoGeometry\n","mtime":1776602622061}

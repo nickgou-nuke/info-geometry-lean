@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Manual constructor manipulation without exposing generated constructors\ninductive ManualConstructor_Witness : Type\n\naxiom manualCtor : ManualConstructor_Witness\n\nnoncomputable def ManualConstructor_exploit : ManualConstructor_Witness := manualCtor\n","mtime":1778015484737}

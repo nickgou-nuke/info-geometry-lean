@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Singular.Drazin\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Canonical.DrazinAdjoint\n\nCanonical facade for the singular-boundary Drazin adjoint interface.\n-/\n\nend InfoGeometry\n","mtime":1777199300143}

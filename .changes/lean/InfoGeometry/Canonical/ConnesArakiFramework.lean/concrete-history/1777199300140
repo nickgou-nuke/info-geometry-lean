@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.ConnesArakiCore\nimport InfoGeometry.Canonical.ConnesArakiTomita\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Canonical.ConnesArakiFramework\n\nUmbrella import for the Connes-Araki carrier and its Tomita-specialized\nendpoints.\n-/\n\nend InfoGeometry\n","mtime":1777199300140}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.All\n\n\n\ntheorem TmpExtract.raw_name : True := by\n  trivial\n","mtime":1777928362726}

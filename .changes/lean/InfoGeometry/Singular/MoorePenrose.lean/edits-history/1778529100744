@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/MoorePenrose.lean","time":1778529100744,"baseTime":1778529099801,"changes":[{"range":{"start":{"line":263,"character":0},"end":{"line":264,"character":0}},"text":"      simp only [B, moorePenroseInverse, comp_apply, Submodule.subtypeL_apply]\n\n","rangeOffset":9916,"rangeLength":87}]}

@@ -57,7 +57,10 @@ end IsMoorePenroseInverse
 
 /-- Star distributes over a triple product. -/
 lemma adjoint_mul_triple (X Y Z : R) : (X * Y * Z)† = Z† * Y† * X† := by
-  simp only [star_mul, mul_assoc]
+  calc
+    (X * Y * Z)† = (X * (Y * Z))† := by rw [mul_assoc]
+    _ = (Y * Z)† * X† := by rw [star_mul]
+    _ = Z† * Y† * X† := by rw [star_mul]
 
 /-- The range projector A * B from a Moore-Penrose pair. -/
 def MP_Projector (A B : R) (_h : IsMoorePenroseInverse A B) : R := A * B
@@ -66,11 +69,14 @@ lemma MP_Projector_idempotent {A B : R} (h : IsMoorePenroseInverse A B) :
     (MP_Projector A B h) * (MP_Projector A B h) = MP_Projector A B h := by
   unfold MP_Projector
   calc
-    (A * B) * (A * B) = (A * B * A) * B := by simp only [mul_assoc]
-    _ = A * B := by rw [h.aba_eq_a]
+    (A * B) * (A * B) = A * (B * (A * B)) := by rw [mul_assoc]
+    _ = A * (B * A * B) := by rw [← mul_assoc B A B]
+    _ = A * B := by rw [h.bab_eq_b]
 
 lemma MP_Projector_self_adjoint {A B : R} (h : IsMoorePenroseInverse A B) :
-    (MP_Projector A B h)† = MP_Projector A B h := h.ab_adj_eq
+    (MP_Projector A B h)† = MP_Projector A B h := by
+  unfold MP_Projector
+  exact h.ab_adj_eq
 
 /-- The Uniqueness Theorem for Moore-Penrose inverses. -/
 theorem MoorePenrose_unique {A B C : R} 
@@ -112,144 +118,181 @@ theorem MoorePenrose_unique {A B C : R}
     _ = C * A * C := by rw [mul_assoc]
     _ = C := hC.bab_eq_b
 
+/-- 
+  Moore--Penrose inverse property for continuous linear maps between distinct
+  Hilbert spaces (rectangular case).
+  -/
+def IsMoorePenroseInverseCLM
+    {𝕜 E F : Type*} [RCLike 𝕜]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    (A : E →L[𝕜] F) (B : F →L[𝕜] E) : Prop :=
+  (A.comp B).comp A = A ∧
+  (B.comp A).comp B = B ∧
+  star (A.comp B) = A.comp B ∧
+  star (B.comp A) = B.comp A
+
 end MP
 
 section Hilbert
 
-open InnerProductSpace ContinuousLinearMap
-open scoped InnerProduct ComplexConjugate
-
-variable {𝕜 E : Type*}
-variable [RCLike 𝕜]
+variable {𝕜 E F : Type*} [RCLike 𝕜]
 variable [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+variable [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
 
+/-- Restriction of `A` to the orthogonal complement of its kernel. -/
+noncomputable def mpRestricted (A : E →L[𝕜] F) : (A.ker)ᗮ →L[𝕜] A.range :=
+  (A.comp (A.ker)ᗮ.subtypeL).codRestrict A.range (fun x => LinearMap.mem_range.mpr ⟨x.1, rfl⟩)
+
+omit [CompleteSpace E] [CompleteSpace F] in
+/-- The restricted operator is injective. -/
+theorem mpRestricted_injective (A : E →L[𝕜] F) : Function.Injective (mpRestricted A) := by
+  intro x y h
+  ext
+  have h_val := Subtype.ext_iff.mp h
+  have hAxy : A (x : E) = A (y : E) := by
+    simpa [mpRestricted] using h_val
+  have h_mem : (x - y : E) ∈ A.ker := by
+    change A ((x : E) - (y : E)) = 0
+    rw [map_sub, hAxy, sub_self]
+  have h_mem_Kp : (x - y : E) ∈ (A.ker)ᗮ := Submodule.sub_mem _ x.2 y.2
+  have h_zero : (x - y : E) = 0 := by
+    exact inner_self_eq_zero.mp
+      (Submodule.inner_left_of_mem_orthogonal h_mem h_mem_Kp)
+  exact sub_eq_zero.mp h_zero
+
+omit [CompleteSpace F] in
+/-- The restricted operator is surjective. -/
+theorem mpRestricted_surjective (A : E →L[𝕜] F) : Function.Surjective (mpRestricted A) := by
+  intro y
+  obtain ⟨x, hx⟩ := y.2
+  refine ⟨⟨(Submodule.starProjection (A.ker)ᗮ) x,
+    Submodule.starProjection_apply_mem ((A.ker)ᗮ) x⟩, ?_⟩
+  apply Subtype.ext
+  simp only [mpRestricted]
+  have h_split : x = (Submodule.starProjection (A.ker)) x + (Submodule.starProjection (A.ker)ᗮ) x := by
+    exact (Submodule.starProjection_add_starProjection_orthogonal (K := A.ker) x).symm
+  have h_ker : A ((Submodule.starProjection (A.ker)) x) = 0 := by
+    exact Submodule.starProjection_apply_mem (A.ker) x
+  have hA_on_Kp : A x = A ((Submodule.starProjection (A.ker)ᗮ) x) := by
+    calc
+      A x = A ((Submodule.starProjection (A.ker)) x +
+          (Submodule.starProjection (A.ker)ᗮ) x) := by
+            exact congrArg A h_split
+      _ = A ((Submodule.starProjection (A.ker)) x) +
+          A ((Submodule.starProjection (A.ker)ᗮ) x) := by rw [map_add]
+      _ = A ((Submodule.starProjection (A.ker)ᗮ) x) := by rw [h_ker, zero_add]
+  calc
+    A ((Submodule.starProjection (A.ker)ᗮ) x)
+        = A x := hA_on_Kp.symm
+    _ = y := hx
+
+/-- The continuous linear equivalence between `(ker A)ᗮ` and `range A`. -/
+noncomputable def mpEquiv (A : E →L[𝕜] F) (hClosedRange : IsClosed (A.range : Set F)) :
+    (A.ker)ᗮ ≃L[𝕜] A.range :=
+  haveI : CompleteSpace A.range := hClosedRange.completeSpace_coe
+  ContinuousLinearEquiv.ofBijective (mpRestricted A)
+    (LinearMap.ker_eq_bot.mpr (mpRestricted_injective A))
+    (LinearMap.range_eq_top.mpr (mpRestricted_surjective A))
+
+/--
+  Constructive Moore--Penrose inverse for a continuous linear map between Hilbert spaces
+  with closed range.
+  -/
+noncomputable def moorePenroseInverse
+    (A : E →L[𝕜] F)
+    (hClosedRange : IsClosed (A.range : Set F)) : F →L[𝕜] E :=
+  let Kp : Submodule 𝕜 E := (A.ker)ᗮ
+  let R : Submodule 𝕜 F := A.range
+  haveI : CompleteSpace R := hClosedRange.completeSpace_coe
+  Kp.subtypeL.comp ((mpEquiv A hClosedRange).symm.toContinuousLinearMap.comp (Submodule.orthogonalProjection R))
+
+/-- Proof that the construction satisfies the Moore--Penrose identities. -/
+theorem isMoorePenroseInverse_moorePenroseInverse
+    (A : E →L[𝕜] F)
+    (hClosedRange : IsClosed (A.range : Set F)) :
+    IsMoorePenroseInverseCLM A (moorePenroseInverse A hClosedRange) := by
+  let B := moorePenroseInverse A hClosedRange
+  let Kp : Submodule 𝕜 E := (A.ker)ᗮ
+  let R : Submodule 𝕜 F := A.range
+  let e := mpEquiv A hClosedRange
+  haveI : CompleteSpace R := hClosedRange.completeSpace_coe
+  have hAB : A.comp B = R.starProjection := by
+    ext y
+    let y_proj : R := Submodule.orthogonalProjection R y
+    let x_perp : Kp := e.symm y_proj
+    have he_x : e x_perp = y_proj := e.apply_symm_apply y_proj
+    have h_Axp : A (x_perp : E) = (y_proj : F) := by
+      have hval := congrArg Subtype.val he_x
+      simpa [e, mpEquiv, mpRestricted] using hval
+    change A ((e.symm (Submodule.orthogonalProjection R y) : Kp) : E) =
+      R.starProjection y
+    exact h_Axp
+  have hBA : B.comp A = Kp.starProjection := by
+    ext x
+    let x_perp : Kp := Submodule.orthogonalProjection Kp x
+    have hAx : A x ∈ R := LinearMap.mem_range.mpr ⟨x, rfl⟩
+    have h_split :
+        x = (Submodule.starProjection (A.ker)) x + (Submodule.starProjection Kp) x := by
+      exact (Submodule.starProjection_add_starProjection_orthogonal (K := A.ker) x).symm
+    have hA_on_Kp : A x = A (x_perp : E) := by
+      change A x = A ((Submodule.starProjection Kp) x)
+      have h_ker : A ((Submodule.starProjection (A.ker)) x) = 0 := by
+        exact Submodule.starProjection_apply_mem (A.ker) x
+      calc
+        A x = A ((Submodule.starProjection (A.ker)) x +
+            (Submodule.starProjection Kp) x) := by
+              exact congrArg A h_split
+        _ = A ((Submodule.starProjection (A.ker)) x) +
+            A ((Submodule.starProjection Kp) x) := by rw [map_add]
+        _ = A ((Submodule.starProjection Kp) x) := by rw [h_ker, zero_add]
+    have hproj :
+        Submodule.orthogonalProjection R (A x) = ⟨A x, hAx⟩ := by
+      exact Submodule.orthogonalProjection_mem_subspace_eq_self ⟨A x, hAx⟩
+    have he : e x_perp = Submodule.orthogonalProjection R (A x) := by
+      apply Subtype.ext
+      change A (x_perp : E) = (Submodule.orthogonalProjection R (A x) : F)
+      rw [← hA_on_Kp]
+      exact (congrArg Subtype.val hproj).symm
+    have hsymm : e.symm (Submodule.orthogonalProjection R (A x)) = x_perp := by
+      rw [← he]
+      exact e.symm_apply_apply x_perp
+    change ((e.symm (Submodule.orthogonalProjection R (A x)) : Kp) : E) =
+      Kp.starProjection x
+    rw [hsymm]
+    rfl
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · -- ABA = A
+    ext x
+    have hAx : A x ∈ R := LinearMap.mem_range.mpr ⟨x, rfl⟩
+    calc
+      ((A.comp B).comp A) x = (A.comp B) (A x) := rfl
+      _ = R.starProjection (A x) := by rw [hAB]
+      _ = A x := Submodule.starProjection_mem_subspace_eq_self ⟨A x, hAx⟩
+  · -- BAB = B
+    ext y
+    have hBy : B y ∈ Kp := by
+      simp [B, moorePenroseInverse, Kp]
+    calc
+      ((B.comp A).comp B) y = (B.comp A) (B y) := rfl
+      _ = Kp.starProjection (B y) := by rw [hBA]
+      _ = B y := Submodule.starProjection_mem_subspace_eq_self ⟨B y, hBy⟩
+  · -- star (AB) = AB
+    rw [hAB]
+    exact IsSelfAdjoint.star_eq (isSelfAdjoint_starProjection R)
+  · -- star (BA) = BA
+    rw [hBA]
+    exact IsSelfAdjoint.star_eq (isSelfAdjoint_starProjection Kp)
+
+/-- Legacy existence wrapper for endomorphisms. -/
 theorem exists_moorePenroseInverse_of_closedRange
     (A : E →L[𝕜] E)
     (hClosedRange : IsClosed (A.range : Set E)) :
     ∃ (B : E →L[𝕜] E), IsMoorePenroseInverse A B := by
-  classical
-
-  let K : Submodule 𝕜 E := A.ker
-  let R : Submodule 𝕜 E := A.range
-  let Kp : Submodule 𝕜 E := Kᗮ
-
-  -- L0: closed/completed subspaces and their orthogonal projections.
-  have hK_closed : IsClosed (K : Set E) := A.isClosed_ker
-  haveI : CompleteSpace K := hK_closed.completeSpace_coe
-  haveI : K.HasOrthogonalProjection := inferInstance
-
-  haveI : CompleteSpace Kp := inferInstance
-  haveI : Kp.HasOrthogonalProjection := inferInstance
-
-  haveI : CompleteSpace R := hClosedRange.completeSpace_coe
-  haveI : R.HasOrthogonalProjection := inferInstance
-
-  -- The kernel component is killed by A, hence A only sees the Kᗮ component.
-  have hA_on_Kp : ∀ x : E, A (Kp.starProjection x) = A x := by
-    intro x
-    have hsplit : K.starProjection x + Kp.starProjection x = x :=
-      Submodule.starProjection_add_starProjection_orthogonal (K := K) x
-    have hKzero : A (K.starProjection x) = 0 := by
-      exact Submodule.starProjection_apply_mem K x
-    calc
-      A (Kp.starProjection x)
-          = 0 + A (Kp.starProjection x) := by rw [zero_add]
-      _ = A (K.starProjection x) + A (Kp.starProjection x) := by rw [hKzero]
-      _ = A (K.starProjection x + Kp.starProjection x) := by rw [map_add]
-      _ = A x := by rw [hsplit]
-
-  -- L1: restrict A to Kᗮ and codrestrict it to range(A).
-  let Ares : Kp →L[𝕜] R :=
-    (A.comp Kp.subtypeL).codRestrict R (fun x =>
-      LinearMap.mem_range.mpr ⟨x.1, rfl⟩)
-
-  -- Injectivity: if x,y ∈ Kᗮ and A x = A y, then x-y ∈ K ∩ Kᗮ = {0}.
-  have hAres_inj : (Ares : Kp →ₗ[𝕜] R).ker = ⊥ := by
-    rw [LinearMap.ker_eq_bot]
-    intro x y hxy
-    apply Subtype.ext
-    have hval : A x.1 = A y.1 := congrArg Subtype.val hxy
-    have hker : x.1 - y.1 ∈ K := by
-      change A (x.1 - y.1) = 0
-      rw [map_sub, hval, sub_self]
-    have horth : x.1 - y.1 ∈ Kᗮ := Submodule.sub_mem Kp x.2 y.2
-    have hzero : x.1 - y.1 = 0 := by
-      have hmem : x.1 - y.1 ∈ K ⊓ Kᗮ := ⟨hker, horth⟩
-      simpa [Submodule.inf_orthogonal_eq_bot K] using hmem
-    exact sub_eq_zero.mp hzero
-
-  -- Surjectivity: every y = A x in range(A) is A applied to the Kᗮ projection of x.
-  have hAres_surj : (Ares : Kp →ₗ[𝕜] R).range = ⊤ := by
-    rw [LinearMap.range_eq_top]
-    intro y
-    rcases y with ⟨y, hy⟩
-    rcases hy with ⟨x, rfl⟩
-    refine ⟨Kp.orthogonalProjection x, ?_⟩
-    apply Subtype.ext
-    change A ((Kp.orthogonalProjection x : Kp) : E) = A x
-    exact hA_on_Kp x
-
-  -- L2: invert the restricted/codrestricted map.
-  let e : Kp ≃L[𝕜] R :=
-    ContinuousLinearEquiv.ofBijective Ares hAres_inj hAres_surj
-
-  -- B = inclusion_Kᗮ ∘ e⁻¹ ∘ P_range.
-  let B : E →L[𝕜] E :=
-    Kp.subtypeL.comp (e.symm.toContinuousLinearMap.comp R.orthogonalProjection)
-
-  -- Direct verification of A ∘ B = P_range.
-  have hAB_apply : ∀ x : E, A (B x) = R.starProjection x := by
-    intro x
-    have h := ContinuousLinearEquiv.ofBijective_apply_symm_apply Ares hAres_inj hAres_surj (R.orthogonalProjection x)
-    have hval : A (B x) = (R.orthogonalProjection x : E) := by
-      simp only [B, comp_apply, Submodule.subtypeL_apply]
-      change (Ares (e.symm (R.orthogonalProjection x)) : E) = _
-      rw [h]
-    exact hval
-
-  -- Direct verification of B ∘ A = P_Kᗮ.
-  have hBA_apply : ∀ x : E, B (A x) = Kp.starProjection x := by
-    intro x
-    have hproj : R.orthogonalProjection (A x) = (⟨A x, ⟨x, rfl⟩⟩ : R) := by
-      apply Subtype.ext
-      exact Submodule.starProjection_mem_subspace_eq_self (K := R) (⟨A x, ⟨x, rfl⟩⟩ : R)
-    have hTz : Ares (Kp.orthogonalProjection x) = (⟨A x, ⟨x, rfl⟩⟩ : R) := by
-      apply Subtype.ext
-      exact hA_on_Kp x
-    have hsymm : e.symm (⟨A x, ⟨x, rfl⟩⟩ : R) = Kp.orthogonalProjection x := by
-      rw [← hTz]
-      exact (e.symm_apply_apply (Kp.orthogonalProjection x))
-    calc
-      B (A x) = ((e.symm (R.orthogonalProjection (A x)) : Kp) : E) := rfl
-      _ = ((e.symm (⟨A x, ⟨x, rfl⟩⟩ : R) : Kp) : E) := by rw [hproj]
-      _ = ((Kp.orthogonalProjection x : Kp) : E) := by rw [hsymm]
-      _ = Kp.starProjection x := rfl
-
-  have hAB : A * B = R.starProjection := by
-    ext x
-    exact hAB_apply x
-
-  have hBA : B * A = Kp.starProjection := by
-    ext x
-    exact hBA_apply x
-
-  refine ⟨B, ?_, ?_, ?_, ?_⟩
-  · -- A * B * A = A.
-    ext x
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hAB_apply]
-    exact Submodule.starProjection_mem_subspace_eq_self (K := R) (⟨A x, ⟨x, rfl⟩⟩ : R)
-  · -- B * A * B = B.
-    ext x
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hBA_apply]
-    have hBmem : B x ∈ Kᗮ :=
-      (e.symm (R.orthogonalProjection x)).property
-    exact Submodule.starProjection_mem_subspace_eq_self (K := Kᗮ) ⟨B x, hBmem⟩
-  · -- star (A * B) = A * B.
-    rw [hAB]
-    exact IsSelfAdjoint.star_eq (isSelfAdjoint_starProjection R)
-  · -- star (B * A) = B * A.
-    rw [hBA]
-    exact IsSelfAdjoint.star_eq (isSelfAdjoint_starProjection Kp)
+  let B := moorePenroseInverse A hClosedRange
+  use B
+  have h := isMoorePenroseInverse_moorePenroseInverse A hClosedRange
+  exact ⟨h.1, h.2.1, h.2.2.1, h.2.2.2⟩
 
 end Hilbert
 

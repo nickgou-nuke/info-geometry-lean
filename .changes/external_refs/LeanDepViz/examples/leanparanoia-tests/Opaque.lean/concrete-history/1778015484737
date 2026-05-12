@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Opaque definition hiding sorry axiom in body\nimport Lean\n\nopen Lean\n\nset_option maxHeartbeats 100000 in\nopaque hiddenSorryProof : False := by\n  have h : False := sorryAx _ false\n  exact h\n\ndef Opaque_exploit_theorem : False := hiddenSorryProof\n","mtime":1778015484737}

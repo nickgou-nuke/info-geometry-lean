@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-!\n# Exploration Modules\n\nThis umbrella module groups constructive exploratory modules only.\nLegacy intake claims that remain assumption-carried or proofless are quarantined\nunder `InfoGeometry.Unstable.Quarantine`.\n-/\n\nnamespace InfoGeometry.Exploration.All\nend InfoGeometry.Exploration.All\n","mtime":1776602622043}

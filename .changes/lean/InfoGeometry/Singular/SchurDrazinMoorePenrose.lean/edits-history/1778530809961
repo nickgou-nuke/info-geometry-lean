@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/SchurDrazinMoorePenrose.lean","time":1778530809961,"baseTime":1778530809039,"changes":[{"range":{"start":{"line":42,"character":0},"end":{"line":44,"character":0}},"text":"structure NormalSpectralLedger\n    (R Mode Scalar : Type*) [Ring R] [StarRing R] where\n\n","rangeOffset":1407,"rangeLength":91}]}

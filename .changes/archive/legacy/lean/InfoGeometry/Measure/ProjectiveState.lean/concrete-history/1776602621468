@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.MeasureProjective\n\n/-!\n# InfoGeometry.Measure.ProjectiveState\n\nLegacy compatibility shim.\n\nThe maintained finite-measure projective state layer now lives in\n`InfoGeometry.MeasureProjective`. This file intentionally contributes no new\ndeclarations.\n-/\n","mtime":1776602621468}

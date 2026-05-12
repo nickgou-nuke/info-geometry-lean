@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-!\n# Docs.generated_blueprints\n\nGenerated blueprint aggregation stubs.\n-/\n\nnamespace Docs\n\n/-- Generated blueprint aggregation declarations entrypoint. -/\ndef generatedBlueprints : Unit := ()\n\nend Docs\n","mtime":1776602621962}

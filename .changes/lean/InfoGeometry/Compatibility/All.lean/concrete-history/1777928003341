@@ -1,0 +1,1 @@
+{"type":"new","contents":"/- \nInfoGeometry/Compatibility/All.lean\n\nCompatibility/readout umbrella for complex-backed shadow files.\n-/\n\nimport InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow\nimport InfoGeometry.Compatibility.MathlibModularShadow\nimport InfoGeometry.Compatibility.MathlibProjectiveDescentShadow\n","mtime":1777928003341}

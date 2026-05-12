@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Uses custom axiom from L0 transitively\nimport LeanTestProject.DeepAxiom_L0\n\ntheorem uses_custom_axiom : False := custom_axiom\n","mtime":1778015484734}

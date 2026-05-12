@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/SchurDrazinMoorePenrose.lean","time":1778530294962,"baseTime":1778530294000,"changes":[{"range":{"start":{"line":3,"character":0},"end":{"line":3,"character":0}},"text":"import Mathlib.Analysis.InnerProductSpace.Spectrum\n","rangeOffset":93,"rangeLength":0}]}

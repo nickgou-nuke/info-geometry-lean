@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Data.Set.Basic\nimport Paperproof\n\n-- Note to self: do not explain anything, just type the tactics\ntheorem commutativityOfIntersections\n(s t : Set ℕ) : s ∩ t = t ∩ s := by\n  sorry\n","mtime":1778008074571}

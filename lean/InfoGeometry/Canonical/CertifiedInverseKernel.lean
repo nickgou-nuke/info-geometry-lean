@@ -272,6 +272,37 @@ theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
     IsSelfAdjoint CIK.spectralProjector := by
   exact CIK.spectralProjector_isSelfAdjoint_of_selfAdjoint hA.star_eq hAD.star_eq
 
+/--
+The certified Drazin inverse is self-adjoint whenever the original operator is
+self-adjoint.
+
+This removes the former independent `A_D` self-adjointness hypothesis: it is
+derived from Drazin uniqueness.
+-/
+theorem A_D_star_of_selfAdjoint
+    (hA : star CIK.A = CIK.A) :
+    star CIK.A_D = CIK.A_D := by
+  exact IsDrazinInverse.star_eq_self_of_selfAdjoint CIK.hDrazin hA
+
+/--
+The certified Drazin spectral projector is self-adjoint whenever `A` is
+self-adjoint.
+-/
+theorem spectralProjector_star_of_A_selfAdjoint
+    (hA : star CIK.A = CIK.A) :
+    star CIK.spectralProjector = CIK.spectralProjector := by
+  exact CIK.spectralProjector_star_of_selfAdjoint hA (CIK.A_D_star_of_selfAdjoint hA)
+
+/--
+The certified Drazin spectral projector is self-adjoint whenever `A` is
+self-adjoint.
+-/
+theorem spectralProjector_isSelfAdjoint_of_A_selfAdjoint
+    (hA : star CIK.A = CIK.A) :
+    IsSelfAdjoint CIK.spectralProjector := by
+  exact CIK.spectralProjector_isSelfAdjoint_of_selfAdjoint hA
+    (CIK.A_D_star_of_selfAdjoint hA)
+
 /-- Certified mismatch commutator identity. -/
 theorem chiralAnomaly_eq_mismatch_commutator_metric :
     CIK.chiralAnomaly =

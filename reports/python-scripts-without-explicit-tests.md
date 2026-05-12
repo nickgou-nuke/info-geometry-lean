@@ -1,0 +1,289 @@
+# Python scripts without explicit tests
+
+Scope: tracked plus untracked non-ignored `*.py`, excluding `.lake/`, virtualenvs, `external/`, `external_refs/`, `artifacts/`, and `archive/`.
+
+- Scoped Python files: `675`
+- Non-test source Python files/modules: `446`
+- Test Python files: `229`
+- Source files with explicit test references: `187`
+- Source files without explicit test references: `259`
+- Empty `__init__.py` package markers among no-explicit group: `2`
+- Non-empty source files without explicit test references: `257`
+- Generic smoke suite present: `True` (`tests/test_python_script_smoke.py` covers compile/import-safety across owned Python scope)
+
+## Non-empty no-explicit-test count by top-level directory
+
+- `tools`: `228`
+- `scripts`: `12`
+- `leantrail`: `5`
+- `.scripts_archive`: `3`
+- `src`: `3`
+- `jsonschema`: `2`
+- `jsonschema_shadow`: `2`
+- `presentation`: `1`
+- `skills`: `1`
+
+## Non-empty source files without explicit test references
+
+- `jsonschema/exceptions.py`
+- `jsonschema_shadow/exceptions.py`
+- `jsonschema_shadow/validators.py`
+- `jsonschema/validators.py`
+- `leantrail/backend/extractor.py`
+- `leantrail/backend/indexer.py`
+- `leantrail/backend/normalizer.py`
+- `leantrail/backend/query_api.py`
+- `leantrail/backend/rpc_adapter.py`
+- `presentation/gen_figures.py`
+- `scripts/analysis/filter_project_decls.py`
+- `scripts/analysis/lean/catastrophe_surface.py`
+- `scripts/analysis/utils.py`
+- `.scripts_archive/bulk_namespace_rewrite.py`
+- `.scripts_archive/gather_cluster_code.py`
+- `.scripts_archive/namespace_patch_plan.py`
+- `scripts/docs/build_doc_map.py`
+- `scripts/docs/convert/common.py`
+- `scripts/docs/convert/modify_latex.py`
+- `scripts/docs/convert/modify_lean.py`
+- `scripts/docs/convert/parse_latex.py`
+- `scripts/docs/emit_markdown_index.py`
+- `scripts/docs/gen_content_auto_tex_from_header.py`
+- `scripts/docs/proof_gap_report.py`
+- `scripts/utils.py`
+- `skills/chatgpt-history-to-hermes/scripts/chatgpt_history_migrate.py`
+- `src/igf/artifacts/io.py`
+- `src/igf/config/env_aliases.py`
+- `src/igf/graph/query_runner.py`
+- `tools/alexandria/alexandria_algorithms.py`
+- `tools/alexandria/arango_ingest.py`
+- `tools/alexandria/render_socratic_dossier.py`
+- `tools/alexandria/structural_chunking.py`
+- `tools/alexandria/txt2kg_hive_ingest.py`
+- `tools/build_lock.py`
+- `tools/check_bipartite_bleed.py`
+- `tools/classify_missing_all.py`
+- `tools/docs/generate_auto_docs.py`
+- `tools/docs/refresh_markdown_status.py`
+- `tools/docs/update_repo_docs.py`
+- `tools/extract_module_patch.py`
+- `tools/failure_correction_driver.py`
+- `tools/frontier/extract_module_patch.py`
+- `tools/frontier/proof_print.py`
+- `tools/frontier/proof_runtime.py`
+- `tools/frontier/proof_session.py`
+- `tools/frontier/semantic_block_export.py`
+- `tools/frontier/semantic_snapshot.py`
+- `tools/frontier/skynet_v2.py`
+- `tools/generate_auto_docs.py`
+- `tools/generate_bridge_candidates.py`
+- `tools/generate_bridge_thinness_index.py`
+- `tools/generate_causal_report.py`
+- `tools/generate_debt_candidates.py`
+- `tools/generate_llm_debt_prompts.py`
+- `tools/generate_llm_frontier_prompts.py`
+- `tools/generate_self_optimization_report.py`
+- `tools/generate_source_sink_compression.py`
+- `tools/generate_structural_dedup.py`
+- `tools/generate_structural_fibers.py`
+- `tools/generate_surrogate_index.py`
+- `tools/generate_unification_index.py`
+- `tools/generate_vacuity_index.py`
+- `tools/infra/agentic_policy_lint.py`
+- `tools/infra/alchemical_loop.py`
+- `tools/infra/apex_defect_profile.py`
+- `tools/infra/arango_fidelity_audit.py`
+- `tools/infra/arango_layered_ingest.py`
+- `tools/infra/arango_raw_infotree_graph.py`
+- `tools/infra/arango_structural_vacuity_audit.py`
+- `tools/infra/autonomous_math/compiler_loop.py`
+- `tools/infra/autonomous_math/evidence_packet.py`
+- `tools/infra/autonomous_math/lean_coder.py`
+- `tools/infra/autonomous_math/lean_designer.py`
+- `tools/infra/autonomous_math/memory_ingest.py`
+- `tools/infra/autonomous_math/pauli_auditor.py`
+- `tools/infra/autonomous_math/research_controller.py`
+- `tools/infra/autonomous_math/socratic_engine.py`
+- `tools/infra/batch_raw_infotree_export.py`
+- `tools/infra/build_changed_lean.py`
+- `tools/infra/build_claim_packet.py`
+- `tools/infra/build_link_ats_dataset.py`
+- `tools/infra/build_mcbal_library.py`
+- `tools/infra/build_state_first_lane.py`
+- `tools/infra/candidate_bridge_packet.py`
+- `tools/infra/changed_verify.py`
+- `tools/infra/check_bipartite_bleed.py`
+- `tools/infra/check_gauge_obstruction_tags.py`
+- `tools/infra/check_hollow_theorems.py`
+- `tools/infra/check_representation_depth.py`
+- `tools/infra/check_research_handoff_gate.py`
+- `tools/infra/claim_promote.py`
+- `tools/infra/classify_missing_all.py`
+- `tools/infra/dag_all.py`
+- `tools/infra/dag_config.py`
+- `tools/infra/dag_doctor.py`
+- `tools/infra/dag_manifest.py`
+- `tools/infra/dag_refresh.py`
+- `tools/infra/dag_reports.py`
+- `tools/infra/dag_status.py`
+- `tools/infra/debug_gravity.py`
+- `tools/infra/decl_graph.py`
+- `tools/infra/deep_research/brief_rewriter.py`
+- `tools/infra/deep_research/clarifier.py`
+- `tools/infra/deep_research/common.py`
+- `tools/infra/deep_research/controller.py`
+- `tools/infra/deep_research/retriever.py`
+- `tools/infra/deep_research/verifier.py`
+- `tools/infra/dgx_spark_hybrid_orchestrator.py`
+- `tools/infra/dual_hypothesis_sampler.py`
+- `tools/infra/epistemic_reactor_ensemble.py`
+- `tools/infra/export_public_release.py`
+- `tools/infra/external_proof_correspondence.py`
+- `tools/infra/external_theorem_harvester.py`
+- `tools/infra/external_theorem_ingest.py`
+- `tools/infra/extract_compressed_cone.py`
+- `tools/infra/extract_expr_fingerprints.py`
+- `tools/infra/find_vacuous.py`
+- `tools/infra/gemini_account_adapter.py`
+- `tools/infra/generate_black_books_keyword_report.py`
+- `tools/infra/generate_black_books_story_from_keyword_index.py`
+- `tools/infra/generate_causal_report.py`
+- `tools/infra/generate_equivalence_dictionary.py`
+- `tools/infra/generate_expr_alpha_dedup.py`
+- `tools/infra/generate_hypothesis_debt_report.py`
+- `tools/infra/generate_keyword_research_report.py`
+- `tools/infra/generate_projection_coloring.py`
+- `tools/infra/generate_replacement_frontier.py`
+- `tools/infra/generate_repo_story_from_keyword_index.py`
+- `tools/infra/generate_representation_depth_graph.py`
+- `tools/infra/generate_semantic_quotient.py`
+- `tools/infra/generate_sorry_equivalence.py`
+- `tools/infra/generate_source_sink_compression.py`
+- `tools/infra/generate_structural_dedup.py`
+- `tools/infra/generate_structural_dictionary.py`
+- `tools/infra/generate_structural_fibers.py`
+- `tools/infra/generate_theorem_surface_index.py`
+- `tools/infra/generate_theory_cloud_movie.py`
+- `tools/infra/graph_hodge_spectrum.py`
+- `tools/infra/gravitational_retrieval.py`
+- `tools/infra/harvest_ground_truth.py`
+- `tools/infra/hash_signature.py`
+- `tools/infra/hermes_isolated_adapter.py`
+- `tools/infra/hive_audit_worker.py`
+- `tools/infra/hive_build_worker.py`
+- `tools/infra/hive_leansearch_bee.py`
+- `tools/infra/hive_packet_build.py`
+- `tools/infra/hive_packet_path_runner.py`
+- `tools/infra/hive_promotion_worker.py`
+- `tools/infra/hive_qi_heartbeat.py`
+- `tools/infra/hollow_semantic_auditor.py`
+- `tools/infra/holonomy_auditor.py`
+- `tools/infra/hypothesis_fuser_and_lean_gate.py`
+- `tools/infra/identity_protocol_metrics.py`
+- `tools/infra/identity_protocol_runner.py`
+- `tools/infra/ingest_chiral_sidecars.py`
+- `tools/infra/injection_build_digest.py`
+- `tools/infra/injection_capture_gemini_cli.py`
+- `tools/infra/injection_chunk_ideate.py`
+- `tools/infra/injection_create_packet.py`
+- `tools/infra/injection_enrich_segment.py`
+- `tools/infra/injection_promote.py`
+- `tools/infra/injection_research_packet.py`
+- `tools/infra/injection_slo_report.py`
+- `tools/infra/injection_status.py`
+- `tools/infra/leandojo_probe.py`
+- `tools/infra/leandojo_to_hermes_packets.py`
+- `tools/infra/leandojo_token_free.py`
+- `tools/infra/link_scorer_common.py`
+- `tools/infra/llm_thermo_conformance.py`
+- `tools/infra/materialize_lossless_infotree.py`
+- `tools/infra/module_keyword_theory_program.py`
+- `tools/infra/openai_deep_research_datasource_mcp_example.py`
+- `tools/infra/openai_deep_research_gateway.py`
+- `tools/infra/plot_decl_graph.py`
+- `tools/infra/prima_materia_ingest.py`
+- `tools/infra/refresh_decl_graph.py`
+- `tools/infra/report_rep_layers.py`
+- `tools/infra/reports/classify_markdown_corpus.py`
+- `tools/infra/reports/common.py`
+- `tools/infra/reports/generate_bilingual_spine_report.py`
+- `tools/infra/reports/generate_bridge_candidates.py`
+- `tools/infra/reports/generate_bridge_thinness_index.py`
+- `tools/infra/reports/generate_debt_candidates.py`
+- `tools/infra/reports/generate_llm_debt_prompts.py`
+- `tools/infra/reports/generate_llm_frontier_prompts.py`
+- `tools/infra/reports/generate_markdown_hygiene_report.py`
+- `tools/infra/reports/generate_repository_surface_index.py`
+- `tools/infra/reports/generate_self_optimization_report.py`
+- `tools/infra/reports/generate_surrogate_index.py`
+- `tools/infra/reports/generate_unification_index.py`
+- `tools/infra/reports/generate_vacuity_index.py`
+- `tools/infra/representation_depth_io.py`
+- `tools/infra/rerank_arango_links.py`
+- `tools/infra/research_controller.py`
+- `tools/infra/research_digest_worker.py`
+- `tools/infra/research_packet.py`
+- `tools/infra/residue_quarantine.py`
+- `tools/infra/run_full_dag_toolchain.py`
+- `tools/infra/run_socratic_alchemy_batch.py`
+- `tools/infra/run_socratic_alchemy_loop.py`
+- `tools/infra/scan_third_party_licenses.py`
+- `tools/infra/score_link_candidates.py`
+- `tools/infra/select_openclaw_target.py`
+- `tools/infra/semantic_audit.py`
+- `tools/infra/shadow_plant_worker.py`
+- `tools/infra/socratic_packet_to_sampler_jsonl.py`
+- `tools/infra/timings.py`
+- `tools/infra/trace_and_retrieve.py`
+- `tools/infra/train_link_scorer.py`
+- `tools/infra/validate_raw_infotree_export.py`
+- `tools/infra/verify_layered_arango_descent.py`
+- `tools/infra/verify_raw_infotree_arango_descent.py`
+- `tools/infra/visualize_causal_chiral_cone_packet.py`
+- `tools/lean4-skills/analyze_let_usage.py`
+- `tools/lean4-skills/find_exact_candidates.py`
+- `tools/lean4-skills/minimize_imports.py`
+- `tools/lean4-skills/parse_command_args.py`
+- `tools/lean4-skills/parse_lean_errors.py`
+- `tools/lean4-skills/solver_cascade.py`
+- `tools/lean4-skills/sorry_analyzer.py`
+- `tools/lean4-skills/try_exact_at_step.py`
+- `tools/leantrail/adapters.py`
+- `tools/leantrail/arango_ingest.py`
+- `tools/leantrail/arango_physics_evaluator.py`
+- `tools/leantrail/conformance.py`
+- `tools/leantrail/failure_harvester.py`
+- `tools/leantrail/hole_packets.py`
+- `tools/leantrail/path_lock_registry.py`
+- `tools/pathing.py`
+- `tools/planner/admissibility.py`
+- `tools/planner/common.py`
+- `tools/plot_decl_graph.py`
+- `tools/proof_driver.py`
+- `tools/quality/audit_docstrings.py`
+- `tools/quality/audit_naming.py`
+- `tools/quality/audit_semantic.py`
+- `tools/quality/audit_style.py`
+- `tools/quality/check_closure_debt_gate.py`
+- `tools/quality/check_equivalence_dictionary_gate.py`
+- `tools/quality/check_frontier_integrity_gate.py`
+- `tools/quality/check_translation_registry.py`
+- `tools/quality/closure_ast_validator.py`
+- `tools/quality/closure_debt_auditor.py`
+- `tools/quality/common.py`
+- `tools/quality/detect_hollow_theorems.py`
+- `tools/quality/detect_ornamental_hypotheses.py`
+- `tools/quality/dvorak_audit.py`
+- `tools/quality/functorial_invariance_audit.py`
+- `tools/quality/pauli_seal_audit.py`
+- `tools/refresh_decl_graph.py`
+- `tools/run_optimization_cycle.py`
+- `tools/select_openclaw_target.py`
+- `tools/semantic_block_export.py`
+- `tools/skynet_v2.py`
+- `tools/update_repo_docs.py`
+- `tools/vacuity_policy_config.py`
+
+## Empty package markers without explicit tests
+
+- `tools/infra/reports/__init__.py`
+- `tools/quality/__init__.py`

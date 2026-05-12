@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib\n#check Matrix.det_smul\n","mtime":1778359622749}

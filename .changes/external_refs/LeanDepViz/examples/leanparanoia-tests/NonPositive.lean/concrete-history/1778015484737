@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace LeanTestProject.KernelRejection\n\n-- Kernel rejects: non-positive inductive type\n\ninductive Bad where\n  | mk : (Bad → False) → Bad\n\ndef exploit : Bad → False\n  | .mk f => f (.mk f)\n\ntheorem exploit_theorem : False :=\n  exploit (.mk exploit)\n\nend LeanTestProject.KernelRejection\n","mtime":1778015484737}

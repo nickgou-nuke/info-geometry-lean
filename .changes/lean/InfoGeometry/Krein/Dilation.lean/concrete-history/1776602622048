@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Clifford.Relations\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Krein.Dilation\n\nCompatibility shim: the canonical dilation/half-generator API now lives in\n`InfoGeometry.Clifford.Relations` (namespace `InfoGeometry.Krein`).\n-/\n\nend InfoGeometry\n","mtime":1776602622048}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.ManifoldHomologyCore\n\n/-!\n# InfoGeometry.Canonical.ManifoldHomology\n\nCanonical manifold-homology surface built from the canonical core interface.\n-/\n\nnamespace InfoGeometry.Canonical.ManifoldHomology\n\nend InfoGeometry.Canonical.ManifoldHomology\n","mtime":1777199300153}

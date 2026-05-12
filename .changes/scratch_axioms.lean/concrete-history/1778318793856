@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Arithmetic.PrimitiveSetsAbove\n\n#print axioms InfoGeometry.Arithmetic.goodDivisorSum_le_log_mul_add\n","mtime":1778318793856}

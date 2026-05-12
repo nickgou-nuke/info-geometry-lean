@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.LinearAlgebra.Basis.Defs\n\n/-- Standard basis of the space of finitely supported functions. -/\nnoncomputable def Finsupp.basisFun (X R : Type*) [Semiring R] : Module.Basis X R (X →₀ R) where\n  repr := (LinearEquiv.refl _ _)\n","mtime":1778328716650}

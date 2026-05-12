@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lake\nopen Lake DSL\n\npackage duality {\n  leanOptions := #[⟨`autoImplicit, false⟩, ⟨`pp.structureInstances, false⟩, ⟨`linter.oldObtain, false⟩]\n}\n\nrequire \"linters\" from git \"https://github.com/madvorak/leanters\" @ \"main\"\n\n@[default_target]\nlean_lib Duality {\n  globs := #[.submodules `Duality]\n}\n","mtime":1777498520163}

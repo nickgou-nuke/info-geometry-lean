@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace Auto.SMT.Attribute\n\n-- Note: add other attributes as needed\ndef trigger {a : Sort u} (_ : a) (h : Prop) := h\n","mtime":1778061430189}

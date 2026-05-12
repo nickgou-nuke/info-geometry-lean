@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/VirasoroProjectBridge.lean","time":1778337142274,"baseTime":1778337141601,"changes":[{"range":{"start":{"line":45,"character":0},"end":{"line":46,"character":0}},"text":"      rw [← smul_ite_zero, smul_zero]\n","rangeOffset":1390,"rangeLength":36}]}

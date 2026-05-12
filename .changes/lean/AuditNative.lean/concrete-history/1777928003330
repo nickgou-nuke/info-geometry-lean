@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.All\nimport InfoGeometry.Meta.Architecture\n\n/-!\n# AuditNative\n\nDedicated Lean-native architecture audit entrypoint.\n-/\n\n#audit_architecture\n","mtime":1777928003330}

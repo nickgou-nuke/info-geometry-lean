@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-\nCopyright (c) 2024 Jannis Limperg. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Jannis Limperg\n-/\n\nimport Aesop\n\nset_option aesop.check.all true\n\nadd_aesop_rules safe (by simp)\n","mtime":1778004626795}

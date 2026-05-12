@@ -54,6 +54,7 @@ import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Geometry.ErlangerPhaseGeometry
 import InfoGeometry.Geometry.PhaseErlanger
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
+import InfoGeometry.Geometry.BilingualSemilinearRepresentation
 import InfoGeometry.Geometry.BilingualPoincareMetric
 import InfoGeometry.Geometry.BerezinianCayleyVolume
 import InfoGeometry.Geometry.DiscreteModularSubgroup

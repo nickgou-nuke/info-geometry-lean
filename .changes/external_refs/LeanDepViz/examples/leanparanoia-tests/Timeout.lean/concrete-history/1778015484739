@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Incomplete calc proof with sorry in chain\ntheorem Timeout_exploit_theorem (a b c : Nat) (h1 : a = b) (h2 : b = c) : a = c := by\n  calc a = b := h1\n       _ = c := sorry\n","mtime":1778015484739}

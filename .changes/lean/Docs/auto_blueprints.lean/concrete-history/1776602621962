@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-!\n# Docs.auto_blueprints\n\nAuto-generated blueprint stubs.\n-/\n\nnamespace Docs\n\n/-- Auto-generated blueprint declarations entrypoint. -/\ndef autoBlueprints : Unit := ()\n\nend Docs\n","mtime":1776602621962}

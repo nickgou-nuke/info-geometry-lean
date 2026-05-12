@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Topology.Algebra.ConstMulAction\n\ndef continuousConstSMul_of_discreteTopology (𝕜 X : Type*) [TopologicalSpace X]\n    [DiscreteTopology X] [AddCommMonoid X] [SMul 𝕜 X] :\n    ContinuousConstSMul 𝕜 X :=\n  ⟨fun c ↦ by continuity⟩\n","mtime":1778332101106}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Meta.DvorakTactics\n\nnamespace InfoGeometry.Meta\n\ntheorem test_aeply : True → True := by\n  intro h\n  aeply h\n  exact h\n\nend InfoGeometry.Meta\n","mtime":1777928003344}

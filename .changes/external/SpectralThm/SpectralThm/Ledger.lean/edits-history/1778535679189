@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/Ledger.lean","time":1778535679189,"baseTime":1778535678288,"changes":[{"range":{"start":{"line":137,"character":0},"end":{"line":138,"character":0}},"text":"    (B * A) * (B * A) = B * (A * B * A) := by simp [mul_assoc]\n","rangeOffset":4931,"rangeLength":63}]}

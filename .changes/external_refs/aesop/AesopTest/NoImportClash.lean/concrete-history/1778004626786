@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-\nCopyright (c) 2023 Jannis Limperg. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Jannis Limperg\n-/\n\n/-\nThis test case ensures that Aesop does not define anything that already exists\nin our dependencies.\n-/\n\nimport Aesop\nimport Lean\nimport Batteries\n","mtime":1778004626786}

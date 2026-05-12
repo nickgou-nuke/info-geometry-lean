@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Helper definitions for multi-file valid tests\ndef helper_value : Nat := 42\n\ntheorem helper_theorem : helper_value = 42 := rfl\n","mtime":1778015484736}

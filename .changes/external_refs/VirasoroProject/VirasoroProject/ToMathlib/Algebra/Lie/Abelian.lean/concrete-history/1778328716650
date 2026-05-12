@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Algebra.Lie.Abelian\n\ninstance _root_.CommRing.isLieAbelian (R : Type*) [CommRing R] : IsLieAbelian R where\n  trivial c₁ c₂ := by\n    change c₁ * c₂ - c₂ * c₁ = 0\n    simp [mul_comm]\n","mtime":1778328716650}

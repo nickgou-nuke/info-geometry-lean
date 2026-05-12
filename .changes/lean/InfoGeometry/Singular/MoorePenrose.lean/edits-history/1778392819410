@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/MoorePenrose.lean","time":1778392819410,"baseTime":1778392818467,"changes":[{"range":{"start":{"line":147,"character":0},"end":{"line":150,"character":0}},"text":"    have hval : A x.1 = A y.1 := congrArg Subtype.val hxy\n","rangeOffset":5211,"rangeLength":84}]}

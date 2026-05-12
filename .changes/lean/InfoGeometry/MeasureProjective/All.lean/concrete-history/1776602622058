@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.MeasureProjective.GeneratorBridge\nimport InfoGeometry.MeasureProjective.Invariant\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.MeasureProjective.All\n\nUmbrella module for the measure-projective bridge and invariant layer.\n-/\n\nend InfoGeometry\n","mtime":1776602622058}

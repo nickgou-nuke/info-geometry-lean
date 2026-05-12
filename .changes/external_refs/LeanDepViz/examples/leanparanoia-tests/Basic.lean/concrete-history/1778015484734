@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Simple test with custom axiom\naxiom bad_axiom : False\n\ntheorem bad_theorem : False := bad_axiom\n\n-- Good theorem\ntheorem good_theorem : True := trivial\n","mtime":1778015484734}

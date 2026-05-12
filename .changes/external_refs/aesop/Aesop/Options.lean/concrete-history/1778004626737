@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-\nCopyright (c) 2023 Jannis Limperg. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Jannis Limperg\n-/\nmodule\n\npublic import Aesop.Options.Internal\npublic import Aesop.Options.Public\n","mtime":1778004626737}

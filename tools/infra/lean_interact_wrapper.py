@@ -66,9 +66,13 @@ def run_lean_source(source: str, *, timeout: int) -> dict[str, object]:
             timeout=timeout,
             check=False,
         )
+        ok = proc.returncode == 0
+        if ok and ("warning: declaration uses `sorry`" in proc.stdout or "warning: declaration uses `sorry`" in proc.stderr):
+            ok = False
+
         return {
             "returncode": proc.returncode,
-            "ok": proc.returncode == 0,
+            "ok": ok,
             "stdout": proc.stdout,
             "stderr": proc.stderr,
             "source_path": str(path),

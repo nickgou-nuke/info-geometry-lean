@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.CondensedMatter.DIIISuperfluid\nimport InfoGeometry.CondensedMatter.CliffordAtomsZ2n\n\nnamespace InfoGeometry.CondensedMatter\n\n/-!\n# Condensed Matter Interfaces\n\nPhysical condensed-matter sockets for topological phases and BdG symmetry\nclasses.\n-/\n\nend InfoGeometry.CondensedMatter\n","mtime":1778086464212}

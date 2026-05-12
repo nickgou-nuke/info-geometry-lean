@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.GromovWittenErlangen.LieOrbitCurve\n\n/-!\nCompatibility shim for the prior module name.\n\nThe theorem-safe orbit-curve skeleton and its constructors are now defined in\n`InfoGeometry.GromovWittenErlangen.LieOrbitCurve`.\n-/\n","mtime":1777928003344}

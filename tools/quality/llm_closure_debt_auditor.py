@@ -61,6 +61,8 @@ LINE_DECL_RE = re.compile(
 
 JSON_FENCE_RE = re.compile(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", re.I)
 
+SYSTEM_JSON_INSTRUCTION = "You are a strict JSON emitting Lean audit assistant."
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -279,6 +281,81 @@ def llm_prompt(path: str, module: str, deterministic_counts: dict[str, int], exc
     )
 
 
+def estimate_prompt_tokens(*, prompt: str) -> int:
+    # Conservative rough estimate for mixed prose/code prompts.
+    return max(1, (len(prompt) + 3) // 4)
+
+
+def discover_model_context_limit(base_url: str, model: str, timeout: int) -> int | None:
+    url = base_url.rstrip("/")
+    if url.endswith("/chat/completions"):
+        url = url[: -len("/chat/completions")]
+    if not url.endswith("/v1/models"):
+        if url.endswith("/v1"):
+            url = url + "/models"
+        else:
+            url = url + "/v1/models"
+
+    req = urllib.request.Request(url, headers={"Content-Type": "application/json"}, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 local endpoint
+            data = json.loads(resp.read().decode("utf-8", errors="replace"))
+    except Exception:
+        return None
+
+    rows = data.get("data", []) if isinstance(data, dict) else []
+    if not isinstance(rows, list):
+        return None
+
+    targets = {model, model.removeprefix("/models/")}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        rid = str(row.get("id", ""))
+        rid_norm = rid.removeprefix("/models/")
+        if rid not in targets and rid_norm not in targets:
+            continue
+        candidates: list[Any] = [
+            row.get("context_length"),
+            row.get("max_context_length"),
+            row.get("n_ctx"),
+            row.get("max_seq_len"),
+        ]
+        for k in ("metadata", "extra", "details"):
+            v = row.get(k)
+            if isinstance(v, dict):
+                candidates.extend([
+                    v.get("context_length"),
+                    v.get("max_context_length"),
+                    v.get("n_ctx"),
+                    v.get("max_seq_len"),
+                ])
+        for c in candidates:
+            try:
+                iv = int(c)
+            except Exception:
+                continue
+            if iv > 0:
+                return iv
+    return None
+
+
+def excerpt_budget_for_context_limit(
+    *,
+    model_context_limit: int,
+    max_tokens: int,
+    prompt_overhead_tokens: int,
+    default_max_chars: int,
+) -> int:
+    # Keep a safety margin to avoid context_length_exceeded.
+    safety = max(128, model_context_limit // 10)
+    available_prompt_tokens = model_context_limit - max_tokens - prompt_overhead_tokens - safety
+    if available_prompt_tokens <= 200:
+        return 1200
+    approx_chars = available_prompt_tokens * 4
+    return max(1200, min(default_max_chars, approx_chars))
+
+
 def post_chat(base_url: str, model: str, prompt: str, timeout: int, max_tokens: int) -> str:
     url = base_url.rstrip("/")
     if not url.endswith("/chat/completions"):
@@ -290,7 +367,7 @@ def post_chat(base_url: str, model: str, prompt: str, timeout: int, max_tokens: 
     payload = {
         "model": model,
         "messages": [
-            {"role": "system", "content": "You are a strict JSON emitting Lean audit assistant."},
+            {"role": "system", "content": SYSTEM_JSON_INSTRUCTION},
             {"role": "user", "content": prompt},
         ],
         "temperature": 0.0,
@@ -458,7 +535,18 @@ def merge_status(findings: list[Finding], llm_status: str) -> str:
     return llm_status if llm_status in {"clean", "advisory", "open_gap"} else "clean"
 
 
-def audit_file(path: Path, *, base_url: str, model: str, timeout: int, max_tokens: int, max_chars: int, retries: int) -> FileAudit:
+def audit_file(
+    path: Path,
+    *,
+    base_url: str,
+    model: str,
+    timeout: int,
+    max_tokens: int,
+    max_chars: int,
+    retries: int,
+    model_context_limit: int | None = None,
+    print_budget: bool = False,
+) -> FileAudit:
     text = path.read_text(encoding="utf-8")
     det_findings, det_counts, suspicious_lines = deterministic_scan(text)
 
@@ -467,6 +555,38 @@ def audit_file(path: Path, *, base_url: str, model: str, timeout: int, max_token
     llm_summary = ""
     llm_findings: list[Finding] = []
     current_max_chars = max_chars
+
+    if model_context_limit:
+        overhead_prompt = llm_prompt(
+            rel(path),
+            module_name(path),
+            det_counts,
+            "--- lines 1-1 ---\n    1| x\n",
+        )
+        overhead_tokens = estimate_prompt_tokens(prompt=overhead_prompt) + estimate_prompt_tokens(
+            prompt=SYSTEM_JSON_INSTRUCTION
+        )
+        current_max_chars = excerpt_budget_for_context_limit(
+            model_context_limit=model_context_limit,
+            max_tokens=max_tokens,
+            prompt_overhead_tokens=overhead_tokens,
+            default_max_chars=max_chars,
+        )
+
+    if print_budget:
+        init_excerpt = build_excerpt(text, suspicious_lines, max_chars=current_max_chars)
+        init_prompt = llm_prompt(rel(path), module_name(path), det_counts, init_excerpt)
+        init_prompt_tokens = estimate_prompt_tokens(prompt=init_prompt) + estimate_prompt_tokens(
+            prompt=SYSTEM_JSON_INSTRUCTION
+        )
+        print(
+            "[llm-audit-budget] "
+            f"file={rel(path)} "
+            f"context_limit={model_context_limit} "
+            f"max_tokens={max_tokens} "
+            f"excerpt_chars={current_max_chars} "
+            f"est_prompt_tokens={init_prompt_tokens}"
+        )
 
     for attempt in range(1, retries + 1):
         try:
@@ -528,7 +648,14 @@ def audit_file(path: Path, *, base_url: str, model: str, timeout: int, max_token
     )
 
 
-def build_payload(root: Path, reports: list[FileAudit], *, model: str, base_url: str) -> dict[str, Any]:
+def build_payload(
+    root: Path,
+    reports: list[FileAudit],
+    *,
+    model: str,
+    base_url: str,
+    model_context_limit: int | None,
+) -> dict[str, Any]:
     hard = sum(r.hard_count for r in reports)
     soft = sum(r.soft_count for r in reports)
     advisory = sum(r.advisory_count for r in reports)
@@ -545,6 +672,7 @@ def build_payload(root: Path, reports: list[FileAudit], *, model: str, base_url:
         "root": rel(root),
         "model": model,
         "endpoint": base_url,
+        "model_context_limit": model_context_limit,
         "summary": {
             "file_count": len(reports),
             "status_counts": status_counts,
@@ -567,6 +695,7 @@ def to_markdown(payload: dict[str, Any]) -> str:
         f"Root: `{payload['root']}`",
         f"Endpoint: `{payload['endpoint']}`",
         f"Model: `{payload['model']}`",
+        f"Model context limit: `{payload.get('model_context_limit')}`",
         "",
         "## Summary",
         f"- Files scanned: **{s['file_count']}**",
@@ -625,12 +754,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--timeout", type=int, default=120)
     p.add_argument("--max-tokens", type=int, default=900)
     p.add_argument("--max-chars", type=int, default=12000, help="Max excerpt chars sent per file")
+    p.add_argument("--max-context-tokens", type=int, default=0, help="Override model context window (0 = auto-detect)")
     p.add_argument("--retries", type=int, default=2)
     p.add_argument("--limit", type=int, default=0, help="Limit file count for smoke runs (0 = all)")
     p.add_argument("--json-out", default="reports/audit/llm-closure-debt-audit.json")
     p.add_argument("--md-out", default="reports/audit/llm-closure-debt-audit.md")
     p.add_argument("--per-file-dir", default="reports/audit/llm-file-reports", help="Write one JSON per file")
     p.add_argument("--print-progress", action="store_true")
+    p.add_argument("--print-budget", action="store_true", help="Print per-file computed excerpt/token budget")
     p.add_argument("--strict", action="store_true", help="Exit nonzero if any hard finding")
     return p.parse_args()
 
@@ -646,6 +777,10 @@ def main() -> int:
     per_file_dir = normalize_user_path(args.per_file_dir, ROOT / "reports" / "audit" / "llm-file-reports")
     per_file_dir.mkdir(parents=True, exist_ok=True)
 
+    model_context_limit = args.max_context_tokens if args.max_context_tokens > 0 else discover_model_context_limit(
+        args.endpoint, args.model, args.timeout
+    )
+
     total = len(files)
     for idx, f in enumerate(files, start=1):
         if args.print_progress:
@@ -659,6 +794,8 @@ def main() -> int:
                 max_tokens=args.max_tokens,
                 max_chars=args.max_chars,
                 retries=args.retries,
+                model_context_limit=model_context_limit,
+                print_budget=args.print_budget,
             )
         except urllib.error.URLError as ex:
             raise SystemExit(f"[llm-audit] endpoint failure {args.endpoint}: {ex}") from ex
@@ -670,7 +807,13 @@ def main() -> int:
         file_out.write_text(json.dumps({**asdict(rep), "findings": [asdict(x) for x in rep.findings]}, indent=2), encoding="utf-8")
 
     reports.sort(key=lambda r: r.path)
-    payload = build_payload(root, reports, model=args.model, base_url=args.endpoint)
+    payload = build_payload(
+        root,
+        reports,
+        model=args.model,
+        base_url=args.endpoint,
+        model_context_limit=model_context_limit,
+    )
 
     json_out = normalize_user_path(args.json_out, ROOT / "reports" / "audit" / "llm-closure-debt-audit.json")
     md_out = normalize_user_path(args.md_out, ROOT / "reports" / "audit" / "llm-closure-debt-audit.md")
@@ -684,6 +827,7 @@ def main() -> int:
         f"[llm-audit] files={s['file_count']} findings={s['finding_count']} "
         f"hard={s['hard_count']} soft={s['soft_count']} advisory={s['advisory_count']}"
     )
+    print(f"[llm-audit] model_context_limit={model_context_limit}")
     print(f"[llm-audit] json={json_out}")
     print(f"[llm-audit] md={md_out}")
 

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Jordan.Core\nimport InfoGeometry.Jordan.BurgStein\nimport InfoGeometry.Jordan.LogDet\nimport InfoGeometry.Jordan.SPD\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Jordan.All\n\nUmbrella module for the Jordan algebra layer.\n-/\n\nend InfoGeometry\n","mtime":1776602622045}

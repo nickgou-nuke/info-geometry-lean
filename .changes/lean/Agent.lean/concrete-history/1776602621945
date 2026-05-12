@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Agent.Protocol\nimport Agent.CompilerBridgeCore\nimport Agent.ProofStateExport\nimport Agent.ProofServerRpc\n\n/-!\n# Agent\n\nTyped proof-state bridge modules for compiler-facing RPC.\n-/\n","mtime":1776602621945}

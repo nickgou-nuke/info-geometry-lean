@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Aesop\n\nset_option aesop.check.all true\n\n-- TODO simp_all introduces spurious metavariables in this example\nset_option aesop.check.rules false\nset_option aesop.check.tree false\n\ntheorem foo {a : Nat → Nat} (ha : a 0 = 37) :\n    (match h : a 0 with | 42 => by simp_all | n => n) = 37 := by\n  aesop\n","mtime":1778004626770}

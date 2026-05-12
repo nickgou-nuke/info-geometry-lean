@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib\n\nnamespace InfoGeometry\n\ndef bar : Nat := 2\n\nend InfoGeometry\n","mtime":1776602621468}

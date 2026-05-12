@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ClNN
+import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.ClNNSpecialization
@@ -26,6 +27,7 @@ import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Clifford.GeometricRotor
+import InfoGeometry.Clifford.RealDoubledHestenesAnchor
 
 namespace InfoGeometry
 

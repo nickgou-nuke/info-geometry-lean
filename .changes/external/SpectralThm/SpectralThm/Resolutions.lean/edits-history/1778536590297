@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/Resolutions.lean","time":1778536590297,"baseTime":1778536589364,"changes":[{"range":{"start":{"line":98,"character":0},"end":{"line":99,"character":0}},"text":"    rw [ResolutionOfIdentity.toMeasure_apply E x h, h₀]\n    simp\n","rangeOffset":4060,"rangeLength":14}]}

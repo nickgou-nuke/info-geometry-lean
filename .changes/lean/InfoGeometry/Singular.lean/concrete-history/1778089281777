@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Singular.MoorePenrose\nimport InfoGeometry.Singular.CartanWiring\nimport InfoGeometry.Singular.Drazin\nimport InfoGeometry.Singular.SchurDrazinMoorePenrose\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Singular\n\nUmbrella module for singular and pseudoinverse geometry.\n-/\nend InfoGeometry\n","mtime":1778089281777}

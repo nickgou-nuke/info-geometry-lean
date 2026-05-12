@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.ProjectiveCCR\n\n#print axioms InfoGeometry.Canonical.ProjectiveCCR.ProjectiveBoundaryPacket.superKMS_detailed_balance\n","mtime":1778349376209}

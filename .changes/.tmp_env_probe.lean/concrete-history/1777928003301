@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Analysis.InnerProductSpace.Adjoint\n\nexample {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]\n    (A : H →L[ℝ] H) (u v : H) : ⟪ContinuousLinearMap.adjoint A u, v⟫ = ⟪u, A v⟫ := \n  ContinuousLinearMap.inner_adjoint_left A u v\n","mtime":1777928003301}

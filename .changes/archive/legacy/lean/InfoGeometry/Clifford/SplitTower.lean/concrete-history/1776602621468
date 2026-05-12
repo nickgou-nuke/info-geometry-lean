@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Clifford.Tower\n\n/-!\n# InfoGeometry.Clifford.SplitTower\n\nLegacy compatibility shim.\n\nThe maintained split Clifford tower now lives in `InfoGeometry.Clifford.Tower`.\nThis file intentionally contributes no new declarations.\n-/\n","mtime":1776602621468}

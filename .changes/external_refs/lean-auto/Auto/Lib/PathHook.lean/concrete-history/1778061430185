@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean\n\n/-\n  This file is here so that code in `Auto/Solver` can find\n  the path to the source code folder of `lean-auto` by\n  ``Lean.findOLean `Auto.Lib.PathHook``\n-/\n\nnamespace Auto\n\nnamespace PathHook\n\ndef hookName : Name := `Auto.Lib.PathHook\n\nend PathHook\n\nend Auto\n","mtime":1778061430185}

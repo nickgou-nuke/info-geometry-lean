@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Custom axiom proving False directly\naxiom ProveFalse_exploit_axiom : False\n\ntheorem ProveFalse_exploit_theorem : False := ProveFalse_exploit_axiom\n","mtime":1778015484738}

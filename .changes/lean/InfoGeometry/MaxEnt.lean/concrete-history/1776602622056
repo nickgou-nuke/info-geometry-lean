@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.MaxEnt.Core\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.MaxEnt\n\nRoot umbrella for maximum-entropy core constructions.\n-/\n\nend InfoGeometry\n","mtime":1776602622056}

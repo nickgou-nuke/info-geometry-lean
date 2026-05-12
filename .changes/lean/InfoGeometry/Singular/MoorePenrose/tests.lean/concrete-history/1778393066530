@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Singular.MoorePenrose.ClosedRange\nimport InfoGeometry.Singular.MoorePenrose\n\n/-! ## Moore-Penrose existence: basic compile-time check -/\n\nopen InfoGeometry.Singular.MoorePenrose\n\n-- The existence theorem compiles and is accessible.\n#check @exists_moorePenroseInverse_of_closedRange\n","mtime":1778393066530}

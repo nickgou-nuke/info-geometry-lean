@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/SchurDrazinMoorePenrose.lean","time":1778530305284,"baseTime":1778530304318,"changes":[{"range":{"start":{"line":145,"character":0},"end":{"line":146,"character":0}},"text":"    NormalSpectralResolution (E →L[𝕜] E) (Module.End.Eigenvalues (A : E →ₗ[𝕜] E)) 𝕜 := by\n\n","rangeOffset":4755,"rangeLength":82}]}

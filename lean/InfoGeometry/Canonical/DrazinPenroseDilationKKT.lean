@@ -184,6 +184,86 @@ theorem rightSupercharge_isSpectralNonCompact :
   simpa [DPDKKT.rightSupercharge] using
     K.kernel.rightChiralAnomaly_isSpectralNonCompact
 
+/-! ## Gauge-class readbacks for the Drazin/chiral sectors -/
+
+/-- Pointwise membership in the Drazin regular sector `range P_D`. -/
+@[rep_depth operator]
+def IsInRegularSector (x : E) : Prop :=
+  ∃ y : E, K.P_D y = x
+
+/-- Pointwise membership in the Drazin null/defect sector `range Q_D`. -/
+@[rep_depth operator]
+def IsInNullSector (x : E) : Prop :=
+  ∃ y : E, K.Q_D y = x
+
+/-- An operator preserves the Drazin regular projector. -/
+@[rep_depth operator]
+def PreservesP_D (U : EndH) : Prop :=
+  U * K.P_D = K.P_D * U
+
+/-- An operator preserves the Drazin defect projector. -/
+@[rep_depth operator]
+def PreservesQ_D (U : EndH) : Prop :=
+  U * K.Q_D = K.Q_D * U
+
+/-- An operator preserves the spectral grading. -/
+@[rep_depth operator]
+def PreservesGammaS (U : EndH) : Prop :=
+  U * K.GammaS = K.GammaS * U
+
+/-- An odd channel exchanges the `Γ_S` chiral sign by anticommuting with `Γ_S`. -/
+@[rep_depth operator]
+def FlipsGammaS (X : EndH) : Prop :=
+  anticommutator K.GammaS X = 0
+
+/-- Gauge transport preserving `P_D` preserves the regular sector. -/
+@[rep_depth operator]
+theorem maps_regular_sector_of_preservesP_D
+    {U : EndH} (hU : K.PreservesP_D U) {x : E} :
+    K.IsInRegularSector x → K.IsInRegularSector (U x) := by
+  intro hx
+  rcases hx with ⟨y, hy⟩
+  refine ⟨U y, ?_⟩
+  have hApply : U (K.P_D y) = K.P_D (U y) := by
+    simpa [ContinuousLinearMap.mul_apply] using congrArg (fun A : EndH => A y) hU
+  calc
+    K.P_D (U y) = U (K.P_D y) := hApply.symm
+    _ = U x := by rw [hy]
+
+/-- Gauge transport preserving `Q_D` preserves the null/defect sector. -/
+@[rep_depth operator]
+theorem maps_null_sector_of_preservesQ_D
+    {U : EndH} (hU : K.PreservesQ_D U) {x : E} :
+    K.IsInNullSector x → K.IsInNullSector (U x) := by
+  intro hx
+  rcases hx with ⟨y, hy⟩
+  refine ⟨U y, ?_⟩
+  have hApply : U (K.Q_D y) = K.Q_D (U y) := by
+    simpa [ContinuousLinearMap.mul_apply] using congrArg (fun A : EndH => A y) hU
+  calc
+    K.Q_D (U y) = U (K.Q_D y) := hApply.symm
+    _ = U x := by rw [hy]
+
+/-- The left anomaly operator is an odd `Γ_S` channel. -/
+@[rep_depth operator]
+theorem leftSupercharge_flipsGammaS :
+    K.FlipsGammaS K.leftSupercharge := by
+  exact K.anticommutator_GammaS_leftSupercharge_eq_zero
+
+/-- The right anomaly operator is an odd `Γ_S` channel. -/
+@[rep_depth operator]
+theorem rightSupercharge_flipsGammaS :
+    K.FlipsGammaS K.rightSupercharge := by
+  exact K.anticommutator_GammaS_rightSupercharge_eq_zero
+
+/-- The Drazin projector itself preserves the regular sector. -/
+@[rep_depth operator]
+theorem P_D_preserves_regular_sector {x : E} :
+    K.IsInRegularSector x → K.IsInRegularSector (K.P_D x) := by
+  intro hx
+  exact maps_regular_sector_of_preservesP_D (K := K) (U := K.P_D)
+    (by rfl) hx
+
 end DPDKKT
 
 section CentralChargeHook

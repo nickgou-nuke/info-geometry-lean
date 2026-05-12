@@ -9,6 +9,7 @@ from tools.quality.placeholder_audit import (
 )
 
 
+
 def test_scan_lean_file_flags_trust_shortcuts(tmp_path: Path) -> None:
     lean_file = tmp_path / "TrustProbe.lean"
     lean_file.write_text(
@@ -87,7 +88,7 @@ theorem foo : True := by
     modules, _, scanned = run_audit(lean_root)
     report = build_json(modules, root=lean_root, scanned_count=len(scanned))
 
-    assert report["schema"] == "info_geometry.placeholder_audit.v1"
+    assert report["schema"] == "info_geometry.placeholder_audit.v2"
     assert "summary" in report
     assert report["summary"]["scanned_count"] == 1
     assert report["summary"]["module_count"] == 1
@@ -132,3 +133,51 @@ def test_build_signal_payload_maps_hard_and_soft_findings(tmp_path: Path) -> Non
     assert "leanstral.autoproof" in task_kinds
     assert "closure.debt.extend" in signal_kinds
     assert "leanstral.autoproof.frontier" in signal_kinds
+
+
+def test_build_json_includes_provenance_and_verdict_fields(tmp_path: Path) -> None:
+    findings = [
+        TrustFinding(
+            file="Demo.lean",
+            module="Demo",
+            line=3,
+            declaration_kind="axiom",
+            declaration_name="MissingAxiom",
+            finding="explicit-placeholder-declaration",
+            severity="hard",
+            detail="explicit placeholder declaration",
+            snippet="axiom MissingAxiom : True",
+        ),
+        TrustFinding(
+            file="Demo.lean",
+            module="Demo",
+            line=10,
+            declaration_kind="theorem",
+            declaration_name="soft_theorem",
+            finding="skeletal-proof",
+            severity="soft",
+            detail="skeletal proof",
+            snippet="theorem soft_theorem : True := by aesop",
+        ),
+    ]
+    from tools.quality.placeholder_audit import ModuleAudit
+
+    module = ModuleAudit(
+        path="Demo.lean",
+        module="Demo",
+        finding_count=2,
+        hard_count=1,
+        soft_count=1,
+        findings=findings,
+    )
+    payload = build_json([module], root=tmp_path / "lean", scanned_count=1)
+
+    assert payload["schema"] == "info_geometry.placeholder_audit.v2"
+    assert payload["authority_tier"] == "heuristic-proxy"
+    assert payload["summary"]["provenance"]["hard_failures"] == 1
+    assert payload["summary"]["provenance"]["soft_findings"] == 1
+
+    first = payload["modules"][0]["findings"][0]
+    assert "graph_grounded_signal" in first
+    assert "heuristic_signal" in first
+    assert "hard_verdict_allowed" in first

@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace LeanTestProject.Valid.WithAxioms\n\n-- Valid theorem using whitelisted Classical axioms\nopen Classical\n\ntheorem uses_choice : True := by\n  have h := em (∃ n : Nat, n = n)\n  trivial\n\nend LeanTestProject.Valid.WithAxioms\n","mtime":1778015484740}

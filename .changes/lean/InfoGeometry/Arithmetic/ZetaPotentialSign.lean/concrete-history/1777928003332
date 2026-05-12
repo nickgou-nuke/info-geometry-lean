@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-\nInfoGeometry/Arithmetic/ZetaPotentialSign.lean\n\nLog ζ sign convention.\n-/\n\nimport Mathlib\n\nnamespace InfoGeometry.Arithmetic.ZetaPotential\n\n/-- Dummy definition for Zeta potential sign convention. -/\ndef zetaPotentialSign : ℝ := 1\n\nend InfoGeometry.Arithmetic.ZetaPotential\n","mtime":1777928003332}

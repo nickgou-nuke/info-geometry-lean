@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean\n\nnamespace Auto.Debugger\n\ninitialize Idbg.stack : IO.Ref (Array String) ← IO.mkRef #[]\n\ndef Idbg.clearStack : IO Unit := Idbg.stack.set #[]\n\nend Auto.Debugger\n","mtime":1778061430179}

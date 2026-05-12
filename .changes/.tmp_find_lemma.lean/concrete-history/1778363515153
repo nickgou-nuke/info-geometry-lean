@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Analysis.InnerProductSpace.Projection.Basic\n#print HasOrthogonalProjection\n","mtime":1778363515153}

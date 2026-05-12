@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lake\nopen System Lake DSL\n\npackage Paperproof\n\n@[default_target]\nlean_lib Paperproof\n\nlean_lib Services\n\nlean_lib Tests\n","mtime":1778008074739}

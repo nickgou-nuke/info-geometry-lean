@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Analysis.InnerProductSpace.Projection.Basic\n#check @HasOrthogonalProjection.ofCompleteSpace\n","mtime":1778363421111}

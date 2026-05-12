@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Simple valid theorem with no exploits\ntheorem simple_theorem : True := trivial\n","mtime":1778015484740}

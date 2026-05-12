@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Krein.Metric\nopen InfoGeometry.Krein\nopen KreinSpace\nvariable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]\ndef test (U : NeutralSpace E →L[ℝ] NeutralSpace E) (h : IsKreinIsometry U) : IsKreinIsometry (U.comp U) :=\n  IsKreinIsometry.comp h h\n","mtime":1776602621468}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.ManifoldDegreeCore\n\n/-!\n# InfoGeometry.Canonical.ManifoldDegree\n\nCanonical manifold-degree surface.\n-/\n\nnamespace InfoGeometry.Canonical.ManifoldDegree\n\nend InfoGeometry.Canonical.ManifoldDegree\n","mtime":1777199300153}

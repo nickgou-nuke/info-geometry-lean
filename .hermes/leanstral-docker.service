@@ -1,0 +1,18 @@
+[Unit]
+Description=Leanstral LLM Docker API (OpenAI-compatible)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+WorkingDirectory=/home/goutev/repos/info-geometry-lean
+ExecStartPre=-/usr/bin/docker rm -f leanstral-api
+ExecStart=/usr/bin/docker run --rm --gpus all --name leanstral-api -p 18889:8000 \
+  -v /home/goutev/models/Leanstral-2603-GGUF:/models \
+  -e N_CTX=32768 -e MODEL=/models/mistralai_Leanstral-128x3.9B-2603-Q4_K_M.gguf \
+  ghcr.io/abetlen/llama-cpp-python:latest
+ExecStop=/usr/bin/docker stop leanstral-api
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

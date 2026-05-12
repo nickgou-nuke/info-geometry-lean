@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.GeneralizedKL\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.generalizedKL\n\nCompatibility shim. The maintained implementation now lives in\n`InfoGeometry.Canonical.GeneralizedKL`.\n-/\n\nend InfoGeometry\n","mtime":1776602622070}

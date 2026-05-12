@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/External/Virasoro/WittAlgebra.lean","time":1778340053746,"baseTime":1778340052566,"changes":[{"range":{"start":{"line":99,"character":0},"end":{"line":100,"character":0}},"text":"  simpa only [OfNat.ofNat_ne_zero, false_or] using smul_eq_zero.mp aux\n","rangeOffset":3697,"rangeLength":90}]}

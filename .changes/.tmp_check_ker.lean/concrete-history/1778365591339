@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Analysis.InnerProductSpace.Projection.Basic\n#check Submodule.ker_starProjection\n","mtime":1778365591339}

@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/SchurDrazinMoorePenrose.lean","time":1778530574227,"baseTime":1778530573285,"changes":[{"range":{"start":{"line":55,"character":0},"end":{"line":57,"character":0}},"text":"  is_zero_mode :\n    Mode → Prop\n\n","rangeOffset":1771,"rangeLength":31}]}

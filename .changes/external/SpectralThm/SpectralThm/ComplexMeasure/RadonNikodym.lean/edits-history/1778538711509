@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/ComplexMeasure/RadonNikodym.lean","time":1778538711509,"baseTime":1778538710555,"changes":[{"range":{"start":{"line":40,"character":0},"end":{"line":41,"character":0}},"text":"  let h (x : X) : ℂ := Complex.mk (f_re x) (f_im x)\n","rangeOffset":1708,"rangeLength":40}]}

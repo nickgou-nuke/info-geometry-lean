@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/ComplexMeasure/Integral.lean","time":1778537536967,"baseTime":1778537536046,"changes":[{"range":{"start":{"line":256,"character":0},"end":{"line":258,"character":0}},"text":"          exact (mul_le_of_le_one_left (norm_nonneg _) hx).trans (hf x)\n","rangeOffset":10686,"rangeLength":82}]}

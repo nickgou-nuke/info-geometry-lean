@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.Algebra.Module.Basic\nstructure Foo (A B : Type) [AddCommGroup A] [AddCommGroup B] where\n  fst : A\n  snd : B\n  deriving AddCommGroup\n","mtime":1778363575586}

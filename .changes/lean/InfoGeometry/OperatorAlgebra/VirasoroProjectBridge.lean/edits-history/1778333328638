@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/VirasoroProjectBridge.lean","time":1778333328638,"baseTime":1778333322706,"changes":[{"range":{"start":{"line":36,"character":0},"end":{"line":39,"character":0}},"text":"      by_cases h : m + n = 0\n      · simp [h]\n        norm_cast\n      · simp [h]\n","rangeOffset":1091,"rangeLength":53}]}

@@ -17,7 +17,7 @@ Defaults:
 
 Environment:
   LEANSTRAL_BASE_URL  Override default Leanstral endpoint (default: http://127.0.0.1:18889/v1)
-  OPENROUTER_PI_MODEL Override the pi assistant OpenRouter model (example: openrouter/qwen/qwen3-coder:free).
+  OPENROUTER_PI_MODEL Override the pi assistant OpenRouter model (example: openrouter/openrouter/owl-alpha).
   If unset, model comes from .archon/config.yaml or the resolver output.
   OPENROUTER_API_KEY  Required when Pi or Hermes use OpenRouter; set via env or .archon/.env.
   ARCHON_SKIP_CLAUDE_PREFLIGHT=1 to skip the preflight API key check
@@ -215,6 +215,17 @@ export_model_env_keys
 rm -f "$MODEL_RESOLUTION_ENV"
 
 echo "Startup model source: resolved_via=${MODEL_RESOLUTION_SOURCE} archon_config=${ARCHON_STARTUP_ARCHON_CONFIG} nemoclaw_config=${ARCHON_STARTUP_NEMOCLAW_CONFIG}"
+
+if [[ -n "${ARCHON_PI_MODEL:-}" && "${ARCHON_PI_MODEL}" == openrouter/* ]]; then
+  OPENROUTER_API_KEY_VAL="${OPENROUTER_API_KEY:-}"
+  case "${OPENROUTER_API_KEY_VAL}" in
+    ""|"[REDACTED]"|"sk-test"|"sk-or-v1-test"|"test"|"changeme")
+      echo "ERROR: ARCHON_PI_MODEL=${ARCHON_PI_MODEL} requires a real OPENROUTER_API_KEY in environment." >&2
+      echo "Set OPENROUTER_API_KEY and retry (do not use placeholders)." >&2
+      exit 2
+      ;;
+  esac
+fi
 
 echo "Checking Leanstral endpoint (${LEANSTRAL_BASE_URL})..."
 if python3 tools/infra/check_resident_model_endpoint.py \

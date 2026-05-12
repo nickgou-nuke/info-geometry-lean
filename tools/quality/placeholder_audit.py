@@ -650,24 +650,48 @@ def build_json(
 ) -> dict[str, object]:
     hard_count = sum(mod.hard_count for mod in modules)
     soft_count = sum(mod.soft_count for mod in modules)
+    findings: list[dict[str, Any]] = []
+    for mod in modules:
+        for item in mod.findings:
+            row = asdict(item)
+            row["graph_grounded_signal"] = "none"
+            row["heuristic_signal"] = item.finding
+            row["hard_verdict_allowed"] = item.severity == "hard"
+            findings.append(row)
+
     return {
-        "schema": "info_geometry.placeholder_audit.v1",
+        "schema": "info_geometry.placeholder_audit.v2",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "root": rel(root),
+        "authority_tier": "heuristic-proxy",
         "summary": {
             "module_count": len(modules),
             "scanned_count": scanned_count,
             "finding_count": hard_count + soft_count,
             "hard_count": hard_count,
             "soft_count": soft_count,
+            "provenance": {
+                "hard_failures": hard_count,
+                "soft_findings": soft_count,
+                "advisory_findings": 0,
+            },
         },
         "modules": [
             {
                 **asdict(mod),
-                "findings": [asdict(item) for item in mod.findings],
+                "findings": [
+                    {
+                        **asdict(item),
+                        "graph_grounded_signal": "none",
+                        "heuristic_signal": item.finding,
+                        "hard_verdict_allowed": item.severity == "hard",
+                    }
+                    for item in mod.findings
+                ],
             }
             for mod in modules
         ],
+        "findings": findings,
     }
 
 
@@ -771,7 +795,12 @@ def main() -> int:
 
     if not args.strict:
         return 0
-    return 1 if any(item.severity == "hard" for item in findings) else 0
+
+    hard_failures = json_payload["summary"].get("provenance", {}).get(
+        "hard_failures",
+        json_payload["summary"]["hard_count"],
+    )
+    return 1 if hard_failures > 0 else 0
 
 
 if __name__ == "__main__":

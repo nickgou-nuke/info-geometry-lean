@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.ErlangenLanglandsLane\nimport InfoGeometry.ErlangenLanglandsGeometryLane\n\n/-!\nGeometry-augmented lane entrypoint.\n\nImport this module when a file needs the geometry payload layer together with the\ncore lane declarations and constructor.\n-/\n\nnamespace InfoGeometry\n\nend InfoGeometry\n","mtime":1778185904406}

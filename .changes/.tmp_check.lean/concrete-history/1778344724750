@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean Elab Frontend\n#print State\n","mtime":1778344724750}

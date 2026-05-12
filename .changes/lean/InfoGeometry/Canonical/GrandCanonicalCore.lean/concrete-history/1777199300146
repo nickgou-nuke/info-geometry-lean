@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.GrandCanonical.Core\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Canonical.GrandCanonicalCore\n\nCanonical facade for the grand-canonical core interfaces.\n-/\n\nend InfoGeometry\n","mtime":1777199300146}

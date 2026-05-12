@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Docs.auto_blueprints\nimport Docs.generated_blueprints\n\n/-!\n# Docs\n\nUmbrella module for documentation-generation library code.\n\nExecutable helpers such as `Docs.AutoTag` and `Docs.emit_blueprint_tex`\nare intentionally not imported here because each defines a top-level `main`\nfor `lake env lean --run`.\n-/\n","mtime":1776602621960}

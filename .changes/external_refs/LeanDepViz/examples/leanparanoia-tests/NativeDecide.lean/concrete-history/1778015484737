@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Native decide introduces compiler axioms to trusted codebase\ntheorem NativeDecide_exploit_theorem : (List.range 100).length = 100 := by\n  native_decide\n","mtime":1778015484737}

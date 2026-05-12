@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.YangMillsFiniteQFT\nimport InfoGeometry.Canonical.YangMillsFiniteBridge\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Canonical.YangMillsFinite\n\nUmbrella façade for the finite constructive Yang-Mills corridor.\n-/\n\nend InfoGeometry\n","mtime":1777199300174}

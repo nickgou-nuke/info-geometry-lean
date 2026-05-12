@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace LeanTestProject.CustomAxioms.HiddenInMacro\n\n-- Axiom hidden behind macro expansion\n\naxiom hidden_axiom : False\n\nmacro \"prove_false\" : term => `(hidden_axiom)\n\ntheorem HiddenInMacro_exploit_theorem : False :=\n  prove_false\n\nend LeanTestProject.CustomAxioms.HiddenInMacro\n","mtime":1778015484736}

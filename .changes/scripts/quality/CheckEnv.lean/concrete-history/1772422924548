@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean\n\n#eval do\n  let env ← importModules #[{module := `InfoGeometry}] {} 0\n  let cnt := (env.constants.toList).length\n  IO.println s!\"constants count: {cnt}\"\n  for (name, _) in env.constants.toList do\n    if name.toString.startsWith \"InfoGeometry\" then\n      IO.println name\n","mtime":1772422924548}

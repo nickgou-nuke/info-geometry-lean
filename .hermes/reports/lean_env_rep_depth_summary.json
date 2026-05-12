@@ -1,0 +1,11 @@
+{"total_tagged": 6116,
+ "total_prop_tagged": 4032,
+ "schema": "info_geometry.rep_depth_env_export.v1",
+ "layer_counts":
+ [{"rep_layer": "L0_Count", "prop": 0, "all": 2},
+  {"rep_layer": "L1_Projective", "prop": 155, "all": 221},
+  {"rep_layer": "L2_Operator", "prop": 844, "all": 1485},
+  {"rep_layer": "L3_Krein", "prop": 1172, "all": 1672},
+  {"rep_layer": "L4_ModularTransport", "prop": 1429, "all": 2010},
+  {"rep_layer": "L5_ThermodynamicClosure", "prop": 432, "all": 726}],
+ "import_module": "InfoGeometry.All"}

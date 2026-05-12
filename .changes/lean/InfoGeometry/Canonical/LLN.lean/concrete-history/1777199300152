@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.LLNCore\n\n/-!\n# InfoGeometry.Canonical.LLN\n\nCanonical LLN surface built from the canonical core interface.\n-/\n\nnamespace InfoGeometry.Canonical.LLN\n\nend InfoGeometry.Canonical.LLN\n","mtime":1777199300152}

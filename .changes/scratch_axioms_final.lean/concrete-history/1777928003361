@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.ChiralNullSpaceBridge\n\n#print axioms InfoGeometry.Canonical.ChiralNullSpaceBridge.ZeroModeSubtractionWitness\n","mtime":1777928003361}

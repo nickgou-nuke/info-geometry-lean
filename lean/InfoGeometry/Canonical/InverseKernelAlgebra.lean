@@ -207,6 +207,19 @@ theorem metricComplementaryProjector_star :
   change star (1 - CIK.metricProjector) = 1 - CIK.metricProjector
   simp [CIK.metricProjector_star]
 
+/--
+The certified complementary Drazin spectral projector is self-adjoint whenever
+`A` is self-adjoint.  The self-adjointness of `A_D` is derived internally from
+Drazin uniqueness.
+-/
+theorem spectralComplementaryProjector_star_of_selfAdjoint
+    (hA : star CIK.A = CIK.A) :
+    star CIK.spectralComplementaryProjector = CIK.spectralComplementaryProjector := by
+  change star (1 - CIK.spectralProjector) = 1 - CIK.spectralProjector
+  have hAD : star CIK.A_D = CIK.A_D :=
+    IsDrazinInverse.star_eq_self_of_selfAdjoint CIK.hDrazin hA
+  simp [CIK.spectralProjector_star_of_selfAdjoint hA hAD]
+
 /-- Certified right-projector mismatch is the spectral-minus-range difference. -/
 theorem mpRangeProjector_sub_metricProjector_eq_two_smul_dilationGap :
     CIK.mpRangeProjector - CIK.metricProjector = (2 : ℝ) • CIK.dilationGap := by

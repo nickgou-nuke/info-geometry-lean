@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.All\n\n\n\ndef NegLogRectifier : Prop := True\n","mtime":1777928362726}

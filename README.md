@@ -128,6 +128,54 @@ igf validate --strict --print-json
 - `handover/`
   packet and runbook history, not current authority
 
+## Closure-Debt Constructive-Proof SOP
+
+Use this SOP when reducing closure debt in Lean modules.
+
+1. Run deterministic debt discovery first
+
+```bash
+python3 tools/quality/closure_debt_crawler.py \
+  --root lean \
+  --json-out reports/audit/repo-closure-debt-crawler.json \
+  --md-out reports/audit/repo-closure-debt-crawler.md \
+  --print-summary
+
+python3 tools/quality/placeholder_audit.py \
+  --root lean/InfoGeometry \
+  --json-out reports/audit/repo-placeholder-audit.json \
+  --md-out reports/audit/repo-placeholder-audit.md \
+  --signals-out reports/audit/repo-placeholder-signals.json
+```
+
+2. Prioritize work in this order
+- P0: hard findings (`sorry`, `admit`, unsafe proof holes)
+- P1: owner-target propositions that currently lack theorem-backed constructive chains
+- P2: soft/advisory debt (skeletal proofs, packaging debt)
+
+3. Enforce proof authority policy
+- No witness placeholders as final authority.
+- Green compile is necessary but not sufficient.
+- Every promoted proposition must be backed by explicit derivation notes: target theorem -> local lemmas -> upstream owner lemmas -> mathlib roots.
+- Prefer existing mathlib lemmas first; if missing, add minimal intermediate lemmas in-repo with full proofs.
+- External literature (AFP/arXiv/etc.) is input for theorem design only; authority is Lean+mathlib-checked proof terms.
+- Reject vacuous packaging as closure evidence (`Nonempty`, `Exists`, `_valid` projection-only readbacks, interface/witness shells) unless fully discharged by theorem derivation.
+
+4. Verify each touched module immediately
+
+```bash
+lake env lean lean/<Path/To/Module>.lean
+lake build <Module.Name>
+```
+
+5. Re-run debt scanners after each batch and record artifacts
+- Keep JSON/MD outputs under `reports/audit/` for each pass.
+- Do not claim debt reduction without scanner evidence and green Lean build evidence.
+
+6. Commit discipline
+- Keep commits surgical (module + directly related tests/scripts only).
+- If asked to push, push both remotes (`origin` and `upstream`).
+
 ## Documentation Rules
 
 Start with:

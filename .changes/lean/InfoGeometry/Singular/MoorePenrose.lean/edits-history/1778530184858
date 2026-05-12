@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/MoorePenrose.lean","time":1778530184858,"baseTime":1778530183947,"changes":[{"range":{"start":{"line":310,"character":0},"end":{"line":320,"character":0}},"text":"\nend Hilbert\n\nend InfoGeometry.Singular.MoorePenrose\n\n","rangeOffset":11785,"rangeLength":384}]}

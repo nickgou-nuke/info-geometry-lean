@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.CountSinkhornFlow\n\nnamespace InfoGeometry\n\n/-!\n# Research.CountEmergentFlow\n\nReview-surface facade for the constructive count-induced Sinkhorn flow.\nThe owner declarations now live in `CountSinkhornFlow`.\n-/\n\nend InfoGeometry\n","mtime":1777199300141}

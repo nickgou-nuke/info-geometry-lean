@@ -1,0 +1,1 @@
+{"type":"new","contents":"example (x y : Nat) : x = y -> y = x := by\n  intro h\n  exact h.symm\n","mtime":1777928362734}

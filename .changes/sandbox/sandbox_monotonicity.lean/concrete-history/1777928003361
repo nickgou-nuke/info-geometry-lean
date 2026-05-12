@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Convex.EuclideanMonotonicity\n\nopen InfoGeometry.Convex\nopen InfoGeometry.Convex.Euclidean\n\nvariable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]\n\n#check euclidean_grad_monotone\n\nexample (x y : E) : 0 ≤ inner ℝ (grad x - grad y) (x - y) := euclidean_grad_monotone x y\n","mtime":1777928003361}

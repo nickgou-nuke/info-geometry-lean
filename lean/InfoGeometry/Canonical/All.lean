@@ -51,6 +51,7 @@ import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
@@ -98,6 +99,8 @@ import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralKMSOwner
+import InfoGeometry.Canonical.ChiralDrazinLightConeBridge
+import InfoGeometry.Canonical.ChiralLightConeTensorTower
 import InfoGeometry.Canonical.ChiralNullSpaceBridge
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.ChiralRadiationCones
@@ -157,11 +160,15 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinAdjoint
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv
 import InfoGeometry.Canonical.DrazinDescriptorSystems
+import InfoGeometry.Canonical.SemilinearPaperLean4
+import InfoGeometry.Canonical.SemilinearPresentation
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
@@ -221,8 +228,16 @@ import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral
 import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
+import InfoGeometry.Canonical.HestenesModularBregman
+import InfoGeometry.Canonical.HestenesComplexTranslation
+import InfoGeometry.Canonical.HestenesCommutantGeometry
+import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Canonical.HestenesQVandermondeShadow
 import InfoGeometry.Canonical.HestenesRealStructures
+import InfoGeometry.Canonical.HestenesPhaseSemilinear
+import InfoGeometry.Canonical.HestenesPhaseSpectral
+import InfoGeometry.Canonical.DrazinChiralFrameEquivariance
+import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Canonical.IB
 import InfoGeometry.Canonical.IBBase
@@ -312,9 +327,12 @@ import InfoGeometry.Canonical.ManifoldHomologyCore
 import InfoGeometry.Canonical.MeasureScaleShape
 import InfoGeometry.Canonical.MetricTransportWitness
 import InfoGeometry.Canonical.MixtureOfExperts
+import InfoGeometry.Canonical.ModularCartanCantorSystem
+import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Canonical.ModularBerryBridge
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
+import InfoGeometry.Canonical.ModularHamiltonianSignum
 import InfoGeometry.Canonical.ModularHessian
 import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.ModularKramersBridge
@@ -353,6 +371,7 @@ import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
 import InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
+import InfoGeometry.Canonical.NoncommutativeModularSignum
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
@@ -368,6 +387,7 @@ import InfoGeometry.Canonical.OperatorialFierzBridge
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.OperatorialInformationLift
+import InfoGeometry.Canonical.OperatorialLogGeneratingPotential
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.OperatorValuedSouriauFamily
 import InfoGeometry.Canonical.OperatorialVolumePreservation
@@ -488,6 +508,8 @@ import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Canonical.SouriauOperatorBregmanModular
+import InfoGeometry.Canonical.SouriauModularBregmanOperator
 import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.SouriauThermalEvaluation

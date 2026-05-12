@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry\n\n-- Minimal test driver for Lean 4 lake test integration.\n-- This will succeed if the codebase compiles and all imports resolve.\n\n#check InfoGeometry\n\n-- Optionally, add more checks for specific theorems/defs:\n-- #check InfoGeometry.Canonical.BekensteinBound\n","mtime":1777928003354}

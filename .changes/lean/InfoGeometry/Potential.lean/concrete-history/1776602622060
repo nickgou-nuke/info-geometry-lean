@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Potential.LogPotential\nimport InfoGeometry.Potential.Thermo\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Potential\n\nRoot umbrella for log-potential and thermodynamic potential layers.\n-/\n\nend InfoGeometry\n","mtime":1776602622060}

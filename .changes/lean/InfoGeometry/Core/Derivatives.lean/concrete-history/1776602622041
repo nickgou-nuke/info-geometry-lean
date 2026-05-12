@@ -1,0 +1,1 @@
+{"type":"new","contents":"\nimport InfoGeometry.Core.GrandCanonical\n\nnamespace InfoGeometry\n\n/-!\n# Core Derivatives\n\nCompatibility bridge for users importing derivative identities from the legacy path.\n\nThe canonical declarations live in `InfoGeometry.Core.GrandCanonical`.\n-/\n\nend InfoGeometry\n","mtime":1776602622041}

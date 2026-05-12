@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Convex.Bregman\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.Convex\n\nRoot umbrella for convex-information primitives.\n-/\n\nend InfoGeometry\n","mtime":1776602622040}

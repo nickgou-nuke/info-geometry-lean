@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Tensor.DeBruijn\n\n#print axioms InfoGeometry.Tensor.DeBruijnEdge.lift_contractionSound\n#print axioms InfoGeometry.Tensor.DeBruijnEdge.lift_inScope\n#print axioms InfoGeometry.Tensor.DeBruijnEdge.lift_portCompatible\n#print axioms InfoGeometry.Tensor.DeBruijnEdge.sound_of_inScope_compatible\n","mtime":1778527036846}

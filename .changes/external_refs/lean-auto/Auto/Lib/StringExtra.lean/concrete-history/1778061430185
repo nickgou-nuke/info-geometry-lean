@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace Auto\n\n@[reducible] def String.le (a b : String) : Prop := a = b ∨ a < b\n\ndef String.lt (a b : String) : Prop := a < b\n\nend Auto","mtime":1778061430185}

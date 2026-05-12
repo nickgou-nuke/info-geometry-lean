@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/MoorePenrose.lean","time":1778534471082,"baseTime":1778534470190,"changes":[{"range":{"start":{"line":183,"character":0},"end":{"line":185,"character":0}},"text":"      exact (Submodule.starProjection_apply_mem K x)\n","rangeOffset":6811,"rangeLength":90}]}

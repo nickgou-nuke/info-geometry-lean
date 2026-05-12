@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Singular/SchurDrazinMoorePenrose.lean","time":1778532573431,"baseTime":1778532572437,"changes":[{"range":{"start":{"line":148,"character":0},"end":{"line":154,"character":0}},"text":"      exact hNormalL.sum_orthogonalProjection_apply_eq_self x\n  }\n\n","rangeOffset":5546,"rangeLength":197}]}

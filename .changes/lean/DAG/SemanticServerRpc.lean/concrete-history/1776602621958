@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean.Server\nimport Lean.Server.Rpc.RequestHandling\n\nimport DAG.ServerExport\n\nopen Lean\nopen Lean.Server\n\nbuiltin_initialize\n  registerBuiltinRpcProcedure\n    `DAG.Server.semanticBlocks\n    DAG.Server.SemanticBlocksParams\n    Json\n    DAG.Server.semanticBlocks\n","mtime":1776602621958}

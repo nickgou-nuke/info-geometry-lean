@@ -1,0 +1,1 @@
+{"type":"new","contents":"/-\nCopyright (c) 2023 Jannis Limperg. All rights reserved.\nReleased under Apache 2.0 license as described in the file LICENSE.\nAuthors: Jannis Limperg\n-/\n\nimport Aesop\n\nset_option aesop.check.all true\n\ndeclare_aesop_rule_sets [regular₁, regular₂]\n\ndeclare_aesop_rule_sets [dflt₁, dflt₂] (default := true)\n","mtime":1778004626777}

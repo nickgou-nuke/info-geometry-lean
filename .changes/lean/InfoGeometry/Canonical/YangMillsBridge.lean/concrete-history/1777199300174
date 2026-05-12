@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.YangMillsFinite\n\n/-!\n# InfoGeometry.Canonical.YangMillsBridge\n\nStable Yang-Mills canonical surface.\n\nFinite constructive closure is exposed through:\n`InfoGeometry.Canonical.YangMillsFinite`.\n-/\n\nnamespace InfoGeometry.Canonical.YangMillsBridge\n\nend InfoGeometry.Canonical.YangMillsBridge\n","mtime":1777199300174}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean Elab Command\n#print Context\n","mtime":1778349692065}

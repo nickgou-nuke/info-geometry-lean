@@ -1,0 +1,1 @@
+{"type":"new","contents":"namespace LeanTestProject.Sorry.Direct\n\n-- Direct sorry bypasses proof verification\ntheorem SorryDirect_exploit_theorem : False := sorry\n\nend LeanTestProject.Sorry.Direct\n","mtime":1778015484739}

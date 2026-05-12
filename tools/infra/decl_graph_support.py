@@ -162,5 +162,79 @@ def load_decl_graph(root: Path) -> tuple[dict[tuple[str, int, str], str], dict[s
 
     return decl_key_to_full, profiles
 
+def _row_get(row: Any, key: str, default: Any = None) -> Any:
+    if isinstance(row, dict):
+        return row.get(key, default)
+    return getattr(row, key, default)
+
+def _normalize_rel_file(root: Path, file_value: Any) -> str | None:
+    if not isinstance(file_value, str) or not file_value:
+        return None
+    try:
+        return Path(file_value).resolve().relative_to(root).as_posix()
+    except Exception:
+        return file_value
+
+def resolve_decl_full_name(
+    row: Any,
+    decl_key_to_full: dict[tuple[str, int, str], str],
+    graph_profiles: dict[str, GraphProfile],
+    *,
+    root: Path | None = None,
+    max_line_delta: int = 3,
+) -> str | None:
+    """Resolve a parsed local declaration row to a full graph declaration name.
+
+    This compatibility helper is intentionally conservative.  It first uses the
+    exact `(file,line,leaf)` key produced by `load_decl_graph`, then falls back to
+    a nearby-line search among existing `GraphProfile`s.  It does not fabricate
+    graph nodes.
+    """
+    root = root or Path.cwd()
+    file_rel = _normalize_rel_file(root, _row_get(row, "file"))
+    line = _row_get(row, "line")
+    leaf = _row_get(row, "name")
+    if not isinstance(file_rel, str) or not isinstance(line, int) or not isinstance(leaf, str):
+        return None
+
+    exact = decl_key_to_full.get((file_rel, line, leaf))
+    if exact is not None:
+        return exact
+
+    profile = resolve_graph_profile(
+        file_rel=file_rel,
+        leaf_name_hint=leaf,
+        line=line,
+        graph_profiles=graph_profiles,
+        max_line_delta=max_line_delta,
+    )
+    return None if profile is None else profile.name
+
+def resolve_graph_profile(
+    *,
+    file_rel: str,
+    leaf_name_hint: str,
+    line: int,
+    graph_profiles: dict[str, GraphProfile],
+    max_line_delta: int = 3,
+) -> GraphProfile | None:
+    """Find the nearest graph profile matching a source file and leaf name."""
+    best: tuple[int, str, GraphProfile] | None = None
+    for name, profile in graph_profiles.items():
+        if profile.file != file_rel:
+            continue
+        if name.rsplit(".", 1)[-1] != leaf_name_hint:
+            continue
+        pline = profile.line
+        if not isinstance(pline, int):
+            continue
+        delta = abs(pline - line)
+        if delta > max_line_delta:
+            continue
+        candidate = (delta, name, profile)
+        if best is None or candidate[:2] < best[:2]:
+            best = candidate
+    return None if best is None else best[2]
+
 def weak_graph_evidence(p: GraphProfile | None) -> bool:
     return p is None or p.structural_role in {"isolated_theorem", "type_only_theorem"}

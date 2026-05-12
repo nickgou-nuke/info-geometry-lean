@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Canonical.SuperUnified\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.SuperUnified\n\nCompatibility shim. The maintained implementation now lives in\n`InfoGeometry.Canonical.SuperUnified`.\n-/\n\nend InfoGeometry\n","mtime":1776602622068}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Paperproof\n\nexample (p q : Prop) (hp : p) (hq : q) : q ∧ p := by\n  constructor\n  · exact hq\n  · exact hp\n","mtime":1778008954945}

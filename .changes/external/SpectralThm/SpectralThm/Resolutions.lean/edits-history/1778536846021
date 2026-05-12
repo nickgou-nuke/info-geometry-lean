@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/Resolutions.lean","time":1778536846021,"baseTime":1778536845051,"changes":[{"range":{"start":{"line":106,"character":0},"end":{"line":107,"character":0}},"text":"          ContinuousLinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]\n","rangeOffset":4307,"rangeLength":78}]}

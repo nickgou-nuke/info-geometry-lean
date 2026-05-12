@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Sorry hidden in intermediate proof step\ntheorem Intermediate_exploit_theorem : True ∧ True := by\n  constructor\n  · exact trivial\n  · have h : True := sorry\n    exact h\n","mtime":1778015484736}

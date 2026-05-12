@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/MoorePenrose.lean","time":1778534413898,"baseTime":1778534413003,"changes":[{"range":{"start":{"line":264,"character":0},"end":{"line":265,"character":0}},"text":"    simp only [B, moorePenroseInverse, ContinuousLinearMap.comp_apply, hproj, hsymm]\n","rangeOffset":10342,"rangeLength":22}]}

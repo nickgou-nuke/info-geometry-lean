@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib.NumberTheory.Real.Irrational\n\ntheorem irrational_sqrt_two_smoke : Irrational (Real.sqrt 2) := by\n  simpa using irrational_sqrt_two\n","mtime":1778045637732}

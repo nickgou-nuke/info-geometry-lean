@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.ExponentialFamily.Class\nimport InfoGeometry.ExponentialFamily.Finite\n\nnamespace InfoGeometry\n\n/-!\n# InfoGeometry.ExponentialFamily\n\nRoot umbrella for exponential-family interfaces and finite constructions.\n-/\n\nend InfoGeometry\n","mtime":1776602622044}

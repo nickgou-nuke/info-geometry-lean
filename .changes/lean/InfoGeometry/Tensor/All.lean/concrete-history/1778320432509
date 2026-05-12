@@ -1,0 +1,1 @@
+{"type":"new","contents":"import InfoGeometry.Tensor.DeBruijn\nimport InfoGeometry.Tensor.DeBruijnPayload\n\nnamespace InfoGeometry\nnamespace Tensor\n\n/-!\n# InfoGeometry.Tensor.All\n\nUmbrella module for the conservative tensor-overlay kernel.\n-/\n\nend Tensor\nend InfoGeometry\n","mtime":1778320432509}

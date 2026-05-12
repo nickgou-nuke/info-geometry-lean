@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\nopen Lean\n\ndef setPPOptions (opts : Lean.Options) : Lean.Options :=\n  opts\n    -- |>.set pp.notation.name true\n    -- |>.set pp.fieldNotation.name true\n    -- |>.set pp.fullNames.name false\n    -- |>.set pp.coercions.types.name false\n","mtime":1778005400310}

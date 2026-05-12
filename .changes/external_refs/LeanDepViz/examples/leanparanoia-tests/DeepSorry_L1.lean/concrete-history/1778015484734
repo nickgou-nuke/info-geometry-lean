@@ -1,0 +1,1 @@
+{"type":"new","contents":"-- Uses sorry from L0 transitively (1 level deep)\nimport LeanTestProject.DeepSorry_L0\n\ntheorem uses_sorry_from_l0 : True := by\n  have : False := has_sorry\n  exact True.intro\n","mtime":1778015484734}

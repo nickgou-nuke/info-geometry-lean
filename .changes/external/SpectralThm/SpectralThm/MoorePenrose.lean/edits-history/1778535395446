@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/external/SpectralThm/SpectralThm/MoorePenrose.lean","time":1778535395446,"baseTime":1778535394522,"changes":[{"range":{"start":{"line":205,"character":0},"end":{"line":208,"character":0}},"text":"    have hKzero : A (K.starProjection x) = 0 :=\n      Submodule.starProjection_apply_mem K x\n","rangeOffset":7779,"rangeLength":141}]}

@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Lean\n#check Lean.Environment.getModuleIdxFor?\n#check Lean.Environment.getModuleFor?\n#check Lean.Environment.getModuleIdx?\n#check Lean.EnvironmentHeader.getModuleIdx?\n#check Lean.EnvironmentHeader.moduleNames\n","mtime":1777928003301}

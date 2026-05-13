@@ -10,6 +10,7 @@
 --   ig_logic_vectors / ig_text_index_docs
 --   ig_translation_candidates / ig_translation_edges / ig_translation_scc
 --   ig_kernel_equivalence_edges
+--   ig_triple_homomorphism_edges
 
 -- ============================================================
 -- 1. Wire schematic for a declaration
@@ -337,9 +338,30 @@ FOR e IN ig_kernel_equivalence_edges
   }
 
 -- ============================================================
--- 17. Triple-preserved but not kernel-certified equivalence
+-- 17. Triple homomorphism certificate hierarchy
 -- ============================================================
-FOR e IN ig_wire_edges
+FOR e IN ig_triple_homomorphism_edges
+  FILTER e.kind == "triple_homomorphism_certificate"
+  RETURN {
+    from: e._from,
+    to: e._to,
+    sourceId: e.sourceId,
+    targetId: e.targetId,
+    sourceLabel: e.sourceLabel,
+    targetLabel: e.targetLabel,
+    status: e.status,
+    tier: e.verificationTier,
+    leanVerified: e.leanVerified,
+    missingTriples: e.missingTriples,
+    safeForAutoRewrite: e.safeForAutoRewrite ? e.safeForAutoRewrite : false,
+    graphUse: e.graphUse,
+    authority: e.proofAuthority
+  }
+
+-- ============================================================
+-- 18. Triple-preserved but not kernel-certified equivalence
+-- ============================================================
+FOR e IN ig_triple_homomorphism_edges
   FILTER e.kind == "triple_homomorphism_certificate"
   FILTER e.leanVerified == true
 

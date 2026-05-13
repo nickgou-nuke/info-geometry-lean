@@ -261,6 +261,33 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
     assert normalize_wire_row("ig_kernel_equivalence_edges", {"_key": "kec_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_decl_topologies/topo_2", "mode": "type"})["kind"] == "kernel_equivalence_certificate"
 
 
+def test_wire_topology_preflight_allows_missing_optional_kernel_edges(tmp_path: Path) -> None:
+    required_rows = {
+        "ig_wires.jsonl": [{"_key": "wire_1"}],
+        "ig_gates.jsonl": [{"_key": "gate_1"}],
+        "ig_wire_edges.jsonl": [{"_key": "we_1"}],
+        "ig_scc.jsonl": [{"_key": "scc_1"}],
+        "ig_scc_edges.jsonl": [{"_key": "se_1"}],
+        "ig_decl_topologies.jsonl": [{"_key": "topo_1"}],
+        "ig_hashes.jsonl": [{"_key": "hash_1"}],
+        "ig_logic_tokens.jsonl": [{"_key": "tok_1"}],
+        "ig_logic_vectors.jsonl": [{"_key": "lv_1"}],
+        "ig_text_index_docs.jsonl": [{"_key": "doc_1"}],
+        "ig_translation_candidates.jsonl": [{"_key": "tc_1"}],
+        "ig_translation_edges.jsonl": [{"_key": "te_1"}],
+        "ig_translation_scc.jsonl": [{"_key": "tscc_1"}],
+        "ig_translation_scc_edges.jsonl": [{"_key": "tse_1"}],
+    }
+    for filename, rows in required_rows.items():
+        write_jsonl(tmp_path / filename, rows)
+
+    pf = preflight(tmp_path)
+
+    assert pf["missing_files"] == []
+    assert pf["optional_missing_files"] == ["ig_kernel_equivalence_edges.jsonl"]
+    assert "ig_kernel_equivalence_edges" not in pf["counts"]
+
+
 def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
     specs = wire_index_specs()
 

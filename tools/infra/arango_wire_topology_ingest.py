@@ -17,6 +17,7 @@ This imports the projection emitted by ``tools/infra/wire_topology_transform.py`
 * ``ig_translation_edges.jsonl``
 * ``ig_translation_scc.jsonl``
 * ``ig_translation_scc_edges.jsonl``
+* ``ig_kernel_equivalence_edges.jsonl``
 
 It deliberately does not import or mutate the raw ``ig_nodes`` / ``ig_edges``
 Lean evidence layer.  All derived documents retain raw ids/hashes for descent.
@@ -69,6 +70,7 @@ ROW_FILES: dict[str, str] = {
     "ig_translation_edges": "ig_translation_edges.jsonl",
     "ig_translation_scc": "ig_translation_scc.jsonl",
     "ig_translation_scc_edges": "ig_translation_scc_edges.jsonl",
+    "ig_kernel_equivalence_edges": "ig_kernel_equivalence_edges.jsonl",
 }
 
 COLLECTION_SPECS = [
@@ -86,6 +88,7 @@ COLLECTION_SPECS = [
     CollectionSpec("ig_translation_edges", edge=True),
     CollectionSpec("ig_translation_scc", edge=False),
     CollectionSpec("ig_translation_scc_edges", edge=True),
+    CollectionSpec("ig_kernel_equivalence_edges", edge=True),
 ]
 
 INDEX_SPECS: dict[str, list[dict[str, Any]]] = {
@@ -224,6 +227,24 @@ INDEX_SPECS: dict[str, list[dict[str, Any]]] = {
         {"fields": ["_from", "role"]},
         {"fields": ["_to", "role"]},
     ],
+    "ig_kernel_equivalence_edges": [
+        {"fields": ["kind"]},
+        {"fields": ["status"]},
+        {"fields": ["mode"]},
+        {"fields": ["sourceDecl"]},
+        {"fields": ["targetDecl"]},
+        {"fields": ["verificationTier"]},
+        {"fields": ["proofAuthority"]},
+        {"fields": ["leanVerified"]},
+        {"fields": ["kernelTypeDefEq"]},
+        {"fields": ["kernelValueDefEq"]},
+        {"fields": ["safeForAutoRewrite"]},
+        {"fields": ["graphUse"]},
+        {"fields": ["candidatePairHash"]},
+        {"fields": ["certificateHash"]},
+        {"fields": ["_from", "kind"]},
+        {"fields": ["_to", "kind"]},
+    ],
 }
 
 
@@ -272,6 +293,10 @@ def normalize_wire_row(collection: str, row: dict[str, Any]) -> dict[str, Any]:
     elif collection == "ig_translation_scc_edges":
         if "_from" not in out or "_to" not in out:
             raise ValueError("ig_translation_scc_edges row is missing _from/_to")
+    elif collection == "ig_kernel_equivalence_edges":
+        if "_from" not in out or "_to" not in out or "mode" not in out:
+            raise ValueError("ig_kernel_equivalence_edges row is missing _from/_to/mode")
+        out.setdefault("kind", "kernel_equivalence_certificate")
     else:
         raise ValueError(f"unknown wire topology collection: {collection}")
     return out

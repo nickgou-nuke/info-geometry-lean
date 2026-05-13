@@ -17,7 +17,7 @@ This imports the projection emitted by ``tools/infra/wire_topology_transform.py`
 * ``ig_translation_edges.jsonl``
 * ``ig_translation_scc.jsonl``
 * ``ig_translation_scc_edges.jsonl``
-* ``ig_kernel_equivalence_edges.jsonl``
+* ``ig_kernel_equivalence_edges.jsonl`` when kernel certificates have been materialized
 
 It deliberately does not import or mutate the raw ``ig_nodes`` / ``ig_edges``
 Lean evidence layer.  All derived documents retain raw ids/hashes for descent.
@@ -54,6 +54,7 @@ from tools.infra.arango_raw_infotree_ingest import (
 
 
 DEFAULT_INPUT_DIR = Path("artifacts/expr-graph/wire-topology")
+OPTIONAL_ROW_COLLECTIONS = frozenset({"ig_kernel_equivalence_edges"})
 
 ROW_FILES: dict[str, str] = {
     "ig_wires": "ig_wires.jsonl",
@@ -351,13 +352,27 @@ def ensure_wire_collections(target: ArangoTarget, *, truncate: bool) -> dict[str
 
 
 def preflight(input_dir: Path) -> dict[str, Any]:
-    missing = [name for name in ROW_FILES.values() if not (input_dir / name).exists()]
+    missing = [
+        name
+        for collection, name in ROW_FILES.items()
+        if collection not in OPTIONAL_ROW_COLLECTIONS and not (input_dir / name).exists()
+    ]
+    optional_missing = [
+        name
+        for collection, name in ROW_FILES.items()
+        if collection in OPTIONAL_ROW_COLLECTIONS and not (input_dir / name).exists()
+    ]
     counts = {
         collection: sum(1 for _ in iter_jsonl(input_dir / filename))
         for collection, filename in ROW_FILES.items()
         if (input_dir / filename).exists()
     }
-    return {"input_dir": str(input_dir), "missing_files": missing, "counts": counts}
+    return {
+        "input_dir": str(input_dir),
+        "missing_files": missing,
+        "optional_missing_files": optional_missing,
+        "counts": counts,
+    }
 
 
 def ingest_wire_topology(
@@ -383,6 +398,13 @@ def ingest_wire_topology(
 
     for collection, filename in ROW_FILES.items():
         path = input_dir / filename
+        if collection in OPTIONAL_ROW_COLLECTIONS and not path.exists():
+            report["imports"][collection] = {
+                "skipped": True,
+                "reason": "optional input file is absent",
+                "file": str(path),
+            }
+            continue
         rows = (normalize_wire_row(collection, row) for row in iter_jsonl(path))
         report["imports"][collection] = import_rows(
             target,

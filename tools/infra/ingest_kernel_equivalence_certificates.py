@@ -39,7 +39,7 @@ from tools.infra.arango_raw_infotree_ingest import (
 
 
 DEFAULT_CERTS = Path("artifacts/expr-graph/translation-candidates/lean-kernel-equivalence.jsonl")
-DEFAULT_OUTPUT = Path("artifacts/expr-graph/translation-candidates/ig_kernel_equivalence_edges.jsonl")
+DEFAULT_OUTPUT = Path("artifacts/expr-graph/wire-topology/ig_kernel_equivalence_edges.jsonl")
 DEFAULT_EDGE_COLLECTION = "ig_kernel_equivalence_edges"
 DEFAULT_DECL_COLLECTION = "ig_decl_topologies"
 

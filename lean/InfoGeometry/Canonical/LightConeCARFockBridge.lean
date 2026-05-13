@@ -82,7 +82,7 @@ these fields, no CAR conclusion is exported from a Drazin projector split.
 -/
 @[rep_depth operator]
 structure LightConeCARFockBridge
-    (E A : Type*)
+    (E : Type) (A : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [Ring A] where
 
@@ -111,7 +111,7 @@ structure LightConeCARFockBridge
 
 namespace LightConeCARFockBridge
 
-variable {E A : Type*}
+variable {E : Type} {A : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [Ring A]
 variable (B : LightConeCARFockBridge E A)
@@ -184,4 +184,3 @@ theorem projector_super_pair_guard :
     (E := E)
 
 end InfoGeometry.Canonical.LightConeCARFockBridge
-

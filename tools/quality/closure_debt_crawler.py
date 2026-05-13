@@ -45,7 +45,7 @@ DECL_HEADER_RE = re.compile(
 
 # Restrict hard proof-hole detection to term-level placeholders. `sorryAx`/`admitAx`
 # may appear as metadata identifiers and are handled separately as advisory context.
-PROOF_HOLE_RE = re.compile(r"\b(?:sorry|admit)\b")
+PROOF_HOLE_RE = re.compile(r"(?<!\.)(?<!\w)(?:sorry|admit)(?!\w)")
 AXIOM_DECL_RE = re.compile(r"^\s*axiom\b", re.M)
 POSTULATE_DECL_RE = re.compile(r"^\s*postulate\b", re.M)
 OPAQUE_DECL_RE = re.compile(r"^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+|local\s+)?opaque\b", re.M)

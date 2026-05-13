@@ -62,6 +62,7 @@ It remains subordinate to Lean source:
 | `ExprArangoExport.lean` | `ig_nodes.jsonl`, `ig_edges.jsonl`, `metadata.json` | Expression-level Arango export (declarations + Expr DAG) with De Bruijn `bvar` annotations and explicit `bound_by` edges; tolerates unresolved binders by marking records as `quality="broken"` |
 | `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
 | `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
+| `KernelEquivalenceExport.lean` | `lean-kernel-equivalence.jsonl` | Native certificate exporter for candidate declaration pairs; imports the requested module and promotes a pair only when `Lean.Meta.isDefEq` verifies the requested type/value mode |
 | `RootOrderExport.lean` | root-order JSON | True root ordering for causal reports |
 | `ExportDecls.lean` | declaration metadata | Lightweight declaration export |
 | `ExportForwardGraph.lean` | forward adjacency JSON | Forward edge-list graph export |
@@ -132,6 +133,23 @@ which runs the Lean-side indexer and writes:
 
 Downstream Python tooling then derives source-sink, causal, theorem-surface, semantic quotient, and representation-depth reports.
 Those reports should agree with the Lean-native audit, not replace it.
+
+Candidate equivalence promotion must go through the Lean/kernel lane:
+
+```bash
+lake env lean --run lean/DAG/KernelEquivalenceExport.lean \
+  InfoGeometry \
+  artifacts/expr-graph/translation-candidates/pairs.jsonl \
+  artifacts/expr-graph/translation-candidates/lean-kernel-equivalence.jsonl \
+  --mode type
+```
+
+The input JSONL rows are `{ "sourceDecl": "...", "targetDecl": "..." }`.
+The output records `kernelTypeDefEq`, `kernelValueDefEq`, `leanVerified`,
+`safeForAutoRewrite`, and `verificationTier`.  Python-derived hashes, role
+tokens, graph SCCs, and vector neighborhoods may propose candidate pairs, but
+they are not allowed to set `leanVerified`; only this Lean-native exporter or a
+future Lean-native checker with the same kernel authority may do that.
 
 For a small Lean-native causal cone around one declaration, import the command
 surface:

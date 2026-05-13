@@ -22,15 +22,16 @@ lemma denomSq_pos (g : SL2R) (τ : InfoGeometry.Geometry.RealUpperHalfPlane) : 0
   by_cases hc : c g = 0
   · rw [hc, zero_mul, zero_add, zero_mul, zero_pow (by norm_num), add_zero]
     have hdet := g.det_coe
+    rw [Matrix.det_fin_two] at hdet
     have : a g * d g - b g * c g = 1 := by
-      rw [← Matrix.det_fin_two]
+      rw [a, b, c, d]
       exact hdet
     rw [hc, mul_zero, sub_zero] at this
     have hd_ne_zero : d g ≠ 0 := by
       intro h
       rw [h, mul_zero] at this
       norm_num at this
-    exact pow_two_pos_of_ne_zero _ hd_ne_zero
+    exact pow_two_pos_of_ne_zero (d g) hd_ne_zero
   · have h1 : 0 ≤ (c g * τ.x + d g) ^ 2 := pow_two_nonneg _
     have h2 : 0 < (c g * τ.y) ^ 2 := by
       apply pow_two_pos_of_ne_zero
@@ -50,7 +51,8 @@ def toComplex (τ : InfoGeometry.Geometry.RealUpperHalfPlane) : ℍ :=
 
 theorem SL2R_det (g : SL2R) : a g * d g - b g * c g = 1 := by
   have h := g.det_coe
-  rw [← Matrix.det_fin_two]
+  rw [Matrix.det_fin_two] at h
+  dsimp [a, b, c, d]
   exact h
 
 theorem toComplex_moebius (g : SL2R) (τ : InfoGeometry.Geometry.RealUpperHalfPlane) :
@@ -73,5 +75,4 @@ theorem toComplex_moebius (g : SL2R) (τ : InfoGeometry.Geometry.RealUpperHalfPl
     simp only [Complex.div_im, Complex.add_im, Complex.mul_im, Complex.ofReal_re,
       Complex.ofReal_im, Complex.normSq, mul_zero, add_zero, zero_mul, sub_zero, zero_add]
     field_simp [hpos.ne.symm]
-    have : (-(a' * τ.x + b') * (c' * τ.y) + a' * τ.y * (c' * τ.x + d')) = τ.y * (a' * d' - b' * c') := by ring
-    rw [this, hdet, mul_one]
+    linear_combination τ.y * hdet

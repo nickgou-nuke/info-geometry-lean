@@ -1,79 +1,42 @@
-# Skills
+# 🐝 Hive Agent Skills
 
-> Status: skill-surface index for this subtree; not a substitute for root/docs operator policy.
-> Canonical docs: [`README.md`](../README.md), [`docs/README.md`](../docs/README.md), [`docs/OperatorQuickstart.md`](../docs/OperatorQuickstart.md).
-> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
+This directory contains specialized skills for the InfoGeometry proving swarm.
 
-Agent skill definitions for this repository.
+## Agent to Skill Mapping
 
-## Repo-Specific Skills
+| Agent | Role | Primary Skills | Purpose |
+| :--- | :--- | :--- | :--- |
+| **RetrieverBee** | Context | `premise_retriever.md` | Finds relevant Mathlib lemmas and local dependencies. |
+| **SocratesBee** | Formalizer | `formalizer_loop.md`, `state_chain_formalizer.md` | Translates informal claims to Lean 4 and manages proof state chains. |
+| **PauliBee** | Prover | `vibe-validation`, `lean-proof` | Executes iterative proof generation and validation (zero-sorry goal). |
+| **AuditBee** | Validator | `replay_auditor.md`, `pauli-auditor` | Verifies build integrity and replays proof traces for certification. |
+| **PromotionBee** | Librarian | `statement_compiler.md`, `reference_preserver.md` | Manages the transition from exploration to authoritative L0/L1 code. |
+| **BuildBee** | Infrastructure | `mathlib-build`, `lean-setup` | Ensures the local toolchain is consistent and Mathlib caches are primed. |
 
-| Skill | Purpose |
-|-------|---------|
-| [info-geometry-repo](info-geometry-repo/SKILL.md) | Primary repo skill: trust order, DAG pipeline, LeanTrail adapters/conformance, Arango ingest + physics eval, failure memory + path lock lanes, artifact inventory, default workflow |
-| [repo-topic-deep-research](repo-topic-deep-research/SKILL.md) | Topic-agnostic deep repo investigation with status matrix (`implemented/interface/missing`) and agent context-pack generation |
-| [lean-canonicalization-policy](lean-canonicalization-policy/SKILL.md) | Theorem ownership, file splitting, graph-guided refactors |
-| [frontier-proof-compression](frontier-proof-compression/SKILL.md) | Skynet/OpenClaw proof compression and structural debt burn-down |
-| [lean-sandbox](lean-sandbox/SKILL.md) | Mandatory sandbox-first development for safe repo integration |
-| [pauli-auditor](pauli-auditor/SKILL.md) | Pauli-seal oriented proof-surface audit and anti-cheat enforcement |
-| [source_packetizer](source_packetizer.md) | Source packet workflow for staged intake/review material |
+## Audit Workflow
 
-## Generic Lean/Mathlib Skills
+To perform an extensive audit of the repository, follow this sequence:
 
-These are shared with `.agents/workflows/` (Copilot agent discovery surface):
+1. **Topological Refresh**:
+   ```bash
+   lake script run dagAll
+   ```
+2. **Axiom/Sorry Stratification**:
+   ```bash
+   python3 tools/infra/generate_sorry_equivalence.py --md-out reports/audit/sorry_stratification.md
+   ```
+3. **Policy Compliance**:
+   ```bash
+   python3 tools/infra/agentic_policy_lint.py
+   ```
+4. **Semantic Snapshot**:
+   ```bash
+   lake script run semanticSnapshot
+   ```
 
-| Skill | Purpose |
-|-------|---------|
-| [lean4](lean4/SKILL.md) | Core Lean 4 theorem proving, tactic reference, proof workflows |
-| [lean-proof](lean-proof/SKILL.md) | One-step-at-a-time methodology, error priority, proof cleanup |
-| [lean-setup](lean-setup/SKILL.md) | Repository clone, build, and toolchain setup |
-| [lean-bisect](lean-bisect/SKILL.md) | Toolchain version bisection for regressions |
-| [lean-mwe](lean-mwe/SKILL.md) | Minimal working examples for bug reports |
-| [lean-pr](lean-pr/SKILL.md) | Lean 4 PR conventions |
-| [mathlib-build](mathlib-build/SKILL.md) | Mathlib build and cache workflow |
-| [mathlib-pr](mathlib-pr/SKILL.md) | Mathlib PR conventions |
-| [mathlib-review](mathlib-review/SKILL.md) | Mathlib PR review guidelines |
-| [nightly-testing](nightly-testing/SKILL.md) | Lean/Mathlib nightly testing infrastructure |
+## Development
 
-## Hidden Surface
-
-`.agents/workflows/` is the Copilot agent discovery directory.
-It contains one additional file not present here:
-
-- [`.agents/workflows/formalization.md`](../.agents/workflows/formalization.md) — Copilot workflow entry point for the [FORMALIZATION_PROTOCOL.md](../FORMALIZATION_PROTOCOL.md)
-
-> **Note:** The 10 generic Lean/Mathlib skill directories exist as full copies in both
-> `skills/` and `.agents/workflows/`. If they drift, `skills/` is authoritative.
-
-## Deep-Research Template Surface
-
-Repo-topic templates:
-
-- [repo-topic-deep-research/templates/topic_dossier_template.md](repo-topic-deep-research/templates/topic_dossier_template.md)
-- [repo-topic-deep-research/templates/coverage_matrix_template.md](repo-topic-deep-research/templates/coverage_matrix_template.md)
-- [repo-topic-deep-research/templates/context_pack_template.md](repo-topic-deep-research/templates/context_pack_template.md)
-- [repo-topic-deep-research/templates/gemini_cli_prompt_template.md](repo-topic-deep-research/templates/gemini_cli_prompt_template.md)
-- [repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md](repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md)
-- [repo-topic-deep-research/templates/openai_deep_research_brief_template.md](repo-topic-deep-research/templates/openai_deep_research_brief_template.md)
-
-Gemini import snapshots (reference-only):
-
-- `skills/gemini-imports/pauli-auditor/SKILL.md`
-
-Info-geometry repo reference notes:
-
-- [info-geometry-repo/references/debt-candidates.md](info-geometry-repo/references/debt-candidates.md)
-- [info-geometry-repo/references/bridge-reviewed-candidates.md](info-geometry-repo/references/bridge-reviewed-candidates.md)
-
-## Current Codebase Status
-
-Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
-
-## Style Guardrail
-
-Repository-wide theorem-surface policy now enforces genuine witness dependency:
-
-- avoid linter-masking existential wrappers like `∃ h : P, (let _ := h; Q)` for non-dependent `Q`
-- prefer `∃ _ : P, Q` for non-dependent existence
-- keep named witnesses only when they are semantically used downstream
-- apply `PAULI_MANDATE` gate I–XI (including anti-existential-hypothesis, interface witness fidelity, metric fidelity, anti-residual-redirect, parameter-admission, and public-uniqueness)
+When adding a new skill:
+1. Create a `<skill_name>.md` or a subdirectory with `SKILL.md`.
+2. Add the agent mapping to this README.
+3. Verify the skill against the current Pauli Mandate.

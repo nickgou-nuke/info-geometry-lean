@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 
 from tools.infra.arango_wire_topology_ingest import (
+    active_collections,
+    ensure_wire_collections,
+    ensure_wire_indexes,
     normalize_wire_row,
     preflight,
     wire_index_specs,
@@ -313,6 +316,55 @@ def test_wire_topology_preflight_allows_missing_optional_kernel_edges(tmp_path: 
     ]
     assert "ig_kernel_equivalence_edges" not in pf["counts"]
     assert "ig_triple_homomorphism_edges" not in pf["counts"]
+    active = active_collections(tmp_path)
+    assert "ig_kernel_equivalence_edges" not in active
+    assert "ig_triple_homomorphism_edges" not in active
+    assert "ig_wires" in active
+
+
+def test_wire_topology_active_collections_include_present_optional_overlays(tmp_path: Path) -> None:
+    write_jsonl(tmp_path / "ig_wires.jsonl", [{"_key": "wire_1"}])
+    write_jsonl(tmp_path / "ig_kernel_equivalence_edges.jsonl", [{"_key": "kec_1"}])
+
+    active = active_collections(tmp_path)
+
+    assert "ig_kernel_equivalence_edges" in active
+    assert "ig_triple_homomorphism_edges" not in active
+
+
+def test_wire_topology_collection_and_index_helpers_skip_inactive_optional_overlays(monkeypatch) -> None:
+    calls: dict[str, list] = {
+        "create": [],
+        "truncate": [],
+        "index": [],
+    }
+
+    monkeypatch.setattr("tools.infra.arango_wire_topology_ingest.ensure_database", lambda target: None)
+    monkeypatch.setattr("tools.infra.arango_wire_topology_ingest.list_collections", lambda target: [])
+    monkeypatch.setattr(
+        "tools.infra.arango_wire_topology_ingest.create_collection",
+        lambda target, spec: calls["create"].append(spec.name),
+    )
+    monkeypatch.setattr(
+        "tools.infra.arango_wire_topology_ingest.truncate_collection",
+        lambda target, name: calls["truncate"].append(name),
+    )
+    monkeypatch.setattr(
+        "tools.infra.arango_wire_topology_ingest.ensure_index",
+        lambda target, collection, fields, unique=False: calls["index"].append(collection) or {},
+    )
+
+    active = {"ig_wires"}
+    collection_report = ensure_wire_collections(object(), truncate=True, collections=active)
+    index_report = ensure_wire_indexes(object(), active)
+
+    assert calls["create"] == ["ig_wires"]
+    assert calls["truncate"] == ["ig_wires"]
+    assert "ig_kernel_equivalence_edges" in collection_report["skipped"]
+    assert "ig_triple_homomorphism_edges" in collection_report["skipped"]
+    assert set(index_report) == {"ig_wires"}
+    assert "ig_kernel_equivalence_edges" not in calls["index"]
+    assert "ig_triple_homomorphism_edges" not in calls["index"]
 
 
 def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:

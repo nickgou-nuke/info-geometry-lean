@@ -63,6 +63,7 @@ import InfoGeometry.Canonical.BogoliubovVielbeinBridge
 import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
+import InfoGeometry.Canonical.BoundedModularFlowCalibration
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
@@ -169,6 +170,7 @@ import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinLightConeDictionary
+import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
@@ -297,6 +299,7 @@ import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersPhaseAxisReduction
 import InfoGeometry.Canonical.KramersSuperchargeBridge
+import InfoGeometry.Canonical.LightConeCARFockBridge
 import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Canonical.KreinDiracSpectralLift
@@ -386,6 +389,7 @@ import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
 import InfoGeometry.Canonical.OperatorialFierzBridge
 import InfoGeometry.Canonical.OperatorialFierzDerivationBridge
 import InfoGeometry.Canonical.OperatorialHessianBridge
+import InfoGeometry.Canonical.OperatorInformationGeometryBridge
 import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.OperatorialLogGeneratingPotential
 import InfoGeometry.Canonical.OperatorialUncertainty
@@ -540,11 +544,13 @@ import InfoGeometry.Canonical.Statistics
 import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
 import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeHoppingBridge
+import InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
 import InfoGeometry.Canonical.SuperchargeOddOddDecomposition
 import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeTransportBridge
@@ -600,6 +606,8 @@ import InfoGeometry.Canonical.WeylCharacterEquivalence
 import InfoGeometry.Canonical.WeylCharacterVandermondeShadow
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
+import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
+import InfoGeometry.Canonical.WeylEntropyShiftBridge
 import InfoGeometry.Canonical.WeylKKTAnomalyIdentity
 import InfoGeometry.Canonical.WeylLocalCancellationShadow
 import InfoGeometry.Canonical.WeylPathHysteresis

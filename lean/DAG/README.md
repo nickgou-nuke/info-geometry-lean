@@ -63,6 +63,8 @@ It remains subordinate to Lean source:
 | `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
 | `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
 | `KernelEquivalenceExport.lean` | `lean-kernel-equivalence.jsonl` | Native certificate exporter for candidate declaration pairs; imports the requested module and promotes a pair only when `Lean.Meta.isDefEq` verifies the requested type/value mode |
+| `TripleSystem.lean` | — | Lean-native core definition of typed subject-predicate-object incidence systems and triple homomorphisms |
+| `TripleHomomorphismExport.lean` | `triple-homomorphism-audit.json`, `missing-triples.jsonl` | Finite Lean-native checker for JSONL/RDF-style triple homomorphism candidates; verifies that every mapped source triple exists in the target triple set |
 | `RootOrderExport.lean` | root-order JSON | True root ordering for causal reports |
 | `ExportDecls.lean` | declaration metadata | Lightweight declaration export |
 | `ExportForwardGraph.lean` | forward adjacency JSON | Forward edge-list graph export |
@@ -150,6 +152,30 @@ The output records `kernelTypeDefEq`, `kernelValueDefEq`, `leanVerified`,
 tokens, graph SCCs, and vector neighborhoods may propose candidate pairs, but
 they are not allowed to set `leanVerified`; only this Lean-native exporter or a
 future Lean-native checker with the same kernel authority may do that.
+
+For finite RDF/Arango-style triple preservation, use the Lean-native triple
+homomorphism checker:
+
+```bash
+lake env lean --run lean/DAG/TripleHomomorphismExport.lean \
+  artifacts/triples/source.jsonl \
+  artifacts/triples/target.jsonl \
+  artifacts/triples/maps.jsonl \
+  artifacts/triples/triple-homomorphism-audit.json \
+  artifacts/triples/missing-triples.jsonl
+```
+
+This checker validates the finite preservation condition:
+
+```text
+(s, p, o) in source
+  implies
+(F_Obj(s), F_Rel(p), F_Obj(o)) in target
+```
+
+It is the native preservation gate for exported triple rows.  It does not
+replace theorem checking: theorem-level equivalence still goes through
+`KernelEquivalenceExport` or another Lean/kernel certificate path.
 
 For a small Lean-native causal cone around one declaration, import the command
 surface:

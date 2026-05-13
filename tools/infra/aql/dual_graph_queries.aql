@@ -9,6 +9,7 @@
 --   ig_decl_topologies / ig_hashes / ig_logic_tokens
 --   ig_logic_vectors / ig_text_index_docs
 --   ig_translation_candidates / ig_translation_edges / ig_translation_scc
+--   ig_kernel_equivalence_edges
 
 -- ============================================================
 -- 1. Wire schematic for a declaration
@@ -279,4 +280,82 @@ FOR hit IN APPEND(vector_hits, exact_hits)
     maxScore: MAX(grouped[*].hit.score),
     reviewOnly: MIN(grouped[*].hit.reviewOnly ? 1 : 0) == 1,
     leanVerified: MAX(grouped[*].hit.leanVerified ? 1 : 0) == 1
+  }
+
+-- ============================================================
+-- 14. Kernel equivalence certificate hierarchy
+-- ============================================================
+FOR e IN ig_kernel_equivalence_edges
+  FILTER e.kind == "kernel_equivalence_certificate"
+  RETURN {
+    from: e._from,
+    to: e._to,
+    sourceDecl: e.sourceDecl,
+    targetDecl: e.targetDecl,
+    mode: e.mode,
+    status: e.status,
+    tier: e.verificationTier,
+    leanVerified: e.leanVerified,
+    kernelTypeDefEq: e.kernelTypeDefEq,
+    kernelValueDefEq: e.kernelValueDefEq,
+    safeForAutoRewrite: e.safeForAutoRewrite ? e.safeForAutoRewrite : false,
+    graphUse: e.graphUse,
+    authority: e.proofAuthority
+  }
+
+-- ============================================================
+-- 15. Rewrite-safe kernel equivalence graph
+-- ============================================================
+FOR e IN ig_kernel_equivalence_edges
+  FILTER e.kind == "kernel_equivalence_certificate"
+  FILTER e.leanVerified == true
+  FILTER e.safeForAutoRewrite == true
+  RETURN {
+    from: e._from,
+    to: e._to,
+    sourceDecl: e.sourceDecl,
+    targetDecl: e.targetDecl,
+    mode: e.mode,
+    tier: e.verificationTier,
+    authority: e.proofAuthority
+  }
+
+-- ============================================================
+-- 16. Invalid certificate guard: type-only must not be rewrite-safe
+-- ============================================================
+FOR e IN ig_kernel_equivalence_edges
+  FILTER e.kind == "kernel_equivalence_certificate"
+  FILTER e.mode == "type"
+  FILTER e.safeForAutoRewrite == true
+  RETURN {
+    edge: e._id,
+    from: e._from,
+    to: e._to,
+    sourceDecl: e.sourceDecl,
+    targetDecl: e.targetDecl,
+    warning: "Invalid certificate: type-only mode must never be rewrite-safe."
+  }
+
+-- ============================================================
+-- 17. Triple-preserved but not kernel-certified equivalence
+-- ============================================================
+FOR e IN ig_wire_edges
+  FILTER e.kind == "triple_homomorphism_certificate"
+  FILTER e.leanVerified == true
+
+  LET kernel = FIRST(
+    FOR k IN ig_kernel_equivalence_edges
+      FILTER k.kind == "kernel_equivalence_certificate"
+      FILTER k._from == e._from AND k._to == e._to
+      RETURN k
+  )
+
+  FILTER kernel == null OR kernel.leanVerified != true
+
+  RETURN {
+    from: e._from,
+    to: e._to,
+    triplePreserved: true,
+    kernelStatus: kernel ? kernel.verificationTier : "no-kernel-certificate",
+    audit: "finite incidence preserved, but theorem-level equivalence not certified"
   }

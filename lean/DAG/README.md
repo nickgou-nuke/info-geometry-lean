@@ -206,6 +206,16 @@ authoritative only for finite incidence preservation.  They are never
 `safeForAutoRewrite`; rewrite authority requires a kernel-equivalence
 certificate with `safeForAutoRewrite=true`.
 
+To compare the structural triple layer with the kernel-equivalence layer:
+
+```bash
+python3 tools/infra/report_certificate_authority_layers.py
+```
+
+The report is read-only.  It classifies each materialized pair as structural
+review, statement-equivalence review, rewrite-safe SCC, or rejected with
+missing-triple evidence.
+
 For a small Lean-native causal cone around one declaration, import the command
 surface:
 

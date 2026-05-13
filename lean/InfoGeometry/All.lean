@@ -78,6 +78,7 @@ import InfoGeometry.Geometry.FiniteMatrixResolventKernel
 import InfoGeometry.Geometry.WindingSnap
 import InfoGeometry.Geometry.ConstructiveConnesChern
 import InfoGeometry.Geometry.FiniteDefectStokesModel
+import InfoGeometry.Geometry.OrbitCurrentStokes
 import InfoGeometry.ProjectiveFoundation.RealProjectiveDescent
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.RealModularReadout

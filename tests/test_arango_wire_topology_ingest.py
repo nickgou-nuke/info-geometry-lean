@@ -198,6 +198,27 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
             }
         ],
     )
+    write_jsonl(
+        tmp_path / "ig_kernel_equivalence_edges.jsonl",
+        [
+            {
+                "_key": "kec_1",
+                "_from": "ig_decl_topologies/topo_1",
+                "_to": "ig_decl_topologies/topo_2",
+                "kind": "kernel_equivalence_certificate",
+                "status": "verified_not_rewrite_safe",
+                "mode": "type",
+                "sourceDecl": "A.foo",
+                "targetDecl": "A.bar",
+                "kernelTypeDefEq": True,
+                "kernelValueDefEq": False,
+                "leanVerified": True,
+                "safeForAutoRewrite": False,
+                "verificationTier": "lean_kernel_type_defeq",
+                "graphUse": "verified-equivalence-only",
+            }
+        ],
+    )
 
     pf = preflight(tmp_path)
     assert pf["missing_files"] == []
@@ -216,6 +237,7 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
         "ig_translation_edges": 1,
         "ig_translation_scc": 1,
         "ig_translation_scc_edges": 1,
+        "ig_kernel_equivalence_edges": 1,
     }
 
     wire = next(json.loads(line) for line in (tmp_path / "ig_wires.jsonl").read_text().splitlines())
@@ -236,6 +258,7 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
     assert normalize_wire_row("ig_translation_edges", {"_key": "te_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_decl_topologies/topo_2", "translationKind": "same_patternHash"})["translationKind"] == "same_patternHash"
     assert normalize_wire_row("ig_translation_scc", {"_key": "tscc_1", "translationSccHash": "sha256:tscc"})["translationSccHash"] == "sha256:tscc"
     assert normalize_wire_row("ig_translation_scc_edges", {"_key": "tse_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_translation_scc/tscc_1"})["_to"] == "ig_translation_scc/tscc_1"
+    assert normalize_wire_row("ig_kernel_equivalence_edges", {"_key": "kec_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_decl_topologies/topo_2", "mode": "type"})["kind"] == "kernel_equivalence_certificate"
 
 
 def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
@@ -254,6 +277,7 @@ def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
     candidate_fields = [spec["fields"] for spec in specs["ig_translation_candidates"]]
     translation_edge_fields = [spec["fields"] for spec in specs["ig_translation_edges"]]
     translation_scc_fields = [spec["fields"] for spec in specs["ig_translation_scc"]]
+    kernel_edge_fields = [spec["fields"] for spec in specs["ig_kernel_equivalence_edges"]]
 
     assert ["wireKey"] in wire_fields
     assert ["wireHash"] in wire_fields
@@ -299,3 +323,10 @@ def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
     assert ["safeForDedupSCC"] in translation_edge_fields
     assert ["safeForAutoRewrite"] in translation_edge_fields
     assert ["translationSccHash"] in translation_scc_fields
+    assert ["mode"] in kernel_edge_fields
+    assert ["status"] in kernel_edge_fields
+    assert ["leanVerified"] in kernel_edge_fields
+    assert ["kernelTypeDefEq"] in kernel_edge_fields
+    assert ["kernelValueDefEq"] in kernel_edge_fields
+    assert ["safeForAutoRewrite"] in kernel_edge_fields
+    assert ["graphUse"] in kernel_edge_fields

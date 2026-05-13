@@ -44,24 +44,34 @@ noncomputable abbrev fockId : FockEndomorphism E :=
 /-- Scaling both CAR arguments scales the anticommutator by the square. -/
 @[rep_depth krein]
 theorem fockAnticommutator_smul_smul
-    (λ : ℝ) (A B : FockEndomorphism E) :
-    fockAnticommutator (E := E) (λ • A) (λ • B)
-      = (λ ^ 2) • fockAnticommutator (E := E) A B := by
-  ext x
-  simp [fockAnticommutator, anticommutator, superBracket_odd_odd,
-    ContinuousLinearMap.comp_apply, pow_two, smul_add, smul_smul,
-    mul_assoc, mul_comm, mul_left_comm]
+    (lam : ℝ) (A B : FockEndomorphism E) :
+    fockAnticommutator (E := E) (lam • A) (lam • B)
+      = (lam ^ 2) • fockAnticommutator (E := E) A B := by
+  change fockSuperBracket (E := E) SuperParity.odd SuperParity.odd (lam • A) (lam • B)
+    = (lam ^ 2) • fockSuperBracket (E := E) SuperParity.odd SuperParity.odd A B
+  rw [show fockSuperBracket (E := E) SuperParity.odd SuperParity.odd (lam • A) (lam • B)
+      = lam • fockSuperBracket (E := E) SuperParity.odd SuperParity.odd A (lam • B) by
+        exact superBracket_smul_left (E := E) SuperParity.odd SuperParity.odd lam A (lam • B)]
+  rw [show fockSuperBracket (E := E) SuperParity.odd SuperParity.odd A (lam • B)
+      = lam • fockSuperBracket (E := E) SuperParity.odd SuperParity.odd A B by
+        exact superBracket_smul_right (E := E) SuperParity.odd SuperParity.odd lam A B]
+  simp [pow_two, smul_smul]
 
 /-- Scaling both CCR arguments scales the commutator by the square. -/
 @[rep_depth krein]
 theorem fockCommutator_smul_smul
-    (λ : ℝ) (A B : FockEndomorphism E) :
-    fockCommutator (E := E) (λ • A) (λ • B)
-      = (λ ^ 2) • fockCommutator (E := E) A B := by
-  ext x
-  simp [fockCommutator, commutator, superBracket_even_left,
-    ContinuousLinearMap.comp_apply, pow_two, smul_sub, smul_smul,
-    mul_assoc, mul_comm, mul_left_comm]
+    (lam : ℝ) (A B : FockEndomorphism E) :
+    fockCommutator (E := E) (lam • A) (lam • B)
+      = (lam ^ 2) • fockCommutator (E := E) A B := by
+  change fockSuperBracket (E := E) SuperParity.even SuperParity.even (lam • A) (lam • B)
+    = (lam ^ 2) • fockSuperBracket (E := E) SuperParity.even SuperParity.even A B
+  rw [show fockSuperBracket (E := E) SuperParity.even SuperParity.even (lam • A) (lam • B)
+      = lam • fockSuperBracket (E := E) SuperParity.even SuperParity.even A (lam • B) by
+        exact superBracket_smul_left (E := E) SuperParity.even SuperParity.even lam A (lam • B)]
+  rw [show fockSuperBracket (E := E) SuperParity.even SuperParity.even A (lam • B)
+      = lam • fockSuperBracket (E := E) SuperParity.even SuperParity.even A B by
+        exact superBracket_smul_right (E := E) SuperParity.even SuperParity.even lam A B]
+  simp [pow_two, smul_smul]
 
 /--
 Scaled CAR pair.
@@ -110,7 +120,7 @@ theorem normalized_aa_zero :
     fockAnticommutator (E := E)
         C.normalizedAnnihilation C.normalizedAnnihilation = 0 := by
   rw [normalizedAnnihilation, fockAnticommutator_smul_smul, C.aa_zero]
-  simp
+  ext x <;> simp
 
 /-- The creation-creation CAR nilpotence survives Weyl normalization. -/
 @[rep_depth krein]
@@ -118,7 +128,7 @@ theorem normalized_adag_adag_zero :
     fockAnticommutator (E := E)
         C.normalizedCreation C.normalizedCreation = 0 := by
   rw [normalizedCreation, fockAnticommutator_smul_smul, C.adag_adag_zero]
-  simp
+  ext x <;> simp
 
 /-- The mixed scaled central law becomes the canonical CAR identity after gauge fixing. -/
 @[rep_depth krein]
@@ -218,13 +228,13 @@ noncomputable abbrev dilationFockOperator : FockEndomorphism E :=
 @[rep_depth krein, simp]
 theorem cptSuperchargeOp_eq_dilationFockOperator :
     cptSuperchargeOp (E := E) = dilationFockOperator (E := E) := by
-  simpa [dilationFockOperator] using cptSuperchargeOp_eq_dilationOperator (E := E)
+  exact cptSuperchargeOp_eq_dilationOperator (E := E)
 
 /-- The dilation operator is the doubled-space clock axis. -/
 @[rep_depth krein, simp]
 theorem dilationFockOperator_eq_clockAxis :
     dilationFockOperator (E := E) = clockAxis (E := E) := by
-  simpa [dilationFockOperator] using dilationOperator_eq_clockAxis (E := E)
+  exact dilationOperator_eq_clockAxis (E := E)
 
 end Core
 

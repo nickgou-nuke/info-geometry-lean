@@ -18,6 +18,8 @@ structure NodeRow where
   info : String
   doc : String
   deBruijnIdx? : Option Nat := none
+  deBruijnHash : String := ""
+  alphaLocalHash : String := ""
   shapeHash : Nat := 0
   quality : String := "ok"
 deriving Repr, ToJson
@@ -30,6 +32,9 @@ structure EdgeRow where
   role : String
   decl : String
   sectionTag : String
+  deBruijnIdx? : Option Nat := none
+  incidenceHash : String := ""
+  binderIncidenceHash : String := ""
   quality : String := "ok"
   notes : String := ""
 deriving Repr, ToJson
@@ -115,6 +120,17 @@ private def declKeyOf (n : Name) : String :=
 private def shapeHashOf (e : Expr) : Nat :=
   (hash (toString e)).toNat
 
+private def stableHashString (s : String) : String :=
+  s!"h_{(hash s).toNat}"
+
+private def deBruijnNodeHash (decl sectionTag path : String) (idx : Nat) : String :=
+  stableHashString s!"debruijn-node|{decl}|{sectionTag}|{path}|{idx}"
+
+private def deBruijnIncidenceHash
+    (decl sectionTag sourceKey targetKey : String)
+    (idx : Nat) : String :=
+  stableHashString s!"debruijn-incidence|{decl}|{sectionTag}|{sourceKey}|{targetKey}|{idx}"
+
 private def binderAt? (binders : Array String) (idx : Nat) : Option String :=
   if idx < binders.size then
     let revIdx := binders.size - 1 - idx
@@ -165,6 +181,8 @@ private def addNode (row : NodeRow) : ExportM Unit :=
 
 private def addEdge
     (fromKey toKey kind role decl sectionTag : String)
+    (deBruijnIdx? : Option Nat := none)
+    (incidenceHash : String := "")
     (quality : String := "ok")
     (notes : String := "") : ExportM Unit := do
   let ek ← freshEdgeKey
@@ -176,6 +194,8 @@ private def addEdge
     role := role
     decl := decl
     sectionTag := sectionTag
+    deBruijnIdx? := deBruijnIdx?
+    incidenceHash := incidenceHash
     quality := quality
     notes := notes
   }
@@ -243,11 +263,18 @@ partial def visitExpr
   match e with
   | .bvar idx =>
       let isBroken := (binderAt? binders idx).isNone
-      let row := { base with deBruijnIdx? := some idx, quality := if isBroken then "broken" else "ok" }
+      let row := {
+        base with
+        deBruijnIdx? := some idx
+        deBruijnHash := deBruijnNodeHash (toString declName) sectionTag path idx
+        quality := if isBroken then "broken" else "ok"
+      }
       addNode row
       match binderAt? binders idx with
       | some binderKey =>
           addEdge key binderKey "bind" "bound_by" (toString declName) sectionTag
+            (some idx)
+            (deBruijnIncidenceHash (toString declName) sectionTag key binderKey idx)
       | none =>
           bumpBrokenBVar
       pure key

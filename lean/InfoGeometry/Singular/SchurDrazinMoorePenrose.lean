@@ -99,52 +99,52 @@ noncomputable def ofNormalHilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E]
     (A : E →L[𝕜] E)
-    (hNormal : IsNormal A) :
+    (hNormal : IsStarNormal A) :
     ResolutionOfIdentityLedger (E →L[𝕜] E) (Module.End.Eigenvalues (A : E →ₗ[𝕜] E)) 𝕜 := by
   let AL : E →ₗ[𝕜] E := (A : E →ₗ[𝕜] E)
-  have hNormalL : AL.IsNormal := by
-    unfold LinearMap.IsNormal
-    simpa using hNormal
+  have hNormalL : IsStarNormal AL := hNormal
   exact {
     A := A
     eigenvalue := fun μ => μ.val
-    spectralProjector := fun μ => 
-      (Submodule.orthogonalProjection μ.eigenspace).toContinuousLinearMap
+    spectralProjector := fun μ =>
+      (AL.eigenspace μ.val).subtypeL.comp (orthogonalProjection (AL.eigenspace μ.val))
     is_zero_mode := fun (μ : Module.End.Eigenvalues AL) => (μ.val = 0)
     projector_idempotent := by
       intro μ
       ext x
-      simp only [ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
-        Submodule.coe_orthogonalProjection]
-      exact (Submodule.orthogonalProjection μ.eigenspace).idempotent x
+      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.coe_comp,
+        Function.comp_apply, Submodule.coe_subtypeL]
+      exact (AL.eigenspace μ.val).orthogonalProjection_idempotent x
     projector_orthogonal := by
       intro μ ν hμν
       ext x
       simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.zero_apply,
-        LinearMap.toContinuousLinearMap_apply, Submodule.coe_orthogonalProjection]
+        ContinuousLinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtypeL]
       -- Normal operators have orthogonal eigenspaces.
-      have horth := hNormalL.orthogonalFamily_eigenspaces
+      have horth : OrthogonalFamily 𝕜 (fun (i : Module.End.Eigenvalues AL) => AL.eigenspace i.val)
+          fun i => (AL.eigenspace i.val).subtypeₗᵢ :=
+        hNormalL.orthogonalFamily_eigenspaces
       exact horth.proj_mp μ ν hμν x
     projector_sum_identity := by
       intro _
       ext x
-      simp only [ContinuousLinearMap.sum_apply, LinearMap.toContinuousLinearMap_apply,
-        Submodule.coe_orthogonalProjection, ContinuousLinearMap.one_apply]
+      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.coe_comp,
+        Function.comp_apply, Submodule.coe_subtypeL, ContinuousLinearMap.one_apply]
       -- Normal operators in finite dim have internal direct sum of eigenspaces.
       exact hNormalL.sum_orthogonalProjection_apply_eq_self x
     projector_self_adjoint := by
       intro μ
       ext x y
       -- Orthogonal projections are self-adjoint.
-      simp only [star, ContinuousLinearMap.coe_toLinearMap, LinearMap.toContinuousLinearMap_apply,
-        Submodule.coe_orthogonalProjection]
-      exact (Submodule.orthogonalProjection μ.eigenspace).isSelfAdjoint x y
+      simp only [star, ContinuousLinearMap.coe_toLinearMap, ContinuousLinearMap.coe_comp,
+        Function.comp_apply, Submodule.coe_subtypeL]
+      exact (AL.eigenspace μ.val).isSelfAdjoint_orthogonalProjection x y
     spectral_expansion_law := by
       intro _
       ext x
       -- This is the core spectral theorem: A = Σ μ P_μ
       simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
-        LinearMap.toContinuousLinearMap_apply, Submodule.coe_orthogonalProjection]
+        ContinuousLinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtypeL]
       -- Use Mathlib's sum of eigenspace projections
       exact hNormalL.sum_orthogonalProjection_apply_eq_self x
   }

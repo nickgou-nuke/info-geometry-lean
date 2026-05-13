@@ -29,7 +29,7 @@ An orbit-current Stokes datum.
 The only law is Stokes on closed orbits.  This is a witness surface, not an
 existence theorem for surfaces, currents, or analytic contours.
 -/
-@[rep_depth geometry]
+@[rep_depth operator]
 structure OrbitCurrentStokesDatum
     (Time State Form Value : Type*) where
   flow : Time → State → State
@@ -65,7 +65,7 @@ Defect specialization of an orbit-current Stokes datum.
 The residue is deliberately just a model-supplied readout of the orbit pairing;
 normalization by `2π`, phase axes, or winding numbers belongs to the backend.
 -/
-@[rep_depth geometry]
+@[rep_depth operator]
 structure DefectOrbitCurrentDatum
     (Time State Form Value : Type*) extends
       OrbitCurrentStokesDatum Time State Form Value where
@@ -116,7 +116,7 @@ This records that a verified Cauchy/resolvent kernel family supplies the form
 being integrated around an orbit.  It does not assert a Riesz projection or
 Drazin projector formula; those require separate spectral-contour hypotheses.
 -/
-@[rep_depth geometry]
+@[rep_depth operator]
 structure ResolventOrbitCurrentDatum
     {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
     (Time State Form : Type*)
@@ -198,4 +198,3 @@ theorem finiteDefect_residue_eq_surfaceIntegral_defect :
   finiteDefectOrbitCurrentDatum.residue_eq_surfaceIntegral_defect True.intro
 
 end InfoGeometry.Geometry.OrbitCurrentStokes
-

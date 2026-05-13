@@ -168,6 +168,7 @@ def test_build_json_includes_provenance_and_verdict_fields(tmp_path: Path) -> No
         finding_count=2,
         hard_count=1,
         soft_count=1,
+        advisory_count=0,
         findings=findings,
     )
     payload = build_json([module], root=tmp_path / "lean", scanned_count=1)

@@ -1,0 +1,50 @@
+FOR r1 IN ig_regions
+  FILTER r1.kind == "LatentRegion"
+
+  LET decls1 = (
+    FOR d, e IN INBOUND r1 ig_edges
+      FILTER e.kind == "member_of_region"
+      RETURN d
+  )
+
+  LET gates1 = UNIQUE(FLATTEN(
+    FOR d IN decls1
+      RETURN (
+        FOR g IN ig_gates
+          FILTER g.decl == d.decl OR g.decl == d.name
+          RETURN g.gateHash
+      )
+  ))
+
+  FOR r2 IN ig_regions
+    FILTER r2.kind == "LatentRegion"
+    FILTER r2._id > r1._id
+
+    LET decls2 = (
+      FOR d, e IN INBOUND r2 ig_edges
+        FILTER e.kind == "member_of_region"
+        RETURN d
+    )
+
+    LET gates2 = UNIQUE(FLATTEN(
+      FOR d IN decls2
+        RETURN (
+          FOR g IN ig_gates
+            FILTER g.decl == d.decl OR g.decl == d.name
+            RETURN g.gateHash
+        )
+    ))
+
+    LET shared = INTERSECTION(gates1, gates2)
+    LET unionSize = LENGTH(UNION_DISTINCT(gates1, gates2))
+    LET jaccard = unionSize == 0 ? 0 : LENGTH(shared) / unionSize
+
+    FILTER jaccard > @minJaccard
+
+    RETURN {
+      regionA: r1.label,
+      regionB: r2.label,
+      sharedGateCount: LENGTH(shared),
+      jaccard,
+      sharedGateHashes: shared
+    }

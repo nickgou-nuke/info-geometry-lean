@@ -202,12 +202,12 @@ def create_collection(target: ArangoTarget, spec: CollectionSpec) -> None:
     )
 
 
-def ensure_index(target: ArangoTarget, collection: str, fields: list[str]) -> dict[str, Any]:
+def ensure_index(target: ArangoTarget, collection: str, fields: list[str], *, unique: bool = False, sparse: bool = True) -> dict[str, Any]:
     payload = {
         "type": "persistent",
         "fields": fields,
-        "unique": False,
-        "sparse": True,
+        "unique": unique,
+        "sparse": sparse,
         "name": "idx_" + "_".join(fields).replace(".", "_"),
     }
     result = request_json(

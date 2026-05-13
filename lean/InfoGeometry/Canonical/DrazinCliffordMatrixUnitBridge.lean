@@ -149,7 +149,7 @@ theorem eps_mul_J_eq_uPlus_sub_uMinus :
 /-- The split Clifford generators anticommute. -/
 @[rep_depth operator]
 theorem J_eps_anticommute :
-    C.J * C.eps = -C.eps * C.J := by
+    C.J * C.eps = -(C.eps * C.J) := by
   rw [C.J_mul_eps_eq_uMinus_sub_uPlus, C.eps_mul_J_eq_uPlus_sub_uMinus]
   abel
 
@@ -191,11 +191,10 @@ The matrix-unit Drazin cell realizes the local split Clifford packet
 theorem split_clifford_relations :
     C.J * C.J = 1 ∧
       C.eps * C.eps = 1 ∧
-      C.J * C.eps = -C.eps * C.J ∧
+      C.J * C.eps = -(C.eps * C.J) ∧
       C.K * C.K = -1 :=
   ⟨C.J_sq, C.eps_sq, C.J_eps_anticommute, C.K_sq⟩
 
 end DrazinCliffordMatrixUnitCell
 
 end InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
-

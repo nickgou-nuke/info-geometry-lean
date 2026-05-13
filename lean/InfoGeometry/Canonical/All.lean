@@ -300,6 +300,7 @@ import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersPhaseAxisReduction
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.LightConeCARFockBridge
+import InfoGeometry.Canonical.HorizonStringDiagram
 import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Canonical.KreinDiracSpectralLift
@@ -518,6 +519,8 @@ import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.SouriauThermalEvaluation
 import InfoGeometry.Canonical.SouriauThermodynamics
+import InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
+import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SpectralGeneratorProxy
@@ -608,6 +611,11 @@ import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.Canonical.WeylEntropyShiftBridge
+import InfoGeometry.Canonical.WeylGWVolumeBridge
+import InfoGeometry.Canonical.BKMDriftMetric
+import InfoGeometry.Canonical.WeylBKMDriftMassBridge
+import InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
+import InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
 import InfoGeometry.Canonical.WeylKKTAnomalyIdentity
 import InfoGeometry.Canonical.WeylLocalCancellationShadow
 import InfoGeometry.Canonical.WeylPathHysteresis

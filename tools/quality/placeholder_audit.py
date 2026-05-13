@@ -39,7 +39,13 @@ WITNESS_FIELD_RE = re.compile(r"(?m)^\s*([A-Za-z0-9_']+_valid)\s*:\s*([A-Za-z0-9
 UNIVERSAL_TRUE_FIELD_RE = re.compile(r"(?m)^\s*[A-Za-z0-9_']+\s*:\s*∀\s+[^\n]*,\s*True\s*$")
 
 # core placeholders that indicate trust debt in source form
-HOLE_TOKEN_RE = re.compile(r"\b(?:sorry|admit|sorryAx|admitAx)\b")
+# NOTE: sorryAx/admitAx are kernel-level metadata identifiers, NOT proof holes.
+# They appear in linter code, axiom audits, and environment introspection.
+# Only term-level `sorry`/`admit` are actual proof holes.
+# We exclude matches where `sorry`/`admit` is preceded by `.` (e.g., `linter.pauli.sorry`)
+# or followed by `Ax` (kernel metadata).
+HOLE_TOKEN_RE = re.compile(r"(?<!\.)(?<!\w)(?:sorry|admit)(?!\w)")
+KERNEL_PLACEHOLDER_REF_RE = re.compile(r"\b(?:sorryAx|admitAx)\b")
 POSTULATE_RE = re.compile(r"^\s*postulate\b")
 
 TRIVIAL_BODY_LINES = (
@@ -204,6 +210,7 @@ class ModuleAudit:
     finding_count: int
     hard_count: int
     soft_count: int
+    advisory_count: int
     findings: list[TrustFinding]
 
 
@@ -390,13 +397,36 @@ def _scan_file_level_findings(path: Path, clean: str) -> list[TrustFinding]:
     return list(dedup.values())
 
 
-def is_vacuous_true_false(body: str) -> bool:
+def is_definitional_equality(block: str) -> bool:
+    """Check if a theorem block states a definitional equality proved by rfl.
+
+    Heuristic: if the declaration contains `↔` or `=` at the top level
+    (not inside a quantifier) and the proof is `rfl`, it is likely a
+    legitimate definitional equality (e.g., Finset/Set coercion forms).
+    """
+    # Look for the statement line (before := or by)
+    stmt_end = block.find(":=")
+    if stmt_end < 0:
+        stmt_end = block.find("by")
+    if stmt_end < 0:
+        return False
+    stmt = block[:stmt_end].strip()
+    # Check for ↔ or = at the top level of the statement
+    if "↔" in stmt or ("=" in stmt and "∀" not in stmt):
+        return True
+    return False
+
+
+def is_vacuous_true_false(body: str, block: str = "") -> bool:
     compact = re.sub(r"\s+", " ", body.strip())
     if compact in {"True", "False", "by trivial", "by decide", "by exact True.intro", "by exact False.elim"}:
         return True
     if compact.startswith("by exact "):
         exact_term = compact.removeprefix("by exact ").strip()
         return exact_term in {"True.intro", "False.elim"}
+    # Do NOT flag definitional equalities proved by rfl as vacuous
+    if compact in {"by rfl", "by simp"} and block and is_definitional_equality(block):
+        return False
     return bool(
         compact.startswith("by")
         and compact in {"by rfl", "by simp", "by decide", "by aesop", "by trivial"}
@@ -461,9 +491,24 @@ def classify_declaration(
         )
         # already highest-priority; still continue for additional tagging.
 
+    if KERNEL_PLACEHOLDER_REF_RE.search(clean):
+        findings.append(
+            TrustFinding(
+                file=rel(path),
+                module=module_name(path),
+                line=line,
+                declaration_kind=kind,
+                declaration_name=name,
+                finding="kernel-placeholder-reference",
+                severity="advisory",
+                detail="declaration references sorryAx/admitAx as kernel identifiers (not a proof hole)",
+                snippet=source_excerpt(file_lines, line),
+            )
+        )
+
     proof = block_body(clean)
     if kind in {"theorem", "lemma", "example"}:
-        if proof and is_vacuous_true_false(proof):
+        if proof and is_vacuous_true_false(proof, block=clean):
             findings.append(
                 TrustFinding(
                     file=rel(path),
@@ -635,6 +680,7 @@ def run_audit(
                 finding_count=len(file_findings),
                 hard_count=counts.get("hard", 0),
                 soft_count=counts.get("soft", 0),
+                advisory_count=counts.get("advisory", 0),
                 findings=file_findings,
             )
         )
@@ -650,6 +696,11 @@ def build_json(
 ) -> dict[str, object]:
     hard_count = sum(mod.hard_count for mod in modules)
     soft_count = sum(mod.soft_count for mod in modules)
+    advisory_count = sum(
+        1 for mod in modules
+        for item in mod.findings
+        if item.severity == "advisory"
+    )
     findings: list[dict[str, Any]] = []
     for mod in modules:
         for item in mod.findings:
@@ -667,13 +718,14 @@ def build_json(
         "summary": {
             "module_count": len(modules),
             "scanned_count": scanned_count,
-            "finding_count": hard_count + soft_count,
+            "finding_count": hard_count + soft_count + advisory_count,
             "hard_count": hard_count,
             "soft_count": soft_count,
+            "advisory_count": advisory_count,
             "provenance": {
                 "hard_failures": hard_count,
                 "soft_findings": soft_count,
-                "advisory_findings": 0,
+                "advisory_findings": advisory_count,
             },
         },
         "modules": [
@@ -698,6 +750,7 @@ def build_json(
 def build_md(modules: list[ModuleAudit], *, scanned_count: int) -> str:
     hard_count = sum(mod.hard_count for mod in modules)
     soft_count = sum(mod.soft_count for mod in modules)
+    advisory_count = sum(mod.advisory_count for mod in modules)
     lines: list[str] = []
     lines.append("# Lean Placeholder Trust Audit")
     lines.append("")
@@ -705,7 +758,7 @@ def build_md(modules: list[ModuleAudit], *, scanned_count: int) -> str:
     lines.append("")
     lines.append(f"- Modules scanned: **{scanned_count}**")
     lines.append(f"- Modules with findings: **{len(modules)}**")
-    lines.append(f"- Total findings: **{hard_count + soft_count}** (hard={hard_count}, soft={soft_count})")
+    lines.append(f"- Total findings: **{hard_count + soft_count + advisory_count}** (hard={hard_count}, soft={soft_count}, advisory={advisory_count})")
     lines.append("")
 
     if not modules:
@@ -716,7 +769,7 @@ def build_md(modules: list[ModuleAudit], *, scanned_count: int) -> str:
         lines.append(f"## `{module.module}`")
         lines.append(f"- path: `{module.path}`")
         lines.append(
-            f"- findings: {module.finding_count} (hard={module.hard_count}, soft={module.soft_count})"
+            f"- findings: {module.finding_count} (hard={module.hard_count}, soft={module.soft_count}, advisory={module.advisory_count})"
         )
         lines.append("")
         for item in module.findings:

@@ -1,0 +1,41 @@
+LET forbidden = @forbidden
+LET allowedWitnesses = @allowedWitnesses
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER CONTAINS(LOWER(d.module), "typeiii")
+      OR CONTAINS(LOWER(d.module), "standardform")
+      OR d.claimedLane == "Type III"
+
+  LET badGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl OR g.decl == d.name
+      FILTER g.gateKind == "const"
+      LET opname = LOWER(g.operatorName)
+      FILTER LENGTH(
+        FOR token IN forbidden
+          FILTER CONTAINS(opname, LOWER(token))
+          RETURN token
+      ) > 0
+      RETURN g
+  )
+
+  FILTER LENGTH(badGates) > 0
+
+  LET witnessGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl OR g.decl == d.name
+      FILTER g.gateKind == "const"
+      FILTER g.operatorName IN allowedWitnesses
+      RETURN g
+  )
+
+  FILTER LENGTH(witnessGates) == 0
+
+  RETURN {
+    declaration: HAS(d, "name") ? d.name : d.decl,
+    module: d.module,
+    badGates: badGates[*].operatorName,
+    auditStatus: "flagged",
+    warning: "Type III / StandardForm declaration uses trace/determinant-like gates without allowed witness."
+  }

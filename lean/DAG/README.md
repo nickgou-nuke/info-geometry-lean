@@ -188,6 +188,24 @@ It is the native preservation gate for exported triple rows.  It does not
 replace theorem checking: theorem-level equivalence still goes through
 `KernelEquivalenceExport` or another Lean/kernel certificate path.
 
+To materialize the finite triple-preservation result as graph edges:
+
+```bash
+python3 tools/infra/ingest_triple_homomorphism_certificates.py \
+  --audit artifacts/triples/triple-homomorphism-audit.json \
+  --missing artifacts/triples/missing-triples.jsonl \
+  --source-id ig_decl_topologies/source_topology \
+  --target-id ig_decl_topologies/target_topology \
+  --skip-arango
+```
+
+The default JSONL output is
+`artifacts/expr-graph/wire-topology/ig_triple_homomorphism_edges.jsonl`.
+Those edges use `ig_triple_homomorphism_edges` and remain structurally
+authoritative only for finite incidence preservation.  They are never
+`safeForAutoRewrite`; rewrite authority requires a kernel-equivalence
+certificate with `safeForAutoRewrite=true`.
+
 For a small Lean-native causal cone around one declaration, import the command
 surface:
 

@@ -219,6 +219,27 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
             }
         ],
     )
+    write_jsonl(
+        tmp_path / "ig_triple_homomorphism_edges.jsonl",
+        [
+            {
+                "_key": "thc_1",
+                "_from": "ig_decl_topologies/topo_1",
+                "_to": "ig_decl_topologies/topo_2",
+                "kind": "triple_homomorphism_certificate",
+                "status": "triple_hom_verified",
+                "sourceId": "ig_decl_topologies/topo_1",
+                "targetId": "ig_decl_topologies/topo_2",
+                "checkedTriples": 2,
+                "preservedTriples": 2,
+                "missingTriples": 0,
+                "leanVerified": True,
+                "safeForAutoRewrite": False,
+                "verificationTier": "lean_native_finite_triple_homomorphism",
+                "graphUse": "triple-homomorphism-scc",
+            }
+        ],
+    )
 
     pf = preflight(tmp_path)
     assert pf["missing_files"] == []
@@ -238,6 +259,7 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
         "ig_translation_scc": 1,
         "ig_translation_scc_edges": 1,
         "ig_kernel_equivalence_edges": 1,
+        "ig_triple_homomorphism_edges": 1,
     }
 
     wire = next(json.loads(line) for line in (tmp_path / "ig_wires.jsonl").read_text().splitlines())
@@ -259,6 +281,7 @@ def test_wire_topology_ingest_preserves_derived_raw_backpointers(tmp_path: Path)
     assert normalize_wire_row("ig_translation_scc", {"_key": "tscc_1", "translationSccHash": "sha256:tscc"})["translationSccHash"] == "sha256:tscc"
     assert normalize_wire_row("ig_translation_scc_edges", {"_key": "tse_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_translation_scc/tscc_1"})["_to"] == "ig_translation_scc/tscc_1"
     assert normalize_wire_row("ig_kernel_equivalence_edges", {"_key": "kec_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_decl_topologies/topo_2", "mode": "type"})["kind"] == "kernel_equivalence_certificate"
+    assert normalize_wire_row("ig_triple_homomorphism_edges", {"_key": "thc_1", "_from": "ig_decl_topologies/topo_1", "_to": "ig_decl_topologies/topo_2", "status": "triple_hom_verified"})["kind"] == "triple_homomorphism_certificate"
 
 
 def test_wire_topology_preflight_allows_missing_optional_kernel_edges(tmp_path: Path) -> None:
@@ -284,8 +307,12 @@ def test_wire_topology_preflight_allows_missing_optional_kernel_edges(tmp_path: 
     pf = preflight(tmp_path)
 
     assert pf["missing_files"] == []
-    assert pf["optional_missing_files"] == ["ig_kernel_equivalence_edges.jsonl"]
+    assert pf["optional_missing_files"] == [
+        "ig_kernel_equivalence_edges.jsonl",
+        "ig_triple_homomorphism_edges.jsonl",
+    ]
     assert "ig_kernel_equivalence_edges" not in pf["counts"]
+    assert "ig_triple_homomorphism_edges" not in pf["counts"]
 
 
 def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
@@ -305,6 +332,7 @@ def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
     translation_edge_fields = [spec["fields"] for spec in specs["ig_translation_edges"]]
     translation_scc_fields = [spec["fields"] for spec in specs["ig_translation_scc"]]
     kernel_edge_fields = [spec["fields"] for spec in specs["ig_kernel_equivalence_edges"]]
+    triple_hom_edge_fields = [spec["fields"] for spec in specs["ig_triple_homomorphism_edges"]]
 
     assert ["wireKey"] in wire_fields
     assert ["wireHash"] in wire_fields
@@ -357,3 +385,9 @@ def test_wire_topology_index_specs_cover_dual_overlay_fields() -> None:
     assert ["kernelValueDefEq"] in kernel_edge_fields
     assert ["safeForAutoRewrite"] in kernel_edge_fields
     assert ["graphUse"] in kernel_edge_fields
+    assert ["status"] in triple_hom_edge_fields
+    assert ["leanVerified"] in triple_hom_edge_fields
+    assert ["safeForDedupSCC"] in triple_hom_edge_fields
+    assert ["safeForAutoRewrite"] in triple_hom_edge_fields
+    assert ["missingTripleHash"] in triple_hom_edge_fields
+    assert ["graphUse"] in triple_hom_edge_fields

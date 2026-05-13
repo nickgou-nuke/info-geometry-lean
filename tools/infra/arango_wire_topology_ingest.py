@@ -18,6 +18,7 @@ This imports the projection emitted by ``tools/infra/wire_topology_transform.py`
 * ``ig_translation_scc.jsonl``
 * ``ig_translation_scc_edges.jsonl``
 * ``ig_kernel_equivalence_edges.jsonl`` when kernel certificates have been materialized
+* ``ig_triple_homomorphism_edges.jsonl`` when finite triple certificates have been materialized
 
 It deliberately does not import or mutate the raw ``ig_nodes`` / ``ig_edges``
 Lean evidence layer.  All derived documents retain raw ids/hashes for descent.
@@ -54,7 +55,10 @@ from tools.infra.arango_raw_infotree_ingest import (
 
 
 DEFAULT_INPUT_DIR = Path("artifacts/expr-graph/wire-topology")
-OPTIONAL_ROW_COLLECTIONS = frozenset({"ig_kernel_equivalence_edges"})
+OPTIONAL_ROW_COLLECTIONS = frozenset({
+    "ig_kernel_equivalence_edges",
+    "ig_triple_homomorphism_edges",
+})
 
 ROW_FILES: dict[str, str] = {
     "ig_wires": "ig_wires.jsonl",
@@ -72,6 +76,7 @@ ROW_FILES: dict[str, str] = {
     "ig_translation_scc": "ig_translation_scc.jsonl",
     "ig_translation_scc_edges": "ig_translation_scc_edges.jsonl",
     "ig_kernel_equivalence_edges": "ig_kernel_equivalence_edges.jsonl",
+    "ig_triple_homomorphism_edges": "ig_triple_homomorphism_edges.jsonl",
 }
 
 COLLECTION_SPECS = [
@@ -90,6 +95,7 @@ COLLECTION_SPECS = [
     CollectionSpec("ig_translation_scc", edge=False),
     CollectionSpec("ig_translation_scc_edges", edge=True),
     CollectionSpec("ig_kernel_equivalence_edges", edge=True),
+    CollectionSpec("ig_triple_homomorphism_edges", edge=True),
 ]
 
 INDEX_SPECS: dict[str, list[dict[str, Any]]] = {
@@ -246,6 +252,26 @@ INDEX_SPECS: dict[str, list[dict[str, Any]]] = {
         {"fields": ["_from", "kind"]},
         {"fields": ["_to", "kind"]},
     ],
+    "ig_triple_homomorphism_edges": [
+        {"fields": ["kind"]},
+        {"fields": ["status"]},
+        {"fields": ["sourceId"]},
+        {"fields": ["targetId"]},
+        {"fields": ["sourceLabel"]},
+        {"fields": ["targetLabel"]},
+        {"fields": ["verificationTier"]},
+        {"fields": ["proofAuthority"]},
+        {"fields": ["checker"]},
+        {"fields": ["leanVerified"]},
+        {"fields": ["safeForDedupSCC"]},
+        {"fields": ["safeForAutoRewrite"]},
+        {"fields": ["graphUse"]},
+        {"fields": ["candidatePairHash"]},
+        {"fields": ["certificateHash"]},
+        {"fields": ["missingTripleHash"]},
+        {"fields": ["_from", "kind"]},
+        {"fields": ["_to", "kind"]},
+    ],
 }
 
 
@@ -298,6 +324,10 @@ def normalize_wire_row(collection: str, row: dict[str, Any]) -> dict[str, Any]:
         if "_from" not in out or "_to" not in out or "mode" not in out:
             raise ValueError("ig_kernel_equivalence_edges row is missing _from/_to/mode")
         out.setdefault("kind", "kernel_equivalence_certificate")
+    elif collection == "ig_triple_homomorphism_edges":
+        if "_from" not in out or "_to" not in out or "status" not in out:
+            raise ValueError("ig_triple_homomorphism_edges row is missing _from/_to/status")
+        out.setdefault("kind", "triple_homomorphism_certificate")
     else:
         raise ValueError(f"unknown wire topology collection: {collection}")
     return out

@@ -340,9 +340,19 @@ def wire_index_specs() -> dict[str, list[dict[str, Any]]]:
     }
 
 
-def ensure_wire_indexes(target: ArangoTarget) -> dict[str, Any]:
+def active_collections(input_dir: Path) -> set[str]:
+    return {
+        collection
+        for collection, filename in ROW_FILES.items()
+        if collection not in OPTIONAL_ROW_COLLECTIONS or (input_dir / filename).exists()
+    }
+
+
+def ensure_wire_indexes(target: ArangoTarget, collections: set[str] | None = None) -> dict[str, Any]:
     report: dict[str, Any] = {}
     for collection, specs in INDEX_SPECS.items():
+        if collections is not None and collection not in collections:
+            continue
         collection_report = []
         for spec in specs:
             fields = [str(field) for field in spec["fields"]]
@@ -365,11 +375,19 @@ def ensure_wire_indexes(target: ArangoTarget) -> dict[str, Any]:
     return report
 
 
-def ensure_wire_collections(target: ArangoTarget, *, truncate: bool) -> dict[str, Any]:
+def ensure_wire_collections(
+    target: ArangoTarget,
+    *,
+    truncate: bool,
+    collections: set[str] | None = None,
+) -> dict[str, Any]:
     ensure_database(target)
     existing = list_collections(target)
-    report: dict[str, Any] = {"created": [], "existing": [], "truncated": []}
+    report: dict[str, Any] = {"created": [], "existing": [], "truncated": [], "skipped": []}
     for spec in COLLECTION_SPECS:
+        if collections is not None and spec.name not in collections:
+            report["skipped"].append(spec.name)
+            continue
         if spec.name not in existing:
             create_collection(target, spec)
             report["created"].append(spec.name)
@@ -416,13 +434,16 @@ def ingest_wire_topology(
     pf = preflight(input_dir)
     if pf["missing_files"]:
         raise RuntimeError(f"wire topology input preflight failed: missing {pf['missing_files']}")
+    active = active_collections(input_dir)
 
     report: dict[str, Any] = {
         "schema": "info_geometry.arango_wire_topology_ingest.v1",
         "truth_boundary": "derived projection; raw Lean evidence remains ig_nodes/ig_edges",
         "input_dir": str(input_dir),
         "preflight": pf,
-        "collections": ensure_wire_collections(target, truncate=truncate),
+        "active_collections": sorted(active),
+        "inactive_optional_collections": sorted(OPTIONAL_ROW_COLLECTIONS - active),
+        "collections": ensure_wire_collections(target, truncate=truncate, collections=active),
         "imports": {},
     }
 
@@ -444,8 +465,12 @@ def ingest_wire_topology(
         )
 
     if not skip_indexes:
-        report["indexes"] = ensure_wire_indexes(target)
-    report["live_counts"] = {spec.name: collection_count(target, spec.name) for spec in COLLECTION_SPECS}
+        report["indexes"] = ensure_wire_indexes(target, active)
+    report["live_counts"] = {
+        spec.name: collection_count(target, spec.name)
+        for spec in COLLECTION_SPECS
+        if spec.name in active
+    }
     return report
 
 

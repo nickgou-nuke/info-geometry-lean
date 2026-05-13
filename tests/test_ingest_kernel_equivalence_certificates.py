@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from tools.infra.ingest_kernel_equivalence_certificates import (
+    DEFAULT_OUTPUT,
     materialize_edges,
     normalize_certificate_edge,
 )
@@ -137,3 +138,7 @@ def test_materialize_kernel_certificate_edges_from_jsonl(tmp_path: Path) -> None
     assert edges[1]["graphUse"] == "rewrite-safe-scc"
     assert all(edge["_from"].startswith("ig_decl_topologies/") for edge in edges)
     assert all(edge["_to"].startswith("ig_decl_topologies/") for edge in edges)
+
+
+def test_default_kernel_edge_output_matches_wire_topology_ingest_dir() -> None:
+    assert DEFAULT_OUTPUT == Path("artifacts/expr-graph/wire-topology/ig_kernel_equivalence_edges.jsonl")

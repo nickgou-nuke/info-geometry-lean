@@ -158,9 +158,11 @@ Mode discipline:
   It may set `leanVerified=true`, but it must not set
   `safeForAutoRewrite=true`.
 - `value`: certifies value/body equality only when both declarations have
-  values and their types are also definitionally compatible.
-- `type-and-value`: certifies both lanes and is the only direct identity mode
-  that can mark a row rewrite-safe.
+  values and their types are also definitionally compatible.  It can mark a row
+  rewrite-safe only when both type and value checks pass.
+- `type-and-value`: certifies both lanes.  Together with `value`, this is one
+  of the only direct identity modes that can mark a row rewrite-safe, and only
+  when both declarations have values and both type/value checks pass.
 
 For finite RDF/Arango-style triple preservation, use the Lean-native triple
 homomorphism checker:

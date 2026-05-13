@@ -1,0 +1,36 @@
+[submodule "external_refs/Aria-autoformalizer"]
+	path = external_refs/Aria-autoformalizer
+	url = https://github.com/frenzymath/Aria-autoformalizer
+[submodule "external_refs/LeanDepViz"]
+	path = external_refs/LeanDepViz
+	url = https://github.com/cameronfreer/LeanDepViz
+[submodule "external_refs/LeanMillenniumPrizeProblems"]
+	path = external_refs/LeanMillenniumPrizeProblems
+	url = https://github.com/lean-dojo/LeanMillenniumPrizeProblems
+[submodule "external_refs/PDA"]
+	path = external_refs/PDA
+	url = https://github.com/rookie-joe/PDA.git
+[submodule "external_refs/REAL-Prover"]
+	path = external_refs/REAL-Prover
+	url = https://github.com/frenzymath/REAL-Prover
+[submodule "external_refs/Rethlas"]
+	path = external_refs/Rethlas
+	url = https://github.com/frenzymath/Rethlas
+[submodule "external_refs/aesop"]
+	path = external_refs/aesop
+	url = https://github.com/leanprover-community/aesop
+[submodule "external_refs/jixia"]
+	path = external_refs/jixia
+	url = https://github.com/frenzymath/jixia
+[submodule "external_refs/lean-graph"]
+	path = external_refs/lean-graph
+	url = https://github.com/patrik-cihal/lean-graph
+[submodule "external_refs/paperproof"]
+	path = external_refs/paperproof
+	url = https://github.com/Paper-Proof/paperproof
+[submodule "external_refs/ulamai"]
+	path = external_refs/ulamai
+	url = https://github.com/ulamai/ulamai.git
+[submodule "tools/archon"]
+	path = tools/archon
+	url = https://github.com/coleam00/archon.git

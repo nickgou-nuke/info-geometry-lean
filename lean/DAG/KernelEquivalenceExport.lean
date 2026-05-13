@@ -87,6 +87,15 @@ private def verifiedByMode (mode : String) (typeDefEq valueDefEq : Bool) : Bool 
   | "type-and-value" => typeDefEq && valueDefEq
   | _ => false
 
+private def safeForAutoRewriteByMode
+    (mode : String)
+    (typeDefEq valueDefEq sourceHasValue targetHasValue : Bool) : Bool :=
+  match mode with
+  | "type" => false
+  | "value" => typeDefEq && valueDefEq && sourceHasValue && targetHasValue
+  | "type-and-value" => typeDefEq && valueDefEq && sourceHasValue && targetHasValue
+  | _ => false
+
 private def tierByMode (mode : String) : String :=
   match mode with
   | "type" => "lean_kernel_type_defeq"
@@ -159,6 +168,10 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
         | some sourceVal, some targetVal => defEq sourceVal targetVal
         | _, _ => pure false
       let leanVerified := verifiedByMode mode typeDefEq valueDefEq
+      let sourceHasValue := sourceVal?.isSome
+      let targetHasValue := targetVal?.isSome
+      let safeForAutoRewrite :=
+        safeForAutoRewriteByMode mode typeDefEq valueDefEq sourceHasValue targetHasValue
       let h := certificateHash sourceDecl targetDecl mode typeDefEq valueDefEq leanVerified
       pure {
         sourceDecl := sourceDecl, targetDecl := targetDecl, mode := mode
@@ -167,10 +180,10 @@ private def checkPair (mode : String) (source target : Name) : MetaM Certificate
         sameKind := kindString sourceCi == kindString targetCi
         kernelTypeDefEq := typeDefEq
         kernelValueDefEq := valueDefEq
-        sourceHasValue := sourceVal?.isSome
-        targetHasValue := targetVal?.isSome
+        sourceHasValue := sourceHasValue
+        targetHasValue := targetHasValue
         leanVerified := leanVerified
-        safeForAutoRewrite := leanVerified
+        safeForAutoRewrite := safeForAutoRewrite
         certificateKind := "lean_kernel_equivalence"
         verificationTier := tierByMode mode
         proofAuthority := "lean-kernel-isDefEq"

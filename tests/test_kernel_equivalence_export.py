@@ -80,3 +80,45 @@ def test_kernel_equivalence_export_promotes_only_isdefeq_pairs(tmp_path: Path) -
     assert missing_pair["targetFound"] is True
     assert missing_pair["leanVerified"] is False
     assert missing_pair["error"] == "source declaration not found"
+
+
+def test_kernel_equivalence_type_mode_is_not_auto_rewrite_safe(tmp_path: Path) -> None:
+    pairs = tmp_path / "pairs.jsonl"
+    out = tmp_path / "certs.jsonl"
+    prefix = "DAG.KernelEquivalenceFixture"
+    write_jsonl(
+        pairs,
+        [
+            {"sourceDecl": f"{prefix}.twoA", "targetDecl": f"{prefix}.three"},
+        ],
+    )
+
+    subprocess.run(
+        ["lake", "build", "DAG.KernelEquivalenceFixture"],
+        check=True,
+        cwd=Path(__file__).resolve().parents[1],
+    )
+    subprocess.run(
+        [
+            "lake",
+            "env",
+            "lean",
+            "--run",
+            "lean/DAG/KernelEquivalenceExport.lean",
+            "DAG.KernelEquivalenceFixture",
+            str(pairs),
+            str(out),
+            "--mode",
+            "type",
+        ],
+        check=True,
+        cwd=Path(__file__).resolve().parents[1],
+    )
+
+    row = read_jsonl(out)[0]
+    assert row["mode"] == "type"
+    assert row["kernelTypeDefEq"] is True
+    assert row["kernelValueDefEq"] is False
+    assert row["leanVerified"] is True
+    assert row["safeForAutoRewrite"] is False
+    assert row["verificationTier"] == "lean_kernel_type_defeq"

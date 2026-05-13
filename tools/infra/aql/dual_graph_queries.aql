@@ -1,0 +1,282 @@
+-- AQL seed queries for the integrated InfoGeometry dual wire/gate overlay.
+--
+-- Raw authority:
+--   ig_nodes / ig_edges
+--
+-- Derived dual topology:
+--   ig_wires / ig_gates / ig_wire_edges
+--   ig_scc / ig_scc_edges
+--   ig_decl_topologies / ig_hashes / ig_logic_tokens
+--   ig_logic_vectors / ig_text_index_docs
+--   ig_translation_candidates / ig_translation_edges / ig_translation_scc
+
+-- ============================================================
+-- 1. Wire schematic for a declaration
+-- ============================================================
+LET declName = @declName
+
+LET wires = (
+  FOR w IN ig_wires
+    FILTER w.decl == declName OR declName IN (w.decls ? w.decls : [])
+    RETURN w
+)
+
+LET gates = (
+  FOR g IN ig_gates
+    FILTER g.decl == declName
+    RETURN g
+)
+
+LET ids = UNION(wires[*]._id, gates[*]._id)
+
+LET edges = (
+  FOR e IN ig_wire_edges
+    FILTER e._from IN ids OR e._to IN ids
+    RETURN e
+)
+
+RETURN { declaration: declName, wires, gates, edges }
+
+-- ============================================================
+-- 2. Find occurrence wires by exact de Bruijn hash
+-- ============================================================
+LET deBruijnHash = @deBruijnHash
+
+FOR w IN ig_wires
+  FILTER w.wireLevel == "occurrence"
+  FILTER w.deBruijnHash == deBruijnHash OR deBruijnHash IN (w.deBruijnHashes ? w.deBruijnHashes : [])
+  RETURN {
+    wire: w._key,
+    decl: w.decl,
+    deBruijnIdx: w.deBruijnIdx,
+    rawBvarId: w.rawBvarId,
+    binderRawId: w.binderRawId,
+    module: w.module
+  }
+
+-- ============================================================
+-- 3. Translation-invariant subprogram candidates by pattern hash
+-- ============================================================
+LET patternHash = @patternHash
+
+FOR d IN ig_decl_topologies
+  FILTER d.patternHash == patternHash
+  RETURN {
+    declaration: d.decl,
+    module: d.module,
+    patternHash: d.patternHash,
+    roleHash: d.roleHash,
+    ownerAwareHash: d.ownerAwareHash
+  }
+
+-- ============================================================
+-- 4. Exact duplicate theorem statements from raw decl nodes
+-- ============================================================
+LET typeHash = @typeHash
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER d.typeHash == typeHash
+  RETURN { decl: d.decl, module: d.module, kind: d.kind, typeHash: d.typeHash }
+
+-- ============================================================
+-- 5. Exact duplicate proof bodies from raw decl nodes
+-- ============================================================
+LET valueHash = @valueHash
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER d.valueHash == valueHash
+  RETURN { decl: d.decl, module: d.module, kind: d.kind, valueHash: d.valueHash }
+
+-- ============================================================
+-- 6. Gate pattern search
+-- ============================================================
+LET gateHash = @gateHash
+
+FOR g IN ig_gates
+  FILTER g.gateHash == gateHash
+  RETURN {
+    gate: g._key,
+    decl: g.decl,
+    gateKind: g.gateKind,
+    operatorName: g.operatorName,
+    module: g.module,
+    rawExprId: g.rawExprId
+  }
+
+-- ============================================================
+-- 7. Graph traversal from a gate
+-- ============================================================
+LET gateKey = @gateKey
+
+FOR v, e, p IN 1..3 ANY CONCAT("ig_gates/", gateKey) ig_wire_edges
+  RETURN { vertex: v, edge: e, path: p }
+
+-- ============================================================
+-- 8. Binder-fiber neighborhoods for a declaration
+-- ============================================================
+LET declName = @declName
+
+FOR w IN ig_wires
+  FILTER w.decl == declName
+  FILTER w.wireLevel == "fiber"
+  SORT w.occurrenceCount DESC
+  RETURN {
+    wire: w._key,
+    occurrenceCount: w.occurrenceCount,
+    deBruijnIdxs: w.deBruijnIdxs,
+    deBruijnHashes: w.deBruijnHashes,
+    incidenceHashes: w.incidenceHashes,
+    binderRawId: w.binderRawId
+  }
+
+-- ============================================================
+-- 9. Wire SCC members
+-- ============================================================
+LET sccKey = @sccKey
+
+FOR e IN ig_scc_edges
+  FILTER e._to == CONCAT("ig_scc/", sccKey)
+  FILTER e.role == "member_of_scc"
+  RETURN e._from
+
+-- ============================================================
+-- 10. Type III category-error detector over gate constants
+-- ============================================================
+LET forbidden = ["trace", "tr", "det", "determinant", "density", "matrix.trace"]
+
+LET allowedWitnesses = [
+  "ScalarCocycleBridge",
+  "NaturalConeStandardFormInterface",
+  "coreWeight",
+  "FinitePartialTraceShadow",
+  "ConnesCocycle",
+  "cocycleLogPotential"
+]
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER CONTAINS(LOWER(d.module), "typeiii")
+      OR CONTAINS(LOWER(d.module), "standardform")
+      OR d.claimedLane == "Type III"
+
+  LET badGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl
+      FILTER g.gateKind == "const"
+      LET opname = LOWER(g.operatorName)
+      FILTER LENGTH(
+        FOR token IN forbidden
+          FILTER CONTAINS(opname, token)
+          RETURN token
+      ) > 0
+      RETURN g
+  )
+
+  FILTER LENGTH(badGates) > 0
+
+  LET witnessGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl
+      FILTER g.gateKind == "const"
+      FILTER g.operatorName IN allowedWitnesses
+      RETURN g
+  )
+
+  FILTER LENGTH(witnessGates) == 0
+
+  RETURN {
+    declaration: d.decl,
+    module: d.module,
+    badGates: badGates[*].operatorName,
+    auditStatus: "flagged",
+    warning: "Type III / StandardForm declaration uses trace/determinant-like gates without allowed witness."
+  }
+
+-- ============================================================
+-- 11. Vector-near review candidates from materialized logic vectors
+-- ============================================================
+LET seed = FIRST(
+  FOR d IN ig_logic_vectors
+    FILTER d.decl == @declName
+    RETURN d
+)
+
+FOR d IN ig_logic_vectors
+  FILTER seed != null
+  FILTER d._id != seed._id
+  FILTER d.logicVector != null
+
+  LET dot = SUM(
+    FOR i IN 0..(LENGTH(seed.logicVector) - 1)
+      RETURN seed.logicVector[i] * d.logicVector[i]
+  )
+
+  LET snorm = SQRT(SUM(
+    FOR i IN 0..(LENGTH(seed.logicVector) - 1)
+      RETURN seed.logicVector[i] * seed.logicVector[i]
+  ))
+
+  LET dnorm = SQRT(SUM(
+    FOR i IN 0..(LENGTH(d.logicVector) - 1)
+      RETURN d.logicVector[i] * d.logicVector[i]
+  ))
+
+  LET cosine = (snorm == 0 OR dnorm == 0) ? 0 : dot / (snorm * dnorm)
+
+  FILTER cosine > @threshold
+  SORT cosine DESC
+  LIMIT 50
+
+  RETURN {
+    seed: seed.decl,
+    candidate: d.decl,
+    module: d.module,
+    cosine,
+    reviewOnly: true
+  }
+
+-- ============================================================
+-- 12. Verified translation SCC members
+-- ============================================================
+LET translationSccKey = @translationSccKey
+
+FOR e IN ig_translation_scc_edges
+  FILTER e._to == CONCAT("ig_translation_scc/", translationSccKey)
+  FILTER e.role == "member_of_translation_scc"
+  RETURN {
+    declaration: e.sourceDecl,
+    edge: e
+  }
+
+-- ============================================================
+-- 13. Hybrid candidate retrieval: exact identity + vector review
+-- ============================================================
+LET vector_hits = (
+  FOR q IN ig_text_index_docs
+    FILTER q.logicVector != null
+    LET sim = APPROX_NEAR_COSINE(q.logicVector, @queryVector, { nProbe: @nProbe })
+    SORT sim DESC
+    LIMIT @kVector
+    RETURN { id: q._id, decl: q.decl, source: "vector", score: sim, reviewOnly: true, leanVerified: false }
+)
+
+LET exact_hits = (
+  FOR q IN ig_decl_topologies
+    FILTER q.ownerAwareHash == @ownerAwareHash
+       OR q.patternHash == @patternHash
+       OR q.roleHash == @roleHash
+    LIMIT @kExact
+    RETURN { id: q._id, decl: q.decl, source: "exact", score: 1.0, reviewOnly: false, leanVerified: false }
+)
+
+FOR hit IN APPEND(vector_hits, exact_hits)
+  COLLECT id = hit.id INTO grouped
+  RETURN {
+    id,
+    sources: grouped[*].hit.source,
+    maxScore: MAX(grouped[*].hit.score),
+    reviewOnly: MIN(grouped[*].hit.reviewOnly ? 1 : 0) == 1,
+    leanVerified: MAX(grouped[*].hit.leanVerified ? 1 : 0) == 1
+  }

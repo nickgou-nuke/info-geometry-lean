@@ -5,7 +5,11 @@ open Lean
 
 namespace DAG
 
-/-- Spectral fingerprint of a Lean expression. -/
+/-- Spectral fingerprint of a Lean expression.
+
+    Captures structural and de Bruijn binding information for
+    alpha-equivalence clustering and incidence graph analysis.
+-/
 structure ExprFingerprint where
   /-- Histogram of De Bruijn depths encountered in the expression. -/
   depthHistogram : Array Nat
@@ -25,6 +29,10 @@ structure ExprFingerprint where
   redexCount     : Nat
   /-- Hash of the expression's structural shape. -/
   shapeHash      : UInt64
+  /-- SHA-256 of the de Bruijn incidence pattern (computed in post-processing). -/
+  deBruijnIncidenceHash : String := ""
+  /-- Alpha-local hash: structural hash invariant under alpha-renaming. -/
+  alphaLocalHash : String := ""
 deriving ToJson, FromJson, Repr, Inhabited
 
 /-- Efficiently compute the ExprFingerprint for a given expression.

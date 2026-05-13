@@ -153,6 +153,15 @@ tokens, graph SCCs, and vector neighborhoods may propose candidate pairs, but
 they are not allowed to set `leanVerified`; only this Lean-native exporter or a
 future Lean-native checker with the same kernel authority may do that.
 
+Mode discipline:
+- `type`: certifies definitional equality of declaration types/statements.
+  It may set `leanVerified=true`, but it must not set
+  `safeForAutoRewrite=true`.
+- `value`: certifies value/body equality only when both declarations have
+  values and their types are also definitionally compatible.
+- `type-and-value`: certifies both lanes and is the only direct identity mode
+  that can mark a row rewrite-safe.
+
 For finite RDF/Arango-style triple preservation, use the Lean-native triple
 homomorphism checker:
 

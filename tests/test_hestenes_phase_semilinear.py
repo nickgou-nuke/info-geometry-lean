@@ -12,7 +12,25 @@ def test_hestenes_phase_semilinear_surface_exists() -> None:
     assert "theorem modular_j_isHestenesAntilinear" in text
     assert "theorem comp_isHestenesSemilinear" in text
     assert "theorem comp_antilinear_antilinear_isHestenesLinear" in text
-    # Guard owner-lane drift: forbid Complex-typed owner language and RCLike polymorphism.
-    assert ": Complex" not in text
-    assert "[RCLike" not in text
-    assert "RCLike" not in text
+    assert "theorem isHestenesSemilinear_linear_iff_KLinear" in text
+    assert "theorem isHestenesSemilinear_antilinear_iff_KAntilinear" in text
+
+
+def test_hestenes_phase_semilinear_has_no_complex_owner_language() -> None:
+    text = FILE.read_text(encoding="utf-8")
+
+    forbidden = [
+        "→L[ℂ]",
+        "→ₗ[ℂ]",
+        "InnerProductSpace ℂ",
+        "NormedSpace ℂ",
+        "Complex.",
+        "RCLike",
+        "SemilinearMap",
+        "RingHomCompTriple",
+        "starRingEnd ℂ",
+        "Complex.conj",
+    ]
+
+    for token in forbidden:
+        assert token not in text

@@ -203,7 +203,6 @@ def SourceSinkChargesCancel
 namespace TomitaCentralBalanceCarrier
 
 variable {State Charge : Type*}
-variable [AddMonoid Charge]
 variable (C : TomitaCentralBalanceCarrier State Charge)
 
 @[rep_depth operator]
@@ -217,6 +216,8 @@ theorem sinkCharge_apply (s : State) :
 @[rep_depth operator]
 theorem totalCharge_apply (s : State) :
     C.totalCharge s = C.totalCharge s := rfl
+
+variable [AddMonoid Charge]
 
 /--
 If the total charge splits as source plus sink and source/sink cancel, the

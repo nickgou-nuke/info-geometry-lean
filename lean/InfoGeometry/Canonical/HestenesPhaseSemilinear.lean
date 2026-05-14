@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesRealStructures
+import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

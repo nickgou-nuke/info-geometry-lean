@@ -547,6 +547,7 @@ import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Canonical.SouriauMetriplecticContext
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
+import InfoGeometry.Canonical.SouriauGWCountOTBridge
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.SouriauOperatorBregmanModular
 import InfoGeometry.Canonical.SouriauModularBregmanOperator

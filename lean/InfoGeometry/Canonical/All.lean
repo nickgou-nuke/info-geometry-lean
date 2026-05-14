@@ -105,6 +105,7 @@ import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralHodgeCartanBridge
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralDiracHomologyBridge
+import InfoGeometry.Canonical.ChiralDiracHomologyCalibration
 import InfoGeometry.Canonical.RealIncidenceHomologyBridge
 import InfoGeometry.Canonical.RealIncidenceHomology
 import InfoGeometry.Canonical.RealIncidenceChains

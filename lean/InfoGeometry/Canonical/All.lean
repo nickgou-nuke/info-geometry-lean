@@ -194,6 +194,7 @@ import InfoGeometry.Canonical.SemilinearPresentation
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinHodgeChiralBridge
+import InfoGeometry.Canonical.DrazinHodgeFierzBridge
 import InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
 import InfoGeometry.Canonical.DrazinFierzBridge
 import InfoGeometry.Canonical.DrazinGreenHorizonEnvelope

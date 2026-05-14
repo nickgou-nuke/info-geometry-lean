@@ -267,4 +267,140 @@ end SouriauModularHamiltonianBridge
 
 end Core
 
+section ExpectationCalibration
+
+/--
+A real expectation state for the Souriau/free-energy readout layer.
+
+In applications this is the compressed state `φ_A`.  No traciality or full
+Tomita--Takesaki modular theory is asserted here.
+-/
+@[rep_depth operator]
+structure RealExpectationState
+    (Obs : Type*) [One Obs] [Mul Obs] [Star Obs] where
+  expect : Obs → ℝ
+  unital : expect 1 = 1
+  positive : ∀ a : Obs, 0 ≤ expect (star a * a)
+
+/--
+Souriau free-energy owner lane.
+
+`freeEnergyObservable` is the operator-valued representative, when the local
+Souriau model supplies one.  `freeEnergy` is the scalar thermodynamic readout.
+-/
+@[rep_depth operator]
+structure SouriauFreeEnergyOwner
+    (Source Obs : Type*) where
+  freeEnergyObservable : Source → Obs
+  freeEnergy : Source → ℝ
+
+/--
+Bounded Drazin quadratic modular-Hamiltonian surrogate.
+
+Intended formula:
+
+`K_sur = μ_Q • (P_D * (Q * Q) * P_D)`.
+
+This is a bounded/compressed surrogate socket.  It is not asserted to be the
+unbounded Type III modular Hamiltonian.
+-/
+@[rep_depth operator]
+structure BoundedModularHamiltonianSurrogate
+    (Obs : Type*) [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs] where
+  μ_Q : ℝ
+  P_D : Obs
+  Q : Obs
+  K_sur : Obs
+  P_D_idempotent : P_D * P_D = P_D
+  P_D_self_adjoint : star P_D = P_D
+  Q_self_adjoint : star Q = Q
+  K_sur_eq : K_sur = μ_Q • (P_D * (Q * Q) * P_D)
+
+namespace BoundedModularHamiltonianSurrogate
+
+variable {Obs : Type*} [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs]
+variable (K : BoundedModularHamiltonianSurrogate Obs)
+
+/-- Formula readback for the bounded Drazin quadratic surrogate. -/
+@[rep_depth operator]
+theorem formula :
+    K.K_sur = K.μ_Q • (K.P_D * (K.Q * K.Q) * K.P_D) :=
+  K.K_sur_eq
+
+end BoundedModularHamiltonianSurrogate
+
+/--
+Operator-level calibration.
+
+This witness is required before identifying the bounded Drazin surrogate with a
+Souriau operator-valued free-energy representative.
+-/
+@[rep_depth operator]
+structure IsOperatorCalibratedBySouriau
+    {Source Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs]
+    (S : SouriauFreeEnergyOwner Source Obs)
+    (K : BoundedModularHamiltonianSurrogate Obs)
+    (src : Source) : Prop where
+  K_sur_eq_freeEnergyObservable :
+    K.K_sur = S.freeEnergyObservable src
+
+/--
+Expectation-level calibration.
+
+This witness states that the compressed expectation of the Souriau operator
+representative is the scalar Souriau free energy.
+-/
+@[rep_depth operator]
+structure IsSouriauFreeEnergyReadoutCalibrated
+    {Source Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs]
+    (φA : RealExpectationState Obs)
+    (S : SouriauFreeEnergyOwner Source Obs)
+    (src : Source) : Prop where
+  expect_freeEnergyObservable_eq_freeEnergy :
+    φA.expect (S.freeEnergyObservable src) = S.freeEnergy src
+
+/--
+Operator-level calibrated equality.
+
+This is not automatic.  It is exactly the supplied operator calibration witness.
+-/
+@[rep_depth operator]
+theorem surrogate_eq_souriau_freeEnergyObservable
+    {Source Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs]
+    (S : SouriauFreeEnergyOwner Source Obs)
+    (K : BoundedModularHamiltonianSurrogate Obs)
+    (src : Source)
+    (hOp : IsOperatorCalibratedBySouriau S K src) :
+    K.K_sur = S.freeEnergyObservable src :=
+  hOp.K_sur_eq_freeEnergyObservable
+
+/--
+Main calibrated expectation bridge.
+
+If the bounded Drazin surrogate is operator-calibrated by the Souriau
+free-energy observable, and that Souriau observable has the correct compressed
+expectation readout, then the surrogate expectation is the scalar Souriau free
+energy:
+
+`φ_A(K_sur) = F_Souriau(src)`.
+-/
+@[rep_depth operator]
+theorem surrogate_expectation_eq_souriau_free_energy
+    {Source Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs]
+    (φA : RealExpectationState Obs)
+    (S : SouriauFreeEnergyOwner Source Obs)
+    (K : BoundedModularHamiltonianSurrogate Obs)
+    (src : Source)
+    (hOp : IsOperatorCalibratedBySouriau S K src)
+    (hRead : IsSouriauFreeEnergyReadoutCalibrated φA S src) :
+    φA.expect K.K_sur = S.freeEnergy src := by
+  rw [hOp.K_sur_eq_freeEnergyObservable]
+  exact hRead.expect_freeEnergyObservable_eq_freeEnergy
+
+end ExpectationCalibration
+
 end InfoGeometry.Canonical.SouriauModularHamiltonianBridge

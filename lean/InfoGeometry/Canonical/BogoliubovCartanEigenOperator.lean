@@ -96,6 +96,14 @@ theorem cartanEigenOperator_comp
   intro x
   simp [add_smul]
 
+/-- Cartan eigen-operator weights add under operator multiplication. -/
+theorem cartanEigenOperator_mul
+    {H A B : EndH} {lamA lamB : ℝ}
+    (hA : IsCartanEigenOperator (E := E) H A lamA)
+    (hB : IsCartanEigenOperator (E := E) H B lamB) :
+    IsCartanEigenOperator (E := E) H (A * B) (lamA + lamB) :=
+  cartanEigenOperator_comp (E := E) hA hB
+
 /-- Sum of equal-weight Cartan eigen-operators is again an eigen-operator. -/
 theorem cartanEigenOperator_add_same_weight
     {H A B : EndH} {lam : ℝ}
@@ -114,6 +122,25 @@ theorem cartanEigenOperator_smul
   unfold IsCartanEigenOperator at hA ⊢
   rw [cartanAdjoint_smul, hA]
   simp [smul_smul, mul_comm, mul_assoc]
+
+/-- Cartan eigen-operator commutators have the summed Cartan weight. -/
+theorem cartanEigenOperator_commutator
+    {H A B : EndH} {lamA lamB : ℝ}
+    (hA : IsCartanEigenOperator (E := E) H A lamA)
+    (hB : IsCartanEigenOperator (E := E) H B lamB) :
+    IsCartanEigenOperator (E := E) H (A * B - B * A) (lamA + lamB) := by
+  have hAB : IsCartanEigenOperator (E := E) H (A * B) (lamA + lamB) :=
+    cartanEigenOperator_mul (E := E) hA hB
+  have hBA : IsCartanEigenOperator (E := E) H (B * A) (lamA + lamB) := by
+    simpa [add_comm] using cartanEigenOperator_mul (E := E) hB hA
+  have hNeg :
+      IsCartanEigenOperator (E := E) H ((-1 : ℝ) • (B * A)) (lamA + lamB) :=
+    cartanEigenOperator_smul (E := E) (c := -1) hBA
+  have hSum :
+      IsCartanEigenOperator (E := E) H (A * B + (-1 : ℝ) • (B * A))
+        (lamA + lamB) :=
+    cartanEigenOperator_add_same_weight (E := E) hAB hNeg
+  simpa [sub_eq_add_neg] using hSum
 
 /-- Phase-refined Cartan eigen-operator in the Hestenes real doubled sense. -/
 def IsPhaseCartanEigenOperator
@@ -144,6 +171,11 @@ def IsDrazinDefectCartanEigenOperator
     (T TD H A : EndH) (lam : ℝ) : Prop :=
   IsCartanEigenOperator (E := E) H A lam ∧
     Pzero T TD * A = A ∧ A * Pzero T TD = A
+
+/-- Alias for Drazin-null/defect Cartan eigen-operators. -/
+def IsDrazinNullCartanEigenOperator
+    (T TD H A : EndH) (lam : ℝ) : Prop :=
+  IsDrazinDefectCartanEigenOperator (E := E) T TD H A lam
 
 /-- Chiral Cartan eigen-operator relative to a grading operator. -/
 def IsChiralCartanEigenOperator
@@ -215,6 +247,17 @@ theorem cartanEigenOperator_conjugateOperator
 def PreservesDrazinSplit (T TD U : EndH) : Prop :=
   U * Preg T TD = Preg T TD * U ∧
     U * Pzero T TD = Pzero T TD * U
+
+/--
+Transport of a Drazin split between two frame representatives.
+
+Use this for equivalence of two structured Drazin geometries.  Use
+`PreservesDrazinSplit` for automorphisms of one fixed geometry.
+-/
+def TransportsDrazinSplit
+    (Tsrc TDsrc Ttgt TDtgt U V : EndH) : Prop :=
+  Preg Ttgt TDtgt = U * Preg Tsrc TDsrc * V ∧
+    Pzero Ttgt TDtgt = U * Pzero Tsrc TDsrc * V
 
 /-- A frame change preserves the fixed doubled chiral grading `ε`. -/
 def PreservesChiralGrading (U : EndH) : Prop :=
@@ -353,6 +396,173 @@ theorem cartanEigenOperator_map
     IsCartanEigenOperator (E := E) Htgt (conjugateOperator (E := E) U V A) lam := by
   rcases hFrame with ⟨hInv, hH, -, -, -⟩
   exact cartanEigenOperator_conjugateOperator (E := E) hInv hH hA
+
+/--
+Explicit exponential adjoint-flow calibration for a Cartan generator.
+
+The infinitesimal theorem-safe statement is `IsCartanEigenOperator H X lam`,
+namely `[H,X] = lam • X`.  The integrated statement
+
+`exp(tH) X exp(-tH) = exp(t lam) • X`
+
+requires an exponential/ODE or functional-calculus backend.  This carrier records
+that integrated law as supplied calibration data, without deriving it from the
+infinitesimal law.
+-/
+structure CartanExponentialAdjointCalibration
+    (H : EndH) where
+  /-- Supplied exponential of the Cartan generator. -/
+  expCartan : ℝ → EndH
+
+  /-- Exponential identity at zero. -/
+  expCartan_zero : expCartan 0 = 1
+
+  /--
+  Supplied integrated eigen-operator law.
+
+  This is the theorem-safe form of
+  `exp(tH) X exp(-tH) = exp(t lam) X`.
+  -/
+  eigen_adjointFlow_law :
+    ∀ {X : EndH} {lam : ℝ},
+      IsCartanEigenOperator (E := E) H X lam →
+        ∀ t : ℝ, expCartan t * X * expCartan (-t) = Real.exp (t * lam) • X
+
+namespace CartanExponentialAdjointCalibration
+
+/-- The calibrated adjoint flow `X ↦ exp(tH) X exp(-tH)`. -/
+noncomputable def adjointExponentialFlow
+    (H : EndH)
+    (C : CartanExponentialAdjointCalibration (E := E) H)
+    (t : ℝ) (X : EndH) : EndH :=
+  C.expCartan t * X * C.expCartan (-t)
+
+/-- At time zero, the calibrated adjoint flow fixes every operator. -/
+theorem adjointExponentialFlow_zero
+    (H : EndH)
+    (C : CartanExponentialAdjointCalibration (E := E) H)
+    (X : EndH) :
+    adjointExponentialFlow (E := E) H C 0 X = X := by
+  unfold adjointExponentialFlow
+  rw [C.expCartan_zero]
+  rw [neg_zero, C.expCartan_zero]
+  simp
+
+/--
+Readback: a Cartan eigen-operator scales exponentially under the supplied
+adjoint flow.
+-/
+theorem cartanEigenOperator_integrates_to_exponential_flow
+    {H : EndH}
+    (C : CartanExponentialAdjointCalibration (E := E) H)
+    {X : EndH} {lam : ℝ}
+    (hX : IsCartanEigenOperator (E := E) H X lam)
+    (t : ℝ) :
+    adjointExponentialFlow (E := E) H C t X = Real.exp (t * lam) • X := by
+  unfold adjointExponentialFlow
+  exact C.eigen_adjointFlow_law hX t
+
+/--
+Additive-time readback on a Cartan eigen-operator.
+
+This uses only the supplied integrated law and the scalar exponential identity;
+it does not prove existence of the exponential flow from the infinitesimal
+derivation law.
+-/
+theorem adjointExponentialFlow_add_on_eigenoperator
+    {H : EndH}
+    (C : CartanExponentialAdjointCalibration (E := E) H)
+    {X : EndH} {lam : ℝ}
+    (hX : IsCartanEigenOperator (E := E) H X lam)
+    (t s : ℝ) :
+    adjointExponentialFlow (E := E) H C (t + s) X =
+      Real.exp (t * lam) • adjointExponentialFlow (E := E) H C s X := by
+  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hX (t + s)]
+  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hX s]
+  have harg : (t + s) * lam = t * lam + s * lam := by
+    rw [add_mul]
+  rw [harg, Real.exp_add, smul_smul]
+
+end CartanExponentialAdjointCalibration
+
+/--
+Kernel-clean Cartan frame equivalence.
+
+This carrier contains only the data needed to prove Cartan weight transport:
+a two-sided inverse pair and Cartan conjugacy.  Drazin, chiral, and Krein
+compatibility live in `BogoliubovCartanFrameEquiv` as additional witnesses.
+-/
+structure CartanFrameEquiv
+    (Hsrc Htgt : EndH) where
+  /-- Frame-change operator. -/
+  U : EndH
+
+  /-- Inverse frame-change operator. -/
+  Uinv : EndH
+
+  /-- Left inverse law. -/
+  left_inv : Uinv * U = 1
+
+  /-- Right inverse law. -/
+  right_inv : U * Uinv = 1
+
+  /-- Cartan generator transport law. -/
+  conjugatesCartan :
+    Htgt = U * Hsrc * Uinv
+
+namespace CartanFrameEquiv
+
+variable {Hsrc Htgt : EndH}
+variable (F : CartanFrameEquiv (E := E) Hsrc Htgt)
+
+end CartanFrameEquiv
+
+/--
+Structure form of a Bogoliubov-Cartan frame equivalence.
+
+The frame is a representative choice.  The invariant data are the Cartan
+weights, Drazin sector support, chiral grading, and Krein pairing.  This
+structure packages the same hypotheses as `IsBogoliubovCartanFrameChange`,
+but makes downstream readbacks field-projection friendly.
+-/
+structure BogoliubovCartanFrameEquiv
+    (T TD Hsrc Htgt : EndH) where
+  /-- Kernel-clean Cartan frame component. -/
+  cartan :
+    CartanFrameEquiv (E := E) Hsrc Htgt
+
+  /-- Regular Drazin projector is preserved by the frame. -/
+  preservesPreg :
+    cartan.U * Preg T TD = Preg T TD * cartan.U
+
+  /-- Defect/null Drazin projector is preserved by the frame. -/
+  preservesPzero :
+    cartan.U * Pzero T TD = Pzero T TD * cartan.U
+
+  /-- The fixed doubled chiral grading is preserved by the frame. -/
+  preservesGammaS :
+    cartan.U * spectral_epsilon (E := E) = spectral_epsilon (E := E) * cartan.U
+
+  /--
+  The frame preserves the Krein pairing.
+
+  Kept as an abstract witness at this layer.  Concrete bilinear-form transport
+  can be installed by a carrier-specific specialization without making the
+  Cartan weight transport depend on that analytic backend.
+  -/
+  preservesKrein :
+    Prop
+
+  /-- Evidence for the Krein-preservation witness. -/
+  preservesKrein_holds :
+    preservesKrein
+
+namespace BogoliubovCartanFrameEquiv
+
+variable {T TD Hsrc Htgt : EndH}
+variable (F : BogoliubovCartanFrameEquiv (E := E) T TD Hsrc Htgt)
+
+end BogoliubovCartanFrameEquiv
 
 end Core
 

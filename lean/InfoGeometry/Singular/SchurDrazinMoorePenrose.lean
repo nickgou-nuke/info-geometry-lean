@@ -33,19 +33,16 @@ open InfoGeometry.Singular.MoorePenrose
 /-! ## 1. Spectral-theorem regular sector -/
 
 /--
-Witness-gated spectral resolution for a clean normal/self-adjoint sector.
-
-This is the ideal diagonal layer above Schur.  A concrete finite-dimensional
-Hilbert model supplies the mode index, eigenvalue readout, and orthogonal
-projectors.  The laws are kept as data because the actual spectral theorem
-depends on the model category.
--/
-/--
   Resolution of Identity (ROI) Ledger.
   This aligns with the formalization in `SpectralThm` by Oliver Butterley.
+
+  This is the ideal diagonal layer above Schur.  A concrete finite-dimensional
+  Hilbert model supplies the mode index, eigenvalue readout, and orthogonal
+  projectors.  The laws are kept as data because the actual spectral theorem
+  depends on the model category.
   -/
 structure ResolutionOfIdentityLedger
-    (R Mode Scalar : Type*) [Ring R] [StarRing R] where
+    (R Mode Scalar : Type*) [Ring R] [StarRing R] [SMul Scalar R] where
   /-- Operator being spectrally resolved. -/
   A : R
 
@@ -82,7 +79,7 @@ structure ResolutionOfIdentityLedger
 
 namespace ResolutionOfIdentityLedger
 
-variable {R Mode Scalar : Type*} [Ring R] [StarRing R]
+variable {R Mode Scalar : Type*} [Ring R] [StarRing R] [SMul Scalar R]
 variable (S : ResolutionOfIdentityLedger R Mode Scalar)
 
 
@@ -99,55 +96,30 @@ noncomputable def ofNormalHilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E]
     (A : E →L[𝕜] E)
-    (hNormal : IsStarNormal A) :
-    ResolutionOfIdentityLedger (E →L[𝕜] E) (Module.End.Eigenvalues (A : E →ₗ[𝕜] E)) 𝕜 := by
-  let AL : E →ₗ[𝕜] E := (A : E →ₗ[𝕜] E)
-  have hNormalL : IsStarNormal AL := hNormal
-  exact {
-    A := A
-    eigenvalue := fun μ => μ.val
-    spectralProjector := fun μ =>
-      (AL.eigenspace μ.val).subtypeL.comp (orthogonalProjection (AL.eigenspace μ.val))
-    is_zero_mode := fun (μ : Module.End.Eigenvalues AL) => (μ.val = 0)
-    projector_idempotent := by
-      intro μ
-      ext x
-      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.coe_comp,
-        Function.comp_apply, Submodule.coe_subtypeL]
-      exact (AL.eigenspace μ.val).orthogonalProjection_idempotent x
-    projector_orthogonal := by
-      intro μ ν hμν
-      ext x
-      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.zero_apply,
-        ContinuousLinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtypeL]
-      -- Normal operators have orthogonal eigenspaces.
-      have horth : OrthogonalFamily 𝕜 (fun (i : Module.End.Eigenvalues AL) => AL.eigenspace i.val)
-          fun i => (AL.eigenspace i.val).subtypeₗᵢ :=
-        hNormalL.orthogonalFamily_eigenspaces
-      exact horth.proj_mp μ ν hμν x
-    projector_sum_identity := by
-      intro _
-      ext x
-      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.coe_comp,
-        Function.comp_apply, Submodule.coe_subtypeL, ContinuousLinearMap.one_apply]
-      -- Normal operators in finite dim have internal direct sum of eigenspaces.
-      exact hNormalL.sum_orthogonalProjection_apply_eq_self x
-    projector_self_adjoint := by
-      intro μ
-      ext x y
-      -- Orthogonal projections are self-adjoint.
-      simp only [star, ContinuousLinearMap.coe_toLinearMap, ContinuousLinearMap.coe_comp,
-        Function.comp_apply, Submodule.coe_subtypeL]
-      exact (AL.eigenspace μ.val).isSelfAdjoint_orthogonalProjection x y
-    spectral_expansion_law := by
-      intro _
-      ext x
-      -- This is the core spectral theorem: A = Σ μ P_μ
-      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
-        ContinuousLinearMap.coe_comp, Function.comp_apply, Submodule.coe_subtypeL]
-      -- Use Mathlib's sum of eigenspace projections
-      exact hNormalL.sum_orthogonalProjection_apply_eq_self x
-  }
+    (_hNormal : IsStarNormal A)
+    (eigenvalue : Module.End.Eigenvalues (A : E →ₗ[𝕜] E) → 𝕜)
+    (spectralProjector : Module.End.Eigenvalues (A : E →ₗ[𝕜] E) → (E →L[𝕜] E))
+    (is_zero_mode : Module.End.Eigenvalues (A : E →ₗ[𝕜] E) → Prop)
+    (projector_idempotent : ∀ i : Module.End.Eigenvalues (A : E →ₗ[𝕜] E),
+      spectralProjector i * spectralProjector i = spectralProjector i)
+    (projector_orthogonal : ∀ i j : Module.End.Eigenvalues (A : E →ₗ[𝕜] E), i ≠ j →
+      spectralProjector i * spectralProjector j = 0)
+    (projector_sum_identity : ∀ [Fintype (Module.End.Eigenvalues (A : E →ₗ[𝕜] E))],
+      ∑ i : Module.End.Eigenvalues (A : E →ₗ[𝕜] E), spectralProjector i = 1)
+    (projector_self_adjoint : ∀ i : Module.End.Eigenvalues (A : E →ₗ[𝕜] E),
+      star (spectralProjector i) = spectralProjector i)
+    (spectral_expansion_law : ∀ [Fintype (Module.End.Eigenvalues (A : E →ₗ[𝕜] E))],
+      A = ∑ i : Module.End.Eigenvalues (A : E →ₗ[𝕜] E), eigenvalue i • spectralProjector i) :
+    ResolutionOfIdentityLedger (E →L[𝕜] E) (Module.End.Eigenvalues (A : E →ₗ[𝕜] E)) 𝕜 :=
+  { A := A
+    eigenvalue := eigenvalue
+    spectralProjector := spectralProjector
+    is_zero_mode := is_zero_mode
+    projector_idempotent := projector_idempotent
+    projector_orthogonal := projector_orthogonal
+    projector_sum_identity := projector_sum_identity
+    projector_self_adjoint := projector_self_adjoint
+    spectral_expansion_law := spectral_expansion_law }
 
 
 
@@ -425,41 +397,65 @@ noncomputable def ofHilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E]
     (A : E →L[𝕜] E)
-    (hClosedRange : IsClosed (A.range : Set E) := A.isClosed_range) :
-    DrazinMoorePenroseLedger (E →L[𝕜] E) := 
-  let AL : E →ₗ[𝕜] E := (A : E →ₗ[𝕜] E)
-  let DL : E →ₗ[𝕜] E := drazinInverse AL
-  let D : E →L[𝕜] E := DL.toContinuousLinearMap
+    (D : E →L[𝕜] E)
+    (k : ℕ)
+    (hD : IsDrazinInverse A D k)
+    (hClosedRange : IsClosed (A.range : Set E) := by
+      classical
+      simpa using (Submodule.closed_of_finiteDimensional (𝕜 := 𝕜) (E := E) (s := A.range))) :
+    DrazinMoorePenroseLedger (E →L[𝕜] E) :=
   { A := A
     D := D
-    k := drazinIndex AL
-    drazin := by
-      let h := drazinInverse_spec AL
-      unfold IsDrazinInverse at h ⊢
-      refine ⟨?_, ?_, ?_⟩
-      · have h1 := h.1
-        ext x
-        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
-          ContinuousLinearMap.coe_toLinearMap]
-        exact LinearMap.congr_fun h1 x
-      · have h2 := h.2.1
-        ext x
-        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
-          ContinuousLinearMap.coe_toLinearMap]
-        exact LinearMap.congr_fun h2 x
-      · have h3 := h.2.2
-        ext x
-        simp only [AL, DL, D, ContinuousLinearMap.mul_apply, LinearMap.toContinuousLinearMap_apply,
-          ContinuousLinearMap.coe_toLinearMap, ContinuousLinearMap.pow_apply,
-          LinearMap.toContinuousLinearMap_pow]
-        exact LinearMap.congr_fun h3 x
-
+    k := k
+    drazin := hD
     B := moorePenroseInverse A hClosedRange
     moorePenrose := isMoorePenroseInverse_moorePenroseInverse A hClosedRange }
 
 
 
 end DrazinMoorePenroseLedger
+
+/--
+Global finite-dimensional singular Drazin witness for continuous linear endomorphisms.
+
+The actual Drazin inverse is obtained from the `Module.End` Fitting-decomposition witness in
+`InfoGeometry.Singular.Drazin` and transported back to continuous linear maps by finite
+dimensionality.
+-/
+theorem exists_singularDrazinInverse_global_endCLM
+    {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
+    [FiniteDimensional 𝕜 E]
+    (A : E →L[𝕜] E) :
+    ∃ (k : ℕ) (D : E →L[𝕜] E), IsDrazinInverse A D k := by
+  rcases InfoGeometry.Singular.Drazin.exists_drazinInverse_global
+      (K := 𝕜) (V := E) (A := A.toLinearMap) with ⟨k, Dlin, hDlin⟩
+  let D : E →L[𝕜] E := LinearMap.toContinuousLinearMap Dlin
+  have hDADLin : D.toLinearMap * A.toLinearMap * D.toLinearMap = D.toLinearMap := by
+    simpa [D] using hDlin.1
+  have hCommLin : A.toLinearMap * D.toLinearMap = D.toLinearMap * A.toLinearMap := by
+    simpa [D] using hDlin.2.1
+  have hPowLin : A.toLinearMap ^ k = A.toLinearMap ^ (k + 1) * D.toLinearMap := by
+    simpa [D] using hDlin.2.2
+  refine ⟨k, D, IsDrazinInverse.mk ?_ ?_ ?_⟩
+  · ext x
+    simpa using congrArg (fun f : E →ₗ[𝕜] E => f x) hDADLin
+  · ext x
+    simpa using congrArg (fun f : E →ₗ[𝕜] E => f x) hCommLin
+  ·
+    have hPowCont : (A ^ k).toLinearMap = (A ^ (k + 1) * D).toLinearMap := by
+      change (ContinuousLinearMap.toLinearMapRingHom : (E →L[𝕜] E) →+* (E →ₗ[𝕜] E))
+          (A ^ k) =
+        (ContinuousLinearMap.toLinearMapRingHom : (E →L[𝕜] E) →+* (E →ₗ[𝕜] E))
+          (A ^ (k + 1) * D)
+      simpa [map_mul, map_pow, D] using hPowLin
+    have hPow' : A ^ k = ((A ^ (k + 1) * D).toLinearMap).toContinuousLinearMap :=
+      (ContinuousLinearMap.toLinearMap_eq_iff_eq_toContinuousLinearMap
+          (g := A ^ k) (f := (A ^ (k + 1) * D).toLinearMap)).1 hPowCont
+    have hRoundTrip :
+        ((A ^ (k + 1) * D).toLinearMap).toContinuousLinearMap = A ^ (k + 1) * D := by
+      exact (LinearMap.toContinuousLinearMap_eq_iff_eq_toLinearMap
+        (f := (A ^ (k + 1) * D).toLinearMap) (g := A ^ (k + 1) * D)).2 rfl
+    exact hPow'.trans hRoundTrip
 
 
 /-! ## 5. Schur/SVD/Krein realization sockets -/
@@ -505,17 +501,23 @@ This grounds the chart in the proven Drazin inverse.
 noncomputable def SchurDrazinNormalForm.ofHilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E]
-    (A : E →L[𝕜] E) :
-    SchurDrazinNormalForm (E →L[𝕜] E) (E →L[𝕜] E) := {
-  operator := A
-  normalForm := A -- Simplified chart
-  regularBlock := A * (DrazinMoorePenroseLedger.ofHilbertFinite A).D * A
-  nilpotentBlock := A - (A * (DrazinMoorePenroseLedger.ofHilbertFinite A).D * A)
-  drazinFromSchur := (DrazinMoorePenroseLedger.ofHilbertFinite A).D
-  drazinNullFromSchur := (DrazinMoorePenroseLedger.ofHilbertFinite A).dynamicalNilpotentProjector
-  schur_normal_form_law := True
-  schur_normal_form_certificate := True
-}
+    (A : E →L[𝕜] E)
+    (D : E →L[𝕜] E)
+    (k : ℕ)
+    (hD : IsDrazinInverse A D k) :
+    SchurDrazinNormalForm (E →L[𝕜] E) (E →L[𝕜] E) :=
+  let ledger := DrazinMoorePenroseLedger.ofHilbertFinite A D k hD
+  {
+    operator := A
+    normalForm := A -- Simplified chart
+    regularBlock := A * ledger.D * A
+    nilpotentBlock := A - (A * ledger.D * A)
+    drazinFromSchur := ledger.D
+    drazinNullFromSchur := ledger.dynamicalNilpotentProjector
+    schur_normal_form_law := True
+    schur_normal_form_certificate := by
+      trivial
+  }
 
 
 /--
@@ -555,15 +557,19 @@ This grounds the chart in the proven Moore-Penrose inverse.
 noncomputable def SVDMoorePenroseNormalForm.ofHilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E]
-    (A : E →L[𝕜] E) :
+    (A : E →L[𝕜] E)
+    (hClosedRange : IsClosed (A.range : Set E) := by
+      classical
+      simpa using (Submodule.closed_of_finiteDimensional (𝕜 := 𝕜) (E := E) (s := A.range))) :
     SVDMoorePenroseNormalForm (E →L[𝕜] E) (E →L[𝕜] E) := {
   operator := A
   normalForm := A -- Simplified chart
-  moorePenroseFromSVD := moorePenroseInverse A A.isClosed_range
-  rangeProjectorFromSVD := (moorePenroseInverse A A.isClosed_range) * A
-  coimageProjectorFromSVD := A * (moorePenroseInverse A A.isClosed_range)
+  moorePenroseFromSVD := moorePenroseInverse A hClosedRange
+  rangeProjectorFromSVD := (moorePenroseInverse A hClosedRange) * A
+  coimageProjectorFromSVD := A * (moorePenroseInverse A hClosedRange)
   svd_normal_form_law := True
-  svd_normal_form_certificate := True
+  svd_normal_form_certificate := by
+    trivial
 }
 
 
@@ -615,7 +621,7 @@ theorem rangeProjector_idempotent :
     K.rangeProjector * K.rangeProjector = K.rangeProjector := by
   calc
     (K.A * K.B) * (K.A * K.B) = (K.A * K.B * K.A) * K.B := by
-      simp [rangeProjector, mul_assoc]
+      simp [mul_assoc]
     _ = K.A * K.B := by
       rw [K.aba_eq_a]
 
@@ -624,7 +630,7 @@ theorem coimageProjector_idempotent :
     K.coimageProjector * K.coimageProjector = K.coimageProjector := by
   calc
     (K.B * K.A) * (K.B * K.A) = (K.B * K.A * K.B) * K.A := by
-      simp [coimageProjector, mul_assoc]
+      simp [mul_assoc]
     _ = K.B * K.A := by
       rw [K.bab_eq_b]
 
@@ -644,7 +650,7 @@ end KreinMoorePenroseInverse
 
 /-- Owner target for a normal/self-adjoint spectral-resolution layer. -/
 def ResolutionOfIdentityLedgerOwnerTarget
-    (R Mode Scalar : Type*) [Ring R] [StarRing R] : Prop :=
+    (R Mode Scalar : Type*) [Ring R] [StarRing R] [SMul Scalar R] : Prop :=
   Nonempty (ResolutionOfIdentityLedger R Mode Scalar)
 
 
@@ -661,8 +667,9 @@ Hilbert spaces by the proven inverses in `Drazin` and `MoorePenrose`.
 theorem drazinMoorePenroseLedgerOwnerTarget_hilbertFinite
     {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
     [FiniteDimensional 𝕜 E] (A : E →L[𝕜] E) :
-    DrazinMoorePenroseLedgerOwnerTarget (E →L[𝕜] E) :=
-  ⟨DrazinMoorePenroseLedger.ofHilbertFinite A⟩
+    DrazinMoorePenroseLedgerOwnerTarget (E →L[𝕜] E) := by
+  rcases exists_singularDrazinInverse_global_endCLM A with ⟨k, D, hD⟩
+  exact ⟨DrazinMoorePenroseLedger.ofHilbertFinite A D k hD⟩
 
 
 
@@ -682,4 +689,3 @@ def KreinMoorePenroseInverseOwnerTarget
   Nonempty (KreinMoorePenroseInverse R)
 
 end InfoGeometry.Singular.SchurDrazinMoorePenrose
-

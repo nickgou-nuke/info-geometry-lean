@@ -1,7 +1,12 @@
+import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
+import InfoGeometry.Canonical.StandardFormProjectiveGWBridge
+import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
 import InfoGeometry.OperatorAlgebra.DrazinEntropyFunctional
 import InfoGeometry.Meta.Architecture
+
+open scoped BigOperators
 
 /-!
 # InfoGeometry.Canonical.WeylGWVolumeBridge
@@ -29,7 +34,10 @@ All physical identifications remain explicit predicates/hypotheses.
 
 namespace InfoGeometry.Canonical.WeylGWVolumeBridge
 
+open InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 open InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
+open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
+open InfoGeometry.Canonical.StandardFormProjectiveGWBridge
 open InfoGeometry.GromovWittenErlangen
 open InfoGeometry.OperatorAlgebra
 
@@ -239,5 +247,170 @@ theorem entropy_eq_kB_log_physicalVolume
             rw [hcal s hs]
 
 end ProjectiveDrazinWeylGWVolumeFusion
+
+/-! ## Determinant/RG/Weyl readout fusion -/
+
+/--
+Fusion socket for the three separate volume-readout mechanisms:
+
+* determinant-like phase volume under modular/ring flow,
+* renormalization fixed-point volume density,
+* Weyl/projective physical-readout factorization.
+
+This structure deliberately does not assert that a Type-III determinant exists.
+The determinant-like readout and its flow invariance are supplied by
+`DeterminantPhaseVolumeBridge`.
+-/
+@[rep_depth projective]
+structure PhaseVolumeRGWeylGWVolumeFusion
+    (Op Shape Volume : Type*) [Ring Op] where
+  /-- Calibrated determinant-like phase-volume carrier. -/
+  phaseVolume :
+    FlowDeterminantVolumeCarrier Op Volume
+
+  /-- Renormalized volume-density carrier. -/
+  renormVolume :
+    RenormalizedVolumeDensityCarrier Op ℝ
+
+  /-- Existing Weyl/projective readout factorization owner. -/
+  factorization :
+    WeylPhysicalReadoutFactorization Op Shape
+
+  /-- Calibration between the RG volume density and Weyl physical readout. -/
+  volumeDensity_eq_physicalReadout :
+    ∀ A : Op,
+      renormVolume.volumeDensity A = factorization.physicalReadout A
+
+namespace PhaseVolumeRGWeylGWVolumeFusion
+
+variable {Op Shape Volume : Type*} [Ring Op]
+variable (F : PhaseVolumeRGWeylGWVolumeFusion Op Shape Volume)
+
+/--
+Flow preserves determinant-like phase volume when the determinant channel is
+explicitly calibrated as flow-invariant.
+-/
+@[rep_depth thermo]
+theorem flow_phase_volume_invariant
+    (hDet : FlowPreservesDeterminant F.phaseVolume)
+    (A : Op) (t : ℝ) :
+    F.phaseVolume.det.detReadout (F.phaseVolume.flow.flow t A) =
+      F.phaseVolume.det.detReadout A :=
+  FlowDeterminantVolumeCarrier.flow_phase_volume_invariant F.phaseVolume hDet A t
+
+/--
+Renormalization leaves volume density unchanged at a supplied self-similar fixed
+point.
+-/
+@[rep_depth projective]
+theorem volume_density_fixed_point_readback
+    (A : Op)
+    (hA : IsSelfSimilarFixedPoint F.renormVolume.renormCarrier A) :
+    F.renormVolume.volumeDensity (F.renormVolume.renormCarrier.renorm A) =
+      F.renormVolume.volumeDensity A :=
+  RenormalizedVolumeDensityCarrier.volume_density_fixed_point_readback F.renormVolume A hA
+
+/--
+The physical volume density factors through the Weyl scale and projective shape
+core owned by `WeylHomogeneousReadoutBridge`.
+-/
+@[rep_depth projective]
+theorem volumeDensity_eq_weyl_scale_pow_mul_shape
+    (A : Op) :
+    F.renormVolume.volumeDensity A =
+      F.factorization.scaleFactor A ^ F.factorization.weight *
+        F.factorization.shapeReadout (F.factorization.shape A) := by
+  rw [F.volumeDensity_eq_physicalReadout A]
+  exact F.factorization.physical_eq_scale_pow_mul_shape A
+
+end PhaseVolumeRGWeylGWVolumeFusion
+
+/-! ## Standard-form face volume fusion -/
+
+section StandardFormFaces
+
+variable {H Functional State G T Target Coeff Word : Type*}
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace H)]
+variable [Fintype Word] [DecidableEq Word]
+
+/--
+Fusion socket from standard-form natural-cone face volume to the projective
+Weyl/GW physical-volume readout.
+
+The Ω-volume owner supplies finite localized expectations on cone faces.  The
+projective GW bridge supplies the gauge-fixed physical volume.  This structure
+only records the calibration between those two readouts; it does not claim a
+trace, determinant, or canonical Type-III volume.
+-/
+@[rep_depth projective]
+structure StandardFormFaceWeylGWVolumeFusion where
+  /-- Projective GW/Weyl bridge enriched with binary-word cone-face localization. -/
+  projectiveFace :
+    StandardFormProjectiveGWFaceBridge (H := H) (Functional := Functional)
+      (State := State) (G := G) (T := T) (Target := Target) (Coeff := Coeff)
+
+  /-- Ω-expectation finite atom/face volume owner. -/
+  omegaVolume :
+    NaturalConeVolumeBridge (H := H) Word
+
+  /-- Model-state representative associated to a finite atom/face. -/
+  wordToState :
+    Word → State
+
+  /--
+  Calibration: projective physical volume on a word-state is the Ω-localized
+  expectation of that face.
+  -/
+  localizedVolume_calibration :
+    ∀ w : Word,
+      projectiveFace.base.physicalVolume (wordToState w) =
+        NaturalConeVolumeBridge.localizedExpectation omegaVolume w
+
+namespace StandardFormFaceWeylGWVolumeFusion
+
+variable (F : StandardFormFaceWeylGWVolumeFusion
+  (H := H) (Functional := Functional) (State := State)
+  (G := G) (T := T) (Target := Target) (Coeff := Coeff) (Word := Word))
+
+/-- Readback: a calibrated word-state physical volume is its Ω-localized face expectation. -/
+@[rep_depth projective]
+theorem physicalVolume_eq_localizedExpectation
+    (w : Word) :
+    F.projectiveFace.base.physicalVolume (F.wordToState w) =
+      NaturalConeVolumeBridge.localizedExpectation F.omegaVolume w :=
+  F.localizedVolume_calibration w
+
+/--
+If the localized face operators form a partition of unity, the calibrated
+projective physical volumes over the finite word layer sum to one.
+-/
+@[rep_depth projective]
+theorem total_projective_face_volume_is_unity
+    (hLocalPartition :
+      (∑ w : Word, NaturalConeVolumeBridge.localizationOp F.omegaVolume w) =
+        (1 : InfoGeometry.Volume.ConnesCocycle.AlgebraEnd H)) :
+    (∑ w : Word, F.projectiveFace.base.physicalVolume (F.wordToState w)) = 1 := by
+  calc
+    (∑ w : Word, F.projectiveFace.base.physicalVolume (F.wordToState w))
+        = ∑ w : Word, NaturalConeVolumeBridge.localizedExpectation F.omegaVolume w := by
+            exact Finset.sum_congr rfl
+              (fun w _ => F.localizedVolume_calibration w)
+    _ = 1 :=
+        NaturalConeVolumeBridge.total_localizedExpectation_is_unity
+          F.omegaVolume hLocalPartition
+
+/-- The base projective GW/Weyl physical-volume readout remains scale invariant. -/
+@[rep_depth projective]
+theorem physicalVolume_scale_invariant
+    (c : ℝ) (hc : c ≠ 0) (s : State) :
+    F.projectiveFace.base.physicalVolume (F.projectiveFace.base.scaleState c s) =
+      F.projectiveFace.base.physicalVolume s :=
+  StandardFormProjectiveGWFaceBridge.physicalVolume_scale_invariant
+    F.projectiveFace c hc s
+
+end StandardFormFaceWeylGWVolumeFusion
+
+end StandardFormFaces
 
 end InfoGeometry.Canonical.WeylGWVolumeBridge

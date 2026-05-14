@@ -196,6 +196,7 @@ import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinHodgeChiralBridge
 import InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
 import InfoGeometry.Canonical.DrazinFierzBridge
+import InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
 import InfoGeometry.Canonical.DrazinSupergradedWeylSocket
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
@@ -206,6 +207,7 @@ import InfoGeometry.Canonical.HorizonZeroModeFierz
 import InfoGeometry.Canonical.HorizonZitterModes
 import InfoGeometry.Canonical.HorizonZitterFierzReadout
 import InfoGeometry.Canonical.HorizonZitterFierzReadback
+import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge

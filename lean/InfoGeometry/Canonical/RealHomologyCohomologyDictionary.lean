@@ -44,14 +44,14 @@ This is the minimal chain-complex socket: `d² = 0`, without committing to a
 normed carrier or a quotient construction.
 -/
 @[rep_depth operator]
-structure RealBoundaryOperator (C : Type*) [AddCommGroup C] where
-  d : C →+ C
-  d_sq_zero : ∀ x : C, d (d x) = 0
+structure RealBoundaryOperator (C : Type*) [AddCommGroup C] [Module ℝ C] where
+  d : C →ₗ[ℝ] C
+  d_sq_zero : d.comp d = 0
 
 namespace RealBoundaryOperator
 
 variable {C : Type*}
-variable [AddCommGroup C]
+variable [AddCommGroup C] [Module ℝ C]
 variable (B : RealBoundaryOperator C)
 
 /-- Real cycles: elements killed by the boundary operator. -/
@@ -70,10 +70,10 @@ theorem boundary_is_cycle
     {x : C}
     (hx : B.IsBoundary x) :
     B.IsCycle x := by
-  rcases hx with ⟨y, hy⟩
+  rcases hx with ⟨y, rfl⟩
   unfold IsCycle
-  rw [← hy]
-  exact B.d_sq_zero y
+  have h := congrArg (fun F : C →ₗ[ℝ] C => F y) B.d_sq_zero
+  simpa [LinearMap.comp_apply] using h
 
 /-- Homology equivalence: two representatives differ by a boundary. -/
 @[rep_depth operator]
@@ -98,8 +98,10 @@ theorem homologyEquivalent_symm
   unfold HomologyEquivalent IsBoundary at hxy ⊢
   rcases hxy with ⟨z, hz⟩
   refine ⟨-z, ?_⟩
-  rw [map_neg, hz]
-  abel
+  calc
+    B.d (-z) = -B.d z := by simp
+    _ = -(x - y) := by rw [hz]
+    _ = y - x := by abel
 
 /-- Transitivity of homology equivalence. -/
 @[rep_depth operator]
@@ -112,8 +114,10 @@ theorem homologyEquivalent_trans
   rcases hxy with ⟨a, ha⟩
   rcases hyz with ⟨b, hb⟩
   refine ⟨a + b, ?_⟩
-  rw [map_add, ha, hb]
-  abel
+  calc
+    B.d (a + b) = B.d a + B.d b := by simp
+    _ = (x - y) + (y - z) := by rw [ha, hb]
+    _ = x - z := by abel
 
 /-- Homology equivalence is an equivalence relation. -/
 @[rep_depth operator]
@@ -126,6 +130,37 @@ theorem homologyEquivalent_equivalence :
     exact B.homologyEquivalent_symm hxy
   · intro x y z hxy hyz
     exact B.homologyEquivalent_trans hxy hyz
+
+/--
+A real homology witness/readout. It descends to homology if it vanishes on
+boundaries.
+-/
+@[rep_depth operator]
+structure BoundaryVanishingWitness where
+  eval : C →ₗ[ℝ] ℝ
+  vanishes_on_boundaries :
+    ∀ y : C, eval (B.d y) = 0
+
+namespace BoundaryVanishingWitness
+
+variable {B}
+variable (ω : BoundaryVanishingWitness B)
+
+/-- Boundary-vanishing witnesses are constant on homology classes. -/
+@[rep_depth operator]
+theorem descends_to_homology_equivalence
+    {x y : C}
+    (hxy : B.HomologyEquivalent x y) :
+    ω.eval x = ω.eval y := by
+  unfold HomologyEquivalent IsBoundary at hxy
+  rcases hxy with ⟨b, hb⟩
+  have hzero : ω.eval (x - y) = 0 := by
+    rw [← hb]
+    exact ω.vanishes_on_boundaries b
+  rw [map_sub] at hzero
+  exact sub_eq_zero.mp hzero
+
+end BoundaryVanishingWitness
 
 end RealBoundaryOperator
 
@@ -148,7 +183,7 @@ structure RealPairing
 namespace RealPairing
 
 variable {Chain Cochain : Type*}
-variable [AddCommGroup Chain]
+variable [AddCommGroup Chain] [Module ℝ Chain]
 variable (P : RealPairing Chain Cochain)
 
 /-- A witness/cochain vanishes on boundaries. -/

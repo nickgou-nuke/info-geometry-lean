@@ -108,6 +108,7 @@ import InfoGeometry.Canonical.ChiralDiracHomologyBridge
 import InfoGeometry.Canonical.RealIncidenceHomologyBridge
 import InfoGeometry.Canonical.RealIncidenceHomology
 import InfoGeometry.Canonical.RealIncidenceChains
+import InfoGeometry.Canonical.RealStokesGaussHomology
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 import InfoGeometry.Canonical.RealHestenesKreinHomology
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge

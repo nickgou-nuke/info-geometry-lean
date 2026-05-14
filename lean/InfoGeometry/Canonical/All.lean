@@ -197,6 +197,7 @@ import InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinLightConeDictionary
+import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration

@@ -114,6 +114,7 @@ import InfoGeometry.Canonical.HestenesCohomology
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge
 import InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
 import InfoGeometry.Canonical.CauchyResidueReadback
+import InfoGeometry.Canonical.ProjectiveCountsModularBridge
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 import InfoGeometry.Canonical.RealHestenesKreinHomology
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge

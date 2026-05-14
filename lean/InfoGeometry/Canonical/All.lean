@@ -113,6 +113,7 @@ import InfoGeometry.Canonical.RealStokesGaussHomology
 import InfoGeometry.Canonical.HestenesCohomology
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge
 import InfoGeometry.Canonical.BogoliubovHomologyFrameEquiv
+import InfoGeometry.Canonical.CauchyResidueReadback
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 import InfoGeometry.Canonical.RealHestenesKreinHomology
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge

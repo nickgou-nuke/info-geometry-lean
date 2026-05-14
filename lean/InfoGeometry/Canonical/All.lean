@@ -184,6 +184,7 @@ import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinAdjoint
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
+import InfoGeometry.Canonical.DrazinFiveGradedTKKAnomalyBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv
 import InfoGeometry.Canonical.DrazinDescriptorSystems

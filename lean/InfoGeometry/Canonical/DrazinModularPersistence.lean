@@ -1,4 +1,6 @@
 import Mathlib
+import InfoGeometry.Canonical.Drazin
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -22,21 +24,16 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.DrazinModularPersistence
 
-/-- Abstract modular flow `σᵠ_t` on a multiplicative observable algebra. -/
-@[rep_depth operator]
-structure ModularFlow
-    (Obs : Type*) [Monoid Obs] where
-  sigma : ℝ → Obs ≃* Obs
-  sigma_zero : sigma 0 = MulEquiv.refl Obs
-  sigma_add : ∀ s t : ℝ, sigma (s + t) = (sigma s).trans (sigma t)
+open InfoGeometry.Canonical.Drazin
+open InfoGeometry.OperatorAlgebra.Thermodynamics
 
 /-- The theorem-safe zero-mode condition for an abstract modular flow. -/
 @[rep_depth operator]
 def IsModularZeroMode
-    {Obs : Type*} [Monoid Obs]
+    {Obs : Type*} [Ring Obs]
     (flow : ModularFlow Obs)
     (x : Obs) : Prop :=
-  ∀ t : ℝ, flow.sigma t x = x
+  ∀ t : ℝ, flow.flow t x = x
 
 /--
 Drazin inverse/support data.
@@ -47,17 +44,34 @@ index `1`.
 -/
 @[rep_depth operator]
 structure DrazinSupportData
-    (Obs : Type*) [Monoid Obs] [Star Obs] where
+    (Obs : Type*) [Ring Obs] [Star Obs] where
   A : Obs
   AD : Obs
   p : Obs
   index : ℕ
-  drazin_power_law : A ^ (index + 1) * AD = A ^ index
-  drazin_reflexive : AD * A * AD = AD
-  drazin_commute : A * AD = AD * A
+  drazin_law : IsDrazinInverse A AD index
   p_def : p = A * AD
-  p_idempotent : p * p = p
   p_self_adjoint : star p = p
+
+namespace DrazinSupportData
+
+variable {Obs : Type*} [Ring Obs] [Star Obs]
+variable (D : DrazinSupportData Obs)
+
+/-- The Drazin support is idempotent. -/
+@[rep_depth operator]
+theorem p_idempotent :
+    D.p * D.p = D.p := by
+  rw [D.p_def]
+  simpa [IsDrazinInverse.projection] using
+    IsDrazinInverse.projection_is_idempotent D.drazin_law
+
+/-- The Drazin complementary projector. -/
+@[rep_depth operator]
+def q : Obs :=
+  1 - D.p
+
+end DrazinSupportData
 
 /--
 A Drazin support becomes a physical horizon exactly when it is fixed by the
@@ -65,10 +79,38 @@ modular flow.
 -/
 @[rep_depth operator]
 def IsPhysicalHorizon
-    {Obs : Type*} [Monoid Obs] [Star Obs]
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs) : Prop :=
   IsModularZeroMode flow D.p
+
+/--
+Alias for the physical interpretation:
+a Drazin support acts as a modular stability filter exactly when its support
+projector is fixed by the modular flow.
+
+This is not a redefinition of the Drazin projector.  It is the extra
+modular-zero condition on the already algebraic Drazin support.
+-/
+@[rep_depth operator]
+abbrev IsDrazinModularStabilityFilter
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs) : Prop :=
+  IsPhysicalHorizon flow D
+
+/--
+Alias for the anomaly-free modular boundary condition.
+
+This is the same condition as `IsPhysicalHorizon`: the Drazin support is fixed
+by modular flow.
+-/
+@[rep_depth operator]
+def ModularInvariantDrazinBoundary
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs) : Prop :=
+  IsPhysicalHorizon flow D
 
 /--
 Leakage from the Drazin horizon into an abstract complement `q`.
@@ -78,12 +120,12 @@ needs the annihilation law `q * p = 0`.
 -/
 @[rep_depth operator]
 def leakageOperator
-    {Obs : Type*} [MonoidWithZero Obs] [Star Obs]
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
     (q : Obs)
     (t : ℝ) : Obs :=
-  q * flow.sigma t D.p * D.p
+  q * flow.flow t D.p * D.p
 
 /--
 If the Drazin horizon is modularly fixed and the complement annihilates it,
@@ -91,7 +133,7 @@ there is no leakage.
 -/
 @[rep_depth operator]
 theorem no_leakage_of_physical_horizon
-    {Obs : Type*} [MonoidWithZero Obs] [Star Obs]
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
     (q : Obs)
@@ -104,10 +146,230 @@ theorem no_leakage_of_physical_horizon
   rw [hPhys t]
   rw [hOrth, zero_mul]
 
+/-! ## Moving Drazin boundaries and covariant sector preservation -/
+
+/--
+The covariantly transported Drazin boundary.
+
+When the Drazin support is not fixed by modular flow, the correct cutoff is the
+moving boundary `σₜ(p_A)`, not the frozen boundary `p_A`.
+-/
+@[rep_depth operator]
+def movingDrazinBoundary
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (t : ℝ) : Obs :=
+  flow.flow t D.p
+
+/--
+Alias with the geometric name used in the covariant-horizon formulation.
+-/
+@[rep_depth operator]
+def MovingDrazinBoundary
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (t : ℝ) : Obs :=
+  movingDrazinBoundary flow D t
+
+/--
+Fixed-frame modular leakage from the original Drazin support into an abstract
+complement.
+
+This is definitionally the same operator as `leakageOperator`; the name records
+the interpretation: apparent leakage is measured relative to a frozen cutoff.
+-/
+@[rep_depth operator]
+def fixedFrameModularLeakage
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (q : Obs)
+    (t : ℝ) : Obs :=
+  leakageOperator flow D q t
+
+/--
+Alias for the anomaly functional's leakage operator:
+`q * σₜ(p_A) * p_A`.
+-/
+@[rep_depth operator]
+def modularLeakageOperator
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (q : Obs)
+    (t : ℝ) : Obs :=
+  fixedFrameModularLeakage flow D q t
+
+/--
+If the Drazin boundary is modular-invariant, fixed-frame leakage vanishes.
+-/
+@[rep_depth operator]
+theorem no_leakage_of_modular_invariant_boundary
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (q : Obs)
+    (hInv : ModularInvariantDrazinBoundary flow D)
+    (hOrth : q * D.p = 0) :
+    ∀ t : ℝ, modularLeakageOperator flow D q t = 0 := by
+  exact no_leakage_of_physical_horizon flow D q hInv hOrth
+
+/-- Real expectation/readout state, explicitly not assumed tracial. -/
+@[rep_depth operator]
+structure RealExpectationState
+    (Obs : Type*) [Monoid Obs] [Star Obs] where
+  expect : Obs → ℝ
+  unital : expect 1 = 1
+  positivity_law : Prop
+
+/--
+Expectation-valued leakage energy.
+
+The state is not assumed tracial; the ordered positive expression is
+`φ(Λ* Λ)`.
+-/
+@[rep_depth operator]
+def modularLeakageEnergy
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (φ : RealExpectationState Obs)
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (q : Obs)
+    (t : ℝ) : ℝ :=
+  let Λ := fixedFrameModularLeakage flow D q t
+  φ.expect (star Λ * Λ)
+
+/-- Nilpotent square-zero elements remain square-zero under modular transport. -/
+@[rep_depth operator]
+theorem square_zero_transport
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (N : Obs)
+    (t : ℝ)
+    (hN : N * N = 0) :
+    flow.flow t N * flow.flow t N = 0 := by
+  calc
+    flow.flow t N * flow.flow t N = flow.flow t (N * N) := by
+      exact ((flow.flow t).map_mul N N).symm
+    _ = flow.flow t 0 := by rw [hN]
+    _ = 0 := by
+      exact (flow.flow t).map_zero
+
+/--
+Scaled-projector fibers are transported covariantly.
+
+The scalar is kept as an algebra element, so the theorem does not assume an
+external complex scalar action on `Obs`.
+-/
+@[rep_depth operator]
+theorem left_scaled_projector_transport
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (M lam : Obs)
+    (t : ℝ)
+    (hM : M * M = lam * M) :
+    flow.flow t M * flow.flow t M =
+      flow.flow t lam * flow.flow t M := by
+  calc
+    flow.flow t M * flow.flow t M = flow.flow t (M * M) := by
+      exact ((flow.flow t).map_mul M M).symm
+    _ = flow.flow t (lam * M) := by rw [hM]
+    _ = flow.flow t lam * flow.flow t M := by
+      exact (flow.flow t).map_mul lam M
+
+/-- Two-sided invertibility is preserved by modular transport. -/
+@[rep_depth operator]
+theorem invertible_transport
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (x : Obs)
+    (t : ℝ)
+    (hInv : ∃ y : Obs, x * y = 1 ∧ y * x = 1) :
+    ∃ y : Obs,
+      flow.flow t x * y = 1 ∧ y * flow.flow t x = 1 := by
+  rcases hInv with ⟨y, hxy, hyx⟩
+  refine ⟨flow.flow t y, ?_, ?_⟩
+  · calc
+      flow.flow t x * flow.flow t y = flow.flow t (x * y) := by
+        exact ((flow.flow t).map_mul x y).symm
+      _ = flow.flow t 1 := by rw [hxy]
+      _ = 1 := by
+        exact (flow.flow t).map_one
+  · calc
+      flow.flow t y * flow.flow t x = flow.flow t (y * x) := by
+        exact ((flow.flow t).map_mul y x).symm
+      _ = flow.flow t 1 := by rw [hyx]
+      _ = 1 := by
+        exact (flow.flow t).map_one
+
+/--
+Drazin inverse covariance under modular transport, as an explicit certificate.
+
+The repo `ModularFlow` is a ring-equivalence flow, but it is not a star-flow in
+this socket.  Therefore this packet records the transported Drazin law without
+claiming transported self-adjointness of the support.
+-/
+@[rep_depth operator]
+structure DrazinTransportCertificate
+    (Obs : Type*) [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (t : ℝ) where
+  transported_law :
+    IsDrazinInverse (flow.flow t D.A) (flow.flow t D.AD) D.index
+
+/--
+The transported Drazin support is the modular image of the original support.
+
+This is the formal version of `p_{σₜ(A)} = σₜ(p_A)` at the support level.
+-/
+@[rep_depth operator]
+theorem transported_support_eq_moving_boundary
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs)
+    (D : DrazinSupportData Obs)
+    (t : ℝ) :
+    flow.flow t D.A * flow.flow t D.AD =
+      movingDrazinBoundary flow D t := by
+  unfold movingDrazinBoundary
+  rw [D.p_def]
+  exact ((flow.flow t).map_mul D.A D.AD).symm
+
+/--
+State invariance socket for real expectation readouts.
+
+This is the expectation-only substitute for trace cyclicity/conservation.
+-/
+@[rep_depth operator]
+structure FlowInvariantRealExpectationState
+    (Obs : Type*) [Ring Obs] [Star Obs]
+    (flow : ModularFlow Obs) where
+  state : RealExpectationState Obs
+  flow_invariant :
+    ∀ t x, state.expect (flow.flow t x) = state.expect x
+
+namespace FlowInvariantRealExpectationState
+
+variable {Obs : Type*} [Ring Obs] [Star Obs]
+variable {flow : ModularFlow Obs}
+variable (φ : FlowInvariantRealExpectationState Obs flow)
+
+/-- Re-export expectation invariance under the modular flow. -/
+@[rep_depth operator]
+theorem expect_flow_eq
+    (t : ℝ)
+    (x : Obs) :
+    φ.state.expect (flow.flow t x) = φ.state.expect x :=
+  φ.flow_invariant t x
+
+end FlowInvariantRealExpectationState
+
 /-- A physical observable is a zero mode localized on the Drazin horizon. -/
 @[rep_depth operator]
 def IsHorizonZeroMode
-    {Obs : Type*} [Monoid Obs] [Star Obs]
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
     (x : Obs) : Prop :=
@@ -131,25 +393,17 @@ structure FierzChannelMap
 /-- Expectation-valued Fierz coordinates. -/
 @[rep_depth operator]
 structure FierzCoordinates where
-  coord : FierzChannel → ℂ
+  coord : FierzChannel → ℝ
 
 /-- Abstract Fierz residual functional. -/
 @[rep_depth operator]
 structure FierzResidual where
   residual : FierzCoordinates → ℝ
 
-/-- Expectation state, explicitly not assumed tracial. -/
-@[rep_depth operator]
-structure ExpectationState
-    (Obs : Type*) [One Obs] [Mul Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs] where
-  expect : Obs → ℂ
-  unital : expect 1 = 1
-  positive : ∀ a : Obs, 0 ≤ (expect (star a * a)).re
-
 /-- Fierz channels are admissible when each channel is a horizon zero mode. -/
 @[rep_depth operator]
 def ChannelsAreHorizonZeroModes
-    {Obs : Type*} [Monoid Obs] [Star Obs]
+    {Obs : Type*} [Ring Obs] [Star Obs]
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
     (C : FierzChannelMap Obs) : Prop :=
@@ -158,45 +412,48 @@ def ChannelsAreHorizonZeroModes
 /-- Expectation-valued Fierz coordinates on the Drazin horizon. -/
 @[rep_depth operator]
 def horizonFierzVector
-    {Obs : Type*} [Monoid Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs]
-    (φA : ExpectationState Obs)
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (φA : RealExpectationState Obs)
     (C : FierzChannelMap Obs)
     (D : DrazinSupportData Obs) :
     FierzCoordinates where
   coord := fun ch => φA.expect (C.channel ch D.AD)
 
 /--
-Compatibility principle for the model-specific Fierz identity.
+Compatibility assumption for the model-specific Fierz identity.
 
-This is the only place where the Fierz quadric law is assumed.  Modular fixedness
-of the Drazin support alone gives no-leakage, not a Fierz identity.
+This is not an owner-derived theorem.  It is an explicitly named assumption
+packet.  Modular fixedness of the Drazin support alone gives no-leakage, not a
+Fierz identity.
 -/
 @[rep_depth operator]
-structure HorizonFierzCompatibility
-    (Obs : Type*) [Monoid Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs] where
+structure HorizonFierzCompatibilityAssumption
+    (Obs : Type*) [Ring Obs] [Star Obs] where
   flow : ModularFlow Obs
-  compressedState : ExpectationState Obs
+  compressedState : RealExpectationState Obs
   channels : FierzChannelMap Obs
   residual : FierzResidual
-  quadric_from_zero_modes :
+  compatibility_assumption :
     ∀ D : DrazinSupportData Obs,
       IsPhysicalHorizon flow D →
       ChannelsAreHorizonZeroModes flow D channels →
         residual.residual (horizonFierzVector compressedState channels D) = 0
 
 /--
-If the Drazin support is a modular physical horizon and the Fierz channels are
-horizon zero modes, the compressed expectation vector satisfies the supplied
-Fierz residual law.
+Assumption-derived Fierz readback.
+
+If the Drazin support is a modular physical horizon, the Fierz channels are
+horizon zero modes, and the explicit compatibility assumption is supplied, then
+the compressed expectation vector satisfies the supplied Fierz residual law.
 -/
 @[rep_depth operator]
-theorem fierz_quadric_from_modular_physical_horizon
-    {Obs : Type*} [Monoid Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs]
-    (K : HorizonFierzCompatibility Obs)
+theorem fierz_quadric_from_modular_physical_horizon_assumption
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (K : HorizonFierzCompatibilityAssumption Obs)
     (D : DrazinSupportData Obs)
     (hHorizon : IsPhysicalHorizon K.flow D)
     (hChannels : ChannelsAreHorizonZeroModes K.flow D K.channels) :
     K.residual.residual (horizonFierzVector K.compressedState K.channels D) = 0 :=
-  K.quadric_from_zero_modes D hHorizon hChannels
+  K.compatibility_assumption D hHorizon hChannels
 
 end InfoGeometry.Canonical.DrazinModularPersistence

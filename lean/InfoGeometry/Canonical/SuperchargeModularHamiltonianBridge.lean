@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Meta.Architecture
 
+set_option linter.dupNamespace false
+
 open scoped InnerProductSpace
 
 namespace InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
@@ -72,7 +74,7 @@ theorem spectralProjector_mul_Ksur :
       H.modularEnergyUnit •
         (H.CIK.spectralProjector *
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK) := by
-        simp [mul_smul_comm]
+        simp
     _ =
       H.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK := by
@@ -93,7 +95,7 @@ theorem Ksur_mul_spectralProjector :
       H.modularEnergyUnit •
         (DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK
           * H.CIK.spectralProjector) := by
-        simp [smul_mul_assoc]
+        simp
     _ =
       H.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK := by
@@ -114,7 +116,7 @@ theorem spectralComplementaryProjector_mul_Ksur_eq_zero :
       H.modularEnergyUnit •
         (H.CIK.spectralComplementaryProjector *
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK) := by
-        simp [mul_smul_comm]
+        simp
     _ = 0 := by
         rw [
           DrazinSupercharge.CertifiedInverseKernel.spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonian_eq_zero
@@ -134,7 +136,7 @@ theorem Ksur_mul_spectralComplementaryProjector_eq_zero :
       H.modularEnergyUnit •
         (DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK
           * H.CIK.spectralComplementaryProjector) := by
-        simp [smul_mul_assoc]
+        simp
     _ = 0 := by
         rw [
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian_mul_spectralComplementaryProjector_eq_zero
@@ -154,7 +156,7 @@ theorem Ksur_commutes_GammaS :
       H.modularEnergyUnit •
         (DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK
           * H.CIK.GammaS) := by
-        simp [smul_mul_assoc]
+        simp
     _ =
       H.modularEnergyUnit •
         (H.CIK.GammaS *
@@ -166,7 +168,7 @@ theorem Ksur_commutes_GammaS :
       H.CIK.GammaS *
         (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK) := by
-        simp [mul_smul_comm]
+        simp
 
 /-- The bounded modular-Hamiltonian surrogate is in the even/spectrally compact lane. -/
 @[rep_depth krein]

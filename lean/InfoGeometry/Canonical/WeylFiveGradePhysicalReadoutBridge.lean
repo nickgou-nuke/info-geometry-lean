@@ -143,6 +143,48 @@ theorem ccr_is_normalized :
 
 end WeylFockPhysicalReadoutCarrier
 
+/--
+Carrier for a single Weyl-normalized CAR readout.
+
+This avoids manufacturing a CCR witness when the available concrete Fock owner
+surface only supplies the split-`Cl(1,1)` CAR pair.
+-/
+@[rep_depth krein]
+structure WeylCARPhysicalReadoutCarrier where
+  car : ScaledCARPair E
+
+namespace WeylCARPhysicalReadoutCarrier
+
+variable (C : WeylCARPhysicalReadoutCarrier (E := E))
+
+@[rep_depth krein]
+theorem normalizedCAR_grade_zero :
+    PhysicalReadoutKind.grade .normalizedCAR = WeylFiveGrade.zero := rfl
+
+/-- The normalized CAR pair theorem is inherited from `WeylNormalizedCARCCRBridge`. -/
+@[rep_depth krein]
+theorem car_is_normalized :
+    InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+      (E := E) C.car.normalizedAnnihilation C.car.normalizedCreation :=
+  C.car.normalized_isCARPair
+
+end WeylCARPhysicalReadoutCarrier
+
+/-- Concrete split-`Cl(1,1)` CAR readout at grade zero. -/
+@[rep_depth krein]
+noncomputable def concreteCl11WeylCARPhysicalReadoutCarrier :
+    WeylCARPhysicalReadoutCarrier (E := E) where
+  car := concreteCl11ScaledCARPair (E := E)
+
+/-- The concrete split-`Cl(1,1)` CAR readout is normalized. -/
+@[rep_depth krein]
+theorem concreteCl11WeylCAR_is_normalized :
+    InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+      (E := E)
+      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car.normalizedAnnihilation
+      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car.normalizedCreation :=
+  (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car_is_normalized
+
 end Fock
 
 /-! ## Modular-Hamiltonian surrogate readout -/

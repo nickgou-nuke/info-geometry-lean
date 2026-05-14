@@ -64,6 +64,11 @@ import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
+import InfoGeometry.Canonical.BoundedKMSConditionBridge
+import InfoGeometry.Canonical.BoundedKMSErgodicFixedPointBridge
+import InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge
+import InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
+import InfoGeometry.Canonical.BoundedModularKMSBridge
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
@@ -83,6 +88,7 @@ import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
 import InfoGeometry.Canonical.CartanDecomposition
+import InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
 import InfoGeometry.Canonical.CasimirWeylDrazinContext
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.CayleyBregmanBridge
@@ -96,9 +102,16 @@ import InfoGeometry.Canonical.ChiralChargeFockNumberBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
+import InfoGeometry.Canonical.ChiralHodgeCartanBridge
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
+import InfoGeometry.Canonical.ChiralDiracHomologyBridge
+import InfoGeometry.Canonical.RealIncidenceHomologyBridge
+import InfoGeometry.Canonical.RealIncidenceHomology
+import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
+import InfoGeometry.Canonical.RealHestenesKreinHomology
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
+import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 import InfoGeometry.Canonical.ChiralKMSOwner
 import InfoGeometry.Canonical.ChiralDrazinLightConeBridge
 import InfoGeometry.Canonical.ChiralLightConeTensorTower
@@ -143,6 +156,7 @@ import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
 import InfoGeometry.Canonical.DIIICommutatorInitialization
 import InfoGeometry.Canonical.DIIIIndexVerification
@@ -167,11 +181,14 @@ import InfoGeometry.Canonical.SemilinearPaperLean4
 import InfoGeometry.Canonical.SemilinearPresentation
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinFredholmBridge
+import InfoGeometry.Canonical.DrazinHodgeChiralBridge
+import InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinLightConeDictionary
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
+import InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 import InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
@@ -187,6 +204,9 @@ import InfoGeometry.Canonical.DunfordTaylor
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EntanglementResidualOwner
+import InfoGeometry.Canonical.ErgodicFixedPointBridge
+import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
+import InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
 import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.EPDefectAlgebra
 import InfoGeometry.Canonical.Fierz
@@ -234,6 +254,7 @@ import InfoGeometry.Canonical.HestenesModularBregman
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Canonical.HestenesCommutantGeometry
 import InfoGeometry.Canonical.HestenesAnalyticity
+import InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 import InfoGeometry.Canonical.HestenesQVandermondeShadow
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
@@ -291,6 +312,7 @@ import InfoGeometry.Canonical.KKTLorentzOrbitBridge
 import InfoGeometry.Canonical.KKTNoetherCharges
 import InfoGeometry.Canonical.KleinBottleOrientifold
 import InfoGeometry.Canonical.KLinearRepresentation
+import InfoGeometry.Canonical.KMSConditionBridge
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
@@ -323,6 +345,7 @@ import InfoGeometry.Canonical.MajoranaJKOErgoBridge
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.MajoranaLiftPacketBridge
+import InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 import InfoGeometry.Canonical.ManifoldDegree
 import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Canonical.ManifoldDegreeIntegration
@@ -351,6 +374,7 @@ import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 import InfoGeometry.Canonical.ModularWeldBridge
+import InfoGeometry.Canonical.MoebiusClosureBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Canonical.MoorePenrose
@@ -541,6 +565,8 @@ import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
 import InfoGeometry.Canonical.StandardFormCore
+import InfoGeometry.Canonical.StandardFormNaturalConeBridge
+import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Canonical.StateIndexedModularSeedBridge
 import InfoGeometry.Canonical.Statistics

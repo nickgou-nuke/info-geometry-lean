@@ -201,6 +201,7 @@ import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 import InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
+import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Canonical.ModularRegularSupport
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 import InfoGeometry.Canonical.RegularSupportSecondLaw

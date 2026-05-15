@@ -93,6 +93,33 @@ theorem cayleyToFugacity_mem_unitCircle_of_criticalLine
   field_simp [hne]
 
 /--
+The Cayley transform identifies the Riemann critical line with the Lee--Yang
+unit circle.
+
+This is the precise algebraic reformulation
+`Re(s) = 1/2 ↔ |s / (1 - s)| = 1`, expressed through squared norm.
+-/
+theorem criticalLine_iff_cayley_unitCircle
+    (s : ℂ) :
+    OnCriticalLine s ↔ OnLeeYangCircle (cayleyToFugacity s) := by
+  constructor
+  · exact cayleyToFugacity_mem_unitCircle_of_criticalLine s
+  · intro h
+    unfold OnLeeYangCircle cayleyToFugacity at h
+    rw [Complex.normSq_div] at h
+    have hden : Complex.normSq (1 - s) ≠ 0 := by
+      intro h0
+      rw [h0] at h
+      norm_num at h
+    have hnorm : Complex.normSq s = Complex.normSq (1 - s) := by
+      field_simp [hden] at h
+      exact h
+    unfold OnCriticalLine
+    rw [Complex.normSq_apply, Complex.normSq_apply] at hnorm
+    simp only [Complex.sub_re, Complex.one_re, Complex.sub_im, Complex.one_im] at hnorm
+    nlinarith
+
+/--
 The inverse Cayley transform maps the Lee--Yang unit circle back to the
 critical line.
 
@@ -216,5 +243,115 @@ theorem cayley_unitCircle_zeros_imply_criticalLine
   W.cayley_unitCircle_zeros_imply_criticalLine_certificate
 
 end LeeYangCayleyRiemannWitness
+
+/-! ## Prime-gas Lee--Yang approximation socket -/
+
+/--
+Witness-gated finite-volume Lee--Yang approximation scheme for the completed
+Riemann determinant in Cayley fugacity coordinates.
+
+This records the exact missing theorem layer:
+
+* each finite `Z N` is a genuine Lee--Yang polynomial;
+* reciprocal symmetry is supplied as a law, not inferred from symmetry prose;
+* an explicit nonvanishing renormalization is supplied;
+* the renormalized finite-volume sequence converges to the completed-`xi`
+  Cayley readout;
+* no spurious zeros survive in the limit;
+* the final RH-style critical-line consequence is a supplied reduction law.
+
+The structure deliberately does not prove Lee--Yang stability, Hurwitz zero
+convergence, analytic continuation of `xi`, or RH.
+-/
+structure LeeYangPrimeApproximation
+    (CompletedXiReadout : Type*) where
+  /-- Finite-volume prime-gas partition polynomial in fugacity coordinates. -/
+  Z : ℕ → Polynomial ℂ
+  /-- Renormalization factor for the finite-volume determinant readout. -/
+  renormalization : ℕ → ℂ → ℂ
+  /-- The completed `xi` readout in Cayley fugacity coordinates. -/
+  completedXiCayley : CompletedXiReadout
+
+  /-- Reciprocal / particle-hole symmetry for each finite volume. -/
+  reciprocal_law : Prop
+  reciprocal_certificate :
+    reciprocal_law
+
+  /-- Lee--Yang circle property for each finite volume. -/
+  leeYang_law :
+    ∀ (N : ℕ) (z : ℂ), (Z N).IsRoot z → OnLeeYangCircle z
+
+  /-- The renormalization factor does not introduce or remove zeros. -/
+  nonvanishing_renormalization_law :
+    ∀ (N : ℕ) (z : ℂ), renormalization N z ≠ 0
+
+  /--
+  Locally uniform convergence of the renormalized finite-volume readout to the
+  completed-`xi` Cayley readout.
+
+  This is a proposition field because the concrete analytic topology and target
+  readout depend on the later determinant/scattering model.
+  -/
+  locallyUniformLimit_law : Prop
+  locallyUniformLimit_certificate :
+    locallyUniformLimit_law
+
+  /-- No extraneous finite-volume zeros survive in the limiting readout. -/
+  noSpuriousZeros_law : Prop
+  noSpuriousZeros_certificate :
+    noSpuriousZeros_law
+
+  /--
+  The final Lee--Yang-to-Riemann reduction law supplied by a concrete analytic
+  model. This is where a future Hurwitz/relative-determinant argument belongs.
+  -/
+  cayleyLeeYang_implies_criticalLineZeros_law : Prop
+  cayleyLeeYang_implies_criticalLineZeros_certificate :
+    cayleyLeeYang_implies_criticalLineZeros_law
+
+  /-- Guardrail: this finite approximation packet is not itself RH. -/
+  no_unconditional_RH_claim_guard : Type*
+
+namespace LeeYangPrimeApproximation
+
+variable {CompletedXiReadout : Type*}
+variable (A : LeeYangPrimeApproximation CompletedXiReadout)
+
+/-- Re-export of the supplied reciprocal symmetry law. -/
+theorem reciprocal :
+    A.reciprocal_law :=
+  A.reciprocal_certificate
+
+/-- Re-export of the finite-volume Lee--Yang circle law. -/
+theorem leeYang
+    (N : ℕ)
+    (z : ℂ)
+    (hz : (A.Z N).IsRoot z) :
+    OnLeeYangCircle z :=
+  A.leeYang_law N z hz
+
+/-- Re-export of the nonvanishing renormalization law. -/
+theorem nonvanishing_renormalization
+    (N : ℕ)
+    (z : ℂ) :
+    A.renormalization N z ≠ 0 :=
+  A.nonvanishing_renormalization_law N z
+
+/-- Re-export of the supplied locally-uniform convergence law. -/
+theorem locallyUniformLimit :
+    A.locallyUniformLimit_law :=
+  A.locallyUniformLimit_certificate
+
+/-- Re-export of the supplied no-spurious-zero law. -/
+theorem noSpuriousZeros :
+    A.noSpuriousZeros_law :=
+  A.noSpuriousZeros_certificate
+
+/-- Re-export of the supplied Lee--Yang-to-critical-line reduction law. -/
+theorem cayleyLeeYang_implies_criticalLineZeros :
+    A.cayleyLeeYang_implies_criticalLineZeros_law :=
+  A.cayleyLeeYang_implies_criticalLineZeros_certificate
+
+end LeeYangPrimeApproximation
 
 end InfoGeometry.Canonical.CayleyCriticalLineCircleBridge

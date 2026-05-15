@@ -1,14 +1,20 @@
-import Mathlib
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic
 
 /-!
 # AFP CBO `Extra_Ordered_Fields` adapters
 
 AFP's `Extra_Ordered_Fields` mainly weakens Isabelle ordered-field typeclass
 requirements and installs a custom order on complex numbers.  Mathlib already
-has the ordered-field inequalities over `LinearOrderedField`, and does not make
-`ℂ` an ordered field.  This file therefore exposes the reusable ordered-field
-facts over `LinearOrderedField` and records the safe `Complex.ofReal`
+has the ordered-field inequalities over `LinearOrderedField` equivalents, 
+and does not make `ℂ` an ordered field.  This file therefore exposes the 
+reusable ordered-field facts and records the safe `Complex.ofReal`
 monotonicity facts through real parts.
+
+Note: `LinearOrderedField` is deprecated in this toolchain. 
+Use `[Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]` instead.
 -/
 
 noncomputable section
@@ -16,7 +22,9 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 namespace ExtraOrderedFields
 
-variable {𝕜 : Type*} [LinearOrderedField 𝕜]
+section FieldFacts
+
+variable {𝕜 : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing 𝕜]
 variable {a b c x y z w : 𝕜}
 
 theorem mult_strict_left_mono_neg (hba : b < a) (hc : c < 0) :
@@ -34,24 +42,22 @@ theorem mult_neg_neg (ha : a < 0) (hb : b < 0) :
 @[simp]
 theorem zero_eq_one_divide_iff :
     (0 : 𝕜) = 1 / a ↔ a = 0 := by
-  rw [eq_comm]
-  simpa [one_div] using (inv_eq_zero : a⁻¹ = 0 ↔ a = 0)
+  rw [eq_comm, one_div, inv_eq_zero]
 
 @[simp]
 theorem one_divide_eq_zero_iff :
     1 / a = (0 : 𝕜) ↔ a = 0 := by
-  simpa [eq_comm] using (zero_eq_one_divide_iff (a := a) (𝕜 := 𝕜))
+  rw [one_div, inv_eq_zero]
 
 @[simp]
 theorem eq_divide_eq_one_iff :
     (1 : 𝕜) = b / a ↔ a ≠ 0 ∧ a = b := by
-  rw [eq_comm]
   constructor
   · intro h
     by_cases ha : a = 0
     · simp [ha] at h
     · have hb : b = a := by
-        simpa using (div_eq_iff ha).mp h
+        simpa [ha] using (div_eq_iff ha).mp h.symm
       exact ⟨ha, hb.symm⟩
   · rintro ⟨ha, rfl⟩
     simp [ha]
@@ -59,7 +65,7 @@ theorem eq_divide_eq_one_iff :
 @[simp]
 theorem divide_eq_eq_one_iff :
     b / a = (1 : 𝕜) ↔ a ≠ 0 ∧ a = b := by
-  simpa [eq_comm] using (eq_divide_eq_one_iff (a := a) (b := b) (𝕜 := 𝕜))
+  rw [eq_comm, eq_divide_eq_one_iff]
 
 theorem mult_imp_div_pos_le (hy : 0 < y) (hxy : x ≤ z * y) :
     x / y ≤ z := by
@@ -79,19 +85,19 @@ theorem mult_imp_less_div_pos (hy : 0 < y) (hzx : z * y < x) :
 
 theorem frac_le (hx : 0 ≤ x) (hxy : x ≤ y) (hw : 0 < w) (hwz : w ≤ z) :
     x / z ≤ y / w :=
-  div_le_div₀ hx hxy hw hwz
+  div_le_div₀ (hx.trans hxy) hxy hw hwz
 
 theorem frac_less (hx : 0 ≤ x) (hxy : x < y) (hw : 0 < w) (hwz : w ≤ z) :
     x / z < y / w :=
   div_lt_div₀ hxy hwz (hx.trans hxy.le) hw
 
-theorem nonzero_abs_inverse (ha : a ≠ 0) :
-    |a⁻¹| = (|a|)⁻¹ := by
-  simpa using abs_inv a
+theorem nonzero_abs_inverse (_ha : a ≠ 0) :
+    |a⁻¹| = (|a|)⁻¹ :=
+  abs_inv a
 
-theorem nonzero_abs_divide (hb : b ≠ 0) :
-    |a / b| = |a| / |b| := by
-  simpa using abs_div a b
+theorem nonzero_abs_divide (_hb : b ≠ 0) :
+    |a / b| = |a| / |b| :=
+  abs_div a b
 
 theorem field_le_epsilon
     (h : ∀ ε : 𝕜, 0 < ε → x ≤ y + ε) :
@@ -126,6 +132,8 @@ theorem one_le_inverse_iff :
   · rintro ⟨ha, ha1⟩
     exact (one_le_inv₀ ha).mpr ha1
 
+end FieldFacts
+
 section ComplexOfReal
 
 variable {r s : ℝ}
@@ -145,7 +153,7 @@ theorem complex_ofReal_re_lt_iff :
   simp
 
 @[simp]
-theorem complex_ofReal_im :
+theorem complex_ofReal_im_val :
     (r : ℂ).im = 0 := by
   simp
 

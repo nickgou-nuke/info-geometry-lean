@@ -520,9 +520,13 @@ def main() -> int:
         return 2
 
     findings: list[Finding] = []
-    files = sorted(target_root.rglob("*.lean"))
+    files = [p for p in sorted(target_root.rglob("*.lean")) if p.is_file()]
+    skipped_missing: list[str] = []
     for p in files:
-        findings.extend(scan_file(p))
+        try:
+            findings.extend(scan_file(p))
+        except FileNotFoundError:
+            skipped_missing.append(relpath(p))
 
     functorial_status: dict[str, Any] = {"enabled": not args.skip_functorial_gate}
     if not args.skip_functorial_gate:
@@ -616,6 +620,7 @@ def main() -> int:
                 "fileCount": len(files),
                 "findingCount": len(findings),
                 "functorialInvariance": functorial_status,
+                "skippedMissingFiles": skipped_missing,
                 "findings": [asdict(f) for f in findings],
             },
             indent=2,
@@ -625,6 +630,8 @@ def main() -> int:
     )
 
     print(f"[pauli-seal] files scanned: {len(files)}")
+    if skipped_missing:
+        print(f"[pauli-seal] skipped missing files: {len(skipped_missing)}")
     print(f"[pauli-seal] findings: {len(findings)}")
     by_directive: dict[str, int] = {}
     for f in findings:

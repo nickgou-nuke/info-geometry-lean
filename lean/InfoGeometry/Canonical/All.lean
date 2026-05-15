@@ -49,6 +49,7 @@ import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Canonical.BerryDrazin
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
@@ -85,7 +86,9 @@ import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.CalabiYauWBridge
 import InfoGeometry.Canonical.CantorCliffordFunctionModel
+import InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
+import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
@@ -122,6 +125,7 @@ import InfoGeometry.Canonical.BottStabilizedFrameEquiv
 import InfoGeometry.Canonical.RealHestenesKreinPipelineCapstone
 import InfoGeometry.Canonical.RealHomologyCohomologyDictionary
 import InfoGeometry.Canonical.RealHestenesKreinHomology
+import InfoGeometry.Canonical.RealRotorGaussHestenesBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
@@ -169,6 +173,8 @@ import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Canonical.PfaffianPathDeterminantBridge
+import InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
 import InfoGeometry.Canonical.DIIICommutatorInitialization
@@ -203,8 +209,11 @@ import InfoGeometry.Canonical.DrazinHodgeChiralBridge
 import InfoGeometry.Canonical.DrazinHodgeFierzBridge
 import InfoGeometry.Canonical.DrazinMPChiralHodgeConeBridge
 import InfoGeometry.Canonical.DrazinFierzBridge
+import InfoGeometry.Canonical.DrazinGreen
 import InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
 import InfoGeometry.Canonical.DrazinSupergradedWeylSocket
+import InfoGeometry.Canonical.SupergradedRandomWalkZeroModes
+import InfoGeometry.Canonical.WeylKMSGromovWittenCounts
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinLightConeDictionary
@@ -215,6 +224,7 @@ import InfoGeometry.Canonical.HorizonZitterModes
 import InfoGeometry.Canonical.HorizonZitterFierzReadout
 import InfoGeometry.Canonical.HorizonZitterFierzReadback
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
+import InfoGeometry.Canonical.OptimalMetricGraphEmbeddingBridge
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
@@ -222,6 +232,7 @@ import InfoGeometry.Canonical.ModularHamiltonianSurrogateCalibration
 import InfoGeometry.Canonical.DrazinPenroseAnomalyOwner
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
+import InfoGeometry.Canonical.DrazinSum
 import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinSpectralProjectorBridge
 import InfoGeometry.Canonical.DrazinSupercharge
@@ -328,6 +339,7 @@ import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Canonical.InverseKernelNormalForm
+import InfoGeometry.Canonical.ItFromBit
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.KaehlerGeometry
@@ -359,6 +371,7 @@ import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Canonical.KreinDiracSpectralLift
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Canonical.VarlamovClifford
 import InfoGeometry.Canonical.VarlamovDiscreteSymmetry
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.KreinNaturalFlow

@@ -198,6 +198,7 @@ import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Canonical.DrazinDilationGapBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.ModularRegularSupport
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 import InfoGeometry.Canonical.RegularSupportSecondLaw

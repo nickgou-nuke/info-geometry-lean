@@ -87,6 +87,7 @@ import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.CalabiYauWBridge
 import InfoGeometry.Canonical.CantorCliffordFunctionModel
 import InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
+import InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.CanonicalGaugeBridge
@@ -145,6 +146,7 @@ import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.CliffordBridge
+import InfoGeometry.Canonical.CliffordFractalWaveletBridge
 import InfoGeometry.Canonical.ClNNBottBridge
 import InfoGeometry.Canonical.ClosureDrazinBridge
 import InfoGeometry.Canonical.CoarseGraining
@@ -339,7 +341,6 @@ import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Canonical.InverseKernelNormalForm
-import InfoGeometry.Canonical.ItFromBit
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.KaehlerGeometry
@@ -354,6 +355,7 @@ import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKTLorentzOrbitBridge
 import InfoGeometry.Canonical.KKTNoetherCharges
 import InfoGeometry.Canonical.KleinBottleOrientifold
+import InfoGeometry.Canonical.KreinDrazinBoundarySupport
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.KMSConditionBridge
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
@@ -502,6 +504,7 @@ import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.PrimeGasSuperKMSBridge
 import InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
 import InfoGeometry.Canonical.PrimeGeodesicEmergence
+import InfoGeometry.Canonical.PrimeSuperalgebraZetaChannel
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
@@ -593,6 +596,7 @@ import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SpectralGeneratorProxy
+import InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.SpectroscopicGauge
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
@@ -700,6 +704,7 @@ import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.YangMillsFiniteBridge
 import InfoGeometry.Canonical.YangMillsFiniteQFT
 import InfoGeometry.Canonical.ZetaDeterminant
+import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 import InfoGeometry.Canonical.ZetaTrace
 import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.ZornSpinor

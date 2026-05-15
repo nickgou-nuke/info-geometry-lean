@@ -1,4 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Complex.Basic
+import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic
 
 /-!
 # CBO-004: adjoints and orthogonal projections
@@ -21,7 +23,7 @@ Lean owner surface:
 
 noncomputable section
 
-open scoped InnerProduct
+open scoped InnerProductSpace
 
 namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 namespace AdjointProjection
@@ -32,7 +34,7 @@ variable [InnerProductSpace ℂ E] [InnerProductSpace ℂ F] [InnerProductSpace 
 
 /-- AFP `adj`: the Hilbert-space adjoint of a bounded operator. -/
 def adjointOp [CompleteSpace E] [CompleteSpace F] (T : E →L[ℂ] F) : F →L[ℂ] E :=
-  T†
+  ContinuousLinearMap.adjoint T
 
 @[simp]
 theorem adjointOp_apply_inner [CompleteSpace E] [CompleteSpace F]
@@ -64,14 +66,13 @@ def orthogonalProjection [CompleteSpace E]
 theorem orthogonalProjection_selfAdjoint [CompleteSpace E]
     (U : Submodule ℂ E) [U.HasOrthogonalProjection] :
     IsSelfAdjoint (orthogonalProjection U) :=
-  isSelfAdjoint_starProjection U
+  IsStarProjection.isSelfAdjoint (_root_.isStarProjection_starProjection (U := U))
 
 /-- Orthogonal projections are star projections. -/
 theorem orthogonalProjection_isStarProjection [CompleteSpace E]
     (U : Submodule ℂ E) [U.HasOrthogonalProjection] :
     IsStarProjection (orthogonalProjection U) :=
-  isStarProjection_starProjection
+  _root_.isStarProjection_starProjection
 
 end AdjointProjection
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
-

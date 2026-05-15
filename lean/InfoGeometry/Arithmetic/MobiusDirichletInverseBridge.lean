@@ -77,7 +77,7 @@ theorem finiteMobiusDirichletPolynomial_eq_finiteFermionicEulerProduct
         (-1 : ℂ) ^ S.card * (∏ p ∈ P.primes \ S, (1 : ℂ)) * ∏ p ∈ S, x p := by
         refine Finset.sum_congr rfl ?_
         intro S _hS
-        simp [mul_assoc]
+        simp
     _ = ∏ p ∈ P.primes, (1 - x p) := by
         exact (Finset.prod_sub (fun _ : ℕ => (1 : ℂ)) x P.primes).symm
 

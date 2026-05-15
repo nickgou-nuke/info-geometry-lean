@@ -113,6 +113,7 @@ import InfoGeometry.OperatorAlgebra.PO55RicciFlux
 import InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 import InfoGeometry.OperatorAlgebra.PoincareAndreev
 import InfoGeometry.OperatorAlgebra.ProjectiveJonesGeometry
+import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 import InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 import InfoGeometry.OperatorAlgebra.RealGWClifford

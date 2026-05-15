@@ -69,6 +69,142 @@ def supercharge : EndH :=
 def superchargeK : EndH := supercharge CIK
 
 /--
+Drazin spectral projector `P_D`.
+
+This is the named regular-support projector surface used by the Drazin
+supercharge layer; definitionally it is `CIK.spectralProjector`.
+-/
+@[rep_depth krein]
+abbrev drazinSpectralProjector : EndH :=
+  CIK.spectralProjector
+
+/--
+Complementary Drazin projector `Q0 = 1 - P_D`.
+
+This projects onto the singular/defect lane complementary to the regular
+Drazin support.
+-/
+@[rep_depth krein]
+abbrev drazinComplementaryProjector : EndH :=
+  CIK.spectralComplementaryProjector
+
+/--
+Dilation gap generator `G` for the Drazin supercharge presentation.
+
+Definitionally this is the certified inverse-kernel dilation gap.
+-/
+@[rep_depth krein]
+noncomputable abbrev drazinDilationGap : EndH :=
+  CIK.dilationGap
+
+/--
+Drazin supercharge `Q_D = 2 • [P_D, G]`.
+
+This is the commutator presentation of the canonical odd generator carried by
+the certified inverse kernel.
+-/
+@[rep_depth krein]
+noncomputable def drazinSupercharge : EndH :=
+  (2 : ℝ) • commutator (drazinSpectralProjector CIK) (drazinDilationGap CIK)
+
+/-- `P_D` is definitionally the certified spectral projector. -/
+@[simp]
+theorem drazinSpectralProjector_eq :
+    drazinSpectralProjector CIK = CIK.spectralProjector := rfl
+
+/-- `Q0` is definitionally the certified complementary spectral projector. -/
+@[simp]
+theorem drazinComplementaryProjector_eq :
+    drazinComplementaryProjector CIK = CIK.spectralComplementaryProjector := rfl
+
+/-- The complementary Drazin projector is `1 - P_D`. -/
+@[rep_depth krein]
+theorem drazinComplementaryProjector_eq_one_sub_drazinSpectralProjector :
+    drazinComplementaryProjector CIK = (1 : EndH) - drazinSpectralProjector CIK := by
+  rfl
+
+/-- `G` is definitionally the certified dilation gap. -/
+@[simp]
+theorem drazinDilationGap_eq :
+    drazinDilationGap CIK = CIK.dilationGap := rfl
+
+/--
+The Drazin dilation gap is the half-difference between the Moore-Penrose
+range and domain projectors.
+-/
+@[rep_depth krein]
+theorem drazinDilationGap_eq_half_sub_mpRange_metric :
+    drazinDilationGap CIK =
+      ((2 : ℝ)⁻¹) • (CIK.mpRangeProjector - CIK.metricProjector) := by
+  rfl
+
+/-- If the Moore-Penrose range and domain projectors agree, the Drazin gap vanishes. -/
+@[rep_depth krein]
+theorem drazinDilationGap_eq_zero_of_mpRangeProjector_eq_metricProjector
+    (hProj : CIK.mpRangeProjector = CIK.metricProjector) :
+    drazinDilationGap CIK = 0 := by
+  rw [drazinDilationGap_eq_half_sub_mpRange_metric, hProj, sub_self, smul_zero]
+
+/-- A vanishing Drazin gap forces the Moore-Penrose range and domain projectors to agree. -/
+@[rep_depth krein]
+theorem mpRangeProjector_eq_metricProjector_of_drazinDilationGap_eq_zero
+    (hGap : drazinDilationGap CIK = 0) :
+    CIK.mpRangeProjector = CIK.metricProjector := by
+  have hdiff : CIK.mpRangeProjector - CIK.metricProjector = 0 := by
+    rw [CIK.mpRangeProjector_sub_metricProjector_eq_two_smul_dilationGap]
+    simpa using congrArg (fun Z : EndH => (2 : ℝ) • Z) hGap
+  exact sub_eq_zero.mp hdiff
+
+/--
+The Drazin gap vanishes exactly when the Moore-Penrose range and domain
+projectors coincide.
+-/
+@[rep_depth krein]
+theorem drazinDilationGap_eq_zero_iff_mpRangeProjector_eq_metricProjector :
+    drazinDilationGap CIK = 0 ↔ CIK.mpRangeProjector = CIK.metricProjector := by
+  constructor
+  · exact mpRangeProjector_eq_metricProjector_of_drazinDilationGap_eq_zero (CIK := CIK)
+  · exact drazinDilationGap_eq_zero_of_mpRangeProjector_eq_metricProjector (CIK := CIK)
+
+/-- Definitional form of `Q_D = 2 • [P_D, G]`. -/
+@[rep_depth krein]
+theorem drazinSupercharge_eq_two_smul_commutator :
+    drazinSupercharge CIK =
+      (2 : ℝ) • commutator (drazinSpectralProjector CIK) (drazinDilationGap CIK) := rfl
+
+/-- The Drazin spectral projector is idempotent. -/
+@[rep_depth krein]
+theorem drazinSpectralProjector_idempotent :
+    drazinSpectralProjector CIK * drazinSpectralProjector CIK =
+      drazinSpectralProjector CIK := by
+  simpa using CIK.spectralProjector_idempotent
+
+/-- The complementary Drazin projector is idempotent. -/
+@[rep_depth krein]
+theorem drazinComplementaryProjector_idempotent :
+    drazinComplementaryProjector CIK * drazinComplementaryProjector CIK =
+      drazinComplementaryProjector CIK := by
+  simpa using CIK.spectralComplementaryProjector_idempotent
+
+/-- The Drazin projector and its complement split the identity. -/
+@[rep_depth krein]
+theorem drazinSpectralProjector_add_drazinComplementaryProjector :
+    drazinSpectralProjector CIK + drazinComplementaryProjector CIK = (1 : EndH) := by
+  simp
+
+/-- The Drazin projector is left-orthogonal to its complement. -/
+@[rep_depth krein]
+theorem drazinSpectralProjector_mul_drazinComplementaryProjector :
+    drazinSpectralProjector CIK * drazinComplementaryProjector CIK = 0 := by
+  simpa using CIK.spectralProjector_mul_spectralComplementaryProjector
+
+/-- The Drazin projector is right-orthogonal to its complement. -/
+@[rep_depth krein]
+theorem drazinComplementaryProjector_mul_drazinSpectralProjector :
+    drazinComplementaryProjector CIK * drazinSpectralProjector CIK = 0 := by
+  simpa using CIK.spectralComplementaryProjector_mul_spectralProjector
+
+/--
 Equivalent commutator presentation:
 `Q = 2 • [P_D, G]`.
 -/
@@ -78,6 +214,51 @@ theorem supercharge_eq_two_smul_commutator_spectralProjector_dilationGap :
     congrArg (fun Z : EndH => (2 : ℝ) • Z)
       CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
   simpa [supercharge, commutator, smul_smul] using h.symm
+
+/-- The commutator-defined Drazin supercharge is the canonical supercharge. -/
+@[rep_depth krein]
+theorem drazinSupercharge_eq_supercharge :
+    drazinSupercharge CIK = supercharge CIK := by
+  simpa [drazinSupercharge] using
+    (supercharge_eq_two_smul_commutator_spectralProjector_dilationGap (CIK := CIK)).symm
+
+/--
+The Drazin supercharge is the right-left anomaly difference induced by the
+spectral projector boundary.
+-/
+@[rep_depth krein]
+theorem drazinSupercharge_eq_rightChiralAnomaly_sub_chiralAnomaly :
+    drazinSupercharge CIK = CIK.rightChiralAnomaly - CIK.chiralAnomaly := by
+  rw [drazinSupercharge_eq_supercharge]
+  rfl
+
+/-- If the Drazin dilation gap vanishes, the Drazin supercharge vanishes. -/
+@[rep_depth krein]
+theorem drazinSupercharge_eq_zero_of_drazinDilationGap_eq_zero
+    (hGap : drazinDilationGap CIK = 0) :
+    drazinSupercharge CIK = 0 := by
+  rw [drazinSupercharge_eq_two_smul_commutator, hGap]
+  simp [commutator]
+
+/--
+If the Moore-Penrose range and domain projectors agree, there is no Drazin
+supercharge anomaly.
+-/
+@[rep_depth krein]
+theorem drazinSupercharge_eq_zero_of_mpRangeProjector_eq_metricProjector
+    (hProj : CIK.mpRangeProjector = CIK.metricProjector) :
+    drazinSupercharge CIK = 0 := by
+  exact drazinSupercharge_eq_zero_of_drazinDilationGap_eq_zero (CIK := CIK)
+    (drazinDilationGap_eq_zero_of_mpRangeProjector_eq_metricProjector (CIK := CIK) hProj)
+
+/--
+The Drazin commutator `[P_D, G]` is half of the right-left anomaly difference.
+-/
+@[rep_depth krein]
+theorem commutator_drazinSpectralProjector_drazinDilationGap_eq_half_sub_anomalies :
+    commutator (drazinSpectralProjector CIK) (drazinDilationGap CIK) =
+      ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly) := by
+  simpa [commutator] using CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
 
 /--
 Equivalent geometric-Cartan commutator presentation:
@@ -200,6 +381,55 @@ theorem supercharge_is_odd :
       rw [hR, hL]
       noncomm_ring
 
+/--
+The Drazin supercharge is odd with respect to the spectral grading:
+`{Γ_S, Q_D} = 0`.
+-/
+@[rep_depth krein]
+theorem drazinSupercharge_is_odd :
+    anticommutator CIK.toInformationCartanTriple.GammaS (drazinSupercharge CIK) = 0 := by
+  rw [drazinSupercharge_eq_supercharge]
+  exact supercharge_is_odd CIK
+
+/--
+Witness packet for the Drazin spectral projector, complementary projector,
+dilation gap, and odd supercharge surface.
+-/
+@[rep_depth krein]
+structure DrazinSuperchargePacket where
+  P_D : EndH
+  Q0 : EndH
+  G : EndH
+  Q_D : EndH
+  P_D_eq : P_D = CIK.spectralProjector
+  Q0_eq : Q0 = (1 : EndH) - P_D
+  G_eq : G = CIK.dilationGap
+  Q_D_eq : Q_D = (2 : ℝ) • commutator P_D G
+  P_D_idempotent : P_D * P_D = P_D
+  Q0_idempotent : Q0 * Q0 = Q0
+  split_identity : P_D + Q0 = (1 : EndH)
+  left_orthogonal : P_D * Q0 = 0
+  right_orthogonal : Q0 * P_D = 0
+  odd : anticommutator CIK.toInformationCartanTriple.GammaS Q_D = 0
+
+/-- Canonical packet instantiating the Drazin supercharge surface from `CIK`. -/
+@[rep_depth krein]
+noncomputable def drazinSuperchargePacket : DrazinSuperchargePacket CIK where
+  P_D := drazinSpectralProjector CIK
+  Q0 := drazinComplementaryProjector CIK
+  G := drazinDilationGap CIK
+  Q_D := drazinSupercharge CIK
+  P_D_eq := rfl
+  Q0_eq := drazinComplementaryProjector_eq_one_sub_drazinSpectralProjector (CIK := CIK)
+  G_eq := rfl
+  Q_D_eq := rfl
+  P_D_idempotent := drazinSpectralProjector_idempotent (CIK := CIK)
+  Q0_idempotent := drazinComplementaryProjector_idempotent (CIK := CIK)
+  split_identity := drazinSpectralProjector_add_drazinComplementaryProjector (CIK := CIK)
+  left_orthogonal := drazinSpectralProjector_mul_drazinComplementaryProjector (CIK := CIK)
+  right_orthogonal := drazinComplementaryProjector_mul_drazinSpectralProjector (CIK := CIK)
+  odd := drazinSupercharge_is_odd (CIK := CIK)
+
 /-- Krein-depth bridge form of supercharge oddness. -/
 @[rep_depth krein]
 theorem supercharge_is_oddK :
@@ -228,6 +458,32 @@ theorem supercharge_isSpectralNonCompact :
 @[rep_depth krein]
 def superHamiltonian : EndH :=
   supercharge CIK * supercharge CIK
+
+/-- Drazin-named superHamiltonian `H_D = Q_D²`. -/
+@[rep_depth krein]
+noncomputable def drazinSuperHamiltonian : EndH :=
+  drazinSupercharge CIK * drazinSupercharge CIK
+
+/-- The Drazin-named superHamiltonian is the canonical `Q²`. -/
+@[rep_depth krein]
+theorem drazinSuperHamiltonian_eq_superHamiltonian :
+    drazinSuperHamiltonian CIK = superHamiltonian CIK := by
+  simp [drazinSuperHamiltonian, superHamiltonian, drazinSupercharge_eq_supercharge]
+
+/-- If the Drazin supercharge vanishes, its superHamiltonian vanishes. -/
+@[rep_depth krein]
+theorem drazinSuperHamiltonian_eq_zero_of_drazinSupercharge_eq_zero
+    (hQ : drazinSupercharge CIK = 0) :
+    drazinSuperHamiltonian CIK = 0 := by
+  simp [drazinSuperHamiltonian, hQ]
+
+/-- If the Drazin dilation gap vanishes, the Drazin superHamiltonian vanishes. -/
+@[rep_depth krein]
+theorem drazinSuperHamiltonian_eq_zero_of_drazinDilationGap_eq_zero
+    (hGap : drazinDilationGap CIK = 0) :
+    drazinSuperHamiltonian CIK = 0 := by
+  exact drazinSuperHamiltonian_eq_zero_of_drazinSupercharge_eq_zero (CIK := CIK)
+    (drazinSupercharge_eq_zero_of_drazinDilationGap_eq_zero (CIK := CIK) hGap)
 
 /-- Krein-depth bridge wrapper for the projected even generator `Q²`. -/
 @[rep_depth krein]
@@ -715,6 +971,16 @@ def canonicalDefectCentralK : EndH := canonicalDefectCentral CIK
 @[rep_depth krein]
 def canonicalKineticPartK : EndH := canonicalKineticPart CIK
 
+/-- Drazin-named central/defect summand `Z` in the split `Q_D² = H + Z`. -/
+@[rep_depth krein]
+def drazinDefectCentral : EndH :=
+  canonicalDefectCentral CIK
+
+/-- Drazin-named kinetic summand `H` in the split `Q_D² = H + Z`. -/
+@[rep_depth krein]
+def drazinKineticPart : EndH :=
+  canonicalKineticPart CIK
+
 /-- The canonical defect-central part is supported on the defect block. -/
 @[rep_depth krein]
 theorem canonicalDefectCentral_isDefectSupported :
@@ -1038,6 +1304,29 @@ theorem superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK 
       = canonicalKineticPartK (CIK := CIK) + canonicalDefectCentralK CIK := by
   simpa [superHamiltonianK, canonicalKineticPartK, canonicalDefectCentralK] using
     superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/-- Drazin-named form of the internal central split `Q_D² = H + Z`. -/
+@[rep_depth krein]
+theorem drazinSuperHamiltonian_eq_drazinKineticPart_add_drazinDefectCentral :
+    drazinSuperHamiltonian CIK
+      = drazinKineticPart (CIK := CIK) + drazinDefectCentral CIK := by
+  rw [drazinSuperHamiltonian_eq_superHamiltonian]
+  simpa [drazinKineticPart, drazinDefectCentral] using
+    superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/-- Drazin-named defect support for the central summand `Z`. -/
+@[rep_depth krein]
+theorem drazinDefectCentral_isDefectSupported :
+    IsDefectSupported CIK (drazinDefectCentral CIK) := by
+  simpa [drazinDefectCentral] using
+    canonicalDefectCentral_isDefectSupported (CIK := CIK)
+
+/-- Drazin-named vanishing defect-block law for the kinetic summand `H`. -/
+@[rep_depth krein]
+theorem drazinKineticPart_hasVanishingDefectBlock :
+    HasVanishingDefectBlock CIK (drazinKineticPart CIK) := by
+  simpa [drazinKineticPart] using
+    canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
 
 /--
 Canonical existence form of the Drazin central split `Q² = H + Z`.

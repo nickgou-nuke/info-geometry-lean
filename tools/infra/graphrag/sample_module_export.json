@@ -1,0 +1,74 @@
+{
+  "schema": "info_geometry.graphrag.seed_sample.v1",
+  "module": {
+    "_key": "module_InfoGeometry_Krein_HestenesAffineO55ClosureBridge",
+    "collection": "ig_nodes",
+    "graphKind": "module",
+    "name": "InfoGeometry.Krein.HestenesAffineO55ClosureBridge",
+    "path": "lean/InfoGeometry/Krein/HestenesAffineO55ClosureBridge.lean",
+    "status": "compiled"
+  },
+  "declarations": [
+    {
+      "_key": "decl_InfoGeometry_Krein_HestenesAffineO55ClosureBridge_HestenesAffineO55ClosureBridge_affine_closure_requires_O55",
+      "collection": "ig_nodes",
+      "graphKind": "decl",
+      "name": "InfoGeometry.Krein.HestenesAffineO55ClosureBridge.HestenesAffineO55ClosureBridge.affine_closure_requires_O55",
+      "kind": "theorem",
+      "module": "InfoGeometry.Krein.HestenesAffineO55ClosureBridge",
+      "path": "lean/InfoGeometry/Krein/HestenesAffineO55ClosureBridge.lean",
+      "status": "compiled",
+      "hasSorry": false,
+      "typeHash": "sha256:sample-type-affine-closure-requires-o55",
+      "valueHash": "sha256:sample-value-affine-closure-requires-o55"
+    }
+  ],
+  "hashes": [
+    {
+      "_key": "hash_sha256_sample_type_affine_closure_requires_o55",
+      "collection": "ig_hashes",
+      "hash": "sha256:sample-type-affine-closure-requires-o55",
+      "hashKind": "typeHash",
+      "normalization": "deBruijn-v1-owner-aware",
+      "exprTag": "forall",
+      "size": 41,
+      "headConst": null,
+      "subhashes": [
+        "sha256:sample-subhash-is-affine-closure",
+        "sha256:sample-subhash-is-o55-invariant"
+      ],
+      "quality": "ok"
+    }
+  ],
+  "concepts": [
+    {
+      "_key": "concept_o55_affine_closure",
+      "collection": "ig_concepts",
+      "kind": "Concept",
+      "label": "Affine O55 closure",
+      "slug": "affine-o55-closure",
+      "domain": "HestenesAffineO55ClosureBridge",
+      "status": "seed",
+      "description": "Witness-gated affine D4 closure requiring a supplied O(5,5) / Cl(5,5) backend certificate."
+    }
+  ],
+  "edges": [
+    {
+      "collection": "ig_edges",
+      "_from": "ig_nodes/decl_InfoGeometry_Krein_HestenesAffineO55ClosureBridge_HestenesAffineO55ClosureBridge_affine_closure_requires_O55",
+      "_to": "ig_hashes/hash_sha256_sample_type_affine_closure_requires_o55",
+      "kind": "has_hash",
+      "hashRole": "typeHash",
+      "source": "sample"
+    },
+    {
+      "collection": "ig_edges",
+      "_from": "ig_nodes/decl_InfoGeometry_Krein_HestenesAffineO55ClosureBridge_HestenesAffineO55ClosureBridge_affine_closure_requires_O55",
+      "_to": "ig_concepts/concept_o55_affine_closure",
+      "kind": "reifies",
+      "source": "curated",
+      "confidence": 1.0,
+      "note": "The theorem exposes the certificate-level equivalence IsAffineClosure <-> IsO55Invariant."
+    }
+  ]
+}

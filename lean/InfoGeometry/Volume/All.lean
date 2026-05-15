@@ -3,6 +3,7 @@ import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Volume.DeterminantBundle
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian
+import InfoGeometry.Volume.PfaffianPathBridge
 import InfoGeometry.Volume.RadonNikodym
 
 namespace InfoGeometry

@@ -1,6 +1,7 @@
 # Arango DAG Refresh Methodology
 
 > Status: operational runbook
+> Audited: 2026-05-14 for ordering semantics.
 > Scope: refreshed Lean declaration DAG, layered Arango raw/overlay ingest, and SCC-first navigation overlays
 > Proof rule: Arango is navigation and audit infrastructure. Lean files and `lake build` remain proof authority.
 
@@ -24,6 +25,7 @@ The practical order is:
 
 ```text
 Lean DAG export
+  -> dagDoctor freshness check
   -> raw DAG materialization
   -> layered Arango ingest
   -> raw-to-SCC descent verification
@@ -48,6 +50,14 @@ artifacts/dag/full_graph.json
 artifacts/dag/structural-topology.json
 ```
 
+Current behavior is fail-fast: if the configured build target
+`InfoGeometry.All` does not build, `dagRefresh` stops before indexing. In that
+case there is no fresh DAG to ingest into Arango. Fix the Lean build first.
+
+For open-socket triage during a build blockage, use the source-only scanner
+`tools/quality/closure_debt_crawler.py`. That script is not a graph crawler and
+does not establish source-sink or Mathlib reachability.
+
 For the run documented here, the indexer reported:
 
 ```text
@@ -62,6 +72,15 @@ declaration set. That is not an ingest failure. The raw edge layer is handled in
 the next step.
 
 ## 2. Materialize the Lossless Raw DAG Arango Layer
+
+Before materializing, confirm the local artifacts are fresh enough:
+
+```bash
+lake script run dagDoctor
+```
+
+If `dagDoctor` reports stale source or olean hashes, do not ingest those
+artifacts as current-source truth.
 
 Materialize the Arango-shaped raw DAG and topology overlay artifacts:
 

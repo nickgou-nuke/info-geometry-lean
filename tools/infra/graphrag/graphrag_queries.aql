@@ -1,0 +1,315 @@
+-- InfoGeometry GraphRAG seed AQL.
+--
+-- These queries assume the existing ExprArangoExport collections:
+--   ig_nodes / ig_edges
+-- plus the KM overlay collections bootstrapped by:
+--   tools/infra/graphrag/arango_graphrag_bootstrap.js
+--
+-- Orientation warning:
+-- The declaration DAG and cone exports use different edge orientations in
+-- different contexts.  Overlay edges must carry kind/orientation fields where
+-- ambiguity matters.  Do not treat traversal direction as proof authority.
+
+-- ============================================================
+-- 1. Link a declaration to a curated concept.
+-- Params:
+--   @declName, @conceptKey, @confidence, @note
+-- ============================================================
+LET decl = FIRST(
+  FOR d IN ig_nodes
+    FILTER d.graphKind == "decl"
+    FILTER d.name == @declName OR d.decl == @declName
+    RETURN d
+)
+
+LET concept = DOCUMENT("ig_concepts", @conceptKey)
+
+FILTER decl != null AND concept != null
+
+UPSERT {
+  _from: decl._id,
+  _to: concept._id,
+  kind: "reifies"
+}
+INSERT {
+  _from: decl._id,
+  _to: concept._id,
+  kind: "reifies",
+  source: "curated",
+  confidence: @confidence,
+  note: @note
+}
+UPDATE {
+  source: "curated",
+  confidence: @confidence,
+  note: @note
+} IN ig_edges
+
+RETURN { declaration: decl.name ? decl.name : decl.decl, concept: concept.label }
+
+-- ============================================================
+-- 2. Link a declaration to an exact hash record.
+-- Params:
+--   @declName, @hash, @hashKind, @hashRole, @normalization, @note
+-- ============================================================
+LET decl = FIRST(
+  FOR d IN ig_nodes
+    FILTER d.graphKind == "decl"
+    FILTER d.name == @declName OR d.decl == @declName
+    RETURN d
+)
+
+FILTER decl != null
+
+LET hashKey = CONCAT(
+  "hash_",
+  REGEX_REPLACE(REGEX_REPLACE(@hash, "^sha256:", "sha256_"), "[^A-Za-z0-9_]", "_")
+)
+
+UPSERT { hash: @hash }
+INSERT {
+  _key: hashKey,
+  hash: @hash,
+  hashKind: @hashKind,
+  normalization: @normalization,
+  quality: "ok"
+}
+UPDATE {
+  hashKind: @hashKind,
+  normalization: @normalization
+} IN ig_hashes
+
+LET h = NEW
+
+UPSERT {
+  _from: decl._id,
+  _to: h._id,
+  kind: "has_hash",
+  hashRole: @hashRole
+}
+INSERT {
+  _from: decl._id,
+  _to: h._id,
+  kind: "has_hash",
+  hashRole: @hashRole,
+  source: "hash-sidecar",
+  note: @note
+}
+UPDATE {
+  source: "hash-sidecar",
+  note: @note
+} IN ig_edges
+
+RETURN { declaration: decl.name ? decl.name : decl.decl, hash: h.hash, hashRole: @hashRole }
+
+-- ============================================================
+-- 3. Given a de Bruijn/content hash, find declarations and concepts.
+-- Params:
+--   @hash
+-- ============================================================
+LET hashNode = FIRST(
+  FOR h IN ig_hashes
+    FILTER h.hash == @hash
+    RETURN h
+)
+
+FILTER hashNode != null
+
+LET declsViaEdges = (
+  FOR d, e IN INBOUND hashNode ig_edges
+    FILTER e.kind == "has_hash"
+    FILTER d.graphKind == "decl"
+    RETURN DISTINCT MERGE(d, { hashRole: e.hashRole })
+)
+
+LET declsViaFields = (
+  FOR d IN ig_nodes
+    FILTER d.graphKind == "decl"
+    FILTER d.typeHash == @hash OR d.valueHash == @hash
+       OR d.deBruijnHash == @hash OR d.alphaLocalHash == @hash
+       OR @hash IN (d.subhashes ? d.subhashes : [])
+    RETURN DISTINCT d
+)
+
+LET decls = UNION_DISTINCT(declsViaEdges, declsViaFields)
+
+LET directConcepts = (
+  FOR c, e IN 1..1 OUTBOUND hashNode ig_edges
+    FILTER e.kind == "reifies"
+    RETURN {
+      concept: c.label,
+      conceptKey: c._key,
+      via: "hash",
+      evidence: e.note,
+      confidence: e.confidence
+    }
+)
+
+LET declConcepts = (
+  FOR d IN decls
+    FOR c, e IN 1..1 OUTBOUND d ig_edges
+      FILTER e.kind == "reifies"
+      RETURN {
+        declaration: d.name ? d.name : d.decl,
+        concept: c.label,
+        conceptKey: c._key,
+        via: "declaration",
+        evidence: e.note,
+        confidence: e.confidence
+      }
+)
+
+RETURN {
+  hash: hashNode,
+  declarations: decls[* RETURN CURRENT.name ? CURRENT.name : CURRENT.decl],
+  concepts: APPEND(directConcepts, declConcepts)
+}
+
+-- ============================================================
+-- 4. Find declarations sharing an exact hash.
+-- Params:
+--   @hash
+-- ============================================================
+LET h = FIRST(FOR x IN ig_hashes FILTER x.hash == @hash RETURN x)
+FILTER h != null
+
+FOR v, e IN INBOUND h ig_edges
+  FILTER e.kind == "has_hash"
+  FILTER v.graphKind == "decl"
+  RETURN {
+    declaration: v.name ? v.name : v.decl,
+    module: v.module,
+    path: v.path,
+    hashRole: e.hashRole,
+    hash: h.hash
+  }
+
+-- ============================================================
+-- 5. Duplicate theorem statements by type hash.
+-- ============================================================
+FOR h IN ig_hashes
+  FILTER h.hashKind IN ["typeHash", "alphaTypeHash"]
+  LET decls = (
+    FOR d, e IN INBOUND h ig_edges
+      FILTER e.kind == "has_hash"
+      FILTER e.hashRole == "typeHash"
+      FILTER d.graphKind == "decl"
+      RETURN d
+  )
+  FILTER LENGTH(decls) > 1
+  RETURN {
+    hash: h.hash,
+    count: LENGTH(decls),
+    declarations: decls[* RETURN CURRENT.name ? CURRENT.name : CURRENT.decl]
+  }
+
+-- ============================================================
+-- 6. Same logical trick by proof/value subhash Jaccard overlap.
+-- Params:
+--   @seedDeclName, @threshold
+-- ============================================================
+LET seedDecl = FIRST(
+  FOR d IN ig_nodes
+    FILTER d.graphKind == "decl"
+    FILTER d.name == @seedDeclName OR d.decl == @seedDeclName
+    RETURN d
+)
+
+FILTER seedDecl != null
+
+LET seedHashes = (
+  FOR h, e IN OUTBOUND seedDecl ig_edges
+    FILTER e.kind == "has_hash"
+    FILTER e.hashRole IN ["valueSubhash", "proofSubhash", "typeSubhash"]
+    RETURN DISTINCT h.hash
+)
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER (d.name ? d.name : d.decl) != @seedDeclName
+
+  LET candidateHashes = (
+    FOR h, e IN OUTBOUND d ig_edges
+      FILTER e.kind == "has_hash"
+      FILTER e.hashRole IN ["valueSubhash", "proofSubhash", "typeSubhash"]
+      RETURN DISTINCT h.hash
+  )
+
+  LET inter = INTERSECTION(seedHashes, candidateHashes)
+  LET unionSize = LENGTH(UNION_DISTINCT(seedHashes, candidateHashes))
+  LET score = unionSize == 0 ? 0 : LENGTH(inter) / unionSize
+
+  FILTER score >= @threshold
+  SORT score DESC
+  LIMIT 50
+
+  RETURN {
+    declaration: d.name ? d.name : d.decl,
+    module: d.module,
+    score,
+    sharedHashes: inter
+  }
+
+-- ============================================================
+-- 7. Public reasoning lineage from a concept.
+-- Params:
+--   @conceptKey
+-- ============================================================
+LET start = DOCUMENT("ig_concepts", @conceptKey)
+FILTER start != null
+
+FOR v, e, p IN 1..8 ANY start GRAPH "InfoGeometryTheoryGraph"
+  OPTIONS { order: "bfs", uniqueVertices: "path" }
+  FILTER e.kind IN ["reifies", "calibrates", "depends_on_principle", "chronology", "guards", "owner_of", "imports"]
+  RETURN {
+    depth: LENGTH(p.edges),
+    pathKeys: p.vertices[*]._key,
+    pathLabels: p.vertices[* RETURN CURRENT.label ? CURRENT.label : (CURRENT.name ? CURRENT.name : CURRENT.decl)],
+    edgeKinds: p.edges[*].kind
+  }
+
+-- ============================================================
+-- 8. Type III trace/determinant leakage heuristic.
+-- ============================================================
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER CONTAINS(LOWER(d.name ? d.name : ""), "typeiii")
+     OR CONTAINS(LOWER(d.module ? d.module : ""), "typeiii")
+     OR CONTAINS(LOWER(d.module ? d.module : ""), "standardform")
+  LET text = LOWER(CONCAT_SEPARATOR(" ",
+    d.name ? d.name : "",
+    d.decl ? d.decl : "",
+    d.module ? d.module : "",
+    d.docstring ? d.docstring : ""))
+  FILTER CONTAINS(text, "trace")
+      OR CONTAINS(text, "determinant")
+      OR CONTAINS(text, "density")
+  RETURN {
+    declaration: d.name ? d.name : d.decl,
+    module: d.module,
+    warning: "Check for trace/determinant leakage in Type III lane"
+  }
+
+-- ============================================================
+-- 9. O55 witness-gating lineage.
+-- Params:
+--   none
+-- ============================================================
+LET start = FIRST(FOR c IN ig_concepts FILTER c.slug == "affine-o55-closure" RETURN c)
+FILTER start != null
+
+FOR v, e, p IN 1..8 ANY start GRAPH "InfoGeometryTheoryGraph"
+  OPTIONS { order: "bfs", uniqueVertices: "path" }
+  FILTER v.kind IN ["Concept", "ArchitecturalPrinciple", "Phase"]
+     OR v.graphKind IN ["decl", "module"]
+     OR e.kind IN ["reifies", "calibrates", "guards", "chronology", "owner_of", "imports"]
+  RETURN {
+    depth: LENGTH(p.edges),
+    node: {
+      id: v._id,
+      label: v.label ? v.label : (v.name ? v.name : v.decl),
+      kind: v.kind ? v.kind : v.graphKind
+    },
+    edgeKind: e.kind,
+    pathLabels: p.vertices[* RETURN CURRENT.label ? CURRENT.label : (CURRENT.name ? CURRENT.name : CURRENT.decl)]
+  }

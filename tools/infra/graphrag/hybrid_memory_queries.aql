@@ -1,0 +1,370 @@
+-- InfoGeometry hybrid GraphRAG memory query atlas.
+--
+-- Layers:
+--   exact  : ig_hashes, deBruijnHash, shapeHash, alphaLocalHash, typeHash, valueHash
+--   graph  : ig_nodes, ig_edges, ig_wires, ig_gates, ig_wire_edges
+--   rdf    : ig_rdf_triples or predicate-like ig_edges projection
+--   text   : ig_text_index_docs / ig_hybrid_docs via ArangoSearch views
+--   vector : ig_logic_vectors / ig_embedding_docs via vector indexes
+--
+-- Rule:
+--   hashes are exact symbolic buckets, not embeddings.
+--   vectors are approximate retrieval hints, not proof evidence.
+
+-- ============================================================
+-- 0. Raw physical graph logical projections
+-- ============================================================
+-- These are query idioms, not physical collection names:
+--
+-- expr_nodes      := ig_nodes WHERE graphKind == "expr"
+-- decl_nodes      := ig_nodes WHERE graphKind == "decl"
+-- binder_nodes    := ig_nodes WHERE graphKind == "expr"
+--                    AND exprTag IN ["lam", "forallE", "letE"]
+-- bound_by_edges  := ig_edges WHERE kind == "bind" AND role == "bound_by"
+-- const_ref_edges := ig_edges WHERE kind == "const_ref"
+--
+-- Keep the physical canonical graph as ig_nodes / ig_edges.
+-- Additional collections are overlays or projections.
+
+-- ============================================================
+-- 1. Exact hash bucket plus graph descent
+-- ============================================================
+LET hashValue = @hashValue
+
+LET hashDocs = (
+  FOR h IN ig_hashes
+    FILTER h.hash == hashValue OR h.value == hashValue
+    RETURN h
+)
+
+LET decls = (
+  FOR h IN hashDocs
+    FOR d IN ig_nodes
+      FILTER d.graphKind == "decl"
+      FILTER d.decl == h.decl OR d.name == h.decl
+      RETURN DISTINCT KEEP(d, "_id", "_key", "name", "decl", "module", "kind", "typeHash", "valueHash")
+)
+
+LET topologies = (
+  FOR h IN hashDocs
+    FOR t IN ig_decl_topologies
+      FILTER t.decl == h.decl
+      RETURN DISTINCT KEEP(t, "decl", "module", "ownerAwareHash", "patternHash", "roleHash")
+)
+
+RETURN {
+  hash: hashValue,
+  hashDocs,
+  declarations: decls,
+  topologies
+}
+
+-- ============================================================
+-- 2. Hybrid retrieval: exact bucket OR vector-near candidate
+-- ============================================================
+LET queryVector = @queryVector
+LET exactHash = @exactHash
+LET nProbe = @nProbe ? @nProbe : 8
+LET minSimilarity = @minSimilarity ? @minSimilarity : 0.82
+LET limit = @limit ? @limit : 25
+
+FOR doc IN ig_embedding_docs
+  FILTER HAS(doc, "embedding")
+  LET exactHit = exactHash != null AND (
+    doc.deBruijnHash == exactHash
+    OR doc.shapeHash == exactHash
+    OR doc.alphaLocalHash == exactHash
+    OR exactHash IN (doc.hashes ? doc.hashes : [])
+  )
+  LET similarity = APPROX_NEAR_COSINE(doc.embedding, queryVector, { nProbe })
+  FILTER exactHit OR similarity >= minSimilarity
+  SORT exactHit DESC, similarity DESC
+  LIMIT limit
+  RETURN {
+    key: doc._key,
+    kind: doc.kind,
+    decl: doc.decl,
+    module: doc.module,
+    exactHit,
+    similarity,
+    hashes: KEEP(doc, "deBruijnHash", "shapeHash", "alphaLocalHash", "typeHash", "valueHash"),
+    reviewOnly: true
+  }
+
+-- ============================================================
+-- 3. RDF-style predicate traversal, using edge collection projection
+-- ============================================================
+LET startId = @startId
+LET predicates = @predicates
+LET maxDepth = @maxDepth ? @maxDepth : 3
+
+FOR v, e, p IN 1..maxDepth ANY startId ig_rdf_triples
+  OPTIONS { order: "bfs", uniqueVertices: "path" }
+  FILTER e.predicate IN predicates
+  RETURN {
+    depth: LENGTH(p.edges),
+    vertex: KEEP(v, "_id", "_key", "kind", "name", "decl", "module", "label"),
+    predicate: e.predicate,
+    edge: KEEP(e, "predicate", "incidenceHash", "deBruijnIdx", "role", "source")
+  }
+
+-- ============================================================
+-- 4. Text-to-graph pivot from ArangoSearch document to wire topology
+-- ============================================================
+LET term = @term
+LET limit = @limit ? @limit : 20
+
+FOR doc IN ig_hybrid_search_view
+  SEARCH ANALYZER(
+    PHRASE(doc.text, term)
+    OR TOKENS(term, "text_en") ALL IN doc.text,
+    "text_en"
+  )
+  SORT BM25(doc) DESC
+  LIMIT limit
+  LET topology = FIRST(
+    FOR t IN ig_decl_topologies
+      FILTER t.decl == doc.decl
+      RETURN t
+  )
+  LET gates = (
+    FOR g IN ig_gates
+      FILTER g.decl == doc.decl
+      SORT g.gateKind ASC, g.operatorName ASC
+      LIMIT 10
+      RETURN KEEP(g, "gateKind", "operatorName", "gateHash")
+  )
+  RETURN {
+    textDoc: KEEP(doc, "_key", "kind", "decl", "module", "label"),
+    score: BM25(doc),
+    topology: KEEP(topology, "ownerAwareHash", "patternHash", "roleHash", "quality"),
+    gates
+  }
+
+-- ============================================================
+-- 5. Same words + same hash + same wire context
+-- ============================================================
+LET term = @term
+LET hashValue = @hashValue
+LET limit = @limit ? @limit : 20
+
+FOR doc IN ig_hybrid_search_view
+  SEARCH ANALYZER(TOKENS(term, "text_en") ALL IN doc.text, "text_en")
+  LET hasExactHash = hashValue IN (doc.hashes ? doc.hashes : [])
+      OR doc.deBruijnHash == hashValue
+      OR doc.shapeHash == hashValue
+      OR doc.alphaLocalHash == hashValue
+  FILTER hasExactHash
+  LET wireCount = LENGTH(
+    FOR w IN ig_wires
+      FILTER w.decl == doc.decl
+      RETURN 1
+  )
+  LET gateCount = LENGTH(
+    FOR g IN ig_gates
+      FILTER g.decl == doc.decl
+      RETURN 1
+  )
+  SORT BM25(doc) DESC
+  LIMIT limit
+  RETURN {
+    decl: doc.decl,
+    module: doc.module,
+    bm25: BM25(doc),
+    hashValue,
+    wireCount,
+    gateCount,
+    auditStatus: "same-text-same-hash-wire-context"
+  }
+
+-- ============================================================
+-- 6. Forbidden-pattern audit: exact gates + text + graph witnesses
+-- ============================================================
+LET forbiddenTerms = @forbiddenTerms
+LET allowedWitnesses = @allowedWitnesses
+
+FOR topo IN ig_decl_topologies
+  LET lowerModule = LOWER(topo.module)
+  FILTER CONTAINS(lowerModule, "typeiii")
+      OR CONTAINS(lowerModule, "standardform")
+      OR CONTAINS(lowerModule, "tomita")
+      OR CONTAINS(lowerModule, "kms")
+
+  LET suspiciousGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == topo.decl
+      FILTER g.gateKind == "const"
+      LET x = LOWER(g.operatorName ? g.operatorName : g.constName)
+      FILTER LENGTH(
+        FOR term IN forbiddenTerms
+          FILTER CONTAINS(x, LOWER(term))
+          RETURN term
+      ) > 0
+      RETURN DISTINCT KEEP(g, "operatorName", "constName", "gateHash", "rawExprId")
+  )
+
+  FILTER LENGTH(suspiciousGates) > 0
+
+  LET witnessGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == topo.decl
+      FILTER g.gateKind == "const"
+      LET x = g.operatorName ? g.operatorName : g.constName
+      FILTER LENGTH(
+        FOR witness IN allowedWitnesses
+          FILTER CONTAINS(x, witness)
+          RETURN witness
+      ) > 0
+      RETURN DISTINCT KEEP(g, "operatorName", "constName", "gateHash")
+  )
+
+  FILTER LENGTH(witnessGates) == 0
+
+  RETURN {
+    declaration: topo.decl,
+    module: topo.module,
+    suspiciousGates,
+    ownerAwareHash: topo.ownerAwareHash,
+    patternHash: topo.patternHash,
+    auditStatus: "hybrid-forbidden-pattern-candidate",
+    warning: "Forbidden Type III / StandardForm gate appears without configured witness gate."
+  }
+
+-- ============================================================
+-- 6b. Production raw-graph audit: Type III leakage from ig_nodes / ig_edges
+-- ============================================================
+LET rawForbiddenTerms = @forbiddenTerms
+LET rawAllowedWitnesses = @allowedWitnesses
+LET maxDepth = @maxDepth ? @maxDepth : 12
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  LET lowerModule = LOWER(d.module ? d.module : "")
+  FILTER CONTAINS(lowerModule, "typeiii")
+      OR CONTAINS(lowerModule, "standardform")
+      OR CONTAINS(lowerModule, "tomita")
+      OR CONTAINS(lowerModule, "kms")
+
+  LET roots = (
+    FOR expr, e IN OUTBOUND d ig_edges
+      FILTER e.kind == "decl_root" OR e.role == "decl_root"
+      RETURN expr
+  )
+
+  LET suspiciousConstants = (
+    FOR root IN roots
+      FOR v, ee, p IN 1..maxDepth OUTBOUND root ig_edges
+        OPTIONS { order: "bfs", uniqueVertices: "path" }
+        FILTER ee.kind IN ["ast", "const_ref"] OR ee.role IN ["ast", "const_ref"]
+        FILTER v.exprTag == "const"
+        LET info = LOWER(v.info ? v.info : (v.name ? v.name : ""))
+        FILTER LENGTH(
+          FOR term IN rawForbiddenTerms
+            FILTER CONTAINS(info, LOWER(term))
+            RETURN term
+        ) > 0
+        RETURN DISTINCT {
+          const: v.info ? v.info : v.name,
+          depth: LENGTH(p.edges),
+          rawExpr: v._key
+        }
+  )
+
+  FILTER LENGTH(suspiciousConstants) > 0
+
+  LET witnessConstants = (
+    FOR root IN roots
+      FOR v, ee IN 1..maxDepth OUTBOUND root ig_edges
+        FILTER ee.kind IN ["ast", "const_ref"] OR ee.role IN ["ast", "const_ref"]
+        FILTER v.exprTag == "const"
+        LET info = v.info ? v.info : (v.name ? v.name : "")
+        FILTER LENGTH(
+          FOR witness IN rawAllowedWitnesses
+            FILTER CONTAINS(info, witness)
+            RETURN witness
+        ) > 0
+        RETURN DISTINCT info
+  )
+
+  FILTER LENGTH(witnessConstants) == 0
+
+  RETURN {
+    declaration: d.decl ? d.decl : d.name,
+    module: d.module,
+    suspiciousConstants,
+    auditStatus: "raw-graph-trace-det-density-leakage-candidate",
+    warning: "Heuristic only: descend to Lean owner and check for explicit trace/determinant witness before making any theorem claim."
+  }
+
+-- ============================================================
+-- 7. Vector hit explanation through exact shared logic tokens
+-- ============================================================
+LET leftDecl = @leftDecl
+LET rightDecl = @rightDecl
+LET tokenLimit = @tokenLimit ? @tokenLimit : 50
+
+LET leftTokens = (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.decl == leftDecl
+    RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+)
+
+LET rightTokens = (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.decl == rightDecl
+    RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+)
+
+LET shared = INTERSECTION(leftTokens, rightTokens)
+LET unionSize = LENGTH(UNION_DISTINCT(leftTokens, rightTokens))
+
+RETURN {
+  leftDecl,
+  rightDecl,
+  sharedTokenCount: LENGTH(shared),
+  unionSize,
+  exactJaccard: unionSize == 0 ? 0 : LENGTH(shared) / unionSize,
+  sharedTokens: SLICE(shared, 0, tokenLimit),
+  note: "Use this exact explanation after any vector-near result."
+}
+
+-- ============================================================
+-- 8. Translation candidate descent: vector/text candidate to raw Lean owner
+-- ============================================================
+LET candidateDecl = @candidateDecl
+
+LET rawDecl = FIRST(
+  FOR d IN ig_nodes
+    FILTER d.graphKind == "decl"
+    FILTER d.decl == candidateDecl OR d.name == candidateDecl
+    RETURN d
+)
+
+LET topology = FIRST(
+  FOR t IN ig_decl_topologies
+    FILTER t.decl == candidateDecl
+    RETURN t
+)
+
+LET constGates = (
+  FOR g IN ig_gates
+    FILTER g.decl == candidateDecl
+    FILTER g.gateKind == "const"
+    SORT g.operatorName ASC
+    RETURN DISTINCT KEEP(g, "operatorName", "constName", "gateHash", "rawExprId")
+)
+
+LET rawConstRefs = (
+  FOR v, e IN 1..1 OUTBOUND rawDecl ig_edges
+    FILTER e.kind == "const_ref" OR e.role == "const_ref"
+    RETURN DISTINCT KEEP(v, "_id", "_key", "name", "decl", "module")
+)
+
+RETURN {
+  candidateDecl,
+  rawDecl: KEEP(rawDecl, "_id", "_key", "name", "decl", "module", "kind", "path"),
+  topology: KEEP(topology, "ownerAwareHash", "patternHash", "roleHash", "quality"),
+  constGates,
+  rawConstRefs,
+  nextStep: "Descend to Lean source and validate; do not treat this GraphRAG result as proof."
+}

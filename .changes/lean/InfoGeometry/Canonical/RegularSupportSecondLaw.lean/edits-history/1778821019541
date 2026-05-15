@@ -1,0 +1,1 @@
+{"file":"/home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/RegularSupportSecondLaw.lean","time":1778821019541,"baseTime":1778821018731,"changes":[{"range":{"start":{"line":139,"character":0},"end":{"line":143,"character":0}},"text":"  rw [hOrth, zero_mul]\n\nend InfoGeometry.Canonical.RegularSupportSecondLaw\n","rangeOffset":4068,"rangeLength":89}]}

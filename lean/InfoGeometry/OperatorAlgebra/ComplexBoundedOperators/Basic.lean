@@ -80,7 +80,8 @@ theorem id_comp (T : CBO E F) :
   ext x
   rfl
 
-theorem comp_assoc (R : CBO G G) (S : CBO F G) (T : CBO E F) :
+theorem comp_assoc {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
+    (R : CBO G H) (S : CBO F G) (T : CBO E F) :
     comp (comp R S) T = comp R (comp S T) := by
   ext x
   rfl
@@ -141,13 +142,13 @@ theorem norm_comp_le (S : CBO F G) (T : CBO E F) :
 theorem comp_zero (S : CBO F G) :
     comp S (0 : CBO E F) = 0 := by
   ext x
-  rfl
+  simp only [comp_apply, zero_apply, map_zero]
 
 @[simp]
 theorem zero_comp (T : CBO E F) :
     comp (0 : CBO F G) T = 0 := by
   ext x
-  rfl
+  simp only [comp_apply, zero_apply]
 
 end Basic
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators

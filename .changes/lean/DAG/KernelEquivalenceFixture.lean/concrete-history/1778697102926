@@ -1,0 +1,1 @@
+{"type":"new","contents":"import Mathlib\n\nnamespace DAG.KernelEquivalenceFixture\n\ndef twoA : Nat := 1 + 1\n\ndef twoB : Nat := 2\n\ndef three : Nat := 3\n\ntheorem trueA : True := by\n  trivial\n\ntheorem trueB : True := by\n  trivial\n\nend DAG.KernelEquivalenceFixture\n","mtime":1778697102926}

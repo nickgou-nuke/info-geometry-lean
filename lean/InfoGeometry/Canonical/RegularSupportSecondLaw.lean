@@ -21,11 +21,20 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.RegularSupportSecondLaw
 
-/-- Abstract modular flow by multiplicative equivalences. -/
+/-! ## 1. Modular flow and expectation states -/
+
+/--
+Abstract modular flow by ring equivalences.
+
+The no-leakage theorem only needs multiplicativity, but the defect-complement
+fixedness theorem uses subtraction:
+
+`sigma t (1 - p) = 1 - sigma t p`.
+-/
 @[rep_depth krein]
-structure ModularFlow (Op : Type*) [Monoid Op] where
-  sigma : ℝ → Op ≃* Op
-  sigma_zero : sigma 0 = MulEquiv.refl Op
+structure ModularFlow (Op : Type*) [Ring Op] where
+  sigma : ℝ → Op ≃+* Op
+  sigma_zero : sigma 0 = RingEquiv.refl Op
   sigma_add : ∀ s t : ℝ, sigma (s + t) = (sigma s).trans (sigma t)
 
 /-- Expectation state, not assumed tracial. -/
@@ -37,11 +46,13 @@ structure RealExpectationState
   zero : expect 0 = 0
   positive : ∀ x : Op, 0 ≤ expect (star x * x)
 
+/-! ## 2. Drazin regular support -/
+
 /--
 Drazin regular support.
 
-`p = A * AD` is required to be a self-adjoint projection.  `q` is the defect
-complement.
+`p = A * AD` is required to be a self-adjoint projection.  `q = 1 - p` is the
+defect complement.
 -/
 @[rep_depth krein]
 structure DrazinRegularSupport (Op : Type*) [Ring Op] [Star Op] where
@@ -76,6 +87,62 @@ def ModularFixedSupport
     (flow : ModularFlow Op) (D : DrazinRegularSupport Op) : Prop :=
   ∀ t : ℝ, flow.sigma t D.p = D.p
 
+/-- The defect complement annihilates the regular support on the left. -/
+@[rep_depth krein]
+theorem defect_mul_regular_eq_zero
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinRegularSupport Op) :
+    D.q * D.p = 0 := by
+  rw [D.q_def]
+  calc
+    (1 - D.p) * D.p = 1 * D.p - D.p * D.p := by
+      rw [sub_mul]
+    _ = D.p - D.p := by
+      rw [one_mul, D.p_idempotent]
+    _ = 0 := by
+      rw [sub_self]
+
+/-- The regular support annihilates the defect complement on the right. -/
+@[rep_depth krein]
+theorem regular_mul_defect_eq_zero
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinRegularSupport Op) :
+    D.p * D.q = 0 := by
+  rw [D.q_def]
+  calc
+    D.p * (1 - D.p) = D.p * 1 - D.p * D.p := by
+      rw [mul_sub]
+    _ = D.p - D.p := by
+      rw [mul_one, D.p_idempotent]
+    _ = 0 := by
+      rw [sub_self]
+
+/--
+If the regular support is modularly fixed, the defect complement is fixed too.
+
+This is the theorem-safe nuance: the complement is algebraically preserved as
+`1 - p`, but it is not the regular heat lane.
+-/
+@[rep_depth krein]
+theorem defect_support_modular_fixed
+    {Op : Type*} [Ring Op] [Star Op]
+    (flow : ModularFlow Op)
+    (D : DrazinRegularSupport Op)
+    (hFix : ModularFixedSupport flow D) :
+    ∀ t : ℝ, flow.sigma t D.q = D.q := by
+  intro t
+  calc
+    flow.sigma t D.q = flow.sigma t (1 - D.p) := by
+      rw [D.q_def]
+    _ = flow.sigma t 1 - flow.sigma t D.p := by
+      rw [map_sub]
+    _ = 1 - D.p := by
+      rw [map_one, hFix t]
+    _ = D.q := by
+      rw [D.q_def]
+
+/-! ## 3. Compressed state on the regular corner -/
+
 /--
 Compressed regular state packet.
 
@@ -93,6 +160,8 @@ structure CompressedRegularState
     ∀ x : Op,
       compressedState.expect x =
         compressedState.expect (D.p * x * D.p)
+
+/-! ## 4. Regular Onsager / metriplectic dissipator -/
 
 /--
 Regular Onsager dissipator.
@@ -149,6 +218,8 @@ theorem dissipator_preserves_regular_corner
     InRegularCorner D (ΛA.Λ x) :=
   ΛA.regular_preserving D x hx
 
+/-! ## 5. No-leakage from modular fixedness -/
+
 /-- Leakage from the regular Drazin support into the defect complement. -/
 @[rep_depth krein]
 def leakageOperator
@@ -167,66 +238,51 @@ def rightLeakageOperator
     (t : ℝ) : Op :=
   D.p * flow.sigma t D.p * D.q
 
-/--
-If the support is modularly fixed and `q * p = 0`, then there is no left
-leakage.
--/
+/-- Modular fixedness gives no left leakage into the defect sector. -/
 @[rep_depth krein]
 theorem no_left_leakage_of_modular_fixed_support
     {Op : Type*} [Ring Op] [Star Op]
     (flow : ModularFlow Op)
     (D : DrazinRegularSupport Op)
-    (hFix : ModularFixedSupport flow D)
-    (hOrth : D.q * D.p = 0) :
+    (hFix : ModularFixedSupport flow D) :
     ∀ t : ℝ, leakageOperator flow D t = 0 := by
   intro t
   unfold leakageOperator
-  unfold ModularFixedSupport at hFix
   rw [hFix t]
   calc
     D.q * D.p * D.p = (D.q * D.p) * D.p := rfl
-    _ = 0 * D.p := by rw [hOrth]
+    _ = 0 * D.p := by rw [defect_mul_regular_eq_zero D]
     _ = 0 := by simp
 
-/--
-If the support is modularly fixed and `p * q = 0`, then there is no right
-leakage.
--/
+/-- Modular fixedness gives no right leakage into the defect sector. -/
 @[rep_depth krein]
 theorem no_right_leakage_of_modular_fixed_support
     {Op : Type*} [Ring Op] [Star Op]
     (flow : ModularFlow Op)
     (D : DrazinRegularSupport Op)
-    (hFix : ModularFixedSupport flow D)
-    (hOrth : D.p * D.q = 0) :
+    (hFix : ModularFixedSupport flow D) :
     ∀ t : ℝ, rightLeakageOperator flow D t = 0 := by
   intro t
   unfold rightLeakageOperator
-  unfold ModularFixedSupport at hFix
   rw [hFix t]
   calc
     D.p * D.p * D.q = (D.p * D.p) * D.q := rfl
     _ = D.p * D.q := by rw [D.p_idempotent]
-    _ = 0 := hOrth
+    _ = 0 := regular_mul_defect_eq_zero D
 
-/--
-No-leakage package: modular fixedness plus orthogonality forbids leakage in
-both directions.
--/
+/-- Modular fixedness gives two-sided no leakage. -/
 @[rep_depth krein]
 theorem no_leakage_of_modular_fixed_support
     {Op : Type*} [Ring Op] [Star Op]
     (flow : ModularFlow Op)
     (D : DrazinRegularSupport Op)
-    (hFix : ModularFixedSupport flow D)
-    (hLeftOrth : D.q * D.p = 0)
-    (hRightOrth : D.p * D.q = 0) :
+    (hFix : ModularFixedSupport flow D) :
     (∀ t : ℝ, leakageOperator flow D t = 0)
       ∧
     (∀ t : ℝ, rightLeakageOperator flow D t = 0) :=
   ⟨
-    no_left_leakage_of_modular_fixed_support flow D hFix hLeftOrth,
-    no_right_leakage_of_modular_fixed_support flow D hFix hRightOrth
+    no_left_leakage_of_modular_fixed_support flow D hFix,
+    no_right_leakage_of_modular_fixed_support flow D hFix
   ⟩
 
 /-- Leakage energy measured by an expectation state. -/
@@ -249,13 +305,14 @@ theorem leakage_energy_zero_of_modular_fixed_support
     (φA : RealExpectationState Op)
     (flow : ModularFlow Op)
     (D : DrazinRegularSupport Op)
-    (hFix : ModularFixedSupport flow D)
-    (hOrth : D.q * D.p = 0) :
+    (hFix : ModularFixedSupport flow D) :
     ∀ t : ℝ, leakageEnergy φA flow D t = 0 := by
   intro t
   unfold leakageEnergy
-  rw [no_left_leakage_of_modular_fixed_support flow D hFix hOrth t]
+  rw [no_left_leakage_of_modular_fixed_support flow D hFix t]
   simpa using φA.zero
+
+/-! ## 6. Defect memory sector -/
 
 /--
 Defect memory readout.
@@ -322,8 +379,8 @@ theorem split_second_law_on_regular_corner
 /--
 Certificate packet for the regular-support Second Law lane.
 
-It packages the state, flow, Drazin support, dissipator, modular fixedness, and
-two-sided orthogonality used by the no-leakage theorems.
+It packages the state, flow, Drazin support, dissipator, and modular fixedness.
+Orthogonality is theorem-owned from `q = 1 - p` and `p * p = p`.
 -/
 @[rep_depth krein]
 structure RegularSupportSecondLawCertificate
@@ -333,8 +390,6 @@ structure RegularSupportSecondLawCertificate
   support : DrazinRegularSupport Op
   dissipator : RegularOnsagerDissipator Op
   support_fixed : ModularFixedSupport flow support
-  left_orthogonal : support.q * support.p = 0
-  right_orthogonal : support.p * support.q = 0
 
 /-- Certificate readback: modular fixed support gives two-sided no leakage. -/
 @[rep_depth krein]
@@ -345,7 +400,15 @@ theorem certificate_no_leakage
       ∧
     (∀ t : ℝ, rightLeakageOperator C.flow C.support t = 0) :=
   no_leakage_of_modular_fixed_support
-    C.flow C.support C.support_fixed C.left_orthogonal C.right_orthogonal
+    C.flow C.support C.support_fixed
+
+/-- Certificate readback: the defect complement is modularly fixed. -/
+@[rep_depth krein]
+theorem certificate_defect_modular_fixed
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (C : RegularSupportSecondLawCertificate Op) :
+    ∀ t : ℝ, C.flow.sigma t C.support.q = C.support.q :=
+  defect_support_modular_fixed C.flow C.support C.support_fixed
 
 /-- Certificate readback: the Second Law holds on the regular corner. -/
 @[rep_depth krein]
@@ -364,24 +427,72 @@ theorem certificate_leakage_energy_zero
     (C : RegularSupportSecondLawCertificate Op) :
     ∀ t : ℝ, leakageEnergy C.state C.flow C.support t = 0 :=
   leakage_energy_zero_of_modular_fixed_support
-    C.state C.flow C.support C.support_fixed C.left_orthogonal
+    C.state C.flow C.support C.support_fixed
 
-/-- Owner target for the regular-support Second Law socket. -/
+/-- Packet for the regular-support Second Law socket over a fixed algebra. -/
 @[rep_depth krein]
-def RegularSupportSecondLawTarget : Prop :=
-  ∃ Op : Type,
-    ∃ (_hRing : Ring Op)
-      (_hStar : Star Op)
-      (_hSmul : SMul ℝ Op) ,
-      Nonempty (RegularHeatDefectMemorySplit Op)
+structure RegularSupportSecondLawPacket
+    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] where
+  flow : ModularFlow Op
+  state : RealExpectationState Op
+  support : DrazinRegularSupport Op
+  support_modular_fixed : ModularFixedSupport flow support
+  dissipator : RegularOnsagerDissipator Op
+
+namespace RegularSupportSecondLawPacket
+
+variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+
+/-- Convert a packet to the certificate API. -/
+@[rep_depth krein]
+def toCertificate
+    (P : RegularSupportSecondLawPacket Op) :
+    RegularSupportSecondLawCertificate Op where
+  state := P.state
+  flow := P.flow
+  support := P.support
+  dissipator := P.dissipator
+  support_fixed := P.support_modular_fixed
+
+/-- Packet readback: entropy production is nonnegative on the regular corner. -/
+@[rep_depth krein]
+theorem entropy_nonnegative
+    (P : RegularSupportSecondLawPacket Op)
+    (x : Op)
+    (hx : InRegularCorner P.support x) :
+    0 ≤ entropyProduction P.state P.dissipator x :=
+  certificate_second_law P.toCertificate x hx
+
+/-- Packet readback: modular fixed support gives two-sided no leakage. -/
+@[rep_depth krein]
+theorem no_leakage
+    (P : RegularSupportSecondLawPacket Op) :
+    (∀ t : ℝ, leakageOperator P.flow P.support t = 0)
+      ∧
+    (∀ t : ℝ, rightLeakageOperator P.flow P.support t = 0) :=
+  certificate_no_leakage P.toCertificate
+
+/-- Packet readback: the defect complement is modularly fixed. -/
+@[rep_depth krein]
+theorem defect_modular_fixed
+    (P : RegularSupportSecondLawPacket Op) :
+    ∀ t : ℝ, P.flow.sigma t P.support.q = P.support.q :=
+  certificate_defect_modular_fixed P.toCertificate
+
+end RegularSupportSecondLawPacket
+
+/-- Owner target for the regular-support Second Law socket over a fixed algebra. -/
+@[rep_depth krein]
+def RegularSupportSecondLawTarget
+    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] : Prop :=
+  Nonempty (RegularHeatDefectMemorySplit Op)
 
 /-- Constructor for the regular-support Second Law target. -/
 @[rep_depth krein]
 theorem constructRegularSupportSecondLawTarget
     {Op : Type} [Ring Op] [Star Op] [SMul ℝ Op]
     (S : RegularHeatDefectMemorySplit Op) :
-    RegularSupportSecondLawTarget := by
-  exact
-    ⟨Op, inferInstance, inferInstance, inferInstance , ⟨S⟩⟩
+    RegularSupportSecondLawTarget Op := by
+  exact ⟨S⟩
 
 end InfoGeometry.Canonical.RegularSupportSecondLaw

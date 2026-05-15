@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
+import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.FractalCantorFockWitness

@@ -1,0 +1,93 @@
+{
+  "key": "region_spacetime_closure_2026_05_13",
+  "label": "Spacetime Closure Dual-Map Atlas",
+  "description": "Seed region for the 15-module Drazin-Hodge-Souriau-KMS-Hestenes-Connes-Moebius-D4-O55 closure corridor. This is an audit/navigation region over derived wire topology, not proof evidence.",
+  "date": "2026-05-13",
+  "authority": "Lean kernel and compiled declarations remain proof authority; Arango wire topology is a derived audit/navigation overlay.",
+  "sourceCollections": [
+    "ig_nodes",
+    "ig_edges",
+    "ig_wires",
+    "ig_gates",
+    "ig_wire_edges",
+    "ig_decl_topologies",
+    "ig_logic_tokens",
+    "ig_logic_vectors"
+  ],
+  "seedModules": [
+    {
+      "module": "InfoGeometry.Canonical.InverseKernelAlgebra",
+      "subregion": "drazin-hodge-projector-arrow-algebra"
+    },
+    {
+      "module": "InfoGeometry.Canonical.DrazinLightConeDictionary",
+      "subregion": "drazin-hodge-projector-arrow-algebra"
+    },
+    {
+      "module": "InfoGeometry.Canonical.DrazinHodgeChiralBridge",
+      "subregion": "drazin-hodge-projector-arrow-algebra"
+    },
+    {
+      "module": "InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge",
+      "subregion": "souriau-kms-modular-energy-accounting"
+    },
+    {
+      "module": "InfoGeometry.Canonical.SouriauModularHamiltonianBridge",
+      "subregion": "souriau-kms-modular-energy-accounting"
+    },
+    {
+      "module": "InfoGeometry.Canonical.BoundedModularFlowCalibration",
+      "subregion": "souriau-kms-modular-energy-accounting"
+    },
+    {
+      "module": "InfoGeometry.Canonical.StandardFormNaturalConeBridge",
+      "subregion": "hestenes-krein-real-geometry-vacuum-readout"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesModularKMSBridge",
+      "subregion": "hestenes-krein-real-geometry-vacuum-readout"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesKreinVacuumBridge",
+      "subregion": "hestenes-krein-real-geometry-vacuum-readout"
+    },
+    {
+      "module": "InfoGeometry.Canonical.StandardFormOmegaVolumeBridge",
+      "subregion": "hestenes-krein-real-geometry-vacuum-readout"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesConnesWilsonBridge",
+      "subregion": "connes-wilson-moebius-projective-holonomy"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesMoebiusClosureBridge",
+      "subregion": "connes-wilson-moebius-projective-holonomy"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesD4HurwitzBridge",
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesCPTONNDualityBridge",
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+    },
+    {
+      "module": "InfoGeometry.Krein.HestenesAffineO55ClosureBridge",
+      "subregion": "d4-hurwitz-o55-affine-arithmetic-socket"
+    }
+  ],
+  "expectedSubregions": [
+    "drazin-hodge-projector-arrow-algebra",
+    "souriau-kms-modular-energy-accounting",
+    "hestenes-krein-real-geometry-vacuum-readout",
+    "connes-wilson-moebius-projective-holonomy",
+    "d4-hurwitz-o55-affine-arithmetic-socket"
+  ],
+  "auditQueries": [
+    "declaration dual schematic",
+    "hash portal",
+    "isomorphic wiring candidates",
+    "shared wire-token explanation",
+    "Type III / StandardForm category-error audit"
+  ]
+}

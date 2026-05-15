@@ -1,8 +1,7 @@
 # DAG Toolchain and Alexandria Trace
 
-> Status: `reference memory`
-> Audited: 2026-05-02
-> Note: Re-audit against current code before using for policy, design claims, or status.
+> Status: `maintained operations trace`
+> Audited: 2026-05-14 against the current scripts.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
 This document records the analysis chain and toolchain usage map for the managed DAG lane, `tools/infra`, and `tools/alexandria`.
@@ -50,6 +49,9 @@ Findings:
 - `dag_status.py` and `dag_doctor.py` are observability/diagnostic surfaces.
 - `dag_manifest.py` stamps a single manifest over refreshed state.
 - `dag_all.py` composes status -> refresh -> reports -> doctor.
+- `run_full_dag_toolchain.py` is a separate strict local pipeline. It does not
+  read `dag-toolchain.json`, and it is not the same execution contract as
+  `dagAll`.
 
 ### 2) Verify build locking and reproducibility controls
 
@@ -149,6 +151,15 @@ Lifecycle:
 3. Run derived report sequence from config.
 4. Diagnose policy/freshness/environment and suggest next commands.
 
+The current `dagAll` wrapper performs exactly:
+
+```text
+dagStatus -> dagRefresh -> dagReports -> dagDoctor
+```
+
+It stops at the first failing stage. If `dagRefresh` fails because
+`InfoGeometry.All` does not build, the later reports are not fresh.
+
 ## Authoritative export chain
 
 1. Lean indexer (`lean/DAG/Indexer.lean`) emits DAG artifacts.
@@ -162,6 +173,21 @@ Lifecycle:
 
 - `tools/infra/dag_reports.py` reads `dag-toolchain.json` `reportSequence` and executes each step.
 - Outputs under `reports/dag/` and timing sidecars under artifacts lane.
+- Current managed reports include `generate_expr_alpha_dedup.py` and
+  `generate_source_sink_compression.py`.
+- `generate_structural_dedup.py` and `generate_semantic_quotient.py` are
+  explicit side tools, not current `dagReports` steps.
+
+## Source closure-debt scanner
+
+`tools/quality/closure_debt_crawler.py` is a source-level scanner despite its
+historical filename. It scans Lean files and reports proof holes, global
+assumptions, skeletal proofs, vacuous props, witness packaging, and placeholder
+surfaces.
+
+It is not a DAG reachability engine and is not an Arango pass. Use it to
+identify open sockets and empty owners in source text, especially when
+`dagRefresh` is blocked.
 
 ## Arango chains
 
@@ -170,6 +196,8 @@ Lifecycle:
 - Lean export -> JSONL (`ig_nodes`, `ig_edges`, topology overlays, raw infotree rows)
 - Ingest scripts populate Arango collections.
 - Overlay analytics scripts compute additional navigation/diagnostic views.
+- This lane is downstream of the native Lean DAG export. If `dagDoctor` reports
+  stale source/olean hashes, live Arango cannot be treated as current.
 
 ### Alexandria retrieval lane
 

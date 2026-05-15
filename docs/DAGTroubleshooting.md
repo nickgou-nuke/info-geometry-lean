@@ -1,7 +1,7 @@
 # DAG Troubleshooting
 
 > Status: `maintained local guide`
-> Audited: 2026-05-02
+> Audited: 2026-05-14 against current scripts.
 > Note: Current for this subsystem, but subordinate to repo-wide authority docs and code.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
@@ -101,6 +101,17 @@ If the underlying Lean build is the issue, fix the build first and rerun:
 lake script run dagAll
 ```
 
+If the failure is a prebuild failure for `InfoGeometry.All`, no fresh native DAG
+was generated. Do not run Arango overlay analysis as if it describes current
+source. Use source-level audits until the build blocker is fixed.
+
+Common prebuild symptoms:
+
+- Lean module typeclass failures.
+- syntax errors in newly imported files.
+- unresolved identifiers from half-installed bridge modules.
+- `InfoGeometry.All` imports a broken experimental module.
+
 ## Coverage Policy Failed (Partial Graph)
 
 If `generate_causal_report.py` or `dagDoctor` fails on coverage policy, check
@@ -118,6 +129,48 @@ python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.
 ```
 
 Use this only as an explicit diagnostic mode. Do not treat it as strict green health.
+
+## I Need To Find Open Sockets While The DAG Is Blocked
+
+Run the source closure-debt scanner:
+
+```bash
+python3 tools/quality/closure_debt_crawler.py \
+  --root lean/InfoGeometry \
+  --json-out reports/audit/closure-debt-crawler.json \
+  --md-out reports/audit/closure-debt-crawler.md \
+  --print-summary
+```
+
+This does not depend on a fresh DAG. It finds source-level debt patterns such as
+`Prop := True`, `sorry`, `admit`, `axiom`, skeletal one-line proofs, witness
+packets, and bridge/socket naming surfaces.
+
+It is not a graph crawler. It does not answer source-sink chain or Mathlib
+reachability questions.
+
+Use `--strict` only when you want hard findings to return nonzero.
+
+## I Need Source-Sink Chains Or Mathlib Reachability
+
+Use native DAG reports first:
+
+```bash
+lake script run dagRefresh
+lake script run dagReports
+lake script run dagDoctor
+```
+
+The relevant local reports are produced by:
+
+- `tools/infra/generate_source_sink_compression.py`
+- `tools/infra/generate_causal_report.py`
+- `tools/theorem_significance.py`
+
+If `dagRefresh` fails, these reports are stale or unavailable for current
+source. Fix the build or run only source-level audits.
+
+Run Arango only after native DAG refresh and ingest/descent verification.
 
 ## Blueprint Or Depth Tags Look Wrong
 
@@ -172,3 +225,11 @@ Use this order unless you have a specific reason not to:
 1. `lake script run dagDoctor`
 2. `lake script run dagAll`
 3. `lake script run changedVerify` for changed Lean work
+
+For current-source graph work, the hard gate is:
+
+```text
+InfoGeometry.All builds
+dagRefresh succeeds
+dagDoctor does not report stale source/olean hashes
+```

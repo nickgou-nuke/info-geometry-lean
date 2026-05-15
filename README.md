@@ -148,6 +148,32 @@ python3 tools/quality/placeholder_audit.py \
   --signals-out reports/audit/repo-placeholder-signals.json
 ```
 
+For agentic file-by-file audit, run the resumable wrapper. It invokes
+`closure_debt_crawler.py` once per Lean file and passes each generated prompt to
+the configured coding agent:
+
+```bash
+python3 tools/quality/run_agentic_closure_debt_audit.py \
+  --root lean \
+  --coding-agent-command 'codex exec --json' \
+  --out-dir reports/audit/agentic-closure-debt \
+  --print-progress
+```
+
+Smoke run:
+
+```bash
+python3 tools/quality/run_agentic_closure_debt_audit.py \
+  --root lean \
+  --coding-agent-command 'codex exec --json' \
+  --limit 1 \
+  --print-progress
+```
+
+This is an audit lane, not a proof lane. The agent reports gaps and repair
+strategies; closing a gap still requires Lean edits and successful targeted
+`lake env lean` / `lake build`.
+
 2. Prioritize work in this order
 - P0: hard findings (`sorry`, `admit`, unsafe proof holes)
 - P1: owner-target propositions that currently lack theorem-backed constructive chains

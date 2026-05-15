@@ -325,6 +325,142 @@ def arithmeticOccupationHamiltonian
     (σ : SpinConfiguration (n := n)) : ℂ :=
   (C.occupationPairEnergy σ : ℂ) + C.arithmeticFieldEnergy s σ
 
+/-! ## Centered Lee--Yang prime chain -/
+
+/-- Centered occupation `k - 1/2`, the particle-hole odd coordinate. -/
+def centeredOccupation
+    (σ : IsingSpin) : ℝ :=
+  occupation σ - (1 / 2 : ℝ)
+
+@[simp]
+theorem centeredOccupation_up :
+    centeredOccupation IsingSpin.up = (1 / 2 : ℝ) := by
+  norm_num [centeredOccupation]
+
+@[simp]
+theorem centeredOccupation_down :
+    centeredOccupation IsingSpin.down = -(1 / 2 : ℝ) := by
+  norm_num [centeredOccupation]
+
+/--
+Centered logarithmic energy
+
+`A_N = Σᵢ log(pᵢ) (kᵢ - 1/2)`.
+-/
+def centeredLogEnergy
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  ∑ i : Fin n, C.siteEnergy i * centeredOccupation (σ i)
+
+/-- The centered logarithmic energy is half the weighted spin magnetization. -/
+theorem centeredLogEnergy_eq_half_spinSum
+    (σ : SpinConfiguration (n := n)) :
+    C.centeredLogEnergy σ =
+      (1 / 2 : ℝ) * ∑ i : Fin n, C.siteEnergy i * IsingSpin.sign (σ i) := by
+  unfold centeredLogEnergy centeredOccupation occupation IsingSpin.sign
+  rw [Finset.mul_sum]
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  cases σ i <;> ring
+
+/--
+Centered Lee--Yang spin coupling
+
+`Jᵢⱼ = κ/2 log(pᵢ) log(pⱼ)`.
+
+This is the coefficient in the standard convention
+`-Σ_{i<j} Jᵢⱼ σᵢσⱼ`.
+-/
+def centeredSpinCoupling
+    (i j : Fin n) : ℝ :=
+  (C.kappa / 2) * C.siteEnergy i * C.siteEnergy j
+
+/-- Centered spin coupling is nonnegative. -/
+theorem centeredSpinCoupling_nonneg
+    (i j : Fin n) :
+    0 ≤ C.centeredSpinCoupling i j := by
+  unfold centeredSpinCoupling
+  exact mul_nonneg (mul_nonneg (div_nonneg C.kappa_nonneg (by norm_num))
+    (C.siteEnergy_nonneg i)) (C.siteEnergy_nonneg j)
+
+/-- Centered spin coupling is symmetric. -/
+theorem centeredSpinCoupling_symm
+    (i j : Fin n) :
+    C.centeredSpinCoupling i j = C.centeredSpinCoupling j i := by
+  unfold centeredSpinCoupling
+  ring
+
+/-- Positive coupling scale gives strictly positive centered couplings. -/
+theorem centeredSpinCoupling_pos
+    (hκ : 0 < C.kappa)
+    (i j : Fin n) :
+    0 < C.centeredSpinCoupling i j := by
+  unfold centeredSpinCoupling
+  exact mul_pos (mul_pos (div_pos hκ (by norm_num)) (C.siteEnergy_pos i))
+    (C.siteEnergy_pos j)
+
+/-- Centered Lee--Yang external field `hᵢ(w) = -w/2 log(pᵢ)`. -/
+def centeredField
+    (w : ℝ)
+    (i : Fin n) : ℝ :=
+  -(w / 2) * C.siteEnergy i
+
+/-- Complex shifted Riemann/Mellin parameter `w = s - 1/2`. -/
+def shiftedRiemannParameter
+    (s : ℂ) : ℂ :=
+  s - (1 / 2 : ℂ)
+
+/-- Local shifted arithmetic fugacity `yᵢ(s) = exp(-(s - 1/2) log pᵢ)`. -/
+def shiftedPrimeFugacity
+    (s : ℂ)
+    (i : Fin n) : ℂ :=
+  Complex.exp (-(shiftedRiemannParameter s) * (C.siteEnergy i : ℂ))
+
+/-- On the critical line, every shifted local fugacity has squared norm one. -/
+theorem shiftedPrimeFugacity_normSq_of_criticalLine
+    (s : ℂ)
+    (hs : OnCriticalLine s)
+    (i : Fin n) :
+    Complex.normSq (C.shiftedPrimeFugacity s i) = 1 := by
+  unfold shiftedPrimeFugacity shiftedRiemannParameter OnCriticalLine at *
+  have hre : (-(s - (1 / 2 : ℂ)) * (C.siteEnergy i : ℂ)).re = 0 := by
+    simp [Complex.mul_re, hs]
+  rw [Complex.normSq_eq_norm_sq, Complex.norm_exp, hre]
+  norm_num
+
+/--
+Centered occupation coupling
+
+`Jᵢⱼ^occ = 2κ log(pᵢ) log(pⱼ)`, the attractive lattice-gas coefficient for
+`-Σ_{i<j} Jᵢⱼ^occ kᵢkⱼ` under the same centered sign convention.
+-/
+def centeredOccupationCoupling
+    (i j : Fin n) : ℝ :=
+  2 * C.kappa * C.siteEnergy i * C.siteEnergy j
+
+/-- Centered occupation coupling is nonnegative. -/
+theorem centeredOccupationCoupling_nonneg
+    (i j : Fin n) :
+    0 ≤ C.centeredOccupationCoupling i j := by
+  unfold centeredOccupationCoupling
+  exact mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) C.kappa_nonneg)
+    (C.siteEnergy_nonneg i)) (C.siteEnergy_nonneg j)
+
+/-- Positive coupling scale gives strictly positive centered occupation couplings. -/
+theorem centeredOccupationCoupling_pos
+    (hκ : 0 < C.kappa)
+    (i j : Fin n) :
+    0 < C.centeredOccupationCoupling i j := by
+  unfold centeredOccupationCoupling
+  exact mul_pos (mul_pos (mul_pos (by norm_num) hκ) (C.siteEnergy_pos i))
+    (C.siteEnergy_pos j)
+
+/-- Centered occupation coupling is symmetric. -/
+theorem centeredOccupationCoupling_symm
+    (i j : Fin n) :
+    C.centeredOccupationCoupling i j = C.centeredOccupationCoupling j i := by
+  unfold centeredOccupationCoupling
+  ring
+
 /--
 Lee--Yang stability socket for a concrete finite prime chain.
 
@@ -396,5 +532,30 @@ theorem primeLeeYangOccupationConventionTarget :
     PrimeLeeYangOccupationConventionTarget := by
   intro n C i j
   exact ⟨rfl, C.occupationPairCoefficient_symm i j, C.occupationPairCoefficient_neg i j⟩
+
+/--
+Owner target for the centered Lee--Yang convention:
+`A_N = Σ log(pᵢ)(kᵢ - 1/2)`, `Jᵢⱼ = κ/2 log(pᵢ)log(pⱼ)`,
+and `Jᵢⱼ^occ = 2κ log(pᵢ)log(pⱼ)`.
+-/
+def PrimeLeeYangCenteredConventionTarget : Prop :=
+  ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
+    C.centeredSpinCoupling i j = (C.kappa / 2) * C.siteEnergy i * C.siteEnergy j ∧
+      0 ≤ C.centeredSpinCoupling i j ∧
+      C.centeredSpinCoupling i j = C.centeredSpinCoupling j i ∧
+      C.centeredOccupationCoupling i j =
+        2 * C.kappa * C.siteEnergy i * C.siteEnergy j ∧
+      0 ≤ C.centeredOccupationCoupling i j
+
+/-- The centered convention target follows from the explicit prime logarithms. -/
+theorem primeLeeYangCenteredConventionTarget :
+    PrimeLeeYangCenteredConventionTarget := by
+  intro n C i j
+  exact ⟨
+    rfl,
+    C.centeredSpinCoupling_nonneg i j,
+    C.centeredSpinCoupling_symm i j,
+    rfl,
+    C.centeredOccupationCoupling_nonneg i j⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

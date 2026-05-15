@@ -206,6 +206,8 @@ import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
+import InfoGeometry.Canonical.PrimeLeeYangRHBridge
+import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.ModularRegularSupport
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 import InfoGeometry.Canonical.RegularSupportSecondLaw

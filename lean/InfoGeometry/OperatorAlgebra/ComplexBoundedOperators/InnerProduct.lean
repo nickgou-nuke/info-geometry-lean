@@ -25,8 +25,8 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 /-! ## Sesquilinear inner-product laws -/
 
 theorem cinner_commute (x y : E) :
-    ⟪x, y⟫_ℂ = star ⟪y, x⟫_ℂ := by
-  rw [inner_conj_symm]
+    ⟪x, y⟫_ℂ = star ⟪y, x⟫_ℂ :=
+  (inner_conj_symm x y).symm
 
 theorem cinner_add_left (x y z : E) :
     ⟪x + y, z⟫_ℂ = ⟪x, z⟫_ℂ + ⟪y, z⟫_ℂ :=
@@ -55,8 +55,12 @@ theorem cinner_diff_right (x y z : E) :
 theorem cinner_eq_flip {x y z w : E} :
     (⟪x, y⟫_ℂ = ⟪z, w⟫_ℂ) ↔ (⟪y, x⟫_ℂ = ⟪w, z⟫_ℂ) := by
   constructor <;> intro h
-  · rw [cinner_commute, cinner_commute, h]
-  · rw [cinner_commute, cinner_commute, h]
+  · conv_lhs => rw [cinner_commute]
+    conv_rhs => rw [cinner_commute]
+    rw [h]
+  · conv_lhs => rw [cinner_commute]
+    conv_rhs => rw [cinner_commute]
+    rw [h]
 
 @[simp]
 theorem im_cinner_self (x : E) :
@@ -64,11 +68,11 @@ theorem im_cinner_self (x : E) :
   inner_self_im x
 
 theorem cinner_smul_real_left (r : ℝ) (x y : E) :
-    ⟪r • x, y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
+    ⟪(r : ℂ) • x, y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
   rw [inner_smul_real_left]
 
 theorem cinner_smul_real_right (r : ℝ) (x y : E) :
-    ⟪x, r • y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
+    ⟪x, (r : ℂ) • y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
   rw [inner_smul_real_right]
 
 /-! ## Nondegeneracy and norm identities -/
@@ -77,7 +81,9 @@ theorem cinner_all_right_zero_iff (x : E) :
     (∀ u : E, ⟪x, u⟫_ℂ = 0) ↔ x = 0 := by
   constructor
   · intro h
-    exact ext_inner_right (𝕜 := ℂ) (fun u => h u)
+    refine ext_inner_right (𝕜 := ℂ) ?_
+    intro u
+    rw [h u, inner_zero_left]
   · intro hx u
     rw [hx, inner_zero_left]
 
@@ -85,7 +91,9 @@ theorem cinner_all_left_zero_iff (x : E) :
     (∀ u : E, ⟪u, x⟫_ℂ = 0) ↔ x = 0 := by
   constructor
   · intro h
-    exact ext_inner_left (𝕜 := ℂ) (fun u => h u)
+    refine ext_inner_left (𝕜 := ℂ) ?_
+    intro u
+    rw [h u, inner_zero_right]
   · intro hx u
     rw [hx, inner_zero_right]
 
@@ -134,7 +142,7 @@ theorem parallelogram_law (x y : E) :
 
 theorem pythagorean_theorem {x y : E} (hxy : ⟪x, y⟫_ℂ = 0) :
     ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 := by
-  rw [polar_identity, hxy, RCLike.zero_re]
+  rw [polar_identity, hxy]
   simp
 
 theorem sum_cinner {ι κ : Type*} (s : Finset ι) (t : Finset κ)

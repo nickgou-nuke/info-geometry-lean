@@ -2,14 +2,16 @@
 
 ## 1. Principle
 
-The phrase "It from bit" is a useful first approximation, but the sharper, mathematically rigorous formulation is **"Geometry from Clifford Fractal Wavelets."**
+The older bit-first slogan is only a useful approximation. The sharper,
+mathematically rigorous formulation is **"Geometry from Clifford Fractal Wavelets."**
 
 A bit is not yet the object; the bit is the **address**. The physical carrier is the **fractal wavelet mode** indexed by that address, and the Clifford algebra acts by tilt/switch operations on those modes.
 
 > [!IMPORTANT]
-> **Binary Word $\to$ Cantor Cylinder $\to$ Fractal Wavelet Mode $\to$ Clifford Action $\to$ Drazin–Hodge Envelope $\to$ Geometry.**
+> **Binary Word $\to$ Cantor Cylinder $\to$ Fractal Wavelet Mode $\to$ Clifford Action $\to$ Drazin Defect Support $\to$ Projective Krein-Null Boundary $\to$ Geometry.**
 
-Reality is the harmonic Drazin envelope of Clifford-stabilized fractal wavelet modes.
+Geometry emerges from the Fierz--Klein readout of projectivized Krein-null
+defects of Clifford fractal wavelets.
 
 ---
 
@@ -24,16 +26,18 @@ The emergence of physical objects follows a calibrated sequence of informational
     *   **Tilt ($T_j$)**: Rademacher/sign operator.
     *   **Switch ($S_j$)**: Bit-flip operator.
     *   These generate the Clifford algebra where $\gamma_i$ are fractal wavelet operators acting on Cantor-addressed modes.
-5.  **Drazin–Hodge Stabilization**:
+5.  **Drazin--Krein Boundary Extraction**:
     *   **Drazin Horizon ($p_A = AA^D$)**: Selects the stable signal support.
-    *   **Hodge Projector ($H_L = 1 - LL^D$)**: Selects the harmonic/zero-frequency sector.
-6.  **Physical Envelope ($x_{\mathrm{phys}}$)**: The stabilized, harmonic projection of the wavelet field.
+    *   **Drazin Defect Support ($q_L = 1 - LL^D$)**: Selects the generalized-zero sector.
+    *   **Krein Null Cut**: Selects the lightlike directions inside the defect support.
+6.  **Projective Boundary**: Weyl/projective scaling quotients nonzero defect-supported Krein-null vectors to null rays.
 
 ---
 
 ## 3. The Ontological Sieve: Reality as Survivor Bias
 
-A raw fractal wavelet mode only graduates to a physical "it" if it survives the Drazin-Hodge stabilization process.
+A raw fractal wavelet mode only graduates to geometry after Drazin support
+selection, Krein-null boundary extraction, and projective readout.
 
 ### I. Kinematic Generation (Addresses $\to$ Wavelets)
 Binary addresses scale the Cantor boundary, defining local basis modes $\psi_w$.
@@ -41,24 +45,35 @@ Binary addresses scale the Cantor boundary, defining local basis modes $\psi_w$.
 ### II. Clifford Transformation (Wavelets $\to$ Spinors)
 Through tilt/switch operators ($T_j, S_j$), these modes are elevated into a non-commutative Clifford algebra. The information acquires intrinsic spin and fermionic statistics.
 
-### III. Stabilization Filter (Drazin $\to$ Hodge)
+### III. Boundary Filter (Drazin $\to$ Krein Null)
 The raw wavelet observable $x$ is filtered:
 *   **Drazin Horizon ($p_A = AA^D$)**: Sheds domain/range mismatches and anomalies.
-*   **Hodge Harmonic Projector ($H_L = 1 - LL^D$)**: Sheds non-zero frequency fluctuations.
+*   **Drazin Defect Support ($q_L = 1 - LL^D$)**: Extracts the generalized-zero sector.
+*   **Krein Null Condition ($[v,v]=0$)**: Extracts lightlike directions inside that support.
 
 ### IV. Geometric Emergence (State $\to$ Fierz–Klein Quadric)
-The stabilized envelope $x_{\mathrm{phys}}$ is measured by the thermodynamic state. If it satisfies the Plücker/Klein quadric constraint $Q_K(P) = 0$, it manifests as observable spacetime geometry.
+The projectivized defect-supported Krein-null boundary is measured by the
+thermodynamic state. If its Fierz readout satisfies the Plücker/Klein quadric
+constraint $Q_K(P) = 0$, it manifests as observable conformal geometry.
 
 ---
 
-## 4. The Definition of "It"
+## 4. The Physical Envelope
 
-An "it"—a physical object—is the harmonic Drazin envelope of Clifford fractal wavelets:
+A physical object is the harmonic Drazin envelope of Clifford fractal wavelets:
 
 > [!IMPORTANT]
 > $$x_{\mathrm{phys}} := H_L (p_A x p_A) H_L$$
 
-"It" is not the raw bitstream; it is the **Clifford-stabilized physical envelope** of the fractal wavelet field.
+The object is not the raw bitstream; it is the **Clifford-stabilized physical
+envelope** of the fractal wavelet field.
+
+The Drazin complement is not the Hilbert kernel. It is the defect support of
+the doubled algebra--commutant representation. The conformal boundary is the
+projectivized Krein-null part of that defect support:
+
+$$\partial_{\mathrm{Drazin-null}}(A)
+  = \mathbb P\{x \neq 0 : q_A x = x,\ [x,x]=0\}.$$
 
 ---
 
@@ -66,10 +81,12 @@ An "it"—a physical object—is the harmonic Drazin envelope of Clifford fracta
 
 *   **Binary words index fractal wavelets.**
 *   **Tilt/switch operators turn those wavelets into a Clifford/Fock representation.**
-*   **Drazin support and Hodge projection select the physical harmonic envelope.**
-*   **Fierz–Klein geometry is read from that envelope.**
+*   **Drazin support selects the regular sector and Drazin complement selects the defect support.**
+*   **Krein nullity selects lightlike directions inside the defect support.**
+*   **Projectivization removes Weyl/scale normalization.**
+*   **Fierz–Klein geometry is read from the projective null boundary.**
 
 > [!IMPORTANT]
-> **It from Clifford Fractal Wavelets.**
+> **Geometry from the Fierz--Klein readout of projectivized Krein-null Drazin defects.**
 
 $$\boxed{x_{\mathrm{phys}} = H_L (AA^D) x (AA^D) H_L.}$$

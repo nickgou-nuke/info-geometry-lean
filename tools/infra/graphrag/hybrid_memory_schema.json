@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infogeometry.local/schemas/hybrid_memory_schema.json",
+  "title": "InfoGeometry Arango Hybrid Memory Overlay",
+  "description": "Schema contract for the optional GraphRAG memory overlay combining exact hashes, graph incidence, RDF-style triples, text documents, and vector documents. This is derived navigation/audit data, not proof authority.",
+  "type": "object",
+  "required": [
+    "version",
+    "authority",
+    "requiredBaseCollections",
+    "optionalOverlayCollections",
+    "edgePredicates",
+    "vectorPolicy"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "hybrid-memory-v1"
+    },
+    "authority": {
+      "type": "string"
+    },
+    "requiredBaseCollections": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "optionalOverlayCollections": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "logicalProjections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "edgePredicates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hashKinds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "textFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vectorPolicy": {
+      "type": "object",
+      "required": [
+        "hashesAreVectors",
+        "defaultDenseField",
+        "defaultMetric",
+        "sourceOfTruth"
+      ],
+      "properties": {
+        "hashesAreVectors": {
+          "type": "boolean",
+          "const": false
+        },
+        "defaultDenseField": {
+          "type": "string"
+        },
+        "defaultMetric": {
+          "type": "string",
+          "enum": [
+            "cosine",
+            "l2",
+            "innerProduct"
+          ]
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": "hybrid-memory-v1",
+      "authority": "Lean kernel and compiled declarations remain proof authority; Arango overlays are derived navigation and audit data.",
+      "requiredBaseCollections": [
+        "ig_nodes",
+        "ig_edges",
+        "ig_wires",
+        "ig_gates",
+        "ig_wire_edges",
+        "ig_decl_topologies",
+        "ig_hashes",
+        "ig_logic_tokens",
+        "ig_logic_vectors"
+      ],
+      "optionalOverlayCollections": [
+        "ig_rdf_triples",
+        "ig_hybrid_docs",
+        "ig_embedding_docs"
+      ],
+      "logicalProjections": {
+        "expr_nodes": "ig_nodes WHERE graphKind = 'expr'",
+        "decl_nodes": "ig_nodes WHERE graphKind = 'decl'",
+        "binder_nodes": "ig_nodes WHERE graphKind = 'expr' AND exprTag IN ['lam', 'forallE', 'letE']",
+        "bound_by_edges": "ig_edges WHERE kind = 'bind' AND role = 'bound_by'",
+        "const_ref_edges": "ig_edges WHERE kind = 'const_ref'",
+        "rdf_triples": "ig_edges WHERE kind = 'rdf_triple' OR dedicated ig_rdf_triples edge collection"
+      },
+      "edgePredicates": [
+        "bound_by",
+        "const_ref",
+        "declares",
+        "dual_of_expr",
+        "has_hash",
+        "reifies",
+        "guards",
+        "passes_through_gate",
+        "same_binder_wire",
+        "same_hash_as"
+      ],
+      "hashKinds": [
+        "deBruijnHash",
+        "shapeHash",
+        "alphaLocalHash",
+        "typeHash",
+        "valueHash",
+        "wireTopologyHash",
+        "wireTopologyPatternHash"
+      ],
+      "textFields": [
+        "name",
+        "decl",
+        "module",
+        "docstring",
+        "prettyType",
+        "canonicalShape",
+        "sourceSnippet"
+      ],
+      "vectorPolicy": {
+        "hashesAreVectors": false,
+        "defaultDenseField": "embedding",
+        "defaultMetric": "cosine",
+        "sourceOfTruth": "Exact hashes and graph incidence explain vector hits; vector hits are retrieval candidates only."
+      }
+    }
+  ]
+}

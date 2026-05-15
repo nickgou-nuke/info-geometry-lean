@@ -1,8 +1,7 @@
 # Arango DAG Algorithms
 
-> Status: `reference memory`
-> Audited: 2026-05-02
-> Note: Re-audit against current code before using for policy, design claims, or status.
+> Status: `maintained downstream runbook`
+> Audited: 2026-05-14 against `tools/infra/arango_dag_algorithms.py`.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
 `tools/infra/arango_dag_algorithms.py` runs classical graph algorithms over the
@@ -42,6 +41,18 @@ It writes only:
 
 The overlay is navigation data, not Lean proof authority.
 
+It is also not the first DAG authority. The required upstream boundary is:
+
+```text
+lake script run dagRefresh
+lake script run dagDoctor
+Arango ingest / descent verification
+arango_dag_algorithms.py
+```
+
+If the native Lean DAG export is stale or blocked, this overlay is stale for
+current-source claims even when Arango queries return rows.
+
 ## Navigation-only authority boundary
 
 Use the DAG overlay to answer questions such as:
@@ -77,6 +88,11 @@ topology_overlay_edges(role == "scc_quotient")
 
 This is the SCC quotient graph produced from the Lean raw-DAG dependency layer.
 It is not the full compiler `InfoTree`.
+
+The source collections must be refreshed from local artifacts before this script
+is used for current-source analysis. `arango_dag_algorithms.py` computes over
+whatever is currently in Arango; it does not run `dagRefresh`, does not build
+Lean, and does not validate source freshness.
 
 ## Algorithms
 
@@ -217,11 +233,14 @@ that context supports.
 
 Recommended workflow:
 
-1. Refresh/load the faithful raw-DAG SCC overlay first.
-2. Run `arango_dag_algorithms.py` as a derived overlay pass.
-3. Query `arango_dag_*` collections for planning, audit, and candidate paths.
-4. Descend to raw witnesses through `topology_overlay_edges`.
-5. Verify mathematical claims in Lean.
+1. Make the native Lean DAG fresh with `lake script run dagRefresh`.
+2. Confirm freshness with `lake script run dagDoctor`.
+3. Materialize/ingest the local DAG into Arango.
+4. Verify raw-to-SCC descent.
+5. Run `arango_dag_algorithms.py` as a derived overlay pass.
+6. Query `arango_dag_*` collections for planning, audit, and candidate paths.
+7. Descend to raw witnesses through `topology_overlay_edges`.
+8. Verify mathematical claims in Lean.
 
 Typical investigation path:
 

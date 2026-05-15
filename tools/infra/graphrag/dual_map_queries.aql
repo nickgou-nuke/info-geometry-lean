@@ -1,0 +1,370 @@
+-- Dual-map / wire-topology AQL atlas for InfoGeometry GraphRAG.
+--
+-- This query file is an overlay on the existing ExprArango and wire-topology
+-- export surface.  It does not define a second KM graph.
+--
+-- Raw proof/navigation authority:
+--   ig_nodes / ig_edges
+--
+-- Derived dual topology:
+--   ig_wires / ig_gates / ig_wire_edges
+--   ig_decl_topologies
+--   ig_hashes / ig_logic_tokens / ig_logic_vectors
+--
+-- Interpretation:
+--   Wires are the dual nodes: de Bruijn occurrences/fibers/patterns.
+--   Gates are the operator junctions: constants, binders, applications, etc.
+--   ig_wire_edges are the incidence relations that make the line graph.
+--
+-- All results are audit/navigation candidates only. Lean remains the proof
+-- authority.
+
+-- ============================================================
+-- 1. Declaration dual schematic: wires, gates, incidence edges
+-- ============================================================
+LET declName = @declName
+
+LET wires = (
+  FOR w IN ig_wires
+    FILTER w.decl == declName OR declName IN (w.decls ? w.decls : [])
+    SORT w.wireLevel ASC, w.rolePath ASC, w.deBruijnIdx ASC
+    RETURN KEEP(w,
+      "_id", "_key", "wireLevel", "wireHash", "deBruijnHash",
+      "deBruijnIdx", "rolePath", "binderRawId", "rawBvarId",
+      "occurrenceCount", "module", "decl")
+)
+
+LET gates = (
+  FOR g IN ig_gates
+    FILTER g.decl == declName
+    SORT g.gateKind ASC, g.operatorName ASC
+    RETURN KEEP(g,
+      "_id", "_key", "gateKind", "gateHash", "operatorName",
+      "constName", "rawExprId", "module", "decl")
+)
+
+LET ids = UNION_DISTINCT(wires[*]._id, gates[*]._id)
+
+LET incidence = (
+  FOR e IN ig_wire_edges
+    FILTER e._from IN ids OR e._to IN ids
+    SORT e.kind ASC, e.role ASC
+    RETURN KEEP(e,
+      "_from", "_to", "kind", "role", "source",
+      "incidenceHash", "wireHash", "rawEdgeId")
+)
+
+LET topology = FIRST(
+  FOR t IN ig_decl_topologies
+    FILTER t.decl == declName
+    RETURN KEEP(t,
+      "decl", "module", "ownerAwareHash", "patternHash",
+      "roleHash", "quality")
+)
+
+RETURN {
+  declaration: declName,
+  topology,
+  wireCount: LENGTH(wires),
+  gateCount: LENGTH(gates),
+  incidenceCount: LENGTH(incidence),
+  wires,
+  gates,
+  incidence
+}
+
+-- ============================================================
+-- 2. Hash portal: exact dual nodes sharing one de Bruijn wire hash
+-- ============================================================
+LET deBruijnHash = @deBruijnHash
+
+FOR w IN ig_wires
+  FILTER w.deBruijnHash == deBruijnHash
+      OR deBruijnHash IN (w.deBruijnHashes ? w.deBruijnHashes : [])
+      OR w.wireHash == deBruijnHash
+  SORT w.module ASC, w.decl ASC, w.wireLevel ASC
+  RETURN {
+    wire: w._key,
+    wireLevel: w.wireLevel,
+    decl: w.decl,
+    module: w.module,
+    deBruijnIdx: w.deBruijnIdx,
+    rolePath: w.rolePath,
+    binderRawId: w.binderRawId,
+    rawBvarId: w.rawBvarId,
+    deBruijnHash: w.deBruijnHash,
+    wireHash: w.wireHash
+  }
+
+-- ============================================================
+-- 3. Wire neighborhood: what gates touch this wire?
+-- ============================================================
+LET wireKey = @wireKey
+
+FOR v, e, p IN 1..2 ANY CONCAT("ig_wires/", wireKey) ig_wire_edges
+  OPTIONS { order: "bfs", uniqueVertices: "path" }
+  FILTER IS_SAME_COLLECTION("ig_gates", v._id)
+      OR IS_SAME_COLLECTION("ig_wires", v._id)
+  RETURN {
+    depth: LENGTH(p.edges),
+    vertex: KEEP(v,
+      "_id", "_key", "wireLevel", "wireHash", "deBruijnHash",
+      "gateKind", "gateHash", "operatorName", "constName",
+      "decl", "module"),
+    edge: KEEP(e, "kind", "role", "source", "incidenceHash", "wireHash")
+  }
+
+-- ============================================================
+-- 4. Gate neighborhood: operator junction as line-graph crossing
+-- ============================================================
+LET gateKey = @gateKey
+
+FOR v, e, p IN 1..3 ANY CONCAT("ig_gates/", gateKey) ig_wire_edges
+  OPTIONS { order: "bfs", uniqueVertices: "path" }
+  RETURN {
+    depth: LENGTH(p.edges),
+    vertex: KEEP(v,
+      "_id", "_key", "wireLevel", "wireHash", "deBruijnHash",
+      "gateKind", "gateHash", "operatorName", "constName",
+      "decl", "module"),
+    edge: KEEP(e, "kind", "role", "source", "incidenceHash", "wireHash"),
+    pathKeys: p.vertices[*]._key
+  }
+
+-- ============================================================
+-- 5. Isomorphic wiring candidates by declaration topology hashes
+-- ============================================================
+LET seed = FIRST(
+  FOR t IN ig_decl_topologies
+    FILTER t.decl == @declName
+    RETURN t
+)
+
+FOR t IN ig_decl_topologies
+  FILTER seed != null
+  FILTER t.decl != seed.decl
+  LET exactPattern = t.patternHash == seed.patternHash
+  LET exactRole = t.roleHash == seed.roleHash
+  LET exactOwner = t.ownerAwareHash == seed.ownerAwareHash
+  FILTER exactPattern OR exactRole OR exactOwner
+  SORT exactOwner DESC, exactRole DESC, exactPattern DESC, t.module ASC
+  RETURN {
+    seed: seed.decl,
+    candidate: t.decl,
+    module: t.module,
+    match: {
+      ownerAwareHash: exactOwner,
+      roleHash: exactRole,
+      patternHash: exactPattern
+    },
+    hashes: {
+      ownerAwareHash: t.ownerAwareHash,
+      roleHash: t.roleHash,
+      patternHash: t.patternHash
+    },
+    auditStatus: "candidate-only"
+  }
+
+-- ============================================================
+-- 6. Shared wire-token explanation between two declarations
+-- ============================================================
+LET leftDecl = @leftDecl
+LET rightDecl = @rightDecl
+
+LET leftTokens = (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.decl == leftDecl
+    RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+)
+
+LET rightTokens = (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.decl == rightDecl
+    RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+)
+
+LET shared = INTERSECTION(leftTokens, rightTokens)
+LET unionSize = LENGTH(UNION_DISTINCT(leftTokens, rightTokens))
+
+RETURN {
+  left: leftDecl,
+  right: rightDecl,
+  sharedCount: LENGTH(shared),
+  unionSize,
+  jaccard: unionSize == 0 ? 0 : LENGTH(shared) / unionSize,
+  sharedTokens: SLICE(shared, 0, @limit ? @limit : 50)
+}
+
+-- ============================================================
+-- 7. Module-level shared wire-token atlas for a seed module
+-- ============================================================
+LET seedModule = @module
+
+LET seedTokens = (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.module == seedModule
+    RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+)
+
+FOR m IN (
+  FOR tok IN ig_logic_tokens
+    FILTER tok.module != seedModule
+    RETURN DISTINCT tok.module
+)
+  LET candidateTokens = (
+    FOR tok IN ig_logic_tokens
+      FILTER tok.module == m
+      RETURN DISTINCT { kind: tok.hashKind, value: tok.value }
+  )
+  LET shared = INTERSECTION(seedTokens, candidateTokens)
+  LET unionSize = LENGTH(UNION_DISTINCT(seedTokens, candidateTokens))
+  LET score = unionSize == 0 ? 0 : LENGTH(shared) / unionSize
+  FILTER score >= @threshold
+  SORT score DESC
+  LIMIT @limit
+  RETURN {
+    seedModule,
+    candidateModule: m,
+    score,
+    sharedCount: LENGTH(shared),
+    unionSize,
+    auditStatus: "logic-neighbor-candidate"
+  }
+
+-- ============================================================
+-- 8. Spacetime-closure atlas membership from seed module list
+-- ============================================================
+LET seedModules = @modules
+
+FOR moduleName IN seedModules
+  LET decls = (
+    FOR t IN ig_decl_topologies
+      FILTER t.module == moduleName
+      RETURN KEEP(t,
+        "decl", "module", "ownerAwareHash", "patternHash",
+        "roleHash", "quality")
+  )
+  LET gateKinds = (
+    FOR g IN ig_gates
+      FILTER g.module == moduleName
+      COLLECT gateKind = g.gateKind WITH COUNT INTO count
+      SORT count DESC
+      RETURN { gateKind, count }
+  )
+  LET wireLevels = (
+    FOR w IN ig_wires
+      FILTER w.module == moduleName
+      COLLECT wireLevel = w.wireLevel WITH COUNT INTO count
+      SORT count DESC
+      RETURN { wireLevel, count }
+  )
+  RETURN {
+    module: moduleName,
+    declCount: LENGTH(decls),
+    gateKinds,
+    wireLevels,
+    topologyHashes: decls[* RETURN {
+      decl: CURRENT.decl,
+      ownerAwareHash: CURRENT.ownerAwareHash,
+      patternHash: CURRENT.patternHash,
+      roleHash: CURRENT.roleHash
+    }]
+  }
+
+-- ============================================================
+-- 9. Type III / StandardForm category-error audit over gate topology
+-- ============================================================
+LET forbidden = ["trace", "tr", "det", "determinant", "density", "matrix.trace"]
+LET allowedWitnesses = [
+  "ScalarCocycleBridge",
+  "NaturalConeStandardFormInterface",
+  "coreWeight",
+  "FinitePartialTraceShadow",
+  "ConnesCocycle",
+  "cocycleLogPotential",
+  "volumeState",
+  "kreinExpectation"
+]
+
+FOR d IN ig_nodes
+  FILTER d.graphKind == "decl"
+  FILTER CONTAINS(LOWER(d.module), "typeiii")
+      OR CONTAINS(LOWER(d.module), "standardform")
+      OR d.claimedLane == "Type III"
+
+  LET badGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl
+      FILTER g.gateKind == "const"
+      LET opname = LOWER(g.operatorName ? g.operatorName : g.constName)
+      FILTER LENGTH(
+        FOR token IN forbidden
+          FILTER CONTAINS(opname, token)
+          RETURN token
+      ) > 0
+      RETURN KEEP(g, "operatorName", "constName", "gateHash", "rawExprId")
+  )
+
+  FILTER LENGTH(badGates) > 0
+
+  LET witnessGates = (
+    FOR g IN ig_gates
+      FILTER g.decl == d.decl
+      FILTER g.gateKind == "const"
+      LET opname = g.operatorName ? g.operatorName : g.constName
+      FILTER LENGTH(
+        FOR witness IN allowedWitnesses
+          FILTER CONTAINS(opname, witness)
+          RETURN witness
+      ) > 0
+      RETURN KEEP(g, "operatorName", "constName", "gateHash")
+  )
+
+  FILTER LENGTH(witnessGates) == 0
+
+  RETURN {
+    declaration: d.decl,
+    module: d.module,
+    badGates,
+    auditStatus: "category-error-candidate",
+    warning: "Trace/determinant-like gate occurs in Type III / StandardForm lane without an allowed witness gate."
+  }
+
+-- ============================================================
+-- 10. Concept-to-wire descent through curated reifies edges
+-- ============================================================
+LET conceptKey = @conceptKey
+
+LET conceptId = CONCAT("ig_concepts/", conceptKey)
+
+FOR decl, edge IN 1..1 INBOUND conceptId ig_edges
+  FILTER edge.kind == "reifies"
+  FILTER decl.graphKind == "decl"
+  LET topology = FIRST(
+    FOR t IN ig_decl_topologies
+      FILTER t.decl == decl.decl OR t.decl == decl.name
+      RETURN t
+  )
+  LET gates = (
+    FOR g IN ig_gates
+      FILTER g.decl == topology.decl
+      SORT g.gateKind ASC, g.operatorName ASC
+      LIMIT 25
+      RETURN KEEP(g, "gateKind", "operatorName", "gateHash")
+  )
+  LET wires = (
+    FOR w IN ig_wires
+      FILTER w.decl == topology.decl
+      SORT w.wireLevel ASC, w.rolePath ASC
+      LIMIT 25
+      RETURN KEEP(w, "wireLevel", "deBruijnIdx", "rolePath", "wireHash", "deBruijnHash")
+  )
+  RETURN {
+    concept: conceptKey,
+    declaration: decl.name ? decl.name : decl.decl,
+    module: decl.module,
+    reifiesEvidence: edge.evidence ? edge.evidence : edge.note,
+    topology: KEEP(topology, "ownerAwareHash", "patternHash", "roleHash", "quality"),
+    gates,
+    wires
+  }

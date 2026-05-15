@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.LinearAlgebra.Span.Defs
@@ -40,25 +41,23 @@ on `scaleR_scaleC` and `re_add_im`.
 -/
 theorem complex_smul_re_im (z : ℂ) (x : E) :
     z • x = (z.re : ℝ) • x + (z.im : ℝ) • ((Complex.I : ℂ) • x) := by
-  calc
-    z • x = ((z.re : ℂ) + z.im * Complex.I) • x := by
-      rw [Complex.re_add_im]
-    _ = (z.re : ℝ) • x + (z.im : ℝ) • ((Complex.I : ℂ) • x) := by
-      simp [add_smul, mul_smul]
+  conv_lhs => rw [← Complex.re_add_im z]
+  rw [add_smul, mul_smul]
+  congr 1 <;> exact (Complex.real_smul _ _).symm
 
-@[simp]
 theorem neg_one_smul (x : E) :
     ((-1 : ℂ) • x) = -x := by
   simp
 
-theorem two_smul (x : E) :
+theorem two_smul_apply (x : E) :
     ((2 : ℂ) • x) = x + x := by
-  simp
+  rw [two_smul]
 
-@[simp]
 theorem half_smul_double (x : E) :
     ((1 / 2 : ℂ) • (x + x)) = x := by
-  simp [one_div]
+  rw [← two_smul (R := ℂ)]
+  rw [← mul_smul]
+  norm_num
 
 /-! ## Complex-linear maps as real-linear maps -/
 

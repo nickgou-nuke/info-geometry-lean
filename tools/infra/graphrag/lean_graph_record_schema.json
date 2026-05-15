@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://info-geometry.local/schema/lean-graph-record.schema.json",
+  "title": "InfoGeometry Lean GraphRAG seed records",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/HashRecord" },
+    { "$ref": "#/$defs/ConceptRecord" },
+    { "$ref": "#/$defs/PrincipleRecord" },
+    { "$ref": "#/$defs/PhaseRecord" },
+    { "$ref": "#/$defs/BuildRecord" },
+    { "$ref": "#/$defs/OverlayEdgeRecord" }
+  ],
+  "$defs": {
+    "HashRecord": {
+      "type": "object",
+      "required": ["_key", "hash", "hashKind", "normalization", "quality"],
+      "properties": {
+        "collection": { "const": "ig_hashes" },
+        "_key": { "type": "string" },
+        "hash": { "type": "string" },
+        "hashKind": {
+          "type": "string",
+          "enum": [
+            "rawExprHash",
+            "alphaExprHash",
+            "patternExprHash",
+            "typeHash",
+            "valueHash",
+            "typeSubhash",
+            "valueSubhash",
+            "proofSubhash",
+            "logicVectorHash"
+          ]
+        },
+        "normalization": { "type": "string" },
+        "exprTag": { "type": ["string", "null"] },
+        "headConst": { "type": ["string", "null"] },
+        "arity": { "type": ["integer", "null"], "minimum": 0 },
+        "size": { "type": ["integer", "null"], "minimum": 0 },
+        "subhashes": { "type": "array", "items": { "type": "string" } },
+        "logicVector": { "type": "array", "items": { "type": "number" } },
+        "leanVersion": { "type": ["string", "null"] },
+        "mathlibVersion": { "type": ["string", "null"] },
+        "quality": { "type": "string", "enum": ["ok", "broken", "partial", "unsupported"] }
+      }
+    },
+    "ConceptRecord": {
+      "type": "object",
+      "required": ["_key", "kind", "label", "slug", "description"],
+      "properties": {
+        "collection": { "const": "ig_concepts" },
+        "_key": { "type": "string" },
+        "kind": { "const": "Concept" },
+        "label": { "type": "string" },
+        "slug": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" },
+        "domain": { "type": "string" },
+        "status": { "type": "string" },
+        "embedding": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "PrincipleRecord": {
+      "type": "object",
+      "required": ["_key", "kind", "label", "rule", "severity"],
+      "properties": {
+        "collection": { "const": "ig_principles" },
+        "_key": { "type": "string" },
+        "kind": { "const": "ArchitecturalPrinciple" },
+        "label": { "type": "string" },
+        "rule": { "type": "string" },
+        "severity": { "type": "string", "enum": ["info", "soft", "hard"] }
+      }
+    },
+    "PhaseRecord": {
+      "type": "object",
+      "required": ["_key", "kind", "label", "summary"],
+      "properties": {
+        "collection": { "const": "ig_phases" },
+        "_key": { "type": "string" },
+        "kind": { "const": "Phase" },
+        "label": { "type": "string" },
+        "date": { "type": "string" },
+        "summary": { "type": "string" },
+        "status": { "type": "string" }
+      }
+    },
+    "BuildRecord": {
+      "type": "object",
+      "required": ["_key", "command", "status"],
+      "properties": {
+        "collection": { "const": "ig_builds" },
+        "_key": { "type": "string" },
+        "gitRev": { "type": ["string", "null"] },
+        "command": { "type": "string" },
+        "status": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "OverlayEdgeRecord": {
+      "type": "object",
+      "required": ["collection", "_from", "_to", "kind"],
+      "properties": {
+        "collection": { "const": "ig_edges" },
+        "_key": { "type": "string" },
+        "_from": { "type": "string" },
+        "_to": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "has_hash",
+            "same_hash_as",
+            "reifies",
+            "calibrates",
+            "guards",
+            "depends_on_principle",
+            "chronology",
+            "build_mentions",
+            "owner_of",
+            "imports"
+          ]
+        },
+        "hashRole": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "orientation": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

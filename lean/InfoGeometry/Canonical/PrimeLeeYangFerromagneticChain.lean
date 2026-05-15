@@ -219,6 +219,112 @@ theorem localFugacity_pos
   unfold localFugacity
   exact Real.exp_pos _
 
+/-! ## Occupation convention and negative-energy couplings -/
+
+/--
+Occupation readout for the convention:
+
+* `1` means the prime is present;
+* `0` means the prime is absent.
+
+Here `up` is the occupied/present state. This is a convention bridge; the
+ferromagnetic Ising convention above uses signs and positive `Jᵢⱼ` in
+`-Σ Jᵢⱼ σᵢσⱼ`.
+-/
+def occupation : IsingSpin → ℝ :=
+  fun
+    | IsingSpin.up => 1
+    | IsingSpin.down => 0
+
+@[simp]
+theorem occupation_up :
+    occupation IsingSpin.up = 1 := rfl
+
+@[simp]
+theorem occupation_down :
+    occupation IsingSpin.down = 0 := rfl
+
+/--
+Occupation-Hamiltonian pair coefficient
+
+`Kᵢⱼ = -2 log(pᵢ) log(pⱼ)`.
+
+This is the negative-energy convention for a Hamiltonian written as
+`Σ Kᵢⱼ kᵢ kⱼ + Σ hᵢ kᵢ`. It is equivalent in sign spirit to a positive
+ferromagnetic coupling in the Ising convention `-Σ Jᵢⱼ σᵢσⱼ`.
+-/
+def occupationPairCoefficient
+    (i j : Fin n) : ℝ :=
+  -2 * C.siteEnergy i * C.siteEnergy j
+
+/-- The occupation pair coefficient is symmetric. -/
+theorem occupationPairCoefficient_symm
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j = C.occupationPairCoefficient j i := by
+  unfold occupationPairCoefficient
+  ring
+
+/-- In the occupation-energy convention the pair coefficient is nonpositive. -/
+theorem occupationPairCoefficient_nonpos
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j ≤ 0 := by
+  unfold occupationPairCoefficient
+  have hprod : 0 ≤ C.siteEnergy i * C.siteEnergy j :=
+    mul_nonneg (C.siteEnergy_nonneg i) (C.siteEnergy_nonneg j)
+  nlinarith
+
+/-- In the occupation-energy convention the pair coefficient is strictly negative. -/
+theorem occupationPairCoefficient_neg
+    (i j : Fin n) :
+    C.occupationPairCoefficient i j < 0 := by
+  unfold occupationPairCoefficient
+  have hprod : 0 < C.siteEnergy i * C.siteEnergy j :=
+    mul_pos (C.siteEnergy_pos i) (C.siteEnergy_pos j)
+  nlinarith
+
+/-- Occupation-space pair energy `Σᵢⱼ Kᵢⱼ kᵢ kⱼ`. -/
+def occupationPairEnergy
+    (σ : SpinConfiguration (n := n)) : ℝ :=
+  ∑ i : Fin n, ∑ j : Fin n,
+    C.occupationPairCoefficient i j * occupation (σ i) * occupation (σ j)
+
+/--
+Complex arithmetic external field
+
+`hᵢ(s) = s log(pᵢ) - log(pᵢ - 1)`.
+
+The subtraction is meaningful for primes because `pᵢ ≥ 2`, so `pᵢ - 1 ≥ 1`.
+No analytic zero-location theorem is inferred from this readout.
+-/
+def arithmeticExternalField
+    (s : ℂ)
+    (i : Fin n) : ℂ :=
+  s * (C.siteEnergy i : ℂ) - (Real.log ((C.prime i - 1 : ℕ) : ℝ) : ℂ)
+
+/-- The regulator `log(pᵢ - 1)` is nonnegative for prime sites. -/
+theorem primeMinusOne_log_nonneg
+    (i : Fin n) :
+    0 ≤ Real.log ((C.prime i - 1 : ℕ) : ℝ) := by
+  exact Real.log_nonneg (by
+    have hp : 1 < C.prime i := Nat.Prime.one_lt (C.prime_law i)
+    have hle : 1 ≤ C.prime i - 1 := Nat.le_sub_one_of_lt hp
+    exact_mod_cast hle)
+
+/-- Occupation-space complex field energy `Σᵢ hᵢ(s) kᵢ`. -/
+def arithmeticFieldEnergy
+    (s : ℂ)
+    (σ : SpinConfiguration (n := n)) : ℂ :=
+  ∑ i : Fin n, C.arithmeticExternalField s i * (occupation (σ i) : ℂ)
+
+/--
+Occupation-space arithmetic Hamiltonian with the negative-energy pair
+convention.
+-/
+def arithmeticOccupationHamiltonian
+    (s : ℂ)
+    (σ : SpinConfiguration (n := n)) : ℂ :=
+  (C.occupationPairEnergy σ : ℂ) + C.arithmeticFieldEnergy s σ
+
 /--
 Lee--Yang stability socket for a concrete finite prime chain.
 
@@ -274,5 +380,21 @@ theorem primeLeeYangFerromagneticChainOwnerTarget :
     PrimeLeeYangFerromagneticChainOwnerTarget := by
   intro n C i j
   exact ⟨C.coupling_nonneg i j, C.coupling_symm i j⟩
+
+/--
+Owner target for the occupation-energy sign convention:
+`Kᵢⱼ = -2 log(pᵢ) log(pⱼ)` is symmetric and strictly negative.
+-/
+def PrimeLeeYangOccupationConventionTarget : Prop :=
+  ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
+    C.occupationPairCoefficient i j = -2 * C.siteEnergy i * C.siteEnergy j ∧
+      C.occupationPairCoefficient i j = C.occupationPairCoefficient j i ∧
+        C.occupationPairCoefficient i j < 0
+
+/-- The occupation convention target follows from the explicit prime logarithms. -/
+theorem primeLeeYangOccupationConventionTarget :
+    PrimeLeeYangOccupationConventionTarget := by
+  intro n C i j
+  exact ⟨rfl, C.occupationPairCoefficient_symm i j, C.occupationPairCoefficient_neg i j⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

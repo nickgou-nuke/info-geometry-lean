@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Complex.Basic
 
 /-!
 # Complex inner-product adapters for AFP `Complex_Inner_Product0`
@@ -25,7 +26,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 theorem cinner_commute (x y : E) :
     ⟪x, y⟫_ℂ = star ⟪y, x⟫_ℂ := by
-  simpa using (inner_conj_symm (𝕜 := ℂ) x y)
+  rw [inner_conj_symm]
 
 theorem cinner_add_left (x y z : E) :
     ⟪x + y, z⟫_ℂ = ⟪x, z⟫_ℂ + ⟪y, z⟫_ℂ :=
@@ -45,30 +46,30 @@ theorem cinner_smul_right (c : ℂ) (x y : E) :
 
 theorem cinner_diff_left (x y z : E) :
     ⟪x - y, z⟫_ℂ = ⟪x, z⟫_ℂ - ⟪y, z⟫_ℂ := by
-  simp [sub_eq_add_neg, cinner_add_left]
+  simp only [sub_eq_add_neg, inner_add_left, inner_neg_left]
 
 theorem cinner_diff_right (x y z : E) :
     ⟪x, y - z⟫_ℂ = ⟪x, y⟫_ℂ - ⟪x, z⟫_ℂ := by
-  simp [sub_eq_add_neg, cinner_add_right]
+  simp only [sub_eq_add_neg, inner_add_right, inner_neg_right]
 
 theorem cinner_eq_flip {x y z w : E} :
     (⟪x, y⟫_ℂ = ⟪z, w⟫_ℂ) ↔ (⟪y, x⟫_ℂ = ⟪w, z⟫_ℂ) := by
   constructor <;> intro h
-  · simpa [cinner_commute] using congrArg star h
-  · simpa [cinner_commute] using congrArg star h
+  · rw [cinner_commute, cinner_commute, h]
+  · rw [cinner_commute, cinner_commute, h]
 
 @[simp]
 theorem im_cinner_self (x : E) :
-    Complex.im ⟪x, x⟫_ℂ = 0 :=
+    RCLike.im ⟪x, x⟫_ℂ = 0 :=
   inner_self_im x
 
 theorem cinner_smul_real_left (r : ℝ) (x y : E) :
     ⟪r • x, y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
-  simpa [Algebra.smul_def] using inner_smul_real_left (𝕜 := ℂ) x y r
+  rw [inner_smul_real_left]
 
 theorem cinner_smul_real_right (r : ℝ) (x y : E) :
     ⟪x, r • y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
-  simpa [Algebra.smul_def] using inner_smul_real_right (𝕜 := ℂ) x y r
+  rw [inner_smul_real_right]
 
 /-! ## Nondegeneracy and norm identities -/
 
@@ -76,20 +77,20 @@ theorem cinner_all_right_zero_iff (x : E) :
     (∀ u : E, ⟪x, u⟫_ℂ = 0) ↔ x = 0 := by
   constructor
   · intro h
-    exact ext_inner_right ℂ (x := x) (y := 0) (by intro u; simpa using h u)
+    exact ext_inner_right (𝕜 := ℂ) (fun u => h u)
   · intro hx u
-    simp [hx]
+    rw [hx, inner_zero_left]
 
 theorem cinner_all_left_zero_iff (x : E) :
     (∀ u : E, ⟪u, x⟫_ℂ = 0) ↔ x = 0 := by
   constructor
   · intro h
-    exact ext_inner_left ℂ (x := x) (y := 0) (by intro u; simpa using h u)
+    exact ext_inner_left (𝕜 := ℂ) (fun u => h u)
   · intro hx u
-    simp [hx]
+    rw [hx, inner_zero_right]
 
 theorem re_cinner_self_pos_iff (x : E) :
-    0 < Complex.re ⟪x, x⟫_ℂ ↔ x ≠ 0 :=
+    0 < RCLike.re ⟪x, x⟫_ℂ ↔ x ≠ 0 :=
   re_inner_self_pos
 
 theorem cinner_self_eq_norm_sq (x : E) :
@@ -103,7 +104,7 @@ theorem cinner_self_eq_zero_iff (x : E) :
 theorem cinner_extensionality {ψ φ : E}
     (h : ∀ γ : E, ⟪γ, ψ⟫_ℂ = ⟪γ, φ⟫_ℂ) :
     ψ = φ :=
-  ext_inner_left ℂ h
+  ext_inner_left (𝕜 := ℂ) h
 
 /-! ## Cauchy--Schwarz and polarization -/
 
@@ -113,16 +114,16 @@ theorem norm_cinner_le_norm (x y : E) :
 
 theorem cinner_mul_cinner_self_le (x y : E) :
     ‖⟪x, y⟫_ℂ‖ * ‖⟪y, x⟫_ℂ‖ ≤
-      Complex.re ⟪x, x⟫_ℂ * Complex.re ⟪y, y⟫_ℂ :=
+      RCLike.re ⟪x, x⟫_ℂ * RCLike.re ⟪y, y⟫_ℂ :=
   inner_mul_inner_self_le x y
 
 theorem polar_identity (x y : E) :
-    ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 + 2 * Complex.re ⟪x, y⟫_ℂ := by
+    ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 + 2 * RCLike.re ⟪x, y⟫_ℂ := by
   rw [norm_add_sq]
   ring
 
 theorem polar_identity_minus (x y : E) :
-    ‖x - y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 - 2 * Complex.re ⟪x, y⟫_ℂ := by
+    ‖x - y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 - 2 * RCLike.re ⟪x, y⟫_ℂ := by
   rw [norm_sub_sq]
   ring
 
@@ -133,14 +134,14 @@ theorem parallelogram_law (x y : E) :
 
 theorem pythagorean_theorem {x y : E} (hxy : ⟪x, y⟫_ℂ = 0) :
     ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 := by
-  rw [polar_identity, hxy]
+  rw [polar_identity, hxy, RCLike.zero_re]
   simp
 
 theorem sum_cinner {ι κ : Type*} (s : Finset ι) (t : Finset κ)
     (f : ι → E) (g : κ → E) :
     ⟪∑ i in s, f i, ∑ j in t, g j⟫_ℂ =
       ∑ i in s, ∑ j in t, ⟪f i, g j⟫_ℂ := by
-  simp [sum_inner, inner_sum]
+  simp only [inner_sum, sum_inner]
 
 /-- Complex polarization identity in mathlib's native form. -/
 theorem cinner_polarization (x y : E) :

@@ -76,6 +76,7 @@ import InfoGeometry.Quantum.TriadicTransportProjective
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Unstable.SingularUnitaryBridge
+import InfoGeometry.Wavelet.All
 import InfoGeometry.Architecture.All
 import InfoGeometry.Causal.All
 import InfoGeometry.Canonical.All

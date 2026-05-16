@@ -23,6 +23,7 @@ namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanNormalForm
 open scoped BigOperators
 open Polynomial
 open Module.End
+open scoped DirectSum
 
 /-- Total size of a Jordan block list. -/
 def matrixSize : List (Nat × ℂ) → Nat
@@ -264,5 +265,23 @@ theorem matrix_isNilpotent_restrict_maxGenEigenspace_sub_algebraMap {n : Nat}
     (Module.End.isNilpotent_restrict_maxGenEigenspace_sub_algebraMap (f := matrixEnd A) μ
       (Module.End.mapsTo_maxGenEigenspace_of_comm
         (Algebra.mul_sub_algebraMap_commutes (matrixEnd A) μ) μ))
+
+/-- PID-route torsion bridge: the matrix action on `AEval'` is torsion over `ℂ[X]`. -/
+theorem matrixAEval_isTorsion {n : Nat} (A : Matrix (Fin n) (Fin n) ℂ) :
+    Module.IsTorsion ℂ[X] (Module.AEval' (matrixEnd A)) := by
+  intro m
+  obtain ⟨p, hpmonic, hzero⟩ := LinearMap.exists_monic_and_aeval_eq_zero ℂ (matrixEnd A)
+  refine ⟨⟨p, mem_nonZeroDivisors_of_ne_zero hpmonic.ne_zero⟩, ?_⟩
+  simpa using congrArg (fun q : (Fin n → ℂ) →ₗ[ℂ] (Fin n → ℂ) => q m) hzero
+
+/-- Native PID decomposition object for the `AEval'` matrix module. -/
+noncomputable def matrixAEval_pidStructure {n : Nat} (A : Matrix (Fin n) (Fin n) ℂ) :=
+  Module.equiv_directSum_of_isTorsion (R := ℂ[X]) (M := Module.AEval' (matrixEnd A))
+    (matrixAEval_isTorsion (A := A))
+
+/-- Over `ℂ`, every irreducible polynomial has degree one. -/
+theorem complex_irreducible_degree_eq_one {p : ℂ[X]} (hp : Irreducible p) :
+    p.degree = 1 := by
+  simpa using (IsAlgClosed.degree_eq_one_of_irreducible ℂ hp)
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanNormalForm

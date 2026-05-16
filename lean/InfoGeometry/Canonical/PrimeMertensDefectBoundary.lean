@@ -18,6 +18,8 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeMertensDefectBoundary
 
+open scoped BigOperators
+
 open InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
@@ -80,6 +82,110 @@ theorem noMacroscopicBias :
   M.noMacroscopicBias_certificate
 
 end MertensDefectBoundary
+
+/-! ## RH-scale Mertens/LDP boundary socket -/
+
+/--
+Möbius/Mertens data.
+
+`μ` is intentionally supplied as data rather than tied to a particular
+number-theory implementation.  This keeps the defect-boundary socket independent
+of arithmetic infrastructure choices.
+-/
+structure MobiusMertensData where
+  μ : ℕ → ℤ
+  M : ℕ → ℤ
+  M_eq_sum :
+    ∀ N : ℕ, M N = (Finset.Icc 1 N).sum (fun n => μ n)
+
+namespace MobiusMertensData
+
+/-- Real absolute value of the Mertens readout. -/
+def absMertens (D : MobiusMertensData) (N : ℕ) : ℝ :=
+  |((D.M N) : ℝ)|
+
+/-- Square-root normalized Mertens defect. -/
+def normalizedDefect (D : MobiusMertensData) (N : ℕ) : ℝ :=
+  D.absMertens N / Real.sqrt ((N : ℝ))
+
+end MobiusMertensData
+
+/--
+RH-scale Mertens boundary:
+
+`∀ ε > 0, eventually |M(N)| ≤ Cε N^(1/2 + ε)`.
+
+This is the theorem-safe RH-scale target, not the classical Mertens conjecture.
+-/
+def RHScaleBoundary (D : MobiusMertensData) : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    ∃ C : ℝ, 0 < C ∧
+      ∃ N0 : ℕ,
+        ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
+          D.absMertens N ≤
+            C * Real.rpow ((N : ℝ)) ((1 / 2 : ℝ) + ε)
+
+/--
+Finite or asymptotic entropy-defect readout for the Mertens lane.
+
+The fields are numerical readouts only; their analytic meaning is supplied by
+the witness fields in `MertensLDPBoundary`.
+-/
+structure MertensDefectReadout (D : MobiusMertensData) where
+  entropyBarrier : ℝ
+  defectCost : ℝ
+  freeEnergyGap : ℝ
+
+/--
+Large-deviation boundary witness for the Mertens defect.
+
+`entropyDominatesDefect` is the formal socket for an LDP estimate saying that
+the entropy barrier beats the parity-defect cost.  The analytic implication from
+that statement to the RH-scale Mertens boundary remains explicit data.
+-/
+structure MertensLDPBoundary (D : MobiusMertensData) where
+  readout : MertensDefectReadout D
+  speed : ℕ → ℝ
+  rate : ℝ → ℝ
+  defectObservable : ℕ → ℝ
+  entropyDominatesDefect : Prop
+  noMacroscopicDefect : Prop
+  ldp_to_noMacroscopicDefect :
+    entropyDominatesDefect → noMacroscopicDefect
+  noMacroscopicDefect_to_RHScale :
+    noMacroscopicDefect → RHScaleBoundary D
+
+namespace MertensLDPBoundary
+
+/-- Extract the RH-scale Mertens boundary from an LDP certificate. -/
+theorem RHScaleBoundary_of_entropyDominance
+    {D : MobiusMertensData}
+    (B : MertensLDPBoundary D)
+    (h : B.entropyDominatesDefect) :
+    RHScaleBoundary D :=
+  B.noMacroscopicDefect_to_RHScale
+    (B.ldp_to_noMacroscopicDefect h)
+
+end MertensLDPBoundary
+
+/--
+Packaged Mertens boundary theorem surface.
+
+Later bridge files can consume this packet without asserting RH or a global
+Mertens theorem.
+-/
+structure MertensBoundaryPacket where
+  mertensData : MobiusMertensData
+  boundary : RHScaleBoundary mertensData
+
+/-- Build a boundary packet from an LDP witness. -/
+def MertensBoundaryPacket.ofLDP
+    (D : MobiusMertensData)
+    (B : MertensLDPBoundary D)
+    (h : B.entropyDominatesDefect) :
+    MertensBoundaryPacket where
+  mertensData := D
+  boundary := MertensLDPBoundary.RHScaleBoundary_of_entropyDominance B h
 
 /--
 Analytic bridge data needed to turn a Mertens boundary packet into a
@@ -203,4 +309,3 @@ theorem defectFreeLimit_of_mertensBoundary_reexports
     (defectFreeLimit_of_mertensBoundary M B).noRandomFieldDefects⟩
 
 end InfoGeometry.Canonical.PrimeMertensDefectBoundary
-

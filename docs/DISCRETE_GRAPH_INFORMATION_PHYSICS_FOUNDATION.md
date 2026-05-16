@@ -61,7 +61,7 @@ lean/InfoGeometry/Probability/HomologicalProbability.lean
 ```
 
 These route projective/Gromov-Witten-style counting and localization through
-explicit Drazin/Frobenius/Erlangen witness packets.  Graph proximity alone is
+explicit Drazin/Frobenius/Erlangen witness packet (Native Closure Mandated: Closure Debt)s.  Graph proximity alone is
 not a Gromov-Witten invariant.
 
 Arango causal cone context:

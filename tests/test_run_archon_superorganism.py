@@ -338,6 +338,7 @@ def test_run_archon_superorganism_respects_openrouter_pi_model_override(tmp_path
 
     env = os.environ.copy()
     env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env["OPENROUTER_API_KEY"] = "sk-live-123456"
     env["OPENROUTER_PI_MODEL"] = "openrouter/qwen/qwen3-coder:free"
 
     proc = subprocess.run(
@@ -440,6 +441,7 @@ def test_run_archon_superorganism_skips_local_pi_preflight_for_openrouter(tmp_pa
 
     env = os.environ.copy()
     env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env["OPENROUTER_API_KEY"] = "sk-live-123456"
 
     proc = subprocess.run(
         ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
@@ -453,3 +455,137 @@ def test_run_archon_superorganism_skips_local_pi_preflight_for_openrouter(tmp_pa
 
     assert proc.returncode == 0
     assert "Skipping local Pi model preflight for remote model: openrouter/qwen/qwen3-coder:free" in output
+
+
+def test_run_archon_superorganism_falls_back_to_local_pi_when_openrouter_key_missing(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "ARCHON_LEANSTRAL_MODEL=resolved-leanstral\\nARCHON_PI_MODEL=openrouter/qwen/qwen3-coder:free\\n"',
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env.pop("OPENROUTER_API_KEY", None)
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0, output
+    assert "WARN: falling back to local Pi model resolved-leanstral because OpenRouter is unavailable." in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_PI_MODEL=resolved-leanstral" in env_dump
+    assert "ARCHON_LEANSTRAL_MODEL=resolved-leanstral" in env_dump
+
+
+def test_run_archon_superorganism_uses_explicit_local_fallback_model_when_openrouter_key_missing(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "ARCHON_LEANSTRAL_MODEL=broken-leanstral\\nARCHON_PI_MODEL=openrouter/qwen/qwen3-coder:free\\n"',
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env.pop("OPENROUTER_API_KEY", None)
+    env["ARCHON_FALLBACK_PI_MODEL"] = "working-local-model"
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0, output
+    assert "WARN: falling back to local Pi model working-local-model because OpenRouter is unavailable." in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_PI_MODEL=working-local-model" in env_dump
+
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "ARCHON_LEANSTRAL_MODEL=resolved-leanstral\\nARCHON_PI_MODEL=openrouter/qwen/qwen3-coder:free\\n"',
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env.pop("OPENROUTER_API_KEY", None)
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0, output
+    assert "WARN: falling back to local Pi model resolved-leanstral because OpenRouter is unavailable." in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_PI_MODEL=resolved-leanstral" in env_dump
+    assert "ARCHON_LEANSTRAL_MODEL=resolved-leanstral" in env_dump
+
+
+def test_run_archon_superorganism_uses_explicit_local_fallback_model_when_openrouter_key_missing(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    resolver_log = tmp_path / "resolver.log"
+    env_log = tmp_path / "archon_env.log"
+    write_fake_python(
+        bin_dir,
+        resolver_log,
+        resolver_exit=0,
+        resolver_output='printf "ARCHON_LEANSTRAL_MODEL=broken-leanstral\\nARCHON_PI_MODEL=openrouter/qwen/qwen3-coder:free\\n"',
+    )
+    write_fake_archon(bin_dir, env_log)
+
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}:{env['PATH']}"
+    env.pop("OPENROUTER_API_KEY", None)
+    env["ARCHON_FALLBACK_PI_MODEL"] = "working-local-model"
+
+    proc = subprocess.run(
+        ["bash", str(SCRIPT), "--iterations", "1", "--project", str(tmp_path)],
+        cwd=REPO,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = proc.stdout + proc.stderr
+
+    assert proc.returncode == 0, output
+    assert "WARN: falling back to local Pi model working-local-model because OpenRouter is unavailable." in output
+    env_dump = env_log.read_text(encoding="utf-8")
+    assert "ARCHON_PI_MODEL=working-local-model" in env_dump
+

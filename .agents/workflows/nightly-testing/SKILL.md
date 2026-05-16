@@ -3,6 +3,10 @@ name: nightly-testing
 description: Understanding the Lean/Mathlib nightly testing infrastructure. Use when working on toolchain bumps, adaptation PRs, or investigating nightly CI failures.
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # Nightly Testing
 
 Lean 4 publishes nightly toolchain builds from `master`. Batteries and Mathlib each have a `nightly-testing` branch that tracks these nightlies and runs CI against them. When CI passes, a `nightly-testing-YYYY-MM-DD` tag is created. When it fails, fixes are needed before the new toolchain can be adopted.

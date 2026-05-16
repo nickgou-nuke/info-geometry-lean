@@ -29,14 +29,14 @@ def innerRight (x : E) : E →L[ℂ] ℂ :=
 
 @[simp]
 theorem innerRight_apply (x y : E) :
-    innerRight x y = ⟪x, y⟫_ℂ := by
-  exact innerSL_apply_apply x y
+    innerRight x y = @inner ℂ E _ x y := by
+  simpa [innerRight] using innerSL_apply_apply (𝕜 := ℂ) (E := E) x y
 
 /-- The inner-product functional has norm `‖x‖`. -/
 @[simp]
 theorem norm_innerRight (x : E) :
     ‖innerRight x‖ = ‖x‖ := by
-  exact innerSL_apply_norm x
+  simpa [innerRight] using innerSL_apply_norm (𝕜 := ℂ) (E := E) x
 
 /-- `innerRight` is the continuous-linear-map view of mathlib's Riesz embedding. -/
 theorem innerRight_eq_toDualMap (x : E) :
@@ -45,4 +45,3 @@ theorem innerRight_eq_toDualMap (x : E) :
 
 end Functionals
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
-

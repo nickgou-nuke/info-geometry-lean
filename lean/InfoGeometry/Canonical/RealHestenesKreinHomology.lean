@@ -164,7 +164,7 @@ end BoundaryVanishingWitness
 
 end RealDifferential
 
-/-! ## 3. Witness-gated Drazin null support -/
+/-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) Drazin null support -/
 
 /--
 Drazin null support predicate for an endomorphism.

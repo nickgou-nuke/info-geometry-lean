@@ -70,7 +70,7 @@ The important requirement is not the exact schema below, but the semantic shape:
 - classified compiler errors
 - validation result without `sorry`
 
-Any future implementation should preserve those invariants.
+Any currently-missing (Native Closure Mandated: Closure Debt) implementation should preserve those invariants.
 
 ## Current repository priority
 

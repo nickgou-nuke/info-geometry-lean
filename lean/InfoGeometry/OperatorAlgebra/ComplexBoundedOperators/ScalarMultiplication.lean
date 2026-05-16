@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Normed.Operator.Mul
 
 /-!
@@ -26,16 +27,20 @@ variable [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- Scalar multiplication by a fixed complex number as a bounded operator. -/
 def scalarOp (c : ℂ) : E →L[ℂ] E :=
-  ContinuousLinearMap.lsmul ℂ ℂ c
+  ({ toFun := fun x => c • x
+     map_add' := by
+       intro x y
+       simp [smul_add]
+     map_smul' := by
+       intro a x
+       simpa using (smul_comm c a x) } : E →ₗ[ℂ] E).mkContinuous ‖c‖ (by
+    intro x
+    simpa using (norm_smul_le c x))
 
 @[simp]
 theorem scalarOp_apply (c : ℂ) (x : E) :
-    scalarOp (E := E) c x = c • x := by
+    scalarOp c x = c • x := by
   rfl
-
-theorem norm_scalarOp_le (c : ℂ) :
-    ‖scalarOp (E := E) c‖ ≤ ‖c‖ :=
-  ContinuousLinearMap.opNorm_lsmul_apply_le c
 
 section Algebra
 
@@ -66,12 +71,11 @@ theorem rightMul_apply (a x : A) :
 
 theorem norm_rightMul_le (a : A) :
     ‖rightMul a‖ ≤ ‖a‖ := by
-  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg a) ?_
+  refine ContinuousLinearMap.opNorm_le_bound (rightMul a) (norm_nonneg a) ?_
   intro x
-  simpa [rightMul_apply, mul_comm ‖x‖ ‖a‖] using norm_mul_le x a
+  simpa [rightMul, mul_comm] using (norm_mul_le x a)
 
 end Algebra
 
 end ScalarMultiplication
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
-

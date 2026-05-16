@@ -3,6 +3,10 @@ name: vibe-validation
 description: Iterative AI-driven formalization for Lean 4. Use when porting algorithms (Rust/Python) to Lean, filling proof skeletons, or performing a clinical audit of AI-generated proofs to eliminate 'sorry' while maintaining symbolic rigor.
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # vibe-validation
 
 ## Procedural Workflow for AI-Driven Formalization in Lean 4

@@ -142,7 +142,7 @@ One of the biggest bottlenecks to mechanising Tomita–Takesaki is the analytic 
 From a Lean architecture standpoint, this suggests a staged strategy:
 
 - develop Tomita’s theorem first in a **bounded modular operator** regime (where continuous functional calculus and bounded-operator analysis are strongest);  
-- then extend to unbounded operators using `LinearPMap` scaffolding for closures/adjoints, and Takesaki-style spectral-measure statements if/when projection-valued measures are available.   
+- then extend to unbounded operators using `LinearPMap` temporary scaffolding (Native Closure Mandated: Closure Debt) for closures/adjoints, and Takesaki-style spectral-measure statements if/when projection-valued measures are available.   
 
 This is also aligned with Summers’ observation that the spectral calculus can be applied to \(\Delta\) to obtain \(\Delta^{it}\) and hence the modular group, so any Lean path will likely need a robust functional calculus/story for exponentials and logarithms (bounded or unbounded). 
 

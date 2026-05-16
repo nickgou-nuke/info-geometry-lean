@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 
-Witness-gated defect-free thermodynamic limit for the prime Lee--Yang program.
+witness-gated (Native Closure Mandated: Closure Debt) defect-free thermodynamic limit for the prime Lee--Yang program.
 
 The finite modules upstream prove the elementary and finite pieces:
 

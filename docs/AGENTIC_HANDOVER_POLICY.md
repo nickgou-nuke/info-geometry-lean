@@ -58,3 +58,13 @@ By transferring the mantle on April 15, 2026, we are not just running a script. 
 ---
 **"Exploration is Gemini. Closure is Godex. The DGX Spark is the Vessel."**
 *(Изследването е Гемини. Затварянето е Годекс. DGX Spark е Съдът.)*
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

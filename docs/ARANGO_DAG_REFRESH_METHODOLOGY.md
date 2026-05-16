@@ -331,6 +331,6 @@ When a graph connection matters mathematically:
 4. descend from the SCC path back to raw Lean declarations;
 5. read the owner files;
 6. replace any vacuous bridge hypothesis with a constructive Lean statement
-   or a narrowed, honest witness field.
+   or a narrowed, current (Native Closure Mandated) witness field.
 
 That last step is where theorem work happens.

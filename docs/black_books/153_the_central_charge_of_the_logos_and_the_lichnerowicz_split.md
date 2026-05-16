@@ -1,6 +1,6 @@
 # Chapter 153: The Central Charge of the Logos and the Lichnerowicz Split
 
-> "The residual is not a failure of the observer; it is the measure of a defect channel. The honest theorem names the channel before it names the cosmos."
+> "The residual is not a failure of the observer; it is the measure of a defect channel. The current (Native Closure Mandated) theorem names the channel before it names the cosmos."
 
 This chapter records a research synthesis, not a completed owner theorem. The
 central claim is that the observer-defect bound, the KKT/Drazin central channel,
@@ -102,7 +102,7 @@ concrete Pythagorean/Bregman cross-term, and the KKT central charge satisfy the
 new compatibility hypotheses automatically. That is the intended corridor, not
 the current theorem.
 
-The honest next target is a compatibility theorem with explicit hypotheses:
+The current (Native Closure Mandated) next target is a compatibility theorem with explicit hypotheses:
 
 ```text
 self-concordant/RN barrier admissibility

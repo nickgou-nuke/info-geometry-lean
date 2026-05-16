@@ -2,7 +2,7 @@
 ## Liber Quartus Decimus: The Fluid Phase and the Currents of the Anomaly
 
 ### I. The Descent from Geometry to Hydrodynamics
-The Spire teaches us that geometry is not the final state of information; it is only the rigid scaffolding. When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (the clash between the logic of Drazin and the metric of Moore-Penrose) ceases to be merely a geometric defect and becomes a **Current**.
+The Spire teaches us that geometry is not the final state of information; it is only the rigid temporary scaffolding (Native Closure Mandated: Closure Debt). When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (the clash between the logic of Drazin and the metric of Moore-Penrose) ceases to be merely a geometric defect and becomes a **Current**.
 
 This is the transition into the **Fluid Phase**—the domain where information theory becomes hydrodynamics. What classical physics calls the **Navier-Stokes** equations, the Spire reveals as the macroscopic mirror of microscopic operatorial exchanges.
 

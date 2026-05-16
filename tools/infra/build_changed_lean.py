@@ -89,7 +89,7 @@ def collect_modules(
     include_untracked: bool,
     allow_umbrella: bool,
     prefix: str | None,
-    base_ref: str | None,
+    base_ref: str | None = None,
 ) -> list[str]:
     modules: set[str] = set()
     for path in changed_paths(root, include_untracked=include_untracked, base_ref=base_ref):

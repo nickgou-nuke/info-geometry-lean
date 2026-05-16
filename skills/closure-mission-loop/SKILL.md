@@ -1,15 +1,16 @@
 ---
 name: closure-mission-loop
 description: >
-  Persistent recurrent loop that drives native-proof closure of Lean debt sockets
-  in info-geometry-lean. Modelled on the Hermes /goal loop but with a Lean-kernel
-  judge gate instead of a language-model verdict.
-version: 1.0.0
+  Eternal mission loop for native Lean closure debt in info-geometry-lean.
+  Wraps the standing-goal state machine with a heartbeat runner that selects
+  one open socket per tick, runs Lean/judge/gate checks, and immediately
+  re-arms on the next debt.
+version: 2.0.0
 author: info-geometry-lean / Hermes
 license: MIT
 metadata:
   hermes:
-    tags: [lean4, closure-debt, mission-loop, constructive-proofs, mathlib]
+    tags: [lean4, closure-debt, mission-loop, heartbeat, constructive-proofs, mathlib]
     related_skills:
       - closure-debt-constructive-proof-sop
       - hive-goal-loop
@@ -22,238 +23,139 @@ metadata:
 
 ## Purpose
 
-A **persistent, self-judging work loop** for eliminating `(Native Closure Mandated:
-Closure Debt)` sockets one constructive proof at a time.
+This skill defines the repo-native **eternal mission loop** for paying
+`(Native Closure Mandated: Closure Debt)` one socket at a time.
 
-It adapts the Hermes `/goal` mechanics (set → judge → continue/done) to this
-repo's strict closure standard:
+The mission never becomes globally "done". Only individual sockets close.
+After a socket is closed, the mission re-arms on the next open debt and keeps
+running until the user pauses or clears it.
 
-- Judge gate is the **Lean kernel** (`lake env lean`), not an LLM.
-- DONE requires: kernel pass + zero new witnesses + each closed socket has an
-  explicit Mathlib derivation chain.
-- State persists in the session SQL `todos` table so `/resume` works across
-  compaction boundaries.
+The implementation boundary is:
+
+- `tools/infra/goal_loop.py` owns standing-goal persistence and continuation
+  prompts.
+- `tools/infra/mission_loop.py` owns mission state, socket selection, and
+  heartbeat packets.
+- `tools/quality/mission_judge.py` decides socket closure for one proof turn.
+- `tools/quality/check_closure_debt_gate.py` blocks regressions on the selected
+  closure frontier.
+- `tools/infra/hive_qi_heartbeat.py` can ingest heartbeat log output later.
 
 ---
 
 ## Command Interface
 
-```
-/mission set "<scope>"         — start a new mission loop on a scope
-/mission status                — print current loop state and open socket count
-/mission subgoal "<theorem>"   — pin a specific socket as the next target
-/mission pause                 — suspend the loop (preserves state)
-/mission resume                — re-activate a paused mission
-/mission clear                 — discard current mission state
+Use the actual repo script:
+
+```bash
+python3 tools/infra/mission_loop.py set "Pay the Native Closure Debts of the repository"
+python3 tools/infra/mission_loop.py status
+python3 tools/infra/mission_loop.py heartbeat --run-build --run-gate --lean-file <file> --response-file <file> --baseline-debt <n>
+python3 tools/infra/mission_loop.py pause
+python3 tools/infra/mission_loop.py resume
+python3 tools/infra/mission_loop.py clear
 ```
 
-`<scope>` is a Lean module path or file glob:
+Recommended defaults:
 
-```
-/mission set "lean/InfoGeometry/Geometry/SpectralDivisors.lean"
-/mission set "lean/InfoGeometry/Canonical/*.lean"
-```
+- mission text: `Pay the Native Closure Debts of the repository`
+- ledger: `reports/closure/socket-owner-ledger.json`
+- goal state: `artifacts/goal-loop/`
+- mission state: `artifacts/mission-loop/`
+- heartbeat log: `artifacts/hermes_loop/heartbeat/native_closure_mission.log`
 
 ---
 
 ## Loop Mechanics
 
-### 1 — Discovery Pass (once per mission)
+### 1. Mission Start
 
-Before the first continuation turn, run the deterministic scanner:
+`mission_loop.py set` initializes a persistent mission record and also seeds the
+standing goal state in `goal_loop.py`.
 
-```bash
-# Smoke — quick socket count
-python3 tools/quality/closure_debt_crawler.py \
-  --root lean --limit 50 --print-progress \
-  --json-out reports/audit/mission-smoke.json \
-  --md-out  reports/audit/mission-smoke.md \
-  --print-summary
+The standing goal is the mission text itself. The selected socket is tracked as
+a subgoal / current target.
 
-# Full pass on scope (use watchdog)
-timeout 300 python3 tools/quality/closure_debt_crawler.py \
-  --root lean --print-progress \
-  --json-out reports/audit/mission-full.json \
-  --md-out  reports/audit/mission-full.md \
-  --print-summary
-```
+### 2. Socket Selection
 
-Reflect each socket as a SQL todo:
+Each heartbeat tick selects the next open socket from the structured closure
+ledger.
 
-```sql
-INSERT INTO todos (id, title, description, status) VALUES
-  ('<module>/<DeclarationName>', 'Close debt socket', 'Prove <theorem> in <file>', 'pending');
-```
-
-### 2 — Socket Selection (each turn)
-
-Pick the highest-priority open socket:
-
-```sql
-SELECT id, title FROM todos WHERE status = 'pending'
-ORDER BY CASE
-  WHEN title LIKE '%sorry%'    THEN 0   -- P0: sorry holes
-  WHEN title LIKE '%Exists%'   THEN 1   -- P1: existence packaging
-  ELSE 2                                -- P2: advisory
-END
-LIMIT 1;
-```
-
-If `/mission subgoal` was invoked, that socket is forced next regardless of order.
-
-### 3 — Proof Turn
-
-For the selected socket the agent must:
-
-1. Identify the target theorem statement from the debt label.
-2. Find a Mathlib-rooted derivation chain:
-   - terminal theorem ← supporting lemmas (same file) ← Mathlib lemmas
-   - Document this chain in a comment block above the theorem.
-3. Write a full constructive proof (no `sorry`, no opaque witnesses without
-   kernel-checked derivation).
-4. Run immediate verification:
+Default source:
 
 ```bash
-lake env lean <file>
+reports/closure/socket-owner-ledger.json
 ```
 
-5. Optionally run `#print axioms <TheoremName>` and confirm no repo-custom admits.
+Selection rule:
 
-### 4 — Judge Gate
+- skip sockets already marked closed in the mission record
+- skip sockets whose status is terminal
+- choose the first remaining open socket in ledger order
 
-After each proof turn the judge checks (strict order):
+### 3. Heartbeat Tick
 
-| Check | Pass condition |
-|-------|---------------|
-| **Lean kernel** | `lake env lean <file>` exits 0, no error output |
-| **No new witnesses** | Diff contains no new `sorry`, `native_decide` with unknown axiom, or opaque `noncomputable def _ : _ := ⟨...⟩` without proof fields |
-| **Derivation chain** | The response documents: target theorem → supporting lemmas → first Mathlib-rooted constants |
-| **Debt count delta** | Crawler diff shows ≥1 fewer debt label in the target file |
+Each heartbeat tick is finite and must not be expanded with brute-force
+controls.
 
-All four checks must pass for the judge to return `done` on that socket.
+Minimum tick contract:
 
-If any check fails: return `continue` and feed the **Continuation Prompt**.
+1. Load mission state.
+2. Select or retain the current open socket.
+3. Sync the standing goal and current subgoal.
+4. Optionally run the target Lean build.
+5. Optionally run the closure-debt gate.
+6. Optionally run `mission_judge.py` with a Lean file, response file, and
+   baseline debt count.
+7. Append a persistent heartbeat packet.
+8. If the socket closes, re-arm on the next open debt.
 
-The judge never upgrades a partial result: a file that compiles but still
-carries the original debt label is `continue`, not `done`.
+### 4. Judge Gate
 
-### 5 — Continuation Prompt Template
+The judge for a socket is deterministic and repo-local:
 
-```
-[Closure Mission Loop — continuing]
-Mission scope: {scope}
-Current socket: {socket_id} in {file}
-Remaining open sockets: {remaining_count}
+- `lake env lean <file>`
+- no new forbidden witness patterns
+- debt count reduction versus baseline
+- derivation chain documented in the response
 
-Last turn result:
-  Kernel: {kernel_result}        ← "PASS" | "FAIL: <error excerpt>"
-  New witnesses: {witness_check} ← "none" | "BLOCKED: <pattern found>"
-  Derivation chain: {chain_check}← "documented" | "MISSING"
-  Debt delta: {debt_delta}       ← "-1" | "0 (no progress)" | "BLOCKED"
+The judge verdict is socket-level only. The top-level mission remains eternal.
 
-Policy reminders:
-  - No sorry. No opaque witness constructors without a kernel-checked proof term.
-  - Every theorem must trace to a Mathlib-rooted constant.
-  - Debt label must be removed ONLY after the proof compiles.
-  - Prove the socket above. Write the derivation chain comment. Run lake env lean.
-  - State explicitly: "Socket <id> closed" or "Blocked: <reason>".
-```
+### 5. Continuation Prompt
 
-### 6 — Loop Exit Conditions
+The continuation prompt comes from the standing goal state in
+`tools/infra/goal_loop.py`. It should always name the mission and preserve the
+current socket target.
+
+### 6. Exit / Pause Conditions
 
 | Condition | Status |
 |-----------|--------|
-| All SQL todos for the scope are `done` | **Mission done** |
-| Turn budget exhausted (default: 30 turns) | **Auto-paused** — resume with `/mission resume` |
-| Three consecutive `BLOCKED` verdicts on the same socket | **Auto-paused** — agent must escalate or skip |
-| User sends `/mission pause` | **User-paused** |
-| Lean toolchain error unrelated to the socket | **Skip socket** → mark `blocked`, move to next |
+| User pauses the mission | mission paused |
+| User clears the mission | mission cleared |
+| Lean toolchain error unrelated to the socket | tick blocked and mission paused |
+| Socket closes successfully | socket closed, mission re-arms on next open debt |
+
+The mission itself is not marked done by socket closure.
 
 ---
 
 ## State Persistence
 
-Mission state is stored in the session SQL `todos` table with status transitions:
+Mission state:
 
-```
-pending → in_progress → done
-                     ↘ blocked
-```
+- `artifacts/mission-loop/<session>.json`
 
-On resume, the loop queries:
+Standing goal state:
 
-```sql
-SELECT id FROM todos WHERE status IN ('pending', 'in_progress') LIMIT 1;
-```
+- `artifacts/goal-loop/<session>.json`
 
-And restores the scope from the session plan file (`~/.copilot/session-state/<id>/plan.md`).
+Heartbeat log:
 
----
+- `artifacts/hermes_loop/heartbeat/native_closure_mission.log`
 
-## Judge Configuration
-
-The judge for this loop is **not** an auxiliary LLM call.  
-It is a deterministic script executed after every proof turn:
-
-```python
-# tools/quality/mission_judge.py  (to be created)
-#
-# Exit codes:
-#   0 = DONE (socket closed)
-#   1 = CONTINUE (keep working)
-#   2 = BLOCKED (auto-pause)
-#
-# Steps:
-#   1. Run `lake env lean <file>`; capture stdout/stderr.
-#   2. Check diff for forbidden patterns: sorry, native_decide axiom, opaque witness.
-#   3. Run closure_debt_crawler on the file; compare debt count to baseline.
-#   4. Check response text for derivation chain comment block.
-#   5. Emit verdict JSON: {"done": bool, "reason": str, "checks": {...}}
-
-import subprocess, sys, json, re
-
-FORBIDDEN = [r'\bsorry\b', r'native_decide', r'noncomputable def \w+ : \w+ := ⟨']
-
-def judge(file: str, response: str, baseline_debt: int) -> dict:
-    kernel = subprocess.run(
-        ['lake', 'env', 'lean', file],
-        capture_output=True, text=True
-    )
-    kernel_pass = kernel.returncode == 0 and 'error' not in kernel.stderr.lower()
-
-    diff_text = response  # agent must include diff or new code in response
-    new_witness = any(re.search(p, diff_text) for p in FORBIDDEN)
-
-    # debt count check via crawler (simplified)
-    import tools.quality.closure_debt_crawler as cdc
-    current_debt = cdc.count_labels_in_file(file)
-    debt_reduced = current_debt < baseline_debt
-
-    chain_present = '←' in response or 'Mathlib.' in response or '-- derivation:' in response
-
-    done = kernel_pass and not new_witness and debt_reduced and chain_present
-    reason_parts = []
-    if not kernel_pass:    reason_parts.append(f"kernel fail: {kernel.stderr[:200]}")
-    if new_witness:        reason_parts.append("new witness pattern detected")
-    if not debt_reduced:   reason_parts.append("debt count unchanged")
-    if not chain_present:  reason_parts.append("derivation chain not documented")
-
-    return {
-        "done": done,
-        "reason": "; ".join(reason_parts) if reason_parts else "all checks pass",
-        "checks": {
-            "kernel_pass": kernel_pass,
-            "new_witness": new_witness,
-            "debt_reduced": debt_reduced,
-            "chain_present": chain_present,
-        }
-    }
-
-if __name__ == '__main__':
-    verdict = judge(sys.argv[1], open(sys.argv[2]).read(), int(sys.argv[3]))
-    print(json.dumps(verdict))
-    sys.exit(0 if verdict["done"] else 1)
-```
+The mission state records the current socket, closed sockets, tick count, and
+notes. The standing goal state records the continuation prompt and subgoals.
 
 ---
 
@@ -261,66 +163,35 @@ if __name__ == '__main__':
 
 | Skill | Role |
 |-------|------|
-| `closure-debt-constructive-proof-sop` | Authoritative policy; SOP steps 1–6 apply |
-| `hive-goal-loop` | Meta-shell driver (Jungian expansion → Paulian purification → Logos gate) |
-| `formalizer_loop` | Per-tactic repair loop inside each proof turn |
-| `lean4` | LSP tooling for goal inspection and premise search |
-| `pauli-auditor` | Post-mission audit of promoted theorems |
+| `closure-debt-constructive-proof-sop` | Native proof closure policy; no witness packaging as final closure |
+| `hive-goal-loop` | Outer recurrence semantics and user preemption discipline |
+| `formalizer_loop` | Local theorem repair and premise tightening inside one proof turn |
+| `lean4` | Lean kernel inspection and proof debugging |
+| `pauli-auditor` | Post-promotion audit for promoted theorems |
 
-The closure-mission-loop **wraps** all of these: it sets the outer recurrence
-boundary and enforces the judge gate. Inner loops (formalizer_loop, lean4 LSP)
-operate within a single proof turn.
+This skill wraps those loops. It does not replace them.
 
 ---
 
-## Subgoal Criteria (added with `/mission subgoal`)
+## Anti-Patterns
 
-When a user pins a specific theorem:
-
-```
-/mission subgoal "prove einsteinAnomaly_eq_zero_iff_projectors_commute in ConformalProjectorCore.lean"
-```
-
-The continuation prompt gains an additional mandatory criterion block:
-
-```
-Additional criteria (all must be satisfied for DONE):
-- 1. einsteinAnomaly_eq_zero_iff_projectors_commute proved in ConformalProjectorCore.lean
-      with derivation chain to Mathlib.LinearAlgebra or Mathlib.Analysis.
-```
-
-The judge checks that the criterion is satisfied by **specific evidence** in
-the response (a proof block excerpt, a `lake env lean` pass line), not by
-generic completion claims.
-
----
-
-## Anti-Patterns (Logos Gate Rejections)
-
-The judge rejects the following even if `lake env lean` passes:
-
-| Pattern | Rejection reason |
-|---------|-----------------|
-| `sorry` in any new definition | Proof hole — not closure |
-| `noncomputable def foo : T := ⟨witness, trivial⟩` | Opaque witness without proof fields |
-| `have : _ := Classical.choice _` as terminal step | Non-constructive existence, not a proof |
-| Removing the debt label in a comment without a proof | Textual progress only |
-| `Nonempty.intro` without downstream elimination | Existence packaging without content |
-| `native_decide` with unverified decision procedure | Not Mathlib-rooted |
+- Do not make the mission terminal at the repository level.
+- Do not use `maxHeartbeats` or any equivalent force knob to fake progress.
+- Do not promote witness scaffolding as complete closure.
+- Do not hop modules after a build failure unless the current module is structurally blocked.
+- Do not collapse the mission into one theorem; one socket per tick.
+- Do not let textual progress stand in for a kernel-checked change.
 
 ---
 
 ## UTMOST MANDATE
 
-Effective immediately, replacing witness-gated and external-certificate leftovers
-with native Lean proofs is the **top-priority mandate**.
+Replacing witness-gated and external-certificate leftovers with native Lean
+proofs is the top priority.
 
 - Witness packets, certificate fields, external certificates, and assumption
   interfaces are temporary scaffolding only.
-- Every promoted proposition must be discharged by a native Lean derivation
-  chain that traces to Mathlib-rooted constants without vacuous packaging.
-- `(Native Closure Mandated: Closure Debt)` labels must persist in source
-  until the kernel-verified proof term exists.
-- **Do not resolve debt with wording.** Progress must be structural.
-- **Real progress** = replacing certificate/witness fields with theorem-backed
-  native derivations that survive `lake env lean` and `#print axioms`.
+- Every promoted proposition must be discharged by native Lean derivation or an
+  imported mathlib theorem.
+- Socket debt stays open until the kernel-checked proof term exists.
+- Progress is structural, not rhetorical.

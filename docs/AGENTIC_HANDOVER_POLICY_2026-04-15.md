@@ -92,7 +92,7 @@ The packet must separate:
 4. formalization candidates
 
 Only facts/interpretations may drive theorem candidates; metaphors are
-exploratory scaffolding and cannot close claims.
+exploratory temporary scaffolding (Native Closure Mandated: Closure Debt) and cannot close claims.
 
 ## 4. Persona Assignment
 
@@ -272,3 +272,13 @@ The handover is successful if:
 - exploration throughput increases in Lane A
 - closure quality remains stable or improves in Lane C
 - gate health remains green without relaxing policy rigor
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

@@ -250,7 +250,7 @@ theorem drazinTranslationCandidate_isSpectralCompact :
               sub_eq_add_neg, mul_add]
 
 /--
-Scaled central lane carried by the KKT packet notation `Z_D`.
+Scaled central lane carried by the KKT notation `Z_D`.
 
 We package the odd-odd bracket in the direct form
 `{Q_D, Q_D} = 2 • translationCandidate + centralCandidate`,
@@ -272,7 +272,7 @@ noncomputable def drazinDefectCandidate : EndH :=
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel
 
 /--
-Minimal pair readout of the new Drazin-lane packet: translation and central
+Minimal pair readout of the new Drazin-lane: translation and central
 channels.  The defect witness is carried separately and proved equal to the
 central readout below.
 -/
@@ -289,23 +289,6 @@ theorem drazinTranslationCentralDefectPacket_fst :
 theorem drazinTranslationCentralDefectPacket_snd :
     (drazinTranslationCentralDefectPacket U).2 = drazinCentralCandidate U := by
   rfl
-
-/--
-Repo-native supergraded packet on the projected Drazin lane.
-
-This does not yet formalize a distinct conjugate odd generator `Q̄_D`; instead it
-records the owner decomposition of the realized odd-odd Drazin bracket
-`{Q_D, Q_D}` into translation, central, and defect readouts.
--/
-@[rep_depth transport]
-structure DrazinSupergradedTranslationPacket where
-  oddOddBracket : EndH
-  translationCandidate : EndH
-  centralCandidate : EndH
-  defectCandidate : EndH
-  oddOdd_bracket_eq_two_smul_translation_plus_central :
-    oddOddBracket = (2 : ℝ) • translationCandidate + centralCandidate
-  central_eq_defect : centralCandidate = defectCandidate
 
 /-- KKT-central and direct Drazin-defect channels coincide definitionally. -/
 @[rep_depth transport]
@@ -346,29 +329,8 @@ Equivalent defect-language readout of the same odd-odd Drazin bracket.
 theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_defect :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
       = (2 : ℝ) • drazinTranslationCandidate U + drazinDefectCandidate U := by
-  rw [projected_oddOdd_bracket_eq_two_smul_translation_plus_central]
+  rw [projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)]
   rw [drazinCentralCandidate_eq_defectCandidate]
-
-/--
-Canonical owner packet witnessing the lift from the primitive transported
-translation seed into the projected chiral-charge / Drazin lane.
--/
-@[rep_depth transport]
-theorem drazinSupergradedTranslationPacket_ofOwners :
-    ∃ P : DrazinSupergradedTranslationPacket,
-      P.oddOddBracket = InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
-        ∧ P.translationCandidate = drazinTranslationCandidate U
-        ∧ P.centralCandidate = drazinCentralCandidate U
-        ∧ P.defectCandidate = drazinDefectCandidate U := by
-  refine ⟨{
-    oddOddBracket := InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
-    translationCandidate := drazinTranslationCandidate U
-    centralCandidate := drazinCentralCandidate U
-    defectCandidate := drazinDefectCandidate U
-    oddOdd_bracket_eq_two_smul_translation_plus_central :=
-      projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
-    central_eq_defect := drazinCentralCandidate_eq_defectCandidate (U := U)
-  }, rfl, rfl, rfl, rfl⟩
 
 /--
 Best available repo-native paired odd candidate on the Drazin lane.
@@ -490,7 +452,7 @@ theorem pairedOddOddKramersBracket_eq_ownerReadout
   rw [hPair]
   exact projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
 
-/-- Projected odd/even closure package under the spectral grading `Γ_S`. -/
+/-- Projected odd/even closure under the spectral grading `Γ_S`. -/
 theorem projected_odd_even_closure :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutator (GammaS U) (QD U) = 0
       ∧
@@ -694,9 +656,7 @@ theorem unified_central_supercharge_theorem
     (A := A) (B := B) (F := F) U.kernel Tpkg.V X hX hEven τ t
 
 /--
-Cross-family compatibility packet:
-projected odd/even closure, transported second-order Lichnerowicz landing, and
-topological central-charge closure on the same transport slice.
+Cross-family compatibility ledger on the unified lane.
 -/
 @[rep_depth transport]
 theorem unified_cross_family_compatibility
@@ -711,14 +671,14 @@ theorem unified_cross_family_compatibility
         (UnifiedSuperchargePackage.QD U)
       = 0)
       ∧
-    (let X := Tpkg.V.connectionGenerator;
+    (let Xv := Tpkg.V.connectionGenerator;
       deriv (fun t => deriv (fun s => TransportedSuperchargePackage.QPi_t Tpkg s) t) 0
         =
       InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationMetricPart
-        (E := F) X X (modular_j (E := F))
+        (E := F) Xv Xv (modular_j (E := F))
         + ((2 : ℝ)⁻¹) •
           InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationCurvaturePart
-            (E := F) X X (modular_j (E := F)))
+            (E := F) Xv Xv (modular_j (E := F)))
       ∧
     rootGapHessianClosure (E := F) Tpkg.V
       ∧
@@ -739,132 +699,6 @@ theorem unified_cross_family_compatibility
       (A := A) (B := B) (F := F) U Tpkg X hX hEven τ t).2.2.1
   · exact (unified_central_supercharge_theorem
       (A := A) (B := B) (F := F) U Tpkg X hX hEven τ t).2.2.2
-
-omit [KreinSpace H₂] [KreinGradedModule H₂] in
-/--
-Sources/sinks + Onsager packet on the unified lane:
-
-1. internal Drazin canonical split `Q_D² = H + Z` with `Z` spectrally central
-   and defect-supported,
-2. projected left/right anomaly channels and net divergence channel
-   `Q_D = Q_R - Q_L`,
-3. divergence identity `[P_D, G] = (1/2)•Q_D`,
-4. first-order Lie-derivation transport laws for `Q_Π(t), Q_J(t)`,
-5. second-order transported metric/curvature (Lichnerowicz/Onsager) split.
--/
-@[rep_depth transport]
-theorem unified_sources_sinks_onsager_with_internal_central_split
-    (U : UnifiedSuperchargePackage (E := F))
-    (Tpkg : TransportedSuperchargePackage (E := F))
-    (t : ℝ) :
-    (∃ H Z : H₂ →L[ℝ] H₂,
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
-        U.kernel Z
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK U.kernel Z
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK
-        U.kernel H
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
-        = H + Z)
-      ∧
-    (UnifiedSuperchargePackage.QD U
-      =
-      UnifiedSuperchargePackage.QR U - UnifiedSuperchargePackage.QL U)
-      ∧
-    (InfoGeometry.Canonical.DrazinSupercharge.commutatorK
-        U.kernel.spectralProjector U.kernel.dilationGap
-      =
-      ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U)
-      ∧
-    (deriv (fun s => TransportedSuperchargePackage.QPi_t Tpkg s) t
-      =
-      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
-        (E := F) Tpkg.V.connectionGenerator (TransportedSuperchargePackage.QPi_t Tpkg t))
-      ∧
-    (deriv (fun s => TransportedSuperchargePackage.QJ_t Tpkg s) t
-      =
-      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
-        (E := F) Tpkg.V.connectionGenerator (TransportedSuperchargePackage.QJ_t Tpkg t))
-      ∧
-    (let X0 := Tpkg.V.connectionGenerator;
-      deriv (fun τ => deriv (fun s => TransportedSuperchargePackage.QPi_t Tpkg s) τ) 0
-        =
-      InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationMetricPart
-        (E := F) X0 X0 (modular_j (E := F))
-        + ((2 : ℝ)⁻¹) •
-          InfoGeometry.Canonical.RelationalInformationDynamics.operatorInformationCurvaturePart
-            (E := F) X0 X0 (modular_j (E := F))) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split_with_drazin_lane_centralityK
-        (CIK := U.kernel)
-  · exact UnifiedSuperchargePackage.projected_supercharge_eq_sub_chiral U
-  · have hQ := UnifiedSuperchargePackage.projected_supercharge_eq_two_commutator (U := U)
-    have hHalf :
-        ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U
-          =
-        InfoGeometry.Canonical.DrazinSupercharge.commutatorK
-          U.kernel.spectralProjector U.kernel.dilationGap := by
-      calc
-        ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U
-            = ((2 : ℝ)⁻¹) •
-              ((2 : ℝ) •
-                InfoGeometry.Canonical.DrazinSupercharge.commutatorK
-                  U.kernel.spectralProjector U.kernel.dilationGap) := by
-                  rw [hQ]
-        _ =
-            InfoGeometry.Canonical.DrazinSupercharge.commutatorK
-              U.kernel.spectralProjector U.kernel.dilationGap := by
-                simp [smul_smul]
-    exact hHalf.symm
-  · exact TransportedSuperchargePackage.deriv_QPi_t Tpkg t
-  · exact TransportedSuperchargePackage.deriv_QJ_t Tpkg t
-  · exact TransportedSuperchargePackage.deriv2_QPi_t_eq_metricPart_add_half_curvaturePart Tpkg
-
-/--
-Integrated internal split + transported operatorial-shadow theorem.
-
-This strengthens the unified lane with the bridge that packages:
-1. internal Drazin split `Q_D² = H + Z`,
-2. Drazin-lane centrality of the transported operatorial central-charge scalar shadow,
-3. transported analytical-index equality on the same slice.
--/
-@[rep_depth transport]
-theorem unified_internal_split_with_operatorial_shadow
-    (U : UnifiedSuperchargePackage (E := F))
-    (Tpkg : TransportedSuperchargePackage (E := F))
-    (X : RealSplitKreinDiracFredholmModule A B H₂)
-    (hX : ChiralFredholmSurface X)
-    (hEven : KreinGradedModule.IsEven (H := H₂) Tpkg.V.connectionGenerator)
-    (t : ℝ) :
-    ∃ H Z : H₂ →L[ℝ] H₂,
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
-          U.kernel Z
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
-          U.kernel Z
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK
-          U.kernel H
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK
-          U.kernel
-        = H + Z
-        ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
-          U.kernel
-          (InfoGeometry.Canonical.DrazinCentralChargeBridge.DrazinLane.operatorialCentralScalar
-            (A := A) (B := B) X hX)
-        ∧
-      quasilatticeAnalyticalIndex Tpkg.V X t
-          (quasilatticeChiralFredholmSurfaceOf (E := F) Tpkg.V X hX hEven t)
-        =
-      operatorialCentralCharge (A := A) (B := B) (E := F) X hX := by
-  simpa using
-    InfoGeometry.Canonical.DrazinCentralChargeBridge.DrazinLane.exists_internal_split_with_operatorial_shadow
-      (A := A) (B := B) (F := F) (CIK := U.kernel) (V := Tpkg.V) X hX hEven t
 
 end Fusion
 

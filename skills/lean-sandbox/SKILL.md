@@ -3,6 +3,10 @@ name: lean-sandbox
 description: Use for implementing new Lean modules or complex refactors. Prevents repository corruption by using a temporary sandbox for development and verification before final integration.
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # Lean Sandbox-First Workflow
 
 This workflow is mandatory for all non-trivial code changes to ensure repository integrity and prevent build failures in the main tree.
@@ -65,3 +69,16 @@ This workflow is mandatory for all non-trivial code changes to ensure repository
 - Do not push generated `artifacts/*` or derived DAG outputs unless explicitly requested.
 
 **Safety Mandate:** Never overwrite an existing working file with untested code. Always prove the new code builds in isolation first.
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+- **Do not “resolve” debt with wording.** Progress must be structural, not just textual.
+- **Do not remove debt labels** unless there is a native explicit Lean proof term checked by the kernel closing that specific debt.
+- **Real progress** = replacing certificate/witness fields with theorem-backed native derivations.

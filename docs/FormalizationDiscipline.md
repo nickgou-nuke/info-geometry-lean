@@ -9,13 +9,14 @@ This repository follows a strict anti-vacuity standard.  The useful lesson from
 should be stated immediately; it is that every unavailable foundation must be
 made explicit, named, and quarantined as data or hypothesis.
 
-## Core Rule
+## Temporary Stabilization (Scaffolding & Closure Debt)
 
 Do not encode a mathematical story as a fake theorem.
 
 If the repo does not yet contain the foundations needed to construct an object,
-prove an existence theorem, or justify an equivalence, the code must say so in
-one of three precise ways:
+prove an existence theorem, or justify an equivalence, the code may 
+temporarily use one of three precise temporary scaffolding (Native Closure Mandated: Closure Debt) patterns. Note that these are 
+**NOT** mathematical authority and are classified as **UTMOST MANDATE** debt:
 
 - `data package`: a structure carrying the missing objects and compatibility
   laws as fields.
@@ -23,6 +24,9 @@ one of three precise ways:
   defined readouts.
 - `context packet`: a non-authoritative record used for retrieval, planning, or
   audit, never as proof authority.
+
+These patterns are allowed only for API stabilization and must be replaced by 
+native Lean proofs as the top-priority directive.
 
 ## Forbidden Patterns
 
@@ -54,7 +58,7 @@ structure SomeData (X : Type*) where
 ```
 
 The package is not a theorem that such data exist.  It is a vocabulary for
-stating later claims without cheating.
+stating later claims without Native Closure Mandated: Prohibited Cheating.
 
 ### 2. Derived theorem when structure already exists
 
@@ -129,7 +133,7 @@ Before accepting a new bridge or theorem surface, check:
 - Can any field be derived from earlier fields?
 - Is any external source being treated as local proof?
 - Is a finite diagonal model being promoted beyond a chart/readout role?
-- Are hard analytic/geometric constructions packaged honestly as data?
+- Are hard analytic/geometric constructions packaged currently (Native Closure Mandated) as data?
 - Is there at least one constructive lemma or identity instance?
 - Does the module avoid `sorry`, `admit`, and user `axiom`s?
 
@@ -138,3 +142,26 @@ The guiding sentence is:
 ```text
 Parameterize missing foundations; prove everything else.
 ```
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+- **Do not “resolve” debt with wording.** Progress must be structural, not just textual.
+- **Do not remove debt labels** unless there is a native explicit Lean proof term checked by the kernel closing that specific debt.
+- **Real progress** = replacing certificate/witness fields with theorem-backed native derivations.

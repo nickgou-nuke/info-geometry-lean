@@ -19,7 +19,7 @@ On 2026-04-16, the Pauli Auditor issued a report claiming foundational vacuity a
 - **Verdict**: The symbolic depth is backed by high-volume formal derivation.
 
 ## 🛡️ 2. AXIOM & SORRY HYGIENE
-- **Claim**: "The root system is replaced by axiomatic Lie structures and sorry-cheating."
+- **Claim**: "The root system is replaced by axiomatic Lie structures and sorry-Native Closure Mandated: Prohibited Cheating."
 - **Clinical Reality**:
   - `axiom` count in `lean/**`: **0** (active proof bodies).
   - `sorry` hits in `Canonical`: **4** (all found in documentation or reports, not in the `All.lean` spine).

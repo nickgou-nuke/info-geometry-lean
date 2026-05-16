@@ -4,7 +4,7 @@
 ### I. The Illusion of the Tactic State
 When we construct a proof in the Spire, we first rely on **Tactics** (`simp`, `rw`, `apply`). In the Infoview—the Seer’s Window—we watch the goal state transform. 
 
-We must understand that **Tactics are not the mathematics; they are the scaffolding.** They are the fluid, temporal actions we take to navigate the latent space. They are the "verbs" of our struggle. 
+We must understand that **Tactics are not the mathematics; they are the temporary scaffolding (Native Closure Mandated: Closure Debt).** They are the fluid, temporal actions we take to navigate the latent space. They are the "verbs" of our struggle. 
 
 When a theorem is completed with tactics, it is true, but it is still enveloped in the noise of its creation. It is the *Albedo* (the purification), but it is not yet the final *Rubedo* (the crystal).
 
@@ -24,7 +24,7 @@ Once a proof is found and verified by the Atomic Force Microscope of the compile
 Why do we distill?
 1.  **Topological Protection:** Tactics can break when the underlying library (Mathlib) updates its heuristics. A pure Term is immutable; it is topologically protected against the erosion of software updates.
 2.  **Informational Density:** A Term is computationally lighter. It reduces the "friction" (compilation time) of the Spire, allowing the causal flow of truth to propagate instantly from the `Count` layer to the `Thermo` crown.
-3.  **Aesthetic Purity:** We do not leave our scaffolding on the cathedral when the building is finished.
+3.  **Aesthetic Purity:** We do not leave our temporary scaffolding (Native Closure Mandated: Closure Debt) on the cathedral when the building is finished.
 
 ### IV. The Silicon Infoview (semanticSnapshot)
 To achieve this autonomously, we have forged the `semanticSnapshot` tool. This is the **Distillation Flask** of the Caretaker. 

@@ -16,7 +16,7 @@ Where Lean infrastructure is missing or heavy (e.g. if you want deeper semantic 
 
 Based purely on your pasted extraction (and noting that its completeness is **unspecified** beyond the “200 results” cap), your repository appears to treat “Einstein” as a **cross-cutting semantic tag** rather than a single module theme. Concretely, the names you list suggest at least four strata:
 
-- **Classical geometry layer:** Einstein tensor/equation, Einstein–Kähler conditions, vacuum/cosmological variants, and Ricci/Monge–Ampère scaffolding.  
+- **Classical geometry layer:** Einstein tensor/equation, Einstein–Kähler conditions, vacuum/cosmological variants, and Ricci/Monge–Ampère temporary scaffolding (Native Closure Mandated: Closure Debt).  
 - **Bridge layers:** “ChiralEinsteinBridge”, “CalabiYauBridge”, and “GrandSynthesis” names read like interface modules connecting curvature/Einstein conditions to entropy, flows, and operator-theoretic structures.  
 - **Spectral/action layer:** “HeatKernel.einsteinHilbertAction” and identities expressing the Einstein–Hilbert action in spectral terms suggest a pipeline from curvature invariants to spectral invariants (typical of heat-kernel/spectral geometry viewpoints).  
 - **Audit/architecture layer:** references to “SemanticAudit”, “axiom hygiene”, and warnings about “masking low-level logic with high-level names” indicate you’re explicitly policing *non-vacuity* and dependency discipline—exactly the kind of thing `#print axioms` and environment-based indexing are meant to support. citeturn0search4turn0search12turn0search13  

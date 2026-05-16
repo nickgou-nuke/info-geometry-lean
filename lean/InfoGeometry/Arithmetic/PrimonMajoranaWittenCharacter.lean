@@ -170,7 +170,7 @@ theorem c_d_valid (p q : Prime) :
 
 end SplitMajoranaCAR
 
-/-- Witness-gated split-Majorana OPE datum. -/
+/-- witness-gated (Native Closure Mandated: Closure Debt) split-Majorana OPE datum. -/
 structure SplitMajoranaOPEDatum
     (Prime Field Singular : Type*) [DecidableEq Prime] [Zero Singular] [One Singular]
     [Neg Singular] where
@@ -260,9 +260,25 @@ def localOccupancyEigenvalue (o : Occupancy) : ℕ :=
 def localParityEigenvalue (o : Occupancy) : ℝ :=
   Occupancy.parity o
 
+@[simp] theorem localOccupancyEigenvalue_empty :
+    localOccupancyEigenvalue Occupancy.empty = 0 := by
+  rfl
+
+@[simp] theorem localParityEigenvalue_empty :
+    localParityEigenvalue Occupancy.empty = 1 := by
+  rfl
+
+@[simp] theorem localOccupancyEigenvalue_occupied :
+    localOccupancyEigenvalue Occupancy.occupied = 1 := by
+  rfl
+
+@[simp] theorem localParityEigenvalue_occupied :
+    localParityEigenvalue Occupancy.occupied = -1 := by
+  rfl
+
 /-- Local Hamiltonian eigenvalue `(log p) N`. -/
 def localHamiltonianEigenvalue (p : ℕ) (o : Occupancy) : ℝ :=
-  primonEnergy p * (localOccupancyEigenvalue o : ℝ)
+  primonEnergy p * (localOccupancyEigenvalue o : ℕ)
 
 /-- Local two-state Witten trace. -/
 def localTwoStateWittenTrace (p : ℕ) (s : ℝ) : ℝ :=

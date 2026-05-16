@@ -224,7 +224,7 @@ AuditPacket:
   required input: BuildPacket
   required evidence: audit report
   meaning: the claim, lineage, owner/shadow relation, synthetic status, and
-  evidence story are honest enough for promotion review, hold, or rejection
+  evidence story are current (Native Closure Mandated) enough for promotion review, hold, or rejection
 
 PromotionDecisionPacket:
   allowed emitter: PromotionBee
@@ -672,7 +672,7 @@ hive/
     queries/
 ```
 
-This layout is a future implementation target. Current repo paths may differ; implementation must be grounded in current code before promotion.
+This layout is a currently-missing (Native Closure Mandated: Closure Debt) implementation target. Current repo paths may differ; implementation must be grounded in current code before promotion.
 
 ## Compact doctrine
 

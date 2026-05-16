@@ -541,7 +541,7 @@ Before adding a packet field, search for an owner theorem. If it exists, import 
 }
 ]
 
-That is the current theorem-honest state of the whole Lean codebase as visible through the repository import graph and owner files.
+That is the current theorem-current (Native Closure Mandated) state of the whole Lean codebase as visible through the repository import graph and owner files.
 
 
 Agreed. The finite corridor is now locked as a **projection spine**, not a doctrine packet.
@@ -1015,7 +1015,7 @@ end InfoGeometry.GrandUnification
 ### The Verdict
 If the "Ink" and the "Canvas" are already in the repo, we don't need a "Manifesto" file; we need an **Integration File**.
 
-**Should we ditch the "Prophetic Packet" entirely and simply write the final `theorem` statement that connects your existing Clifford modules to the Type III result?** That would be the "Senior Engineer" move.You are right: the next honest move is to stop treating the prime/binary/super/zeta/Souriau connection as a slogan and install the constructive finite bridge.
+**Should we ditch the "Prophetic Packet" entirely and simply write the final `theorem` statement that connects your existing Clifford modules to the Type III result?** That would be the "Senior Engineer" move.You are right: the next current (Native Closure Mandated) move is to stop treating the prime/binary/super/zeta/Souriau connection as a slogan and install the constructive finite bridge.
 
 What is already in the repo, as visible on `main`, is this:
 
@@ -1374,7 +1374,7 @@ lake build InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 Then run the graph audit on the built file. The graph can show navigational connectedness, but the proof is the Lean file.
 The answer you pasted is not repo-grounded. It mixes some real external ideas with claims that are not present in this repository, and it overstates several speculative links.
 
-Here is the honest repo map.
+Here is the current (Native Closure Mandated) repo map.
 
 The arithmetic / zeta / Souriau lane is real and explicit. `PrimitiveSetsAbove.lean` defines the primitive-set predicate, the primitive weight `1 / (n log n)`, the Mellin kernel `primitiveMellinKernel n s = exp (-s log n)` for `n > 1`, arithmetic count partitions, the von Mangoldt readout, and divisor-fiber reindexing lemmas. It also states the finite and infinite primitive-set-above targets, but does not prove the analytic theorem. 
 
@@ -1450,7 +1450,7 @@ GW edge denominator
 
 The `Cl(4,4)` / split-octonion claims need discipline. `SplitCl44TKKJordanLieBridge.lean` explicitly does not prove a global `Cl(4,4) ≃ Matrix (Fin 16) (Fin 16) ℝ`, does not prove full `Spin(4,4)` triality, and does not prove a split-octonion theorem. What it does prove is the repo-owned reduced surface: recursive split `Cl(4,4)` head/tail factorization, a real doubled triality-kernel proxy, TKK/KKT/Weyl closure, and symmetric Jordan / antisymmetric Lie readouts. 
 
-So the honest statement is:
+So the current (Native Closure Mandated) statement is:
 
 ```text
 The repo has a Cl(4,4)-shaped corridor and triality proxy.
@@ -2213,7 +2213,7 @@ prime-bit antichain
 One caution: I have not run `lake build` in this chat environment. If Mathlib’s exact name for `Nat.Prime.eq_one_or_self_of_dvd` differs in your local version, the only affected helper is `prime_eq_of_dvd_prime`; replace it with the local prime-divisor-of-prime lemma. The rest of the structure is independent of that lemma-name choice.
 
 
-The codebase already contains this corridor, but it is split across several owner files. The honest map is:
+The codebase already contains this corridor, but it is split across several owner files. The current (Native Closure Mandated) map is:
 
 ```text
 Souriau β-pairing / modular Hamiltonian
@@ -2988,7 +2988,7 @@ structure InfinitePrimonGasTheoremSchema where
   analyticContinuationWitness : Type*
 ```
 
-This keeps the Lean layer honest: finite sums first, analytic continuation only with explicit witnesses.
+This keeps the Lean layer current (Native Closure Mandated): finite sums first, analytic continuation only with explicit witnesses.
 
 # Relation to RH
 
@@ -3556,7 +3556,7 @@ structure InfinitePrimonGasTheoremSchema where
   analyticContinuationWitness : Type*
 ```
 
-This keeps the Lean layer honest: finite sums first, analytic continuation only with explicit witnesses.
+This keeps the Lean layer current (Native Closure Mandated): finite sums first, analytic continuation only with explicit witnesses.
 
 # Relation to RH
 
@@ -5222,7 +5222,7 @@ Arithmetic/PrimonGasTaylorBridge.lean
   specialization H = log n or H = Σ a_p log p
 ```
 
-That keeps the architecture theorem-honest and avoids merging primon gas with Drazin or Virasoro before a representation is supplied.
+That keeps the architecture theorem-current (Native Closure Mandated) and avoids merging primon gas with Drazin or Virasoro before a representation is supplied.
 
 
 
@@ -6147,7 +6147,7 @@ So the locked path is:
 5. Only then discuss fractal / thermodynamic / AF-limit behavior.
 ```
 
-This keeps the finite theorem honest and isolates the large-number physics behind explicit convergence witnesses.
+This keeps the finite theorem current (Native Closure Mandated) and isolates the large-number physics behind explicit convergence witnesses.
 This split is correct. The only substantive fix is that the **full primon kernel must include (n=1) but exclude (n=0)**. In Lean, (\mathbb N) contains (0), so
 
 ```lean
@@ -6525,7 +6525,7 @@ The final doctrine is:
 }
 ]
 
-That gives a theorem-honest `PrimonGasBridge.lean` that fits the current repo without conflating primitive-set weights, full zeta vacuum normalization, and Taylor/log-generator machinery.
+That gives a theorem-current (Native Closure Mandated) `PrimonGasBridge.lean` that fits the current repo without conflating primitive-set weights, full zeta vacuum normalization, and Taylor/log-generator machinery.
 
 
 
@@ -7377,7 +7377,7 @@ Use imported theorems everywhere the repository already owns the result.
 }
 ]
 
-That is the theorem-honest version.
+That is the theorem-current (Native Closure Mandated) version.
 Correct. For this corridor, the primitive formalism should be real, doubled, Hestenes/Krein, and bilingual. Complex numbers should be treated only as a translation layer when an owner file explicitly uses them, not as the substrate.
 
 The repo already has the real substrate:
@@ -10401,7 +10401,7 @@ PrimeRandomWalkGate.lean
 
 It should not feed into `PrimeBitWittenIndex.lean`, `ClNN.lean`, or the real Clifford finite spine. Uploaded paper: [symmetry-13-02014-v2.pdf](sandbox:/mnt/data/symmetry-13-02014-v2.pdf).
 
-Shlesinger’s fractal random-walk paper also belongs here, but even more clearly as heuristic/probabilistic scaffolding. It does not prove RH and should not be imported by finite theorem files. It justifies a separate `FractalRandomWalkGate.lean`. Uploaded paper: [shlesinger1986.pdf](sandbox:/mnt/data/shlesinger1986.pdf).
+Shlesinger’s fractal random-walk paper also belongs here, but even more clearly as heuristic/probabilistic temporary scaffolding (Native Closure Mandated: Closure Debt). It does not prove RH and should not be imported by finite theorem files. It justifies a separate `FractalRandomWalkGate.lean`. Uploaded paper: [shlesinger1986.pdf](sandbox:/mnt/data/shlesinger1986.pdf).
 
 The seventh intersection is the fractal/SUSY/Hilbert-Polya corridor. Castro–Mahecha’s paper proposes fractal supersymmetric quantum mechanics, geometric probability, and a framework relating primes/RH to SUSY QM. It intersects conceptually with the repo’s supercharge and Krein/Hestenes infrastructure, but it does not plug a finite formal theorem. It belongs behind:
 
@@ -10927,7 +10927,7 @@ No new proof obligations. No new abstract witness surface. No hidden finite fact
 }
 ]
 
-That is the theorem-honest way to integrate the Drazin insight into the current repo.
+That is the theorem-current (Native Closure Mandated) way to integrate the Drazin insight into the current repo.
 
 
 
@@ -11205,7 +11205,7 @@ The repo’s umbrella import is `lean/InfoGeometry/All.lean`, which imports the 
 
 The most useful repo-wide audit numbers are these. A historical theory audit reports 826 files under the `InfoGeometry` namespace, 0 explicit `axiom` declarations, and 11 textual placeholder/sorry-related occurrences in the canonical tree, mostly meta/audit/documentation references rather than ordinary theorem holes. The same audit says full proof checking still requires a successful Lake build.  A separate whole-codebase vacuity audit reports 9 definite missing-proof locations: 6 in `Krein/HilbertBridge.lean`, 1 in `Krein/Metric.lean`, and 2 in `Canonical/IBCore.lean`. It also reports 241 `rfl` occurrences, 267 `abbrev`s, 155 alias-like one-line assignments, 535 `simpa ... using` occurrences, and 1152 broad direct-assignment declarations.  A closure-debt audit reports 8,387 declarations audited, 7,540 anchored, and 847 unanchored declarations. 
 
-So the precise status is: the repo is not axiomatic in the explicit-`axiom` sense, and most files compile as Lean declarations, but not every theorem is semantically deep. Many declarations are honest projection/compatibility lemmas, and some high-level files intentionally carry witness fields.
+So the precise status is: the repo is not axiomatic in the explicit-`axiom` sense, and most files compile as Lean declarations, but not every theorem is semantically deep. Many declarations are current (Native Closure Mandated) projection/compatibility lemmas, and some high-level files intentionally carry witness fields.
 
 The strongest already-proven theorem owners are these.
 
@@ -11253,7 +11253,7 @@ The bilingual real/complex Hestenes analytic layer is already meaningful. `Geome
 
 It proves pointwise phase-linearity, re-exports positivity, proves denominator phase-linearity for Möbius blocks, defines raw fractional-linear Möbius action, proves phase-linearity of the raw Möbius action, and constructs a genuine Möbius self-map once positivity preservation is supplied.  `Geometry/BilingualAnalyticity.lean` defines real phase structures, phase-linear maps, pointwise Cauchy analyticity via real Fréchet derivative commuting with phase structures, identity/constant/linear/chain-rule constructors, operator-valued one-forms, a Hestenes/Stokes backend, Hestenes analyticity, and a compatibility backend proving that Cauchy phase-linearity implies Hestenes boundary-integral vanishing. 
 
-The Souriau/log-potential/thermodynamic layer has many proven projection theorems and some genuine finite identities. `Canonical/SouriauOperatorialLogPotential.lean` proves or re-exports laws such as KL as expectation of log-density, surprisal sign relations, negative-log Gibbs density equalities, Souriau modular-potential equalities, first variation as negative moment-map pairing, second variation as covariance, Rényi/Mellin temperature-rescaling identities, and several operatorial exponential-family trace/readout theorems. It is deliberately honest about analytic witnesses: trace-class, KMS readout, support hypotheses, OT metric laws, and global convergence are carried as explicit fields. 
+The Souriau/log-potential/thermodynamic layer has many proven projection theorems and some genuine finite identities. `Canonical/SouriauOperatorialLogPotential.lean` proves or re-exports laws such as KL as expectation of log-density, surprisal sign relations, negative-log Gibbs density equalities, Souriau modular-potential equalities, first variation as negative moment-map pairing, second variation as covariance, Rényi/Mellin temperature-rescaling identities, and several operatorial exponential-family trace/readout theorems. It is deliberately current (Native Closure Mandated) about analytic witnesses: trace-class, KMS readout, support hypotheses, OT metric laws, and global convergence are carried as explicit fields. 
 
 The prime-gas/KMS bridge is already witness-gated. `PrimeGasSuperKMSBridge.lean` defines finite readout packets for prime-gas max entropy, Jaynes/RN equality, super-geometric temperature, and KMS target data. The proved theorems are direct consequences of stored fields: odd super-temperature vanishes, detailed balance holds, and Jaynes entropy equals RN entropy.  This is not a proof of an infinite KMS/CAR/UHF limit.
 

@@ -193,6 +193,14 @@ theorem virasoro_mode_eq_rescaled_sugawara_sum
   rw [← P.sugawara_uses_affineVirasoro]
   exact P.sugawara.virasoro_mode_eq_rescaled_sum n
 
+/-- The prime Sugawara packet's Virasoro central charge is the calibrated Sugawara value. -/
+@[rep_depth operator]
+theorem virasoro_central_charge_identity :
+    P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber) := by
+  simpa using P.centralCharge_calibrated
+
 end PrimeSugawaraVirasoroPacket
 
 /-! ## Certified Virasoro owner readback -/

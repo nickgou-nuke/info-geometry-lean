@@ -45,6 +45,26 @@ The repository is not a pure prose knowledge base. Most Markdown outside the
 maintained entry docs is reference memory, archived handover material, or a
 generated report snapshot.
 
+## Beehive / Swarm Architecture
+
+The local-first swarm / beehive layer is documented in the maintained docs.
+Use these as the current design map for agent orchestration, provider routing,
+and long-running worker layout:
+
+- [docs/README.md](docs/README.md)
+- [docs/hive_greenfield_architecture.md](docs/hive_greenfield_architecture.md)
+- [docs/hive_migration_plan.md](docs/hive_migration_plan.md)
+- [docs/hive_beehive_implementation_checklist.md](docs/hive_beehive_implementation_checklist.md)
+- [docs/hive_beehive_operator_runbook.md](docs/hive_beehive_operator_runbook.md)
+- [docs/hive_beehive_systemd_units.md](docs/hive_beehive_systemd_units.md)
+- [docs/hive_beehive_overrides.md](docs/hive_beehive_overrides.md)
+- [scripts/install_hive_beehive_systemd_units.sh](scripts/install_hive_beehive_systemd_units.sh)
+- [scripts/uninstall_hive_beehive_systemd_units.sh](scripts/uninstall_hive_beehive_systemd_units.sh)
+- [docs/hive_graph_resident_os.md](docs/hive_graph_resident_os.md)
+- [docs/hermes_recursive_hive_architecture.md](docs/hermes_recursive_hive_architecture.md)
+- [docs/hive_neural_backbone_architecture.md](docs/hive_neural_backbone_architecture.md)
+- [docs/hive_beehive_swarm_implementation_plan.md](docs/hive_beehive_swarm_implementation_plan.md)
+
 ## Live Repository Surface
 
 Lean:

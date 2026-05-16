@@ -208,6 +208,7 @@ import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
+import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeLeeYangRHBridge
 import InfoGeometry.Canonical.PrimeHurwitzLimit

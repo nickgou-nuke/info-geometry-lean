@@ -1,0 +1,282 @@
+{
+  "generated_at": "2026-05-16",
+  "scope": "Prime/RH motherboard closure-debt audit, D12-D20 plus Clifford-wavelet convergence route",
+  "authority": {
+    "lean_kernel": "proof authority",
+    "mathlib": "formal owner when theorem is present and imported",
+    "repo_owner": "formal owner when an existing repository theorem/definition proves the socket",
+    "literature": "orientation only until formalized",
+    "arango_leantrail": "derived navigation layer only; current refresh blocked"
+  },
+  "verification": {
+    "closure_debt_gate": {
+      "command": "python3 tools/quality/check_closure_debt_gate.py --policy tools/quality/closure_debt_gate.json",
+      "status": "passed"
+    },
+    "focused_prime_build": {
+      "command": "lake build InfoGeometry.Canonical.PrimeHurwitzLimit InfoGeometry.Canonical.PrimePartitionPolynomials InfoGeometry.Canonical.PrimeLeeYangConvergence InfoGeometry.Canonical.PrimeMertensDefectBoundary InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace InfoGeometry.Wavelet.PrimeWaveletMRA",
+      "status": "passed"
+    },
+    "mathfulness_gate": {
+      "command": "python3 tools/quality/mathfulness_audit.py --file-prefix lean/InfoGeometry/Canonical --json-out reports/closure/mathfulness-audit.json --md-out reports/closure/mathfulness-audit.md --gate",
+      "status": "failed",
+      "reason": "missing_required_audit_input:policy_lint; global audit also classifies many definitions/bridges as non-promotable by design"
+    },
+    "dag_refresh": {
+      "command": "lake script run dagRefresh",
+      "status": "blocked",
+      "reason": "InfoGeometry.All prebuild fails in existing ComplexBoundedOperators modules and DPDWedgeCompatibility"
+    },
+    "leantrail_export": {
+      "command": "lake script run leantrailExport",
+      "status": "blocked",
+      "reason": "artifacts/leantrail/graph_snapshot.json missing because dagRefresh did not complete"
+    },
+    "proof_gap_report": {
+      "command": "python3 scripts/docs/proof_gap_report.py",
+      "status": "passed",
+      "outputs": [
+        "notes/proof_gap_report.md",
+        "notes/proof_gap_report.tex"
+      ]
+    }
+  },
+  "sockets": [
+    {
+      "id": "D12",
+      "socket": "InfoGeometry.Canonical.PrimeHurwitzLimit.CayleyCriticalWitness",
+      "fields": [
+        "cayleyInv_cayley",
+        "unit_of_critical",
+        "critical_of_unit",
+        "reflection_to_inversion"
+      ],
+      "owner_class": "mathlib_owned",
+      "owner_target": "Complex algebra for C(s)=s/(1-s), C^{-1}(z)=z/(1+z), and |C(s)|=1 iff Re(s)=1/2 for s != 1.",
+      "premises": [
+        "s : ℂ",
+        "s != 1"
+      ],
+      "to_prove": "Close CayleyCriticalWitness by direct complex algebra.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_of_Hurwitz_LeeYang_limit",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "unclosed",
+      "risk": "close_now"
+    },
+    {
+      "id": "D13",
+      "socket": "InfoGeometry.Canonical.PrimeLeeYangFerromagnet.FinitePrimeChainData.spinCoupling_nonneg",
+      "fields": [
+        "spinCoupling_nonneg",
+        "spinCoupling_pos_of_ne"
+      ],
+      "owner_class": "repo_owned",
+      "owner_target": "Finite positivity of rank-one Hopfield/Curie-Weiss coupling J_ij=(lambda/2) ell_i ell_j.",
+      "premises": [
+        "FinitePrimeChainData.ell_pos",
+        "0 <= lambda or 0 < lambda",
+        "i != j for strict positivity"
+      ],
+      "to_prove": "Already proved in the repository for stored positive logarithmic weights.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimePartitionPolynomials.LeeYangPolydiscWitness premises"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "closed"
+    },
+    {
+      "id": "D14",
+      "socket": "InfoGeometry.Canonical.PrimePartitionPolynomials.LeeYangPolydiscWitness",
+      "fields": [
+        "inner_zero_free",
+        "outer_zero_free"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "Multivariate Lee-Yang / Asano contraction / Ruelle stable-polynomial zero-free theorem for finite ferromagnetic Ising lattice gases.",
+      "premises": [
+        "N finite",
+        "D : FinitePrimeChainData N",
+        "lambda > 0",
+        "nonnegative pair couplings",
+        "multi-affine local fugacity partition function Z(y)"
+      ],
+      "to_prove": "If all |y_i| < 1 then Z(y) != 0, and if all 1 < |y_i| then Z(y) != 0.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_field_re_zero",
+        "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_critical_line"
+      ],
+      "status": "unclosed",
+      "risk": "formalizable_literature"
+    },
+    {
+      "id": "D15",
+      "socket": "InfoGeometry.Canonical.PrimePartitionPolynomials.RiemannFieldPullback",
+      "fields": [
+        "re_pos_inner",
+        "re_neg_outer",
+        "critical_of_field_re_zero"
+      ],
+      "owner_class": "mathlib_owned",
+      "owner_target": "Complex exponential modulus identity |exp z| = exp(Re z) applied to y_i(s)=exp(-(s-1/2) log p_i).",
+      "premises": [
+        "ell_i > 0",
+        "field s = s - 1/2",
+        "localFugacity s i = exp (-(field s) * ell_i)"
+      ],
+      "to_prove": "Re(s)>1/2 implies |y_i(s)|<1; Re(s)<1/2 implies 1<|y_i(s)|; Re(field s)=0 implies Re(s)=1/2.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_field_re_zero",
+        "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_critical_line"
+      ],
+      "status": "unclosed",
+      "risk": "close_now"
+    },
+    {
+      "id": "D16",
+      "socket": "InfoGeometry.Canonical.PrimeHurwitzLimit.ZeroFreeDomainTransfer",
+      "fields": [
+        "inner_zero_free",
+        "outer_zero_free",
+        "converges_locally_uniform",
+        "nontrivial_in",
+        "nontrivial_out"
+      ],
+      "owner_class": "mathlib_owned_or_formalizable_literature",
+      "owner_target": "Hurwitz zero-free domain transfer on connected components, applied separately to {|z|<1} and {|z|>1}.",
+      "premises": [
+        "locally uniform convergence on compact subsets",
+        "finite approximants zero-free on each component",
+        "limit not identically zero on each component"
+      ],
+      "to_prove": "The limiting function is zero-free off the unit circle, hence zeros lie on |z|=1.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.zero_on_unit_of_inner_outer_zero_free",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "partially_closed_by_repo_logic",
+      "risk": "close_after_mathlib_hurwitz_surface_verification"
+    },
+    {
+      "id": "D17",
+      "socket": "InfoGeometry.Canonical.PrimeLeeYangConvergence.PrimeLeeYangConvergenceSocket",
+      "fields": [
+        "limitF",
+        "zeroFreeTransfer",
+        "xi_zero_iff_limit_zero"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Construct Lee-Yang-stable prime-gas approximants Z_N, nonvanishing R_N, and prove R_N(z)Z_N(z) -> xi(z/(1+z)) locally uniformly.",
+      "premises": [
+        "finite multivariate Lee-Yang approximants",
+        "nonvanishing renormalization",
+        "Cayley chart z -> z/(1+z)",
+        "completed xi zero predicate"
+      ],
+      "to_prove": "Locally uniform convergence to the Cayley pullback of completed xi and zero-equivalence for xi zeros.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.CorrectHurwitzZeroTransferWitness",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "unclosed",
+      "risk": "RH_level_open_analytic_problem",
+      "literature_candidates": [
+        "Clifford (Geometric) Algebra Wavelet Transform, Eckhard Hitzer, 2013, as a possible formalization route for Clifford-wavelet reconstruction and renormalization filters"
+      ]
+    },
+    {
+      "id": "D18",
+      "socket": "InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace.MBKRelativeTraceXiSocket",
+      "fields": [
+        "selfAdjointness",
+        "relativeHeatTrace",
+        "mellinMatchesXiLogDerivative",
+        "singularSupportOnXiZeros"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Self-adjoint MBK operator, relative trace/scattering determinant, and Pfaffian or determinant identity for completed xi.",
+      "premises": [
+        "Berry-Keating dilation operator",
+        "finite Majorana Fock coupling",
+        "infinite-volume self-adjoint or Krein-self-adjoint extension",
+        "trace-class or distributional relative heat trace"
+      ],
+      "to_prove": "Relative Mellin heat trace equals -d/ds log xi(s), with spectral singular support at xi zeros.",
+      "downstream_unlocks": [
+        "operator-theoretic Hilbert-Polya route"
+      ],
+      "status": "unclosed",
+      "risk": "open_program"
+    },
+    {
+      "id": "D19",
+      "socket": "InfoGeometry.Canonical.PrimeSUSYVacuum.PrimeSUSYVacuumPacket",
+      "fields": [
+        "paritySupertrace_eq",
+        "wittenCharacter_eq_parityTrace"
+      ],
+      "owner_class": "repo_owned",
+      "owner_target": "Finite parity supertrace equals finiteParityTrace from PrimeGasPartitions; infinite Euler product remains witness-gated there.",
+      "premises": [
+        "FormalPrimeRootLattice",
+        "finiteParityTrace"
+      ],
+      "to_prove": "Finite Witten character/parity supertrace readback is already a direct field projection.",
+      "downstream_unlocks": [
+        "finite Majorana/Mobius parity channel"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "closed_finite; infinite_euler_product_witness_remains"
+    },
+    {
+      "id": "D20",
+      "socket": "InfoGeometry.Canonical.PrimeMertensDefectBoundary.MertensLDPBoundary",
+      "fields": [
+        "entropyDominatesDefect",
+        "noMacroscopicDefect",
+        "ldp_to_noMacroscopicDefect",
+        "noMacroscopicDefect_to_RHScale"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Large-deviation/entropy-defect proof of RH-scale Mertens boundary M(x)=O(x^(1/2+epsilon)).",
+      "premises": [
+        "MobiusMertensData",
+        "large-deviation speed and rate function",
+        "defect observable",
+        "entropy barrier dominates parity defect cost"
+      ],
+      "to_prove": "For every epsilon>0, eventually |M(N)| <= C_epsilon N^(1/2+epsilon).",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeMertensDefectBoundary.MertensBoundaryPacket.ofLDP"
+      ],
+      "status": "unclosed",
+      "risk": "RH_scale_open_boundary"
+    },
+    {
+      "id": "D21",
+      "socket": "InfoGeometry.Wavelet.PrimeWaveletMRA.WaveletMRACompletionWitness",
+      "fields": [
+        "nested_mra",
+        "scalingFilter",
+        "zeroFreeTransfer",
+        "xi_zero_iff_limit_zero"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "Clifford/geometric-algebra wavelet transform and MRA reconstruction as a possible formal route to D17 convergence.",
+      "premises": [
+        "nested prime resolution bands",
+        "nonvanishing wavelet scaling filter",
+        "zero-free complement transfer",
+        "xi zero equivalence for the wavelet limit"
+      ],
+      "to_prove": "Turn the Clifford-wavelet MRA reconstruction into the locally uniform convergence and zero-equivalence required by PrimeLeeYangConvergenceSocket.",
+      "downstream_unlocks": [
+        "InfoGeometry.Wavelet.PrimeWaveletMRA.toPrimeLeeYangConvergenceSocket",
+        "InfoGeometry.Wavelet.PrimeWaveletMRA.RH_from_Wavelet_MRA"
+      ],
+      "status": "unclosed",
+      "risk": "formalization_route_not_proof"
+    }
+  ]
+}

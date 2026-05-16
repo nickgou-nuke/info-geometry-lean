@@ -82,6 +82,24 @@ Use these first:
 - [../tools/infra/README.md](../tools/infra/README.md)
 - [../leantrail/README.md](../leantrail/README.md)
 
+## Beehive Architecture Docs
+
+These are the current design target for the local-first swarm / beehive layer.
+They are not theorem authority, but they are the best map for the runtime:
+
+- [hive_greenfield_architecture.md](hive_greenfield_architecture.md)
+- [hive_migration_plan.md](hive_migration_plan.md)
+- [hive_beehive_implementation_checklist.md](hive_beehive_implementation_checklist.md)
+- [hive_beehive_operator_runbook.md](hive_beehive_operator_runbook.md)
+- [hive_beehive_systemd_units.md](hive_beehive_systemd_units.md)
+- [hive_beehive_overrides.md](hive_beehive_overrides.md)
+- [../scripts/install_hive_beehive_systemd_units.sh](../scripts/install_hive_beehive_systemd_units.sh)
+- [../scripts/uninstall_hive_beehive_systemd_units.sh](../scripts/uninstall_hive_beehive_systemd_units.sh)
+- [hive_graph_resident_os.md](hive_graph_resident_os.md)
+- [hermes_recursive_hive_architecture.md](hermes_recursive_hive_architecture.md)
+- [hive_neural_backbone_architecture.md](hive_neural_backbone_architecture.md)
+- [hive_beehive_swarm_implementation_plan.md](hive_beehive_swarm_implementation_plan.md)
+
 ## Protected Markdown
 
 These paths are intentionally excluded from content-rewrite cleanup:

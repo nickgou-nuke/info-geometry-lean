@@ -8,8 +8,10 @@
 `hive.md` is no longer a top-level authority document for the repository.
 
 Treat it as historical design memory for earlier swarm or orchestration ideas.
-For current operator surfaces, use:
+For the current beehive architecture and migration path, use:
 
+- [docs/hive_greenfield_architecture.md](docs/hive_greenfield_architecture.md)
+- [docs/hive_migration_plan.md](docs/hive_migration_plan.md)
 - [tools/infra/README.md](tools/infra/README.md)
 - [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
 - [docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md](docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md)

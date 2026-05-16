@@ -39,8 +39,22 @@ def jordanMatrix : ∀ l : List (Nat × ℂ), Matrix (Fin (matrixSize l)) (Fin (
           simpa [matrixSize] using (finSumFinEquiv (m := n) (n := matrixSize as)))
         (by
           simpa [matrixSize] using (finSumFinEquiv (m := n) (n := matrixSize as)))
-        (Matrix.fromBlocks (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock.jordanBlock n a)
+          (Matrix.fromBlocks (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock.jordanBlock n a)
           0 0 (jordanMatrix as))
+
+/-- AFP-style recursive block decomposition for a Jordan matrix. -/
+theorem jordanMatrix_cons (n : Nat) (a : ℂ) (as : List (Nat × ℂ)) :
+    jordanMatrix ((n, a) :: as) =
+      Matrix.reindex
+        (by
+          simpa [matrixSize] using (finSumFinEquiv (m := n) (n := matrixSize as)))
+        (by
+          simpa [matrixSize] using (finSumFinEquiv (m := n) (n := matrixSize as)))
+        (Matrix.fromBlocks
+          (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock.jordanBlock n a)
+          0 0
+          (jordanMatrix as)) := by
+  rfl
 
 /-- Transport a Jordan matrix along a proof that the block-list size matches `n`. -/
 def jordanMatrixTransport {n : Nat} (blocks : List (Nat × ℂ))
@@ -85,10 +99,19 @@ theorem jordanMatrixTransport_charpoly {n : Nat} (blocks : List (Nat × ℂ))
   subst h
   simpa using jordanMatrix_charpoly (blocks := blocks)
 
+/-- Recursive constructor: the transported Jordan matrix is in Jordan normal form
+with respect to its own block list. -/
+theorem jordanNF_transport {n : Nat} (blocks : List (Nat × ℂ))
+    (h : matrixSize blocks = n) :
+    jordanNF (jordanMatrixTransport blocks h) blocks := by
+  refine ⟨h, ?_⟩
+  exact ⟨InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly.SimilarMatrixWitness.refl
+    (jordanMatrixTransport blocks h)⟩
+
 /-- Native Jordan normal-form predicate implies the transported Jordan matrix similarity readout. -/
 theorem jordanNF_charpoly {n : Nat} {A : Matrix (Fin n) (Fin n) ℂ}
     {blocks : List (Nat × ℂ)} (hNF : jordanNF A blocks) :
-    ∃ h : matrixSize blocks = n,
+    ∃ _ : matrixSize blocks = n,
       Matrix.charpoly A = jordanMatrixPoly blocks := by
   rcases hNF with ⟨h, hW⟩
   refine ⟨h, ?_⟩
@@ -283,5 +306,186 @@ noncomputable def matrixAEval_pidStructure {n : Nat} (A : Matrix (Fin n) (Fin n)
 theorem complex_irreducible_degree_eq_one {p : ℂ[X]} (hp : Irreducible p) :
     p.degree = 1 := by
   simpa using (IsAlgClosed.degree_eq_one_of_irreducible ℂ hp)
+
+/-- A degree-one complex polynomial is a unit multiple of a linear factor. -/
+theorem complex_degree_one_associated_X_sub_C (p : ℂ[X]) (hdeg : p.degree = 1) :
+    ∃ a : ℂ, Associated p (X - C a) := by
+  have hp0 : p ≠ 0 := by
+    intro hp0
+    rw [hp0] at hdeg
+    simp at hdeg
+  have hlc : p.leadingCoeff ≠ 0 := Polynomial.leadingCoeff_ne_zero.mpr hp0
+  let a : ℂ := -(p.coeff 0) / p.leadingCoeff
+  have hEq : p = C p.leadingCoeff * (X - C a) := by
+    dsimp [a]
+    calc
+      p = C p.leadingCoeff * X + C (p.coeff 0) := by
+        simpa using (Polynomial.eq_X_add_C_of_degree_eq_one hdeg)
+      _ = C p.leadingCoeff * (X + C (p.coeff 0 / p.leadingCoeff)) := by
+        calc
+          C p.leadingCoeff * X + C (p.coeff 0)
+              = C p.leadingCoeff * X + C (p.leadingCoeff * (p.coeff 0 / p.leadingCoeff)) := by
+                congr 2
+                exact (mul_div_cancel₀ _ hlc).symm
+          _ = C p.leadingCoeff * X + C p.leadingCoeff * C (p.coeff 0 / p.leadingCoeff) := by
+                simp
+          _ = C p.leadingCoeff * (X + C (p.coeff 0 / p.leadingCoeff)) := by
+                rw [mul_add]
+      _ = C p.leadingCoeff * (X - C a) := by
+        congr 1
+        ext i
+        cases i with
+        | zero =>
+            simpa [a] using (show p.coeff 0 / p.leadingCoeff = -(-p.coeff 0 / p.leadingCoeff) by
+              ring_nf)
+        | succ i =>
+            simp [a]
+  refine ⟨a, ?_⟩
+  rw [hEq]
+  exact associated_unit_mul_left (X - C a) (C p.leadingCoeff)
+    (Polynomial.isUnit_C.mpr (isUnit_iff_ne_zero.mpr hlc))
+
+/-- Over `ℂ`, every irreducible polynomial is associated to a linear factor. -/
+theorem complex_irreducible_associated_X_sub_C {p : ℂ[X]} (hp : Irreducible p) :
+    ∃ a : ℂ, Associated p (X - C a) := by
+  exact complex_degree_one_associated_X_sub_C p (complex_irreducible_degree_eq_one hp)
+
+/-- Powers of complex irreducibles are associated to powers of linear factors. -/
+theorem complex_irreducible_pow_associated_X_sub_C {p : ℂ[X]} (hp : Irreducible p) (e : ℕ) :
+    ∃ a : ℂ, Associated (p ^ e) ((X - C a) ^ e) := by
+  rcases complex_irreducible_associated_X_sub_C (p := p) hp with ⟨a, ha⟩
+  exact ⟨a, ha.pow_pow⟩
+
+/-- Over `ℂ`, every irreducible principal ideal is the ideal of a linear factor. -/
+theorem complex_irreducible_span_eq_span_X_sub_C {p : ℂ[X]} (hp : Irreducible p) :
+    ∃ a : ℂ, Ideal.span ({p} : Set ℂ[X]) = Ideal.span ({X - C a} : Set ℂ[X]) := by
+  rcases complex_irreducible_associated_X_sub_C (p := p) hp with ⟨a, hassoc⟩
+  exact ⟨a, Ideal.span_singleton_eq_span_singleton.mpr hassoc⟩
+
+/-- Normalize the PID decomposition of `AEval'` to linear factors over `ℂ`. -/
+theorem matrixAEval_pidStructure_linearFactors {n : Nat}
+    (A : Matrix (Fin n) (Fin n) ℂ) :
+    ∃ (ι : Type) (_ : Fintype ι) (a : ι → ℂ) (e : ι → ℕ) (I : ι → Submodule ℂ[X] ℂ[X]),
+      ((∀ i, I i = Ideal.span ({(X - C (a i)) ^ e i} : Set ℂ[X])) ∧
+        (Nonempty <|
+          Module.AEval' (matrixEnd A) ≃ₗ[ℂ[X]]
+            ⨁ i : ι, (ℂ[X] ⧸ I i))) := by
+  classical
+  obtain ⟨ι, fι, p, hp, e, ⟨e0⟩⟩ :=
+    Module.equiv_directSum_of_isTorsion (R := ℂ[X]) (M := Module.AEval' (matrixEnd A))
+      (matrixAEval_isTorsion (A := A))
+  let a : ι → ℂ := fun i => Classical.choose (complex_irreducible_pow_associated_X_sub_C (p := p i)
+    (hp i) (e i))
+  let I0 : ι → Submodule ℂ[X] ℂ[X] := fun i =>
+    Ideal.span ({p i ^ e i} : Set ℂ[X])
+  let J0 : ι → Submodule ℂ[X] ℂ[X] := fun i =>
+    Ideal.span ({(X - C (a i)) ^ e i} : Set ℂ[X])
+  have ha : ∀ i, Associated (p i ^ e i) ((X - C (a i)) ^ e i) := by
+    intro i
+    dsimp [a]
+    exact Classical.choose_spec (complex_irreducible_pow_associated_X_sub_C (p := p i)
+      (hp i) (e i))
+  have hIJ : ∀ i, I0 i = J0 i := by
+    intro i
+    dsimp [I0, J0]
+    exact Ideal.span_singleton_eq_span_singleton.mpr (ha i)
+  let I : ι → Submodule ℂ[X] ℂ[X] := I0
+  refine ⟨ι, fι, a, e, I, ?_, ?_⟩
+  · intro i
+    dsimp [I, I0, J0]
+    exact hIJ i
+  · refine ⟨?_⟩
+    simpa [I, I0, J0, hIJ] using e0
+
+/-- The quotient by an ideal is cyclic, generated by the class of `1`. -/
+theorem quotient_span_top {I : Ideal ℂ[X]} :
+    Submodule.span ℂ[X] {Ideal.Quotient.mk I (1 : ℂ[X])} = ⊤ := by
+  simpa using (Ideal.Quotient.span_singleton_one (I := I))
+
+/--
+Native module-cyclic reconstruction of the normalized PID decomposition.
+
+The torsion decomposition of `AEval'` is a direct sum of cyclic quotients,
+each generated by the class of `1`; the ideals are then normalized to linear
+factors over `ℂ`.
+-/
+theorem matrixAEval_pidStructure_cyclicLinearFactors {n : Nat}
+    (A : Matrix (Fin n) (Fin n) ℂ) :
+    ∃ (ι : Type) (_ : Fintype ι) (a : ι → ℂ) (e : ι → ℕ) (I : ι → Submodule ℂ[X] ℂ[X]),
+      ((∀ i, I i = Ideal.span ({(X - C (a i)) ^ e i} : Set ℂ[X])) ∧
+        (∀ i, Submodule.span ℂ[X] {Ideal.Quotient.mk (I i) (1 : ℂ[X])} = ⊤) ∧
+        (Nonempty <|
+          Module.AEval' (matrixEnd A) ≃ₗ[ℂ[X]]
+            ⨁ i : ι, (ℂ[X] ⧸ I i))) := by
+  rcases matrixAEval_pidStructure_linearFactors (A := A) with
+    ⟨ι, fι, a, e, I, hI, hEquiv⟩
+  refine ⟨ι, fι, a, e, I, ?_⟩
+  refine ⟨hI, ?_, hEquiv⟩
+  intro i
+  simpa using (quotient_span_top (I := I i))
+
+/-- A cyclic factor `AdjoinRoot ((X - a)^(n+1))` has a Jordan block basis after shifting
+the generator by `a`. -/
+theorem adjoinRoot_shifted_powerBasis_exists_jordanBlock {n : Nat} (a : ℂ) :
+    ∃ (pb : PowerBasis ℂ (AdjoinRoot ((X - C a) ^ (n + 1)))),
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis (pb.gen + algebraMap ℂ _ a)) =
+        InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock.jordanBlock
+          (R := ℂ) pb.dim a := by
+  classical
+  let f : ℂ[X] := (X - C a) ^ (n + 1)
+  let S : Type := AdjoinRoot f
+  let x : S := AdjoinRoot.root f - algebraMap ℂ S a
+  have hroot :
+      AdjoinRoot.root f = x + algebraMap ℂ S a := by
+    dsimp [x]
+    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+      (sub_add_cancel (AdjoinRoot.root f) (algebraMap ℂ S a)).symm
+  have hXeval :
+      aeval (AdjoinRoot.root f) (X - C a) = x := by
+    dsimp [x]
+    rw [Polynomial.aeval_sub, Polynomial.aeval_X, Polynomial.aeval_C, AdjoinRoot.algebraMap_eq]
+    simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+  have hxpow : x ^ (n + 1) = 0 := by
+    have h := AdjoinRoot.eval₂_root f
+    simpa [f, hXeval, Polynomial.eval₂_sub, Polynomial.eval₂_pow, Polynomial.eval₂_X,
+      Polynomial.eval₂_C, AdjoinRoot.algebraMap_eq, sub_eq_add_neg, add_comm, add_left_comm,
+      add_assoc] using h
+  have hx : IsIntegral ℂ x := by
+    have hzero : IsIntegral ℂ (x ^ (n + 1)) := by
+      simpa [hxpow] using (isIntegral_zero : IsIntegral ℂ (0 : S))
+    exact IsIntegral.of_pow (Nat.succ_pos _) hzero
+  have hgen : AdjoinRoot.root f ∈ Algebra.adjoin ℂ ({x} : Set S) := by
+    rw [hroot]
+    exact Subalgebra.add_mem _ (Algebra.subset_adjoin (by simp))
+      (Subalgebra.algebraMap_mem _ a)
+  have htop : Algebra.adjoin ℂ ({x} : Set S) = ⊤ := by
+    exact (AdjoinRoot.powerBasis' ((monic_X_sub_C a).pow (n + 1))).adjoin_eq_top_of_gen_mem_adjoin
+      hgen
+  let pb : PowerBasis ℂ S := PowerBasis.ofAdjoinEqTop hx htop
+  have hdim : pb.dim = n + 1 := by
+    calc
+      pb.dim = Module.finrank ℂ S := by
+        symm
+        exact PowerBasis.finrank pb
+      _ = (n + 1) := by
+        simpa [S, Polynomial.natDegree_pow, natDegree_X_sub_C] using
+          (AdjoinRoot.powerBasis'_dim
+            (R := ℂ) (g := ((X - C a) ^ (n + 1))) (hg := (monic_X_sub_C a).pow (n + 1)))
+  have hmin : pb.minpolyGen = (X ^ pb.dim : ℂ[X]) := by
+    have hdiv : pb.minpolyGen ∣ (X ^ pb.dim : ℂ[X]) := by
+      have hroot : aeval pb.gen (X ^ pb.dim : ℂ[X]) = 0 := by
+        simpa [pb, hdim, Polynomial.aeval_X] using hxpow
+      exact minpoly.dvd (by simpa [PowerBasis.minpolyGen_eq] using hroot)
+    have hdeg : (X ^ pb.dim : ℂ[X]).natDegree ≤ pb.minpolyGen.natDegree := by
+      rw [natDegree_X_pow, pb.natDegree_minpolyGen]
+    have h := Polynomial.eq_of_monic_of_dvd_of_natDegree_le pb.minpolyGen_monic
+      (Polynomial.monic_X_pow pb.dim) hdiv hdeg
+    simpa using h.symm
+  refine ⟨pb, ?_⟩
+  simpa [pb] using
+    (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock
+      .powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
+      (K := ℂ) (S := S) (pb := pb) (a := a) hmin)
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanNormalForm

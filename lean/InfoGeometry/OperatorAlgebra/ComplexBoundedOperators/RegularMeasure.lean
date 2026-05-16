@@ -41,31 +41,34 @@ theorem nbh_add (A : Set α) (e f : ℝ) :
     (⋃ b ∈ metricNeighborhood A e, Metric.ball b f)
       ⊆ metricNeighborhood A (e + f) := by
   intro x hx
-  rw [metricNeighborhood] at hx ⊢
-  rcases hx with ⟨b, hb, hxb⟩
-  rcases hb with ⟨a, ha, hba⟩
-  refine ⟨a, ha, ?_⟩
-  rw [Metric.mem_ball] at hxb hba ⊢
-  exact lt_of_le_of_lt (dist_triangle x b a) (by
-    rw [add_comm e f]
-    exact add_lt_add hxb hba)
+  have hx' :
+      ∃ a ∈ A, ∃ b, dist b a < e ∧ dist x b < f := by
+    simpa [metricNeighborhood, Metric.mem_ball, exists_and_left, exists_and_right,
+      and_assoc] using hx
+  rcases hx' with ⟨a, ha, b, hba, hxb⟩
+  have hxtri : ∃ a ∈ A, dist x a < e + f := by
+    refine ⟨a, ha, ?_⟩
+    nlinarith [dist_triangle x b a, hba, hxb]
+  simpa [metricNeighborhood, Metric.mem_ball] using hxtri
 
 /-- AFP `nbh_subset`: every set lies in each positive metric neighborhood of itself. -/
 theorem subset_nbh (A : Set α) {e : ℝ} (he : 0 < e) :
     A ⊆ metricNeighborhood A e := by
   intro x hx
-  rw [metricNeighborhood]
-  exact ⟨x, hx, by simpa [Metric.mem_ball] using he⟩
+  simpa [metricNeighborhood, Metric.mem_ball] using
+    (show ∃ a ∈ A, dist x a < e from ⟨x, hx, by simpa using he⟩)
 
 /-- AFP `nbh_decseq`: decreasing radii give decreasing metric neighborhoods. -/
 theorem nbh_antitone (A : Set α) {r : ℕ → ℝ} (hr : Antitone r) :
     Antitone fun n => metricNeighborhood A (r n) := by
   intro m n hmn x hx
-  rw [metricNeighborhood] at hx ⊢
-  rcases hx with ⟨a, ha, hxa⟩
-  refine ⟨a, ha, ?_⟩
-  rw [Metric.mem_ball] at hxa ⊢
-  exact lt_of_lt_of_le hxa (hr hmn)
+  have hx' : ∃ a ∈ A, dist x a < r n := by
+    simpa [metricNeighborhood, Metric.mem_ball] using hx
+  rcases hx' with ⟨a, ha, hxa⟩
+  have hxa' : dist x a < r m := lt_of_lt_of_le hxa (hr hmn)
+  exact by
+    simpa [metricNeighborhood, Metric.mem_ball] using
+      (show ∃ a ∈ A, dist x a < r m from ⟨a, ha, hxa'⟩)
 
 /--
 AFP `nbh_Inter_closure_of`: if positive radii decrease to zero, the intersection
@@ -86,18 +89,21 @@ theorem iInter_nbh_eq_closure (A : Set α) {r : ℕ → ℝ}
     rcases Filter.eventually_atTop.mp hev with ⟨N, hN⟩
     have hxN : x ∈ metricNeighborhood A (r N) := by
       simpa using mem_iInter.mp hx N
-    rw [metricNeighborhood] at hxN
-    rcases hxN with ⟨a, ha, hxa⟩
-    refine ⟨a, ha, ?_⟩
-    rw [Metric.mem_ball] at hxa
-    exact lt_trans hxa (hN N le_rfl)
+    have hxN' : ∃ a ∈ A, dist x a < r N := by
+      simpa [metricNeighborhood, Metric.mem_ball] using hxN
+    rcases hxN' with ⟨a, ha, hxa⟩
+    have hεN : r N < ε := hN N le_rfl
+    exact by
+      simpa [metricNeighborhood, Metric.mem_ball] using
+        (show ∃ a ∈ A, dist x a < ε from ⟨a, ha, lt_trans hxa hεN⟩)
   · intro hx
     rw [mem_iInter]
     intro n
     rw [Metric.mem_closure_iff] at hx
     rcases hx (r n) (hrpos n) with ⟨a, ha, hxa⟩
-    rw [metricNeighborhood]
-    exact ⟨a, ha, by simpa [Metric.mem_ball] using hxa⟩
+    exact by
+      simpa [metricNeighborhood, Metric.mem_ball] using
+        (show ∃ a ∈ A, dist x a < r n from ⟨a, ha, hxa⟩)
 
 end MetricNeighborhoods
 
@@ -110,7 +116,7 @@ variable {μ : Measure α} {s : ι → Set α}
 
 /-- Countable additivity for pairwise-disjoint measurable families. -/
 theorem measure_iUnion_eq_tsum
-    (hdisj : Pairwise (Disjoint on s))
+    (hdisj : Pairwise (Function.onFun Disjoint s))
     (hmeas : ∀ i, MeasurableSet (s i)) :
     μ (⋃ i, s i) = ∑' i, μ (s i) :=
   MeasureTheory.measure_iUnion hdisj hmeas
@@ -133,7 +139,7 @@ countable disjoint measurable family are summable.
 -/
 theorem summable_measureReal
     (hmeas : ∀ n, MeasurableSet (s n))
-    (hdisj : Pairwise (Disjoint on s)) :
+    (hdisj : Pairwise (Function.onFun Disjoint s)) :
     Summable fun n => μ.real (s n) :=
   MeasureTheory.summable_measure_toReal hmeas hdisj
 
@@ -143,11 +149,13 @@ additivity for a disjoint measurable family can be read in `ℝ`.
 -/
 theorem tsum_measureReal_eq_measureReal_iUnion
     (hmeas : ∀ n, MeasurableSet (s n))
-    (hdisj : Pairwise (Disjoint on s)) :
+    (hdisj : Pairwise (Function.onFun Disjoint s)) :
     (∑' n, μ.real (s n)) = μ.real (⋃ n, s n) := by
-  rw [Measure.real]
-  rw [MeasureTheory.measure_iUnion hdisj hmeas]
-  exact ENNReal.tsum_toReal_eq fun n => measure_ne_top μ (s n)
+  calc
+    ∑' n, μ.real (s n) = (∑' n, μ (s n)).toReal := by
+      simpa [Measure.real] using (ENNReal.tsum_toReal_eq fun n => measure_ne_top μ (s n)).symm
+    _ = μ.real (⋃ n, s n) := by
+      simp [Measure.real, MeasureTheory.measure_iUnion hdisj hmeas]
 
 end FiniteRealMeasureSums
 
@@ -229,9 +237,9 @@ subsets. This is mathlib's direct replacement for the closed-set part of AFP's
 finite metrizable regularity argument.
 -/
 theorem innerRegularWRT_isClosed_isOpen_of_pseudoMetrizable
-    [PseudoMetrizableSpace α] :
+    [TopologicalSpace.PseudoMetrizableSpace α] :
     μ.InnerRegularWRT IsClosed IsOpen :=
-  Measure.InnerRegularWRT.of_pseudoMetrizableSpace μ
+  MeasureTheory.Measure.InnerRegularWRT.of_pseudoMetrizableSpace μ
 
 /--
 In a sigma-compact space, closed sets are inner-regular with respect to compact
@@ -240,7 +248,7 @@ subsets.
 theorem innerRegularWRT_isCompact_isClosed_of_sigmaCompact
     [SigmaCompactSpace α] :
     μ.InnerRegularWRT IsCompact IsClosed :=
-  Measure.InnerRegularWRT.isCompact_isClosed μ
+  MeasureTheory.Measure.InnerRegularWRT.isCompact_isClosed μ
 
 /--
 Finite measures on complete second-countable pseudometrizable Borel spaces are
@@ -248,7 +256,7 @@ inner regular with compact closed approximants.
 -/
 theorem innerRegularWRT_isCompact_isClosed_measurableSet_of_finite
     [SecondCountableTopology α]
-    [IsCompletelyPseudoMetrizableSpace α]
+    [TopologicalSpace.IsCompletelyPseudoMetrizableSpace α]
     [BorelSpace α]
     [IsFiniteMeasure μ] :
     μ.InnerRegularWRT (fun K => IsCompact K ∧ IsClosed K) MeasurableSet :=
@@ -260,7 +268,7 @@ mathlib-inner-regular.
 -/
 theorem innerRegular_of_completeSecondCountablePseudoMetrizable
     [SecondCountableTopology α]
-    [IsCompletelyPseudoMetrizableSpace α]
+    [TopologicalSpace.IsCompletelyPseudoMetrizableSpace α]
     [BorelSpace α]
     [IsFiniteMeasure μ] :
     μ.InnerRegular :=
@@ -317,7 +325,7 @@ theorem tightSingleton_of_innerRegular
 
 /-- Complete second-countable pseudometrizable spaces have tight finite measures. -/
 theorem tightSingleton_of_completeSecondCountablePseudoMetric
-    [IsCompletelyPseudoMetrizableSpace α]
+    [TopologicalSpace.IsCompletelyPseudoMetrizableSpace α]
     [SecondCountableTopology α]
     [BorelSpace α]
     [IsFiniteMeasure μ] :

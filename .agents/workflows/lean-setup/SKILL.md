@@ -3,6 +3,10 @@ name: lean4-setup
 description: Set up a lean4 repository clone with proper elan toolchains. 
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # Lean 4 Repository Setup
 
 The first time you build in a lean4 repository clone, you need to run

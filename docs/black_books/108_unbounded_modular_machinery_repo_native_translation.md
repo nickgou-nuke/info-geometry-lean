@@ -55,7 +55,7 @@ So the right sentence is:
 
 > log is spectral; projectors realize support routing for executable lanes.
 
-This keeps the repo architecture honest in Type III-facing directions.
+This keeps the repo architecture current (Native Closure Mandated) in Type III-facing directions.
 
 ## 4. Unbounded-correct analogue of the Penrose boundary
 
@@ -90,14 +90,14 @@ theorem supportRestrictedLog_exists
     K = -log_on_support Δ
 ```
 
-### T2. Surrogate projector agrees with spectral support under honest hypotheses
+### T2. Surrogate projector agrees with spectral support under current (Native Closure Mandated) hypotheses
 
 Schematic:
 
 ```lean
 theorem preg_eq_spectralSupport_of_selfAdjoint_limit
   (Δ̂ : SurrogateModularOperator H₂) :
-  honesty_hypotheses Δ̂ ->
+  current (Native Closure Mandated)y_hypotheses Δ̂ ->
   Preg Δ̂ = spectralSupport (limitOperator Δ̂)
 ```
 

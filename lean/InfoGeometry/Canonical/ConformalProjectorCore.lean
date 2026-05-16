@@ -700,6 +700,39 @@ theorem singularEinsteinAnomaly_eq_neg_leftChiralAnomaly_of_projectorAgreement
     CI.einsteinAnomaly_eq_neg_chiralAnomaly_of_projectorAgreement hProj
 
 /--
+Vanishing singular Einstein anomaly is equivalent to vanishing right-projector
+chiral anomaly.
+-/
+theorem einsteinAnomaly_eq_zero_iff_rightChiralAnomaly_eq_zero :
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = 0
+      ↔ CI.rightChiralAnomalyOperator = 0 := by
+  constructor
+  · intro hE
+    rw [CI.singularEinsteinAnomaly_eq_neg_rightChiralAnomaly] at hE
+    simpa [rightChiralAnomalyOperator] using hE
+  · intro hχR
+    rw [CI.singularEinsteinAnomaly_eq_neg_rightChiralAnomaly]
+    simpa [rightChiralAnomalyOperator, hχR]
+
+/--
+Under projector agreement, vanishing singular Einstein anomaly is equivalent to
+vanishing left-projector chiral anomaly.
+-/
+theorem einsteinAnomaly_eq_zero_iff_leftChiralAnomaly_eq_zero_of_projectorAgreement
+    (hProj :
+      IsMoorePenroseInverse.rightProjector CI.A CI.A_MP =
+        IsMoorePenroseInverse.leftProjector CI.A CI.A_MP) :
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = 0
+      ↔ CI.leftChiralAnomalyOperator = 0 := by
+  constructor
+  · intro hE
+    rw [CI.singularEinsteinAnomaly_eq_neg_leftChiralAnomaly_of_projectorAgreement hProj] at hE
+    simpa using hE
+  · intro hχL
+    rw [CI.singularEinsteinAnomaly_eq_neg_leftChiralAnomaly_of_projectorAgreement hProj]
+    simpa [hχL]
+
+/--
 The commutator of the Drazin spectral projector with the dilation operator
 decomposes into the difference of its commutators with the Moore-Penrose range
 and domain projectors.
@@ -815,6 +848,42 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
   simp [hχ]
 
 /--
+Under right-projector commutation, the dilation commutator vanishes exactly
+when the chiral anomaly vanishes.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_iff_chiralAnomaly_eq_zero_of_rightProjector_commute
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 ↔ CI.chiralAnomalyOperator = 0 := by
+  constructor
+  · intro hComm
+    have hEq :=
+      spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_rightProjector_commute
+        (CI := CI) hRight
+    rw [hComm] at hEq
+    have hzero : ((2 : ℝ)⁻¹) • CI.chiralAnomalyOperator = 0 := by
+      have hEq' : 0 = -(((2 : ℝ)⁻¹) • CI.chiralAnomalyOperator) := by
+        simpa [neg_smul] using hEq
+      simpa using hEq'
+    have hscalar : ((2 : ℝ)⁻¹) ≠ 0 := by
+      norm_num
+    exact Or.resolve_left (smul_eq_zero.mp hzero) hscalar
+  · intro hχ
+    exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
+      hRight hχ
+
+/--
+Left-projector notation variant of the same vanishing equivalence.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_iff_leftChiralAnomaly_eq_zero_of_rightProjector_commute
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 ↔ CI.leftChiralAnomalyOperator = 0 := by
+  simpa [leftChiralAnomalyOperator] using
+    CI.spectralProjector_commutator_dilation_eq_zero_iff_chiralAnomaly_eq_zero_of_rightProjector_commute
+      hRight
+
+/--
 Specialized zero corollary, explicitly labeled with left-projector anomaly
 notation.
 -/
@@ -852,6 +921,44 @@ theorem leftChiralAnomalyOperator_eq_zero_iff_projectors_commute :
       CI.spectralChiralProjector * CI.metricChiralProjector
         = CI.metricChiralProjector * CI.spectralChiralProjector := by
   simpa [leftChiralAnomalyOperator] using CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute
+
+/--
+Under projector agreement, vanishing singular Einstein anomaly is equivalent to
+spectral/metric projector commutation.
+-/
+theorem einsteinAnomaly_eq_zero_iff_projectors_commute_of_projectorAgreement
+    (hProj :
+      IsMoorePenroseInverse.rightProjector CI.A CI.A_MP =
+        IsMoorePenroseInverse.leftProjector CI.A CI.A_MP) :
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = 0 ↔
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  calc
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = 0
+        ↔ CI.leftChiralAnomalyOperator = 0 :=
+      CI.einsteinAnomaly_eq_zero_iff_leftChiralAnomaly_eq_zero_of_projectorAgreement hProj
+    _ ↔ CI.spectralChiralProjector * CI.metricChiralProjector
+          = CI.metricChiralProjector * CI.spectralChiralProjector :=
+      CI.leftChiralAnomalyOperator_eq_zero_iff_projectors_commute
+
+/--
+Under right-projector commutation, vanishing dilation commutator is equivalent
+to spectral/metric projector commutation.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_iff_projectors_commute_of_rightProjector_commute
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 ↔
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  calc
+    CI.P_D * CI.D - CI.D * CI.P_D = 0
+        ↔ CI.chiralAnomalyOperator = 0 :=
+      CI.spectralProjector_commutator_dilation_eq_zero_iff_chiralAnomaly_eq_zero_of_rightProjector_commute
+        hRight
+    _ ↔ CI.spectralChiralProjector * CI.metricChiralProjector
+          = CI.metricChiralProjector * CI.spectralChiralProjector :=
+      CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute
 
 /--
 Constructive forward direction: vanishing anomaly implies projector commutation.

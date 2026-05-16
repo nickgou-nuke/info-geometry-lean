@@ -17,6 +17,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.ComplexBoundedOperators
 namespace InnerProduct
 
+open scoped BigOperators
 open scoped InnerProductSpace
 
 variable {E : Type*}
@@ -38,11 +39,11 @@ theorem cinner_add_right (x y z : E) :
 
 theorem cinner_smul_left (c : ℂ) (x y : E) :
     ⟪c • x, y⟫_ℂ = star c * ⟪x, y⟫_ℂ :=
-  inner_smul_left x y c
+  by simpa using (@inner_smul_left ℂ E _ _ _ x y c)
 
 theorem cinner_smul_right (c : ℂ) (x y : E) :
     ⟪x, c • y⟫_ℂ = c * ⟪x, y⟫_ℂ :=
-  inner_smul_right x y c
+  by simpa using (@inner_smul_right ℂ E _ _ _ x y c)
 
 theorem cinner_diff_left (x y z : E) :
     ⟪x - y, z⟫_ℂ = ⟪x, z⟫_ℂ - ⟪y, z⟫_ℂ := by
@@ -69,11 +70,11 @@ theorem im_cinner_self (x : E) :
 
 theorem cinner_smul_real_left (r : ℝ) (x y : E) :
     ⟪(r : ℂ) • x, y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
-  rw [inner_smul_real_left]
+  simpa using (@inner_smul_real_left ℂ E _ _ _ x y r)
 
 theorem cinner_smul_real_right (r : ℝ) (x y : E) :
     ⟪x, (r : ℂ) • y⟫_ℂ = (r : ℂ) * ⟪x, y⟫_ℂ := by
-  rw [inner_smul_real_right]
+  simpa using (@inner_smul_real_right ℂ E _ _ _ x y r)
 
 /-! ## Nondegeneracy and norm identities -/
 
@@ -127,12 +128,12 @@ theorem cinner_mul_cinner_self_le (x y : E) :
 
 theorem polar_identity (x y : E) :
     ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 + 2 * RCLike.re ⟪x, y⟫_ℂ := by
-  rw [norm_add_sq]
+  rw [norm_add_sq (𝕜 := ℂ)]
   ring
 
 theorem polar_identity_minus (x y : E) :
     ‖x - y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 - 2 * RCLike.re ⟪x, y⟫_ℂ := by
-  rw [norm_sub_sq]
+  rw [norm_sub_sq (𝕜 := ℂ)]
   ring
 
 theorem parallelogram_law (x y : E) :
@@ -147,9 +148,10 @@ theorem pythagorean_theorem {x y : E} (hxy : ⟪x, y⟫_ℂ = 0) :
 
 theorem sum_cinner {ι κ : Type*} (s : Finset ι) (t : Finset κ)
     (f : ι → E) (g : κ → E) :
-    ⟪∑ i in s, f i, ∑ j in t, g j⟫_ℂ =
-      ∑ i in s, ∑ j in t, ⟪f i, g j⟫_ℂ := by
-  simp only [inner_sum, sum_inner]
+    ⟪(Finset.sum s (fun i => f i)), (Finset.sum t (fun j => g j))⟫_ℂ =
+      Finset.sum (s.product t) (fun p => ⟪f p.1, g p.2⟫_ℂ) := by
+  rw [sum_inner]
+  simp [inner_sum, Finset.sum_product]
 
 /-- Complex polarization identity in mathlib's native form. -/
 theorem cinner_polarization (x y : E) :
@@ -157,7 +159,7 @@ theorem cinner_polarization (x y : E) :
       ((‖x + y‖ : ℂ) ^ 2 - (‖x - y‖ : ℂ) ^ 2 +
           (((‖x - Complex.I • y‖ : ℂ) ^ 2 -
               (‖x + Complex.I • y‖ : ℂ) ^ 2) * Complex.I)) / 4 :=
-  inner_eq_sum_norm_sq_div_four x y
+  inner_eq_sum_norm_sq_div_four (𝕜 := ℂ) x y
 
 end InnerProduct
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators

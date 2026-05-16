@@ -27,6 +27,10 @@ abbrev LatticeState := HurwitzNode → ℝ
 def node (a b c d : ℝ) : HurwitzNode :=
   { re := a, imI := b, imJ := c, imK := d }
 
+@[simp] theorem node_normSq (a b c d : ℝ) :
+    Quaternion.normSq (node a b c d) = a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 := by
+  simp [node, Quaternion.normSq_def']
+
 /-- The first eight Hurwitz directions `±1, ±i, ±j, ±k`. -/
 def basisDir : Fin 8 → HurwitzNode
   | ⟨0, _⟩ => node 1 0 0 0
@@ -38,6 +42,13 @@ def basisDir : Fin 8 → HurwitzNode
   | ⟨6, _⟩ => node 0 0 0 1
   | ⟨7, _⟩ => node 0 0 0 (-1)
 
+@[simp] theorem basisDir_isHurwitzUnit (i : Fin 8) :
+    IsHurwitzUnit (basisDir i) := by
+  fin_cases i <;>
+    change Quaternion.normSq (node _ _ _ _) = 1 <;>
+    rw [node_normSq] <;>
+    norm_num
+
 /--
 The sixteen half-integer Hurwitz directions `(±1, ±1, ±1, ±1) / 2`.
 The signs are encoded by the 4 low bits of the index.
@@ -47,6 +58,12 @@ def halfDir (i : Fin 16) : HurwitzNode :=
   let sgn (bit : Nat) : ℝ :=
     if ((n / bit) % 2 = 0) then (1 / 2 : ℝ) else (-1 / 2 : ℝ)
   node (sgn 1) (sgn 2) (sgn 4) (sgn 8)
+
+@[simp] theorem halfDir_isHurwitzUnit (i : Fin 16) :
+    IsHurwitzUnit (halfDir i) := by
+  dsimp [IsHurwitzUnit, halfDir, node]
+  rw [Quaternion.normSq_def']
+  repeat split_ifs <;> norm_num
 
 /--
 A computable 24-direction chart for nearest-neighbor hopping on the Hurwitz shell.
@@ -58,6 +75,16 @@ def hurwitzDirection : Fin 24 → HurwitzNode
         basisDir ⟨n, h⟩
       else
         halfDir ⟨n % 16, Nat.mod_lt _ (by decide : 0 < 16)⟩
+
+@[simp] theorem hurwitzDirection_isHurwitzUnit (i : Fin 24) :
+    IsHurwitzUnit (hurwitzDirection i) := by
+  rcases i with ⟨n, hn⟩
+  by_cases h : n < 8
+  · simpa [hurwitzDirection, IsHurwitzUnit, h] using
+      (basisDir_isHurwitzUnit (i := ⟨n, h⟩))
+  · have h' : ¬ n < 8 := h
+    simpa [hurwitzDirection, IsHurwitzUnit, h'] using
+      (halfDir_isHurwitzUnit (i := ⟨n % 16, Nat.mod_lt _ (by decide : 0 < 16)⟩))
 
 /-- Finite index set of the 24 neighbor directions. -/
 def hurwitzDirections : Finset (Fin 24) :=

@@ -69,6 +69,40 @@ theorem spectrum_root_charPoly {K ι : Type*} [CommRing K] [Fintype ι] [Decidab
   ext k
   simp [matrixSpectrum, Eigenvalue, Polynomial.IsRoot]
 
+/-- Native finite-spectrum theorem for the matrix-spectrum root set. -/
+theorem matrixSpectrum_finite {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℂ) : (matrixSpectrum A).Finite := by
+  have h : spectrum ℂ A = matrixSpectrum A := by
+    ext k
+    rw [Matrix.mem_spectrum_iff_isRoot_charpoly]
+    rfl
+  simpa [h] using (Matrix.finite_spectrum (A := A))
+
+/-- Native nonempty-spectrum theorem for positive-dimensional complex matrices. -/
+theorem matrixSpectrum_nonempty_of_pos {n : Nat}
+    (hn : 0 < n) (A : Matrix (Fin n) (Fin n) ℂ) :
+    (matrixSpectrum A).Nonempty := by
+  have hdegNat : 0 < (Matrix.charpoly A).natDegree := by
+    simpa [Matrix.charpoly_natDegree_eq_dim] using hn
+  have hdeg : 0 < (Matrix.charpoly A).degree := by
+    rw [Polynomial.degree_eq_natDegree (Matrix.charpoly_monic A).ne_zero]
+    simpa using hdegNat
+  have hdeg' : (Matrix.charpoly A).degree ≠ 0 := ne_of_gt hdeg
+  rcases IsAlgClosed.exists_root (Matrix.charpoly A) hdeg' with ⟨x, hx⟩
+  exact ⟨x, by simpa [matrixSpectrum, Polynomial.IsRoot] using hx⟩
+
+/-- Native cardinality bound for the matrix spectrum. -/
+theorem matrixSpectrum_ncard_le {n : Nat}
+    (A : Matrix (Fin n) (Fin n) ℂ) :
+    (matrixSpectrum A).ncard ≤ n := by
+  have hs : matrixSpectrum A = (Matrix.charpoly A).rootSet ℂ := by
+    ext k
+    simpa [matrixSpectrum, Eigenvalue, Polynomial.IsRoot] using
+      ((Matrix.charpoly_monic A).mem_rootSet (a := k)).symm
+  rw [hs]
+  simpa [Matrix.charpoly_natDegree_eq_dim] using
+    (Polynomial.ncard_rootSet_le (p := Matrix.charpoly A) ℂ)
+
 /-- Complex spectral radius: supremum of eigenvalue norms. -/
 def spectralRadius {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℂ) : ℝ :=
@@ -85,6 +119,12 @@ structure SpectrumCardPacket (n : Nat) where
   finite_spectrum : (matrixSpectrum A).Finite
   /-- Cardinality bound by matrix dimension. -/
   card_le : (matrixSpectrum A).ncard ≤ n
+
+/-- Native constructor for the spectrum-cardinality packet. -/
+def SpectrumCardPacket.ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) : SpectrumCardPacket n where
+  A := A
+  finite_spectrum := matrixSpectrum_finite A
+  card_le := matrixSpectrum_ncard_le A
 
 namespace SpectrumCardPacket
 
@@ -107,6 +147,11 @@ structure SpectrumNonemptyPacket (n : Nat) where
   /-- Nonempty spectrum witness. -/
   nonempty_spectrum : (matrixSpectrum A).Nonempty
 
+/-- Native constructor for the nonempty-spectrum packet. -/
+def SpectrumNonemptyPacket.ofMatrix {n : Nat}
+    (A : Matrix (Fin n) (Fin n) ℂ) (hn : 0 < n) : SpectrumNonemptyPacket n := by
+  refine { A := A, positive_dim := hn, nonempty_spectrum := matrixSpectrum_nonempty_of_pos hn A }
+
 /-- Maximum-attainment packet for the spectral radius. -/
 structure SpectralRadiusMaxPacket {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℂ) where
@@ -119,12 +164,41 @@ structure SpectralRadiusMaxPacket {ι : Type*} [Fintype ι] [DecidableEq ι]
   /-- Spectral-radius upper bound on every spectral value. -/
   norm_le_radius : ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A
 
+/-- Native constructor for the spectral-radius maximum packet. -/
+def SpectralRadiusMaxPacket.ofNonempty {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι ℂ) (h : (matrixSpectrum A).Nonempty) :
+    SpectralRadiusMaxPacket A := by
+  let S : Set ℝ := (fun z : ℂ => ‖z‖) '' matrixSpectrum A
+  have hS : S.Finite := by
+    simpa [S] using (matrixSpectrum_finite (A := A)).image (fun z : ℂ => ‖z‖)
+  have hSn : S.Nonempty := by
+    rcases h with ⟨z, hz⟩
+    exact ⟨‖z‖, ⟨z, hz, rfl⟩⟩
+  have hmem : ∃ z : ℂ, z ∈ matrixSpectrum A ∧ ‖z‖ = spectralRadius A := by
+    simpa [S, spectralRadius] using (Set.Nonempty.csSup_mem hSn hS)
+  let z : ℂ := Classical.choose hmem
+  have hz : z ∈ matrixSpectrum A := (Classical.choose_spec hmem).1
+  have hzR : ‖z‖ = spectralRadius A := (Classical.choose_spec hmem).2
+  refine
+    { eigenvalue := z
+      eigenvalue_mem := hz
+      norm_eq_radius := hzR
+      norm_le_radius := ?_ }
+  intro a ha
+  exact le_csSup hS.bddAbove ⟨a, ha, rfl⟩
+
 namespace SpectralRadiusMaxPacket
 
 theorem spectralRadius_mem_max {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {A : Matrix ι ι ℂ} (P : SpectralRadiusMaxPacket A) :
-    spectralRadius A ∈ (fun z : ℂ => ‖z‖) '' matrixSpectrum A :=
-  ⟨P.eigenvalue, P.eigenvalue_mem, P.norm_eq_radius⟩
+    {A : Matrix ι ι ℂ} (h : (matrixSpectrum A).Nonempty) :
+    spectralRadius A ∈ (fun z : ℂ => ‖z‖) '' matrixSpectrum A := by
+  let S : Set ℝ := (fun z : ℂ => ‖z‖) '' matrixSpectrum A
+  have hS : S.Finite := by
+    simpa [S] using (matrixSpectrum_finite (A := A)).image (fun z : ℂ => ‖z‖)
+  have hSn : S.Nonempty := by
+    rcases h with ⟨z, hz⟩
+    exact ⟨‖z‖, ⟨z, hz, rfl⟩⟩
+  simpa [spectralRadius, S] using (Set.Nonempty.csSup_mem hSn hS)
 
 theorem le_spectralRadius {ι : Type*} [Fintype ι] [DecidableEq ι]
     {A : Matrix ι ι ℂ} (P : SpectralRadiusMaxPacket A)

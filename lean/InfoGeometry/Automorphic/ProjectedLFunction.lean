@@ -329,7 +329,7 @@ structure LanglandsPrimeResonanceWitness
   completedFunctionalEquation :
     HasCompletedFunctionalEquation P.L completedL
 
-/-! ## 5A. Strong arithmetic witness packets -/
+/-! ## 5A. Strong arithmetic witness packet (Native Closure Mandated: Closure Debt)s -/
 
 /--
 Proof-carrying Euler-product witness for an automorphic L-function.
@@ -374,6 +374,11 @@ def toEulerProductData :
   localFactor := E.localFactor
   convergenceRegion := E.convergenceRegion
   hasEulerProduct := E.euler_product_certificate
+
+@[simp]
+theorem toEulerProductData_hasEulerProduct :
+    (E.toEulerProductData).hasEulerProduct = E.euler_product_certificate :=
+  rfl
 
 end EulerProductWitness
 

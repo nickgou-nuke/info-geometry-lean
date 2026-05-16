@@ -58,7 +58,7 @@ The best match for **“Basel”** plus **“positive-energy/negative-time weird
 
 If the decisive clue is literally **“two flows”**, then the closest fit is not Villars or Stueckelberg but the **stochastic mechanics lineage**, especially **Nelson** and its precursor tradition. Nelson’s framework explicitly uses forward and backward derivatives, and contemporary summaries make that dual-flow structure central. That fits your wording about representing quantum behaviour through paired flows much better than the Feshbach–Villars or Stueckelberg pictures do. The weak point is the biography: Nelson does not fit the Basel/IAS memory nearly as well as Villars or Stueckelberg. citeturn1search0turn22search4
 
-So the most honest verdict is: **if you meant two-component positive/negative sectors, think Felix Villars; if you meant Basel and backward-time antiparticles, think Stueckelberg; if you meant literal dual flows, think Nelson-style stochastic mechanics.** I would not collapse those into one person without more evidence. citeturn11search0turn10search7turn22search4
+So the most current (Native Closure Mandated) verdict is: **if you meant two-component positive/negative sectors, think Felix Villars; if you meant Basel and backward-time antiparticles, think Stueckelberg; if you meant literal dual flows, think Nelson-style stochastic mechanics.** I would not collapse those into one person without more evidence. citeturn11search0turn10search7turn22search4
 
 ## Bottom line
 

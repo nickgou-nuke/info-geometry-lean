@@ -1,42 +1,40 @@
-# 🐝 Hive Agent Skills
+# 🐝 Hive Agent Roles (Authoritative Architecture)
 
-This directory contains specialized skills for the InfoGeometry proving swarm.
+This directory contains specialized skills for the InfoGeometry proving swarm, governed by the **Jung–Pauli Split-Step Hive Blueprint**.
 
-## Agent to Skill Mapping
+## Worker Castes & Specializations
 
-| Agent | Role | Primary Skills | Purpose |
+The Hive operates as a recurrent symbolic-technical organism. Agents are specialized embodiments (backends) wrapped in the doctrinal soul of **Hermes**.
+
+| Caste | Role | Persona/Embodiment | Primary Objective |
 | :--- | :--- | :--- | :--- |
-| **RetrieverBee** | Context | `premise_retriever.md` | Finds relevant Mathlib lemmas and local dependencies. |
-| **SocratesBee** | Formalizer | `formalizer_loop.md`, `state_chain_formalizer.md` | Translates informal claims to Lean 4 and manages proof state chains. |
-| **PauliBee** | Prover | `vibe-validation`, `lean-proof` | Executes iterative proof generation and validation (zero-sorry goal). |
-| **AuditBee** | Validator | `replay_auditor.md`, `pauli-auditor` | Verifies build integrity and replays proof traces for certification. |
-| **PromotionBee** | Librarian | `statement_compiler.md`, `reference_preserver.md` | Manages the transition from exploration to authoritative L0/L1 code. |
-| **BuildBee** | Infrastructure | `mathlib-build`, `lean-setup` | Ensures the local toolchain is consistent and Mathlib caches are primed. |
+| **Jung Bees** | **Excitation** | Hermes[GeminiCLI] | High-pressure symbolic dreaming, motif generation, and bridge hypostatization. |
+| **Pauli Bees** | **Differentiation** | Hermes[CodexCLI] | Anti-inflationary sharpening, branch separation, and admissibility pressure. |
+| **Translation** | **Legalization** | Hermes[CopilotCLI] | Mapping symbolic invariants into `TheoremCandidatePackets` and Lean signatures. |
+| **Proof Bees** | **Probing** | Hermes[LocalProver] | Local proof-state contact, tactic search, and formal survivability checks. |
+| **Audit Bees** | **Purification** | Hermes[LocalAuditor] | Legality checks, architecture conformance, and duplication review. |
+| **Logos Gates** | **Authority** | Lean/Build/Promotion | Final survival authority, executable gates, and durable state transitions. |
 
-## Audit Workflow
+## The Recurrent Cultivation Loop
 
-To perform an extensive audit of the repository, follow this sequence:
+Every seed enters a bounded recurrence until a stable invariant emerges:
 
-1. **Topological Refresh**:
-   ```bash
-   lake script run dagAll
-   ```
-2. **Axiom/Sorry Stratification**:
-   ```bash
-   python3 tools/infra/generate_sorry_equivalence.py --md-out reports/audit/sorry_stratification.md
-   ```
-3. **Policy Compliance**:
-   ```bash
-   python3 tools/infra/agentic_policy_lint.py
-   ```
-4. **Semantic Snapshot**:
-   ```bash
-   lake script run semanticSnapshot
-   ```
+1.  **Seed Intake**: From Black Books, dialogues, or DAG anomalies.
+2.  **Jung Excitation**: Symbolic spreading and reformulation (Nonlinear diffraction).
+3.  **Resonance Clustering**: Detecting recurring structural motifs across variants.
+4.  **Pauli Differentiation**: Sharpening distinctions and collapsing decorative restatement.
+5.  **Invariant Extraction**: Identifying stable structural relations.
+6.  **Packet Legalization**: Converting invariants into formal theorem-factory targets.
+7.  **Formal Probe**: Minimal Lean kernel contact and import verification.
+8.  **Outcome Routing**: Iterate, Promote to Authority, or Return to Residue.
 
-## Development
+## UTMOST MANDATE: Native Proof Closure
 
-When adding a new skill:
-1. Create a `<skill_name>.md` or a subdirectory with `SKILL.md`.
-2. Add the agent mapping to this README.
-3. Verify the skill against the current Pauli Mandate.
+All castes are strictly bound by the top-priority mandate:
+- **No Textual Evasion**: Do not "resolve" debt with wording.
+- **Scaffolding is Debt**: Witness packets and certificate fields are temporary closure debt.
+- **Structural Progress**: Real progress = replacing certificates with theorem-backed native derivations.
+- **Kernel Authority**: Lean is the final arbiter of truth.
+
+## Integration
+This architecture ensures that the Hive is not a one-pass theorem proposer, but a persistent system of recurrent symbolic propagation governed by the Logos of the Lean kernel.

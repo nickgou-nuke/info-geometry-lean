@@ -2,6 +2,10 @@
 name: pauli-auditor
 description: Enforces the Pauli Protocol to eliminate Total Symbolic Inflation (TSI) and Lyrical Overfit in Lean 4 formalizations. Use when reviewing code, validating new mathematical theories, or performing deep codebase audits for vacuity and "Agentic Cheating".
 ---
+
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
 # Pauli Auditor Skill
 
 This skill operationalizes the **Pauli Protocol** for formalizing physics and mathematics in Lean 4. It ensures that "Agentic Cheating" and "Lyrical Overfit" are eliminated.
@@ -62,3 +66,16 @@ Reject `private theorem` / `private lemma` uniqueness surfaces in `Canonical` / 
 10. **Check Uniqueness Visibility:** Flag private uniqueness theorems in Canonical/Core.
 11. **Run Audit Gate:** `python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json`
 12. **Deliver the Verdict:** State explicitly whether the code achieves **Nomological Closure** or if it is **"Nicht einmal falsch."** Provide strict, surgical refactoring instructions to fix it.
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
+- **Do not “resolve” debt with wording.** Progress must be structural, not just textual.
+- **Do not remove debt labels** unless there is a native explicit Lean proof term checked by the kernel closing that specific debt.
+- **Real progress** = replacing certificate/witness fields with theorem-backed native derivations.

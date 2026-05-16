@@ -449,7 +449,7 @@ The whole report, in the repo’s actual language, compresses to this:
   H_D = Q_D^2.
   ]
 * The central-charge/topological lane appears as an operator-valued central term (Z) and its transported index shadow.
-* Type III doubling is translated through modular conjugation, flow, core, and index—not through external complex scaffolding.
+* Type III doubling is translated through modular conjugation, flow, core, and index—not through external complex temporary scaffolding (Native Closure Mandated: Closure Debt).
 * “Penrose apex singularity” becomes a statement about projector/support/kernel/modular-flow concentration on the doubled carrier.
 
 That is the Krein / Hestenes real doubled translation of your whole report.

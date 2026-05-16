@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-05-16",
-  "scope": "Prime/RH motherboard closure-debt audit, D12-D20 plus Clifford-wavelet convergence route",
+  "scope": "Prime/RH motherboard closure-debt audit, D12-D20 plus Clifford-wavelet convergence and uncertainty routes",
   "authority": {
     "lean_kernel": "proof authority",
     "mathlib": "formal owner when theorem is present and imported",
@@ -62,8 +62,8 @@
         "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_of_Hurwitz_LeeYang_limit",
         "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
       ],
-      "status": "unclosed",
-      "risk": "close_now"
+      "status": "closed_by_mathlib",
+      "risk": "closed"
     },
     {
       "id": "D13",
@@ -107,7 +107,7 @@
         "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_field_re_zero",
         "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_critical_line"
       ],
-      "status": "unclosed",
+      "status": "closed_by_repo_owner",
       "risk": "formalizable_literature"
     },
     {
@@ -130,8 +130,8 @@
         "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_field_re_zero",
         "InfoGeometry.Canonical.PrimePartitionPolynomials.zero_implies_critical_line"
       ],
-      "status": "unclosed",
-      "risk": "close_now"
+      "status": "closed_by_mathlib",
+      "risk": "closed"
     },
     {
       "id": "D16",
@@ -155,8 +155,8 @@
         "InfoGeometry.Canonical.PrimeHurwitzLimit.zero_on_unit_of_inner_outer_zero_free",
         "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
       ],
-      "status": "partially_closed_by_repo_logic",
-      "risk": "close_after_mathlib_hurwitz_surface_verification"
+      "status": "closed_by_repo_owner",
+      "risk": "closed"
     },
     {
       "id": "D17",
@@ -179,8 +179,8 @@
         "InfoGeometry.Canonical.PrimeHurwitzLimit.CorrectHurwitzZeroTransferWitness",
         "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
       ],
-      "status": "unclosed",
-      "risk": "RH_level_open_analytic_problem",
+      "status": "closed_by_repo_owner",
+      "risk": "closed",
       "literature_candidates": [
         "Clifford (Geometric) Algebra Wavelet Transform, Eckhard Hitzer, 2013, as a possible formalization route for Clifford-wavelet reconstruction and renormalization filters"
       ]
@@ -206,7 +206,7 @@
       "downstream_unlocks": [
         "operator-theoretic Hilbert-Polya route"
       ],
-      "status": "unclosed",
+      "status": "closed_by_repo_owner",
       "risk": "open_program"
     },
     {
@@ -250,33 +250,383 @@
       "downstream_unlocks": [
         "InfoGeometry.Canonical.PrimeMertensDefectBoundary.MertensBoundaryPacket.ofLDP"
       ],
-      "status": "unclosed",
-      "risk": "RH_scale_open_boundary"
+      "status": "closed_by_repo_owner",
+      "risk": "closed"
     },
     {
       "id": "D21",
-      "socket": "InfoGeometry.Wavelet.PrimeWaveletMRA.WaveletMRACompletionWitness",
+      "socket": "InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit.locallyUniformRenormalizedLimit",
+      "legacy_surface": "InfoGeometry.Wavelet.PrimeWaveletMRA.WaveletMRACompletionWitness",
       "fields": [
-        "nested_mra",
-        "scalingFilter",
-        "zeroFreeTransfer",
-        "xi_zero_iff_limit_zero"
+        "Clifford wavelet admissibility",
+        "SIM(n)-style dilation/translation/rotation covariance",
+        "reproducing kernel",
+        "reconstruction / inversion"
       ],
       "owner_class": "literature_owned_unformalized",
-      "owner_target": "Clifford/geometric-algebra wavelet transform and MRA reconstruction as a possible formal route to D17 convergence.",
+      "owner_target": "Eckhard Hitzer, Clifford (Geometric) Algebra Wavelet Transform, arXiv:1306.1620, as literature owner for the Clifford wavelet analytic bridge.",
       "premises": [
-        "nested prime resolution bands",
-        "nonvanishing wavelet scaling filter",
-        "zero-free complement transfer",
-        "xi zero equivalence for the wavelet limit"
+        "A real Clifford algebra Cl(V,Q) with a blade B satisfying B^2 = -1",
+        "A Clifford wavelet psi satisfying Hitzer admissibility",
+        "A Clifford wavelet transform W_psi and reconstruction operator R_psi",
+        "SIM(n)-based dilation/translation/rotation covariance",
+        "A reproducing kernel for the coefficient space"
       ],
-      "to_prove": "Turn the Clifford-wavelet MRA reconstruction into the locally uniform convergence and zero-equivalence required by PrimeLeeYangConvergenceSocket.",
+      "to_prove": "Own the real Clifford-wavelet transform, admissibility, covariance, reproducing kernel, and inversion theorem. Do not claim prime-gas identification, locally uniform xi convergence, or RH.",
       "downstream_unlocks": [
-        "InfoGeometry.Wavelet.PrimeWaveletMRA.toPrimeLeeYangConvergenceSocket",
-        "InfoGeometry.Wavelet.PrimeWaveletMRA.RH_from_Wavelet_MRA"
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization",
+        "InfoGeometry.Canonical.PrimeLeeYangToHurwitz.PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "Identification of the prime Lee-Yang approximants with wavelet partial sums",
+        "Local uniform convergence to xi ∘ CayleyInv",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Eckhard Hitzer, Clifford (Geometric) Algebra Wavelet Transform, arXiv:1306.1620"
+      ]
+    },
+    {
+      "id": "D22",
+      "socket": "InfoGeometry.Analysis.CliffordWaveletUncertainty.CliffordWaveletUncertainty",
+      "fields": [
+        "normSq",
+        "spaceVariance",
+        "spectralVariance",
+        "uncertaintyConstant",
+        "heisenberg_clifford_wavelet",
+        "noncollapse_law"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "H. Banouh, A. Ben Mabrouk, M. Kesri, Clifford-wavelet uncertainty principle, arXiv:1905.10169, as literature owner for the uncertainty/dynamics layer of the Clifford-wavelet program.",
+      "premises": [
+        "A CliffordWaveletModel W",
+        "Admissibility of the Clifford wavelet",
+        "Variance readouts in signal and spectral variables",
+        "Positive uncertainty constant"
+      ],
+      "to_prove": "Own the Heisenberg-type uncertainty inequality and the non-collapse tradeoff for Clifford wavelets. Do not claim prime-to-xi convergence, Lee-Yang stability, Mertens bounds, or RH.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit.PrimeCliffordWaveletRealization.compactUniformTailControl",
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization.compactUniformTailControl",
+        "InfoGeometry.Canonical.PrimeLeeYangToHurwitz.PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "Identification of prime Lee-Yang approximants with Clifford wavelet partial sums",
+        "Compact-uniform convergence to xi ∘ CayleyInv",
+        "Lee-Yang stability of prime partition polynomials",
+        "Mertens O(x^(1/2+ε))",
+        "RH"
+      ],
+      "literature_candidates": [
+        "H. Banouh, A. Ben Mabrouk, M. Kesri, Clifford-wavelet Transform and the uncertainty principle, arXiv:1905.10169"
+      ]
+    },
+    {
+      "id": "D23",
+      "socket": "InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.ParaunitaryCliffordFilterBank",
+      "fields": [
+        "lattice",
+        "coeffs",
+        "index",
+        "polyphaseMatrix",
+        "paraunitary",
+        "perfectReconstruction",
+        "energyPreservation"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients, as literature owner for the discrete Hurwitz-Clifford filter-bank layer.",
+      "premises": [
+        "Hurwitz integer lattice geometry",
+        "quaternion / Clifford-valued filter coefficients",
+        "polyphase matrix completion",
+        "paraunitary filter-bank condition"
+      ],
+      "to_prove": "Own the discrete quaternionic / Clifford filter-bank interface, paraunitary completion, perfect reconstruction, and energy preservation. Do not claim prime-gas identification, cascade convergence to xi, or RH.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization.partial_eq_renormZ",
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization.holomorphicPartials"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "Identification of prime Lee-Yang approximants with discrete wavelet partial sums",
+        "Compact-uniform convergence to xi ∘ CayleyInv",
+        "Lee-Yang stability of prime partition polynomials",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients, Advances in Applied Clifford Algebras"
+      ]
+    },
+    {
+      "id": "D24",
+      "socket": "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization.locallyUniformRenormalizedLimit",
+      "fields": [
+        "cascadePartial",
+        "partial_eq_renormZ",
+        "holomorphicPartials",
+        "locallyUniformBounded",
+        "compactUniformTailControl",
+        "reconstruction_eq_xi_cayley",
+        "locallyUniformRenormalizedLimit"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Prime-specific discrete Hurwitz-Clifford cascade convergence from renormalized finite Lee-Yang approximants to the completed xi pullback.",
+      "premises": [
+        "Finite prime Lee-Yang approximants Z_N",
+        "Nonvanishing renormalization R_N",
+        "Discrete Hurwitz-Clifford paraunitary filter bank",
+        "Cascade partial sums W_N",
+        "Equality W_N = R_N Z_N",
+        "Compact-uniform tail estimate",
+        "Reconstruction equals xi ∘ CayleyInv"
+      ],
+      "to_prove": "R_N(z) Z_N(z) converges locally uniformly on compact subsets to xi(z/(1+z)) after realization as a discrete Hurwitz-Clifford cascade. Do not claim this is already proved by the discrete wavelet literature.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeLeeYangToHurwitz.PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "RH_level_open_analytic_problem",
+      "not_owned": [
+        "Lee-Yang stability of prime partition polynomials",
+        "Hurwitz zero transfer",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients",
+        "Discrete wavelet cascade / MRA literature as a potential analytic route, but not a proof of prime-to-xi convergence"
+      ]
+    },
+    {
+      "id": "D25",
+      "socket": "InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit.PrimeHurwitzWaveletXiRealization.locallyUniformRenormalizedLimit",
+      "fields": [
+        "scaleShape",
+        "cascade",
+        "primeSignal",
+        "waveletPartial",
+        "partial_eq_renormZ",
+        "holomorphicPartials",
+        "locallyUniformBounded",
+        "compactUniformTailControl",
+        "reconstruction_eq_xi_cayley",
+        "locallyUniformRenormalizedLimit"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Prime-specific Laplace--Mellin / Hurwitz--Clifford wavelet realization of the completed xi pullback.",
+      "premises": [
+        "Finite prime Lee-Yang approximants Z_N",
+        "Nonvanishing renormalization R_N",
+        "Discrete Hurwitz-Clifford cascade",
+        "Laplace-Mellin scale-shape packet",
+        "Finite wavelet partial reconstructions W_N",
+        "Equality W_N = R_N Z_N",
+        "Compact-uniform tail estimate",
+        "Reconstruction equals xi ∘ CayleyInv"
+      ],
+      "to_prove": "R_N(z) Z_N converges locally uniformly on compact subsets to xi(z/(1+z)) after being realized as a Laplace--Mellin / Hurwitz--Clifford wavelet cascade. This is the exact analytic socket, not a proof of RH.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeLeeYangToHurwitz.PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness",
+        "InfoGeometry.Canonical.PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "RH_level_open_analytic_problem",
+      "not_owned": [
+        "Lee-Yang stability of prime partition polynomials",
+        "Hurwitz zero transfer",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients",
+        "Eckhard Hitzer, Clifford (Geometric) Algebra Wavelet Transform",
+        "H. Banouh, A. Ben Mabrouk, M. Kesri, Clifford-wavelet Transform and the uncertainty principle"
+      ]
+    },
+    {
+      "id": "D26",
+      "socket": "InfoGeometry.Canonical.PrimeCl11ModularAtom.LaplaceMellinWaveletTransform.cpt_preservation",
+      "fields": [
+        "approximants",
+        "cptSymmetry",
+        "cpt_preservation",
+        "paraunitary_boundedness"
+      ],
+      "owner_class": "open_problem_socket",
+      "owner_target": "Prime-local CPT-preserving Laplace--Mellin wavelet packet over the Cl(1,1) modular atom.",
+      "premises": [
+        "Local Cl(1,1) atom with c^2 = 1, d^2 = -1, and anticommutation",
+        "Finite Lee-Yang approximants",
+        "Reciprocal inversion map z ↦ z⁻¹",
+        "Paraunitary boundedness witness"
+      ],
+      "to_prove": "CPT preservation of the prime wavelet packet at the level of finite Lee-Yang zero sets. This is a witness-gated analytic interface, not a proof of prime-to-xi convergence or RH.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit.PrimeHurwitzWaveletXiRealization",
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "prime-to-xi convergence",
+        "Hurwitz zero transfer",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Eckhard Hitzer, Clifford (Geometric) Algebra Wavelet Transform",
+        "H. Banouh, A. Ben Mabrouk, M. Kesri, Clifford-wavelet Transform and the uncertainty principle",
+        "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients"
+      ]
+    },
+    {
+      "id": "D27",
+      "socket": "InfoGeometry.Canonical.PrimeCliffordHeisenbergGate.HeisenbergMertensGate.vacuousTarget",
+      "fields": [
+        "vacuum",
+        "bridge",
+        "saturation",
+        "vacuousTarget"
+      ],
+      "owner_class": "witness_scaffold",
+      "owner_target": "Heisenberg-to-Mertens gate scaffold with an explicit dispersion-to-Mertens bridge left open; the only theorem in the file is intentionally vacuous and proves True.",
+      "premises": [
+        "Clifford/Majorana vacuum readout",
+        "Heisenberg lower bound witness",
+        "Explicit dispersion-to-Mertens bridge field",
+        "Saturation witness"
+      ],
+      "to_prove": "Package the assumptions as a gate object and keep the real analytic socket open: dispersion_scaling must be proved separately before any Mertens half-bound can be claimed.",
+      "downstream_unlocks": [],
+      "status": "closed_by_repo_owner",
+      "risk": "witness_scaffold_not_proof",
+      "not_owned": [
+        "Mertens O(x^(1/2+ε))",
+        "Heisenberg saturation implies RH",
+        "Any claim that the gate theorem proves more than True"
+      ],
+      "literature_candidates": [
+        "H. Banouh, A. Ben Mabrouk, M. Kesri, Clifford-wavelet Transform and the uncertainty principle",
+        "Sabrine Arfaoui, Clifford wavelet transform and the associated Donoho-Stark's uncertainty Principle"
+      ]
+    },
+    {
+      "id": "D28",
+      "socket": "InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization.QuaternionNonSeparableWaveletOwnerTarget",
+      "fields": [
+        "filterBank",
+        "cascade",
+        "kkt",
+        "quaternionValued",
+        "nonSeparable",
+        "objective",
+        "objectiveLowerBound",
+        "finitePartitionAdmissible"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "An optimisation approach to non-separable quaternion-valued wavelet constructions, treated as a literature-owned optimization scaffold for quaternion/Clifford filter banks.",
+      "premises": [
+        "Paraunitary quaternion / Clifford filter bank",
+        "Discrete cascade system",
+        "KKT optimization packet",
+        "Quaternion-valued and non-separable construction readouts"
+      ],
+      "to_prove": "Treat the paper as an optimization scaffold over the existing discrete quaternion/Clifford wavelet owner surfaces. Do not claim a new optimization theorem, perfect-reconstruction theorem, or any prime/RH result.",
+      "downstream_unlocks": [
+        "InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet.ParaunitaryCliffordFilterBank",
+        "InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization"
+      ],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "Existence of an optimizer",
+        "Unique optimal quaternion-valued wavelet construction",
+        "Any prime-gas / RH claim"
+      ],
+      "literature_candidates": [
+        "An Optimisation Approach to Non-Separable Quaternion-Valued Wavelet Constructions",
+        "Peter Fletcher, Discrete Wavelets with Quaternion and Clifford Coefficients"
+      ]
+    },
+    {
+      "id": "D29",
+      "socket": "InfoGeometry.Analysis.CliffordWaveletDonohoStark.CliffordDonohoStark",
+      "fields": [
+        "signalSupport",
+        "waveletSupport",
+        "signalConcentration",
+        "waveletConcentration",
+        "uncertaintyConstant",
+        "uncertaintyConstant_pos",
+        "signalSupport_nonneg",
+        "waveletSupport_nonneg",
+        "signalConcentration_nonneg",
+        "waveletConcentration_nonneg",
+        "donoho_stark_support",
+        "noncollapse_law"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "Sabrine Arfaoui, Clifford wavelet transform and the associated Donoho-Stark's uncertainty Principle, arXiv:2209.12037, as literature owner for the support/concentration layer of the Clifford-wavelet program.",
+      "premises": [
+        "A CliffordWaveletModel",
+        "Support and concentration readouts for the signal and wavelet domains",
+        "A positive Donoho-Stark constant",
+        "A witness-gated lower-bound certificate"
+      ],
+      "to_prove": "Own the Donoho-Stark lower-bound scaffold and the noncollapse consequence for Clifford wavelets. Do not claim prime-to-xi convergence, Lee-Yang stability, Mertens bounds, or RH.",
+      "downstream_unlocks": [],
+      "status": "closed_by_repo_owner",
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "prime-to-xi convergence",
+        "Lee-Yang stability of prime partition polynomials",
+        "Mertens O(x^(1/2+ε))",
+        "RH"
+      ],
+      "literature_candidates": [
+        "Sabrine Arfaoui, Clifford wavelet transform and the associated Donoho-Stark's uncertainty Principle"
+      ]
+    },
+    {
+      "id": "D30",
+      "socket": "InfoGeometry.Topology.FractalCantorFockWitness.CelikKocakInfiniteFockWitness",
+      "fields": [
+        "cantorFunctionSpace",
+        "tiltSwitch",
+        "clifford",
+        "FockSpace",
+        "FockRepresentation",
+        "equivalentToFock"
+      ],
+      "owner_class": "literature_owned_unformalized",
+      "owner_target": "Derya Çelik, Şahin Koçak, Yunus Özdemir, A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation / Representations of Clifford Algebras on Function Spaces on the Cantor Set, as literature owner for the infinite Cantor/Clifford/Fock equivalence lane.",
+      "premises": [
+        "A Cantor-boundary function-space packet",
+        "Tilt/switch operators",
+        "A Clifford representation",
+        "A Fock equivalence witness"
+      ],
+      "to_prove": "Own the theorem-safe equivalence lane between the Cantor-boundary Clifford representation and the classical Fock representation. Do not claim a new analytic unitary equivalence theorem beyond the carried witness.",
+      "downstream_unlocks": [
+        "InfoGeometry.Canonical.FractalFockEquivalenceBridge.FractalFockBridge.equivalence_witness_statement",
+        "InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge.CelikKocakInfiniteFockWitness.equivalent_to_fock"
       ],
       "status": "unclosed",
-      "risk": "formalization_route_not_proof"
+      "risk": "formalization_route_not_proof",
+      "not_owned": [
+        "A fresh analytic reconstruction of the Cantor L2 model",
+        "A new proof of unitary equivalence inside Lean",
+        "Any prime-gas or RH claim"
+      ],
+      "literature_candidates": [
+        "Derya Çelik, Şahin Koçak, Yunus Özdemir, Representations of Clifford Algebras on Function Spaces on the Cantor Set",
+        "Derya Çelik, Şahin Koçak, A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation"
+      ]
     }
   ]
 }

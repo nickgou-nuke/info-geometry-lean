@@ -252,7 +252,7 @@ theorem gramSchmidt_length {ι : Type*} [Fintype ι]
   rw [gramSchmidt_code]
   exact gramSchmidtSub2_length [] ws
 
-/-! ## Witness-gated AFP correctness surface -/
+/-! ## witness-gated (Native Closure Mandated: Closure Debt) AFP correctness surface -/
 
 /--
 Certified output of Gram-Schmidt for a list of finite complex vectors.

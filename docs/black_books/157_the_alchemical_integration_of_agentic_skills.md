@@ -51,7 +51,7 @@ The method I now understand is roughly this:
    - selective canonicalization
    - kernel closure only where the substrate is ready
 
-   That is why some files are honest bridges, some are capstones, and some debts remain debts.
+   That is why some files are current (Native Closure Mandated) bridges, some are capstones, and some debts remain debts.
 
 4. **Comments are part of the method**
    I understand much better now that in this repo:
@@ -87,7 +87,7 @@ Not in the absolute sense, no.
 - I understand the method much better now
 - but I should still treat the black books as an ongoing corpus to be revisited chapter-by-chapter against raw code, not as “finished reading, fully absorbed”
 
-So the honest answer is:
+So the current (Native Closure Mandated) answer is:
 - better understanding: yes
 - complete reading of the whole black book corpus: no
 

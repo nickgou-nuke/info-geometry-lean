@@ -14,7 +14,7 @@ Scope: formal candidate doctrine for the operatorial trunk of `info-geometry-lea
 This note distills a recurring symbolic claim into a theorem-factory target:
 - a state should be owned first as a positive normalized probe of an observable algebra;
 - vector, density-matrix, doubled-real, Krein, BdG, Cartan, and Clifford presentations should appear as representation or transport surfaces;
-- basis data should remain epistemological scaffolding rather than ontology.
+- basis data should remain epistemological temporary scaffolding (Native Closure Mandated: Closure Debt) rather than ontology.
 
 This is not a proof note. It is a doctrine note that identifies the minimal truthful Lean targets and the remaining debt.
 
@@ -87,14 +87,14 @@ Those are future obligations.
 The minimal Lean target should define:
 
 - `PositiveNormalizedFunctional` or equivalently a normalized algebraic probe on `AlgebraEnd`;
-- `RepresentationFrame` as coordinate scaffolding on a chosen representation carrier;
+- `RepresentationFrame` as coordinate temporary scaffolding (Native Closure Mandated: Closure Debt) on a chosen representation carrier;
 - `StateRepresentationBridge` connecting a probe to a `StandardFormCarrier` reference state;
 - a theorem exposing `probe = expectation` under the bridge;
 - a theorem or constructor showing that changing/attaching a frame does not change the probe identity.
 
-## Why this target is honest
+## Why this target is current (Native Closure Mandated)
 
-This target is honest because:
+This target is current (Native Closure Mandated) because:
 - the repo already owns `VectorState.expectation` on the doubled carrier;
 - the repo does not yet own a full positive-functional / GNS theorem;
 - therefore the smallest truthful move is to separate abstract probe from representation and connect them by explicit bridge data.

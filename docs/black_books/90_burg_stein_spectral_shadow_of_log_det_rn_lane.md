@@ -145,7 +145,7 @@ Classical -> modular dictionary:
   time-parameterized), with additive structure recovered from the logarithmic
   generator where defined.
 
-This is the mathematically honest translation layer from commutative
+This is the mathematically current (Native Closure Mandated) translation layer from commutative
 log-det/RN mechanics to noncommutative modular dynamics.
 
 ## VII. Commuting Sanity Check

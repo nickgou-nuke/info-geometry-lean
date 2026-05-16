@@ -408,6 +408,6 @@ Audit is its discipline of integration.
 Replay is its memory of successful form.
 Deadends are its memory of failed reduction.
 
-**Conclusion:** the theorem factory should be understood as a computational alchemy. Dreaming may generate, but logos must integrate. The system is healthy only when symbolic material can enter the vessel, be transformed, and emerge either as stable theorem memory or as honest residue — but never be confused with truth before the gates have spoken.
+**Conclusion:** the theorem factory should be understood as a computational alchemy. Dreaming may generate, but logos must integrate. The system is healthy only when symbolic material can enter the vessel, be transformed, and emerge either as stable theorem memory or as current (Native Closure Mandated) residue — but never be confused with truth before the gates have spoken.
 
 **Audit Status: Jungian-Alchemical Doctrine Integrated | MotherBee Recast as Analytic Mediator | Symbolic Reservoir Preserved Without Inflation | Connected | Idle.**

@@ -27,7 +27,7 @@ This "memory" perfectly aligns with the real **DIII/KKT Operator Geometry** we h
 
 ### 🛡️ Existing Repo Infrastructure
 
-The Spire already possesses the structural scaffolding for this synthesis:
+The Spire already possesses the structural temporary scaffolding (Native Closure Mandated: Closure Debt) for this synthesis:
 1.  **Twistor/Incidence Geometry**: `InfoGeometry.Twistor.Incidence` formally defines twistors as pairs of spinors mapping to null geodesics (light rays). `InfoGeometry.Twistor.NullProjective` defines twistors as projectivized null rays of a quadratic form.
 2.  **KKT Triad**: `InfoGeometry.Canonical.KKTCore` now houses the real $Cl(1,1)$ generators ($J, K, \epsilon$) and the circularly polarized nilpotent basis ($u^\pm$).
 

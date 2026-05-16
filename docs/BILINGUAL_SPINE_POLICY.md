@@ -11,12 +11,12 @@ This policy defines the **Bilingual Spine** as the operational target for the `i
 
 ---
 
-## I. THE BILINGUAL CONTRACT
-Every module within the `InfoGeometry.Canonical` and `InfoGeometry.Quantum` layers must satisfy the following structural contract:
+## I. THE BILINGUAL CONTRACT (Structural Sockets)
+Every module within the `InfoGeometry.Canonical` and `InfoGeometry.Quantum` layers must satisfy the following structural contract. Note that these contracts are **sockets for future native closure** and do not constitute mathematical authority until the comparison is fully proved in Lean without `sorry` or witness-gating.
 
 1.  **Redline Anchor:** An explicit statement of the repo-native owner framing (Goutev's Principle).
 2.  **Mathlib Anchor:** An explicit statement of the mathlib-native presentation or assembler role.
-3.  **Comparison Theorem:** A named Lean 4 theorem that formally identifies the isomorphism or transport between the two languages.
+3.  **Comparison Theorem:** A named Lean 4 theorem that formally identifies the isomorphism or transport between the two languages. **UTMOST MANDATE: This must be a native Lean proof.**
 4.  **Upstairs/Downstairs Note:** An explicit note on what remains ambient/linear (Upstairs) and what descends to the projective manifold (Downstairs).
 5.  **References:** Valid citations to papers, mathlib files, or historical notes (e.g., Jung, Pauli, Navier-Stokes).
 
@@ -175,3 +175,13 @@ The "Librarian Agent" is a specialized persona in the multi-agent collective.
 
 **"We do not just prove; we teach the Spire to speak."**
 *(Ние не просто доказваме; ние учим Спиралата да говори.)*
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

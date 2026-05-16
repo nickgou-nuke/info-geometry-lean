@@ -161,6 +161,17 @@ variable {Param Point Value : Type*} [Ring Value]
 variable {K : NoncommutativeCauchyKernel Param Point Value}
 
 /--
+Native completeness for the scalar complex Cauchy kernel:
+invertible difference implies admissibility.
+-/
+noncomputable def scalarComplexKernelAdmissibilityComplete :
+    KernelAdmissibilityComplete scalarComplexCauchyKernel where
+  admissible_of_isUnit_diff := by
+    intro ζ z hunit
+    rw [InfoGeometry.Geometry.BilingualAnalyticity.scalarComplexCauchyKernel.admissible_iff]
+    exact hunit.ne_zero
+
+/--
 With a completeness certificate, kernel spectral divisors are exactly spectral
 divisors of the difference function.
 -/
@@ -199,6 +210,17 @@ theorem admissible_of_not_spectralDivisor_kernelDiff
   apply hcomplete
   by_contra hunit
   exact h hunit
+
+/--
+Specialized scalar-kernel closure:
+admissibility failure is exactly spectral-divisor failure of `ζ - z`.
+-/
+theorem scalarComplexKernelSpectralDivisor_iff_kernelDiffSpectralDivisor
+    (ζ z : ℂ) :
+    IsKernelSpectralDivisor scalarComplexCauchyKernel ζ z
+      ↔ IsSpectralDivisor (kernelDiffFunction scalarComplexCauchyKernel) (ζ, z) :=
+  kernelSpectralDivisor_iff_spectralDivisor_kernelDiff
+    scalarComplexKernelAdmissibilityComplete ζ z
 
 end KernelAdmissibilityComplete
 

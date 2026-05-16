@@ -72,3 +72,13 @@ The Pauli Mandate still rejects Total Symbolic Inflation. The distinction is:
 
 The auditor must separate those cases semantically. The Lean kernel decides
 truth; comments carry the map by which humans and agents find the truth.
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

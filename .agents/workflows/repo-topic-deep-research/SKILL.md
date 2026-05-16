@@ -3,6 +3,10 @@ name: repo-topic-deep-research
 description: Use when you need a deep, topic-focused investigation of repository coverage and maturity (implemented/interface/missing), plus a formalized context pack for LLM/agent reasoning and Socratic dialogue.
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # Repo Topic Deep Research
 
 Use this skill to investigate any topic in this repo (replace `einstein` with your target token set), then produce:

@@ -1,0 +1,30 @@
+# Native Closure Debt loci (exact marker scan)
+
+Total files with exact marker: 66
+
+Top 25 by marker-count:
+01. lean/InfoGeometry/Geometry/BilingualPoincareMetric.lean | hits=4 | lines=1278 | first-hit-lines=[540, 766, 776, 1257]
+02. lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket.lean | hits=4 | lines=1666 | first-hit-lines=[138, 390, 1250, 1492]
+03. lean/InfoGeometry/Canonical/StandardFormCore.lean | hits=3 | lines=275 | first-hit-lines=[12, 18, 180]
+04. lean/InfoGeometry/Canonical/CantorCliffordFunctionModel.lean | hits=3 | lines=381 | first-hit-lines=[12, 13, 343]
+05. lean/InfoGeometry/Canonical/AlgebraicStateFunctionalBridge.lean | hits=2 | lines=164 | first-hit-lines=[13, 106]
+06. lean/InfoGeometry/Automorphic/LFunctionResonance.lean | hits=2 | lines=487 | first-hit-lines=[18, 477]
+07. lean/InfoGeometry/OperatorAlgebra/SpectralTriple.lean | hits=2 | lines=492 | first-hit-lines=[184, 221]
+08. lean/InfoGeometry/Topology/FractalCantorFockWitness.lean | hits=2 | lines=518 | first-hit-lines=[7, 379]
+09. lean/InfoGeometry/OperatorAlgebra/SugawaraAffineBridge.lean | hits=1 | lines=33 | first-hit-lines=[30]
+10. lean/InfoGeometry/Canonical/ManifoldHomologyCore.lean | hits=1 | lines=60 | first-hit-lines=[14]
+11. lean/InfoGeometry/Arithmetic/PrimeMajoranaOPE.lean | hits=1 | lines=106 | first-hit-lines=[77]
+12. lean/InfoGeometry/LanglandsGWBridge.lean | hits=1 | lines=117 | first-hit-lines=[75]
+13. lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean | hits=1 | lines=130 | first-hit-lines=[115]
+14. lean/InfoGeometry/Canonical/DIIIModularEntropyFlowBridge.lean | hits=1 | lines=165 | first-hit-lines=[32]
+15. lean/InfoGeometry/Canonical/FierzStressProjectionBridge.lean | hits=1 | lines=172 | first-hit-lines=[40]
+16. lean/InfoGeometry/Canonical/DrazinGreen.lean | hits=1 | lines=173 | first-hit-lines=[15]
+17. lean/InfoGeometry/Geometry/VerifiedCauchyKernel.lean | hits=1 | lines=179 | first-hit-lines=[24]
+18. lean/InfoGeometry/Canonical/RelativeModularHamiltonianSupport.lean | hits=1 | lines=180 | first-hit-lines=[21]
+19. lean/InfoGeometry/Canonical/QuantumPresentation.lean | hits=1 | lines=181 | first-hit-lines=[128]
+20. lean/InfoGeometry/CondensedMatter/DIIISuperfluid.lean | hits=1 | lines=204 | first-hit-lines=[97]
+21. lean/InfoGeometry/GromovHomologicalProbabilityRoadmap.lean | hits=1 | lines=209 | first-hit-lines=[11]
+22. lean/InfoGeometry/MaxEnt/Core.lean | hits=1 | lines=213 | first-hit-lines=[155]
+23. lean/InfoGeometry/Canonical/GeometricCalculusSurgery.lean | hits=1 | lines=214 | first-hit-lines=[57]
+24. lean/InfoGeometry/Canonical/PrimeLeeYangZeroModeProtection.lean | hits=1 | lines=217 | first-hit-lines=[81]
+25. lean/InfoGeometry/Canonical/DiscreteModularSpectrum.lean | hits=1 | lines=218 | first-hit-lines=[208]

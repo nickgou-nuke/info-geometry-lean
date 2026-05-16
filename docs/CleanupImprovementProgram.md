@@ -63,7 +63,7 @@ Current strict-warning frontier (post latest cleanup pass):
 ### W0. Pauli Seal Enforcement (Mandatory)
 
 Target:
-- block agentic cheating surfaces on canonical modules by mandatory machine gate.
+- block agentic Native Closure Mandated: Prohibited Cheating surfaces on canonical modules by mandatory machine gate.
 
 Actions:
 1. Enforce `I.no_mask_mandate` (physically loaded names must be grounded).

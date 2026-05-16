@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 /-!
 # InfoGeometry.Canonical.PrimeSUSYVacuum
 
-Witness-gated SUSY vacuum capstone for the prime Lee--Yang architecture.
+witness-gated (Native Closure Mandated: Closure Debt) SUSY vacuum capstone for the prime Lee--Yang architecture.
 
 This module keeps the finite arithmetic fact separate from the analytic
 spectral hypothesis:
@@ -239,6 +239,29 @@ def primeSUSYVacuum_of_zeroModeProtection
   no_unconditional_RH_claim_guard := B.no_unconditional_RH_claim_guard
   wittenIndex_not_completedXiDeterminant_guard :=
     B.wittenIndex_not_completedXiDeterminant_guard
+
+/-- The assembled SUSY packet exposes the supplied vacuum readout by definitional equality. -/
+theorem primeSUSYVacuum_of_zeroModeProtection_vacuumReadout
+    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
+      VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket
+      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
+    (B : PrimeSUSYVacuumBridge VacuumReadout) :
+    (primeSUSYVacuum_of_zeroModeProtection M P B).vacuumReadout =
+      B.vacuumReadout :=
+  rfl
+
+/-- The assembled SUSY packet exposes the supplied zero-vacuum-energy law. -/
+theorem primeSUSYVacuum_of_zeroModeProtection_zeroVacuumEnergy
+    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
+      VacuumReadout : Type}
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket
+      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
+    (B : PrimeSUSYVacuumBridge VacuumReadout) :
+    (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_law :=
+  (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy
 
 /-- Owner theorem: the assembled SUSY packet re-exports its supplied laws. -/
 theorem primeSUSYVacuum_of_zeroModeProtection_reexports

@@ -266,7 +266,7 @@ theorem regularBlock_invertible : P.regularBlockInvertibleWitness :=
 theorem singularBlock_quasinilpotent : P.singularBlockQuasinilpotentWitness :=
   P.singularBlockQuasinilpotent_witness
 
-/-- The block formula is a witness-gated computational readback. -/
+/-- The block formula is a witness-gated (Native Closure Mandated: Closure Debt) computational readback. -/
 @[rep_depth operator]
 theorem blockFormula_holds : P.blockFormulaWitness :=
   P.blockFormula_witness

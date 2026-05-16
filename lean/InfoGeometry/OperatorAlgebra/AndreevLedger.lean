@@ -123,6 +123,12 @@ theorem evenMajorana_fixed :
     _ = P.electron + P.hole := by
             abel
 
+/-- The diagonal Andreev mode is pointwise fixed by particle-hole closure. -/
+@[simp]
+theorem theta_evenMajorana_eq_evenMajorana :
+    A.theta P.evenMajorana = P.evenMajorana := by
+  exact (A.mem_fixed_iff P.evenMajorana).mp P.evenMajorana_fixed
+
 /-- The odd Andreev mode is anti-fixed by particle-hole closure. -/
 theorem oddMajorana_antiFixed :
     A.theta P.oddMajorana = -P.oddMajorana := by
@@ -255,7 +261,7 @@ theorem theta_mode_eq_mode
 
 end MajoranaZeroMode
 
-/-! ## 5. Vortex-core memory, witness-gated -/
+/-! ## 5. Vortex-core memory, witness-gated (Native Closure Mandated: Closure Debt) -/
 
 /--
 A witness that a particular vortex core carries a Majorana zero mode.

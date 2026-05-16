@@ -32,7 +32,7 @@ This is the theorem-safe bridge:
 * KMS/Jaynes reproducing weights;
 * calibrated effective volume;
 * projective count coordinates;
-* witness-gated Fierz--Klein readout.
+* witness-gated (Native Closure Mandated: Closure Debt) Fierz--Klein readout.
 
 The Gromov--Witten interpretation is explicitly calibration data.  The raw
 finite object is a real weighted zero-mode orbit count.
@@ -190,6 +190,14 @@ structure ProjectiveCountFierzKleinLaw
 
   quadric_law :
     residual.residual coords = 0
+
+/-- Read back the witness-gated Fierz--Klein quadric law. -/
+theorem projective_count_lies_on_fierz_klein_quadric
+    {Γ : Type*}
+    [Fintype Γ]
+    (P : ProjectiveCountFierzKleinLaw Γ) :
+    P.residual.residual P.coords = 0 :=
+  P.quadric_law
 
 /-- Parameterized owner target for Weyl/KMS projective count geometry. -/
 def WeylKMSProjectiveCountTarget (Γ : Type*) [Fintype Γ] : Prop :=

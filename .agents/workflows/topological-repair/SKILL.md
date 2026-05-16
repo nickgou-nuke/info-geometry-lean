@@ -3,6 +3,10 @@ name: topological-repair
 description: Policy for purifying the repository's DAG by restoring continuous Mathlib dependency chains from L0 upward.
 ---
 
+## Constructive Closure Mandate
+
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+
 # Topological Repair & Mathlib Conductivity
 
 This skill defines the overarching policy and methodology for purifying the repository's Directed Acyclic Graph (DAG) of dependencies. It is the core theoretical framework for transforming schematic code into verified, theorem-honest Lean mathematics.

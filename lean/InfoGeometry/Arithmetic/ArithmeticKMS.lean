@@ -101,7 +101,7 @@ theorem cold_phase_of_projective_Ioo
     PhaseAtProjectiveTemperature u ArithmeticKMSPhase.cold :=
   one_lt_beta_of_projective_cold hu
 
-/-! ## 3. Witness-gated modular/KMS socket -/
+/-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) modular/KMS socket -/
 
 /--
 Finite arithmetic KMS witness.
@@ -155,6 +155,82 @@ theorem modularFlowReadout_nonneg
     0 ≤ K.modularFlowReadout (K.stateOfFinset A) β := by
   rw [K.modularFlow_eq_gibbsPartition A β]
   exact arithmeticGibbsPartition_nonneg A β
+
+/-- The finite arithmetic Gibbs partition at `β = 0` is the cardinality of
+its support restricted to `n > 1`. This is a real calibration fact, not a
+certificate placeholder. -/
+theorem arithmeticGibbsPartition_zero_eq_card_filter (A : Finset ℕ) :
+    arithmeticGibbsPartition A 0 = (A.filter fun n => 1 < n).card := by
+  classical
+  unfold arithmeticGibbsPartition arithmeticGibbsWeight
+  calc
+    Finset.sum A (fun n => primitiveMellinKernel n 0)
+        = Finset.sum A (fun n => if 1 < n then 1 else 0) := by
+            refine Finset.sum_congr rfl ?_
+            intro n hn
+            simp [primitiveMellinKernel]
+    _ = (A.filter fun n => 1 < n).card := by
+          exact_mod_cast (Finset.card_filter (fun n => 1 < n) A).symm
+
+/-- If the finite support contains some `n > 1`, the Gibbs partition is
+strictly positive for every inverse temperature. -/
+theorem arithmeticGibbsPartition_pos_of_mem_gt_one
+    (A : Finset ℕ) (β : ℝ)
+    (h : ∃ n ∈ A, 1 < n) :
+    0 < arithmeticGibbsPartition A β := by
+  rcases h with ⟨n, hnA, hn⟩
+  unfold arithmeticGibbsPartition arithmeticGibbsWeight
+  refine Finset.sum_pos' ?_ ?_
+  · intro i hi
+    exact primitiveMellinKernel_nonneg i β
+  · refine ⟨n, hnA, ?_⟩
+    rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
+    positivity
+
+/-- At `β = 0`, the Gibbs partition vanishes exactly when every support
+point is at most `1`. -/
+theorem arithmeticGibbsPartition_zero_iff_forall_le_one (A : Finset ℕ) :
+    arithmeticGibbsPartition A 0 = 0 ↔ ∀ n ∈ A, n ≤ 1 := by
+  constructor
+  · intro h n hn
+    by_contra hle
+    have hpos : 0 < arithmeticGibbsPartition A 0 :=
+      arithmeticGibbsPartition_pos_of_mem_gt_one A 0 ⟨n, hn, lt_of_not_ge hle⟩
+    linarith
+  · intro h
+    classical
+    unfold arithmeticGibbsPartition arithmeticGibbsWeight
+    rw [Finset.sum_eq_zero]
+    intro n hn
+    rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
+
+/-- KMS certificate implies the state is KMS at all temperatures. -/
+theorem kms_at_all_temperatures
+    (K : ArithmeticKMSWitness State)
+    (A : Finset ℕ)
+    (β : ℝ) :
+    K.IsKMSAt (K.stateOfFinset A) β :=
+  K.kms_certificate A β
+
+/-- Two KMS witnesses with matching state encoding, modular flow, and KMS
+predicate are equal. -/
+theorem kms_witness_eq_of_flow_eq
+    (K1 K2 : ArithmeticKMSWitness State)
+    (hstate : ∀ A, K1.stateOfFinset A = K2.stateOfFinset A)
+    (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β)
+    (hkms : ∀ s β, K1.IsKMSAt s β ↔ K2.IsKMSAt s β) :
+    K1 = K2 := by
+  cases K1
+  cases K2
+  simp at hstate hflow hkms ⊢
+  constructor
+  · funext A
+    exact hstate A
+  · constructor
+    · funext s β
+      exact hflow s β
+    · funext s β
+      exact propext (hkms s β)
 
 end ArithmeticKMSWitness
 

@@ -4,6 +4,20 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+maybe_source() {
+  local candidate=$1
+  if [[ -f "$candidate" ]]; then
+    # shellcheck source=/dev/null
+    source "$candidate"
+  fi
+}
+
+maybe_source ".env"
+maybe_source ".archon/.env"
+if [[ -n "${OPENROUTER_API_KEY:-}" ]]; then
+  maybe_source "tools/infra/archon_openrouter_env.sh"
+fi
+
 usage() {
   cat <<'EOF'
 Usage: ./scripts/run_archon_superorganism.sh [--iterations N] [--parallel N] [--project PATH] [--dashboard]
@@ -19,6 +33,7 @@ Environment:
   LEANSTRAL_BASE_URL  Override default Leanstral endpoint (default: http://127.0.0.1:18889/v1)
   OPENROUTER_PI_MODEL Override the pi assistant OpenRouter model (example: openrouter/openrouter/owl-alpha).
   If unset, model comes from .archon/config.yaml or the resolver output.
+  ARCHON_FALLBACK_PI_MODEL Override the local fallback model when OpenRouter is unavailable.
   OPENROUTER_API_KEY  Required when Pi or Hermes use OpenRouter; set via env or .archon/.env.
   ARCHON_SKIP_CLAUDE_PREFLIGHT=1 to skip the preflight API key check
   ARCHON_SKIP_TITLE_GENERATION=1 to skip Claude title generation calls (recommended for local PI-only loops)
@@ -216,13 +231,21 @@ rm -f "$MODEL_RESOLUTION_ENV"
 
 echo "Startup model source: resolved_via=${MODEL_RESOLUTION_SOURCE} archon_config=${ARCHON_STARTUP_ARCHON_CONFIG} nemoclaw_config=${ARCHON_STARTUP_NEMOCLAW_CONFIG}"
 
+fallback_to_local_pi_model() {
+  local fallback_model="${ARCHON_FALLBACK_PI_MODEL:-${ARCHON_LEANSTRAL_MODEL:-}}"
+  if [[ -n "$fallback_model" ]]; then
+    echo "WARN: falling back to local Pi model ${fallback_model} because OpenRouter is unavailable." >&2
+    export ARCHON_PI_MODEL="$fallback_model"
+  else
+    echo "WARN: cannot fall back to local Pi model because ARCHON_FALLBACK_PI_MODEL and ARCHON_LEANSTRAL_MODEL are unset." >&2
+  fi
+}
+
 if [[ -n "${ARCHON_PI_MODEL:-}" && "${ARCHON_PI_MODEL}" == openrouter/* ]]; then
   OPENROUTER_API_KEY_VAL="${OPENROUTER_API_KEY:-}"
   case "${OPENROUTER_API_KEY_VAL}" in
-    ""|"[REDACTED]"|"sk-test"|"sk-or-v1-test"|"test"|"changeme")
-      echo "ERROR: ARCHON_PI_MODEL=${ARCHON_PI_MODEL} requires a real OPENROUTER_API_KEY in environment." >&2
-      echo "Set OPENROUTER_API_KEY and retry (do not use placeholders)." >&2
-      exit 2
+    ""|"[REDACTED]"|"sk-test"|"***"|"test"|"changeme")
+      fallback_to_local_pi_model
       ;;
   esac
 fi

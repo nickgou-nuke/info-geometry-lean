@@ -427,7 +427,7 @@ Leibniz rule
 finite-sum expansion
 ```
 
-What remains model-specific, honestly:
+What remains model-specific, currently (Native Closure Mandated):
 
 ```text
 the cancellation identity
@@ -520,7 +520,7 @@ bilingual/two-sided analytic:
   central/phase-linear calibration identifying them.
 ```
 
-That is the honest noncommutative replacement for classical complex analyticity.
+That is the current (Native Closure Mandated) noncommutative replacement for classical complex analyticity.
 
 The next module should be something like:
 
@@ -1038,7 +1038,7 @@ Cauchy kernel side
   integral formula is witness-gated
 ```
 
-That is the honest bilingual definition.
+That is the current (Native Closure Mandated) bilingual definition.
 
 The strongest constructive theorem in this first module is:
 

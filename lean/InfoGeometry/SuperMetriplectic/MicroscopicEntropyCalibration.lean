@@ -30,7 +30,7 @@ structure PlanckScaleCalibration where
   /-- Newton constant positivity. -/
   G_pos : 0 < G
 
-/-- Black-hole thermodynamic readout contract (witness-gated). -/
+/-- Black-hole thermodynamic readout contract (witness-gated (Native Closure Mandated: Closure Debt)). -/
 structure BlackHoleThermodynamics (P : PlanckScaleCalibration) (State : Type*) where
   /-- Validity predicate for states to which laws apply. -/
   valid_state : State → Prop
@@ -161,6 +161,15 @@ theorem entropy_nonneg_of_valid_state
   have hcard : (1 : ℝ) ≤ ((C.microstatesOf s).card : ℝ) := by
     exact_mod_cast Nat.succ_le_of_lt hcardNat
   exact Real.log_nonneg hcard
+
+/-- The microstate fiber of any valid state has positive cardinality. -/
+@[simp]
+theorem microstates_card_pos_of_valid_state
+    (C : MicroscopicEntropyCalibration (P := P) (State := State)
+      (MicroState := MicroState) (BH := BH))
+    (s : State) (hs : BH.valid_state s) :
+    0 < (C.microstatesOf s).card := by
+  exact Finset.card_pos.mpr (C.microstates_nonempty s hs)
 
 /--
 For a valid calibrated black-hole state, the macroscopic area law and microscopic

@@ -60,7 +60,7 @@ theorem exists_bump_one_on_compact_zero_off_open
     ⟨f, hfK, hfc, hfU, hfrange⟩
   refine ⟨f, hfK, ?_, hfc, hfU, hfrange⟩
   intro x hx
-  exact image_eq_zero_of_notMem_tsupport (fun hx' => hx (hfU hx'))
+  simpa using image_eq_zero_of_notMem_tsupport (fun hx' => hx (hfU hx'))
 
 /--
 Two-compact-set separation form.
@@ -70,7 +70,7 @@ supported function with values in `[0, 1]`, equal to `0` on `K₀` and `1` on
 `K₁`.
 -/
 theorem exists_bump_zero_one_of_disjoint_compacts
-    [R1Space X] [LocallyCompactSpace X]
+    [R1Space X] [LocallyCompactSpace X] [T2Space X]
     {K₀ K₁ : Set X}
     (hK₀ : IsCompact K₀)
     (hK₁ : IsCompact K₁)
@@ -87,13 +87,13 @@ theorem exists_bump_zero_one_of_disjoint_compacts
   rcases exists_bump_one_on_compact_zero_off_open
       hK₁ hK₀_closed.isOpen_compl hK₁U with
     ⟨f, hfK₁, hfzero, hfc, _hfU, hfrange⟩
-  exact ⟨f, hfzero, hfK₁, hfc, hfrange⟩
+  exact ⟨f, by simpa only [compl_compl] using hfzero, hfK₁, hfc, hfrange⟩
 
 /--
 Mathlib's closed-set Urysohn form for a compact set and a closed disjoint set.
 -/
 theorem exists_continuous_one_zero_of_compact_closed
-    [RegularSpace X] [LocallyCompactSpace X]
+    [RegularSpace X] [LocallyCompactSpace X] [T2Space X]
     {K F : Set X}
     (hK : IsCompact K)
     (hF : IsClosed F)

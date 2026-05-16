@@ -139,9 +139,9 @@ theorem relativeModular_scaleShapeSplit
     {CIK : CertifiedInverseKernel H₂}
     {R : EndH}
     (hComm : Commute CIK.spectralProjector R) :
-    R =
-      CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
-        + CIK.spectralProjector * (R * CIK.spectralProjector) := by
+    let P : EndH := CIK.spectralProjector
+    let Q : EndH := CIK.spectralComplementaryProjector
+    R = Q * (R * Q) + P * (R * P) := by
   let P : EndH := CIK.spectralProjector
   let Q : EndH := CIK.spectralComplementaryProjector
   have hDec : P + Q = (1 : EndH) := by
@@ -167,10 +167,6 @@ theorem relativeModular_scaleShapeSplit
           rw [hPRQ, hQRP]
     _ = Q * (R * Q) + P * (R * P) := by
           simp [add_comm]
-    _ =
-      CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
-        + CIK.spectralProjector * (R * CIK.spectralProjector) := by
-          rfl
 
 /--
 CP-002 ↔ CP-003 bridge:

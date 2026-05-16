@@ -35,7 +35,7 @@ The specific intuition was:
    a Taylor expansion, an integration-by-parts move, or a Feynman-style
    differentiation-under-the-parameter integral.
 
-This pressure is legitimate. But the mathematically honest correction is that
+This pressure is legitimate. But the mathematically current (Native Closure Mandated) correction is that
 the first useful move for this series is not differentiation. It is Mellin/Laplace integration.
 
 ## II. The Correct Kernel Identity

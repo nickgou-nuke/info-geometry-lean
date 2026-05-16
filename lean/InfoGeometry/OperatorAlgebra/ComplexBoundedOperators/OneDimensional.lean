@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
+import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Topology.Algebra.Module.Equiv
 import Mathlib.LinearAlgebra.Span.Defs
 
@@ -30,12 +31,12 @@ def oneKet : OneDimSpace :=
 
 /-- Canonical continuous linear equivalence `Unit → ℂ ≃L[ℂ] ℂ`. -/
 def oneDimIso : OneDimSpace ≃L[ℂ] ℂ :=
-  ContinuousLinearEquiv.funUnique Unit ℂ ℂ
+  (EuclideanSpace.equiv Unit ℂ).trans (ContinuousLinearEquiv.funUnique Unit ℂ ℂ)
 
 @[simp]
 theorem oneDimIso_apply (x : OneDimSpace) :
     oneDimIso x = x () :=
-  rfl
+  by rfl
 
 @[simp]
 theorem oneDimIso_symm_apply (z : ℂ) (u : Unit) :

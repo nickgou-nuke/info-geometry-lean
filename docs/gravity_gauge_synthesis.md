@@ -45,7 +45,7 @@ So the current reading is:
 
 ## Current open gap
 
-The remaining honest gap is still operator-level:
+The remaining current (Native Closure Mandated) gap is still operator-level:
 
 - the Weyl branch is attached to conformal obstruction,
 - but the repo still needs the full operator theorem deriving that obstruction

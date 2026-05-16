@@ -238,7 +238,7 @@ Intended operator analogue:
 - compact capstone theorem relating inverse kernels, projector mismatch, defect support, and entropy readout.
 
 Missing lift obligations likely exposed:
-- the first honest operator-facing metriplectic capstone theorem,
+- the first current (Native Closure Mandated) operator-facing metriplectic capstone theorem,
 - compatibility theorem between hidden-block elimination and entropy split,
 - bridge from scalar defect projector to operator defect support readout.
 

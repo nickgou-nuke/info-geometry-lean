@@ -132,7 +132,7 @@ theorem centeredOccupationCoupling_eq_kappa_mul_logConvolutionCoeff
 /-! ## Wick/Krein and Hurwitz limit sockets -/
 
 /--
-Witness-gated sign bridge between Euclidean damping and Lee--Yang
+witness-gated (Native Closure Mandated: Closure Debt) sign bridge between Euclidean damping and Lee--Yang
 ferromagnetic sign.
 
 This records the Wick/Krein step as data.  The file does not turn a positive
@@ -160,6 +160,16 @@ namespace WickKreinSignBridge
 variable {EuclideanWeight FerromagneticWeight KreinReadout : Type}
 variable (W : WickKreinSignBridge EuclideanWeight FerromagneticWeight KreinReadout)
 
+/-- Re-export of the supplied damping-sign law. -/
+theorem dampingSign :
+    W.dampingSign_law :=
+  W.dampingSign_certificate
+
+/-- Re-export of the supplied ferromagnetic-sign law. -/
+theorem ferromagneticSign :
+    W.ferromagneticSign_law :=
+  W.ferromagneticSign_certificate
+
 /-- Re-export of the supplied Wick/Krein continuation law. -/
 theorem wickKreinContinuation :
     W.wickKreinContinuation_law :=
@@ -168,7 +178,7 @@ theorem wickKreinContinuation :
 end WickKreinSignBridge
 
 /--
-Witness-gated Hurwitz/Lee--Yang limit packet.
+witness-gated (Native Closure Mandated: Closure Debt) Hurwitz/Lee--Yang limit packet.
 
 This is the final analytic bridge:
 finite Lee--Yang stability plus nonvanishing renormalization plus locally

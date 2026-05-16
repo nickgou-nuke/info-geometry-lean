@@ -35,12 +35,13 @@ Arango/LeanTrail are navigation layers only.
 | D18 | `PrimeMBKSelfAdjointTrace.MBKRelativeTraceXiSocket` | `open_problem_socket` | unclosed | open_program |
 | D19 | `PrimeSUSYVacuum.PrimeSUSYVacuumPacket` | `repo_owned` | closed_by_repo_owner | closed_finite |
 | D20 | `PrimeMertensDefectBoundary.MertensLDPBoundary` | `open_problem_socket` | unclosed | RH_scale_open_boundary |
-| D21 | `Wavelet.PrimeWaveletMRA.WaveletMRACompletionWitness` | `literature_owned_unformalized` | unclosed | formalization_route_not_proof |
+| D21 | `PrimeCliffordWaveletXiLimit.locallyUniformRenormalizedLimit` | `literature_owned_unformalized` | unclosed | formalization_route_not_proof |
+| D22 | `CliffordWaveletUncertainty.CliffordWaveletUncertainty` | `literature_owned_unformalized` | unclosed | formalization_route_not_proof |
 
 ## Notes
 
 - D17 remains the irreducible analytic socket on the Lee-Yang/Hurwitz route.
-- The Hitzer Clifford/geometric algebra wavelet transform reference is recorded as a candidate owner route for D21/D17, not as a proof.
+- D21 is now treated as the Hitzer Clifford-wavelet analytic bridge: admissibility, reconstruction, covariance, and reproducing-kernel machinery are literature-owned, but the prime-to-`xi` identification remains open.
+- D22 is the Banouh--Ben Mabrouk--Kesri uncertainty layer: it owns the Heisenberg-type Clifford-wavelet inequality and non-collapse tradeoff, but not prime convergence or RH.
 - The MBK/Pfaffian route D18 remains separate from the finite Mobius parity channel D19.
 - The Arango/LeanTrail graph ledger cannot be treated as fresh until `InfoGeometry.All` and `dagRefresh` are repaired.
-

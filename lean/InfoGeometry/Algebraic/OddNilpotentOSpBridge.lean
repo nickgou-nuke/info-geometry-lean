@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # Odd nilpotent and `osp(1|2)` gate socket
 
-Witness-gated super Jacobson--Morozov eligibility surface:
+witness-gated (Native Closure Mandated: Closure Debt) super Jacobson--Morozov eligibility surface:
 
 `odd nilpotent -> super Jordan normal form -> osp(1|2) embedding gate`.
 
@@ -80,6 +80,13 @@ theorem parityAt_zero
     (hB : 0 < B.size) :
     B.parityAt start ⟨0, hB⟩ = start := by
   simp [parityAt]
+
+@[simp]
+theorem parityAt_zero_even
+    (B : SuperJordanBlock)
+    (hB : 0 < B.size) :
+    B.parityAt SuperParity.even ⟨0, hB⟩ = SuperParity.even := by
+  simp
 
 /--
 Admissibility is exactly the stored odd-size condition.

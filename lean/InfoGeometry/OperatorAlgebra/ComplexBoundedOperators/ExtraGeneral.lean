@@ -21,19 +21,19 @@ theorem uniqueChoice {α β : Type*} {Q : α → β → Prop}
     (hQ : ∀ x, ∃! y, Q x y) :
     ∃! f : α → β, ∀ x, Q x (f x) := by
   classical
-  refine ⟨fun x => Classical.choose (exists_of_exists_unique (hQ x)), ?_, ?_⟩
+  refine ⟨fun x => Classical.choose (ExistsUnique.exists (hQ x)), ?_, ?_⟩
   · intro x
-    exact Classical.choose_spec (exists_of_exists_unique (hQ x))
+    exact Classical.choose_spec (ExistsUnique.exists (hQ x))
   · intro g hg
     funext x
     exact ExistsUnique.unique (hQ x)
       (hg x)
-      (Classical.choose_spec (exists_of_exists_unique (hQ x)))
+      (Classical.choose_spec (ExistsUnique.exists (hQ x)))
 
 theorem finset_sum_single {α β : Type*} [DecidableEq α] [AddCommMonoid β]
     (s : Finset α) (f : α → β) (i : α)
     (hzero : ∀ j ∈ s, j ≠ i → f j = 0) :
-    ∑ j in s, f j = if i ∈ s then f i else 0 := by
+    Finset.sum s f = if i ∈ s then f i else 0 := by
   classical
   by_cases hi : i ∈ s
   · simp [hi, Finset.sum_eq_single i (by
@@ -62,7 +62,7 @@ theorem eqOn_closure_of_continuous {α β : Type*}
 
 theorem leOn_closure_of_continuous {α β : Type*}
     [TopologicalSpace α] [TopologicalSpace β] [LinearOrder β] [ClosedIciTopology β]
-    [ClosedIicTopology β]
+    [ClosedIicTopology β] [OrderClosedTopology β]
     {s : Set α} {f g : α → β}
     (hf : Continuous f) (hg : Continuous g)
     (hfg : ∀ x ∈ s, f x ≤ g x) :

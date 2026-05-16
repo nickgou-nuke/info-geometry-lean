@@ -119,7 +119,7 @@ PrimitiveSetsAbove.lean
   divisor quotient/fiber machinery
 ```
 
-The next honest bridge would be a witness-gated module:
+The next current (Native Closure Mandated) bridge would be a witness-gated module:
 
 ```lean
 structure SouriauPrimitiveZetaCalibration where

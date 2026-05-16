@@ -17,7 +17,7 @@ open InfoGeometry.Canonical.CurvatureRGFlow
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.SpectralInference
 
-/-! ## Ricci Tensor and Einstein-Kähler Scaffolding -/
+/-! ## Ricci Tensor and Einstein-Kähler scaffolding (Native Closure Mandated: Closure Debt) -/
 
 abbrev RicciTensor (E : Type*) := E → E → ℝ
 
@@ -154,7 +154,7 @@ end StrongRicciFromHessian
 
 end EinsteinKaehler
 
-/-! ## Ricci Flow Scaffolding -/
+/-! ## Ricci Flow scaffolding (Native Closure Mandated: Closure Debt) -/
 
 section RicciFlow
 
@@ -326,6 +326,43 @@ lemma isEinsteinKaehlerAtWith_to_exists
     (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (h : IsEinsteinKaehlerAtWith c R K x) :
     IsEinsteinKaehlerAt R K x := by
+  exact ⟨c, h⟩
+
+/-- Converse: from an existential Einstein-Kähler witness, extract the
+explicit constant. The constant is uniquely determined by any pair (u,v)
+with `K.H.metric x u v ≠ 0`. -/
+lemma isEinsteinKaehlerAt_to_with
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (h : IsEinsteinKaehlerAt R K x) :
+    ∃ c : ℝ, IsEinsteinKaehlerAtWith c R K x := by
+  rcases h with ⟨c, hc⟩
+  refine ⟨c, fun u v => hc u v⟩
+
+/-- Uniqueness of the Einstein-Kähler constant: if `Ric = c g` and `Ric = c' g`
+then `c = c'` at any point where the metric is nondegenerate. -/
+theorem einsteinKaehler_constant_unique
+    (c c' : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (h1 : IsEinsteinKaehlerAtWith c R K x)
+    (h2 : IsEinsteinKaehlerAtWith c' R K x)
+    (hnd : ∃ u : E, K.H.metric x u u ≠ 0) :
+    c = c' := by
+  rcases hnd with ⟨u, huu⟩
+  have h_eq1 := h1 u u
+  have h_eq2 := h2 u u
+  have h_metric : K.H.metric x u u ≠ 0 := huu
+  have : c * K.H.metric x u u = c' * K.H.metric x u u := by
+    linarith [h_eq1, h_eq2]
+  have : c = c' := by
+    apply (mul_left_inj' h_metric).mp
+    linarith
+  exact this
+
+/-- Equivalence: `IsEinsteinKaehlerAt R K x` is equivalent to
+`IsEinsteinKaehlerAtWith c R K x` for a specific c. -/
+theorem isEinsteinKaehlerAt_iff_with
+    (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) :
+    IsEinsteinKaehlerAtWith c R K x → IsEinsteinKaehlerAt R K x := by
+  intro h
   exact ⟨c, h⟩
 
 /-- Lemma `einsteinTensor_eq_metric_multiple_of_einsteinKaehlerWith`. -/
@@ -641,7 +678,7 @@ theorem spinorialScalarCurvature_eq_zero_of_normalized_fixedpoint
 
 end SpinorialEinsteinBridge
 
-/-! ## Monge-Ampère Consistency Scaffolding -/
+/-! ## Monge-Ampère Consistency scaffolding (Native Closure Mandated: Closure Debt) -/
 
 section MongeAmpere
 

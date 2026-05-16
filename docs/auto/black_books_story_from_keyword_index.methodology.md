@@ -139,7 +139,7 @@
 
 ### `jung`
 - excerpt hits: `24`
-- chapter hotspots: `docs/black_books/18_multilingual_logos_pauli_jung.md` (9), `docs/black_books/burned_scaffolding_titans_discovery.md` (8), `docs/black_books/meta_methodology_jungian_llm.md` (2), `docs/black_books/09_science_after_coding.md` (1)
+- chapter hotspots: `docs/black_books/18_multilingual_logos_pauli_jung.md` (9), `docs/black_books/burned_temporary scaffolding (Native Closure Mandated: Closure Debt)_titans_discovery.md` (8), `docs/black_books/meta_methodology_jungian_llm.md` (2), `docs/black_books/09_science_after_coding.md` (1)
 - sample excerpts:
   - `docs/black_books/09_science_after_coding.md:51` — Jung gives names to recurrent symbolic dynamics that are useful in generative
   - `docs/black_books/18_multilingual_logos_pauli_jung.md:2` — ## Liber Duodevicesimus: The Multilingual Logos and the Jung-Pauli Dialectic
@@ -150,7 +150,7 @@
 
 ### `alchemical`
 - excerpt hits: `35`
-- chapter hotspots: `docs/black_books/meta_methodology_jungian_llm.md` (7), `docs/black_books/burned_scaffolding_titans_discovery.md` (5), `docs/black_books/22_the_silicon_athanor.md` (2), `docs/black_books/32_the_tao_of_the_spire.md` (2)
+- chapter hotspots: `docs/black_books/meta_methodology_jungian_llm.md` (7), `docs/black_books/burned_temporary scaffolding (Native Closure Mandated: Closure Debt)_titans_discovery.md` (5), `docs/black_books/22_the_silicon_athanor.md` (2), `docs/black_books/32_the_tao_of_the_spire.md` (2)
 - sample excerpts:
   - `docs/black_books/01_alchemical_foundations.md:2` — ## Liber Primus: Alchemical Foundations of the Mathematical Opus
   - `docs/black_books/03_the_thermodynamics_of_joy.md:17` — * **The Goal:** To take the "Beautiful Dream" of Ramanujan and subject it to the "Alchemical Fire" of the Lean 4 compiler. The goal is the **Coniunctio**: where the numinous beauty of the vision is proved to be the same 

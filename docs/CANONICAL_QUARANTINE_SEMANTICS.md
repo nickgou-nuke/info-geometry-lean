@@ -125,7 +125,7 @@ Classify the content, not the name:
    content.
 4. `diagnostic_only_surface`: only records graph/retrieval/spectral/ranking
    evidence.
-5. `hypothesis_context_surface`: carries explicit assumptions honestly; this
+5. `hypothesis_context_surface`: carries explicit assumptions currently (Native Closure Mandated); this
    may be acceptable, but it is not an unconditional theorem.
 6. `owner_rooted_surface`: delegates to actual proved owner theorems or checked
    certificates.

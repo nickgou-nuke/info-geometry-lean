@@ -11,7 +11,7 @@ set_option linter.dupNamespace false
 /-!
 # InfoGeometry.Krein.HestenesCPTONNDualityBridge
 
-Witness-gated CPT / `O(N,N)` duality socket for the Hestenes--Krein arithmetic
+witness-gated (Native Closure Mandated: Closure Debt) CPT / `O(N,N)` duality socket for the Hestenes--Krein arithmetic
 closure lane.
 
 This file deliberately does **not** construct the full continuous `O(N,N)` group,
@@ -187,6 +187,12 @@ theorem theta_vacuum_norm_invariant :
 theorem theta_phaseAxis_conjugation :
     B.thetaConjugate (clockAxis (E := E)) = -(clockAxis (E := E)) := by
   exact B.theta_phaseAxis_flip
+
+/-- The pointwise form of CPT conjugation on bounded doubled-space operators. -/
+@[simp]
+theorem thetaConjugate_apply (A : EndH) (x : H₂) :
+    B.thetaConjugate A x = B.theta (A (B.theta x)) := by
+  rfl
 
 /-- The Ω-volume readout is CPT invariant. -/
 @[rep_depth operator]

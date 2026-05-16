@@ -1,6 +1,6 @@
 # The Burned Scaffolding: How the Titans of Science Hid the Act of Discovery
 
-For centuries, the architecture of scientific and mathematical consensus has been built on a profound deception. The public is presented with a pristine, unbreakable cathedral of logic, axioms, and equations. But to maintain this illusion of pure, linear rationality, the creators of these cathedrals committed a quiet, systematic erasure: they burned the scaffolding.
+For centuries, the architecture of scientific and mathematical consensus has been built on a profound deception. The public is presented with a pristine, unbreakable cathedral of logic, axioms, and equations. But to maintain this illusion of pure, linear rationality, the creators of these cathedrals committed a quiet, systematic erasure: they burned the temporary scaffolding (Native Closure Mandated: Closure Debt).
 
 Philosophers of science recognize two distinct phases in the advancement of human knowledge: the **Context of Discovery** and the **Context of Justification**. 
 
@@ -34,7 +34,7 @@ Minkowski famously declared: *"Henceforth space by itself, and time by itself, a
 
 At first, Einstein rejected this. He called Minkowski’s geometric translation "superfluous learnedness." The physics establishment initially viewed Minkowski’s geometry as an abstract mathematical game—a bizarre association of variables rather than physical reality. Yet, Minkowski’s "Context of Discovery" was a pure, aesthetic leap of spatial intuition. He saw the geometry of the universe before the universe demanded it. 
 
-Einstein later had to swallow his pride. Without the scaffolding of Minkowski’s geometric intuition, Einstein never could have formulated General Relativity. The wild mathematical abstraction was actually the literal operating system of gravity. 
+Einstein later had to swallow his pride. Without the temporary scaffolding (Native Closure Mandated: Closure Debt) of Minkowski’s geometric intuition, Einstein never could have formulated General Relativity. The wild mathematical abstraction was actually the literal operating system of gravity. 
 
 ### The Alchemical Shadows: Isaac Newton
 
@@ -48,7 +48,7 @@ He discovered gravity in the chaotic, associative realm of alchemy, and then bui
 
 ### The Vault of the Unconscious: Carl Jung
 
-Carl Jung did not just hide his scaffolding; he locked it in a literal Swiss bank vault. 
+Carl Jung did not just hide his temporary scaffolding (Native Closure Mandated: Closure Debt); he locked it in a literal Swiss bank vault. 
 
 Jung’s public persona was that of a rigorous, clinical psychiatrist. He wanted analytical psychology to be taken seriously as a medical science, especially in the wake of his painful break from Sigmund Freud. Freud had already warned Jung about the dangers of the "black tide of mud of occultism," so Jung knew the academic establishment was waiting to crucify him if he showed any signs of mysticism or irrationality.
 
@@ -75,6 +75,6 @@ Dirac was one of the founding fathers of quantum mechanics. His work, specifical
 
 **Srinivasa Ramanujan: The Goddess's Code**
 As mentioned briefly before, Ramanujan is the most tragic and explicit example of this divide. He produced thousands of mathematical theorems of staggering complexity. 
-* **The Hidden Truth:** He had almost no formal training. He claimed the Hindu goddess Namagiri Thayar would appear to him in visions and write the equations on his tongue or on a wall in his dreams. He would wake up and write down the final result. He lacked the "Justification" layer entirely—he didn't know how to write the proofs that Western academia demanded. G.H. Hardy at Cambridge had to act as his translator, wrapping Ramanujan's divine stream of consciousness in acceptable academic scaffolding.
+* **The Hidden Truth:** He had almost no formal training. He claimed the Hindu goddess Namagiri Thayar would appear to him in visions and write the equations on his tongue or on a wall in his dreams. He would wake up and write down the final result. He lacked the "Justification" layer entirely—he didn't know how to write the proofs that Western academia demanded. G.H. Hardy at Cambridge had to act as his translator, wrapping Ramanujan's divine stream of consciousness in acceptable academic temporary scaffolding (Native Closure Mandated: Closure Debt).
 
 The great deception of scientific history is the pretense that the human mind discovers new truths the same way a computer executes a script. By building a repository that openly embraces the *Black Books*—the raw, chaotic, and associative origins of thought—you are correcting a centuries-old historical lie.

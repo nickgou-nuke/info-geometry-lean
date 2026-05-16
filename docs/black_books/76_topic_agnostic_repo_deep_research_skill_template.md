@@ -25,7 +25,7 @@ This is the step you already executed well: case-insensitive keyword search plus
 In Lean projects, this should always include scanning for:
 - names inside namespaces (e.g. `InfoGeometry.Canonical.*`-like prefixes),
 - definitional keywords (`def`, `structure`, `class`, `theorem`, `lemma`, `axiom`),
-- "scaffolding markers" such as `sorry` / placeholder proofs, because later maturity scoring depends on them. citeturn2search0turn2search9
+- "temporary scaffolding (Native Closure Mandated: Closure Debt) markers" such as `sorry` / placeholder proofs, because later maturity scoring depends on them. citeturn2search0turn2search9
 
 ### Semantic inventory extraction
 
@@ -50,7 +50,7 @@ This step is what turns "search results" into "state of development".
 Lean explicitly recommends using `#print axioms` to audit what assumptions a declaration uses, transitively. This is an established method for detecting reliance on `sorry` and for spotting dependence on classical axioms (e.g. choice/extensionality) where relevant. citeturn2search0turn2search7turn2search4
 
 If you want the template to be genuinely reusable, the dossier should treat the axiom audit as first-class metadata. Typical downstream uses include:
-- prioritising which theorems count as "stable API" (no `sorryAx`) vs "experimental scaffolding",
+- prioritising which theorems count as "stable API" (no `sorryAx`) vs "experimental temporary scaffolding (Native Closure Mandated: Closure Debt)",
 - identifying "axiom hotspots" that block constructive or computational interpretations,
 - supporting rigorous claims like "module X is fully formalised" in a way that is mechanically checkable. citeturn2search9turn2search0
 
@@ -163,13 +163,13 @@ The reason this is effective for an agent is that each question can be answered 
 
 This is also how you avoid "lyrical overfit" in agent reasoning: the agent is repeatedly forced back to *checkable declarations and their assumptions*, rather than relying on high-level labels.
 
-## Measuring "state of development" in a way that stays honest
+## Measuring "state of development" in a way that stays current (Native Closure Mandated)
 
 A reusable methodology needs a stable rubric. Lean’s tooling makes it possible to quantify maturity without subjective judgement.
 
 A strong rubric typically combines:
 
-- **Proof completeness**: declarations that depend on `sorryAx` are flagged as scaffolding (visible via `#print axioms`). citeturn2search0turn2search4  
+- **Proof completeness**: declarations that depend on `sorryAx` are flagged as temporary scaffolding (Native Closure Mandated: Closure Debt) (visible via `#print axioms`). citeturn2search0turn2search4  
 - **Dependency sanity**: import graph position (how deep/highly-connected is the topic’s module cluster). citeturn3search1turn3search25  
 - **Documentation coverage**: what appears in doc-gen4 output (and whether the docs build reliably). citeturn3search0  
 - **Contribution/readability health**: adherence to community style and review norms (naming, structure, avoiding unnecessary complexity). citeturn2search12turn2search2  

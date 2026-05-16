@@ -119,6 +119,13 @@ theorem criticalLine_iff_cayley_unitCircle
     simp only [Complex.sub_re, Complex.one_re, Complex.sub_im, Complex.one_im] at hnorm
     nlinarith
 
+/-- The Lee--Yang unit circle condition is equivalent to the critical line after Cayley. -/
+@[simp]
+theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine
+    (s : ℂ) :
+    OnLeeYangCircle (cayleyToFugacity s) ↔ OnCriticalLine s := by
+  simpa using (criticalLine_iff_cayley_unitCircle s).symm
+
 /--
 The inverse Cayley transform maps the Lee--Yang unit circle back to the
 critical line.
@@ -181,7 +188,7 @@ theorem cayleyToFugacity_one_sub_eq_inv
 /-! ## Lee--Yang admissibility socket -/
 
 /--
-Witness-gated bridge from a Lee--Yang admissible determinant to an RH-style
+witness-gated (Native Closure Mandated: Closure Debt) bridge from a Lee--Yang admissible determinant to an RH-style
 critical-line statement through the Cayley transform.
 
 The Lee--Yang circle theorem is not proved here. A concrete prime/Majorana
@@ -247,7 +254,7 @@ end LeeYangCayleyRiemannWitness
 /-! ## Prime-gas Lee--Yang approximation socket -/
 
 /--
-Witness-gated finite-volume Lee--Yang approximation scheme for the completed
+witness-gated (Native Closure Mandated: Closure Debt) finite-volume Lee--Yang approximation scheme for the completed
 Riemann determinant in Cayley fugacity coordinates.
 
 This records the exact missing theorem layer:

@@ -121,4 +121,4 @@ The right repository doctrine at this stage is:
 > transport structure.
 
 That is already a strong and distinctive theorem-guided position, and it is the
-one this repository can honestly defend today.
+one this repository can current (Native Closure Mandated)ly defend today.

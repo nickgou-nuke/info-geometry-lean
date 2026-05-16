@@ -32,53 +32,6 @@ Downstream unlock:
 Risk:
 Formalizable literature, not RH-equivalent by itself.
 
-## D16: Hurwitz Zero-Free Domain Transfer
-
-Socket:
-`InfoGeometry.Canonical.PrimeHurwitzLimit.ZeroFreeDomainTransfer`
-
-Premises:
-- `F_N -> F` locally uniformly on compact subsets of each connected zero-free component.
-- Each `F_N` is zero-free on the component.
-- `F` is not identically zero on that component.
-
-Known owner:
-Hurwitz theorem.  Exact mathlib availability must be checked before replacing the witness.
-
-To prove:
-The limit is zero-free in `{z | Complex.abs z < 1}` and `{z | 1 < Complex.abs z}`; therefore every zero of the limit lies on the unit circle.
-
-Downstream unlock:
-`CorrectHurwitzZeroTransferWitness` can stop carrying zero-free transfer as a field.
-
-Risk:
-Likely formalizable, but not yet closed in this repository.
-
-## D17: Prime Lee-Yang Convergence to Completed Xi
-
-Socket:
-`InfoGeometry.Canonical.PrimeLeeYangConvergence.PrimeLeeYangConvergenceSocket`
-
-Premises:
-- Finite Lee-Yang-stable prime approximants `Z_N`.
-- Nonvanishing renormalizations `R_N`.
-- Cayley inverse `s = z / (1 + z)`.
-- Completed xi zero predicate.
-
-Known owner:
-None.
-
-To prove:
-`R_N(z) Z_N(z)` converges locally uniformly on compact subsets of the Cayley chart to `xi (z / (1 + z))`, with the needed zero-equivalence between `xi` and the limiting function.
-
-Downstream unlock:
-`HurwitzZeroTransferWitness.xiZeros_map_to_unit_circle`,
-`RH_of_Hurwitz_LeeYang_limit`,
-`RH_from_Correct_Hurwitz_LeeYang`.
-
-Risk:
-RH-level open analytic problem.
-
 ## D18: MBK Relative Pfaffian / Trace Identity
 
 Socket:
@@ -102,50 +55,163 @@ Operator-theoretic Hilbert-Polya corridor.
 Risk:
 Open program.
 
-## D20: Mertens/LDP Boundary
+## D21: Clifford Wavelet Analytic Bridge
 
 Socket:
-`InfoGeometry.Canonical.PrimeMertensDefectBoundary.MertensLDPBoundary`
+`InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit.locallyUniformRenormalizedLimit`
 
-Premises:
-- `D : MobiusMertensData`.
-- Large-deviation speed and rate function.
-- Defect observable.
-- Entropy barrier dominates parity defect cost.
-
-Known owner:
-None for the LDP implication as a proved repository theorem.  Latorre-Sierra is background for the Mobius state/RH-scale boundary, not a closure proof.
-
-To prove:
-For every `epsilon > 0`, eventually `|M(N)| <= C_epsilon * N^(1/2 + epsilon)`.
-
-Downstream unlock:
-`MertensBoundaryPacket.ofLDP` gains a constructive analytic owner.
-
-Risk:
-RH-scale open boundary.
-
-## D21: Clifford-Wavelet MRA Completion
-
-Socket:
+Current scaffold:
 `InfoGeometry.Wavelet.PrimeWaveletMRA.WaveletMRACompletionWitness`
 
 Premises:
-- Nested prime resolution bands.
-- Nonvanishing scaling filter.
-- Wavelet-completed limit.
-- Zero-equivalence with completed xi.
+- A real Clifford algebra `Cl(V,Q)` with a blade `B` satisfying `B^2 = -1`.
+- A Clifford wavelet `psi` satisfying Hitzer admissibility.
+- A Clifford wavelet transform `W_psi` and reconstruction operator `R_psi`.
+- `SIM(n)`-based dilation/translation/rotation covariance.
+- A reproducing kernel for the coefficient space.
 
 Known owner:
-Hitzer-style Clifford/geometric algebra wavelet transform is a candidate literature route for the transform/reconstruction substrate.  It does not prove the arithmetic xi convergence socket by itself.
+Eckhard Hitzer, *Clifford (Geometric) Algebra Wavelet Transform*, arXiv:1306.1620.
 
 To prove:
-Turn Clifford MRA reconstruction into the locally uniform convergence and zero-equivalence required by D17.
+Own the Clifford-wavelet admissibility, reconstruction/inversion, covariance, and reproducing-kernel machinery. Do not claim the prime-gas identification, locally uniform convergence to `xi ∘ CayleyInv`, or RH.
 
 Downstream unlock:
-`toPrimeLeeYangConvergenceSocket`,
-`RH_from_Wavelet_MRA`.
+`PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization`,
+`PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness`,
+`PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang`.
 
 Risk:
 Formalization route, not proof.
 
+Not owned:
+- Identification of the prime Lee-Yang approximants with wavelet partial sums.
+- Local uniform convergence to `xi ∘ CayleyInv`.
+- RH.
+
+## D24: Prime Hurwitz-Clifford Cascade Limit
+
+Socket:
+`InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization.locallyUniformRenormalizedLimit`
+
+Premises:
+- Finite prime Lee-Yang approximants `Z_N`.
+- Nonvanishing renormalization `R_N`.
+- Discrete Hurwitz-Clifford paraunitary filter bank.
+- Cascade partial sums `W_N`.
+- Equality `W_N = R_N Z_N`.
+- Compact-uniform tail estimate.
+- Reconstruction equals `xi ∘ CayleyInv`.
+
+Known owner:
+None. This is the prime-specific discrete cascade convergence socket.
+
+To prove:
+`R_N(z) Z_N` converges locally uniformly on compact subsets to
+`xi(z / (1 + z))` after realization as a discrete Hurwitz-Clifford cascade.
+Do not claim this is already proved by the discrete wavelet literature.
+
+Downstream unlock:
+`PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness`,
+`PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang`.
+
+Risk:
+RH-level open analytic problem.
+
+Not owned:
+- Lee-Yang stability of prime partition polynomials.
+- Hurwitz zero transfer.
+- RH.
+
+## D27: Heisenberg-to-Mertens Gate Scaffold
+
+Socket:
+`InfoGeometry.Canonical.PrimeCliffordHeisenbergGate.HeisenbergMertensGate.vacuousTarget`
+
+Premises:
+- Clifford/Majorana vacuum readout with a Heisenberg lower bound.
+- Explicit dispersion-to-Mertens bridge field.
+- Heisenberg saturation witness.
+- The gate theorem is intentionally vacuous and proves only `True`.
+
+Known owner:
+None. This is a witness scaffold, not a proof-bearing theorem.
+
+To prove:
+`CliffordLDPBridge.dispersion_scaling` as an actual analytic statement.
+Do not claim Heisenberg saturation alone proves a Mertens bound.
+
+Risk:
+Witness scaffold, not proof.
+
+Not owned:
+- Mertens `O(x^(1/2+ε))`
+- Heisenberg saturation implies RH
+- Any stronger claim than the vacuous gate theorem
+
+## D26: Prime Cl(1,1) CPT Wavelet Packet
+
+Socket:
+`InfoGeometry.Canonical.PrimeCl11ModularAtom.LaplaceMellinWaveletTransform.cpt_preservation`
+
+Premises:
+- A local `Cl(1,1)` atom with `c^2 = 1`, `d^2 = -1`, and anticommutation.
+- Finite Lee-Yang approximants.
+- The reciprocal inversion map `z ↦ z⁻¹`.
+- Paraunitary boundedness witness.
+
+Known owner:
+None. This is the prime-local CPT-preserving Laplace--Mellin wavelet packet.
+
+To prove:
+CPT preservation of the finite prime wavelet packet at the level of Lee--Yang
+zero sets. Do not claim prime-to-`xi` convergence, Hurwitz zero transfer, or RH.
+
+Downstream unlock:
+`PrimeLaplaceMellinHurwitzWaveletLimit.PrimeHurwitzWaveletXiRealization`,
+`PrimeHurwitzCliffordCascadeLimit.PrimeHurwitzCliffordCascadeRealization`.
+
+Risk:
+Formalization route, not proof.
+
+Not owned:
+- prime-to-`xi` convergence
+- Hurwitz zero transfer
+- RH
+
+## D25: Prime Laplace-Mellin Hurwitz-Wavelet Limit
+
+Socket:
+`InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit.PrimeHurwitzWaveletXiRealization.locallyUniformRenormalizedLimit`
+
+Premises:
+- Finite prime Lee-Yang approximants `Z_N`.
+- Nonvanishing renormalization `R_N`.
+- Discrete Hurwitz-Clifford cascade.
+- Laplace-Mellin scale-shape packet.
+- Finite wavelet partial reconstructions `W_N`.
+- Equality `W_N = R_N Z_N`.
+- Compact-uniform tail estimate.
+- Reconstruction equals `xi ∘ CayleyInv`.
+
+Known owner:
+None. This is the prime-specific Laplace--Mellin / Hurwitz--Clifford
+wavelet realization socket.
+
+To prove:
+`R_N(z) Z_N` converges locally uniformly on compact subsets to
+`xi(z / (1 + z))` after being realized as a Laplace--Mellin /
+Hurwitz--Clifford wavelet cascade. This is the exact analytic socket, not a
+proof of RH.
+
+Downstream unlock:
+`PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness`,
+`PrimeHurwitzLimit.RH_from_Correct_Hurwitz_LeeYang`.
+
+Risk:
+RH-level open analytic problem.
+
+Not owned:
+- Lee-Yang stability of prime partition polynomials.
+- Hurwitz zero transfer.
+- RH.

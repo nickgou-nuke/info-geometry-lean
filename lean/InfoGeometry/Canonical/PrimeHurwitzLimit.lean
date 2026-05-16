@@ -39,6 +39,19 @@ def cayleyInv
     (z : ℂ) : ℂ :=
   z / (1 + z)
 
+/-- The inverse Cayley map undoes the Cayley map off the pole at `1`. -/
+@[rep_depth operator]
+theorem cayleyInv_cayley
+    (s : ℂ) (hs : s ≠ 1) :
+    cayleyInv (cayley s) = s := by
+  have h1 : (1 - s) ≠ 0 := by
+    intro h
+    apply hs
+    exact (sub_eq_zero.mp h).symm
+  unfold cayleyInv cayley
+  field_simp [h1]
+  ring_nf
+
 /-- The Lee--Yang unit circle. -/
 @[rep_depth operator]
 def OnUnitCircle
@@ -102,6 +115,88 @@ structure CayleyCriticalWitness where
   reflection_to_inversion :
     ∀ s : ℂ, s ≠ 0 → s ≠ 1 →
       cayley (1 - s) = (cayley s)⁻¹
+
+namespace CayleyCriticalWitness
+
+/-- The inverse Cayley map undoes the Cayley map off the pole at `1`. -/
+@[rep_depth operator]
+theorem cayleyInv_cayley_eq
+    (s : ℂ) (hs : s ≠ 1) :
+    cayleyInv (cayley s) = s := by
+  have h1 : (1 - s) ≠ 0 := by
+    intro h
+    apply hs
+    exact (sub_eq_zero.mp h).symm
+  unfold cayleyInv cayley
+  field_simp [h1]
+  ring_nf
+
+/-- The Cayley image of a critical-line point lies on the Lee--Yang unit circle. -/
+@[rep_depth operator]
+theorem cayley_unit_of_critical
+    (s : ℂ) (hs : s ≠ 1) (hcrit : OnCriticalLine s) :
+    OnUnitCircle (cayley s) := by
+  have h1 : (1 - s) ≠ 0 := by
+    intro h
+    apply hs
+    exact (sub_eq_zero.mp h).symm
+  have hnorm : Complex.normSq s = Complex.normSq (1 - s) := by
+    rw [Complex.normSq_apply, Complex.normSq_apply]
+    rcases s with ⟨x, y⟩
+    have hx : x = (1 / 2 : ℝ) := by simpa [OnCriticalLine] using hcrit
+    rw [hx]
+    norm_num
+  have hden : Complex.normSq (1 - s) ≠ 0 := by
+    exact ne_of_gt (Complex.normSq_pos.2 h1)
+  calc
+    Complex.normSq (cayley s)
+        = Complex.normSq s / Complex.normSq (1 - s) := by
+            rw [cayley, Complex.normSq_div]
+    _ = 1 := by
+          rw [hnorm]
+          exact div_self hden
+
+/-- A Lee--Yang unit-circle point has critical-line preimage under Cayley. -/
+@[rep_depth operator]
+theorem cayley_critical_of_unit
+    (s : ℂ) (hs : s ≠ 1) (hunit : OnUnitCircle (cayley s)) :
+    OnCriticalLine s := by
+  rcases s with ⟨x, y⟩
+  have h1 : (1 - ({ re := x, im := y } : ℂ)) ≠ 0 := by
+    intro h
+    apply hs
+    exact (sub_eq_zero.mp h).symm
+  have hdiv : Complex.normSq ({ re := x, im := y } : ℂ) /
+      Complex.normSq (1 - ({ re := x, im := y } : ℂ)) = 1 := by
+    simpa [OnUnitCircle, cayley, Complex.normSq_div] using hunit
+  have hnorm : Complex.normSq ({ re := x, im := y } : ℂ) =
+      Complex.normSq (1 - ({ re := x, im := y } : ℂ)) := by
+    have hmul := congrArg (fun t : ℝ => t * Complex.normSq (1 - ({ re := x, im := y } : ℂ))) hdiv
+    simpa [h1] using hmul
+  have hx : x = (1 / 2 : ℝ) := by
+    have hcoord : x * x + y * y = (1 - x) * (1 - x) + y * y := by
+      simpa [Complex.normSq_apply] using hnorm
+    nlinarith
+  simpa [OnCriticalLine] using hx
+
+/-- Reflection across the critical line corresponds to inversion on the circle. -/
+@[rep_depth operator]
+theorem cayley_reflection_to_inversion
+    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    cayley (1 - s) = (cayley s)⁻¹ := by
+  unfold cayley
+  field_simp [hs0, hs1]
+  ring
+
+/-- Native proof-carrying Cayley geometry witness. -/
+@[rep_depth operator]
+def canonicalCayleyCriticalWitness : CayleyCriticalWitness :=
+  { cayleyInv_cayley := cayleyInv_cayley_eq
+    unit_of_critical := cayley_unit_of_critical
+    critical_of_unit := cayley_critical_of_unit
+    reflection_to_inversion := cayley_reflection_to_inversion }
+
+end CayleyCriticalWitness
 
 /--
 Finite Lee--Yang approximant family.

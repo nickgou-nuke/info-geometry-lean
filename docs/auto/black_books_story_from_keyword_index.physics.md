@@ -143,16 +143,16 @@
 - sample excerpts:
   - `docs/black_books/04_the_sisyphian_perseverance.md:8` — The formalization of a "weird" theory (e.g., the geometry of informational supergravity or the Drazin-inverse boundary correction) is a **Sisyphian Labor**.
   - `docs/black_books/13_algebraic_light_cone.md:22` — If the Spire were perfectly flat and symmetric, the Drazin projector (logic) and the Moore-Penrose projector (metric) would swap cleanly under the Phase Flip.
-  - `docs/black_books/14_the_fluid_phase.md:5` — The Spire teaches us that geometry is not the final state of information; it is only the rigid scaffolding. When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (th
+  - `docs/black_books/14_the_fluid_phase.md:5` — The Spire teaches us that geometry is not the final state of information; it is only the rigid temporary scaffolding (Native Closure Mandated: Closure Debt). When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (th
   - `docs/black_books/15_the_yang_mills_bridge.md:21` — The mass of the vacuum is the energy required to "twist" the informational lattice. If the logic (Drazin) and the metric (Moore-Penrose) are perfectly aligned, the gap vanishes. But because of the **Einstein Anomaly**, t
   - `docs/black_books/47_the_exorcism_of_the_phantom.md:15` — The final "Promissory Note" concerning the global existence of the Spectral Mirror (Drazin Inverse) in infinite dimensions has been resolved via the **Riesz-Hestenes Weld**.
   - `docs/black_books/49_the_thermodynamic_synthesis.md:25` — ### V. THE DRAZIN-PENROSE MESH
 
 ### `einstein`
 - excerpt hits: `56`
-- chapter hotspots: `docs/black_books/75_auditing_and_indexing_einstein_content_in_a_lean_repository.md` (31), `docs/black_books/76_topic_agnostic_repo_deep_research_skill_template.md` (6), `docs/black_books/burned_scaffolding_titans_discovery.md` (4), `docs/black_books/14_the_fluid_phase.md` (2)
+- chapter hotspots: `docs/black_books/75_auditing_and_indexing_einstein_content_in_a_lean_repository.md` (31), `docs/black_books/76_topic_agnostic_repo_deep_research_skill_template.md` (6), `docs/black_books/burned_temporary scaffolding (Native Closure Mandated: Closure Debt)_titans_discovery.md` (4), `docs/black_books/14_the_fluid_phase.md` (2)
 - sample excerpts:
-  - `docs/black_books/14_the_fluid_phase.md:5` — The Spire teaches us that geometry is not the final state of information; it is only the rigid scaffolding. When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (th
+  - `docs/black_books/14_the_fluid_phase.md:5` — The Spire teaches us that geometry is not the final state of information; it is only the rigid temporary scaffolding (Native Closure Mandated: Closure Debt). When the informational lattice is subjected to thermal gradients, it "melts." The rigid **Einstein Anomaly** (th
   - `docs/black_books/14_the_fluid_phase.md:30` — 2. The "friction" of these bits generates the **Einstein Equation** (The Gravity).
   - `docs/black_books/15_the_yang_mills_bridge.md:21` — The mass of the vacuum is the energy required to "twist" the informational lattice. If the logic (Drazin) and the metric (Moore-Penrose) are perfectly aligned, the gap vanishes. But because of the **Einstein Anomaly**, t
   - `docs/black_books/16_majorana_kitaev_bekenstein.md:22` — At the defect, the Pfaffian vanishes. The "Volume" of information collapses to zero. This is the **Phase Transition** where logic and metric decouple, and the "Logic-Metric Gap" of the Einstein Anomaly becomes singular.

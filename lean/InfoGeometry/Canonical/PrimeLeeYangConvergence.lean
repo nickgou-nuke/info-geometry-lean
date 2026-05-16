@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.PrimePartitionPolynomials
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangConvergence
 
-Witness-gated convergence socket for the prime Lee--Yang program.
+witness-gated (Native Closure Mandated: Closure Debt) convergence socket for the prime Lee--Yang program.
 
 This file owns the exact analytic target needed by `PrimeHurwitzLimit`:
 
@@ -149,6 +149,16 @@ Conditional RH theorem from a prime Lee--Yang convergence socket.
 This is a theorem-safe reduction: all hard convergence, nontriviality, and
 zero-transfer inputs are supplied by `S`.
 -/
+@[rep_depth operator]
+theorem limitF_zero_on_unitCircle
+    (S : PrimeLeeYangConvergenceSocket Ξ A)
+    {z : ℂ}
+    (hz : S.limitF z = 0) :
+    OnUnitCircle z :=
+  ZeroFreeDomainTransfer.zero_on_unit_of_inner_outer_zero_free
+    S.zeroFreeTransfer hz
+
+/-- Conditional RH theorem from a prime Lee--Yang convergence socket. -/
 @[rep_depth operator]
 theorem RH_of_convergence_socket
     (S : PrimeLeeYangConvergenceSocket Ξ A)

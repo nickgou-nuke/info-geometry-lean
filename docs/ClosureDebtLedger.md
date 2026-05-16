@@ -11,6 +11,21 @@ This ledger tracks closure debt as executable proof obligations on the
 operator-algebraic spine. It is not an essay surface; each row maps to Lean
 anchors and CI gates.
 
+## Mission Loop Contract
+
+The repo-local mission loop treats this ledger as the authoritative backlog.
+On each heartbeat it should:
+
+1. select the smallest payable debt row,
+2. patch exactly one native Lean surface,
+3. run the narrowest build target for that surface,
+4. escalate only to the frontier gate or `strict-check.sh` when the touched
+   target crosses a broader cluster boundary,
+5. record the result back into the ledger or an explicit open-problem report.
+
+Open problem sockets stay open until kernel-checked Lean or imported mathlib
+theorems discharge them. Literature ownership is only advisory until formalized.
+
 ## Debt Register
 
 | Debt ID | Requirement | Current Formal Anchors | Missing Derivation Target | Owner Surface | Status |

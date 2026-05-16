@@ -274,8 +274,16 @@ structure ProjectivePfaffianKleinLaw
   klein_law :
     residual.residual coords = 0
 
-/-- Read back the witness-gated Klein residual law. -/
+/-- Read back the witness-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
 theorem projective_pfaffian_counts_lie_on_klein
+    {Γ : Type*}
+    [Fintype Γ]
+    (K : ProjectivePfaffianKleinLaw Γ) :
+    K.residual.residual K.coords = 0 :=
+  K.klein_law
+
+/-- The projective Pfaffian count ray lies on the Fierz--Klein residual locus. -/
+theorem projective_pfaffian_counts_lie_on_fierz_klein
     {Γ : Type*}
     [Fintype Γ]
     (K : ProjectivePfaffianKleinLaw Γ) :

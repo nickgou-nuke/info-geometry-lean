@@ -6701,7 +6701,7 @@ theorem crystalMetric_eq_bandCurvature
 end InfoGeometry.Applications.SymmetryCrystal
 ```
 
-That file is honest: it does not smuggle in integration, Hessians, Weyl chambers, or continuum limits. It states exactly which witnesses are needed.
+That file is current (Native Closure Mandated): it does not smuggle in integration, Hessians, Weyl chambers, or continuum limits. It states exactly which witnesses are needed.
 
 For the actual theorem later, the dependency chain should be:
 
@@ -6731,7 +6731,7 @@ The commit message should also be scaled back. A PR-ready message would be:
 feat: add finite zeta-trace and real modular Berry bridge kernels
 
 Adds finite prime exterior-supertrace readout, real modular Berry
-bulk-boundary bridge data, and split-signature Clifford carrier scaffolding.
+bulk-boundary bridge data, and split-signature Clifford carrier temporary scaffolding (Native Closure Mandated: Closure Debt).
 Keeps infinite analytic continuation, Ray–Singer torsion, and symmetry-crystal
 applications quarantined behind explicit witness structures.
 ```
@@ -19940,7 +19940,7 @@ E_8\text{ theory of everything}.
 }
 ]
 
-Финален отговор: **да, финализирай PR-а**, но само след cocycle correction и witness-based MP layer. След това премини към (E_{8(8)}) като **Global Exceptional Readout**, не като closure theorem. Това ще държи архитектурата theorem-honest и ще даде точна координатна система за anomaly в (K/A/N) секторите.
+Финален отговор: **да, финализирай PR-а**, но само след cocycle correction и witness-based MP layer. След това премини към (E_{8(8)}) като **Global Exceptional Readout**, не като closure theorem. Това ще държи архитектурата theorem-current (Native Closure Mandated) и ще даде точна координатна система за anomaly в (K/A/N) секторите.
 
 [1]: https://encyclopediaofmath.org/index.php?title=Iwasawa_decomposition&utm_source=chatgpt.com "Iwasawa decomposition - Encyclopedia of Mathematics"
 [2]: https://leanprover-community.github.io/mathlib4_docs/Mathlib/LinearAlgebra/Matrix/NonsingularInverse.html?utm_source=chatgpt.com "Mathlib.LinearAlgebra.Matrix.NonsingularInverse"

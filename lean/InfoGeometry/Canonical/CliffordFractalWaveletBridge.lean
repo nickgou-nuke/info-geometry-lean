@@ -180,7 +180,7 @@ structure CliffordFractalWaveletSocket
   coords : CliffordFractalWaveletFierzChannel → ℝ
 
 -- ============================================================================
--- Witness-Gated Admissibility
+-- witness-gated (Native Closure Mandated: Closure Debt) Admissibility
 -- ============================================================================
 
 /--

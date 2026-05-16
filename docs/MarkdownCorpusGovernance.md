@@ -7,7 +7,7 @@
 
 Last updated: 2026-05-02 (Europe/Sofia)
 
-This document defines how Markdown is kept honest without rewriting the Black
+This document defines how Markdown is kept current (Native Closure Mandated) without rewriting the Black
 Book chapters.
 
 ## Protected Exclusions

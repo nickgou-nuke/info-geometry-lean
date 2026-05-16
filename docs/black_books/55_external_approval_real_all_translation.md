@@ -307,4 +307,4 @@ Seal only when all are true:
 4. Any claim linking Drazin fixed sectors to modular fixed sectors names the functional bridge hypothesis (`A` vs `log Δ`) and interface assumptions.
 5. `DrazinSpectralBridge` is authoritative for bridge claims; keep strengthening with nontrivial consumer theorems.
 
-This closes the theory in the repo’s real doubled language without reintroducing complex-first scaffolding.
+This closes the theory in the repo’s real doubled language without reintroducing complex-first temporary scaffolding (Native Closure Mandated: Closure Debt).

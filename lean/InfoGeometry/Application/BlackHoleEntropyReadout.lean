@@ -88,7 +88,7 @@ def supervolumeReadout
     (B : BlackHoleEntropyReadout n G X Rotor Bivector) : ℝ :=
   B.thermodynamics.supervolumeReadout
 
-/-- The entropy shadow, packaged as a witness-gated scalar readout. -/
+/-- The entropy shadow, packaged as a witness-gated (Native Closure Mandated: Closure Debt) scalar readout. -/
 def entropyReadout
     (B : BlackHoleEntropyReadout n G X Rotor Bivector) : ℝ :=
   B.thermodynamics.supervolumeReadout
@@ -138,6 +138,13 @@ theorem thermo_modularHamiltonian_eq_chiral
     (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
     ∀ x : Cl_nn n, B.modularHamiltonian x = B.chiral.modularHamiltonian x :=
   B.thermoChiralCompat
+
+@[simp]
+theorem modularHamiltonian_eq_chiralModularHamiltonian
+    (B : BlackHoleEntropyReadout n G X Rotor Bivector) :
+    (B.modularHamiltonian : Cl_nn n → Cl_nn n) = B.chiral.modularHamiltonian := by
+  funext x
+  exact B.thermo_modularHamiltonian_eq_chiral x
 
 @[simp]
 theorem thermo_modularHamiltonian_apply_eq_chiral

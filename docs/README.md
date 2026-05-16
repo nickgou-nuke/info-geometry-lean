@@ -47,11 +47,21 @@ If documentation and code disagree, trust:
 3. [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 4. the maintained docs listed below
 
+## Constructive Closure Mandate
+
+[CONSTRUCTIVE_CLOSURE_MANDATE.md](CONSTRUCTIVE_CLOSURE_MANDATE.md) is current
+policy for all repo agents, skills, proof workflows, and closure-debt audits.
+Replacing witness-gated and external-certificate leftovers with native Lean 4
+proofs is the highest mandate. Unformalized witnesses, certificates,
+literature references, physics analogies, and graph edges remain closure debt
+until discharged by kernel-checked Lean or mathlib proofs.
+
 ## Maintained Entry Docs
 
 Use these first:
 
 - [../README.md](../README.md)
+- [CONSTRUCTIVE_CLOSURE_MANDATE.md](CONSTRUCTIVE_CLOSURE_MANDATE.md)
 - [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [ModuleMap.md](ModuleMap.md)
@@ -135,3 +145,13 @@ Do not hand-curate those surfaces as if they were source of truth.
 On 2026-05-02, the Markdown corpus was reclassified so old notes and generated
 reports stop presenting themselves as current repository truth. Black Book
 chapters were left untouched.
+
+## UTMOST MANDATE: Native Lean proof closure over witness/certificate temporary scaffolding (Native Closure Mandated: Closure Debt)
+
+Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+
+Policy requirements:
+- Witness packets, certificate field (Native Closure Mandated: Closure Debt)s, external certificates, and assumption interfaces are temporary temporary scaffolding (Native Closure Mandated: Closure Debt) only.
+- They are not final mathematical closure and not promotion authority.
+- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
+- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.

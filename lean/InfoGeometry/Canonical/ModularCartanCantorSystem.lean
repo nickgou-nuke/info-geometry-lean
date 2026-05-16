@@ -485,7 +485,7 @@ theorem modular_score_readback :
     B.modular_score_law :=
   B.modular_score_holds
 
-/-- Readback: finite/split approximants are explicitly witness-gated. -/
+/-- Readback: finite/split approximants are explicitly witness-gated (Native Closure Mandated: Closure Debt). -/
 @[rep_depth operator]
 theorem finite_split_approximant_readback :
     B.finite_split_approximant_law :=

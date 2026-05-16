@@ -233,13 +233,10 @@ theorem projected_supercharge_eq_neg_commutator_PZero_wedgeSign
       -InfoGeometry.Canonical.DrazinSupercharge.commutator CIK.spectralProjector W.wedgeSign := by
     unfold InfoGeometry.Canonical.DrazinSupercharge.commutator
     change
-      (CIK.spectralComplementaryProjector * W.wedgeSign
-        - W.wedgeSign * CIK.spectralComplementaryProjector)
+      ((1 : EndH) - CIK.spectralProjector) * W.wedgeSign
+        - W.wedgeSign * ((1 : EndH) - CIK.spectralProjector)
         =
       -(CIK.spectralProjector * W.wedgeSign - W.wedgeSign * CIK.spectralProjector)
-    simp [CertifiedInverseKernel.spectralComplementaryProjector,
-      CertifiedInverseKernel.toInverseKernel',
-      InverseKernel.spectralComplementaryProjector]
     noncomm_ring
   calc
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK

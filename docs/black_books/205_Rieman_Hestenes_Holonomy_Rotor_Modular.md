@@ -1647,7 +1647,7 @@ I am ready for the packet. Let's lay down the foundational
 ProjectiveModularAction and KreinProjectiveCarrier!
 Yes. The foundation should be stated this way, with one Lean-facing sharpening:
 
-`PSL(2, ℝ)` is the honest geometric symmetry group of `ℍ`. `SL(2, ℝ)` is the implementation cover. The base Möbius action becomes projective only when viewed from the covering group, because `γ` and `-γ` act identically on `ℍ`. Mathlib’s ready-made entry point is the `GL(2, ℝ)`/`SL(2, ℝ)` action on `UpperHalfPlane`, and it already has the key descent lemma shape: `UpperHalfPlane.neg_smul`, i.e. `-g • z = g • z`. It also provides `UpperHalfPlane.SLAction` for special linear groups. The quotient-group API supplies the `G ⧸ H` notation needed for the later `PSL2R := SL2R ⧸ {±1}` layer. ([Lean Community][1])
+`PSL(2, ℝ)` is the current (Native Closure Mandated) geometric symmetry group of `ℍ`. `SL(2, ℝ)` is the implementation cover. The base Möbius action becomes projective only when viewed from the covering group, because `γ` and `-γ` act identically on `ℍ`. Mathlib’s ready-made entry point is the `GL(2, ℝ)`/`SL(2, ℝ)` action on `UpperHalfPlane`, and it already has the key descent lemma shape: `UpperHalfPlane.neg_smul`, i.e. `-g • z = g • z`. It also provides `UpperHalfPlane.SLAction` for special linear groups. The quotient-group API supplies the `G ⧸ H` notation needed for the later `PSL2R := SL2R ⧸ {±1}` layer. ([Lean Community][1])
 
 The Berry/modular data should therefore be formalized as a cocycle over the geometric action, but often represented on a cover. This distinction matters. A cocycle defined on `SL(2, ℝ)` descends to `PSL(2, ℝ)` only if the central kernel acts trivially on the cocycle. Spin, metaplectic, and half-weight multiplier phenomena often deliberately do not descend; they live on the cover or on a further central extension.
 
@@ -1848,7 +1848,7 @@ The key correction is to distinguish three layers:
 
 ```text
 Base geometry:
-  PSL(2, ℝ) acts honestly on ℍ.
+  PSL(2, ℝ) acts currently (Native Closure Mandated) on ℍ.
 
 Cover implementation:
   SL(2, ℝ) acts with kernel ±1, so it factors through PSL(2, ℝ).
@@ -2160,7 +2160,7 @@ Interpretation:
   SL(2,ℝ) supplies a convenient double-cover implementation.
   The carrier action is projective.
   The multiplier/cocycle stores the Berry/rotor anomaly.
-  Stabilizers turn the cocycle into an honest homomorphism.
+  Stabilizers turn the cocycle into an current (Native Closure Mandated) homomorphism.
   Cusps are regularized by filter limits.
 ```
 
@@ -2288,7 +2288,7 @@ genuine PSL/SL Möbius action on ℍ
   Restriction of a cocycle to the native stabilizer of a point.
 
   At a fixed point, the base-point dependence disappears and the cocycle becomes
-  an honest group homomorphism.
+  an current (Native Closure Mandated) group homomorphism.
   -/
   def stabilizerHom
       (C : MulActionCocycle Γ X R)
@@ -6234,7 +6234,7 @@ structure DetExpTraceWitness where
         Real.exp (Matrix.trace H)
 ```
 
-Then the general matrix Berezinian theorem becomes conditional on `DetExpTraceWitness`. That keeps the finite layer honest without pretending Mathlib already owns the missing determinant-exponential theorem. The trace side itself is standard: `Matrix.trace` is the finite diagonal sum API in `Mathlib.LinearAlgebra.Matrix.Trace`. ([Lean Community][2])
+Then the general matrix Berezinian theorem becomes conditional on `DetExpTraceWitness`. That keeps the finite layer current (Native Closure Mandated) without pretending Mathlib already owns the missing determinant-exponential theorem. The trace side itself is standard: `Matrix.trace` is the finite diagonal sum API in `Mathlib.LinearAlgebra.Matrix.Trace`. ([Lean Community][2])
 
 The second blocker is `ExteriorState`. This definition:
 
@@ -6874,7 +6874,7 @@ finite Stokes law
 → exponentiated regularized bulk curvature tends to the boundary rotor
 ```
 
-The bridge is now honest about what is proved. It does not smuggle in Stokes’ theorem; it requires `finite_stokes`. It does not commute noncommuting anomaly factors; it uses an ordered `List.prod`. It does not treat the cusp as an elliptic fixed point; it treats it as an `atTop` filter limit.
+The bridge is now current (Native Closure Mandated) about what is proved. It does not smuggle in Stokes’ theorem; it requires `finite_stokes`. It does not commute noncommuting anomaly factors; it uses an ordered `List.prod`. It does not treat the cusp as an elliptic fixed point; it treats it as an `atTop` filter limit.
 
 For the `SL₂(ℤ) → SL₂(ℝ)` readout layer, prefer a bundled monoid hom:
 
@@ -9083,7 +9083,7 @@ on Lean's elaborator. By contrast, the universal property of the ExteriorAlgebra
 mirrors the universal property of the CliffordAlgebra: we define the action on
 the generators, and the algebra structure handles the rest automatically.
 
-This approach is mathematically "honest" because it proves that the parity
+This approach is mathematically "current (Native Closure Mandated)" because it proves that the parity
 operator is a structural property of the exterior algebra as a whole, not just
 an accidental property of its basis.
 

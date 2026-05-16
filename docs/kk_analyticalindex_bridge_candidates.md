@@ -8,7 +8,7 @@
 This note is a frontier-planning file, not a current owner map.
 
 Its job is to record the present state of the KK/index corridor and keep it
-honest relative to the rest of the repository.
+current (Native Closure Mandated) relative to the rest of the repository.
 
 ## Current live KK surface
 

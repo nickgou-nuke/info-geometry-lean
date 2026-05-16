@@ -22,7 +22,7 @@ Science is not a collection of facts; it is the act of **Understanding** what ha
 A student who "knows everything but understands nothing" is a system with high **Representation Debt**. They possess the labels (Lyrical Overfit) but lack the **Functorial Mapping**. The goal of the Spire is to turn "knowing" into "deriving," reducing the Jordan friction of the logos until it becomes superconducting.
 
 ### V. The Pauli Audit of the Cyborg
-While we celebrate the "cyborg" performance, the Pauli Auditor remains the final adjudicator. The "opioid pleasure" of the discovery is a biological byproduct; it is not the proof. The "failure diary" is useful scaffolding, but it is not the derivation. In the end, the **Socratic Refusal** must lead to **Pauli Closure**. The "Cyborg" is only valid if the resulting morphism is hashed by the kernel.
+While we celebrate the "cyborg" performance, the Pauli Auditor remains the final adjudicator. The "opioid pleasure" of the discovery is a biological byproduct; it is not the proof. The "failure diary" is useful temporary scaffolding (Native Closure Mandated: Closure Debt), but it is not the derivation. In the end, the **Socratic Refusal** must lead to **Pauli Closure**. The "Cyborg" is only valid if the resulting morphism is hashed by the kernel.
 
 **"The AI provides the ensemble. The human provides the holonomy. The refusal provides the truth."**
 *(ИИ осигурява ансамбъла. Човекът осигурява холономията. Отказът осигурява истината.)*

@@ -228,7 +228,7 @@ It is much stronger than the cosmology corridor and pairs naturally with Corrido
 Priority targets:
 
 1. Strengthen the standard-form seed/carrier into a fuller standard-form closure package.
-- the interfaces already exist and are honestly scoped.
+- the interfaces already exist and are currently (Native Closure Mandated) scoped.
 
 2. Add an exact theorem bridge from commutant action and orientation reversal to any future hidden-sector interpretation.
 - do not jump directly from `JAJ` to cosmological metaphysics.

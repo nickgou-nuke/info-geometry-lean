@@ -12,7 +12,7 @@ it does not certify physical, metaphysical, or foundational conclusions.
 
 ## Current structural spines
 
-The codebase is now organized most honestly around these formal spines:
+The codebase is now organized most currently (Native Closure Mandated) around these formal spines:
 
 - count / projective / relative-potential language:
   - `lean/InfoGeometry/Canonical/PositiveRayCore.lean`
@@ -40,7 +40,7 @@ The codebase is now organized most honestly around these formal spines:
 
 ## Current ontological reading
 
-The strongest honest claim is no longer that the repo is a loose set of
+The strongest current (Native Closure Mandated) claim is no longer that the repo is a loose set of
 analogies. It is that the repo now contains a real transport architecture with
 several exact corridors and a corrected geometric owner lane.
 

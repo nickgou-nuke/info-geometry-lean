@@ -179,7 +179,7 @@ Import this list by first loading
 
 ## `InfoGeometry.Canonical.BerryRotorBridge`
 - **D** group/model abbreviations (`Γ`, `H`), `phaseLine`, `AbelianModularBerryData`,
-  `NonAbelianSpinBerryData`, and type/class scaffolding.
+  `NonAbelianSpinBerryData`, and type/class temporary scaffolding (Native Closure Mandated: Closure Debt).
 - **S** `modularBerryRotor_eq_curvatureIntegral_plus_anomaly`,
   `modularBerryRotor_eq_bulkRotor_mul_anomaly`,
   `modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly`

@@ -38,6 +38,20 @@ structure SimilarMatrixWitness {R ι : Type*}
   /-- Similarity factorization. -/
   factorization : A = P * B * Q
 
+namespace SimilarMatrixWitness
+
+/-- Reflexive similarity witness. -/
+def refl {R ι : Type*}
+    [Semiring R] [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι R) : SimilarMatrixWitness A A where
+  P := 1
+  Q := 1
+  P_mul_Q := by simp
+  Q_mul_P := by simp
+  factorization := by simp
+
+end SimilarMatrixWitness
+
 /-- AFP `eigenvector`: a nonzero vector satisfying `A v = k v`. -/
 def Eigenvector {K ι : Type*} [Semiring K] [Fintype ι]
     (A : Matrix ι ι K) (v : ι → K) (k : K) : Prop :=
@@ -121,7 +135,7 @@ theorem charPoly_upperTriangular
     intro i j hij
     exact hA hij)
 
-/-- Witness-gated characteristic-polynomial invariance under similarity. -/
+/-- witness-gated (Native Closure Mandated: Closure Debt) characteristic-polynomial invariance under similarity. -/
 structure SimilarCharPolyPacket {K ι : Type*}
     [CommRing K] [Fintype ι] [DecidableEq ι]
     (A B : Matrix ι ι K) where
@@ -137,6 +151,23 @@ theorem charPoly_similar {K ι : Type*}
     (P : SimilarCharPolyPacket A B) :
     charPoly A = charPoly B :=
   P.charpoly_eq
+
+/-- Native characteristic-polynomial invariance under explicit similarity data. -/
+theorem charPoly_similar_of_witness {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly A = charPoly B := by
+  rw [charPoly, W.factorization, charPoly]
+  calc
+    (W.P * B * W.Q).charpoly = (W.P * (B * W.Q)).charpoly := by
+      rw [Matrix.mul_assoc]
+    _ = ((B * W.Q) * W.P).charpoly := by
+      rw [Matrix.charpoly_mul_comm]
+    _ = (B * (W.Q * W.P)).charpoly := by
+      rw [Matrix.mul_assoc]
+    _ = B.charpoly := by
+      rw [W.Q_mul_P, Matrix.mul_one]
 
 /--
 Factorized characteristic polynomial packet.
@@ -156,6 +187,35 @@ structure CharPolyFactorizationPacket (n : Nat) where
   length_eq : roots.length = n
 
 namespace CharPolyFactorizationPacket
+
+/-- Native factorization of the characteristic polynomial over `ℂ`. -/
+theorem charPoly_factorized_native (A : Matrix (Fin n) (Fin n) ℂ) :
+    ∃ roots : List ℂ,
+      charPoly A = roots.foldr (fun a p => (X - C a) * p) 1 ∧ roots.length = n := by
+  classical
+  let r : Multiset ℂ := (charPoly A).roots
+  have hsplits : (charPoly A).Splits := IsAlgClosed.splits (charPoly A)
+  refine ⟨r.toList, ?_, ?_⟩
+  · have hsplits : (charPoly A).Splits := IsAlgClosed.splits (charPoly A)
+    have hprod : charPoly A = (r.map fun a => X - C a).prod := by
+      simpa [r] using hsplits.eq_prod_roots_of_monic (Matrix.charpoly_monic A)
+    rw [hprod, ← Multiset.prod_map_toList, List.prod_eq_foldr, List.foldr_map]
+  · have hcard : r.card = n := by
+      have h1 : (charPoly A).natDegree = r.card := by
+        simpa [r] using hsplits.natDegree_eq_card_roots
+      rw [← h1, Matrix.charpoly_natDegree_eq_dim]
+      simp
+    simpa [r, hcard] using (Multiset.length_toList r)
+
+/-- Native constructor for the factorization packet. -/
+noncomputable def ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) : CharPolyFactorizationPacket n := by
+  classical
+  let h := charPoly_factorized_native (n := n) A
+  refine
+    { A := A
+      roots := Classical.choose h
+      factorization := (Classical.choose_spec h).1
+      length_eq := (Classical.choose_spec h).2 }
 
 /-- Projection corresponding to AFP `char_poly_factorized`. -/
 theorem charPoly_factorized {n : Nat} (P : CharPolyFactorizationPacket n) :

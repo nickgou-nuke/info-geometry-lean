@@ -1,5 +1,11 @@
 schema: info_geometry.verification_policy.v1
 version: 1
+constructive_closure_mandate:
+  policy: docs/CONSTRUCTIVE_CLOSURE_MANDATE.md
+  utmost_priority: replace witness-gated and external-certificate leftovers with native Lean 4 proofs
+  promotion_rule: kernel_checked_lean_or_mathlib_only
+  forbid_anonymous_witnesses: true
+  unformalized_surfaces_are_closure_debt: true
 defaults:
   max_soft_failures: 1
   escalate_soft_to_hard_after: 2

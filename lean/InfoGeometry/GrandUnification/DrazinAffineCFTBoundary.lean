@@ -7,7 +7,7 @@ import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 /-!
 # InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 
-Witness-gated CFT boundary enhancement for the existing Drazin, Moore--Penrose,
+witness-gated (Native Closure Mandated: Closure Debt) CFT boundary enhancement for the existing Drazin, Moore--Penrose,
 split-Clifford, and affine-Virasoro lanes.
 
 This file does not assert that singular generalized-inverse data automatically
@@ -162,6 +162,10 @@ theorem constructDrazinAffineCFTBoundaryTarget
     (P : DrazinAffineCFTBoundaryPacket) :
     DrazinAffineCFTBoundaryTarget := by
   exact ⟨P⟩
+
+@[simp] theorem DrazinAffineCFTBoundaryTarget_iff :
+    DrazinAffineCFTBoundaryTarget ↔ Nonempty DrazinAffineCFTBoundaryPacket :=
+  Iff.rfl
 
 namespace DrazinAffineCFTBoundaryPacket
 

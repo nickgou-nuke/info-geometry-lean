@@ -25,7 +25,7 @@ structure PrimeGasMaxEntPacket where
   entropyReadout : ℝ
   freeEnergyReadout : ℝ
 
-/-- Witness-gated Jaynes/Riemannian readout bridge. -/
+/-- witness-gated (Native Closure Mandated: Closure Debt) Jaynes/Riemannian readout bridge. -/
 @[rep_depth operator]
 structure PrimeGasJaynesRNBridge where
   jaynesEntropy : ℝ
@@ -57,6 +57,12 @@ def toSuperGeometricTemperature
   K.superTemperature
 
 @[simp]
+theorem toSuperGeometricTemperature_eq
+    (K : PrimeGasKMSTargetBridge) :
+    toSuperGeometricTemperature K = K.superTemperature :=
+  rfl
+
+@[simp]
 theorem toSuperGeometricTemperature_zero_odd
     (K : PrimeGasKMSTargetBridge) :
     (toSuperGeometricTemperature K).oddTemperature = 0 :=
@@ -79,6 +85,18 @@ structure PrimeGasSuperKMSBridge where
 namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)
+
+/-- The bridge's stored super-temperature is exactly the KMS target temperature. -/
+@[simp]
+theorem superTemperature_eq_kmsTargetTemperature :
+    B.superTemperature = B.kmsTarget.superTemperature := by
+  rw [B.superTemperature_eq, toSuperGeometricTemperature_eq]
+
+/-- The bridge's super-temperature is the same as the extracted KMS temperature. -/
+@[simp]
+theorem superTemperature_eq_toSuperGeometricTemperature :
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget := by
+  rw [B.superTemperature_eq]
 
 /-- The odd super-temperature vanishes by the stored KMS witness. -/
 @[simp]

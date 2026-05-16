@@ -40,6 +40,10 @@ theorem cscalar_prod_adjoint [Fintype ι] [Fintype κ]
     star v ⬝ᵥ (Mᴴ *ᵥ u) = star (M *ᵥ v) ⬝ᵥ u :=
   FiniteMatrix.dotProduct_conjTranspose_mulVec M v u
 
+/-- Lean-native alias of the matrix adjoint. -/
+abbrev matAdjoint {ι : Type*} (A : Matrix ι ι ℂ) : Matrix ι ι ℂ :=
+  Aᴴ
+
 @[simp]
 theorem minus_one_smul_vec (v : ι → ℂ) :
     (-1 : ℂ) • v = -v := by
@@ -77,10 +81,79 @@ theorem list_map_smul_vec (c : ℂ) (v : ι → ℂ) :
   ext i
   simp
 
+/-- AFP-style dot product on finite complex coordinate vectors. -/
+abbrev dot {ι : Type*} [Fintype ι] (v w : ι → ℂ) : ℂ :=
+  dotProduct v w
+
+/-- Hermitian dot product on finite complex coordinate vectors. -/
+abbrev cDot {ι : Type*} [Fintype ι] (v w : ι → ℂ) : ℂ :=
+  dotProduct (star v) w
+
+/-- The inverse-row vector used in the finite complex JNF corridor. -/
+abbrev vecInv {ι : Type*} [Fintype ι] (v : ι → ℂ) : ι → ℂ :=
+  fun i => star (v i) * (cDot v v)⁻¹
+
+/-- Columns are pairwise conjugate-orthogonal, with nonzero self-overlap. -/
+def corthogonalMatrix {ι : Type*} [Fintype ι] (A : Matrix ι ι ℂ) : Prop :=
+  (∀ i j, i ≠ j → cDot (fun k => A k i) (fun k => A k j) = 0) ∧
+  (∀ i, cDot (fun k => A k i) (fun k => A k i) ≠ 0)
+
+/-- Explicit inverse from a conjugate-orthogonal matrix. -/
+abbrev corthogonalInverse {ι : Type*} [Fintype ι] (A : Matrix ι ι ℂ) : Matrix ι ι ℂ :=
+  fun i j => vecInv (fun k => A k i) j
+
+/-- The inverse-row vector evaluates to `1` against its source vector. -/
+theorem dot_vecInv_self [Fintype ι] (v : ι → ℂ) (h : cDot v v ≠ 0) :
+    dot (vecInv v) v = 1 := by
+  have hsum :
+      ∑ x, v x * (star (v x) * (cDot v v)⁻¹) =
+        (∑ x, v x * star (v x)) * (cDot v v)⁻¹ := by
+    simpa [mul_assoc, mul_left_comm, mul_comm] using
+      (Finset.sum_mul (s := Finset.univ) (f := fun x => v x * star (v x))
+        (a := (cDot v v)⁻¹)).symm
+  have hconj : (∑ x, v x * star (v x)) = cDot v v := by
+    simp [cDot, dotProduct, mul_comm]
+  rw [show dot (vecInv v) v = ∑ x, v x * (star (v x) * (cDot v v)⁻¹) by
+    simp [dot, vecInv, dotProduct, mul_assoc, mul_left_comm, mul_comm]]
+  rw [hsum, hconj]
+  exact mul_inv_cancel₀ h
+
+/-- The explicit conjugate-orthogonal inverse is a left inverse. -/
+theorem corthogonalInverse_mul [Fintype ι] [DecidableEq ι]
+    {A : Matrix ι ι ℂ} (hA : corthogonalMatrix A) :
+    corthogonalInverse A * A = 1 := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    have hcalc :
+        (corthogonalInverse A * A) i i = dot (vecInv (fun k => A k i)) (fun k => A k i) := by
+      simp [corthogonalInverse, dot, vecInv, Matrix.mul_apply, dotProduct, mul_assoc,
+        mul_left_comm, mul_comm]
+    rw [hcalc]
+    simpa [dot, cDot, dotProduct, mul_comm] using
+      (dot_vecInv_self (v := fun k => A k i) (hA.2 i))
+  · have hzero := hA.1 i j hij
+    have hcalc :
+        (corthogonalInverse A * A) i j =
+          cDot (fun k => A k i) (fun k => A k j) *
+            (cDot (fun k => A k i) (fun k => A k i))⁻¹ := by
+      rw [Matrix.mul_apply]
+      have hsum :
+          ∑ x, A x j * (star (A x i) * (cDot (fun k => A k i) (fun k => A k i))⁻¹) =
+            (∑ x, A x j * star (A x i)) * (cDot (fun k => A k i) (fun k => A k i))⁻¹ := by
+        simpa [mul_assoc, mul_left_comm, mul_comm] using
+          (Finset.sum_mul (s := Finset.univ)
+            (f := fun x => A x j * star (A x i))
+            (a := (cDot (fun k => A k i) (fun k => A k i))⁻¹)).symm
+      simpa [corthogonalInverse, vecInv, cDot, dotProduct, mul_assoc, mul_left_comm, mul_comm]
+        using hsum
+    rw [hcalc, hzero]
+    simp [hij]
+
 section GramSchmidt
 
 variable [NormedAddCommGroup E] [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
-variable [Fintype ι]
+variable [Fintype ι] [LinearOrder ι] [LocallyFiniteOrderBot ι] [WellFoundedLT ι]
 
 /--
 Mathlib's actual Gram-Schmidt orthonormal-basis construction.
@@ -89,25 +162,25 @@ This is the Lean-native replacement for AFP's list-level `gram_schmidt0`
 construction when the index cardinality is the Hilbert-space dimension.
 -/
 abbrev gramSchmidtBasis
-    (hcard : finrank ℂ E = Fintype.card ι)
+    (hcard : Module.finrank ℂ E = Fintype.card ι)
     (f : ι → E) :
     OrthonormalBasis ι ℂ E :=
-  gramSchmidtOrthonormalBasis hcard f
+  InnerProductSpace.gramSchmidtOrthonormalBasis hcard f
 
 theorem gramSchmidtBasis_orthonormal
-    (hcard : finrank ℂ E = Fintype.card ι)
+    (hcard : Module.finrank ℂ E = Fintype.card ι)
     (f : ι → E) :
     Orthonormal ℂ (gramSchmidtBasis (E := E) hcard f) :=
   (gramSchmidtBasis (E := E) hcard f).orthonormal
 
 theorem gramSchmidtBasis_apply_of_orthogonal
-    (hcard : finrank ℂ E = Fintype.card ι)
+    (hcard : Module.finrank ℂ E = Fintype.card ι)
     {f : ι → E}
-    (hf : Pairwise fun i j => ⟪f i, f j⟫_ℂ = 0)
+    (hf : Pairwise fun i j => inner ℂ (f i) (f j) = 0)
     {i : ι}
     (hi : f i ≠ 0) :
     gramSchmidtBasis (E := E) hcard f i = (‖f i‖⁻¹ : ℂ) • f i :=
-  gramSchmidtOrthonormalBasis_apply_of_orthogonal hcard hf hi
+  InnerProductSpace.gramSchmidtOrthonormalBasis_apply_of_orthogonal hcard hf hi
 
 end GramSchmidt
 

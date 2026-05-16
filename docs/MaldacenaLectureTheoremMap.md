@@ -8,7 +8,7 @@
 This file turns the lecture themes into a concrete formalization program for this repository.
 
 It does not claim that the repo already formalizes quantum gravity, Hawking radiation, or full AdS/CFT.
-It identifies the parts of the lecture that can be translated honestly into current owner surfaces.
+It identifies the parts of the lecture that can be translated currently (Native Closure Mandated) into current owner surfaces.
 
 ## Core Rule
 
@@ -88,7 +88,7 @@ Goal:
 
 Why this corridor first:
 - it is already repo-native
-- it is mathematically honest
+- it is mathematically current (Native Closure Mandated)
 - it captures a real piece of the lecture’s inversion / fixed-point / closure story
 - it avoids fake claims about black-hole dynamics
 
@@ -112,7 +112,7 @@ Concrete theorem targets:
 - invariant readouts survive closure while local descriptions become mixed
 - joint vs marginal readout distinctions
 
-This is the right place to formalize the lecture’s “portion of the sentence” analogy in a mathematically honest finite model.
+This is the right place to formalize the lecture’s “portion of the sentence” analogy in a mathematically current (Native Closure Mandated) finite model.
 
 ### Third corridor: paired carriers and entanglement shadows
 

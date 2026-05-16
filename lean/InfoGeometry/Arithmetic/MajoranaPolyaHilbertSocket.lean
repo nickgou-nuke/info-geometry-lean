@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 /-!
 # InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 
-Witness-gated spectral socket for a Majorana/Pólya--Hilbert program.
+witness-gated (Native Closure Mandated: Closure Debt) spectral socket for a Majorana/Pólya--Hilbert program.
 
 This file deliberately does **not** construct a self-adjoint operator whose
 spectrum proves RH.  It records the exact analytic obligations such a program
@@ -844,7 +844,7 @@ end CompletedXiHilbertPolyaReduction
 /-! ## 5. Full Pólya--Hilbert bridge packet -/
 
 /--
-Complete witness-gated Majorana/Pólya--Hilbert bridge.
+Complete witness-gated (Native Closure Mandated: Closure Debt) Majorana/Pólya--Hilbert bridge.
 
 The final implication to a classical RH proposition is a field, not a theorem
 derived by this module.  A concrete analytic construction must supply it.

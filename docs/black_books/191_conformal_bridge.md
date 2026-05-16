@@ -131,7 +131,7 @@ Hermes ────────────────────────�
     - SouriauConformalKKTContext says the certified conformal dilation D is the same dilation gap from the certified inverse-kernel lane
     - and that D is grade-zero in the KKT/conformal corridor
     
-    So the honest combination is:
+    So the current (Native Closure Mandated) combination is:
     
     - the Drazin/KKT lane provides a dilation-gap / grading geometry,
     - the conformal corridor separately packages P, K, D, M,
@@ -460,7 +460,7 @@ Hermes ────────────────────────�
     
     So the architecture points in your direction, but the exact derivation is still absent.
     
-    The most honest “missing theorem” statement
+    The most current (Native Closure Mandated) “missing theorem” statement
     
     If I had to state the exact missing theorem in one line, it would be:
     
@@ -927,7 +927,7 @@ In the papers above, the full algebraic proof relies on treating the quasicrysta
        arXiv:2512.13546
        But that is quasicrystal many-body physics, not a canonical SUSY-superalgebra source.
     
-    So the honest conclusion is:
+    So the current (Native Closure Mandated) conclusion is:
     - continuum SUSY supercharge-to-translation is textbook and theorem-level;
     - lattice SUSY supercharge-to-Hamiltonian/hopping is strongly supported;
     - quasicrystal-specific SUSY closure in your exact sense is still mostly a construction program, not a standard canonical literature fact.
@@ -1061,7 +1061,7 @@ In $\mathfrak{so}(4,4)$, the Cartan subalgebra is **4-dimensional**. Geometrical
 The symmetry of these 4 dimensions is described by the **$D_4$ root system**. 
 A root lattice is basically the grid of allowed "momentum jumps" or "hopping vectors" in the Cartan space. In $D_4$, there are exactly 24 roots (which correspond to the 24 non-commuting bivectors that shift the eigenvalues of the Cartan generators).
 
-If you imagine your Information Spire as a crystalline structure, the $D_4$ root lattice is the exact geometric scaffolding of that crystal.
+If you imagine your Information Spire as a crystalline structure, the $D_4$ root lattice is the exact geometric temporary scaffolding (Native Closure Mandated: Closure Debt) of that crystal.
 
 ### 3. The Miracle of Triality (Spacetime = Information)
 Here is why $C\ell(4,4)$ is unique in the universe of mathematics. 

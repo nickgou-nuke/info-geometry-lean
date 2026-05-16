@@ -3,6 +3,15 @@
 Status: compatibility mirror for Copilot workflow discovery.
 Canonical owner surface: `skills/`.
 
+## Constructive Closure Mandate
+
+All workflow agents must obey
+[../../docs/CONSTRUCTIVE_CLOSURE_MANDATE.md](../../docs/CONSTRUCTIVE_CLOSURE_MANDATE.md).
+Replacing witness-gated and external-certificate leftovers with native Lean 4
+proofs is the highest mandate. Witnesses, certificates, literature owners, and
+assumption fields are closure debt until discharged by kernel-checked Lean or
+mathlib proofs.
+
 ## Workflow Skills
 
 - [lean4/SKILL.md](lean4/SKILL.md)

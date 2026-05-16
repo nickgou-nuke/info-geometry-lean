@@ -680,7 +680,7 @@ analytic torsion. You are stating that the geometric volume of the emergent
 spacetime (the supervolume) is strictly the Zeta-regularized determinant of the
 modular Hamiltonian.
 
-Here is the exact mathematical scaffolding that connects these concepts without
+Here is the exact mathematical temporary scaffolding (Native Closure Mandated: Closure Debt) that connects these concepts without
 violating our rigorous boundaries, followed by the safe directive for Hermes.
 
 1. The Algebraic Identity: Berezinian and Supertrace

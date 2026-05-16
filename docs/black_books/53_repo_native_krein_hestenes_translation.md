@@ -8,7 +8,7 @@ $$
 (H,[\cdot,\cdot],J,\varepsilon,K),\qquad K:=J\circ\varepsilon,\qquad K^2=-1.
 $$
 
-Here the ambient Hilbert structure is analytic scaffolding; the primary owned datum is the Krein pairing. This is formalized in `Krein/InvolutiveSelfDualCarrier.lean`.
+Here the ambient Hilbert structure is analytic temporary scaffolding (Native Closure Mandated: Closure Debt); the primary owned datum is the Krein pairing. This is formalized in `Krein/InvolutiveSelfDualCarrier.lean`.
 
 In this repo, "complex-linear" and "antilinear" are no longer primitive notions. They are replaced by carrier-native phase conditions:
 

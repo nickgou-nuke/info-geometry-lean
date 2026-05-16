@@ -98,11 +98,11 @@ across all temperature vectors.
 -/
 @[rep_depth transport]
 def LanglandsThermodynamicEquivalence 
-    {G_G G_A : Type} [Group G_G] [Group G_A]
-    (twist_Galois : GaugeTwist G_G) (twist_Automorphic : GaugeTwist G_A) : Prop :=
-  ∀ (base : SouriauWeylPartitionBridge E Op H Finite Alg),
-    twistedEulerProduct base.positiveRoots base.temperature.s twist_Galois = 
-      twistedEulerProduct base.positiveRoots base.temperature.s twist_Automorphic
+    {G_G G_A : Type*} [Group G_G] [Group G_A]
+    (twist_Galois : GaugeTwist G_G) (twist_Automorphic : GaugeTwist G_A) 
+    (positiveRoots : Finset ℕ) (temperature_s : ℂ) : Prop :=
+  twistedEulerProduct positiveRoots temperature_s twist_Galois = 
+    twistedEulerProduct positiveRoots temperature_s twist_Automorphic
 
 end TwistedSouriauWeylBridge
 

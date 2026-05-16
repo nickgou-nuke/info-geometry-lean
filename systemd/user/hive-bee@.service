@@ -1,0 +1,18 @@
+[Unit]
+Description=Hive proof bee worker %i
+After=network-online.target
+Wants=network-online.target
+PartOf=hive-beehive.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/goutev/repos/info-geometry-lean
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-%h/.config/info-geometry-lean/hive.env
+ExecStart=/usr/bin/env python3 /home/goutev/repos/info-geometry-lean/tools/infra/hive_bee.py --worker-id proof-%i --poll-interval 15
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=hive-beehive.target

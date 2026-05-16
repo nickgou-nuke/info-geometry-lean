@@ -1,0 +1,18 @@
+[Unit]
+Description=Hive MotherBee deterministic router
+After=network-online.target
+Wants=network-online.target
+PartOf=hive-beehive.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/goutev/repos/info-geometry-lean
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-%h/.config/info-geometry-lean/hive.env
+ExecStart=/usr/bin/env bash -lc 'cd /home/goutev/repos/info-geometry-lean && while true; do python3 tools/infra/hive_motherbee.py once; sleep 5; done'
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=hive-beehive.target

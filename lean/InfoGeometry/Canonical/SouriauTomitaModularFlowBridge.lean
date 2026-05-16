@@ -325,7 +325,6 @@ structure SouriauTomitaKMSContext where
     KMSState (H := H)
       logContext.souriauAdditiveModularFlow beta
   kms_state_eq : kms.state = state
-
 namespace SouriauTomitaKMSContext
 
 /-- Constructor theorem exposing the state field from an explicit KMS witness packet. -/
@@ -366,7 +365,7 @@ theorem kms_eval_mul_souriau_modular_eq_eval_flip
   calc
     C.state.eval (A * C.sigma C.modularBeta B)
         = C.kms.state.eval (A * C.sigma C.modularBeta B) := by
-          rw [C.kms_state_eq]
+            rw [C.kms_state_eq]
     _ = C.kms.state.eval (B * A) :=
           C.kms.eval_mul_modular_eq_eval_flip A B
     _ = C.state.eval (B * A) := by

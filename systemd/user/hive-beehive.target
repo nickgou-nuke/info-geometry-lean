@@ -1,0 +1,8 @@
+[Unit]
+Description=Hive beehive swarm target
+Wants=hive-motherbee.service hive-bee@default.service hive-swarm@default.service hive-build@default.service hive-audit@default.service hive-research@default.service
+After=network-online.target
+Wants=network-online.target
+
+[Install]
+WantedBy=default.target

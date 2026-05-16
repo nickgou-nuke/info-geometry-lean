@@ -260,6 +260,175 @@ theorem jordanShift_pow_eq_zero_self {R : Type*} [Semiring R] (n : Nat) :
     (jordanShift (R := R) n) ^ n = 0 :=
   jordanShift_pow_eq_zero_of_card_le (R := R) (n := n) (k := n) (le_rfl)
 
+/-- `Fin.rev` commutes with `succ` up to the expected one-step shift. -/
+theorem rev_succ_eq_castSucc_add_one {n : Nat} (j : Fin n) :
+    j.rev.succ = j.succ.rev + 1 := by
+  apply Fin.ext
+  have hlt' : (j.succ.rev : ℕ) + 1 < n + 1 := by
+    have h : (j.succ.rev : ℕ) = (n + 1) - (j.val + 2) := by
+      simp [Fin.val_rev, Fin.val_succ]
+    rw [h]
+    omega
+  simp [Fin.val_succ, Fin.val_rev, Fin.val_add_one_of_lt' hlt']
+
+/-- The reversed companion matrix of the `X^(n+1)` power basis is the superdiagonal shift. -/
+theorem powerBasis_rev_leftMulMatrix_eq_jordanShift
+    {K : Type*} [Field K] {S : Type*} [Ring S] [Algebra K S] [Nontrivial S]
+    (pb : PowerBasis K S)
+    (hmin : pb.minpolyGen = (X ^ pb.dim : K[X])) :
+    Matrix.reindex Fin.revPerm Fin.revPerm
+      (Algebra.leftMulMatrix pb.basis pb.gen) = jordanShift (R := K) pb.dim := by
+  classical
+  have hmin' : minpoly K pb.gen = (X ^ pb.dim : K[X]) := by
+    simpa [PowerBasis.minpolyGen_eq] using hmin
+  ext i j
+  simp [Matrix.reindex, PowerBasis.leftMulMatrix, hmin', Polynomial.coeff_X_pow]
+  by_cases hj0 : (j : Nat) = 0
+  · have hj0' : (j : Nat) = 0 := hj0
+    have hdimpos : 0 < pb.dim := pb.dim_pos
+    have htop : pb.dim - 1 + 1 = pb.dim := by
+      omega
+    have hi0 : ¬ pb.dim - (i.val + 1) = pb.dim := by
+      omega
+    simpa [hj0', htop] using hi0
+  · have hjpos : 0 < j.val := Nat.pos_of_ne_zero hj0
+    have hfirst : pb.dim - (j.val + 1) + 1 = pb.dim ↔ False := by
+      constructor
+      · intro h
+        omega
+      · intro h
+        exact False.elim h
+    have hmid : pb.dim - (i.val + 1) = pb.dim - (j.val + 1) + 1 ↔ i.val + 1 = j.val := by
+      omega
+    simp [hfirst, hmid]
+
+/-- The reversed power basis turns a scalar shift into a Jordan block. -/
+theorem powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
+    {K : Type*} [Field K] {S : Type*} [Ring S] [Algebra K S] [Nontrivial S]
+    (pb : PowerBasis K S) (a : K)
+    (hmin : pb.minpolyGen = (X ^ pb.dim : K[X])) :
+    Matrix.reindex Fin.revPerm Fin.revPerm
+      (Algebra.leftMulMatrix pb.basis (pb.gen + algebraMap K S a)) =
+      jordanBlock (R := K) pb.dim a := by
+  classical
+  have hshift :
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis pb.gen) =
+      jordanShift (R := K) pb.dim := by
+    simpa [PowerBasis.minpolyGen_eq] using
+      (powerBasis_rev_leftMulMatrix_eq_jordanShift (K := K) (S := S) (pb := pb) hmin)
+  have hscalar :
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis (algebraMap K S a)) =
+      Matrix.scalar (Fin pb.dim) a := by
+    ext i j
+    by_cases hij : i = j
+    · subst hij
+      simp [Matrix.reindex, Matrix.scalar, Matrix.algebraMap_matrix_apply]
+    · simp [Matrix.reindex, Matrix.scalar, Matrix.algebraMap_matrix_apply, hij]
+  calc
+    Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis (pb.gen + algebraMap K S a))
+        =
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis pb.gen +
+          Algebra.leftMulMatrix pb.basis (algebraMap K S a)) := by
+      rw [map_add]
+    _ =
+      Matrix.reindex Fin.revPerm Fin.revPerm (Algebra.leftMulMatrix pb.basis pb.gen) +
+        Matrix.reindex Fin.revPerm Fin.revPerm
+          (Algebra.leftMulMatrix pb.basis (algebraMap K S a)) := by
+      ext i j <;> simp [Matrix.reindex]
+    _ = jordanShift (R := K) pb.dim + Matrix.scalar (Fin pb.dim) a := by
+      rw [hshift, hscalar]
+    _ = jordanBlock (R := K) pb.dim a := by
+      simpa [add_comm] using
+        (jordanBlock_eq_scalar_add_shift (R := K) (n := pb.dim) (a := a)).symm
+
+/-- The `AdjoinRoot` power basis for `X^(n+1)` reverses to the Jordan shift. -/
+theorem adjoinRoot_powerBasis_rev_leftMulMatrix_eq_jordanShift
+    {K : Type*} [Field K] (n : Nat) :
+    Matrix.reindex Fin.revPerm Fin.revPerm
+      (Algebra.leftMulMatrix
+        (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).basis
+        (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).gen) =
+      jordanShift (R := K) (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).dim := by
+  let pb : PowerBasis K (AdjoinRoot (X ^ (n + 1))) :=
+    AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))
+  letI : Nontrivial (AdjoinRoot (X ^ (n + 1) : K[X])) := by
+    exact AdjoinRoot.nontrivial (f := (X ^ (n + 1) : K[X])) (by
+      rw [Polynomial.degree_X_pow]
+      intro h
+      have hco : (↑(n + 1) : WithBot Nat) = (0 : WithBot Nat) := by
+        simpa [WithBot.coe_zero] using h
+      have hnat : n + 1 = 0 := WithBot.coe_injective hco
+      exact Nat.succ_ne_zero n hnat)
+  have hmin :
+      pb.minpolyGen = (X ^ pb.dim : K[X]) := by
+    have hmin0 : minpoly K pb.gen = (X ^ (n + 1) : K[X]) := by
+      simpa [PowerBasis.minpolyGen_eq, AdjoinRoot.powerBasis'] using
+      (AdjoinRoot.minpoly_powerBasis_gen_of_monic
+        (K := K)
+        (f := (X ^ (n + 1) : K[X]))
+        (hf := Polynomial.monic_X_pow (R := K) (n + 1)))
+    have hdim : pb.dim = n + 1 := by
+      simp [pb, AdjoinRoot.powerBasis', PowerBasis.dim]
+    simpa [PowerBasis.minpolyGen_eq, hdim] using hmin0
+  simpa using
+    (powerBasis_rev_leftMulMatrix_eq_jordanShift
+      (K := K) (S := AdjoinRoot (X ^ (n + 1)))
+      (pb := pb)
+      hmin)
+
+/-- The reversed `X^(n+1)` power basis turns a scalar shift into a Jordan block. -/
+theorem adjoinRoot_powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
+    {K : Type*} [Field K] (n : Nat) (a : K) :
+    Matrix.reindex Fin.revPerm Fin.revPerm
+      (Algebra.leftMulMatrix
+        (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).basis
+        ((AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).gen +
+          algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a)) =
+      jordanBlock (R := K) (AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))).dim a := by
+  classical
+  let pb : PowerBasis K (AdjoinRoot (X ^ (n + 1))) :=
+    AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := K) (n + 1))
+  have hshift :
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis pb.gen) =
+      jordanShift (R := K) pb.dim := by
+    simpa [pb] using
+      (adjoinRoot_powerBasis_rev_leftMulMatrix_eq_jordanShift (K := K) n)
+  have hscalar :
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis (algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a)) =
+      Matrix.scalar (Fin pb.dim) a := by
+    ext i j
+    by_cases hij : i = j
+    · subst hij
+      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar, pb] using
+        (Module.Basis.repr_smul' (B := pb.basis) (i := i.rev) (r := a) (s := pb.basis i.rev))
+    · have hrev : i.rev ≠ j.rev := by simpa using hij
+      simpa [Matrix.reindex, Algebra.leftMulMatrix_eq_repr_mul, Matrix.scalar, pb, hij, hrev] using
+        (Module.Basis.repr_smul' (B := pb.basis) (i := i.rev) (r := a) (s := pb.basis j.rev))
+  calc
+    Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis (pb.gen + algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a))
+        =
+      Matrix.reindex Fin.revPerm Fin.revPerm
+        (Algebra.leftMulMatrix pb.basis pb.gen +
+          Algebra.leftMulMatrix pb.basis (algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a)) := by
+      rw [map_add]
+    _ =
+      Matrix.reindex Fin.revPerm Fin.revPerm (Algebra.leftMulMatrix pb.basis pb.gen) +
+        Matrix.reindex Fin.revPerm Fin.revPerm
+          (Algebra.leftMulMatrix pb.basis (algebraMap K (AdjoinRoot (X ^ (n + 1) : K[X])) a)) := by
+      ext i j <;> simp [Matrix.reindex]
+    _ = jordanShift (R := K) pb.dim + Matrix.scalar (Fin pb.dim) a := by
+      rw [hshift, hscalar]
+    _ = jordanBlock (R := K) pb.dim a := by
+      simpa [add_comm] using
+        (jordanBlock_eq_scalar_add_shift (R := K) (n := pb.dim) (a := a)).symm
+
 /-- Entrywise upper-triangular predicate for ordered finite index types. -/
 def UpperTriangular {R ι : Type*} [Zero R] [LT ι] (A : Matrix ι ι R) : Prop :=
   ∀ ⦃i j : ι⦄, j < i → A i j = 0

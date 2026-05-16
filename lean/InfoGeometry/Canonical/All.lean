@@ -63,6 +63,8 @@ import InfoGeometry.Canonical.BogoliubovVielbein
 import InfoGeometry.Canonical.BogoliubovVielbeinBridge
 import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
+import InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
+import InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.BoundedModularFlowCalibration
 import InfoGeometry.Canonical.BoundedKMSConditionBridge
@@ -75,6 +77,7 @@ import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 import InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
 import InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
+import InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.BoundaryProjector
@@ -95,7 +98,9 @@ import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
+import InfoGeometry.Canonical.JordanChevalleyPolynomialBridge
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
+import InfoGeometry.Canonical.NilpotentLegendreConformalBridge
 import InfoGeometry.Canonical.FractalFockEquivalenceBridge
 import InfoGeometry.Canonical.CelikKocakFractalFockBridge
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
@@ -210,6 +215,7 @@ import InfoGeometry.Canonical.DrazinAdjoint
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Canonical.DrazinDilationGapBridge
+import InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

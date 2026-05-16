@@ -20,12 +20,7 @@ namespace InfoGeometry.Canonical.BinaryCrystalHamiltonianFlowBridge
 open InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 open InfoGeometry.Canonical.WeylCharacterEquivalence
 
-variable {𝔤 E Op H Finite Alg : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
-variable [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-variable [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
-variable [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+variable {𝔤 : Type*}
 
 /--
 Binary crystal / thermodynamic flow packet.
@@ -45,16 +40,14 @@ structure BinaryCrystalHamiltonianFlowBridge
 
 namespace BinaryCrystalHamiltonianFlowBridge
 
-variable (B : BinaryCrystalHamiltonianFlowBridge
-  (𝔤 := 𝔤) (E := E) (Op := Op) (H := H)
-  (Finite := Finite) (Alg := Alg))
+variable (B : BinaryCrystalHamiltonianFlowBridge 𝔤)
 
 /-- The binary crystal packet still supplies the binary-owner target. -/
 @[rep_depth transport]
 theorem crystal_ownerTarget (B : BinaryCrystalHamiltonianFlowBridge
     𝔤) :
     BinaryCrystalWeylBlochOwnerTarget :=
-  B.crystalOwner
+  binaryCrystalWeylBlochOwnerTarget
 
 /-- The Souriau partition function is read as a Souriau character on the crystal side. -/
 @[rep_depth transport]

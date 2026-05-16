@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
@@ -41,9 +42,15 @@ structure CantorCoadjointHamiltonianFlowBridge
     (Orbit E Op H Finite Alg : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
     [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] [CompleteSpace H]
+    [InnerProductSpace ℝ H]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
+
+  /-- The actual dynamic Hamiltonian-flow owner surface. -/
+  flow :
+    InfoGeometry.Dynamics.HamiltonianFlowBridge.HamiltonianFlowBridge
+      E Op H Finite Alg Orbit
 
   /-- The underlying CCKV bridge. -/
   crystal :
@@ -85,7 +92,8 @@ variable
     {Orbit E Op H Finite Alg : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Module ℝ E]
     [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] [CompleteSpace H]
+    [InnerProductSpace ℝ H]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
@@ -99,6 +107,34 @@ pointing along the L₀ direction.
 theorem hamiltonian_eq_L0 :
     B.dynamics.geometricTemperature = B.crystal.virasoro.Lmode 0 :=
   B.hamiltonian_is_L0
+
+/--
+The actual dynamic owner surface identifies the Hamiltonian with the Tomita
+thermal generator.
+-/
+@[rep_depth transport]
+theorem flow_hamiltonian_is_souriau_generator :
+    B.flow.selfAdjointHamiltonian =
+      B.flow.modularContext.logContext.modularHamiltonian :=
+  InfoGeometry.Dynamics.HamiltonianFlowBridge.HamiltonianFlowBridge.hamiltonian_is_souriau_generator
+    (B := B.flow)
+
+/--
+The actual dynamic owner surface identifies the KMS inverse temperature with
+the real part of the Souriau temperature parameter.
+-/
+@[rep_depth transport]
+theorem flow_kms_inverse_temperature_eq_real_part_of_s :
+    B.flow.modularContext.beta = B.flow.partition.temperature.s.re :=
+  InfoGeometry.Dynamics.HamiltonianFlowBridge.HamiltonianFlowBridge.kms_inverse_temperature_eq_real_part_of_s
+    (B := B.flow)
+
+/-- The actual dynamic owner surface encodes positive roots spectrally. -/
+@[rep_depth transport]
+theorem flow_positive_roots_spectral_encoding (p : ℕ) (hp : p ∈ B.flow.partition.positiveRoots) :
+    ∃ (energy : ℝ), energy = Real.log (p : ℝ) :=
+  InfoGeometry.Dynamics.HamiltonianFlowBridge.HamiltonianFlowBridge.positive_roots_spectral_encoding
+    (B := B.flow) p hp
 
 /--
 The reversible (Hamiltonian) flow on the coadjoint orbit is exactly the 
@@ -119,6 +155,26 @@ theorem conformal_flow_valid (m n : ℤ) :
         bracket (B.virasoro_flow_generator m) (B.virasoro_flow_generator n) =
           B.virasoro_flow_generator (m + n) :=
   B.conformal_equations_of_motion m n
+
+/-- The coadjoint-orbit metriplectic second law is available from the owner layer. -/
+@[rep_depth transport]
+theorem coadjoint_orbit_metriplectic_second_law (x : Orbit) :
+    0 ≤ B.dynamics.totalEntropyRate x :=
+  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
+    (C := B.dynamics) x
+
+/-- Packed coadjoint-orbit metriplectic outputs are available from the owner layer. -/
+@[rep_depth transport]
+theorem full_coadjoint_orbit_metriplectic_theorem (x : Orbit) :
+    B.dynamics.isOnCoadjointOrbit (B.dynamics.moment x)
+      ∧ B.dynamics.isOnCoadjointOrbit (B.dynamics.moment (B.dynamics.reversibleVectorField x))
+      ∧ B.dynamics.isOnCoadjointOrbit (B.dynamics.moment (B.dynamics.metricVectorField x))
+      ∧ B.dynamics.reversibleEntropyRate x = 0
+      ∧ 0 ≤ B.dynamics.metricEntropyRate x
+      ∧ B.dynamics.totalEntropyRate x = B.dynamics.metricEntropyRate x
+      ∧ 0 ≤ B.dynamics.totalEntropyRate x :=
+  InfiniteCoadjointOrbitMetriplecticContext.full_coadjoint_orbit_metriplectic_theorem
+    (C := B.dynamics) x
 
 end CantorCoadjointHamiltonianFlowBridge
 

@@ -6,21 +6,24 @@ import InfoGeometry.Canonical.PrimeHurwitzLimit
 /-!
 # InfoGeometry.Canonical.PrimePartitionPolynomials
 
-Finite prime-chain partition functions.
+Finite prime-chain partition functions and the Lee--Yang interface.
 
 This module bridges the finite ferromagnetic prime-chain Hamiltonian to the
-Lee--Yang interface used by `PrimeHurwitzLimit`.
+Lee--Yang interface.
 
-The arithmetic local fugacities have logarithmic weights, so the natural
-finite readout is a generalized Dirichlet/quasi-polynomial in the shifted
-complex field `w`, not an ordinary polynomial in one variable.  The ordinary
-polynomial projection is still available below as a coarse global fugacity
-readout, but the Hurwitz handoff uses the generalized Lee--Yang witness.
+The key point is that the Lee--Yang theorem is multivariate before it is
+single-variable.  We therefore construct the finite partition function as a
+function of local fugacities
 
-The generalized Lee--Yang theorem remains a witness.  This file proves the
-algebraic handoff: once that witness and the chosen Cayley/global projection are
-supplied, the finite prime-chain partition functions yield the
-`LeeYangApproximants` required by the Hurwitz limit layer.
+`y : Fin N → ℂ`
+
+rather than using the non-polynomial expression `z^(log pᵢ)`.
+
+The Riemann/Mellin pullback is a separate witness layer:
+
+`yᵢ(s) = exp (-(s - 1/2) log pᵢ)`.
+
+No RH theorem is asserted here.
 -/
 
 noncomputable section
@@ -94,158 +97,182 @@ theorem configurationWeight_pos
   unfold configurationWeight
   exact Real.exp_pos _
 
-/-! ## Generalized arithmetic fugacity readout -/
+/-! ## Multivariate local-fugacity readout -/
 
-/-- Weighted spin sum controlling the arithmetic external field. -/
+/-- Centered occupation bit: `true` is occupied/up, `false` is empty/down. -/
 @[rep_depth thermo]
-def weightedSpinSum
+def centeredBit
+    (b : Bool) : ℝ :=
+  if b then (1 / 2 : ℝ) else -(1 / 2 : ℝ)
+
+@[simp]
+theorem centeredBit_true :
+    centeredBit true = (1 / 2 : ℝ) := by
+  simp [centeredBit]
+
+@[simp]
+theorem centeredBit_false :
+    centeredBit false = -(1 / 2 : ℝ) := by
+  simp [centeredBit]
+
+/-- Centered logarithmic magnetization, odd under particle-hole reversal. -/
+@[rep_depth thermo]
+def centeredLogMagnetization
     (D : FinitePrimeChainData N)
-    (σ : SpinConfig N) : ℝ :=
-  ∑ i : Fin N, D.ell i * spinSign (σ i)
+    (k : SpinConfig N) : ℝ :=
+  ∑ i : Fin N, D.ell i * centeredBit (k i)
 
 /--
-Generalized finite partition function in the shifted field `w`.
+Ferromagnetic Hopfield/Curie--Weiss weight in occupation variables.
 
-The local arithmetic fugacity is encoded through
-`exp((w / 2) * ∑ᵢ ellᵢ σᵢ)`.  Since the `ellᵢ = log pᵢ` are real weights, this
-is not represented as a natural-power polynomial in one global variable.
+The Boltzmann exponent contains `+ λ A(k)^2`, equivalently the Hamiltonian
+contains `- λ A(k)^2`.
 -/
 @[rep_depth thermo]
-def generalizedPartitionFunction
+def hopfieldInteractionWeight
     (D : FinitePrimeChainData N)
     (lam : ℝ)
-    (w : ℂ) : ℂ :=
-  ∑ σ : SpinConfig N,
-    ((configurationWeight D lam σ : ℝ) : ℂ) *
-      Complex.exp ((((weightedSpinSum D σ : ℝ) : ℂ) * w) / 2)
+    (k : SpinConfig N) : ℝ :=
+  Real.exp (lam * (centeredLogMagnetization D k)^2)
 
-/--
-Witness for the generalized Lee--Yang theorem in the arithmetic weighted-field
-coordinate.
-
-For the prime-chain application, a zero of the generalized partition function
-forces the shifted field to lie on the imaginary axis, `w.re = 0`.  The
-Asano/Grace/Suzuki--Fisher proof is deliberately not reimplemented here.
--/
+/-- Hopfield interaction weights are strictly positive. -/
 @[rep_depth thermo]
-structure GeneralizedLeeYangWitness where
-  imaginary_axis_theorem :
-    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-      0 < lam →
-        ∀ w : ℂ, generalizedPartitionFunction D lam w = 0 →
-          w.re = 0
-
-namespace GeneralizedLeeYangWitness
-
-/-- Re-export of the supplied generalized Lee--Yang axis law. -/
-@[rep_depth thermo]
-theorem zeros_on_imaginary_axis
-    (GLY : GeneralizedLeeYangWitness)
+theorem hopfieldInteractionWeight_pos
     (D : FinitePrimeChainData N)
-    {lam : ℝ}
+    (lam : ℝ)
+    (k : SpinConfig N) :
+    0 < hopfieldInteractionWeight D lam k := by
+  unfold hopfieldInteractionWeight
+  exact Real.exp_pos _
+
+/--
+Multivariate finite prime-chain partition function.
+
+`Z(y₁,...,y_N) = ∑ₖ W(k) ∏_{i : kᵢ = 1} yᵢ`.
+
+This is multi-affine in the local fugacities `yᵢ` and avoids any expression of
+the form `z^(log pᵢ)`.
+-/
+@[rep_depth thermo]
+def multiPartition
+    (D : FinitePrimeChainData N)
+    (lam : ℝ)
+    (y : Fin N → ℂ) : ℂ :=
+  ∑ k : SpinConfig N,
+    ((hopfieldInteractionWeight D lam k : ℝ) : ℂ) *
+      ∏ i : Fin N, if k i then y i else 1
+
+/--
+Multivariate Lee--Yang zero-free witness.
+
+Instead of asserting the full Asano/Ruelle contraction theorem in this file, we
+store exactly the consequence needed:
+
+* no zeros when all local fugacities are inside the unit disk;
+* no zeros when all local fugacities are outside the unit disk.
+-/
+@[rep_depth thermo]
+structure LeeYangPolydiscWitness where
+  inner_zero_free :
+    ∀ {N : ℕ}
+      (D : FinitePrimeChainData N)
+      (lam : ℝ),
+      0 < lam →
+      ∀ y : Fin N → ℂ,
+        (∀ i : Fin N, InUnitDisk (y i)) →
+        multiPartition D lam y ≠ 0
+  outer_zero_free :
+    ∀ {N : ℕ}
+      (D : FinitePrimeChainData N)
+      (lam : ℝ),
+      0 < lam →
+      ∀ y : Fin N → ℂ,
+        (∀ i : Fin N, OutsideUnitDisk (y i)) →
+        multiPartition D lam y ≠ 0
+
+/--
+Pullback from the Riemann/Mellin variable into local Lee--Yang fugacities.
+
+The intended concrete model is
+
+`field s = s - 1/2` and
+`localFugacity s i = exp (-(field s) * ellᵢ)`.
+
+The exponential estimates are stored as witness fields so this bridge does not
+accumulate complex-analysis proof debt.
+-/
+@[rep_depth thermo]
+structure RiemannFieldPullback
+    (D : FinitePrimeChainData N) where
+  field :
+    ℂ → ℂ
+  localFugacity :
+    ℂ → Fin N → ℂ
+  /-- Right half-plane in the shifted field sends every local fugacity inside. -/
+  re_pos_inner :
+    ∀ s : ℂ, 0 < (field s).re →
+      ∀ i : Fin N, InUnitDisk (localFugacity s i)
+  /-- Left half-plane in the shifted field sends every local fugacity outside. -/
+  re_neg_outer :
+    ∀ s : ℂ, (field s).re < 0 →
+      ∀ i : Fin N, OutsideUnitDisk (localFugacity s i)
+  /-- The imaginary axis of the shifted field is the Riemann critical line. -/
+  critical_of_field_re_zero :
+    ∀ s : ℂ, (field s).re = 0 →
+      s.re = (1 / 2 : ℝ)
+
+/-- The pulled-back one-parameter partition function. -/
+@[rep_depth thermo]
+def pulledPartition
+    (D : FinitePrimeChainData N)
+    (lam : ℝ)
+    (F : RiemannFieldPullback D)
+    (s : ℂ) : ℂ :=
+  multiPartition D lam (F.localFugacity s)
+
+/--
+Lee--Yang zero-free theorem after Riemann pullback.
+
+If the pulled partition function vanishes, the shifted field must lie on the
+imaginary axis.
+-/
+@[rep_depth thermo]
+theorem zero_implies_field_re_zero
+    (D : FinitePrimeChainData N)
+    (LY : LeeYangPolydiscWitness)
+    (lam : ℝ)
     (hLam : 0 < lam)
-    (w : ℂ)
-    (hz : generalizedPartitionFunction D lam w = 0) :
-    w.re = 0 :=
-  GLY.imaginary_axis_theorem D hLam w hz
+    (F : RiemannFieldPullback D)
+    (s : ℂ)
+    (hz : pulledPartition D lam F s = 0) :
+    (F.field s).re = 0 := by
+  by_cases hneg : (F.field s).re < 0
+  · have hzne : pulledPartition D lam F s ≠ 0 := by
+      unfold pulledPartition
+      exact LY.outer_zero_free D lam hLam (F.localFugacity s)
+        (F.re_neg_outer s hneg)
+    exact False.elim (hzne hz)
+  · by_cases hpos : 0 < (F.field s).re
+    · have hzne : pulledPartition D lam F s ≠ 0 := by
+        unfold pulledPartition
+        exact LY.inner_zero_free D lam hLam (F.localFugacity s)
+          (F.re_pos_inner s hpos)
+      exact False.elim (hzne hz)
+    · linarith
 
-end GeneralizedLeeYangWitness
-
-/--
-Projection witness from a global Hurwitz/Cayley coordinate `z` to the shifted
-arithmetic field `w`.
-
-This is where the chosen coordinate chart records that `w.re = 0` maps to the
-Lee--Yang unit circle in the `z` variable consumed by `PrimeHurwitzLimit`.
--/
+/-- Pulled Lee--Yang zeros lie on the Riemann critical line. -/
 @[rep_depth thermo]
-structure GeneralizedLeeYangProjectionWitness where
-  wOfZ : ℂ → ℂ
-  imaginary_axis_to_unit :
-    ∀ z : ℂ, (wOfZ z).re = 0 → OnUnitCircle z
-
-/--
-Finite-volume generalized prime-chain family feeding the Hurwitz layer.
-
-`D N` supplies the finite prime chain, `lam N` its positive coupling scale, `P`
-the projection from Hurwitz coordinate to shifted field, and `R` a nonvanishing
-renormalization readout.
--/
-@[rep_depth thermo]
-structure GeneralizedPrimePartitionFamily where
-  D :
-    (N : ℕ) → FinitePrimeChainData N
-  lam :
-    ℕ → ℝ
-  lam_pos :
-    ∀ N : ℕ, 0 < lam N
-  projection :
-    GeneralizedLeeYangProjectionWitness
-  R :
-    ℕ → ℂ → ℂ
-  R_nonzero :
-    ∀ N : ℕ, ∀ z : ℂ, R N z ≠ 0
-
-namespace GeneralizedPrimePartitionFamily
-
-/-- Generalized finite partition-function readout in the Hurwitz coordinate. -/
-@[rep_depth thermo]
-def Z
-    (F : GeneralizedPrimePartitionFamily)
-    (N : ℕ)
-    (z : ℂ) : ℂ :=
-  generalizedPartitionFunction (F.D N) (F.lam N) (F.projection.wOfZ z)
-
-/--
-Construct the Hurwitz approximant family from generalized finite prime
-partition functions and a generalized Lee--Yang witness.
--/
-@[rep_depth thermo]
-def toLeeYangApproximants
-    (F : GeneralizedPrimePartitionFamily)
-    (GLY : GeneralizedLeeYangWitness) :
-    LeeYangApproximants where
-  Z := F.Z
-  R := F.R
-  lee_yang := by
-    intro N z hz
-    have hAxis :
-        (F.projection.wOfZ z).re = 0 :=
-      GLY.zeros_on_imaginary_axis (F.D N) (F.lam_pos N)
-        (F.projection.wOfZ z) hz
-    exact F.projection.imaginary_axis_to_unit z hAxis
-  renorm_nonzero :=
-    F.R_nonzero
-
-/-- The constructed approximants preserve the family renormalization. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_R
-    (F : GeneralizedPrimePartitionFamily)
-    (GLY : GeneralizedLeeYangWitness) :
-    (F.toLeeYangApproximants GLY).R = F.R := rfl
-
-/-- The constructed approximants use the generalized partition readout. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_Z
-    (F : GeneralizedPrimePartitionFamily)
-    (GLY : GeneralizedLeeYangWitness)
-    (N : ℕ)
-    (z : ℂ) :
-    (F.toLeeYangApproximants GLY).Z N z =
-      generalizedPartitionFunction (F.D N) (F.lam N) (F.projection.wOfZ z) := rfl
-
-/-- The constructed Hurwitz approximants satisfy the finite Lee--Yang law. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_leeYang
-    (F : GeneralizedPrimePartitionFamily)
-    (GLY : GeneralizedLeeYangWitness)
-    (N : ℕ)
-    (z : ℂ)
-    (hz : (F.toLeeYangApproximants GLY).Z N z = 0) :
-    OnUnitCircle z :=
-  (F.toLeeYangApproximants GLY).lee_yang N z hz
-
-end GeneralizedPrimePartitionFamily
+theorem zero_implies_critical_line
+    (D : FinitePrimeChainData N)
+    (LY : LeeYangPolydiscWitness)
+    (lam : ℝ)
+    (hLam : 0 < lam)
+    (F : RiemannFieldPullback D)
+    (s : ℂ)
+    (hz : pulledPartition D lam F s = 0) :
+    s.re = (1 / 2 : ℝ) :=
+  F.critical_of_field_re_zero s
+    (zero_implies_field_re_zero D LY lam hLam F s hz)
 
 /-! ## Coarse ordinary-polynomial projection -/
 
@@ -315,7 +342,7 @@ end LeeYangPolynomialWitness
 Finite-volume prime-chain family feeding the Hurwitz layer.
 
 This is the coarse polynomial projection lane.  The generalized arithmetic
-fugacity lane is represented by `GeneralizedPrimePartitionFamily`.
+fugacity lane is represented by `multiPartition` and `RiemannFieldPullback`.
 -/
 @[rep_depth thermo]
 structure PrimePartitionPolynomialFamily where

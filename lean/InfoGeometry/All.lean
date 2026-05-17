@@ -16,6 +16,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
+import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
@@ -51,12 +52,14 @@ import InfoGeometry.Arithmetic.PrimeSupertraceFinite
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeBitLattice
+import InfoGeometry.Arithmetic.PrimeCantorTiltCARBridge
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 import InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
 import InfoGeometry.Arithmetic.ProjectiveEntropy
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
+import InfoGeometry.Arithmetic.WeylGaugeCantorFockBridge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Compatibility.PSLDescentShadow

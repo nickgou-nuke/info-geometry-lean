@@ -234,6 +234,8 @@ import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.LeeYangStabilityPacket
 import InfoGeometry.Canonical.AsanoContractionBase
 import InfoGeometry.Canonical.LeeYangAsanoNativeCore
+import InfoGeometry.Canonical.LeeYangAsanoMobiusNative
+import InfoGeometry.Canonical.LeeYangAsanoNondegeneratePrep
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 import InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence

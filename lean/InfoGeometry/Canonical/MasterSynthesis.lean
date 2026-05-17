@@ -626,7 +626,38 @@ private theorem bridge_fluid_helicity_of_regularization
     hHelicity
 
 /--
-Finite-dimensional regularization wrapper:
+Finite-dimensional regularization witness:
+derive the canonical Drazin packet internally and expose the fluid/helicity
+bridge under a single proof-carrying helicity witness.
+-/
+private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional_of_matchedHelicityWitness
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (hHelicity : MatchedHelicityWitness (E := E) A) :
+    ∃ (k : ℕ) (B_dr : VelocityField E),
+      IsDrazinInverse A B_dr k ∧
+      (star (A * B_dr) = A * B_dr →
+        ((∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0) ∧
+          (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
+  refine ⟨
+    DrazinWitnessElimination.drazinIndex (E := E) A,
+    DrazinWitnessElimination.drazinInverse (E := E) A,
+    DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A,
+    ?_
+  ⟩
+  intro h_dr_star
+  exact bridge_fluid_helicity
+    A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A)
+    hHelicity.omega hHelicity.Omega
+    (anomalySkew_of_regularization_auto (E := E) A B_mp h_mp h_dr_star)
+    hHelicity.match_helicity
+
+/--
+Finite-dimensional regularization compatibility wrapper:
 derive a canonical Drazin witness internally and expose the fluid/helicity
 bridge under the remaining projector self-adjointness condition.
 -/
@@ -645,17 +676,9 @@ private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
               ∧ momentumResidual (E := E) state.u = 0) ∧
           (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
             helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
-  refine ⟨
-    DrazinWitnessElimination.drazinIndex (E := E) A,
-    DrazinWitnessElimination.drazinInverse (E := E) A,
-    DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A,
-    ?_
-  ⟩
-  intro h_dr_star
-  exact bridge_fluid_helicity
-    A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A) ω Ω
-    (anomalySkew_of_regularization_auto (E := E) A B_mp h_mp h_dr_star)
-    hHelicity
+  exact bridge_fluid_helicity_of_regularization_of_finiteDimensional_of_matchedHelicityWitness
+    (E := E) A B_mp h_mp
+    { omega := ω, Omega := Ω, match_helicity := hHelicity }
 
 omit [FiniteDimensional ℝ E] in
 /--

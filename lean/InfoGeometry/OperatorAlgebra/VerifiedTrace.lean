@@ -19,6 +19,7 @@ No vacuous trace-invariance certificate is used.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -135,6 +136,7 @@ theorem real_matrix_trace_invariant_under_transport
 /--
 Owner target for raw finite trace conjugation invariance.
 -/
+@[owner_target_tag]
 def FiniteTraceConjugationOwnerTarget : Prop :=
   ∀ (n : Type*) [Fintype n] [DecidableEq n],
   ∀ (R : Type*) [CommRing R],
@@ -155,6 +157,7 @@ theorem finiteTraceConjugationOwnerTarget :
 Owner target for finite matrix trace conjugation invariance through
 `InvertibleTransport`.
 -/
+@[owner_target_tag]
 def FiniteMatrixTraceInvariantOwnerTarget : Prop :=
   ∀ (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R],
   ∀ (A : Matrix n n R),

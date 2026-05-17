@@ -1,5 +1,7 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -204,6 +206,53 @@ theorem virasoro_central_charge_identity :
 
 end PrimeSugawaraVirasoroPacket
 
+/-! ## Sugawara Central Charge Socket and Owner -/
+
+/--
+Witness-gated socket for the Sugawara central charge identity over the prime lattice.
+
+This structure enforces that a prime Virasoro/Sugawara packet must actually supply a valid
+certificate for the algebraic Sugawara formula `c = k * dim(g) / (k + h∨)`.
+-/
+@[socket_debt_tag, rep_depth operator]
+structure PrimeSugawaraCentralChargeSocket
+    (PrimeLabel Field Coeff Finite Alg : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
+  /-- The underlying Sugawara/Virasoro packet. -/
+  packet : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg
+
+  /-- Witness for the Sugawara central charge formula. -/
+  central_charge_certificate :
+    packet.affineVirasoro.centralCharge =
+      packet.affineVirasoro.level * packet.affineVirasoro.finiteDimension /
+        (packet.affineVirasoro.level + packet.affineVirasoro.dualCoxeterNumber)
+
+/--
+Owner target asserting that the prime Sugawara central charge identity holds.
+-/
+@[owner_target_tag, rep_depth operator]
+def PrimeSugawaraCentralChargeOwnerTarget
+    (PrimeLabel Field Coeff Finite Alg : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg) : Prop :=
+  P.affineVirasoro.centralCharge =
+    P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+      (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber)
+
+/--
+The central charge identity is witnessed by the packet's built-in calibration theorem.
+-/
+@[rep_depth operator]
+theorem primeSugawaraCentralChargeOwnerTarget
+    {PrimeLabel Field Coeff Finite Alg : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg) :
+    PrimeSugawaraCentralChargeOwnerTarget PrimeLabel Field Coeff Finite Alg P :=
+  PrimeSugawaraVirasoroPacket.virasoro_central_charge_identity P
+
 /-! ## Certified Virasoro owner readback -/
 
 /--
@@ -223,5 +272,26 @@ theorem virasoro_project_owner_certified :
 theorem heisenberg_sugawara_centralCharge_eq_one :
     InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1 :=
   rfl
+
+/--
+Finite-cardinality specialization of the Sugawara central charge.
+
+If the calibrated Virasoro packet has unit affine level, vanishing dual Coxeter
+number, and its finite-dimension readout is the cardinality of a finite prime
+cutoff `S`, then the Sugawara central charge reads exactly `|S|`.
+-/
+@[rep_depth operator]
+theorem centralCharge_eq_card_of_level_one_dualCoxeter_zero
+    {PrimeLabel Field Coeff Finite Alg : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
+    (S : Finset PrimeLabel)
+    (hlevel : P.affineVirasoro.level = 1)
+    (hdim : P.affineVirasoro.finiteDimension = (S.card : ℝ))
+    (hdual : P.affineVirasoro.dualCoxeterNumber = 0) :
+    P.affineVirasoro.centralCharge = (S.card : ℝ) := by
+  rw [P.centralCharge_calibrated, hlevel, hdim, hdual]
+  norm_num
 
 end InfoGeometry.Canonical.PrimeVirasoroSugawara

@@ -18,6 +18,7 @@ No claim is made that every vortex hosts a Majorana zero mode.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -320,6 +321,7 @@ Owner target for the Andreev ledger.
 
 An Andreev electron/hole swap has a particle-hole fixed diagonal mode.
 -/
+@[owner_target_tag]
 def AndreevLedgerOwnerTarget : Prop :=
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ A : AndreevLedger V,

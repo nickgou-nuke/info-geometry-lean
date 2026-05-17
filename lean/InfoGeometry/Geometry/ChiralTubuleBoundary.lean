@@ -14,6 +14,7 @@ only through proof-carrying calibration data.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -400,6 +401,7 @@ Owner target for the chiral tubule boundary.
 It is intentionally witness-gated by thermal/shear calibration and a transition
 law.
 -/
+@[owner_target_tag]
 def ChiralTubuleBoundaryOwnerTarget : Prop :=
   ∀ (Op Charge Residue : Type*)
     [NormedAddCommGroup Op] [NormedSpace ℝ Op]

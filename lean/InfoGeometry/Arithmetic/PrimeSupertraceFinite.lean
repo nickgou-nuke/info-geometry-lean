@@ -1,6 +1,7 @@
 import Mathlib
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSupertraceFinite
@@ -431,6 +432,7 @@ theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
 Guardrail packet: zero/divisor/cohomology claims are not produced by the finite
 exterior supertrace. They must be supplied as separate spectral data.
 -/
+@[socket_debt_tag]
 structure SpectralZeroCalibrationSocket where
   zeroCarrier : Type*
   zeroLaw : Prop

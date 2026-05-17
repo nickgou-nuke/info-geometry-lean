@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.Normed.Algebra.Exponential
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -41,7 +42,7 @@ Minimal primal/dual operator socket.
 The product supplies the algebraic composition channel. The readout turns that
 product into the scalar pairing required by convex duality.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure OperatorPrimalDualSocket (Op : Type*) [AddGroup Op] where
   /-- Operator product/composition channel. -/
   product : Op → Op → Op

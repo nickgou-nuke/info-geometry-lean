@@ -16,6 +16,10 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
+import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
+import InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
+import InfoGeometry.Canonical.PrimeExteriorMobiusCalibration
+import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
@@ -37,6 +41,7 @@ import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Arithmetic.PrimeSupertraceFinite
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 import InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
@@ -79,6 +84,7 @@ import InfoGeometry.Quantum.TriadicTransportModular
 import InfoGeometry.Quantum.TriadicTransportProjective
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
+import InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Wavelet.All
 import InfoGeometry.Analysis.All
@@ -217,16 +223,20 @@ import InfoGeometry.KL
 import InfoGeometry.LLM
 import InfoGeometry.Library
 import InfoGeometry.Meta.Admission
+import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.CompilerTelemetry
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.DrazinRefactor
 import InfoGeometry.Meta.GromovErgostructureBridge
+import InfoGeometry.Meta.HiveLogos
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Meta.StrictDef
 import InfoGeometry.Meta.StrictSurface
 import InfoGeometry.Meta.Trust
-import InfoGeometry.Meta.CompilerTelemetry
-import InfoGeometry.Meta.HiveLogos
 import InfoGeometry.OptimalTransport
 
 -- Coverage closure imports for declaration-bearing leaves not yet in category umbrellas.

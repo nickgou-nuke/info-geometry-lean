@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
@@ -291,7 +292,7 @@ Bott-periodic It-from-bit socket.
 The "bit" side is the Bott-periodic Cantor entropy packet.  The "it" side is
 the Drazin-Hodge envelope of a bit-derived operator.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure BottPeriodicItFromBitSocket
     (Op : Type*) [Ring Op] where
   kind : BottKind

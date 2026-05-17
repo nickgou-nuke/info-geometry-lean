@@ -15,6 +15,7 @@ action.
 import Mathlib
 import InfoGeometry.Geometry.BilingualUpperHalfPlane
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -801,6 +802,7 @@ structure BilingualPoincareMetricAdmissible
 Owner target for constructing the canonical bilingual Poincare metric from
 admissible Krein-Hestenes data.
 -/
+@[owner_target_tag]
 def BilingualPoincareMetricOwnerTarget : Prop :=
   ∀ (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
   ∀ D : ProjectivePolarizedBigradedBogoliubovDatum (E := E),
@@ -1256,6 +1258,7 @@ structure PoincareMetricAdmissible
 /--
 Owner target for the future construction of the bilingual Poincare metric.
 -/
+@[owner_target_tag]
 def BilingualPoincareMetricOwnerTarget : Prop :=
   ∀ (H : Type*) [AddCommGroup H] [Module ℝ H],
   ∀ Q : KreinQuadraticDatum H,
@@ -1265,6 +1268,7 @@ def BilingualPoincareMetricOwnerTarget : Prop :=
 /--
 Owner target for proving that admissible Mobius symmetries are isometries.
 -/
+@[owner_target_tag]
 def BilingualMobiusIsometryOwnerTarget : Prop :=
   ∀ (H : Type*) [AddCommGroup H] [Module ℝ H],
   ∀ Q : KreinQuadraticDatum H,

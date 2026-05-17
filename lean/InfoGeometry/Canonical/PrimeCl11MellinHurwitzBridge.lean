@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
 import InfoGeometry.Canonical.PrimeCl11ModularAtomCore
@@ -83,7 +84,7 @@ This packages the already-proved finite owner surfaces:
 * local `Cl(1,1)` parity involution;
 * `Cl(1,1)` finite-dimensional core.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def PrimeCl11MellinHurwitzOwnerTarget : Prop :=
   PrimeBinaryCantorSuperalgebraOwnerTarget
     ∧ (∀ η0 Δη k,

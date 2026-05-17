@@ -14,6 +14,7 @@ polarization live safely in the associative represented operator algebra.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -398,6 +399,7 @@ The theorem should construct the represented split, its circular polarization,
 and its Drazin core/null projectors from a compatible doubled/split algebra
 representation.
 -/
+@[owner_target_tag]
 def DrazinRepresentedSplitOwnerTarget : Prop :=
   ∀ (Core Split Op : Type*)
     [Ring Op] [Module ℝ Op],

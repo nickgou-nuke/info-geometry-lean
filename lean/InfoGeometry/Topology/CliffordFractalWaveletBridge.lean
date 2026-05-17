@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Topology.CliffordFractalWaveletBridge
@@ -44,7 +45,7 @@ Abstract Clifford fractal wavelet socket.
 This is the primitive socket for the corrected slogan:
 `geometry from Clifford fractal wavelets`.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure CliffordFractalWaveletSocket
     (Op : Type*) [Ring Op] where
   address : FractalWaveletAddress

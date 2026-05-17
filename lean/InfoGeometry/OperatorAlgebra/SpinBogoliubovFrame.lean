@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # Spin-Bogoliubov Frame
@@ -337,6 +338,7 @@ Owner target for spin-Bogoliubov conservation.
 Once a spin-Bogoliubov frame is supplied, visible deficit is exactly recovered
 hidden flow in every frame.
 -/
+@[owner_target_tag]
 def SpinBogoliubovConservationOwnerTarget : Prop :=
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],
@@ -359,6 +361,7 @@ theorem spinBogoliubovConservationOwnerTarget :
 /--
 Owner target for calibrated heat as hidden information.
 -/
+@[owner_target_tag]
 def SpinHeatHiddenInformationOwnerTarget : Prop :=
   ∀ (Frame Sys Comm : Type*),
   ∀ [NormedAddCommGroup Sys], ∀ [NormedSpace ℝ Sys],

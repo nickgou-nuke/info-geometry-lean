@@ -29,6 +29,7 @@ or Cl(4,4)-specific realizations.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -240,6 +241,7 @@ end CliffordFrame
 /--
 Owner target for finite Clifford quadratic Casimir centrality.
 -/
+@[owner_target_tag]
 def FiniteCliffordCasimirCentralityOwnerTarget : Prop :=
   ∀ (ι Op : Type*) [Fintype ι] [DecidableEq ι]
     [Ring Op] [Algebra ℝ Op],
@@ -258,6 +260,7 @@ theorem finiteCliffordCasimirCentralityOwnerTarget :
 /--
 Owner target for finite Clifford quadratic Casimir conjugation invariance.
 -/
+@[owner_target_tag]
 def FiniteCliffordCasimirInvariantOwnerTarget : Prop :=
   ∀ (ι Op : Type*) [Fintype ι] [DecidableEq ι]
     [Ring Op] [Algebra ℝ Op],

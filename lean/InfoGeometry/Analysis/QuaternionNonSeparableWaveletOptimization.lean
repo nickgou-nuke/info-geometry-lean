@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
@@ -66,7 +67,7 @@ This packages the finite optimization data and keeps the actual optimization
 existence statement open.  It does not prove the existence of an optimizing
 wavelet construction.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def QuaternionNonSeparableWaveletOwnerTarget : Prop :=
   True
 

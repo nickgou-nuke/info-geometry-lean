@@ -26,6 +26,7 @@ import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -158,6 +159,7 @@ The target is intentionally modest: it exposes the finite cold-sector,
 nonnegativity, prime-flow, KMS, Weyl-factorization, and Itakura-Saito
 scale-invariance payloads supplied by the sidecar stack.
 -/
+@[owner_target_tag]
 def PrimitiveSouriauPipelineOwnerTarget : Prop :=
   ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
     1 < betaInvert P.u ∧

@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge
@@ -241,6 +242,7 @@ Modular/Tomita socket for Type III or non-tracial versions.
 
 No trace, density matrix, determinant, or partition function is assumed here.
 -/
+@[socket_debt_tag]
 structure TypeIIIModularPrimonSocket (A : Type*) [Mul A] where
   modularState : InfoGeometry.Dynamics.ModularThermalState A
   standardFormData : Type*
@@ -341,6 +343,7 @@ Witness-gated zeta-zero socket.
 Riemann zero locations are not inferred from TFD, Krein parity, or Hestenes
 winding periodicity.  They require a separate analytic/spectral witness.
 -/
+@[socket_debt_tag]
 structure WitnessGatedZetaZeroSocket where
   spectralObject : Type*
   zetaZeroReadout : Type*

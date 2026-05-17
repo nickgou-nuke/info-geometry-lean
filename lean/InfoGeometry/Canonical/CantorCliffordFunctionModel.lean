@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.ChiralLightConeTensorTower
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.CantorCliffordFunctionModel
@@ -367,7 +368,7 @@ def canonicalPrefixBoundaryAction
   tail := tailPullback
 
 /-- Owner target: the boundary carrier supports canonical prefix/tail readouts. -/
-@[rep_depth krein]
+@[owner_target_tag]
 def CantorCliffordFunctionModelOwnerTarget : Prop :=
   ∀ Value : Type*, Nonempty (PrefixBoundaryAction Value)
 

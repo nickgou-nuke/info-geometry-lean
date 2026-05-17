@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.HestenesPhaseSemilinear
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -515,7 +516,7 @@ theorem complementaryProjection_fixes_drazinNullCycle
 end ModuleEndDrazinResidue
 
 /-- A real pairing between homology-side vectors and cohomology witnesses. -/
-@[rep_depth transport]
+@[socket_debt_tag, rep_depth transport]
 structure RealPairingSocket (Cochain : Type u) where
   pairing : H₂ → Cochain → ℝ
   pairing_sub_left :

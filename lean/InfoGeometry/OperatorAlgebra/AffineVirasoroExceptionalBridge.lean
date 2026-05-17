@@ -15,6 +15,7 @@ This is proof-carrying calibration data, not an unconditional theorem that
 import Mathlib
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -128,6 +129,7 @@ hidden grade-two memory in the exceptional ledger
 Virasoro/affine central charge readout on the helical boundary.
 ```
 -/
+@[owner_target_tag]
 def ExceptionalAffineVirasoroBridgeOwnerTarget : Prop :=
   ∀ (Finite Affine Vir State Charge : Type*)
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]

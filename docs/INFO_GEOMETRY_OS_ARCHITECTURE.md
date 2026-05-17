@@ -71,6 +71,28 @@ The retrieval graph is built by joining multiple surfaces:
   + attempt and diagnostic ledgers
 ```
 
+The finite prime-lattice dictionary is separate from this analytic retrieval
+graph.  Its core meaning is:
+
+```text
+prime-indexed Cantor lattice
+  -> square-free finite-support vertices
+  -> split-Majorana / Clifford packets
+  -> local parity and global Möbius chirality
+  -> finite Witten / Pfaffian readouts
+```
+
+Repository owner surfaces for that lane are:
+
+- `lean/InfoGeometry/Arithmetic/SplitMajoranaPrimon.lean`
+- `lean/InfoGeometry/Arithmetic/PrimeExteriorRepresentation.lean`
+- `lean/InfoGeometry/Arithmetic/PrimeWittenCharacter.lean`
+- `lean/InfoGeometry/Arithmetic/PrimeMajoranaPfaffian.lean`
+
+The derived observability overlay for that lane lives under
+`tools/observability/graph_overlay_toolchain/`; it is for navigation, wrapper
+dedup, and audit reports only.
+
 The current InfoTree layer should not be called fully lossless unless the
 contract gates are satisfied:
 
@@ -273,4 +295,3 @@ The Python orchestrator retrieves graph-conditioned concrete Lean context,
 queries the model through prefix-cached vLLM, evaluates candidates through Lean
 LSP and focused builds, and records successes and failures back into graph
 memory.
-

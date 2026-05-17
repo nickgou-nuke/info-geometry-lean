@@ -591,6 +591,25 @@ theorem observerOrientationStrain_eq_zero_iff
   exact norm_eq_zero
 
 /--
+If the compressed observer-deviation channel vanishes, then the scalarized
+observer strain already vanishes. This lets downstream callers carry the
+smaller compressed witness instead of a separate `observerOrientationStrain = 0`
+packet.
+-/
+theorem observerOrientationStrain_eq_zero_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    observerOrientationStrain CIK obs = 0 := by
+  exact
+    (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).2
+      (observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero
+        (CIK := CIK) (obs := obs) hZero)
+
+/--
 A zero scalarized observer strain already forces the defect residual itself to
 vanish.
 -/

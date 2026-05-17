@@ -667,6 +667,18 @@ theorem operatorPartition_pos (W : ConformalPositivePartitionWitness C) :
     (ConformalPositivePartitionWitness.floor_pos W)
     (sq_nonneg (ConformalPositivePartitionWitness.amplitude W))
 
+-- theorem-class: bridge
+/--
+Cone membership plus the positive-partition witness recover the old operator
+admissibility surface without a separate bare `hOperatorAdmissible` packet.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible
+    (W : ConformalPositivePartitionWitness C)
+    (hCone : C.IsConeAdmissible) :
+    C.IsOperatorAdmissible :=
+  ⟨hCone, W.operatorPartition_pos⟩
+
 end ConformalPositivePartitionWitness
 
 /--
@@ -727,12 +739,13 @@ operatorial admissibility gate.
 theorem operatorAdmissible_of_cartanOddPartition
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (hCone : C.IsConeAdmissible) :
-    C.IsOperatorAdmissible :=
-  ⟨hCone,
-    ConformalPositivePartitionWitness.operatorPartition_pos
+    C.IsOperatorAdmissible := by
+  simpa using
+    ConformalPositivePartitionWitness.operatorAdmissible
       (C := C)
-      (ConformalCartanOddPartitionWitness.toPositivePartitionWitness
-        (C := C) W)⟩
+      (W := ConformalCartanOddPartitionWitness.toPositivePartitionWitness
+        (C := C) W)
+      hCone
 
 end ConformalCartanOddPartitionWitness
 
@@ -795,9 +808,8 @@ positive operator-partition witness.
 @[rep_depth transport]
 theorem operatorAdmissible :
     W.gibbs.IsOperatorAdmissible :=
-  ⟨W.hCone,
-    ConformalPositivePartitionWitness.operatorPartition_pos
-      (C := W.gibbs) W.partitionWitness⟩
+  ConformalPositivePartitionWitness.operatorAdmissible
+    (C := W.gibbs) W.partitionWitness W.hCone
 
 /--
 Convert the constructive admissibility witness into the stable closure-context
@@ -814,6 +826,49 @@ def toClosureContext : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) w
   Y := W.Y
 
 end ConformalOperatorAdmissibilityWitness
+
+namespace ConformalPositivePartitionWitness
+
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/--
+Build the stable operator-admissibility witness directly from a positive-partition
+witness plus the remaining cone/TKK/channel data.
+-/
+@[rep_depth transport]
+noncomputable def toOperatorAdmissibilityWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂) :
+    ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
+  gibbs := C
+  weylGauge := weylGauge
+  tkkParameter := tkkParameter
+  hTKK := hTKK
+  hCone := hCone
+  partitionWitness := W
+  X := X
+  Y := Y
+
+/--
+Build the stable closure context directly from a positive-partition witness,
+without re-supplying a separate `hOperatorAdmissible` packet.
+-/
+@[rep_depth transport]
+noncomputable def toClosureContext
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
+  (W.toOperatorAdmissibilityWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
+
+end ConformalPositivePartitionWitness
 
 namespace ConformalCartanOddPartitionWitness
 

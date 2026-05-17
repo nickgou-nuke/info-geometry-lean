@@ -169,23 +169,17 @@ end RealDifferential
 /--
 Drazin null support predicate for an endomorphism.
 
-`P0` is the Drazin complementary projector. The field
-`null_iff_generalizedKernel` is the bridge to the concrete `Module.End`
-generalized-kernel theorem when that owner is imported.
+This packet is anchored to the concrete Drazin complement from
+`DrazinCoreFlow`: the Drazin-null sector is the range of the complementary
+projector, and the generalized kernel is the corresponding `drazinCore`.
 -/
 @[rep_depth operator]
 structure DrazinNullSupport
     (C : Type*) [AddCommGroup C] [Module ℝ C] where
   A : Module.End ℝ C
-  P0 : Module.End ℝ C
+  D : Module.End ℝ C
   k : ℕ
-  /-- Null residue predicate selected by the Drazin complementary projector. -/
-  IsDrazinNull : C → Prop := fun x => P0 x = x
-  /-- Generalized kernel predicate from the selected backend. -/
-  IsGeneralizedKernel : C → Prop
-  /-- Calibration to the existing generalized-kernel theorem. -/
-  null_iff_generalizedKernel :
-    ∀ x : C, IsDrazinNull x ↔ IsGeneralizedKernel x
+  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k
 
 namespace DrazinNullSupport
 
@@ -193,12 +187,31 @@ variable {C : Type*}
 variable [AddCommGroup C] [Module ℝ C]
 variable (N : DrazinNullSupport C)
 
-/-- Readback of the supplied Drazin-null/generalized-kernel calibration. -/
+/-- Drazin-null elements are exactly the range of the complementary projector. -/
+@[rep_depth operator]
+def IsDrazinNull (x : C) : Prop :=
+  x ∈ LinearMap.range (complementaryProjection N.A N.D)
+
+/-- The generalized kernel is the concrete `drazinCore` from `DrazinCoreFlow`. -/
+@[rep_depth operator]
+def IsGeneralizedKernel (x : C) : Prop :=
+  x ∈ drazinCore N.A N.k
+
+/-- Readback of the concrete Drazin-null/generalized-kernel identification. -/
 @[rep_depth operator]
 theorem drazinNull_iff_generalizedKernel
     (x : C) :
-    N.IsDrazinNull x ↔ N.IsGeneralizedKernel x :=
-  N.null_iff_generalizedKernel x
+    N.IsDrazinNull x ↔ N.IsGeneralizedKernel x := by
+  constructor
+  · intro hx
+    rcases hx with ⟨y, hy⟩
+    rw [← hy]
+    exact complementaryProjection_mapsTo_drazinCore
+      (A := N.A) (D := N.D) (k := N.k) (h := N.hDrazin) y
+  · intro hx
+    simpa [DrazinNullSupport.IsDrazinNull, DrazinNullSupport.IsGeneralizedKernel,
+      complementaryProjection_range_eq_drazinCore (A := N.A) (D := N.D) (k := N.k)
+        (h := N.hDrazin)] using hx
 
 end DrazinNullSupport
 

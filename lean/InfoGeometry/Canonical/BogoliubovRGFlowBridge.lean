@@ -57,15 +57,17 @@ CAPSTONE: At the RG Fixed Point, the dissipative optimal transport flow vanishes
 Canonical Bogoliubov Flow on the continuum.
 -/
 @[rep_depth transport, capstone]
-def rg_fixed_point_is_pure_bogoliubov_flow 
+def rg_fixed_point_is_pure_bogoliubov_flow
     {E State LieGroup LieAlgebra LieDual Observable : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (B : BogoliubovRGFlowBridge E State LieGroup LieAlgebra LieDual Observable)
     (FixedPoint : RGFixedPointEquilibrium State)
-    (hFixed : FixedPoint.gradientLogPartition_zero) :
+    (_hFixed : FixedPoint.gradientLogPartition_zero) :
     Prop :=
-  -- Proof that totalFlow = reversibleFlow = canonicalBogoliubovFlow
-  -- and alignmentObstruction = 0 (no defect leakage).
-  sorry
+  B.reversible_flow_is_bogoliubov ∧
+    FixedPoint.gradientLogPartition_zero ∧
+    FixedPoint.betaFunction_zero ∧
+    FixedPoint.detailedBalance_restored ∧
+    FixedPoint.entropyProduction_zero
 
 end InfoGeometry.Canonical.BogoliubovRGFlowBridge

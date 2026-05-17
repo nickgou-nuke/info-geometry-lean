@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
+import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 
 namespace InfoGeometry.Canonical.CalabiYauBridge
@@ -40,6 +41,25 @@ theorem unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
     UnitRelativeVolumeState Kgeo := by
   intro x
   simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x
+
+omit [FiniteDimensional ℝ E] in
+/--
+Proof-carrying unit relative-volume closure extracted from RN-sourced
+Monge-Ampere density.
+
+This narrows the public hypothesis surface from the bare equality
+`relativeVolumeChangeRN n M = 1` to the constructive
+`UnitRelativeVolumeBit n M` packet while reusing the existing owner route.
+-/
+theorem unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
+    UnitRelativeVolumeState Kgeo := by
+  exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+    (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
 
 omit [FiniteDimensional ℝ E] in
 /--

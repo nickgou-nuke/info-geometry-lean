@@ -334,6 +334,13 @@ end
 section
 
 /--
+Proof-carrying unit relative-volume witness for the RN/Kähler/log-det lane in
+this conformal owner module.
+-/
+structure UnitRelativeVolumeWitness (n : Nat) (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop where
+  unit_relative_volume : relativeVolumeChangeRN n M = 1
+
+/--
 Normality (`ε = 0`) from the Kähler/log-det layer:
 if the conformal chiral scale matches the RN Kähler potential and the RN
 relative volume is unit, then `ε = 0`.
@@ -355,6 +362,22 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
   calc
     CI.chiralScale = kahlerPotentialRN n M := hScaleFromKahler
     _ = 0 := hKZero
+
+/--
+Proof-carrying unit-relative-volume route for scalar normality.
+
+This constructive companion removes the bare
+`relativeVolumeChangeRN n M = 1` hypothesis from the scalar zero-scale branch
+when callers already own the `UnitRelativeVolumeBit` witness packet.
+-/
+theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.chiralScale = 0 := by
+  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
 
 end
 
@@ -530,6 +553,23 @@ theorem projectors_commute_of_kahlerLogDet_unitRelativeVolume
   exact CI.projectors_commute_of_chiralScale_eq_zero
     (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume)
+
+/--
+Proof-carrying unit-relative-volume route for projector commutation.
+
+This removes the bare `relativeVolumeChangeRN n M = 1` hypothesis from the
+projector-closure lane when callers already own the compact
+`UnitRelativeVolumeWitness` packet.
+-/
+theorem projectors_commute_of_kahlerLogDet_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  exact CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
 
 /--
 Log-det barrier self-concordance mechanics package:
@@ -772,6 +812,21 @@ theorem isNormalInference_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
   simpa [ConformalInference.IsNormalInference] using hZero
 
+/--
+Constructive bridge from the RN/Kahler/log-det lane into the normal phase via
+the proof-carrying unit-relative-volume packet.
+-/
+theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.IsNormalInference := by
+  have hZero :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
+      (M := M) hScaleFromKahler bit
+  simpa [ConformalInference.IsNormalInference] using hZero
+
 end
 
 /--
@@ -787,6 +842,19 @@ theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
     CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
   exact CI.chiralAnomaly_eq_zero_of_projectors_commute hCommute
+
+/--
+Constructive zero-anomaly endpoint using the proof-carrying
+`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
+-/
+theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.chiralAnomalyOperator = 0 := by
+  exact CI.chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
 
 end ConformalInference
 

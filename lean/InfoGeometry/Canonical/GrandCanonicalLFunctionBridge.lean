@@ -17,9 +17,8 @@ alignment needed to transfer the temperature readout across the two layers.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
+namespace InfoGeometry.Canonical.GrandCanonicalLFunctionFlowBridge
 
-open InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 open InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 open InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 open InfoGeometry.Arithmetic.LFunctionRepresentationBridge
@@ -66,7 +65,7 @@ structure GrandCanonicalLFunctionBridge
   partition_alignment :
     lfunction.coadjointFlow.flow.partition = engine.flow.partition
 
-namespace GrandCanonicalLFunctionBridge
+namespace Bridge
 
 variable
     {Orbit G E Op H Finite Alg Symmetry : Type}
@@ -94,7 +93,8 @@ theorem packet_beta_eq_engine_temperature :
   calc
     B.lfunction.packet.beta = B.lfunction.coadjointFlow.flow.partition.temperature :=
       B.lfunction.packet_beta_eq_flow
-    _ = B.engine.flow.partition.temperature := B.partition_temperature_alignment
+    _ = B.engine.flow.partition.temperature :=
+      Bridge.partition_temperature_alignment (B := B)
 
 /-- The engine still identifies the Hamiltonian with the Souriau generator. -/
 @[rep_depth transport]
@@ -144,6 +144,6 @@ theorem packet_denominator_is_prime_euler_product :
       B.lfunction.packet.denominatorBridge.primeEulerProduct :=
   B.lfunction.packet_denominator_is_prime_euler_product
 
-end GrandCanonicalLFunctionBridge
+end Bridge
 
-end InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
+end InfoGeometry.Canonical.GrandCanonicalLFunctionFlowBridge

@@ -75,4 +75,24 @@ This is deliberately only a bridge socket: the finite character above becomes
 abbrev InfiniteReciprocalZetaCharacterBridge :=
   InfiniteEulerProductZetaBridge
 
+/-! ## 2b. Owner target -/
+
+/-- Owner target for the finite real Majorana Witten character surface. -/
+def PrimeMajoranaWittenCharacterOwnerTarget : Prop :=
+  ∀ (P : PrimeRegister) (q : ℕ → ℝ),
+    equivariantRealWittenCharacter P q = finiteEulerProduct P q ∧
+    dirichletWittenCharacterReadout P q = finiteEulerProduct P q ∧
+    mobiusGradedThermalCharacter P q =
+      ∑ S ∈ P.primes.powerset,
+        ((ArithmeticFunction.moebius (∏ p ∈ S, p) : ℤ) : ℝ) *
+          ∏ p ∈ S, q p
+
+/-- The finite real Majorana Witten readouts agree with the finite Euler/Möbius surfaces. -/
+theorem primeMajoranaWittenCharacterOwnerTarget :
+    PrimeMajoranaWittenCharacterOwnerTarget := by
+  intro P q
+  exact ⟨equivariantRealWittenCharacter_eq_eulerProduct P q,
+    dirichletWittenCharacterReadout_eq_eulerProduct P q,
+    mobiusGradedThermalCharacter_eq_mobius_sum P q⟩
+
 end InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter

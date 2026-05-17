@@ -191,6 +191,79 @@ structure HestenesKreinNaturalConeKMSBridge where
   complexEval_eq_realConeEval :
     ∀ A : Op, kms.state.eval A = (vacuum.natural.eval omegaState A : ℂ)
 
+/--
+Constructive witness surface for the Hestenes/Krein KMS corridor.
+
+This narrows the explicit `kms : KMSState ...` packet to the exact ingredients
+used in this file: the underlying state, flow invariance, the analytic boundary
+certificate, and the calibration to the real cone readout.
+-/
+@[rep_depth krein]
+structure HestenesKreinNaturalConeKMSWitness where
+  /-- Natural-cone vacuum carrier. -/
+  vacuum :
+    HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)
+
+  /-- Selected normal-positive functional represented by the vacuum. -/
+  omegaState : NormalPositive
+
+  /-- The selected state has cone vector `Ω`. -/
+  coneVector_eq_Omega :
+    vacuum.natural.coneVector omegaState = vacuum.Omega
+
+  /-- Operator flow used by the existing KMS API. -/
+  flow : OperatorFlow Op
+
+  /-- Inverse temperature. -/
+  beta : ℝ
+
+  /-- Underlying complex state used by the KMS witness route. -/
+  state : AlgebraicState Op
+
+  /-- Real-time invariance needed by the bridge. -/
+  flow_invariant :
+    ∀ t : ℝ, ∀ A : Op, state.eval (flow.flow t A) = state.eval A
+
+  /-- Analytic KMS strip-boundary proposition. -/
+  kms_boundary_condition : Prop
+
+  /-- Evidence for the analytic KMS strip-boundary proposition. -/
+  kms_boundary_holds : kms_boundary_condition
+
+  /-- Compatibility between the complex KMS readout and real cone readout. -/
+  complexEval_eq_realConeEval :
+    ∀ A : Op, state.eval A = (vacuum.natural.eval omegaState A : ℂ)
+
+namespace HestenesKreinNaturalConeKMSWitness
+
+variable (W : HestenesKreinNaturalConeKMSWitness (H := H)
+  (NormalPositive := NormalPositive) (Op := Op))
+
+/-- Package the narrowed witness surface back into the legacy broad KMS bridge. -/
+@[rep_depth krein]
+def toKMSBridge :
+    HestenesKreinNaturalConeKMSBridge (H := H)
+      (NormalPositive := NormalPositive) (Op := Op) where
+  vacuum := W.vacuum
+  omegaState := W.omegaState
+  coneVector_eq_Omega := W.coneVector_eq_Omega
+  flow := W.flow
+  beta := W.beta
+  kms := {
+    state := W.state
+    flow_invariant := W.flow_invariant
+    kms_boundary_condition := W.kms_boundary_condition
+    kms_boundary_condition_holds := W.kms_boundary_holds
+  }
+  complexEval_eq_realConeEval := W.complexEval_eq_realConeEval
+
+@[rep_depth krein]
+theorem toKMSBridge_state_eq :
+    W.toKMSBridge.kms.state = W.state :=
+  rfl
+
+end HestenesKreinNaturalConeKMSWitness
 namespace HestenesKreinNaturalConeKMSBridge
 
 variable (B : HestenesKreinNaturalConeKMSBridge (H := H)

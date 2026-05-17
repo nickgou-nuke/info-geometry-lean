@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.Determinant
 
@@ -66,6 +67,26 @@ theorem chiralDirac_eq_of_unitRelativeVolume
   have hNormal : CI.IsNormalInference := by
     exact CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume
+  exact chiral_action_reduces_for_normal IST CI g 0 hNormal
+
+omit [FiniteDimensional ℝ E] in
+/--
+Proof-carrying unit-relative-volume route for the chiral Dirac collapse.
+
+This keeps the older equality-based theorem for compatibility, but the new
+branch accepts the constructive `UnitRelativeVolumeBit` packet instead of a bare
+`relativeVolumeChangeRN n M = 1` hypothesis.
+-/
+theorem chiralDirac_eq_of_unitRelativeVolumeBit
+    {n : Nat}
+    (IST : InfoSpectralTriple E) (CI : ConformalInference E) (g : ℝ)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
+    chiralDirac IST CI g = IST.D := by
+  have hNormal : CI.IsNormalInference :=
+    InfoGeometry.Canonical.IncompressibleBitBridge.isNormalInference_of_unitRelativeVolumeBit
+      (CI := CI) (M := M) hScaleFromKahler bit
   exact chiral_action_reduces_for_normal IST CI g 0 hNormal
 
 end InfoGeometry.Canonical.ChiralAction

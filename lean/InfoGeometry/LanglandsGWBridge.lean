@@ -112,6 +112,18 @@ def constructSymplecticWeylVolumePacket
     SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
   ⟨Q, W, True⟩
 
+/--
+Constructive target route that no longer asks callers to prepackage the combined
+`symplectic + Weyl` packet.
+-/
+theorem constructSymplecticWeylVolumeTarget_of_witnesses
+    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
+    (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
+    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus) :
+    SymplecticWeylVolumeTarget Space GaugeGroup Torus := by
+  exact constructSymplecticWeylVolumeTarget Q W
+    (constructSymplecticWeylVolumePacket Q W)
+
 end LanglandsGWBridge
 
 end InfoGeometry

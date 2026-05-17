@@ -1,0 +1,3971 @@
+{
+  "root": "/mnt/data/lean",
+  "nodes": [
+    {
+      "id": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "kind": "file",
+      "path": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "imports": [
+        "Mathlib"
+      ],
+      "decl_count": 12,
+      "wl_hash": "b214614e4ea2937b"
+    },
+    {
+      "id": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "kind": "file",
+      "path": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "imports": [
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Data.Nat.Prime.Basic",
+        "Mathlib.Analysis.SpecialFunctions.Log.Basic",
+        "Mathlib.Tactic"
+      ],
+      "decl_count": 16,
+      "wl_hash": "ccfc4e4ca3f28134"
+    },
+    {
+      "id": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "kind": "file",
+      "path": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "imports": [
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Topology.Basic",
+        "Mathlib.Algebra.Module.Basic"
+      ],
+      "decl_count": 15,
+      "wl_hash": "0cb35916bf3e90ab"
+    },
+    {
+      "id": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "kind": "file",
+      "path": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "imports": [
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.GroupTheory.Subgroup.Basic",
+        "Mathlib.GroupTheory.GroupAction.Defs",
+        "Mathlib.Topology.Basic",
+        "Mathlib.Order.Filter.Tendsto",
+        "Mathlib.Tactic"
+      ],
+      "decl_count": 29,
+      "wl_hash": "fa66aaf42ac4a35e"
+    },
+    {
+      "id": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "kind": "file",
+      "path": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "imports": [
+        "Mathlib.Data.Real.Basic",
+        "Mathlib.Tactic"
+      ],
+      "decl_count": 27,
+      "wl_hash": "4671f0c5d3a09321"
+    },
+    {
+      "id": "import:Mathlib",
+      "kind": "import",
+      "name": "Mathlib",
+      "wl_hash": "998630686b97f409"
+    },
+    {
+      "id": "import:Mathlib.Algebra.Module.Basic",
+      "kind": "import",
+      "name": "Mathlib.Algebra.Module.Basic",
+      "wl_hash": "c227a80eedde3ac2"
+    },
+    {
+      "id": "import:Mathlib.Analysis.SpecialFunctions.Log.Basic",
+      "kind": "import",
+      "name": "Mathlib.Analysis.SpecialFunctions.Log.Basic",
+      "wl_hash": "6e9dc386e6e8054c"
+    },
+    {
+      "id": "import:Mathlib.Data.Nat.Prime.Basic",
+      "kind": "import",
+      "name": "Mathlib.Data.Nat.Prime.Basic",
+      "wl_hash": "6e9dc386e6e8054c"
+    },
+    {
+      "id": "import:Mathlib.Data.Real.Basic",
+      "kind": "import",
+      "name": "Mathlib.Data.Real.Basic",
+      "wl_hash": "5f12255c09189073"
+    },
+    {
+      "id": "import:Mathlib.GroupTheory.GroupAction.Defs",
+      "kind": "import",
+      "name": "Mathlib.GroupTheory.GroupAction.Defs",
+      "wl_hash": "755d764d36d8e3d0"
+    },
+    {
+      "id": "import:Mathlib.GroupTheory.Subgroup.Basic",
+      "kind": "import",
+      "name": "Mathlib.GroupTheory.Subgroup.Basic",
+      "wl_hash": "755d764d36d8e3d0"
+    },
+    {
+      "id": "import:Mathlib.Order.Filter.Tendsto",
+      "kind": "import",
+      "name": "Mathlib.Order.Filter.Tendsto",
+      "wl_hash": "755d764d36d8e3d0"
+    },
+    {
+      "id": "import:Mathlib.Tactic",
+      "kind": "import",
+      "name": "Mathlib.Tactic",
+      "wl_hash": "8eff1670233a9f82"
+    },
+    {
+      "id": "import:Mathlib.Topology.Basic",
+      "kind": "import",
+      "name": "Mathlib.Topology.Basic",
+      "wl_hash": "9ef0144a660640bb"
+    },
+    {
+      "id": "decl:8ba84085ec748cb841d5",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "anticomm",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.anticomm",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 23,
+      "end_line": 35,
+      "alpha_hash": "b28d6faac9b615b9",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 27,
+      "wl_hash": "1cf21b69eaece4ce"
+    },
+    {
+      "id": "decl:7f99d87bfbef0999902c",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "SplitPrimeCAR",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 36,
+      "end_line": 60,
+      "alpha_hash": "8945895acb9e787a",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "anticomm"
+      ],
+      "token_count": 137,
+      "wl_hash": "817ee7a9a36c3575"
+    },
+    {
+      "id": "decl:4ae1a49638e07cf65d68",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "c",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.c",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 61,
+      "end_line": 64,
+      "alpha_hash": "1b9f87c1d00ea723",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 15,
+      "wl_hash": "6153b876ef2f10aa"
+    },
+    {
+      "id": "decl:c100b8a2ff9386d841f0",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "d",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.d",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 65,
+      "end_line": 68,
+      "alpha_hash": "6b89fa23910ac32d",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 15,
+      "wl_hash": "d1fdde04dd300db2"
+    },
+    {
+      "id": "decl:9d38fd26b57108827005",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "N",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.N",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 69,
+      "end_line": 72,
+      "alpha_hash": "f0ee89a50b9d263b",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 15,
+      "wl_hash": "2f8d2c2a5b040e7f"
+    },
+    {
+      "id": "decl:6752a00e6f1f20126bb2",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "Pi",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.Pi",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 73,
+      "end_line": 76,
+      "alpha_hash": "f0ee89a50b9d263b",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 15,
+      "wl_hash": "a05f692c5160ea11"
+    },
+    {
+      "id": "decl:65e085257d6b221abdf4",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "eps_iota",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.eps_iota",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 77,
+      "end_line": 90,
+      "alpha_hash": "1771874dd8474183",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "anticomm"
+      ],
+      "token_count": 102,
+      "wl_hash": "96eeb2dd2422dc24"
+    },
+    {
+      "id": "decl:9a0f3af0d3a1f5aae71c",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "c_c_anticomm",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.c_c_anticomm",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 91,
+      "end_line": 114,
+      "alpha_hash": "bbe85e74c0862699",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "anticomm",
+        "c"
+      ],
+      "token_count": 251,
+      "wl_hash": "5e8c5e2b88929256"
+    },
+    {
+      "id": "decl:0435a93425ef1d514b82",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "d_d_anticomm",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.d_d_anticomm",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 115,
+      "end_line": 138,
+      "alpha_hash": "f5dc5981975c3557",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "anticomm",
+        "d"
+      ],
+      "token_count": 251,
+      "wl_hash": "e69b781944f3c329"
+    },
+    {
+      "id": "decl:c502be8c7f2a8e7efb36",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "c_d_anticomm",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.c_d_anticomm",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 139,
+      "end_line": 161,
+      "alpha_hash": "1c987246dd752f3b",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "anticomm",
+        "c",
+        "d"
+      ],
+      "token_count": 226,
+      "wl_hash": "89337ce291964982"
+    },
+    {
+      "id": "decl:beaac559d361143cddfb",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "iota_mul_eps_eq_one_sub_N",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.iota_mul_eps_eq_one_sub_N",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 162,
+      "end_line": 176,
+      "alpha_hash": "862050ba1351fdb7",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "N",
+        "anticomm"
+      ],
+      "token_count": 77,
+      "wl_hash": "0d0862db5d1f6490"
+    },
+    {
+      "id": "decl:99bf474d98ce34a212a9",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "Pi_eq_one_sub_two_N",
+      "fqname": "InfoGeometry.Arithmetic.SplitMajoranaPrimeGas.SplitPrimeCAR.Pi_eq_one_sub_two_N",
+      "file": "InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "start_line": 177,
+      "end_line": 197,
+      "alpha_hash": "4dae4c45125adab6",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "N",
+        "Pi",
+        "SplitPrimeCAR",
+        "c",
+        "d"
+      ],
+      "token_count": 164,
+      "wl_hash": "4dd6944d3930cc79"
+    },
+    {
+      "id": "decl:414f988692d7f4d38d37",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "localBosonicPartition",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.localBosonicPartition",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 35,
+      "end_line": 38,
+      "alpha_hash": "d66f6cc2dcd5b3bf",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 36,
+      "wl_hash": "9da1643865f57e2c"
+    },
+    {
+      "id": "decl:56b057cec77a096c651a",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "localFermionicSignedTrace",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.localFermionicSignedTrace",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 39,
+      "end_line": 42,
+      "alpha_hash": "e1e5dc8d6fcc0215",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 34,
+      "wl_hash": "237413213d689e3a"
+    },
+    {
+      "id": "decl:b91cf2b5577142250dee",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "localWittenIndex",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.localWittenIndex",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 43,
+      "end_line": 51,
+      "alpha_hash": "9e99f6364e4eabe9",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "localBosonicPartition",
+        "localFermionicSignedTrace"
+      ],
+      "token_count": 30,
+      "wl_hash": "076ba02c4befb8a4"
+    },
+    {
+      "id": "decl:6b5618df380d80e1c1c0",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "localWittenIndex_eq_one",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.localWittenIndex_eq_one",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 52,
+      "end_line": 67,
+      "alpha_hash": "0cd7ab9254896bae",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "localBosonicPartition",
+        "localFermionicSignedTrace",
+        "localWittenIndex"
+      ],
+      "token_count": 81,
+      "wl_hash": "04c300b2f88be7c6"
+    },
+    {
+      "id": "decl:c4f1380d747d906b4cd7",
+      "kind": "decl",
+      "decl_kind": "abbrev",
+      "name": "PrimeCutoff",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.PrimeCutoff",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 68,
+      "end_line": 70,
+      "alpha_hash": "81dec1d5e3c42b16",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 5,
+      "wl_hash": "80960063a7e090d5"
+    },
+    {
+      "id": "decl:b6b9c74b60f28aed06e6",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "primeEnergy",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.primeEnergy",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 71,
+      "end_line": 74,
+      "alpha_hash": "8d063816b25e6439",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 19,
+      "wl_hash": "9fe7f29bd27b8222"
+    },
+    {
+      "id": "decl:a0c0067d84a51dcc7a33",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "primeWeight",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.primeWeight",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 75,
+      "end_line": 78,
+      "alpha_hash": "e29c89e587a03414",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "primeEnergy"
+      ],
+      "token_count": 22,
+      "wl_hash": "51d3e3e878b86825"
+    },
+    {
+      "id": "decl:d7f9fc2c34fc3e3340e6",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "finiteBosonicPrimonPartition",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.finiteBosonicPrimonPartition",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 79,
+      "end_line": 82,
+      "alpha_hash": "b5bee5659dd21689",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "PrimeCutoff",
+        "localBosonicPartition",
+        "primeWeight"
+      ],
+      "token_count": 21,
+      "wl_hash": "73dacfb290b1dd48"
+    },
+    {
+      "id": "decl:88d90e91590ef65ee715",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "finiteMobiusFermionicSignedTrace",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.finiteMobiusFermionicSignedTrace",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 83,
+      "end_line": 86,
+      "alpha_hash": "b5bee5659dd21689",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "PrimeCutoff",
+        "localFermionicSignedTrace",
+        "primeWeight"
+      ],
+      "token_count": 21,
+      "wl_hash": "716f8fcc29eb8c8d"
+    },
+    {
+      "id": "decl:9f16e50617ade8af2543",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "finiteSupergradedLiouvilleanWittenIndex",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.finiteSupergradedLiouvilleanWittenIndex",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 87,
+      "end_line": 90,
+      "alpha_hash": "b5bee5659dd21689",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "PrimeCutoff",
+        "localWittenIndex",
+        "primeWeight"
+      ],
+      "token_count": 21,
+      "wl_hash": "6e762ecae9b0faf7"
+    },
+    {
+      "id": "decl:55fa0143aa1f34c4b993",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "FiniteWittenIndexGate",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.FiniteWittenIndexGate",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 91,
+      "end_line": 100,
+      "alpha_hash": "2920c0061fb51387",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "PrimeCutoff",
+        "primeWeight"
+      ],
+      "token_count": 29,
+      "wl_hash": "bc58391b37f31283"
+    },
+    {
+      "id": "decl:72da260f8a92bcbcf536",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "finiteSupergradedLiouvilleanWittenIndex_eq_one",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.finiteSupergradedLiouvilleanWittenIndex_eq_one",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 101,
+      "end_line": 109,
+      "alpha_hash": "13ffb032d8465bd7",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "FiniteWittenIndexGate",
+        "PrimeCutoff",
+        "finiteSupergradedLiouvilleanWittenIndex",
+        "localWittenIndex_eq_one",
+        "primeWeight"
+      ],
+      "token_count": 35,
+      "wl_hash": "f5e3b1fa483a06da"
+    },
+    {
+      "id": "decl:93d09c028662e52e6ee0",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "finite_boson_times_mobius_trace_eq_one",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.finite_boson_times_mobius_trace_eq_one",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 110,
+      "end_line": 125,
+      "alpha_hash": "01323e9e032930f2",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "FiniteWittenIndexGate",
+        "PrimeCutoff",
+        "finiteBosonicPrimonPartition",
+        "finiteMobiusFermionicSignedTrace",
+        "finiteSupergradedLiouvilleanWittenIndex_eq_one"
+      ],
+      "token_count": 36,
+      "wl_hash": "1c4934bad3f24967"
+    },
+    {
+      "id": "decl:a83bae5697585a4c44bb",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "FiniteSupergradedLiouvilleanReadout",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.FiniteSupergradedLiouvilleanReadout",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 126,
+      "end_line": 140,
+      "alpha_hash": "f31bc4d524232f59",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "FiniteWittenIndexGate",
+        "PrimeCutoff",
+        "finiteBosonicPrimonPartition",
+        "finiteMobiusFermionicSignedTrace",
+        "finiteSupergradedLiouvilleanWittenIndex"
+      ],
+      "token_count": 48,
+      "wl_hash": "5f876c97fe365e48"
+    },
+    {
+      "id": "decl:10306668794cd2419a22",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "witten_index_eq_one",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.FiniteSupergradedLiouvilleanReadout.witten_index_eq_one",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 141,
+      "end_line": 148,
+      "alpha_hash": "fbcd4b413b1d68e3",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "FiniteSupergradedLiouvilleanReadout",
+        "PrimeCutoff",
+        "finiteSupergradedLiouvilleanWittenIndex_eq_one"
+      ],
+      "token_count": 29,
+      "wl_hash": "1a5a6b2fbbeb09a8"
+    },
+    {
+      "id": "decl:1c03dff6c5deb36684d8",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "boson_times_fermion_eq_one",
+      "fqname": "InfoGeometry.Arithmetic.SupergradedLiouvilleanWittenIndex.FiniteSupergradedLiouvilleanReadout.boson_times_fermion_eq_one",
+      "file": "InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "start_line": 149,
+      "end_line": 158,
+      "alpha_hash": "d89a4efbc7d7d888",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "FiniteSupergradedLiouvilleanReadout",
+        "PrimeCutoff",
+        "finite_boson_times_mobius_trace_eq_one"
+      ],
+      "token_count": 37,
+      "wl_hash": "f43bf1593ee0052e"
+    },
+    {
+      "id": "decl:1b49a7fcd4d866f5dfc3",
+      "kind": "decl",
+      "decl_kind": "inductive",
+      "name": "Bit",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.Bit",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 26,
+      "end_line": 31,
+      "alpha_hash": "17c9a255cafc8d97",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "one"
+      ],
+      "token_count": 15,
+      "wl_hash": "23cd3d03ce692ded"
+    },
+    {
+      "id": "decl:8aa45cc9fae200f21d65",
+      "kind": "decl",
+      "decl_kind": "abbrev",
+      "name": "CantorPath",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorPath",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 32,
+      "end_line": 34,
+      "alpha_hash": "e4ca23880bc84fcd",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Bit"
+      ],
+      "token_count": 8,
+      "wl_hash": "eb449b0dd04a852c"
+    },
+    {
+      "id": "decl:e60e451cea57924f9f7f",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CantorCylinder",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCylinder",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 35,
+      "end_line": 41,
+      "alpha_hash": "a8c4e8fdee73cc26",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Bit"
+      ],
+      "token_count": 14,
+      "wl_hash": "245d16912e3d5e72"
+    },
+    {
+      "id": "decl:fa0ec780e16e38e9917b",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "Contains",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCylinder.Contains",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 42,
+      "end_line": 54,
+      "alpha_hash": "ec7cc16481b554eb",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCylinder",
+        "CantorPath"
+      ],
+      "token_count": 28,
+      "wl_hash": "bf24b4f353391aae"
+    },
+    {
+      "id": "decl:6b95c2d712dc7a7d86f0",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CantorMeasureDimensionGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorMeasureDimensionGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 55,
+      "end_line": 68,
+      "alpha_hash": "100d53c85c6d030d",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCylinder"
+      ],
+      "token_count": 17,
+      "wl_hash": "bfcf1a294baacab0"
+    },
+    {
+      "id": "decl:fae526bceecc5cec9d3e",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CantorCliffordRepresentationGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordRepresentationGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 69,
+      "end_line": 86,
+      "alpha_hash": "07509ab3da92e5c7",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "car_relations_hold"
+      ],
+      "token_count": 31,
+      "wl_hash": "ad13fab166bfc046"
+    },
+    {
+      "id": "decl:6ff4755a33f72473fe32",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CantorFockEquivalenceGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorFockEquivalenceGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 87,
+      "end_line": 104,
+      "alpha_hash": "cd6f54ac62e5d242",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 54,
+      "wl_hash": "37132f082d631798"
+    },
+    {
+      "id": "decl:be0dc353fd488bd200ce",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CuntzTwoBridgeGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CuntzTwoBridgeGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 105,
+      "end_line": 125,
+      "alpha_hash": "5c288e9c6f1e9f8d",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 37,
+      "wl_hash": "6b8128085c5f758d"
+    },
+    {
+      "id": "decl:aac5d6a92dca2bc48ed6",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "InductiveLimitSelfDualityGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.InductiveLimitSelfDualityGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 126,
+      "end_line": 137,
+      "alpha_hash": "b257ac225823867d",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "self_duality_law"
+      ],
+      "token_count": 16,
+      "wl_hash": "ea7cbf465d01c657"
+    },
+    {
+      "id": "decl:596f9319edf2ae8e5dfc",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "TiltBogoliubovGate",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.TiltBogoliubovGate",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 138,
+      "end_line": 151,
+      "alpha_hash": "4a6b3c1b535441e0",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 24,
+      "wl_hash": "7a272ba33be5761c"
+    },
+    {
+      "id": "decl:d6c0c30ba1946653cd4e",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "CantorCliffordFockBridgeData",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordFockBridgeData",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 152,
+      "end_line": 170,
+      "alpha_hash": "8a72c16e8c0d5558",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCliffordRepresentationGate",
+        "CantorFockEquivalenceGate",
+        "CantorMeasureDimensionGate",
+        "CuntzTwoBridgeGate",
+        "InductiveLimitSelfDualityGate",
+        "TiltBogoliubovGate"
+      ],
+      "token_count": 87,
+      "wl_hash": "5a0c8b0330d29d6d"
+    },
+    {
+      "id": "decl:20cbc06643b112f6f1c5",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "car_relations_hold",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordFockBridgeData.car_relations_hold",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 171,
+      "end_line": 177,
+      "alpha_hash": "62b789d19a6bf019",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCliffordFockBridgeData"
+      ],
+      "token_count": 16,
+      "wl_hash": "b13aad5dae0da77b"
+    },
+    {
+      "id": "decl:f9e6ed9eac83fd77d65a",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "fock_left_inverse",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordFockBridgeData.fock_left_inverse",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 178,
+      "end_line": 184,
+      "alpha_hash": "62b789d19a6bf019",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCliffordFockBridgeData"
+      ],
+      "token_count": 16,
+      "wl_hash": "265db99c8f4f8379"
+    },
+    {
+      "id": "decl:c17c6b37b5f3f90fb11e",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "cuntz_isometry_relations",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordFockBridgeData.cuntz_isometry_relations",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 185,
+      "end_line": 191,
+      "alpha_hash": "62b789d19a6bf019",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCliffordFockBridgeData"
+      ],
+      "token_count": 16,
+      "wl_hash": "265db99c8f4f8379"
+    },
+    {
+      "id": "decl:95c5f96d60752319c13b",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "self_duality_law",
+      "fqname": "InfoGeometry.Canonical.CantorCliffordFockGate.CantorCliffordFockBridgeData.self_duality_law",
+      "file": "InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "start_line": 192,
+      "end_line": 200,
+      "alpha_hash": "8c1782d0d5b85ec6",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "CantorCliffordFockBridgeData"
+      ],
+      "token_count": 20,
+      "wl_hash": "1e4c69fa3d0eb715"
+    },
+    {
+      "id": "decl:2bdbc0d690ddc0b7b6c7",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "KANData",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 40,
+      "end_line": 62,
+      "alpha_hash": "8c11f0432d1c2e20",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "N"
+      ],
+      "token_count": 112,
+      "wl_hash": "f456374b8f541cb8"
+    },
+    {
+      "id": "decl:c3e85f5b26e980955a58",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "k",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.k",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 63,
+      "end_line": 67,
+      "alpha_hash": "7f4178b14bfa3fc0",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 24,
+      "wl_hash": "bce671a1d4f56623"
+    },
+    {
+      "id": "decl:e92e18cceca68acfd721",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "a",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.a",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 68,
+      "end_line": 72,
+      "alpha_hash": "9d6637ffd10260f3",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 24,
+      "wl_hash": "e300e22cf6064697"
+    },
+    {
+      "id": "decl:b82efe60447d3c521111",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "n",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.n",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 73,
+      "end_line": 77,
+      "alpha_hash": "a0289dfe313d9e75",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 24,
+      "wl_hash": "5861ffc0001bdd32"
+    },
+    {
+      "id": "decl:3707834d21bb1cefa109",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "recompose",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.recompose",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 78,
+      "end_line": 83,
+      "alpha_hash": "b10cc8b26a60158d",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 37,
+      "wl_hash": "b787e2fd1aa12755"
+    },
+    {
+      "id": "decl:4c930618533175913d98",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "recompose_factor",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.recompose_factor",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 84,
+      "end_line": 89,
+      "alpha_hash": "9529708dd9c6cde4",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 31,
+      "wl_hash": "433db85d17f90ff6"
+    },
+    {
+      "id": "decl:43b07ffa9e5d1af61c2f",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "factor_recompose_eq",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KANData.factor_recompose_eq",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 90,
+      "end_line": 104,
+      "alpha_hash": "ce1c31ad3bf5ceab",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 42,
+      "wl_hash": "229139f5359315d8"
+    },
+    {
+      "id": "decl:1ddd0a352f007777d497",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "ModularAxisWitness",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ModularAxisWitness",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 105,
+      "end_line": 129,
+      "alpha_hash": "781072180ef6c585",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KANData",
+        "N"
+      ],
+      "token_count": 81,
+      "wl_hash": "e161065d4c2728d3"
+    },
+    {
+      "id": "decl:ab9c0ae0c2baf696ca3c",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "TomitaSplitData",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.TomitaSplitData",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 130,
+      "end_line": 147,
+      "alpha_hash": "509b69cc69a6c482",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 21,
+      "wl_hash": "4e48e2ef50d6121d"
+    },
+    {
+      "id": "decl:2cc39e4973f2b522a6f3",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "ConjugationAction",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 148,
+      "end_line": 168,
+      "alpha_hash": "742fb7006559626e",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 175,
+      "wl_hash": "c0c6cabf61dbfd17"
+    },
+    {
+      "id": "decl:829fb004a69c3f865425",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "act_one_apply",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction.act_one_apply",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 169,
+      "end_line": 174,
+      "alpha_hash": "413b2aa54eac637c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 27,
+      "wl_hash": "f38c219bc995e378"
+    },
+    {
+      "id": "decl:478f0acdeaa1a2b9d08c",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "act_mul_apply",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction.act_mul_apply",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 175,
+      "end_line": 180,
+      "alpha_hash": "b9d60ed197f7d428",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 45,
+      "wl_hash": "f1dfb48e50fc748b"
+    },
+    {
+      "id": "decl:6dd5307736f98f68d855",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "act_add_apply",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction.act_add_apply",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 181,
+      "end_line": 186,
+      "alpha_hash": "fae40d75b70d870c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 45,
+      "wl_hash": "6a69a4f264410634"
+    },
+    {
+      "id": "decl:d02b6b2d0cf0464f7c08",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "act_neg_apply",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction.act_neg_apply",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 187,
+      "end_line": 192,
+      "alpha_hash": "75d58517fe59ef2c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 38,
+      "wl_hash": "7609d52f868fe91e"
+    },
+    {
+      "id": "decl:f9a52f928032f46ee557",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "act_sub_apply",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ConjugationAction.act_sub_apply",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 193,
+      "end_line": 211,
+      "alpha_hash": "3ef76af2eac2204c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 44,
+      "wl_hash": "314edbad0856a7f9"
+    },
+    {
+      "id": "decl:e0433d015d9426ad942c",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "MPFixedTear",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MPFixedTear",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 212,
+      "end_line": 224,
+      "alpha_hash": "d2ac193a4603632e",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 56,
+      "wl_hash": "3b8195475c27d615"
+    },
+    {
+      "id": "decl:0012e077c557164317c4",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "MPFixedTear_cocycle",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MPFixedTear_cocycle",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 225,
+      "end_line": 244,
+      "alpha_hash": "14ecc916f74bc6db",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "MPFixedTear"
+      ],
+      "token_count": 78,
+      "wl_hash": "8a3aa1065de98085"
+    },
+    {
+      "id": "decl:308546483b4ab0f45df0",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "MPFixedTear_three_factor",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MPFixedTear_three_factor",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 245,
+      "end_line": 265,
+      "alpha_hash": "4656968c38062520",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "MPFixedTear",
+        "MPFixedTear_cocycle",
+        "a",
+        "k",
+        "n"
+      ],
+      "token_count": 119,
+      "wl_hash": "77ee420588d7b2b4"
+    },
+    {
+      "id": "decl:cde658c53174d4fcf42e",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "MPFixedTear_KAN_decomposition",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MPFixedTear_KAN_decomposition",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 266,
+      "end_line": 294,
+      "alpha_hash": "7a2be4d1a9231974",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "KANData",
+        "MPFixedTear",
+        "MPFixedTear_three_factor",
+        "N"
+      ],
+      "token_count": 177,
+      "wl_hash": "56712ebd4df3e6dd"
+    },
+    {
+      "id": "decl:08fe7f26a84dbc6ab308",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "ProjectorNaturalFor",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ProjectorNaturalFor",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 295,
+      "end_line": 306,
+      "alpha_hash": "a1026a1253374c03",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "Pi"
+      ],
+      "token_count": 56,
+      "wl_hash": "e4163a1132aa5306"
+    },
+    {
+      "id": "decl:f7e14e28e8abc173f23a",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "MPFixedTear_eq_zero_of_projector_natural",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MPFixedTear_eq_zero_of_projector_natural",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 307,
+      "end_line": 324,
+      "alpha_hash": "3c05c636663684e7",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "MPFixedTear",
+        "ProjectorNaturalFor"
+      ],
+      "token_count": 65,
+      "wl_hash": "7625a38bc23c3919"
+    },
+    {
+      "id": "decl:79cd99cbdad88d39734d",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "projectorMismatch",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.projectorMismatch",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 325,
+      "end_line": 336,
+      "alpha_hash": "97b67cec4c096e87",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 47,
+      "wl_hash": "ac29f027191c418a"
+    },
+    {
+      "id": "decl:63280da2ad1d018de0ba",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "DrazinProjectorCovariant",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.DrazinProjectorCovariant",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 337,
+      "end_line": 354,
+      "alpha_hash": "9b333af8351fca6c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 57,
+      "wl_hash": "0bb6b806d74fe3e4"
+    },
+    {
+      "id": "decl:1b6bc079c35937138f50",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "MetricTransportWitness",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.MetricTransportWitness",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 355,
+      "end_line": 368,
+      "alpha_hash": "c90b828d08d775b8",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction"
+      ],
+      "token_count": 76,
+      "wl_hash": "41a5c85225421990"
+    },
+    {
+      "id": "decl:8b01789b4a016a4b3374",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "projectorMismatch_metric_transport_covariant",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.projectorMismatch_metric_transport_covariant",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 369,
+      "end_line": 392,
+      "alpha_hash": "c8e7c51c719e0b53",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "DrazinProjectorCovariant",
+        "MetricTransportWitness",
+        "projectorMismatch"
+      ],
+      "token_count": 101,
+      "wl_hash": "8159ae1f8c3707a8"
+    },
+    {
+      "id": "decl:ca994c5d43b29449b9d8",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "KPhaseTear",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.KPhaseTear",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 393,
+      "end_line": 409,
+      "alpha_hash": "df77ca99258711a4",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "KANData",
+        "MPFixedTear",
+        "N"
+      ],
+      "token_count": 95,
+      "wl_hash": "509e7f5d07a92467"
+    },
+    {
+      "id": "decl:d0ab7716cbb2032737b2",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "AScaleTear",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.AScaleTear",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 410,
+      "end_line": 426,
+      "alpha_hash": "89211dd90e027950",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "KANData",
+        "MPFixedTear",
+        "N"
+      ],
+      "token_count": 89,
+      "wl_hash": "abed631bbcf300e2"
+    },
+    {
+      "id": "decl:e3f31976bdb6aa3bf471",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "NNilpotentTear",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.NNilpotentTear",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 427,
+      "end_line": 443,
+      "alpha_hash": "c90b868434bbcb1a",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ConjugationAction",
+        "KANData",
+        "MPFixedTear",
+        "N"
+      ],
+      "token_count": 80,
+      "wl_hash": "0cdea7b489a98ac1"
+    },
+    {
+      "id": "decl:67e6226145bb82af280d",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "ParabolicBoundaryData",
+      "fqname": "InfoGeometry.Canonical.KANIwasawaObstructionBridge.ParabolicBoundaryData",
+      "file": "InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "start_line": 444,
+      "end_line": 454,
+      "alpha_hash": "f3746a6ac5624839",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "N"
+      ],
+      "token_count": 61,
+      "wl_hash": "4bb6978831906b7d"
+    },
+    {
+      "id": "decl:db64b0ee7a732156a62b",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "Mat2",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 22,
+      "end_line": 31,
+      "alpha_hash": "ff270091e22d29a5",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 19,
+      "wl_hash": "e9dc4dacc5b89682"
+    },
+    {
+      "id": "decl:d2ee79601946105cc65f",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "det",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2.det",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 32,
+      "end_line": 35,
+      "alpha_hash": "e7f1eb25e1e9452c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2"
+      ],
+      "token_count": 17,
+      "wl_hash": "3839a338899b6157"
+    },
+    {
+      "id": "decl:dfccb404dcfcfed240d9",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "matMul",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2.matMul",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 36,
+      "end_line": 42,
+      "alpha_hash": "3868b292995bc7c6",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2",
+        "N"
+      ],
+      "token_count": 51,
+      "wl_hash": "80e8c633dda5bc00"
+    },
+    {
+      "id": "decl:d94ac5dd18c8932d5a3d",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_matMul",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2.det_matMul",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 43,
+      "end_line": 48,
+      "alpha_hash": "92aa1c40b1ac0374",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2",
+        "N",
+        "det",
+        "matMul"
+      ],
+      "token_count": 30,
+      "wl_hash": "f8d54fb2f448f7ba"
+    },
+    {
+      "id": "decl:35477c2793f64ae03b23",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "one",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2.one",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 49,
+      "end_line": 55,
+      "alpha_hash": "ff506fb5450dd42a",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2"
+      ],
+      "token_count": 21,
+      "wl_hash": "3914cebeb0c0ba1c"
+    },
+    {
+      "id": "decl:3d08b4c0a03d71865ffc",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_one",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.Mat2.det_one",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 56,
+      "end_line": 63,
+      "alpha_hash": "14c13c17a6c89102",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2",
+        "det",
+        "one"
+      ],
+      "token_count": 17,
+      "wl_hash": "cb586d438ec9f31c"
+    },
+    {
+      "id": "decl:845c16704602fc05a52c",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "KCoord",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KCoord",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 64,
+      "end_line": 69,
+      "alpha_hash": "cdf2b5a3de17be9f",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 20,
+      "wl_hash": "c95b19c18b274f5f"
+    },
+    {
+      "id": "decl:23f73e8b6838b750fe18",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "ACoord",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.ACoord",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 70,
+      "end_line": 75,
+      "alpha_hash": "ea436481ba8d97b0",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 16,
+      "wl_hash": "ce5545bbda3814d5"
+    },
+    {
+      "id": "decl:8c1eeeb6d6a06af3d183",
+      "kind": "decl",
+      "decl_kind": "abbrev",
+      "name": "NCoord",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.NCoord",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 76,
+      "end_line": 78,
+      "alpha_hash": "5b42c07111bb7a67",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [],
+      "token_count": 4,
+      "wl_hash": "0b9fb3e27b318112"
+    },
+    {
+      "id": "decl:57e9dfca9cbd4fd1f31d",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "KMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 79,
+      "end_line": 85,
+      "alpha_hash": "7c44a29de8cf1922",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KCoord",
+        "Mat2",
+        "k"
+      ],
+      "token_count": 23,
+      "wl_hash": "f5c20d5023658eeb"
+    },
+    {
+      "id": "decl:3e30fe32d6fcfeb9ec96",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "AMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.AMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 86,
+      "end_line": 92,
+      "alpha_hash": "31637c95fedf8183",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "Mat2",
+        "a"
+      ],
+      "token_count": 22,
+      "wl_hash": "34a9180e1cbd18d6"
+    },
+    {
+      "id": "decl:23198d44f2b3ea64d878",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "NMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.NMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 93,
+      "end_line": 99,
+      "alpha_hash": "27ce5a52a27cc21c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2",
+        "NCoord"
+      ],
+      "token_count": 26,
+      "wl_hash": "71e43c0a51cc380a"
+    },
+    {
+      "id": "decl:b2e0c0317fcdc17666c5",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_KMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.det_KMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 100,
+      "end_line": 108,
+      "alpha_hash": "b7bc90bd0af3d524",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KCoord",
+        "KMatrix",
+        "k"
+      ],
+      "token_count": 49,
+      "wl_hash": "db27ad250287eeb7"
+    },
+    {
+      "id": "decl:76cfadef516b81314bc2",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_AMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.det_AMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 109,
+      "end_line": 113,
+      "alpha_hash": "c0f2c47346c93c30",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "AMatrix",
+        "a"
+      ],
+      "token_count": 29,
+      "wl_hash": "273f4f103a52728a"
+    },
+    {
+      "id": "decl:70b87ff93f61fd0b7843",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_NMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.det_NMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 114,
+      "end_line": 120,
+      "alpha_hash": "930c7ace86b8c62c",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "NCoord",
+        "NMatrix"
+      ],
+      "token_count": 23,
+      "wl_hash": "b99ba964d252dd74"
+    },
+    {
+      "id": "decl:070d3074f8fd8866778d",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "KANMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KANMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 121,
+      "end_line": 125,
+      "alpha_hash": "27c78b383be016c0",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "AMatrix",
+        "KCoord",
+        "KMatrix",
+        "Mat2",
+        "NCoord",
+        "NMatrix",
+        "a",
+        "k",
+        "n"
+      ],
+      "token_count": 39,
+      "wl_hash": "89eb6fa6d3fd8deb"
+    },
+    {
+      "id": "decl:fb27233680dace1fdd8b",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "det_KANMatrix",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.det_KANMatrix",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 126,
+      "end_line": 130,
+      "alpha_hash": "56a4ad2ef5999368",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "KANMatrix",
+        "KCoord",
+        "NCoord",
+        "a",
+        "k",
+        "n"
+      ],
+      "token_count": 33,
+      "wl_hash": "8ef545cbe7e82ace"
+    },
+    {
+      "id": "decl:81fb0ff293f0ae367903",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "KANMatrix_entries",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KANMatrix_entries",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 131,
+      "end_line": 139,
+      "alpha_hash": "cc29c0ddb6615cdd",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "AMatrix",
+        "KANMatrix",
+        "KCoord",
+        "KMatrix",
+        "NCoord",
+        "NMatrix",
+        "a",
+        "k",
+        "n"
+      ],
+      "token_count": 75,
+      "wl_hash": "9a94e324ebc6bb0a"
+    },
+    {
+      "id": "decl:2193193bbab655721c42",
+      "kind": "decl",
+      "decl_kind": "structure",
+      "name": "SL2RModel",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.SL2RModel",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 140,
+      "end_line": 144,
+      "alpha_hash": "40d9ba0c334f6393",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "Mat2"
+      ],
+      "token_count": 12,
+      "wl_hash": "6574deed6b84cd2b"
+    },
+    {
+      "id": "decl:ff33fdaba6e0c3765856",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "KANToSL2RModel",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KANToSL2RModel",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 145,
+      "end_line": 149,
+      "alpha_hash": "57ef830cfb177772",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "KANMatrix",
+        "KCoord",
+        "NCoord",
+        "SL2RModel",
+        "a",
+        "det_KANMatrix",
+        "k",
+        "n"
+      ],
+      "token_count": 36,
+      "wl_hash": "a66f20b07d66fd78"
+    },
+    {
+      "id": "decl:dbce0399b7bd043f8049",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "KANToSL2RModel_det",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KANToSL2RModel_det",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 150,
+      "end_line": 156,
+      "alpha_hash": "b5ec124bb07a79c3",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "KANToSL2RModel",
+        "KCoord",
+        "NCoord",
+        "a",
+        "k",
+        "n"
+      ],
+      "token_count": 36,
+      "wl_hash": "ce7a0629f0fc956b"
+    },
+    {
+      "id": "decl:930989a4044fd3560171",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "KSectorDetOne",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KSectorDetOne",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 157,
+      "end_line": 160,
+      "alpha_hash": "ef88c8bd0163ef7e",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KCoord",
+        "KMatrix",
+        "k"
+      ],
+      "token_count": 17,
+      "wl_hash": "c654c8cf2139a532"
+    },
+    {
+      "id": "decl:25be2acb0e356c795622",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "ASectorDetOne",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.ASectorDetOne",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 161,
+      "end_line": 164,
+      "alpha_hash": "ef88c8bd0163ef7e",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "AMatrix",
+        "a"
+      ],
+      "token_count": 17,
+      "wl_hash": "8dc67cd1667d0d8c"
+    },
+    {
+      "id": "decl:ef9a5fadc4ec019e6775",
+      "kind": "decl",
+      "decl_kind": "def",
+      "name": "NSectorDetOne",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.NSectorDetOne",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 165,
+      "end_line": 168,
+      "alpha_hash": "3fb230c4179831a1",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "NCoord",
+        "NMatrix",
+        "n"
+      ],
+      "token_count": 21,
+      "wl_hash": "f6613dc7339e8d7d"
+    },
+    {
+      "id": "decl:39cefc9ceb9636926673",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "KSectorDetOne_true",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.KSectorDetOne_true",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 169,
+      "end_line": 172,
+      "alpha_hash": "d3df0c3f244d32c1",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "KCoord",
+        "KSectorDetOne",
+        "det_KMatrix",
+        "k"
+      ],
+      "token_count": 17,
+      "wl_hash": "17f47c2635582a90"
+    },
+    {
+      "id": "decl:45aa842321d8bffa34c0",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "ASectorDetOne_true",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.ASectorDetOne_true",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 173,
+      "end_line": 176,
+      "alpha_hash": "d3df0c3f244d32c1",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "ACoord",
+        "ASectorDetOne",
+        "a",
+        "det_AMatrix"
+      ],
+      "token_count": 17,
+      "wl_hash": "6e3761664eaf4fcc"
+    },
+    {
+      "id": "decl:f561bed0efac5be438ac",
+      "kind": "decl",
+      "decl_kind": "theorem",
+      "name": "NSectorDetOne_true",
+      "fqname": "InfoGeometry.Canonical.SL2R_KAN_Model.NSectorDetOne_true",
+      "file": "InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "start_line": 177,
+      "end_line": 180,
+      "alpha_hash": "0f510d7b56c91623",
+      "contains_sorry": false,
+      "contains_axiom_like": false,
+      "refs": [
+        "NCoord",
+        "NSectorDetOne",
+        "det_NMatrix",
+        "n"
+      ],
+      "token_count": 15,
+      "wl_hash": "b83d470b33bea848"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "import:Mathlib",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "import:Mathlib.Data.Real.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "import:Mathlib.Data.Nat.Prime.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "import:Mathlib.Analysis.SpecialFunctions.Log.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "import:Mathlib.Tactic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "import:Mathlib.Data.Real.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "import:Mathlib.Topology.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "import:Mathlib.Algebra.Module.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.Data.Real.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.GroupTheory.Subgroup.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.GroupTheory.GroupAction.Defs",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.Topology.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.Order.Filter.Tendsto",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "import:Mathlib.Tactic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "import:Mathlib.Data.Real.Basic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "import:Mathlib.Tactic",
+      "type": "imports"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:7f99d87bfbef0999902c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:4ae1a49638e07cf65d68",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:c100b8a2ff9386d841f0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:6752a00e6f1f20126bb2",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:65e085257d6b221abdf4",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:9a0f3af0d3a1f5aae71c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:0435a93425ef1d514b82",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:c502be8c7f2a8e7efb36",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:beaac559d361143cddfb",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SplitMajoranaPrimeGas.lean",
+      "target": "decl:99bf474d98ce34a212a9",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:414f988692d7f4d38d37",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:56b057cec77a096c651a",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:b91cf2b5577142250dee",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:6b5618df380d80e1c1c0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:b6b9c74b60f28aed06e6",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:d7f9fc2c34fc3e3340e6",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:88d90e91590ef65ee715",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:9f16e50617ade8af2543",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:55fa0143aa1f34c4b993",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:72da260f8a92bcbcf536",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:93d09c028662e52e6ee0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:a83bae5697585a4c44bb",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:10306668794cd2419a22",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Arithmetic/SupergradedLiouvilleanWittenIndex.lean",
+      "target": "decl:1c03dff6c5deb36684d8",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:1b49a7fcd4d866f5dfc3",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:8aa45cc9fae200f21d65",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:e60e451cea57924f9f7f",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:fa0ec780e16e38e9917b",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:6b95c2d712dc7a7d86f0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:fae526bceecc5cec9d3e",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:6ff4755a33f72473fe32",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:be0dc353fd488bd200ce",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:aac5d6a92dca2bc48ed6",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:596f9319edf2ae8e5dfc",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:d6c0c30ba1946653cd4e",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:20cbc06643b112f6f1c5",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:f9e6ed9eac83fd77d65a",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:c17c6b37b5f3f90fb11e",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/CantorCliffordFockGate.lean",
+      "target": "decl:95c5f96d60752319c13b",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:3707834d21bb1cefa109",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:4c930618533175913d98",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:43b07ffa9e5d1af61c2f",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:1ddd0a352f007777d497",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:ab9c0ae0c2baf696ca3c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:829fb004a69c3f865425",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:478f0acdeaa1a2b9d08c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:6dd5307736f98f68d855",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:d02b6b2d0cf0464f7c08",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:f9a52f928032f46ee557",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:0012e077c557164317c4",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:308546483b4ab0f45df0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:cde658c53174d4fcf42e",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:08fe7f26a84dbc6ab308",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:f7e14e28e8abc173f23a",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:79cd99cbdad88d39734d",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:63280da2ad1d018de0ba",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:1b6bc079c35937138f50",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:8b01789b4a016a4b3374",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:ca994c5d43b29449b9d8",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:d0ab7716cbb2032737b2",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:e3f31976bdb6aa3bf471",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/KANIwasawaObstructionBridge.lean",
+      "target": "decl:67e6226145bb82af280d",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:d2ee79601946105cc65f",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:dfccb404dcfcfed240d9",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:d94ac5dd18c8932d5a3d",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:35477c2793f64ae03b23",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:3d08b4c0a03d71865ffc",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:57e9dfca9cbd4fd1f31d",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:3e30fe32d6fcfeb9ec96",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:23198d44f2b3ea64d878",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:b2e0c0317fcdc17666c5",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:76cfadef516b81314bc2",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:70b87ff93f61fd0b7843",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:070d3074f8fd8866778d",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:fb27233680dace1fdd8b",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:81fb0ff293f0ae367903",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:2193193bbab655721c42",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:ff33fdaba6e0c3765856",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:dbce0399b7bd043f8049",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:930989a4044fd3560171",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:25be2acb0e356c795622",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:ef9a5fadc4ec019e6775",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:39cefc9ceb9636926673",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:45aa842321d8bffa34c0",
+      "type": "contains"
+    },
+    {
+      "source": "file:InfoGeometry/Canonical/SL2R_KAN_Model.lean",
+      "target": "decl:f561bed0efac5be438ac",
+      "type": "contains"
+    },
+    {
+      "source": "decl:7f99d87bfbef0999902c",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:65e085257d6b221abdf4",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:9a0f3af0d3a1f5aae71c",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:9a0f3af0d3a1f5aae71c",
+      "target": "decl:4ae1a49638e07cf65d68",
+      "type": "lexical_ref",
+      "refname": "c"
+    },
+    {
+      "source": "decl:0435a93425ef1d514b82",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:0435a93425ef1d514b82",
+      "target": "decl:c100b8a2ff9386d841f0",
+      "type": "lexical_ref",
+      "refname": "d"
+    },
+    {
+      "source": "decl:c502be8c7f2a8e7efb36",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:c502be8c7f2a8e7efb36",
+      "target": "decl:4ae1a49638e07cf65d68",
+      "type": "lexical_ref",
+      "refname": "c"
+    },
+    {
+      "source": "decl:c502be8c7f2a8e7efb36",
+      "target": "decl:c100b8a2ff9386d841f0",
+      "type": "lexical_ref",
+      "refname": "d"
+    },
+    {
+      "source": "decl:beaac559d361143cddfb",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:beaac559d361143cddfb",
+      "target": "decl:8ba84085ec748cb841d5",
+      "type": "lexical_ref",
+      "refname": "anticomm"
+    },
+    {
+      "source": "decl:99bf474d98ce34a212a9",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:99bf474d98ce34a212a9",
+      "target": "decl:6752a00e6f1f20126bb2",
+      "type": "lexical_ref",
+      "refname": "Pi"
+    },
+    {
+      "source": "decl:99bf474d98ce34a212a9",
+      "target": "decl:7f99d87bfbef0999902c",
+      "type": "lexical_ref",
+      "refname": "SplitPrimeCAR"
+    },
+    {
+      "source": "decl:99bf474d98ce34a212a9",
+      "target": "decl:4ae1a49638e07cf65d68",
+      "type": "lexical_ref",
+      "refname": "c"
+    },
+    {
+      "source": "decl:99bf474d98ce34a212a9",
+      "target": "decl:c100b8a2ff9386d841f0",
+      "type": "lexical_ref",
+      "refname": "d"
+    },
+    {
+      "source": "decl:b91cf2b5577142250dee",
+      "target": "decl:414f988692d7f4d38d37",
+      "type": "lexical_ref",
+      "refname": "localBosonicPartition"
+    },
+    {
+      "source": "decl:b91cf2b5577142250dee",
+      "target": "decl:56b057cec77a096c651a",
+      "type": "lexical_ref",
+      "refname": "localFermionicSignedTrace"
+    },
+    {
+      "source": "decl:6b5618df380d80e1c1c0",
+      "target": "decl:414f988692d7f4d38d37",
+      "type": "lexical_ref",
+      "refname": "localBosonicPartition"
+    },
+    {
+      "source": "decl:6b5618df380d80e1c1c0",
+      "target": "decl:56b057cec77a096c651a",
+      "type": "lexical_ref",
+      "refname": "localFermionicSignedTrace"
+    },
+    {
+      "source": "decl:6b5618df380d80e1c1c0",
+      "target": "decl:b91cf2b5577142250dee",
+      "type": "lexical_ref",
+      "refname": "localWittenIndex"
+    },
+    {
+      "source": "decl:a0c0067d84a51dcc7a33",
+      "target": "decl:b6b9c74b60f28aed06e6",
+      "type": "lexical_ref",
+      "refname": "primeEnergy"
+    },
+    {
+      "source": "decl:d7f9fc2c34fc3e3340e6",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:d7f9fc2c34fc3e3340e6",
+      "target": "decl:414f988692d7f4d38d37",
+      "type": "lexical_ref",
+      "refname": "localBosonicPartition"
+    },
+    {
+      "source": "decl:d7f9fc2c34fc3e3340e6",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "lexical_ref",
+      "refname": "primeWeight"
+    },
+    {
+      "source": "decl:88d90e91590ef65ee715",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:88d90e91590ef65ee715",
+      "target": "decl:56b057cec77a096c651a",
+      "type": "lexical_ref",
+      "refname": "localFermionicSignedTrace"
+    },
+    {
+      "source": "decl:88d90e91590ef65ee715",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "lexical_ref",
+      "refname": "primeWeight"
+    },
+    {
+      "source": "decl:9f16e50617ade8af2543",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:9f16e50617ade8af2543",
+      "target": "decl:b91cf2b5577142250dee",
+      "type": "lexical_ref",
+      "refname": "localWittenIndex"
+    },
+    {
+      "source": "decl:9f16e50617ade8af2543",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "lexical_ref",
+      "refname": "primeWeight"
+    },
+    {
+      "source": "decl:55fa0143aa1f34c4b993",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:55fa0143aa1f34c4b993",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "lexical_ref",
+      "refname": "primeWeight"
+    },
+    {
+      "source": "decl:72da260f8a92bcbcf536",
+      "target": "decl:55fa0143aa1f34c4b993",
+      "type": "lexical_ref",
+      "refname": "FiniteWittenIndexGate"
+    },
+    {
+      "source": "decl:72da260f8a92bcbcf536",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:72da260f8a92bcbcf536",
+      "target": "decl:9f16e50617ade8af2543",
+      "type": "lexical_ref",
+      "refname": "finiteSupergradedLiouvilleanWittenIndex"
+    },
+    {
+      "source": "decl:72da260f8a92bcbcf536",
+      "target": "decl:6b5618df380d80e1c1c0",
+      "type": "lexical_ref",
+      "refname": "localWittenIndex_eq_one"
+    },
+    {
+      "source": "decl:72da260f8a92bcbcf536",
+      "target": "decl:a0c0067d84a51dcc7a33",
+      "type": "lexical_ref",
+      "refname": "primeWeight"
+    },
+    {
+      "source": "decl:93d09c028662e52e6ee0",
+      "target": "decl:55fa0143aa1f34c4b993",
+      "type": "lexical_ref",
+      "refname": "FiniteWittenIndexGate"
+    },
+    {
+      "source": "decl:93d09c028662e52e6ee0",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:93d09c028662e52e6ee0",
+      "target": "decl:d7f9fc2c34fc3e3340e6",
+      "type": "lexical_ref",
+      "refname": "finiteBosonicPrimonPartition"
+    },
+    {
+      "source": "decl:93d09c028662e52e6ee0",
+      "target": "decl:88d90e91590ef65ee715",
+      "type": "lexical_ref",
+      "refname": "finiteMobiusFermionicSignedTrace"
+    },
+    {
+      "source": "decl:93d09c028662e52e6ee0",
+      "target": "decl:72da260f8a92bcbcf536",
+      "type": "lexical_ref",
+      "refname": "finiteSupergradedLiouvilleanWittenIndex_eq_one"
+    },
+    {
+      "source": "decl:a83bae5697585a4c44bb",
+      "target": "decl:55fa0143aa1f34c4b993",
+      "type": "lexical_ref",
+      "refname": "FiniteWittenIndexGate"
+    },
+    {
+      "source": "decl:a83bae5697585a4c44bb",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:a83bae5697585a4c44bb",
+      "target": "decl:d7f9fc2c34fc3e3340e6",
+      "type": "lexical_ref",
+      "refname": "finiteBosonicPrimonPartition"
+    },
+    {
+      "source": "decl:a83bae5697585a4c44bb",
+      "target": "decl:88d90e91590ef65ee715",
+      "type": "lexical_ref",
+      "refname": "finiteMobiusFermionicSignedTrace"
+    },
+    {
+      "source": "decl:a83bae5697585a4c44bb",
+      "target": "decl:9f16e50617ade8af2543",
+      "type": "lexical_ref",
+      "refname": "finiteSupergradedLiouvilleanWittenIndex"
+    },
+    {
+      "source": "decl:10306668794cd2419a22",
+      "target": "decl:a83bae5697585a4c44bb",
+      "type": "lexical_ref",
+      "refname": "FiniteSupergradedLiouvilleanReadout"
+    },
+    {
+      "source": "decl:10306668794cd2419a22",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:10306668794cd2419a22",
+      "target": "decl:72da260f8a92bcbcf536",
+      "type": "lexical_ref",
+      "refname": "finiteSupergradedLiouvilleanWittenIndex_eq_one"
+    },
+    {
+      "source": "decl:1c03dff6c5deb36684d8",
+      "target": "decl:a83bae5697585a4c44bb",
+      "type": "lexical_ref",
+      "refname": "FiniteSupergradedLiouvilleanReadout"
+    },
+    {
+      "source": "decl:1c03dff6c5deb36684d8",
+      "target": "decl:c4f1380d747d906b4cd7",
+      "type": "lexical_ref",
+      "refname": "PrimeCutoff"
+    },
+    {
+      "source": "decl:1c03dff6c5deb36684d8",
+      "target": "decl:93d09c028662e52e6ee0",
+      "type": "lexical_ref",
+      "refname": "finite_boson_times_mobius_trace_eq_one"
+    },
+    {
+      "source": "decl:1b49a7fcd4d866f5dfc3",
+      "target": "decl:35477c2793f64ae03b23",
+      "type": "lexical_ref",
+      "refname": "one"
+    },
+    {
+      "source": "decl:8aa45cc9fae200f21d65",
+      "target": "decl:1b49a7fcd4d866f5dfc3",
+      "type": "lexical_ref",
+      "refname": "Bit"
+    },
+    {
+      "source": "decl:e60e451cea57924f9f7f",
+      "target": "decl:1b49a7fcd4d866f5dfc3",
+      "type": "lexical_ref",
+      "refname": "Bit"
+    },
+    {
+      "source": "decl:fa0ec780e16e38e9917b",
+      "target": "decl:e60e451cea57924f9f7f",
+      "type": "lexical_ref",
+      "refname": "CantorCylinder"
+    },
+    {
+      "source": "decl:fa0ec780e16e38e9917b",
+      "target": "decl:8aa45cc9fae200f21d65",
+      "type": "lexical_ref",
+      "refname": "CantorPath"
+    },
+    {
+      "source": "decl:6b95c2d712dc7a7d86f0",
+      "target": "decl:e60e451cea57924f9f7f",
+      "type": "lexical_ref",
+      "refname": "CantorCylinder"
+    },
+    {
+      "source": "decl:fae526bceecc5cec9d3e",
+      "target": "decl:20cbc06643b112f6f1c5",
+      "type": "lexical_ref",
+      "refname": "car_relations_hold"
+    },
+    {
+      "source": "decl:aac5d6a92dca2bc48ed6",
+      "target": "decl:95c5f96d60752319c13b",
+      "type": "lexical_ref",
+      "refname": "self_duality_law"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:fae526bceecc5cec9d3e",
+      "type": "lexical_ref",
+      "refname": "CantorCliffordRepresentationGate"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:6ff4755a33f72473fe32",
+      "type": "lexical_ref",
+      "refname": "CantorFockEquivalenceGate"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:6b95c2d712dc7a7d86f0",
+      "type": "lexical_ref",
+      "refname": "CantorMeasureDimensionGate"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:be0dc353fd488bd200ce",
+      "type": "lexical_ref",
+      "refname": "CuntzTwoBridgeGate"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:aac5d6a92dca2bc48ed6",
+      "type": "lexical_ref",
+      "refname": "InductiveLimitSelfDualityGate"
+    },
+    {
+      "source": "decl:d6c0c30ba1946653cd4e",
+      "target": "decl:596f9319edf2ae8e5dfc",
+      "type": "lexical_ref",
+      "refname": "TiltBogoliubovGate"
+    },
+    {
+      "source": "decl:20cbc06643b112f6f1c5",
+      "target": "decl:d6c0c30ba1946653cd4e",
+      "type": "lexical_ref",
+      "refname": "CantorCliffordFockBridgeData"
+    },
+    {
+      "source": "decl:f9e6ed9eac83fd77d65a",
+      "target": "decl:d6c0c30ba1946653cd4e",
+      "type": "lexical_ref",
+      "refname": "CantorCliffordFockBridgeData"
+    },
+    {
+      "source": "decl:c17c6b37b5f3f90fb11e",
+      "target": "decl:d6c0c30ba1946653cd4e",
+      "type": "lexical_ref",
+      "refname": "CantorCliffordFockBridgeData"
+    },
+    {
+      "source": "decl:95c5f96d60752319c13b",
+      "target": "decl:d6c0c30ba1946653cd4e",
+      "type": "lexical_ref",
+      "refname": "CantorCliffordFockBridgeData"
+    },
+    {
+      "source": "decl:2bdbc0d690ddc0b7b6c7",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:c3e85f5b26e980955a58",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:c3e85f5b26e980955a58",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:e92e18cceca68acfd721",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:e92e18cceca68acfd721",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:b82efe60447d3c521111",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:b82efe60447d3c521111",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:3707834d21bb1cefa109",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:3707834d21bb1cefa109",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:4c930618533175913d98",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:4c930618533175913d98",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:43b07ffa9e5d1af61c2f",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:43b07ffa9e5d1af61c2f",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:1ddd0a352f007777d497",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:1ddd0a352f007777d497",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:829fb004a69c3f865425",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:478f0acdeaa1a2b9d08c",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:6dd5307736f98f68d855",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:d02b6b2d0cf0464f7c08",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:f9a52f928032f46ee557",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:e0433d015d9426ad942c",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:0012e077c557164317c4",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:0012e077c557164317c4",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:0012e077c557164317c4",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear_cocycle"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:308546483b4ab0f45df0",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:cde658c53174d4fcf42e",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:cde658c53174d4fcf42e",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:cde658c53174d4fcf42e",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:cde658c53174d4fcf42e",
+      "target": "decl:308546483b4ab0f45df0",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear_three_factor"
+    },
+    {
+      "source": "decl:cde658c53174d4fcf42e",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:08fe7f26a84dbc6ab308",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:08fe7f26a84dbc6ab308",
+      "target": "decl:6752a00e6f1f20126bb2",
+      "type": "lexical_ref",
+      "refname": "Pi"
+    },
+    {
+      "source": "decl:f7e14e28e8abc173f23a",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:f7e14e28e8abc173f23a",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:f7e14e28e8abc173f23a",
+      "target": "decl:08fe7f26a84dbc6ab308",
+      "type": "lexical_ref",
+      "refname": "ProjectorNaturalFor"
+    },
+    {
+      "source": "decl:63280da2ad1d018de0ba",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:1b6bc079c35937138f50",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:8b01789b4a016a4b3374",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:8b01789b4a016a4b3374",
+      "target": "decl:63280da2ad1d018de0ba",
+      "type": "lexical_ref",
+      "refname": "DrazinProjectorCovariant"
+    },
+    {
+      "source": "decl:8b01789b4a016a4b3374",
+      "target": "decl:1b6bc079c35937138f50",
+      "type": "lexical_ref",
+      "refname": "MetricTransportWitness"
+    },
+    {
+      "source": "decl:8b01789b4a016a4b3374",
+      "target": "decl:79cd99cbdad88d39734d",
+      "type": "lexical_ref",
+      "refname": "projectorMismatch"
+    },
+    {
+      "source": "decl:ca994c5d43b29449b9d8",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:ca994c5d43b29449b9d8",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:ca994c5d43b29449b9d8",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:ca994c5d43b29449b9d8",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:d0ab7716cbb2032737b2",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:d0ab7716cbb2032737b2",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:d0ab7716cbb2032737b2",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:d0ab7716cbb2032737b2",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:e3f31976bdb6aa3bf471",
+      "target": "decl:2cc39e4973f2b522a6f3",
+      "type": "lexical_ref",
+      "refname": "ConjugationAction"
+    },
+    {
+      "source": "decl:e3f31976bdb6aa3bf471",
+      "target": "decl:2bdbc0d690ddc0b7b6c7",
+      "type": "lexical_ref",
+      "refname": "KANData"
+    },
+    {
+      "source": "decl:e3f31976bdb6aa3bf471",
+      "target": "decl:e0433d015d9426ad942c",
+      "type": "lexical_ref",
+      "refname": "MPFixedTear"
+    },
+    {
+      "source": "decl:e3f31976bdb6aa3bf471",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:67e6226145bb82af280d",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:d2ee79601946105cc65f",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:dfccb404dcfcfed240d9",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:dfccb404dcfcfed240d9",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:d94ac5dd18c8932d5a3d",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:d94ac5dd18c8932d5a3d",
+      "target": "decl:9d38fd26b57108827005",
+      "type": "lexical_ref",
+      "refname": "N"
+    },
+    {
+      "source": "decl:d94ac5dd18c8932d5a3d",
+      "target": "decl:d2ee79601946105cc65f",
+      "type": "lexical_ref",
+      "refname": "det"
+    },
+    {
+      "source": "decl:d94ac5dd18c8932d5a3d",
+      "target": "decl:dfccb404dcfcfed240d9",
+      "type": "lexical_ref",
+      "refname": "matMul"
+    },
+    {
+      "source": "decl:35477c2793f64ae03b23",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:3d08b4c0a03d71865ffc",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:3d08b4c0a03d71865ffc",
+      "target": "decl:d2ee79601946105cc65f",
+      "type": "lexical_ref",
+      "refname": "det"
+    },
+    {
+      "source": "decl:3d08b4c0a03d71865ffc",
+      "target": "decl:35477c2793f64ae03b23",
+      "type": "lexical_ref",
+      "refname": "one"
+    },
+    {
+      "source": "decl:57e9dfca9cbd4fd1f31d",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:57e9dfca9cbd4fd1f31d",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:57e9dfca9cbd4fd1f31d",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:3e30fe32d6fcfeb9ec96",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:3e30fe32d6fcfeb9ec96",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:3e30fe32d6fcfeb9ec96",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:23198d44f2b3ea64d878",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:23198d44f2b3ea64d878",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:b2e0c0317fcdc17666c5",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:b2e0c0317fcdc17666c5",
+      "target": "decl:57e9dfca9cbd4fd1f31d",
+      "type": "lexical_ref",
+      "refname": "KMatrix"
+    },
+    {
+      "source": "decl:b2e0c0317fcdc17666c5",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:76cfadef516b81314bc2",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:76cfadef516b81314bc2",
+      "target": "decl:3e30fe32d6fcfeb9ec96",
+      "type": "lexical_ref",
+      "refname": "AMatrix"
+    },
+    {
+      "source": "decl:76cfadef516b81314bc2",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:70b87ff93f61fd0b7843",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:70b87ff93f61fd0b7843",
+      "target": "decl:23198d44f2b3ea64d878",
+      "type": "lexical_ref",
+      "refname": "NMatrix"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:3e30fe32d6fcfeb9ec96",
+      "type": "lexical_ref",
+      "refname": "AMatrix"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:57e9dfca9cbd4fd1f31d",
+      "type": "lexical_ref",
+      "refname": "KMatrix"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:23198d44f2b3ea64d878",
+      "type": "lexical_ref",
+      "refname": "NMatrix"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:070d3074f8fd8866778d",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:070d3074f8fd8866778d",
+      "type": "lexical_ref",
+      "refname": "KANMatrix"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:fb27233680dace1fdd8b",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:3e30fe32d6fcfeb9ec96",
+      "type": "lexical_ref",
+      "refname": "AMatrix"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:070d3074f8fd8866778d",
+      "type": "lexical_ref",
+      "refname": "KANMatrix"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:57e9dfca9cbd4fd1f31d",
+      "type": "lexical_ref",
+      "refname": "KMatrix"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:23198d44f2b3ea64d878",
+      "type": "lexical_ref",
+      "refname": "NMatrix"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:81fb0ff293f0ae367903",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:2193193bbab655721c42",
+      "target": "decl:db64b0ee7a732156a62b",
+      "type": "lexical_ref",
+      "refname": "Mat2"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:070d3074f8fd8866778d",
+      "type": "lexical_ref",
+      "refname": "KANMatrix"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:2193193bbab655721c42",
+      "type": "lexical_ref",
+      "refname": "SL2RModel"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:fb27233680dace1fdd8b",
+      "type": "lexical_ref",
+      "refname": "det_KANMatrix"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:ff33fdaba6e0c3765856",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:ff33fdaba6e0c3765856",
+      "type": "lexical_ref",
+      "refname": "KANToSL2RModel"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:dbce0399b7bd043f8049",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:930989a4044fd3560171",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:930989a4044fd3560171",
+      "target": "decl:57e9dfca9cbd4fd1f31d",
+      "type": "lexical_ref",
+      "refname": "KMatrix"
+    },
+    {
+      "source": "decl:930989a4044fd3560171",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:25be2acb0e356c795622",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:25be2acb0e356c795622",
+      "target": "decl:3e30fe32d6fcfeb9ec96",
+      "type": "lexical_ref",
+      "refname": "AMatrix"
+    },
+    {
+      "source": "decl:25be2acb0e356c795622",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:ef9a5fadc4ec019e6775",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:ef9a5fadc4ec019e6775",
+      "target": "decl:23198d44f2b3ea64d878",
+      "type": "lexical_ref",
+      "refname": "NMatrix"
+    },
+    {
+      "source": "decl:ef9a5fadc4ec019e6775",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    },
+    {
+      "source": "decl:39cefc9ceb9636926673",
+      "target": "decl:845c16704602fc05a52c",
+      "type": "lexical_ref",
+      "refname": "KCoord"
+    },
+    {
+      "source": "decl:39cefc9ceb9636926673",
+      "target": "decl:930989a4044fd3560171",
+      "type": "lexical_ref",
+      "refname": "KSectorDetOne"
+    },
+    {
+      "source": "decl:39cefc9ceb9636926673",
+      "target": "decl:b2e0c0317fcdc17666c5",
+      "type": "lexical_ref",
+      "refname": "det_KMatrix"
+    },
+    {
+      "source": "decl:39cefc9ceb9636926673",
+      "target": "decl:c3e85f5b26e980955a58",
+      "type": "lexical_ref",
+      "refname": "k"
+    },
+    {
+      "source": "decl:45aa842321d8bffa34c0",
+      "target": "decl:23f73e8b6838b750fe18",
+      "type": "lexical_ref",
+      "refname": "ACoord"
+    },
+    {
+      "source": "decl:45aa842321d8bffa34c0",
+      "target": "decl:25be2acb0e356c795622",
+      "type": "lexical_ref",
+      "refname": "ASectorDetOne"
+    },
+    {
+      "source": "decl:45aa842321d8bffa34c0",
+      "target": "decl:e92e18cceca68acfd721",
+      "type": "lexical_ref",
+      "refname": "a"
+    },
+    {
+      "source": "decl:45aa842321d8bffa34c0",
+      "target": "decl:76cfadef516b81314bc2",
+      "type": "lexical_ref",
+      "refname": "det_AMatrix"
+    },
+    {
+      "source": "decl:f561bed0efac5be438ac",
+      "target": "decl:8c1eeeb6d6a06af3d183",
+      "type": "lexical_ref",
+      "refname": "NCoord"
+    },
+    {
+      "source": "decl:f561bed0efac5be438ac",
+      "target": "decl:ef9a5fadc4ec019e6775",
+      "type": "lexical_ref",
+      "refname": "NSectorDetOne"
+    },
+    {
+      "source": "decl:f561bed0efac5be438ac",
+      "target": "decl:70b87ff93f61fd0b7843",
+      "type": "lexical_ref",
+      "refname": "det_NMatrix"
+    },
+    {
+      "source": "decl:f561bed0efac5be438ac",
+      "target": "decl:b82efe60447d3c521111",
+      "type": "lexical_ref",
+      "refname": "n"
+    }
+  ],
+  "duplicate_alpha_classes": {
+    "f0ee89a50b9d263b": [
+      "decl:9d38fd26b57108827005",
+      "decl:6752a00e6f1f20126bb2"
+    ],
+    "b5bee5659dd21689": [
+      "decl:d7f9fc2c34fc3e3340e6",
+      "decl:88d90e91590ef65ee715",
+      "decl:9f16e50617ade8af2543"
+    ],
+    "62b789d19a6bf019": [
+      "decl:20cbc06643b112f6f1c5",
+      "decl:f9e6ed9eac83fd77d65a",
+      "decl:c17c6b37b5f3f90fb11e"
+    ],
+    "ef88c8bd0163ef7e": [
+      "decl:930989a4044fd3560171",
+      "decl:25be2acb0e356c795622"
+    ],
+    "d3df0c3f244d32c1": [
+      "decl:39cefc9ceb9636926673",
+      "decl:45aa842321d8bffa34c0"
+    ]
+  },
+  "duplicate_wl_classes": {
+    "265db99c8f4f8379": [
+      "decl:f9e6ed9eac83fd77d65a",
+      "decl:c17c6b37b5f3f90fb11e"
+    ]
+  },
+  "sccs": [
+    [
+      "decl:95c5f96d60752319c13b",
+      "decl:aac5d6a92dca2bc48ed6",
+      "decl:d6c0c30ba1946653cd4e",
+      "decl:20cbc06643b112f6f1c5",
+      "decl:fae526bceecc5cec9d3e"
+    ]
+  ],
+  "stats": {
+    "files": 5,
+    "decls": 99,
+    "imports": 10,
+    "edges": 337,
+    "duplicate_alpha_classes": 5,
+    "duplicate_wl_classes": 1,
+    "sccs": 1,
+    "sorry_decl_count": 0,
+    "axiom_like_decl_count": 0
+  }
+}

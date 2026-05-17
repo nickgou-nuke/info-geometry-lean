@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.RGFlow
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib
@@ -144,5 +145,25 @@ theorem riemann_weil_wasserstein_identification
   rw [hEquiv]
   rw [← Ex.explicitFormula_eq_logEulerDerivative]
   rw [hExplicitConsistency]
+
+/--
+Direct identification of the Majorana Dirac seed with the quasilattice Dirac
+transport at the reference scale.
+
+This is the minimal native bridge surface: if the Majorana packet's spectral
+seed is the same operator as the Bogoliubov connection generator, then the
+transported quasilattice operator at `t = 0` reads back exactly that seed.
+-/
+theorem majoranaDirac_as_quasilatticeDirac_zero
+    {Carrier Domain Mode : Type*}
+    {E0 : Type} [NormedAddCommGroup E0] [InnerProductSpace ℝ E0] [CompleteSpace E0]
+    (M : InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaBerryKeatingOperatorPacket
+      Carrier (DoubledSpace E0 →L[ℝ] DoubledSpace E0) Domain Mode)
+    (V : InfoGeometry.Canonical.BogoliubovVielbein.BogoliubovVielbeinBundle (E := E0))
+    (hSeed : M.majoranaDirac = V.connectionGenerator) :
+    InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V M.majoranaDirac 0
+      = M.majoranaDirac := by
+  simpa [hSeed] using
+    (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac_zero V M.majoranaDirac)
 
 end InfoGeometry.Canonical.HamiltonianFlowBridge

@@ -63,6 +63,11 @@ noncomputable def kOp : X →ₗ[ℝ] X := X.K
     (kOp X).comp (kOp X) = -(oneOp X) := by
   exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.K_sq X
 
+/-- Canonical re-export of `K`-commutation for Majorana-core morphisms. -/
+@[simp] theorem Hom.comm_K {Y : Core} (f : X ⟶ Y) :
+    f.hom.comp (kOp X) = (kOp Y).comp f.hom := by
+  simpa [kOp] using f.comm_K
+
 end Core
 
 namespace Atom

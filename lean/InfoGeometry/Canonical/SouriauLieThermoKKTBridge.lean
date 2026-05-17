@@ -725,6 +725,66 @@ structure SouriauLieThermoKKTContext [Fintype α] [Nonempty α] where
   conformal_metriplectic_temperature :
     conformalKKT.density.T = finiteMetriplectic.T
 
+/--
+Exact KKT-residual branch of the Souriau Lie-thermodynamic optimization context.
+
+This narrowed constructive branch does not carry an explicit
+`KKTEntropyStationarityShadow` field. Instead, the KKT lane is fixed to the
+owned exact residual packet and can be recovered definitionally through the
+adapter `toSouriauLieThermoKKTContext`.
+-/
+@[rep_depth thermo]
+structure ExactKKTResidualSouriauLieThermoKKTContext [Fintype α] [Nonempty α] where
+  finiteFenchel : SouriauFenchelContext (α := α)
+  finiteMetriplectic : MetriplecticContext (α := α)
+  conformalKKT : SouriauConformalKKTContext (α := α) (H := H)
+  operatorialMetriplectic : OperatorialMetriplecticContext (E := H)
+-- theorem-class: bridge
+  fenchel_metriplectic_moment :
+    finiteFenchel.M = finiteMetriplectic.M
+-- theorem-class: bridge
+  fenchel_metriplectic_temperature :
+    finiteFenchel.T = finiteMetriplectic.T
+-- theorem-class: bridge
+  conformal_metriplectic_moment :
+    conformalKKT.density.M = finiteMetriplectic.M
+-- theorem-class: bridge
+  conformal_metriplectic_temperature :
+    conformalKKT.density.T = finiteMetriplectic.T
+
+namespace ExactKKTResidualSouriauLieThermoKKTContext
+
+variable [Fintype α] [Nonempty α]
+
+/-- Recover the legacy broad context by computing the exact KKT packet. -/
+@[rep_depth thermo]
+def toSouriauLieThermoKKTContext
+    (C : ExactKKTResidualSouriauLieThermoKKTContext (α := α) (H := H)) :
+    SouriauLieThermoKKTContext (α := α) (H := H) where
+  finiteFenchel := C.finiteFenchel
+  finiteMetriplectic := C.finiteMetriplectic
+  conformalKKT := C.conformalKKT
+  operatorialMetriplectic := C.operatorialMetriplectic
+  kktStationarity :=
+      DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
+  fenchel_metriplectic_moment := C.fenchel_metriplectic_moment
+  fenchel_metriplectic_temperature := C.fenchel_metriplectic_temperature
+  conformal_metriplectic_moment := C.conformal_metriplectic_moment
+  conformal_metriplectic_temperature := C.conformal_metriplectic_temperature
+
+-- theorem-class: bridge
+/-- Exact residuals discharge the computed KKT packet on the narrowed branch. -/
+@[rep_depth thermo]
+theorem kktStationarity_packet
+    (C : ExactKKTResidualSouriauLieThermoKKTContext (α := α) (H := H)) :
+    C.toSouriauLieThermoKKTContext.kktStationarity.coneAdmissible ∧
+      C.toSouriauLieThermoKKTContext.kktStationarity.stationarity ∧
+      C.toSouriauLieThermoKKTContext.kktStationarity.complementarySlackness ∧
+      C.toSouriauLieThermoKKTContext.kktStationarity.finitePartitionAdmissible := by
+  exact KKTEntropyStationarityShadow.mk_exact
+
+end ExactKKTResidualSouriauLieThermoKKTContext
+
 namespace SouriauLieThermoKKTContext
 
 variable [Fintype α] [Nonempty α]

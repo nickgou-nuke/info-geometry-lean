@@ -26,7 +26,15 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
     minimal_block = text.split("structure MinimalSouriauTomitaKMSContext", 1)[1].split("namespace MinimalSouriauTomitaKMSContext", 1)[0]
     assert " state : AlgebraicState" not in minimal_block
     assert "kms_state_eq" not in minimal_block
+    assert "def toMinimalSouriauTomitaKMSContext" in text
+    assert "theorem toMinimalSouriauTomitaKMSContext_state_eq" in text
+    assert "kms := C.kms" in text
     assert "def state" in text
+    assert "theorem mk_of_kms" in text
+    assert "def toSouriauTomitaKMSContext" in text
+    assert "theorem toSouriauTomitaKMSContext_state_eq" in text
+    assert "state := C.kms.state" in text
+    assert "kms_state_eq := rfl" in text
     assert "theorem mk_of_state_kms" in text
     assert "theorem kms_eval_mul_souriau_modular_eq_eval_flip" in text
     assert "theorem sigma_add" in text

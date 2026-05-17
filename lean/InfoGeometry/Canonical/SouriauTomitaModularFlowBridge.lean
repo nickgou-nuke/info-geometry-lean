@@ -327,6 +327,12 @@ structure SouriauTomitaKMSContext where
   kms_state_eq : kms.state = state
 namespace SouriauTomitaKMSContext
 
+/-- Convenience lemma: the `state` field equals the KMS state's `state`. -/
+@[rep_depth operator]
+theorem state_eq_kms_state_readback (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+  C.state = C.kms.state := by
+  simpa using C.kms_state_eq.symm
+
 /-- Constructor theorem exposing the state field from an explicit KMS witness packet. -/
 @[rep_depth operator]
 theorem mk_of_state_kms
@@ -337,12 +343,26 @@ theorem mk_of_state_kms
     (hstate : kms.state = state) :
     ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry), ctx.state = state := by
   refine ⟨{
-    logContext := logContext
-    beta := beta
-    state := state
-    kms := kms
-    kms_state_eq := hstate
-  }, rfl⟩
+    logContext := logContext,
+    beta := beta,
+    state := state,
+    kms := kms,
+    kms_state_eq := hstate}, rfl⟩
+
+/-- Constructor theorem that builds a `SouriauTomitaKMSContext` directly from a `KMSState`
+    without requiring an explicit `state` argument. -/
+@[rep_depth operator]
+theorem mk_of_kms
+    (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+    (beta : ℝ)
+    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry), ctx.state = kms.state := by
+  refine ⟨{
+    logContext := logContext,
+    beta := beta,
+    state := kms.state,
+    kms := kms,
+    kms_state_eq := rfl}, rfl⟩
 
 variable (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
 
@@ -431,6 +451,40 @@ variable (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
 def state : AlgebraicState (H := H) :=
   C.kms.state
 
+/-- Constructor theorem for the narrowed KMS lane with no explicit `state` packet. -/
+@[rep_depth operator]
+theorem mk_of_kms
+    (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+    (beta : ℝ)
+    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
+    ∃ ctx : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = kms.state := by
+  refine ⟨{
+    logContext := logContext,
+    beta := beta,
+    kms := kms}, rfl⟩
+
+/--
+Construct the broader compatibility packet from the narrowed minimal KMS lane.
+
+This keeps downstream users on the legacy `SouriauTomitaKMSContext` surface
+without asking them to carry an extra `state` field or `kms_state_eq` proof.
+-/
+@[rep_depth operator]
+def toSouriauTomitaKMSContext :
+    SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) where
+  logContext := C.logContext
+  beta := C.beta
+  state := C.kms.state
+  kms := C.kms
+  kms_state_eq := rfl
+
+/-- The compatibility adapter reads back the same algebraic state definitionally. -/
+@[rep_depth operator]
+theorem toSouriauTomitaKMSContext_state_eq :
+    C.toSouriauTomitaKMSContext.state = C.state :=
+  rfl
+
 /-- The modular automorphism group is the Souriau/Tomita generated flow. -/
 @[rep_depth operator]
 noncomputable def sigma : AdditiveModularFlow (H := H) :=
@@ -487,6 +541,37 @@ theorem constructive_kms_packet
     C.modularHamiltonian_eq_moment_geometricTemperature⟩
 
 end MinimalSouriauTomitaKMSContext
+
+namespace SouriauTomitaKMSContext
+
+/-- Convenience lemma: the `state` field equals the KMS state's `state`. -/
+@[rep_depth operator]
+theorem state_eq_kms_state (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+  C.state = C.kms.state := by
+  simpa using C.kms_state_eq.symm
+
+variable (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+
+/--
+Project a broad Souriau/Tomita KMS packet onto the narrowed minimal branch.
+
+This removes the explicit `state` and `kms_state_eq` fields for downstream
+consumers that only need the KMS witness itself.
+-/
+@[rep_depth operator]
+def toMinimalSouriauTomitaKMSContext :
+    MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) where
+  logContext := C.logContext
+  beta := C.beta
+  kms := C.kms
+
+/-- The narrowed minimal branch reads back the original state propositionally. -/
+@[rep_depth operator]
+theorem toMinimalSouriauTomitaKMSContext_state_eq :
+    C.toMinimalSouriauTomitaKMSContext.state = C.state := by
+  exact C.kms_state_eq
+
+end SouriauTomitaKMSContext
 
 /--
 Narrow constructive KMS owner lane obtained from a standard-form carrier whose
@@ -553,6 +638,59 @@ theorem toStandardFormCarrier_modularFlow_apply_eq_self
     (t : ℝ) (A : Obs) :
     C.logContext.toStandardFormCarrier.seed.modularFlow t A = A :=
   C.sigma_apply_eq_self t A
+
+/-- The Souriau-generated flow itself is pointwise identity on the zero-thermal branch. -/
+@[rep_depth operator]
+theorem souriauAdditiveModularFlow_apply_eq_self
+    (t : ℝ) (A : Obs) :
+    C.logContext.souriauAdditiveModularFlow t A = A := by
+  calc
+    C.logContext.souriauAdditiveModularFlow t A
+      = InfoGeometry.Krein.modular_shift (E := H) C.logContext.modularHamiltonian t A :=
+          C.logContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift t A
+    _ = InfoGeometry.Krein.modular_shift (E := H) (0 : Obs) t A := by
+          rw [C.modularHamiltonian_zero]
+    _ = A := by
+          simp [InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
+
+/--
+Construct the narrowed KMS packet directly from cyclicity and the zero-thermal
+Souriau/Tomita flow, without carrying an explicit `KMSState` hypothesis.
+-/
+@[rep_depth operator]
+noncomputable def toMinimalSouriauTomitaKMSContext :
+    MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) where
+  logContext := C.logContext
+  beta := C.beta
+  kms := {
+    state := C.state.state
+    kms_identity := by
+      intro A B
+      rw [C.souriauAdditiveModularFlow_apply_eq_self C.beta B]
+      exact C.state.eval_mul_comm A B
+  }
+
+/-- The constructive narrowed KMS adapter reads back the same cyclic state definitionally. -/
+@[rep_depth operator]
+theorem toMinimalSouriauTomitaKMSContext_state_eq :
+    C.toMinimalSouriauTomitaKMSContext.state = C.state.state :=
+  rfl
+
+/--
+Construct the legacy broad KMS packet from the constructive cyclic branch.
+This keeps downstream compatibility while removing the explicit `kms`/
+`kms_state_eq` packet from the owner branch itself.
+-/
+@[rep_depth operator]
+noncomputable def toSouriauTomitaKMSContext :
+    SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) :=
+  C.toMinimalSouriauTomitaKMSContext.toSouriauTomitaKMSContext
+
+/-- The broad compatibility adapter still reads back the same cyclic state. -/
+@[rep_depth operator]
+theorem toSouriauTomitaKMSContext_state_eq :
+    C.toSouriauTomitaKMSContext.state = C.state.state :=
+  rfl
 
 /-- KMS identity derived from cyclicity on the zero-Hamiltonian standard-form branch. -/
 @[rep_depth operator]

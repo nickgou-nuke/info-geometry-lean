@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.ConformalUnification
+import InfoGeometry.Canonical.IncompressibleBitBridge
 
 namespace InfoGeometry.Canonical.WeylTransportBridge
 
@@ -313,6 +314,32 @@ theorem holonomy_eq_zero_of_flat_of_unitRelativeVolume
     exact bridge.zeroCurvatureIntegral_to_target B
       (bridge.flat_to_zeroCurvatureIntegral B hFlat)
   exact hHol.trans hScaleZero
+
+omit [Fintype I] [FiniteDimensional ℝ E] in
+/--
+Flat Weyl holonomy collapses to zero on the proof-carrying unit-relative-volume
+branch.
+
+This narrows the explicit hypothesis surface from the bare equality
+`relativeVolumeChangeRN n M = 1` to the constructive `UnitRelativeVolumeBit`
+packet while preserving `holonomy_eq_zero_of_flat_of_unitRelativeVolume` as the
+compatibility theorem.
+-/
+theorem holonomy_eq_zero_of_flat_of_unitRelativeVolumeBit
+    {n : Nat}
+    (CI : ConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge : FlatCurvatureChiralScaleBridge (CI := CI) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = 0 := by
+  exact holonomy_eq_zero_of_flat_of_unitRelativeVolume
+    (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) (hFlat := hFlat)
+    (M := M) hScaleFromKahler bit.unit_relative_volume
 
 omit [Fintype I] [FiniteDimensional ℝ E] in
 /-- Nonvanishing case:

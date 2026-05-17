@@ -269,6 +269,30 @@ theorem densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_ph
   · have hPhase := congrArg Prod.snd hWeighted
     simpa [hBerryZero] using hPhase
 
+/--
+On the canonical phase-axis observable branch, the phase-axis commutation
+hypothesis is discharged constructively by reflexivity.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂}
+    (hEq :
+      InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
+        (E := E) P ψ
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)))
+    (w : ℝ) :
+    ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) w).metric,
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) w).phase)
+      = (0, 0) := by
+  exact densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_phaseAxis
+    (E := E) (A := InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E))
+    hEq (Commute.refl _) w
+
 end Core
 
 end InfoGeometry.Canonical.WeightedWeylNormalizationBridge

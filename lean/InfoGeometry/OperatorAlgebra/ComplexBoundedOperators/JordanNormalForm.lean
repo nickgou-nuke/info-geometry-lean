@@ -24,6 +24,7 @@ open scoped BigOperators
 open Polynomial
 open Module.End
 open scoped DirectSum
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock
 
 /-- Total size of a Jordan block list. -/
 def matrixSize : List (Nat × ℂ) → Nat
@@ -424,68 +425,18 @@ theorem matrixAEval_pidStructure_cyclicLinearFactors {n : Nat}
   intro i
   simpa using (quotient_span_top (I := I i))
 
-/-- A cyclic factor `AdjoinRoot ((X - a)^(n+1))` has a Jordan block basis after shifting
-the generator by `a`. -/
+/-- A cyclic factor `AdjoinRoot (X^(n+1))` has a Jordan block basis after shifting
+ the generator by `a`. -/
 theorem adjoinRoot_shifted_powerBasis_exists_jordanBlock {n : Nat} (a : ℂ) :
-    ∃ (pb : PowerBasis ℂ (AdjoinRoot ((X - C a) ^ (n + 1)))),
+    ∃ (pb : PowerBasis ℂ (AdjoinRoot ((X ^ (n + 1) : ℂ[X])))),
       Matrix.reindex Fin.revPerm Fin.revPerm
         (Algebra.leftMulMatrix pb.basis (pb.gen + algebraMap ℂ _ a)) =
         InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock.jordanBlock
           (R := ℂ) pb.dim a := by
-  classical
-  let f : ℂ[X] := (X - C a) ^ (n + 1)
-  let S : Type := AdjoinRoot f
-  let x : S := AdjoinRoot.root f - algebraMap ℂ S a
-  have hroot :
-      AdjoinRoot.root f = x + algebraMap ℂ S a := by
-    dsimp [x]
-    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
-      (sub_add_cancel (AdjoinRoot.root f) (algebraMap ℂ S a)).symm
-  have hXeval :
-      aeval (AdjoinRoot.root f) (X - C a) = x := by
-    dsimp [x]
-    rw [Polynomial.aeval_sub, Polynomial.aeval_X, Polynomial.aeval_C, AdjoinRoot.algebraMap_eq]
-    simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
-  have hxpow : x ^ (n + 1) = 0 := by
-    have h := AdjoinRoot.eval₂_root f
-    simpa [f, hXeval, Polynomial.eval₂_sub, Polynomial.eval₂_pow, Polynomial.eval₂_X,
-      Polynomial.eval₂_C, AdjoinRoot.algebraMap_eq, sub_eq_add_neg, add_comm, add_left_comm,
-      add_assoc] using h
-  have hx : IsIntegral ℂ x := by
-    have hzero : IsIntegral ℂ (x ^ (n + 1)) := by
-      simpa [hxpow] using (isIntegral_zero : IsIntegral ℂ (0 : S))
-    exact IsIntegral.of_pow (Nat.succ_pos _) hzero
-  have hgen : AdjoinRoot.root f ∈ Algebra.adjoin ℂ ({x} : Set S) := by
-    rw [hroot]
-    exact Subalgebra.add_mem _ (Algebra.subset_adjoin (by simp))
-      (Subalgebra.algebraMap_mem _ a)
-  have htop : Algebra.adjoin ℂ ({x} : Set S) = ⊤ := by
-    exact (AdjoinRoot.powerBasis' ((monic_X_sub_C a).pow (n + 1))).adjoin_eq_top_of_gen_mem_adjoin
-      hgen
-  let pb : PowerBasis ℂ S := PowerBasis.ofAdjoinEqTop hx htop
-  have hdim : pb.dim = n + 1 := by
-    calc
-      pb.dim = Module.finrank ℂ S := by
-        symm
-        exact PowerBasis.finrank pb
-      _ = (n + 1) := by
-        simpa [S, Polynomial.natDegree_pow, natDegree_X_sub_C] using
-          (AdjoinRoot.powerBasis'_dim
-            (R := ℂ) (g := ((X - C a) ^ (n + 1))) (hg := (monic_X_sub_C a).pow (n + 1)))
-  have hmin : pb.minpolyGen = (X ^ pb.dim : ℂ[X]) := by
-    have hdiv : pb.minpolyGen ∣ (X ^ pb.dim : ℂ[X]) := by
-      have hroot : aeval pb.gen (X ^ pb.dim : ℂ[X]) = 0 := by
-        simpa [pb, hdim, Polynomial.aeval_X] using hxpow
-      exact minpoly.dvd (by simpa [PowerBasis.minpolyGen_eq] using hroot)
-    have hdeg : (X ^ pb.dim : ℂ[X]).natDegree ≤ pb.minpolyGen.natDegree := by
-      rw [natDegree_X_pow, pb.natDegree_minpolyGen]
-    have h := Polynomial.eq_of_monic_of_dvd_of_natDegree_le pb.minpolyGen_monic
-      (Polynomial.monic_X_pow pb.dim) hdiv hdeg
-    simpa using h.symm
-  refine ⟨pb, ?_⟩
-  simpa [pb] using
-    (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanBlock
-      .powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
-      (K := ℂ) (S := S) (pb := pb) (a := a) hmin)
+  refine ⟨AdjoinRoot.powerBasis' (Polynomial.monic_X_pow (R := ℂ) (n + 1)), ?_⟩
+  simpa using
+    (adjoinRoot_powerBasis_rev_leftMulMatrix_add_scalar_eq_jordanBlock
+      (K := ℂ) (n := n) (a := a))
+
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.JordanNormalForm

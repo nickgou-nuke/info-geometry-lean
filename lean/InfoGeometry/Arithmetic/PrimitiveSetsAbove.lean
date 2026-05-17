@@ -4,6 +4,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.Chebyshev
+import InfoGeometry.Meta.BridgeTarget
 
 /-!
 InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean
@@ -1820,12 +1821,14 @@ theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_largeDivisorSlice_of_
   apply add_le_add_right
   exact badBiUnionDivisorFilter_sum_le_largeDivisor_sum A x x₀
 
+@[bridge_target_tag]
 theorem supportedAboveFinset_mono {x y : ℕ} {A : Finset ℕ}
     (hxy : y ≤ x) (hA : SupportedAboveFinset x A) :
     SupportedAboveFinset y A := by
   intro n hn
   exact le_trans hxy (hA hn)
 
+@[bridge_target_tag]
 theorem supportedAbove_mono {x y : ℕ} {A : Set ℕ}
     (hxy : y ≤ x) (hA : SupportedAbove x A) :
     SupportedAbove y A := by

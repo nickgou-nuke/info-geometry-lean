@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaCAR
@@ -174,37 +175,36 @@ This is the real split-Majorana version of the local Möbius parity involution.
 -/
 theorem parityOp_sq :
     P.parityOp * P.parityOp = 1 := by
-  dsimp [parityOp, cMajorana, dMajorana]
-  have hc : (P.eps + P.iota) * (P.eps + P.iota) = 1 :=
-    P.cMajorana_sq
-  have hd : (P.eps - P.iota) * (P.eps - P.iota) = -1 :=
-    P.dMajorana_sq
-  have hdc :
-      (P.eps - P.iota) * (P.eps + P.iota)
-        =
-      -((P.eps + P.iota) * (P.eps - P.iota)) := by
-    simpa [parityOp, cMajorana, dMajorana] using P.dMajorana_mul_cMajorana_eq_neg
+  rw [P.parityOp_eq_one_sub_two_numberOp]
   calc
-    ((P.eps + P.iota) * (P.eps - P.iota))
-        * ((P.eps + P.iota) * (P.eps - P.iota))
-      =
-    (P.eps + P.iota)
-        * ((P.eps - P.iota) * (P.eps + P.iota))
-        * (P.eps - P.iota) := by
-          noncomm_ring
-    _ =
-    (P.eps + P.iota)
-        * (-((P.eps + P.iota) * (P.eps - P.iota)))
-        * (P.eps - P.iota) := by
-          rw [hdc]
-    _ =
-    -(((P.eps + P.iota) * (P.eps + P.iota))
-        * ((P.eps - P.iota) * (P.eps - P.iota))) := by
-          noncomm_ring
-    _ = -(1 * (-1)) := by
-          rw [hc, hd]
+    (1 - (2 : Op) * P.numberOp) * (1 - (2 : Op) * P.numberOp)
+        = 1 - (4 : Op) * P.numberOp + (4 : Op) * (P.numberOp * P.numberOp) := by
+            noncomm_ring
+    _ = 1 - (4 : Op) * P.numberOp + (4 : Op) * P.numberOp := by
+            rw [P.numberOp_idem]
     _ = 1 := by
-          simp
+            abel
+
+/-- Local CAR owner target. -/
+@[owner_target_tag]
+def PrimeMajoranaCAROwnerTarget : Prop :=
+  ∀ {Op : Type*} [Ring Op] (P : ExteriorCARPair Op),
+    P.numberOp * P.numberOp = P.numberOp ∧
+    P.cMajorana * P.cMajorana = 1 ∧
+    P.dMajorana * P.dMajorana = -1 ∧
+    P.parityOp = 1 - (2 : Op) * P.numberOp ∧
+    P.parityOp * P.parityOp = 1
+
+/-- The local CAR owner target is closed by the explicit algebraic identities. -/
+theorem primeMajoranaCAROwnerTarget :
+    PrimeMajoranaCAROwnerTarget := by
+  intro Op inst P
+  exact
+    ⟨P.numberOp_idem,
+      P.cMajorana_sq,
+      P.dMajorana_sq,
+      P.parityOp_eq_one_sub_two_numberOp,
+      P.parityOp_sq⟩
 
 end ExteriorCARPair
 

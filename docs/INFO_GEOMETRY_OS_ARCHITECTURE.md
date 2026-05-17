@@ -89,6 +89,11 @@ Repository owner surfaces for that lane are:
 - `lean/InfoGeometry/Arithmetic/PrimeWittenCharacter.lean`
 - `lean/InfoGeometry/Arithmetic/PrimeMajoranaPfaffian.lean`
 
+The self-reference/conformal Möbius sidecar is:
+
+- `lean/SelfReference/Moebius.lean`
+- `lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean`
+
 The derived observability overlay for that lane lives under
 `tools/observability/graph_overlay_toolchain/`; it is for navigation, wrapper
 dedup, and audit reports only.

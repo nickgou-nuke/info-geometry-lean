@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Applications.STUBlackHoleQubit
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry/Canonical/GeometricCalculusSTUBridge.lean
@@ -178,6 +179,7 @@ The construction remains witness-gated: the Clifford resolvent family,
 boundary, observer, and flux/entropy equality must still be supplied by future
 analytic geometry.
 -/
+@[owner_target_tag]
 def STUQubitBoundaryFluxOwnerTarget : Prop :=
   ∀ (E : Type uE) (P : Type uP)
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]

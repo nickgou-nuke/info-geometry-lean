@@ -23,6 +23,7 @@ itself does not decode hidden memory.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -187,6 +188,7 @@ Owner target for horizon attractor microstate accounting.
 Once the ledger is supplied, entropy is determined by charge through the
 installed attractor law.
 -/
+@[owner_target_tag]
 def HorizonAttractorMicrostateOwnerTarget : Prop :=
   ∀ (State Charge Scalar Memory : Type*),
   ∀ L : HorizonAttractorMicrostateLedger State Charge Scalar Memory,

@@ -13,6 +13,7 @@ it does not by itself decide whether the mirror preserves or flips chirality.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -811,6 +812,7 @@ The branch is witness-gated: once the modular sign/CPT datum, chiral mirror
 datum, and calibration fields are supplied, the left/right exchange and charge
 flip laws are theorems.
 -/
+@[owner_target_tag]
 def CPTSymmetryBranchOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ C : CPTSymmetryBranchDatum H,

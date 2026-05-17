@@ -13,6 +13,7 @@ diagonal phase-centralizer subgroup.
 
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -217,6 +218,7 @@ theorem brewsterMatrix_invariant_under_diagonalJonesTransport
 /--
 Owner target for the finite Jones Erlanger layer.
 -/
+@[owner_target_tag]
 def FiniteJonesErlangerOwnerTarget : Prop :=
   (∀ a b : ℂ, IsSPPhaseLinear (diagJones a b))
   ∧

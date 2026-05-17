@@ -23,6 +23,7 @@ certificates.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -486,6 +487,7 @@ Owner target for constructing a phase-compatible Cayley transform.
 Concrete models must provide the inverse of `D + K` and prove it is
 phase-linear.
 -/
+@[owner_target_tag]
 def PhaseResolventOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
     Nonempty (PhaseResolventDatum H)
@@ -493,6 +495,7 @@ def PhaseResolventOwnerTarget : Prop :=
 /--
 Owner target for constructing a bounded transform proxy.
 -/
+@[owner_target_tag]
 def BoundedTransformOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
     Nonempty (BoundedTransformDatum H)
@@ -500,6 +503,7 @@ def BoundedTransformOwnerTarget : Prop :=
 /--
 Owner target for constructing a bounded Kasparov cycle.
 -/
+@[owner_target_tag]
 def BoundedKasparovCycleOwnerTarget : Prop :=
   ∀ (A H : Type*)
     [Ring A] [Module ℝ A]

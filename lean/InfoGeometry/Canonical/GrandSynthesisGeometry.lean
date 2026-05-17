@@ -254,6 +254,28 @@ private theorem gravity_generated_by_rnEntropy
 
 omit [FiniteDimensional ℝ X] in
 /--
+Gravity capstone from the already-constructed unit-volume state.
+
+This is the smallest non-metric-derived owner route in this module: it no
+longer asks callers to re-supply the RN-entropy source theorem or the
+`UnitRelativeVolumeBit` packet when they already own the geometric
+`UnitRelativeVolumeState Kgeo` consumed by `MetricRNRicciBridge`.
+-/
+theorem gravity_generated_by_unitRelativeVolumeState
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (hUnitState : UnitRelativeVolumeState Kgeo)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact ⟨
+    isRicciFlat_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) hUnitState hBridge,
+    vacuumEinsteinEquation_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge⟩
+
+omit [FiniteDimensional ℝ X] in
+/--
 Capstone entropy-to-gravity statement through the proof-carrying unit
 relative-volume bit.
 
@@ -270,9 +292,11 @@ theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit
     (bit : UnitRelativeVolumeBit n M)
     (hBridge : MetricRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  exact gravity_generated_by_rnEntropy
-    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (M := M) hSource bit.unit_relative_volume hBridge
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
+  exact gravity_generated_by_unitRelativeVolumeState
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hBridge
 
 /--
 Metric-derived entropy-to-vacuum route through the proof-carrying unit-volume

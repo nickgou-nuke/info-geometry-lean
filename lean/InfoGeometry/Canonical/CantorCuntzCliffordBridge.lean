@@ -2,6 +2,7 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -149,7 +150,7 @@ The CAR generator is theorem-derived from Cuntz data.  The Clifford pair is a
 separate witness because signature, phase, and real-structure choices are model
 data.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure CantorCuntzCliffordSocket
     (Op : Type*) [Ring Op] [StarRing Op] where
   cuntz : CantorCuntzO2Carrier Op
@@ -221,7 +222,7 @@ structure CantorFierzAdmissible
   admissible : (FierzChannelReadout → ℝ) → Prop
 
 /-- Full theorem-safe Cantor -> Cuntz -> CAR -> Clifford -> envelope -> Fierz socket. -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure CantorCuntzCliffordFierzSocket
     (Op : Type*) [Ring Op] [StarRing Op] where
   spinSocket : CantorCuntzCliffordSocket Op

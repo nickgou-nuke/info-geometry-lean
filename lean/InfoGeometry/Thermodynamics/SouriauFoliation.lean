@@ -15,6 +15,7 @@ theorem packets.
 
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -318,6 +319,7 @@ on-leaf modular motion preserves entropy/Weyl scale/shape readout, closure
 preserves entropy/Weyl scale, and the JKO step satisfies its installed
 transverse law.
 -/
+@[owner_target_tag]
 def SouriauFoliationOwnerTarget : Prop :=
   ∀ (State : Type*) (W : SouriauFoliationWitness State),
     W.leaf.entropyReadout (W.modularFlow.flow W.time W.state) =

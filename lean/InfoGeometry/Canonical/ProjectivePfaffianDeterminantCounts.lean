@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
@@ -298,6 +299,7 @@ Combined projective Pfaffian/determinant count socket.
 This packages the determinant path count, Pfaffian square-root count, Drazin
 regular determinant data, Weyl/KMS projectivization, and Klein residual readout.
 -/
+@[socket_debt_tag]
 structure ProjectivePfaffianDeterminantCountSocket
     (I V Γ : Type*)
     [Fintype I] [DecidableEq I]

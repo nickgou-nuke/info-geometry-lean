@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
@@ -30,7 +31,7 @@ Bridge packet from a convergence witness to a Hurwitz transfer witness.
 The packet is intentionally explicit: it keeps the convergence data and the
 Hurwitz data separate while allowing downstream code to relay the latter.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure PrimeLeeYangToHurwitzWitness
     (Ξ : CompletedXiZeroPredicate)
     (A : LeeYangApproximants) where

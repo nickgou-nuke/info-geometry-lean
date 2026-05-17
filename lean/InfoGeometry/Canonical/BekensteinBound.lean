@@ -696,6 +696,21 @@ structure MinimalCasiniIncrementBridge
       relEnt k - relEnt (k + 1)
         = phaseRNGeneratorBefore n (phaseAt k) (T.state k)
 
+/--
+Proof-carrying minimal Casini increment packet.
+
+This bundles the cocycle bridge, the selected relative-entropy profile, and the
+minimal two-field Casini increment witness needed for the smallest constructive
+Casini route to the RN-barrier Bekenstein bound.
+-/
+structure MinimalCasiniIncrementWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  relEnt : RelativeEntropyProfile
+  hCasini : MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt
+
 /--Recover the minimal Casini increment bridge from the legacy monotone packet. -/
 theorem minimalCasiniIncrementBridge_of_casiniIncrementBridge
   (σ : AdditiveModularFlow (H := H))
@@ -834,6 +849,28 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_casiniIncre
     (hBridge := hBridge) (relEnt := relEnt) (hCasini := hCasini)
 
 /--
+Minimal Casini-route cocycle-to-bound theorem through a proof-carrying witness
+packet.
+
+This is the smallest constructive Casini branch: one witness bundles the bridge,
+relative-entropy profile, and the two increment-identification fields needed to
+reconstruct the cocycle generator lift and hence the RN-barrier bound.
+-/
+theorem topologicalBekensteinBound_of_minimalCasiniIncrementWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : MinimalCasiniIncrementWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := W.hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_minimalCasiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge)
+        (T := T) (relEnt := W.relEnt) W.hCasini)
+
+/--
 Minimal Casini-route cocycle-to-bound theorem: the generator lift is derived
 internally from two increment-identification fields.  This branch does not carry
 an additive `IsConnesCocycle`, a free `CocycleGeneratorLift`, or the legacy
@@ -847,13 +884,9 @@ theorem topologicalBekensteinBound_of_minimalCasiniIncrement
     (relEnt : RelativeEntropyProfile)
     (hCasini : MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+  exact topologicalBekensteinBound_of_minimalCasiniIncrementWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hBridge := hBridge)
-    (hLift :=
-      cocycleGeneratorLift_of_minimalCasiniIncrementBridge
-        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
-        (T := T) (relEnt := relEnt) hCasini)
+    { hBridge := hBridge, relEnt := relEnt, hCasini := hCasini }
 
 /--
 Casini-route cocycle-to-bound compatibility wrapper:

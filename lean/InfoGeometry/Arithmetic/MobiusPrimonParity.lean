@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.MobiusPrimonParity
@@ -152,6 +153,7 @@ Owner target for the finite square-free Möbius parity layer.
 This target intentionally stops at finite square-free chirality and finite
 Euler products.
 -/
+@[owner_target_tag]
 def MobiusPrimonParityOwnerTarget : Prop :=
   ∀ (P : PrimeRegister) (q : ℕ → ℝ),
     finiteMajoranaChiralityCharacter P q = finiteEulerProduct P q ∧

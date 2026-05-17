@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
@@ -469,6 +471,7 @@ real Lee--Yang theorem still requires a concrete partition polynomial and the
 usual positivity/stability hypotheses. Those are supplied here as certificates,
 not inferred from the existence of nonnegative `Jᵢⱼ` alone.
 -/
+@[socket_debt_tag]
 structure LeeYangStabilityWitness where
   /-- The finite chain whose partition polynomial is being certified. -/
   chain : PrimeFerromagneticChain n
@@ -507,6 +510,7 @@ end PrimeFerromagneticChain
 Owner target for the exact finite prime-chain interaction matrix:
 the entries are nonnegative and symmetric.
 -/
+@[owner_target_tag]
 def PrimeLeeYangFerromagneticChainOwnerTarget : Prop :=
   ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
     0 ≤ C.coupling i j ∧ C.coupling i j = C.coupling j i
@@ -521,6 +525,7 @@ theorem primeLeeYangFerromagneticChainOwnerTarget :
 Owner target for the occupation-energy sign convention:
 `Kᵢⱼ = -2 log(pᵢ) log(pⱼ)` is symmetric and strictly negative.
 -/
+@[owner_target_tag]
 def PrimeLeeYangOccupationConventionTarget : Prop :=
   ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
     C.occupationPairCoefficient i j = -2 * C.siteEnergy i * C.siteEnergy j ∧
@@ -538,6 +543,7 @@ Owner target for the centered Lee--Yang convention:
 `A_N = Σ log(pᵢ)(kᵢ - 1/2)`, `Jᵢⱼ = κ/2 log(pᵢ)log(pⱼ)`,
 and `Jᵢⱼ^occ = 2κ log(pᵢ)log(pⱼ)`.
 -/
+@[owner_target_tag]
 def PrimeLeeYangCenteredConventionTarget : Prop :=
   ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
     C.centeredSpinCoupling i j = (C.kappa / 2) * C.siteEnergy i * C.siteEnergy j ∧

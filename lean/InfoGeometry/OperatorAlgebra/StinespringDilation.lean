@@ -17,6 +17,7 @@ a normal map on a von Neumann algebra, or a type III modular reduction.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -937,6 +938,7 @@ Owner target for the Stinespring/Tomita dilation layer.
 It is witness-gated: once the dilation is supplied, the visible deficit is
 identified with recovered hidden flow.
 -/
+@[owner_target_tag]
 def StinespringDilationOwnerTarget : Prop :=
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
@@ -958,6 +960,7 @@ theorem stinespringDilationOwnerTarget :
 /--
 Owner target for the heat-hidden-information bridge.
 -/
+@[owner_target_tag]
 def HeatHiddenInformationOwnerTarget : Prop :=
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]

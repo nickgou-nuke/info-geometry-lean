@@ -16,6 +16,7 @@ or a richer index/winding datum depending on dimension and interaction regime.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -405,6 +406,7 @@ Owner target for DIII symmetry-class data.
 It is witness-gated: the concrete BdG carrier, symmetry operators, and
 topological invariant must be supplied by a model.
 -/
+@[owner_target_tag]
 def DIIISuperfluidOwnerTarget : Prop :=
   ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
     DIIISuperfluidDatum.{uH, uInv} H →

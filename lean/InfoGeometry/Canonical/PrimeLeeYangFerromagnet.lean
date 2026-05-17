@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
 /-!
@@ -190,7 +191,7 @@ def spinHamiltonian
 Owner target for the compact finite ferromagnetic anchor:
 nonnegative, symmetric pair couplings with deleted diagonal.
 -/
-@[rep_depth thermo]
+@[owner_target_tag]
 def PrimeLeeYangFerromagnetOwnerTarget : Prop :=
   ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
     0 ≤ lam →

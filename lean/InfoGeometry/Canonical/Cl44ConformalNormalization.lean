@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # `Cl(4,4)` conformal normalization
@@ -262,6 +263,7 @@ end TrialityLeviPlacement
 /--
 Owner target for the corrected `Cl(4,4)` conformal normalization.
 -/
+@[owner_target_tag]
 def Cl44ConformalNormalizationOwnerTarget : Prop :=
   Nonempty QuadraticLightConeConformalRoute
     ∧ Nonempty SpinFactorConformalRoute
@@ -275,4 +277,3 @@ theorem cl44ConformalNormalizationOwnerTarget :
     ⟨TrialityLeviPlacement.canonical⟩⟩
 
 end InfoGeometry.Canonical.Cl44ConformalNormalization
-

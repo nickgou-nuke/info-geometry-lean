@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
@@ -178,6 +179,7 @@ The fields isolate the exact analytic work needed after the finite definitions:
 choice of scaling speed, convergence of finite cumulants, a rate function, and
 the final large-deviation principle.
 -/
+@[socket_debt_tag]
 structure PrimeChainLargeDeviationWitness where
   chain : ℕ → Σ n : ℕ, PrimeFerromagneticChain n
   speed : ℕ → ℝ

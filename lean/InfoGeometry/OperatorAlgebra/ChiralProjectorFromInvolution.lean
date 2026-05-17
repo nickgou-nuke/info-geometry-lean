@@ -18,6 +18,7 @@ The result can be exported both as a `CircularPolarization` and as the
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -314,6 +315,7 @@ end ChiralInvolutionAction
 /--
 Owner target for constructing chiral projector stages from involutions.
 -/
+@[owner_target_tag]
 def ChiralProjectorFromInvolutionOwnerTarget : Prop :=
   ∀ (Op : Type*) [Ring Op] [Algebra ℝ Op],
   ∀ C : ChiralInvolution Op,

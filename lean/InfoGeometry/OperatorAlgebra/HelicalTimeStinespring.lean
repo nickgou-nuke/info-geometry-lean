@@ -15,6 +15,7 @@ The key distinction:
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.StinespringDilation
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -283,6 +284,7 @@ Owner target for helical Stinespring bookkeeping.
 Once a helical Stinespring calibration is supplied, the hidden sector carries
 the visible sheet charge.
 -/
+@[owner_target_tag]
 def HelicalStinespringOwnerTarget : Prop :=
   ∀ (Sys Comm : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]

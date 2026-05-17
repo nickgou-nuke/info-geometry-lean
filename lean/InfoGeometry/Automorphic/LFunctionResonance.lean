@@ -20,6 +20,7 @@ asserted here. Those are future witness layers.
 
 import Mathlib
 import InfoGeometry.Automorphic.SiegelResonance
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -477,6 +478,7 @@ theorem automorphicLResonanceWitness_nonempty_of_admissible
 Conditional owner target for the future theorem that constructs arithmetic
 L-resonance data from admissible automorphic operator data.
 -/
+@[owner_target_tag]
 def AutomorphicLResonanceOwnerTarget : Prop :=
   ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
   ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],

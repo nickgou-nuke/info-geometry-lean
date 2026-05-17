@@ -16,6 +16,7 @@ added in later calibration layers.
 
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -189,6 +190,7 @@ abbrev JonesStinespringIsometry :=
 /--
 Owner target for finite Jones Stinespring audit.
 -/
+@[owner_target_tag]
 def FiniteJonesStinespringOwnerTarget : Prop :=
   ∀ S : JonesStinespringIsometry,
     opticalDefect S.R = hiddenGain S.V

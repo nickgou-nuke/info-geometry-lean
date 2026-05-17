@@ -32,6 +32,7 @@ import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Geometry.DualFlat
 import InfoGeometry.Quantum.HestenesKahler
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -643,6 +644,7 @@ end ScalarJKOParameters
 /-! ## 5. Owner targets -/
 
 /-- Owner target for scalar deterministic JKO minimization. -/
+@[owner_target_tag]
 def ScalarJKOOwnerTarget : Prop :=
   ∀ P : ScalarJKOParameters,
     ∀ x : ℝ,
@@ -655,6 +657,7 @@ theorem scalarJKOOwnerTarget :
   exact P.step_minimizes x
 
 /-- Owner target for uniqueness of scalar deterministic JKO minimization. -/
+@[owner_target_tag]
 def ScalarJKOUniqueOwnerTarget : Prop :=
   ∀ P : ScalarJKOParameters,
     ∀ x : ℝ,
@@ -670,6 +673,7 @@ theorem scalarJKOUniqueOwnerTarget :
 /--
 Owner target for the Majorana/JKO/Ergo bridge once a bridge witness is supplied.
 -/
+@[owner_target_tag]
 def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
   ∀ (E : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
@@ -104,6 +105,7 @@ The arithmetic slogans
 are kept as supplied laws.  This packet does not prove the Riemann functional
 equation, a scattering determinant identity, or RH.
 -/
+@[socket_debt_tag]
 structure WeylMobiusDeterminantInversionSocket
     (DeterminantLine Inversion LogCoordinate Generator StableEndpoint
       UnstableEndpoint BosonicReadout FermionicReadout : Type*) where
@@ -189,6 +191,7 @@ The stable chart is the positive Gibbs/KL minimization chart.  The inverted
 chart `e^{-tV} ↦ e^{+tV}` is represented separately, because for unbounded
 potentials it may fail to have a normalizable minimizer.
 -/
+@[socket_debt_tag]
 structure StableUnstableGibbsChartSocket
     (ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
       UnstableFunctional StableMinimizer BoundaryReadout FlowReadout : Type*) where
@@ -263,6 +266,7 @@ sign from the naive positive Gutzwiller orbit contribution.  This packet
 records a supplied explanation through a boson-minus-fermion or relative
 supertrace readout.
 -/
+@[socket_debt_tag]
 structure RelativeTraceSignatureSocket
     (BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
       ExplicitFormulaReadout : Type*) where
@@ -323,6 +327,7 @@ The finite Majorana/Pfaffian Witten character belongs to the inverse-zeta
 channel.  Passing to `-log` gives the free-energy/log-zeta channel only after
 positivity, branch, and regularization choices are supplied.
 -/
+@[socket_debt_tag]
 structure MobiusFreeEnergyInversionSocket
     (SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
       BranchData SingularityReadout : Type*) where
@@ -390,6 +395,7 @@ The geometric inversion `x ↦ 1/x` becomes `u ↦ -u` in logarithmic coordinate
 Any identification with the functional equation or the critical-axis symmetry
 is supplied as witness data.
 -/
+@[socket_debt_tag]
 structure MellinInversionParitySocket
     (ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
       FunctionalEquationReadout : Type*) where
@@ -442,6 +448,7 @@ This is intentionally a witness interface.  It is not generally true that a
 zeta/free-energy landscape is convex or that zeta zeros are minima; a concrete
 model must supply the KL functional, convexity, and equilibrium theorem.
 -/
+@[socket_debt_tag]
 structure KLEquilibriumSocket
     (SourceDistribution TargetDistribution TransportPlan KLReadout
       Potential EquilibriumSet CriticalLineReadout : Type*) where
@@ -506,6 +513,7 @@ Five-graded symmetry balance socket.
 The `e⁺/e⁻` UV/IR language is represented only as supplied Lie/gradation data.
 It does not prove a representation-theoretic zero-mode theorem.
 -/
+@[socket_debt_tag]
 structure FiveGradedMobiusBalanceSocket
     (LieAlgebra GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout
       ZeroModeReadout : Type*) where

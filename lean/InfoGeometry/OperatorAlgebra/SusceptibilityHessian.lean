@@ -18,6 +18,7 @@ import Mathlib
 import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -1798,6 +1799,7 @@ def MaterialSusceptibilityHessianCompatibility
 Owner target for constructing material-response/Fresnel data from an
 information Hessian.
 -/
+@[owner_target_tag]
 def MaterialSusceptibilityHessianOwnerTarget : Prop :=
   ∀ (State Tangent Op Freq WaveVector : Type*) [Ring Op],
     MaterialSusceptibilityHessianCompatibility State Tangent Op Freq WaveVector →
@@ -1813,6 +1815,7 @@ Owner target for optical response calibration.
 This is intentionally witness-gated.  Concrete material models must supply the
 Hessian/material/Fresnel calibration.
 -/
+@[owner_target_tag]
 def SusceptibilityHessianOwnerTarget : Prop :=
   ∀ (State : Type*) [NormedAddCommGroup State] [NormedSpace ℝ State],
   ∀ H : HessianResponseDatum State,

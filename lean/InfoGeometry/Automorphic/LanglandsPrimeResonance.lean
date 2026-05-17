@@ -28,6 +28,7 @@ This is the PR-safe closure of the AQL-discovered Langlands/Siegel corridor.
 import Mathlib
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.LFunctionResonance
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -433,6 +434,7 @@ Conditional owner target for Langlands prime resonance.
 The target is intentionally conditional on admissible automorphic, completed-L,
 and Sugawara bridge data.
 -/
+@[owner_target_tag]
 def LanglandsPrimeResonanceOwnerTarget : Prop :=
   ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
   ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],

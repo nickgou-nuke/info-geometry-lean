@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Radioactive Poisson bit streams
@@ -149,12 +150,12 @@ structure ParityPoissonCalibrationAssumption
     oddProbability = ch.idealOddProbability
 
 /-- Four raw bit streams used as a stochastic spinor socket. -/
-@[rep_depth projective]
+@[socket_debt_tag, rep_depth projective]
 structure SpinorSocket where
   streams : Fin 4 → BitStream
 
 /-- Four independent radioactive decay channels for a spinor socket. -/
-@[rep_depth projective]
+@[socket_debt_tag, rep_depth projective]
 structure RadioactiveSpinorSocket where
   channels : Fin 4 → RadioactiveDecayChannel
 

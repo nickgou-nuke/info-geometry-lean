@@ -485,6 +485,20 @@ theorem toSouriauTomitaKMSContext_state_eq :
     C.toSouriauTomitaKMSContext.state = C.state :=
   rfl
 
+/--
+Constructor theorem routing the broad compatibility packet through the narrowed
+minimal KMS lane.
+
+This removes the explicit `(logContext, beta, kms)` theorem surface for callers
+that already own a `MinimalSouriauTomitaKMSContext` witness.
+-/
+@[rep_depth operator]
+theorem mk_broad_of_minimal
+    (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state :=
+  ⟨C.toSouriauTomitaKMSContext, rfl⟩
+
 /-- The modular automorphism group is the Souriau/Tomita generated flow. -/
 @[rep_depth operator]
 noncomputable def sigma : AdditiveModularFlow (H := H) :=

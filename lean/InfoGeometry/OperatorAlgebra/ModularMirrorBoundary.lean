@@ -26,6 +26,7 @@ It does not assert that every fixed diagonal is a protected Majorana edge mode.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -373,6 +374,7 @@ Owner target for modular mirror boundaries.
 
 Every closure mirror has a transparent diagonal and an anti-fixed imbalance.
 -/
+@[owner_target_tag]
 def ModularMirrorBoundaryOwnerTarget : Prop :=
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ M : ClosureMirrorBoundary V,

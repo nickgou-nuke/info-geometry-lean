@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeWittenCharacter
@@ -66,6 +67,7 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
       exact InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q
 
 /-- Owner target for the finite Witten character surface. -/
+@[owner_target_tag]
 def PrimeWittenCharacterOwnerTarget : Prop :=
   ∀ (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ),
     finiteWittenCharacter P q =

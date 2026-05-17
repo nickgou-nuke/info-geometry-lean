@@ -64,6 +64,10 @@ class Decl:
     contains_axiom_like: bool
     refs: List[str] = dataclasses.field(default_factory=list)
     wl_hash: str = ""
+    is_owner: bool = False
+    is_bridge: bool = False
+    is_socket: bool = False
+    rep_depth: str = ""
 
 
 def sha256_short(s: str, n: int = 16) -> str:
@@ -138,7 +142,28 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
     decls: List[Decl] = []
     for idx, (start, kind, name, ns) in enumerate(decl_starts):
         end = decl_starts[idx + 1][0] - 1 if idx + 1 < len(decl_starts) else len(lines)
-        block = "\n".join(lines[start - 1:end])
+        
+        # Scan upwards to capture attribute lines immediately preceding the declaration
+        attr_lines = []
+        p = start - 2
+        while p >= 0 and lines[p].strip().startswith("@["):
+            attr_lines.insert(0, lines[p].strip())
+            p -= 1
+        
+        # Also include any attributes on the same line
+        decl_line = lines[start - 1]
+        attr_text = " ".join(attr_lines) + " " + decl_line
+        
+        is_owner = "owner_target_tag" in attr_text
+        is_bridge = "bridge_target_tag" in attr_text
+        is_socket = "socket_debt_tag" in attr_text
+        
+        rep_depth = ""
+        m_depth = re.search(r"rep_depth\s+([a-zA-Z0-9_]+)", attr_text)
+        if m_depth:
+            rep_depth = m_depth.group(1)
+            
+        block = "\n".join(lines[p + 1:end])
         tokens = tokenize(block)
         alpha_tokens = alpha_normalize_tokens(tokens)
         alpha_hash = sha256_short(" ".join(alpha_tokens))
@@ -157,6 +182,10 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
             alpha_tokens=alpha_tokens,
             contains_sorry=bool(re.search(r"\b(sorry|admit)\b", strip_comments(block))),
             contains_axiom_like=(kind in {"axiom", "constant", "opaque"}),
+            is_owner=is_owner,
+            is_bridge=is_bridge,
+            is_socket=is_socket,
+            rep_depth=rep_depth,
         ))
     return imports, decls
 
@@ -225,6 +254,10 @@ def build_graph(root: Path) -> Dict[str, Any]:
             "alpha_hash": d.alpha_hash,
             "contains_sorry": d.contains_sorry,
             "contains_axiom_like": d.contains_axiom_like,
+            "is_owner": d.is_owner,
+            "is_bridge": d.is_bridge,
+            "is_socket": d.is_socket,
+            "rep_depth": d.rep_depth,
             "refs": d.refs,
             "token_count": len(d.alpha_tokens),
         })
@@ -321,6 +354,9 @@ def build_graph(root: Path) -> Dict[str, Any]:
             "sccs": len(sccs),
             "sorry_decl_count": sum(1 for d in decls if d.contains_sorry),
             "axiom_like_decl_count": sum(1 for d in decls if d.contains_axiom_like),
+            "owner_target_count": sum(1 for d in decls if d.is_owner),
+            "bridge_target_count": sum(1 for d in decls if d.is_bridge),
+            "socket_debt_count": sum(1 for d in decls if d.is_socket),
         }
     }
 

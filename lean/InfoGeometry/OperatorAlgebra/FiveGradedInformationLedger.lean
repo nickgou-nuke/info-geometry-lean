@@ -24,6 +24,7 @@ model-specific witnesses.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -497,6 +498,7 @@ Owner target for projected five-grade information accounting.
 Once a projected five-grade accounting witness is supplied, the observed defect
 equals the projection of the hidden grade-two memory.
 -/
+@[owner_target_tag]
 def FiveGradedInformationLedgerOwnerTarget : Prop :=
   ∀ (J L Obs : Type*)
     [AddCommGroup J] [Module ℝ J]

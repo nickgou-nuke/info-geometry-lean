@@ -28,6 +28,7 @@ algebras; it keeps the reflection/projective/conformal dependency graph honest.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.KreinIsotropicCone
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -848,6 +849,7 @@ def O44PinMobiusProjectiveCompatibility
   Nonempty (O44PinMobiusProjectiveConstructionData V W PinBase PinConf)
 
 /-- Owner target for the full reflection-sensitive projective conformal stack. -/
+@[owner_target_tag]
 def O44PinMobiusProjectiveOwnerTarget : Prop :=
   ∀ (V W PinBase PinConf : Type*)
     [AddCommGroup V] [Module ℝ V]

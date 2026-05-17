@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Canonical.ZetaTrace
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeSuperalgebraZetaChannel
@@ -165,6 +166,7 @@ Zero-location socket.
 Any zero theorem must supply its own analytic-continuation/spectral data.  The
 prime supertrace channel does not produce zero locations by itself.
 -/
+@[socket_debt_tag]
 structure WitnessGatedZetaZeroSocket
     (Z : PrimeSupertraceChannel) where
   /-- Carrier for candidate zero/spectral data. -/

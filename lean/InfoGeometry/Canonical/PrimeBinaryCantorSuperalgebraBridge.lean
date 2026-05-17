@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -138,7 +139,7 @@ Combined theorem-safe snapshot of the three finite surfaces:
 * prime Möbius/supertrace readback;
 * Hurwitz 24-shell units.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def PrimeBinaryCantorSuperalgebraOwnerTarget : Prop :=
   (∀ w : BinaryCantorLattice,
       binaryClosedCylinder w =

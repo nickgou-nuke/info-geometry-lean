@@ -2,6 +2,7 @@ import InfoGeometry.Quantum.KitaevChain
 import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 open scoped InnerProductSpace
 
@@ -48,7 +49,7 @@ def isRepoTheorem (C : TaggedClaim) : Prop :=
   C.tier = ClaimTier.repoTheorem
 
 /-- Predicate: this claim is tagged as a formalizable-next-owner target. -/
-@[rep_depth transport]
+@[owner_target_tag]
 def isFormalizableNextOwnerTarget (C : TaggedClaim) : Prop :=
   C.tier = ClaimTier.formalizableNextOwnerTarget
 

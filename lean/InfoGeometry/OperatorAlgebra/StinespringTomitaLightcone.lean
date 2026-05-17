@@ -20,6 +20,7 @@ commutant. That routing is a proof-carrying Tomita/Stinespring witness.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -372,6 +373,7 @@ structure StinespringTomitaDilationCompatibility
 /--
 Owner target for the Stinespring-Tomita dilation theorem.
 -/
+@[owner_target_tag]
 def StinespringTomitaDilationOwnerTarget : Prop :=
   ∀ (Op GlobalOp : Type*)
     [Ring Op] [Module ℝ Op]
@@ -405,6 +407,7 @@ structure StinespringTomitaChiralLightconeCompatibility
 /--
 Owner target for the chiral-lightcone Stinespring-Tomita theorem.
 -/
+@[owner_target_tag]
 def StinespringTomitaChiralLightconeOwnerTarget : Prop :=
   ∀ (Op GlobalOp H : Type*)
     [Ring Op] [Module ℝ Op]

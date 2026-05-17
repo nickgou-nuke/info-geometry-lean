@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
@@ -311,6 +312,7 @@ theorem finiteTwoStateWittenTrace_eq_wittenCharacter
 /-! ## 7. Owner target -/
 
 /-- Owner target for the finite primon Majorana Witten character surface. -/
+@[owner_target_tag]
 def PrimonMajoranaWittenCharacterOwnerTarget : Prop :=
   ∀ (P : Finset ℕ) (s : ℝ),
     finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧

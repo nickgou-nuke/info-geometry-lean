@@ -28,6 +28,7 @@ Route map entry: localReadbackCertified (Integrated VirasoroProject).
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -675,6 +676,7 @@ Legacy module-level owner target for affine/Virasoro helical calibration.
 This preserves the historical automation surface while routing to the current
 proof-carrying modular-flow calibration (`modular_flow_is_L0`).
 -/
+@[owner_target_tag]
 def AffineVirasoroBridgeOwnerTarget : Prop :=
   ∀ (Alg State : Type*)
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
@@ -697,6 +699,7 @@ Owner target asserting affine closure of the symmetry group action.
 This packages the identity/composition/inverse closure laws for the modular
 helical flow that realizes affine/Virasoro symmetry evolution.
 -/
+@[owner_target_tag]
 def AffineSymmetryGroupClosureOwnerTarget : Prop :=
   ∀ (Alg State : Type*)
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]

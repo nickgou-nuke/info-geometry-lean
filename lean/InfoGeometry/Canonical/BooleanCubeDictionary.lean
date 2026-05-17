@@ -2,6 +2,13 @@ import Mathlib
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
+import InfoGeometry.Canonical.ParityTraceWitness
+
+open scoped BigOperators
+open InfoGeometry.Canonical.FormalPrimeRootSystem
+open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
+open InfoGeometry.Canonical.ParityTraceWitness
 
 /-!
 # InfoGeometry.Canonical.BooleanCubeDictionary
@@ -22,11 +29,6 @@ preservation 2-morphisms.
 
 namespace InfoGeometry.Canonical.BooleanCubeDictionary
 
-open scoped BigOperators
-open InfoGeometry.Canonical.FormalPrimeRootSystem
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
-open InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
-
 variable (P : PrimeRegister)
 
 /-! ## 1. Subset <-> State word bridge -/
@@ -45,12 +47,8 @@ def stateToSubsetEquiv : PrimeBitState P ≃ {S : Finset ℕ // S ⊆ P.primes} 
     apply Subtype.ext
     ext x
     simp [occupiedPrimeSet]
-    constructor
-    · rintro ⟨q, hq, rfl⟩
-      exact q.property
-    · intro hx
-      refine ⟨⟨x, S.property hx⟩, ?_, rfl⟩
-      simp [hx]
+    intro h
+    exact S.property h
 
 /-! ## 2. Subset <-> Arithmetic bridge -/
 
@@ -68,45 +66,63 @@ Equivalence between prime subsets and their square-free products.
 def subsetToArithmeticEquiv : {S : Finset ℕ // S ⊆ P.primes} ≃ ArithmeticRegister P where
   toFun S := ⟨∏ p ∈ S.val, p, by
     constructor
-    · apply squarefree_iff_nodup_factors.mpr
-      · apply Nat.squarefree_multiset_prod
-        intro p hp
-        exact P.prime_mem p (S.property (Finset.mem_coe.mp hp))
+    · refine Finset.squarefree_prod_of_pairwise_isCoprime ?_ ?_
+      · intro x hx y hy hxy
+        have hx_prime : Nat.Prime x := P.prime_mem x (S.property hx)
+        have hy_prime : Nat.Prime y := P.prime_mem y (S.property hy)
+        simpa [Function.onFun, Nat.coprime_iff_isRelPrime] using
+          ((Nat.coprime_primes hx_prime hy_prime).2 hxy)
+      · intro x hx
+        exact (P.prime_mem x (S.property hx)).squarefree
     · intro p hp hdiv
-      have hmem : p ∈ S.val := by
-        exact (Nat.prime_dvd_prod_iff hp).mp hdiv
-      exact S.property hmem
+      have hp_prime : Nat.Prime p := hp
+      rw [hp_prime.prime.dvd_finset_prod_iff] at hdiv
+      rcases hdiv with ⟨a, ha, hpa⟩
+      have ha_prime : a.Prime := P.prime_mem a (S.property ha)
+      have heq : a = p := (Nat.Prime.dvd_iff_eq ha_prime hp_prime.ne_one).mp hpa
+      subst heq
+      exact S.property ha
   ⟩
-  invFun n := ⟨n.val.factors.toFinset, by
+  invFun n := ⟨n.val.primeFactorsList.toFinset, by
     intro p hp
-    have hprime := Nat.prime_of_mem_factors (Multiset.mem_toFinset.mp hp)
-    exact n.property.2 p hprime (Nat.dvd_of_mem_factors (Multiset.mem_toFinset.mp hp))
+    have hp_mem : p ∈ n.val.primeFactorsList := List.mem_toFinset.mp hp
+    have hprime := Nat.prime_of_mem_primeFactorsList hp_mem
+    exact n.property.2 p hprime (Nat.dvd_of_mem_primeFactorsList hp_mem)
   ⟩
   left_inv S := by
     apply Subtype.ext
     ext p
     constructor
     · intro hp
-      simp
-      apply Multiset.mem_toFinset.mpr
-      apply Nat.mem_factors_iff_dvd.mpr
-      constructor
-      · exact P.prime_mem p (S.property hp)
-      · constructor
-        · exact Finset.prod_ne_zero_iff.mpr fun x hx => (P.prime_mem x (S.property hx)).ne_zero
-        · exact Finset.dvd_prod_of_mem p hp
+      rw [List.mem_toFinset] at hp
+      have hne : ∏ x ∈ S.val, x ≠ 0 := by
+        apply Finset.prod_ne_zero_iff.mpr
+        intro x hx
+        exact (P.prime_mem x (S.property hx)).ne_zero
+      rw [Nat.mem_primeFactorsList hne] at hp
+      have hprime : p.Prime := hp.1
+      have hdvd : p ∣ ∏ x ∈ S.val, x := hp.2
+      rw [hprime.prime.dvd_finset_prod_iff] at hdvd
+      rcases hdvd with ⟨a, ha, hpa⟩
+      have ha_prime : a.Prime := P.prime_mem a (S.property ha)
+      have heq : a = p := (Nat.Prime.dvd_iff_eq ha_prime hprime.ne_one).mp hpa
+      subst heq
+      exact ha
     · intro hp
-      simp at hp
-      have hprime := Nat.prime_of_mem_factors (Multiset.mem_toFinset.mp hp)
-      exact (Nat.prime_dvd_prod_iff hprime).mp (Nat.dvd_of_mem_factors (Multiset.mem_toFinset.mp hp))
+      rw [List.mem_toFinset]
+      have hne : ∏ x ∈ S.val, x ≠ 0 := by
+        apply Finset.prod_ne_zero_iff.mpr
+        intro x hx
+        exact (P.prime_mem x (S.property hx)).ne_zero
+      rw [Nat.mem_primeFactorsList hne]
+      have hprime : p.Prime := P.prime_mem p (S.property hp)
+      constructor
+      · exact hprime
+      · exact Finset.dvd_prod_of_mem (fun x => x) hp
   right_inv n := by
     apply Subtype.ext
-    calc
-      ∏ p ∈ n.val.factors.toFinset, p
-          = ∏ p ∈ n.val.factors, p := by
-            apply Finset.prod_multiset_toFinset
-            exact n.property.1.factors_nodup
-      _ = n.val := Nat.prod_factors n.val.pos
+    simp
+    exact Nat.prod_primeFactors_of_squarefree n.property.1
 
 /-! ## 3. Preservation 2-morphisms -/
 

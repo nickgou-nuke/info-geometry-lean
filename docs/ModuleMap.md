@@ -53,6 +53,12 @@ The current `lean/InfoGeometry/` tree includes major families such as:
 - `Topological`
 - `Twistor`
 
+Selected bridge surfaces that connect these families:
+
+- `lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean`
+- `lean/InfoGeometry/Canonical/PrimeExteriorSugawaraBridge.lean`
+- `lean/InfoGeometry/Arithmetic/PrimeExteriorMobiusBridge.lean`
+
 The practical rule is simple:
 
 - use `Audit.lean` and `Meta/` to understand architecture and policy

@@ -19,6 +19,7 @@ import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
+import InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification
 import InfoGeometry.Canonical.PrimeExteriorSugawaraBridge
 import InfoGeometry.Canonical.PrimeExteriorMobiusCalibration
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
@@ -93,6 +94,7 @@ import InfoGeometry.Analysis.All
 import InfoGeometry.Architecture.All
 import InfoGeometry.Causal.All
 import InfoGeometry.Canonical.All
+import InfoGeometry.Canonical.MoebiusVirasoroBridge
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Geometry.ErlangerPhaseGeometry

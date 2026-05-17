@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import SelfReference.Core
+import SelfReference.MoebiusVirasoroBridge
 /-!
 # SelfReference
 

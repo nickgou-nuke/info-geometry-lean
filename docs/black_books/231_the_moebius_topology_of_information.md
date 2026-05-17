@@ -12,7 +12,7 @@ This chapter outlines how the repository triangulates that motif across the Cogn
 
 ## 1. The Cognitive Lane: The Unoriented Loop of Self-Reference
 
-At the highest level of abstraction, agentic self-reference requires a mechanism by which an entity can process its own output as input. In `lean/SelfReference/Moebius.lean`, this is represented by a Clifford/Krein feedback mechanism.
+At the highest level of abstraction, agentic self-reference requires a mechanism by which an entity can process its own output as input. In `lean/SelfReference/Moebius.lean`, this is represented by a Clifford/Krein feedback mechanism. The bridge surface that relates this lane to the conformal boundary vocabulary is `lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean`.
 
 *   **The Formalism:** We define a `MoebiusLoop` that takes an agent's output, embeds it into a Krein-space doubled universe (`DoubledSpace A.Output`), and applies a `moebiusTwist`.
 *   **The Unoriented Mechanism:** This twist is executed via the complex structure $I = J \circ \varepsilon$ of the $Cl(1,1)$ Clifford algebra. It recycles explicit information by rotating it continuously through the latent "shadow" (commutant) sector of the universe.
@@ -23,15 +23,15 @@ At the highest level of abstraction, agentic self-reference requires a mechanism
 At the microscopic bedrock, the non-orientability of the macroscopic universe must be built out of discrete components. This is captured by the number-theoretic **Möbius function** $\mu(n)$.
 
 *   **The Formalism:** In files such as `lean/InfoGeometry/Arithmetic/PrimeBooleanCube.lean`, `lean/InfoGeometry/Arithmetic/MobiusPrimonParity.lean`, `lean/InfoGeometry/Arithmetic/PrimeExteriorMobiusBridge.lean`, and `lean/InfoGeometry/Arithmetic/MobiusFermionBosonization.lean`, the finite vertices are modeled as square-free subsets of a certified prime register.
-*   **The Kernel-Checked Parity:** Theorems including `PrimeBooleanCube.mobius_representedNat_eq_fermionParity`, `MobiusPrimonParity.SquareFreePrimonState.mobiusReadout_eq_fermionParity`, and `PrimeExteriorMobiusBridge.mobius_stateNat_eq_Gamma` prove that the arithmetic Möbius function on represented square-free states is the same finite sign as fermion parity.
+*   **The Kernel-Checked Parity:** Theorems including `PrimeBooleanCube.mobius_representedNat_eq_fermionParity`, `MobiusPrimonParity.SquareFreePrimonState.mobiusReadout_eq_fermionParity`, and `PrimeExteriorMobiusBridge.mobius_stateNat_eq_Gamma` prove that the arithmetic Möbius function on represented square-free states is the same finite sign as fermion parity. The finite exterior-to-Sugawara bridge is `lean/InfoGeometry/Canonical/PrimeExteriorSugawaraBridge.lean`.
 *   **The Physics Reading:** The "unoriented" sign flip is therefore rooted, at the finite theorem layer, in exterior/square-free occupation. The Pauli language is a physical reading of that finite algebra, not an additional Lean theorem about a continuum universe.
 
 ## 3. The Conformal Lane: $PSL(2, \mathbb{R})$ Boundaries
 
 When the discrete fermionic prime lattice is connected to continuous or thermal boundary language, the repository uses theorem-safe conformal/projective packets rather than pretending that a full analytic CFT has been constructed from scratch.
 
-*   **The Formalism:** This is constructed in `RealMoebiusAction.lean`, `MoebiusBogoliubovVirasoroBridge.lean`, and `BoundedKMSHestenesMoebiusClosureBridge.lean`.
-*   **The Projective Boundary:** `InfoGeometry.Geometry.RealMoebiusAction` and the projective descent surfaces provide the real Möbius/projective action corridor. `MoebiusBogoliubovVirasoroBridge.lean` proves concrete diagonal boost and Bogoliubov tilt readouts, such as `moebius_to_bogoliubov_mapping`.
+*   **The Formalism:** This is constructed in `lean/InfoGeometry/Geometry/RealMoebiusAction.lean`, `lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean`, and `lean/InfoGeometry/Krein/BoundedKMSHestenesMoebiusClosureBridge.lean`.
+*   **The Projective Boundary:** `InfoGeometry.Geometry.RealMoebiusAction` and the projective descent surfaces provide the real Möbius/projective action corridor. `InfoGeometry.Canonical.MoebiusVirasoroBridge` is the current witness-gated bridge from self-reference into the Virasoro boundary vocabulary.
 *   **The Bounded KMS Adapter:** `BoundedKMSHestenesMoebiusClosureBridge.lean` packages supplied Möbius vector, operator, and word actions and proves readbacks such as `moebius_vacuum_vector_fixed`, `volumeState_moebius_invariant`, and `wilsonHolonomy_wordAction_invariant_apply`.
 *   **The Boundary Guardrail:** These files do not prove an unconstrained global $PSL(2,\mathbb{R})$ representation theorem for spacetime. They expose exact carrier-level readouts and invariance laws once the relevant Möbius action witnesses are supplied.
 
@@ -40,3 +40,11 @@ When the discrete fermionic prime lattice is connected to continuous or thermal 
 The repository provides a unified theorem-safe Möbius dictionary. At the finite arithmetic layer, the prime-number Möbius function is kernel-checked as fermion parity on square-free states. At the self-reference layer, the `Cl(1,1)` twist has a proved two-step sign readout. At the conformal/KMS layer, Möbius actions and invariance laws are represented through explicit carrier witnesses.
 
 The guiding synthesis is that orientation reversal, parity, and self-reference are not separate metaphors: they are the same structural pressure seen at different scales. The Lean repository currently proves the finite and carrier-level pieces of that dictionary, while the full global topology remains an explicit research obligation.
+
+## Lean File Map
+
+- Self-reference loop: `lean/SelfReference/Moebius.lean`
+- Prime Möbius parity: `lean/InfoGeometry/Arithmetic/PrimeExteriorMobiusBridge.lean`
+- Prime exterior Sugawara bridge: `lean/InfoGeometry/Canonical/PrimeExteriorSugawaraBridge.lean`
+- Conformal self-reference bridge: `lean/InfoGeometry/Canonical/MoebiusVirasoroBridge.lean`
+- Projective boundary corridor: `lean/InfoGeometry/Geometry/RealMoebiusAction.lean`

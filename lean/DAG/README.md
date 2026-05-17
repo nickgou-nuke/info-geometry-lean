@@ -50,6 +50,8 @@ It remains subordinate to Lean source:
 | `Impact.lean` | Forward/reverse BFS reachability lifted from SCC level back to declaration level |
 | `Betti.lean` | Betti-number / homological rank computations on the graph |
 | `TwoComplex.lean` | 2-complex (cell complex) structure over the DAG |
+| `GraphHodge.lean` | Finite Hodge/Laplacian/Dirac/chiral operator definitions on the declaration two-complex |
+| `GraphHodgeBridge.lean` | Canonical finite graph-Hodge bridge packet that bundles the operator/readout layer |
 
 ### Export Pipelines
 

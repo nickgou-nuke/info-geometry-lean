@@ -14,6 +14,8 @@ import InfoGeometry.Arithmetic.MobiusFermionBosonization
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
+import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
+import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter

@@ -2676,11 +2676,68 @@ private theorem bits_to_gravity_to_fluid_capstone_of_canonicalDrazinRegularizati
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
         ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
             Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-  exact bits_to_gravity_to_fluid_capstone_of_canonicalDrazinFluidHelicityWitness
+  exact bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
     (hEin := hEin) (A := A) (B_mp := B_mp)
-    (hFluidHelicity := { canonicalRegularization := hCanon, helicity := hHelicity })
+    (h_mp := hCanon.h_mp) (h_dr_star_canonical := hCanon.h_star_canonical)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+
+/--
+Canonical-Drazin witness route with a proof-carrying ZPE gravity packet.
+
+This is the next narrowing step on the canonical-Drazin lane: the explicit
+rank-positivity and Einstein-Kähler hypotheses are recovered from one
+`ZPEGravityWitness`, while the canonical-Drazin fluid/helicity packet carries the
+regularization and helicity data.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_of_canonicalDrazinFluidHelicityWitness_and_zpeGravityWitness
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hZPEGravity : ZPEGravityWitness (E := E) S c R Kgeo x)
+    (A B_mp : VelocityField E)
+    (hFluidHelicity : CanonicalDrazinFluidHelicityWitness (E := E) A B_mp)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    ∃ (B_dr : VelocityField E),
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k' : Nat, 0 ≤ trajectoryRNBarrier n Tflow k')
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_of_canonicalDrazinFluidHelicityWitness
+    (S := S) (hRankPos := hZPEGravity.hRankPos) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+    (hEin := hZPEGravity.hEin) (A := A) (B_mp := B_mp)
+    (hFluidHelicity := hFluidHelicity)
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 

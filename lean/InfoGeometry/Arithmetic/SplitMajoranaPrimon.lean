@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.SplitMajoranaPrimon
@@ -255,6 +256,7 @@ Witness-gated infinite Euler product bridge.
 For a concrete analytic model this should state that, on an admissible domain,
 the infinite cutoff limit of the finite character equals `1 / ζ(s)`.
 -/
+@[socket_debt_tag]
 structure InfiniteEulerProductZetaBridge
     (Param Scalar : Type*) where
   IsAdmissible : Param → Prop

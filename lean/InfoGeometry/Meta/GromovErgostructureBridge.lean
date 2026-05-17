@@ -19,6 +19,7 @@ import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Quantum.RealMajorana
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -226,6 +227,7 @@ A supplied handoff witness carries:
 * a Bayes-router simplex certificate;
 * a latent Majorana `K² = -Id` certificate.
 -/
+@[owner_target_tag]
 def GromovErgostructureBridgeOwnerTarget : Prop :=
   ∀ (State Tok V MajoranaSpace : Type*)
     [Fintype Tok] [DecidableEq Tok]

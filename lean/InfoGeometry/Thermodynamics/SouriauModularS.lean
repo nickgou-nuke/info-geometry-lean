@@ -18,6 +18,7 @@ temperature inversion anchor used by downstream routing/orchestration.
 -/
 
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -122,6 +123,7 @@ The payload is deliberately finite and geometric:
 * `S` is accepted by the projective-lift inversion socket;
 * the unit imaginary temperature is stationary under that lift.
 -/
+@[owner_target_tag]
 def ModularSTemperatureOwnerTarget : Prop :=
   modularS * modularS = negIdSL2R ∧
     modularSLiftInversion.element = modularS ∧

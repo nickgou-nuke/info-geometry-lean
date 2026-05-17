@@ -19,6 +19,7 @@ readouts, pairings, and projector decompositions.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -657,6 +658,7 @@ Owner target for the invariant-operator layer.
 Every symmetry action has a nonempty invariant subring: at least `0` and `1`
 are invariant.
 -/
+@[owner_target_tag]
 def SymmetryInvariantOwnerTarget : Prop :=
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
@@ -674,6 +676,7 @@ Owner target for invariant projectors.
 
 Every symmetry action has at least the trivial invariant projectors `0` and `1`.
 -/
+@[owner_target_tag]
 def InvariantProjectorOwnerTarget : Prop :=
   ∀ (G : Type uG) [Group G],
   ∀ (Op : Type uOp) [Ring Op],
@@ -1375,6 +1378,7 @@ A future concrete theorem should instantiate this from a represented operator
 system, a symmetry action, circular polarization, Drazin projectors, and
 trace/weight/spectral readouts.
 -/
+@[owner_target_tag]
 def GeometricOriginOwnerTarget : Prop :=
   ∃ S : OperatorSymmetryAction G Op,
     Nonempty S.InvariantDrazinGeometry

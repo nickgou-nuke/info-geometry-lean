@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Quantum.Hurwitz
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
@@ -102,7 +103,7 @@ Combined theorem-safe owner target for the D23 Hurwitz--Clifford layer.
 This is intentionally lightweight: it records the instantiated filter bank
 and its three repo-owned readouts.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def D23HurwitzCliffordFilterBankOwnerTarget : Prop :=
   True
 

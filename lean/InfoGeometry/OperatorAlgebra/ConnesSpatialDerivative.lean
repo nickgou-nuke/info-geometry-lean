@@ -22,6 +22,7 @@ No trace normalization is used.
 
 import Mathlib
 import Mathlib.Data.ENNReal.Basic
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -477,6 +478,7 @@ end PositiveScalarWeight
 /--
 Owner target for the constructive scalar spatial derivative branch.
 -/
+@[owner_target_tag]
 def ScalarSpatialDerivativeOwnerTarget : Prop :=
   Nonempty (ConnesSpatialDerivative PositiveScalarWeight ℝ)
 
@@ -490,6 +492,7 @@ theorem scalarSpatialDerivativeOwnerTarget :
 /--
 Owner target for the constructive scalar BKM metric branch.
 -/
+@[owner_target_tag]
 def ScalarBKMOwnerTarget : Prop :=
   Nonempty (BKMMetricDatum PositiveScalarWeight ℝ)
 

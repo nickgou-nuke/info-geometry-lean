@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
@@ -78,6 +79,7 @@ abbrev InfiniteReciprocalZetaCharacterBridge :=
 /-! ## 2b. Owner target -/
 
 /-- Owner target for the finite real Majorana Witten character surface. -/
+@[owner_target_tag]
 def PrimeMajoranaWittenCharacterOwnerTarget : Prop :=
   ∀ (P : PrimeRegister) (q : ℕ → ℝ),
     equivariantRealWittenCharacter P q = finiteEulerProduct P q ∧

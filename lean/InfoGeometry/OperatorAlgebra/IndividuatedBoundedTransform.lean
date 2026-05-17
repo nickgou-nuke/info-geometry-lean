@@ -20,6 +20,7 @@ scalar bound transfers to the chosen operator model.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -91,6 +92,7 @@ theorem scalarBoundedTransform_sq_mem_Icc
 /-! ## 2. Owner target discharged constructively -/
 
 /-- Scalar owner target for the bounded-transform contraction. -/
+@[owner_target_tag]
 def ScalarBoundedTransformOwnerTarget : Prop :=
   ∀ t : ℝ, scalarBoundedTransform t ^ 2 ≤ 1
 
@@ -168,6 +170,7 @@ Bridge-gated operator owner target.
 No operator contraction is asserted without a functional-calculus/order-lift
 bridge.
 -/
+@[owner_target_tag]
 def OperatorBoundedTransformOwnerTarget : Prop :=
   ∀ (Op : Type*) [Ring Op] [StarRing Op] [PartialOrder Op],
   ∀ B : BoundedTransformFunctionalCalculusBridge Op,

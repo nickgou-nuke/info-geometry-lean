@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
@@ -84,7 +85,7 @@ The analytic work remains explicit:
 * no surviving spurious zeros;
 * zero transfer from completed-`xi` zeros to the Cayley unit circle.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure LeeYangPrimeApproximation
     (Ξ : CompletedXiZeroPredicate) where
   approximant :

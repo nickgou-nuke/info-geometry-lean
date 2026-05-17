@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.DrazinFierzBridge
 import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Drazin supergraded Weyl socket
@@ -192,7 +193,7 @@ Supergraded Drazin filter socket.
 The actual Drazin action is supplied by the trace-free Böttcher--Spitkovsky
 fiber data.  The supergraded meaning of the strata is supplied separately.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure SupergradedDrazinFilterSocket
     (Φ : BSExpectationPhi)
     (νH : Measure ℝ)

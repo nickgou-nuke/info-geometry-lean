@@ -1,6 +1,7 @@
 import InfoGeometry.Arithmetic.MobiusPrimonParity
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeMajoranaWittenCharacter
@@ -92,6 +93,7 @@ theorem finiteSignedPfaffianCharacter_eq_dirichletWittenCharacter
       rfl
 
 /-- Canonical finite owner target for the split-Majorana / Dirichlet lane. -/
+@[owner_target_tag]
 def PrimeMajoranaWittenCharacterOwnerTarget : Prop :=
   ∀ (P : PrimeRegister) (q : ℕ → ℝ),
     finiteDirichletWittenCharacter P q = finiteEulerProduct P q ∧

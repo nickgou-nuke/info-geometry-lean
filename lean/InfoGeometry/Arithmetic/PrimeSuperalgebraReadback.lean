@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
@@ -241,6 +242,7 @@ The existing finite arithmetic layer supplies:
 * Möbius as fermion parity on represented square-free states;
 * finite supertrace equals finite inverse Euler product.
 -/
+@[owner_target_tag]
 def PrimeSuperalgebraReadbackOwnerTarget : Prop :=
   ∀ P : FermionicPrimeRegister,
   ∀ ψ : FermionicPrimeState P,

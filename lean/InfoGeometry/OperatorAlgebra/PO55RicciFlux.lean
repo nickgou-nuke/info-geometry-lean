@@ -27,6 +27,7 @@ import Mathlib
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
+import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -44,6 +45,7 @@ The intended relation is the standard conformal algebra pattern
 up to the sign convention chosen by the concrete model.  This structure carries
 that convention explicitly in `cross_closure`.
 -/
+@[socket_debt_tag]
 structure ConformalBracketSocket
     (Idx L : Type*) [AddCommGroup L] [Module ℝ L] where
   /-- Bracket in the conformal Lie socket. -/

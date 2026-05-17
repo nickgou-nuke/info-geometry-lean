@@ -16,6 +16,7 @@ It kills the finite shadows first:
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -352,6 +353,7 @@ end Circuit
 /-! ## 7. Owner targets discharged constructively -/
 
 /-- Owner target for Bell-same support correlation. -/
+@[owner_target_tag]
 def BellSameSupportOwnerTarget : Prop :=
   ∀ x : Bit × Bit,
     bellSameAmplitude x ≠ 0 ↔ x.1 = x.2
@@ -362,6 +364,7 @@ theorem bellSameSupportOwnerTarget :
   bellSame_nonzero_iff
 
 /-- Owner target for GHZ support correlation. -/
+@[owner_target_tag]
 def GHZSupportOwnerTarget : Prop :=
   ∀ x : TripleBit,
     ghzAmplitude x ≠ 0 ↔ x.a = x.b ∧ x.b = x.c
@@ -372,6 +375,7 @@ theorem ghzSupportOwnerTarget :
   ghz_nonzero_iff
 
 /-- Owner target for the finite Bell-to-GHZ copy-register support transition. -/
+@[owner_target_tag]
 def BellToGHZCopyOwnerTarget : Prop :=
   ∀ x : Bit × Bit,
     bellSameAmplitude x ≠ 0 →
@@ -384,6 +388,7 @@ theorem bellToGHZCopyOwnerTarget :
   exact copyBellSame_to_GHZ h
 
 /-- Owner target for the classical single-flip complexity bound. -/
+@[owner_target_tag]
 def ClassicalSingleFlipComplexityOwnerTarget : Prop :=
   ∀ (n : ℕ) (s : BitString n),
     classicalSingleFlipComplexity s ≤ n
@@ -397,6 +402,7 @@ theorem classicalSingleFlipComplexityOwnerTarget :
 /--
 Owner target for finite circuit gate-accounting additivity.
 -/
+@[owner_target_tag]
 def CircuitCostAppendOwnerTarget : Prop :=
   ∀ (Wire : Type*) (C₁ C₂ : Circuit Wire),
     Circuit.cost (C₁ ++ C₂) =

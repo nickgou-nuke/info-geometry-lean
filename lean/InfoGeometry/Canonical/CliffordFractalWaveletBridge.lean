@@ -23,6 +23,7 @@ Four Ontological Sieve Stages:
 
 import Mathlib
 import InfoGeometry.Canonical.DrazinDilationGap
+import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -62,6 +63,7 @@ compiler if it is explicitly sandwiched between both Drazin support (p_A)
 and Hodge harmonic projector (H_L). This hardcodes the philosophy into the
 type system itself.
 -/
+@[socket_debt_tag]
 structure CliffordFractalWaveletSocket
     (Op : Type*)
     [Ring Op] [Star Op] [SMul ℝ Op] where

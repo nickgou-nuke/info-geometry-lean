@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
@@ -123,7 +124,7 @@ This records the three repo-owned laws:
 * depth-parity toggle;
 * contragredient observable transport along the symmetry action.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def BinaryCrystalWeylBlochOwnerTarget : Prop :=
   (∀ w : BinaryLattice,
       binaryUnitCell w =
@@ -149,4 +150,3 @@ theorem binaryCrystalWeylBlochOwnerTarget :
     simpa using (adjointAction_apply (G := G) (g := g) (f := f) (w := w))
 
 end InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
-

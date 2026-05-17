@@ -20,6 +20,7 @@ Virasoro, black-hole unitarity, Page-curve, or holographic-recovery theorem.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -408,6 +409,7 @@ Owner target for five-grade defect absorption.
 Once a five-grade absorption witness is supplied, every old closure defect is
 represented in the `g_+2` memory sector.
 -/
+@[owner_target_tag]
 def FiveGradeDefectAbsorptionOwnerTarget : Prop :=
   ∀ (L State Defect : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]

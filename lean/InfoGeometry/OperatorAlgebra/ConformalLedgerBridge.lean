@@ -25,6 +25,7 @@ material, and topological ledgers.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -472,6 +473,7 @@ Owner target for the conformal ledger bridge.
 Once the conformal thermodynamic ledger is supplied, heat, hidden information,
 and scalarized TKK Ricci flux agree by the bridge laws.
 -/
+@[owner_target_tag]
 def ConformalLedgerBridgeOwnerTarget : Prop :=
   ∀ (Sys Comm Jordan V Wamb L State Geometry : Type*)
     [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]

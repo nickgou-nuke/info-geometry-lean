@@ -20,6 +20,7 @@ support.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -656,6 +657,7 @@ Owner target for the full/gapped modular sign-CPT construction.
 This remains intentionally compatibility-gated: abstract normed real Hilbert
 data alone do not construct the modular sign and conjugation witnesses.
 -/
+@[owner_target_tag]
 def ModularSignCPTDatumOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     ModularSignCPTCompatibility H →
@@ -674,6 +676,7 @@ def PartialModularSignCPTCompatibility
   Nonempty (PartialModularSignCPTRelations H)
 
 /-- Owner target for the partial modular sign-CPT construction. -/
+@[owner_target_tag]
 def PartialModularSignCPTDatumOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     PartialModularSignCPTCompatibility H →
@@ -692,6 +695,7 @@ Owner target for the full/gapped modular sign-CPT algebra.
 This is intentionally witness-gated: the sign operator, modular conjugation,
 and anticommutation relation are analytic input.
 -/
+@[owner_target_tag]
 def ModularSignCPTOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     ModularSignCPTDatum H →
@@ -704,6 +708,7 @@ theorem modularSignCPTOwnerTarget :
   exact ⟨M⟩
 
 /-- Owner target for the partial/zero-mode modular sign-CPT algebra. -/
+@[owner_target_tag]
 def PartialModularSignCPTOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
     PartialModularSignCPTDatum H →

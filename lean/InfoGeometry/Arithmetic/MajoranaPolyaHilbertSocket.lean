@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
@@ -391,6 +392,7 @@ This is where a future analytic owner would connect a Majorana Pfaffian or
 determinant readout to the meromorphically continued zeta function.  It also
 separates zeros of zeta from singularities of reciprocal zeta.
 -/
+@[socket_debt_tag]
 structure MajoranaPfaffianZetaSpectralSocket
     (SpectralParameter PfaffianReadout ZetaReadout : Type*) where
   parameter : SpectralParameter
@@ -434,6 +436,7 @@ The Majorana/Fock parity supertrace naturally produces a readout of
 must instead have a determinant/Pfaffian target proportional to the completed
 function on the critical line, commonly written `Ξ(t) = ξ(1/2 + it)`.
 -/
+@[socket_debt_tag]
 structure WittenCharacterVsCompletedXiSocket
     (SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout : Type*) where
@@ -508,6 +511,7 @@ character.  A spectral-zero determinant targeting `ζ` or completed `ξ` needs
 additional bosonic/Dirichlet data or a supplied superdeterminant inversion
 mechanism.
 -/
+@[socket_debt_tag]
 structure BosonFermionSuperdeterminantSocket
     (BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout : Type*) where
@@ -568,6 +572,7 @@ The finite-prime Euler product does not contain the factor
 `π^{-s/2} Γ(s/2)` or the polynomial `s(s-1)/2`.  A completed-zeta spectral
 target must supply an Archimedean/local-infinity readout and a completion law.
 -/
+@[socket_debt_tag]
 structure ArchimedeanGammaFactorSocket
     (SpectralParameter ArchimedeanReadout FinitePrimeReadout
       CompletedZetaReadout : Type*) where
@@ -625,6 +630,7 @@ Hilbert--Pólya construction must supply boundary conditions, a scattering
 matrix, or an absorption-spectrum mechanism that produces the relevant
 spectral zero data.
 -/
+@[socket_debt_tag]
 structure BoundaryScatteringDiscretizationSocket
     (BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout : Type*) where
@@ -685,6 +691,7 @@ For the combined MBK operator, the square-law suggests a factorized heat trace.
 The nontrivial analytic test is that a Mellin transform or scattering trace
 formula recovers the Riemann--Weil explicit formula.
 -/
+@[socket_debt_tag]
 structure MBKHeatTraceExplicitFormulaSocket
     (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout : Type*) where
@@ -1357,6 +1364,7 @@ choice of dense core, closure, and an essential self-adjointness proof.  This
 packet records that obligation without asserting a Kato--Rellich or Nelson
 commutator theorem.
 -/
+@[socket_debt_tag]
 structure EssentialSelfAdjointLimitSocket
     (FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
       CommutatorControl RepresentationLimit : Type*) where
@@ -1425,6 +1433,7 @@ Ordinary determinants and Pfaffians require trace-class control.  The MBK
 program needs a heat-kernel subtraction/finite-part construction that turns a
 divergent trace into a renormalized spectral Pfaffian.
 -/
+@[socket_debt_tag]
 structure ZetaRegularizedPfaffianSocket
     (Operator HeatKernel SmallTimeAsymptotics Counterterm FinitePart
       RegularizedPfaffian MeromorphicReadout : Type*) where
@@ -1493,6 +1502,7 @@ This is the exact place where a future owner must prove that the bosonic,
 fermionic, and Archimedean factors combine into the completed zeta function,
 not merely the inverse-zeta Witten character.
 -/
+@[socket_debt_tag]
 structure CompletedXiSuperdeterminantIdentitySocket
     (BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout : Type*) where

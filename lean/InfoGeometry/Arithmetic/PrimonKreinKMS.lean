@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Krein.Thermal
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Primon Krein/KMS Bridge
@@ -112,6 +113,7 @@ Finite arithmetic KMS socket with an explicit primon normalizability guard.
 
 The KMS law is supplied by the existing `ArithmeticKMSWitness` interface.
 -/
+@[socket_debt_tag]
 structure NormalizableArithmeticKMSSocket
     (State : Type*) where
   /-- Finite arithmetic KMS witness. -/
@@ -220,6 +222,7 @@ Real doubled Krein/KMS socket.
 The KMS-like boundary law is the repository's finite Krein thermal predicate,
 not a global Tomita--Takesaki theorem.
 -/
+@[socket_debt_tag]
 structure RealDoubledKreinKMSSocket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Inverse temperature. -/
@@ -257,6 +260,7 @@ The arithmetic KMS socket and doubled Krein socket share the same inverse
 temperature, while keeping positive KMS state data separate from indefinite
 Krein/supertrace bookkeeping.
 -/
+@[socket_debt_tag]
 structure PrimonDoubledKreinKMSSocket
     (State E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where

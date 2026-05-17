@@ -15,6 +15,7 @@ In particular, this file does not put a bare trace field on a type III algebra.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -333,6 +334,7 @@ The target is intentionally witness-gated: the modular weight and continuous
 core trace are analytic/operator-algebraic inputs, not consequences of an
 abstract ambient type alone.
 -/
+@[owner_target_tag]
 def TypeIIIIntegrationOwnerTarget : Prop :=
   ∀ (M Core : Type*) [AddCommMonoid M],
     ModularWeightDatum M →
@@ -357,6 +359,7 @@ theorem typeIIIIntegrationOwnerTarget :
 /--
 Owner target for graded readouts once an explicit backend has been supplied.
 -/
+@[owner_target_tag]
 def SuperTraceBackendOwnerTarget : Prop :=
   ∀ (A : Type*) [AddCommMonoid A] [Mul A],
     SuperTraceDatum A → Nonempty (SuperTraceDatum A)

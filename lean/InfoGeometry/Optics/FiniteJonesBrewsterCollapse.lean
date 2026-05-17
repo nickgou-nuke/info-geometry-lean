@@ -19,6 +19,7 @@ with explicit finite matrix facts:
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesErlanger
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -154,6 +155,7 @@ end ConstructiveBrewsterCollapse
 /--
 Owner target: finite Brewster determinant collapse.
 -/
+@[owner_target_tag]
 def FiniteBrewsterDeterminantCollapseOwnerTarget : Prop :=
   ∀ r_s : ℂ,
     Matrix.det (brewsterMatrix r_s) = 0
@@ -169,6 +171,7 @@ theorem finiteBrewsterDeterminantCollapseOwnerTarget :
 /--
 Owner target: finite Brewster trace readout.
 -/
+@[owner_target_tag]
 def FiniteBrewsterTraceReadoutOwnerTarget : Prop :=
   ∀ r_s : ℂ,
     Matrix.trace (brewsterMatrix r_s) = r_s
@@ -184,6 +187,7 @@ theorem finiteBrewsterTraceReadoutOwnerTarget :
 /--
 Owner target: finite Brewster killed-channel theorem.
 -/
+@[owner_target_tag]
 def FiniteBrewsterKilledChannelOwnerTarget : Prop :=
   ∀ r_s : ℂ,
     brewsterMatrix r_s * pProjector = 0

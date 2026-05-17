@@ -23,6 +23,7 @@ to `SusceptibilityHessian.lean`.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.JonesCalibration
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -311,6 +312,7 @@ The concrete finite-dimensional optical branch proves:
 * lossless retarder events are lossless;
 * diagonal determinants are channel products.
 -/
+@[owner_target_tag]
 def FiniteJonesOpticsOwnerTarget : Prop :=
   (∀ (rs : ℂ) (hrs : rs ≠ 0),
     IsBrewsterEvent (brewsterEvent rs hrs) ∧

@@ -347,6 +347,33 @@ theorem kms_eval_mul_modular_eq_eval_flip (A B : Obs) :
     C.state.state.eval (A * C.sigma C.beta B) = C.state.state.eval (B * A) := by
   simpa [CyclicModularTimeKMSContext.sigma, identityAdditiveModularFlow] using C.state.cyclic A B
 
+/--
+Compatibility adapter from the constructive cyclic modular-time branch to the
+broad modular-time KMS context.
+
+This removes the explicit `sigma` and `kms` packet from callers that already
+live on the cyclic identity-flow lane: both fields are derived constructively
+from the owned cyclic state.
+-/
+@[rep_depth operator]
+def toModularTimeKMSContext :
+    ModularTimeKMSContext (H := H) where
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.state.toIdentityKMSState C.beta
+
+/-- On the adapter, the modular flow is definitionally the owned identity flow. -/
+@[rep_depth operator]
+theorem toModularTimeKMSContext_sigma_eq :
+    C.toModularTimeKMSContext.sigma = C.sigma :=
+  rfl
+
+/-- On the adapter, the KMS state is definitionally the cyclic identity-flow KMS witness. -/
+@[rep_depth operator]
+theorem toModularTimeKMSContext_kms_eq :
+    C.toModularTimeKMSContext.kms = C.state.toIdentityKMSState C.beta :=
+  rfl
+
 end CyclicModularTimeKMSContext
 
 namespace CyclicAlgebraicState

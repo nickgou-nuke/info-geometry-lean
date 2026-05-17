@@ -21,6 +21,7 @@ and an ER-style identification can evade that contradiction only by proving
 
 import Mathlib
 import InfoGeometry.Geometry.EntanglementGeometry
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -427,6 +428,7 @@ end ComplexityBridgeBackend
 /--
 Owner target for the finite entanglement/monogamy/complexity layer.
 -/
+@[owner_target_tag]
 def EntanglementMonogamyOwnerTarget : Prop :=
   ∀ (System : Type)
     (MaxEntangled Independent : System → System → Prop),

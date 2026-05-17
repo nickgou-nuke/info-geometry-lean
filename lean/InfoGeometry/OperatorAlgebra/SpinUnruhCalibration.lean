@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # Spin-Unruh Calibration
@@ -271,6 +272,7 @@ end ModularBoostTemperatureCalibration
 Owner target for deriving the modular acceleration calibration from geometric
 horizon/boost data.
 -/
+@[owner_target_tag]
 def ModularUnruhCalibrationOwnerTarget : Prop :=
   Nonempty ModularAccelerationCalibration
 

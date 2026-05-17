@@ -19,6 +19,7 @@ black-hole microstate theorem is asserted here.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -511,6 +512,7 @@ Owner target for physical Langlands holonomy.
 A supplied KW physical duality witness identifies Wilson holonomy with the
 dual 't Hooft holonomy.
 -/
+@[owner_target_tag]
 def PhysicalLanglandsHolonomyOwnerTarget : Prop :=
   ∀ (GState GdualState GLoop GdualLoop Scalar : Type*),
   ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
@@ -533,6 +535,7 @@ Owner target for relation-valued physical Langlands holonomy.
 A supplied relational KW witness relates Wilson holonomy with the dual
 't Hooft holonomy under the supplied scalar relation.
 -/
+@[owner_target_tag]
 def RelationalPhysicalLanglandsHolonomyOwnerTarget : Prop :=
   ∀ (GState GdualState GLoop GdualLoop Scalar : Type*),
   ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
@@ -557,6 +560,7 @@ Owner target for hidden-memory recovery through physical Langlands holonomy.
 Given KW duality and a dual-holonomy recovery witness, hidden memory is
 recoverable from Wilson readouts along recovery-calibrated loops.
 -/
+@[owner_target_tag]
 def PhysicalLanglandsRecoveryOwnerTarget : Prop :=
   ∀ (GState GdualState GLoop GdualLoop Scalar Memory : Type*),
   ∀ (W : WilsonReadoutDatum GState GLoop Scalar),

@@ -24,6 +24,7 @@ import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -646,6 +647,7 @@ def ChiralTubuleBoundaryCompatibility
   True
 
 /-- Owner target for constructing the chiral tubule boundary witness. -/
+@[owner_target_tag]
 def ChiralTubuleBoundaryOwnerTarget : Prop :=
   ∀ (State Tangent Charge Residue H : Type*)
     [Zero Charge]
@@ -670,6 +672,7 @@ def UnruhDrivenChiralTubuleCompatibility
   True
 
 /-- Owner target for the Unruh-driven boundary theorem. -/
+@[owner_target_tag]
 def UnruhDrivenChiralTubuleOwnerTarget : Prop :=
   ∀ (State Tangent Charge Residue H : Type*)
     [Zero Charge]

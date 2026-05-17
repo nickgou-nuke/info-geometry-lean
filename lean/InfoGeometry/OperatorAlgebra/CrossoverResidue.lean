@@ -19,6 +19,7 @@ No ethical interpretation is encoded.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -439,6 +440,7 @@ A placeholder-free statement of what this module actually proves.
 A resolved divisor has smooth nonzero seeds with chiral vorticity signs.
 It does not prove any PDE regularity theorem.
 -/
+@[owner_target_tag]
 def CrossoverResidueOwnerTarget : Prop :=
   ∀ (V NewState : Type*)
     [AddCommGroup V] [Module ℝ V]

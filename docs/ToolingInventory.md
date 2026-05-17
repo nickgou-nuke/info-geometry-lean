@@ -36,7 +36,7 @@ When tool surfaces disagree, use this order:
 1. Lean source and kernel-checked declarations
 2. Lake entrypoints in [lakefile.lean](../lakefile.lean)
 3. Maintained package/API surfaces under `src/igf/`
-4. Maintained tool directories under `tools/infra/`, `tools/frontier/`, `tools/leantrail/`, `tools/quality/`, `tools/docs/`
+4. Maintained tool directories under `tools/infra/`, `tools/frontier/`, `tools/leantrail/`, `tools/quality/`, `tools/docs/`, `tools/observability/`
 5. Compatibility wrappers under top-level `tools/*.py`, `cli/`, and `scripts/`
 
 ## Entrypoints

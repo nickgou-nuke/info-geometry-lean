@@ -15,7 +15,9 @@ import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
+import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
+import InfoGeometry.Arithmetic.PrimeWittenCharacter
 import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge

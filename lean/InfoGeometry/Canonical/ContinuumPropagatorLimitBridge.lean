@@ -105,12 +105,6 @@ theorem propagator_continuum_fusion
         (NormedSpace.exp (1 • B.propagator.generator.sqrtDirac scale)))
       Filter.atTop (nhds (NormedSpace.exp (1 • B.propagator.modularData.modularHamiltonian))) :=
   by
-    -- Follows from the continuity of the exponential map and hLimitGenerator.
-    apply ContinuousAt.tendsto
-    apply NormedSpace.exp_continuousAt
-    simpa using B.propagator.hLimitGenerator
-
-end InfoGeometry.Canonical.ContinuumPropagatorLimitBridge
-
+    simpa [one_smul] using B.propagator.hLimitGenerator.exp
 
 end InfoGeometry.Canonical.ContinuumPropagatorLimitBridge

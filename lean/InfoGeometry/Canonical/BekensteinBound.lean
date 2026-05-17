@@ -563,6 +563,43 @@ theorem topologicalBekensteinBound_of_connesCocycle_natMatch
     (hBridge := hBridge) (hMatch := hMatch)
 
 /--
+Proof-carrying zero-normalized cocycle generator packet.
+
+This bundles the bridge, concrete generator lift, and zero-time normalization
+needed for the smallest constructive Bekenstein route in this lane.
+-/
+structure ZeroNormalizedCocycleGeneratorWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hLift :
+    CocycleGeneratorLift n T
+      (CocycleEntropyPotential (H := H) σ u hBridge)
+  hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
+
+/--
+Zero-normalized witness route to the topological Bekenstein bound.
+
+This is the smallest constructive surface behind the older Connes-cocycle
+wrapper: one proof-carrying packet supplies the bridge, the concrete generator
+lift, and zero-time normalization.
+-/
+theorem topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_natMatch
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := W.hBridge)
+    (hMatch :=
+      cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge) (T := T)
+        W.hLift W.hZero)
+
+/--
 Zero-normalized generator-lift route to the topological Bekenstein bound.
 
 This is the smaller constructive surface behind the older Connes-cocycle wrapper:
@@ -580,13 +617,9 @@ theorem topologicalBekensteinBound_of_cocycleGeneratorLift_zero
         (CocycleEntropyPotential (H := H) σ u hBridge))
     (hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_natMatch
+  exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hBridge := hBridge)
-    (hMatch :=
-      cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
-        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
-        hLift hZero)
+    { hBridge := hBridge, hLift := hLift, hZero := hZero }
 
 /--
 Compatibility wrapper for the older zero-anchored Connes-cocycle theorem surface.
@@ -604,13 +637,13 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
       CocycleGeneratorLift n T
         (CocycleEntropyPotential (H := H) σ u hBridge)) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_cocycleGeneratorLift_zero
+  exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hBridge := hBridge) (hLift := hLift)
-    (hZero :=
-      cocycleEntropyPotential_zero_of_connesCocycle
+    { hBridge := hBridge
+      hLift := hLift
+      hZero := cocycleEntropyPotential_zero_of_connesCocycle
         (H := H) (σ := σ) (u := u)
-        (hCocycle := hCocycle) (hBridge := hBridge))
+        (hCocycle := hCocycle) (hBridge := hBridge) }
 
 /--
 Casini-style relative-entropy profile on discrete Sinkhorn steps.
@@ -987,6 +1020,26 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
       (hCocycle := hCocycle) (hBridge := hBridge) (hMatch := hMatch)
 
 /--
+Tomita-specialized zero-normalized witness route to the topological Bekenstein bound.
+
+This narrows the specialized zero-anchored Tomita lane to the existing
+proof-carrying `ZeroNormalizedCocycleGeneratorWitness` packet instead of
+rethreading separate bridge, lift, and zero-normalization hypotheses.
+-/
+theorem topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitness
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      u T) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T) (W := W)
+
+/--
 Tomita-specialized zero-anchored cocycle-to-bound theorem.
 -/
 theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
@@ -1003,13 +1056,15 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
       CocycleGeneratorLift n T
         (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
     TopologicalBekensteinBound n T := by
-  simpa [TomitaCocycleEntropyPotential] using
-    topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
-      (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-      (u := u) (T := T)
-      (hCocycle := hCocycle) (hBridge := hBridge)
-      (hLift := hLift)
+  exact topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitness
+    (n := n) (H := H) (u := u) (T := T)
+    { hBridge := hBridge
+      hLift := hLift
+      hZero := cocycleEntropyPotential_zero_of_connesCocycle
+        (H := H)
+        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (u := u)
+        (hCocycle := hCocycle) (hBridge := hBridge) }
 
 /--
 Tomita-specialized Casini-route cocycle-to-bound theorem.

@@ -353,6 +353,12 @@ def freeEnergyPotential (G : GrandCanonicalPartitionFunction)
     (s : ℝ) : ℝ :=
   G.logPartition s
 
+@[rep_depth thermo]
+theorem freeEnergyPotential_eq_logPartition
+    (G : GrandCanonicalPartitionFunction) (s : ℝ) :
+    G.freeEnergyPotential s = G.logPartition s :=
+  rfl
+
 /--
 The logarithmic derivative of the partition function.
 This is the thermodynamic force density that drives the Wasserstein OT.
@@ -554,11 +560,10 @@ is driven by the logarithmic derivative of the Souriau partition function.
 -/
 @[rep_depth transport]
 theorem optimal_transport_driven_by_log_partition_gradient
-    (State : Type*) (F : LogPartitionGradientField State) :
-    -- The Wasserstein gradient field of the Free Energy is driven by ∇ log Z
-    F.gradientField = F.gradientField := by
-  -- Follows from the JKO variational principle applied to the Grand Canonical potential
-  rfl
+    (State : Type*) (B : GrandCanonicalThermodynamicBridge State) :
+    B.logForce.thermodynamicForce = B.explicitFormula.wassersteinField := by
+  funext x
+  exact B.force_matches_explicitFormula x
 
 /--
 THE RIEMANN-WEIL EXPLICIT FORMULA AS A WASSERSTEIN VECTOR FIELD.

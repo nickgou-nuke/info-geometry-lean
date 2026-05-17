@@ -15,6 +15,8 @@ This directory contains the maintained script surface around the Lean codebase.
   proof-session and semantic/frontier helpers
 - `tools/docs/`
   documentation refresh helpers
+- `tools/observability/`
+  static Lean graph overlay, wrapper dedup, and audit reports
 - `tools/leantrail/`
   LeanTrail conformance, export, ingest, and path/failure tooling
 

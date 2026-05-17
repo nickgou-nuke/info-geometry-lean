@@ -118,6 +118,35 @@ variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
 omit [FiniteDimensional ℝ X] in
+/--
+Proof-carrying unit-volume route for RN entropy sourced vacuum gravity.
+
+This narrows the public hypothesis surface from a bare
+`relativeVolumeChangeRN n M = 1` equality to the constructive
+`UnitRelativeVolumeBit` packet.
+-/
+theorem gravity_from_rn_entropy_of_unitRelativeVolumeBit
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo := by
+    intro x'
+    have hSource' :
+        mongeAmpereDensity Kgeo.H x' = relativeVolumeChangeRN n M := by
+      simpa using hSource x'
+    exact hSource'.trans bit.unit_relative_volume
+  refine ⟨?_, ?_⟩
+  · exact isRicciFlat_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
+  · exact vacuumEinsteinEquation_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
+
+omit [FiniteDimensional ℝ X] in
 /-- RN entropy sourcing plus unit-volume metric bridge yields vacuum gravity. -/
 theorem gravity_from_rn_entropy
     (Kgeo : KaehlerInformationGeometry X)
@@ -128,17 +157,10 @@ theorem gravity_from_rn_entropy
     (hUnit : relativeVolumeChangeRN n M = 1)
     (hBridge : MetricRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  have hUnitState : UnitRelativeVolumeState Kgeo := by
-    intro x'
-    have hSource' :
-        mongeAmpereDensity Kgeo.H x' = relativeVolumeChangeRN n M := by
-      simpa using hSource x'
-    exact hSource'.trans hUnit
-  refine ⟨?_, ?_⟩
-  · exact isRicciFlat_of_unitRelativeVolume
-      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
-  · exact vacuumEinsteinEquation_of_unitRelativeVolume
-      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
+  exact gravity_from_rn_entropy_of_unitRelativeVolumeBit
+    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) hSource
+    (InfoGeometry.Canonical.IncompressibleBitBridge.unitRelativeVolumeBit_of_eq_one hUnit)
+    hBridge
 
 end EntropyGravity
 

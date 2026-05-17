@@ -1,59 +1,94 @@
 import Mathlib
 import InfoGeometry.Canonical.CliffordFractalWaveletBridge
+import InfoGeometry.Canonical.PrimeCl11ModularAtomCore
 
-/-
-InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean
+/-!
+# InfoGeometry.Canonical.CliffordWaveletAnalyticBridge
 
-Analytic realization wrapper for the Clifford fractal wavelet corridor.
+Closed algebraic bridge for the Clifford fractal wavelet socket.
 
-This file does not invent a new Hilbert-space representation theorem.
-It packages an explicit representation field, a wavelet-basis carrier, and the
-existing Clifford admissibility witness into a theorem-safe analytic bridge.
+This file proves only the local algebraic consequences already present in the
+socket:
+
+* tilt/switch admissibility;
+* extraction of a local `Cl(1,1)` atom;
+* involutivity of the local pseudoscalar.
+
+No `sorry`.
+No Hilbert-space representation theorem.
+No wavelet convergence theorem.
+No RH-level witness.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.CliffordWaveletAnalyticBridge
 
-open scoped InnerProductSpace
+open InfoGeometry.Canonical
 
-variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] [Algebra ℂ Op]
+namespace CliffordFractalWaveletSocket
 
-/--
-Hilbert-space analytic realization of the Clifford fractal wavelet socket.
+variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
 
-The representation target is the bounded-operator algebra `H →L[ℂ] H`.
-The bridge does not prove that such a representation exists in general; it
-packages it as explicit data.
--/
-structure CliffordWaveletAnalyticBridge
-    (H : Type*)
-    [NormedAddCommGroup H]
-    [InnerProductSpace ℂ H]
-    [CompleteSpace H] where
-  socket : InfoGeometry.Canonical.CliffordFractalWaveletSocket Op
-  repr : Op →ₐ[ℂ] (H →L[ℂ] H)
-  waveletBasis : socket.BinaryWord → H
-  cliffordAdmissible :
-    InfoGeometry.Canonical.TiltSwitchCliffordAdmissible socket
+/-- The socket already contains exactly the admissibility fields. -/
+@[rep_depth operator]
+theorem tiltSwitchCliffordAdmissible
+    (S : CliffordFractalWaveletSocket Op) :
+    TiltSwitchCliffordAdmissible S := by
+  exact ⟨S.T_sq, S.S_sq, S.T_S_anticomm, S.gamma_anticomm⟩
 
-namespace CliffordWaveletAnalyticBridge
+/-- The local `Cl(1,1)` atom at coordinate `j`. -/
+@[rep_depth operator]
+def cl11AtomOfTiltSwitch
+    (S : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    PrimeCl11ModularAtomCore.Cl11Atom Op where
+  c := S.T j
+  d := S.T j * S.S j
+  c_sq := S.T_sq j
+  d_sq := by
+    have hT : S.T j * S.T j = 1 := S.T_sq j
+    have hS : S.S j * S.S j = 1 := S.S_sq j
+    have hTS : S.T j * S.S j = -(S.S j * S.T j) :=
+      S.T_S_anticomm j
+    have hST : S.S j * S.T j = -(S.T j * S.S j) := by
+      simp [hTS]
+    calc
+      (S.T j * S.S j) * (S.T j * S.S j)
+          = S.T j * (S.S j * S.T j) * S.S j := by
+              noncomm_ring
+      _ = S.T j * (-(S.T j * S.S j)) * S.S j := by
+            rw [hST]
+      _ = - ((S.T j * S.T j) * (S.S j * S.S j)) := by
+            noncomm_ring
+      _ = - (1 * 1) := by
+            rw [hT, hS]
+      _ = -1 := by simp
+  anticomm := by
+    have hT : S.T j * S.T j = 1 := S.T_sq j
+    have hTS : S.T j * S.S j = -(S.S j * S.T j) :=
+      S.T_S_anticomm j
+    have hST : S.S j * S.T j = -(S.T j * S.S j) := by
+      simp [hTS]
+    calc
+      S.T j * (S.T j * S.S j) + (S.T j * S.S j) * S.T j
+          = (S.T j * S.T j) * S.S j + S.T j * (S.S j * S.T j) := by
+              noncomm_ring
+      _ = 1 * S.S j + S.T j * (-(S.T j * S.S j)) := by
+            rw [hT, hST]
+      _ = S.S j + -((S.T j * S.T j) * S.S j) := by
+            noncomm_ring
+      _ = S.S j + -(1 * S.S j) := by
+            rw [hT]
+      _ = 0 := by simp
 
-variable {H : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
-variable (B : CliffordWaveletAnalyticBridge (Op := Op) H)
+/-- The local pseudoscalar squares to one. -/
+@[rep_depth operator]
+theorem cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one
+    (S : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    (CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch S j).mobiusParity *
+      (CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch S j).mobiusParity = 1 :=
+  (CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch S j).mobiusParity_sq_eq_one
 
-/-- The Clifford analytic bridge retains the underlying Clifford admissibility. -/
-theorem analytic_clifford_closure :
-    InfoGeometry.Canonical.TiltSwitchCliffordAdmissible B.socket :=
-  B.cliffordAdmissible
-
-/-- The observable of a word factors through the corresponding wavelet operator. -/
-theorem analytic_correspondence (w : B.socket.BinaryWord) :
-    (B.repr (B.socket.observableOfWord w)) (B.waveletBasis w) =
-      (B.repr (B.socket.operatorOfWavelet (B.socket.waveletOfWord w))) (B.waveletBasis w) := by
-  rw [B.socket.observableOfWord_def]
-
-end CliffordWaveletAnalyticBridge
+end CliffordFractalWaveletSocket
 
 end InfoGeometry.Canonical.CliffordWaveletAnalyticBridge

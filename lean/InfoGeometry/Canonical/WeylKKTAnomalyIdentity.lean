@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalAnomalyReadout
 import InfoGeometry.Canonical.SouriauPlanckVector
+import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.NoncommRing
 
@@ -220,6 +221,34 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypothes
   exact
     semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
       (CI := CI) hProj hLeft (hStationaryToScaleZero hStationary)
+
+/--
+Smaller constructive zero-scale packet from the proof-carrying unit-relative-volume
+bit route.
+
+This removes the explicit bridge hypothesis
+`hStationaryToScaleZero : IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`
+when the caller already owns the RN/Kähler witness packet forcing
+`CI.chiralScale = 0`.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler :
+      CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft
+      (InfoGeometry.Canonical.IncompressibleBitBridge.chiralScale_eq_zero_of_unitRelativeVolumeBit
+        (CI := CI) (M := M) hScaleFromKahler bit)
 
 /--
 Souriau-to-Weyl zero-scale packet from the smaller constructive thermodynamic

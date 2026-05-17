@@ -147,6 +147,17 @@ theorem purified_charge_eq_l_value
       L_func.value chi 0 :=
   H.purification_law chi P s
 
+/-- The hidden grade-memory readout also matches the Hecke L-value at zero. -/
+theorem hiddenGradeMemory_eq_l_value
+    (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
+    (chi : JointEigenvalue HeckeIndex)
+    (P : CuspidalEigenpacket R chi)
+    (s : State) :
+    charge_eval (EAV.hiddenGradeMemoryReadout s) =
+      L_func.value chi 0 := by
+  rw [← EAV.centralCharge_eq_hiddenGradeMemory s]
+  exact H.purified_charge_eq_l_value chi P s
+
 end HeckeSugawaraIntertwining
 
 /--

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge

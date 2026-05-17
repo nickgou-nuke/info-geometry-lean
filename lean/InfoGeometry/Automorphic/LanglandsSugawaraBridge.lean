@@ -110,6 +110,18 @@ theorem centralCharge_eq_completedL :
   B.centralCharge_eq_completedL_value
 
 /--
+If the completed L-function on the bridge is identified with the projected
+L-function and the spectral point is `0`, then the central charge readout is
+the projected value at `0`.
+-/
+theorem centralCharge_eq_projectedL_zero_of_match
+    (B : LanglandsSugawaraBridge P Finite Affine Vir State)
+    (hspectral : B.spectralPoint = 0)
+    (hcompleted : B.completedL = P.L) :
+    B.affineVirasoro.centralChargeReadout B.state = P.L 0 := by
+  simpa [hspectral, hcompleted] using B.centralCharge_eq_completedL
+
+/--
 Central charge also equals hidden exceptional grade-memory readout by the
 affine/Virasoro exceptional bridge.
 -/

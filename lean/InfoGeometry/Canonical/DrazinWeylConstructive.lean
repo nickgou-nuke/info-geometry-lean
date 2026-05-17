@@ -200,6 +200,38 @@ def constructiveRieszWeylData_of_localWeylSymmetry
       (E := E) D
 
 /--
+Package the legacy classical Riesz witness plus an explicit spectral-sheet
+commutation proof into the constructive Weyl bridge packet.
+-/
+def constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
+    {T : EndH}
+    (h : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T)
+    (hComm :
+      h.D.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.D) :
+    ConstructiveRieszWeylData (E := E) T where
+  riesz :=
+    constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+      (𝕂 := ℝ) h
+  candidate_commutes_spectralEpsilon := by
+    simpa [constructiveDrazinCandidate,
+      constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero] using hComm
+
+/--
+Package the broad infinite Drazin assumption lane into the constructive Weyl
+bridge using its owned classical Riesz component.
+-/
+def constructiveRieszWeylData_of_drazinInfiniteAssumptions
+    {T : EndH}
+    (h : DrazinInfiniteAssumptions (𝕂 := ℝ) T)
+    (hComm :
+      h.classical_riesz.D.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.classical_riesz.D) :
+    ConstructiveRieszWeylData (E := E) T :=
+  constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
+    (E := E) h.classical_riesz hComm
+
+/--
 Constructive D2 bridge: local Weyl symmetry and uniqueness of the regular
 Riesz inverse imply Weyl compatibility of the constructive Drazin candidate.
 -/
@@ -227,6 +259,42 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
       (constructiveDrazinCandidate_inner (hR := D.riesz))
       (constructiveDrazinCandidate_power (hR := D.riesz))
   · exact constructiveDrazinCandidate_isWeylCompatible (E := E) D
+
+/--
+Classical Riesz witness lane exports the same constructive Drazin/Weyl package
+without repeating the existential witness construction downstream.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_hasClassicalRieszDecompositionAtZero
+    {T : EndH}
+    (h : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T)
+    (hComm :
+      h.D.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.D) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+      (E := E)
+      (constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
+        (E := E) h hComm)
+
+/--
+Broad infinite Drazin assumptions export the same constructive Drazin/Weyl
+package through their owned classical Riesz component.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteAssumptions
+    {T : EndH}
+    (h : DrazinInfiniteAssumptions (𝕂 := ℝ) T)
+    (hComm :
+      h.classical_riesz.D.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.classical_riesz.D) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+      (E := E)
+      (constructiveRieszWeylData_of_drazinInfiniteAssumptions
+        (E := E) h hComm)
 
 /--
 Constructive local-symmetry variant of the D2 witness theorem. The Weyl

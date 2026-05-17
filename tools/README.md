@@ -17,6 +17,7 @@ This directory contains the maintained script surface around the Lean codebase.
   documentation refresh helpers
 - `tools/observability/`
   static Lean graph overlay, wrapper dedup, auto-tagging, and audit reports
+  - compatibility wrapper: `tools/observability/lean_graph_overlay.py`
 - `tools/leantrail/`
   LeanTrail conformance, export, ingest, and path/failure tooling
 

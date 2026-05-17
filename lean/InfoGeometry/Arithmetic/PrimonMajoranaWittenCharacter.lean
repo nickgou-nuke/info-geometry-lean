@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
+import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 import InfoGeometry.Meta.OwnerTarget
 
 /-!
@@ -228,28 +229,33 @@ theorem finiteMajoranaPfaffian_eq_wittenCharacter
 
 /-! ## 6. Two-state Hamiltonian trace -/
 
-/-- Two local occupancy states for one primon mode. -/
-inductive Occupancy where
-  | empty
-  | occupied
-deriving DecidableEq, Fintype, Repr
+/-- Two local occupancy states for one primon mode, re-exported from the
+canonical finite arithmetic Witten surface. -/
+abbrev Occupancy := InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy
 
 namespace Occupancy
 
+/-- Occupancy state `empty`. -/
+def empty : Occupancy := InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.empty
+
+/-- Occupancy state `occupied`. -/
+def occupied : Occupancy :=
+  InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.occupied
+
 /-- Local occupation eigenvalue. -/
 def number : Occupancy → ℕ
-  | empty => 0
-  | occupied => 1
+  | InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.empty => 0
+  | InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.occupied => 1
 
 /-- Local parity eigenvalue `1 - 2N`. -/
 def parity : Occupancy → ℝ
-  | empty => 1
-  | occupied => -1
+  | InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.empty => 1
+  | InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.Occupancy.occupied => -1
 
-@[simp] theorem number_empty : number empty = 0 := rfl
-@[simp] theorem number_occupied : number occupied = 1 := rfl
-@[simp] theorem parity_empty : parity empty = 1 := rfl
-@[simp] theorem parity_occupied : parity occupied = -1 := rfl
+@[simp] theorem number_empty : number Occupancy.empty = 0 := rfl
+@[simp] theorem number_occupied : number Occupancy.occupied = 1 := rfl
+@[simp] theorem parity_empty : parity Occupancy.empty = 1 := rfl
+@[simp] theorem parity_occupied : parity Occupancy.occupied = -1 := rfl
 
 end Occupancy
 

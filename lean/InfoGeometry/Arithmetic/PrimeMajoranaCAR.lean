@@ -176,12 +176,13 @@ This is the real split-Majorana version of the local Möbius parity involution.
 theorem parityOp_sq :
     P.parityOp * P.parityOp = 1 := by
   rw [P.parityOp_eq_one_sub_two_numberOp]
+  have hN : P.numberOp * P.numberOp = P.numberOp := P.numberOp_idem
   calc
     (1 - (2 : Op) * P.numberOp) * (1 - (2 : Op) * P.numberOp)
         = 1 - (4 : Op) * P.numberOp + (4 : Op) * (P.numberOp * P.numberOp) := by
             noncomm_ring
     _ = 1 - (4 : Op) * P.numberOp + (4 : Op) * P.numberOp := by
-            rw [P.numberOp_idem]
+            rw [hN]
     _ = 1 := by
             abel
 

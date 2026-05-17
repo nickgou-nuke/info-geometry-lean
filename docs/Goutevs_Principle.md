@@ -161,6 +161,10 @@ This principle governs the architecture:
    projective rays may coexist. They are not duplicates when their preservation
    maps are kernel-visible. Without those maps, they are duplication debt.
 
+   Every future bridge must expose normalization, gauge, and coherence fields
+   explicitly. Those fields are part of the formal contract, not optional
+   commentary.
+
 ### The Master 2-Morphism
 
 The finite master 2-morphism is:
@@ -208,6 +212,27 @@ the Cantor set, and proves equivalence with the classical Fock
 representation. Their Lemma 1.1 supplies the infinite tilt/switch relations,
 Theorem 2.1 builds the \(Cl_\infty\) representation, and Theorem 3.3 proves
 Fock equivalence.
+
+### Bridge Contract
+
+The safe bridge shape is:
+
+```text
+raw carrier
+  -> normalization / gauge fix
+  -> normalized representation
+  -> coherence / preservation data
+  -> delegated owner readout
+```
+
+In Lean terms, that means the module surface must make the normalization map,
+the gauge witness, and the preservation theorems explicit. A bridge that hides
+those fields is incomplete, even if its prose is persuasive.
+
+The DAG toolchain already implements the Hodge / chiral / Dirac operator
+overlays in Lean as derived observability. They are useful for audit and
+navigation, but they remain downstream of Lean source and do not replace owner
+proofs.
 
 ### Finite Arithmetic Interpretation
 

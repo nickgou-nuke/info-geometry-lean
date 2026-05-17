@@ -29,56 +29,30 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.PrimeCantorTiltCARBridge
 
 /--
-The normalized Cantor tilt/switch bridge target.
+The normalized Cantor tilt/switch bridge targets.
 
-This is intentionally a conjunction of the existing finite owner targets:
-the normalized tilt/switch atom, the split-Majorana local CAR atom, the
-finite Boolean-cube bridge, and the finite Witten owner.
+These are thin bridge reexports of the existing finite owner surfaces:
+the normalized tilt/switch atom, the split-Majorana local CAR atom,
+the finite Boolean-cube bridge, and the finite Witten owner.
 -/
 @[bridge_target_tag]
-def PrimeCantorTiltCARBridgeTarget : Prop :=
-  InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-      .PrimeCantorTiltFockRepresentationOwnerTarget ∧
-  InfoGeometry.Arithmetic.PrimeMajoranaCAR.PrimeMajoranaCAROwnerTarget ∧
-  InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
-      .PrimeBooleanCubeCARBridgeOwnerTarget ∧
-  InfoGeometry.Arithmetic.PrimeWittenCharacter.PrimeWittenCharacterOwnerTarget
+theorem primeCantorTiltFockRepresentationOwnerTarget_bridge :
+    InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation.PrimeCantorTiltFockRepresentationOwnerTarget :=
+  InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation.primeCantorTiltFockRepresentationOwnerTarget
 
-namespace PrimeCantorTiltCARBridgeTarget
+@[bridge_target_tag]
+theorem primeMajoranaCAROwnerTarget_bridge :
+    InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.PrimeMajoranaCAROwnerTarget :=
+  InfoGeometry.Arithmetic.PrimeMajoranaCAR.ExteriorCARPair.primeMajoranaCAROwnerTarget
 
-theorem normalized_tilt_switch_owner :
-    InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-        .PrimeCantorTiltFockRepresentationOwnerTarget :=
-  InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-    .primeCantorTiltFockRepresentationOwnerTarget
+@[bridge_target_tag]
+theorem primeBooleanCubeCARBridgeOwnerTarget_bridge :
+    InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge.PrimeBooleanCubeCARBridgeOwnerTarget :=
+  InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge.primeBooleanCubeCARBridgeOwnerTarget
 
-theorem split_majorana_owner :
-    InfoGeometry.Arithmetic.PrimeMajoranaCAR.PrimeMajoranaCAROwnerTarget :=
-  InfoGeometry.Arithmetic.PrimeMajoranaCAR.primeMajoranaCAROwnerTarget
-
-theorem boolean_cube_car_owner :
-    InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
-        .PrimeBooleanCubeCARBridgeOwnerTarget :=
-  InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
-    .primeBooleanCubeCARBridgeOwnerTarget
-
-theorem finite_witten_owner :
+@[bridge_target_tag]
+theorem primeWittenCharacterOwnerTarget_bridge :
     InfoGeometry.Arithmetic.PrimeWittenCharacter.PrimeWittenCharacterOwnerTarget :=
   InfoGeometry.Arithmetic.PrimeWittenCharacter.primeWittenCharacterOwnerTarget
-
-end PrimeCantorTiltCARBridgeTarget
-
-/--
-The normalized Cantor tilt/switch bridge target is closed.
--/
-theorem primeCantorTiltCARBridgeTarget :
-    PrimeCantorTiltCARBridgeTarget := by
-  exact
-    ⟨ InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-        .primeCantorTiltFockRepresentationOwnerTarget,
-      InfoGeometry.Arithmetic.PrimeMajoranaCAR.primeMajoranaCAROwnerTarget,
-      InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
-        .primeBooleanCubeCARBridgeOwnerTarget,
-      InfoGeometry.Arithmetic.PrimeWittenCharacter.primeWittenCharacterOwnerTarget ⟩
 
 end InfoGeometry.Arithmetic.PrimeCantorTiltCARBridge

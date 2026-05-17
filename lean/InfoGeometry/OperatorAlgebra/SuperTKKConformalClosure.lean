@@ -27,6 +27,7 @@ super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -689,6 +690,7 @@ Owner target for super-TKK defect absorption.
 Once an absorption witness is supplied, every TKK closure defect has an
 explicit same-left-chirality supercharge-square representative.
 -/
+@[owner_target_tag]
 def SuperTKKDefectAbsorptionOwnerTarget : Prop :=
   ∀ (L Odd State Geometry : Type*)
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]

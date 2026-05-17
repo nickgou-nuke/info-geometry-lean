@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeExteriorRepresentationCalibration
@@ -60,6 +61,7 @@ theorem canonicalGamma_eq_negOne_pow_fermionNumber
   Gamma_eq_negOne_pow_fermionNumber S
 
 /-- Canonical owner target for the finite exterior surface. -/
+@[owner_target_tag]
 def PrimeExteriorRepresentationOwnerTarget : Prop :=
   ∀ {PrimeLabel : Type*} [DecidableEq PrimeLabel]
     (p : PrimeLabel) (S : SquareFreePrimeState PrimeLabel),

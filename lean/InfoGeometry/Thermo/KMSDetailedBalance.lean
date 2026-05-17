@@ -15,6 +15,7 @@ surface that is already constructive:
 
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -237,6 +238,7 @@ Owner target for KMS detailed balance:
 once a KMS/detailed-balance packet is supplied, both the algebraic KMS boundary
 identity and the closed-form Stokes boundary vanishing theorem are available.
 -/
+@[owner_target_tag]
 def KMSDetailedBalanceOwnerTarget : Prop :=
   ∀ (A Region Point Tangent Value : Type*)
     [Mul A]

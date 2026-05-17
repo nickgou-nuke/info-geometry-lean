@@ -30,6 +30,8 @@ proof-carrying closure laws needed by concrete models.
 import Mathlib
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.KleinianTwist
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -125,6 +127,7 @@ This avoids committing the repository to a concrete `LieAlgebra` realization at
 this owner layer.  Downstream modules can replace it by Mathlib's Lie algebra
 API once the concrete carrier is chosen.
 -/
+@[socket_debt_tag]
 structure LieSocket
     (L : Type*) [AddCommGroup L] [Module ℝ L] where
   bracket : L → L → L
@@ -508,6 +511,7 @@ Owner target for the TKK closure layer.
 Concrete modules must supply the Jordan triple system, the three-grade Lie
 closure, and the conformal/projective Pin-Möbius action.
 -/
+@[owner_target_tag]
 def TKKClosureOwnerTarget : Prop :=
   ∀ (J L V W PinBase PinConf : Type*)
     [AddCommGroup J] [Module ℝ J]

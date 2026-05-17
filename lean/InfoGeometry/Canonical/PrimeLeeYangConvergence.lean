@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 
@@ -42,7 +43,7 @@ The intended mathematical content is:
 locally uniformly on the Cayley chart, with the two zero-free complement
 domains transferred by Hurwitz.  Every analytic part is stored as data.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure PrimeLeeYangConvergenceSocket
     (Ξ : CompletedXiZeroPredicate)
     (A : LeeYangApproximants) where

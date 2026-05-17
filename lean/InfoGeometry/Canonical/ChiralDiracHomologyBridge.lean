@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -35,7 +36,7 @@ A chiral differential pair.
 This is the chain-complex/homology socket. It is valid only when the two
 same-direction two-step composites vanish.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure ChiralComplexSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
   dPlus : Cplus → Cminus
   dMinus : Cminus → Cplus
@@ -117,7 +118,7 @@ This does not require nilpotence. Instead, it carries the Laplace/Hodge loops:
 
 `Δ₊ = D⁻D⁺`, `Δ₋ = D⁺D⁻`.
 -/
-@[rep_depth krein]
+@[socket_debt_tag, rep_depth krein]
 structure ChiralHodgeDiracSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
   Dplus : Cplus → Cminus
   Dminus : Cminus → Cplus

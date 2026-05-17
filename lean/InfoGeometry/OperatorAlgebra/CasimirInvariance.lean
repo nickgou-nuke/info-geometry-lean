@@ -18,6 +18,7 @@ import Mathlib
 import InfoGeometry.OperatorAlgebra.IndividuatedCl44Casimir
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -155,6 +156,7 @@ Owner target for real-time Casimir anchoring.
 Once an inner modular flow and a verified Casimir are installed, the Casimir is
 fixed along real thermal time.
 -/
+@[owner_target_tag]
 def CasimirInvarianceOwnerTarget : Prop :=
   ∀ (Op : Type*) [Ring Op],
   ∀ (G : Type*) [Group G],

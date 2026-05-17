@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeLatticeGasVariational
@@ -201,6 +202,7 @@ structure PrimeLatticeGasVariationalPacket where
   notEulerProductBridgeWitness : Type*
 
 /-- Owner target for the exact finite hard-core prime lattice gas identity. -/
+@[owner_target_tag]
 def PrimeLatticeGasFiniteOwnerTarget : Prop :=
   ∀ (M : ℕ) (Z : Fugacity),
     grandPartition M Z = (1 + Z.z) ^ primeSiteCount M

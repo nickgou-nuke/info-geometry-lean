@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeSUSYVacuum
@@ -60,6 +61,7 @@ Prime SUSY vacuum packet.
 This is the QFT/SUSY capstone over the defect-free and zero-mode protection
 layers.  All infinite, spectral, and topological statements are supplied laws.
 -/
+@[socket_debt_tag]
 structure PrimeSUSYVacuumPacket
     (CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
       VacuumReadout : Type) where

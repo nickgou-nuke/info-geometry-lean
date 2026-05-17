@@ -18,6 +18,7 @@ No vacuous determinant-invariance certificate is used.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -136,6 +137,7 @@ theorem real_matrix_det_invariant_under_transport
 /--
 Owner target for finite determinant conjugation invariance.
 -/
+@[owner_target_tag]
 def FiniteDeterminantConjugationOwnerTarget : Prop :=
   ∀ (n : Type*) [Fintype n] [DecidableEq n],
   ∀ (R : Type*) [CommRing R],

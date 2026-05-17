@@ -13,6 +13,7 @@ A resolvent kernel is a matrix `R` equipped with two-sided inverse proofs.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -227,6 +228,7 @@ theorem scalarOneByOneResolventKernel_unique
 Owner target: finite matrix resolvent uniqueness from explicit two-sided
 inverse laws.
 -/
+@[owner_target_tag]
 def FiniteMatrixResolventUniquenessOwnerTarget : Prop :=
   ∀ (n : Type*) [Fintype n] [DecidableEq n],
   ∀ (A : Matrix n n ℂ) (z : ℂ),
@@ -250,6 +252,7 @@ theorem finiteMatrixResolventUniquenessOwnerTarget :
   exact K.kernel_unique R₁ h₁L h₁R
 
 /-- Owner target: scalar one-by-one resolvent exists constructively when `z-a ≠ 0`. -/
+@[owner_target_tag]
 def ScalarOneByOneResolventOwnerTarget : Prop :=
   ∀ z a : ℂ,
     z - a ≠ 0 →
@@ -262,6 +265,7 @@ theorem scalarOneByOneResolventOwnerTarget :
   exact ⟨scalarOneByOneResolventKernel z a h⟩
 
 /-- Owner target: resolvent kernel from a unit witness. -/
+@[owner_target_tag]
 def MatrixResolventFromUnitOwnerTarget : Prop :=
   ∀ (n : Type*) [Fintype n] [DecidableEq n],
   ∀ (A : Matrix n n ℂ) (z : ℂ),

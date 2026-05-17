@@ -17,6 +17,7 @@ modes. Topological edge protection is a separate witness.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -466,6 +467,7 @@ end AndreevChargeLedger
 /-! ## 7. Owner targets discharged constructively -/
 
 /-- Owner target for the finite Andreev diagonal. -/
+@[owner_target_tag]
 def FiniteAndreevDiagonalOwnerTarget : Prop :=
   electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed
 
@@ -475,6 +477,7 @@ theorem finiteAndreevDiagonalOwnerTarget :
   finite_electron_hole_diagonal_fixed
 
 /-- Owner target for the finite Andreev imbalance. -/
+@[owner_target_tag]
 def FiniteAndreevImbalanceOwnerTarget : Prop :=
   finiteAndreevClosure.theta
       (electronAmplitude - holeAmplitude)

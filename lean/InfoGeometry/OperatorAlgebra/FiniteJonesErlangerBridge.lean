@@ -16,6 +16,7 @@ covariant rather than fixed.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -248,6 +249,7 @@ Owner target for the finite Jones Erlanger bridge.
 The diagonal phase stabilizer fixes the Brewster core projector and preserves
 Brewster rank collapse.
 -/
+@[owner_target_tag]
 def FiniteJonesErlangerBridgeOwnerTarget : Prop :=
   (∀ G : DiagonalJonesGauge,
     G.conjugate brewsterCoreProjector = brewsterCoreProjector)

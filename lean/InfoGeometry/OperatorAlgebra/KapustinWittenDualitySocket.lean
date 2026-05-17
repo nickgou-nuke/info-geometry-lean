@@ -18,6 +18,8 @@ witness-gated socket.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
@@ -229,6 +231,7 @@ or five-graded/TKK/Freudenthal enhancement.
 
 No classification theorem is asserted here.
 -/
+@[socket_debt_tag]
 structure ExceptionalSymmetrySocket
     (State SymmetryLabel : Type*) where
   /-- Symmetry label or algebraic readout. -/
@@ -251,6 +254,7 @@ Owner target for the operator S-duality socket.
 Given an S-duality witness, Wilson eigenconditions transport to 't Hooft
 eigenconditions.
 -/
+@[owner_target_tag]
 def OperatorSDualityOwnerTarget : Prop :=
   ∀ (ElectricState MagneticState Charge : Type*),
   ∀ S : SDualityDatum ElectricState MagneticState Charge,

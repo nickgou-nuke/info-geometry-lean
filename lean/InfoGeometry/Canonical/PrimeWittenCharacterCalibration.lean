@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeWittenCharacter
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeWittenCharacterCalibration
@@ -41,6 +42,7 @@ theorem canonicalFiniteWittenCharacter_eq_dirichletWittenCharacter
   finiteWittenCharacter_eq_dirichletWittenCharacter P q
 
 /-- Canonical owner target for the finite Witten-character surface. -/
+@[owner_target_tag]
 def CanonicalPrimeWittenCharacterOwnerTarget : Prop :=
   ∀ (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ),
     finiteWittenCharacter P q =

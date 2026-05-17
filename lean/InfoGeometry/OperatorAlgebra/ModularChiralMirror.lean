@@ -18,6 +18,7 @@ This is a bridge datum, not a global theorem about every modular conjugation.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -850,6 +851,7 @@ Owner target for modular mirroring of real-linear chiral projectors.
 Once the sign datum `Jχ = -χJ` and the involution laws are supplied, Lean proves
 that the modular mirror exchanges the left and right chiral projectors.
 -/
+@[owner_target_tag]
 def ModularChiralMirrorOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ M : ModularChiralMirrorDatum H,
@@ -875,6 +877,7 @@ theorem modularChiralMirrorOwnerTarget :
 /--
 Disambiguated name for the real-linear modular chiral mirror owner target.
 -/
+@[owner_target_tag]
 def RealLinearModularChiralMirrorOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
   ∀ M : ModularChiralMirrorDatum H,

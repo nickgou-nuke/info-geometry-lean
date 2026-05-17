@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
@@ -42,6 +43,7 @@ is the theorem-safe location for claims such as:
 * convergence of a renormalized finite-volume determinant to the completed
   Riemann readout in Cayley coordinates.
 -/
+@[socket_debt_tag]
 structure DefectFreeLimitPacket
     (CompletedXiReadout : Type) where
   /-- Finite-volume Lee--Yang approximation socket. -/

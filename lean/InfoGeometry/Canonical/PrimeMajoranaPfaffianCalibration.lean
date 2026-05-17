@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeMajoranaPfaffianCalibration
@@ -23,6 +24,7 @@ theorem canonicalBlockPfaffian_eq_finiteEulerProduct
   blockPfaffian_eq_finiteEulerProduct P q
 
 /-- Canonical owner target for the finite block-Pfaffian surface. -/
+@[owner_target_tag]
 def CanonicalPrimeMajoranaPfaffianOwnerTarget : Prop :=
   ∀ (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ),
     blockPfaffian P q = InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q

@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 open scoped InnerProductSpace
 
@@ -190,7 +191,7 @@ Combined finite owner target:
 * Clifford generator readout;
 * canonical CAR/CCR channels.
 -/
-@[rep_depth operator]
+@[owner_target_tag]
 def CantorBinaryTiltCARCCROwnerTarget : Prop :=
   (∀ w : BinaryWord,
       wordDepth (BinaryWord.child w false) = wordDepth w + 1)

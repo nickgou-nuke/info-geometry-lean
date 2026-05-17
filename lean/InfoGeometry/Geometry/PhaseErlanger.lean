@@ -17,6 +17,7 @@ polarization projectors.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -422,6 +423,7 @@ The target is intentionally structural: it does not assert a preferred metric,
 a preferred upper-half-plane cone, or a modular subgroup. Those are later
 Erlanger refinements.
 -/
+@[owner_target_tag]
 def PhaseErlangerOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : EndR H),

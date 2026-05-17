@@ -18,6 +18,7 @@ instantiate the witness structures defined here.
 import Mathlib
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -530,6 +531,7 @@ functional and a bulk state.
 
 This target is purely algebraic and is constructible immediately.
 -/
+@[owner_target_tag]
 def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
   ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
   ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
@@ -558,6 +560,7 @@ This one is intentionally witness-gated: the Euler product and functional
 equation are arithmetic input, not consequences of the split-exact projector
 algebra alone.
 -/
+@[owner_target_tag]
 def LanglandsPrimeResonanceOwnerTarget : Prop :=
   ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
   ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],

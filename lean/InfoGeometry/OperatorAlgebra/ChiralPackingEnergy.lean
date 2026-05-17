@@ -20,6 +20,7 @@ No ethical claim is encoded.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.CrossoverResidue
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -405,6 +406,7 @@ A successful audit proves:
 * same-chirality pair preference;
 * reorientation preserves finite support and total divisor weight.
 -/
+@[owner_target_tag]
 def ChiralPackingAuditOwnerTarget : Prop :=
   ∀ (Site V : Type*)
     [AddCommGroup V] [Module ℝ V],

@@ -9,6 +9,7 @@ projector and Brewster rank-collapse facts directly.
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -150,6 +151,7 @@ Owner target for the concrete finite Jones model.
 
 Everything here is constructively proved.
 -/
+@[owner_target_tag]
 def FiniteJonesModelOwnerTarget : Prop :=
   sProjector * sProjector = sProjector ∧
   pProjector * pProjector = pProjector ∧

@@ -25,6 +25,7 @@ The physical statement is witness-gated:
 import Mathlib
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -621,6 +622,7 @@ Once the bridge is supplied:
 * hidden grade-two memory is represented as an affine current;
 * the hidden memory scalar equals the Virasoro/current stress readout.
 -/
+@[owner_target_tag]
 def ExceptionalVirasoroBridgeOwnerTarget : Prop :=
   ∀ (J L Obs Memory Finite AffineAlg : Type*)
     [AddCommGroup J] [Module ℝ J]

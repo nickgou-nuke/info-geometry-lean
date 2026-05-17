@@ -10,6 +10,7 @@ that can be proved at this layer.
 
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -497,6 +498,7 @@ Owner target for constructing a phase-compatible Cayley proxy.
 This is intentionally not proved here: concrete spectral data must supply the
 bounded inverse and its phase-linearity.
 -/
+@[owner_target_tag]
 def PhaseResolventOwnerTarget : Prop :=
   ∀ (K : EndR H), Nonempty (PhaseResolventDatum K)
 
@@ -506,12 +508,14 @@ Owner target for constructing a bounded transform proxy.
 This is intentionally not proved here: the functional-calculus layer owns the
 analytic bounded-transform construction.
 -/
+@[owner_target_tag]
 def BoundedTransformOwnerTarget : Prop :=
   ∀ (K : EndR H), Nonempty (BoundedTransformDatum K)
 
 /--
 Owner target for constructing a bounded Kasparov cycle after admissibility data.
 -/
+@[owner_target_tag]
 def BoundedKasparovOwnerTarget : Prop :=
   ∀ (A : Type*) (K : EndR H) (B : BoundedTransformDatum K),
     KasparovAdmissibility A K B →

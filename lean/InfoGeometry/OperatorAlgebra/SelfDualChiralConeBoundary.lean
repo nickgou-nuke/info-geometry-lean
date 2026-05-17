@@ -22,6 +22,7 @@ that witness.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -211,6 +212,7 @@ Owner target for the self-dual chiral cone boundary socket.
 
 Every fixed-boundary point is boundary data and is closure-fixed.
 -/
+@[owner_target_tag]
 def SelfDualChiralConeBoundaryOwnerTarget : Prop :=
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ B : SelfDualChiralConeBoundary V,

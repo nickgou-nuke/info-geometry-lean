@@ -768,6 +768,36 @@ end
 
 section
 
+/--
+Constructive unit-of-action collapse from the RN/Kähler/log-det lane.
+
+This packages the owner route
+`unitOfAction = chiralScale = kahlerPotentialRN = 0` once the caller already
+owns the unit-relative-volume witness on the infinite/operatorial lane.
+-/
+theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.unitOfAction = 0 := by
+  rw [CI.unitOfAction_eq_chiralScale]
+  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler hUnitVolume
+
+/--
+Constructive unit-of-action collapse using the proof-carrying
+`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
+-/
+theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.unitOfAction = 0 := by
+  exact CI.unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
+
 /-- In the normal phase, the unit of action vanishes. -/
 theorem unitOfAction_eq_zero_of_normalInference
     (hNormal : IsNormalInference (CI := CI)) :

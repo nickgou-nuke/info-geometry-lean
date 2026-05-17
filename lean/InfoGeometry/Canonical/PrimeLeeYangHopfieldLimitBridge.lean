@@ -1,4 +1,6 @@
 import Mathlib
+import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
@@ -185,6 +187,7 @@ finite Lee--Yang stability plus nonvanishing renormalization plus locally
 uniform convergence to the completed-`xi` Cayley readout, with no surviving
 spurious zeros.
 -/
+@[socket_debt_tag, rep_depth operator]
 structure HurwitzLeeYangXiLimitPacket
     (CompletedXiReadout RenormalizationReadout LimitReadout : Type) where
   completedXiReadout : CompletedXiReadout

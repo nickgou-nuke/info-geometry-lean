@@ -29,6 +29,7 @@ import Mathlib
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespringConstructive
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -201,6 +202,7 @@ end FiniteOpticalKernelReadout
 /--
 Owner target for the finite optical Stinespring-Kasparov defect deployment.
 -/
+@[owner_target_tag]
 def FiniteOpticalKasparovBoundaryOwnerTarget : Prop :=
   ∀ D : ConstructiveJonesStinespring,
     D.visibleDefect = kasparovDefect D ∧

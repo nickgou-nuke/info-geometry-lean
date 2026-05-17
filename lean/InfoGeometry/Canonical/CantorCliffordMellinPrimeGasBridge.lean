@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Canonical.PrimeGasPartitions
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
@@ -298,6 +299,7 @@ structure ZetaChannelWitnessPacket where
   noRHClaimWitness : Type*
 
 /-- Zero-location socket recording a spectral/analytic zero statement only as supplied data. -/
+@[socket_debt_tag]
 structure ZetaZeroSocket where
   /-- Function/spectral carrier. -/
   FunctionCarrier : Type*

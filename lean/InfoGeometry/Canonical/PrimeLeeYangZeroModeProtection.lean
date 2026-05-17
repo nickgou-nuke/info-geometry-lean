@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
@@ -42,6 +43,7 @@ The packet links three already-separated layers:
 
 All spectral and analytic claims remain explicit certificates.
 -/
+@[socket_debt_tag]
 structure ZeroModeProtectionPacket
     (CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout : Type) where
   /-- Defect-free Lee--Yang/large-deviation limit packet. -/
@@ -144,6 +146,7 @@ end ZeroModeProtectionPacket
 Bridge data needed to build a zero-mode protection packet from a defect-free
 Lee--Yang limit and a Majorana zero-mode gate.
 -/
+@[socket_debt_tag]
 structure ZeroModeProtectionBridge
     (ProtectionReadout : Type) where
   protectionReadout : ProtectionReadout

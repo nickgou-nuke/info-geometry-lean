@@ -32,6 +32,7 @@ this gives a proved finite heat readout:
 -/
 
 import Mathlib
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section
@@ -328,6 +329,7 @@ theorem diagonalJonesHeat_eq_hiddenGainPotential
 /--
 Owner target for constructive finite Jones Bregman heat.
 -/
+@[owner_target_tag]
 def FiniteJonesBregmanOwnerTarget : Prop :=
   ∀ S : StinespringIsometry JonesMat,
     0 ≤ finiteStinespringHeat S ∧

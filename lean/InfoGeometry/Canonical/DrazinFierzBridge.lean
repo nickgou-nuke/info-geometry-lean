@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Drazin--Fierz bridge
@@ -340,7 +341,7 @@ Complete expectation-only Fierz socket.
 No physical trace exists in this interface.  The residual law is an explicit
 compatibility field, not a theorem derived from expectation alone.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure ExpectationOnlyFierzSocket
     (Obs : Type*)
     [One Obs]
@@ -512,7 +513,7 @@ structure BirkhoffDecomposition4
 Correlation-energy matrix together with a normalized bistochastic socket and a
 chosen Birkhoff decomposition.
 -/
-@[rep_depth projective]
+@[socket_debt_tag, rep_depth projective]
 structure ExpectationBirkhoffSocket
     {Obs : Type*}
     [One Obs]
@@ -533,7 +534,7 @@ Explicit representation socket from a Hurwitz-unit-like set to permutations.
 
 This avoids identifying order-24 structures merely by cardinality.
 -/
-@[rep_depth projective]
+@[socket_debt_tag, rep_depth projective]
 structure HurwitzToPermutationSocket where
   HurwitzUnit : Type*
   mul : HurwitzUnit → HurwitzUnit → HurwitzUnit

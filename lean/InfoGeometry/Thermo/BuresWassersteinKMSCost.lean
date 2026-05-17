@@ -16,6 +16,7 @@ data.
 
 import Mathlib
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -358,6 +359,7 @@ end BilingualKMSHolonomyCompatibility
 /-! ## 7. Owner target -/
 
 /-- Owner target for Bures-Wasserstein KMS holonomy cost. -/
+@[owner_target_tag]
 def BuresWassersteinKMSCostOwnerTarget : Prop :=
   ∀ (State : Type*) (Ω : PositiveStateDomain State),
   ∀ (BW : BuresWassersteinDatum State Ω),

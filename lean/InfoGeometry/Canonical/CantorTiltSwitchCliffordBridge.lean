@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
@@ -277,7 +278,7 @@ This is the primary owner route supplied by the Cantor/Clifford papers.  It does
 not pass through Cuntz, and it does not assert a Fierz/Klein law without a
 separate admissibility witness.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure CantorTiltSwitchMatterReadoutSocket
     (Op : Type*) [Ring Op] [Star Op] where
   clifford : CantorCliffordRepresentation Op

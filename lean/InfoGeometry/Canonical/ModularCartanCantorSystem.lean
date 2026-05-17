@@ -4,6 +4,7 @@ import InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Meta.SocketTarget
 
 set_option linter.unusedSectionVars false
 
@@ -412,7 +413,7 @@ The barrier is a relative-entropy readout, and the logarithmic derivative is
 represented by Connes cocycle/spatial-derivative data.  Finite determinant
 barriers can only enter through the explicit `finite_split_approximant_law`.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure RelativeEntropyBarrierSocket where
   /-- Araki/Connes relative entropy socket. -/
   relativeEntropy :

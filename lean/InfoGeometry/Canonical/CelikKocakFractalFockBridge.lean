@@ -1,6 +1,7 @@
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Canonical.FractalFockEquivalenceBridge
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Canonical.CelikKocakFractalFockBridge
@@ -57,24 +58,44 @@ def cliffordRepresentation : RealDoubledCantorCliffordRepresentation Op :=
   W.clifford
 
 /-- The paper's explicit equivalence-to-Fock witness. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 theorem equivalent_to_fock :
     W.equivalentToFock :=
   W.equivalentToFock_witness
 
 /-- Infinite Clifford generators square to one. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 theorem gamma_sq (i : ℕ) :
     W.clifford.gamma i * W.clifford.gamma i = 1 :=
   W.clifford.gamma_sq i
 
 /-- Distinct infinite Clifford generators anticommute. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 theorem gamma_anticomm {i j : ℕ} (hij : i ≠ j) :
     W.clifford.gamma i * W.clifford.gamma j +
       W.clifford.gamma j * W.clifford.gamma i = 0 := by
   rw [W.clifford.gamma_anticomm i j hij]
   simp
+
+/--
+Bundled paper formalism:
+
+the Cantor-boundary Clifford generators square to one, anticommute at distinct
+slots, and the resulting fractal representation is equivalent to the Fock
+representation.
+-/
+@[rep_depth operator, bridge_target_tag]
+theorem paperFormalism :
+    W.equivalentToFock ∧
+      (∀ i : ℕ, W.clifford.gamma i * W.clifford.gamma i = 1) ∧
+      (∀ {i j : ℕ}, i ≠ j →
+        W.clifford.gamma i * W.clifford.gamma j +
+          W.clifford.gamma j * W.clifford.gamma i = 0) := by
+  refine ⟨W.equivalent_to_fock, ?_, ?_⟩
+  · intro i
+    exact W.clifford.gamma_sq i
+  · intro i j hij
+    exact W.clifford.gamma_anticomm i j hij
 
 end CelikKocakPaperWitness
 
@@ -98,25 +119,25 @@ variable {Op : Type*} [Ring Op]
 variable (B : CelikKocakFractalFockBridge Op)
 
 /-- Re-export of the paper witness. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 def paperWitness_readout :
     CelikKocakPaperWitness Op :=
   B.paperWitness
 
 /-- Re-export of the canonical fractal/Fock bridge. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 def canonicalBridge_readout :
     FractalFockBridge Op :=
   B.fractalFockBridge
 
 /-- The paper and canonical bridge agree, as supplied. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 theorem paper_and_bridge_agree :
     B.paperAndBridgeAgree :=
   B.paperAndBridgeAgree_witness
 
 /-- The underlying Fock equivalence witness is available. -/
-@[rep_depth operator]
+@[rep_depth operator, bridge_target_tag]
 theorem equivalent_to_fock :
     B.paperWitness.equivalentToFock :=
   B.paperWitness.equivalentToFock_witness

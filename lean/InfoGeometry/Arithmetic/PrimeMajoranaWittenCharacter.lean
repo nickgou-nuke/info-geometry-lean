@@ -1,100 +1,77 @@
+import Mathlib
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
 import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
-Focused finite real Majorana Witten character layer.
+Finite Möbius-graded thermal character over the certified prime register.
 
-This module owns the naming corridor
+This module stays in the finite combinatorial layer. It re-exports the finite
+Dirichlet/Witten product identity from `SplitMajoranaPrimon` under the
+`PrimeMajoranaWittenCharacter` naming surface so the older arithmetic files can
+delegate cleanly.
 
-`equivariant real Witten character`
-`Dirichlet Witten character`
-`Möbius graded thermal character`
-
-for the finite theorem
-
-`Tr(Γ_Λ exp(-s H_Λ)) = ∏_{p≤Λ} (1 - q_p)`.
-
-The theorem-bearing finite product is imported from `SplitMajoranaPrimon`.
 No infinite Euler product, analytic continuation, Pfaffian determinant, or RH
 claim is asserted here.
 -/
 
 noncomputable section
 
+open scoped BigOperators
+
 namespace InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
-open scoped BigOperators
-open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.SplitMajoranaPrimon
 
-/-- Equivariant real Witten character alias. -/
-def equivariantRealWittenCharacter
-    (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
-  dirichletWittenCharacter P q
+/-- Finite Witten character over a certified prime register. -/
+def finiteWittenCharacter
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) : ℝ :=
+  SplitMajoranaPrimon.dirichletWittenCharacter P q
 
-/-- Dirichlet Witten character alias. -/
-def dirichletWittenCharacterReadout
-    (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
-  dirichletWittenCharacter P q
-
-/-- Möbius graded thermal character alias. -/
+/-- Finite Möbius-graded thermal character over a certified prime register. -/
 def mobiusGradedThermalCharacter
-    (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
-  dirichletWittenCharacter P q
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) : ℝ :=
+  finiteWittenCharacter P q
 
-/-- The equivariant real Witten character is the finite reciprocal Euler product. -/
-theorem equivariantRealWittenCharacter_eq_eulerProduct
-    (P : PrimeRegister) (q : ℕ → ℝ) :
-    equivariantRealWittenCharacter P q =
-      finiteEulerProduct P q := by
-  exact dirichletWittenCharacter_eq_eulerProduct P q
+/-- The finite Witten character equals the finite Euler product. -/
+theorem finiteWittenCharacter_eq_product
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) :
+    finiteWittenCharacter P q =
+      SplitMajoranaPrimon.finiteEulerProduct P q := by
+  simpa [finiteWittenCharacter] using
+    (SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q)
 
-/-- The Dirichlet Witten character is the finite reciprocal Euler product. -/
-theorem dirichletWittenCharacterReadout_eq_eulerProduct
-    (P : PrimeRegister) (q : ℕ → ℝ) :
-    dirichletWittenCharacterReadout P q =
-      finiteEulerProduct P q := by
-  exact dirichletWittenCharacter_eq_eulerProduct P q
+/-- The finite Witten character equals the finite Möbius-graded thermal character. -/
+theorem finiteWittenCharacter_eq_mobiusGradedThermalCharacter
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) :
+    finiteWittenCharacter P q = mobiusGradedThermalCharacter P q := by
+  rfl
 
-/-- The Möbius graded thermal character is the finite Möbius squarefree sum. -/
-theorem mobiusGradedThermalCharacter_eq_mobius_sum
-    (P : PrimeRegister) (q : ℕ → ℝ) :
-    mobiusGradedThermalCharacter P q =
-      ∑ S ∈ P.primes.powerset,
-        ((ArithmeticFunction.moebius (∏ p ∈ S, p) : ℤ) : ℝ) *
-          ∏ p ∈ S, q p := by
-  exact dirichletWittenCharacter_eq_mobius_sum P q
+/-- The finite Witten character agrees with the finite Dirichlet Witten character. -/
+theorem finiteWittenCharacter_eq_dirichletWittenCharacter
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) :
+    finiteWittenCharacter P q =
+      SplitMajoranaPrimon.dirichletWittenCharacter P q := by
+  rfl
 
-/--
-Witness-gated infinite reciprocal-zeta readout.
-
-This is deliberately only a bridge socket: the finite character above becomes
-`1 / ζ(s)` only after an analytic Euler-product convergence witness.
--/
-abbrev InfiniteReciprocalZetaCharacterBridge :=
-  InfiniteEulerProductZetaBridge
-
-/-! ## 2b. Owner target -/
-
-/-- Owner target for the finite real Majorana Witten character surface. -/
+/-- Owner target for the finite Witten character surface. -/
 @[owner_target_tag]
 def PrimeMajoranaWittenCharacterOwnerTarget : Prop :=
-  ∀ (P : PrimeRegister) (q : ℕ → ℝ),
-    equivariantRealWittenCharacter P q = finiteEulerProduct P q ∧
-    dirichletWittenCharacterReadout P q = finiteEulerProduct P q ∧
-    mobiusGradedThermalCharacter P q =
-      ∑ S ∈ P.primes.powerset,
-        ((ArithmeticFunction.moebius (∏ p ∈ S, p) : ℤ) : ℝ) *
-          ∏ p ∈ S, q p
+  ∀ (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ),
+    finiteWittenCharacter P q =
+      SplitMajoranaPrimon.finiteEulerProduct P q ∧
+    finiteWittenCharacter P q =
+      mobiusGradedThermalCharacter P q ∧
+    finiteWittenCharacter P q =
+      SplitMajoranaPrimon.dirichletWittenCharacter P q
 
-/-- The finite real Majorana Witten readouts agree with the finite Euler/Möbius surfaces. -/
+/-- The finite Witten character owner target is proved. -/
 theorem primeMajoranaWittenCharacterOwnerTarget :
     PrimeMajoranaWittenCharacterOwnerTarget := by
   intro P q
-  exact ⟨equivariantRealWittenCharacter_eq_eulerProduct P q,
-    dirichletWittenCharacterReadout_eq_eulerProduct P q,
-    mobiusGradedThermalCharacter_eq_mobius_sum P q⟩
+  exact ⟨finiteWittenCharacter_eq_product P q,
+    finiteWittenCharacter_eq_mobiusGradedThermalCharacter P q,
+    finiteWittenCharacter_eq_dirichletWittenCharacter P q⟩
 
 end InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter

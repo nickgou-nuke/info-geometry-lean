@@ -58,16 +58,24 @@ class Decl:
     start_line: int
     end_line: int
     text: str
+    type_text: str
+    proof_text: str
     alpha_hash: str
+    type_hash_alpha: str
+    proof_hash_alpha: str
     alpha_tokens: List[str]
     contains_sorry: bool
     contains_axiom_like: bool
     refs: List[str] = dataclasses.field(default_factory=list)
+    direct_dependencies: List[str] = dataclasses.field(default_factory=list)
+    reverse_dependencies: List[str] = dataclasses.field(default_factory=list)
     wl_hash: str = ""
     is_owner: bool = False
     is_bridge: bool = False
     is_socket: bool = False
     rep_depth: str = ""
+    template_role: str = ""
+    socket_debt_class: str = ""
 
 
 def sha256_short(s: str, n: int = 16) -> str:
@@ -109,6 +117,60 @@ def alpha_normalize_tokens(tokens: List[str]) -> List[str]:
         else:
             out.append(tok)
     return out
+
+
+def split_decl_body(block: str) -> Tuple[str, str]:
+    """Split a declaration block into a type-ish prefix and proof/body-ish suffix.
+
+    This is heuristic and purely for observability. It tries to separate the
+    statement surface from the proof/body surface when `:=` or `where` exists.
+    """
+    for sep in ("\n:=\n", "\n:= ", "\nwhere\n", "\nwhere "):
+        if sep in block:
+            head, tail = block.split(sep, 1)
+            return head + sep.strip(), tail
+    if ":=" in block:
+        head, tail = block.split(":=", 1)
+        return head + ":=", tail
+    if " where" in block:
+        head, tail = block.split(" where", 1)
+        return head + " where", tail
+    return block, ""
+
+
+def decl_template_role(kind: str, name: str, attr_text: str) -> str:
+    lowered = name.lower()
+    if "socket_debt_tag" in attr_text:
+        return "Socket"
+    if "bridge_target_tag" in attr_text:
+        return "Bridge"
+    if "owner_target_tag" in attr_text:
+        return "Witness"
+    if "gate" in lowered:
+        return "Gate"
+    if "bridge" in lowered:
+        return "Bridge"
+    if "socket" in lowered:
+        return "Socket"
+    if kind in {"theorem", "lemma", "example"}:
+        return "Witness"
+    return "Source"
+
+
+def decl_socket_debt_class(is_socket: bool, is_owner: bool, is_bridge: bool, contains_sorry: bool, contains_axiom_like: bool, name: str, kind: str) -> str:
+    if is_socket:
+        return "socket_debt"
+    if is_bridge:
+        return "bridge_preservation"
+    if is_owner:
+        return "closed_owner"
+    if contains_sorry or contains_axiom_like:
+        return "source_claim"
+    if "alias" in name.lower() or "equiv" in name.lower() or "preserve" in name.lower():
+        return "duplicate_alias"
+    if kind in {"theorem", "lemma", "def"}:
+        return "unclassified"
+    return "source_claim"
 
 
 def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
@@ -157,16 +219,20 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
         is_owner = "owner_target_tag" in attr_text
         is_bridge = "bridge_target_tag" in attr_text
         is_socket = "socket_debt_tag" in attr_text
-        
+        template_role = decl_template_role(kind, name, attr_text)
+
         rep_depth = ""
         m_depth = re.search(r"rep_depth\s+([a-zA-Z0-9_]+)", attr_text)
         if m_depth:
             rep_depth = m_depth.group(1)
-            
+
         block = "\n".join(lines[p + 1:end])
+        type_text, proof_text = split_decl_body(block)
         tokens = tokenize(block)
         alpha_tokens = alpha_normalize_tokens(tokens)
         alpha_hash = sha256_short(" ".join(alpha_tokens))
+        type_hash_alpha = sha256_short(" ".join(alpha_normalize_tokens(tokenize(type_text))))
+        proof_hash_alpha = sha256_short(" ".join(alpha_normalize_tokens(tokenize(proof_text or type_text))))
         fq = ".".join([*ns, name]) if ns else name
         decl_id = sha256_short(f"{rel}:{start}:{fq}", 20)
         decls.append(Decl(
@@ -178,7 +244,11 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
             start_line=start,
             end_line=end,
             text=block,
+            type_text=type_text,
+            proof_text=proof_text,
             alpha_hash=alpha_hash,
+            type_hash_alpha=type_hash_alpha,
+            proof_hash_alpha=proof_hash_alpha,
             alpha_tokens=alpha_tokens,
             contains_sorry=bool(re.search(r"\b(sorry|admit)\b", strip_comments(block))),
             contains_axiom_like=(kind in {"axiom", "constant", "opaque"}),
@@ -186,11 +256,13 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
             is_bridge=is_bridge,
             is_socket=is_socket,
             rep_depth=rep_depth,
+            template_role=template_role,
+            socket_debt_class=decl_socket_debt_class(is_socket, is_owner, is_bridge, bool(re.search(r"\b(sorry|admit)\b", strip_comments(block))), kind in {"axiom", "constant", "opaque"}, name, kind),
         ))
     return imports, decls
 
 
-def build_graph(root: Path) -> Dict[str, Any]:
+def build_graph(root: Path, wl_rounds: int = 4) -> Dict[str, Any]:
     files = sorted(path for path in root.rglob("*.lean") if path.is_file())
     file_nodes = []
     decls: List[Decl] = []
@@ -214,6 +286,7 @@ def build_graph(root: Path) -> Dict[str, Any]:
     for d in decls:
         name_to_ids[d.name].append(d.id)
         fq_to_id[d.fqname] = d.id
+    id_to_fq = {v: k for k, v in fq_to_id.items()}
 
     edges = []
     for f in file_nodes:
@@ -235,6 +308,15 @@ def build_graph(root: Path) -> Dict[str, Any]:
             for tid in targets:
                 edges.append({"source": f"decl:{d.id}", "target": f"decl:{tid}", "type": "lexical_ref", "refname": refname})
 
+    decl_out_deps: Dict[str, set[str]] = defaultdict(set)
+    decl_in_deps: Dict[str, set[str]] = defaultdict(set)
+    for e in edges:
+        if e["type"] != "lexical_ref":
+            continue
+        if e["source"].startswith("decl:") and e["target"].startswith("decl:"):
+            decl_out_deps[e["source"]].add(e["target"])
+            decl_in_deps[e["target"]].add(e["source"])
+
     nodes: List[Dict[str, Any]] = []
     nodes.extend(file_nodes)
     # import placeholder nodes
@@ -249,16 +331,29 @@ def build_graph(root: Path) -> Dict[str, Any]:
             "name": d.name,
             "fqname": d.fqname,
             "file": d.file,
+            "imports": imports_by_file.get(d.file, []),
             "start_line": d.start_line,
             "end_line": d.end_line,
+            "type_text": d.type_text,
+            "proof_text": d.proof_text,
             "alpha_hash": d.alpha_hash,
+            "type_hash_alpha": d.type_hash_alpha,
+            "proof_hash_alpha": d.proof_hash_alpha,
             "contains_sorry": d.contains_sorry,
             "contains_axiom_like": d.contains_axiom_like,
             "is_owner": d.is_owner,
             "is_bridge": d.is_bridge,
             "is_socket": d.is_socket,
             "rep_depth": d.rep_depth,
+            "template_role": d.template_role,
+            "socket_debt_class": d.socket_debt_class,
             "refs": d.refs,
+            "direct_dependencies": sorted(
+                id_to_fq.get(dep.split("decl:", 1)[1], dep) for dep in decl_out_deps.get(f"decl:{d.id}", set())
+            ),
+            "reverse_dependencies": sorted(
+                id_to_fq.get(dep.split("decl:", 1)[1], dep) for dep in decl_in_deps.get(f"decl:{d.id}", set())
+            ),
             "token_count": len(d.alpha_tokens),
         })
 
@@ -276,7 +371,7 @@ def build_graph(root: Path) -> Dict[str, Any]:
     for e in edges:
         out_edges[e["source"]].append((e["type"], e["target"]))
         in_edges[e["target"]].append((e["type"], e["source"]))
-    for _ in range(4):
+    for _ in range(wl_rounds):
         new_label = {}
         for n in nodes:
             nid = n["id"]
@@ -357,8 +452,180 @@ def build_graph(root: Path) -> Dict[str, Any]:
             "owner_target_count": sum(1 for d in decls if d.is_owner),
             "bridge_target_count": sum(1 for d in decls if d.is_bridge),
             "socket_debt_count": sum(1 for d in decls if d.is_socket),
+            "wl_rounds": wl_rounds,
         }
     }
+
+
+def decl_nodes(graph: Dict[str, Any]) -> List[Dict[str, Any]]:
+    return [n for n in graph["nodes"] if n["kind"] == "decl"]
+
+
+def filter_graph_by_prefix(graph: Dict[str, Any], prefix: str) -> Dict[str, Any]:
+    if not prefix:
+        return graph
+    keep_ids = {n["id"] for n in decl_nodes(graph) if n["fqname"].startswith(prefix)}
+    keep_file_ids = {f"file:{n['file']}" for n in decl_nodes(graph) if n["id"] in keep_ids}
+    keep_import_ids = {
+        f"import:{imp}"
+        for n in decl_nodes(graph)
+        if n["id"] in keep_ids
+        for imp in n.get("imports", [])
+    }
+    keep_ids_all = keep_ids | keep_file_ids | keep_import_ids
+    nodes = [n for n in graph["nodes"] if n["id"] in keep_ids_all]
+    edges = [e for e in graph["edges"] if e["source"] in keep_ids_all and e["target"] in keep_ids_all]
+    sub = dict(graph)
+    sub["nodes"] = nodes
+    sub["edges"] = edges
+    sub["root_prefix"] = prefix
+    return sub
+
+
+def cluster_classification(members: List[Dict[str, Any]]) -> str:
+    if not members:
+        return "unclassified"
+    if any(m.get("is_socket") or m.get("socket_debt_class") == "socket_debt" for m in members):
+        return "socket_debt"
+    if any(m.get("is_bridge") for m in members):
+        return "bridge_preservation"
+    if any(m.get("is_owner") for m in members) and all(not m.get("contains_sorry") for m in members):
+        return "closed_owner"
+    if len(members) > 1:
+        type_hashes = {m.get("type_hash_alpha") for m in members}
+        proof_hashes = {m.get("proof_hash_alpha") for m in members}
+        if len(type_hashes) == 1 and len(proof_hashes) == 1:
+            return "duplicate_alias"
+    if any(m.get("contains_sorry") or m.get("contains_axiom_like") for m in members):
+        return "source_claim"
+    return "unclassified"
+
+
+def lane_duplicate_clusters(graph: Dict[str, Any]) -> List[Dict[str, Any]]:
+    decls = decl_nodes(graph)
+    by_hash: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for d in decls:
+        by_hash[d.get("alpha_hash", "")].append(d)
+    clusters = []
+    for h, members in by_hash.items():
+        if len(members) <= 1:
+            continue
+        clusters.append({
+            "hash": h,
+            "classification": cluster_classification(members),
+            "count": len(members),
+            "members": members,
+        })
+    clusters.sort(key=lambda c: (-c["count"], c["hash"]))
+    return clusters
+
+
+def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
+    decls = decl_nodes(graph)
+    clusters = lane_duplicate_clusters(graph)
+    report_json = {
+        "root": graph["root"],
+        "root_prefix": graph.get("root_prefix", ""),
+        "include_tags": graph.get("include_tags", []),
+        "wl_rounds": graph.get("wl_rounds", graph.get("stats", {}).get("wl_rounds", None)),
+        "stats": graph["stats"],
+        "declarations": decls,
+        "duplicate_clusters": clusters,
+    }
+    (out_dir / f"{stem}.json").write_text(json.dumps(report_json, ensure_ascii=False, indent=2), encoding="utf-8")
+    lines = []
+    lines.append(f"# {stem}")
+    lines.append("")
+    lines.append(f"Root: `{graph['root']}`")
+    if graph.get("root_prefix"):
+        lines.append(f"Prefix: `{graph['root_prefix']}`")
+    lines.append("")
+    lines.append("## Summary")
+    lines.append("")
+    for k, v in graph["stats"].items():
+        lines.append(f"- `{k}`: **{v}**")
+    lines.append("")
+    if graph.get("include_tags"):
+        lines.append(f"- `include_tags`: `{', '.join(graph['include_tags'])}`")
+        lines.append("")
+    class_counts = Counter(c["classification"] for c in clusters)
+    if class_counts:
+        lines.append("## Cluster classification summary")
+        lines.append("")
+        for label in ["closed_owner", "bridge_preservation", "duplicate_alias", "socket_debt", "source_claim", "unclassified"]:
+            lines.append(f"- `{label}`: **{class_counts.get(label, 0)}**")
+        lines.append("")
+    lines.append("## Duplicate clusters")
+    lines.append("")
+    if not clusters:
+        lines.append("No duplicate alpha classes found in scope.")
+    else:
+        for c in clusters:
+            lines.append(f"### `{c['hash']}` ({c['count']} declarations, `{c['classification']}`)")
+            for m in c["members"]:
+                lines.append(
+                    f"- `{m['fqname']}` [{m['decl_kind']}] `{m['file']}:{m['start_line']}-{m['end_line']}` "
+                    f"`rep_depth={m.get('rep_depth','')}` `role={m.get('template_role','')}` "
+                    f"`owner={m.get('is_owner')}` `bridge={m.get('is_bridge')}` `socket={m.get('is_socket')}`"
+                )
+            lines.append("")
+    lines.append("## AQL query templates")
+    lines.append("")
+    lines.append("```aql")
+    lines.append("FOR d IN declarations")
+    lines.append("  FILTER d.socket_debt_tag == true")
+    lines.append("  LET owners = (")
+    lines.append("    FOR e IN edges")
+    lines.append("      FILTER e._to == d._id AND e.kind == \"owns_socket\"")
+    lines.append("      RETURN e")
+    lines.append("  )")
+    lines.append("  FILTER LENGTH(owners) == 0")
+    lines.append("  RETURN {")
+    lines.append("    name: d.name,")
+    lines.append("    module: d.module,")
+    lines.append("    rep_depth: d.rep_depth,")
+    lines.append("    socket_debt_class: d.socket_debt_class")
+    lines.append("  }")
+    lines.append("```")
+    lines.append("")
+    lines.append("```aql")
+    lines.append("FOR d IN declarations")
+    lines.append("  FILTER d.owner_target_tag == true")
+    lines.append("  COLLECT h = d.type_hash_alpha INTO group")
+    lines.append("  FILTER LENGTH(group) > 1")
+    lines.append("  RETURN {")
+    lines.append("    type_hash_alpha: h,")
+    lines.append("    declarations: group[*].d.name,")
+    lines.append("    modules: group[*].d.module")
+    lines.append("  }")
+    lines.append("```")
+    lines.append("")
+    lines.append("```aql")
+    lines.append("FOR d IN declarations")
+    lines.append("  FILTER d.template_role IN [\"Gate\", \"Bridge\", \"Socket\", \"Witness\"]")
+    lines.append("  FILTER d.socket_debt_tag != true AND d.owner_target_tag != true AND d.bridge_target_tag != true")
+    lines.append("  RETURN {")
+    lines.append("    name: d.name,")
+    lines.append("    module: d.module,")
+    lines.append("    template_role: d.template_role,")
+    lines.append("    status: \"untagged_template_object\"")
+    lines.append("  }")
+    lines.append("```")
+    lines.append("")
+    lines.append("## Declaration inventory")
+    lines.append("")
+    for d in sorted(decls, key=lambda n: n["fqname"]):
+        lines.append(
+            f"- `{d['fqname']}` [{d['decl_kind']}] "
+            f"`type_hash={d.get('type_hash_alpha','')}` `proof_hash={d.get('proof_hash_alpha','')}` "
+            f"`rep_depth={d.get('rep_depth','')}` `role={d.get('template_role','')}` "
+            f"`socket_debt_class={d.get('socket_debt_class','')}`"
+        )
+    lines.append("")
+    lines.append("## Interpretation")
+    lines.append("")
+    lines.append("This is a static observability overlay. It is not a kernel proof. Exact duplicates and WL neighborhoods are heuristics for navigation and refactoring priority.")
+    (out_dir / f"{stem}.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 def write_report(graph: Dict[str, Any], out: Path) -> None:
@@ -480,18 +747,41 @@ document.getElementById('wl').innerHTML = dupTable(graph.duplicate_wl_classes);
     out.write_text(html_text, encoding="utf-8")
 
 
+def choose_report_stem(root: Path, filter_prefix: str, explicit: str | None = None) -> str:
+    if explicit:
+        return explicit
+    if filter_prefix == "InfoGeometry.Arithmetic" or root.name == "Arithmetic":
+        return "prime_boolean_cube_dedupe"
+    if filter_prefix:
+        tail = filter_prefix.rsplit(".", 1)[-1]
+        return f"{tail.lower()}_dedupe"
+    return "graph_overlay"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("root", type=Path, help="Root directory containing Lean files")
     ap.add_argument("--out-dir", type=Path, default=Path("graph_overlay_out"))
+    ap.add_argument("--filter-prefix", default="", help="Restrict the lane-scoped report to this declaration prefix")
+    ap.add_argument("--include-tags", default="", help="Comma-separated tag names to preserve in the lane report")
+    ap.add_argument("--wl-rounds", type=int, default=4, help="Number of Weisfeiler-Lehman refinement rounds")
+    ap.add_argument("--report-stem", default="", help="Override the lane-scoped report filename stem")
     args = ap.parse_args()
     root = args.root.resolve()
     out = args.out_dir.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    graph = build_graph(root)
+    graph = build_graph(root, wl_rounds=args.wl_rounds)
     (out / "graph_overlay.json").write_text(json.dumps(graph, ensure_ascii=False, indent=2), encoding="utf-8")
     write_report(graph, out / "graph_overlay_report.md")
     write_html(graph, out / "graph_overlay_dashboard.html")
+
+    if args.filter_prefix:
+        lane = filter_graph_by_prefix(graph, args.filter_prefix)
+        lane["include_tags"] = [t for t in args.include_tags.split(",") if t]
+        lane["wl_rounds"] = args.wl_rounds
+        stem = choose_report_stem(root, args.filter_prefix, args.report_stem or None)
+        write_lane_report(lane, out, stem)
+
     print(json.dumps(graph["stats"], indent=2))
     return 0
 

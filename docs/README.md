@@ -157,6 +157,7 @@ Do not hand-curate those surfaces as if they were source of truth.
 11. [OperatorQuickstart.md](OperatorQuickstart.md)
 12. [DAGTroubleshooting.md](DAGTroubleshooting.md)
 13. [LeanTrail.md](LeanTrail.md)
+14. [black_books/231_the_moebius_topology_of_information.md](black_books/231_the_moebius_topology_of_information.md)
 
 ## What Changed In This Audit
 

@@ -60,6 +60,8 @@ import InfoGeometry.Arithmetic.ProjectivePrimePartition
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylGaugeCantorFockBridge
+import InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
+import InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Compatibility.PSLDescentShadow

@@ -8,6 +8,9 @@ Lean remains proof authority; the overlay is an external analysis surface.
 
 ## Current Toolchain
 
+- `lean_graph_overlay.py`
+  compatibility wrapper for the main graph overlay CLI. Use this when you want
+  the shorter repo-root-facing entrypoint.
 - `graph_overlay_toolchain/graph_overlay/scripts/lean_graph_overlay.py`
   static scanner for Lean sources, alpha-normalized wrapper silhouettes, WL hashes,
   SCC summaries, and dashboard/report generation.
@@ -26,11 +29,22 @@ Run from the repository root:
 python3 tools/observability/graph_overlay_toolchain/graph_overlay/scripts/lean_graph_overlay.py . --out-dir /tmp/graph_overlay_smoke
 ```
 
+Lane-scoped arithmetic pass:
+
+```bash
+python3 tools/observability/lean_graph_overlay.py lean/InfoGeometry/Arithmetic \
+  --filter-prefix InfoGeometry.Arithmetic \
+  --include-tags rep_depth,owner_target_tag,bridge_target_tag,socket_debt_tag \
+  --wl-rounds 3 \
+  --out-dir reports/overlay/arithmetic_wl
+```
+
 Outputs:
 
 - `graph_overlay.json`
 - `graph_overlay_report.md`
 - `graph_overlay_dashboard.html`
+- lane-scoped report files such as `prime_boolean_cube_dedupe.md` and `prime_boolean_cube_dedupe.json`
 
 ## Auto Tagging
 

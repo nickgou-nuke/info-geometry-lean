@@ -115,6 +115,7 @@ import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
 import InfoGeometry.Canonical.NilpotentLegendreConformalBridge
 import InfoGeometry.Canonical.FractalFockEquivalenceBridge
 import InfoGeometry.Canonical.CelikKocakFractalFockBridge
+import InfoGeometry.Canonical.CelikKocakPaperFormalism
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Canonical.CanonicalGaugeBridge

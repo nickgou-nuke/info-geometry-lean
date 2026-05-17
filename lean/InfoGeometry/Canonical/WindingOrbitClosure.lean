@@ -932,6 +932,50 @@ theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBra
       (H := H) hMod N hFaithful hObs
 
 /--
+Constructive reverse direction for D1: a local clock-gauge symmetry certificate
+supplies the faithful branch witness, so zero winding obstruction forces clock
+equilibrium without exposing `IsClockFaithfulExponentialBranch` separately.
+-/
+theorem clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N)
+    (hObs :
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0) :
+    IsClockEquilibriumLane (H := H) hMod := by
+  exact clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
+    (H := H)
+    hMod
+    N
+    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
+    hObs
+
+/--
+Constructive faithful-branch package for the reverse D1 equivalence: a local
+clock-gauge symmetry certificate is enough to recover the winding-obstruction /
+clock-equilibrium iff on the selected branch.
+-/
+theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N) :
+    IsClockEquilibriumLane (H := H) hMod ↔
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0 := by
+  exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
+    (H := H)
+    hMod
+    N
+    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
+
+/--
 Clock-equilibrium gives branch periodicity for the modular transport generator.
 -/
 theorem winding_orbit_periodicity_of_clockEquilibrium

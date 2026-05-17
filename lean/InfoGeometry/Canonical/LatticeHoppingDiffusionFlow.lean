@@ -94,4 +94,100 @@ theorem continuum_emergence {V : Type} [NormedAddCommGroup V] [InnerProductSpace
     IsStationaryAtScale B.rg B.scale := by
   exact B.continuumEmergence
 
+/-- The RG beta function vanishes at the bridge's stationary scale. -/
+theorem betaFunction_eq_zero_at_continuum_emergence
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V)) (x : DoubledSpace V) :
+    betaFunction B.rg B.scale x = 0 := by
+  exact betaFunction_eq_zero_at_stationary_scale B.rg B.scale B.continuumEmergence x
+
+/-- The RG dual-map derivative vanishes at the bridge's stationary scale. -/
+theorem dual_map_deriv_eq_zero_at_continuum_emergence
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V)) (x : DoubledSpace V) :
+    deriv (fun t => (B.rg t).dualMap x) B.scale = 0 := by
+  exact dual_map_deriv_eq_zero_at_stationary_scale B.rg B.scale B.continuumEmergence x
+
+/-- Flow-invariance at the bridge scale is enough to force stationarity. -/
+theorem continuum_emergence_of_flowInvariant
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V))
+    (hInv : FlowInvariantAtScale B.rg B.scale) :
+    IsStationaryAtScale B.rg B.scale :=
+  isStationaryAtScale_of_flowInvariant B.rg B.scale hInv
+
+/-- The RG beta function vanishes under explicit flow-invariance. -/
+theorem betaFunction_eq_zero_of_flowInvariant
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V))
+    (hInv : FlowInvariantAtScale B.rg B.scale)
+    (x : DoubledSpace V) :
+    betaFunction B.rg B.scale x = 0 := by
+  exact betaFunction_eq_zero_at_stationary_scale B.rg B.scale
+    (continuum_emergence_of_flowInvariant B hInv) x
+
+/-- The RG dual-map derivative vanishes under explicit flow-invariance. -/
+theorem dual_map_deriv_eq_zero_of_flowInvariant
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V))
+    (hInv : FlowInvariantAtScale B.rg B.scale)
+    (x : DoubledSpace V) :
+    deriv (fun t => (B.rg t).dualMap x) B.scale = 0 := by
+  exact dual_map_deriv_eq_zero_at_stationary_scale B.rg B.scale
+    (continuum_emergence_of_flowInvariant B hInv) x
+
+/-- The bridge JKO step decreases the installed free energy. -/
+theorem jko_energy_next_le_previous_energy
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V)) :
+    B.potential.energy B.jko.next ≤ B.potential.energy B.jko.previous :=
+  B.jko.energy_next_le_previous_energy
+
+/-- The bridge JKO penalty is bounded by the energy drop. -/
+theorem jko_penalty_le_energy_drop
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V)) :
+    B.potential.penalty B.jko.stepSize B.jko.next B.jko.previous ≤
+      B.potential.energy B.jko.previous - B.potential.energy B.jko.next :=
+  B.jko.penalty_le_energy_drop
+
+/-- The hopping/Dirac transport has no defect leakage once the support split is supplied. -/
+theorem no_defect_leakage_of_hopping
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V))
+    (hPzeroMulPreg : B.reduction.Pzero * B.reduction.Preg = 0)
+    (v : DoubledSpace V)
+    (hReg : B.reduction.Preg v = v)
+    (t : ℝ) :
+    B.reduction.Pzero (quasilatticeDirac B.gen.bundle B.gen.baseD t v) = 0 := by
+  exact no_defect_leakage_of_optimal_flow
+    B.reduction
+    (fun t => quasilatticeDirac B.gen.bundle B.gen.baseD t)
+    B.optimality
+    hPzeroMulPreg
+    v
+    hReg
+    t
+
+/-- Compact payload for the lattice bridge: stationarity, JKO decay, and defect control. -/
+theorem continuum_emergence_payload
+    {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
+    (B : LatticeJKORGFlowBridge (V := V))
+    (hInv : FlowInvariantAtScale B.rg B.scale)
+    (hPzeroMulPreg : B.reduction.Pzero * B.reduction.Preg = 0)
+    (v : DoubledSpace V)
+    (hReg : B.reduction.Preg v = v)
+    (t : ℝ) :
+    IsStationaryAtScale B.rg B.scale ∧
+      betaFunction B.rg B.scale v = 0 ∧
+      B.potential.energy B.jko.next ≤ B.potential.energy B.jko.previous ∧
+      B.potential.penalty B.jko.stepSize B.jko.next B.jko.previous ≤
+        B.potential.energy B.jko.previous - B.potential.energy B.jko.next ∧
+      B.reduction.Pzero (quasilatticeDirac B.gen.bundle B.gen.baseD t v) = 0 := by
+  refine ⟨continuum_emergence_of_flowInvariant B hInv, ?_, ?_, ?_, ?_⟩
+  · exact betaFunction_eq_zero_of_flowInvariant B hInv v
+  · exact jko_energy_next_le_previous_energy B
+  · exact jko_penalty_le_energy_drop B
+  · exact no_defect_leakage_of_hopping B hPzeroMulPreg v hReg t
+
 end InfoGeometry.Canonical.LatticeHoppingDiffusionFlow

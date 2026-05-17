@@ -53,7 +53,7 @@ structure GrandCanonicalHamiltonianFlowBridge
   /-- Certified regular-lane Bogoliubov transport on the same Hilbert carrier. -/
   bogoliubov : CertifiedModularReduction (E := H)
 
-namespace GrandCanonicalHamiltonianFlowBridge
+namespace Bridge
 
 variable
     {Orbit E Op H Finite Alg Symmetry : Type}
@@ -102,6 +102,6 @@ theorem bogoliubovFlow_isOptimal :
   exact InfoGeometry.Canonical.BogoliubovOptimalTransport.canonicalBogoliubovFlow_isOptimal
     (c := B.bogoliubov)
 
-end GrandCanonicalHamiltonianFlowBridge
+end Bridge
 
 end InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge

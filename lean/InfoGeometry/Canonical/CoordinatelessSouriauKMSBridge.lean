@@ -405,10 +405,114 @@ structure CoordinatelessSouriauFisherContext
   fisherMetric : QuantumFisherSLDMetric (H := H) Tangent state
   weylGauge : WeylAlgebraGauge (H := H) state
 
+/--
+Minimal broad coordinateless Souriau/KMS/Fisher context.
+
+This removes the redundant explicit `state` and `kms_state_eq` packet from the
+broad context: the algebraic state is read directly from `kms.state`.
+-/
+@[rep_depth operator]
+structure MinimalCoordinatelessSouriauFisherContext
+    (Symmetry : Type v) (Tangent : Type v) where
+  sigma : AdditiveModularFlow (H := H)
+  beta : ℝ
+  kms : KMSState (H := H) sigma beta
+  souriauMoment : OperatorSouriauMoment (H := H) Symmetry
+  fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state
+  weylGauge : WeylAlgebraGauge (H := H) kms.state
+
+namespace MinimalCoordinatelessSouriauFisherContext
+
+variable {Symmetry : Type v} {Tangent : Type v}
+variable (C : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent)
+
+/-- The algebraic state is read directly from the KMS witness. -/
+@[rep_depth operator]
+def state : AlgebraicState (H := H) :=
+  C.kms.state
+
+/-- Constructor theorem for the narrowed broad KMS/Fisher lane with no explicit `state` packet. -/
+@[rep_depth operator]
+theorem mk_of_kms
+    (sigma : AdditiveModularFlow (H := H))
+    (beta : ℝ)
+    (kms : KMSState (H := H) sigma beta)
+    (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
+    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state)
+    (weylGauge : WeylAlgebraGauge (H := H) kms.state) :
+    ∃ ctx : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent,
+      ctx.state = kms.state := by
+  refine ⟨{
+    sigma := sigma
+    beta := beta
+    kms := kms
+    souriauMoment := souriauMoment
+    fisherMetric := fisherMetric
+    weylGauge := weylGauge
+  }, rfl⟩
+
+/--
+Compatibility adapter from the narrowed broad KMS/Fisher lane to the legacy
+coordinateless context.
+
+This keeps downstream users on the old `CoordinatelessSouriauFisherContext`
+surface without carrying an extra `state` field or `kms_state_eq` proof.
+-/
+@[rep_depth operator]
+def toCoordinatelessSouriauFisherContext :
+    CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
+  state := C.kms.state
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.kms
+  kms_state_eq := rfl
+  souriauMoment := C.souriauMoment
+  fisherMetric := C.fisherMetric
+  weylGauge := C.weylGauge
+
+/-- The compatibility adapter reads back the same algebraic state definitionally. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_state_eq :
+    C.toCoordinatelessSouriauFisherContext.state = C.state :=
+  rfl
+
+end MinimalCoordinatelessSouriauFisherContext
+
 namespace CoordinatelessSouriauFisherContext
 
 variable {Symmetry : Type v} {Tangent : Type v}
 variable (C : CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent)
+
+/-- Convenience lemma: the `state` field equals the KMS state's `state`. -/
+@[rep_depth operator]
+theorem state_eq_kms_state :
+    C.state = C.kms.state := by
+  simpa using C.kms_state_eq.symm
+
+/--
+Project a broad coordinateless Souriau/KMS/Fisher packet onto the narrowed
+minimal branch.
+
+This removes the explicit `state` and `kms_state_eq` fields for downstream
+consumers that only need the KMS witness itself.
+-/
+@[rep_depth operator]
+def toMinimalCoordinatelessSouriauFisherContext :
+    MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.kms
+  souriauMoment := C.souriauMoment
+  fisherMetric := by
+    simpa [C.state_eq_kms_state] using C.fisherMetric
+  weylGauge := by
+    simpa [C.state_eq_kms_state] using C.weylGauge
+
+/-- The narrowed minimal branch reads back the original state propositionally. -/
+@[rep_depth operator]
+theorem toMinimalCoordinatelessSouriauFisherContext_state_eq :
+    C.toMinimalCoordinatelessSouriauFisherContext.state = C.state := by
+  exact C.kms_state_eq
 
 /-- The selected Souriau moment is an operator, not a coordinate field. -/
 @[rep_depth operator]
@@ -734,6 +838,36 @@ theorem coordinateless_constructive_packet
     C.fisherMetric.metric_symm A B,
     C.weyl_state_invariant A⟩
 
+/--
+Compatibility adapter from the observable-tangent constructive branch to the
+observable-tangent cyclic constructive branch.
+
+This removes the remaining explicit `fisherMetric` and `weylGauge` packets from
+callers already living on `ObservableMinimalCyclicCoordinatelessSouriauContext`:
+both are computed canonically from the cyclic state on the identity-flow lane.
+-/
+@[rep_depth operator]
+def ofObservableMinimal
+    (C : ObservableMinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry) :
+    ObservableCyclicCoordinatelessSouriauFisherContext (H := H) Symmetry where
+  state := C.state
+  beta := C.beta
+  souriauMoment := C.souriauMoment
+
+/-- On the observable-tangent adapter, the Fisher metric is definitionally canonical. -/
+@[rep_depth operator]
+theorem ofObservableMinimal_fisherMetric_eq
+    (C : ObservableMinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry) :
+    (ofObservableMinimal (H := H) C).fisherMetric = C.fisherMetric :=
+  rfl
+
+/-- On the observable-tangent adapter, the Weyl gauge is definitionally the identity gauge. -/
+@[rep_depth operator]
+theorem ofObservableMinimal_weylGauge_eq
+    (C : ObservableMinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry) :
+    (ofObservableMinimal (H := H) C).weylGauge = C.weylGauge :=
+  rfl
+
 end ObservableCyclicCoordinatelessSouriauFisherContext
 
 /--
@@ -826,6 +960,93 @@ theorem coordinateless_constructive_packet
     C.weyl_state_invariant A⟩
 
 end CyclicCoordinatelessSouriauFisherContext
+
+namespace CyclicCoordinatelessSouriauFisherContext
+
+variable {Symmetry : Type v} {Tangent : Type v}
+
+/--
+Convert a cyclic coordinateless Souriau/Fisher context to the minimal cyclic
+form by retaining only the generating state, inverse-temperature parameter,
+Souriau moment, and SLD readout.
+-/
+@[rep_depth operator]
+def toMinimalCyclicCoordinatelessSouriauContext
+    (C : CyclicCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent) :
+    MinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry Tangent where
+  state := C.state
+  beta := C.beta
+  souriauMoment := C.souriauMoment
+  sld := fun A => C.fisherMetric.sld A
+
+end CyclicCoordinatelessSouriauFisherContext
+
+namespace MinimalCyclicCoordinatelessSouriauContext
+
+variable {Symmetry : Type v} {Tangent : Type v}
+variable (C : MinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry Tangent)
+
+/-- Compatibility adapter from the minimal constructive branch to the broader cyclic Fisher context. -/
+@[rep_depth operator]
+def toCyclicCoordinatelessSouriauFisherContext :
+    CyclicCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
+  state := C.state
+  beta := C.beta
+  souriauMoment := C.souriauMoment
+  fisherMetric := C.fisherMetric
+  weylGauge := C.weylGauge
+
+/-- On the adapter, the Fisher metric is definitionally the canonical derived one. -/
+@[rep_depth operator]
+theorem toCyclicCoordinatelessSouriauFisherContext_fisherMetric_eq :
+    C.toCyclicCoordinatelessSouriauFisherContext.fisherMetric = C.fisherMetric :=
+  rfl
+
+/-- On the adapter, the Weyl gauge is definitionally the canonical identity gauge. -/
+@[rep_depth operator]
+theorem toCyclicCoordinatelessSouriauFisherContext_weylGauge_eq :
+    C.toCyclicCoordinatelessSouriauFisherContext.weylGauge = C.weylGauge :=
+  rfl
+
+/--
+Compatibility adapter from the minimal constructive branch to the full
+coordinateless Souriau/KMS/Fisher context.
+
+This removes the explicit `sigma`, `kms`, `kms_state_eq`, `fisherMetric`, and
+`weylGauge` packet from callers that already live on the minimal cyclic branch:
+all of those fields are computed from the owned cyclic identity-flow lane.
+-/
+@[rep_depth operator]
+def toCoordinatelessSouriauFisherContext :
+    CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
+  state := C.state.state
+  sigma := identityAdditiveModularFlow (H := H)
+  beta := C.beta
+  kms := C.state.toIdentityKMSState C.beta
+  kms_state_eq := rfl
+  souriauMoment := C.souriauMoment
+  fisherMetric := C.fisherMetric
+  weylGauge := C.weylGauge
+
+/-- On the adapter, the modular flow is definitionally the owned identity flow. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_sigma_eq :
+    C.toCoordinatelessSouriauFisherContext.sigma = C.sigma :=
+  rfl
+
+/-- On the adapter, the Fisher metric is definitionally the canonical derived one. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_fisherMetric_eq :
+    C.toCoordinatelessSouriauFisherContext.fisherMetric = C.fisherMetric :=
+  rfl
+
+/-- On the adapter, the Weyl gauge is definitionally the canonical identity gauge. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_weylGauge_eq :
+    C.toCoordinatelessSouriauFisherContext.weylGauge = C.weylGauge :=
+  rfl
+
+end MinimalCyclicCoordinatelessSouriauContext
 
 namespace CyclicAlgebraicState
 

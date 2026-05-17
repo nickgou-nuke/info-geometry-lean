@@ -648,8 +648,8 @@ noncomputable def ofStrainZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     RouterDefectBoundBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow
-    (observerDefectResidual_norm_le_ZD_of_strain_eq_zero
+  ofZDControlledObserver (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_strain_eq_zero
       (E := E) (CIK := CIK) (obs := obs) hStrain)
 
 /--
@@ -683,7 +683,7 @@ noncomputable def ofDeviationZeroObserver
     (ofStrainZeroObserver (E := E) CIK obs flow hStrain).routerResidual = 0 := by
   have hZero : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
-  simpa [ofStrainZeroObserver] using hZero
+  simpa [ofStrainZeroObserver, ofZDControlledObserver] using hZero
 
 @[simp] theorem ofAlignedObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -816,6 +816,7 @@ theorem ofStrainZeroObserver_sourcedGenerator_eq_flow
   have hZero : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
   simp [RouterDefectBoundBridge.sourcedGenerator, ofStrainZeroObserver,
+    ofZDControlledObserver,
     ofCanonicalObserverDefect, hZero]
 
 /--

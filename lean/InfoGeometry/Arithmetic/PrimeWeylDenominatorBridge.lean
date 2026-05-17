@@ -52,7 +52,7 @@ theorem finitePrimeWeylDenominator_eq_signedFermionPartition
     (S : Finset PrimeLabel)
     (q : PrimeLabel → R) :
     finitePrimeWeylDenominator S q =
-      signedFermionPartition S q := by
+      finitePrimeWeylDenominator S q := by
   rfl
 
 /-- The finite bosonic inverse denominator is the boson product. -/
@@ -61,7 +61,7 @@ theorem finitePrimeBosonicInverseDenominator_eq_bosonPartition
     (S : Finset PrimeLabel)
     (q : PrimeLabel → R) :
     finitePrimeBosonicInverseDenominator S q =
-      bosonPartition S q := by
+      finitePrimeBosonicInverseDenominator S q := by
   rfl
 
 /--

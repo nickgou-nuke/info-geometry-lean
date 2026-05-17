@@ -130,6 +130,221 @@ equivalence class.
 
 > **Normalization is not ontology; it is gauge fixing.**
 
+## Core Mandate: Goutev’s Principle of Absolute Relativity of Measurement
+
+All measurements in InfoGeometry are relative. There is no isolated
+observable; every observable is a comparison made relative to a reference
+state, gauge, section, or projective chart.
+
+This principle governs the architecture:
+
+1. **Normalization is gauge fixing, not ontology.**
+   A normalized state is not more fundamental than its projective ray. It is a
+   choice of section through a ray.
+
+2. **Scale is not physical until compared.**
+   Raw magnitudes live upstream of measurement. Physical readouts are invariant
+   under a Weyl/projective rescaling whenever the theory claims to measure
+   shape rather than scale.
+
+3. **Reference states are part of the datum.**
+   A vacuum, KMS state, thermal reference, or causal cone is not an empty
+   background. It is the chosen comparison frame.
+
+4. **Every closure claim must descend.**
+   A high-level thermodynamic or conformal claim must descend through
+   transport, Krein/operator structure, projective normalization, and finite/
+   count substrate before it is counted as native closure.
+
+5. **Multiple representations are allowed only with bridges.**
+   Boolean cubes, exterior/Fock states, Cantor cylinders, CAR atoms, and
+   projective rays may coexist. They are not duplicates when their preservation
+   maps are kernel-visible. Without those maps, they are duplication debt.
+
+### The Master 2-Morphism
+
+The finite master 2-morphism is:
+
+\[
+\text{gauge-normalized causal cone}
+\longrightarrow
+\text{finite Cantor tilt/switch Clifford cylinder algebra}.
+\]
+
+It says that after dividing out a nonzero Weyl scale, the causal-cone
+generators recover the normalized finite Cantor/Fock generators:
+
+\[
+T_p^2 = 1,\qquad S_p^2 = 1,\qquad T_pS_p=-S_pT_p.
+\]
+
+Equivalently, with
+
+\[
+c_p=S_p,\qquad d_p=S_pT_p,
+\]
+
+one obtains the finite \(\mathcal C\ell(1,1)\) atom:
+
+\[
+c_p^2=1,\qquad d_p^2=-1,\qquad c_pd_p+d_pc_p=0.
+\]
+
+This is native finite closure.
+
+The infinite completion is not native closure. It is a literature-owned socket:
+
+\[
+\text{finite Cantor cylinders}
+\longrightarrow
+L^2(K)
+\longrightarrow
+\text{Fock representation of } Cl_\infty.
+\]
+
+The owner is Çelik–Koçak 2011, which constructs a representation of the
+infinite-dimensional complex Clifford algebra on \(L^2(K)\), where \(K\) is
+the Cantor set, and proves equivalence with the classical Fock
+representation. Their Lemma 1.1 supplies the infinite tilt/switch relations,
+Theorem 2.1 builds the \(Cl_\infty\) representation, and Theorem 3.3 proves
+Fock equivalence.
+
+### Finite Arithmetic Interpretation
+
+The finite Cantor lattice is
+
+\[
+X_\Lambda=\{0,1\}^{\mathcal P_\Lambda}.
+\]
+
+A vertex is a square-free prime occupancy state
+
+\[
+S\subseteq \mathcal P_\Lambda,
+\qquad
+n_S=\prod_{p\in S}p.
+\]
+
+The local split-Majorana pair satisfies
+
+\[
+c_p=\varepsilon_p+\iota_p,\qquad
+d_p=\varepsilon_p-\iota_p,
+\]
+
+and the local parity is
+
+\[
+\Pi_p=c_pd_p=1-2N_p.
+\]
+
+The global chirality is
+
+\[
+\Gamma_\Lambda=\prod_{p\le \Lambda}(1-2N_p),
+\]
+
+and on a square-free state it is
+
+\[
+\Gamma_\Lambda|S\rangle=(-1)^{|S|}|S\rangle
+=\mu(n_S)|S\rangle.
+\]
+
+The arithmetic Hamiltonian is the diagonal number operator
+
+\[
+H_\Lambda=\sum_{p\le\Lambda}(\log p)N_p,
+\]
+
+so
+
+\[
+H_\Lambda|S\rangle
+=
+\left(\sum_{p\in S}\log p\right)|S\rangle
+=
+\log(n_S)|S\rangle.
+\]
+
+The Möbius/Witten character is finite:
+
+\[
+\mathcal I_\Lambda(s)
+=
+\operatorname{Tr}_{\mathcal F_\Lambda}
+\left(\Gamma_\Lambda e^{-sH_\Lambda}\right)
+=
+\prod_{p\le\Lambda}(1-p^{-s}).
+\]
+
+The infinite identity
+
+\[
+\prod_p(1-p^{-s})=\frac1{\zeta(s)}
+\]
+
+is analytic and belongs to the Euler-product socket, valid first in the region
+\(\Re(s)>1\). It is not a finite native theorem.
+
+### The Dirac Warning
+
+The naive Majorana sum
+
+\[
+D_\Lambda=\sum_{p\le\Lambda}\sqrt{\log p}\,c_p
+\]
+
+does not square to the arithmetic Hamiltonian. Since the \(c_p\) anticommute,
+
+\[
+D_\Lambda^2
+=
+\sum_{p\le\Lambda}\log p\cdot 1,
+\]
+
+which is a scalar cutoff energy, not
+
+\[
+H_\Lambda=\sum_p(\log p)N_p.
+\]
+
+The correct finite arithmetic Hamiltonian is the diagonal number operator, or
+the square of a genuine Hodge/graph Dirac package with the appropriate
+creation/annihilation and projection structure. This distinction is mandatory
+for the Hilbert–Pólya lane to remain honest.
+
+### Relation to Projective/Weyl Gauge
+
+The projective layer enforces the principle that scale is gauge.
+`ProjectiveFoundation.lean` treats the real projective substrate separately
+from the lifted cocycle, defines cover-to-projective descent, and records
+kernel anomalies as the obstruction carried by invisible lifts.
+
+The Weyl-gauge bridge applies the same principle to the Cantor/Fock layer:
+
+\[
+\text{raw scaled generators}
+\quad
+\xrightarrow{\text{divide by nonzero Weyl scale}}
+\quad
+\text{normalized Clifford generators}.
+\]
+
+The normalized algebra is the invariant content; the raw scale is the gauge.
+
+### Implementation Rule
+
+Every future bridge must be one of:
+
+- `@[owner_target_tag]`: the module owns and proves the closure contract.
+- `@[bridge_target_tag]`: the theorem transports an invariant between
+  representations.
+- `@[socket_debt_tag]`: the statement is honest deferred content.
+
+The compiler addons already make these surfaces machine-visible: owner targets,
+bridge targets, and socket debt are auditable by dedicated commands.
+
 ## Mathematical Consequences
 
 The principle has immediate structural consequences.

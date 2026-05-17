@@ -16,8 +16,10 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
+import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
+import InfoGeometry.Canonical.PrimeExteriorSugawaraBridge
 import InfoGeometry.Canonical.PrimeExteriorMobiusCalibration
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE

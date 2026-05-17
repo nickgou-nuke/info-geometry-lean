@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
@@ -280,7 +281,7 @@ If the calibrated Virasoro packet has unit affine level, vanishing dual Coxeter
 number, and its finite-dimension readout is the cardinality of a finite prime
 cutoff `S`, then the Sugawara central charge reads exactly `|S|`.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem centralCharge_eq_card_of_level_one_dualCoxeter_zero
     {PrimeLabel Field Coeff Finite Alg : Type*}
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]

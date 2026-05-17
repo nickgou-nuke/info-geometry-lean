@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
 import InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
@@ -228,6 +229,17 @@ theorem operatorialCharge_eq_analyticIndex :
 theorem virasoroCentralCharge_eq_sugawara :
     P.virasoroCentralCharge = P.primeVirasoro.affineVirasoro.centralCharge :=
   P.virasoroCentralCharge_eq
+
+/-- Bridge re-export of the finite Sugawara cardinality specialization. -/
+@[bridge_target_tag, rep_depth operator]
+theorem primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
+    (S : Finset PrimeLabel)
+    (hlevel : P.primeVirasoro.affineVirasoro.level = 1)
+    (hdim : P.primeVirasoro.affineVirasoro.finiteDimension = (S.card : ℝ))
+    (hdual : P.primeVirasoro.affineVirasoro.dualCoxeterNumber = 0) :
+    P.primeVirasoro.affineVirasoro.centralCharge = (S.card : ℝ) :=
+  PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
+    P.primeVirasoro S hlevel hdim hdual
 
 /-- The Virasoro central charge is calibrated by the Sugawara owner theorem. -/
 @[rep_depth operator]

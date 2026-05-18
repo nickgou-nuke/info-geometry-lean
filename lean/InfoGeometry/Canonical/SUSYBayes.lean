@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
-import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.Fock
 
 /-!
@@ -40,17 +40,17 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Theorem `majorana_belief_iff_zero_uncertainty`. -/
 theorem majorana_belief_iff_zero_uncertainty (ψ : Krein.DoubledSpace E) :
-    InfoGeometry.Canonical.Fierz.IsMajoranaBelief (E := E) ψ
-      ↔ InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ = 0 :=
+    InfoGeometry.Quantum.Fierz.IsMajoranaBelief (E := E) ψ
+      ↔ InfoGeometry.Quantum.Fierz.infoArea (E := E) ψ = 0 :=
   Iff.rfl
 
 /-- Theorem `fierz_power_conservation`. -/
 theorem fierz_power_conservation [CompleteSpace E] (ψ : Krein.DoubledSpace E) :
-    (InfoGeometry.Canonical.Fierz.infoHilbert (E := E) ψ) ^ 2
-      = (InfoGeometry.Canonical.Fierz.infoScalar (E := E) ψ) ^ 2
-        + (InfoGeometry.Canonical.Fierz.infoSymplectic (E := E) ψ) ^ 2
-        + 4 * InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ :=
-  InfoGeometry.Canonical.Fierz.information_fierz_identity (E := E) ψ
+    (InfoGeometry.Quantum.Fierz.infoHilbert (E := E) ψ) ^ 2
+      = (InfoGeometry.Quantum.Fierz.infoScalar (E := E) ψ) ^ 2
+        + (InfoGeometry.Quantum.Fierz.infoSymplectic (E := E) ψ) ^ 2
+        + 4 * InfoGeometry.Quantum.Fierz.infoArea (E := E) ψ :=
+  InfoGeometry.Quantum.Fierz.information_fierz_identity (E := E) ψ
 
 end MajoranaFierz
 

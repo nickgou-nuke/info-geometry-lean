@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.DeterminantCore
-import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Canonical.SpectralInference
-import InfoGeometry.Canonical.ThermoFromLogDet
+import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Volume.LogPotential
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 

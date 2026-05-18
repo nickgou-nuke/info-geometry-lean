@@ -1,7 +1,9 @@
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
 import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.QFTTDFTLaunchpad
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
+import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.RicciMongeAmpere
 

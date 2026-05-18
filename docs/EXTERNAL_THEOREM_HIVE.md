@@ -157,7 +157,15 @@ python3 tools/infra/external_theorem_harvester.py \
 
 ## Lean reconstruction lane
 
-For locally mirrored external corpora, keep the corpus under `external/<repo>` and search it by declaration index before rebuilding any theorem surface. Prefer a query/index workflow for already-proved theorems, then reconstruct the Lean-native theorem or adapter in this repo.
+For locally mirrored external corpora, keep the corpus under `external/<repo>` or `external_refs/<repo>` and search it by declaration index before rebuilding any theorem surface. Prefer a query/index workflow for already-proved theorems, then reconstruct the Lean-native theorem or adapter in this repo.
+
+Repository-facing query helper:
+
+```bash
+python3 tools/infra/query_external_corpus.py admissible level --limit 20
+```
+
+The helper reads `external_refs/pyw/index.json` and `external_refs/pyw/keyword_index.json` and returns matching declarations for search-first triage.
 
 
 The intended downstream chain is:

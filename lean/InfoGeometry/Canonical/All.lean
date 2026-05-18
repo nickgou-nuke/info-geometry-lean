@@ -176,7 +176,7 @@ import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.Clifford
-import InfoGeometry.Canonical.CliffordBridge
+import InfoGeometry.Canonical.GaugeUnified
 import InfoGeometry.Canonical.Cl11ModularAtom
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Canonical.CliffordFractalWaveletBridge
@@ -208,7 +208,6 @@ import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.DeterminantCore
-import InfoGeometry.Canonical.PfaffianPathDeterminantBridge
 import InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
@@ -252,7 +251,6 @@ import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.External.Virasoro
-import InfoGeometry.External.VirasoroPaperDigest
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -326,7 +324,7 @@ import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 import InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
 import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.EPDefectAlgebra
-import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.FierzStressProjectionBridge
@@ -433,9 +431,8 @@ import InfoGeometry.Canonical.KreinDrazinBoundarySupport
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.KMSConditionBridge
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
-import InfoGeometry.Canonical.KMSSinkhornBridge
-import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersPhaseAxisReduction
@@ -455,7 +452,7 @@ import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Canonical.LiteratureTwistorHodgePalatial
 import InfoGeometry.Canonical.LLN
 import InfoGeometry.Canonical.LLNCore
-import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Canonical.LogDetRadonNikodymMechanism
 import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Canonical.LogSpineBridge
@@ -476,7 +473,7 @@ import InfoGeometry.Canonical.MetricTransportWitness
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularCartanCantorSystem
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
-import InfoGeometry.Canonical.ModularBerryBridge
+import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import InfoGeometry.Canonical.ModularHamiltonianSignum
@@ -515,7 +512,6 @@ import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OnsagerSpineBridge
 import InfoGeometry.Canonical.OpenProblemFormalization
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
-import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
 import InfoGeometry.Canonical.NoncommutativeOperatorAlgebra
@@ -585,7 +581,8 @@ import InfoGeometry.Canonical.ProjectiveCCR
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Canonical.ProjectiveSectorDecomposition
 import InfoGeometry.Canonical.ProjectiveSplitQ11Realization
-import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.MeasureProjective
+import InfoGeometry.Measure.Normalized
 import InfoGeometry.Canonical.ProjectorAnomalyConformalBridge
 import InfoGeometry.Canonical.ProjectorNoncommutativityDilationClosure
 import InfoGeometry.Canonical.ProjectorEquivariance
@@ -608,7 +605,7 @@ import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.RelationalInformationDynamics
-import InfoGeometry.Canonical.RelativeGeneratorCore
+import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
@@ -723,7 +720,7 @@ import InfoGeometry.Canonical.ThermodynamicAction
 import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
 import InfoGeometry.Canonical.ThermodynamicClosureTargets
 import InfoGeometry.Canonical.ThermodynamicGenerator
-import InfoGeometry.Canonical.ThermoFromLogDet
+import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Canonical.TimeReversalKramers
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
@@ -744,7 +741,9 @@ import InfoGeometry.Canonical.Unification
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
 import InfoGeometry.Canonical.UnifiedTopologicalGapBridge
-import InfoGeometry.Canonical.UniversalVolume
+import InfoGeometry.Volume.LogPotential
+import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Volume.DeterminantBundle
 import InfoGeometry.Canonical.VandermondeExclusionBridge
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.VolumeDeformationPrinciple

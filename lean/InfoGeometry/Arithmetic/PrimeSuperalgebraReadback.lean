@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
@@ -158,107 +157,10 @@ theorem finiteThermalSupertrace_eq_inverseEulerProduct
       finiteThermalInverseEulerProduct P β := by
   exact finiteSupertraceDirichlet_eq_inverseEulerProduct P (thermalPrimeFactor β)
 
-/-! ## 4. Witness sockets for richer superalgebra structure -/
+/-! ## 4. Native theorem content only -/
 
-/--
-A witness-gated prime superalgebra socket.
-
-This is deliberately abstract. It records a superalgebra interpretation without
-asserting that the finite prime-bit arithmetic layer itself has already built a
-full free supercommutative algebra or DG-superalgebra.
--/
-structure PrimeSuperalgebraWitness
-    (Carrier : Type*) where
-  /-- Multiplication/readout on the carrier. -/
-  mul : Carrier → Carrier → Carrier
-  /-- Degree or fermion-number readout. -/
-  degree : Carrier → ℕ
-  /-- Parity readout. -/
-  parity : Carrier → ℤ
-  /-- Supercommutativity law, supplied by a concrete model. -/
-  supercommutativity_law : Prop
-  /-- Proof/certificate of supercommutativity. -/
-  supercommutativity_certificate :
-    supercommutativity_law
-
-namespace PrimeSuperalgebraWitness
-
-variable {Carrier : Type*}
-variable (A : PrimeSuperalgebraWitness Carrier)
-
-/-- The supplied supercommutativity law is available. -/
-theorem supercommutativity_valid :
-    A.supercommutativity_law :=
-  A.supercommutativity_certificate
-
-end PrimeSuperalgebraWitness
-
-/--
-A witness-gated differential graded prime superalgebra socket.
-
-The differential laws are explicit fields. This prevents smuggling an
-arithmetic derivative, von Mangoldt operator, or Hecke differential into the
-theory without proof.
--/
-structure PrimeDGSuperalgebraWitness
-    (Carrier : Type*) extends PrimeSuperalgebraWitness Carrier where
-  /-- Differential/odd derivation candidate. -/
-  d : Carrier → Carrier
-  /-- Nilpotence law. -/
-  d_sq_zero_law : Prop
-  /-- Proof/certificate of nilpotence. -/
-  d_sq_zero_certificate :
-    d_sq_zero_law
-  /-- Graded Leibniz law. -/
-  graded_leibniz_law : Prop
-  /-- Proof/certificate of the graded Leibniz law. -/
-  graded_leibniz_certificate :
-    graded_leibniz_law
-
-namespace PrimeDGSuperalgebraWitness
-
-variable {Carrier : Type*}
-variable (D : PrimeDGSuperalgebraWitness Carrier)
-
-/-- The supplied nilpotence law is available. -/
-theorem d_sq_zero_valid :
-    D.d_sq_zero_law :=
-  D.d_sq_zero_certificate
-
-/-- The supplied graded Leibniz law is available. -/
-theorem graded_leibniz_valid :
-    D.graded_leibniz_law :=
-  D.graded_leibniz_certificate
-
-end PrimeDGSuperalgebraWitness
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for the finite prime-superalgebra readback.
-
-The existing finite arithmetic layer supplies:
-
-* Möbius as fermion parity on represented square-free states;
-* finite supertrace equals finite inverse Euler product.
--/
-@[owner_target_tag]
-def PrimeSuperalgebraReadbackOwnerTarget : Prop :=
-  ∀ P : FermionicPrimeRegister,
-  ∀ ψ : FermionicPrimeState P,
-  ∀ x : ℕ → ℂ,
-    ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
-      fermionParity P ψ
-    ∧
-    finiteSupertraceDirichlet P x =
-      finiteInverseEulerProduct P x
-
-/-- The owner target follows by processing the installed finite arithmetic theorems. -/
-theorem primeSuperalgebraReadbackOwnerTarget :
-    PrimeSuperalgebraReadbackOwnerTarget := by
-  intro P ψ x
-  exact
-    ⟨mobius_eq_fermionParity P ψ,
-      finiteSupertraceDirichlet_eq_inverseEulerProduct P x⟩
+-- Möbius parity on represented square-free states.
+-- Finite supertrace equals finite inverse Euler product.
+-- Thermal finite cutoffs.
 
 end InfoGeometry.Arithmetic.PrimeSuperalgebraReadback

@@ -34,9 +34,10 @@ import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 import InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
 import InfoGeometry.External.Virasoro
-import InfoGeometry.External.VirasoroPaperDigest
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
+import InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauWeights
+import InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauSymmetry
 import InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
@@ -78,7 +79,6 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeFiniteArithmeticDictionary
 import InfoGeometry.Arithmetic.PrimeBitLattice
-import InfoGeometry.Arithmetic.PrimeCantorTiltCARBridge
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
 import InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
 import InfoGeometry.Arithmetic.ProjectiveEntropy
@@ -86,7 +86,6 @@ import InfoGeometry.Arithmetic.ProjectivePrimePartition
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylGaugeCantorFockBridge
-import InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 import InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Canonical.ModularTomitaGeometry
@@ -102,7 +101,6 @@ import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
-import InfoGeometry.GromovWittenErlangen.Checks
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.LanglandsGWBridge
@@ -213,7 +211,6 @@ import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Automorphic.AutomorphicKreinBridge
 import InfoGeometry.Automorphic.SiegelWeilKudlaRallisBridge
 import InfoGeometry.Automorphic.SiegelJacobiStandardLFunction
-import InfoGeometry.Automorphic.SiegelJacobiStandardLFunctionChecks
 import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Optics.All
 import InfoGeometry.Algebraic.CartanCocycle

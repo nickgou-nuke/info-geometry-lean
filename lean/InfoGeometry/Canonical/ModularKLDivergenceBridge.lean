@@ -1,5 +1,5 @@
 import InfoGeometry.Thermo.ModularKLDivergence
-import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
@@ -24,7 +24,8 @@ open scoped ENNReal NNReal
 open MeasureTheory
 open InfoGeometry.PositiveMeasure
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.ProjectiveStateCore
+open InfoGeometry.MeasureProjective
+open InfoGeometry.MeasureProjective.ProjectiveState
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 open InfoGeometry.Canonical.DPDWedgeCompatibility

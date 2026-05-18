@@ -4,8 +4,6 @@ import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.Chebyshev
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean
@@ -380,15 +378,13 @@ primitive Mellin side.  It does not assert any zeta functional equation or
 any analytic continuation beyond the explicit kernel identities already
 proved in this file.
 -/
-@[owner_target_tag]
 def PrimitiveMellinParityOwnerTarget : Prop :=
-  ∀ (n : ℕ) (h : 1 < n),
+  ∀ (n : ℕ) (_h : 1 < n),
     Real.log (primitiveInverseBase n) = -Real.log (n : ℝ) ∧
     (primitiveMellinKernel n = (fun s => Real.exp (s * Real.log (primitiveInverseBase n))) ∧
       primitiveModularKernel n = fun τ => Real.exp ((τ + 1) * Real.log (primitiveInverseBase n)))
 
 /-- The Mellin parity owner target is discharged by the existing inversion lemmas. -/
-@[bridge_target_tag]
 theorem primitiveMellinParityOwnerTarget :
     PrimitiveMellinParityOwnerTarget := by
   intro n h
@@ -584,7 +580,6 @@ theorem primitiveWeight_mul_le_of_ne_one
       omega
     simp [hm_zero, primitiveWeight_eq_zero_of_le_one]
 
-@[bridge_target_tag]
 theorem primitiveWeight_eq_integral_mellinKernel (n : ℕ) :
     primitiveWeight n = ∫ s : ℝ in Set.Ioi 1, primitiveMellinKernel n s := by
   by_cases h : 1 < n
@@ -618,7 +613,6 @@ theorem primitiveWeight_eq_integral_mellinKernel (n : ℕ) :
     rw [primitiveWeight_eq_zero_of_not_lt_two h, hkernel_zero]
     simp
 
-@[bridge_target_tag]
 theorem primitiveWeight_eq_integral_modularKernel (n : ℕ) :
     primitiveWeight n = ∫ τ : ℝ in Set.Ioi 0, primitiveModularKernel n τ := by
   by_cases h : 1 < n
@@ -1852,14 +1846,12 @@ theorem primitiveWeight_vonMangoldt_divisorSigma_scaled_le_largeDivisorSlice_of_
   apply add_le_add_right
   exact badBiUnionDivisorFilter_sum_le_largeDivisor_sum A x x₀
 
-@[bridge_target_tag]
 theorem supportedAboveFinset_mono {x y : ℕ} {A : Finset ℕ}
     (hxy : y ≤ x) (hA : SupportedAboveFinset x A) :
     SupportedAboveFinset y A := by
   intro n hn
   exact le_trans hxy (hA hn)
 
-@[bridge_target_tag]
 theorem supportedAbove_mono {x y : ℕ} {A : Set ℕ}
     (hxy : y ≤ x) (hA : SupportedAbove x A) :
     SupportedAbove y A := by
@@ -2216,53 +2208,5 @@ theorem goodDivisorSum_le_log_mul_add
           * ((if d ∈ A then primitiveWeight d else 0) + (1 + ε)))
       ≤ (1 + ε) * (Real.log 4 + 4) * (x / x₀ : ℕ) :=
   goodDivisorSumChebyshevBound hε hx₀ hx hAprim hAsupp
-
-/-! ## MaxEnt interpretation socket -/
-
-/--
-A finite MaxEnt interpretation socket for primitive supports.
-
-This does not assert that primes maximize the primitive weight sum.  It only
-packages a model-specific entropy/readout functional and a supplied optimality
-law.
--/
-structure PrimitiveFiniteMaxEntWitness where
-  /-- Candidate finite primitive support. -/
-  support :
-    Finset ℕ
-
-  /-- Entropy/readout assigned to finite supports. -/
-  entropyReadout :
-    Finset ℕ → ℝ
-
-  /-- Admissibility predicate, usually primitive plus support bounds. -/
-  admissible :
-    Finset ℕ → Prop
-
-  /-- The candidate support is admissible. -/
-  support_admissible :
-    admissible support
-
-  /-- Supplied MaxEnt optimality law. -/
-  maxent_law :
-    ∀ A : Finset ℕ, admissible A → entropyReadout A ≤ entropyReadout support
-
-namespace PrimitiveFiniteMaxEntWitness
-
-variable (M : PrimitiveFiniteMaxEntWitness)
-
-/-- The supplied MaxEnt candidate is admissible. -/
-theorem admissible_valid :
-    M.admissible M.support :=
-  M.support_admissible
-
-/-- The supplied MaxEnt candidate dominates all admissible finite supports. -/
-theorem entropyReadout_le_support
-    (A : Finset ℕ)
-    (hA : M.admissible A) :
-    M.entropyReadout A ≤ M.entropyReadout M.support :=
-  M.maxent_law A hA
-
-end PrimitiveFiniteMaxEntWitness
 
 end InfoGeometry.Arithmetic

@@ -4,9 +4,10 @@ import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.IBFrozenModularBridge
-import InfoGeometry.Canonical.LogDet
-import InfoGeometry.Canonical.ProjectiveStateCore
-import InfoGeometry.Canonical.RelativeGeneratorCore
+import InfoGeometry.Jordan.LogDet
+import InfoGeometry.MeasureProjective
+import InfoGeometry.Measure.Normalized
+import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
@@ -14,7 +15,7 @@ import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.LogSumExp
-import InfoGeometry.Canonical.ThermoFromLogDet
+import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.LogPotential
 
@@ -50,7 +51,7 @@ References:
 namespace InfoGeometry.Canonical.RedLine
 
 
-export InfoGeometry.Canonical.LogDet (
+export InfoGeometry.Jordan (
   logDetBarrier
   logDetBregman
 )
@@ -60,7 +61,7 @@ export InfoGeometry.Volume.LogPotential (
   logAbsVolume_add
 )
 
-export InfoGeometry.Canonical.ThermoFromLogDet (
+export InfoGeometry.Thermo (
   energyFromLogDet
   partitionFromLogDet
   freeEnergyFromLogDet
@@ -123,7 +124,7 @@ export InfoGeometry.Canonical.RicciMongeAmpere (
   scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
 )
 
-export InfoGeometry.Canonical.ProjectiveStateCore (
+export InfoGeometry.MeasureProjective (
   UState
   NonzeroUState
   SameRay
@@ -134,9 +135,15 @@ export InfoGeometry.Canonical.ProjectiveStateCore (
   PotentialClass
   logPotentialClass
   self_eq_mass_smul_normalize
+)
+
+export InfoGeometry.MeasureProjective.ProjectiveState (
   normalize
   logGenerator
   logGeneratorClass
+)
+
+export InfoGeometry.MeasureProjective.Normalized (
   normalizedSlice
   probMeasureToUState
   probMeasureToNonzero
@@ -153,11 +160,9 @@ export InfoGeometry.Canonical.ProjectiveStateCore (
   logPotential_pmf_self_ae
 )
 
-export InfoGeometry.Canonical.RelativeGeneratorCore (
+export InfoGeometry.MeasureProjective (
   logPotential_smul_left_ae
   logPotential_smul_right_ae
-  logGenerator_self
-  logGeneratorClass_invariant
 )
 
 export InfoGeometry.Canonical.PositiveRayCore (

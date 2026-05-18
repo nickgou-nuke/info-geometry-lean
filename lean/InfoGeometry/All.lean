@@ -16,9 +16,11 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
+import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
+import InfoGeometry.Arithmetic.PrimeCantorLatticeDiracBridge
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
 import InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
@@ -51,6 +53,7 @@ import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Arithmetic.PrimeSupertraceFinite
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
+import InfoGeometry.Arithmetic.PrimeFiniteArithmeticDictionary
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimeCantorTiltCARBridge
 import InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
@@ -164,6 +167,7 @@ import InfoGeometry.Algebraic.NarainRealification
 import InfoGeometry.Application.BlackHoleEntropyReadout
 import InfoGeometry.Specialization.ModularBerrySpecialization
 import InfoGeometry.Arithmetic.PrimeVielbeinSupervolume
+import InfoGeometry.Arithmetic.PrimitiveSetHullKernelBridge
 import InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta

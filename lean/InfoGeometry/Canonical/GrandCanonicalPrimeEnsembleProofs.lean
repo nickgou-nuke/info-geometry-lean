@@ -4,7 +4,6 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Canonical.ZetaTrace
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs
@@ -46,7 +45,6 @@ def energy {α : Type*} (P : VolumeProfile α) (x : α) : ℝ :=
   Real.log (P.volume x)
 
 /-- Energy is definitional log-volume. -/
--- theorem-class: derived
 theorem energy_eq_log_volume {α : Type*} (P : VolumeProfile α) (x : α) :
     energy P x = Real.log (P.volume x) :=
   rfl
@@ -66,7 +64,6 @@ def gibbsProbability {α : Type*} [Fintype α]
   boltzmannWeight β energy mu x / partitionFunction β energy mu
 
 /-- Boltzmann weights are positive. -/
--- theorem-class: derived
 theorem boltzmannWeight_pos {α : Type*}
     (β : ℝ) (energy mu : α → ℝ) (x : α) :
     0 < boltzmannWeight β energy mu x := by
@@ -74,7 +71,6 @@ theorem boltzmannWeight_pos {α : Type*}
   exact Real.exp_pos _
 
 /-- The finite partition function is positive when the state space is nonempty. -/
--- theorem-class: closure
 theorem partitionFunction_pos {α : Type*} [Fintype α] [Nonempty α]
     (β : ℝ) (energy mu : α → ℝ) :
     0 < partitionFunction β energy mu := by
@@ -87,7 +83,6 @@ theorem partitionFunction_pos {α : Type*} [Fintype α] [Nonempty α]
     Finset.univ_nonempty
 
 /-- Gibbs probabilities are nonnegative. -/
--- theorem-class: derived
 theorem gibbsProbability_nonneg {α : Type*} [Fintype α] [Nonempty α]
     (β : ℝ) (energy mu : α → ℝ) (x : α) :
     0 ≤ gibbsProbability β energy mu x := by
@@ -96,7 +91,6 @@ theorem gibbsProbability_nonneg {α : Type*} [Fintype α] [Nonempty α]
     (le_of_lt (partitionFunction_pos β energy mu))
 
 /-- Gibbs probabilities sum to one after normalization. -/
--- theorem-class: closure
 theorem gibbsProbability_sum_eq_one {α : Type*} [Fintype α] [Nonempty α]
     (β : ℝ) (energy mu : α → ℝ) :
     ∑ x, gibbsProbability β energy mu x = 1 := by
@@ -117,7 +111,6 @@ theorem gibbsProbability_sum_eq_one {α : Type*} [Fintype α] [Nonempty α]
 /-! ## 2. Finite log-volume products -/
 
 /-- Finite log-volume product-to-sum law. -/
--- theorem-class: derived
 theorem finite_log_volume_product
     {α : Type*} (w : α → ℝ) (S : Finset α)
     (hw : ∀ a ∈ S, 0 < w a) :
@@ -181,7 +174,6 @@ end TwoMajoranaPair
 /-! ## 4. Prime square-free product and zeta bridge -/
 
 /-- The finite prime square-free partition equals its product form. -/
--- theorem-class: bridge
 theorem finite_prime_grand_partition_product
     (P : InfoGeometry.Arithmetic.PrimeSuperalgebra.PrimeCutoff) (β : ℝ) :
     InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteFermionicSquarefreePartition P β =
@@ -190,7 +182,6 @@ theorem finite_prime_grand_partition_product
     InfoGeometry.Arithmetic.PrimeSuperalgebra.finiteFermionicSquarefreePartition_eq_product P β
 
 /-- The prime Euler product equals `riemannZeta` in the convergence half-plane. -/
--- theorem-class: bridge
 theorem primeEulerProduct_eq_riemannZeta
     {s : ℂ} (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹) = riemannZeta s := by

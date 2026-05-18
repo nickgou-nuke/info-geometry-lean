@@ -6,8 +6,10 @@ import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Canonical.ChiralAction
 import InfoGeometry.Canonical.ChiralCliffordBridge
-import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
+import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
+import InfoGeometry.Canonical.ChiralTorsionTwistor
+import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.HolographicEmergence
@@ -3496,8 +3498,8 @@ attribute [blueprint] InfoGeometry.Canonical.MoE.weightedModeCliffordState
 attribute [blueprint] InfoGeometry.Canonical.MoE.weightedModeCliffordStateMinus
 attribute [blueprint] InfoGeometry.Canonical.MoE.weightedModeCliffordStatePlus
 attribute [blueprint] InfoGeometry.Canonical.MoE.weightedModeCliffordState_split
-attribute [blueprint] InfoGeometry.Canonical.ModularBerryBridge.modularBerryRotor_eq_curvatureIntegral_plus_anomaly
-attribute [blueprint] InfoGeometry.Canonical.ModularBerryBridge.modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly
+attribute [blueprint] InfoGeometry.Canonical.BerryRotorBridge.modularBerryRotor_eq_curvatureIntegral_plus_anomaly
+attribute [blueprint] InfoGeometry.Canonical.BerryRotorBridge.modularSpinHolonomy_eq_surfaceOrderedCurvature_mul_anomaly
 attribute [blueprint] InfoGeometry.Canonical.ModularCPTChiralAtom
 attribute [blueprint] InfoGeometry.Canonical.ModularCPTChiralAtom.K
 attribute [blueprint] InfoGeometry.Canonical.ModularCPTChiralAtom.K_sq_neg_one_eq
@@ -3852,7 +3854,6 @@ attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.IsCStarLayer
 attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.IsCompleteCStarLayer
 attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package
 attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package
-attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.kk_supercomm_compact_of_even_rep
 attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.modular_atom_is_cl11
 attribute [blueprint] InfoGeometry.Canonical.OperatorAlgebraBridge.modular_atom_is_cl11_root
 attribute [blueprint] InfoGeometry.Canonical.OperatorDictionary.Qminus

@@ -3,8 +3,6 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Thermodynamics.SouriauTemperature
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
@@ -231,41 +229,6 @@ theorem responseMatrix_positiveSemidefinite (β μ : ℝ)
 theorem spinodal2D_iff_det_eq_zero (β μ : ℝ) :
     B.packet.spinodal2D β μ ↔ (B.packet.responseMatrix β μ).det = 0 :=
   B.packet.spinodal2D_iff_det_eq_zero β μ
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for the finite prime grand-canonical Massieu/Souriau bridge.
-
-This closes the bridge-level identifications:
-* Souriau temperature and inverse temperature;
-* partition normalization and first derivatives;
-* finite Legendre/Bregman regularization on the contact locus.
--/
-@[owner_target_tag]
-def PrimeGrandCanonicalMassieuOwnerTarget : Prop :=
-    ∀ (B : PrimeGrandCanonicalMassieuBridge),
-    B.beta = B.temperature.s.re ∧
-      0 < B.packet.partition B.beta B.chemicalPotential ∧
-      (∑ S, B.packet.gibbsWeight B.beta B.chemicalPotential S = 1) ∧
-      (deriv (fun t => B.packet.potential t B.chemicalPotential) B.beta =
-        -B.packet.meanShift B.beta B.chemicalPotential) ∧
-      (deriv (fun t => B.packet.potential B.beta t) B.chemicalPotential =
-        B.beta * B.packet.meanNumber B.beta B.chemicalPotential) ∧
-      B.temperatureRegularizedHamiltonian 1 B.beta
-        (B.massieuModel.dualCoord B.beta) = 0
-
-/-- The finite prime grand-canonical Massieu owner target is proved. -/
-theorem primeGrandCanonicalMassieuOwnerTarget :
-    PrimeGrandCanonicalMassieuOwnerTarget := by
-  intro B
-  exact
-    ⟨ B.beta_eq_realPart_of_bridge,
-      B.partition_pos B.beta B.chemicalPotential,
-      B.gibbsWeight_sum_one B.beta B.chemicalPotential,
-      B.potential_deriv_beta_eq_neg_meanShift B.beta B.chemicalPotential,
-      B.potential_deriv_mu_eq_beta_meanNumber B.beta B.chemicalPotential,
-      B.temperatureRegularizedHamiltonian_eq_zero_at_contact 1 B.beta ⟩
 
 end PrimeGrandCanonicalMassieuBridge
 

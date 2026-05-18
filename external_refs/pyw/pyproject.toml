@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyw"
+version = "0.1.0"
+description = "Kac-Moody & W-Algebra Computation Library"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "pyw contributors"}
+]
+keywords = [
+    "kac-moody",
+    "lie-algebra",
+    "affine-lie-algebra",
+    "w-algebra",
+    "root-system",
+    "weyl-group",
+    "fractional-level",
+    "sagemath",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "sagemath-standard >= 10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest >= 7.0",
+    "pytest-cov >= 4.0",
+    "black >= 23.0",
+    "mypy >= 1.0",
+    "ruff >= 0.1.0",
+]
+docs = [
+    "sphinx >= 6.0",
+    "sphinx-rtd-theme >= 1.0",
+    "sphinx-autodoc-typehints",
+]
+jupyter = [
+    "jupyter >= 1.0",
+    "ipywidgets >= 8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pyw"
+Documentation = "https://pyw.readthedocs.io"
+Repository = "https://github.com/yourusername/pyw"
+Issues = "https://github.com/yourusername/pyw/issues"
+
+[tool.setuptools]
+packages = ["pyw"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B"]
+ignore = ["E501"]  # Line too long (handled by black)
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["pyw/tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=pyw --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["pyw"]
+branch = true
+
+[tool.coverage.report]
+precision = 2
+fail_under = 80

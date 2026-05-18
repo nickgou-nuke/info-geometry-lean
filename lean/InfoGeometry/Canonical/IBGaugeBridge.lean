@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.IBMeasure
-import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.MeasureProjective
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 
@@ -9,7 +9,8 @@ open scoped ENNReal
 namespace InfoGeometry.Canonical.IBGaugeBridge
 
 open InfoGeometry.Canonical.IBMeasure
-open InfoGeometry.Canonical.ProjectiveStateCore
+open InfoGeometry.MeasureProjective
+open InfoGeometry.MeasureProjective.ProjectiveState
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 

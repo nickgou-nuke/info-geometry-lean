@@ -96,8 +96,7 @@ def PrimeCl11MellinHurwitzOwnerTarget : Prop :=
     ∧ (Module.finrank ℝ (CliffordAlgebra q11) = 4)
 
 /-- The combined bridge follows from the existing repo owner theorems. -/
-@[rep_depth operator]
-theorem primeCl11MellinHurwitzOwnerTarget :
+@[bridge_target_tag, rep_depth operator] theorem primeCl11MellinHurwitzOwnerTarget :
     PrimeCl11MellinHurwitzOwnerTarget := by
   constructor
   · exact primeBinaryCantorSuperalgebraOwnerTarget

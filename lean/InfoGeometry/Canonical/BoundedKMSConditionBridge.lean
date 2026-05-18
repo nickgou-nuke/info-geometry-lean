@@ -75,6 +75,69 @@ structure BoundedKMSConditionBridge where
       beta
       state
 
+/--
+Constructive witness for the missing reverse-route ingredient on a broad bounded
+KMS bridge.
+
+The broad bridge already carries the state and analytic KMS certificate.  The
+remaining datum needed to recover an integrated `KMSState` is explicit
+real-time invariance of that state under the bounded modular flow.
+-/
+@[rep_depth thermo]
+structure BoundedFlowInvariantStateWitness
+    (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)) where
+  /-- Real-time invariance of the broad bridge state under the bounded flow datum. -/
+  flow_invariant :
+    ∀ t : ℝ, ∀ A : EndH,
+      B.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) = B.state.eval A
+
+/--
+Minimal bounded KMS condition bridge.
+
+This narrows the explicit `state` and bare `KMSAnalyticCertificate` fields to a
+single proof-carrying `KMSState` for the bounded modular flow datum. The legacy
+broader packet remains available through `toBoundedKMSConditionBridge`.
+-/
+@[rep_depth thermo]
+structure MinimalBoundedKMSConditionBridge where
+  /-- Bounded Souriau/Drazin modular-flow calibration. -/
+  boundedFlow :
+    BoundedModularFlowCalibration (E := E) (LieAlgebra := LieAlgebra)
+
+  /-- Inverse temperature. -/
+  beta : ℝ
+
+  /-- Integrated KMS state for the bounded modular flow datum. -/
+  kms :
+    KMSState EndH boundedFlow.modularFlow.toFlowDatum beta
+
+namespace MinimalBoundedKMSConditionBridge
+
+variable (B : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))
+
+/-- Recover the legacy broad bounded KMS bridge from the integrated KMS state. -/
+@[rep_depth thermo]
+def toBoundedKMSConditionBridge :
+    BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) where
+  boundedFlow := B.boundedFlow
+  beta := B.beta
+  state := B.kms.state
+  kms := B.kms.kms
+
+/-- The legacy state field is definitionally the state carried by the KMS socket. -/
+@[rep_depth thermo]
+theorem state_eq_kms_state :
+    B.toBoundedKMSConditionBridge.state = B.kms.state :=
+  rfl
+
+/-- The analytic KMS boundary certificate is recovered from the integrated KMS state. -/
+@[rep_depth thermo]
+theorem kms_boundary_holds :
+    B.toBoundedKMSConditionBridge.kms.boundaryCondition :=
+  B.kms.kms_boundary_holds
+
+end MinimalBoundedKMSConditionBridge
+
 namespace BoundedKMSConditionBridge
 
 variable (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))
@@ -117,6 +180,100 @@ theorem flow_add_apply
 theorem kms_boundary_holds :
     B.kms.boundaryCondition :=
   B.kms.boundaryCondition_holds
+
+/--
+Constructive reverse route: recover the narrowed integrated KMS packet from a
+proof-carrying flow-invariance witness instead of a bare hypothesis argument.
+-/
+@[rep_depth thermo]
+def toMinimalBoundedKMSConditionBridgeOfWitness
+    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
+    MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) where
+  boundedFlow := B.boundedFlow
+  beta := B.beta
+  kms := {
+    state := B.state
+    flow_invariant := W.flow_invariant
+    kms := B.kms
+  }
+
+/-- The witness-routed reverse route recovers the legacy state definitionally. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridgeOfWitness_state_eq
+    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
+    (B.toMinimalBoundedKMSConditionBridgeOfWitness W).kms.state = B.state :=
+  rfl
+
+/-- The witness-routed reverse route round-trips back to the broad bridge. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridgeOfWitness_toBoundedKMSConditionBridge
+    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
+    (B.toMinimalBoundedKMSConditionBridgeOfWitness W).toBoundedKMSConditionBridge = B :=
+  rfl
+
+/--
+Compatibility wrapper: build the narrowed integrated KMS packet from a broad
+bridge using a proof-carrying flow-invariance witness.
+-/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant_witness
+    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
+    ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
+      M.kms.state = B.state := by
+  exact ⟨B.toMinimalBoundedKMSConditionBridgeOfWitness W, rfl⟩
+
+/--
+Build the narrowed integrated KMS packet from the broad bounded bridge once
+real-time flow invariance is supplied explicitly.
+
+This is the smallest honest reverse route currently available in this file:
+the broad packet already carries the state and analytic KMS boundary witness,
+but not the flow-invariance field required by `KMSState`.
+-/
+@[rep_depth thermo]
+def toMinimalBoundedKMSConditionBridge
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) where
+  boundedFlow := B.boundedFlow
+  beta := B.beta
+  kms := {
+    state := B.state
+    flow_invariant := hInvariant
+    kms := B.kms
+  }
+
+/-- The direct narrowed reverse route recovers the legacy state definitionally. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_state_eq
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    (B.toMinimalBoundedKMSConditionBridge hInvariant).kms.state = B.state :=
+  rfl
+
+/-- The direct narrowed reverse route round-trips back to the broad bridge. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_toBoundedKMSConditionBridge
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    (B.toMinimalBoundedKMSConditionBridge hInvariant).toBoundedKMSConditionBridge = B :=
+  rfl
+
+/--
+Compatibility wrapper: build the narrowed integrated KMS packet from the broad
+bounded bridge once real-time flow invariance is supplied explicitly.
+-/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant
+    (hInvariant :
+      ∀ t : ℝ, ∀ A : EndH,
+        B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
+    ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
+      M.kms.state = B.state := by
+  exact ⟨B.toMinimalBoundedKMSConditionBridge hInvariant, rfl⟩
 
 /--
 The bounded KMS socket inherits the Drazin regular-sector commutant stability

@@ -263,6 +263,14 @@ theorem toKMSBridge_state_eq :
     W.toKMSBridge.kms.state = W.state :=
   rfl
 
+/-- Route the legacy broad KMS bridge through the narrowed witness packet. -/
+@[rep_depth krein]
+theorem mk_broad_of_witness :
+    ∃ B : HestenesKreinNaturalConeKMSBridge (H := H)
+      (NormalPositive := NormalPositive) (Op := Op),
+      B.kms.state = W.state :=
+  ⟨W.toKMSBridge, rfl⟩
+
 end HestenesKreinNaturalConeKMSWitness
 namespace HestenesKreinNaturalConeKMSBridge
 

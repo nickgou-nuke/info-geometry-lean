@@ -20,6 +20,10 @@ Lean remains proof authority; the overlay is an external analysis surface.
   only when a matching declaration is present, and it normalizes attribute
   stacks so owner-targets stay plain and socket-debt contracts can share a
   combined `@[socket_debt_tag, rep_depth ...]` line.
+- `socket_debt_ledger.py`
+  derived socket audit ledger. It groups explicit `@[socket_debt_tag]`
+  declarations into ownerless and bridge-backed buckets so proof-plugging can
+  start from a concrete list instead of a raw count.
 
 ## Smoke Test
 
@@ -37,6 +41,13 @@ python3 tools/observability/lean_graph_overlay.py lean/InfoGeometry/Arithmetic \
   --include-tags rep_depth,owner_target_tag,bridge_target_tag,socket_debt_tag \
   --wl-rounds 3 \
   --out-dir reports/overlay/arithmetic_wl
+```
+
+Socket-debt ledger:
+
+```bash
+python3 tools/observability/socket_debt_ledger.py lean/InfoGeometry \
+  --out-dir reports/socket_debt_ledger
 ```
 
 Outputs:

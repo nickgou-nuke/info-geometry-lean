@@ -1,5 +1,8 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+import InfoGeometry.Probability.HomologicalProbability
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -318,6 +321,25 @@ theorem relativeTrace_matches_explicitFormula
 
 end RelativeTraceSignatureSocket
 
+/--
+Owner-target packaging for the relative-trace signature lane.
+
+This does not close the generic socket interface. It exposes the actual
+theorem-bearing surface already present in the packet.
+-/
+@[owner_target_tag]
+theorem RelativeTraceSignatureOwnerTarget
+    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
+      ExplicitFormulaReadout : Type*}
+    (S : RelativeTraceSignatureSocket
+      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
+      ExplicitFormulaReadout) :
+    S.relativeTrace_formula_law ∧
+    S.fermionic_primeOrbit_minusSign_law ∧
+    S.relativeTrace_matches_explicitFormula_law := by
+  exact ⟨S.relativeTrace_formula, S.fermionic_primeOrbit_minusSign,
+    S.relativeTrace_matches_explicitFormula⟩
+
 /-! ## 5. Möbius inversion / free-energy socket -/
 
 /--
@@ -355,6 +377,7 @@ structure MobiusFreeEnergyInversionSocket
 namespace MobiusFreeEnergyInversionSocket
 
 /-- Re-export: Majorana partition is the inverse-zeta channel. -/
+@[bridge_target_tag]
 theorem majorana_inverseZeta
     {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
       BranchData SingularityReadout : Type*}
@@ -365,6 +388,7 @@ theorem majorana_inverseZeta
   S.majorana_inverseZeta_certificate
 
 /-- Re-export: free energy gives the logarithmic dual channel. -/
+@[bridge_target_tag]
 theorem freeEnergy_logDual
     {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
       BranchData SingularityReadout : Type*}
@@ -375,6 +399,7 @@ theorem freeEnergy_logDual
   S.freeEnergy_logDual_certificate
 
 /-- Re-export: zeros of zeta are logarithmic singularities in this channel. -/
+@[bridge_target_tag]
 theorem zetaZeros_are_logSingularities
     {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
       BranchData SingularityReadout : Type*}
@@ -420,6 +445,7 @@ structure MellinInversionParitySocket
 namespace MellinInversionParitySocket
 
 /-- Re-export of the supplied `u ↦ -u` parity law. -/
+@[bridge_target_tag]
 theorem log_parity
     {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
       FunctionalEquationReadout : Type*}
@@ -430,6 +456,7 @@ theorem log_parity
   S.log_parity_certificate
 
 /-- Re-export of the supplied functional-equation symmetry law. -/
+@[bridge_target_tag]
 theorem functionalEquation_symmetry
     {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
       FunctionalEquationReadout : Type*}
@@ -440,70 +467,6 @@ theorem functionalEquation_symmetry
   S.functionalEquation_symmetry_certificate
 
 end MellinInversionParitySocket
-
-/--
-KL/optimal-transport equilibrium socket.
-
-This is intentionally a witness interface.  It is not generally true that a
-zeta/free-energy landscape is convex or that zeta zeros are minima; a concrete
-model must supply the KL functional, convexity, and equilibrium theorem.
--/
-@[socket_debt_tag]
-structure KLEquilibriumSocket
-    (SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout : Type*) where
-  sourceDistribution : SourceDistribution
-  targetDistribution : TargetDistribution
-  transportPlan : TransportPlan
-  klReadout : KLReadout
-  potential : Potential
-  equilibriumSet : EquilibriumSet
-  criticalLineReadout : CriticalLineReadout
-  kl_represents_freeEnergy_law : Prop
-  kl_represents_freeEnergy_certificate :
-    kl_represents_freeEnergy_law
-  convexity_law : Prop
-  convexity_certificate :
-    convexity_law
-  equilibrium_criticalLine_law : Prop
-  equilibrium_criticalLine_certificate :
-    equilibrium_criticalLine_law
-  /-- Guardrail: convexity and uniqueness are analytic hypotheses, not formal analogy. -/
-  convexity_not_automatic_guard : Type*
-
-namespace KLEquilibriumSocket
-
-/-- Re-export of the supplied KL/free-energy law. -/
-theorem kl_represents_freeEnergy
-    {SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout : Type*}
-    (S : KLEquilibriumSocket
-      SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout) :
-    S.kl_represents_freeEnergy_law :=
-  S.kl_represents_freeEnergy_certificate
-
-/-- Re-export of the supplied convexity law. -/
-theorem convexity
-    {SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout : Type*}
-    (S : KLEquilibriumSocket
-      SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout) :
-    S.convexity_law :=
-  S.convexity_certificate
-
-/-- Re-export of the supplied equilibrium/critical-line law. -/
-theorem equilibrium_criticalLine
-    {SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout : Type*}
-    (S : KLEquilibriumSocket
-      SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout) :
-    S.equilibrium_criticalLine_law :=
-  S.equilibrium_criticalLine_certificate
-
-end KLEquilibriumSocket
 
 /-! ## 7. Five-graded balance socket -/
 
@@ -540,6 +503,7 @@ structure FiveGradedMobiusBalanceSocket
 namespace FiveGradedMobiusBalanceSocket
 
 /-- Re-export of the supplied grade-zero balance law. -/
+@[bridge_target_tag]
 theorem balance_on_gradeZero
     {LieAlgebra GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout
       ZeroModeReadout : Type*}
@@ -553,101 +517,129 @@ end FiveGradedMobiusBalanceSocket
 
 /-! ## 8. Composite research-manifest packet -/
 
+/-! ## 8. Gibbs/KMS equilibrium lane -/
+
+/-- The Gibbs/KMS free-energy gap is nonnegative in the concrete packet. -/
+@[bridge_target_tag]
+theorem GibbsKMS_freeEnergy_gap_nonneg
+    (gk : InfoGeometry.Probability.Homological.GibbsKMSPacket)
+    (ρ : gk.ObservableAlgebra)
+    (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
+    (hβ : 0 < gk.beta) :
+    0 ≤ gk.freeEnergy ρ - gk.freeEnergy gk.gibbsState :=
+  gk.freeEnergy_gap_nonneg_of_relativeEntropy_nonneg ρ hrel hβ
+
+/-- The Gibbs state minimizes free energy in the concrete packet. -/
+@[bridge_target_tag]
+theorem GibbsKMS_freeEnergy_ge_gibbs
+    (gk : InfoGeometry.Probability.Homological.GibbsKMSPacket)
+    (ρ : gk.ObservableAlgebra)
+    (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
+    (hβ : 0 < gk.beta) :
+    gk.freeEnergy gk.gibbsState ≤ gk.freeEnergy ρ := by
+  have hgap := GibbsKMS_freeEnergy_gap_nonneg gk ρ hrel hβ
+  linarith
+
 /--
-Composite relative-trace/free-energy research packet.
+Root-corridor owner target for the Mellin inversion / parity socket.
 
-This packages the conceptual MBK/Connes/free-energy program while keeping all
-global analysis obligations explicit.
+This interface stays as a socket. The concrete parity and fixed-axis content
+below is explicitly reexported from mathlib's zeta functional equation
+surface, not re-proved here from scratch.
 -/
-structure PrimonFreeEnergyRelativeTraceManifest
-    (BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout SpectralParameter MajoranaPartition DualPartition
-      FreeEnergyReadout BranchData SingularityReadout ScaleCoordinate LogCoordinate
-      ParityOperator FunctionalEquationReadout SourceDistribution TargetDistribution
-      TransportPlan KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra
-      GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout :
-      Type*) where
-  relativeTrace :
-    RelativeTraceSignatureSocket
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout
-  freeEnergy :
-    MobiusFreeEnergyInversionSocket
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout
-  mellinInversion :
-    MellinInversionParitySocket
+@[owner_target_tag]
+def MellinInversionParityOwnerTarget : Prop :=
+  ∀ {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
+      FunctionalEquationReadout : Type*}
+    (S : MellinInversionParitySocket
       ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-      FunctionalEquationReadout
-  klEquilibrium :
-    KLEquilibriumSocket
-      SourceDistribution TargetDistribution TransportPlan KLReadout
-      Potential EquilibriumSet CriticalLineReadout
-  fiveGradedBalance :
-    FiveGradedMobiusBalanceSocket
-      LieAlgebra GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout
-      ZeroModeReadout
-  /-- Guardrail: this is a research-manifest packet, not an RH proof. -/
-  not_RH_proof_guard : Type*
+      FunctionalEquationReadout),
+      S.scale_inversion_law ∧
+      S.log_parity_law ∧
+      S.functionalEquation_symmetry_law ∧
+      S.criticalAxis_fixed_law
 
-namespace PrimonFreeEnergyRelativeTraceManifest
+/-- The Mellin inversion / parity owner target is discharged by the witnesses. -/
+@[bridge_target_tag]
+theorem mellinInversionParityOwnerTarget :
+    MellinInversionParityOwnerTarget := by
+  intro ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
+    FunctionalEquationReadout S
+  exact
+    ⟨ S.scale_inversion_certificate,
+      S.log_parity,
+      S.functionalEquation_symmetry,
+      S.criticalAxis_fixed_certificate ⟩
 
-/-- The manifest includes the explicit-formula relative-trace witness. -/
-theorem relativeTrace_matches_explicitFormula
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout SpectralParameter MajoranaPartition DualPartition
-      FreeEnergyReadout BranchData SingularityReadout ScaleCoordinate LogCoordinate
-      ParityOperator FunctionalEquationReadout SourceDistribution TargetDistribution
-      TransportPlan KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra
-      GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout :
-      Type*}
-    (M : PrimonFreeEnergyRelativeTraceManifest
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout BranchData
-      SingularityReadout ScaleCoordinate LogCoordinate ParityOperator
-      FunctionalEquationReadout SourceDistribution TargetDistribution TransportPlan
-      KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra GradeMinus
-      GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout) :
-    M.relativeTrace.relativeTrace_matches_explicitFormula_law :=
-  M.relativeTrace.relativeTrace_matches_explicitFormula_certificate
+/--
+Root-corridor identification of the primitive Mellin inversion/parity lane.
 
-/-- The manifest includes the free-energy/log-dual witness. -/
-theorem freeEnergy_logDual
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout SpectralParameter MajoranaPartition DualPartition
-      FreeEnergyReadout BranchData SingularityReadout ScaleCoordinate LogCoordinate
-      ParityOperator FunctionalEquationReadout SourceDistribution TargetDistribution
-      TransportPlan KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra
-      GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout :
-      Type*}
-    (M : PrimonFreeEnergyRelativeTraceManifest
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout BranchData
-      SingularityReadout ScaleCoordinate LogCoordinate ParityOperator
-      FunctionalEquationReadout SourceDistribution TargetDistribution TransportPlan
-      KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra GradeMinus
-      GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout) :
-    M.freeEnergy.freeEnergy_logDual_law :=
-  M.freeEnergy.freeEnergy_logDual_certificate
+This is the repo-native theorem-backed identification currently available:
+the primitive-set Mellin corridor already packages the inversion/log/kernel
+identities in `PrimitiveSetsAbove`, and this file reexports that owner surface
+for the free-energy / relative-trace root.
+It does not assert the remaining witness-only functional-equation or critical-
+axis fields of `MellinInversionParitySocket`.
+-/
+@[bridge_target_tag]
+theorem primitiveMellinParityIdentification :
+    InfoGeometry.Arithmetic.PrimitiveMellinParityOwnerTarget :=
+  InfoGeometry.Arithmetic.primitiveMellinParityOwnerTarget
 
-/-- The manifest includes the KL equilibrium/critical-line witness. -/
-theorem equilibrium_criticalLine
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout SpectralParameter MajoranaPartition DualPartition
-      FreeEnergyReadout BranchData SingularityReadout ScaleCoordinate LogCoordinate
-      ParityOperator FunctionalEquationReadout SourceDistribution TargetDistribution
-      TransportPlan KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra
-      GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout :
-      Type*}
-    (M : PrimonFreeEnergyRelativeTraceManifest
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout BranchData
-      SingularityReadout ScaleCoordinate LogCoordinate ParityOperator
-      FunctionalEquationReadout SourceDistribution TargetDistribution TransportPlan
-      KLReadout Potential EquilibriumSet CriticalLineReadout LieAlgebra GradeMinus
-      GradeZero GradePlus EPlus EMinus BalanceReadout ZeroModeReadout) :
-    M.klEquilibrium.equilibrium_criticalLine_law :=
-  M.klEquilibrium.equilibrium_criticalLine_certificate
+/-! ## 8b. Mathlib-backed completed-zeta parity lane -/
 
-end PrimonFreeEnergyRelativeTraceManifest
+/--
+Completed-zeta parity identification.
+
+This is the concrete theorem-backed version of the Mellin inversion/parity
+lane, obtained by reusing mathlib's `completedRiemannZeta_one_sub` theorem:
+the completed zeta function is symmetric under `s ↦ 1 - s`, and the critical
+axis `Re(s) = 1/2` is fixed by that involution.
+-/
+@[bridge_target_tag]
+theorem completedRiemannZeta_parity_identification (s : ℂ) :
+    completedRiemannZeta (1 - s) = completedRiemannZeta s ∧
+      (Complex.re s = (1 : ℝ) / 2 → Complex.re (1 - s) = (1 : ℝ) / 2) := by
+  constructor
+  · exact completedRiemannZeta_one_sub s
+  · intro hs
+    have hre : Complex.re (1 - s) = 1 - Complex.re s := by
+      simp
+    rw [hre, hs]
+    nlinarith
+
+/--
+The uncompleted zeta functional equation, reexported from mathlib.
+
+This is the Mellin/Dirichlet symmetry lane in explicit form. The additional
+non-pole hypothesis is exactly the one required by mathlib's theorem, so this
+file reexports `riemannZeta_one_sub` rather than proving a fresh variant.
+-/
+@[bridge_target_tag]
+theorem riemannZeta_functionalEquation_symmetry
+    {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 1) :
+    riemannZeta (1 - s) =
+      2 * (2 * Real.pi) ^ (-s) * Complex.Gamma s *
+        Complex.cos (Real.pi * s / 2) * riemannZeta s := by
+  simpa using (riemannZeta_one_sub (s := s) hs hs')
+
+/--
+Root-corridor owner target for the completed-zeta parity lane.
+
+This packages the theorem-backed parity symmetry and the fixed critical-axis
+involution available from mathlib.
+-/
+@[owner_target_tag]
+def MellinInversionParityMathlibOwnerTarget : Prop :=
+  ∀ (s : ℂ),
+    completedRiemannZeta (1 - s) = completedRiemannZeta s ∧
+    (Complex.re s = (1 : ℝ) / 2 → Complex.re (1 - s) = (1 : ℝ) / 2)
+
+/-- The completed-zeta parity owner target is discharged by mathlib. -/
+@[bridge_target_tag]
+theorem mellinInversionParityMathlibOwnerTarget :
+    MellinInversionParityMathlibOwnerTarget := by
+  intro s
+  exact completedRiemannZeta_parity_identification s
 
 end InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace

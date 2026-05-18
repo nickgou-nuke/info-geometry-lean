@@ -444,4 +444,64 @@ theorem superTrace_eq_zero_ofIdentityBalanced
       moment geometricTemperature pairing parityOfGenerator
       stressTensorProjection x).superTrace_stress_eq_zero
 
+/--
+Constructive identity-balanced seed for the Weyl/supertrace-free stress lane.
+
+This groups only the generating data already owned by the identity-balanced
+super-coadjoint moment route, so downstream users can avoid carrying an
+explicit `WeylSupertraceFreeStressContext` packet when this concrete branch is
+available.
+-/
+@[rep_depth thermo]
+structure IdentityBalancedStressSeed
+    (G Gdual Orbit : Type*) where
+  moment : Orbit → Gdual
+  geometricTemperature : G
+  pairing : G → Gdual → ℝ
+  parityOfGenerator : G →
+    InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity
+  stressTensorProjection : Gdual → ℝ
+  point : Orbit
+
+namespace IdentityBalancedStressSeed
+
+variable {G Gdual Orbit : Type*}
+
+/--
+Build the broader stress context definitionally from the identity-balanced seed.
+-/
+@[rep_depth thermo]
+def toContext (S : IdentityBalancedStressSeed G Gdual Orbit) :
+    WeylSupertraceFreeStressContext BalancedScalarStress :=
+  WeylSupertraceFreeStressContext.ofIdentityBalanced
+    (G := G) (Gdual := Gdual) (Orbit := Orbit)
+    S.moment S.geometricTemperature S.pairing S.parityOfGenerator
+    S.stressTensorProjection S.point
+
+/--
+The seed-backed context is supertrace-free without an extra hypothesis field.
+-/
+@[rep_depth thermo]
+theorem toContext_superTrace_eq_zero (S : IdentityBalancedStressSeed G Gdual Orbit) :
+    S.toContext.superTrace S.toContext.stress = 0 := by
+  simpa [IdentityBalancedStressSeed.toContext] using
+    superTrace_eq_zero_ofIdentityBalanced
+      (G := G) (Gdual := Gdual) (Orbit := Orbit)
+      S.moment S.geometricTemperature S.pairing S.parityOfGenerator
+      S.stressTensorProjection S.point
+
+/--
+The seed-backed context is Weyl-invariant by the identity-action owner route.
+-/
+@[rep_depth thermo]
+theorem toContext_is_weyl_invariant (S : IdentityBalancedStressSeed G Gdual Orbit) :
+    S.toContext.weylInvariant := by
+  simpa [IdentityBalancedStressSeed.toContext] using
+    (WeylSupertraceFreeStressContext.ofIdentityBalanced
+      (G := G) (Gdual := Gdual) (Orbit := Orbit)
+      S.moment S.geometricTemperature S.pairing S.parityOfGenerator
+      S.stressTensorProjection S.point).is_weyl_invariant
+
+end IdentityBalancedStressSeed
+
 end InfoGeometry.Canonical.SuperSouriauFermionGasBridge

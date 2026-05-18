@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 
@@ -329,7 +330,7 @@ structure HurwitzZeroTransferWitness
     ∀ s : ℂ, Ξ.XiZero s → zeroFreeTransfer.limitF (cayley s) = 0
 
 /-- Hurwitz conclusion: every completed-`xi` zero maps to the Lee--Yang circle. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -342,7 +343,7 @@ theorem hurwitz_xiZeros_map_to_unit_circle
     (HurwitzZeroTransferWitness.xiZero_to_limitZero H s hs)
 
 /-- Conditional RH theorem from the Lee--Yang/Hurwitz package. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_of_Hurwitz_LeeYang_limit
     (Ξ : CompletedXiZeroPredicate)
     (C : CayleyCriticalWitness)
@@ -389,7 +390,7 @@ structure CorrectHurwitzZeroTransferWitness
     ∀ s : ℂ, s ≠ 1 → (Ξ.XiZero s ↔ limitF (cayley s) = 0)
 
 /-- Zero-location transfer for the corrected split-domain Hurwitz witness. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem corrected_hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}
     {A : LeeYangApproximants}
@@ -410,7 +411,7 @@ theorem corrected_hurwitz_xiZeros_map_to_unit_circle
 Final conditional RH theorem from the corrected split-domain
 Hurwitz/Lee--Yang package.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_from_Correct_Hurwitz_LeeYang
     (Ξ : CompletedXiZeroPredicate)
     (C : CayleyCriticalWitness)

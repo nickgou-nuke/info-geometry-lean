@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Canonical.ZetaTrace
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -140,7 +142,8 @@ structure PrimeSupertraceChannel where
   /-- Guardrail: channel declarations are not zero-location theorems. -/
   noZeroLocationClaimGuard : Type*
 
-/-- Re-export a declared prime-supertrace channel law. -/
+/- Re-export a declared prime-supertrace channel law. -/
+@[bridge_target_tag]
 theorem primeSupertraceChannel_law
     (Z : PrimeSupertraceChannel) :
     Z.channelLaw :=
@@ -179,6 +182,7 @@ structure WitnessGatedZetaZeroSocket
   analyticOrSpectralWitness : Type*
 
 /-- Zero claims are available only from the explicit zero socket. -/
+@[bridge_target_tag]
 theorem zeta_zero_socket_requires_witness
     {Z : PrimeSupertraceChannel}
     (W : WitnessGatedZetaZeroSocket Z) :

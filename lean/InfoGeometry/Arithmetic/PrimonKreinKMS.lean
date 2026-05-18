@@ -2,6 +2,8 @@ import Mathlib
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Krein.Thermal
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -134,6 +136,7 @@ def encodedState (S : NormalizableArithmeticKMSSocket State) : State :=
   S.witness.stateOfFinset S.support
 
 /-- The supplied finite arithmetic witness certifies the KMS predicate. -/
+@[bridge_target_tag]
 theorem isKMSAt
     (S : NormalizableArithmeticKMSSocket State) :
     S.witness.IsKMSAt S.encodedState S.beta := by
@@ -242,6 +245,7 @@ variable
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Re-export of the supplied modular KMS boundary law. -/
+@[bridge_target_tag]
 theorem kms_boundary_law
     (S : RealDoubledKreinKMSSocket E)
     (A B : DoubledKrein.EndH₂ (E := E)) :
@@ -278,12 +282,14 @@ variable
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The common inverse temperature is in the normalizable primon region. -/
+@[bridge_target_tag]
 theorem arithmetic_beta_normalizable
     (S : PrimonDoubledKreinKMSSocket State E) :
     NormalizableBeta S.arithmetic.beta :=
   S.arithmetic.normalizable
 
 /-- The doubled Krein side satisfies its supplied KMS boundary law. -/
+@[bridge_target_tag]
 theorem krein_kms_boundary_law
     (S : PrimonDoubledKreinKMSSocket State E)
     (A B : DoubledKrein.EndH₂ (E := E)) :
@@ -293,5 +299,37 @@ theorem krein_kms_boundary_law
   S.krein.kms_boundary_law A B
 
 end PrimonDoubledKreinKMSSocket
+
+/-! ## 8. Owner target package -/
+
+/--
+Root-corridor owner target for the primon doubled Krein/KMS package.
+
+This packages only the already proved finite arithmetic KMS normalization and
+the doubled Krein boundary law.  It does not claim a Type III completion or a
+global Tomita--Takesaki theorem.
+-/
+@[owner_target_tag]
+def PrimonDoubledKreinKMSSocketOwnerTarget : Prop :=
+  ∀ {State E : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (S : PrimonDoubledKreinKMSSocket State E),
+      NormalizableBeta S.arithmetic.beta ∧
+      S.arithmetic.witness.IsKMSAt S.arithmetic.encodedState S.arithmetic.beta ∧
+      (∀ A B : DoubledKrein.EndH₂ (E := E),
+        S.krein.state
+          (A * InfoGeometry.Krein.modular_shift S.krein.generator S.krein.beta B) =
+            S.krein.state (B * A))
+
+/-- The root-corridor owner target is discharged by the existing witnesses. -/
+theorem primonDoubledKreinKMSSocketOwnerTarget :
+    PrimonDoubledKreinKMSSocketOwnerTarget := by
+  intro State E instE instI instC S
+  constructor
+  · exact S.arithmetic.normalizable
+  · constructor
+    · exact S.arithmetic.witness.isKMSAt S.arithmetic.support S.arithmetic.beta
+    · intro A B
+      exact S.krein.kms_boundary_law A B
 
 end InfoGeometry.Arithmetic.PrimonKreinKMS

@@ -1140,6 +1140,25 @@ theorem operatorialEntropyProduction_nonneg_of_metricResponsePSD
 
 -- theorem-class: bridge
 /--
+Operatorial second-law gate from a constructive square-response witness.
+
+This narrows the bare `OperatorialMetricResponsePSD` hypothesis to the owned
+infinite-dimensional witness route already available on the operatorial
+metriplectic lane.
+-/
+@[rep_depth transport]
+theorem operatorialEntropyProduction_nonneg_of_squareResponse
+    (S :
+      OperatorialMetriplecticContext.SquareOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.operatorialEntropyProduction_nonneg_of_metricResponsePSD
+    (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
+    xForce yForce
+
+-- theorem-class: bridge
+/--
 Single operatorial Fisher/Onsager entropy equation packet:
 Hessian readout, diagonal double-commutator coefficient, quadratic entropy
 production, and PSD second-law nonnegativity.
@@ -1452,9 +1471,8 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_squareResponse
     (xForce yForce : ℝ) :
     0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
       0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
-  C.finite_and_operatorial_entropyProduction_nonneg
-    (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
-    xForce yForce
+  ⟨C.finiteMetriplecticEntropyProduction_nonneg,
+    C.operatorialEntropyProduction_nonneg_of_squareResponse S xForce yForce⟩
 
 -- theorem-class: bridge
 /--
@@ -1532,6 +1550,7 @@ attribute [terminal]
   operatorialDiagonalFisherOnsager_eq_doubleTransportCommutator
   operatorialWeightedDynamics_eq_weylCovariantThermodynamicDerivation
   operatorialWeylCovariantThermodynamicDerivation_split
+  operatorialEntropyProduction_nonneg_of_squareResponse
   operatorialFisherOnsager_entropyProduction_equation
   operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
   operatorialFisherOnsager_entropyProduction_equation_of_regularCone

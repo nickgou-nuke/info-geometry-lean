@@ -579,6 +579,25 @@ structure ZeroNormalizedCocycleGeneratorWitness
   hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
 
 /--
+Zero-normalized witness route to integer-time matching.
+
+This reduces the explicit `hBridge`, `hLift`, and `hZero` hypothesis surface of
+`cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero` to one
+proof-carrying witness packet.
+-/
+theorem cocycleEntropyPotential_natMatch_of_zeroNormalizedCocycleGeneratorWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H) σ u T) :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u W.hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k := by
+  exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+    (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge) (T := T)
+    W.hLift W.hZero
+
+/--
 Zero-normalized witness route to the topological Bekenstein bound.
 
 This is the smallest constructive surface behind the older Connes-cocycle

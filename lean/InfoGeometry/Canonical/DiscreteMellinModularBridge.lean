@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.DiscreteModularSpectrum
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.MellinTransform
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators

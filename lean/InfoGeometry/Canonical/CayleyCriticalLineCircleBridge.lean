@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -220,6 +221,7 @@ structure LeeYangCayleyRiemannWitness
 namespace LeeYangCayleyRiemannWitness
 
 /-- Re-export of the supplied Lee--Yang admissibility law. -/
+@[bridge_target_tag]
 theorem leeYangAdmissible
     {PartitionFunction CompletedXiReadout ZeroReadout : Type*}
     (W : LeeYangCayleyRiemannWitness
@@ -228,6 +230,7 @@ theorem leeYangAdmissible
   W.leeYangAdmissible_certificate
 
 /-- Re-export of the supplied completed-`xi` determinant identification. -/
+@[bridge_target_tag]
 theorem cayleyDeterminant_eq_completedXi
     {PartitionFunction CompletedXiReadout ZeroReadout : Type*}
     (W : LeeYangCayleyRiemannWitness
@@ -236,6 +239,7 @@ theorem cayleyDeterminant_eq_completedXi
   W.cayleyDeterminant_eq_completedXi_certificate
 
 /-- Re-export of the supplied unit-circle zero-location law. -/
+@[bridge_target_tag]
 theorem zeros_on_unitCircle
     {PartitionFunction CompletedXiReadout ZeroReadout : Type*}
     (W : LeeYangCayleyRiemannWitness
@@ -244,6 +248,7 @@ theorem zeros_on_unitCircle
   W.zeros_on_unitCircle_certificate
 
 /-- Re-export of the supplied Cayley/Riemann critical-line implication. -/
+@[bridge_target_tag]
 theorem cayley_unitCircle_zeros_imply_criticalLine
     {PartitionFunction CompletedXiReadout ZeroReadout : Type*}
     (W : LeeYangCayleyRiemannWitness

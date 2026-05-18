@@ -40,6 +40,7 @@ The source narrative for this shift is recorded in:
 | TR-013 | Cartan boost orbit on the `u⁺` channel | `ε`-generated hyperbolic boost gives `uPlus` weight `(cosh τ + sinh τ)` | `InfoGeometry.Canonical.KKTLorentzOrbitBridge.channelBoost_mul_uPlus` | implemented |
 | TR-014 | Cartan boost orbit on the `u⁻` channel | `ε`-generated hyperbolic boost gives `uMinus` weight `(cosh τ - sinh τ)` | `InfoGeometry.Canonical.KKTLorentzOrbitBridge.channelBoost_mul_uMinus` | implemented |
 | TR-015 | Cartan boost action on the grade-zero channel | `ε`-generated hyperbolic boost commutes with `g₀` channel operators | `InfoGeometry.Canonical.KKTLorentzOrbitBridge.channelBoost_mul_gZeroPart_eq_gZeroPart_mul_channelBoost` | implemented |
+| TR-016 | projective log generator → relative modular potential → state-relative modular generator → Souriau temperature vector → operator Bregman → free energy | carrier-safe thermodynamic source/sink spine on projective rays, doubled carrier, modular Hamiltonian, and bounded thermodynamic readout | `InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge.temperature_modularHamiltonian_Bregman_freeEnergy_chain` | implemented |
 
 ## Promotion Rule
 

@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -172,6 +173,7 @@ structure ZeroModeProtectionBridge
 Assemble the protected zero-mode packet from existing defect-free and Majorana
 zero-mode witnesses plus the supplied QFT/SUSY protection bridge.
 -/
+@[bridge_target_tag]
 def zeroModeProtection_of_defectFreeLimit
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout : Type}
     (D : DefectFreeLimitPacket CompletedXiReadout)
@@ -200,6 +202,7 @@ def zeroModeProtection_of_defectFreeLimit
     B.no_unconditional_RH_claim_guard
 
 /-- Owner theorem: the assembled packet re-exports its supplied protection laws. -/
+@[bridge_target_tag]
 theorem zeroModeProtection_of_defectFreeLimit_reexports
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout : Type}
     (D : DefectFreeLimitPacket CompletedXiReadout)

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -99,19 +100,19 @@ variable {A : LeeYangApproximants}
 variable (S : PrimeLeeYangConvergenceSocket Ξ A)
 
 /-- Re-export of the supplied completed-`xi` Cayley-pullback identity law. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem limit_eq_xiCayleyPullback :
     S.limit_eq_xiCayleyPullback_law :=
   S.limit_eq_xiCayleyPullback_certificate
 
 /-- Re-export of the supplied no-spurious-zeros law. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem noSpuriousZeros_law :
     S.noSpuriousZeros :=
   S.noSpuriousZeros_certificate
 
 /-- Zero-free complement transfer induced by the convergence socket. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 def zeroFreeTransfer :
     ZeroFreeDomainTransfer where
   limitF := S.limitF
@@ -121,7 +122,7 @@ def zeroFreeTransfer :
 /--
 Build the corrected Hurwitz witness consumed by `PrimeHurwitzLimit`.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 def toCorrectHurwitzZeroTransferWitness :
     CorrectHurwitzZeroTransferWitness Ξ A where
   limitF := S.limitF
@@ -134,7 +135,7 @@ def toCorrectHurwitzZeroTransferWitness :
   xi_zero_iff_limit_zero := S.xi_zero_iff_limit_zero
 
 /-- The convergence socket maps completed-`xi` zeros to the Lee--Yang circle. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem xiZeros_map_to_unit_circle
     (S : PrimeLeeYangConvergenceSocket Ξ A)
     (s : ℂ)
@@ -150,7 +151,7 @@ Conditional RH theorem from a prime Lee--Yang convergence socket.
 This is a theorem-safe reduction: all hard convergence, nontriviality, and
 zero-transfer inputs are supplied by `S`.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem limitF_zero_on_unitCircle
     (S : PrimeLeeYangConvergenceSocket Ξ A)
     {z : ℂ}
@@ -160,7 +161,7 @@ theorem limitF_zero_on_unitCircle
     S.zeroFreeTransfer hz
 
 /-- Conditional RH theorem from a prime Lee--Yang convergence socket. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_of_convergence_socket
     (S : PrimeLeeYangConvergenceSocket Ξ A)
     (C : CayleyCriticalWitness) :

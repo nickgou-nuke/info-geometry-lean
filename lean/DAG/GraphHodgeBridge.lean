@@ -15,8 +15,7 @@ graph-Hodge carrier from `GraphHodge.lean` into a single coherence layer:
 * `chiralAnticommutes` is the bounded chiral compatibility check;
 * `HodgeSummary` is the readout/export packet.
 
-The bridge is intended to make the operator lane explicit at one point in the
-namespace, instead of repeating the same finite dictionary in each consumer.
+The bridge is intentionally a packaging surface, not a new theorem owner.
 -/
 
 namespace DAG
@@ -29,88 +28,65 @@ Dirac, Laplacian, chiral, and summary readouts.
 -/
 structure FiniteGraphHodgePacket (α) [BEq α] [Hashable α] where
   tc : TwoComplex α
-  grading : ChiralGrading (tc.base.toGraph.nodes.size)
+  gradingSize : Nat
+  gradingMatrix : Array (Array Rat)
   dirac : Array (Array Rat)
-  laplacian0 : Array (Array Rat)
-  laplacian1 : Array (Array Rat)
-  chiral : Array (Array Rat)
-  chiralAnticommutes : Bool
+  lap0 : Array (Array Rat)
+  lap1 : Array (Array Rat)
+  chiralMatrix : Array (Array Rat)
+  chiralCompatible : Bool
   summary : HodgeSummary
+
+namespace FiniteGraphHodgePacket
 
 /--
 Canonical constructor for the finite graph-Hodge packet.
 
-This is the bridge-normalized packet: the operator and readout fields are
-filled from the owner definitions in `GraphHodge.lean`.
+The fields are populated from the owner definitions in `GraphHodge.lean`.
 -/
-def FiniteGraphHodgePacket.canonical
-    {α : Type*} [BEq α] [Hashable α]
+def canonical
+    {α} [BEq α] [Hashable α]
     (tc : TwoComplex α)
     (grading : ChiralGrading (tc.base.toGraph.nodes.size)) :
-    FiniteGraphHodgePacket α where
-  tc := tc
-  grading := grading
-  dirac := graphDirac tc
-  laplacian0 := laplacian0 tc
-  laplacian1 := laplacian1 tc
-  chiral := extendedChiralGrading tc grading
-  chiralAnticommutes := chiralAnticommutes tc grading
-  summary := hodgeSummary tc
-
-namespace FiniteGraphHodgePacket
-
-variable {α : Type*} [BEq α] [Hashable α]
-
-/-- The bundled Dirac matrix is the graph Dirac readout. -/
-theorem dirac_eq_graphDirac (B : FiniteGraphHodgePacket α) :
-    B.dirac = graphDirac B.tc := by
-  rfl
-
-/-- The bundled 0-Laplacian is the graph Hodge Laplacian readout. -/
-theorem laplacian0_eq_graphLaplacian0 (B : FiniteGraphHodgePacket α) :
-    B.laplacian0 = laplacian0 B.tc := by
-  rfl
-
-/-- The bundled 1-Laplacian is the graph Hodge Laplacian readout. -/
-theorem laplacian1_eq_graphLaplacian1 (B : FiniteGraphHodgePacket α) :
-    B.laplacian1 = laplacian1 B.tc := by
-  rfl
-
-/-- The bundled chiral grading matrix is the extended grading readout. -/
-theorem chiral_eq_extendedChiralGrading (B : FiniteGraphHodgePacket α) :
-    B.chiral = extendedChiralGrading B.tc B.grading := by
-  rfl
-
-/-- The summary packet is the Hodge summary of the carrier. -/
-theorem summary_eq_hodgeSummary (B : FiniteGraphHodgePacket α) :
-    B.summary = hodgeSummary B.tc := by
-  rfl
+    FiniteGraphHodgePacket α :=
+  let n := tc.base.toGraph.nodes.size
+  { tc := tc
+    gradingSize := n
+    gradingMatrix := chiralDiagMatrix grading
+    dirac := graphDirac tc
+    lap0 := laplacian0 tc
+    lap1 := laplacian1 tc
+    chiralMatrix := extendedChiralGrading tc grading
+    chiralCompatible := chiralAnticommutes tc grading
+    summary := hodgeSummary tc }
 
 end FiniteGraphHodgePacket
 
 /--
 Finite graph Hodge bridge target.
 
-This is the canonical coercion point for the finite Hodge / Dirac / chiral
+This is the canonical packaging point for the finite Hodge / Dirac / chiral
 bundle in the DAG layer.
 -/
 def GraphHodgeBridgeTarget (α) [BEq α] [Hashable α] : Prop :=
-  ∀ (B : FiniteGraphHodgePacket α),
-    B.dirac = graphDirac B.tc ∧
-    B.laplacian0 = laplacian0 B.tc ∧
-    B.laplacian1 = laplacian1 B.tc ∧
-    B.chiral = extendedChiralGrading B.tc B.grading ∧
-    B.summary = hodgeSummary B.tc
+  ∀ (tc : TwoComplex α)
+    (grading : ChiralGrading (tc.base.toGraph.nodes.size)),
+    ∃ B : FiniteGraphHodgePacket α,
+      B.tc = tc ∧
+      B.gradingSize = tc.base.toGraph.nodes.size ∧
+      B.gradingMatrix = chiralDiagMatrix grading ∧
+      B.dirac = graphDirac tc ∧
+      B.lap0 = laplacian0 tc ∧
+      B.lap1 = laplacian1 tc ∧
+      B.chiralMatrix = extendedChiralGrading tc grading ∧
+      B.chiralCompatible = chiralAnticommutes tc grading ∧
+      B.summary = hodgeSummary tc
 
-/-- The finite graph Hodge bridge target is closed by definitional equality. -/
+/-- The finite graph Hodge bridge target is closed. -/
 theorem graphHodgeBridgeTarget (α) [BEq α] [Hashable α] :
     GraphHodgeBridgeTarget α := by
-  intro B
-  exact
-    ⟨FiniteGraphHodgePacket.dirac_eq_graphDirac B,
-     FiniteGraphHodgePacket.laplacian0_eq_graphLaplacian0 B,
-     FiniteGraphHodgePacket.laplacian1_eq_graphLaplacian1 B,
-     FiniteGraphHodgePacket.chiral_eq_extendedChiralGrading B,
-     FiniteGraphHodgePacket.summary_eq_hodgeSummary B⟩
+  intro tc grading
+  refine ⟨FiniteGraphHodgePacket.canonical tc grading, ?_⟩
+  simp [FiniteGraphHodgePacket.canonical]
 
 end DAG

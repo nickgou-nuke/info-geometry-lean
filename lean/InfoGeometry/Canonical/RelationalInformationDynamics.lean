@@ -730,6 +730,36 @@ theorem constructiveRelationalDatum_firstVariation_comparison
       (constructiveRelationalDatum (E := E) reference comparison M ω) A) := by
   rfl
 
+/--
+The realized comparison-state first variation factors through the existing
+gauge/source split of the comparison-induced modular dynamics.
+
+This is the source→sink pairing the modular lane needs:
+`stateRelativeModularGenerator` feeds `stateInducedDynamics`, and that induced
+dynamics is already split into gauge and source channels.
+-/
+@[rep_depth transport, simp]
+theorem constructiveRelationalDatum_firstVariation_comparison_eq_gauge_add_source
+    (reference comparison : H₂)
+    (M : StateModularDatum E)
+    (ω : EndH →L[ℝ] ℝ)
+    (A : ObservableAlgebra E) :
+    (constructiveRelationalDatum (E := E) reference comparison M ω).firstVariation
+        comparison A
+      =
+    ω
+      (comparisonGaugeDynamics
+        (constructiveRelationalDatum (E := E) reference comparison M ω) A
+        +
+      comparisonSourceDynamics
+        (constructiveRelationalDatum (E := E) reference comparison M ω) A) := by
+  rw [constructiveRelationalDatum_firstVariation_comparison
+      (E := E) reference comparison M ω A]
+  rw [comparisonInducedDynamics_eq_gauge_add_source
+      (E := E)
+      (R := constructiveRelationalDatum (E := E) reference comparison M ω)
+      A]
+
 /-- The comparison-state phase form of the realized datum is the channel metric twisted by `K = Jε`. -/
 @[rep_depth krein, simp]
 theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i

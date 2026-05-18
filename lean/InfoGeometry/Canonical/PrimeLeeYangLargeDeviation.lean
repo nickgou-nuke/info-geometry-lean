@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Cramer
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -212,21 +213,25 @@ namespace PrimeChainLargeDeviationWitness
 variable (W : PrimeChainLargeDeviationWitness)
 
 /-- Re-export of the supplied speed-divergence law. -/
+@[bridge_target_tag]
 theorem speed_tends_to_infinity :
     W.speed_tends_to_infinity_law :=
   W.speed_tends_to_infinity_certificate
 
 /-- Re-export of the supplied finite-cumulant convergence law. -/
+@[bridge_target_tag]
 theorem finiteCumulant_converges :
     W.finiteCumulant_converges_law :=
   W.finiteCumulant_converges_certificate
 
 /-- Re-export of the supplied Legendre/rate-function law. -/
+@[bridge_target_tag]
 theorem rateFunction_is_legendre :
     W.rateFunction_is_legendre_law :=
   W.rateFunction_is_legendre_certificate
 
 /-- Re-export of the supplied large-deviation principle. -/
+@[bridge_target_tag]
 theorem largeDeviationPrinciple :
     W.largeDeviationPrinciple_law :=
   W.largeDeviationPrinciple_certificate

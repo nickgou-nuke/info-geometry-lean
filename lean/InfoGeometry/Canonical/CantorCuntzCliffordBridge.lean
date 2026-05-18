@@ -2,6 +2,7 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
@@ -232,7 +233,7 @@ structure CantorCuntzCliffordFierzSocket
   admissibility : CantorFierzAdmissible Op
 
 /-- Re-export: the spin socket's CAR generator is the Cuntz-derived generator. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem socket_car_eq_carFromCuntz
     {Op : Type*} [Ring Op] [StarRing Op]
     (S : CantorCuntzCliffordSocket Op) :
@@ -240,7 +241,7 @@ theorem socket_car_eq_carFromCuntz
   S.car_eq
 
 /-- Re-export: the Cuntz-derived generator in a socket is nilpotent. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem socket_car_nilpotent
     {Op : Type*} [Ring Op] [StarRing Op]
     (S : CantorCuntzCliffordSocket Op) :
@@ -248,7 +249,7 @@ theorem socket_car_nilpotent
   S.car.nilpotent
 
 /-- Re-export: the Cuntz-derived generator in a socket satisfies CAR. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem socket_car_anticommutator
     {Op : Type*} [Ring Op] [StarRing Op]
     (S : CantorCuntzCliffordSocket Op) :

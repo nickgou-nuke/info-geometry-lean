@@ -371,6 +371,30 @@ theorem comparisonReadout_phasePart_eq_zero_of_equilibriumSeed
       (E := E) P ψ A hEq)
 
 @[rep_depth transport]
+theorem comparisonReadout_kSplit_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E) (stateGaugeDynamics (E := E) P.modularData ψ A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E) (stateSourceDynamics (E := E) P.modularData ψ A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E) (stateGaugeDynamics (E := E) P.modularData ψ A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E) (stateSourceDynamics (E := E) P.modularData ψ A) )
+      =
+    (0, 0) := by
+  exact
+    comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
+      (E := E) P ψ A
+      (isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
+        (E := E) P ψ A hFaithful hFirst)
+
+@[rep_depth transport]
 theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
     (ψ : H₂) (A : EndH)
@@ -400,11 +424,9 @@ theorem comparisonReadout_phasePart_eq_zero_of_firstVariation_eq_zero_of_probeFa
             (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
       =
     (0, 0) := by
-  exact
-    comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
-      (E := E) P ψ A
-      (isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
-        (E := E) P ψ A hFaithful hFirst)
+  simpa [stateGaugeDynamics, stateSourceDynamics] using
+    (comparisonReadout_kSplit_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst)
 
 end Core
 

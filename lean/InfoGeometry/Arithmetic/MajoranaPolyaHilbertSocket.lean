@@ -1743,6 +1743,39 @@ theorem superdeterminant_eq_completedXi
     F.completedXiIdentity.superdeterminant_eq_completedXi_law :=
   F.completedXiIdentity.superdeterminant_eq_completedXi_certificate
 
+/-- Owner-target packaging for the MBK analytic frontier.
+
+This bundles the already-owned archimedean completion and completed-`Xi`
+identity readouts without claiming the underlying operator construction or
+RH.
+-/
+@[owner_target_tag]
+theorem MBKAnalyticFrontierOwnerTarget
+    {FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
+      CommutatorControl RepresentationLimit HeatKernel SmallTimeAsymptotics
+      Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
+      BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
+      CompletedXiReadout SpectralZeroReadout : Type*}
+    (F : MBKAnalyticFrontier
+      FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
+      CommutatorControl RepresentationLimit HeatKernel SmallTimeAsymptotics
+      Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
+      BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
+      CompletedXiReadout SpectralZeroReadout) :
+    F.all_three_fronts_closed_law ∧
+      F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_law ∧
+      F.regularizedPfaffian.regularizedPfaffian_meromorphic_law ∧
+      F.completedXiIdentity.archimedean_completion_law ∧
+      F.completedXiIdentity.superdeterminant_eq_completedXi_law ∧
+      F.completedXiIdentity.completedXiZero_iff_spectralZero_law := by
+  exact ⟨
+    F.all_three_fronts_closed,
+    F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint,
+    F.regularizedPfaffian.regularizedPfaffian_meromorphic,
+    F.completedXiIdentity.archimedean_completion,
+    F.completedXiIdentity.superdeterminant_eq_completedXi,
+    F.completedXiIdentity.completedXiZero_iff_spectralZero⟩
+
 end MBKAnalyticFrontier
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

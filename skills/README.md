@@ -36,5 +36,10 @@ All castes are strictly bound by the top-priority mandate:
 - **Structural Progress**: Real progress = replacing certificates with theorem-backed native derivations.
 - **Kernel Authority**: Lean is the final arbiter of truth.
 
+## Policy Skills
+
+- `lean-formula-function-policy`: formulas are `def`s/functions, not prose
+  labels or structure fields, and downstream Lean code must call them directly.
+
 ## Integration
 This architecture ensures that the Hive is not a one-pass theorem proposer, but a persistent system of recurrent symbolic propagation governed by the Logos of the Lean kernel.

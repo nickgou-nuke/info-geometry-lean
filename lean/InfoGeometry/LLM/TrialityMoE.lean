@@ -627,8 +627,9 @@ zero.
 Zero-defect bounded constructor for an aligned observer.
 
 This closes the `ZD` budget without a free inequality assumption in the
-equilibrium lane: alignment forces the canonical observer defect to vanish, and
-`0 ≤ ‖Z_D‖` supplies the bound.
+equilibrium lane: alignment constructs the exact owner-side deviation-control
+predicate, and the general `ofZDControlledObserver` constructor consumes that
+packet without reopening a bridge-local residual budget.
 -/
 noncomputable def ofAlignedObserver
     (CIK : CertifiedInverseKernel H₂)
@@ -636,8 +637,9 @@ noncomputable def ofAlignedObserver
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     RouterDefectBoundBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow
-    (observerDefectResidual_norm_le_ZD_of_aligned (E := E) (CIK := CIK) (obs := obs) hAlign)
+  ofZDControlledObserver (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_aligned
+      (E := E) (CIK := CIK) (obs := obs) hAlign)
 
 /--
 Zero-defect bounded constructor for an observer whose scalarized orientation
@@ -655,7 +657,9 @@ noncomputable def ofStrainZeroObserver
 
 /--
 Zero-defect bounded constructor for an observer whose local slice is exactly the
-certified spectral projector.
+certified spectral projector.  The owner lane first constructs the exact
+deviation-control predicate, and the bounded bridge is then obtained from the
+general `ofZDControlledObserver` constructor.
 -/
 noncomputable def ofDeviationZeroObserver
     (CIK : CertifiedInverseKernel H₂)
@@ -663,8 +667,9 @@ noncomputable def ofDeviationZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hDev : observerProjectorDeviation CIK obs = 0) :
     RouterDefectBoundBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow
-    (observerDefectResidual_norm_le_ZD_of_deviation_eq_zero (E := E) (CIK := CIK) (obs := obs) hDev)
+  ofZDControlledObserver (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_deviation_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hDev)
 
 @[simp] theorem ofDeviationZeroObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -750,10 +755,10 @@ theorem ofDeviationZeroObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hDev : observerProjectorDeviation CIK obs = 0) :
     (ofDeviationZeroObserver (E := E) CIK obs flow hDev).sourcedGenerator = flow.K0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
-  simp [RouterDefectBoundBridge.sourcedGenerator, ofDeviationZeroObserver,
-    ofCanonicalObserverDefect, hZero]
+  unfold RouterDefectBoundBridge.sourcedGenerator
+  rw [ofDeviationZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+    (flow := flow) (hDev := hDev)]
+  simp [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect]
 
 /--
 For a deviation-zero observer, Drazin-cut preservation reduces to the
@@ -782,10 +787,10 @@ theorem ofAlignedObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     (ofAlignedObserver (E := E) CIK obs flow hAlign).sourcedGenerator = flow.K0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-  simp [RouterDefectBoundBridge.sourcedGenerator, ofAlignedObserver,
-    ofCanonicalObserverDefect, hZero]
+  unfold RouterDefectBoundBridge.sourcedGenerator
+  rw [ofAlignedObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+    (flow := flow) (hAlign := hAlign)]
+  simp [ofAlignedObserver, ofZDControlledObserver, ofCanonicalObserverDefect]
 
 /--
 For an aligned observer, Drazin-cut preservation reduces to the background-flow

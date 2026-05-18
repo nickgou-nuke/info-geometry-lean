@@ -122,6 +122,17 @@ def canonicalFreeEnergy (M : LegendreModel) (ε θ : ℝ) : ℝ :=
 def scaledFenchelGap (M : LegendreModel) (ε θ η : ℝ) : ℝ :=
   ε * M.fenchelGap θ η
 
+/--
+Temperature-regularized Hamiltonian defect.
+
+This is the scaled Fenchel/Bregman defect attached to the Legendre/Massieu
+potential.  It is the proof-carrying scalar Hamiltonian defect used by the
+thermodynamic bridges in the repo.
+-/
+def temperatureRegularizedHamiltonian
+    (M : LegendreModel) (β θ η : ℝ) : ℝ :=
+  M.scaledFenchelGap β θ η
+
 @[simp] lemma canonicalEnergy_def (M : LegendreModel) (θ : ℝ) :
     M.canonicalEnergy θ = -M.dualCoord θ := rfl
 
@@ -136,6 +147,10 @@ def scaledFenchelGap (M : LegendreModel) (ε θ η : ℝ) : ℝ :=
 @[simp] lemma scaledFenchelGap_def (M : LegendreModel) (ε θ η : ℝ) :
     M.scaledFenchelGap ε θ η = ε * (M.massieu θ + M.φ η - θ * η) := by
   simp [scaledFenchelGap, fenchelGap]
+
+@[simp] lemma temperatureRegularizedHamiltonian_def
+    (M : LegendreModel) (β θ η : ℝ) :
+    M.temperatureRegularizedHamiltonian β θ η = M.scaledFenchelGap β θ η := rfl
 
 /-- The abstract convex-conjugate entropy and canonical entropy are opposites
 under the Gibbs-sign convention. -/
@@ -160,6 +175,13 @@ lemma scaledFenchelGap_nonneg
   unfold scaledFenchelGap
   exact mul_nonneg hε (M.fenchelGap_nonneg θ η)
 
+/-- Temperature-regularized Hamiltonian defect is nonnegative for nonnegative temperature scale. -/
+lemma temperatureRegularizedHamiltonian_nonneg
+    (M : LegendreModel) (β θ η : ℝ) (hβ : 0 ≤ β) :
+    0 ≤ M.temperatureRegularizedHamiltonian β θ η := by
+  simpa [temperatureRegularizedHamiltonian] using
+    (M.scaledFenchelGap_nonneg β θ η hβ)
+
 /-- Scaled Fenchel gap vanishes on the contact locus. -/
 lemma scaledFenchelGap_eq_zero_at_contact
     (M : LegendreModel) (ε θ : ℝ) :
@@ -167,6 +189,13 @@ lemma scaledFenchelGap_eq_zero_at_contact
   unfold scaledFenchelGap
   rw [M.fenchelGap_eq_zero_at_contact]
   ring
+
+/-- Temperature-regularized Hamiltonian defect vanishes on the contact locus. -/
+lemma temperatureRegularizedHamiltonian_eq_zero_at_contact
+    (M : LegendreModel) (β θ : ℝ) :
+    M.temperatureRegularizedHamiltonian β θ (M.dualCoord θ) = 0 := by
+  simpa [temperatureRegularizedHamiltonian] using
+    (M.scaledFenchelGap_eq_zero_at_contact β θ)
 
 /-- Contact balance rewritten with canonical energy:
 `ψ = S - θ U` (Massieu form). -/

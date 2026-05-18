@@ -57,6 +57,10 @@ def test_souriau_tomita_bridge_exposes_cyclic_standard_form_kms_owner_route() ->
     assert "theorem sigma_apply_eq_self" in text
     assert "theorem toStandardFormCarrier_Delta_eq_zero" in text
     assert "theorem toStandardFormCarrier_modularFlow_apply_eq_self" in text
+    assert "theorem mk_of_cyclic" in text
+    assert "C.toMinimalSouriauTomitaKMSContext" in text
+    assert "theorem mk_broad_of_cyclic" in text
+    assert "C.toSouriauTomitaKMSContext" in text
     assert "theorem kms_eval_mul_souriau_modular_eq_eval_flip" in text
     assert "theorem constructive_kms_packet" in text
 

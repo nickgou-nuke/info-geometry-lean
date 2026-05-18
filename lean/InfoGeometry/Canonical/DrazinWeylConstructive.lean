@@ -70,6 +70,17 @@ structure ConstructiveRieszLocalWeylSymmetryData (T : EndH) where
       riesz.P * S' = S' →
         S' = riesz.S
 
+/--
+Witness package for the broad infinite Drazin lane: keep the owned infinite
+assumptions together with the spectral-sheet commutation proof for the classical
+Riesz candidate they already expose.
+-/
+structure DrazinInfiniteWeylWitness (T : EndH) where
+  assumptions : DrazinInfiniteAssumptions (𝕂 := ℝ) T
+  classical_candidate_commutes_spectralEpsilon :
+    assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
+      = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
+
 /-- Shim theorem exporting constructive commutation into legacy Weyl compatibility. -/
 theorem drazinInverse_isWeylCompatible
     (D : ConstructiveDrazinWeylData (E := E)) :
@@ -232,6 +243,17 @@ def constructiveRieszWeylData_of_drazinInfiniteAssumptions
     (E := E) h.classical_riesz hComm
 
 /--
+Witness-routed infinite Drazin package: narrow the free commutation hypothesis
+surface to one proof-carrying bundle on the infinite lane.
+-/
+def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
+    {T : EndH}
+    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    ConstructiveRieszWeylData (E := E) T :=
+  constructiveRieszWeylData_of_drazinInfiniteAssumptions
+    (E := E) W.assumptions W.classical_candidate_commutes_spectralEpsilon
+
+/--
 Constructive D2 bridge: local Weyl symmetry and uniqueness of the regular
 Riesz inverse imply Weyl compatibility of the constructive Drazin candidate.
 -/
@@ -295,6 +317,20 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteAssumptions
       (E := E)
       (constructiveRieszWeylData_of_drazinInfiniteAssumptions
         (E := E) h hComm)
+
+/--
+Proof-carrying infinite Drazin witness route into the constructive Drazin/Weyl
+existence theorem.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylWitness
+    {T : EndH}
+    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+      (E := E)
+      (constructiveRieszWeylData_of_drazinInfiniteWeylWitness (E := E) W)
 
 /--
 Constructive local-symmetry variant of the D2 witness theorem. The Weyl

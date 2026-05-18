@@ -39,6 +39,31 @@ def test_hestenes_dirac_module_declares_real_dirac_equation_and_conservation_pac
     assert "pauliMagneticCoupling" in text
 
 
+def test_hestenes_dirac_finite_tilt_shell_declares_current_density_readout():
+    text = ROOT.joinpath("lean", "InfoGeometry", "Clifford", "FiniteTiltDiracShell.lean").read_text()
+    assert "def finiteTiltCurrentDensity" in text
+    assert "theorem finiteTiltCurrentDensity_eq_boundaryCurrent" in text
+    assert "theorem finiteTiltBoundaryCurrent_sq_zero" in text
+    assert "theorem finiteTiltDiracShell_eq_boundaryCurrent_add_mass" in text
+
+
+def test_hestenes_dirac_finite_tilt_shell_builds():
+    result = subprocess.run(
+        [
+            "python3",
+            "tools/infra/run_locked_lake_build.py",
+            "--wait-for-build-lock",
+            "InfoGeometry.Clifford.FiniteTiltDiracShell",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=240,
+    )
+    assert result.returncode == 0, result.stdout
+
+
 def test_hestenes_dirac_polar_owner_exposes_density_rotor_phase_without_complex_i():
     text = MODULE.read_text()
     assert "structure DiracHestenesPolarDecomposition" in text

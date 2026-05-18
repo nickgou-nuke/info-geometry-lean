@@ -1216,6 +1216,50 @@ longer carries the legacy `relEnt_monotone` field from `CasiniIncrementBridge`.
 The two increment-identification fields in `MinimalCasiniIncrementBridge` are
 enough to reconstruct the generator lift and hence the RN-barrier bound.
 -/
+structure TomitaFlowUnitMinimalCasiniWitness
+    (T : SinkhornTrajectory n) where
+  relEnt : RelativeEntropyProfile
+  hCasini :
+    MinimalCasiniIncrementBridge (n := n) (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      T relEnt
+
+/--
+Tomita flow-unit endpoint through a proof-carrying minimal Casini witness.
+
+This removes the explicit `{relEnt, hCasini}` pair on the canonical Tomita
+flow-unit lane while keeping the older specialized theorem as a compatibility
+wrapper.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniWitness
+    (T : SinkhornTrajectory n)
+    (W : TomitaFlowUnitMinimalCasiniWitness (n := n) (H := H) T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_minimalCasiniIncrement
+    (n := n) (H := H)
+    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (T := T)
+    (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (relEnt := W.relEnt)
+    (hCasini := W.hCasini)
+
+/--
+Tomita flow-unit endpoint through the minimal Casini increment packet.
+
+This is the narrowed constructive branch beneath
+`topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_casiniIncrement`:
+it uses the owned Tomita flow-unit cocycle and unit scalar bridge, and it no
+longer carries the legacy `relEnt_monotone` field from `CasiniIncrementBridge`.
+The two increment-identification fields in `MinimalCasiniIncrementBridge` are
+enough to reconstruct the generator lift and hence the RN-barrier bound.
+-/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniIncrement
     (T : SinkhornTrajectory n)
     (relEnt : RelativeEntropyProfile)
@@ -1228,16 +1272,9 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniI
           (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
         T relEnt) :
     TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_minimalCasiniIncrement
-    (n := n) (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
-    (T := T)
-    (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
-    (relEnt := relEnt)
-    (hCasini := hCasini)
+  exact topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_minimalCasiniWitness
+    (n := n) (H := H) (T := T)
+    { relEnt := relEnt, hCasini := hCasini }
 
 /--
 Tomita flow-unit endpoint for increment control through the minimal Casini

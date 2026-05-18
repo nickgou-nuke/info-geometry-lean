@@ -346,3 +346,173 @@ The Codex should now classify that Watkins page as:
 
 [1]: https://empslocal.ex.ac.uk/people/staff/mrwatkin/zeta/fnleqn.htm "The functional equation of Riemann's zeta function"
 [2]: https://dlmf.nist.gov/25.4 "DLMF: §25.4 Reflection Formulas ‣ Riemann Zeta Function ‣ Chapter 25 Zeta and Related Functions"
+What Is Missing for a Proof of the Riemann Hypothesis
+CAUTION
+
+This is an honest structural audit. The repository records RH as explicit debt. None of the gaps below are claimed to be closed. Every missing piece is an open mathematical problem — some of which may be as hard as RH itself.
+
+The Logical Chain
+The repository has formalized three independent reduction lanes that each terminate at an RH-shaped statement. All three are theorem-safe: the Lean kernel verifies the conditional logic, but every lane has unfilled socket obligations that constitute the actual mathematical difficulty.
+
+Finite FerromagneticPrime Chain✅ PROVED
+Lee–Yang CircleTheorem for Finite Z_N🔴 SOCKET
+Hurwitz ZeroTransfer / Convergence🔴 SOCKET
+Completed ξ Identification🔴 SOCKET
+RH🔴 CONDITIONAL
+Cayley GeometryRe(s)=1/2 ↔ |w|=1✅ PROVED
+Functional Equationξ(s)=ξ(1−s)🔴 SOCKET
+Cantor-DiracSelf-Adjointness🔴 SOCKET
+Vanishing Period ⇒Self-Adjointness🔴 SOCKET
+Prime HolonomyInversion h(1−s)=h(s)⁻¹✅ PROVED
+Unitarity onCritical Line ‖h‖=1✅ PROVED
+Layer 1: What Is Already Proved (Native Lean, No Sorry)
+These theorems are kernel-verified and carry no debt:
+
+Theorem	File	Statement
+coupling_nonneg	
+PrimeLeeYangFerromagneticChain.lean
+$J_{ij} = \kappa \ln(p_i)\ln(p_j) \geq 0$
+coupling_symm	same	$J_{ij} = J_{ji}$
+coupling_pos	same	$\kappa > 0 \Rightarrow J_{ij} > 0$
+shiftedPrimeFugacity_normSq_of_criticalLine	same	$|p^{-(s-1/2)}|^2 = 1$ on $\text{Re}(s)=1/2$
+criticalLine_iff_cayley_unitCircle	
+CayleyCriticalLineCircleBridge.lean
+$\text{Re}(s)=1/2 \iff |s/(1-s)|=1$
+cayleyToFugacity_one_sub_eq_inv	same	$\text{Cayley}(1-s) = \text{Cayley}(s)^{-1}$
+primeHolonomy_reflection_eq_inv	
+ZetaFunctionalEquationLayer.lean
+$h_p(1-s) = h_p(s)^{-1}$
+primeHolonomy_norm_one_of_criticalLine	same	$|h_p(s)| = 1$ on $\text{Re}(s)=1/2$
+riemannReflection_involutive	same	$(s \mapsto 1-s)^2 = \text{id}$
+RH_of_LeeYangPrimeApproximation	
+PrimeLeeYangRHBridge.lean
+Socket hypotheses ⇒ RH (conditional)
+RH_of_convergence_socket	
+PrimeLeeYangConvergence.lean
+Convergence socket ⇒ RH (conditional)
+zetaPeriod_zero_implies_criticalLine	
+CantorDiracZetaBraneSocket.lean
+Vanishing period socket ⇒ critical line (conditional)
+Layer 2: The Missing Pieces (Socket Debt)
+These are the unfilled obligations. Each is tagged @[socket_debt_tag] and carries a no_unconditional_RH_claim_guard guardrail.
+
+Gap 1: Lee–Yang Circle Theorem for the Prime Partition Polynomial
+File: 
+PrimeLeeYangFerromagneticChain.lean
+ Socket: LeeYangStabilityWitness
+
+IMPORTANT
+
+What is needed: A proof that for each finite prime chain of length $N$, the partition polynomial $Z_N(z)$ has all its roots on the unit circle $|z|=1$.
+
+Mathematical difficulty: This is the classical Lee–Yang circle theorem. For the standard Ising model with ferromagnetic $J_{ij} \geq 0$, this is known (Lee & Yang, 1952). The difficulty is proving it for the specific rank-one coupling $J_{ij} = \kappa \ln(p_i)\ln(p_j)$ with the arithmetic external field.
+
+Gap 2: Completed ξ Determinant Identification
+File: 
+CayleyCriticalLineCircleBridge.lean
+ Socket: LeeYangCayleyRiemannWitness.cayleyDeterminant_eq_completedXi_law
+
+IMPORTANT
+
+What is needed: An identification of the infinite prime partition function (in the Cayley coordinate) with the completed Riemann $\xi$ function.
+
+Mathematical difficulty: This requires constructing the analytic continuation of the Euler product and identifying the resulting entire function with $\xi(s) = \tfrac{1}{2}s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s)$. This is equivalent to the construction of the analytic continuation of $\zeta(s)$ itself.
+
+Gap 3: Locally Uniform Convergence of Finite Approximants
+File: 
+PrimeLeeYangConvergence.lean
+ Socket: PrimeLeeYangConvergenceSocket.locallyUniformRenormalizedLimit
+
+IMPORTANT
+
+What is needed: The renormalized finite-volume Lee–Yang approximants $R_N(z) \cdot Z_N(z)$ converge locally uniformly to the completed-$\xi$ Cayley pullback.
+
+Mathematical difficulty: This requires (a) a concrete renormalization scheme that removes the finite-volume artifacts, and (b) a proof of locally uniform convergence. This is hard analytic number theory.
+
+Gap 4: Hurwitz Zero Transfer (No Spurious Zeros)
+File: 
+PrimeLeeYangConvergence.lean
+ Sockets: inner_zero_free, outer_zero_free, noSpuriousZeros, nontrivial_in, nontrivial_out
+
+WARNING
+
+What is needed: Application of Hurwitz's theorem to conclude that the limiting function inherits the zero-free property of the approximants on both the interior and exterior of the unit disk, and that the limiting function is not identically zero on either component.
+
+Mathematical difficulty: This is the hardest step. Hurwitz's theorem says that if $f_n \to f$ locally uniformly, and each $f_n$ is zero-free on a domain, and $f$ is not identically zero on that domain, then $f$ is also zero-free. The difficulty is proving nontriviality: that the limit is not identically zero on either component of the unit-circle complement. This is where the actual content of RH lives — it is essentially equivalent to proving that $\xi$ has no zeros off the critical line.
+
+Gap 5: The Functional Equation as a Theorem
+File: 
+ZetaFunctionalEquationLayer.lean
+ Socket: FunctionalEquation.xi_reflection_eq
+
+IMPORTANT
+
+What is needed: A construction of the completed $\xi$ function and a proof that $\xi(s) = \xi(1-s)$.
+
+Mathematical difficulty: This is known mathematics (Riemann, 1859). The standard proof goes through Poisson summation / theta modularity. Formalizing this in Lean requires: (1) the Jacobi theta function, (2) its modular transformation, (3) the Mellin transform, and (4) the pole structure analysis. Mathlib does not yet have all of these pieces, but they are not open problems — they are formalization engineering.
+
+Gap 6: Cantor-Dirac Self-Adjointness ↔ Critical Line
+File: 
+CantorDiracZetaBraneSocket.lean
+ Socket: CantorZetaDiracSelfAdjointPacket.selfAdjoint_iff_criticalLine
+
+IMPORTANT
+
+What is needed: A construction of the Cantor-Dirac operator $D^{\zeta}_{\mathcal{C}}(s)$ and a proof that it is self-adjoint if and only if $\text{Re}(s) = 1/2$.
+
+Mathematical difficulty: The algebraic half (unitarity of prime holonomies on the critical line) is already proved. The full operator-theoretic half requires defining the infinite tensor product Hilbert space, the operator, and proving self-adjointness in the functional-analytic sense. This is an open construction problem.
+
+Gap 7: Vanishing Period ⇒ Self-Adjointness
+File: 
+CantorDiracZetaBraneSocket.lean
+ Socket: vanishing_period_implies_total_selfAdjoint
+
+CAUTION
+
+What is needed: A proof that if the zeta period $\xi(s) = 0$, then the total Cantor-Dirac operator is self-adjoint at $s$.
+
+Mathematical difficulty: This is the deepest missing piece in the operator-theoretic lane. It asks for a bridge between the analytic zeros of an L-function and the spectral properties of a concrete operator. This is essentially the Hilbert–Pólya conjecture in constructive form.
+
+Gap 8: Theta Modularity Formalization
+File: 
+ZetaFunctionalEquationLayer.lean
+ Socket: ThetaModularity.theta_modular
+
+NOTE
+
+What is needed: A formalization of $\theta(x) = x^{-1/2}\theta(1/x)$.
+
+Mathematical difficulty: Known mathematics (Poisson summation). This is formalization debt, not open-problem debt. Parts of this infrastructure are emerging in Mathlib's Mathlib.NumberTheory.LSeries and Mathlib.NumberTheory.ModularForms.
+
+Summary: The Three Lanes to RH
+Lane A: Lee–Yang / Statistical Mechanics
+✅ Ferromagnetic coupling J_ij ≥ 0
+🔴 Lee–Yang circle theorem for prime partition polynomials  ← known math, needs formalization
+🔴 Completed ξ = limit of renormalized Z_N               ← hard analytic number theory
+🔴 Hurwitz zero transfer (nontriviality!)                  ← essentially equivalent to RH
+✅ Cayley geometry Re(s)=1/2 ↔ |w|=1                       (conditional → RH)
+Lane B: Functional Equation / Duality
+✅ Prime holonomy inversion h(1−s) = h(s)⁻¹
+✅ Unitarity on critical line ‖h(s)‖ = 1
+🔴 Construct ξ(s) and prove ξ(s) = ξ(1−s)                 ← known math, needs formalization
+🔴 Zero-free inside Cayley disk ⇒ all zeros on boundary   ← equivalent to RH
+Lane C: Cantor-Dirac / Hilbert–Pólya
+✅ Prime holonomy algebra
+🔴 Construct infinite Cantor-Dirac operator                ← open construction
+🔴 Self-adjointness ↔ critical line                        ← open problem
+🔴 Vanishing period ⇒ self-adjointness                    ← Hilbert–Pólya conjecture
+✅ Self-adjointness ⇒ critical line                        (conditional → RH)
+Bottom Line
+CAUTION
+
+The hardest gap in every lane is the same problem wearing different clothes:
+
+Proving that $\xi(s)$ has no zeros off the critical line.
+
+In Lane A, this appears as the nontriviality of the Hurwitz limit on the interior and exterior of the unit disk.
+In Lane B, this appears as the zero-freeness of $\Xi(w)$ inside the Cayley disk.
+In Lane C, this appears as the vanishing-period-to-self-adjointness bridge (Hilbert–Pólya).
+The repository honestly records all three as explicit @[socket_debt_tag] obligations. None of them are resolved by wording, witness scaffolding, or certificate fields. Each requires a genuine mathematical breakthrough or a novel constructive argument.
+
+The formalization-engineering gaps (theta modularity, functional equation, Lee–Yang for ferromagnets) are known mathematics that could be closed with sufficient Lean formalization effort. The core RH-equivalent gaps cannot be closed without solving RH.
+

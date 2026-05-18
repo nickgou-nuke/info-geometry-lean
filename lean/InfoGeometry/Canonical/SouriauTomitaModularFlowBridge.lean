@@ -324,6 +324,12 @@ structure SouriauTomitaKMSContext where
   kms :
     KMSState (H := H)
       logContext.souriauAdditiveModularFlow beta
+  /--
+  Canonical state equality derived from the `KMSState` constructor.
+
+  Public constructors can omit a separate state-equality packet because this
+  equality is recovered definitionally from the chosen `state` field.
+  -/
   kms_state_eq : kms.state = state
 namespace SouriauTomitaKMSContext
 
@@ -498,6 +504,20 @@ theorem mk_broad_of_minimal
     ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
       ctx.state = C.state :=
   ⟨C.toSouriauTomitaKMSContext, rfl⟩
+
+/--
+Compatibility export for the minimal KMS owner lane.
+
+This keeps the older constructor-facing theorem name while routing through the
+narrowed context that no longer carries explicit `state` and `kms_state_eq`
+fields.
+-/
+@[rep_depth operator]
+theorem mk_of_minimal_kms
+    (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state :=
+  C.mk_broad_of_minimal
 
 /-- The modular automorphism group is the Souriau/Tomita generated flow. -/
 @[rep_depth operator]
@@ -691,6 +711,19 @@ theorem toMinimalSouriauTomitaKMSContext_state_eq :
   rfl
 
 /--
+Constructor theorem for the narrowed cyclic owner lane.
+
+This removes the explicit `kms` constructor argument on the cyclic identity-flow
+branch by routing directly through the constructive adapter.
+-/
+@[rep_depth operator]
+theorem mk_of_cyclic
+    (C : CyclicSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    ∃ ctx : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state.state :=
+  ⟨C.toMinimalSouriauTomitaKMSContext, rfl⟩
+
+/--
 Construct the legacy broad KMS packet from the constructive cyclic branch.
 This keeps downstream compatibility while removing the explicit `kms`/
 `kms_state_eq` packet from the owner branch itself.
@@ -705,6 +738,20 @@ noncomputable def toSouriauTomitaKMSContext :
 theorem toSouriauTomitaKMSContext_state_eq :
     C.toSouriauTomitaKMSContext.state = C.state.state :=
   rfl
+
+/--
+Constructor theorem exporting the legacy broad KMS packet from the cyclic owner
+lane.
+
+This removes the explicit broad `kms` / `kms_state_eq` constructor surface for
+callers that already own the constructive cyclic branch.
+-/
+@[rep_depth operator]
+theorem mk_broad_of_cyclic
+    (C : CyclicSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state.state :=
+  ⟨C.toSouriauTomitaKMSContext, rfl⟩
 
 /-- KMS identity derived from cyclicity on the zero-Hamiltonian standard-form branch. -/
 @[rep_depth operator]

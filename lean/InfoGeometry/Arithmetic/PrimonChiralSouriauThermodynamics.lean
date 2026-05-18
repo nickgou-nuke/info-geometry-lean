@@ -12,6 +12,7 @@ import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.ChiralProduct
+import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.Krein.DoubledSpace
 
 /-!
@@ -270,6 +271,32 @@ theorem primonVirasoroClosure (n m : ℤ) :
       (VirasoroProject.VirasoroAlgebra.cgen_bracket (𝕜 := ℂ)
         (VirasoroProject.VirasoroAlgebra.cgen ℂ))
 
+/-- The imported chiral Virasoro product closes by the componentwise bracket. -/
+@[rep_depth thermo]
+theorem primonChiralVirasoroClosure (n m : ℤ) :
+    ⁅VirasoroProject.ChiralVirasoro.lgenLeft (𝕜 := ℂ) n,
+      VirasoroProject.ChiralVirasoro.lgenLeft (𝕜 := ℂ) m⁆ =
+      VirasoroProject.ChiralVirasoro.inLeft
+        (⁅VirasoroProject.VirasoroAlgebra.lgen ℂ n,
+          VirasoroProject.VirasoroAlgebra.lgen ℂ m⁆) ∧
+    ⁅VirasoroProject.ChiralVirasoro.lgenRight (𝕜 := ℂ) n,
+      VirasoroProject.ChiralVirasoro.lgenRight (𝕜 := ℂ) m⁆ =
+      VirasoroProject.ChiralVirasoro.inRight
+        (⁅VirasoroProject.VirasoroAlgebra.lgen ℂ n,
+          VirasoroProject.VirasoroAlgebra.lgen ℂ m⁆) ∧
+    ⁅VirasoroProject.ChiralVirasoro.lgenLeft (𝕜 := ℂ) n,
+      VirasoroProject.ChiralVirasoro.lgenRight (𝕜 := ℂ) m⁆ = 0 ∧
+    ⁅VirasoroProject.ChiralVirasoro.cgenLeft (𝕜 := ℂ),
+      VirasoroProject.ChiralVirasoro.cgenRight (𝕜 := ℂ)⁆ = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa using (VirasoroProject.ChiralVirasoro.lgenLeft_bracket (𝕜 := ℂ) n m)
+  · simpa using (VirasoroProject.ChiralVirasoro.lgenRight_bracket (𝕜 := ℂ) n m)
+  · simpa using
+      (VirasoroProject.ChiralVirasoro.inLeft_bracket_inRight (𝕜 := ℂ)
+        (VirasoroProject.VirasoroAlgebra.lgen ℂ n)
+        (VirasoroProject.VirasoroAlgebra.lgen ℂ m))
+  · simpa using (VirasoroProject.ChiralVirasoro.cgenLeft_bracket_cgenRight (𝕜 := ℂ))
+
 /-- The imported affine Kac-Moody current bracket closes on the prime packet. -/
 @[rep_depth thermo]
 theorem primonAffineKacMoodyClosure
@@ -284,6 +311,25 @@ theorem primonAffineKacMoodyClosure
         ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
           (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) := by
   exact P.affine_current_mode_bracket m n X Y
+
+/-- The imported Sugawara construction acts as the identity on the Virasoro central element. -/
+@[rep_depth thermo]
+theorem primonSugawaraCentralElementAct_eq_id (α : ℂ)
+    (v : VirasoroProject.ChargedFockSpace ℂ α) :
+    VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.cgen ℂ) v = v := by
+  exact
+    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation_cgen_apply
+      (𝕜 := ℂ) α v)
+
+/-- The imported Sugawara construction gives the vacuum its expected `L₀` energy. -/
+@[rep_depth thermo]
+theorem primonSugawaraVacuumEnergy (α : ℂ) :
+    VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α := by
+  exact
+    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation_lgen_zero_apply_vacuum
+      (𝕜 := ℂ) α)
 
 /-! ## 3. Chiral Bogoliubov bracket closure -/
 

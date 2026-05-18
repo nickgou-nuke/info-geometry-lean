@@ -200,6 +200,58 @@ def imbalance (c : CentralCharge (𝕜 := 𝕜)) : 𝕜 :=
 
 end CentralCharge
 
+/-- Left projector onto the left Virasoro sector. -/
+noncomputable def projectLeft (X : ChiralVirasoro 𝕜) : ChiralVirasoro 𝕜 :=
+  inLeft X.1
+
+/-- Right projector onto the right Virasoro sector. -/
+noncomputable def projectRight (X : ChiralVirasoro 𝕜) : ChiralVirasoro 𝕜 :=
+  inRight X.2
+
+@[simp] theorem projectLeft_fst (X : ChiralVirasoro 𝕜) :
+    (projectLeft (𝕜 := 𝕜) X).1 = X.1 := by
+  rfl
+
+@[simp] theorem projectLeft_snd (X : ChiralVirasoro 𝕜) :
+    (projectLeft (𝕜 := 𝕜) X).2 = 0 := by
+  rfl
+
+@[simp] theorem projectRight_fst (X : ChiralVirasoro 𝕜) :
+    (projectRight (𝕜 := 𝕜) X).1 = 0 := by
+  rfl
+
+@[simp] theorem projectRight_snd (X : ChiralVirasoro 𝕜) :
+    (projectRight (𝕜 := 𝕜) X).2 = X.2 := by
+  rfl
+
+@[simp] theorem projectLeft_idempotent (X : ChiralVirasoro 𝕜) :
+    projectLeft (𝕜 := 𝕜) (projectLeft X) = projectLeft X := by
+  ext <;> rfl
+
+@[simp] theorem projectRight_idempotent (X : ChiralVirasoro 𝕜) :
+    projectRight (𝕜 := 𝕜) (projectRight X) = projectRight X := by
+  ext <;> rfl
+
+@[simp] theorem projectLeft_projectRight_zero (X : ChiralVirasoro 𝕜) :
+    projectLeft (𝕜 := 𝕜) (projectRight X) = 0 := by
+  ext <;> rfl
+
+@[simp] theorem projectRight_projectLeft_zero (X : ChiralVirasoro 𝕜) :
+    projectRight (𝕜 := 𝕜) (projectLeft X) = 0 := by
+  ext <;> rfl
+
+@[simp] theorem projectLeft_add_projectRight (X : ChiralVirasoro 𝕜) :
+    projectLeft (𝕜 := 𝕜) X + projectRight X = X := by
+  ext <;> simp [projectLeft, projectRight, inLeft, inRight]
+
+@[simp] theorem projectLeft_bracket (X Y : ChiralVirasoro 𝕜) :
+    projectLeft (𝕜 := 𝕜) ⁅X, Y⁆ = ⁅projectLeft X, projectLeft Y⁆ := by
+  rfl
+
+@[simp] theorem projectRight_bracket (X Y : ChiralVirasoro 𝕜) :
+    projectRight (𝕜 := 𝕜) ⁅X, Y⁆ = ⁅projectRight X, projectRight Y⁆ := by
+  rfl
+
 end ChiralVirasoro
 
 end VirasoroProject

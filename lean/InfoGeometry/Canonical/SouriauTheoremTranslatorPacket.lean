@@ -418,6 +418,21 @@ theorem claimK_kktEntropyStationarity_packet
       K.complementarySlackness ∧ K.finitePartitionAdmissible :=
   K.packet hCone hStationarity hSlack hFinite
 
+/--
+Claim K on the exact dimension-agnostic owner lane.
+
+This removes the explicit shadow packet and the four separate KKT hypothesis
+arguments on the owned exact-residual branch by reading them directly from
+`DimensionAgnosticKKTResiduals.exact`.
+-/
+@[rep_depth thermo]
+theorem claimK_kktEntropyStationarity_packet_ofExactResiduals :
+    (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible ∧
+      (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity ∧
+      (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness ∧
+      (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
+  simpa using DimensionAgnosticKKTResiduals.exact_stationarity_packet
+
 /-! ## Representation weights and conformal/TKK bridge claims -/
 
 /--

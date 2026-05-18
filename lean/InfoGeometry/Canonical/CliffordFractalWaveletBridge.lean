@@ -23,6 +23,7 @@ Four Ontological Sieve Stages:
 
 import Mathlib
 import InfoGeometry.Canonical.DrazinDilationGap
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
@@ -552,6 +553,7 @@ structure GeometricEmergence (Op : Type*)
     Geometry emerges from the Fierz--Klein readout of projectivized
     Krein-Drazin null defects of Clifford fractal wavelets.
 -/
+@[bridge_target_tag]
 theorem clifford_fractal_wavelets_to_geometry
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
@@ -579,6 +581,7 @@ theorem clifford_fractal_wavelets_to_geometry
   exact hFierz.R_null
 
 /-- Compatibility wrapper for callers that already package the closure law. -/
+@[bridge_target_tag]
 theorem CliffordFractalWaveletFierzKleinLaw.to_geometry
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]

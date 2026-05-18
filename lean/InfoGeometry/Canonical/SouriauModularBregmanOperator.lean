@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import Mathlib.Analysis.Normed.Algebra.Exponential
 import InfoGeometry.Meta.SocketTarget
 
@@ -95,7 +96,7 @@ def operatorBregman
     (X Y : Op) : ℝ :=
   Φ X - Φ Y - S.pairing (gradientΦ Y) (X - Y)
 
-@[simp, rep_depth operator]
+@[simp, rep_depth operator, bridge_target_tag]
 theorem operatorBregman_self
     (S : OperatorPrimalDualSocket Op)
     (Φ : Op → ℝ)
@@ -333,7 +334,7 @@ variable (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra)
 def divergence (X Y : EndH) : ℝ :=
   operatorBregman P.socket P.potential P.gradient X Y
 
-@[simp, rep_depth thermo]
+@[simp, rep_depth thermo, bridge_target_tag]
 theorem divergence_self (X : EndH) :
     P.divergence X X = 0 := by
   simp [divergence]
@@ -343,13 +344,13 @@ theorem divergence_self (X : EndH) :
 noncomputable def modularDeviationDivergence (Δ₁ Δ₀ : EndH) : ℝ :=
   P.divergence (modularDeviation (E := E) Δ₁) (modularDeviation (E := E) Δ₀)
 
-@[simp, rep_depth thermo]
+@[simp, rep_depth thermo, bridge_target_tag]
 theorem modularDeviationDivergence_self (Δ : EndH) :
     P.modularDeviationDivergence Δ Δ = 0 := by
   simp [modularDeviationDivergence]
 
 /-- Family-level modular deviation divergence at the same Souriau beta point is zero. -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth thermo, bridge_target_tag]
 theorem family_deltaDeviation_divergence_self :
     P.divergence P.family.deltaDeviation P.family.deltaDeviation = 0 := by
   simp [divergence]

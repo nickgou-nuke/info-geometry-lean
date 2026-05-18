@@ -128,56 +128,6 @@ variable
   (S : PrimeSUSYVacuumPacket
     CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout)
 
-/-- Re-export of the supplied Witten-index law. -/
-theorem wittenIndex :
-    S.wittenIndex_law :=
-  S.wittenIndex_certificate
-
-/-- Re-export of the supplied boson/fermion cancellation law. -/
-theorem bosonFermionCancellation :
-    S.bosonFermionCancellation_law :=
-  S.bosonFermionCancellation_certificate
-
-/-- Re-export of the supplied zero-vacuum-energy law. -/
-theorem zeroVacuumEnergy :
-    S.zeroVacuumEnergy_law :=
-  S.zeroVacuumEnergy_certificate
-
-/-- Re-export of the supplied unbroken-SUSY law. -/
-theorem unbrokenSUSY :
-    S.unbrokenSUSY_law :=
-  S.unbrokenSUSY_certificate
-
-/-- Re-export of the supplied SUSY/Mertens-boundary equivalence law. -/
-theorem unbrokenSUSY_iff_mertensBoundary :
-    S.unbrokenSUSY_iff_mertensBoundary_law :=
-  S.unbrokenSUSY_iff_mertensBoundary_certificate
-
-/-- Re-export of the supplied SUSY-zero-mode/completed-`xi` matching law. -/
-theorem susyZeroModes_eq_completedXiZeros :
-    S.susyZeroModes_eq_completedXiZeros_law :=
-  S.susyZeroModes_eq_completedXiZeros_certificate
-
-/-- The SUSY vacuum packet contains the Mertens/random-walk bound law. -/
-theorem mertensBound :
-    S.mertensBoundary.mertensBound_law :=
-  S.mertensBoundary.mertensBound
-
-/-- The SUSY vacuum packet contains the no-macroscopic-bias law. -/
-theorem noMacroscopicBias :
-    S.mertensBoundary.noMacroscopicBias_law :=
-  S.mertensBoundary.noMacroscopicBias
-
-/-- The SUSY vacuum packet contains the protected zero-mode matching law. -/
-theorem protectedZeroModes_eq_completedXiZeros :
-    S.zeroModeProtection.protectedZeroModes_eq_completedXiZeros_law :=
-  S.zeroModeProtection.protectedZeroModes_eq_completedXiZeros
-
-/-- The SUSY vacuum packet contains the Majorana zero-energy law. -/
-theorem majorana_zero_energy :
-    S.zeroModeProtection.majoranaZeroMode.zero_energy_law :=
-  S.zeroModeProtection.majorana_zero_energy
-
 end PrimeSUSYVacuumPacket
 
 /--
@@ -242,29 +192,6 @@ def primeSUSYVacuum_of_zeroModeProtection
   wittenIndex_not_completedXiDeterminant_guard :=
     B.wittenIndex_not_completedXiDeterminant_guard
 
-/-- The assembled SUSY packet exposes the supplied vacuum readout by definitional equality. -/
-theorem primeSUSYVacuum_of_zeroModeProtection_vacuumReadout
-    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-      VacuumReadout : Type}
-    (M : MertensDefectBoundary)
-    (P : ZeroModeProtectionPacket
-      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
-    (B : PrimeSUSYVacuumBridge VacuumReadout) :
-    (primeSUSYVacuum_of_zeroModeProtection M P B).vacuumReadout =
-      B.vacuumReadout :=
-  rfl
-
-/-- The assembled SUSY packet exposes the supplied zero-vacuum-energy law. -/
-theorem primeSUSYVacuum_of_zeroModeProtection_zeroVacuumEnergy
-    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
-      VacuumReadout : Type}
-    (M : MertensDefectBoundary)
-    (P : ZeroModeProtectionPacket
-      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
-    (B : PrimeSUSYVacuumBridge VacuumReadout) :
-    (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_law :=
-  (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy
-
 /-- Owner theorem: the assembled SUSY packet re-exports its supplied laws. -/
 theorem primeSUSYVacuum_of_zeroModeProtection_reexports
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
@@ -279,10 +206,10 @@ theorem primeSUSYVacuum_of_zeroModeProtection_reexports
       (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY_law ∧
       (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros_law := by
   exact ⟨
-    (primeSUSYVacuum_of_zeroModeProtection M P B).wittenIndex,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).bosonFermionCancellation,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros⟩
+    (primeSUSYVacuum_of_zeroModeProtection M P B).wittenIndex_certificate,
+    (primeSUSYVacuum_of_zeroModeProtection M P B).bosonFermionCancellation_certificate,
+    (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_certificate,
+    (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY_certificate,
+    (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros_certificate⟩
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

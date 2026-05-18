@@ -24,6 +24,8 @@ def test_cyclic_constructive_branch_removes_explicit_kms_packet() -> None:
     assert "def toCyclicCoordinatelessSouriauFisherContext" in text
     assert "theorem toCyclicCoordinatelessSouriauFisherContext_fisherMetric_eq" in text
     assert "theorem toCyclicCoordinatelessSouriauFisherContext_weylGauge_eq" in text
+    assert "theorem mk_minimal_of_cyclic" in text
+    assert "theorem mk_broad_of_cyclic" in text
     minimal_block = text.split("structure MinimalCyclicCoordinatelessSouriauContext", 1)[1].split("namespace MinimalCyclicCoordinatelessSouriauContext", 1)[0]
     assert "fisherMetric : QuantumFisherSLDMetric" not in minimal_block
     assert "weylGauge : WeylAlgebraGauge" not in minimal_block
@@ -40,8 +42,28 @@ def test_cyclic_constructive_branch_removes_explicit_kms_packet() -> None:
     assert "theorem fisherMetric_sld_eq_id" in text
     assert "theorem kms_identity" in text
     assert "theorem coordinateless_constructive_packet" in text
+    assert "def toObservableCyclicCoordinatelessSouriauFisherContext :" in text
+    assert "theorem toObservableCyclicCoordinatelessSouriauFisherContext_sigma_eq" in text
+    assert "theorem toObservableCyclicCoordinatelessSouriauFisherContext_fisherMetric_eq" in text
+    assert "theorem toObservableCyclicCoordinatelessSouriauFisherContext_weylGauge_eq" in text
+    assert "def toObservableMinimalCoordinatelessSouriauFisherContext :" in text
+    assert "def toObservableCoordinatelessSouriauFisherContext :" in text
+    assert "theorem toObservableMinimalCoordinatelessSouriauFisherContext_sigma_eq" in text
+    assert "theorem mk_observable_minimal_of_cyclic" in text
+    assert "theorem toObservableCoordinatelessSouriauFisherContext_sigma_eq" in text
+    assert "theorem mk_observable_broad_of_cyclic" in text
+    assert "namespace ObservableCyclicCoordinatelessSouriauFisherContext" in text
+    assert "def toIdentityKMSState" in text
+    assert "theorem toIdentityKMSState_state_eq" in text
+    assert "kms_identity := by" in text
+    assert "namespace ObservableMinimalCyclicCoordinatelessSouriauContext" in text
+    assert "ObservableCyclicCoordinatelessSouriauFisherContext.ofObservableMinimal (H := H) C" in text
+    assert "C.toObservableCyclicCoordinatelessSouriauFisherContext.toIdentityKMSState" in text
+    assert "theorem toObservableCyclicCoordinatelessSouriauFisherContext_toIdentityKMSState_state_eq" in text
     assert "def ofObservableMinimal" in text
     assert "theorem ofObservableMinimal_fisherMetric_eq" in text
     assert "theorem ofObservableMinimal_weylGauge_eq" in text
     assert "def toCyclicCoordinatelessSouriauFisherContext" in text
+    assert "def toMinimalCoordinatelessSouriauFisherContext" in text
     assert "def toCoordinatelessSouriauFisherContext" in text
+    assert "(ω.toMinimalCoordinatelessSouriauFisherContext beta J sld).toCoordinatelessSouriauFisherContext" in text

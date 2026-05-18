@@ -34,3 +34,17 @@ def test_exact_residual_det_route_uses_no_bare_psd_packet() -> None:
     assert "hPSD" not in theorem
     assert "PositiveSemidefinite" not in theorem
     assert "hdet" in theorem
+
+
+def test_claimK_has_exact_residual_constructive_route() -> None:
+    text = SOURCE.read_text(encoding="utf-8")
+
+    assert "theorem claimK_kktEntropyStationarity_packet_ofExactResiduals" in text
+    theorem = text.split("theorem claimK_kktEntropyStationarity_packet_ofExactResiduals", 1)[1]
+    theorem = theorem.split("/--\nClaim W:", 1)[0]
+
+    assert "DimensionAgnosticKKTResiduals.exact_stationarity_packet" in theorem
+    assert "hCone" not in theorem
+    assert "hStationarity" not in theorem
+    assert "hSlack" not in theorem
+    assert "hFinite" not in theorem

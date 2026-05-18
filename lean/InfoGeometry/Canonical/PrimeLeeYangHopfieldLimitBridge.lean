@@ -162,21 +162,6 @@ namespace WickKreinSignBridge
 variable {EuclideanWeight FerromagneticWeight KreinReadout : Type}
 variable (W : WickKreinSignBridge EuclideanWeight FerromagneticWeight KreinReadout)
 
-/-- Re-export of the supplied damping-sign law. -/
-theorem dampingSign :
-    W.dampingSign_law :=
-  W.dampingSign_certificate
-
-/-- Re-export of the supplied ferromagnetic-sign law. -/
-theorem ferromagneticSign :
-    W.ferromagneticSign_law :=
-  W.ferromagneticSign_certificate
-
-/-- Re-export of the supplied Wick/Krein continuation law. -/
-theorem wickKreinContinuation :
-    W.wickKreinContinuation_law :=
-  W.wickKreinContinuation_certificate
-
 end WickKreinSignBridge
 
 /--
@@ -217,31 +202,6 @@ variable {CompletedXiReadout RenormalizationReadout LimitReadout : Type}
 variable (H : HurwitzLeeYangXiLimitPacket
   CompletedXiReadout RenormalizationReadout LimitReadout)
 
-/-- Re-export of the supplied finite Lee--Yang stability law. -/
-theorem finiteLeeYangStability :
-    H.finiteLeeYangStability_law :=
-  H.finiteLeeYangStability_certificate
-
-/-- Re-export of the supplied nonvanishing-renormalization law. -/
-theorem nonvanishingRenormalization :
-    H.nonvanishingRenormalization_law :=
-  H.nonvanishingRenormalization_certificate
-
-/-- Re-export of the supplied locally-uniform completed-`xi` limit law. -/
-theorem locallyUniformXiLimit :
-    H.locallyUniformXiLimit_law :=
-  H.locallyUniformXiLimit_certificate
-
-/-- Re-export of the supplied no-spurious-zero law. -/
-theorem noSpuriousZeros :
-    H.noSpuriousZeros_law :=
-  H.noSpuriousZeros_certificate
-
-/-- Re-export of the supplied Hurwitz zero-transfer law. -/
-theorem hurwitzTransfer :
-    H.hurwitzTransfer_law :=
-  H.hurwitzTransfer_certificate
-
 end HurwitzLeeYangXiLimitPacket
 
 /--
@@ -279,26 +239,6 @@ variable
     CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
     EuclideanWeight FerromagneticWeight KreinReadout RenormalizationReadout
     LimitReadout)
-
-/-- Re-export of the supplied Wick/Krein continuation law. -/
-theorem wickKreinContinuation :
-    B.wickKrein.wickKreinContinuation_law :=
-  B.wickKrein.wickKreinContinuation
-
-/-- Re-export of the supplied Hurwitz transfer law. -/
-theorem hurwitzTransfer :
-    B.hurwitzLimit.hurwitzTransfer_law :=
-  B.hurwitzLimit.hurwitzTransfer
-
-/-- Re-export of the supplied relative determinant/scattering compatibility law. -/
-theorem determinant_scattering_identity :
-    B.relativeDeterminant.determinant_scattering_identity_law :=
-  B.relativeDeterminant.determinant_scattering_identity
-
-/-- Re-export of the final supplied limit/protected-zero-mode matching law. -/
-theorem limit_eq_protectedZeroModeReadout :
-    B.limit_eq_protectedZeroModeReadout_law :=
-  B.limit_eq_protectedZeroModeReadout_certificate
 
 end HopfieldLimitBridgePacket
 

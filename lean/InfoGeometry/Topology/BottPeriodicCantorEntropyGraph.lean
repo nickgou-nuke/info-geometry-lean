@@ -319,24 +319,6 @@ namespace BottPeriodicItFromBitSocket
 variable {Op : Type*} [Ring Op]
 variable (S : BottPeriodicItFromBitSocket Op)
 
-/-- The Drazin support selected by the signal operator. -/
-@[rep_depth operator]
-theorem drazin_support_def :
-    S.pA = S.A * S.AD :=
-  S.pA_def
-
-/-- The Drazin-Green harmonic projector selected by the frequency operator. -/
-@[rep_depth operator]
-theorem harmonic_projector_def :
-    S.HL = 1 - S.L * S.LD :=
-  S.HL_def
-
-/-- The emergent object is the Drazin-Hodge envelope of the raw bit operator. -/
-@[rep_depth operator]
-theorem it_envelope_def :
-    S.xIt = S.HL * (S.pA * S.xRaw * S.pA) * S.HL :=
-  S.xIt_def
-
 end BottPeriodicItFromBitSocket
 
 /--

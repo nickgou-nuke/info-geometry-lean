@@ -2,6 +2,8 @@ import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -501,6 +503,25 @@ theorem completedXiZeros_are_spectralZeros
 
 end WittenCharacterVsCompletedXiSocket
 
+/--
+Owner-target packaging for the Witten / completed-`Xi` separation packet.
+
+This exposes the theorem-bearing surface already present in the packet.
+-/
+@[owner_target_tag]
+theorem WittenCharacterVsCompletedXiOwnerTarget
+    {SpectralParameter WittenCharacter CompletedXiReadout
+      SpectralPfaffianReadout : Type*}
+    (S : WittenCharacterVsCompletedXiSocket
+      SpectralParameter WittenCharacter CompletedXiReadout
+      SpectralPfaffianReadout) :
+    S.wittenCharacter_inverseZeta_law ∧
+    S.spectralPfaffian_completedXi_law ∧
+    S.zetaZeros_are_poles_of_inverseZeta_law ∧
+    S.completedXiZeros_are_spectralZeros_law := by
+  exact ⟨S.wittenCharacter_inverseZeta, S.spectralPfaffian_completedXi,
+    S.zetaZeros_are_poles_of_inverseZeta, S.completedXiZeros_are_spectralZeros⟩
+
 /-! ## 3. Boson/fermion, Archimedean, and trace-formula sockets -/
 
 /--
@@ -621,6 +642,22 @@ theorem completedZeta_factorization
   A.completedZeta_factorization_certificate
 
 end ArchimedeanGammaFactorSocket
+
+/--
+Owner-target packaging for the Archimedean completion packet.
+
+This exposes the theorem-bearing surface already present in the packet.
+-/
+@[owner_target_tag]
+theorem ArchimedeanGammaFactorOwnerTarget
+    {SpectralParameter ArchimedeanReadout FinitePrimeReadout
+      CompletedZetaReadout : Type*}
+    (A : ArchimedeanGammaFactorSocket
+      SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
+    A.gammaFactor_law ∧
+    A.polynomialCompletion_law ∧
+    A.completedZeta_factorization_law := by
+  exact ⟨A.gammaFactor, A.polynomialCompletion, A.completedZeta_factorization⟩
 
 /--
 Boundary/scattering mechanism socket.
@@ -757,6 +794,25 @@ theorem mellinTransform_eq_explicitFormula
 
 end MBKHeatTraceExplicitFormulaSocket
 
+/--
+Owner-target packaging for the heat-trace / explicit-formula packet.
+
+This exposes the theorem-bearing surface already present in the packet.
+-/
+@[owner_target_tag]
+theorem MBKHeatTraceExplicitFormulaOwnerTarget
+    {HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
+      ExplicitFormulaReadout : Type*}
+    (T : MBKHeatTraceExplicitFormulaSocket
+      HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
+      ExplicitFormulaReadout) :
+    T.heatTrace_factorization_law ∧
+    T.arithmeticHeatTrace_primeSum_law ∧
+    T.bkHeatTrace_mellinContinuum_law ∧
+    T.mellinTransform_eq_explicitFormula_law := by
+  exact ⟨T.heatTrace_factorization, T.arithmeticHeatTrace_primeSum,
+    T.bkHeatTrace_mellinContinuum, T.mellinTransform_eq_explicitFormula⟩
+
 /-! ## 4. Completed-`Xi` Hilbert--Pólya reduction -/
 
 /--
@@ -801,7 +857,8 @@ structure CompletedXiHilbertPolyaReduction
 
 namespace CompletedXiHilbertPolyaReduction
 
-/-- Re-export of self-adjointness for the supplied spectral operator. -/
+/-! Re-export of self-adjointness for the supplied spectral operator. -/
+@[bridge_target_tag]
 theorem self_adjoint
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
@@ -810,7 +867,8 @@ theorem self_adjoint
     R.self_adjoint_law :=
   R.self_adjoint_certificate
 
-/-- Re-export of the renormalized Pfaffian/completed-`Xi` identity. -/
+/-! Re-export of the renormalized Pfaffian/completed-`Xi` identity. -/
+@[bridge_target_tag]
 theorem renormalizedPfaffian_eq_completedXi
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
@@ -819,7 +877,8 @@ theorem renormalizedPfaffian_eq_completedXi
     R.renormalizedPfaffian_eq_completedXi_law :=
   R.renormalizedPfaffian_eq_completedXi_certificate
 
-/-- Re-export of completed-`Xi` zero data. -/
+/-! Re-export of completed-`Xi` zero data. -/
+@[bridge_target_tag]
 theorem completedXiZero
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
@@ -828,7 +887,8 @@ theorem completedXiZero
     R.completedXiZero_law :=
   R.completedXiZero_certificate
 
-/-- Completed-`Xi` zero data gives a spectral kernel by supplied identity. -/
+/-! Completed-`Xi` zero data gives a spectral kernel by supplied identity. -/
+@[bridge_target_tag]
 theorem spectralKernel_of_completedXiZero
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
@@ -837,7 +897,8 @@ theorem spectralKernel_of_completedXiZero
     Nonempty SpectralKernel :=
   (R.completedXiZero_iff_spectralKernel_certificate).mp R.completedXiZero_certificate
 
-/-- Conditional RH readback from the completed-`Xi` spectral reduction. -/
+/-! Conditional RH readback from the completed-`Xi` spectral reduction. -/
+@[bridge_target_tag]
 theorem classicalRH_of_completedXi_spectral_reduction
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
@@ -890,6 +951,7 @@ structure MajoranaPolyaHilbertBridge
 namespace MajoranaPolyaHilbertBridge
 
 /-- Re-export of the supplied real-spectrum law. -/
+@[bridge_target_tag]
 theorem selfAdjoint_spectrum_real
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout : Type*}
@@ -902,6 +964,7 @@ theorem selfAdjoint_spectrum_real
   B.selfAdjoint_spectrum_real_certificate
 
 /-- Re-export of the supplied zero-mode/zeta-zero matching law. -/
+@[bridge_target_tag]
 theorem zeroModes_match_zetaZeros
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout : Type*}
@@ -919,6 +982,7 @@ Conditional RH readback from the supplied analytic bridge.
 The proof uses the packet's normalizability criterion and the packet's own
 implication from critical-line real part to the classical RH statement.
 -/
+@[bridge_target_tag]
 theorem classicalRH_of_supplied_majorana_spectral_witness
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout : Type*}
@@ -933,6 +997,7 @@ theorem classicalRH_of_supplied_majorana_spectral_witness
       B.zeroModeNormalizability)
 
 /-- The bridge records that the BK/Mellin sector supplies the critical-line condition. -/
+@[bridge_target_tag]
 theorem criticalLine_from_mellinPlancherel
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout
@@ -947,6 +1012,7 @@ theorem criticalLine_from_mellinPlancherel
   MellinPlancherelCriticalLinePacket.criticalLine B.mellinPlancherel
 
 /-- The bridge keeps the inverse-zeta Witten character separate from the `Xi` target. -/
+@[bridge_target_tag]
 theorem wittenCharacter_inverseZeta_channel
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout
@@ -961,6 +1027,7 @@ theorem wittenCharacter_inverseZeta_channel
   B.wittenVsXi.wittenCharacter_inverseZeta_certificate
 
 /-- The bridge records that spectral zeros target completed `Xi`, not `1 / ζ`. -/
+@[bridge_target_tag]
 theorem spectralPfaffian_completedXi_channel
     {Carrier Operator Domain Mode ZeroMode NormReadout
       SpectralParameter PfaffianReadout ZetaReadout
@@ -1275,7 +1342,8 @@ structure RelativeMBKDeterminantScatteringPacket
 
 namespace RelativeMBKDeterminantScatteringPacket
 
-/-- Re-export of the supplied self-adjoint relative MBK law. -/
+/-! Re-export of the supplied self-adjoint relative MBK law. -/
+@[bridge_target_tag]
 theorem self_adjoint_relativeMBK
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
@@ -1287,7 +1355,8 @@ theorem self_adjoint_relativeMBK
     P.self_adjoint_relativeMBK_law :=
   P.self_adjoint_relativeMBK_certificate
 
-/-- Re-export of the supplied relative determinant/completed-`Xi` identity. -/
+/-! Re-export of the supplied relative determinant/completed-`Xi` identity. -/
+@[bridge_target_tag]
 theorem relativeDeterminant_eq_completedXi
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
@@ -1299,7 +1368,8 @@ theorem relativeDeterminant_eq_completedXi
     P.relativeDeterminant_eq_completedXi_law :=
   P.relativeDeterminant_eq_completedXi_certificate
 
-/-- Re-export of the supplied scattering-trace/explicit-formula identity. -/
+/-! Re-export of the supplied scattering-trace/explicit-formula identity. -/
+@[bridge_target_tag]
 theorem scatteringTrace_eq_explicitFormula
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
@@ -1311,7 +1381,8 @@ theorem scatteringTrace_eq_explicitFormula
     P.scatteringTrace_eq_explicitFormula_law :=
   P.scatteringTrace_eq_explicitFormula_certificate
 
-/-- Re-export of the supplied spectral-shift trace formula law. -/
+/-! Re-export of the supplied spectral-shift trace formula law. -/
+@[bridge_target_tag]
 theorem spectralShift_traceFormula
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
@@ -1323,7 +1394,8 @@ theorem spectralShift_traceFormula
     P.spectralShift_traceFormula_law :=
   P.spectralShift_traceFormula_certificate
 
-/-- Re-export of the supplied completed-`Xi` zero/spectral-kernel law. -/
+/-! Re-export of the supplied completed-`Xi` zero/spectral-kernel law. -/
+@[bridge_target_tag]
 theorem completedXiZero_iff_spectralKernel
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
@@ -1335,12 +1407,12 @@ theorem completedXiZero_iff_spectralKernel
     P.completedXiZero_iff_spectralKernel_law :=
   P.completedXiZero_iff_spectralKernel_certificate
 
-/--
-Conditional RH readback from the supplied Hilbert--Polya reduction.
+/-! Conditional RH readback from the supplied Hilbert--Polya reduction.
 
 This theorem only consumes the packet's own analytic certificate; it is not an
 unconditional proof of RH.
 -/
+@[bridge_target_tag]
 theorem classicalRH_of_relativeMBK_witness
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout

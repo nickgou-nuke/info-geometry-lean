@@ -1,6 +1,8 @@
 import Mathlib
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -201,7 +203,7 @@ Readback: an independent centered spinor calibration has diagonal covariance.
 
 This is a calibration-field readout, not a probabilistic limit theorem.
 -/
-@[rep_depth projective]
+@[bridge_target_tag, rep_depth projective]
 theorem covariance_eq_clifford_delta
     (S : SpinorSocket)
     (C : IndependentCenteredSpinorCalibration S)

@@ -71,6 +71,7 @@ This is the theorem-safe bridge from the source packet statement to the
 already-defined `LeeYangPolydiscWitness` payload. It does not prove the
 Asano/Ruelle theorem itself.
 -/
+@[bridge_target_tag]
 theorem highTemperatureLeeYangSourceClaim_of_witness
     {N : ℕ}
     (LY : LeeYangPolydiscWitness) :
@@ -85,6 +86,7 @@ zero-freeness content.
 This is a definitional bridge: the repository keeps the exact theorem
 statement separate from the structure that packages its two halves.
 -/
+@[bridge_target_tag]
 theorem leeYangPolydiscWitness_iff_sourceClaim :
     (∀ N : ℕ, HighTemperatureLeeYangSourceClaim N) ↔ LeeYangPolydiscWitness := by
   constructor

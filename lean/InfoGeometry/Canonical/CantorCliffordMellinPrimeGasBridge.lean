@@ -352,6 +352,7 @@ structure CantorCliffordMellinPrimeGasBridge where
   analyticGuardWitness : Type*
 
 /-- The bosonic channel is the finite reciprocal-product lane. -/
+@[bridge_target_tag]
 theorem bridge_bosonChannel_eq
     (B : CantorCliffordMellinPrimeGasBridge) :
     B.zetaChannels.bosonChannel =
@@ -359,6 +360,7 @@ theorem bridge_bosonChannel_eq
   B.zetaChannels.bosonChannel_eq
 
 /-- The ordinary fermion channel is the finite positive square-free product. -/
+@[bridge_target_tag]
 theorem bridge_fermionTraceChannel_eq
     (B : CantorCliffordMellinPrimeGasBridge) :
     B.zetaChannels.fermionTraceChannel =
@@ -366,6 +368,7 @@ theorem bridge_fermionTraceChannel_eq
   B.zetaChannels.fermionTraceChannel_eq
 
 /-- The parity supertrace channel is the finite inverse-zeta product. -/
+@[bridge_target_tag]
 theorem bridge_paritySupertraceChannel_eq
     (B : CantorCliffordMellinPrimeGasBridge) :
     B.zetaChannels.paritySupertraceChannel =

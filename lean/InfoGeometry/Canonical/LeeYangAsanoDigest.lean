@@ -533,7 +533,7 @@ def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
         multiPartition D lam y ≠ 0)
 
 /-- Package the standard Lee--Yang witness back into the source-claim shape. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem leeYangPolydiscSourceClaim_of_witness
     (LY : LeeYangPolydiscWitness) :
     ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
@@ -541,7 +541,7 @@ theorem leeYangPolydiscSourceClaim_of_witness
   exact ⟨LY.inner_zero_free D lam hLam, LY.outer_zero_free D lam hLam⟩
 
 /-- Package the source claim into the standard Lee--Yang witness surface. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 def leeYangPolydiscWitness_of_sourceClaim
     (H : ∀ N : ℕ, LeeYangPolydiscSourceClaim N) :
     LeeYangPolydiscWitness where

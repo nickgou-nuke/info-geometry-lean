@@ -13,6 +13,8 @@ import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.ChiralProduct
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
+import InfoGeometry.OperatorAlgebra.FiveGradeClosureSymmetry
+import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Krein.DoubledSpace
 
 /-!
@@ -330,6 +332,29 @@ theorem primonSugawaraVacuumEnergy (α : ℂ) :
   exact
     (VirasoroProject.ChargedFockSpace.sugawaraRepresentation_lgen_zero_apply_vacuum
       (𝕜 := ℂ) α)
+
+/-- The imported five-grade closure keeps grade zero stable and Cartan-decomposed. -/
+@[rep_depth thermo]
+theorem primonFiveGradeCartanDecomposition
+    {L : Type*} [AddCommGroup L] [Module ℝ L]
+    (G : InfoGeometry.OperatorAlgebra.FiveGradeClosureSymmetry L)
+    {x : L}
+    (hx : x ∈ G.gZero) :
+    G.closure.SetwiseStable G.gZero ∧
+      G.closure.fixedPart x ∈ G.gZero ∧
+      G.closure.antiPart x ∈ G.gZero ∧
+      G.closure.fixedPart x + G.closure.antiPart x = x := by
+  exact ⟨G.zero_setwise_stable, G.zero_cartan_decomposition hx⟩
+
+/-- The imported conformal Cartan split gives the generator decomposition. -/
+@[rep_depth thermo]
+theorem primonGeneratorCartanDecomposition
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [FiniteDimensional ℝ E]
+    (CBA : InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra E)
+    (hCartan : CBA.GeneratorCartanDecomposition) :
+    CBA.IsVolumePreservingPart CBA.M ∧ CBA.IsWeylDilationPart CBA.D := by
+  exact CBA.cartan_generator_split hCartan
 
 /-! ## 3. Chiral Bogoliubov bracket closure -/
 

@@ -106,6 +106,7 @@ import InfoGeometry.Meta.TestTactic
 import InfoGeometry.ModularVolumePotential
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Thermo.ComplexThermodynamicLift
 import InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
 import InfoGeometry.OperatorAlgebra.ModularThermalState

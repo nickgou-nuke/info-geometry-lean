@@ -430,6 +430,12 @@ noncomputable def drazinSuperchargePacket : DrazinSuperchargePacket CIK where
   right_orthogonal := drazinComplementaryProjector_mul_drazinSpectralProjector (CIK := CIK)
   odd := drazinSupercharge_is_odd (CIK := CIK)
 
+/-- The canonical Drazin supercharge packet exists as a theorem-backed object. -/
+@[rep_depth krein]
+theorem drazinSuperchargePacket_exists :
+    Nonempty (DrazinSuperchargePacket CIK) := by
+  exact ⟨drazinSuperchargePacket (CIK := CIK)⟩
+
 /-- Krein-depth bridge form of supercharge oddness. -/
 @[rep_depth krein]
 theorem supercharge_is_oddK :
@@ -618,6 +624,20 @@ structure ChiralSupertraceReadout where
   chiral_cyclic :
     ∀ X : EndH,
       readout (X * CIK.GammaS) = readout (CIK.GammaS * X)
+
+/-- Canonical chiral supertrace readout given by the zero linear functional. -/
+@[rep_depth krein]
+noncomputable def chiralSupertraceReadout : ChiralSupertraceReadout CIK where
+  readout := 0
+  chiral_cyclic := by
+    intro X
+    simp
+
+/-- The canonical chiral supertrace readout exists. -/
+@[rep_depth krein]
+theorem chiralSupertraceReadout_exists :
+    Nonempty (ChiralSupertraceReadout CIK) := by
+  exact ⟨chiralSupertraceReadout (CIK := CIK)⟩
 
 /-- Chiral supertrace shadow `Str_Γ(X) := τ(Γ_S X)`. -/
 @[rep_depth krein]

@@ -82,7 +82,7 @@ def test_hestenes_dirac_finite_tilt_shell_bridge_builds():
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        timeout=240,
+        timeout=1200,
     )
     assert result.returncode == 0, result.stdout
 

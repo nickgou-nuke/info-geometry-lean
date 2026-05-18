@@ -97,11 +97,40 @@ theorem modeWeight_eq_circular
   simpa [modeWeight, complexBoltzmannWeight, map_sub, sub_eq_add_neg] using
     complexBoltzmannWeight_eq_circular (E := E p - μ p) s
 
+/-- Circularly polarized local mode weight. -/
+@[rep_depth thermo]
+def circularModeWeight
+    (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) : ℂ :=
+  circularBoltzmannAmplitude (E p - μ p) s *
+    circularBoltzmannPhase (E p - μ p) s
+
+/-- Circular mode weight is the same as the original mode weight. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem circularModeWeight_eq_modeWeight
+    (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
+    circularModeWeight s E μ p = modeWeight s E μ p := by
+  rw [circularModeWeight, modeWeight_eq_circular]
+
 /-- Microstate weight as the product of local mode weights. -/
 @[rep_depth thermo]
 def microstateWeight [DecidableEq ι]
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
   InfoGeometry.Arithmetic.PrimonFinite.weight (modeWeight s E μ) S
+
+/-- Circular microstate weight as the product of circular local weights. -/
+@[rep_depth thermo]
+def circularMicrostateWeight [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
+  InfoGeometry.Arithmetic.PrimonFinite.weight (circularModeWeight s E μ) S
+
+/-- Circular microstate weight equals the original microstate weight. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem circularMicrostateWeight_eq_microstateWeight [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    circularMicrostateWeight s E μ S = microstateWeight s E μ S := by
+  unfold circularMicrostateWeight microstateWeight
+  simp [InfoGeometry.Arithmetic.PrimonFinite.weight,
+    circularModeWeight_eq_modeWeight]
 
 section FiniteModes
 
@@ -135,6 +164,17 @@ theorem fermionPartition_eq_prod
     (InfoGeometry.Arithmetic.PrimonFinite.ZF_eq_prod
       (modes := modes) (q := modeWeight s E μ))
 
+/-- Fermionic finite partition written in circular polarization coordinates. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem fermionPartition_eq_circularProd
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
+    fermionPartition modes s E μ =
+      modes.prod (fun p =>
+        1 + circularModeWeight s E μ p) := by
+  rw [fermionPartition_eq_prod]
+  congr with p
+  rw [circularModeWeight_eq_modeWeight]
+
 /-- Signed/Möbius finite partition product formula. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem signedPartition_eq_prod
@@ -145,6 +185,17 @@ theorem signedPartition_eq_prod
     (InfoGeometry.Arithmetic.PrimonFinite.STrF_eq_prod
       (modes := modes) (q := modeWeight s E μ))
 
+/-- Signed/Möbius finite partition written in circular polarization coordinates. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem signedPartition_eq_circularProd
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
+    signedPartition modes s E μ =
+      modes.prod (fun p =>
+        1 - circularModeWeight s E μ p) := by
+  rw [signedPartition_eq_prod]
+  congr with p
+  rw [circularModeWeight_eq_modeWeight]
+
 /-- Bosonic finite partition product formula. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem bosonPartition_eq_prod_inv
@@ -152,6 +203,16 @@ theorem bosonPartition_eq_prod_inv
     bosonPartition modes s E μ =
       modes.prod (fun p => (1 - modeWeight s E μ p)⁻¹) := by
   rfl
+
+/-- Bosonic finite partition written in circular polarization coordinates. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem bosonPartition_eq_circularProd_inv
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ) :
+    bosonPartition modes s E μ =
+      modes.prod (fun p => (1 - circularModeWeight s E μ p)⁻¹) := by
+  rw [bosonPartition_eq_prod_inv]
+  congr with p
+  rw [circularModeWeight_eq_modeWeight]
 
 /-- Finite boson/signed-fermion cancellation. -/
 @[bridge_target_tag, rep_depth thermo]
@@ -171,6 +232,23 @@ def density
     (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
     (S : FState ι) : ℂ :=
   microstateWeight s E μ S * (fermionPartition modes s E μ)⁻¹
+
+/-- Normalized finite fermionic density written in circular coordinates. -/
+@[rep_depth thermo]
+def circularDensity
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
+    (S : FState ι) : ℂ :=
+  circularMicrostateWeight s E μ S *
+    (fermionPartition modes s E μ)⁻¹
+
+/-- Circular density equals the original density. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem circularDensity_eq_density [DecidableEq ι]
+    (modes : Finset ι) (s : SouriauTemperature) (E μ : ι → ℝ)
+    (S : FState ι) :
+    circularDensity modes s E μ S = density modes s E μ S := by
+  unfold circularDensity density
+  rw [circularMicrostateWeight_eq_microstateWeight]
 
 /-- The finite normalized fermionic density sums to one when `Z_F ≠ 0`. -/
 @[bridge_target_tag, rep_depth thermo]
@@ -206,15 +284,87 @@ end FiniteModes
 def massieu (Z : ℂ) : ℂ :=
   Complex.log Z
 
+/-- Circular amplitude coordinate of a complex readout. -/
+@[rep_depth thermo]
+def circularAmplitudeCoord (z : ℂ) : ℂ :=
+  InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circleAmplitudeCoord z
+
+/-- Circular phase coordinate of a complex readout. -/
+@[rep_depth thermo]
+def circularPhaseCoord (z : ℂ) : ℂ :=
+  InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circlePhaseCoord z
+
+/-- Circular split of the Massieu readout. -/
+@[rep_depth thermo]
+def circularMassieuPlus (Z : ℂ) : ℂ :=
+  circularAmplitudeCoord (massieu Z)
+
+/-- Circular split of the Massieu phase readout. -/
+@[rep_depth thermo]
+def circularMassieuMinus (Z : ℂ) : ℂ :=
+  circularPhaseCoord (massieu Z)
+
+/-- The Massieu readout reconstructs from its circular split. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem massieu_circular_reconstruct (Z : ℂ) :
+    massieu Z = circularMassieuPlus Z + circularMassieuMinus Z := by
+  unfold circularMassieuPlus circularMassieuMinus circularAmplitudeCoord
+    circularPhaseCoord
+  simpa using
+    InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circle_reconstruct
+      (massieu Z)
+
 /-- Free energy / barrier potential `F = -log Z`. -/
 @[rep_depth thermo]
 def freeEnergy (Z : ℂ) : ℂ :=
   -massieu Z
 
+/-- Circular amplitude coordinate of the free energy readout. -/
+@[rep_depth thermo]
+def circularFreeEnergyPlus (Z : ℂ) : ℂ :=
+  circularAmplitudeCoord (freeEnergy Z)
+
+/-- Circular phase coordinate of the free energy readout. -/
+@[rep_depth thermo]
+def circularFreeEnergyMinus (Z : ℂ) : ℂ :=
+  circularPhaseCoord (freeEnergy Z)
+
+/-- The free-energy readout reconstructs from its circular split. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem freeEnergy_circular_reconstruct (Z : ℂ) :
+    freeEnergy Z =
+      circularFreeEnergyPlus Z + circularFreeEnergyMinus Z := by
+  unfold circularFreeEnergyPlus circularFreeEnergyMinus circularAmplitudeCoord
+    circularPhaseCoord
+  simpa using
+    InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circle_reconstruct
+      (freeEnergy Z)
+
 /-- Grand potential `Ω = -s⁻¹ Φ`. -/
 @[rep_depth thermo]
 def grandPotential (s Z : ℂ) : ℂ :=
   -s⁻¹ * massieu Z
+
+/-- Circular amplitude coordinate of the grand potential readout. -/
+@[rep_depth thermo]
+def circularGrandPotentialPlus (s Z : ℂ) : ℂ :=
+  circularAmplitudeCoord (grandPotential s Z)
+
+/-- Circular phase coordinate of the grand potential readout. -/
+@[rep_depth thermo]
+def circularGrandPotentialMinus (s Z : ℂ) : ℂ :=
+  circularPhaseCoord (grandPotential s Z)
+
+/-- The grand-potential readout reconstructs from its circular split. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem grandPotential_circular_reconstruct (s Z : ℂ) :
+    grandPotential s Z =
+      circularGrandPotentialPlus s Z + circularGrandPotentialMinus s Z := by
+  unfold circularGrandPotentialPlus circularGrandPotentialMinus
+    circularAmplitudeCoord circularPhaseCoord
+  simpa using
+    InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circle_reconstruct
+      (grandPotential s Z)
 
 /-- Direct formula for a partition function `Z : ℂ → ℂ`. -/
 @[rep_depth thermo]
@@ -294,11 +444,61 @@ def thermalWeight
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(s * hamiltonianC E μ S))
 
+/-- Circular split of the complex thermal weight. -/
+@[rep_depth thermo]
+def circularThermalWeightPlus
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
+  circularAmplitudeCoord (thermalWeight s E μ S)
+
+/-- Circular phase split of the complex thermal weight. -/
+@[rep_depth thermo]
+def circularThermalWeightMinus
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
+  circularPhaseCoord (thermalWeight s E μ S)
+
+/-- The thermal weight reconstructs from its circular split. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem thermalWeight_circular_reconstruct
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    thermalWeight s E μ S =
+      circularThermalWeightPlus s E μ S +
+        circularThermalWeightMinus s E μ S := by
+  unfold circularThermalWeightPlus circularThermalWeightMinus
+    circularAmplitudeCoord circularPhaseCoord
+  simpa using
+    InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circle_reconstruct
+      (thermalWeight s E μ S)
+
 /-- Complex thermal-vacuum half-density `exp(-(s/2)K(S))`. -/
 @[rep_depth thermo]
 def thermalVacuumAmplitude
     (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
   Complex.exp (-(s / 2 * hamiltonianC E μ S))
+
+/-- Circular split of the thermal-vacuum amplitude. -/
+@[rep_depth thermo]
+def circularThermalVacuumPlus
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
+  circularAmplitudeCoord (thermalVacuumAmplitude s E μ S)
+
+/-- Circular phase split of the thermal-vacuum amplitude. -/
+@[rep_depth thermo]
+def circularThermalVacuumMinus
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ℂ :=
+  circularPhaseCoord (thermalVacuumAmplitude s E μ S)
+
+/-- The thermal-vacuum amplitude reconstructs from its circular split. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem thermalVacuumAmplitude_circular_reconstruct
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    thermalVacuumAmplitude s E μ S =
+      circularThermalVacuumPlus s E μ S +
+        circularThermalVacuumMinus s E μ S := by
+  unfold circularThermalVacuumPlus circularThermalVacuumMinus
+    circularAmplitudeCoord circularPhaseCoord
+  simpa using
+    InfoGeometry.Thermo.ComplexCircularPolarizationBasis.circle_reconstruct
+      (thermalVacuumAmplitude s E μ S)
 
 /-- Thermal-vacuum amplitude squares to the thermal weight. -/
 @[bridge_target_tag, rep_depth thermo]

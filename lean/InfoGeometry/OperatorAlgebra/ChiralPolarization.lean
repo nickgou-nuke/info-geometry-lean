@@ -435,6 +435,43 @@ theorem comp_P_right :
   rw [CX.P_right_def, CY.P_right_def]
   simp [LinearMap.comp_apply, f.preserves_chi_apply x]
 
+/--
+A phase-preserving map splits on the domain chiral projectors.
+
+This is the raw left/right decomposition before applying the target
+projectors.
+-/
+theorem split_on_domain_projectors
+    (f : PhasePreservingLinearMap CX CY)
+    (x : X) :
+    f.toLinearMap x =
+      f.toLinearMap (CX.P_left x) + f.toLinearMap (CX.P_right x) := by
+  have hsum : CX.P_left x + CX.P_right x = x := by
+    have h :=
+      congrArg (fun L : X →ₗ[ℝ] X => L x) CX.P_sum
+    simpa [LinearMap.add_apply, LinearMap.id_apply] using h
+  calc
+    f.toLinearMap x = f.toLinearMap (CX.P_left x + CX.P_right x) := by
+      exact congrArg f.toLinearMap hsum.symm
+    _ = f.toLinearMap (CX.P_left x) + f.toLinearMap (CX.P_right x) := by
+      exact f.toLinearMap.map_add (CX.P_left x) (CX.P_right x)
+
+/--
+A phase-preserving map lands in the codomain chiral decomposition.
+
+This is the output-side projector decomposition; combined with
+`split_on_domain_projectors`, it gives the closed left/right split package.
+-/
+theorem split_on_target_projectors
+    (f : PhasePreservingLinearMap CX CY)
+    (x : X) :
+    CY.P_left (f.toLinearMap x) + CY.P_right (f.toLinearMap x) =
+      f.toLinearMap x := by
+  have hsum : CY.P_left + CY.P_right = LinearMap.id := by
+    simpa [add_comm] using CY.P_sum
+  have h := congrArg (fun L : Y →ₗ[ℝ] Y => L (f.toLinearMap x)) hsum
+  simpa [LinearMap.add_apply, LinearMap.id_apply] using h
+
 end PhasePreservingLinearMap
 
 end InfoGeometry.OperatorAlgebra

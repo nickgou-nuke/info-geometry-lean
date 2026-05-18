@@ -19,7 +19,7 @@ namespace InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 open InfoGeometry.Clifford.FiniteTiltDiracShell
 open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
-open InfoGeometry.OperatorAlgebra.SymmetryInvariants
+open InfoGeometry.OperatorAlgebra
 
 abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
 
@@ -39,7 +39,7 @@ theorem finiteTiltChiralProjector_sum :
     finiteTiltLeftChiralProjector + finiteTiltRightChiralProjector = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
-      tiltOddA, Matrix.one_apply, Matrix.add_apply, Matrix.smul_apply]
+      tiltOddA, Matrix.one_apply, Matrix.add_apply, Matrix.smul_apply] <;> ring_nf
 
 /-- The left chiral projector is idempotent. -/
 @[rep_depth operator]

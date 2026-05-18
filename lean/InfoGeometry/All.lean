@@ -18,6 +18,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
+import InfoGeometry.Arithmetic.SplitChiralCantorDirac
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.Arithmetic.PrimeCantorGraphDirac
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
@@ -29,8 +30,12 @@ import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 import InfoGeometry.Arithmetic.PrimeInformationKMS
+import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
+import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
+import InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
+import InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.ZetaDihedral
@@ -46,7 +51,6 @@ import InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification
 import InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge
 import InfoGeometry.Canonical.MoebiusTopologyOfInformation
 import InfoGeometry.Canonical.PrimeExteriorSugawaraBridge
-import InfoGeometry.Canonical.PrimeExteriorMobiusCalibration
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian

@@ -44,6 +44,7 @@ def test_hestenes_dirac_finite_tilt_shell_declares_current_density_readout():
     assert "def finiteTiltCurrentDensity" in text
     assert "theorem finiteTiltCurrentDensity_eq_boundaryCurrent" in text
     assert "theorem finiteTiltBoundaryCurrent_sq_zero" in text
+    assert "theorem finiteTiltCurrentDensity_sq_zero" in text
     assert "theorem finiteTiltDiracShell_eq_boundaryCurrent_add_mass" in text
 
 
@@ -51,6 +52,8 @@ def test_hestenes_dirac_finite_tilt_shell_bridge_declares_current_density_reexpo
     text = ROOT.joinpath("lean", "InfoGeometry", "Clifford", "FiniteTiltDiracShellBridge.lean").read_text()
     assert "theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge" in text
     assert "finiteTiltCurrentDensity_eq_boundaryCurrent" in text
+    assert "def FiniteTiltDiracShellBridgeOwnerTarget" in text
+    assert "theorem finiteTiltDiracShellBridgeOwnerTarget" in text
 
 
 def test_hestenes_dirac_finite_tilt_shell_builds():

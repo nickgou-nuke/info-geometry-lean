@@ -73,13 +73,6 @@ noncomputable def canonicalBridge
       (DrazinSupercharge.CertifiedInverseKernel.supercharge_isSpectralNonCompact
         (CIK := CIK))
 
-/-- The canonical Hodge/chiral bridge exists. -/
-@[rep_depth krein]
-theorem canonicalBridge_exists
-    (CIK : CertifiedInverseKernel E) :
-    Nonempty (DrazinHodgeChiralBridge (E := E)) := by
-  exact ⟨canonicalBridge (CIK := CIK)⟩
-
 namespace DrazinHodgeChiralBridge
 
 variable (B : DrazinHodgeChiralBridge (E := E))

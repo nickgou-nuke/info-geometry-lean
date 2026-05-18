@@ -23,6 +23,7 @@ No zeta claim.
 noncomputable section
 
 open scoped Matrix
+open scoped Polynomial
 
 namespace InfoGeometry.Clifford.FiniteTiltDiracShell
 
@@ -140,6 +141,12 @@ theorem finiteTiltBoundaryCurrent_sq_zero :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [tiltOddA, tiltOddB, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-- The current-density readout is nilpotent. -/
+@[rep_depth operator]
+theorem finiteTiltCurrentDensity_sq_zero :
+    finiteTiltCurrentDensity * finiteTiltCurrentDensity = 0 := by
+  simpa [finiteTiltCurrentDensity_eq_boundaryCurrent] using finiteTiltBoundaryCurrent_sq_zero
+
 /-- The shell operator splits into boundary current plus mass term. -/
 @[rep_depth operator]
 theorem finiteTiltDiracShell_eq_boundaryCurrent_add_mass (m : ℝ) :
@@ -195,15 +202,15 @@ theorem finiteTiltDiracShell_det (m : ℝ) :
 /-- The finite shell characteristic polynomial is `X^2 - m^2`. -/
 @[rep_depth operator]
 theorem finiteTiltDiracShell_charpoly (m : ℝ) :
-    (finiteTiltDiracShell m).charpoly = X ^ 2 - C (m ^ 2 : ℝ) := by
+    (finiteTiltDiracShell m).charpoly = Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) := by
   rw [Matrix.charpoly_fin_two, finiteTiltDiracShell_trace, finiteTiltDiracShell_det]
-  ring
+  simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 @[rep_depth operator]
 def FiniteTiltDiracShellSpectralTarget : Prop :=
   ∀ m : ℝ, Matrix.trace (finiteTiltDiracShell m) = 0 ∧
     Matrix.det (finiteTiltDiracShell m) = - m ^ 2 ∧
-    (finiteTiltDiracShell m).charpoly = X ^ 2 - C (m ^ 2 : ℝ)
+    (finiteTiltDiracShell m).charpoly = Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ)
 
 theorem finiteTiltDiracShellSpectralTarget :
     FiniteTiltDiracShellSpectralTarget := by

@@ -664,3 +664,5 @@ valid source line are not part of its public-theorem scan.
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+
+- `external_refs/LeanMillenniumPrizeProblems/` mirror: searchable theorem corpus for the Clay problems.

@@ -206,7 +206,31 @@ theorem finite_divisor_mobius_sum_cancel
         intro S hS
         have hSub : S ⊆ P.primes := Finset.mem_powerset.mp hS
         simpa [representedNat, subregister]
-          using mobius_prime_product_eq_parity S (fun p hp => P.prime_mem p (hSub hp))
+        using mobius_prime_product_eq_parity S (fun p hp => P.prime_mem p (hSub hp))
     _ = 0 := finite_witten_index_cancel P hP
+
+/-- The prime register as a finite prime root lattice. -/
+@[rep_depth thermo]
+def primeRootLattice (P : PrimeRegister) :
+    InfoGeometry.Canonical.FormalPrimeRootSystem.FormalPrimeRootLattice where
+  primes := P.primes
+  prime_mem := P.prime_mem
+
+/--
+The finite prime Weyl denominator identity on the prime register.
+
+This is the direct finite `A₁^P` root-system shadow of the Weyl denominator
+formula, specialized to the existing prime cutoff carrier.
+-/
+@[rep_depth thermo]
+theorem finite_prime_weyl_denominator_identity
+    (P : PrimeRegister) (x : ℕ → ℝ) :
+    InfoGeometry.Canonical.FormalPrimeRootSystem.weylDenominatorProduct
+      (primeRootLattice P) x =
+    InfoGeometry.Canonical.FormalPrimeRootSystem.weylAlternatingSum
+      (primeRootLattice P) x := by
+  simpa [primeRootLattice] using
+    (InfoGeometry.Canonical.FormalPrimeRootSystem.finite_prime_weyl_denominator
+      (L := primeRootLattice P) x)
 
 end InfoGeometry.Arithmetic.PrimeBitWittenIndex

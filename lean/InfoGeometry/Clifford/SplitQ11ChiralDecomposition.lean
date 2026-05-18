@@ -23,9 +23,10 @@ noncomputable section
 
 namespace InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 
+open InfoGeometry.Clifford.SplitQ11PhaseFlip
 open InfoGeometry.Clifford.SplitQ11Projectors
 open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
-open InfoGeometry.OperatorAlgebra.SymmetryInvariants
+open InfoGeometry.OperatorAlgebra
 
 /-- The split `Cl(1,1)` projectors as a complementary projector pair. -/
 @[rep_depth krein]
@@ -72,9 +73,15 @@ theorem splitQ11_left_right_decomposition (x : Alg) :
 @[rep_depth krein]
 theorem splitQ11_chiral_pair_decomposition (x : Alg) :
     splitQ11ChiralProjectorPair.PL * x + splitQ11ChiralProjectorPair.PR * x = x := by
-  simpa [splitQ11ChiralProjectorPair] using
-    ComplementaryProjectors.left_decomposition
-      splitQ11ComplementaryProjectors x
+  calc
+    splitQ11ChiralProjectorPair.PL * x + splitQ11ChiralProjectorPair.PR * x
+        = splitQ11ComplementaryProjectors.pComponent x +
+            splitQ11ComplementaryProjectors.qComponent x := by
+          simp [splitQ11ChiralProjectorPair, splitQ11ComplementaryProjectors,
+            ComplementaryProjectors.pComponent, ComplementaryProjectors.qComponent, add_comm]
+    _ = x :=
+          ComplementaryProjectors.left_decomposition
+            splitQ11ComplementaryProjectors x
 
 /-- The left split component is supported on the negative projector. -/
 @[rep_depth krein]

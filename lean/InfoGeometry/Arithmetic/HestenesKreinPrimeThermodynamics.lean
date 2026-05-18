@@ -10,7 +10,7 @@ This module keeps the algebra explicit:
 * split-complex numbers as a real/ hyperbolic pair,
 * the hyperbolic unit `j`,
 * split Souriau temperatures `σ + j t`,
-* the antiunitary reflection `s ↦ 1 - \bar s`,
+* the split reflection `σ ↦ 1 - σ` with `t` fixed,
 * a finite normalized prime holonomy readout.
 
 No sockets.
@@ -141,9 +141,16 @@ def leftCone (s : SplitSouriauTemperature) : ℝ :=
 def rightCone (s : SplitSouriauTemperature) : ℝ :=
   s.sigma - s.time
 
-/-- Split reflection swapping the light-cone coordinates. -/
-def antiunitaryReflection (s : SplitSouriauTemperature) : SplitSouriauTemperature :=
+/-- Split reflection with `t` fixed. -/
+def splitReflection (s : SplitSouriauTemperature) : SplitSouriauTemperature :=
   ⟨1 - s.sigma, s.time⟩
+
+/-- Compatibility alias for the split reflection. -/
+abbrev antiunitaryReflection := splitReflection
+
+/-- Carrier-level split reflection in left/right coordinates. -/
+def splitReflectionComplex (z : SplitComplex) : SplitComplex :=
+  reconstruct (1 - rightPart z) (1 - leftPart z)
 
 /-- Critical line in the split-temperature plane. -/
 def CriticalLine (s : SplitSouriauTemperature) : Prop :=
@@ -151,16 +158,41 @@ def CriticalLine (s : SplitSouriauTemperature) : Prop :=
 
 @[simp]
 theorem antiunitaryReflection_involutive (s : SplitSouriauTemperature) :
-    antiunitaryReflection (antiunitaryReflection s) = s := by
+    splitReflection (splitReflection s) = s := by
   cases s
-  simp [antiunitaryReflection]
+  simp [splitReflection]
 
 /-- The antiunitary reflection preserves the critical line. -/
 theorem antiunitaryReflection_preserves_criticalLine
     (s : SplitSouriauTemperature) (hs : CriticalLine s) :
-    CriticalLine (antiunitaryReflection s) := by
-  unfold CriticalLine antiunitaryReflection at *
+    CriticalLine (splitReflection s) := by
+  unfold CriticalLine splitReflection at *
   linarith
+
+@[simp]
+theorem splitReflectionComplex_leftPart (z : SplitComplex) :
+    leftPart (splitReflectionComplex z) = 1 - rightPart z := by
+  simp [splitReflectionComplex]
+
+@[simp]
+theorem splitReflectionComplex_rightPart (z : SplitComplex) :
+    rightPart (splitReflectionComplex z) = 1 - leftPart z := by
+  simp [splitReflectionComplex]
+
+@[simp]
+theorem splitReflectionComplex_involutive (z : SplitComplex) :
+    splitReflectionComplex (splitReflectionComplex z) = z := by
+  cases z
+  ext <;> simp [splitReflectionComplex, leftPart, rightPart, reconstruct] <;> ring
+
+/-- The carrier-level split reflection matches the split-temperature reflection. -/
+theorem splitReflectionComplex_eq_splitTemperatureAsNumber
+    (s : SplitSouriauTemperature) :
+    splitReflectionComplex (splitTemperatureAsNumber s) =
+      splitTemperatureAsNumber (splitReflection s) := by
+  cases s
+  ext <;> simp [splitReflectionComplex, splitTemperatureAsNumber,
+    splitReflection, leftPart, rightPart, reconstruct] <;> ring
 
 /-- Split-complex normalized holonomy on a finite prime cutoff. -/
 def normalizedPrimeHolonomySplit (sigma t period : ℝ) : SplitComplex :=

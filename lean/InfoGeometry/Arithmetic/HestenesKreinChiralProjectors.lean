@@ -165,7 +165,7 @@ theorem antiunitaryReflection_leftCone
     leftCone (antiunitaryReflection s) =
       1 - rightCone s := by
   cases s
-  simp [leftCone, rightCone, antiunitaryReflection]
+  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
   ring_nf
 
 /-- Antiunitary reflection sends `v` to `1-u`. -/
@@ -174,7 +174,7 @@ theorem antiunitaryReflection_rightCone
     rightCone (antiunitaryReflection s) =
       1 - leftCone s := by
   cases s
-  simp [leftCone, rightCone, antiunitaryReflection]
+  simp [leftCone, rightCone, antiunitaryReflection, splitReflection]
   ring_nf
 
 

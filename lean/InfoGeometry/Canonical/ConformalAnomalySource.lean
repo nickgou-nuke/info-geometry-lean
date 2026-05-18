@@ -596,6 +596,22 @@ theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolu
   refine ⟨hKahlerZero, hScaleZero, ?_⟩
   exact CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
 
+/--
+Proof-carrying self-concordance mechanics route using the compact
+`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
+-/
+theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeBit
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    kahlerPotentialRN n M = 0
+      ∧ CI.chiralScale = 0
+      ∧ (CI.spectralChiralProjector * CI.metricChiralProjector
+            = CI.metricChiralProjector * CI.spectralChiralProjector) := by
+  exact CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
+    (M := M) hScaleFromKahler bit.unit_relative_volume
+
 section
 
 /--
@@ -618,6 +634,22 @@ theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
       (M := M) hScaleFromKahler hUnitVolume
   exact CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
     (flow := flow) hNorm hScaleZero
+
+/--
+Proof-carrying anomaly-flow discharge using the compact
+`UnitRelativeVolumeWitness` packet instead of a bare unit-volume equality.
+-/
+theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeBit
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+      (fun _ => CI.chiralScale) := by
+  exact CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+    (flow := flow) hNorm (M := M) hScaleFromKahler bit.unit_relative_volume
 
 end
 

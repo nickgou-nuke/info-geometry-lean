@@ -36,6 +36,10 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
     assert "state := C.kms.state" in text
     assert "kms_state_eq := rfl" in text
     assert "theorem mk_of_state_kms" in text
+    assert "theorem mk_of_minimal_kms" in text
+    assert "∃ ctx : SouriauTomitaKMSContext" in text
+    assert "ctx.state = C.state" in text
+    assert "C.toSouriauTomitaKMSContext" in text
     assert "theorem kms_eval_mul_souriau_modular_eq_eval_flip" in text
     assert "theorem sigma_add" in text
     assert "theorem sigma_zero" in text

@@ -4,6 +4,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.Chebyshev
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.BridgeTarget
 
 /-!
@@ -369,6 +370,34 @@ theorem primitiveModularKernel_eq_exp_mul_log_inverseBase {n : ℕ} (h : 1 < n) 
   rw [log_primitiveInverseBase h]
   ring_nf
 
+/-! ## Mellin parity owner target -/
+
+/--
+Root-corridor owner target for the Mellin inversion/parity lane.
+
+This packages the already proved inversion/log/kernel identities on the
+primitive Mellin side.  It does not assert any zeta functional equation or
+any analytic continuation beyond the explicit kernel identities already
+proved in this file.
+-/
+@[owner_target_tag]
+def PrimitiveMellinParityOwnerTarget : Prop :=
+  ∀ (n : ℕ) (h : 1 < n),
+    Real.log (primitiveInverseBase n) = -Real.log (n : ℝ) ∧
+    (primitiveMellinKernel n = (fun s => Real.exp (s * Real.log (primitiveInverseBase n))) ∧
+      primitiveModularKernel n = fun τ => Real.exp ((τ + 1) * Real.log (primitiveInverseBase n)))
+
+/-- The Mellin parity owner target is discharged by the existing inversion lemmas. -/
+@[bridge_target_tag]
+theorem primitiveMellinParityOwnerTarget :
+    PrimitiveMellinParityOwnerTarget := by
+  intro n h
+  constructor
+  · exact log_primitiveInverseBase h
+  · constructor
+    · exact primitiveMellinKernel_eq_exp_mul_log_inverseBase h
+    · exact primitiveModularKernel_eq_exp_mul_log_inverseBase h
+
 theorem primitiveWeight_nonneg (n : ℕ) : 0 ≤ primitiveWeight n := by
   by_cases h : 1 < n
   · have hn_pos : 0 < (n : ℝ) := by
@@ -555,6 +584,7 @@ theorem primitiveWeight_mul_le_of_ne_one
       omega
     simp [hm_zero, primitiveWeight_eq_zero_of_le_one]
 
+@[bridge_target_tag]
 theorem primitiveWeight_eq_integral_mellinKernel (n : ℕ) :
     primitiveWeight n = ∫ s : ℝ in Set.Ioi 1, primitiveMellinKernel n s := by
   by_cases h : 1 < n
@@ -588,6 +618,7 @@ theorem primitiveWeight_eq_integral_mellinKernel (n : ℕ) :
     rw [primitiveWeight_eq_zero_of_not_lt_two h, hkernel_zero]
     simp
 
+@[bridge_target_tag]
 theorem primitiveWeight_eq_integral_modularKernel (n : ℕ) :
     primitiveWeight n = ∫ τ : ℝ in Set.Ioi 0, primitiveModularKernel n τ := by
   by_cases h : 1 < n

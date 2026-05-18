@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -164,6 +165,7 @@ Owner theorem for the theorem-safe defect-free Lee--Yang limit lane.
 It says only that a packet re-exports its supplied analytic laws.  It does not
 assert that such a packet exists for the Riemann `xi` function.
 -/
+@[owner_target_tag]
 theorem primeLeeYangDefectFreeLimitOwnerTarget
     {CompletedXiReadout : Type}
     (W : DefectFreeLimitPacket CompletedXiReadout) :

@@ -52,18 +52,6 @@ variable {Ξ : CompletedXiZeroPredicate}
 variable {A : LeeYangApproximants}
 variable (W : PrimeLeeYangToHurwitzWitness Ξ A)
 
-/-- Re-export of the Hurwitz witness carried by the relay packet. -/
-@[rep_depth operator]
-def toCorrectHurwitzZeroTransferWitness :
-    CorrectHurwitzZeroTransferWitness Ξ A :=
-  W.hurwitz
-
-/-- Re-export of the convergence socket carried by the relay packet. -/
-@[rep_depth operator]
-def toPrimeLeeYangConvergenceSocket :
-    PrimeLeeYangConvergenceSocket Ξ A :=
-  W.convergence
-
 /-- The relay maps completed-`xi` zeros to the Lee--Yang circle. -/
 @[rep_depth operator]
 theorem xiZeros_map_to_unit_circle
@@ -74,8 +62,7 @@ theorem xiZeros_map_to_unit_circle
     OnUnitCircle (cayley s) :=
 by
   exact corrected_hurwitz_xiZeros_map_to_unit_circle
-    (PrimeLeeYangToHurwitzWitness.toCorrectHurwitzZeroTransferWitness W)
-    s hs_ne_one hs
+    W.hurwitz s hs_ne_one hs
 
 end PrimeLeeYangToHurwitzWitness
 

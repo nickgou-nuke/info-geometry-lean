@@ -291,49 +291,4 @@ theorem projective_pfaffian_counts_lie_on_fierz_klein
     K.residual.residual K.coords = 0 :=
   K.klein_law
 
-/-! ## Combined owner packet -/
-
-/--
-Combined projective Pfaffian/determinant count socket.
-
-This packages the determinant path count, Pfaffian square-root count, Drazin
-regular determinant data, Weyl/KMS projectivization, and Klein residual readout.
--/
-@[socket_debt_tag]
-structure ProjectivePfaffianDeterminantCountSocket
-    (I V Γ : Type*)
-    [Fintype I] [DecidableEq I]
-    [Fintype V] [DecidableEq V]
-    [Fintype Γ] where
-
-  determinantPathCount : DeterminantPathCount I
-  pfaffianKernel : PfaffianKernel I
-  drazinDeterminant : DrazinDeterminantData V
-
-  weylWeight : WeylPathWeight Γ
-  kmsState : KMSPathState Γ
-  determinantCalibration :
-    ProjectiveDeterminantCalibration weylWeight kmsState
-
-  kleinLaw : ProjectivePfaffianKleinLaw Γ
-
-/-- Parameterized owner target for projective Pfaffian determinant counts. -/
-def ProjectivePfaffianDeterminantCountTarget
-    (I V Γ : Type*)
-    [Fintype I] [DecidableEq I]
-    [Fintype V] [DecidableEq V]
-    [Fintype Γ] : Prop :=
-  Nonempty (ProjectivePfaffianDeterminantCountSocket I V Γ)
-
-/-- Constructor for the projective Pfaffian determinant count target. -/
-theorem constructProjectivePfaffianDeterminantCountTarget
-    {I V Γ : Type*}
-    [Fintype I] [DecidableEq I]
-    [Fintype V] [DecidableEq V]
-    [Fintype Γ]
-    (P : ProjectivePfaffianDeterminantCountSocket I V Γ) :
-    ProjectivePfaffianDeterminantCountTarget I V Γ :=
-  ⟨P⟩
-
 end InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
-

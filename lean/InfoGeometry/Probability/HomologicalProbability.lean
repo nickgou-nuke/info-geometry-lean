@@ -6,6 +6,7 @@ import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Probability.HomologicalProbability
@@ -1976,6 +1977,53 @@ structure GibbsKMSPacket where
   freeEnergyEntropyRelation : ∀ ρ : ObservableAlgebra,
     relativeEntropyToGibbs ρ =
       beta * (freeEnergy ρ - freeEnergy gibbsState)
+
+namespace GibbsKMSPacket
+
+/--
+Owner-target readback for the Gibbs/KMS free-energy identity.
+
+This packages the actual packet theorem as a graph-visible proof surface.
+-/
+@[owner_target_tag]
+theorem freeEnergyEntropyRelation_ownerTarget
+    (gk : GibbsKMSPacket) :
+    ∀ ρ : gk.ObservableAlgebra,
+      gk.relativeEntropyToGibbs ρ =
+        gk.beta * (gk.freeEnergy ρ - gk.freeEnergy gk.gibbsState) :=
+  gk.freeEnergyEntropyRelation
+
+/--
+Free-energy gap nonnegativity from the Gibbs/KMS identity.
+
+In concrete models this is the sink statement of the KL nonnegativity source:
+once the relative entropy is nonnegative and `β > 0`, the Gibbs state
+minimizes the free energy.
+-/
+theorem freeEnergy_gap_nonneg_of_relativeEntropy_nonneg
+    (gk : GibbsKMSPacket)
+    (ρ : gk.ObservableAlgebra)
+    (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
+    (hβ : 0 < gk.beta) :
+    0 ≤ gk.freeEnergy ρ - gk.freeEnergy gk.gibbsState := by
+  have h := gk.freeEnergyEntropyRelation ρ
+  nlinarith
+
+/--
+The Gibbs/KMS reference state is a free-energy minimizer whenever the relative
+entropy is nonnegative and the inverse temperature is positive.
+-/
+theorem freeEnergy_ge_gibbs_of_relativeEntropy_nonneg
+    (gk : GibbsKMSPacket)
+    (ρ : gk.ObservableAlgebra)
+    (hrel : 0 ≤ gk.relativeEntropyToGibbs ρ)
+    (hβ : 0 < gk.beta) :
+    gk.freeEnergy gk.gibbsState ≤ gk.freeEnergy ρ := by
+  have hgap :=
+    freeEnergy_gap_nonneg_of_relativeEntropy_nonneg gk ρ hrel hβ
+  linarith
+
+end GibbsKMSPacket
 
 /--
 **Packet 25.4 — GKSL dissipative dynamics layer.**

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.OwnerTarget
+import InfoGeometry.MaxEnt.Jaynes
 
 /-!
 # InfoGeometry.Arithmetic.PrimeLatticeGasVariational
@@ -25,6 +26,9 @@ noncomputable section
 open scoped BigOperators
 
 namespace InfoGeometry.Arithmetic.PrimeLatticeGasVariational
+
+open scoped BigOperators
+open InfoGeometry.MaxEnt
 
 /-! ## 1. Finite prime-supported lattice sites -/
 
@@ -213,5 +217,47 @@ theorem primeLatticeGasFiniteOwnerTarget :
   intro M Z
   exact grandPartition_eq_one_add_pow_primeSiteCount M Z
 
-end InfoGeometry.Arithmetic.PrimeLatticeGasVariational
+/--
+Finite entropy maximizer on the prime lattice configuration space.
 
+This is the honest MaxEnt statement available in the repository: the zero-feature
+Gibbs law on the finite configuration carrier maximizes Shannon entropy on the
+Jaynes feasible set.  It does not claim anything about zeta zeros.
+-/
+theorem primeLatticeGas_zeroFeature_entropy_maximizer
+    (M : ℕ) :
+    let n := Fintype.card (Configuration M)
+    ∀ q : Fin n → ℝ,
+      q ∈ MaxEntConstraint (n := n) (fun _ : Fin n => (0 : ℝ)) 0 →
+        ShannonEntropy q ≤
+          ShannonEntropy (gibbs (fun _ : Fin n => (0 : ℝ)) 0) := by
+  classical
+  dsimp
+  intro q hq
+  let n := Fintype.card (Configuration M)
+  have hpos : 0 < n := by
+    dsimp [n]
+    exact Fintype.card_pos_iff.mpr (⟨Finset.empty⟩ : Nonempty (Configuration M))
+  letI : Nonempty (Fin n) := ⟨⟨0, hpos⟩⟩
+  have hp :
+      gibbs (fun _ : Fin n => (0 : ℝ)) 0 ∈
+        MaxEntConstraint (n := n) (fun _ : Fin n => (0 : ℝ)) 0 := by
+    refine ⟨?_, ?_⟩
+    · refine ⟨?_, ?_⟩
+      · intro i
+        exact gibbs_nonneg (f := fun _ : Fin n => (0 : ℝ)) (lam := 0) i
+      · simpa using
+          (gibbs_sum_one (f := fun _ : Fin n => (0 : ℝ)) (lam := 0))
+    · simp
+  simpa [ShannonEntropy] using
+    (gibbs_maximizes_shannon_under_moment
+      (n := n)
+      (f := fun _ : Fin n => (0 : ℝ))
+      (E := 0)
+      (lam := 0)
+      (p := gibbs (fun _ : Fin n => (0 : ℝ)) 0)
+      hp
+      (by intro i; rfl)
+      q hq)
+
+end InfoGeometry.Arithmetic.PrimeLatticeGasVariational

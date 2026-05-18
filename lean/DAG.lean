@@ -12,6 +12,8 @@ import DAG.Search
 import DAG.SearchCore
 import DAG.SearchRank
 import DAG.ServerExport
+import DAG.GraphHodge
+import DAG.GraphHodgeBridge
 import DAG.Topo
 import DAG.TwoComplex
 import DAG.Util

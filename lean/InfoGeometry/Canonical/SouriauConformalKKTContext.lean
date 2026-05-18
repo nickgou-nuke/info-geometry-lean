@@ -1255,6 +1255,73 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse :
 
 end ConformalSquareFisherOnsagerPositiveContext
 
+/--
+Constructive square-response package that avoids carrying a separate
+`hOperatorAdmissible` field on the Fisher/Onsager-positive branch.
+
+The closure data is supplied through
+`ConformalOperatorAdmissibilityWitness`, so the stable closure context is
+recovered by theorem-backed construction rather than an explicit packaged
+admissibility proof.
+-/
+@[rep_depth transport]
+structure ConstructiveConformalSquareFisherOnsagerPositiveContext where
+  closureWitness : ConformalOperatorAdmissibilityWitness (α := α) (H := H)
+  amplitude : ℝ
+-- theorem-class: bridge
+  selfResponse_eq_square :
+    closureWitness.gibbs.operatorConformalResponse
+        closureWitness.X closureWitness.X =
+      amplitude ^ (2 : ℕ)
+
+namespace ConstructiveConformalSquareFisherOnsagerPositiveContext
+
+variable (C : ConstructiveConformalSquareFisherOnsagerPositiveContext
+  (α := α) (H := H))
+
+-- theorem-class: bridge
+/-- The selected conformal self-response is nonnegative because it is a real square. -/
+@[rep_depth transport]
+theorem selfResponse_nonneg :
+    0 ≤ C.closureWitness.gibbs.operatorConformalResponse
+      C.closureWitness.X C.closureWitness.X := by
+  rw [C.selfResponse_eq_square]
+  exact sq_nonneg C.amplitude
+
+/--
+Recover the existing square-response surface from the constructive
+operator-admissibility witness branch.
+-/
+@[rep_depth transport]
+def toSquarePositiveContext :
+    ConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
+  closure := C.closureWitness.toClosureContext
+  amplitude := C.amplitude
+  selfResponse_eq_square := by
+    simpa [ConformalOperatorAdmissibilityWitness.toClosureContext] using
+      C.selfResponse_eq_square
+
+/--
+Recover the legacy nonnegativity-only Fisher/Onsager interface from the
+constructive operator-admissibility witness branch.
+-/
+@[rep_depth transport]
+def toPositiveContext :
+    ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
+  C.toSquarePositiveContext.toPositiveContext
+
+-- theorem-class: bridge
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the
+constructive admissibility-plus-square branch.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg :
+    0 ≤ C.toPositiveContext.fisherOnsagerProduction := by
+  exact C.toPositiveContext.fisherOnsagerProduction_nonneg
+
+end ConstructiveConformalSquareFisherOnsagerPositiveContext
+
 /-! ## Grand-canonical Fock-number coupling over the conformal operator context -/
 
 /--

@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -259,6 +260,7 @@ def CliffordFractalWaveletBridgeTarget
   Nonempty (CliffordFractalWaveletFierzKleinLaw Op)
 
 /-- Constructor for the Clifford fractal wavelet bridge target. -/
+@[bridge_target_tag]
 theorem constructCliffordFractalWaveletBridgeTarget
     {Op : Type*} [Ring Op]
     (L : CliffordFractalWaveletFierzKleinLaw Op) :
@@ -266,4 +268,3 @@ theorem constructCliffordFractalWaveletBridgeTarget
   exact ⟨L⟩
 
 end InfoGeometry.Topology.CliffordFractalWaveletBridge
-

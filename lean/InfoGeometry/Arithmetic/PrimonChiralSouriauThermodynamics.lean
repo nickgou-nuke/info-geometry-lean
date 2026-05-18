@@ -12,7 +12,6 @@ import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.External.Virasoro
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Krein.DoubledSpace
-import InfoGeometry.Thermo.FromBregman
 
 /-!
 # InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

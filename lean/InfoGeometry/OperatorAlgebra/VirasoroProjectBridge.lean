@@ -9,7 +9,7 @@ MANDATE IX COMPLIANCE: VERIFIED
 -/
 
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
-import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.External.Virasoro
 
 noncomputable section
 

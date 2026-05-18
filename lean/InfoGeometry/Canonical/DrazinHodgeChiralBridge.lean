@@ -62,6 +62,24 @@ structure DrazinHodgeChiralBridge where
   Dirac : EndH
   dirac_odd : CIK.IsSpectralNonCompact Dirac
 
+/-- Canonical Hodge/chiral bridge using the repo-owned Drazin supercharge. -/
+@[rep_depth krein]
+noncomputable def canonicalBridge
+    (CIK : CertifiedInverseKernel E) : DrazinHodgeChiralBridge (E := E) where
+  CIK := CIK
+  Dirac := DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+  dirac_odd := by
+    simpa [DrazinSupercharge.CertifiedInverseKernel.supercharge] using
+      (DrazinSupercharge.CertifiedInverseKernel.supercharge_isSpectralNonCompact
+        (CIK := CIK))
+
+/-- The canonical Hodge/chiral bridge exists. -/
+@[rep_depth krein]
+theorem canonicalBridge_exists
+    (CIK : CertifiedInverseKernel E) :
+    Nonempty (DrazinHodgeChiralBridge (E := E)) := by
+  exact ⟨canonicalBridge (CIK := CIK)⟩
+
 namespace DrazinHodgeChiralBridge
 
 variable (B : DrazinHodgeChiralBridge (E := E))

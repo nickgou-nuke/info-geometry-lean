@@ -3,6 +3,7 @@ import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
@@ -42,6 +43,7 @@ open scoped BigOperators
 namespace InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 
 open InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+open InfoGeometry.Thermo.SplitChiralPolarizationBasis
 
 /-! ## 1. Complex lift of grand-canonical formulas -/
 
@@ -131,6 +133,77 @@ theorem circularMicrostateWeight_eq_microstateWeight [DecidableEq ι]
   unfold circularMicrostateWeight microstateWeight
   simp [InfoGeometry.Arithmetic.PrimonFinite.weight,
     circularModeWeight_eq_modeWeight]
+
+
+/-! ## 2. Split-chiral lift -/
+
+/-- Split-complex rapidity extracted from a complex temperature. -/
+@[rep_depth thermo]
+def splitTemperature (s : ℂ) : SplitRapidity :=
+  ⟨s.re, s.im⟩
+
+/-- Left-moving chiral Boltzmann weight on the split plane. -/
+@[rep_depth thermo]
+def chiralBoltzmannLeftWeight (E : ℝ) (s : ℂ) : ℝ :=
+  splitChiralLeftBoltzmannWeight E (splitTemperature s)
+
+/-- Right-moving chiral Boltzmann weight on the split plane. -/
+@[rep_depth thermo]
+def chiralBoltzmannRightWeight (E : ℝ) (s : ℂ) : ℝ :=
+  splitChiralRightBoltzmannWeight E (splitTemperature s)
+
+/-- Split-chiral Boltzmann weight on the complex temperature plane. -/
+@[rep_depth thermo]
+def chiralBoltzmannWeight (E : ℝ) (s : ℂ) : ChiralScalar :=
+  splitChiralBoltzmannWeight E (splitTemperature s)
+
+/-- The split-chiral Boltzmann weight is the pair of left/right weights. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem chiralBoltzmannWeight_eq_pair (E : ℝ) (s : ℂ) :
+    chiralBoltzmannWeight E s =
+      (chiralBoltzmannLeftWeight E s, chiralBoltzmannRightWeight E s) := by
+  rfl
+
+/-- Left part of the split-chiral Boltzmann weight. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem leftPart_chiralBoltzmannWeight (E : ℝ) (s : ℂ) :
+    leftPart (chiralBoltzmannWeight E s) = chiralBoltzmannLeftWeight E s := by
+  rfl
+
+/-- Right part of the split-chiral Boltzmann weight. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem rightPart_chiralBoltzmannWeight (E : ℝ) (s : ℂ) :
+    rightPart (chiralBoltzmannWeight E s) = chiralBoltzmannRightWeight E s := by
+  rfl
+
+/-- Chiral local mode weight. -/
+@[rep_depth thermo]
+def chiralModeWeight
+    (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) : ChiralScalar :=
+  chiralBoltzmannWeight (E p - μ p) s
+
+/-- Chiral microstate weight. -/
+@[rep_depth thermo]
+def chiralMicrostateWeight [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) : ChiralScalar :=
+  InfoGeometry.Arithmetic.PrimonFinite.weight (chiralModeWeight s E μ) S
+
+/-- Chiral local weight reduces to the split thermodynamic basis. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem chiralModeWeight_eq_splitChiralBoltzmannWeight
+    (s : SouriauTemperature) (E μ : ι → ℝ) (p : ι) :
+    chiralModeWeight s E μ p =
+      splitChiralBoltzmannWeight (E p - μ p) (splitTemperature s) := by
+  rfl
+
+/-- Chiral microstate weight reduces to the split thermodynamic basis. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem chiralMicrostateWeight_eq_split [DecidableEq ι]
+    (s : SouriauTemperature) (E μ : ι → ℝ) (S : FState ι) :
+    chiralMicrostateWeight s E μ S =
+      InfoGeometry.Arithmetic.PrimonFinite.weight
+        (fun p => splitChiralBoltzmannWeight (E p - μ p) (splitTemperature s)) S := by
+  rfl
 
 section FiniteModes
 

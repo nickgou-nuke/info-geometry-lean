@@ -81,6 +81,20 @@ theorem hodgeChiralityStar_sq_one
       noncomm_ring [hP, hQ, hPQ, hQP]
     _ = (1 : EndH) := hAdd
 
+/-- The bridge chirality agrees with the certified spectral grading. -/
+@[rep_depth krein]
+theorem hodgeChiralityStar_eq_GammaS
+    (CIK : CertifiedInverseKernel E) :
+    hodgeChiralityStar CIK = CIK.toInformationCartanTriple.GammaS := by
+  unfold hodgeChiralityStar
+  change
+    CIK.spectralProjector - CIK.spectralComplementaryProjector =
+      CIK.toInformationCartanTriple.GammaS
+  change
+    CIK.spectralProjector - (1 - CIK.spectralProjector) =
+      2 * CIK.spectralProjector - 1
+  noncomm_ring
+
 /-- `⋆χ` acts by `+1` on the Drazin regular/self-dual sector on the left. -/
 @[rep_depth krein]
 theorem hodgeChiralityStar_mul_hodgeSD
@@ -141,6 +155,43 @@ theorem hodgeASD_mul_hodgeChiralityStar
   change Q * (P - Q) = -Q
   noncomm_ring [hQ, hQP]
 
+/-- The certified left anomaly is genuinely odd for the bridge chirality. -/
+@[rep_depth krein]
+theorem chiralAnomaly_anticommutes_hodgeChiralityStar
+    (CIK : CertifiedInverseKernel E) :
+    CIK.chiralAnomaly * hodgeChiralityStar CIK =
+      -(hodgeChiralityStar CIK * CIK.chiralAnomaly) := by
+  rw [hodgeChiralityStar_eq_GammaS]
+  exact CIK.chiralAnomaly_anticommutes_GammaS
+
+/-- The certified right anomaly is genuinely odd for the bridge chirality. -/
+@[rep_depth krein]
+theorem rightChiralAnomaly_anticommutes_hodgeChiralityStar
+    (CIK : CertifiedInverseKernel E) :
+    CIK.rightChiralAnomaly * hodgeChiralityStar CIK =
+      -(hodgeChiralityStar CIK * CIK.rightChiralAnomaly) := by
+  rw [hodgeChiralityStar_eq_GammaS]
+  exact CIK.rightChiralAnomaly_anticommutes_GammaS
+
+/-- The canonical anomaly-difference Dirac is odd for the bridge chirality. -/
+@[rep_depth krein]
+theorem canonicalDirac_anticommutes_hodgeChiralityStar
+    (CIK : CertifiedInverseKernel E) :
+    (CIK.rightChiralAnomaly - CIK.chiralAnomaly) * hodgeChiralityStar CIK =
+      -(hodgeChiralityStar CIK * (CIK.rightChiralAnomaly - CIK.chiralAnomaly)) := by
+  have hR := rightChiralAnomaly_anticommutes_hodgeChiralityStar (CIK := CIK)
+  have hL := chiralAnomaly_anticommutes_hodgeChiralityStar (CIK := CIK)
+  calc
+    (CIK.rightChiralAnomaly - CIK.chiralAnomaly) * hodgeChiralityStar CIK
+        = CIK.rightChiralAnomaly * hodgeChiralityStar CIK -
+            CIK.chiralAnomaly * hodgeChiralityStar CIK := by
+              rw [sub_mul]
+    _ = -(hodgeChiralityStar CIK * CIK.rightChiralAnomaly) -
+        -(hodgeChiralityStar CIK * CIK.chiralAnomaly) := by
+          rw [hR, hL]
+    _ = -(hodgeChiralityStar CIK * (CIK.rightChiralAnomaly - CIK.chiralAnomaly)) := by
+          noncomm_ring
+
 /--
 Bridge between certified Drazin/MP projectors, the lightcone projector algebra,
 chiral Hodge star/chirality, and a supplied odd Dirac/supercharge candidate.
@@ -159,6 +210,21 @@ structure DrazinMPChiralHodgeConeBridge where
   Dirac_odd :
     Dirac * hodgeChiralityStar CIK =
       -(hodgeChiralityStar CIK * Dirac)
+
+/-- The canonical bridge using the repo-owned anomaly-difference Dirac. -/
+@[rep_depth krein]
+noncomputable def canonicalBridge
+    (CIK : CertifiedInverseKernel E) : DrazinMPChiralHodgeConeBridge (E := E) where
+  CIK := CIK
+  Dirac := CIK.rightChiralAnomaly - CIK.chiralAnomaly
+  Dirac_odd := canonicalDirac_anticommutes_hodgeChiralityStar (CIK := CIK)
+
+/-- The canonical Drazin/Moore--Penrose chiral Hodge bridge exists. -/
+@[rep_depth krein]
+theorem canonicalBridge_exists
+    (CIK : CertifiedInverseKernel E) :
+    Nonempty (DrazinMPChiralHodgeConeBridge (E := E)) := by
+  exact ⟨canonicalBridge (CIK := CIK)⟩
 
 namespace DrazinMPChiralHodgeConeBridge
 

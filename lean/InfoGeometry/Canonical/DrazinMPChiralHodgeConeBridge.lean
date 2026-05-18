@@ -219,13 +219,6 @@ noncomputable def canonicalBridge
   Dirac := CIK.rightChiralAnomaly - CIK.chiralAnomaly
   Dirac_odd := canonicalDirac_anticommutes_hodgeChiralityStar (CIK := CIK)
 
-/-- The canonical Drazin/Moore--Penrose chiral Hodge bridge exists. -/
-@[rep_depth krein]
-theorem canonicalBridge_exists
-    (CIK : CertifiedInverseKernel E) :
-    Nonempty (DrazinMPChiralHodgeConeBridge (E := E)) := by
-  exact ⟨canonicalBridge (CIK := CIK)⟩
-
 namespace DrazinMPChiralHodgeConeBridge
 
 variable (B : DrazinMPChiralHodgeConeBridge (E := E))

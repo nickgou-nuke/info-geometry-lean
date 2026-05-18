@@ -3,22 +3,11 @@ import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 
 Proof-only chiral splitting of the finite tilt Dirac shell.
-
-This file stays on the finite 2x2 matrix model already owned by
-`FiniteTiltDiracShell`.  It introduces the spectral projectors of the
-grading generator `tiltOddA`, proves they are complementary idempotents, and
-uses them to split the shell operator into left/right chiral pieces.
-
-No socket.
-No certificate.
-No CFT claim.
 -/
 
 noncomputable section
@@ -28,8 +17,11 @@ open scoped Matrix
 namespace InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 
 open InfoGeometry.Clifford.FiniteTiltDiracShell
+open InfoGeometry.Clifford.Cl11Matrix
 open InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 open InfoGeometry.OperatorAlgebra.SymmetryInvariants
+
+abbrev Mat2 := Matrix (Fin 2) (Fin 2) ℝ
 
 /-- The left chiral projector of the finite tilt shell. -/
 @[rep_depth operator]
@@ -42,48 +34,48 @@ def finiteTiltRightChiralProjector : Mat2 :=
   (1 / 2 : ℝ) • ((1 : Mat2) - tiltOddA)
 
 /-- The left and right chiral projectors sum to the identity. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltChiralProjector_sum :
     finiteTiltLeftChiralProjector + finiteTiltRightChiralProjector = 1 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
-      tiltOddA, Eplus, Matrix.one_apply, Matrix.add_apply, Matrix.smul_apply]
+      tiltOddA, Matrix.one_apply, Matrix.add_apply, Matrix.smul_apply]
 
 /-- The left chiral projector is idempotent. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltLeftChiralProjector_idempotent :
     finiteTiltLeftChiralProjector * finiteTiltLeftChiralProjector =
       finiteTiltLeftChiralProjector := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, tiltOddA, Eplus, Matrix.mul_apply,
-      Fin.sum_univ_two, Matrix.smul_apply, Matrix.add_apply] <;> ring
+      Fin.sum_univ_two, Matrix.smul_apply, Matrix.add_apply] <;> ring_nf
 
 /-- The right chiral projector is idempotent. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltRightChiralProjector_idempotent :
     finiteTiltRightChiralProjector * finiteTiltRightChiralProjector =
       finiteTiltRightChiralProjector := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltRightChiralProjector, tiltOddA, Eplus, Matrix.mul_apply,
-      Fin.sum_univ_two, Matrix.smul_apply, Matrix.add_apply] <;> ring
+      Fin.sum_univ_two, Matrix.smul_apply, Matrix.add_apply] <;> ring_nf
 
 /-- The two chiral projectors annihilate in one order. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltLeftRightChiralProjector_mul_zero :
     finiteTiltLeftChiralProjector * finiteTiltRightChiralProjector = 0 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
       tiltOddA, Eplus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-      Matrix.add_apply] <;> ring
+      Matrix.add_apply] <;> ring_nf
 
 /-- The two chiral projectors annihilate in the opposite order. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltRightLeftChiralProjector_mul_zero :
     finiteTiltRightChiralProjector * finiteTiltLeftChiralProjector = 0 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [finiteTiltLeftChiralProjector, finiteTiltRightChiralProjector,
       tiltOddA, Eplus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-      Matrix.add_apply] <;> ring
+      Matrix.add_apply] <;> ring_nf
 
 /-- The finite tilt chiral projectors form a complementary projector pair. -/
 @[rep_depth operator]
@@ -119,7 +111,7 @@ def finiteTiltRightChiralShell (m : ℝ) : Mat2 :=
   finiteTiltChiralProjectors.qComponent (finiteTiltDiracShell m)
 
 /-- The finite shell splits into left and right chiral components. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltDiracShell_chiral_decomposition (m : ℝ) :
     finiteTiltLeftChiralShell m + finiteTiltRightChiralShell m =
       finiteTiltDiracShell m := by
@@ -127,8 +119,28 @@ theorem finiteTiltDiracShell_chiral_decomposition (m : ℝ) :
       ComplementaryProjectors.left_decomposition
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 
+/-- The finite current density splits into left and right chiral components. -/
+@[rep_depth operator]
+def finiteTiltLeftChiralCurrentDensity : Mat2 :=
+  finiteTiltChiralProjectors.pComponent finiteTiltCurrentDensity
+
+/-- The finite current density splits into left and right chiral components. -/
+@[rep_depth operator]
+def finiteTiltRightChiralCurrentDensity : Mat2 :=
+  finiteTiltChiralProjectors.qComponent finiteTiltCurrentDensity
+
+/-- The finite current density splits through the explicit chiral projector pair. -/
+@[rep_depth operator]
+theorem finiteTiltCurrentDensity_chiral_pair_decomposition :
+    finiteTiltChiralProjectorPair.PL * finiteTiltCurrentDensity +
+      finiteTiltChiralProjectorPair.PR * finiteTiltCurrentDensity =
+        finiteTiltCurrentDensity := by
+  simpa [finiteTiltChiralProjectorPair] using
+    ComplementaryProjectors.left_decomposition
+      finiteTiltChiralProjectors finiteTiltCurrentDensity
+
 /-- The finite shell splits through the explicit chiral projector pair. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltDiracShell_chiral_pair_decomposition (m : ℝ) :
     finiteTiltChiralProjectorPair.PL * finiteTiltDiracShell m +
       finiteTiltChiralProjectorPair.PR * finiteTiltDiracShell m =
@@ -138,44 +150,30 @@ theorem finiteTiltDiracShell_chiral_pair_decomposition (m : ℝ) :
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 
 /-- The left chiral component is supported on the left projector. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltLeftChiralShell_supported (m : ℝ) :
     IsSupportedOn finiteTiltChiralProjectors.p (finiteTiltLeftChiralShell m) := by
   simpa [finiteTiltLeftChiralShell] using
       ComplementaryProjectors.pComponent_supported
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 
-/-- The left chiral component is supported on the explicit chiral projector. -/
-@[bridge_target_tag, rep_depth operator]
-theorem finiteTiltLeftChiralShell_supported_by_pair (m : ℝ) :
-    finiteTiltChiralProjectorPair.IsLeftSupported (finiteTiltLeftChiralShell m) := by
-  simpa [finiteTiltChiralProjectorPair, finiteTiltLeftChiralShell] using
-    finiteTiltLeftChiralShell_supported (m := m)
-
 /-- The right chiral component is supported on the right projector. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltRightChiralShell_supported (m : ℝ) :
     IsSupportedOn finiteTiltChiralProjectors.q (finiteTiltRightChiralShell m) := by
   simpa [finiteTiltRightChiralShell] using
       ComplementaryProjectors.qComponent_supported
       finiteTiltChiralProjectors (finiteTiltDiracShell m)
 
-/-- The right chiral component is supported on the explicit chiral projector. -/
-@[bridge_target_tag, rep_depth operator]
-theorem finiteTiltRightChiralShell_supported_by_pair (m : ℝ) :
-    finiteTiltChiralProjectorPair.IsRightSupported (finiteTiltRightChiralShell m) := by
-  simpa [finiteTiltChiralProjectorPair, finiteTiltRightChiralShell] using
-    finiteTiltRightChiralShell_supported (m := m)
-
 /-- The left projector fixes the left chiral shell component. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltLeftChiralProjector_mul_leftChiralShell (m : ℝ) :
     finiteTiltChiralProjectors.p * finiteTiltLeftChiralShell m =
       finiteTiltLeftChiralShell m :=
   finiteTiltLeftChiralShell_supported m
 
 /-- The right projector kills the left chiral shell component. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltRightChiralProjector_mul_leftChiralShell (m : ℝ) :
     finiteTiltChiralProjectors.q * finiteTiltLeftChiralShell m = 0 := by
   calc
@@ -190,14 +188,14 @@ theorem finiteTiltRightChiralProjector_mul_leftChiralShell (m : ℝ) :
           rw [finiteTiltChiralProjectors.qp_zero, zero_mul]
 
 /-- The right projector fixes the right chiral shell component. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltRightChiralProjector_mul_rightChiralShell (m : ℝ) :
     finiteTiltChiralProjectors.q * finiteTiltRightChiralShell m =
       finiteTiltRightChiralShell m :=
   finiteTiltRightChiralShell_supported m
 
 /-- The left projector kills the right chiral shell component. -/
-@[bridge_target_tag, rep_depth operator]
+@[rep_depth operator]
 theorem finiteTiltLeftChiralProjector_mul_rightChiralShell (m : ℝ) :
     finiteTiltChiralProjectors.p * finiteTiltRightChiralShell m = 0 := by
   calc
@@ -210,22 +208,5 @@ theorem finiteTiltLeftChiralProjector_mul_rightChiralShell (m : ℝ) :
           rw [mul_assoc]
     _ = 0 := by
           rw [finiteTiltChiralProjectors.pq_zero, zero_mul]
-
-/-- Owner target for the finite tilt shell chiral split. -/
-@[owner_target_tag]
-def FiniteTiltDiracShellChiralSplitOwnerTarget : Prop :=
-  ∀ m : ℝ,
-    finiteTiltLeftChiralShell m + finiteTiltRightChiralShell m =
-      finiteTiltDiracShell m ∧
-    IsSupportedOn finiteTiltChiralProjectors.p (finiteTiltLeftChiralShell m) ∧
-    IsSupportedOn finiteTiltChiralProjectors.q (finiteTiltRightChiralShell m)
-
-/-- The finite tilt shell chiral split owner target is closed. -/
-theorem finiteTiltDiracShellChiralSplitOwnerTarget :
-    FiniteTiltDiracShellChiralSplitOwnerTarget := by
-  intro m
-  exact ⟨finiteTiltDiracShell_chiral_decomposition m,
-    finiteTiltLeftChiralShell_supported m,
-    finiteTiltRightChiralShell_supported m⟩
 
 end InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit

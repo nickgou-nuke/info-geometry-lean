@@ -80,6 +80,49 @@ theorem fixed_zero_mem_and_fixed
     x ∈ G.gZero ∧ G.closure.theta x = x :=
   G.closure.fixed_mem_of_stable G.zero_setwise_stable hx hfix
 
+/--
+The Cartan/fixed component of a grade-zero element remains in grade zero.
+
+This is the native link between five-graded closure and Cartan decomposition:
+setwise stability of `g₀` is strong enough to keep the closure-fixed projection
+inside `g₀`.
+-/
+theorem zero_fixedPart_mem
+    {x : L}
+    (hx : x ∈ G.gZero) :
+    G.closure.fixedPart x ∈ G.gZero := by
+  unfold ClosureInvolution.LinearClosureInvolution.fixedPart
+  exact G.gZero.smul_mem (1 / 2 : ℝ)
+    (G.gZero.add_mem hx (G.maps_zero_to_zero x hx))
+
+/--
+The Cartan/anti-fixed component of a grade-zero element remains in grade zero.
+
+Together with `zero_fixedPart_mem`, this says the internal Cartan split of the
+closure involution does not leak out of the five-grading's middle sector.
+-/
+theorem zero_antiPart_mem
+    {x : L}
+    (hx : x ∈ G.gZero) :
+    G.closure.antiPart x ∈ G.gZero := by
+  unfold ClosureInvolution.LinearClosureInvolution.antiPart
+  exact G.gZero.smul_mem (1 / 2 : ℝ)
+    (G.gZero.sub_mem hx (G.maps_zero_to_zero x hx))
+
+/--
+Grade-zero Cartan decomposition.
+
+Every `g₀` element splits into a closure-fixed component and a closure-anti-fixed
+component, and both components still lie in `g₀`.
+-/
+theorem zero_cartan_decomposition
+    {x : L}
+    (hx : x ∈ G.gZero) :
+    G.closure.fixedPart x ∈ G.gZero ∧
+      G.closure.antiPart x ∈ G.gZero ∧
+        G.closure.fixedPart x + G.closure.antiPart x = x :=
+  ⟨G.zero_fixedPart_mem hx, G.zero_antiPart_mem hx, G.closure.fixed_add_anti_decomposition x⟩
+
 /-- A fixed grade `-1` element also lies in grade `+1`. -/
 theorem fixed_negOne_mem_posOne
     {x : L}

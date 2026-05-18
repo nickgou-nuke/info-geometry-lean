@@ -758,6 +758,7 @@ import InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow
 import InfoGeometry.Canonical.WeylCharacterEquivalence
+import InfoGeometry.Canonical.WeylA1Character
 import InfoGeometry.Canonical.WeylCharacterVandermondeShadow
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylGaugeOperatorLift

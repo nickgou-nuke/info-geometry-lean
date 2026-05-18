@@ -87,6 +87,7 @@ import InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge
 import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 import InfoGeometry.External.Virasoro.AffineKacMoody
+import InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
 import InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.KleinianTwist

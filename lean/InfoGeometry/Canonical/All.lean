@@ -251,6 +251,8 @@ import InfoGeometry.Canonical.PrimonVirasoroCentralChargeBridge
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
+import InfoGeometry.External.Virasoro
+import InfoGeometry.External.VirasoroPaperDigest
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge

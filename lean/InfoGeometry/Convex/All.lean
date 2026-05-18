@@ -10,6 +10,7 @@ import InfoGeometry.Convex.RadonHelly
 import InfoGeometry.Convex.SelfDualCone
 import InfoGeometry.Convex.SpinFactorHessian
 import InfoGeometry.Convex.EuclideanMonotonicity
+import InfoGeometry.Convex.SelfConcordantLogBarrier
 
 namespace InfoGeometry
 

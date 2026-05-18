@@ -82,6 +82,22 @@ Degenerate package from the proof-carrying unit-relative-volume bit.
   CI.normalPhaseDegeneratePackage_of_kahlerLogDet_unitRelativeVolume
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
+/--
+The local unit-relative-volume witness already forces the normal-phase equation.
+
+This gives downstream users a direct theorem-backed readback from the local
+constructive bit to `CI.IsNormalInference`, instead of forcing them to unpack
+`relativeVolumeChangeRN n M = 1` and replay the RN/Kähler route.
+-/
+@[rep_depth operator] theorem isNormalInference_of_unitRelativeVolumeBit
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeBit n M) :
+    CI.IsNormalInference :=
+  (CI.normalPhaseDegeneratePackage_of_unitRelativeVolumeBit
+    (M := M) hScaleFromKahler bit).isNormalInference
+
 end ConformalInference
 
 end InfoGeometry.Canonical.ConformalUnification

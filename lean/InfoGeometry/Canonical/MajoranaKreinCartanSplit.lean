@@ -280,6 +280,42 @@ theorem comparisonReadout_pair_eq_zero_of_equilibriumSeed
     InfoGeometry.Canonical.SouriauPlanckVector.comparisonReadout_pair_eq_zero_of_equilibriumSeed
       (E := E) hEq
 
+/--
+Constructive `K`-split collapse from the exact thermodynamic stationary packet.
+
+This is a smaller downstream route than `IsPotentialKillingOperator`: callers
+that already own the stationary readout predicate can reuse the existing
+owner-level equivalence and reach the `K`-split collapse without repackaging a
+separate Killing witness.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hStationary : IsThermodynamicReadoutStationary (E := E) P ψ A) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E) (stateGaugeDynamics (E := E) P.modularData ψ A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E) (stateSourceDynamics (E := E) P.modularData ψ A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E) (stateGaugeDynamics (E := E) P.modularData ψ A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E) (stateSourceDynamics (E := E) P.modularData ψ A) )
+      =
+    (0, 0) := by
+  have hPair :
+      (InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A,
+        InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A)
+        = (0, 0) := by
+    simpa [IsThermodynamicReadoutStationary] using hStationary
+  exact
+    comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
+      (E := E) P ψ A
+      ((isPotentialKillingOperator_iff_comparisonReadoutStationary
+        (E := E) P ψ A).2 hPair)
+
 @[rep_depth transport]
 theorem comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))

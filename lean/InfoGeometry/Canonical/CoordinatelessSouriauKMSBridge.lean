@@ -516,6 +516,23 @@ def toMinimalCoordinatelessSouriauFisherContext :
   souriauMoment := C.souriauMoment
   fisherMetric := C.fisherMetric
   weylGauge := C.weylGauge
+  
+@[rep_depth operator]
+theorem mk_of_kms
+    (sigma : AdditiveModularFlow (H := H))
+    (beta : ℝ)
+    (kms : KMSState (H := H) sigma beta)
+    (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
+    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state) :
+    ∃ ctx : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent,
+      ctx.state = kms.state := by
+  refine ⟨{
+    sigma := sigma,
+    beta := beta,
+    kms := kms,
+    souriauMoment := souriauMoment,
+    fisherMetric := fisherMetric
+  }, rfl⟩
 
 /--
 Compatibility adapter from the identity-Weyl minimal branch to the legacy broad

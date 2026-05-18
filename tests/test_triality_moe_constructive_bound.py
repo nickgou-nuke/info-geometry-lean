@@ -11,4 +11,6 @@ def test_aligned_observer_uses_theorem_backed_bound() -> None:
     observer_text = OBSERVER.read_text(encoding="utf-8")
 
     assert "theorem observerDefectResidual_eq_zero_of_aligned" in observer_text
-    assert "observerDefectResidual_norm_le_ZD_of_aligned (E := E) (CIK := CIK) (obs := obs)" in triality_text
+    assert "ofZDControlledObserver (E := E) CIK obs flow" in triality_text
+    assert "observerDeviationControlledByZD_of_aligned" in observer_text
+    assert "observerDeviationControlledByZD_of_aligned" in triality_text

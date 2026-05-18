@@ -14,6 +14,11 @@ interfaces, and literature-owner placeholders are allowed only as temporary
 closure-debt temporary scaffolding (Native Closure Mandated: Closure Debt). They are not final mathematical closure and they are
 not promotion authority.
 
+Definitional formulas are not witness packets. If a quantity is a formula, it
+must be exposed as a plain Lean `def` and used as a function immediately
+downstream. Do not hide formulas behind prose labels, structure fields, or
+alias-only theorem wrappers.
+
 ## Required Agent Behavior
 
 Every agent working in this repository must:

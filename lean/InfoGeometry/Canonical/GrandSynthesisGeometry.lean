@@ -254,6 +254,25 @@ private theorem gravity_generated_by_rnEntropy
 
 omit [FiniteDimensional ℝ X] in
 /--
+Vacuum Einstein equation from the already-constructed unit-volume state.
+
+This façade export removes the RN-entropy source theorem and
+`UnitRelativeVolumeBit` packet from the vacuum-equation surface when callers
+already own the geometric `UnitRelativeVolumeState Kgeo` consumed by
+`MetricRNRicciBridge`.
+-/
+theorem vacuumEinsteinEquation_of_unitRelativeVolumeState
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (hUnitState : UnitRelativeVolumeState Kgeo)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_unitRelativeVolume
+    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
+
+omit [FiniteDimensional ℝ X] in
+/--
 Gravity capstone from the already-constructed unit-volume state.
 
 This is the smallest non-metric-derived owner route in this module: it no
@@ -271,8 +290,8 @@ theorem gravity_generated_by_unitRelativeVolumeState
   exact ⟨
     isRicciFlat_of_unitRelativeVolume
       (R := R) (K := Kgeo) (x := x) hUnitState hBridge,
-    vacuumEinsteinEquation_of_unitRelativeVolume
-      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge⟩
+    vacuumEinsteinEquation_of_unitRelativeVolumeState
+      (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hBridge⟩
 
 omit [FiniteDimensional ℝ X] in
 /--

@@ -30,8 +30,10 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 import InfoGeometry.Arithmetic.PrimeInformationKMS
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
+import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
+import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.SelfConcordantZetaBarrier
 import InfoGeometry.Arithmetic.SelfConcordantZetaBarrierProofs
 import InfoGeometry.Convex.SelfConcordantLogBarrier
@@ -102,6 +104,9 @@ import InfoGeometry.Lint.Vacuity
 import InfoGeometry.Meta.ClosureAttribute
 import InfoGeometry.Meta.TestTactic
 import InfoGeometry.ModularVolumePotential
+import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
+import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+import InfoGeometry.Thermo.ComplexThermodynamicLift
 import InfoGeometry.OperatorAlgebra.IndividuatedBoundedTransform
 import InfoGeometry.OperatorAlgebra.ModularThermalState
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein

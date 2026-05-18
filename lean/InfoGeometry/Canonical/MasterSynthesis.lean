@@ -334,6 +334,34 @@ private structure DIIITransportCommutatorWitness
       ∨ Sbd.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sinkVortexSeed (E := E) V
 
 /--
+Proof-carrying quasilattice mismatch / nonzero-index packet.
+
+This bundles the two remaining explicit hypotheses on the mismatch-driven
+quasilattice branch: the owner implication from transported chiral-kernel
+mismatch to projector noncommutation, and the nonzero quasilattice analytical
+index witness on the same defect surface.
+-/
+private structure QuasilatticeIndexMismatchWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (CI : ConformalInference E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef) where
+  /-- Owner implication from mismatch to projector noncommutation. -/
+  hMismatchNoncommute :
+    InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+        V Xdef tdef hVXdef →
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        ≠
+      CI.metricChiralProjector * CI.spectralChiralProjector
+  /-- Nonzero quasilattice analytical index on the same transported defect slice. -/
+  hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0
+
+/--
 Recover the DIII-owned transport-commutator nonvanishing theorem from the bundled
 witness packet.
 -/
@@ -1481,6 +1509,76 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
     (hCompatDefect := hCompatDefect) (hIndexNonzero := hIndexNonzero)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
+/--
+Further constructive narrowing of the quasilattice-index capstone branch.
+
+This removes the remaining three explicit packet arguments
+`(hZPEGravity, Wfluid, hThermalBott)` by routing through one
+`ConstructiveMasterCapstoneWitness` object while keeping the same explicit
+quasilattice defect and nonzero-index lane.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_constructiveWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (A B_mp B_dr : VelocityField E)
+    (W : ConstructiveMasterCapstoneWitness (E := E) S c R Kgeo x A B_mp B_dr)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface W.thermalBott.V Xdef tdef)
+    (hCompatDefect :
+      SuperchargeProjectorCompatibility
+        (A := A₀) (B := B₀) (E := E)
+        CI W.thermalBott.V Xdef tdef hVXdef
+        CI.spectralChiralProjector CI.metricChiralProjector)
+    (hIndexNonzero : quasilatticeAnalyticalIndex W.thermalBott.V Xdef tdef hVXdef ≠ 0)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    CI.chiralScale ≠ 0
+      ∧
+    (0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ W.thermalBott.Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+  exact bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_ownerWitnesses_and_thermalBottWitness
+    (A₀ := A₀) (B₀ := B₀)
+    (S := S) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ)
+    (hZPEGravity := W.zpeGravity)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Wfluid := W.fluidProduction)
+    (hThermalBott := W.thermalBott)
+    (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
+    (hCompatDefect := hCompatDefect)
+    (hIndexNonzero := hIndexNonzero)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+
 
 /--
 Defect-sourced capstone variant (canonical projector pair):
@@ -1728,6 +1826,77 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
       (hMismatchNoncommute := hMismatchNoncommute)
       (hIndexNonzero := hIndexNonzero)
+      (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N)
+
+/--
+Witness-routed mismatch capstone with constructive owner packets.
+
+This is the smaller constructive route on the mismatch-driven quasilattice
+branch: one `ConstructiveMasterCapstoneWitness` now recovers the
+`(hZPEGravity, Wfluid, hThermalBott)` lane, while the bundled
+`QuasilatticeIndexMismatchWitness` supplies the remaining mismatch/index owner
+data for the same transported defect surface.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeIndexMismatchWitness_of_constructiveWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (A B_mp B_dr : VelocityField E)
+    (W : ConstructiveMasterCapstoneWitness (E := E) S c R Kgeo x A B_mp B_dr)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface W.thermalBott.V Xdef tdef)
+    (Wmismatch : QuasilatticeIndexMismatchWitness
+      (A₀ := A₀) (B₀ := B₀) (E := E)
+      (CI := CI) W.thermalBott.V Xdef tdef hVXdef)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    CI.chiralScale ≠ 0
+      ∧
+    (0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ W.thermalBott.Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+  exact
+    bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_mismatch_forces_projector_noncommute_of_ownerWitnesses_and_productionWitness
+      (A₀ := A₀) (B₀ := B₀)
+      (S := S) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ)
+      (hZPEGravity := W.zpeGravity)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr)
+      (Wfluid := W.fluidProduction)
+      (Mod := W.thermalBott.Mod) (V := W.thermalBott.V)
+      (IST := W.thermalBott.IST) (hCompat := W.thermalBott.hCompat)
+      (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
+      (hMismatchNoncommute := Wmismatch.hMismatchNoncommute)
+      (hIndexNonzero := Wmismatch.hIndexNonzero)
       (n := n) (Tflow := Tflow)
       (γ := γ) (N := N)
 
@@ -2296,6 +2465,83 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_tr
       (hVXdef := hVXdef)
       (hMismatchNoncommute := hMismatchNoncommute)
       (hIndexNonzero := hIndexNonzero)
+      (W := W)
+      (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N)
+
+/--
+Witness-routed DIII transport capstone with quasilattice mismatch packet.
+
+This is the next small constructive reduction on the mismatch-driven DIII branch:
+the explicit pair `(hMismatchNoncommute, hIndexNonzero)` is recovered from one
+`QuasilatticeIndexMismatchWitness` on top of the already-owned ZPE/gravity,
+production, thermal/Bott, and DIII transport packets.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_transportCommutator_of_quasilatticeIndexMismatchWitness_of_zpeGravityWitness_and_productionWitness_and_thermalBottWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (Sstate : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hZPEGravity : ZPEGravityWitness (E := E) Sstate c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (Wfluid : FluidHelicityProductionWitness (E := E) A B_mp B_dr)
+    (hThermalBott : ThermalBottWitness (E := E))
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (hXdef : ChiralFredholmSurface Xdef)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface hThermalBott.V Xdef tdef)
+    (Wmismatch : QuasilatticeIndexMismatchWitness
+      (A₀ := A₀) (B₀ := B₀) (E := E)
+      CI hThermalBott.V Xdef tdef hVXdef)
+    (W : DIIITransportCommutatorWitness (E := E) hThermalBott.V Xdef hXdef tdef)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    (CI.chiralScale ≠ 0
+      ∧
+    (0 < Sstate.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ hThermalBott.Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear hThermalBott.IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear hThermalBott.IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)))
+      ∧
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      hThermalBott.V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 :=
+  bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_transportCommutator_of_quasilatticeAnalyticalIndex_of_mismatch_forces_projector_noncommute_of_zpeGravityWitness_and_productionWitness_and_thermalBottWitness
+      (A₀ := A₀) (B₀ := B₀)
+      (Sstate := Sstate) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ)
+      (hZPEGravity := hZPEGravity)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr)
+      (Wfluid := Wfluid)
+      (hThermalBott := hThermalBott)
+      (Xdef := Xdef) (hXdef := hXdef) (tdef := tdef)
+      (hVXdef := hVXdef)
+      (hMismatchNoncommute := Wmismatch.hMismatchNoncommute)
+      (hIndexNonzero := Wmismatch.hIndexNonzero)
       (W := W)
       (n := n) (Tflow := Tflow)
       (γ := γ) (N := N)

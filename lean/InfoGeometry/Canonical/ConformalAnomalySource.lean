@@ -679,6 +679,29 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
   exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
     (flow := flow) hNorm hFixed hAnomFlow
 
+/--
+Proof-carrying normalized fixed-point projector-commutation route using the
+compact `UnitRelativeVolumeWitness` packet instead of a bare unit-volume
+hypothesis.
+-/
+theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeBit
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeWitness n M) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  have hAnomFlow :
+      SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+        (fun _ => CI.chiralScale) :=
+    CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeBit
+      (flow := flow) hNorm (M := M) hScaleFromKahler bit
+  exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
+    (flow := flow) hNorm hFixed hAnomFlow
+
 section
 
 theorem einsteinEquation_of_projectorObstruction_source

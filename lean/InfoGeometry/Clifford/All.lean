@@ -4,6 +4,8 @@ import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.FiniteTiltDiracShell
+import InfoGeometry.Clifford.FiniteTiltDiracShellBridge
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.ClNNSpecialization
 import InfoGeometry.Clifford.Decomposition

@@ -533,6 +533,30 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD
   subst routerResidual
   exact ⟨comparison⟩
 
+/--
+Canonical constructor for the thermodynamic router bridge from the theorem-level
+Weyl/thermodynamic boundedness target.
+
+This consumes the owner proposition `ObserverDefectResidualWeylThermodynamicBoundedByZD`
+instead of requiring downstream callers to manually unpack a comparison packet.
+-/
+noncomputable def ofWeylThermodynamicBoundedByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
+    RouterDefectThermodynamicBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow (Classical.choice hBound)
+
+@[simp] theorem ofWeylThermodynamicBoundedByZD_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
+    (ofWeylThermodynamicBoundedByZD (E := E) CIK obs flow hBound).routerResidual =
+      observerDefectResidual CIK obs := by
+  simp [ofWeylThermodynamicBoundedByZD]
+
 end RouterDefectThermodynamicBridge
 
 /--

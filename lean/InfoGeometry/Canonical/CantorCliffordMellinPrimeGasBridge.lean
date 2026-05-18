@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Canonical.PrimeGasPartitions
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!

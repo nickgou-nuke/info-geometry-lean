@@ -154,6 +154,62 @@ theorem sourcedGenerator_boundary_excitation
     sourcedModularGenerator_boundary_excitation CIK C.observer C.flow
 
 /--
+The sourced generator collapses to the background flow exactly when the observer
+ defect residual vanishes.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0
+      ↔ observerDefectResidual CIK C.observer = 0 := by
+  constructor
+  · intro hEq
+    have hEq' :
+        C.flow.K0 + observerDefectResidual CIK C.observer = C.flow.K0 + 0 := by
+      simpa [sourcedGenerator, sourcedModularGenerator] using hEq
+    exact add_left_cancel hEq'
+  · intro hZero
+    simp [sourcedGenerator, sourcedModularGenerator, hZero]
+
+/--
+Compressed-deviation-zero is a constructive owner route forcing the sourced
+ generator to collapse to the background flow.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator
+          (observerProjectorDeviation CIK C.observer) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0 := by
+  exact
+    (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+      (E := E) CIK C).2
+      (observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero
+        (CIK := CIK) (obs := C.observer) hZero)
+
+/--
+Zero central-defect budget plus owner control of the observer deviation forces
+ the sourced generator to collapse to the background flow.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hControl : ObserverDeviationControlledByZD CIK C.observer)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0 := by
+  exact
+    (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+      (E := E) CIK C).2
+      (observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+        (CIK := CIK) (obs := C.observer) hControl hZD)
+
+/--
 The regular Drazin-core Hamiltonian is supported on the Drazin projector and
 annihilated by the complementary cut on both sides.
 -/

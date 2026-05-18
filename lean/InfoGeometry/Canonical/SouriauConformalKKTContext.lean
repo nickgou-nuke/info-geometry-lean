@@ -1322,6 +1322,78 @@ theorem fisherOnsagerProduction_nonneg :
 
 end ConstructiveConformalSquareFisherOnsagerPositiveContext
 
+namespace ConformalCartanOddPartitionWitness
+
+variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/--
+Build the constructive square-response Fisher/Onsager-positive package directly
+from the Cartan-odd partition witness branch, without re-packaging an explicit
+positive-partition or operator-admissibility proof.
+-/
+@[rep_depth transport]
+noncomputable def toConstructiveSquarePositiveContext
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    ConstructiveConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
+  closureWitness :=
+    W.toOperatorAdmissibilityWitness weylGauge tkkParameter hTKK hCone X Y
+  amplitude := amplitude
+  selfResponse_eq_square := selfResponse_eq_square
+
+/--
+Recover the legacy nonnegativity-only Fisher/Onsager surface directly from the
+Cartan-odd partition witness plus a square-response certificate.
+-/
+@[rep_depth transport]
+noncomputable def toPositiveContext
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
+  (W.toConstructiveSquarePositiveContext weylGauge tkkParameter hTKK hCone X Y
+    amplitude selfResponse_eq_square).toPositiveContext
+
+-- theorem-class: bridge
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the Cartan-odd
+constructive branch, using the owner Cartan positivity route instead of a bare
+operator-admissibility packet.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareResponse
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤
+      (W.toPositiveContext weylGauge tkkParameter hTKK hCone X Y amplitude
+        selfResponse_eq_square).fisherOnsagerProduction := by
+  exact
+    (W.toConstructiveSquarePositiveContext weylGauge tkkParameter hTKK hCone X Y
+      amplitude selfResponse_eq_square).fisherOnsagerProduction_nonneg
+
+end ConformalCartanOddPartitionWitness
+
 /-! ## Grand-canonical Fock-number coupling over the conformal operator context -/
 
 /--

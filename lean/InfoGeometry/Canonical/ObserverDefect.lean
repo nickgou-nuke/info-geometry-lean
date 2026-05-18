@@ -283,6 +283,20 @@ theorem observerDefectResidual_norm_le_ZD
   exact hControl
 
 /--
+Constructive owner route to the observer-defect `Z_D` budget: instead of a bare
+`ObserverDeviationControlledByZD` proposition, consume the explicit
+`ObserverDeviationControl` witness carrying the compressed deviation-channel
+norm bound.
+-/
+@[rep_depth krein]
+theorem observerDefectResidual_norm_le_ZD_of_control
+    {CIK : CertifiedInverseKernel H₂} {obs : ObserverL5 CIK}
+    (c : ObserverDeviationControl CIK obs) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  exact observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)
+    (ObserverDeviationControlledByZD.of_control c)
+
+/--
 The owner-level deviation-channel predicate is equivalent to the old residual
 norm budget once the exact compressed-deviation identity is used.
 -/
@@ -378,6 +392,24 @@ theorem observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
   have hNormZero : ‖observerDefectResidual CIK obs‖ = 0 :=
     le_antisymm hBound (norm_nonneg (observerDefectResidual CIK obs))
   exact norm_eq_zero.mp hNormZero
+
+/--
+Constructive zero-`Z_D` collapse from an explicit deviation-control witness.
+
+This is the proof-carrying companion to
+`observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero`: the
+owner-side `ObserverDeviationControl` packet replaces the bare
+`ObserverDeviationControlledByZD` proposition on the exact zero-central-defect
+branch.
+-/
+@[rep_depth krein]
+theorem observerDefectResidual_eq_zero_of_control_of_ZD_eq_zero
+    {CIK : CertifiedInverseKernel H₂} {obs : ObserverL5 CIK}
+    (c : ObserverDeviationControl CIK obs)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    observerDefectResidual CIK obs = 0 := by
+  exact observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK := CIK) (obs := obs) (ObserverDeviationControlledByZD.of_control c) hZD
 
 /--
 Defect-compressed observer-side Cartan split through a chosen axis `sigma`.

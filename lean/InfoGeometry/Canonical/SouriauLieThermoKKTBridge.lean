@@ -1222,6 +1222,24 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
 
 -- theorem-class: bridge
 /--
+Operatorial second-law gate from regular Drazin/Krein cone positivity.
+
+This replaces the bare `OperatorialMetricResponsePSD` hypothesis by the owned
+regular-cone witness route on the infinite doubled-Krein operator lane.
+-/
+@[rep_depth transport]
+theorem operatorialEntropyProduction_nonneg_of_regularCone
+    (R :
+      OperatorialMetriplecticContext.RegularConeOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.operatorialEntropyProduction_nonneg_of_metricResponsePSD
+    (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
+    xForce yForce
+
+-- theorem-class: bridge
+/--
 Operatorial Fisher/Onsager entropy equation from regular Drazin/Krein cone
 positivity.
 
@@ -1487,9 +1505,8 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_regularCone
     (xForce yForce : ℝ) :
     0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
       0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
-  C.finite_and_operatorial_entropyProduction_nonneg
-    (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
-    xForce yForce
+  ⟨C.finiteMetriplecticEntropyProduction_nonneg,
+    C.operatorialEntropyProduction_nonneg_of_regularCone R xForce yForce⟩
 
 -- theorem-class: bridge
 /--
@@ -1551,6 +1568,7 @@ attribute [terminal]
   operatorialWeightedDynamics_eq_weylCovariantThermodynamicDerivation
   operatorialWeylCovariantThermodynamicDerivation_split
   operatorialEntropyProduction_nonneg_of_squareResponse
+  operatorialEntropyProduction_nonneg_of_regularCone
   operatorialFisherOnsager_entropyProduction_equation
   operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
   operatorialFisherOnsager_entropyProduction_equation_of_regularCone

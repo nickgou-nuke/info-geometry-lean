@@ -272,6 +272,39 @@ theorem mk_broad_of_witness :
   ⟨W.toKMSBridge, rfl⟩
 
 end HestenesKreinNaturalConeKMSWitness
+
+/--
+Turn a legacy Hestenes/Krein KMS bridge into the narrowed witness packet by
+extracting the underlying `KMSState` fields definitionally.
+
+This removes the explicit `kms : KMSState ...` packet from the exposed surface
+on the witness route while preserving the same vacuum/cone calibration data.
+-/
+@[simp]
+def HestenesKreinNaturalConeKMSBridge.fromKMSBridge
+    (B : HestenesKreinNaturalConeKMSBridge (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    HestenesKreinNaturalConeKMSWitness (H := H)
+      (NormalPositive := NormalPositive) (Op := Op) where
+  vacuum := B.vacuum
+  omegaState := B.omegaState
+  coneVector_eq_Omega := B.coneVector_eq_Omega
+  flow := B.flow
+  beta := B.beta
+  state := B.kms.state
+  flow_invariant := B.kms.flow_invariant
+  kms_boundary_condition := B.kms.kms_boundary_condition
+  kms_boundary_holds := B.kms.kms_boundary_holds
+  complexEval_eq_realConeEval := B.complexEval_eq_realConeEval
+
+/-- The bridge-to-witness conversion reads back the same state definitionally. -/
+@[simp]
+theorem HestenesKreinNaturalConeKMSBridge.fromKMSBridge_state_eq
+    (B : HestenesKreinNaturalConeKMSBridge (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    B.fromKMSBridge.state = B.kms.state := by
+  rfl
+
 namespace HestenesKreinNaturalConeKMSBridge
 
 variable (B : HestenesKreinNaturalConeKMSBridge (H := H)

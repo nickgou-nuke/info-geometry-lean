@@ -243,7 +243,7 @@ lemma hom_of_coboundary_add (γ₁ γ₂ γ₃ : LieTwoCocycle 𝕜 𝓰 𝓪)
   ext Z
   · rfl
   · simp only [LieTwoCocycle.CentralExtension.congr, LieOneCochain.bdryHom,
-      LieHom.comp_apply, LieHom.coe_mk, add_fst, add_snd]
+      LieHom.comp_apply, LieHom.coe_mk]
     change Z.snd + β₁ Z.fst + β₂ Z.fst = Z.snd + (β₁ + β₂).toLinearMap Z.fst
     simp only [LieOneCochain.toLinearMap_add, LinearMap.add_apply]
     abel
@@ -269,7 +269,7 @@ noncomputable def equiv_of_lieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
           LieOneCochain.bdryHom, add_neg_cancel, LieHom.comp_apply, LieHom.coe_mk]
         ext
         · rfl
-        · simp only [add_snd, zero_snd, left_eq_add]
+        · simp only [left_eq_add]
           rfl)
       (by
         convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add
@@ -279,7 +279,7 @@ noncomputable def equiv_of_lieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
           LieOneCochain.bdryHom, LieHom.comp_apply, LieHom.coe_mk]
         ext
         · rfl
-        · simp only [add_snd, zero_snd, neg_add_cancel, left_eq_add]
+        · simp only [neg_add_cancel, left_eq_add]
           rfl)
 
 

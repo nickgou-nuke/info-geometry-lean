@@ -150,6 +150,7 @@ import InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration
 import InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 import InfoGeometry.OperatorAlgebra.VerifiedDeterminant
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
+import InfoGeometry.OperatorAlgebra.VirasoroProjectPin
 import InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 
 namespace InfoGeometry.OperatorAlgebra

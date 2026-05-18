@@ -86,6 +86,7 @@ import InfoGeometry.OperatorAlgebra.IndividuatedCayley
 import InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge
 import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
+import InfoGeometry.OperatorAlgebra.AffineKacMoody
 import InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.KleinianTwist

@@ -32,6 +32,12 @@ interfaces, graph edges, literature citations, and physics analogies are closure
 debt until discharged by kernel-checked Lean proofs or imported mathlib
 theorems. No anonymous witnesses and no promotion of unformalized sockets.
 
+The formula/function rule is also current policy:
+[docs/FORMULA_FUNCTION_POLICY.md](docs/FORMULA_FUNCTION_POLICY.md).
+Formulas are definitions, functions are functions, and downstream code must
+call the function directly rather than storing the formula as prose or a field
+label.
+
 ## What Is Current
 
 The current authority order is:

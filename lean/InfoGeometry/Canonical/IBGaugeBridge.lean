@@ -44,7 +44,7 @@ noncomputable def ibProjectiveState
     (β : ℝ) (D : X → T → ℝ) (x : X)
     [IsFiniteMeasure (IBUnnormalized qT β D x)]
     (h_nz : IBUnnormalized qT β D x ≠ 0) :
-    normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := by
+    ProjectiveState.normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := by
   simp [ibProjectiveState, ibNonzeroUState, IBGibbs, IBNormalize]
 
 /-- Additive distortion shifts rescale the raw unnormalized Gibbs slice by a positive constant. -/

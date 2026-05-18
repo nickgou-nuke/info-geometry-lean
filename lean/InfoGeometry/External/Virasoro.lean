@@ -15,6 +15,7 @@ import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
 import InfoGeometry.External.Virasoro.LieCohomologySmallDegree
 import InfoGeometry.External.Virasoro.LieVerma
 import InfoGeometry.External.Virasoro.SectionSES
+import InfoGeometry.External.Virasoro.ChiralProduct
 import InfoGeometry.External.Virasoro.Sugawara
 import InfoGeometry.External.Virasoro.VermaModule
 import InfoGeometry.External.Virasoro.VirasoroAlgebra

@@ -44,22 +44,32 @@ noncomputable instance : Bracket (ChiralVirasoro 𝕜) (ChiralVirasoro 𝕜) whe
 noncomputable instance : LieRing (ChiralVirasoro 𝕜) where
   lie_add := by
     intro x y z
-    ext <;> simp [Bracket.bracket]
+    ext
+    · simpa [Bracket.bracket] using (lie_add x.1 y.1 z.1)
+    · simpa [Bracket.bracket] using (lie_add x.2 y.2 z.2)
   add_lie := by
     intro x y z
-    ext <;> simp [Bracket.bracket]
+    ext
+    · simpa [Bracket.bracket] using (add_lie x.1 y.1 z.1)
+    · simpa [Bracket.bracket] using (add_lie x.2 y.2 z.2)
   lie_self := by
     intro x
-    ext <;> simp [Bracket.bracket]
+    ext
+    · simpa [Bracket.bracket] using (lie_self x.1)
+    · simpa [Bracket.bracket] using (lie_self x.2)
   leibniz_lie := by
     intro x y z
-    ext <;> simp [Bracket.bracket, leibniz_lie]
+    ext
+    · simpa [Bracket.bracket] using (leibniz_lie x.1 y.1 z.1)
+    · simpa [Bracket.bracket] using (leibniz_lie x.2 y.2 z.2)
 
 /-- Componentwise Lie algebra structure over `𝕜`. -/
 noncomputable instance : LieAlgebra 𝕜 (ChiralVirasoro 𝕜) where
   lie_smul := by
     intro a x y
-    ext <;> simp [Bracket.bracket, lie_smul]
+    ext
+    · simpa [Bracket.bracket] using (lie_smul a x.1 y.1)
+    · simpa [Bracket.bracket] using (lie_smul a x.2 y.2)
 
 /-- Left-sector inclusion. -/
 noncomputable def inLeft (X : VirasoroAlgebra 𝕜) : ChiralVirasoro 𝕜 :=
@@ -93,49 +103,79 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
 /-- Left-sector brackets are computed in the left component. -/
 @[simp] theorem inLeft_bracket (X Y : VirasoroAlgebra 𝕜) :
     ⁅inLeft X, inLeft Y⁆ = inLeft ⁅X, Y⁆ := by
-  ext <;> simp [inLeft]
+  ext
+  · rfl
+  · simp [inLeft, Bracket.bracket]
 
 /-- Right-sector brackets are computed in the right component. -/
 @[simp] theorem inRight_bracket (X Y : VirasoroAlgebra 𝕜) :
     ⁅inRight X, inRight Y⁆ = inRight ⁅X, Y⁆ := by
-  ext <;> simp [inRight]
+  ext
+  · simp [inRight, Bracket.bracket]
+  · rfl
 
 /-- Cross brackets vanish between the left and right sectors. -/
 @[simp] theorem inLeft_bracket_inRight (X Y : VirasoroAlgebra 𝕜) :
     ⁅inLeft X, inRight Y⁆ = 0 := by
-  ext <;> simp [inLeft, inRight]
+  have h1 : ⁅X, (0 : VirasoroAlgebra 𝕜)⁆ = 0 := by
+    simp
+  have h2 : ⁅(0 : VirasoroAlgebra 𝕜), Y⁆ = 0 := by
+    simp
+  ext
+  · simpa [inLeft, inRight, Bracket.bracket] using h1
+  · simpa [inLeft, inRight, Bracket.bracket] using h2
 
 /-- Cross brackets vanish between the right and left sectors. -/
 @[simp] theorem inRight_bracket_inLeft (X Y : VirasoroAlgebra 𝕜) :
     ⁅inRight X, inLeft Y⁆ = 0 := by
-  ext <;> simp [inLeft, inRight]
+  have h1 : ⁅(0 : VirasoroAlgebra 𝕜), X⁆ = 0 := by
+    simp
+  have h2 : ⁅Y, (0 : VirasoroAlgebra 𝕜)⁆ = 0 := by
+    simp
+  ext
+  · simpa [inLeft, inRight, Bracket.bracket] using h1
+  · simpa [inLeft, inRight, Bracket.bracket] using h2
 
 /-- The left sector `L_n` bracket is inherited from the Virasoro algebra. -/
 @[simp] theorem lgenLeft_bracket (n m : ℤ) :
     ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
       inLeft (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) := by
-  rfl
+  simpa [lgenLeft, inLeft] using
+    congrArg (fun X : VirasoroAlgebra 𝕜 => (X, (0 : VirasoroAlgebra 𝕜)))
+      (VirasoroAlgebra.lgen_bracket 𝕜 n m)
 
 /-- The right sector `L_n` bracket is inherited from the Virasoro algebra. -/
 @[simp] theorem lgenRight_bracket (n m : ℤ) :
     ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
       inRight (⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆) := by
-  rfl
+  simpa [lgenRight, inRight] using
+    congrArg (fun X : VirasoroAlgebra 𝕜 => ((0 : VirasoroAlgebra 𝕜), X))
+      (VirasoroAlgebra.lgen_bracket 𝕜 n m)
 
 /-- The left and right central elements commute with everything in the product. -/
 @[simp] theorem cgenLeft_bracket (X : ChiralVirasoro 𝕜) :
     ⁅cgenLeft (𝕜 := 𝕜), X⁆ = 0 := by
-  ext <;> simp [cgenLeft]
+  ext
+  · simpa [cgenLeft, inLeft, Bracket.bracket] using
+      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) X.1)
+  · simpa [cgenLeft, inLeft, Bracket.bracket] using (zero_lie X.2)
 
 /-- The right and left central elements commute with everything in the product. -/
 @[simp] theorem cgenRight_bracket (X : ChiralVirasoro 𝕜) :
     ⁅cgenRight (𝕜 := 𝕜), X⁆ = 0 := by
-  ext <;> simp [cgenRight]
+  ext
+  · simpa [cgenRight, inRight, Bracket.bracket] using (zero_lie X.1)
+  · simpa [cgenRight, inRight, Bracket.bracket] using
+      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) X.2)
 
 /-- The two central elements commute with each other. -/
 @[simp] theorem cgenLeft_bracket_cgenRight :
     ⁅cgenLeft (𝕜 := 𝕜), cgenRight (𝕜 := 𝕜)⁆ = 0 := by
-  simp
+  ext
+  · simpa [cgenLeft, cgenRight, inLeft, inRight, Bracket.bracket] using
+      (VirasoroAlgebra.cgen_bracket (𝕜 := 𝕜) (VirasoroAlgebra.cgen 𝕜))
+  · simpa [cgenLeft, cgenRight, inLeft, inRight, Bracket.bracket] using
+      (zero_lie (VirasoroAlgebra.cgen 𝕜))
 
 /-- Chiral central charge bookkeeping. -/
 structure CentralCharge where
@@ -143,8 +183,6 @@ structure CentralCharge where
   right : 𝕜
 
 namespace CentralCharge
-
-variable {𝕜}
 
 /-- Total central charge. -/
 def total (c : CentralCharge (𝕜 := 𝕜)) : 𝕜 :=

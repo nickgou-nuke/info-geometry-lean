@@ -10,6 +10,8 @@ import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
+import InfoGeometry.External.Virasoro.AffineKacMoody
+import InfoGeometry.External.Virasoro.ChiralProduct
 import InfoGeometry.Krein.DoubledSpace
 
 /-!
@@ -238,6 +240,50 @@ theorem completedZetaKleinAct_involutive
     CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct g
       (CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct g s) = s := by
   exact CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct_involutive g s
+
+/-! ## 6. Imported Virasoro closure -/
+
+/--
+The imported Virasoro algebra closes on the standard generators: the `L_n`
+bracket stays in the Virasoro span, and the central generator commutes with all
+elements.
+-/
+@[rep_depth thermo]
+theorem primonVirasoroClosure (n m : ℤ) :
+    (⁅VirasoroProject.VirasoroAlgebra.lgen ℂ n,
+        VirasoroProject.VirasoroAlgebra.lgen ℂ m⁆ =
+        (n - m : ℂ) • VirasoroProject.VirasoroAlgebra.lgen ℂ (n + m) +
+          if n + m = 0 then
+            ((n^3 - n : ℂ) / 12) • VirasoroProject.VirasoroAlgebra.cgen ℂ
+          else 0) ∧
+    (⁅VirasoroProject.VirasoroAlgebra.cgen ℂ,
+        VirasoroProject.VirasoroAlgebra.lgen ℂ n⁆ = 0) ∧
+    (⁅VirasoroProject.VirasoroAlgebra.cgen ℂ,
+        VirasoroProject.VirasoroAlgebra.cgen ℂ⁆ = 0) := by
+  constructor
+  · exact (VirasoroProject.VirasoroAlgebra.lgen_bracket (𝕜 := ℂ) n m)
+  constructor
+  · exact
+      (VirasoroProject.VirasoroAlgebra.cgen_bracket (𝕜 := ℂ)
+        (VirasoroProject.VirasoroAlgebra.lgen ℂ n))
+  · exact
+      (VirasoroProject.VirasoroAlgebra.cgen_bracket (𝕜 := ℂ)
+        (VirasoroProject.VirasoroAlgebra.cgen ℂ))
+
+/-- The imported affine Kac-Moody current bracket closes on the prime packet. -/
+@[rep_depth thermo]
+theorem primonAffineKacMoodyClosure
+    {PrimeLabel Field Coeff Finite Alg : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (P : InfoGeometry.Canonical.PrimeVirasoroSugawara.PrimeSugawaraVirasoroPacket
+      PrimeLabel Field Coeff Finite Alg)
+    (m n : ℤ) (X Y : Finite) :
+    ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+      P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+        ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+          (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) := by
+  exact P.affine_current_mode_bracket m n X Y
 
 /-! ## 3. Chiral Bogoliubov bracket closure -/
 

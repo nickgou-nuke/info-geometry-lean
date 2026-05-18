@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Meta.Architecture
 
@@ -15,7 +15,7 @@ channels as a typed readout interface and connects that interface to
 
 namespace InfoGeometry.Canonical.FierzReadout
 
-open InfoGeometry.Canonical.Fierz
+open InfoGeometry.Quantum.Fierz
 open InfoGeometry.Canonical.QuantumPresentation
 
 /--

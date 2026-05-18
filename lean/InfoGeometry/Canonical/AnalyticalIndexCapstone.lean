@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.AnalyticalIndexCoupled
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
+import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.SinkhornFoundation
 

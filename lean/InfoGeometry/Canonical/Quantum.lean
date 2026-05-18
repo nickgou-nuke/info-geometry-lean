@@ -19,7 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 
-import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow

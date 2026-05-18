@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
@@ -98,14 +97,6 @@ def canonicalPrimeSupergradedReadout : PrimeSupergradedReadout where
   grade_two := primeSectorGrade_two
   grade_prime_ne_two := fun p hp h2 => primeSectorGrade_prime_ne_two (p := p) hp h2
 
-/-! ## Prime superalgebra readback -/
-
-/-- Re-export of the finite prime superalgebra readback owner target. -/
-@[rep_depth operator]
-theorem primeSuperalgebraReadbackOwnerTarget_valid :
-    PrimeSuperalgebraReadbackOwnerTarget :=
-  primeSuperalgebraReadbackOwnerTarget
-
 /-- Möbius parity readback on represented squarefree prime-bit states. -/
 @[rep_depth operator]
 theorem mobiusParity_readback
@@ -129,36 +120,12 @@ theorem hurwitzDirection_isHurwitzUnit (i : Fin 24) :
     IsHurwitzUnit (hurwitzDirection i) :=
   Quantum.Hurwitz.hurwitzDirection_isHurwitzUnit i
 
-/-! ## Combined finite bridge -/
-
-/--
-Combined theorem-safe snapshot of the three finite surfaces:
-
+/-
+The finite theorem content remains:
 * binary Cantor cylinder splitting;
 * prime supergraded labels with bosonic `2` and fermionic odd primes;
 * prime Möbius/supertrace readback;
 * Hurwitz 24-shell units.
 -/
-@[owner_target_tag]
-def PrimeBinaryCantorSuperalgebraOwnerTarget : Prop :=
-  (∀ w : BinaryCantorLattice,
-      binaryClosedCylinder w =
-        ({w} : Set BinaryCantorLattice)
-          ∪ binaryClosedCylinder (binaryChild w false)
-          ∪ binaryClosedCylinder (binaryChild w true))
-    ∧ PrimeSuperalgebraReadbackOwnerTarget
-    ∧ (∀ i : Fin 24, IsHurwitzUnit (hurwitzDirection i))
-
-/-- The combined finite bridge is available from the installed repo theorems. -/
-@[rep_depth operator]
-theorem primeBinaryCantorSuperalgebraOwnerTarget :
-    PrimeBinaryCantorSuperalgebraOwnerTarget := by
-  constructor
-  · intro w
-    exact binaryClosedCylinder_split w
-  · constructor
-    · exact primeSuperalgebraReadbackOwnerTarget
-    · intro i
-      exact hurwitzDirection_isHurwitzUnit i
 
 end InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge

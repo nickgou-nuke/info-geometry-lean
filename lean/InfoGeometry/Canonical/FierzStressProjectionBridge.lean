@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Meta.Architecture
 
@@ -22,7 +22,7 @@ channel identity.
 namespace InfoGeometry.Canonical.FierzStressProjectionBridge
 
 open InfoGeometry.Canonical.BogoliubovTransport
-open InfoGeometry.Canonical.Fierz
+open InfoGeometry.Quantum.Fierz
 open InfoGeometry.Canonical.OperatorialHessianBridge
 open InfoGeometry.Krein
 

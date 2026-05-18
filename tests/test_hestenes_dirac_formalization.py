@@ -47,6 +47,12 @@ def test_hestenes_dirac_finite_tilt_shell_declares_current_density_readout():
     assert "theorem finiteTiltDiracShell_eq_boundaryCurrent_add_mass" in text
 
 
+def test_hestenes_dirac_finite_tilt_shell_bridge_declares_current_density_reexport():
+    text = ROOT.joinpath("lean", "InfoGeometry", "Clifford", "FiniteTiltDiracShellBridge.lean").read_text()
+    assert "theorem finiteTiltCurrentDensity_eq_boundaryCurrent_bridge" in text
+    assert "finiteTiltCurrentDensity_eq_boundaryCurrent" in text
+
+
 def test_hestenes_dirac_finite_tilt_shell_builds():
     result = subprocess.run(
         [
@@ -54,6 +60,23 @@ def test_hestenes_dirac_finite_tilt_shell_builds():
             "tools/infra/run_locked_lake_build.py",
             "--wait-for-build-lock",
             "InfoGeometry.Clifford.FiniteTiltDiracShell",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=240,
+    )
+    assert result.returncode == 0, result.stdout
+
+
+def test_hestenes_dirac_finite_tilt_shell_bridge_builds():
+    result = subprocess.run(
+        [
+            "python3",
+            "tools/infra/run_locked_lake_build.py",
+            "--wait-for-build-lock",
+            "InfoGeometry.Clifford.FiniteTiltDiracShellBridge",
         ],
         cwd=ROOT,
         text=True,

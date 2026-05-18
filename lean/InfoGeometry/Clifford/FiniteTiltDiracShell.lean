@@ -192,17 +192,27 @@ theorem finiteTiltDiracShell_det (m : ℝ) :
   simp [Matrix.det_fin_two]
   ring
 
+/-- The finite shell characteristic polynomial is `X^2 - m^2`. -/
+@[rep_depth operator]
+theorem finiteTiltDiracShell_charpoly (m : ℝ) :
+    (finiteTiltDiracShell m).charpoly = X ^ 2 - C (m ^ 2 : ℝ) := by
+  rw [Matrix.charpoly_fin_two, finiteTiltDiracShell_trace, finiteTiltDiracShell_det]
+  ring
+
 @[rep_depth operator]
 def FiniteTiltDiracShellSpectralTarget : Prop :=
   ∀ m : ℝ, Matrix.trace (finiteTiltDiracShell m) = 0 ∧
-    Matrix.det (finiteTiltDiracShell m) = - m ^ 2
+    Matrix.det (finiteTiltDiracShell m) = - m ^ 2 ∧
+    (finiteTiltDiracShell m).charpoly = X ^ 2 - C (m ^ 2 : ℝ)
 
 theorem finiteTiltDiracShellSpectralTarget :
     FiniteTiltDiracShellSpectralTarget := by
   intro m
   constructor
   · exact finiteTiltDiracShell_trace m
+  constructor
   · exact finiteTiltDiracShell_det m
+  · exact finiteTiltDiracShell_charpoly m
 
 @[rep_depth operator]
 def FiniteTiltDiracShellOwnerTarget : Prop :=

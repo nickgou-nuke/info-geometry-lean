@@ -1,6 +1,10 @@
 -- This module serves as the root of the integrated VirasoroProject.
 import InfoGeometry.External.Virasoro.CentralExtension
+import InfoGeometry.External.Virasoro.Commutator
 import InfoGeometry.External.Virasoro.CyclicTripleSum
+import InfoGeometry.External.Virasoro.CentralChargeCalc
+import InfoGeometry.External.Virasoro.FiveGradedDecomposition
+import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.FockSpace
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra

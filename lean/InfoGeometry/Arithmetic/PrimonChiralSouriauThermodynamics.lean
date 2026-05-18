@@ -6,7 +6,10 @@ import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.PrimeVirasoroSugawara
+import InfoGeometry.External.Virasoro
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Thermo.FromBregman
@@ -181,7 +184,7 @@ theorem complexBregman_self_eq_zero
 theorem completedFunctionalReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.functionalReflection
       (CompletedZetaSouriauDInfinityThermodynamics.functionalReflection s) = s := by
-  simpa [CompletedZetaSouriauDInfinityThermodynamics.functionalReflection] using
+  exact
     (CompletedZetaSouriauDInfinityThermodynamics.functionalReflection_involutive (s := s))
 
 /-- Conjugation is an involution on the completed-zeta symmetry plane. -/
@@ -189,7 +192,7 @@ theorem completedFunctionalReflection_involutive (s : ℂ) :
 theorem completedConjugationReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection
       (CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection s) = s := by
-  simpa [CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection] using
+  exact
     (CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection_involutive (s := s))
 
 /-- The antiunitary reflection is an involution. -/
@@ -197,7 +200,7 @@ theorem completedConjugationReflection_involutive (s : ℂ) :
 theorem completedAntiunitaryReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection
       (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s) = s := by
-  simpa [CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection] using
+  exact
     (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection_involutive
       (s := s))
 
@@ -208,8 +211,7 @@ theorem completedFunctional_conjugation_commute (s : ℂ) :
       (CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection s) =
       CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection
         (CompletedZetaSouriauDInfinityThermodynamics.functionalReflection s) := by
-  simpa [CompletedZetaSouriauDInfinityThermodynamics.functionalReflection,
-    CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection] using
+  exact
     (CompletedZetaSouriauDInfinityThermodynamics.functional_conjugation_commute (s := s))
 
 /-- The completed-zeta antiunitary fixed locus is the critical line. -/
@@ -252,14 +254,14 @@ the odd-odd anticommutator is hyperbolic, while the mixed commutator vanishes.
 @[rep_depth thermo]
 theorem chiralCone_bogoliubov_projector_superalgebra
     (s : ℂ) :
-    anticommutator (E := E)
+    fockAnticommutator (E := E)
         (bogoliubovAnnihilation (E := E) (chiralBogoliubovParams s))
         (bogoliubovCreation (E := E) (chiralBogoliubovParams s))
       =
       (Real.sinh (2 * chiralConeAngle s)) •
         ContinuousLinearMap.id ℝ (DoubledSpace E)
     ∧
-    commutator (E := E)
+    fockCommutator (E := E)
         (bogoliubovAnnihilation (E := E) (chiralBogoliubovParams s))
         (bogoliubovCreation (E := E) (chiralBogoliubovParams s)) = 0 := by
   refine ⟨?_, ?_⟩
@@ -346,5 +348,76 @@ theorem primeBooleanCubeParityEquation
   refine ⟨?_, ?_⟩
   · exact PrimeBooleanCube.globalChirality_vertex_eq_fermionParity P v
   · exact PrimeBooleanCube.mobius_representedNat_eq_fermionParity P v
+
+/-! ## 8. Collected native closure -/
+
+/--
+Collected native closure for the primon lane.
+
+This packages the pieces already proved in their native owner files:
+
+* the completed-zeta finite symmetry preserves the critical line;
+* the five-graded homological pipeline has numerical shadow `5`;
+* the prime Sugawara finite specialization reads off the cardinality.
+-/
+@[rep_depth thermo]
+theorem primonCollectedNativeClosure
+    {G : Type*} (bracket : G → G → G)
+    {PrimeLabel Field Coeff Finite Alg : Type*}
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    (P : InfoGeometry.Canonical.PrimeVirasoroSugawara.PrimeSugawaraVirasoroPacket
+      PrimeLabel Field Coeff Finite Alg)
+    (S : Finset PrimeLabel)
+    (hlevel : P.affineVirasoro.level = 1)
+    (hdim : P.affineVirasoro.finiteDimension = (S.card : ℝ))
+    (hdual : P.affineVirasoro.dualCoxeterNumber = 0)
+    (s : ℂ)
+    (hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s) :
+    CompletedZetaSouriauDInfinityThermodynamics.CriticalLine
+      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct
+        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry.functional s)
+    ∧
+    ((InfoGeometry.Probability.Homological.fiveGradedHomologicalPipeline G bracket).toNumericalShadow =
+      fun _ => 5)
+    ∧
+    P.affineVirasoro.centralCharge = (S.card : ℝ) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact
+      CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct_preserves_criticalLine
+        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry.functional hs
+  · rfl
+  · exact
+      InfoGeometry.Canonical.PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
+        P S hlevel hdim hdual
+
+/-- Native VirasoroProject readout bundled into the primon lane. -/
+@[rep_depth thermo]
+theorem primonExternalVirasoroClosure :
+    (VirasoroProject.LieAlgebra.IsCentralExtension
+        (VirasoroProject.VirasoroAlgebra.ofCentral ℝ)
+        VirasoroProject.VirasoroAlgebra.toWittAlgebra) ∧
+    (VirasoroProject.LieAlgebra.IsCentralExtension
+        (VirasoroProject.HeisenbergAlgebra.ofCentral ℝ)
+        VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn) ∧
+    (Module.rank ℝ
+        (VirasoroProject.LieTwoCohomology ℝ (VirasoroProject.WittAlgebra ℝ) ℝ) = 1) ∧
+    (∀ (α : ℝ) (v : VirasoroProject.ChargedFockSpace ℝ α),
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℝ α
+        (VirasoroProject.VirasoroAlgebra.cgen ℝ) v = v) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact VirasoroProject.VirasoroAlgebra.isCentralExtension ℝ
+  · exact VirasoroProject.HeisenbergAlgebra.isCentralExtension ℝ
+  · exact VirasoroProject.WittAlgebra.rank_lieTwoCohomology_eq_one ℝ
+  · intro α v
+    exact
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation_cgen_apply (𝕜 := ℝ) α v
+
+/-- Native Heisenberg cohomology nontriviality from the vendored Virasoro project. -/
+@[rep_depth thermo]
+theorem primonExternalHeisenbergNontrivial :
+    Nontrivial (VirasoroProject.LieTwoCohomology ℝ
+      (VirasoroProject.AbelianLieAlgebraOn ℤ ℝ) ℝ) := by
+  exact VirasoroProject.AbelianLieAlgebraOn.nontrivial_lieTwoCohomology (𝕜 := ℝ)
 
 end InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

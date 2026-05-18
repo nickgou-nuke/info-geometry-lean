@@ -1338,6 +1338,13 @@ def fiveGradedHomologicalPipeline (G : Type*) (bracket : G → G → G) :
     toHomInvariant    := id
     toNumericalShadow := fun _ => 5 }
 
+/-- The five-graded homological pipeline has numerical shadow `5`. -/
+@[simp]
+theorem fiveGradedHomologicalPipeline_numericalShadow_five
+    (G : Type*) (bracket : G → G → G) :
+    (fiveGradedHomologicalPipeline G bracket).toNumericalShadow = fun _ => 5 := by
+  rfl
+
 end FiveGradedErlangen
 
 -- ---------------------------------------------------------------------------

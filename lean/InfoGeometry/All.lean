@@ -33,6 +33,8 @@ import InfoGeometry.Arithmetic.PrimeInformationKMS
 import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 import InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
+import InfoGeometry.External.Virasoro
+import InfoGeometry.External.VirasoroPaperDigest
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

@@ -3,7 +3,7 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
-import InfoGeometry.Canonical.ZetaTrace
+import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
 
 /-!
 # InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs
@@ -185,6 +185,6 @@ theorem finite_prime_grand_partition_product
 theorem primeEulerProduct_eq_riemannZeta
     {s : ℂ} (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
-  simpa using InfoGeometry.Canonical.ZetaTrace.zeta_trace_bridge (s := s) hs
+  simpa using InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge (s := s) hs
 
 end InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs

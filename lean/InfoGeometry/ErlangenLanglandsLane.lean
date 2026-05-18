@@ -16,7 +16,6 @@ import InfoGeometry.Automorphic.LanglandsPrimeResonance
 import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Canonical.KleinBottleOrientifold
-import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.BerryRotorBridge
 
 /-!

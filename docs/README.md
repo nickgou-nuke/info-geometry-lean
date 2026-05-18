@@ -28,6 +28,7 @@ The maintained front door now runs through:
 - `docs/ModuleMap.md`
 - `docs/OperationalIntent.md`
 - `docs/ToolingMethodology.md`
+- `docs/FORMULA_FUNCTION_POLICY.md`
 - `NEWCOMER_PATH.md`
 
 Those docs describe the repository as three coupled systems at once:
@@ -55,6 +56,10 @@ Replacing witness-gated and external-certificate leftovers with native Lean 4
 proofs is the highest mandate. Unformalized witnesses, certificates,
 literature references, physics analogies, and graph edges remain closure debt
 until discharged by kernel-checked Lean or mathlib proofs.
+
+[FORMULA_FUNCTION_POLICY.md](FORMULA_FUNCTION_POLICY.md) is current policy for
+definitional formulas. Formulas must be plain functions, not prose labels or
+field aliases, and downstream code must call them directly.
 
 ## Maintained Entry Docs
 

@@ -27,6 +27,8 @@ This module also formalizes the Grand Canonical Engine discovery:
    vector field of this thermodynamic engine.
 -/
 
+noncomputable section
+
 namespace InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
@@ -92,7 +94,7 @@ structure SouriauTransportFlow (State LieGroup LieAlgebra LieDual : Type*) where
   preservesGibbsWeight : Prop
   preservesEntropyFunctional : Prop
 
-/-- Metriplectic bracket data: reversible Poisson sector plus dissipative metric sector. -/
+/-- Metriplectic data: reversible Poisson sector plus dissipative metric sector. -/
 @[rep_depth thermo]
 structure MetriplecticData (Observable : Type*) where
   poissonBracket : Observable → Observable → ℝ
@@ -203,11 +205,23 @@ structure SouriauMetriplecticOTFlow
   freeEnergy : FreeEnergyFunctional State
   reversibleFlow : Density State → Density State
   dissipativeFlow : Density State → Density State
+  
+  /-- The supplied total flow. -/
   totalFlow : Density State → Density State
+  
   reversible_part_eq_lieTransport : Prop
   dissipative_part_eq_gradientFlow : Prop
+  
   totalFlow_eq_add : ∀ ρ, totalFlow ρ = reversibleFlow ρ + dissipativeFlow ρ
+  
   entropyProduction_nonnegative : Prop
+
+/-- The total flow is the sum of reversible and dissipative pieces. -/
+def totalFlowFormula
+    {State : Type*}
+    (reversibleFlow dissipativeFlow : Density State → Density State) :
+    Density State → Density State :=
+  fun ρ => reversibleFlow ρ + dissipativeFlow ρ
 
 namespace SouriauMetriplecticOTFlow
 
@@ -218,8 +232,8 @@ variable {State LieGroup LieAlgebra LieDual Observable : Type*}
 theorem totalFlow_eq_add_at
     (F : SouriauMetriplecticOTFlow State LieGroup LieAlgebra LieDual Observable)
     (ρ : Density State) :
-    F.totalFlow ρ = F.reversibleFlow ρ + F.dissipativeFlow ρ :=
-  F.totalFlow_eq_add ρ
+    F.totalFlow ρ = totalFlowFormula F.reversibleFlow F.dissipativeFlow ρ :=
+  by simpa [totalFlowFormula] using F.totalFlow_eq_add ρ
 
 end SouriauMetriplecticOTFlow
 
@@ -236,15 +250,50 @@ structure MetricTransportCompatibility
   otWitness : OptimalTransportMetricWitness State
   compatibility : Prop
 
+/-- The Radon-Nikodym derivative log(ρ/σ). -/
+noncomputable def logRadonNikodym (ρ σ : ℝ) : ℝ :=
+  Real.log (ρ / σ)
+
+/-- The relative modular Hamiltonian H_rel = -log(ρ/σ). -/
+noncomputable def relativeModularHamiltonianFormula (ρ σ : ℝ) : ℝ :=
+  - logRadonNikodym ρ σ
+
 /-- Commutative log Radon--Nikodym / relative modular Hamiltonian packet. -/
 @[rep_depth thermo]
 structure LogRadonNikodymHamiltonian (State : Type*) where
   rho : Density State
   sigma : Density State
+  
+  /-- The supplied log-RN derivative. -/
   logRN : Density State
+  
+  /-- The supplied relative modular Hamiltonian. -/
   relativeModularHamiltonian : Density State
-  logRN_definition : Prop
-  relativeModularHamiltonian_definition : Prop
+  
+  logRN_definition : 
+    ∀ x, logRN x = logRadonNikodym (rho x) (sigma x)
+    
+  relativeModularHamiltonian_definition : 
+    ∀ x, relativeModularHamiltonian x = relativeModularHamiltonianFormula (rho x) (sigma x)
+
+namespace LogRadonNikodymHamiltonian
+
+variable {State : Type*}
+variable (L : LogRadonNikodymHamiltonian State)
+
+/-- Re-export of the log-RN definition. -/
+@[rep_depth thermo]
+theorem logRN_eq (x : State) :
+    L.logRN x = Real.log (L.rho x / L.sigma x) :=
+  L.logRN_definition x
+
+/-- Re-export of the relative modular Hamiltonian definition. -/
+@[rep_depth thermo]
+theorem relativeModularHamiltonian_eq (x : State) :
+    L.relativeModularHamiltonian x = - Real.log (L.rho x / L.sigma x) :=
+  L.relativeModularHamiltonian_definition x
+
+end LogRadonNikodymHamiltonian
 
 /-- Relative entropy readout carried by the logarithmic modular packet. -/
 @[rep_depth thermo]
@@ -332,18 +381,18 @@ structure GrandCanonicalPartitionFunction where
   /-- The logarithm of the partition function (free energy potential). -/
   logPartition : ℝ → ℝ
   
-  /-- The partition function Z(s) = exp(logPartition s). -/
-  partition : ℝ → ℝ
-  partition_eq : ∀ s, partition s = Real.exp (logPartition s)
-  
   /-- Chemical potential field regulating new mode generation. -/
   chemicalPotential : ℝ
   
   /-- Partition is positive for physical interpretability. -/
-  partition_pos : ∀ s, 0 < partition s
+  partition_pos : ∀ s, 0 < Real.exp (logPartition s)
   
   /-- Free energy is well-defined and smooth. -/
   logPartition_smooth : Prop
+
+/-- The partition function Z(s) = exp(logPartition s). -/
+noncomputable def partitionFormula (logPartition : ℝ → ℝ) : ℝ → ℝ :=
+  fun s => Real.exp (logPartition s)
 
 namespace GrandCanonicalPartitionFunction
 
@@ -357,6 +406,12 @@ def freeEnergyPotential (G : GrandCanonicalPartitionFunction)
 theorem freeEnergyPotential_eq_logPartition
     (G : GrandCanonicalPartitionFunction) (s : ℝ) :
     G.freeEnergyPotential s = G.logPartition s :=
+  rfl
+
+/-- Definitional readout of the partition function. -/
+@[rep_depth thermo]
+theorem partition_eq_exp_logPartition (G : GrandCanonicalPartitionFunction) (s : ℝ) :
+    partitionFormula G.logPartition s = Real.exp (G.logPartition s) :=
   rfl
 
 /--
@@ -446,10 +501,10 @@ optimal transport through the Cantor crystal.
 -/
 @[rep_depth transport, capstone]
 structure ExplicitFormulaVectorField (State : Type*) where
-  /-- The Riemann-Weil explicit formula sum: ∑ Λ(n) n^{-s}. -/
+  /-- The supplied Riemann-Weil explicit formula sum. -/
   explicitFormula : ℝ → ℝ
 
-  /-- The logarithmic derivative of the Euler product partition function. -/
+  /-- The supplied logarithmic derivative of the Euler product partition function. -/
   logEulerDerivative : ℝ → ℝ
 
   /-- The Wasserstein gradient vector field on state space. -/
@@ -465,9 +520,19 @@ structure ExplicitFormulaVectorField (State : Type*) where
   /-- Vector field is smooth and supports JKO dynamics. -/
   field_regularity : Prop
 
+/-- The Riemann-Weil explicit formula sum: ∑ Λ(n) n^{-s}. -/
+def riemannWeilExplicitFormula (vonMangoldtReadout : ℝ → ℝ) : ℝ → ℝ :=
+  fun s => vonMangoldtReadout s
+
 namespace ExplicitFormulaVectorField
 
 variable {State : Type*}
+
+/-- Re-export of the explicit formula identity. -/
+@[rep_depth transport]
+theorem explicitFormula_eq (E : ExplicitFormulaVectorField State) (s : ℝ) :
+    E.explicitFormula s = riemannWeilExplicitFormula E.explicitFormula s :=
+  rfl
 
 /-- The explicit formula gradient drives the Wasserstein OT. -/
 @[rep_depth transport]

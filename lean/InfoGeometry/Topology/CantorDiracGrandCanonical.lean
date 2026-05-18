@@ -241,8 +241,7 @@ theorem betaMuHessian_eq_muBetaHessian (B : CantorGrandCanonicalPacket) (β μ :
 theorem responseMatrix_symmetric (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
     InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric (responseMatrix B β μ) := by
   simpa [CantorGrandCanonicalPacket.responseMatrix] using
-    InfoGeometry.GrandCanonical.responseMatrix_symmetric (params B) β μ
-      (betaMuHessian_eq_muBetaHessian B β μ)
+    InfoGeometry.GrandCanonical.responseMatrix_symmetric_of_hessian (params B) β μ
 
 theorem responseMatrix_positiveSemidefinite (B : CantorGrandCanonicalPacket) (β μ : ℝ)
     (hββ : 0 ≤ betaHessian B β μ)

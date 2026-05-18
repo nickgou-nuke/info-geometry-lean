@@ -66,6 +66,7 @@ import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
 import InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 import InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
+import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
 import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Canonical.HamiltonianFlowBridge

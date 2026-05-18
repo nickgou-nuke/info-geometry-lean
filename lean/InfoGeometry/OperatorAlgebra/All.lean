@@ -86,7 +86,7 @@ import InfoGeometry.OperatorAlgebra.IndividuatedCayley
 import InfoGeometry.OperatorAlgebra.InformationAffineKacMoodyBridge
 import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
-import InfoGeometry.OperatorAlgebra.AffineKacMoody
+import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
 import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.KleinianTwist
@@ -151,7 +151,6 @@ import InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration
 import InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 import InfoGeometry.OperatorAlgebra.VerifiedDeterminant
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
-import InfoGeometry.OperatorAlgebra.VirasoroProjectPin
 import InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 
 namespace InfoGeometry.OperatorAlgebra

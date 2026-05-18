@@ -1,7 +1,5 @@
 import InfoGeometry.Canonical.CoordinateFree
-import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.BerryRotorBridge
-import InfoGeometry.Canonical.ZetaTrace
 
 namespace InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
 

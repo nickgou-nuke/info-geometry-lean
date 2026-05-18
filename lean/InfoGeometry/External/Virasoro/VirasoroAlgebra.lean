@@ -160,6 +160,11 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
     · simp [lgen]
     · simp [WittAlgebra.virasoroCocycle_apply_lgen_lgen, h, lgen]
 
+/-- The Virasoro `L_n` bracket has no central term away from the resonance `n + m = 0`. -/
+@[simp] lemma lgen_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆ = (n - m : 𝕜) • lgen 𝕜 (n + m) := by
+  rw [lgen_bracket, if_neg h, add_zero]
+
 lemma lgen_bracket' (n m : ℤ) :
     ⁅lgen 𝕜 n, lgen 𝕜 m⁆
       = (n - m : 𝕜) • lgen 𝕜 (n + m)

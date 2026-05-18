@@ -66,7 +66,6 @@ import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
 import InfoGeometry.Canonical.BogoliubovCartanFrameInterpretation
 import InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 import InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
-import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
 import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Canonical.HamiltonianFlowBridge
@@ -575,7 +574,6 @@ import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.PrimeGasSuperKMSBridge
 import InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
 import InfoGeometry.Canonical.PrimeGeodesicEmergence
-import InfoGeometry.Canonical.PrimeSuperalgebraZetaChannel
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
@@ -787,8 +785,6 @@ import InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
 import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
-import InfoGeometry.Canonical.ZetaTrace
-import InfoGeometry.Canonical.ZetaTraceBridge
 import InfoGeometry.Canonical.ZornSpinor
 
 namespace InfoGeometry

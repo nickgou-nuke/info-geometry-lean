@@ -162,10 +162,11 @@ For locally mirrored external corpora, keep the corpus under `external/<repo>` o
 Repository-facing query helper:
 
 ```bash
-python3 tools/infra/query_external_corpus.py admissible level --limit 20
+python3 tools/infra/query_external_corpus.py --list
+python3 tools/infra/query_external_corpus.py --corpus external_refs/pyw admissible level --limit 20
 ```
 
-The helper reads `external_refs/pyw/index.json` and `external_refs/pyw/keyword_index.json` and returns matching declarations for search-first triage.
+The helper reads `index.json` and `keyword_index.json` from the selected mirror and returns matching declarations for search-first triage.
 
 
 The intended downstream chain is:

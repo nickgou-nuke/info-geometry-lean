@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge

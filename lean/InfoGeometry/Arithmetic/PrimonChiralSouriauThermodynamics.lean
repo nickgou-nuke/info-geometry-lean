@@ -9,7 +9,6 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
-import InfoGeometry.External.Virasoro
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Krein.DoubledSpace
 
@@ -389,34 +388,5 @@ theorem primonCollectedNativeClosure
   · exact
       InfoGeometry.Canonical.PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
         P S hlevel hdim hdual
-
-/-- Native VirasoroProject readout bundled into the primon lane. -/
-@[rep_depth thermo]
-theorem primonExternalVirasoroClosure :
-    (VirasoroProject.LieAlgebra.IsCentralExtension
-        (VirasoroProject.VirasoroAlgebra.ofCentral ℝ)
-        VirasoroProject.VirasoroAlgebra.toWittAlgebra) ∧
-    (VirasoroProject.LieAlgebra.IsCentralExtension
-        (VirasoroProject.HeisenbergAlgebra.ofCentral ℝ)
-        VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn) ∧
-    (Module.rank ℝ
-        (VirasoroProject.LieTwoCohomology ℝ (VirasoroProject.WittAlgebra ℝ) ℝ) = 1) ∧
-    (∀ (α : ℝ) (v : VirasoroProject.ChargedFockSpace ℝ α),
-      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℝ α
-        (VirasoroProject.VirasoroAlgebra.cgen ℝ) v = v) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact VirasoroProject.VirasoroAlgebra.isCentralExtension ℝ
-  · exact VirasoroProject.HeisenbergAlgebra.isCentralExtension ℝ
-  · exact VirasoroProject.WittAlgebra.rank_lieTwoCohomology_eq_one ℝ
-  · intro α v
-    exact
-      VirasoroProject.ChargedFockSpace.sugawaraRepresentation_cgen_apply (𝕜 := ℝ) α v
-
-/-- Native Heisenberg cohomology nontriviality from the vendored Virasoro project. -/
-@[rep_depth thermo]
-theorem primonExternalHeisenbergNontrivial :
-    Nontrivial (VirasoroProject.LieTwoCohomology ℝ
-      (VirasoroProject.AbelianLieAlgebraOn ℤ ℝ) ℝ) := by
-  exact VirasoroProject.AbelianLieAlgebraOn.nontrivial_lieTwoCohomology (𝕜 := ℝ)
 
 end InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

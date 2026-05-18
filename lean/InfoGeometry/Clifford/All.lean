@@ -5,7 +5,7 @@ import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.FiniteTiltDiracShell
-import InfoGeometry.Clifford.FiniteTiltDiracShellBridge
+import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.ClNNSpecialization
 import InfoGeometry.Clifford.Decomposition
@@ -23,6 +23,7 @@ import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Clifford.SplitQ11Equivariance
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix

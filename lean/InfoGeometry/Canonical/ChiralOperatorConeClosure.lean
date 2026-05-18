@@ -471,6 +471,20 @@ def chiralConeCompatibilityData
     ChiralConeCompatibilityData CIK :=
   SpectralChiralConeAlgebra.ofCertifiedInverseKernel (CIK := CIK)
 
+/-- Existence wrapper for the reified spectral chiral cone owner. -/
+@[rep_depth krein]
+theorem spectralChiralConeAlgebra_exists
+    (CIK : CertifiedInverseKernel E) :
+    Nonempty (SpectralChiralConeAlgebra CIK) :=
+  ⟨SpectralChiralConeAlgebra.ofCertifiedInverseKernel (CIK := CIK)⟩
+
+/-- Existence wrapper for the deprecated compatibility alias. -/
+@[rep_depth krein]
+theorem chiralConeCompatibilityData_exists
+    (CIK : CertifiedInverseKernel E) :
+    Nonempty (ChiralConeCompatibilityData CIK) :=
+  spectralChiralConeAlgebra_exists (CIK := CIK)
+
 end Core
 
 end InfoGeometry.Canonical.ChiralOperatorConeClosure

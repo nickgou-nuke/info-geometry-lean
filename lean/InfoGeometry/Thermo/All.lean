@@ -3,6 +3,7 @@ import InfoGeometry.Thermo.BuresWassersteinKMSCost
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
+import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs

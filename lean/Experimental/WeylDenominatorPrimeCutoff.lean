@@ -205,14 +205,4 @@ theorem weyl_denominator_limit_eq_zeta
     ∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹ = riemannZeta s := by
   simpa using riemannZeta_eulerProduct_tprod hs
 
-/--
-Compatibility alias for the proposed lane name.
-
-Despite the name, the right-hand side is `ζ(s)`, not `ζ(s)⁻¹`.
--/
-theorem weyl_denominator_limit_eq_inv_zeta
-    {s : ℂ} (hs : 1 < s.re) :
-    ∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹ = riemannZeta s := by
-  simpa using weyl_denominator_limit_eq_zeta hs
-
 end Experimental.WeylDenominatorPrimeCutoff

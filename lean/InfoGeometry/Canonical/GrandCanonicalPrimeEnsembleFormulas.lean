@@ -1,5 +1,5 @@
 import Mathlib
-import InfoGeometry.Canonical.ZetaTrace
+import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
 
 /-!
 # InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
@@ -185,7 +185,7 @@ theorem primeEulerProduct_eq_riemannZeta
     {s : ℂ}
     (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - (p : ℂ) ^ (-s))⁻¹) = riemannZeta s :=
-  InfoGeometry.Canonical.ZetaTrace.zeta_trace_bridge hs
+  InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge hs
 
 /-! ## 5. Majorana cancellation as a genuine proof -/
 

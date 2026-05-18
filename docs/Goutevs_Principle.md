@@ -234,6 +234,171 @@ overlays in Lean as derived observability. They are useful for audit and
 navigation, but they remain downstream of Lean source and do not replace owner
 proofs.
 
+## Source/Sink Chain: Log Generator -> Bregman Gap -> Free Energy
+
+The repository treats free energy as a relative readout of a generator field,
+not as an isolated scalar.
+
+The source chain is:
+
+\[
+\text{log/Radon--Nikodym generator}
+\to
+\text{modular Hamiltonian}
+\to
+\text{Bregman gap}
+\to
+\text{free energy}.
+\]
+
+### 1. Log / Modular Generator
+
+The logarithmic Radon--Nikodym density is the relative information generator.
+In the finite/classical packet, KL is recorded as expectation of the log-density.
+In the operator packet, the modular Hamiltonian is the negative logarithmic
+density.
+
+Thus:
+
+\[
+K = -\log \rho
+\]
+
+is not an absolute Hamiltonian first. It is a relative modular generator.
+
+### 2. Bregman Gap
+
+A Legendre potential determines a Bregman divergence. The repository uses this
+gap as the energy induced by a reference point:
+
+\[
+E_{\theta_0}(\theta)
+=
+D_L(\theta,\theta_0).
+\]
+
+This is the finite scalar bridge from convex geometry to thermodynamics.
+
+### 3. Free Energy Readout
+
+The free energy is the Legendre/Fenchel/Bregman thermodynamic readout of the
+generator-induced gap:
+
+\[
+F
+=
+U-\varepsilon S.
+\]
+
+This is a scalar thermodynamic theorem in the finite Bregman/Gibbs setting.
+
+The repository does not assert a universal unbounded operator Legendre theorem
+for arbitrary type-III algebras. Operatorial versions are bounded/modular
+packets whose scalar thermodynamic meaning appears only after a trace, state,
+KMS datum, or projective readout is supplied.
+
+## DAG/Hodge Toolchain: The Causal Cone as a Finite Operator System
+
+The declaration DAG is not only an index. It is the finite causal cone on which
+the repository measures descent, obstruction, and closure flow.
+
+The graph/Hodge layer implements:
+
+\[
+\Delta_0=\partial_1^T\partial_1,
+\]
+
+\[
+\Delta_1=\partial_1\partial_1^T+\partial_2^T\partial_2,
+\]
+
+and the graph Dirac operator
+
+\[
+D=
+\begin{pmatrix}
+0 & \partial_1^T\\
+\partial_1 & 0
+\end{pmatrix}
+\]
+
+on \(0\oplus1\)-chains.
+
+A chiral grading \(\Gamma\) is implemented as a signed diagonal grading, and the
+finite anticommutation check is
+
+\[
+\Gamma D + D\Gamma=0.
+\]
+
+### DAG Operator Owner Map
+
+| Role | Layer | Responsibility |
+|---|---|---|
+| Graph/Hodge implementation | `lean/DAG/GraphHodge.lean` | concrete coboundaries, Laplacians, graph Dirac, chiral grading |
+| Krein chirality owner | `lean/InfoGeometry/Krein/Prelude.lean` | doubled/Krein chirality operator and projectors |
+| Modular block split | `lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean` | active/apex projector split, scale/shape decomposition |
+| Arithmetic finite carrier | `lean/InfoGeometry/Arithmetic/PrimeExteriorRepresentation.lean`, `lean/InfoGeometry/Arithmetic/PrimeBooleanCube.lean` | square-free finite states, chirality, state energy, Möbius readout |
+| Infinite Cantor/Fock socket | Çelik--Koçak 2011 | \(L^2(K)\) Clifford representation equivalent to Fock |
+| Closure discipline | `OwnerTarget`, `BridgeTarget`, `SocketTarget` | machine-visible owner, bridge, and socket-debt surfaces |
+
+### Operator Boundary Rule
+
+The DAG graph Dirac, the arithmetic Cantor/Fock Dirac package, and the modular
+Hamiltonian are adjacent but not identical.
+
+- The DAG graph Dirac measures the declaration causal cone.
+- The finite arithmetic Hamiltonian is the prime-weighted number operator.
+- The modular Hamiltonian is a relative logarithmic generator.
+- The Bregman free energy is a scalar thermodynamic readout of a generator gap.
+
+A bridge may relate these objects only by exposing its reference datum:
+projector, gauge, state, trace, KMS datum, finite cutoff, or literature-owned
+completion theorem.
+
+### Relative Measurement Interpretation
+
+A theorem is not merely a closed term. It is a closed term situated in a
+reference frame.
+
+The reference may be:
+
+- a projective ray representative,
+- a KMS state,
+- a Drazin projector,
+- a finite prime cutoff,
+- a graph/Hodge causal cone,
+- a Weyl gauge,
+- or a literature-owned infinite completion.
+
+Thus the repository treats absolute magnitudes as pre-observables and
+relative/projective/cocycle/Bregman readouts as theorem-safe observables.
+
+## Temperature as Inverse Modular Scale
+
+The scalar first-law readout is:
+
+\[
+\delta Q_{\mathrm{rev}} = T\,dS,
+\qquad
+\beta := \frac{1}{T} = \frac{dS}{\delta Q_{\mathrm{rev}}}.
+\]
+
+In the repository dictionary, \(\beta\) is the state-relative modular scale.
+The modular Hamiltonian / log generator is the operator field whose scalar
+readout gives the heat or energy variation being compared.
+
+So the correct boundary is:
+
+- temperature is not the raw operator;
+- the operator is the state-relative modular generator;
+- temperature is the inverse projective/modular scale of the readout.
+
+The theorem-safe scalar core already exists in
+`lean/InfoGeometry/Thermo/RelativeTemperatureFirstLaw.lean`, and the projective
+temperature inversion discipline is separately handled in
+`lean/InfoGeometry/Thermodynamics/ProjectiveTemperature.lean`.
+
 ### Finite Arithmetic Interpretation
 
 The finite Cantor lattice is
@@ -369,6 +534,135 @@ Every future bridge must be one of:
 
 The compiler addons already make these surfaces machine-visible: owner targets,
 bridge targets, and socket debt are auditable by dedicated commands.
+
+## Source/Sink Chain: Log Generator → Bregman Gap → Free Energy
+
+The repository treats free energy as a relative readout of a generator field,
+not as an isolated scalar.
+
+The source chain is:
+
+\[
+\text{log/Radon--Nikodym generator}
+\to
+\text{modular Hamiltonian}
+\to
+\text{Bregman gap}
+\to
+\text{free energy}.
+\]
+
+### 1. Log / Modular Generator
+
+The logarithmic Radon--Nikodym density is the relative information generator.
+In the finite/classical packet, KL is recorded as expectation of the
+log-density. In the operator packet, the modular Hamiltonian is the negative
+logarithmic density.
+
+Thus:
+
+\[
+K = -\log \rho
+\]
+
+is not an absolute Hamiltonian first. It is a relative modular generator.
+
+### 2. Bregman Gap
+
+A Legendre potential determines a Bregman divergence. The repository uses this
+gap as the energy induced by a reference point:
+
+\[
+E_{\theta_0}(\theta)
+=
+D_L(\theta,\theta_0).
+\]
+
+This is the finite scalar bridge from convex geometry to thermodynamics.
+
+### 3. Free Energy Readout
+
+The free energy is the Legendre/Fenchel/Bregman thermodynamic readout of the
+generator-induced gap:
+
+\[
+F
+=
+U-\varepsilon S.
+\]
+
+This is a scalar thermodynamic theorem in the finite Bregman/Gibbs setting.
+
+The repository does not assert a universal unbounded operator Legendre theorem
+for arbitrary type-III algebras. Operatorial versions are bounded/modular
+packets whose scalar thermodynamic meaning appears only after a trace, state,
+KMS, or projective readout is supplied.
+
+## DAG/Hodge Toolchain: The Causal Cone as a Finite Operator System
+
+The declaration DAG is not only an index. It is the finite causal cone on
+which the repository measures descent, obstruction, and closure flow.
+
+The graph/Hodge layer implements:
+
+\[
+\Delta_0=\partial_1^T\partial_1,
+\]
+
+\[
+\Delta_1=\partial_1\partial_1^T+\partial_2^T\partial_2,
+\]
+
+and the graph Dirac operator
+
+\[
+D=
+\begin{pmatrix}
+0 & \partial_1^T\\
+\partial_1 & 0
+\end{pmatrix}
+\]
+
+on \(0\oplus1\)-chains.
+
+A chiral grading \(\Gamma\) is implemented as a signed diagonal grading, and
+the finite anticommutation check is
+
+\[
+\Gamma D + D\Gamma=0.
+\]
+
+### Operator Boundary Rule
+
+The DAG graph Dirac, the arithmetic Cantor/Fock Dirac package, and the modular
+Hamiltonian are adjacent but not identical.
+
+- The DAG graph Dirac measures the declaration causal cone.
+- The finite arithmetic Hamiltonian is the prime-weighted number operator.
+- The modular Hamiltonian is a relative logarithmic generator.
+- The Bregman free energy is a scalar thermodynamic readout of a generator gap.
+
+A bridge may relate these objects only by exposing its reference datum:
+projector, gauge, state, trace, KMS datum, finite cutoff, or
+literature-owned completion theorem.
+
+### Relative Measurement Interpretation
+
+A theorem is not merely a closed term. It is a closed term situated in a
+reference frame.
+
+The reference may be:
+
+- a projective ray representative,
+- a KMS state,
+- a Drazin projector,
+- a finite prime cutoff,
+- a graph/Hodge causal cone,
+- a Weyl gauge,
+- or a literature-owned infinite completion.
+
+Thus the repository treats absolute magnitudes as pre-observables and
+relative/projective/cocycle/Bregman readouts as theorem-safe observables.
 
 ## Mathematical Consequences
 

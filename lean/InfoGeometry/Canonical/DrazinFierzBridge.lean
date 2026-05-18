@@ -336,42 +336,6 @@ structure FierzResidual where
   residual : NormalizedFierzCoordinates → ℝ
 
 /--
-Complete expectation-only Fierz socket.
-
-No physical trace exists in this interface.  The residual law is an explicit
-compatibility field, not a theorem derived from expectation alone.
--/
-@[socket_debt_tag, rep_depth operator]
-structure ExpectationOnlyFierzSocket
-    (Obs : Type*)
-    [One Obs]
-    [Mul Obs]
-    [Star Obs]
-    [AddCommMonoid Obs]
-    [SMul ℂ Obs] where
-  state :
-    ExpectationState Obs
-  channels :
-    FierzChannelMap Obs
-  drazin :
-    Obs → DrazinFilteredObservable Obs
-  residual :
-    FierzResidual
-  coords :
-    Obs → NormalizedFierzCoordinates
-  coords_eq_expectation :
-    ∀ A ch,
-      (coords A).coord ch =
-        expectationChannelFierzCoordinate
-          state
-          channels
-          (drazin A)
-          ch
-  drazin_sound :
-    ∀ A,
-      residual.residual (coords A) = 0
-
-/--
 Compatibility assumption connecting trace-free Drazin-stable two-projection
 fibers to a chosen Fierz residual.
 
@@ -508,37 +472,5 @@ structure BirkhoffDecomposition4
       Finset.univ.sum
         (fun π : Equiv.Perm (Fin 4) =>
           weights π • permutationMatrix4 π)
-
-/--
-Correlation-energy matrix together with a normalized bistochastic socket and a
-chosen Birkhoff decomposition.
--/
-@[socket_debt_tag, rep_depth projective]
-structure ExpectationBirkhoffSocket
-    {Obs : Type*}
-    [One Obs]
-    [Mul Obs]
-    [Star Obs]
-    [AddCommMonoid Obs]
-    [SMul ℂ Obs]
-    (φ : ExpectationState Obs)
-    (Z W : Fin 4 → Obs) where
-  rawEnergy : Matrix (Fin 4) (Fin 4) ℝ
-  rawEnergy_eq :
-    rawEnergy = expectationCorrelationEnergy φ Z W
-  normalized : Bistochastic4
-  decomposition : BirkhoffDecomposition4 normalized
-
-/--
-Explicit representation socket from a Hurwitz-unit-like set to permutations.
-
-This avoids identifying order-24 structures merely by cardinality.
--/
-@[socket_debt_tag, rep_depth projective]
-structure HurwitzToPermutationSocket where
-  HurwitzUnit : Type*
-  mul : HurwitzUnit → HurwitzUnit → HurwitzUnit
-  toPerm : HurwitzUnit → Equiv.Perm (Fin 4)
-  respects_mul : Prop
 
 end InfoGeometry.Canonical.DrazinFierzBridge

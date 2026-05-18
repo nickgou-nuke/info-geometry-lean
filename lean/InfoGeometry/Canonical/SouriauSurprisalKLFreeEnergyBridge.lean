@@ -1,5 +1,10 @@
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
+import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
@@ -25,6 +30,9 @@ noncomputable section
 namespace InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
+open InfoGeometry.Canonical.StateDependentTransport
+open InfoGeometry.Canonical.ThermodynamicGenerator
+open InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 
 /-! ## Owner readback dashboard -/
 
@@ -107,6 +115,27 @@ theorem KL_eq_souriau_Bregman
         - B.generator.dPhi B.alphaMinusBeta :=
   B.KL_eq_souriau_Bregman
 
+/--
+Owner target bundling the KL-as-log-density and KL-as-Bregman readbacks.
+
+This does not add new mathematics. It packages the existing KL readbacks so
+that the KL/Bregman lane is a graph-visible theorem surface rather than only a
+commentary lane.
+-/
+@[owner_target_tag]
+theorem KL_BregmanOwnerTarget
+    (D : LogRadonNikodymData State)
+    (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
+    D.KL = D.expectationNu D.logDensity ∧
+    D.KL = -D.expectationNu D.surprisalDensity ∧
+    B.klValue =
+      B.alphaPartitionPotential
+        - B.generator.souriau.partitionPotential
+        - B.generator.dPhi B.alphaMinusBeta := by
+  exact ⟨D.KL_eq_expectation_logDensity,
+    D.KL_eq_neg_expectation_surprisalDensity,
+    B.KL_eq_souriau_Bregman⟩
+
 /-! ### 5. Modular Hamiltonian / operatorial Souriau family readbacks -/
 
 /-- Modular Hamiltonian data read back as the negative logarithmic density. -/
@@ -130,6 +159,182 @@ theorem Khat_beta_eq_Jhat_beta
     (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) :
     Q.Khat_beta = Q.Jhat Q.beta :=
   Q.Khat_beta_eq_Jhat_beta
+
+/--
+Source/sink chain:
+
+* Souriau temperature is the state-relative modular generator;
+* the modular Hamiltonian is the negative logarithmic density;
+* KL is expectation of the log density;
+* KL is the Souriau Bregman gap;
+* free energy is the Bregman-induced thermodynamic readout.
+-/
+@[owner_target_tag]
+theorem temperature_modularHamiltonian_Bregman_freeEnergy_chain
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {State LieAlgebra LieDual Obs Ω : Type*}
+    [Fintype Ω] [Nonempty Ω]
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
+    (M : ModularHamiltonianData Obs)
+    (D : LogRadonNikodymData State)
+    (B : SouriauKLBregmanWitness State LieAlgebra LieDual)
+    (L : InfoGeometry.Convex.LegendrePotential)
+    (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) (hε : ε ≠ 0) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector
+        (E := E) P ψ
+      =
+      stateRelativeModularGenerator (E := E) P.modularData ψ
+      ∧
+    M.modularHamiltonian = M.negativeLogDensity
+      ∧
+    D.KL = D.expectationNu D.logDensity
+      ∧
+    B.klValue =
+      B.alphaPartitionPotential
+        - B.generator.souriau.partitionPotential
+        - B.generator.dPhi B.alphaMinusBeta
+      ∧
+    InfoGeometry.Thermo.freeEnergyFromBregman (L := L) θ0 θ ε
+      =
+      InfoGeometry.Thermo.internalEnergy
+        (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε
+        - ε * InfoGeometry.Thermo.shannonEntropy
+          (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simpa using
+      souriauTemperatureVector_eq_stateRelativeModularGenerator (E := E) P ψ
+  · exact modularHamiltonian_eq_negativeLogDensity M
+  · exact KL_eq_expectation_logDensity D
+  · exact KL_eq_souriau_Bregman B
+  · exact InfoGeometry.Thermo.freeEnergyFromBregman_eq_internal_sub_scale_entropy
+      (L := L) θ0 θ ε hε
+
+/--
+Exact source/sink bundle for the thermodynamic lane.
+
+This packages the source chain the repo already owns:
+
+* projective logarithmic generator → relative modular potential;
+* state-relative modular generator → Souriau temperature vector;
+* Souriau modular Hamiltonian → negative logarithmic density;
+* KL → expectation of the log density;
+* KL → Souriau Bregman gap;
+* free energy → Bregman-induced thermodynamic readout.
+-/
+@[owner_target_tag]
+theorem projectiveLogGenerator_temperature_Bregman_freeEnergy_chain
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {State LieAlgebra LieDual Obs Ω α : Type*}
+    [Fintype Ω] [Nonempty Ω]
+    [Fintype α] [Nonempty α]
+    [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α]
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α)
+    (a : α)
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
+    (M : ModularHamiltonianData Obs)
+    (D : LogRadonNikodymData State)
+    (B : SouriauKLBregmanWitness State LieAlgebra LieDual)
+    (L : InfoGeometry.Convex.LegendrePotential)
+    (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) (hε : ε ≠ 0) :
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState q0)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState q) a
+      =
+    InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q0 a
+      ∧
+    (InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector
+        (E := E) P ψ
+      =
+      stateRelativeModularGenerator (E := E) P.modularData ψ
+      ∧
+    M.modularHamiltonian = M.negativeLogDensity
+      ∧
+    D.KL = D.expectationNu D.logDensity
+      ∧
+    B.klValue =
+      B.alphaPartitionPotential
+        - B.generator.souriau.partitionPotential
+        - B.generator.dPhi B.alphaMinusBeta
+      ∧
+    InfoGeometry.Thermo.freeEnergyFromBregman (L := L) θ0 θ ε
+      =
+      InfoGeometry.Thermo.internalEnergy
+        (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε
+        - ε * InfoGeometry.Thermo.shannonEntropy
+          (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε) := by
+  refine ⟨?_, ?_⟩
+  · exact projectiveLogGenerator_eq_relativeModularPotential
+      (q := q) (q0 := q0) (a := a)
+  · exact temperature_modularHamiltonian_Bregman_freeEnergy_chain
+      (E := E) (P := P) (ψ := ψ) (M := M) (D := D) (B := B)
+      (L := L) (θ0 := θ0) (θ := θ) (ε := ε) hε
+
+/-!
+Compact owner target for the thermodynamic source/sink spine.
+
+This is an audit-facing alias for the exact chain already owned above:
+
+* projective logarithmic generator;
+* relative modular potential;
+* state-relative modular generator;
+* Souriau temperature vector;
+* modular Hamiltonian;
+* KL/Bregman gap;
+* free-energy readout.
+-/
+@[owner_target_tag]
+def ThermodynamicSourceSinkOwnerTarget : Prop :=
+  ∀ {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {State LieAlgebra LieDual Obs Ω α : Type*}
+    [Fintype Ω] [Nonempty Ω]
+    [Fintype α] [Nonempty α]
+    [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α]
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α)
+    (a : α)
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
+    (M : ModularHamiltonianData Obs)
+    (D : LogRadonNikodymData State)
+    (B : SouriauKLBregmanWitness State LieAlgebra LieDual)
+    (L : InfoGeometry.Convex.LegendrePotential)
+    (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) (hε : ε ≠ 0),
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState q0)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState q) a
+      =
+    InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential q q0 a
+      ∧
+    InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector
+        (E := E) P ψ
+      =
+      stateRelativeModularGenerator (E := E) P.modularData ψ
+      ∧
+    M.modularHamiltonian = M.negativeLogDensity
+      ∧
+    D.KL = D.expectationNu D.logDensity
+      ∧
+    B.klValue =
+      B.alphaPartitionPotential
+        - B.generator.souriau.partitionPotential
+        - B.generator.dPhi B.alphaMinusBeta
+      ∧
+    InfoGeometry.Thermo.freeEnergyFromBregman (L := L) θ0 θ ε
+      =
+      InfoGeometry.Thermo.internalEnergy
+        (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε
+        - ε * InfoGeometry.Thermo.shannonEntropy
+          (InfoGeometry.Thermo.energyFromBregman (L := L) θ0 θ) ε
+
+/-! The thermodynamic source/sink owner target is discharged by the chain theorem. -/
+@[bridge_target_tag]
+theorem thermodynamicSourceSinkOwnerTarget :
+    ThermodynamicSourceSinkOwnerTarget := by
+  exact projectiveLogGenerator_temperature_Bregman_freeEnergy_chain
 
 end OwnerReadbacks
 

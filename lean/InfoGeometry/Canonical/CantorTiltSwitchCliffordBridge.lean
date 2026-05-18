@@ -298,19 +298,6 @@ variable (S : CantorTiltSwitchMatterReadoutSocket Op)
 def coordinate (x : Op) : ℝ :=
   envelopeFierzCoordinate S.horizon S.harmonic S.channel x
 
-/-- Re-export of the envelope formula used by the socket. -/
-@[rep_depth operator]
-theorem coordinate_eq_channel_envelope (x : Op) :
-    S.coordinate x =
-      S.channel (cantorCliffordMatterEnvelope S.horizon S.harmonic x) :=
-  rfl
-
-/-- Re-export of the required Fierz-admissibility gate for the envelope. -/
-@[rep_depth operator]
-theorem admissibility_gate (x : Op) :
-    S.fierzAdmissibilityPredicate x :=
-  S.fierzAdmissible x
-
 end CantorTiltSwitchMatterReadoutSocket
 
 /-- Packaged owner target for the direct Cantor tilt/switch Clifford bridge. -/

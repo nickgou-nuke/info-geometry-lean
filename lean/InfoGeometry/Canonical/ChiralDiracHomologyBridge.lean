@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
@@ -218,6 +219,51 @@ theorem minus_hodge_witness :
   K.minus_harmonic_represents_homology_holds
 
 end ChiralHodgeHomologyCalibration
+
+/-! ## 4. File-level owner target -/
+
+/--
+Root-corridor owner target for the chiral/Dirac homology bridge.
+
+This packages the already-proved cycle/boundary and harmonic-loop readbacks
+from this file.
+-/
+@[owner_target_tag]
+def ChiralDiracHomologyBridgeOwnerTarget : Prop :=
+  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+      (C : ChiralComplexSocket Cplus Cminus)
+      {x : Cplus}, C.plusBoundary x → C.plusCycle x) ∧
+  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+      (C : ChiralComplexSocket Cplus Cminus)
+      {y : Cminus}, C.minusBoundary y → C.minusCycle y) ∧
+  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+      (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus),
+      H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
+  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+      (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
+      H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0) ∧
+  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
+      (K : ChiralHodgeHomologyCalibration Cplus Cminus),
+      K.plus_harmonic_represents_homology ∧
+      K.minus_harmonic_represents_homology)
+
+/-- The chiral/Dirac homology owner target is discharged by the local witnesses. -/
+theorem chiralDiracHomologyBridgeOwnerTarget :
+    ChiralDiracHomologyBridgeOwnerTarget := by
+  constructor
+  · intro Cplus Cminus instC instM C x hx
+    exact C.plus_boundary_is_cycle hx
+  · constructor
+    · intro Cplus Cminus instC instM C y hy
+      exact C.minus_boundary_is_cycle hy
+    · constructor
+      · intro Cplus Cminus instC instM H x
+        exact H.plusHarmonic_iff_loop_zero x
+      · constructor
+        · intro Cplus Cminus instC instM H y
+          exact H.minusHarmonic_iff_loop_zero y
+        · intro Cplus Cminus instC instM K
+          exact ⟨K.plus_hodge_witness, K.minus_hodge_witness⟩
 
 /-! ## 4. Root doubled-carrier readbacks from the owner lane -/
 

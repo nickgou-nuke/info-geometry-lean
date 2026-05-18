@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -115,7 +116,7 @@ variable {Ξ : CompletedXiZeroPredicate}
 variable (A : LeeYangPrimeApproximation Ξ)
 
 /-- Re-export of the supplied finite Lee--Yang circle law. -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem leeYang
     (N : ℕ)
     (z : ℂ)
@@ -152,7 +153,7 @@ This theorem is deliberately small: the analytic Hurwitz/limit work is exactly
 the supplied `zeros_transfer_to_xi` witness, and the final geometric step is
 the supplied Cayley critical-line witness.
 -/
-@[rep_depth operator]
+@[bridge_target_tag, rep_depth operator]
 theorem RH_of_LeeYangPrimeApproximation
     (Ξ : CompletedXiZeroPredicate)
     (C : CayleyCriticalLineWitness)

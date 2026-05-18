@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Dynamics.ModularThermalState
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -355,6 +356,7 @@ structure WitnessGatedZetaZeroSocket where
 namespace WitnessGatedZetaZeroSocket
 
 /-- Re-export of the supplied zero-location law. -/
+@[bridge_target_tag]
 theorem zero_location (Z : WitnessGatedZetaZeroSocket) :
     Z.zeroLocationLaw :=
   Z.zeroLocationCertificate
@@ -386,6 +388,7 @@ It only exports the certified TFD/Krein readout duality and the certified
 Hestenes periodicity law.  It does not assert a Type III trace formula and does
 not identify winding-obstruction zeros with zeta zeros.
 -/
+@[bridge_target_tag]
 theorem tfd_krein_mobius_duality_channel
     {A : Type*} [Mul A]
     (P : PrimonTFDKreinMobiusBridge A) :

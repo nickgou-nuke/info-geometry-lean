@@ -26,13 +26,13 @@ def searchAndPrintByHash (targetHash : UInt64) : MetaM Unit := do
   let env ← getEnv
   let mut found := false
   for (name, ci) in env.constants do
-    let typeHash := DAG.computeShapeHash ci.type
+    let typeHash := (DAG.computeFingerprint ci.type).shapeHash
     if typeHash == targetHash then
       IO.println s!"{getKindString ci} {name} (type)"
       found := true
     
     if let some val := ci.value? then
-      let valHash := DAG.computeShapeHash val
+      let valHash := (DAG.computeFingerprint val).shapeHash
       if valHash == targetHash then
         IO.println s!"{getKindString ci} {name} (value)"
         found := true
@@ -50,15 +50,18 @@ def main (args : List String) : IO UInt32 := do
     return 1
   let targetHash := targetHash?.get!
 
-  let imports := 
+  let imports : Array Import :=
     if args.length > 1 then
-      args[1]!.splitOn "," |>.filter (· != "") |>.map fun m => 
-        { module := (m.splitOn ".").foldl (init := Name.anonymous) fun acc part => Name.str acc part }
+      let mods : List Import :=
+        (args[1]!.splitOn "," |>.filter (· != "")).map fun m =>
+          ({ module := (m.splitOn ".").foldl (init := Name.anonymous) fun acc part =>
+              Name.str acc part } : Import)
+      mods.toArray
     else
-      #[{ module := `InfoGeometry.All }]
+      #[({ module := `InfoGeometry.All } : Import)]
 
   initSearchPath (← findSysroot)
-  let env ← importModules imports.toArray {} 0
+  let env ← importModules imports {} 0
   
   let coreContext : Lean.Core.Context := { 
     options := {}, 

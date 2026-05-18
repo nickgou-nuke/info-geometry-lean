@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 
@@ -236,7 +237,7 @@ Lee--Yang zero-free theorem after Riemann pullback.
 If the pulled partition function vanishes, the shifted field must lie on the
 imaginary axis.
 -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem zero_implies_field_re_zero
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -261,7 +262,7 @@ theorem zero_implies_field_re_zero
     · linarith
 
 /-- Pulled Lee--Yang zeros lie on the Riemann critical line. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem zero_implies_critical_line
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -325,7 +326,7 @@ structure LeeYangPolynomialWitness where
 namespace LeeYangPolynomialWitness
 
 /-- Re-export of the supplied Lee--Yang circle law for a finite prime chain. -/
-@[rep_depth thermo]
+@[bridge_target_tag, rep_depth thermo]
 theorem roots_on_circle
     (LY : LeeYangPolynomialWitness)
     (D : FinitePrimeChainData N)

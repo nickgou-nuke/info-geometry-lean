@@ -112,6 +112,16 @@ lemma gc2_gibbsWeight_sum_one
     ∑ x, gibbsWeightGC params β μ x = 1 :=
   gibbsWeightGC_sum_one params β μ
 
+lemma gc2_gibbsWeight_nonneg
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    0 ≤ gibbsWeightGC params β μ x :=
+  gibbsWeightGC_nonneg params β μ x
+
+lemma gc2_gibbsWeight_pos
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    0 < gibbsWeightGC params β μ x :=
+  gibbsWeightGC_pos params β μ x
+
 lemma gc2_potential_deriv_beta_eq_neg_meanShift
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
     deriv (fun t => potentialGC params t μ) β = -meanShift params β μ :=

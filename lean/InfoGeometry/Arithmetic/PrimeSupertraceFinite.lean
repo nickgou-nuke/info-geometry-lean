@@ -428,16 +428,6 @@ theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
       InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge.FinitePrimeBitLattice.primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
         P ε β hε
 
-/--
-Guardrail packet: zero/divisor/cohomology claims are not produced by the finite
-exterior supertrace. They must be supplied as separate spectral data.
--/
-@[socket_debt_tag]
-structure SpectralZeroCalibrationSocket where
-  zeroCarrier : Type*
-  zeroLaw : Prop
-  zeroCertificate : zeroLaw
-
 end FinitePrimeBitLattice
 
 /-! ## 6. Infinite zeta/supertrace witness socket -/

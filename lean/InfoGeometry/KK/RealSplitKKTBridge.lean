@@ -20,6 +20,20 @@ Under that hypothesis:
 - the odd phase splits exactly into the `g₁ ⊕ g₋₁` channels.
 -/
 
+/-!
+-- Added constructive wrapper theorem using witness to avoid raw equality hypothesis.
+@[rep_depth krein] theorem pi_isGZero_of_witness_wrapper {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [KreinSpace H] [KreinGradedModule H]
+    (X : RealSplitKreinKasparovCycle A B H)
+    (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
+    (a : A) :
+    IsGZero X.cl11 (X.π a) :=
+  pi_isGZero_of_witness (X:=X) w a
+-/
+
 namespace InfoGeometry.KK.RealSplitKKTBridge
 
 open InfoGeometry.Canonical.KKTCore

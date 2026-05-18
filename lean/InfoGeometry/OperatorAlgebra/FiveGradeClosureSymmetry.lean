@@ -123,6 +123,156 @@ theorem zero_cartan_decomposition
         G.closure.fixedPart x + G.closure.antiPart x = x :=
   ⟨G.zero_fixedPart_mem hx, G.zero_antiPart_mem hx, G.closure.fixed_add_anti_decomposition x⟩
 
+/-- The span of the opposite grade-one sectors `g₋₁ ⊔ g₊₁`. -/
+def gradeOnePair : Submodule ℝ L :=
+  G.gNegOne ⊔ G.gPosOne
+
+/-- The span of the opposite grade-two sectors `g₋₂ ⊔ g₊₂`. -/
+def gradeTwoPair : Submodule ℝ L :=
+  G.gNegTwo ⊔ G.gPosTwo
+
+/--
+The Cartan/fixed component of a grade `-1` element lies in the opposite
+grade-one pair.
+-/
+theorem negOne_fixedPart_mem_gradeOnePair
+    {x : L}
+    (hx : x ∈ G.gNegOne) :
+    G.closure.fixedPart x ∈ G.gradeOnePair := by
+  unfold ClosureInvolution.LinearClosureInvolution.fixedPart gradeOnePair
+  exact (G.gNegOne ⊔ G.gPosOne).smul_mem (1 / 2 : ℝ)
+    ((G.gNegOne ⊔ G.gPosOne).add_mem
+      ((show G.gNegOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_left) hx)
+      ((show G.gPosOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_right)
+        (G.maps_negOne_to_posOne x hx)))
+
+/--
+The Cartan/anti-fixed component of a grade `-1` element lies in the opposite
+grade-one pair.
+-/
+theorem negOne_antiPart_mem_gradeOnePair
+    {x : L}
+    (hx : x ∈ G.gNegOne) :
+    G.closure.antiPart x ∈ G.gradeOnePair := by
+  unfold ClosureInvolution.LinearClosureInvolution.antiPart gradeOnePair
+  exact (G.gNegOne ⊔ G.gPosOne).smul_mem (1 / 2 : ℝ)
+    ((G.gNegOne ⊔ G.gPosOne).sub_mem
+      ((show G.gNegOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_left) hx)
+      ((show G.gPosOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_right)
+        (G.maps_negOne_to_posOne x hx)))
+
+/-- Grade `-1` Cartan decomposition inside `g₋₁ ⊔ g₊₁`. -/
+theorem negOne_cartan_decomposition
+    {x : L}
+    (hx : x ∈ G.gNegOne) :
+    G.closure.fixedPart x ∈ G.gradeOnePair ∧
+      G.closure.antiPart x ∈ G.gradeOnePair ∧
+        G.closure.fixedPart x + G.closure.antiPart x = x :=
+  ⟨G.negOne_fixedPart_mem_gradeOnePair hx, G.negOne_antiPart_mem_gradeOnePair hx,
+    G.closure.fixed_add_anti_decomposition x⟩
+
+/-- The Cartan/fixed component of a grade `+1` element lies in `g₋₁ ⊔ g₊₁`. -/
+theorem posOne_fixedPart_mem_gradeOnePair
+    {x : L}
+    (hx : x ∈ G.gPosOne) :
+    G.closure.fixedPart x ∈ G.gradeOnePair := by
+  unfold ClosureInvolution.LinearClosureInvolution.fixedPart gradeOnePair
+  exact (G.gNegOne ⊔ G.gPosOne).smul_mem (1 / 2 : ℝ)
+    ((G.gNegOne ⊔ G.gPosOne).add_mem
+      ((show G.gPosOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_right) hx)
+      ((show G.gNegOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_left)
+        (G.maps_posOne_to_negOne x hx)))
+
+/-- The Cartan/anti-fixed component of a grade `+1` element lies in `g₋₁ ⊔ g₊₁`. -/
+theorem posOne_antiPart_mem_gradeOnePair
+    {x : L}
+    (hx : x ∈ G.gPosOne) :
+    G.closure.antiPart x ∈ G.gradeOnePair := by
+  unfold ClosureInvolution.LinearClosureInvolution.antiPart gradeOnePair
+  exact (G.gNegOne ⊔ G.gPosOne).smul_mem (1 / 2 : ℝ)
+    ((G.gNegOne ⊔ G.gPosOne).sub_mem
+      ((show G.gPosOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_right) hx)
+      ((show G.gNegOne ≤ G.gNegOne ⊔ G.gPosOne from le_sup_left)
+        (G.maps_posOne_to_negOne x hx)))
+
+/-- Grade `+1` Cartan decomposition inside `g₋₁ ⊔ g₊₁`. -/
+theorem posOne_cartan_decomposition
+    {x : L}
+    (hx : x ∈ G.gPosOne) :
+    G.closure.fixedPart x ∈ G.gradeOnePair ∧
+      G.closure.antiPart x ∈ G.gradeOnePair ∧
+        G.closure.fixedPart x + G.closure.antiPart x = x :=
+  ⟨G.posOne_fixedPart_mem_gradeOnePair hx, G.posOne_antiPart_mem_gradeOnePair hx,
+    G.closure.fixed_add_anti_decomposition x⟩
+
+/-- The Cartan/fixed component of a grade `-2` element lies in `g₋₂ ⊔ g₊₂`. -/
+theorem negTwo_fixedPart_mem_gradeTwoPair
+    {x : L}
+    (hx : x ∈ G.gNegTwo) :
+    G.closure.fixedPart x ∈ G.gradeTwoPair := by
+  unfold ClosureInvolution.LinearClosureInvolution.fixedPart gradeTwoPair
+  exact (G.gNegTwo ⊔ G.gPosTwo).smul_mem (1 / 2 : ℝ)
+    ((G.gNegTwo ⊔ G.gPosTwo).add_mem
+      ((show G.gNegTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_left) hx)
+      ((show G.gPosTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_right)
+        (G.maps_negTwo_to_posTwo x hx)))
+
+/-- The Cartan/anti-fixed component of a grade `-2` element lies in `g₋₂ ⊔ g₊₂`. -/
+theorem negTwo_antiPart_mem_gradeTwoPair
+    {x : L}
+    (hx : x ∈ G.gNegTwo) :
+    G.closure.antiPart x ∈ G.gradeTwoPair := by
+  unfold ClosureInvolution.LinearClosureInvolution.antiPart gradeTwoPair
+  exact (G.gNegTwo ⊔ G.gPosTwo).smul_mem (1 / 2 : ℝ)
+    ((G.gNegTwo ⊔ G.gPosTwo).sub_mem
+      ((show G.gNegTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_left) hx)
+      ((show G.gPosTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_right)
+        (G.maps_negTwo_to_posTwo x hx)))
+
+/-- Grade `-2` Cartan decomposition inside `g₋₂ ⊔ g₊₂`. -/
+theorem negTwo_cartan_decomposition
+    {x : L}
+    (hx : x ∈ G.gNegTwo) :
+    G.closure.fixedPart x ∈ G.gradeTwoPair ∧
+      G.closure.antiPart x ∈ G.gradeTwoPair ∧
+        G.closure.fixedPart x + G.closure.antiPart x = x :=
+  ⟨G.negTwo_fixedPart_mem_gradeTwoPair hx, G.negTwo_antiPart_mem_gradeTwoPair hx,
+    G.closure.fixed_add_anti_decomposition x⟩
+
+/-- The Cartan/fixed component of a grade `+2` element lies in `g₋₂ ⊔ g₊₂`. -/
+theorem posTwo_fixedPart_mem_gradeTwoPair
+    {x : L}
+    (hx : x ∈ G.gPosTwo) :
+    G.closure.fixedPart x ∈ G.gradeTwoPair := by
+  unfold ClosureInvolution.LinearClosureInvolution.fixedPart gradeTwoPair
+  exact (G.gNegTwo ⊔ G.gPosTwo).smul_mem (1 / 2 : ℝ)
+    ((G.gNegTwo ⊔ G.gPosTwo).add_mem
+      ((show G.gPosTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_right) hx)
+      ((show G.gNegTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_left)
+        (G.maps_posTwo_to_negTwo x hx)))
+
+/-- The Cartan/anti-fixed component of a grade `+2` element lies in `g₋₂ ⊔ g₊₂`. -/
+theorem posTwo_antiPart_mem_gradeTwoPair
+    {x : L}
+    (hx : x ∈ G.gPosTwo) :
+    G.closure.antiPart x ∈ G.gradeTwoPair := by
+  unfold ClosureInvolution.LinearClosureInvolution.antiPart gradeTwoPair
+  exact (G.gNegTwo ⊔ G.gPosTwo).smul_mem (1 / 2 : ℝ)
+    ((G.gNegTwo ⊔ G.gPosTwo).sub_mem
+      ((show G.gPosTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_right) hx)
+      ((show G.gNegTwo ≤ G.gNegTwo ⊔ G.gPosTwo from le_sup_left)
+        (G.maps_posTwo_to_negTwo x hx)))
+
+/-- Grade `+2` Cartan decomposition inside `g₋₂ ⊔ g₊₂`. -/
+theorem posTwo_cartan_decomposition
+    {x : L}
+    (hx : x ∈ G.gPosTwo) :
+    G.closure.fixedPart x ∈ G.gradeTwoPair ∧
+      G.closure.antiPart x ∈ G.gradeTwoPair ∧
+        G.closure.fixedPart x + G.closure.antiPart x = x :=
+  ⟨G.posTwo_fixedPart_mem_gradeTwoPair hx, G.posTwo_antiPart_mem_gradeTwoPair hx,
+    G.closure.fixed_add_anti_decomposition x⟩
+
 /-- A fixed grade `-1` element also lies in grade `+1`. -/
 theorem fixed_negOne_mem_posOne
     {x : L}

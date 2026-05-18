@@ -64,6 +64,40 @@ theorem partitionFunction_eq_weighted_sum
 end WeylCharacterGibbsPacket
 
 /--
+Conservative symbolic packet for the Weyl character formula.
+
+This records the ratio shape of the Weyl character formula without claiming a
+concrete semisimple Lie algebra, root system, or denominator identity owner in
+this file.
+-/
+structure WeylCharacterFormulaShadow (ι : Type*) [Fintype ι] where
+  characterPacket : WeylCharacterGibbsPacket ι
+  numerator : ℝ
+  denominator : ℝ
+  denominator_ne_zero : denominator ≠ 0
+  character_eq_ratio :
+    characterPacket.character = numerator / denominator
+
+namespace WeylCharacterFormulaShadow
+
+variable {ι : Type*} [Fintype ι]
+
+/-- The stored Weyl character formula is the advertised ratio. -/
+theorem character_ratio
+    (W : WeylCharacterFormulaShadow ι) :
+    W.characterPacket.character = W.numerator / W.denominator :=
+  W.character_eq_ratio
+
+/-- Multiplying the stored ratio recovers the numerator. -/
+theorem character_mul_denominator_eq_numerator
+    (W : WeylCharacterFormulaShadow ι) :
+    W.characterPacket.character * W.denominator = W.numerator := by
+  rw [W.character_ratio]
+  exact div_mul_cancel₀ _ W.denominator_ne_zero
+
+end WeylCharacterFormulaShadow
+
+/--
 Even/odd character split.
 
 The ordinary character adds bosonic and fermionic contributions.  The

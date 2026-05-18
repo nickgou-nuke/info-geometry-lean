@@ -6,6 +6,7 @@ import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.External.Virasoro
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 
 /-!

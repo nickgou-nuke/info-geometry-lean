@@ -210,6 +210,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - full-lean keyword indexing and story synthesis
   - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
+  - `query_external_corpus.py` (search mirrored external corpora by keyword/declaration name)
   - `module_keyword_theory_program.py` (module-name keyword extraction + full-repo keyword scan + trunk→root dependency tracing + theorem-packet draft synthesis with literature context)
 - closed-loop deep-research control
   - `deep_research/controller.py` (official Responses tool stack: web_search/file_search/mcp with stateful planning and verification gates)

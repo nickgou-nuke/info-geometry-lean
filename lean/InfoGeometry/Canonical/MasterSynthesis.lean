@@ -9,7 +9,9 @@ import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
-import InfoGeometry.Canonical.UniversalVolume
+import InfoGeometry.Volume.LogPotential
+import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Volume.DeterminantBundle
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Canonical.MongeAmpereCramerRao
@@ -67,7 +69,9 @@ open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.DiracRicciBridge
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.CalabiYauBridge
-open InfoGeometry.Canonical.UniversalVolume
+open InfoGeometry.Volume.LogPotential
+open InfoGeometry.Volume.ConnesCocycle
+open InfoGeometry.Volume.DeterminantBundle
 open InfoGeometry.Canonical.Determinant
 open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.BekensteinBound

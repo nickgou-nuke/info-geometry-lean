@@ -2,7 +2,9 @@ import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
+import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.SingularTransportSystem

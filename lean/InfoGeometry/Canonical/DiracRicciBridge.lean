@@ -1,9 +1,9 @@
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnification
-import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Canonical.PerelmanWSpinorial
-import InfoGeometry.Canonical.ThermoFromLogDet
+import InfoGeometry.Thermo.FromLogDet
 
 /-!
 # InfoGeometry.Canonical.DiracRicciBridge
@@ -22,12 +22,12 @@ open InfoGeometry.Canonical.CalabiYauBridge
 open InfoGeometry.Canonical.GrandSynthesis
 open InfoGeometry.Canonical.GrandUnification
 open InfoGeometry.Canonical.KaehlerGeometry
-open InfoGeometry.Canonical.LogDet
+open InfoGeometry.Jordan
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.PerelmanW
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Canonical.ThermoFromLogDet
+open InfoGeometry.Thermo
 
 section DeterminantChain
 

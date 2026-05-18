@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 
 /-!
@@ -17,7 +17,8 @@ namespace InfoGeometry.Canonical.PositiveRayProjectiveBridge
 
 open MeasureTheory
 open InfoGeometry.Canonical.PositiveRayCore
-open InfoGeometry.Canonical.ProjectiveStateCore
+open InfoGeometry.MeasureProjective
+open InfoGeometry.MeasureProjective.ProjectiveState
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 

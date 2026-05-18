@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Jordan.LogDet
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.Attention
@@ -13,7 +13,10 @@ import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
-import InfoGeometry.Canonical.ChiralTorsionBridge
+import InfoGeometry.Canonical.ChiralTorsionRelativeVolume
+import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
+import InfoGeometry.Canonical.ChiralTorsionTwistor
+import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.WeylAnomalySource

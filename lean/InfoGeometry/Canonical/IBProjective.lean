@@ -1,6 +1,6 @@
 import InfoGeometry.Basic
 import InfoGeometry.Measure.Normalized
-import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.MeasureProjective
 import InfoGeometry.Canonical.PositiveRayCore
 
 /-!
@@ -224,7 +224,9 @@ noncomputable def gaugeSection : ScoreRay (T := T) → FinProb T :=
 
 section ProjectiveState
 
-open InfoGeometry.Canonical.ProjectiveStateCore
+open InfoGeometry.MeasureProjective
+open InfoGeometry.MeasureProjective.ProjectiveState
+open InfoGeometry.MeasureProjective.Normalized
 
 variable [MeasurableSpace T] [MeasurableSingletonClass T] [Nonempty T]
 

@@ -18,7 +18,6 @@ temperature inversion anchor used by downstream routing/orchestration.
 -/
 
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -111,29 +110,6 @@ theorem modularS_closure_unitImaginary :
     (modularSLiftInversion.closure).theta unitImaginary = unitImaginary := by
   simpa [ProjectiveLiftTemperatureInversion.closure, modularSLiftInversion] using
     modularS_smul_unitImaginary
-
-/-! ## 3. Owner target -/
-
-/--
-Installed owner target for the concrete modular `S` temperature anchor.
-
-The payload is deliberately finite and geometric:
-
-* `S² = negIdSL2R` in `SL2R`;
-* `S` is accepted by the projective-lift inversion socket;
-* the unit imaginary temperature is stationary under that lift.
--/
-@[owner_target_tag]
-def ModularSTemperatureOwnerTarget : Prop :=
-  modularS * modularS = negIdSL2R ∧
-    modularSLiftInversion.element = modularS ∧
-    ProjectiveLiftTemperatureInversion.StationaryTemperature
-      modularSLiftInversion unitImaginary
-
-/-- The installed modular `S` owner target follows from the concrete witness. -/
-theorem modularSTemperatureOwnerTarget :
-    ModularSTemperatureOwnerTarget := by
-  exact ⟨modularS_sq, rfl, unitImaginary_stationary_modularS⟩
 
 end PositiveSouriauTemperature
 

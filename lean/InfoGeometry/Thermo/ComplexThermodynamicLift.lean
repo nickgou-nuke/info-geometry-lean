@@ -1,7 +1,6 @@
 import Mathlib
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Thermo.ComplexThermodynamicLift
@@ -220,56 +219,5 @@ theorem cayley_invCayley
   field_simp [hw]
   ring
 
-
-/-! ## 4. Owner target -/
-
-/--
-Proof-only owner target for the complex thermodynamic lift.
-
-This closes only algebraic identities:
-first-law inversion, Bregman identities, and Cayley duality.
--/
-@[owner_target_tag]
-def ComplexThermodynamicLiftOwnerTarget : Prop :=
-  (∀ D : ComplexFirstLawDatum,
-    D.β ≠ 0 →
-      D.T * D.dS = D.dQ
-      ∧
-      D.T⁻¹ = D.β)
-  ∧
-  (∀ (Φ grad : ℂ → ℂ) (z : ℂ),
-    complexBregman Φ grad z z = 0)
-  ∧
-  (∀ (Φ grad : ℂ → ℂ) (x y z : ℂ),
-    complexBregman Φ grad x z =
-      complexBregman Φ grad x y
-        + complexBregman Φ grad y z
-        + (grad y - grad z) * (x - y))
-  ∧
-  (∀ (s : ℂ),
-    1 - s ≠ 0 →
-    s - 1 ≠ 0 →
-      cayleyFE (1 - s) = (cayleyFE s)⁻¹)
-
-/--
-The proof-only complex thermodynamic lift owner target is closed.
--/
-theorem complexThermodynamicLiftOwnerTarget :
-    ComplexThermodynamicLiftOwnerTarget := by
-  refine ⟨?firstLaw, ?bregmanSelf, ?bregmanThree, ?cayley⟩
-
-  · intro D hβ
-    exact
-      ⟨ D.temperature_mul_entropy_eq_heat hβ,
-        D.inv_temperature_eq_beta hβ ⟩
-
-  · intro Φ grad z
-    exact complexBregman_self Φ grad z
-
-  · intro Φ grad x y z
-    exact complexBregman_three_point Φ grad x y z
-
-  · intro s h1s hsm1
-    exact cayley_reflection_eq_inv s h1s hsm1
 
 end InfoGeometry.Thermo.ComplexThermodynamicLift

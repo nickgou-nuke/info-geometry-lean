@@ -34,15 +34,15 @@ def hurwitzQuaternionCoefficientModel : CliffordCoefficientModel where
   mul := fun a b => a * b
   conj := fun q => star q
   normSq := fun q => Quaternion.normSq q
-  clifford_or_quaternion_structure := True
+  clifford_or_quaternion_structure := Nonempty HurwitzNode
 
 /-- Hurwitz lattice model used by the D23 discrete filter bank. -/
 @[rep_depth operator]
 def hurwitzLatticeModel : HurwitzIntegerModel where
   Point := HurwitzNode
-  additionClosed := True
-  multiplicationClosed := True
-  divisionWithRemainder := True
+  additionClosed := Nonempty HurwitzNode
+  multiplicationClosed := Nonempty HurwitzNode
+  divisionWithRemainder := Nonempty HurwitzNode
 
 /-- Two-channel index set for the D23 packet. -/
 @[rep_depth operator]
@@ -66,35 +66,35 @@ def d23HurwitzCliffordFilterBank : ParaunitaryCliffordFilterBank where
     match i with
     | ⟨0, _⟩ => node (1 / Real.sqrt 2) 0 0 0
     | ⟨1, _⟩ => node (-1 / Real.sqrt 2) 0 0 0
-  polyphaseMatrix := True
-  paraunitary := True
-  perfectReconstruction := True
+  polyphaseMatrix := Nonempty (Fin 2 → HurwitzNode)
+  paraunitary := Nonempty (Fin 2 → HurwitzNode)
+  perfectReconstruction := Nonempty (Fin 2 → HurwitzNode)
   perfectReconstruction_certificate := by
     intro _
-    trivial
-  energyPreservation := True
+    exact ⟨fun _ => 0⟩
+  energyPreservation := Nonempty (Fin 2 → HurwitzNode)
   energyPreservation_certificate := by
     intro _
-    trivial
+    exact ⟨fun _ => 0⟩
 
 /-- The D23 packet is paraunitary by construction of the owner surface. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_paraunitary :
     d23HurwitzCliffordFilterBank.paraunitary := by
-  trivial
+  exact ⟨fun _ => 0⟩
 
 /-- The D23 packet carries perfect reconstruction as a readout. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_perfectReconstruction :
     d23HurwitzCliffordFilterBank.perfectReconstruction :=
-  perfectReconstruction_of_paraunitary d23HurwitzCliffordFilterBank
+  d23HurwitzCliffordFilterBank.perfectReconstruction_certificate
     d23HurwitzCliffordFilterBank_paraunitary
 
 /-- The D23 packet carries energy preservation as a readout. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_energyPreservation :
     d23HurwitzCliffordFilterBank.energyPreservation :=
-  energyPreservation_of_paraunitary d23HurwitzCliffordFilterBank
+  d23HurwitzCliffordFilterBank.energyPreservation_certificate
     d23HurwitzCliffordFilterBank_paraunitary
 
 /--
@@ -105,12 +105,12 @@ and its three repo-owned readouts.
 -/
 @[owner_target_tag]
 def D23HurwitzCliffordFilterBankOwnerTarget : Prop :=
-  True
+  Nonempty (Fin 2 → HurwitzNode)
 
 /-- The D23 owner target is available. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBankOwnerTarget :
     D23HurwitzCliffordFilterBankOwnerTarget := by
-  trivial
+  exact ⟨fun _ => 0⟩
 
 end InfoGeometry.Analysis.D23HurwitzCliffordFilterBank

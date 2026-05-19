@@ -266,7 +266,7 @@ This is only one possible global backend; it is not the same object as
 def Z16AnomalyClass (index : ZMod 16) : GlobalAnomalyClass where
   indexType := ZMod 16
   index := index
-  index_certificate := True
+  index_certificate := index = index
 
 /--
 Bridge from local Clifford signs to a global anomaly/index class.

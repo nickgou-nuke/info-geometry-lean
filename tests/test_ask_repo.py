@@ -39,3 +39,12 @@ def test_ask_repo_brief_summary() -> None:
     assert "repo provenance summary" in stdout
     assert "authority labels" in stdout
     assert "lean = proof/navigation authority" in stdout
+
+
+def test_ask_repo_answer_mode() -> None:
+    proc = run("Weyl character formula", "--no-gravity", "--answer", "--top-k", "2")
+    assert proc.returncode == 0, proc.stderr
+    stdout = proc.stdout.lower()
+    assert "answer draft" in stdout
+    assert "citations" in stdout
+    assert "authority labels" in stdout

@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBooleanCube
@@ -193,54 +191,5 @@ theorem switch_splitDOp_eq_tilt
       PrimeBooleanCube.mem_flipVertex_self (P := P) (p := p) (hp := hp) v,
       PrimeBooleanCube.flipVertex_involutive (P := P) (p := p) (hp := hp) v]
 
-
-/-! ## 4. Bridge target contract -/
-
-/--
-The local tilt/switch Fock representation owner target.
--/
-@[owner_target_tag]
-def PrimeCantorTiltFockRepresentationOwnerTarget : Prop :=
-  ∀ {P : PrimeRegister} {R : Type*} [AddGroup R] [DecidableEq ℕ]
-    (p : ℕ) (hp : p ∈ P.primes),
-    compOp (switchOp (P := P) (R := R) p hp)
-      (switchOp (P := P) (R := R) p hp)
-      =
-    idOp
-    ∧
-    compOp (tiltOp (P := P) (R := R) p)
-      (tiltOp (P := P) (R := R) p)
-      =
-    idOp
-    ∧
-    compOp (tiltOp (P := P) (R := R) p)
-      (switchOp (P := P) (R := R) p hp)
-      =
-    negOp
-      (compOp (switchOp (P := P) (R := R) p hp)
-        (tiltOp (P := P) (R := R) p))
-    ∧
-    compOp (splitDOp (P := P) (R := R) p hp)
-      (splitDOp (P := P) (R := R) p hp)
-      =
-    negOp idOp
-    ∧
-    compOp (switchOp (P := P) (R := R) p hp)
-      (splitDOp (P := P) (R := R) p hp)
-      =
-    tiltOp (P := P) (R := R) p
-
-/--
-The local tilt/switch Fock representation owner target is closed.
--/
-theorem primeCantorTiltFockRepresentationOwnerTarget :
-    PrimeCantorTiltFockRepresentationOwnerTarget := by
-  intro P R inst dec p hp
-  exact
-    ⟨ switchOp_sq (P := P) (R := R) p hp,
-      tiltOp_sq (P := P) (R := R) p,
-      tilt_switch_anticomm (P := P) (R := R) p hp,
-      splitDOp_sq (P := P) (R := R) p hp,
-      switch_splitDOp_eq_tilt (P := P) (R := R) p hp ⟩
 
 end InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation

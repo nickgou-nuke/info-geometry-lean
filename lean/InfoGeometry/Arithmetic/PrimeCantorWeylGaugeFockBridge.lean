@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
@@ -49,36 +47,12 @@ structure PrimeCantorWeylGaugeFockBridge
   weyl : ProjectiveWeylGaugeCalibration State
 
 /--
-Bridge target for the Weyl-gauge normalized Cantor/Fock lane.
-
-This is the finite normalization statement:
-projective Weyl scale/shape data are available, the finite Cantor
-tilt/switch atom is closed, and the Boolean readout bridge is preserved.
--/
-@[owner_target_tag]
-def PrimeCantorWeylGaugeFockBridgeOwnerTarget
-    (State : Type*) : Prop :=
-  ∀ (B : PrimeCantorWeylGaugeFockBridge State)
-    (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
-    B.weyl.totalReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u =
-      B.weyl.weylScaleReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u *
-        B.weyl.shapeCoreReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u
-
-/-- The finite Weyl-gauge Cantor/Fock bridge target is closed. -/
-theorem primeCantorWeylGaugeFockBridgeOwnerTarget
-    (State : Type*) :
-    PrimeCantorWeylGaugeFockBridgeOwnerTarget State := by
-  intro B counts₁ counts₂ support u
-  exact B.weyl.total_eq_scale_mul_shape counts₁ counts₂ support u
-
-/--
 The normalized Weyl-gauge and Cantor/Fock bridge are available simultaneously.
 
 This is the bridge-visible version of the normalization story: the projective
 Weyl packet remains normalized, the finite Cantor tilt/switch atom remains
 closed, and the Boolean/CAR bridge remains preserved.
 -/
-@[bridge_target_tag]
 theorem normalizedWeylGauge_and_cantorFock
     {State : Type*}
     (B : PrimeCantorWeylGaugeFockBridge State)

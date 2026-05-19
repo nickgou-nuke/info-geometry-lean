@@ -2,8 +2,6 @@ import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Thermo.RelativeTemperatureFirstLaw
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
@@ -66,26 +64,6 @@ theorem invTemperature_eq_entropy_div_heat
     C.firstLaw.β = C.firstLaw.dS / C.firstLaw.dQ := by
   exact C.firstLaw.invTemperature_eq_entropy_div_heat hQ
 
-/--
-Owner target bundling the Souriau scalar-temperature calibration and the
-finite first-law readout.
-
-This is trace-free: it does not construct or assume any type-III trace, and it
-does not promote the operatorial modular generator to a scalar by fiat.
--/
-@[owner_target_tag]
-theorem souriauRelativeTemperatureOwnerTarget :
-    C.firstLaw.T = C.souriauTemperature.beta⁻¹ ∧
-    (∀ hβ : C.firstLaw.β ≠ 0,
-      C.firstLaw.T * C.firstLaw.dS = C.firstLaw.dQ) ∧
-    (∀ hQ : C.firstLaw.dQ ≠ 0,
-      C.firstLaw.β = C.firstLaw.dS / C.firstLaw.dQ) := by
-  refine ⟨C.temperature_eq_inv_beta, ?_, ?_⟩
-  · intro hβ
-    exact C.temperature_mul_entropy_eq_heat hβ
-  · intro hQ
-    exact C.invTemperature_eq_entropy_div_heat hQ
-
 end SouriauFirstLawCalibration
 
 /-- Trace-free calibration tying Souriau scalar temperature to the Tomita log-context. -/
@@ -137,25 +115,6 @@ theorem modularHamiltonian_eq_moment_geometricTemperature :
       C.tomitaLogContext.souriauMoment.momentOperator
         C.tomitaLogContext.souriauMoment.geometricTemperature :=
   C.tomitaLogContext.modularHamiltonian_eq_moment_geometricTemperature
-
-/--
-Owner target bundling the Souriau scalar-temperature calibration with the
-Tomita modular `Delta` and modular Hamiltonian lane.
-
-This stays trace-free: it does not construct or assume any type-III trace, and
-it does not promote the operatorial modular generator to a scalar by fiat.
--/
-@[owner_target_tag]
-theorem souriauTomitaModularHamiltonianOwnerTarget :
-    C.scalarCalibration.firstLaw.T = C.scalarCalibration.souriauTemperature.beta⁻¹ ∧
-    C.tomitaLogContext.toStandardFormCarrier.Delta = C.tomitaLogContext.modularHamiltonian ∧
-    C.tomitaLogContext.toRealModularLogData = C.tomitaLogContext.modularHamiltonian ∧
-    C.tomitaLogContext.modularHamiltonian = C.tomitaLogContext.souriauMoment.thermalGenerator := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact C.temperature_eq_inv_beta
-  · exact C.tomitaStandardFormCarrier_eq
-  · exact C.tomitaDelta_eq_modularHamiltonian
-  · exact C.modularHamiltonian_eq_thermalGenerator
 
 end SouriauTomitaFirstLawCalibration
 

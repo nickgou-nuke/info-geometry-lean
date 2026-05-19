@@ -1,6 +1,4 @@
 import Mathlib
-import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
@@ -75,7 +73,6 @@ def exteriorEnergy {P : PrimeCutoff} (S : ExteriorState P) : ℝ :=
   Finset.sum S fun p => Real.log p.1
 
 /-- The transported exterior carrier has the same cardinality. -/
-@[bridge_target_tag]
 theorem boolState_to_finset_preserves_card
     {P : PrimeCutoff} (v : Vertex P) :
     (toExteriorState v).card = v.val.card := by
@@ -86,7 +83,6 @@ theorem boolState_to_finset_preserves_card
       (s := v.val.attach))
 
 /-- The transported exterior carrier has the same finite state product. -/
-@[bridge_target_tag]
 theorem boolState_to_finset_preserves_stateNat
     {P : PrimeCutoff} (v : Vertex P) :
     stateNat (toExteriorState v) = representedNat v := by
@@ -99,7 +95,6 @@ theorem boolState_to_finset_preserves_stateNat
   simpa [stateNat, representedNat, toExteriorState] using hmap'.trans hattach
 
 /-- The transported exterior carrier preserves the Möbius/chirality readout. -/
-@[bridge_target_tag]
 theorem boolState_to_finset_preserves_chirality
     {P : PrimeCutoff} (v : Vertex P) :
     ArithmeticFunction.moebius
@@ -109,7 +104,6 @@ theorem boolState_to_finset_preserves_chirality
   exact mobius_representedNat_eq_globalChirality P v
 
 /-- The transported exterior carrier preserves the finite logarithmic energy. -/
-@[bridge_target_tag]
 theorem boolState_to_finset_preserves_energy
     {P : PrimeCutoff} (v : Vertex P) :
     exteriorEnergy (toExteriorState v) =
@@ -121,25 +115,5 @@ theorem boolState_to_finset_preserves_energy
     simpa [toPrimeModeEmbedding] using hmap
   have hattach := Finset.sum_attach v.val (fun p : ℕ => Real.log p)
   simpa [exteriorEnergy, toExteriorState] using hmap'.trans hattach
-
-/--
-Canonical owner target for the Boolean-cube to exterior bridge.
--/
-@[owner_target_tag]
-def PrimeBooleanCubeExteriorOwnerTarget : Prop :=
-  ∀ {P : PrimeCutoff} (v : Vertex P),
-    (toExteriorState v).card = v.val.card ∧
-    stateNat (toExteriorState v) = representedNat v ∧
-    ArithmeticFunction.moebius
-        (stateNat (toExteriorState v)) =
-      globalChirality P v.val
-
-/-- The canonical Boolean-cube to exterior bridge is closed. -/
-theorem primeBooleanCubeExteriorOwnerTarget :
-    PrimeBooleanCubeExteriorOwnerTarget := by
-  intro P v
-  exact ⟨boolState_to_finset_preserves_card (v := v),
-    boolState_to_finset_preserves_stateNat (v := v),
-    boolState_to_finset_preserves_chirality (v := v)⟩
 
 end InfoGeometry.Canonical.PrimeBooleanCubeExteriorBridge

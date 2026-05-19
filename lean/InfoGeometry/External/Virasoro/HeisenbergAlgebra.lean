@@ -272,6 +272,10 @@ lemma toAbelianLieAlgebraOn_kgen :
     ⁅kgen 𝕜, Z⁆ = 0 :=
   (isCentralExtension 𝕜).central 1 Z
 
+@[simp] lemma lie_ofCentral (a : 𝕜) (Z : HeisenbergAlgebra 𝕜) :
+    ⁅ofCentral 𝕜 a, Z⁆ = 0 := by
+  rw [ofCentral_apply, smul_lie, lie_kgen, smul_zero]
+
 @[simp] lemma lie_jgen (k l : ℤ) :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by
   simp_rw [bracket_def']

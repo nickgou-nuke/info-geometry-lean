@@ -501,7 +501,9 @@ noncomputable def scalarCocycleHom
   map_one' := scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
   map_mul' := by
     intro s t
-    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
+    change scalarCocycle (H := H) σ u B (s.toAdd + t.toAdd) =
+      scalarCocycle (H := H) σ u B s.toAdd * scalarCocycle (H := H) σ u B t.toAdd
+    exact scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
 
 @[simp] theorem scalarCocycleHom_apply
     (σ : AdditiveModularFlow (H := H))
@@ -535,6 +537,35 @@ noncomputable def cocycleLogPotentialHom
       cocycleLogPotential (H := H) σ u B t :=
   rfl
 
+@[simp] theorem unitScalarCocycle_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H) (t : ℝ) :
+    scalarCocycle (H := H) σ u (unitScalarBridge (H := H) σ) t = 1 := by
+  simp [scalarCocycle, unitScalarBridge]
+
+@[simp] theorem unitScalarCocycleHom_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u) (t : Multiplicative ℝ) :
+    scalarCocycleHom (H := H) σ u hCocycle (unitScalarBridge (H := H) σ) t = 1 := by
+  change scalarCocycle (H := H) σ u (unitScalarBridge (H := H) σ) t.toAdd = 1
+  exact unitScalarCocycle_apply (H := H) σ u t.toAdd
+
+@[simp] theorem unitCocycleLogPotential_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H) (t : ℝ) :
+    cocycleLogPotential (H := H) σ u (unitScalarBridge (H := H) σ) t = 0 := by
+  unfold cocycleLogPotential scalarCocycle
+  simp [unitScalarBridge]
+
+@[simp] theorem unitCocycleLogPotentialHom_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u) (t : ℝ) :
+    cocycleLogPotentialHom (H := H) σ u hCocycle (unitScalarBridge (H := H) σ) t = 0 := by
+  change cocycleLogPotential (H := H) σ u (unitScalarBridge (H := H) σ) t = 0
+  exact unitCocycleLogPotential_apply (H := H) σ u t
+
 /-! ## Projective/stabilizer descent for operator modular cocycles -/
 
 /--
@@ -555,10 +586,12 @@ noncomputable def scalarProjectiveRotorCocycle
   toFun t _ := scalarCocycle (H := H) σ u B t.toAdd
   map_one := by
     intro x
-    simpa using scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
+    exact scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
   map_mul := by
     intro s t x
-    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
+    change scalarCocycle (H := H) σ u B (s.toAdd + t.toAdd) =
+      scalarCocycle (H := H) σ u B s.toAdd * scalarCocycle (H := H) σ u B t.toAdd
+    exact scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
 
 /--
 Because the base action on `PUnit` is trivial, the whole additive modular
@@ -573,9 +606,11 @@ noncomputable def scalarStabilizerCharacter
     (⊤ : Subgroup (Multiplicative ℝ)) →* ℝˣ where
   toFun t := scalarCocycle (H := H) σ u B t.1.toAdd
   map_one' := by
-    simpa using scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
+    exact scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
   map_mul' s t := by
-    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.1.toAdd t.1.toAdd
+    change scalarCocycle (H := H) σ u B (s.1.toAdd + t.1.toAdd) =
+      scalarCocycle (H := H) σ u B s.1.toAdd * scalarCocycle (H := H) σ u B t.1.toAdd
+    exact scalarCocycle_mul (H := H) σ u hCocycle B s.1.toAdd t.1.toAdd
 
 @[simp] theorem scalarProjectiveRotorCocycle_apply
   (σ : AdditiveModularFlow (H := H))

@@ -349,18 +349,4 @@ theorem quadric_zero :
 
 end BottPeriodicFierzKleinLaw
 
-/-! ## 4. Owner target -/
-
-/-- Owner target for the Bott-periodic Cantor entropy graph layer over a fixed algebra. -/
-def BottPeriodicCantorEntropyGraphTarget
-    (Op : Type*) [Ring Op] : Prop :=
-  Nonempty (BottPeriodicFierzKleinLaw Op)
-
-/-- Constructor for the owner target from a concrete Fierz-Klein law. -/
-theorem constructBottPeriodicCantorEntropyGraphTarget
-    {Op : Type*} [Ring Op]
-    (L : BottPeriodicFierzKleinLaw Op) :
-    BottPeriodicCantorEntropyGraphTarget Op := by
-  exact ⟨L⟩
-
 end InfoGeometry.Topology.BottPeriodicCantorEntropyGraph

@@ -485,6 +485,56 @@ theorem cocycle_additive_potential
   ⟨cocycleLogPotential (H := H) σ u B,
     cocycleLogPotential_add (H := H) σ u hCocycle B⟩
 
+/--
+The induced scalar cocycle is a monoid homomorphism from `Multiplicative ℝ`
+to `ℝˣ`.
+
+This is the canonical package of the multiplicative cocycle law.
+-/
+noncomputable def scalarCocycleHom
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    Multiplicative ℝ →* ℝˣ where
+  toFun := fun t => scalarCocycle (H := H) σ u B t.toAdd
+  map_one' := scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B
+  map_mul' := by
+    intro s t
+    simpa using scalarCocycle_mul (H := H) σ u hCocycle B s.toAdd t.toAdd
+
+@[simp] theorem scalarCocycleHom_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) (t : Multiplicative ℝ) :
+    scalarCocycleHom (H := H) σ u hCocycle B t =
+      scalarCocycle (H := H) σ u B t.toAdd :=
+  rfl
+
+/--
+The logarithmic cocycle potential is an additive monoid homomorphism from `ℝ`
+to `ℝ`.
+-/
+noncomputable def cocycleLogPotentialHom
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    ℝ →+ ℝ where
+  toFun := cocycleLogPotential (H := H) σ u B
+  map_zero' := cocycleLogPotential_zero (H := H) σ u hCocycle B
+  map_add' := cocycleLogPotential_add (H := H) σ u hCocycle B
+
+@[simp] theorem cocycleLogPotentialHom_apply
+    (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) (t : ℝ) :
+    cocycleLogPotentialHom (H := H) σ u hCocycle B t =
+      cocycleLogPotential (H := H) σ u B t :=
+  rfl
+
 /-! ## Projective/stabilizer descent for operator modular cocycles -/
 
 /--

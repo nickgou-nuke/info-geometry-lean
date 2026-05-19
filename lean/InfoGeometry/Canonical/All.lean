@@ -233,7 +233,6 @@ import InfoGeometry.Canonical.DiracSouriauOperator
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.DiscreteModularSpectrum
-import InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Singular.Drazin
@@ -277,7 +276,6 @@ import InfoGeometry.Canonical.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
 import InfoGeometry.Canonical.CliffordWaveletAnalyticBridge
-import InfoGeometry.Canonical.PrimeCliffordHeisenbergGate
 import InfoGeometry.Canonical.PrimeLocalFugacityOrder
 import InfoGeometry.Canonical.ModularRegularSupport
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket

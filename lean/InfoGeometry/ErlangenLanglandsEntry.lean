@@ -19,10 +19,6 @@ namespace InfoGeometry
 
 namespace ErlangenLanglandsEntry
 
-/-- Sentinel declaration confirming that the Erlangen–Langlands entrypoint loaded. -/
-theorem loaded : True := by
-  trivial
-
 end ErlangenLanglandsEntry
 
 end InfoGeometry

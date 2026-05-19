@@ -150,8 +150,8 @@ igf validate --strict --print-json
 Use the unified natural-language explorer to search Lean declarations, docs, black books, handover material, and external mirrors:
 
 ```bash
-python3 tools/infra/graph_rag_query.py "Weyl character formula" --top-k 8
-python3 tools/infra/graph_rag_query.py "Weyl character formula" --top-k 8 --no-gravity --format json
+python3 tools/infra/ask_repo.py "Weyl character formula" --top-k 8
+python3 tools/infra/ask_repo.py "Weyl character formula" --top-k 8 --no-gravity --format json
 ```
 
 The explorer is retrieval-only for prose and external mirrors; Lean remains the proof authority.

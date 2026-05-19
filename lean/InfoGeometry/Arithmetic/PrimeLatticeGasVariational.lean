@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.MaxEnt.Jaynes
 
 /-!
@@ -204,18 +203,6 @@ structure PrimeLatticeGasVariationalPacket where
   criticalLineGate : Option VariationalCriticalLineGate
   /-- Guardrail: no Euler-product zeta bridge is claimed here. -/
   notEulerProductBridgeWitness : Type*
-
-/-- Owner target for the exact finite hard-core prime lattice gas identity. -/
-@[owner_target_tag]
-def PrimeLatticeGasFiniteOwnerTarget : Prop :=
-  ∀ (M : ℕ) (Z : Fugacity),
-    grandPartition M Z = (1 + Z.z) ^ primeSiteCount M
-
-/-- The finite owner target is exactly the closed-form grand partition theorem. -/
-theorem primeLatticeGasFiniteOwnerTarget :
-    PrimeLatticeGasFiniteOwnerTarget := by
-  intro M Z
-  exact grandPartition_eq_one_add_pow_primeSiteCount M Z
 
 /--
 Finite entropy maximizer on the prime lattice configuration space.

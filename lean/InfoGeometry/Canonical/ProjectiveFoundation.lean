@@ -11,6 +11,8 @@ This file keeps the base symmetry / carrier / cocycle split explicit:
 -/
 
 import Mathlib.Algebra.Group.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Algebra.Module.LinearMap.End
 import Mathlib.GroupTheory.GroupAction.Defs
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -55,6 +57,97 @@ structure ProjectiveRotorCocycle
 instance {Γ X R : Type*} [Group Γ] [MulAction Γ X] [Group R] :
     CoeFun (ProjectiveRotorCocycle Γ X R) (fun _ ↦ Γ → X → R) where
   coe := ProjectiveRotorCocycle.toFun
+
+/--
+A Lean-native projective linear representation.
+
+The representation itself is linear, but composition is only defined up to a
+scalar cocycle. This is the direct algebraic analogue of the usual projective
+representation package on Wikipedia.
+-/
+structure ProjectiveRepresentation
+    (k G V : Type*)
+    [Group G] [Semiring k] [AddCommMonoid V] [Module k V] where
+  /-- The underlying projective linear action. -/
+  toLinearEquiv : G → V ≃ₗ[k] V
+  /-- The scalar multiplier recording the projective defect. -/
+  multiplier : G → G → kˣ
+  /-- The identity acts strictly. -/
+  map_one : toLinearEquiv 1 = LinearEquiv.refl k V
+  /-- Composition is multiplicative up to the scalar multiplier. -/
+  map_mul :
+    ∀ g h : G,
+      ∀ x : V,
+        toLinearEquiv (g * h) x =
+          (multiplier g h : k) • toLinearEquiv g (toLinearEquiv h x)
+  /--
+  The multiplier is a normalized 2-cocycle.
+
+  This is the coherence condition that makes the projective defect associative.
+  -/
+  cocycle : ∀ g h l : G, multiplier g h * multiplier (g * h) l =
+    multiplier h l * multiplier g (h * l)
+  /-- Normalization on the left identity. -/
+  one_left : ∀ g : G, multiplier 1 g = 1
+  /-- Normalization on the right identity. -/
+  one_right : ∀ g : G, multiplier g 1 = 1
+
+namespace ProjectiveRepresentation
+
+variable {k G V : Type*}
+  [Group G] [Semiring k] [AddCommMonoid V] [Module k V]
+
+instance : CoeFun (ProjectiveRepresentation k G V) (fun _ ↦ G → V → V) where
+  coe P := fun g ↦ P.toLinearEquiv g
+
+@[simp] theorem map_one_apply (P : ProjectiveRepresentation k G V) (x : V) :
+    P 1 x = x := by
+  simpa using congrArg (fun e : V ≃ₗ[k] V => e x) P.map_one
+
+@[simp] theorem map_mul_apply (P : ProjectiveRepresentation k G V)
+    (g h : G) (x : V) :
+    P (g * h) x =
+      (P.multiplier g h : k) • P g (P h x) :=
+  P.map_mul g h x
+
+theorem map_one_eq_id (P : ProjectiveRepresentation k G V) :
+    P 1 = id := by
+  ext x
+  exact P.map_one_apply x
+
+/-- A genuine representation is a projective representation with trivial multiplier. -/
+def ofLinearHom (ρ : G →* (V ≃ₗ[k] V)) : ProjectiveRepresentation k G V where
+  toLinearEquiv := ρ
+  multiplier := fun _ _ ↦ 1
+  map_one := by
+    ext x
+    exact congrArg (fun e : V ≃ₗ[k] V => e x) ρ.map_one
+  map_mul := by
+    intro g h x
+    exact congrArg (fun e : V ≃ₗ[k] V => e x) (ρ.map_mul g h)
+  cocycle := by
+    intro g h l
+    simp
+  one_left := by
+    intro g
+    simp
+  one_right := by
+    intro g
+    simp
+
+@[simp] theorem ofLinearHom_multiplier (ρ : G →* (V ≃ₗ[k] V)) (g h : G) :
+    (ofLinearHom (k := k) (G := G) (V := V) ρ).multiplier g h = 1 :=
+  rfl
+
+@[simp] theorem ofLinearHom_toLinearEquiv (ρ : G →* (V ≃ₗ[k] V)) :
+    (ofLinearHom (k := k) (G := G) (V := V) ρ).toLinearEquiv = ρ :=
+  rfl
+
+/-- A projective representation with trivial multiplier gives a genuine action on points. -/
+def act (P : ProjectiveRepresentation k G V) : G → V → V :=
+  fun g => P g
+
+end ProjectiveRepresentation
 
 /-- Rotor cocycles are ordinary projective cocycles with rotor-valued target. -/
 abbrev RotorCocycle

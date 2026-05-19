@@ -39,88 +39,7 @@ namespace InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-! ## 1. Sector split -/
-
-/--
-Arithmetic sign/zeta channel.
-
-These channels must not be collapsed:
-
-* `bosonicZeta`: full bosonic primon trace, zeta channel;
-* `squareFreeMobiusInverseZeta`: exterior square-free supertrace, Möbius/inverse-zeta channel;
-* `liouvilleZetaRatio`: full integer sector with `(-1)^Ω(n)`, zeta-ratio channel;
-* `distinctPrimeParity`: `(-1)^ω(n)` as a distinct-prime sign, not the Möbius function unless
-  restricted to square-free states and zeroed off that sector.
--/
-inductive PrimeSignChannel where
-  | bosonicZeta
-  | squareFreeMobiusInverseZeta
-  | liouvilleZetaRatio
-  | distinctPrimeParity
-  deriving DecidableEq, Repr
-
-/--
-Generic prime superalgebra channel packet.
-
-`degreeOmega` is total prime multiplicity `Ω`; `degreeOmegaDistinct` is distinct
-prime count `ω`.  The `channel` field declares which arithmetic sign convention
-is being used.
--/
-structure PrimeSuperalgebraChannel where
-  /-- State carrier. -/
-  State : Type*
-  /-- Total prime multiplicity, with repeated factors counted. -/
-  degreeOmega : State → ℕ
-  /-- Distinct prime count. -/
-  degreeOmegaDistinct : State → ℕ
-  /-- Arithmetic code/readout of a state. -/
-  arithmeticCode : State → ℕ
-  /-- Energy readout. -/
-  energy : State → ℝ
-  /-- Channel-dependent parity/sign. -/
-  paritySign : State → ℤ
-  /-- Declared arithmetic sign/zeta channel. -/
-  channel : PrimeSignChannel
-  /-- Partition or supertrace function. -/
-  partitionFunction : ℂ → ℂ
-  /-- Trace/supertrace law for this channel. -/
-  traceLaw : Prop
-  /-- Certificate of the trace/supertrace law. -/
-  traceLawCertificate : traceLaw
-
-/--
-Bosonic full-integer sector descriptor.
-
-This is the full multiplicative monoid sector.  If graded by total prime
-multiplicity, its parity readout is Liouville-type, not the Möbius denominator.
--/
-structure PrimeBosonAlgebra where
-  /-- Integer-state carrier, usually a basis `|n⟩`. -/
-  IntegerState : Type*
-  /-- Multiplication of integer states. -/
-  multiply : IntegerState → IntegerState → IntegerState
-  /-- Total-prime-multiplicity grading witness, i.e. `Ω(n)`. -/
-  totalMultiplicityGradingWitness : Type*
-  /-- Guardrail: this sector does not produce the square-free Möbius denominator. -/
-  liouville_not_mobius_guard : Type*
-
-/--
-Mixed boson/fermion sector descriptor.
-
-The partition depends on which species are included.  It is not automatically
-`ζ`, `1/ζ`, or `ζ(2s)/ζ(s)`.
--/
-structure PrimeMixedSuperAlgebra where
-  /-- Bosonic species carrier. -/
-  BosonMode : Type*
-  /-- Fermionic species carrier. -/
-  FermionMode : Type*
-  /-- Species-choice/weighting witness. -/
-  speciesWitness : Type*
-  /-- Guardrail: no automatic zeta-channel identification. -/
-  noAutomaticZetaChannelGuard : Type*
-
-/-! ## 2. Finite exterior prime algebra -/
+/-! ## 1. Finite exterior prime algebra -/
 
 /-- A finite prime cutoff is a certified finite register of primes. -/
 abbrev PrimeCutoff :=
@@ -275,7 +194,7 @@ theorem finiteFullSUSYProduct_eq_one
 
 /-! ## 3. Möbius interpretation and differential guardrails -/
 
-/-! ## 3. Complex finite-volume zeta bridge -/
+/-! ## 2. Complex finite-volume zeta bridge -/
 
 /-- Complex one-prime Boltzmann/Mellin weight `p^{-s}`. -/
 def complexPrimeWeight
@@ -358,72 +277,5 @@ theorem inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta
     (infiniteComplexBosonicEulerProduct s)⁻¹ = (riemannZeta s)⁻¹ := by
   exact congrArg (fun z : ℂ => z⁻¹)
     (infiniteComplexBosonicEulerProduct_eq_riemannZeta hs)
-
-/--
-Finite exterior prime algebra packet.
-
-The square-free/Möbius interpretation is imported from `PrimeBitWittenIndex`,
-which proves that the Möbius value of a square-free prime product is the
-fermion parity.
--/
-structure PrimeFermionExteriorAlgebra where
-  /-- Finite prime cutoff. -/
-  cutoff : PrimeCutoff
-  /-- Exterior state carrier. -/
-  State : Type*
-  /-- Map from exterior states to occupied prime subsets. -/
-  occupiedPrimes : State → Finset ℕ
-  /-- Occupied primes lie in the cutoff. -/
-  occupied_subset :
-    ∀ ψ : State, occupiedPrimes ψ ⊆ cutoff.primes
-  /-- Square-free/Möbius parity witness. -/
-  mobiusParityWitness : Type*
-  /-- Pauli exclusion guard: nonsquare-free states are not exterior states. -/
-  squarefreeOnlyGuard : Type*
-
-/--
-Square-free fermionic prime channel.
-
-The Möbius sign is `(-1)^ω` only on square-free/exterior states.  Non-square-free
-integer states are not represented in this exterior state carrier; globally, the
-Möbius function is zero on them.
--/
-structure SquareFreeFermionicPrimeChannel where
-  /-- State carrier for exterior/square-free states. -/
-  State : Type*
-  /-- Arithmetic integer code. -/
-  code : State → ℕ
-  /-- Square-free admissibility predicate. -/
-  squareFree : State → Prop
-  /-- Möbius/supertrace weight. -/
-  mobiusWeight : State → ℤ
-  /-- Energy readout. -/
-  energy : State → ℝ
-  /-- Supertrace readout. -/
-  supertrace : ℂ → ℂ
-  /-- Inverse-zeta or finite inverse-Euler-product law, supplied by the correct analytic/finite owner. -/
-  inverseZetaLaw : Prop
-  /-- Certificate of the inverse-zeta/finite-denominator law. -/
-  inverseZetaCertificate : inverseZetaLaw
-
-/--
-Koszul differential packet for the exterior prime algebra.
-
-Arithmetic derivative and von Mangoldt readouts are not automatically odd
-differentials.  A DG-superalgebra needs an explicit odd derivation and a proof
-of `d² = 0`.
--/
-structure PrimeKoszulDifferentialPacket
-    (A Weight : Type*) where
-  /-- Odd differential. -/
-  d : A → A
-  /-- Weight/readout assigned to prime generators, e.g. `log p`. -/
-  weight : Weight
-  /-- Odd Leibniz rule witness. -/
-  oddLeibnizWitness : Type*
-  /-- Nilpotence witness `d² = 0`. -/
-  d_squared_zero_witness : Type*
-  /-- Guardrail separating this differential from the arithmetic derivative. -/
-  notArithmeticDerivativeGuard : Type*
 
 end InfoGeometry.Arithmetic.PrimeSuperalgebra

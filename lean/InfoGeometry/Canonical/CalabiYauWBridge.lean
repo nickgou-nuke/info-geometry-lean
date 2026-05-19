@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
+import InfoGeometry.Canonical.PerelmanWCore
 
 namespace InfoGeometry.Canonical.CalabiYauBridge
 

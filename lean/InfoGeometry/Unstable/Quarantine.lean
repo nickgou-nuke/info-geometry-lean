@@ -20,7 +20,7 @@ import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnificationBlueprint
 import InfoGeometry.Canonical.HolographicEmergence
-import InfoGeometry.Canonical.InformationCalculus
+import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.MasterSynthesis
 import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
@@ -32,7 +32,8 @@ import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.SUSYBayes
 import InfoGeometry.Canonical.WilsonLoop
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.WeylAnomalySource
+import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.YangMillsFiniteBridge
 import InfoGeometry.Canonical.YangMillsFiniteQFT
 import InfoGeometry.Canonical.YangMillsContinuum

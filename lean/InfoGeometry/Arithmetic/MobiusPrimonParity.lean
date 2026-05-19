@@ -1,6 +1,5 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.MobiusPrimonParity
@@ -145,26 +144,4 @@ theorem mobius_zero_of_not_squarefree
     ArithmeticFunction.moebius n = 0 :=
   PrimeBitWittenIndex.mobius_eq_zero_of_not_squarefree hn
 
-/-! ## 4. Owner target -/
-
-/--
-Owner target for the finite square-free Möbius parity layer.
-
-This target intentionally stops at finite square-free chirality and finite
-Euler products.
--/
-@[owner_target_tag]
-def MobiusPrimonParityOwnerTarget : Prop :=
-  ∀ (P : PrimeRegister) (q : ℕ → ℝ),
-    finiteMajoranaChiralityCharacter P q = finiteEulerProduct P q ∧
-    finiteMajoranaChiralityCharacter P q = mobiusGradedThermalCharacter P q
-
-/-- The finite square-free Möbius parity owner target is proved. -/
-theorem mobiusPrimonParityOwnerTarget :
-    MobiusPrimonParityOwnerTarget := by
-  intro P q
-  exact ⟨finiteMajoranaChiralityCharacter_eq_eulerProduct P q,
-    finiteMajoranaChiralityCharacter_eq_mobiusGradedThermalCharacter P q⟩
-
 end InfoGeometry.Arithmetic.MobiusPrimonParity
-

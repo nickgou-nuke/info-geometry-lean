@@ -1,5 +1,14 @@
 import Architect
-import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Clifford.Grading
+import InfoGeometry.Clifford.Lift
+import InfoGeometry.Clifford.Relations
+import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Clifford.SplitQ11Equivariance
+import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Clifford.Supercharge
+import InfoGeometry.Clifford.Tower
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Module.Basic

@@ -260,24 +260,31 @@ def main() -> int:
     ap.add_argument("--black-books-root", type=Path, default=ROOT / "docs" / "black_books")
     ap.add_argument("--handover-root", type=Path, default=ROOT / "handover")
     ap.add_argument("--no-gravity", action="store_true")
+    ap.add_argument("--scope", choices=["all", "lean", "docs", "external", "gravity"], default="all")
     ap.add_argument("--format", choices=["md", "json"], default="md")
     args = ap.parse_args()
 
     docs_roots = args.docs_root or DEFAULT_DOC_ROOTS
+    do_lean = args.scope in {"all", "lean"}
+    do_docs = args.scope in {"all", "docs"}
+    do_external = args.scope in {"all", "external"}
+    do_gravity = args.scope in {"all", "gravity"} and not args.no_gravity
+
     text_hits = search_text_roots(
         [*(docs_roots or []), args.black_books_root, args.handover_root],
         args.query,
         args.top_k,
-    )
-    lean_hits = search_lean_records(args.lean_records, args.query, args.top_k)
+    ) if do_docs else []
+    lean_hits = search_lean_records(args.lean_records, args.query, args.top_k) if do_lean else []
     external_hits: list[Hit] = []
-    for mirror in discover_external_mirrors(args.external_root):
-        external_hits.extend(search_external_corpus(mirror, args.query, max(1, args.top_k // 2)))
-    external_hits.sort(key=lambda h: (-h.score, h.title, h.path))
-    external_hits = external_hits[: args.top_k]
+    if do_external:
+        for mirror in discover_external_mirrors(args.external_root):
+            external_hits.extend(search_external_corpus(mirror, args.query, max(1, args.top_k // 2)))
+        external_hits.sort(key=lambda h: (-h.score, h.title, h.path))
+        external_hits = external_hits[: args.top_k]
 
     gravity = None
-    if not args.no_gravity:
+    if do_gravity:
         gravity = run_gravity(args.query, args.top_k)
 
     result = {

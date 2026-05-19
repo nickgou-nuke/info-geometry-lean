@@ -4,7 +4,6 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Thermodynamics.SouriauTemperature
 
 /-!
@@ -97,7 +96,7 @@ theorem beta_eq_realPart_of_packet (K : FinitePrimeInformationKMSPacket) :
   K.beta_eq_realPart_proof
 
 /-- The normalized finite probabilities sum to one. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem normalizedProbability_sum_eq_one (K : FinitePrimeInformationKMSPacket) :
     Finset.sum K.modes (fun p => normalizedProbability K p) = 1 := by
   unfold normalizedProbability partition boltzmannWeight
@@ -110,7 +109,7 @@ Normalized surprisal is `β log p + log Z` on the finite cutoff.
 This is the calibrated information-theoretic version of the unnormalized
 energy `log p`.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem informationSurprisal_eq_beta_log_add_logPartition
     (K : FinitePrimeInformationKMSPacket)
     (p : ℕ) :
@@ -133,7 +132,7 @@ theorem informationSurprisal_eq_beta_log_add_logPartition
 /--
 Boltzmann weight equals the `p^{-β}` real power on prime modes.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem boltzmannWeight_eq_rpow
     (K : FinitePrimeInformationKMSPacket)
     (p : ℕ) (hp : p ∈ K.modes) :
@@ -169,7 +168,7 @@ def fermionicSquarefreePartition (P : PrimeCutoff) (β : ℝ) : ℝ :=
 def mobiusSupertrace (P : PrimeCutoff) (β : ℝ) : ℝ :=
   finitePrimeSupertrace P β
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem bosonicZetaPartition_eq_riemannZeta
     {s : ℂ}
     (hs : 1 < s.re) :
@@ -177,7 +176,7 @@ theorem bosonicZetaPartition_eq_riemannZeta
   simpa [bosonicZetaPartition] using
     infiniteComplexBosonicEulerProduct_eq_riemannZeta (s := s) hs
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem fermionicSquarefreePartition_eq_product
     (P : PrimeCutoff) (β : ℝ) :
     fermionicSquarefreePartition P β =
@@ -185,7 +184,7 @@ theorem fermionicSquarefreePartition_eq_product
   simpa [fermionicSquarefreePartition, primeWeight] using
     finiteFermionicSquarefreePartition_eq_product P β
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem mobiusSupertrace_eq_denominator
     (P : PrimeCutoff) (β : ℝ) :
     mobiusSupertrace P β =
@@ -193,7 +192,7 @@ theorem mobiusSupertrace_eq_denominator
   simpa [mobiusSupertrace, primeWeight, finitePrimeDenominator] using
     finitePrimeSupertrace_eq_denominator P β
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finiteFullSUSYProduct_eq_one
     (P : PrimeCutoff) (β : ℝ)
     (hdenom : finitePrimeDenominator P β ≠ 0) :
@@ -203,13 +202,13 @@ theorem finiteFullSUSYProduct_eq_one
 /-! ## 3. KMS normalization and Massieu/Bregman readouts -/
 
 /-- The finite grand-canonical KMS strip is nonempty at positive inverse temperature. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem primeKMSAnalyticStrip_nonempty {β : ℝ} (hβ : 0 < β) :
     (Set.Ioo (0 : ℝ) β).Nonempty := by
   refine ⟨β / 2, ?_, ?_⟩ <;> linarith
 
 /-- Grand-canonical KMS periodicity for a finite kernel. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem primeGrandKMS_periodicity_condition
     (β : ℝ) {ι : Type*} [DecidableEq ι]
     (energy mu : ι → ℝ)

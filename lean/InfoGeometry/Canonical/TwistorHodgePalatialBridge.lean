@@ -171,7 +171,7 @@ noncomputable def palatialOperatorAlgebraOfCertifiedConformalInference
   twistorOperator := CCI.liftedProjectorObstructionOperator
   operatorialIncidence := CCI.operatorialIncidence
   holonomyReadout := CCI.toConformalInference.chiralScale
-  differentialOperatorCompatible := True
+  differentialOperatorCompatible := CCI.operatorialIncidence
   incidenceHolonomyCompatible :=
     CCI.liftedProjectorObstructionOperator = 0
       ↔ CCI.chiralAnomalyOperator = 0
@@ -213,8 +213,8 @@ def hodgeStarSelfDualSplitOfIncidentNullSeparation
   selfDualSector := X
   antiSelfDualSector := Y
   twistorIncidence := Incident Z X ∧ Incident Z Y
-  selfDualCondition := True
-  antiSelfDualCondition := True
+  selfDualCondition := Incident Z X
+  antiSelfDualCondition := Incident Z Y
   incidenceCompatible := InfoGeometry.Clifford.Soldering.q22 (X - Y) = 0
 
 @[rep_depth projective]

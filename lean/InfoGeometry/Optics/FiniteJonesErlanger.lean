@@ -13,7 +13,6 @@ diagonal phase-centralizer subgroup.
 
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -212,39 +211,5 @@ theorem brewsterMatrix_invariant_under_diagonalJonesTransport
       _ = rs * 1 := by rw [mul_inv_cancel₀ ha]
       _ = rs := by ring
   simp [hs]
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for the finite Jones Erlanger layer.
--/
-@[owner_target_tag]
-def FiniteJonesErlangerOwnerTarget : Prop :=
-  (∀ a b : ℂ, IsSPPhaseLinear (diagJones a b))
-  ∧
-  (∀ (a b : ℂ) (ha : a ≠ 0) (hb : b ≠ 0),
-    (diagonalJonesTransport a b ha hb).conjugate sProjector =
-      sProjector)
-  ∧
-  (∀ (a b : ℂ) (ha : a ≠ 0) (hb : b ≠ 0),
-    (diagonalJonesTransport a b ha hb).conjugate pProjector =
-      pProjector)
-  ∧
-  (∀ (a b rs : ℂ) (ha : a ≠ 0) (hb : b ≠ 0),
-    (diagonalJonesTransport a b ha hb).conjugate (brewsterMatrix rs) =
-      brewsterMatrix rs)
-
-/-- The finite Jones Erlanger owner target. -/
-theorem finiteJonesErlangerOwnerTarget :
-    FiniteJonesErlangerOwnerTarget := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · intro a b
-    exact diagJones_isSPPhaseLinear a b
-  · intro a b ha hb
-    exact sProjector_invariant_under_diagonalJonesTransport a b ha hb
-  · intro a b ha hb
-    exact pProjector_invariant_under_diagonalJonesTransport a b ha hb
-  · intro a b rs ha hb
-    exact brewsterMatrix_invariant_under_diagonalJonesTransport a b rs ha hb
 
 end InfoGeometry.Optics.FiniteJonesErlanger

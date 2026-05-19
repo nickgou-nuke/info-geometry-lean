@@ -12,11 +12,6 @@ namespace InfoGeometry
 
 namespace ErlangenLanglandsGeometryEntry
 
-/-- Sentinel declaration confirming geometry-lane import reached. -/
-theorem loaded : True := by
-  trivial
-
 end ErlangenLanglandsGeometryEntry
 
 end InfoGeometry
-

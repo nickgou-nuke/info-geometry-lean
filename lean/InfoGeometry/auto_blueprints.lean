@@ -1802,7 +1802,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.topologicalBek
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaUnitConnesArakiData
 attribute [blueprint] InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge.deltaFiniteShadow
 attribute [blueprint] InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge.deltaFiniteSupportShadow
-attribute [blueprint] InfoGeometry.Canonical.CoordinateFreeContract
 attribute [blueprint] InfoGeometry.Canonical.CoordinateFreeSecondVariation.modularCurvatureOperator_eq_metricPart_complex_i
 attribute [blueprint] InfoGeometry.Canonical.CoordinateFreeSecondVariation.operatorInformationCurvaturePart_self_eq_zero
 attribute [blueprint] InfoGeometry.Canonical.CoordinatelessSouriauCocycleFisherBridge.CocycleFisherCorrection.correctedMetric
@@ -2031,7 +2030,6 @@ attribute [blueprint] InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMell
 attribute [blueprint] InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice.discreteBoost
 attribute [blueprint] InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice.thermalTimeStep
 attribute [blueprint] InfoGeometry.Canonical.DiscreteModularSpectrum.TypeIIIScaleGroup
-attribute [blueprint] InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree.coordinateFreeContract
 attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse
 attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.comm
 attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.commute_complementaryProjection
@@ -6262,7 +6260,6 @@ attribute [blueprint] InfoGeometry.Canonical.complexLikeByAxis
 attribute [blueprint] InfoGeometry.Canonical.complexLikeByAxis_i_sq
 attribute [blueprint] InfoGeometry.Canonical.complexLike_i_sq
 attribute [blueprint] InfoGeometry.Canonical.compress
-attribute [blueprint] InfoGeometry.Canonical.coordinateFreeContract
 attribute [blueprint] InfoGeometry.Canonical.deriv_expTransport
 attribute [blueprint] InfoGeometry.Canonical.deriv_expTransportEnd_at_zero
 attribute [blueprint] InfoGeometry.Canonical.deriv_expTransportEnd_at_zero_eq_zero_of_commute

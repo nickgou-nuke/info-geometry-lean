@@ -29,7 +29,6 @@ import Mathlib
 import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Optics.FiniteJonesBregman
 import InfoGeometry.Optics.FiniteJonesStinespringConstructive
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -196,30 +195,5 @@ theorem exists_projected_mode_of_index_ne_zero
   simpa [kernelBasis_eq_modesOf_kasparovDefect] using h
 
 end FiniteOpticalKernelReadout
-
-/-! ## 3. Bregman/Stinespring/Kasparov owner target -/
-
-/--
-Owner target for the finite optical Stinespring-Kasparov defect deployment.
--/
-@[owner_target_tag]
-def FiniteOpticalKasparovBoundaryOwnerTarget : Prop :=
-  ∀ D : ConstructiveJonesStinespring,
-    D.visibleDefect = kasparovDefect D ∧
-    kasparovDefect D = D.environmentGain ∧
-    finiteStinespringHeat D.toStinespringIsometry =
-      frobeniusBregman (kasparovDefect D) 0
-
-/--
-The finite optical Stinespring-Kasparov deployment is constructive.
--/
-theorem finiteOpticalKasparovBoundaryOwnerTarget :
-    FiniteOpticalKasparovBoundaryOwnerTarget := by
-  intro D
-  exact ⟨
-    visibleDefect_eq_kasparovDefect D,
-    kasparovDefect_eq_environmentGain D,
-    finiteHeat_eq_kasparovDefectBregman D
-  ⟩
 
 end InfoGeometry.Optics.FiniteJonesKasparovBoundary

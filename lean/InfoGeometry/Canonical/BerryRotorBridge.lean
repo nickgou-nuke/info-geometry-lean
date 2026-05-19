@@ -16,7 +16,6 @@ import Mathlib.Geometry.Manifold.Algebra.LieGroup
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Canonical.ProjectiveFoundation
-import InfoGeometry.Canonical.CoordinateFree
 import InfoGeometry.Topological.CuspLimit
 import InfoGeometry.Topological.OrbifoldCorner
 import InfoGeometry.Differential.CurveHolonomy

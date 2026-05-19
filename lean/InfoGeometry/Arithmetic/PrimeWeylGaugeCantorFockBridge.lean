@@ -4,7 +4,6 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Canonical.WeylGaugeCantorFockBridge
-import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
@@ -218,8 +217,6 @@ structure PrimeWeylGaugeCantorFockBridge
   exteriorState_eq : exteriorState = toSquareFreePrimeState vertex
   canonicalBridge :
     InfoGeometry.Canonical.WeylGaugeCantorFockBridge.WeylGaugeCantorFockBridge Raw Op
-  infiniteSocketGated : Prop
-  infiniteSocketGated_witness : infiniteSocketGated
 
 namespace PrimeWeylGaugeCantorFockBridge
 

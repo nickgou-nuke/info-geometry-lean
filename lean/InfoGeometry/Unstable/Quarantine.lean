@@ -15,7 +15,11 @@ import InfoGeometry.Canonical.ConformalWard
 import InfoGeometry.Canonical.ConnesArakiTomita
 import InfoGeometry.Canonical.CountProbabilityState
 import InfoGeometry.Canonical.CountSinkhornFlow
-import InfoGeometry.Canonical.DeepHorizon
+import InfoGeometry.Canonical.MixtureOfExperts
+import InfoGeometry.Canonical.CayleyBregmanBridge
+import InfoGeometry.Canonical.HolographicEmergence
+import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Krein.All
 import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnificationBlueprint

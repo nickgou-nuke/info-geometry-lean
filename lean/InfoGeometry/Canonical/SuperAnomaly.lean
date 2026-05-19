@@ -1,4 +1,5 @@
-import InfoGeometry.Canonical.Krein
+import InfoGeometry.Krein.Clifford
+import InfoGeometry.Krein.HilbertBridge
 
 open scoped InnerProductSpace
 

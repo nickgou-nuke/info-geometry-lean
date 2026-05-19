@@ -94,23 +94,24 @@ Required derivation path:
 
 Status: `reduced; mass-normalized equality constructors and finite gauge-thermodynamics bridge landed`.
 
-## Target D: Grand-Canonical Gauge Potential Bridge
+## Target D: Dirac-Souriau Operator and Souriau Hessian
 
 Current dependency:
-- [lean/InfoGeometry/GrandCanonical/Core.lean](/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/Core.lean): `shiftedEnergy`, `partitionGC`, `potentialGC`, `meanNumber`, `meanShift`, and the derivative laws `potentialGC_deriv_mu_eq_beta_meanNumber` and `potentialGC_deriv_beta_eq_neg_meanShift`.
-- [lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean](/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean): packages `μ` as a finite background gauge coupling to the count observable and re-exports the conjugate `log Z` readouts.
-- [lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean](/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean): owns `bogoliubovNumberOperator` and `grandCanonicalFockGenerator`.
-- [lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean](/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean): packages the Fock-side `μN_B` gauge coupling and the affine generator identity.
+- `lean/InfoGeometry/Canonical/DiracSouriauOperator.lean`: intended owner surface for the 4x4 Dirac-Souriau operator, Drazin inverse data, and entropy exactness.
+- `lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean`: intended infinite coadjoint-orbit Souriau Hessian / metriplectic discharge surface.
+- `lean/InfoGeometry/Geometry/LegendreHessianInverse.lean`: smooth Legendre inverse owner used by the inverse-Hessian discharge path.
+- `lean/InfoGeometry/Canonical/SouriauThermodynamics.lean`: source-backed finite thermodynamic bridge used by adjacent Souriau owner lanes.
 
 Gap:
-- the finite scalar lane and same-form Fock number coupling are closed. A theorem equating finite count profiles with Fock occupation readouts is not present and should not be assumed.
+- the 4x4 Dirac-Souriau operator lane is still a pending constructive proof surface.
+- the inverse-Hessian leg is connected to the smooth Legendre two-sided inverse owner, but the concrete infinite coadjoint-orbit construction still needs model-backed derivation of partition differentiability, covariance identity, Fisher positivity, and readout matching.
 
 Required derivation path:
-1. If needed, define an explicit occupation readout from Fock states to finite/count data.
-2. Prove compatibility with `bogoliubovNumberOperator`.
-3. Only then state a finite-count-to-Fock-occupation representation theorem.
+1. Prove the 4x4 Drazin inverse from the block-decoupling properties in the owner file.
+2. Derive the `souriauEntropy` exactness from the underlying $C\ell(4,4)$ owner route.
+3. Build a concrete coadjoint-orbit model and discharge the infinite Souriau Hessian / metriplectic conditions from that model rather than from abstract context data.
 
-Status: `finite grand-canonical lane and Fock same-form number coupling landed`.
+Status: `D7 open; D8 open / reduced`.
 
 ## Target E: Chiral Light-Cone / KKT / Fock Charge Reconciliation
 

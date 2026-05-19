@@ -1,4 +1,6 @@
-import InfoGeometry.Canonical.Krein
+import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Krein.HilbertBridge
+import InfoGeometry.Krein.OrthogonalGroup
 import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped InnerProductSpace

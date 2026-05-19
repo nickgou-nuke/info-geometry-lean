@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Krein
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

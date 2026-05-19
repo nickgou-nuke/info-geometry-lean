@@ -1,8 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
 import InfoGeometry.Probability.HomologicalProbability
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -143,46 +141,6 @@ structure WeylMobiusDeterminantInversionSocket
 
 namespace WeylMobiusDeterminantInversionSocket
 
-/-- Re-export of the supplied determinant inversion law. -/
-theorem determinant_inversion
-    {DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout : Type*}
-    (S : WeylMobiusDeterminantInversionSocket
-      DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout) :
-    S.determinant_inversion_law :=
-  S.determinant_inversion_certificate
-
-/-- Re-export of the supplied logarithmic sign-flip law. -/
-theorem log_sign_flip
-    {DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout : Type*}
-    (S : WeylMobiusDeterminantInversionSocket
-      DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout) :
-    S.log_sign_flip_law :=
-  S.log_sign_flip_certificate
-
-/-- Re-export of the supplied endpoint-exchange law. -/
-theorem endpoints_exchanged
-    {DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout : Type*}
-    (S : WeylMobiusDeterminantInversionSocket
-      DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout) :
-    S.endpoints_exchanged_law :=
-  S.endpoints_exchanged_certificate
-
-/-- Re-export of the supplied boson/fermion inverse determinant law. -/
-theorem boson_fermion_inverse
-    {DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout : Type*}
-    (S : WeylMobiusDeterminantInversionSocket
-      DeterminantLine Inversion LogCoordinate Generator StableEndpoint
-      UnstableEndpoint BosonicReadout FermionicReadout) :
-    S.boson_fermion_inverse_law :=
-  S.boson_fermion_inverse_certificate
-
 end WeylMobiusDeterminantInversionSocket
 
 /-! ## 3. Stable/unstable Gibbs chart socket -/
@@ -227,36 +185,6 @@ structure StableUnstableGibbsChartSocket
 
 namespace StableUnstableGibbsChartSocket
 
-/-- Re-export of the supplied stable Gibbs minimizer law. -/
-theorem stable_gibbs_minimizer
-    {ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout : Type*}
-    (S : StableUnstableGibbsChartSocket
-      ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout) :
-    S.stable_gibbs_minimizer_law :=
-  S.stable_gibbs_minimizer_certificate
-
-/-- Re-export of the supplied inverted chart law. -/
-theorem inverted_chart
-    {ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout : Type*}
-    (S : StableUnstableGibbsChartSocket
-      ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout) :
-    S.inverted_chart_law :=
-  S.inverted_chart_certificate
-
-/-- Re-export of the supplied unstable boundary law. -/
-theorem unstable_boundary
-    {ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout : Type*}
-    (S : StableUnstableGibbsChartSocket
-      ReferenceMeasure Potential StableDensity UnstableDensity StableFunctional
-      UnstableFunctional StableMinimizer BoundaryReadout FlowReadout) :
-    S.unstable_boundary_law :=
-  S.unstable_boundary_certificate
-
 end StableUnstableGibbsChartSocket
 
 /-! ## 4. Relative trace signature socket -/
@@ -292,53 +220,7 @@ structure RelativeTraceSignatureSocket
 
 namespace RelativeTraceSignatureSocket
 
-/-- Re-export of the supplied relative-trace formula law. -/
-theorem relativeTrace_formula
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout : Type*}
-    (S : RelativeTraceSignatureSocket
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout) :
-    S.relativeTrace_formula_law :=
-  S.relativeTrace_formula_certificate
-
-/-- Re-export of the supplied prime-orbit minus-sign law. -/
-theorem fermionic_primeOrbit_minusSign
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout : Type*}
-    (S : RelativeTraceSignatureSocket
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout) :
-    S.fermionic_primeOrbit_minusSign_law :=
-  S.fermionic_primeOrbit_minusSign_certificate
-
-/-- Re-export of the supplied explicit-formula matching law. -/
-theorem relativeTrace_matches_explicitFormula
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout : Type*}
-    (S : RelativeTraceSignatureSocket
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout ExplicitFormulaReadout) :
-    S.relativeTrace_matches_explicitFormula_law :=
-  S.relativeTrace_matches_explicitFormula_certificate
-
 end RelativeTraceSignatureSocket
-
-/--
-Owner-target packaging for the relative-trace signature lane.
-
-This does not close the generic socket interface. It exposes the actual
-theorem-bearing surface already present in the packet.
--/
-@[owner_target_tag]
-theorem RelativeTraceSignatureOwnerTarget
-    {BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout : Type*}
-    (S : RelativeTraceSignatureSocket
-      BosonicTrace FermionicTrace RelativeTrace PrimeOrbitReadout
-      ExplicitFormulaReadout) :
-    S.relativeTrace_formula_law ∧
-    S.fermionic_primeOrbit_minusSign_law ∧
-    S.relativeTrace_matches_explicitFormula_law := by
-  exact ⟨S.relativeTrace_formula, S.fermionic_primeOrbit_minusSign,
-    S.relativeTrace_matches_explicitFormula⟩
 
 /-! ## 5. Möbius inversion / free-energy socket -/
 
@@ -376,39 +258,6 @@ structure MobiusFreeEnergyInversionSocket
 
 namespace MobiusFreeEnergyInversionSocket
 
-/-- Re-export: Majorana partition is the inverse-zeta channel. -/
-@[bridge_target_tag]
-theorem majorana_inverseZeta
-    {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout : Type*}
-    (S : MobiusFreeEnergyInversionSocket
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout) :
-    S.majorana_inverseZeta_law :=
-  S.majorana_inverseZeta_certificate
-
-/-- Re-export: free energy gives the logarithmic dual channel. -/
-@[bridge_target_tag]
-theorem freeEnergy_logDual
-    {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout : Type*}
-    (S : MobiusFreeEnergyInversionSocket
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout) :
-    S.freeEnergy_logDual_law :=
-  S.freeEnergy_logDual_certificate
-
-/-- Re-export: zeros of zeta are logarithmic singularities in this channel. -/
-@[bridge_target_tag]
-theorem zetaZeros_are_logSingularities
-    {SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout : Type*}
-    (S : MobiusFreeEnergyInversionSocket
-      SpectralParameter MajoranaPartition DualPartition FreeEnergyReadout
-      BranchData SingularityReadout) :
-    S.zetaZeros_are_logSingularities_law :=
-  S.zetaZeros_are_logSingularities_certificate
-
 end MobiusFreeEnergyInversionSocket
 
 /-! ## 6. Mellin inversion and KL/convex equilibrium sockets -/
@@ -443,28 +292,6 @@ structure MellinInversionParitySocket
     criticalAxis_fixed_law
 
 namespace MellinInversionParitySocket
-
-/-- Re-export of the supplied `u ↦ -u` parity law. -/
-@[bridge_target_tag]
-theorem log_parity
-    {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-      FunctionalEquationReadout : Type*}
-    (S : MellinInversionParitySocket
-      ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-      FunctionalEquationReadout) :
-    S.log_parity_law :=
-  S.log_parity_certificate
-
-/-- Re-export of the supplied functional-equation symmetry law. -/
-@[bridge_target_tag]
-theorem functionalEquation_symmetry
-    {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-      FunctionalEquationReadout : Type*}
-    (S : MellinInversionParitySocket
-      ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-      FunctionalEquationReadout) :
-    S.functionalEquation_symmetry_law :=
-  S.functionalEquation_symmetry_certificate
 
 end MellinInversionParitySocket
 
@@ -502,17 +329,6 @@ structure FiveGradedMobiusBalanceSocket
 
 namespace FiveGradedMobiusBalanceSocket
 
-/-- Re-export of the supplied grade-zero balance law. -/
-@[bridge_target_tag]
-theorem balance_on_gradeZero
-    {LieAlgebra GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout
-      ZeroModeReadout : Type*}
-    (S : FiveGradedMobiusBalanceSocket
-      LieAlgebra GradeMinus GradeZero GradePlus EPlus EMinus BalanceReadout
-      ZeroModeReadout) :
-    S.balance_on_gradeZero_law :=
-  S.balance_on_gradeZero_certificate
-
 end FiveGradedMobiusBalanceSocket
 
 /-! ## 8. Composite research-manifest packet -/
@@ -520,7 +336,6 @@ end FiveGradedMobiusBalanceSocket
 /-! ## 8. Gibbs/KMS equilibrium lane -/
 
 /-- The Gibbs/KMS free-energy gap is nonnegative in the concrete packet. -/
-@[bridge_target_tag]
 theorem GibbsKMS_freeEnergy_gap_nonneg
     (gk : InfoGeometry.Probability.Homological.GibbsKMSPacket)
     (ρ : gk.ObservableAlgebra)
@@ -530,7 +345,6 @@ theorem GibbsKMS_freeEnergy_gap_nonneg
   gk.freeEnergy_gap_nonneg_of_relativeEntropy_nonneg ρ hrel hβ
 
 /-- The Gibbs state minimizes free energy in the concrete packet. -/
-@[bridge_target_tag]
 theorem GibbsKMS_freeEnergy_ge_gibbs
     (gk : InfoGeometry.Probability.Homological.GibbsKMSPacket)
     (ρ : gk.ObservableAlgebra)
@@ -547,7 +361,6 @@ This interface stays as a socket. The concrete parity and fixed-axis content
 below is explicitly reexported from mathlib's zeta functional equation
 surface, not re-proved here from scratch.
 -/
-@[owner_target_tag]
 def MellinInversionParityOwnerTarget : Prop :=
   ∀ {ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
       FunctionalEquationReadout : Type*}
@@ -559,18 +372,6 @@ def MellinInversionParityOwnerTarget : Prop :=
       S.functionalEquation_symmetry_law ∧
       S.criticalAxis_fixed_law
 
-/-- The Mellin inversion / parity owner target is discharged by the witnesses. -/
-@[bridge_target_tag]
-theorem mellinInversionParityOwnerTarget :
-    MellinInversionParityOwnerTarget := by
-  intro ScaleCoordinate LogCoordinate SpectralParameter ParityOperator
-    FunctionalEquationReadout S
-  exact
-    ⟨ S.scale_inversion_certificate,
-      S.log_parity,
-      S.functionalEquation_symmetry,
-      S.criticalAxis_fixed_certificate ⟩
-
 /--
 Root-corridor identification of the primitive Mellin inversion/parity lane.
 
@@ -581,7 +382,6 @@ for the free-energy / relative-trace root.
 It does not assert the remaining witness-only functional-equation or critical-
 axis fields of `MellinInversionParitySocket`.
 -/
-@[bridge_target_tag]
 theorem primitiveMellinParityIdentification :
     InfoGeometry.Arithmetic.PrimitiveMellinParityOwnerTarget :=
   InfoGeometry.Arithmetic.primitiveMellinParityOwnerTarget
@@ -596,7 +396,6 @@ lane, obtained by reusing mathlib's `completedRiemannZeta_one_sub` theorem:
 the completed zeta function is symmetric under `s ↦ 1 - s`, and the critical
 axis `Re(s) = 1/2` is fixed by that involution.
 -/
-@[bridge_target_tag]
 theorem completedRiemannZeta_parity_identification (s : ℂ) :
     completedRiemannZeta (1 - s) = completedRiemannZeta s ∧
       (Complex.re s = (1 : ℝ) / 2 → Complex.re (1 - s) = (1 : ℝ) / 2) := by
@@ -615,7 +414,6 @@ This is the Mellin/Dirichlet symmetry lane in explicit form. The additional
 non-pole hypothesis is exactly the one required by mathlib's theorem, so this
 file reexports `riemannZeta_one_sub` rather than proving a fresh variant.
 -/
-@[bridge_target_tag]
 theorem riemannZeta_functionalEquation_symmetry
     {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 1) :
     riemannZeta (1 - s) =
@@ -629,17 +427,9 @@ Root-corridor owner target for the completed-zeta parity lane.
 This packages the theorem-backed parity symmetry and the fixed critical-axis
 involution available from mathlib.
 -/
-@[owner_target_tag]
 def MellinInversionParityMathlibOwnerTarget : Prop :=
   ∀ (s : ℂ),
     completedRiemannZeta (1 - s) = completedRiemannZeta s ∧
     (Complex.re s = (1 : ℝ) / 2 → Complex.re (1 - s) = (1 : ℝ) / 2)
-
-/-- The completed-zeta parity owner target is discharged by mathlib. -/
-@[bridge_target_tag]
-theorem mellinInversionParityMathlibOwnerTarget :
-    MellinInversionParityMathlibOwnerTarget := by
-  intro s
-  exact completedRiemannZeta_parity_identification s
 
 end InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace

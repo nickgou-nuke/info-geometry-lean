@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -158,29 +157,5 @@ theorem finitePrimeChain_largeDeviationPrinciple :
   W.largeDeviation.largeDeviationPrinciple
 
 end DefectFreeLimitPacket
-
-/--
-Owner theorem for the theorem-safe defect-free Lee--Yang limit lane.
-
-It says only that a packet re-exports its supplied analytic laws.  It does not
-assert that such a packet exists for the Riemann `xi` function.
--/
-@[owner_target_tag]
-theorem primeLeeYangDefectFreeLimitOwnerTarget
-    {CompletedXiReadout : Type}
-    (W : DefectFreeLimitPacket CompletedXiReadout) :
-      W.zeroMeanMagnetization_law ∧
-      W.gaussianFluctuation_law ∧
-      W.noRandomFieldDefects_law ∧
-      W.leeYangStabilityPersists_law ∧
-      W.xiCayleyLimit_law ∧
-      W.defectFreeLimit_implies_criticalLineZeros_law := by
-  exact ⟨
-    W.zeroMeanMagnetization,
-    W.gaussianFluctuation,
-    W.noRandomFieldDefects,
-    W.leeYangStabilityPersists,
-    W.xiCayleyLimit,
-    W.defectFreeLimit_implies_criticalLineZeros⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit

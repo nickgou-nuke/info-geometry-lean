@@ -19,7 +19,6 @@ with explicit finite matrix facts:
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.Optics.FiniteJonesErlanger
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -149,55 +148,5 @@ theorem s_channel_survives :
   brewsterMatrix_on_s_projector B.r_s
 
 end ConstructiveBrewsterCollapse
-
-/-! ## 5. Owner targets discharged constructively -/
-
-/--
-Owner target: finite Brewster determinant collapse.
--/
-@[owner_target_tag]
-def FiniteBrewsterDeterminantCollapseOwnerTarget : Prop :=
-  ∀ r_s : ℂ,
-    Matrix.det (brewsterMatrix r_s) = 0
-
-/--
-Constructive proof of finite Brewster determinant collapse.
--/
-theorem finiteBrewsterDeterminantCollapseOwnerTarget :
-    FiniteBrewsterDeterminantCollapseOwnerTarget := by
-  intro r_s
-  exact brewsterMatrix_det_eq_zero r_s
-
-/--
-Owner target: finite Brewster trace readout.
--/
-@[owner_target_tag]
-def FiniteBrewsterTraceReadoutOwnerTarget : Prop :=
-  ∀ r_s : ℂ,
-    Matrix.trace (brewsterMatrix r_s) = r_s
-
-/--
-Constructive proof of finite Brewster trace readout.
--/
-theorem finiteBrewsterTraceReadoutOwnerTarget :
-    FiniteBrewsterTraceReadoutOwnerTarget := by
-  intro r_s
-  exact brewsterMatrix_trace r_s
-
-/--
-Owner target: finite Brewster killed-channel theorem.
--/
-@[owner_target_tag]
-def FiniteBrewsterKilledChannelOwnerTarget : Prop :=
-  ∀ r_s : ℂ,
-    brewsterMatrix r_s * pProjector = 0
-
-/--
-Constructive proof of the killed-channel theorem.
--/
-theorem finiteBrewsterKilledChannelOwnerTarget :
-    FiniteBrewsterKilledChannelOwnerTarget := by
-  intro r_s
-  exact brewsterMatrix_kills_p_basis r_s
 
 end InfoGeometry.Optics.FiniteJonesBrewsterCollapse

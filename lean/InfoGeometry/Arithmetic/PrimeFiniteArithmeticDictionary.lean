@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
@@ -275,93 +273,5 @@ theorem exteriorMobius_eq_booleanMöbius
         InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.fermionNumber S :=
   InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma_eq_negOne_pow_fermionNumber
     S
-
-/-! ## 5. Owner target -/
-
-/--
-Finite arithmetic dictionary owner target.
-
-This target deliberately covers only finite, kernel-checkable compatibility:
-
-* CAR parity → Boolean chirality/Möbius;
-* finite Dirac Hamiltonian → prime-bit energy/log integer;
-* finite exterior readout → square-free exterior state data.
--/
-@[owner_target_tag]
-def PrimeFiniteArithmeticDictionaryOwnerTarget : Prop :=
-  (∀ {Op : Type*} [Ring Op]
-      (P : PrimeRegister)
-      (v : Vertex P)
-      (E : ℕ → ExteriorCARPair Op)
-      (χ : Op →+* ℤ)
-      (hN :
-        ∀ p ∈ P.primes,
-          χ ((E p).numberOp) = occupationInt p v.val),
-      carGlobalChiralityReadout P E χ =
-        globalChirality P v.val
-      ∧
-      carGlobalChiralityReadout P E χ =
-        fermionParity v
-      ∧
-      carGlobalChiralityReadout P E χ =
-        ArithmeticFunction.moebius (representedNat v))
-  ∧
-  (∀ (L : InfoGeometry.Arithmetic.PrimeBitLattice)
-      (ψ : InfoGeometry.Arithmetic.PrimeBitState L),
-      finiteDiracHamiltonian L ψ =
-        InfoGeometry.Arithmetic.primeBitEnergy L ψ.support
-      ∧
-      finiteDiracHamiltonian L ψ =
-        Real.log (InfoGeometry.Arithmetic.primeBitInteger L ψ : ℝ))
-  ∧
-  (∀ {PrimeLabel : Type*}
-      [DecidableEq PrimeLabel]
-      (energy : PrimeLabel → ℝ)
-      (S :
-        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
-          PrimeLabel),
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S =
-        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.fermionParitySign S
-      ∧
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S =
-        (-1 : ℤ) ^
-          InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.fermionNumber S
-      ∧
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.squareFreeEnergy
-          energy S =
-        ∑ p ∈ S, energy p)
-  ∧
-  (∀ {PrimeLabel : Type*}
-      [DecidableEq PrimeLabel]
-      (p : PrimeLabel)
-      (S :
-        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
-          PrimeLabel),
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.localParitySign
-          p S =
-        1 -
-          2 *
-            (InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.localOccupation
-              p S : ℤ))
-
-/-- The finite arithmetic dictionary owner target is closed. -/
-theorem primeFiniteArithmeticDictionaryOwnerTarget :
-    PrimeFiniteArithmeticDictionaryOwnerTarget := by
-  refine ⟨?car, ?dirac, ?ext, ?loc⟩
-
-  · intro Op inst P v E χ hN
-    exact
-      ⟨ carGlobalChiralityReadout_eq_booleanChirality P v E χ hN,
-        carGlobalChiralityReadout_eq_fermionParity P v E χ hN,
-        carGlobalChiralityReadout_eq_mobius P v E χ hN ⟩
-
-  · intro L ψ
-    exact finiteDiracHamiltonian_dictionary L ψ
-
-  · intro PrimeLabel dec energy S
-    exact exteriorSquareFreeState_dictionary energy S
-
-  · intro PrimeLabel dec p S
-    exact exteriorLocalParity_eq_one_sub_two_localOccupation p S
 
 end InfoGeometry.Arithmetic.PrimeFiniteArithmeticDictionary

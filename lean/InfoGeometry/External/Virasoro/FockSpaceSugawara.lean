@@ -228,7 +228,7 @@ instance (α : 𝕜) : HasCentralCharge 𝕜 (ChargedFockSpace 𝕜 α) (1 : �
   simp
 
 /-- The Sugawara vacuum is a highest-weight vector for the induced Virasoro action. -/
-lemma vacuum_highestWeight (α : 𝕜) :
+lemma sugawaraVacuum_highestWeight (α : 𝕜) :
     sugawaraRepresentation 𝕜 α (.cgen 𝕜) (vacuum 𝕜 α) = vacuum 𝕜 α ∧
     sugawaraRepresentation 𝕜 α (.lgen 𝕜 0) (vacuum 𝕜 α) = (α^2 / 2) • vacuum 𝕜 α ∧
     (∀ n > 0, sugawaraRepresentation 𝕜 α (.lgen 𝕜 n) (vacuum 𝕜 α) = 0) := by

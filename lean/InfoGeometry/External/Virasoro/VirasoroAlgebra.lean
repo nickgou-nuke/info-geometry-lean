@@ -165,6 +165,12 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
     ⁅lgen 𝕜 n, lgen 𝕜 m⁆ = (n - m : 𝕜) • lgen 𝕜 (n + m) := by
   rw [lgen_bracket, if_neg h, add_zero]
 
+/-- The Virasoro `L_n` bracket at the resonance `n + m = 0` has the central correction term. -/
+@[simp] lemma lgen_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
+    ⁅lgen 𝕜 n, lgen 𝕜 m⁆ =
+      (n - m : 𝕜) • lgen 𝕜 (n + m) + ((n^3 - n : 𝕜)/12) • cgen 𝕜 := by
+  rw [lgen_bracket, if_pos h]
+
 lemma lgen_bracket' (n m : ℤ) :
     ⁅lgen 𝕜 n, lgen 𝕜 m⁆
       = (n - m : 𝕜) • lgen 𝕜 (n + m)

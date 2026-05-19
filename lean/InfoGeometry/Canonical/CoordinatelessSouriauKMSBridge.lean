@@ -144,6 +144,21 @@ def toIdentityKMSState (beta : ℝ) :
     intro A B
     simpa [identityAdditiveModularFlow] using ω.cyclic A B
 
+/-!
+## Alias constructor for a generic KMS state
+
+While the `toIdentityKMSState` constructor is sufficient for the identity
+modular flow, downstream code often expects a more generically named theorem
+`toKMSState`.  Providing this thin wrapper does not introduce any new hypothesis
+or proof burden—it simply forwards to the existing construction.  This reduces
+the explicit hypothesis surface by allowing callers to use `toKMSState` without
+referring to the concrete flow name.
+-/
+@[rep_depth operator]
+def toKMSState (beta : ℝ) :
+    KMSState (H := H) (identityAdditiveModularFlow (H := H)) beta :=
+  ω.toIdentityKMSState beta
+
 @[rep_depth operator]
 theorem identityKMS_eval_mul_modular_eq_eval_flip (beta : ℝ) (A B : Obs) :
     (ω.toIdentityKMSState beta).state.eval

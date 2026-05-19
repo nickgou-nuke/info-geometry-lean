@@ -10,6 +10,7 @@ import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
+import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.ChiralProduct
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
@@ -332,6 +333,21 @@ theorem primonSugawaraVacuumEnergy (α : ℂ) :
   exact
     (VirasoroProject.ChargedFockSpace.sugawaraRepresentation_lgen_zero_apply_vacuum
       (𝕜 := ℂ) α)
+
+/-- The imported Heisenberg generators `K` and `J₀` are central. -/
+@[rep_depth thermo]
+theorem primonHeisenbergCentral_kgen_jgen_zero
+    (Z : VirasoroProject.HeisenbergAlgebra ℂ) :
+    ⁅VirasoroProject.HeisenbergAlgebra.kgen ℂ, Z⁆ = 0 ∧
+      ⁅VirasoroProject.HeisenbergAlgebra.jgen ℂ 0, Z⁆ = 0 := by
+  exact VirasoroProject.HeisenbergAlgebra.central_kgen_jgen_zero ℂ Z
+
+/-- A Heisenberg generator `Jₙ` is central iff it is the zero mode. -/
+@[rep_depth thermo]
+theorem primonHeisenbergJgen_mem_center_iff (n : ℤ) :
+    VirasoroProject.HeisenbergAlgebra.jgen ℂ n ∈
+      LieAlgebra.center ℂ (VirasoroProject.HeisenbergAlgebra ℂ) ↔ n = 0 := by
+  exact VirasoroProject.HeisenbergAlgebra.jgen_mem_center_iff (𝕜 := ℂ) n
 
 /-- The imported five-grade closure keeps grade zero stable and Cartan-decomposed. -/
 @[rep_depth thermo]

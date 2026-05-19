@@ -15,7 +15,6 @@ In particular, this file does not put a bare trace field on a type III algebra.
 -/
 
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -324,50 +323,5 @@ theorem supertrace_eq_traceBackend_grading_mul
   S.supertrace_eq x
 
 end SuperTraceDatum
-
-/-! ## 7. Owner targets -/
-
-/--
-Owner target for selecting a type III integration backend.
-
-The target is intentionally witness-gated: the modular weight and continuous
-core trace are analytic/operator-algebraic inputs, not consequences of an
-abstract ambient type alone.
--/
-@[owner_target_tag]
-def TypeIIIIntegrationOwnerTarget : Prop :=
-  ∀ (M Core : Type*) [AddCommMonoid M],
-    ModularWeightDatum M →
-      CoreTraceDatum M Core →
-        Nonempty (TypeIIIIntegrationDatum M Core)
-
-/--
-The type III integration owner target is constructible once modular weight and
-core trace data are supplied. The type III/no-bare-trace certificates remain
-explicit proof-carrying fields.
--/
-theorem typeIIIIntegrationOwnerTarget :
-    TypeIIIIntegrationOwnerTarget := by
-  intro M Core _ φ C
-  exact ⟨{
-    modularWeight := φ
-    coreTrace := C
-    typeIII := True
-    noBareTraceOnBase := True
-  }⟩
-
-/--
-Owner target for graded readouts once an explicit backend has been supplied.
--/
-@[owner_target_tag]
-def SuperTraceBackendOwnerTarget : Prop :=
-  ∀ (A : Type*) [AddCommMonoid A] [Mul A],
-    SuperTraceDatum A → Nonempty (SuperTraceDatum A)
-
-/-- The supertrace owner target is satisfied once the backend datum is supplied. -/
-theorem superTraceBackendOwnerTarget :
-    SuperTraceBackendOwnerTarget := by
-  intro A _ _ S
-  exact ⟨S⟩
 
 end InfoGeometry.OperatorAlgebra

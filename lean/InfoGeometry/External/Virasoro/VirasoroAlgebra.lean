@@ -181,6 +181,17 @@ lemma lgen_bracket' (n m : ℤ) :
 noncomputable def lsection : WittAlgebra 𝕜 →ₗ[𝕜] VirasoroAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (WittAlgebra.virasoroCocycle 𝕜)
 
+/-- The standard section is a right inverse to the Virasoro projection. -/
+@[simp] lemma toWittAlgebra_lsection (X : WittAlgebra 𝕜) :
+    toWittAlgebra (lsection 𝕜 X) = X := by
+  have h := LieTwoCocycle.CentralExtension.stdSection_prop (WittAlgebra.virasoroCocycle 𝕜)
+  simpa [lsection] using congrArg (fun f => f X) h
+
+/-- The Virasoro section lifts the Witt bracket and the projection recovers it. -/
+@[simp] lemma toWittAlgebra_bracket_lsection (X Y : WittAlgebra 𝕜) :
+    toWittAlgebra ⁅lsection 𝕜 X, lsection 𝕜 Y⁆ = ⁅X, Y⁆ := by
+  rw [toWittAlgebra.map_lie, toWittAlgebra_lsection, toWittAlgebra_lsection]
+
 @[simp] lemma lsection_lgen (n : ℤ) :
     lsection 𝕜 (WittAlgebra.lgen 𝕜 n) = lgen 𝕜 n :=
   rfl

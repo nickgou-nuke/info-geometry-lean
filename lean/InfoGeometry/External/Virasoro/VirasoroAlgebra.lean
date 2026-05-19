@@ -138,6 +138,10 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
 @[simp] lemma toWittAlgebra_lgen (n : ℤ) :
   toWittAlgebra (lgen 𝕜 n) = WittAlgebra.lgen 𝕜 n := rfl
 
+@[simp] lemma toWittAlgebra_ofCentral (a : 𝕜) :
+    toWittAlgebra (ofCentral 𝕜 a) = 0 := by
+  rw [ofCentral_apply, map_smul, toWittAlgebra_cgen, smul_zero]
+
 @[simp] lemma cgen_bracket (Z : VirasoroAlgebra 𝕜) :
     ⁅cgen 𝕜, Z⁆ = 0 :=
   (isCentralExtension 𝕜).central 1 Z

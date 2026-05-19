@@ -288,17 +288,6 @@ theorem virasoroVermaToChargedFockSpace_uniqueByVacuum (α : 𝕜)
   · intro r x hx hx'
     simp [map_smul, hx']
 
-/-- The Verma-to-Fock map is surjective. -/
-theorem virasoroVermaToChargedFockSpace_surjective (α : 𝕜) :
-    Function.Surjective (virasoroVermaToChargedFockSpace 𝕜 α) := by
-  intro y
-  have hy : y ∈ Submodule.span (𝓤 𝕜 (VirasoroAlgebra 𝕜)) {vacuum 𝕜 α} := by
-    simpa [ChargedFockSpace.vacuum_cyclic 𝕜 α] using
-      (Submodule.mem_top (R := 𝓤 𝕜 (VirasoroAlgebra 𝕜)) : y ∈ (⊤ : Submodule _ _))
-  rcases Submodule.mem_span_singleton.mp hy with ⟨a, rfl⟩
-  refine ⟨a • VirasoroVerma.hwVec 𝕜 1 (α^2 / 2), ?_⟩
-  simp [virasoroVermaToChargedFockSpace, virasoroVermaToChargedFockSpace_hwVec]
-
 end ChargedFockSpace
 
 end Fock_space_Sugawara_construction

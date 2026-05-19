@@ -1,9 +1,7 @@
 import Mathlib
-import InfoGeometry.Meta.Architecture
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-import InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
 
 /-!
 # InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
@@ -18,8 +16,7 @@ The intended reading is:
 
 * projective Weyl normalization is fixed first;
 * the normalized finite Cantor tilt/switch system supplies the local
-  `Cl(1,1)` atom;
-* the Boolean-cube CAR bridge preserves the finite Möbius/chirality readout.
+  `Cl(1,1)` atom.
 
 No infinite Cantor `L²` completion.
 No analytic Euler product.
@@ -33,7 +30,6 @@ namespace InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveWeylGauge
 open InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
-open InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
 
 /--
 Weyl-gauge normalization packet for the Cantor/Fock lane.
@@ -59,11 +55,7 @@ theorem normalizedWeylGauge_and_cantorFock
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
     B.weyl.totalReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u =
       B.weyl.weylScaleReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u *
-        B.weyl.shapeCoreReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u ∧
-    PrimeCantorTiltFockRepresentationOwnerTarget ∧
-    PrimeBooleanCubeCARBridgeOwnerTarget := by
-  exact ⟨B.weyl.total_eq_scale_mul_shape counts₁ counts₂ support u,
-    primeCantorTiltFockRepresentationOwnerTarget,
-    primeBooleanCubeCARBridgeOwnerTarget⟩
+        B.weyl.shapeCoreReadout (B.weyl.stateOfProfiles counts₁ counts₂ support) u := by
+  exact B.weyl.total_eq_scale_mul_shape counts₁ counts₂ support u
 
 end InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge

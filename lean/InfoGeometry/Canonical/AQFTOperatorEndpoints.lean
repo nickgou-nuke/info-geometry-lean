@@ -3,7 +3,8 @@ import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.RicciMongeAmpere
-import InfoGeometry.Canonical.IBCore
+import InfoGeometry.Canonical.IBTrajectory
+import InfoGeometry.Canonical.IBUpdate
 
 /-!
 # InfoGeometry.Canonical.AQFTOperatorEndpoints

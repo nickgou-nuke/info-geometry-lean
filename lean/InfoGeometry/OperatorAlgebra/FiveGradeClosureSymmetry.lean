@@ -131,6 +131,28 @@ def gradeOnePair : Submodule ℝ L :=
 def gradeTwoPair : Submodule ℝ L :=
   G.gNegTwo ⊔ G.gPosTwo
 
+/-- The opposite grade-one pair is stable under closure. -/
+theorem gradeOnePair_setwise_stable :
+    G.closure.SetwiseStable G.gradeOnePair := by
+  intro x hx
+  rcases Submodule.mem_sup.mp hx with ⟨y, hy, z, hz, rfl⟩
+  simpa [map_add] using (G.gradeOnePair).add_mem
+    (Submodule.mem_sup_right (S := G.gNegOne) (T := G.gPosOne)
+      (G.maps_negOne_to_posOne y hy))
+    (Submodule.mem_sup_left (S := G.gNegOne) (T := G.gPosOne)
+      (G.maps_posOne_to_negOne z hz))
+
+/-- The opposite grade-two pair is stable under closure. -/
+theorem gradeTwoPair_setwise_stable :
+    G.closure.SetwiseStable G.gradeTwoPair := by
+  intro x hx
+  rcases Submodule.mem_sup.mp hx with ⟨y, hy, z, hz, rfl⟩
+  simpa [map_add] using (G.gradeTwoPair).add_mem
+    (Submodule.mem_sup_right (S := G.gNegTwo) (T := G.gPosTwo)
+      (G.maps_negTwo_to_posTwo y hy))
+    (Submodule.mem_sup_left (S := G.gNegTwo) (T := G.gPosTwo)
+      (G.maps_posTwo_to_negTwo z hz))
+
 /--
 The Cartan/fixed component of a grade `-1` element lies in the opposite
 grade-one pair.

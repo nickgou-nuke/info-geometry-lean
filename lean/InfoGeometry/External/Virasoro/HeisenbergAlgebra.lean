@@ -323,6 +323,18 @@ noncomputable def basisJK : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
   | none => by simp [basisJK_none, ← lie_skew (jgen 𝕜 0)]
   | some l => by simp
 
+/-- The projection from the Heisenberg algebra to the abelian quotient kills all brackets. -/
+@[simp] lemma toAbelianLieAlgebraOn_bracket (X Y : HeisenbergAlgebra 𝕜) :
+    toAbelianLieAlgebraOn (𝕜 := 𝕜) ⁅X, Y⁆ = 0 := by
+  simp
+
+/-- The Heisenberg generators `K` and `J₀` are central. -/
+lemma central_kgen_jgen_zero (Z : HeisenbergAlgebra 𝕜) :
+    ⁅kgen 𝕜, Z⁆ = 0 ∧ ⁅jgen 𝕜 0, Z⁆ = 0 := by
+  constructor
+  · simpa using lie_kgen 𝕜 Z
+  · simpa using lie_jgen_zero 𝕜 Z
+
 end HeisenbergAlgebra -- namespace
 
 end HeisenbergAlgebra

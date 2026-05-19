@@ -25,6 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--top-k", type=int, default=8)
     parser.add_argument("--format", choices=["md", "json"], default="md")
     parser.add_argument("--brief", action="store_true", help="Render a compact provenance summary instead of raw explorer output")
+    parser.add_argument("--answer", action="store_true", help="Render a short cited answer synthesized from the top hits")
     parser.add_argument("--scope", choices=["all", "lean", "docs", "external", "gravity"], default="all")
     parser.add_argument("--no-gravity", action="store_true")
     parser.add_argument("--lean-records", type=Path, default=None)
@@ -35,7 +36,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_cmd(args: argparse.Namespace) -> list[str]:
-    fmt = "json" if args.brief else args.format
+    fmt = "json" if args.brief or args.answer else args.format
     cmd = [
         sys.executable,
         str(SCRIPT),
@@ -60,8 +61,9 @@ def build_cmd(args: argparse.Namespace) -> list[str]:
     return cmd
 
 
-def _count(items: list[dict[str, Any]]) -> int:
-    return sum(1 for item in items if isinstance(item, dict))
+def _hits(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    raw = payload.get(key, [])
+    return [item for item in raw if isinstance(item, dict)]
 
 
 def render_brief(payload: dict[str, Any]) -> str:
@@ -71,9 +73,9 @@ def render_brief(payload: dict[str, Any]) -> str:
     lines.append(f"Query: `{payload.get('query', '')}`")
     lines.append("")
 
-    lean = [item for item in payload.get("lean", []) if isinstance(item, dict)]
-    docs = [item for item in payload.get("docs", []) if isinstance(item, dict)]
-    external = [item for item in payload.get("external", []) if isinstance(item, dict)]
+    lean = _hits(payload, "lean")
+    docs = _hits(payload, "docs")
+    external = _hits(payload, "external")
     gravity = payload.get("gravity")
 
     lines.append("## Source breakdown")
@@ -136,6 +138,85 @@ def render_brief(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def render_answer(payload: dict[str, Any]) -> str:
+    lean = _hits(payload, "lean")
+    docs = _hits(payload, "docs")
+    external = _hits(payload, "external")
+    gravity = payload.get("gravity")
+
+    def top_names(items: list[dict[str, Any]], n: int = 3) -> list[str]:
+        out: list[str] = []
+        for item in items[:n]:
+            title = item.get("title") or item.get("name") or "item"
+            source = item.get("source") or "unknown"
+            out.append(f"{title} [{source}]")
+        return out
+
+    strongest: list[str] = []
+    strongest.extend(top_names(lean, 2))
+    strongest.extend(top_names(docs, 2))
+    strongest.extend(top_names(external, 1))
+
+    lines: list[str] = []
+    lines.append("# Answer draft")
+    lines.append("")
+    lines.append(f"Query: `{payload.get('query', '')}`")
+    lines.append("")
+
+    if strongest:
+        if lean:
+            lines.append(
+                "The strongest repo-local pointers come from Lean declarations, with supporting context from docs/black books and, where relevant, external mirrors."
+            )
+        elif docs:
+            lines.append(
+                "The strongest pointers are coming from documentation and black-book context, with no Lean declaration hits in the current scope."
+            )
+        elif external:
+            lines.append(
+                "The strongest pointers are coming from external mirrors only; treat them as discovery context, not proof authority."
+            )
+        else:
+            lines.append("No ranked hits were found in the current scope.")
+        lines.append("")
+        lines.append("Top pointers:")
+        for idx, label in enumerate(strongest[:5], start=1):
+            lines.append(f"{idx}. {label}")
+        lines.append("")
+    else:
+        lines.append("No ranked hits were found in the current scope.")
+        lines.append("")
+
+    if isinstance(gravity, dict):
+        if gravity.get("ok"):
+            payload_g = gravity.get("payload", {})
+            items = payload_g.get("items") or []
+            if items:
+                lines.append("Graph context:")
+                for idx, item in enumerate(items[:3], start=1):
+                    if not isinstance(item, dict):
+                        continue
+                    name = item.get("name") or item.get("decl") or item.get("id") or "item"
+                    score = item.get("score") or item.get("weight") or item.get("rank") or "?"
+                    lines.append(f"{idx}. {name} (score={score})")
+                lines.append("")
+        else:
+            lines.append(f"Graph context unavailable: {gravity.get('error')}")
+            lines.append("")
+
+    lines.append("Citations:")
+    for label in strongest[:5]:
+        lines.append(f"- {label}")
+    lines.append("")
+    lines.append("Authority labels:")
+    lines.append("- Lean = proof/navigation authority")
+    lines.append("- Docs/black books/handover = retrieval context")
+    lines.append("- External mirrors = search-only mirrors")
+    lines.append("- Gravity = graph navigation context only")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def main() -> int:
     args = parse_args()
     cmd = build_cmd(args)
@@ -144,8 +225,11 @@ def main() -> int:
         sys.stderr.write(proc.stderr or proc.stdout)
         return proc.returncode
 
-    if args.brief:
+    if args.answer or args.brief:
         payload = json.loads(proc.stdout)
+        if args.answer:
+            print(render_answer(payload))
+            return 0
         print(render_brief(payload))
         return 0
 

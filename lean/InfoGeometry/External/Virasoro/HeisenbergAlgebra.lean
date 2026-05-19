@@ -281,7 +281,11 @@ lemma central_ofCentral (a : 𝕜) (Z : HeisenbergAlgebra 𝕜) :
     ⁅ofCentral 𝕜 a, Z⁆ = 0 ∧ ⁅Z, ofCentral 𝕜 a⁆ = 0 := by
   constructor
   · simp
-  · rw [ofCentral_apply, lie_smul, lie_kgen, smul_zero]
+  · have hk' : -⁅Z, kgen 𝕜⁆ = 0 := by
+      rw [← lie_skew (kgen 𝕜) Z]
+      exact lie_kgen 𝕜 Z
+    have hk : ⁅Z, kgen 𝕜⁆ = 0 := neg_eq_zero.mp hk'
+    rw [ofCentral_apply, lie_smul, hk, smul_zero]
 
 @[simp] lemma lie_jgen (k l : ℤ) :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by

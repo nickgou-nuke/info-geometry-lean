@@ -48,12 +48,6 @@ structure WeylGaugeCantorFockBridge
   fractalFock_uses_cantorClifford :
     fractalFock.clifford = cantorClifford
 
-  /-- Compatibility with the arithmetic/Majorana local atom layer. -/
-  arithmeticMajoranaCompatibility : Prop
-
-  /-- Explicit witness for the arithmetic/Majorana compatibility. -/
-  arithmeticMajoranaCompatibility_witness : arithmeticMajoranaCompatibility
-
 /--
 The Master 2-Morphism: Coherence certificate for the relational formalization.
 This projection confirms that the bridge factors correctly through all layers.
@@ -63,10 +57,8 @@ theorem master_two_morphism
     {Raw Op : Type*} [Ring Op]
     (B : WeylGaugeCantorFockBridge Raw Op) :
     B.cantorClifford.tiltSwitch = B.normalizedTiltSwitch ∧
-    B.fractalFock.clifford = B.cantorClifford ∧
-    B.arithmeticMajoranaCompatibility :=
+    B.fractalFock.clifford = B.cantorClifford :=
   ⟨B.cantor_uses_normalized_tiltSwitch,
-   B.fractalFock_uses_cantorClifford,
-   B.arithmeticMajoranaCompatibility_witness⟩
+   B.fractalFock_uses_cantorClifford⟩
 
 end InfoGeometry.Canonical.WeylGaugeCantorFockBridge

@@ -2,8 +2,6 @@ import Mathlib
 import InfoGeometry.Basic
 import InfoGeometry.Thermodynamics.SouriauTemperature
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSurprisalNormalization
@@ -43,7 +41,6 @@ Normalized surprisal is the affine log transform
 
 `-log (w_i / Z) = -log w_i + log Z`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem normalizedSurprisal_eq_neg_log_weight_add_logZ
     {α : Type*} (w : α → ℝ) (Z : ℝ) (a : α)
     (hw : 0 < w a) (hZ : 0 < Z) :
@@ -56,7 +53,6 @@ theorem normalizedSurprisal_eq_neg_log_weight_add_logZ
 Specialization where the normalizer is the finite partition
 `Z = ∑ a, w a`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem normalizedSurprisal_eq_neg_log_weight_add_log_partition
     {α : Type*} [Fintype α] (w : α → ℝ) (a : α)
     (hw : 0 < w a) (hZ : 0 < ∑ x, w x) :
@@ -79,7 +75,6 @@ Finite prime product turns into an additive sum of log-weights:
 
 `-log (∏ q_p) = ∑ -log q_p`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem primeProductSurprisal_eq_sum
     (q : ℕ → ℝ) (S : Finset ℕ)
     (hq : ∀ p ∈ S, 0 < q p) :
@@ -101,7 +96,6 @@ def primeSouriauWeight (s : ℝ) (p : ℕ) : ℝ :=
 For a real Souriau temperature, the finite prime-product surprisal is the
 linear energy `s ∑ log p`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem primeSouriauWeight_surprisal_eq_mul_log
     (s : ℝ) (p : ℕ) :
     -Real.log (primeSouriauWeight s p) = s * Real.log p := by
@@ -115,7 +109,6 @@ weighted log-volume:
 
 `-log (∏ exp(-s log p)) = s * ∑ log p`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem primeSouriauProductSurprisal_eq_mul_sum
     (s : ℝ) (S : Finset ℕ) :
     -Real.log (S.prod (primeSouriauWeight s)) =
@@ -152,7 +145,6 @@ Complex Souriau temperature specialization of the prime surprisal law.
 The complex parameter enters only through its real part, which is the
 thermodynamically meaningful inverse-temperature coordinate.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexPrimeSouriauWeight_surprisal_eq_re_mul_log
     (s : ℂ) (p : ℕ) :
     -Real.log (complexPrimeSouriauWeight s p) = s.re * Real.log p := by
@@ -164,7 +156,6 @@ theorem complexPrimeSouriauWeight_surprisal_eq_re_mul_log
 Finite prime-product surprisal at complex Souriau temperature, projected to the
 real-part Gibbs weight.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexPrimeSouriauProductSurprisal_eq_re_mul_sum
     (s : ℂ) (S : Finset ℕ) :
     -Real.log (S.prod (complexPrimeSouriauWeight s)) =
@@ -184,38 +175,5 @@ theorem complexPrimeSouriauProductSurprisal_eq_re_mul_sum
   ring
 
 /-! ## 4. Prime-register owner target -/
-
-/--
-Owner target for the finite surprisal normalization bridge.
-
-This closes:
-* normalization as affine surprisal shift;
-* finite prime product as additive log energy;
-* real-part complex Souriau extension.
--/
-@[owner_target_tag]
-def PrimeSurprisalNormalizationOwnerTarget : Prop :=
-  (∀ {α : Type*} (w : α → ℝ) (Z : ℝ) (a : α),
-      0 < w a → 0 < Z →
-      normalizedSurprisal w Z a = -Real.log (w a) + Real.log Z)
-  ∧
-  (∀ (q : ℕ → ℝ) (S : Finset ℕ),
-      (∀ p ∈ S, 0 < q p) →
-      primeProductSurprisal q S = S.sum (fun p => -Real.log (q p)))
-  ∧
-  (∀ (s : ℂ) (S : Finset ℕ),
-      -Real.log (S.prod (complexPrimeSouriauWeight s)) =
-        s.re * S.sum (fun p => Real.log p))
-
-/-- The finite surprisal normalization owner target is proved. -/
-theorem primeSurprisalNormalizationOwnerTarget :
-    PrimeSurprisalNormalizationOwnerTarget := by
-  refine ⟨?_, ?_, ?_⟩
-  · intro α w Z a hw hZ
-    exact normalizedSurprisal_eq_neg_log_weight_add_logZ w Z a hw hZ
-  · intro q S hq
-    exact primeProductSurprisal_eq_sum q S hq
-  · intro s S
-    exact complexPrimeSouriauProductSurprisal_eq_re_mul_sum s S
 
 end InfoGeometry.Arithmetic.PrimeSurprisalNormalization

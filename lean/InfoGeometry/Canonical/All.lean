@@ -379,7 +379,6 @@ import InfoGeometry.Canonical.HestenesPhaseSpectral
 import InfoGeometry.Canonical.DrazinChiralFrameEquivariance
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.HyperbolicRotor
-import InfoGeometry.Canonical.IB
 import InfoGeometry.Canonical.IBBase
 import InfoGeometry.Canonical.IBCanonical
 import InfoGeometry.Canonical.IBCore
@@ -532,7 +531,6 @@ import InfoGeometry.Canonical.NoncommutativeModularSignum
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
-import InfoGeometry.Canonical.OperatorFreudenthalBoundary
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1

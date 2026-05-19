@@ -18,7 +18,6 @@ No vacuous determinant-invariance certificate is used.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.IndividuatedCasimir
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -131,26 +130,5 @@ theorem real_matrix_det_invariant_under_transport
     (U : InvertibleTransport (Matrix (Fin n) (Fin n) ℝ)) :
     Matrix.det (U.conjugate A) = Matrix.det A :=
   matrix_det_invariant_under_transport A U
-
-/-! ## 4. Owner target discharged constructively -/
-
-/--
-Owner target for finite determinant conjugation invariance.
--/
-@[owner_target_tag]
-def FiniteDeterminantConjugationOwnerTarget : Prop :=
-  ∀ (n : Type*) [Fintype n] [DecidableEq n],
-  ∀ (R : Type*) [CommRing R],
-  ∀ (A U U_inv : Matrix n n R),
-    U * U_inv = 1 →
-      Matrix.det (U * A * U_inv) = Matrix.det A
-
-/--
-Constructive proof of finite determinant conjugation invariance.
--/
-theorem finiteDeterminantConjugationOwnerTarget :
-    FiniteDeterminantConjugationOwnerTarget := by
-  intro n _ _ R _ A U U_inv h_right
-  exact matrix_det_conjugation_invariant A U U_inv h_right
 
 end InfoGeometry.OperatorAlgebra.VerifiedDeterminant

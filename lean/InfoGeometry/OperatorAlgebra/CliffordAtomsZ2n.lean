@@ -472,7 +472,7 @@ variable (G : GlobalAnomalyClass)
 def toLocalToGlobalAnomalyDatum : LocalToGlobalAnomalyDatum where
   localCharge := G.localSector
   globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
-  reductionMod16 := True
+  reductionMod16 := G.cyclicIndex = (G.integerLift : ZMod 16)
   compatibility := G.assembly_certificate
 
 end GlobalAnomalyClass

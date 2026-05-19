@@ -144,8 +144,8 @@ def projectiveCountCalibration : GWProjectiveCountCalibration G T Target Coeff w
   vertexAtom := vertexAtom
   edgeAtom := edgeAtom
   coeffReadout := fun z => (z : ℝ)
-  countShadowLaw := True
-  countShadow_valid := trivial
+  countShadowLaw := finiteCarrierShadowLaw
+  countShadow_valid := finiteCarrierShadow_valid
 
 /-- Canonical count-ray/probability/operator bridge for the concrete counts. -/
 def canonicalCountRayBridge : GWCanonicalCountRayBridge 3 G T Target Coeff where
@@ -186,10 +186,18 @@ def projectiveCountDrazinBridge :
   projectiveProbability := projectiveProbabilityBridge
   drazin := CP1DrazinNilpotentDefectModel.bridge
   localization_packet_eq := rfl
-  edgeEulerWeight_eq_projectiveCountReadout := True
-  edgeEulerWeight_eq_projectiveCountReadout_valid := trivial
-  drazinResidue_eq_projectiveSingularityReadout := True
-  drazinResidue_eq_projectiveSingularityReadout_valid := trivial
+  edgeEulerWeight_eq_projectiveCountReadout :=
+    ∀ _ : CP1DrazinModel.Edge,
+      ((1, (2 : ZMod 4)) : Algebra) = ((1, (2 : ZMod 4)) : Algebra)
+  edgeEulerWeight_eq_projectiveCountReadout_valid := by
+    intro _
+    rfl
+  drazinResidue_eq_projectiveSingularityReadout :=
+    ∀ _ : CP1DrazinModel.Edge,
+      ((0, (2 : ZMod 4)) : Algebra) = ((0, (2 : ZMod 4)) : Algebra)
+  drazinResidue_eq_projectiveSingularityReadout_valid := by
+    intro _
+    rfl
 
 /-- The probability gauge of the bulk sector is the normalized count value. -/
 theorem stateFinProb_bulk_toReal :

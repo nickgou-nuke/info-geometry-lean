@@ -196,6 +196,36 @@ noncomputable def multiplierClass (P : ProjectiveRepresentation K G V) :
       (K := K) (V := V)) = P.multiplierClass (G := G) (K := K) (V := V) :=
   rfl
 
+/-- The projective class vanishes exactly when the cocycle is a coboundary. -/
+theorem multiplierClass_eq_zero_iff_mem_coboundaries₂ (P : ProjectiveRepresentation K G V) :
+    P.multiplierClass (G := G) (K := K) (V := V) = 0 ↔
+      ⇑(P.multiplierToCocycles₂ (G := G) (K := K) (V := V)) ∈
+        groupCohomology.coboundaries₂ (Rep.ofMulDistribMulAction G Kˣ) := by
+  simpa [multiplierClass] using
+    (groupCohomology.H2π_eq_zero_iff
+      (A := Rep.ofMulDistribMulAction G Kˣ)
+      (x := P.multiplierToCocycles₂ (G := G) (K := K) (V := V)))
+
+/-- The projective class vanishes exactly when the multiplier is a multiplicative coboundary. -/
+theorem multiplierClass_eq_zero_iff_isMulCoboundary₂ (P : ProjectiveRepresentation K G V) :
+    P.multiplierClass (G := G) (K := K) (V := V) = 0 ↔
+      groupCohomology.IsMulCoboundary₂
+        (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) := by
+  constructor
+  · intro h
+    have hm :
+        ⇑(P.multiplierToCocycles₂ (G := G) (K := K) (V := V)) ∈
+          groupCohomology.coboundaries₂ (Rep.ofMulDistribMulAction G Kˣ) :=
+      (multiplierClass_eq_zero_iff_mem_coboundaries₂ (P := P)).mp h
+    exact groupCohomology.isMulCoboundary₂_of_mem_coboundaries₂
+      (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ))
+      hm
+  · intro h
+    refine (multiplierClass_eq_zero_iff_mem_coboundaries₂ (P := P)).mpr ?_
+    simpa [multiplierToCocycles₂] using
+      (groupCohomology.coboundariesOfIsMulCoboundary₂
+        (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) h).2
+
 end CocycleBridgeLowDegree
 
 /-- A genuine representation is a projective representation with trivial multiplier. -/
@@ -303,7 +333,7 @@ end ProjectivizationAction
 
 section CentralExtension
 
-variable {K G V : Type*}
+variable {K G V : Type}
   [Group G] [Field K] [AddCommGroup V] [Module K V]
 
 /--

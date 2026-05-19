@@ -124,10 +124,6 @@ def Spire_Stability_Conjecture_typed
 
 /-! ## 3. Concrete Operator Aliases -/
 
-def concrete_real_four_by_four_biquaternion_slice : Prop := True
-def concrete_majorana_bdg_four_by_four : Prop := True
-def concrete_real_pfaffian_bridge : Prop := True
-
 /-! ## 4. Prime Gas and Fierz Bridge Surface -/
 
 structure PrimeGasSymmetry where
@@ -136,25 +132,18 @@ structure PrimeGasSymmetry where
 structure PrimeGasJaynesData (V : Type*) where
   gas : V
 
-def PrimeGasJaynesConjecture {V : Type*} (_gas : V) : Prop := True
-
 structure FierzStressProjectionContext where
   projection : Prop
 
 structure PrimeGasOperatorialFierzPacket (V : Type*) where
   gas : V
-  jaynes : PrimeGasJaynesConjecture gas
+  jaynes : PrimeGasJaynesData V
   fierz : FierzStressProjectionContext
-
-theorem projectedStress_fierz_identity (V : Type*) (_ : PrimeGasOperatorialFierzPacket V) : True := trivial
-theorem projectedStress_majorana_identity (V : Type*) (_ : PrimeGasOperatorialFierzPacket V) : True := trivial
 
 /-! ## 5. MaxEnt and Onsager Bridge Surface -/
 
 structure PrimeGasMaxEntPacket where
   entropy : ℝ
-
-def PrimeGasJaynesRNBridge : Prop := True
 
 structure OnsagerReciprocalFlow where
   symmetry : Prop
@@ -164,17 +153,12 @@ structure PrimeGasOnsagerFierzBridge where
   eulerProductHypothesis : Prop
   primeLogEnergyHypothesis : Prop
 
-theorem onsager_projectedStress_fierz_identity (_ : PrimeGasOnsagerFierzBridge) : True := trivial
-
 /-! ## 6. Prime Gas KMS Target Bridge -/
 
 structure PrimeGasKMSTargetBridge where
   betaOdd_eq_zero : Prop
 
 def toSuperGeometricTemperature (_ : PrimeGasKMSTargetBridge) : ℝ := 0
-
-theorem toSuperGeometricTemperature_zero_odd (_ : PrimeGasKMSTargetBridge) : True := trivial
-theorem kms_target_projectedStress_fierz_identity (_ : PrimeGasKMSTargetBridge) : True := trivial
 
 /-! ## 7. Non-Equilibrium Bridge -/
 
@@ -187,13 +171,9 @@ structure ModularDerivationTower where
 structure BOperatorFormN where
   order : ℕ
 
-def isCompatibleWithModularTower (_ : BOperatorFormN) (_ : ModularDerivationTower) : Prop := True
-
 structure HigherOrderOnsagerOperatorialTheory where
   entropyProduction_nonneg : Prop
   maxOrder : ℕ
-
-theorem higher_order_projectedStress_fierz_identity (_ : HigherOrderOnsagerOperatorialTheory) : True := trivial
 
 /-! ## 8. Infinite-dimensional relative and Koliha-Drazin spectral surgery -/
 
@@ -208,19 +188,13 @@ def IsDenseDomain
     (_Dom : Submodule ℂ X) : Prop :=
   True
 
-def HasNonemptyResolvent
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_Dom : Submodule ℂ X)
-    (_op : _Dom →ₗ[ℂ] X) : Prop :=
-  True
-
 structure ClosedOperatorDatum
     (X : Type*) [NormedAddCommGroup X] [NormedSpace ℂ X] where
   Dom : Submodule ℂ X
   op : Dom →ₗ[ℂ] X
   closedGraph : IsClosedGraph Dom op
   denseDomain : IsDenseDomain Dom
-  resolventNonempty : HasNonemptyResolvent Dom op
+  resolventNonempty : Prop
 
 namespace ClosedOperatorDatum
 
@@ -271,47 +245,6 @@ structure RelativeSpectralSetHypotheses
   Gamma0 : Type
   Gamma0_admissible : Prop
 
-def RieszProjectionFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_σ : RelativeSpectralSetHypotheses _A)
-    (_Pσ : X →L[ℂ] X) : Prop :=
-  True
-
-def SpectralTopologicalDecompositionFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_σ : RelativeSpectralSetHypotheses _A)
-    (_Pσ _Pcore : X →L[ℂ] X) : Prop :=
-  True
-
-def BranchMapsDomainAllPowersFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_σ : RelativeSpectralSetHypotheses _A)
-    (_Pσ : X →L[ℂ] X) : Prop :=
-  True
-
-def ShiftedRelativeDrazinFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_σ : RelativeSpectralSetHypotheses _A)
-    (_Pσ _Pcore _ADσ : X →L[ℂ] X) : Prop :=
-  True
-
-def SpectralBranchSpectrumFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_σ : RelativeSpectralSetHypotheses _A)
-    (_Pσ _APσ : X →L[ℂ] X) : Prop :=
-  True
-
-def KolihaDrazinFunctionalCalculusFormula
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
-    (_A : ClosedOperatorDatum X)
-    (_AD : X →L[ℂ] X) : Prop :=
-  True
-
 structure KolihaZeroBranchHypotheses
     {X : Type*} [NormedAddCommGroup X] [NormedSpace ℂ X]
     (A : ClosedOperatorDatum X) where
@@ -347,11 +280,11 @@ structure RelativeSpectralDrazinSurgeryWitness
   disjoint_right :
     Pcore.comp Pσ = 0
   Pσ_contour_formula :
-    RieszProjectionFormula A σ Pσ
+    Prop
   topological_decomposition :
-    SpectralTopologicalDecompositionFormula A σ Pσ Pcore
+    Prop
   Pσ_maps_domain_all_powers :
-    BranchMapsDomainAllPowersFormula A σ Pσ
+    Prop
   Pσ_reduces_A :
     A.ReducesBounded Pσ
   Pcore_reduces_A :
@@ -362,9 +295,9 @@ structure RelativeSpectralDrazinSurgeryWitness
     ∀ x : X,
       A.applyAfterBounded Pσ Pσ_maps_domain x = APσ x
   spectral_branch_spectrum :
-    SpectralBranchSpectrumFormula A σ Pσ APσ
+    Prop
   ADσ_shifted_inverse_formula :
-    ShiftedRelativeDrazinFormula A σ Pσ Pcore ADσ
+    Prop
   ADσ_maps_domain :
     A.MapsIntoDomain ADσ
   ADσ_core_identity :
@@ -396,7 +329,7 @@ structure StrictKolihaDrazinSingletonSurgeryWitness
   sigma_zero :
     σ.sigma0 = {0}
   AD_functional_calculus_formula :
-    KolihaDrazinFunctionalCalculusFormula A relative.ADσ
+    Prop
   nil_branch_quasinilpotent :
     IsQuasinilpotent relative.APσ
 
@@ -437,7 +370,7 @@ structure KolihaDrazinSurgeryWitness
   nil_quasinilpotent :
     IsQuasinilpotent Anil
   AD_functional_calculus_formula :
-    KolihaDrazinFunctionalCalculusFormula A AD
+    Prop
   AD_maps_domain :
     A.MapsIntoDomain AD
   core_identity :
@@ -485,9 +418,6 @@ def SpectralZetaContinuationExistence : Prop :=
     ∃ Z : InfoGeometry.Analytic.SpectralZetaWitness,
       Z.kernel = W ∧ Z.analyticContinuation
 
-def TKKJacobiIdentity_FormalizationPending : Prop :=
-  True
-
 def STUFreudenthalEmbeddingFor
     {J : Type*} [AddCommGroup J] [Module ℝ J]
     (D : CubicJordanDatum J) : Prop :=
@@ -502,9 +432,6 @@ def KMSExistenceSupercharge : Prop :=
     (_Q : H →L[ℝ] H),
     ∃ S : InfoGeometry.Canonical.SuperKMS_Equilibrium.SuperKMSEquilibriumState,
       S.absorption = S.spontaneousEmission + S.stimulatedEmission
-
-def IBMonotonicity_FormalizationPending : Prop :=
-  True
 
 end Statements
 

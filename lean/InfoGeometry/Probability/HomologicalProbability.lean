@@ -2428,23 +2428,6 @@ def constructModularVolumeBridgePacket
     spectralVolumeComparison := SC }
 
 /--
-**Correction 26.5 — KL divergence is NOT Gromov–Hausdorff distance.**
-
-`D_KL(P|Q)` (or Araki relative entropy `S(φ|ψ)`) is a divergence comparing
-two states or weights on the same algebra.  It is not a metric.
-
-Quantum Gromov–Hausdorff distance (Rieffel 2000) is a metric on quantum
-metric spaces; it measures proximity of quantum metric *structures*, not
-divergence between *states*.
-
-Both can appear in a broader variational framework (optimal transport, quantum
-metric geometry), but they are distinct mathematical objects.
-
-This definition records that distinction as a structural placeholder.
--/
-def KLDivergenceDistinctFromGromovHausdorff : Prop := True
-
-/--
 **Definition 26.6 — Grand modular volume bridge capstone slogans.**
 
 Owner-level encoding of the seven-step synthesis:

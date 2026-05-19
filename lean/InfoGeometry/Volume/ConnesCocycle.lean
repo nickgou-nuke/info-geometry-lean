@@ -169,6 +169,17 @@ noncomputable def additiveModularFlowOfGenerator
     additiveModularFlowOfGenerator (H := H) K t A =
       InfoGeometry.Krein.modular_shift (E := H) K t A := rfl
 
+/-- Flipping the generator sign reverses the modular time parameter. -/
+@[simp] theorem additiveModularFlowOfGenerator_neg_eq_time_reverse
+    (K : AlgebraEnd H) (τ : ℝ) :
+    additiveModularFlowOfGenerator (H := H) (-K) τ =
+      additiveModularFlowOfGenerator (H := H) K (-τ) := by
+  ext A
+  ext x
+  simp [additiveModularFlowOfGenerator, modularShiftAlgEquiv,
+    InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift,
+    smul_neg, neg_smul, mul_assoc]
+
 end GeneratorFlow
 
 /--
@@ -630,6 +641,23 @@ noncomputable def scalarStabilizerCharacter
     (t : Multiplicative ℝ) :
     scalarStabilizerCharacter (H := H) σ u hCocycle B ⟨t, by trivial⟩ =
       scalarCocycle (H := H) σ u B t.toAdd :=
+  rfl
+
+/-- The scalar stabilizer character is the extracted stabilizer hom of the rotor cocycle. -/
+theorem scalarStabilizerCharacter_eq_extractStabilizerHom
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    scalarStabilizerCharacter (H := H) σ u hCocycle B =
+      InfoGeometry.Canonical.ProjectiveFoundation.extractStabilizerHom
+        (scalarProjectiveRotorCocycle (H := H) σ u hCocycle B)
+        PUnit.unit
+        (⊤ : Subgroup (Multiplicative ℝ))
+        (by
+          intro γ _
+          trivial) := by
+  ext t
   rfl
 
 /--

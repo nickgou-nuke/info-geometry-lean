@@ -219,7 +219,7 @@ def fresnelJonesTransport
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.dielectricReflection
-  coherent := True
+  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A Brewster reflection supplies a singular/projector-type transport event. -/
 def brewsterJonesTransport
@@ -228,7 +228,7 @@ def brewsterJonesTransport
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.brewsterReflection
-  coherent := True
+  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A lossless total-internal-reflection branch supplies a phase-retarder event. -/
 def losslessRetarderJonesTransport
@@ -237,7 +237,7 @@ def losslessRetarderJonesTransport
   matrix := R.jones
   tag := R.tag
   kind := OpticalEventKind.totalInternalReflection
-  coherent := True
+  coherent := R.jones 0 1 = 0 ∧ R.jones 1 0 = 0
 
 /-- A chiral medium supplies circular-basis Cartan transport. -/
 def chiralJonesTransport
@@ -245,7 +245,7 @@ def chiralJonesTransport
   matrix := C.jones
   tag := C.tag
   kind := OpticalEventKind.chiralMedium
-  coherent := True
+  coherent := C.jones 0 1 = 0 ∧ C.jones 1 0 = 0
 
 /--
 Rough or depolarizing surfaces are marked explicitly as outside the pure Jones

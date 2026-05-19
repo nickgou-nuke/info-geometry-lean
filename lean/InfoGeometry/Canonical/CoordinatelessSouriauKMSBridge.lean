@@ -604,10 +604,10 @@ theorem mk_of_kms
     (beta : ℝ)
     (kms : KMSState (H := H) sigma beta)
     (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
-    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state)
-    (weylGauge : WeylAlgebraGauge (H := H) kms.state) :
-    ∃ ctx : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent,
-      ctx.state = kms.state := by
+  (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state)
+  (weylGauge : WeylAlgebraGauge (H := H) kms.state) :
+  ∃ ctx : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent,
+    ctx.state = kms.state := by
   refine ⟨{
     sigma := sigma
     beta := beta
@@ -615,6 +615,29 @@ theorem mk_of_kms
     souriauMoment := souriauMoment
     fisherMetric := fisherMetric
     weylGauge := weylGauge
+  }, rfl⟩
+
+/--
+Constructor theorem for the narrowed KMS/Fisher lane when the Weyl gauge is the
+canonical identity gauge.  This eliminates the explicit `weylGauge` hypothesis
+by constructing it definitionally via `identityWeylAlgebraGauge`.
+-/
+@[rep_depth operator]
+theorem mk_of_kms_identity
+    (sigma : AdditiveModularFlow (H := H))
+    (beta : ℝ)
+    (kms : KMSState (H := H) sigma beta)
+    (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
+    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state) :
+    ∃ ctx : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent,
+      ctx.state = kms.state := by
+  refine ⟨{
+    sigma := sigma,
+    beta := beta,
+    kms := kms,
+    souriauMoment := souriauMoment,
+    fisherMetric := fisherMetric,
+    weylGauge := identityWeylAlgebraGauge (H := H) kms.state,
   }, rfl⟩
 
 /--

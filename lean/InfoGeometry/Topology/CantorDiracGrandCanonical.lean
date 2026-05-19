@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Core.GrandCanonical
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Topology.CantorDiracOperator
 
@@ -255,33 +254,6 @@ theorem spinodal2D_iff_det_eq_zero (B : CantorGrandCanonicalPacket) (β μ : ℝ
     spinodal2D B β μ ↔ (responseMatrix B β μ).det = 0 := by
   simpa [CantorGrandCanonicalPacket.spinodal2D, CantorGrandCanonicalPacket.responseMatrix] using
     InfoGeometry.GrandCanonical.spinodal2D_iff_det_eq_zero (params B) β μ
-
-/-! ## 4. Owner target -/
-
-/--
-Finite Cantor grand-canonical owner target.
-
-This closes the finite partition, normalization, first-derivative, second-
-derivative, and mixed-response identities.  No infinite limit is claimed.
--/
-@[owner_target_tag]
-def CantorGrandCanonicalOwnerTarget : Prop :=
-  ∀ (B : CantorGrandCanonicalPacket) (β μ : ℝ),
-    0 < B.partition β μ ∧
-      (∑ w, B.gibbsWeight β μ w = 1) ∧
-      (deriv (fun t => B.potential t μ) β = -B.meanShift β μ) ∧
-      (deriv (fun t => B.potential β t) μ = β * B.meanNumber β μ) ∧
-      (B.betaMuHessian β μ = B.muBetaHessian β μ)
-
-theorem cantorGrandCanonicalOwnerTarget :
-    CantorGrandCanonicalOwnerTarget := by
-  intro B β μ
-  exact
-    ⟨ partition_pos B β μ,
-      gibbsWeight_sum_one B β μ,
-      potential_deriv_beta_eq_neg_meanShift B β μ,
-      potential_deriv_mu_eq_beta_meanNumber B β μ,
-      betaMuHessian_eq_muBetaHessian B β μ ⟩
 
 end CantorGrandCanonicalPacket
 

@@ -15,7 +15,6 @@ theorem packets.
 
 import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -236,119 +235,6 @@ theorem weylScale_theta_eq
 
 end ClosureInvariantLeaf
 
-/-! ## 5. Bundled owner target -/
-
-/--
-Bundled finite/projective Souriau foliation witness.
-
-This is the graph-facing declaration surface: an orchestration layer can point
-to one Lean owner target while all substantial geometric laws remain supplied by
-the witness fields.
--/
-structure SouriauFoliationWitness
-    (State : Type*) where
-  /-- Installed Souriau leaf. -/
-  leaf : SymplecticLeaf State
-
-  /-- Reversible on-leaf modular flow. -/
-  modularFlow : OnLeafModularFlow leaf
-
-  /-- Leaf-invariant shape/core readout. -/
-  shapeReadout : LeafInvariantReadout leaf
-
-  /-- Dissipative transverse JKO-style flow. -/
-  jkoFlow : TransverseJKOFlow leaf
-
-  /-- Closure/Tomita-style involution preserving the leaf. -/
-  closureLeaf : ClosureInvariantLeaf leaf
-
-  /-- State under inspection. -/
-  state : State
-
-  /-- The inspected state lies on the installed leaf. -/
-  state_mem : state ∈ leaf.carrier
-
-  /-- Flow time for the owner target. -/
-  time : ℝ
-
-namespace SouriauFoliationWitness
-
-variable {State : Type*}
-variable (W : SouriauFoliationWitness State)
-
-/-- The modular flow preserves entropy on the installed leaf. -/
-theorem modular_entropy_preserved :
-    W.leaf.entropyReadout (W.modularFlow.flow W.time W.state) =
-      W.leaf.entropyReadout W.state :=
-  W.modularFlow.entropy_preserved W.time W.state_mem
-
-/-- The modular flow preserves Weyl scale on the installed leaf. -/
-theorem modular_weylScale_preserved :
-    W.leaf.weylScaleReadout (W.modularFlow.flow W.time W.state) =
-      W.leaf.weylScaleReadout W.state :=
-  W.modularFlow.weylScale_preserved W.time W.state_mem
-
-/-- The installed shape readout is preserved along the modular leaf flow. -/
-theorem modular_shapeReadout_preserved :
-    W.shapeReadout.readout (W.modularFlow.flow W.time W.state) =
-      W.shapeReadout.readout W.state :=
-  W.shapeReadout.readout_preserved_by_onLeafFlow W.modularFlow W.time W.state_mem
-
-/-- The closure involution preserves entropy on the installed leaf. -/
-theorem closure_entropy_preserved :
-    W.leaf.entropyReadout (W.closureLeaf.closure.theta W.state) =
-      W.leaf.entropyReadout W.state :=
-  W.closureLeaf.entropy_theta_eq W.state_mem
-
-/-- The closure involution preserves Weyl scale on the installed leaf. -/
-theorem closure_weylScale_preserved :
-    W.leaf.weylScaleReadout (W.closureLeaf.closure.theta W.state) =
-      W.leaf.weylScaleReadout W.state :=
-  W.closureLeaf.weylScale_theta_eq W.state_mem
-
-/-- The installed JKO-style step satisfies its supplied transverse law. -/
-theorem jko_transverse_law :
-    W.jkoFlow.transverseLaw W.state (W.jkoFlow.step W.state) :=
-  W.jkoFlow.transverse_step_law W.state_mem
-
-/--
-Installed owner target for the finite/projective Souriau foliation sidecar.
-
-The target states only processed consequences of supplied witnesses:
-on-leaf modular motion preserves entropy/Weyl scale/shape readout, closure
-preserves entropy/Weyl scale, and the JKO step satisfies its installed
-transverse law.
--/
-@[owner_target_tag]
-def SouriauFoliationOwnerTarget : Prop :=
-  ∀ (State : Type*) (W : SouriauFoliationWitness State),
-    W.leaf.entropyReadout (W.modularFlow.flow W.time W.state) =
-      W.leaf.entropyReadout W.state ∧
-    W.leaf.weylScaleReadout (W.modularFlow.flow W.time W.state) =
-      W.leaf.weylScaleReadout W.state ∧
-    W.shapeReadout.readout (W.modularFlow.flow W.time W.state) =
-      W.shapeReadout.readout W.state ∧
-    W.leaf.entropyReadout (W.closureLeaf.closure.theta W.state) =
-      W.leaf.entropyReadout W.state ∧
-    W.leaf.weylScaleReadout (W.closureLeaf.closure.theta W.state) =
-      W.leaf.weylScaleReadout W.state ∧
-    W.jkoFlow.transverseLaw W.state (W.jkoFlow.step W.state)
-
-/-- The owner target follows directly from the supplied foliation witness. -/
-theorem souriauFoliationOwnerTarget :
-    SouriauFoliationOwnerTarget := by
-  intro State W
-  exact ⟨
-    W.modular_entropy_preserved,
-    W.modular_weylScale_preserved,
-    W.modular_shapeReadout_preserved,
-    W.closure_entropy_preserved,
-    W.closure_weylScale_preserved,
-    W.jko_transverse_law
-  ⟩
-
-end SouriauFoliationWitness
-
 /-! ## 6. Positive-temperature specialization alias -/
 
 /--
@@ -361,4 +247,3 @@ abbrev PositiveTemperatureLeaf :=
   SymplecticLeaf PositiveSouriauTemperature
 
 end InfoGeometry.Thermodynamics.SouriauFoliation
-

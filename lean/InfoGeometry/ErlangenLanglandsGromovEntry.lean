@@ -17,10 +17,6 @@ namespace InfoGeometry
 
 namespace ErlangenLanglandsGromovEntry
 
-/-- Sentinel declaration confirming the integration entrypoint loaded. -/
-theorem loaded : True := by
-  trivial
-
 end ErlangenLanglandsGromovEntry
 
 end InfoGeometry

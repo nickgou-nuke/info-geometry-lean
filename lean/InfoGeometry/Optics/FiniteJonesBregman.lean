@@ -32,7 +32,6 @@ this gives a proved finite heat readout:
 -/
 
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Optics.FiniteJonesStinespring
 
 noncomputable section
@@ -323,28 +322,5 @@ theorem diagonalJonesHeat_eq_hiddenGainPotential
         (star (diagJones v_s v_p) * diagJones v_s v_p) := by
   rw [diagonalJonesHeat_eq_hiddenGainBregman]
   exact frobeniusBregman_to_zero _
-
-/-! ## 5. Constructive owner target -/
-
-/--
-Owner target for constructive finite Jones Bregman heat.
--/
-@[owner_target_tag]
-def FiniteJonesBregmanOwnerTarget : Prop :=
-  ∀ S : StinespringIsometry JonesMat,
-    0 ≤ finiteStinespringHeat S ∧
-    finiteStinespringHeat S =
-      frobeniusBregman (star S.V * S.V) 0
-
-/--
-The owner target is constructively discharged.
--/
-theorem finiteJonesBregmanOwnerTarget :
-    FiniteJonesBregmanOwnerTarget := by
-  intro S
-  exact ⟨
-    finiteStinespringHeat_nonneg S,
-    finiteStinespringHeat_eq_hiddenGainBregman S
-  ⟩
 
 end InfoGeometry.Optics.FiniteJonesBregman

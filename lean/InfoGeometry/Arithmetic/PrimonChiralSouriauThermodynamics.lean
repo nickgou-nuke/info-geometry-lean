@@ -350,110 +350,15 @@ theorem primonHeisenbergJgen_mem_center_iff (n : ℤ) :
       LieAlgebra.center ℂ (VirasoroProject.HeisenbergAlgebra ℂ) ↔ n = 0 := by
   exact VirasoroProject.HeisenbergAlgebra.jgen_mem_center_iff (𝕜 := ℂ) n
 
-/-- The center of the Heisenberg algebra is exactly the span of `K` and `J₀`. -/
+/-- The Heisenberg Cartan subalgebra is the span of `K` and `J₀`. -/
 @[rep_depth thermo]
-theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
-    LieAlgebra.center ℂ (VirasoroProject.HeisenbergAlgebra ℂ) =
+theorem primonHeisenbergCartan_eq_span_kgen_jgen_zero :
+    (VirasoroProject.heisenbergTri ℂ).cartan =
       Submodule.span ℂ
         ({VirasoroProject.HeisenbergAlgebra.kgen ℂ,
             VirasoroProject.HeisenbergAlgebra.jgen ℂ 0} :
           Set (VirasoroProject.HeisenbergAlgebra ℂ)) := by
-  classical
-  apply le_antisymm
-  · intro Z hZ
-    have hcentralR : ∀ x : VirasoroProject.HeisenbergAlgebra ℂ, ⁅x, Z⁆ = 0 := by
-      simpa [LieAlgebra.center] using hZ
-    have hcentral : ∀ x : VirasoroProject.HeisenbergAlgebra ℂ, ⁅Z, x⁆ = 0 := by
-      intro x
-      have hx : -⁅Z, x⁆ = 0 := by
-        simpa [lie_skew] using (hcentralR x)
-      exact neg_eq_zero.mp hx
-    have hspan :
-        Z ∈ Submodule.span ℂ
-          ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ) ''
-            ({none, some 0} : Set (Option ℤ))) := by
-      refine (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).mem_span_image.mpr ?_
-      intro i hi
-      by_cases hi0 : i = none
-      · simpa [hi0] using hi
-      · by_cases hi1 : i = some 0
-        · simpa [hi1] using hi
-        · rcases i with _ | n
-          · exact (hi0 rfl).elim
-          · have hn : n ≠ 0 := by
-              intro h
-              apply hi1
-              simp [h]
-            have hsum :
-                ∑ x ∈ ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z).support,
-                  ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) x •
-                    ⁅VirasoroProject.HeisenbergAlgebra.basisJK ℂ x,
-                      VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)⁆ = 0 := by
-              have h := hcentral (VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n))
-              rw [← (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).linearCombination_repr Z] at h
-              rw [Finsupp.linearCombination_apply] at h
-              rw [Finsupp.sum] at h
-              simpa [sum_lie] using h
-            have h0 :
-                ∀ b ∈ ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z).support,
-                  b ≠ some n →
-                    ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) b •
-                      ⁅VirasoroProject.HeisenbergAlgebra.basisJK ℂ b,
-                        VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)⁆ = 0 := by
-              intro b hb hne
-              rcases b with _ | m
-              · simp [VirasoroProject.HeisenbergAlgebra.basisJK_none,
-                  VirasoroProject.HeisenbergAlgebra.lie_kgen]
-              · have hm : m ≠ n := by
-                  intro hmn
-                  apply hne
-                  simp [hmn]
-                have hcond : m + -n ≠ 0 := by
-                  intro h
-                  have hmn : m = n := by linarith
-                  exact hm hmn
-                simp [VirasoroProject.HeisenbergAlgebra.basisJK_some,
-                  VirasoroProject.HeisenbergAlgebra.lie_jgen, hcond]
-            have h1 :
-                some n ∉ ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z).support →
-                  ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) (some n) •
-                    ⁅VirasoroProject.HeisenbergAlgebra.basisJK ℂ (some n),
-                      VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)⁆ = 0 := by
-              intro hnot
-              simp [Finsupp.mem_support_iff] at hnot
-              simp [VirasoroProject.HeisenbergAlgebra.basisJK_some,
-                VirasoroProject.HeisenbergAlgebra.lie_jgen, hnot, hn]
-            have hk : VirasoroProject.HeisenbergAlgebra.kgen ℂ ≠ 0 := by
-              simpa [VirasoroProject.HeisenbergAlgebra.kgen_eq'] using
-                (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).ne_zero none
-            have hcoeff :
-                ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) (some n) = 0 := by
-              have hsumPrime := hsum
-              rw [Finset.sum_eq_single (some n) h0 h1] at hsumPrime
-              simp [VirasoroProject.HeisenbergAlgebra.basisJK_some,
-                VirasoroProject.HeisenbergAlgebra.lie_jgen, hn,
-                smul_smul, mul_comm, mul_left_comm, mul_assoc] at hsumPrime
-              exact hsumPrime.resolve_right hk
-            have hnot :
-                some n ∉ ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z).support := by
-              simpa [Finsupp.mem_support_iff, hcoeff]
-            exact (hnot hi).elim
-    have himage :
-        (VirasoroProject.HeisenbergAlgebra.basisJK ℂ) ''
-            ({none, some 0} : Set (Option ℤ)) =
-          ({VirasoroProject.HeisenbergAlgebra.kgen ℂ,
-              VirasoroProject.HeisenbergAlgebra.jgen ℂ 0} :
-            Set (VirasoroProject.HeisenbergAlgebra ℂ)) := by
-      ext x
-      aesop
-    simpa [himage] using hspan
-  · refine Submodule.span_le.mpr ?_
-    intro y hy
-    rcases hy with rfl | rfl
-    · change VirasoroProject.HeisenbergAlgebra.ofCentral ℂ 1 ∈
-        LieAlgebra.center ℂ (VirasoroProject.HeisenbergAlgebra ℂ)
-      exact VirasoroProject.HeisenbergAlgebra.ofCentral_mem_center (𝕜 := ℂ) 1
-    · exact (VirasoroProject.HeisenbergAlgebra.jgen_mem_center_iff (𝕜 := ℂ) 0).2 rfl
+  exact VirasoroProject.heisenbergTri_cartan ℂ
 
 /-- The imported five-grade closure keeps grade zero stable and Cartan-decomposed. -/
 @[rep_depth thermo]

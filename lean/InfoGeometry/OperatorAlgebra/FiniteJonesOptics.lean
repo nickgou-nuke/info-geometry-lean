@@ -23,7 +23,6 @@ to `SusceptibilityHessian.lean`.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.JonesCalibration
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -300,43 +299,5 @@ theorem det2_chiralMediumEvent_jones
     PolarizationBasis.circular
     OpticalSurfaceKind.chiralMedium
     rL rR tag
-
-/-! ## 7. Owner target -/
-
-/--
-Owner target for the finite Jones optics instantiation.
-
-The concrete finite-dimensional optical branch proves:
-
-* Brewster events are Brewster/rank-collapse events;
-* lossless retarder events are lossless;
-* diagonal determinants are channel products.
--/
-@[owner_target_tag]
-def FiniteJonesOpticsOwnerTarget : Prop :=
-  (∀ (rs : ℂ) (hrs : rs ≠ 0),
-    IsBrewsterEvent (brewsterEvent rs hrs) ∧
-      det2 (brewsterEvent rs hrs).jones = 0)
-  ∧
-  (∀ (rs rp : ℂ)
-      (hrs : ‖rs‖ = 1)
-      (hrp : ‖rp‖ = 1),
-    IsLosslessRetarder (losslessSPRetarderEvent rs rp hrs hrp) ∧
-      det2 (losslessSPRetarderEvent rs rp hrs hrp).jones = rs * rp)
-
-/-- The finite Jones optics owner target is proved by the concrete constructors. -/
-theorem finiteJonesOpticsOwnerTarget :
-    FiniteJonesOpticsOwnerTarget := by
-  constructor
-  · intro rs hrs
-    exact ⟨
-      brewsterEvent_isBrewster rs hrs,
-      det2_brewsterEvent_jones rs hrs
-    ⟩
-  · intro rs rp hrs hrp
-    exact ⟨
-      losslessSPRetarderEvent_isLossless rs rp hrs hrp,
-      det2_losslessSPRetarderEvent_jones rs rp hrs hrp
-    ⟩
 
 end InfoGeometry.OperatorAlgebra.FiniteJonesOptics

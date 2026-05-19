@@ -271,13 +271,33 @@ theorem virasoroVermaToChargedFockSpace_uniqueByVacuum (α : 𝕜)
     (hφ : φ (.hwVec 𝕜 _ _) = vacuum 𝕜 α) :
     φ = virasoroVermaToChargedFockSpace 𝕜 α := by
   ext v
-  rw [← VirasoroVerma.hwVec_cyclic 𝕜 1 (α^2 / 2)]
-  refine UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero _ _ ?_ ?_ ?_ v
-  · intro X
-    simp
-  · exact hφ
-  · intro X
-    simp
+  have hv : v ∈ Submodule.span (𝓤 𝕜 (VirasoroAlgebra 𝕜))
+      {VirasoroVerma.hwVec 𝕜 1 (α^2 / 2)} := by
+    simpa [VirasoroVerma.hwVec_cyclic 𝕜 1 (α^2 / 2)] using
+      (Submodule.mem_top (R := 𝓤 𝕜 (VirasoroAlgebra 𝕜)) : v ∈ (⊤ : Submodule _ _))
+  refine Submodule.span_induction
+      (p := fun x _ ↦ φ x = virasoroVermaToChargedFockSpace 𝕜 α x)
+      ?_ ?_ ?_ ?_ hv
+  · intro x hx
+    simp at hx
+    subst hx
+    simpa [hφ, virasoroVermaToChargedFockSpace_hwVec] using hφ
+  · simp
+  · intro x y hx hy hx' hy'
+    simp [map_add, hx', hy']
+  · intro r x hx hx'
+    simp [map_smul, hx']
+
+/-- The Verma-to-Fock map is surjective. -/
+theorem virasoroVermaToChargedFockSpace_surjective (α : 𝕜) :
+    Function.Surjective (virasoroVermaToChargedFockSpace 𝕜 α) := by
+  intro y
+  have hy : y ∈ Submodule.span (𝓤 𝕜 (VirasoroAlgebra 𝕜)) {vacuum 𝕜 α} := by
+    simpa [ChargedFockSpace.vacuum_cyclic 𝕜 α] using
+      (Submodule.mem_top (R := 𝓤 𝕜 (VirasoroAlgebra 𝕜)) : y ∈ (⊤ : Submodule _ _))
+  rcases Submodule.mem_span_singleton.mp hy with ⟨a, rfl⟩
+  refine ⟨a • VirasoroVerma.hwVec 𝕜 1 (α^2 / 2), ?_⟩
+  simp [virasoroVermaToChargedFockSpace, virasoroVermaToChargedFockSpace_hwVec]
 
 end ChargedFockSpace
 

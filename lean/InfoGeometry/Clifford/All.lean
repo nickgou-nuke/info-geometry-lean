@@ -24,7 +24,7 @@ import InfoGeometry.Clifford.SplitQ11Equivariance
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
-import InfoGeometry.Clifford.Supercharge
+import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix
 import InfoGeometry.Clifford.ChiralBasis

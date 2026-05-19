@@ -3,9 +3,6 @@ import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
@@ -112,7 +109,6 @@ def complexFermionGrandPartition
     modes (complexGrandModeWeight β energy mu)
 
 /-- Euler-product form of the finite fermionic grand partition. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexFermionGrandPartition_eq_prod
     (modes : Finset ι) (β : SouriauTemperature)
     (energy mu : ι → ℝ) :
@@ -131,7 +127,6 @@ def complexFermionGrandSupertrace
     modes (complexGrandModeWeight β energy mu)
 
 /-- Euler-product form of the finite signed/Möbius grand supertrace. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexFermionGrandSupertrace_eq_prod
     (modes : Finset ι) (β : SouriauTemperature)
     (energy mu : ι → ℝ) :
@@ -150,7 +145,6 @@ def complexBosonGrandPartition
     modes (complexGrandModeWeight β energy mu)
 
 /-- Product form of the finite bosonic grand partition. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexBosonGrandPartition_eq_prod_inv
     (modes : Finset ι) (β : SouriauTemperature)
     (energy mu : ι → ℝ) :
@@ -159,7 +153,6 @@ theorem complexBosonGrandPartition_eq_prod_inv
   rfl
 
 /-- Finite boson/signed-fermion cancellation. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexBoson_mul_signedFermionGrandSupertrace_eq_one
     (modes : Finset ι) (β : SouriauTemperature)
     (energy mu : ι → ℝ)
@@ -191,7 +184,6 @@ def normalizedComplexFermionGrandDensity
     (complexFermionGrandPartition modes β energy mu)⁻¹
 
 /-- The normalized finite density sums to one if the finite partition is nonzero. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem normalizedComplexFermionGrandDensity_sum_eq_one
     (modes : Finset ι) (β : SouriauTemperature)
     (energy mu : ι → ℝ)
@@ -230,7 +222,6 @@ def grandPotential (β Z : ℂ) : ℂ :=
   - β⁻¹ * massieuPlanck Z
 
 /-- Definitional readout of the grand potential in Massieu--Planck form. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem grandPotential_eq_neg_inv_beta_mul_massieu
     (β Z : ℂ) :
     grandPotential β Z = -β⁻¹ * massieuPlanck Z := by
@@ -259,7 +250,6 @@ This is the generic information-geometric layer: a model supplies a Massieu
 potential, entropy, energy, particle number, chemical potential, and the
 Legendre laws.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure MassieuPlanckLegendreCalibration (Param : Type*) where
   beta : Param → ℂ
   chemicalPotential : Param → ℂ
@@ -325,7 +315,6 @@ def complexGrandThermalVacuumAmplitude
   Complex.exp (-(β / 2 * grandEnergyC energy mu S))
 
 /-- The complex thermal-vacuum amplitude squares to the Boltzmann weight. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexGrandThermalVacuumAmplitude_mul_self_eq_weight
     (β : SouriauTemperature) (energy mu : ι → ℝ) (S : FState ι) :
     complexGrandThermalVacuumAmplitude β energy mu S *
@@ -358,7 +347,6 @@ This is the finite kernel form
 
 `ρ(S) A(S,T) = ρ(T) σ_{iβ}(A)(S,T)`.
 -/
-@[bridge_target_tag, rep_depth thermo]
 theorem complexGrandKMS_periodicity_condition
     (β : SouriauTemperature) (energy mu : ι → ℝ)
     (A : Kernel (ι := ι))
@@ -411,7 +399,6 @@ def regularizedBregmanComplex
   bregmanComplex A firstOrderAt θ η + ε * ‖θ - η‖ ^ 2
 
 /-- Regularized Bregman divergence is nonnegative if the base Bregman term is. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem regularizedBregmanComplex_nonneg
     (A : ℂ → ℝ)
     (firstOrderAt : ℂ → ℂ → ℝ)
@@ -431,7 +418,6 @@ The convexity/self-concordance facts are witness-gated.  The finite theorem
 above proves only elementary nonnegativity once the model supplies base
 Bregman nonnegativity.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure RegularizedMassieuBregmanPacket where
   potential : ℂ → ℝ
   firstOrderAt : ℂ → ℂ → ℝ
@@ -450,7 +436,6 @@ def divergence (θ η : ℂ) : ℝ :=
   regularizedBregmanComplex B.potential B.firstOrderAt B.epsilon θ η
 
 /-- The packet's regularized divergence is nonnegative. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem divergence_nonneg (θ η : ℂ) :
     0 ≤ B.divergence θ η :=
   regularizedBregmanComplex_nonneg
@@ -472,7 +457,6 @@ The intended analytic specialization is
 but the completed zeta construction and analytic continuation are not native
 finite theorems here.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure ZetaMassieuPotentialSocket where
   zetaPartition : ℂ → ℂ
 
@@ -500,7 +484,6 @@ The intended analytic identity is
 in the half-plane where the Dirichlet series converges.  The equality is kept
 as a socket field.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure VonMangoldtMomentMapBridge where
   souriauMoment : ℂ → ℂ
   vonMangoldtDirichletSeries : ℂ → ℂ
@@ -547,7 +530,6 @@ def zetaBregmanDivergence
     Phi.gradient s₂ * (s₁ - s₂)
 
 /-- The complex zeta Bregman divergence vanishes on the diagonal. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem zetaBregmanDivergence_self_eq_zero
     (Phi : ZetaMassieuPotentialSocket)
     (s : ℂ) :
@@ -584,14 +566,12 @@ def zetaKleinAct : ZetaKleinSymmetry → ℂ → ℂ
   | ZetaKleinSymmetry.functionalConjugation, s => 1 - star s
 
 /-- Each finite zeta Klein symmetry is involutive on the complex plane. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem zetaKleinAct_involutive
     (g : ZetaKleinSymmetry) (s : ℂ) :
     zetaKleinAct g (zetaKleinAct g s) = s := by
   cases g <;> simp [zetaKleinAct]
 
 /-- The finite zeta Klein symmetries preserve the critical line. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem zetaKleinAct_preserves_criticalLine
     (g : ZetaKleinSymmetry) {s : ℂ}
     (hs : CriticalLine s) :
@@ -612,7 +592,6 @@ Functional-equation / zeta-plane thermodynamic symmetry socket.
 The actual analytic zeta/xi functional equation is not proved here.  A model
 supplies the partition function, its Massieu readout, and the invariance law.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure ZetaFunctionalEquationThermodynamics where
   partition : ℂ → ℂ
 
@@ -628,19 +607,11 @@ variable (Z : ZetaFunctionalEquationThermodynamics)
 def massieuFromFunctionalEquation (partition : ℂ → ℂ) : ℂ → ℂ :=
   fun β => Complex.log (partition β)
 
-namespace ZetaFunctionalEquationThermodynamics
-
-variable (Z : ZetaFunctionalEquationThermodynamics)
-
 /-- Re-export of the derived Massieu/log-partition law. -/
 @[rep_depth thermo]
 theorem massieu_eq_log_partition_of_socket (β : ℂ) :
     massieuFromFunctionalEquation Z.partition β = Complex.log (Z.partition β) :=
   rfl
-
-end ZetaFunctionalEquationThermodynamics
-
-namespace ZetaFunctionalEquationThermodynamics
 
 variable (Z : ZetaFunctionalEquationThermodynamics)
 
@@ -651,8 +622,6 @@ theorem partition_zero_reflects {β : ℂ}
     Z.partition (1 - β) = 0 := by
   rw [← Z.partition_duality β]
   exact h
-
-end ZetaFunctionalEquationThermodynamics
 
 end ZetaFunctionalEquationThermodynamics
 
@@ -667,7 +636,6 @@ This is the Lie-group/Souriau layer.  The group action and invariance law are
 supplied by the model; finite partition identities live in the finite ensemble
 layer above.
 -/
-@[socket_debt_tag, rep_depth thermo]
 structure SouriauZetaLieGroupThermodynamics
     (G : Type*) [Group G] where
   actOnBeta : G → ℂ → ℂ
@@ -755,7 +723,6 @@ def finitePrimeBosonGrandPartition
   complexBosonGrandPartition P.primes β primeEnergy zeroChemicalPotential
 
 /-- Product form of the finite prime bosonic grand partition. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem finitePrimeBosonGrandPartition_eq_prod
     (P : PrimeRegister) (β : ℂ) :
     finitePrimeBosonGrandPartition P β =
@@ -769,7 +736,6 @@ def finitePrimeSignedGrandSupertrace
   complexFermionGrandSupertrace P.primes β primeEnergy zeroChemicalPotential
 
 /-- Product form of the finite prime signed/Möbius grand supertrace. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem finitePrimeSignedGrandSupertrace_eq_prod
     (P : PrimeRegister) (β : ℂ) :
     finitePrimeSignedGrandSupertrace P β =
@@ -796,7 +762,6 @@ def finitePrimeGrandPotential
     (P : PrimeRegister) (β : ℂ) : ℂ :=
   grandPotential β (finitePrimeBosonGrandPartition P β)
 
-@[bridge_target_tag, rep_depth thermo]
 theorem finitePrimeGrandPotential_eq
     (P : PrimeRegister) (β : ℂ) :
     finitePrimeGrandPotential P β =

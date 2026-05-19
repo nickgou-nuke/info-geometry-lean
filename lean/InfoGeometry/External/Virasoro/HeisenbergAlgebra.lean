@@ -157,6 +157,13 @@ theorem nontrivial_lieTwoCohomology :
     Nontrivial (LieTwoCohomology 𝕜 (AbelianLieAlgebraOn ℤ 𝕜) 𝕜) :=
   nontrivial_of_ne _ _ (cohomologyClass_heisenbergCocycle_ne_zero 𝕜)
 
+/-- The Heisenberg cocycle and its cohomology class are both nontrivial. -/
+theorem heisenbergCocycle_nontriviality :
+    heisenbergCocycle 𝕜 ≠ 0 ∧ (heisenbergCocycle 𝕜).cohomologyClass ≠ 0 := by
+  constructor
+  · exact heisenbergCocycle_ne_zero 𝕜
+  · exact cohomologyClass_heisenbergCocycle_ne_zero 𝕜
+
 end AbelianLieAlgebraOn -- namespace
 
 end HeisenbergCocycle -- section

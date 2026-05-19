@@ -1,6 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeWittenCharacter
@@ -307,32 +306,5 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
   exact InfoGeometry.Arithmetic.PrimeWittenCharacter.finiteWittenCharacter_eq_dirichletWittenCharacter
     P q
 
-
-/-! ## 6. Owner target -/
-
-/--
-Canonical finite Boolean-cube owner target.
-
-This owner intentionally covers only finite combinatorial closure.
--/
-@[owner_target_tag]
-def PrimeBooleanCubeOwnerTarget : Prop :=
-  ∀ (P : PrimeRegister) (v : Vertex P) (q : ℕ → ℝ),
-    globalChirality P v.val = fermionParity v ∧
-    ArithmeticFunction.moebius (representedNat v) = fermionParity v ∧
-    finiteWittenCharacter P q =
-      InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q ∧
-    finiteWittenCharacter P q =
-      InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter P q
-
-/-- The canonical finite Boolean-cube owner target is closed. -/
-theorem primeBooleanCubeOwnerTarget :
-    PrimeBooleanCubeOwnerTarget := by
-  intro P v q
-  exact
-    ⟨ globalChirality_vertex_eq_fermionParity P v,
-      mobius_representedNat_eq_fermionParity P v,
-      finiteWittenCharacter_eq_eulerProduct P q,
-      finiteWittenCharacter_eq_dirichletWittenCharacter P q ⟩
 
 end InfoGeometry.Arithmetic.PrimeBooleanCube

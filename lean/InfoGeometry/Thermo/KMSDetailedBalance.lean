@@ -15,7 +15,6 @@ surface that is already constructive:
 
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Dynamics.ModularThermalState
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -229,32 +228,5 @@ theorem boundaryIntegral_eq_zero
   D.form.boundaryIntegral_eq_zero Ω
 
 end KMSDetailedBalance
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for KMS detailed balance:
-
-once a KMS/detailed-balance packet is supplied, both the algebraic KMS boundary
-identity and the closed-form Stokes boundary vanishing theorem are available.
--/
-@[owner_target_tag]
-def KMSDetailedBalanceOwnerTarget : Prop :=
-  ∀ (A Region Point Tangent Value : Type*)
-    [Mul A]
-    [AddCommGroup Value] [Module ℝ Value],
-  ∀ (I : GeometricIntegralBackend Region Point Tangent Value),
-  ∀ D : KMSDetailedBalance A Region Point Tangent Value I,
-  ∀ (Ω : Region) (t : ℝ) (a b : A),
-    lowerKMSCorrelation D.kms t a b =
-      upperKMSCorrelation D.kms t a b
-    ∧
-    I.boundaryIntegral Ω D.form.modularForm = 0
-
-/-- Constructive proof of the KMS detailed-balance owner target. -/
-theorem kmsDetailedBalanceOwnerTarget :
-    KMSDetailedBalanceOwnerTarget := by
-  intro A Region Point Tangent Value _ _ _ I D Ω t a b
-  exact ⟨D.kms_boundary t a b, D.boundaryIntegral_eq_zero Ω⟩
 
 end InfoGeometry.Thermo.KMSDetailedBalance

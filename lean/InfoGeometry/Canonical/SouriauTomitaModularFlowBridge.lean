@@ -457,6 +457,12 @@ variable (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
 def state : AlgebraicState (H := H) :=
   C.kms.state
 
+/-- State equality between the minimal context and its underlying KMS state. -/
+@[rep_depth operator]
+ theorem state_eq_kms_state :
+   C.state = C.kms.state :=
+  rfl
+
 /-- Constructor theorem for the narrowed KMS lane with no explicit `state` packet. -/
 @[rep_depth operator]
 theorem mk_of_kms

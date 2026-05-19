@@ -2,8 +2,6 @@ import Mathlib
 import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
@@ -279,34 +277,6 @@ def logPrimeEnergyWeight : ℕ → ℝ :=
 def logPrimePacket (P : PrimeRegister) : PrimeGrandCanonicalPacket where
   P := P
   energyWeight := logPrimeEnergyWeight
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for the finite prime grand-canonical ensemble.
-
-This closes the finite partition, normalization, first-derivative, second
-derivative, and mixed-response identities.  No infinite limit is claimed.
--/
-@[owner_target_tag]
-def PrimeGrandCanonicalOwnerTarget : Prop :=
-  ∀ (B : PrimeGrandCanonicalPacket) (β μ : ℝ),
-    0 < B.partition β μ ∧
-      (∑ S, B.gibbsWeight β μ S = 1) ∧
-      (deriv (fun t => B.potential t μ) β = -B.meanShift β μ) ∧
-      (deriv (fun t => B.potential β t) μ = β * B.meanNumber β μ) ∧
-      (B.betaMuHessian β μ = B.muBetaHessian β μ)
-
-/-- The finite prime grand-canonical owner target is proved. -/
-theorem primeGrandCanonicalOwnerTarget :
-    PrimeGrandCanonicalOwnerTarget := by
-  intro B β μ
-  exact
-    ⟨ B.partition_pos β μ,
-      B.gibbsWeight_sum_one β μ,
-      B.potential_deriv_beta_eq_neg_meanShift β μ,
-      B.potential_deriv_mu_eq_beta_meanNumber β μ,
-      B.betaMuHessian_eq_muBetaHessian β μ ⟩
 
 end PrimeGrandCanonicalPacket
 

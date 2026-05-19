@@ -47,7 +47,8 @@ variable {R : Type*} [CommRing R]
 Construct a Dirac-Souriau sector from Zorn matrix coefficients.
 This anchors the operator in the Zorn-spinor algebra.
 -/
-def ofZorn (z1 z2 zB : ZornMatrix R) : DiracSouriauSector R where
+
+noncomputable def ofZorn (z1 z2 zB : ZornMatrix R) : DiracSouriauSector R where
   A := z1.coarseGrain
   K := z2.coarseGrain
   B := !![ZornMatrix.dot zB.x zB.y, zB.a; zB.b, ZornMatrix.dot zB.y zB.x]
@@ -56,6 +57,7 @@ def ofZorn (z1 z2 zB : ZornMatrix R) : DiracSouriauSector R where
 The antisymmetry constraint on the supercharge intertwiner (C) for 
 $C\ell(4,4)$ vacuum stability. In this sector, C = -Bᵀ.
 -/
+
 @[rep_depth transport]
 def C (S : DiracSouriauSector R) : Matrix (Fin 2) (Fin 2) R :=
   -S.B.transpose
@@ -65,14 +67,16 @@ Assembles the blocks into the full 4x4 Dirac-Souriau supermatrix.
 This matrix is the "reduced owner surface" for the 4x4 sector.
 Using the sum type `Fin 2 ⊕ Fin 2` for the index set to match `fromBlocks`.
 -/
+
 @[rep_depth transport]
 def toMatrix (S : DiracSouriauSector R) : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
   fromBlocks S.A S.B S.C S.K
 
 /-- The assembled operator is exactly the declared block matrix. -/
+
 @[rep_depth transport]
 theorem toMatrix_eq_fromBlocks (S : DiracSouriauSector R) :
-    S.toMatrix = fromBlocks S.A S.B S.C S.K :=
+    S.toMatrix = fromBlocks S.A S.B S.C S.K := by
   rfl
 
 /--
@@ -80,6 +84,7 @@ Constructive Proof: Drazin-Penrose existence for fields.
 Any Dirac-Souriau operator over a field admits a Drazin inverse,
 rigorously enabling the split into a topological Core and a dissipative Shell.
 -/
+
 theorem exists_drazinInverse {K : Type*} [Field K] (S : DiracSouriauSector K) :
     ∃ (k : ℕ) (D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) K),
       InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k := by
@@ -111,6 +116,7 @@ theorem exists_drazinInverse {K : Type*} [Field K] (S : DiracSouriauSector K) :
 Predicate encoding the Drazin inverse property.
 This is now a proven property for sectors over fields.
 -/
+
 def HasDrazinInverse (S : DiracSouriauSector R) (k : ℕ) : Prop :=
   ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R,
     InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k
@@ -118,6 +124,7 @@ def HasDrazinInverse (S : DiracSouriauSector R) (k : ℕ) : Prop :=
 /--
 Discharge the Drazin hypothesis for field-based configurations.
 -/
+
 theorem hasDrazinInverse_of_field {K : Type*} [Field K] (S : DiracSouriauSector K) :
     ∃ k, S.HasDrazinInverse k := by
   obtain ⟨k, D, hD⟩ := S.exists_drazinInverse
@@ -128,6 +135,7 @@ Context carrying the explicit Drazin witness for one concrete Dirac-Souriau
 sector.  This is intentionally a context object, not a generalized closure
 claim about all block matrices.
 -/
+
 structure DrazinWitnessContext (S : DiracSouriauSector R) where
   k : ℕ
   D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R
@@ -138,9 +146,10 @@ Construct the local Drazin witness context for any finite Dirac-Souriau sector
 over a field.  This removes the need to pass a local Drazin witness as an
 independent hypothesis in real/field-based downstream contexts.
 -/
+
 noncomputable def DrazinWitnessContext.ofField
     {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    DrazinWitnessContext S :=
+    DrazinWitnessContext S := by
   let h := S.exists_drazinInverse
   let k := Classical.choose h
   let hDExists := Classical.choose_spec h
@@ -149,29 +158,35 @@ noncomputable def DrazinWitnessContext.ofField
   ⟨k, D, hD⟩
 
 /-- A Drazin witness context discharges the local hypothesis predicate. -/
+
 theorem hasDrazinInverse_of_context
     {S : DiracSouriauSector R} (Ctxt : DrazinWitnessContext S) :
-    S.HasDrazinInverse Ctxt.k :=
+    S.HasDrazinInverse Ctxt.k := by
   ⟨Ctxt.D, Ctxt.isDrazin⟩
 
 /-- The constructed field witness context discharges the local Drazin predicate. -/
+
 theorem hasDrazinInverse_of_fieldContext
     {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k :=
-  hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
+    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
+  have h := S.exists_drazinInverse
+  refine ⟨k, D, hD⟩
 
 /-- Unpack a Drazin hypothesis into its explicit witness. -/
+
 theorem exists_drazinInverse_of_hasDrazinInverse
     {S : DiracSouriauSector R} {k : ℕ} (h : S.HasDrazinInverse k) :
     ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R,
-      InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k :=
-  h
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k := by
+  cases h with D hD
+  exact D, hD
 
 /--
 Constructive Drazin witness from an explicit two-sided inverse of the full
 assembled `4×4` block operator.  This is the source-safe invertible case:
 the Drazin index is `0`.
 -/
+
 def drazinWitnessContext_zero_of_twoSidedInverse
     (S : DiracSouriauSector R)
     (D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R)
@@ -185,6 +200,7 @@ def drazinWitnessContext_zero_of_twoSidedInverse
     (by simpa using hSD)
 
 /-- The local two-sided inverse context discharges `HasDrazinInverse` at index `0`. -/
+
 theorem hasDrazinInverse_zero_of_twoSidedInverse
     (S : DiracSouriauSector R)
     (D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R)
@@ -198,15 +214,17 @@ Definition-level supersymmetric stability.
 The operator preserves the $C\ell(4,4)$ vacuum if the intertwiner B is
 balanced by its supersymmetric partner C.
 -/
+
 @[rep_depth transport]
 theorem supercharge_conservation_satisfied (S : DiracSouriauSector R) :
-    S.C = -S.B.transpose :=
+    S.C = -S.B.transpose := by
   rfl
 
 /--
 The Schur-complement Berezinian for the 4x4 sector.
 This represents the statistical dissipation of the configuration.
 -/
+
 @[rep_depth transport]
 noncomputable def berezinian [Field R] (S : DiracSouriauSector R) : R :=
   open scoped Classical in
@@ -219,11 +237,13 @@ noncomputable def berezinian [Field R] (S : DiracSouriauSector R) : R :=
 Scalar Pfaffian proxy for the topological sector `K`.
 Under the explicit hypothesis `0 ≤ det K`, it satisfies `pfaffian² = det K`.
 -/
+
 @[rep_depth transport]
 noncomputable def pfaffian (S : DiracSouriauSector ℝ) : ℝ :=
   Real.sqrt S.K.det
 
 /-- The Pfaffian proxy squares to `det K` when the determinant is nonnegative. -/
+
 @[rep_depth transport]
 theorem pfaffian_sq_eq_det_of_det_nonneg
     (S : DiracSouriauSector ℝ) (hdet : 0 ≤ S.K.det) :
@@ -236,6 +256,7 @@ Formal Pfaffian-Berezinian entropy expression.
 The macro-entropy S of the universe is governed by the exact duality between
 topological complexity (Pfaffian) and statistical dissipation (Berezinian).
 -/
+
 @[rep_depth transport]
 noncomputable def souriauEntropy (S : DiracSouriauSector ℝ) : ℝ :=
   Real.log (S.pfaffian) - (1 / 2) * Real.log (S.berezinian)
@@ -246,20 +267,41 @@ Cosmic acceleration (Dark Energy) is hypothesized as the elastic rigidity of the
 $C\ell(4,4)$ vacuum protecting topological memory (Core) from thermodynamic
 collapse (Shell).
 -/
+
+/-- Constructive witness for BPS protection of a Dirac-Souriau sector. -/
+@[rep_depth transport]
+structure BPSPProtectedWitness (S : DiracSouriauSector ℝ) where
+  /-- The critical stiffness threshold parameter. -/
+  κ_crit : ℝ
+  /-- Proof that the Berezinian is below the critical threshold. -/
+  hBelow : S.berezinian < κ_crit
+
+/-- The original `IsBPSProtected` predicate is equivalent to the existence of a witness. -/
+@[rep_depth transport]
+theorem IsBPSProtected_iff_exists_witness (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
+    IsBPSProtected S κ_crit ↔ S.berezinian < κ_crit := by
+  constructor
+  · rintro ⟨w, rfl⟩
+    exact w.hBelow
+  · intro h
+    refine ⟨⟨κ_crit, h⟩, rfl⟩
+
 @[rep_depth transport]
 def IsBPSProtected (S : DiracSouriauSector ℝ) (κ_crit : ℝ) : Prop :=
-  S.berezinian < κ_crit
+  ∃ (w : BPSPProtectedWitness S), w.κ_crit = κ_crit
 
 /--
 Absolute Pfaffian proxy: unlike `pfaffian`, this has an unconditional square
 law, so callers do not need a separate `0 ≤ det K` hypothesis when the intended
 readout is the determinant magnitude.
 -/
+
 @[rep_depth transport]
 noncomputable def pfaffianAbs (S : DiracSouriauSector ℝ) : ℝ :=
   Real.sqrt |S.K.det|
 
 /-- The absolute Pfaffian proxy squares to `|det K|` without extra hypotheses. -/
+
 @[rep_depth transport]
 theorem pfaffianAbs_sq_eq_abs_det (S : DiracSouriauSector ℝ) :
     S.pfaffianAbs ^ (2 : ℕ) = |S.K.det| := by

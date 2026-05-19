@@ -22,7 +22,6 @@ No trace normalization is used.
 
 import Mathlib
 import Mathlib.Data.ENNReal.Basic
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -472,35 +471,5 @@ def scalarSpatialDerivativeDatum :
   support_certificate := trivial
 
 end PositiveScalarWeight
-
-/-! ## 8. Owner targets -/
-
-/--
-Owner target for the constructive scalar spatial derivative branch.
--/
-@[owner_target_tag]
-def ScalarSpatialDerivativeOwnerTarget : Prop :=
-  Nonempty (ConnesSpatialDerivative PositiveScalarWeight ℝ)
-
-/--
-The scalar spatial derivative owner target is constructively discharged.
--/
-theorem scalarSpatialDerivativeOwnerTarget :
-    ScalarSpatialDerivativeOwnerTarget :=
-  ⟨PositiveScalarWeight.scalarSpatialDerivativeDatum⟩
-
-/--
-Owner target for the constructive scalar BKM metric branch.
--/
-@[owner_target_tag]
-def ScalarBKMOwnerTarget : Prop :=
-  Nonempty (BKMMetricDatum PositiveScalarWeight ℝ)
-
-/--
-The scalar BKM owner target is constructively discharged.
--/
-theorem scalarBKMOwnerTarget :
-    ScalarBKMOwnerTarget :=
-  ⟨PositiveScalarWeight.scalarBKMMetricDatum⟩
 
 end InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative

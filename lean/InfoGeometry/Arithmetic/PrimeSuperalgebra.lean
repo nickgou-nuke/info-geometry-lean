@@ -88,12 +88,6 @@ structure PrimeSuperalgebraChannel where
   /-- Certificate of the trace/supertrace law. -/
   traceLawCertificate : traceLaw
 
-/-- Any prime-superalgebra channel exports only its declared trace law. -/
-theorem primeSuperalgebraChannel_traceLaw
-    (C : PrimeSuperalgebraChannel) :
-    C.traceLaw :=
-  C.traceLawCertificate
-
 /--
 Bosonic full-integer sector descriptor.
 
@@ -411,12 +405,6 @@ structure SquareFreeFermionicPrimeChannel where
   inverseZetaLaw : Prop
   /-- Certificate of the inverse-zeta/finite-denominator law. -/
   inverseZetaCertificate : inverseZetaLaw
-
-/-- Square-free fermionic supertrace exports only its supplied inverse-zeta law. -/
-theorem squarefree_fermionic_supertrace_inverse_zeta
-    (C : SquareFreeFermionicPrimeChannel) :
-    C.inverseZetaLaw :=
-  C.inverseZetaCertificate
 
 /--
 Koszul differential packet for the exterior prime algebra.

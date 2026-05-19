@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
 /-!
@@ -142,82 +141,5 @@ theorem defectFreeLimit_implies_criticalLineZeros :
   P.defectFreeLimit.defectFreeLimit_implies_criticalLineZeros
 
 end ZeroModeProtectionPacket
-
-/--
-Bridge data needed to build a zero-mode protection packet from a defect-free
-Lee--Yang limit and a Majorana zero-mode gate.
--/
-@[socket_debt_tag]
-structure ZeroModeProtectionBridge
-    (ProtectionReadout : Type) where
-  protectionReadout : ProtectionReadout
-  halfFillingCenter_law : Prop
-  halfFillingCenter_certificate :
-    halfFillingCenter_law
-  zeroPointShift_law : Prop
-  zeroPointShift_certificate :
-    zeroPointShift_law
-  unbrokenSUSY_law : Prop
-  unbrokenSUSY_certificate :
-    unbrokenSUSY_law
-  topologicalProtection_law : Prop
-  topologicalProtection_certificate :
-    topologicalProtection_law
-  protectedZeroModes_eq_completedXiZeros_law : Prop
-  protectedZeroModes_eq_completedXiZeros_certificate :
-    protectedZeroModes_eq_completedXiZeros_law
-  inverseZetaWitten_not_zeroMode_guard : Type
-  no_unconditional_RH_claim_guard : Type
-
-/--
-Assemble the protected zero-mode packet from existing defect-free and Majorana
-zero-mode witnesses plus the supplied QFT/SUSY protection bridge.
--/
-@[bridge_target_tag]
-def zeroModeProtection_of_defectFreeLimit
-    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout : Type}
-    (D : DefectFreeLimitPacket CompletedXiReadout)
-    (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout)
-    (B : ZeroModeProtectionBridge ProtectionReadout) :
-    ZeroModeProtectionPacket
-      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout where
-  defectFreeLimit := D
-  majoranaZeroMode := G
-  protectionReadout := B.protectionReadout
-  halfFillingCenter_law := B.halfFillingCenter_law
-  halfFillingCenter_certificate := B.halfFillingCenter_certificate
-  zeroPointShift_law := B.zeroPointShift_law
-  zeroPointShift_certificate := B.zeroPointShift_certificate
-  unbrokenSUSY_law := B.unbrokenSUSY_law
-  unbrokenSUSY_certificate := B.unbrokenSUSY_certificate
-  topologicalProtection_law := B.topologicalProtection_law
-  topologicalProtection_certificate := B.topologicalProtection_certificate
-  protectedZeroModes_eq_completedXiZeros_law :=
-    B.protectedZeroModes_eq_completedXiZeros_law
-  protectedZeroModes_eq_completedXiZeros_certificate :=
-    B.protectedZeroModes_eq_completedXiZeros_certificate
-  inverseZetaWitten_not_zeroMode_guard :=
-    B.inverseZetaWitten_not_zeroMode_guard
-  no_unconditional_RH_claim_guard :=
-    B.no_unconditional_RH_claim_guard
-
-/-- Owner theorem: the assembled packet re-exports its supplied protection laws. -/
-@[bridge_target_tag]
-theorem zeroModeProtection_of_defectFreeLimit_reexports
-    {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout : Type}
-    (D : DefectFreeLimitPacket CompletedXiReadout)
-    (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout)
-    (B : ZeroModeProtectionBridge ProtectionReadout) :
-      (zeroModeProtection_of_defectFreeLimit D G B).halfFillingCenter_law ∧
-      (zeroModeProtection_of_defectFreeLimit D G B).zeroPointShift_law ∧
-      (zeroModeProtection_of_defectFreeLimit D G B).unbrokenSUSY_law ∧
-      (zeroModeProtection_of_defectFreeLimit D G B).topologicalProtection_law ∧
-      (zeroModeProtection_of_defectFreeLimit D G B).protectedZeroModes_eq_completedXiZeros_law := by
-  exact ⟨
-    (zeroModeProtection_of_defectFreeLimit D G B).halfFillingCenter,
-    (zeroModeProtection_of_defectFreeLimit D G B).zeroPointShift,
-    (zeroModeProtection_of_defectFreeLimit D G B).unbrokenSUSY,
-    (zeroModeProtection_of_defectFreeLimit D G B).topologicalProtection,
-    (zeroModeProtection_of_defectFreeLimit D G B).protectedZeroModes_eq_completedXiZeros⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection

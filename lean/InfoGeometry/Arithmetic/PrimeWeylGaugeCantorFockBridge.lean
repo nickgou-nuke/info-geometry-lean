@@ -7,7 +7,6 @@ import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeWittenCharacter
 import InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
@@ -232,7 +231,6 @@ variable {Raw Op : Type*} [Ring Op]
 variable (B : PrimeWeylGaugeCantorFockBridge Raw Op)
 
 /-- The normalized local split-Majorana atom. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem normalized_local_splitMajoranaAtom (p : ℕ) :
     B.normalized.c p * B.normalized.c p = 1 ∧
     B.normalized.d p * B.normalized.d p = -1 ∧
@@ -240,49 +238,27 @@ theorem normalized_local_splitMajoranaAtom (p : ℕ) :
   exact ⟨B.normalized.c_sq p, B.normalized.d_sq p, B.normalized.c_d_anticomm_same p⟩
 
 /-- The exterior readout preserves fermion number. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem exteriorState_fermionNumber_eq (v : Vertex B.P) :
     SquareFreePrimeState.fermionNumber (toSquareFreePrimeState v) = v.val.card :=
   toSquareFreePrimeState_fermionNumber_eq v
 
 /-- The exterior readout preserves local parity sign. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem exteriorState_localParitySign_eq (v : Vertex B.P) (p : ℕ) :
     SquareFreePrimeState.localParitySign p (toSquareFreePrimeState v) =
       PrimeBooleanCube.localParity p v.val :=
   toSquareFreePrimeState_localParitySign_eq v p
 
 /-- The exterior readout preserves global chirality. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem exteriorState_Gamma_eq_globalChirality (v : Vertex B.P) :
     SquareFreePrimeState.Gamma (toSquareFreePrimeState v) =
       PrimeBooleanCube.globalChirality B.P v.val :=
   toSquareFreePrimeState_Gamma_eq_globalChirality v
 
 /-- Möbius readout delegates to the existing Boolean-cube owner. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem vertex_mobius_eq_globalChirality (v : Vertex B.P) :
     ArithmeticFunction.moebius (PrimeBooleanCube.representedNat v) =
       PrimeBooleanCube.globalChirality B.P v.val :=
   PrimeBooleanCube.mobius_representedNat_eq_globalChirality B.P v
-
-/-- Boolean-cube owner reexport. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem primeBooleanCubeOwnerTarget_bridge :
-    PrimeBooleanCube.PrimeBooleanCubeOwnerTarget :=
-  PrimeBooleanCube.primeBooleanCubeOwnerTarget
-
-/-- Finite Witten-character owner reexport. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem primeWittenCharacterOwnerTarget_bridge :
-    PrimeWittenCharacter.PrimeWittenCharacterOwnerTarget :=
-  PrimeWittenCharacter.primeWittenCharacterOwnerTarget
-
-/-- Local CAR owner reexport. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem primeMajoranaCAROwnerTarget_bridge :
-    PrimeMajoranaCAR.ExteriorCARPair.PrimeMajoranaCAROwnerTarget :=
-  PrimeMajoranaCAR.ExteriorCARPair.primeMajoranaCAROwnerTarget
 
 end PrimeWeylGaugeCantorFockBridge
 

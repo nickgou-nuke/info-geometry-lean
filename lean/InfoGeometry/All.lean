@@ -15,7 +15,6 @@ import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
-import InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Arithmetic.SplitChiralCantorDirac

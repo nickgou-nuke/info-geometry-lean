@@ -153,6 +153,22 @@ theorem gradeTwoPair_setwise_stable :
     (Submodule.mem_sup_left (S := G.gNegTwo) (T := G.gPosTwo)
       (G.maps_posTwo_to_negTwo z hz))
 
+/-- The closure projections of a grade-one pair element remain in the pair. -/
+theorem gradeOnePair_projections_mem
+    {x : L}
+    (hx : x ∈ G.gradeOnePair) :
+    G.closure.fixedPart x ∈ G.gradeOnePair ∧
+      G.closure.antiPart x ∈ G.gradeOnePair :=
+  G.closure.projections_mem_of_stable G.gradeOnePair_setwise_stable hx
+
+/-- The closure projections of a grade-two pair element remain in the pair. -/
+theorem gradeTwoPair_projections_mem
+    {x : L}
+    (hx : x ∈ G.gradeTwoPair) :
+    G.closure.fixedPart x ∈ G.gradeTwoPair ∧
+      G.closure.antiPart x ∈ G.gradeTwoPair :=
+  G.closure.projections_mem_of_stable G.gradeTwoPair_setwise_stable hx
+
 /--
 The Cartan/fixed component of a grade `-1` element lies in the opposite
 grade-one pair.

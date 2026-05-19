@@ -264,6 +264,10 @@ lemma toAbelianLieAlgebraOn_kgen :
 @[simp] lemma toAbelianLieAlgebraOn_jgen (n : ℤ) :
   toAbelianLieAlgebraOn (jgen 𝕜 n) = AbelianLieAlgebraOn.jgen 𝕜 n := rfl
 
+@[simp] lemma toAbelianLieAlgebraOn_ofCentral (a : 𝕜) :
+    toAbelianLieAlgebraOn (ofCentral 𝕜 a) = 0 := by
+  rw [ofCentral_apply, map_smul, toAbelianLieAlgebraOn_kgen, smul_zero]
+
 @[simp] lemma lie_kgen (Z : HeisenbergAlgebra 𝕜) :
     ⁅kgen 𝕜, Z⁆ = 0 :=
   (isCentralExtension 𝕜).central 1 Z

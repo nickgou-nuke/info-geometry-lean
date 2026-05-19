@@ -3,8 +3,6 @@ import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-import InfoGeometry.Arithmetic.PrimeMajoranaCAR
-import InfoGeometry.Arithmetic.PrimeWittenCharacter
 import InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 import InfoGeometry.Meta.Architecture
 
@@ -37,8 +35,6 @@ namespace InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-open InfoGeometry.Arithmetic.PrimeMajoranaCAR
-open InfoGeometry.Arithmetic.PrimeWittenCharacter
 open InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 
 /--

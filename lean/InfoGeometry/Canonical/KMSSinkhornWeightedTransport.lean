@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.KMSSinkhornSeedState
 import InfoGeometry.Canonical.KMSSinkhornScalarPotential
-import InfoGeometry.Canonical.IBCore
+import InfoGeometry.Canonical.IBFrozenDescent
+import InfoGeometry.Canonical.IBTrajectory
+import InfoGeometry.Canonical.IBUpdate
 
 set_option linter.unnecessarySeqFocus false
 

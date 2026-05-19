@@ -1,4 +1,7 @@
-import InfoGeometry.Canonical.IBCore
+import InfoGeometry.Canonical.IBTrajectory
+import InfoGeometry.Canonical.IBFrozenDescent
+import InfoGeometry.Canonical.IBFiniteIteration
+import InfoGeometry.Canonical.IBUpdate
 
 /-!
 # InfoGeometry.Canonical.IBCanonical

@@ -26,7 +26,16 @@ def test_ask_repo_no_gravity_smoke() -> None:
     assert "docs / black books / handover" in stdout
 
 
-def test_ask_repo_json_mode() -> None:
-    proc = run("Weyl character formula", "--no-gravity", "--top-k", "3", "--format", "json")
+def test_ask_repo_scope_json_mode() -> None:
+    proc = run("Weyl character formula", "--scope", "lean", "--no-gravity", "--top-k", "3", "--format", "json")
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout.strip().startswith("{")
+
+
+def test_ask_repo_brief_summary() -> None:
+    proc = run("Weyl character formula", "--no-gravity", "--brief", "--top-k", "2")
+    assert proc.returncode == 0, proc.stderr
+    stdout = proc.stdout.lower()
+    assert "repo provenance summary" in stdout
+    assert "authority labels" in stdout
+    assert "lean = proof/navigation authority" in stdout

@@ -255,6 +255,16 @@ theorem virasoroVermaToChargedFockSpace_hwVec (α : 𝕜) :
     virasoroVermaToChargedFockSpace 𝕜 α (.hwVec 𝕜 _ _) = vacuum 𝕜 α := by
   apply VirasoroVerma.universalMap_hwVec
 
+/-- The Verma-to-Fock map sends the highest-weight vector to a Virasoro highest-weight vector. -/
+theorem virasoroVermaToChargedFockSpace_highestWeight (α : 𝕜) :
+    virasoroVermaToChargedFockSpace 𝕜 α (.hwVec 𝕜 _ _) = vacuum 𝕜 α ∧
+    sugawaraRepresentation 𝕜 α (.cgen 𝕜) (vacuum 𝕜 α) = vacuum 𝕜 α ∧
+    sugawaraRepresentation 𝕜 α (.lgen 𝕜 0) (vacuum 𝕜 α) = (α^2 / 2) • vacuum 𝕜 α ∧
+    (∀ n > 0, sugawaraRepresentation 𝕜 α (.lgen 𝕜 n) (vacuum 𝕜 α) = 0) := by
+  constructor
+  · exact virasoroVermaToChargedFockSpace_hwVec 𝕜 α
+  exact sugawaraVacuum_highestWeight 𝕜 α
+
 end ChargedFockSpace
 
 end Fock_space_Sugawara_construction

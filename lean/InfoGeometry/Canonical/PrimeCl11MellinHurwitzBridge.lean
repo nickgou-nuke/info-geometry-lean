@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
 import InfoGeometry.Canonical.PrimeCl11ModularAtomCore
@@ -72,76 +70,5 @@ theorem cl11_mobiusParity_sq_eq_one
 theorem cl11_finrank_four :
     Module.finrank ℝ (CliffordAlgebra q11) = 4 :=
   finrank_cl11
-
-/-! ## Combined bridge target -/
-
-/--
-Combined theorem-safe bridge.
-
-This packages the already-proved finite owner surfaces:
-
-* Cantor cylinder splitting plus the finite prime superalgebra / Hurwitz shell
-  target;
-* Mellin scale-step law;
-* weight-zero scale invariance;
-* local `Cl(1,1)` parity involution;
-* `Cl(1,1)` finite-dimensional core.
--/
-@[owner_target_tag]
-def PrimeCl11MellinHurwitzOwnerTarget : Prop :=
-  (∀ w : BinaryCantorLattice,
-      binaryClosedCylinder w =
-        ({w} : Set BinaryCantorLattice)
-          ∪ binaryClosedCylinder (binaryChild w false)
-          ∪ binaryClosedCylinder (binaryChild w true))
-    ∧ (∀ w : BinaryCantorLattice, w ∈ binaryClosedCylinder w)
-    ∧ (primeSectorGrade 2 = PrimeSectorGrade.bosonic)
-    ∧ (∀ p, Nat.Prime p → p ≠ 2 → primeSectorGrade p = PrimeSectorGrade.fermionic)
-    ∧ (∀ (P : FermionicPrimeRegister) (ψ : FermionicPrimeState P),
-        ArithmeticFunction.moebius (representedSquarefreeNat P ψ) = fermionParity P ψ)
-    ∧ (∀ (P : FermionicPrimeRegister) (x : ℕ → ℂ),
-        finiteSupertraceDirichlet P x = finiteInverseEulerProduct P x)
-    ∧ (∀ i : Fin 24, IsHurwitzUnit (hurwitzDirection i))
-    ∧ (∀ η0 Δη k,
-        Real.log (logarithmicSample η0 Δη k) = discreteRapidity η0 Δη k)
-    ∧ (∀ {Op : Type*} (W : WeylHomogeneousOperatorReadout Op),
-        W.weight = 0 → ∀ c A, W.readout (W.scale c A) = W.readout A)
-    ∧ (∀ (A : Type*) [Ring A] (atom : Cl11Atom A),
-        atom.mobiusParity * atom.mobiusParity = 1)
-    ∧ (Module.finrank ℝ (CliffordAlgebra q11) = 4)
-
-/-- The combined bridge follows from the existing repo owner theorems. -/
-@[bridge_target_tag, rep_depth operator] theorem primeCl11MellinHurwitzOwnerTarget :
-    PrimeCl11MellinHurwitzOwnerTarget := by
-  constructor
-  · intro w
-    exact binaryClosedCylinder_split w
-  · constructor
-    · intro w
-      exact mem_binaryClosedCylinder_self w
-    · constructor
-      · exact primeSectorGrade_two
-      · constructor
-        · intro p hp h2
-          exact primeSectorGrade_prime_ne_two hp h2
-        · constructor
-          · intro P ψ
-            exact mobiusParity_readback P ψ
-          · constructor
-            · intro P x
-              exact finiteSupertrace_readback P x
-            · constructor
-              · intro i
-                exact PrimeBinaryCantorSuperalgebraBridge.hurwitzDirection_isHurwitzUnit i
-              · constructor
-                · intro η0 Δη k
-                  simpa using (log_logarithmicSample η0 Δη k)
-                · constructor
-                  · intro Op W hW c A
-                    exact W.readout_scale_of_weight_zero hW c A
-                  · constructor
-                    · intro A inst atom
-                      exact Cl11Atom.mobiusParity_sq_eq_one (A := A) (atom := atom)
-                    · exact cl11_finrank_four
 
 end InfoGeometry.Canonical.PrimeCl11MellinHurwitzBridge

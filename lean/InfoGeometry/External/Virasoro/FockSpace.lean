@@ -232,6 +232,18 @@ lemma ChargedFockSpace.kgen_smul (α : 𝕜) (v : ChargedFockSpace 𝕜 α) :
   simpa using UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero
     _ _ (fun _ ↦ rfl) (vacuum_cyclic 𝕜 α) aux v
 
+/-- The vacuum is a highest-weight vector for the charged Fock space Heisenberg action. -/
+lemma ChargedFockSpace.vacuum_highestWeight (α : 𝕜) :
+    ιUEA 𝕜 (HeisenbergAlgebra.kgen 𝕜) • vacuum 𝕜 α = vacuum 𝕜 α ∧
+    ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0) • vacuum 𝕜 α = α • vacuum 𝕜 α ∧
+    (∀ k > 0, ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 k) • vacuum 𝕜 α = 0) := by
+  constructor
+  · exact kgen_vacuum 𝕜 α
+  constructor
+  · exact jgen_zero_vacuum 𝕜 α
+  · intro k hk
+    exact jgen_pos_vacuum 𝕜 α hk
+
 /-- `J₀ • v = α • v` for all `v` in `ChargedFockSpace 𝕜 α` -/
 @[simp] lemma ChargedFockSpace.jgen_zero_smul (α : 𝕜) (v : ChargedFockSpace 𝕜 α) :
     (ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0)) • v = α • v := by

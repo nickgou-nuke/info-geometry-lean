@@ -64,4 +64,19 @@ theorem rn_chain_rule {A : Type*} [Monoid A] (B : HasScalarRNBridge A) (f g : A)
   rw [rn_eq_additiveInvariant, rn_eq_additiveInvariant]
   exact ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul B.toExactBridge f g
 
+/-- The scalar RN potential is an additive monoid homomorphism. -/
+noncomputable def rnHom {A : Type*} [Monoid A] (B : HasScalarRNBridge A) :
+    Additive A →+ ℝ where
+  toFun := fun a => B.rn a.toMul
+  map_zero' := by
+    rw [B.rn_eq_logAbs_vol]
+    simp
+  map_add' := by
+    intro a b
+    exact rn_chain_rule B a.toMul b.toMul
+
+@[simp] theorem rnHom_apply {A : Type*} [Monoid A] (B : HasScalarRNBridge A) (a : A) :
+    rnHom (B := B) (Additive.ofMul a) = B.rn a :=
+  rfl
+
 end InfoGeometry.Volume.RadonNikodym

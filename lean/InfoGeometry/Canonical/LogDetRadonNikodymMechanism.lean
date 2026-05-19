@@ -84,6 +84,19 @@ theorem logPotential_add (P : TypeIIILogDetRNPackage (E := E)) (s t : ℝ) :
   simpa [logPotential] using
     (cocycleLogPotential_add (H := E) P.base.additiveFlow P.cocycle P.isCocycle P.scalarBridge s t)
 
+/-- The Type-III log potential is an additive monoid homomorphism. -/
+noncomputable def logPotentialHom (P : TypeIIILogDetRNPackage (E := E)) : ℝ →+ ℝ where
+  toFun := P.logPotential
+  map_zero' := by
+    simpa [logPotential] using
+      (cocycleLogPotential_zero (H := E) P.base.additiveFlow P.cocycle P.isCocycle
+        P.scalarBridge)
+  map_add' := P.logPotential_add
+
+@[simp] theorem logPotentialHom_apply (P : TypeIIILogDetRNPackage (E := E)) (t : ℝ) :
+    P.logPotentialHom t = P.logPotential t :=
+  rfl
+
 /-- The cocycle law is the noncommutative chain rule. -/
 theorem cocycle_chain_rule (P : TypeIIILogDetRNPackage (E := E)) (s t : ℝ) :
     P.cocycle (s + t) = P.cocycle s * P.base.additiveFlow s (P.cocycle t) :=
@@ -114,6 +127,20 @@ noncomputable def unitPackage (R : RealTypeIIIModularData (E := E)) :
   cocycle := unitCocycle (H := E)
   isCocycle := unitCocycle_isConnesCocycle (H := E) R.additiveFlow
   scalarBridge := unitScalarBridge (H := E) R.additiveFlow
+
+@[simp] theorem unitPackage_logPotential_apply
+    (R : RealTypeIIIModularData (E := E)) (t : ℝ) :
+    (unitPackage (E := E) R).logPotential t = 0 := by
+  change R.boltzmannEntropyPotential InfoGeometry.Volume.ConnesCocycle.unitCocycle
+      (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge (H := E) R.additiveFlow) t = 0
+  exact (InfoGeometry.Volume.ConnesCocycle.unitCocycleLogPotential_apply
+    (H := E) R.additiveFlow InfoGeometry.Volume.ConnesCocycle.unitCocycle t)
+
+@[simp] theorem unitPackage_logPotentialHom_apply
+    (R : RealTypeIIIModularData (E := E)) (t : ℝ) :
+    (unitPackage (E := E) R).logPotentialHom t = 0 := by
+  change (unitPackage (E := E) R).logPotential t = 0
+  exact unitPackage_logPotential_apply (E := E) R t
 
 end TypeIIILogDetRNPackage
 

@@ -82,8 +82,6 @@ structure SymplecticWeylVolumePacket (Space GaugeGroup Torus : Type) [instGroup 
   quotient : SymplecticQuotientWitness Space GaugeGroup
   /-- Weyl torus-reduction layer. -/
   weyl : WeylIntegrationWitness GaugeGroup Torus
-  /-- Explicit structural compatibility marker between the two layers. -/
-  weylCompatibleWithQuotient : Prop := True
 
 /-- Owner target for the combined packet shape. -/
 def SymplecticWeylVolumeTarget (Space GaugeGroup Torus : Type) [instGroup : Group GaugeGroup] : Prop :=
@@ -110,7 +108,7 @@ def constructSymplecticWeylVolumePacket
     (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
     (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus) :
     SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
-  ⟨Q, W, True⟩
+  ⟨Q, W⟩
 
 /--
 Constructive target route that no longer asks callers to prepackage the combined

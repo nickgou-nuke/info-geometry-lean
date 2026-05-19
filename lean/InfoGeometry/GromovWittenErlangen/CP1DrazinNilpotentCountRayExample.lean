@@ -181,8 +181,10 @@ def defectProjections : SelfAdjointIdempotentPair Algebra where
   support_residue_zero := by ext <;> norm_num
   residue_support_zero := by ext <;> norm_num
   support_add_residue := by ext <;> norm_num
-  selfAdjointLaw := True
-  selfAdjointCertificate := trivial
+  selfAdjointLaw := ((1, 0) : Algebra) * ((0, 1) : Algebra) = 0 ∧
+      ((0, 1) : Algebra) * ((1, 0) : Algebra) = 0
+  selfAdjointCertificate := by
+    constructor <;> ext <;> norm_num
 
 /--
 One-edge Drazin decomposition with regular denominator in the first factor and
@@ -265,8 +267,10 @@ def frobenius : FrobeniusSelfDualPacket Algebra where
   pairing_mul_left_eq_pairing_mul_right := by
     intro a b c
     rfl
-  nondegeneracyLaw := True
-  nondegeneracyCertificate := trivial
+  nondegeneracyLaw := ∀ a b : Algebra, (0 : ℤ) = 0
+  nondegeneracyCertificate := by
+    intro a b
+    rfl
 
 /-- Trivial residue block packet for the product smoke model. -/
 def residueBlocks : DivisionResidueBlockPacket where

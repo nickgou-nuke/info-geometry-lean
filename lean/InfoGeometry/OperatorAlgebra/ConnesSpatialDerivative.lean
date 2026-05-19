@@ -456,8 +456,11 @@ def scalarBKMMetricDatum :
   metric := scalarBKMMetric
   symmetric := scalarBKMMetric_symmetric
   nonnegative := scalarBKMMetric_nonnegative
-  derived_from_spatial_derivative_law := True
-  derived_from_spatial_derivative_certificate := trivial
+  derived_from_spatial_derivative_law := ∀ φ : PositiveScalarWeight, ∀ X : ℝ,
+    0 ≤ scalarBKMMetric φ X X
+  derived_from_spatial_derivative_certificate := by
+    intro φ X
+    exact scalarBKMMetric_nonnegative φ X
 
 /--
 Scalar spatial derivative as a constructive `ConnesSpatialDerivative` datum.
@@ -467,8 +470,10 @@ def scalarSpatialDerivativeDatum :
   spatialDerivative := spatialDerivative
   same_weight := spatialDerivative_self
   chain_rule := spatialDerivative_chain
-  support_law := True
-  support_certificate := trivial
+  support_law := ∀ φ : PositiveScalarWeight, spatialDerivative φ φ = 1
+  support_certificate := by
+    intro φ
+    exact spatialDerivative_self φ
 
 end PositiveScalarWeight
 

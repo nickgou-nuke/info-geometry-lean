@@ -389,9 +389,7 @@ theorem primonHeisenbergCenter_eq_span :
         intro i hi
         rcases i with _ | m
         · right
-          simpa [VirasoroProject.HeisenbergAlgebra.lie_skew] using
-            (VirasoroProject.HeisenbergAlgebra.lie_kgen (𝕜 := ℂ)
-              (VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)))
+          simpa using (lie_kgen (𝕜 := ℂ) (jgen ℂ (-n)))
         · by_cases hm : m = n
           · simp [hm]
           · have hm' : (-n + m : ℤ) ≠ 0 := by
@@ -399,9 +397,7 @@ theorem primonHeisenbergCenter_eq_span :
               have : m = n := by omega
               exact hm this
             right
-            simpa [VirasoroProject.HeisenbergAlgebra.lie_jgen, hm'] using
-              (VirasoroProject.HeisenbergAlgebra.lie_jgen
-                (𝕜 := ℂ) (-n) m)
+            simpa [hm'] using (lie_jgen (𝕜 := ℂ) (-n) m)
       have hsingle :
           ∑ᶠ i, f (cf i • B i) = f (cf (some n) • B (some n)) := by
         rw [finsum_eq_sum_of_support_subset _ hsupport]
@@ -412,10 +408,7 @@ theorem primonHeisenbergCenter_eq_span :
         exact hsum0
       have hterm : cf (some n) • ((-n : ℂ) • VirasoroProject.HeisenbergAlgebra.kgen ℂ) = 0 := by
         dsimp [f, B] at hzero'
-        simp [VirasoroProject.HeisenbergAlgebra.basisJK_some,
-          VirasoroProject.HeisenbergAlgebra.lie_smul,
-          VirasoroProject.HeisenbergAlgebra.lie_jgen, hn] at hzero'
-        simpa using hzero'
+        simpa [basisJK_some, lie_smul, lie_jgen, hn] using hzero'
       have hneg : (-n : ℂ) ≠ 0 := by
         exact_mod_cast (neg_ne_zero.mpr hn)
       have hknonzero :
@@ -447,16 +440,12 @@ theorem primonHeisenbergCenter_eq_span :
       · intro hy
         rcases hy with ⟨o, ho, rfl⟩
         rcases ho with rfl | rfl
-        · exact Or.inl (by simpa [B] using
-            (VirasoroProject.HeisenbergAlgebra.basisJK_none (𝕜 := ℂ)))
-        · exact Or.inr (by simpa [B] using
-            (VirasoroProject.HeisenbergAlgebra.basisJK_some (𝕜 := ℂ) 0))
+        · exact Or.inl (by simpa [B] using (basisJK_none (𝕜 := ℂ)))
+        · exact Or.inr (by simpa [B] using (basisJK_some (𝕜 := ℂ) 0))
       · intro hy
         rcases hy with rfl | rfl
-        · exact ⟨none, by simp, by simpa [B] using
-            (VirasoroProject.HeisenbergAlgebra.basisJK_none (𝕜 := ℂ))⟩
-        · exact ⟨some 0, by simp, by simpa [B] using
-            (VirasoroProject.HeisenbergAlgebra.basisJK_some (𝕜 := ℂ) 0)⟩
+        · exact ⟨none, by simp, by simpa [B] using (basisJK_none (𝕜 := ℂ))⟩
+        · exact ⟨some 0, by simp, by simpa [B] using (basisJK_some (𝕜 := ℂ) 0)⟩
     simpa [himg] using hmem
   · refine Submodule.span_le.2 ?_
     intro y hy

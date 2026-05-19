@@ -1,9 +1,5 @@
 import Mathlib
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
-import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.WeylGaugeCantorFockBridge

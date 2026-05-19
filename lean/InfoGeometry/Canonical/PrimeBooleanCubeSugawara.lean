@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
@@ -114,14 +112,12 @@ def booleanCubeSugawaraPacket
   dualCoxeterNumber_eq_zero := rfl
 
 /-- The Boolean-cube Sugawara readout is exactly the vertex cardinality. -/
-@[bridge_target_tag]
 theorem booleanCubeSugawaraPacket_centralCharge_eq_card
     (P : PrimeRegister) (v : Vertex P) :
     (booleanCubeSugawaraPacket P v).bridge.centralCharge = v.val.card := by
   exact PrimeBooleanCubeSugawaraPacket.centralCharge_eq_card (booleanCubeSugawaraPacket P v)
 
 /-- The Sugawara calibration of the Boolean-cube packet is kernel-checked. -/
-@[bridge_target_tag]
 theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
     (P : PrimeRegister) (v : Vertex P) :
     (booleanCubeSugawaraPacket P v).bridge.centralCharge =
@@ -132,17 +128,5 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
   simpa using
     (AffineVirasoroBridgeDatum.centralCharge_calibrated
       (booleanCubeSugawaraPacket P v).bridge)
-
-/-- Canonical finite conformal owner target for the Boolean cube. -/
-@[owner_target_tag]
-def PrimeBooleanCubeSugawaraOwnerTarget : Prop :=
-  ∀ (P : PrimeRegister) (v : Vertex P),
-    (booleanCubeSugawaraPacket P v).bridge.centralCharge = v.val.card
-
-/-- The canonical finite conformal owner target is closed. -/
-theorem primeBooleanCubeSugawaraOwnerTarget :
-    PrimeBooleanCubeSugawaraOwnerTarget := by
-  intro P v
-  exact PrimeBooleanCubeSugawaraPacket.centralCharge_eq_card (booleanCubeSugawaraPacket P v)
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

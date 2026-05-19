@@ -47,7 +47,6 @@ import InfoGeometry.Convex.SelfConcordantLogBarrier
 import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleProofs
 import InfoGeometry.Canonical.GrandCanonicalPrimeEnsembleFormulas
 import InfoGeometry.Topology.CantorDiracGrandCanonical
-import InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 import InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification

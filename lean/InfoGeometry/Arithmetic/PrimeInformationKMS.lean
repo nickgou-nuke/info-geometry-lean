@@ -3,7 +3,6 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Thermodynamics.SouriauTemperature
 
 /-!

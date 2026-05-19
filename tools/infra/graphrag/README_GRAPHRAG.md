@@ -3,6 +3,10 @@
 This directory contains the content-addressable GraphRAG seed layer for the
 InfoGeometry Lean repository.
 
+IGX is only a partial shallow implementation of the larger VAST/robust tooling
+system. Treat everything here as a fragmentary retrieval-and-audit substrate,
+not as a complete platform.
+
 It is an overlay on the existing DAG/Expr Arango surface:
 
 ```text

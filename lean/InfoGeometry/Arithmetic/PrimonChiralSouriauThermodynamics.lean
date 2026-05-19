@@ -352,6 +352,7 @@ theorem primonHeisenbergJgen_mem_center_iff (n : ℤ) :
 
 /-- The center of the Heisenberg algebra is exactly the span of `K` and `J₀`. -/
 @[rep_depth thermo]
+set_option maxHeartbeats 500000 in
 theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
     LieAlgebra.center ℂ (VirasoroProject.HeisenbergAlgebra ℂ) =
       Submodule.span ℂ
@@ -362,21 +363,18 @@ theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
   apply le_antisymm
   · intro Z hZ
     have hcentralR : ∀ x : VirasoroProject.HeisenbergAlgebra ℂ, ⁅x, Z⁆ = 0 := by
-      simpa [LieAlgebra.center, LieModule.maxTrivSubmodule, LieModule.mem_maxTrivSubmodule] using
-        hZ
+      simpa [LieAlgebra.center] using hZ
     have hcentral : ∀ x : VirasoroProject.HeisenbergAlgebra ℂ, ⁅Z, x⁆ = 0 := by
       intro x
       have hx : -⁅Z, x⁆ = 0 := by
         simpa [lie_skew] using (hcentralR x)
       exact neg_eq_zero.mp hx
     refine (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).mem_span_image.mpr ?_
-    intro i
+    intro i hi
     by_cases hi0 : i = none
-    · simpa [hi0] using (Set.mem_insert (VirasoroProject.HeisenbergAlgebra.jgen ℂ 0)
-        (Set.singleton (VirasoroProject.HeisenbergAlgebra.kgen ℂ)))
+    · simp [hi0]
     · by_cases hi1 : i = some 0
-      · simpa [hi1] using (Set.mem_insert_of_mem (VirasoroProject.HeisenbergAlgebra.kgen ℂ)
-          (Set.singleton (VirasoroProject.HeisenbergAlgebra.jgen ℂ 0)))
+      · simp [hi1]
       · rcases i with _ | n
         · exact (hi0 rfl).elim
         · have hn : n ≠ 0 := by
@@ -388,8 +386,11 @@ theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
                 ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) x •
                   ⁅VirasoroProject.HeisenbergAlgebra.basisJK ℂ x,
                     VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)⁆ = 0 := by
-            simpa [Finsupp.linearCombination_apply, Finsupp.sum] using
-              (hcentral (VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)))
+            have h := hcentral (VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n))
+            rw [← (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).linearCombination_repr Z] at h
+            rw [Finsupp.linearCombination_apply] at h
+            rw [Finsupp.sum] at h
+            simpa [sum_lie] using h
           have h0 :
               ∀ b ∈ ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z).support,
                 b ≠ some n →
@@ -410,7 +411,7 @@ theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
                   ⁅VirasoroProject.HeisenbergAlgebra.basisJK ℂ (some n),
                     VirasoroProject.HeisenbergAlgebra.jgen ℂ (-n)⁆ = 0 := by
             intro hnot
-            simp [Finsupp.not_mem_support_iff] at hnot
+            simp [Finsupp.mem_support_iff] at hnot
             simp [VirasoroProject.HeisenbergAlgebra.basisJK_some, VirasoroProject.HeisenbergAlgebra.lie_jgen, hnot, hn]
           have hsingle :
               ((VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z) (some n) •
@@ -425,17 +426,16 @@ theorem primonHeisenbergCenter_eq_span_kgen_jgen_zero :
           have hscalar :
               (n : ℂ) * (VirasoroProject.HeisenbergAlgebra.basisJK ℂ).repr Z (some n) = 0 := by
             have hsingle' := hsingle
-            simp [VirasoroProject.HeisenbergAlgebra.basisJK_some,
+            simpa [VirasoroProject.HeisenbergAlgebra.basisJK_some,
               VirasoroProject.HeisenbergAlgebra.lie_jgen, hn,
-              smul_smul, mul_comm, mul_left_comm, mul_assoc] at hsingle'
-            exact (smul_eq_zero.mp hsingle').resolve_right hk
+              smul_smul, mul_comm, mul_left_comm, mul_assoc] using hsingle'
           exact by
-            simp [hn] at hscalar
+            exact (mul_eq_zero.mp hscalar).resolve_left hn
   · intro hZ
     refine Submodule.span_le.mpr ?_
     intro x hx
     rcases hx with rfl | rfl
-    · exact primonHeisenbergCentral_kgen_jgen_zero (Z := VirasoroProject.HeisenbergAlgebra.kgen ℂ) x |> And.left
+    · exact (VirasoroProject.HeisenbergAlgebra.central_kgen_jgen_zero ℂ x).1
     · exact (VirasoroProject.HeisenbergAlgebra.jgen_mem_center_iff (𝕜 := ℂ) 0).2 rfl
 
 /-- The imported five-grade closure keeps grade zero stable and Cartan-decomposed. -/

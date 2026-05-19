@@ -29,7 +29,6 @@ or Cl(4,4)-specific realizations.
 -/
 
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -235,45 +234,5 @@ theorem quadraticCasimir_fixed_by_conjugation
   F.quadraticVerifiedCasimir.fixed_by_conjugation U
 
 end CliffordFrame
-
-/-! ## 5. Owner targets discharged constructively -/
-
-/--
-Owner target for finite Clifford quadratic Casimir centrality.
--/
-@[owner_target_tag]
-def FiniteCliffordCasimirCentralityOwnerTarget : Prop :=
-  ∀ (ι Op : Type*) [Fintype ι] [DecidableEq ι]
-    [Ring Op] [Algebra ℝ Op],
-  ∀ F : CliffordFrame ι Op,
-  ∀ X : Op,
-    F.quadraticCasimir * X = X * F.quadraticCasimir
-
-/--
-Constructive proof of finite Clifford quadratic Casimir centrality.
--/
-theorem finiteCliffordCasimirCentralityOwnerTarget :
-    FiniteCliffordCasimirCentralityOwnerTarget := by
-  intro ι Op _ _ _ _ F X
-  exact F.quadraticCasimir_central X
-
-/--
-Owner target for finite Clifford quadratic Casimir conjugation invariance.
--/
-@[owner_target_tag]
-def FiniteCliffordCasimirInvariantOwnerTarget : Prop :=
-  ∀ (ι Op : Type*) [Fintype ι] [DecidableEq ι]
-    [Ring Op] [Algebra ℝ Op],
-  ∀ F : CliffordFrame ι Op,
-  ∀ U : InvertibleTransport Op,
-    U.conjugate F.quadraticCasimir = F.quadraticCasimir
-
-/--
-Constructive proof of finite Clifford quadratic Casimir conjugation invariance.
--/
-theorem finiteCliffordCasimirInvariantOwnerTarget :
-    FiniteCliffordCasimirInvariantOwnerTarget := by
-  intro ι Op _ _ _ _ F U
-  exact F.quadraticCasimir_fixed_by_conjugation U
 
 end InfoGeometry.OperatorAlgebra.IndividuatedCasimir

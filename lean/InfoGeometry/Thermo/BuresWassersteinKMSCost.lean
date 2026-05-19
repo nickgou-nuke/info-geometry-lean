@@ -16,7 +16,6 @@ data.
 
 import Mathlib
 import InfoGeometry.Geometry.BilingualAnalyticity
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -355,22 +354,5 @@ theorem thermal_cylinder_valid :
   C.thermal_cylinder_certificate
 
 end BilingualKMSHolonomyCompatibility
-
-/-! ## 7. Owner target -/
-
-/-- Owner target for Bures-Wasserstein KMS holonomy cost. -/
-@[owner_target_tag]
-def BuresWassersteinKMSCostOwnerTarget : Prop :=
-  ∀ (State : Type*) (Ω : PositiveStateDomain State),
-  ∀ (BW : BuresWassersteinDatum State Ω),
-  ∀ (H : KMSHolonomyTransport State Ω),
-  ∀ ρ : PositiveState Ω,
-    0 ≤ holonomyCost BW H ρ
-
-/-- Constructive proof of the Bures-Wasserstein KMS holonomy-cost owner target. -/
-theorem buresWassersteinKMSCostOwnerTarget :
-    BuresWassersteinKMSCostOwnerTarget := by
-  intro State Ω BW H ρ
-  exact holonomyCost_nonneg BW H ρ
 
 end InfoGeometry.Thermo.BuresWassersteinKMSCost

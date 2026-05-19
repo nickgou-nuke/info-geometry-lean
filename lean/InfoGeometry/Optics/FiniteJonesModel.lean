@@ -9,7 +9,6 @@ projector and Brewster rank-collapse facts directly.
 -/
 
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -145,33 +144,5 @@ theorem brewsterMatrix_one :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [brewsterMatrix, sProjector, diagJones]
-
-/--
-Owner target for the concrete finite Jones model.
-
-Everything here is constructively proved.
--/
-@[owner_target_tag]
-def FiniteJonesModelOwnerTarget : Prop :=
-  sProjector * sProjector = sProjector ∧
-  pProjector * pProjector = pProjector ∧
-  sProjector * pProjector = 0 ∧
-  pProjector * sProjector = 0 ∧
-  sProjector + pProjector = 1 ∧
-  ∀ rs : ℂ, det2 (brewsterMatrix rs) = 0
-
-/-- The finite Jones model owner target. -/
-theorem finiteJonesModelOwnerTarget :
-    FiniteJonesModelOwnerTarget := by
-  refine ⟨
-    sProjector_idem,
-    pProjector_idem,
-    sProjector_mul_pProjector,
-    pProjector_mul_sProjector,
-    sProjector_add_pProjector,
-    ?_
-  ⟩
-  intro rs
-  exact det2_brewsterMatrix rs
 
 end InfoGeometry.Optics.FiniteJonesModel

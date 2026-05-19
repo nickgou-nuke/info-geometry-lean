@@ -668,3 +668,4 @@ Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_ST
 - `external_refs/LeanMillenniumPrizeProblems/` mirror: searchable theorem corpus for the Clay problems.
 
 - `graph_rag_query.py` (unified natural-language GraphRAG explorer over Lean, docs, black books, handover material, and external mirrors)
+- `ask_repo.py` (thin user-facing wrapper for the GraphRAG explorer)

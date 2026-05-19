@@ -1,5 +1,4 @@
 import InfoGeometry.Arithmetic.SplitMajoranaPrimon
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
@@ -33,18 +32,5 @@ theorem blockPfaffian_eq_finiteEulerProduct
     blockPfaffian P q =
       InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q := by
   rfl
-
-/-- Owner target for the finite block-Pfaffian surface. -/
-@[owner_target_tag]
-def PrimeMajoranaPfaffianOwnerTarget : Prop :=
-  ∀ (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ),
-    blockPfaffian P q =
-      InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q
-
-/-- The finite block-Pfaffian owner target is proved. -/
-theorem primeMajoranaPfaffianOwnerTarget :
-    PrimeMajoranaPfaffianOwnerTarget := by
-  intro P q
-  exact rfl
 
 end InfoGeometry.Arithmetic.PrimeMajoranaPfaffian

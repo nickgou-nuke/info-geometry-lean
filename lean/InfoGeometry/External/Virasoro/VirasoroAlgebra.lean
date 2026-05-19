@@ -223,6 +223,14 @@ noncomputable def basisLC : Basis (Option ℤ) 𝕜 (VirasoroAlgebra 𝕜) :=
     basisLC 𝕜 none = cgen 𝕜 := by
   simp [basisLC]
 
+@[simp] lemma toWittAlgebra_basisLC_some (n : ℤ) :
+    toWittAlgebra (basisLC 𝕜 (some n)) = WittAlgebra.lgen 𝕜 n := by
+  simp
+
+@[simp] lemma toWittAlgebra_basisLC_none :
+    toWittAlgebra (basisLC 𝕜 none) = 0 := by
+  simp
+
 end VirasoroAlgebra -- namespace
 
 end VirasoroAlgebra -- section

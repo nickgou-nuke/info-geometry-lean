@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.AttentionPolarizedSplit
-import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Meta.Architecture
 
 /-!

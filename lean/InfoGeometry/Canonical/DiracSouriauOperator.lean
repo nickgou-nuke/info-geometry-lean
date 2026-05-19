@@ -155,22 +155,21 @@ noncomputable def DrazinWitnessContext.ofField
   let hDExists := Classical.choose_spec h
   let D := Classical.choose hDExists
   let hD := Classical.choose_spec hDExists
-  ⟨k, D, hD⟩
+  exact ⟨k, D, hD⟩
 
 /-- A Drazin witness context discharges the local hypothesis predicate. -/
 
 theorem hasDrazinInverse_of_context
     {S : DiracSouriauSector R} (Ctxt : DrazinWitnessContext S) :
     S.HasDrazinInverse Ctxt.k := by
-  ⟨Ctxt.D, Ctxt.isDrazin⟩
+  exact ⟨Ctxt.D, Ctxt.isDrazin⟩
 
 /-- The constructed field witness context discharges the local Drazin predicate. -/
 
 theorem hasDrazinInverse_of_fieldContext
     {K : Type*} [Field K] (S : DiracSouriauSector K) :
     S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
-  have h := S.exists_drazinInverse
-  refine ⟨k, D, hD⟩
+  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
 
 /-- Unpack a Drazin hypothesis into its explicit witness. -/
 
@@ -178,8 +177,8 @@ theorem exists_drazinInverse_of_hasDrazinInverse
     {S : DiracSouriauSector R} {k : ℕ} (h : S.HasDrazinInverse k) :
     ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R,
       InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k := by
-  cases h with D hD
-  exact D, hD
+  rcases h with ⟨D, hD⟩
+  exact ⟨D, hD⟩
 
 /--
 Constructive Drazin witness from an explicit two-sided inverse of the full
@@ -261,7 +260,7 @@ topological complexity (Pfaffian) and statistical dissipation (Berezinian).
 noncomputable def souriauEntropy (S : DiracSouriauSector ℝ) : ℝ :=
   Real.log (S.pfaffian) - (1 / 2) * Real.log (S.berezinian)
 
-/--
+/-
 Hypothesis 4: Critical Stiffness Threshold.
 Cosmic acceleration (Dark Energy) is hypothesized as the elastic rigidity of the
 $C\ell(4,4)$ vacuum protecting topological memory (Core) from thermodynamic
@@ -276,6 +275,11 @@ structure BPSPProtectedWitness (S : DiracSouriauSector ℝ) where
   /-- Proof that the Berezinian is below the critical threshold. -/
   hBelow : S.berezinian < κ_crit
 
+/-- BPS protection means the sector has an explicit stiffness witness. -/
+@[rep_depth transport]
+def IsBPSProtected (S : DiracSouriauSector ℝ) (κ_crit : ℝ) : Prop :=
+  ∃ (w : BPSPProtectedWitness S), w.κ_crit = κ_crit
+
 /-- The original `IsBPSProtected` predicate is equivalent to the existence of a witness. -/
 @[rep_depth transport]
 theorem IsBPSProtected_iff_exists_witness (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
@@ -285,10 +289,6 @@ theorem IsBPSProtected_iff_exists_witness (S : DiracSouriauSector ℝ) (κ_crit 
     exact w.hBelow
   · intro h
     refine ⟨⟨κ_crit, h⟩, rfl⟩
-
-@[rep_depth transport]
-def IsBPSProtected (S : DiracSouriauSector ℝ) (κ_crit : ℝ) : Prop :=
-  ∃ (w : BPSPProtectedWitness S), w.κ_crit = κ_crit
 
 /--
 Absolute Pfaffian proxy: unlike `pfaffian`, this has an unconditional square

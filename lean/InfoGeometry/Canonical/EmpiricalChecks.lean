@@ -1,6 +1,12 @@
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.GrandCanonicalExperts
-import InfoGeometry.Canonical.Thermo
+import InfoGeometry.Thermo.FiniteDiagonal
+import InfoGeometry.Thermo.FiniteMatrix
+import InfoGeometry.Thermo.FromBregman
+import InfoGeometry.Thermo.FromLogDet
+import InfoGeometry.Thermo.Gibbs
+import InfoGeometry.Thermo.ThermodynamicIdentities
+import InfoGeometry.Thermal.FiniteMatrix
 
 /-!
 # InfoGeometry.Canonical.EmpiricalChecks
@@ -67,4 +73,3 @@ lemma switch_selectedRoutingEpsilon_le_one
 end RoutingBounds
 
 end InfoGeometry.Canonical.EmpiricalChecks
-

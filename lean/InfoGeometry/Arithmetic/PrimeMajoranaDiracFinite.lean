@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
@@ -78,22 +77,5 @@ theorem finiteDiracHamiltonian_eq_log_primeBitInteger
       Real.log (InfoGeometry.Arithmetic.primeBitInteger L ψ : ℝ) := by
   rw [finiteDiracHamiltonian_eq_primeBitEnergy]
   exact InfoGeometry.Arithmetic.primeBitEnergy_eq_log_primeBitInteger (L := L) ψ
-
-/-- Owner target for the finite Dirac-square surface. -/
-@[owner_target_tag]
-def PrimeMajoranaDiracFiniteOwnerTarget : Prop :=
-  ∀ (L : InfoGeometry.Arithmetic.PrimeBitLattice)
-    (ψ : InfoGeometry.Arithmetic.PrimeBitState L),
-    finiteDiracHamiltonian L ψ =
-      InfoGeometry.Arithmetic.primeBitEnergy L ψ.support ∧
-    finiteDiracHamiltonian L ψ =
-      Real.log (InfoGeometry.Arithmetic.primeBitInteger L ψ : ℝ)
-
-/-- The finite Dirac-square owner target is proved. -/
-theorem primeMajoranaDiracFiniteOwnerTarget :
-    PrimeMajoranaDiracFiniteOwnerTarget := by
-  intro L ψ
-  exact ⟨finiteDiracHamiltonian_eq_primeBitEnergy L ψ,
-    finiteDiracHamiltonian_eq_log_primeBitInteger L ψ⟩
 
 end InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite

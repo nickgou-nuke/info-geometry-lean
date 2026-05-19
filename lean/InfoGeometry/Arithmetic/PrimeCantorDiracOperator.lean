@@ -1,7 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
@@ -324,30 +322,5 @@ theorem occupancy_hamiltonian_eq_hamiltonian
 
 end FinitePrimeCantorDirac
 
-
-/-! ## 5. Owner target -/
-
-/--
-Finite Cantor Dirac owner target.
-
-This target closes only the finite graph/difference and diagonal-Hamiltonian
-facts. It does not identify the Dirac square with the Hamiltonian.
--/
-@[owner_target_tag]
-def PrimeCantorDiracOperatorOwnerTarget : Prop :=
-  ∀ (D : FinitePrimeCantorDirac)
-    (c : ℝ)
-    (v : D.Vertex),
-      D.dirac (fun _ => c) v = 0
-      ∧
-      occupancyHamiltonian D.P D.lam v = D.hamiltonian v
-
-/-- The finite Cantor Dirac owner target is closed. -/
-theorem primeCantorDiracOperatorOwnerTarget :
-    PrimeCantorDiracOperatorOwnerTarget := by
-  intro D c v
-  exact
-    ⟨ D.dirac_const_zero c v,
-      D.occupancy_hamiltonian_eq_hamiltonian v ⟩
 
 end InfoGeometry.Arithmetic.PrimeCantorDiracOperator

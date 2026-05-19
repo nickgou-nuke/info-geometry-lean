@@ -124,7 +124,7 @@ def ofLinearHom (ρ : G →* (V ≃ₗ[k] V)) : ProjectiveRepresentation k G V w
     exact congrArg (fun e : V ≃ₗ[k] V => e x) ρ.map_one
   map_mul := by
     intro g h x
-    exact congrArg (fun e : V ≃ₗ[k] V => e x) (ρ.map_mul g h)
+    simpa using congrArg (fun e : V ≃ₗ[k] V => e x) (ρ.map_mul g h)
   cocycle := by
     intro g h l
     simp

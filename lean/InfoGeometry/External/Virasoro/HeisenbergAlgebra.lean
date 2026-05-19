@@ -282,10 +282,18 @@ lemma central_ofCentral (a : 𝕜) (Z : HeisenbergAlgebra 𝕜) :
   constructor
   · simp
   · have hk' : -⁅Z, kgen 𝕜⁆ = 0 := by
-      rw [← lie_skew (kgen 𝕜) Z]
+      rw [lie_skew (kgen 𝕜) Z]
       exact lie_kgen 𝕜 Z
     have hk : ⁅Z, kgen 𝕜⁆ = 0 := neg_eq_zero.mp hk'
     rw [ofCentral_apply, lie_smul, hk, smul_zero]
+
+/-- The whole central line lands in the Lie-algebra center. -/
+@[simp] lemma ofCentral_mem_center (a : 𝕜) :
+    ofCentral 𝕜 a ∈ LieAlgebra.center 𝕜 (HeisenbergAlgebra 𝕜) := by
+  change ofCentral 𝕜 a ∈ LieModule.maxTrivSubmodule 𝕜 (HeisenbergAlgebra 𝕜) (HeisenbergAlgebra 𝕜)
+  rw [LieModule.mem_maxTrivSubmodule]
+  intro Z
+  exact (central_ofCentral 𝕜 a Z).2
 
 @[simp] lemma lie_jgen (k l : ℤ) :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by

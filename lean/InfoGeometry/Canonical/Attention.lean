@@ -1,5 +1,5 @@
 import Architect
-import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.GrandCanonical.Core
 import Mathlib.Algebra.Module.Basic
 
 /-!

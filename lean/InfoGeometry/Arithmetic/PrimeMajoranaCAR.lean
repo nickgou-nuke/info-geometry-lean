@@ -1,5 +1,4 @@
 import Mathlib
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaCAR
@@ -185,27 +184,6 @@ theorem parityOp_sq :
             rw [hN]
     _ = 1 := by
             abel
-
-/-- Local CAR owner target. -/
-@[owner_target_tag]
-def PrimeMajoranaCAROwnerTarget : Prop :=
-  ∀ {Op : Type*} [Ring Op] (P : ExteriorCARPair Op),
-    P.numberOp * P.numberOp = P.numberOp ∧
-    P.cMajorana * P.cMajorana = 1 ∧
-    P.dMajorana * P.dMajorana = -1 ∧
-    P.parityOp = 1 - (2 : Op) * P.numberOp ∧
-    P.parityOp * P.parityOp = 1
-
-/-- The local CAR owner target is closed by the explicit algebraic identities. -/
-theorem primeMajoranaCAROwnerTarget :
-    PrimeMajoranaCAROwnerTarget := by
-  intro Op inst P
-  exact
-    ⟨P.numberOp_idem,
-      P.cMajorana_sq,
-      P.dMajorana_sq,
-      P.parityOp_eq_one_sub_two_numberOp,
-      P.parityOp_sq⟩
 
 end ExteriorCARPair
 

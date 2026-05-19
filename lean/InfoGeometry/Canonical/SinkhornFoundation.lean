@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Meta.Architecture

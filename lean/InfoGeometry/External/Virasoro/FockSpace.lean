@@ -244,6 +244,16 @@ lemma ChargedFockSpace.vacuum_highestWeight (α : 𝕜) :
   · intro k hk
     exact jgen_pos_vacuum 𝕜 α hk
 
+/-- The charged Fock vacuum is cyclic and satisfies the full highest-weight conditions. -/
+lemma ChargedFockSpace.vacuum_cyclic_highestWeight (α : 𝕜) :
+    Submodule.span (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) {ChargedFockSpace.vacuum 𝕜 α} = ⊤ ∧
+    ιUEA 𝕜 (HeisenbergAlgebra.kgen 𝕜) • vacuum 𝕜 α = vacuum 𝕜 α ∧
+    ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0) • vacuum 𝕜 α = α • vacuum 𝕜 α ∧
+    (∀ k > 0, ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 k) • vacuum 𝕜 α = 0) := by
+  constructor
+  · exact vacuum_cyclic 𝕜 α
+  exact vacuum_highestWeight 𝕜 α
+
 /-- `J₀ • v = α • v` for all `v` in `ChargedFockSpace 𝕜 α` -/
 @[simp] lemma ChargedFockSpace.jgen_zero_smul (α : 𝕜) (v : ChargedFockSpace 𝕜 α) :
     (ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0)) • v = α • v := by

@@ -3,7 +3,8 @@ import InfoGeometry.Singular.KreinNaturalFlow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.PerelmanWCore
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.WeylAnomalySource
+import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.RicciMongeAmpere
 
 /-!

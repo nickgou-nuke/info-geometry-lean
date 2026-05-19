@@ -1,8 +1,5 @@
 import Mathlib
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 
 /-!
@@ -335,50 +332,5 @@ theorem kernel_eq_sum
           annihilationKernel D.amplitude (D.holonomy s) p S T) := rfl
 
 end FiniteCantorZetaDirac
-
-/-! ## 5. Self-adjointness calibration socket -/
-
-/--
-Finite self-adjointness calibration for the Cantor--Dirac operator.
-
-This packet records the expected analytic criterion separately from the finite
-operator definition. In the zeta specialization the intended criterion is:
-
-`SelfAdjoint s ↔ all normalized prime holonomies are unitary ↔ Re(s)=1/2`.
-
-The equivalence is witness-gated here.
--/
-@[socket_debt_tag, rep_depth operator]
-structure FiniteCantorDiracSelfAdjointCalibration
-    (P : PrimeCutoff)
-    (D : FiniteCantorZetaDirac P) where
-  CriticalLine : ℂ → Prop
-  SelfAdjoint : ℂ → Prop
-
-  /-- Calibration theorem supplied by the analytic/holonomy owner. -/
-  selfAdjoint_iff_criticalLine :
-    ∀ s : ℂ, SelfAdjoint s ↔ CriticalLine s
-
-namespace FiniteCantorDiracSelfAdjointCalibration
-
-variable {P : PrimeCutoff}
-variable {D : FiniteCantorZetaDirac P}
-variable (C : FiniteCantorDiracSelfAdjointCalibration P D)
-
-/-- Re-export: self-adjointness forces the critical line. -/
-@[rep_depth operator]
-theorem criticalLine_of_selfAdjoint {s : ℂ}
-    (h : C.SelfAdjoint s) :
-    C.CriticalLine s :=
-  (C.selfAdjoint_iff_criticalLine s).mp h
-
-/-- Re-export: the critical line supplies self-adjointness. -/
-@[rep_depth operator]
-theorem selfAdjoint_of_criticalLine {s : ℂ}
-    (h : C.CriticalLine s) :
-    C.SelfAdjoint s :=
-  (C.selfAdjoint_iff_criticalLine s).mpr h
-
-end FiniteCantorDiracSelfAdjointCalibration
 
 end InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator

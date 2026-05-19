@@ -13,6 +13,10 @@ vector search
 It is a navigation and audit layer over the existing ExprArango / wire-topology
 exports.  It is not proof authority.
 
+IGX is only a partial shallow implementation of the larger VAST/robust tooling
+system; the layered memory here is a fragmentary retrieval substrate, not the
+final platform.
+
 ## Layer contract
 
 ```text

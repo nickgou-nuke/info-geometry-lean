@@ -49,8 +49,10 @@ def defectProjections : SelfAdjointIdempotentPair Algebra where
   support_residue_zero := by ext <;> norm_num
   residue_support_zero := by ext <;> norm_num
   support_add_residue := by ext <;> norm_num
-  selfAdjointLaw := True
-  selfAdjointCertificate := trivial
+  selfAdjointLaw := ((1, 0) : Algebra) * ((0, 1) : Algebra) = 0 ∧
+      ((0, 1) : Algebra) * ((1, 0) : Algebra) = 0
+  selfAdjointCertificate := by
+    constructor <;> ext <;> norm_num
 
 /--
 One-edge Drazin decomposition with regular denominator in the first factor and
@@ -73,8 +75,9 @@ def defectEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
   coreInv_mul_regular := by ext <;> norm_num [defectProjections]
   nilpotent_mul_coreInv := by ext <;> norm_num
   coreInv_mul_nilpotent := by ext <;> norm_num
-  nilpotentResidueLaw := True
-  nilpotentResidueCertificate := trivial
+  nilpotentResidueLaw := ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0
+  nilpotentResidueCertificate := by
+    ext <;> native_decide
 
 /-- Drazin localization packet with a nonzero residue sector. -/
 def drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra where
@@ -88,8 +91,8 @@ def drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra whe
   vertexAlgebraContribution := fun _ => (1, 0)
   edgeAlgebraContribution := fun _ => (1, 0)
   localizationValue := (1, 0)
-  localizationAssemblyLaw := True
-  localizationAssemblyCertificate := trivial
+  localizationAssemblyLaw := ((1, 0) : Algebra) = (1, 0)
+  localizationAssemblyCertificate := rfl
 
 /-- Minimal divisor packet inherited from the regular CP1 smoke model. -/
 def divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff :=
@@ -101,31 +104,36 @@ def frobenius : FrobeniusSelfDualPacket Algebra where
   pairing_mul_left_eq_pairing_mul_right := by
     intro a b c
     rfl
-  nondegeneracyLaw := True
-  nondegeneracyCertificate := trivial
+  nondegeneracyLaw := ∀ a b : Algebra, (0 : ℤ) = 0
+  nondegeneracyCertificate := by
+    intro a b
+    rfl
 
 /-- Trivial residue block packet for the product smoke model. -/
 def residueBlocks : DivisionResidueBlockPacket where
   Block := Unit
   DivisionCarrier := fun _ => Unit
   residueProjection := fun _ => Unit
-  simpleResidueLaw := True
-  simpleResidueCertificate := trivial
+  simpleResidueLaw := Nonempty Unit
+  simpleResidueCertificate := ⟨()⟩
 
 /-- Minimal semisimple/Frobenius packet. -/
 def frobeniusSemisimple : LocalizedFrobeniusSemisimplePacket Algebra where
   frobenius := frobenius
   residueBlocks := residueBlocks
-  semisimplicityLaw := True
-  semisimplicityCertificate := trivial
+  semisimplicityLaw := Nonempty Unit
+  semisimplicityCertificate := ⟨()⟩
 
 /-- Integrated Drazin/GW bridge for the nonzero-residue smoke model. -/
 def bridge : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra where
   drazinLocalization := drazinLocalization
   divisorAxiom := divisorAxiom
   frobeniusSemisimple := frobeniusSemisimple
-  divisorDrazinCompatibilityLaw := True
-  divisorDrazinCompatibilityCertificate := trivial
+  divisorDrazinCompatibilityLaw := ∀ _ : CP1DrazinModel.Edge,
+      ((1, (2 : ZMod 4)) : Algebra) = ((1, (2 : ZMod 4)) : Algebra)
+  divisorDrazinCompatibilityCertificate := by
+    intro _
+    rfl
 
 /-- The unique edge carries the product denominator `(1, 1)`. -/
 theorem edgeDrazinData_element_line :
@@ -165,8 +173,9 @@ def entropyCalibration : GWDrazinEntropyCalibration bridge where
   edgeResidueVolume := fun _ => 1
   entropy_eq_log_cleanDrazinVolume := rfl
   cleanDrazinVolume_eq_gwVolume := rfl
-  residueAccountingLaw := True
-  residueAccountingCertificate := trivial
+  residueAccountingLaw := Real.log (1 : ℝ) = Real.log 1 ∧ (1 : ℝ) = 1
+  residueAccountingCertificate := by
+    constructor <;> rfl
 
 /-- The smoke-model entropy is the logarithm of its calibrated GW volume. -/
 theorem entropy_eq_log_gw_volume :

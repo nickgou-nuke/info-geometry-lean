@@ -153,6 +153,27 @@ theorem boltzmannEntropyPotential_add
     (InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential_add
       (H := E) R.additiveFlow u hCocycle B s t)
 
+/-- The Type-III Boltzmann entropy potential is an additive monoid homomorphism. -/
+noncomputable def boltzmannEntropyPotentialHom
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
+    ℝ →+ ℝ where
+  toFun := R.boltzmannEntropyPotential u B
+  map_zero' := by
+    simpa [boltzmannEntropyPotential] using
+      (InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential_zero
+        (H := E) R.additiveFlow u hCocycle B)
+  map_add' := R.boltzmannEntropyPotential_add u hCocycle B
+
+@[simp] theorem boltzmannEntropyPotentialHom_apply
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow)
+    (t : ℝ) :
+    R.boltzmannEntropyPotentialHom u hCocycle B t = R.boltzmannEntropyPotential u B t :=
+  rfl
+
 @[rep_depth thermo, capstone]
 theorem exists_boltzmannEntropyPotential_of_cocycle
     (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)

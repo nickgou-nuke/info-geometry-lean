@@ -276,6 +276,13 @@ lemma toAbelianLieAlgebraOn_kgen :
     ⁅ofCentral 𝕜 a, Z⁆ = 0 := by
   rw [ofCentral_apply, smul_lie, lie_kgen, smul_zero]
 
+/-- Central elements in the Heisenberg algebra commute on both sides. -/
+lemma central_ofCentral (a : 𝕜) (Z : HeisenbergAlgebra 𝕜) :
+    ⁅ofCentral 𝕜 a, Z⁆ = 0 ∧ ⁅Z, ofCentral 𝕜 a⁆ = 0 := by
+  constructor
+  · simp
+  · rw [ofCentral_apply, lie_smul, lie_kgen, smul_zero]
+
 @[simp] lemma lie_jgen (k l : ℤ) :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by
   simp_rw [bracket_def']

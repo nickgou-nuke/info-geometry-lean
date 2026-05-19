@@ -47,35 +47,4 @@ def v4Action (g : V4) (z : ℂ) : ℂ :=
 def IsV4Symmetric (S : Set ℂ) : Prop :=
   ∀ (g : V4) (z : ℂ), z ∈ S → v4Action g z ∈ S
 
-/--
-The structural witness for `V4` compactification.
-
-It asserts that checking the condition at the boundary representatives of the
-`V4` fundamental domain is logically equivalent to checking the global analytic
-condition.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure AsanoCompactificationWitness
-    (AsanoRootCondition EndpointRepresentativeCheck : ℂ → Set ℂ → Prop) where
-  /-- The endpoints capture the full degrees of freedom of the `V4` orbit. -/
-  orbit_reduction :
-    ∀ (z : ℂ) (S : Set ℂ), IsV4Symmetric S →
-    (EndpointRepresentativeCheck z S ↔ AsanoRootCondition (v4Action V4.id z) S)
-
-/--
-Capstone reduction: if the finite endpoint check holds, the global condition
-holds as well.
--/
-@[rep_depth thermo, capstone]
-theorem asano_nondegenerate_orbit_reduction
-    (W : AsanoCompactificationWitness AsanoRootCondition EndpointRepresentativeCheck)
-    (S : Set ℂ) (hSymm : IsV4Symmetric S)
-    (z : ℂ)
-    (h_endpoint : EndpointRepresentativeCheck z S) :
-    AsanoRootCondition z S := by
-  have h_equiv := W.orbit_reduction z S hSymm
-  have h_id : v4Action V4.id z = z := rfl
-  rw [h_id] at h_equiv
-  exact h_equiv.mp h_endpoint
-
 end InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry

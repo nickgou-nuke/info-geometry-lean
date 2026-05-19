@@ -16,6 +16,7 @@ import Mathlib.Algebra.Module.LinearMap.End
 import Mathlib.Algebra.Group.End
 import Mathlib.GroupTheory.QuotientGroup.Defs
 import Mathlib.GroupTheory.GroupAction.Defs
+import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
@@ -25,17 +26,6 @@ namespace InfoGeometry.Canonical.ProjectiveFoundation
 open scoped LinearAlgebra.Projectivization
 
 universe u v w
-
-/--
-Abstract projective symmetry layer.
-
-The file deliberately keeps the geometric symmetry abstract:
-- the base action is genuine;
-- the lift is cocyclic/projective;
-- cusp behavior is handled elsewhere.
--/
-structure ProjectiveModularAction (Γ X : Type u) [Group Γ] [MulAction Γ X] : Prop where
-  holds : True
 
 /--
 A minimal Krein-style carrier.
@@ -102,6 +92,16 @@ namespace ProjectiveRepresentation
 variable {k G V : Type*}
   [Group G] [Semiring k] [AddCommMonoid V] [Module k V]
 
+@[simp] theorem multiplier_one_left (P : ProjectiveRepresentation k G V)
+    (g : G) :
+    P.multiplier 1 g = 1 :=
+  P.one_left g
+
+@[simp] theorem multiplier_one_right (P : ProjectiveRepresentation k G V)
+    (g : G) :
+    P.multiplier g 1 = 1 :=
+  P.one_right g
+
 instance : CoeFun (ProjectiveRepresentation k G V) (fun _ ↦ G → V → V) where
   coe P := fun g ↦ P.toLinearEquiv g
 
@@ -119,6 +119,84 @@ theorem map_one_eq_id (P : ProjectiveRepresentation k G V) :
     P 1 = id := by
   ext x
   exact P.map_one_apply x
+
+section CocycleBridge
+
+variable {K : Type*}
+  [Group G] [Field K] [AddCommGroup V] [Module K V]
+
+local instance : MulDistribMulAction G Kˣ where
+  smul := fun _ x => x
+  mul_smul := by
+    intro g h x
+    rfl
+  one_smul := by
+    intro x
+    rfl
+  smul_mul := by
+    intro g x y
+    rfl
+  smul_one := by
+    intro g
+    rfl
+
+@[simp] theorem multiplierTrivialAction_smul (g : G) (x : Kˣ) :
+    g • x = x :=
+  rfl
+
+/-- The projective multiplier is a normalized multiplicative 2-cocycle. -/
+theorem multiplier_isMulCocycle₂ (P : ProjectiveRepresentation K G V) :
+    groupCohomology.IsMulCocycle₂ (fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) := by
+  intro g h l
+  simpa [ProjectiveRepresentation.cocycle, mul_comm, mul_left_comm, mul_assoc]
+    using (P.cocycle g h l)
+
+end CocycleBridge
+
+section CocycleBridgeLowDegree
+
+variable (G : Type) [Group G]
+variable (K : Type) [Field K]
+variable (V : Type) [AddCommGroup V] [Module K V]
+
+local instance : MulDistribMulAction G Kˣ where
+  smul := fun _ x => x
+  mul_smul := by
+    intro x y b
+    rfl
+  one_smul := by
+    intro b
+    rfl
+  smul_mul := by
+    intro r x y
+    rfl
+  smul_one := by
+    intro r
+    rfl
+
+/-- The projective multiplier canonically defines a Mathlib 2-cocycle. -/
+noncomputable def multiplierToCocycles₂ (P : ProjectiveRepresentation K G V) :
+    groupCohomology.cocycles₂ (Rep.ofMulDistribMulAction G Kˣ) := by
+  exact groupCohomology.cocyclesOfIsMulCocycle₂ (G := G) (M := Kˣ)
+    (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ))
+    (by simpa using (P.multiplier_isMulCocycle₂ (G := G) (V := V)))
+
+@[simp] theorem multiplierToCocycles₂_apply (P : ProjectiveRepresentation K G V)
+    (g h : G) :
+    (multiplierToCocycles₂ (G := G) (K := K) (V := V) P) (g, h) = P.multiplier g h :=
+  rfl
+
+/-- The multiplier class in low-degree cohomology. -/
+noncomputable def multiplierClass (P : ProjectiveRepresentation K G V) :
+    groupCohomology.H2 (Rep.ofMulDistribMulAction G Kˣ) :=
+  groupCohomology.H2π _ (P.multiplierToCocycles₂ (G := G) (K := K) (V := V))
+
+@[simp] theorem multiplierClass_apply (P : ProjectiveRepresentation K G V) :
+    groupCohomology.H2π (Rep.ofMulDistribMulAction G Kˣ) (P.multiplierToCocycles₂ (G := G)
+      (K := K) (V := V)) = P.multiplierClass (G := G) (K := K) (V := V) :=
+  rfl
+
+end CocycleBridgeLowDegree
 
 /-- A genuine representation is a projective representation with trivial multiplier. -/
 def ofLinearHom (ρ : G →* (V ≃ₗ[k] V)) : ProjectiveRepresentation k G V where
@@ -147,6 +225,25 @@ def ofLinearHom (ρ : G →* (V ≃ₗ[k] V)) : ProjectiveRepresentation k G V w
 @[simp] theorem ofLinearHom_toLinearEquiv (ρ : G →* (V ≃ₗ[k] V)) :
     (ofLinearHom (k := k) (G := G) (V := V) ρ).toLinearEquiv = ρ :=
   rfl
+
+section CocycleBridgeLowDegree
+
+variable {G : Type} [Group G]
+variable {K : Type} [Field K]
+variable {V : Type} [AddCommGroup V] [Module K V]
+
+@[simp] theorem ofLinearHom_multiplierToCocycles₂ (ρ : G →* (V ≃ₗ[K] V)) :
+    multiplierToCocycles₂ (G := G) (K := K) (V := V) (ofLinearHom (k := K) (G := G) (V := V) ρ)
+      = 0 := by
+  ext g h
+  change Additive.ofMul (1 : Kˣ) = 0
+  simp
+
+@[simp] theorem ofLinearHom_multiplierClass (ρ : G →* (V ≃ₗ[K] V)) :
+    multiplierClass (G := G) (K := K) (V := V) (ofLinearHom (k := K) (G := G) (V := V) ρ) = 0 := by
+  simp [multiplierClass, ofLinearHom_multiplierToCocycles₂]
+
+end CocycleBridgeLowDegree
 
 /-- A projective representation with trivial multiplier gives a genuine action on points. -/
 def act (P : ProjectiveRepresentation k G V) : G → V → V :=
@@ -229,6 +326,12 @@ instance : One (P.centralExtension) where
 
 instance : Inhabited (P.centralExtension) := ⟨1⟩
 
+@[simp] theorem mul_fst (x y : P.centralExtension) : (x * y).1 = x.1 * y.1 := rfl
+@[simp] theorem mul_snd (x y : P.centralExtension) :
+    (x * y).2 = x.2 * y.2 * P.multiplier x.1 y.1 := rfl
+@[simp] theorem one_fst : (1 : P.centralExtension).1 = (1 : G) := rfl
+@[simp] theorem one_snd : (1 : P.centralExtension).2 = (1 : Kˣ) := rfl
+
 @[ext]
 theorem ext {x y : P.centralExtension} (h1 : x.1 = y.1) (h2 : x.2 = y.2) : x = y := by
   cases x
@@ -250,40 +353,29 @@ instance : Monoid (P.centralExtension) where
       ext
       · change (g * h) * l = g * (h * l)
         exact mul_assoc g h l
-      · have h : (({ fst := g, snd := a } : P.centralExtension) *
+      · have hunits :
+          (({ fst := g, snd := a } : P.centralExtension) *
             ({ fst := h, snd := b } : P.centralExtension) *
             ({ fst := l, snd := c } : P.centralExtension)).snd =
           (({ fst := g, snd := a } : P.centralExtension) *
             (({ fst := h, snd := b } : P.centralExtension) *
               ({ fst := l, snd := c } : P.centralExtension))).snd := by
-          simp [mul_assoc, mul_left_comm, mul_comm, P.cocycle]
-        exact congrArg (fun u : Kˣ => (u : K)) h
+          simp [mul_snd, mul_assoc, mul_left_comm, mul_comm, P.cocycle]
+        exact congrArg (fun u : Kˣ => (u : K)) hunits
   one_mul x := by
     cases x with
     | mk g a =>
       ext
       · change 1 * g = g
         exact one_mul g
-      · have h : ((1 : P.centralExtension) * ({ fst := g, snd := a } : P.centralExtension)).snd =
-          ({ fst := g, snd := a } : P.centralExtension).snd := by
-          rfl
-        exact congrArg (fun u : Kˣ => (u : K)) h
+      · simp [ProjectiveRepresentation.one_left]
   mul_one x := by
     cases x with
     | mk g a =>
       ext
       · change g * 1 = g
         exact mul_one g
-      · have h : (({ fst := g, snd := a } : P.centralExtension) * (1 : P.centralExtension)).snd =
-          ({ fst := g, snd := a } : P.centralExtension).snd := by
-          rfl
-        exact congrArg (fun u : Kˣ => (u : K)) h
-
-@[simp] theorem mul_fst (x y : P.centralExtension) : (x * y).1 = x.1 * y.1 := rfl
-@[simp] theorem mul_snd (x y : P.centralExtension) :
-    (x * y).2 = x.2 * y.2 * P.multiplier x.1 y.1 := rfl
-@[simp] theorem one_fst : (1 : P.centralExtension).1 = (1 : G) := rfl
-@[simp] theorem one_snd : (1 : P.centralExtension).2 = (1 : Kˣ) := rfl
+      · simp [ProjectiveRepresentation.one_right]
 
 /-- The extension projects to the original group. -/
 def proj : P.centralExtension →* G where
@@ -314,6 +406,56 @@ def liftToCentralExtension : P.centralExtension →* (V ≃ₗ[K] V) where
 theorem liftToCentralExtension_proj (x : P.centralExtension) :
     centralExtension.proj (P := P) x = x.1 := rfl
 
+theorem proj_surjective : Function.Surjective (centralExtension.proj (P := P)) := by
+  intro g
+  exact ⟨⟨g, 1⟩, rfl⟩
+
+/-- The kernel of the projection consists exactly of the scalar units in the second coordinate. -/
+theorem proj_eq_one_iff (x : P.centralExtension) :
+    centralExtension.proj (P := P) x = 1 ↔ x.1 = 1 := by
+  rfl
+
+/-- Any element in the kernel of the projection is a scalar kernel generator. -/
+theorem proj_eq_one_exists (x : P.centralExtension) (hx : centralExtension.proj (P := P) x = 1) :
+    ∃ u : Kˣ, x = ⟨1, u⟩ := by
+  cases x with
+  | mk g a =>
+    simp [centralExtension.proj] at hx
+    subst hx
+    exact ⟨a, rfl⟩
+
+/-- Kernel generators commute with every element of the extension. -/
+theorem kernel_isCentral (u : Kˣ) (x : P.centralExtension) :
+    ⟨1, u⟩ * x = x * ⟨1, u⟩ := by
+  cases x with
+  | mk g a =>
+    ext <;> simp [mul_assoc, mul_left_comm, mul_comm, ProjectiveRepresentation.one_left,
+      ProjectiveRepresentation.one_right]
+
+/-- The honest linear case gives a split central extension. -/
+def ofLinearHomSection (ρ : G →* (V ≃ₗ[K] V)) :
+    G →* (centralExtension (P := ofLinearHom (k := K) (G := G) (V := V) ρ)) where
+  toFun := fun g => ⟨g, 1⟩
+  map_one' := rfl
+  map_mul' := by
+    intro g h
+    ext <;> simp [ofLinearHom]
+
+@[simp] theorem ofLinearHomSection_apply (ρ : G →* (V ≃ₗ[K] V)) (g : G) :
+    ofLinearHomSection (G := G) (V := V) ρ g = ⟨g, 1⟩ :=
+  rfl
+
+@[simp] theorem ofLinearHomSection_proj (ρ : G →* (V ≃ₗ[K] V)) (g : G) :
+    centralExtension.proj (P := ofLinearHom (k := K) (G := G) (V := V) ρ)
+      (ofLinearHomSection (G := G) (V := V) ρ g) = g :=
+  rfl
+
+@[simp] theorem ofLinearHomSection_lift (ρ : G →* (V ≃ₗ[K] V)) (g : G) :
+    centralExtension.liftToCentralExtension (P := ofLinearHom (k := K) (G := G) (V := V) ρ)
+      (ofLinearHomSection (G := G) (V := V) ρ g) = ρ g := by
+  ext v
+  simp [ofLinearHomSection, centralExtension.liftToCentralExtension, ofLinearHom]
+
 end centralExtension
 
 end CentralExtension
@@ -324,7 +466,8 @@ namespace ProjectiveRepresentation
 
 section PGL
 
-variable {K V : Type*}
+variable {K G V : Type*}
+  [Group G]
   [Field K] [AddCommGroup V] [Module K V]
 
 def scalarEquiv : Kˣ →* (V ≃ₗ[K] V) where
@@ -360,9 +503,55 @@ def projectiveEquivSetoid : Setoid (V ≃ₗ[K] V) where
 /-- The projective linear group as a quotient by scalar equivalence. -/
 abbrev PGL := Quotient (projectiveEquivSetoid (K := K) (V := V))
 
+/-- The identity projective linear map. -/
+instance : One (PGL (K := K) (V := V)) where
+  one := Quotient.mk _ (1 : V ≃ₗ[K] V)
+
+/-- Projective linear maps compose. -/
+instance : Mul (PGL (K := K) (V := V)) where
+  mul := Quotient.map₂ (· * ·)
+    (by
+      intro e₁ e₂ he f₁ f₂ hf
+      rcases he with ⟨a, rfl⟩
+      rcases hf with ⟨b, rfl⟩
+      refine ⟨b * a, ?_⟩
+      ext v
+      simp [smul_smul, mul_comm, mul_left_comm, mul_assoc])
+
+instance : MulOne (PGL (K := K) (V := V)) where
+  mul := (· * ·)
+  one := 1
+
+instance : Monoid (PGL (K := K) (V := V)) where
+  mul := (· * ·)
+  one := 1
+  mul_assoc := by
+    intro x y z
+    refine Quotient.inductionOn₃ x y z ?_
+    intro e f g
+    rfl
+  one_mul := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    rfl
+  mul_one := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    rfl
+
 /-- The canonical quotient map to `PGL`. -/
 def toPGL : (V ≃ₗ[K] V) → PGL (K := K) (V := V) :=
   Quotient.mk _
+
+/-- The canonical quotient map into `PGL` is a monoid homomorphism. -/
+def toPGLHom : (V ≃ₗ[K] V) →* PGL (K := K) (V := V) where
+  toFun := toPGL (K := K) (V := V)
+  map_one' := rfl
+  map_mul' := by
+    intro e f
+    rfl
 
 /-- The quotient acts on projective space. -/
 def pglAction : PGL (K := K) (V := V) → ℙ K V → ℙ K V :=
@@ -371,19 +560,51 @@ def pglAction : PGL (K := K) (V := V) → ℙ K V → ℙ K V :=
     (by
       intro e f h
       rcases h with ⟨a, rfl⟩
-      ext ⟨v, hv⟩
-      change Projectivization.map e.toLinearMap e.injective (Projectivization.mk K v hv) =
-        Projectivization.map (a • e).toLinearMap (LinearEquiv.injective (a • e))
-          (Projectivization.mk K v hv)
-      rw [Projectivization.map_mk, Projectivization.map_mk]
-      apply (Projectivization.mk_eq_mk_iff' K _ _ _ _).2
+      funext p
+      refine Quotient.inductionOn p ?_
+      intro v
+      delta Projectivization.map
+      apply Quotient.sound
       refine ⟨a⁻¹, ?_⟩
-      simp [smul_smul]
-    )
+      dsimp
+      have hmul : ((a⁻¹ : K) * (a : K)) = 1 := by
+        simp
+      rw [Units.smul_def, smul_smul]
+      simp [hmul])
 
 /-- The quotient action agrees with the usual action of a chosen representative. -/
 theorem pglAction_mk (e : V ≃ₗ[K] V) :
     pglAction (K := K) (V := V) (toPGL (K := K) (V := V) e)
+      = Projectivization.map e.toLinearMap e.injective :=
+  rfl
+
+/-- Scalar representatives act trivially on projective space. -/
+theorem pglAction_scalar (a : Kˣ) :
+    pglAction (K := K) (V := V) (toPGL (K := K) (V := V) (a • LinearEquiv.refl K V)) = id := by
+  funext p
+  refine Quotient.inductionOn p ?_
+  intro v
+  simp [projectivizationMap, Projectivization.map_mk]
+  apply (Projectivization.mk_eq_mk_iff' K _ _ _ _).2
+  refine ⟨a, ?_⟩
+  simp
+
+/-- Composition of representatives is reflected by the quotient action. -/
+theorem pglAction_comp (e f : V ≃ₗ[K] V) :
+    pglAction (K := K) (V := V) (toPGL (K := K) (V := V) (e.trans f))
+      = pglAction (K := K) (V := V) (toPGL (K := K) (V := V) f) ∘
+          pglAction (K := K) (V := V) (toPGL (K := K) (V := V) e) := by
+  funext p
+  refine Quotient.inductionOn p ?_
+  intro v
+  simpa [Function.comp] using
+    congrArg (fun q => q ⟦v⟧)
+      (Projectivization.map_comp (f := e.toLinearMap) (hf := e.injective)
+        (g := f.toLinearMap) (hg := f.injective))
+
+/-- Honest linear equivalences act on projective space through their `PGL` image. -/
+theorem pglAction_toPGLHom (e : V ≃ₗ[K] V) :
+    pglAction (K := K) (V := V) (toPGLHom (K := K) (V := V) e)
       = Projectivization.map e.toLinearMap e.injective :=
   rfl
 
@@ -433,29 +654,6 @@ def extractStabilizerHom
   map_mul' γ δ := by
     have h_fixed : ((δ : Γ) • x) = x := h_stab (δ : Γ) δ.property
     simp only [Subgroup.coe_mul, C.map_mul (γ : Γ) (δ : Γ) x, h_fixed]
-
-/--
-The chart-free projective foundation contract.
-
-This is intentionally thin: it records the architectural requirement that the
-modular story is projective on the carrier and honest only on stabilizers.
--/
-structure ProjectiveFoundationContract : Prop where
-  holds : True
-
-theorem projectiveFoundationContract : ProjectiveFoundationContract :=
-  ⟨trivial⟩
-
-/--
-Compatibility alias for the projective symmetry contract.
-
-This records the intended Klein/Krein reading without forcing a quotient-level
-PSL construction.
--/
-theorem projectiveModularActionContract
-    {Γ X : Type u} [Group Γ] [MulAction Γ X] :
-    ProjectiveModularAction Γ X := by
-  exact ⟨trivial⟩
 
 /--
 A projective Krein-style carrier.

@@ -368,32 +368,6 @@ theorem primitiveModularKernel_eq_exp_mul_log_inverseBase {n : ℕ} (h : 1 < n) 
   rw [log_primitiveInverseBase h]
   ring_nf
 
-/-! ## Mellin parity owner target -/
-
-/--
-Root-corridor owner target for the Mellin inversion/parity lane.
-
-This packages the already proved inversion/log/kernel identities on the
-primitive Mellin side.  It does not assert any zeta functional equation or
-any analytic continuation beyond the explicit kernel identities already
-proved in this file.
--/
-def PrimitiveMellinParityOwnerTarget : Prop :=
-  ∀ (n : ℕ) (_h : 1 < n),
-    Real.log (primitiveInverseBase n) = -Real.log (n : ℝ) ∧
-    (primitiveMellinKernel n = (fun s => Real.exp (s * Real.log (primitiveInverseBase n))) ∧
-      primitiveModularKernel n = fun τ => Real.exp ((τ + 1) * Real.log (primitiveInverseBase n)))
-
-/-- The Mellin parity owner target is discharged by the existing inversion lemmas. -/
-theorem primitiveMellinParityOwnerTarget :
-    PrimitiveMellinParityOwnerTarget := by
-  intro n h
-  constructor
-  · exact log_primitiveInverseBase h
-  · constructor
-    · exact primitiveMellinKernel_eq_exp_mul_log_inverseBase h
-    · exact primitiveModularKernel_eq_exp_mul_log_inverseBase h
-
 theorem primitiveWeight_nonneg (n : ℕ) : 0 ≤ primitiveWeight n := by
   by_cases h : 1 < n
   · have hn_pos : 0 < (n : ℝ) := by

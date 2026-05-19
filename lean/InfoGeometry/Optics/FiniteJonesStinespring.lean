@@ -16,7 +16,6 @@ added in later calibration layers.
 
 import Mathlib
 import InfoGeometry.Optics.FiniteJonesModel
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -186,19 +185,5 @@ theorem diagonal_defect_eq_environment_gain
 /-- Finite Jones Stinespring isometry. -/
 abbrev JonesStinespringIsometry :=
   StinespringIsometry JonesMat
-
-/--
-Owner target for finite Jones Stinespring audit.
--/
-@[owner_target_tag]
-def FiniteJonesStinespringOwnerTarget : Prop :=
-  ∀ S : JonesStinespringIsometry,
-    opticalDefect S.R = hiddenGain S.V
-
-/-- The finite Jones Stinespring owner target. -/
-theorem finiteJonesStinespringOwnerTarget :
-    FiniteJonesStinespringOwnerTarget := by
-  intro S
-  exact S.defect_eq_hiddenGain
 
 end InfoGeometry.Optics.FiniteJonesStinespring

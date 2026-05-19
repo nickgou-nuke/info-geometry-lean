@@ -62,8 +62,7 @@ and Cantor-to-Fock coherence certificate.
 @[bridge_target_tag, rep_depth transport]
 theorem finite_master_two_morphism :
     B.finite.cantorClifford.tiltSwitch = B.finite.normalizedTiltSwitch ∧
-    B.finite.fractalFock.clifford = B.finite.cantorClifford ∧
-    B.finite.arithmeticMajoranaCompatibility :=
+    B.finite.fractalFock.clifford = B.finite.cantorClifford :=
   InfoGeometry.Canonical.WeylGaugeCantorFockBridge.master_two_morphism B.finite
 
 end CausalConeCantorFockMasterBridge

@@ -7,6 +7,8 @@ import Mathlib.LinearAlgebra.Basis.Bilinear
 import InfoGeometry.External.Virasoro.IsCentralExtension
 import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Abelian
 import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.Defs
+import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
 
 /-!
 # Heisenberg algebra
@@ -406,6 +408,93 @@ lemma jgen_mem_center_iff (n : ℤ) :
       simpa [lie_jgen_zero 𝕜 x] using (lie_skew x (jgen 𝕜 0)).symm
     simpa [LieAlgebra.center, LieModule.maxTrivSubmodule, LieModule.mem_maxTrivSubmodule] using
       hcentral
+
+/-- The Lie-algebra center is the span of the central generator `K` and the zero mode `J₀`. -/
+theorem center_eq_span_kgen_jgen_zero :
+    LieAlgebra.center 𝕜 (HeisenbergAlgebra 𝕜) =
+      Submodule.span 𝕜 ({kgen 𝕜, jgen 𝕜 0} : Set (HeisenbergAlgebra 𝕜)) := by
+  apply le_antisymm
+  · intro x hx
+    have hxleft : ∀ y : HeisenbergAlgebra 𝕜, ⁅y, x⁆ = 0 := by
+      simpa [LieAlgebra.center, LieModule.maxTrivSubmodule, LieModule.mem_maxTrivSubmodule] using
+        hx
+    let B : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) := basisJK 𝕜
+    let cf : Option ℤ →₀ 𝕜 := B.repr x
+    have hfinite : (Function.support fun i : Option ℤ ↦ cf i • B i).Finite := by
+      exact (Finsupp.finite_support cf).subset
+        (smul_support_subset_left (fun i : Option ℤ ↦ B i) (fun i ↦ cf i))
+    have hxsum : ∑ᶠ i, cf i • B i = x := B.finsum_repr_smul_basis x
+    have hcoeff_some :
+        ∀ n : ℤ, n ≠ 0 → cf (some n) = 0 := by
+      intro n hn
+      have hbracket : ⁅jgen 𝕜 (-n), x⁆ = 0 := hxleft (jgen 𝕜 (-n))
+      let f : HeisenbergAlgebra 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 :=
+        { toFun := fun y ↦ ⁅jgen 𝕜 (-n), y⁆
+          map_add' := by intro a b; simp [add_lie]
+          map_smul' := by intro a b; simp [lie_smul] }
+      have hmap : f (∑ᶠ i, cf i • B i) = ∑ᶠ i, f (cf i • B i) := by
+        simpa [f] using map_finsum f hfinite
+      have hsum0 : ∑ᶠ i, f (cf i • B i) = 0 := by
+        have hleft : f (∑ᶠ i, cf i • B i) = 0 := by
+          simpa [hxsum, f] using hbracket
+        exact hmap.symm.trans hleft
+      have hsupport : Function.support (fun i : Option ℤ ↦ f (cf i • B i)) ⊆ ({some n} : Finset (Option ℤ)) := by
+        intro i hi
+        rcases i with _ | m
+        · have hzero : f (cf none • B none) = 0 := by
+            simp [f, basisJK_none, lie_kgen]
+          exact False.elim (hi hzero)
+        · by_cases hm : m = n
+          · simp [hm]
+          · have hzero : f (cf (some m) • B (some m)) = 0 := by
+              have hm' : (-n + m : ℤ) ≠ 0 := by
+                linarith
+              simp [f, basisJK_some, lie_smul, lie_jgen, hm', hn]
+            exact False.elim (hi hzero)
+      have hsingle :
+          ∑ᶠ i, f (cf i • B i) = f (cf (some n) • B (some n)) := by
+        rw [finsum_eq_sum_of_support_subset _ hsupport]
+        simp [f]
+      have hzero' : f (cf (some n) • B (some n)) = 0 := by
+        simpa [hsingle] using hsum0
+      have hterm : cf (some n) • ((-n : 𝕜) • kgen 𝕜) = 0 := by
+        simpa [f, basisJK_some, lie_smul, lie_jgen, hn] using hzero'
+      have hneg : (-n : 𝕜) ≠ 0 := by
+        exact_mod_cast (neg_ne_zero.mpr hn)
+      have hknonzero : ((-n : 𝕜) • kgen 𝕜) ≠ 0 := by
+        exact smul_ne_zero hneg (by simpa [kgen_eq'] using (basisJK 𝕜).ne_zero none)
+      exact (smul_eq_zero.mp hterm).resolve_right hknonzero
+    have hsupport :
+        (B.repr x).support ⊆ ({none, some 0} : Set (Option ℤ)) := by
+      intro i hi
+      rcases i with _ | n
+      · simp
+      · by_cases hn : n = 0
+        · simp [hn]
+        · have hcoef := hcoeff_some n hn
+          have hmem : cf (some n) ≠ 0 := by
+            simpa [Function.mem_support] using hi
+          exact (hcoef hmem).elim
+    have hmem : x ∈ Submodule.span 𝕜 (B '' ({none, some 0} : Set (Option ℤ))) :=
+      (B.mem_span_image).2 hsupport
+    have himg :
+        B '' ({none, some 0} : Set (Option ℤ)) =
+          ({kgen 𝕜, jgen 𝕜 0} : Set (HeisenbergAlgebra 𝕜)) := by
+      ext y
+      constructor
+      · intro hy
+        rcases hy with ⟨o, ho, rfl⟩
+        rcases ho with rfl | rfl <;> simp [basisJK_none, basisJK_some]
+      · intro hy
+        rcases hy with rfl | rfl
+        · exact ⟨none, by simp, by simp [basisJK_none]⟩
+        · exact ⟨some 0, by simp, by simp [basisJK_some]⟩
+    simpa [himg] using hmem
+  · refine Submodule.span_le.2 ?_
+    intro y hy
+    rcases hy with rfl | rfl
+    · simpa using ofCentral_mem_center (𝕜 := 𝕜) 1
+    · exact (jgen_mem_center_iff (𝕜 := 𝕜) 0).2 rfl
 
 end HeisenbergAlgebra -- namespace
 

@@ -439,7 +439,13 @@ import InfoGeometry.Canonical.KramersPhaseAxisReduction
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.LightConeCARFockBridge
 import InfoGeometry.Canonical.HorizonStringDiagram
-import InfoGeometry.Canonical.Krein
+import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Krein.CartanDecomposition
+import InfoGeometry.Krein.Clifford
+import InfoGeometry.Krein.HilbertBridge
+import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.OrthogonalGroup
+import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 import InfoGeometry.Canonical.KreinDiracSpectralLift
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
@@ -447,7 +453,7 @@ import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.VarlamovClifford
 import InfoGeometry.Canonical.VarlamovDiscreteSymmetry
 import InfoGeometry.Canonical.KreinLadder
-import InfoGeometry.Canonical.KreinNaturalFlow
+import InfoGeometry.Singular.KreinNaturalFlow
 import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.Canonical.LiteratureTwistorHodgePalatial
 import InfoGeometry.Canonical.LLN

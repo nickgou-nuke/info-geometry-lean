@@ -131,12 +131,6 @@ variable {State : Type*}
 def encodedState (S : NormalizableArithmeticKMSSocket State) : State :=
   S.witness.stateOfFinset S.support
 
-/-- The supplied finite arithmetic witness certifies the KMS predicate. -/
-theorem isKMSAt
-    (S : NormalizableArithmeticKMSSocket State) :
-    S.witness.IsKMSAt S.encodedState S.beta := by
-  exact S.witness.isKMSAt S.support S.beta
-
 end NormalizableArithmeticKMSSocket
 
 /-! ## 4. KMS strip readout -/
@@ -238,14 +232,6 @@ namespace RealDoubledKreinKMSSocket
 variable
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Re-export of the supplied modular KMS boundary law. -/
-theorem kms_boundary_law
-    (S : RealDoubledKreinKMSSocket E)
-    (A B : DoubledKrein.EndH₂ (E := E)) :
-    S.state (A * InfoGeometry.Krein.modular_shift S.generator S.beta B) =
-      S.state (B * A) :=
-  S.kms A B
-
 end RealDoubledKreinKMSSocket
 
 /-! ## 7. Combined primon doubled Krein/KMS bridge -/
@@ -278,15 +264,6 @@ theorem arithmetic_beta_normalizable
     (S : PrimonDoubledKreinKMSSocket State E) :
     NormalizableBeta S.arithmetic.beta :=
   S.arithmetic.normalizable
-
-/-- The doubled Krein side satisfies its supplied KMS boundary law. -/
-theorem krein_kms_boundary_law
-    (S : PrimonDoubledKreinKMSSocket State E)
-    (A B : DoubledKrein.EndH₂ (E := E)) :
-    S.krein.state
-        (A * InfoGeometry.Krein.modular_shift S.krein.generator S.krein.beta B) =
-      S.krein.state (B * A) :=
-  S.krein.kms_boundary_law A B
 
 end PrimonDoubledKreinKMSSocket
 

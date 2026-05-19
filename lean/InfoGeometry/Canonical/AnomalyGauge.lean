@@ -1,8 +1,7 @@
 import Mathlib
 import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin
-import InfoGeometry.Canonical.KreinNaturalFlow
-import InfoGeometry.Canonical.Krein
+import InfoGeometry.Singular.KreinNaturalFlow
 
 /-!
 # The Anomaly Gauge Field

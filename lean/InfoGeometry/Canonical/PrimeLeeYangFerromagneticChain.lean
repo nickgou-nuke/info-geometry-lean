@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
@@ -503,65 +502,5 @@ theorem leeYang_valid
 end LeeYangStabilityWitness
 
 end PrimeFerromagneticChain
-
-/-! ## Owner target -/
-
-/--
-Owner target for the exact finite prime-chain interaction matrix:
-the entries are nonnegative and symmetric.
--/
-@[owner_target_tag]
-def PrimeLeeYangFerromagneticChainOwnerTarget : Prop :=
-  ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
-    0 ≤ C.coupling i j ∧ C.coupling i j = C.coupling j i
-
-/-- The owner target follows from the explicit matrix elements. -/
-theorem primeLeeYangFerromagneticChainOwnerTarget :
-    PrimeLeeYangFerromagneticChainOwnerTarget := by
-  intro n C i j
-  exact ⟨C.coupling_nonneg i j, C.coupling_symm i j⟩
-
-/--
-Owner target for the occupation-energy sign convention:
-`Kᵢⱼ = -2 log(pᵢ) log(pⱼ)` is symmetric and strictly negative.
--/
-@[owner_target_tag]
-def PrimeLeeYangOccupationConventionTarget : Prop :=
-  ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
-    C.occupationPairCoefficient i j = -2 * C.siteEnergy i * C.siteEnergy j ∧
-      C.occupationPairCoefficient i j = C.occupationPairCoefficient j i ∧
-        C.occupationPairCoefficient i j < 0
-
-/-- The occupation convention target follows from the explicit prime logarithms. -/
-theorem primeLeeYangOccupationConventionTarget :
-    PrimeLeeYangOccupationConventionTarget := by
-  intro n C i j
-  exact ⟨rfl, C.occupationPairCoefficient_symm i j, C.occupationPairCoefficient_neg i j⟩
-
-/--
-Owner target for the centered Lee--Yang convention:
-`A_N = Σ log(pᵢ)(kᵢ - 1/2)`, `Jᵢⱼ = κ/2 log(pᵢ)log(pⱼ)`,
-and `Jᵢⱼ^occ = 2κ log(pᵢ)log(pⱼ)`.
--/
-@[owner_target_tag]
-def PrimeLeeYangCenteredConventionTarget : Prop :=
-  ∀ {n : ℕ} (C : PrimeFerromagneticChain n) (i j : Fin n),
-    C.centeredSpinCoupling i j = (C.kappa / 2) * C.siteEnergy i * C.siteEnergy j ∧
-      0 ≤ C.centeredSpinCoupling i j ∧
-      C.centeredSpinCoupling i j = C.centeredSpinCoupling j i ∧
-      C.centeredOccupationCoupling i j =
-        2 * C.kappa * C.siteEnergy i * C.siteEnergy j ∧
-      0 ≤ C.centeredOccupationCoupling i j
-
-/-- The centered convention target follows from the explicit prime logarithms. -/
-theorem primeLeeYangCenteredConventionTarget :
-    PrimeLeeYangCenteredConventionTarget := by
-  intro n C i j
-  exact ⟨
-    rfl,
-    C.centeredSpinCoupling_nonneg i j,
-    C.centeredSpinCoupling_symm i j,
-    rfl,
-    C.centeredOccupationCoupling_nonneg i j⟩
 
 end InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain

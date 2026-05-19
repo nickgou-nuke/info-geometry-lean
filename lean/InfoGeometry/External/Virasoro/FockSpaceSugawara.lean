@@ -265,6 +265,20 @@ theorem virasoroVermaToChargedFockSpace_highestWeight (α : 𝕜) :
   · exact virasoroVermaToChargedFockSpace_hwVec 𝕜 α
   exact sugawaraVacuum_highestWeight 𝕜 α
 
+/-- The Verma-to-Fock map is determined by the vacuum highest-weight data. -/
+theorem virasoroVermaToChargedFockSpace_uniqueByVacuum (α : 𝕜)
+    (φ : VirasoroVerma 𝕜 1 (α^2/2) →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] ChargedFockSpace 𝕜 α)
+    (hφ : φ (.hwVec 𝕜 _ _) = vacuum 𝕜 α) :
+    φ = virasoroVermaToChargedFockSpace 𝕜 α := by
+  ext v
+  rw [← VirasoroVerma.hwVec_cyclic 𝕜 1 (α^2 / 2)]
+  refine UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero _ _ ?_ ?_ ?_ v
+  · intro X
+    simp
+  · exact hφ
+  · intro X
+    simp
+
 end ChargedFockSpace
 
 end Fock_space_Sugawara_construction

@@ -152,6 +152,36 @@ noncomputable def cgenRight : ChiralVirasoro 𝕜 :=
     congrArg (fun X : VirasoroAlgebra 𝕜 => ((0 : VirasoroAlgebra 𝕜), X))
       (VirasoroAlgebra.lgen_bracket 𝕜 n m)
 
+/-- The left-sector generator bracket has no central term away from resonance. -/
+@[simp] theorem lgenLeft_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
+    ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
+      (n - m : 𝕜) • lgenLeft (𝕜 := 𝕜) (n + m) := by
+  rw [lgenLeft_bracket, VirasoroAlgebra.lgen_bracket_of_ne_zero (𝕜 := 𝕜) n m h]
+  simp [lgenLeft, inLeft]
+
+/-- The right-sector generator bracket has no central term away from resonance. -/
+@[simp] theorem lgenRight_bracket_of_ne_zero (n m : ℤ) (h : n + m ≠ 0) :
+    ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
+      (n - m : 𝕜) • lgenRight (𝕜 := 𝕜) (n + m) := by
+  rw [lgenRight_bracket, VirasoroAlgebra.lgen_bracket_of_ne_zero (𝕜 := 𝕜) n m h]
+  simp [lgenRight, inRight]
+
+/-- The left-sector generator bracket at resonance carries the central correction. -/
+@[simp] theorem lgenLeft_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
+    ⁅lgenLeft (𝕜 := 𝕜) n, lgenLeft (𝕜 := 𝕜) m⁆ =
+      (n - m : 𝕜) • lgenLeft (𝕜 := 𝕜) (n + m)
+        + ((n^3 - n : 𝕜) / 12) • cgenLeft (𝕜 := 𝕜) := by
+  rw [lgenLeft_bracket, VirasoroAlgebra.lgen_bracket_of_add_eq_zero (𝕜 := 𝕜) n m h]
+  simp [lgenLeft, cgenLeft, inLeft]
+
+/-- The right-sector generator bracket at resonance carries the central correction. -/
+@[simp] theorem lgenRight_bracket_of_add_eq_zero (n m : ℤ) (h : n + m = 0) :
+    ⁅lgenRight (𝕜 := 𝕜) n, lgenRight (𝕜 := 𝕜) m⁆ =
+      (n - m : 𝕜) • lgenRight (𝕜 := 𝕜) (n + m)
+        + ((n^3 - n : 𝕜) / 12) • cgenRight (𝕜 := 𝕜) := by
+  rw [lgenRight_bracket, VirasoroAlgebra.lgen_bracket_of_add_eq_zero (𝕜 := 𝕜) n m h]
+  simp [lgenRight, cgenRight, inRight]
+
 /-- The left and right central elements commute with everything in the product. -/
 @[simp] theorem cgenLeft_bracket (X : ChiralVirasoro 𝕜) :
     ⁅cgenLeft (𝕜 := 𝕜), X⁆ = 0 := by
@@ -250,6 +280,22 @@ noncomputable def projectRight (X : ChiralVirasoro 𝕜) : ChiralVirasoro 𝕜 :
 
 @[simp] theorem projectRight_bracket (X Y : ChiralVirasoro 𝕜) :
     projectRight (𝕜 := 𝕜) ⁅X, Y⁆ = ⁅projectRight X, projectRight Y⁆ := by
+  rfl
+
+@[simp] theorem projectLeft_inLeft (X : VirasoroAlgebra 𝕜) :
+    projectLeft (𝕜 := 𝕜) (inLeft X) = inLeft X := by
+  rfl
+
+@[simp] theorem projectRight_inRight (X : VirasoroAlgebra 𝕜) :
+    projectRight (𝕜 := 𝕜) (inRight X) = inRight X := by
+  rfl
+
+@[simp] theorem projectLeft_inRight (X : VirasoroAlgebra 𝕜) :
+    projectLeft (𝕜 := 𝕜) (inRight X) = 0 := by
+  rfl
+
+@[simp] theorem projectRight_inLeft (X : VirasoroAlgebra 𝕜) :
+    projectRight (𝕜 := 𝕜) (inLeft X) = 0 := by
   rfl
 
 end ChiralVirasoro

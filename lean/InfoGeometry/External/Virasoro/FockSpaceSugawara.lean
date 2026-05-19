@@ -227,6 +227,18 @@ instance (α : 𝕜) : HasCentralCharge 𝕜 (ChargedFockSpace 𝕜 α) (1 : �
   rw [Algebra.algebraMap_eq_smul_one r, sugawaraRepresentation_smul_eq]
   simp
 
+/-- The Sugawara vacuum is a highest-weight vector for the induced Virasoro action. -/
+lemma vacuum_highestWeight (α : 𝕜) :
+    sugawaraRepresentation 𝕜 α (.cgen 𝕜) (vacuum 𝕜 α) = vacuum 𝕜 α ∧
+    sugawaraRepresentation 𝕜 α (.lgen 𝕜 0) (vacuum 𝕜 α) = (α^2 / 2) • vacuum 𝕜 α ∧
+    (∀ n > 0, sugawaraRepresentation 𝕜 α (.lgen 𝕜 n) (vacuum 𝕜 α) = 0) := by
+  constructor
+  · simp
+  constructor
+  · exact sugawaraRepresentation_lgen_zero_apply_vacuum 𝕜 α
+  · intro n hn
+    exact sugawaraRepresentation_lgen_pos_apply_vacuum 𝕜 α hn
+
 /-- A Virasoro module map from the Verma module with `c = 1` and `h = α^2 / 2`
 to the charged Fock space of charge `α`. -/
 noncomputable def virasoroVermaToChargedFockSpace (α : 𝕜) :

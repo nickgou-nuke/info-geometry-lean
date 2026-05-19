@@ -217,6 +217,19 @@ lemma VirasoroVerma.cgen_smul (c h : 𝕜) (v : VirasoroVerma 𝕜 c h) :
   UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero
     _ _ (fun _ ↦ rfl) (hwVec_cyclic 𝕜 c h) (cgen_hwVec 𝕜 c h) v
 
+/-- The highest weight vector of the Virasoro Verma module satisfies the full highest-weight
+conditions. -/
+lemma VirasoroVerma.hwVec_highestWeight (c h : 𝕜) :
+    ιUEA 𝕜 (VirasoroAlgebra.cgen 𝕜) • hwVec 𝕜 c h = c • hwVec 𝕜 c h ∧
+    ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 0) • hwVec 𝕜 c h = h • hwVec 𝕜 c h ∧
+    (∀ n > 0, ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 n) • hwVec 𝕜 c h = 0) := by
+  constructor
+  · exact cgen_hwVec 𝕜 c h
+  constructor
+  · exact lgen_zero_hwVec 𝕜 c h
+  · intro n hn
+    exact lgen_pos_hwVec 𝕜 c h hn
+
 /-- The Virasoro Verma module with central charge `c` and conformal weight `h` has central
 charge `c`. -/
 instance (c h : 𝕜) : HasCentralCharge 𝕜 (VirasoroVerma 𝕜 c h) c :=

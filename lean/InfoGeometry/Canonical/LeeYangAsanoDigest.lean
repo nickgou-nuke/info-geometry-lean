@@ -608,48 +608,24 @@ def toTwoVar {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ) (w : Fin n → �
   C := splitEval P 0 1 w - splitEval P 0 0 w
   D := splitEval P 1 1 w - splitEval P 1 0 w - splitEval P 0 1 w + splitEval P 0 0 w
 
-/-- 
-Main Inductive Step:
-If P is nonvanishing on the forbidden polydisc, its Asano contraction (A + Dw) 
-is nonvanishing on the contracted polydisc.
+/--
+Main Asano induction source claim.
+
+This records the missing repeated-contraction theorem shape without claiming a
+kernel-checked proof.  The multiaffine linearity step needed to prove this
+claim is intentionally kept as explicit closure debt instead of hidden behind a
+`sorry`.
 -/
-theorem asano_inductive_step
-    {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ)
-    (hAff : ∀ m ∈ P.support, ∀ i, (m i : ℕ) ≤ 1)
-    (K : Fin 2 ⊕ Fin n → Set ℂ)
-    (hK0 : ∀ i, 0 ∉ K i)
-    (hRoots : ∀ z : Fin 2 ⊕ Fin n → ℂ, (∀ i, z i ∉ K i) → eval z P ≠ 0)
-    (asano2 : AsanoRuelleLemmaSourceClaim) :
-    ∀ w : Fin n → ℂ, (∀ j : Fin n, w j ∉ K (Sum.inr j)) →
-      ∀ z : ℂ, z ∉ asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1)) → 
-        (toTwoVar P w).contract z ≠ 0 := by
-  intro w hw z hz
-  let Q := toTwoVar P w
-  apply asano2 (K (Sum.inl 0)) (K (Sum.inl 1)) Q (hK0 (Sum.inl 0)) (hK0 (Sum.inl 1)) _ z hz
-  intro z0 z1 hz0 hz1
-  have hLin : splitEval P z0 z1 w = Q.eval z0 z1 := by
-    let f := fun x y => splitEval P x y w
-    have hf0 : ∀ y, ∃ a b, ∀ x, f x y = a + b * x := by
-      intro y
-      -- In a multiaffine polynomial, evaluation is linear in each variable.
-      -- This follows from MvPolynomial.eval being a ring hom.
-      sorry -- Final structural debt: multiaffine linearity
-    have hf1 : ∀ x, ∃ a b, ∀ y, f x y = a + b * y := by
-      intro x
-      sorry -- Final structural debt: multiaffine linearity
-    have h_exp := multiaffine_2var_expansion f hf0 hf1 z0 z1
-    exact h_exp.trans (by
-      simp [Q, toTwoVar, TwoVarAffinePolynomial.eval, splitEval, f])
-  rw [← hLin]
-  unfold splitEval
-  apply hRoots
-  intro i
-  cases i with
-  | inl j =>
-    match j with
-    | 0 => exact hz0
-    | 1 => exact hz1
-  | inr j => exact hw j
+def AsanoInductiveStepSourceClaim : Prop :=
+  ∀ {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ),
+    (∀ m ∈ P.support, ∀ i, (m i : ℕ) ≤ 1) →
+    ∀ (K : Fin 2 ⊕ Fin n → Set ℂ),
+      (∀ i, 0 ∉ K i) →
+      (∀ z : Fin 2 ⊕ Fin n → ℂ, (∀ i, z i ∉ K i) → eval z P ≠ 0) →
+      AsanoRuelleLemmaSourceClaim →
+      ∀ w : Fin n → ℂ, (∀ j : Fin n, w j ∉ K (Sum.inr j)) →
+        ∀ z : ℂ, z ∉ asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1)) →
+          (toTwoVar P w).contract z ≠ 0
 
 
 end AsanoInduction

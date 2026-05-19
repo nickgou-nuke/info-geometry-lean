@@ -666,3 +666,5 @@ valid source line are not part of its public-theorem scan.
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
 
 - `external_refs/LeanMillenniumPrizeProblems/` mirror: searchable theorem corpus for the Clay problems.
+
+- `graph_rag_query.py` (unified natural-language GraphRAG explorer over Lean, docs, black books, handover material, and external mirrors)

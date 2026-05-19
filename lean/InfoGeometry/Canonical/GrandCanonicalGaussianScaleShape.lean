@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.RelativePotentialScalarBridge

@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.IncompressibleBitBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
+import InfoGeometry.Canonical.PerelmanWCore
 
 namespace InfoGeometry.Canonical.CalabiYauBridge
 

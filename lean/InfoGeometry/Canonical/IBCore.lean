@@ -1,9 +1,10 @@
 import InfoGeometry.Canonical.IBUnnormalized
 import InfoGeometry.Canonical.IBNormalize
 import InfoGeometry.Canonical.IBTilted
-import InfoGeometry.Canonical.IBDynamics
 import InfoGeometry.Canonical.IBFrozenDescent
 import InfoGeometry.Canonical.IBFiniteIteration
+import InfoGeometry.Canonical.IBTrajectory
+import InfoGeometry.Canonical.IBUpdate
 
 /-!
 # InfoGeometry.Canonical.IBCore

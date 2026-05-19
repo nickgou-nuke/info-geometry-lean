@@ -26,7 +26,9 @@ import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Experimental.ModularSpinorBridge
-import InfoGeometry.Canonical.Twistor
+import InfoGeometry.Twistor.NullProjective
+import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Canonical.TwistorOperatorialIncidence
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.Singular

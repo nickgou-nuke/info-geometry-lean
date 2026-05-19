@@ -277,6 +277,13 @@ abelian Lie algebra. -/
 noncomputable def jsection : AbelianLieAlgebraOn ℤ 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
+/-- The Heisenberg section is a right inverse to the projection. -/
+lemma toAbelianLieAlgebraOn_jsection :
+    (HeisenbergAlgebra.toAbelianLieAlgebraOn (𝕜 := 𝕜)).toLinearMap ∘ₗ jsection 𝕜 = 1 := by
+  simpa [jsection, HeisenbergAlgebra.toAbelianLieAlgebraOn] using
+    LieTwoCocycle.CentralExtension.stdSection_prop
+      (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
+
 @[simp] lemma jsection_jgen (l : ℤ) :
     jsection 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 l) = jgen 𝕜 l :=
   rfl

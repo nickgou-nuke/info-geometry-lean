@@ -314,6 +314,16 @@ noncomputable def basisJK : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
     basisJK 𝕜 none = kgen 𝕜 := by
   simp [basisJK]
 
+/-- The Heisenberg basis projects to the expected abelian generators. -/
+@[simp] lemma toAbelianLieAlgebraOn_basisJK (o : Option ℤ) :
+    toAbelianLieAlgebraOn (𝕜 := 𝕜) (basisJK 𝕜 o) =
+      Option.rec 0 (fun l ↦ AbelianLieAlgebraOn.jgen 𝕜 l) o := by
+  cases o with
+  | none =>
+      rw [basisJK_none, toAbelianLieAlgebraOn_kgen]
+  | some l =>
+      simp
+
 /-- J₀ is central -/
 @[simp] lemma lie_jgen_zero (Z : HeisenbergAlgebra 𝕜) :
     ⁅jgen 𝕜 0, Z⁆ = 0 := by

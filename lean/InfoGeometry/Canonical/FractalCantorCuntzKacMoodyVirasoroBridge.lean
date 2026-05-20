@@ -83,7 +83,7 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   /-- The binary Cantor / Cuntz / CAR / Fock backbone. -/
   fractal :
-    FractalCantorCliffordFockChain Op H
+    InfoGeometry.Topology.CuntzCantorSpectralTriple Op H
 
   /-- Bit-code tilt/switch system on the Cantor code. -/
   tilt :

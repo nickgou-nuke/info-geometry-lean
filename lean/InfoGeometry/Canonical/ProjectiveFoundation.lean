@@ -336,6 +336,21 @@ section CentralExtension
 variable {K G V : Type}
   [Group G] [Field K] [AddCommGroup V] [Module K V]
 
+local instance : MulDistribMulAction G Kˣ where
+  smul := fun _ x => x
+  mul_smul := by
+    intro g h x
+    rfl
+  one_smul := by
+    intro x
+    rfl
+  smul_mul := by
+    intro g x y
+    rfl
+  smul_one := by
+    intro g
+    rfl
+
 /--
 The cocycle extension attached to a projective representation.
 
@@ -485,6 +500,75 @@ def ofLinearHomSection (ρ : G →* (V ≃ₗ[K] V)) :
       (ofLinearHomSection (G := G) (V := V) ρ g) = ρ g := by
   ext v
   simp [ofLinearHomSection, centralExtension.liftToCentralExtension, ofLinearHom]
+
+/-- The multiplier class vanishes when the cocycle extension admits a splitting section. -/
+theorem multiplierClass_eq_zero_exists_splitSection
+    (P : ProjectiveRepresentation K G V) :
+    P.multiplierClass (G := G) (K := K) (V := V) = 0 →
+      ∃ s : G →* P.centralExtension,
+        Function.RightInverse s (centralExtension.proj (P := P)) := by
+  intro h
+  rcases (multiplierClass_eq_zero_iff_isMulCoboundary₂ (P := P)).mp h with ⟨x, hx⟩
+  have hx1 : x 1 = 1 := by
+    have h := hx 1 1
+    simpa [ProjectiveRepresentation.one_left, ProjectiveRepresentation.one_right] using h
+  refine ⟨
+    { toFun := fun g => ⟨g, (x g)⁻¹⟩
+      map_one' := by
+        apply centralExtension.ext <;> simp [hx1]
+      map_mul' := by
+        intro g h
+        apply centralExtension.ext
+        · rfl
+        · have h1 : x g * x h * (x (g * h))⁻¹ = P.multiplier g h := by
+            have := hx g h
+            simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using this
+          have h2 : x g * x h = P.multiplier g h * x (g * h) := by
+            exact (mul_inv_eq_iff_eq_mul).mp h1
+          have h3 := congrArg Inv.inv h2
+          have h4 := congrArg (fun z : Kˣ => z * P.multiplier g h) h3
+          simpa [mul_comm, mul_left_comm, mul_assoc] using h4.symm }, ?_⟩
+  intro g
+  rfl
+
+/-- A splitting section forces the multiplier class to vanish. -/
+theorem multiplierClass_eq_zero_of_exists_splitSection
+    (P : ProjectiveRepresentation K G V) :
+    (∃ s : G →* P.centralExtension,
+      Function.RightInverse s (centralExtension.proj (P := P))) →
+    P.multiplierClass (G := G) (K := K) (V := V) = 0 := by
+  intro h
+  rcases h with ⟨s, hs⟩
+  have hhx : ∀ g h : G,
+      (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier (s g).1 (s h).1 := by
+    intro g h
+    have := congrArg centralExtension.snd (s.map_mul g h)
+    simpa [centralExtension.mul_snd] using this
+  have hm : groupCohomology.IsMulCoboundary₂
+      (f := fun p : G × G => (P.multiplier p.1 p.2 : Kˣ)) := by
+    refine ⟨fun g => (s g).2⁻¹, ?_⟩
+    intro g h
+    have hg' : (s g).1 = g := by simpa [centralExtension.proj] using hs g
+    have hh' : (s h).1 = h := by simpa [centralExtension.proj] using hs h
+    have hsnd0 : (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier (s g).1 (s h).1 :=
+      hhx g h
+    have hsnd : (s (g * h)).2 = (s g).2 * (s h).2 * P.multiplier g h := by
+      simpa [hg', hh'] using hsnd0
+    have h1 : (s h).2⁻¹ * (s (g * h)).2 * (s g).2⁻¹ = P.multiplier g h := by
+      rw [hsnd]
+      simp [mul_comm, mul_left_comm, mul_assoc]
+    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h1
+  exact (multiplierClass_eq_zero_iff_isMulCoboundary₂ (P := P)).mpr hm
+
+/-- The multiplier class vanishes exactly when the cocycle extension splits. -/
+theorem multiplierClass_eq_zero_iff_exists_splitSection
+    (P : ProjectiveRepresentation K G V) :
+    P.multiplierClass (G := G) (K := K) (V := V) = 0 ↔
+      ∃ s : G →* P.centralExtension,
+        Function.RightInverse s (centralExtension.proj (P := P)) := by
+  constructor
+  · exact multiplierClass_eq_zero_exists_splitSection (P := P)
+  · exact multiplierClass_eq_zero_of_exists_splitSection (P := P)
 
 end centralExtension
 

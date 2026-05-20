@@ -1329,6 +1329,23 @@ theorem drazinKineticPart_hasVanishingDefectBlock :
     canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
 
 /--
+Defect-first Drazin spine:
+the canonical defect summand is defect-supported, the canonical kinetic part
+has vanishing defect block, and the Drazin split is exactly `Q² = H + Z`.
+-/
+@[rep_depth krein]
+theorem defectRegularDrazin_spine :
+    IsDefectSupported CIK (canonicalDefectCentral CIK)
+      ∧ HasVanishingDefectBlock CIK (canonicalKineticPart CIK)
+      ∧ drazinSuperHamiltonian CIK
+          = drazinKineticPart (CIK := CIK) + drazinDefectCentral CIK := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
+  · exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
+  · exact drazinSuperHamiltonian_eq_drazinKineticPart_add_drazinDefectCentral
+      (CIK := CIK)
+
+/--
 Canonical existence form of the Drazin central split `Q² = H + Z`.
 -/
 @[rep_depth krein]

@@ -408,6 +408,59 @@ structure ConstructiveRieszDecompositionAtZero (T : E →L[𝕂] E) where
   S_supported_on_regular_left : S * P = S
   S_supported_on_regular_right : P * S = S
   nilpotent_on_complement : T ^ k * (1 - P) = 0
+/--
+Foundational Drazin data: the inverse is not primitive, but is carried together
+with the projector and defect-annihilation laws that define it.
+-/
+@[rep_depth operator]
+structure ConstructiveDrazinData (T : E →L[𝕂] E) where
+  k : ℕ
+  projector : E →L[𝕂] E
+  inverse : E →L[𝕂] E
+  projector_idempotent : projector * projector = projector
+  projector_comm : T * projector = projector * T
+  left_inverse_on_regular : inverse * T = projector
+  right_inverse_on_regular : T * inverse = projector
+  inverse_supported_on_regular_left : inverse * projector = inverse
+  inverse_supported_on_regular_right : projector * inverse = inverse
+  nilpotent_on_defect : T ^ k * (1 - projector) = 0
+
+/--
+A constructive Riesz decomposition canonically induces the foundational Drazin
+package.
+-/
+@[rep_depth operator]
+def constructiveDrazinData_of_constructiveRieszDecompositionAtZero
+    {T : E →L[𝕂] E}
+    (hR : ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T) :
+    ConstructiveDrazinData (𝕂 := 𝕂) T where
+  k := hR.k
+  projector := hR.P
+  inverse := hR.S
+  projector_idempotent := hR.P_idempotent
+  projector_comm := hR.PT_comm
+  left_inverse_on_regular := hR.left_inverse_on_regular
+  right_inverse_on_regular := hR.right_inverse_on_regular
+  inverse_supported_on_regular_left := hR.S_supported_on_regular_left
+  inverse_supported_on_regular_right := hR.S_supported_on_regular_right
+  nilpotent_on_defect := hR.nilpotent_on_complement
+
+/-- Recover constructive Riesz data from the foundational Drazin package. -/
+@[rep_depth operator]
+def constructiveRieszDecompositionAtZero_of_constructiveDrazinData
+    {T : E →L[𝕂] E}
+    (h : ConstructiveDrazinData (𝕂 := 𝕂) T) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  k := h.k
+  P := h.projector
+  P_idempotent := h.projector_idempotent
+  PT_comm := h.projector_comm
+  S := h.inverse
+  left_inverse_on_regular := h.left_inverse_on_regular
+  right_inverse_on_regular := h.right_inverse_on_regular
+  S_supported_on_regular_left := h.inverse_supported_on_regular_left
+  S_supported_on_regular_right := h.inverse_supported_on_regular_right
+  nilpotent_on_complement := h.nilpotent_on_defect
 
 /-- Candidate Drazin inverse extracted from constructive Riesz data. -/
 @[rep_depth operator]

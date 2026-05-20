@@ -3,9 +3,9 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
+import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
-import InfoGeometry.Canonical.CelikKocakFractalFockBridge
-import InfoGeometry.Canonical.FractalFockEquivalenceBridge
+import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -33,8 +33,6 @@ open InfoGeometry.Topology
 open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
-open InfoGeometry.Canonical.CelikKocakFractalFockBridge
-open InfoGeometry.Canonical.FractalFockEquivalenceBridge
 
 /-! ## 1. Boundary and cylinder carriers -/
 
@@ -80,6 +78,129 @@ theorem boundaryTail_boundaryCons
     boundaryTail (boundaryCons a ξ) = ξ := by
   funext n
   rfl
+
+/--
+The infinite Cantor boundary decomposes recursively into its head symbol and
+its tail.
+
+This is the symbolic `n → ∞` carrier used by the Cantor/Fock lane.
+-/
+@[rep_depth operator]
+theorem boundary_recursive_decomposition (ξ : InfiniteBinaryWordSpace) :
+    ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ) := by
+  funext n
+  cases n <;> rfl
+
+/-- Iterated tail extraction on the infinite binary boundary. -/
+@[rep_depth operator]
+def boundaryIterateTail : ℕ → InfiniteBinaryWordSpace → InfiniteBinaryWordSpace
+  | 0, ξ => ξ
+  | Nat.succ n, ξ => boundaryIterateTail n (boundaryTail ξ)
+
+/-- Finite prefix extraction on the infinite binary boundary. -/
+@[rep_depth operator]
+def boundaryPrefix : ℕ → InfiniteBinaryWordSpace → List Bool
+  | 0, _ => []
+  | Nat.succ n, ξ => boundaryHead ξ :: boundaryPrefix n (boundaryTail ξ)
+
+/-- Rebuild an infinite binary word from a finite prefix and a tail. -/
+@[rep_depth operator]
+def boundaryConsList : List Bool → InfiniteBinaryWordSpace → InfiniteBinaryWordSpace
+  | [], ξ => ξ
+  | b :: bs, ξ => boundaryCons b (boundaryConsList bs ξ)
+
+@[simp, rep_depth operator]
+theorem boundaryIterateTail_zero (ξ : InfiniteBinaryWordSpace) :
+    boundaryIterateTail 0 ξ = ξ := by
+  rfl
+
+@[simp, rep_depth operator]
+theorem boundaryIterateTail_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    boundaryIterateTail (Nat.succ n) ξ = boundaryIterateTail n (boundaryTail ξ) := by
+  rfl
+
+@[simp, rep_depth operator]
+theorem boundaryPrefix_zero (ξ : InfiniteBinaryWordSpace) :
+    boundaryPrefix 0 ξ = [] := by
+  rfl
+
+@[simp, rep_depth operator]
+theorem boundaryPrefix_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    boundaryPrefix (Nat.succ n) ξ = boundaryHead ξ :: boundaryPrefix n (boundaryTail ξ) := by
+  rfl
+
+@[simp, rep_depth operator]
+theorem boundaryConsList_nil (ξ : InfiniteBinaryWordSpace) :
+    boundaryConsList [] ξ = ξ := by
+  rfl
+
+@[simp, rep_depth operator]
+theorem boundaryConsList_cons (b : Bool) (bs : List Bool) (ξ : InfiniteBinaryWordSpace) :
+    boundaryConsList (b :: bs) ξ = boundaryCons b (boundaryConsList bs ξ) := by
+  rfl
+
+/-- Iterated boundary reconstruction from a finite prefix and the remaining tail. -/
+@[rep_depth operator]
+theorem boundary_iterated_decomposition :
+    ∀ n (ξ : InfiniteBinaryWordSpace),
+      ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
+  | 0, ξ => by
+      rfl
+  | Nat.succ n, ξ => by
+      calc
+        ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ) := boundary_recursive_decomposition ξ
+        _ = boundaryCons (boundaryHead ξ)
+              (boundaryConsList (boundaryPrefix n (boundaryTail ξ))
+                (boundaryIterateTail n (boundaryTail ξ))) := by
+              congr
+              exact boundary_iterated_decomposition n (boundaryTail ξ)
+        _ = boundaryConsList (boundaryPrefix (Nat.succ n) ξ)
+              (boundaryIterateTail (Nat.succ n) ξ) := by
+              rfl
+
+/--
+The Cantor/Cuntz root branching and the infinite boundary recursion hold
+together at the symbolic root.
+
+This packages the finite Cuntz split with the `n → ∞` Cantor carrier without
+claiming a new analytic infinite tensor product.
+-/
+@[rep_depth operator]
+theorem cantorCuntz_root_branching
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (C : CuntzO2Carrier Op)
+    (seed : Op)
+    (ξ : InfiniteBinaryWordSpace) :
+    (C.leftRangeProjection * seed +
+      C.rightRangeProjection * seed = seed) ∧
+      (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) := by
+  constructor
+  · exact InfoGeometry.Canonical.CantorCuntzBasis.seed_branch_decomposition (C := C) (seed := seed)
+  · exact boundary_recursive_decomposition ξ
+
+/-- Finite boundary reconstruction is the theorem-backed crossing point into the limit carrier. -/
+@[rep_depth operator]
+theorem boundary_finite_reconstruction
+    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ) :=
+  boundary_iterated_decomposition n ξ
+
+/-- Boundary crossing witness with explicit prefix/tail fields. -/
+@[rep_depth operator]
+structure BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) where
+  pre : List Bool
+  suf : InfiniteBinaryWordSpace
+  reconstruction : ξ = boundaryConsList pre suf
+  pre_eq : pre = boundaryPrefix n ξ
+  suf_eq : suf = boundaryIterateTail n ξ
+
+/-- Boundary crossing as a theorem-backed witness packet. -/
+@[rep_depth operator]
+theorem boundary_crossing_witness
+    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    Nonempty (BoundaryCrossingWitness n ξ) := by
+  refine ⟨⟨boundaryPrefix n ξ, boundaryIterateTail n ξ, ?_, rfl, rfl⟩⟩
+  exact boundary_finite_reconstruction n ξ
 
 /-- Re-export of the binary child map. -/
 @[rep_depth operator]
@@ -163,205 +284,37 @@ theorem carFromCuntz_anticommutator_star_eq_one
 @[rep_depth operator]
 theorem infiniteClifford_generator_sq
     {Op : Type*} [Ring Op]
-    (W : CelikKocakInfiniteFockWitness Op) (i : ℕ) :
-    W.clifford.gamma i * W.clifford.gamma i = 1 :=
-  W.clifford.gamma_sq i
+    (C : RealDoubledCantorCliffordRepresentation Op) (i : ℕ) :
+    C.gamma i * C.gamma i = 1 :=
+  C.gamma_sq i
 
 /-- Re-export of the infinite Clifford anticommutation law from the paper witness. -/
 @[rep_depth operator]
 theorem infiniteClifford_generator_anticomm
     {Op : Type*} [Ring Op]
-    (W : CelikKocakInfiniteFockWitness Op) {i j : ℕ} (hij : i ≠ j) :
-    W.clifford.gamma i * W.clifford.gamma j +
-      W.clifford.gamma j * W.clifford.gamma i = 0 := by
-  rw [W.clifford.gamma_anticomm (i := i) (j := j) hij]
+    (C : RealDoubledCantorCliffordRepresentation Op) {i j : ℕ} (hij : i ≠ j) :
+    C.gamma i * C.gamma j +
+      C.gamma j * C.gamma i = 0 := by
+  rw [C.gamma_anticomm (i := i) (j := j) hij]
   simp
 
-/-! ## 4. Fock equivalence readout -/
-
-/-- Re-export of the explicit equivalence-to-Fock witness. -/
+/-- Re-export of the Hestenes/Krein structure-operator anticommutation law. -/
 @[rep_depth operator]
-theorem equivalent_to_fock
-    {Op : Type*} [Ring Op]
-    (W : CelikKocakInfiniteFockWitness Op) :
-    W.equivalentToFock :=
-  W.equivalentToFock_witness
+theorem hestenes_structure_operator_anticommute
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (InfoGeometry.Krein.modular_j (E := E)).comp (InfoGeometry.Krein.complex_i (E := E)) =
+      -((InfoGeometry.Krein.complex_i (E := E)).comp (InfoGeometry.Krein.modular_j (E := E))) :=
+  InfoGeometry.Topology.FractalCantorFockWitness.hestenes_structure_operator_anticommute
 
-/-! ## 5. Chain packet -/
-
-/--
-The theorem-safe chain packet for the requested framework.
-
-This packages:
-
-* an infinite binary boundary point;
-* a finite binary word address;
-* the Cuntz/Cantor spectral triple;
-* a CAR generator readout;
-* the infinite Clifford/Fock witness;
-* the paper-facing Fock equivalence bridge.
-
-The packet is intentionally a witness container, not a claim that the analytic
-substrate has been reconstructed from scratch in this file.
--/
+/-- Re-export of the infinite `Cl(1,1)` generator readout as the structure operator. -/
 @[rep_depth operator]
-structure FractalCantorCliffordFockChain
-    (Op H : Type*) [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] where
-  boundary : InfiniteBinaryWordSpace
-  finiteWord : FiniteBinaryWord
-  spectralTriple : CuntzCantorSpectralTriple Op H
-  car : CARGenerator Op
-  car_eq : car.a = carFromCuntz (spectralTriple.cuntz)
-  cliffordFock : CelikKocakInfiniteFockWitness Op
-  fractalFockBridge : FractalFockBridge Op
+theorem cl11Rep_ι_zero_one_eq_structure_operator
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    InfoGeometry.Krein.cl11Rep (E := E)
+      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))
+      = InfoGeometry.Krein.complex_i (E := E) :=
+  InfoGeometry.Topology.FractalCantorFockWitness.cl11Rep_ι_zero_one_eq_structure_operator
 
-namespace FractalCantorCliffordFockChain
-
-variable {Op H : Type*} [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-variable (B : FractalCantorCliffordFockChain Op H)
-
-/-- The finite word is a binary Cantor word. -/
-@[rep_depth operator]
-theorem finiteWord_child_length (b : Bool) :
-    (binaryChild B.finiteWord b).length = B.finiteWord.length + 1 :=
-  binaryWord_child_length (w := B.finiteWord) b
-
-/-- The finite word lies in its own closed cylinder. -/
-@[rep_depth operator]
-theorem finiteWord_mem_closedCylinder_self :
-    B.finiteWord ∈ binaryClosedCylinder B.finiteWord :=
-  binaryWord_mem_closedCylinder_self (w := B.finiteWord)
-
-/-- The finite binary cylinder splits into root, false child, and true child. -/
-@[rep_depth operator]
-theorem finiteWord_closedCylinder_split :
-    binaryClosedCylinder B.finiteWord =
-      ({B.finiteWord} : Set FiniteBinaryWord)
-        ∪ binaryClosedCylinder (binaryChild B.finiteWord false)
-        ∪ binaryClosedCylinder (binaryChild B.finiteWord true) :=
-  binaryWord_closedCylinder_split (w := B.finiteWord)
-
-/-- The Cuntz range projections sum to one. -/
-@[rep_depth operator]
-theorem spectralTriple_firstLevel_sum_one :
-    B.spectralTriple.cuntz.leftRangeProjection +
-      B.spectralTriple.cuntz.rightRangeProjection = 1 :=
-  B.spectralTriple.firstLevelCylinder_sum_one
-
-/-- The spectral/Hausdorff readout is calibrated to the Cantor dimension. -/
-@[rep_depth operator]
-theorem spectralTriple_cantorDimension :
-    cantorHausdorffReadout B.spectralTriple = Real.log 2 / Real.log 3 :=
-  cantorHausdorffReadout_eq_middleThirdsCantor B.spectralTriple
-
-/-- The CAR generator from Cuntz data is nilpotent. -/
-@[rep_depth operator]
-theorem car_sq_eq_zero :
-    B.car.a * B.car.a = 0 :=
-  B.car.nilpotent
-
-/-- The CAR generator and its adjoint satisfy the expected anticommutator law. -/
-@[rep_depth operator]
-theorem car_anticommutator_star_eq_one :
-    cantorAnticommutator B.car.a (star B.car.a) = 1 :=
-  B.car.car
-
-/-- The infinite Clifford generators square to one. -/
-@[rep_depth operator]
-theorem clifford_generator_sq (i : ℕ) :
-    B.cliffordFock.clifford.gamma i * B.cliffordFock.clifford.gamma i = 1 :=
-  infiniteClifford_generator_sq B.cliffordFock i
-
-/-- Distinct infinite Clifford generators anticommute. -/
-@[rep_depth operator]
-theorem clifford_generator_anticomm {i j : ℕ} (hij : i ≠ j) :
-    B.cliffordFock.clifford.gamma i * B.cliffordFock.clifford.gamma j +
-      B.cliffordFock.clifford.gamma j * B.cliffordFock.clifford.gamma i = 0 :=
-  infiniteClifford_generator_anticomm B.cliffordFock hij
-
-/-- The infinite Clifford/Fock packet is equivalent to the classical Fock socket. -/
-@[rep_depth operator]
-theorem equivalent_to_fock :
-    B.cliffordFock.equivalentToFock :=
-  B.cliffordFock.equivalent_to_fock
-
-end FractalCantorCliffordFockChain
-
-/-! ## 6. Combined owner target -/
-
-/--
-Combined theorem-safe owner target for the requested framework.
-
-This records the chain as a conjunction of already-owned theorem surfaces:
-
-* finite binary Cantor cylinder refinement;
-* Cuntz partition of unity;
-* derived CAR from Cuntz;
-* infinite Clifford generator laws;
-* Fock equivalence;
-* Cantor-dimension calibration.
--/
-@[rep_depth operator]
-structure FractalCantorCliffordFockOwnerTarget
-    (Op H : Type*) [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] where
-  binaryWord_closedCylinder_split :
-    ∀ w : FiniteBinaryWord,
-      binaryClosedCylinder w =
-        ({w} : Set FiniteBinaryWord)
-          ∪ binaryClosedCylinder (binaryChild w false)
-          ∪ binaryClosedCylinder (binaryChild w true)
-
-  cuntz_rangeProjection_sum_one :
-    ∀ (C : CuntzO2Carrier Op),
-      C.leftRangeProjection + C.rightRangeProjection = 1
-
-  carFromCuntz_laws :
-    ∀ (C : CantorCuntzO2Carrier Op),
-      carFromCuntz C * carFromCuntz C = 0 ∧
-        cantorAnticommutator (carFromCuntz C) (star (carFromCuntz C)) = 1
-
-  infiniteClifford_laws :
-    ∀ (W : CelikKocakInfiniteFockWitness Op),
-      W.equivalentToFock ∧
-        (∀ i : ℕ, W.clifford.gamma i * W.clifford.gamma i = 1) ∧
-        (∀ {i j : ℕ}, i ≠ j →
-          W.clifford.gamma i * W.clifford.gamma j +
-            W.clifford.gamma j * W.clifford.gamma i = 0)
-
-  spectralDimension_eq :
-    ∀ (T : CuntzCantorSpectralTriple Op H),
-      cantorHausdorffReadout T = Real.log 2 / Real.log 3
-
-/-- The combined owner target follows from the existing owner surfaces. -/
-@[rep_depth operator]
-theorem fractalCantorCliffordFockOwnerTarget
-    (Op H : Type*) [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] :
-    FractalCantorCliffordFockOwnerTarget Op H := by
-  refine { binaryWord_closedCylinder_split := ?_,
-           cuntz_rangeProjection_sum_one := ?_,
-           carFromCuntz_laws := ?_,
-           infiniteClifford_laws := ?_,
-           spectralDimension_eq := ?_ }
-  · intro w
-    exact binaryWord_closedCylinder_split (w := w)
-  · intro C
-    exact C.rangeProjection_sum_one
-  · intro C
-    exact ⟨carFromCuntz_sq_eq_zero C, carFromCuntz_anticommutator_star_eq_one C⟩
-  · intro W
-    constructor
-    · exact W.equivalent_to_fock
-    · constructor
-      · intro i
-        exact W.clifford.gamma_sq i
-      · intro i j hij
-        rw [W.clifford.gamma_anticomm (i := i) (j := j) hij]
-        simp
-  · intro T
-    exact cantorHausdorffReadout_eq_middleThirdsCantor T
+/-! ## 4. Theorem surfaces -/
 
 end FractalCantorCliffordFockBridge

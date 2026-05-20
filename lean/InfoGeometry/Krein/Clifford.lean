@@ -456,6 +456,84 @@ noncomputable instance instSymmetricCliffordModuleHilbertDoubled :
     simp [cl11RepHilbert_ι_apply, cl11RepLinHilbert, KreinSpace.kreinAdjoint_add,
       KreinSpace.kreinAdjoint_smul, kreinAdjoint_jCLM_hilbert, kreinAdjoint_hilbertComplexI]
 
+@[simp] lemma cl11RepHilbert_ι_one_zero_isOdd :
+    KreinGradedModule.IsOdd (H := HilbertDoubled E)
+      ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+        InfoGeometry.Clifford.splitQ11).ρ
+        (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))) := by
+  exact SymmetricCliffordModule.rho_ι_isOdd
+    (V := ℝ × ℝ) (H := HilbertDoubled E) (Q := InfoGeometry.Clifford.splitQ11)
+    (v := (1, 0))
+
+@[simp] lemma cl11RepHilbert_ι_one_zero_evenPart_eq_zero :
+    ((2 : ℝ)⁻¹) •
+        (((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+          InfoGeometry.Clifford.splitQ11).ρ
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)))
+          + KreinGradedModule.gradeConj (H := HilbertDoubled E)
+            ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+              InfoGeometry.Clifford.splitQ11).ρ
+              (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)))) = 0 := by
+  have hodd := cl11RepHilbert_ι_one_zero_isOdd (E := E)
+  rw [hodd]
+  simp
+
+@[simp] lemma cl11RepHilbert_ι_one_zero_oddPart_eq :
+    ((2 : ℝ)⁻¹) •
+        (((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+          InfoGeometry.Clifford.splitQ11).ρ
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)))
+          - KreinGradedModule.gradeConj (H := HilbertDoubled E)
+            ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+              InfoGeometry.Clifford.splitQ11).ρ
+              (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))))
+      =
+      ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+        InfoGeometry.Clifford.splitQ11).ρ
+        (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0))) := by
+  have hodd := cl11RepHilbert_ι_one_zero_isOdd (E := E)
+  rw [hodd]
+  module
+
+@[simp] lemma cl11RepHilbert_ι_zero_one_isOdd :
+    KreinGradedModule.IsOdd (H := HilbertDoubled E)
+      ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+        InfoGeometry.Clifford.splitQ11).ρ
+        (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))) := by
+  exact SymmetricCliffordModule.rho_ι_isOdd
+    (V := ℝ × ℝ) (H := HilbertDoubled E) (Q := InfoGeometry.Clifford.splitQ11)
+    (v := (0, 1))
+
+@[simp] lemma cl11RepHilbert_ι_zero_one_evenPart_eq_zero :
+    ((2 : ℝ)⁻¹) •
+        (((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+          InfoGeometry.Clifford.splitQ11).ρ
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)))
+          + KreinGradedModule.gradeConj (H := HilbertDoubled E)
+            ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+              InfoGeometry.Clifford.splitQ11).ρ
+              (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)))) = 0 := by
+  have hodd := cl11RepHilbert_ι_zero_one_isOdd (E := E)
+  rw [hodd]
+  simp
+
+@[simp] lemma cl11RepHilbert_ι_zero_one_oddPart_eq :
+    ((2 : ℝ)⁻¹) •
+        (((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+          InfoGeometry.Clifford.splitQ11).ρ
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)))
+          - KreinGradedModule.gradeConj (H := HilbertDoubled E)
+            ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+              InfoGeometry.Clifford.splitQ11).ρ
+              (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))))
+      =
+      ((inferInstance : SymmetricCliffordModule (ℝ × ℝ) (HilbertDoubled E)
+        InfoGeometry.Clifford.splitQ11).ρ
+        (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))) := by
+  have hodd := cl11RepHilbert_ι_zero_one_isOdd (E := E)
+  rw [hodd]
+  module
+
 section NeutralTransport
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

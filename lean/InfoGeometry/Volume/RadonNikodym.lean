@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LogGenerator
+import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Volume.LogPotential
 
 /-!
@@ -78,5 +79,33 @@ noncomputable def rnHom {A : Type*} [Monoid A] (B : HasScalarRNBridge A) :
 @[simp] theorem rnHom_apply {A : Type*} [Monoid A] (B : HasScalarRNBridge A) (a : A) :
     rnHom (B := B) (Additive.ofMul a) = B.rn a :=
   rfl
+
+/--
+An RN bridge can be read as a projective rotor cocycle over the trivial
+`PUnit` base action by exponentiating the additive shadow into the additive
+wrapper group `Multiplicative ℝ`.
+-/
+noncomputable def toProjectiveRotorCocycle {A : Type*} [Group A]
+    (B : HasScalarRNBridge A) :
+    InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRotorCocycle
+      A PUnit (Multiplicative ℝ) where
+  toFun a _ := Multiplicative.ofAdd (B.rn a)
+  map_one := by
+    simp [HasScalarRNBridge.rn_eq_logAbs_vol]
+  map_mul := by
+    intro a b _
+    simpa [rn_chain_rule] using congrArg Multiplicative.ofAdd (rn_chain_rule B a b)
+
+@[simp] theorem toProjectiveRotorCocycle_apply {A : Type*} [Group A]
+    (B : HasScalarRNBridge A) (a : A) :
+    toProjectiveRotorCocycle (B := B) a PUnit.unit = Multiplicative.ofAdd (B.rn a) :=
+  rfl
+
+@[simp] theorem toProjectiveRotorCocycle_mul {A : Type*} [Group A]
+    (B : HasScalarRNBridge A) (a b : A) :
+    toProjectiveRotorCocycle (B := B) (a * b) PUnit.unit =
+      toProjectiveRotorCocycle (B := B) a PUnit.unit *
+        toProjectiveRotorCocycle (B := B) b PUnit.unit := by
+  simp [toProjectiveRotorCocycle, rn_chain_rule]
 
 end InfoGeometry.Volume.RadonNikodym

@@ -75,7 +75,7 @@ end FiniteStateChain
 
 section ScalarRNCharacter
 
-variable {A : Type*} [Monoid A]
+variable {A : Type*} [Group A]
 
 /--
 Abstract scalar Radon-Nikodym bridge chain rule:
@@ -86,6 +86,20 @@ theorem rn_state_chain
     (B : HasScalarRNBridge A) (f g : A) :
     B.rn (f * g) = B.rn f + B.rn g :=
   rn_chain_rule B f g
+
+/--
+The scalar RN bridge is already a projective cocycle on the trivial base:
+composition becomes multiplication after passing through the projective rotor
+encoding.
+-/
+@[rep_depth projective]
+theorem rn_projectiveRotorCocycle_chain
+    (B : HasScalarRNBridge A) (f g : A) :
+    InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) (f * g) PUnit.unit =
+      InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) f PUnit.unit *
+        InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) g PUnit.unit :=
+by
+  simp [InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle, rn_chain_rule]
 
 end ScalarRNCharacter
 

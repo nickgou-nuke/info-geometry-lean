@@ -20,6 +20,7 @@ import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Basic
+import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Geometry.RealMoebiusAction
 import InfoGeometry.Geometry.RealUpperHalfPlane
 
@@ -179,5 +180,26 @@ def cuspLimit_tendsto
     (fun Y : PosReal => C T (verticalRay Y))
     atTop
     (𝓝 anomalyRotor)
+
+/--
+Repo-facing split criterion for projective representations.
+
+This is the canonical projective-representation equivalence, exposed from the
+public projective-foundation module so downstream code does not need to reach
+into the canonical namespace directly.
+-/
+theorem projectiveRepresentation_multiplierClass_eq_zero_iff_exists_splitSection
+    {K G V : Type} [Group G] [Field K] [AddCommGroup V] [Module K V]
+    (P : InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation K G V) :
+    InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation.multiplierClass G K V P =
+      0 ↔
+      ∃ s : G →*
+          InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation.centralExtension P,
+        Function.RightInverse s
+          (InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation.centralExtension.proj
+            (P := P)) := by
+  simpa using
+    (InfoGeometry.Canonical.ProjectiveFoundation.ProjectiveRepresentation.centralExtension.multiplierClass_eq_zero_iff_exists_splitSection
+      (P := P))
 
 end InfoGeometry.ProjectiveFoundation

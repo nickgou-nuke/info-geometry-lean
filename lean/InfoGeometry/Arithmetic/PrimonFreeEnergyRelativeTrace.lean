@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
+import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Probability.HomologicalProbability
 
 /-!
@@ -117,18 +118,18 @@ theorem GibbsKMS_freeEnergy_ge_gibbs
   linarith
 
 /--
-Root-corridor identification of the primitive Mellin inversion/parity lane.
+Root-corridor identification of the primitive-set analytic-input lane.
 
-This is the repo-native theorem-backed identification currently available:
-the primitive-set Mellin corridor already packages the inversion/log/kernel
-identities in `PrimitiveSetsAbove`, and this file reexports that owner surface
-for the free-energy / relative-trace root.
-It does not assert the remaining witness-only functional-equation or critical-
-axis fields of `MellinInversionParitySocket`.
+This is only the definitional owner surface currently available in
+`PrimitiveSetsAbove`: the analytic input implies the finite primitive-set
+statement. It does not assert a Mellin functional equation or critical-axis
+theorem.
 -/
 theorem primitiveMellinParityIdentification :
-    InfoGeometry.Arithmetic.PrimitiveMellinParityOwnerTarget :=
-  InfoGeometry.Arithmetic.primitiveMellinParityOwnerTarget
+    InfoGeometry.Arithmetic.PrimitiveWeightSumAssemblyFromAnalyticInput =
+      (InfoGeometry.Arithmetic.PrimitiveLargeDivisorAnalyticInput →
+        InfoGeometry.Arithmetic.PrimitiveSetsAboveFiniteStatement) :=
+  rfl
 
 /-! ## 8b. Mathlib-backed completed-zeta parity lane -/
 

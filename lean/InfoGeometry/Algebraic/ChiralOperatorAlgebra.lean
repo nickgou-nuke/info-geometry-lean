@@ -118,6 +118,36 @@ theorem canonical_root_laws
       - splitCliffordVector n v :=
   splitCliffordParityInvolution_vector (n := n) v
 
+/--
+The positive split generator in `Cl(1,1)` is odd under the canonical parity.
+
+This is the smallest explicit split Clifford super-grading in the native
+carrier language.
+-/
+@[simp]
+theorem canonical_cl11_pos_generator_odd :
+    (canonical 1).parity.toAlgEquiv
+        (splitCliffordVector 1 (splitBasisVector (Sum.inl (0 : Fin 1)))) =
+      - splitCliffordVector 1 (splitBasisVector (Sum.inl (0 : Fin 1))) := by
+  simpa using
+    (canonical_root_laws (n := 1)
+      (v := splitBasisVector (Sum.inl (0 : Fin 1))))
+
+/--
+The negative split generator in `Cl(1,1)` is odd under the canonical parity.
+
+Together with `canonical_cl11_pos_generator_odd`, this gives the symmetric
+`Cl(1,1)` super-graded atom.
+-/
+@[simp]
+theorem canonical_cl11_neg_generator_odd :
+    (canonical 1).parity.toAlgEquiv
+        (splitCliffordVector 1 (splitBasisVector (Sum.inr (0 : Fin 1)))) =
+      - splitCliffordVector 1 (splitBasisVector (Sum.inr (0 : Fin 1))) := by
+  simpa using
+    (canonical_root_laws (n := 1)
+      (v := splitBasisVector (Sum.inr (0 : Fin 1))))
+
 end ChiralOperatorAlgebra
 
 end InfoGeometry.Algebraic

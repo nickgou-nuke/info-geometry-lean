@@ -18,6 +18,7 @@ namespace InfoGeometry.Canonical.PositiveRayProjectiveBridge
 open MeasureTheory
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.MeasureProjective
+open InfoGeometry.MeasureProjective.Normalized
 open InfoGeometry.MeasureProjective.ProjectiveState
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.RelativePotentialDiscreteBridge

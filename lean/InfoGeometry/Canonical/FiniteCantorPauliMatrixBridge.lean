@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
+import InfoGeometry.Clifford.Cl11Matrix
 
 /-!
 # InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
@@ -7,9 +8,8 @@ Finite Celik--Kocak endpoint lane:
 
 `V_n -> F_n -> Cl_{2n} -> Pauli tensor-product matrices`.
 
-The concrete matrix identification is carried by the `pauli_tensor_law` witness
-from `FiniteCantorPauliBridge`; this file separates that finite matrix owner
-surface from the infinite fractal/Fock and metric-graph lanes.
+The concrete matrix identification is theorem-backed in the `n = 1` base case
+and the finite bridge facts are re-exported here.
 -/
 
 noncomputable section
@@ -46,12 +46,63 @@ theorem psiGamma_anticomm {i j : Fin (2 * n)} (hij : i ≠ j) :
   rw [B.clifford_anticomm i j hij]
   simp
 
-/-- The Pauli tensor-product matrix law carried by this finite owner lane. -/
-@[rep_depth operator]
-def pauli_tensor_law_statement : Prop :=
-  B.pauli_tensor_law
-
 end FiniteCantorPauliMatrixBridge
+
+/-! ## 1. The `n = 1` matrix base case -/
+
+open InfoGeometry.Clifford.Cl11Matrix
+
+/-- The paper's first finite Pauli pair in the `Cl(1,1)` matrix model. -/
+@[rep_depth operator]
+noncomputable def cl11PauliBridge : FiniteCantorPauliBridge 1 Mat2 where
+  psiGamma := fun i =>
+    match i with
+    | ⟨0, _⟩ => Eplus
+    | ⟨1, _⟩ => J1
+  clifford_sq := by
+    intro i
+    fin_cases i
+    · simpa [Eplus] using Eplus_sq
+    · simpa [J1] using J1_sq
+  clifford_anticomm := by
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> simp [Eplus, J1, Matrix.mul_apply, Fin.sum_univ_two]
+    · exact False.elim (hij rfl)
+    · exact False.elim (hij rfl)
+
+/-- The `n = 1` finite Cantor-Pauli representation is theorem-backed. -/
+@[rep_depth operator]
+theorem cl11PauliBridge_target :
+    Nonempty (FiniteCantorPauliBridge 1 Mat2) :=
+  ⟨cl11PauliBridge⟩
+
+/-- The `n = 1` finite Cantor-Pauli bridge recovers the first paper generator. -/
+@[rep_depth operator]
+theorem cl11PauliBridge_psiGamma_zero :
+    (cl11PauliBridge).psiGamma ⟨0, by decide⟩ = Eplus := by
+  rfl
+
+/-- The `n = 1` finite Cantor-Pauli bridge recovers the second paper generator. -/
+@[rep_depth operator]
+theorem cl11PauliBridge_psiGamma_one :
+    (cl11PauliBridge).psiGamma ⟨1, by decide⟩ = J1 := by
+  rfl
+
+/-- The `n = 1` matrix model decomposes in the Pauli basis. -/
+@[rep_depth operator]
+theorem cl11PauliBridge_mat2_decompose (M : Mat2) :
+    M =
+      (InfoGeometry.Clifford.Cl11Matrix.alpha M) • (1 : Mat2) +
+      (InfoGeometry.Clifford.Cl11Matrix.beta M) • Eplus +
+      (InfoGeometry.Clifford.Cl11Matrix.gamma M) • Eminus +
+      (InfoGeometry.Clifford.Cl11Matrix.delta M) • J1 :=
+  InfoGeometry.Clifford.Cl11Matrix.mat2_decompose M
+
+/-- The `Cl(1,1)` matrix equivalence is the paper's base isomorphism. -/
+@[rep_depth operator]
+noncomputable def cl11PauliBridge_equivMat :
+    CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11 ≃ₐ[ℝ] Mat2 :=
+  InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat
 
 /-- Packaged owner for the finite Cantor-Pauli matrix lane. -/
 @[rep_depth operator]

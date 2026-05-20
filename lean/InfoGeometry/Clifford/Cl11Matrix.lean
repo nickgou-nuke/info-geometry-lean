@@ -80,7 +80,7 @@ noncomputable def beta  (M : Mat2) : ℝ := (M 0 0 - M 1 1) / 2
 noncomputable def delta (M : Mat2) : ℝ := (M 0 1 + M 1 0) / 2
 noncomputable def gamma (M : Mat2) : ℝ := (M 0 1 - M 1 0) / 2
 
-lemma mat2_decompose (M : Mat2) :
+theorem mat2_decompose (M : Mat2) :
     M = (alpha M) • (1 : Mat2) + (beta M) • Eplus + (gamma M) • Eminus + (delta M) • J1 := by
   ext i j; fin_cases i <;> fin_cases j <;> (simp [alpha, beta, gamma, delta, Eplus, Eminus, J1, Matrix.smul_apply, Matrix.add_apply]; ring)
 

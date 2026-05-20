@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -57,6 +58,17 @@ noncomputable abbrev cptSuperchargeOp : FockEndomorphism E :=
       simpa [cptSuperchargeOp] using modularCPTSupercharge_Q_eq_dilationOperator (E := E)
     _ = complex_i (E := E) := dilationOperator_eq_complex_i (E := E)
 
+/-- The derived CPT supercharge is the real doubled phase axis `K = J ∘ ε`. -/
+@[rep_depth krein, simp] theorem cptSuperchargeOp_eq_modularK :
+    cptSuperchargeOp (E := E) = InfoGeometry.Canonical.RealBdG.modularK (E := E) := by
+  rw [cptSuperchargeOp_eq_complex_i, InfoGeometry.Canonical.RealBdG.modularK_eq_complex_i]
+
+/-- The CPT supercharge is Hestenes-linear, i.e. `K`-linear. -/
+@[rep_depth krein]
+theorem cptSuperchargeOp_isKLinear :
+    InfoGeometry.Canonical.RealBdG.KLinear (E := E) (cptSuperchargeOp (E := E)) := by
+  simp [InfoGeometry.Canonical.RealBdG.KLinear, cptSuperchargeOp_eq_modularK]
+
 /-- The derived CPT supercharge is exactly the root split axis `J ∘ ε`. -/
 @[rep_depth krein, simp] theorem cptSuperchargeOp_eq_modular_j_comp_spectral_epsilon :
     cptSuperchargeOp (E := E) = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
@@ -94,6 +106,14 @@ theorem modular_j_spectral_epsilon_car_zero :
     CARBracket (E := E) (modular_j (E := E)) (spectral_epsilon (E := E)) = 0 := by
   simpa using parity_modular_supercharge_car_zero (E := E)
 
+/-- The parity supercharge is Hestenes-antilinear, i.e. `K`-antilinear. -/
+@[rep_depth krein]
+theorem paritySuperchargeOp_isKAntilinear :
+    InfoGeometry.Canonical.RealBdG.KAntilinear (E := E) (paritySuperchargeOp (E := E)) := by
+  simpa [InfoGeometry.Canonical.RealBdG.KAntilinear, paritySuperchargeOp,
+    RealBdG.modularK_eq_complex_i] using
+    (InfoGeometry.Krein.modular_j_complex_i_anticommute (E := E))
+
 /--
 The primitive `J/ε` commutator is exactly `2Q`, where `Q` is the canonical
 Tomita CPT supercharge.
@@ -112,6 +132,14 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
     _ = (2 : ℝ) • cptSuperchargeOp (E := E) := by
           rw [cptSuperchargeOp_eq_complex_i]
 
+/-- The primitive `J/ε` commutator is exactly `2K`, where `K = J ∘ ε`. -/
+@[rep_depth krein]
+theorem parity_modular_supercharge_ccr_eq_two_modularK :
+    (paritySuperchargeOp (E := E)).comp (modularSuperchargeOp (E := E))
+      - (modularSuperchargeOp (E := E)).comp (paritySuperchargeOp (E := E))
+      = (2 : ℝ) • InfoGeometry.Canonical.RealBdG.modularK (E := E) := by
+  simpa [cptSuperchargeOp_eq_modularK] using parity_modular_supercharge_ccr_eq_two_cpt (E := E)
+
 /-- Bracket form of the primitive even-even closure `[J, ε] = 2Q`. -/
 @[rep_depth krein]
 theorem parity_modular_supercharge_ccrBracket_eq_two_cpt :
@@ -121,6 +149,16 @@ theorem parity_modular_supercharge_ccrBracket_eq_two_cpt :
       = (2 : ℝ) • cptSuperchargeOp (E := E) := by
   simpa [CCRBracket, fockCommutator, superBracket_even_left] using
     (parity_modular_supercharge_ccr_eq_two_cpt (E := E))
+
+/-- Bracket form of the primitive even-even closure `[J, ε] = 2K`. -/
+@[rep_depth krein]
+theorem parity_modular_supercharge_ccrBracket_eq_two_modularK :
+    CCRBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = (2 : ℝ) • InfoGeometry.Canonical.RealBdG.modularK (E := E) := by
+  simpa [CCRBracket, fockCommutator, superBracket_even_left] using
+    (parity_modular_supercharge_ccr_eq_two_modularK (E := E))
 
 /-- Root-name form of the primitive even-even commutator closure. -/
 @[rep_depth krein]

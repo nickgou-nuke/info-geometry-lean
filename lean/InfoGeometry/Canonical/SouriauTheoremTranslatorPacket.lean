@@ -546,7 +546,72 @@ theorem claimF_superSouriauFermionGas_packet
     W.is_weyl_invariant⟩
 
 /--
-Claim F, constructive identity-balanced stress variant.
+-- Claim F, constructive identity-balanced stress variant.
+
+/--
+Constructive translator packet using an `IdentityBalancedStressSeed` instead of an explicit
+`WeylSupertraceFreeStressContext`. This removes the explicit `W` hypothesis by building the
+required context via `IdentityBalancedStressSeed.toContext`.
+-/
+@[rep_depth thermo]
+theorem translatorPacket_of_seed
+    {G Gdual Orbit Stress : Type*}
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G →
+      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (point : Orbit)
+    (J : SuperSouriauFermionGasBridge.SuperMomentMapData G Gdual Gdual)
+    (P : SuperSouriauFermionGasBridge.SuperSouriauPairing G Gdual Gdual)
+    (B : InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams)
+    (Hop Qodd : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism H)
+    (mu betaOdd : ℝ)
+    (F :
+      SuperSouriauFermionGasBridge.FermionicCAROperatorPair (E := H))
+    (S : IdentityBalancedStressSeed G Gdual Orbit) :
+    J.stressTensor x = J.stressTensorReadout (J.evenMoment x) ∧
+    J.supercurrent x = J.supercurrentReadout (J.oddMoment x) ∧
+    P.action x =
+      P.beta.betaEven * P.evenEnergy x + P.beta.betaOdd * P.oddSource x ∧
+    SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator
+        (E := H) B Hop mu betaOdd Qodd =
+      SuperSouriauFermionGasBridge.evenGrandCanonicalFockGenerator
+        (E := H) B Hop mu
+        + SuperSouriauFermionGasBridge.oddFockSourceCoupling
+          (E := H) betaOdd Qodd ∧
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket
+        (E := H)
+        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
+        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
+        F.annihilation F.creation =
+      SuperchargeCARCCRBridge.CARBracket
+        (E := H) F.annihilation F.creation ∧
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+        (E := H) F.annihilation F.annihilation = 0 ∧
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+        (E := H) F.creation F.creation = 0 ∧
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+        (E := H) F.annihilation F.creation =
+      ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H) ∧
+    (S.toContext).superTrace (S.toContext).stress = 0 ∧
+    (S.toContext).weylInvariant :=
+  by
+    let W := S.toContext
+    exact
+      ⟨J.stressTensor_eq_even_readout x,
+        J.supercurrent_eq_odd_readout x,
+        P.action_eq_even_add_odd x,
+        SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator_eq_even_add_odd
+          (E := H) B Hop mu betaOdd Qodd,
+        SuperSouriauFermionGasBridge.odd_odd_superBracket_eq_CARBracket
+          (E := H) F.annihilation F.creation,
+        F.annihilation_anticommutator_self_zero,
+        F.creation_anticommutator_self_zero,
+        F.annihilation_creation_anticommutator_id,
+        W.superTrace_stress_eq_zero,
+        W.is_weyl_invariant⟩
 
 This removes the explicit `WeylSupertraceFreeStressContext` argument from the
 translator surface.  The Weyl/supertrace stress packet is constructed from the

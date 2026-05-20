@@ -145,6 +145,17 @@ noncomputable abbrev splitCliffordTensorStepEquiv (n : ℕ) :
     SplitClNNAlg (n + 1) ≃ₐ[ℝ] SplitClNNTensorStep n :=
   bottStepEquiv n
 
+/--
+Recursive `Cl(1,1)` tensor step in the split tower.
+
+This is the proof-backed transition used to iterate the split atom through the
+finite tower `Cl(1,1) → Cl(2,2) → ...`.
+-/
+@[rep_depth krein]
+noncomputable abbrev splitCliffordTensorRecursiveTransition (n : ℕ) :
+    SplitClNNAlg (n + 1) ≃ₐ[ℝ] SplitClNNTensorStep n :=
+  splitCliffordTensorStepEquiv n
+
 @[rep_depth krein] theorem splitCliffordTensorStep_headFactor
     (n : ℕ) (x : ℝ × ℝ) :
     splitCliffordTensorStepEquiv n

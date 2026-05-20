@@ -192,6 +192,28 @@ structure KMSDetailedBalance
 
 namespace KMSDetailedBalance
 
+/--
+A reduced KMS detailed-balance packet that omits the calibration law and its certificate.
+It carries only the algebraic KMS boundary data and the geometric form.
+-/
+structure KMSDetailedBalanceCore
+    (A Region Point Tangent Value : Type*)
+    [Mul A]
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value) where
+  kms : KMSBoundaryData A
+  form : KMSDetailedBalanceForm Region Point Tangent Value I
+
+/-- Construct a `KMSDetailedBalanceCore` from a full `KMSDetailedBalance` packet, discarding
+the calibration law and its proof. -/
+@[simp] def KMSDetailedBalance.toCore
+    {A Region Point Tangent Value : Type*}
+    [Mul A] [AddCommGroup Value] [Module ℝ Value]
+    {I : GeometricIntegralBackend Region Point Tangent Value}
+    (D : KMSDetailedBalance A Region Point Tangent Value I) :
+    KMSDetailedBalanceCore A Region Point Tangent Value I :=
+  { kms := D.kms,
+    form := D.form }
 variable
     {A Region Point Tangent Value : Type*}
     [Mul A]

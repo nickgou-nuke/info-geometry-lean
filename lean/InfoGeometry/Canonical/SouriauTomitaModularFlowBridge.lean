@@ -356,13 +356,16 @@ theorem mk_of_state_kms
     kms_state_eq := hstate}, rfl⟩
 
 /-- Constructor theorem that builds a `SouriauTomitaKMSContext` directly from a `KMSState`
-    without requiring an explicit `state` argument. -/
+    without requiring an explicit `state` argument. The `state` field is defined
+    definitionally as `kms.state`, and the `kms_state_eq` packet is `rfl`.
+-/
 @[rep_depth operator]
 theorem mk_of_kms
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
     (beta : ℝ)
     (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
-    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry), ctx.state = kms.state := by
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = kms.state := by
   refine ⟨{
     logContext := logContext,
     beta := beta,
@@ -496,6 +499,22 @@ def toSouriauTomitaKMSContext :
 theorem toSouriauTomitaKMSContext_state_eq :
     C.toSouriauTomitaKMSContext.state = C.state :=
   rfl
+
+/--
+Convert a full `SouriauTomitaKMSContext` with an explicit `state` packet into the
+minimal `MinimalSouriauTomitaKMSContext`.  This theorem removes the redundant
+`kms_state_eq` hypothesis while preserving the underlying state.
+The resulting context satisfies
+`ctx.logContext = C.logContext ∧ ctx.beta = C.beta ∧ ctx.state = C.kms.state`.
+This provides a thin bridge from the legacy API to the newer, winner‑free
+representation.
+--/
+@[rep_depth operator]
+theorem toMinimal (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
+    ∃ ctx : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.logContext = C.logContext ∧ ctx.beta = C.beta ∧ ctx.state = C.kms.state := by
+  refine ⟨{ logContext := C.logContext, beta := C.beta, kms := C.kms }, ?_, ?_, ?_⟩
+  all_goals rfl
 
 /--
 Constructor theorem routing the broad compatibility packet through the narrowed

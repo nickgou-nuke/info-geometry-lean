@@ -486,6 +486,38 @@ theorem regularCompressed_hodgeLaplacian_eq_regularRestrictedSuperHamiltonian_of
   rw [hodgeLaplacian_eq_superHamiltonian_of_Dirac_eq_supercharge (B := B) hD]
   rfl
 
+/--
+Public Hodge-to-defect bridge spine.
+
+This packages the calibrated chiral Hodge split and the Drazin regular/defect
+split in the order the repo now treats as canonical:
+1. Hodge chirality,
+2. regular/defect projectors,
+3. off-diagonal chiral arrows,
+4. Laplacian evenness.
+-/
+@[rep_depth krein, capstone]
+theorem hodge_defect_regular_spine :
+    B.hodgeStar = B.CIK.GammaS
+      ∧ B.hodgeRegularCarrier = B.drazinSplit.P
+      ∧ B.hodgeHarmonicDefectRemnant = B.drazinSplit.P0
+      ∧ B.diracPlus = B.drazinSplit.uMinus B.Dirac
+      ∧ B.diracMinus = B.drazinSplit.uPlus B.Dirac
+      ∧ B.diracPlus * B.diracPlus = 0
+      ∧ B.diracMinus * B.diracMinus = 0
+      ∧ B.hodgeLaplacian * B.CIK.GammaS = B.CIK.GammaS * B.hodgeLaplacian
+      ∧ B.CIK.IsSpectralCompact B.hodgeLaplacian := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact hodgeStar_eq_GammaS (B := B)
+  · exact hodgeRegularCarrier_eq_drazinRegular (B := B)
+  · exact hodgeHarmonicDefectRemnant_eq_drazinDefect (B := B)
+  · exact diracPlus_eq_uMinus (B := B)
+  · exact diracMinus_eq_uPlus (B := B)
+  · exact diracPlus_mul_diracPlus_eq_zero (B := B)
+  · exact diracMinus_mul_diracMinus_eq_zero (B := B)
+  · exact laplacian_commutes_GammaS (B := B)
+  · exact laplacianEven (B := B)
+
 end DrazinHodgeChiralBridge
 
 end Core

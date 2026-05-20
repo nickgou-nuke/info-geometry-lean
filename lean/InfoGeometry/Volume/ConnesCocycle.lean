@@ -169,17 +169,6 @@ noncomputable def additiveModularFlowOfGenerator
     additiveModularFlowOfGenerator (H := H) K t A =
       InfoGeometry.Krein.modular_shift (E := H) K t A := rfl
 
-/-- Flipping the generator sign reverses the modular time parameter. -/
-@[simp] theorem additiveModularFlowOfGenerator_neg_eq_time_reverse
-    (K : AlgebraEnd H) (τ : ℝ) :
-    additiveModularFlowOfGenerator (H := H) (-K) τ =
-      additiveModularFlowOfGenerator (H := H) K (-τ) := by
-  ext A
-  ext x
-  simp [additiveModularFlowOfGenerator, modularShiftAlgEquiv,
-    InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift,
-    smul_neg, neg_smul, mul_assoc]
-
 end GeneratorFlow
 
 /--

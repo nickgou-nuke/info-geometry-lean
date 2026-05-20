@@ -15,8 +15,10 @@ import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.ChiralProduct
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.OperatorAlgebra.FiveGradeClosureSymmetry
+import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 
 /-!
 # InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
@@ -382,6 +384,23 @@ theorem primonGeneratorCartanDecomposition
     (hCartan : CBA.GeneratorCartanDecomposition) :
     CBA.IsVolumePreservingPart CBA.M ∧ CBA.IsWeylDilationPart CBA.D := by
   exact CBA.cartan_generator_split hCartan
+
+/-- Möbius/projective closure and five-grade Cartan closure are both theorem-backed. -/
+@[rep_depth thermo]
+theorem primonMoebiusProjectiveFiveGradeClosure
+    {L : Type*} [AddCommGroup L] [Module ℝ L]
+    (G : InfoGeometry.OperatorAlgebra.FiveGradeClosureSymmetry L)
+    (I : InfoGeometry.Thermodynamics.PositiveSouriauTemperature.ProjectiveTemperatureInversion)
+    {x : L}
+    (hx : x ∈ G.gZero)
+    (T : InfoGeometry.Thermodynamics.PositiveSouriauTemperature) :
+    (I.closure).theta T = I.element • T ∧
+      G.closure.SetwiseStable G.gZero ∧
+      G.closure.fixedPart x ∈ G.gZero ∧
+      G.closure.antiPart x ∈ G.gZero ∧
+      G.closure.fixedPart x + G.closure.antiPart x = x := by
+  refine ⟨rfl, ?_⟩
+  exact ⟨G.zero_setwise_stable, G.zero_cartan_decomposition hx⟩
 
 /-! ## 3. Chiral Bogoliubov bracket closure -/
 

@@ -12,9 +12,8 @@ Literature owner:
   Advances in Applied Clifford Algebras, 2011.
 
 This is the literature-owned socket for the infinite Cantor-set Clifford/Fock
-representation layer. It records the citation and carries the already-owned
-topology-side witness packet without claiming a new native reconstruction of
-the analytic `L^2(K)` model.
+representation layer. It records the citation and carries the theorem-backed
+topology-side carrier data for the analytic `L^2` model.
 
 No infinite CAR completion.
 No CCR completion.
@@ -32,24 +31,26 @@ open InfoGeometry.Topology.FractalCantorFockWitness
 The literature-owned infinite Cantor/Clifford/Fock socket.
 
 The socket is intentionally thin: it pins the paper citation and stores the
-existing infinite Cantor/Fock witness packet as the deferred owner lane.
+theorem-backed Cantor/Fock carrier data as the owner lane.
 -/
 @[socket_debt_tag]
 structure InfiniteCantorCliffordFockSocket
-    (Op : Type*) [Ring Op] where
+    (Op E : Type*) [Ring Op]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
   citationAuthors : String := "Derya Çelik and Şahin Koçak"
   citationTitle :
     String :=
     "A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation"
   citationVenue : String := "Advances in Applied Clifford Algebras"
   citationYear : Nat := 2011
-  paperWitness : CelikKocakInfiniteFockWitness Op
+  carrierData : CelikKocakInfiniteFockCarrierData E
 
-/-- The socket exposes the underlying paper witness. -/
+/-- The socket exposes the underlying carrier data. -/
 @[rep_depth operator]
-def paperWitness_readout {Op : Type*} [Ring Op]
-    (S : InfiniteCantorCliffordFockSocket Op) :
-    CelikKocakInfiniteFockWitness Op :=
-  S.paperWitness
+def carrierData_readout {Op E : Type*} [Ring Op]
+    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+    (S : InfiniteCantorCliffordFockSocket Op E) :
+    CelikKocakInfiniteFockCarrierData E :=
+  S.carrierData
 
 end InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket

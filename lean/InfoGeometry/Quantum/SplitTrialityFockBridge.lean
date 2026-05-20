@@ -117,4 +117,18 @@ canonical triality supercharge square closes onto the identity even seed.
     _ = LinearMap.id := by
           exact congrArg ContinuousLinearMap.toLinearMap hMixed
 
+/--
+The triality left/right spinor channels themselves satisfy the concrete CAR
+witness transported from the split-`Cl(1,1)` null-mode realization.
+-/
+theorem triality_channels_CARWitness :
+    InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
+      (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
+      (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
+      (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by
+  simpa [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
+    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap] using
+    (InfoGeometry.Quantum.RealMajoranaCategory.car_realization_of_clifford_concrete
+      (E := E))
+
 end InfoGeometry.Quantum.SplitTrialityFockBridge

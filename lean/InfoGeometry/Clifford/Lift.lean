@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.Clifford
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Krein.Representation
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -111,7 +112,13 @@ export InfoGeometry.Krein
     cl11Rep_ι_one_zero_sq
     cl11Rep_ι_zero_one_sq
     cl11Rep_ι_one_zero_anticommute_ι_zero_one
-    cl11Rep_pseudoscalar )
+    cl11Rep_pseudoscalar
+    cl11RepHilbert_ι_one_zero_isOdd
+    cl11RepHilbert_ι_one_zero_evenPart_eq_zero
+    cl11RepHilbert_ι_one_zero_oddPart_eq
+    cl11RepHilbert_ι_zero_one_isOdd
+    cl11RepHilbert_ι_zero_one_evenPart_eq_zero
+    cl11RepHilbert_ι_zero_one_oddPart_eq )
 
 section KreinClifford
 

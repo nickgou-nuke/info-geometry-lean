@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Krein.PolarizedSector
+import InfoGeometry.Singular.Drazin
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -191,6 +192,54 @@ theorem rootDiracOddLane_sq_eq_chiralLaplacian_sum :
     _ = rootChiralLaplacianPlus (E := E) + rootChiralLaplacianMinus (E := E) := by
           rw [rootChiralLaplacianPlus_eq_spectralChiralPlusProjector,
             rootChiralLaplacianMinus_eq_spectralChiralMinusProjector]
+
+/--
+The positive chiral Hodge projector is already a Drazin inverse of itself at
+index `1`.
+
+This is the proof-backed bridge from the Hodge/projector decomposition to the
+operator-level Drazin predicate.
+-/
+@[rep_depth krein]
+theorem rootChiralLaplacianPlus_isDrazinInverse :
+    InfoGeometry.Singular.Drazin.IsDrazinInverse
+      (rootChiralLaplacianPlus (E := E))
+      (rootChiralLaplacianPlus (E := E)) 1 := by
+  rw [rootChiralLaplacianPlus_eq_spectralChiralPlusProjector]
+  exact InfoGeometry.Singular.Drazin.IsDrazinInverse.of_idempotent
+    (spectralPlusProj_idempotent (E := E))
+
+/--
+The negative chiral Hodge projector is already a Drazin inverse of itself at
+index `1`.
+
+This is the complementary defect-sector readout of the same Hodge/projector
+bridge.
+-/
+@[rep_depth krein]
+theorem rootChiralLaplacianMinus_isDrazinInverse :
+    InfoGeometry.Singular.Drazin.IsDrazinInverse
+      (rootChiralLaplacianMinus (E := E))
+      (rootChiralLaplacianMinus (E := E)) 1 := by
+  rw [rootChiralLaplacianMinus_eq_spectralChiralMinusProjector]
+  exact InfoGeometry.Singular.Drazin.IsDrazinInverse.of_idempotent
+    (spectralMinusProj_idempotent (E := E))
+
+/--
+Compact owner-level Hodge spine:
+oddness, chiral splitting, and Laplacian closure for the root doubled Dirac lane.
+-/
+@[rep_depth krein]
+theorem rootChiralHodge_spine :
+    (spectral_epsilon (E := E)).comp (rootDiracOddLane (E := E))
+        = -((rootDiracOddLane (E := E)).comp (spectral_epsilon (E := E)))
+      ∧ rootDiracOddLane (E := E) = rootDiracPlus (E := E) + rootDiracMinus (E := E)
+      ∧ (rootDiracOddLane (E := E)).comp (rootDiracOddLane (E := E))
+          = rootChiralLaplacianPlus (E := E) + rootChiralLaplacianMinus (E := E) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact rootDiracOddLane_is_spectral_odd (E := E)
+  · exact rootDiracOddLane_eq_chiral_sum (E := E)
+  · exact rootDiracOddLane_sq_eq_chiralLaplacian_sum (E := E)
 
 end Core
 

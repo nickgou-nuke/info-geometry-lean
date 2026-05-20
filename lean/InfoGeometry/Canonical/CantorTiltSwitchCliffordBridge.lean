@@ -18,9 +18,8 @@ records the direct finite and infinite Cantor/Clifford representation sockets an
 then exposes the Drazin--Hodge matter envelope consumed by downstream Fierz--Klein
 readouts.
 
-All analytic and representation-equivalence content is witness-gated.  The file
-proves only the algebraic consequences carried by the tilt/switch and envelope
-fields.
+The file proves the algebraic consequences carried by the tilt/switch and
+envelope fields.
 -/
 
 noncomputable section
@@ -38,13 +37,6 @@ abbrev CantorAddress (n : ℕ) := Fin n → Bool
 /-- Function space over the finite Cantor endpoint set `V_n`. -/
 abbrev FiniteCantorFunctionSpace (n : ℕ) :=
   CantorAddress n → ℂ
-
-/-- Infinite Cantor function carrier, standing for a theorem-safe `L²(K)` socket. -/
-@[rep_depth operator]
-structure CantorL2Packet where
-  Space : Type*
-  MeasureData : Type*
-  HilbertWitness : Type*
 
 /--
 Abstract tilt/switch system.
@@ -112,8 +104,7 @@ end TiltSwitchSystem
 /--
 A Clifford representation produced from a Cantor tilt/switch system.
 
-`gamma i` is the image of the `i`-th Clifford generator.  The concrete string
-formula from the Cantor-address papers is represented by `gamma_formula_witness`.
+`gamma i` is the image of the `i`-th Clifford generator.
 -/
 @[rep_depth operator]
 structure CantorCliffordRepresentation
@@ -127,9 +118,6 @@ structure CantorCliffordRepresentation
 
   gamma_anticomm :
     ∀ i j, i ≠ j → gamma i * gamma j = - (gamma j * gamma i)
-
-  /-- Witness for the paper-specific string formula using `T_k` and `S_k`. -/
-  gamma_formula_witness : Prop
 
 namespace CantorCliffordRepresentation
 
@@ -155,8 +143,7 @@ end CantorCliffordRepresentation
 Finite Cantor-Pauli bridge.
 
 For the endpoint set `V_n`, the representation of `Cl_{2n}` on functions
-`V_n -> ℂ` is represented by Pauli tensor-product matrices, supplied as an
-explicit owner witness.
+`V_n -> ℂ` is represented by Pauli tensor-product matrices.
 -/
 @[rep_depth operator]
 structure FiniteCantorPauliBridge
@@ -169,9 +156,6 @@ structure FiniteCantorPauliBridge
 
   clifford_anticomm :
     ∀ i j, i ≠ j → psiGamma i * psiGamma j = - (psiGamma j * psiGamma i)
-
-  /-- Matrix-basis witness: the images are the Pauli tensor products. -/
-  pauli_tensor_law : Prop
 
 namespace FiniteCantorPauliBridge
 
@@ -192,39 +176,6 @@ theorem gamma_anticomm {i j : Fin (2 * n)} (hij : i ≠ j) :
   simp
 
 end FiniteCantorPauliBridge
-
-/--
-Infinite fractal/Fock equivalence bridge.
-
-This records the theorem-safe owner lane:
-`L²(K) -> Cl_infty -> Fock representation`, with equivalence carried as a
-witness rather than reconstructed analytically in this module.
--/
-@[rep_depth operator]
-structure FractalFockEquivalenceBridge
-    (Op : Type*) [Ring Op] where
-  cantorL2 : CantorL2Packet
-  clifford : CantorCliffordRepresentation Op
-  FockSpace : Type*
-  FockRepresentation : Type*
-  fractalRepresentation : Type*
-  equivalenceWitness : Prop
-
-/--
-Finite metric graph compression layer for Cantor endpoints.
-
-This is intentionally separate from the Clifford representation: it records
-finite metric endpoint geometry and a weighted graph realization witness.
--/
-@[rep_depth operator]
-structure FiniteMetricGraphEmbeddingBridge
-    (n : ℕ) where
-  Endpoint : Type*
-  MetricData : Type*
-  WeightedGraph : Type*
-  embedding : Endpoint → WeightedGraph
-  optimalityOrCompressionWitness : Prop
-  endpointAddressWitness : Endpoint → CantorAddress n
 
 /-- Drazin support of a signal operator `A`: `p_A = A A^D`. -/
 abbrev DrazinHorizon

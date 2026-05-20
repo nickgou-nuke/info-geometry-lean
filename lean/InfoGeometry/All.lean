@@ -100,6 +100,7 @@ import InfoGeometry.GrandUnification.ModularTransport
 import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
+import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 import InfoGeometry.KL.EntropicInferenceTest

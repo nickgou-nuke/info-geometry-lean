@@ -3,7 +3,6 @@ import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-import InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 
 /-!
 # InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
@@ -34,7 +33,6 @@ namespace InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-open InfoGeometry.Canonical.WeylGaugeCantorFockBridge
 
 /--
 Raw causal-cone switch data before Weyl/projective normalization.
@@ -215,8 +213,6 @@ structure PrimeWeylGaugeCantorFockBridge
   vertex : Vertex P
   exteriorState : SquareFreePrimeState ℕ
   exteriorState_eq : exteriorState = toSquareFreePrimeState vertex
-  canonicalBridge :
-    InfoGeometry.Canonical.WeylGaugeCantorFockBridge.WeylGaugeCantorFockBridge Raw Op
 
 namespace PrimeWeylGaugeCantorFockBridge
 

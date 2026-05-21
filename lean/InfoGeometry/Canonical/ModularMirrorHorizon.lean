@@ -69,7 +69,7 @@ theorem horizon_mem_boundarySector
 theorem boundarySector_zeroMode
     (S : DrazinCentralizerSanctuary Obs) (x : Obs)
     (hx : x ∈ horizonBoundarySector S) :
-    InfoGeometry.Canonical.DrazinModularPersistence.IsHorizonZeroMode S.flow x :=
+    InfoGeometry.Canonical.DrazinModularPersistence.IsHorizonZeroMode S.flow S.horizon x :=
   compressed_centralizer_is_horizon_zero_mode S.flow S.horizon x hx
 
 /-- The horizon sector is exactly the compressed centralizer. -/

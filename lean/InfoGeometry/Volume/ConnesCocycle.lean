@@ -256,6 +256,52 @@ theorem unitCocycle_isConnesCocycle
   intro s t
   simp [unitCocycle]
 
+/-- The modular centralizer: the fixed-point subalgebra of a modular flow. -/
+def modularCentralizer (σ : AdditiveModularFlow (H := H)) :
+    Subalgebra ℝ (AlgebraEnd H) where
+  carrier := {A : AlgebraEnd H | ∀ t : ℝ, σ t A = A}
+  zero_mem' := by
+    intro t
+    simp
+  add_mem' := by
+    intro A B hA hB t
+    rw [map_add, hA t, hB t]
+  mul_mem' := by
+    intro A B hA hB t
+    rw [map_mul, hA t, hB t]
+  algebraMap_mem' := by
+    intro r t
+    simp
+
+/-- A modular-centralizer element is fixed by the modular flow. -/
+theorem mem_modularCentralizer_iff
+    (σ : AdditiveModularFlow (H := H)) (A : AlgebraEnd H) :
+    A ∈ modularCentralizer (H := H) σ ↔ ∀ t : ℝ, σ t A = A :=
+  Iff.rfl
+
+/-- The identity endomorphism lies in the modular centralizer. -/
+@[simp] theorem one_mem_modularCentralizer
+    (σ : AdditiveModularFlow (H := H)) :
+    (1 : AlgebraEnd H) ∈ modularCentralizer (H := H) σ := by
+  intro t
+  simp [modularCentralizer]
+
+/-- The modular centralizer is closed under multiplication. -/
+@[simp] theorem mul_mem_modularCentralizer
+    (σ : AdditiveModularFlow (H := H)) {A B : AlgebraEnd H}
+    (hA : A ∈ modularCentralizer (H := H) σ)
+    (hB : B ∈ modularCentralizer (H := H) σ) :
+    A * B ∈ modularCentralizer (H := H) σ :=
+  modularCentralizer (H := H) σ |>.mul_mem hA hB
+
+/-- The modular centralizer is closed under addition. -/
+@[simp] theorem add_mem_modularCentralizer
+    (σ : AdditiveModularFlow (H := H)) {A B : AlgebraEnd H}
+    (hA : A ∈ modularCentralizer (H := H) σ)
+    (hB : B ∈ modularCentralizer (H := H) σ) :
+    A + B ∈ modularCentralizer (H := H) σ :=
+  modularCentralizer (H := H) σ |>.add_mem hA hB
+
 /-- Unit cocycle at zero is unit. -/
 @[simp] theorem unitCocycle_zero :
     unitCocycle (H := H) 0 = 1 := by

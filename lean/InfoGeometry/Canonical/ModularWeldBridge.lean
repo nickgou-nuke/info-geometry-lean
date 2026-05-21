@@ -86,6 +86,21 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
     rw [Matrix.exp_diagonal]
     simp only [Matrix.diagonal_apply_ne _ hij]
 
+/--
+Diagonal trace-determinant law for the matrix exponential.
+
+This is the repo-native shadow of the full `det (exp A) = exp (trace A)` theorem:
+it is proved by the same diagonal reduction algorithm used elsewhere in the
+finite modular lane.
+-/
+@[rep_depth operator]
+theorem det_exp_diagonal_eq_exp_trace
+    (v : Fin n → ℝ) :
+    Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
+      NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) := by
+  rw [Matrix.exp_diagonal, Matrix.det_diagonal, Matrix.trace_diagonal]
+  simpa [Real.exp_eq_exp_ℝ] using (Real.exp_sum (s := Finset.univ) (f := v)).symm
+
 /-- Shadow/diagnostic alias for the finite diagonal weld identity. -/
 theorem finiteDiagonalShadow_relativeModularOperator_eq_exp_relativeLogDensity
     (q q0 : PositiveRay (Fin n)) :

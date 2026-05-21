@@ -533,6 +533,8 @@ import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 import InfoGeometry.Canonical.ModularWeldBridge
+import InfoGeometry.Canonical.MatrixExponentialTraceDet
+import InfoGeometry.Canonical.ModularMirrorHorizon
 import InfoGeometry.Canonical.MoebiusClosureBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
@@ -890,6 +892,7 @@ import InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
 import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
+import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.ZornSpinor
 
 namespace InfoGeometry

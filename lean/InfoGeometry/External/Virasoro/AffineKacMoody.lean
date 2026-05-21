@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.Loop
+import Mathlib.Tactic
 import InfoGeometry.External.Virasoro.CentralExtension
 import InfoGeometry.External.Virasoro.LieCohomologySmallDegree
 
@@ -18,6 +19,8 @@ loop algebra `loopAlgebra 𝕜 ℤ 𝓰`.
 * `VirasoroProject.affineKacMoodyCocycle`: The 2-cocycle defining the central extension,
   transported from Mathlib's `LieAlgebra.LoopAlgebra.twoCocycleOfBilinear`.
 * `VirasoroProject.AffineKacMoody`: The affine Kac-Moody algebra.
+* `VirasoroProject.affineCurrentGen_bracket`: The generator-level Kac-Moody bracket obtained by
+  evaluating the loop-algebra residue cocycle on monomials.
 -/
 
 namespace VirasoroProject
@@ -61,5 +64,93 @@ noncomputable def affineKacMoodyCocycle : LieTwoCocycle 𝕜 (loopAlgebra 𝕜 �
 /-- The untwisted affine Kac-Moody algebra. -/
 abbrev AffineKacMoody :=
   LieTwoCocycle.CentralExtension (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs)
+
+/-- The loop-algebra monomial `t^n ⊗ x`. -/
+noncomputable def affineLoopMode (n : ℤ) (x : 𝓰) : loopAlgebra 𝕜 ℤ 𝓰 :=
+  AddMonoidAlgebra.single n (1 : 𝕜) ⊗ₜ[𝕜] x
+
+omit [IsAddTorsionFree 𝕜] in
+/-- Loop monomials bracket by adding exponents and taking the bracket in `𝓰`. -/
+theorem affineLoopMode_bracket (m n : ℤ) (x y : 𝓰) :
+    ⁅affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) m x,
+        affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) n y⁆ =
+      affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) (m + n) (⁅x, y⁆ : 𝓰) := by
+  change ⁅AddMonoidAlgebra.single m (1 : 𝕜) ⊗ₜ[𝕜] x,
+      AddMonoidAlgebra.single n (1 : 𝕜) ⊗ₜ[𝕜] y⁆ =
+    AddMonoidAlgebra.single (m + n) (1 : 𝕜) ⊗ₜ[𝕜] (⁅x, y⁆ : 𝓰)
+  rw [LieAlgebra.ExtendScalars.bracket_tmul]
+  rw [AddMonoidAlgebra.single_mul_single]
+  simp only [mul_one]
+
+omit [IsAddTorsionFree 𝕜] in
+/--
+The residue cocycle on two loop monomials.  With the exponent convention in mathlib's
+`residuePairing`, the central coefficient is the exponent of the second monomial.
+-/
+theorem residuePairing_affineLoopMode (m n : ℤ) (x y : 𝓰) :
+    residuePairing 𝕜 ℤ 𝓰 Φ
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) m x)
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) n y) =
+    if m + n = 0 then (n : 𝕜) * Φ x y else 0 := by
+  rw [residuePairing_apply_apply]
+  simp only [affineLoopMode, toFinsupp_single_tmul]
+  rw [Finsupp.sum_single_index]
+  · by_cases hmn : -n = m
+    · have hsum : m + n = 0 := by omega
+      rw [if_pos hsum]
+      simp [hmn]
+    · have hsum : ¬ m + n = 0 := by omega
+      rw [if_neg hsum]
+      simp [Finsupp.single_eq_of_ne hmn]
+  · simp
+
+/-- The affine Kac-Moody 2-cocycle evaluated on two loop monomials. -/
+theorem affineKacMoodyCocycle_affineLoopMode (m n : ℤ) (x y : 𝓰) :
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) m x)
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) n y) =
+    if m + n = 0 then (n : 𝕜) * Φ x y else 0 := by
+  change residuePairing 𝕜 ℤ 𝓰 Φ
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) m x)
+      (affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) n y) =
+    if m + n = 0 then (n : 𝕜) * Φ x y else 0
+  exact residuePairing_affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) Φ m n x y
+
+/--
+Affine current generator.  The current index `n` is represented by loop exponent `-n`,
+so that the residue cocycle has the standard central coefficient `m` in
+`[J_m, J_n]` when `m + n = 0`.
+-/
+noncomputable def affineCurrentGen (n : ℤ) (x : 𝓰) :
+    AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
+  ⟨affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) (-n) x, 0⟩
+
+/-- The central generator of the affine Kac-Moody central extension. -/
+noncomputable def affineCentralGen : AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
+  ⟨0, 1⟩
+
+/--
+Generator-level affine Kac-Moody bracket.
+
+This is the nonabelian current-algebra readback from the mathlib-backed loop-algebra
+central extension.  It does not assume a fermionic current theorem; it evaluates the
+existing residue 2-cocycle on loop monomials.
+-/
+theorem affineCurrentGen_bracket (m n : ℤ) (x y : 𝓰) :
+    ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+        affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆ =
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)
+        + (if m + n = 0
+            then ((m : 𝕜) * Φ x y) • affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+            else 0) := by
+  ext
+  · have hidx : -m + -n = -(m + n) := by omega
+    simp [affineCurrentGen, affineCentralGen, affineLoopMode_bracket, hidx]
+    by_cases h : m + n = 0 <;> simp [h]
+  · by_cases h : m + n = 0
+    · have hmn : -n = m := by omega
+      simp [affineCurrentGen, affineCentralGen, affineKacMoodyCocycle_affineLoopMode, h, hmn]
+    · have hloop : ¬ -m + -n = 0 := by omega
+      simp [affineCurrentGen, affineKacMoodyCocycle_affineLoopMode, h, hloop]
 
 end VirasoroProject

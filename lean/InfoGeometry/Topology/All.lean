@@ -5,3 +5,4 @@ import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.CompleteLatticeSectorCompletion

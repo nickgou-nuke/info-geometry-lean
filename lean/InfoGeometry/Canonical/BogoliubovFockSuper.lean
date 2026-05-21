@@ -243,6 +243,12 @@ def IsProjectorSuperPair (a adag : FockEnd E) : Prop :=
 noncomputable abbrev fockCommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
   commutator (E := E) A B
 
+/-- The Fock commutator is the ordinary operator commutator. -/
+lemma fockCommutator_eq (A B : FockEndomorphism E) :
+    fockCommutator (E := E) A B = A.comp B - B.comp A := by
+  unfold fockCommutator commutator
+  rw [superBracket_even_left]
+
 /-- Canonical naming alias for odd-odd channel on Fock endomorphisms. -/
 noncomputable abbrev fockAnticommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
   anticommutator (E := E) A B

@@ -23,6 +23,7 @@ import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Clifford.SplitQ11Equivariance
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower

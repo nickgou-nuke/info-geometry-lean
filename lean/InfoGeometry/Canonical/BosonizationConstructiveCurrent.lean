@@ -2036,7 +2036,7 @@ theorem sugawaraVirasoro_from_heisenbergCurrent
     (m n : Int) :
     (VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc m).commutator
         (VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc n) =
-      (m - n : 𝕜) • VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc (m + n)
+      (m - n) • VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc (m + n)
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
           else 0 :=

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalNormalOrdering
+import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.Sugawara
 import Mathlib.Tactic
 
@@ -1899,20 +1900,6 @@ theorem normalOrdered_nonabelianCurrent_commutator_from_matrixUnit
   · exact formalNonabelianCurrentNoncentralCoeff_eq_current_commutator T S m n x y
   · exact formalNonabelianCurrentCentralCoeff_eq_kacMoody T S m n
 
-/--
-Public nonabelian Wick current theorem.
-
-For finite internal matrices `T` and `S`, the completed normal-ordered current
-bracket is the current of the internal commutator `[T,S]` plus the Wick
-central term `m Tr(TS) δ_{m+n,0}`.  This is the Kac--Moody owner surface above
-the matrix-unit Wick theorem.
--/
-theorem nonabelianWickCurrent_commutator_from_matrixUnit
-    (T S : Color -> Color -> Int) (m n : Int) :
-    completedNonabelianCurrentBracketFromWick T S m n =
-      completedNonabelianCurrentKacMoodyRHS T S m n :=
-  normalOrdered_nonabelianCurrent_commutator_from_matrixUnit T S m n
-
 /-- Noncentral component of the nonabelian Wick current bracket. -/
 theorem nonabelianWickCurrent_noncentralCoeff
     (T S : Color -> Color -> Int) (m n : Int) (x y : ColorModeIndex Color) :
@@ -1983,29 +1970,6 @@ theorem normalOrdered_basisKacMoodyCurrent_commutator_from_matrixUnit
     by_cases hmn : m + n = 0
     · simp [hmn, htrace]
     · simp [hmn]
-
-/--
-Public basis-form nonabelian Wick current theorem.
-
-When the finite internal matrices `B a` close with structure constants
-`structureCoeff` and trace form `level * kappa`, the Wick current bracket has
-the standard Kac--Moody basis form.
--/
-theorem nonabelianWickCurrent_basis_kacMoody
-    {BasisLabel : Type*} [Fintype BasisLabel]
-    (B : BasisLabel -> Color -> Color -> Int)
-    (structureCoeff : BasisLabel -> BasisLabel -> BasisLabel -> Int)
-    (level : Int)
-    (kappa : BasisLabel -> BasisLabel -> Int)
-    (a b : BasisLabel) (m n : Int)
-    (hcomm : forall i j : Color,
-      colorMatrixComm (B a) (B b) i j =
-        ∑ c : BasisLabel, structureCoeff a b c * B c i j)
-    (htrace : colorTracePairing (B a) (B b) = level * kappa a b) :
-    completedNonabelianCurrentBracketFromWick (B a) (B b) m n =
-      basisKacMoodyRightClass B structureCoeff level kappa a b m n :=
-  normalOrdered_basisKacMoodyCurrent_commutator_from_matrixUnit
-    B structureCoeff level kappa a b m n hcomm htrace
 
 end ConstructiveKacMoody
 

@@ -870,6 +870,255 @@ theorem rightCuntzCu_le_unit :
 
 end CuntzO2Carrier
 
+/-!
+## Idempotent projector algebra
+
+These are the local algebraic facts used by the sector language.  The first
+three hold in any ring.  The Boolean meet/join formulas are stated for
+commutative rings, matching the central Cantor-idempotent lane rather than the
+noncentral Krein matrix-projection lane.
+-/
+
+section IdempotentProjectorAlgebra
+
+variable {R : Type*} [Ring R]
+
+/-- If `e` is idempotent, then `1 - e` is idempotent. -/
+@[rep_depth operator]
+theorem idempotent_one_sub {e : R} (he : IsIdempotentElem e) :
+    IsIdempotentElem (1 - e) :=
+  he.one_sub
+
+/-- An idempotent is orthogonal on the right to its complement. -/
+@[rep_depth operator]
+theorem idempotent_mul_one_sub {e : R} (he : IsIdempotentElem e) :
+    e * (1 - e) = 0 := by
+  rw [mul_sub, mul_one, he.eq, sub_self]
+
+/-- An idempotent is orthogonal on the left to its complement. -/
+@[rep_depth operator]
+theorem one_sub_mul_idempotent {e : R} (he : IsIdempotentElem e) :
+    (1 - e) * e = 0 := by
+  rw [sub_mul, one_mul, he.eq, sub_self]
+
+/-- Product of commuting idempotents is idempotent. -/
+@[rep_depth operator]
+theorem commuting_idempotent_mul {e f : R}
+    (he : IsIdempotentElem e) (hf : IsIdempotentElem f) (hcomm : e * f = f * e) :
+    IsIdempotentElem (e * f) := by
+  rw [IsIdempotentElem]
+  calc
+    (e * f) * (e * f) = e * (f * e) * f := by noncomm_ring
+    _ = e * (e * f) * f := by rw [hcomm]
+    _ = (e * e) * (f * f) := by noncomm_ring
+    _ = e * f := by rw [he.eq, hf.eq]
+
+end IdempotentProjectorAlgebra
+
+section CentralIdempotentBooleanAlgebra
+
+variable {R : Type*} [CommRing R]
+
+/-- Boolean meet of central idempotents: multiplication preserves idempotence. -/
+@[rep_depth operator]
+theorem central_idempotent_boolean_meet {e f : R}
+    (he : IsIdempotentElem e) (hf : IsIdempotentElem f) :
+    IsIdempotentElem (e * f) := by
+  exact commuting_idempotent_mul he hf (mul_comm e f)
+
+/-- Boolean join of central idempotents: `e ∨ f = e + f - e * f`. -/
+@[rep_depth operator]
+theorem central_idempotent_boolean_join {e f : R}
+    (he : IsIdempotentElem e) (hf : IsIdempotentElem f) :
+    IsIdempotentElem (e + f - e * f) := by
+  have he2 : e ^ 2 = e := by simpa [pow_two] using he.eq
+  have hf2 : f ^ 2 = f := by simpa [pow_two] using hf.eq
+  rw [IsIdempotentElem]
+  ring_nf
+  rw [he2, hf2]
+  ring
+
+/-- A central idempotent lies below its Boolean join with another central idempotent. -/
+@[rep_depth operator]
+theorem central_idempotent_boolean_join_absorb_left {e f : R}
+    (he : IsIdempotentElem e) (_hf : IsIdempotentElem f) :
+    e * (e + f - e * f) = e := by
+  have he2 : e ^ 2 = e := by simpa [pow_two] using he.eq
+  ring_nf
+  rw [he2]
+  ring
+
+/-- A central idempotent is absorbed by its Boolean join on the other side too. -/
+@[rep_depth operator]
+theorem central_idempotent_boolean_join_absorb_right {e f : R}
+    (he : IsIdempotentElem e) (_hf : IsIdempotentElem f) :
+    (e + f - e * f) * e = e := by
+  have he2 : e ^ 2 = e := by simpa [pow_two] using he.eq
+  ring_nf
+  rw [he2]
+  ring
+
+end CentralIdempotentBooleanAlgebra
+
+/-!
+## Complete-lattice sector completion
+
+This section records the order-theoretic closure that is already canonical in
+mathlib.  It does not assert a full noncommutative projection lattice for an
+operator algebra.  Instead it uses concrete sector selections as sets, where
+arbitrary joins and meets are the ordinary unions and intersections, refinement
+is direct image, coarse-graining is inverse image, and self-similar sectors are
+fixed points of a monotone self-map by Knaster--Tarski.
+-/
+
+section CompleteLatticeSectorCompletion
+
+universe u v w
+
+/-- A finite Cantor/Krein sector is a binary cylinder address together with a chirality bit. -/
+@[rep_depth operator]
+abbrev FiniteCantorKreinSector (n : Nat) :=
+  BinaryCylinder n × Bool
+
+/-- Completed finite-sector selections form the powerset lattice of concrete sectors. -/
+@[rep_depth operator]
+abbrev FiniteCantorKreinSectorSet (n : Nat) :=
+  Set (FiniteCantorKreinSector n)
+
+/-- Join of finite Cantor/Krein sector selections is union. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_sup_eq_union
+    {n : Nat} (P Q : FiniteCantorKreinSectorSet n) :
+    P ⊔ Q = P ∪ Q := by
+  rfl
+
+/-- Meet of finite Cantor/Krein sector selections is intersection. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_inf_eq_inter
+    {n : Nat} (P Q : FiniteCantorKreinSectorSet n) :
+    P ⊓ Q = P ∩ Q := by
+  rfl
+
+/-- Arbitrary join of finite Cantor/Krein sector selections is set union. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_sSup_eq_sUnion
+    {n : Nat} (S : Set (FiniteCantorKreinSectorSet n)) :
+    sSup S = ⋃₀ S := by
+  rfl
+
+/-- Arbitrary meet of finite Cantor/Krein sector selections is set intersection. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_sInf_eq_sInter
+    {n : Nat} (S : Set (FiniteCantorKreinSectorSet n)) :
+    sInf S = ⋂₀ S := by
+  rfl
+
+/-- Indexed join of finite Cantor/Krein sector selections is indexed union. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_iSup_eq_iUnion
+    {ι : Sort u} {n : Nat} (S : ι → FiniteCantorKreinSectorSet n) :
+    (⨆ i, S i) = ⋃ i, S i := by
+  rfl
+
+/-- Indexed meet of finite Cantor/Krein sector selections is indexed intersection. -/
+@[rep_depth operator]
+theorem finiteCantorKreinSectorSet_iInf_eq_iInter
+    {ι : Sort u} {n : Nat} (S : ι → FiniteCantorKreinSectorSet n) :
+    (⨅ i, S i) = ⋂ i, S i := by
+  rfl
+
+/-- Refinement of sector selections along a concrete sector map. -/
+@[rep_depth operator]
+def sectorRefine {α : Type u} {β : Type v} (f : α → β) (P : Set α) : Set β :=
+  f '' P
+
+/-- Coarse-graining of sector selections along a concrete sector map. -/
+@[rep_depth operator]
+def sectorCoarse {α : Type u} {β : Type v} (f : α → β) (Q : Set β) : Set α :=
+  f ⁻¹' Q
+
+/--
+Direct image refinement and inverse image coarse-graining form a Galois
+connection.  This is the order-theoretic coarse/fine adjunction.
+-/
+@[rep_depth operator]
+theorem sectorRefine_sectorCoarse_galoisConnection
+    {α : Type u} {β : Type v} (f : α → β) :
+    GaloisConnection (sectorRefine f) (sectorCoarse f) := by
+  intro P Q
+  exact Set.image_subset_iff
+
+/-- Refinement preserves arbitrary joins, as every lower adjoint does. -/
+@[rep_depth operator]
+theorem sectorRefine_iSup
+    {α : Type u} {β : Type v} {ι : Sort w} (f : α → β) (P : ι → Set α) :
+    sectorRefine f (⨆ i, P i) = ⨆ i, sectorRefine f (P i) := by
+  exact (sectorRefine_sectorCoarse_galoisConnection f).l_iSup
+
+/-- Coarse-graining preserves arbitrary meets, as every upper adjoint does. -/
+@[rep_depth operator]
+theorem sectorCoarse_iInf
+    {α : Type u} {β : Type v} {ι : Sort w} (f : α → β) (Q : ι → Set β) :
+    sectorCoarse f (⨅ i, Q i) = ⨅ i, sectorCoarse f (Q i) := by
+  exact (sectorRefine_sectorCoarse_galoisConnection f).u_iInf
+
+/-- Self-similar sectors are fixed points of a monotone refinement operator. -/
+@[rep_depth operator]
+abbrev SelfSimilarSectors {L : Type u} [CompleteLattice L] (R : L →o L) :=
+  Function.fixedPoints R
+
+/-- Knaster--Tarski: fixed sectors of a monotone map form a complete lattice. -/
+@[rep_depth operator]
+noncomputable def selfSimilarSectorsCompleteLattice
+    {L : Type u} [CompleteLattice L] (R : L →o L) :
+    CompleteLattice (SelfSimilarSectors R) :=
+  fixedPoints.completeLattice R
+
+/-- Membership in the self-similar sector type is exactly the fixed-point equation. -/
+@[rep_depth operator]
+theorem selfSimilarSector_isFixed
+    {L : Type u} [CompleteLattice L] (R : L →o L) (P : SelfSimilarSectors R) :
+    R P.1 = P.1 :=
+  P.2
+
+/-- The least fixed sector supplied by Knaster--Tarski is fixed. -/
+@[rep_depth operator]
+theorem selfSimilarSector_lfp_isFixed
+    {L : Type u} [CompleteLattice L] (R : L →o L) :
+    R R.lfp = R.lfp :=
+  R.map_lfp
+
+/-- The greatest fixed sector supplied by Knaster--Tarski is fixed. -/
+@[rep_depth operator]
+theorem selfSimilarSector_gfp_isFixed
+    {L : Type u} [CompleteLattice L] (R : L →o L) :
+    R R.gfp = R.gfp :=
+  R.map_gfp
+
+/-- Sector selections over the existing concrete Cuntz projection subtype. -/
+@[rep_depth operator]
+abbrev CuntzProjectionSectorSet
+    {Op : Type u} [Ring Op] [StarRing Op] :=
+  Set (CuntzO2Carrier.CuntzProjection (Op := Op))
+
+/-- Arbitrary joins in the Cuntz projection sector powerset are unions. -/
+@[rep_depth operator]
+theorem CuntzProjectionSectorSet_iSup_eq_iUnion
+    {Op : Type u} [Ring Op] [StarRing Op] {ι : Sort v}
+    (S : ι → CuntzProjectionSectorSet (Op := Op)) :
+    (⨆ i, S i) = ⋃ i, S i := by
+  rfl
+
+/-- Arbitrary meets in the Cuntz projection sector powerset are intersections. -/
+@[rep_depth operator]
+theorem CuntzProjectionSectorSet_iInf_eq_iInter
+    {Op : Type u} [Ring Op] [StarRing Op] {ι : Sort v}
+    (S : ι → CuntzProjectionSectorSet (Op := Op)) :
+    (⨅ i, S i) = ⋂ i, S i := by
+  rfl
+
+end CompleteLatticeSectorCompletion
+
 /-- Candidate Majorana/Clifford operators generated from a Cuntz shift. -/
 @[rep_depth operator]
 class PhaseAxisCarrier (Op : Type*) where
@@ -887,7 +1136,6 @@ instance doubledSpaceEndPhaseAxis
     PhaseAxisCarrier (DoubledSpace E →L[ℝ] DoubledSpace E) where
   phaseAxis := clockAxis (E := E)
 
-/-- Candidate Majorana/Clifford operators generated from a Cuntz shift. -/
 @[rep_depth operator]
 structure CuntzMajoranaCandidates
     (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op] where

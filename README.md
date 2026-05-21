@@ -1,9 +1,12 @@
 # InfoGeometry Lean Fusion
 
-> Status: `current authority`
+> Status: `reference memory`
 > Audited: 2026-05-02
 > Note: Maintained against the live code surface.
 > See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+
+This file is stale as an authority source. Do not use it as current proof or
+design truth without re-auditing against `lean/` and `lakefile.lean`.
 
 This repository has two live code surfaces:
 

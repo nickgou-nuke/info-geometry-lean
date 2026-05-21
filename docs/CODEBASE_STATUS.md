@@ -1,9 +1,12 @@
 # Codebase Status
 
-> Status: `current authority`
+> Status: `reference memory`
 > Audited: 2026-05-02
 > Note: Maintained against the live code surface.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
+This file is stale as an authority source. Treat it as a snapshot only and
+re-audit against the live repository before using it to guide edits.
 
 Last refreshed: 2026-05-02 (Europe/Sofia)
 

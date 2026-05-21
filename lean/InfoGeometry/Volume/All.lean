@@ -1,6 +1,9 @@
 import InfoGeometry.Volume.Base
 import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Volume.ConnesInfinitesimal
+import InfoGeometry.Volume.ConnesTomitaKreinBridge
 import InfoGeometry.Volume.DeterminantBundle
+import InfoGeometry.Volume.FunctorialCocycleCalculus
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian
 import InfoGeometry.Volume.PfaffianPathBridge

@@ -1,9 +1,12 @@
 # Operational Intent
 
-> Status: `current authority`
+> Status: `reference memory`
 > Audited: 2026-05-02
 > Note: Maintained against the live code surface.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
+This file is stale as an authority source. Do not treat it as current policy
+without checking the live Lean and tooling surface first.
 
 This repository is maintained as code first, prose second.
 

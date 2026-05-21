@@ -284,7 +284,7 @@ theorem mem_modularCentralizer_iff
     (σ : AdditiveModularFlow (H := H)) :
     (1 : AlgebraEnd H) ∈ modularCentralizer (H := H) σ := by
   intro t
-  simp [modularCentralizer]
+  simp
 
 /-- The modular centralizer is closed under multiplication. -/
 @[simp] theorem mul_mem_modularCentralizer

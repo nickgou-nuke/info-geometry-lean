@@ -1404,6 +1404,143 @@ theorem formalCurrent_noncentral_cancel_and_central_heisenberg (m n : Int) :
     exact formalCurrentNoncentralCoeff_eq_zero m n i j
   · exact formalCurrentCentralCoeff_eq_heisenberg m n
 
+/-! ## Problem 7: constructive Heisenberg current theorem -/
+
+/--
+Central extension of the completed current coefficient algebra.
+
+The noncentral part is recorded coefficientwise because the completed currents
+are locally finite matrices from Problem 6; the extra integer component is the
+central Schwinger coefficient produced by the Wick correction and crossing
+count.
+-/
+structure CompletedCurrentCentralClass where
+  noncentralCoeff : Int -> Int -> Int
+  centralCoeff : Int
+
+@[ext]
+theorem CompletedCurrentCentralClass.ext
+    {X Y : CompletedCurrentCentralClass}
+    (hcoeff : forall i j : Int, X.noncentralCoeff i j = Y.noncentralCoeff i j)
+    (hcentral : X.centralCoeff = Y.centralCoeff) :
+    X = Y := by
+  cases X with
+  | mk Xcoeff Xcentral =>
+    cases Y with
+    | mk Ycoeff Ycentral =>
+      simp only at hcentral
+      have hfun : Xcoeff = Ycoeff := by
+        funext i j
+        exact hcoeff i j
+      subst hfun
+      subst hcentral
+      rfl
+
+/-- The completed current mode as a central-extension class with zero central part. -/
+def completedCurrentMode (n : Int) : CompletedCurrentCentralClass where
+  noncentralCoeff := (completedCurrent n).coeff
+  centralCoeff := 0
+
+@[simp]
+theorem completedCurrentMode_noncentralCoeff (n i j : Int) :
+    (completedCurrentMode n).noncentralCoeff i j = if j = i + n then 1 else 0 :=
+  rfl
+
+@[simp]
+theorem completedCurrentMode_centralCoeff (n : Int) :
+    (completedCurrentMode n).centralCoeff = 0 :=
+  rfl
+
+/-- Pure central element in the completed current central extension. -/
+def centralCurrentClass (k : Int) : CompletedCurrentCentralClass where
+  noncentralCoeff := fun _ _ => 0
+  centralCoeff := k
+
+@[simp]
+theorem centralCurrentClass_noncentralCoeff (k i j : Int) :
+    (centralCurrentClass k).noncentralCoeff i j = 0 :=
+  rfl
+
+@[simp]
+theorem centralCurrentClass_centralCoeff (k : Int) :
+    (centralCurrentClass k).centralCoeff = k :=
+  rfl
+
+/--
+Problem 6 readback for the central-extension current mode:
+the cutoff representatives stabilize coefficientwise to the completed mode.
+-/
+theorem completedCurrentMode_wellDefined_from_cutoffs (n i j : Int) :
+    ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (cutoffDiagonalCurrent N n).coeff i j =
+        (completedCurrentMode n).noncentralCoeff i j := by
+  exact completedCurrent_wellDefined_from_cutoffs n i j
+
+/--
+The completed mode is the diagonal infinite sum `J_n = sum_a E_{a,a+n}` in
+coefficient form.
+-/
+theorem completedCurrentMode_coeff_eq_formal_diagonal_sum (n i j : Int) :
+    (completedCurrentMode n).noncentralCoeff i j = formalDiagonalSumCoeff n i j :=
+  completedCurrent_coeff_eq_formal_diagonal_sum n i j
+
+/--
+Constructed bracket of completed current modes.
+
+This is not an assumed Heisenberg law.  Its noncentral coefficient is the
+matrix-unit diagonal remainder after applying the Wick owner theorem and
+reindexing; its central coefficient is the finite crossing number.
+-/
+def completedCurrentModeBracket (m n : Int) : CompletedCurrentCentralClass where
+  noncentralCoeff := formalCurrentNoncentralCoeff m n
+  centralCoeff := formalCurrentCentralCoeff m n
+
+@[simp]
+theorem completedCurrentModeBracket_noncentralCoeff (m n i j : Int) :
+    (completedCurrentModeBracket m n).noncentralCoeff i j =
+      formalCurrentNoncentralCoeff m n i j :=
+  rfl
+
+@[simp]
+theorem completedCurrentModeBracket_centralCoeff (m n : Int) :
+    (completedCurrentModeBracket m n).centralCoeff = formalCurrentCentralCoeff m n :=
+  rfl
+
+/-- The completed current bracket has no noncentral matrix coefficient. -/
+theorem completedCurrentModeBracket_noncentralCoeff_eq_zero (m n i j : Int) :
+    (completedCurrentModeBracket m n).noncentralCoeff i j = 0 :=
+  formalCurrentNoncentralCoeff_eq_zero m n i j
+
+/-- The completed current bracket has Heisenberg central coefficient. -/
+theorem completedCurrentModeBracket_centralCoeff_eq_heisenberg (m n : Int) :
+    (completedCurrentModeBracket m n).centralCoeff =
+      if m + n = 0 then m else 0 :=
+  formalCurrentCentralCoeff_eq_heisenberg m n
+
+/--
+Problem 7 theorem:
+the completed normal-ordered currents satisfy the Heisenberg current law.
+
+The proof factors through the matrix-unit Wick theorem, the diagonal
+reindexing cancellation, Problem 6's completed current class, and the
+crossing-number theorem.
+-/
+theorem completedCurrentModeBracket_heisenberg (m n : Int) :
+    completedCurrentModeBracket m n =
+      centralCurrentClass (if m + n = 0 then m else 0) := by
+  ext i j
+  · exact completedCurrentModeBracket_noncentralCoeff_eq_zero m n i j
+  · exact completedCurrentModeBracket_centralCoeff_eq_heisenberg m n
+
+/--
+Named constructive bosonization current theorem in the locally finite
+central-extension completion.
+-/
+theorem constructive_heisenberg_current_from_completed_modes (m n : Int) :
+    completedCurrentModeBracket m n =
+      centralCurrentClass (if m + n = 0 then m else 0) :=
+  completedCurrentModeBracket_heisenberg m n
+
 /--
 Formal completed current bracket obtained after applying the matrix-unit Wick
 commutator, reindexing away the noncentral diagonal, and retaining the central
@@ -1502,6 +1639,67 @@ theorem bosonization_constructive_heisenberg_current
     CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
       if m + n = 0 then m • completedCentral C else 0 :=
   normalOrderedCurrent_heisenberg_from_matrixUnit C m n
+
+/--
+Problem 7: constructive Heisenberg current theorem with the completed-current
+well-definedness data exposed.
+
+The first two conjuncts are Problem 6 for the two current labels.  The third
+and fourth conjuncts are the completed diagonal-summation step: the noncentral
+matrix-unit coefficients cancel after reindexing, and the central coefficient
+is the crossing number.  The last conjunct is the Heisenberg current law
+computed from these ingredients.
+-/
+theorem constructiveHeisenbergCurrent_from_completedCurrent
+    {A : Type*} [Ring A] (C : RawCARModeCompletion A) (m n : Int) :
+    (forall i j : Int, ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (cutoffDiagonalCurrent N m).coeff i j = (completedCurrent m).coeff i j) ∧
+    (forall i j : Int, ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (cutoffDiagonalCurrent N n).coeff i j = (completedCurrent n).coeff i j) ∧
+    (forall i j : Int, formalCurrentNoncentralCoeff m n i j = 0) ∧
+    (formalCurrentCentralCoeff m n = if m + n = 0 then m else 0) ∧
+    CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
+      if m + n = 0 then m • C.central else 0 := by
+  refine ⟨completedCurrent_wellDefined_from_cutoffs m, ?_⟩
+  refine ⟨completedCurrent_wellDefined_from_cutoffs n, ?_⟩
+  rcases formalCurrent_noncentral_cancel_and_central_heisenberg m n with
+    ⟨hnoncentral, hcentral⟩
+  refine ⟨hnoncentral, hcentral, ?_⟩
+  simpa [completedCentral] using bosonization_constructive_heisenberg_current C m n
+
+/--
+Problem 7 CAR packet for the literal direct-sum exterior Fock construction.
+
+This is the same exterior/Clifford CAR source used for Problems 1--3, now fed
+into the completed-current theorem.
+-/
+noncomputable def directSumExteriorFockRawCAR (R : Type*) [CommRing R] :
+    RawCARModeCompletion
+      (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
+        (R := R) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace R)) :=
+  exteriorFockRawCAR
+    (R := R) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace R)
+    (InfoGeometry.Canonical.CanonicalNormalOrdering.intModeBasis R)
+
+/--
+Problem 7 for the constructed polarized exterior-Fock CAR model.
+
+The central carrier is the identity endomorphism, so this is the normalized
+statement `[J_m, J_n] = m delta_{m+n,0} I` in the completed current bracket.
+-/
+theorem directSumExteriorFock_constructiveHeisenbergCurrent
+    (R : Type*) [CommRing R] (m n : Int) :
+    CCRBracketCompleted
+        (directSumExteriorFockRawCAR R)
+        (normalOrderedCurrent (directSumExteriorFockRawCAR R) m)
+        (normalOrderedCurrent (directSumExteriorFockRawCAR R) n) =
+      if m + n = 0 then
+        m •
+          (1 : InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
+            (R := R) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace R))
+      else 0 := by
+  simpa [directSumExteriorFockRawCAR, completedCentral, RawCARModeCompletion.central] using
+    bosonization_constructive_heisenberg_current (directSumExteriorFockRawCAR R) m n
 
 namespace RawCARModeAlgebra
 

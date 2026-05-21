@@ -1202,6 +1202,172 @@ theorem crossingNumber_eq_mode (m : Int) :
     signedCrossingNumber m = m :=
   polarizationCrossingSum_eq_self m
 
+/-! ## Problem 6: locally finite completed currents -/
+
+/--
+Sparse integer matrix used for the locally finite current completion.
+
+The support witnesses are explicit finite row and column support sets.  This is
+the conservative `gl_res`/locally-finite route: a current is well-defined when
+each matrix coefficient has a definite finite-support value.
+-/
+structure LocallyFiniteIntegerMatrix where
+  coeff : Int -> Int -> Int
+  rowSupport : Int -> Finset Int
+  rowSupport_spec : forall {i j : Int}, coeff i j ≠ 0 -> j ∈ rowSupport i
+  colSupport : Int -> Finset Int
+  colSupport_spec : forall {i j : Int}, coeff i j ≠ 0 -> i ∈ colSupport j
+
+/-- Formal coefficient of the matrix unit `E_ab`. -/
+def matrixUnitCoeff (a b i j : Int) : Int :=
+  if i = a ∧ j = b then 1 else 0
+
+/-- The completed diagonal current `J_n = sum_a E_{a,a+n}` as a locally finite matrix. -/
+def completedDiagonalCurrent (n : Int) : LocallyFiniteIntegerMatrix where
+  coeff i j := if j = i + n then 1 else 0
+  rowSupport i := {i + n}
+  rowSupport_spec := by
+    intro i j h
+    change (if j = i + n then (1 : Int) else 0) ≠ 0 at h
+    by_cases hij : j = i + n
+    · simp [hij]
+    · exact False.elim (h (by simp [hij]))
+  colSupport j := {j - n}
+  colSupport_spec := by
+    intro i j h
+    change (if j = i + n then (1 : Int) else 0) ≠ 0 at h
+    by_cases hij : j = i + n
+    · have hi : i = j - n := by omega
+      simp [hi]
+    · exact False.elim (h (by simp [hij]))
+
+@[simp]
+theorem completedDiagonalCurrent_coeff (n i j : Int) :
+    (completedDiagonalCurrent n).coeff i j = if j = i + n then 1 else 0 :=
+  rfl
+
+/--
+Finite cutoff diagonal current in the locally finite matrix completion:
+`J_n^(N) = sum_{a in W_N} E_{a,a+n}`.
+-/
+def cutoffDiagonalCurrent (N : Nat) (n : Int) : LocallyFiniteIntegerMatrix where
+  coeff i j := if i ∈ cutoffWindow N ∧ j = i + n then 1 else 0
+  rowSupport i := if i ∈ cutoffWindow N then {i + n} else ∅
+  rowSupport_spec := by
+    intro i j h
+    change (if i ∈ cutoffWindow N ∧ j = i + n then (1 : Int) else 0) ≠ 0 at h
+    by_cases hp : i ∈ cutoffWindow N ∧ j = i + n
+    · simp [hp.1, hp.2]
+    · exact False.elim (h (by simp [hp]))
+  colSupport j := if j - n ∈ cutoffWindow N then {j - n} else ∅
+  colSupport_spec := by
+    intro i j h
+    change (if i ∈ cutoffWindow N ∧ j = i + n then (1 : Int) else 0) ≠ 0 at h
+    by_cases hp : i ∈ cutoffWindow N ∧ j = i + n
+    · have hi : i = j - n := by omega
+      have hwin : j - n ∈ cutoffWindow N := by
+        simpa [hi] using hp.1
+      simp [hwin, hi]
+    · exact False.elim (h (by simp [hp]))
+
+@[simp]
+theorem cutoffDiagonalCurrent_coeff (N : Nat) (n i j : Int) :
+    (cutoffDiagonalCurrent N n).coeff i j =
+      if i ∈ cutoffWindow N ∧ j = i + n then 1 else 0 :=
+  rfl
+
+/-- Integer `i` lies in the symmetric cutoff window once `N ≥ |i|`. -/
+theorem mem_cutoffWindow_of_natAbs_le (i : Int) (N : Nat) (hN : i.natAbs ≤ N) :
+    i ∈ cutoffWindow N := by
+  have hInt : |i| ≤ (N : Int) := by
+    rw [Int.abs_eq_natAbs]
+    exact_mod_cast hN
+  exact Finset.mem_Icc.mpr (abs_le.mp hInt)
+
+/--
+Problem 6, coefficientwise completion:
+each matrix coefficient of the finite cutoff current is eventually equal to the
+coefficient of the locally finite completed current.
+-/
+theorem cutoffDiagonalCurrent_coeff_eventually_eq_completed
+    (n i j : Int) :
+    ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (cutoffDiagonalCurrent N n).coeff i j =
+        (completedDiagonalCurrent n).coeff i j := by
+  refine ⟨i.natAbs, ?_⟩
+  intro N hN
+  have hi : i ∈ cutoffWindow N := mem_cutoffWindow_of_natAbs_le i N hN
+  by_cases hij : j = i + n
+  · simp [hi, hij]
+  · simp [hi, hij]
+
+/-- Completed normal-ordered current as a locally finite matrix. -/
+def completedCurrent (n : Int) : LocallyFiniteIntegerMatrix :=
+  completedDiagonalCurrent n
+
+@[simp]
+theorem completedCurrent_coeff (n i j : Int) :
+    (completedCurrent n).coeff i j = if j = i + n then 1 else 0 :=
+  rfl
+
+/--
+The completed current is the formal diagonal sum `sum_a E_{a,a+n}`: a
+coefficient is nonzero exactly when it lies on the diagonal `j = i+n`, i.e.
+when the unique summand has `a = i`.
+-/
+theorem completedCurrent_coeff_nonzero_iff_formal_diagonal (n i j : Int) :
+    (completedCurrent n).coeff i j ≠ 0 ↔
+      ∃ a : Int, i = a ∧ j = a + n := by
+  by_cases hij : j = i + n
+  · have hex : ∃ a : Int, i = a ∧ j = a + n := ⟨i, rfl, hij⟩
+    constructor
+    · intro _h
+      exact hex
+    · intro _h
+      simp [completedCurrent, hij]
+  · have hnex : ¬ ∃ a : Int, i = a ∧ j = a + n := by
+      rintro ⟨a, rfl, ha⟩
+      exact hij ha
+    constructor
+    · intro h
+      exact False.elim (h (by simp [completedCurrent, hij]))
+    · intro h
+      exact False.elim (hnex h)
+
+/-- Coefficient of the formal diagonal sum `sum_a E_{a,a+n}`. -/
+noncomputable def formalDiagonalSumCoeff (n i j : Int) : Int := by
+  classical
+  exact if ∃ a : Int, i = a ∧ j = a + n then 1 else 0
+
+/--
+Coefficient form of `J_n = sum_a E_{a,a+n}`.
+
+For a fixed coefficient `(i,j)`, the infinite diagonal sum has at most one
+contributing summand, namely `a = i`.
+-/
+theorem completedCurrent_coeff_eq_formal_diagonal_sum (n i j : Int) :
+    (completedCurrent n).coeff i j = formalDiagonalSumCoeff n i j := by
+  unfold formalDiagonalSumCoeff
+  classical
+  by_cases hij : j = i + n
+  · have hex : ∃ a : Int, i = a ∧ j = a + n := ⟨i, rfl, hij⟩
+    rw [completedCurrent_coeff, if_pos hij, if_pos hex]
+  · have hnex : ¬ ∃ a : Int, i = a ∧ j = a + n := by
+      rintro ⟨a, rfl, ha⟩
+      exact hij ha
+    rw [completedCurrent_coeff, if_neg hij, if_neg hnex]
+
+/--
+Problem 6 public well-definedness theorem:
+`J_n = [J_n^(N)]_N` is represented by the locally finite diagonal current, and
+the cutoff representatives converge coefficientwise to it.
+-/
+theorem completedCurrent_wellDefined_from_cutoffs (n : Int) :
+    forall i j : Int, ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (cutoffDiagonalCurrent N n).coeff i j = (completedCurrent n).coeff i j := by
+  intro i j
+  exact cutoffDiagonalCurrent_coeff_eventually_eq_completed n i j
+
 /--
 The noncentral diagonal-current matrix-unit coefficient after formal
 reindexing.  The two matrix-unit sums are the same diagonal and cancel.

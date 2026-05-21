@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
+import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
+import Mathlib.LinearAlgebra.CliffordAlgebra.Star
+import Mathlib.Tactic
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Meta.Architecture
 
@@ -6,6 +9,14 @@ import InfoGeometry.Meta.Architecture
 # InfoGeometry.Canonical.VarlamovClifford
 
 Theorem-safe Varlamov/Drazin Clifford socket.
+
+The finite Clifford automorphism side of Varlamov's paper is not rewrapped
+here.  It is imported directly from mathlib:
+
+* `CliffordAlgebra.involute` for the grade involution;
+* `CliffordAlgebra.reverse` for reversion;
+* `star = reverse ∘ involute` from `CliffordAlgebra.Star`;
+* `CliffordAlgebra.SpinGroup` for the canonical spin group substrate.
 
 This module formalizes the algebraic part only:
 

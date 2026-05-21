@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CanonicalNormalOrdering
+import InfoGeometry.External.Virasoro.Sugawara
 import Mathlib.Tactic
 
 /-!
@@ -2007,6 +2008,81 @@ theorem nonabelianWickCurrent_basis_kacMoody
     B structureCoeff level kappa a b m n hcomm htrace
 
 end ConstructiveKacMoody
+
+/-! ## Sugawara/Virasoro consumer layer -/
+
+section ConstructiveSugawaraVirasoro
+
+open Filter
+
+variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+variable {V : Type*} [AddCommGroup V] [Module 𝕜 V]
+
+/--
+Sugawara/Virasoro theorem consumed from a Heisenberg representation.
+
+This is the downstream layer after the constructive current theorem: once a
+mode family `heiOper` is known to satisfy the Heisenberg commutator and to act
+locally truncatedly, the basic Sugawara operators satisfy the Virasoro bracket.
+The proof is the kernel-checked external Sugawara theorem, not a Virasoro law
+field.
+-/
+theorem sugawaraVirasoro_from_heisenbergCurrent
+    (heiOper : Int -> V →ₗ[𝕜] V)
+    (heiTrunc : forall v, atTop.Eventually (fun l => heiOper l v = 0))
+    (heiComm : forall k l,
+      (heiOper k).commutator (heiOper l) =
+        if k + l = 0 then (k : 𝕜) • (1 : V →ₗ[𝕜] V) else 0)
+    (m n : Int) :
+    (VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc m).commutator
+        (VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc n) =
+      (m - n : 𝕜) • VirasoroProject.sugawaraGen (heiOper := heiOper) heiTrunc (m + n)
+        + if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
+          else 0 :=
+  VirasoroProject.commutator_sugawaraGen (heiOper := heiOper) heiTrunc heiComm m n
+
+/--
+The Sugawara representation of the Virasoro algebra obtained from a locally
+truncated Heisenberg representation.
+-/
+noncomputable def sugawaraVirasoroRepresentation_from_heisenbergCurrent
+    (heiOper : Int -> V →ₗ[𝕜] V)
+    (heiTrunc : forall v, atTop.Eventually (fun l => heiOper l v = 0))
+    (heiComm : forall k l,
+      (heiOper k).commutator (heiOper l) =
+        if k + l = 0 then (k : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
+    VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
+  VirasoroProject.sugawaraRepresentation (heiOper := heiOper) heiTrunc heiComm
+
+/-- In the basic Sugawara representation, the Virasoro central generator acts as identity. -/
+theorem sugawaraVirasoroRepresentation_central_from_heisenbergCurrent
+    (heiOper : Int -> V →ₗ[𝕜] V)
+    (heiTrunc : forall v, atTop.Eventually (fun l => heiOper l v = 0))
+    (heiComm : forall k l,
+      (heiOper k).commutator (heiOper l) =
+        if k + l = 0 then (k : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
+    sugawaraVirasoroRepresentation_from_heisenbergCurrent
+        (𝕜 := 𝕜) (V := V) heiOper heiTrunc heiComm
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+      (1 : V →ₗ[𝕜] V) :=
+  VirasoroProject.sugawaraRepresentation_cgen (heiOper := heiOper) heiTrunc heiComm
+
+/--
+The external Virasoro target has the standard centrally extended Witt bracket.
+This records the final target law produced by the Sugawara representation.
+-/
+theorem virasoroGeneratorBracket_externalTarget (m n : Int) :
+    ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+      VirasoroProject.VirasoroAlgebra.lgen 𝕜 n⁆ =
+      (m - n : 𝕜) • VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n)
+        + if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+              VirasoroProject.VirasoroAlgebra.cgen 𝕜)
+          else 0 :=
+  VirasoroProject.VirasoroAlgebra.lgen_bracket (𝕜 := 𝕜) m n
+
+end ConstructiveSugawaraVirasoro
 
 namespace RawCARModeAlgebra
 

@@ -5,6 +5,9 @@
 > Note: Re-audit against current code before using for policy, design claims, or status.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
+This ledger is stale unless re-audited against the live Lean source. Do not use
+it as current proof authority.
+
 Last updated: 2026-04-22 (Sofia/Interactive)
 
 This ledger tracks closure debt as executable proof obligations on the

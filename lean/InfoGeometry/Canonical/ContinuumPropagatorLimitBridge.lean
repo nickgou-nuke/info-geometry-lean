@@ -19,8 +19,8 @@ THE NOMOLOGICAL PATH:
    continuum Modular Hamiltonian.
 4. The propagator exp(-t D) converges to the modular automorphism flow.
 
-UTMOST MANDATE: No witness-gating. The limit is recorded as a structural convergence
-law, identifying the emergent physics of the continuum.
+Boundary: this module records a structural convergence law; it should be
+consumed through its theorem fields, not treated as independent authority.
 -/
 
 noncomputable section

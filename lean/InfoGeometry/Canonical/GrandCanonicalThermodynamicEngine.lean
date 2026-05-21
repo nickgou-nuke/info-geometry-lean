@@ -16,8 +16,8 @@ This module formalizes the ultimate physical discovery:
 3. The Riemann-Weil Explicit Formula is identified as the exact Wasserstein 
    vector field of this thermodynamic engine.
 
-UTMOST MANDATE: No witness-gating. The dynamical force is strictly derived from 
-the statistical sum of the information crystal.
+Boundary: the dynamical force law is carried as theorem data from the imported
+surfaces; this module does not replace those owner theorems.
 -/
 
 noncomputable section

@@ -19,8 +19,8 @@ as a Hamiltonian flow on the coadjoint orbit of the Virasoro group.
 3. The Virasoro generators Lₙ act as infinitesimal generators of the conformal
    Hamiltonian flow.
 
-UTMOST MANDATE: No witness-gating. The equations of motion are derived from the
-conformal symmetry of the information crystal.
+Boundary: the conformal/Hamiltonian data are supplied by the imported theorem
+surfaces; this packet only records their compatible readout.
 -/
 
 noncomputable section

@@ -79,8 +79,8 @@ theorem source_sink_disjoint
     (P : FiveGradeClosurePacket L ι R) :
     ∀ x : L, x ∈ P.packet.sourceSet → x ∈ P.packet.sinkSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sourceSet, FiveGradeBoundaryCurrentPacket.sinkSet,
-      P.separation_packet_eq] using P.separation.source_sink_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.source_sink_disjoint P.separation)
 
 /-- The `+1` and `-1` sectors are disjoint. -/
 theorem outgoing_incoming_disjoint
@@ -88,24 +88,24 @@ theorem outgoing_incoming_disjoint
     ∀ x : L, x ∈ P.packet.inversion.outgoingSet →
       x ∈ P.packet.inversion.incomingSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.outgoingSet, FiveGradeBoundaryCurrentPacket.incomingSet,
-      P.separation_packet_eq] using P.separation.outgoing_incoming_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.outgoing_incoming_disjoint P.separation)
 
 /-- The source sector is disjoint from the modular center. -/
 theorem source_center_disjoint
     (P : FiveGradeClosurePacket L ι R) :
     ∀ x : L, x ∈ P.packet.sourceSet → x ∈ P.packet.centerSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sourceSet, FiveGradeBoundaryCurrentPacket.centerSet,
-      P.separation_packet_eq] using P.separation.source_center_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.source_center_disjoint P.separation)
 
 /-- The sink sector is disjoint from the modular center. -/
 theorem sink_center_disjoint
     (P : FiveGradeClosurePacket L ι R) :
     ∀ x : L, x ∈ P.packet.sinkSet → x ∈ P.packet.centerSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sinkSet, FiveGradeBoundaryCurrentPacket.centerSet,
-      P.separation_packet_eq] using P.separation.sink_center_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.sink_center_disjoint P.separation)
 
 /-- The source sector is disjoint from the outgoing boundary sector. -/
 theorem source_outgoing_disjoint
@@ -113,9 +113,8 @@ theorem source_outgoing_disjoint
     ∀ x : L, x ∈ P.packet.sourceSet →
       x ∈ P.packet.inversion.outgoingSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sourceSet,
-      FiveGradeBoundaryCurrentPacket.outgoingSet, P.separation_packet_eq]
-      using P.separation.source_outgoing_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.source_outgoing_disjoint P.separation)
 
 /-- The sink sector is disjoint from the incoming boundary sector. -/
 theorem sink_incoming_disjoint
@@ -123,9 +122,8 @@ theorem sink_incoming_disjoint
     ∀ x : L, x ∈ P.packet.sinkSet →
       x ∈ P.packet.inversion.incomingSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sinkSet,
-      FiveGradeBoundaryCurrentPacket.incomingSet, P.separation_packet_eq]
-      using P.separation.sink_incoming_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.sink_incoming_disjoint P.separation)
 
 /-- The source sector is disjoint from the incoming boundary sector. -/
 theorem source_incoming_disjoint
@@ -133,9 +131,8 @@ theorem source_incoming_disjoint
     ∀ x : L, x ∈ P.packet.sourceSet →
       x ∈ P.packet.inversion.incomingSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sourceSet,
-      FiveGradeBoundaryCurrentPacket.incomingSet, P.separation_packet_eq]
-      using P.separation.source_incoming_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.source_incoming_disjoint P.separation)
 
 /-- The sink sector is disjoint from the outgoing boundary sector. -/
 theorem sink_outgoing_disjoint
@@ -143,9 +140,8 @@ theorem sink_outgoing_disjoint
     ∀ x : L, x ∈ P.packet.sinkSet →
       x ∈ P.packet.inversion.outgoingSet → False :=
   by
-    simpa [FiveGradeBoundaryCurrentPacket.sinkSet,
-      FiveGradeBoundaryCurrentPacket.outgoingSet, P.separation_packet_eq]
-      using P.separation.sink_outgoing_disjoint
+    simpa [P.separation_packet_eq] using
+      (FiveGradeSectorSeparationPacket.sink_outgoing_disjoint P.separation)
 
 /-- A closure packet obtained directly from the current packet. -/
 def ofCurrentPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :

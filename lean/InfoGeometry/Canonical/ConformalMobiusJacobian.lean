@@ -57,10 +57,9 @@ theorem mobiusInversion_hasFDerivAt {x : E} (hx : x ≠ 0) :
   simpa [mobiusInversion] using
     EuclideanGeometry.hasFDerivAt_inversion (c := (0 : E)) (R := (1 : ℝ)) (x := x) hx
 
-/-- The scalar Jacobian factor is `1` on the unit sphere. -/
 section JacobianFactor
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E]
 
 /-- The scalar Jacobian factor is `1` on the unit sphere. -/
 theorem mobiusJacobianFactor_eq_one_of_norm_one {x : E}

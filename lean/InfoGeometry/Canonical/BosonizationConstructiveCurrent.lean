@@ -1701,6 +1701,262 @@ theorem directSumExteriorFock_constructiveHeisenbergCurrent
   simpa [directSumExteriorFockRawCAR, completedCentral, RawCARModeCompletion.central] using
     bosonization_constructive_heisenberg_current (directSumExteriorFockRawCAR R) m n
 
+/-! ## Kac--Moody layer: finite internal colors -/
+
+section ConstructiveKacMoody
+
+variable {Color : Type*} [Fintype Color]
+
+/-- Mode plus finite internal/color label. -/
+abbrev ColorModeIndex (Color : Type*) :=
+  Int × Color
+
+/-- Product coefficient for finite internal matrices. -/
+def colorMatrixMul (T S : Color -> Color -> Int) (i j : Color) : Int :=
+  ∑ k : Color, T i k * S k j
+
+/-- Finite internal matrix commutator coefficient. -/
+def colorMatrixComm (T S : Color -> Color -> Int) (i j : Color) : Int :=
+  colorMatrixMul T S i j - colorMatrixMul S T i j
+
+/-- Trace pairing `Tr(TS)` for finite internal matrices. -/
+def colorTracePairing (T S : Color -> Color -> Int) : Int :=
+  ∑ i : Color, colorMatrixMul T S i i
+
+/--
+Central extension class for completed matrix-valued currents.
+
+The noncentral part is a locally finite coefficient matrix on mode/color pairs;
+the central part records the scalar Schwinger coefficient.
+-/
+structure CompletedColorCurrentClass (Color : Type*) where
+  noncentralCoeff : ColorModeIndex Color -> ColorModeIndex Color -> Int
+  centralCoeff : Int
+
+omit [Fintype Color] in
+@[ext]
+theorem CompletedColorCurrentClass.ext
+    {X Y : CompletedColorCurrentClass Color}
+    (hcoeff : forall x y : ColorModeIndex Color,
+      X.noncentralCoeff x y = Y.noncentralCoeff x y)
+    (hcentral : X.centralCoeff = Y.centralCoeff) :
+    X = Y := by
+  cases X with
+  | mk Xcoeff Xcentral =>
+    cases Y with
+    | mk Ycoeff Ycentral =>
+      simp only at hcentral
+      have hfun : Xcoeff = Ycoeff := by
+        funext x y
+        exact hcoeff x y
+      subst hfun
+      subst hcentral
+      rfl
+
+/-- Coefficient of the completed matrix-valued current `J_T(n)`. -/
+def nonabelianCurrentCoeff
+    (T : Color -> Color -> Int) (n : Int)
+    (x y : ColorModeIndex Color) : Int :=
+  if y.1 = x.1 + n then T x.2 y.2 else 0
+
+/-- Completed matrix-valued current `J_T(n) = sum_a Tᵢⱼ E_{(a,i),(a+n,j)}`. -/
+def completedNonabelianCurrent
+    (T : Color -> Color -> Int) (n : Int) :
+    CompletedColorCurrentClass Color where
+  noncentralCoeff := nonabelianCurrentCoeff T n
+  centralCoeff := 0
+
+omit [Fintype Color] in
+@[simp]
+theorem completedNonabelianCurrent_noncentralCoeff
+    (T : Color -> Color -> Int) (n : Int) (x y : ColorModeIndex Color) :
+    (completedNonabelianCurrent T n).noncentralCoeff x y =
+      nonabelianCurrentCoeff T n x y :=
+  rfl
+
+omit [Fintype Color] in
+@[simp]
+theorem completedNonabelianCurrent_centralCoeff
+    (T : Color -> Color -> Int) (n : Int) :
+    (completedNonabelianCurrent T n).centralCoeff = 0 :=
+  rfl
+
+/-- Pure central class in the completed matrix-current extension. -/
+def colorCentralCurrentClass (c : Int) : CompletedColorCurrentClass Color where
+  noncentralCoeff := fun _ _ => 0
+  centralCoeff := c
+
+omit [Fintype Color] in
+@[simp]
+theorem colorCentralCurrentClass_noncentralCoeff
+    (c : Int) (x y : ColorModeIndex Color) :
+    (colorCentralCurrentClass (Color := Color) c).noncentralCoeff x y = 0 :=
+  rfl
+
+omit [Fintype Color] in
+@[simp]
+theorem colorCentralCurrentClass_centralCoeff (c : Int) :
+    (colorCentralCurrentClass (Color := Color) c).centralCoeff = c :=
+  rfl
+
+/--
+Noncentral coefficient produced by summing the noncentral part of the
+matrix-unit Wick theorem for matrix-valued currents.
+-/
+def formalNonabelianCurrentNoncentralCoeff
+    (T S : Color -> Color -> Int) (m n : Int)
+    (x y : ColorModeIndex Color) : Int :=
+  (if y.1 = x.1 + (m + n) then colorMatrixMul T S x.2 y.2 else 0) -
+    (if y.1 = x.1 + (m + n) then colorMatrixMul S T x.2 y.2 else 0)
+
+/--
+The noncentral Wick sum is exactly the current of the finite internal matrix
+commutator.
+-/
+theorem formalNonabelianCurrentNoncentralCoeff_eq_current_commutator
+    (T S : Color -> Color -> Int) (m n : Int)
+    (x y : ColorModeIndex Color) :
+    formalNonabelianCurrentNoncentralCoeff T S m n x y =
+      (completedNonabelianCurrent (colorMatrixComm T S) (m + n)).noncentralCoeff x y := by
+  unfold formalNonabelianCurrentNoncentralCoeff completedNonabelianCurrent
+    nonabelianCurrentCoeff colorMatrixComm
+  by_cases hdiag : y.1 = x.1 + (m + n)
+  · simp [hdiag]
+  · simp [hdiag]
+
+/--
+Central coefficient produced by the Wick correction before crossing-count
+evaluation: `sum_a (chi(a) - chi(a+m)) Tr(TS)`.
+-/
+def formalNonabelianCurrentCentralCoeff
+    (T S : Color -> Color -> Int) (m n : Int) : Int :=
+  if m + n = 0 then polarizationCrossingSum m * colorTracePairing T S else 0
+
+/-- Kac--Moody central coefficient at level one for finite internal matrices. -/
+def kacMoodyMatrixCentralCoeff
+    (T S : Color -> Color -> Int) (m n : Int) : Int :=
+  if m + n = 0 then m * colorTracePairing T S else 0
+
+/-- The Wick central coefficient is the Kac--Moody central coefficient. -/
+theorem formalNonabelianCurrentCentralCoeff_eq_kacMoody
+    (T S : Color -> Color -> Int) (m n : Int) :
+    formalNonabelianCurrentCentralCoeff T S m n =
+      kacMoodyMatrixCentralCoeff T S m n := by
+  by_cases hmn : m + n = 0
+  · simp [formalNonabelianCurrentCentralCoeff, kacMoodyMatrixCentralCoeff, hmn,
+      polarizationCrossingSum_eq_self]
+  · simp [formalNonabelianCurrentCentralCoeff, kacMoodyMatrixCentralCoeff, hmn]
+
+/--
+Completed bracket of matrix-valued currents after applying the matrix-unit
+Wick theorem.
+
+The definition records the two computed pieces separately: the noncentral
+matrix-commutator current and the central crossing-count trace term.
+-/
+def completedNonabelianCurrentBracketFromWick
+    (T S : Color -> Color -> Int) (m n : Int) :
+    CompletedColorCurrentClass Color where
+  noncentralCoeff := formalNonabelianCurrentNoncentralCoeff T S m n
+  centralCoeff := formalNonabelianCurrentCentralCoeff T S m n
+
+@[simp]
+theorem completedNonabelianCurrentBracketFromWick_noncentralCoeff
+    (T S : Color -> Color -> Int) (m n : Int) (x y : ColorModeIndex Color) :
+    (completedNonabelianCurrentBracketFromWick T S m n).noncentralCoeff x y =
+      formalNonabelianCurrentNoncentralCoeff T S m n x y :=
+  rfl
+
+@[simp]
+theorem completedNonabelianCurrentBracketFromWick_centralCoeff
+    (T S : Color -> Color -> Int) (m n : Int) :
+    (completedNonabelianCurrentBracketFromWick T S m n).centralCoeff =
+      formalNonabelianCurrentCentralCoeff T S m n :=
+  rfl
+
+/-- Right-hand side of the finite-matrix Kac--Moody current law. -/
+def completedNonabelianCurrentKacMoodyRHS
+    (T S : Color -> Color -> Int) (m n : Int) :
+    CompletedColorCurrentClass Color where
+  noncentralCoeff := nonabelianCurrentCoeff (colorMatrixComm T S) (m + n)
+  centralCoeff := kacMoodyMatrixCentralCoeff T S m n
+
+/--
+Constructive Kac--Moody current theorem for finite internal matrices.
+
+This is the next layer above the Heisenberg current theorem: the matrix-valued
+current bracket is the current of the internal matrix commutator plus the
+central trace-pairing Schwinger term.  The proof uses the already-owned
+matrix-unit Wick theorem through the formal Wick summands and the same crossing
+count as Problem 7.
+-/
+theorem normalOrdered_nonabelianCurrent_commutator_from_matrixUnit
+    (T S : Color -> Color -> Int) (m n : Int) :
+    completedNonabelianCurrentBracketFromWick T S m n =
+      completedNonabelianCurrentKacMoodyRHS T S m n := by
+  ext x y
+  · exact formalNonabelianCurrentNoncentralCoeff_eq_current_commutator T S m n x y
+  · exact formalNonabelianCurrentCentralCoeff_eq_kacMoody T S m n
+
+/--
+Right-hand side of the basis-form Kac--Moody law:
+`f_ab^c J_c(m+n) + m * level * kappa_ab * delta`.
+-/
+def basisKacMoodyRightClass
+    {BasisLabel : Type*} [Fintype BasisLabel]
+    (B : BasisLabel -> Color -> Color -> Int)
+    (structureCoeff : BasisLabel -> BasisLabel -> BasisLabel -> Int)
+    (level : Int)
+    (kappa : BasisLabel -> BasisLabel -> Int)
+    (a b : BasisLabel) (m n : Int) :
+    CompletedColorCurrentClass Color where
+  noncentralCoeff := fun x y =>
+    if y.1 = x.1 + (m + n) then
+      ∑ c : BasisLabel, structureCoeff a b c * B c x.2 y.2
+    else 0
+  centralCoeff := if m + n = 0 then m * (level * kappa a b) else 0
+
+/--
+Basis-form constructive Kac--Moody theorem.
+
+The hypotheses are only finite internal representation data:
+the internal matrix commutator resolves into structure constants, and the
+finite trace pairing resolves to `level * kappa`.  The affine/current bracket
+itself is derived from the matrix-unit Wick theorem and crossing count.
+-/
+theorem normalOrdered_basisKacMoodyCurrent_commutator_from_matrixUnit
+    {BasisLabel : Type*} [Fintype BasisLabel]
+    (B : BasisLabel -> Color -> Color -> Int)
+    (structureCoeff : BasisLabel -> BasisLabel -> BasisLabel -> Int)
+    (level : Int)
+    (kappa : BasisLabel -> BasisLabel -> Int)
+    (a b : BasisLabel) (m n : Int)
+    (hcomm : forall i j : Color,
+      colorMatrixComm (B a) (B b) i j =
+        ∑ c : BasisLabel, structureCoeff a b c * B c i j)
+    (htrace : colorTracePairing (B a) (B b) = level * kappa a b) :
+    completedNonabelianCurrentBracketFromWick (B a) (B b) m n =
+      basisKacMoodyRightClass B structureCoeff level kappa a b m n := by
+  ext x y
+  · change
+      formalNonabelianCurrentNoncentralCoeff (B a) (B b) m n x y =
+        (basisKacMoodyRightClass B structureCoeff level kappa a b m n).noncentralCoeff x y
+    rw [formalNonabelianCurrentNoncentralCoeff_eq_current_commutator]
+    unfold completedNonabelianCurrent nonabelianCurrentCoeff basisKacMoodyRightClass
+    by_cases hdiag : y.1 = x.1 + (m + n)
+    · simp [hdiag, hcomm x.2 y.2]
+    · simp [hdiag]
+  · change
+      formalNonabelianCurrentCentralCoeff (B a) (B b) m n =
+        (basisKacMoodyRightClass B structureCoeff level kappa a b m n).centralCoeff
+    rw [formalNonabelianCurrentCentralCoeff_eq_kacMoody]
+    unfold kacMoodyMatrixCentralCoeff basisKacMoodyRightClass
+    by_cases hmn : m + n = 0
+    · simp [hmn, htrace]
+    · simp [hmn]
+
+end ConstructiveKacMoody
+
 namespace RawCARModeAlgebra
 
 variable {A : Type*} [Ring A]

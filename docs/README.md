@@ -1,9 +1,12 @@
 # Documentation Map
 
-> Status: `current authority`
+> Status: `reference memory`
 > Audited: 2026-05-02
 > Note: Maintained against the live code surface.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+
+This file is stale as an authority source. Use it only as a routing map and
+re-audit against the live code surface before relying on any claim.
 
 This directory is mixed on purpose.
 

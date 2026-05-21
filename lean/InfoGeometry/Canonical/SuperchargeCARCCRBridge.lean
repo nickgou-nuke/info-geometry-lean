@@ -67,7 +67,7 @@ noncomputable abbrev cptSuperchargeOp : FockEndomorphism E :=
 @[rep_depth krein]
 theorem cptSuperchargeOp_isKLinear :
     InfoGeometry.Canonical.RealBdG.KLinear (E := E) (cptSuperchargeOp (E := E)) := by
-  simp [InfoGeometry.Canonical.RealBdG.KLinear, cptSuperchargeOp_eq_modularK]
+  simp [InfoGeometry.Canonical.RealBdG.KLinear]
 
 /-- The derived CPT supercharge is exactly the root split axis `J ∘ ε`. -/
 @[rep_depth krein, simp] theorem cptSuperchargeOp_eq_modular_j_comp_spectral_epsilon :
@@ -286,6 +286,110 @@ theorem concrete_car_minus_plus :
       (concreteCARCreation (E := E))
     = ContinuousLinearMap.id ℝ (DoubledSpace E)
   exact hmp
+
+/-- The concrete split-null product `u₊u₋` is the positive spectral projector. -/
+@[rep_depth krein]
+theorem concrete_creation_comp_annihilation_eq_spectralPlusProj :
+    (concreteCARCreation (E := E)).comp (concreteCARAnnihilation (E := E))
+      = spectralPlusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  simp [concreteCARAnnihilation, concreteCARCreation]
+
+/-- The concrete split-null product `u₋u₊` is the negative spectral projector. -/
+@[rep_depth krein]
+theorem concrete_annihilation_comp_creation_eq_spectralMinusProj :
+    (concreteCARAnnihilation (E := E)).comp (concreteCARCreation (E := E))
+      = spectralMinusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  simp [concreteCARAnnihilation, concreteCARCreation]
+
+/--
+Concrete split-null commutator readout:
+`[u₋, u₊] = P₋ - P₊`, the finite grading-sector difference.
+
+This is a finite CAR/product identity, not a Heisenberg current-mode or central
+extension statement.
+-/
+@[rep_depth krein]
+theorem concrete_car_ccrBracket_eq_spectralMinus_sub_spectralPlus :
+    CCRBracket (E := E)
+        (concreteCARAnnihilation (E := E))
+        (concreteCARCreation (E := E))
+      = spectralMinusProj (E := E) - spectralPlusProj (E := E) := by
+  rw [CCRBracket, fockCommutator_eq]
+  rw [concrete_annihilation_comp_creation_eq_spectralMinusProj,
+    concrete_creation_comp_annihilation_eq_spectralPlusProj]
+
+/-- Reversed concrete split-null commutator recovers the positive-minus-negative grading sign. -/
+@[rep_depth krein]
+theorem concrete_car_creation_annihilation_ccrBracket_eq_spectralPlus_sub_spectralMinus :
+    CCRBracket (E := E)
+        (concreteCARCreation (E := E))
+        (concreteCARAnnihilation (E := E))
+      = spectralPlusProj (E := E) - spectralMinusProj (E := E) := by
+  rw [CCRBracket, fockCommutator_eq]
+  rw [concrete_creation_comp_annihilation_eq_spectralPlusProj,
+    concrete_annihilation_comp_creation_eq_spectralMinusProj]
+
+/--
+Concrete split-null sign convention:
+`[u₋, u₊] = -ε` for the repository's `ε = P₊ - P₋`.
+
+This is still a finite doubled-carrier commutator identity.
+-/
+@[rep_depth krein]
+theorem concrete_car_ccrBracket_eq_neg_spectral_epsilon :
+    CCRBracket (E := E)
+        (concreteCARAnnihilation (E := E))
+        (concreteCARCreation (E := E))
+      = -(spectral_epsilon (E := E)) := by
+  rw [concrete_car_ccrBracket_eq_spectralMinus_sub_spectralPlus]
+  have hhalf (z : E) : (2 : ℝ)⁻¹ • z + (2 : ℝ)⁻¹ • z = z := by
+    have hscalar : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = (1 : ℝ) := by norm_num
+    rw [← add_smul, hscalar, one_smul]
+  have hhalf_neg (z : E) : -((2 : ℝ)⁻¹ • z) + -((2 : ℝ)⁻¹ • z) = -z := by
+    rw [← neg_add, hhalf]
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [spectralPlusProj, spectralMinusProj, InfoGeometry.Krein.spectral_epsilon,
+      InfoGeometry.Krein.to_doubled, sub_eq_add_neg, hhalf, hhalf_neg]
+
+/--
+Reversed concrete split-null sign convention:
+`[u₊, u₋] = ε` for the repository's `ε = P₊ - P₋`.
+-/
+@[rep_depth krein]
+theorem concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon :
+    CCRBracket (E := E)
+        (concreteCARCreation (E := E))
+        (concreteCARAnnihilation (E := E))
+      = spectral_epsilon (E := E) := by
+  rw [concrete_car_creation_annihilation_ccrBracket_eq_spectralPlus_sub_spectralMinus]
+  have hhalf (z : E) : (2 : ℝ)⁻¹ • z + (2 : ℝ)⁻¹ • z = z := by
+    have hscalar : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = (1 : ℝ) := by norm_num
+    rw [← add_smul, hscalar, one_smul]
+  have hhalf_neg (z : E) : -((2 : ℝ)⁻¹ • z) + -((2 : ℝ)⁻¹ • z) = -z := by
+    rw [← neg_add, hhalf]
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [spectralPlusProj, spectralMinusProj, InfoGeometry.Krein.spectral_epsilon,
+      InfoGeometry.Krein.to_doubled, sub_eq_add_neg, hhalf, hhalf_neg]
 
 /--
 Single-surface oscillator closure package on the canonical doubled carrier:

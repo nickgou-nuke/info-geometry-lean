@@ -14,10 +14,15 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 
-Theorem-safe owner packet for the chain
+Theorem-safe owner packet for compatible structures drawn from several levels:
 
-`binary Cantor lattice -> Cuntz O₂ -> CAR -> affine Kac--Moody -> Virasoro ->
-Sugawara -> super-Virasoro`.
+`binary Cantor lattice`, `Cuntz O₂`, `CAR/Fock`, `affine Kac--Moody`,
+`Virasoro`, `Sugawara`, and `super-Virasoro`.
+
+This is not a derivation of the high current/conformal layers from the finite
+Cantor/Cuntz/CAR seed.  The affine, Virasoro, Sugawara, and super-Virasoro
+fields are supplied owner data, and the theorems below read back their
+compatibility laws.
 
 This file records the already-owned theorem surfaces as a single compatibility
 packet, now expanded to include:
@@ -28,8 +33,8 @@ packet, now expanded to include:
 * Discrete Möbius Symmetry (UHP action);
 * Majorana Lift (Real carrier doubling).
 
-UTMOST MANDATE: No witness-gating. The analytical index and bracket laws are
-derived directly from the operator algebra.
+Boundary: no raw finite-algebra isomorphism is asserted here, and no
+source-side normal-ordering construction is supplied by this packet.
 -/
 
 noncomputable section
@@ -57,9 +62,11 @@ abbrev FiniteBinaryWord :=
   InfoGeometry.Canonical.FractalCantorCliffordFockBridge.FiniteBinaryWord
 
 /--
-Compatibility packet for the Cantor/Cuntz/Kac--Moody/Virasoro chain.
+Compatibility packet for the Cantor/Cuntz/Kac--Moody/Virasoro owner surfaces.
 
-The bridge is intentionally theorem-safe and proof-carrying:
+The bridge is intentionally theorem-safe and proof-carrying, but the
+current/conformal layers are owner fields rather than consequences of the
+finite Cantor/Cuntz/CAR data:
 
 * `fractal` carries the binary Cantor/Cuntz/CAR/Fock backbone;
 * `tilt` carries the bit-code tilt/switch algebra;
@@ -67,11 +74,11 @@ The bridge is intentionally theorem-safe and proof-carrying:
 * `boost` carries the prime-mode spinor square-root dictionary;
 * `majorana` carries the real-carrier doubling lift;
 * `bogoljubov` carries the real Bogoliubov KAN shadow;
-* `kacMoody` carries the affine current algebra;
-* `virasoro` carries the Virasoro modes and central element;
-* `bridge` ties the affine and Virasoro layers together;
-* `sugawara` carries the mode-sum construction;
-* `superVirasoro` carries the super-Virasoro extension.
+* `kacMoody` carries the supplied affine current algebra;
+* `virasoro` carries the supplied Virasoro modes and central element;
+* `bridge` ties the supplied affine and Virasoro layers together;
+* `sugawara` carries the supplied mode-sum construction;
+* `superVirasoro` carries the supplied super-Virasoro extension.
 -/
 @[rep_depth operator]
 structure FractalCantorCuntzKacMoodyVirasoroBridge

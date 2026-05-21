@@ -1,9 +1,11 @@
 import Mathlib
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Clifford.Lift
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
+open InfoGeometry.Krein.DoubledSpace
 
 /-!
 # InfoGeometry.Topology.FractalCantorFockWitness

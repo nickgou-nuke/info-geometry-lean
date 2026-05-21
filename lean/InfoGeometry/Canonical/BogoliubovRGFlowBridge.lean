@@ -16,8 +16,8 @@ This module formalizes the ultimate physical integration:
 4. The remaining total flow converges to the pure, defect-free Canonical Bogoliubov Flow,
    signifying the emergence of the smooth continuum from the regular-lane quantum dynamics.
 
-UTMOST MANDATE: No witness-gating. The convergence to the pure Bogoliubov flow at 
-the RG fixed point is structurally enforced.
+Boundary: this module records the convergence law supplied by its owner
+fields; it is not a substitute for theorem-owner imports upstream.
 -/
 
 noncomputable section

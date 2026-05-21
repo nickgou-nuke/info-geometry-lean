@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Probability.HomologicalProbability
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.ModeExtensionBoundary
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
@@ -33,6 +34,7 @@ open InfoGeometry.Canonical.PrimeVirasoroSugawara
 open InfoGeometry.Probability.Homological
 open InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 open InfoGeometry.Canonical.BogoliubovFockSuper
+open InfoGeometry.Canonical.ModeExtensionBoundary
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.SplitTrialityFockBridge
@@ -40,6 +42,8 @@ open InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 open InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 open VirasoroProject
+
+set_option synthInstance.maxHeartbeats 200000
 
 /-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR witness. -/
 theorem splitClifford_cl11_majorana_car
@@ -237,9 +241,9 @@ theorem splitClifford_fiveGraded_witten_virasoro_chain
   constructor
   · exact splitCliffordInfinity_unbounded_representatives z N
   · constructor
-    · simpa using
-        (InfoGeometry.Probability.Homological.fiveGradedHomologicalPipeline_numericalShadow_five
-          Unit (fun _ _ => ()))
+    · exact
+        InfoGeometry.Probability.Homological.fiveGradedHomologicalPipeline_numericalShadow_five
+          Unit (fun _ _ => ())
     · constructor
       · exact finiteRealMajoranaWittenIndex_cancel P hP
       · exact virasoro_project_is_certified
@@ -267,16 +271,132 @@ theorem splitClifford_externalHeisenbergSugawara_chain
       VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
     InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1 := by
-  refine And.intro
-    (cliffordConcreteIsCARPair (E := E)) ?_
-  refine And.intro
-    (externalHeisenberg_sugawaraRepresentation_lgen_zero_apply_vacuum α) ?_
-  refine And.intro
-    (externalHeisenberg_sugawaraRepresentation_cgen_apply α
-      (VirasoroProject.ChargedFockSpace.vacuum ℂ α)) ?_
-  refine And.intro ?_
-    (externalHeisenberg_sugawaraDatum_centralCharge_one)
-  intro n hn
-  exact externalHeisenberg_sugawaraRepresentation_lgen_pos_apply_vacuum α hn
+  constructor
+  · exact cliffordConcreteIsCARPair (E := E)
+  · constructor
+    · exact externalHeisenberg_sugawaraRepresentation_lgen_zero_apply_vacuum α
+    · constructor
+      · exact externalHeisenberg_sugawaraRepresentation_cgen_apply α
+          (VirasoroProject.ChargedFockSpace.vacuum ℂ α)
+      · constructor
+        · intro n hn
+          exact externalHeisenberg_sugawaraRepresentation_lgen_pos_apply_vacuum α hn
+        · exact externalHeisenberg_sugawaraDatum_centralCharge_one
+
+/--
+The literature-facing bosonization spine:
+
+- the split triality channels are the concrete CAR witness;
+- the split supercharge lane already carries the CAR/CCR oscillator spine;
+- the external Heisenberg/Sugawara implementation is independently certified.
+
+This theorem is a theorem-only bundle of the already proved source and target
+surface facts.  It does not claim a new split-to-Heisenberg morphism.
+-/
+theorem splitClifford_literature_bosonization_chain
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (α : ℂ) :
+    (InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
+      (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
+      (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
+      (InfoGeometry.Quantum.vectorToRightSpinor (E := E))) ∧
+    (IsCARPair (E := E)
+      (cliffordConcreteAnnihilation (E := E))
+      (cliffordConcreteCreation (E := E))) ∧
+    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
+    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.cgen ℂ)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
+    (∀ n > 0,
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
+        (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
+    (InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1) := by
+  constructor
+  · exact triality_channels_CARWitness (E := E)
+  · constructor
+    · exact cliffordConcreteIsCARPair (E := E)
+    · constructor
+      · exact externalHeisenberg_sugawaraRepresentation_lgen_zero_apply_vacuum α
+      · constructor
+        · exact externalHeisenberg_sugawaraRepresentation_cgen_apply α
+            (VirasoroProject.ChargedFockSpace.vacuum ℂ α)
+        · constructor
+          · intro n hn
+            exact externalHeisenberg_sugawaraRepresentation_lgen_pos_apply_vacuum α hn
+          · exact externalHeisenberg_sugawaraDatum_centralCharge_one
+
+/--
+The conservative zero-mode lift is available alongside the external
+Heisenberg/Sugawara owner surface.
+
+This is still theorem-only packaging.  It does not claim that the split
+finite atom already induces the full current algebra.
+-/
+theorem splitClifford_zeroModeSeed_boundary_and_externalHeisenbergSugawara_chain
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (α : ℂ) :
+    ((splitNullCreationModeSeed (E := E) 0).comp
+          (splitNullCreationModeSeed (E := E) 0) = 0
+      ∧ (splitNullAnnihilationModeSeed (E := E) 0).comp
+          (splitNullAnnihilationModeSeed (E := E) 0) = 0
+      ∧ (splitNullCreationModeSeed (E := E) 0).comp
+          (splitNullAnnihilationModeSeed (E := E) 0)
+        = spectralPlusProj (E := E)
+      ∧ (splitNullAnnihilationModeSeed (E := E) 0).comp
+          (splitNullCreationModeSeed (E := E) 0)
+        = spectralMinusProj (E := E)
+      ∧ CARBracket (E := E)
+          (splitNullAnnihilationModeSeed (E := E) 0)
+          (splitNullCreationModeSeed (E := E) 0)
+        = ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ CCRBracket (E := E)
+          (splitNullCreationModeSeed (E := E) 0)
+          (splitNullAnnihilationModeSeed (E := E) 0)
+        = splitEpsilonModeSeed (E := E) 0) ∧
+      IsCARPair (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E)) ∧
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
+        (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+        (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α ∧
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.cgen ℂ)
+        (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+        VirasoroProject.ChargedFockSpace.vacuum ℂ α ∧
+      (∀ n > 0,
+        VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
+          (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
+      InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge
+        = 1 := by
+  constructor
+  · exact ModeExtensionBoundary.zeroModeSeed_nilpotent_idempotent_atom (E := E)
+  · exact splitClifford_externalHeisenbergSugawara_chain (E := E) α
+
+/-- The finite Cantor/Krein sector lattice is complete. -/
+noncomputable instance splitClifford_finiteCantorKreinSectorSet_completeLattice
+    (n : Nat) :
+    CompleteLattice (InfoGeometry.Topology.FiniteCantorKreinSectorSet n) := by
+  infer_instance
+
+/-- The Cuntz projection sector lattice is complete. -/
+noncomputable instance splitClifford_CuntzProjectionSectorSet_completeLattice
+    {Op : Type} [Ring Op] [StarRing Op] :
+    CompleteLattice (InfoGeometry.Topology.CuntzProjectionSectorSet (Op := Op)) := by
+  infer_instance
+
+/-- The fixed-point sector lattice is complete. -/
+noncomputable instance splitClifford_selfSimilarSectors_completeLattice
+    {L : Type} [CompleteLattice L] (R : L →o L) :
+    CompleteLattice (InfoGeometry.Topology.SelfSimilarSectors R) :=
+  InfoGeometry.Topology.selfSimilarSectorsCompleteLattice R
+
+/-- The refinement/coarse-graining adjunction is the canonical Galois connection. -/
+theorem splitClifford_sectorRefine_sectorCoarse_galoisConnection
+    {α : Type*} {β : Type*} (f : α → β) :
+    GaloisConnection
+      (InfoGeometry.Topology.sectorRefine f)
+      (InfoGeometry.Topology.sectorCoarse f) :=
+  InfoGeometry.Topology.sectorRefine_sectorCoarse_galoisConnection f
 
 end InfoGeometry.Canonical.SplitCliffordExternalChain

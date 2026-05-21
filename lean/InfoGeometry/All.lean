@@ -230,6 +230,7 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Clifford.All
+import InfoGeometry.Cocycle.All
 import InfoGeometry.Convex.All
 import InfoGeometry.Core.All
 import InfoGeometry.ExponentialFamily.All

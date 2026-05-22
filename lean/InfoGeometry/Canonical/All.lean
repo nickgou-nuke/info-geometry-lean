@@ -93,6 +93,9 @@ import InfoGeometry.Canonical.LFunctionHamiltonianFlowBridge
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.BoundaryProjector
+import InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
+import InfoGeometry.Canonical.VirasoroWardEquilibrium
+import InfoGeometry.Canonical.FiveGradedTwistorIncidence
 import InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.BregmanTriality

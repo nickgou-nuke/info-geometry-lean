@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Meta.Architecture
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 open scoped InnerProductSpace
 
@@ -44,16 +45,13 @@ noncomputable def majoranaConjOp (T : FockEndomorphism E) : FockEndomorphism E :
 def IsPHSInvariant (T : FockEndomorphism E) : Prop :=
   majoranaConjOp (E := E) T = T
 
-/-- Boundary zero mode: the operator has vanishing CCR bracket with `H`. -/
+/-- Boundary zero mode: the operator commutes with the chosen boundary generator. -/
 def IsBoundaryZeroMode (H T : FockEndomorphism E) : Prop :=
-  CCRBracket (E := E) H T = 0
+  Commute H T
 
-/-- Self-adjoint and PHS-invariant.  The self-adjointness predicate is supplied
-externally so this file stays agnostic about the chosen star API. -/
-def IsMajoranaOperator
-    (SelfAdjoint : FockEndomorphism E → Prop)
-    (T : FockEndomorphism E) : Prop :=
-  SelfAdjoint T ∧ IsPHSInvariant (E := E) T
+/-- Self-adjoint and PHS-invariant, using mathlib's symmetry predicate. -/
+def IsMajoranaOperator (T : FockEndomorphism E) : Prop :=
+  LinearMap.IsSymmetric T.toLinearMap ∧ IsPHSInvariant (E := E) T
 
 /-- A selected zero-mode corner projector: idempotent and PHS-stable. -/
 structure ZeroModeProjector (H : FockEndomorphism E) where
@@ -72,19 +70,17 @@ def SupportedInZeroMode
 /-- Full zero-mode predicate keeping support, self-adjointness, PHS, and
 boundary stationarity separate. -/
 def IsMajoranaPHSZeroMode
-    (SelfAdjoint : FockEndomorphism E → Prop)
     (P0 H T : FockEndomorphism E) : Prop :=
   P0.comp (T.comp P0) = T
-    ∧ SelfAdjoint T
+    ∧ LinearMap.IsSymmetric T.toLinearMap
     ∧ IsPHSInvariant (E := E) T
     ∧ IsBoundaryZeroMode (E := E) H T
 
-/-- Any boundary generator is stationary with respect to its own bracket. -/
+/-- Any boundary generator commutes with itself. -/
 theorem boundaryGenerator_is_boundary_zero_mode
     (H : FockEndomorphism E) :
     IsBoundaryZeroMode (E := E) H H := by
-  unfold IsBoundaryZeroMode CCRBracket
-  simp [fockCommutator]
+  exact Commute.refl H
 
 /-- The canonical `K = J ∘ ε` boundary lane is stationary with respect to itself. -/
 theorem cptSuperchargeOp_is_boundary_zero_mode :
@@ -92,24 +88,6 @@ theorem cptSuperchargeOp_is_boundary_zero_mode :
       (cptSuperchargeOp (E := E))
       (cptSuperchargeOp (E := E)) := by
   simpa using (boundaryGenerator_is_boundary_zero_mode (E := E) (cptSuperchargeOp (E := E)))
-
-/-- Concrete corner projector witness for the trivial zero boundary sector. -/
-noncomputable def trivialZeroModeProjector :
-    ZeroModeProjector (E := E) (0 : FockEndomorphism E) where
-  P0 := 0
-  idempotent := by
-    simp
-  boundary_zero_mode := by
-    unfold IsBoundaryZeroMode CCRBracket
-    simp [fockCommutator]
-  phs_stable := by
-    simp [IsPHSInvariant, majoranaConjOp]
-
-/-- The trivial zero projector supports the zero operator. -/
-theorem supportedIn_trivialZeroModeProjector_zero :
-    SupportedInZeroMode (E := E) (trivialZeroModeProjector (E := E))
-      (0 : FockEndomorphism E) := by
-  simp [SupportedInZeroMode, trivialZeroModeProjector]
 
 /-! ## 2. Concrete finite PHS swap -/
 

@@ -57,6 +57,13 @@ theorem mobiusInversion_hasFDerivAt {x : E} (hx : x ≠ 0) :
   simpa [mobiusInversion] using
     EuclideanGeometry.hasFDerivAt_inversion (c := (0 : E)) (R := (1 : ℝ)) (x := x) hx
 
+/-- Canonical Möbius/Jacobian packet. -/
+structure MobiusJacobianPacket (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
+  inversion : E → E
+  involutive : Function.Involutive inversion
+  fixed_of_norm_one : ∀ {x : E}, ‖x‖ = 1 → inversion x = x
+  jacobianFactor : E → ℝ
+
 section JacobianFactor
 
 variable {E : Type*} [NormedAddCommGroup E]
@@ -68,5 +75,14 @@ theorem mobiusJacobianFactor_eq_one_of_norm_one {x : E}
   simp [mobiusJacobianFactor, dist_eq_norm, hx]
 
 end JacobianFactor
+
+/-- The canonical Möbius/Jacobian packet. -/
+def standardMobiusJacobianPacket : MobiusJacobianPacket E where
+  inversion := mobiusInversion
+  involutive := mobiusInversion_involutive
+  fixed_of_norm_one := by
+    intro x hx
+    exact mobiusInversion_fixed_of_norm_one (E := E) hx
+  jacobianFactor := mobiusJacobianFactor
 
 end InfoGeometry.Canonical.ConformalMobiusJacobian

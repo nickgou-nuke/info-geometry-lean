@@ -214,7 +214,19 @@ structure PositiveGibbsKMSWitness
   /-- Normalizability/nonzero partition certificate. -/
   partition_ne_zero : partition ≠ 0
   /-- Model-specific KMS condition. -/
-  IsKMSState : Prop
+  isKMSWitness : KMSWitness
+  kmsCertificate : KMSWitness
+  
+  def KMSWitness (flow : Flow) (beta :  →   → WildBernoulli) (hKMS : IsKMSState flow beta) : KMSWitness := [[flow, beta, hKMS]]
+  
+  
+  -- Replace IsKMSState prop with constructive KMSWitness structure
+  theorem constructKMSWitness (flow : Flow) (beta :  →   → WildBernoulli) (W : KMSWitness) (hW : IsKMSState flow beta) : IsKMSState (W.flow) beta := 
+    exact hW
+  
+  
+  -- Update existing certificate field
+  theorem kmsCertificateToWitness (W : KMSWitness) : IsKMSState W.flow beta := constructKMSWitness W.flow beta W kmsCertificate
   /-- Certificate for the supplied KMS condition. -/
   kmsCertificate : IsKMSState
 
@@ -413,6 +425,20 @@ structure DoubledKreinPrimonKMSPacket
   noZetaZeroClaim : Type*
 
 namespace DoubledKreinPrimonKMSPacket
+
+/-- Extract the admissible beta domain from the optional infinite positive KMS calibration, if present. -/
+theorem infinitePositiveKMS_beta_admissible
+    {State : Type*} [Fintype State]
+    (P : DoubledKreinPrimonKMSPacket State) :
+    (Option.map (fun C => C.BetaAdmissible) P.infinitePositiveKMS).isSome :=
+  match h : P.infinitePositiveKMS with
+  | none => rfl
+  | some C => by
+    have : C.BetaAdmissible := C.beta_admissible
+    -- map_some returns some True, so isSome holds
+    simp [Option.map, h] at *
+
+
 
 variable {State : Type*} [Fintype State]
 

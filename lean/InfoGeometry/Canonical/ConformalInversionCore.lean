@@ -61,12 +61,15 @@ def inversion (x : UnitSphere E) : UnitSphere E := by
   have hfix : EuclideanGeometry.inversion (0 : E) 1 x.val = x.val :=
     EuclideanGeometry.inversion_of_mem_sphere
       (c := (0 : E)) (R := (1 : ℝ)) x.property
-  simpa [hfix] using x.property
+  rw [hfix]
+  exact x.property
 
+omit [NormedSpace ℝ E] in
 @[simp] theorem inversion_apply (x : UnitSphere E) :
     (inversion (E := E) x).val = EuclideanGeometry.inversion (0 : E) 1 x.val :=
   rfl
 
+omit [NormedSpace ℝ E] in
 @[simp] theorem inversion_fixed (x : UnitSphere E) : inversion (E := E) x = x := by
   cases x with
   | mk v hv =>
@@ -76,9 +79,14 @@ def inversion (x : UnitSphere E) : UnitSphere E := by
           (c := (0 : E)) (R := (1 : ℝ)) hv
       simp [hfix]
 
+omit [NormedSpace ℝ E] in
 theorem inversion_involutive : Function.Involutive (inversion (E := E)) := by
   intro x
-  simpa using inversion_fixed (E := E) x
+  have hxx : inversion (E := E) (inversion (E := E) x) = inversion (E := E) x :=
+    inversion_fixed (E := E) (inversion (E := E) x)
+  have hx : inversion (E := E) x = x :=
+    inversion_fixed (E := E) x
+  exact hxx.trans hx
 
 end UnitSphere
 

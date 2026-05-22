@@ -117,6 +117,32 @@ theorem spectralMinusProj_comp_modular_j :
   simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
     spectralMinusProj_comp_J (E := E)
 
+/--
+A `J`-fixed doubled state is a real Majorana combination of opposite Weyl
+sectors: its negative-chirality component is the `J`-mirror of its positive
+chirality component.
+-/
+theorem majorana_fixed_eq_weylPlus_add_mirror
+  (u : H₂)
+  (hu : modular_j (E := E) u = u) :
+    u = spectralPlusProj (E := E) u
+        + modular_j (E := E) (spectralPlusProj (E := E) u) := by
+  have hsum :
+      spectralPlusProj (E := E) u + spectralMinusProj (E := E) u = u := by
+    exact congrArg (fun F : EndH => F u) (spectralProj_sum (E := E))
+  have hmirror :
+      spectralMinusProj (E := E) u
+        = modular_j (E := E) (spectralPlusProj (E := E) u) := by
+    have h :=
+      congrArg (fun F : EndH => F u)
+        (spectralMinusProj_comp_modular_j (E := E))
+    simpa [ContinuousLinearMap.comp_apply, hu] using h
+  calc
+    u = spectralPlusProj (E := E) u + spectralMinusProj (E := E) u := hsum.symm
+    _ = spectralPlusProj (E := E) u
+          + modular_j (E := E) (spectralPlusProj (E := E) u) := by
+          rw [hmirror]
+
 omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_K :
     (spectralPlusProj (E := E)).comp (InfoGeometry.Krein.clockAxis (E := E))

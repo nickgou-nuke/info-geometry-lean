@@ -410,6 +410,40 @@ theorem positiveRay_logGenerator_eq_neg_relativeLogDensity
       (a := a)]
   exact relativeModularPotential_eq_neg_relativeLogDensity (α := α) q q0 a
 
+/--
+Weyl order parameter as the logarithmic representative of the relative modular
+potential.
+
+This is just a naming alias for the positive-ray projective logarithmic
+generator theorem.
+-/
+@[rep_depth projective, simp]
+theorem weylOrderParameter_eq_relativeModularPotential
+    (q q0 : PositiveRay α) (a : α) :
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (positiveRayToProjectiveState (α := α) q0)
+        (positiveRayToProjectiveState (α := α) q) a
+      = relativeModularPotential (α := α) q q0 a := by
+  exact
+    positiveRay_logGenerator_eq_relativeModularPotential
+      (α := α) (q := q) (q0 := q0) (a := a)
+
+/--
+Weyl order parameter as the negative logarithmic density cocycle.
+
+This records the additive `-log` form of the positive density/modular cocycle.
+-/
+@[rep_depth projective, simp]
+theorem weylOrderParameter_eq_neg_relativeLogDensity
+    (q q0 : PositiveRay α) (a : α) :
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (positiveRayToProjectiveState (α := α) q0)
+        (positiveRayToProjectiveState (α := α) q) a
+      = -relativeLogDensity (α := α) q q0 a := by
+  exact
+    positiveRay_logGenerator_eq_neg_relativeLogDensity
+      (α := α) (q := q) (q0 := q0) (a := a)
+
 end PositiveRayCompatibility
 
 end InfoGeometry.Canonical.ModularKLDivergenceBridge

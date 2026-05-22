@@ -62,6 +62,10 @@ variable {α : Type*} [MeasurableSpace α]
 noncomputable def logPotential (μ ν : Measure α) : α → ℝ :=
   fun x => -MeasureTheory.llr μ ν x
 
+@[simp] theorem logPotential_eq_neg_llr (μ ν : Measure α) (x : α) :
+    logPotential μ ν x = -MeasureTheory.llr μ ν x :=
+  rfl
+
 /-- Gauge relation modulo additive constants, with respect to a fixed base measure. -/
 def AEAddConst (μ : Measure α) (f g : α → ℝ) : Prop :=
   ∃ c : ℝ, f =ᶠ[ae μ] fun x => g x + c

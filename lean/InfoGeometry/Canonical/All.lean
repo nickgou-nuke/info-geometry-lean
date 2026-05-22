@@ -115,15 +115,7 @@ import InfoGeometry.Canonical.RefinementGaloisConnection
 import InfoGeometry.Canonical.SelfSimilarVacuum
 import InfoGeometry.Canonical.StableVacuum
 import InfoGeometry.Canonical.CompletionPathway
-import InfoGeometry.Canonical.ConformalInversionCore
-import InfoGeometry.Canonical.ConformalMobiusJacobian
-import InfoGeometry.Canonical.ConformalFiveGradeInversion
-import InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
-import InfoGeometry.Canonical.ConformalFiveGradeCommutatorTable
-import InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
-import InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
-import InfoGeometry.Canonical.ConformalCurrentHierarchyBoundary
-import InfoGeometry.Canonical.ConformalProjectiveClosure
+import InfoGeometry.Canonical.ConformalEngine
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
@@ -558,6 +550,8 @@ import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.NoetherRelationalBridge
 import InfoGeometry.Canonical.NormalSemisimpleAgreement
 import InfoGeometry.Canonical.NormalOrderedCurrent
+import InfoGeometry.Canonical.BoundaryMatrixUnitWick
+import InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.OddDefectFunctional
 import InfoGeometry.Canonical.OnsagerCasimirJ
@@ -793,6 +787,7 @@ import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.TomitaConnesBridge
 import InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary
 import InfoGeometry.Canonical.ModeExtensionBoundary

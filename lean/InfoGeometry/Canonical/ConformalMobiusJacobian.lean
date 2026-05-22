@@ -17,29 +17,26 @@ No bridge file is imported here.
 
 noncomputable section
 
-open EuclideanGeometry
-open scoped Topology RealInnerProductSpace
-
 namespace InfoGeometry.Canonical.ConformalMobiusJacobian
+
+open InfoGeometry.Canonical.ConformalInversionCore
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Ambient Möbius inversion around the origin with unit radius. -/
-def mobiusInversion : E → E := EuclideanGeometry.inversion (0 : E) 1
+def mobiusInversion : E → E := conformalInversion (E := E)
 
 /-- Möbius inversion is involutive. -/
 theorem mobiusInversion_involutive : Function.Involutive (mobiusInversion (E := E)) := by
   intro x
-  rw [mobiusInversion]
-  exact EuclideanGeometry.inversion_inversion (c := (0 : E)) (R := (1 : ℝ))
-    (by norm_num) x
+  simpa [mobiusInversion] using (conformalInversion_involutive (E := E) x)
 
 /-- The unit sphere is fixed by Möbius inversion. -/
 theorem mobiusInversion_fixed_of_norm_one {x : E}
     (hx : ‖x‖ = 1) :
     mobiusInversion (E := E) x = x :=
-  EuclideanGeometry.inversion_of_mem_sphere (c := (0 : E)) (R := (1 : ℝ)) (by
-    simpa [Metric.mem_sphere, dist_eq_norm] using hx)
+  by
+    simpa [mobiusInversion] using (conformalInversion_fixed_of_norm_one (E := E) x hx)
 
 /-- Scalar Jacobian factor of the Möbius inversion derivative. -/
 def mobiusJacobianFactor (x : E) : ℝ := (1 / dist x (0 : E)) ^ 2
@@ -57,13 +54,6 @@ theorem mobiusInversion_hasFDerivAt {x : E} (hx : x ≠ 0) :
   simpa [mobiusInversion] using
     EuclideanGeometry.hasFDerivAt_inversion (c := (0 : E)) (R := (1 : ℝ)) (x := x) hx
 
-/-- Canonical Möbius/Jacobian packet. -/
-structure MobiusJacobianPacket (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
-  inversion : E → E
-  involutive : Function.Involutive inversion
-  fixed_of_norm_one : ∀ {x : E}, ‖x‖ = 1 → inversion x = x
-  jacobianFactor : E → ℝ
-
 section JacobianFactor
 
 variable {E : Type*} [NormedAddCommGroup E]
@@ -75,14 +65,5 @@ theorem mobiusJacobianFactor_eq_one_of_norm_one {x : E}
   simp [mobiusJacobianFactor, dist_eq_norm, hx]
 
 end JacobianFactor
-
-/-- The canonical Möbius/Jacobian packet. -/
-def standardMobiusJacobianPacket : MobiusJacobianPacket E where
-  inversion := mobiusInversion
-  involutive := mobiusInversion_involutive
-  fixed_of_norm_one := by
-    intro x hx
-    exact mobiusInversion_fixed_of_norm_one (E := E) hx
-  jacobianFactor := mobiusJacobianFactor
 
 end InfoGeometry.Canonical.ConformalMobiusJacobian

@@ -1,15 +1,5 @@
-import InfoGeometry.Canonical.ConformalInversionCore
-import InfoGeometry.Canonical.ConformalMobiusJacobian
-import InfoGeometry.Canonical.ConformalFiveGradeInversion
+import InfoGeometry.Canonical.ConformalProjectiveClosure
 import InfoGeometry.Canonical.NormalOrderedCurrent
-import InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
-import InfoGeometry.Canonical.BoundaryMatrixUnitWick
-import InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI
-import InfoGeometry.Canonical.ConformalFiveGradeCommutatorTable
-import InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
-import InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
-import InfoGeometry.Canonical.ConformalFiveGradeBracketAPI
-import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 
 /-!

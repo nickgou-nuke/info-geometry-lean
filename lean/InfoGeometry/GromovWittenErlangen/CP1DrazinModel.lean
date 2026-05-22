@@ -215,6 +215,11 @@ theorem entropy_eq_log_gw_volume :
     entropyCalibration.entropyReadout = Real.log entropyCalibration.gwVolume :=
   entropyCalibration.entropy_eq_log_gw_volume
 
+/-- The calibrated GW volume is the exponential of the entropy readout. -/
+theorem log_gw_volume_eq_entropy :
+    Real.log entropyCalibration.gwVolume = entropyCalibration.entropyReadout := by
+  simpa [eq_comm] using entropy_eq_log_gw_volume.symm
+
 end CP1DrazinModel
 end GromovWittenErlangen
 end InfoGeometry

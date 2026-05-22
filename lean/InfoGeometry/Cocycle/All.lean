@@ -2,6 +2,7 @@ import InfoGeometry.Cocycle.ActionCocycle
 import InfoGeometry.Cocycle.AlternativeAssociator
 import InfoGeometry.Cocycle.GroupoidCocycle
 import InfoGeometry.Cocycle.LogCocycle
+import InfoGeometry.Cocycle.LogarithmicOrderParameter
 import InfoGeometry.Cocycle.Infinitesimal
 import InfoGeometry.Cocycle.SplitQuaternionicJacobian
 

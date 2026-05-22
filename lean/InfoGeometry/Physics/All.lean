@@ -8,7 +8,8 @@ import InfoGeometry.Physics.HolographicPressureFunctional
 Re-exports the conservative physics-layer owner surfaces.
 
 This file is declaration-free. It only provides a compact import surface for
-the boundary symmetry atom and the holographic pressure functional.
+the boundary symmetry atom, the Majorana mass-gap model, and the holographic
+pressure functional.
 -/
 
 namespace InfoGeometry.Physics

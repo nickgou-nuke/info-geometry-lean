@@ -136,6 +136,64 @@ theorem tomitaKrein_nilpotent_idempotent_atom :
     concrete_car_ccrBracket_eq_neg_spectral_epsilon (E := E)⟩
 
 /--
+Tomita/PHS conjugation on doubled-space endomorphisms:
+`T ↦ J ∘ T ∘ J`.
+
+This is the finite boundary reflection used to package the real Majorana swap
+at the split-`Cl(1,1)` level.
+-/
+@[rep_depth krein]
+noncomputable def tomitaConjOp
+    (T : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
+    InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E :=
+  (modular_j (E := E)).comp (T.comp (modular_j (E := E)))
+
+/-- Tomita/PHS conjugation swaps the concrete split-null creation operator to annihilation. -/
+@[rep_depth krein]
+theorem tomitaConj_creation_eq_annihilation :
+    tomitaConjOp (concreteCARCreation (E := E))
+      = concreteCARAnnihilation (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : InfoGeometry.Krein.to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [tomitaConjOp, concreteCARCreation, concreteCARAnnihilation,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled]
+
+/-- Tomita/PHS conjugation swaps the concrete split-null annihilation operator to creation. -/
+@[rep_depth krein]
+theorem tomitaConj_annihilation_eq_creation :
+    tomitaConjOp (concreteCARAnnihilation (E := E))
+      = concreteCARCreation (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : InfoGeometry.Krein.to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [tomitaConjOp, concreteCARCreation, concreteCARAnnihilation,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled]
+
+/-- The real Majorana boundary candidate is fixed by Tomita/PHS conjugation. -/
+@[rep_depth krein]
+theorem concrete_majorana_swap_is_phs_invariant :
+    tomitaConjOp (concreteCARCreation (E := E) + concreteCARAnnihilation (E := E))
+      = concreteCARCreation (E := E) + concreteCARAnnihilation (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : InfoGeometry.Krein.to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hu]
+  unfold tomitaConjOp concreteCARCreation concreteCARAnnihilation
+  simp [InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled,
+    InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled,
+    add_comm]
+
+/--
 Single exported finite spine for the doubled real Krein map:
 Tomita atom, idempotent projector split, and nilpotent CAR split-null fit.
 -/

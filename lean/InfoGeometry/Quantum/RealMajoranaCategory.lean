@@ -658,6 +658,27 @@ noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) w
     _ = InfoGeometry.Krein.to_doubled y (0 : E) := by
           simpa [hhalf]
 
+@[simp] lemma cl11_majoranaField_uPlus_add_uMinus_apply_to_doubled (x y : E) :
+    (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
+        + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E)))
+      (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.modular_j (E := E) (InfoGeometry.Krein.to_doubled x y) := by
+  calc
+    (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
+        + SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E)))
+      (InfoGeometry.Krein.to_doubled x y)
+        = InfoGeometry.Krein.to_doubled y (0 : E) +
+            InfoGeometry.Krein.to_doubled (0 : E) x := by
+              simp [LinearMap.add_apply, cl11_majoranaField_uPlus_apply_to_doubled,
+                cl11_majoranaField_uMinus_apply_to_doubled]
+    _ = InfoGeometry.Krein.to_doubled y x := by
+          simpa [InfoGeometry.Krein.to_doubled, Prod.mk_add_mk, WithLp.add_fst, WithLp.add_snd]
+            using
+              (WithLp.toLp_add (p := (2 : ENNReal))
+                (x := (y, (0 : E))) (y := ((0 : E), x))).symm
+    _ = InfoGeometry.Krein.modular_j (E := E) (InfoGeometry.Krein.to_doubled x y) := by
+          simp [InfoGeometry.Krein.modular_j_to_doubled]
+
 end Cl11Polarization
 
 /-- CAR ladder package: nilpotent ladders with mixed anticommutator identity. -/

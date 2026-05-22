@@ -356,6 +356,14 @@ theorem normalOrdered_matrixUnit_commutator_from_CAR (a b c d : Int) :
         (if b = c ∧ a = d then (occ a - occ b) • C.central else 0) :=
   C.normalOrdered_matrixUnit_commutator_from_rawCAR a b c d
 
+/-- Boundary-facing name for the matrix-unit Wick owner theorem. -/
+theorem boundaryMatrixUnitWick_commutator_from_rawCAR (a b c d : Int) :
+    comm (C.matrixUnit a b) (C.matrixUnit c d) =
+      (if b = c then C.matrixUnit a d else 0) -
+        (if a = d then C.matrixUnit c b else 0) +
+        (if b = c ∧ a = d then (occ a - occ b) • C.central else 0) :=
+  C.normalOrdered_matrixUnit_commutator_from_rawCAR a b c d
+
 /--
 The Wick correction on the current diagonal.
 
@@ -1612,6 +1620,13 @@ theorem normalOrderedCurrent_heisenberg_from_rawCAR
     CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
       if m + n = 0 then m • completedCentral C else 0 := by
   exact formalCompletedCurrentBracket_heisenberg_from_rawCAR C m n
+
+/-- Boundary-facing name for the completed current Heisenberg law. -/
+theorem boundaryCurrent_heisenberg_from_rawCAR
+    {A : Type*} [Ring A] (C : RawCARModeCompletion A) (m n : Int) :
+    CCRBracketCompleted C (normalOrderedCurrent C m) (normalOrderedCurrent C n) =
+      if m + n = 0 then m • completedCentral C else 0 :=
+  normalOrderedCurrent_heisenberg_from_rawCAR C m n
 
 /--
 Completed-current Heisenberg law as the downstream corollary of the

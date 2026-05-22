@@ -135,24 +135,35 @@ structure HestenesAnalyticKMSWitness where
   /-- Evidence for the analytic KMS strip-boundary proposition. -/
   kms_boundary_holds : kms_boundary_condition
 
+/-- Bridge version of the witness surface that mirrors `HestenesAnalyticKMSBridge` but with the KMS state components exposed constructively. -/
+@[rep_depth krein]
+structure HestenesAnalyticKMSWitnessBridge where
+  flow : OperatorFlow EndH
+  preserves_KLinear : ∀ t A, KLinear (E := E) A → KLinear (E := E) (flow.flow t A)
+  phase_left_covariant : ∀ t A, flow.flow t ((clockAxis (E := E)).comp A) = (clockAxis (E := E)).comp (flow.flow t A)
+  phase_right_covariant : ∀ t A, flow.flow t (A.comp (clockAxis (E := E))) = (flow.flow t A).comp (clockAxis (E := E))
+  beta : ℝ
+  state : AlgebraicState EndH
+  flow_invariant : ∀ t A, state.eval (flow.flow t A) = state.eval A
+  kms_boundary_condition : Prop
+  kms_boundary_condition_holds : kms_boundary_condition
+
 namespace HestenesAnalyticKMSWitness
 
 variable (W : HestenesAnalyticKMSWitness (E := E))
 
 /-- Package the narrowed witness surface back into the legacy broad KMS bridge. -/
 @[rep_depth krein]
-def toBridge : HestenesAnalyticKMSBridge (E := E) where
+@[rep_depth krein] def toBridge : HestenesAnalyticKMSWitnessBridge (E := E) where
   flow := W.flow
   preserves_KLinear := W.preserves_KLinear
   phase_left_covariant := W.phase_left_covariant
   phase_right_covariant := W.phase_right_covariant
   beta := W.beta
-  kms := {
-    state := W.state
-    flow_invariant := W.flow_invariant
-    kms_boundary_condition := W.kms_boundary_condition
-    kms_boundary_condition_holds := W.kms_boundary_holds
-  }
+  state := W.state
+  flow_invariant := W.flow_invariant
+  kms_boundary_condition := W.kms_boundary_condition
+  kms_boundary_condition_holds := W.kms_boundary_holds
 
 /-- The compatibility adapter reads back the same underlying state definitionally. -/
 @[rep_depth krein]

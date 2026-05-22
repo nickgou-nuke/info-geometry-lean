@@ -466,7 +466,7 @@ structure CoordinatelessSouriauFisherContext
   sigma : AdditiveModularFlow (H := H)
   beta : ℝ
   kms : KMSState (H := H) sigma beta
-  kms_state_eq : kms.state = state
+  kms_def_eq : kms.state = state
   souriauMoment : OperatorSouriauMoment (H := H) Symmetry
   fisherMetric : QuantumFisherSLDMetric (H := H) Tangent state
   weylGauge : WeylAlgebraGauge (H := H) state
@@ -484,16 +484,16 @@ def CoordinatelessSouriauFisherContext.toMinimal
   beta := C.beta
   kms := C.kms
   souriauMoment := C.souriauMoment
-  fisherMetric :=
+    fisherMetric :=
     (by
-      -- reuse the original metric but change the state reference via `C.kms_state_eq`
+      -- use the state from the KMS packet directly
       have h := C.fisherMetric
-      -- change the state argument using the equality
-      simpa [C.kms_state_eq] using h) 
+      -- replace the state parameter by `C.kms.state`
+      simpa [C.kms.state] using h)
   weylGauge :=
     (by
       have h := C.weylGauge
-      simpa [C.kms_state_eq] using h)
+      simpa [C.kms.state] using h)
 
 
 /--
@@ -535,7 +535,7 @@ structure MinimalCoordinatelessSouriauFisherContext
 * **Constructive reduction**
 *
 * The broad `CoordinatelessSouriauFisherContext` bundles a redundant equality
-* `kms_state_eq : kms.state = state`.  The canonical owner corridor already
+* `kms : KMSState (H := H)`.  The canonical owner corridor already
 * provides the smaller `MinimalCoordinatelessSouriauFisherContext` which derives
 * the algebraic state directly from `kms.state`.  The following definition
 * constructs the minimal context from a broad one, eliminating the explicit

@@ -1,35 +1,88 @@
-import InfoGeometry.Canonical.ZornSpinor
+import Mathlib.Data.Fin.Basic
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Algebra.Zorn.Basic
 
-This is the narrow algebra bridge for the repository's Zorn carrier.
-
-It reuses the explicit canonical split-octonion carrier from
-`InfoGeometry.Canonical.ZornSpinor` and exposes the local norm/determinant
-readout under the algebra namespace.
-
-No composition theorem is claimed here.
+Basic Zorn vector-matrix data for the local split-octonion cell.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
-abbrev ZornMatrix (R : Type*) [CommRing R] := InfoGeometry.Canonical.ZornMatrix R
+/--
+A minimal dot/cross interface on `R^3`.
 
-/-- The reduced Zorn determinant/norm `ab - x · y`. -/
-def detZ {R : Type*} [CommRing R] (z : ZornMatrix R) : R :=
-  z.a * z.b - InfoGeometry.Canonical.ZornMatrix.dot z.x z.y
+For the null-cone proofs we only need the dot-zero laws.  The cross-zero laws
+are included because they will be needed once `mulZ` and square-zero facts are
+added.
+-/
+structure CrossProduct3 (R : Type*) [CommRing R] where
+  dot : (Fin 3 → R) → (Fin 3 → R) → R
+  cross : (Fin 3 → R) → (Fin 3 → R) → (Fin 3 → R)
 
-/-- The Zorn multiplication inherited from the canonical carrier. -/
-def mulZ {R : Type*} [CommRing R] (x y : ZornMatrix R) : ZornMatrix R :=
-  x * y
+  dot_zero_left :
+    ∀ v : Fin 3 → R, dot 0 v = 0
+  dot_zero_right :
+    ∀ v : Fin 3 → R, dot v 0 = 0
 
-@[simp] theorem detZ_def {R : Type*} [CommRing R] (z : ZornMatrix R) :
-    detZ z = z.a * z.b - InfoGeometry.Canonical.ZornMatrix.dot z.x z.y :=
-  rfl
+  cross_zero_left :
+    ∀ v : Fin 3 → R, cross 0 v = 0
+  cross_zero_right :
+    ∀ v : Fin 3 → R, cross v 0 = 0
 
-@[simp] theorem mulZ_def {R : Type*} [CommRing R] (x y : ZornMatrix R) :
-    mulZ x y = x * y :=
-  rfl
+/--
+Zorn vector matrix
+
+  [ a  v ]
+  [ w  b ]
+
+representing the local split-octonion coordinate cell.
+-/
+structure ZornMatrix (R : Type*) where
+  a : R
+  b : R
+  v : Fin 3 → R
+  w : Fin 3 → R
+deriving DecidableEq
+
+namespace ZornMatrix
+
+variable {R : Type*} [CommRing R]
+
+/-- The zero Zorn matrix. -/
+def zero : ZornMatrix R where
+  a := 0
+  b := 0
+  v := 0
+  w := 0
+
+instance : Zero (ZornMatrix R) :=
+  ⟨zero⟩
+
+@[simp] theorem zero_a : (0 : ZornMatrix R).a = 0 := rfl
+@[simp] theorem zero_b : (0 : ZornMatrix R).b = 0 := rfl
+@[simp] theorem zero_v : (0 : ZornMatrix R).v = 0 := rfl
+@[simp] theorem zero_w : (0 : ZornMatrix R).w = 0 := rfl
+
+/--
+Zorn determinant / split norm.
+
+For
+
+  X = [ a  v ]
+      [ w  b ]
+
+the determinant is
+
+  detZ X = a b - v · w.
+-/
+def detZ (cp : CrossProduct3 R) (X : ZornMatrix R) : R :=
+  X.a * X.b - cp.dot X.v X.w
+
+/-- Quadratic/projective nullness. -/
+def IsNull (cp : CrossProduct3 R) (X : ZornMatrix R) : Prop :=
+  detZ cp X = 0
+
+end ZornMatrix
 
 end InfoGeometry.Algebra.Zorn

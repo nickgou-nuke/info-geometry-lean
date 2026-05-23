@@ -24,6 +24,17 @@ structure Diamond (A : Type*) [Semiring A] where
   idem : P * P = P
 
 /--
+Directional orthogonality for a ray from `src` to `tgt`.
+
+For a lightray `N ∈ tgt A src`, encoded by `tgt.P * N = N` and
+`N * src.P = N`, square-zero propagation uses `src.P * tgt.P = 0`.
+If the arrow orientation is reversed, the orthogonality condition is reversed
+too.
+-/
+def OrthogonalForRay {A : Type*} [Semiring A] (src tgt : Diamond A) : Prop :=
+  src.P * tgt.P = 0
+
+/--
 A lightray from `src` to `tgt`.
 
 The support laws say that `N` starts in the source sector and lands in the
@@ -48,7 +59,7 @@ sector, support laws, and that those sectors are orthogonal.
 structure SupportedLightray (A : Type*) [Semiring A]
     (src tgt : Diamond A) extends IncidentLightray A src tgt where
   /-- Orthogonality of the source and target sectors. -/
-  orthogonal : src.P * tgt.P = 0
+  orthogonal : OrthogonalForRay src tgt
 
 /--
 If the source and target idempotents are orthogonal, then every supported
@@ -78,7 +89,7 @@ theorem IncidentLightray.square_zero_of_orthogonal
     {A : Type*} [Semiring A]
     {src tgt : Diamond A}
     (L : IncidentLightray A src tgt)
-    (h_orthogonal : src.P * tgt.P = 0) :
+    (h_orthogonal : OrthogonalForRay src tgt) :
     L.N * L.N = 0 :=
   incident_lightray_square_zero h_orthogonal L.left_support L.right_support
 

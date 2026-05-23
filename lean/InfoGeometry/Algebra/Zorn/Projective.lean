@@ -46,8 +46,10 @@ def IsNull (X : ZornMatrix R) : Prop :=
   detZ X = 0
 
 /-- Nonzero null representatives. -/
-def NonzeroNullCone (R : Type*) [Field R] : Type* :=
-  { X : ZornMatrix R // X ≠ 0 ∧ IsNull X }
+structure NonzeroNullCone (R : Type*) [Field R] where
+  X : ZornMatrix R
+  nonzero : X ≠ 0
+  null : IsNull X
 
 /-- Nullness is invariant under scalar rescaling. -/
 theorem isNull_smulZ {X : ZornMatrix R} (hX : IsNull X) (r : R) :
@@ -57,38 +59,38 @@ theorem isNull_smulZ {X : ZornMatrix R} (hX : IsNull X) (r : R) :
   ring
 
 /-- Same-projective-ray relation on nonzero null representatives. -/
-def SameRay (X Y : NonzeroNullCone) : Prop :=
-  ∃ r : Rˣ, Y.1 = smulZ (r : R) X.1
+def RayEq (X Y : NonzeroNullCone R) : Prop :=
+  ∃ r : Rˣ, Y.X = smulZ (r : R) X.X
 
-theorem SameRay.refl (X : NonzeroNullCone) :
-    SameRay X X := by
+theorem RayEq_refl (X : NonzeroNullCone R) :
+    RayEq X X := by
   refine ⟨1, one_ne_zero, ?_⟩
-  simp [SameRay, smulZ]
+  simp [RayEq, smulZ]
 
-theorem SameRay.symm {X Y : NonzeroNullCone R}
-    (h : SameRay X Y) : SameRay Y X := by
+theorem RayEq_symm {X Y : NonzeroNullCone R}
+    (h : RayEq X Y) : RayEq Y X := by
   rcases h with ⟨r, hr, hXY⟩
   refine ⟨r⁻¹, inv_ne_zero hr, ?_⟩
   rw [hXY]
-  simp [smulZ, smulZ_mul, mul_assoc, hXY]
+  simpa [smulZ, smulZ_mul, mul_assoc]
 
-theorem SameRay.trans {X Y Z : NonzeroNullCone R}
-    (hXY : SameRay X Y) (hYZ : SameRay Y Z) : SameRay X Z := by
+theorem RayEq_trans {X Y Z : NonzeroNullCone R}
+    (hXY : RayEq X Y) (hYZ : RayEq Y Z) : RayEq X Z := by
   rcases hXY with ⟨r, hr, hXY⟩
   rcases hYZ with ⟨s, hs, hYZ⟩
   refine ⟨s * r, mul_ne_zero hs hr, ?_⟩
-  rw [hs, hr]
-  simp [smulZ, smulZ_mul, mul_assoc, hXY, hYZ]
+  rw [hYZ, hXY]
+  simpa [smulZ, smulZ_mul, mul_assoc]
 
 /-- Setoid for projectivizing the nonzero Zorn null cone. -/
-def projectiveNullSetoid : Setoid (NonzeroNullCone R) where
-  r := SameRay (R := R)
-  iseqv := ⟨SameRay.refl, SameRay.symm, SameRay.trans⟩
+def projectiveNullSetoid (R : Type*) [Field R] : Setoid (NonzeroNullCone R) where
+  r := RayEq
+  iseqv := ⟨fun X => RayEq_refl X,
+            fun X Y h => RayEq_symm h,
+            fun X Y Z hXY hYZ => RayEq_trans hXY hYZ⟩
 
 /-- Projectivized Zorn null cone `{X ≠ 0 | detZ X = 0} / Rˣ`. -/
-def ProjectiveNullCone : Type :=
-  Quot (projectiveNullSetoid (R := R))
-
-end ZornMatrix
+def ProjectiveNullCone (R : Type*) [Field R] : Type _ :=
+  Quotient (projectiveNullSetoid R)
 
 end InfoGeometry.Algebra.Zorn

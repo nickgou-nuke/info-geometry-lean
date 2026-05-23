@@ -1,4 +1,4 @@
-import InfoGeometry.Tessellation.Incidence
+import InfoGeometry.Tessellation.VolumeTransport
 
 /-!
 # Tessellation corner sectors

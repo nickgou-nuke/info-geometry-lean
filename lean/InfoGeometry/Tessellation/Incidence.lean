@@ -124,30 +124,4 @@ theorem supported_lightray_square_zero
     L.N * L.N = 0 :=
   L.square_zero
 
-/-! ## Unit conjugation preserves sectors -/
-
-/-- Ring-level unit conjugation. -/
-def unitConjRing {A : Type*} [Monoid A] (g : Aˣ) (x : A) : A :=
-  (g : A) * x * ((g⁻¹ : Aˣ) : A)
-
-/--
-Unit conjugation preserves idempotents, hence sends causal diamonds to causal
-diamonds.
--/
-theorem unitConj_idempotent
-    {A : Type*} [Monoid A]
-    (g : Aˣ) {P : A}
-    (hP : P * P = P) :
-    unitConjRing g P * unitConjRing g P = unitConjRing g P := by
-  unfold unitConjRing
-  calc
-    ((g : A) * P * ((g⁻¹ : Aˣ) : A)) * ((g : A) * P * ((g⁻¹ : Aˣ) : A))
-        = (g : A) * P * (((g⁻¹ : Aˣ) : A) * (g : A)) * P *
-            ((g⁻¹ : Aˣ) : A) := by
-            simp [mul_assoc]
-    _ = (g : A) * (P * P) * ((g⁻¹ : Aˣ) : A) := by
-            simp [mul_assoc]
-    _ = (g : A) * P * ((g⁻¹ : Aˣ) : A) := by
-            rw [hP]
-
 end InfoGeometry.Tessellation

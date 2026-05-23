@@ -194,17 +194,40 @@ theorem majorana_packet_K_sq_eq_neg_id :
     (InfoGeometry.Core.MajoranaLiftPacket.K_sq_eq_neg_id
       (E := E) (P := B.majorana))
 
+/-- Backwards-compatible name for the Majorana packet square law. -/
+@[rep_depth krein]
+theorem majorana_packet_valid :
+    B.majorana.K.comp B.majorana.K =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
+  majorana_packet_K_sq_eq_neg_id (B := B)
+
 /-- The Bogoliubov shadow exposes the phase-axis force law from the Cartan shadow. -/
 @[rep_depth operator]
 theorem bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow
     [CompleteSpace E]
-    (H : BogoliubovKANShadowPacket.doubledKreinEnd (E := E)) :
-    BogoliubovKANShadowPacket.cartanGaugeShadow (E := E) H +
-      BogoliubovKANShadowPacket.cartanScaleShadow (E := E) H =
+    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
+        (E := E)) :
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow
+        (E := E) H +
+      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanScaleShadow
+        (E := E) H =
         BogoliubovTransport.modularTransportGenerator (E := E) H := by
   simpa using
-    (BogoliubovKANShadowPacket.cartanGaugeShadow_add_cartanScaleShadow
+    (InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow_add_cartanScaleShadow
       (E := E) H)
+
+/-- Backwards-compatible name for the Bogoljubov phase-axis force law. -/
+@[rep_depth operator]
+theorem bogoljubov_packet_valid
+    [CompleteSpace E]
+    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
+        (E := E)) :
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow
+        (E := E) H +
+      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanScaleShadow
+        (E := E) H =
+        BogoliubovTransport.modularTransportGenerator (E := E) H :=
+  bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow (E := E) H
 
 /-- The affine and Virasoro layers are explicitly compatible. -/
 @[rep_depth operator]

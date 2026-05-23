@@ -84,6 +84,11 @@ theorem boost_norm_preserved (t : ℝ) (x : SC) :
     SplitComplex.norm (mul (boostElement t) x) = SplitComplex.norm x := by
   rw [SplitComplex.norm_mul, boostElement_norm, one_mul]
 
+/-- The split boost preserves the split norm. -/
+theorem splitBoost_preserves_norm (t : ℝ) (x : SC) :
+    SplitComplex.norm (mul (boostElement t) x) = SplitComplex.norm x := by
+  simpa using (boost_norm_preserved (t := t) (x := x))
+
 /-- A split-boost unit preserves any zero-norm element. -/
 theorem boost_preserves_zeroNorm (t : ℝ) (x : SC) (hx : SplitComplex.norm x = 0) :
     SplitComplex.norm (mul (boostElement t) x) = 0 := by

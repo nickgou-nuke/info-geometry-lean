@@ -1,55 +1,45 @@
-import InfoGeometry.Algebra.Zorn.Basic
+import InfoGeometry.Canonical.ZornComposition
 
 /-!
 # InfoGeometry.Algebra.Zorn.Composition
 
-This file packages the split-octonion/Zorn determinant multiplicativity as a
-composition datum.
+This file exposes the explicit split-octonion composition law in the algebra
+namespace.
 
-The repository already owns the explicit Zorn carrier and the local null-cone
-readouts.  This module does not invent a new multiplication table; it isolates
-the exact `detZ` multiplicativity statement needed for the local H¹ rigidity
-layer.
-
-The composition law is recorded as data so that a later proof-complete instance
-can be attached without changing the interface.
+The proof is the canonical H¹ rigidity identity on the concrete Zorn carrier.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
-/--
-Zorn composition datum.
+/-- The Zorn determinant is multiplicative. -/
+theorem detZ_mul (X Y : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord) :
+    InfoGeometry.Canonical.ZornComposition.detZ
+      (InfoGeometry.Canonical.ZornComposition.mulZ X Y)
+      =
+    InfoGeometry.Canonical.ZornComposition.detZ X *
+    InfoGeometry.Canonical.ZornComposition.detZ Y := by
+  simpa using InfoGeometry.Canonical.ZornComposition.detZ_mul X Y
 
-This is the theorem-facing interface for the local split-octonion composition
-law:
-
-`detZ (mulZ X Y) = detZ X * detZ Y`.
--/
-structure ZornCompositionDatum (R : Type*) [CommRing R] where
-  detZ_mul :
-    ∀ X Y : ZornMatrix R,
-      detZ (mulZ X Y) = detZ X * detZ Y
-
-namespace ZornCompositionDatum
-
-variable {R : Type*} [CommRing R]
-
-/-- Left multiplication by a norm-one Zorn element preserves `detZ`. -/
+/-- Left multiplication by a norm-one Zorn element preserves the determinant. -/
 theorem detZ_left_mul_normOne
-    (cp : ZornCompositionDatum R)
-    (U X : ZornMatrix R)
-    (hU : detZ U = 1) :
-    detZ (mulZ U X) = detZ X := by
-  rw [cp.detZ_mul, hU, one_mul]
+    (U X : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
+    (hU : InfoGeometry.Canonical.ZornComposition.detZ U = 1) :
+    InfoGeometry.Canonical.ZornComposition.detZ
+      (InfoGeometry.Canonical.ZornComposition.mulZ U X)
+      =
+    InfoGeometry.Canonical.ZornComposition.detZ X := by
+  simpa using
+    InfoGeometry.Canonical.ZornComposition.detZ_left_mul_normOne U X hU
 
-/-- Right multiplication by a norm-one Zorn element preserves `detZ`. -/
+/-- Right multiplication by a norm-one Zorn element preserves the determinant. -/
 theorem detZ_right_mul_normOne
-    (cp : ZornCompositionDatum R)
-    (X U : ZornMatrix R)
-    (hU : detZ U = 1) :
-    detZ (mulZ X U) = detZ X := by
-  rw [cp.detZ_mul, hU, mul_one]
-
-end ZornCompositionDatum
+    (X U : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
+    (hU : InfoGeometry.Canonical.ZornComposition.detZ U = 1) :
+    InfoGeometry.Canonical.ZornComposition.detZ
+      (InfoGeometry.Canonical.ZornComposition.mulZ X U)
+      =
+    InfoGeometry.Canonical.ZornComposition.detZ X := by
+  simpa using
+    InfoGeometry.Canonical.ZornComposition.detZ_right_mul_normOne X U hU
 
 end InfoGeometry.Algebra.Zorn

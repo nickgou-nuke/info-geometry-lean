@@ -4,6 +4,7 @@ import InfoGeometry.Applications.STUGradientFlow
 import InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
+import InfoGeometry.Algebra.All
 import InfoGeometry.Arithmetic.FinitePrimeGroverOracle
 import InfoGeometry.Arithmetic.FiniteRiemannPrimeState
 import InfoGeometry.Arithmetic.LPrimitive

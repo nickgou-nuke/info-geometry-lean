@@ -84,10 +84,10 @@ theorem projectiveCountRay_positiveRescale
     (positiveRescaleCounts (n := n) c counts)
     (positiveRescaleCounts_pos (n := n) c hc counts hcounts)
   have hsame : InfoGeometry.PositiveMeasure.SameRay μ ν := by
-    refine ⟨c, hc, ?_⟩
+    refine ⟨(⟨c, hc⟩ : InfoGeometry.Stratum.PosGauge), ?_⟩
     ext i
-    simp [μ, ν, positiveRescaleCounts, positiveMeasureOfCounts,
-      InfoGeometry.PositiveMeasure.scale_apply, Pi.smul_apply, smul_eq_mul]
+    change InfoGeometry.PositiveMeasure.scale c hc (positiveMeasureOfCounts counts hcounts) i = c * counts i
+    rfl
   exact (Quotient.sound hsame).symm
 
 /-- The canonical gauge section is also invariant under common positive rescaling. -/

@@ -17,6 +17,47 @@ namespace InfoGeometry.Canonical.CurrentSugawaraBridge
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 
+/-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
+noncomputable def conjugateEnd
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) (A : V →ₗ[𝕜] V) : V →ₗ[𝕜] V :=
+  U.toLinearMap.comp (A.comp U.symm.toLinearMap)
+
+@[simp] lemma conjugateEnd_add
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
+    conjugateEnd U (A + B) = conjugateEnd U A + conjugateEnd U B := by
+  ext v
+  simp [conjugateEnd]
+
+@[simp] lemma conjugateEnd_mul
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
+    conjugateEnd U (A * B) = conjugateEnd U A * conjugateEnd U B := by
+  ext v
+  simp [conjugateEnd]
+
+@[simp] lemma conjugateEnd_comp
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) (A B : V →ₗ[𝕜] V) :
+    conjugateEnd U (A ∘ₗ B) = conjugateEnd U A ∘ₗ conjugateEnd U B := by
+  ext v
+  simp [conjugateEnd]
+
+@[simp] lemma conjugateEnd_smul
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) (a : 𝕜) (A : V →ₗ[𝕜] V) :
+    conjugateEnd U (a • A) = a • conjugateEnd U A := by
+  ext v
+  simp [conjugateEnd]
+
+@[simp] lemma conjugateEnd_one
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) :
+    conjugateEnd U (1 : V →ₗ[𝕜] V) = 1 := by
+  ext v
+  simp [conjugateEnd]
+
 /--
 The exact current-representation interface required by the external Sugawara
 construction.
@@ -71,6 +112,24 @@ theorem currentSugawaraRepresentation_central
     H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
       (1 : V →ₗ[𝕜] V) :=
   sugawaraVirasoroRepresentation_central_from_heisenbergCurrent H.J H.trunc H.comm
+
+/-!
+The full mode-reversal covariance of the Sugawara stress modes needs a
+separate central-sign analysis: the naive pointwise flip of the Heisenberg
+current family does not preserve the central sign convention term-by-term.
+We keep the proved central readout and the Virasoro bracket here, and return
+to the covariance theorem after isolating the sign-flip lemma on the current
+extension.
+-/
+
+/-- The central Virasoro readout remains fixed under conjugation. -/
+theorem currentSugawaraRepresentation_cgen_conjugate
+    (H : CurrentHeisenbergRep 𝕜 V) (U : V ≃ₗ[𝕜] V) :
+    conjugateEnd U
+        (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) =
+      (1 : V →ₗ[𝕜] V) := by
+  rw [currentSugawaraRepresentation_central]
+  simp
 
 end CurrentHeisenbergRep
 

@@ -330,6 +330,7 @@ structure SouriauTomitaKMSContext where
   Public constructors can omit a separate state-equality packet because this
   equality is recovered definitionally from the chosen `state` field.
   -/
+  -- Note: `kms_state_eq` is kept for backward compatibility but is set to `rfl`. It can be removed once all dependents use the `ofMinimal` constructor.
   kms_state_eq : kms.state = state
 namespace SouriauTomitaKMSContext
 

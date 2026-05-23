@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
@@ -20,6 +21,7 @@ open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open VirasoroProject
 open InfoGeometry.Canonical.CurrentSugawaraMetricDatum
+open CurrentMetricDatum
 
 /-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
 noncomputable def conjugateEnd
@@ -42,7 +44,7 @@ signature used for the indexed current contraction layer.
 -/
 noncomputable def splitEightSugawaraSignatureDatum :
     CurrentMetricDatum ℝ (Fin 8) :=
-  splitEightCurrentMetricDatum
+  CurrentMetricDatum.splitEightCurrentMetricDatum
 
 @[simp] theorem splitEightSugawaraSignatureDatum_kappa :
     splitEightSugawaraSignatureDatum.kappa = splitEightKappa := by
@@ -50,6 +52,22 @@ noncomputable def splitEightSugawaraSignatureDatum :
 
 @[simp] theorem splitEightSugawaraSignatureDatum_kappaInv :
     splitEightSugawaraSignatureDatum.kappaInv = splitEightKappa := by
+  rfl
+
+/-- The split 8-channel Sugawara kernel is the finite-channel operator layer. -/
+noncomputable def splitEightSugawaraKernel
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (H : CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8)) :
+    ℤ → V → V :=
+  MetricSugawaraBridge.splitEightKernel (V := V) H
+
+@[simp] theorem splitEightSugawaraKernel_def
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (H : CurrentMetricDatum.MetricHeisenbergCurrent ℝ V (Fin 8))
+    (n : ℤ) (v : V) :
+    splitEightSugawaraKernel (V := V) H n v =
+      (2 : ℝ)⁻¹ • ∑ᶠ k, ∑ i : Fin 8, ∑ j : Fin 8,
+        H.metric.kappaInv i j • MetricSugawaraBridge.channelPairNO H i j (n - k) k v := by
   rfl
 
 @[simp] lemma conjugateEnd_mul

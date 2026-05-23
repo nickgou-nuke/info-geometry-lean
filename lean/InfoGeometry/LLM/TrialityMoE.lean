@@ -761,6 +761,22 @@ noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH
   B.flow.K0 + B.routerResidual
 
 /--
+The bounded sourced generator equals the background flow exactly when the router
+residual vanishes.
+-/
+theorem sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+    (B : RouterDefectBoundBridge (E := E)) :
+    B.sourcedGenerator = B.flow.K0 ↔ B.routerResidual = 0 := by
+  constructor
+  · intro h
+    have hSub := congrArg (fun T => T - B.flow.K0) h
+    unfold RouterDefectBoundBridge.sourcedGenerator at hSub
+    simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using hSub
+  · intro hResidual
+    unfold RouterDefectBoundBridge.sourcedGenerator
+    simpa [hResidual]
+
+/--
 If the exact deviation channel is controlled by `Z_D` and `Z_D` itself vanishes,
 then the bounded router sourced generator collapses to the background flow.
 -/
@@ -838,6 +854,30 @@ theorem ofControlObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
   exact flow.commutesQ0
 
 /--
+Strain-zero sourced-flow collapse for the control-witness constructor.
+
+This is a constructive infinite-lane descent that removes the extra `Z_D = 0`
+input on this branch: the owner theorem
+`observerDefectResidual_eq_zero_of_strain_eq_zero` already discharges residual
+vanishing from strain zero.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_eq_flow_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator = flow.K0 := by
+  refine
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofControlObserver (E := E) CIK obs flow c)).2 ?_
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero
+      (CIK := CIK) (obs := obs) hStrain
+  simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+
+/--
 Under zero central defect, the control-witness constructor forces zero scalarized
 observer strain on the owner lane.
 -/
@@ -863,10 +903,10 @@ theorem ofDeviationZeroObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hDev : observerProjectorDeviation CIK obs = 0) :
     (ofDeviationZeroObserver (E := E) CIK obs flow hDev).sourcedGenerator = flow.K0 := by
-  unfold RouterDefectBoundBridge.sourcedGenerator
-  rw [ofDeviationZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
-    (flow := flow) (hDev := hDev)]
-  simp [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect]
+  simpa [RouterDefectBoundBridge.sourcedGenerator, ofDeviationZeroObserver,
+    ofZDControlledObserver, ofCanonicalObserverDefect] using
+      ofDeviationZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+        (flow := flow) (hDev := hDev)
 
 /--
 For a deviation-zero observer, Drazin-cut preservation reduces to the
@@ -895,10 +935,10 @@ theorem ofAlignedObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     (ofAlignedObserver (E := E) CIK obs flow hAlign).sourcedGenerator = flow.K0 := by
-  unfold RouterDefectBoundBridge.sourcedGenerator
-  rw [ofAlignedObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
-    (flow := flow) (hAlign := hAlign)]
-  simp [ofAlignedObserver, ofZDControlledObserver, ofCanonicalObserverDefect]
+  simpa [RouterDefectBoundBridge.sourcedGenerator, ofAlignedObserver,
+    ofZDControlledObserver, ofCanonicalObserverDefect] using
+      ofAlignedObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+        (flow := flow) (hAlign := hAlign)
 
 /--
 For an aligned observer, Drazin-cut preservation reduces to the background-flow
@@ -927,10 +967,11 @@ theorem ofStrainZeroObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator = flow.K0 := by
-  unfold RouterDefectBoundBridge.sourcedGenerator
-  rw [ofStrainZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
-    (flow := flow) (hStrain := hStrain)]
-  simp [ofStrainZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect]
+  exact
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofStrainZeroObserver (E := E) CIK obs flow hStrain)).2
+      (ofStrainZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+        (flow := flow) (hStrain := hStrain))
 
 /--
 For a strain-zero observer, Drazin-cut preservation reduces to the

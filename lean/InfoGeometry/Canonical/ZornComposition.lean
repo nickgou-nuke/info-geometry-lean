@@ -7,6 +7,7 @@ This file records the reduced Zorn norm multiplicativity on the explicit
 coordinate carrier as a direct theorem.
 
 It is the local H¹ rigidity layer for the split-octonion shadow.
+This is a Zorn composition theorem, not a projection/Binet-Cauchy claim.
 -/
 
 noncomputable section

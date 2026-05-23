@@ -37,6 +37,7 @@ cohomology.
 The main public theorem names are:
 
 ```lean
+Diamond.OrthogonalForRay
 OrthogonalForRay
 incident_lightray_square_zero
 IncidentLightray.square_zero_of_orthogonal
@@ -45,12 +46,18 @@ supported_lightray_square_zero
 squareZeroUnit
 supportedLightrayFlowUnit
 lightrayFlowUnit
+incidentLightrayFlowUnit
 det_unitConj
 trace_unitConj
+matrixUnitConj
+det_matrixUnitConj
+trace_matrixUnitConj
 det_supported_lightray_conj
 trace_supported_lightray_conj
 det_square_zero_lightray_conj
 trace_square_zero_lightray_conj
+volume_rigidity
+trace_rigidity
 WilsonLoop.defect
 WilsonLoop.Flat
 WilsonLoop.defect_eq_zero_iff_flat

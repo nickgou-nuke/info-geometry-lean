@@ -23,16 +23,25 @@ structure Diamond (A : Type*) [Semiring A] where
   /-- The sector law. -/
   idem : P * P = P
 
-/--
-Directional orthogonality for a ray from `src` to `tgt`.
+/-!
+## Directional orthogonality
 
 For a lightray `N ∈ tgt A src`, encoded by `tgt.P * N = N` and
 `N * src.P = N`, square-zero propagation uses `src.P * tgt.P = 0`.
 If the arrow orientation is reversed, the orthogonality condition is reversed
 too.
 -/
+namespace Diamond
+
+/-- Directional orthogonality for a ray from `src` to `tgt`. -/
 def OrthogonalForRay {A : Type*} [Semiring A] (src tgt : Diamond A) : Prop :=
   src.P * tgt.P = 0
+
+end Diamond
+
+/-- Unqualified alias for the directional lightray orthogonality predicate. -/
+abbrev OrthogonalForRay {A : Type*} [Semiring A] (src tgt : Diamond A) : Prop :=
+  Diamond.OrthogonalForRay src tgt
 
 /--
 A lightray from `src` to `tgt`.

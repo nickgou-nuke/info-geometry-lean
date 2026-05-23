@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
@@ -8,7 +9,7 @@ This file is a narrow adapter from a proved Heisenberg current representation
 to the existing external Sugawara/Virasoro construction.
 
 It does not reprove Sugawara and it does not assert a Lichnerowicz square
-identity.  The only inputs are exactly the inputs required by
+identity. The only inputs are exactly the inputs required by
 `VirasoroProject.sugawaraRepresentation`: current modes, local truncation, and
 the Heisenberg commutator.
 -/
@@ -18,42 +19,7 @@ namespace InfoGeometry.Canonical.CurrentSugawaraBridge
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open VirasoroProject
-
-/-- Index reversal on the abelian current algebra. -/
-noncomputable def currentFlip
-    {𝕜 : Type*} [Field 𝕜] :
-    VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜 ≃ₗ[𝕜] VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜 :=
-  Finsupp.mapDomain.linearEquiv (M := 𝕜) (R := 𝕜) (Equiv.neg ℤ)
-
-@[simp] lemma currentFlip_jgen
-    {𝕜 : Type*} [Field 𝕜] (n : ℤ) :
-    currentFlip (𝕜 := 𝕜) (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 n) =
-      VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 (-n) := by
-  simpa [currentFlip, VirasoroProject.AbelianLieAlgebraOn.jgen_eq_single] using
-    (Finsupp.mapDomain_single (f := Equiv.neg ℤ) (a := n) (b := (1 : 𝕜)))
-
-@[simp] lemma currentFlip_zero
-    {𝕜 : Type*} [Field 𝕜] :
-    currentFlip (𝕜 := 𝕜) (0 : VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜) = 0 := by
-  simp [currentFlip]
-
-@[simp] lemma currentFlip_add
-    {𝕜 : Type*} [Field 𝕜]
-    (X Y : VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜) :
-    currentFlip (𝕜 := 𝕜) (X + Y) = currentFlip (𝕜 := 𝕜) X + currentFlip (𝕜 := 𝕜) Y := by
-  simp [currentFlip]
-
-@[simp] lemma currentFlip_single
-    {𝕜 : Type*} [Field 𝕜] (i : ℤ) (a : 𝕜) :
-    currentFlip (𝕜 := 𝕜) (Finsupp.single i a) = Finsupp.single (-i) a := by
-  simpa [currentFlip] using
-    (Finsupp.mapDomain_single (f := Equiv.neg ℤ) (a := i) (b := a))
-
-@[simp] lemma currentFlip_involutive
-    {𝕜 : Type*} [Field 𝕜] (X : VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜) :
-    currentFlip (𝕜 := 𝕜) (currentFlip (𝕜 := 𝕜) X) = X := by
-  rw [currentFlip, currentFlip, Finsupp.mapDomain_comp]
-  simp [currentFlip]
+open InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 
 /-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
 noncomputable def conjugateEnd
@@ -67,6 +33,24 @@ noncomputable def conjugateEnd
     conjugateEnd U (A + B) = conjugateEnd U A + conjugateEnd U B := by
   ext v
   simp [conjugateEnd]
+
+/--
+The split 8-channel Sugawara signature datum.
+
+This stays separate from the global Krein carrier.  It packages the metric
+signature used for the indexed current contraction layer.
+-/
+noncomputable def splitEightSugawaraSignatureDatum :
+    CurrentMetricDatum ℝ (Fin 8) :=
+  splitEightCurrentMetricDatum
+
+@[simp] theorem splitEightSugawaraSignatureDatum_kappa :
+    splitEightSugawaraSignatureDatum.kappa = splitEightKappa := by
+  rfl
+
+@[simp] theorem splitEightSugawaraSignatureDatum_kappaInv :
+    splitEightSugawaraSignatureDatum.kappaInv = splitEightKappa := by
+  rfl
 
 @[simp] lemma conjugateEnd_mul
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
@@ -95,73 +79,6 @@ noncomputable def conjugateEnd
     conjugateEnd U (1 : V →ₗ[𝕜] V) = 1 := by
   ext v
   simp [conjugateEnd]
-
-/-- The Heisenberg cocycle picks up a minus sign under mode reversal. -/
-theorem heisenbergCocycleBilin_modeFlip
-    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
-    (X Y : VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜) :
-    VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin 𝕜
-        (currentFlip (𝕜 := 𝕜) X)
-        (currentFlip (𝕜 := 𝕜) Y)
-      =
-    - VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin 𝕜 X Y := by
-  induction X using Finsupp.induction_linear with
-  | zero =>
-      simp
-  | add X₁ X₂ hX₁ hX₂ =>
-      simp [hX₁, hX₂]
-  | single i a =>
-      induction Y using Finsupp.induction_linear with
-      | zero =>
-          simp
-      | add Y₁ Y₂ hY₁ hY₂ =>
-          simp [hY₁, hY₂]
-      | single j b =>
-          simp [currentFlip_single, VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin_apply_jgen_jgen]
-          by_cases h : i + j = 0
-          · have h' : (-i) + (-j) = 0 := by linarith
-            simp [h, h']
-          · have h' : (-i) + (-j) ≠ 0 := by
-              intro hh
-              apply h
-              linarith
-            simp [h, h']
-
-/-- The Heisenberg algebra mode flip sends `J_n ↦ J_-n` and `K ↦ -K`. -/
-noncomputable def heisenbergModeFlip
-    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] :
-    VirasoroProject.HeisenbergAlgebra 𝕜 ≃ₗ[𝕜] VirasoroProject.HeisenbergAlgebra 𝕜 where
-  toFun X := ⟨currentFlip (𝕜 := 𝕜) X.fst, -X.snd⟩
-  map_add' X Y := by
-    apply VirasoroProject.HeisenbergAlgebra.ext'
-    · simp [currentFlip]
-    · abel
-  map_smul' c X := by
-    apply VirasoroProject.HeisenbergAlgebra.ext'
-    · simp [currentFlip]
-    · ring
-  invFun X := ⟨currentFlip (𝕜 := 𝕜) X.fst, -X.snd⟩
-  left_inv := by
-    intro X
-    apply VirasoroProject.HeisenbergAlgebra.ext'
-    · simpa [currentFlip] using (currentFlip_involutive (𝕜 := 𝕜) X.fst)
-    · ring
-  right_inv := by
-    intro X
-    apply VirasoroProject.HeisenbergAlgebra.ext'
-    · simpa [currentFlip] using (currentFlip_involutive (𝕜 := 𝕜) X.fst)
-    · ring
-
-/-- The mode flip is a Lie algebra automorphism of the Heisenberg extension. -/
-theorem heisenbergModeFlip_map_lie
-    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
-    (X Y : VirasoroProject.HeisenbergAlgebra 𝕜) :
-    ⁅heisenbergModeFlip (𝕜 := 𝕜) X, heisenbergModeFlip (𝕜 := 𝕜) Y⁆ =
-      heisenbergModeFlip (𝕜 := 𝕜) ⁅X, Y⁆ := by
-  apply VirasoroProject.HeisenbergAlgebra.ext'
-  · simp [VirasoroProject.HeisenbergAlgebra.bracket_def']
-  · simp [VirasoroProject.HeisenbergAlgebra.bracket_def',
-      heisenbergCocycleBilin_modeFlip]
 
 /--
 The exact current-representation interface required by the external Sugawara

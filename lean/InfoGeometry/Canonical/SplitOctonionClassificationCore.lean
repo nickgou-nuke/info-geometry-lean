@@ -249,6 +249,48 @@ theorem associator_upper_e2_lower_e2_y (x : InfoGeometry.Canonical.ZornMatrix R)
   rcases x with ⟨a, b, x, y⟩
   ext i <;> fin_cases i <;> simp [associator, mulZ, upper, lower, e2, ZornMatrix.dot, ZornMatrix.cross]
 
+theorem associator_upper_e0_upper_e1_b
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e0) (upper e1)).b = x.x 2 := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e0, e1, ZornMatrix.dot, ZornMatrix.cross]
+
+theorem associator_upper_e0_upper_e1_y2
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e0) (upper e1)).y 2 = x.a - x.b := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e0, e1, ZornMatrix.dot, ZornMatrix.cross]
+
+theorem associator_upper_e1_upper_e2_b
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e1) (upper e2)).b = x.x 0 := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e1, e2, ZornMatrix.dot, ZornMatrix.cross]
+
+theorem associator_upper_e1_upper_e2_y0
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e1) (upper e2)).y 0 = x.a - x.b := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e1, e2, ZornMatrix.dot, ZornMatrix.cross]
+
+theorem associator_upper_e2_upper_e0_b
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e2) (upper e0)).b = x.x 1 := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e2, e0, ZornMatrix.dot, ZornMatrix.cross]
+
+theorem associator_upper_e2_upper_e0_y1
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hy : x.y = 0) :
+    (associator x (upper e2) (upper e0)).y 1 = x.a - x.b := by
+  rcases x with ⟨a, b, u, v⟩
+  simp [associator, mulZ, upper, e2, e0, ZornMatrix.dot, ZornMatrix.cross]
+
 theorem nonzero_associator_of_y_ne_zero
     (x : InfoGeometry.Canonical.ZornMatrix R)
     (hy : x.y ≠ 0) :
@@ -278,6 +320,79 @@ theorem nonzero_associator_of_y_ne_zero
       rw [associator_upper_e0_lower_e0_y] at h'
       simp at h'
       exact h2 h'.2
+
+/-- A non-scalar Zorn element has a nonzero associator witness. -/
+theorem nonzero_associator_of_not_scalar
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :
+    ∃ y z : InfoGeometry.Canonical.ZornMatrix R, associator x y z ≠ 0 := by
+  by_cases hy : x.y = 0
+  · rcases x with ⟨a, b, u, v⟩
+    have hv : v = 0 := by simpa using hy
+    by_cases hu0 : u 0 ≠ 0
+    · refine ⟨upper e1, upper e2, ?_⟩
+      intro h
+      have hcoord : (associator (x := ⟨a, b, u, v⟩) (upper e1) (upper e2)).b = 0 := by
+        simpa using congrArg (fun z : InfoGeometry.Canonical.ZornMatrix R => z.b) h
+      have hxy := associator_upper_e1_upper_e2_b (R := R) (x := ⟨a, b, u, v⟩) (by simp [hv])
+      have hzero : u 0 = 0 := by
+        simpa [hxy] using hcoord
+      exact hu0 hzero
+    · have hu0eq : u 0 = 0 := by
+        by_contra h
+        exact hu0 h
+      by_cases hu1 : u 1 ≠ 0
+      · refine ⟨upper e2, upper e0, ?_⟩
+        intro h
+        have hcoord : (associator (x := ⟨a, b, u, v⟩) (upper e2) (upper e0)).b = 0 := by
+          simpa using congrArg (fun z : InfoGeometry.Canonical.ZornMatrix R => z.b) h
+        have hxy := associator_upper_e2_upper_e0_b (R := R) (x := ⟨a, b, u, v⟩) (by simp [hv])
+        have hzero : u 1 = 0 := by
+          simpa [hxy] using hcoord
+        exact hu1 hzero
+      · have hu1eq : u 1 = 0 := by
+          by_contra h
+          exact hu1 h
+        by_cases hu2 : u 2 ≠ 0
+        · refine ⟨upper e0, upper e1, ?_⟩
+          intro h
+          have hcoord : (associator (x := ⟨a, b, u, v⟩) (upper e0) (upper e1)).b = 0 := by
+            simpa using congrArg (fun z : InfoGeometry.Canonical.ZornMatrix R => z.b) h
+          have hxy := associator_upper_e0_upper_e1_b (R := R) (x := ⟨a, b, u, v⟩) (by simp [hv])
+          have hzero : u 2 = 0 := by
+            simpa [hxy] using hcoord
+          exact hu2 hzero
+        · have hu2eq : u 2 = 0 := by
+            by_contra h
+            exact hu2 h
+          have hu : u = 0 := by
+            ext i <;> fin_cases i <;> simp [hu0eq, hu1eq, hu2eq]
+          by_cases hAB : a = b
+          · apply False.elim
+            apply hx
+            have hscalar : ({ a := a, b := a, x := 0, y := 0 } : InfoGeometry.Canonical.ZornMatrix R) =
+                a • (1 : InfoGeometry.Canonical.ZornMatrix R) := by
+              have h1a : InfoGeometry.Canonical.ZornMatrix.a (1 : InfoGeometry.Canonical.ZornMatrix R) = 1 := by
+                rfl
+              have h1b : InfoGeometry.Canonical.ZornMatrix.b (1 : InfoGeometry.Canonical.ZornMatrix R) = 1 := by
+                rfl
+              have hx0 : InfoGeometry.Canonical.ZornMatrix.x (1 : InfoGeometry.Canonical.ZornMatrix R) = 0 := by
+                rfl
+              have hy0 : InfoGeometry.Canonical.ZornMatrix.y (1 : InfoGeometry.Canonical.ZornMatrix R) = 0 := by
+                rfl
+              ext <;> simp [Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+                h1a, h1b, hx0, hy0]
+            refine ⟨a, ?_⟩
+            simpa [hu, hv, hAB] using hscalar
+          · refine ⟨upper e0, upper e1, ?_⟩
+            intro h
+            have hcoord : (associator (x := ⟨a, b, u, v⟩) (upper e0) (upper e1)).y 2 = 0 := by
+              simpa using congrArg (fun z : InfoGeometry.Canonical.ZornMatrix R => z.y 2) h
+            have hxy := associator_upper_e0_upper_e1_y2 (R := R) (x := ⟨a, b, u, v⟩) (by simp [hv])
+            have hzero : a - b = 0 := by
+              simpa [hxy] using hcoord
+            exact hAB (sub_eq_zero.mp hzero)
+  · exact nonzero_associator_of_y_ne_zero (R := R) x hy
 
 end ZornMatrix
 

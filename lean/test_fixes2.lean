@@ -1,8 +1,17 @@
 import Mathlib
 open Real
 
+noncomputable section
+
 def isBarrierKernel (x : ℝ) : ℝ := x - Real.log x - 1
-theorem isBarrierKernel_pos (x : ℝ) (hx : 0 < x) (hne : x ≠ 1) : 0 < isBarrierKernel x := sorry
+theorem isBarrierKernel_pos (x : ℝ) (hx : 0 < x) (hne : x ≠ 1) : 0 < isBarrierKernel x := by
+  have hlt : Real.log x < x - 1 := Real.log_lt_sub_one_of_pos hx hne
+  have hpos : 0 < x - 1 - Real.log x := sub_pos.mpr hlt
+  have h_eq : isBarrierKernel x = x - 1 - Real.log x := by
+    unfold isBarrierKernel
+    ring
+  rw [h_eq]
+  exact hpos
 def singlePrimeBarrier (p : ℕ) (σ : ℝ) : ℝ := isBarrierKernel ((p : ℝ) ^ (2 * ((1 : ℝ) / 2 - σ)))
 
 theorem singlePrimeBarrier_pos_off_criticalLine

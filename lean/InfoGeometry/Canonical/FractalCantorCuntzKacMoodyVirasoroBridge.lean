@@ -185,15 +185,26 @@ theorem boost_bilinear_partition_valid :
         (fun p => scalarWeightFromSpinor (B.boost.amplitude p)) :=
   B.boost.bilinear_partition
 
-/-- The Majorana packet is carried by the bridge as a root doubled-core witness. -/
+/-- The Majorana packet exposes the phase-axis square law. -/
 @[rep_depth krein]
-theorem majorana_packet_valid : True := by
-  trivial
+theorem majorana_packet_K_sq_eq_neg_id :
+    B.majorana.K.comp B.majorana.K =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
+  simpa using
+    (InfoGeometry.Core.MajoranaLiftPacket.K_sq_eq_neg_id
+      (E := E) (P := B.majorana))
 
-/-- The Bogoliubov shadow is carried by the bridge as a witness packet. -/
+/-- The Bogoliubov shadow exposes the phase-axis force law from the Cartan shadow. -/
 @[rep_depth operator]
-theorem bogoljubov_packet_valid : True := by
-  trivial
+theorem bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow
+    [CompleteSpace E]
+    (H : BogoliubovKANShadowPacket.doubledKreinEnd (E := E)) :
+    BogoliubovKANShadowPacket.cartanGaugeShadow (E := E) H +
+      BogoliubovKANShadowPacket.cartanScaleShadow (E := E) H =
+        BogoliubovTransport.modularTransportGenerator (E := E) H := by
+  simpa using
+    (BogoliubovKANShadowPacket.cartanGaugeShadow_add_cartanScaleShadow
+      (E := E) H)
 
 /-- The affine and Virasoro layers are explicitly compatible. -/
 @[rep_depth operator]

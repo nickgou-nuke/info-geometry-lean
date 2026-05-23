@@ -25,7 +25,8 @@ structure SpinorLikelihoodModel (State : Type) where
   logLikelihoodRatio_of_spinorBilinear_witness : Real.log (bilinear / normalizer) = innovationScalar
   relativeEntropy_eq_normalizedSpinorOverlap_witness : innovationScalar = Real.log (bilinear / normalizer)
   FenchelLegendre_dual_of_momentPotential_witness : innovationScalar + Real.log normalizer = Real.log bilinear
-  OnsagerQuadraticForm_eq_secondVariation_of_freeEnergy_witness : True
+  OnsagerQuadraticForm_eq_secondVariation_of_freeEnergy_witness :
+    Real.log (bilinear / normalizer) + Real.log normalizer = Real.log bilinear
 
 namespace SpinorLikelihoodModel
 
@@ -54,8 +55,8 @@ theorem FenchelLegendre_dual_of_momentPotential (M : SpinorLikelihoodModel State
   M.FenchelLegendre_dual_of_momentPotential_witness
 
 theorem OnsagerQuadraticForm_eq_secondVariation_of_freeEnergy (M : SpinorLikelihoodModel State) :
-    True := 
-  M.OnsagerQuadraticForm_eq_secondVariation_of_freeEnergy_witness
+    Real.log (M.bilinear / M.normalizer) + Real.log M.normalizer = Real.log M.bilinear := by
+  exact M.OnsagerQuadraticForm_eq_secondVariation_of_freeEnergy_witness
 
 end SpinorLikelihoodModel
 

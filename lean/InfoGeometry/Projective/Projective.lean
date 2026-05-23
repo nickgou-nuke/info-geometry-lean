@@ -1,5 +1,6 @@
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Stratum.Gauge
+import Mathlib.GroupTheory.GroupAction.Basic
 
 /-!
 # Projective geometry of the positive cone
@@ -7,8 +8,7 @@ import InfoGeometry.Stratum.Gauge
 Defines projective rays, the quotient, and ray-invariance of normalization.
 -/
 
-namespace InfoGeometry.Projective.Projective
-end InfoGeometry.Projective.Projective
+
 
 namespace InfoGeometry
 
@@ -28,37 +28,50 @@ instance : SMul PosGauge (PositiveMeasure α ℝ) :=
 
 -- MulAction instance for the gauge action on positive measures
 instance : MulAction PosGauge (PositiveMeasure α ℝ) where
-  one_smul μ := by ext a; simp
-  mul_smul c d μ := by ext a; simp [smul_smul]
-
+  one_smul μ := by
+    ext a
+    change scale 1 zero_lt_one μ a = μ a
+    simp [scale]
+  mul_smul c d μ := by
+    ext a
+    change (c.val * d.val) * μ a = c.val * (d.val * μ a)
+    rw [mul_assoc]
 
 /-- `μ` and `ν` lie on the same projective ray iff they differ by the `PosGauge` action. -/
-def SameRay (μ ν : PositiveMeasure α ℝ) : Prop :=
-  ∃ c : ℝ, ∃ hc : 0 < c, ν = scale c hc μ
+def SameRay (μ ν : PositiveMeasure α ℝ) : Prop := ∃ c : PosGauge, c • μ = ν
 
 /-- The setoid for projectivization, rooted formally in Mathlib's orbit relations. -/
 instance sameRaySetoid : Setoid (PositiveMeasure α ℝ) :=
-  MulAction.orbitRel PosGauge (PositiveMeasure α ℝ)
-
-lemma same_ray_iff_orbitRel {μ ν : PositiveMeasure α ℝ} :
-    SameRay μ ν ↔ sameRaySetoid.r μ ν := by
-  constructor
-  · rintro ⟨c, hc, rfl⟩
-    let c_gauge : PosGauge := ⟨c, hc⟩
-    refine ⟨c_gauge⁻¹, ?_⟩
-    ext a
-    change c⁻¹ * (c * μ a) = μ a
-    rw [← mul_assoc, inv_mul_cancel₀ hc.ne', one_mul]
-  · rintro ⟨c, hc⟩
-    refine ⟨(c⁻¹).val, (c⁻¹).property, ?_⟩
-    ext a
-    have hca : c.val * ν a = μ a := congr_arg (fun (x : PositiveMeasure α ℝ) => x a) hc
-    change (c⁻¹).val * μ a = ν a
-    rw [← hca, ← mul_assoc, inv_mul_cancel₀ c.property.ne', one_mul]
+  Setoid.mk SameRay ⟨
+    fun μ => ⟨1, by
+      ext a
+      change scale 1 zero_lt_one μ a = μ a
+      simp [scale]⟩,
+    fun {μ ν} ⟨c, h⟩ => ⟨c⁻¹, by
+      rw [← h]
+      ext a
+      have hc : (c.val : ℝ) ≠ 0 := ne_of_gt c.property
+      calc
+        c⁻¹.val * (c.val * μ a)
+            = (c⁻¹.val * c.val) * μ a := by rw [mul_assoc]
+        _ = μ a := by
+              rw [show (c⁻¹.val * c.val) = 1 by
+                rw [show c⁻¹.val = (c.val)⁻¹ by rfl]
+                exact inv_mul_cancel₀ hc, one_mul]
+    ⟩,
+    fun {μ ν κ} ⟨c, h₁⟩ ⟨d, h₂⟩ => ⟨d * c, by
+      rw [← h₂, ← h₁]
+      ext a
+      calc
+        (d * c).val * μ a = (d.val * c.val) * μ a := rfl
+        _ = d.val * (c.val * μ a) := by rw [mul_assoc]
+    ⟩
+  ⟩
 
 /-- The projectivized positive cone (rays). -/
 def Proj := Quotient (sameRaySetoid (α := α))
 
+end
 end Projective
 
 section Gauge

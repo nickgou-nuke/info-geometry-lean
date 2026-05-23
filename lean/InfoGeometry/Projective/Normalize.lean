@@ -18,9 +18,10 @@ lemma normalize_eq_of_sameRay
     {μ ν : PositiveMeasure α ℝ}
     (h : PositiveMeasure.SameRay μ ν) :
     PositiveMeasure.normalize (α := α) (R := ℝ) μ = PositiveMeasure.normalize (α := α) (R := ℝ) ν := by
-  rcases h with ⟨c, hc, rfl⟩
+  rcases h with ⟨c, rfl⟩
+  have hc : 0 < c.1 := c.2
   symm
-  exact PositiveMeasure.normalize_scale (α := α) (c := c) hc μ
+  exact PositiveMeasure.normalize_scale (α := α) (c := c.1) hc μ
 
 /-- Legacy quotient-based normalization map (kept private). -/
 private noncomputable def normalizeOnProjLegacy : PositiveMeasure.Proj (α := α) → PositiveMeasure α ℝ :=

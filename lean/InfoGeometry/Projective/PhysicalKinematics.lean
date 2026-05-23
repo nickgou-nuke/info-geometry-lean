@@ -57,7 +57,8 @@ noncomputable def descend
     ProjectiveState (E := E) → β :=
   Quotient.lift φ (by
     intro v w hvw
-    exact GaugeInvariant.compat (E := E) hφ hvw)
+    exact GaugeInvariant.compat (E := E) hφ
+      ((same_ray_iff_gauge (E := E) (v := v) (w := w)).mpr hvw))
 
 @[simp] lemma descend_projectivize
     (φ : DoubledSpace E → β)

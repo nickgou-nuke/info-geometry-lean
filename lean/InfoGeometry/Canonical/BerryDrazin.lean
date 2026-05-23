@@ -13,9 +13,10 @@ This module builds on the theorem-safe idempotent differential law from
 `p * d p * p = 0`.
 
 It defines the Berry connection `p_A * d p_A`, a curvature readout
-`p_A * d p_A * d p_A * p_A`, and a witness-gated thermodynamic entropy packet
+`p_A * d p_A * d p_A * p_A`, and a thermodynamic entropy packet
 for Hodge-Drazin Laplacian geometry.  It does not assert analytic trace, log,
-exponential, or Chern integration theorems without supplied witnesses.
+exponential, positivity, or Chern integration theorems beyond the concrete laws
+stored in each packet.
 -/
 
 noncomputable section
@@ -114,10 +115,11 @@ theorem harmonicBerryConnection_mul_HL_eq_zero :
 end LeanSafeCarrier
 
 /--
-Witness-gated Chern readout for a Drazin Berry curvature.
+Chern readout for a Drazin Berry curvature.
 
 Integration, trace, normalization constants, and cohomology classes are analytic
-or geometric model data, so they are explicit fields.
+or geometric model data, so the readout map and its value law are explicit
+fields.
 -/
 @[rep_depth operator]
 structure DrazinBerryChernPacket
@@ -142,11 +144,11 @@ theorem chern_readout_eq_value :
 end DrazinBerryChernPacket
 
 /--
-Witness-gated Hodge-Drazin thermodynamic entropy packet.
+Hodge-Drazin thermodynamic entropy packet.
 
-This records the intended regular-sector density and entropy readouts without
-claiming the existence of trace, exponential, logarithm, or positivity theory in
-an arbitrary operator ring.
+This records regular-sector density and entropy laws without claiming the
+existence of trace, exponential, logarithm, or positivity theory in an arbitrary
+operator ring.
 -/
 @[rep_depth operator]
 structure HodgeDrazinThermodynamicEntropyPacket
@@ -174,14 +176,14 @@ theorem entropy_eq_horizon_add_harmonic :
     P.entropy = P.horizonEntropy + P.harmonicEntropy :=
   P.entropy_split_law
 
-/-- The regular-sector density law is available as a model-supplied proposition. -/
+/-- The regular-sector density law carried by the packet. -/
 @[rep_depth operator]
-def density_regularSector_statement : Prop :=
+def density_regularSector_law_readout : Prop :=
   P.density_regularSector_law
 
-/-- The von Neumann entropy law is available as a model-supplied proposition. -/
+/-- The von Neumann entropy law carried by the packet. -/
 @[rep_depth operator]
-def entropy_vonNeumann_statement : Prop :=
+def entropy_vonNeumann_law_readout : Prop :=
   P.entropy_vonNeumann_law
 
 end HodgeDrazinThermodynamicEntropyPacket

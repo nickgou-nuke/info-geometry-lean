@@ -1,129 +1,94 @@
-import InfoGeometry.Algebra.Zorn.NullCone
+import InfoGeometry.Algebra.Zorn.Basic
+import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Algebra.Zorn.Projective
 
-Projectivized null cone of the explicit split-octonion Zorn carrier.
+Projective null-cone layer for the split Zorn carrier.
 
-This file stays at the quadratic/projective level:
+This file defines the projectivized null cone
 
-* nonzero null vectors modulo nonzero real rescaling;
-* scale-invariance of nullness;
-* canonical null representatives for the Zorn projectors and lightrays.
+`{X ≠ 0 | detZ X = 0} / Rˣ`
 
-It does not introduce a `Ring` instance on `ZornMatrix` and it does not touch
-associators.
+without introducing an associative ring structure on `ZornMatrix`.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
-open scoped BigOperators
-open InfoGeometry.Canonical.ZornVectorMatrixExplicit
+variable {R : Type*} [Field R]
 
-/-- A nonzero null Zorn vector. -/
-structure NonzeroNullCone where
-  X : ZornCoord
-  nonzero : X ≠ 0
-  null : IsZornNull X
+namespace ZornMatrix
 
-/-- Real rescaling of an explicit Zorn coordinate. -/
-def rescale (c : ℝ) (X : ZornCoord) : ZornCoord :=
-  c • X
+/-- Componentwise scalar action on Zorn matrices. -/
+def smulZ (r : R) (X : ZornMatrix R) : ZornMatrix R :=
+  { a := r * X.a
+    b := r * X.b
+    x := r • X.x
+    y := r • X.y }
 
-/-- The Zorn norm is homogeneous of degree two under scalar rescaling. -/
-theorem zornNorm_rescale (c : ℝ) (X : ZornCoord) :
-    zornNorm (rescale c X) = c * c * zornNorm X := by
-  rcases X with ⟨a, b, x, y⟩
-  simp [rescale, zornNorm, dot3, mul_add, add_mul, mul_comm, mul_left_comm,
-    mul_assoc]
+@[simp] theorem smulZ_one (X : ZornMatrix R) :
+    smulZ (1 : R) X = X := by
+  ext <;> simp [smulZ]
+
+@[simp] theorem smulZ_mul (r s : R) (X : ZornMatrix R) :
+    smulZ r (smulZ s X) = smulZ (r * s) X := by
+  ext <;> simp [smulZ, mul_assoc]
+
+/-- Quadratic homogeneity of the reduced Zorn determinant. -/
+theorem detZ_smulZ (r : R) (X : ZornMatrix R) :
+    detZ (smulZ r X) = r * r * detZ X := by
+  unfold detZ smulZ InfoGeometry.Canonical.ZornMatrix.dot
+  simp
   ring
 
-/-- Nullness is preserved by real rescaling. -/
-theorem isZornNull_rescale
-    (c : ℝ) (X : ZornCoord)
-    (hX : IsZornNull X) :
-    IsZornNull (rescale c X) := by
-  unfold IsZornNull
-  rw [zornNorm_rescale, hX]
-  simp
+/-- Nullness for the reduced Zorn determinant. -/
+def IsNull (X : ZornMatrix R) : Prop :=
+  detZ X = 0
 
-/-- Same-ray relation on nonzero null Zorn vectors. -/
-def SameRay (X Y : NonzeroNullCone) : Prop :=
-  ∃ c : ℝ, c ≠ 0 ∧ Y.X = rescale c X.X
+/-- Nonzero null representatives. -/
+def NonzeroNullCone : Type :=
+  { X : ZornMatrix R // X ≠ 0 ∧ IsNull X }
 
-theorem SameRay.refl (X : NonzeroNullCone) : SameRay X X := by
-  refine ⟨1, one_ne_zero, ?_⟩
-  simp [SameRay, rescale]
+/-- Nullness is invariant under scalar rescaling. -/
+theorem isNull_smulZ {X : ZornMatrix R} (hX : IsNull X) (r : R) :
+    IsNull (smulZ r X) := by
+  unfold IsNull at *
+  rw [detZ_smulZ, hX]
+  ring
 
-theorem SameRay.symm {X Y : NonzeroNullCone} (h : SameRay X Y) :
-    SameRay Y X := by
-  rcases h with ⟨c, hc, rfl⟩
-  refine ⟨c⁻¹, inv_ne_zero hc, ?_⟩
-  simp [SameRay, rescale, smul_smul, hc]
+/-- Same-projective-ray relation on nonzero null representatives. -/
+def SameRay (X Y : NonzeroNullCone (R := R)) : Prop :=
+  ∃ r : Rˣ, Y.1 = smulZ (r : R) X.1
 
-theorem SameRay.trans {X Y Z : NonzeroNullCone}
-    (hXY : SameRay X Y) (hYZ : SameRay Y Z) :
-    SameRay X Z := by
-  rcases hXY with ⟨c, hc, rfl⟩
-  rcases hYZ with ⟨d, hd, rfl⟩
-  refine ⟨d * c, mul_ne_zero hd hc, ?_⟩
-  simp [SameRay, rescale, smul_smul, mul_comm, mul_left_comm, mul_assoc]
+theorem SameRay.refl (X : NonzeroNullCone (R := R)) :
+    SameRay X X := by
+  refine ⟨1, ?_⟩
+  simp [SameRay]
 
-/-- Setoid for the projectivized Zorn null cone. -/
-def projectiveNullSetoid : Setoid (NonzeroNullCone) where
+theorem SameRay.symm {X Y : NonzeroNullCone (R := R)}
+    (h : SameRay X Y) : SameRay Y X := by
+  rcases h with ⟨r, hr⟩
+  refine ⟨r⁻¹, ?_⟩
+  rw [hr]
+  simpa [smulZ_mul, mul_assoc]
+
+theorem SameRay.trans {X Y Z : NonzeroNullCone (R := R)}
+    (hXY : SameRay X Y) (hYZ : SameRay Y Z) : SameRay X Z := by
+  rcases hXY with ⟨r, hr⟩
+  rcases hYZ with ⟨s, hs⟩
+  refine ⟨s * r, ?_⟩
+  rw [hs, hr]
+  simpa [smulZ_mul, mul_assoc]
+
+/-- Setoid for projectivizing the nonzero Zorn null cone. -/
+def projectiveNullSetoid : Setoid (NonzeroNullCone (R := R)) where
   r := SameRay
-  iseqv := ⟨SameRay.refl, @SameRay.symm, @SameRay.trans⟩
+  iseqv := ⟨SameRay.refl, SameRay.symm, SameRay.trans⟩
 
-/--
-Projectivized Zorn null cone.
+/-- Projectivized Zorn null cone `{X ≠ 0 | detZ X = 0} / Rˣ`. -/
+def ProjectiveNullCone : Type :=
+  Quot (projectiveNullSetoid (R := R))
 
-This is the quotient of nonzero null Zorn vectors by nonzero real rescaling.
--/
-abbrev ProjectiveNullCone : Type := Quotient projectiveNullSetoid
-
-/-- The projective class of a nonzero null representative. -/
-def projectiveNullClass (X : NonzeroNullCone) : ProjectiveNullCone :=
-  Quotient.mk _ X
-
-/-- The positive diagonal projector is null. -/
-@[simp] theorem pPlus_null : IsZornNull pPlus := by
-  simp [IsZornNull, zornNorm, pPlus, dot3]
-
-/-- The negative diagonal projector is null. -/
-@[simp] theorem pMinus_null : IsZornNull pMinus := by
-  simp [IsZornNull, zornNorm, pMinus, dot3]
-
-/-- The upper off-diagonal lightray is null. -/
-@[simp] theorem upperVector_null (x : Vec3) :
-    IsZornNull (upperVectorZorn x) := by
-  simp [IsZornNull, zornNorm, upperVectorZorn, dot3]
-
-/-- The lower off-diagonal lightray is null. -/
-@[simp] theorem lowerVector_null (y : Vec3) :
-    IsZornNull (lowerVectorZorn y) := by
-  simp [IsZornNull, zornNorm, lowerVectorZorn, dot3]
-
-/-- A projective null point represented by `pPlus`. -/
-def projectivePPlus : ProjectiveNullCone :=
-  projectiveNullClass
-    ⟨pPlus, by
-      intro h
-      have h1 := congrArg (fun z : ZornCoord => z.1) h
-      simpa [pPlus] using h1, pPlus_null⟩
-
-/-- A projective null point represented by `pMinus`. -/
-def projectivePMinus : ProjectiveNullCone :=
-  projectiveNullClass
-    ⟨pMinus, by
-      intro h
-      have h2 := congrArg (fun z : ZornCoord => z.2.1) h
-      simpa [pMinus] using h2, pMinus_null⟩
-
-/-- The projective null class is unchanged by a same-ray rescaling. -/
-theorem projectiveNullClass_eq_of_sameRay
-    {X Y : NonzeroNullCone} (h : SameRay X Y) :
-    projectiveNullClass X = projectiveNullClass Y := by
-  exact Quotient.sound h
+end ZornMatrix
 
 end InfoGeometry.Algebra.Zorn
-

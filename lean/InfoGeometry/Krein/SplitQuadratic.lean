@@ -14,21 +14,76 @@ local notation "H₂" => DoubledSpace E
 /-- The split/Krein carrier used by the quadratic layer. -/
 abbrev SplitKreinSpace := H₂
 
-/-- The split quadratic form `q(x) = [x, x]_J`. -/
+/-- Indefinite Krein quadratic form: q(x) = B(x, x). -/
 noncomputable def qform (u : SplitKreinSpace (E := E)) : ℝ :=
   KreinSpace.kreinInner (H := H₂) u u
+
+@[simp] theorem qform_eq_kreinInner (u : SplitKreinSpace (E := E)) :
+    qform (E := E) u = KreinSpace.kreinInner (H := H₂) u u := rfl
+
+/-- Hilbertized J-positive form: <x, x>_J = B(x, Jx). -/
+noncomputable def jForm (u : SplitKreinSpace (E := E)) : ℝ :=
+  KreinSpace.kreinInner (H := H₂) u (spectral_epsilon (E := E) u)
+
+@[simp] theorem jForm_eq_kreinInner_twist (u : SplitKreinSpace (E := E)) :
+    jForm (E := E) u = KreinSpace.kreinInner (H := H₂) u (spectral_epsilon (E := E) u) := rfl
 
 /-- A vector is null when its split quadratic form vanishes. -/
 def IsNull (u : SplitKreinSpace (E := E)) : Prop :=
   qform (E := E) u = 0
 
-/-- A vector is positive when its split quadratic form is positive. -/
-def IsPositive (u : SplitKreinSpace (E := E)) : Prop :=
+/-- A vector is Krein-positive when its indefinite split quadratic form is positive. -/
+def IsKreinPositive (u : SplitKreinSpace (E := E)) : Prop :=
   0 < qform (E := E) u
 
-/-- A vector is negative when its split quadratic form is negative. -/
-def IsNegative (u : SplitKreinSpace (E := E)) : Prop :=
+/-- A vector is Krein-negative when its indefinite split quadratic form is negative. -/
+def IsKreinNegative (u : SplitKreinSpace (E := E)) : Prop :=
   qform (E := E) u < 0
+
+/-- A vector is J-positive when its Hilbertized form is positive. -/
+def IsJPositive (u : SplitKreinSpace (E := E)) : Prop :=
+  0 < jForm (E := E) u
+
+/-- Alias for the sign sector of the indefinite quadratic form. -/
+abbrev IsPositive (u : SplitKreinSpace (E := E)) : Prop :=
+  IsKreinPositive (E := E) u
+
+/-- Alias for the negative sign sector of the indefinite quadratic form. -/
+abbrev IsNegative (u : SplitKreinSpace (E := E)) : Prop :=
+  IsKreinNegative (E := E) u
+
+@[simp] theorem qform_neg (u : SplitKreinSpace (E := E)) :
+    qform (E := E) (-u) = qform (E := E) u := by
+  unfold qform
+  simp [KreinSpace.kreinInner, inner_neg_left, inner_neg_right]
+
+@[simp] theorem jForm_neg (u : SplitKreinSpace (E := E)) :
+    jForm (E := E) (-u) = jForm (E := E) u := by
+  unfold jForm
+  have h_J_neg : spectral_epsilon (E := E) (-u) = - spectral_epsilon (E := E) u :=
+    map_neg (spectral_epsilon (E := E)) u
+  rw [h_J_neg]
+  simp [KreinSpace.kreinInner, inner_neg_left, inner_neg_right]
+
+@[simp] theorem isNull_neg (u : SplitKreinSpace (E := E)) :
+    IsNull (E := E) (-u) ↔ IsNull (E := E) u := by
+  unfold IsNull
+  rw [qform_neg]
+
+@[simp] theorem isKreinPositive_neg (u : SplitKreinSpace (E := E)) :
+    IsKreinPositive (E := E) (-u) ↔ IsKreinPositive (E := E) u := by
+  unfold IsKreinPositive
+  rw [qform_neg]
+
+@[simp] theorem isKreinNegative_neg (u : SplitKreinSpace (E := E)) :
+    IsKreinNegative (E := E) (-u) ↔ IsKreinNegative (E := E) u := by
+  unfold IsKreinNegative
+  rw [qform_neg]
+
+@[simp] theorem isJPositive_neg (u : SplitKreinSpace (E := E)) :
+    IsJPositive (E := E) (-u) ↔ IsJPositive (E := E) u := by
+  unfold IsJPositive
+  rw [jForm_neg]
 
 /--
 The split quadratic potential on the doubled/Krein carrier.

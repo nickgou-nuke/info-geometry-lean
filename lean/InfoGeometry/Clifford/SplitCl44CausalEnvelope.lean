@@ -188,15 +188,4 @@ theorem splitCl44MetricLogScale_neutral_iff_metric_null
     IsWeylNeutral (splitCl44MetricLogScale v) ↔ IsMetricNull44 v :=
   Iff.rfl
 
-/-! ## Eta/signature residue boundary -/
-
-/--
-This owner does not construct an eta-invariant reduction from split `(4,4)` to
-Lorentz `(3,1)`.  The explicit theorem is just the negative boundary: the
-module exports no such datum.
--/
-theorem no_eta_signature_residue_claim :
-    InfoGeometry.Clifford.Cl44SignatureResidue.etaShadow = 2 :=
-  rfl
-
 end InfoGeometry.Clifford.SplitCl44CausalEnvelope

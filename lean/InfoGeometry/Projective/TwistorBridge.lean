@@ -113,8 +113,9 @@ lemma projectiveClassToTwistor_mk_normalize
     refine ⟨(⟨(PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹,
       inv_pos.mpr (PositiveMeasure.Z_pos (α := α) (R := ℝ) μ)⟩ : InfoGeometry.Stratum.PosGauge), ?_⟩
     ext a
-    change (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹ * μ a = μ a / PositiveMeasure.Z (α := α) (R := ℝ) μ
-    rw [div_eq_mul_inv]
+    change (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹ * μ a = μ a * (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹
+    simpa [mul_comm] using (rfl : (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹ * μ a =
+      (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹ * μ a)
   exact (congrArg (projectiveClassToTwistor (α := α) Q hNull) (Quotient.sound hsame)).symm
 
 /-- Twistor bridge is invariant under `normalizeOnProj`. -/

@@ -98,16 +98,32 @@ def IsZornNull (z : ZornCoord) : Prop :=
     zornA (zornMk a b x y) = a := by
   rfl
 
+@[simp] theorem zornA_tuple (a b : ℝ) (x y : Vec3) :
+    zornA (a, b, x, y) = a := by
+  rfl
+
 @[simp] theorem zornB_mk (a b : ℝ) (x y : Vec3) :
     zornB (zornMk a b x y) = b := by
+  rfl
+
+@[simp] theorem zornB_tuple (a b : ℝ) (x y : Vec3) :
+    zornB (a, b, x, y) = b := by
   rfl
 
 @[simp] theorem zornX_mk (a b : ℝ) (x y : Vec3) :
     zornX (zornMk a b x y) = x := by
   rfl
 
+@[simp] theorem zornX_tuple (a b : ℝ) (x y : Vec3) :
+    zornX (a, b, x, y) = x := by
+  rfl
+
 @[simp] theorem zornY_mk (a b : ℝ) (x y : Vec3) :
     zornY (zornMk a b x y) = y := by
+  rfl
+
+@[simp] theorem zornY_tuple (a b : ℝ) (x y : Vec3) :
+    zornY (a, b, x, y) = y := by
   rfl
 
 theorem dot3_comm (u v : Vec3) :
@@ -119,6 +135,31 @@ theorem cross3_self (u : Vec3) :
     cross3 u u = 0 := by
   funext i
   fin_cases i <;> simp [cross3] <;> ring
+
+@[simp] theorem vecHead_eq (v : Vec3) : Matrix.vecHead v = v 0 := by
+  rfl
+
+@[simp] theorem vecHead_tail_eq (v : Vec3) :
+    Matrix.vecHead (Matrix.vecTail v) = v 1 := by
+  rfl
+
+@[simp] theorem vecHead_tail_tail_eq (v : Vec3) :
+    Matrix.vecHead (Matrix.vecTail (Matrix.vecTail v)) = v 2 := by
+  rfl
+
+@[simp] theorem vecHead_smul (a : ℝ) (v : Vec3) :
+    Matrix.vecHead (a • v) = a * Matrix.vecHead v := by
+  rfl
+
+@[simp] theorem vecHead_tail_smul (a : ℝ) (v : Vec3) :
+    Matrix.vecHead (Matrix.vecTail (a • v)) =
+      a * Matrix.vecHead (Matrix.vecTail v) := by
+  rfl
+
+@[simp] theorem vecHead_tail_tail_smul (a : ℝ) (v : Vec3) :
+    Matrix.vecHead (Matrix.vecTail (Matrix.vecTail (a • v))) =
+      a * Matrix.vecHead (Matrix.vecTail (Matrix.vecTail v)) := by
+  rfl
 
 theorem scalarZorn_eq_paravectorZorn_zero (a : ℝ) :
     scalarZorn a = paravectorZorn a 0 := by
@@ -201,5 +242,26 @@ theorem zornMul_self_quadratic_rank (z : ZornCoord) :
     simp [zornMul, zornOne, zornTrace, zornNorm, zornMk, zornA, zornB, zornX,
       zornY, dot3, cross3_self] <;>
     ring
+
+/--
+The reduced Zorn norm is multiplicative on the explicit coordinate carrier.
+
+This is the local composition law for the split-octonion shadow.
+-/
+theorem zornNorm_mul (p q : ZornCoord) :
+    zornNorm (zornMul p q) = zornNorm p * zornNorm q := by
+  rcases p with ⟨a, b, x, y⟩
+  rcases q with ⟨c, d, u, v⟩
+  unfold zornMul zornNorm zornA zornB zornX zornY zornMk
+  simp [dot3, cross3]
+  ring_nf
+
+/-- The positive diagonal projector in the Zorn carrier. -/
+def pPlus : ZornCoord :=
+  zornMk 1 0 0 0
+
+/-- The negative diagonal projector in the Zorn carrier. -/
+def pMinus : ZornCoord :=
+  zornMk 0 1 0 0
 
 end InfoGeometry.Canonical.ZornVectorMatrixExplicit

@@ -19,6 +19,36 @@ open InfoGeometry.Canonical.ZornVectorMatrixExplicit
 abbrev Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
 abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
 
+/-- The positive diagonal projector. -/
+def pPlus : ZornCoord :=
+  zornMk 1 0 0 0
+
+/-- The negative diagonal projector. -/
+def pMinus : ZornCoord :=
+  zornMk 0 1 0 0
+
+@[simp] theorem vec3_zero : (![0, 0, 0] : Vec3) = 0 := by
+  funext i; fin_cases i <;> simp
+
+@[simp] theorem vec3_splat (x : Vec3) : ![x 0, x 1, x 2] = x := by
+  funext i; fin_cases i <;> simp
+
+@[simp] theorem pPlus_idempotent :
+    zornMul pPlus pPlus = pPlus := by
+  ext <;> simp [pPlus, zornMul, zornMk, dot3, cross3]
+
+@[simp] theorem pMinus_idempotent :
+    zornMul pMinus pMinus = pMinus := by
+  ext <;> simp [pMinus, zornMul, zornMk, dot3, cross3]
+
+@[simp] theorem pPlus_mul_pMinus :
+    zornMul pPlus pMinus = 0 := by
+  ext <;> simp [pPlus, pMinus, zornMul, zornMk, dot3, cross3]
+
+@[simp] theorem pMinus_mul_pPlus :
+    zornMul pMinus pPlus = 0 := by
+  ext <;> simp [pPlus, pMinus, zornMul, zornMk, dot3, cross3]
+
 @[simp] theorem upperVector_square_zero (x : Vec3) :
     zornMul (upperVectorZorn x) (upperVectorZorn x) = 0 := by
   simpa using upperVectorZorn_square_zero x
@@ -36,5 +66,21 @@ abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
     zornMul (lowerVectorZorn y) (upperVectorZorn x) =
       zornMk 0 (dot3 y x) 0 0 := by
   simpa using lowerVectorZorn_mul_upperVectorZorn x y
+
+theorem upperVector_left_supported_on_pPlus (x : Vec3) :
+    zornMul pPlus (upperVectorZorn x) = upperVectorZorn x := by
+  ext <;> simp [pPlus, upperVectorZorn, zornMul, zornMk, dot3, cross3]
+
+theorem upperVector_right_supported_on_pMinus (x : Vec3) :
+    zornMul (upperVectorZorn x) pMinus = upperVectorZorn x := by
+  ext <;> simp [pMinus, upperVectorZorn, zornMul, zornMk, dot3, cross3]
+
+theorem lowerVector_left_supported_on_pMinus (y : Vec3) :
+    zornMul pMinus (lowerVectorZorn y) = lowerVectorZorn y := by
+  ext <;> simp [pMinus, lowerVectorZorn, zornMul, zornMk, dot3, cross3]
+
+theorem lowerVector_right_supported_on_pPlus (y : Vec3) :
+    zornMul (lowerVectorZorn y) pPlus = lowerVectorZorn y := by
+  ext <;> simp [pPlus, lowerVectorZorn, zornMul, zornMk, dot3, cross3]
 
 end InfoGeometry.Algebra.Zorn

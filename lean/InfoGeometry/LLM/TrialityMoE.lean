@@ -660,11 +660,10 @@ zero.
     (hZD :
       InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
     (ofControlObserver (E := E) CIK obs flow c).routerResidual = 0 := by
-  simpa [ofControlObserver] using
-    ofZDControlledObserver_routerResidual_eq_zero_of_ZD_eq_zero
-      (E := E) (CIK := CIK) (obs := obs) (flow := flow)
-      (hControl := ObserverDeviationControlledByZD.of_control c)
-      (hZD := hZD)
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_control_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) c hZD
+  simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 @[simp] theorem ofCanonicalObserverDefect_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -834,22 +833,6 @@ theorem ofControlObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
   exact flow.commutesQ0
 
 /--
-Under zero central defect, the control-witness constructor forces zero
-observer-defect residual on the owner lane.
--/
-@[rep_depth transport]
-theorem ofControlObserver_observerDefectResidual_eq_zero_of_ZD_eq_zero
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (c : ObserverDeviationControl CIK obs)
-    (hZD :
-      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
-    observerDefectResidual CIK obs = 0 := by
-  exact observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
-    (CIK := CIK) (obs := obs)
-    (ObserverDeviationControlledByZD.of_control c) hZD
-
-/--
 Under zero central defect, the control-witness constructor forces zero scalarized
 observer strain on the owner lane.
 -/
@@ -861,10 +844,8 @@ theorem ofControlObserver_observerOrientationStrain_eq_zero_of_ZD_eq_zero
     (hZD :
       InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
     observerOrientationStrain CIK obs = 0 := by
-  have hResidual : observerDefectResidual CIK obs = 0 :=
-    ofControlObserver_observerDefectResidual_eq_zero_of_ZD_eq_zero
-      (CIK := CIK) (obs := obs) (c := c) (hZD := hZD)
-  exact (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).2 hResidual
+  exact observerOrientationStrain_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK := CIK) (obs := obs) hZD (ObserverDeviationControlledByZD.of_control c)
 
 /--
 For a deviation-zero observer, the bounded router sourced generator collapses to

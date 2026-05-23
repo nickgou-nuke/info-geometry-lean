@@ -92,15 +92,15 @@ structure DoubledKreinCarrier
 
 /-- Krein adjoint data for the operator host. -/
 structure KreinAdjointData
-    (Op : Type*) where
+    (Op : Type*) [Ring Op] where
   /-- Krein adjoint, e.g. `T ↦ ε T† ε` in a concrete model. -/
   sharp : Op → Op
   /-- Krein adjoint is involutive. -/
   sharp_involutive : ∀ T, sharp (sharp T) = T
-  /-- Product compatibility, packaged as a witness surface. -/
-  sharp_mul_witness : Prop
-  /-- Additive/linear compatibility, packaged as a witness surface. -/
-  sharp_linear_witness : Prop
+  /-- Krein adjoint reverses products. -/
+  sharp_mul : ∀ S T, sharp (S * T) = sharp T * sharp S
+  /-- Krein adjoint preserves addition. -/
+  sharp_add : ∀ S T, sharp (S + T) = sharp S + sharp T
 
 /--
 Krein interpretation of an algebraic Drazin split.
@@ -121,10 +121,12 @@ structure KreinDrazinBoundarySupport
   p_sharp : adjoint.sharp drazin.p = drazin.p
   /-- Defect support is Krein-self-adjoint. -/
   q_sharp : adjoint.sharp drazin.q = drazin.q
-  /-- The Drazin complement is the generalized-zero support, not the full light cone. -/
-  generalized_zero_sector_witness : Prop
+  /-- The distinguished zero vector belongs to the Drazin defect support. -/
+  generalized_zero_sector_zero :
+    carrier.act drazin.q carrier.zero = carrier.zero
   /-- The Drazin inverse is inverse on the regular support corner. -/
-  inverse_on_regular_sector_witness : Prop
+  inverse_on_regular_sector :
+    drazin.p * drazin.A * drazin.AD = drazin.p
 
 /-! ## Tomita-realified boundary polarization -/
 
@@ -687,8 +689,8 @@ structure BoundaryNormalObstruction
   boundary_point : IsDrazinKreinNullVector K D x
   /-- Obstruction/normal direction carrier. -/
   obstruction : Type*
-  /-- Constraint/anomaly witness attached to the conormal direction. -/
-  obstruction_witness : Prop
+  /-- The obstruction carrier contains at least one normal/anomaly channel. -/
+  obstruction_nonempty : Nonempty obstruction
 
 /-- Orthogonality to every vector in the Drazin zero sector. -/
 def KreinOrthogonalToDrazinZeroSector

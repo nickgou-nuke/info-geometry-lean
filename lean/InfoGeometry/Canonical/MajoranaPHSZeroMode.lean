@@ -79,6 +79,38 @@ theorem cptSuperchargeOp_is_boundary_zero_mode :
       (cptSuperchargeOp (E := E)) := by
   simpa using (boundaryGenerator_is_boundary_zero_mode (E := E) (cptSuperchargeOp (E := E)))
 
+/--
+The canonical boundary projector is supported in its own corner.
+
+This is the exact projection-side statement used by the zero-mode lane:
+the boundary projector is idempotent, hence stable under its own corner
+compression.
+-/
+theorem boundaryProjector_supportedInCorner
+    (Δ : FockEndomorphism E)
+    [(boundarySubspace (E := E) Δ).HasOrthogonalProjection] :
+    IsSupportedInCorner (E := E)
+      (boundaryProjector (E := E) Δ) (boundaryProjector (E := E) Δ) := by
+  have h := boundaryProjector_idempotent (E := E) Δ
+  simpa [IsSupportedInCorner, ContinuousLinearMap.comp_assoc, h] using
+    (congrArg (fun f : FockEndomorphism E => f.comp (boundaryProjector (E := E) Δ)) h)
+
+/--
+Finite Majorana/PHS zero-mode package on the canonical split boundary lane.
+
+This packages the two concrete finite facts that are already owned separately:
+PHS invariance of the real Majorana swap and boundary-zero-mode closure of the
+Tomita CPT generator.
+-/
+theorem concreteMajoranaPHSZeroModePackage :
+    IsPHSInvariant (E := E)
+      (concreteCARCreation (E := E) + concreteCARAnnihilation (E := E)) ∧
+    IsBoundaryZeroMode (E := E)
+      (cptSuperchargeOp (E := E))
+      (cptSuperchargeOp (E := E)) := by
+  refine ⟨concrete_majorana_swap_is_phs_invariant (E := E),
+    cptSuperchargeOp_is_boundary_zero_mode (E := E)⟩
+
 /-! ## 2. Canonical projector/corner facts -/
 
 /-- The `+` spectral projector is supported in its own canonical corner. -/

@@ -720,6 +720,35 @@ theorem observerDeviationControlledByZD_of_strain_eq_zero
   exact observerDefectResidual_norm_le_ZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
 
 /--
+Constructive witness-packet route: zero scalarized observer strain yields an
+explicit `ObserverDeviationControl` record, so downstream callers can carry the
+proof object directly instead of a bare `ObserverDeviationControlledByZD`
+proposition.
+-/
+theorem observerDeviationControl_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    ObserverDeviationControl CIK obs :=
+  { bound := observerDeviationControlledByZD_of_strain_eq_zero
+      (CIK := CIK) (obs := obs) hStrain }
+
+/--
+Under zero central defect, constructive deviation-control witness packets force
+zero scalarized observer strain.
+-/
+theorem observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
+    (c : ObserverDeviationControl CIK obs) :
+    observerOrientationStrain CIK obs = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_control_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) c hZD
+  exact (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).2 hResidual
+
+/--
 Under zero central defect, scalarized observer strain is equivalent to the exact
 owner-side `Z_D` deviation-control predicate. This lets downstream callers use
 whichever witness they already own instead of carrying both packets.

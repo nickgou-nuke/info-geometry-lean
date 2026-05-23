@@ -700,6 +700,28 @@ private theorem bridge_fluid_helicity_of_canonicalDrazinProductionWitness
     (canonicalDrazinFluidHelicityWitness_toProductionWitness (E := E) A B_mp W)
 
 /--
+Canonical-Drazin regularization bridge under a single proof-carrying packet.
+
+This narrows the canonical-Drazin regularization lane by replacing the explicit
+pair `(hCanon, hHelicity)` with `CanonicalDrazinFluidHelicityWitness` and
+routing through the existing production-witness bridge.
+-/
+private theorem bridge_fluid_helicity_of_canonicalDrazinRegularizationWitness
+    (A B_mp : VelocityField E)
+    (hCanon : CanonicalDrazinRegularizationWitness (E := E) A B_mp)
+    (hHelicity : MatchedHelicityWitness (E := E) A) :
+    (∃ state : FluidState E,
+      state.u = EinsteinAnomaly A B_mp
+          (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        ∧ state.ρ = 1
+        ∧ momentumResidual (E := E) state.u = 0) ∧
+    (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
+      helicityInvariant A ω' = twinWaveHelicity A Ω') :=
+  bridge_fluid_helicity_of_canonicalDrazinProductionWitness
+    (E := E) A B_mp
+    { canonicalRegularization := hCanon, helicity := hHelicity }
+
+/--
 Compatibility wrapper for the older regularization surface.
 It now builds the regularization witness locally and routes through
 `bridge_fluid_helicity_of_regularizationWitness`.
@@ -3322,12 +3344,11 @@ private theorem bits_to_gravity_to_fluid_capstone_of_canonicalDrazinRegularizati
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
         ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
             Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-  exact bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin
+  exact bits_to_gravity_to_fluid_capstone_of_canonicalDrazinFluidHelicityWitness
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
     (hEin := hEin) (A := A) (B_mp := B_mp)
-    (h_mp := hCanon.h_mp) (h_dr_star_canonical := hCanon.h_star_canonical)
-    (hHelicity := hHelicity)
+    (hFluidHelicity := { canonicalRegularization := hCanon, helicity := hHelicity })
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 

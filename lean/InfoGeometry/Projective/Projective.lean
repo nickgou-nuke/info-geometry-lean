@@ -1,4 +1,5 @@
 import InfoGeometry.PositiveMeasure
+import InfoGeometry.Stratum.Gauge
 
 /-!
 # Projective geometry of the positive cone
@@ -17,41 +18,46 @@ variable {α : Type u}
 
 section Projective
 
-/-- `μ` and `ν` lie on the same projective ray iff `ν = c • μ` for some `c>0`. -/
+noncomputable section
+-- Reuse `PosGauge` defined in `InfoGeometry.Stratum.Gauge`
+open InfoGeometry.Stratum (PosGauge)
+
+-- SMul instance for the gauge action on positive measures
+instance : SMul PosGauge (PositiveMeasure α ℝ) :=
+  ⟨fun c μ => scale c.val c.property μ⟩
+
+-- MulAction instance for the gauge action on positive measures
+instance : MulAction PosGauge (PositiveMeasure α ℝ) where
+  one_smul μ := by ext a; simp
+  mul_smul c d μ := by ext a; simp [smul_smul]
+
+
+/-- `μ` and `ν` lie on the same projective ray iff they differ by the `PosGauge` action. -/
 def SameRay (μ ν : PositiveMeasure α ℝ) : Prop :=
   ∃ c : ℝ, ∃ hc : 0 < c, ν = scale c hc μ
 
-lemma SameRay.refl (μ : PositiveMeasure α ℝ) : SameRay μ μ := by
-  refine ⟨1, one_pos, ?_⟩
-  ext a
-  simp [scale]
+/-- The setoid for projectivization, rooted formally in Mathlib's orbit relations. -/
+instance sameRaySetoid : Setoid (PositiveMeasure α ℝ) :=
+  MulAction.orbitRel PosGauge (PositiveMeasure α ℝ)
 
-lemma SameRay.symm {μ ν : PositiveMeasure α ℝ} (h : SameRay μ ν) : SameRay ν μ := by
-  rcases h with ⟨c, hc, rfl⟩
-  refine ⟨c⁻¹, inv_pos.2 hc, ?_⟩
-  ext a
-  simp [scale, hc.ne']
+lemma same_ray_iff_orbitRel {μ ν : PositiveMeasure α ℝ} :
+    SameRay μ ν ↔ sameRaySetoid.r μ ν := by
+  constructor
+  · rintro ⟨c, hc, rfl⟩
+    let c_gauge : PosGauge := ⟨c, hc⟩
+    refine ⟨c_gauge⁻¹, ?_⟩
+    ext a
+    change c⁻¹ * (c * μ a) = μ a
+    rw [← mul_assoc, inv_mul_cancel₀ hc.ne', one_mul]
+  · rintro ⟨c, hc⟩
+    refine ⟨(c⁻¹).val, (c⁻¹).property, ?_⟩
+    ext a
+    have hca : c.val * ν a = μ a := congr_arg (fun (x : PositiveMeasure α ℝ) => x a) hc
+    change (c⁻¹).val * μ a = ν a
+    rw [← hca, ← mul_assoc, inv_mul_cancel₀ c.property.ne', one_mul]
 
-lemma SameRay.trans {μ ν κ : PositiveMeasure α ℝ} (h₁ : SameRay μ ν) (h₂ : SameRay ν κ) :
-    SameRay μ κ := by
-  rcases h₁ with ⟨c₁, hc₁, rfl⟩
-  rcases h₂ with ⟨c₂, hc₂, rfl⟩
-  refine ⟨c₂ * c₁, mul_pos hc₂ hc₁, ?_⟩
-  ext a
-  simp [scale, mul_assoc]
-
-/-- The setoid for projectivization. -/
-instance : Setoid (PositiveMeasure α ℝ) where
-  r := SameRay
-  iseqv := by
-    refine ⟨SameRay.refl, ?_, ?_⟩
-    · intro x y hxy
-      exact SameRay.symm hxy
-    · intro x y z hxy hyz
-      exact SameRay.trans hxy hyz
-
-/-- The projectivized cone (rays). -/
-def Proj := Quotient (inferInstance : Setoid (PositiveMeasure α ℝ))
+/-- The projectivized positive cone (rays). -/
+def Proj := Quotient (sameRaySetoid (α := α))
 
 end Projective
 

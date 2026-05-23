@@ -98,6 +98,58 @@ theorem norm_reconstruct (u v : ℝ) :
 theorem j_mul_j : mul j j = one := by
   ext <;> simp [mul, j, one]
 
+/--
+The split generator `j` produces explicit nonzero zero divisors:
+`(1 + j)(1 - j) = 0`.
+
+This is the precise split-sign theorem.  The factors are zero divisors, but
+they are not nilpotent.
+-/
+theorem one_add_j_mul_one_sub_j_zero :
+    mul (add one j) (add one (neg j)) = zero := by
+  ext <;> norm_num [add, mul, neg, one, j, zero]
+
+theorem one_add_j_ne_zero :
+    add one j ≠ zero := by
+  intro h
+  have h' := congrArg SplitComplex.re h
+  norm_num [add, one, j, zero] at h'
+
+theorem one_sub_j_ne_zero :
+    add one (neg j) ≠ zero := by
+  intro h
+  have h' := congrArg SplitComplex.re h
+  norm_num [add, neg, one, j, zero] at h'
+
+/-- The zero divisors are not nilpotent. -/
+theorem one_add_j_sq :
+    mul (add one j) (add one j) = add (add one j) (add one j) := by
+  ext <;> norm_num [add, mul, one, j]
+
+theorem one_sub_j_sq :
+    mul (add one (neg j)) (add one (neg j)) = add (add one (neg j)) (add one (neg j)) := by
+  ext <;> norm_num [add, mul, neg, one, j]
+
+theorem one_add_j_sq_ne_zero :
+    mul (add one j) (add one j) ≠ zero := by
+  rw [one_add_j_sq]
+  intro h
+  have h' := congrArg SplitComplex.re h
+  norm_num [add, one, j, zero] at h'
+
+theorem one_sub_j_sq_ne_zero :
+    mul (add one (neg j)) (add one (neg j)) ≠ zero := by
+  rw [one_sub_j_sq]
+  intro h
+  have h' := congrArg SplitComplex.re h
+  norm_num [add, neg, one, j, zero] at h'
+
+/-- The split sign has explicit nonzero zero divisors. -/
+theorem split_sign_has_nonzero_zero_divisors :
+    ∃ u v : SplitComplex, u ≠ zero ∧ v ≠ zero ∧ mul u v = zero := by
+  refine ⟨add one j, add one (neg j), one_add_j_ne_zero, one_sub_j_ne_zero, ?_⟩
+  exact one_add_j_mul_one_sub_j_zero
+
 @[simp]
 theorem leftPart_mul (x y : SplitComplex) :
     leftPart (mul x y) = leftPart x * leftPart y := by
@@ -118,6 +170,16 @@ theorem reconstruct_mul (u v u' v' : ℝ) :
 theorem norm_mul (x y : SplitComplex) :
     norm (mul x y) = norm x * norm y := by
   cases x <;> cases y <;> simp [norm, leftPart, rightPart, mul] <;> ring
+
+/-- Left multiplication by a norm-one split-complex unit preserves the split norm. -/
+theorem norm_mul_left_of_norm_one (x y : SplitComplex) (hx : norm x = 1) :
+    norm (mul x y) = norm y := by
+  rw [norm_mul, hx, one_mul]
+
+/-- Right multiplication by a norm-one split-complex unit preserves the split norm. -/
+theorem norm_mul_right_of_norm_one (x y : SplitComplex) (hx : norm x = 1) :
+    norm (mul y x) = norm y := by
+  rw [norm_mul, hx, mul_one]
 
 end SplitComplex
 

@@ -146,9 +146,10 @@ end DrazinBerryChernPacket
 /--
 Hodge-Drazin thermodynamic entropy packet.
 
-This records regular-sector density and entropy laws without claiming the
-existence of trace, exponential, logarithm, or positivity theory in an arbitrary
-operator ring.
+This records only the algebraic support law for the density and the finite
+entropy split. Since trace, exponential, logarithm, and positivity theory are
+not available in an arbitrary operator ring, no von Neumann entropy formula is
+asserted in this file.
 -/
 @[rep_depth operator]
 structure HodgeDrazinThermodynamicEntropyPacket
@@ -161,8 +162,12 @@ structure HodgeDrazinThermodynamicEntropyPacket
   horizonEntropy : ℝ
   harmonicEntropy : ℝ
 
-  density_regularSector_law : Prop
-  entropy_vonNeumann_law : Prop
+  /-- The density is supported in the Drazin horizon sector on the left. -/
+  density_left_supported : carrier.p_A * density = density
+
+  /-- The density is supported in the Drazin horizon sector on the right. -/
+  density_right_supported : density * carrier.p_A = density
+
   entropy_split_law : entropy = horizonEntropy + harmonicEntropy
 
 namespace HodgeDrazinThermodynamicEntropyPacket
@@ -176,15 +181,17 @@ theorem entropy_eq_horizon_add_harmonic :
     P.entropy = P.horizonEntropy + P.harmonicEntropy :=
   P.entropy_split_law
 
-/-- The regular-sector density law carried by the packet. -/
+/-- The density is left-supported by the Drazin horizon sector. -/
 @[rep_depth operator]
-def density_regularSector_law_readout : Prop :=
-  P.density_regularSector_law
+theorem density_left_supported_readback :
+    P.carrier.p_A * P.density = P.density :=
+  P.density_left_supported
 
-/-- The von Neumann entropy law carried by the packet. -/
+/-- The density is right-supported by the Drazin horizon sector. -/
 @[rep_depth operator]
-def entropy_vonNeumann_law_readout : Prop :=
-  P.entropy_vonNeumann_law
+theorem density_right_supported_readback :
+    P.density * P.carrier.p_A = P.density :=
+  P.density_right_supported
 
 end HodgeDrazinThermodynamicEntropyPacket
 

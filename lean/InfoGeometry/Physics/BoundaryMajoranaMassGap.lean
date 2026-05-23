@@ -4,19 +4,15 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!
-# Boundary Majorana Mass Gap
+# Explicit boundary Majorana mass-gap readouts
 
-Finite scalar theorem surface for the boundary Majorana/twistor-knot gap.
+This file keeps the boundary mass-gap layer scalar and constructive:
 
-This module proves only the controlled finite readouts:
-
-* the boundary gap is the supplied minimum positive singular value of a real
-  skew Majorana quadratic form;
-* a Pfaffian/index transition forces a zero Pfaffian and hence a gap closing;
-* chiral Majorana central charge bookkeeping gives `N_R - N_L = 16` for
-  `c_- = 8`;
-* the chiral boundary CFT pressure formula specializes to the `E₈` value;
-* a Weyl-scaled gap has logarithmic scale response `log Δ = log Δ₀ - φ`.
+* a one-pair Majorana gap is `|λ|`;
+* the two-state splitting convention is `2 |λ|`;
+* the explicit scalar Pfaffian gap model is `|Pf|`, so `Pf = 0` closes it;
+* chiral central charge is `c_- = (N_R - N_L) / 2`;
+* chiral CFT pressure and Weyl gap scaling are closed-form definitions.
 
 No Riemann-spectrum theorem, `E₈` representation theorem, or full gravity
 theorem is asserted here.
@@ -24,184 +20,143 @@ theorem is asserted here.
 
 namespace InfoGeometry.Physics.BoundaryMajoranaMassGap
 
-/-! ## 1. Boundary Majorana spectrum and gap -/
+/-! ## 1. Explicit one-pair Majorana gap -/
 
-/--
-Finite Majorana boundary spectrum.
+/-- BdG quasiparticle gap for one Majorana pair with singular value `λ`. -/
+def majoranaPairGap (lambda : ℝ) : ℝ :=
+  |lambda|
 
-`lambda j` represents the positive singular values of the real skew matrix
-`A` in a quadratic Majorana Hamiltonian.  `gap` is supplied as the minimum
-nonzero quasiparticle gap readout.
--/
-structure BoundaryMajoranaSpectrum (Mode : Type*) where
-  lambda : Mode → ℝ
-  gap : ℝ
-  gap_nonneg : 0 ≤ gap
-  gap_le_abs_lambda : ∀ j, gap ≤ |lambda j|
-  gap_attained : ∃ j, gap = |lambda j|
+/-- Two-state fermion-parity splitting convention for one Majorana pair. -/
+def majoranaPairSplitting (lambda : ℝ) : ℝ :=
+  2 * majoranaPairGap lambda
 
-namespace BoundaryMajoranaSpectrum
+/-- The explicit one-pair gap is nonnegative. -/
+theorem majoranaPairGap_nonneg (lambda : ℝ) :
+    0 ≤ majoranaPairGap lambda := by
+  unfold majoranaPairGap
+  exact abs_nonneg lambda
 
-/-- The quasiparticle gap is nonnegative. -/
-theorem massGap_nonneg {Mode : Type*} (S : BoundaryMajoranaSpectrum Mode) :
-    0 ≤ S.gap :=
-  S.gap_nonneg
+/-- The explicit two-state splitting is twice the BdG gap. -/
+theorem majoranaPairSplitting_eq_two_mul_gap (lambda : ℝ) :
+    majoranaPairSplitting lambda = 2 * majoranaPairGap lambda :=
+  rfl
 
-/-- The gap is bounded by every singular-value magnitude. -/
-theorem massGap_le_abs_lambda {Mode : Type*} (S : BoundaryMajoranaSpectrum Mode) (j : Mode) :
-    S.gap ≤ |S.lambda j| :=
-  S.gap_le_abs_lambda j
+/-- The one-pair gap vanishes exactly when the singular value vanishes. -/
+theorem majoranaPairGap_eq_zero_iff (lambda : ℝ) :
+    majoranaPairGap lambda = 0 ↔ lambda = 0 := by
+  unfold majoranaPairGap
+  exact abs_eq_zero
 
-/-- The supplied gap is attained by at least one mode. -/
-theorem massGap_attained {Mode : Type*} (S : BoundaryMajoranaSpectrum Mode) :
-    ∃ j, S.gap = |S.lambda j| :=
-  S.gap_attained
+/-! ## 2. Explicit scalar Pfaffian transition model -/
 
-end BoundaryMajoranaSpectrum
+/-- Scalar Pfaffian gap model: the protected gap readout is `|Pf|`. -/
+def pfaffianGap (pfaffian : ℝ) : ℝ :=
+  |pfaffian|
 
-/-! ## 2. Pfaffian transition obstruction -/
+/-- The scalar Pfaffian gap is nonnegative. -/
+theorem pfaffianGap_nonneg (pfaffian : ℝ) :
+    0 ≤ pfaffianGap pfaffian := by
+  unfold pfaffianGap
+  exact abs_nonneg pfaffian
 
-/--
-Pfaffian transition package for a finite Majorana boundary path.
+/-- In the explicit scalar Pfaffian gap model, `Pf = 0` closes the gap. -/
+theorem pfaffian_zero_forces_gap_closing {pfaffian : ℝ}
+    (hpf : pfaffian = 0) :
+    pfaffianGap pfaffian = 0 := by
+  rw [hpf]
+  simp [pfaffianGap]
 
-`gap_zero_of_pfaffian_zero` is the finite Majorana fact that a zero Pfaffian
-means the skew matrix is singular, so at least one singular value and hence
-the gap vanishes.  The path/intermediate-value analysis is not hidden here:
-the critical point `critical` with zero Pfaffian is explicit data.
--/
-structure PfaffianKnotTransition (Path : Type*) where
-  pfaffian : Path → ℝ
-  gap : Path → ℝ
-  critical : Path
-  pfaffian_critical_eq_zero : pfaffian critical = 0
-  gap_zero_of_pfaffian_zero : ∀ s, pfaffian s = 0 → gap s = 0
-
-namespace PfaffianKnotTransition
-
-/-- At the supplied Pfaffian transition point, the boundary gap closes. -/
-theorem critical_gap_closes {Path : Type*} (T : PfaffianKnotTransition Path) :
-    T.gap T.critical = 0 :=
-  T.gap_zero_of_pfaffian_zero T.critical T.pfaffian_critical_eq_zero
-
-/-- A protected Pfaffian/index transition has some point where the gap closes. -/
-theorem topological_transition_forces_gap_closing
-    {Path : Type*} (T : PfaffianKnotTransition Path) :
-    ∃ s, T.gap s = 0 :=
-  ⟨T.critical, T.critical_gap_closes⟩
-
-end PfaffianKnotTransition
+/-- The explicit scalar Pfaffian gap vanishes exactly at zero Pfaffian. -/
+theorem pfaffianGap_eq_zero_iff (pfaffian : ℝ) :
+    pfaffianGap pfaffian = 0 ↔ pfaffian = 0 := by
+  unfold pfaffianGap
+  exact abs_eq_zero
 
 /-! ## 3. Chiral Majorana central charge bookkeeping -/
 
-/--
-Chiral Majorana boundary central charge.
+/-- Net chiral Majorana count `N_R - N_L`. -/
+def netChiralMajorana (rightModes leftModes : ℝ) : ℝ :=
+  rightModes - leftModes
 
-`netChiral = N_R - N_L` and `cMinus = netChiral / 2`.
--/
-structure ChiralMajoranaCentralCharge where
-  rightModes : ℝ
-  leftModes : ℝ
-  netChiral : ℝ
-  cMinus : ℝ
-  netChiral_eq : netChiral = rightModes - leftModes
-  cMinus_eq : cMinus = netChiral / 2
-
-namespace ChiralMajoranaCentralCharge
+/-- Chiral Majorana central charge `c_- = (N_R - N_L)/2`. -/
+noncomputable def chiralMajoranaCentralCharge (rightModes leftModes : ℝ) : ℝ :=
+  netChiralMajorana rightModes leftModes / 2
 
 /-- Chiral central charge is half the net chiral Majorana count. -/
-theorem cMinus_eq_half_net (C : ChiralMajoranaCentralCharge) :
-    C.cMinus = C.netChiral / 2 :=
-  C.cMinus_eq
+theorem chiralMajoranaCentralCharge_eq_half_net
+    (rightModes leftModes : ℝ) :
+    chiralMajoranaCentralCharge rightModes leftModes =
+      netChiralMajorana rightModes leftModes / 2 :=
+  rfl
 
-/-- If `c_- = 8`, the required net chiral Majorana count is `16`. -/
+/-- If `c_- = 8`, then the net chiral Majorana count is `16`. -/
 theorem netChiral_eq_sixteen_of_cMinus_eq_eight
-    (C : ChiralMajoranaCentralCharge)
-    (hE8 : C.cMinus = 8) :
-    C.netChiral = 16 := by
-  rw [C.cMinus_eq] at hE8
+    {rightModes leftModes : ℝ}
+    (hE8 : chiralMajoranaCentralCharge rightModes leftModes = 8) :
+    netChiralMajorana rightModes leftModes = 16 := by
+  unfold chiralMajoranaCentralCharge at hE8
   nlinarith
 
 /-- The `E₈` level-one central-charge condition is `N_R - N_L = 16`. -/
 theorem right_minus_left_eq_sixteen_of_cMinus_eq_eight
-    (C : ChiralMajoranaCentralCharge)
-    (hE8 : C.cMinus = 8) :
-    C.rightModes - C.leftModes = 16 := by
-  rw [← C.netChiral_eq]
-  exact C.netChiral_eq_sixteen_of_cMinus_eq_eight hE8
-
-end ChiralMajoranaCentralCharge
+    {rightModes leftModes : ℝ}
+    (hE8 : chiralMajoranaCentralCharge rightModes leftModes = 8) :
+    rightModes - leftModes = 16 := by
+  exact netChiral_eq_sixteen_of_cMinus_eq_eight hE8
 
 /-! ## 4. Chiral boundary CFT pressure -/
 
-/--
-Scalar chiral boundary CFT pressure readout.
+/-- Scalar chiral boundary CFT thermal pressure `π c_- T²/(12v)`. -/
+noncomputable def chiralBoundaryThermalPressure
+    (cMinus velocity temperature : ℝ) : ℝ :=
+  Real.pi * cMinus * temperature ^ 2 / (12 * velocity)
 
-The intended formula is `P = π c_- T² / (12 v)`.  At horizon temperature
-`T = κ/(2π)`, this becomes `P = c_- κ²/(48π v)`.
--/
-structure ChiralBoundaryCFTPressure where
-  cMinus : ℝ
-  velocity : ℝ
-  temperature : ℝ
-  kappa : ℝ
-  pressure : ℝ
-  temperature_eq_horizon : temperature = kappa / (2 * Real.pi)
-  pressure_eq : pressure = Real.pi * cMinus * temperature ^ 2 / (12 * velocity)
+/-- Horizon temperature `T = κ/(2π)`. -/
+noncomputable def horizonTemperature (kappa : ℝ) : ℝ :=
+  kappa / (2 * Real.pi)
 
-namespace ChiralBoundaryCFTPressure
-
-/-- Chiral CFT thermal pressure before substituting the horizon temperature. -/
-theorem pressure_eq_thermal (P : ChiralBoundaryCFTPressure) :
-    P.pressure = Real.pi * P.cMinus * P.temperature ^ 2 / (12 * P.velocity) :=
-  P.pressure_eq
+/-- Horizon-pressure readout after substituting `T = κ/(2π)`. -/
+noncomputable def chiralBoundaryHorizonPressure
+    (cMinus velocity kappa : ℝ) : ℝ :=
+  chiralBoundaryThermalPressure cMinus velocity (horizonTemperature kappa)
 
 /-- Horizon-temperature pressure: `P = c_- κ² / (48πv)`. -/
-theorem pressure_eq_horizon (P : ChiralBoundaryCFTPressure) :
-    P.pressure = P.cMinus * P.kappa ^ 2 / (48 * Real.pi * P.velocity) := by
-  rw [P.pressure_eq, P.temperature_eq_horizon]
+theorem chiralBoundaryHorizonPressure_eq
+    (cMinus velocity kappa : ℝ) :
+    chiralBoundaryHorizonPressure cMinus velocity kappa =
+      cMinus * kappa ^ 2 / (48 * Real.pi * velocity) := by
+  unfold chiralBoundaryHorizonPressure chiralBoundaryThermalPressure horizonTemperature
   field_simp [Real.pi_ne_zero]
   ring
 
 /-- For `c_- = 8`, the pressure is `κ²/(6πv)`. -/
-theorem pressure_eq_E8
-    (P : ChiralBoundaryCFTPressure)
-    (hE8 : P.cMinus = 8) :
-    P.pressure = P.kappa ^ 2 / (6 * Real.pi * P.velocity) := by
-  rw [P.pressure_eq_horizon, hE8]
+theorem chiralBoundaryHorizonPressure_eq_E8
+    (velocity kappa : ℝ) :
+    chiralBoundaryHorizonPressure 8 velocity kappa =
+      kappa ^ 2 / (6 * Real.pi * velocity) := by
+  rw [chiralBoundaryHorizonPressure_eq]
   ring
-
-end ChiralBoundaryCFTPressure
 
 /-! ## 5. Weyl scaling of the boundary gap -/
 
-/--
-Weyl scaling of a boundary Majorana gap.
-
-The intended readout is `Δ(φ) = exp(-φ) Δ₀`.
--/
-structure WeylGapScaling where
-  phi : ℝ
-  gap0 : ℝ
-  gap : ℝ
-  gap0_pos : 0 < gap0
-  gap_eq : gap = Real.exp (-phi) * gap0
-
-namespace WeylGapScaling
+/-- Weyl scaling of a boundary Majorana gap: `Δ(φ) = exp(-φ) Δ₀`. -/
+noncomputable def weylScaledGap (gap0 phi : ℝ) : ℝ :=
+  Real.exp (-phi) * gap0
 
 /-- Weyl scaling keeps the gap positive when the reference gap is positive. -/
-theorem gap_pos (W : WeylGapScaling) :
-    0 < W.gap := by
-  rw [W.gap_eq]
-  exact mul_pos (Real.exp_pos _) W.gap0_pos
+theorem weylScaledGap_pos {gap0 phi : ℝ}
+    (hgap0 : 0 < gap0) :
+    0 < weylScaledGap gap0 phi := by
+  unfold weylScaledGap
+  exact mul_pos (Real.exp_pos _) hgap0
 
 /-- Logarithmic Weyl gap scaling: `log Δ = log Δ₀ - φ`. -/
-theorem log_gap_eq_log_gap0_sub_phi (W : WeylGapScaling) :
-    Real.log W.gap = Real.log W.gap0 - W.phi := by
-  rw [W.gap_eq]
-  rw [Real.log_mul (ne_of_gt (Real.exp_pos _)) (ne_of_gt W.gap0_pos)]
+theorem log_weylScaledGap_eq_log_gap0_sub_phi {gap0 phi : ℝ}
+    (hgap0 : 0 < gap0) :
+    Real.log (weylScaledGap gap0 phi) = Real.log gap0 - phi := by
+  unfold weylScaledGap
+  rw [Real.log_mul (ne_of_gt (Real.exp_pos _)) (ne_of_gt hgap0)]
   rw [Real.log_exp]
   ring
-
-end WeylGapScaling
 
 end InfoGeometry.Physics.BoundaryMajoranaMassGap

@@ -1,0 +1,122 @@
+import Mathlib.Algebra.Group.Units.Defs
+import Mathlib.Algebra.Ring.Basic
+
+/-!
+# Tessellation incidence
+
+This file contains the first algebraic incidence layer for the operator
+tessellation picture.
+
+A nilpotent alone does not define incidence.  Incidence is represented by an
+element supported between two idempotent sectors.  Orthogonal supports then
+force nilpotence as a theorem.
+
+No cyclic cohomology or H³ gluing statement is introduced here.
+-/
+
+namespace InfoGeometry.Tessellation
+
+/-- A causal diamond is an idempotent sector. -/
+structure Diamond (A : Type*) [Semiring A] where
+  /-- The sector idempotent. -/
+  P : A
+  /-- The sector law. -/
+  idem : P * P = P
+
+/--
+A lightray from `src` to `tgt`.
+
+The support laws say that `N` starts in the source sector and lands in the
+target sector: `tgt.P * N = N` and `N * src.P = N`.
+-/
+structure IncidentLightray (A : Type*) [Semiring A]
+    (src tgt : Diamond A) where
+  /-- The off-diagonal transition element. -/
+  N : A
+  /-- Left support at the target sector. -/
+  left_support : tgt.P * N = N
+  /-- Right support at the source sector. -/
+  right_support : N * src.P = N
+
+/--
+A supported lightray with the source/target orthogonality stored as part of the
+incidence datum.
+
+This is the geometric packet: the lightray knows its source sector, target
+sector, support laws, and that those sectors are orthogonal.
+-/
+structure SupportedLightray (A : Type*) [Semiring A]
+    (src tgt : Diamond A) extends IncidentLightray A src tgt where
+  /-- Orthogonality of the source and target sectors. -/
+  orthogonal : src.P * tgt.P = 0
+
+/--
+If the source and target idempotents are orthogonal, then every supported
+lightray between them is automatically nilpotent.
+
+This is the algebraic core of lightlike incidence.
+-/
+theorem incident_lightray_square_zero
+    {A : Type*} [Semiring A]
+    {P Q N : A}
+    (hPQ : P * Q = 0)
+    (hQN : Q * N = N)
+    (hNP : N * P = N) :
+    N * N = 0 := by
+  calc
+    N * N = (N * P) * (Q * N) := by
+      rw [hNP, hQN]
+    _ = N * (P * Q) * N := by
+      simp [mul_assoc]
+    _ = 0 := by
+      simp [hPQ]
+
+/--
+Structure-level version of `incident_lightray_square_zero`.
+-/
+theorem IncidentLightray.square_zero_of_orthogonal
+    {A : Type*} [Semiring A]
+    {src tgt : Diamond A}
+    (L : IncidentLightray A src tgt)
+    (h_orthogonal : src.P * tgt.P = 0) :
+    L.N * L.N = 0 :=
+  incident_lightray_square_zero h_orthogonal L.left_support L.right_support
+
+/--
+Closed structure-level incidence theorem: a supported lightray between
+orthogonal idempotent sectors is square-zero.
+-/
+theorem SupportedLightray.square_zero
+    {A : Type*} [Semiring A]
+    {src tgt : Diamond A}
+    (L : SupportedLightray A src tgt) :
+    L.N * L.N = 0 :=
+  L.toIncidentLightray.square_zero_of_orthogonal L.orthogonal
+
+/-! ## Unit conjugation preserves sectors -/
+
+/-- Ring-level unit conjugation. -/
+def unitConjRing {A : Type*} [Monoid A] (g : Aˣ) (x : A) : A :=
+  (g : A) * x * ((g⁻¹ : Aˣ) : A)
+
+/--
+Unit conjugation preserves idempotents, hence sends causal diamonds to causal
+diamonds.
+-/
+theorem unitConj_idempotent
+    {A : Type*} [Monoid A]
+    (g : Aˣ) {P : A}
+    (hP : P * P = P) :
+    unitConjRing g P * unitConjRing g P = unitConjRing g P := by
+  unfold unitConjRing
+  calc
+    ((g : A) * P * ((g⁻¹ : Aˣ) : A)) * ((g : A) * P * ((g⁻¹ : Aˣ) : A))
+        = (g : A) * P * (((g⁻¹ : Aˣ) : A) * (g : A)) * P *
+            ((g⁻¹ : Aˣ) : A) := by
+            simp [mul_assoc]
+    _ = (g : A) * (P * P) * ((g⁻¹ : Aˣ) : A) := by
+            simp [mul_assoc]
+    _ = (g : A) * P * ((g⁻¹ : Aˣ) : A) := by
+            rw [hP]
+
+end InfoGeometry.Tessellation

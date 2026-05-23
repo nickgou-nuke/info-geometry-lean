@@ -138,11 +138,13 @@ structure MassieuPlanckVolumeBridge extends
   word : Word
 
   /--
-  Calibration: the Souriau Massieu potential is the positive log-volume readout
-  associated with the atom expectation.
+  Model-specific calibration between the Souriau Massieu/log-partition readout
+  and the chosen atom-volume readout.
 
-  Since `modularVolumePotential = -log(atomExpectation)`, this states
-  `Φ = - modularVolumePotential`.
+  This is not a general identification of determinant volume with the
+  statistical Massieu potential.  It is an explicit bridge assumption for this
+  packet: since `modularVolumePotential = -log(atomExpectation)`, the field
+  states `Φ = - modularVolumePotential` for the chosen word.
   -/
   partitionPotential_eq_neg_modularVolumePotential_readback :
     souriau.partitionPotential =

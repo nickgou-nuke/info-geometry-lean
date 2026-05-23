@@ -44,7 +44,13 @@ Modules: `QuantumInference.lean`, `KreinLadder.lean`, `BerryPhase.lean`
 Modules: `GrandCanonical.lean`, `HeatKernel.lean`, `InformationNumber.lean`
 - **Grand Canonical Ensemble**: Expectation of the Number Operator N recovering ⟨N⟩.
 - **Gibbs Variance**: Identical to the Hessian metric of the log-partition potential.
-- **Spectral Action Principle**: log-volume spectral functional as the universal information criterion.
+- **Layer separation**:
+  `det (exp A) = exp (trace A)` is the finite H¹ volume/Weyl cocycle;
+  `log Tr (exp (-β·Q))` is the Massieu/Fisher/Souriau potential;
+  finite Connes phases are state-to-state modular transport;
+  normal-ordered CAR currents are the H² Wick/Schwinger anomaly lane.
+  These theorem surfaces interact, but none is definitionally identified with
+  another.
 
 ## 6. ARCHITECTURAL SPECIALIZATION
 Modules: `Triality.lean`, `Gaussian.lean`, `BregmanTriality.lean`

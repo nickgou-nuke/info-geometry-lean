@@ -12,8 +12,10 @@ This file formalizes only the source-supported finite shadow:
 - the metric/Onsager sector is the existing Souriau-Fisher response
   quadratic form;
 - the response diagonal positivity is constructed from variance identities;
-- the remaining determinant/non-spinodal gate gives the finite second-law
-  inequality for the total entropy production.
+- the remaining determinant/non-spinodal gate is the determinant of this
+  finite `2 × 2` response matrix, not the `det(exp A)` H¹ volume cocycle;
+- that response-matrix gate gives the finite second-law inequality for the
+  total entropy production.
 
 It does not claim a full infinite-dimensional coadjoint-orbit metriplectic
 flow.
@@ -33,7 +35,9 @@ Explicit finite metriplectic context for a Souriau two-channel shadow.
 field `casimir_reversible` is the honest Casimir hypothesis: the reversible
 sector preserves entropy.  The metric sector is the already-owned
 Souriau-Fisher/Onsager response matrix.  Its diagonal PSD entries are proved
-from variance identities; only the determinant gate remains as a field.
+from variance identities; only the finite response-matrix determinant gate
+remains as a field.  This determinant gate is unrelated to the
+`MatrixDetExpTrace` volume-cocycle theorem.
 -/
 structure MetriplecticContext [Fintype α] [Nonempty α] where
   M : SouriauMomentMap α
@@ -81,7 +85,8 @@ theorem totalEntropyProduction_eq_metric :
 
 /--
 The finite Fisher response is positive semidefinite constructively from
-variance diagonal positivity plus the remaining determinant gate.
+variance diagonal positivity plus the remaining `2 × 2` response determinant
+gate.
 -/
 @[rep_depth transport]
 theorem fisher_positiveSemidefinite :
@@ -89,7 +94,10 @@ theorem fisher_positiveSemidefinite :
   souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg
     C.M C.T C.fisher_determinant_nonnegative
 
-/-- The metric/Onsager channel is nonnegative under the determinant-gated Fisher response. -/
+/--
+The metric/Onsager channel is nonnegative under the finite response-matrix
+determinant gate.
+-/
 @[rep_depth transport]
 theorem metricEntropyProduction_nonneg :
     0 ≤ C.metricEntropyProduction := by
@@ -98,8 +106,8 @@ theorem metricEntropyProduction_nonneg :
 
 /--
 Finite metriplectic second-law shadow: if the reversible sector is a Casimir
-direction and the Souriau-Fisher determinant gate is nonnegative, total
-entropy production is nonnegative.
+direction and the Souriau-Fisher response determinant gate is nonnegative,
+total entropy production is nonnegative.
 -/
 @[rep_depth transport]
 theorem totalEntropyProduction_nonneg :

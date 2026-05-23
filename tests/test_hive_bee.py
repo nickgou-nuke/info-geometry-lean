@@ -388,6 +388,39 @@ def test_run_one_failure_requeues_before_max_attempts(monkeypatch) -> None:
     assert any(name == "goal_status" and payload["status"] == "requeued" for name, payload in calls)
 
 
+def test_run_one_accepts_usable_proof_state_when_status_is_error(monkeypatch) -> None:
+    config = sample_config()
+    events: list[tuple[str, dict]] = []
+    task = sample_task()
+    goal = sample_goal()
+
+    monkeypatch.setattr(hive_bee, "fetch_claimed_task_and_goal", lambda cfg: (task, goal))
+    monkeypatch.setattr(
+        hive_bee,
+        "run_gravity_retrieval",
+        lambda cfg, goal_doc, task_key: ({"items": [{"id": "Demo.foo"}], "graph_source": "arango"}, Path("/tmp/gravity.json"), None),
+    )
+    monkeypatch.setattr(
+        hive_bee,
+        "get_proof_state",
+        lambda *args, **kwargs: {
+            "status": "error",
+            "proof_state": "⊢ 1 = 1",
+            "lean": {"returncode": 0, "stdout": "⊢ 1 = 1", "stderr": "warning: declaration uses 'sorry'"},
+        },
+    )
+    monkeypatch.setattr(hive_bee, "propose_tactic", lambda *args, **kwargs: "rfl")
+    monkeypatch.setattr(hive_bee, "apply_tactic", lambda *args, **kwargs: {"status": "success", "lean": {"ok": True, "stdout": "", "stderr": ""}})
+    monkeypatch.setattr(hive_bee, "fossilize_success", lambda cfg, attempt: {"fossil": {"_key": "fossil_usable_ps"}})
+    monkeypatch.setattr(hive_bee.queue_tool, "update_goal_status", lambda *args, **kwargs: events.append(("goal_status", kwargs)) or {"ok": True})
+
+    result = hive_bee.run_one(config)
+
+    assert result["status"] == "fossilized"
+    assert result["tactic"] == "rfl"
+    assert any(item[0] == "goal_status" and item[1]["status"] == "checked" for item in events)
+
+
 def test_run_retrieval_dispatches_to_leansearch(monkeypatch) -> None:
     config = sample_config()
     config = hive_bee.BeeConfig(**{**config.__dict__, "retrieval_strategy": "leansearch"})
@@ -429,6 +462,49 @@ def test_emit_attempt_packets_marks_leansearch_source_lane(monkeypatch) -> None:
     )
 
     assert out["retrieval"]["source_lane"] == "leansearch"
+
+
+def test_run_retrieval_dispatches_to_leantrail(monkeypatch) -> None:
+    config = sample_config()
+    config = hive_bee.BeeConfig(**{**config.__dict__, "retrieval_strategy": "leantrail"})
+    goal = sample_goal()
+    monkeypatch.setattr(
+        hive_bee,
+        "run_leantrail_retrieval",
+        lambda cfg, goal_doc, task_key: ({"graph_source": "leantrail", "items": []}, Path("/tmp/lt.json"), None),
+    )
+
+    payload, path, err = hive_bee.run_retrieval(config, goal, "task_leantrail")
+
+    assert err is None
+    assert payload is not None
+    assert payload["graph_source"] == "leantrail"
+    assert str(path).endswith("lt.json")
+
+
+def test_emit_attempt_packets_marks_leantrail_source_lane(monkeypatch) -> None:
+    config = sample_config()
+    imports: list[dict] = []
+
+    def fake_emit_packet(cfg, packet, task_key=None, dependencies=None):
+        imports.append(packet)
+        return {"packet": {**packet, "packet_key": f"p-{len(imports)}"}}
+
+    monkeypatch.setattr(hive_bee, "emit_packet", fake_emit_packet)
+
+    out = hive_bee.emit_attempt_packets(
+        config,
+        goal=sample_goal(),
+        task=sample_task(),
+        gravity_context={"graph_source": "leantrail", "items": []},
+        gravity_path=Path("/tmp/leantrail.json"),
+        proof_state={"proof_state": "⊢ 1 = 1"},
+        tactic="rfl",
+        verification=None,
+        emit_proposal=False,
+    )
+
+    assert out["retrieval"]["source_lane"] == "leantrail"
 
 
 def test_run_retrieval_hybrid_merges_and_dedupes(monkeypatch) -> None:

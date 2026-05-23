@@ -807,6 +807,8 @@ import InfoGeometry.Canonical.WilsonSchwingerBridge
 import InfoGeometry.Canonical.BosonizationBoundary
 import InfoGeometry.Canonical.BosonizationSchwinger
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Canonical.SUSYCentralChargeBridge
 import InfoGeometry.External.Virasoro.Sugawara
 import InfoGeometry.Canonical.BosonFermionFockIntertwiner
 import InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy

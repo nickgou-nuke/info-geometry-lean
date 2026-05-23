@@ -74,6 +74,40 @@ theorem boundaryMajoranaCircuitModel :
       (RawCARModeAlgebra.normalOrderedCurrent_heisenberg_from_matrixUnit
         (C := C) (m := m) (n := n))
 
+/--
+Bosonization theorem in boundary-Majorana form.
+
+This is the explicit bosonization surface for the finite Tomita-Krein atom:
+PHS-invariant Majorana swap, boundary zero-mode lane, and the completed
+current Heisenberg law packaged together.
+-/
+theorem majoranaBosonizationTheorem :
+    IsPHSInvariant
+      ((concreteCARCreation (E := E) + concreteCARAnnihilation (E := E)) :
+        InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E)
+      ∧ IsBoundaryZeroMode
+          (cptSuperchargeOp (E := E))
+          (cptSuperchargeOp (E := E))
+      ∧ (∀ {ι R : Type*} [Fintype ι] [DecidableEq ι] [Ring R]
+          (occ : ι → ℤ) (a b c d : ι),
+            algebraCommutator
+                (normalOrderedMatrixUnit (R := R) occ a b)
+                (normalOrderedMatrixUnit (R := R) occ c d)
+              =
+              (if b = c then normalOrderedMatrixUnit (R := R) occ a d else 0)
+                - (if a = d then normalOrderedMatrixUnit (R := R) occ c b else 0)
+                + wickCorrection (R := R) occ a b c d)
+      ∧ (∀ {A : Type*} [Ring A]
+          (C : InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeAlgebra A)
+          (m n : Int),
+            InfoGeometry.Canonical.BosonizationConstructiveCurrent.CCRBracketCompleted C
+                (InfoGeometry.Canonical.BosonizationConstructiveCurrent.normalOrderedCurrent C m)
+                (InfoGeometry.Canonical.BosonizationConstructiveCurrent.normalOrderedCurrent C n) =
+              if m + n = 0 then
+                m • InfoGeometry.Canonical.BosonizationConstructiveCurrent.completedCentral C
+              else 0) := by
+  simpa using boundaryMajoranaCircuitModel (E := E)
+
 end Core
 
 end InfoGeometry.Canonical.BoundaryMajoranaCircuitModel

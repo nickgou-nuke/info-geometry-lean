@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ConformalProjectiveClosure
 import InfoGeometry.Canonical.NormalOrderedCurrent
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Canonical.BosonizationTheorem
 
 /-!
 # InfoGeometry.Canonical.ConformalEngine

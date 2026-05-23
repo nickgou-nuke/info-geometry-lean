@@ -1,9 +1,12 @@
 import InfoGeometry.Krein.DoubledSpace
+import Mathlib.GroupTheory.GroupAction.Quotient
+import InfoGeometry.Stratum.Projective
 
 /-!
 # InfoGeometry.Projective.Rays
 
 Projective ray quotient of doubled states by nonzero real scaling.
+This implements the foundation layer bridging to `Mathlib`'s orbit quotients.
 -/
 
 namespace InfoGeometry.Projective
@@ -14,31 +17,28 @@ section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+abbrev Gauge := ℝˣ
+
+instance : SMul Gauge (DoubledSpace E) :=
+  ⟨fun u v => (↑u : ℝ) • v⟩
+
+instance : MulAction Gauge (DoubledSpace E) where
+  one_smul := by
+    intro v
+    simp
+  mul_smul := by
+    intro u v w
+    simp [smul_smul]
+
 /-- Cone-projectivization dictionary: vectors represent the same ray
 iff they differ by a nonzero real scalar.
 This includes the distinguished zero class (vacuum) in the quotient. -/
 def same_ray (v w : DoubledSpace E) : Prop :=
   ∃ a : ℝ, a ≠ 0 ∧ w = a • v
 
-lemma same_ray_refl (v : DoubledSpace E) : same_ray v v :=
-  ⟨1, one_ne_zero, by simp⟩
-
-lemma same_ray_symm {v w : DoubledSpace E} :
-    same_ray v w → same_ray w v := by
-  rintro ⟨a, ha, rfl⟩
-  refine ⟨a⁻¹, inv_ne_zero ha, ?_⟩
-  simp [ha]
-
-lemma same_ray_trans {u v w : DoubledSpace E} :
-    same_ray u v → same_ray v w → same_ray u w := by
-  rintro ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
-  refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
-  simp [mul_smul]
-
 /-- Setoid for projectivized doubled states (rays). -/
-instance sameRaySetoid {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] : Setoid (DoubledSpace E) where
-  r := same_ray
-  iseqv := Equivalence.mk same_ray_refl same_ray_symm same_ray_trans
+abbrev sameRaySetoid {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] : Setoid (DoubledSpace E) :=
+  MulAction.orbitRel Gauge (DoubledSpace E)
 
 /-- Cone-projective states: quotient of doubled states by nonzero real rescaling.
 Unlike strict projectivization, this retains a distinguished zero class. -/
@@ -49,43 +49,33 @@ abbrev ProjectiveState (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] : T
 def projectivize (v : DoubledSpace E) : ProjectiveState E :=
   Quotient.mk sameRaySetoid v
 
-lemma projectivize_eq_iff {v w : DoubledSpace E} :
-    projectivize v = projectivize w ↔ same_ray v w := by
-  constructor
-  · intro h
-    exact Quotient.exact h
-  · intro h
-    exact Quotient.sound h
-
-abbrev Gauge := Units ℝ
-
-instance : SMul (Gauge) (DoubledSpace E) :=
-  ⟨fun u v => (↑u : ℝ) • v⟩
-
-instance : MulAction (Gauge) (DoubledSpace E) where
-  one_smul := by
-    intro v
-    simp
-  mul_smul := by
-    intro u v w
-    simp [smul_smul]
-
 /-- `same_ray` is exactly the orbit relation for the gauge action by `ℝˣ`. -/
 lemma same_ray_iff_gauge {v w : DoubledSpace E} :
-    same_ray v w ↔ ∃ u : Gauge, w = u • v := by
+    same_ray v w ↔ sameRaySetoid.r v w := by
   constructor
   · rintro ⟨a, ha, hwa⟩
-    refine ⟨Units.mk0 a ha, ?_⟩
-    simpa using hwa
+    refine ⟨(Units.mk0 a ha)⁻¹, ?_⟩
+    change (a⁻¹ : ℝ) • w = v
+    rw [hwa, ← mul_smul, inv_mul_cancel₀ ha, one_smul]
   · rintro ⟨u, hwu⟩
-    refine ⟨(↑u : ℝ), Units.ne_zero u, ?_⟩
-    simpa using hwu
+    refine ⟨(↑(u⁻¹) : ℝ), Units.ne_zero u⁻¹, ?_⟩
+    change (↑u : ℝ) • w = v at hwu
+    calc
+      w = 1 • w := by rw [one_smul]
+      _ = (↑(u⁻¹ * u) : ℝ) • w := by simp
+      _ = (↑(u⁻¹) : ℝ) • (↑u : ℝ) • w := by rw [Units.val_mul, mul_smul]
+      _ = (↑(u⁻¹) : ℝ) • v := by rw [hwu]
+
+lemma projectivize_eq_iff {v w : DoubledSpace E} :
+    projectivize v = projectivize w ↔ same_ray v w := by
+  rw [same_ray_iff_gauge]
+  exact Quotient.eq (r := sameRaySetoid)
 
 lemma projectivize_eq_projectivize_smul
     (u : Gauge) (v : DoubledSpace E) :
     projectivize v = projectivize (u • v) := by
   apply Quotient.sound
-  exact same_ray_iff_gauge.2 ⟨u, rfl⟩
+  exact ⟨u⁻¹, by simp⟩
 
 @[simp] lemma projectivize_smul
     (u : Gauge) (v : DoubledSpace E) :

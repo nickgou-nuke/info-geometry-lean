@@ -33,7 +33,13 @@ noncomputable def freeEnergyFromLogDet
     (X0 : SPD n) (X : Ω → SPD n) (ε : ℝ) : ℝ :=
   freeEnergy (energyFromLogDet (X0 := X0) X) ε
 
-/-- Named partition alias for the log-det/Burg-induced ensemble. -/
+/--
+Statistical Gibbs partition for the finite ensemble whose energy is induced by
+log-det/Burg divergence.
+
+This is a finite sum over `Ω`, not the determinant-volume cocycle
+`det(exp A)`.
+-/
 noncomputable def partitionFromLogDet
     (X0 : SPD n) (X : Ω → SPD n) (ε : ℝ) : ℝ :=
   Z (energyFromLogDet (X0 := X0) X) ε

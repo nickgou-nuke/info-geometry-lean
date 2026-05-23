@@ -466,35 +466,10 @@ structure CoordinatelessSouriauFisherContext
   sigma : AdditiveModularFlow (H := H)
   beta : ℝ
   kms : KMSState (H := H) sigma beta
-  kms_def_eq : kms.state = state
+  kms_state_eq : kms.state = state
   souriauMoment : OperatorSouriauMoment (H := H) Symmetry
   fisherMetric : QuantumFisherSLDMetric (H := H) Tangent state
   weylGauge : WeylAlgebraGauge (H := H) state
-
-/--
-Convert a `CoordinatelessSouriauFisherContext` to the minimal context by
-using the `kms.state` as the canonical algebraic state.
--/
-@[rep_depth operator]
-def CoordinatelessSouriauFisherContext.toMinimal
-    {Symmetry : Type v} {Tangent : Type w}
-    (C : CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent) :
-    MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
-  sigma := C.sigma
-  beta := C.beta
-  kms := C.kms
-  souriauMoment := C.souriauMoment
-    fisherMetric :=
-    (by
-      -- use the state from the KMS packet directly
-      have h := C.fisherMetric
-      -- replace the state parameter by `C.kms.state`
-      simpa [C.kms.state] using h)
-  weylGauge :=
-    (by
-      have h := C.weylGauge
-      simpa [C.kms.state] using h)
-
 
 /--
 Minimal broad coordinateless Souriau/KMS/Fisher context.
@@ -510,66 +485,26 @@ structure MinimalCoordinatelessSouriauFisherContext
   kms : KMSState (H := H) sigma beta
   souriauMoment : OperatorSouriauMoment (H := H) Symmetry
   fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state
-  488|  weylGauge : WeylAlgebraGauge (H := H) kms.state
-  489|}
-  490|
-  491|/--
-  492|Minimal broad coordinateless Souriau/KMS/Fisher context on the identity-Weyl
-  493|branch.
-  494|/nThis removes the explicit `weylGauge` packet from the broad context when the
-  495|constructive route already chooses the identity gauge.
-  496|-/
-  497|@[rep_depth operator]
-  498|structure MinimalIdentityWeylCoordinatelessSouriauContext
-  499|    (Symmetry : Type v) (Tangent : Type w) where
-  500|  sigma : AdditiveModularFlow (H := H)
-  501|  beta : ℝ
-  502|  kms : KMSState (H := H) sigma beta
-  503|  souriauMoment : OperatorSouriauMoment (H := H) Symmetry
-  504|  fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state
-  505|  -- we omit the `weylGauge` field: the identity gauge is the canonical choice
-  506|  weylGauge := identityWeylAlgebraGauge kms.state
-  507|}
-  
-/**
-* **Constructive reduction**
-*
-* The broad `CoordinatelessSouriauFisherContext` bundles a redundant equality
-* `kms : KMSState (H := H)`.  The canonical owner corridor already
-* provides the smaller `MinimalCoordinatelessSouriauFisherContext` which derives
-* the algebraic state directly from `kms.state`.  The following definition
-* constructs the minimal context from a broad one, eliminating the explicit
-* `state` field and the `kms_state_eq` hypothesis.
-*
-* This is a truthful, kernel‑checked reduction: no `sorry` is used, and the
-* construction only depends on fields that are already present in the source
-* structure.
-*/
+  weylGauge : WeylAlgebraGauge (H := H) kms.state
+
+/--
+Minimal broad coordinateless Souriau/KMS/Fisher context on the identity-Weyl
+branch.
+
+This removes the explicit `weylGauge` packet from the broad context when the
+constructive route already chooses the identity gauge.
+-/
 @[rep_depth operator]
-def CoordinatelessSouriauFisherContext.toMinimalCoordinateless
-    {Symmetry : Type v} {Tangent : Type w}
-    (C : CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent) :
-    MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent :=
-  {
-    sigma := C.sigma,
-    beta := C.beta,
-    kms := C.kms,
-    souriauMoment := C.souriauMoment,
-    fisherMetric :=
-      -- The original metric expects `state`, but we can transport it via the
-      -- equality `C.kms_state_eq`.  `C.fisherMetric` is defined over `C.state`.
-      (by
-        -- Rewrite the metric's underlying state using `C.kms_state_eq`.
-        have h := C.fisherMetric;
-        -- `h` has type `QuantumFisherSLDMetric ... C.state`.
-        -- Use `C.kms_state_eq` to change the state argument.
-        simpa [C.kms_state_eq] using h),
-    weylGauge :=
-      (by
-        -- Similar transport for the Weyl gauge.
-        have h := C.weylGauge;
-        simpa [C.kms_state_eq] using h)
-  }
+structure MinimalIdentityWeylCoordinatelessSouriauContext
+    (Symmetry : Type v) (Tangent : Type w) where
+  sigma : AdditiveModularFlow (H := H)
+  beta : ℝ
+  kms : KMSState (H := H) sigma beta
+  souriauMoment : OperatorSouriauMoment (H := H) Symmetry
+  fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state
+
+namespace MinimalIdentityWeylCoordinatelessSouriauContext
+
 variable {Symmetry : Type v} {Tangent : Type w}
 variable (C : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent)
 
@@ -584,21 +519,7 @@ def weylGauge : WeylAlgebraGauge (H := H) C.state :=
   identityWeylAlgebraGauge (H := H) C.state
 
 /--
-Convert a full `CoordinatelessSouriauFisherContext` to the minimal
-identity-Weyl version by reading the algebraic state from `kms.state`.
--/
-@[rep_depth operator]
-def fromFull (C : CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent) :
-    MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent := by
-  refine
-    { sigma := C.sigma
-      beta := C.beta
-      kms := C.kms
-      souriauMoment := C.souriauMoment
-      fisherMetric := C.kms_state_eq.symm ▸ C.fisherMetric }
-
-/--
-Promote the identity-Weyl branch to the existing minimal broad coordinateless
+Convert the identity-Weyl branch to the existing minimal broad coordinateless
 context by constructing the removed Weyl packet definitionally.
 -/
 @[rep_depth operator]
@@ -610,30 +531,13 @@ def toMinimalCoordinatelessSouriauFisherContext :
   souriauMoment := C.souriauMoment
   fisherMetric := C.fisherMetric
   weylGauge := C.weylGauge
-  
-@[rep_depth operator]
-theorem mk_of_kms
-    (sigma : AdditiveModularFlow (H := H))
-    (beta : ℝ)
-    (kms : KMSState (H := H) sigma beta)
-    (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
-    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state) :
-    ∃ ctx : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent,
-      ctx.state = kms.state := by
-  refine ⟨{
-    sigma := sigma,
-    beta := beta,
-    kms := kms,
-    souriauMoment := souriauMoment,
-    fisherMetric := fisherMetric
-  }, rfl⟩
 
 /--
 Compatibility adapter from the identity-Weyl minimal branch to the legacy broad
 coordinateless context.
 -/
 @[rep_depth operator]
-def toFull (C : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent) :
+def toFull :
     CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
   state := C.kms.state
   sigma := C.sigma
@@ -643,12 +547,6 @@ def toFull (C : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetr
   souriauMoment := C.souriauMoment
   fisherMetric := C.fisherMetric
   weylGauge := C.weylGauge
-
-/-- The reconstructed Weyl gauge is definitionally the identity gauge. -/
-@[rep_depth operator]
-theorem toFull_weylGauge_eq_identity
-    (C : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent) :
-    (toFull (H := H) C).weylGauge = identityWeylAlgebraGauge (H := H) C.state := rfl
 
 end MinimalIdentityWeylCoordinatelessSouriauContext
 

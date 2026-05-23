@@ -171,6 +171,27 @@ theorem hasDrazinInverse_of_fieldContext
     S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
   exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
 
+/--
+The field-constructed Drazin witness context really packages the explicit
+inverse witness that appears in `exists_drazinInverse`.
+-/
+theorem drazinWitnessContext_ofField_spec
+    {K : Type*} [Field K] (S : DiracSouriauSector K) :
+    ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) K,
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D
+        (DrazinWitnessContext.ofField S).k := by
+  exact ⟨(DrazinWitnessContext.ofField S).D,
+    (DrazinWitnessContext.ofField S).isDrazin⟩
+
+/--
+The local Drazin witness context discharges the existence predicate on the
+same index that it stores.
+-/
+theorem hasDrazinInverse_of_fieldContext_spec
+    {K : Type*} [Field K] (S : DiracSouriauSector K) :
+    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
+  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
+
 /-- Unpack a Drazin hypothesis into its explicit witness. -/
 
 theorem exists_drazinInverse_of_hasDrazinInverse
@@ -307,6 +328,17 @@ theorem pfaffianAbs_sq_eq_abs_det (S : DiracSouriauSector ℝ) :
     S.pfaffianAbs ^ (2 : ℕ) = |S.K.det| := by
   unfold pfaffianAbs
   exact Real.sq_sqrt (abs_nonneg S.K.det)
+
+/--
+The Dirac-Souriau entropy expression is a direct readout of the sector
+structure: there is no extra witness data hidden behind the definition.
+-/
+theorem souriauEntropy_eq
+    (S : DiracSouriauSector ℝ) :
+    S.souriauEntropy =
+      Real.log (Real.sqrt S.K.det) - (1 / 2) *
+        Real.log (S.berezinian) := by
+  rfl
 
 end DiracSouriauSector
 

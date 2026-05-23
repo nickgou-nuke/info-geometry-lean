@@ -3,7 +3,6 @@ import Mathlib.Analysis.MellinTransform
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Analysis.MellinZetaScaling
@@ -20,14 +19,15 @@ The infinite identity
   M (∑_{k ≥ 1} f (k x)) (s) = ζ(s) * M(f) (s)
 
 requires analytic convergence, Tonelli/Fubini interchange, and decay
-hypotheses.  That part is recorded as socket debt, not native closure.
+hypotheses.  This module deliberately does not expose that infinite statement
+as a witness socket; only the finite orbit-sum identity below is owned here.
 
 The intended interpretation is:
 
 * Mellin dilation character `k ↦ k^{-s}` is the scalar shadow of projective
   scaling;
 * finite orbit sums produce finite Dirichlet characters;
-* the infinite orbit sum is the analytic zeta completion.
+* the infinite orbit sum is later analytic work, not a theorem surface here.
 -/
 
 noncomputable section
@@ -139,41 +139,5 @@ theorem mellinZetaScalingOwnerTarget :
     MellinZetaScalingOwnerTarget := by
   intro Func R inst1 inst2 D A f
   exact D.finite_sample_sum_factor A f
-
-/--
-Infinite Mellin-zeta interchange socket.
-
-This is the analytic part of the identity
-
-  M (∑_{k ≥ 1} f (k x)) (s) = ζ(s) * M(f) (s).
-
-It requires convergence and interchange-of-sum/integral hypotheses.
--/
-@[socket_debt_tag]
-structure InfiniteMellinZetaInterchangeSocket
-    (Func R : Type*) where
-  infiniteOrbitSum : Func → Func
-  zetaWeightSum : R
-  Mellin : Func → R
-  sampleWeightMellinFactor : Func → R
-
-  /-- Analytic interchange/convergence law. -/
-  interchange_law : Prop
-
-  /-- Explicit certificate remains socket debt until formalized. -/
-  interchange_certificate : interchange_law
-
-namespace InfiniteMellinZetaInterchangeSocket
-
-variable {Func R : Type*}
-variable (S : InfiniteMellinZetaInterchangeSocket Func R)
-
-/-- Re-export of the supplied analytic interchange law. -/
-@[bridge_target_tag]
-theorem interchange :
-    S.interchange_law :=
-  S.interchange_certificate
-
-end InfiniteMellinZetaInterchangeSocket
 
 end InfoGeometry.Analysis.MellinZetaScaling

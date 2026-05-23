@@ -8,13 +8,10 @@ open scoped InnerProductSpace
 
 Conservative Schwinger boundary for the finite Tomita/Krein atom.
 
-This module proves the signed crossing-number identity that produces the
-expected Heisenberg coefficient `m δ[m+n,0]` once one has a mode-indexed
-current algebra.
-
-It does **not** construct the normal-ordered current from raw CAR modes.
-That constructive Wick/normal-ordering theorem remains the missing source-side
-bosonization step.
+This module proves the signed crossing-number identity and the target
+Heisenberg current law.  The source-side construction from raw CAR modes lives
+in `InfoGeometry.Canonical.BosonizationConstructiveCurrent`, where the current
+law is derived from normal-ordered matrix units and the crossing-count theorem.
 -/
 
 namespace InfoGeometry.Canonical.BosonizationSchwinger
@@ -98,8 +95,9 @@ section TargetHeisenberg
 Target normal-ordered current object in the already-constructed Heisenberg
 current algebra.
 
-This names the target current generator.  It is not yet a construction from raw
-CAR modes.
+This names the target current generator in the already-constructed external
+Heisenberg algebra.  The raw-CAR construction is supplied separately by
+`BosonizationConstructiveCurrent`.
 -/
 @[rep_depth transport]
 noncomputable abbrev normalOrderedCurrentTarget (n : ℤ) : HeisenbergAlgebra ℝ :=
@@ -113,7 +111,7 @@ noncomputable abbrev normalOrderedCurrentCentral : HeisenbergAlgebra ℝ :=
 /--
 The target normal-ordered currents satisfy the Heisenberg current law.
 
-This is the second arrow of the remaining current layer:
+This is the target current law:
 `normal-ordered current -> [J_m,J_n] = m δ[m+n,0] K`.
 -/
 @[rep_depth transport]

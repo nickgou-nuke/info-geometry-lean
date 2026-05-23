@@ -35,7 +35,7 @@ works in `EReal`.
 lemma fenchelSet_nonempty (f : E → ℝ) (y : DualSpace E) :
     (fenchelSet f y).Nonempty := by
   refine ⟨⟪y, (0 : E)⟫ₗ - f 0, ?_⟩
-  exact ⟨0, rfl⟩
+  exact ⟨(0 : E), rfl⟩
 
 /-- Witness bound: `⟪y,x⟫ - f x ≤ f* y`, assuming bounded-above so `le_csSup` applies. -/
 lemma le_fenchelConj (f : E → ℝ) (y : DualSpace E) (x : E)
@@ -46,21 +46,22 @@ lemma le_fenchelConj (f : E → ℝ) (y : DualSpace E) (x : E)
 /-- Discoverability alias for `le_fenchelConj` in `≥` orientation. -/
 lemma fenchelConj_ge_eval_sub (f : E → ℝ) (y : DualSpace E) (x : E)
     (hb : BddAbove (fenchelSet f y)) :
-    fenchelConj f y ≥ ⟪y, x⟫ₗ - f x :=
-  le_fenchelConj (f := f) (y := y) (x := x) hb
+    fenchelConj f y ≥ ⟪y, x⟫ₗ - f x := by
+  exact le_fenchelConj (f := f) (y := y) (x := x) hb
 
 /-- Fenchel-Young inequality (real-valued version; needs `BddAbove` to use `le_csSup`). -/
 theorem fenchelYoung (f : E → ℝ) (y : DualSpace E) (x : E)
     (hb : BddAbove (fenchelSet f y)) :
     ⟪y, x⟫ₗ ≤ f x + fenchelConj f y := by
-  have h := le_fenchelConj (f := f) (y := y) (x := x) hb
-  linarith
+  exact le_add_of_sub_left_le (le_fenchelConj (f := f) (y := y) (x := x) hb)
 
 /-- Attainment packaged as a value equation gives equality in Fenchel-Young. -/
 theorem fenchelYoung_eq_of_conj_eq (f : E → ℝ) (y : DualSpace E) (x : E)
     (h : fenchelConj f y = ⟪y, x⟫ₗ - f x) :
     ⟪y, x⟫ₗ = f x + fenchelConj f y := by
-  linarith
+  have h' : ⟪y, x⟫ₗ - f x = fenchelConj f y := h.symm
+  have h'' : ⟪y, x⟫ₗ = fenchelConj f y + f x := (sub_eq_iff_eq_add).mp h'
+  simpa [add_comm] using h''
 
 /-- If `⟪y,x⟫ - f x` is a greatest element of the defining set, then it attains `sSup`. -/
 theorem fenchelConj_eq_of_isGreatest (f : E → ℝ) (y : DualSpace E) (x : E)

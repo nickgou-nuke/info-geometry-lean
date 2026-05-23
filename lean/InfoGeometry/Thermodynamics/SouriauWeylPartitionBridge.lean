@@ -7,10 +7,12 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 
-Grand Synthesis: Souriau Symplectic Thermodynamics and the Euler Product.
+Finite Souriau/Weyl denominator arithmetic packet.
 
-This bridge formalizes the profound identity:
-`Souriau Partition Function = Weyl Denominator = Euler Product = Zeta Function`.
+This file is not the general Massieu/Fisher partition layer.  The statistical
+Massieu potential is owned separately as `log Z` in finite Cartan/exponential
+family modules.  Here the word "partition" refers to the finite arithmetic
+Euler-product/Weyl-denominator readout carried by the packet below.
 
 According to Souriau's Lie Group Thermodynamics:
 1. The temperature `β` is a vector in the Lie algebra `mathfrak{g}`.
@@ -20,8 +22,10 @@ According to Souriau's Lie Group Thermodynamics:
 4. The Weyl character denominator `∏ (1 - e^{-α})` is exactly the Euler product 
    `∏ (1 - p^{-s})`.
 
-UTMOST MANDATE: No witness-gating. The thermodynamic identities are derived
-directly from the Lie-algebraic structure of the information crystal.
+The packet carries the finite arithmetic compatibility data needed for this
+specialized bridge.  It should not be read as a proof that determinant-volume
+transport replaces Souriau coadjoint-orbit integration or the statistical
+Massieu partition function.
 -/
 
 noncomputable section
@@ -70,8 +74,9 @@ structure SouriauWeylPartitionBridge
     ∀ n ∈ positiveRoots, weylSignature n = if n = 1 then 1 else -1 -- Simplified placeholder for μ(n)
 
   /--
-  The Souriau-Weyl Identity:
-  The partition function is the inverse of the Weyl denominator.
+  The finite Souriau-Weyl arithmetic readout:
+  the carried Euler-product partition readout is the inverse of the finite
+  Weyl denominator.
   -/
   partitionFunction_eq_inverseWeylDenominator :
     finitePrimeBosonicInverseDenominator positiveRoots (fun p => souriauEvaluation p temperature.s) =
@@ -90,8 +95,8 @@ variable
 variable (B : SouriauWeylPartitionBridge E Op H Finite Alg)
 
 /-- 
-The Souriau partition function is exactly the finite Euler product for the 
-Riemann Zeta function.
+The carried finite arithmetic partition readout is exactly the finite Euler
+product associated with the selected positive roots.
 -/
 @[rep_depth transport]
 theorem partitionFunction_is_zeta_product :

@@ -149,3 +149,35 @@ def test_schema_specs_include_queue_and_truth_collections() -> None:
     assert "hive_task_for_goal" in collections
     assert ("hive_tasks", "task_queue_status_priority_idx") in indexes
     assert ("hive_events", "event_packet_sha_idx") in indexes
+
+
+def test_enqueue_leantrail_goal_sets_task_kind(monkeypatch) -> None:
+    inserted: list[tuple[str, dict]] = []
+
+    def fake_import_rows(endpoint, database, username, password, collection, docs):
+        for doc in docs:
+            inserted.append((collection, doc))
+        return {"collection": collection, "imported": len(docs)}
+
+    monkeypatch.setattr(queue_tool, "import_rows", fake_import_rows)
+
+    result = queue_tool.enqueue_leantrail_goal(
+        "http://127.0.0.1:8530",
+        "hive_live",
+        "root",
+        "alexandria_root",
+        queue_name="proof-search",
+        goal_hash_shape="goal_hash",
+        canonical_shape="⊢ theorem_goal",
+        target_pretty="Demo.theorem_goal",
+        module="Demo.Module",
+        goal_index=0,
+        priority=0.5,
+    )
+
+    assert "goal" in result
+    assert "task" in result
+    assert result["task"]["task_kind"] == "proof.search.leantrail"
+    task_docs = [doc for coll, doc in inserted if coll == "hive_tasks"]
+    assert task_docs
+    assert task_docs[0]["task_kind"] == "proof.search.leantrail"

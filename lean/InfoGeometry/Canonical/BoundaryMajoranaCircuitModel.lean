@@ -1,4 +1,5 @@
-import InfoGeometry.Canonical.BoundaryMatrixUnitWick
+import InfoGeometry.Canonical.NormalOrderedCurrent
+import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 
@@ -21,10 +22,10 @@ module is just the theorem-level synthesis point.
 
 namespace InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
 
-open InfoGeometry.Canonical.BoundaryMatrixUnitWick
+open InfoGeometry.Canonical.NormalOrderedCurrent
+open InfoGeometry.Canonical.BosonizationConstructiveCurrent
 open InfoGeometry.Canonical.MajoranaPHSZeroMode
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
-open InfoGeometry.Canonical.NormalOrderedCurrent
 
 section Core
 
@@ -67,11 +68,10 @@ theorem boundaryMajoranaCircuitModel :
   · exact cptSuperchargeOp_is_boundary_zero_mode (E := E)
   · intro ι R _ _ _ occ a b c d
     simpa using
-      (BoundaryMatrixUnitWick.boundaryMatrixUnitWick_commutator
-        (R := R) (occ := occ) (a := a) (b := b) (c := c) (d := d))
+      (normalOrdered_matrixUnit_commutator (R := R) occ a b c d)
   · intro A _ C m n
     simpa using
-      (BoundaryMatrixUnitWick.boundaryCurrent_heisenberg_from_matrixUnit
+      (RawCARModeAlgebra.normalOrderedCurrent_heisenberg_from_matrixUnit
         (C := C) (m := m) (n := n))
 
 end Core

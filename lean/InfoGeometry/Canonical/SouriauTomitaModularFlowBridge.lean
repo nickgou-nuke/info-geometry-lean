@@ -373,6 +373,32 @@ theorem mk_of_kms
     kms := kms,
     kms_state_eq := rfl}, rfl⟩
 
+/-- Direct constructor: build a `SouriauTomitaKMSContext` from a `KMSState`
+    without carrying an explicit `state` field or `kms_state_eq` hypothesis.
+    The state is derived from `kms.state` definitionally, removing the explicit
+    hypothesis packet from the exposed surface on the constructive route while
+    preserving the standard-form carrier and the KMS identity.
+-/
+@[rep_depth operator]
+noncomputable def SouriauTomitaKMSContext.ofKMS
+    (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+    (beta : ℝ)
+    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
+    SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) where
+  logContext := logContext
+  beta := beta
+  state := kms.state
+  kms := kms
+  kms_state_eq := rfl
+
+/-- The `ofKMS` constructor reads back the same `state` definitionally. -/
+@[rep_depth operator]
+theorem SouriauTomitaKMSContext.state_eq_kms_state_ofKMS
+    (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+    (beta : ℝ)
+    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
+    (ofKMS logContext beta kms).state = kms.state := rfl
+
 variable (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
 
 /-- The modular automorphism group is the Souriau/Tomita generated flow. -/

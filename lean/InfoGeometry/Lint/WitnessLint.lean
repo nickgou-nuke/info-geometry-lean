@@ -8,14 +8,14 @@ import Lean
 /-!
 # Witness-Pack Lint — Detection Logic
 
-Detects the `_statement : Prop` / `_witness` anti-pattern in structure
+Detects the generic statement/witness anti-pattern in structure
 declarations.
 
 The pattern:
 
 ```
 structure Foo where
-  bar_statement : Prop
+  bar_statement : Sort 0
   bar_witness   : bar_statement
 ```
 
@@ -39,8 +39,9 @@ A pair `(f, g)` of structure fields is a **witness-pack pair** when:
    `stem` is `f` with the `_statement` suffix removed.
 
 A slightly broader variant also fires when a field named `*_statement`
-has type `Prop` regardless of whether a companion witness field exists —
-because a bare `Prop` field in a structure is almost always vacuous.
+or `*_witness` has type `Prop` regardless of whether a companion field
+exists — because a bare `Prop` field with either suffix is almost always
+vacuous.
 -/
 
 open Lean
@@ -67,6 +68,10 @@ private def isBarePropSort (e : Expr) : Bool :=
 private def endsWithStatement (s : String) : Bool :=
   s.endsWith "_statement"
 
+/-- True if a string ends with `_witness`. -/
+private def endsWithWitness (s : String) : Bool :=
+  s.endsWith "_witness"
+
 /-- Compute the expected witness field name from a statement field name.
     `foo_statement` → `foo_witness`. -/
 private def witnessNameOf (statementName : String) : String :=
@@ -78,21 +83,22 @@ private def witnessNameOf (statementName : String) : String :=
 
 /-- A single detected witness-pack pair inside a structure. -/
 structure WitnessPackPair where
-  /-- Name of the `_statement : Prop` field. -/
+  /-- Name of the generic statement field. -/
   statementField : Name
   /-- Name of the companion `_witness` field, if present. -/
   witnessField?  : Option Name
   deriving Repr, Inhabited
 
 /--
-Detect `_statement : Prop` / `_witness` pairs in the fields of a structure.
+Detect generic statement/witness pairs in the fields of a structure.
 
 For each field `f`:
-- whose leaf name ends in `_statement`, AND
+- whose leaf name ends in `_statement` or `_witness`, AND
 - whose projected type (after stripping the implicit self-binder) is bare `Prop`,
 
-we check whether a companion field named `stem_witness` exists among the
-structure's fields.
+we check whether a statement field has a companion field named
+`stem_witness` among the structure's fields.  Bare witness fields of type `Prop`
+are reported directly.
 
 Returns an array of detected pairs (with or without companion).
 -/
@@ -107,7 +113,7 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
   let mut pairs : Array WitnessPackPair := #[]
   for fieldName in fields do
     let leafStr := toString fieldName
-    unless endsWithStatement leafStr do continue
+    unless endsWithStatement leafStr || endsWithWitness leafStr do continue
     -- Check that the projected type is bare Prop.
     -- The projection function `structName.fieldName` has type
     --   ∀ (self : StructType ...), FieldType
@@ -118,14 +124,18 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
         let projType := cinfo.type
         let body := stripForalls projType
         unless isBarePropSort body do continue
-        -- Check for companion _witness field
-        let expectedWitness := witnessNameOf leafStr
-        let companion :=
-          if fieldLeafSet.contains expectedWitness then
-            some expectedWitness.toName
-          else
-            none
-        pairs := pairs.push { statementField := fieldName, witnessField? := companion }
+        if endsWithStatement leafStr then
+          -- Check for companion witness field.
+          let expectedWitness := witnessNameOf leafStr
+          let companion :=
+            if fieldLeafSet.contains expectedWitness then
+              some expectedWitness.toName
+            else
+              none
+          pairs := pairs.push { statementField := fieldName, witnessField? := companion }
+        else
+          -- Bare witness field of type `Prop`.
+          pairs := pairs.push { statementField := fieldName, witnessField? := some fieldName }
     | none => continue
   return pairs
 
@@ -141,10 +151,15 @@ def hasWitnessPackPairs (env : Environment) (structName : Name) : Bool :=
 def renderWitnessPackDiag (structName : Name) (pair : WitnessPackPair) : MessageData :=
   match pair.witnessField? with
   | some wf =>
-      m!"[Pauli/Witness-Pack] `{structName}` has a generic `Prop` field \
-         `{pair.statementField}` with tautological companion `{wf}`. \
-         Replace with a concrete mathematical statement, move to a standalone \
-         `sorry`-backed theorem, or remove if the math is unknown."
+      if wf == pair.statementField then
+        m!"[Pauli/Witness-Pack] `{structName}` has a generic bare `Prop` field \
+           `{pair.statementField}`. Replace with a concrete mathematical statement \
+           tied to the surrounding objects, or remove if the math is unknown."
+      else
+        m!"[Pauli/Witness-Pack] `{structName}` has a generic `Prop` field \
+           `{pair.statementField}` with tautological companion `{wf}`. \
+           Replace with a concrete mathematical statement, move to a standalone \
+           theorem, or remove if the math is unknown."
   | none =>
       m!"[Pauli/Witness-Pack] `{structName}` has a generic `Prop` field \
          `{pair.statementField}` with no concrete content. \

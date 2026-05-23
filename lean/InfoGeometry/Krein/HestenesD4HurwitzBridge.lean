@@ -99,11 +99,11 @@ structure D4LatticeKacMoodyBridge
   /-- Evidence for the discrete-Möbius certificate. -/
   discrete_moebius_holds : discrete_moebius_certificate
 
-  /-- Triality symmetry witness for the D4 arithmetic backend. -/
-  triality_witness : Prop
+  /-- Triality action on the three outer nodes of the D4 diagram. -/
+  triality_action : Automorphism → Equiv.Perm (Fin 3)
 
-  /-- Evidence for triality. -/
-  triality_holds : triality_witness
+  /-- Triality has order dividing three for every installed symmetry element. -/
+  triality_holds : ∀ g : Automorphism, triality_action g ^ 3 = 1
 
   /-- Backend certificate: affine Kac--Moody closure is installed. -/
   affine_kac_moody_closure : Prop
@@ -154,7 +154,7 @@ theorem discrete_moebius_readback :
 /-- Readback: triality is supplied by the arithmetic backend. -/
 @[rep_depth projective]
 theorem triality_readback :
-    B.triality_witness :=
+    ∀ g : Automorphism, B.triality_action g ^ 3 = 1 :=
   B.triality_holds
 
 /-- Readback: affine Kac--Moody closure is supplied by the arithmetic backend. -/
@@ -220,11 +220,11 @@ structure D4HurwitzArithmeticBridge where
   /-- Evidence for the self-duality certificate. -/
   d4_self_dual_holds : d4_self_dual_certificate
 
-  /-- Backend certificate: triality acts on the supplied arithmetic layer. -/
-  triality_certificate : Prop
+  /-- Triality action on the three outer nodes of the D4 diagram. -/
+  trialityAction : MoebiusParameter → Equiv.Perm (Fin 3)
 
-  /-- Evidence for the triality certificate. -/
-  triality_holds : triality_certificate
+  /-- Triality has order dividing three for every Möbius parameter. -/
+  triality_holds : ∀ g : MoebiusParameter, trialityAction g ^ 3 = 1
 
   /-- Backend certificate: affine Kac--Moody structure is installed. -/
   affine_kac_moody_certificate : Prop
@@ -260,7 +260,7 @@ theorem d4_self_dual_in_krein :
 /-- The supplied triality certificate is available. -/
 @[rep_depth projective]
 theorem triality_readback :
-    B.triality_certificate :=
+    ∀ g : MoebiusParameter, B.trialityAction g ^ 3 = 1 :=
   B.triality_holds
 
 /-- The supplied affine Kac--Moody certificate is available. -/

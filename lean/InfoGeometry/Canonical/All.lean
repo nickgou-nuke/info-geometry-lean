@@ -190,8 +190,12 @@ import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.SplitCayleyDicksonTrace
+import InfoGeometry.Canonical.SplitComplex
+import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.SplitHierarchy
 import InfoGeometry.Canonical.SplitQuaternionMatrixModel
+import InfoGeometry.Canonical.ZornComposition
+import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Lift
@@ -806,6 +810,7 @@ import InfoGeometry.Canonical.BoundaryMatrixUnitWick
 import InfoGeometry.Canonical.WilsonSchwingerBridge
 import InfoGeometry.Canonical.BosonizationBoundary
 import InfoGeometry.Canonical.BosonizationSchwinger
+import InfoGeometry.Canonical.BosonizationTheorem
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SUSYCentralChargeBridge
@@ -909,6 +914,8 @@ import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 import InfoGeometry.Canonical.SplitOctonionAssociator
+import InfoGeometry.Canonical.SplitOctonionRigidity
+import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 

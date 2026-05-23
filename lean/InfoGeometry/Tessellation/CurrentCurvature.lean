@@ -1,18 +1,72 @@
 import InfoGeometry.Tessellation.WilsonLoop
+import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import Mathlib.Algebra.Algebra.Basic
 
 /-!
 # Current curvature bridge API
 
-This file contains only the abstract interface that reads a Wilson-loop defect
-as a central scalar curvature carried by the base sector.
+This file contains the adapter that reads the completed Heisenberg current
+coefficient as current curvature, together with the Wilson-loop defect
+interface that can carry such scalar curvature.
 
 The Wick/Schwinger current algebra theorems live in the canonical branch.  This
-module does not reprove normal ordering or Heisenberg current identities; it is
-the tessellation-facing shape that those theorems can instantiate.
+module does not reprove normal ordering or Heisenberg current identities; it
+imports the already-proved completed-current theorem and renames its central
+coefficient as current curvature.
 -/
 
 namespace InfoGeometry.Tessellation
+
+namespace CurrentCurvature
+
+open InfoGeometry.Canonical.BosonizationConstructiveCurrent
+
+/--
+The quantum Ricci scalar exposed by the completed current extension.
+
+This is a naming adapter for the already constructed completed central carrier.
+-/
+def quantumRicciScalar {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A) : A :=
+  completedCentral C
+
+/-- The Heisenberg/Ricci mode coefficient `m δ_{m+n,0}`. -/
+def ricciModeCoefficient (m n : Int) : Int :=
+  if m + n = 0 then m else 0
+
+/--
+Completed current curvature theorem.
+
+This is the existing Heisenberg current theorem read as the central
+current-curvature/Ricci anomaly.  It does not reprove Wick ordering.
+-/
+theorem currentCurvature_is_centralRicciAnomaly
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A) (m n : Int) :
+    CCRBracketCompleted C
+        (normalOrderedCurrent C m)
+        (normalOrderedCurrent C n)
+      =
+      ricciModeCoefficient m n • quantumRicciScalar C := by
+  rw [normalOrderedCurrent_heisenberg_from_matrixUnit C m n]
+  unfold quantumRicciScalar ricciModeCoefficient
+  by_cases hmn : m + n = 0 <;> simp [hmn]
+
+/--
+Expanded Heisenberg form of the current-curvature theorem.
+-/
+theorem currentCurvature_is_centralRicciAnomaly_if
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A) (m n : Int) :
+    CCRBracketCompleted C
+        (normalOrderedCurrent C m)
+        (normalOrderedCurrent C n)
+      =
+      if m + n = 0 then m • quantumRicciScalar C else 0 := by
+  unfold quantumRicciScalar
+  exact normalOrderedCurrent_heisenberg_from_matrixUnit C m n
+
+end CurrentCurvature
 
 /-- The identity sector as a tessellation diamond. -/
 def unitDiamond (A : Type*) [Semiring A] : Diamond A where

@@ -15,6 +15,8 @@ import InfoGeometry.Projective.Projective
 import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.SelfDualCone
+import InfoGeometry.Projective.SplitOctonions
+import InfoGeometry.Projective.SplitOctonions.Polar
 
 namespace InfoGeometry
 

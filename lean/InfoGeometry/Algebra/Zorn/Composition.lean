@@ -43,4 +43,24 @@ theorem detZ_right_mul_normOne
   simpa using
     InfoGeometry.Canonical.ZornComposition.detZ_right_mul_normOne X U hU
 
+/-- Left Zorn multiplication preserves the null cone. -/
+theorem left_mul_preserves_null
+    (U X : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
+    (hX : InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull X) :
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull
+      (InfoGeometry.Canonical.ZornComposition.mulZ U X) := by
+  unfold InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull at *
+  change InfoGeometry.Canonical.ZornComposition.detZ (InfoGeometry.Canonical.ZornComposition.mulZ U X) = 0
+  rw [InfoGeometry.Canonical.ZornComposition.detZ_mul, hX, mul_zero]
+
+/-- Right Zorn multiplication preserves the null cone. -/
+theorem right_mul_preserves_null
+    (X U : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
+    (hX : InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull X) :
+    InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull
+      (InfoGeometry.Canonical.ZornComposition.mulZ X U) := by
+  unfold InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull at *
+  change InfoGeometry.Canonical.ZornComposition.detZ (InfoGeometry.Canonical.ZornComposition.mulZ X U) = 0
+  rw [InfoGeometry.Canonical.ZornComposition.detZ_mul, hX, zero_mul]
+
 end InfoGeometry.Algebra.Zorn

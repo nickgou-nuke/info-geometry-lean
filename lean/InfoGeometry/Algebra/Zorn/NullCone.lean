@@ -1,106 +1,96 @@
 import InfoGeometry.Algebra.Zorn.Basic
-import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 /-!
 # InfoGeometry.Algebra.Zorn.NullCone
 
-This file re-exports the canonical square-zero readouts of the explicit Zorn
-carrier.
+Canonical null representatives in the local Zorn/split-octonion cell.
 
-It is the algebraic null-cone lane for the split-octonion shadow:
-upper and lower off-diagonal vectors square to zero, and their mixed products
-land in the diagonal sector.
+These are representative-level determinant-zero facts.  They do not use
+projective quotienting.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
-open InfoGeometry.Canonical.ZornVectorMatrixExplicit
+variable {R : Type*} [CommRing R]
 
-abbrev Vec3 := InfoGeometry.Canonical.ZornVectorMatrixExplicit.Vec3
-abbrev ZornCoord := InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord
+/-- Upper diagonal Peirce projector. -/
+def pPlus : ZornMatrix R where
+  a := 1
+  b := 0
+  v := 0
+  w := 0
 
-/-- The positive diagonal projector. -/
-def pPlus : ZornCoord :=
-  zornMk 1 0 0 0
+/-- Lower diagonal Peirce projector. -/
+def pMinus : ZornMatrix R where
+  a := 0
+  b := 1
+  v := 0
+  w := 0
 
-/-- The negative diagonal projector. -/
-def pMinus : ZornCoord :=
-  zornMk 0 1 0 0
+/-- Upper off-diagonal lightray. -/
+def upperLightray (v : Fin 3 → R) : ZornMatrix R where
+  a := 0
+  b := 0
+  v := v
+  w := 0
 
-@[simp] theorem vec3_zero : (![0, 0, 0] : Vec3) = 0 := by
-  funext i; fin_cases i <;> simp
+/-- Lower off-diagonal lightray. -/
+def lowerLightray (w : Fin 3 → R) : ZornMatrix R where
+  a := 0
+  b := 0
+  v := 0
+  w := w
 
-@[simp] theorem vec3_splat (x : Vec3) : ![x 0, x 1, x 2] = x := by
-  funext i; fin_cases i <;> simp
+/-- The upper diagonal sector `p₊` lies on the Zorn null quadric. -/
+@[simp]
+theorem detZ_pPlus (cp : CrossProduct3 R) :
+    ZornMatrix.detZ cp (pPlus : ZornMatrix R) = 0 := by
+  simp [ZornMatrix.detZ, pPlus, cp.dot_zero_left]
 
-@[simp] theorem pPlus_idempotent :
-    zornMul pPlus pPlus = pPlus := by
-  ext <;> simp [pPlus, zornMul, zornMk, dot3, cross3]
+/-- The lower diagonal sector `p₋` lies on the Zorn null quadric. -/
+@[simp]
+theorem detZ_pMinus (cp : CrossProduct3 R) :
+    ZornMatrix.detZ cp (pMinus : ZornMatrix R) = 0 := by
+  simp [ZornMatrix.detZ, pMinus, cp.dot_zero_left]
 
-@[simp] theorem pMinus_idempotent :
-    zornMul pMinus pMinus = pMinus := by
-  ext <;> simp [pMinus, zornMul, zornMk, dot3, cross3]
+/-- Every upper off-diagonal arrow is Zorn-null. -/
+@[simp]
+theorem detZ_upperLightray
+    (cp : CrossProduct3 R) (v : Fin 3 → R) :
+    ZornMatrix.detZ cp (upperLightray v) = 0 := by
+  simp [ZornMatrix.detZ, upperLightray, cp.dot_zero_right]
 
-@[simp] theorem pPlus_mul_pMinus :
-    zornMul pPlus pMinus = 0 := by
-  ext <;> simp [pPlus, pMinus, zornMul, zornMk, dot3, cross3]
+/-- Every lower off-diagonal arrow is Zorn-null. -/
+@[simp]
+theorem detZ_lowerLightray
+    (cp : CrossProduct3 R) (w : Fin 3 → R) :
+    ZornMatrix.detZ cp (lowerLightray w) = 0 := by
+  simp [ZornMatrix.detZ, lowerLightray, cp.dot_zero_left]
 
-@[simp] theorem pMinus_mul_pPlus :
-    zornMul pMinus pPlus = 0 := by
-  ext <;> simp [pPlus, pMinus, zornMul, zornMk, dot3, cross3]
+/-- `p₊` is null. -/
+@[simp]
+theorem pPlus_isNull (cp : CrossProduct3 R) :
+    ZornMatrix.IsNull cp (pPlus : ZornMatrix R) := by
+  exact detZ_pPlus cp
 
-@[simp] theorem upperVector_square_zero (x : Vec3) :
-    zornMul (upperVectorZorn x) (upperVectorZorn x) = 0 := by
-  simpa using upperVectorZorn_square_zero x
+/-- `p₋` is null. -/
+@[simp]
+theorem pMinus_isNull (cp : CrossProduct3 R) :
+    ZornMatrix.IsNull cp (pMinus : ZornMatrix R) := by
+  exact detZ_pMinus cp
 
-@[simp] theorem lowerVector_square_zero (y : Vec3) :
-    zornMul (lowerVectorZorn y) (lowerVectorZorn y) = 0 := by
-  simpa using lowerVectorZorn_square_zero y
+/-- Every upper lightray is null. -/
+@[simp]
+theorem upperLightray_isNull
+    (cp : CrossProduct3 R) (v : Fin 3 → R) :
+    ZornMatrix.IsNull cp (upperLightray v) := by
+  exact detZ_upperLightray cp v
 
-@[simp] theorem upper_lower_mul_diag (x y : Vec3) :
-    zornMul (upperVectorZorn x) (lowerVectorZorn y) =
-      zornMk (dot3 x y) 0 0 0 := by
-  simpa using upperVectorZorn_mul_lowerVectorZorn x y
-
-@[simp] theorem lower_upper_mul_diag (x y : Vec3) :
-    zornMul (lowerVectorZorn y) (upperVectorZorn x) =
-      zornMk 0 (dot3 y x) 0 0 := by
-  simpa using lowerVectorZorn_mul_upperVectorZorn x y
-
-theorem upperVector_left_supported_on_pPlus (x : Vec3) :
-    zornMul pPlus (upperVectorZorn x) = upperVectorZorn x := by
-  ext <;> simp [pPlus, upperVectorZorn, zornMul, zornMk, dot3, cross3]
-
-theorem upperVector_right_supported_on_pMinus (x : Vec3) :
-    zornMul (upperVectorZorn x) pMinus = upperVectorZorn x := by
-  ext <;> simp [pMinus, upperVectorZorn, zornMul, zornMk, dot3, cross3]
-
-theorem lowerVector_left_supported_on_pMinus (y : Vec3) :
-    zornMul pMinus (lowerVectorZorn y) = lowerVectorZorn y := by
-  ext <;> simp [pMinus, lowerVectorZorn, zornMul, zornMk, dot3, cross3]
-
-theorem lowerVector_right_supported_on_pPlus (y : Vec3) :
-    zornMul (lowerVectorZorn y) pPlus = lowerVectorZorn y := by
-  ext <;> simp [pPlus, lowerVectorZorn, zornMul, zornMk, dot3, cross3]
-
-/-- The positive diagonal projector lies on the Zorn null cone. -/
-@[simp] theorem pPlus_isZornNull :
-    IsZornNull pPlus := by
-  simp [IsZornNull, pPlus, zornNorm, zornMk, dot3]
-
-/-- The negative diagonal projector lies on the Zorn null cone. -/
-@[simp] theorem pMinus_isZornNull :
-    IsZornNull pMinus := by
-  simp [IsZornNull, pMinus, zornNorm, zornMk, dot3]
-
-/-- Every upper off-diagonal lightray representative is null. -/
-@[simp] theorem upperVector_isZornNull (x : Vec3) :
-    IsZornNull (upperVectorZorn x) := by
-  simp [IsZornNull, upperVectorZorn, zornNorm, zornMk, dot3]
-
-/-- Every lower off-diagonal lightray representative is null. -/
-@[simp] theorem lowerVector_isZornNull (y : Vec3) :
-    IsZornNull (lowerVectorZorn y) := by
-  simp [IsZornNull, lowerVectorZorn, zornNorm, zornMk, dot3]
+/-- Every lower lightray is null. -/
+@[simp]
+theorem lowerLightray_isNull
+    (cp : CrossProduct3 R) (w : Fin 3 → R) :
+    ZornMatrix.IsNull cp (lowerLightray w) := by
+  exact detZ_lowerLightray cp w
 
 end InfoGeometry.Algebra.Zorn

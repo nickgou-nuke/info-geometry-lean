@@ -37,6 +37,16 @@ def matrixUnit {A : Type*} [Ring A]
   rawMatrixUnit psiPlus psiMinus a b -
     (if a = b then occ a • (1 : A) else 0)
 
+/-- Compatibility spelling for `rawMatrixUnit`. -/
+def rawUnit {A : Type*} [Ring A]
+    (psiPlus psiMinus : Int → A) (a b : Int) : A :=
+  rawMatrixUnit psiPlus psiMinus a b
+
+/-- Compatibility spelling for the normal-ordered `matrixUnit`. -/
+def normalUnit {A : Type*} [Ring A]
+    (psiPlus psiMinus : Int → A) (a b : Int) : A :=
+  matrixUnit psiPlus psiMinus a b
+
 section ExplicitCAR
 
 variable {A : Type*} [Ring A]
@@ -181,6 +191,25 @@ theorem raw_matrixUnit_commutator_from_rawCAR
                 rw [quarticPart_cancel psiPlus psiMinus car_plus_plus car_minus_minus a b c d]
                 simp
 
+/-- Compatibility spelling for the raw Wick matrix-unit commutator. -/
+theorem rawUnit_commutator
+    (car_minus_plus :
+      ∀ b c : Int,
+        psiMinus (-b) * psiPlus c + psiPlus c * psiMinus (-b) =
+          if b = c then 1 else 0)
+    (car_plus_plus :
+      ∀ a c : Int, psiPlus a * psiPlus c + psiPlus c * psiPlus a = 0)
+    (car_minus_minus :
+      ∀ b d : Int,
+        psiMinus (-b) * psiMinus (-d) + psiMinus (-d) * psiMinus (-b) = 0)
+    (a b c d : Int) :
+    comm (rawUnit psiPlus psiMinus a b) (rawUnit psiPlus psiMinus c d) =
+      (if b = c then rawUnit psiPlus psiMinus a d else 0) -
+        (if a = d then rawUnit psiPlus psiMinus c b else 0) := by
+  simpa [rawUnit] using
+    raw_matrixUnit_commutator_from_rawCAR psiPlus psiMinus
+      car_minus_plus car_plus_plus car_minus_minus a b c d
+
 private lemma comm_sub_zsmul_one_sub_zsmul_one (X Y : A) (m n : Int) :
     comm (X - m • (1 : A)) (Y - n • (1 : A)) = comm X Y := by
   unfold comm
@@ -250,6 +279,26 @@ theorem normalOrdered_matrixUnit_commutator_from_rawCAR
       have hcb : ¬ c = b := fun h => hbc h.symm
       simp [hbc, hcb]
     · simp [hbc, had]
+
+/-- Compatibility spelling for the normal-ordered Wick/Schwinger commutator. -/
+theorem normalUnit_commutator
+    (car_minus_plus :
+      ∀ b c : Int,
+        psiMinus (-b) * psiPlus c + psiPlus c * psiMinus (-b) =
+          if b = c then 1 else 0)
+    (car_plus_plus :
+      ∀ a c : Int, psiPlus a * psiPlus c + psiPlus c * psiPlus a = 0)
+    (car_minus_minus :
+      ∀ b d : Int,
+        psiMinus (-b) * psiMinus (-d) + psiMinus (-d) * psiMinus (-b) = 0)
+    (a b c d : Int) :
+    comm (normalUnit psiPlus psiMinus a b) (normalUnit psiPlus psiMinus c d) =
+      (if b = c then normalUnit psiPlus psiMinus a d else 0) -
+        (if a = d then normalUnit psiPlus psiMinus c b else 0) +
+        (if b = c ∧ a = d then (occ a - occ c) • (1 : A) else 0) := by
+  simpa [normalUnit] using
+    normalOrdered_matrixUnit_commutator_from_rawCAR psiPlus psiMinus
+      car_minus_plus car_plus_plus car_minus_minus a b c d
 
 end ExplicitCAR
 

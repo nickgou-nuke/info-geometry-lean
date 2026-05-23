@@ -1,1 +1,2 @@
 import InfoGeometry.Network.ThermoDiamond
+import InfoGeometry.Network.DeformationPositivity

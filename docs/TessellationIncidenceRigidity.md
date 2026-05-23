@@ -6,7 +6,7 @@ transport.
 The finite theorem is:
 
 ```text
-orthogonal idempotent sectors + supported arrow
+directionally orthogonal idempotent sectors + supported corner arrow
   => square-zero lightray
   => unipotent unit 1 + N with inverse 1 - N
   => determinant and trace are preserved by unit conjugation
@@ -20,8 +20,11 @@ InfoGeometry.Tessellation.VolumeTransport
 InfoGeometry.Tessellation.WilsonLoop
 ```
 
-`Incidence` owns the structured sector API: `Diamond`, `IncidentLightray`,
-`SupportedLightray`, and the structure-level square-zero theorem.
+`Incidence` owns the structured sector API: `Diamond`, `OrthogonalForRay`,
+`IncidentLightray`, `SupportedLightray`, and the structure-level square-zero
+theorem.  The orientation convention is fixed: for a ray from `src` to `tgt`,
+the support laws are `tgt.P * N = N` and `N * src.P = N`, so the square-zero
+theorem uses `OrthogonalForRay src tgt`, i.e. `src.P * tgt.P = 0`.
 
 `VolumeTransport` imports `Incidence` and mathlib matrix determinant/trace
 files. It uses the incidence theorem to build unipotent flow units, then uses
@@ -34,6 +37,8 @@ cohomology.
 The main public theorem names are:
 
 ```lean
+OrthogonalForRay
+incident_lightray_square_zero
 IncidentLightray.square_zero_of_orthogonal
 SupportedLightray.square_zero
 supported_lightray_square_zero
@@ -61,7 +66,9 @@ This proves a finite noncommutative `H^1` volume/trace rigidity result:
 A ↦ G A G⁻¹
 ```
 
-preserves determinant and trace.
+preserves determinant and trace.  This unit-conjugation rigidity theorem is
+compatible with, but distinct from, the determinant-exponential volume cocycle
+`det (exp A) = exp (trace A)`.
 
 The incidence rigidity theorem proves that a supported arrow between
 orthogonal idempotent sectors is automatically square-zero. Its unipotent
@@ -78,3 +85,16 @@ cohomology.
 
 Trace is treated here only as a linear conjugation invariant. It is not called
 entropy in this layer.
+
+The Tomita/Krein finite atom remains a separate source of local sector
+examples.  In complex Tomita--Takesaki theory `J` is antiunitary/antilinear;
+in the repo's doubled-real model it is represented by `modular_j`.  The
+chiral/projector split is supplied by the real-linear sign involution
+`spectral_epsilon`, not by treating complex Tomita `J` itself as the projector
+generator.
+
+Wilson-loop defects in this file are only supported-holonomy defects
+`Hol - P`.  The current-algebra Schwinger term belongs to the later
+normal-ordering/Wick layer, not to this incidence-rigidity layer.  A future
+cyclic `H^3` layer should use scalar-valued cyclic cochains and Hochschild
+closedness, not a simple ring expression such as `a * (b * c - c * b)`.

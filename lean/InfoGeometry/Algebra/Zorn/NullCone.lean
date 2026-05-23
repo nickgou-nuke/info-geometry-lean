@@ -83,4 +83,24 @@ theorem lowerVector_right_supported_on_pPlus (y : Vec3) :
     zornMul (lowerVectorZorn y) pPlus = lowerVectorZorn y := by
   ext <;> simp [pPlus, lowerVectorZorn, zornMul, zornMk, dot3, cross3]
 
+/-- The positive diagonal projector lies on the Zorn null cone. -/
+@[simp] theorem pPlus_isZornNull :
+    IsZornNull pPlus := by
+  simp [IsZornNull, pPlus, zornNorm, zornMk, dot3]
+
+/-- The negative diagonal projector lies on the Zorn null cone. -/
+@[simp] theorem pMinus_isZornNull :
+    IsZornNull pMinus := by
+  simp [IsZornNull, pMinus, zornNorm, zornMk, dot3]
+
+/-- Every upper off-diagonal lightray representative is null. -/
+@[simp] theorem upperVector_isZornNull (x : Vec3) :
+    IsZornNull (upperVectorZorn x) := by
+  simp [IsZornNull, upperVectorZorn, zornNorm, zornMk, dot3]
+
+/-- Every lower off-diagonal lightray representative is null. -/
+@[simp] theorem lowerVector_isZornNull (y : Vec3) :
+    IsZornNull (lowerVectorZorn y) := by
+  simp [IsZornNull, lowerVectorZorn, zornNorm, zornMk, dot3]
+
 end InfoGeometry.Algebra.Zorn

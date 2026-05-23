@@ -813,6 +813,7 @@ import InfoGeometry.Canonical.BosonizationSchwinger
 import InfoGeometry.Canonical.BosonizationTheorem
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.CurrentSugawaraFlipBridge
 import InfoGeometry.Canonical.SUSYCentralChargeBridge
 import InfoGeometry.Canonical.SupercurrentBridge

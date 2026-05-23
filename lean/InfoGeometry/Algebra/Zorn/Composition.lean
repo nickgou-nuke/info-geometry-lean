@@ -7,6 +7,7 @@ This file exposes the explicit split-octonion composition law in the algebra
 namespace.
 
 The proof is the canonical H¹ rigidity identity on the concrete Zorn carrier.
+It is a Zorn composition theorem, not a Binet-Cauchy or projection statement.
 -/
 
 namespace InfoGeometry.Algebra.Zorn

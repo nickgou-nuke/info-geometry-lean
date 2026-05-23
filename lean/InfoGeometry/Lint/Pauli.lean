@@ -1,6 +1,7 @@
 import Lean
 import InfoGeometry.Meta.Trust
 import InfoGeometry.Meta.Admission
+import InfoGeometry.Lint.WitnessLint
 
 open Lean Elab Command InfoGeometry.Meta
 
@@ -18,30 +19,61 @@ register_option linter.pauli.grandUnity : Bool := {
   descr := "warn about grand unity via trivial reflexivity"
 }
 
+/-- Option to control the Pauli witness-pack linter. -/
+register_option linter.pauli.witness : Bool := {
+  defValue := true
+  descr := "warn about structures with generic Prop _statement/_witness field pairs"
+}
+
 private def isCanonical (declName : Name) : Bool :=
   (toString declName).startsWith "InfoGeometry.Canonical."
+
+/-- True for any namespace under `InfoGeometry.`. -/
+private def isInfoGeometry (declName : Name) : Bool :=
+  (toString declName).startsWith "InfoGeometry."
 
 /--
 Linter for the Pauli Mandate.
 
 This linter runs after each command and checks for violations of the
-Axiom-Surface Seal and the Identity-via-Reflexivity audit.
+Axiom-Surface Seal, the Identity-via-Reflexivity audit, and the
+Witness-Pack prohibition.
 -/
 def pauliLinter : Linter where
   run stx := do
-    unless linter.pauli.sorry.get (← getOptions) || linter.pauli.grandUnity.get (← getOptions) do
+    let anyEnabled :=
+      linter.pauli.sorry.get (← getOptions) ||
+      linter.pauli.grandUnity.get (← getOptions) ||
+      linter.pauli.witness.get (← getOptions)
+    unless anyEnabled do
       return
 
     let env ← getEnv
     -- We look for newly added declarations in the current command
     -- This is a bit tricky as a command can add multiple declarations.
     -- For now, we heuristically look at the syntax.
-    
+
     let k := stx.getKind
     if k == ``Lean.Parser.Command.declaration then
       let decl := stx[1]
       let declKind := decl.getKind
-      if declKind == ``Lean.Parser.Command.theorem || 
+
+      -- ── 4. Witness-Pack detection (structure declarations) ──
+      -- This fires on `structure` commands, which are a separate
+      -- declaration kind from theorem/definition/instance.
+      if declKind == ``Lean.Parser.Command.structure ||
+         declKind == ``Lean.Parser.Command.structureTk then
+        if linter.pauli.witness.get (← getOptions) then
+          -- Extract the structure name from the syntax
+          let id := decl[1][0]
+          if id.isIdent then
+            let structName := (← getCurrNamespace) ++ id.getId
+            if isInfoGeometry structName then
+              let pairs := detectWitnessPackPairs env structName
+              for diag in renderAllWitnessPackDiags structName pairs do
+                logWarningAt id diag
+
+      if declKind == ``Lean.Parser.Command.theorem ||
          declKind == ``Lean.Parser.Command.definition ||
          declKind == ``Lean.Parser.Command.instance then
         let id := decl[1][0]
@@ -55,13 +87,13 @@ def pauliLinter : Linter where
                 let axioms ← Lean.collectAxioms declName
                 if axioms.contains ``sorryAx || axioms.contains "admitAx".toName then
                   logWarningAt id m!"[Pauli/Axiom-Surface Seal] {declName} depends on `sorryAx` or `admitAx`."
-              
+
               -- 2. Grand Unity (rfl)
               if linter.pauli.grandUnity.get (← getOptions) then
                 if let some (.thmInfo info) := env.find? declName then
                   if info.value.isAppOfArity ``Eq.refl 2 || info.value.isAppOfArity ``rfl 2 then
                      logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} is proved via trivial `rfl`. Ensure this is not masking missing logic."
-            
+
             -- 3. No-Mask Mandate (Heuristic)
             let physicalKeywords := #["Einstein", "Boltzmann", "Hamiltonian", "Entropy", "Physics", "Gravity", "Condensate"]
             let nameStr := toString idName
@@ -73,7 +105,7 @@ def pauliLinter : Linter where
                 if s.startsWith "InfoGeometry.Core" || s.startsWith "InfoGeometry.Algebra" then
                   hasFoundation := true
                   break
-              
+
               if !hasFoundation then
                 logWarningAt id m!"[Pauli/No-Mask Mandate] {declName} uses a physically-loaded name but does not transitively depend on foundational Core or Algebra transformations. Ensure this is not symbolic inflation."
     else

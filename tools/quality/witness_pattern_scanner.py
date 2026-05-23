@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Scan Lean files for _statement : Prop / _witness pattern pairs.
+"""Scan Lean files for generic Prop witness-packing patterns.
 
-The witness-packing anti-pattern stores a generic `Prop` in a structure
-field named `*_statement` with a companion `*_witness` field.  This is
-vacuous: the instantiator can supply `True` and `True.intro`, and the
-Lean kernel checks nothing meaningful.
+The narrow anti-pattern stores a generic `Prop` in a structure field named
+`*_statement` with a companion `*_witness` field.  A broader variant stores
+a bare `*_witness : Prop` field directly.  Both are vacuous: the instantiator
+can supply `True`, and the Lean kernel checks no mathematical content.
 
 Usage
 -----
@@ -43,54 +43,142 @@ STATEMENT_RE = re.compile(
 
 # Broader: also catches `foo_statement : Prop` with type annotations
 # like `(hFoo : ...)` before the colon — rare but possible.
-STATEMENT_SIMPLE_RE = re.compile(r"(\w+_statement)\s*:\s*Prop\b")
+STATEMENT_SIMPLE_RE = re.compile(r"\b(\w+_statement)\s*:\s*Prop\b")
+
+# Matches:  someField_witness : Prop
+BARE_WITNESS_PROP_RE = re.compile(r"\b(\w+_witness)\s*:\s*Prop\b")
 
 # Matches:  someField_witness :
 WITNESS_RE = re.compile(r"^\s+(\w+_witness)\s*:", re.MULTILINE)
 
 
+# ── Comment Stripping ────────────────────────────────────────────────
+
+def strip_lean_comments(text: str) -> str:
+    """Remove Lean line and block comments while preserving line numbers."""
+    out: list[str] = []
+    i = 0
+    depth = 0
+    in_string = False
+    in_char = False
+
+    while i < len(text):
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < len(text) else ""
+
+        if depth > 0:
+            if ch == "/" and nxt == "-":
+                depth += 1
+                out.extend("  ")
+                i += 2
+            elif ch == "-" and nxt == "/":
+                depth -= 1
+                out.extend("  ")
+                i += 2
+            else:
+                out.append("\n" if ch == "\n" else " ")
+                i += 1
+            continue
+
+        if in_string:
+            out.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                out.append(text[i + 1])
+                i += 2
+            else:
+                if ch == "\"":
+                    in_string = False
+                i += 1
+            continue
+
+        if in_char:
+            out.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                out.append(text[i + 1])
+                i += 2
+            else:
+                if ch == "'":
+                    in_char = False
+                i += 1
+            continue
+
+        if ch == "-" and nxt == "-":
+            out.extend(" " for _ in iter(text[i:].split("\n", 1)[0]))
+            i += len(text[i:].split("\n", 1)[0])
+            continue
+
+        if ch == "/" and nxt == "-":
+            depth = 1
+            out.extend("  ")
+            i += 2
+            continue
+
+        if ch == "\"":
+            in_string = True
+        elif ch == "'":
+            in_char = True
+        out.append(ch)
+        i += 1
+
+    return "".join(out)
+
+
 # ── Scanning ─────────────────────────────────────────────────────────
 
 def scan_file(path: Path) -> list[dict]:
-    """Find all _statement : Prop / _witness pairs in a single Lean file."""
+    """Find generic Prop witness-packing patterns in a single Lean file."""
     try:
         text = path.read_text(encoding="utf-8", errors="replace")
     except OSError:
         return []
 
-    lines = text.splitlines()
+    lines = strip_lean_comments(text).splitlines()
     hits: list[dict] = []
 
     for i, line in enumerate(lines):
         m = STATEMENT_SIMPLE_RE.search(line)
-        if not m:
-            continue
+        if m:
+            statement_field = m.group(1)
+            stem = statement_field.removesuffix("_statement")
+            expected_witness = f"{stem}_witness"
 
-        statement_field = m.group(1)
-        stem = statement_field.removesuffix("_statement")
-        expected_witness = f"{stem}_witness"
+            # Look for companion witness within next 15 lines
+            witness_found = False
+            witness_line = None
+            for j in range(i + 1, min(i + 16, len(lines))):
+                if expected_witness in lines[j]:
+                    wm = re.search(rf"\b{re.escape(expected_witness)}\b", lines[j])
+                    if wm:
+                        witness_found = True
+                        witness_line = j + 1
+                        break
 
-        # Look for companion witness within next 15 lines
-        witness_found = False
-        witness_line = None
-        for j in range(i + 1, min(i + 16, len(lines))):
-            if expected_witness in lines[j]:
-                wm = re.search(rf"\b{re.escape(expected_witness)}\b", lines[j])
-                if wm:
-                    witness_found = True
-                    witness_line = j + 1
-                    break
+            hits.append(
+                {
+                    "file": str(path),
+                    "line": i + 1,
+                    "kind": "statement",
+                    "statement_field": statement_field,
+                    "witness_field": expected_witness if witness_found else None,
+                    "witness_line": witness_line,
+                    "has_companion": witness_found,
+                }
+            )
 
-        hits.append(
-            {
-                "file": str(path),
-                "line": i + 1,
-                "statement_field": statement_field,
-                "witness_field": expected_witness if witness_found else None,
-                "witness_line": witness_line,
-                "has_companion": witness_found,
-            }
-        )
+        mw = BARE_WITNESS_PROP_RE.search(line)
+        if mw:
+            witness_field = mw.group(1)
+            hits.append(
+                {
+                    "file": str(path),
+                    "line": i + 1,
+                    "kind": "bare_witness",
+                    "statement_field": witness_field,
+                    "witness_field": witness_field,
+                    "witness_line": i + 1,
+                    "has_companion": False,
+                }
+            )
 
     return hits
 
@@ -128,15 +216,18 @@ def find_new_instances(
 
 def print_summary(hits: list[dict], new_hits: list[dict] | None = None) -> None:
     """Print a human-readable summary."""
-    paired = [h for h in hits if h["has_companion"]]
-    orphan = [h for h in hits if not h["has_companion"]]
+    paired = [h for h in hits if h["kind"] == "statement" and h["has_companion"]]
+    orphan = [h for h in hits if h["kind"] == "statement" and not h["has_companion"]]
+    bare_witness = [h for h in hits if h["kind"] == "bare_witness"]
 
     print(f"\n{'='*60}")
     print(f"  Witness-Pack Scanner Results")
     print(f"{'='*60}")
-    print(f"  Total _statement : Prop fields found: {len(hits)}")
+    print(f"  Total generic Prop witness-pack fields found: {len(hits)}")
+    print(f"  _statement : Prop fields found: {len(paired) + len(orphan)}")
     print(f"  With companion _witness field (full pair): {len(paired)}")
     print(f"  Without companion (bare Prop field): {len(orphan)}")
+    print(f"  Bare _witness : Prop fields: {len(bare_witness)}")
     print()
 
     if paired:
@@ -154,11 +245,17 @@ def print_summary(hits: list[dict], new_hits: list[dict] | None = None) -> None:
             print(f"    {h['file']}:{h['line']}  {h['statement_field']}")
         print()
 
+    if bare_witness:
+        print(f"  ── Bare Prop _witness fields ({len(bare_witness)}) ──")
+        for h in bare_witness:
+            print(f"    {h['file']}:{h['line']}  {h['witness_field']}")
+        print()
+
     if new_hits is not None:
         if new_hits:
             print(f"  !! NEW instances (not in baseline): {len(new_hits)}")
             for h in new_hits:
-                marker = "PAIR" if h["has_companion"] else "BARE"
+                marker = "PAIR" if h["has_companion"] else h["kind"].upper()
                 print(
                     f"    [{marker}] {h['file']}:{h['line']}  "
                     f"{h['statement_field']}"

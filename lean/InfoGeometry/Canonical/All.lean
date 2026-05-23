@@ -803,6 +803,7 @@ import InfoGeometry.Canonical.CliffordCantorModeHierarchy
 import InfoGeometry.Canonical.LevelSeparationNoIso
 import InfoGeometry.Canonical.CanonicalNormalOrdering
 import InfoGeometry.Canonical.BoundaryMatrixUnitWick
+import InfoGeometry.Canonical.WilsonSchwingerBridge
 import InfoGeometry.Canonical.BosonizationBoundary
 import InfoGeometry.Canonical.BosonizationSchwinger
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent

@@ -76,6 +76,7 @@ DEFAULT_TASK_KIND = "proof.search"
 DEFAULT_LEANSEARCH_BASE_URL = "http://127.0.0.1:18080"
 DEFAULT_LEANSEARCH_NUM_RESULTS = 8
 DEFAULT_LEANSEARCH_LOCAL_RECORDS_PATH = ROOT / DEFAULT_LEANSEARCH_LOCAL_RECORDS
+DEFAULT_LEANTRAIL_NODES_PATH = ROOT / "artifacts" / "leantrail" / "arango" / "ig_nodes.jsonl"
 ARTIFACT_DIR = ROOT / "artifacts" / "hermes_loop" / "hive_bee"
 GRAVITY_TOOL = ROOT / "tools" / "infra" / "arango_gravity_context.py"
 
@@ -146,6 +147,16 @@ def parse_imports(goal: dict[str, Any]) -> list[str]:
 def parse_context(goal: dict[str, Any]) -> str:
     context = goal.get("lean_context") or goal.get("context") or ""
     return str(context)
+
+
+def proof_state_is_usable(proof_state: dict[str, Any]) -> bool:
+    if str(proof_state.get("status") or "") == "ok":
+        return True
+    raw_lean = proof_state.get("lean")
+    lean: dict[str, Any] = raw_lean if isinstance(raw_lean, dict) else {}
+    if lean.get("returncode") == 0 and str(proof_state.get("proof_state") or "").strip():
+        return True
+    return False
 
 
 def build_gravity_query(goal: dict[str, Any]) -> str:
@@ -397,11 +408,119 @@ def run_leansearch_local_retrieval(config: BeeConfig, goal: dict[str, Any], task
     return normalized, out_path, None
 
 
+def run_leantrail_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    out_path = ARTIFACT_DIR / f"{task_key}-leantrail.json"
+    nodes_path = DEFAULT_LEANTRAIL_NODES_PATH
+    if not nodes_path.exists():
+        return (
+            None,
+            out_path,
+            "leantrail nodes not found; generate them with: "
+            "python3 tools/leantrail/export.py --snapshot artifacts/leantrail/graph_snapshot.json --to arango "
+            "--arango-out artifacts/leantrail/arango",
+        )
+
+    query_text = build_leansearch_query(goal)
+    query_tokens = [tok for tok in re.split(r"[^A-Za-z0-9_]+", query_text.lower()) if len(tok) >= 2]
+    top_k = max(1, int(config.leansearch_num_results))
+    scored: list[tuple[float, dict[str, Any]]] = []
+
+    try:
+        with nodes_path.open("r", encoding="utf-8") as handle:
+            for line_no, raw in enumerate(handle, start=1):
+                raw = raw.strip()
+                if not raw:
+                    continue
+                try:
+                    row = json.loads(raw)
+                except Exception:
+                    continue
+                if not isinstance(row, dict):
+                    continue
+
+                name = str(
+                    row.get("id")
+                    or row.get("name")
+                    or row.get("decl")
+                    or row.get("full_name")
+                    or row.get("canonical_name")
+                    or row.get("symbol")
+                    or ""
+                ).strip()
+                module_name = str(row.get("module") or row.get("module_name") or row.get("namespace") or "").strip()
+                if not name and not module_name:
+                    continue
+                blob = " ".join(
+                    str(row.get(key) or "")
+                    for key in (
+                        "id",
+                        "name",
+                        "decl",
+                        "full_name",
+                        "module",
+                        "module_name",
+                        "namespace",
+                        "kind",
+                        "type",
+                        "signature",
+                        "doc",
+                        "source",
+                    )
+                ).lower()
+                overlap = sum(1 for tok in query_tokens if tok in blob)
+                if overlap <= 0:
+                    continue
+                score = float(overlap)
+                if name and name.lower() == query_text.strip().lower():
+                    score += 2.0
+                if module_name and module_name.lower() in query_text.lower():
+                    score += 1.0
+
+                item = {
+                    "id": name or f"leantrail:{line_no}",
+                    "module": module_name,
+                    "score": score,
+                    "faithful_witness": {
+                        "source": "leantrail",
+                        "nodes_path": str(nodes_path),
+                        "line": line_no,
+                        "raw_doc_id": row.get("_id") or row.get("id") or row.get("_key"),
+                    },
+                    "source_excerpt": {
+                        "lines": [
+                            {"text": str(row.get("kind") or "")},
+                            {"text": str(row.get("type") or row.get("signature") or "")},
+                            {"text": str(row.get("doc") or row.get("source") or "")},
+                        ]
+                    },
+                }
+                scored.append((score, item))
+    except Exception as exc:  # noqa: BLE001
+        return None, out_path, f"leantrail retrieval failed: {exc!r}"
+
+    scored.sort(key=lambda pair: pair[0], reverse=True)
+    items = [item for _score, item in scored[:top_k]]
+    normalized = {
+        "graph_source": "leantrail",
+        "graph_mode": "snapshot",
+        "query": query_text,
+        "nodes_path": str(nodes_path),
+        "node_count": len(items),
+        "edge_count": 0,
+        "items": items,
+    }
+    out_path.write_text(json.dumps(normalized, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    return normalized, out_path, None
+
+
 def run_retrieval(config: BeeConfig, goal: dict[str, Any], task_key: str) -> tuple[dict[str, Any] | None, Path, str | None]:
     if config.retrieval_strategy == "leansearch":
         return run_leansearch_retrieval(config, goal, task_key)
     if config.retrieval_strategy == "leansearch_local":
         return run_leansearch_local_retrieval(config, goal, task_key)
+    if config.retrieval_strategy == "leantrail":
+        return run_leantrail_retrieval(config, goal, task_key)
     if config.retrieval_strategy == "hybrid":
         gravity_payload, gravity_path, gravity_error = run_gravity_retrieval(config, goal, task_key)
         lean_payload, lean_path, lean_error = run_leansearch_local_retrieval(config, goal, task_key)
@@ -872,6 +991,8 @@ def emit_attempt_packets(
             if gravity_context.get("graph_source") == "arango"
             else "leansearch"
             if gravity_context.get("graph_source") == "leansearch"
+            else "leantrail"
+            if gravity_context.get("graph_source") == "leantrail"
             else "leansearch_local"
             if gravity_context.get("graph_source") == "leansearch_local"
             else "hybrid"
@@ -1258,7 +1379,7 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
         verification=None,
         emit_proposal=False,
     )
-    if proof_state.get("status") != "ok":
+    if not proof_state_is_usable(proof_state):
         queue_tool.fail_task(
             config.hive_endpoint,
             config.hive_database,
@@ -1490,7 +1611,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout", type=int, default=120)
     parser.add_argument("--tactic-override", default=None)
-    parser.add_argument("--retrieval-strategy", choices=["gravity", "leansearch", "leansearch_local", "hybrid"], default=DEFAULT_RETRIEVAL_STRATEGY)
+    parser.add_argument("--retrieval-strategy", choices=["gravity", "leansearch", "leantrail", "leansearch_local", "hybrid"], default=DEFAULT_RETRIEVAL_STRATEGY)
     parser.add_argument("--task-kind", default=DEFAULT_TASK_KIND)
     parser.add_argument("--leansearch-base-url", default=DEFAULT_LEANSEARCH_BASE_URL)
     parser.add_argument("--leansearch-num-results", type=int, default=DEFAULT_LEANSEARCH_NUM_RESULTS)

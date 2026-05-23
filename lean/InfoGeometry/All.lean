@@ -91,6 +91,9 @@ import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Compatibility.PSLDescentShadow
 import InfoGeometry.Core.ExtendedField
+import InfoGeometry.Erlangen.InvariantGeometry
+import InfoGeometry.Erlangen.KillingFisher
+import InfoGeometry.Erlangen.ProjectiveLineGeometry
 import InfoGeometry.ErlangenLanglandsGeometryLane
 import InfoGeometry.ErlangenLanglandsLane
 import InfoGeometry.ErlangenLanglandsOwners
@@ -109,6 +112,7 @@ import InfoGeometry.Lint.Vacuity
 import InfoGeometry.Meta.ClosureAttribute
 import InfoGeometry.Meta.TestTactic
 import InfoGeometry.ModularVolumePotential
+import InfoGeometry.Network.All
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
@@ -118,6 +122,7 @@ import InfoGeometry.OperatorAlgebra.ModularThermalState
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.Physics.All
+import InfoGeometry.Signal.All
 import InfoGeometry.Quantum.CliffordDictionary
 import InfoGeometry.Quantum.CliffordDictionaryTest
 import InfoGeometry.Quantum.GeometricTensorTest
@@ -126,6 +131,9 @@ import InfoGeometry.Quantum.TriadicTransportCore
 import InfoGeometry.Quantum.TriadicTransportModular
 import InfoGeometry.Quantum.TriadicTransportProjective
 import InfoGeometry.SLT.ConditionalExpectation
+import InfoGeometry.Tessellation.All
+import InfoGeometry.Thermodynamics.FiniteConnesCocycle
+import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
 import InfoGeometry.Unstable.SingularUnitaryBridge
@@ -166,6 +174,7 @@ import InfoGeometry.Geometry.WindingSnap
 import InfoGeometry.Geometry.ConstructiveConnesChern
 import InfoGeometry.Geometry.FiniteDefectStokesModel
 import InfoGeometry.Geometry.OrbitCurrentStokes
+import InfoGeometry.Geometry.ParavectorZornBoundary
 import InfoGeometry.ProjectiveFoundation.RealProjectiveDescent
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.RealModularReadout
@@ -235,6 +244,7 @@ import InfoGeometry.Clifford.All
 import InfoGeometry.Cocycle.All
 import InfoGeometry.Convex.All
 import InfoGeometry.Core.All
+import InfoGeometry.Algebraic.CartanExponentialFamily
 import InfoGeometry.ExponentialFamily.All
 import InfoGeometry.Jordan.All
 import InfoGeometry.KK.All

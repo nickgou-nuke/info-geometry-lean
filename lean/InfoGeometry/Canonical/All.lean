@@ -189,6 +189,9 @@ import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
+import InfoGeometry.Canonical.SplitCayleyDicksonTrace
+import InfoGeometry.Canonical.SplitHierarchy
+import InfoGeometry.Canonical.SplitQuaternionMatrixModel
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Lift
@@ -245,6 +248,7 @@ import InfoGeometry.Canonical.DiracSouriauOperator
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.DiscreteModularSpectrum
+import InfoGeometry.Canonical.DiscreteCPTGroup
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Singular.Drazin
@@ -537,6 +541,7 @@ import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 import InfoGeometry.Canonical.ModularWeldBridge
+import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
 import InfoGeometry.Canonical.ModularMirrorHorizon
 import InfoGeometry.Canonical.MoebiusClosureBridge
@@ -553,8 +558,8 @@ import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.NoetherRelationalBridge
 import InfoGeometry.Canonical.NormalSemisimpleAgreement
 import InfoGeometry.Canonical.NormalOrderedCurrent
-import InfoGeometry.Canonical.BoundaryMatrixUnitWick
-import InfoGeometry.Canonical.BoundaryCurrentHeisenbergAPI
+import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Canonical.FreeEntropyDiffusionBridge
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.OddDefectFunctional
 import InfoGeometry.Canonical.OnsagerCasimirJ
@@ -797,6 +802,7 @@ import InfoGeometry.Canonical.ModeExtensionBoundary
 import InfoGeometry.Canonical.CliffordCantorModeHierarchy
 import InfoGeometry.Canonical.LevelSeparationNoIso
 import InfoGeometry.Canonical.CanonicalNormalOrdering
+import InfoGeometry.Canonical.BoundaryMatrixUnitWick
 import InfoGeometry.Canonical.BosonizationBoundary
 import InfoGeometry.Canonical.BosonizationSchwinger
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
@@ -901,6 +907,7 @@ import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.ZornSpinor
+import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 
 namespace InfoGeometry
 

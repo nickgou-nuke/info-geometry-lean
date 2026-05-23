@@ -131,7 +131,12 @@ def finiteBosonPartition {ι : Type} [Fintype ι]
     (E : ι → ℝ) (β : ℝ) : ℝ :=
   ∏ i : ι, (1 - Real.exp (-(β * E i)))⁻¹
 
-/-- User-sign Massieu potential `Phi_N(β) = -log Z_N(β)`. -/
+/--
+Legacy user-sign negative log-partition `Phi_N(β) = -log Z_N(β)`.
+
+This is a free-energy/barrier sign convention, not the library's statistical
+Massieu convention `Φ = log Z`.
+-/
 def finiteBosonMassieu {ι : Type} [Fintype ι]
     (E : ι → ℝ) (β : ℝ) : ℝ :=
   - Real.log (finiteBosonPartition E β)

@@ -1,4 +1,8 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Clifford.BudinichCliqueSpinor
+import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
+import InfoGeometry.Clifford.BudinichSpinorsNullVectors
+import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.ClNN
@@ -19,12 +23,15 @@ import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
 import InfoGeometry.Clifford.Relations
 import InfoGeometry.Clifford.Soldering
 import InfoGeometry.Clifford.Spacetime
+import InfoGeometry.Clifford.STAOperators
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Clifford.SplitQ11Equivariance
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
+import InfoGeometry.Clifford.SplitCl44CausalEnvelope
+import InfoGeometry.Clifford.Cl44SignatureResidue
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix

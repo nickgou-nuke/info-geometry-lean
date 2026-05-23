@@ -88,7 +88,9 @@ noncomputable def familyAInterfaceOfSouriau
 
 /--
 Concrete Bulgarian family-D interface realized by finite Souriau Onsager entropy
-production and the determinant-gated finite Fisher response.
+production and the finite Fisher response whose `2 × 2` response-matrix
+determinant gate is nonnegative.  This is not the `det(exp A)` H¹
+volume-cocycle determinant.
 -/
 @[rep_depth thermo]
 noncomputable def familyDInterfaceOfSouriau
@@ -113,8 +115,11 @@ noncomputable def familyDInterfaceOfSouriau
     simp [souriauEntropyProduction, ResponseMatrix2.entropyProduction,
       ResponseMatrix2.betaFlux, ResponseMatrix2.muFlux]
 
-/-- Family-A bridge theorem: the Bulgarian packet's Fisher/Hessian layer is owned
-by the finite Souriau translator packet plus the determinant gate. -/
+/--
+Family-A bridge theorem: the Bulgarian packet's Fisher/Hessian layer is owned
+by the finite Souriau translator packet plus the finite response-matrix
+determinant gate.
+-/
 @[rep_depth thermo]
 theorem familyA_bridge_packet
     [Fintype α] [Nonempty α]

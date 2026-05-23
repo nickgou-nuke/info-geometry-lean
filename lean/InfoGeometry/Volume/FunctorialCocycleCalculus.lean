@@ -101,18 +101,17 @@ noncomputable def rnBridgeAsAdditiveCocycle (B : HasScalarRNBridge A) :
   toFun a _ := B.rn a
   map_one := by
     intro x
-    rw [B.rn_eq_logAbs_vol]
-    simp
+    simp [HasScalarRNBridge.rn, scalarRN]
   map_mul := by
     intro a b x
-    exact rn_chain_rule B a b
+    exact B.rn_chain_rule a b
 
 /-- The RN bridge chain rule in additive cocycle form. -/
 theorem rnBridgeAsAdditiveCocycle_chain_rule (B : HasScalarRNBridge A) (a b : A) :
     rnBridgeAsAdditiveCocycle B (a * b) PUnit.unit =
       rnBridgeAsAdditiveCocycle B a PUnit.unit +
         rnBridgeAsAdditiveCocycle B b PUnit.unit := by
-  exact rn_chain_rule B a b
+  exact B.rn_chain_rule a b
 
 end RN
 

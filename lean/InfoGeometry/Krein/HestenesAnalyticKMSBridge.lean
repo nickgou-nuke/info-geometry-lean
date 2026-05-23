@@ -1,6 +1,7 @@
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 open scoped InnerProductSpace
 
@@ -48,9 +49,6 @@ Hestenes-analytic KMS adapter.
 
 `K = clockAxis` is the internal real phase axis.  Hestenes analyticity of a
 linear operator is `KLinear`, i.e. commutation with `K`.
-
-The KMS analytic boundary is not derived here.  It is carried as an existing
-`KMSState` certificate.
 -/
 @[rep_depth krein]
 structure HestenesAnalyticKMSBridge where
@@ -93,7 +91,7 @@ This narrows the explicit `kms : KMSState ...` packet to the exact ingredients
 used in this file: the underlying state, real-time invariance, and the analytic
 boundary certificate, while preserving the flow-covariance owner data.
 -/
-@[rep_depth krein]
+@[socket_debt_tag]
 structure HestenesAnalyticKMSWitness where
   /-- Operator flow, e.g. a modular flow, on doubled real observables. -/
   flow :
@@ -129,24 +127,11 @@ structure HestenesAnalyticKMSWitness where
   flow_invariant :
     ∀ t A, state.eval (flow.flow t A) = state.eval A
 
-  /-- Analytic KMS strip-boundary proposition. -/
-  kms_boundary_condition : Prop
+  /-- Analytic KMS strip-boundary law. -/
+  law : Prop
 
-  /-- Evidence for the analytic KMS strip-boundary proposition. -/
-  kms_boundary_holds : kms_boundary_condition
-
-/-- Bridge version of the witness surface that mirrors `HestenesAnalyticKMSBridge` but with the KMS state components exposed constructively. -/
-@[rep_depth krein]
-structure HestenesAnalyticKMSWitnessBridge where
-  flow : OperatorFlow EndH
-  preserves_KLinear : ∀ t A, KLinear (E := E) A → KLinear (E := E) (flow.flow t A)
-  phase_left_covariant : ∀ t A, flow.flow t ((clockAxis (E := E)).comp A) = (clockAxis (E := E)).comp (flow.flow t A)
-  phase_right_covariant : ∀ t A, flow.flow t (A.comp (clockAxis (E := E))) = (flow.flow t A).comp (clockAxis (E := E))
-  beta : ℝ
-  state : AlgebraicState EndH
-  flow_invariant : ∀ t A, state.eval (flow.flow t A) = state.eval A
-  kms_boundary_condition : Prop
-  kms_boundary_condition_holds : kms_boundary_condition
+  /-- Evidence for the analytic KMS strip-boundary law. -/
+  certificate : law
 
 namespace HestenesAnalyticKMSWitness
 
@@ -154,16 +139,18 @@ variable (W : HestenesAnalyticKMSWitness (E := E))
 
 /-- Package the narrowed witness surface back into the legacy broad KMS bridge. -/
 @[rep_depth krein]
-@[rep_depth krein] def toBridge : HestenesAnalyticKMSWitnessBridge (E := E) where
+def toBridge : HestenesAnalyticKMSBridge (E := E) where
   flow := W.flow
   preserves_KLinear := W.preserves_KLinear
   phase_left_covariant := W.phase_left_covariant
   phase_right_covariant := W.phase_right_covariant
   beta := W.beta
-  state := W.state
-  flow_invariant := W.flow_invariant
-  kms_boundary_condition := W.kms_boundary_condition
-  kms_boundary_condition_holds := W.kms_boundary_holds
+  kms := {
+    state := W.state
+    flow_invariant := W.flow_invariant
+    kms_boundary_condition := W.law
+    kms_boundary_condition_holds := W.certificate
+  }
 
 /-- The compatibility adapter reads back the same underlying state definitionally. -/
 @[rep_depth krein]
@@ -171,7 +158,9 @@ theorem toBridge_state_eq :
     W.toBridge.kms.state = W.state :=
   rfl
 
-/-- Route the legacy broad KMS bridge through a narrowed witness packet. -/
+/--
+Route the legacy broad KMS bridge through a narrowed witness packet.
+-/
 @[rep_depth krein]
 theorem mk_broad_of_witness :
     ∃ B : HestenesAnalyticKMSBridge (E := E), B.kms.state = W.state :=
@@ -194,14 +183,14 @@ def HestenesAnalyticKMSBridge.fromBridge
   beta := B.beta
   state := B.kms.state
   flow_invariant := B.kms.flow_invariant
-  kms_boundary_condition := B.kms.kms_boundary_condition
-  kms_boundary_holds := B.kms.kms_boundary_condition_holds
+  law := B.kms.kms_boundary_condition
+  certificate := B.kms.kms_boundary_condition_holds
 
 /-- The bridge-to-witness conversion reads back the same state definitionally. -/
 @[simp]
 theorem HestenesAnalyticKMSBridge.fromBridge_state_eq
     (B : HestenesAnalyticKMSBridge (E := E)) :
-    B.fromBridge.state = B.kms.state := by
+    B.fromBridge.state = B.kms.state :=
   rfl
 
 namespace HestenesAnalyticKMSBridge
@@ -234,23 +223,14 @@ theorem phase_right_covariance
     (B.flow.flow t A).comp (clockAxis (E := E)) :=
   B.phase_right_covariant t A
 
-/-- Readback: the KMS analytic-boundary certificate is available. -/
-@[rep_depth thermo]
-theorem kms_boundary_holds :
+/-- Readback: the underlying state is KMS relative to the operator flow. -/
+@[rep_depth krein]
+theorem kms_valid :
     B.kms.kms_boundary_condition :=
   B.kms.kms_boundary_condition_holds
-
-/-- Readback: the KMS state is invariant under the supplied flow. -/
-@[rep_depth thermo]
-theorem kms_state_flow_invariant
-    (t : ℝ) (A : EndH) :
-    B.kms.state.eval (B.flow.flow t A) = B.kms.state.eval A :=
-  B.kms.flow_invariant t A
 
 end HestenesAnalyticKMSBridge
 
 end Core
 
 end InfoGeometry.Krein.HestenesAnalyticKMSBridge
-
-end

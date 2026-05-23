@@ -14,7 +14,8 @@ This file does not assert a trace, determinant, Lebesgue volume, finite
 symmetric cone, or global self-concordant barrier for a type III factor. It
 records the replacement dictionary used by the modular layer:
 
-* determinant / volume  ↦  modular weight, Connes cocycle, Araki entropy;
+* finite determinant-volume analogies are replaced by modular weight,
+  Connes-cocycle, and Araki-entropy data;
 * symmetric cone       ↦  standard-form natural positive cone;
 * Cartan involution    ↦  Tomita modular conjugation / mirror equivalence;
 * left/right twins     ↦  an algebra and its modular commutant mirror;

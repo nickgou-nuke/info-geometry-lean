@@ -46,8 +46,12 @@ structure HestenesPhaseVolumeBridge
   opLog : EndH → EndH
 
   /--
-  Hestenes/Krein determinant-trace replacement:
+  Hestenes/Krein phase-volume readout:
   `log det(U) = [log(U) Ω, Ω]_J`.
+
+  This is explicit model data for this Krein phase-volume packet.  It is not
+  the finite `det (exp A) = exp (trace A)` theorem, and it is not the
+  statistical Massieu partition `log Tr (exp (-β·Q))`.
   -/
   log_det_eq_vacuumExpectation :
     ∀ U : Units EndH,
@@ -100,8 +104,9 @@ theorem log_det_product_eq_sum_log_det
 /--
 Log-determinant product law read through Hestenes/Krein vacuum expectations.
 
-This is the determinant-trace identity after replacing trace by the supplied
-vacuum state.
+This is a product law for the supplied Hestenes/Krein phase-volume channel,
+read through the supplied vacuum state.  It should not be identified with the
+Cartan Massieu/Fisher partition function.
 -/
 @[rep_depth krein]
 theorem log_det_product_eq_sum_expectation

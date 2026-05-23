@@ -85,7 +85,7 @@ the multiplicative character descends to an additive scalar potential.
 theorem rn_state_chain
     (B : HasScalarRNBridge A) (f g : A) :
     B.rn (f * g) = B.rn f + B.rn g :=
-  rn_chain_rule B f g
+  B.rn_chain_rule f g
 
 /--
 The scalar RN bridge is already a projective cocycle on the trivial base:
@@ -95,11 +95,11 @@ encoding.
 @[rep_depth projective]
 theorem rn_projectiveRotorCocycle_chain
     (B : HasScalarRNBridge A) (f g : A) :
-    InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) (f * g) PUnit.unit =
-      InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) f PUnit.unit *
-        InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle (B := B) g PUnit.unit :=
+    toProjectiveRotorCocycle B.vol (f * g) PUnit.unit =
+      toProjectiveRotorCocycle B.vol f PUnit.unit *
+        toProjectiveRotorCocycle B.vol g PUnit.unit :=
 by
-  simp [InfoGeometry.Volume.RadonNikodym.toProjectiveRotorCocycle, rn_chain_rule]
+  simp [toProjectiveRotorCocycle, rn_chain_rule]
 
 end ScalarRNCharacter
 

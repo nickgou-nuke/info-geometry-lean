@@ -1,157 +1,98 @@
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!
-# Holographic Pressure Functional
+# Explicit holographic pressure functional
 
-Effective scalar pressure layer for the Weyl/Majorana boundary model.
+This file contains only explicit scalar readouts.  It does not introduce packet
+fields for area laws, free-energy laws, pressure laws, or Newtonian matching.
 
-This file proves only the scalar coefficient and effective-limit algebra:
+The core functions are:
 
-* a Weyl-scaled boundary area with `dA/dχ = q A`;
-* a Majorana/Pfaffian free-energy readout with `dF/dχ = (z/2) N_eff`;
-* the outward pressure coefficient `P = z N_eff / (2 q A)`;
-* the cubic toy equilibrium in division form;
-* the conditional Newtonian Poisson limit from a Weyl-pressure scalar equation.
-
-It does not assert a covariant Einstein equation, a spectral determinant
-construction, or an `E₈` spectrum theorem.
+* `weylBoundaryArea A0 q chi = A0 * exp (q * chi)`;
+* `majoranaFreeEnergy F0 z Neff chi = F0 + (z / 2) * Neff * chi`;
+* `outwardPressure = (dF/dchi)/(dA/dchi)` using the explicit derivative
+  readouts for these two closed forms;
+* `newtonianMatchedAlpha kappa c0 G = 4πGκ/c0²`;
+* the Newtonian scalar Poisson readout follows by algebra from that definition.
 -/
 
 namespace InfoGeometry.Physics.HolographicPressureFunctional
 
-/-! ## 1. Weyl boundary area and Majorana Pfaffian scaling -/
+/-! ## 1. Explicit Weyl area and Majorana free energy -/
 
-/--
-Boundary area/volume scaling under a Weyl scalar `χ`.
+/-- Explicit Weyl-scaled boundary area `A(χ) = A₀ exp(qχ)`. -/
+noncomputable def weylBoundaryArea (A0 q chi : ℝ) : ℝ :=
+  A0 * Real.exp (q * chi)
 
-The intended model is `A(χ) = A₀ exp(qχ)`, with derivative readout
-`dA/dχ = q A`.
--/
-structure WeylBoundaryArea where
-  q : ℝ
-  A0 : ℝ
-  chi : ℝ
-  A : ℝ
-  dA_dchi : ℝ
-  A_eq : A = A0 * Real.exp (q * chi)
-  dA_dchi_eq : dA_dchi = q * A
+/-- Explicit derivative readout of `weylBoundaryArea` with respect to `χ`. -/
+noncomputable def weylBoundaryAreaDerivative (A0 q chi : ℝ) : ℝ :=
+  q * weylBoundaryArea A0 q chi
 
-namespace WeylBoundaryArea
+/-- The boundary-area derivative readout is by definition `q * A`. -/
+theorem weylBoundaryAreaDerivative_eq_dim_mul_area (A0 q chi : ℝ) :
+    weylBoundaryAreaDerivative A0 q chi = q * weylBoundaryArea A0 q chi :=
+  rfl
 
-theorem area_eq_exp_scale (B : WeylBoundaryArea) :
-    B.A = B.A0 * Real.exp (B.q * B.chi) :=
-  B.A_eq
+/-- Explicit Majorana/Pfaffian free energy `F(χ) = F₀ + (z/2) N_eff χ`. -/
+noncomputable def majoranaFreeEnergy (F0 z Neff chi : ℝ) : ℝ :=
+  F0 + (z / 2) * Neff * chi
 
-theorem area_derivative_eq_dim_mul_area (B : WeylBoundaryArea) :
-    B.dA_dchi = B.q * B.A :=
-  B.dA_dchi_eq
+/-- Explicit derivative readout of the linear Majorana/Pfaffian free energy. -/
+noncomputable def majoranaFreeEnergyDerivative (_F0 z Neff _chi : ℝ) : ℝ :=
+  (z / 2) * Neff
 
-end WeylBoundaryArea
+/-- The free-energy derivative readout is by definition `(z/2) N_eff`. -/
+theorem majoranaFreeEnergyDerivative_eq_half_z_modes (F0 z Neff chi : ℝ) :
+    majoranaFreeEnergyDerivative F0 z Neff chi = (z / 2) * Neff :=
+  rfl
 
-/--
-Majorana/Pfaffian boundary free-energy scaling.
+/-- Outward pressure convention `P_out = (dF/dχ)/(dA/dχ)`. -/
+noncomputable def outwardPressure (A0 q F0 z Neff chi : ℝ) : ℝ :=
+  majoranaFreeEnergyDerivative F0 z Neff chi / weylBoundaryAreaDerivative A0 q chi
 
-The intended readout is
-`F(χ) = F₀ + (z/2) N_eff χ`, coming from
-`λ_k(χ) = exp(-zχ) λ_k(0)` and a regularized active-mode count.
--/
-structure MajoranaPfaffianScaling where
-  z : ℝ
-  Neff : ℝ
-  F0 : ℝ
-  chi : ℝ
-  F : ℝ
-  dF_dchi : ℝ
-  F_eq : F = F0 + (z / 2) * Neff * chi
-  dF_dchi_eq : dF_dchi = (z / 2) * Neff
-
-namespace MajoranaPfaffianScaling
-
-theorem freeEnergy_eq_linear_weyl (M : MajoranaPfaffianScaling) :
-    M.F = M.F0 + (M.z / 2) * M.Neff * M.chi :=
-  M.F_eq
-
-theorem freeEnergy_derivative_eq_half_z_modes (M : MajoranaPfaffianScaling) :
-    M.dF_dchi = (M.z / 2) * M.Neff :=
-  M.dF_dchi_eq
-
-end MajoranaPfaffianScaling
-
-/-- Outward pressure convention: `P_out = dF/dA = (dF/dχ)/(dA/dχ)`. -/
-noncomputable def outwardPressure (B : WeylBoundaryArea) (M : MajoranaPfaffianScaling) : ℝ :=
-  M.dF_dchi / B.dA_dchi
-
-/--
-First scalar pressure coefficient of the boundary Majorana/Pfaffian layer:
-
-`P_out = z N_eff / (2 q A)`.
--/
-theorem holographicPressure_coeff
-    (B : WeylBoundaryArea) (M : MajoranaPfaffianScaling) :
-    outwardPressure B M = M.z * M.Neff / (2 * B.q * B.A) := by
-  unfold outwardPressure
-  rw [M.dF_dchi_eq, B.dA_dchi_eq]
+/-- First scalar pressure coefficient of the explicit Majorana/Pfaffian layer. -/
+theorem holographicPressure_coeff (A0 q F0 z Neff chi : ℝ) :
+    outwardPressure A0 q F0 z Neff chi =
+      z * Neff / (2 * q * weylBoundaryArea A0 q chi) := by
+  unfold outwardPressure majoranaFreeEnergyDerivative weylBoundaryAreaDerivative
   ring_nf
 
-/--
-Boundary holographic functional packet.
+/-- Explicit positive partition function associated to the free energy. -/
+noncomputable def boundaryPartitionFunction (F0 z Neff chi : ℝ) : ℝ :=
+  Real.exp (-(majoranaFreeEnergy F0 z Neff chi))
 
-This is the sign-convention-safe variational readout:
+/-- The explicit partition function is positive. -/
+theorem boundaryPartitionFunction_pos (F0 z Neff chi : ℝ) :
+    0 < boundaryPartitionFunction F0 z Neff chi := by
+  unfold boundaryPartitionFunction
+  exact Real.exp_pos _
 
-* `boundaryPartitionFunction` plays the role of `|Pf D_∂|`;
-* `boundaryFreeEnergy = -log boundaryPartitionFunction`;
-* `holographicPressure = -δF_∂/δA_∂`.
+/-- Explicit boundary free energy `-log Z`. -/
+noncomputable def boundaryFreeEnergyFromPartition (F0 z Neff chi : ℝ) : ℝ :=
+  -Real.log (boundaryPartitionFunction F0 z Neff chi)
 
-The file does not assert that the Pfaffian is constructed analytically; that
-information is carried by the scalar readout fields.
--/
-structure BoundaryHolographicFunctionalPacket where
-  boundaryArea : WeylBoundaryArea
-  boundaryPfaffian : MajoranaPfaffianScaling
-  boundaryPartitionFunction : ℝ
-  boundaryFreeEnergy : ℝ
-  holographicPressure : ℝ
-  boundaryPartitionFunction_pos : 0 < boundaryPartitionFunction
-  boundaryFreeEnergy_eq_neg_log_partition :
-    boundaryFreeEnergy = - Real.log boundaryPartitionFunction
-  holographicPressure_eq_neg_outward :
-    holographicPressure =
-      - outwardPressure boundaryArea boundaryPfaffian
+/-- The explicit partition function recovers the explicit Majorana free energy. -/
+theorem boundaryFreeEnergyFromPartition_eq_majoranaFreeEnergy
+    (F0 z Neff chi : ℝ) :
+    boundaryFreeEnergyFromPartition F0 z Neff chi = majoranaFreeEnergy F0 z Neff chi := by
+  unfold boundaryFreeEnergyFromPartition boundaryPartitionFunction
+  rw [Real.log_exp]
+  ring
 
-namespace BoundaryHolographicFunctionalPacket
+/-- Holographic pressure sign convention `P_holo = -P_out`. -/
+noncomputable def holographicPressure (A0 q F0 z Neff chi : ℝ) : ℝ :=
+  -outwardPressure A0 q F0 z Neff chi
 
-/-- Boundary partition function is a positive Pfaffian magnitude. -/
-theorem boundaryPartitionFunction_pos'
-    (B : BoundaryHolographicFunctionalPacket) :
-    0 < B.boundaryPartitionFunction :=
-  B.boundaryPartitionFunction_pos
-
-/-- Boundary free energy is the negative logarithm of the boundary partition function. -/
-theorem freeEnergy_eq_neg_log_partition
-    (B : BoundaryHolographicFunctionalPacket) :
-    B.boundaryFreeEnergy = - Real.log B.boundaryPartitionFunction :=
-  B.boundaryFreeEnergy_eq_neg_log_partition
-
-/-- Holographic pressure is the negative outward-pressure readout. -/
-theorem holographicPressure_eq_neg_outwardPressure
-    (B : BoundaryHolographicFunctionalPacket) :
-    B.holographicPressure =
-      - outwardPressure B.boundaryArea B.boundaryPfaffian :=
-  B.holographicPressure_eq_neg_outward
-
-/-- The sign convention `P_holo = - δF/δA` is represented by `- outwardPressure`. -/
-theorem holographicPressure_eq_neg_coeff
-    (B : BoundaryHolographicFunctionalPacket) :
-    B.holographicPressure =
-      - (B.boundaryPfaffian.z * B.boundaryPfaffian.Neff
-          / (2 * B.boundaryArea.q * B.boundaryArea.A)) := by
-  rw [B.holographicPressure_eq_neg_outwardPressure,
-    holographicPressure_coeff]
-
-end BoundaryHolographicFunctionalPacket
+/-- Explicit holographic pressure coefficient with the `P_holo = -P_out` convention. -/
+theorem holographicPressure_eq_neg_coeff (A0 q F0 z Neff chi : ℝ) :
+    holographicPressure A0 q F0 z Neff chi =
+      -(z * Neff / (2 * q * weylBoundaryArea A0 q chi)) := by
+  unfold holographicPressure
+  rw [holographicPressure_coeff]
 
 /-! ## 2. Toy equilibrium law -/
 
@@ -169,56 +110,96 @@ theorem stableScale_cubic
   field_simp [hphi, hc] at h_eq ⊢
   nlinarith
 
-/-! ## 3. Conditional Newtonian limit -/
+/-! ## 3. Explicit Newtonian scalar limit -/
+
+/-- Explicit scalar Weyl-pressure equation readout `∇²δχ = -(α/κ)ρ`. -/
+noncomputable def weylLapDeltaChi (kappa alpha rho : ℝ) : ℝ :=
+  -(alpha / kappa) * rho
+
+/-- Laplacian-level readout of `δχ = -Φ/c₀²`: `∇²Φ = -c₀² ∇²δχ`. -/
+noncomputable def newtonianLapPhi (kappa alpha c0 rho : ℝ) : ℝ :=
+  -c0 ^ 2 * weylLapDeltaChi kappa alpha rho
+
+/-- Explicit coupling value matching the Newtonian Poisson coefficient. -/
+noncomputable def newtonianMatchedAlpha (kappa c0 G : ℝ) : ℝ :=
+  4 * Real.pi * G * kappa / c0 ^ 2
 
 /--
-Scalar readout of the Weyl-pressure Poisson limit.
-
-`lapDeltaChi` is the Laplacian of the Weyl fluctuation `δχ`; `lapPhi` is the
-Laplacian of the Newtonian potential.  The relation
-`δχ = -Φ/c₀²` is represented at Laplacian level by
-`lapPhi = -c₀² lapDeltaChi`.
+Explicit Newtonian limit:
+with `α = 4πGκ/c₀²`, the scalar Weyl-pressure readout gives
+`∇²Φ = 4πGρ`.
 -/
-structure WeylPoissonDatum where
-  kappa : ℝ
-  alpha : ℝ
-  c0 : ℝ
-  G : ℝ
-  rho : ℝ
-  lapDeltaChi : ℝ
-  lapPhi : ℝ
-  coupling_match : alpha * c0 ^ 2 / kappa = 4 * Real.pi * G
-  weyl_poisson : lapDeltaChi = -(alpha / kappa) * rho
-  potential_laplacian_relation : lapPhi = -c0 ^ 2 * lapDeltaChi
+theorem newtonianLimit_from_weylPressure
+    {kappa c0 G rho : ℝ}
+    (hkappa : kappa ≠ 0)
+    (hc0 : c0 ≠ 0) :
+    newtonianLapPhi kappa (newtonianMatchedAlpha kappa c0 G) c0 rho =
+      (4 * Real.pi * G) * rho := by
+  unfold newtonianLapPhi weylLapDeltaChi newtonianMatchedAlpha
+  field_simp [hkappa, hc0]
 
-namespace WeylPoissonDatum
-
-/-- The supplied scalar Weyl-pressure equation. -/
-theorem lapDeltaChi_eq_source (W : WeylPoissonDatum) :
-    W.lapDeltaChi = -(W.alpha / W.kappa) * W.rho :=
-  W.weyl_poisson
-
-/-- Laplacian-level form of `δχ = -Φ/c₀²`. -/
-theorem lapPhi_eq_neg_c0_sq_lapDeltaChi (W : WeylPoissonDatum) :
-    W.lapPhi = -W.c0 ^ 2 * W.lapDeltaChi :=
-  W.potential_laplacian_relation
+/-! ## 4. Explicit quantum-limit balance law -/
 
 /--
-Conditional Newtonian limit:
-if the Weyl-pressure Poisson equation and coupling match are supplied, then
-`∇²Φ = 4πGρ` at the scalar readout level.
--/
-theorem newtonianLimit_from_weylPressure (W : WeylPoissonDatum) :
-    W.lapPhi = (4 * Real.pi * W.G) * W.rho := by
-  calc
-    W.lapPhi = -W.c0 ^ 2 * W.lapDeltaChi := W.potential_laplacian_relation
-    _ = -W.c0 ^ 2 * (-(W.alpha / W.kappa) * W.rho) := by
-          rw [W.weyl_poisson]
-    _ = (W.alpha * W.c0 ^ 2 / W.kappa) * W.rho := by
-          ring
-    _ = (4 * Real.pi * W.G) * W.rho := by
-          rw [W.coupling_match]
+Two-term quantum-limit free-energy ansatz:
+`A * ellK / L + B * L / ellE8`.
 
-end WeylPoissonDatum
+This is only an explicit scalar model.  Identifying the critical scale with a
+physical Planck length is a later calibration step, not part of this theorem.
+-/
+noncomputable def quantumLimitFreeEnergy
+    (A B ellK ellE8 L : ℝ) : ℝ :=
+  A * ellK / L + B * L / ellE8
+
+/-- Explicit critical-balance equation for the two-term ansatz. -/
+def quantumLimitCriticalEquation
+    (A B ellK ellE8 L : ℝ) : Prop :=
+  -A * ellK / L ^ 2 + B / ellE8 = 0
+
+/--
+At a nondegenerate critical point of the two-term balance ansatz,
+`L² = (A/B) * ellK * ellE8`.
+-/
+theorem quantumLimit_geometricMean_sq
+    {A B ellK ellE8 L : ℝ}
+    (hcrit : quantumLimitCriticalEquation A B ellK ellE8 L)
+    (hL : L ≠ 0)
+    (hB : B ≠ 0)
+    (hellE8 : ellE8 ≠ 0) :
+    L ^ 2 = (A / B) * ellK * ellE8 := by
+  unfold quantumLimitCriticalEquation at hcrit
+  field_simp [hL, hB, hellE8] at hcrit ⊢
+  nlinarith
+
+/--
+At a nondegenerate critical point of the two-term balance ansatz, the critical
+scale is the positive square root of the geometric-mean readout.
+-/
+theorem quantumLimit_geometricMean
+    {A B ellK ellE8 L : ℝ}
+    (hcrit : quantumLimitCriticalEquation A B ellK ellE8 L)
+    (hL : 0 ≤ L)
+    (hL0 : L ≠ 0)
+    (hB : B ≠ 0)
+    (hellE8 : ellE8 ≠ 0)
+    (hR : 0 ≤ (A / B) * ellK * ellE8) :
+    L = Real.sqrt ((A / B) * ellK * ellE8) := by
+  have hsq := quantumLimit_geometricMean_sq hcrit hL0 hB hellE8
+  have hs :
+      (Real.sqrt ((A / B) * ellK * ellE8)) ^ 2 = (A / B) * ellK * ellE8 := by
+    rw [Real.sq_sqrt hR]
+  apply (sq_eq_sq₀ hL (Real.sqrt_nonneg _)).mp
+  simpa [hs] using hsq
+
+/-- If the two coefficients agree, the critical scale squares to `ellK * ellE8`. -/
+theorem quantumLimit_geometricMean_sq_of_equal_coeff
+    {A ellK ellE8 L : ℝ}
+    (hcrit : quantumLimitCriticalEquation A A ellK ellE8 L)
+    (hL : L ≠ 0)
+    (hA : A ≠ 0)
+    (hellE8 : ellE8 ≠ 0) :
+    L ^ 2 = ellK * ellE8 := by
+  rw [quantumLimit_geometricMean_sq hcrit hL hA hellE8]
+  field_simp [hA]
 
 end InfoGeometry.Physics.HolographicPressureFunctional

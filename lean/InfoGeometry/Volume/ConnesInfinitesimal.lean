@@ -37,10 +37,6 @@ local instance : CompleteSpace (AlgebraEnd H) := inferInstance
 /-- The constructive scalar RN datum on real units: volume is the identity. -/
 noncomputable def unitsRNBridge : HasScalarRNBridge ℝˣ where
   vol := MonoidHom.id ℝˣ
-  rn := fun u => Real.log |(u : ℝ)|
-  rn_eq_logAbs_vol := by
-    intro u
-    rfl
 
 @[simp] theorem unitsRNBridge_rn_apply (u : ℝˣ) :
     unitsRNBridge.rn u = Real.log |(u : ℝ)| :=
@@ -49,7 +45,7 @@ noncomputable def unitsRNBridge : HasScalarRNBridge ℝˣ where
 /-- The exact logarithmic RN chain rule on real units. -/
 theorem unitsRNBridge_chain_rule (u v : ℝˣ) :
     unitsRNBridge.rn (u * v) = unitsRNBridge.rn u + unitsRNBridge.rn v :=
-  rn_chain_rule unitsRNBridge u v
+  unitsRNBridge.rn_chain_rule u v
 
 /-- The logarithmic two-coboundary of the concrete RN character. -/
 noncomputable def unitsRNTwoCoboundary (u v : ℝˣ) : ℝ :=
@@ -79,7 +75,8 @@ noncomputable def expUnitsPath (rate t : ℝ) : ℝˣ :=
 /-- The RN logarithm of the exponential unit path is the linear potential. -/
 @[simp] theorem unitsRNBridge_rn_expUnitsPath (rate t : ℝ) :
     unitsRNBridge.rn (expUnitsPath rate t) = rate * t := by
-  simp [unitsRNBridge, expUnitsPath, Real.log_exp]
+  change Real.log |Real.exp (rate * t)| = rate * t
+  rw [abs_of_pos (Real.exp_pos _), Real.log_exp]
 
 /-- The concrete RN logarithmic path has derivative equal to its rate. -/
 theorem unitsRNBridge_rn_expUnitsPath_hasDerivAt (rate t : ℝ) :

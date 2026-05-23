@@ -3,18 +3,19 @@ import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.LinearAlgebra.Finsupp.VectorSpace
 import Mathlib.Data.Int.Order.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Order
 
 /-!
 # Canonical Polarized Fermionic Fock Space and Normal Ordering
 
-This file proves the first exterior-Fock layers without CAR or
-vacuum-contraction hypothesis sockets.
+This file proves the first exterior-Fock layers directly from exterior
+multiplication and Clifford contraction.
 
 The Fock space is the exterior algebra `ExteriorAlgebra R M`, implemented in
 mathlib as the Clifford algebra of the zero quadratic form.  The vacuum is
-`1`; the vacuum coefficient is `ExteriorAlgebra.algebraMapInv`; creation is
-left exterior multiplication; annihilation is mathlib's Clifford/exterior
+`1`; the vacuum coefficient is the algebra map induced by the zero
+one-particle functional; creation is left exterior multiplication;
+annihilation is mathlib's Clifford/exterior
 contraction `CliffordAlgebra.contractLeft`.
 
 Problem 1 is the constructed CAR layer: creation and annihilation operators are
@@ -231,8 +232,7 @@ theorem modeDual_modeVec (a b : ℤ) :
   by_cases h : a = b
   · subst b
     simp [modeVec, modeDual, Module.Basis.coord_apply]
-  · have hba : b ≠ a := fun hb => h hb.symm
-    simp [modeVec, modeDual, Module.Basis.coord_apply, h, hba]
+  · simp [modeVec, modeDual, Module.Basis.coord_apply, h]
 
 /--
 Sea-polarized plus modes.
@@ -382,9 +382,9 @@ Problem 1 existence package: from an integer-indexed basis of the one-particle
 space, the exterior-Fock construction supplies polarized fermion modes
 satisfying the normalized CAR.
 
-This is an existence theorem over `ExteriorAlgebra R M`, not a hypothesis
-socket.  The vacuum is `1 : ExteriorAlgebra R M`, with negative sea encoded by
-the definitions of `psiPlus` and `psiMinus`.
+This is an existence theorem over `ExteriorAlgebra R M`.  The vacuum is
+`1 : ExteriorAlgebra R M`, with negative sea encoded by the definitions of
+`psiPlus` and `psiMinus`.
 -/
 theorem exists_polarizedFermionicFock_CAR (B : Module.Basis ℤ R M) :
     ∃ plus minus : ℤ → EndFock (R := R) (M := M),
@@ -444,14 +444,27 @@ theorem rawMatrixUnit_vacuumExpect_eq_contractionCoeff (a b : ℤ) :
   · by_cases hb : b < 0
     · simp [rawMatrixUnit, psiPlus, psiMinusNeg, contractionCoeff,
         vacuumExpectEnd, ha, hb, vacuumCoeff, create, annih]
-    · have hab : ¬ a = b := by omega
-      simp [rawMatrixUnit, psiPlus, psiMinusNeg, contractionCoeff,
-        vacuumExpectEnd, ha, hb, hab, modeDual_modeVec, vacuumCoeff, annih]
+    · have hne : a ≠ b := by omega
+      have hp : modeDual (R := R) B a (modeVec (R := R) B b) = 0 := by
+        simp [modeDual_modeVec, hne]
+      simpa [rawMatrixUnit, psiPlus, psiMinusNeg, contractionCoeff,
+        vacuumExpectEnd, ha, hb, vacuumCoeff, annih] using hp.symm
   · by_cases hb : b < 0
     · simp [rawMatrixUnit, psiPlus, psiMinusNeg, contractionCoeff,
         vacuumExpectEnd, ha, hb, vacuumCoeff, create]
     · simp [rawMatrixUnit, psiPlus, psiMinusNeg, contractionCoeff,
         vacuumExpectEnd, ha, hb, vacuumCoeff, create, annih]
+
+/--
+Compatibility spelling for the canonical raw contraction theorem.
+
+Despite the name, the left-hand side is the endomorphism vacuum coefficient
+`epsilon_0 (E Ω)`, implemented by `vacuumExpectEnd`.
+-/
+theorem rawMatrixUnit_vacuumCoeff_eq_contractionCoeff (a b : ℤ) :
+    vacuumExpectEnd (R := R) (M := M) (rawMatrixUnit (R := R) (M := M) B a b) =
+      contractionCoeff (R := R) B a b :=
+  rawMatrixUnit_vacuumExpect_eq_contractionCoeff (R := R) (M := M) B a b
 
 /--
 Coefficient form of the raw contraction theorem:
@@ -513,6 +526,12 @@ theorem normalMatrixUnit_vacuumExpect_zero (a b : ℤ) :
   rw [rawMatrixUnit_vacuumExpect_eq_contractionCoeff]
   simp [vacuumExpectEnd, vacuumCoeff]
 
+/-- Compatibility spelling for the zero one-point function of normal ordering. -/
+theorem normalMatrixUnit_vacuumCoeff_zero (a b : ℤ) :
+    vacuumExpectEnd (R := R) (M := M)
+        (normalMatrixUnit (R := R) (M := M) B a b) = 0 :=
+  normalMatrixUnit_vacuumExpect_zero (R := R) (M := M) B a b
+
 /--
 Problem 2 in coefficient form: the normal-ordered matrix unit has zero vacuum
 coefficient after acting on `Omega = 1`.
@@ -550,9 +569,9 @@ noncomputable abbrev intModeBasis (R : Type*) [Semiring R] :
 Problem 1 for the literal direct-sum mode space.
 
 For `V = ⊕ r : ℤ, R e_r`, the constructed exterior Fock space
-`ExteriorAlgebra R V` carries sea-polarized modes satisfying the normalized
-CAR.  This is obtained from `Finsupp.basisSingleOne`, exterior multiplication,
-and Clifford/exterior contraction; no CAR law is assumed as data.
+`ExteriorAlgebra R V` carries sea-polarized modes satisfying the normalized CAR.
+This is obtained from `Finsupp.basisSingleOne`, exterior multiplication, and
+Clifford/exterior contraction.
 -/
 theorem exists_polarizedFermionicFock_CAR_directSum (R : Type*) [CommRing R] :
     ∃ plus minus : ℤ → EndFock (R := R) (M := IntModeSpace R),
@@ -574,8 +593,7 @@ Problem 2, direct-sum raw contraction.
 For `V = ⊕ r : ℤ, R e_r`, the vacuum coefficient of the raw bilinear
 `psiPlus a * psiMinus(-b)` is exactly the Kronecker delta times the negative
 occupation indicator.  This is computed from exterior multiplication,
-Clifford/exterior contraction, and `Finsupp.basisSingleOne`; it is not a
-vacuum-contraction hypothesis.
+Clifford/exterior contraction, and `Finsupp.basisSingleOne`.
 -/
 theorem rawMatrixUnit_vacuumExpect_eq_delta_occ_directSum
     (R : Type*) [CommRing R] (a b : ℤ) :

@@ -25,6 +25,10 @@ open VirasoroProject
 abbrev FiniteTomitaKreinAtom : Type :=
   Matrix (Fin 2) (Fin 2) ℝ
 
+/-- Short problem-name alias for the finite `Cl(1,1) ≃ M₂(ℝ)` atom. -/
+abbrev A0 : Type :=
+  FiniteTomitaKreinAtom
+
 /--
 The underlying free real vector-space carrier with one central generator and
 integer-labeled current generators.
@@ -34,10 +38,19 @@ integer-labeled current generators.
 abbrev HeisenbergFreeCarrier : Type :=
   Option ℤ →₀ ℝ
 
+/-- Short problem-name alias for the countably generated Heisenberg carrier. -/
+abbrev HeisCarrier : Type :=
+  HeisenbergFreeCarrier
+
 /-- The finite atom has real Hamel dimension `4`. -/
 theorem finiteTomitaKreinAtom_finrank :
     Module.finrank ℝ FiniteTomitaKreinAtom = 4 := by
   simp [FiniteTomitaKreinAtom, Module.finrank_matrix, Module.finrank_self]
+
+/-- Problem-name form of the finite atom dimension computation. -/
+theorem A0_finrank :
+    Module.finrank ℝ A0 = 4 :=
+  finiteTomitaKreinAtom_finrank
 
 /-- The free Heisenberg carrier is not finite-dimensional over `ℝ`. -/
 theorem heisenbergFreeCarrier_not_finiteDimensional :
@@ -69,6 +82,19 @@ theorem finiteAtom_not_linearEquiv_heisenbergFreeCarrier :
   rintro ⟨e⟩
   exact heisenbergFreeCarrier_not_finiteDimensional e.finiteDimensional
 
+/--
+Problem 0 vector-space separation: the finite atom is not linearly isomorphic
+to the countably generated Heisenberg carrier.
+-/
+theorem finiteAtom_not_vectorSpaceIso_heisenbergCarrier :
+    ¬ Nonempty (A0 ≃ₗ[ℝ] HeisCarrier) :=
+  finiteAtom_not_linearEquiv_heisenbergFreeCarrier
+
+/-- Problem-name alias: `A₀` is not linearly equivalent to the Heisenberg carrier. -/
+theorem A0_not_linear_equiv_HeisCarrier :
+    ¬ Nonempty (A0 ≃ₗ[ℝ] HeisCarrier) :=
+  finiteAtom_not_vectorSpaceIso_heisenbergCarrier
+
 /-- There is no real-linear equivalence from the finite atom to the external Heisenberg algebra. -/
 theorem finiteAtom_not_linearEquiv_heisenbergAlgebra :
     ¬ Nonempty (FiniteTomitaKreinAtom ≃ₗ[ℝ] HeisenbergAlgebra ℝ) := by
@@ -83,5 +109,43 @@ theorem finiteAtom_not_lieEquiv_heisenbergAlgebra :
     ¬ Nonempty (FiniteTomitaKreinAtom ≃ₗ⁅ℝ⁆ HeisenbergAlgebra ℝ) := by
   rintro ⟨e⟩
   exact finiteAtom_not_linearEquiv_heisenbergAlgebra ⟨e.toLinearEquiv⟩
+
+/-- Problem-name alias: no Lie-algebra isomorphism from `A₀` to the Heisenberg algebra. -/
+theorem finiteAtom_not_lieIso_heisenberg :
+    ¬ Nonempty (A0 ≃ₗ⁅ℝ⁆ HeisenbergAlgebra ℝ) :=
+  finiteAtom_not_lieEquiv_heisenbergAlgebra
+
+/--
+Any stronger equivalence notion whose data include a real-linear equivalence
+from the finite atom to the infinite free carrier is impossible.
+
+Use this for associative or graded algebra equivalences only after extracting
+their underlying real-linear equivalence for the intended `Finsupp` carrier.
+-/
+theorem finiteAtom_not_equiv_with_underlying_linearEquiv {Iso : Type}
+    (toLinearEquiv : Iso → FiniteTomitaKreinAtom ≃ₗ[ℝ] HeisenbergFreeCarrier) :
+    ¬ Nonempty Iso := by
+  rintro ⟨e⟩
+  exact finiteAtom_not_linearEquiv_heisenbergFreeCarrier ⟨toLinearEquiv e⟩
+
+/--
+Problem-name form for associative-style equivalences: any candidate
+associative isomorphism to the free Heisenberg carrier is impossible once its
+underlying real-linear equivalence is exposed.
+-/
+theorem finiteAtom_not_assocIso_heisenbergCarrier {AssocIso : Type}
+    (toLinearEquiv : AssocIso → A0 ≃ₗ[ℝ] HeisCarrier) :
+    ¬ Nonempty AssocIso :=
+  finiteAtom_not_equiv_with_underlying_linearEquiv toLinearEquiv
+
+/--
+Problem-name form for graded-style equivalences: any candidate graded
+isomorphism to the free Heisenberg carrier is impossible once its underlying
+real-linear equivalence is exposed.
+-/
+theorem finiteAtom_not_gradedIso_heisenbergCarrier {GradedIso : Type}
+    (toLinearEquiv : GradedIso → A0 ≃ₗ[ℝ] HeisCarrier) :
+    ¬ Nonempty GradedIso :=
+  finiteAtom_not_equiv_with_underlying_linearEquiv toLinearEquiv
 
 end InfoGeometry.Canonical.LevelSeparationNoIso

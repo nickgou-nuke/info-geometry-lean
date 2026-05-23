@@ -1275,6 +1275,36 @@ def enqueue_leansearch_goal(
     )
 
 
+def enqueue_leantrail_goal(
+    endpoint: str,
+    database: str,
+    username: str,
+    password: str,
+    *,
+    queue_name: str,
+    goal_hash_shape: str,
+    canonical_shape: str,
+    target_pretty: str,
+    module: str,
+    goal_index: int,
+    priority: float,
+) -> dict[str, Any]:
+    return enqueue_goal(
+        endpoint,
+        database,
+        username,
+        password,
+        queue_name=queue_name,
+        goal_hash_shape=goal_hash_shape,
+        canonical_shape=canonical_shape,
+        target_pretty=target_pretty,
+        module=module,
+        goal_index=goal_index,
+        priority=priority,
+        task_kind="proof.search.leantrail",
+    )
+
+
 def claim_next_task(
     endpoint: str,
     database: str,
@@ -2135,6 +2165,18 @@ def parse_args() -> argparse.Namespace:
     enqueue_leansearch.add_argument("--goal-index", type=int, required=True)
     enqueue_leansearch.add_argument("--priority", type=float, default=0.5)
 
+    enqueue_leantrail = sub.add_parser(
+        "enqueue-leantrail-goal",
+        help="Insert a manual goal and pending task with task_kind preset to proof.search.leantrail",
+    )
+    enqueue_leantrail.add_argument("--queue-name", default=DEFAULT_QUEUE)
+    enqueue_leantrail.add_argument("--goal-hash-shape", required=True)
+    enqueue_leantrail.add_argument("--canonical-shape", required=True)
+    enqueue_leantrail.add_argument("--target-pretty", required=True)
+    enqueue_leantrail.add_argument("--module", required=True)
+    enqueue_leantrail.add_argument("--goal-index", type=int, required=True)
+    enqueue_leantrail.add_argument("--priority", type=float, default=0.5)
+
     seed = sub.add_parser("seed-jsonl", help="Seed goals/fossils/tasks from ingest_hive_json JSONL")
     seed.add_argument("--input", type=Path, required=True)
     seed.add_argument("--queue-name", default=DEFAULT_QUEUE)
@@ -2253,6 +2295,20 @@ def main() -> int:
         )
     elif args.command == "enqueue-leansearch-goal":
         result = enqueue_leansearch_goal(
+            endpoint,
+            database,
+            username,
+            password,
+            queue_name=str(args.queue_name),
+            goal_hash_shape=str(args.goal_hash_shape),
+            canonical_shape=str(args.canonical_shape),
+            target_pretty=str(args.target_pretty),
+            module=str(args.module),
+            goal_index=int(args.goal_index),
+            priority=float(args.priority),
+        )
+    elif args.command == "enqueue-leantrail-goal":
+        result = enqueue_leantrail_goal(
             endpoint,
             database,
             username,

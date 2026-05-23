@@ -189,7 +189,11 @@ theorem fundamentalSymmetry_commutes_modularGenerator :
         =
       (D.fundamentalSymmetry * D.modularGenerator * D.fundamentalSymmetry) *
         D.fundamentalSymmetry := by
-          simp [mul_assoc, D.fundamentalSymmetry_involution]
+          ext v
+          have hJv : D.fundamentalSymmetry (D.fundamentalSymmetry v) = v := by
+            have h := congrArg (fun T : RealEnd E => T v) D.fundamentalSymmetry_involution
+            simpa [ContinuousLinearMap.mul_apply] using h
+          simp [ContinuousLinearMap.mul_apply, hJv]
     _ =
       D.modularGenerator * D.fundamentalSymmetry := by
         rw [D.generator_krein_selfadjoint]
@@ -290,24 +294,28 @@ theorem rotorInv_group_law (s t : ℝ) :
           simp [mul_assoc]
       _ =
         F.rotor s * F.rotorInv s := by
-          rw [F.rotor_right_inv t]
-          simp [mul_assoc]
+          ext v
+          simp [ContinuousLinearMap.mul_apply, F.rotor_right_inv t]
       _ =
         ContinuousLinearMap.id ℝ E := by
           exact F.rotor_right_inv s
   calc
-    y = y * ContinuousLinearMap.id ℝ E := by simp
+    y = y * ContinuousLinearMap.id ℝ E := by
+      ext v
+      simp [ContinuousLinearMap.mul_apply]
     _ = y * (x * z) := by rw [hxz]
     _ = (y * x) * z := by rw [mul_assoc]
     _ = ContinuousLinearMap.id ℝ E * z := by rw [hyx]
-    _ = z := by simp
+    _ = z := by
+      ext v
+      simp [ContinuousLinearMap.mul_apply]
 
 /-- The rotor conjugation actions compose by adding their parameters. -/
 theorem sigma_comp (s t : ℝ) (A : RealEnd E) :
     F.sigma s (F.sigma t A) = F.sigma (s + t) A := by
-  unfold sigma
-  rw [F.rotor_group_law, F.rotorInv_group_law]
-  simp [mul_assoc]
+  ext v
+  simp [sigma, ContinuousLinearMap.mul_apply, F.rotor_group_law,
+    F.rotorInv_group_law, mul_assoc]
 
 /-- Flow-fixed observables are exactly modular-monogenic observables. -/
 theorem fixedByFlow_iff (A : RealEnd E) :

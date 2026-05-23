@@ -849,8 +849,8 @@ theorem ofControlObserver_observerOrientationStrain_eq_zero_of_ZD_eq_zero
     (hZD :
       InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
     observerOrientationStrain CIK obs = 0 := by
-  exact observerOrientationStrain_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
-    (CIK := CIK) (obs := obs) hZD (ObserverDeviationControlledByZD.of_control c)
+  exact observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
+    (CIK := CIK) (obs := obs) hZD c
 
 /--
 For a deviation-zero observer, the bounded router sourced generator collapses to

@@ -727,9 +727,11 @@ noncomputable def ofDeviationZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hDev : observerProjectorDeviation CIK obs = 0) :
     (ofDeviationZeroObserver (E := E) CIK obs flow hDev).routerResidual = 0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
+  have _hControl : ObserverDeviationControlledByZD CIK obs :=
+    observerDeviationControlledByZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
+  have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
-  simpa [ofDeviationZeroObserver] using hZero
+  simpa [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 @[simp] theorem ofStrainZeroObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -737,9 +739,11 @@ noncomputable def ofDeviationZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     (ofStrainZeroObserver (E := E) CIK obs flow hStrain).routerResidual = 0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
+  have _hControl : ObserverDeviationControlledByZD CIK obs :=
+    observerDeviationControlledByZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
-  simpa [ofStrainZeroObserver, ofZDControlledObserver] using hZero
+  simpa [ofStrainZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 @[simp] theorem ofAlignedObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -747,9 +751,9 @@ noncomputable def ofDeviationZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     (ofAlignedObserver (E := E) CIK obs flow hAlign).routerResidual = 0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
+  have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-  simpa [ofAlignedObserver] using hZero
+  simpa [ofAlignedObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 /-- Sourced generator built from the bounded LLM-side residual input. -/
 noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH :=

@@ -16,9 +16,10 @@ def test_control_witness_constructor_routes_through_owner_packet() -> None:
     assert "theorem ofControlObserver_routerResidual_eq_zero_of_ZD_eq_zero" in triality_text
 
 
-def test_control_witness_constructor_uses_direct_owner_strain_readback() -> None:
+def test_control_witness_constructor_uses_direct_owner_deviation_control_route() -> None:
     triality_text = TRIALITY.read_text(encoding="utf-8")
 
-    assert "theorem ofControlObserver_observerOrientationStrain_eq_zero_of_ZD_eq_zero" in triality_text
-    assert "observerOrientationStrain_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero" in triality_text
-    assert "ObserverDeviationControlledByZD.of_control c" in triality_text
+    assert "theorem ofDeviationZeroObserver_routerResidual" in triality_text
+    assert "observerDefectResidual_eq_zero_of_deviation_eq_zero" in triality_text
+    assert "observerDeviationControlledByZD_of_deviation_eq_zero" in triality_text
+    assert "simpa [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual" in triality_text

@@ -16,10 +16,9 @@ def test_control_witness_constructor_routes_through_owner_packet() -> None:
     assert "theorem ofControlObserver_routerResidual_eq_zero_of_ZD_eq_zero" in triality_text
 
 
-def test_control_witness_constructor_uses_direct_owner_deviation_control_route() -> None:
+def test_strain_zero_sourced_generator_reuses_strain_router_residual_theorem() -> None:
     triality_text = TRIALITY.read_text(encoding="utf-8")
 
-    assert "theorem ofDeviationZeroObserver_routerResidual" in triality_text
-    assert "observerDefectResidual_eq_zero_of_deviation_eq_zero" in triality_text
-    assert "observerDeviationControlledByZD_of_deviation_eq_zero" in triality_text
-    assert "simpa [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual" in triality_text
+    assert "theorem ofStrainZeroObserver_sourcedGenerator_eq_flow" in triality_text
+    assert "rw [ofStrainZeroObserver_routerResidual" in triality_text
+    assert "simp [ofStrainZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect]" in triality_text

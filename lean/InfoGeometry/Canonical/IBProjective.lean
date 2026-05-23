@@ -307,7 +307,16 @@ lemma sameRay_toPositiveMeasure
   rcases hs with ⟨c, hc0, hcTop, hscale⟩
   refine ⟨(⟨c.toReal, ENNReal.toReal_pos hc0 hcTop⟩ : InfoGeometry.Stratum.PosGauge), ?_⟩
   ext t
-  simp [toPositiveMeasure_apply, hscale, InfoGeometry.PositiveMeasure.scale_apply, ENNReal.toReal_mul]
+  calc
+    (InfoGeometry.PositiveMeasure.scale c.toReal (ENNReal.toReal_pos hc0 hcTop)
+        (toPositiveMeasure s₁)) t
+        = c.toReal * (s₁.f t).toReal := by
+            rfl
+    _ = (s₂.f t).toReal := by
+          have hscale_t : s₂.f t = c * s₁.f t := by
+            simpa using congrArg (fun f => f t) hscale
+          rw [hscale_t]
+          simp [ENNReal.toReal_mul, hc0, hcTop]
 
 /-- A full-support score slice as a strict-positive projective ray. -/
 noncomputable def positiveRay (s : FullSupportScoreSlice (T := T)) : PositiveRay T :=

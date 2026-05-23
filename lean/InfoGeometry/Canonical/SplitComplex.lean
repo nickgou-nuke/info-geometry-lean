@@ -138,6 +138,9 @@ theorem pPlus_sq : pPlus (R := R) * pPlus (R := R) = pPlus (R := R) := by
     field_simp [h2]
     ring
 
+@[simp] theorem pPlus_idempotent : pPlus (R := R) * pPlus (R := R) = pPlus (R := R) := by
+  simpa using (pPlus_sq (R := R))
+
 /-- The negative half-projector is idempotent. -/
 theorem pMinus_sq : pMinus (R := R) * pMinus (R := R) = pMinus (R := R) := by
   ext <;> simp [pMinus]
@@ -147,6 +150,9 @@ theorem pMinus_sq : pMinus (R := R) * pMinus (R := R) = pMinus (R := R) := by
   · have h2 : (2 : R) ≠ 0 := two_ne_zero
     field_simp [h2]
     ring
+
+@[simp] theorem pMinus_idempotent : pMinus (R := R) * pMinus (R := R) = pMinus (R := R) := by
+  simpa using (pMinus_sq (R := R))
 
 /-- The projectors are orthogonal. -/
 theorem pPlus_mul_pMinus : pPlus (R := R) * pMinus (R := R) = 0 := by

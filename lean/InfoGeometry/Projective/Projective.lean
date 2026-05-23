@@ -68,8 +68,59 @@ instance sameRaySetoid : Setoid (PositiveMeasure α ℝ) :=
     ⟩
   ⟩
 
+namespace PositiveMeasure
+
+lemma SameRay.refl (μ : PositiveMeasure α ℝ) : SameRay μ μ := by
+  refine ⟨⟨1, zero_lt_one⟩, ?_⟩
+  ext a
+  change (1 : ℝ) * μ a = μ a
+  ring
+
+lemma SameRay.symm {μ ν : PositiveMeasure α ℝ} (h : SameRay μ ν) : SameRay ν μ := by
+  rcases h with ⟨c, hc⟩
+  refine ⟨⟨c.1⁻¹, inv_pos.mpr c.2⟩, ?_⟩
+  ext a
+  have hc' : c.1 * μ a = ν a := by
+    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hc
+  calc
+    c.1⁻¹ * ν a = c.1⁻¹ * (c.1 * μ a) := by rw [hc']
+    _ = μ a := by field_simp [c.2.ne']
+
+lemma SameRay.trans {μ ν κ : PositiveMeasure α ℝ}
+    (h₁ : SameRay μ ν) (h₂ : SameRay ν κ) : SameRay μ κ := by
+  rcases h₁ with ⟨c, hc⟩
+  rcases h₂ with ⟨d, hd⟩
+  refine ⟨⟨d.1 * c.1, mul_pos d.2 c.2⟩, ?_⟩
+  ext a
+  have hc' : c.1 * μ a = ν a := by
+    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hc
+  have hd' : d.1 * ν a = κ a := by
+    simpa [SMul.smul, PositiveMeasure.scale] using congrArg (fun m => m a) hd
+  calc
+    (d.1 * c.1) * μ a = d.1 * (c.1 * μ a) := by ring
+    _ = d.1 * ν a := by rw [hc']
+    _ = κ a := by rw [hd']
+
+end PositiveMeasure
+
 /-- The projectivized positive cone (rays). -/
 def Proj := Quotient (sameRaySetoid (α := α))
+
+namespace Projective
+
+lemma same_ray_refl (μ : PositiveMeasure α ℝ) : PositiveMeasure.SameRay μ μ :=
+  PositiveMeasure.SameRay.refl μ
+
+lemma same_ray_symm {μ ν : PositiveMeasure α ℝ} (h : PositiveMeasure.SameRay μ ν) :
+    PositiveMeasure.SameRay ν μ :=
+  PositiveMeasure.SameRay.symm h
+
+lemma same_ray_trans {μ ν κ : PositiveMeasure α ℝ}
+    (h₁ : PositiveMeasure.SameRay μ ν) (h₂ : PositiveMeasure.SameRay ν κ) :
+    PositiveMeasure.SameRay μ κ :=
+  PositiveMeasure.SameRay.trans h₁ h₂
+
+end Projective
 
 end
 end Projective
@@ -99,6 +150,7 @@ lemma normalize_scale (c : ℝ) (hc : 0 < c) (μ : PositiveMeasure α ℝ) :
   field_simp [hc.ne', Z_ne_zero (α := α) (R := ℝ) μ]
 
 end NormalizeGauge
+
 end PositiveMeasure
 
 end InfoGeometry

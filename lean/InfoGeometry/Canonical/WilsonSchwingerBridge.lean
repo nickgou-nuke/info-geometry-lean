@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.BoundaryMatrixUnitWick
-import InfoGeometry.Tessellation.WilsonLoop
+import InfoGeometry.Tessellation.CurrentCurvature
 
 /-!
 # Wilson defects and Wick/Schwinger central terms
@@ -17,26 +17,6 @@ namespace InfoGeometry.Canonical.WilsonSchwingerBridge
 
 open InfoGeometry.Tessellation
 
-/-- The identity sector as a tessellation diamond. -/
-def unitDiamond (A : Type*) [Semiring A] : Diamond A where
-  P := 1
-  idem := by simp
-
-/--
-A Wilson loop at the identity sector whose defect is the prescribed central
-integer multiple of the identity.
--/
-def centralDefectLoop (A : Type*) [Ring A] (k : Int) :
-    WilsonLoop A (unitDiamond A) where
-  holonomy := 1 + k • (1 : A)
-  left_support := by simp [unitDiamond]
-  right_support := by simp [unitDiamond]
-
-/-- The defect of `centralDefectLoop` is exactly `k • 1`. -/
-theorem centralDefectLoop_defect (A : Type*) [Ring A] (k : Int) :
-    WilsonLoop.defect (centralDefectLoop A k) = k • (1 : A) := by
-  simp [WilsonLoop.defect, centralDefectLoop, unitDiamond]
-
 /--
 The Wilson loop carrying the Wick/Schwinger coefficient
 `occ a - occ c`.
@@ -53,6 +33,18 @@ theorem schwingerWilsonLoop_defect (A : Type*) [Ring A] (a c : Int) :
       (InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
         InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c) • (1 : A) := by
   simp [schwingerWilsonLoop, centralDefectLoop_defect]
+
+/--
+The Wick/Schwinger Wilson loop as a central-defect realization over `ℤ`.
+-/
+def schwingerCentralDefectRealization
+    (A : Type*) [Ring A] (a c : Int) :
+    CentralDefectRealization A ℤ (schwingerWilsonLoop A a c) where
+  scalar :=
+    InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ a -
+      InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c
+  defect_eq := by
+    simp [schwingerWilsonLoop, centralDefectLoop_defect, unitDiamond]
 
 /--
 The conditional Wick/Schwinger central term can be read as a Wilson-loop

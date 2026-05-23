@@ -458,7 +458,13 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
   have hq :
       (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ) : PositiveRay α)
         = Quotient.mk _ μ := by
-    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨c, hc, rfl⟩)
+    refine Quotient.sound ?_
+    refine ⟨⟨c⁻¹, inv_pos.mpr hc⟩, ?_⟩
+    ext a
+    change c⁻¹ * (c * μ a) = μ a
+    calc
+      c⁻¹ * (c * μ a) = (c⁻¹ * c) * μ a := by ring
+      _ = μ a := by field_simp [hc.ne']
   rw [hq]
 
 @[simp] theorem informationGeometricRelativeNorm_scale_right
@@ -472,7 +478,13 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
   have hq :
       (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν) : PositiveRay α)
         = Quotient.mk _ ν := by
-    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨d, hd, rfl⟩)
+    refine Quotient.sound ?_
+    refine ⟨⟨d⁻¹, inv_pos.mpr hd⟩, ?_⟩
+    ext a
+    change d⁻¹ * (d * ν a) = ν a
+    calc
+      d⁻¹ * (d * ν a) = (d⁻¹ * d) * ν a := by ring
+      _ = ν a := by field_simp [hd.ne']
   rw [hq]
 
 @[simp] theorem informationGeometricRelativeNorm_scale_scale
@@ -497,7 +509,13 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
   have hq :
       (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ) : PositiveRay α)
         = Quotient.mk _ μ := by
-    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨c, hc, rfl⟩)
+    refine Quotient.sound ?_
+    refine ⟨⟨c⁻¹, inv_pos.mpr hc⟩, ?_⟩
+    ext a
+    change c⁻¹ * (c * μ a) = μ a
+    calc
+      c⁻¹ * (c * μ a) = (c⁻¹ * c) * μ a := by ring
+      _ = μ a := by field_simp [hc.ne']
   rw [hq]
 
 @[simp] theorem relativeInformationEnergy_scale_right
@@ -511,7 +529,13 @@ theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
   have hq :
       (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν) : PositiveRay α)
         = Quotient.mk _ ν := by
-    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨d, hd, rfl⟩)
+    refine Quotient.sound ?_
+    refine ⟨⟨d⁻¹, inv_pos.mpr hd⟩, ?_⟩
+    ext a
+    change d⁻¹ * (d * ν a) = ν a
+    calc
+      d⁻¹ * (d * ν a) = (d⁻¹ * d) * ν a := by ring
+      _ = ν a := by field_simp [hd.ne']
   rw [hq]
 
 @[simp] theorem relativeInformationEnergy_scale_scale

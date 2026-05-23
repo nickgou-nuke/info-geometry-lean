@@ -25,6 +25,7 @@ import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Krein.SplitBoost
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Krein.Thermal

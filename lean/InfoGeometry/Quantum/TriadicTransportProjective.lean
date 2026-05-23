@@ -15,7 +15,7 @@ theorem Update_weight_proj_stable
     [CompleteSpace E] (data : TriadicTransportData (E := E) ι)
     {w : ι → ℝ} {v : ι → H₂} (c : ℝ) (hc : c > 0) :
     projectivize (data.Update (fun i => c * w i) v) = projectivize (data.Update w v) := by
-  apply Quotient.sound
+  apply projectivize_eq_iff.mpr
   exact data.Update_weight_hom c hc w v
 
 theorem Update_content_proj_stable

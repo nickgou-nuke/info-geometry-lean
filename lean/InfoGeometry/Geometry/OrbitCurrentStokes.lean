@@ -144,6 +144,8 @@ end ResolventOrbitCurrentDatum
 
 open InfoGeometry.Geometry.FiniteDefectStokesModel
 
+def finiteDefectFlow : Unit → Unit → Unit := fun _ x => x
+
 /--
 The finite one-point defect model as an orbit-current Stokes datum.
 
@@ -153,9 +155,9 @@ certified finite defect form.
 -/
 def finiteDefectOrbitCurrentStokesDatum :
     OrbitCurrentStokesDatum Unit Unit Unit Mat2 where
-  flow := fun _ x => x
+  flow := finiteDefectFlow
   period := ()
-  isClosedOrbit := fun _ => True
+  isClosedOrbit := fun x => finiteDefectFlow () x = x
   orbitIntegral := fun _ _ => defectBackend.boundaryIntegral () ccForm
   surfaceIntegral := fun _ _ => defectBackend.volumeIntegral () (fun _ => boundedDirac.P)
   d := fun _ => ()
@@ -163,11 +165,19 @@ def finiteDefectOrbitCurrentStokesDatum :
     intro x ω hx
     exact boundaryIntegral_eq_volumeIntegral_defect
 
+/-- The finite one-point orbit is closed. -/
+theorem finiteDefect_isClosedOrbit :
+    finiteDefectOrbitCurrentStokesDatum.isClosedOrbit () := by
+  rfl
+
 /-- The finite defect Stokes readback has boundary pairing equal to the defect surface pairing. -/
 theorem finiteDefect_orbitIntegral_eq_surfaceIntegral :
     finiteDefectOrbitCurrentStokesDatum.orbitIntegral () () =
       finiteDefectOrbitCurrentStokesDatum.surfaceIntegral () () :=
-  finiteDefectOrbitCurrentStokesDatum.stokes_law () () True.intro
+by
+  have hClosed : finiteDefectOrbitCurrentStokesDatum.isClosedOrbit () :=
+    finiteDefect_isClosedOrbit
+  exact finiteDefectOrbitCurrentStokesDatum.stokes_law () () hClosed
 
 /--
 The finite one-point defect model as a defect orbit-current datum.
@@ -195,6 +205,9 @@ theorem finiteDefect_residue_eq_P :
 theorem finiteDefect_residue_eq_surfaceIntegral_defect :
     finiteDefectOrbitCurrentDatum.residue () =
       finiteDefectOrbitCurrentDatum.surfaceIntegral () finiteDefectOrbitCurrentDatum.defectCurrent :=
-  finiteDefectOrbitCurrentDatum.residue_eq_surfaceIntegral_defect True.intro
+by
+  have hClosed : finiteDefectOrbitCurrentDatum.isClosedOrbit () := by
+    simpa [finiteDefectOrbitCurrentDatum, finiteDefectOrbitCurrentStokesDatum] using finiteDefect_isClosedOrbit
+  exact finiteDefectOrbitCurrentDatum.residue_eq_surfaceIntegral_defect hClosed
 
 end InfoGeometry.Geometry.OrbitCurrentStokes

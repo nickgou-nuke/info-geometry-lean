@@ -34,3 +34,12 @@
 [submodule "tools/archon"]
 	path = tools/archon
 	url = https://github.com/coleam00/archon.git
+[submodule "external_refs/GIFT"]
+	path = external_refs/GIFT
+	url = https://github.com/gift-framework/GIFT.git
+[submodule "external_refs/gift-framework-core"]
+	path = external_refs/gift-framework-core
+	url = https://github.com/gift-framework/core.git
+[submodule "external_refs/geoalg"]
+	path = external_refs/geoalg
+	url = https://github.com/GPWilmot/geoalg.git

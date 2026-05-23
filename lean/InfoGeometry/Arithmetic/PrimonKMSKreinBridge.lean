@@ -201,8 +201,9 @@ variable (P : InfinitePrimonKMSPacket)
 /-- A real positive-lane readout attached to the inverse temperature. -/
 def zeta : ℝ := (riemannZeta (P.beta : ℂ)).re
 
-/-- The infinite primon gas is formally KMS in the commutative sector. -/
-theorem satisfies_kms_formal : True := True.intro
+/-- The infinite primon inverse temperature lies above the unit threshold. -/
+theorem beta_gt_one : 1 < P.beta :=
+  P.h_beta
 
 end InfinitePrimonKMSPacket
 
@@ -242,10 +243,15 @@ namespace DoubledKreinPrimonKMSPacket
 
 variable {State : Type*} [Fintype State] (P : DoubledKreinPrimonKMSPacket State)
 
+omit [Fintype State] in
 /--
-The Liouvillean `L = H ⊕ (-H)` is formally Krein-skew-adjoint.
+Thermal doubling reads the Liouvillean with opposite signs on the two copies.
 -/
-theorem liouvillean_is_krein_skew_adjoint_formal : True := True.intro
+theorem liouvillean_plus_minus_sign_laws
+    (energy : State → ℝ) (s : State) :
+    doubledLiouvilleEnergy energy (ThermalCopy.plus, s) = energy s ∧
+    doubledLiouvilleEnergy energy (ThermalCopy.minus, s) = - energy s := by
+  constructor <;> simp [doubledLiouvilleEnergy, ThermalCopy.sign]
 
 /-- The positive KMS condition is formally satisfied. -/
 theorem positiveKMS_valid :

@@ -28,6 +28,10 @@ namespace ZornMatrix
 
 open InfoGeometry.Canonical.SplitOctonionClassificationCore.ZornMatrix
 
+/-- Scalar Zorn elements are scalar multiples of the identity. -/
+def IsScalar (x : InfoGeometry.Canonical.ZornMatrix R) : Prop :=
+  ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)
+
 @[simp] theorem a_sub (x y : InfoGeometry.Canonical.ZornMatrix R) :
     (x - y).a = x.a - y.a := by
   rfl
@@ -195,6 +199,37 @@ theorem exists_nonzero_commutator_of_not_scalar
         InfoGeometry.Canonical.ZornMatrix.dot,
         InfoGeometry.Canonical.ZornMatrix.cross] using hcoord'
     exact hAB (sub_eq_zero.mp hcoord'').symm
+
+/-- A non-scalar Zorn element has a nonzero associator witness. -/
+theorem exists_nonzero_associator_of_not_scalar
+    {x : InfoGeometry.Canonical.ZornMatrix R}
+    (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :
+    ∃ y z : InfoGeometry.Canonical.ZornMatrix R,
+      SplitOctonionClassificationCore.ZornMatrix.associator (R := R) x y z ≠ 0 := by
+  exact SplitOctonionClassificationCore.ZornMatrix.nonzero_associator_of_not_scalar
+    (R := R) x hx
+
+/-- The commutant of the explicit Zorn carrier collapses to scalars. -/
+theorem commutant_eq_scalars
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hcomm : ∀ y : InfoGeometry.Canonical.ZornMatrix R,
+      SplitOctonionClassificationCore.ZornMatrix.commutator (R := R) x y = 0) :
+    IsScalar (R := R) x := by
+  by_contra hx
+  rcases exists_nonzero_commutator_of_not_scalar (R := R) (x := x) hx with
+    ⟨y, hy⟩
+  exact hy (hcomm y)
+
+/-- The left nucleus of the explicit Zorn carrier collapses to scalars. -/
+theorem left_nucleus_eq_scalars
+    (x : InfoGeometry.Canonical.ZornMatrix R)
+    (hnuc : ∀ y z : InfoGeometry.Canonical.ZornMatrix R,
+      SplitOctonionClassificationCore.ZornMatrix.associator (R := R) x y z = 0) :
+    IsScalar (R := R) x := by
+  by_contra hx
+  rcases exists_nonzero_associator_of_not_scalar (R := R) (x := x) hx with
+    ⟨y, z, hyz⟩
+  exact hyz (hnuc y z)
 
 end ZornMatrix
 

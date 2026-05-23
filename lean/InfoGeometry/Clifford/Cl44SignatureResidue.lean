@@ -125,11 +125,10 @@ def etaShadow : Int :=
   rfl
 
 /--
-This module proves only the count-level eta shadow.  It does not construct an
-analytic eta invariant.
+This module proves only the count-level eta shadow.
 -/
-theorem no_analytic_eta_invariant_claim : True :=
-  trivial
+theorem no_analytic_eta_invariant_claim : etaShadow = 2 :=
+  etaShadow_split44_to_lorentz31
 
 /-! ## D4 half-spinor count shadow -/
 

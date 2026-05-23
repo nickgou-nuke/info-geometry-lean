@@ -28,9 +28,13 @@ lemma map_smul_gauge
 lemma same_ray_map
     (A : DoubledSpace E →L[ℝ] DoubledSpace E)
     {v w : DoubledSpace E} :
-    same_ray v w → same_ray (A v) (A w) := by
-  rintro ⟨a, ha, rfl⟩
-  refine ⟨a, ha, by simp⟩
+    sameRaySetoid.r v w → sameRaySetoid.r (A v) (A w) := by
+  intro h
+  rcases (same_ray_iff_gauge (v := v) (w := w)).mpr h with ⟨a, ha, rfl⟩
+  have h' : same_ray (A v) (A (a • v)) := by
+    refine ⟨a, ha, ?_⟩
+    simp
+  exact (same_ray_iff_gauge (v := A v) (w := A (a • v))).mp h'
 
 /-- Descent of a linear map to the pointed projective space. -/
 def projectiveMap

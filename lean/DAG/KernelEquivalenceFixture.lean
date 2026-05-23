@@ -8,10 +8,10 @@ def twoB : Nat := 2
 
 def three : Nat := 3
 
-theorem trueA : True := by
-  trivial
+theorem twoA_eq_twoB : twoA = twoB := by
+  rfl
 
-theorem trueB : True := by
-  trivial
+theorem three_ne_twoA : three ≠ twoA := by
+  decide
 
 end DAG.KernelEquivalenceFixture

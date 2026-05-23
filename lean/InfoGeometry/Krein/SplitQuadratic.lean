@@ -11,12 +11,45 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 local notation "H₂" => DoubledSpace E
 
+/-- The split/Krein carrier used by the quadratic layer. -/
+abbrev SplitKreinSpace := H₂
+
+/-- The split quadratic form `q(x) = [x, x]_J`. -/
+noncomputable def qform (u : SplitKreinSpace (E := E)) : ℝ :=
+  KreinSpace.kreinInner (H := H₂) u u
+
+/-- A vector is null when its split quadratic form vanishes. -/
+def IsNull (u : SplitKreinSpace (E := E)) : Prop :=
+  qform (E := E) u = 0
+
+/-- A vector is positive when its split quadratic form is positive. -/
+def IsPositive (u : SplitKreinSpace (E := E)) : Prop :=
+  0 < qform (E := E) u
+
+/-- A vector is negative when its split quadratic form is negative. -/
+def IsNegative (u : SplitKreinSpace (E := E)) : Prop :=
+  qform (E := E) u < 0
+
 /--
 The split quadratic potential on the doubled/Krein carrier.
 Unlike the Euclidean convex case, this potential is indefinite.
 -/
 noncomputable def potential (u : H₂) : ℝ :=
   (1 / 2 : ℝ) * KreinSpace.kreinInner (H := H₂) u u
+
+@[simp] theorem potential_eq_half_qform (u : H₂) :
+    potential (E := E) u = (1 / 2 : ℝ) * qform (E := E) u := rfl
+
+/-- Nullness is equivalent to vanishing potential. -/
+theorem isNull_iff_potential_eq_zero (u : H₂) :
+    IsNull (E := E) u ↔ potential (E := E) u = 0 := by
+  constructor
+  · intro hu
+    unfold IsNull qform potential at *
+    nlinarith
+  · intro hu
+    unfold IsNull qform potential at *
+    nlinarith
 
 /-- The gradient is the concrete fundamental symmetry action on doubled space. -/
 noncomputable def grad (u : H₂) : H₂ :=

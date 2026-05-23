@@ -93,6 +93,17 @@ theorem SupportedLightray.square_zero
     L.N * L.N = 0 :=
   L.toIncidentLightray.square_zero_of_orthogonal L.orthogonal
 
+/--
+Name-level alias for the closed supported-incidence theorem:
+a supported arrow between orthogonal idempotent sectors is square-zero.
+-/
+theorem supported_lightray_square_zero
+    {A : Type*} [Semiring A]
+    {src tgt : Diamond A}
+    (L : SupportedLightray A src tgt) :
+    L.N * L.N = 0 :=
+  L.square_zero
+
 /-! ## Unit conjugation preserves sectors -/
 
 /-- Ring-level unit conjugation. -/

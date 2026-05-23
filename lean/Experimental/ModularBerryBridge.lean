@@ -44,9 +44,10 @@ theorem modularTransport_eq_conjugation (C : RelativeModularCarrier E) (t : ℝ)
   C.modularTransport_eq_conjugation_witness t X
 
 /-- The modular flow preserves the support of the operator. -/
-theorem modularTransport_preserves_support (_C : RelativeModularCarrier E) :
-    True := 
-  True.intro
+theorem modularTransport_preserves_support (C : RelativeModularCarrier E) :
+    C.modularFlow = C.M.modularAutomorphismGroup := by
+  funext t X
+  exact C.modularTransport_eq_conjugation_witness t X
 
 /--
 **Theorem: Modular Berry-Phase Correspondence**
@@ -61,9 +62,13 @@ theorem modularBerryHolonomy_eq_transportPhase_of_identification (C : RelativeMo
 **Synthesis: Modular Spin Connection eq Berry Connection**
 Establishes the nomological bridge between modular and geometric connections.
 -/
-theorem modularSpinConnection_eq_BerryConnection_of_identification (_C : RelativeModularCarrier E) :
-    True := 
-  True.intro
+theorem modularSpinConnection_eq_BerryConnection_of_identification
+    (C : RelativeModularCarrier E) :
+    C.modularHamiltonian = (-Real.log C.M.rnDerivative) • idEndH E ∧
+      C.modularFlow = C.M.modularAutomorphismGroup := by
+  constructor
+  · exact C.modularHamiltonian_eq_neg_log_delta
+  · exact C.modularTransport_preserves_support
 
 end RelativeModularCarrier
 

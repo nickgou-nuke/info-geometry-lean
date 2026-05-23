@@ -292,9 +292,7 @@ critical parameter is often `p = 1/2`.
 This `Prop` records the shape of the conjecture for `k = 0`.
 -/
 def HomologicalPercolationDualityStatement (d k : ℕ) (_hk : k + 1 ≤ d) : Prop :=
-  ∃ (p_c : ℝ), 0 < p_c ∧ p_c < 1 ∧
-    -- In the self-dual case, the threshold equals 1/2.
-    ∀ _hself_dual : True, p_c = 1 / 2
+  ∃ (p_c : ℝ), 0 < p_c ∧ p_c < 1 ∧ p_c = 1 / 2
 
 end Percolation
 

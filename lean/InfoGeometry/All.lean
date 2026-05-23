@@ -191,6 +191,7 @@ import InfoGeometry.Algebraic.PrimonKreinRingConstraints
 import InfoGeometry.Algebraic.SplitMajoranaOPEBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Canonical.SplitAlbert
 import InfoGeometry.Application.STUOperatorBridge
 import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge

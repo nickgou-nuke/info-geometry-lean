@@ -147,6 +147,55 @@ theorem concrete_majorana_swap_is_phs_invariant :
   simpa [IsPHSInvariant] using
     (InfoGeometry.Canonical.TomitaKreinNilpotentAtom.concrete_majorana_swap_is_phs_invariant (E := E))
 
+/-- The concrete Majorana swap is exactly the modular swap on the doubled carrier. -/
+theorem concrete_majorana_swap_eq_modular_j :
+    concreteCARCreation (E := E) + concreteCARAnnihilation (E := E)
+      = modular_j (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : InfoGeometry.Krein.to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.add_apply,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled,
+      add_comm]
+
+/-- The modular swap is Hilbert-self-adjoint on the doubled carrier. -/
+theorem modular_j_isHilbertSelfAdjoint :
+    ContinuousLinearMap.adjoint (modular_j (E := E)) = modular_j (E := E) := by
+  symm
+  refine (ContinuousLinearMap.eq_adjoint_iff (A := modular_j (E := E))
+    (B := modular_j (E := E))).2 ?_
+  intro u v
+  simp [modular_j_apply, WithLp.prod_inner_apply, add_comm]
+
+/-- The modular swap is Krein-skew-adjoint on the doubled carrier. -/
+theorem modular_j_isKreinSkewAdjoint :
+    KreinSpace.IsKreinSkewAdjoint (H := DoubledSpace E) (modular_j (E := E)) := by
+  rw [KreinSpace.isKreinSkewAdjoint_iff]
+  intro u v
+  rcases u with ⟨x, ξ⟩
+  rcases v with ⟨y, η⟩
+  change
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        (modular_j (E := E) (InfoGeometry.Krein.to_doubled x ξ))
+        (InfoGeometry.Krein.to_doubled y η)
+      + KreinSpace.kreinInner (H := DoubledSpace E)
+          (InfoGeometry.Krein.to_doubled x ξ)
+          (modular_j (E := E) (InfoGeometry.Krein.to_doubled y η))
+      = 0
+  repeat rw [InfoGeometry.Krein.krein_inner_prod_l2]
+  simp [modular_j_to_doubled, add_comm, add_left_comm, add_assoc]
+
+/-- The concrete Majorana boundary swap is Krein-skew-adjoint. -/
+theorem concrete_majorana_swap_isKreinSkewAdjoint :
+    KreinSpace.IsKreinSkewAdjoint (H := DoubledSpace E)
+      (concreteCARCreation (E := E) + concreteCARAnnihilation (E := E)) := by
+  rw [concrete_majorana_swap_eq_modular_j (E := E)]
+  exact modular_j_isKreinSkewAdjoint (E := E)
+
 end Core
 
 end InfoGeometry.Canonical.MajoranaPHSZeroMode

@@ -38,39 +38,37 @@ noncomputable def projectiveClassToTwistor
       (positiveMeasureToEuclidean_ne_zero (α := α) μ) (hNull μ))
     (by
       intro μ₁ μ₂ hray
-      rcases hray with ⟨c, hc, rfl⟩
+      rcases hray with ⟨c, rfl⟩
       let v : EuclideanSpace ℝ α := positiveMeasureToEuclidean (α := α) μ₁
       have hv0 : v ≠ 0 := positiveMeasureToEuclidean_ne_zero (α := α) μ₁
-      have hcv0 : c • v ≠ 0 := smul_ne_zero (ne_of_gt hc) hv0
+      have hcv0 : c.1 • v ≠ 0 := smul_ne_zero (ne_of_gt c.2) hv0
       have hscaled :
-          positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁) = c • v := by
-        change positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁) =
-          c • positiveMeasureToEuclidean (α := α) μ₁
-        exact positiveMeasureToEuclidean_scale (α := α) c hc μ₁
+          positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ₁) = c.1 • v := by
+        simpa [v] using positiveMeasureToEuclidean_scale (α := α) c.1 c.2 μ₁
       have hmkScaled :
           Projectivization.mk ℝ
-              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
-              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁))
+              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ₁))
+              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ₁))
             =
-          Projectivization.mk ℝ (c • v) hcv0 := by
+          Projectivization.mk ℝ (c.1 • v) hcv0 := by
         apply (Projectivization.mk_eq_mk_iff ℝ
-          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
-          (c • v)
-          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁))
+          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ₁))
+          (c.1 • v)
+          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ₁))
           hcv0).2
         refine ⟨1, ?_⟩
         simpa [one_smul] using hscaled.symm
       have hmkRay :
-          Projectivization.mk ℝ (c • v) hcv0 = Projectivization.mk ℝ v hv0 := by
-        apply (Projectivization.mk_eq_mk_iff ℝ (c • v) v hcv0 hv0).2
-        refine ⟨Units.mk0 c (ne_of_gt hc), ?_⟩
+          Projectivization.mk ℝ (c.1 • v) hcv0 = Projectivization.mk ℝ v hv0 := by
+        apply (Projectivization.mk_eq_mk_iff ℝ (c.1 • v) v hcv0 hv0).2
+        refine ⟨Units.mk0 c.1 (ne_of_gt c.2), ?_⟩
         simp
       have hmkGoal :
           Projectivization.mk ℝ v hv0
             =
           Projectivization.mk ℝ
-              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
-              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁)) := by
+              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ₁))
+              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ₁)) := by
         exact hmkRay.symm.trans hmkScaled.symm
       apply Subtype.ext
       simpa [twistorMk, v] using hmkGoal
@@ -112,11 +110,11 @@ lemma projectiveClassToTwistor_mk_normalize
     projectiveClassToTwistor (α := α) Q hNull
       (Quotient.mk _ μ) := by
   have hsame : PositiveMeasure.SameRay μ (PositiveMeasure.normalize (α := α) (R := ℝ) μ) := by
-    refine ⟨(PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹,
-      inv_pos.mpr (PositiveMeasure.Z_pos (α := α) (R := ℝ) μ), ?_⟩
+    refine ⟨(⟨(PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹,
+      inv_pos.mpr (PositiveMeasure.Z_pos (α := α) (R := ℝ) μ)⟩ : InfoGeometry.Stratum.PosGauge), ?_⟩
     ext a
-    rw [PositiveMeasure.scale_apply, PositiveMeasure.normalize_apply]
-    field_simp [PositiveMeasure.Z_ne_zero (α := α) (R := ℝ) μ]
+    change (PositiveMeasure.Z (α := α) (R := ℝ) μ)⁻¹ * μ a = μ a / PositiveMeasure.Z (α := α) (R := ℝ) μ
+    rw [div_eq_mul_inv]
   exact (congrArg (projectiveClassToTwistor (α := α) Q hNull) (Quotient.sound hsame)).symm
 
 /-- Twistor bridge is invariant under `normalizeOnProj`. -/

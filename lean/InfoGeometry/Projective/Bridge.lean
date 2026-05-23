@@ -133,43 +133,45 @@ lemma positiveMeasureToConeInteriorRay_sameRay
     (h : PositiveMeasure.SameRay μ ν) :
     positiveMeasureToConeInteriorRay (α := α) μ
       = positiveMeasureToConeInteriorRay (α := α) ν := by
-  rcases h with ⟨c, hc, rfl⟩
+  rcases h with ⟨c, rfl⟩
   apply Subtype.ext
   let v : EuclideanSpace ℝ α := positiveMeasureToEuclidean (α := α) μ
   have hv0 : v ≠ 0 := positiveMeasureToEuclidean_ne_zero (α := α) μ
-  have hcv0 : c • v ≠ 0 := smul_ne_zero (ne_of_gt hc) hv0
+  have hcpos : 0 < c.1 := c.2
+  have hcv0 : c.1 • v ≠ 0 := smul_ne_zero (ne_of_gt hcpos) hv0
   have hscaled :
-      positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ) = c • v := by
-    simpa [v] using positiveMeasureToEuclidean_scale (α := α) c hc μ
+      positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ)
+        = c.1 • v := by
+    simpa [v] using positiveMeasureToEuclidean_scale (α := α) (c : ℝ) hcpos μ
   have hmkScaled :
       Projectivization.mk ℝ
-          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ))
-          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ))
+          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ))
         =
-      Projectivization.mk ℝ (c • v) hcv0 := by
+      Projectivization.mk ℝ (c.1 • v) hcv0 := by
     apply (Projectivization.mk_eq_mk_iff ℝ
-      (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ))
-      (c • v)
-      (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ))
+      (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+      (c.1 • v)
+      (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ))
       hcv0).2
     refine ⟨1, ?_⟩
     simpa [one_smul] using hscaled.symm
   have hmkRay :
-      Projectivization.mk ℝ (c • v) hcv0 = Projectivization.mk ℝ v hv0 := by
-    apply (Projectivization.mk_eq_mk_iff ℝ (c • v) v hcv0 hv0).2
-    refine ⟨Units.mk0 c (ne_of_gt hc), ?_⟩
+      Projectivization.mk ℝ (c.1 • v) hcv0 = Projectivization.mk ℝ v hv0 := by
+    apply (Projectivization.mk_eq_mk_iff ℝ (c.1 • v) v hcv0 hv0).2
+    refine ⟨Units.mk0 c.1 (ne_of_gt hcpos), ?_⟩
     simp
   have hmkGoal :
       Projectivization.mk ℝ v hv0 =
         Projectivization.mk ℝ
-          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ))
-          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ)) := by
+          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ)) := by
     calc
-      Projectivization.mk ℝ v hv0 = Projectivization.mk ℝ (c • v) hcv0 := hmkRay.symm
+      Projectivization.mk ℝ v hv0 = Projectivization.mk ℝ (c.1 • v) hcv0 := hmkRay.symm
       _ =
         Projectivization.mk ℝ
-          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ))
-          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ)) := hmkScaled.symm
+          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c.1 c.2 μ))
+          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c.1 c.2 μ)) := hmkScaled.symm
   simpa [v] using hmkGoal
 
 /--
@@ -215,7 +217,7 @@ lemma projectiveClassToConeInteriorStateSpace_injective :
     have hmul' : 0 < (u : ℝ) * ν i := by simpa [hcoord] using μ.pos i
     simpa [mul_comm] using hmul'
   have hu_pos : 0 < (u : ℝ) := pos_of_mul_pos_right hmul (le_of_lt (ν.pos i))
-  refine ⟨(u : ℝ)⁻¹, inv_pos.mpr hu_pos, ?_⟩
+  refine ⟨⟨(u : ℝ)⁻¹, inv_pos.mpr hu_pos⟩, ?_⟩
   ext a
   have hcoordA : (u : ℝ) * ν a = μ a := by
     have := congrArg (fun x => x a) hu
@@ -223,7 +225,7 @@ lemma projectiveClassToConeInteriorStateSpace_injective :
   have hsolve' : (u : ℝ)⁻¹ * μ a = ν a :=
     (inv_mul_eq_iff_eq_mul₀ (Units.ne_zero u)).2 hcoordA.symm
   have hsolve : ν a = (u : ℝ)⁻¹ * μ a := hsolve'.symm
-  simpa [PositiveMeasure.scale_apply] using hsolve
+  simpa [PositiveMeasure.scale_apply] using hsolve.symm
 
 lemma projectiveClassToConeInteriorStateSpace_surjective :
     Function.Surjective (projectiveClassToConeInteriorStateSpace (α := α)) := by

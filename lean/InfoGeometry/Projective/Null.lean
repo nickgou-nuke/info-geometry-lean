@@ -54,8 +54,9 @@ def IsGradePlusRay : ProjectiveState E → Prop :=
     (fun v : DoubledSpace E => inGradePlus v)
     (by
       intro v w hvw
-      rcases hvw with ⟨a, ha, rfl⟩
-      exact propext (inGradePlus_smul_iff ha v).symm)
+      rcases hvw with ⟨a, h⟩
+      rw [← h]
+      exact propext (inGradePlus_smul_iff (Units.ne_zero a) w))
 
 /-- Grade `-` rays, well-defined on the projective quotient. -/
 def IsGradeMinusRay : ProjectiveState E → Prop :=
@@ -63,8 +64,9 @@ def IsGradeMinusRay : ProjectiveState E → Prop :=
     (fun v : DoubledSpace E => inGradeMinus v)
     (by
       intro v w hvw
-      rcases hvw with ⟨a, ha, rfl⟩
-      exact propext (inGradeMinus_smul_iff ha v).symm)
+      rcases hvw with ⟨a, h⟩
+      rw [← h]
+      exact propext (inGradeMinus_smul_iff (Units.ne_zero a) w))
 
 @[simp] lemma IsGradePlusRay_projectivize (v : DoubledSpace E) :
     IsGradePlusRay (projectivize v) ↔ inGradePlus v := Iff.rfl
@@ -122,8 +124,9 @@ def IsMetricNullRay : ProjectiveState E → Prop :=
     (fun v : DoubledSpace E => IsMetricNull v)
     (by
       intro v w hvw
-      rcases hvw with ⟨a, ha, rfl⟩
-      exact propext (isMetricNull_smul_iff ha v).symm)
+      rcases hvw with ⟨a, h⟩
+      rw [← h]
+      exact propext (isMetricNull_smul_iff (Units.ne_zero a) w))
 
 @[simp] lemma IsMetricNullRay_projectivize (v : DoubledSpace E) :
     IsMetricNullRay (projectivize v) ↔ IsMetricNull v := Iff.rfl

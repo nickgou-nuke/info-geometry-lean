@@ -814,6 +814,7 @@ import InfoGeometry.Canonical.BosonizationTheorem
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SUSYCentralChargeBridge
+import InfoGeometry.Canonical.SupercurrentBridge
 import InfoGeometry.External.Virasoro.Sugawara
 import InfoGeometry.Canonical.BosonFermionFockIntertwiner
 import InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy

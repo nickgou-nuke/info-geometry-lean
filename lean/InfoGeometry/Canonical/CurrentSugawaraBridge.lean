@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 
 /-!
 # Current-to-Sugawara bridge
@@ -16,6 +17,20 @@ namespace InfoGeometry.Canonical.CurrentSugawaraBridge
 
 open Filter
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
+open VirasoroProject
+
+/-- Index reversal on the abelian current algebra. -/
+noncomputable def currentFlip
+    {𝕜 : Type*} [Field 𝕜] :
+    VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜 ≃ₗ[𝕜] VirasoroProject.AbelianLieAlgebraOn ℤ 𝕜 :=
+  Finsupp.mapDomain.linearEquiv (M := 𝕜) (R := 𝕜) (Equiv.neg ℤ)
+
+@[simp] lemma currentFlip_jgen
+    {𝕜 : Type*} [Field 𝕜] (n : ℤ) :
+    currentFlip (𝕜 := 𝕜) (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 n) =
+      VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 (-n) := by
+  simpa [currentFlip, VirasoroProject.AbelianLieAlgebraOn.jgen_eq_single] using
+    (Finsupp.mapDomain_single (f := Equiv.neg ℤ) (a := n) (b := (1 : 𝕜)))
 
 /-- Algebraic conjugation on endomorphisms by a linear equivalence. -/
 noncomputable def conjugateEnd
@@ -131,6 +146,40 @@ theorem currentSugawaraRepresentation_cgen_conjugate
   rw [currentSugawaraRepresentation_central]
   simp
 
+/-- The cocycle sign flip on basis generators. -/
+@[simp] theorem heisenbergCocycle_flip_jgen
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜] (k l : ℤ) :
+    VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle 𝕜
+        (currentFlip (𝕜 := 𝕜) (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 k))
+        (currentFlip (𝕜 := 𝕜) (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 l)) =
+      - VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle 𝕜
+        (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 k)
+        (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 l) := by
+  rw [currentFlip_jgen, currentFlip_jgen]
+  by_cases h : k + l = 0
+  · have h' : (-k) + (-l) = 0 := by omega
+    simp [VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h, h']
+  · have h' : (-k) + (-l) ≠ 0 := by
+      intro hneg
+      apply h
+      omega
+    simp [VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h, h']
+
 end CurrentHeisenbergRep
+
+/--
+Semantic adapter for the quantum Ricci scalar on the raw CAR mode algebra.
+
+This exposes the Heisenberg central term safely without asserting a false
+Lichnerowicz `J_m^2` identity, respecting the Sugawara owner theorem boundary.
+-/
+def quantumRicciScalar {A : Type*} [Ring A] (C : RawCARModeAlgebra A) : A :=
+  completedCentral C
+
+/-- The Heisenberg central term is exposed as the quantum Ricci scalar. -/
+theorem heisenberg_central_term_is_quantumRicciScalar
+    {A : Type*} [Ring A] (C : RawCARModeAlgebra A) :
+    completedCentral C = quantumRicciScalar C := by
+  rfl
 
 end InfoGeometry.Canonical.CurrentSugawaraBridge

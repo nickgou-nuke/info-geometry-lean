@@ -13,6 +13,7 @@ import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 import InfoGeometry.Arithmetic.MobiusPrimonParity
 import InfoGeometry.Arithmetic.MobiusFermionBosonization
 import InfoGeometry.Arithmetic.PrimeBosonFermionGas
+import InfoGeometry.Arithmetic.PrimeMajoranaLocalMode
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite

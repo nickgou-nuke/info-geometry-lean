@@ -360,37 +360,37 @@ theorem mk_of_state_kms
     without requiring an explicit `state` argument. The `state` field is defined
     definitionally as `kms.state`, and the `kms_state_eq` packet is `rfl`.
 -/
-  @[rep_depth operator]
-  theorem mk_of_kms
+@[rep_depth operator]
+theorem mk_of_kms
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
-    (beta : \u211d)
-    (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
-    \u2203 ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+    (beta : ℝ)
+      (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
       ctx.state = kms.state := by
-  refine \u27e8{
+  refine ⟨{
     logContext := logContext,
     beta := beta,
     state := kms.state,
     kms := kms,
-    kms_state_eq := rfl}, rfl\u27e9
-  
-  /--
-  The `of_minimal` constructor converts a `MinimalSouriauTomitaKMSContext` into a
-  full `SouriauTomitaKMSContext`. It eliminates the explicit `kms_state_eq` packet
-  by defining `state` as `kms.state` definitionally. This provides a hypothesis‑free
-  route for downstream callers while preserving the original API via a thin wrapper.
-  -/
-  @[rep_depth operator]
-  theorem mk_of_minimal
-    (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
-    : \u2203 ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
-        ctx.state = C.state := by
-    refine \u27e8{
-      logContext := C.logContext,
-      beta := C.beta,
-      state := C.state,
-      kms := C.kms,
-      kms_state_eq := rfl}, rfl\u27e9
+    kms_state_eq := rfl}, rfl⟩
+
+/--
+The `of_minimal` constructor converts a `MinimalSouriauTomitaKMSContext` into a
+full `SouriauTomitaKMSContext`. It eliminates the explicit `kms_state_eq` packet
+by defining `state` as `kms.state` definitionally. This provides a hypothesis‑free
+route for downstream callers while preserving the original API via a thin wrapper.
+-/
+@[rep_depth operator]
+theorem mk_of_minimal
+    (C : MinimalSouriauTomitaKMSContext) :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = MinimalSouriauTomitaKMSContext.state C := by
+  refine ⟨{
+    logContext := C.logContext,
+    beta := C.beta,
+    state := MinimalSouriauTomitaKMSContext.state C,
+    kms := C.kms,
+    kms_state_eq := rfl}, rfl⟩
 /-- Direct constructor: build a `SouriauTomitaKMSContext` from a `KMSState`
     without carrying an explicit `state` field or `kms_state_eq` hypothesis.
     The state is derived from `kms.state` definitionally, removing the explicit
@@ -497,7 +497,7 @@ structure MinimalSouriauTomitaKMSContext where
 
 namespace MinimalSouriauTomitaKMSContext
 
-variable (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+variable (C : MinimalSouriauTomitaKMSContext)
 
 /-- The algebraic state is read directly from the KMS witness. -/
 @[rep_depth operator]
@@ -507,7 +507,7 @@ def state : AlgebraicState (H := H) :=
 /-- State equality between the minimal context and its underlying KMS state. -/
 @[rep_depth operator]
 theorem state_eq_kms_state :
-  C.state = C.kms.state :=
+  MinimalSouriauTomitaKMSContext.state C = C.kms.state :=
   rfl
 
 /-- Constructor theorem for the narrowed KMS lane with no explicit `state` packet. -/
@@ -516,8 +516,8 @@ theorem mk_of_kms
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
     (beta : ℝ)
     (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
-    ∃ ctx : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
-      ctx.state = kms.state := by
+    ∃ ctx : MinimalSouriauTomitaKMSContext,
+      MinimalSouriauTomitaKMSContext.state ctx = kms.state := by
   refine ⟨{
     logContext := logContext,
     beta := beta,
@@ -541,7 +541,8 @@ def toSouriauTomitaKMSContext :
 /-- The compatibility adapter reads back the same algebraic state definitionally. -/
 @[rep_depth operator]
 theorem toSouriauTomitaKMSContext_state_eq :
-    C.toSouriauTomitaKMSContext.state = C.state :=
+    (MinimalSouriauTomitaKMSContext.toSouriauTomitaKMSContext C).state =
+      MinimalSouriauTomitaKMSContext.state C :=
   rfl
 
 /-

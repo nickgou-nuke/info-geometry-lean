@@ -770,6 +770,7 @@ import InfoGeometry.Canonical.SplitCliffordHeadPolarization
 import InfoGeometry.Canonical.SplitCliffordHeadProjectors
 import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Canonical.SplitCliffordCurrentLift
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
 import InfoGeometry.Canonical.StandardFormCore

@@ -19,6 +19,10 @@ the finite atom a mode-indexed *zero-mode seed*:
 This is the honest interface before a real bosonization/current-mode theorem:
 it provides names `u_{±,n}` and `ε_n` without pretending that the nonzero modes
 or normal-ordering anomaly have been derived.
+
+Repository policy boundary:
+this file does not construct the affine current witness
+`J : Int → V →ₗ[𝕜] V` with truncation/commutator laws.
 -/
 
 namespace InfoGeometry.Canonical.ModeExtensionBoundary

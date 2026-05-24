@@ -41,11 +41,4 @@ def packagedHeisenbergWitness
   trunc := hTruncLift
   comm := hCommLift
 
-/--
-Source-side theorem debt:
-construct `Jlift`, `hTruncLift`, and `hCommLift` from split carrier/current/Wick
-data.  This file does not postulate that transport.
--/
-def SourceToEndomorphismTransportRequired : Prop := Prop
-
 end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg

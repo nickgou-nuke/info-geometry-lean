@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Canonical.SplitCliffordCurrentLift
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 
 /-!
@@ -17,6 +18,7 @@ namespace InfoGeometry.Canonical.BosonizationTheorem
 
 open InfoGeometry.Canonical.BoundaryMajoranaCircuitModel
 open InfoGeometry.Canonical.BosonizationConstructiveCurrent
+open InfoGeometry.Canonical.SplitCliffordCurrentLift
 open InfoGeometry.Canonical.CurrentSugawaraBridge
 
 section Core
@@ -66,13 +68,30 @@ theorem bosonizationTheorem
         + if m + n = 0 then
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
           else 0) ∧
-    (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+      (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
       (1 : V →ₗ[𝕜] V)) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · simpa using (BoundaryMajoranaCircuitModel.boundaryMajoranaCircuitModel (E := E))
   · exact bosonization_constructive_heisenberg_current C m n
   · exact H.sugawaraStressMode_virasoroBracket m n
   · exact H.currentSugawaraRepresentation_central
+
+/--
+Packaged boundary theorem for the split completion and the Heisenberg/Sugawara
+bridge.
+
+This is the strongest theorem surface currently supported by the repository:
+the split completion has a current boundary package, and any supplied
+Heisenberg current datum canonically yields the external Sugawara morphism
+package.
+-/
+theorem splitClifford_current_boundary_and_sugawara_morphism
+    (H : CurrentHeisenbergRep 𝕜 V) :
+    Nonempty SplitCliffordCurrentMorphism ∧
+    Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
+  constructor
+  · exact splitCompletion_to_current_morphism
+  · exact CurrentSugawaraMorphism.nonempty H
 
 end Core
 

@@ -32,6 +32,10 @@ def vacuum : LocalFock :=
 def occupied : LocalFock :=
   (0, 1)
 
+/-- Endomorphisms of the local real Fock mode. -/
+abbrev LocalEnd : Type :=
+  LocalFock →ₗ[ℝ] LocalFock
+
 /--
 Creation/exterior operator `ε`.
 
@@ -73,8 +77,13 @@ def dMajorana : LocalFock →ₗ[ℝ] LocalFock :=
   epsilon - iota
 
 /-- Local parity operator `Π = c d`. -/
-def parityOp : LocalFock →ₗ[ℝ] LocalFock :=
+def parityOp : LocalEnd :=
   cMajorana.comp dMajorana
+
+/-- Operator anticommutator `{A,B} = AB + BA`. -/
+def anticommutator
+    (A B : LocalEnd) : LocalEnd :=
+  A.comp B + B.comp A
 
 /-! ## Exterior / contraction CAR -/
 
@@ -108,6 +117,16 @@ theorem epsilon_iota_anticomm :
   rw [add_comm]
   exact iota_epsilon_anticomm
 
+/-- The local CAR law in anticommutator form `{ε, ι} = 1`. -/
+theorem epsilon_iota_anticomm' :
+    anticommutator epsilon iota = 1 := by
+  simpa [anticommutator] using epsilon_iota_anticomm
+
+/-- The local CAR law in anticommutator form `{ι, ε} = 1`. -/
+theorem iota_epsilon_anticomm' :
+    anticommutator iota epsilon = 1 := by
+  simpa [anticommutator] using iota_epsilon_anticomm
+
 /-! ## Split-Majorana Clifford relations -/
 
 /-- `c² = 1`. Hence `{c,c} = 2`. -/
@@ -118,6 +137,16 @@ theorem cMajorana_sq :
   rcases x with ⟨x0, x1⟩
   ext <;> simp [cMajorana, epsilon, iota]
 
+/-- `{c,c} = 2`. -/
+theorem cMajorana_cMajorana_anticomm :
+    anticommutator cMajorana cMajorana = (2 : ℝ) • (1 : LocalEnd) := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [anticommutator, cMajorana, epsilon, iota]
+  · ring_nf
+  · ring_nf
+
 /-- `d² = -1`. Hence `{d,d} = -2`. -/
 theorem dMajorana_sq :
     dMajorana.comp dMajorana = -1 := by
@@ -126,6 +155,16 @@ theorem dMajorana_sq :
   rcases x with ⟨x0, x1⟩
   ext <;> simp [dMajorana, epsilon, iota]
 
+/-- `{d,d} = -2`. -/
+theorem dMajorana_dMajorana_anticomm :
+    anticommutator dMajorana dMajorana = -((2 : ℝ) • (1 : LocalEnd)) := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [anticommutator, dMajorana, epsilon, iota]
+  · ring_nf
+  · ring_nf
+
 /-- `c d + d c = 0`. -/
 theorem cMajorana_dMajorana_anticomm :
     cMajorana.comp dMajorana + dMajorana.comp cMajorana = 0 := by
@@ -133,6 +172,12 @@ theorem cMajorana_dMajorana_anticomm :
   intro x
   rcases x with ⟨x0, x1⟩
   ext <;> simp [cMajorana, dMajorana, epsilon, iota]
+
+/-- `d c + c d = 0`. -/
+theorem dMajorana_cMajorana_anticomm :
+    dMajorana.comp cMajorana + cMajorana.comp dMajorana = 0 := by
+  rw [add_comm]
+  exact cMajorana_dMajorana_anticomm
 
 /-- Number operator acts as projection to the occupied component. -/
 theorem numberOp_apply

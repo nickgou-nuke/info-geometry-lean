@@ -360,20 +360,37 @@ theorem mk_of_state_kms
     without requiring an explicit `state` argument. The `state` field is defined
     definitionally as `kms.state`, and the `kms_state_eq` packet is `rfl`.
 -/
-@[rep_depth operator]
-theorem mk_of_kms
+  @[rep_depth operator]
+  theorem mk_of_kms
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
-    (beta : ℝ)
+    (beta : \u211d)
     (kms : KMSState (H := H) logContext.souriauAdditiveModularFlow beta) :
-    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+    \u2203 ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
       ctx.state = kms.state := by
-  refine ⟨{
+  refine \u27e8{
     logContext := logContext,
     beta := beta,
     state := kms.state,
     kms := kms,
-    kms_state_eq := rfl}, rfl⟩
-
+    kms_state_eq := rfl}, rfl\u27e9
+  
+  /--
+  The `of_minimal` constructor converts a `MinimalSouriauTomitaKMSContext` into a
+  full `SouriauTomitaKMSContext`. It eliminates the explicit `kms_state_eq` packet
+  by defining `state` as `kms.state` definitionally. This provides a hypothesis‑free
+  route for downstream callers while preserving the original API via a thin wrapper.
+  -/
+  @[rep_depth operator]
+  theorem mk_of_minimal
+    (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+    : \u2203 ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+        ctx.state = C.state := by
+    refine \u27e8{
+      logContext := C.logContext,
+      beta := C.beta,
+      state := C.state,
+      kms := C.kms,
+      kms_state_eq := rfl}, rfl\u27e9
 /-- Direct constructor: build a `SouriauTomitaKMSContext` from a `KMSState`
     without carrying an explicit `state` field or `kms_state_eq` hypothesis.
     The state is derived from `kms.state` definitionally, removing the explicit

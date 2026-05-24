@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Data.Complex.Basic
 
 /-!
 # InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
@@ -43,71 +43,59 @@ structure RelativeDeterminantScatteringPacket where
   /-- Predicate that `s` is a scattering-side resonance/pole (owner-specified notion). -/
   IsScatteringResonance : ℂ → Prop
 
-  /-- Supplied self-adjointness/symmetry witness for the spectral generator lane. -/
-  selfAdjointWitness : Prop
+  /-- Supplied self-adjointness/symmetry law for the spectral generator lane. -/
+  selfAdjointLaw : Prop
 
-  /-- Proof/witness of the supplied self-adjointness/symmetry law. -/
-  selfAdjoint_valid : selfAdjointWitness
-
-  /-- Supplied witness that the relative determinant has a continuation in scope. -/
-  meromorphicContinuationWitness : Prop
-
-  /-- Proof/witness of the continuation statement. -/
-  meromorphicContinuation_valid : meromorphicContinuationWitness
+  /-- Supplied continuation law for the relative determinant lane. -/
+  meromorphicContinuationLaw : Prop
 
   /--
   Owner-supplied determinant/scattering compatibility law.
 
   Typical meaning: a relative determinant identity written through the scattering channel.
   -/
-  determinant_scattering_identity_law : Prop
-
-  /-- Proof/witness of determinant/scattering compatibility. -/
-  determinant_scattering_identity_valid : determinant_scattering_identity_law
+  determinant_scattering_identity : Prop
 
   /--
   Owner-supplied pole/zero conversion law between determinant and scattering channels.
 
   This is the place where spectral conversion obligations live; not proved here.
   -/
-  pole_zero_conversion_law : Prop
+  pole_zero_conversion : Prop
 
-  /-- Proof/witness of the pole/zero conversion law. -/
-  pole_zero_conversion_valid : pole_zero_conversion_law
+  /-- Guard law: this packet is not an unconditional RH theorem. -/
+  no_unconditional_RH_claim : Prop
 
-  /-- Guard: this packet is not an unconditional RH theorem. -/
-  no_unconditional_RH_claim_guard : Type
-
-  /-- Guard: no self-adjoint MBK determinant identity is proved in this file. -/
-  no_selfAdjoint_MBK_identity_claim_guard : Type
+  /-- Guard law: no self-adjoint MBK determinant identity is proved in this file. -/
+  no_selfAdjoint_MBK_identity_claim : Prop
 
 namespace RelativeDeterminantScatteringPacket
 
 variable (P : RelativeDeterminantScatteringPacket.{uH, uScat})
 
 /-- Re-export: supplied self-adjointness/symmetry witness. -/
-theorem selfAdjoint_law : P.selfAdjointWitness :=
-  P.selfAdjoint_valid
+def selfAdjoint_law : Prop :=
+  P.selfAdjointLaw
 
 /-- Re-export: supplied meromorphic continuation witness. -/
-theorem meromorphicContinuation_law : P.meromorphicContinuationWitness :=
-  P.meromorphicContinuation_valid
+def meromorphicContinuation_law : Prop :=
+  P.meromorphicContinuationLaw
 
 /-- Re-export: supplied determinant/scattering compatibility witness. -/
-theorem determinant_scattering_identity : P.determinant_scattering_identity_law :=
-  P.determinant_scattering_identity_valid
+def determinant_scattering_identity_law : Prop :=
+  P.determinant_scattering_identity
 
 /-- Re-export: supplied pole/zero conversion witness. -/
-theorem pole_zero_conversion : P.pole_zero_conversion_law :=
-  P.pole_zero_conversion_valid
+def pole_zero_conversion_law : Prop :=
+  P.pole_zero_conversion
 
 /-- Guard re-export: no unconditional RH theorem is asserted here. -/
-def noUnconditionalRHGuard : Type :=
-  P.no_unconditional_RH_claim_guard
+def noUnconditionalRHGuard : Prop :=
+  P.no_unconditional_RH_claim
 
 /-- Guard re-export: no self-adjoint MBK determinant identity is asserted here. -/
-def noSelfAdjointMBKIdentityGuard : Type :=
-  P.no_selfAdjoint_MBK_identity_claim_guard
+def noSelfAdjointMBKIdentityGuard : Prop :=
+  P.no_selfAdjoint_MBK_identity_claim
 
 end RelativeDeterminantScatteringPacket
 

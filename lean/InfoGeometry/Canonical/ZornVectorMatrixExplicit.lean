@@ -219,6 +219,28 @@ theorem lowerVectorZorn_mul_upperVectorZorn (x y : Vec3) :
     try fin_cases i <;>
     simp
 
+/--
+The upper/lower rank-one blocks have scalar anticommutator: this is the explicit
+finite Zorn analogue of the contraction readback.
+-/
+theorem upperLower_add_lowerUpper_scalar (x y : Vec3) :
+    zornMul (upperVectorZorn x) (lowerVectorZorn y) +
+      zornMul (lowerVectorZorn y) (upperVectorZorn x) =
+    scalarZorn (dot3 x y) := by
+  rw [upperVectorZorn_mul_lowerVectorZorn, lowerVectorZorn_mul_upperVectorZorn]
+  ext i <;> simp [scalarZorn, zornMk, dot3_comm]
+
+/--
+The upper/lower rank-one block commutator is diagonal with opposite scalar
+entries `± dot3 x y`.
+-/
+theorem upperLower_sub_lowerUpper_diag (x y : Vec3) :
+    zornMul (upperVectorZorn x) (lowerVectorZorn y) -
+      zornMul (lowerVectorZorn y) (upperVectorZorn x) =
+    zornMk (dot3 x y) (-(dot3 x y)) 0 0 := by
+  rw [upperVectorZorn_mul_lowerVectorZorn, lowerVectorZorn_mul_upperVectorZorn]
+  ext i <;> simp [zornMk, dot3_comm]
+
 theorem zornTrace_conj (z : ZornCoord) :
     zornTrace (zornConj z) = zornTrace z := by
   rcases z with ⟨a, b, x, y⟩

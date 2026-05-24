@@ -91,6 +91,20 @@ structure BoundedFlowInvariantStateWitness
     ∀ t : ℝ, ∀ A : EndH,
       B.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) = B.state.eval A
 
+namespace BoundedFlowInvariantStateWitness
+
+variable {B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)}
+
+/-- Recover the real-time flow-invariance proposition from the witness packet. -/
+@[rep_depth thermo]
+theorem flow_invariant_of_witness
+    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
+    ∀ t : ℝ, ∀ A : EndH,
+      B.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) = B.state.eval A :=
+  W.flow_invariant
+
+end BoundedFlowInvariantStateWitness
+
 /--
 Minimal bounded KMS condition bridge.
 

@@ -26,6 +26,11 @@ Boundary:
 This module supplies only bridge contexts and projection theorems.  It does not
 claim a full coadjoint-orbit Souriau theory or an infinite-dimensional
 metriplectic flow.
+
+Repository policy boundary:
+this file defines abstract Souriau bridge mechanics only. It does not
+instantiate concrete `G₂(2)` / `Spin(5,5)` coadjoint-orbit thermodynamic
+models.
 -/
 
 namespace InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
@@ -173,5 +178,58 @@ theorem onsager_total_entropy_nonnegative :
   C.totalEntropyProduction_nonneg
 
 end MetriplecticContext
+
+/-! ## Coadjoint Casimir-entropy invariance surface (Erlangen operator stage) -/
+
+/--
+Proof-carrying symmetry package for the coadjoint entropy lane.
+
+This keeps the geometry-as-symmetry-invariants doctrine explicit:
+
+* `moment_equivariant` records the chosen state-to-coadjoint transport law.
+* `entropy_casimir_invariant` records Casimir-style entropy invariance on `Gdual`.
+* downstream theorems can therefore read entropy invariance directly on state orbits.
+-/
+@[rep_depth transport]
+structure CoadjointEntropySymmetryContext
+    (Sym G Gdual State : Type*) where
+  data : CoadjointMomentMapData G Gdual State
+  stateAction : Sym → State → State
+  coadjointAction : Sym → Gdual → Gdual
+  moment_equivariant :
+    ∀ s : Sym, ∀ x : State,
+      data.moment (stateAction s x) = coadjointAction s (data.moment x)
+  entropy : Gdual → ℝ
+  entropy_casimir_invariant :
+    ∀ s : Sym, ∀ ξ : Gdual,
+      entropy (coadjointAction s ξ) = entropy ξ
+
+namespace CoadjointEntropySymmetryContext
+
+variable {Sym G Gdual State : Type*}
+variable (C : CoadjointEntropySymmetryContext Sym G Gdual State)
+
+/-- Entropy is constant along the coadjoint symmetry orbit by the Casimir law. -/
+@[rep_depth transport]
+theorem entropy_invariant_on_coadjoint_orbit
+    (s : Sym) (ξ : Gdual) :
+    C.entropy (C.coadjointAction s ξ) = C.entropy ξ :=
+  C.entropy_casimir_invariant s ξ
+
+/--
+Entropy is constant on state orbits when transported through the moment map.
+
+This is the theorem-facing bridge from state-space symmetry action to
+coadjoint Casimir-style entropy invariance.
+-/
+@[rep_depth transport]
+theorem entropy_invariant_on_state_orbit
+    (s : Sym) (x : State) :
+    C.entropy (C.data.moment (C.stateAction s x)) =
+      C.entropy (C.data.moment x) := by
+  rw [C.moment_equivariant s x]
+  exact C.entropy_casimir_invariant s (C.data.moment x)
+
+end CoadjointEntropySymmetryContext
 
 end InfoGeometry.Canonical.SouriauFenchelOnsagerBridge

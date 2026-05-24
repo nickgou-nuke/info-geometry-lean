@@ -8,6 +8,11 @@ Honest split-octonion composition surface.
 This file provides the `ZornCompositionDatum` interface that wraps
 the explicit H¹ rigidity identity (the Zorn determinant is multiplicative).
 It separates quadratic null-preservation from projective automorphism status.
+
+Repository policy boundary:
+this is not ordinary associative matrix determinant multiplicativity
+(and not a Binet-Cauchy theorem surface). It is the split-octonion/Zorn
+composition identity for a custom nonassociative product.
 -/
 
 namespace InfoGeometry.Algebra.Zorn

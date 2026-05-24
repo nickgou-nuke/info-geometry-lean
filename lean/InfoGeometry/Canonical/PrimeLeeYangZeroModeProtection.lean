@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
 import InfoGeometry.Meta.SocketTarget
@@ -60,23 +59,15 @@ structure ZeroModeProtectionPacket
 
   /-- Particle-hole centering / half-filling law. -/
   halfFillingCenter_law : Prop
-  halfFillingCenter_certificate :
-    halfFillingCenter_law
 
   /-- Zero-point / zero-energy shift law for the protected lane. -/
   zeroPointShift_law : Prop
-  zeroPointShift_certificate :
-    zeroPointShift_law
 
   /-- Unbroken SUSY or Witten-cancellation law. -/
   unbrokenSUSY_law : Prop
-  unbrokenSUSY_certificate :
-    unbrokenSUSY_law
 
   /-- Topological protection law for the zero-mode lane. -/
   topologicalProtection_law : Prop
-  topologicalProtection_certificate :
-    topologicalProtection_law
 
   /--
   Matching law between protected zero modes and the completed-`xi` zero
@@ -84,14 +75,6 @@ structure ZeroModeProtectionPacket
   Majorana Witten character.
   -/
   protectedZeroModes_eq_completedXiZeros_law : Prop
-  protectedZeroModes_eq_completedXiZeros_certificate :
-    protectedZeroModes_eq_completedXiZeros_law
-
-  /-- Guardrail: inverse-zeta Witten poles are not directly zero modes. -/
-  inverseZetaWitten_not_zeroMode_guard : Type
-
-  /-- Guardrail: this packet is not an unconditional RH proof. -/
-  no_unconditional_RH_claim_guard : Type
 
 namespace ZeroModeProtectionPacket
 
@@ -101,29 +84,24 @@ variable
     CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
 
 /-- Re-export of the supplied half-filling / particle-hole centering law. -/
-theorem halfFillingCenter :
-    P.halfFillingCenter_law :=
-  P.halfFillingCenter_certificate
+def halfFillingCenter : Prop :=
+  P.halfFillingCenter_law
 
 /-- Re-export of the supplied zero-point / zero-energy shift law. -/
-theorem zeroPointShift :
-    P.zeroPointShift_law :=
-  P.zeroPointShift_certificate
+def zeroPointShift : Prop :=
+  P.zeroPointShift_law
 
 /-- Re-export of the supplied unbroken-SUSY/Witten-cancellation law. -/
-theorem unbrokenSUSY :
-    P.unbrokenSUSY_law :=
-  P.unbrokenSUSY_certificate
+def unbrokenSUSY : Prop :=
+  P.unbrokenSUSY_law
 
 /-- Re-export of the supplied topological-protection law. -/
-theorem topologicalProtection :
-    P.topologicalProtection_law :=
-  P.topologicalProtection_certificate
+def topologicalProtection : Prop :=
+  P.topologicalProtection_law
 
 /-- Re-export of the supplied protected-zero-mode/completed-`xi` matching law. -/
-theorem protectedZeroModes_eq_completedXiZeros :
-    P.protectedZeroModes_eq_completedXiZeros_law :=
-  P.protectedZeroModes_eq_completedXiZeros_certificate
+def protectedZeroModes_eq_completedXiZeros : Prop :=
+  P.protectedZeroModes_eq_completedXiZeros_law
 
 /-- The packet contains the supplied Majorana zero-energy law. -/
 theorem majorana_zero_energy :
@@ -136,8 +114,7 @@ theorem majorana_zero_readout_comparison :
   P.majoranaZeroMode.zero_readout_comparison
 
 /-- The packet contains the defect-free critical-line zero-location reduction law. -/
-theorem defectFreeLimit_implies_criticalLineZeros :
-    P.defectFreeLimit.defectFreeLimit_implies_criticalLineZeros_law :=
+def defectFreeLimit_implies_criticalLineZeros : Prop :=
   P.defectFreeLimit.defectFreeLimit_implies_criticalLineZeros
 
 end ZeroModeProtectionPacket

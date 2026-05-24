@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Algebra.GroupWithZero.Defs
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.Basic
 
 /-!
 # Odd nilpotent finite parity core

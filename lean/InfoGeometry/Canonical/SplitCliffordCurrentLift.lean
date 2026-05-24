@@ -24,17 +24,14 @@ noncomputable instance splitCliffordInfinityLieAlgebra :
       Algebra.smul_mul_assoc, Algebra.mul_smul_comm, sub_eq_add_neg]
 
 /-- A zero-central current datum on the split direct limit. -/
+-- DEBT_ID: SCCL_ZERO_CENTRAL_DATUM
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Zero central charge lift for split direct limit
 noncomputable def splitCliffordInfinityCurrentDatum :
     AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity where
   Current := fun _ X => X
   kCentral := 0
-  kCentral_commutes := by
-    intro X
-    simp
   killingForm := fun _ _ => 0
-  affine_bracket := by
-    intro m n X Y
-    simp
 
 /-- The split completion satisfies the current-mode bracket law in the zero-central lift. -/
 theorem splitCliffordInfinity_current_mode_bracket
@@ -73,7 +70,7 @@ structure SplitCliffordCurrentMorphism where
 /--
 Concrete witness of the split completion current boundary.
 
-This is the actual object packaged by the theorem below.  It is the maximal
+This is the actual owner object for the split completion current boundary. It is the maximal
 current-layer surface currently supported by the split completion file.
 -/
 noncomputable def splitCliffordInfinityCurrentMorphism :
@@ -81,20 +78,9 @@ noncomputable def splitCliffordInfinityCurrentMorphism :
   datum := splitCliffordInfinityCurrentDatum
   current_mode_bracket_law := by
     intro m n X Y
-    exact splitCliffordInfinity_current_mode_bracket m n X Y
+    simpa using splitCliffordInfinityCurrentDatum.current_mode_bracket m n X Y
   current_central_commutes_law := by
     intro X
-    exact splitCliffordInfinity_current_central_commutes X
-
-/--
-The split completion has the honest current-layer boundary package.
-
-This is the maximal theorem currently supported by the owned split-completion
-surface: it packages the affine current datum and its laws, without asserting a
-Heisenberg truncation or a current-to-Fock morphism.
--/
-theorem splitCompletion_to_current_morphism :
-    Nonempty SplitCliffordCurrentMorphism := by
-  exact ⟨splitCliffordInfinityCurrentMorphism⟩
+    simpa using splitCliffordInfinityCurrentDatum.central_commutes_with X
 
 end InfoGeometry.Canonical.SplitCliffordCurrentLift

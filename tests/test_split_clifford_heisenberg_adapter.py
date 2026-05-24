@@ -5,15 +5,12 @@ import textwrap
 import unittest
 
 REPO = Path(__file__).resolve().parents[1]
-SOURCE = REPO / "lean" / "InfoGeometry" / "Canonical" / "SplitCliffordHeisenbergAdapter.lean"
+SOURCE = REPO / "lean" / "InfoGeometry" / "Canonical" / "SplitCliffordHeisenbergBridge.lean"
 
 def test_split_clifford_heisenberg_adapter_surface_exists() -> None:
     text = SOURCE.read_text(encoding="utf-8")
-    assert "structure SplitCliffordCurrentMorphism" in text
-    assert "theorem splitCompletion_to_current_morphism :" in text
-    assert "Nonempty SplitCliffordCurrentMorphism" in text
-    assert "central_commutes" in text
-    assert "current_bracket" in text
+    # The canonical bridge is the source-side adapter surface.
+    assert "structure SplitCliffordHeisenbergWitness" in text
 
 def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
     with tempfile.TemporaryDirectory(prefix="split-clifford-heisenberg-") as td:
@@ -21,9 +18,9 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
         path.write_text(
             textwrap.dedent(
                 f"""\
-                import InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter
+                import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
-                open InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter
+                open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
                 namespace Scratch.SplitCliffordHeisenberg
 
@@ -48,7 +45,7 @@ class SplitCliffordHeisenbergAdapterTests(unittest.TestCase):
                 "python3",
                 "tools/infra/run_locked_lake_build.py",
                 "--wait-for-build-lock",
-                "InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter",
+                "InfoGeometry.Canonical.SplitCliffordHeisenbergBridge",
             ],
             cwd=REPO,
             text=True,

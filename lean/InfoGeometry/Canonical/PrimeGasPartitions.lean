@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Algebraic.SplitSuperGeometry

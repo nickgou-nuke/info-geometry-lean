@@ -16,6 +16,9 @@ import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
+import InfoGeometry.Clifford.AlbertBottConformalBridge
+import InfoGeometry.Clifford.ThreeDHurwitz
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Clifford.MatrixCompat
 import InfoGeometry.Clifford.NeutralPhaseSpaceCore
@@ -26,11 +29,17 @@ import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Clifford.STAOperators
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Clifford.SplitQ11Equivariance
+import InfoGeometry.Clifford.SplitQ11Sesquilinear
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
+import InfoGeometry.Clifford.SplitCl44Complexification
+import InfoGeometry.Clifford.SplitCliffordBoundaryPacket
+import InfoGeometry.Clifford.Cl44GenerationRotation
+import InfoGeometry.Clifford.Cl44C8Comparison
+import InfoGeometry.Clifford.Cl44QuaternionSplit
 import InfoGeometry.Clifford.Cl44SignatureResidue
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower

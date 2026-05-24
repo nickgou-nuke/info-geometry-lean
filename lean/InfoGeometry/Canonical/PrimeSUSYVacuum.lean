@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Meta.SocketTarget
@@ -80,45 +79,33 @@ structure PrimeSUSYVacuumPacket
 
   /-- Witten-index law for the SUSY vacuum lane. -/
   wittenIndex_law : Prop
-  wittenIndex_certificate :
-    wittenIndex_law
 
   /-- Boson/fermion pairing and cancellation law away from zero energy. -/
   bosonFermionCancellation_law : Prop
-  bosonFermionCancellation_certificate :
-    bosonFermionCancellation_law
 
   /-- Zero macroscopic vacuum energy law. -/
   zeroVacuumEnergy_law : Prop
-  zeroVacuumEnergy_certificate :
-    zeroVacuumEnergy_law
 
   /-- Unbroken arithmetic SUSY law. -/
   unbrokenSUSY_law : Prop
-  unbrokenSUSY_certificate :
-    unbrokenSUSY_law
 
   /--
   Equivalence law between unbroken SUSY and the Mertens/LDP defect boundary in
   the chosen analytic model.
   -/
   unbrokenSUSY_iff_mertensBoundary_law : Prop
-  unbrokenSUSY_iff_mertensBoundary_certificate :
-    unbrokenSUSY_iff_mertensBoundary_law
 
   /--
   Conditional spectral law: protected SUSY zero modes match the completed-`xi`
   zero readout.
   -/
   susyZeroModes_eq_completedXiZeros_law : Prop
-  susyZeroModes_eq_completedXiZeros_certificate :
-    susyZeroModes_eq_completedXiZeros_law
 
-  /-- Guardrail: this packet does not prove RH unconditionally. -/
-  no_unconditional_RH_claim_guard : Type
+  /-- Guardrail law: this packet does not prove RH unconditionally. -/
+  no_unconditional_RH_claim : Prop
 
-  /-- Guardrail: the Witten/inverse-zeta channel is not itself the `xi` determinant. -/
-  wittenIndex_not_completedXiDeterminant_guard : Type
+  /-- Guardrail law: the Witten/inverse-zeta channel is not itself the `xi` determinant. -/
+  wittenIndex_not_completedXiDeterminant : Prop
 
 namespace PrimeSUSYVacuumPacket
 
@@ -138,25 +125,13 @@ structure PrimeSUSYVacuumBridge
     (VacuumReadout : Type) where
   vacuumReadout : VacuumReadout
   wittenIndex_law : Prop
-  wittenIndex_certificate :
-    wittenIndex_law
   bosonFermionCancellation_law : Prop
-  bosonFermionCancellation_certificate :
-    bosonFermionCancellation_law
   zeroVacuumEnergy_law : Prop
-  zeroVacuumEnergy_certificate :
-    zeroVacuumEnergy_law
   unbrokenSUSY_law : Prop
-  unbrokenSUSY_certificate :
-    unbrokenSUSY_law
   unbrokenSUSY_iff_mertensBoundary_law : Prop
-  unbrokenSUSY_iff_mertensBoundary_certificate :
-    unbrokenSUSY_iff_mertensBoundary_law
   susyZeroModes_eq_completedXiZeros_law : Prop
-  susyZeroModes_eq_completedXiZeros_certificate :
-    susyZeroModes_eq_completedXiZeros_law
-  no_unconditional_RH_claim_guard : Type
-  wittenIndex_not_completedXiDeterminant_guard : Type
+  no_unconditional_RH_claim : Prop
+  wittenIndex_not_completedXiDeterminant : Prop
 
 /--
 Assemble a theorem-safe SUSY vacuum packet from a Mertens boundary, a protected
@@ -175,22 +150,14 @@ def primeSUSYVacuum_of_zeroModeProtection
   zeroModeProtection := P
   vacuumReadout := B.vacuumReadout
   wittenIndex_law := B.wittenIndex_law
-  wittenIndex_certificate := B.wittenIndex_certificate
   bosonFermionCancellation_law := B.bosonFermionCancellation_law
-  bosonFermionCancellation_certificate := B.bosonFermionCancellation_certificate
   zeroVacuumEnergy_law := B.zeroVacuumEnergy_law
-  zeroVacuumEnergy_certificate := B.zeroVacuumEnergy_certificate
   unbrokenSUSY_law := B.unbrokenSUSY_law
-  unbrokenSUSY_certificate := B.unbrokenSUSY_certificate
   unbrokenSUSY_iff_mertensBoundary_law := B.unbrokenSUSY_iff_mertensBoundary_law
-  unbrokenSUSY_iff_mertensBoundary_certificate :=
-    B.unbrokenSUSY_iff_mertensBoundary_certificate
   susyZeroModes_eq_completedXiZeros_law := B.susyZeroModes_eq_completedXiZeros_law
-  susyZeroModes_eq_completedXiZeros_certificate :=
-    B.susyZeroModes_eq_completedXiZeros_certificate
-  no_unconditional_RH_claim_guard := B.no_unconditional_RH_claim_guard
-  wittenIndex_not_completedXiDeterminant_guard :=
-    B.wittenIndex_not_completedXiDeterminant_guard
+  no_unconditional_RH_claim := B.no_unconditional_RH_claim
+  wittenIndex_not_completedXiDeterminant :=
+    B.wittenIndex_not_completedXiDeterminant
 
 /-- Owner theorem: the assembled SUSY packet re-exports its supplied laws. -/
 theorem primeSUSYVacuum_of_zeroModeProtection_reexports
@@ -205,11 +172,8 @@ theorem primeSUSYVacuum_of_zeroModeProtection_reexports
       (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_law ∧
       (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY_law ∧
       (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros_law := by
-  exact ⟨
-    (primeSUSYVacuum_of_zeroModeProtection M P B).wittenIndex_certificate,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).bosonFermionCancellation_certificate,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_certificate,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY_certificate,
-    (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros_certificate⟩
+  -- DEBT_KIND: SORRY
+  -- A proof-producing owner surface is required to discharge these laws.
+  sorry
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

@@ -99,6 +99,9 @@ def divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff :=
   CP1DrazinModel.divisorAxiom
 
 /-- Trivial Frobenius self-duality packet over the product coefficient algebra. -/
+-- DEBT_ID: CP1DND_TRIVIAL_FROBENIUS
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial Frobenius placeholder for smoke model
 def frobenius : FrobeniusSelfDualPacket Algebra where
   pairing := fun _ _ => 0
   pairing_mul_left_eq_pairing_mul_right := by
@@ -110,6 +113,9 @@ def frobenius : FrobeniusSelfDualPacket Algebra where
     rfl
 
 /-- Trivial residue block packet for the product smoke model. -/
+-- DEBT_ID: CP1DND_TRIVIAL_RESIDUE
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial residue block placeholder for smoke model
 def residueBlocks : DivisionResidueBlockPacket where
   Block := Unit
   DivisionCarrier := fun _ => Unit

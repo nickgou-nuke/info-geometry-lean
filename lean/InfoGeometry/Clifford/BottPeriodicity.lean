@@ -84,4 +84,22 @@ theorem cl44_as_splitBottStep_eq_owner :
     cl44_as_splitBottStep = clsplit_succ_equiv 3 :=
   rfl
 
+/--
+`Cl(5,5)` is the next split Bott step over `Cl(4,4)` in the current tower.
+
+This is the concrete tower-level suspension step available in the repository.
+-/
+@[rep_depth krein]
+noncomputable def cl55_as_splitBottStep :
+    SplitBottClifford 5
+      ≃ₐ[ℝ]
+        (CliffordAlgebra.evenOdd Q11 ᵍ⊗[ℝ]
+          CliffordAlgebra.evenOdd (SplitBottQuad 4)) :=
+  splitBottStep 4
+
+@[rep_depth krein]
+theorem cl55_as_splitBottStep_eq_owner :
+    cl55_as_splitBottStep = clsplit_succ_equiv 4 :=
+  rfl
+
 end InfoGeometry.Clifford.BottPeriodicity

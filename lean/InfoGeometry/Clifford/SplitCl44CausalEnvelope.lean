@@ -1,7 +1,9 @@
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Canonical.Cl44ConformalNormalization
+import InfoGeometry.Projective.NullBoundary
 import InfoGeometry.Twistor.NullProjective
+import InfoGeometry.Twistor.PenroseTwistor
 
 /-!
 # Split `Cl(4,4)` causal envelope
@@ -34,6 +36,7 @@ namespace InfoGeometry.Clifford.SplitCl44CausalEnvelope
 
 open scoped TensorProduct
 
+open InfoGeometry.Projective
 open InfoGeometry.Clifford.BottPeriodicity
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Clifford.ClNNBilinear
@@ -65,6 +68,51 @@ abbrev SplitCl44Algebra := Cl44
 noncomputable abbrev ProjectiveNullBoundary44 : Type _ :=
   InfoGeometry.Twistor.TwistorSpace (K := ℝ) (V := SplitCl44Carrier) SplitCl44Quad
 
+/--
+The split `(4,4)` quadratic carrier as a generic projective-null datum.
+
+This is the shared quotient pattern used by the repo's twistor and Zorn
+projective-null layers.
+-/
+@[rep_depth krein]
+noncomputable def splitCl44ProjectiveNullBoundaryDatum :
+    ProjectiveNullBoundaryDatum ℝ ℝ SplitCl44Carrier where
+  q := SplitCl44Quad
+  zero := 0
+  scale := fun u v => (u : ℝ) • v
+  scale_one := by
+    intro v
+    simp
+  scale_mul := by
+    intro u v w
+    simp [smul_smul]
+  null_scale := by
+    intro u v
+    constructor
+    · intro h
+      have hmul : ((u : ℝ) * (u : ℝ)) * SplitCl44Quad v = 0 := by
+        simpa [SplitCl44Quad.map_smul] using h
+      rcases mul_eq_zero.mp hmul with hsq | hq
+      · exfalso
+        have hu : (u : ℝ) ≠ 0 := Units.ne_zero u
+        exact (mul_ne_zero hu hu) hsq
+      · exact hq
+    · intro h
+      simp [SplitCl44Quad.map_smul, h]
+  scale_ne_zero := by
+    intro u v hv
+    exact smul_ne_zero (Units.ne_zero u) hv
+
+/-- The split `(4,4)` projective null reps in the shared quotient layer. -/
+@[rep_depth krein]
+abbrev splitCl44ProjectiveNullRep :=
+  ProjectiveNullBoundaryDatum.NullRep splitCl44ProjectiveNullBoundaryDatum
+
+/-- The split `(4,4)` projective null boundary in the shared quotient layer. -/
+@[rep_depth krein]
+abbrev splitCl44ProjectiveNullSpace :=
+  ProjectiveNullBoundaryDatum.ProjectiveNullBoundary splitCl44ProjectiveNullBoundaryDatum
+
 /-- `Cl(4,4)` is the fourth split Bott stage of the recursive tower. -/
 @[rep_depth krein]
 theorem splitCl44_is_fourth_split_bott_stage :
@@ -86,6 +134,47 @@ noncomputable def projectiveNullBoundary44_mk
     (v : SplitCl44Carrier) (hv : v ≠ 0) (hQ : SplitCl44Quad v = 0) :
     ProjectiveNullBoundary44 :=
   InfoGeometry.Twistor.twistorMk SplitCl44Quad v hv hQ
+
+/-
+Honest boundary debt:
+the repo still lacks a source theorem identifying the Penrose twistor carrier
+`ℂ^4` with the split `Cl(4,4)` carrier in a way that preserves the null
+quadratic readout.  The next theorem states exactly that missing model as
+explicit debt, rather than hiding it behind a wrapper.
+-/
+theorem penroseTwistor_has_splitCl44_null_model :
+    ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
+      Function.Injective L ∧
+        ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
+          SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z := by
+  sorry
+
+/--
+If the missing Penrose-to-split `Cl(4,4)` null model is supplied, any nonzero
+Penrose null representative yields a projective split-null boundary point.
+-/
+noncomputable def penroseNullTwistor_toProjectiveNullBoundary44
+    (z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier)
+    (hz : z ≠ 0)
+    (hnull : InfoGeometry.Twistor.PenroseTwistor.helicity z = 0)
+    (hmodel :
+      ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
+        Function.Injective L ∧
+          ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
+            SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z) :
+    ProjectiveNullBoundary44 := by
+  classical
+  let L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier :=
+    Classical.choose hmodel
+  have hLin : Function.Injective L := (Classical.choose_spec hmodel).1
+  have hQ :
+      ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
+        SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z :=
+    (Classical.choose_spec hmodel).2
+  have hLz_ne_zero : L z ≠ 0 := by
+    intro hzero
+    exact hz <| hLin <| by simpa using hzero
+  exact projectiveNullBoundary44_mk (L z) hLz_ne_zero (by simpa [hQ z] using hnull)
 
 /-! ## Built-in null directions in the split carrier -/
 

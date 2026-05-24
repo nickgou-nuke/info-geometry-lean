@@ -409,6 +409,23 @@ noncomputable def souriauFisherMetricMatrix
   let R := souriauFisherResponseMatrix M T
   !![R.betaBeta, R.betaMu; R.muBeta, R.muMu]
 
+/--
+Finite Souriau-Koszul-Fisher tensor.
+
+This is the Hessian readout surface used by the Souriau Fisher/Koszul
+language.  It is definitionally the finite Souriau-Fisher response packet.
+-/
+@[rep_depth transport]
+noncomputable def souriauKoszulFisherTensor
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) : ResponseMatrix2 :=
+  souriauFisherResponseMatrix M T
+
+@[simp] theorem souriauKoszulFisherTensor_eq_responseMatrix
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) :
+    souriauKoszulFisherTensor M T = souriauFisherResponseMatrix M T := rfl
+
 /-- The `ββ` Souriau-Fisher response is the shifted-energy variance. -/
 @[rep_depth transport]
 theorem souriauFisher_betaBeta_eq_varianceShift
@@ -482,6 +499,41 @@ theorem souriauFisherResponseMatrix_symmetric
     (souriauFisherResponseMatrix M T).Symmetric := by
   simpa [souriauFisherResponseMatrix] using
     responseMatrix_symmetric_of_hessian (toGrandCanonicalTwoParam M) T.beta T.mu
+
+/--
+Finite Souriau-Koszul-Fisher Hessian packet.
+
+The tensor readout is explicitly the second-derivative packet of the finite
+Massieu potential in the owner grand-canonical coordinates, rewritten in
+Souriau notation.
+-/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_hessian_packet
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) :
+    (souriauKoszulFisherTensor M T).betaBeta =
+        varianceShift (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).muMu =
+        T.beta ^ (2 : ℕ) *
+          varianceNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).betaMu =
+        meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).muBeta =
+        meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).Symmetric := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_betaBeta_eq_varianceShift M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_muMu_eq_beta_sq_varianceNumber M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_betaMu_eq_meanNumber_sub_beta_mul_covariance M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_muBeta_eq_meanNumber_sub_beta_mul_covariance M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisherResponseMatrix_symmetric M T
 
 /-- Matrix-level Souriau-Fisher symmetry, i.e. finite Onsager reciprocity. -/
 @[rep_depth transport]
@@ -668,6 +720,112 @@ theorem souriauFisherOnsager_proof_packet
     souriauFisher_muBeta_eq_meanNumber_sub_beta_mul_covariance M T,
     souriauFisherResponseMatrix_symmetric M T,
     souriauEntropyProduction_nonneg_of_positiveSemidefinite M T hPSD xβ xμ⟩
+
+/-- Souriau-Koszul-Fisher symmetry: the finite Onsager shadow. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_symmetric
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) :
+    (souriauKoszulFisherTensor M T).Symmetric := by
+  simpa [souriauKoszulFisherTensor] using
+    souriauFisherResponseMatrix_symmetric M T
+
+/-- The Souriau-Koszul-Fisher tensor is positive semidefinite on `det ≥ 0`. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_positiveSemidefinite_of_det_nonneg
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature)
+    (hdet : 0 ≤ (souriauKoszulFisherTensor M T).det) :
+    (souriauKoszulFisherTensor M T).PositiveSemidefinite := by
+  simpa [souriauKoszulFisherTensor] using
+    souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg M T hdet
+
+/-- The inverse Souriau-Koszul-Fisher response packet is symmetric. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_inverseMetric_symmetric
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature) :
+    (souriauFisherInverseMetricResponse M T).Symmetric := by
+  simpa using souriauFisherInverseMetricResponse_symmetric M T
+
+/-- Right inverse law for the finite Souriau-Koszul-Fisher tensor on `det ≠ 0`. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_comp_inverseMetric_of_det_ne_zero
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature)
+    (hdet : (souriauKoszulFisherTensor M T).det ≠ 0) :
+    (souriauKoszulFisherTensor M T).compose
+        (souriauFisherInverseMetricResponse M T) =
+      ResponseMatrix2.identityMetric := by
+  simpa [souriauKoszulFisherTensor] using
+    souriauFisher_comp_inverseMetric_of_det_ne_zero M T hdet
+
+/-- Left inverse law for the finite Souriau-Koszul-Fisher tensor on `det ≠ 0`. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_inverseMetric_comp_of_det_ne_zero
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature)
+    (hdet : (souriauKoszulFisherTensor M T).det ≠ 0) :
+    (souriauFisherInverseMetricResponse M T).compose
+        (souriauKoszulFisherTensor M T) =
+      ResponseMatrix2.identityMetric := by
+  simpa [souriauKoszulFisherTensor] using
+    souriauFisher_inverseMetric_comp_of_det_ne_zero M T hdet
+
+/-- Souriau-Koszul-Fisher entropy production is nonnegative on `det ≥ 0`. -/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_entropyProduction_nonneg_of_det_nonneg
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature)
+    (hdet : 0 ≤ (souriauKoszulFisherTensor M T).det)
+    (xβ xμ : ℝ) :
+    0 ≤ (souriauKoszulFisherTensor M T).entropyProduction xβ xμ := by
+  simpa [souriauKoszulFisherTensor, souriauEntropyProduction] using
+    souriauEntropyProduction_nonneg_of_det_nonneg M T hdet xβ xμ
+
+/--
+Finite Souriau-Koszul-Fisher proof packet.
+
+This is the direct package form of the owned response-matrix content:
+
+* variance/covariance Hessian readout;
+* Onsager reciprocity;
+* positive-semidefinite gate from `det ≥ 0`;
+* entropy production nonnegativity on the same gate;
+* explicit inverse laws on the non-spinodal locus `det ≠ 0`.
+-/
+@[rep_depth transport]
+theorem souriauKoszulFisherTensor_proof_packet
+    [Fintype α] [Nonempty α]
+    (M : SouriauMomentMap α) (T : GeometricTemperature)
+    (hdet : 0 ≤ (souriauKoszulFisherTensor M T).det)
+    (xβ xμ : ℝ) :
+    (souriauKoszulFisherTensor M T).betaBeta =
+        varianceShift (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).muMu =
+        T.beta ^ (2 : ℕ) *
+          varianceNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).betaMu =
+        meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).muBeta =
+        meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+      ∧ (souriauKoszulFisherTensor M T).Symmetric
+      ∧ (souriauKoszulFisherTensor M T).PositiveSemidefinite
+      ∧ 0 ≤ (souriauKoszulFisherTensor M T).entropyProduction xβ xμ := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_betaBeta_eq_varianceShift M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_muMu_eq_beta_sq_varianceNumber M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_betaMu_eq_meanNumber_sub_beta_mul_covariance M T
+  · simpa [souriauKoszulFisherTensor] using
+      souriauFisher_muBeta_eq_meanNumber_sub_beta_mul_covariance M T
+  · exact souriauKoszulFisherTensor_symmetric M T
+  · exact souriauKoszulFisherTensor_positiveSemidefinite_of_det_nonneg M T hdet
+  · exact souriauKoszulFisherTensor_entropyProduction_nonneg_of_det_nonneg M T hdet xβ xμ
 
 /-- The `β` direction is conjugate to the shifted observable `E - μN`. -/
 @[rep_depth transport]

@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Tactic.Basic
 import InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
 
 /-!

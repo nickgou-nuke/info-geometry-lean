@@ -190,20 +190,12 @@ structure PrimeChainLargeDeviationWitness where
   rateFunction : ℝ → ℝ
 
   speed_tends_to_infinity_law : Prop
-  speed_tends_to_infinity_certificate :
-    speed_tends_to_infinity_law
 
   finiteCumulant_converges_law : Prop
-  finiteCumulant_converges_certificate :
-    finiteCumulant_converges_law
 
   rateFunction_is_legendre_law : Prop
-  rateFunction_is_legendre_certificate :
-    rateFunction_is_legendre_law
 
   largeDeviationPrinciple_law : Prop
-  largeDeviationPrinciple_certificate :
-    largeDeviationPrinciple_law
 
   /-- Guardrail: this LDP packet is not an RH proof or a Lee--Yang theorem. -/
   noRiemannHypothesisClaimGuard : Type*
@@ -215,26 +207,30 @@ variable (W : PrimeChainLargeDeviationWitness)
 /-- Re-export of the supplied speed-divergence law. -/
 @[bridge_target_tag]
 theorem speed_tends_to_infinity :
-    W.speed_tends_to_infinity_law :=
-  W.speed_tends_to_infinity_certificate
+    W.speed_tends_to_infinity_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Re-export of the supplied finite-cumulant convergence law. -/
 @[bridge_target_tag]
 theorem finiteCumulant_converges :
-    W.finiteCumulant_converges_law :=
-  W.finiteCumulant_converges_certificate
+    W.finiteCumulant_converges_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Re-export of the supplied Legendre/rate-function law. -/
 @[bridge_target_tag]
 theorem rateFunction_is_legendre :
-    W.rateFunction_is_legendre_law :=
-  W.rateFunction_is_legendre_certificate
+    W.rateFunction_is_legendre_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Re-export of the supplied large-deviation principle. -/
 @[bridge_target_tag]
 theorem largeDeviationPrinciple :
-    W.largeDeviationPrinciple_law :=
-  W.largeDeviationPrinciple_certificate
+    W.largeDeviationPrinciple_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 end PrimeChainLargeDeviationWitness
 

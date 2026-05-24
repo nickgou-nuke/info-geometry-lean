@@ -52,14 +52,14 @@ def concreteCrossProduct3 : CrossProduct3 ℝ where
 
 /-- The concrete Zorn multiplication on `ZornMatrix ℝ Vec3`. -/
 def mulZ (X Y : ZornMatrix ℝ) : ZornMatrix ℝ where
-  a := X.a * Y.a + dot3 X.v Y.w
-  b := X.b * Y.b + dot3 X.w Y.v
-  v := X.a • Y.v + Y.b • X.v - cross3 X.w Y.w
-  w := X.b • Y.w + Y.a • X.w + cross3 X.v Y.v
+  a := X.a * Y.a + dot3 X.x Y.y
+  b := X.b * Y.b + dot3 X.y Y.x
+  x := X.a • Y.x + Y.b • X.x - cross3 X.y Y.y
+  y := X.b • Y.y + Y.a • X.y + cross3 X.x Y.x
 
 /-- Coordinate transport into the explicit canonical carrier. -/
 def toCoord (X : ZornMatrix ℝ) : ZornCoord :=
-  (X.a, X.b, X.v, X.w)
+  (X.a, X.b, X.x, X.y)
 
 /-- The determinant on the concrete carrier agrees with the canonical norm. -/
 theorem detZ_eq_zornNorm (X : ZornMatrix ℝ) :

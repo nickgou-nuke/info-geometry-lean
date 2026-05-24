@@ -90,7 +90,7 @@ theorem splitClifford_current_boundary_and_sugawara_morphism
     Nonempty SplitCliffordCurrentMorphism ∧
     Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
   constructor
-  · exact splitCompletion_to_current_morphism
+  · exact ⟨splitCliffordInfinityCurrentMorphism⟩
   · exact CurrentSugawaraMorphism.nonempty H
 
 end Core

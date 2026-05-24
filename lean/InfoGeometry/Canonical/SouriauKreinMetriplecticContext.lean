@@ -732,6 +732,42 @@ theorem weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis :
     densityWeightLiftedDynamics, observableLieDerivation_apply]
 
 /--
+Coordinate-free two-operator Onsager packet.
+
+This packages the operatorial two-channel response in derivation language:
+
+* the metric lane is the symmetrized probe of the nested Lie derivation;
+* the skew lane is the probe of the bracket derivation;
+* the Weyl-covariant thermodynamic derivation splits into zero-weight and
+  phase-axis derivations.
+
+No coordinate derivative is used here.  The operators live on the doubled
+Krein carrier `EndH`.
+-/
+@[rep_depth transport]
+theorem operatorialTwoOperatorOnsagerDerivation_packet
+    (xForce yForce : ℝ) :
+    C.metricResponse =
+      (2 : ℝ)⁻¹ *
+        (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
+          + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A))
+      ∧ C.curvatureResponse =
+        C.P.probe
+          (observableLieDerivation (E := E) ⁅C.X, C.Y⁆ C.A)
+      ∧ C.weylCovariantThermodynamicDerivation =
+          C.zeroWeightThermodynamicDerivation
+            + C.weight • C.phaseAxisThermodynamicDerivation
+      ∧ C.operatorialEntropyProduction xForce yForce =
+          C.diagonalMetricResponse * xForce ^ (2 : ℕ)
+            + 2 * C.mixedMetricResponseXY * xForce * yForce
+              + C.yDiagonalMetricResponse * yForce ^ (2 : ℕ) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact C.metricResponse_eq_half_probe_observableLieHessian_add_swap
+  · exact C.curvatureResponse_eq_probe_bracketDerivation
+  · exact C.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis
+  · exact C.operatorialEntropyProduction_eq_quadratic xForce yForce
+
+/--
 Dilation/Goldstone-charge packet on the doubled real Krein carrier.
 
 The theorem name is Goldstone-facing, but the formal content is deliberately

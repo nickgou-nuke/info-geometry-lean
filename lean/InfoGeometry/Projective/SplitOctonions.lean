@@ -34,6 +34,19 @@ structure ZornCell (R : Type u) (V : Type v) where
   v : V
   w : V
 
+@[ext]
+theorem ZornCell.ext {R : Type u} {V : Type v}
+    {X Y : ZornCell R V}
+    (ha : X.a = Y.a) (hb : X.b = Y.b) (hv : X.v = Y.v) (hw : X.w = Y.w) :
+    X = Y := by
+  cases X
+  cases Y
+  cases ha
+  cases hb
+  cases hv
+  cases hw
+  rfl
+
 namespace ZornCell
 
 variable {R : Type u} {V : Type v}

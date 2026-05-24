@@ -283,18 +283,18 @@ theorem observerDefectResidual_norm_le_ZD
   exact hControl
 
 /--
-Constructive owner route to the observer-defect `Z_D` budget: instead of a bare
-`ObserverDeviationControlledByZD` proposition, consume the explicit
-`ObserverDeviationControl` witness carrying the compressed deviation-channel
-norm bound.
+|Constructive owner route to the observer-defect `Z_D` budget: instead of a bare
+|`ObserverDeviationControlledByZD` proposition, consume the explicit
+|`ObserverDeviationControl` witness carrying the compressed deviation-channel
+|norm bound.
 -/
 @[rep_depth krein]
 theorem observerDefectResidual_norm_le_ZD_of_control
     {CIK : CertifiedInverseKernel H₂} {obs : ObserverL5 CIK}
     (c : ObserverDeviationControl CIK obs) :
     ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
-  exact observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)
-    (ObserverDeviationControlledByZD.of_control c)
+  rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+  exact c.bound
 
 /--
 The owner-level deviation-channel predicate is equivalent to the old residual

@@ -625,6 +625,33 @@ theorem primitiveWeightSum_nonneg (A : Finset ℕ) :
   intro n hn
   exact primitiveWeight_nonneg n
 
+/--
+Monotonicity of the finite primitive weight under inclusion.
+
+This is the finite variational monotonicity needed by exhaustion arguments:
+adding support cannot decrease the nonnegative primitive weight sum.
+-/
+theorem primitiveWeightSum_mono_of_subset
+    {A B : Finset ℕ}
+    (hAB : A ⊆ B) :
+    primitiveWeightSum A ≤ primitiveWeightSum B := by
+  unfold primitiveWeightSum
+  exact Finset.sum_le_sum_of_subset_of_nonneg hAB (by
+    intro n hnB hnA
+    exact primitiveWeight_nonneg n)
+
+/--
+Filtering a finite support cannot increase the primitive weight sum.
+-/
+theorem primitiveWeightSum_filter_le
+    (A : Finset ℕ)
+    (p : ℕ → Prop)
+    [DecidablePred p] :
+    primitiveWeightSum (A.filter p) ≤ primitiveWeightSum A := by
+  apply primitiveWeightSum_mono_of_subset
+  intro n hn
+  exact (Finset.mem_filter.mp hn).1
+
 theorem primitiveWeightSum_empty :
     primitiveWeightSum ∅ = 0 := by
   simp [primitiveWeightSum]

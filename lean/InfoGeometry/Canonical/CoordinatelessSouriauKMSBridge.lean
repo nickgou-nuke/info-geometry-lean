@@ -49,6 +49,11 @@ structure AlgebraicState where
 
 namespace AlgebraicState
 
+/-- The `normalized` field states that the functional evaluated at the identity is `1`. -/
+
+theorem normalized_eq_one (s : AlgebraicState) : s.functional 1 = 1 :=
+  s.normalized
+
 variable (ω : AlgebraicState (H := H))
 
 /-- Evaluation notation for the algebraic thermodynamic state. -/

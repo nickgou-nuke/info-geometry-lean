@@ -27,7 +27,6 @@ import InfoGeometry.Arithmetic.PrimeCantorLatticeDiracBridge
 import InfoGeometry.Arithmetic.PrimeCantorBooleanCubeBridge
 import InfoGeometry.Arithmetic.PrimeCantorDiracOperator
 import InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
-import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalEnsemble
 import InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 import InfoGeometry.Arithmetic.PrimeInformationKMS
@@ -42,7 +41,6 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauSymmetry
 import InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
-import InfoGeometry.Arithmetic.ZetaDihedral
 import InfoGeometry.Arithmetic.SelfConcordantZetaBarrier
 import InfoGeometry.Arithmetic.SelfConcordantZetaBarrierProofs
 import InfoGeometry.Convex.SelfConcordantLogBarrier
@@ -115,7 +113,6 @@ import InfoGeometry.Meta.ClosureAttribute
 import InfoGeometry.Meta.TestTactic
 import InfoGeometry.ModularVolumePotential
 import InfoGeometry.Network.All
-import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Thermo.ComplexThermodynamicLift
@@ -198,7 +195,6 @@ import InfoGeometry.Application.STUOperatorBridge
 import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge
 import InfoGeometry.Algebraic.JordanCliffordLieSplit
-import InfoGeometry.Algebraic.SplitQuadraticForm
 import InfoGeometry.Algebraic.OperatorSurgery
 import InfoGeometry.Application.OperatorFreudenthalBoundary
 import InfoGeometry.Applications.FiniteJonesModel
@@ -303,17 +299,18 @@ import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
 import InfoGeometry.Canonical.DIIIIndexVerification
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Algebraic.ExactPhaseCocycle
-import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.SYKKitaevGuardrails
 import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.Canonical.SandboxVerification
 import InfoGeometry.Canonical.SouriauTranslatorAudit
+import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.GeometricRotor
 import InfoGeometry.Convex.EuclideanMonotonicity
 import InfoGeometry.ExponentialFamily.GaussianMonotonicity
 import InfoGeometry.Sandbox.FullOperatorVerification
+import InfoGeometry.Twistor.CliffordBridge
 import InfoGeometry.Twistor.LightconeBridge
 import InfoGeometry.Information.Basic
 import InfoGeometry.PositiveMeasure

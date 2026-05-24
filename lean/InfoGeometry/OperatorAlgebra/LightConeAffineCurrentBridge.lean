@@ -36,26 +36,6 @@ structure LightConeAffineCurrentBridge
   /-- Finite-algebra element representing the `u₋` lightcone direction. -/
   uMinusRoot : Finite
 
-  /--
-  Compatibility between the separately supplied bridge and the current/Virasoro
-  data stored in this lightcone socket.
-  -/
-  bridge_affine_eq : bridge.affine = affine
-
-  /--
-  Compatibility between the separately supplied bridge and the current/Virasoro
-  data stored in this lightcone socket.
-  -/
-  bridge_virasoro_eq : bridge.virasoro = virasoro
-
-  /--
-  Model-specific certification that the chosen roots really are the lightcone
-  current directions.  This is a witness field by design: the algebra remains
-  owned by the modules that construct the lightcone arrows.
-  -/
-  lightconeCurrentLaw : Prop
-  lightconeCurrentWitness : lightconeCurrentLaw
-
 namespace LightConeAffineCurrentBridge
 
 variable
@@ -75,11 +55,38 @@ def uPlusCurrent (n : ℤ) : Alg :=
 def uMinusCurrent (n : ℤ) : Alg :=
   B.affine.Current n B.uMinusRoot
 
-/-- Re-export of the supplied lightcone-current certification law. -/
-@[rep_depth operator]
-theorem lightconeCurrentLaw_holds :
-    B.lightconeCurrentLaw :=
-  B.lightconeCurrentWitness
+/--
+Compatibility between the separately supplied bridge and the current data
+stored in this lightcone socket.
+-/
+theorem bridge_affine_eq : B.bridge.affine = B.affine := by
+  -- DEBT_ID: LC_AFFINE_BRIDGE_EQ
+  -- DEBT_KIND: SORRY
+  sorry
+
+/--
+Compatibility between the separately supplied bridge and the Virasoro data
+stored in this lightcone socket.
+-/
+theorem bridge_virasoro_eq : B.bridge.virasoro = B.virasoro := by
+  -- DEBT_ID: LC_VIRASORO_BRIDGE_EQ
+  -- DEBT_KIND: SORRY
+  sorry
+
+/--
+Model-specific law that the chosen roots really are the lightcone
+current directions.
+-/
+-- DEBT_ID: LCAT-ZD-001
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: lightcone root-law not yet derived
+def lightconeCurrentLawZero : Prop := False
+
+/-- Evidence for the lightcone-current law. -/
+theorem lightconeCurrentLaw_holds : lightconeCurrentLawZero := by
+  -- DEBT_ID: LC_CURRENT_LAW_HOLDS
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Bracket of two positive lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]
@@ -122,7 +129,7 @@ theorem virasoro_acts_on_uPlusCurrent
       (-(n : ℝ)) • B.uPlusCurrent (m + n) := by
   unfold uPlusCurrent
   have h :=
-    B.bridge.virasoro_acts_on_currents_at m n B.uPlusRoot
+    B.bridge.virasoro_acts_on_currents m n B.uPlusRoot
   rw [B.bridge_virasoro_eq, B.bridge_affine_eq] at h
   exact h
 
@@ -134,7 +141,7 @@ theorem virasoro_acts_on_uMinusCurrent
       (-(n : ℝ)) • B.uMinusCurrent (m + n) := by
   unfold uMinusCurrent
   have h :=
-    B.bridge.virasoro_acts_on_currents_at m n B.uMinusRoot
+    B.bridge.virasoro_acts_on_currents m n B.uMinusRoot
   rw [B.bridge_virasoro_eq, B.bridge_affine_eq] at h
   exact h
 

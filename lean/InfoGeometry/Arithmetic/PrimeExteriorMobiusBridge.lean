@@ -1,4 +1,8 @@
-import Mathlib
+import Mathlib.Data.Finset.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Tactic.Basic
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
@@ -68,7 +72,7 @@ theorem card_natSetOfState
     (S : SquareFreeState P) :
     (natSetOfState S).card = S.card := by
   unfold natSetOfState
-  simpa using (Finset.card_map (primeModeEmbedding P) (s := S))
+  exact Finset.card_map (primeModeEmbedding P)
 
 /--
 The Möbius value of the represented square-free integer is exactly the
@@ -89,7 +93,6 @@ theorem mobius_stateNat_eq_Gamma
     {P : PrimeCutoff}
     (S : SquareFreeState P) :
     ArithmeticFunction.moebius (stateNat S) = SquareFreePrimeState.Gamma S := by
-  simpa [SquareFreePrimeState.Gamma] using
-    (mobius_stateNat_eq_fermionParitySign (S := S))
+  simp [SquareFreePrimeState.Gamma, mobius_stateNat_eq_fermionParitySign]
 
 end InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge

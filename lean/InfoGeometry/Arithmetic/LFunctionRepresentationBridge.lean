@@ -1,4 +1,11 @@
-import Mathlib
+import Mathlib.Algebra.Group.Defs
+import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Star.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 import InfoGeometry.Meta.Architecture
 

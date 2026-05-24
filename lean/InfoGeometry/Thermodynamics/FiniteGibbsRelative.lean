@@ -73,6 +73,18 @@ theorem relativeEntropy_eq_massieuBregman
     relativeEntropy θ η = massieuBregman θ η := by
   exact kl_eq_bregmanPhi θ η hZ
 
+/-- The finite Massieu-Bregman divergence vanishes on the diagonal. -/
+theorem massieuBregman_self (θ : FiniteTemperature ι) :
+    massieuBregman θ θ = 0 := by
+  unfold massieuBregman bregmanPhi
+  simp [Phi, expect]
+
+/-- The finite relative entropy vanishes on the diagonal. -/
+theorem relativeEntropy_self
+    [Nonempty ι] (θ : FiniteTemperature ι) (hZ : 0 < Z θ) :
+    relativeEntropy θ θ = 0 := by
+  rw [relativeEntropy_eq_massieuBregman θ θ hZ, massieuBregman_self]
+
 /-- The Fisher metric is the usual covariance formula. -/
 theorem fisherMetric_eq_covariance
     [Nonempty ι] (θ : FiniteTemperature ι) (X Y : ι → ℝ) (hZ : 0 < Z θ) :

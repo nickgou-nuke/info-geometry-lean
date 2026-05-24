@@ -13,6 +13,12 @@ under a fixed null quadratic form.
 
 Vacuous zero-quadratic-form scaffolds have been removed in favor of
 nontrivial constructive witnesses.
+
+Repository policy boundary:
+this file does not identify twistor space with split-octonions. Any
+split-octonion/twistor relation is a carried-structure theorem target, not a
+definitional equality.
+It also does not claim a quantized twistor CCR realization by itself.
 -/
 
 namespace InfoGeometry.Projective.TwistorBridge

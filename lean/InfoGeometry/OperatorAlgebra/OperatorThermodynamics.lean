@@ -43,6 +43,9 @@ structure AlgebraicState
   eval : Op → ℂ
 
   /-- Positivity/normality/faithfulness certificate, abstract at this layer. -/
+  -- DEBT_ID: OTH-ZD-001
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: abstract state certificate placeholder.
   state_certificates : Prop
 
 /--
@@ -64,6 +67,9 @@ structure OperatorFlow
     ∀ s t x, flow (s + t) x = flow s (flow t x)
 
   /-- Multiplicativity/covariance certificate. -/
+  -- DEBT_ID: OTH-ZD-002
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: flow multiplicativity is stored as an explicit placeholder.
   multiplicative : Prop
 
 namespace OperatorFlow
@@ -114,6 +120,9 @@ structure KMSState
 
   The analytic details are model-dependent, so they are stored as a certificate.
   -/
+  -- DEBT_ID: OTH-ZD-003
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: KMS boundary is an explicit certificate placeholder.
   kms_boundary_condition : Prop
 
   /-- Evidence for the KMS analytic boundary condition. -/
@@ -195,6 +204,9 @@ structure FinitePartialTraceShadow
   partialTrace : AlgebraicState Global → AlgebraicState Local
 
   /-- Agreement of the finite partial-trace formula with restriction. -/
+  -- DEBT_ID: OTH-ZD-004
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: finite partial-trace agreement is deferred as explicit debt.
   partialTrace_agrees_with_restriction : Prop
 
 /-! ## 4. Tomita observer reduction and KMS thermalization -/
@@ -212,6 +224,9 @@ structure KMSAnalyticBoundary
     (_σ : OperatorFlow Op)
     (_beta : ℝ) where
   /-- Analytic strip-boundary statement for the supplied readout and flow. -/
+  -- DEBT_ID: OTH-ZD-005
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
   boundaryCondition : Prop
 
   /-- Evidence that the boundary condition holds. -/
@@ -986,6 +1001,9 @@ structure KMSAnalyticBoundary
     (_σ : ModularFlow Op)
     (_β : ℝ) where
   /-- Analytic strip-boundary statement for the supplied readout and flow. -/
+  -- DEBT_ID: OTH-ZD-006
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
   boundaryCondition : Prop
 
   /-- Evidence that the boundary condition holds. -/

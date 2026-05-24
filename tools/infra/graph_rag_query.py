@@ -22,6 +22,12 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LEAN_RECORDS = ROOT / "artifacts" / "leansearch_local" / "records.jsonl"
 DEFAULT_EXTERNAL_ROOT = ROOT / "external_refs"
 DEFAULT_DOC_ROOTS = [ROOT / "docs", ROOT / "handover"]
+DEFAULT_BLACKBOOK_ROOTS = [
+    ROOT / "docs" / "black_books",
+    ROOT / "black_books",
+    ROOT / "external_refs" / "black_books",
+    ROOT / "external_refs" / "blackbooks",
+]
 DEFAULT_TEXT_EXTS = {".md", ".txt", ".rst", ".yaml", ".yml"}
 
 TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_']{2,}")
@@ -156,6 +162,65 @@ def discover_external_mirrors(root: Path) -> list[Path]:
     return mirrors
 
 
+def discover_external_lean_roots(root: Path, mirrors: list[Path]) -> list[Path]:
+    """Find external refs trees that contain Lean sources but no mirror index.
+
+    These are searched as raw Lean text so GraphRAG can surface non-bridged
+    external Lean code until a formal mirror index is generated.
+    """
+    if not root.exists():
+        return []
+    mirror_set = {m.resolve() for m in mirrors}
+    out: list[Path] = []
+    for child in sorted(root.iterdir()):
+        if not child.is_dir():
+            continue
+        if child.resolve() in mirror_set:
+            continue
+        if child.name.startswith('.'):
+            continue
+        has_lean = False
+        for p in child.rglob("*.lean"):
+            sp = str(p)
+            if "/.lake/" in sp or "/build/" in sp or "/.git/" in sp:
+                continue
+            has_lean = True
+            break
+        if has_lean:
+            out.append(child)
+    return out
+
+
+def search_external_lean_roots(roots: list[Path], query: str, limit: int) -> list[Hit]:
+    qterms = tokenize(query)
+    hits: list[Hit] = []
+    for root in roots:
+        for path in root.rglob("*.lean"):
+            sp = str(path)
+            if "/.lake/" in sp or "/build/" in sp or "/.git/" in sp:
+                continue
+            try:
+                text = path.read_text(encoding="utf-8", errors="ignore")
+            except Exception:
+                continue
+            score = score_text(text, qterms)
+            if score <= 0:
+                continue
+            rel = str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path)
+            hits.append(
+                Hit(
+                    source=f"{root.name}-raw-lean",
+                    title=path.stem,
+                    path=rel,
+                    score=score,
+                    snippet=excerpt(text, qterms),
+                    metadata={"root": str(root), "kind": ".lean", "mode": "raw_external_lean"},
+                )
+            )
+    hits.sort(key=lambda h: (-h.score, h.path))
+    return hits[:limit]
+
+
 def search_external_corpus(corpus_root: Path, query: str, limit: int) -> list[Hit]:
     try:
         index = json.loads((corpus_root / "index.json").read_text(encoding="utf-8"))
@@ -258,6 +323,7 @@ def main() -> int:
     ap.add_argument("--external-root", type=Path, default=DEFAULT_EXTERNAL_ROOT)
     ap.add_argument("--docs-root", action="append", type=Path, default=[])
     ap.add_argument("--black-books-root", type=Path, default=ROOT / "docs" / "black_books")
+    ap.add_argument("--extra-black-books-root", action="append", type=Path, default=[])
     ap.add_argument("--handover-root", type=Path, default=ROOT / "handover")
     ap.add_argument("--no-gravity", action="store_true")
     ap.add_argument("--scope", choices=["all", "lean", "docs", "external", "gravity"], default="all")
@@ -270,16 +336,24 @@ def main() -> int:
     do_external = args.scope in {"all", "external"}
     do_gravity = args.scope in {"all", "gravity"} and not args.no_gravity
 
+    blackbook_roots: list[Path] = []
+    for bb in [args.black_books_root, *DEFAULT_BLACKBOOK_ROOTS, *(args.extra_black_books_root or [])]:
+        if bb and bb not in blackbook_roots:
+            blackbook_roots.append(bb)
+
     text_hits = search_text_roots(
-        [*(docs_roots or []), args.black_books_root, args.handover_root],
+        [*(docs_roots or []), *blackbook_roots, args.handover_root],
         args.query,
         args.top_k,
     ) if do_docs else []
     lean_hits = search_lean_records(args.lean_records, args.query, args.top_k) if do_lean else []
     external_hits: list[Hit] = []
     if do_external:
-        for mirror in discover_external_mirrors(args.external_root):
+        mirrors = discover_external_mirrors(args.external_root)
+        for mirror in mirrors:
             external_hits.extend(search_external_corpus(mirror, args.query, max(1, args.top_k // 2)))
+        raw_lean_roots = discover_external_lean_roots(args.external_root, mirrors)
+        external_hits.extend(search_external_lean_roots(raw_lean_roots, args.query, max(1, args.top_k // 2)))
         external_hits.sort(key=lambda h: (-h.score, h.title, h.path))
         external_hits = external_hits[: args.top_k]
 

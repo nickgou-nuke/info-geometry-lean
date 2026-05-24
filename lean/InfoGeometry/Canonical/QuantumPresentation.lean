@@ -136,7 +136,13 @@ def pairedFunctionPresentation (α : Type) : Presentation where
   act := fun o s => (o s.1, o s.2)
   support := fun _ => True
   generator := fun s => (s.2, s.1)
+  -- DEBT_ID: QPR_PAIRED_METRIC
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: Trivial metric for paired function model
   metricReadout := fun _ => 0
+  -- DEBT_ID: QPR_PAIRED_PHASE
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: Trivial phase for paired function model
   phaseReadout := fun _ => 0
 
 /-- Non-identity symmetry intertwiner on the paired-function presentation. -/

@@ -4,7 +4,9 @@ InfoGeometry/Exceptional/STUDatum.lean
 Diagonal STU value construction.
 -/
 
-import Mathlib
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic.Ring
 import InfoGeometry.Exceptional.Freudenthal
 
 noncomputable section

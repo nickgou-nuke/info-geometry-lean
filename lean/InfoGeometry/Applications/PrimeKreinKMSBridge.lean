@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Arithmetic.PrimonKMSKreinBridge
 
 /-!

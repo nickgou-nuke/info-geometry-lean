@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Meta.Architecture
 

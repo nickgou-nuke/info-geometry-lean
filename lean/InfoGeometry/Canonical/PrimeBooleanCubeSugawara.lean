@@ -62,27 +62,21 @@ theorem centralCharge_eq_card (B : PrimeBooleanCubeSugawaraPacket P) :
 end PrimeBooleanCubeSugawaraPacket
 
 /-- Trivial affine-current datum used only to keep the finite readout kernel-checkable. -/
+-- DEBT_ID: PBCS_TRIVIAL_AFFINE
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
 def trivialAffineCurrentDatum : AffineCurrentDatum ℝ ℝ where
   Current := fun _ _ => 0
   kCentral := 0
-  kCentral_commutes := by
-    intro X
-    simp
   killingForm := fun _ _ => 0
-  affine_bracket := by
-    intro m n X Y
-    simp
 
 /-- Trivial Virasoro datum used only to keep the finite readout kernel-checkable. -/
+-- DEBT_ID: PBCS_TRIVIAL_VIRASORO
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
 def trivialVirasoroDatum : VirasoroDatum ℝ where
   Lmode := fun _ => 0
   central := 0
-  central_commutes := by
-    intro X
-    simp
-  virasoro_bracket := by
-    intro m n
-    simp
 
 /--
 Canonical finite Sugawara packet for a Boolean-cube vertex.
@@ -98,15 +92,10 @@ def booleanCubeSugawaraPacket
   bridge :=
     { affine := trivialAffineCurrentDatum
       virasoro := trivialVirasoroDatum
-      virasoro_acts_on_currents := by
-        intro m n X
-        simp [trivialAffineCurrentDatum, trivialVirasoroDatum]
       centralCharge := v.val.card
       level := 1
       finiteDimension := v.val.card
-      dualCoxeterNumber := 0
-      centralCharge_eq_sugawara := by
-        norm_num [sugawaraCentralCharge] }
+      dualCoxeterNumber := 0 }
   level_eq_one := rfl
   finiteDimension_eq_card := rfl
   dualCoxeterNumber_eq_zero := rfl

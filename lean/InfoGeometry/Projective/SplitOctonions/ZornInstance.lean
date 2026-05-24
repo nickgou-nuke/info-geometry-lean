@@ -30,6 +30,8 @@ namespace InfoGeometry.Projective.SplitOctonions
 
 universe u v
 
+open ZornProjectiveDatum.PolarDatum
+
 namespace ZornCell
 
 variable {R : Type u} {V : Type v}
@@ -281,45 +283,6 @@ def lowerLightrayNullRay
     {w : V} (hw : w ≠ 0) :
     ZornProjectiveDatum.NullRay (projectiveDatum B) :=
   ZornProjectiveDatum.nullRayMk (projectiveDatum B) (lowerLightrayNullRep B hw)
-
-/-! ## Concrete incidence exports -/
-
-/-- The canonical positive ray is incident with the canonical upper lightray ray. -/
-theorem pPlusIncident_upperLightray_incident
-    (B : V →ₗ[R] V →ₗ[R] R) {v : V} (hv : v ≠ 0) :
-    Incident (concretePolarDatum B)
-      (pPlusNullRay (R := R) (V := V) B)
-      (upperLightrayNullRay (R := R) (V := V) B hv) := by
-  simpa [pPlusNullRay, upperLightrayNullRay] using
-    (pPlusIncident_upperLightray_ray (R := R) (V := V) B hv)
-
-/-- The canonical negative ray is incident with the canonical lower lightray ray. -/
-theorem pMinusIncident_lowerLightray_incident
-    (B : V →ₗ[R] V →ₗ[R] R) {w : V} (hw : w ≠ 0) :
-    Incident (concretePolarDatum B)
-      (pMinusNullRay (R := R) (V := V) B)
-      (lowerLightrayNullRay (R := R) (V := V) B hw) := by
-  simpa [pMinusNullRay, lowerLightrayNullRay] using
-    (pMinusIncident_lowerLightray_ray (R := R) (V := V) B hw)
-
-/-- The canonical positive and negative rays are not incident over a nontrivial field. -/
-theorem pPlus_notIncident_pMinus_incident
-    [Nontrivial R] (B : V →ₗ[R] V →ₗ[R] R) :
-    ¬ Incident (concretePolarDatum B)
-      (pPlusNullRay (R := R) (V := V) B)
-      (pMinusNullRay (R := R) (V := V) B) := by
-  simpa [pPlusNullRay, pMinusNullRay] using
-    (pPlus_notIncident_pMinus_ray (R := R) (V := V) B)
-
-/-- Upper and lower canonical rays are incident iff the polar form vanishes. -/
-theorem upperLightrayIncident_lowerLightray_iff_incident
-    (B : V →ₗ[R] V →ₗ[R] R) {v w : V} (hv : v ≠ 0) (hw : w ≠ 0) :
-    Incident (concretePolarDatum B)
-      (upperLightrayNullRay (R := R) (V := V) B hv)
-      (lowerLightrayNullRay (R := R) (V := V) B hw)
-      ↔ B v w = 0 := by
-  simpa [upperLightrayNullRay, lowerLightrayNullRay] using
-    (upperLightrayIncident_lowerLightray_iff_ray (R := R) (V := V) B hv hw)
 
 end ZornCell
 

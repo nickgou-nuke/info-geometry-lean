@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.Meta.Architecture
 

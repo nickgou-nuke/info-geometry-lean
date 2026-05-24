@@ -1,9 +1,9 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
-import InfoGeometry.External.Virasoro
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 
 /-!
@@ -59,16 +59,25 @@ structure PrimeCurrentOPEPacket
     MobiusCurrentOPE PrimeLabel Field
 
   /-- Symbolic level-one current-current OPE law. -/
-  current_current_level_one_law : Prop
-
-  /-- Certificate for the supplied current-current OPE law. -/
-  current_current_level_one_certificate :
-    current_current_level_one_law
+  -- DEBT_ID: PVS-CCL1-001
+  -- DEBT_KIND: THEOREM_DEBT
+  -- THEOREM_DEBT: level-one current-current OPE law still needs an owner proof.
+  current_current_level_one_data : Unit
 
 namespace PrimeCurrentOPEPacket
 
 variable {PrimeLabel Field Coeff : Type*}
 variable (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff)
+
+/--
+The level-one current-current OPE law attached to the prime current packet.
+
+This remains an explicit theorem debt until a concrete Laurent/OPE owner
+construction is wired into this corridor.
+-/
+def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- The supplied `c c` split-Majorana OPE law is available. -/
 @[rep_depth operator]
@@ -103,8 +112,9 @@ theorem current_d_valid :
 /-- The supplied level-one current-current OPE law is available. -/
 @[rep_depth operator]
 theorem current_current_level_one_valid :
-    P.current_current_level_one_law :=
-  P.current_current_level_one_certificate
+    CurrentCurrentLevelOneLaw P := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 end PrimeCurrentOPEPacket
 
@@ -176,7 +186,7 @@ theorem virasoro_acts_on_currents
     ⁅P.affineVirasoro.virasoro.Lmode m,
       P.affineVirasoro.affine.Current n X⁆ =
       (-(n : ℝ)) • P.affineVirasoro.affine.Current (m + n) X :=
-  P.affineVirasoro.virasoro_acts_on_currents_at m n X
+  P.affineVirasoro.virasoro_acts_on_currents m n X
 
 /-- The Sugawara central charge is the owner datum's calibrated value. -/
 @[rep_depth operator]

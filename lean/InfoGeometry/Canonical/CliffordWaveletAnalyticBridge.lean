@@ -91,4 +91,29 @@ theorem cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one
 
 end CliffordFractalWaveletSocket
 
+/-- Top-level alias for the socket admissibility packet. -/
+@[rep_depth operator]
+theorem tiltSwitchCliffordAdmissible
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (S : CliffordFractalWaveletSocket Op) :
+    TiltSwitchCliffordAdmissible S :=
+  CliffordFractalWaveletSocket.tiltSwitchCliffordAdmissible S
+
+/-- Top-level alias for the local `Cl(1,1)` atom construction. -/
+@[rep_depth operator]
+def cl11AtomOfTiltSwitch
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (S : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    PrimeCl11ModularAtomCore.Cl11Atom Op :=
+  CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch S j
+
+/-- Top-level alias for the local pseudoscalar involution. -/
+@[rep_depth operator]
+theorem cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (S : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    (cl11AtomOfTiltSwitch S j).mobiusParity *
+      (cl11AtomOfTiltSwitch S j).mobiusParity = 1 :=
+  CliffordFractalWaveletSocket.cl11AtomOfTiltSwitch_mobiusParity_sq_eq_one S j
+
 end InfoGeometry.Canonical.CliffordWaveletAnalyticBridge

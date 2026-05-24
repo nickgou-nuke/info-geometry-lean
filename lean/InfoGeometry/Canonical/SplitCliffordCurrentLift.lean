@@ -53,4 +53,48 @@ theorem splitCliffordInfinity_current_central_commutes
     ⁅splitCliffordInfinityCurrentDatum.kCentral, X⁆ = 0 :=
   splitCliffordInfinityCurrentDatum.central_commutes_with X
 
+/--
+Proof-carrying boundary package for the split completion as a current datum.
+
+This records the exact morphism surface that is currently proved: the split
+direct limit carries an affine current datum with zero central charge, and the
+current-mode bracket law is discharged by the lift above.
+It does not claim a locally truncated Heisenberg representation.
+-/
+structure SplitCliffordCurrentMorphism where
+  /-- The affine current datum on the split direct limit. -/
+  datum :
+    AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity
+  /-- The current-mode bracket law inherited from the split lift. -/
+  current_mode_bracket_law : datum.current_mode_bracket_law
+  /-- The central element commutes with everything. -/
+  current_central_commutes_law : datum.current_central_commutes_law
+
+/--
+Concrete witness of the split completion current boundary.
+
+This is the actual object packaged by the theorem below.  It is the maximal
+current-layer surface currently supported by the split completion file.
+-/
+noncomputable def splitCliffordInfinityCurrentMorphism :
+    SplitCliffordCurrentMorphism where
+  datum := splitCliffordInfinityCurrentDatum
+  current_mode_bracket_law := by
+    intro m n X Y
+    exact splitCliffordInfinity_current_mode_bracket m n X Y
+  current_central_commutes_law := by
+    intro X
+    exact splitCliffordInfinity_current_central_commutes X
+
+/--
+The split completion has the honest current-layer boundary package.
+
+This is the maximal theorem currently supported by the owned split-completion
+surface: it packages the affine current datum and its laws, without asserting a
+Heisenberg truncation or a current-to-Fock morphism.
+-/
+theorem splitCompletion_to_current_morphism :
+    Nonempty SplitCliffordCurrentMorphism := by
+  exact ⟨splitCliffordInfinityCurrentMorphism⟩
+
 end InfoGeometry.Canonical.SplitCliffordCurrentLift

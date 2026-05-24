@@ -174,6 +174,14 @@ theorem mk_eq_of_scale
   apply Quotient.sound
   exact ⟨u, h⟩
 
+/-- Projective null rays are scale-blind. -/
+@[simp]
+theorem mk_scaleNull
+    (u : Rˣ) (X : NullRep D) :
+    nullRayMk D X = nullRayMk D (scaleNull D u X) := by
+  apply Quotient.sound
+  exact ⟨u, rfl⟩
+
 end ZornProjectiveDatum
 
 end InfoGeometry.Projective.SplitOctonions

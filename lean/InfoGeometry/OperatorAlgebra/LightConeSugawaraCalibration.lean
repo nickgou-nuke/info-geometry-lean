@@ -69,6 +69,23 @@ against the same affine/Virasoro bridge used by the lightcone affine socket.
 def UsesLightConeAffineBridge : Prop :=
   S.sugawara.bridge = S.kanAffine.affineLightCone.bridge
 
+/--
+Constructive witness for lightcone/Sugawara bridge compatibility.
+
+This packages the compatibility equation as data, so downstream routes can
+consume a witness object instead of a bare proposition argument.
+-/
+@[rep_depth operator]
+structure UsesLightConeAffineBridgeWitness where
+  use : S.UsesLightConeAffineBridge
+
+/-- Recover the compatibility proposition from its witness packet. -/
+@[rep_depth operator]
+theorem usesLightConeAffineBridge_of_witness
+    (W : S.UsesLightConeAffineBridgeWitness) :
+    S.UsesLightConeAffineBridge :=
+  W.use
+
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
 def sugawaraFactor : ℝ :=
@@ -179,6 +196,20 @@ theorem sugawara_virasoro_acts_on_uPlusCurrent
   have hVir := S.kanAffine.affineLightCone.bridge_virasoro_eq
   rw [hUse, hVir]
   exact S.kanAffine.virasoro_acts_on_uPlusCurrent m n
+
+/--
+Constructive witness variant of the positive-current action theorem.
+
+This removes the bare compatibility proposition argument from this route by
+consuming a proof-carrying witness packet.
+-/
+@[rep_depth operator]
+theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
+    (W : S.UsesLightConeAffineBridgeWitness)
+    (m n : ℤ) :
+    ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
+      (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
+  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use) m n
 
 /--
 Under the compatibility predicate, the supplied Sugawara Virasoro modes act on

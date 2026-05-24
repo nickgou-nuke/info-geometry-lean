@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
+import InfoGeometry.External.Virasoro.FockSpace
 
 /-!
 # Current-to-Sugawara bridge
@@ -182,6 +183,126 @@ theorem currentSugawaraRepresentation_cgen_conjugate
   simp
 
 end CurrentHeisenbergRep
+
+/--
+The Heisenberg algebra acts on the charged Fock space through its universal
+enveloping algebra representation.
+
+This is the concrete source-side current datum used to package a genuine
+`CurrentHeisenbergRep` object from the existing charged Fock module structure.
+-/
+noncomputable def chargedFockSpaceHeisenbergMode
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α :=
+  (UniversalEnvelopingAlgebra.representation
+    (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+    (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+    (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n)
+
+@[simp] theorem chargedFockSpaceHeisenbergMode_apply
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int)
+    (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
+    chargedFockSpaceHeisenbergMode 𝕜 α n v =
+      ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n) • v := by
+  rfl
+
+@[simp] theorem chargedFockSpaceHeisenbergRepresentation_kgen
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (UniversalEnvelopingAlgebra.representation
+      (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+      (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+      (VirasoroProject.HeisenbergAlgebra.kgen 𝕜) =
+        (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  ext v
+  simpa using (VirasoroProject.ChargedFockSpace.kgen_smul 𝕜 α v)
+
+/--
+Package the charged Fock space as a `CurrentHeisenbergRep`.
+
+The current modes are the standard Heisenberg generators acting through the
+universal enveloping algebra action on the charged Fock module.
+-/
+noncomputable def chargedFockSpaceCurrentHeisenbergRep
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) where
+  J := chargedFockSpaceHeisenbergMode 𝕜 α
+  trunc := by
+    intro v
+    filter_upwards [VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero 𝕜 α v] with
+      n hn
+    simpa [chargedFockSpaceHeisenbergMode] using hn
+  comm := by
+    intro m n
+    have hbr :=
+      LieAlgebra.Representation.apply_bracket_eq_commutator
+        (UniversalEnvelopingAlgebra.representation
+          (𝕜 := 𝕜) (𝓰 := VirasoroProject.HeisenbergAlgebra 𝕜)
+          (V := VirasoroProject.ChargedFockSpace 𝕜 α))
+        (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 m)
+        (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 n)
+    by_cases hmn : m + n = 0
+    · simpa [chargedFockSpaceHeisenbergMode,
+          VirasoroProject.HeisenbergAlgebra.lie_jgen,
+          hmn,
+          chargedFockSpaceHeisenbergRepresentation_kgen] using hbr.symm
+    · simpa [chargedFockSpaceHeisenbergMode,
+          VirasoroProject.HeisenbergAlgebra.lie_jgen,
+          hmn] using hbr.symm
+
+/--
+Packaged Heisenberg-to-Sugawara morphism.
+
+This is the repository-native object that records the exact bridge already
+proved by the current Sugawara owner surface: a Heisenberg current datum, the
+associated Virasoro representation, and the two readbacks used downstream
+(`cgen ↦ 1`, `lgen n ↦ L_n`).
+It does not assert any split-Clifford source construction.
+-/
+structure CurrentSugawaraMorphism
+    (𝕜 V : Type*) [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V] where
+  /-- The Heisenberg current datum. -/
+  heisenberg : CurrentHeisenbergRep 𝕜 V
+  /-- The induced Virasoro representation. -/
+  virasoro :
+    VirasoroProject.VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)
+  /-- `L_n` is the Sugawara stress mode. -/
+  lgen_apply :
+    ∀ n : Int,
+      virasoro (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n) =
+        heisenberg.sugawaraStressMode n
+  /-- The central Virasoro generator acts as the identity. -/
+  central_apply :
+    virasoro (VirasoroProject.VirasoroAlgebra.cgen 𝕜) =
+      (1 : V →ₗ[𝕜] V)
+
+namespace CurrentSugawaraMorphism
+
+variable {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
+variable [AddCommGroup V] [Module 𝕜 V]
+
+/-- The canonical packaged Sugawara morphism induced by a Heisenberg current datum. -/
+noncomputable def ofHeisenberg (H : CurrentHeisenbergRep 𝕜 V) :
+    CurrentSugawaraMorphism 𝕜 V where
+  heisenberg := H
+  virasoro := H.currentSugawaraRepresentation
+  lgen_apply := by
+    intro n
+    exact H.currentSugawaraRepresentation_lgen_apply n
+  central_apply := H.currentSugawaraRepresentation_central
+
+/-- Every Heisenberg current datum canonically yields a Sugawara morphism package. -/
+theorem nonempty (H : CurrentHeisenbergRep 𝕜 V) :
+    Nonempty (CurrentSugawaraMorphism 𝕜 V) :=
+  ⟨ofHeisenberg H⟩
+
+end CurrentSugawaraMorphism
+
+/-- The charged Fock space canonically yields a current Sugawara morphism package. -/
+theorem chargedFockSpace_currentSugawaraMorphism_nonempty
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  CurrentSugawaraMorphism.nonempty (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
 /--
 Semantic adapter for the quantum Ricci scalar on the raw CAR mode algebra.

@@ -94,6 +94,85 @@ theorem incidentRep_scale_right
   simpa [IncidentRep, polarZ, ZornProjectiveDatum.scaleNull] using
     (D.polar_scale_right_zero u X.rep Y.rep)
 
+/-- Representative incidence is symmetric when the polar pairing is symmetric. -/
+theorem incidentRep_symm
+    (hSymm : ∀ X Y : ZornCell R V, polarZ D X Y = polarZ D Y X)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    IncidentRep D X Y ↔ IncidentRep D Y X := by
+  constructor
+  · intro h
+    unfold IncidentRep at h ⊢
+    calc
+      polarZ D Y.rep X.rep = polarZ D X.rep Y.rep := (hSymm X.rep Y.rep).symm
+      _ = 0 := h
+  · intro h
+    unfold IncidentRep at h ⊢
+    calc
+      polarZ D X.rep Y.rep = polarZ D Y.rep X.rep := hSymm X.rep Y.rep
+      _ = 0 := h
+
+/-- Scaling both projective representatives preserves representative incidence. -/
+theorem incidentRep_scale_both
+    (u v : Rˣ)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    IncidentRep D
+        (ZornProjectiveDatum.scaleNull D.base u X)
+        (ZornProjectiveDatum.scaleNull D.base v Y)
+      ↔
+    IncidentRep D X Y := by
+  calc
+    IncidentRep D
+        (ZornProjectiveDatum.scaleNull D.base u X)
+        (ZornProjectiveDatum.scaleNull D.base v Y)
+        ↔ IncidentRep D X (ZornProjectiveDatum.scaleNull D.base v Y) := by
+            exact incidentRep_scale_left (D := D) u X
+              (ZornProjectiveDatum.scaleNull D.base v Y)
+    _ ↔ IncidentRep D X Y := by
+            exact incidentRep_scale_right (D := D) v X Y
+
+/--
+Quotient-level local incidence on the Zorn null shell.
+
+This descends the representative incidence relation to `NullRay`.
+-/
+def Incident : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base → Prop :=
+  fun X Y =>
+    Quotient.liftOn₂ X Y
+      (fun X Y => IncidentRep D X Y)
+      (by
+        intro X₁ Y₁ X₂ Y₂ hX hY
+        rcases hX with ⟨u, hX⟩
+        rcases hY with ⟨v, hY⟩
+        change (D.polarZ X₁.rep Y₁.rep = 0) = (D.polarZ X₂.rep Y₂.rep = 0)
+        rw [← hX, ← hY]
+        simpa [IncidentRep, polarZ, ZornProjectiveDatum.scaleNull] using
+          (propext ((D.incidentRep_scale_both u v X₁ Y₁).symm)))
+
+/-- The quotient incidence agrees with representative incidence on canonical rays. -/
+theorem incident_mk
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    Incident D (ZornProjectiveDatum.nullRayMk D.base X)
+      (ZornProjectiveDatum.nullRayMk D.base Y)
+      ↔ IncidentRep D X Y := by
+  simp [Incident, ZornProjectiveDatum.nullRayMk]
+
+@[simp]
+theorem incident_mk_iff
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    Incident D (ZornProjectiveDatum.nullRayMk D.base X)
+      (ZornProjectiveDatum.nullRayMk D.base Y)
+      ↔ IncidentRep D X Y :=
+  incident_mk D X Y
+
+/-- Quotient-level incidence is symmetric when the representative polar pairing is symmetric. -/
+theorem incident_symm
+    (hSymm : ∀ X Y : ZornCell R V, polarZ D X Y = polarZ D Y X)
+    (X Y : ZornProjectiveDatum.NullRay D.base) :
+    Incident D X Y ↔ Incident D Y X := by
+  refine Quotient.inductionOn₂ X Y ?_
+  intro X Y
+  simpa [incident_mk_iff (D := D)] using incidentRep_symm (D := D) hSymm X Y
+
 end PolarDatum
 
 end ZornProjectiveDatum

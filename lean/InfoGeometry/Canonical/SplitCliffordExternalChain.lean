@@ -6,6 +6,7 @@ import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ModeExtensionBoundary
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
@@ -36,6 +37,7 @@ open InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.ModeExtensionBoundary
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
+open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.SplitTrialityFockBridge
 open InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
@@ -106,6 +108,26 @@ theorem externalHeisenberg_sugawaraVacuum_highestWeight (α : ℂ) :
       VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) :=
   VirasoroProject.ChargedFockSpace.sugawaraVacuum_highestWeight ℂ α
+
+/-- The external Sugawara representation includes a concrete Verma-to-Fock highest-weight map. -/
+theorem externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight (α : ℂ) :
+    VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace ℂ α (.hwVec ℂ _ _) =
+      VirasoroProject.ChargedFockSpace.vacuum ℂ α ∧
+    VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.cgen ℂ)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      VirasoroProject.ChargedFockSpace.vacuum ℂ α ∧
+    VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α ∧
+    (∀ n > 0,
+      VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
+        (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) :=
+  VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace_highestWeight ℂ α
+
+/-- The charged Fock space canonically yields a current/Sugawara morphism package. -/
+theorem externalHeisenberg_currentSugawaraMorphism_nonempty (α : ℂ) :
+    Nonempty (CurrentSugawaraMorphism ℂ (VirasoroProject.ChargedFockSpace ℂ α)) :=
+  CurrentSugawaraBridge.chargedFockSpace_currentSugawaraMorphism_nonempty ℂ α
 
 /-- The external Heisenberg-owned Sugawara datum has central charge `1`. -/
 theorem externalHeisenberg_sugawaraDatum_centralCharge_one :
@@ -288,7 +310,8 @@ The literature-facing bosonization spine:
 
 - the split triality channels are the concrete CAR witness;
 - the split supercharge lane already carries the CAR/CCR oscillator spine;
-- the external Heisenberg/Sugawara implementation is independently certified.
+- the external Heisenberg/Sugawara implementation is independently certified,
+  including the concrete Verma-to-Fock highest-weight map.
 
 This theorem is a theorem-only bundle of the already proved source and target
 surface facts.  It does not claim a new split-to-Heisenberg morphism.
@@ -303,12 +326,14 @@ theorem splitClifford_literature_bosonization_chain
     (IsCARPair (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E))) ∧
-    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
-      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
-      (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
+    (VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace ℂ α (.hwVec ℂ _ _) =
+      VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
     (VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.cgen ℂ)
       (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
       VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
+    (VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ 0)
+      (VirasoroProject.ChargedFockSpace.vacuum ℂ α) =
+      (α^2 / 2) • VirasoroProject.ChargedFockSpace.vacuum ℂ α) ∧
     (∀ n > 0,
       VirasoroProject.ChargedFockSpace.sugawaraRepresentation ℂ α (.lgen ℂ n)
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
@@ -317,15 +342,9 @@ theorem splitClifford_literature_bosonization_chain
   · exact triality_channels_CARWitness (E := E)
   · constructor
     · exact cliffordConcreteIsCARPair (E := E)
-    · constructor
-      · exact externalHeisenberg_sugawaraRepresentation_lgen_zero_apply_vacuum α
-      · constructor
-        · exact externalHeisenberg_sugawaraRepresentation_cgen_apply α
-            (VirasoroProject.ChargedFockSpace.vacuum ℂ α)
-        · constructor
-          · intro n hn
-            exact externalHeisenberg_sugawaraRepresentation_lgen_pos_apply_vacuum α hn
-          · exact externalHeisenberg_sugawaraDatum_centralCharge_one
+    · rcases externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight α with
+        ⟨hHwVec, hCgen, hL0, hLpos⟩
+      exact ⟨hHwVec, hCgen, hL0, hLpos, externalHeisenberg_sugawaraDatum_centralCharge_one⟩
 
 /--
 The conservative zero-mode lift is available alongside the external

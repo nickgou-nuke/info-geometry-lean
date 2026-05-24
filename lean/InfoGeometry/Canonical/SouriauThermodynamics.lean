@@ -23,6 +23,11 @@ This file records the part of the Souriau vocabulary that is already owned by
 It deliberately does not claim coadjoint-orbit equivariance, a full Souriau
 metric tensor, or D1 commutator closure.  Those require separate owner
 theorems.
+
+Repository policy boundary:
+this file is finite-dimensional response ownership, not a concrete global
+Souriau coadjoint-orbit realization for groups such as `G₂(2)`, `G₂*`, or
+`Spin(5,5)`.
 -/
 
 namespace InfoGeometry.Canonical.SouriauThermodynamics

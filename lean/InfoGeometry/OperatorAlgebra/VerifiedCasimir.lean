@@ -9,7 +9,9 @@ as the algebraic invariants of the symmetry action.  The Casimir element
 is the fundamental constructive witness for this geometry.
 -/
 
-import Mathlib
+import Mathlib.Algebra.Ring.Defs
+import Mathlib.Algebra.Group.Defs
+import Mathlib.Algebra.Ring.Subring.Basic
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 
 noncomputable section

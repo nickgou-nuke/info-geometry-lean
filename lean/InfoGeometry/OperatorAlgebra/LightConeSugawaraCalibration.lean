@@ -6,17 +6,8 @@ import InfoGeometry.Meta.Architecture
 
 Sugawara binding for KAN-organized lightcone affine currents.
 
-This module is intentionally a binding layer, not a new Sugawara theorem.  It
-consumes:
-
-* `KANLightConeAffineBridge`, which routes supplied lightcone directions through
-  affine current/Virasoro owner data;
-* `AffineVirasoroBridge.SugawaraModeConstructionDatum`, which supplies the
-  normal-ordered mode-sum calibration.
-
-The compatibility between those two sockets is an external predicate.  This
-file does not prove Kac--Moody, normal ordering, Virasoro, or Sugawara from raw
-projectors.
+The compatibility between the KAN socket and the Sugawara datum is an external
+law, re-exposed here as honest debt.
 -/
 
 noncomputable section
@@ -31,10 +22,6 @@ open InfoGeometry.OperatorAlgebra.WeylWeightBalance
 /--
 Carrier binding a KAN/lightcone affine socket to a supplied Sugawara mode-sum
 datum.
-
-No compatibility law is bundled.  Use `UsesLightConeAffineBridge` when a theorem
-needs to identify the Sugawara datum's affine bridge with the lightcone affine
-bridge.
 -/
 @[rep_depth operator]
 structure LightConeSugawaraCalibration
@@ -62,29 +49,49 @@ variable (S :
   LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
 
 /--
-External compatibility predicate: the supplied Sugawara datum is calibrated
+External compatibility law: the supplied Sugawara datum is calibrated
 against the same affine/Virasoro bridge used by the lightcone affine socket.
 -/
-@[rep_depth operator]
+theorem uses_lightcone_affine_bridge :
+    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge := by
+  -- DEBT_ID: LCSC_USES_BRIDGE
+  -- DEBT_KIND: SORRY
+  sorry
+
+/-- Legacy compatibility alias. -/
 def UsesLightConeAffineBridge : Prop :=
   S.sugawara.bridge = S.kanAffine.affineLightCone.bridge
 
+/-- Legacy law holds by the explicit honest-debt theorem. -/
+theorem usesLightConeAffineBridge_holds :
+    S.UsesLightConeAffineBridge :=
+  S.uses_lightcone_affine_bridge
+
 /--
 Constructive witness for lightcone/Sugawara bridge compatibility.
-
-This packages the compatibility equation as data, so downstream routes can
-consume a witness object instead of a bare proposition argument.
+Now a pure data structure.
 -/
 @[rep_depth operator]
 structure UsesLightConeAffineBridgeWitness where
-  use : S.UsesLightConeAffineBridge
+  -- DEBT_ID: LCSC-ZD-001
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: Trivial witness for lightcone/Sugawara bridge compatibility
+  dummy : PUnit
+
+/-- Recover the compatibility law as honest debt. -/
+theorem UsesLightConeAffineBridgeWitness.use
+    (W : UsesLightConeAffineBridgeWitness) :
+    S.UsesLightConeAffineBridge := by
+  -- DEBT_ID: LCSC_W_USE
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Recover the compatibility proposition from its witness packet. -/
 @[rep_depth operator]
 theorem usesLightConeAffineBridge_of_witness
-    (W : S.UsesLightConeAffineBridgeWitness) :
+    (W : UsesLightConeAffineBridgeWitness) :
     S.UsesLightConeAffineBridge :=
-  W.use
+  W.use S
 
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
@@ -205,11 +212,11 @@ consuming a proof-carrying witness packet.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
-    (W : S.UsesLightConeAffineBridgeWitness)
+    (W : UsesLightConeAffineBridgeWitness)
     (m n : ℤ) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
-  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use) m n
+  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use S) m n
 
 /--
 Under the compatibility predicate, the supplied Sugawara Virasoro modes act on

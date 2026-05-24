@@ -9,7 +9,9 @@ space over an abstract cubic Jordan datum, and proves only consequences of
 those stored operations.
 -/
 
-import Mathlib
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Ring
 
 noncomputable section
 

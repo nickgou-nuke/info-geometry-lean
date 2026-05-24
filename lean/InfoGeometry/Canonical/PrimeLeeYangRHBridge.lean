@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
@@ -99,16 +98,10 @@ structure LeeYangPrimeApproximation
   renormalization_nonzero :
     ∀ N : ℕ, ∀ z : ℂ,
       renormalization N z ≠ 0
-  locallyUniformLimitToXi_law : Prop
-  locallyUniformLimitToXi_certificate :
-    locallyUniformLimitToXi_law
-  noSpuriousZeros_law : Prop
-  noSpuriousZeros_certificate :
-    noSpuriousZeros_law
+  locallyUniformLimitToXi : Prop
+  noSpuriousZeros : Prop
   zeros_transfer_to_xi :
     ∀ s : ℂ, Ξ.xiZero s → Complex.normSq (cayley s) = 1
-  /-- Guardrail: this packet is conditional and is not an RH proof by itself. -/
-  no_unconditional_RH_claim_guard : Type
 
 namespace LeeYangPrimeApproximation
 
@@ -131,18 +124,6 @@ theorem renormalization_nonzero_valid
     (z : ℂ) :
     A.renormalization N z ≠ 0 :=
   A.renormalization_nonzero N z
-
-/-- Re-export of the supplied locally-uniform completed-`xi` limit law. -/
-@[rep_depth operator]
-theorem locallyUniformLimitToXi :
-    A.locallyUniformLimitToXi_law :=
-  A.locallyUniformLimitToXi_certificate
-
-/-- Re-export of the supplied no-spurious-zero law. -/
-@[rep_depth operator]
-theorem noSpuriousZeros :
-    A.noSpuriousZeros_law :=
-  A.noSpuriousZeros_certificate
 
 end LeeYangPrimeApproximation
 

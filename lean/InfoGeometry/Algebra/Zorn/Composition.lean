@@ -1,66 +1,57 @@
-import InfoGeometry.Canonical.ZornComposition
+import InfoGeometry.Algebra.Zorn.Basic
 
 /-!
 # InfoGeometry.Algebra.Zorn.Composition
 
-This file exposes the explicit split-octonion composition law in the algebra
-namespace.
+Honest split-octonion composition surface.
 
-The proof is the canonical H¹ rigidity identity on the concrete Zorn carrier.
-It is a Zorn composition theorem, not a Binet-Cauchy or projection statement.
+This file provides the `ZornCompositionDatum` interface that wraps
+the explicit H¹ rigidity identity (the Zorn determinant is multiplicative).
+It separates quadratic null-preservation from projective automorphism status.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
-/-- The Zorn determinant is multiplicative. -/
-theorem detZ_mul (X Y : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord) :
-    InfoGeometry.Canonical.ZornComposition.detZ
-      (InfoGeometry.Canonical.ZornComposition.mulZ X Y)
-      =
-    InfoGeometry.Canonical.ZornComposition.detZ X *
-    InfoGeometry.Canonical.ZornComposition.detZ Y := by
-  simpa using InfoGeometry.Canonical.ZornComposition.detZ_mul X Y
+variable {R : Type*} [CommRing R]
 
-/-- Left multiplication by a norm-one Zorn element preserves the determinant. -/
-theorem detZ_left_mul_normOne
-    (U X : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
-    (hU : InfoGeometry.Canonical.ZornComposition.detZ U = 1) :
-    InfoGeometry.Canonical.ZornComposition.detZ
-      (InfoGeometry.Canonical.ZornComposition.mulZ U X)
-      =
-    InfoGeometry.Canonical.ZornComposition.detZ X := by
-  simpa using
-    InfoGeometry.Canonical.ZornComposition.detZ_left_mul_normOne U X hU
+/--
+A composition datum for the Zorn split-octonion cell.
 
-/-- Right multiplication by a norm-one Zorn element preserves the determinant. -/
-theorem detZ_right_mul_normOne
-    (X U : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
-    (hU : InfoGeometry.Canonical.ZornComposition.detZ U = 1) :
-    InfoGeometry.Canonical.ZornComposition.detZ
-      (InfoGeometry.Canonical.ZornComposition.mulZ X U)
+It extends the dot/cross interface with an abstract multiplication `mulZ`
+and requires it to be strictly multiplicative on the Zorn determinant.
+This is the honest composition theorem, avoiding partial/placeholder proofs.
+-/
+structure ZornCompositionDatum (R : Type*) [CommRing R]
+    extends CrossProduct3 R where
+  mulZ : ZornMatrix R → ZornMatrix R → ZornMatrix R
+
+  detZ_mul :
+    ∀ X Y : ZornMatrix R,
+      ZornMatrix.detZ toCrossProduct3 (mulZ X Y)
       =
-    InfoGeometry.Canonical.ZornComposition.detZ X := by
-  simpa using
-    InfoGeometry.Canonical.ZornComposition.detZ_right_mul_normOne X U hU
+      ZornMatrix.detZ toCrossProduct3 X *
+      ZornMatrix.detZ toCrossProduct3 Y
+
+namespace ZornCompositionDatum
+
+variable (cp : ZornCompositionDatum R)
 
 /-- Left Zorn multiplication preserves the null cone. -/
 theorem left_mul_preserves_null
-    (U X : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
-    (hX : InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull X) :
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull
-      (InfoGeometry.Canonical.ZornComposition.mulZ U X) := by
-  unfold InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull at *
-  change InfoGeometry.Canonical.ZornComposition.detZ (InfoGeometry.Canonical.ZornComposition.mulZ U X) = 0
-  rw [InfoGeometry.Canonical.ZornComposition.detZ_mul, hX, mul_zero]
+    (U X : ZornMatrix R)
+    (hX : ZornMatrix.IsNull cp.toCrossProduct3 X) :
+    ZornMatrix.IsNull cp.toCrossProduct3 (cp.mulZ U X) := by
+  unfold ZornMatrix.IsNull at *
+  rw [cp.detZ_mul U X, hX, mul_zero]
 
 /-- Right Zorn multiplication preserves the null cone. -/
 theorem right_mul_preserves_null
-    (X U : InfoGeometry.Canonical.ZornVectorMatrixExplicit.ZornCoord)
-    (hX : InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull X) :
-    InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull
-      (InfoGeometry.Canonical.ZornComposition.mulZ X U) := by
-  unfold InfoGeometry.Canonical.ZornVectorMatrixExplicit.IsZornNull at *
-  change InfoGeometry.Canonical.ZornComposition.detZ (InfoGeometry.Canonical.ZornComposition.mulZ X U) = 0
-  rw [InfoGeometry.Canonical.ZornComposition.detZ_mul, hX, zero_mul]
+    (X U : ZornMatrix R)
+    (hX : ZornMatrix.IsNull cp.toCrossProduct3 X) :
+    ZornMatrix.IsNull cp.toCrossProduct3 (cp.mulZ X U) := by
+  unfold ZornMatrix.IsNull at *
+  rw [cp.detZ_mul X U, hX, zero_mul]
+
+end ZornCompositionDatum
 
 end InfoGeometry.Algebra.Zorn

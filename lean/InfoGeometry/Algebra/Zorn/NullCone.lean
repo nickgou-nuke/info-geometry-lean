@@ -17,29 +17,29 @@ variable {R : Type*} [CommRing R]
 def pPlus : ZornMatrix R where
   a := 1
   b := 0
-  v := 0
-  w := 0
+  x := 0
+  y := 0
 
 /-- Lower diagonal Peirce projector. -/
 def pMinus : ZornMatrix R where
   a := 0
   b := 1
-  v := 0
-  w := 0
+  x := 0
+  y := 0
 
 /-- Upper off-diagonal lightray. -/
 def upperLightray (v : Fin 3 → R) : ZornMatrix R where
   a := 0
   b := 0
-  v := v
-  w := 0
+  x := v
+  y := 0
 
 /-- Lower off-diagonal lightray. -/
 def lowerLightray (w : Fin 3 → R) : ZornMatrix R where
   a := 0
   b := 0
-  v := 0
-  w := w
+  x := 0
+  y := w
 
 /-- The upper diagonal sector `p₊` lies on the Zorn null quadric. -/
 @[simp]

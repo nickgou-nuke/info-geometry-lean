@@ -369,6 +369,198 @@ theorem relativeModular_scaleShapeSplit_of_commutes_spectralProjector
 
 end IsCompatibleDPDWedge
 
+/--
+Export alias for the kernel convention lock on the compatible DPD/wedge lane.
+This keeps the top-level owner surface stable for downstream bridge files.
+-/
+@[rep_depth transport]
+theorem kernelConventionLock_pzero_eq_spectralComplementaryProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.PZero = CIK.spectralComplementaryProjector :=
+  IsCompatibleDPDWedge.kernelConventionLock_pzero_eq_spectralComplementaryProjector
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the active-projector complement identity. -/
+@[rep_depth transport]
+theorem activeProjector_eq_one_sub_spectralComplementaryProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.activeProjector =
+      (1 : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
+        - CIK.spectralComplementaryProjector :=
+  IsCompatibleDPDWedge.activeProjector_eq_one_sub_spectralComplementaryProjector
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the wedge-sign square relation. -/
+@[rep_depth transport]
+theorem wedgeSign_sq_eq_spectralProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.wedgeSign * W.wedgeSign = CIK.spectralProjector :=
+  IsCompatibleDPDWedge.wedgeSign_sq_eq_spectralProjector (CIK := CIK) (W := W) comp
+
+/-- Export alias for right annihilation of the wedge sign. -/
+@[rep_depth transport]
+theorem wedgeSign_mul_spectralComplementaryProjector_eq_zero
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.wedgeSign * CIK.spectralComplementaryProjector = 0 :=
+  IsCompatibleDPDWedge.wedgeSign_mul_spectralComplementaryProjector_eq_zero
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for left annihilation of the wedge sign. -/
+@[rep_depth transport]
+theorem spectralComplementaryProjector_mul_wedgeSign_eq_zero
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    CIK.spectralComplementaryProjector * W.wedgeSign = 0 :=
+  IsCompatibleDPDWedge.spectralComplementaryProjector_mul_wedgeSign_eq_zero
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for involutivity on the active projector. -/
+@[rep_depth transport]
+theorem wedgeSign_sq_mul_spectralProjector_eq_spectralProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    (W.wedgeSign * W.wedgeSign) * CIK.spectralProjector = CIK.spectralProjector :=
+  IsCompatibleDPDWedge.wedgeSign_sq_mul_spectralProjector_eq_spectralProjector
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the dilation-gap relation `2G = ε_wedge`. -/
+@[rep_depth transport]
+theorem two_smul_dilationGap_eq_wedgeSign
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    (2 : ℝ) • CIK.dilationGap = W.wedgeSign :=
+  IsCompatibleDPDWedge.two_smul_dilationGap_eq_wedgeSign
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the half-wedge form of the dilation gap. -/
+@[rep_depth transport]
+theorem dilationGap_eq_half_wedgeSign
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    CIK.dilationGap = ((2 : ℝ)⁻¹) • W.wedgeSign :=
+  IsCompatibleDPDWedge.dilationGap_eq_half_wedgeSign
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the wedge-calibrated package constructor. -/
+@[rep_depth transport]
+theorem wedgeCalibrated_of_compatibleDPDWedge
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (T : InfoGeometry.Canonical.RealTomitaCore.RealModularLogData (E := E))
+    (comp : IsCompatibleDPDWedge CIK W)
+    (hFlowCommQd : ∀ τ : ℝ, Commute (T.flow τ) CIK.spectralComplementaryProjector)
+    (hFlowCommEps : ∀ τ : ℝ, Commute (T.flow τ) ((2 : ℝ) • CIK.dilationGap)) :
+    InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+      (E := E) (T := T) (W := W)
+      ((2 : ℝ) • CIK.dilationGap) CIK.spectralComplementaryProjector :=
+  IsCompatibleDPDWedge.wedgeCalibrated_of_compatibleDPDWedge
+    (CIK := CIK) (W := W) T comp hFlowCommQd hFlowCommEps
+
+/-- Export alias for the projected supercharge bridge. -/
+@[rep_depth transport, capstone]
+theorem projected_supercharge_eq_commutator_PD_wedgeSign
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    InfoGeometry.Canonical.DrazinSupercharge.commutator CIK.spectralProjector W.wedgeSign :=
+  IsCompatibleDPDWedge.projected_supercharge_eq_commutator_PD_wedgeSign
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the complementary-apex commutator form. -/
+@[rep_depth transport, capstone]
+theorem projected_supercharge_eq_neg_commutator_PZero_wedgeSign
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {W : HasModularSpectralWedge E}
+    (comp : IsCompatibleDPDWedge CIK W) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    -InfoGeometry.Canonical.DrazinSupercharge.commutator CIK.spectralComplementaryProjector W.wedgeSign :=
+  IsCompatibleDPDWedge.projected_supercharge_eq_neg_commutator_PZero_wedgeSign
+    (CIK := CIK) (W := W) comp
+
+/-- Export alias for the mixed-block vanishing theorem. -/
+@[rep_depth transport]
+theorem relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {RMO : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hComm : Commute RMO CIK.spectralProjector) :
+    CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector = 0
+      ∧
+    CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector = 0 :=
+  IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
+    (CIK := CIK) (RMO := RMO) hComm
+
+/-- Export alias for the scale/shape split theorem. -/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {RMO : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hQD_RMO_PD_zero : CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector = 0)
+    (hPD_RMO_QD_zero : CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector = 0) :
+    RMO
+      =
+    IsCompatibleDPDWedge.relativeModularKernelScalePart (E := E) (CIK := CIK) RMO
+      +
+    IsCompatibleDPDWedge.relativeModularActiveShapePart (E := E) (CIK := CIK) RMO :=
+  IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
+    (CIK := CIK) (RMO := RMO) hQD_RMO_PD_zero hPD_RMO_QD_zero
+
+/-- Export alias for the commutation-based split theorem. -/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_of_commutes_spectralProjector
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E)}
+    {RMO : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hComm : Commute RMO CIK.spectralProjector) :
+    RMO
+      =
+    IsCompatibleDPDWedge.relativeModularKernelScalePart (E := E) (CIK := CIK) RMO
+      +
+    IsCompatibleDPDWedge.relativeModularActiveShapePart (E := E) (CIK := CIK) RMO :=
+  IsCompatibleDPDWedge.relativeModular_scaleShapeSplit_of_commutes_spectralProjector
+    (CIK := CIK) (RMO := RMO) hComm
+
 end Core
 
 end InfoGeometry.Canonical.DPDWedgeCompatibility

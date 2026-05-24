@@ -1,20 +1,26 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
+import InfoGeometry.Canonical.ZornSpinor
 
 /-!
 # InfoGeometry.Algebra.Zorn.Basic
 
 Basic Zorn vector-matrix data for the local split-octonion cell.
+This module now uses the canonical `ZornMatrix` carrier.
+
+Repository policy boundary:
+Zorn cells are not ordinary associative `2×2` matrix multiplication objects.
+They are vector-matrix coordinates for split-octonion algebraic data with a
+custom nonassociative product supplied in dedicated owner modules.
 -/
 
 namespace InfoGeometry.Algebra.Zorn
 
+/-- Use the canonical Zorn matrix carrier. -/
+abbrev ZornMatrix (R : Type*) [CommRing R] := InfoGeometry.Canonical.ZornMatrix R
+
 /--
 A minimal dot/cross interface on `R^3`.
-
-For the null-cone proofs we only need the dot-zero laws.  The cross-zero laws
-are included because they will be needed once `mulZ` and square-zero facts are
-added.
 -/
 structure CrossProduct3 (R : Type*) [CommRing R] where
   dot : (Fin 3 → R) → (Fin 3 → R) → R
@@ -30,54 +36,24 @@ structure CrossProduct3 (R : Type*) [CommRing R] where
   cross_zero_right :
     ∀ v : Fin 3 → R, cross v 0 = 0
 
-/--
-Zorn vector matrix
-
-  [ a  v ]
-  [ w  b ]
-
-representing the local split-octonion coordinate cell.
--/
-structure ZornMatrix (R : Type*) where
-  a : R
-  b : R
-  v : Fin 3 → R
-  w : Fin 3 → R
-deriving DecidableEq
-
 namespace ZornMatrix
 
 variable {R : Type*} [CommRing R]
-
-/-- The zero Zorn matrix. -/
-def zero : ZornMatrix R where
-  a := 0
-  b := 0
-  v := 0
-  w := 0
-
-instance : Zero (ZornMatrix R) :=
-  ⟨zero⟩
-
-@[simp] theorem zero_a : (0 : ZornMatrix R).a = 0 := rfl
-@[simp] theorem zero_b : (0 : ZornMatrix R).b = 0 := rfl
-@[simp] theorem zero_v : (0 : ZornMatrix R).v = 0 := rfl
-@[simp] theorem zero_w : (0 : ZornMatrix R).w = 0 := rfl
 
 /--
 Zorn determinant / split norm.
 
 For
 
-  X = [ a  v ]
-      [ w  b ]
+  X = [ a  x ]
+      [ y  b ]
 
 the determinant is
 
   detZ X = a b - v · w.
 -/
 def detZ (cp : CrossProduct3 R) (X : ZornMatrix R) : R :=
-  X.a * X.b - cp.dot X.v X.w
+  X.a * X.b - cp.dot X.x X.y
 
 /-- Quadratic/projective nullness. -/
 def IsNull (cp : CrossProduct3 R) (X : ZornMatrix R) : Prop :=

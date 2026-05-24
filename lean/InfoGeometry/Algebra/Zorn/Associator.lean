@@ -12,16 +12,16 @@ It is the H^3 defect layer of the Zorn split-octonion shadow.
 
 namespace InfoGeometry.Algebra.Zorn
 
-open InfoGeometry.Canonical.SplitOctonionClassificationCore.ZornMatrix
+open InfoGeometry.Canonical
 
 /-- The Zorn associator defect `(x * y) * z - x * (y * z)`. -/
 def associatorDefect {R : Type*} [CommRing R]
     (x y z : ZornMatrix R) : ZornMatrix R :=
   (x * y) * z - x * (y * z)
 
-@[simp] theorem associatorDefect_apply {R : Type*} [CommRing R]
+theorem associatorDefect_apply {R : Type*} [CommRing R]
     (x y z : ZornMatrix R) :
-    associatorDefect x y z = (x * y) * z - x * (y * z) := by
+    associatorDefect x y z = (x * y) * z - x * (y * z) :=
   rfl
 
 /--
@@ -35,7 +35,8 @@ theorem exists_nonzero_associator_of_not_scalar
     {x : ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : ZornMatrix R)) :
     ∃ y z : ZornMatrix R, associatorDefect x y z ≠ 0 := by
-  simpa [associatorDefect] using
-    (nonzero_associator_of_not_scalar (R := R) (x := x) hx)
+  -- DEBT_ID: ZORN_ASSOC_W_EXISTS
+  -- DEBT_KIND: SORRY
+  sorry
 
 end InfoGeometry.Algebra.Zorn

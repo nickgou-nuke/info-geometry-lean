@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -448,11 +447,7 @@ structure LocalFugacityProjectionWitness
   globalFugacity :
     ℂ → ℂ
   projection_law : Prop
-  projection_certificate :
-    projection_law
   preserves_unit_circle_law : Prop
-  preserves_unit_circle_certificate :
-    preserves_unit_circle_law
 
 namespace LocalFugacityProjectionWitness
 
@@ -462,8 +457,9 @@ theorem projection
     {N : ℕ}
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
-    W.projection_law :=
-  W.projection_certificate
+    W.projection_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Re-export of the supplied unit-circle preservation law. -/
 @[rep_depth thermo]
@@ -471,8 +467,9 @@ theorem preserves_unit_circle
     {N : ℕ}
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
-    W.preserves_unit_circle_law :=
-  W.preserves_unit_circle_certificate
+    W.preserves_unit_circle_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 end LocalFugacityProjectionWitness
 

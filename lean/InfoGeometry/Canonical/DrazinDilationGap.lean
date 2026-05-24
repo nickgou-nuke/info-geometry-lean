@@ -390,3 +390,49 @@ theorem star_commutator_eq_neg_of_self_adjoint
   simp [commutator, hP, hG]
 
 end InfoGeometry.Canonical.DrazinDilationGap
+
+namespace InfoGeometry.Canonical.DrazinDilationGap
+
+/-- Export alias for the Drazin defect support readback. -/
+theorem defectSupport_eq_one_sub_regularSupport
+    {Op : Type*} [Ring Op] [Star Op] (D : DrazinData Op) :
+    D.Q₀ = 1 - D.P_D :=
+  DrazinData.defectSupport_eq_one_sub_regularSupport D
+
+/-- Export alias for the dilation-gap readback. -/
+theorem eq_scaled_range_sub_domain
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (G : DilationGapData Op) :
+    G.G = G.halfScalar • (G.mp.P_range - G.mp.P_domain) :=
+  DilationGapData.eq_scaled_range_sub_domain G
+
+/-- Export alias for the Drazin supercharge commutator readback. -/
+theorem eq_two_smul_commutator
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (Q : DrazinSuperchargeData Op) :
+    Q.Q_alg = (2 : ℝ) • commutator Q.drazin.P_D Q.gap.G :=
+  DrazinSuperchargeData.eq_two_smul_commutator Q
+
+/-- Export alias for the kinetic/defect square split readback. -/
+theorem supercharge_square_split
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (S : DrazinKineticDefectSplit Op) :
+    S.supercharge.Q_alg * S.supercharge.Q_alg = S.T_D + (0.5 : ℝ) • S.Z_D :=
+  DrazinKineticDefectSplit.supercharge_square_split S
+
+/-- Export alias for the regular-support readback. -/
+theorem translation_regular_support
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (S : DrazinKineticDefectSplit Op) :
+    S.supercharge.drazin.P_D * S.T_D * S.supercharge.drazin.P_D = S.T_D :=
+  DrazinKineticDefectSplit.translation_regular_support S
+
+/-- Export alias for the defect-support readback. -/
+theorem defect_supported
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (S : DrazinKineticDefectSplit Op) :
+    S.supercharge.drazin.Q₀ * S.Z_D * S.supercharge.drazin.Q₀ = S.Z_D :=
+  DrazinKineticDefectSplit.defect_supported S
+
+/-- Export alias for the modular-noise support invariance. -/
+theorem noiseSupport_invariant
+    {Op : Type*} [Ring Op] (M : ModularRegularSupport Op) :
+    ∀ t : ℝ, M.modularFlow t M.noiseSupport = M.noiseSupport :=
+  ModularRegularSupport.noiseSupport_invariant M
+
+end InfoGeometry.Canonical.DrazinDilationGap

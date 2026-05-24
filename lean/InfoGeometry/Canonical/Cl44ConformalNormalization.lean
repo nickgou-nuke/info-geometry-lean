@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic.NormNum
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Meta.OwnerTarget

@@ -817,6 +817,9 @@ def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex Triangl
     | TriangleEdge.AB => T.kBA
     | TriangleEdge.BC => T.kCB
     | TriangleEdge.CA => T.kAC
+  -- DEBT_ID: CTG_TRIVIAL_READOUTS
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: Trivial placeholders for triangle graph model
   conductance := fun _ => 0
   bias := fun _ => 0
   capacity := fun _ => 0

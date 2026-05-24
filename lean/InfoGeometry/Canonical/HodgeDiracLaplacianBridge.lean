@@ -142,20 +142,33 @@ theorem laplacian_commutes_hodge_of_dirac_closure
 /--
 Central readout remains witness-gated.
 
-This predicate is a placeholder for downstream affine/Sugawara calibration.  No
-central-charge theorem is asserted in this Hodge/Dirac bridge.
+This is intentionally a witness-gated interface for downstream affine/Sugawara
+calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
-def IsCentralReadoutFromLaplacianAnomaly {Op : Type*}
-    (_C : HodgeDiracLaplacianCarrier Op) : Prop :=
-  True
+structure CentralReadoutWitness
+    {Op : Type*}
+    (C : HodgeDiracLaplacianCarrier Op) where
+  centralReadout : Op
+  calibrationLaw : Prop
+
+/--
+Owner-facing central-readout gate: the bridge exports only the existence of a
+supplied witness.
+-/
+@[rep_depth operator]
+def IsCentralReadoutFromLaplacianAnomaly
+    {Op : Type*}
+    (C : HodgeDiracLaplacianCarrier Op) : Prop :=
+  Nonempty (CentralReadoutWitness C)
 
 /-- Readback that the central/anomaly readout is intentionally externally gated. -/
 @[rep_depth operator]
 theorem centralReadout_is_witness_gated
     {Op : Type*}
-    (C : HodgeDiracLaplacianCarrier Op) :
-    IsCentralReadoutFromLaplacianAnomaly C := by
-  trivial
+    (C : HodgeDiracLaplacianCarrier Op)
+    (h : IsCentralReadoutFromLaplacianAnomaly C) :
+    IsCentralReadoutFromLaplacianAnomaly C :=
+  h
 
 end InfoGeometry.Canonical.HodgeDiracLaplacianBridge

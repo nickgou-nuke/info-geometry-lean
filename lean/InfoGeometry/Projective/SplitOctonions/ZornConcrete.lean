@@ -6,6 +6,12 @@ import InfoGeometry.Projective.SplitOctonions.Polar
 Concrete Zorn-cell addition and unit scaling for the local split-octonion
 projective boundary.
 
+Repository policy boundary:
+* Zorn cells are not ordinary associative `2×2` matrices.
+* This lane uses the custom split-octonion (generally nonassociative) product.
+* Determinant theorems here are split-octonion composition-surface theorems,
+  not claims of ordinary matrix Binet–Cauchy multiplicativity.
+
 This file supplies a concrete `ZornProjectiveDatum` and a matching
 `PolarDatum` instance using componentwise addition and scalar multiplication.
 The determinant scaling law is proven directly from the linearity of `B`.
@@ -275,6 +281,46 @@ theorem concretePolarDatum_incident_symm
   refine incident_symm (D := concretePolarDatum B) ?_ X Y
   intro X Y
   exact concretePolarDatum_polarZ_symm B X Y
+
+/--
+Canonical public name: projective polar incidence in the concrete Zorn model.
+-/
+def projective_polar_incidence
+    (B : V →ₗ[R] V →ₗ[R] R) :
+    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) →
+    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) → Prop :=
+  Incident (concretePolarDatum B)
+
+/--
+Canonical public theorem: on canonical null-ray representatives, projective
+polar incidence is equivalent to vanishing of the concrete polarized form.
+-/
+theorem projective_polar_incidence_iff
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (X Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B)) :
+    projective_polar_incidence (R := R) (V := V) B
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) X)
+      (ZornProjectiveDatum.nullRayMk (concreteZornProjectiveDatum B) Y)
+      ↔
+    polarExpr B X.rep Y.rep = 0 := by
+  unfold projective_polar_incidence
+  constructor
+  · intro h
+    have hrep :
+        IncidentRep (concretePolarDatum B) X Y :=
+      (incident_mk_iff (D := concretePolarDatum B) X Y).1 h
+    have hcoord :
+        X.rep.a * Y.rep.b + Y.rep.a * X.rep.b - B X.rep.v Y.rep.w - B Y.rep.v X.rep.w = 0 :=
+      (concretePolarDatum_incidentRep_iff B X Y).1 hrep
+    simpa [polarExpr_closed] using hcoord
+  · intro h
+    have hcoord :
+        X.rep.a * Y.rep.b + Y.rep.a * X.rep.b - B X.rep.v Y.rep.w - B Y.rep.v X.rep.w = 0 := by
+      simpa [polarExpr_closed] using h
+    have hrep :
+        IncidentRep (concretePolarDatum B) X Y :=
+      (concretePolarDatum_incidentRep_iff B X Y).2 hcoord
+    exact (incident_mk_iff (D := concretePolarDatum B) X Y).2 hrep
 
 /-- The canonical positive diagonal ray is incident with every upper lightray. -/
 theorem pPlusIncident_upperLightray

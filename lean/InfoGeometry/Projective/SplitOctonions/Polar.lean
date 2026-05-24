@@ -164,6 +164,67 @@ theorem incident_mk_iff
       ↔ IncidentRep D X Y :=
   incident_mk D X Y
 
+/--
+Canonical public alias for projective Zorn polar incidence on null rays.
+-/
+def projectivePolarIncidence :
+    ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base → Prop :=
+  Incident D
+
+/--
+Projective polar incidence agrees with representative polar orthogonality on
+canonical null-ray representatives.
+-/
+theorem projectivePolarIncidence_iff
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    projectivePolarIncidence D
+        (ZornProjectiveDatum.nullRayMk D.base X)
+        (ZornProjectiveDatum.nullRayMk D.base Y)
+      ↔
+    polarZ D X.rep Y.rep = 0 := by
+  simpa [projectivePolarIncidence, IncidentRep] using incident_mk_iff (D := D) X Y
+
+/-- Projective rays are scale-blind at the canonical null-ray map. -/
+theorem nullRayMk_eq_scaleNull
+    (u : Rˣ)
+    (X : ZornProjectiveDatum.NullRep D.base) :
+    ZornProjectiveDatum.nullRayMk D.base X
+      = ZornProjectiveDatum.nullRayMk D.base (ZornProjectiveDatum.scaleNull D.base u X) := by
+  simpa using ZornProjectiveDatum.mk_scaleNull (D := D.base) u X
+
+/--
+Incidence is unchanged by scaling either representative before taking projective rays.
+-/
+theorem incident_mk_scale_both_iff
+    (u v : Rˣ)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    Incident D
+        (ZornProjectiveDatum.nullRayMk D.base (ZornProjectiveDatum.scaleNull D.base u X))
+        (ZornProjectiveDatum.nullRayMk D.base (ZornProjectiveDatum.scaleNull D.base v Y))
+      ↔
+    Incident D
+        (ZornProjectiveDatum.nullRayMk D.base X)
+        (ZornProjectiveDatum.nullRayMk D.base Y) := by
+  simpa [incident_mk_iff] using incidentRep_scale_both (D := D) u v X Y
+
+/--
+Projective incidence is well-defined under scaling either representative.
+
+This is the local split-octonion/Zorn projective well-definedness statement the
+branch is built around.
+-/
+theorem incident_well_defined
+    (u v : Rˣ)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    Incident D
+        (ZornProjectiveDatum.nullRayMk D.base (ZornProjectiveDatum.scaleNull D.base u X))
+        (ZornProjectiveDatum.nullRayMk D.base (ZornProjectiveDatum.scaleNull D.base v Y))
+      ↔
+    Incident D
+        (ZornProjectiveDatum.nullRayMk D.base X)
+        (ZornProjectiveDatum.nullRayMk D.base Y) :=
+  incident_mk_scale_both_iff (D := D) u v X Y
+
 /-- Quotient-level incidence is symmetric when the representative polar pairing is symmetric. -/
 theorem incident_symm
     (hSymm : ∀ X Y : ZornCell R V, polarZ D X Y = polarZ D Y X)

@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.LinearAlgebra.Dimension.Constructions
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
 
@@ -123,4 +125,3 @@ theorem splitAlbertCarrier_finrank_eq_27 :
   simp [SplitAlbertCarrier, STUCarrier, Module.finrank_pi_fintype]
 
 end InfoGeometry.Canonical.SplitAlbert
-

@@ -62,8 +62,6 @@ structure PrimeLeeYangConvergenceSocket
 
   /-- Identification of the abstract limit with the completed-`xi` Cayley pullback. -/
   limit_eq_xiCayleyPullback_law : Prop
-  limit_eq_xiCayleyPullback_certificate :
-    limit_eq_xiCayleyPullback_law
 
   /-- The limit is not identically zero on the inner component. -/
   nontrivial_in :
@@ -83,8 +81,6 @@ structure PrimeLeeYangConvergenceSocket
 
   /-- No finite renormalization or limiting artifact contributes spurious zeros. -/
   noSpuriousZeros : Prop
-  noSpuriousZeros_certificate :
-    noSpuriousZeros
 
   /--
   Comparison between completed-`xi` zeros and zeros of the limiting Cayley
@@ -102,14 +98,16 @@ variable (S : PrimeLeeYangConvergenceSocket Ξ A)
 /-- Re-export of the supplied completed-`xi` Cayley-pullback identity law. -/
 @[bridge_target_tag, rep_depth operator]
 theorem limit_eq_xiCayleyPullback :
-    S.limit_eq_xiCayleyPullback_law :=
-  S.limit_eq_xiCayleyPullback_certificate
+    S.limit_eq_xiCayleyPullback_law := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Re-export of the supplied no-spurious-zeros law. -/
 @[bridge_target_tag, rep_depth operator]
 theorem noSpuriousZeros_law :
-    S.noSpuriousZeros :=
-  S.noSpuriousZeros_certificate
+    S.noSpuriousZeros := by
+  -- DEBT_KIND: SORRY
+  sorry
 
 /-- Zero-free complement transfer induced by the convergence socket. -/
 @[bridge_target_tag, rep_depth operator]

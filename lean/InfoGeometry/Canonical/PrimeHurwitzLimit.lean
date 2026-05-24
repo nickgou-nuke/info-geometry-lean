@@ -1,4 +1,8 @@
-import Mathlib
+import Mathlib.Data.Complex.Basic
+import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeGasPartitions

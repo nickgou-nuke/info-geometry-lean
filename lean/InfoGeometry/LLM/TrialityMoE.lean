@@ -415,6 +415,9 @@ derivative.
 def ObserverDefectResidualWeylThermodynamicBoundedByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK) : Prop :=
+  -- DEBT_ID: LLM-ZD-001
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: boundedness is recorded as a nonempty comparison witness rather than a proven theorem.
   Nonempty
     (WeylThermodynamicOperatorComparison (E := E)
       (observerDefectResidual CIK obs)

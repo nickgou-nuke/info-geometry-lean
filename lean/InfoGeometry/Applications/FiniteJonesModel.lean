@@ -14,7 +14,11 @@ It proves the first concrete optical laboratory facts:
 * a Brewster/rank-collapse event `r_p = 0` leaves only the `s` channel.
 -/
 
-import Mathlib
+import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Fin.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Basic
 import InfoGeometry.OperatorAlgebra.FresnelJonesReflection
 
 noncomputable section

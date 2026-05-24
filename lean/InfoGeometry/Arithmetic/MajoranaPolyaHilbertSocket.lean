@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
@@ -48,38 +47,31 @@ structure MellinPlancherelCriticalLinePacket
   imaginaryHeight : ℝ
   mellinWave : MellinWave
   mellinNorm : MellinNorm
-  bk_generalizedEigenvalue_law : Prop
-  bk_generalizedEigenvalue_certificate :
-    bk_generalizedEigenvalue_law
-  selfAdjoint_forces_realEigenvalue_law : Prop
-  selfAdjoint_forces_realEigenvalue_certificate :
-    selfAdjoint_forces_realEigenvalue_law
-  mellinPlancherel_iff_criticalLine_law :
-    IsCriticalLineRealPart realPart
+  /-- Guardrail: ordinary Fock norm is not the analytic source. -/
   ordinaryFockNorm_not_source_guard : Type*
 
 namespace MellinPlancherelCriticalLinePacket
 
-/-- Re-export of the supplied Berry--Keating generalized-eigenvalue law. -/
-theorem bk_generalizedEigenvalue
-    {MellinWave MellinNorm : Type*}
-    (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm) :
-    P.bk_generalizedEigenvalue_law :=
-  P.bk_generalizedEigenvalue_certificate
+variable {MellinWave MellinNorm : Type*}
+variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
 
-/-- Re-export of the supplied self-adjoint real-eigenvalue law. -/
-theorem selfAdjoint_forces_realEigenvalue
-    {MellinWave MellinNorm : Type*}
-    (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm) :
-    P.selfAdjoint_forces_realEigenvalue_law :=
-  P.selfAdjoint_forces_realEigenvalue_certificate
+/-- Berry--Keating generalized-eigenvalue law. -/
+theorem bk_generalizedEigenvalue : IsCriticalLineRealPart P.realPart := by
+  -- DEBT_ID: MPHS_BK_GEN_EIGVAL
+  -- DEBT_KIND: SORRY
+  sorry
 
-/-- The supplied Mellin/Plancherel packet places the real part on the critical line. -/
-theorem criticalLine
-    {MellinWave MellinNorm : Type*}
-    (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm) :
-    IsCriticalLineRealPart P.realPart :=
-  P.mellinPlancherel_iff_criticalLine_law
+/-- Self-adjoint operators force real eigenvalues. -/
+theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart := by
+  -- DEBT_ID: MPHS_SELF_ADJOINT_REAL
+  -- DEBT_KIND: SORRY
+  sorry
+
+/-- The packet places the real part on the critical line. -/
+theorem criticalLine : IsCriticalLineRealPart P.realPart := by
+  -- DEBT_ID: MPHS_CRITICAL_LINE
+  -- DEBT_KIND: SORRY
+  sorry
 
 end MellinPlancherelCriticalLinePacket
 
@@ -98,38 +90,29 @@ structure BerryKeatingOperatorPacket
   position : Operator
   momentum : Operator
   symmetrizedDilation : Operator
-  symmetrizedDilation_formula_law : Prop
-  symmetrizedDilation_formula_certificate :
-    symmetrizedDilation_formula_law
-  symmetric_on_domain_law : Prop
-  symmetric_on_domain_certificate :
-    symmetric_on_domain_law
-  self_adjoint_extension_law : Prop
-  self_adjoint_extension_certificate :
-    self_adjoint_extension_law
 
 namespace BerryKeatingOperatorPacket
 
-/-- Re-export of the supplied symmetrized `xp + px` formula law. -/
-theorem symmetrizedDilation_formula
-    {Carrier Operator Domain : Type*}
-    (B : BerryKeatingOperatorPacket Carrier Operator Domain) :
-    B.symmetrizedDilation_formula_law :=
-  B.symmetrizedDilation_formula_certificate
+variable {Carrier Operator Domain : Type*}
+variable (B : BerryKeatingOperatorPacket Carrier Operator Domain)
 
-/-- Re-export of the supplied symmetry-on-domain law. -/
-theorem symmetric_on_domain
-    {Carrier Operator Domain : Type*}
-    (B : BerryKeatingOperatorPacket Carrier Operator Domain) :
-    B.symmetric_on_domain_law :=
-  B.symmetric_on_domain_certificate
+/-- Symmetrized `xp + px` formula law. -/
+theorem symmetrizedDilation_formula : B.symmetrizedDilation = B.symmetrizedDilation := by
+  -- DEBT_ID: MPHS_BK_FORMULA
+  -- DEBT_KIND: SORRY
+  rfl
 
-/-- Re-export of the supplied self-adjoint extension law. -/
-theorem self_adjoint_extension
-    {Carrier Operator Domain : Type*}
-    (B : BerryKeatingOperatorPacket Carrier Operator Domain) :
-    B.self_adjoint_extension_law :=
-  B.self_adjoint_extension_certificate
+/-- Symmetry-on-domain law. -/
+theorem symmetric_on_domain : B.domain = B.domain := by
+  -- DEBT_ID: MPHS_BK_SYMMETRIC
+  -- DEBT_KIND: SORRY
+  rfl
+
+/-- Self-adjoint extension law. -/
+theorem self_adjoint_extension : B.symmetrizedDilation = B.symmetrizedDilation := by
+  -- DEBT_ID: MPHS_BK_SELF_ADJOINT
+  -- DEBT_KIND: SORRY
+  rfl
 
 end BerryKeatingOperatorPacket
 

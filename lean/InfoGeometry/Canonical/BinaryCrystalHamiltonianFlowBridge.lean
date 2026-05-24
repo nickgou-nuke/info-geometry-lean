@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 import InfoGeometry.Canonical.WeylCharacterEquivalence
 

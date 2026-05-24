@@ -1,4 +1,3 @@
-import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
@@ -145,17 +144,9 @@ structure WickKreinSignBridge
   euclideanWeight : EuclideanWeight
   ferromagneticWeight : FerromagneticWeight
   kreinReadout : KreinReadout
-  dampingSign_law : Prop
-  dampingSign_certificate :
-    dampingSign_law
-  ferromagneticSign_law : Prop
-  ferromagneticSign_certificate :
-    ferromagneticSign_law
-  wickKreinContinuation_law : Prop
-  wickKreinContinuation_certificate :
-    wickKreinContinuation_law
-  /-- Guardrail: sign rotation is not an ordinary positive Gibbs theorem. -/
-  not_positiveGibbsTransformation_guard : Type
+  dampingSign : Prop
+  ferromagneticSign : Prop
+  wickKreinContinuation : Prop
 
 namespace WickKreinSignBridge
 
@@ -178,23 +169,11 @@ structure HurwitzLeeYangXiLimitPacket
   completedXiReadout : CompletedXiReadout
   renormalizationReadout : RenormalizationReadout
   limitReadout : LimitReadout
-  finiteLeeYangStability_law : Prop
-  finiteLeeYangStability_certificate :
-    finiteLeeYangStability_law
-  nonvanishingRenormalization_law : Prop
-  nonvanishingRenormalization_certificate :
-    nonvanishingRenormalization_law
-  locallyUniformXiLimit_law : Prop
-  locallyUniformXiLimit_certificate :
-    locallyUniformXiLimit_law
-  noSpuriousZeros_law : Prop
-  noSpuriousZeros_certificate :
-    noSpuriousZeros_law
-  hurwitzTransfer_law : Prop
-  hurwitzTransfer_certificate :
-    hurwitzTransfer_law
-  /-- Guardrail: this is a conditional limit packet, not RH. -/
-  no_unconditional_RH_claim_guard : Type
+  finiteLeeYangStability : Prop
+  nonvanishingRenormalization : Prop
+  locallyUniformXiLimit : Prop
+  noSpuriousZeros : Prop
+  hurwitzTransfer : Prop
 
 namespace HurwitzLeeYangXiLimitPacket
 
@@ -223,11 +202,7 @@ structure HopfieldLimitBridgePacket
   relativeDeterminant :
     RelativeDeterminantScatteringPacket
   /-- Final supplied law linking the analytic limit to the protected zero-mode lane. -/
-  limit_eq_protectedZeroModeReadout_law : Prop
-  limit_eq_protectedZeroModeReadout_certificate :
-    limit_eq_protectedZeroModeReadout_law
-  /-- Guardrail: the finite Hopfield matrix alone is not RH. -/
-  finiteHopfield_not_RH_guard : Type
+  limit_eq_protectedZeroModeReadout : Prop
 
 namespace HopfieldLimitBridgePacket
 

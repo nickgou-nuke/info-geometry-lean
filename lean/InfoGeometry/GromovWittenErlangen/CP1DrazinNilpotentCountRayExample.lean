@@ -262,6 +262,9 @@ def divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff where
     rfl
 
 /-- Trivial Frobenius self-duality packet over the product coefficient algebra. -/
+-- DEBT_ID: CP1DNC_TRIVIAL_FROBENIUS
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial Frobenius placeholder for smoke model
 def frobenius : FrobeniusSelfDualPacket Algebra where
   pairing := fun _ _ => 0
   pairing_mul_left_eq_pairing_mul_right := by

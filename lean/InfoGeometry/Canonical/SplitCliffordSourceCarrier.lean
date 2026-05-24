@@ -1,5 +1,4 @@
-import Mathlib.Order.Filter.Basic
-import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordSourceCarrier
@@ -33,4 +32,3 @@ structure SplitSourceCarrier
   exists_stableCutoff : ∀ v : V, ∃ N : Int, stableCutoff v N
 
 end InfoGeometry.Canonical.SplitCliffordSourceCarrier
-

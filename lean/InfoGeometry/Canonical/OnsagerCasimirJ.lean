@@ -15,6 +15,10 @@ This file keeps the Onsager/Casimir split fully operatorial:
 - phase-sector sign flip under `J` because `J` anticommutes with `K = Jε`,
 - and the resulting left/right reciprocity laws for `J`-paired modular
   generators.
+
+Repository policy boundary:
+this file does not instantiate a concrete global Souriau coadjoint-orbit
+model, and it does not assert split-source affine current construction.
 -/
 
 namespace InfoGeometry.Canonical.OnsagerCasimirJ

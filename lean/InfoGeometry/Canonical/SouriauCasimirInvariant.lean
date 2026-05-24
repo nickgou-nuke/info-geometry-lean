@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Algebra.Group.Defs
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauThermodynamics
 
 /-!
@@ -15,16 +18,16 @@ Boundary with `SouriauThermodynamics`:
 * `SouriauThermodynamics.lean` owns finite-dimensional Gibbs/Massieu/Fisher
   response data and finite entropy-production readouts.
 * This file is the abstract invariant-theory target (affine/coadjoint
-  symmetry, Casimir equation, Legendre readout), without claiming a full
-  concrete coadjoint-orbit model.
+  symmetry, generalized Casimir equation, Legendre/Massieu readout), without
+  claiming a full concrete coadjoint-orbit model.
 
 This file does not assert a trajectory-level entropy-production statement
 `dS/dt = 0`. It only records affine-coadjoint invariance
 `S (Ad#_g Q) = S(Q)`. Orbit-dynamics derivatives belong in a later owner file.
 
-It does not instantiate `G₂(2)`, `Spin(5,5)`, split octonions, or twistors.
-Those require separate group-specific Ad/Ad*, cocycle, orbit, and moment-map
-proofs.
+It does not instantiate `G₂(2)`, `G2*`, `Spin(5,5)`, split octonions, or
+twistors as completed coadjoint-orbit models. Those require separate
+group-specific Ad/Ad*, cocycle, orbit, and moment-map proofs.
 -/
 
 noncomputable section
@@ -219,6 +222,17 @@ def GeometryInvariant
   ∀ g : G, ∀ Q : LieDual,
     F (D.affine.affineCoAd g Q) = F Q
 
+/--
+Souriau/Fenchel defect on the affine-coadjoint side.
+
+This is the affine-coadjoint analogue of the scalar Fenchel/Bregman defect:
+`⟪Q,β(Q)⟫ - Φ(β(Q)) - S(Q)`.
+-/
+def fenchelDefect
+    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (Q : LieDual) : 𝕜 :=
+  D.pair Q (D.betaOfHeat Q) - D.massieu (D.betaOfHeat Q) - D.entropy Q
+
 /-- Readout form of the geometry-invariant definition. -/
 theorem geometryInvariant_iff
     (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
@@ -250,6 +264,21 @@ theorem entropy_is_generalized_casimir
     D.affineLiePoissonVector (D.betaOfHeat Q) Q = 0 :=
   D.entropy_generalizedCasimir_equation Q
 
+/-- Readout: affine coadjoint identity action fixes every heat vector. -/
+@[simp] theorem affineCoAd_one_apply
+    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (Q : LieDual) :
+    D.affine.affineCoAd 1 Q = Q :=
+  AffineCoadjointDatum.affineCoAd_one D.affine Q
+
+/-- Readout: affine coadjoint action composes by group multiplication. -/
+theorem affineCoAd_mul_apply
+    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (g h : G) (Q : LieDual) :
+    D.affine.affineCoAd (g * h) Q =
+      D.affine.affineCoAd g (D.affine.affineCoAd h Q) :=
+  AffineCoadjointDatum.affineCoAd_mul D.affine g h Q
+
 /-- Legendre/Fenchel readout for entropy and Massieu potential. -/
 theorem entropy_eq_pair_beta_minus_massieu
     (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
@@ -258,7 +287,239 @@ theorem entropy_eq_pair_beta_minus_massieu
       D.pair Q (D.betaOfHeat Q) - D.massieu (D.betaOfHeat Q) :=
   D.entropy_legendre Q
 
+/-- Legendre contact identity: the Souriau/Fenchel defect vanishes. -/
+theorem fenchelDefect_eq_zero
+    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (Q : LieDual) :
+    D.fenchelDefect Q = 0 := by
+  unfold fenchelDefect
+  rw [D.entropy_eq_pair_beta_minus_massieu Q]
+  ring
+
+/--
+Affine-coadjoint invariance of the Souriau/Fenchel defect under symmetry laws
+for pairing, Massieu potential, and dual-coordinate transport.
+-/
+theorem fenchelDefect_affineCoAd_invariant_of_preserves_pair_massieu_beta
+    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (hPair :
+      ∀ g : G, ∀ Q : LieDual, ∀ β : Lie,
+        D.pair (D.affine.affineCoAd g Q) (D.affine.Ad g β) = D.pair Q β)
+    (hMassieu :
+      ∀ g : G, ∀ β : Lie,
+        D.massieu (D.affine.Ad g β) = D.massieu β)
+    (hBeta :
+      ∀ g : G, ∀ Q : LieDual,
+        D.betaOfHeat (D.affine.affineCoAd g Q) = D.affine.Ad g (D.betaOfHeat Q))
+    (g : G) (Q : LieDual) :
+    D.fenchelDefect (D.affine.affineCoAd g Q) = D.fenchelDefect Q := by
+  unfold fenchelDefect
+  rw [hBeta g Q]
+  rw [hPair g Q (D.betaOfHeat Q)]
+  rw [hMassieu g (D.betaOfHeat Q)]
+  rw [D.entropy_affineCoAd_invariant g Q]
+
 end SouriauCasimirEntropyDatum
+
+/-! ## Operatorial Fenchel-Legendre lift along affine coadjoint orbits -/
+
+/--
+Operatorial Fenchel defect.
+
+This is the Lie-side analogue of the scalar Fenchel gap
+
+`ψ(θ) + φ(η) - θη`.
+
+Here:
+
+* `massieu ξ` is the adjoint-side Massieu/log-partition potential;
+* `entropy Q` is the coadjoint-side entropy;
+* `pair Q ξ` is the Lie pairing `<Q, ξ>`.
+-/
+def operatorFenchelGap
+    {𝕜 Lie LieDual : Type*} [Sub 𝕜] [Add 𝕜]
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (Q : LieDual) (ξ : Lie) : 𝕜 :=
+  massieu ξ + entropy Q - pair Q ξ
+
+/--
+Real operatorial Legendre-Fenchel lemma.
+
+The Fenchel defect is invariant under simultaneous adjoint and affine
+coadjoint transport, provided:
+
+* the pairing is additive in the coadjoint argument;
+* the ordinary coadjoint/adjoint pairing is invariant;
+* the Massieu potential transforms by the Souriau affine cocycle;
+* entropy is affine-coadjoint invariant.
+
+Mathematically, with
+
+`Ad#_g Q = coAd_g Q + θ(g)`,
+
+this proves
+
+`Gap(Ad#_g Q, Ad_g ξ) = Gap(Q, ξ)`.
+-/
+theorem operatorFenchelGap_affineCoAd_invariant
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [Group G] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (hentropy_affine :
+      ∀ g Q,
+        entropy (coAd g Q + theta g) = entropy Q)
+    (g : G) (Q : LieDual) (ξ : Lie) :
+    operatorFenchelGap pair massieu entropy
+        (coAd g Q + theta g) (Ad g ξ)
+      =
+    operatorFenchelGap pair massieu entropy Q ξ := by
+  unfold operatorFenchelGap
+  rw [hmassieu_affine g ξ]
+  rw [hentropy_affine g Q]
+  rw [hpair_add (coAd g Q) (theta g) (Ad g ξ)]
+  rw [hpair_coAd_Ad g Q ξ]
+  abel
+
+/--
+Entropy invariance from the operatorial Legendre-Fenchel readout.
+
+Assume entropy is represented by the generalized Legendre transform
+
+`S(Q) = <Q, β(Q)> - Φ(β(Q))`.
+
+If the dual coordinate is equivariant,
+
+`β(Ad#_g Q) = Ad_g β(Q)`,
+
+and the pairing/Massieu terms transform by the affine Souriau rules, then
+entropy is constant along the affine coadjoint orbit.
+-/
+theorem operatorLegendre_entropy_affineCoAd_invariant
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [Group G] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (beta : LieDual → Lie)
+    (hentropy_legendre :
+      ∀ Q,
+        entropy Q = pair Q (beta Q) - massieu (beta Q))
+    (hbeta_affine :
+      ∀ g Q,
+        beta (coAd g Q + theta g) = Ad g (beta Q))
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (g : G) (Q : LieDual) :
+    entropy (coAd g Q + theta g) = entropy Q := by
+  rw [hentropy_legendre (coAd g Q + theta g)]
+  rw [hentropy_legendre Q]
+  rw [hbeta_affine g Q]
+  rw [hpair_add (coAd g Q) (theta g) (Ad g (beta Q))]
+  rw [hpair_coAd_Ad g Q (beta Q)]
+  rw [hmassieu_affine g (beta Q)]
+  abel
+
+/--
+Operatorial Legendre/Fenchel covariance implies affine-coadjoint entropy
+invariance.
+
+This is the operator-lifted Souriau readout:
+`EntropyOp ρ = <ρ, β(ρ)> - MassieuOp (β(ρ))`.
+-/
+theorem operator_entropy_affine_invariant_of_legendre_covariant
+    {𝕜 G StateOp TempOp : Type*} [Sub 𝕜]
+    (EntropyOp : StateOp → 𝕜)
+    (MassieuOp : TempOp → 𝕜)
+    (pairOp : StateOp → TempOp → 𝕜)
+    (betaOfState : StateOp → TempOp)
+    (AdSharp : G → StateOp → StateOp)
+    (AdTemp : G → TempOp → TempOp)
+    (g : G) (ρ : StateOp)
+    (hLegendre :
+      ∀ ρ : StateOp,
+        EntropyOp ρ =
+          pairOp ρ (betaOfState ρ) - MassieuOp (betaOfState ρ))
+    (hBeta :
+      betaOfState (AdSharp g ρ) = AdTemp g (betaOfState ρ))
+    (hPair :
+      pairOp (AdSharp g ρ) (AdTemp g (betaOfState ρ)) =
+        pairOp ρ (betaOfState ρ))
+    (hMassieu :
+      MassieuOp (AdTemp g (betaOfState ρ)) =
+        MassieuOp (betaOfState ρ)) :
+    EntropyOp (AdSharp g ρ) = EntropyOp ρ := by
+  rw [hLegendre (AdSharp g ρ)]
+  rw [hBeta]
+  rw [hPair]
+  rw [hMassieu]
+  rw [hLegendre ρ]
+
+/--
+Operatorial Bregman/Fenchel divergence is invariant under the affine-coadjoint
+operator action.
+-/
+theorem operator_bregman_affine_invariant
+    {𝕜 G StateOp TempOp : Type*} [Sub 𝕜]
+    (EntropyOp : StateOp → 𝕜)
+    (pairDiffOp : StateOp → StateOp → TempOp → 𝕜)
+    (betaOfState : StateOp → TempOp)
+    (AdSharp : G → StateOp → StateOp)
+    (AdTemp : G → TempOp → TempOp)
+    (g : G) (ρ₁ ρ₂ : StateOp)
+    (hEntropy :
+      ∀ ρ : StateOp,
+        EntropyOp (AdSharp g ρ) = EntropyOp ρ)
+    (hBeta :
+      betaOfState (AdSharp g ρ₂) = AdTemp g (betaOfState ρ₂))
+    (hPairDiff :
+      pairDiffOp
+          (AdSharp g ρ₁)
+          (AdSharp g ρ₂)
+          (AdTemp g (betaOfState ρ₂))
+        =
+      pairDiffOp ρ₁ ρ₂ (betaOfState ρ₂)) :
+    EntropyOp (AdSharp g ρ₁)
+      - EntropyOp (AdSharp g ρ₂)
+      - pairDiffOp
+          (AdSharp g ρ₁)
+          (AdSharp g ρ₂)
+          (betaOfState (AdSharp g ρ₂))
+    =
+    EntropyOp ρ₁
+      - EntropyOp ρ₂
+      - pairDiffOp ρ₁ ρ₂ (betaOfState ρ₂) := by
+  rw [hEntropy ρ₁]
+  rw [hEntropy ρ₂]
+  rw [hBeta]
+  rw [hPairDiff]
 
 
 /--

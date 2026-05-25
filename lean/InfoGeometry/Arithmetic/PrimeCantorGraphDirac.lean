@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.Arithmetic.PrimeBosonFermionGas
 
 /-!
 # InfoGeometry.Arithmetic.PrimeCantorGraphDirac
@@ -453,6 +454,375 @@ theorem weightedHodgeSquareEnergy_erase_of_mem
   rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight (S.erase p)]
   rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight S]
   exact weightedNumberEnergy_erase_of_mem P weight hS hmem
+
+/--
+If concrete creation succeeds, the Hamiltonian increases by the created
+prime mode's weight.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_create_eq_some
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    weightedNumberEnergy P weight T =
+      weightedNumberEnergy P weight S + weight p := by
+  unfold create at hcreate
+  by_cases h : p ∈ S
+  · simp [h] at hcreate
+  · simp [h] at hcreate
+    cases hcreate
+    exact weightedNumberEnergy_insert_of_not_mem P weight hp hS h
+
+/--
+If concrete annihilation succeeds, the Hamiltonian decreases by the annihilated
+prime mode's weight.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_annihilate_eq_some
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    weightedNumberEnergy P weight T =
+      weightedNumberEnergy P weight S - weight p := by
+  unfold annihilate at hann
+  by_cases h : p ∈ S
+  · simp [h] at hann
+    cases hann
+    exact weightedNumberEnergy_erase_of_mem P weight hS h
+  · simp [h] at hann
+
+/--
+If concrete creation succeeds, the Hodge-square energy increases by the created
+prime mode's weight.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_create_eq_some
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    weightedHodgeSquareEnergy P weight T =
+      weightedHodgeSquareEnergy P weight S + weight p := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight T]
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight S]
+  exact weightedNumberEnergy_create_eq_some P weight hp hS hcreate
+
+/--
+If concrete annihilation succeeds, the Hodge-square energy decreases by the
+annihilated prime mode's weight.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_annihilate_eq_some
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    weightedHodgeSquareEnergy P weight T =
+      weightedHodgeSquareEnergy P weight S - weight p := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight T]
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight S]
+  exact weightedNumberEnergy_annihilate_eq_some P weight hS hann
+
+/--
+Prime-register finite log-volume factorization for occupation profiles.
+
+For any `S ⊆ P.primes` and occupation map `a`,
+`log (∏ p∈S, p^(a p)) = ∑ p∈S, (a p) log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_prime_pow_eq_sum_on_register
+    (P : PrimeRegister)
+    (a : ℕ → ℕ)
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes) :
+    Real.log (Finset.prod S (fun p => (p : ℝ) ^ a p)) =
+      Finset.sum S (fun p => (a p : ℝ) * Real.log (p : ℝ)) := by
+  refine InfoGeometry.Arithmetic.PrimeBosonFermionGas.log_prod_prime_pow_of_prime
+    (s := S) (a := a) ?_
+  intro p hp
+  exact P.prime_mem p (hS hp)
+
+/--
+Binary-occupancy specialization of prime-register log-volume factorization.
+
+For occupancy exponent `a p = 1`, this gives
+`log (∏ p∈S, p) = ∑ p∈S, log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_primes_eq_sum_log_on_register
+    (P : PrimeRegister)
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes) :
+    Real.log (Finset.prod S (fun p => (p : ℝ))) =
+      Finset.sum S (fun p => Real.log (p : ℝ)) := by
+  have hpow :=
+    log_prod_prime_pow_eq_sum_on_register (P := P) (a := fun _ => (1 : ℕ)) (S := S) hS
+  simpa using hpow
+
+/--
+With logarithmic weight, the finite number-energy equals the log of the prime
+volume product on any register-supported occupation set.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_log_eq_log_prod_on_register
+    (P : PrimeRegister)
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes) :
+    weightedNumberEnergy P (fun p => Real.log (p : ℝ)) S =
+      Real.log (Finset.prod S (fun p => (p : ℝ))) := by
+  rw [weightedNumberEnergy_eq_sum_occupied (P := P) (weight := fun p => Real.log (p : ℝ)) hS]
+  rw [log_prod_primes_eq_sum_log_on_register (P := P) hS]
+
+/--
+With logarithmic weight, the finite Hodge-square energy equals the log of the
+prime volume product on any register-supported occupation set.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_log_eq_log_prod_on_register
+    (P : PrimeRegister)
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes) :
+    weightedHodgeSquareEnergy P (fun p => Real.log (p : ℝ)) S =
+      Real.log (Finset.prod S (fun p => (p : ℝ))) := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P (fun p => Real.log (p : ℝ)) S]
+  exact weightedNumberEnergy_log_eq_log_prod_on_register (P := P) hS
+
+/--
+Primon creation law for successful concrete creation:
+the log-weighted number energy increases by `log p`.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_log_create_eq_some
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    weightedNumberEnergy P (fun q => Real.log (q : ℝ)) T =
+      weightedNumberEnergy P (fun q => Real.log (q : ℝ)) S + Real.log (p : ℝ) := by
+  simpa using
+    weightedNumberEnergy_create_eq_some
+      (P := P) (weight := fun q => Real.log (q : ℝ))
+      (hp := hp) (hS := hS) (hcreate := hcreate)
+
+/--
+Primon annihilation law for successful concrete annihilation:
+the log-weighted number energy decreases by `log p`.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_log_annihilate_eq_some
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    weightedNumberEnergy P (fun q => Real.log (q : ℝ)) T =
+      weightedNumberEnergy P (fun q => Real.log (q : ℝ)) S - Real.log (p : ℝ) := by
+  simpa using
+    weightedNumberEnergy_annihilate_eq_some
+      (P := P) (weight := fun q => Real.log (q : ℝ))
+      (hS := hS) (hann := hann)
+
+/--
+Primon creation law for successful concrete creation on Hodge-square energy:
+the energy increases by `log p`.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_log_create_eq_some
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    weightedHodgeSquareEnergy P (fun q => Real.log (q : ℝ)) T =
+      weightedHodgeSquareEnergy P (fun q => Real.log (q : ℝ)) S + Real.log (p : ℝ) := by
+  simpa using
+    weightedHodgeSquareEnergy_create_eq_some
+      (P := P) (weight := fun q => Real.log (q : ℝ))
+      (hp := hp) (hS := hS) (hcreate := hcreate)
+
+/--
+Primon annihilation law for successful concrete annihilation on Hodge-square
+energy: the energy decreases by `log p`.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_log_annihilate_eq_some
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    weightedHodgeSquareEnergy P (fun q => Real.log (q : ℝ)) T =
+      weightedHodgeSquareEnergy P (fun q => Real.log (q : ℝ)) S - Real.log (p : ℝ) := by
+  simpa using
+    weightedHodgeSquareEnergy_annihilate_eq_some
+      (P := P) (weight := fun q => Real.log (q : ℝ))
+      (hS := hS) (hann := hann)
+
+/--
+Successful concrete creation updates prime log-volume additively:
+
+`log (∏ q∈T, q) = log (∏ q∈S, q) + log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_create_eq_some_on_register
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    Real.log (Finset.prod T (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) + Real.log (p : ℝ) := by
+  have hT : T ⊆ P.primes := by
+    unfold create at hcreate
+    by_cases h : p ∈ S
+    · simp [h] at hcreate
+    · simp [h] at hcreate
+      subst T
+      intro q hq
+      rcases Finset.mem_insert.mp hq with hqp | hqS
+      · subst q
+        exact hp
+      · exact hS hqS
+  have hE :=
+    weightedNumberEnergy_log_create_eq_some
+      (P := P) (hp := hp) (hS := hS) (hcreate := hcreate)
+  rw [weightedNumberEnergy_log_eq_log_prod_on_register (P := P) (S := T) hT] at hE
+  rw [weightedNumberEnergy_log_eq_log_prod_on_register (P := P) (S := S) hS] at hE
+  exact hE
+
+/--
+Successful concrete annihilation updates prime log-volume additively:
+
+`log (∏ q∈T, q) = log (∏ q∈S, q) - log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_annihilate_eq_some_on_register
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    Real.log (Finset.prod T (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) - Real.log (p : ℝ) := by
+  have hT : T ⊆ P.primes := by
+    unfold annihilate at hann
+    by_cases h : p ∈ S
+    · simp [h] at hann
+      subst T
+      intro q hq
+      exact hS (Finset.mem_of_mem_erase hq)
+    · simp [h] at hann
+  have hE :=
+    weightedNumberEnergy_log_annihilate_eq_some
+      (P := P) (hS := hS) (hann := hann)
+  rw [weightedNumberEnergy_log_eq_log_prod_on_register (P := P) (S := T) hT] at hE
+  rw [weightedNumberEnergy_log_eq_log_prod_on_register (P := P) (S := S) hS] at hE
+  exact hE
+
+/--
+Successful concrete creation gives the same additive update through the
+Hodge-square log-energy readout:
+
+`log (∏ q∈T, q) = log (∏ q∈S, q) + log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_create_eq_some_on_register_via_hodge
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some T) :
+    Real.log (Finset.prod T (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) + Real.log (p : ℝ) := by
+  have hT : T ⊆ P.primes := by
+    unfold create at hcreate
+    by_cases h : p ∈ S
+    · simp [h] at hcreate
+    · simp [h] at hcreate
+      subst T
+      intro q hq
+      rcases Finset.mem_insert.mp hq with hqp | hqS
+      · subst q
+        exact hp
+      · exact hS hqS
+  have hE :=
+    weightedHodgeSquareEnergy_log_create_eq_some
+      (P := P) (hp := hp) (hS := hS) (hcreate := hcreate)
+  rw [weightedHodgeSquareEnergy_log_eq_log_prod_on_register (P := P) (S := T) hT] at hE
+  rw [weightedHodgeSquareEnergy_log_eq_log_prod_on_register (P := P) (S := S) hS] at hE
+  exact hE
+
+/--
+Successful concrete annihilation gives the same additive update through the
+Hodge-square log-energy readout:
+
+`log (∏ q∈T, q) = log (∏ q∈S, q) - log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_annihilate_eq_some_on_register_via_hodge
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S T : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hann : annihilate p S = some T) :
+    Real.log (Finset.prod T (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) - Real.log (p : ℝ) := by
+  have hT : T ⊆ P.primes := by
+    unfold annihilate at hann
+    by_cases h : p ∈ S
+    · simp [h] at hann
+      subst T
+      intro q hq
+      exact hS (Finset.mem_of_mem_erase hq)
+    · simp [h] at hann
+  have hE :=
+    weightedHodgeSquareEnergy_log_annihilate_eq_some
+      (P := P) (hS := hS) (hann := hann)
+  rw [weightedHodgeSquareEnergy_log_eq_log_prod_on_register (P := P) (S := T) hT] at hE
+  rw [weightedHodgeSquareEnergy_log_eq_log_prod_on_register (P := P) (S := S) hS] at hE
+  exact hE
+
+/--
+Bundled successful log-product transition laws on a prime register:
+
+* creation success adds `log p`,
+* annihilation success subtracts `log p`.
+-/
+@[rep_depth thermo]
+theorem log_prod_transition_laws_on_register
+    (P : PrimeRegister)
+    {p : ℕ}
+    {S Tc Ta : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hcreate : create p S = some Tc)
+    (hann : annihilate p S = some Ta) :
+    Real.log (Finset.prod Tc (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) + Real.log (p : ℝ)
+    ∧
+    Real.log (Finset.prod Ta (fun q => (q : ℝ))) =
+      Real.log (Finset.prod S (fun q => (q : ℝ))) - Real.log (p : ℝ) := by
+  exact ⟨
+    log_prod_create_eq_some_on_register (P := P) (hp := hp) (hS := hS) (hcreate := hcreate),
+    log_prod_annihilate_eq_some_on_register (P := P) (hS := hS) (hann := hann)
+  ⟩
 
 
 /-! ## 4. Bundled finite graph-Dirac carrier -/

@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
@@ -1710,6 +1711,166 @@ theorem externalInfiniteJ_commutator_skew
     simp
 
 /--
+Packaged Lie-algebra closure for the explicit infinite current family:
+global commutator skew-symmetry and Jacobi identity.
+-/
+theorem externalInfiniteJ_lie_closure
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (∀ m n : Int,
+      (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n)
+        =
+      -((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m)))
+    ∧
+    (∀ m n k : Int,
+      (externalInfiniteJ 𝕜 α m).commutator
+          ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+        +
+        (externalInfiniteJ 𝕜 α n).commutator
+          ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+        +
+        (externalInfiniteJ 𝕜 α k).commutator
+          ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+        =
+      (0 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  refine ⟨?_, ?_⟩
+  · intro m n
+    exact externalInfiniteJ_commutator_skew (𝕜 := 𝕜) α m n
+  · intro m n k
+    exact externalInfiniteJ_jacobi (𝕜 := 𝕜) α m n k
+
+/--
+Mode-level resonance corollary:
+if `n + k = 0`, then the inner bracket is central and hence
+`[J_m, [J_n, J_k]] = 0` for all `m`.
+-/
+theorem externalInfiniteJ_double_commutator_zero_of_inner_resonance
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int) (hnk : n + k = 0) :
+    (externalInfiniteJ 𝕜 α m).commutator
+      ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := n) (n := k) hnk]
+  simp [LinearMap.commutator]
+
+/--
+Second Jacobi-leg resonance corollary:
+if `k + m = 0`, then ` [J_n, [J_k, J_m]] = 0`.
+-/
+theorem externalInfiniteJ_double_commutator_zero_of_middle_resonance
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int) (hkm : k + m = 0) :
+    (externalInfiniteJ 𝕜 α n).commutator
+      ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := k) (n := m) hkm]
+  simp [LinearMap.commutator]
+
+/--
+Third Jacobi-leg resonance corollary:
+if `m + n = 0`, then ` [J_k, [J_m, J_n]] = 0`.
+-/
+theorem externalInfiniteJ_double_commutator_zero_of_outer_resonance
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int) (hmn : m + n = 0) :
+    (externalInfiniteJ 𝕜 α k).commutator
+      ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := m) (n := n) hmn]
+  simp [LinearMap.commutator]
+
+/--
+Bundled resonance closure:
+if each inner pair is resonant, then each Jacobi leg vanishes individually.
+-/
+theorem externalInfiniteJ_jacobi_legs_zero_of_resonances
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int)
+    (hnk : n + k = 0) (hkm : k + m = 0) (hmn : m + n = 0) :
+    (externalInfiniteJ 𝕜 α m).commutator
+        ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+      = 0
+    ∧
+    (externalInfiniteJ 𝕜 α n).commutator
+        ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+      = 0
+    ∧
+    (externalInfiniteJ 𝕜 α k).commutator
+        ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+      = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact externalInfiniteJ_double_commutator_zero_of_inner_resonance
+      (𝕜 := 𝕜) α m n k hnk
+  · exact externalInfiniteJ_double_commutator_zero_of_middle_resonance
+      (𝕜 := 𝕜) α m n k hkm
+  · exact externalInfiniteJ_double_commutator_zero_of_outer_resonance
+      (𝕜 := 𝕜) α m n k hmn
+
+/--
+Direct Jacobi-sum closure from resonance-leg vanishing lemmas.
+
+This avoids invoking any generic Jacobi theorem: each leg is reduced to `0`
+via the concrete Heisenberg-resonance lemmas, then the sum is `0`.
+-/
+theorem externalInfiniteJ_jacobi_sum_zero_of_resonances
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int)
+    (hnk : n + k = 0) (hkm : k + m = 0) (hmn : m + n = 0) :
+    (externalInfiniteJ 𝕜 α m).commutator
+        ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+      +
+      (externalInfiniteJ 𝕜 α n).commutator
+        ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+      +
+      (externalInfiniteJ 𝕜 α k).commutator
+        ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+      = 0 := by
+  rcases
+      externalInfiniteJ_jacobi_legs_zero_of_resonances
+        (𝕜 := 𝕜) α m n k hnk hkm hmn
+    with ⟨h1, h2, h3⟩
+  rw [h1, h2, h3]
+  simp
+
+/--
+Zero-middle resonance closure:
+if `n = 0` together with `m + n = 0` and `n + k = 0`, then all three
+resonances hold and the Jacobi sum vanishes.
+-/
+theorem externalInfiniteJ_jacobi_sum_zero_of_two_resonances_and_zero_middle
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int)
+    (hmn : m + n = 0) (hnk : n + k = 0) (hn0 : n = 0) :
+    (externalInfiniteJ 𝕜 α m).commutator
+        ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+      +
+      (externalInfiniteJ 𝕜 α n).commutator
+        ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+      +
+      (externalInfiniteJ 𝕜 α k).commutator
+        ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+      = 0 := by
+  subst n
+  have hm0 : m = 0 := by simpa using hmn
+  have hk0 : k = 0 := by simpa using hnk
+  subst hm0
+  subst hk0
+  have hkm : (0 : Int) + 0 = 0 := by simp
+  exact
+    externalInfiniteJ_jacobi_sum_zero_of_resonances
+      (𝕜 := 𝕜) α 0 0 0 (by simp) hkm (by simp)
+
+/--
 Constructive source-side `J/trunc/comm` closure theorem for the explicit
 infinite current family `externalInfiniteJ`.
 
@@ -1736,7 +1897,132 @@ theorem externalInfiniteJ_constructive_J_trunc_comm
 /-! ## Closure Checklist: Section 3 (Affine Kac-Moody Current Layer)
 
 Owned directly by `InfoGeometry.External.Virasoro.AffineKacMoody`.
--/
+-/ 
+universe u
+theorem km_current_def_well_defined
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (n : Int) :
+    ∃ Jn : 𝓰 →ₗ[𝕜] VirasoroProject.AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs,
+      ∀ x : 𝓰,
+        Jn x = VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x := by
+  exact VirasoroProject.km_current_def_well_defined (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n
+
+theorem km_bracket_expand
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (m n : Int) (x y : 𝓰) :
+    ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+      VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆ =
+      VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)
+        + (if m + n = 0 then
+            ((m : 𝕜) * Φ x y) •
+              VirasoroProject.affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+          else 0) := by
+  exact VirasoroProject.km_bracket_expand (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+
+theorem km_cocycle_bilinear
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (X Y Z : LieAlgebra.loopAlgebra 𝕜 ℤ 𝓰) (a : 𝕜) :
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs (X + Y) Z
+      =
+      VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+        + VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y Z
+    ∧
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs (a • X) Z
+      =
+      a * VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+    ∧
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X (Y + Z)
+      =
+      VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y
+        + VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+    ∧
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X (a • Y)
+      =
+      a * VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y := by
+  exact VirasoroProject.km_cocycle_bilinear (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs X Y Z a
+
+theorem km_cocycle_skew
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (X Y : LieAlgebra.loopAlgebra 𝕜 ℤ 𝓰) :
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y
+      =
+      -VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y X := by
+  exact VirasoroProject.km_cocycle_skew (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs X Y
+
+theorem km_cocycle_2cocycle_identity
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (X Y Z : LieAlgebra.loopAlgebra 𝕜 ℤ 𝓰) :
+    VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X ⁅Y, Z⁆
+      =
+      VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs ⁅X, Y⁆ Z
+        + VirasoroProject.affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y ⁅X, Z⁆ := by
+  exact VirasoroProject.km_cocycle_2cocycle_identity (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs X Y Z
+
+theorem km_jacobi_from_structure_and_cocycle
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (m n p : Int) (x y z : 𝓰) :
+    ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+      ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y,
+        VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z⁆⁆
+    +
+    ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y,
+      ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z,
+        VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x⁆⁆
+    +
+    ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z,
+      ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+        VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆⁆
+      = 0 := by
+  exact VirasoroProject.km_jacobi_from_structure_and_cocycle
+    (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n p x y z
+
+theorem km_comm_full
+    {𝕜 : Type u} {𝓰 : Type u}
+    [Field 𝕜] [CharZero 𝕜]
+    [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
+    (Φ : LinearMap.BilinForm 𝕜 𝓰)
+    (hΦ : Φ.lieInvariant 𝓰)
+    (hΦs : Φ.IsSymm)
+    (m n : Int) (x y : 𝓰) :
+    ⁅VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+      VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆ =
+      VirasoroProject.affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)
+        + (if m + n = 0 then
+            ((m : 𝕜) * Φ x y) •
+              VirasoroProject.affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+          else 0) := by
+  exact VirasoroProject.km_comm_full (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+
 /-! ## Closure Checklist: Section 4 (Normal Ordering + Sugawara) -/
 
 theorem normal_order_cutoff_independent_eventually
@@ -1855,7 +2141,33 @@ theorem sugawara_LL_full
             (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
       else
         0 := by
-  exact externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α m n
+  let H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α
+  calc
+    (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+        (H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      = (H.sugawaraStressMode m).commutator (H.sugawaraStressMode n) := by
+          simp [InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply]
+    _ =
+        (m - n) • H.sugawaraStressMode (m + n)
+          +
+          if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+              (1 : VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                VirasoroProject.ChargedFockSpace 𝕜 α))
+          else
+            0 := by
+          simpa [H] using sugawara_LL_expand (𝕜 := 𝕜) α m n
+    _ =
+        (m - n) • H.currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n))
+          +
+          if m + n = 0 then
+            (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+              H.currentSugawaraRepresentation (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+          else
+            0 := by
+          simp [InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.currentSugawaraRepresentation_lgen_apply,
+            InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.currentSugawaraRepresentation_central]
 
 /-! ## Closure Checklist: Section 5 (Virasoro Closure) -/
 
@@ -1870,7 +2182,7 @@ theorem virasoro_bracket_skew
       (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
         (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m))) := by
-  exact externalInfiniteJ_currentSugawara_lgen_commutator_skew (𝕜 := 𝕜) α m n
+  simp [LinearMap.commutator, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 theorem virasoro_jacobi
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
@@ -1895,7 +2207,7 @@ theorem virasoro_from_sugawara
             (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
       else
         0 := by
-  exact externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α m n
+  exact sugawara_LL_full (𝕜 := 𝕜) α m n
 
 theorem central_charge_identification
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -1905,14 +2217,681 @@ theorem central_charge_identification
     (1 :
       VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
         VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  exact externalInfiniteJ_currentSugawara_central (𝕜 := 𝕜) α
+  let H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α
+  simpa [H] using
+    InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.currentSugawaraRepresentation_central
+      (H := H)
+
+/--
+Represented Virasoro central mode commutes with represented `L_n` on Fock endomorphisms.
+-/
+theorem virasoro_rep_on_fock_lgen_cgen_commutator_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [central_charge_identification (𝕜 := 𝕜) α]
+  simp [LinearMap.commutator]
+
+/--
+Symmetric represented central commutator on Fock endomorphisms.
+-/
+theorem virasoro_rep_on_fock_cgen_lgen_commutator_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [central_charge_identification (𝕜 := 𝕜) α]
+  simp [LinearMap.commutator]
+
+/--
+Bundled central commutation for represented Virasoro modes on Fock endomorphisms.
+-/
+theorem virasoro_rep_on_fock_central_commutes_with_lgen
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+    ∧
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  exact
+    ⟨virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n,
+      virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α n⟩
+
+/--
+Skew relation between represented central/l-mode commutators.
+-/
+theorem virasoro_rep_on_fock_central_commutator_skew
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+    =
+    -(((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))) := by
+  simp [LinearMap.commutator]
+
+/--
+The two represented central commutator orders coincide (both vanish).
+-/
+theorem virasoro_rep_on_fock_central_commutator_orders_eq
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+    =
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)) := by
+  rw [virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n]
+  rw [virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α n]
+
+/--
+`simp`-ready package: both represented central commutator orders with `L_n` vanish.
+-/
+@[simp] theorem virasoro_rep_on_fock_central_commutator_pair
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+    ∧
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  exact virasoro_rep_on_fock_central_commutes_with_lgen (𝕜 := 𝕜) α n
+
+/--
+Normalized closure readout: the represented central/L-mode commutator vanishes.
+-/
+theorem virasoro_rep_on_fock_lgen_cgen_commutator_eq_zero_iff
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+      ↔ True := by
+  constructor
+  · intro _
+    trivial
+  · intro _
+    exact virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n
+
+/--
+Equivalent zero-conditions for the two represented central commutator orders.
+-/
+theorem virasoro_rep_on_fock_central_commutator_zero_orders_iff
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α))
+    ↔
+    (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  constructor
+  · intro _
+    exact virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α n
+  · intro _
+    exact virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n
 
 theorem virasoro_rep_on_fock
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))
+      =
+      (m - n) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n))
+      +
+      if m + n = 0 then
+        (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+          (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+      else
+        0 := by
+  exact virasoro_from_sugawara (𝕜 := 𝕜) α m n
+
+/--
+Image of the concrete Virasoro bracket under the represented Sugawara action.
+
+This is a direct closure statement in the corridor:
+the representation image of `⁅L_m, L_n⁆` is exactly the already-proved
+endomorphism commutator formula.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_lgen
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 n⁆
+      =
+    (m - n) •
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n))
+    +
+    if m + n = 0 then
+      (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+    else
+      0 := by
+  calc
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+          VirasoroProject.VirasoroAlgebra.lgen 𝕜 n⁆
+      =
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+          ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)) := by
+          simpa using
+            LieAlgebra.Representation.apply_bracket_eq_commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)
+    _ =
+        (m - n) •
+          (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n))
+        +
+        if m + n = 0 then
+          (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+            (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+        else
+          0 := by
+          exact virasoro_rep_on_fock (𝕜 := 𝕜) α m n
+
+/--
+Jacobi identity at the represented Virasoro-generator level on Fock endomorphisms.
+
+This is a direct closure theorem on the concrete operator corridor, not on the
+abstract Virasoro carrier: the three represented `L`-modes satisfy Jacobi under
+endomorphism commutator.
+-/
+theorem virasoro_lgen_rep_jacobi
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n p : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p)))
+    =
+      (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+          ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n))).commutator
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p))) := by
+  simp [LinearMap.commutator]
+  noncomm_ring
+
+/--
+Concrete represented Jacobi specialization at modes `(2, -2, 0)`.
+-/
+theorem virasoro_lgen_rep_jacobi_two_negTwo_zero
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    ∃ ρ : VirasoroProject.VirasoroAlgebra 𝕜 →
-      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α,
-      ρ = (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation := by
-  exact ⟨(externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation, rfl⟩
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)))
+    =
+      (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+          ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2)))).commutator
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0))) := by
+  simpa using virasoro_lgen_rep_jacobi (𝕜 := 𝕜) α 2 (-2) 0
+
+/--
+Cyclic Jacobi sum vanishes for represented Virasoro `L`-modes on Fock
+endomorphisms.
+-/
+theorem virasoro_lgen_rep_jacobi_sum_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n p : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)))
+      = 0 := by
+  let X :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
+  let Y :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)
+  let Z :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 p)
+  change ⁅X, ⁅Y, Z⁆⁆ + ⁅Y, ⁅Z, X⁆⁆ + ⁅Z, ⁅X, Y⁆⁆ = 0
+  exact lie_jacobi X Y Z
+
+/--
+Concrete cyclic-Jacobi specialization at modes `(2, -2, 0)`.
+-/
+theorem virasoro_lgen_rep_jacobi_sum_zero_two_negTwo_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))))
+      = 0 := by
+  simpa using virasoro_lgen_rep_jacobi_sum_zero (𝕜 := 𝕜) α 2 (-2) 0
+
+/--
+Concrete cyclic Jacobi-sum specialization at modes `(1, -1, 0)`.
+-/
+theorem virasoro_lgen_rep_jacobi_sum_zero_one_negOne_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))))
+      = 0 := by
+  simpa using virasoro_lgen_rep_jacobi_sum_zero (𝕜 := 𝕜) α 1 (-1) 0
+
+/--
+Cyclic Jacobi sum vanishes when one slot is the represented central generator
+and the other two slots are represented `L`-modes.
+-/
+theorem virasoro_cgen_lgen_lgen_rep_jacobi_sum_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.cgen 𝕜)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)))
+      = 0 := by
+  let C :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)
+  let Lm :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
+  let Ln :=
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)
+  change ⁅C, ⁅Lm, Ln⁆⁆ + ⁅Lm, ⁅Ln, C⁆⁆ + ⁅Ln, ⁅C, Lm⁆⁆ = 0
+  exact lie_jacobi C Lm Ln
+
+/--
+Concrete cyclic-Jacobi specialization with one central slot:
+`(C, L₂, L₋₂)`.
+-/
+theorem virasoro_cgen_lgen_lgen_rep_jacobi_sum_zero_two_negTwo
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.cgen 𝕜)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2))).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)))
+      = 0 := by
+  simpa using virasoro_cgen_lgen_lgen_rep_jacobi_sum_zero (𝕜 := 𝕜) α 2 (-2)
+
+/--
+Concrete cyclic-Jacobi specialization with one central slot:
+`(C, L₁, L₋₁)`.
+-/
+theorem virasoro_cgen_lgen_lgen_rep_jacobi_sum_zero_one_negOne
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+        (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+            ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.cgen 𝕜)))
+      +
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1))).commutator
+          (((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+                (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)))
+      = 0 := by
+  simpa using virasoro_cgen_lgen_lgen_rep_jacobi_sum_zero (𝕜 := 𝕜) α 1 (-1)
+
+/--
+In the represented Virasoro action on Fock endomorphisms, the central generator
+commutes with every represented `L_m`.
+-/
+theorem virasoro_rep_cgen_commutator_lgen_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa using virasoro_rep_on_fock_cgen_lgen_commutator_zero (𝕜 := 𝕜) α m
+
+/--
+Representation-image bracket readout for central/l-mode generators.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_cgen_lgen
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m : Int) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.cgen 𝕜,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 m⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  calc
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        ⁅VirasoroProject.VirasoroAlgebra.cgen 𝕜,
+          VirasoroProject.VirasoroAlgebra.lgen 𝕜 m⁆
+      =
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.cgen 𝕜)).commutator
+          ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)) := by
+          simpa using
+            LieAlgebra.Representation.apply_bracket_eq_commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
+              (VirasoroProject.VirasoroAlgebra.cgen 𝕜)
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
+    _ = 0 := by
+          simpa using virasoro_rep_cgen_commutator_lgen_zero (𝕜 := 𝕜) α m
+
+/--
+Representation-image bracket readout for l-mode/central generators.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_lgen_cgen
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m : Int) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+        VirasoroProject.VirasoroAlgebra.cgen 𝕜⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  calc
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+          VirasoroProject.VirasoroAlgebra.cgen 𝕜⁆
+      =
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)).commutator
+          ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+            (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
+          simpa using
+            LieAlgebra.Representation.apply_bracket_eq_commutator
+              ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation)
+              (VirasoroProject.VirasoroAlgebra.lgen 𝕜 m)
+              (VirasoroProject.VirasoroAlgebra.cgen 𝕜)
+    _ = 0 := by
+          simpa using virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α m
+
+/--
+Unified represented Virasoro bracket readout on Fock endomorphisms:
+`[L_m,L_n]` has the Virasoro form, while brackets with the central generator
+vanish.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_readout
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    (
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 n⁆
+      =
+    (m - n) •
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (m + n))
+    +
+    if m + n = 0 then
+      (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.cgen 𝕜))
+    else
+      (0 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α))
+    ∧
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.cgen 𝕜,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 m⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+    ∧
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 m,
+        VirasoroProject.VirasoroAlgebra.cgen 𝕜⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  exact ⟨
+    virasoro_rep_on_fock_apply_bracket_lgen (𝕜 := 𝕜) α m n,
+    ⟨virasoro_rep_on_fock_apply_bracket_cgen_lgen (𝕜 := 𝕜) α m,
+      virasoro_rep_on_fock_apply_bracket_lgen_cgen (𝕜 := 𝕜) α m⟩
+  ⟩
+
+/--
+Concrete represented bracket readout specialization at `(m,n) = (2,-2)`.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_readout_two_negTwo
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 2,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2)⁆
+      =
+    (4 : 𝕜) •
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)
+    +
+      (((6 : 𝕜) / (12 : 𝕜)) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.cgen 𝕜)))
+    ∧
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.cgen 𝕜,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 2⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+    ∧
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 2,
+        VirasoroProject.VirasoroAlgebra.cgen 𝕜⁆
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  have hread := virasoro_rep_on_fock_apply_bracket_readout (𝕜 := 𝕜) α 2 (-2)
+  have hLL := hread.1
+  have hcoeff : (((2 ^ 3 - 2 : 𝕜) / (12 : 𝕜)) : 𝕜) = ((6 : 𝕜) / (12 : 𝕜)) := by
+    norm_num
+  refine ⟨?_, ?_⟩
+  · simpa [hcoeff] using hLL
+  · refine ⟨?_, ?_⟩
+    · simpa using hread.2.1
+    · simpa using hread.2.2
+
+/--
+Concrete represented bracket specialization at modes `(2, -2)`.
+
+This extracts the explicit central-term shape from the unified readout.
+-/
+theorem virasoro_rep_on_fock_apply_bracket_two_negTwo
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      ⁅VirasoroProject.VirasoroAlgebra.lgen 𝕜 2,
+        VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2)⁆
+      =
+    (4 : 𝕜) •
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)
+    +
+    (((2 ^ 3 - 2 : 𝕜) / (12 : 𝕜)) •
+      (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
+  have hread :=
+    (virasoro_rep_on_fock_apply_bracket_readout (𝕜 := 𝕜) α 2 (-2)).1
+  simpa using hread
 
 /-! ## Closure Checklist: Section 6 (Boundary / Non-fake Guards) -/
 
@@ -1972,9 +2951,9 @@ theorem externalInfiniteJ_heisenberg_comm_skew
               VirasoroProject.ChargedFockSpace 𝕜 α) := by
       have hnm : n + m = 0 := by simpa [add_comm] using hmn
       exact heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := n) (n := m) hnm
+    have hm_int : m = -n := by omega
     have hm_eq_neg_n : (m : 𝕜) = -(n : 𝕜) := by
-      have hmni : m + n = 0 := hmn
-      linarith
+      exact_mod_cast hm_int
     rw [h1, h2, hm_eq_neg_n]
     simp [smul_neg]
   · have h1 := heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := m) (n := n) hmn
@@ -1983,6 +2962,158 @@ theorem externalInfiniteJ_heisenberg_comm_skew
       exact heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := n) (n := m) hnm
     rw [h1, h2]
     simp
+
+/--
+Concrete central-mode relation:
+`[J₂, J₋₂] + [J₋₂, J₂] = 0`.
+
+This is a nontrivial commutator closure readout on the explicit infinite
+source-side current family.
+-/
+theorem externalInfiniteJ_commutator_two_negTwo_antisymm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (externalInfiniteJ 𝕜 α 2).commutator (externalInfiniteJ 𝕜 α (-2))
+      +
+    (externalInfiniteJ 𝕜 α (-2)).commutator (externalInfiniteJ 𝕜 α 2)
+      = 0 := by
+  have h1 := heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := 2) (n := -2) (by norm_num)
+  have h2 := heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := -2) (n := 2) (by norm_num)
+  rw [h1, h2]
+  simp
+
+/--
+For the explicit infinite source current family, opposite nonzero modes cannot
+both vanish.
+
+This is a direct constructive consequence of the full Heisenberg central law:
+if both `J_k` and `J_{-k}` were zero for `k ≠ 0`, then
+`[J_k, J_{-k}] = k • 1` would collapse to `0 = k • 1`.
+-/
+theorem externalInfiniteJ_no_opposite_zero_modes
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (α : 𝕜)
+    [Nontrivial (VirasoroProject.ChargedFockSpace 𝕜 α)]
+    (k : Int) (hk : k ≠ 0) :
+    ¬
+      ((externalInfiniteJ 𝕜 α k =
+          (0 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α))
+        ∧
+        (externalInfiniteJ 𝕜 α (-k) =
+          (0 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α))) := by
+  intro hzero
+  exact
+    InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction.currentHeisenbergRep_no_opposite_zero_modes
+      (H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α)
+      (k := k) hk hzero.1 hzero.2
+
+/--
+For nonzero mode `k`, the explicit infinite current central commutator
+`[J_k, J_{-k}]` is nonzero.
+
+This is a direct closure consequence of the Heisenberg diagonal law
+`[J_k, J_{-k}] = k • 1` with `k ≠ 0`.
+-/
+theorem externalInfiniteJ_commutator_k_negk_ne_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (α : 𝕜)
+    [Nontrivial (VirasoroProject.ChargedFockSpace 𝕜 α)]
+    (k : Int) (hk : k ≠ 0) :
+    (externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α (-k))
+      ≠
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  have hcomm :
+      (externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α (-k))
+        =
+      (k : 𝕜) •
+        (1 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+    have hsum : k + (-k) = 0 := by omega
+    exact heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := k) (n := -k) hsum
+  rw [hcomm]
+  have hk0 : (k : 𝕜) ≠ 0 := by exact_mod_cast hk
+  intro hzero
+  have happly :
+      ((k : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α))
+        =
+      0 := hzero
+  have hscalar :
+      (k : 𝕜) = 0 := by
+    -- evaluate on a nonzero vector and cancel scalar
+    obtain ⟨v, hv⟩ := exists_ne (0 : VirasoroProject.ChargedFockSpace 𝕜 α)
+    have hv0 :
+        (((k : 𝕜) •
+            (1 :
+              VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                VirasoroProject.ChargedFockSpace 𝕜 α)) v)
+          = 0 := by
+      simpa using congrArg (fun f => f v) happly
+    have : (k : 𝕜) • v = 0 := by simpa using hv0
+    exact (smul_eq_zero.mp this).resolve_right hv
+  exact hk0 hscalar
+
+/--
+Mode-level nontriviality consequence:
+for `k ≠ 0`, at least one of `J_k`, `J_{-k}` is nonzero.
+-/
+theorem externalInfiniteJ_exists_nonzero_in_opposite_pair
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (α : 𝕜)
+    [Nontrivial (VirasoroProject.ChargedFockSpace 𝕜 α)]
+    (k : Int) (hk : k ≠ 0) :
+    (externalInfiniteJ 𝕜 α k ≠
+        (0 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α))
+      ∨
+    (externalInfiniteJ 𝕜 α (-k) ≠
+        (0 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  by_contra h
+  push_neg at h
+  exact externalInfiniteJ_no_opposite_zero_modes (𝕜 := 𝕜) α k hk ⟨h.1, h.2⟩
+
+/--
+Exact diagonal-resonance vanishing criterion for the explicit infinite current:
+`[J_k, J_{-k}] = 0` if and only if `k = 0`.
+-/
+theorem externalInfiniteJ_commutator_k_negk_eq_zero_iff
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (α : 𝕜)
+    [Nontrivial (VirasoroProject.ChargedFockSpace 𝕜 α)]
+    (k : Int) :
+    (externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α (-k))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α)
+      ↔
+    k = 0 := by
+  constructor
+  · intro hcomm0
+    by_contra hk
+    exact externalInfiniteJ_commutator_k_negk_ne_zero (𝕜 := 𝕜) α k hk hcomm0
+  · intro hk
+    subst hk
+    have hdiag :
+        (externalInfiniteJ 𝕜 α 0).commutator (externalInfiniteJ 𝕜 α 0) =
+          (0 : 𝕜) •
+            (1 :
+              VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      have hsum : (0 : Int) + 0 = 0 := by norm_num
+      simpa using heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := 0) (n := 0) hsum
+    simpa using hdiag
 
 theorem finite_model_is_not_full_heisenberg_but_converges_to_current_completion
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :

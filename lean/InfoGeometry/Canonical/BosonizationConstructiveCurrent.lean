@@ -807,6 +807,73 @@ theorem cutoffBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
     simp
 
 /--
+For fixed `a,m,n`, the reindexed boundary diagonal summand is eventually zero
+as the cutoff grows.
+
+Concrete bound:
+`N₀ = max(|a+m|, |a+n|)` works.
+-/
+theorem cutoffBulkBoundaryDiagonalTerm_eventually_zero
+    (m n a : Int) :
+    ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      cutoffBulkBoundaryDiagonalTerm C N m n a = 0 := by
+  refine ⟨max (a + m).natAbs (a + n).natAbs, ?_⟩
+  intro N hN
+  have hmAbs : (a + m).natAbs ≤ N := le_trans (Nat.le_max_left _ _) hN
+  have hnAbs : (a + n).natAbs ≤ N := le_trans (Nat.le_max_right _ _) hN
+  have hmInt : |a + m| ≤ (N : Int) := by
+    rw [Int.abs_eq_natAbs]
+    exact_mod_cast hmAbs
+  have hnInt : |a + n| ≤ (N : Int) := by
+    rw [Int.abs_eq_natAbs]
+    exact_mod_cast hnAbs
+  have hm : a + m ∈ cutoffWindow N := Finset.mem_Icc.mpr (abs_le.mp hmInt)
+  have hn : a + n ∈ cutoffWindow N := Finset.mem_Icc.mpr (abs_le.mp hnInt)
+  exact cutoffBulkBoundaryDiagonalTerm_eq_zero_of_same_shift_membership
+    (C := C) N m n a (by constructor <;> intro _ <;> simpa [hm, hn])
+
+/--
+Finite-sum lift of eventual vanishing for reindexed boundary diagonal summands.
+
+For any fixed finite index set `S`, the sum
+`∑ a ∈ S, cutoffBulkBoundaryDiagonalTerm C N m n a`
+is eventually zero as `N → ∞`.
+-/
+theorem cutoffBulkBoundaryDiagonalSum_eventually_zero_on_finset
+    (m n : Int) (S : Finset Int) :
+    ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (∑ a ∈ S, cutoffBulkBoundaryDiagonalTerm C N m n a) = 0 := by
+  induction S using Finset.induction_on with
+  | empty =>
+      refine ⟨0, ?_⟩
+      intro N hN
+      simp
+  | @insert a S ha hS =>
+      rcases cutoffBulkBoundaryDiagonalTerm_eventually_zero (C := C) m n a with ⟨N1, hN1⟩
+      rcases hS with ⟨N2, hN2⟩
+      refine ⟨max N1 N2, ?_⟩
+      intro N hN
+      have h1 : N1 ≤ N := le_trans (Nat.le_max_left _ _) hN
+      have h2 : N2 ≤ N := le_trans (Nat.le_max_right _ _) hN
+      rw [Finset.sum_insert ha]
+      rw [hN1 N h1, hN2 N h2]
+      simp
+
+/--
+Concrete window specialization of boundary-diagonal eventual vanishing.
+
+For any fixed index window `W_K`, the reindexed boundary-diagonal sum over
+`W_K` is eventually zero as the external cutoff `N` grows.
+-/
+theorem cutoffBulkBoundaryDiagonalSum_eventually_zero_on_window
+    (m n : Int) (K : Nat) :
+    ∃ N0 : Nat, ∀ N : Nat, N0 ≤ N ->
+      (∑ a ∈ cutoffWindow K, cutoffBulkBoundaryDiagonalTerm C N m n a) = 0 := by
+  simpa using
+    (cutoffBulkBoundaryDiagonalSum_eventually_zero_on_finset
+      (C := C) m n (cutoffWindow K))
+
+/--
 The actual finite-cutoff central term.  It only receives contributions when
 both coupled labels `a` and `a + m` lie inside the cutoff window.
 -/
@@ -2257,10 +2324,75 @@ theorem cutoffCurrent_centralWickSummand_eq_zero_of_add_ne_zero
     exact hmn hmn_zero
   simp [hcond]
 
+/--
+Off-resonance represented current commutator expansion.
+
+When `m + n ≠ 0`, the Wick-central indicator is pointwise false, so the finite
+double-sum commutator expansion reduces to the pure noncentral part.
+-/
+theorem representedCutoffCurrent_commutator_expand_off_resonance
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A)
+    (N M : Nat)
+    (m n : Int)
+    (hmn : m + n ≠ 0) :
+    comm
+        (representedCutoffCurrent C N m)
+        (representedCutoffCurrent C M n)
+      =
+      ∑ k ∈ integerWindow N,
+        ∑ l ∈ integerWindow M,
+          ((if k + m = l then C.matrixUnit k (l + n) else 0)
+            -
+            (if k = l + n then C.matrixUnit l (k + m) else 0)) := by
+  rw [representedCutoffCurrent_commutator_expand C N M m n]
+  refine Finset.sum_congr rfl ?_
+  intro k hk
+  refine Finset.sum_congr rfl ?_
+  intro l hl
+  have hcond : ¬ (k + m = l ∧ k = l + n) := by
+    intro h
+    have hmn_zero : m + n = 0 := by omega
+    exact hmn hmn_zero
+  simp [hcond]
+
 namespace RawCARModeCompletion
 
 variable {A : Type*} [Ring A]
 variable (C : RawCARModeCompletion A)
+
+/--
+Off-resonance actual finite central term vanishes.
+
+The indicator constraints `a + m = b` and `a = b + n` force `m + n = 0`.
+Hence for `m + n ≠ 0`, every summand is zero.
+-/
+theorem cutoffActualCentralTerm_eq_zero_of_add_ne_zero
+    (N : Nat) (m n : Int) (hmn : m + n ≠ 0) :
+    cutoffActualCentralTerm C N m n = 0 := by
+  unfold cutoffActualCentralTerm
+  refine Finset.sum_eq_zero ?_
+  intro a ha
+  refine Finset.sum_eq_zero ?_
+  intro b hb
+  have hcond : ¬ (a + m = b ∧ a = b + n) := by
+    intro h
+    have hmn_zero : m + n = 0 := by omega
+    exact hmn hmn_zero
+  simp [hcond]
+
+/--
+Off-resonance cutoff-current commutator equals the boundary term.
+
+Away from resonance (`m + n ≠ 0`), the crossing term is zero, so the exact
+finite-window commutator formula reduces to the boundary contribution.
+-/
+theorem cutoffCurrent_commutator_eq_boundary_of_add_ne_zero
+    (N : Nat) (m n : Int) (hmn : m + n ≠ 0) :
+    comm (cutoffCurrent C N m) (cutoffCurrent C N n) =
+      cutoffBoundaryTerm C N m n := by
+  rw [cutoffCurrent_commutator_eq_boundary_add_windowCrossing C N m n]
+  simp [cutoffWindowCrossingTerm, hmn]
 
 /--
 The finite-window crossing term is already the Heisenberg central coefficient
@@ -2288,6 +2420,20 @@ theorem cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
         (if m + n = 0 then m • C.central else 0) := by
   rw [cutoffCurrent_commutator_eq_boundary_add_windowCrossing C N m n]
   rw [cutoffWindowCrossingTerm_eq_heisenberg_of_natAbs_le C N m n hN]
+
+/--
+Resonant finite-window commutator specialization.
+
+When `m + n = 0` and the cutoff is large enough for mode `m`, the finite
+cutoff commutator is the boundary term plus the central Schwinger coefficient
+`m • central`.
+-/
+theorem cutoffCurrent_commutator_eq_boundary_add_central_of_add_eq_zero
+    (N : Nat) (m n : Int) (hN : m.natAbs ≤ N) (hmn : m + n = 0) :
+    comm (cutoffCurrent C N m) (cutoffCurrent C N n) =
+      cutoffBoundaryTerm C N m n + m • C.central := by
+  rw [cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN]
+  simp [hmn]
 
 end RawCARModeCompletion
 

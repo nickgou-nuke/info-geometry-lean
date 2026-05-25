@@ -172,6 +172,106 @@ theorem affine_current_mode_bracket
           (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) :=
   P.affineVirasoro.affine.current_mode_bracket hbr m n X Y
 
+/--
+Central-mode specialization of the affine current bracket at `(m,n) = (1,-1)`.
+
+This is the concrete level-one commutator readback from the affine bracket law:
+the central channel is activated exactly on the resonant diagonal `m + n = 0`.
+-/
+@[rep_depth operator]
+theorem affine_current_mode_bracket_one_negOne
+    (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
+    ⁅P.affineVirasoro.affine.Current 1 X,
+      P.affineVirasoro.affine.Current (-1) Y⁆
+      =
+      P.affineVirasoro.affine.Current 0 ⁅X, Y⁆
+        +
+      (P.affineVirasoro.affine.killingForm X Y) • P.affineVirasoro.affine.kCentral := by
+  have h :=
+    P.affine_current_mode_bracket (m := 1) (n := -1) X Y hbr
+  simpa using h
+
+/--
+Off-diagonal specialization of the affine current bracket at `(m,n) = (1,0)`.
+
+Here `m + n ≠ 0`, so the central channel vanishes.
+-/
+@[rep_depth operator]
+theorem affine_current_mode_bracket_one_zero
+    (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
+    ⁅P.affineVirasoro.affine.Current 1 X,
+      P.affineVirasoro.affine.Current 0 Y⁆
+      =
+      P.affineVirasoro.affine.Current 1 ⁅X, Y⁆ := by
+  have h :=
+    P.affine_current_mode_bracket (m := 1) (n := 0) X Y hbr
+  simpa using h
+
+/--
+Zero-mode affine current law:
+`[J₀(X), J_n(Y)] = J_n([X,Y])`.
+
+The central channel vanishes because the prefactor is `m = 0`.
+-/
+@[rep_depth operator]
+theorem affine_current_mode_bracket_zero_any
+    (n : ℤ) (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
+    ⁅P.affineVirasoro.affine.Current 0 X,
+      P.affineVirasoro.affine.Current n Y⁆
+      =
+      P.affineVirasoro.affine.Current n ⁅X, Y⁆ := by
+  have h :=
+    P.affine_current_mode_bracket (m := 0) (n := n) X Y hbr
+  simpa using h
+
+/--
+Central skew-difference at the resonant pair `(1,-1)`:
+
+`[J₁(X),J₋₁(Y)] - [J₋₁(X),J₁(Y)] = 2·κ(X,Y)·K`.
+-/
+@[rep_depth operator]
+theorem affine_current_mode_bracket_resonant_skew_diff
+    (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
+    ⁅P.affineVirasoro.affine.Current 1 X,
+      P.affineVirasoro.affine.Current (-1) Y⁆
+      -
+    ⁅P.affineVirasoro.affine.Current (-1) X,
+      P.affineVirasoro.affine.Current 1 Y⁆
+      =
+      (((2 : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+        P.affineVirasoro.affine.kCentral) := by
+  have h1 := P.affine_current_mode_bracket (m := 1) (n := -1) X Y hbr
+  have h2 := P.affine_current_mode_bracket (m := -1) (n := 1) X Y hbr
+  rw [h1, h2]
+  simp
+  ring_nf
+  rw [← add_smul]
+  ring_nf
+
 /-- The Virasoro bracket is inherited in coefficient-normalized form. -/
 @[rep_depth operator]
 theorem virasoro_bracket_modes_normalized
@@ -187,6 +287,165 @@ theorem virasoro_bracket_modes_normalized
         (virasoroCentralCoefficient m n : ℝ) •
           P.affineVirasoro.virasoro.central :=
   P.affineVirasoro.virasoro.bracket_modes_normalized hvir m n
+
+/--
+Central-mode specialization of the Virasoro bracket at `(m,n) = (1,-1)`.
+
+This is the concrete resonant readback:
+`[L₁, L₋₁] = 2 L₀ + centralCoefficient(1,-1)·C`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_one_negOne
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 1,
+      P.affineVirasoro.virasoro.Lmode (-1)⁆
+      =
+      (2 : ℝ) • P.affineVirasoro.virasoro.Lmode 0
+        +
+      (virasoroCentralCoefficient 1 (-1) : ℝ) • P.affineVirasoro.virasoro.central := by
+  have h := P.virasoro_bracket_modes_normalized (m := 1) (n := -1) hvir
+  simpa [one_add_one_eq_two] using h
+
+/--
+Off-resonant specialization of the Virasoro bracket at `(m,n) = (1,0)`.
+
+The central channel is still represented by `virasoroCentralCoefficient 1 0`;
+in standard normalization this coefficient vanishes.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_one_zero
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 1,
+      P.affineVirasoro.virasoro.Lmode 0⁆
+      =
+      (1 : ℝ) • P.affineVirasoro.virasoro.Lmode 1
+        +
+      (virasoroCentralCoefficient 1 0 : ℝ) • P.affineVirasoro.virasoro.central := by
+  have h := P.virasoro_bracket_modes_normalized (m := 1) (n := 0) hvir
+  simpa using h
+
+/--
+Low-mode central coefficient vanishing:
+`virasoroCentralCoefficient 1 0 = 0`.
+-/
+@[rep_depth operator]
+theorem virasoroCentralCoefficient_one_zero :
+    virasoroCentralCoefficient 1 0 = 0 := by
+  simp [virasoroCentralCoefficient]
+
+/--
+Strict off-resonant low-mode Virasoro law:
+`[L₁, L₀] = L₁`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_one_zero_strict
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 1,
+      P.affineVirasoro.virasoro.Lmode 0⁆
+      =
+      P.affineVirasoro.virasoro.Lmode 1 := by
+  have h := P.virasoro_bracket_one_zero hvir
+  simpa [virasoroCentralCoefficient_one_zero] using h
+
+/--
+Low-mode resonant central coefficient vanishing:
+`virasoroCentralCoefficient 1 (-1) = 0`.
+-/
+@[rep_depth operator]
+theorem virasoroCentralCoefficient_one_negOne :
+    virasoroCentralCoefficient 1 (-1) = 0 := by
+  simp [virasoroCentralCoefficient]
+
+/--
+Strict resonant global-conformal low-mode law:
+`[L₁, L₋₁] = 2L₀`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_one_negOne_strict
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 1,
+      P.affineVirasoro.virasoro.Lmode (-1)⁆
+      =
+      (2 : ℝ) • P.affineVirasoro.virasoro.Lmode 0 := by
+  have h := P.virasoro_bracket_one_negOne hvir
+  simpa [virasoroCentralCoefficient_one_negOne] using h
+
+/--
+Concrete zero-mode identity:
+`[L₀, L₀] = 0`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_zero_zero
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 0,
+      P.affineVirasoro.virasoro.Lmode 0⁆
+      = 0 := by
+  have h := P.virasoro_bracket_modes_normalized (m := 0) (n := 0) hvir
+  simpa [virasoroCentralCoefficient, sub_eq_add_neg] using h
+
+/--
+Strict resonant global-conformal low-mode law:
+`[L₋₁, L₁] = -2L₀`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_negOne_one_strict
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode (-1),
+      P.affineVirasoro.virasoro.Lmode 1⁆
+      =
+      (-2 : ℝ) • P.affineVirasoro.virasoro.Lmode 0 := by
+  have h := P.virasoro_bracket_modes_normalized (m := -1) (n := 1) hvir
+  have hsub : ((-1 : ℝ) - (1 : ℝ)) = (-2 : ℝ) := by norm_num
+  simpa [virasoroCentralCoefficient, hsub] using h
+
+/--
+Strict global-conformal `sl₂` low-mode table:
+`[L₁,L₋₁]=2L₀`, `[L₋₁,L₁]=-2L₀`, and `[L₀,L₀]=0`.
+-/
+@[rep_depth operator]
+theorem virasoro_bracket_sl2_low_modes
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
+    ⁅P.affineVirasoro.virasoro.Lmode 1,
+      P.affineVirasoro.virasoro.Lmode (-1)⁆
+      = (2 : ℝ) • P.affineVirasoro.virasoro.Lmode 0
+    ∧
+    ⁅P.affineVirasoro.virasoro.Lmode (-1),
+      P.affineVirasoro.virasoro.Lmode 1⁆
+      = (-2 : ℝ) • P.affineVirasoro.virasoro.Lmode 0
+    ∧
+    ⁅P.affineVirasoro.virasoro.Lmode 0,
+      P.affineVirasoro.virasoro.Lmode 0⁆ = 0 := by
+  exact ⟨P.virasoro_bracket_one_negOne_strict hvir,
+    P.virasoro_bracket_negOne_one_strict hvir,
+    P.virasoro_bracket_zero_zero hvir⟩
 
 /-- Virasoro modes reparametrize affine currents by the supplied bridge law. -/
 @[rep_depth operator]

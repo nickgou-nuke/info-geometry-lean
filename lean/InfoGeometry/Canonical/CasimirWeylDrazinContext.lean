@@ -287,6 +287,35 @@ theorem sourcedGenerator_boundary_excitation_eq_background_of_strain_eq_zero_of_
       (E := E) CIK C hZD).2 hStrain
 
 /--
+Compressed-deviation-zero is exactly the sourced-generator/background-collapse
+surface on the owner lane. This removes the intermediate
+`observerDefectResidual = 0` packet for callers that already own the smaller
+compressed commutator witness.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_iff_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0
+      ↔ CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator
+            (observerProjectorDeviation CIK C.observer) CIK.dilationGap *
+          CIK.spectralComplementaryProjector = 0 := by
+  constructor
+  · intro hBackground
+    have hResidual : observerDefectResidual CIK C.observer = 0 :=
+      (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+        (E := E) CIK C).1 hBackground
+    simpa [observerDefectResidual_eq_projectorCompression_commutator_deviation
+      (CIK := CIK) (obs := C.observer)] using hResidual
+  · intro hZero
+    exact
+      (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+        (E := E) CIK C).2
+        (observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero
+          (CIK := CIK) (obs := C.observer) hZero)
+
+/--
 Compressed-deviation-zero is a constructive owner route forcing the sourced
 generator to collapse to the background flow.
 -/
@@ -301,10 +330,8 @@ theorem sourcedGenerator_eq_background_of_compressedDeviation_eq_zero
         CIK.spectralComplementaryProjector = 0) :
     sourcedGenerator (E := E) CIK C = C.flow.K0 := by
   exact
-    (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
-      (E := E) CIK C).2
-      (observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero
-        (CIK := CIK) (obs := C.observer) hZero)
+    (sourcedGenerator_eq_background_iff_compressedDeviation_eq_zero
+      (E := E) CIK C).2 hZero
 
 /--
 Zero central-defect budget plus owner control of the observer deviation forces

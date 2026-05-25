@@ -614,6 +614,19 @@ theorem projectors_commute_of_kahlerLogDet_unitRelativeVolumeBit
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
 /--
+Proof-carrying projector-commutation route using the single
+`KahlerLogDetUnitRelativeVolumeWitness` packet.
+-/
+theorem projectors_commute_of_kahlerLogDet_unitRelativeVolumeWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  exact CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
+    (M := M) W.scale_from_kahler W.unit_relative_volume
+
+/--
 Log-det barrier self-concordance mechanics package:
 unit relative volume in the RN layer forces zero Kähler potential, zero anomaly
 scale, normal inference, and projector-obstruction closure.

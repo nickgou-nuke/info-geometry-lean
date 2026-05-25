@@ -913,6 +913,16 @@ theorem fisher_metric_eq_sld_readout (A B : Obs) :
       C.state.state.eval ((C.fisherMetric.sld A) * (C.fisherMetric.sld B)) :=
   C.fisherMetric.metric_eq_state_sld_product A B
 
+/--
+On the observable-tangent identity-SLD branch, the Fisher/Bures metric is read
+back directly from the algebraic state without carrying the explicit SLD packet.
+-/
+@[rep_depth operator]
+theorem fisher_metric_eq_state_product (A B : Obs) :
+    C.fisherMetric.metric A B = C.state.state.eval (A * B) := by
+  simpa [ObservableMinimalCyclicCoordinatelessSouriauContext.fisherMetric_sld_eq_id]
+    using C.fisher_metric_eq_sld_readout A B
+
 /-- Fisher/Bures metric symmetry. -/
 @[rep_depth operator]
 theorem fisher_metric_symm (A B : Obs) :
@@ -941,6 +951,28 @@ theorem coordinateless_constructive_packet
     C.souriau_thermalGenerator_eq_moment,
     C.fisher_metric_symm A B,
     C.weyl_state_invariant A⟩
+
+/--
+Compatibility adapter from the observable-minimal identity-SLD branch to the
+minimal constructive cyclic branch.
+
+This reintroduces the general `sld` field definitionally, so callers that need
+`MinimalCyclicCoordinatelessSouriauContext` no longer carry an explicit
+observable-tangent `sld` packet on the owned identity-SLD lane.
+-/
+@[rep_depth operator]
+def toMinimalCyclicCoordinatelessSouriauContext :
+    MinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry Obs where
+  state := C.state
+  beta := C.beta
+  souriauMoment := C.souriauMoment
+  sld := fun A => A
+
+/-- The compatibility adapter reconstructs the observable-tangent SLD definitionally. -/
+@[rep_depth operator]
+theorem toMinimalCyclicCoordinatelessSouriauContext_sld_eq_id (A : Obs) :
+    C.toMinimalCyclicCoordinatelessSouriauContext.sld A = A :=
+  rfl
 
 end ObservableMinimalCyclicCoordinatelessSouriauContext
 
@@ -1465,6 +1497,19 @@ all of those fields are computed from the owned cyclic identity-flow lane.
 def toCoordinatelessSouriauFisherContext :
     CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent :=
   C.toMinimalCoordinatelessSouriauFisherContext.toCoordinatelessSouriauFisherContext
+
+/-- The broad compatibility adapter reads back the same cyclic algebraic state definitionally. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_state_eq :
+    C.toCoordinatelessSouriauFisherContext.state = C.state.state :=
+  rfl
+
+/-- The broad compatibility adapter reconstructs the removed `kms_state_eq` packet definitionally. -/
+@[rep_depth operator]
+theorem toCoordinatelessSouriauFisherContext_kms_state_eq :
+    C.toCoordinatelessSouriauFisherContext.kms.state =
+      C.toCoordinatelessSouriauFisherContext.state :=
+  rfl
 
 /-- On the adapter, the modular flow is definitionally the owned identity flow. -/
 @[rep_depth operator]

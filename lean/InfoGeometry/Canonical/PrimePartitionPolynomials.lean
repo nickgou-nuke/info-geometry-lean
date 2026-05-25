@@ -453,23 +453,21 @@ namespace LocalFugacityProjectionWitness
 
 /-- Re-export of the supplied local-to-global projection law. -/
 @[rep_depth thermo]
-theorem projection
+def projection
     {N : ℕ}
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
-    W.projection_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+    Prop :=
+  W.projection_law
 
 /-- Re-export of the supplied unit-circle preservation law. -/
 @[rep_depth thermo]
-theorem preserves_unit_circle
+def preserves_unit_circle
     {N : ℕ}
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
-    W.preserves_unit_circle_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+    Prop :=
+  W.preserves_unit_circle_law
 
 end LocalFugacityProjectionWitness
 

@@ -202,6 +202,35 @@ theorem parityOp_eq_one_sub_two_numberOp :
   ext <;> simp [parityOp_apply, numberOp_apply]
   ring
 
+/--
+Conjugation by local parity flips the split-Majorana bit-flipper.
+
+This is the real local grading law:
+
+`Π c Π = -c`.
+
+It proves that the local Möbius/parity operator acts as the `ℤ₂` grading on
+the Majorana generator.
+-/
+theorem parityOp_conj_cMajorana :
+    parityOp.comp (cMajorana.comp parityOp) = -cMajorana := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [parityOp, cMajorana, dMajorana, epsilon, iota]
+
+/--
+Conjugation by local parity flips the hyperbolic split-Majorana partner.
+
+`Π d Π = -d`.
+-/
+theorem parityOp_conj_dMajorana :
+    parityOp.comp (dMajorana.comp parityOp) = -dMajorana := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [parityOp, cMajorana, dMajorana, epsilon, iota]
+
 /-- `Π |0⟩ = |0⟩`. -/
 @[simp]
 theorem parityOp_vacuum :

@@ -173,6 +173,30 @@ theorem primeBoltzmannWeight_eq
         chemicalPotential * particleNumber x))) :=
   rfl
 
+/--
+Logarithm of a finite positive product equals the sum of logarithms.
+-/
+theorem log_prod_of_pos
+    {ι : Type*}
+    (s : Finset ι)
+    (f : ι → ℝ)
+    (hf : ∀ i ∈ s, 0 < f i) :
+    Real.log (s.prod f) = s.sum (fun i => Real.log (f i)) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simp
+  | insert a s ha ih =>
+      have hfa : 0 < f a := hf a (by simp)
+      have hfs : ∀ i ∈ s, 0 < f i := by
+        intro i hi
+        exact hf i (by simp [hi])
+      have hprod_pos : 0 < s.prod f := by
+        exact Finset.prod_pos hfs
+      rw [Finset.prod_insert ha, Finset.sum_insert ha]
+      rw [Real.log_mul (ne_of_gt hfa) (ne_of_gt hprod_pos)]
+      rw [ih hfs]
+
 /-! ## 4. Existing theorem-owned zeta readout -/
 
 /--

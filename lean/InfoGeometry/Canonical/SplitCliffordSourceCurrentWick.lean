@@ -6,6 +6,7 @@ import InfoGeometry.Canonical.SplitCliffordFiniteCAR
 import InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
 import InfoGeometry.Canonical.SplitCliffordSourceCurrent
+import InfoGeometry.External.Virasoro.AffineKacMoody
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
@@ -664,6 +665,29 @@ theorem sourceJfin_pairComm_support_subset
   simpa [InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW,
     sourceJfin_eq_JfinIndexed, InfoGeometry.Canonical.SplitCliffordFiniteCAR.commM4]
     using InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW_pairComm_support_subset m n
+
+/--
+Pointwise off-window vanishing for the source-side pair-commutator kernel.
+
+If `k` is not one of the two support points `m-1` or `m+1`, then the local
+kernel term is exactly zero.
+-/
+theorem sourceJfin_pairComm_term_eq_zero_of_outside_window
+    (m n k : Int)
+    (hk1 : k ≠ m - 1) (hk2 : k ≠ m + 1) :
+    (sourceJfin (m - k) * sourceJfin (n + k) -
+      sourceJfin (n + k) * sourceJfin (m - k)) = 0 := by
+  by_contra hne
+  have hkSupp : k ∈ Function.support
+      (fun t : Int =>
+        (sourceJfin (m - t) * sourceJfin (n + t) -
+          sourceJfin (n + t) * sourceJfin (m - t))) := by
+    simpa [Function.mem_support] using hne
+  have hkWin : k ∈ ({m - 1, m + 1} : Set Int) :=
+    sourceJfin_pairComm_support_subset m n hkSupp
+  rcases hkWin with hkWin | hkWin
+  · exact hk1 hkWin
+  · exact hk2 hkWin
 
 /--
 Two-term reduction of the local source-side pair-commutator `finsum`.
@@ -1378,6 +1402,34 @@ theorem externalInfiniteJ_currentHeisenbergRep_comm_full
   exact (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).comm m n
 
 /--
+Single-shot closure theorem for the explicit source-side Heisenberg object:
+the constructed `CurrentHeisenbergRep` has the intended current family `J`,
+the truncation law, and the full Heisenberg commutator law.
+-/
+theorem externalInfiniteJ_currentHeisenbergRep_J_trunc_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J = externalInfiniteJ 𝕜 α)
+      ∧
+    (∀ v : VirasoroProject.ChargedFockSpace 𝕜 α,
+      ∀ᶠ n : Int in Filter.atTop,
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J n v = 0)
+      ∧
+    (∀ m n : Int,
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J m).commutator
+        ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J n)
+        =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)
+      else 0) := by
+  refine ⟨rfl, ?_, ?_⟩
+  · exact (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).trunc
+  · intro m n
+    exact (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).comm m n
+
+/--
 Concrete Virasoro bracket law for the Sugawara stress modes attached to
 `externalInfiniteJ`.
 -/
@@ -1608,6 +1660,83 @@ theorem heisenberg_comm_full
   simpa [externalInfiniteJ_currentHeisenbergRep] using
     externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
 
+/--
+Jacobi closure for the explicit infinite current family.
+
+This is a direct `J/trunc/comm` consequence: each inner bracket is central,
+so all three nested commutators vanish.
+-/
+theorem externalInfiniteJ_jacobi
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n k : Int) :
+    (externalInfiniteJ 𝕜 α m).commutator
+        ((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α k))
+      +
+      (externalInfiniteJ 𝕜 α n).commutator
+        ((externalInfiniteJ 𝕜 α k).commutator (externalInfiniteJ 𝕜 α m))
+      +
+      (externalInfiniteJ 𝕜 α k).commutator
+        ((externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n))
+      =
+    (0 :
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  rw [heisenberg_comm_full (𝕜 := 𝕜) α n k]
+  rw [heisenberg_comm_full (𝕜 := 𝕜) α k m]
+  rw [heisenberg_comm_full (𝕜 := 𝕜) α m n]
+  simp [LinearMap.commutator, add_assoc, add_left_comm, add_comm]
+
+/--
+Global commutator skew-symmetry for the explicit infinite source current family.
+
+This is proved from the full Heisenberg law in both diagonal and off-diagonal
+branches.
+-/
+theorem externalInfiniteJ_commutator_skew
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n : Int) :
+    (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n)
+      =
+    -((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m)) := by
+  by_cases hmn : m + n = 0
+  · have hnm : n + m = 0 := by simpa [add_comm] using hmn
+    rw [heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := m) (n := n) hmn]
+    rw [heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := n) (n := m) hnm]
+    have hn : n = -m := by linarith
+    simp [hn]
+  · have hnm : n + m ≠ 0 := by simpa [add_comm] using hmn
+    rw [heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := m) (n := n) hmn]
+    rw [heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := n) (n := m) hnm]
+    simp
+
+/--
+Constructive source-side `J/trunc/comm` closure theorem for the explicit
+infinite current family `externalInfiniteJ`.
+
+This is the nontrivial closure payload consumed downstream: a concrete current
+family with proved truncation and full Heisenberg commutator law.
+-/
+theorem externalInfiniteJ_constructive_J_trunc_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (∀ v : VirasoroProject.ChargedFockSpace 𝕜 α,
+      ∀ᶠ n : Int in Filter.atTop, externalInfiniteJ 𝕜 α n v = 0)
+      ∧
+    (∀ m n : Int,
+      (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n) =
+        if m + n = 0 then
+          (m : 𝕜) •
+            (1 :
+              VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                VirasoroProject.ChargedFockSpace 𝕜 α)
+        else 0) := by
+  refine ⟨jw_mode_trunc_vector_infinite (𝕜 := 𝕜) α, ?_⟩
+  intro m n
+  exact heisenberg_comm_full (𝕜 := 𝕜) α m n
+
+/-! ## Closure Checklist: Section 3 (Affine Kac-Moody Current Layer)
+
+Owned directly by `InfoGeometry.External.Virasoro.AffineKacMoody`.
+-/
 /-! ## Closure Checklist: Section 4 (Normal Ordering + Sugawara) -/
 
 theorem normal_order_cutoff_independent_eventually
@@ -1824,6 +1953,37 @@ theorem source_to_infinite_closure_pipeline
   · intro m n
     exact heisenberg_comm_full (𝕜 := 𝕜) α m n
 
+/--
+Skew-symmetry of the explicit source-side Heisenberg current commutator.
+
+This is derived from the full central-law closure on `externalInfiniteJ`.
+-/
+theorem externalInfiniteJ_heisenberg_comm_skew
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n)
+      =
+    -((externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m)) := by
+  by_cases hmn : m + n = 0
+  · have h1 := heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := m) (n := n) hmn
+    have h2 : (externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m) =
+        (n : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α) := by
+      have hnm : n + m = 0 := by simpa [add_comm] using hmn
+      exact heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := n) (n := m) hnm
+    have hm_eq_neg_n : (m : 𝕜) = -(n : 𝕜) := by
+      have hmni : m + n = 0 := hmn
+      linarith
+    rw [h1, h2, hm_eq_neg_n]
+    simp [smul_neg]
+  · have h1 := heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := m) (n := n) hmn
+    have h2 : (externalInfiniteJ 𝕜 α n).commutator (externalInfiniteJ 𝕜 α m) = 0 := by
+      have hnm : n + m ≠ 0 := by simpa [add_comm] using hmn
+      exact heisenberg_comm_zero_offdiag (𝕜 := 𝕜) α (m := n) (n := m) hnm
+    rw [h1, h2]
+    simp
+
 theorem finite_model_is_not_full_heisenberg_but_converges_to_current_completion
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (¬ scalarHeisenbergShape sourceJfin)
@@ -1840,5 +2000,52 @@ theorem finite_to_infinite_agreement_on_low_energy_window
             VirasoroProject.ChargedFockSpace 𝕜 α) := by
   simpa using
     heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := 1) (n := -1) (by norm_num)
+
+theorem sugawara_commutator_two_neg_two
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode 2).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode (-2))
+      =
+      ((2 - (-2) : Int) : 𝕜) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode 0
+      + (((2 ^ 3 - 2 : 𝕜) / (12 : 𝕜)) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  have h :=
+    sugawara_central_term_eval (𝕜 := 𝕜) α (m := 2) (n := -2) (by norm_num)
+  simpa using h
+
+theorem sugawara_commutator_three_neg_three
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode 3).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode (-3))
+      =
+      ((3 - (-3) : Int) : 𝕜) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode 0
+      + (((3 ^ 3 - 3 : 𝕜) / (12 : 𝕜)) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  have h :=
+    sugawara_central_term_eval (𝕜 := 𝕜) α (m := 3) (n := -3) (by norm_num)
+  simpa using h
+
+theorem virasoro_lgen_commutator_two_neg_two
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 2)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-2)))
+      =
+      ((2 - (-2) : Int) : 𝕜) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0)
+      +
+      (((2 ^ 3 - 2 : 𝕜) / (12 : 𝕜)) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.cgen 𝕜)) := by
+  have h := sugawara_LL_full (𝕜 := 𝕜) α (m := 2) (n := -2)
+  simpa using h
 
 end InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

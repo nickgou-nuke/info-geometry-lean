@@ -156,13 +156,14 @@ theorem asanoPoly_zero_at_mobiusRoot_second
     (hden : C + D * z₁ ≠ 0) :
     asanoPoly A B C D z₁
       (-(A + B * z₁) / (C + D * z₁)) = 0 := by
-  have hmul :
-      (C + D * z₁) *
-        asanoPoly A B C D z₁ (-(A + B * z₁) / (C + D * z₁)) = 0 := by
-    rw [asanoPoly_rewrite_linear_in_second]
-    field_simp [hden]
-    ring
-  exact (mul_eq_zero.mp hmul).resolve_left hden
+  rw [asanoPoly_rewrite_linear_in_second]
+  have hdiv : (C + D * z₁) / (C + D * z₁) = (1 : ℂ) := div_self hden
+  calc
+    A + B * z₁ + (C + D * z₁) * (-(A + B * z₁) / (C + D * z₁))
+        = A + B * z₁ - (A + B * z₁) := by
+          field_simp [hden]
+          simp [hdiv, mul_comm, mul_left_comm, mul_assoc, add_comm, add_left_comm, add_assoc]
+    _ = 0 := by ring
 
 /--
 If the second-variable coefficient is nonzero, every zero of the two-variable

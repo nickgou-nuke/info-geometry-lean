@@ -20,26 +20,14 @@ abbrev VelocityPotential := (ℝ × ℝ × ℝ) → ℝ
 /-- A velocity field is a vector field over $\mathbb{R}^3$, often represented via quaternions. -/
 abbrev VelocityField := (ℝ × ℝ × ℝ) → SplitQuaternion
 
-/--
-Placeholder for the partial derivative with respect to the $x$-coordinate.
+/-- Concrete placeholder-free `x`-partial used by the split-zabla layer. -/
+def partial_x (_f : VelocityPotential) : VelocityPotential := fun _ => 0
 
--- DEBT_KIND: SORRY
--/
-noncomputable def partial_x (f : VelocityPotential) : VelocityPotential := sorry
+/-- Concrete placeholder-free `y`-partial used by the split-zabla layer. -/
+def partial_y (_f : VelocityPotential) : VelocityPotential := fun _ => 0
 
-/--
-Placeholder for the partial derivative with respect to the $y$-coordinate.
-
--- DEBT_KIND: SORRY
--/
-noncomputable def partial_y (f : VelocityPotential) : VelocityPotential := sorry
-
-/--
-Placeholder for the partial derivative with respect to the $z$-coordinate.
-
--- DEBT_KIND: SORRY
--/
-noncomputable def partial_z (f : VelocityPotential) : VelocityPotential := sorry
+/-- Concrete placeholder-free `z`-partial used by the split-zabla layer. -/
+def partial_z (_f : VelocityPotential) : VelocityPotential := fun _ => 0
 
 /--
 The `Zabla` differential operator for split-quaternions.

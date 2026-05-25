@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.Bregman
+import InfoGeometry.Convex.BregmanLegendreProofs
 import InfoGeometry.Convex.Duality
 import InfoGeometry.Convex.Euclidean
 import InfoGeometry.Convex.FenchelConjugate

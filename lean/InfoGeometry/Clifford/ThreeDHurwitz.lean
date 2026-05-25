@@ -251,6 +251,39 @@ theorem pseudoscalar_sq (s0 s1 s2 : ℝ) :
     ((g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2)
       * ((g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2)
       = algebraMap ℝ (Cl3 s0 s1 s2) (-(s0 * s1 * s2)) := by
-  sorry
+  have h20 : g2 s0 s1 s2 * g0 s0 s1 s2 = -(g0 s0 s1 s2 * g2 s0 s1 s2) := by
+    simpa using congrArg Neg.neg (g0_g2_anti (s0 := s0) (s1 := s1) (s2 := s2))
+  have h21 : g2 s0 s1 s2 * g1 s0 s1 s2 = -(g1 s0 s1 s2 * g2 s0 s1 s2) := by
+    simpa using congrArg Neg.neg (g1_g2_anti (s0 := s0) (s1 := s1) (s2 := s2))
+  have hcomm :
+      g2 s0 s1 s2 * (g0 s0 s1 s2 * g1 s0 s1 s2) =
+        (g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2 := by
+    calc
+      g2 s0 s1 s2 * (g0 s0 s1 s2 * g1 s0 s1 s2)
+          = (g2 s0 s1 s2 * g0 s0 s1 s2) * g1 s0 s1 s2 := by rw [mul_assoc]
+      _ = (-(g0 s0 s1 s2 * g2 s0 s1 s2)) * g1 s0 s1 s2 := by rw [h20]
+      _ = -((g0 s0 s1 s2 * g2 s0 s1 s2) * g1 s0 s1 s2) := by rw [neg_mul]
+      _ = -(g0 s0 s1 s2 * (g2 s0 s1 s2 * g1 s0 s1 s2)) := by rw [mul_assoc]
+      _ = -(g0 s0 s1 s2 * (-(g1 s0 s1 s2 * g2 s0 s1 s2))) := by rw [h21]
+      _ = g0 s0 s1 s2 * (g1 s0 s1 s2 * g2 s0 s1 s2) := by simp
+      _ = (g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2 := by rw [mul_assoc]
+  calc
+    ((g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2)
+        * ((g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2)
+        = (g0 s0 s1 s2 * g1 s0 s1 s2)
+            * (g2 s0 s1 s2 * (g0 s0 s1 s2 * g1 s0 s1 s2))
+            * g2 s0 s1 s2 := by
+              repeat rw [mul_assoc]
+    _ = (g0 s0 s1 s2 * g1 s0 s1 s2)
+          * ((g0 s0 s1 s2 * g1 s0 s1 s2) * g2 s0 s1 s2)
+          * g2 s0 s1 s2 := by rw [hcomm]
+    _ = ((g0 s0 s1 s2 * g1 s0 s1 s2) * (g0 s0 s1 s2 * g1 s0 s1 s2))
+          * (g2 s0 s1 s2 * g2 s0 s1 s2) := by
+            repeat rw [mul_assoc]
+    _ = (algebraMap ℝ (Cl3 s0 s1 s2) (-(s0 * s1)))
+          * (algebraMap ℝ (Cl3 s0 s1 s2) s2) := by
+            rw [bivector01_sq, g2_sq]
+    _ = algebraMap ℝ (Cl3 s0 s1 s2) (-(s0 * s1 * s2)) := by
+            simp [mul_assoc]
 
 end InfoGeometry.Clifford.ThreeDHurwitz

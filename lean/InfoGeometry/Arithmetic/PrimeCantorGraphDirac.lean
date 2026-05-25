@@ -411,6 +411,49 @@ theorem weightedNumberEnergy_erase_of_mem
     simpa using Finset.sum_erase_add S (fun q => weight q) hmem
   exact (eq_sub_iff_add_eq).2 hsum
 
+/--
+Creating an unoccupied prime mode adds exactly that mode's weight to the
+finite Hodge-square energy.
+
+This is the Hodge-square version of
+`weightedNumberEnergy_insert_of_not_mem`.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_insert_of_not_mem
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hnot : p ∉ S) :
+    weightedHodgeSquareEnergy P weight (insert p S) =
+      weightedHodgeSquareEnergy P weight S + weight p := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight (insert p S)]
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight S]
+  exact weightedNumberEnergy_insert_of_not_mem P weight hp hS hnot
+
+/--
+Annihilating an occupied prime mode subtracts exactly that mode's weight from
+the finite Hodge-square energy.
+
+This is the Hodge-square version of
+`weightedNumberEnergy_erase_of_mem`.
+-/
+@[rep_depth thermo]
+theorem weightedHodgeSquareEnergy_erase_of_mem
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hmem : p ∈ S) :
+    weightedHodgeSquareEnergy P weight (S.erase p) =
+      weightedHodgeSquareEnergy P weight S - weight p := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight (S.erase p)]
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy P weight S]
+  exact weightedNumberEnergy_erase_of_mem P weight hS hmem
+
 
 /-! ## 4. Bundled finite graph-Dirac carrier -/
 

@@ -308,6 +308,93 @@ theorem negLogVolume_mul3_of_ne_zero
   rw [log_detZ3_mul3_of_ne_zero X Y hX hY]
   ring
 
+/-! ### Barrier/Radon–Nikodym reconciliation lemmas -/
+
+/--
+The positive Zorn chamber is closed under the concrete Zorn product.
+
+This is the determinant composition theorem read as preservation of the
+positive log-barrier domain.
+-/
+theorem IsPosCone_mul3
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsPosCone X) (hY : IsPosCone Y) :
+    IsPosCone (mul3 X Y) := by
+  unfold IsPosCone at *
+  rw [detZ3_mul3]
+  exact mul_pos hX hY
+
+/--
+The isotropic/null shell is outside the positive log-barrier chamber.
+
+This formalizes the statement that the projective null boundary is a barrier
+boundary, not an interior point of the finite logarithmic potential.
+-/
+theorem not_IsPosCone_of_detZ3_eq_zero
+    (X : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZ3 X = 0) :
+    ¬ IsPosCone X := by
+  intro hpos
+  have hzero : (0 : ℝ) < 0 := by
+    simpa [IsPosCone, hX] using hpos
+  exact (lt_irrefl (0 : ℝ)) hzero
+
+/--
+Positive-branch negative logarithmic volume change under Zorn multiplication.
+
+The additive change in the barrier potential caused by right multiplication
+by `Y` is exactly the barrier potential of `Y`.
+-/
+theorem barrierPhi_change_mul3_left
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsPosCone X) (hY : IsPosCone Y) :
+    barrierPhi (mul3 X Y) - barrierPhi X = barrierPhi Y := by
+  rw [barrierPhi_mul3 X Y hX hY]
+  ring
+
+/--
+Radon–Nikodym reconciliation on the positive Zorn chamber.
+
+The barrier change under left multiplication agrees with the negative
+logarithm of the determinant-ratio Radon–Nikodym readout.
+-/
+theorem barrierPhi_change_mul3_left_eq_negLog_relativeVolumeRN
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsPosCone X) (hY : IsPosCone Y) :
+    barrierPhi (mul3 X Y) - barrierPhi X =
+      -Real.log (relativeVolumeRN X (mul3 X Y)) := by
+  calc
+    barrierPhi (mul3 X Y) - barrierPhi X = barrierPhi Y := by
+      exact barrierPhi_change_mul3_left X Y hX hY
+    _ = -Real.log (relativeVolumeRN X (mul3 X Y)) := by
+      rw [relativeVolumeRN_mul3_left X Y (ne_of_gt hX)]
+      rfl
+
+/--
+Non-isotropic absolute log-volume change under Zorn multiplication.
+
+This version works on the non-null stratum using `-log |detZ3|`, so it does
+not require choosing the positive chamber.
+-/
+theorem barrierAbsPhi_change_mul3_left_of_ne_zero
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZ3 X ≠ 0) (hY : detZ3 Y ≠ 0) :
+    barrierAbsPhi (mul3 X Y) - barrierAbsPhi X = barrierAbsPhi Y := by
+  rw [barrierAbsPhi_mul3_of_ne_zero X Y hX hY]
+  ring
+
+/--
+Non-isotropic negative-log-volume change under Zorn multiplication.
+
+This is the same additive cocycle statement for `negLogVolume`.
+-/
+theorem negLogVolume_change_mul3_left_of_ne_zero
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZ3 X ≠ 0) (hY : detZ3 Y ≠ 0) :
+    negLogVolume (mul3 X Y) - negLogVolume X = negLogVolume Y := by
+  rw [negLogVolume_mul3_of_ne_zero X Y hX hY]
+  ring
+
 /-- Ambient coordinate pairing on concrete Zorn cells. -/
 def coordPair (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ :=
   X.a * Y.a + X.b * Y.b + dot X.v Y.v + dot X.w Y.w

@@ -266,7 +266,7 @@ equals the negative log determinant of the multiplier `Y`.
 -/
 theorem negLog_relativeVolumeRN_mul3_left
     (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hX : detZ3 X ≠ 0) (hY : detZ3 Y ≠ 0) :
+    (hX : detZ3 X ≠ 0) :
     -Real.log (relativeVolumeRN X (mul3 X Y)) = negLogVolume Y := by
   rw [relativeVolumeRN_mul3_left X Y hX]
   unfold negLogVolume
@@ -307,44 +307,6 @@ theorem negLogVolume_mul3_of_ne_zero
   unfold negLogVolume
   rw [log_detZ3_mul3_of_ne_zero X Y hX hY]
   ring
-
-/-! ### Naming aliases (`detZc`/`mulZ`) for the same concrete `R³` carrier -/
-
-/-- Alias: concrete determinant in `R³` coordinates. -/
-abbrev detZc (X : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ := detZ3 X
-
-/-- Alias: concrete Zorn product in `R³` coordinates. -/
-abbrev mulZ (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ZornCell ℝ (ℝ × ℝ × ℝ) := mul3 X Y
-
-/-- Alias of left multiplicative RN transport with `mulZ` naming. -/
-theorem relativeVolumeRN_mulZ_left
-    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hX : detZc X ≠ 0) :
-    relativeVolumeRN X (mulZ X Y) = detZc Y := by
-  simpa [mulZ, detZc] using relativeVolumeRN_mul3_left X Y hX
-
-/-- Alias of negative-log RN transport with `mulZ` naming. -/
-theorem negLog_relativeVolumeRN_mulZ_left
-    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
-    -Real.log (relativeVolumeRN X (mulZ X Y)) = negLogVolume Y := by
-  simpa [mulZ, detZc] using negLog_relativeVolumeRN_mul3_left X Y hX hY
-
-/-- Alias of log-additivity theorem with `detZ`/`mulZ` naming. -/
-theorem log_detZ_mulZ
-    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
-    Real.log (detZc (mulZ X Y)) =
-      Real.log (detZc X) + Real.log (detZc Y) := by
-  simpa [mulZ, detZc] using log_detZ3_mul3_of_ne_zero X Y hX hY
-
-/-- Alias of negative-log cocycle theorem with `detZ`/`mulZ` naming. -/
-theorem negLogVolume_mulZ
-    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
-    negLogVolume (mulZ X Y) =
-      negLogVolume X + negLogVolume Y := by
-  simpa [mulZ, detZc] using negLogVolume_mul3_of_ne_zero X Y hX hY
 
 /-- Ambient coordinate pairing on concrete Zorn cells. -/
 def coordPair (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ :=
@@ -422,6 +384,55 @@ theorem logDetBregmanAt_cocycle_shift_cancel
     bregmanAt_add_const_invariant barrierPhi (-Real.log χU) X Y η
 
 /--
+8D Jacobian normalization identity (concrete criterion).
+
+If a Jacobian scale is fixed by `J(U) = |detZ3(U)|^4`, then
+`-log J(U) = -4 log |detZ3(U)|`.
+-/
+theorem neg_log_jacobianScale_eq_neg_four_log_abs_detZ3
+    (jacobianScale : ZornCell ℝ (ℝ × ℝ × ℝ) → ℝ)
+    (U : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hJ : jacobianScale U = |detZ3 U| ^ (4 : ℕ)) :
+    -Real.log (jacobianScale U) = -4 * Real.log |detZ3 U| := by
+  rw [hJ]
+  by_cases h0 : detZ3 U = 0
+  · simp [h0]
+  · rw [← Real.rpow_natCast]
+    rw [Real.log_rpow (abs_pos.mpr h0)]
+    ring
+
+/--
+Concrete RN cocycle theorem for a multiplicative Zorn action character.
+
+If `act` scales the Zorn determinant by `χ(U)` and Jacobian scale is normalized
+as `|detZ3 U|^4`, then the logarithmic RN shift is exactly
+`-4 * log |χ(U)|`.
+-/
+theorem rn_log_cocycle_of_action_character
+    (jacobianScale : ZornCell ℝ (ℝ × ℝ × ℝ) → ℝ)
+    (χ : ZornCell ℝ (ℝ × ℝ × ℝ) → ℝ)
+    (U : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hscale : jacobianScale U = |χ U| ^ (4 : ℕ)) :
+    -Real.log (jacobianScale U) = -4 * Real.log |χ U| := by
+  rw [hscale]
+  by_cases h0 : χ U = 0
+  · simp [h0]
+  · rw [← Real.rpow_natCast]
+    rw [Real.log_rpow (abs_pos.mpr h0)]
+    ring
+
+/--
+Concrete left-transport cocycle on the positive cone:
+for explicit Zorn product `mul3`, the barrier shift is exactly additive.
+-/
+theorem barrierPhi_left_mul3_shift
+    (U X : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hU : IsPosCone U) (hX : IsPosCone X) :
+    barrierPhi (mul3 U X) = barrierPhi X + barrierPhi U := by
+  rw [barrierPhi_mul3 U X hU hX]
+  ring
+
+/--
 Fenchel-gap form for `F = barrierPhi` and pairing `coordPair`.
 -/
 noncomputable def logDetFenchelGapAt
@@ -444,109 +455,6 @@ theorem logDetBregman_eq_fenchelGap_at_contact
   ring
 
 end LogDet
-
-section CharacterCocycle
-
-open Real
-
-variable {G : Type*} [Group G]
-
-/-- Additive log-cocycle attached to a positive multiplicative character. -/
-noncomputable def logCharacterCocycle (χ : G → ℝ) (g : G) : ℝ :=
-  -Real.log (χ g)
-
-/--
-Multiplicative character gives additive log-cocycle:
-`c(gh) = c(g) + c(h)` for `c(g) = -log χ(g)`.
--/
-theorem logCharacterCocycle_mul
-    (χ : G → ℝ)
-    (hχ_mul : ∀ g h : G, χ (g * h) = χ g * χ h)
-    (hχ_pos : ∀ g : G, 0 < χ g)
-    (g h : G) :
-    logCharacterCocycle χ (g * h) =
-      logCharacterCocycle χ g + logCharacterCocycle χ h := by
-  unfold logCharacterCocycle
-  rw [hχ_mul g h, Real.log_mul (ne_of_gt (hχ_pos g)) (ne_of_gt (hχ_pos h))]
-  ring
-
-/--
-If a conformal action scales a quadratic norm by `χ`, then in dimension `8`
-the volume Jacobian scales by `χ^4`; equivalently the inverse-density log is
-`4 log χ` (for positive `χ`).
--/
-theorem neg_log_inv_jacobian_eq_four_log_character
-    (χ J : ℝ)
-    (hJ : J = χ ^ (4 : ℕ)) :
-    -Real.log (J⁻¹) = 4 * Real.log χ := by
-  rw [hJ]
-  rw [show -Real.log ((χ ^ (4 : ℕ))⁻¹) = Real.log (χ ^ (4 : ℕ)) by
-    rw [Real.log_inv, neg_neg]]
-  simpa using (Real.log_rpow χ (4 : ℝ))
-
-/--
-Action-character law on the concrete positive cone:
-if `detZ3` scales by `χ`, then `barrierPhi` shifts by `-log χ`.
--/
-theorem barrierPhi_action_of_det_character
-    (act : G → ZornCell ℝ (ℝ × ℝ × ℝ) → ZornCell ℝ (ℝ × ℝ × ℝ))
-    (χ : G → ℝ)
-    (hdet : ∀ g X, detZ3 (act g X) = χ g * detZ3 X)
-    (g : G) (X : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hχ : 0 < χ g) (hX : IsPosCone X) :
-    barrierPhi (act g X) = barrierPhi X - Real.log (χ g) := by
-  unfold barrierPhi
-  rw [hdet g X]
-  rw [Real.log_mul (ne_of_gt hχ) (ne_of_gt hX)]
-  ring
-
-/-- Pushforward RN cocycle rewrite: `-log (1/J) = log J` for positive `J`. -/
-theorem neg_log_inv_eq_log
-    (J : ℝ) :
-    -Real.log (1 / J) = Real.log J := by
-  rw [one_div, Real.log_inv, neg_neg]
-
-/--
-If `J = |χ|^4`, the RN logarithmic cocycle is `4 log |χ|`.
--/
-theorem rn_log_cocycle_eq_four_log_abs_character
-    (χ : ℝ) (hχ : χ ≠ 0) :
-    let J : ℝ := |χ| ^ (4 : ℕ);
-    -Real.log (1 / J) = 4 * Real.log |χ| := by
-  intro J
-  have h := neg_log_inv_jacobian_eq_four_log_character (|χ|) (|χ| ^ (4 : ℕ)) rfl
-  simpa [J] using h
-
-/--
-Function-form RN logarithmic cocycle:
-if `J(g) = |χ(g)|^4`, then `-log (1 / J(g)) = 4 log |χ(g)|`.
--/
-theorem rn_log_cocycle_eq_four_log_abs_character_fn
-    (χ J : G → ℝ)
-    (hJ : ∀ g : G, J g = |χ g| ^ (4 : ℕ))
-    (hχ : ∀ g : G, χ g ≠ 0)
-    (g : G) :
-    -Real.log (1 / J g) = 4 * Real.log |χ g| := by
-  rw [hJ g]
-  simpa using rn_log_cocycle_eq_four_log_abs_character (χ g) (hχ g)
-
-/--
-8D Jacobian normalization criterion:
-if `jacobianScale U = |detZ3 U|^4`, then
-`-log (jacobianScale U) = -4 * log |detZ3 U|`.
--/
-theorem neg_log_jacobianScale_eq_neg_four_log_abs_detZ3
-    (jacobianScale : ZornCell ℝ (ℝ × ℝ × ℝ) → ℝ)
-    (U : ZornCell ℝ (ℝ × ℝ × ℝ))
-    (hJ : jacobianScale U = |detZ3 U| ^ (4 : ℕ))
-    (hdet : detZ3 U ≠ 0) :
-    -Real.log (jacobianScale U) = -4 * Real.log |detZ3 U| := by
-  rw [hJ]
-  rw [← Real.rpow_natCast]
-  rw [Real.log_rpow (abs_pos.mpr hdet)]
-  ring
-
-end CharacterCocycle
 
 end ZornCell
 

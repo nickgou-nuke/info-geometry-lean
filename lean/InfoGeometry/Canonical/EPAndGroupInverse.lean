@@ -76,6 +76,15 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_isEP
   IK.rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement hEP
 
 /--
+Vanishing dilation gap is a smaller constructive route to the anomaly-agreement
+surface: the EP packet is recovered internally from the gap collapse.
+-/
+theorem rightChiralAnomaly_eq_chiralAnomaly_of_dilationGap_eq_zero
+    (hGap : IK.dilationGap = 0) :
+    IK.rightChiralAnomaly = IK.chiralAnomaly :=
+  IK.rightChiralAnomaly_eq_chiralAnomaly_of_isEP (IK.isEP_of_dilationGap_eq_zero hGap)
+
+/--
 In the EP corridor, the Moore-Penrose inverse satisfies the Drazin laws with
 index `1`, so it is a group inverse witness.
 -/
@@ -170,6 +179,16 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_isEP
   simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.rightChiralAnomaly,
     CertifiedInverseKernel.chiralAnomaly, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_isEP hEP
+
+/--
+Certified gap-collapse route to anomaly agreement: callers that already own
+`dilationGap = 0` do not need to provide a separate `CIK.IsEP` packet.
+-/
+theorem rightChiralAnomaly_eq_chiralAnomaly_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    CIK.rightChiralAnomaly = CIK.chiralAnomaly := by
+  simpa [CertifiedInverseKernel.dilationGap, CertifiedInverseKernel.toInverseKernel'] using
+    CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_dilationGap_eq_zero hGap
 
 /-- Under certified EP, the spectral/dilation commutator vanishes trivially. -/
 theorem spectralProjector_commutator_dilationGap_eq_zero_of_isEP

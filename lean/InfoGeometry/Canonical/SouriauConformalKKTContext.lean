@@ -796,6 +796,32 @@ structure ConformalOperatorAdmissibilityWitness where
   X : EndH₂
   Y : EndH₂
 
+/--
+Proof-carrying witness for the operatorial conformal cone-admissibility socket.
+
+This is the smallest constructive narrowing of the remaining broad proposition
+surface on the positive-partition lane: downstream routes can consume a witness
+object instead of a bare `hCone : C.IsConeAdmissible` argument.
+-/
+@[rep_depth transport]
+structure ConformalConeAdmissibilityWitness
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
+-- theorem-class: bridge
+  hCone : C.IsConeAdmissible
+
+namespace ConformalConeAdmissibilityWitness
+
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/-- Recover the cone-admissibility proposition from the proof-carrying witness. -/
+@[rep_depth transport]
+theorem coneAdmissible
+    (W : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
+    C.IsConeAdmissible :=
+  W.hCone
+
+end ConformalConeAdmissibilityWitness
+
 namespace ConformalOperatorAdmissibilityWitness
 
 variable (W : ConformalOperatorAdmissibilityWitness (α := α) (H := H))
@@ -832,6 +858,18 @@ namespace ConformalPositivePartitionWitness
 variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
 
 /--
+Cone membership plus the positive-partition witness recover operatorial
+admissibility through the proof-carrying cone witness socket, without a bare
+`hCone` theorem argument.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible_of_coneWitness
+    (W : ConformalPositivePartitionWitness C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
+    C.IsOperatorAdmissible :=
+  W.operatorAdmissible hCone.hCone
+
+/--
 Build the stable operator-admissibility witness directly from a positive-partition
 witness plus the remaining cone/TKK/channel data.
 -/
@@ -854,6 +892,28 @@ noncomputable def toOperatorAdmissibilityWitness
   Y := Y
 
 /--
+Build the stable operator-admissibility witness directly from a positive-partition
+witness and a proof-carrying cone witness, without a bare `hCone` argument.
+-/
+@[rep_depth transport]
+noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
+  gibbs := C
+  weylGauge := weylGauge
+  tkkParameter := tkkParameter
+  hTKK := hTKK
+  hCone := hCone.hCone
+  partitionWitness := W
+  X := X
+  Y := Y
+
+/--
 Build the stable closure context directly from a positive-partition witness,
 without re-supplying a separate `hOperatorAdmissible` packet.
 -/
@@ -867,6 +927,21 @@ noncomputable def toClosureContext
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
+
+/--
+Build the stable closure context directly from a positive-partition witness and
+a proof-carrying cone witness, without a bare `hCone` theorem argument.
+-/
+@[rep_depth transport]
+noncomputable def toClosureContextOfConeWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
+  (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
 
 end ConformalPositivePartitionWitness
 
@@ -1453,6 +1528,19 @@ theorem selfResponse_nonneg_of_squareResponse
 -- theorem-class: bridge
 /--
 Diagonal conformal Fisher/Onsager production is nonnegative on the
+operator-admissibility constructive branch, using the proof-carrying
+square-response witness packet instead of a separate amplitude/equality pair.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareWitness
+    (hSquare : ConformalSquareResponseWitness W.gibbs W.X) :
+    0 ≤ (W.toPositiveContextOfWitness hSquare).fisherOnsagerProduction := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitness hSquare).fisherOnsagerProduction_nonneg
+
+-- theorem-class: bridge
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the
 operator-admissibility constructive branch, without re-threading separate
 operator-admissibility premises.
 -/
@@ -1463,7 +1551,8 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse
       W.gibbs.operatorConformalResponse W.X W.X = amplitude ^ (2 : ℕ)) :
     0 ≤ (W.toPositiveContext amplitude selfResponse_eq_square).fisherOnsagerProduction := by
   exact
-    (W.toConstructiveSquarePositiveContext amplitude selfResponse_eq_square).fisherOnsagerProduction_nonneg
+    W.fisherOnsagerProduction_nonneg_of_squareWitness
+      { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }
 
 -- theorem-class: bridge
 /--

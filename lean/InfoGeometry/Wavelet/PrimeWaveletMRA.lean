@@ -217,13 +217,11 @@ def toPrimeLeeYangConvergenceSocket :
   xiCayleyPullback := W.xiCayleyPullback
   locallyUniformRenormalizedLimit := W.locallyUniformWaveletLimit
   limit_eq_xiCayleyPullback_law := W.waveletLimit_eq_xiCayleyPullback_law
-  limit_eq_xiCayleyPullback_certificate := W.waveletLimit_eq_xiCayleyPullback_certificate
   nontrivial_in := W.nontrivial_in
   nontrivial_out := W.nontrivial_out
   inner_zero_free := W.inner_mra_zero_free
   outer_zero_free := W.outer_mra_zero_free
   noSpuriousZeros := W.noSpuriousZeros
-  noSpuriousZeros_certificate := W.noSpuriousZeros_certificate
   xi_zero_iff_limit_zero := W.xi_zero_iff_waveletLimit_zero
 
 /-- The wavelet MRA witness maps completed-`xi` zeros to the Lee--Yang circle. -/

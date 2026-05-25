@@ -834,6 +834,24 @@ theorem nonDegenerate_endpoint_adapter_pair
       h0₁ h0₂ hzf hD hend hzero
 
 /--
+Contrapositive nondegenerate endpoint adapter:
+outside the signed-product obstruction, there is no contracted zero.
+-/
+theorem not_isContractedZero_of_not_mem_signedProduct_of_nonDegenerate_via_endpoint
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0₁ : (0 : ℂ) ∉ K₁)
+    (h0₂ : (0 : ℂ) ∉ K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
+    (hD : D ≠ 0)
+    (hend : (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))
+    (hz_not : z ∉ signedProductSet K₁ K₂) :
+    ¬ IsContractedZero A D z := by
+  intro hzero
+  exact hz_not
+    (contracted_zero_mem_signedProduct_of_nonDegenerate_via_endpoint
+      h0₁ h0₂ hzf hD hend hzero)
+
+/--
 Full contracted Asano closure assembled from all determinant branches:
 
 * `D = 0`,

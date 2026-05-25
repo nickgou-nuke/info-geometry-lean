@@ -389,8 +389,7 @@ theorem zetaHolonomy_unitaryAt_iff_re_eq_half
       have hnorm_nonneg : 0 ≤ ‖zetaHolonomy s p‖ := norm_nonneg _
       nlinarith
     exact (norm_zetaHolonomy_eq_one_iff_re_eq_half (s := s) (p := p)).1 hnorm_one
-  · intro hs
-    intro p
+  · intro hs p
     refine ⟨?_, ?_⟩
     · unfold zetaHolonomy
       exact Complex.exp_ne_zero _
@@ -512,12 +511,12 @@ theorem creationSupercharge_basisDelta_eq_kernel_sum {P : PrimeCutoff}
   unfold creationPush creationKernel optionEval basisDelta
   cases h : PrimeExteriorGraphDirac.create p S with
   | none =>
-      simp [h]
+      simp
   | some U =>
       by_cases hUT : U = T
       · subst U
-        simp [h]
-      · simp [h, hUT]
+        simp
+      · simp [hUT]
 
 /--
 The dual annihilation supercharge applied to a basis delta has matrix coefficient
@@ -537,12 +536,12 @@ theorem dualAnnihilationSupercharge_basisDelta_eq_kernel_sum {P : PrimeCutoff}
   unfold annihilationPush annihilationKernel optionEval basisDelta
   cases h : PrimeExteriorGraphDirac.annihilate p S with
   | none =>
-      simp [h]
+      simp
   | some U =>
       by_cases hUT : U = T
       · subst U
-        simp [h]
-      · simp [h, hUT]
+        simp
+      · simp [hUT]
 
 /--
 The finite Cantor--Dirac kernel is the matrix coefficient of the finite
@@ -621,34 +620,6 @@ theorem re_eq_half_of_HolonomyUnitaryAt_of_zetaHolonomy
     s.re = 1 / 2 := by
   exact (D.HolonomyUnitaryAt_iff_re_eq_half_of_zetaHolonomy hP s hhol).1 hU
 
-/--
-Zeta-specialized finite self-adjointness of the Cantor--Dirac operator on the
-critical line.
-
-This theorem stays inside the existing owner lane: once modewise adjointness is
-available and `D.holonomy` is specialized to `zetaHolonomy`, `Re(s)=1/2`
-implies self-adjointness of `D.op s` for the finite pairing.
--/
-@[rep_depth thermo]
-theorem op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
-    (hP : P.primes.Nonempty) (s : ℂ)
-    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
-    (hs : s.re = 1 / 2)
-    (hAdjMode :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
-    (hAdjModeRev :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
-    IsAdjointPair (P := P) (D.op s) (D.op s) := by
-  have _hU : D.HolonomyUnitaryAt s :=
-    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
-  exact D.op_isSelfAdjoint_of_modewiseAdjoint s hAdjMode hAdjModeRev
-
 /-- Finite sesquilinear pairing on Cantor fields. -/
 @[rep_depth thermo]
 def pairing (f g : CantorField P) : ℂ :=
@@ -709,6 +680,18 @@ theorem pairing_conj_symm (f g : CantorField P) :
     star (pairing f g) = pairing g f := by
   unfold pairing
   simp [mul_comm]
+
+@[simp, rep_depth thermo]
+theorem pairing_right_basisDelta (f : CantorField P) (T : Vertex P) :
+    pairing f (basisDelta T) = star (f T) := by
+  unfold pairing basisDelta
+  simp
+
+@[simp, rep_depth thermo]
+theorem pairing_left_basisDelta (f : CantorField P) (T : Vertex P) :
+    pairing (basisDelta T) f = f T := by
+  unfold pairing basisDelta
+  simp
 
 @[simp, rep_depth thermo]
 theorem pairing_sum_left (s : Finset (PrimeMode P))
@@ -858,6 +841,112 @@ theorem op_isSelfAdjoint_of_modewiseAdjoint
   apply D.op_isSelfAdjoint_of_unitary (s := s)
   · exact D.Qsharp_isAdjointPair_of_unitary (s := s) hAdjMode
   · exact D.Q_isAdjointPair_of_unitary (s := s) hAdjModeRev
+
+/--
+Zeta-specialized finite self-adjointness of the Cantor--Dirac operator on the
+critical line.
+
+This theorem stays inside the existing owner lane: once modewise adjointness is
+available and `D.holonomy` is specialized to `zetaHolonomy`, `Re(s)=1/2`
+implies self-adjointness of `D.op s` for the finite pairing.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_isSelfAdjoint_of_modewiseAdjoint s hAdjMode hAdjModeRev
+
+/--
+Zeta-specialized finite self-adjointness from pointwise holonomy unitarity.
+
+This is the direct `HolonomyUnitaryAt` entrypoint: if the zeta-specialized
+holonomy is unitary at `s`, then `D.op s` is self-adjoint once modewise
+adjointness is provided.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  have hs : s.re = 1 / 2 :=
+    D.re_eq_half_of_HolonomyUnitaryAt_of_zetaHolonomy hP s hhol hU
+  exact D.op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+    hP s hhol hs hAdjMode hAdjModeRev
+
+/--
+Kernel Hermitian symmetry induced by finite self-adjointness:
+
+`star (K(S,T)) = K(T,S)`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_op_isSelfAdjoint
+    (s : ℂ)
+    (hself : IsAdjointPair (P := P) (D.op s) (D.op s))
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hpair := hself (basisDelta T) (basisDelta S)
+  have hL :
+      pairing (D.op s (basisDelta T)) (basisDelta S) = star (D.kernel s S T) := by
+    rw [pairing_right_basisDelta]
+    simpa using congrArg star (D.op_basisDelta_eq_kernel (s := s) (S := S) (T := T))
+  have hR :
+      pairing (basisDelta T) (D.op s (basisDelta S)) = D.kernel s T S := by
+    rw [pairing_left_basisDelta]
+    simpa using (D.op_basisDelta_eq_kernel (s := s) (S := T) (T := S))
+  rw [hL, hR] at hpair
+  exact hpair
+
+/--
+Zeta-specialized kernel Hermitian symmetry on the critical line:
+
+`star (K_s(S,T)) = K_s(T,S)`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S))
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+      hP s hhol hs hAdjMode hAdjModeRev
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
 
 end FiniteCantorZetaDirac
 

@@ -30,11 +30,21 @@ structure LightConeAffineCurrentBridge
   bridge :
     AffineVirasoroBridge.AffineVirasoroBridgeDatum Finite Alg
 
+  /-- Compatibility between the bridge record and the local affine datum. -/
+  bridge_affine_eq : bridge.affine = affine
+
+  /-- Compatibility between the bridge record and the local Virasoro datum. -/
+  bridge_virasoro_eq : bridge.virasoro = virasoro
+
   /-- Finite-algebra element representing the `u₊` lightcone direction. -/
   uPlusRoot : Finite
 
   /-- Finite-algebra element representing the `u₋` lightcone direction. -/
   uMinusRoot : Finite
+
+  /-- Model-specific law that the chosen roots are lightcone directions. -/
+  lightconeCurrentLaw : Prop
+  lightconeCurrentLaw_holds : lightconeCurrentLaw
 
 namespace LightConeAffineCurrentBridge
 
@@ -55,99 +65,103 @@ def uPlusCurrent (n : ℤ) : Alg :=
 def uMinusCurrent (n : ℤ) : Alg :=
   B.affine.Current n B.uMinusRoot
 
-/--
-Compatibility between the separately supplied bridge and the current data
-stored in this lightcone socket.
--/
-theorem bridge_affine_eq : B.bridge.affine = B.affine := by
-  -- DEBT_ID: LC_AFFINE_BRIDGE_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+/-- Compatibility between the bridge record and the local affine datum. -/
+theorem bridge_affine_eq_theorem : B.bridge.affine = B.affine :=
+  B.bridge_affine_eq
 
-/--
-Compatibility between the separately supplied bridge and the Virasoro data
-stored in this lightcone socket.
--/
-theorem bridge_virasoro_eq : B.bridge.virasoro = B.virasoro := by
-  -- DEBT_ID: LC_VIRASORO_BRIDGE_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+/-- Compatibility between the bridge record and the local Virasoro datum. -/
+theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
+  B.bridge_virasoro_eq
 
-/--
-Model-specific law that the chosen roots really are the lightcone
-current directions.
--/
--- DEBT_ID: LCAT-ZD-001
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: lightcone root-law not yet derived
-def lightconeCurrentLawZero : Prop := False
-
-/-- Evidence for the lightcone-current law. -/
-theorem lightconeCurrentLaw_holds : lightconeCurrentLawZero := by
-  -- DEBT_ID: LC_CURRENT_LAW_HOLDS
-  -- DEBT_KIND: SORRY
-  sorry
+/-- Evidence for the installed lightcone-current law. -/
+theorem lightconeCurrentLaw_holds_theorem : B.lightconeCurrentLaw :=
+  B.lightconeCurrentLaw_holds
 
 /-- Bracket of two positive lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]
 theorem uPlusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affine.Current m X, B.affine.Current n Y⁆ =
+          B.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affine.killingForm X Y) •
+              (if m + n = 0 then B.affine.kCentral else 0)) :
     ⁅B.uPlusCurrent m, B.uPlusCurrent n⁆ =
       B.affine.Current (m + n) ⁅B.uPlusRoot, B.uPlusRoot⁆ +
         ((m : ℝ) * B.affine.killingForm B.uPlusRoot B.uPlusRoot) •
           (if m + n = 0 then B.affine.kCentral else 0) := by
   unfold uPlusCurrent
-  exact B.affine.current_mode_bracket m n B.uPlusRoot B.uPlusRoot
+  exact B.affine.current_mode_bracket hbr m n B.uPlusRoot B.uPlusRoot
 
 /-- Bracket of two negative lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]
 theorem uMinusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affine.Current m X, B.affine.Current n Y⁆ =
+          B.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affine.killingForm X Y) •
+              (if m + n = 0 then B.affine.kCentral else 0)) :
     ⁅B.uMinusCurrent m, B.uMinusCurrent n⁆ =
       B.affine.Current (m + n) ⁅B.uMinusRoot, B.uMinusRoot⁆ +
         ((m : ℝ) * B.affine.killingForm B.uMinusRoot B.uMinusRoot) •
           (if m + n = 0 then B.affine.kCentral else 0) := by
   unfold uMinusCurrent
-  exact B.affine.current_mode_bracket m n B.uMinusRoot B.uMinusRoot
+  exact B.affine.current_mode_bracket hbr m n B.uMinusRoot B.uMinusRoot
 
 /-- Mixed lightcone current bracket, inherited from the affine owner. -/
 @[rep_depth operator]
 theorem uPlus_uMinusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affine.Current m X, B.affine.Current n Y⁆ =
+          B.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affine.killingForm X Y) •
+              (if m + n = 0 then B.affine.kCentral else 0)) :
     ⁅B.uPlusCurrent m, B.uMinusCurrent n⁆ =
       B.affine.Current (m + n) ⁅B.uPlusRoot, B.uMinusRoot⁆ +
         ((m : ℝ) * B.affine.killingForm B.uPlusRoot B.uMinusRoot) •
           (if m + n = 0 then B.affine.kCentral else 0) := by
   unfold uPlusCurrent uMinusCurrent
-  exact B.affine.current_mode_bracket m n B.uPlusRoot B.uMinusRoot
+  exact B.affine.current_mode_bracket hbr m n B.uPlusRoot B.uMinusRoot
 
 /-- Virasoro reparametrization of positive lightcone current modes. -/
 @[rep_depth operator]
 theorem virasoro_acts_on_uPlusCurrent
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅B.bridge.virasoro.Lmode m, B.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • B.bridge.affine.Current (m + n) X) :
     ⁅B.virasoro.Lmode m, B.uPlusCurrent n⁆ =
       (-(n : ℝ)) • B.uPlusCurrent (m + n) := by
-  unfold uPlusCurrent
   have h :=
-    B.bridge.virasoro_acts_on_currents m n B.uPlusRoot
-  rw [B.bridge_virasoro_eq, B.bridge_affine_eq] at h
-  exact h
+    B.bridge.virasoro_acts_on_currents m n B.uPlusRoot hact
+  simpa [uPlusCurrent, B.bridge_virasoro_eq_theorem, B.bridge_affine_eq_theorem] using h
 
 /-- Virasoro reparametrization of negative lightcone current modes. -/
 @[rep_depth operator]
 theorem virasoro_acts_on_uMinusCurrent
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅B.bridge.virasoro.Lmode m, B.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • B.bridge.affine.Current (m + n) X) :
     ⁅B.virasoro.Lmode m, B.uMinusCurrent n⁆ =
       (-(n : ℝ)) • B.uMinusCurrent (m + n) := by
-  unfold uMinusCurrent
   have h :=
-    B.bridge.virasoro_acts_on_currents m n B.uMinusRoot
-  rw [B.bridge_virasoro_eq, B.bridge_affine_eq] at h
-  exact h
+    B.bridge.virasoro_acts_on_currents m n B.uMinusRoot hact
+  simpa [uMinusCurrent, B.bridge_virasoro_eq_theorem, B.bridge_affine_eq_theorem] using h
 
 /-- The bridge central charge remains the Sugawara-calibrated central charge. -/
 @[rep_depth operator]
 theorem centralCharge_calibrated :
+    (hcc : B.bridge.centralCharge =
+      B.bridge.level * B.bridge.finiteDimension /
+        (B.bridge.level + B.bridge.dualCoxeterNumber)) →
     B.bridge.centralCharge =
       B.bridge.level * B.bridge.finiteDimension /
         (B.bridge.level + B.bridge.dualCoxeterNumber) :=

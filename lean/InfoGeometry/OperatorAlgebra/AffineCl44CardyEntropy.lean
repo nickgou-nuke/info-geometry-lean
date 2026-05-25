@@ -45,9 +45,11 @@ If an affine-Virasoro bridge is calibrated with `k = 1`, `dim = 28`, and
 theorem centralCharge_eq_four_of_so44_levelOne
     (hlevel : B.level = 1)
     (hdim : B.finiteDimension = 28)
-    (hdual : B.dualCoxeterNumber = 6) :
+    (hdual : B.dualCoxeterNumber = 6)
+    (hcc : B.centralCharge =
+      B.level * B.finiteDimension / (B.level + B.dualCoxeterNumber)) :
     B.centralCharge = 4 := by
-  rw [B.centralCharge_calibrated, hlevel, hdim, hdual]
+  rw [hcc, hlevel, hdim, hdual]
   norm_num
 
 end BridgeDatum

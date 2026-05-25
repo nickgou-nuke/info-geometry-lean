@@ -1785,4 +1785,60 @@ theorem virasoro_rep_on_fock
       ρ = (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation := by
   exact ⟨(externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation, rfl⟩
 
+/-! ## Closure Checklist: Section 6 (Boundary / Non-fake Guards) -/
+
+theorem finite_support_not_heisenberg_full :
+    ¬ scalarHeisenbergShape sourceJfin :=
+  sourceJfin_not_scalarHeisenbergShape
+
+theorem two_mode_charge_diag_not_scalar_id :
+    sourceJfin 1 * sourceJfin (-1) - sourceJfin (-1) * sourceJfin 1
+      ≠ (1 : M4R) := by
+  intro h
+  have h00 := congrArg (fun A : M4R => A 0 0) h
+  rw [sourceJfin_commutator_one_neg_one] at h00
+  norm_num at h00
+
+/-! ## Closure Checklist: Section 7 (Constructive Integrated Closure) -/
+
+theorem source_to_infinite_closure_pipeline
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (¬ scalarHeisenbergShape sourceJfin)
+      ∧ scalarHeisenbergShapeEnd (externalInfiniteJ 𝕜 α)
+      ∧ (∀ m n : Int,
+          (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n)
+            =
+            if m + n = 0 then
+              (m : 𝕜) •
+                (1 :
+                  VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                    VirasoroProject.ChargedFockSpace 𝕜 α)
+            else 0) := by
+  refine ⟨finite_support_not_heisenberg_full, ?_, ?_⟩
+  · intro m n
+    by_cases hmn : m + n = 0
+    · simpa [scalarHeisenbergShapeEnd, hmn] using
+        heisenberg_comm_full (𝕜 := 𝕜) α m n
+    · simpa [scalarHeisenbergShapeEnd, hmn] using
+        heisenberg_comm_full (𝕜 := 𝕜) α m n
+  · intro m n
+    exact heisenberg_comm_full (𝕜 := 𝕜) α m n
+
+theorem finite_model_is_not_full_heisenberg_but_converges_to_current_completion
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (¬ scalarHeisenbergShape sourceJfin)
+      ∧ scalarHeisenbergShapeEnd (externalInfiniteJ 𝕜 α) := by
+  exact finite_vs_external_closure_boundary (𝕜 := 𝕜) α
+
+theorem finite_to_infinite_agreement_on_low_energy_window
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (externalInfiniteJ 𝕜 α 1).commutator (externalInfiniteJ 𝕜 α (-1))
+      =
+      (1 : 𝕜) •
+        (1 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa using
+    heisenberg_comm_central_diag (𝕜 := 𝕜) α (m := 1) (n := -1) (by norm_num)
+
 end InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

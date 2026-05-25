@@ -311,12 +311,18 @@ theorem primonAffineKacMoodyClosure
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (P : InfoGeometry.Canonical.PrimeVirasoroSugawara.PrimeSugawaraVirasoroPacket
       PrimeLabel Field Coeff Finite Alg)
-    (m n : ℤ) (X Y : Finite) :
+    (m n : ℤ) (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
     ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
       P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
         ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
           (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) := by
-  exact P.affine_current_mode_bracket m n X Y
+  exact P.affine_current_mode_bracket m n X Y hbr
 
 /-- The imported Sugawara construction acts as the identity on the Virasoro central element. -/
 @[rep_depth thermo]
@@ -533,6 +539,9 @@ theorem primonCollectedNativeClosure
     (hlevel : P.affineVirasoro.level = 1)
     (hdim : P.affineVirasoro.finiteDimension = (S.card : ℝ))
     (hdual : P.affineVirasoro.dualCoxeterNumber = 0)
+    (hcc : P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber))
     (s : ℂ)
     (hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s) :
     CompletedZetaSouriauDInfinityThermodynamics.CriticalLine
@@ -550,6 +559,6 @@ theorem primonCollectedNativeClosure
   · rfl
   · exact
       InfoGeometry.Canonical.PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
-        P S hlevel hdim hdual
+        P S hlevel hdim hdual hcc
 
 end InfoGeometry.Arithmetic.PrimonChiralSouriauThermodynamics

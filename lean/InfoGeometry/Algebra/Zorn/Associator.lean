@@ -35,8 +35,8 @@ theorem exists_nonzero_associator_of_not_scalar
     {x : ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : ZornMatrix R)) :
     ∃ y z : ZornMatrix R, associatorDefect x y z ≠ 0 := by
-  -- DEBT_ID: ZORN_ASSOC_W_EXISTS
-  -- DEBT_KIND: SORRY
-  sorry
+  rcases nonzero_associator_of_not_scalar (R := R) x hx with ⟨y, z, hz⟩
+  refine ⟨y, z, ?_⟩
+  simpa [associatorDefect, ZornMatrix.associator] using hz
 
 end InfoGeometry.Algebra.Zorn

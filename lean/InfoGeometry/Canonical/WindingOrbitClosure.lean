@@ -297,6 +297,34 @@ theorem windingOrbitObstruction_eq_zero_of_commute
   simp
 
 /--
+Phase-linearity of the modular seed forces zero winding obstruction for the
+induced transport generator branch.
+-/
+theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_forcingSeed
+    (hMod : EndH) (N : ℤ)
+    (hForce : HasClockAxisForcingSeed (H := H) hMod) :
+    windingOrbitObstruction
+      (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N = 0 := by
+  exact windingOrbitObstruction_eq_zero_of_commute
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    (modularTransportGenerator_commutes_clockAxis_of_forcingSeed (H := H) hMod hForce)
+
+/--
+Backward-compatible obstruction-zero export for the explicit
+`IsPhaseLinear` transport seed surface.
+-/
+theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_IsPhaseLinear
+    (hMod : EndH) (N : ℤ)
+    (hPhase :
+      InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := H) hMod) :
+    windingOrbitObstruction
+      (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N = 0 := by
+  exact windingOrbitObstruction_modularTransportGenerator_eq_zero_of_forcingSeed
+    (H := H) hMod N hPhase
+
+/--
 Cartan-even (gauge) sector is automatically winding-periodic: no extra
 commutation hypothesis is required.
 -/

@@ -75,6 +75,31 @@ theorem packet
       K.complementarySlackness ∧ K.finitePartitionAdmissible :=
   ⟨hCone, hStationarity, hSlack, hFinite⟩
 
+/--
+Proof-carrying witness for the KKT stationarity shadow.
+
+This narrows the old four-hypothesis packet to one constructive object carrying
+exactly the owned proofs needed to recover the original conjunction surface.
+-/
+@[rep_depth thermo]
+structure Witness where
+  shadow : KKTEntropyStationarityShadow
+  hCone : shadow.coneAdmissible
+  hStationarity : shadow.stationarity
+  hSlack : shadow.complementarySlackness
+  hFinite : shadow.finitePartitionAdmissible
+
+namespace Witness
+
+/-- Recover the full KKT stationarity packet from the proof-carrying witness. -/
+@[rep_depth thermo]
+theorem packet (W : KKTEntropyStationarityShadow.Witness) :
+    W.shadow.coneAdmissible ∧ W.shadow.stationarity ∧
+      W.shadow.complementarySlackness ∧ W.shadow.finitePartitionAdmissible :=
+  ⟨W.hCone, W.hStationarity, W.hSlack, W.hFinite⟩
+
+end Witness
+
 end KKTEntropyStationarityShadow
 
 /--
@@ -128,16 +153,34 @@ theorem partitionAdmissible_of_square :
 
 -- theorem-class: bridge
 /--
+Exact residuals construct a proof-carrying KKT witness without external KKT
+hypotheses.
+-/
+@[rep_depth thermo]
+def exactWitness : KKTEntropyStationarityShadow.Witness where
+  shadow := exact.toShadow
+  hCone := by
+    dsimp [exact, toShadow]
+    norm_num
+  hStationarity := by
+    dsimp [exact, toShadow]
+  hSlack := by
+    dsimp [exact, toShadow]
+  hFinite := by
+    dsimp [exact, toShadow]
+    norm_num
+
+-- theorem-class: bridge
+/--
 Exact residuals construct the full KKT stationarity packet without external
 KKT hypotheses.
 -/
 @[rep_depth thermo]
 theorem exact_stationarity_packet :
-    let K := exact.toShadow
-    K.coneAdmissible ∧ K.stationarity ∧
-      K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-  dsimp [exact, toShadow]
-  exact ⟨by norm_num, rfl, rfl, by norm_num⟩
+    let W := exactWitness
+    W.shadow.coneAdmissible ∧ W.shadow.stationarity ∧
+      W.shadow.complementarySlackness ∧ W.shadow.finitePartitionAdmissible := by
+  simpa using exactWitness.packet
 
 attribute [terminal] exact_stationarity_packet
 

@@ -53,16 +53,20 @@ Legendre/Fenchel ingredients.
 -/
 def sl2EntropyDatum :
     SouriauCasimirEntropyDatum ℝ G0 SL2Lie SL2Dual where
-  affine := sl2AffineDatum
-  pair := fun Q ξ => (Q * ξ).trace
+  Ad := sl2AffineDatum.Ad
+  coAd := sl2AffineDatum.coAd
+  theta := sl2AffineDatum.theta
+  Ad_one := sl2AffineDatum.Ad_one
+  Ad_mul := sl2AffineDatum.Ad_mul
+  coAd_one := sl2AffineDatum.coAd_one
+  coAd_mul := sl2AffineDatum.coAd_mul
+  theta_one := sl2AffineDatum.theta_one
+  theta_mul := sl2AffineDatum.theta_mul
   entropy := fun _ => (0 : ℝ)
   massieu := fun _ => (0 : ℝ)
   betaOfHeat := fun _ => 0
   coadInf := 0
   Theta := 0
-  entropy_legendre := by
-    intro Q
-    simp
   entropy_affineCoAd_invariant := by
     intro g Q
     simp
@@ -81,7 +85,7 @@ theorem sl2_theta_mul
 theorem sl2_entropy_affine_invariant
     (g : G0) (Q : SL2Dual) :
     sl2EntropyDatum.entropy
-      (sl2EntropyDatum.affine.affineCoAd g Q) =
+      (sl2EntropyDatum.toAffineCoadjointDatum.affineCoAd g Q) =
     sl2EntropyDatum.entropy Q :=
   SouriauCasimirEntropyDatum.entropy_is_affine_coadjoint_invariant
     sl2EntropyDatum g Q

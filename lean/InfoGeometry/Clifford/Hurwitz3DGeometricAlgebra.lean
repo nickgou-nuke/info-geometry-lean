@@ -16,7 +16,7 @@ namespace InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
 
 open scoped TensorProduct
 open InfoGeometry.Canonical.AlbertCayleyDickson
-open InfoGeometry.Algebra.Zorn
+open InfoGeometry.Algebra.Zorn.ConcreteComposition
 
 theorem cl11_pseudoscalar_sq :
     InfoGeometry.Clifford.Hestenes.Pseudoscalar *
@@ -38,16 +38,12 @@ theorem splitOctonion_has_nonzero_zero_divisors :
           (A := SplitQuaternion ℝ))
 
 theorem zorn_det_mul
-    (X Y : InfoGeometry.Canonical.ZornMatrix ℝ) :
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-        concreteCrossProduct3
-        (mulZ X Y)
-      =
-    InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-        concreteCrossProduct3 X *
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-        concreteCrossProduct3 Y := by
-  simpa using InfoGeometry.Algebra.Zorn.detZ_mul X Y
+    (X Y : InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell ℝ) :
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ (X * Y) =
+      InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ X *
+      InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ Y := by
+  simpa using
+    InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ_mul X Y
 
 noncomputable def cl44_complexification_equiv :
     InfoGeometry.Clifford.SplitCl44Complexification.Cl44Complex ≃ₐ[ℂ]

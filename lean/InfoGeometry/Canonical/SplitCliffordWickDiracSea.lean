@@ -60,7 +60,47 @@ theorem cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
       =
       InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffBoundaryTerm C N m n +
         (if m + n = 0 then m • C.central else 0) :=
-  InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN
+      InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le C N m n hN
+
+/--
+Diagonal/base-case commutator specialization (`n = -m`) in downstream form.
+
+For cutoff `N` with `|m| ≤ N`:
+
+`[J_m^(N), J_{-m}^(N)] = boundary + m • K`,
+
+where `K = C.central`.
+-/
+theorem cutoffCurrent_commutator_eq_boundary_add_mode_of_natAbs_le
+    (N : Nat) (m : Int) (hN : m.natAbs ≤ N) :
+    comm
+        (InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent C N m)
+        (InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent C N (-m))
+      =
+      InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffBoundaryTerm C N m (-m) +
+        m • C.central := by
+  simpa using
+    (cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
+      (C := C) N m (-m) hN)
+
+/--
+Vacuum-readout base case on the scalar carrier:
+
+if the explicit finite-cutoff boundary term vanishes, then
+`[J_m^(N), J_{-m}^(N)] = m • K`.
+-/
+theorem cutoffCurrent_commutator_eq_mode_of_boundary_zero
+    (N : Nat) (m : Int) (hN : m.natAbs ≤ N)
+    (hBoundary :
+      InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffBoundaryTerm C N m (-m) = 0) :
+    comm
+        (InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent C N m)
+        (InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion.cutoffCurrent C N (-m))
+      =
+      m • C.central := by
+  have hdiag :=
+    cutoffCurrent_commutator_eq_boundary_add_mode_of_natAbs_le (C := C) N m hN
+  simpa [hBoundary] using hdiag
 
 end RawCARModeCompletion
 

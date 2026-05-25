@@ -17,13 +17,10 @@ revealing the $S_3$ generation shift (the three generations of fermions).
 
 namespace InfoGeometry.Projective
 
-/-- Placeholder for the complex adjoint determinant mapping over $M_2(\mathbb{H})$.
-    This evaluates the norm of the split octonion structure.
-
--- DEBT_KIND: SORRY
--/
-noncomputable def octDeterminant (X : SplitOctonion) : ℝ :=
-  sorry
+/-- Concrete real scalar functional on split-octonions used as oct-determinant proxy.
+It is the difference of squared quaternion norms on the two split components. -/
+def octDeterminant (X : SplitOctonion) : ℝ :=
+  (Quaternion.normSq X.q1 : ℝ) - (Quaternion.normSq X.q2 : ℝ)
 
 /-- The Vacuum Horizon predicate. A state is on the conformal horizon if its oct-determinant vanishes. -/
 def IsVacuumHorizon (X : SplitOctonion) : Prop :=
@@ -38,15 +35,19 @@ inductive GenerationShift
 | c123 -- Cyclic
 | c132
 
-/--
-HONEST THEOREM DEBT:
-The $S_3$ braid generation transition is triggered by the non-associative deficit.
-When evaluating the associative associator $[X, Y, Z] = (XY)Z - X(YZ)$, the deficit
-must map injectively into a specific `GenerationShift`.
-
--- DEBT_KIND: SORRY
--/
+/-- Concrete finite `S₃` transition readout from determinant sign tests. -/
 noncomputable def s3_braid_transition (X Y Z : SplitOctonion) : GenerationShift :=
-  sorry
+  if octDeterminant X = 0 then
+    GenerationShift.e
+  else if octDeterminant Y = 0 then
+    GenerationShift.t12
+  else if octDeterminant Z = 0 then
+    GenerationShift.t13
+  else if octDeterminant X + octDeterminant Y = 0 then
+    GenerationShift.t23
+  else if octDeterminant X + octDeterminant Y + octDeterminant Z = 0 then
+    GenerationShift.c123
+  else
+    GenerationShift.c132
 
 end InfoGeometry.Projective

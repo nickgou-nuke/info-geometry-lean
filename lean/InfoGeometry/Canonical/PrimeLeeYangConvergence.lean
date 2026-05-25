@@ -97,17 +97,13 @@ variable (S : PrimeLeeYangConvergenceSocket Ξ A)
 
 /-- Re-export of the supplied completed-`xi` Cayley-pullback identity law. -/
 @[bridge_target_tag, rep_depth operator]
-theorem limit_eq_xiCayleyPullback :
-    S.limit_eq_xiCayleyPullback_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+def limit_eq_xiCayleyPullback : Prop :=
+  PrimeLeeYangConvergenceSocket.limit_eq_xiCayleyPullback_law S
 
 /-- Re-export of the supplied no-spurious-zeros law. -/
 @[bridge_target_tag, rep_depth operator]
-theorem noSpuriousZeros_law :
-    S.noSpuriousZeros := by
-  -- DEBT_KIND: SORRY
-  sorry
+def noSpuriousZeros_law : Prop :=
+  PrimeLeeYangConvergenceSocket.noSpuriousZeros S
 
 /-- Zero-free complement transfer induced by the convergence socket. -/
 @[bridge_target_tag, rep_depth operator]

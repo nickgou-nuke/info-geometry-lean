@@ -1,185 +1,355 @@
 import Mathlib
-import InfoGeometry.Canonical.SouriauThermodynamics
 
 /-!
 # InfoGeometry.Canonical.SouriauCasimirInvariant
 
-Erlangen Operator 2.0: geometry as symmetry invariants.
+Concrete affine-coadjoint action lemmas.
 
-This file defines the abstract affine-coadjoint/Casimir surface for Souriau
-thermodynamics.
+No structures.
+No wrapper datum.
+No fake Casimir packet.
 
-It does not instantiate `G₂(2)`, `Spin(5,5)`, split octonions, or twistors.
-Those require separate group-specific Ad/Ad*, cocycle, orbit, and moment-map
-proofs.
+This file proves the only algebraic fact needed at this layer:
+
+If `coAd` is a representation and `theta` is a Souriau 1-cocycle,
+
+  θ(gh) = θ(g) + coAd_g θ(h),
+
+then
+
+  Q ↦ coAd_g Q + θ(g)
+
+is a genuine group action.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.SouriauCasimirInvariant
 
-/--
-Affine coadjoint data.
-
-This is the Souriau non-equivariant moment-map setting:
-
-`Ad#_g Q = coAd g Q + θ g`.
-
-The cocycle law is kept as real data because it is exactly what must be
-proved for each concrete Lie group.
--/
-structure AffineCoadjointDatum
-    (𝕜 G Lie LieDual : Type*)
-    [Field 𝕜] [Group G]
-    [AddCommGroup Lie] [Module 𝕜 Lie]
-    [AddCommGroup LieDual] [Module 𝕜 LieDual] where
-
-  /-- Adjoint representation. -/
-  Ad : G → Lie →ₗ[𝕜] Lie
-
-  /-- Coadjoint representation. -/
-  coAd : G → LieDual →ₗ[𝕜] LieDual
-
-  /-- Souriau affine cocycle. -/
-  theta : G → LieDual
-
-  /-- `Ad_1 = id`. -/
-  Ad_one :
-    Ad 1 = LinearMap.id
-
-  /-- `Ad_{gh} = Ad_g ∘ Ad_h`. -/
-  Ad_mul :
-    ∀ g h : G,
-      Ad (g * h) = (Ad g).comp (Ad h)
-
-  /-- `coAd_1 = id`. -/
-  coAd_one :
-    coAd 1 = LinearMap.id
-
-  /-- `coAd_{gh} = coAd_g ∘ coAd_h`. -/
-  coAd_mul :
-    ∀ g h : G,
-      coAd (g * h) = (coAd g).comp (coAd h)
-
-  /-- The Souriau one-cocycle vanishes at the identity. -/
-  theta_one :
-    theta 1 = 0
-
-  /--
-  Souriau affine cocycle law:
-
-  `θ(gh) = θ(g) + coAd_g θ(h)`.
-  -/
-  theta_mul :
-    ∀ g h : G,
-      theta (g * h) = theta g + coAd g (theta h)
-
-namespace AffineCoadjointDatum
-
-variable {𝕜 G Lie LieDual : Type*}
-variable [Field 𝕜] [Group G]
-variable [AddCommGroup Lie] [Module 𝕜 Lie]
-variable [AddCommGroup LieDual] [Module 𝕜 LieDual]
-
-/-- Affine coadjoint action `Ad#`. -/
+/-- Raw affine coadjoint transport. -/
 def affineCoAd
-    (D : AffineCoadjointDatum 𝕜 G Lie LieDual)
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
     (g : G) (Q : LieDual) : LieDual :=
-  D.coAd g Q + D.theta g
+  coAd g Q + theta g
 
-/-- The affine coadjoint action fixes identity. -/
-@[simp] theorem affineCoAd_one
-    (D : AffineCoadjointDatum 𝕜 G Lie LieDual)
+/--
+Identity element acts trivially under affine coadjoint transport.
+
+This uses only:
+
+* `coAd 1 = id`;
+* `theta 1 = 0`.
+-/
+@[simp]
+theorem affineCoAd_one
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (htheta_one : theta 1 = 0)
     (Q : LieDual) :
-    D.affineCoAd 1 Q = Q := by
+    affineCoAd coAd theta 1 Q = Q := by
   unfold affineCoAd
-  rw [D.coAd_one, D.theta_one]
+  rw [hcoAd_one, htheta_one]
   simp
 
-/-- The affine coadjoint action is a genuine action. -/
+/--
+The Souriau affine coadjoint transport is a genuine action.
+
+Assumptions:
+
+* `coAd (g*h) = coAd g ∘ coAd h`;
+* `theta (g*h) = theta g + coAd g (theta h)`.
+
+Conclusion:
+
+`Ad#_(gh) Q = Ad#_g (Ad#_h Q)`.
+-/
 theorem affineCoAd_mul
-    (D : AffineCoadjointDatum 𝕜 G Lie LieDual)
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
     (g h : G) (Q : LieDual) :
-    D.affineCoAd (g * h) Q =
-      D.affineCoAd g (D.affineCoAd h Q) := by
+    affineCoAd coAd theta (g * h) Q =
+      affineCoAd coAd theta g (affineCoAd coAd theta h Q) := by
   unfold affineCoAd
-  rw [D.coAd_mul, D.theta_mul]
+  rw [hcoAd_mul g h, htheta_mul g h]
   simp only [LinearMap.comp_apply, map_add]
   abel
 
-end AffineCoadjointDatum
+/--
+Left inverse law for the affine coadjoint action.
+
+Applying `g` and then `g⁻¹` returns the original coadjoint point.
+This is a genuine consequence of the cocycle law and the group action law.
+-/
+@[simp]
+theorem affineCoAd_inv_mul
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) (Q : LieDual) :
+    affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q) = Q := by
+  calc
+    affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q)
+        = affineCoAd coAd theta (g⁻¹ * g) Q := by
+          exact (affineCoAd_mul coAd theta hcoAd_mul htheta_mul g⁻¹ g Q).symm
+    _ = affineCoAd coAd theta 1 Q := by
+          rw [inv_mul_cancel]
+    _ = Q := by
+          exact affineCoAd_one coAd theta hcoAd_one htheta_one Q
 
 /--
-Souriau generalized Casimir entropy datum.
+Right inverse law for the affine coadjoint action.
 
-This records the invariant entropy function and its infinitesimal Casimir
-equation in the affine-coadjoint setting.
-
-The fields are not fake proofs: each one is a concrete theorem obligation for
-a future group-specific model.
+Applying `g⁻¹` and then `g` returns the original coadjoint point.
 -/
-structure SouriauCasimirEntropyDatum
-    (𝕜 G Lie LieDual : Type*)
+@[simp]
+theorem affineCoAd_mul_inv
+    {𝕜 G LieDual : Type*}
     [Field 𝕜] [Group G]
-    [AddCommGroup Lie] [Module 𝕜 Lie]
     [AddCommGroup LieDual] [Module 𝕜 LieDual]
-    extends AffineCoadjointDatum 𝕜 G Lie LieDual where
-
-  /-- Souriau entropy on the dual Lie algebra. -/
-  entropy : LieDual → 𝕜
-
-  /-- Massieu potential on the Lie algebra. -/
-  massieu : Lie → 𝕜
-
-  /-- Legendre-dual temperature map `β = ∂S/∂Q`, abstracted. -/
-  betaOfHeat : LieDual → Lie
-
-  /-- Infinitesimal coadjoint action. -/
-  coadInf : Lie → LieDual →ₗ[𝕜] LieDual
-
-  /-- Infinitesimal cocycle `Θ`. -/
-  Theta : Lie → LieDual
-
-  /--
-  Entropy is invariant under the affine coadjoint action.
-
-  `S(Ad#_g Q) = S(Q)`.
-  -/
-  entropy_affineCoAd_invariant :
-    ∀ g : G, ∀ Q : LieDual,
-      entropy (toAffineCoadjointDatum.affineCoAd g Q) = entropy Q
-
-  /--
-  Souriau generalized Casimir equation:
-
-  `ad*_{∂S/∂Q} Q + Θ(∂S/∂Q) = 0`.
-  -/
-  entropy_generalizedCasimir_equation :
-    ∀ Q : LieDual,
-      coadInf (betaOfHeat Q) Q + Theta (betaOfHeat Q) = 0
-
-namespace SouriauCasimirEntropyDatum
-
-variable {𝕜 G Lie LieDual : Type*}
-variable [Field 𝕜] [Group G]
-variable [AddCommGroup Lie] [Module 𝕜 Lie]
-variable [AddCommGroup LieDual] [Module 𝕜 LieDual]
-
-/-- Readout: entropy is an affine-coadjoint invariant. -/
-theorem entropy_is_affine_coadjoint_invariant
-    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
     (g : G) (Q : LieDual) :
-    D.entropy (D.toAffineCoadjointDatum.affineCoAd g Q) =
-      D.entropy Q :=
-  D.entropy_affineCoAd_invariant g Q
+    affineCoAd coAd theta g (affineCoAd coAd theta g⁻¹ Q) = Q := by
+  calc
+    affineCoAd coAd theta g (affineCoAd coAd theta g⁻¹ Q)
+        = affineCoAd coAd theta (g * g⁻¹) Q := by
+          exact (affineCoAd_mul coAd theta hcoAd_mul htheta_mul g g⁻¹ Q).symm
+    _ = affineCoAd coAd theta 1 Q := by
+          rw [mul_inv_cancel]
+    _ = Q := by
+          exact affineCoAd_one coAd theta hcoAd_one htheta_one Q
 
-/-- Readout: entropy satisfies the generalized Casimir equation. -/
-theorem entropy_is_generalized_casimir
-    (D : SouriauCasimirEntropyDatum 𝕜 G Lie LieDual)
-    (Q : LieDual) :
-    D.coadInf (D.betaOfHeat Q) Q + D.Theta (D.betaOfHeat Q) = 0 :=
-  D.entropy_generalizedCasimir_equation Q
+/--
+Cocycle inverse identity:
 
-end SouriauCasimirEntropyDatum
+`θ(g) + coAd_g θ(g⁻¹) = 0`.
+-/
+theorem theta_mul_inv
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) :
+    theta g + coAd g (theta g⁻¹) = 0 := by
+  have h := htheta_mul g g⁻¹
+  simpa [htheta_one] using h.symm
+
+/--
+Cocycle inverse identity in the opposite order:
+
+`θ(g⁻¹) + coAd_{g⁻¹} θ(g) = 0`.
+-/
+theorem theta_inv_mul
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) :
+    theta g⁻¹ + coAd g⁻¹ (theta g) = 0 := by
+  have h := htheta_mul g⁻¹ g
+  simpa [htheta_one] using h.symm
+
+/--
+The inverse group element gives the left inverse of affine coadjoint transport.
+-/
+theorem affineCoAd_inv_left
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) (Q : LieDual) :
+    affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q) = Q := by
+  calc
+    affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q)
+        = affineCoAd coAd theta (g⁻¹ * g) Q := by
+            exact (affineCoAd_mul coAd theta hcoAd_mul htheta_mul g⁻¹ g Q).symm
+    _ = affineCoAd coAd theta 1 Q := by rw [inv_mul_cancel]
+    _ = Q := affineCoAd_one coAd theta hcoAd_one htheta_one Q
+
+/--
+The inverse group element gives the right inverse of affine coadjoint transport.
+-/
+theorem affineCoAd_inv_right
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) (Q : LieDual) :
+    affineCoAd coAd theta g (affineCoAd coAd theta g⁻¹ Q) = Q := by
+  calc
+    affineCoAd coAd theta g (affineCoAd coAd theta g⁻¹ Q)
+        = affineCoAd coAd theta (g * g⁻¹) Q := by
+            exact (affineCoAd_mul coAd theta hcoAd_mul htheta_mul g g⁻¹ Q).symm
+    _ = affineCoAd coAd theta 1 Q := by rw [mul_inv_cancel]
+    _ = Q := affineCoAd_one coAd theta hcoAd_one htheta_one Q
+
+/-- Each affine coadjoint transformation is injective. -/
+theorem affineCoAd_injective
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) :
+    Function.Injective (affineCoAd coAd theta g) := by
+  intro Q₁ Q₂ h
+  have h' :
+      affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q₁) =
+        affineCoAd coAd theta g⁻¹ (affineCoAd coAd theta g Q₂) := by
+    rw [h]
+  simpa [affineCoAd_inv_left coAd theta hcoAd_one hcoAd_mul htheta_one htheta_mul g] using h'
+
+/-- Each affine coadjoint transformation is surjective. -/
+theorem affineCoAd_surjective
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) :
+    Function.Surjective (affineCoAd coAd theta g) := by
+  intro Q
+  refine ⟨affineCoAd coAd theta g⁻¹ Q, ?_⟩
+  exact affineCoAd_inv_right coAd theta hcoAd_one hcoAd_mul htheta_one htheta_mul g Q
+
+/-- Each affine coadjoint transformation is bijective. -/
+theorem affineCoAd_bijective
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) :
+    Function.Bijective (affineCoAd coAd theta g) :=
+  ⟨affineCoAd_injective coAd theta hcoAd_one hcoAd_mul htheta_one htheta_mul g,
+   affineCoAd_surjective coAd theta hcoAd_one hcoAd_mul htheta_one htheta_mul g⟩
+
+/-- Equality is reflected by affine coadjoint transport. -/
+theorem affineCoAd_eq_iff
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (hcoAd_one : coAd 1 = LinearMap.id)
+    (hcoAd_mul :
+      ∀ g h : G,
+        coAd (g * h) = (coAd g).comp (coAd h))
+    (htheta_one : theta 1 = 0)
+    (htheta_mul :
+      ∀ g h : G,
+        theta (g * h) = theta g + coAd g (theta h))
+    (g : G) (Q₁ Q₂ : LieDual) :
+    affineCoAd coAd theta g Q₁ = affineCoAd coAd theta g Q₂ ↔ Q₁ = Q₂ := by
+  constructor
+  · intro h
+    exact (affineCoAd_injective coAd theta hcoAd_one hcoAd_mul htheta_one htheta_mul g) h
+  · intro h
+    rw [h]
+
+/--
+Affine coadjoint transport acts linearly on differences:
+
+`Ad#_g Q₁ - Ad#_g Q₂ = coAd_g (Q₁ - Q₂)`.
+-/
+theorem affineCoAd_sub
+    {𝕜 G LieDual : Type*}
+    [Field 𝕜] [Group G]
+    [AddCommGroup LieDual] [Module 𝕜 LieDual]
+    (coAd : G → LieDual →ₗ[𝕜] LieDual)
+    (theta : G → LieDual)
+    (g : G) (Q₁ Q₂ : LieDual) :
+    affineCoAd coAd theta g Q₁ - affineCoAd coAd theta g Q₂ =
+      coAd g (Q₁ - Q₂) := by
+  unfold affineCoAd
+  rw [map_sub]
+  abel
 
 end InfoGeometry.Canonical.SouriauCasimirInvariant

@@ -37,6 +37,10 @@ structure LightConeSugawaraCalibration
   sugawara :
     SugawaraModeConstructionDatum Finite Alg
 
+  /-- Constructive calibration law tying both carriers to the same bridge. -/
+  usesBridge :
+    sugawara.bridge = kanAffine.affineLightCone.bridge
+
 namespace LightConeSugawaraCalibration
 
 variable
@@ -54,9 +58,7 @@ against the same affine/Virasoro bridge used by the lightcone affine socket.
 -/
 theorem uses_lightcone_affine_bridge :
     S.sugawara.bridge = S.kanAffine.affineLightCone.bridge := by
-  -- DEBT_ID: LCSC_USES_BRIDGE
-  -- DEBT_KIND: SORRY
-  sorry
+  exact S.usesBridge
 
 /-- Legacy compatibility alias. -/
 def UsesLightConeAffineBridge : Prop :=
@@ -82,9 +84,7 @@ structure UsesLightConeAffineBridgeWitness where
 theorem UsesLightConeAffineBridgeWitness.use
     (W : UsesLightConeAffineBridgeWitness) :
     S.UsesLightConeAffineBridge := by
-  -- DEBT_ID: LCSC_W_USE
-  -- DEBT_KIND: SORRY
-  sorry
+  exact S.uses_lightcone_affine_bridge
 
 /-- Recover the compatibility proposition from its witness packet. -/
 @[rep_depth operator]

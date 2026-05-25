@@ -80,4 +80,38 @@ theorem mode2_car_identity :
   fin_cases i <;> fin_cases j <;>
     norm_num [a2, a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
 
+/-! ### Trace-form readouts -/
+
+/-- Explicit trace on `M4R`. -/
+def tr4 (A : M4R) : ℝ := A 0 0 + A 1 1 + A 2 2 + A 3 3
+
+/-- Bilinear trace pairing `⟨A,B⟩ = tr4 (A*B)`. -/
+def traceForm4 (A B : M4R) : ℝ := tr4 (A * B)
+
+@[simp] theorem tr4_zero : tr4 (0 : M4R) = 0 := by
+  simp [tr4]
+
+@[simp] theorem tr4_one : tr4 (1 : M4R) = 4 := by
+  norm_num [tr4]
+
+/-- Trace readout of the cross annihilation anticommutator `{a₁,a₂}=0`. -/
+theorem traceForm4_cross_annihilate_anticommute :
+    tr4 (a1 * a2 + a2 * a1) = 0 := by
+  simpa [cross_annihilate_anticommute] using tr4_zero
+
+/-- Trace readout of the cross mixed anticommutator `{a₁,a₂†}=0`. -/
+theorem traceForm4_cross_mixed_anticommute :
+    tr4 (a1 * a2Dag + a2Dag * a1) = 0 := by
+  simpa [cross_mixed_anticommute] using tr4_zero
+
+/-- Trace readout of local CAR for mode 1. -/
+theorem traceForm4_mode1_car :
+    tr4 (a1 * a1Dag + a1Dag * a1) = 4 := by
+  simpa [mode1_car_identity] using tr4_one
+
+/-- Trace readout of local CAR for mode 2. -/
+theorem traceForm4_mode2_car :
+    tr4 (a2 * a2Dag + a2Dag * a2) = 4 := by
+  simpa [mode2_car_identity] using tr4_one
+
 end InfoGeometry.Canonical.SplitCliffordTwoModeCAR

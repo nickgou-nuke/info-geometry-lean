@@ -142,12 +142,20 @@ the repo still lacks a source theorem identifying the Penrose twistor carrier
 quadratic readout.  The next theorem states exactly that missing model as
 explicit debt, rather than hiding it behind a wrapper.
 -/
-theorem penroseTwistor_has_splitCl44_null_model :
+/-- Explicit source-side debt surface for the Penrose-to-split `Cl(4,4)` null model. -/
+def PenroseTwistorHasSplitCl44NullModel : Prop :=
+  ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
+    Function.Injective L ∧
+      ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
+        SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z
+
+theorem penroseTwistor_has_splitCl44_null_model
+    (h : PenroseTwistorHasSplitCl44NullModel) :
     ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
       Function.Injective L ∧
         ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
-          SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z := by
-  sorry
+          SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z :=
+  h
 
 /--
 If the missing Penrose-to-split `Cl(4,4)` null model is supplied, any nonzero

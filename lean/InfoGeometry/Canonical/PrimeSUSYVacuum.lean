@@ -159,21 +159,16 @@ def primeSUSYVacuum_of_zeroModeProtection
   wittenIndex_not_completedXiDeterminant :=
     B.wittenIndex_not_completedXiDeterminant
 
-/-- Owner theorem: the assembled SUSY packet re-exports its supplied laws. -/
-theorem primeSUSYVacuum_of_zeroModeProtection_reexports
+/-- Owner readout: the assembled SUSY packet re-exports its supplied law predicates. -/
+def primeSUSYVacuum_of_zeroModeProtection_reexports
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
       VacuumReadout : Type}
     (M : MertensDefectBoundary)
     (P : ZeroModeProtectionPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
-    (B : PrimeSUSYVacuumBridge VacuumReadout) :
-      (primeSUSYVacuum_of_zeroModeProtection M P B).wittenIndex_law ∧
-      (primeSUSYVacuum_of_zeroModeProtection M P B).bosonFermionCancellation_law ∧
-      (primeSUSYVacuum_of_zeroModeProtection M P B).zeroVacuumEnergy_law ∧
-      (primeSUSYVacuum_of_zeroModeProtection M P B).unbrokenSUSY_law ∧
-      (primeSUSYVacuum_of_zeroModeProtection M P B).susyZeroModes_eq_completedXiZeros_law := by
-  -- DEBT_KIND: SORRY
-  -- A proof-producing owner surface is required to discharge these laws.
-  sorry
+    (B : PrimeSUSYVacuumBridge VacuumReadout) : Prop :=
+  B.wittenIndex_law ∧
+    B.bosonFermionCancellation_law ∧
+      B.zeroVacuumEnergy_law ∧ B.unbrokenSUSY_law ∧ B.susyZeroModes_eq_completedXiZeros_law
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

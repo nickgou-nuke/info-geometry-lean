@@ -705,8 +705,8 @@ noncomputable def ofStrainZeroObserver
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     RouterDefectBoundBridge (E := E) :=
-  ofZDControlledObserver (E := E) CIK obs flow
-    (observerDeviationControlledByZD_of_strain_eq_zero
+  ofCanonicalObserverDefect (E := E) CIK obs flow
+    (observerDefectResidual_norm_le_ZD_of_strain_eq_zero
       (E := E) (CIK := CIK) (obs := obs) hStrain)
 
 /--

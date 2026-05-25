@@ -41,6 +41,7 @@ import InfoGeometry.Clifford.Cl44GenerationRotation
 import InfoGeometry.Clifford.Cl44C8Comparison
 import InfoGeometry.Clifford.Cl44QuaternionSplit
 import InfoGeometry.Clifford.Cl44SignatureResidue
+import InfoGeometry.Clifford.QuadraticPolarAnticommutator
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix

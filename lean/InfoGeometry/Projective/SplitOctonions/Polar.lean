@@ -62,6 +62,53 @@ variable {R : Type u} {V : Type v}
 variable [CommRing R] [AddCommGroup V] [Module R V]
 variable (D : PolarDatum R V)
 
+/-! ## Generic homogeneous polar-zero invariance -/
+
+/--
+Projective orthogonality is well-defined under independent unit rescaling.
+
+This is the abstract algebraic lemma behind local polar incidence on
+projective Zorn rays. It introduces no new projective quotient, no new Zorn
+type, and no wrapper datum.
+-/
+theorem projective_incidence_well_defined_units
+    {Carrier : Type*}
+    [AddCommGroup Carrier] [Module R Carrier]
+    (splitOctPolar : Carrier → Carrier → R)
+    (h_left :
+      ∀ (l : R) (X Y : Carrier),
+        splitOctPolar (l • X) Y = l * splitOctPolar X Y)
+    (h_right :
+      ∀ (m : R) (X Y : Carrier),
+        splitOctPolar X (m • Y) = m * splitOctPolar X Y)
+    (l m : Rˣ) (X Y : Carrier) :
+    splitOctPolar X Y = 0
+      ↔
+    splitOctPolar ((l : R) • X) ((m : R) • Y) = 0 := by
+  constructor
+  · intro h
+    rw [h_left (l : R) X ((m : R) • Y)]
+    rw [h_right (m : R) X Y]
+    rw [h]
+    simp
+  · intro h
+    rw [h_left (l : R) X ((m : R) • Y)] at h
+    rw [h_right (m : R) X Y] at h
+
+    have h_strip_left :
+        (m : R) * splitOctPolar X Y = 0 := by
+      have h' :=
+        congrArg (fun t : R => ((l⁻¹ : Rˣ) : R) * t) h
+      simpa [mul_assoc] using h'
+
+    have h_strip_right :
+        splitOctPolar X Y = 0 := by
+      have h' :=
+        congrArg (fun t : R => ((m⁻¹ : Rˣ) : R) * t) h_strip_left
+      simpa [mul_assoc] using h'
+
+    exact h_strip_right
+
 /-- The Zorn polar pairing induced by the determinant quadratic form. -/
 def polarZ (X Y : ZornCell R V) : R :=
   ZornCell.detZ D.base.B (D.add X Y) - ZornCell.detZ D.base.B X - ZornCell.detZ D.base.B Y
@@ -438,6 +485,35 @@ theorem incident_pencil_image_eq_of_invariant
     exact ⟨X, (hInc X p).1 hY, rfl⟩
   · rintro ⟨X, hX, rfl⟩
     exact (hInc X p).2 hX
+
+/--
+Erlangen-style transport of the right incidence pencil under a ray equivalence.
+
+If `e` preserves projective incidence, then the full right-incidence fiber
+through `X`,
+
+`{Y | Incident D Y X}`,
+
+is transported exactly to the right-incidence fiber through `e X`.
+-/
+theorem incidenceRightNeighborhood_image_eq
+    (e : ZornProjectiveDatum.NullRay D.base ≃ ZornProjectiveDatum.NullRay D.base)
+    (he : StabilizesProjectivePolarIncidence D e)
+    (X : ZornProjectiveDatum.NullRay D.base) :
+    Set.image e {Y : ZornProjectiveDatum.NullRay D.base | Incident D Y X}
+      =
+    {Y : ZornProjectiveDatum.NullRay D.base | Incident D Y (e X)} := by
+  ext Y
+  constructor
+  · intro hY
+    rcases hY with ⟨Z, hZ, rfl⟩
+    exact (he Z X).2 hZ
+  · intro hY
+    refine ⟨e.symm Y, ?_, by simp⟩
+    have hiff := he (e.symm Y) X
+    have hstep : Incident D (e (e.symm Y)) (e X) := by
+      simpa using hY
+    exact hiff.mp (by simpa using hstep)
 
 end PolarDatum
 

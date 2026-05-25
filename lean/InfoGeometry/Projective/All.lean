@@ -7,6 +7,10 @@ import InfoGeometry.Projective.GaugeQuotient
 import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.LogSumIneq
+import InfoGeometry.Projective.KleinCrossRatioInvariant
+import InfoGeometry.Projective.KleinQuadric
+import InfoGeometry.Projective.KleinQuadricPlucker
+import InfoGeometry.Projective.KleinQuadricIncidence
 import InfoGeometry.Projective.Normalize
 import InfoGeometry.Projective.Null
 import InfoGeometry.Projective.NullBoundary
@@ -24,6 +28,9 @@ import InfoGeometry.Projective.SplitOctonions.SplitOctonionsProjectivePolar
 import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
 import InfoGeometry.Projective.SplitOctonions.Polar
 import InfoGeometry.Projective.SplitOctonions.PolarConcrete
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
+import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
+import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant
 import InfoGeometry.Projective.SplitOctonions.ZornInstance
 import InfoGeometry.Projective.Twistor.Basic

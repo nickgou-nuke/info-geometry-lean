@@ -29,7 +29,6 @@ import InfoGeometry.Projective.SplitOctonions.SplitOctonionsProjectivePolar
 import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
 import InfoGeometry.Projective.SplitOctonions.Polar
 import InfoGeometry.Projective.SplitOctonions.PolarConcrete
-import InfoGeometry.Projective.SplitOctonions.BektasMatrix
 import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport

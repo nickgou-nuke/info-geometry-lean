@@ -168,6 +168,42 @@ theorem detZ3_zornOfQuaternionPair
   ring
 
 /--
+Quaternion-pair/Zorn determinant dictionary in coordinates.
+
+For a split Cayley-Dickson quaternion pair
+
+  q₁ = (s, x₁, x₂, x₃),
+  q₂ = (t, y₁, y₂, y₃),
+
+use the Zorn coordinates
+
+  a = s + t,
+  b = s - t,
+  v = y + x,
+  w = y - x.
+
+Then the concrete Zorn determinant is exactly the split quaternion-pair norm:
+
+  detZ3 = (s² + |x|²) - (t² + |y|²).
+
+This is a direct algebraic bridge from the quaternion-pair presentation to the
+existing concrete Zorn determinant. No new structure is introduced.
+-/
+theorem detZ3_quaternionPair_coordinates
+    (s x₁ x₂ x₃ t y₁ y₂ y₃ : R) :
+    detZ3
+      ({ a := s + t
+         b := s - t
+         v := (y₁ + x₁, y₂ + x₂, y₃ + x₃)
+         w := (y₁ - x₁, y₂ - x₂, y₃ - x₃) } :
+          ZornCell R (R × R × R))
+      =
+      (s * s + x₁ * x₁ + x₂ * x₂ + x₃ * x₃)
+        - (t * t + y₁ * y₁ + y₂ * y₂ + y₃ * y₃) := by
+  unfold detZ3 Coord3.dot
+  ring
+
+/--
 Concrete split-octonion/Zorn product on `R³` coordinates.
 
 The bottom-left cross term carries the opposite sign. With equal signs for

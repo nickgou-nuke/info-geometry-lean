@@ -308,6 +308,44 @@ theorem negLogVolume_mul3_of_ne_zero
   rw [log_detZ3_mul3_of_ne_zero X Y hX hY]
   ring
 
+/-! ### Naming aliases (`detZc`/`mulZ`) for the same concrete `R³` carrier -/
+
+/-- Alias: concrete determinant in `R³` coordinates. -/
+abbrev detZc (X : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ := detZ3 X
+
+/-- Alias: concrete Zorn product in `R³` coordinates. -/
+abbrev mulZ (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ZornCell ℝ (ℝ × ℝ × ℝ) := mul3 X Y
+
+/-- Alias of left multiplicative RN transport with `mulZ` naming. -/
+theorem relativeVolumeRN_mulZ_left
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZc X ≠ 0) :
+    relativeVolumeRN X (mulZ X Y) = detZc Y := by
+  simpa [mulZ, detZc] using relativeVolumeRN_mul3_left X Y hX
+
+/-- Alias of negative-log RN transport with `mulZ` naming. -/
+theorem negLog_relativeVolumeRN_mulZ_left
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
+    -Real.log (relativeVolumeRN X (mulZ X Y)) = negLogVolume Y := by
+  simpa [mulZ, detZc] using negLog_relativeVolumeRN_mul3_left X Y hX hY
+
+/-- Alias of log-additivity theorem with `detZ`/`mulZ` naming. -/
+theorem log_detZ_mulZ
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
+    Real.log (detZc (mulZ X Y)) =
+      Real.log (detZc X) + Real.log (detZc Y) := by
+  simpa [mulZ, detZc] using log_detZ3_mul3_of_ne_zero X Y hX hY
+
+/-- Alias of negative-log cocycle theorem with `detZ`/`mulZ` naming. -/
+theorem negLogVolume_mulZ
+    (X Y : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : detZc X ≠ 0) (hY : detZc Y ≠ 0) :
+    negLogVolume (mulZ X Y) =
+      negLogVolume X + negLogVolume Y := by
+  simpa [mulZ, detZc] using negLogVolume_mul3_of_ne_zero X Y hX hY
+
 /-- Ambient coordinate pairing on concrete Zorn cells. -/
 def coordPair (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ :=
   X.a * Y.a + X.b * Y.b + dot X.v Y.v + dot X.w Y.w

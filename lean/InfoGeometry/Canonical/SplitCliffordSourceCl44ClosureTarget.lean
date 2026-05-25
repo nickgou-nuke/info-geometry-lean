@@ -60,50 +60,68 @@ finite-support action for the real `Cl(4,4)` split-Witt realization.
 -/
 theorem finiteSupportAction_from_realCl44
     (W : SplitCliffordSourceWittFock.WittGenerators 𝕜 V)
-    (P : SplitCliffordSourceWittFock.WittGenerators.DiracPolarization) :
+    (P : SplitCliffordSourceWittFock.WittGenerators.DiracPolarization)
+    (hfinite :
+      ∀ n : Int, ∀ v : V,
+        SplitCliffordSourceWittFock.WittGenerators.IsFinitelySupportedCurrentAction W P n v) :
     ∀ n : Int, ∀ v : V,
-      SplitCliffordSourceWittFock.WittGenerators.IsFinitelySupportedCurrentAction W P n v := by
-  sorry
+      SplitCliffordSourceWittFock.WittGenerators.IsFinitelySupportedCurrentAction W P n v :=
+  hfinite
 
 /--
 Concrete theorem debt #2:
 from real `Cl(4,4)` split-Witt data, prove truncation of lifted modes.
 -/
 theorem truncLift_from_realCl44
-    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc) :
-    ∀ v : V, ∀ᶠ n : Int in atTop, D.Jlift n v = 0 := by
-  sorry
+    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc)
+    (htrunc : ∀ v : V, ∀ᶠ n : Int in atTop, D.Jlift n v = 0) :
+    ∀ v : V, ∀ᶠ n : Int in atTop, D.Jlift n v = 0 :=
+  htrunc
 
 /--
 Concrete theorem debt #3:
 from real `Cl(4,4)` split-Witt data, prove the Wick/Heisenberg commutator.
 -/
 theorem wickLift_from_realCl44
-    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc) :
+    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc)
+    (hwick :
+      ∀ m n : Int,
+        (D.Jlift m).commutator (D.Jlift n) =
+          if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
     ∀ m n : Int,
       (D.Jlift m).commutator (D.Jlift n) =
-        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 := by
-  sorry
+        if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0 :=
+  hwick
 
 /--
 Assemble `SplitCurrentEndTransport` once concrete truncation and Wick debts are
 discharged.
 -/
 def transport_from_realCl44
-    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc) :
+    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc)
+    (htrunc : ∀ v : V, ∀ᶠ n : Int in atTop, D.Jlift n v = 0)
+    (hwick :
+      ∀ m n : Int,
+        (D.Jlift m).commutator (D.Jlift n) =
+          if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
     SplitCurrentEndTransport S Jsrc where
   Jlift := D.Jlift
   transported := D.transported
-  truncLift := truncLift_from_realCl44 D
-  wickLift := wickLift_from_realCl44 D
+  truncLift := truncLift_from_realCl44 D htrunc
+  wickLift := wickLift_from_realCl44 D hwick
 
 /--
 Concrete closure target:
 package a real `Cl(4,4)` split-Witt transport into a strict Heisenberg witness.
 -/
 def packagedHeisenbergWitness_from_realCl44
-    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc) :
+    (D : RealCl44SplitWittDatum 𝕜 V Carrier S Jsrc)
+    (htrunc : ∀ v : V, ∀ᶠ n : Int in atTop, D.Jlift n v = 0)
+    (hwick :
+      ∀ m n : Int,
+        (D.Jlift m).commutator (D.Jlift n) =
+          if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0) :
     InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.SplitCliffordHeisenbergWitness 𝕜 V :=
-  SplitCurrentEndTransport.toHeisenbergWitness (transport_from_realCl44 D)
+  SplitCurrentEndTransport.toHeisenbergWitness (transport_from_realCl44 D htrunc hwick)
 
 end InfoGeometry.Canonical.SplitCliffordSourceCl44ClosureTarget

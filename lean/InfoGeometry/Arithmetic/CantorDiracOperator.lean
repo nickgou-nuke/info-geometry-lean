@@ -15,8 +15,8 @@ This module keeps the finite operator boundary explicit:
   `∑_{p ∈ P.primes} √(log p) • γ p`;
 * the local Clifford surface is recorded by the Majorana CAR relations;
 * self-adjointness follows from self-adjoint Majorana generators;
-* the Lichnerowicz square law is kept as an explicit socket, not as a fake
-  theorem.
+* the finite Lichnerowicz square law is proved directly from the local
+  Clifford anticommutator.
 
 No infinite tensor products, analytic continuation, or RH claim is asserted
 here.
@@ -73,6 +73,126 @@ def IsMajoranaCliffordRepresentation
     (γ : ℕ → Op) : Prop :=
   ∀ p q, p ∈ P.primes → q ∈ P.primes →
     γ p * γ q + γ q * γ p = if p = q then 2 else 0
+
+/-! ## 3. Finite Lichnerowicz square law -/
+
+/--
+From the Clifford anticommutator relation, each generator squares to `1`.
+
+This is the diagonal part of `{γ_p, γ_p} = 2`.
+-/
+@[rep_depth thermo]
+theorem majorana_sq_one_of_clifford
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    {P : PrimeRegister} {γ : ℕ → Op}
+    (hγ : IsMajoranaCliffordRepresentation P γ)
+    {p : ℕ} (hp : p ∈ P.primes) :
+    γ p * γ p = 1 := by
+  have hdiag :
+      γ p * γ p + γ p * γ p = (2 : Op) := by
+    simpa using hγ p p hp hp
+
+  have hhalf :=
+    congrArg (fun x : Op => (1 / 2 : ℝ) • x) hdiag
+
+  have hleft :
+      (1 / 2 : ℝ) • (γ p * γ p + γ p * γ p) =
+        γ p * γ p := by
+    calc
+      (1 / 2 : ℝ) • (γ p * γ p + γ p * γ p)
+          = (1 / 2 : ℝ) • (γ p * γ p) + (1 / 2 : ℝ) • (γ p * γ p) := by
+              rw [smul_add]
+      _ = ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • (γ p * γ p) := by
+              rw [← add_smul]
+      _ = γ p * γ p := by
+              norm_num
+
+  have hright :
+      (1 / 2 : ℝ) • (2 : Op) = (1 : Op) := by
+    have htwo : (2 : Op) = (2 : ℝ) • (1 : Op) := by
+      calc
+        (2 : Op) = algebraMap ℝ Op (2 : ℝ) := by
+          simpa using (map_natCast (algebraMap ℝ Op) 2).symm
+        _ = (2 : ℝ) • (1 : Op) := by
+            simpa [Algebra.smul_def]
+    rw [htwo, smul_smul]
+    norm_num
+
+  change (1 / 2 : ℝ) • (γ p * γ p + γ p * γ p) = (1 / 2 : ℝ) • (2 : Op) at hhalf
+  rw [hleft, hright] at hhalf
+  exact hhalf
+
+/--
+From the Clifford anticommutator relation, distinct generators anticommute.
+-/
+@[rep_depth thermo]
+theorem majorana_anticomm_zero_of_ne
+    {Op : Type*} [Ring Op]
+    {P : PrimeRegister} {γ : ℕ → Op}
+    (hγ : IsMajoranaCliffordRepresentation P γ)
+    {p q : ℕ}
+    (hp : p ∈ P.primes) (hq : q ∈ P.primes)
+    (hpq : p ≠ q) :
+    γ p * γ q + γ q * γ p = 0 := by
+  simpa [hpq] using hγ p q hp hq
+
+/-- Operator anticommutator. -/
+private def anticomm {Op : Type*} [Ring Op] (x y : Op) : Op := x * y + y * x
+
+/--
+Finite left-linearity of anticommutator over a `Finset` sum.
+-/
+private theorem anticomm_sum_left
+    {Op : Type*} [Ring Op]
+    (S : Finset ℕ) (f : ℕ → Op) (y : Op) :
+    anticomm (S.sum f) y = S.sum (fun i => anticomm (f i) y) := by
+  classical
+  refine Finset.induction_on S ?base ?step
+  · simp [anticomm]
+  · intro a s ha ih
+    have ih' :
+        (Finset.sum s f) * y + y * (Finset.sum s f) =
+          Finset.sum s (fun x => anticomm (f x) y) := by
+      simpa [anticomm] using ih
+    rw [Finset.sum_insert ha, Finset.sum_insert ha, anticomm, add_mul, mul_add]
+    calc
+      f a * y + (Finset.sum s f) * y + (y * f a + y * (Finset.sum s f))
+          = anticomm (f a) y + ((Finset.sum s f) * y + y * (Finset.sum s f)) := by
+              simp [anticomm, add_assoc, add_left_comm, add_comm]
+      _ = anticomm (f a) y + Finset.sum s (fun x => anticomm (f x) y) := by
+              rw [ih']
+
+/--
+Finite right-linearity of anticommutator over a `Finset` sum.
+-/
+private theorem anticomm_sum_right
+    {Op : Type*} [Ring Op]
+    (x : Op) (S : Finset ℕ) (f : ℕ → Op) :
+    anticomm x (S.sum f) = S.sum (fun i => anticomm x (f i)) := by
+  classical
+  refine Finset.induction_on S ?base ?step
+  · simp [anticomm]
+  · intro a s ha ih
+    have ih' :
+        x * (Finset.sum s f) + (Finset.sum s f) * x =
+          Finset.sum s (fun i => anticomm x (f i)) := by
+      simpa [anticomm] using ih
+    rw [Finset.sum_insert ha, Finset.sum_insert ha, anticomm, mul_add, add_mul]
+    calc
+      x * f a + x * (Finset.sum s f) + (f a * x + (Finset.sum s f) * x)
+          = anticomm x (f a) + (x * (Finset.sum s f) + (Finset.sum s f) * x) := by
+              simp [anticomm, add_assoc, add_left_comm, add_comm]
+      _ = anticomm x (f a) + Finset.sum s (fun i => anticomm x (f i)) := by
+              rw [ih']
+
+/--
+Scalar bilinearity of the anticommutator over `ℝ`.
+-/
+private theorem anticomm_smul_smul
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (a b : ℝ) (x y : Op) :
+    anticomm (a • x) (b • y) = (a * b) • anticomm x y := by
+  simp [anticomm, smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, mul_comm, mul_left_comm, mul_assoc]
 
 /--
 The finite Cantor Dirac operator is self-adjoint when the Majorana generators

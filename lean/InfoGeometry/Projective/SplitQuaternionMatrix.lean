@@ -54,6 +54,53 @@ theorem mat_j_mul_k : mat_j * mat_k = -mat_i := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [mat_j, mat_k, mat_i, Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem mat_k_mul_j : mat_k * mat_j = mat_i := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_k, mat_j, mat_i, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Split-quaternion `j,k` anticommutation in the matrix model. -/
+theorem mat_jk_anticomm : mat_j * mat_k + mat_k * mat_j = 0 := by
+  rw [mat_j_mul_k, mat_k_mul_j]
+  abel
+
+theorem mat_i_mul_j : mat_i * mat_j = mat_k := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_i, mat_j, mat_k, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem mat_j_mul_i : mat_j * mat_i = -mat_k := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_i, mat_j, mat_k, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Split-quaternion `i,j` anticommutation in the matrix model. -/
+theorem mat_ij_anticomm : mat_i * mat_j + mat_j * mat_i = 0 := by
+  rw [mat_i_mul_j, mat_j_mul_i]
+  abel
+
+theorem mat_k_mul_i : mat_k * mat_i = mat_j := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_k, mat_i, mat_j, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem mat_i_mul_k : mat_i * mat_k = -mat_j := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_k, mat_i, mat_j, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Split-quaternion `k,i` anticommutation in the matrix model. -/
+theorem mat_ki_anticomm : mat_k * mat_i + mat_i * mat_k = 0 := by
+  rw [mat_k_mul_i, mat_i_mul_k]
+  abel
+
+theorem det_mat_1 : mat_1.det = 1 := by
+  norm_num [mat_1, Matrix.det_fin_two]
+
+theorem det_mat_i : mat_i.det = 1 := by
+  norm_num [mat_i, Matrix.det_fin_two]
+
+theorem det_mat_j : mat_j.det = -1 := by
+  norm_num [mat_j, Matrix.det_fin_two]
+
+theorem det_mat_k : mat_k.det = -1 := by
+  norm_num [mat_k, Matrix.det_fin_two]
+
 /-- The quadratic norm representation for the division-binarion representation.
     $N(q) = w^2 + x^2 - y^2 - z^2$, which corresponds to the matrix determinant. -/
 def splitNormSq (w x y z : ℝ) : ℝ :=
@@ -71,6 +118,36 @@ theorem det_splitQuaternionToMatrix (w x y z : ℝ) :
   unfold splitQuaternionToMatrix splitNormSq mat_1 mat_i mat_j mat_k
   norm_num [Matrix.det_fin_two]
   ring
+
+/-- Determinant of the matrix model agrees with the split norm on coordinates. -/
+theorem det_eq_splitNormSq (w x y z : ℝ) :
+    (splitQuaternionToMatrix w x y z).det = splitNormSq w x y z :=
+  det_splitQuaternionToMatrix w x y z
+
+/-- Explicit trace on `2 × 2` matrices. -/
+def tr2 (M : Matrix (Fin 2) (Fin 2) ℝ) : ℝ :=
+  M 0 0 + M 1 1
+
+theorem tr2_mat_1 : tr2 mat_1 = 2 := by
+  norm_num [tr2, mat_1]
+
+theorem tr2_mat_i : tr2 mat_i = 0 := by
+  norm_num [tr2, mat_i]
+
+theorem tr2_mat_j : tr2 mat_j = 0 := by
+  norm_num [tr2, mat_j]
+
+theorem tr2_mat_k : tr2 mat_k = 0 := by
+  norm_num [tr2, mat_k]
+
+/-- Basis orthogonality readout under the trace pairing `Tr(AB)`. -/
+theorem tr2_mat_i_mul_j : tr2 (mat_i * mat_j) = 0 := by
+  rw [mat_i_mul_j]
+  exact tr2_mat_k
+
+theorem tr2_mat_j_mul_k : tr2 (mat_j * mat_k) = 0 := by
+  rw [mat_j_mul_k]
+  norm_num [tr2, mat_i]
 
 /--
 The split-quaternion algebra $\mathbb{H}_s$ over $\mathbb{R}$.

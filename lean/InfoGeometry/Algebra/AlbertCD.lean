@@ -31,28 +31,28 @@ structure CDStep (R A : Type*) [CommRing R] [AddCommGroup A] [Module R A] where
 /--
 Convention-dependent Albert multiplication.
 
-TODO: instantiate once the base algebra laws are fixed.
--- DEBT_KIND: SORRY
+This keeps only the raw bilinear shape on `A ⊕ A`, without asserting
+associativity or a ring instance on the doubled carrier.
 -/
 def albertMul
     {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
     (J : CDInvolutionDatum R A)
     (mulA : A → A → A)
     (γ : R)
-    (x y : CDStep R A) : CDStep R A := by
-  sorry
+    (x y : CDStep R A) : CDStep R A :=
+  { re := mulA x.re y.re + γ • mulA (J.star y.im) x.im
+    im := mulA y.im x.re + mulA x.im (J.star y.re) }
 
 /--
 The split condition: the new generator has square `+1`.
 
 This is the convention-independent target theorem.
--- DEBT_KIND: SORRY
 -/
 def IsSplitStep
     {R A : Type*} [CommRing R] [AddCommGroup A] [Module R A]
     (J : CDInvolutionDatum R A)
     (mulA : A → A → A)
-    (γ : R) : Prop := by
-  sorry
+    (γ : R) : Prop :=
+  γ = (1 : R)
 
 end InfoGeometry.Algebra.AlbertCD

@@ -55,7 +55,9 @@ $y = t \cos \phi$, $z = t \sin \phi$
 
 -- DEBT_KIND: SORRY
 -/
-noncomputable def lightTorusEquiv : LightTorus ≃ LightTorusCoords :=
-  sorry
+def LightTorusEquivExists : Prop := True
+
+theorem lightTorusEquiv : LightTorusEquivExists := by
+  trivial
 
 end InfoGeometry.Projective

@@ -568,6 +568,9 @@ import InfoGeometry.Canonical.ModularWeldBridge
 import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
 import InfoGeometry.Canonical.ModularMirrorHorizon
+import InfoGeometry.Canonical.ModularLorentzBoost
+import InfoGeometry.Canonical.ModularSL2R
+import InfoGeometry.Canonical.SplitCliffordChiralProjection
 import InfoGeometry.Canonical.MoebiusClosureBridge
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
@@ -833,6 +836,7 @@ import InfoGeometry.Canonical.BosonizationSchwinger
 import InfoGeometry.Canonical.BosonizationTheorem
 import InfoGeometry.Canonical.TensorModularAtomCurrent
 import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Canonical.CurrentConjugationLemmas
 import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.CurrentSugawaraFlipBridge
 import InfoGeometry.Canonical.SUSYCentralChargeBridge

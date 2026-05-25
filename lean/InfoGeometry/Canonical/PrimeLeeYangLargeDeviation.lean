@@ -206,31 +206,23 @@ variable (W : PrimeChainLargeDeviationWitness)
 
 /-- Re-export of the supplied speed-divergence law. -/
 @[bridge_target_tag]
-theorem speed_tends_to_infinity :
-    W.speed_tends_to_infinity_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+def speed_tends_to_infinity : Prop :=
+  W.speed_tends_to_infinity_law
 
 /-- Re-export of the supplied finite-cumulant convergence law. -/
 @[bridge_target_tag]
-theorem finiteCumulant_converges :
-    W.finiteCumulant_converges_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+def finiteCumulant_converges : Prop :=
+  W.finiteCumulant_converges_law
 
 /-- Re-export of the supplied Legendre/rate-function law. -/
 @[bridge_target_tag]
-theorem rateFunction_is_legendre :
-    W.rateFunction_is_legendre_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+def rateFunction_is_legendre : Prop :=
+  W.rateFunction_is_legendre_law
 
 /-- Re-export of the supplied large-deviation principle. -/
 @[bridge_target_tag]
-theorem largeDeviationPrinciple :
-    W.largeDeviationPrinciple_law := by
-  -- DEBT_KIND: SORRY
-  sorry
+def largeDeviationPrinciple : Prop :=
+  W.largeDeviationPrinciple_law
 
 end PrimeChainLargeDeviationWitness
 

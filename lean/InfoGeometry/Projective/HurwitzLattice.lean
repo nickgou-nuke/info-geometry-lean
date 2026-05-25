@@ -1,4 +1,5 @@
 import InfoGeometry.Projective.SplitQuaternionMatrix
+import InfoGeometry.Projective.TwistorBlockGrid
 
 /-!
 # InfoGeometry.Projective.HurwitzLattice
@@ -37,6 +38,8 @@ The exact mapping of the discrete `HurwitzInteger` lattice into the $2 \times 2$
 -- DEBT_KIND: SORRY
 -/
 noncomputable def hurwitzToTwistorBlock : HurwitzInteger → TwistorBlock :=
-  sorry
+  fun h =>
+    !![(h.a : ℝ), (h.b : ℝ);
+       (h.c : ℝ), (h.d : ℝ)]
 
 end InfoGeometry.Projective

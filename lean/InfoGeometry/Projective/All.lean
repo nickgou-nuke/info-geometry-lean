@@ -33,6 +33,7 @@ import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsTraceIncidence
 import InfoGeometry.Projective.SplitOctonions.ZornInstance
 import InfoGeometry.Projective.Twistor.Basic
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge

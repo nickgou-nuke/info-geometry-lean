@@ -23,5 +23,10 @@ def test_square_response_witness_surface_present():
         "theorem fisherOnsagerProduction_nonneg_of_squareWitness\n"
         "    (W : ConformalCartanOddPartitionWitness"
     ) in LEAN
+    assert (
+        "theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness\n"
+        "    (W : ConformalCartanOddPartitionWitness"
+    ) in LEAN
     assert "(hSquare : ConformalSquareResponseWitness C X)" in LEAN
     assert "(W.toPositiveContextOfWitness weylGauge tkkParameter hTKK hCone X Y" in LEAN
+    assert "W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge hTKK.tkkParameter hTKK.hTKK hCone X Y" in LEAN

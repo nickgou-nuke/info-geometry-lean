@@ -432,6 +432,23 @@ theorem localExteriorContractWith_mul_createWith_add_createWith_mul_contractWith
           rw [TS.localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw j]
     _ = 1 := by exact hhalf
 
+/--
+Explicit normalized CAR corollary with local names `ε, ι`:
+`ι * ε + ε * ι = 1`.
+-/
+@[rep_depth operator]
+theorem localExteriorWith_anticomm_eq_one
+    (half : Op) (j : ℕ)
+    (hcommCreate : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j)
+    (hcommContract : TS.localExteriorContractRaw j * half = half * TS.localExteriorContractRaw j)
+    (hhalf : half * half * 4 = 1) :
+    let ε := TS.localExteriorCreateWith half j
+    let ι := TS.localExteriorContractWith half j
+    ι * ε + ε * ι = 1 := by
+  simpa using
+    (TS.localExteriorContractWith_mul_createWith_add_createWith_mul_contractWith
+      half j hcommCreate hcommContract hhalf)
+
 /-- Explicit local split-Majorana product readout: `c_j d_j = T_j`. -/
 @[rep_depth operator]
 theorem localMajoranaC_mul_D_eq_tilt (j : ℕ) :

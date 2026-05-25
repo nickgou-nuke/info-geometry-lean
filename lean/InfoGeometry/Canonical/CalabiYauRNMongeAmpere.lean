@@ -79,6 +79,24 @@ theorem incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
 
 omit [FiniteDimensional ℝ E] in
 /--
+Proof-carrying incompressible Monge-Ampere closure from the RN entropy source.
+
+This narrows the public hypothesis surface from the bare equality
+`relativeVolumeChangeRN n M = 1` to the constructive
+`UnitRelativeVolumeBit n M` packet while reusing the existing owner route.
+-/
+theorem incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolumeBit
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
+    IncompressibleMongeAmpere Kgeo.H := by
+  exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit
+    (n := n) (Kgeo := Kgeo) (M := M) hSource bit
+
+omit [FiniteDimensional ℝ E] in
+/--
 Direct Cramer-Rao determinant closure from the RN entropy source and unit
 relative-volume hypothesis.
 -/

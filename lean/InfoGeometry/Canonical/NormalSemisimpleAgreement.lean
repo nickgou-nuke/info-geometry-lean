@@ -57,6 +57,16 @@ theorem no_mismatch
     W.pair.ProjectorAgreement :=
   W.projectorAgreementOwner
 
+/-- Constructive route: owner zero-mismatch agreement rules out every projector anomaly,
+including the noncommuting branch, because the owner mismatch surface already collapses. -/
+theorem no_projector_anomaly
+    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
+    ¬ W.pair.HasProjectorAnomaly := by
+  intro h
+  have hMismatch : W.pair.HasMismatchAnomaly :=
+    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := W.pair)).1 h
+  exact hMismatch W.no_mismatch
+
 end ConstructiveNormalSemisimpleAgreementWitness
 
 /-- Safe theorem: with the witness, the projectors agree. -/
@@ -78,12 +88,28 @@ theorem normalSemisimple_no_mismatch
     W.pair.ProjectorAgreement := by
   exact (ProjectorPair.projectorAgreement_iff_eq (P := W.pair)).2 W.projectorAgreement
 
+/-- Agreement witness rules out every projector anomaly, not only the raw mismatch field. -/
+theorem normalSemisimple_no_projector_anomaly
+    (W : NormalSemisimpleAgreementWitness (R := R)) :
+    ¬ W.pair.HasProjectorAnomaly := by
+  intro h
+  have hMismatch : W.pair.HasMismatchAnomaly :=
+    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := W.pair)).1 h
+  exact hMismatch (normalSemisimple_no_mismatch (R := R) W)
+
 /-- Constructive compatibility route for downstream users that can provide the
 owner zero-mismatch predicate instead of a raw equality packet. -/
 theorem normalSemisimple_no_mismatch_of_constructive
     (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
     W.pair.ProjectorAgreement :=
   W.no_mismatch
+
+/-- Constructive compatibility route for downstream users that need the full no-anomaly
+readback, not just the mismatch-equality packet. -/
+theorem normalSemisimple_no_projector_anomaly_of_constructive
+    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
+    ¬ W.pair.HasProjectorAnomaly :=
+  W.no_projector_anomaly
 
 /-- Marker for the forbidden shortcut: diagonalizable/nonnormal data alone is not enough. -/
 @[rep_depth transport]

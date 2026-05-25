@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauMetriplecticContext
+import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Meta.Architecture
 
@@ -73,6 +74,111 @@ theorem actionAt_eq_pairing (x : State) :
 
 end CoadjointMomentMapData
 
+/-! ## Operatorial Fenchel-Legendre lift along affine coadjoint orbits -/
+
+/--
+Operatorial Fenchel defect.
+
+This is the Lie-side analogue of the scalar Fenchel gap
+`ψ(θ) + φ(η) - θη`.
+
+Only an additive abelian group is required for the scalar target.
+-/
+def operatorFenchelGap
+    {𝕜 Lie LieDual : Type*} [AddCommGroup 𝕜]
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (Q : LieDual) (ξ : Lie) : 𝕜 :=
+  massieu ξ + entropy Q - pair Q ξ
+
+/--
+Operatorial Legendre-Fenchel gap invariance under paired adjoint /
+affine-coadjoint transport.
+
+With
+`Ad#_g Q = coAd_g Q + θ(g)`,
+this proves
+`Gap(Ad#_g Q, Ad_g ξ) = Gap(Q, ξ)`.
+
+The proof is only additive cancellation of the Souriau cocycle contribution.
+-/
+theorem operatorFenchelGap_affineCoAd_invariant
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (hentropy_affine :
+      ∀ g Q,
+        entropy (coAd g Q + theta g) = entropy Q)
+    (g : G) (Q : LieDual) (ξ : Lie) :
+    operatorFenchelGap pair massieu entropy
+        (coAd g Q + theta g) (Ad g ξ)
+      =
+    operatorFenchelGap pair massieu entropy Q ξ := by
+  unfold operatorFenchelGap
+  rw [hmassieu_affine g ξ]
+  rw [hentropy_affine g Q]
+  rw [hpair_add (coAd g Q) (theta g) (Ad g ξ)]
+  rw [hpair_coAd_Ad g Q ξ]
+  abel
+
+/--
+Entropy invariance from the operatorial Legendre-Fenchel readout.
+
+Assume entropy is represented by the generalized Legendre transform
+`S(Q) = <Q, β(Q)> - Φ(β(Q))`.
+-/
+theorem operatorLegendre_entropy_affineCoAd_invariant
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (beta : LieDual → Lie)
+    (hentropy_legendre :
+      ∀ Q,
+        entropy Q = pair Q (beta Q) - massieu (beta Q))
+    (hbeta_affine :
+      ∀ g Q,
+        beta (coAd g Q + theta g) = Ad g (beta Q))
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (g : G) (Q : LieDual) :
+    entropy (coAd g Q + theta g) = entropy Q := by
+  rw [hentropy_legendre (coAd g Q + theta g)]
+  rw [hentropy_legendre Q]
+  rw [hbeta_affine g Q]
+  rw [hpair_add (coAd g Q) (theta g) (Ad g (beta Q))]
+  rw [hpair_coAd_Ad g Q (beta Q)]
+  rw [hmassieu_affine g (beta Q)]
+  abel
+
 /-! ## Fenchel-Legendre bridge to finite Souriau Massieu potential -/
 
 /--
@@ -135,6 +241,78 @@ theorem souriauMassieu_contact_balance :
       C.theta * C.model.dualCoord C.theta := by
   rw [← C.massieu_matches]
   exact C.contact_balance
+
+/--
+Concrete bridge contact equation:
+the Souriau Massieu value at the bridge point satisfies the Fenchel contact
+identity with the dual coordinate.
+-/
+@[rep_depth transport]
+theorem souriau_contact_equation :
+    souriauMassieuPotential C.M C.T
+      + C.model.φ (C.model.dualCoord C.theta)
+      - C.theta * C.model.dualCoord C.theta = 0 := by
+  have hcb := C.souriauMassieu_contact_balance
+  linarith
+
+/--
+Concrete bridge contact defect is zero.
+
+This is the finite instantiation of the Legendre-contact/Fenchel bridge at the
+selected Souriau Massieu basepoint.
+-/
+@[rep_depth transport]
+theorem souriau_fenchelGap_eq_zero_at_bridge_contact :
+    C.model.massieu C.theta
+      + C.model.φ (C.model.dualCoord C.theta)
+      - C.theta * C.model.dualCoord C.theta = 0 := by
+  have hgap0 := C.fenchelGap_eq_zero_at_contact
+  simpa [InfoGeometry.LogPotential.LegendreModel.fenchelGap] using hgap0
+
+/--
+Primal Bregman/Fenchel readout at the Souriau bridge basepoint.
+-/
+@[rep_depth transport]
+theorem primalBregman_eq_fenchelGap_at_bridge_base
+    (θ : ℝ)
+    (hgrad : C.model.grad C.theta = deriv C.model.L.ψ C.theta) :
+    C.model.primalBregman θ C.theta =
+      C.model.fenchelGap θ (C.model.dualCoord C.theta) :=
+  C.model.primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv θ C.theta hgrad
+
+/--
+Finite convex consequence at the Souriau bridge basepoint:
+the primal Bregman divergence is nonnegative.
+-/
+@[rep_depth transport]
+theorem primalBregman_nonneg_at_bridge_base
+    (θ : ℝ)
+    (hgrad : C.model.grad C.theta = deriv C.model.L.ψ C.theta) :
+    0 ≤ C.model.primalBregman θ C.theta :=
+  C.model.primalBregman_nonneg_of_grad_eq_deriv θ C.theta hgrad
+
+/--
+Bridge-contact specialization: primal Bregman divergence vanishes on the
+diagonal at the selected Souriau basepoint.
+-/
+@[rep_depth transport]
+theorem primalBregman_self_at_bridge_base :
+    C.model.primalBregman C.theta C.theta = 0 := by
+  unfold InfoGeometry.LogPotential.LegendreModel.primalBregman
+  simp [InfoGeometry.LogPotential.bregman, InfoGeometry.bregmanDiv]
+
+/--
+Transverse Fenchel defect readout at the Souriau bridge basepoint.
+
+This is the dual-flat transverse channel decomposition at fixed basepoint.
+-/
+@[rep_depth transport]
+theorem transverse_fenchel_defect_at_bridge_base
+    (eta : ℝ) :
+    C.model.fenchelGap C.theta eta =
+      C.model.φ eta - C.model.φ (C.model.dualCoord C.theta)
+        + C.theta * (C.model.dualCoord C.theta - eta) :=
+  C.model.fenchelGap_eq_dual_defect_add_pairing_defect C.theta eta
 
 /-- Scaled Fenchel defects are nonnegative at nonnegative scale. -/
 @[rep_depth transport]
@@ -229,6 +407,16 @@ theorem entropy_invariant_on_state_orbit
       C.entropy (C.data.moment x) := by
   rw [C.moment_equivariant s x]
   exact C.entropy_casimir_invariant s (C.data.moment x)
+
+/-- Orbit-tangent entropy channel readout: entropy difference along a symmetry
+orbit is exactly zero. -/
+@[rep_depth transport]
+theorem entropy_difference_on_state_orbit_eq_zero
+    (s : Sym) (x : State) :
+    C.entropy (C.data.moment (C.stateAction s x))
+      - C.entropy (C.data.moment x) = 0 := by
+  rw [C.entropy_invariant_on_state_orbit s x]
+  ring
 
 end CoadjointEntropySymmetryContext
 

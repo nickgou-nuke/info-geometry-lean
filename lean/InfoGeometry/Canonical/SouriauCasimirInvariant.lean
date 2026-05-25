@@ -448,6 +448,51 @@ theorem operatorLegendre_entropy_affineCoAd_invariant
   abel
 
 /--
+Corollary: operatorial Fenchel gap invariance on the Legendre-contact slice
+`ξ = beta Q`.
+
+This is the direct specialization of
+`operatorFenchelGap_affineCoAd_invariant` along the transported dual
+coordinate.
+-/
+theorem operatorFenchelGap_affineCoAd_invariant_on_betaSlice
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [Group G] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (beta : LieDual → Lie)
+    (hbeta_affine :
+      ∀ g Q,
+        beta (coAd g Q + theta g) = Ad g (beta Q))
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (hentropy_affine :
+      ∀ g Q,
+        entropy (coAd g Q + theta g) = entropy Q)
+    (g : G) (Q : LieDual) :
+    operatorFenchelGap pair massieu entropy
+        (coAd g Q + theta g) (beta (coAd g Q + theta g))
+      =
+    operatorFenchelGap pair massieu entropy Q (beta Q) := by
+  rw [hbeta_affine g Q]
+  exact operatorFenchelGap_affineCoAd_invariant
+    (Ad := Ad) (coAd := coAd) (theta := theta)
+    (pair := pair) (massieu := massieu) (entropy := entropy)
+    hpair_add hpair_coAd_Ad hmassieu_affine hentropy_affine g Q (beta Q)
+
+/--
 Operatorial Legendre/Fenchel covariance implies affine-coadjoint entropy
 invariance.
 

@@ -95,6 +95,20 @@ def concreteCompositionDatum : ZornCompositionDatum ℝ where
 
 namespace concreteCompositionDatum
 
+/--
+Sign-regression guard on the concrete Zorn product.
+
+For the test pair
+`X = (a=b=0, x=e₀, y=e₀)` and `Y = (a=b=0, x=e₁, y=e₁)`,
+the product has determinant `1`, matching `detZ X * detZ Y = (-1)*(-1)`.
+-/
+theorem detZ_mul_sign_regression_guard :
+    let X : ZornMatrix ℝ := { a := 0, b := 0, x := ![1, 0, 0], y := ![1, 0, 0] }
+    let Y : ZornMatrix ℝ := { a := 0, b := 0, x := ![0, 1, 0], y := ![0, 1, 0] }
+    ZornMatrix.detZ concreteCrossProduct3 (mulZ X Y) = 1 := by
+  dsimp [mulZ, concreteCrossProduct3, ZornMatrix.detZ, dot3, cross3]
+  ring
+
 /-- Left multiplication by a norm-one concrete Zorn element preserves the determinant. -/
 theorem detZ_left_mul_normOne
     (U X : ZornMatrix ℝ)
@@ -109,6 +123,46 @@ theorem detZ_right_mul_normOne
     (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
     ZornMatrix.detZ concreteCrossProduct3 (mulZ X U) =
       ZornMatrix.detZ concreteCrossProduct3 X := by
+  rw [detZ_mul, hU, mul_one]
+
+/-- Left concrete multiplication preserves Zorn-null representatives. -/
+theorem left_mul_preserves_null
+    (U X : ZornMatrix ℝ)
+    (hX : ZornMatrix.IsNull concreteCrossProduct3 X) :
+    ZornMatrix.IsNull concreteCrossProduct3 (mulZ U X) := by
+  unfold ZornMatrix.IsNull at *
+  rw [detZ_mul, hX, mul_zero]
+
+/-- Right concrete multiplication preserves Zorn-null representatives. -/
+theorem right_mul_preserves_null
+    (X U : ZornMatrix ℝ)
+    (hX : ZornMatrix.IsNull concreteCrossProduct3 X) :
+    ZornMatrix.IsNull concreteCrossProduct3 (mulZ X U) := by
+  unfold ZornMatrix.IsNull at *
+  rw [detZ_mul, hX, zero_mul]
+
+/--
+If the left multiplier is norm-one, left concrete multiplication preserves
+the determinant-zero/null condition in both directions.
+-/
+theorem left_mul_normOne_iff_isNull
+    (U X : ZornMatrix ℝ)
+    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
+    ZornMatrix.IsNull concreteCrossProduct3 (mulZ U X)
+      ↔ ZornMatrix.IsNull concreteCrossProduct3 X := by
+  unfold ZornMatrix.IsNull
+  rw [detZ_mul, hU, one_mul]
+
+/--
+If the right multiplier is norm-one, right concrete multiplication preserves
+the determinant-zero/null condition in both directions.
+-/
+theorem right_mul_normOne_iff_isNull
+    (X U : ZornMatrix ℝ)
+    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
+    ZornMatrix.IsNull concreteCrossProduct3 (mulZ X U)
+      ↔ ZornMatrix.IsNull concreteCrossProduct3 X := by
+  unfold ZornMatrix.IsNull
   rw [detZ_mul, hU, mul_one]
 
 end concreteCompositionDatum

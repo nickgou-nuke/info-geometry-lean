@@ -373,4 +373,130 @@ lemma bregmanPythagoreanIneq
     bregmanDiv F x z ≥ bregmanDiv F x y + bregmanDiv F y z :=
   bregmanPythagoreanIneq_of_crossTerm_nonneg F x y z hproj
 
+/-! ## Linear-symmetry invariance (vector-space form) -/
+
+/-- Pairing readout from the gradient-linear map. -/
+def pairing
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (nablaΦ : V → V →ₗ[ℝ] ℝ)
+    (y v : V) : ℝ :=
+  nablaΦ y v
+
+/-- Bregman divergence from a potential and gradient pairing surface. -/
+def bregmanDivergence
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Φ : V → ℝ)
+    (nablaΦ : V → V →ₗ[ℝ] ℝ)
+    (x y : V) : ℝ :=
+  Φ x - Φ y - pairing nablaΦ y (x - y)
+
+/--
+Dual-pairing invariance under the coadjoint action induced by a linear
+equivalence.
+
+If `T` is the primal action and the dual action is pullback by `T.symm`, then
+`⟨η ∘ T⁻¹, T x⟩ = ⟨η, x⟩`.
+-/
+theorem pairing_dualMap_linearEquiv
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (T : V ≃ₗ[ℝ] V)
+    (η : V →ₗ[ℝ] ℝ)
+    (x : V) :
+    (η.comp (T.symm : V →ₗ[ℝ] V)) (T x) = η x := by
+  change η (T.symm (T x)) = η x
+  simp
+
+/--
+Fenchel objective invariance under a linear primal/coadjoint pair.
+-/
+theorem fenchelObjective_invariant_linearEquiv
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Φ : V → ℝ)
+    (T : V ≃ₗ[ℝ] V)
+    (η : V →ₗ[ℝ] ℝ)
+    (hΦ : ∀ x : V, Φ (T x) = Φ x)
+    (x : V) :
+    (η.comp (T.symm : V →ₗ[ℝ] V)) (T x) - Φ (T x)
+      =
+    η x - Φ x := by
+  rw [hΦ x, pairing_dualMap_linearEquiv T η x]
+
+/--
+Affine-coadjoint Fenchel objective invariance.
+-/
+theorem fenchelObjective_invariant_affineCoadjoint
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Φ : V → ℝ)
+    (T : V ≃ₗ[ℝ] V)
+    (η θ : V →ₗ[ℝ] ℝ)
+    (hΦ : ∀ x : V, Φ (T x) = Φ x)
+    (x : V) :
+    ((η.comp (T.symm : V →ₗ[ℝ] V) + θ) (T x))
+      - (Φ (T x) + θ (T x))
+      =
+    η x - Φ x := by
+  rw [LinearMap.add_apply, hΦ x, pairing_dualMap_linearEquiv T η x]
+  ring
+
+/--
+Affine-coadjoint invariance of the Bregman divergence.
+-/
+theorem bregman_invariant_affineCoadjoint
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Φ : V → ℝ)
+    (nablaΦ : V → V →ₗ[ℝ] ℝ)
+    (T : V ≃ₗ[ℝ] V)
+    (θ : V →ₗ[ℝ] ℝ)
+    (hΦ : ∀ x : V, Φ (T x) = Φ x + θ (T x))
+    (hgrad :
+      ∀ y : V,
+        nablaΦ (T y) =
+          (nablaΦ y).comp (T.symm : V →ₗ[ℝ] V) + θ)
+    (x y : V) :
+    bregmanDivergence Φ nablaΦ (T x) (T y)
+      =
+    bregmanDivergence Φ nablaΦ x y := by
+  unfold bregmanDivergence pairing
+  have harg : T x - T y = T (x - y) := by
+    simpa using (map_sub T x y).symm
+  have hpair :
+      ((nablaΦ y).comp (T.symm : V →ₗ[ℝ] V) + θ) (T (x - y))
+        =
+      nablaΦ y (x - y) + θ (T x) - θ (T y) := by
+    rw [LinearMap.add_apply]
+    have hdual :
+        ((nablaΦ y).comp (T.symm : V →ₗ[ℝ] V)) (T (x - y))
+          =
+        nablaΦ y (x - y) :=
+      pairing_dualMap_linearEquiv T (nablaΦ y) (x - y)
+    have htheta :
+        θ (T (x - y)) = θ (T x) - θ (T y) := by
+      rw [map_sub T x y, map_sub θ (T x) (T y)]
+    rw [hdual, htheta]
+    ring
+  rw [hΦ x, hΦ y, hgrad y, harg, hpair]
+  ring
+
+/--
+Bregman divergence is invariant under a linear symmetry that preserves
+the potential and the gradient pairing.
+
+No strict convexity is needed for this lemma.
+-/
+theorem bregman_invariant_of_linear_symmetry
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Φ : V → ℝ)
+    (nablaΦ : V → V →ₗ[ℝ] ℝ)
+    (T : V →ₗ[ℝ] V)
+    (hΦ : ∀ x : V, Φ (T x) = Φ x)
+    (hPair : ∀ x y : V, nablaΦ (T x) (T y) = nablaΦ x y)
+    (x y : V) :
+    bregmanDivergence Φ nablaΦ (T x) (T y) =
+      bregmanDivergence Φ nablaΦ x y := by
+  unfold bregmanDivergence pairing
+  have hsub : T (x - y) = T x - T y := by
+    exact map_sub T x y
+  rw [← hsub]
+  simp [hΦ, hPair]
+
 end InfoGeometry

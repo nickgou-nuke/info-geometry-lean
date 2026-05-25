@@ -1015,6 +1015,47 @@ noncomputable def SinkhornRNBarrierProfileLift.ofPhase
         L.phaseRNBarrier_eq_scaled_informationGeometricRelativeNorm }
 
 /--
+If the current Sinkhorn phase is column-normalization, then a mass-normalized
+row-count lift produces the trajectory-local RN-barrier profile lift directly.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {T : SinkhornTrajectory n}
+    {k : Nat}
+    (hk : phaseAt k = SinkhornPhase.col)
+    {hrow : HasPositiveRowSums n (T.state k)}
+    (hMass : countMass (rowSumCounts n (T.state k)) hrow = n) :
+    SinkhornRNBarrierProfileLift n T k :=
+  SinkhornRNBarrierProfileLift.ofPhase
+    (T := T) (k := k)
+    (hk.symm ▸
+      PhaseRNBarrierProfileLift.ofRowCounts
+        (RowRNBarrierCountProfileLift.ofMassNormalized
+          (n := n) (M := T.state k) hrow hMass))
+
+/--
+If the current Sinkhorn phase is row-normalization, then a mass-normalized
+column-count lift produces the trajectory-local RN-barrier profile lift
+directly.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {T : SinkhornTrajectory n}
+    {k : Nat}
+    (hk : phaseAt k = SinkhornPhase.row)
+    {hcol : HasPositiveColSums n (T.state k)}
+    (hMass : countMass (colSumCounts n (T.state k)) hcol = n) :
+    SinkhornRNBarrierProfileLift n T k :=
+  SinkhornRNBarrierProfileLift.ofPhase
+    (T := T) (k := k)
+    (hk.symm ▸
+      PhaseRNBarrierProfileLift.ofColCounts
+        (ColRNBarrierCountProfileLift.ofMassNormalized
+          (n := n) (M := T.state k) hcol hMass))
+
+/--
 If the remaining profile lift is supplied, the RN-barrier budget becomes a
 repo-native projective modular-potential budget on the `L¹` readout lane.
 -/
@@ -1074,6 +1115,46 @@ theorem operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile
   RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
     (E := E)
     (WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C L)
+
+/--
+Mass-normalized row counts at a column-normalization phase are enough to route
+the Sinkhorn RN budget all the way to the operator readout inequality.
+-/
+theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.col)
+    {hrow : HasPositiveRowSums n (C.T.state C.k)}
+    (hMass : countMass (rowSumCounts n (C.T.state C.k)) hrow = n) :
+    C.B.comparison.operatorInformationNormReadout C.B.routerResidual
+      ≤
+    C.B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) := by
+  exact
+    operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile (E := E) C
+      (SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
+        (T := C.T) (k := C.k) hk hMass)
+
+/--
+Mass-normalized column counts at a row-normalization phase are enough to route
+the Sinkhorn RN budget all the way to the operator readout inequality.
+-/
+theorem operatorInformationNormReadout_le_of_massNormalizedColCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.row)
+    {hcol : HasPositiveColSums n (C.T.state C.k)}
+    (hMass : countMass (colSumCounts n (C.T.state C.k)) hcol = n) :
+    C.B.comparison.operatorInformationNormReadout C.B.routerResidual
+      ≤
+    C.B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) := by
+  exact
+    operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile (E := E) C
+      (SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
+        (T := C.T) (k := C.k) hk hMass)
 
 /--
 Volume anomaly monotonicity forces one-step odd-defect monotonicity.

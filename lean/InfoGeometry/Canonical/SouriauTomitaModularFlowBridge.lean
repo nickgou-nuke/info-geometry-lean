@@ -458,3 +458,96 @@ theorem constructive_kms_packet
     C.modularHamiltonian_eq_moment_geometricTemperature⟩
 
 end SouriauTomitaKMSContext
+
+/--
+Constructive cyclic zero-thermal Souriau/Tomita KMS branch.
+
+This is the honest infinite-dimensional narrowing where no explicit `kms`
+packet is supplied.  Instead, the branch carries only:
+
+* a cyclic algebraic state,
+* a geometric temperature selecting the zero thermal moment, and
+* the modular inverse temperature `beta`.
+
+From these data the module constructs the zero modular Hamiltonian, the induced
+Souriau/Tomita modular flow, and the KMS witness.
+-/
+@[rep_depth operator]
+structure CyclicSouriauTomitaKMSContext where
+  geometricTemperature : Symmetry
+  state : CyclicAlgebraicState (H := H)
+  beta : ℝ
+
+namespace CyclicSouriauTomitaKMSContext
+
+variable (C : CyclicSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry))
+
+/-- The logarithmic Souriau/Tomita context is the zero-thermal-moment branch. -/
+@[rep_depth operator]
+noncomputable def logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) :=
+  SouriauTomitaLogContext.ofZeroThermalMoment (H := H) C.geometricTemperature
+
+/-- On the zero-thermal branch, the modular Hamiltonian vanishes. -/
+@[rep_depth operator]
+theorem modularHamiltonian_zero : C.logContext.modularHamiltonian = 0 :=
+  SouriauTomitaLogContext.modularHamiltonian_zero_ofZeroThermalMoment
+    (H := H) C.geometricTemperature
+
+/-- The induced Souriau/Tomita modular flow is the identity on observables. -/
+@[rep_depth operator]
+theorem sigma_apply_eq_self (t : ℝ) (A : Obs) :
+    C.logContext.souriauAdditiveModularFlow t A = A := by
+  rw [SouriauTomitaLogContext.souriauAdditiveModularFlow_apply_eq_modularHamiltonian_shift]
+  rw [C.modularHamiltonian_zero]
+  simp [InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
+
+/-- Constructive KMS witness derived from cyclicity on the zero-thermal branch. -/
+@[rep_depth operator]
+noncomputable def kms :
+    KMSState (H := H) C.logContext.souriauAdditiveModularFlow C.beta where
+  state := C.state.state
+  kms_identity := by
+    intro A B
+    rw [C.sigma_apply_eq_self C.beta B]
+    simpa using C.state.cyclic A B
+
+/-- The standard-form carrier extracted from the zero-thermal branch has `Δ = 0`. -/
+@[rep_depth operator]
+theorem toStandardFormCarrier_Delta_eq_zero :
+    C.logContext.toStandardFormCarrier.Delta = 0 := by
+  rw [C.logContext.toStandardFormCarrier_Delta_eq_modularHamiltonian]
+  exact C.modularHamiltonian_zero
+
+/-- The standard-form carrier flow is the identity on the cyclic zero-thermal branch. -/
+@[rep_depth operator]
+theorem toStandardFormCarrier_modularFlow_apply_eq_self (t : ℝ) (A : Obs) :
+    C.logContext.toStandardFormCarrier.seed.modularFlow t A = A := by
+  calc
+    C.logContext.toStandardFormCarrier.seed.modularFlow t A
+        = C.logContext.souriauAdditiveModularFlow t A := rfl
+    _ = A := C.sigma_apply_eq_self t A
+
+/-- Build the standard `SouriauTomitaKMSContext` without an explicit KMS packet. -/
+@[rep_depth operator]
+noncomputable def toSouriauTomitaKMSContext :
+    SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) where
+  logContext := C.logContext
+  beta := C.beta
+  kms := C.kms
+
+/-- Constructor theorem for the cyclic zero-thermal KMS branch. -/
+@[rep_depth operator]
+theorem mk_of_cyclic :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state.state := by
+  refine ⟨C.toSouriauTomitaKMSContext, ?_⟩
+  rfl
+
+/-- Backward-compatible broad constructor theorem from the cyclic zero-thermal branch. -/
+@[rep_depth operator]
+theorem mk_broad_of_cyclic :
+    ∃ ctx : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = C.state.state :=
+  C.mk_of_cyclic
+
+end CyclicSouriauTomitaKMSContext

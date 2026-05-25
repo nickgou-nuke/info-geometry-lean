@@ -188,7 +188,25 @@ theorem km_bracket_expand (m n : ℤ) (x y : 𝓰) :
         + (if m + n = 0
             then ((m : 𝕜) * Φ x y) • affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
             else 0) := by
-  simpa using affineCurrentGen_bracket (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+  exact affineCurrentGen_bracket (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+
+/--
+Direct linearity package for fixed mode current insertion:
+`x ↦ J⁽ˣ⁾ₙ` is a linear map.
+-/
+noncomputable def km_current_linear_map (n : ℤ) :
+    𝓰 →ₗ[𝕜] AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
+  { toFun := fun x => affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
+    map_add' := by
+      intro x y
+      ext <;> simp [affineCurrentGen, affineLoopMode, TensorProduct.tmul_add]
+    map_smul' := by
+      intro a x
+      ext <;> simp [affineCurrentGen, affineLoopMode, TensorProduct.tmul_smul] }
+
+@[simp] theorem km_current_linear_map_apply (n : ℤ) (x : 𝓰) :
+    km_current_linear_map (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
+      = affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x := rfl
 
 /--
 Bilinearity of the affine Kac--Moody cocycle.
@@ -290,6 +308,6 @@ theorem km_comm_full
         + (if m + n = 0
             then ((m : 𝕜) * Φ x y) • affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
             else 0) := by
-  simpa using km_bracket_expand (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+  exact affineCurrentGen_bracket (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
 
 end VirasoroProject

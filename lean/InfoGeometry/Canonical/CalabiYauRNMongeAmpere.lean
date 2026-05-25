@@ -207,6 +207,30 @@ theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativ
 
 omit [FiniteDimensional ℝ E] in
 /--
+Proof-carrying entropy-sourced gravity closure through the constructive
+`UnitRelativeVolumeBit n M` packet.
+
+This narrows the public capstone surface from the bare equality
+`relativeVolumeChangeRN n M = 1` to the existing constructive witness while
+reusing the owner theorem above unchanged.
+-/
+theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (R : RicciTensor E)
+    (x : E)
+    (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
+    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M)
+    hSource bit.unit_relative_volume hBridge
+
+omit [FiniteDimensional ℝ E] in
+/--
 Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
 -/
 private theorem hasConstantMongeAmpereDensity_of_rnEntropySource

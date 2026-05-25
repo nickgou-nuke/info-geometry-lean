@@ -276,6 +276,37 @@ def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
     (E := E) W.assumptions W.classical_candidate_commutes_spectralEpsilon
 
 /--
+Classical Riesz Weyl witness route: the converted constructive Drazin candidate
+is Weyl-compatible without carrying a separate free commutation hypothesis.
+-/
+theorem constructiveDrazinCandidate_isWeylCompatible_of_classicalRieszWeylWitness
+    {T : EndH}
+    (W : ClassicalRieszWeylWitness (E := E) T) :
+    IsWeylCompatible (E := E)
+      (constructiveDrazinCandidate
+        (constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+          (𝕂 := ℝ) W.classical_riesz)) := by
+  exact constructiveDrazinCandidate_isWeylCompatible
+    (E := E)
+    (constructiveRieszWeylData_of_classicalRieszWeylWitness (E := E) W)
+
+/--
+Broad infinite witness route: the constructive Drazin candidate extracted from
+`DrazinInfiniteAssumptions` is Weyl-compatible once the spectral-sheet
+commutation proof is bundled into `DrazinInfiniteWeylWitness`.
+-/
+theorem constructiveDrazinCandidate_isWeylCompatible_of_drazinInfiniteWeylWitness
+    {T : EndH}
+    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    IsWeylCompatible (E := E)
+      (constructiveDrazinCandidate
+        (constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+          (𝕂 := ℝ) W.assumptions.classical_riesz)) := by
+  exact constructiveDrazinCandidate_isWeylCompatible
+    (E := E)
+    (constructiveRieszWeylData_of_drazinInfiniteWeylWitness (E := E) W)
+
+/--
 Constructive D2 bridge: local Weyl symmetry and uniqueness of the regular
 Riesz inverse imply Weyl compatibility of the constructive Drazin candidate.
 -/

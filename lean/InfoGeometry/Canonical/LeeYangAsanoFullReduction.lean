@@ -2,6 +2,7 @@ import Mathlib
 import Mathlib.Tactic.FieldSimp
 import InfoGeometry.Canonical.LeeYangAsanoNativeCore
 import InfoGeometry.Canonical.LeeYangAsanoNondegeneratePrep
+import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 
 /-!
 # InfoGeometry.Canonical.LeeYangAsanoFullReduction
@@ -114,5 +115,56 @@ theorem asano_contraction_root_mem_negProductSet_of_nondegenerate_topology
     (asano_contraction_full_of_nondegenerate_topology
       hTop h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff)
       hroot
+
+/--
+Full two-variable Asano contraction from a concrete nondegenerate endpoint
+alternative hypothesis.
+
+This removes the abstract nondegenerate root-membership premise and replaces it
+with the endpoint alternative used by the native endpoint theorem.
+-/
+@[rep_depth operator]
+theorem asano_contraction_full_of_endpoint_nondegenerate
+    (hEndpointNonDeg :
+      ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+        (0 : ℂ) ∉ K₁ →
+        (0 : ℂ) ∉ K₂ →
+        IsClosed K₁ →
+        IsClosed K₂ →
+        D ≠ 0 →
+        A * D - B * C ≠ 0 →
+        (∀ z₁ z₂ : ℂ,
+          z₁ ∉ K₁ →
+          z₂ ∉ K₂ →
+          asanoPhi A B C D z₁ z₂ ≠ 0) →
+        A + D * z = 0 →
+        ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)))
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hzOff : z ∉ negProductSet K₁ K₂) :
+    A + D * z ≠ 0 := by
+  by_cases hD : D = 0
+  · subst hD
+    exact asano_contraction_D_eq_zero_nonzero h0K₁ h0K₂ hPhi
+  by_cases hDet : A * D - B * C = 0
+  · exact
+      asano_det_zero_contraction_nonzero_off_negProductSet
+        h0K₁ h0K₂ hD hDet hPhi hzOff
+  · intro hroot
+    have hend :
+        (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂) :=
+      hEndpointNonDeg h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
+    exact hzOff
+      (asano_nondegenerate_root_mem_negProductSet_of_endpoint
+        h0K₁ h0K₂ hD hPhi hroot hend)
 
 end InfoGeometry.Canonical.LeeYangAsanoNativeCore

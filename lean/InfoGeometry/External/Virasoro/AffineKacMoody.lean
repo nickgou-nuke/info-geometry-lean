@@ -125,6 +125,28 @@ noncomputable def affineCurrentGen (n : ℤ) (x : 𝓰) :
     AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
   ⟨affineLoopMode (𝕜 := 𝕜) (𝓰 := 𝓰) (-n) x, 0⟩
 
+/--
+Affine current mode is well-defined as a linear map in the Lie-algebra input.
+
+This is the concrete `km_current_def_well_defined` step:
+for each mode `n`, `x ↦ J⁽ˣ⁾ₙ` is linear.
+-/
+theorem km_current_def_well_defined (n : ℤ) :
+    ∃ Jn : 𝓰 →ₗ[𝕜] AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs,
+      ∀ x : 𝓰,
+        Jn x = affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x := by
+  refine ⟨
+    { toFun := fun x => affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n x
+      map_add' := ?_
+      map_smul' := ?_ },
+    ?_⟩
+  · intro x y
+    ext <;> simp [affineCurrentGen, affineLoopMode, TensorProduct.tmul_add]
+  · intro a x
+    ext <;> simp [affineCurrentGen, affineLoopMode, TensorProduct.tmul_smul]
+  · intro x
+    rfl
+
 /-- The central generator of the affine Kac-Moody central extension. -/
 noncomputable def affineCentralGen : AffineKacMoody 𝕜 𝓰 Φ hΦ hΦs :=
   ⟨0, 1⟩
@@ -152,5 +174,122 @@ theorem affineCurrentGen_bracket (m n : ℤ) (x y : 𝓰) :
       simp [affineCurrentGen, affineCentralGen, affineKacMoodyCocycle_affineLoopMode, h, hmn]
     · have hloop : ¬ -m + -n = 0 := by omega
       simp [affineCurrentGen, affineKacMoodyCocycle_affineLoopMode, h, hloop]
+
+/--
+Kac--Moody bracket expansion for current generators:
+structure bracket part plus central cocycle part.
+
+This is the `km_bracket_expand` closure item.
+-/
+theorem km_bracket_expand (m n : ℤ) (x y : 𝓰) :
+    ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆ =
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)
+        + (if m + n = 0
+            then ((m : 𝕜) * Φ x y) • affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+            else 0) := by
+  simpa using affineCurrentGen_bracket (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
+
+/--
+Bilinearity of the affine Kac--Moody cocycle.
+
+This is the `km_cocycle_bilinear` closure item.
+-/
+theorem km_cocycle_bilinear
+    (X Y Z : loopAlgebra 𝕜 ℤ 𝓰) (a : 𝕜) :
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs (X + Y) Z
+      =
+      affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+        + affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y Z
+    ∧
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs (a • X) Z
+      =
+      a * affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+    ∧
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X (Y + Z)
+      =
+      affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y
+        + affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Z
+    ∧
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X (a • Y)
+      =
+      a * affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y := by
+  constructor
+  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_add_left X Y Z
+  constructor
+  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_smul_left a X Z
+  constructor
+  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_add_right X Y Z
+  · simpa using (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).map_smul_right a X Y
+
+/--
+Skew-symmetry of the affine Kac--Moody cocycle.
+
+This is the `km_cocycle_skew` closure item.
+-/
+theorem km_cocycle_skew
+    (X Y : loopAlgebra 𝕜 ℤ 𝓰) :
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X Y
+      =
+      - affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y X := by
+  have hskew := (affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs).skew X Y
+  simpa using hskew.symm
+
+/--
+Leibniz/2-cocycle identity for the affine Kac--Moody cocycle.
+
+This is the `km_cocycle_2cocycle_identity` closure item.
+-/
+theorem km_cocycle_2cocycle_identity
+    (X Y Z : loopAlgebra 𝕜 ℤ 𝓰) :
+    affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs X ⁅Y, Z⁆
+      =
+      affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs ⁅X, Y⁆ Z
+        + affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs Y ⁅X, Z⁆ := by
+  simpa using
+    (LieTwoCocycle.leibniz
+      (γ := affineKacMoodyCocycle 𝕜 𝓰 Φ hΦ hΦs)
+      (X := X) (Y := Y) (Z := Z))
+
+/--
+Jacobi identity for affine current generators.
+
+This is the `km_jacobi_from_structure_and_cocycle` closure item, read at the
+generator level in the affine central extension.
+-/
+theorem km_jacobi_from_structure_and_cocycle
+    (m n p : ℤ) (x y z : 𝓰) :
+    ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+        ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y,
+          affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z⁆⁆
+      +
+      ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y,
+        ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z,
+          affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x⁆⁆
+      +
+      ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z,
+        ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+          affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆⁆
+      = 0 := by
+  simpa [add_assoc] using
+    (lie_jacobi
+      (affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x)
+      (affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y)
+      (affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs p z))
+
+/--
+Full affine Kac--Moody generator commutator.
+
+This is the `km_comm_full` closure item.
+-/
+theorem km_comm_full
+    (m n : ℤ) (x y : 𝓰) :
+    ⁅affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m x,
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs n y⁆ =
+      affineCurrentGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs (m + n) (⁅x, y⁆ : 𝓰)
+        + (if m + n = 0
+            then ((m : 𝕜) * Φ x y) • affineCentralGen (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs
+            else 0) := by
+  simpa using km_bracket_expand (𝕜 := 𝕜) (𝓰 := 𝓰) Φ hΦ hΦs m n x y
 
 end VirasoroProject

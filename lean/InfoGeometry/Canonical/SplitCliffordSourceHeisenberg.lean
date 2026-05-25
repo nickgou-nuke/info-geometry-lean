@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 
 /-!
@@ -15,6 +16,7 @@ namespace InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 open InfoGeometry.Canonical.SplitCliffordSourceCurrent
 
 /--
@@ -115,5 +117,36 @@ theorem currentRep_nonempty_of_splitCurrentLiftDatum
     Nonempty (InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V) := by
   rcases strictWitness_of_splitCurrentLiftDatum L hCommLift with ⟨W⟩
   exact splitClifford_to_currentHeisenbergRep W
+
+/-! ## Explicit infinite-current consumer readouts -/
+
+/--
+Consumer readout: the canonical infinite current from the external Heisenberg
+algebra satisfies the full mode commutator law.
+-/
+theorem canonicalInfiniteCurrent_commutator_readout
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (m n : Int) :
+    ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
+      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 :=
+  canonicalInfiniteCurrent_lie (𝕜 := 𝕜) m n
+
+/--
+Consumer readout: the first central mode pair of the canonical infinite
+current is exactly `[J₁,J₋₁] = 1 • K`.
+-/
+theorem canonicalInfiniteCurrent_one_negOne
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
+  canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
+
+/--
+Consumer readout: the canonical central generator commutes with every element.
+-/
+theorem canonicalInfiniteCurrent_central
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (Z : InfiniteCurrentAlg 𝕜) :
+    ⁅Kinf 𝕜, Z⁆ = 0 :=
+  canonicalInfiniteCurrent_lie_central (𝕜 := 𝕜) Z
 
 end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg

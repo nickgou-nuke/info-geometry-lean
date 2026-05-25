@@ -54,12 +54,12 @@ def add3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : ZornCell 𝕜 (Vec3 𝕜) where
   w := X.w + Y.w
 
 /-- Concrete Zorn determinant/norm `ab - v·w` over `𝕜³`. -/
-def detZ3 (X : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
+def detZ3c (X : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
   X.a * X.b - Vec3.dot X.v X.w
 
 /-- Polarization numerator `det(X + Y) - det(X) - det(Y)`. -/
 def polarZ3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
-  detZ3 (add3 X Y) - detZ3 X - detZ3 Y
+  detZ3c (add3 X Y) - detZ3c X - detZ3c Y
 
 /-- The standard explicit Zorn polar numerator. -/
 def polarFormula3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
@@ -93,8 +93,8 @@ theorem polarZ3_eq_formula
                   | mk wY1 wY23 =>
                     cases wY23 with
                     | mk wY2 wY3 =>
-                      simp [polarZ3, polarFormula3, detZ3, add3, Vec3.dot]
-                      ring
+                      simp [polarZ3, polarFormula3, detZ3c, add3, Vec3.dot]
+                      ring_nf
 
 /-- The explicit Zorn polar numerator is symmetric. -/
 theorem polarFormula3_symm

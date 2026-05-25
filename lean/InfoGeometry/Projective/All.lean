@@ -19,6 +19,7 @@ import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.SelfDualCone
 import InfoGeometry.Projective.SplitOctonions
 import InfoGeometry.Projective.SplitOctonions.BoundaryPacket
+import InfoGeometry.Projective.SplitOctonions.SplitOctonionsBarrier
 import InfoGeometry.Projective.SplitOctonions.Polar
 import InfoGeometry.Projective.SplitOctonions.PolarConcrete
 import InfoGeometry.Projective.SplitOctonions.ZornInstance
@@ -32,6 +33,13 @@ namespace InfoGeometry
 
 Stable umbrella module for the projective and self-dual cone layer.
 The zero-null twistor bridge remains quarantined and must be imported explicitly.
+
+Split-octonion note:
+- `SplitOctonions.Polar` owns projective polar/incidence descent.
+- `SplitOctonions.SplitOctonionsBarrier` owns the logarithmic barrier/Hessian
+  information-metric slice model.
+These are companion lanes (boundary potential vs incidence geometry), not
+mutual owner replacements.
 -/
 
 end InfoGeometry

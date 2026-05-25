@@ -160,37 +160,55 @@ variable (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
 /-- The affine Kac--Moody current-mode bracket is inherited from the owner datum. -/
 @[rep_depth operator]
 theorem affine_current_mode_bracket
-    (m n : ℤ) (X Y : Finite) :
+    (m n : ℤ) (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
     ⁅P.affineVirasoro.affine.Current m X,
       P.affineVirasoro.affine.Current n Y⁆ =
       P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
         ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
           (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) :=
-  P.affineVirasoro.affine.current_mode_bracket m n X Y
+  P.affineVirasoro.affine.current_mode_bracket hbr m n X Y
 
 /-- The Virasoro bracket is inherited in coefficient-normalized form. -/
 @[rep_depth operator]
 theorem virasoro_bracket_modes_normalized
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • P.affineVirasoro.virasoro.central) :
     ⁅P.affineVirasoro.virasoro.Lmode m,
       P.affineVirasoro.virasoro.Lmode n⁆ =
       (m - n : ℝ) • P.affineVirasoro.virasoro.Lmode (m + n) +
         (virasoroCentralCoefficient m n : ℝ) •
           P.affineVirasoro.virasoro.central :=
-  P.affineVirasoro.virasoro.bracket_modes_normalized m n
+  P.affineVirasoro.virasoro.bracket_modes_normalized hvir m n
 
 /-- Virasoro modes reparametrize affine currents by the supplied bridge law. -/
 @[rep_depth operator]
 theorem virasoro_acts_on_currents
-    (m n : ℤ) (X : Finite) :
+    (m n : ℤ) (X : Finite)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.affine.Current n X⁆ =
+          (-(n : ℝ)) • P.affineVirasoro.affine.Current (m + n) X) :
     ⁅P.affineVirasoro.virasoro.Lmode m,
       P.affineVirasoro.affine.Current n X⁆ =
       (-(n : ℝ)) • P.affineVirasoro.affine.Current (m + n) X :=
-  P.affineVirasoro.virasoro_acts_on_currents m n X
+  P.affineVirasoro.virasoro_acts_on_currents m n X hact
 
 /-- The Sugawara central charge is the owner datum's calibrated value. -/
 @[rep_depth operator]
 theorem centralCharge_calibrated :
+    (hcc : P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber)) →
     P.affineVirasoro.centralCharge =
       P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
         (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber) :=
@@ -199,19 +217,28 @@ theorem centralCharge_calibrated :
 /-- Sugawara mode-sum readback transported to the packet's affine bridge. -/
 @[rep_depth operator]
 theorem virasoro_mode_eq_rescaled_sugawara_sum
-    (n : ℤ) :
+    (n : ℤ)
+    (hsum :
+      ∀ n : ℤ,
+        P.sugawara.bridge.virasoro.Lmode n =
+          (1 / (2 * (P.sugawara.bridge.level + P.sugawara.bridge.dualCoxeterNumber))) •
+            P.sugawara.modeSum n) :
     P.affineVirasoro.virasoro.Lmode n =
       P.sugawara.sugawaraFactor • P.sugawara.modeSum n := by
   rw [← P.sugawara_uses_affineVirasoro]
-  exact P.sugawara.virasoro_mode_eq_rescaled_sum n
+  exact P.sugawara.virasoro_mode_eq_rescaled_sum n hsum
 
 /-- The prime Sugawara packet's Virasoro central charge is the calibrated Sugawara value. -/
 @[rep_depth operator]
 theorem virasoro_central_charge_identity :
+    (hcc : P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber)) →
     P.affineVirasoro.centralCharge =
       P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
         (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber) := by
-  simpa using P.centralCharge_calibrated
+  intro hcc
+  exact P.centralCharge_calibrated hcc
 
 end PrimeSugawaraVirasoroPacket
 
@@ -250,9 +277,12 @@ theorem centralCharge_eq_card_of_level_one_dualCoxeter_zero
     (S : Finset PrimeLabel)
     (hlevel : P.affineVirasoro.level = 1)
     (hdim : P.affineVirasoro.finiteDimension = (S.card : ℝ))
-    (hdual : P.affineVirasoro.dualCoxeterNumber = 0) :
+    (hdual : P.affineVirasoro.dualCoxeterNumber = 0)
+    (hcc : P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber)) :
     P.affineVirasoro.centralCharge = (S.card : ℝ) := by
-  rw [P.centralCharge_calibrated, hlevel, hdim, hdual]
+  rw [P.centralCharge_calibrated hcc, hlevel, hdim, hdual]
   norm_num
 
 end InfoGeometry.Canonical.PrimeVirasoroSugawara

@@ -182,6 +182,37 @@ theorem asano_contraction_full_of_kleinV4_compactification
     h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 /--
+Paired full Asano closure from the Klein-four certificate through the
+topological reduction path:
+1) outside forbidden set implies contraction nonvanishing;
+2) contracted root implies forbidden-set membership.
+-/
+@[rep_depth operator]
+theorem asano_contraction_pair_of_kleinV4_compactification
+    (V4 : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0) :
+    (z ∉ negProductSet K₁ K₂ → A + D * z ≠ 0)
+      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) := by
+  refine ⟨?_, ?_⟩
+  · intro hzOff
+    exact asano_contraction_full_of_kleinV4_compactification
+      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
+  · intro hroot
+    exact asano_contraction_root_mem_negProductSet_of_nondegenerate_topology
+      (asano_nondegenerate_topological_of_kleinV4_compactification V4)
+      h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot
+
+/--
 Direct full Asano contraction from the Klein-four certificate through the
 endpoint-based nondegenerate reduction (without routing through the abstract
 `AsanoNondegenerateTopologicalTheorem` wrapper).
@@ -269,5 +300,30 @@ theorem asano_contraction_pair_of_kleinV4_compactification_direct_endpoint
   · intro hroot
     exact asano_contraction_root_mem_negProductSet_of_kleinV4_compactification_direct_endpoint
       V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot
+
+/--
+Contrapositive form of direct endpoint-based Klein-V4 full Asano contraction:
+outside the forbidden set, the contracted polynomial cannot vanish.
+-/
+@[rep_depth operator]
+theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification_direct_endpoint
+    (V4 : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hzOff : z ∉ negProductSet K₁ K₂) :
+    ¬ (A + D * z = 0) := by
+  intro hroot
+  exact hzOff
+    (asano_contraction_root_mem_negProductSet_of_kleinV4_compactification_direct_endpoint
+      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot)
 
 end InfoGeometry.Canonical.LeeYangAsanoNativeCore

@@ -35,8 +35,12 @@ theorem exists_nonzero_associator_of_not_scalar
     {x : ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : ZornMatrix R)) :
     ∃ y z : ZornMatrix R, associatorDefect x y z ≠ 0 := by
-  rcases nonzero_associator_of_not_scalar (R := R) x hx with ⟨y, z, hz⟩
+  rcases
+      InfoGeometry.Canonical.SplitOctonionClassificationCore.ZornMatrix.nonzero_associator_of_not_scalar
+        (R := R) x hx with
+    ⟨y, z, hz⟩
   refine ⟨y, z, ?_⟩
-  simpa [associatorDefect, ZornMatrix.associator] using hz
+  simpa [associatorDefect,
+    InfoGeometry.Canonical.SplitOctonionClassificationCore.ZornMatrix.associator] using hz
 
 end InfoGeometry.Algebra.Zorn

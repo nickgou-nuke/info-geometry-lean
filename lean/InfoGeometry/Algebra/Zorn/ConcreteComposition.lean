@@ -69,6 +69,14 @@ operatorization gives the associated split Clifford relation.
 def polarZ (X Y : ZornCell R) : R :=
   detZ (addZ X Y) - detZ X - detZ Y
 
+/-- The Zorn polar form is symmetric. -/
+theorem polarZ_comm (X Y : ZornCell R) :
+    polarZ X Y = polarZ Y X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
+  unfold polarZ addZ detZ
+  ring
+
 /--
 Self-polarization identity for the Zorn determinant:
 

@@ -389,6 +389,44 @@ theorem primitiveWeight_pos {n : ℕ} (h : 1 < n) :
   have hweight_pos : 0 < 1 / ((n : ℝ) * Real.log (n : ℝ)) := one_div_pos.mpr hdenom_pos
   simpa [primitiveWeight, h] using hweight_pos
 
+/--
+The primitive weight `1 / (n log n)` is antitone on the positive-weight range.
+
+This is the real arithmetic monotonicity lemma:
+if `1 < m ≤ n`, then `w n ≤ w m`.
+-/
+theorem primitiveWeight_antitone_of_le
+    {m n : ℕ}
+    (hm : 1 < m)
+    (hmn : m ≤ n) :
+    primitiveWeight n ≤ primitiveWeight m := by
+  have hn : 1 < n := lt_of_lt_of_le hm hmn
+  rw [primitiveWeight, if_pos hn, primitiveWeight, if_pos hm]
+  have hm_pos : 0 < (m : ℝ) := by
+    exact_mod_cast lt_trans Nat.zero_lt_one hm
+  have hmn_real : (m : ℝ) ≤ (n : ℝ) := by
+    exact_mod_cast hmn
+  have hlog_le : Real.log (m : ℝ) ≤ Real.log (n : ℝ) :=
+    Real.log_le_log hm_pos hmn_real
+  have hlog_n_nonneg : 0 ≤ Real.log (n : ℝ) := by
+    exact (Real.log_pos (by exact_mod_cast hn)).le
+  have hden_left :
+      (m : ℝ) * Real.log (m : ℝ) ≤
+        (m : ℝ) * Real.log (n : ℝ) :=
+    mul_le_mul_of_nonneg_left hlog_le hm_pos.le
+  have hden_right :
+      (m : ℝ) * Real.log (n : ℝ) ≤
+        (n : ℝ) * Real.log (n : ℝ) :=
+    mul_le_mul_of_nonneg_right hmn_real hlog_n_nonneg
+  have hden :
+      (m : ℝ) * Real.log (m : ℝ) ≤
+        (n : ℝ) * Real.log (n : ℝ) :=
+    le_trans hden_left hden_right
+  have hden_m_pos :
+      0 < (m : ℝ) * Real.log (m : ℝ) :=
+    mul_pos hm_pos (Real.log_pos (by exact_mod_cast hm))
+  exact one_div_le_one_div_of_le hden_m_pos hden
+
 /-! ## Positive-weight support facts -/
 
 /--
@@ -511,34 +549,9 @@ weight, once the right factor is already strictly above `1`.
 theorem primitiveWeight_mul_le_of_one_lt_right
     {d m : ℕ} (hd : 1 ≤ d) (hm : 1 < m) :
     primitiveWeight (d * m) ≤ primitiveWeight m := by
-  have hmul_ge : m ≤ d * m := by
+  have hmn : m ≤ d * m := by
     simpa [Nat.one_mul, Nat.mul_comm] using Nat.mul_le_mul_right m hd
-  have hdm : 1 < d * m := lt_of_lt_of_le hm hmul_ge
-  rw [primitiveWeight, if_pos hdm, primitiveWeight, if_pos hm]
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast (lt_trans Nat.zero_lt_one hm)
-  have hcast_le : (m : ℝ) ≤ (d * m : ℕ) := by
-    exact_mod_cast hmul_ge
-  have hlog_le : Real.log m ≤ Real.log (d * m) := by
-    have hcast_mul : (m : ℝ) ≤ (d : ℝ) * (m : ℝ) := by
-      exact_mod_cast hmul_ge
-    simpa [Nat.cast_mul] using Real.log_le_log hm_pos hcast_mul
-  have hlog_nonneg : 0 ≤ Real.log (d * m) := by
-    exact Real.log_nonneg (show (1 : ℝ) ≤ d * m by
-      exact_mod_cast (Nat.le_of_lt hdm))
-  have hden_left :
-      (m : ℝ) * Real.log m ≤ (m : ℝ) * Real.log (d * m) := by
-    exact mul_le_mul_of_nonneg_left hlog_le hm_pos.le
-  have hden_right :
-      (m : ℝ) * Real.log (d * m) ≤ ((d * m : ℕ) : ℝ) * Real.log (d * m) := by
-    exact mul_le_mul_of_nonneg_right hcast_le hlog_nonneg
-  have hden :
-      (m : ℝ) * Real.log m ≤ ((d * m : ℕ) : ℝ) * Real.log (d * m) := by
-    exact le_trans hden_left hden_right
-  have hden' :
-      (m : ℝ) * Real.log m ≤ ((d * m : ℕ) : ℝ) * Real.log ((d * m : ℕ) : ℝ) := by
-    simpa [Nat.cast_mul] using hden
-  exact one_div_le_one_div_of_le (mul_pos hm_pos (Real.log_pos (by exact_mod_cast hm))) hden'
+  exact primitiveWeight_antitone_of_le hm hmn
 
 /--
 Away from the special quotient atom `m = 1`, scaling by `d ≥ 1` does not

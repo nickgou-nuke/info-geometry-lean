@@ -302,6 +302,102 @@ theorem cantorDiracOperator_eq_supercharge_sum {P : PrimeCutoff}
       creationSupercharge amplitude holonomy f S +
         dualAnnihilationSupercharge amplitude holonomy f S := rfl
 
+/-! ## 3.5 Critical-line holonomy specialization (finite) -/
+
+/--
+Finite zeta-model holonomy specialization on a prime mode:
+`h_p(s) = exp((1/2 - s) * log p)`.
+-/
+@[rep_depth thermo]
+def zetaHolonomy {P : PrimeCutoff} (s : ℂ) (p : PrimeMode P) : ℂ :=
+  Complex.exp (((1 / 2 : ℂ) - s) * Complex.log (p : ℂ))
+
+/--
+Norm readout for the finite zeta-model holonomy specialization.
+-/
+@[rep_depth thermo]
+theorem norm_zetaHolonomy_eq {P : PrimeCutoff} (s : ℂ) (p : PrimeMode P) :
+    ‖zetaHolonomy s p‖ = Real.exp ((1 / 2 - s.re) * Real.log (p : ℝ)) := by
+  unfold zetaHolonomy
+  rw [Complex.norm_exp]
+  have hlog : Complex.log (p : ℂ) = (Real.log (p : ℝ) : ℂ) := by
+    symm
+    exact Complex.ofReal_log (by positivity)
+  have hre : (Complex.log (p : ℂ)).re = Real.log (p : ℝ) := by
+    exact congrArg Complex.re hlog
+  have him : (Complex.log (p : ℂ)).im = 0 := by
+    exact congrArg Complex.im hlog
+  have hreS : ((1 / 2 : ℂ) - s).re = 1 / 2 - s.re := by
+    simp
+  rw [Complex.mul_re, hre, him, hreS]
+  ring_nf
+
+/--
+For a prime mode, the zeta holonomy has unit norm exactly on the critical line.
+
+`‖p^(1/2-s)‖ = 1 ↔ Re(s) = 1/2` in finite cutoff form.
+-/
+@[rep_depth thermo]
+theorem norm_zetaHolonomy_eq_one_iff_re_eq_half
+    {P : PrimeCutoff} (s : ℂ) (p : PrimeMode P) :
+    ‖zetaHolonomy s p‖ = 1 ↔ s.re = 1 / 2 := by
+  have hp1_nat : 1 < (p : ℕ) := Nat.Prime.one_lt (P.prime_mem p.1 p.2)
+  have hp1 : (1 : ℝ) < (p : ℝ) := by
+    exact_mod_cast hp1_nat
+  have hlog_pos : 0 < Real.log (p : ℝ) := Real.log_pos hp1
+  have hlog_ne : Real.log (p : ℝ) ≠ 0 := ne_of_gt hlog_pos
+
+  rw [norm_zetaHolonomy_eq]
+  constructor
+  · intro h
+    have hzero :
+        (1 / 2 - s.re) * Real.log (p : ℝ) = 0 :=
+      (Real.exp_eq_one_iff _).mp (by simpa using h)
+    have hfactor : (1 / 2 - s.re) = 0 := by
+      rcases mul_eq_zero.mp hzero with hfac | hlog
+      · exact hfac
+      · exact False.elim (hlog_ne hlog)
+    linarith
+  · intro hs
+    rw [hs]
+    simp
+
+/--
+Pointwise holonomy unitarity for the zeta specialization is equivalent to the
+critical-line condition, provided the finite prime cutoff is nonempty.
+-/
+@[rep_depth thermo]
+theorem zetaHolonomy_unitaryAt_iff_re_eq_half
+    {P : PrimeCutoff} (hP : P.primes.Nonempty) (s : ℂ) :
+    (∀ p : PrimeMode P, zetaHolonomy s p ≠ 0 ∧ (zetaHolonomy s p)⁻¹ = star (zetaHolonomy s p))
+      ↔ s.re = 1 / 2 := by
+  constructor
+  · intro hU
+    rcases hP with ⟨p0, hp0⟩
+    let p : PrimeMode P := ⟨p0, hp0⟩
+    have hpU : zetaHolonomy s p ≠ 0 ∧ (zetaHolonomy s p)⁻¹ = star (zetaHolonomy s p) := hU p
+    have hnorm_one : ‖zetaHolonomy s p‖ = 1 := by
+      rcases hpU with ⟨hp_ne, hp_inv⟩
+      have hmul : zetaHolonomy s p * star (zetaHolonomy s p) = (1 : ℂ) := by
+        rw [← hp_inv]
+        exact mul_inv_cancel₀ hp_ne
+      have hnorm_sq : ‖zetaHolonomy s p‖ * ‖star (zetaHolonomy s p)‖ = 1 := by
+        have := congrArg norm hmul
+        simpa [Complex.norm_mul] using this
+      have hnorm_sq' : ‖zetaHolonomy s p‖ ^ 2 = 1 := by
+        simpa [pow_two, Complex.norm_conj] using hnorm_sq
+      have hnorm_nonneg : 0 ≤ ‖zetaHolonomy s p‖ := norm_nonneg _
+      nlinarith
+    exact (norm_zetaHolonomy_eq_one_iff_re_eq_half (s := s) (p := p)).1 hnorm_one
+  · intro hs
+    intro p
+    refine ⟨?_, ?_⟩
+    · unfold zetaHolonomy
+      exact Complex.exp_ne_zero _
+    · have hnorm : ‖zetaHolonomy s p‖ = 1 :=
+        (norm_zetaHolonomy_eq_one_iff_re_eq_half (s := s) (p := p)).2 hs
+      simpa using Complex.inv_eq_conj hnorm
+
 /--
 Basis delta field on the finite Cantor/Fock lattice.
 -/
@@ -394,6 +490,90 @@ theorem kernel_eq_sum
         creationKernel D.amplitude (D.holonomy s) p S T +
           annihilationKernel D.amplitude (D.holonomy s) p S T) := rfl
 
+end FiniteCantorZetaDirac
+
+open InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
+
+/--
+The creation supercharge applied to a basis delta has matrix coefficient equal
+to the creation kernel.
+
+This is an actual kernel/operator compatibility lemma.
+-/
+theorem creationSupercharge_basisDelta_eq_kernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (S T : Vertex P) :
+    creationSupercharge amplitude holonomy (basisDelta T) S =
+      Finset.sum (Finset.univ : Finset (PrimeMode P))
+        (fun p => creationKernel amplitude holonomy p S T) := by
+  unfold creationSupercharge
+  apply Finset.sum_congr rfl
+  intro p hp
+  unfold creationPush creationKernel optionEval basisDelta
+  cases h : PrimeExteriorGraphDirac.create p S with
+  | none =>
+      simp [h]
+  | some U =>
+      by_cases hUT : U = T
+      · subst U
+        simp [h]
+      · simp [h, hUT]
+
+/--
+The dual annihilation supercharge applied to a basis delta has matrix coefficient
+equal to the annihilation kernel.
+
+This is the annihilation half of the finite Cantor--Dirac kernel theorem.
+-/
+theorem dualAnnihilationSupercharge_basisDelta_eq_kernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (S T : Vertex P) :
+    dualAnnihilationSupercharge amplitude holonomy (basisDelta T) S =
+      Finset.sum (Finset.univ : Finset (PrimeMode P))
+        (fun p => annihilationKernel amplitude holonomy p S T) := by
+  unfold dualAnnihilationSupercharge
+  apply Finset.sum_congr rfl
+  intro p hp
+  unfold annihilationPush annihilationKernel optionEval basisDelta
+  cases h : PrimeExteriorGraphDirac.annihilate p S with
+  | none =>
+      simp [h]
+  | some U =>
+      by_cases hUT : U = T
+      · subst U
+        simp [h]
+      · simp [h, hUT]
+
+/--
+The finite Cantor--Dirac kernel is the matrix coefficient of the finite
+Cantor--Dirac operator on the basis delta.
+-/
+theorem cantorDiracOperator_basisDelta_eq_kernel {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (S T : Vertex P) :
+    cantorDiracOperator amplitude holonomy (basisDelta T) S =
+      cantorDiracKernel amplitude holonomy S T := by
+  unfold cantorDiracOperator cantorDiracKernel
+  rw [creationSupercharge_basisDelta_eq_kernel_sum]
+  rw [dualAnnihilationSupercharge_basisDelta_eq_kernel_sum]
+  rw [Finset.sum_add_distrib]
+
+namespace FiniteCantorZetaDirac
+
+variable {P : PrimeCutoff}
+variable (D : FiniteCantorZetaDirac P)
+
+/--
+Bundled specialization: the bundled kernel is the matrix coefficient of the
+bundled operator on a basis delta.
+-/
+theorem op_basisDelta_eq_kernel
+    (s : ℂ)
+    (S T : Vertex P) :
+    D.op s (basisDelta T) S = D.kernel s S T := by
+  exact cantorDiracOperator_basisDelta_eq_kernel
+    D.amplitude (D.holonomy s) S T
+
 /-! ## 5. Finite adjoint pairing surface -/
 
 /--
@@ -403,6 +583,71 @@ Pointwise holonomy unitarity at spectral parameter `s`:
 @[rep_depth thermo]
 def HolonomyUnitaryAt (s : ℂ) : Prop :=
   ∀ p : PrimeMode P, (D.holonomy s p) ≠ 0 ∧ (D.holonomy s p)⁻¹ = star (D.holonomy s p)
+
+/--
+Bundled critical-line criterion for pointwise holonomy unitarity under the
+zeta holonomy specialization.
+-/
+@[rep_depth thermo]
+theorem HolonomyUnitaryAt_iff_re_eq_half_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s) :
+    D.HolonomyUnitaryAt s ↔ s.re = 1 / 2 := by
+  unfold HolonomyUnitaryAt
+  rw [hhol]
+  exact zetaHolonomy_unitaryAt_iff_re_eq_half (P := P) hP s
+
+/--
+Under zeta holonomy specialization, critical-line real part implies pointwise
+holonomy unitarity.
+-/
+@[rep_depth thermo]
+theorem HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2) :
+    D.HolonomyUnitaryAt s := by
+  exact (D.HolonomyUnitaryAt_iff_re_eq_half_of_zetaHolonomy hP s hhol).2 hs
+
+/--
+Under zeta holonomy specialization, pointwise holonomy unitarity forces the
+critical-line real part.
+-/
+@[rep_depth thermo]
+theorem re_eq_half_of_HolonomyUnitaryAt_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s) :
+    s.re = 1 / 2 := by
+  exact (D.HolonomyUnitaryAt_iff_re_eq_half_of_zetaHolonomy hP s hhol).1 hU
+
+/--
+Zeta-specialized finite self-adjointness of the Cantor--Dirac operator on the
+critical line.
+
+This theorem stays inside the existing owner lane: once modewise adjointness is
+available and `D.holonomy` is specialized to `zetaHolonomy`, `Re(s)=1/2`
+implies self-adjointness of `D.op s` for the finite pairing.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  have _hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_isSelfAdjoint_of_modewiseAdjoint s hAdjMode hAdjModeRev
 
 /-- Finite sesquilinear pairing on Cantor fields. -/
 @[rep_depth thermo]

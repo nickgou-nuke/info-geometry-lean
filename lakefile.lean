@@ -653,6 +653,11 @@ require LeanArchitect from git
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
+require VirasoroProject from git
+  "https://github.com/kkytola/VirasoroProject.git"
+  @ "main"
+require «GIFT» from
+  "external_refs/gift-framework-core"
 
 lean_lib DAG where
   globs := #[.andSubmodules `DAG]

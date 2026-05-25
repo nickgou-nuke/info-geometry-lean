@@ -85,6 +85,22 @@ noncomputable def splitEightSugawaraKernel
   ext v
   simp [conjugateEnd]
 
+@[simp] lemma conjugateEnd_zero
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V) :
+    conjugateEnd U (0 : V →ₗ[𝕜] V) = 0 := by
+  ext v
+  simp [conjugateEnd]
+
+@[simp] lemma conjugateEnd_sub
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V)
+    (A B : V →ₗ[𝕜] V) :
+    conjugateEnd U (A - B) =
+      conjugateEnd U A - conjugateEnd U B := by
+  ext v
+  simp [conjugateEnd]
+
 @[simp] lemma conjugateEnd_smul
     {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
     (U : V ≃ₗ[𝕜] V) (a : 𝕜) (A : V →ₗ[𝕜] V) :
@@ -98,6 +114,22 @@ noncomputable def splitEightSugawaraKernel
     conjugateEnd U (1 : V →ₗ[𝕜] V) = 1 := by
   ext v
   simp [conjugateEnd]
+
+/--
+Conjugation by a linear equivalence preserves the endomorphism commutator.
+-/
+theorem conjugateEnd_commutator
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (U : V ≃ₗ[𝕜] V)
+    (A B : V →ₗ[𝕜] V) :
+    (conjugateEnd U A).commutator (conjugateEnd U B) =
+      conjugateEnd U (A.commutator B) := by
+  change
+    (conjugateEnd U A) * (conjugateEnd U B) -
+        (conjugateEnd U B) * (conjugateEnd U A)
+      =
+    conjugateEnd U (A * B - B * A)
+  rw [conjugateEnd_sub, conjugateEnd_mul, conjugateEnd_mul]
 
 /--
 The exact current-representation interface required by the external Sugawara
@@ -181,6 +213,41 @@ theorem currentSugawaraRepresentation_cgen_conjugate
       (1 : V →ₗ[𝕜] V) := by
   rw [currentSugawaraRepresentation_central]
   simp
+
+/--
+The Heisenberg current commutator is invariant under conjugation by a
+linear equivalence.
+-/
+theorem conjugated_current_commutator
+    (H : CurrentHeisenbergRep 𝕜 V)
+    (U : V ≃ₗ[𝕜] V)
+    (m n : Int) :
+    (conjugateEnd U (H.J m)).commutator
+        (conjugateEnd U (H.J n)) =
+      if m + n = 0 then
+        (m : 𝕜) • (1 : V →ₗ[𝕜] V)
+      else
+        0 := by
+  rw [conjugateEnd_commutator]
+  rw [H.comm m n]
+  by_cases hmn : m + n = 0
+  · simp [hmn, conjugateEnd_smul, conjugateEnd_one]
+  · simp [hmn]
+
+/--
+The local truncation condition is invariant under conjugation by a linear
+equivalence.
+-/
+theorem conjugated_current_trunc
+    (H : CurrentHeisenbergRep 𝕜 V)
+    (U : V ≃ₗ[𝕜] V) :
+    ∀ v, atTop.Eventually
+      (fun l => conjugateEnd U (H.J l) v = 0) := by
+  intro v
+  have htrunc := H.trunc (U.symm v)
+  exact htrunc.mono (by
+    intro l hl
+    simp [conjugateEnd, hl])
 
 end CurrentHeisenbergRep
 

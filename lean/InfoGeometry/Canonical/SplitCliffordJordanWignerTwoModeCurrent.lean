@@ -127,6 +127,15 @@ theorem Jfin_eq_zero_iff (n : Int) :
   · rintro ⟨h1, hm1⟩
     exact Jfin_eq_zero_of_ne_one_ne_neg_one h1 hm1
 
+/--
+Exact support of the finite current family.
+
+`Jfin n = 0` precisely outside `{1,-1}`.
+-/
+theorem Jfin_support (n : Int) :
+    Jfin n = 0 ↔ n ≠ 1 ∧ n ≠ (-1 : Int) :=
+  Jfin_eq_zero_iff n
+
 @[simp]
 theorem Jplus_square_zero :
     Jplus * Jplus = 0 := by

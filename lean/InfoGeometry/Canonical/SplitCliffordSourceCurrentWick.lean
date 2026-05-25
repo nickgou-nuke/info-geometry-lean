@@ -1318,17 +1318,33 @@ theorem no_fake_currentRep_from_finite_support
       _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V,
       H.J = J := by
   rintro ⟨H, hJ⟩
-  apply
-    _root_.InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction.no_two_mode_support_heisenberg_comm
-      (J := H.J)
-  · intro n hn1 hnm1
+  have hJ2 : H.J 2 = 0 := by
     rw [hJ]
-    exact hSupport n hn1 hnm1
-  · intro m n
-    simpa
-      [_root_.InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction.linComm,
-        LinearMap.commutator]
-      using H.comm m n
+    exact hSupport 2 (by norm_num) (by norm_num)
+  have hJneg2 : H.J (-2) = 0 := by
+    rw [hJ]
+    exact hSupport (-2) (by norm_num) (by norm_num)
+  have hcomm_zero :
+      (H.J 2).commutator (H.J (-2)) = 0 := by
+    rw [hJ2, hJneg2]
+    simp [LinearMap.commutator]
+  have hcomm_heis :
+      (H.J 2).commutator (H.J (-2))
+        =
+      (2 : 𝕜) • (1 : V →ₗ[𝕜] V) := by
+    simpa using H.comm 2 (-2)
+  have hscalar_zero :
+      (2 : 𝕜) • (1 : V →ₗ[𝕜] V) = 0 := by
+    rw [← hcomm_heis]
+    exact hcomm_zero
+  have h2_ne : (2 : 𝕜) ≠ 0 := by norm_num
+  have hone_zero : (1 : V →ₗ[𝕜] V) = 0 :=
+    (smul_eq_zero.mp hscalar_zero).resolve_left h2_ne
+  obtain ⟨v, hv⟩ := exists_ne (0 : V)
+  have : v = 0 := by
+    have happly := congrArg (fun f : V →ₗ[𝕜] V => f v) hone_zero
+    simpa using happly
+  exact hv this
 
 /--
 Concrete `CurrentHeisenbergRep` built from the explicit infinite current
@@ -1342,6 +1358,24 @@ noncomputable def externalInfiniteJ_currentHeisenbergRep
   J := externalInfiniteJ 𝕜 α
   trunc := externalInfiniteJ_splitLiftTruncation (𝕜 := 𝕜) α
   comm := externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α
+
+/--
+Direct full Heisenberg commutator law read from the constructed
+`CurrentHeisenbergRep` field `comm`.
+-/
+theorem externalInfiniteJ_currentHeisenbergRep_comm_full
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J m).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J n)
+      =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)
+      else
+        0 := by
+  exact (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).comm m n
 
 /--
 Concrete Virasoro bracket law for the Sugawara stress modes attached to
@@ -1443,11 +1477,13 @@ theorem externalInfiniteJ_currentSugawara_lgen_commutator_skew
 
 theorem jw_mode_family_well_defined
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    ∃ J : Int →
-      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-        VirasoroProject.ChargedFockSpace 𝕜 α),
-      ∀ n : Int, J n = externalInfiniteJ 𝕜 α n := by
-  exact ⟨externalInfiniteJ 𝕜 α, by intro n; rfl⟩
+    ∀ n : Int,
+      ∃ T :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α,
+        T = externalInfiniteJ 𝕜 α n := by
+  intro n
+  exact ⟨externalInfiniteJ 𝕜 α n, rfl⟩
 
 theorem jw_mode_family_linear
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -1466,6 +1502,17 @@ theorem jw_mode_cutoff_stabilizes
   simpa [InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW] using
     InfoGeometry.Canonical.SplitCliffordFiniteCAR.cutoffCurrentModeJW_eventually_eq_J n
 
+theorem jw_mode_cutoff_stabilizes_apply
+    (n : Int) (v : Fin 4 → ℝ) :
+    ∀ᶠ N : Nat in Filter.atTop,
+      Matrix.mulVec
+        (InfoGeometry.Canonical.SplitCliffordFiniteCAR.cutoffCurrentModeJW N n) v
+      =
+      Matrix.mulVec
+        (InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW n) v := by
+  filter_upwards [jw_mode_cutoff_stabilizes n] with N hN
+  simpa [hN]
+
 theorem jw_mode_trunc_vector :
     ∀ v : Fin 4 → ℝ, ∀ᶠ n : Int in Filter.atTop,
       Matrix.mulVec (InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW n) v = 0 := by
@@ -1479,6 +1526,12 @@ theorem jw_mode_trunc_entry
       (InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW n) i j = 0 := by
   simpa [InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW] using
     InfoGeometry.Canonical.SplitCliffordFiniteCAR.JfinIndexed_trunc_entry i j
+
+theorem jw_mode_trunc_vector_infinite
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
+    ∀ᶠ n : Int in Filter.atTop, externalInfiniteJ 𝕜 α n v = 0 := by
+  simpa [externalInfiniteJ] using representedChargedFockJ_trunc (𝕜 := 𝕜) α v
 
 /-! ## Closure Checklist: Section 2 (Heisenberg Law) -/
 
@@ -1526,7 +1579,9 @@ theorem heisenberg_comm_zero_offdiag
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
     {m n : Int} (hmn : m + n ≠ 0) :
     (externalInfiniteJ 𝕜 α m).commutator (externalInfiniteJ 𝕜 α n) = 0 := by
-  exact externalInfiniteJ_heisenberg_comm_offdiag (𝕜 := 𝕜) α hmn
+  have hfull :=
+    externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
+  simpa [externalInfiniteJ_currentHeisenbergRep, hmn] using hfull
 
 theorem heisenberg_comm_central_diag
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
@@ -1536,7 +1591,9 @@ theorem heisenberg_comm_central_diag
         (1 :
           VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
             VirasoroProject.ChargedFockSpace 𝕜 α) := by
-  exact externalInfiniteJ_heisenberg_comm_diag (𝕜 := 𝕜) α hmn
+  have hfull :=
+    externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
+  simpa [externalInfiniteJ_currentHeisenbergRep, hmn] using hfull
 
 theorem heisenberg_comm_full
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :
@@ -1548,7 +1605,8 @@ theorem heisenberg_comm_full
               VirasoroProject.ChargedFockSpace 𝕜 α)
       else
         0 := by
-  exact externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α m n
+  simpa [externalInfiniteJ_currentHeisenbergRep] using
+    externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
 
 /-! ## Closure Checklist: Section 4 (Normal Ordering + Sugawara) -/
 
@@ -1589,6 +1647,17 @@ theorem normal_order_pair_finsum_reduction
       (InfoGeometry.Canonical.SplitCliffordFiniteCAR.completedCurrentModeJW (m + n + 1)) := by
   exact current_comm_window_eval m n
 
+theorem sugawara_L_def_explicit_pairNO
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int)
+    (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
+    (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode n v
+      =
+      (2 : 𝕜)⁻¹ • ∑ᶠ k, VirasoroProject.pairNO
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (n - k) k v := by
+  simpa using
+    _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.sugawaraStressMode_eq_pairNO
+      (H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α) n v
+
 theorem sugawara_L_def_converges
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     ∀ n : Int,
@@ -1602,9 +1671,13 @@ theorem sugawara_LJ_comm
     ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode m).commutator
       ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J n)
       =
-    -(((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J n).commutator
-      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).sugawaraStressMode m)) := by
-  simp [LinearMap.commutator, sub_eq_add_neg]
+    (-(n : 𝕜)) •
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (m + n)) := by
+  let H := externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α
+  simpa [InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep.sugawaraStressMode, H]
+    using
+      (VirasoroProject.commutator_sugawaraGen_heiOper
+        (heiOper := H.J) (heiComm := H.comm) (heiTrunc := H.trunc) m n)
 
 theorem sugawara_LL_expand
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (m n : Int) :

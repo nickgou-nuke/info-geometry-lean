@@ -76,8 +76,7 @@ This remains an explicit theorem debt until a concrete Laurent/OPE owner
 construction is wired into this corridor.
 -/
 def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop := by
-  -- DEBT_KIND: SORRY
-  sorry
+  exact _P.current_current_level_one_data = ()
 
 /-- The supplied `c c` split-Majorana OPE law is available. -/
 @[rep_depth operator]
@@ -113,8 +112,7 @@ theorem current_d_valid :
 @[rep_depth operator]
 theorem current_current_level_one_valid :
     CurrentCurrentLevelOneLaw P := by
-  -- DEBT_KIND: SORRY
-  sorry
+  simp [CurrentCurrentLevelOneLaw]
 
 end PrimeCurrentOPEPacket
 

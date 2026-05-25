@@ -3430,6 +3430,61 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_of_zpeGravit
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
 /--
+Regularization capstone with both ZPE/gravity and thermal/Bott owner packets.
+
+This is the next truthful narrowing on the regularization lane:
+`ZPEGravityWitness` recovers `(hRankPos, hEin)` and `ThermalBottWitness`
+recovers `(Mod, V, IST, hCompat)`, leaving only the explicit
+`RegularizationWitness` and `MatchedHelicityWitness` on this branch.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_of_regularization_of_zpeGravityWitness_and_thermalBottWitness
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hZPEGravity : ZPEGravityWitness (E := E) S c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (hReg : RegularizationWitness (E := E) A B_mp B_dr)
+    (hHelicity : MatchedHelicityWitness (E := E) A)
+    (hThermalBott : ThermalBottWitness (E := E))
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ hThermalBott.Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear hThermalBott.IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear hThermalBott.IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) :=
+  bits_to_gravity_to_fluid_capstone_of_regularization_of_zpeGravityWitness
+    (S := S) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+    (hZPEGravity := hZPEGravity)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (hReg := hReg) (hHelicity := hHelicity)
+    (Mod := hThermalBott.Mod) (V := hThermalBott.V)
+    (IST := hThermalBott.IST) (hCompat := hThermalBott.hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+
+/--
 Production-witness capstone with the ZPE/gravity owner packet.
 
 This is the narrower constructive branch combining the existing owner packets:

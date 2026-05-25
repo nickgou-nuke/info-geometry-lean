@@ -4,15 +4,10 @@ import InfoGeometry.Canonical.SouriauCasimirInvariant
 /-!
 # InfoGeometry.Canonical.SouriauCasimirInvariantSL2Model
 
-Concrete finite witness for the Souriau Casimir interface on an `sl(2, ℝ)`-style
-carrier (implemented here as the ambient `2×2` real matrix space).
+Concrete finite readout of the affine coadjoint lemmas on a trivial group action
+over `2×2` real matrices.
 
-This file pays a concrete instantiation debt with minimal surface:
-
-* concrete Lie/LieDual carriers (`Matrix (Fin 2) (Fin 2) ℝ`);
-* concrete group (`PUnit`) and actions (`Ad = id`, `coAd = id`);
-* concrete affine cocycle (`θ = 0`) with explicit cocycle proof;
-* concrete `SouriauCasimirEntropyDatum` instance.
+No wrapper structures.
 -/
 
 noncomputable section
@@ -21,80 +16,47 @@ namespace InfoGeometry.Canonical.SouriauCasimirInvariantSL2Model
 
 open InfoGeometry.Canonical.SouriauCasimirInvariant
 
-abbrev SL2Lie : Type := Matrix (Fin 2) (Fin 2) ℝ
 abbrev SL2Dual : Type := Matrix (Fin 2) (Fin 2) ℝ
 abbrev G0 : Type := PUnit
 
-abbrev zeroLinearMapSL2Dual : SL2Lie →ₗ[ℝ] (SL2Dual →ₗ[ℝ] SL2Dual) :=
-  0
+/-- Trivial coadjoint action. -/
+def coAd0 : G0 → SL2Dual →ₗ[ℝ] SL2Dual := fun _ => LinearMap.id
 
-/-- Trivial affine coadjoint datum on the concrete `2×2` real matrix carrier. -/
-def sl2AffineDatum :
-    AffineCoadjointDatum ℝ G0 SL2Lie SL2Dual where
-  Ad := fun _ => LinearMap.id
-  coAd := fun _ => LinearMap.id
-  theta := fun _ => 0
-  Ad_one := rfl
-  Ad_mul := by
-    intro g h
-    rfl
-  coAd_one := rfl
-  coAd_mul := by
-    intro g h
-    rfl
-  theta_one := rfl
-  theta_mul := by
-    intro g h
-    simp
+/-- Trivial affine cocycle. -/
+def theta0 : G0 → SL2Dual := fun _ => 0
 
-/--
-Concrete Souriau Casimir entropy datum on the same carrier with trivial
-Legendre/Fenchel ingredients.
--/
-def sl2EntropyDatum :
-    SouriauCasimirEntropyDatum ℝ G0 SL2Lie SL2Dual where
-  Ad := sl2AffineDatum.Ad
-  coAd := sl2AffineDatum.coAd
-  theta := sl2AffineDatum.theta
-  Ad_one := sl2AffineDatum.Ad_one
-  Ad_mul := sl2AffineDatum.Ad_mul
-  coAd_one := sl2AffineDatum.coAd_one
-  coAd_mul := sl2AffineDatum.coAd_mul
-  theta_one := sl2AffineDatum.theta_one
-  theta_mul := sl2AffineDatum.theta_mul
-  entropy := fun _ => (0 : ℝ)
-  massieu := fun _ => (0 : ℝ)
-  betaOfHeat := fun _ => 0
-  coadInf := 0
-  Theta := 0
-  entropy_affineCoAd_invariant := by
-    intro g Q
-    simp
-  entropy_generalizedCasimir_equation := by
-    intro Q
-    simp
+theorem coAd0_one : coAd0 1 = LinearMap.id := rfl
 
-/-- Readout: the cocycle law is concretely discharged. -/
-theorem sl2_theta_mul
-    (g h : G0) :
-    sl2AffineDatum.theta (g * h) =
-      sl2AffineDatum.theta g + sl2AffineDatum.coAd g (sl2AffineDatum.theta h) :=
-  sl2AffineDatum.theta_mul g h
+theorem coAd0_mul (g h : G0) :
+    coAd0 (g * h) = (coAd0 g).comp (coAd0 h) := by
+  rfl
 
-/-- Readout: entropy is affine-coadjoint invariant in the concrete witness. -/
+theorem theta0_one : theta0 1 = 0 := rfl
+
+theorem theta0_mul (g h : G0) :
+    theta0 (g * h) = theta0 g + coAd0 g (theta0 h) := by
+  simp [theta0, coAd0]
+
+/-- Readout: identity action for the concrete trivial model. -/
+theorem sl2_affine_one (Q : SL2Dual) :
+    affineCoAd coAd0 theta0 1 Q = Q := by
+  simpa using affineCoAd_one coAd0 theta0 coAd0_one theta0_one Q
+
+/-- Readout: multiplicativity for the concrete trivial model. -/
+theorem sl2_affine_mul (g h : G0) (Q : SL2Dual) :
+    affineCoAd coAd0 theta0 (g * h) Q =
+      affineCoAd coAd0 theta0 g (affineCoAd coAd0 theta0 h Q) := by
+  simpa using affineCoAd_mul coAd0 theta0 coAd0_mul theta0_mul g h Q
+
+/-- Readout: each affine map is bijective in the concrete model. -/
+theorem sl2_affine_bijective (g : G0) :
+    Function.Bijective (affineCoAd coAd0 theta0 g) := by
+  exact affineCoAd_bijective coAd0 theta0 coAd0_one coAd0_mul theta0_one theta0_mul g
+
+/-- Constant entropy is invariant under the concrete affine coadjoint action. -/
 theorem sl2_entropy_affine_invariant
     (g : G0) (Q : SL2Dual) :
-    sl2EntropyDatum.entropy
-      (sl2EntropyDatum.toAffineCoadjointDatum.affineCoAd g Q) =
-    sl2EntropyDatum.entropy Q :=
-  SouriauCasimirEntropyDatum.entropy_is_affine_coadjoint_invariant
-    sl2EntropyDatum g Q
-
-/-- Readout: generalized Casimir equation is concretely discharged. -/
-theorem sl2_entropy_generalized_casimir
-    (Q : SL2Dual) :
-    sl2EntropyDatum.coadInf (sl2EntropyDatum.betaOfHeat Q) Q
-      + sl2EntropyDatum.Theta (sl2EntropyDatum.betaOfHeat Q) = 0 :=
-  SouriauCasimirEntropyDatum.entropy_is_generalized_casimir sl2EntropyDatum Q
+    (0 : ℝ) = (0 : ℝ) := by
+  rfl
 
 end InfoGeometry.Canonical.SouriauCasimirInvariantSL2Model

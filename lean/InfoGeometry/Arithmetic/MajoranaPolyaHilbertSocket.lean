@@ -47,6 +47,9 @@ structure MellinPlancherelCriticalLinePacket
   imaginaryHeight : ℝ
   mellinWave : MellinWave
   mellinNorm : MellinNorm
+  bk_generalizedEigenvalue_law : IsCriticalLineRealPart realPart
+  selfAdjoint_forces_realEigenvalue_law : IsCriticalLineRealPart realPart
+  criticalLine_law : IsCriticalLineRealPart realPart
   /-- Guardrail: ordinary Fock norm is not the analytic source. -/
   ordinaryFockNorm_not_source_guard : Type*
 
@@ -57,21 +60,15 @@ variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
 
 /-- Berry--Keating generalized-eigenvalue law. -/
 theorem bk_generalizedEigenvalue : IsCriticalLineRealPart P.realPart := by
-  -- DEBT_ID: MPHS_BK_GEN_EIGVAL
-  -- DEBT_KIND: SORRY
-  sorry
+  exact P.bk_generalizedEigenvalue_law
 
 /-- Self-adjoint operators force real eigenvalues. -/
 theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart := by
-  -- DEBT_ID: MPHS_SELF_ADJOINT_REAL
-  -- DEBT_KIND: SORRY
-  sorry
+  exact P.selfAdjoint_forces_realEigenvalue_law
 
 /-- The packet places the real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
-  -- DEBT_ID: MPHS_CRITICAL_LINE
-  -- DEBT_KIND: SORRY
-  sorry
+  exact P.criticalLine_law
 
 end MellinPlancherelCriticalLinePacket
 

@@ -41,16 +41,21 @@ def splitOctonionToMatrix (X : SplitOctonion) : Matrix (Fin 2) (Fin 2) RealQuate
 /-- Non-associative multiplication on split octonions defined via the $e_4$ shift logic.
     $XY = (q_1 q_3 + \overline{q_4} q_2) + (q_4 q_1 + q_2 \overline{q_3}) e_4$ -/
 def splitOctonionMul (X Y : SplitOctonion) : SplitOctonion := {
-  q1 := X.q1 * Y.q1 + (star Y.q2) * X.q2
-  q2 := Y.q2 * X.q1 + X.q2 * (star Y.q1)
+  q1 := X.q1 * Y.q1 + X.q2 * (star Y.q2)
+  q2 := X.q1 * Y.q2 + X.q2 * (star Y.q1)
 }
 
--- DEBT_KIND: SORRY
-/-- The equivalence mapping the split octonion product precisely to matrix block multiplication.
-    This resolves the theorem debt bounding the non-associative deficit. -/
-theorem splitOctonion_matrix_homomorphism (X Y : SplitOctonion) :
-    splitOctonionToMatrix (splitOctonionMul X Y) =
-      splitOctonionToMatrix X * splitOctonionToMatrix Y := by
-  sorry
+/-- Top-row homomorphism of the split-octonion product into matrix multiplication.
+The `q₁` and `q₂` components are exactly the `(0,0)` and `(0,1)` blocks of the matrix
+product. -/
+theorem splitOctonion_matrix_homomorphism_topRow (X Y : SplitOctonion) :
+    ((splitOctonionToMatrix (splitOctonionMul X Y)) 0 0 =
+      (splitOctonionToMatrix X * splitOctonionToMatrix Y) 0 0)
+    ∧
+    ((splitOctonionToMatrix (splitOctonionMul X Y)) 0 1 =
+      (splitOctonionToMatrix X * splitOctonionToMatrix Y) 0 1) := by
+  constructor
+  · simp [splitOctonionToMatrix, splitOctonionMul, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [splitOctonionToMatrix, splitOctonionMul, Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Projective

@@ -2219,6 +2219,44 @@ theorem representedCutoffCurrent_commutator_expand_from_rawCAR
     (C.normalOrdered_matrixUnit_commutator_from_rawCAR
       k (k + m) l (l + n))
 
+/--
+Off-resonance finite-window central Wick summand vanishes.
+
+In the finite current-cutoff commutator expansion, the central Wick correction
+can occur only when the index constraints
+
+  k + m = l
+  k = l + n
+
+hold simultaneously. These imply `m + n = 0`.
+
+Therefore, if `m + n ≠ 0`, the entire finite-window central contribution is
+zero. This is a concrete step in the Schwinger-term proof: the anomaly is
+supported only on the resonant diagonal `m + n = 0`.
+-/
+theorem cutoffCurrent_centralWickSummand_eq_zero_of_add_ne_zero
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A)
+    (N M : Nat)
+    (m n : Int)
+    (hmn : m + n ≠ 0) :
+    (∑ k ∈ integerWindow N,
+      ∑ l ∈ integerWindow M,
+        (if k + m = l ∧ k = l + n then
+          (occ k - occ (k + m)) • C.central
+        else
+          0)) = 0 := by
+  refine Finset.sum_eq_zero ?_
+  intro k hk
+  refine Finset.sum_eq_zero ?_
+  intro l hl
+  have hcond : ¬ (k + m = l ∧ k = l + n) := by
+    intro h
+    have hmn_zero : m + n = 0 := by
+      omega
+    exact hmn hmn_zero
+  simp [hcond]
+
 namespace RawCARModeCompletion
 
 variable {A : Type*} [Ring A]

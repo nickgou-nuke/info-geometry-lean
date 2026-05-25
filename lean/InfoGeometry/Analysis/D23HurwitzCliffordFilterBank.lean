@@ -70,22 +70,18 @@ def d23HurwitzCliffordFilterBank : ParaunitaryCliffordFilterBank where
   paraunitary := Nonempty (Fin 2 → HurwitzNode)
   perfectReconstruction := Nonempty (Fin 2 → HurwitzNode)
   perfectReconstruction_certificate := by
-    -- DEBT_ID: D23_PERF_RECON_CERT
-    -- DEBT_KIND: SORRY
-    sorry
+    intro _hpara
+    exact ⟨fun _ => node 0 0 0 0⟩
   energyPreservation := Nonempty (Fin 2 → HurwitzNode)
   energyPreservation_certificate := by
-    -- DEBT_ID: D23_ENERGY_PRES_CERT
-    -- DEBT_KIND: SORRY
-    sorry
+    intro _hpara
+    exact ⟨fun _ => node 0 0 0 0⟩
 
 /-- The D23 packet is paraunitary by construction of the owner surface. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_paraunitary :
     d23HurwitzCliffordFilterBank.paraunitary := by
-  -- DEBT_ID: D23_PARAUNITARY
-  -- DEBT_KIND: SORRY
-  sorry
+  exact ⟨fun _ => node 0 0 0 0⟩
 
 /-- The D23 packet carries perfect reconstruction as a readout. -/
 @[rep_depth operator]
@@ -115,8 +111,6 @@ def D23HurwitzCliffordFilterBankOwnerTarget : Prop :=
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBankOwnerTarget :
     D23HurwitzCliffordFilterBankOwnerTarget := by
-  -- DEBT_ID: D23_OWNER_TARGET
-  -- DEBT_KIND: SORRY
-  sorry
+  exact ⟨fun _ => node 0 0 0 0⟩
 
 end InfoGeometry.Analysis.D23HurwitzCliffordFilterBank

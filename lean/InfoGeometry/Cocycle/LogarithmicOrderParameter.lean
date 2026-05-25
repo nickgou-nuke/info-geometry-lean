@@ -525,6 +525,22 @@ theorem scalarModularHamiltonian_eq_negativeLog (Δ : X → ℝ) (x : X) :
     scalarModularHamiltonian Δ x = -Real.log (Δ x) :=
   rfl
 
+/-- Log-generating identity: the modular Hamiltonian of a product is additive. -/
+theorem scalarModularHamiltonian_mul (Δ₁ Δ₂ : X → ℝ)
+    (h₁ : ∀ x, 0 < Δ₁ x) (h₂ : ∀ x, 0 < Δ₂ x) (x : X) :
+    scalarModularHamiltonian (fun x => Δ₁ x * Δ₂ x) x =
+      scalarModularHamiltonian Δ₁ x + scalarModularHamiltonian Δ₂ x := by
+  unfold scalarModularHamiltonian
+  rw [Real.log_mul (ne_of_gt (h₁ x)) (ne_of_gt (h₂ x))]
+  ring
+
+/-- Log-generating identity: the modular Hamiltonian of an inverse flips sign. -/
+theorem scalarModularHamiltonian_inv (Δ : X → ℝ) (x : X) :
+    scalarModularHamiltonian (fun x => (Δ x)⁻¹) x =
+      -scalarModularHamiltonian Δ x := by
+  unfold scalarModularHamiltonian
+  simp [Real.log_inv]
+
 /--
 Finite determinant/log-barrier shadow: `B(A) = -log |det(A)|`.
 

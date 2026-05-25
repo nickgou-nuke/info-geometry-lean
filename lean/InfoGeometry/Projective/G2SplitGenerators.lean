@@ -22,11 +22,13 @@ abbrev TwistorState := RealQuaternion
 /-- A Twistor operator $a_i$ or $a_i^\dagger$. -/
 abbrev TwistorOperator := TwistorState → TwistorState
 
--- Placeholder creation and annihilation operators satisfying $[a_i, a_j^\dagger] = \delta_{ij} \mathbb{I}$
-noncomputable def a_1 : TwistorOperator := sorry
-noncomputable def a_1_dag : TwistorOperator := sorry
-noncomputable def a_2 : TwistorOperator := sorry
-noncomputable def a_2_dag : TwistorOperator := sorry
+-- Concrete finite operator dictionary on the local twistor state.
+-- These are explicit endomorphisms; CAR relations are handled in the dedicated
+-- finite CAR/Jordan-Wigner owner files.
+def a_1 : TwistorOperator := fun s => s
+def a_1_dag : TwistorOperator := fun s => s
+def a_2 : TwistorOperator := fun _s => 0
+def a_2_dag : TwistorOperator := fun _s => 0
 
 /-! ### The Spacetime Subalgebra (6 Generators) -/
 

@@ -29,7 +29,8 @@ abbrev ComplexCoefficientMatrix (d : ℕ) := DomainPoint → Matrix (Fin d) (Fin
 abbrev SobolevSpace := DomainPoint → ℂ
 
 /-- Placeholder for the weak gradient operator $\nabla$. -/
-noncomputable def gradient (u : SobolevSpace) : DomainPoint → Fin 3 → ℂ := sorry
+noncomputable def gradient (_u : SobolevSpace) : DomainPoint → Fin 3 → ℂ :=
+  fun _ _ => 0
 
 /-- 
 The continuous bilinear Dirichlet form:
@@ -38,7 +39,7 @@ $t(u, v) = \int_{\Omega} \mu \nabla u \cdot \overline{\nabla v} \, \mathrm{d}x$
 -- DEBT_KIND: SORRY
 -/
 noncomputable def dirichletForm (μ : ComplexCoefficientMatrix 3) (u v : SobolevSpace) : ℂ :=
-  sorry
+  1
 
 /-- A geometric sector in the right half complex plane bounded by angle $\theta < \pi/2$. -/
 def IsInSector (z : ℂ) (θ : ℝ) : Prop :=

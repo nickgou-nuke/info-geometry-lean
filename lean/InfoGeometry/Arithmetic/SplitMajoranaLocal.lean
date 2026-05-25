@@ -18,6 +18,18 @@ def cMajorana (ε ι : A) : A :=
 def dMajorana (ε ι : A) : A :=
   ε - ι
 
+/-- Local particle-number operator candidate: `N = ε ι`. -/
+def numberOp (ε ι : A) : A :=
+  ε * ι
+
+/-- Local hole-number operator candidate: `1 - N = ι ε`. -/
+def holeNumberOp (ε ι : A) : A :=
+  ι * ε
+
+/-- Local parity product in split-Majorana form: `Π = c d`. -/
+def parityOp (ε ι : A) : A :=
+  cMajorana ε ι * dMajorana ε ι
+
 /--
 If `ε² = 0`, `ι² = 0`, and `{ι, ε} = 1`, then
 `{c, c} = 2` for `c = ε + ι`.
@@ -225,5 +237,40 @@ theorem anticomm_cMajorana_dMajorana_eq_zero_of_sq_zero
   unfold anticomm
   rw [cMajorana_mul_dMajorana_eq_neg_dMajorana_mul_cMajorana (ε := ε) (ι := ι) hε hι]
   simp
+
+/--
+Square-zero corollary in product-sum form:
+`c d + d c = 0`.
+-/
+theorem cMajorana_mul_dMajorana_add_dMajorana_mul_cMajorana_eq_zero_of_sq_zero
+    (ε ι : A)
+    (hε : ε * ε = 0)
+    (hι : ι * ι = 0) :
+    cMajorana ε ι * dMajorana ε ι + dMajorana ε ι * cMajorana ε ι = 0 := by
+  simpa [anticomm] using
+    anticomm_cMajorana_dMajorana_eq_zero_of_sq_zero (ε := ε) (ι := ι) hε hι
+
+/--
+CAR readout of hole-plus-number:
+`holeNumberOp + numberOp = 1`.
+-/
+theorem holeNumberOp_add_numberOp_eq_one
+    (ε ι : A)
+    (hcar : ι * ε + ε * ι = 1) :
+    holeNumberOp ε ι + numberOp ε ι = 1 := by
+  simpa [holeNumberOp, numberOp] using hcar
+
+/--
+Parity-number relation:
+`parityOp = 1 - 2 * numberOp`.
+-/
+theorem parityOp_eq_one_sub_two_numberOp
+    (ε ι : A)
+    (hε : ε * ε = 0)
+    (hι : ι * ι = 0)
+    (hcar : ι * ε + ε * ι = 1) :
+    parityOp ε ι = 1 - (2 : A) * numberOp ε ι := by
+  simpa [parityOp, numberOp] using
+    cMajorana_mul_dMajorana_eq_one_sub_two_N (ε := ε) (ι := ι) hε hι hcar
 
 end InfoGeometry.Arithmetic.SplitMajoranaLocal

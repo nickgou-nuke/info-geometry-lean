@@ -24,6 +24,8 @@ import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.Canonical.ErlangenOperator2Bridge
 import InfoGeometry.Canonical.Algebra
 import InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
+import InfoGeometry.Canonical.AlgebraicStateLorentzAction
+import InfoGeometry.Canonical.AlgebraicStateEmergence
 import InfoGeometry.Canonical.AlgebraicStationarity
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Canonical.AnalyticalIndexCoupled

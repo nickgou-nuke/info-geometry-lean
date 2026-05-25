@@ -263,6 +263,175 @@ theorem localCARTwice_anticomm (j : ℕ) :
     _ = (4 : Op) := by
             norm_num
 
+/-- Raw exterior-creation nilpotent: `ε_raw = c + d`. -/
+@[rep_depth operator]
+def localExteriorCreateRaw (j : ℕ) : Op :=
+  TS.localCARCreationTwice j
+
+/-- Raw exterior-contraction nilpotent: `ι_raw = c - d`. -/
+@[rep_depth operator]
+def localExteriorContractRaw (j : ℕ) : Op :=
+  TS.localCARAnnihilationTwice j
+
+/-- The raw exterior-creation operator squares to zero. -/
+@[rep_depth operator]
+theorem localExteriorCreateRaw_sq_zero (j : ℕ) :
+    TS.localExteriorCreateRaw j * TS.localExteriorCreateRaw j = 0 := by
+  simpa [localExteriorCreateRaw] using TS.localCARCreationTwice_sq j
+
+/-- The raw exterior-contraction operator squares to zero. -/
+@[rep_depth operator]
+theorem localExteriorContractRaw_sq_zero (j : ℕ) :
+    TS.localExteriorContractRaw j * TS.localExteriorContractRaw j = 0 := by
+  simpa [localExteriorContractRaw] using TS.localCARAnnihilationTwice_sq j
+
+/-- Raw CAR normalization: `(c - d)(c + d) + (c + d)(c - d) = 4`. -/
+@[rep_depth operator]
+theorem localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw
+    (j : ℕ) :
+    TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j +
+      TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j = 4 := by
+  simpa [localExteriorContractRaw, localExteriorCreateRaw] using TS.localCARTwice_anticomm j
+
+/-- Raw product `ε_raw ι_raw = 2 - 2Π`. -/
+@[rep_depth operator]
+theorem localExteriorCreateRaw_mul_contractRaw_eq_two_sub_two_parity
+    (j : ℕ) :
+    TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j =
+      2 - 2 * TS.localMajoranaParity j := by
+  unfold localExteriorCreateRaw localExteriorContractRaw
+  unfold localCARCreationTwice localCARAnnihilationTwice localMajoranaParity
+  calc
+    (TS.localMajoranaC j + TS.localMajoranaD j) *
+        (TS.localMajoranaC j - TS.localMajoranaD j)
+        = TS.localMajoranaC j * TS.localMajoranaC j -
+            (TS.localMajoranaC j * TS.localMajoranaD j) +
+            TS.localMajoranaD j * TS.localMajoranaC j -
+            TS.localMajoranaD j * TS.localMajoranaD j := by
+          noncomm_ring
+    _ = 1 - TS.localMajoranaC j * TS.localMajoranaD j +
+            TS.localMajoranaD j * TS.localMajoranaC j - (-1) := by
+          rw [TS.localMajoranaC_sq j, TS.localMajoranaD_sq j]
+    _ = 2 - 2 * (TS.localMajoranaC j * TS.localMajoranaD j) := by
+          have hdc : TS.localMajoranaD j * TS.localMajoranaC j =
+              -(TS.localMajoranaC j * TS.localMajoranaD j) := by
+            have hanti := TS.localMajoranaC_D_anticomm j
+            have h := congrArg (fun x => x - TS.localMajoranaC j * TS.localMajoranaD j) hanti
+            simpa using h
+          rw [hdc]
+          calc
+            1 - TS.localMajoranaC j * TS.localMajoranaD j +
+                (-(TS.localMajoranaC j * TS.localMajoranaD j)) - (-1 : Op)
+                = (1 + 1 : Op) -
+                    (TS.localMajoranaC j * TS.localMajoranaD j +
+                      TS.localMajoranaC j * TS.localMajoranaD j) := by
+                    abel_nf
+            _ = 2 - 2 * (TS.localMajoranaC j * TS.localMajoranaD j) := by
+                    rw [← two_mul (TS.localMajoranaC j * TS.localMajoranaD j)]
+                    norm_num
+
+/-- Raw product `ι_raw ε_raw = 2 + 2Π`. -/
+@[rep_depth operator]
+theorem localExteriorContractRaw_mul_createRaw_eq_two_add_two_parity
+    (j : ℕ) :
+    TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j =
+      2 + 2 * TS.localMajoranaParity j := by
+  have hsum := TS.localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw j
+  have hcreate := TS.localExteriorCreateRaw_mul_contractRaw_eq_two_sub_two_parity j
+  calc
+    TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j
+        = 4 - TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j := by
+          have h := congrArg
+            (fun x => x - TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j) hsum
+          simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h
+    _ = 4 - (2 - 2 * TS.localMajoranaParity j) := by rw [hcreate]
+    _ = 2 + 2 * TS.localMajoranaParity j := by
+          calc
+            4 - (2 - 2 * TS.localMajoranaParity j)
+                = (4 - 2) + 2 * TS.localMajoranaParity j := by
+                    abel_nf
+            _ = 2 + 2 * TS.localMajoranaParity j := by
+                    norm_num
+
+/-- Normalized exterior creation with an explicitly supplied half scalar. -/
+@[rep_depth operator]
+def localExteriorCreateWith (half : Op) (j : ℕ) : Op :=
+  half * TS.localExteriorCreateRaw j
+
+/-- Normalized exterior contraction with an explicitly supplied half scalar. -/
+@[rep_depth operator]
+def localExteriorContractWith (half : Op) (j : ℕ) : Op :=
+  half * TS.localExteriorContractRaw j
+
+/-- If `half` commutes with `ε_raw`, then normalized creation is square-zero. -/
+@[rep_depth operator]
+theorem localExteriorCreateWith_sq_zero
+    (half : Op) (j : ℕ)
+    (hcomm : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j) :
+    TS.localExteriorCreateWith half j * TS.localExteriorCreateWith half j = 0 := by
+  unfold localExteriorCreateWith
+  calc
+    (half * TS.localExteriorCreateRaw j) *
+        (half * TS.localExteriorCreateRaw j)
+        = half * (TS.localExteriorCreateRaw j * half) * TS.localExteriorCreateRaw j := by
+          noncomm_ring
+    _ = half * (half * TS.localExteriorCreateRaw j) * TS.localExteriorCreateRaw j := by
+          rw [hcomm]
+    _ = half * half *
+          (TS.localExteriorCreateRaw j * TS.localExteriorCreateRaw j) := by
+          noncomm_ring
+    _ = half * half * 0 := by rw [TS.localExteriorCreateRaw_sq_zero j]
+    _ = 0 := by simp
+
+/-- If `half` commutes with `ι_raw`, then normalized contraction is square-zero. -/
+@[rep_depth operator]
+theorem localExteriorContractWith_sq_zero
+    (half : Op) (j : ℕ)
+    (hcomm : TS.localExteriorContractRaw j * half = half * TS.localExteriorContractRaw j) :
+    TS.localExteriorContractWith half j * TS.localExteriorContractWith half j = 0 := by
+  unfold localExteriorContractWith
+  calc
+    (half * TS.localExteriorContractRaw j) *
+        (half * TS.localExteriorContractRaw j)
+        = half * (TS.localExteriorContractRaw j * half) * TS.localExteriorContractRaw j := by
+          noncomm_ring
+    _ = half * (half * TS.localExteriorContractRaw j) * TS.localExteriorContractRaw j := by
+          rw [hcomm]
+    _ = half * half *
+          (TS.localExteriorContractRaw j * TS.localExteriorContractRaw j) := by
+          noncomm_ring
+    _ = half * half * 0 := by rw [TS.localExteriorContractRaw_sq_zero j]
+    _ = 0 := by simp
+
+/-- Normalized CAR from an explicit half scalar: `ι ε + ε ι = 1`. -/
+@[rep_depth operator]
+theorem localExteriorContractWith_mul_createWith_add_createWith_mul_contractWith
+    (half : Op) (j : ℕ)
+    (hcommCreate : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j)
+    (hcommContract : TS.localExteriorContractRaw j * half = half * TS.localExteriorContractRaw j)
+    (hhalf : half * half * 4 = 1) :
+    TS.localExteriorContractWith half j * TS.localExteriorCreateWith half j +
+      TS.localExteriorCreateWith half j * TS.localExteriorContractWith half j = 1 := by
+  unfold localExteriorCreateWith localExteriorContractWith
+  calc
+    (half * TS.localExteriorContractRaw j) *
+          (half * TS.localExteriorCreateRaw j) +
+        (half * TS.localExteriorCreateRaw j) *
+          (half * TS.localExteriorContractRaw j)
+        = half * (TS.localExteriorContractRaw j * half) * TS.localExteriorCreateRaw j +
+          half * (TS.localExteriorCreateRaw j * half) * TS.localExteriorContractRaw j := by
+          noncomm_ring
+    _ = half * (half * TS.localExteriorContractRaw j) * TS.localExteriorCreateRaw j +
+          half * (half * TS.localExteriorCreateRaw j) * TS.localExteriorContractRaw j := by
+          rw [hcommContract, hcommCreate]
+    _ = half * half *
+          (TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j +
+            TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j) := by
+          noncomm_ring
+    _ = half * half * 4 := by
+          rw [TS.localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw j]
+    _ = 1 := by exact hhalf
+
 /-- Explicit local split-Majorana product readout: `c_j d_j = T_j`. -/
 @[rep_depth operator]
 theorem localMajoranaC_mul_D_eq_tilt (j : ℕ) :

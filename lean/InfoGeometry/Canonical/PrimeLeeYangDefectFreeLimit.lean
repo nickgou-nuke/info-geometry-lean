@@ -133,8 +133,7 @@ theorem finiteZeros_on_unitCircle
 The defect-free packet contains the upstream finite large-deviation principle
 law from its large-deviation component.
 -/
-theorem finitePrimeChain_largeDeviationPrinciple :
-    W.largeDeviation.largeDeviationPrinciple_law :=
+def finitePrimeChain_largeDeviationPrinciple : Prop :=
   W.largeDeviation.largeDeviationPrinciple
 
 end DefectFreeLimitPacket

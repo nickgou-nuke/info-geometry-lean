@@ -137,6 +137,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceCarrier
 import InfoGeometry.Canonical.SplitCliffordSourceCurrent
 import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 import InfoGeometry.Canonical.SplitCliffordSourceWickVacuum
+import InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
 import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 import InfoGeometry.Canonical.SplitCliffordExternalChain

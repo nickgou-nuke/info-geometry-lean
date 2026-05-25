@@ -150,6 +150,34 @@ theorem ofAlignedObserver_isRouterEquilibrium
     (ofAlignedObserver_δ_odd_eq_zero
       (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hAlign := hAlign))
 
+/--
+A strain-zero observer has zero odd-sector defect on the Sinkhorn router lane.
+-/
+@[simp] theorem ofStrainZeroObserver_δ_odd_eq_zero
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (obs : InfoGeometry.Canonical.ObserverDefect.ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : InfoGeometry.Canonical.ObserverDefect.observerOrientationStrain CIK obs = 0) :
+    δ_odd (ofStrainZeroObserver (E := E) CIK obs flow hStrain) = 0 := by
+  unfold δ_odd
+  rw [ofStrainZeroObserver_routerResidual
+    (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hStrain := hStrain)]
+  exact ContinuousLinearMap.opNorm_zero
+
+/--
+A strain-zero observer is already in Sinkhorn router-equilibrium.
+-/
+theorem ofStrainZeroObserver_isRouterEquilibrium
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (obs : InfoGeometry.Canonical.ObserverDefect.ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : InfoGeometry.Canonical.ObserverDefect.observerOrientationStrain CIK obs = 0) :
+    IsRouterEquilibrium (ofStrainZeroObserver (E := E) CIK obs flow hStrain) := by
+  exact equilibrium_of_δ_odd_eq_zero (E := E)
+    (ofStrainZeroObserver (E := E) CIK obs flow hStrain)
+    (ofStrainZeroObserver_δ_odd_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hStrain := hStrain))
+
 /-- The sourced-generator deviation is exactly `δ_odd`. -/
 theorem sourcedGenerator_deviation_eq_δ_odd
     (B : RouterDefectBoundBridge (E := E)) :

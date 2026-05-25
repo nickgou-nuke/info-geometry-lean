@@ -69,6 +69,7 @@ import InfoGeometry.Krein.SplitCliffordNN
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
+import InfoGeometry.Krein.TomitaMatrixAtom
 import InfoGeometry.Krein.README
 
 namespace InfoGeometry

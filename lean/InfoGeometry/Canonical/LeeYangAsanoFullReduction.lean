@@ -167,4 +167,87 @@ theorem asano_contraction_full_of_endpoint_nondegenerate
       (asano_nondegenerate_root_mem_negProductSet_of_endpoint
         h0K₁ h0K₂ hD hPhi hroot hend)
 
+/--
+Contrapositive root-location form of endpoint-based full Asano contraction.
+
+If `A + D*z = 0`, then `z` lies in the contracted forbidden set, assuming the
+concrete nondegenerate endpoint alternative hypothesis.
+-/
+@[rep_depth operator]
+theorem asano_contraction_root_mem_negProductSet_of_endpoint_nondegenerate
+    (hEndpointNonDeg :
+      ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+        (0 : ℂ) ∉ K₁ →
+        (0 : ℂ) ∉ K₂ →
+        IsClosed K₁ →
+        IsClosed K₂ →
+        D ≠ 0 →
+        A * D - B * C ≠ 0 →
+        (∀ z₁ z₂ : ℂ,
+          z₁ ∉ K₁ →
+          z₂ ∉ K₂ →
+          asanoPhi A B C D z₁ z₂ ≠ 0) →
+        A + D * z = 0 →
+        ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)))
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hroot : A + D * z = 0) :
+    z ∈ negProductSet K₁ K₂ := by
+  by_contra hzOff
+  exact
+    (asano_contraction_full_of_endpoint_nondegenerate
+      hEndpointNonDeg h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff)
+      hroot
+
+/--
+Paired full endpoint-based Asano closure:
+1) outside forbidden set implies the contracted polynomial is nonzero;
+2) a contracted root lies in the forbidden set.
+-/
+@[rep_depth operator]
+theorem asano_contraction_pair_of_endpoint_nondegenerate
+    (hEndpointNonDeg :
+      ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+        (0 : ℂ) ∉ K₁ →
+        (0 : ℂ) ∉ K₂ →
+        IsClosed K₁ →
+        IsClosed K₂ →
+        D ≠ 0 →
+        A * D - B * C ≠ 0 →
+        (∀ z₁ z₂ : ℂ,
+          z₁ ∉ K₁ →
+          z₂ ∉ K₂ →
+          asanoPhi A B C D z₁ z₂ ≠ 0) →
+        A + D * z = 0 →
+        ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)))
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0) :
+    (z ∉ negProductSet K₁ K₂ → A + D * z ≠ 0)
+      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) := by
+  refine ⟨?_, ?_⟩
+  · intro hzOff
+    exact asano_contraction_full_of_endpoint_nondegenerate
+      hEndpointNonDeg h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
+  · intro hroot
+    exact asano_contraction_root_mem_negProductSet_of_endpoint_nondegenerate
+      hEndpointNonDeg h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot
+
 end InfoGeometry.Canonical.LeeYangAsanoNativeCore

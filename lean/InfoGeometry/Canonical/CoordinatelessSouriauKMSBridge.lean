@@ -1659,6 +1659,32 @@ def toCoordinatelessSouriauFisherContext
     CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent :=
   (ω.toMinimalCoordinatelessSouriauFisherContext beta J sld).toCoordinatelessSouriauFisherContext
 
+/--
+Search-facing theorem packet for the observable-tangent constructive branch.
+
+This removes the explicit `sld` argument on the owned observable identity-SLD
+lane by routing directly through `toObservableCoordinatelessSouriauFisherContext`.
+-/
+@[rep_depth operator]
+theorem observable_coordinateless_constructive_packet
+    (beta : ℝ)
+    (J : OperatorSouriauMoment (H := H) Symmetry)
+    (A B : Obs) :
+    let C := ω.toObservableCoordinatelessSouriauFisherContext beta J
+    C.state.eval 1 = 1 ∧
+    C.state.eval (A * C.sigma C.beta B) = C.state.eval (B * A) ∧
+    C.souriauMoment.thermalGenerator =
+      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature ∧
+    C.fisherMetric.metric A B = C.fisherMetric.metric B A ∧
+    C.state.eval (C.weylGauge.gauge A) = C.state.eval A := by
+  intro C
+  exact ⟨
+    C.state.eval_one,
+    C.kms_identity A B,
+    C.souriau_thermalGenerator_eq_moment,
+    C.fisher_metric_symm A B,
+    C.weyl_state_invariant A⟩
+
 /-- Search-facing theorem packet for the constructive coordinateless branch. -/
 @[rep_depth operator]
 theorem coordinateless_constructive_packet

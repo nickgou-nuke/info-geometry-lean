@@ -775,6 +775,65 @@ theorem asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate
   exact hz_not (hAsanoRuelle z hzero)
 
 /--
+Adapter: the existing nondegenerate closure theorem can be discharged from
+the concrete endpoint condition.
+-/
+theorem asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate_via_endpoint
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0₁ : (0 : ℂ) ∉ K₁)
+    (h0₂ : (0 : ℂ) ∉ K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
+    (hD : D ≠ 0)
+    (hend : (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))
+    (hz_not : z ∉ signedProductSet K₁ K₂) :
+    asanoContract A D z ≠ 0 := by
+  exact asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate
+    (K₁ := K₁) (K₂ := K₂) (A := A) (D := D) (z := z)
+    (asanoRuelle_premise_of_nonDegenerate_endpoint
+      (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D)
+      h0₁ h0₂ hzf hD hend)
+    hz_not
+
+/--
+Adapter: root-localization in the nondegenerate branch from the concrete
+endpoint condition.
+-/
+theorem contracted_zero_mem_signedProduct_of_nonDegenerate_via_endpoint
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0₁ : (0 : ℂ) ∉ K₁)
+    (h0₂ : (0 : ℂ) ∉ K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
+    (hD : D ≠ 0)
+    (hend : (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))
+    (hzero : IsContractedZero A D z) :
+    z ∈ signedProductSet K₁ K₂ := by
+  exact asanoRuelle_premise_of_nonDegenerate_endpoint
+    (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D)
+    h0₁ h0₂ hzf hD hend z hzero
+
+/--
+Paired nondegenerate endpoint adapters:
+1) outside signed-product implies nonvanishing contraction;
+2) contracted root implies signed-product membership.
+-/
+theorem nonDegenerate_endpoint_adapter_pair
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0₁ : (0 : ℂ) ∉ K₁)
+    (h0₂ : (0 : ℂ) ∉ K₂)
+    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
+    (hD : D ≠ 0)
+    (hend : (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)) :
+    (z ∉ signedProductSet K₁ K₂ → asanoContract A D z ≠ 0)
+      ∧ (IsContractedZero A D z → z ∈ signedProductSet K₁ K₂) := by
+  refine ⟨?_, ?_⟩
+  · intro hz_not
+    exact asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate_via_endpoint
+      h0₁ h0₂ hzf hD hend hz_not
+  · intro hzero
+    exact contracted_zero_mem_signedProduct_of_nonDegenerate_via_endpoint
+      h0₁ h0₂ hzf hD hend hzero
+
+/--
 Full contracted Asano closure assembled from all determinant branches:
 
 * `D = 0`,
@@ -816,13 +875,13 @@ theorem asanoContract_ne_zero_outside_signedProduct_of_endpoint_nonDeg
       ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂)))
     (hz_not : z ∉ signedProductSet K₁ K₂) :
     asanoContract A D z ≠ 0 := by
-  refine asanoContract_ne_zero_outside_signedProduct
-    (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D) (z := z)
-    h0₁ h0₂ hzf ?_ hz_not
-  intro hD hdet w hw
-  exact contracted_zero_mem_signedProduct_of_nonDegenerate_endpoint
-    (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D) (z := w)
-    h0₁ h0₂ hzf hD (hEndpointNonDeg hD hdet) hw
+  by_cases hD : D = 0
+  · exact asanoContract_ne_zero_of_D_eq_zero h0₁ h0₂ hzf hD
+  · by_cases hdet : A * D - B * C = 0
+    · exact asanoContract_ne_zero_outside_signedProduct_of_rankOne
+        h0₁ h0₂ hzf hD hdet hz_not
+    · exact asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate_via_endpoint
+        h0₁ h0₂ hzf hD (hEndpointNonDeg hD hdet) hz_not
 
 /--
 Full contracted-root localization across all determinant branches, where the
@@ -846,7 +905,7 @@ theorem contracted_zero_mem_signedProduct_of_endpoint_nonDeg
   · by_cases hdet : A * D - B * C = 0
     · exact contracted_zero_mem_signedProduct_of_rankOne
         h0₁ h0₂ hzf hD hdet hzero
-    · exact contracted_zero_mem_signedProduct_of_nonDegenerate_endpoint
+    · exact contracted_zero_mem_signedProduct_of_nonDegenerate_via_endpoint
         h0₁ h0₂ hzf hD (hEndpointNonDeg hD hdet) hzero
 
 /--

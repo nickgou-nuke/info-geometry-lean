@@ -44,14 +44,18 @@ theorem virasoroProjectVirasoroDatum_realizes :
 /-- The concrete central element commutes, via the partial affine bridge laws. -/
 theorem virasoroProjectVirasoroDatum_central_commutes :
     VirasoroDatum.central_commutes_law virasoroProjectVirasoroDatum := by
-  -- Using the honest-debt theorem from the bridge.
-  exact VirasoroDatum.central_commutes_law_holds virasoroProjectVirasoroDatum
+  intro X
+  simpa [virasoroProjectVirasoroDatum] using VirasoroAlgebra.cgen_bracket (𝕜 := ℝ) X
 
 /-- The concrete Virasoro bracket law is the expected one. -/
 theorem virasoroProjectVirasoroDatum_bracket :
     VirasoroDatum.virasoro_bracket_law virasoroProjectVirasoroDatum := by
-  -- Using the honest-debt theorem from the bridge.
-  exact VirasoroDatum.virasoro_bracket_law_holds virasoroProjectVirasoroDatum
+  intro m n
+  by_cases hmn : m + n = 0
+  · simpa [virasoroProjectVirasoroDatum, virasoroCentralCoefficient, hmn] using
+      (VirasoroAlgebra.lgen_bracket (𝕜 := ℝ) m n)
+  · simpa [virasoroProjectVirasoroDatum, virasoroCentralCoefficient, hmn] using
+      (VirasoroAlgebra.lgen_bracket (𝕜 := ℝ) m n)
 
 /--
 Existence of a concrete `VirasoroDatum` realized by `VirasoroProject`.
@@ -80,8 +84,7 @@ def heisenbergSugawaraDatum : AffineVirasoroBridge.SugawaraDatum where
 /-- The concrete Sugawara datum satisfies the expected central-charge law. -/
 theorem heisenbergSugawaraDatum_sugawara_law :
     heisenbergSugawaraDatum.sugawara_law := by
-  -- DEBT_ID: VPB_SUG_LAW
-  -- DEBT_KIND: SORRY
-  sorry
+  unfold SugawaraDatum.sugawara_law sugawaraCentralCharge heisenbergSugawaraDatum
+  norm_num
 
 end InfoGeometry.OperatorAlgebra.VirasoroProjectBridge

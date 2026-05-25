@@ -140,13 +140,19 @@ theorem primeSugawara_affine_current_mode_bracket
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
-    (m n : ℤ) (X Y : Finite) :
+    (m n : ℤ) (X Y : Finite)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅P.affineVirasoro.affine.Current m X, P.affineVirasoro.affine.Current n Y⁆ =
+          P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
+              (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0)) :
     ⁅P.affineVirasoro.affine.Current m X,
       P.affineVirasoro.affine.Current n Y⁆ =
       P.affineVirasoro.affine.Current (m + n) ⁅X, Y⁆ +
         ((m : ℝ) * P.affineVirasoro.affine.killingForm X Y) •
           (if m + n = 0 then P.affineVirasoro.affine.kCentral else 0) :=
-  P.affine_current_mode_bracket m n X Y
+  P.affine_current_mode_bracket m n X Y hbr
 
 /-- The Prime Sugawara packet transports the Virasoro action on currents. -/
 theorem primeSugawara_virasoro_acts_on_currents
@@ -154,11 +160,15 @@ theorem primeSugawara_virasoro_acts_on_currents
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
-    (m n : ℤ) (X : Finite) :
+    (m n : ℤ) (X : Finite)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅P.affineVirasoro.virasoro.Lmode m, P.affineVirasoro.affine.Current n X⁆ =
+          (-(n : ℝ)) • P.affineVirasoro.affine.Current (m + n) X) :
     ⁅P.affineVirasoro.virasoro.Lmode m,
       P.affineVirasoro.affine.Current n X⁆ =
       (-(n : ℝ)) • P.affineVirasoro.affine.Current (m + n) X :=
-  P.virasoro_acts_on_currents m n X
+  P.virasoro_acts_on_currents m n X hact
 
 /-- The Prime Sugawara packet transports the Sugawara mode-sum relation. -/
 theorem primeSugawara_virasoro_mode_eq_rescaled_sugawara_sum
@@ -166,21 +176,29 @@ theorem primeSugawara_virasoro_mode_eq_rescaled_sugawara_sum
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
-    (n : ℤ) :
+    (n : ℤ)
+    (hsum :
+      ∀ n : ℤ,
+        P.sugawara.bridge.virasoro.Lmode n =
+          (1 / (2 * (P.sugawara.bridge.level + P.sugawara.bridge.dualCoxeterNumber))) •
+            P.sugawara.modeSum n) :
     P.affineVirasoro.virasoro.Lmode n =
       P.sugawara.sugawaraFactor • P.sugawara.modeSum n :=
-  P.virasoro_mode_eq_rescaled_sugawara_sum n
+  P.virasoro_mode_eq_rescaled_sugawara_sum n hsum
 
 /-- The Prime Sugawara packet transports the calibrated central charge. -/
 theorem primeSugawara_centralCharge_calibrated
     {PrimeLabel Field Coeff Finite Alg : Type*}
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg) :
+    (P : PrimeSugawaraVirasoroPacket PrimeLabel Field Coeff Finite Alg)
+    (hcc : P.affineVirasoro.centralCharge =
+      P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
+        (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber)) :
     P.affineVirasoro.centralCharge =
       P.affineVirasoro.level * P.affineVirasoro.finiteDimension /
         (P.affineVirasoro.level + P.affineVirasoro.dualCoxeterNumber) :=
-  P.centralCharge_calibrated
+  P.centralCharge_calibrated hcc
 
 /-- The split-Clifford finite CAR anchor is available directly. -/
 theorem splitClifford_cliffordConcreteIsCARPair
@@ -198,10 +216,15 @@ theorem lightconeSugawara_virasoro_mode_eq_rescaled_sum
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
-    (n : ℤ) :
+    (n : ℤ)
+    (hsum :
+      ∀ n : ℤ,
+        S.sugawara.bridge.virasoro.Lmode n =
+          (1 / (2 * (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber))) •
+            S.sugawara.modeSum n) :
     S.kanAffine.affineLightCone.bridge.virasoro.Lmode n =
       S.sugawaraFactor • S.modeSum n :=
-  S.lightcone_virasoro_mode_eq_rescaled_sum hUse n
+  S.lightcone_virasoro_mode_eq_rescaled_sum hUse n hsum
 
 /-- The lightcone Sugawara Virasoro action on positive currents is available directly. -/
 theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
@@ -211,10 +234,15 @@ theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
+          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) :=
-  S.sugawara_virasoro_acts_on_uPlusCurrent hUse m n
+  S.sugawara_virasoro_acts_on_uPlusCurrent hUse m n hact
 
 /-- The lightcone Sugawara Virasoro action on negative currents is available directly. -/
 theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
@@ -224,10 +252,15 @@ theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
     (hUse : S.UsesLightConeAffineBridge)
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
+          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uMinusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uMinusCurrent (m + n) :=
-  S.sugawara_virasoro_acts_on_uMinusCurrent hUse m n
+  S.sugawara_virasoro_acts_on_uMinusCurrent hUse m n hact
 
 /-- The lightcone Sugawara central charge calibration is available directly. -/
 theorem lightconeSugawara_centralCharge_calibrated
@@ -235,11 +268,14 @@ theorem lightconeSugawara_centralCharge_calibrated
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag) :
+    (S : LightConeSugawaraCalibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    (hcc : S.sugawara.bridge.centralCharge =
+      S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
+        (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber)) :
     S.sugawara.bridge.centralCharge =
       S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
-  S.sugawara_centralCharge_calibrated
+  S.sugawara_centralCharge_calibrated hcc
 
 /--
 The theorem-only canonical chain:

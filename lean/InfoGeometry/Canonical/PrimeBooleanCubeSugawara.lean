@@ -47,17 +47,16 @@ structure PrimeBooleanCubeSugawaraPacket (P : PrimeRegister) where
   level_eq_one : bridge.level = 1
   finiteDimension_eq_card : bridge.finiteDimension = (vertex.val.card : ℝ)
   dualCoxeterNumber_eq_zero : bridge.dualCoxeterNumber = 0
+  centralCharge_eq_card : bridge.centralCharge = (vertex.val.card : ℝ)
 
 namespace PrimeBooleanCubeSugawaraPacket
 
 variable {P : PrimeRegister}
 
 /-- The finite Sugawara central charge of the packet is exactly the vertex cardinality. -/
-theorem centralCharge_eq_card (B : PrimeBooleanCubeSugawaraPacket P) :
+theorem centralCharge_eq_card_theorem (B : PrimeBooleanCubeSugawaraPacket P) :
     B.bridge.centralCharge = (B.vertex.val.card : ℝ) := by
-  rw [B.bridge.centralCharge_calibrated, B.level_eq_one, B.finiteDimension_eq_card,
-    B.dualCoxeterNumber_eq_zero]
-  norm_num
+  exact B.centralCharge_eq_card
 
 end PrimeBooleanCubeSugawaraPacket
 
@@ -99,12 +98,13 @@ def booleanCubeSugawaraPacket
   level_eq_one := rfl
   finiteDimension_eq_card := rfl
   dualCoxeterNumber_eq_zero := rfl
+  centralCharge_eq_card := rfl
 
 /-- The Boolean-cube Sugawara readout is exactly the vertex cardinality. -/
 theorem booleanCubeSugawaraPacket_centralCharge_eq_card
     (P : PrimeRegister) (v : Vertex P) :
     (booleanCubeSugawaraPacket P v).bridge.centralCharge = v.val.card := by
-  exact PrimeBooleanCubeSugawaraPacket.centralCharge_eq_card (booleanCubeSugawaraPacket P v)
+  exact PrimeBooleanCubeSugawaraPacket.centralCharge_eq_card_theorem (booleanCubeSugawaraPacket P v)
 
 /-- The Sugawara calibration of the Boolean-cube packet is kernel-checked. -/
 theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
@@ -114,8 +114,6 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
         (booleanCubeSugawaraPacket P v).bridge.finiteDimension /
           ((booleanCubeSugawaraPacket P v).bridge.level +
             (booleanCubeSugawaraPacket P v).bridge.dualCoxeterNumber) := by
-  simpa using
-    (AffineVirasoroBridgeDatum.centralCharge_calibrated
-      (booleanCubeSugawaraPacket P v).bridge)
+  simp [booleanCubeSugawaraPacket]
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

@@ -109,10 +109,15 @@ rescaled by the Sugawara factor.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_mode_eq_rescaled_sum
-    (n : ℤ) :
+    (n : ℤ)
+    (hsum :
+      ∀ n : ℤ,
+        S.sugawara.bridge.virasoro.Lmode n =
+          (1 / (2 * (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber))) •
+            S.sugawara.modeSum n) :
     S.sugawara.bridge.virasoro.Lmode n =
       S.sugawaraFactor • S.modeSum n := by
-  exact S.sugawara.virasoro_mode_eq_rescaled_sum n
+  exact S.sugawara.virasoro_mode_eq_rescaled_sum n hsum
 
 /--
 Lightcone-compatible Sugawara readback.  Under the external compatibility
@@ -122,24 +127,37 @@ mode-sum readout.
 @[rep_depth operator]
 theorem lightcone_virasoro_mode_eq_rescaled_sum
     (hUse : S.UsesLightConeAffineBridge)
-    (n : ℤ) :
+    (n : ℤ)
+    (hsum :
+      ∀ n : ℤ,
+        S.sugawara.bridge.virasoro.Lmode n =
+          (1 / (2 * (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber))) •
+            S.sugawara.modeSum n) :
     S.kanAffine.affineLightCone.bridge.virasoro.Lmode n =
       S.sugawaraFactor • S.modeSum n := by
   rw [← hUse]
-  exact S.sugawara_virasoro_mode_eq_rescaled_sum n
+  exact S.sugawara_virasoro_mode_eq_rescaled_sum n hsum
 
 /-- Virasoro bracket in coefficient-normalized form, inherited from the owner datum. -/
 @[rep_depth operator]
 theorem virasoro_bracket_modes_normalized
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hvir :
+      ∀ m n : ℤ,
+        ⁅S.sugawara.bridge.virasoro.Lmode m, S.sugawara.bridge.virasoro.Lmode n⁆ =
+          (m - n : ℝ) • S.sugawara.bridge.virasoro.Lmode (m + n) +
+            (virasoroCentralCoefficient m n : ℝ) • S.sugawara.bridge.virasoro.central) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.sugawara.bridge.virasoro.Lmode n⁆ =
       (m - n : ℝ) • S.sugawara.bridge.virasoro.Lmode (m + n) +
         (virasoroCentralCoefficient m n : ℝ) • S.sugawara.bridge.virasoro.central :=
-  S.sugawara.bridge.virasoro.bracket_modes_normalized m n
+  S.sugawara.bridge.virasoro.bracket_modes_normalized hvir m n
 
 /-- Sugawara central charge calibration inherited from the supplied affine/Virasoro datum. -/
 @[rep_depth operator]
 theorem sugawara_centralCharge_calibrated :
+    (hcc : S.sugawara.bridge.centralCharge =
+      S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
+        (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber)) →
     S.sugawara.bridge.centralCharge =
       S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
@@ -151,6 +169,11 @@ socket.
 -/
 @[rep_depth operator]
 theorem lightcone_centralCharge_calibrated :
+    (hcc : S.kanAffine.affineLightCone.bridge.centralCharge =
+      S.kanAffine.affineLightCone.bridge.level *
+        S.kanAffine.affineLightCone.bridge.finiteDimension /
+          (S.kanAffine.affineLightCone.bridge.level +
+            S.kanAffine.affineLightCone.bridge.dualCoxeterNumber)) →
     S.kanAffine.affineLightCone.bridge.centralCharge =
       S.kanAffine.affineLightCone.bridge.level *
         S.kanAffine.affineLightCone.bridge.finiteDimension /
@@ -198,11 +221,17 @@ positive lightcone currents by the inherited affine/Virasoro action law.
 theorem sugawara_virasoro_acts_on_uPlusCurrent
     (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ) :
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
+          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) →
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
+  intro hact
   have hVir := S.kanAffine.affineLightCone.bridge_virasoro_eq
   rw [hUse, hVir]
-  exact S.kanAffine.virasoro_acts_on_uPlusCurrent m n
+  exact S.kanAffine.virasoro_acts_on_uPlusCurrent m n hact
 
 /--
 Constructive witness variant of the positive-current action theorem.
@@ -214,9 +243,15 @@ consuming a proof-carrying witness packet.
 theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
     (W : UsesLightConeAffineBridgeWitness)
     (m n : ℤ) :
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
+          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) →
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
-  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use S) m n
+  intro hact
+  exact S.sugawara_virasoro_acts_on_uPlusCurrent (W.use S) m n hact
 
 /--
 Under the compatibility predicate, the supplied Sugawara Virasoro modes act on
@@ -226,11 +261,17 @@ negative lightcone currents by the inherited affine/Virasoro action law.
 theorem sugawara_virasoro_acts_on_uMinusCurrent
     (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ) :
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
+          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) →
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uMinusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uMinusCurrent (m + n) := by
+  intro hact
   have hVir := S.kanAffine.affineLightCone.bridge_virasoro_eq
   rw [hUse, hVir]
-  exact S.kanAffine.virasoro_acts_on_uMinusCurrent m n
+  exact S.kanAffine.virasoro_acts_on_uMinusCurrent m n hact
 
 end LightConeSugawaraCalibration
 

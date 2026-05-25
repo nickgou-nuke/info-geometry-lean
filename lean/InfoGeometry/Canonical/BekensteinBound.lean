@@ -218,6 +218,25 @@ theorem cocycleGeneratorLift_of_cocycleEntropyPotential_match
             (n := n) (T := T) k
 
 /--
+Proof-carrying zero-anchored generator-lift packet for a cocycle entropy
+potential.
+
+This bundles the two explicit hypotheses needed for integer-time matching on the
+cocycle lane: the concrete generator-lift relation and the zero-time
+normalization of the selected entropy potential.
+-/
+structure CocycleLiftZeroWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n) where
+  /-- Concrete generator-lift relation on the Sinkhorn trajectory. -/
+  hLift :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge)
+  /-- Zero-time normalization of the selected cocycle entropy potential. -/
+  hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
+
+/--
 Zero-anchored uniqueness on integer times:
 if a cocycle entropy potential satisfies the concrete generator-lift relation
 and is normalized at time `0`, then it matches the canonical trajectory
@@ -290,6 +309,26 @@ theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
               exact congrArg (trajectoryRNGeneratorPotential (n := n) T) hcast
 
 /--
+Witness-routed integer-time matching for cocycle entropy potentials.
+
+This is the constructive companion to
+`cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero`: the old loose
+pair `(hLift, hZero)` is recovered from one `CocycleLiftZeroWitness` packet.
+-/
+theorem cocycleEntropyPotential_natMatch_of_cocycleLiftZeroWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (W : CocycleLiftZeroWitness (n := n) (H := H) σ u hBridge T) :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k :=
+  cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+    (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
+    W.hLift W.hZero
+
+/--
 Connes-cocycle owner route to zero-normalization of the selected cocycle
 entropy potential.
 
@@ -322,12 +361,12 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
     ∀ k : Nat,
       CocycleEntropyPotential (H := H) σ u hBridge k
         = trajectoryRNGeneratorPotential (n := n) T k := by
-  exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+  exact cocycleEntropyPotential_natMatch_of_cocycleLiftZeroWitness
     (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
-    hLift
-    (cocycleEntropyPotential_zero_of_connesCocycle
-      (H := H) (σ := σ) (u := u)
-      (hCocycle := hCocycle) (hBridge := hBridge))
+    { hLift := hLift
+      hZero := cocycleEntropyPotential_zero_of_connesCocycle
+        (H := H) (σ := σ) (u := u)
+        (hCocycle := hCocycle) (hBridge := hBridge) }
 
 /--
 Zero-normalized route for generator-lift equivalence.

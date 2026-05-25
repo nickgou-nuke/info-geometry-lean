@@ -297,6 +297,29 @@ theorem gravity_generated_by_unitRelativeVolumeState
 
 omit [FiniteDimensional ℝ X] in
 /--
+Entropy-sourced Ricci-flat route through the proof-carrying unit relative-volume
+bit.
+
+This narrows the Ricci-flat surface from a bare RN equality to the existing
+constructive `UnitRelativeVolumeBit` packet.
+-/
+theorem isRicciFlat_of_rnEntropySource_of_unitRelativeVolumeBit
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R := by
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit
+      (n := n) (Kgeo := Kgeo) (M := M) hSource bit
+  exact isRicciFlat_of_unitRelativeVolume
+    (R := R) (K := Kgeo) (x := x) hUnitState hBridge
+
+omit [FiniteDimensional ℝ X] in
+/--
 Capstone entropy-to-gravity statement through the proof-carrying unit
 relative-volume bit.
 
@@ -313,11 +336,12 @@ theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit
     (bit : UnitRelativeVolumeBit n M)
     (hBridge : MetricRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  have hUnitState : UnitRelativeVolumeState Kgeo :=
-    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
-      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
-  exact gravity_generated_by_unitRelativeVolumeState
-    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hBridge
+  exact ⟨
+    isRicciFlat_of_rnEntropySource_of_unitRelativeVolumeBit
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (M := M) hSource bit hBridge,
+    vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) hSource bit hBridge
+  ⟩
 
 /--
 Metric-derived entropy-to-vacuum route through the proof-carrying unit-volume

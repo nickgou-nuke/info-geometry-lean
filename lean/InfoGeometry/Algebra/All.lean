@@ -6,6 +6,8 @@ import InfoGeometry.Algebra.Zorn.Composition
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
 import InfoGeometry.Algebra.Zorn.RelativeVolume
 import InfoGeometry.Algebra.Zorn.Associator
+import InfoGeometry.Algebra.NoFaithfulAssociativeModel
+import InfoGeometry.Algebra.NilpotentNonunit
 /-!
 # InfoGeometry.Algebra.All
 

@@ -174,6 +174,30 @@ theorem semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_e
       _ = 0 := hScaleZero
   exact ⟨hScaleZero, hEpsZero, hObsDil.1, hObsDil.2⟩
 
+/--
+Smaller constructive projector/dilation zero packet from the proof-carrying
+unit-relative-volume bit route.
+
+This removes the explicit `hScaleZero : CI.chiralScale = 0` gate when the
+caller already owns the RN/Kähler witness packet forcing zero chiral scale.
+-/
+@[rep_depth transport]
+theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler :
+      CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft
+      (InfoGeometry.Canonical.IncompressibleBitBridge.chiralScale_eq_zero_of_unitRelativeVolumeBit
+        (CI := CI) (M := M) hScaleFromKahler bit)
+
 end ConformalInference
 
 end WeylAnomalyClosure

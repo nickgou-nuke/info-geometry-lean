@@ -422,6 +422,22 @@ theorem comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithf
       (E := E) P ψ A hFaithful hFirst)
 
 /--
+Faithful thermodynamic probing upgrades vanishing first variation all the way to
+zero induced thermodynamic dynamics, removing the intermediate explicit
+comparison-metric vanishing packet from downstream routes.
+-/
+@[rep_depth transport]
+theorem stateInducedDynamics_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    stateInducedDynamics (E := E) P.modularData ψ A = 0 := by
+  exact stateInducedDynamics_eq_zero_of_comparisonMetricReadout_eq_zero
+    (E := E) P ψ A
+    (comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst)
+
+/--
 Faithful thermodynamic probing upgrades vanishing first variation into vanishing
 comparison-state phase readout directly.
 -/

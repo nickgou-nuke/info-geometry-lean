@@ -79,6 +79,30 @@ lemma fenchelGap_nonneg (M : LegendreModel) (θ η : ℝ) :
   unfold fenchelGap massieu
   linarith [M.fenchel_ineq θ η]
 
+/--
+Fenchel gap is invariant under any symmetry that preserves the primal
+potential, the dual potential, and the primal-dual pairing.
+-/
+lemma fenchelGap_invariant_of_preserves_potentials_and_pairing
+    (M : LegendreModel)
+    {G : Type*} [Group G]
+    (actθ : G → ℝ → ℝ)
+    (actη : G → ℝ → ℝ)
+    (hψ :
+      ∀ g θ,
+        M.massieu (actθ g θ) = M.massieu θ)
+    (hφ :
+      ∀ g η,
+        M.φ (actη g η) = M.φ η)
+    (hpair :
+      ∀ g θ η,
+        actθ g θ * actη g η = θ * η)
+    (g : G) (θ η : ℝ) :
+    M.fenchelGap (actθ g θ) (actη g η) =
+      M.fenchelGap θ η := by
+  unfold fenchelGap
+  rw [hψ g θ, hφ g η, hpair g θ η]
+
 /-- Contact identity rewritten as `entropy = φ(η)` at `η = grad θ`. -/
 lemma entropy_eq_dual_at_contact (M : LegendreModel) (θ : ℝ) :
     M.entropy θ = M.φ (M.dualCoord θ) := by
@@ -98,6 +122,18 @@ lemma contact_balance (M : LegendreModel) (θ : ℝ) :
   unfold massieu dualCoord
   have h := M.contact θ
   linarith
+
+/--
+Fenchel gap measured from the Legendre contact locus.
+-/
+lemma fenchelGap_eq_dual_defect_add_pairing_defect
+    (M : LegendreModel) (θ η : ℝ) :
+    M.fenchelGap θ η =
+      M.φ η - M.φ (M.dualCoord θ)
+        + θ * (M.dualCoord θ - η) := by
+  unfold fenchelGap dualCoord massieu
+  rw [M.contact θ]
+  ring
 
 /-- Free energy is just a scaled negative Massieu potential by definition. -/
 @[simp] lemma freeEnergy_def (M : LegendreModel) (ε θ : ℝ) :
@@ -212,6 +248,33 @@ lemma canonicalFreeEnergy_eq_scaled_entropy_energy
       = -ε * (M.canonicalEntropy θ - θ * M.canonicalEnergy θ) := by
   unfold canonicalFreeEnergy
   rw [M.massieu_eq_canonicalEntropy_minus_theta_energy]
+
+/--
+Primal Bregman divergence is the Fenchel gap at the dual coordinate of the
+base point.
+
+`D_ψ(θ ‖ θ₀) = ψ(θ) + φ(η₀) - θη₀`,
+where `η₀ = grad θ₀ = deriv ψ θ₀`.
+-/
+lemma primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv
+    (M : LegendreModel) (θ θ₀ : ℝ)
+    (hgrad : M.grad θ₀ = deriv M.L.ψ θ₀) :
+    M.primalBregman θ θ₀ = M.fenchelGap θ (M.dualCoord θ₀) := by
+  unfold primalBregman fenchelGap massieu dualCoord
+  unfold InfoGeometry.LogPotential.bregman InfoGeometry.bregmanDiv
+  rw [M.contact θ₀]
+  rw [← hgrad]
+  ring
+
+/--
+Nonnegativity of primal Bregman divergence via the Fenchel gap bridge.
+-/
+lemma primalBregman_nonneg_of_grad_eq_deriv
+    (M : LegendreModel) (θ θ₀ : ℝ)
+    (hgrad : M.grad θ₀ = deriv M.L.ψ θ₀) :
+    0 ≤ M.primalBregman θ θ₀ := by
+  rw [M.primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv θ θ₀ hgrad]
+  exact M.fenchelGap_nonneg θ (M.dualCoord θ₀)
 
 end LegendreModel
 

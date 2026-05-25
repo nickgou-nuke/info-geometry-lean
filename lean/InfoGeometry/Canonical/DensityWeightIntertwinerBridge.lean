@@ -290,6 +290,27 @@ theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_equilibriumSeed
   exact InfoGeometry.Canonical.SouriauPlanckVector.comparisonReadout_pair_eq_zero_of_equilibriumSeed
     (E := E) hEq
 
+/--
+Faithful probing plus vanishing first variation force the zero-weight
+ density-lifted readout packet to vanish.
+
+This is the smaller constructive route on the doubled carrier: it removes the
+explicit `GibbsSouriauEquilibriumSeed` packet when the raw owner witnesses
+`ProbeFaithful` and `firstVariation = 0` are already available.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    {P : PotentialDatum (E := E)} {ψ : H₂} {A : EndH}
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    ((densityWeightLiftedReadout (E := E) P ψ A 0).metric,
+      (densityWeightLiftedReadout (E := E) P ψ A 0).phase)
+      = (0, 0) := by
+  rw [densityWeightLiftedReadout_zero_pair_eq_comparisonReadout_pair (E := E) P ψ A]
+  exact
+    InfoGeometry.Canonical.ThermodynamicGenerator.comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst
+
 end DoubledCarrier
 
 section WeylIntertwiners

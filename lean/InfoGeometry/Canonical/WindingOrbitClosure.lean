@@ -1012,6 +1012,60 @@ theorem winding_orbit_periodicity_succ_of_clockEquilibrium
     ((nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1 hEq)
 
 /--
+Constructive branch periodicity: a local clock-gauge symmetry certificate plus
+zero winding obstruction recovers clock equilibrium, so the modular transport
+branch is periodic without exposing a separate faithful-branch or equilibrium
+hypothesis.
+-/
+theorem winding_orbit_periodicity_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N)
+    (hObs :
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
+  exact winding_orbit_periodicity_of_clockEquilibrium
+    (H := H)
+    hMod
+    N
+    (clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+      (H := H) hMod N C hObs)
+
+/--
+Successor branch periodicity on the same constructive reverse lane.
+-/
+theorem winding_orbit_periodicity_succ_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N)
+    (hObs :
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+        (multiBranchedGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  exact winding_orbit_periodicity_succ_of_clockEquilibrium
+    (H := H)
+    hMod
+    N
+    (clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+      (H := H) hMod N C hObs)
+
+/--
 Any noncommuting scale lane is necessarily outside detailed equilibrium.
 -/
 theorem not_detailedEquilibrium_of_noncommutingScaleLane

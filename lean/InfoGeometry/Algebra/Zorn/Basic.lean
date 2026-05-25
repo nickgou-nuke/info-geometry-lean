@@ -12,6 +12,8 @@ Repository policy boundary:
 Zorn cells are not ordinary associative `2×2` matrix multiplication objects.
 They are vector-matrix coordinates for split-octonion algebraic data with a
 custom nonassociative product supplied in dedicated owner modules.
+The determinant lane is the split-octonion composition identity (`detZ_mul`),
+not ordinary matrix determinant multiplicativity.
 -/
 
 namespace InfoGeometry.Algebra.Zorn

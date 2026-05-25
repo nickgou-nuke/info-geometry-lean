@@ -158,6 +158,34 @@ The sourced generator collapses to the background flow exactly when the observer
  defect residual vanishes.
 -/
 @[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_iff_observerDefectResidual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector
+        ↔ observerDefectResidual CIK C.observer = 0 := by
+  constructor
+  · intro hEq
+    have hBoundary := sourcedGenerator_boundary_excitation (E := E) CIK C
+    dsimp at hBoundary
+    have hSum :
+        CIK.spectralComplementaryProjector * C.flow.K0 *
+            CIK.spectralComplementaryProjector + observerDefectResidual CIK C.observer
+          = CIK.spectralComplementaryProjector * C.flow.K0 *
+              CIK.spectralComplementaryProjector + 0 := by
+      exact hBoundary.symm.trans (by simpa [hEq])
+    exact add_left_cancel hSum
+  · intro hZero
+    have hBoundary := sourcedGenerator_boundary_excitation (E := E) CIK C
+    dsimp at hBoundary
+    simpa [hZero] using hBoundary
+
+/--
+The sourced generator collapses to the background flow exactly when the observer
+ defect residual vanishes.
+-/
+@[rep_depth transport]
 theorem sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
     (CIK : CertifiedInverseKernel H₂)
     (C : CasimirWeylDrazinData (E := E) CIK) :
@@ -171,6 +199,54 @@ theorem sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
     exact add_left_cancel hEq'
   · intro hZero
     simp [sourcedGenerator, sourcedModularGenerator, hZero]
+
+/--
+Under zero central defect, the Drazin-complement boundary excitation collapses to
+its background block exactly when the exact owner-side `Z_D` deviation-control
+predicate holds.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector
+        ↔ ObserverDeviationControlledByZD CIK C.observer := by
+  have hResidualIffStrain :
+      observerDefectResidual CIK C.observer = 0
+        ↔ observerOrientationStrain CIK C.observer = 0 := by
+    exact
+      (observerOrientationStrain_eq_zero_iff
+        (CIK := CIK) (obs := C.observer)).symm
+  have hResidualIffControl :
+      observerDefectResidual CIK C.observer = 0
+        ↔ ObserverDeviationControlledByZD CIK C.observer := by
+    exact
+      hResidualIffStrain.trans
+        (observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
+          (CIK := CIK) (obs := C.observer) hZD)
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_observerDefectResidual_eq_zero
+      (E := E) CIK C).trans hResidualIffControl
+
+/--
+Under zero central defect, exact owner-side `Z_D` deviation control forces the
+Drazin-complement boundary excitation to collapse to its background block.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hControl : ObserverDeviationControlledByZD CIK C.observer)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector := by
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero
+      (E := E) CIK C hZD).2 hControl
 
 /--
 Compressed-deviation-zero is a constructive owner route forcing the sourced
@@ -208,6 +284,67 @@ theorem sourcedGenerator_eq_background_of_deviationControlledByZD_of_ZD_eq_zero
       (E := E) CIK C).2
       (observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
         (CIK := CIK) (obs := C.observer) hControl hZD)
+
+/--
+Under zero central defect, sourced-generator collapse is equivalent to the exact
+owner-side `Z_D` deviation-control predicate.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0
+      ↔ ObserverDeviationControlledByZD CIK C.observer := by
+  have hResidualIffStrain :
+      observerDefectResidual CIK C.observer = 0
+        ↔ observerOrientationStrain CIK C.observer = 0 := by
+    exact
+      (observerOrientationStrain_eq_zero_iff
+        (CIK := CIK) (obs := C.observer)).symm
+  have hResidualIffControl :
+      observerDefectResidual CIK C.observer = 0
+        ↔ ObserverDeviationControlledByZD CIK C.observer := by
+    exact
+      hResidualIffStrain.trans
+        (observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
+          (CIK := CIK) (obs := C.observer) hZD)
+  exact
+    (sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
+      (E := E) CIK C).trans hResidualIffControl
+
+/--
+Under zero central defect, sourced-generator collapse is equivalent to zero
+scalarized observer strain. This narrows the explicit `ObserverDeviationControlledByZD`
+packet to the smaller owner-side strain witness.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_iff_strain_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0
+      ↔ observerOrientationStrain CIK C.observer = 0 := by
+  exact
+    (sourcedGenerator_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero
+      (E := E) CIK C hZD).trans
+      (observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
+        (CIK := CIK) (obs := C.observer) hZD).symm
+
+/--
+Under zero central defect, zero scalarized observer strain constructively forces
+sourced-generator collapse to the background flow.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_background_of_strain_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
+    (hStrain : observerOrientationStrain CIK C.observer = 0) :
+    sourcedGenerator (E := E) CIK C = C.flow.K0 := by
+  exact
+    (sourcedGenerator_eq_background_iff_strain_eq_zero_of_ZD_eq_zero
+      (E := E) CIK C hZD).2 hStrain
 
 /--
 The regular Drazin-core Hamiltonian is supported on the Drazin projector and

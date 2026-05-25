@@ -238,4 +238,70 @@ theorem dMajorana_occupied :
     dMajorana occupied = -vacuum := by
   ext <;> simp [dMajorana, epsilon, iota, vacuum, occupied]
 
+/-! ## 6. Parity as the local chiral grading -/
+
+/--
+The local parity/Möbius operator squares to the identity.
+
+This proves that `Π = cd` is a genuine local `ℤ₂` grading operator.
+-/
+theorem parityOp_sq :
+    parityOp.comp parityOp = (1 : LocalEnd) := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [parityOp, cMajorana, dMajorana, epsilon, iota]
+
+/--
+The local parity operator anticommutes with the split-Majorana bit-flipper `c`.
+
+This is the concrete local grading law:
+
+`Π c + c Π = 0`.
+-/
+theorem parityOp_cMajorana_anticomm :
+    parityOp.comp cMajorana + cMajorana.comp parityOp = 0 := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [parityOp, cMajorana, dMajorana, epsilon, iota]
+
+/--
+The local parity operator anticommutes with the split-Majorana partner `d`.
+
+This is the second local grading law:
+
+`Π d + d Π = 0`.
+-/
+theorem parityOp_dMajorana_anticomm :
+    parityOp.comp dMajorana + dMajorana.comp parityOp = 0 := by
+  apply LinearMap.ext
+  intro x
+  rcases x with ⟨x0, x1⟩
+  ext <;> simp [parityOp, cMajorana, dMajorana, epsilon, iota]
+
+/--
+Pointwise form of `Π c + c Π = 0`.
+-/
+theorem parityOp_cMajorana_apply
+    (x : LocalFock) :
+    parityOp (cMajorana x) = -cMajorana (parityOp x) := by
+  have h :=
+    congrArg (fun T : LocalEnd => T x) parityOp_cMajorana_anticomm
+  have h0 : parityOp (cMajorana x) + cMajorana (parityOp x) = 0 := by
+    simpa [LinearMap.add_apply] using h
+  exact (eq_neg_iff_add_eq_zero).2 h0
+
+/--
+Pointwise form of `Π d + d Π = 0`.
+-/
+theorem parityOp_dMajorana_apply
+    (x : LocalFock) :
+    parityOp (dMajorana x) = -dMajorana (parityOp x) := by
+  have h :=
+    congrArg (fun T : LocalEnd => T x) parityOp_dMajorana_anticomm
+  have h0 : parityOp (dMajorana x) + dMajorana (parityOp x) = 0 := by
+    simpa [LinearMap.add_apply] using h
+  exact (eq_neg_iff_add_eq_zero).2 h0
+
 end InfoGeometry.Arithmetic.PrimeMajoranaLocalMode

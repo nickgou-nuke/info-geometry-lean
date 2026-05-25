@@ -11,4 +11,7 @@ def test_thermodynamic_generator_exposes_readout_pair_from_first_variation() -> 
     assert "theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in text
     assert "theorem comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in text
     assert "theorem comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in text
+    assert "theorem stateInducedDynamics_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in text
     assert "theorem isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful" in text
+    assert "stateInducedDynamics_eq_zero_of_comparisonMetricReadout_eq_zero" in text
+    assert "comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful" in text

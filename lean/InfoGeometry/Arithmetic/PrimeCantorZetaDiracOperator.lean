@@ -117,6 +117,69 @@ theorem annihilationPush_of_not_mem {P : PrimeCutoff}
     annihilationPush p f S = 0 := by
   simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hp]
 
+/-- Creation push-forward is nilpotent on a fixed prime axis: `ε_p² = 0`. -/
+@[simp, rep_depth thermo]
+theorem creationPush_sq_zero {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    creationPush p (creationPush p f) S = 0 := by
+  by_cases hp : p ∈ S
+  · simp [hp]
+  · have hmem : p ∈ insert p S := by simp
+    simp [hp, hmem]
+
+/-- Annihilation push-forward is nilpotent on a fixed prime axis: `ι_p² = 0`. -/
+@[simp, rep_depth thermo]
+theorem annihilationPush_sq_zero {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    annihilationPush p (annihilationPush p f) S = 0 := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by simp
+    simp [hp, hnot]
+  · simp [hp]
+
+/--
+Finite local CAR identity on Cantor fields:
+
+`ε_p ι_p + ι_p ε_p = 1`.
+
+This is a genuine operator lemma, not a certificate. It proves that the
+creation/annihilation push-forwards close to the identity on each prime axis.
+-/
+@[rep_depth thermo]
+theorem creation_annihilation_push_anticomm_identity {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    creationPush p (annihilationPush p f) S
+      + annihilationPush p (creationPush p f) S
+      =
+    f S := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [hp, hnot, hins]
+  · have hmem : p ∈ insert p S := by simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · have hpq : p ≠ q := by
+          intro h
+          exact hq h.symm
+        simp [Finset.mem_erase, hq]
+    simp [hp, hmem, herase]
+
+/--
+Operator form of the local CAR identity on Cantor fields:
+`ε_p ι_p + ι_p ε_p = 1` as an extensional equality of field transforms.
+-/
+@[rep_depth thermo]
+theorem creation_annihilation_push_anticomm_identity_funext {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) :
+    (fun S => creationPush p (annihilationPush p f) S
+        + annihilationPush p (creationPush p f) S) = f := by
+  funext S
+  exact creation_annihilation_push_anticomm_identity p f S
+
 /-! ## 2. Kernel-level Cantor--Dirac readouts -/
 
 /--
@@ -330,6 +393,226 @@ theorem kernel_eq_sum
       Finset.sum (Finset.univ : Finset (PrimeMode P)) (fun p =>
         creationKernel D.amplitude (D.holonomy s) p S T +
           annihilationKernel D.amplitude (D.holonomy s) p S T) := rfl
+
+/-! ## 5. Finite adjoint pairing surface -/
+
+/--
+Pointwise holonomy unitarity at spectral parameter `s`:
+`hol(s,p)⁻¹ = conj(hol(s,p))` with nonvanishing.
+-/
+@[rep_depth thermo]
+def HolonomyUnitaryAt (s : ℂ) : Prop :=
+  ∀ p : PrimeMode P, (D.holonomy s p) ≠ 0 ∧ (D.holonomy s p)⁻¹ = star (D.holonomy s p)
+
+/-- Finite sesquilinear pairing on Cantor fields. -/
+@[rep_depth thermo]
+def pairing (f g : CantorField P) : ℂ :=
+  ∑ S : Vertex P, star (f S) * g S
+
+/--
+Adjoint-pair predicate for endomorphisms of the finite Cantor field.
+-/
+@[rep_depth thermo]
+def IsAdjointPair
+    (A B : CantorField P → CantorField P) : Prop :=
+  ∀ f g : CantorField P, pairing (A f) g = pairing f (B g)
+
+/--
+Conjugate-transposed readout of an adjoint pair.
+
+If `A` is adjoint to `B` under `pairing`, then
+`star (pairing f (B g)) = pairing g (A f)`.
+-/
+@[rep_depth thermo]
+theorem IsAdjointPair.conj_swap
+    {A B : CantorField P → CantorField P}
+    (hAB : IsAdjointPair (P := P) A B)
+    (f g : CantorField P) :
+    star (pairing f (B g)) = pairing g (A f) := by
+  calc
+    star (pairing f (B g))
+        = star (pairing (A f) g) := by rw [hAB f g]
+    _ = pairing g (A f) := by
+      unfold pairing
+      simp [mul_comm]
+
+@[simp, rep_depth thermo]
+theorem pairing_add_left (f₁ f₂ g : CantorField P) :
+    pairing (f₁ + f₂) g = pairing f₁ g + pairing f₂ g := by
+  simp [pairing, add_mul, Finset.sum_add_distrib]
+
+@[simp, rep_depth thermo]
+theorem pairing_add_right (f g₁ g₂ : CantorField P) :
+    pairing f (g₁ + g₂) = pairing f g₁ + pairing f g₂ := by
+  simp [pairing, mul_add, Finset.sum_add_distrib]
+
+@[simp, rep_depth thermo]
+theorem pairing_smul_left (c : ℂ) (f g : CantorField P) :
+    pairing (c • f) g = (star c) * pairing f g := by
+  simp [pairing, Finset.mul_sum, mul_left_comm, mul_comm]
+
+@[simp, rep_depth thermo]
+theorem pairing_smul_right (c : ℂ) (f g : CantorField P) :
+    pairing f (c • g) = c * pairing f g := by
+  simp [pairing, Finset.mul_sum, mul_assoc, mul_comm]
+
+/--
+Conjugate symmetry of the finite Cantor sesquilinear pairing.
+-/
+@[simp, rep_depth thermo]
+theorem pairing_conj_symm (f g : CantorField P) :
+    star (pairing f g) = pairing g f := by
+  unfold pairing
+  simp [mul_comm]
+
+@[simp, rep_depth thermo]
+theorem pairing_sum_left (s : Finset (PrimeMode P))
+    (F : PrimeMode P → CantorField P) (g : CantorField P) :
+    pairing (Finset.sum s fun p => F p) g = Finset.sum s (fun p => pairing (F p) g) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      unfold pairing
+      simp
+  | @insert a s ha ih =>
+      simp [ha, pairing_add_left, ih]
+
+@[simp, rep_depth thermo]
+theorem pairing_sum_right (f : CantorField P) (s : Finset (PrimeMode P))
+    (G : PrimeMode P → CantorField P) :
+    pairing f (Finset.sum s fun p => G p) = Finset.sum s (fun p => pairing f (G p)) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      unfold pairing
+      simp
+  | @insert a s ha ih =>
+      simp [ha, pairing_add_right, ih]
+
+/--
+If each prime-axis creation/annihilation channel is adjoint for the finite
+pairing, and the holonomy is unitary with real amplitudes, then `Q♯` is the
+adjoint partner of `Q`.
+
+This is a theorem-level closure surface over existing finite operators.
+-/
+@[rep_depth thermo]
+theorem Qsharp_isAdjointPair_of_unitary
+    (s : ℂ)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)) :
+    IsAdjointPair (P := P) (D.Q s) (D.Qsharp s) := by
+  intro f g
+  unfold Q Qsharp creationSupercharge dualAnnihilationSupercharge
+  have hQ :
+      (fun S => ∑ p : PrimeMode P, D.amplitude p * D.holonomy s p * creationPush p f S)
+        =
+      (∑ p : PrimeMode P, fun S => D.amplitude p * D.holonomy s p * creationPush p f S) := by
+    funext S
+    simp
+  have hQsharp :
+      (fun S => ∑ p : PrimeMode P, D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p g S)
+        =
+      (∑ p : PrimeMode P, fun S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p g S) := by
+    funext S
+    simp
+  rw [hQ, hQsharp]
+  rw [pairing_sum_left (P := P)
+      (s := (Finset.univ : Finset (PrimeMode P)))
+      (F := fun p S => D.amplitude p * D.holonomy s p * creationPush p f S) g]
+  rw [pairing_sum_right (P := P) f
+      (s := (Finset.univ : Finset (PrimeMode P)))
+      (G := fun p S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p g S)]
+  refine Finset.sum_congr rfl ?_
+  intro p hp
+  exact hAdjMode p f g
+
+/--
+Modewise reverse adjointness lifts to reverse adjointness of finite summed
+supercharges.
+-/
+@[rep_depth thermo]
+theorem Q_isAdjointPair_of_unitary
+    (s : ℂ)
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    IsAdjointPair (P := P) (D.Qsharp s) (D.Q s) := by
+  intro f g
+  unfold Q Qsharp creationSupercharge dualAnnihilationSupercharge
+  have hQ :
+      (fun S => ∑ p : PrimeMode P, D.amplitude p * D.holonomy s p * creationPush p g S)
+        =
+      (∑ p : PrimeMode P, fun S => D.amplitude p * D.holonomy s p * creationPush p g S) := by
+    funext S
+    simp
+  have hQsharp :
+      (fun S => ∑ p : PrimeMode P, D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+        =
+      (∑ p : PrimeMode P, fun S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) := by
+    funext S
+    simp
+  rw [hQsharp, hQ]
+  rw [pairing_sum_left (P := P)
+      (s := (Finset.univ : Finset (PrimeMode P)))
+      (F := fun p S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) g]
+  rw [pairing_sum_right (P := P) f
+      (s := (Finset.univ : Finset (PrimeMode P)))
+      (G := fun p S => D.amplitude p * D.holonomy s p * creationPush p g S)]
+  refine Finset.sum_congr rfl ?_
+  intro p hp
+  exact hAdjModeRev p f g
+
+/--
+Finite pairing self-adjointness of `op` as a consequence of `Q/Q♯` adjointness.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_unitary
+    (s : ℂ)
+    (hQQsharp : IsAdjointPair (P := P) (D.Q s) (D.Qsharp s))
+    (hQsharpQ : IsAdjointPair (P := P) (D.Qsharp s) (D.Q s)) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  intro f g
+  unfold op cantorDiracOperator
+  have h1 := hQQsharp f g
+  have h2 := hQsharpQ f g
+  calc
+    pairing (D.Q s f + D.Qsharp s f) g
+        = pairing (D.Q s f) g + pairing (D.Qsharp s f) g := by
+            simp [pairing_add_left]
+    _ = pairing f (D.Qsharp s g) + pairing f (D.Q s g) := by simp [h1, h2]
+    _ = pairing f (D.Qsharp s g + D.Q s g) := by
+          simp [pairing_add_right]
+    _ = pairing f (D.Q s g + D.Qsharp s g) := by abel_nf
+
+/--
+Direct finite self-adjointness corollary from modewise adjointness.
+
+If each prime-mode channel is adjoint in both directions, then the finite
+Cantor--Dirac operator `op = Q + Q♯` is self-adjoint for the finite pairing.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_modewiseAdjoint
+    (s : ℂ)
+    (hAdjMode :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
+    (hAdjModeRev :
+      ∀ p : PrimeMode P,
+        IsAdjointPair (P := P)
+          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  apply D.op_isSelfAdjoint_of_unitary (s := s)
+  · exact D.Qsharp_isAdjointPair_of_unitary (s := s) hAdjMode
+  · exact D.Q_isAdjointPair_of_unitary (s := s) hAdjModeRev
 
 end FiniteCantorZetaDirac
 

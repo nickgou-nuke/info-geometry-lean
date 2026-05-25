@@ -334,6 +334,23 @@ theorem observerDeviationControlledByZD_of_compressedDeviation_eq_zero
       norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
 
 /--
+If the compressed observer-deviation channel vanishes, then we obtain an
+explicit owner-side `ObserverDeviationControl` witness packet. This removes the
+need to carry the bare `ObserverDeviationControlledByZD` proposition on the
+compressed-deviation-zero branch.
+-/
+theorem observerDeviationControl_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    ObserverDeviationControl CIK obs :=
+  { bound := observerDeviationControlledByZD_of_compressedDeviation_eq_zero
+      (CIK := CIK) (obs := obs) hZero }
+
+/--
 If the compressed observer-deviation channel vanishes, then the observer defect
 residual itself vanishes by the exact projector-compression identity.
 -/
@@ -747,6 +764,24 @@ theorem observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
     observerDefectResidual_eq_zero_of_control_of_ZD_eq_zero
       (CIK := CIK) (obs := obs) c hZD
   exact (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).2 hResidual
+
+/--
+Under zero central defect, scalarized observer strain is equivalent to the
+existence of an explicit owner-side `ObserverDeviationControl` witness packet.
+This strengthens the zero-`Z_D` lane from a bare proposition to a concrete
+proof-carrying bound certificate.
+-/
+theorem observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    observerOrientationStrain CIK obs = 0 ↔ Nonempty (ObserverDeviationControl CIK obs) := by
+  constructor
+  · intro hStrain
+    exact ⟨observerDeviationControl_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain⟩
+  · rintro ⟨c⟩
+    exact observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) hZD c
 
 /--
 Under zero central defect, scalarized observer strain is equivalent to the exact

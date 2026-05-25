@@ -96,6 +96,32 @@ namespace CramerRaoNegLogVolumeAnomalyReadout
 variable {CI : ConformalInference E} {H : HessianGeometry E}
 
 /--
+Proof-carrying witness for the structured projector hypotheses used by the
+Weyl/KKT anomaly-collapse lane.
+
+This bundles the two projector-compatibility equalities so downstream callers
+can route through a single constructive packet rather than two separate bare
+hypotheses.
+-/
+@[rep_depth transport]
+structure StructuredProjectorWitness (CI : ConformalInference E) where
+  hProj : CI.P_MP_right = CI.P_MP
+  hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
+
+namespace StructuredProjectorWitness
+
+variable {CI : ConformalInference E}
+
+/-- Recover the original structured projector hypothesis surface from the witness. -/
+@[rep_depth transport]
+theorem hypotheses
+    (W : StructuredProjectorWitness CI) :
+    CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D :=
+  ⟨W.hProj, W.hLeft⟩
+
+end StructuredProjectorWitness
+
+/--
 Incompressibility kills the conformal anomaly scale when the anomaly readout is
 the negative Cramer-Rao log-volume mode.
 -/
@@ -276,6 +302,47 @@ theorem semanticCollapsePacket_of_incompressible
     CramerRaoNegLogVolumeAnomalyReadout.projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
       R hIncomp x hProj hLeft
   exact ⟨hPacket, hScaleZero, hObsDil.1, hObsDil.2⟩
+
+/--
+Witness-routed incompressible collapse of projector obstruction and the Weyl
+dilation commutator.
+
+This constructive route removes the separate bare projector equalities from the
+new theorem surface while preserving the compatibility theorem above.
+-/
+@[rep_depth transport]
+theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible_of_projectorWitness
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
+    (hIncomp : IncompressibleMongeAmpere H) (x : E)
+    (W : StructuredProjectorWitness CI) :
+    CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible
+      R hIncomp x W.hProj W.hLeft
+
+/--
+Witness-routed full Weyl/KKT semantic-collapse packet from the operatorial
+Souriau-Fisher metric-volume zero mode.
+
+This removes the explicit pair of structured projector equalities from the new
+route while preserving the older compatibility theorem surface.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_incompressible_of_projectorWitness
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
+    (hIncomp : IncompressibleMongeAmpere H) (x : E)
+    (W : StructuredProjectorWitness CI) :
+    (CI.chiralScale = CI.epsilon
+      ∧ CI.epsilon = ‖CI.projectorObstruction‖₊
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D
+          = -((2 : ℝ)⁻¹) • CI.projectorObstruction)
+      ∧ CI.chiralScale = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    semanticCollapsePacket_of_incompressible
+      R hIncomp x W.hProj W.hLeft
 
 end CramerRaoNegLogVolumeAnomalyReadout
 

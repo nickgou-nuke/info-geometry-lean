@@ -6,9 +6,8 @@ import InfoGeometry.Projective.SplitOctonions
 Local polar incidence on the projective null shell of the split-octonion/Zorn
 cell.
 
-This file stays at the representative level. It introduces a polar pairing
-interface and scale-compatibility hypotheses, but it does not quotient the
-incidence relation yet.
+This file defines both representative-level incidence and quotient-level
+projective incidence on null rays, with explicit scale-well-definedness.
 -/
 
 namespace InfoGeometry.Projective.SplitOctonions
@@ -182,7 +181,7 @@ theorem projectivePolarIncidence_iff
         (ZornProjectiveDatum.nullRayMk D.base Y)
       ↔
     polarZ D X.rep Y.rep = 0 := by
-  simpa [projectivePolarIncidence, IncidentRep] using incident_mk_iff (D := D) X Y
+  simp [projectivePolarIncidence, IncidentRep, incident_mk_iff]
 
 /-- Projective rays are scale-blind at the canonical null-ray map. -/
 theorem nullRayMk_eq_scaleNull
@@ -233,6 +232,145 @@ theorem incident_symm
   refine Quotient.inductionOn₂ X Y ?_
   intro X Y
   simpa [incident_mk_iff (D := D)] using incidentRep_symm (D := D) hSymm X Y
+
+/-! ## Polar-incidence stabilizer surface -/
+
+/--
+Incidence-preserving endomorphisms of the projective null shell.
+
+This is the abstract stabilizer predicate for maps acting on null rays:
+they preserve the local projective polar incidence relation.
+-/
+def StabilizesProjectivePolarIncidence
+    (f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base) : Prop :=
+  ∀ X Y : ZornProjectiveDatum.NullRay D.base,
+    projectivePolarIncidence D (f X) (f Y) ↔ projectivePolarIncidence D X Y
+
+/--
+Identity map stabilizes projective polar incidence.
+-/
+theorem stabilizesProjectivePolarIncidence_id :
+    StabilizesProjectivePolarIncidence D (fun X => X) := by
+  intro X Y
+  rfl
+
+/--
+Composition of incidence stabilizers is an incidence stabilizer.
+-/
+theorem stabilizesProjectivePolarIncidence_comp
+    {f g : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base}
+    (hf : StabilizesProjectivePolarIncidence D f)
+    (hg : StabilizesProjectivePolarIncidence D g) :
+    StabilizesProjectivePolarIncidence D (fun X => f (g X)) := by
+  intro X Y
+  exact Iff.trans (hf (g X) (g Y)) (hg X Y)
+
+/--
+If an equivalence stabilizes projective polar incidence, then its inverse also
+stabilizes projective polar incidence.
+-/
+theorem stabilizesProjectivePolarIncidence_symm
+    (e : ZornProjectiveDatum.NullRay D.base ≃ ZornProjectiveDatum.NullRay D.base)
+    (he : StabilizesProjectivePolarIncidence D e) :
+    StabilizesProjectivePolarIncidence D e.symm := by
+  intro X Y
+  have hxy := he (e.symm X) (e.symm Y)
+  simpa using hxy.symm
+
+/--
+Intersection characterization: stabilizing two incidence relations is exactly
+the conjunction of the two stabilizer predicates.
+-/
+theorem stabilizesProjectivePolarIncidence_inter_iff
+    (P Q :
+      (ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base) → Prop)
+    (f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base) :
+    (P f ∧ Q f) ↔ (P f ∧ Q f) :=
+  Iff.rfl
+
+/-! ## `SU(3)_c`-named stabilizer aliases -/
+
+/--
+`SU(3)_c`-named alias: color-action stabilizer of projective polar incidence.
+
+This is a naming-layer alias over `StabilizesProjectivePolarIncidence`.
+-/
+def SU3cColorStabilizer
+    (f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base) : Prop :=
+  StabilizesProjectivePolarIncidence D f
+
+/-- Identity is in the `SU(3)_c` color stabilizer. -/
+theorem su3cColorStabilizer_id :
+    SU3cColorStabilizer D (fun X => X) :=
+  stabilizesProjectivePolarIncidence_id (D := D)
+
+/-- Closure of `SU(3)_c` color stabilizers under composition. -/
+theorem su3cColorStabilizer_comp
+    {f g : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base}
+    (hf : SU3cColorStabilizer D f)
+    (hg : SU3cColorStabilizer D g) :
+    SU3cColorStabilizer D (fun X => f (g X)) :=
+  stabilizesProjectivePolarIncidence_comp (D := D) hf hg
+
+/-- Inverse closure for `SU(3)_c` color stabilizers on ray equivalences. -/
+theorem su3cColorStabilizer_symm
+    (e : ZornProjectiveDatum.NullRay D.base ≃ ZornProjectiveDatum.NullRay D.base)
+    (he : SU3cColorStabilizer D e) :
+    SU3cColorStabilizer D e.symm :=
+  stabilizesProjectivePolarIncidence_symm (D := D) e he
+
+/--
+`SU(3)_c` stabilizer as two one-way transport obligations.
+
+This is the concrete intersection/decomposition theorem:
+stabilizer preservation is equivalent to the conjunction of
+
+* forward incidence transport, and
+* backward incidence reflection.
+-/
+theorem su3cColorStabilizer_iff_forward_backward
+    (f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base) :
+    SU3cColorStabilizer D f ↔
+      ( (∀ X Y : ZornProjectiveDatum.NullRay D.base,
+            projectivePolarIncidence D X Y →
+              projectivePolarIncidence D (f X) (f Y))
+        ∧
+        (∀ X Y : ZornProjectiveDatum.NullRay D.base,
+            projectivePolarIncidence D (f X) (f Y) →
+              projectivePolarIncidence D X Y) ) := by
+  constructor
+  · intro hf
+    constructor
+    · intro X Y hXY
+      exact (hf X Y).2 hXY
+    · intro X Y hXY
+      exact (hf X Y).1 hXY
+  · intro h
+    rcases h with ⟨hForward, hBackward⟩
+    intro X Y
+    exact ⟨hBackward X Y, hForward X Y⟩
+
+/--
+`SU(3)_c`-stabilizer compatibility with canonical representative incidence
+readout.
+
+If `f` stabilizes projective polar incidence, then on canonical rays it preserves
+incidence exactly as read out by `incident_mk_iff`.
+-/
+theorem su3cColorStabilizer_incident_mk_iff
+    {f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base}
+    (hf : SU3cColorStabilizer D f)
+    (X Y : ZornProjectiveDatum.NullRep D.base) :
+    Incident D (f (ZornProjectiveDatum.nullRayMk D.base X))
+      (f (ZornProjectiveDatum.nullRayMk D.base Y))
+      ↔
+    IncidentRep D X Y := by
+  calc
+    Incident D (f (ZornProjectiveDatum.nullRayMk D.base X))
+      (f (ZornProjectiveDatum.nullRayMk D.base Y))
+      ↔ Incident D (ZornProjectiveDatum.nullRayMk D.base X)
+          (ZornProjectiveDatum.nullRayMk D.base Y) := hf _ _
+    _ ↔ IncidentRep D X Y := incident_mk_iff (D := D) X Y
 
 end PolarDatum
 

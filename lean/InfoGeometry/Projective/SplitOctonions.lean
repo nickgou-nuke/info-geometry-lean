@@ -85,6 +85,88 @@ variable {R : Type*} [CommRing R]
 def detZ3 (X : ZornCell R (R × R × R)) : R :=
   X.a * X.b - dot X.v X.w
 
+/-! ### Split Cayley-Dickson quaternion-pair dictionary -/
+
+/--
+Coordinate norm of a real-quaternion-style 4-tuple.
+
+For `q = (s, x₁, x₂, x₃)`, this is
+
+`s² + x₁² + x₂² + x₃²`.
+-/
+def quatNorm4 (q : R × R × R × R) : R :=
+  q.1 * q.1
+    + q.2.1 * q.2.1
+    + q.2.2.1 * q.2.2.1
+    + q.2.2.2 * q.2.2.2
+
+/--
+Split Cayley-Dickson norm of a pair of quaternion-coordinate 4-tuples.
+
+This is the split form
+
+`N(q₁, q₂) = N(q₁) - N(q₂)`.
+-/
+def splitQuaternionPairNorm
+    (q₁ q₂ : R × R × R × R) : R :=
+  quatNorm4 q₁ - quatNorm4 q₂
+
+/--
+Concrete Zorn cell attached to a split Cayley-Dickson quaternion pair.
+
+Writing
+
+`q₁ = (s, u₁)` and `q₂ = (t, u₂)`
+
+with imaginary-vector parts `u₁, u₂ ∈ R³`, we set
+
+* `a = s + t`,
+* `b = s - t`,
+* `v = u₂ + u₁`,
+* `w = u₂ - u₁`.
+
+Then
+
+`detZ3 = N(q₁) - N(q₂)`.
+-/
+def zornOfQuaternionPair
+    (q₁ q₂ : R × R × R × R) :
+    ZornCell R (R × R × R) where
+  a := q₁.1 + q₂.1
+  b := q₁.1 - q₂.1
+  v :=
+    (q₂.2.1 + q₁.2.1,
+      q₂.2.2.1 + q₁.2.2.1,
+      q₂.2.2.2 + q₁.2.2.2)
+  w :=
+    (q₂.2.1 - q₁.2.1,
+      q₂.2.2.1 - q₁.2.2.1,
+      q₂.2.2.2 - q₁.2.2.2)
+
+/--
+Concrete Zorn/Bektaş-Cayley-Dickson norm dictionary.
+
+Under `zornOfQuaternionPair`, the Zorn determinant agrees with the split
+Cayley-Dickson quaternion-pair norm:
+
+`detZ3(zorn(q₁,q₂)) = N(q₁) - N(q₂)`.
+
+This is the first algebraic bridge between the Zorn vector-matrix coordinates
+and the quaternion-pair presentation of split octonions.
+-/
+theorem detZ3_zornOfQuaternionPair
+    (q₁ q₂ : R × R × R × R) :
+    detZ3 (zornOfQuaternionPair q₁ q₂) =
+      splitQuaternionPairNorm q₁ q₂ := by
+  rcases q₁ with ⟨s, q₁tail⟩
+  rcases q₁tail with ⟨x₁, q₁tail₂⟩
+  rcases q₁tail₂ with ⟨x₂, x₃⟩
+  rcases q₂ with ⟨t, q₂tail⟩
+  rcases q₂tail with ⟨y₁, q₂tail₂⟩
+  rcases q₂tail₂ with ⟨y₂, y₃⟩
+  unfold detZ3 zornOfQuaternionPair splitQuaternionPairNorm quatNorm4 Coord3.dot
+  ring
+
 /--
 Concrete split-octonion/Zorn product on `R³` coordinates.
 

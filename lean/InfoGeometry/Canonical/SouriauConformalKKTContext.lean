@@ -822,6 +822,34 @@ theorem coneAdmissible
 
 end ConformalConeAdmissibilityWitness
 
+/--
+Proof-carrying witness for the operatorial conformal TKK socket.
+
+This narrows the remaining broad TKK hypothesis surface on the positive-partition
+lane: downstream routes can consume a witness object carrying both the selected
+parameter and the master-relation proof, instead of a free
+`tkkParameter`/`hTKK` pair.
+-/
+@[rep_depth transport]
+structure ConformalTKKWitness
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
+  tkkParameter : ℝ
+-- theorem-class: bridge
+  hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter
+
+namespace ConformalTKKWitness
+
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/-- Recover the TKK master relation from the proof-carrying witness. -/
+@[rep_depth transport]
+theorem tkkMasterRelation
+    (W : ConformalTKKWitness (α := α) (H := H) C) :
+    C.SatisfiesOperatorTKKMasterRelation W.tkkParameter :=
+  W.hTKK
+
+end ConformalTKKWitness
+
 namespace ConformalOperatorAdmissibilityWitness
 
 variable (W : ConformalOperatorAdmissibilityWitness (α := α) (H := H))
@@ -914,6 +942,28 @@ noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
   Y := Y
 
 /--
+Build the stable operator-admissibility witness directly from a positive-partition
+witness, a proof-carrying TKK witness, and a proof-carrying cone witness,
+without bare `tkkParameter`/`hTKK` or `hCone` arguments.
+-/
+@[rep_depth transport]
+noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
+  gibbs := C
+  weylGauge := weylGauge
+  tkkParameter := hTKK.tkkParameter
+  hTKK := hTKK.hTKK
+  hCone := hCone.hCone
+  partitionWitness := W
+  X := X
+  Y := Y
+
+/--
 Build the stable closure context directly from a positive-partition witness,
 without re-supplying a separate `hOperatorAdmissible` packet.
 -/
@@ -942,6 +992,21 @@ noncomputable def toClosureContextOfConeWitness
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
+
+/--
+Build the stable closure context directly from a positive-partition witness, a
+proof-carrying TKK witness, and a proof-carrying cone witness, without bare
+`tkkParameter`/`hTKK` or `hCone` theorem arguments.
+-/
+@[rep_depth transport]
+noncomputable def toClosureContextOfTKKConeWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
+  (W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y).toClosureContext
 
 end ConformalPositivePartitionWitness
 

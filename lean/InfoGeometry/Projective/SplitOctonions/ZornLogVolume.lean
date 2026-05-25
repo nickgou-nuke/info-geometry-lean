@@ -5,14 +5,23 @@ import Mathlib.Tactic
 /-!
 # InfoGeometry.Projective.SplitOctonions.ZornLogVolume
 
-Zorn determinant as logarithmic relative-volume potential.
+Concrete log-volume consequences of the Zorn determinant scaling law.
 
-This file proves the concrete log-volume consequences of the existing
-Zorn determinant scaling theorem
+Existing owner theorem from `ZornInstance`:
 
-  detZ (u • X) = u^2 detZ X.
+  detZ (u • X) = u^2 * detZ X.
 
-It adds no new projective datum and no new wrapper structure.
+This file proves:
+
+* positive determinant is preserved by unit scaling;
+* the negative log determinant shifts by `- log(u^2)`;
+* the relative-volume/Radon--Nikodym ratio is `detZ Y / detZ X`;
+* `-log RN(X,Y) = φ(Y) - φ(X)`, where `φ = -log detZ`;
+* the induced dimension-8 Jacobian exponent is `u^8`.
+
+No new projective datum.
+No self-concordance claim.
+No extended-real barrier claim.
 -/
 
 namespace InfoGeometry.Projective.SplitOctonions
@@ -31,7 +40,7 @@ def zornLogBarrier
   - Real.log (ZornCell.detZ B X)
 
 /--
-Radon–Nikodym-style relative Zorn volume factor:
+Radon--Nikodym-style relative Zorn volume factor:
 
   RN(X,Y) = detZ(Y) / detZ(X).
 -/
@@ -40,18 +49,15 @@ def zornRelativeVolumeRN
     (X Y : ZornCell ℝ V) : ℝ :=
   ZornCell.detZ B Y / ZornCell.detZ B X
 
-/--
-Unit coefficient is nonzero after coercion to `ℝ`.
--/
+/-- Coercion of a real unit is nonzero. -/
 private lemma unit_coe_ne_zero (u : ℝˣ) :
-    (u : ℝ) ≠ 0 := by
-  exact Units.ne_zero u
+    (u : ℝ) ≠ 0 :=
+  Units.ne_zero u
 
 /--
-The determinant remains positive under unit scaling if it was positive.
+The determinant remains positive under componentwise unit scaling.
 
-This is the concrete domain-preservation statement for the positive
-log-volume chart.
+This is the domain-preservation theorem for the positive log-volume chart.
 -/
 theorem detZ_scalarScale_pos
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
@@ -62,9 +68,9 @@ theorem detZ_scalarScale_pos
   exact mul_pos (sq_pos_of_ne_zero (unit_coe_ne_zero u)) hX
 
 /--
-Log-barrier scaling under componentwise Zorn unit scaling.
+Log-barrier shift under Zorn unit scaling.
 
-Because
+Since
 
   detZ(u • X) = u² detZ(X),
 
@@ -89,7 +95,8 @@ theorem zornLogBarrier_scalarScale
   ring
 
 /--
-Relative volume of a point with itself is `1` on the non-isotropic stratum.
+The relative Zorn volume of a point with itself is `1`
+on the non-isotropic stratum.
 -/
 theorem zornRelativeVolumeRN_self
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
@@ -124,30 +131,31 @@ Right scaling of the target multiplies the relative-volume factor by `u²`.
 -/
 theorem zornRelativeVolumeRN_scalarScale_right
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
-    (u : ℝˣ) (X Y : ZornCell ℝ V) :
+    (u : ℝˣ) (X Y : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
     zornRelativeVolumeRN B X (ZornCell.scalarScale u Y)
       =
     ((u : ℝ) ^ 2) * zornRelativeVolumeRN B X Y := by
   unfold zornRelativeVolumeRN
   rw [ZornCell.detZ_scalarScale]
-  ring
+  field_simp [hX]
 
 /--
 Left scaling of the base divides the relative-volume factor by `u²`.
 -/
 theorem zornRelativeVolumeRN_scalarScale_left
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
-    (u : ℝˣ) (X Y : ZornCell ℝ V) :
+    (u : ℝˣ) (X Y : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
     zornRelativeVolumeRN B (ZornCell.scalarScale u X) Y
       =
     (((u : ℝ) ^ 2)⁻¹) * zornRelativeVolumeRN B X Y := by
   unfold zornRelativeVolumeRN
   rw [ZornCell.detZ_scalarScale]
-  field_simp [pow_ne_zero 2 (unit_coe_ne_zero u)]
-  ring
+  field_simp [hX, pow_ne_zero 2 (unit_coe_ne_zero u)]
 
 /--
-If the determinant scales by `u²`, then the corresponding 8-dimensional
+If the Zorn determinant scales by `u²`, then the induced 8-dimensional
 volume Jacobian scales by `(u²)^4`.
 
 This is only the algebraic exponent calculation.
@@ -165,18 +173,15 @@ theorem zornVolumeJacobianOfScale_eq_pow_eight
   ring
 
 /--
-Negative logarithm of the 8-dimensional Jacobian is the logarithmic volume
-change of the determinant scale.
-
-This keeps the statement at the scalar algebraic level; no self-concordance
-or extended-real barrier is claimed here.
+The negative logarithm of the Zorn scale Jacobian can be rewritten using
+the simplified eighth-power form.
 -/
 theorem negLog_zornVolumeJacobianOfScale
     (u : ℝˣ) :
     - Real.log (zornVolumeJacobianOfScale u)
       =
     - Real.log ((u : ℝ) ^ 8) := by
-  rw [zornVolumeJacobianOfScale_eq_pow_eight]
+  rw [zornVolumeJacobianOfScale_eq_pow_eight u]
 
 end ZornCell
 

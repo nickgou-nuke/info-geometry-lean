@@ -335,9 +335,7 @@ theorem not_IsPosCone_of_detZ3_eq_zero
     (hX : detZ3 X = 0) :
     ¬ IsPosCone X := by
   intro hpos
-  have hzero : (0 : ℝ) < 0 := by
-    simpa [IsPosCone, hX] using hpos
-  exact (lt_irrefl (0 : ℝ)) hzero
+  simp [IsPosCone, hX] at hpos
 
 /--
 Positive-branch negative logarithmic volume change under Zorn multiplication.
@@ -394,6 +392,137 @@ theorem negLogVolume_change_mul3_left_of_ne_zero
     negLogVolume (mul3 X Y) - negLogVolume X = negLogVolume Y := by
   rw [negLogVolume_mul3_of_ne_zero X Y hX hY]
   ring
+
+/-! ### Explicit logarithmic barrier calculus on the diagonal Zorn chamber -/
+
+/--
+Diagonal concrete Zorn cell.
+
+This is not a new model; it is the diagonal subfamily of the existing
+coordinate-level `ZornCell ℝ (ℝ × ℝ × ℝ)`.
+-/
+def diag3 (a b : ℝ) : ZornCell ℝ (ℝ × ℝ × ℝ) where
+  a := a
+  b := b
+  v := (0, 0, 0)
+  w := (0, 0, 0)
+
+/-- The concrete determinant on the diagonal Zorn chamber is `a * b`. -/
+@[simp]
+theorem detZ3_diag3 (a b : ℝ) :
+    detZ3 (diag3 a b) = a * b := by
+  unfold detZ3 diag3 Coord3.dot
+  ring
+
+/-- The positive cone condition on the diagonal chamber follows from `a > 0`, `b > 0`. -/
+theorem IsPosCone_diag3
+    {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
+    IsPosCone (diag3 a b) := by
+  unfold IsPosCone
+  rw [detZ3_diag3]
+  exact mul_pos ha hb
+
+/--
+The logarithmic Zorn barrier on the diagonal chamber splits as
+
+`Φ(diag(a,b)) = -log a - log b`
+
+on the positive branch.
+-/
+theorem barrierPhi_diag3
+    {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
+    barrierPhi (diag3 a b) =
+      -Real.log a - Real.log b := by
+  unfold barrierPhi
+  rw [detZ3_diag3]
+  rw [Real.log_mul (ne_of_gt ha) (ne_of_gt hb)]
+  ring
+
+/--
+First derivative of the diagonal Zorn logarithmic barrier in the `a` coordinate:
+
+`∂/∂a (-log detZ3(diag(a,b))) = -1/a`.
+-/
+theorem hasDerivAt_barrierPhi_diag3_a
+    {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
+    HasDerivAt
+      (fun t : ℝ => barrierPhi (diag3 t b))
+      (-1 / a)
+      a := by
+  have hb_ne : b ≠ 0 := ne_of_gt hb
+  have ha_ne : a ≠ 0 := ne_of_gt ha
+  have hmul :
+      HasDerivAt (fun t : ℝ => t * b) b a := by
+    simpa using (hasDerivAt_id a).mul_const b
+  have hlog :
+      HasDerivAt
+        (fun t : ℝ => Real.log (t * b))
+        (((a * b)⁻¹) * b)
+        a := by
+    simpa [one_div, mul_comm, mul_left_comm, mul_assoc] using
+      (Real.hasDerivAt_log (mul_ne_zero ha_ne hb_ne)).comp a hmul
+  have hneg :
+      HasDerivAt
+        (fun t : ℝ => -Real.log (t * b))
+        (-(((a * b)⁻¹) * b))
+        a :=
+    hlog.neg
+  have hcoef : -(((a * b)⁻¹) * b) = -1 / a := by
+    field_simp [ha_ne, hb_ne]
+  rw [hcoef] at hneg
+  simpa [barrierPhi, detZ3, diag3, Coord3.dot] using hneg
+
+/--
+Second derivative / Hessian entry of the diagonal Zorn logarithmic barrier:
+
+`∂²/∂a² (-log a - log b) = 1/a²`.
+
+This is the one-dimensional Fisher/Koszul-Vinberg metric entry along the
+positive diagonal chamber.
+-/
+theorem hasDerivAt_barrierPhi_diag3_hessian_a
+    {a : ℝ} (ha : a ≠ 0) :
+    HasDerivAt
+      (fun t : ℝ => -1 / t)
+      (1 / (a ^ 2))
+      a := by
+  have hfun : (fun t : ℝ => -1 / t) = (fun t : ℝ => -t⁻¹) := by
+    funext t
+    rw [div_eq_mul_inv]
+    ring
+  rw [hfun]
+  have hinv :
+      HasDerivAt (fun t : ℝ => t⁻¹) (-(a ^ 2)⁻¹) a :=
+    hasDerivAt_inv ha
+  have hneg :
+      HasDerivAt (fun t : ℝ => -t⁻¹) ((a ^ 2)⁻¹) a := by
+    simpa using hinv.neg
+  have hcoef : (a ^ 2)⁻¹ = 1 / (a ^ 2) := by
+    simp [one_div]
+  rw [← hcoef]
+  exact hneg
+
+/--
+Quantitative barrier blow-up estimate.
+
+If a positive Zorn determinant is below `exp (-M)`, then the logarithmic
+barrier is at least `M`. This is the proof-bearing finite form of the statement
+that the barrier diverges when the determinant approaches the isotropic
+boundary.
+-/
+theorem barrierPhi_ge_of_detZ3_le_exp_neg
+    (X : ZornCell ℝ (ℝ × ℝ × ℝ))
+    (hX : IsPosCone X)
+    (M : ℝ)
+    (hsmall : detZ3 X ≤ Real.exp (-M)) :
+    M ≤ barrierPhi X := by
+  unfold IsPosCone at hX
+  unfold barrierPhi
+  have hlog_le :
+      Real.log (detZ3 X) ≤ Real.log (Real.exp (-M)) :=
+    Real.log_le_log hX hsmall
+  rw [Real.log_exp] at hlog_le
+  linarith
 
 /-- Ambient coordinate pairing on concrete Zorn cells. -/
 def coordPair (X Y : ZornCell ℝ (ℝ × ℝ × ℝ)) : ℝ :=
@@ -542,6 +671,143 @@ theorem logDetBregman_eq_fenchelGap_at_contact
   ring
 
 end LogDet
+
+/-! ### Concrete polar form for the Zorn determinant -/
+
+variable {R : Type*} [CommRing R]
+
+/-- Componentwise addition of concrete `R³` Zorn cells. -/
+def add3 (X Y : ZornCell R (R × R × R)) :
+    ZornCell R (R × R × R) where
+  a := X.a + Y.a
+  b := X.b + Y.b
+  v :=
+    (X.v.1 + Y.v.1,
+      X.v.2.1 + Y.v.2.1,
+      X.v.2.2 + Y.v.2.2)
+  w :=
+    (X.w.1 + Y.w.1,
+      X.w.2.1 + Y.w.2.1,
+      X.w.2.2 + Y.w.2.2)
+
+/-- Componentwise scalar multiplication of concrete `R³` Zorn cells. -/
+def scale3 (lam : R) (X : ZornCell R (R × R × R)) :
+    ZornCell R (R × R × R) where
+  a := lam * X.a
+  b := lam * X.b
+  v := (lam * X.v.1, lam * X.v.2.1, lam * X.v.2.2)
+  w := (lam * X.w.1, lam * X.w.2.1, lam * X.w.2.2)
+
+/--
+The unhalved polar form of the concrete Zorn determinant:
+
+`polarDetZ3 X Y = detZ3 (X + Y) - detZ3 X - detZ3 Y`.
+
+The vanishing relation is unaffected by the omitted factor `1/2`.
+-/
+def polarDetZ3
+    (X Y : ZornCell R (R × R × R)) : R :=
+  detZ3 (add3 X Y) - detZ3 X - detZ3 Y
+
+/--
+Coordinate formula for the concrete Zorn polar form.
+-/
+theorem polarDetZ3_formula
+    (X Y : ZornCell R (R × R × R)) :
+    polarDetZ3 X Y =
+      X.a * Y.b + Y.a * X.b
+        - Coord3.dot X.v Y.w
+        - Coord3.dot Y.v X.w := by
+  rcases X with ⟨a, b, x, y⟩
+  rcases x with ⟨x1, x23⟩
+  rcases x23 with ⟨x2, x3⟩
+  rcases y with ⟨y1, y23⟩
+  rcases y23 with ⟨y2, y3⟩
+  rcases Y with ⟨a', b', u, v⟩
+  rcases u with ⟨u1, u23⟩
+  rcases u23 with ⟨u2, u3⟩
+  rcases v with ⟨v1, v23⟩
+  rcases v23 with ⟨v2, v3⟩
+  unfold polarDetZ3 add3 detZ3 Coord3.dot
+  ring
+
+/-- The concrete Zorn polar form is symmetric. -/
+theorem polarDetZ3_symm
+    (X Y : ZornCell R (R × R × R)) :
+    polarDetZ3 X Y = polarDetZ3 Y X := by
+  rw [polarDetZ3_formula, polarDetZ3_formula]
+  ring
+
+/-- The concrete determinant is quadratic under componentwise scaling. -/
+theorem detZ3_scale3
+    (lam : R) (X : ZornCell R (R × R × R)) :
+    detZ3 (scale3 lam X) = lam ^ 2 * detZ3 X := by
+  rcases X with ⟨a, b, x, y⟩
+  rcases x with ⟨x1, x23⟩
+  rcases x23 with ⟨x2, x3⟩
+  rcases y with ⟨y1, y23⟩
+  rcases y23 with ⟨y2, y3⟩
+  unfold detZ3 scale3 Coord3.dot
+  ring
+
+/-- Left homogeneity of the concrete Zorn polar form. -/
+theorem polarDetZ3_scale_left
+    (lam : R) (X Y : ZornCell R (R × R × R)) :
+    polarDetZ3 (scale3 lam X) Y = lam * polarDetZ3 X Y := by
+  rcases X with ⟨a, b, x, y⟩
+  rcases x with ⟨x1, x23⟩
+  rcases x23 with ⟨x2, x3⟩
+  rcases y with ⟨y1, y23⟩
+  rcases y23 with ⟨y2, y3⟩
+  rcases Y with ⟨a', b', u, v⟩
+  rcases u with ⟨u1, u23⟩
+  rcases u23 with ⟨u2, u3⟩
+  rcases v with ⟨v1, v23⟩
+  rcases v23 with ⟨v2, v3⟩
+  unfold polarDetZ3 add3 scale3 detZ3 Coord3.dot
+  ring
+
+/-- Right homogeneity of the concrete Zorn polar form. -/
+theorem polarDetZ3_scale_right
+    (mu : R) (X Y : ZornCell R (R × R × R)) :
+    polarDetZ3 X (scale3 mu Y) = mu * polarDetZ3 X Y := by
+  rw [polarDetZ3_symm X (scale3 mu Y)]
+  rw [polarDetZ3_scale_left mu Y X]
+  rw [polarDetZ3_symm Y X]
+
+/-- Bilinear scaling of the concrete Zorn polar form. -/
+theorem polarDetZ3_scale_both
+    (lam mu : R) (X Y : ZornCell R (R × R × R)) :
+    polarDetZ3 (scale3 lam X) (scale3 mu Y) =
+      (lam * mu) * polarDetZ3 X Y := by
+  rw [polarDetZ3_scale_left lam X (scale3 mu Y)]
+  rw [polarDetZ3_scale_right mu X Y]
+  ring
+
+/--
+Concrete projective polar incidence is independent of nonzero scalar
+representatives.
+
+This is the coordinate-level version of projective polar well-definedness:
+scaling either Zorn representative by a nonzero scalar preserves the vanishing
+of the polar form.
+-/
+theorem polarDetZ3_zero_iff_scale_both
+    {𝕜 : Type*} [Field 𝕜]
+    {lam mu : 𝕜}
+    (hlam : lam ≠ 0) (hmu : mu ≠ 0)
+    (X Y : ZornCell 𝕜 (𝕜 × 𝕜 × 𝕜)) :
+    polarDetZ3 X Y = 0
+      ↔
+    polarDetZ3 (scale3 lam X) (scale3 mu Y) = 0 := by
+  rw [polarDetZ3_scale_both]
+  constructor
+  · intro h
+    rw [h, mul_zero]
+  · intro h
+    rcases mul_eq_zero.mp h with hprod | hpolar
+    · exact False.elim ((mul_ne_zero hlam hmu) hprod)
+    · exact hpolar
 
 end ZornCell
 

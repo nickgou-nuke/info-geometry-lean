@@ -372,6 +372,47 @@ theorem su3cColorStabilizer_incident_mk_iff
           (ZornProjectiveDatum.nullRayMk D.base Y) := hf _ _
     _ ↔ IncidentRep D X Y := incident_mk_iff (D := D) X Y
 
+/--
+Erlangen-style incidence neighborhood invariance.
+
+For an incidence-preserving action `f`, membership in incidence neighborhoods
+is invariant along `f`:
+
+`Y` is incident to `X` iff `f Y` is incident to `f X`.
+-/
+theorem su3cColorStabilizer_incidenceNeighborhood_iff
+    {f : ZornProjectiveDatum.NullRay D.base → ZornProjectiveDatum.NullRay D.base}
+    (hf : SU3cColorStabilizer D f)
+    (X Y : ZornProjectiveDatum.NullRay D.base) :
+    Incident D X Y ↔ Incident D (f X) (f Y) := by
+  exact (hf X Y).symm
+
+/--
+Erlangen-style neighborhood transport for ray equivalences.
+
+When `e` is an equivalence that stabilizes projective polar incidence, it
+transports the incidence neighborhood of `X` exactly onto the incidence
+neighborhood of `e X`.
+-/
+theorem su3cColorStabilizer_incidenceNeighborhood_image_eq
+    (e : ZornProjectiveDatum.NullRay D.base ≃ ZornProjectiveDatum.NullRay D.base)
+    (he : SU3cColorStabilizer D e)
+    (X : ZornProjectiveDatum.NullRay D.base) :
+    Set.image e {Y : ZornProjectiveDatum.NullRay D.base | Incident D X Y}
+      =
+    {Y : ZornProjectiveDatum.NullRay D.base | Incident D (e X) Y} := by
+  ext Y
+  constructor
+  · intro hY
+    rcases hY with ⟨Z, hZ, rfl⟩
+    exact (he X Z).2 hZ
+  · intro hY
+    refine ⟨e.symm Y, ?_, by simp⟩
+    have hiff := he X (e.symm Y)
+    have hstep : Incident D (e X) (e (e.symm Y)) := by
+      simpa using hY
+    exact hiff.mp (by simpa using hstep)
+
 end PolarDatum
 
 end ZornProjectiveDatum

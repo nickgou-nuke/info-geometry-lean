@@ -45,7 +45,7 @@ namespace ZornCell
 variable {𝕜 : Type u} [CommRing 𝕜]
 
 /-- Concrete addition of Zorn cells over `𝕜³`. -/
-def add3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : ZornCell 𝕜 (Vec3 𝕜) where
+def add3c (X Y : ZornCell 𝕜 (Vec3 𝕜)) : ZornCell 𝕜 (Vec3 𝕜) where
   a := X.a + Y.a
   b := X.b + Y.b
   v := X.v + Y.v
@@ -57,7 +57,7 @@ def detZ3c (X : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
 
 /-- Polarization numerator `det(X + Y) - det(X) - det(Y)`. -/
 def polarZ3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
-  detZ3c (add3 X Y) - detZ3c X - detZ3c Y
+  detZ3c (add3c X Y) - detZ3c X - detZ3c Y
 
 /-- Explicit expanded Zorn polarization numerator. -/
 def polarFormula3 (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
@@ -70,7 +70,7 @@ def BZ3 [Inv 𝕜] (X Y : ZornCell 𝕜 (Vec3 𝕜)) : 𝕜 :=
 /-- Expanding determinant polarization gives the standard explicit formula. -/
 theorem polarZ3_eq_formula (X Y : ZornCell 𝕜 (Vec3 𝕜)) :
     polarZ3 X Y = polarFormula3 X Y := by
-  unfold polarZ3 polarFormula3 detZ3c add3 Vec3.dot
+  unfold polarZ3 polarFormula3 detZ3c add3c Vec3.dot
   simp [Prod.fst_add, Prod.snd_add, add_mul, mul_add, sub_eq_add_neg]
   ring_nf
 

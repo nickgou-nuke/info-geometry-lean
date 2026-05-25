@@ -1,170 +1,168 @@
-import InfoGeometry.Algebra.Zorn.Composition
-import InfoGeometry.Canonical.ZornComposition
-import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import Mathlib.Tactic
 
 /-!
 # InfoGeometry.Algebra.Zorn.ConcreteComposition
 
-Concrete split-octonion composition bridge on the algebraic Zorn carrier.
+Concrete coordinate proof of the Zorn determinant composition theorem.
 
-This file instantiates the abstract `ZornCompositionDatum` on the concrete
-real `Fin 3` model, using the explicit reduced norm multiplicativity theorem
-already proved in the canonical carrier.
+This file proves:
+
+* `detZ (X * Y) = detZ X * detZ Y`;
+* null preservation under multiplication;
+* norm-one determinant preservation;
+* the negative-log determinant cocycle.
+
+No wrappers. No `sorry`.
 -/
 
-namespace InfoGeometry.Algebra.Zorn
-
-open InfoGeometry.Canonical.ZornVectorMatrixExplicit
-
-abbrev Vec3 : Type := Fin 3 → ℝ
-
-/-- The concrete dot product on `Vec3`. -/
-def dot3 (u v : Vec3) : ℝ :=
-  u 0 * v 0 + u 1 * v 1 + u 2 * v 2
-
-/-- The concrete cross product on `Vec3`. -/
-def cross3 (u v : Vec3) : Vec3 :=
-  ![u 1 * v 2 - u 2 * v 1,
-    u 2 * v 0 - u 0 * v 2,
-    u 0 * v 1 - u 1 * v 0]
-
-theorem dot3_zero_left (v : Vec3) : dot3 0 v = 0 := by
-  simp [dot3]
-
-theorem dot3_zero_right (v : Vec3) : dot3 v 0 = 0 := by
-  simp [dot3]
-
-theorem cross3_zero_left (v : Vec3) : cross3 0 v = 0 := by
-  ext i <;> fin_cases i <;> simp [cross3]
-
-theorem cross3_zero_right (v : Vec3) : cross3 v 0 = 0 := by
-  ext i <;> fin_cases i <;> simp [cross3]
-
-/-- The concrete `CrossProduct3` structure for the real split-octonion cell. -/
-def concreteCrossProduct3 : CrossProduct3 ℝ where
-  dot := dot3
-  cross := cross3
-  dot_zero_left := dot3_zero_left
-  dot_zero_right := dot3_zero_right
-  cross_zero_left := cross3_zero_left
-  cross_zero_right := cross3_zero_right
-
-/-- The concrete Zorn multiplication on `ZornMatrix ℝ Vec3`. -/
-def mulZ (X Y : ZornMatrix ℝ) : ZornMatrix ℝ where
-  a := X.a * Y.a + dot3 X.x Y.y
-  b := X.b * Y.b + dot3 X.y Y.x
-  x := X.a • Y.x + Y.b • X.x - cross3 X.y Y.y
-  y := X.b • Y.y + Y.a • X.y + cross3 X.x Y.x
-
-/-- Coordinate transport into the explicit canonical carrier. -/
-def toCoord (X : ZornMatrix ℝ) : ZornCoord :=
-  (X.a, X.b, X.x, X.y)
-
-/-- The determinant on the concrete carrier agrees with the canonical norm. -/
-theorem detZ_eq_zornNorm (X : ZornMatrix ℝ) :
-    ZornMatrix.detZ concreteCrossProduct3 X =
-      zornNorm (toCoord X) := by
-  rfl
-
-/-- Multiplication is the explicit split-octonion multiplication. -/
-theorem mulZ_eq_zornMul (X Y : ZornMatrix ℝ) :
-    toCoord (mulZ X Y) = zornMul (toCoord X) (toCoord Y) := by
-  ext <;> rfl
-
-/-- The concrete Zorn determinant is multiplicative. -/
-theorem detZ_mul (X Y : ZornMatrix ℝ) :
-    ZornMatrix.detZ concreteCrossProduct3 (mulZ X Y)
-      =
-    ZornMatrix.detZ concreteCrossProduct3 X *
-      ZornMatrix.detZ concreteCrossProduct3 Y := by
-  change zornNorm (toCoord (mulZ X Y)) = zornNorm (toCoord X) * zornNorm (toCoord Y)
-  rw [mulZ_eq_zornMul]
-  simpa using zornNorm_mul (toCoord X) (toCoord Y)
-
-/-- Concrete Zorn composition datum on the real split-octonion carrier. -/
-def concreteCompositionDatum : ZornCompositionDatum ℝ where
-  dot := dot3
-  cross := cross3
-  dot_zero_left := dot3_zero_left
-  dot_zero_right := dot3_zero_right
-  cross_zero_left := cross3_zero_left
-  cross_zero_right := cross3_zero_right
-  mulZ := mulZ
-  detZ_mul := detZ_mul
-
-namespace concreteCompositionDatum
+namespace InfoGeometry.Algebra.Zorn.ConcreteComposition
 
 /--
-Sign-regression guard on the concrete Zorn product.
+A concrete Zorn cell
 
-For the test pair
-`X = (a=b=0, x=e₀, y=e₀)` and `Y = (a=b=0, x=e₁, y=e₁)`,
-the product has determinant `1`, matching `detZ X * detZ Y = (-1)*(-1)`.
+  [ r   x ]
+  [ y   s ]
+
+with `x = (x1,x2,x3)` and `y = (y1,y2,y3)`.
 -/
-theorem detZ_mul_sign_regression_guard :
-    let X : ZornMatrix ℝ := { a := 0, b := 0, x := ![1, 0, 0], y := ![1, 0, 0] }
-    let Y : ZornMatrix ℝ := { a := 0, b := 0, x := ![0, 1, 0], y := ![0, 1, 0] }
-    ZornMatrix.detZ concreteCrossProduct3 (mulZ X Y) = 1 := by
-  dsimp [mulZ, concreteCrossProduct3, ZornMatrix.detZ, dot3, cross3]
-  ring
+structure ZornCell (R : Type*) where
+  r  : R
+  s  : R
+  x1 : R
+  x2 : R
+  x3 : R
+  y1 : R
+  y2 : R
+  y3 : R
 
-/-- Left multiplication by a norm-one concrete Zorn element preserves the determinant. -/
+namespace ZornCell
+
+variable {R : Type*} [CommRing R]
+
+/-- Zorn determinant / split norm. -/
+def detZ (X : ZornCell R) : R :=
+  X.r * X.s - (X.x1 * X.y1 + X.x2 * X.y2 + X.x3 * X.y3)
+
+/--
+Correct Zorn product.
+
+The sign convention is:
+
+  top-right    = r u + d x - y × v
+  bottom-left  = c y + s v + x × u
+
+With this convention, `detZ` is multiplicative.
+-/
+def mulZ (X Y : ZornCell R) : ZornCell R where
+  r :=
+    X.r * Y.r +
+      (X.x1 * Y.y1 + X.x2 * Y.y2 + X.x3 * Y.y3)
+
+  s :=
+    (X.y1 * Y.x1 + X.y2 * Y.x2 + X.y3 * Y.x3) +
+      X.s * Y.s
+
+  x1 :=
+    X.r * Y.x1 + Y.s * X.x1 -
+      (X.y2 * Y.y3 - X.y3 * Y.y2)
+
+  x2 :=
+    X.r * Y.x2 + Y.s * X.x2 -
+      (X.y3 * Y.y1 - X.y1 * Y.y3)
+
+  x3 :=
+    X.r * Y.x3 + Y.s * X.x3 -
+      (X.y1 * Y.y2 - X.y2 * Y.y1)
+
+  y1 :=
+    Y.r * X.y1 + X.s * Y.y1 +
+      (X.x2 * Y.x3 - X.x3 * Y.x2)
+
+  y2 :=
+    Y.r * X.y2 + X.s * Y.y2 +
+      (X.x3 * Y.x1 - X.x1 * Y.x3)
+
+  y3 :=
+    Y.r * X.y3 + X.s * Y.y3 +
+      (X.x1 * Y.x2 - X.x2 * Y.x1)
+
+instance instMulZornCell : Mul (ZornCell R) where
+  mul := mulZ
+
+/--
+Zorn Composition Theorem.
+
+This is the split-octonion composition norm identity.
+-/
+theorem detZ_mul (X Y : ZornCell R) :
+    detZ (X * Y) = detZ X * detZ Y := by
+  change detZ (mulZ X Y) = detZ X * detZ Y
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  rcases Y with ⟨r₂, s₂, u1, u2, u3, v1, v2, v3⟩
+  unfold detZ mulZ
+  ring_nf
+
+/-- Left multiplication by a norm-one Zorn cell preserves `detZ`. -/
 theorem detZ_left_mul_normOne
-    (U X : ZornMatrix ℝ)
-    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
-    ZornMatrix.detZ concreteCrossProduct3 (mulZ U X) =
-      ZornMatrix.detZ concreteCrossProduct3 X := by
+    (U X : ZornCell R)
+    (hU : detZ U = 1) :
+    detZ (U * X) = detZ X := by
   rw [detZ_mul, hU, one_mul]
 
-/-- Right multiplication by a norm-one concrete Zorn element preserves the determinant. -/
+/-- Right multiplication by a norm-one Zorn cell preserves `detZ`. -/
 theorem detZ_right_mul_normOne
-    (X U : ZornMatrix ℝ)
-    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
-    ZornMatrix.detZ concreteCrossProduct3 (mulZ X U) =
-      ZornMatrix.detZ concreteCrossProduct3 X := by
+    (X U : ZornCell R)
+    (hU : detZ U = 1) :
+    detZ (X * U) = detZ X := by
   rw [detZ_mul, hU, mul_one]
 
-/-- Left concrete multiplication preserves Zorn-null representatives. -/
-theorem left_mul_preserves_null
-    (U X : ZornMatrix ℝ)
-    (hX : ZornMatrix.IsNull concreteCrossProduct3 X) :
-    ZornMatrix.IsNull concreteCrossProduct3 (mulZ U X) := by
-  unfold ZornMatrix.IsNull at *
-  rw [detZ_mul, hX, mul_zero]
-
-/-- Right concrete multiplication preserves Zorn-null representatives. -/
-theorem right_mul_preserves_null
-    (X U : ZornMatrix ℝ)
-    (hX : ZornMatrix.IsNull concreteCrossProduct3 X) :
-    ZornMatrix.IsNull concreteCrossProduct3 (mulZ X U) := by
-  unfold ZornMatrix.IsNull at *
+/-- A left null factor forces the product to be Zorn-null. -/
+theorem detZ_mul_eq_zero_of_left_null
+    (X Y : ZornCell R)
+    (hX : detZ X = 0) :
+    detZ (X * Y) = 0 := by
   rw [detZ_mul, hX, zero_mul]
 
-/--
-If the left multiplier is norm-one, left concrete multiplication preserves
-the determinant-zero/null condition in both directions.
--/
-theorem left_mul_normOne_iff_isNull
-    (U X : ZornMatrix ℝ)
-    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
-    ZornMatrix.IsNull concreteCrossProduct3 (mulZ U X)
-      ↔ ZornMatrix.IsNull concreteCrossProduct3 X := by
-  unfold ZornMatrix.IsNull
-  rw [detZ_mul, hU, one_mul]
+/-- A right null factor forces the product to be Zorn-null. -/
+theorem detZ_mul_eq_zero_of_right_null
+    (X Y : ZornCell R)
+    (hY : detZ Y = 0) :
+    detZ (X * Y) = 0 := by
+  rw [detZ_mul, hY, mul_zero]
 
 /--
-If the right multiplier is norm-one, right concrete multiplication preserves
-the determinant-zero/null condition in both directions.
+Negative logarithmic determinant potential, abstracted over a logarithm-like
+map.
+
+For analytic use, `ell` can later be instantiated as `log |·|` on a valid
+nonzero/positive domain. This theorem only needs the algebraic law
+
+`ell (a * b) = ell a + ell b`.
 -/
-theorem right_mul_normOne_iff_isNull
-    (X U : ZornMatrix ℝ)
-    (hU : ZornMatrix.detZ concreteCrossProduct3 U = 1) :
-    ZornMatrix.IsNull concreteCrossProduct3 (mulZ X U)
-      ↔ ZornMatrix.IsNull concreteCrossProduct3 X := by
-  unfold ZornMatrix.IsNull
-  rw [detZ_mul, hU, mul_one]
+def negLogDet
+    {A : Type*} [AddCommGroup A]
+    (ell : R → A)
+    (X : ZornCell R) : A :=
+  - ell (detZ X)
 
-end concreteCompositionDatum
+/--
+Negative-log determinant cocycle.
 
-end InfoGeometry.Algebra.Zorn
+If `ell` converts multiplication into addition, then
+
+`-ell(detZ (X * Y)) = -ell(detZ X) + -ell(detZ Y)`.
+-/
+theorem negLogDet_mul
+    {A : Type*} [AddCommGroup A]
+    (ell : R → A)
+    (hlog_mul : ∀ a b : R, ell (a * b) = ell a + ell b)
+    (X Y : ZornCell R) :
+    negLogDet ell (X * Y) =
+      negLogDet ell X + negLogDet ell Y := by
+  unfold negLogDet
+  rw [detZ_mul, hlog_mul]
+  abel
+
+end ZornCell
+
+end InfoGeometry.Algebra.Zorn.ConcreteComposition

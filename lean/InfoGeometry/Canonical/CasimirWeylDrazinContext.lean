@@ -249,8 +249,46 @@ theorem sourcedGenerator_boundary_excitation_eq_background_of_deviationControlle
       (E := E) CIK C hZD).2 hControl
 
 /--
+Under zero central defect, Drazin-complement boundary excitation collapse is
+already equivalent to the smaller owner-side scalarized observer strain witness.
+This removes the larger explicit `ObserverDeviationControlledByZD` packet on the
+exact zero-`Z_D` lane.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_iff_strain_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector
+        ↔ observerOrientationStrain CIK C.observer = 0 := by
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero
+      (E := E) CIK C hZD).trans
+      (observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
+        (CIK := CIK) (obs := C.observer) hZD).symm
+
+/--
+Under zero central defect, zero scalarized observer strain constructively forces
+Drazin-complement boundary excitation collapse to the background block.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_of_strain_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
+    (hStrain : observerOrientationStrain CIK C.observer = 0) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector := by
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_strain_eq_zero_of_ZD_eq_zero
+      (E := E) CIK C hZD).2 hStrain
+
+/--
 Compressed-deviation-zero is a constructive owner route forcing the sourced
- generator to collapse to the background flow.
+generator to collapse to the background flow.
 -/
 @[rep_depth transport]
 theorem sourcedGenerator_eq_background_of_compressedDeviation_eq_zero

@@ -784,6 +784,31 @@ theorem observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero
       (CIK := CIK) (obs := obs) hZD c
 
 /--
+Zero scalarized observer strain produces an explicit owner-side deviation-control
+witness packet.
+-/
+theorem nonempty_observerDeviationControl_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    Nonempty (ObserverDeviationControl CIK obs) := by
+  exact ⟨observerDeviationControl_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain⟩
+
+/--
+Under zero central defect, the existence of an explicit owner-side deviation-control
+witness packet forces zero scalarized observer strain.
+-/
+theorem observerOrientationStrain_eq_zero_of_nonempty_control_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
+    (hControl : Nonempty (ObserverDeviationControl CIK obs)) :
+    observerOrientationStrain CIK obs = 0 := by
+  rcases hControl with ⟨c⟩
+  exact observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
+    (CIK := CIK) (obs := obs) hZD c
+
+/--
 Under zero central defect, scalarized observer strain is equivalent to the exact
 owner-side `Z_D` deviation-control predicate. This lets downstream callers use
 whichever witness they already own instead of carrying both packets.

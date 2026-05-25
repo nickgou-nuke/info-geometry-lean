@@ -4570,6 +4570,58 @@ private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSControl
     (hControl := hControl) (hPair := hPair)
 
 /--
+KMS-control / pairing-witness cocycle-sourced capstone variant with the
+ZPE/gravity owner packet and a single fluid-production witness.
+
+This removes the explicit `(hRankPos, hEin)` theorem surface for callers that
+already own the proof-carrying `ZPEGravityWitness` packet.
+-/
+private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSControl_pairingFluidWitness_of_zpeGravityWitness
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hZPEGravity : ZPEGravityWitness (E := E) S c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (Wfluid : FluidHelicityProductionWitness (E := E) A B_mp B_dr)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (K : InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G)
+    (ωKMS :
+      Nat → InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G →L[ℝ] ℝ)
+    (β : ℝ)
+    (hControl :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSControl
+        n Tflow K ωKMS β)
+    (hPair :
+      KMSPairingWitness (n := n) (E := G) Tflow σ u hBridge K ωKMS β) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSControl_pairingFluidWitness
+    (S := S) (hRankPos := hZPEGravity.hRankPos) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) (hEin := hZPEGravity.hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Wfluid := Wfluid)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (K := K) (ωKMS := ωKMS) (β := β)
+    (hControl := hControl) (hPair := hPair)
+
+/--
 Integer-time cocycle-match capstone variant:
 the RN cocycle bridge discharges the topological Bekenstein clause from
 `hMatch` by deriving the generator-lift condition internally.

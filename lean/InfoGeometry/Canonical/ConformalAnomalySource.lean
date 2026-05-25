@@ -1040,6 +1040,18 @@ theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeBit
   exact CI.chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
+/--
+Constructive zero-anomaly endpoint using the single proof-carrying
+Kähler/log-det/unit-relative-volume witness packet.
+-/
+theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    CI.chiralAnomalyOperator = 0 := by
+  exact CI.chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
+    (M := M) W.scale_from_kahler W.unit_relative_volume
+
 end ConformalInference
 
 namespace CertifiedInverseKernel

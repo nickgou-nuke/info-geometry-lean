@@ -731,6 +731,28 @@ theorem polarDetZ3_formula
   unfold polarDetZ3 add3 detZ3 Coord3.dot
   ring
 
+/--
+Self-pairing of the concrete Zorn polar form:
+
+`polarDetZ3 X X = 2 * detZ3 X`.
+-/
+theorem polarDetZ3_self
+    (X : ZornCell R (R × R × R)) :
+    polarDetZ3 X X = 2 * detZ3 X := by
+  rw [polarDetZ3_formula]
+  unfold detZ3
+  ring
+
+/--
+A Zorn-null point is self-orthogonal for the concrete Zorn polar form.
+-/
+theorem polarDetZ3_self_of_detZ3_eq_zero
+    (X : ZornCell R (R × R × R))
+    (hX : detZ3 X = 0) :
+    polarDetZ3 X X = 0 := by
+  rw [polarDetZ3_self, hX]
+  ring
+
 /-- The concrete Zorn polar form is symmetric. -/
 theorem polarDetZ3_symm
     (X Y : ZornCell R (R × R × R)) :

@@ -156,9 +156,13 @@ theorem asanoPoly_zero_at_mobiusRoot_second
     (hden : C + D * z₁ ≠ 0) :
     asanoPoly A B C D z₁
       (-(A + B * z₁) / (C + D * z₁)) = 0 := by
-  rw [asanoPoly_rewrite_linear_in_second]
-  field_simp [hden]
-  ring
+  have hmul :
+      (C + D * z₁) *
+        asanoPoly A B C D z₁ (-(A + B * z₁) / (C + D * z₁)) = 0 := by
+    rw [asanoPoly_rewrite_linear_in_second]
+    field_simp [hden]
+    ring
+  exact (mul_eq_zero.mp hmul).resolve_left hden
 
 /--
 If the second-variable coefficient is nonzero, every zero of the two-variable
@@ -311,7 +315,6 @@ theorem contracted_zero_mem_signedProduct_of_rankOne
     z = -A / D := hz
     _ = -((-(C / D)) * (-(A / C))) := by
       field_simp [hC, hD]
-      ring
 
 /--
 Rank-one Asano contraction zero-freeness outside the signed product

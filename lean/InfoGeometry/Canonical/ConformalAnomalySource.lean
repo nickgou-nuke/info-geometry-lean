@@ -997,6 +997,20 @@ theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeBit
       (M := M) hScaleFromKahler bit
   simpa [ConformalInference.IsNormalInference] using hZero
 
+/--
+Constructive bridge from the RN/Kahler/log-det lane into the normal phase via
+its single proof-carrying witness packet.
+-/
+theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    CI.IsNormalInference := by
+  have hZero :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
+      (M := M) W
+  simpa [ConformalInference.IsNormalInference] using hZero
+
 end
 
 /--

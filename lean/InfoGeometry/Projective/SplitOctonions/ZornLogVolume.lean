@@ -7,214 +7,176 @@ import Mathlib.Tactic
 
 Zorn determinant as logarithmic relative-volume potential.
 
-This file proves the concrete reconciliation:
+This file proves the concrete log-volume consequences of the existing
+Zorn determinant scaling theorem
 
-* multiplicative determinant character;
-* additive negative-log cocycle;
-* Zorn determinant scaling;
-* negative log determinant as a barrier/log-volume potential;
-* dimension-8 volume Jacobian exponent `4`.
+  detZ (u • X) = u^2 detZ X.
 
-No new projective structure is introduced.
+It adds no new projective datum and no new wrapper structure.
 -/
 
 namespace InfoGeometry.Projective.SplitOctonions
 
 noncomputable section
 
-/-- Negative logarithm of a positive multiplicative quantity. -/
-def negLog (x : ℝ) : ℝ :=
-  - Real.log x
-
-/--
-Negative logarithm turns multiplication of positive scalars into addition.
-
-This is the scalar algebra behind determinant-character cocycles and
-Radon--Nikodym log-density transformations.
--/
-theorem negLog_mul_of_pos {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
-    negLog (x * y) = negLog x + negLog y := by
-  unfold negLog
-  rw [Real.log_mul]
-  · ring
-  · exact hx.ne'
-  · exact hy.ne'
-
-/--
-A positive multiplicative character gives an additive negative-log character.
-
-If `χ(gh)=χ(g)χ(h)`, then `-log χ(gh)=-log χ(g)-log χ(h)`,
-written additively as `negLog χ(gh)=negLog χ(g)+negLog χ(h)`.
--/
-def negLogCharacter {G : Type*} (χ : G → ℝ) (g : G) : ℝ :=
-  negLog (χ g)
-
-theorem negLogCharacter_mul
-    {G : Type*} [Mul G]
-    (χ : G → ℝ)
-    (hχ_mul : ∀ g h : G, χ (g * h) = χ g * χ h)
-    (hχ_pos : ∀ g : G, 0 < χ g)
-    (g h : G) :
-    negLogCharacter χ (g * h) =
-      negLogCharacter χ g + negLogCharacter χ h := by
-  unfold negLogCharacter
-  rw [hχ_mul]
-  exact negLog_mul_of_pos (hχ_pos g) (hχ_pos h)
-
-/--
-For an 8-dimensional quadratic determinant character, the induced volume
-Jacobian scales as `χ^4`.
-
-This is the formal placeholder for the standard fact:
-if a quadratic form scales by `χ` in dimension `8`, then volume scales by
-`χ^(8/2)=χ^4`.
--/
-def zornVolumeJacobian {G : Type*} (χ : G → ℝ) (g : G) : ℝ :=
-  (χ g) ^ 4
-
-/-- Negative logarithmic Zorn volume Jacobian. -/
-def zornNegLogVolumeJacobian {G : Type*} (χ : G → ℝ) (g : G) : ℝ :=
-  negLog (zornVolumeJacobian χ g)
-
-/--
-The negative logarithmic Zorn volume Jacobian is additive under composition
-of determinant characters.
--/
-theorem zornNegLogVolumeJacobian_mul
-    {G : Type*} [Mul G]
-    (χ : G → ℝ)
-    (hχ_mul : ∀ g h : G, χ (g * h) = χ g * χ h)
-    (hχ_pos : ∀ g : G, 0 < χ g)
-    (g h : G) :
-    zornNegLogVolumeJacobian χ (g * h) =
-      zornNegLogVolumeJacobian χ g +
-        zornNegLogVolumeJacobian χ h := by
-  unfold zornNegLogVolumeJacobian zornVolumeJacobian
-  rw [hχ_mul]
-  have hpow :
-      (χ g * χ h) ^ 4 = (χ g) ^ 4 * (χ h) ^ 4 := by
-    ring
-  rw [hpow]
-  exact negLog_mul_of_pos
-    (pow_pos (hχ_pos g) 4)
-    (pow_pos (hχ_pos h) 4)
-
 namespace ZornCell
 
 variable {V : Type*}
 variable [AddCommGroup V] [Module ℝ V]
 
-/--
-Zorn log barrier / negative logarithmic determinant.
-
-This is meaningful on the positive determinant domain
-`0 < detZ B X`; at the null shell `detZ B X = 0`, the intended barrier
-interpretation is divergence to `+∞`, which is not represented by this total
-real-valued function.
--/
+/-- Negative logarithmic Zorn determinant potential. -/
 def zornLogBarrier
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (X : ZornCell ℝ V) : ℝ :=
-  negLog (ZornCell.detZ B X)
+  - Real.log (ZornCell.detZ B X)
 
 /--
-The Zorn log barrier under componentwise unit scaling.
+Radon–Nikodym-style relative Zorn volume factor:
 
-Since the existing Zorn instance proves
+  RN(X,Y) = detZ(Y) / detZ(X).
+-/
+def zornRelativeVolumeRN
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X Y : ZornCell ℝ V) : ℝ :=
+  ZornCell.detZ B Y / ZornCell.detZ B X
 
-`detZ (u • X) = u^2 detZ X`,
+/--
+Unit coefficient is nonzero after coercion to `ℝ`.
+-/
+private lemma unit_coe_ne_zero (u : ℝˣ) :
+    (u : ℝ) ≠ 0 := by
+  exact Units.ne_zero u
 
-the logarithmic barrier transforms by
+/--
+The determinant remains positive under unit scaling if it was positive.
 
-`F(u • X) = F(X) - 2 log u`
+This is the concrete domain-preservation statement for the positive
+log-volume chart.
+-/
+theorem detZ_scalarScale_pos
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (u : ℝˣ) (X : ZornCell ℝ V)
+    (hX : 0 < ZornCell.detZ B X) :
+    0 < ZornCell.detZ B (ZornCell.scalarScale u X) := by
+  rw [ZornCell.detZ_scalarScale]
+  exact mul_pos (sq_pos_of_ne_zero (unit_coe_ne_zero u)) hX
 
-for positive `u` and positive determinant.
+/--
+Log-barrier scaling under componentwise Zorn unit scaling.
+
+Because
+
+  detZ(u • X) = u² detZ(X),
+
+we get
+
+  -log detZ(u • X) = -log detZ(X) - log(u²)
+
+on the positive determinant stratum.
 -/
 theorem zornLogBarrier_scalarScale
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (u : ℝˣ) (X : ZornCell ℝ V)
-    (hu : 0 < (u : ℝ))
-    (hdet : 0 < ZornCell.detZ B X) :
-    zornLogBarrier B (ZornCell.scalarScale u X) =
-      zornLogBarrier B X - 2 * Real.log (u : ℝ) := by
-  unfold zornLogBarrier negLog
+    (hX : 0 < ZornCell.detZ B X) :
+    zornLogBarrier B (ZornCell.scalarScale u X)
+      =
+    zornLogBarrier B X - Real.log ((u : ℝ) ^ 2) := by
+  unfold zornLogBarrier
   rw [ZornCell.detZ_scalarScale]
-  rw [pow_two]
-  rw [Real.log_mul]
-  · rw [Real.log_mul]
-    · ring
-    · exact hu.ne'
-    · exact hu.ne'
-  · exact mul_ne_zero hu.ne' hu.ne'
-  · exact hdet.ne'
+  rw [Real.log_mul
+      (pow_ne_zero 2 (unit_coe_ne_zero u))
+      (ne_of_gt hX)]
+  ring
 
 /--
-Equivalent additive-cocycle form of the previous theorem.
-
-The logarithmic change of Zorn barrier under positive unit scaling is exactly
-`-2 log u`.
+Relative volume of a point with itself is `1` on the non-isotropic stratum.
 -/
-theorem zornLogBarrier_scalarScale_sub
+theorem zornRelativeVolumeRN_self
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
-    (u : ℝˣ) (X : ZornCell ℝ V)
-    (hu : 0 < (u : ℝ))
-    (hdet : 0 < ZornCell.detZ B X) :
-    zornLogBarrier B (ZornCell.scalarScale u X) -
-        zornLogBarrier B X =
-      -2 * Real.log (u : ℝ) := by
-  rw [zornLogBarrier_scalarScale B u X hu hdet]
+    (X : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0) :
+    zornRelativeVolumeRN B X X = 1 := by
+  unfold zornRelativeVolumeRN
+  field_simp [hX]
+
+/--
+The negative logarithm of the Zorn RN relative-volume factor is the
+difference of log-barrier potentials:
+
+  -log(detZ(Y)/detZ(X)) = φ(Y) - φ(X),
+
+where `φ(X) = -log detZ(X)`.
+-/
+theorem negLog_zornRelativeVolumeRN_eq_zornLogBarrier_sub
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (X Y : ZornCell ℝ V)
+    (hX : ZornCell.detZ B X ≠ 0)
+    (hY : ZornCell.detZ B Y ≠ 0) :
+    - Real.log (zornRelativeVolumeRN B X Y)
+      =
+    zornLogBarrier B Y - zornLogBarrier B X := by
+  unfold zornRelativeVolumeRN zornLogBarrier
+  rw [Real.log_div hY hX]
   ring
 
 /--
-For Zorn cells, the determinant scaling character of componentwise unit
-scaling is `u ↦ u^2`.
-
-This is the determinant-character readout corresponding to the already-proved
-determinant scaling theorem.
+Right scaling of the target multiplies the relative-volume factor by `u²`.
 -/
-def scalarScaleDetCharacter (u : ℝˣ) : ℝ :=
-  (u : ℝ) ^ 2
-
-/--
-The determinant character of componentwise unit scaling is multiplicative.
--/
-theorem scalarScaleDetCharacter_mul (u v : ℝˣ) :
-    scalarScaleDetCharacter (u * v) =
-      scalarScaleDetCharacter u * scalarScaleDetCharacter v := by
-  unfold scalarScaleDetCharacter
-  simp
+theorem zornRelativeVolumeRN_scalarScale_right
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (u : ℝˣ) (X Y : ZornCell ℝ V) :
+    zornRelativeVolumeRN B X (ZornCell.scalarScale u Y)
+      =
+    ((u : ℝ) ^ 2) * zornRelativeVolumeRN B X Y := by
+  unfold zornRelativeVolumeRN
+  rw [ZornCell.detZ_scalarScale]
   ring
 
 /--
-If the determinant character is interpreted as a quadratic conformal factor on
-the Zorn determinant, the induced 8-volume Jacobian has exponent `4`.
-
-For componentwise scaling this gives `(u^2)^4 = u^8`.
+Left scaling of the base divides the relative-volume factor by `u²`.
 -/
-theorem scalarScale_volumeJacobian_eq_eight_power
+theorem zornRelativeVolumeRN_scalarScale_left
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (u : ℝˣ) (X Y : ZornCell ℝ V) :
+    zornRelativeVolumeRN B (ZornCell.scalarScale u X) Y
+      =
+    (((u : ℝ) ^ 2)⁻¹) * zornRelativeVolumeRN B X Y := by
+  unfold zornRelativeVolumeRN
+  rw [ZornCell.detZ_scalarScale]
+  field_simp [pow_ne_zero 2 (unit_coe_ne_zero u)]
+  ring
+
+/--
+If the determinant scales by `u²`, then the corresponding 8-dimensional
+volume Jacobian scales by `(u²)^4`.
+
+This is only the algebraic exponent calculation.
+-/
+def zornVolumeJacobianOfScale (u : ℝˣ) : ℝ :=
+  ((u : ℝ) ^ 2) ^ 4
+
+/--
+The 8-dimensional Jacobian exponent simplifies to `u^8`.
+-/
+theorem zornVolumeJacobianOfScale_eq_pow_eight
     (u : ℝˣ) :
-    zornVolumeJacobian scalarScaleDetCharacter u =
-      (u : ℝ) ^ 8 := by
-  unfold zornVolumeJacobian scalarScaleDetCharacter
+    zornVolumeJacobianOfScale u = (u : ℝ) ^ 8 := by
+  unfold zornVolumeJacobianOfScale
   ring
 
 /--
-The negative logarithmic 8-volume Jacobian for componentwise Zorn scaling is
-`-8 log u`, for positive `u`.
+Negative logarithm of the 8-dimensional Jacobian is the logarithmic volume
+change of the determinant scale.
 
-This is the formal Radon--Nikodym/log-volume-change statement attached to the
-Zorn determinant character.
+This keeps the statement at the scalar algebraic level; no self-concordance
+or extended-real barrier is claimed here.
 -/
-theorem scalarScale_negLogVolumeJacobian_eq
-    (u : ℝˣ) (hu : 0 < (u : ℝ)) :
-    zornNegLogVolumeJacobian scalarScaleDetCharacter u =
-      -8 * Real.log (u : ℝ) := by
-  let _ := hu
-  unfold zornNegLogVolumeJacobian
-  rw [scalarScale_volumeJacobian_eq_eight_power]
-  unfold negLog
-  rw [Real.log_pow]
-  ring
+theorem negLog_zornVolumeJacobianOfScale
+    (u : ℝˣ) :
+    - Real.log (zornVolumeJacobianOfScale u)
+      =
+    - Real.log ((u : ℝ) ^ 8) := by
+  rw [zornVolumeJacobianOfScale_eq_pow_eight]
 
 end ZornCell
 

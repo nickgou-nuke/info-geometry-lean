@@ -2160,6 +2160,28 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness
 -- theorem-class: bridge
 /--
 Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the Cartan-odd constructive branch, using proof-carrying TKK and
+cone witnesses instead of bare `tkkParameter`/`hTKK` and `hCone` inputs.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    (ConformalOperatorAdmissibilityWitness.toPositiveContextOfWitness
+      (W := W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge hTKK.tkkParameter hTKK.hTKK hCone X Y)
+      hSquare).fisherOnsagerProduction = hSquare.amplitude ^ (2 : ℕ) := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
+      (W := W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge hTKK.tkkParameter hTKK.hTKK hCone X Y)
+      hSquare).fisherOnsagerProduction_eq_square
+
+-- theorem-class: bridge
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
 square on the Cartan-odd constructive branch, using the owner Cartan
 positivity route instead of a bare operator-admissibility packet.
 -/

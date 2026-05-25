@@ -1,6 +1,7 @@
 import Mathlib.Order.Filter.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Canonical.CurrentSugawaraBridge
+import InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
@@ -36,6 +37,7 @@ namespace InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 open Filter
 open InfoGeometry.Canonical.CurrentSugawaraBridge
+open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
 open VirasoroProject
 
 /--
@@ -254,5 +256,39 @@ theorem splitClifford_currentSugawara_and_current
     Nonempty (CurrentSugawaraMorphism 𝕜 V) ∧
       Nonempty (CurrentHeisenbergRep 𝕜 V) :=
   W.currentSugawaraMorphism_and_current_nonempty
+
+/-! ## Explicit infinite-current consumer surface (external Heisenberg engine) -/
+
+section ExternalInfiniteCurrent
+
+variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+
+/--
+Canonical infinite-current commutator readout, directly from
+`SplitCliffordInfiniteCurrent`.
+-/
+theorem canonicalInfiniteCurrent_lie
+    (m n : Int) :
+    ⁅Jinf 𝕜 m, Jinf 𝕜 n⁆ =
+      if m + n = 0 then (m : 𝕜) • Kinf 𝕜 else 0 :=
+  lie_Jinf (𝕜 := 𝕜) m n
+
+/-- Concrete central-mode check: `[J₁,J₋₁] = 1 • K`. -/
+theorem canonicalInfiniteCurrent_lie_one_neg_one :
+    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
+  lie_Jinf_one_neg_one (𝕜 := 𝕜)
+
+/-- Concrete reverse check: `[J₋₁,J₁] = -1 • K`. -/
+theorem canonicalInfiniteCurrent_lie_neg_one_one :
+    ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 :=
+  lie_Jinf_neg_one_one (𝕜 := 𝕜)
+
+/-- The canonical central generator commutes with every element. -/
+theorem canonicalInfiniteCurrent_lie_central
+    (Z : InfiniteCurrentAlg 𝕜) :
+    ⁅Kinf 𝕜, Z⁆ = 0 :=
+  lie_Kinf (𝕜 := 𝕜) Z
+
+end ExternalInfiniteCurrent
 
 end InfoGeometry.Canonical.SplitCliffordHeisenbergBridge

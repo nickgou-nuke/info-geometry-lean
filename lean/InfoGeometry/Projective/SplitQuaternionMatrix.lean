@@ -38,13 +38,21 @@ def mat_k : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-! ### Structural properties of the basis -/
 
-theorem mat_j_sq : mat_j * mat_j = mat_1 := sorry
+theorem mat_j_sq : mat_j * mat_j = mat_1 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_j, mat_1, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem mat_k_sq : mat_k * mat_k = mat_1 := sorry
+theorem mat_k_sq : mat_k * mat_k = mat_1 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_k, mat_1, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem mat_i_sq : mat_i * mat_i = -mat_1 := sorry
+theorem mat_i_sq : mat_i * mat_i = -mat_1 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_i, mat_1, Matrix.mul_apply, Fin.sum_univ_two]
 
-theorem mat_j_mul_k : mat_j * mat_k = -mat_i := sorry
+theorem mat_j_mul_k : mat_j * mat_k = -mat_i := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [mat_j, mat_k, mat_i, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The quadratic norm representation for the division-binarion representation.
     $N(q) = w^2 + x^2 - y^2 - z^2$, which corresponds to the matrix determinant. -/
@@ -60,8 +68,9 @@ def splitQuaternionToMatrix (w x y z : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 theorem det_splitQuaternionToMatrix (w x y z : ℝ) :
     (splitQuaternionToMatrix w x y z).det = splitNormSq w x y z := by
-  -- Explicitly compute the determinant of the 2x2 matrix
-  sorry
+  unfold splitQuaternionToMatrix splitNormSq mat_1 mat_i mat_j mat_k
+  norm_num [Matrix.det_fin_two]
+  ring
 
 /--
 The split-quaternion algebra $\mathbb{H}_s$ over $\mathbb{R}$.

@@ -1,125 +1,353 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.NilpotentNonunit
+import Mathlib
 
 /-!
 # InfoGeometry.Algebra.HypercomplexTriad
 
-Concrete algebraic lemmas for the three real two-dimensional
-hypercomplex signatures:
+Concrete `2 × 2` real matrix representatives of the elliptic, hyperbolic,
+and parabolic two-dimensional hypercomplex units.
 
-* elliptic:   `x^2 = -1`;
-* hyperbolic: `x^2 =  1`;
-* parabolic:  `x^2 =  0`.
+This file proves:
 
-The first two give invertible elements.  A nonzero square-zero element cannot
-be a unit.  This is the algebraic reason nilpotent/dual-number directions
-appear as boundary/Fock/BRST data rather than as global symmetry-group
-operators.
+* `I^2 = -1`;
+* `E^2 = 1`;
+* `N^2 = 0`;
+* `I` and `E` are invertible;
+* nonzero `N` has no left or right inverse;
+* `1 + N` is unipotent with inverse `1 - N`;
+* the split idempotents `(1 ± E)/2` are genuine projectors.
+
+No wrappers. No classification structure.
 -/
 
-namespace InfoGeometry.Algebra
+namespace InfoGeometry.Algebra.HypercomplexTriad
+
+abbrev Mat2 : Type :=
+  Matrix (Fin 2) (Fin 2) ℝ
+
+/-- Elliptic unit: `I^2 = -1`. -/
+noncomputable def I : Mat2 :=
+  !![0, -1;
+     1,  0]
+
+/-- Hyperbolic/split unit: `E^2 = 1`. -/
+noncomputable def E : Mat2 :=
+  !![1,  0;
+     0, -1]
+
+/-- Parabolic/nilpotent unit: `N^2 = 0`, `N ≠ 0`. -/
+noncomputable def N : Mat2 :=
+  !![0, 1;
+     0, 0]
+
+@[simp]
+theorem I_sq :
+    I * I = -(1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem E_sq :
+    E * E = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [E, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem N_sq :
+    N * N = (0 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem N_ne_zero :
+    N ≠ (0 : Mat2) := by
+  intro h
+  have h01 := congrArg (fun M : Mat2 => M 0 1) h
+  norm_num [N] at h01
+
+/-- `I` is invertible, with inverse `-I`. -/
+theorem I_mul_negI :
+    I * (-I) = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- `-I * I = 1`. -/
+theorem negI_mul_I :
+    (-I) * I = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [I, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Concrete unit structure for the elliptic generator. -/
+noncomputable def I_unit : Mat2ˣ where
+  val := I
+  inv := -I
+  val_inv := I_mul_negI
+  inv_val := negI_mul_I
+
+/-- `E` is its own inverse. -/
+theorem E_mul_E :
+    E * E = (1 : Mat2) :=
+  E_sq
+
+/-- Concrete unit structure for the hyperbolic generator. -/
+noncomputable def E_unit : Mat2ˣ where
+  val := E
+  inv := E
+  val_inv := E_mul_E
+  inv_val := E_mul_E
 
 /--
-An element with square `1` is a unit.
+The nilpotent parabolic unit has no left inverse.
 
-This covers the hyperbolic/split-complex involutive case.
+This is the concrete obstruction excluding `N` from global symmetry groups.
 -/
-theorem isUnit_of_sq_eq_one
-    {R : Type*} [Monoid R]
-    (x : R) (hx : x * x = 1) :
-    IsUnit x := by
-  exact ⟨Units.mk x x hx hx, rfl⟩
+theorem N_no_left_inverse :
+    ¬ ∃ L : Mat2, L * N = (1 : Mat2) := by
+  rintro ⟨L, hL⟩
+  have h00 := congrArg (fun M : Mat2 => M 0 0) hL
+  norm_num [N, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /--
-An element with square `-1` is a unit.
-
-This covers the elliptic/complex case.
+The nilpotent parabolic unit has no right inverse.
 -/
-theorem isUnit_of_sq_eq_neg_one
-    {R : Type*} [Ring R]
-    (x : R) (hx : x * x = -1) :
-    IsUnit x := by
-  refine ⟨Units.mk x (-x) ?_ ?_, rfl⟩
-  · rw [mul_neg, hx]
-    simp
-  · rw [neg_mul, hx]
-    simp
+theorem N_no_right_inverse :
+    ¬ ∃ R : Mat2, N * R = (1 : Mat2) := by
+  rintro ⟨R, hR⟩
+  have h11 := congrArg (fun M : Mat2 => M 1 1) hR
+  norm_num [N, Matrix.mul_apply, Fin.sum_univ_two] at h11
+
+/-- `N` is not a unit. -/
+theorem N_not_isUnit :
+    ¬ IsUnit N := by
+  intro hN
+  rcases hN with ⟨u, hu⟩
+  have hleft : (↑u⁻¹ : Mat2) * N = 1 := by
+    rw [← hu]
+    exact Units.inv_mul u
+  exact N_no_left_inverse ⟨↑u⁻¹, hleft⟩
+
+/-- `(1 + N)(1 - N) = 1`. -/
+theorem one_add_N_mul_one_sub_N :
+    ((1 : Mat2) + N) * ((1 : Mat2) - N) = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- `(1 - N)(1 + N) = 1`. -/
+theorem one_sub_N_mul_one_add_N :
+    ((1 : Mat2) - N) * ((1 : Mat2) + N) = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
-If a unit has square zero, then it is zero.
-
-This is the core obstruction behind nilpotent/parabolic directions:
-a square-zero element cannot be an invertible symmetry unless it is zero.
+The parabolic generator produces an invertible unipotent shift `1 + N`.
 -/
-theorem eq_zero_of_isUnit_of_sq_eq_zero
-    {R : Type*} [MonoidWithZero R]
-    {x : R}
-    (hxUnit : IsUnit x)
-    (hxSq : x * x = 0) :
-    x = 0 := by
-  rcases hxUnit with ⟨u, rfl⟩
-  calc
-    (u : R) = (u : R) * 1 := by
-      simp
-    _ = (u : R) * ((u : R) * ((u⁻¹ : Rˣ) : R)) := by
-      simp
-    _ = ((u : R) * (u : R)) * ((u⁻¹ : Rˣ) : R) := by
-      rw [mul_assoc]
-    _ = 0 * ((u⁻¹ : Rˣ) : R) := by
-      rw [hxSq]
-    _ = 0 := by
-      simp
+noncomputable def unipotentN_unit : Mat2ˣ where
+  val := (1 : Mat2) + N
+  inv := (1 : Mat2) - N
+  val_inv := one_add_N_mul_one_sub_N
+  inv_val := one_sub_N_mul_one_add_N
+
+/-- Positive split idempotent `(1 + E)/2`. -/
+noncomputable def Pplus : Mat2 :=
+  (1 / 2 : ℝ) • ((1 : Mat2) + E)
+
+/-- Negative split idempotent `(1 - E)/2`. -/
+noncomputable def Pminus : Mat2 :=
+  (1 / 2 : ℝ) • ((1 : Mat2) - E)
+
+@[simp]
+theorem Pplus_idempotent :
+    Pplus * Pplus = Pplus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem Pminus_idempotent :
+    Pminus * Pminus = Pminus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Pminus, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem Pplus_mul_Pminus :
+    Pplus * Pminus = (0 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem Pminus_mul_Pplus :
+    Pminus * Pplus = (0 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem Pplus_add_Pminus :
+    Pplus + Pminus = (1 : Mat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Pplus, Pminus, E]
+
+/-! ## Moore--Penrose inverse of the parabolic nilpotent -/
 
 /--
-A nonzero square-zero element is not a unit.
+The transpose/conjugate nilpotent.
 
-This is the parabolic/dual-number exclusion from invertible symmetry groups.
+For the parabolic generator
+
+  N = [0 1; 0 0],
+
+the Moore--Penrose inverse over real matrices is
+
+  N† = [0 0; 1 0].
 -/
-theorem triad_not_isUnit_of_sq_eq_zero_of_ne_zero
-    {R : Type*} [MonoidWithZero R]
-    {x : R}
-    (hxSq : x * x = 0)
-    (hxNonzero : x ≠ 0) :
-    ¬ IsUnit x := by
-  intro hxUnit
-  exact hxNonzero (eq_zero_of_isUnit_of_sq_eq_zero hxUnit hxSq)
+noncomputable def Nmp : Mat2 :=
+  !![0, 0;
+     1, 0]
+
+/-- Range projector of `N`: `N N†`. -/
+noncomputable def NRangeProj : Mat2 :=
+  !![1, 0;
+     0, 0]
+
+/-- Source projector of `N`: `N† N`. -/
+noncomputable def NSourceProj : Mat2 :=
+  !![0, 0;
+     0, 1]
+
+@[simp]
+theorem N_mul_Nmp :
+    N * Nmp = NRangeProj := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Nmp, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem Nmp_mul_N :
+    Nmp * N = NSourceProj := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem NRangeProj_idempotent :
+    NRangeProj * NRangeProj = NRangeProj := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem NSourceProj_idempotent :
+    NSourceProj * NSourceProj = NSourceProj := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem NRangeProj_mul_NSourceProj :
+    NRangeProj * NSourceProj = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp]
+theorem NSourceProj_mul_NRangeProj :
+    NSourceProj * NRangeProj = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
-The three algebraic cases in one theorem statement:
+First Moore--Penrose equation:
 
-* square `1` gives a unit;
-* square `-1` gives a unit;
-* nonzero square `0` gives a nonunit.
-
-This packages no new data; it only records the three consequences together.
+  N N† N = N.
 -/
-theorem hypercomplex_triad_unit_status
-    {R : Type*} [Ring R]
-    (x : R) :
-    (x * x = 1 → IsUnit x) ∧
-    (x * x = -1 → IsUnit x) ∧
-    ((x * x = 0 ∧ x ≠ 0) → ¬ IsUnit x) := by
+theorem N_moore_penrose_1 :
+    N * Nmp * N = N := by
+  rw [N_mul_Nmp]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Second Moore--Penrose equation:
+
+  N† N N† = N†.
+-/
+theorem N_moore_penrose_2 :
+    Nmp * N * Nmp = Nmp := by
+  rw [Nmp_mul_N]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Third Moore--Penrose equation in concrete real form:
+
+  N N† is the range projector.
+-/
+theorem N_moore_penrose_range_projector :
+    N * Nmp = NRangeProj ∧ NRangeProj * NRangeProj = NRangeProj := by
+  exact ⟨N_mul_Nmp, NRangeProj_idempotent⟩
+
+/--
+Fourth Moore--Penrose equation in concrete real form:
+
+  N† N is the source projector.
+-/
+theorem N_moore_penrose_source_projector :
+    Nmp * N = NSourceProj ∧ NSourceProj * NSourceProj = NSourceProj := by
+  exact ⟨Nmp_mul_N, NSourceProj_idempotent⟩
+
+/--
+The Moore--Penrose inverse is not a two-sided inverse.
+
+The parabolic nilpotent has no inverse, but it has a generalized inverse
+whose products are orthogonal idempotent projections.
+-/
+theorem Nmp_not_two_sided_inverse :
+    N * Nmp ≠ (1 : Mat2) ∧ Nmp * N ≠ (1 : Mat2) := by
   constructor
-  · intro hx
-    exact isUnit_of_sq_eq_one x hx
-  constructor
-  · intro hx
-    exact isUnit_of_sq_eq_neg_one x hx
-  · intro hx
-    exact triad_not_isUnit_of_sq_eq_zero_of_ne_zero hx.1 hx.2
+  · intro h
+    have hentry := congrArg (fun A : Mat2 => A 1 1) h
+    norm_num [N_mul_Nmp, NRangeProj] at hentry
+  · intro h
+    have hentry := congrArg (fun A : Mat2 => A 0 0) h
+    norm_num [Nmp_mul_N, NSourceProj] at hentry
 
 /--
-Cross-reference to the generic nilpotent non-unit firewall.
+The nilpotent boundary has a genuine Moore--Penrose inverse profile:
 
-This specializes the reusable algebra lemma from
-`InfoGeometry.Algebra.NilpotentNonunit` to the triad context.
+  N² = 0,
+  N N† N = N,
+  N† N N† = N†,
+  N N† and N† N are orthogonal idempotent projectors.
 -/
-theorem triad_not_isUnit_via_generic_firewall
-    {R : Type*} [Ring R] [Nontrivial R]
-    {x : R}
-    (hxSq : x * x = 0)
-    (hxNonzero : x ≠ 0) :
-    ¬ IsUnit x :=
-  not_isUnit_of_sq_eq_zero_of_ne_zero hxSq hxNonzero
+theorem N_moore_penrose_profile :
+    N * N = 0 ∧
+    N * Nmp * N = N ∧
+    Nmp * N * Nmp = Nmp ∧
+    NRangeProj * NRangeProj = NRangeProj ∧
+    NSourceProj * NSourceProj = NSourceProj ∧
+    NRangeProj * NSourceProj = 0 ∧
+    NSourceProj * NRangeProj = 0 := by
+  exact
+    ⟨N_sq,
+     N_moore_penrose_1,
+     N_moore_penrose_2,
+     NRangeProj_idempotent,
+     NSourceProj_idempotent,
+     NRangeProj_mul_NSourceProj,
+     NSourceProj_mul_NRangeProj⟩
 
-end InfoGeometry.Algebra
+/--
+The concrete triad status:
+
+* elliptic `I` is a unit;
+* hyperbolic `E` is a unit;
+* parabolic `N` is nonzero, square-zero, and not a unit.
+-/
+theorem concrete_hypercomplex_triad :
+    IsUnit I ∧ IsUnit E ∧ N ≠ 0 ∧ N * N = 0 ∧ ¬ IsUnit N := by
+  exact ⟨⟨I_unit, rfl⟩, ⟨E_unit, rfl⟩, N_ne_zero, N_sq, N_not_isUnit⟩
+
+end InfoGeometry.Algebra.HypercomplexTriad

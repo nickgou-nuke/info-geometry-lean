@@ -808,6 +808,44 @@ theorem modularTransportGenerator_commutes_clockAxis_of_scalePart_eq_zero
     (modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
       (E := E) hMod hScaleZero)
 
+/--
+Proof-carrying witness for the vanishing scaling sector of a modular generator.
+This packages the exact owner datum needed to force the phase-linear /
+clock-commuting branch without threading a separate raw equality hypothesis.
+-/
+@[rep_depth operator]
+structure ModularScaleZeroWitness where
+  hMod : EndH
+  scalePart_eq_zero : modularGeneratorScalePart (E := E) hMod = 0
+
+namespace ModularScaleZeroWitness
+
+omit [CompleteSpace E] in
+/--
+On the proof-carrying zero-scale branch, the modular transport generator is
+phase-linear.
+-/
+theorem modularTransportGenerator_isPhaseLinear
+    (W : ModularScaleZeroWitness (E := E)) :
+    IsPhaseLinear (E := E) (modularTransportGenerator (E := E) W.hMod) := by
+  exact modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
+    (E := E) W.hMod W.scalePart_eq_zero
+
+omit [CompleteSpace E] in
+/--
+On the proof-carrying zero-scale branch, the modular transport generator
+commutes with the canonical clock axis.
+-/
+theorem modularTransportGenerator_commutes_clockAxis
+    (W : ModularScaleZeroWitness (E := E)) :
+    Commute
+      (modularTransportGenerator (E := E) W.hMod)
+      (InfoGeometry.Krein.clockAxis (E := E)) := by
+  exact modularTransportGenerator_commutes_clockAxis_of_scalePart_eq_zero
+    (E := E) W.hMod W.scalePart_eq_zero
+
+end ModularScaleZeroWitness
+
 omit [CompleteSpace E] in
 /--
 The modular derivation splits as the sum of its gauge-sector and scaling-sector

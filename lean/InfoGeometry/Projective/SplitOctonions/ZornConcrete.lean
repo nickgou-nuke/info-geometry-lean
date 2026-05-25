@@ -149,6 +149,29 @@ theorem polarExpr_symm
   rw [polarExpr_closed, polarExpr_closed]
   ring_nf
 
+/--
+Self-pairing identity for the Zorn polar expression.
+
+This is the polarization bridge:
+`polarExpr B X X = 2 * detZ B X`.
+-/
+theorem polarExpr_self
+    (B : V →ₗ[R] V →ₗ[R] R) (X : ZornCell R V) :
+    polarExpr B X X = (2 : R) * ZornCell.detZ B X := by
+  rw [polarExpr_closed]
+  unfold ZornCell.detZ
+  ring
+
+/--
+Null Zorn cells are self-orthogonal for the polar expression.
+-/
+theorem polarExpr_self_of_detZ_eq_zero
+    (B : V →ₗ[R] V →ₗ[R] R) (X : ZornCell R V)
+    (hX : ZornCell.detZ B X = 0) :
+    polarExpr B X X = 0 := by
+  rw [polarExpr_self, hX]
+  ring
+
 /-- The polar expression scales linearly on the left. -/
 theorem polarExpr_scale_left
     (B : V →ₗ[R] V →ₗ[R] R)

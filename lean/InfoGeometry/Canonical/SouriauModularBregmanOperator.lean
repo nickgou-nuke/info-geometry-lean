@@ -105,6 +105,29 @@ theorem operatorBregman_self
     operatorBregman S Φ gradientΦ X X = 0 := by
   simp [operatorBregman]
 
+/--
+Operatorial Bregman divergence is invariant under an additive symmetry `T`
+that preserves both the potential and the gradient-pairing channel.
+-/
+@[rep_depth operator]
+theorem operatorBregman_invariant_of_linear_symmetry
+    {Op : Type*} [AddCommGroup Op] [Module ℝ Op]
+    (S : OperatorPrimalDualSocket Op)
+    (Φ : Op → ℝ)
+    (gradientΦ : Op → Op)
+    (T : Op →ₗ[ℝ] Op)
+    (hΦ : ∀ X : Op, Φ (T X) = Φ X)
+    (hPair : ∀ X Y : Op, S.pairing (gradientΦ (T X)) (T Y) = S.pairing (gradientΦ X) Y)
+    (X Y : Op) :
+    operatorBregman S Φ gradientΦ (T X) (T Y) =
+      operatorBregman S Φ gradientΦ X Y := by
+  unfold operatorBregman
+  have hsub : T (X - Y) = T X - T Y := by
+    simpa using T.map_sub X Y
+  rw [← hsub]
+  rw [hΦ X, hΦ Y]
+  rw [hPair Y (X - Y)]
+
 /-- Fenchel gap through the same scalar pairing socket. -/
 @[rep_depth operator]
 def operatorFenchelGap

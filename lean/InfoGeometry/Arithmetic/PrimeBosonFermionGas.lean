@@ -1,50 +1,85 @@
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Powerset
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
+import Mathlib
+
+/-!
+# Finite prime boson/fermion cancellation
+
+Finite algebraic theorem:
+
+  `(∏ p ∈ S, (1 - x p)⁻¹) * (∏ p ∈ S, (1 - x p)) = 1`
+
+under the local nonzero condition `1 - x p ≠ 0`.
+
+This is the finite theorem-root behind the formal cancellation
+`ζ(s) * (1 / ζ(s)) = 1`, but no infinite product or zeta claim is made here.
+-/
 
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.PrimeBosonFermionGas
 
 open scoped BigOperators
-open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
-open InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState
 
-variable {PrimeLabel : Type*} [DecidableEq PrimeLabel]
-variable {R : Type*} [CommRing R]
+variable {ι R : Type*} [Field R]
 
-/--
-The signed Witten character evaluated on a finite prime label set.
-This is the evaluation of the partition function over the exterior algebra.
--/
-def signedWittenCharacter (S : Finset PrimeLabel) (x : PrimeLabel → R) : R :=
-  ∑ T ∈ S.powerset, (fermionParitySign T : R) * (∏ p ∈ T, x p)
+/-- Finite signed fermion / Möbius Euler factor product. -/
+def signedFermionPartition (S : Finset ι) (x : ι → R) : R :=
+  ∏ p ∈ S, (1 - x p)
+
+/-- Finite boson Euler factor product. -/
+def bosonPartition (S : Finset ι) (x : ι → R) : R :=
+  ∏ p ∈ S, (1 - x p)⁻¹
 
 /--
-The finite supertrace factorization theorem.
-This asserts the algebraic identity underlying the Euler product,
-valid for any finite subset of primes, avoiding analytic limits.
+Finite boson × signed-fermion cancellation.
 
-∑_{T ⊆ S} (-1)^{|T|} ∏_{p ∈ T} x_p = ∏_{p ∈ S} (1 - x_p)
+This is the real algebraic lemma:
+the inverse Euler factors cancel the signed fermion Euler factors.
 -/
-theorem signedWittenCharacter_eq_prod (S : Finset PrimeLabel) (x : PrimeLabel → R) :
-    signedWittenCharacter S x = ∏ p ∈ S, (1 - x p) := by
-  unfold signedWittenCharacter fermionParitySign
-  have h_prod : ∏ p ∈ S, (1 - x p) = ∑ T ∈ S.powerset, (-1 : R) ^ T.card * (∏ p ∈ S \ T, 1) * ∏ p ∈ T, x p := by
-    exact Finset.prod_sub (fun _ => 1) x S
-  
-  have h_simpl : ∀ T ∈ S.powerset, (-1 : R) ^ T.card * (∏ p ∈ S \ T, 1) * ∏ p ∈ T, x p = 
-      (-1 : R) ^ T.card * (∏ p ∈ T, x p) := by
-    intro T _
-    simp
+theorem boson_mul_signedFermion_cancel
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0) :
+    bosonPartition S x * signedFermionPartition S x = 1 := by
+  unfold bosonPartition signedFermionPartition
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_eq_one
+  intro p hp
+  exact inv_mul_cancel₀ (h p hp)
 
-  
-  rw [h_prod]
-  apply Finset.sum_congr rfl
-  intro T hT
-  rw [h_simpl T hT]
-  simp
+/--
+Finite signed-fermion × boson cancellation.
+
+Same result with the factors reversed.
+-/
+theorem signedFermion_mul_boson_cancel
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0) :
+    signedFermionPartition S x * bosonPartition S x = 1 := by
+  unfold bosonPartition signedFermionPartition
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_eq_one
+  intro p hp
+  exact mul_inv_cancel₀ (h p hp)
+
+/-! ## Real lemma: logarithm of a positive finite product -/
+
+/--
+For a positive finite family, the logarithm of the product is the sum of the
+logarithms.
+
+This is the direct proof needed for prime log-volume:
+`log (∏ p, v p) = ∑ p, log (v p)`.
+No certificate field, no wrapper structure.
+-/
+theorem log_prod_of_pos
+    {ι : Type*}
+    (s : Finset ι)
+    (f : ι → ℝ)
+    (hf : ∀ i ∈ s, 0 < f i) :
+    Real.log (s.prod f) = s.sum (fun i => Real.log (f i)) := by
+  refine Real.log_prod ?_
+  intro i hi
+  exact ne_of_gt (hf i hi)
 
 end InfoGeometry.Arithmetic.PrimeBosonFermionGas

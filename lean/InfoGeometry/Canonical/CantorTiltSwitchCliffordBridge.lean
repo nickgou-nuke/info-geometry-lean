@@ -99,6 +99,66 @@ theorem tilt_switch_comm_of_ne {i j : ℕ} (hij : i ≠ j) :
     TS.T i * TS.S j = TS.S j * TS.T i :=
   TS.T_S_comm_ne i j hij
 
+/-- Split-Majorana `c_j = S_j` from a normalized tilt/switch atom. -/
+@[rep_depth operator]
+def localMajoranaC (j : ℕ) : Op :=
+  TS.S j
+
+/-- Split-Majorana `d_j = S_j T_j` from a normalized tilt/switch atom. -/
+@[rep_depth operator]
+def localMajoranaD (j : ℕ) : Op :=
+  TS.S j * TS.T j
+
+/-- Local parity `Π_j = c_j d_j`. -/
+@[rep_depth operator]
+def localMajoranaParity (j : ℕ) : Op :=
+  TS.localMajoranaC j * TS.localMajoranaD j
+
+/-- `c_j² = 1`. -/
+@[rep_depth operator]
+theorem localMajoranaC_sq (j : ℕ) :
+    TS.localMajoranaC j * TS.localMajoranaC j = 1 :=
+  TS.S_sq j
+
+/-- `d_j² = -1`. -/
+@[rep_depth operator]
+theorem localMajoranaD_sq (j : ℕ) :
+    TS.localMajoranaD j * TS.localMajoranaD j = -1 := by
+  unfold localMajoranaD
+  calc
+    (TS.S j * TS.T j) * (TS.S j * TS.T j)
+        = TS.S j * (TS.T j * TS.S j) * TS.T j := by
+            noncomm_ring
+    _ = TS.S j * (-(TS.S j * TS.T j)) * TS.T j := by
+            rw [TS.T_S_anticomm j]
+    _ = -((TS.S j * TS.S j) * (TS.T j * TS.T j)) := by
+            noncomm_ring
+    _ = -(1 * 1) := by
+            rw [TS.S_sq j, TS.T_sq j]
+    _ = -1 := by simp
+
+/-- `c_j d_j + d_j c_j = 0`. -/
+@[rep_depth operator]
+theorem localMajoranaC_D_anticomm (j : ℕ) :
+    TS.localMajoranaC j * TS.localMajoranaD j +
+      TS.localMajoranaD j * TS.localMajoranaC j = 0 := by
+  unfold localMajoranaC localMajoranaD
+  rw [← mul_assoc, TS.S_sq j]
+  rw [one_mul]
+  rw [mul_assoc]
+  rw [TS.T_S_anticomm j]
+  rw [mul_neg]
+  rw [← mul_assoc, TS.S_sq j]
+  simp
+
+/-- The local split-Majorana parity is the normalized tilt operator. -/
+@[rep_depth operator]
+theorem localMajoranaParity_eq_tilt (j : ℕ) :
+    TS.localMajoranaParity j = TS.T j := by
+  unfold localMajoranaParity localMajoranaC localMajoranaD
+  rw [← mul_assoc, TS.S_sq j]
+  simp
+
 end TiltSwitchSystem
 
 /--

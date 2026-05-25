@@ -1372,6 +1372,50 @@ theorem toCyclicCoordinatelessSouriauFisherContext_weylGauge_eq :
   rfl
 
 /--
+Compatibility adapter from the minimal constructive branch to the narrowed
+identity-Weyl broad coordinateless context.
+
+This removes the explicit `weylGauge` packet from callers that already live on
+the minimal cyclic branch: the Weyl gauge is reconstructed definitionally as the
+identity gauge on the owned cyclic identity-flow lane.
+-/
+@[rep_depth operator]
+def toMinimalIdentityWeylCoordinatelessSouriauContext :
+    MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent where
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.state.toIdentityKMSState C.beta
+  souriauMoment := C.souriauMoment
+  fisherMetric := C.fisherMetric
+
+/-- On the identity-Weyl adapter, the modular flow is definitionally the owned identity flow. -/
+@[rep_depth operator]
+theorem toMinimalIdentityWeylCoordinatelessSouriauContext_sigma_eq :
+    C.toMinimalIdentityWeylCoordinatelessSouriauContext.sigma = C.sigma :=
+  rfl
+
+/-- On the identity-Weyl adapter, the Fisher metric is definitionally the canonical derived one. -/
+@[rep_depth operator]
+theorem toMinimalIdentityWeylCoordinatelessSouriauContext_fisherMetric_eq :
+    C.toMinimalIdentityWeylCoordinatelessSouriauContext.fisherMetric = C.fisherMetric :=
+  rfl
+
+/--
+Constructor theorem routing the narrowed identity-Weyl packet directly through
+the minimal cyclic constructive branch.
+
+This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
+constructor surface for callers that already own a
+`MinimalCyclicCoordinatelessSouriauContext` witness and only need the identity
+Weyl-gauge branch.
+-/
+@[rep_depth operator]
+theorem mk_identityWeyl_of_cyclic :
+    ∃ ctx : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent,
+      ctx.state = C.state.state :=
+  ⟨C.toMinimalIdentityWeylCoordinatelessSouriauContext, rfl⟩
+
+/--
 Compatibility adapter from the minimal constructive branch to the full
 coordinateless Souriau/KMS/Fisher context.
 

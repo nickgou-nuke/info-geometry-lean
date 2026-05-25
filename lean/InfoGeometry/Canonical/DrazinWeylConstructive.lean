@@ -81,6 +81,17 @@ structure DrazinInfiniteWeylWitness (T : EndH) where
     assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
 
+/--
+Proof-carrying classical Riesz witness for the Weyl bridge: bundle the legacy
+classical decomposition witness with the spectral-sheet commutation proof it
+already exports.
+-/
+structure ClassicalRieszWeylWitness (T : EndH) where
+  classical_riesz : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T
+  classical_candidate_commutes_spectralEpsilon :
+    classical_riesz.D.comp (spectral_epsilon (E := E))
+      = (spectral_epsilon (E := E)).comp classical_riesz.D
+
 /-- Shim theorem exporting constructive commutation into legacy Weyl compatibility. -/
 theorem drazinInverse_isWeylCompatible
     (D : ConstructiveDrazinWeylData (E := E)) :
@@ -229,6 +240,17 @@ def constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
       constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero] using hComm
 
 /--
+Proof-carrying classical Riesz witness route into the constructive Weyl bridge
+packet.
+-/
+def constructiveRieszWeylData_of_classicalRieszWeylWitness
+    {T : EndH}
+    (W : ClassicalRieszWeylWitness (E := E) T) :
+    ConstructiveRieszWeylData (E := E) T :=
+  constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
+    (E := E) W.classical_riesz W.classical_candidate_commutes_spectralEpsilon
+
+/--
 Package the broad infinite Drazin assumption lane into the constructive Weyl
 bridge using its owned classical Riesz component.
 -/
@@ -283,6 +305,20 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
   · exact constructiveDrazinCandidate_isWeylCompatible (E := E) D
 
 /--
+Proof-carrying classical Riesz witness route into the constructive Drazin/Weyl
+existence theorem.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_classicalRieszWeylWitness
+    {T : EndH}
+    (W : ClassicalRieszWeylWitness (E := E) T) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+      (E := E)
+      (constructiveRieszWeylData_of_classicalRieszWeylWitness (E := E) W)
+
+/--
 Classical Riesz witness lane exports the same constructive Drazin/Weyl package
 without repeating the existential witness construction downstream.
 -/
@@ -295,10 +331,10 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_hasClassicalRieszDecompositio
     ∃ k TD,
       Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
   exact
-    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+    exists_isDrazinInverse_isWeylCompatible_of_classicalRieszWeylWitness
       (E := E)
-      (constructiveRieszWeylData_of_hasClassicalRieszDecompositionAtZero
-        (E := E) h hComm)
+      { classical_riesz := h
+        classical_candidate_commutes_spectralEpsilon := hComm }
 
 /--
 Broad infinite Drazin assumptions export the same constructive Drazin/Weyl

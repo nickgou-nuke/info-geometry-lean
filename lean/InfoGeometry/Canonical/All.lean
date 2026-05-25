@@ -133,6 +133,10 @@ import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 import InfoGeometry.Canonical.CantorBoundarySplitClifford
 import InfoGeometry.Canonical.SplitCARCurrentSource
 import InfoGeometry.Canonical.SplitCliffordCurrentLift
+import InfoGeometry.Canonical.SplitCliffordSourceCarrier
+import InfoGeometry.Canonical.SplitCliffordSourceCurrent
+import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
+import InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 import InfoGeometry.Canonical.SplitCliffordExternalChain
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
@@ -734,6 +738,7 @@ import InfoGeometry.Canonical.SouriauConformalKKTContext
 import InfoGeometry.Canonical.SouriauDensityWeightContext
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauCasimirInvariant
+import InfoGeometry.Canonical.SouriauOrbitDynamics
 import InfoGeometry.Canonical.SouriauFlowCliffordBridge
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge

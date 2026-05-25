@@ -350,6 +350,67 @@ theorem weightedHodgeSquareEnergy_eq_sum_occupied
   rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy]
   exact weightedNumberEnergy_eq_sum_occupied P weight hS
 
+/--
+Creating an unoccupied prime mode adds exactly that mode's weight to the
+finite prime-Cantor Hamiltonian.
+
+This is the concrete creation-energy lemma:
+
+  `H(S ∪ {p}) = H(S) + weight p`
+
+provided `p` is in the certified prime register and not already occupied.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_insert_of_not_mem
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S : Finset ℕ}
+    (hp : p ∈ P.primes)
+    (hS : S ⊆ P.primes)
+    (hnot : p ∉ S) :
+    weightedNumberEnergy P weight (insert p S) =
+      weightedNumberEnergy P weight S + weight p := by
+  have hInsert : insert p S ⊆ P.primes := by
+    intro q hq
+    rcases Finset.mem_insert.mp hq with hqp | hqS
+    · subst q
+      exact hp
+    · exact hS hqS
+  rw [weightedNumberEnergy_eq_sum_occupied P weight hInsert]
+  rw [weightedNumberEnergy_eq_sum_occupied P weight hS]
+  rw [Finset.sum_insert hnot]
+  ring
+
+/--
+Annihilating an occupied prime mode subtracts exactly that mode's weight from
+the finite prime-Cantor Hamiltonian.
+
+This is the concrete annihilation-energy lemma:
+
+  `H(S \ {p}) = H(S) - weight p`
+
+provided `p` is occupied.
+-/
+@[rep_depth thermo]
+theorem weightedNumberEnergy_erase_of_mem
+    (P : PrimeRegister)
+    (weight : ℕ → ℝ)
+    {p : ℕ}
+    {S : Finset ℕ}
+    (hS : S ⊆ P.primes)
+    (hmem : p ∈ S) :
+    weightedNumberEnergy P weight (S.erase p) =
+      weightedNumberEnergy P weight S - weight p := by
+  have hErase : S.erase p ⊆ P.primes := by
+    intro q hq
+    exact hS (Finset.mem_of_mem_erase hq)
+  rw [weightedNumberEnergy_eq_sum_occupied P weight hErase]
+  rw [weightedNumberEnergy_eq_sum_occupied P weight hS]
+  have hsum : (S.erase p).sum (fun q => weight q) + weight p = S.sum (fun q => weight q) := by
+    simpa using Finset.sum_erase_add S (fun q => weight q) hmem
+  exact (eq_sub_iff_add_eq).2 hsum
+
 
 /-! ## 4. Bundled finite graph-Dirac carrier -/
 

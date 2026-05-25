@@ -216,6 +216,42 @@ theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibr
   simpa [hMetricZero, hPhaseZero] using hSplit
 
 /--
+Faithful probing plus vanishing first variation kill the zero-weight packet, so
+only the explicit weighted phase-axis response remains.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0)
+    (w : ℝ) :
+    ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
+      =
+    (w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+          (E := E)
+          (transportCommutator (E := E)
+            (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+      w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+          (E := E)
+          (transportCommutator (E := E)
+            (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+  have hSplit :=
+    densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisReadout
+      (P := P) (ψ := ψ) (A := A) (w := w)
+  have hZero :=
+    densityWeightLiftedReadout_zero_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) (P := P) (ψ := ψ) (A := A) hFaithful hFirst
+  have hMetricZero :
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).metric = 0 := by
+    exact congrArg Prod.fst hZero
+  have hPhaseZero :
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).phase = 0 := by
+    exact congrArg Prod.snd hZero
+  simpa [hMetricZero, hPhaseZero] using hSplit
+
+/--
 If the observable channel commutes with the density-weight phase axis, then a
 Gibbs-Souriau equilibrium seed kills the full weighted density-lifted readout at
 any weight.

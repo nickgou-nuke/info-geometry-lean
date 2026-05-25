@@ -413,6 +413,32 @@ theorem su3cColorStabilizer_incidenceNeighborhood_image_eq
       simpa using hY
     exact hiff.mp (by simpa using hstep)
 
+/--
+Erlangen incidence-pencil equivariance.
+
+If a map on projective null rays is surjective and preserves quotient-level
+incidence, then the full incidence pencil through `g p` is exactly the image
+under `g` of the incidence pencil through `p`.
+-/
+theorem incident_pencil_image_eq_of_invariant
+    (g : ZornProjectiveDatum.NullRay D.base →
+          ZornProjectiveDatum.NullRay D.base)
+    (hsurj : Function.Surjective g)
+    (hInc :
+      ∀ X Y : ZornProjectiveDatum.NullRay D.base,
+        Incident D (g X) (g Y) ↔ Incident D X Y)
+    (p : ZornProjectiveDatum.NullRay D.base) :
+    {Y : ZornProjectiveDatum.NullRay D.base | Incident D Y (g p)}
+      =
+    g '' {X : ZornProjectiveDatum.NullRay D.base | Incident D X p} := by
+  ext Y
+  constructor
+  · intro hY
+    rcases hsurj Y with ⟨X, rfl⟩
+    exact ⟨X, (hInc X p).1 hY, rfl⟩
+  · rintro ⟨X, hX, rfl⟩
+    exact (hInc X p).2 hX
+
 end PolarDatum
 
 end ZornProjectiveDatum

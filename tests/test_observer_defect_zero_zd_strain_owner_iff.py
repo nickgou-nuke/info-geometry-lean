@@ -20,3 +20,11 @@ def test_zero_zd_owner_iff_has_constructive_control_witness_route() -> None:
     assert "theorem observerDeviationControl_of_strain_eq_zero" in text
     assert "theorem observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero" in text
     assert "ObserverDeviationControlledByZD.of_control c" in text
+
+
+def test_zero_zd_owner_iff_exports_residual_zero_to_control_witness() -> None:
+    text = OBSERVER_DEFECT.read_text(encoding="utf-8")
+
+    assert "theorem observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero" in text
+    assert "observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero" in text
+    assert "observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)" in text

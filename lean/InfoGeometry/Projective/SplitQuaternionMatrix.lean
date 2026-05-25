@@ -158,26 +158,96 @@ structure SplitQuaternion where
   y : ℝ
   z : ℝ
 
--- DEBT_KIND: SORRY
-noncomputable instance : AddCommGroup SplitQuaternion := sorry
+/--
+Concrete matrix realization of a split quaternion.
+-/
+def splitQuaternionToMatrixQ (q : SplitQuaternion) : Matrix (Fin 2) (Fin 2) ℝ :=
+  splitQuaternionToMatrix q.w q.x q.y q.z
 
--- DEBT_KIND: SORRY
-noncomputable instance : Module ℝ SplitQuaternion := sorry
+/--
+Inverse coordinate readback from `M₂(ℝ)` to split-quaternion coordinates.
+-/
+noncomputable def matrixToSplitQuaternion (M : Matrix (Fin 2) (Fin 2) ℝ) : SplitQuaternion where
+  w := (M 0 0 + M 1 1) / 2
+  x := (M 0 1 - M 1 0) / 2
+  y := (M 0 1 + M 1 0) / 2
+  z := (M 0 0 - M 1 1) / 2
 
--- DEBT_KIND: SORRY
-noncomputable instance : Ring SplitQuaternion := sorry
+theorem splitQuaternionToMatrixQ_matrixToSplitQuaternion
+    (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    splitQuaternionToMatrixQ (matrixToSplitQuaternion M) = M := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [splitQuaternionToMatrixQ, matrixToSplitQuaternion,
+      splitQuaternionToMatrix, mat_1, mat_i, mat_j, mat_k]
+    <;> ring
 
--- DEBT_KIND: SORRY
-noncomputable instance : Algebra ℝ SplitQuaternion := sorry
+theorem matrixToSplitQuaternion_splitQuaternionToMatrixQ
+    (q : SplitQuaternion) :
+    matrixToSplitQuaternion (splitQuaternionToMatrixQ q) = q := by
+  cases q
+  simp [matrixToSplitQuaternion, splitQuaternionToMatrixQ,
+    splitQuaternionToMatrix, mat_1, mat_i, mat_j, mat_k]
+  constructor <;> ring
+
+/--
+Equivalence between split-quaternion coordinates and `M₂(ℝ)`.
+-/
+noncomputable def splitQuaternionEquivMatrix :
+    SplitQuaternion ≃ Matrix (Fin 2) (Fin 2) ℝ where
+  toFun := splitQuaternionToMatrixQ
+  invFun := matrixToSplitQuaternion
+  left_inv := matrixToSplitQuaternion_splitQuaternionToMatrixQ
+  right_inv := splitQuaternionToMatrixQ_matrixToSplitQuaternion
+
+noncomputable instance : AddCommGroup SplitQuaternion :=
+  Equiv.addCommGroup splitQuaternionEquivMatrix
+
+noncomputable instance : Module ℝ SplitQuaternion :=
+  Equiv.module ℝ splitQuaternionEquivMatrix
+
+noncomputable instance : Ring SplitQuaternion :=
+  Equiv.ring splitQuaternionEquivMatrix
+
+noncomputable instance : Algebra ℝ SplitQuaternion :=
+  Equiv.algebra ℝ splitQuaternionEquivMatrix
 
 /--
 The fundamental equivalence $\mathbb{H}_s \cong M_2(\mathbb{R})$.
 With the exact mapping provided, this equivalence is structurally fixed.
 
--- DEBT_KIND: SORRY
 -/
 noncomputable def splitQuaternionMatrixEquiv :
     SplitQuaternion ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ :=
-  sorry
+  { toFun := splitQuaternionToMatrixQ
+    invFun := matrixToSplitQuaternion
+    left_inv := matrixToSplitQuaternion_splitQuaternionToMatrixQ
+    right_inv := splitQuaternionToMatrixQ_matrixToSplitQuaternion
+    map_mul' := by
+      intro a b
+      change
+        splitQuaternionEquivMatrix
+            (splitQuaternionEquivMatrix.symm
+              (splitQuaternionEquivMatrix a * splitQuaternionEquivMatrix b))
+          =
+        splitQuaternionEquivMatrix a * splitQuaternionEquivMatrix b
+      simp
+    map_add' := by
+      intro a b
+      change
+        splitQuaternionEquivMatrix
+            (splitQuaternionEquivMatrix.symm
+              (splitQuaternionEquivMatrix a + splitQuaternionEquivMatrix b))
+          =
+        splitQuaternionEquivMatrix a + splitQuaternionEquivMatrix b
+      simp
+    commutes' := by
+      intro r
+      change
+        splitQuaternionEquivMatrix
+            (splitQuaternionEquivMatrix.symm
+              (algebraMap ℝ (Matrix (Fin 2) (Fin 2) ℝ) r))
+          =
+        algebraMap ℝ (Matrix (Fin 2) (Fin 2) ℝ) r
+      simp }
 
 end InfoGeometry.Projective

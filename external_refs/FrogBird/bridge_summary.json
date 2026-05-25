@@ -3,7 +3,7 @@
   "declarations": 5000,
   "output_dir": "external_refs/FrogBird",
   "schema": "info_geometry.external_frogbird.bridge.summary.v1",
-  "source": "external/FrogBird/theorem_index.json",
+  "source": "/home/goutev/repos/info-geometry-lean/external/FrogBird/theorem_index.json",
   "stats": {
     "decls": 39944,
     "files": 1688

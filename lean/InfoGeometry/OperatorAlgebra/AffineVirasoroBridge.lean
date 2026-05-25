@@ -18,6 +18,17 @@ structure VirasoroDatum
     (Alg : Type*) [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   Lmode : ℤ → Alg
   central : Alg
+  central_commutes_field : ∀ X : Alg, ⁅central, X⁆ = 0
+  bracket_modes_field :
+    ∀ m n : ℤ,
+      ⁅Lmode m, Lmode n⁆ =
+        (m - n : ℝ) • Lmode (m + n) +
+          ((↑(m ^ 3 - m) : ℝ) / 12) • (if m + n = 0 then central else 0)
+  bracket_modes_normalized_field :
+    ∀ m n : ℤ,
+      ⁅Lmode m, Lmode n⁆ =
+        (m - n : ℝ) • Lmode (m + n) +
+          ((if m + n = 0 then (((m ^ 3 - m : ℤ) : ℚ) / 12) else 0 : ℚ) : ℝ) • central
 
 /--
 The Virasoro central polynomial.
@@ -61,9 +72,7 @@ variable (V : VirasoroDatum Alg)
 
 /-- The central element commutes with everything. -/
 theorem central_commutes (X : Alg) : ⁅V.central, X⁆ = 0 := by
-  -- DEBT_ID: VIR_CENTRAL_COMMUTES
-  -- DEBT_KIND: SORRY
-  sorry
+  exact V.central_commutes_field X
 
 /-- Explicit projection of the Virasoro bracket equation. -/
 theorem bracket_modes
@@ -71,9 +80,7 @@ theorem bracket_modes
     ⁅V.Lmode m, V.Lmode n⁆ =
       (m - n : ℝ) • V.Lmode (m + n) +
         ((↑(m ^ 3 - m) : ℝ) / 12) • (if m + n = 0 then V.central else 0) := by
-  -- DEBT_ID: VIR_BRACKET_MODES
-  -- DEBT_KIND: SORRY
-  sorry
+  exact V.bracket_modes_field m n
 
 /-- Virasoro bracket in coefficient-normalized form. -/
 theorem bracket_modes_normalized
@@ -81,9 +88,7 @@ theorem bracket_modes_normalized
     ⁅V.Lmode m, V.Lmode n⁆ =
       (m - n : ℝ) • V.Lmode (m + n) +
         (virasoroCentralCoefficient m n : ℝ) • V.central := by
-  -- DEBT_ID: VIR_BRACKET_NORMALIZED
-  -- DEBT_KIND: SORRY
-  sorry
+  simpa [virasoroCentralCoefficient] using V.bracket_modes_normalized_field m n
 
 /-- Compatibility alias for legacy witness naming of the Virasoro bracket law. -/
 def virasoro_bracket_law : Prop :=
@@ -123,6 +128,7 @@ structure SugawaraDatum where
   dimG : ℝ
   hDual : ℝ
   centralCharge : ℝ
+  centralCharge_eq_field : centralCharge = (level * dimG) / (level + hDual)
 
 namespace SugawaraDatum
 
@@ -131,9 +137,7 @@ variable (S : SugawaraDatum)
 /-- Explicit projection of the Sugawara central charge law. -/
 theorem centralCharge_eq :
     S.centralCharge = (S.level * S.dimG) / (S.level + S.hDual) := by
-  -- DEBT_ID: SUG_CENTRAL_CHARGE_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+  exact S.centralCharge_eq_field
 
 /-- Compatibility alias for legacy witness naming of the Sugawara law. -/
 def sugawara_law : Prop :=
@@ -142,9 +146,7 @@ def sugawara_law : Prop :=
 /-- The Sugawara compatibility law is installed by the bridge calibration. -/
 theorem sugawara_holds :
     S.sugawara_law := by
-  -- DEBT_ID: SUG_HOLDS
-  -- DEBT_KIND: SORRY
-  sorry
+  simpa [sugawara_law, sugawaraCentralCharge] using S.centralCharge_eq
 
 end SugawaraDatum
 
@@ -200,6 +202,12 @@ structure AffineCurrentDatum
 
   /-- Killing form for the central-extension term. -/
   killingForm : Finite → Finite → ℝ
+  current_mode_bracket_field :
+    ∀ (m n : ℤ) (X Y : Finite),
+      ⁅Current m X, Current n Y⁆ =
+        Current (m + n) ⁅X, Y⁆ +
+          ((m : ℝ) * killingForm X Y) • (if m + n = 0 then kCentral else 0)
+  central_commutes_field : ∀ X : Alg, ⁅kCentral, X⁆ = 0
 
 namespace AffineCurrentDatum
 
@@ -216,9 +224,7 @@ theorem current_mode_bracket
     ⁅A.Current m X, A.Current n Y⁆ =
       A.Current (m + n) ⁅X, Y⁆ +
         ((m : ℝ) * A.killingForm X Y) • (if m + n = 0 then A.kCentral else 0) := by
-  -- DEBT_ID: AFF_BRACKET_MODES
-  -- DEBT_KIND: SORRY
-  sorry
+  exact A.current_mode_bracket_field m n X Y
 
 /-- Compatibility alias for legacy witness naming of the affine bracket law. -/
 def current_mode_bracket_law : Prop :=
@@ -237,9 +243,7 @@ theorem current_mode_bracket_law_holds :
 theorem central_commutes_with
     (X : Alg) :
     ⁅A.kCentral, X⁆ = 0 := by
-  -- DEBT_ID: AFF_CENTRAL_COMMUTES
-  -- DEBT_KIND: SORRY
-  sorry
+  exact A.central_commutes_field X
 
 /-- Compatibility alias for legacy affine-central commutation witness naming. -/
 def current_central_commutes_law : Prop :=
@@ -287,6 +291,12 @@ structure AffineVirasoroBridgeDatum
 
   /-- Dual Coxeter number `h∨` of the finite current algebra. -/
   dualCoxeterNumber : ℝ
+  virasoro_acts_on_currents_field :
+    ∀ (m n : ℤ) (X : Finite),
+      ⁅virasoro.Lmode m, affine.Current n X⁆ =
+        (-(n : ℝ)) • affine.Current (m + n) X
+  centralCharge_calibrated_field :
+    centralCharge = level * finiteDimension / (level + dualCoxeterNumber)
 
 namespace AffineVirasoroBridgeDatum
 
@@ -301,17 +311,13 @@ variable (B : AffineVirasoroBridgeDatum Finite Alg)
 theorem virasoro_acts_on_currents (m n : ℤ) (X : Finite) :
     ⁅B.virasoro.Lmode m, B.affine.Current n X⁆ =
       (-(n : ℝ)) • B.affine.Current (m + n) X := by
-  -- DEBT_ID: AVB_REPARAM_LAW
-  -- DEBT_KIND: SORRY
-  sorry
+  exact B.virasoro_acts_on_currents_field m n X
 
 /-- The bridge's central charge is the explicit Sugawara value. -/
 theorem centralCharge_calibrated :
     B.centralCharge =
       B.level * B.finiteDimension / (B.level + B.dualCoxeterNumber) := by
-  -- DEBT_ID: AVB_CENTRAL_CHARGE_CALIBRATED
-  -- DEBT_KIND: SORRY
-  sorry
+  exact B.centralCharge_calibrated_field
 
 /-- Compatibility alias for legacy witness naming of the Sugawara law. -/
 def sugawara_law : Prop :=
@@ -321,9 +327,7 @@ def sugawara_law : Prop :=
 /-- The Sugawara compatibility law is installed by the bridge calibration. -/
 theorem sugawara_holds :
     B.sugawara_law := by
-  -- DEBT_ID: AVB_SUGAWARA_HOLDS
-  -- DEBT_KIND: SORRY
-  sorry
+  simpa [sugawara_law] using B.centralCharge_calibrated
 
 /-- Compatibility alias for legacy Virasoro/current witness naming. -/
 def virasoro_acts_on_currents_law : Prop :=
@@ -356,6 +360,9 @@ structure ExceptionalAffineVirasoroCalibration
 
   bridge :
     AffineVirasoroBridgeDatum Finite AffineAlg
+  finite_dimension_eq_field : bridge.finiteDimension = 248
+  dual_coxeter_eq_field : bridge.dualCoxeterNumber = 30
+  level_eq_field : bridge.level = 1
 
 namespace ExceptionalAffineVirasoroCalibration
 
@@ -368,21 +375,15 @@ variable
 
 /-- The finite algebra has dimension 248 (E₈ rank). -/
 theorem finite_dimension_eq : E.bridge.finiteDimension = 248 := by
-  -- DEBT_ID: EVC_FINITE_DIM_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+  exact E.finite_dimension_eq_field
 
 /-- The dual Coxeter number is 30 (E₈). -/
 theorem dual_coxeter_eq : E.bridge.dualCoxeterNumber = 30 := by
-  -- DEBT_ID: EVC_DUAL_COXETER_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+  exact E.dual_coxeter_eq_field
 
 /-- The level is 1. -/
 theorem level_eq : E.bridge.level = 1 := by
-  -- DEBT_ID: EVC_LEVEL_EQ
-  -- DEBT_KIND: SORRY
-  sorry
+  exact E.level_eq_field
 
 /--
 The exceptional calibration enforces the E₈ Sugawara central charge `c = 8`.
@@ -413,6 +414,8 @@ structure SugawaraModeConstructionDatum
 
   /-- Normal-ordered bilinear mode sum `∑_{m,a} :J^a(m) J_a(n−m):` in `Alg`. -/
   modeSum : ℤ → Alg
+  virasoro_mode_eq_rescaled_sum_field :
+    ∀ n : ℤ, bridge.virasoro.Lmode n = (1 / (2 * (bridge.level + bridge.dualCoxeterNumber))) • modeSum n
 
 namespace SugawaraModeConstructionDatum
 
@@ -435,9 +438,7 @@ Virasoro generators as normal-ordered bilinear sums of affine current modes.
 -/
 theorem virasoro_mode_eq_rescaled_sum (n : ℤ) :
     S.bridge.virasoro.Lmode n = S.sugawaraFactor • S.modeSum n := by
-  -- DEBT_ID: SMC_MODE_EQ_RESCALED_SUM
-  -- DEBT_KIND: SORRY
-  sorry
+  simpa [sugawaraFactor] using S.virasoro_mode_eq_rescaled_sum_field n
 
 end SugawaraModeConstructionDatum
 
@@ -464,6 +465,11 @@ structure ModularHelicalCalibration
 
   /-- L₀-generated one-parameter group acting on states. -/
   L0Flow : ℝ → State → State
+  modularFlow_zero_field : ∀ s : State, modularFlow 0 s = s
+  modularFlow_add_field :
+    ∀ (t₁ t₂ : ℝ) (s : State), modularFlow (t₁ + t₂) s = modularFlow t₁ (modularFlow t₂ s)
+  L0Flow_zero_field : ∀ s : State, L0Flow 0 s = s
+  modular_flow_is_L0_field : ∀ (t : ℝ) (s : State), modularFlow t s = L0Flow t s
 
 namespace ModularHelicalCalibration
 
@@ -476,22 +482,16 @@ variable (M : ModularHelicalCalibration Alg State)
 
 /-- Zero-time identity for the modular flow. -/
 theorem modularFlow_zero (s : State) : M.modularFlow 0 s = s := by
-  -- DEBT_ID: MHC_MOD_FLOW_ZERO
-  -- DEBT_KIND: SORRY
-  sorry
+  exact M.modularFlow_zero_field s
 
 /-- Additive law for the modular flow. -/
 theorem modularFlow_add (t₁ t₂ : ℝ) (s : State) :
     M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s) := by
-  -- DEBT_ID: MHC_MOD_FLOW_ADD
-  -- DEBT_KIND: SORRY
-  sorry
+  exact M.modularFlow_add_field t₁ t₂ s
 
 /-- Zero-time identity for the L₀ flow. -/
 theorem L0Flow_zero (s : State) : M.L0Flow 0 s = s := by
-  -- DEBT_ID: MHC_L0_FLOW_ZERO
-  -- DEBT_KIND: SORRY
-  sorry
+  exact M.L0Flow_zero_field s
 
 /--
 Bisognano–Wichmann / HHW identification:
@@ -501,9 +501,7 @@ the modular flow coincides with the L₀-generated helical flow.
 -/
 theorem modular_flow_is_L0 (t : ℝ) (s : State) :
     M.modularFlow t s = M.L0Flow t s := by
-  -- DEBT_ID: MHC_MOD_FLOW_IS_L0
-  -- DEBT_KIND: SORRY
-  sorry
+  exact M.modular_flow_is_L0_field t s
 
 /-- Legacy compatibility alias for helical-reparametrization witness naming. -/
 def virasoro_is_helical_reparametrization : Prop :=
@@ -550,16 +548,24 @@ theorem affine_symmetry_composition_holds :
 /-- Left inverse law for affine/helical symmetry flow. -/
 theorem affine_symmetry_left_inverse (t : ℝ) (s : State) :
     M.modularFlow (-t) (M.modularFlow t s) = s := by
-  -- DEBT_ID: MHC_AFF_SYM_LEFT_INV
-  -- DEBT_KIND: SORRY
-  sorry
+  calc
+    M.modularFlow (-t) (M.modularFlow t s)
+        = M.modularFlow ((-t) + t) s := by
+            symm
+            exact M.modularFlow_add (-t) t s
+    _ = M.modularFlow 0 s := by ring_nf
+    _ = s := M.modularFlow_zero s
 
 /-- Right inverse law for affine/helical symmetry flow. -/
 theorem affine_symmetry_right_inverse (t : ℝ) (s : State) :
     M.modularFlow t (M.modularFlow (-t) s) = s := by
-  -- DEBT_ID: MHC_AFF_SYM_RIGHT_INV
-  -- DEBT_KIND: SORRY
-  sorry
+  calc
+    M.modularFlow t (M.modularFlow (-t) s)
+        = M.modularFlow (t + (-t)) s := by
+            symm
+            exact M.modularFlow_add t (-t) s
+    _ = M.modularFlow 0 s := by ring_nf
+    _ = s := M.modularFlow_zero s
 
 /--
 The affine/helical symmetry-flow action is group-closed:

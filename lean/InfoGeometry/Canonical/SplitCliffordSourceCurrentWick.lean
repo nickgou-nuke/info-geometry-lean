@@ -106,4 +106,34 @@ theorem represented_current_commutator_chargedFock
     _root_.InfoGeometry.Canonical.CurrentSugawaraBridge.chargedFockSpaceCurrentHeisenbergRep 𝕜 α
   exact ⟨H.J, H.trunc, H.comm⟩
 
+/--
+Finite-support (finite-window) commutator expansion readout from the raw-CAR
+owner theorem surface.
+-/
+theorem finiteSupport_cutoffCurrent_commutator_expand_from_rawCAR
+    {A : Type*} [Ring A]
+    (C : _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARModeCompletion A)
+    (N M : Nat) (m n : Int) :
+    _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.comm
+        (∑ k ∈ _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.integerWindow N,
+          C.matrixUnit k (k + m))
+        (∑ l ∈ _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.integerWindow M,
+          C.matrixUnit l (l + n))
+      =
+      ∑ k ∈ _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.integerWindow N,
+        ∑ l ∈ _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.integerWindow M,
+          ((if k + m = l then C.matrixUnit k (l + n) else 0)
+            -
+            (if k = l + n then C.matrixUnit l (k + m) else 0)
+            +
+            (if k + m = l ∧ k = l + n then
+              (_root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.occ k
+                - _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.occ (k + m)) •
+                C.central
+            else
+              0)) := by
+  simpa using
+    _root_.InfoGeometry.Canonical.BosonizationConstructiveCurrent.representedCutoffCurrent_commutator_expand_from_rawCAR
+      C N M m n
+
 end InfoGeometry.Canonical.SplitCliffordSourceCurrentWick

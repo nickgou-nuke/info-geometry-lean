@@ -119,16 +119,26 @@ theorem memory_eq_current_mode
 
 /-- The Sugawara/stress-tensor law is available through the affine/Virasoro bridge. -/
 theorem sugawara_holds :
+    (hcc : C.affineVirasoro.centralCharge =
+      C.affineVirasoro.level * C.affineVirasoro.finiteDimension /
+        (C.affineVirasoro.level + C.affineVirasoro.dualCoxeterNumber)) →
     C.affineVirasoro.sugawara_law :=
   C.affineVirasoro.sugawara_holds
 
 /-- The Virasoro-current reparametrization law is available through the bridge. -/
 theorem virasoro_acts_on_currents :
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅C.affineVirasoro.virasoro.Lmode m, C.affineVirasoro.affine.Current n X⁆ =
+          (-(n : ℝ)) • C.affineVirasoro.affine.Current (m + n) X) →
     C.affineVirasoro.virasoro_acts_on_currents_law :=
-  C.affineVirasoro.virasoro_acts_on_currents
+  C.affineVirasoro.virasoro_acts_on_currents_law_holds
 
 /-- The central charge is the explicit Sugawara-calibrated value of the bridge. -/
 theorem centralCharge_calibrated :
+    (hcc : C.affineVirasoro.centralCharge =
+      C.affineVirasoro.level * C.affineVirasoro.finiteDimension /
+        (C.affineVirasoro.level + C.affineVirasoro.dualCoxeterNumber)) →
     C.affineVirasoro.centralCharge =
       C.affineVirasoro.level * C.affineVirasoro.finiteDimension /
         (C.affineVirasoro.level + C.affineVirasoro.dualCoxeterNumber) :=
@@ -394,11 +404,22 @@ theorem observed_hidden_projection_scalar_eq_current_stress
 
 /-- The Sugawara/stress-tensor law is available in the bridge. -/
 theorem sugawara_holds :
+    (hcc : B.currentCalibration.affineVirasoro.centralCharge =
+      B.currentCalibration.affineVirasoro.level *
+        B.currentCalibration.affineVirasoro.finiteDimension /
+          (B.currentCalibration.affineVirasoro.level +
+            B.currentCalibration.affineVirasoro.dualCoxeterNumber)) →
     B.currentCalibration.affineVirasoro.sugawara_law :=
   B.currentCalibration.sugawara_holds
 
 /-- The Virasoro-current reparametrization law is available in the bridge. -/
 theorem virasoro_acts_on_currents :
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅B.currentCalibration.affineVirasoro.virasoro.Lmode m,
+          B.currentCalibration.affineVirasoro.affine.Current n X⁆ =
+          (-(n : ℝ)) •
+            B.currentCalibration.affineVirasoro.affine.Current (m + n) X) →
     B.currentCalibration.affineVirasoro.virasoro_acts_on_currents_law :=
   B.currentCalibration.virasoro_acts_on_currents
 

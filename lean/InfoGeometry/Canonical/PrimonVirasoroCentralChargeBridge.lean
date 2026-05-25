@@ -236,10 +236,13 @@ theorem primeVirasoroCentralCharge_eq_card_of_level_one_dualCoxeter_zero
     (S : Finset PrimeLabel)
     (hlevel : P.primeVirasoro.affineVirasoro.level = 1)
     (hdim : P.primeVirasoro.affineVirasoro.finiteDimension = (S.card : ℝ))
-    (hdual : P.primeVirasoro.affineVirasoro.dualCoxeterNumber = 0) :
+    (hdual : P.primeVirasoro.affineVirasoro.dualCoxeterNumber = 0)
+    (hcc : P.primeVirasoro.affineVirasoro.centralCharge =
+      P.primeVirasoro.affineVirasoro.level * P.primeVirasoro.affineVirasoro.finiteDimension /
+        (P.primeVirasoro.affineVirasoro.level + P.primeVirasoro.affineVirasoro.dualCoxeterNumber)) :
     P.primeVirasoro.affineVirasoro.centralCharge = (S.card : ℝ) :=
   PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero
-    P.primeVirasoro S hlevel hdim hdual
+    P.primeVirasoro S hlevel hdim hdual hcc
 
 /-- The Virasoro central charge is calibrated by the Sugawara owner theorem. -/
 @[rep_depth operator]

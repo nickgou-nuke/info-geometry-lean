@@ -123,7 +123,13 @@ def uMinusCurrent (n : ℤ) : Alg :=
 /-- Positive current bracket law inherited from the lightcone affine owner. -/
 @[rep_depth operator]
 theorem uPlusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affineLightCone.affine.Current m X, B.affineLightCone.affine.Current n Y⁆ =
+          B.affineLightCone.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affineLightCone.affine.killingForm X Y) •
+              (if m + n = 0 then B.affineLightCone.affine.kCentral else 0)) :
     ⁅B.uPlusCurrent m, B.uPlusCurrent n⁆ =
       B.affineLightCone.affine.Current (m + n)
           ⁅B.affineLightCone.uPlusRoot, B.affineLightCone.uPlusRoot⁆ +
@@ -132,12 +138,18 @@ theorem uPlusCurrent_bracket
               B.affineLightCone.uPlusRoot B.affineLightCone.uPlusRoot) •
           (if m + n = 0 then B.affineLightCone.affine.kCentral else 0) := by
   unfold uPlusCurrent
-  exact B.affineLightCone.uPlusCurrent_bracket m n
+  exact B.affineLightCone.uPlusCurrent_bracket m n hbr
 
 /-- Negative current bracket law inherited from the lightcone affine owner. -/
 @[rep_depth operator]
 theorem uMinusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affineLightCone.affine.Current m X, B.affineLightCone.affine.Current n Y⁆ =
+          B.affineLightCone.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affineLightCone.affine.killingForm X Y) •
+              (if m + n = 0 then B.affineLightCone.affine.kCentral else 0)) :
     ⁅B.uMinusCurrent m, B.uMinusCurrent n⁆ =
       B.affineLightCone.affine.Current (m + n)
           ⁅B.affineLightCone.uMinusRoot, B.affineLightCone.uMinusRoot⁆ +
@@ -146,12 +158,18 @@ theorem uMinusCurrent_bracket
               B.affineLightCone.uMinusRoot B.affineLightCone.uMinusRoot) •
           (if m + n = 0 then B.affineLightCone.affine.kCentral else 0) := by
   unfold uMinusCurrent
-  exact B.affineLightCone.uMinusCurrent_bracket m n
+  exact B.affineLightCone.uMinusCurrent_bracket m n hbr
 
 /-- Mixed current bracket law inherited from the lightcone affine owner. -/
 @[rep_depth operator]
 theorem uPlus_uMinusCurrent_bracket
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hbr :
+      ∀ (m n : ℤ) (X Y : Finite),
+        ⁅B.affineLightCone.affine.Current m X, B.affineLightCone.affine.Current n Y⁆ =
+          B.affineLightCone.affine.Current (m + n) ⁅X, Y⁆ +
+            ((m : ℝ) * B.affineLightCone.affine.killingForm X Y) •
+              (if m + n = 0 then B.affineLightCone.affine.kCentral else 0)) :
     ⁅B.uPlusCurrent m, B.uMinusCurrent n⁆ =
       B.affineLightCone.affine.Current (m + n)
           ⁅B.affineLightCone.uPlusRoot, B.affineLightCone.uMinusRoot⁆ +
@@ -160,29 +178,42 @@ theorem uPlus_uMinusCurrent_bracket
               B.affineLightCone.uPlusRoot B.affineLightCone.uMinusRoot) •
           (if m + n = 0 then B.affineLightCone.affine.kCentral else 0) := by
   unfold uPlusCurrent uMinusCurrent
-  exact B.affineLightCone.uPlus_uMinusCurrent_bracket m n
+  exact B.affineLightCone.uPlus_uMinusCurrent_bracket m n hbr
 
 /-- Virasoro reparametrization of positive lightcone current modes. -/
 @[rep_depth operator]
 theorem virasoro_acts_on_uPlusCurrent
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅B.affineLightCone.bridge.virasoro.Lmode m,
+          B.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • B.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅B.affineLightCone.virasoro.Lmode m, B.uPlusCurrent n⁆ =
       (-(n : ℝ)) • B.uPlusCurrent (m + n) := by
   unfold uPlusCurrent
-  exact B.affineLightCone.virasoro_acts_on_uPlusCurrent m n
+  exact B.affineLightCone.virasoro_acts_on_uPlusCurrent m n hact
 
 /-- Virasoro reparametrization of negative lightcone current modes. -/
 @[rep_depth operator]
 theorem virasoro_acts_on_uMinusCurrent
-    (m n : ℤ) :
+    (m n : ℤ)
+    (hact :
+      ∀ (m n : ℤ) (X : Finite),
+        ⁅B.affineLightCone.bridge.virasoro.Lmode m,
+          B.affineLightCone.bridge.affine.Current n X⁆ =
+          (-(n : ℝ)) • B.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅B.affineLightCone.virasoro.Lmode m, B.uMinusCurrent n⁆ =
       (-(n : ℝ)) • B.uMinusCurrent (m + n) := by
   unfold uMinusCurrent
-  exact B.affineLightCone.virasoro_acts_on_uMinusCurrent m n
+  exact B.affineLightCone.virasoro_acts_on_uMinusCurrent m n hact
 
 /-- Sugawara central-charge calibration inherited from the affine/Virasoro owner. -/
 @[rep_depth operator]
 theorem centralCharge_calibrated :
+    (hcc : B.affineLightCone.bridge.centralCharge =
+      B.affineLightCone.bridge.level * B.affineLightCone.bridge.finiteDimension /
+        (B.affineLightCone.bridge.level + B.affineLightCone.bridge.dualCoxeterNumber)) →
     B.affineLightCone.bridge.centralCharge =
       B.affineLightCone.bridge.level * B.affineLightCone.bridge.finiteDimension /
         (B.affineLightCone.bridge.level + B.affineLightCone.bridge.dualCoxeterNumber) :=

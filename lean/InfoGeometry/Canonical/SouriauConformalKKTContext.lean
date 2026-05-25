@@ -951,6 +951,22 @@ variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
 variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
 
 /--
+Cone membership plus Cartan-odd partition positivity proves the conformal
+operatorial admissibility gate through the proof-carrying cone witness socket,
+without a bare `hCone` theorem argument.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible_of_coneWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (hCone : ConformalConeAdmissibilityWitness C) :
+    C.IsOperatorAdmissible := by
+  simpa using
+    ConformalPositivePartitionWitness.operatorAdmissible
+      (C := C)
+      (W := W.toPositivePartitionWitness)
+      hCone.hCone
+
+/--
 Package the Cartan-odd partition witness as the stable constructive
 operator-admissibility interface used by downstream conformal/Weyl/KKT theorem
 surfaces.
@@ -974,6 +990,29 @@ noncomputable def toOperatorAdmissibilityWitness
   Y := Y
 
 /--
+Package the Cartan-odd partition witness as the stable constructive
+operator-admissibility interface using the proof-carrying cone witness socket,
+without a bare `hCone` theorem argument.
+-/
+@[rep_depth transport]
+noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
+  gibbs := C
+  weylGauge := weylGauge
+  tkkParameter := tkkParameter
+  hTKK := hTKK
+  hCone := hCone.hCone
+  partitionWitness := W.toPositivePartitionWitness
+  X := X
+  Y := Y
+
+/--
 Build the full stable closure context directly from the Cartan-odd partition
 witness plus the remaining Weyl/TKK channel data.
 -/
@@ -987,6 +1026,22 @@ noncomputable def toClosureContext
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
+
+/--
+Build the full stable closure context directly from the Cartan-odd partition
+witness and a proof-carrying cone witness, without a bare `hCone` theorem
+argument.
+-/
+@[rep_depth transport]
+noncomputable def toClosureContextOfConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
+  (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
 
 end ConformalCartanOddPartitionWitness
 

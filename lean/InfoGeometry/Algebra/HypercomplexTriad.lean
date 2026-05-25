@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Algebra.NilpotentNonunit
 
 /-!
 # InfoGeometry.Algebra.HypercomplexTriad
@@ -106,5 +107,19 @@ theorem hypercomplex_triad_unit_status
     exact isUnit_of_sq_eq_neg_one x hx
   · intro hx
     exact triad_not_isUnit_of_sq_eq_zero_of_ne_zero hx.1 hx.2
+
+/--
+Cross-reference to the generic nilpotent non-unit firewall.
+
+This specializes the reusable algebra lemma from
+`InfoGeometry.Algebra.NilpotentNonunit` to the triad context.
+-/
+theorem triad_not_isUnit_via_generic_firewall
+    {R : Type*} [Ring R] [Nontrivial R]
+    {x : R}
+    (hxSq : x * x = 0)
+    (hxNonzero : x ≠ 0) :
+    ¬ IsUnit x :=
+  not_isUnit_of_sq_eq_zero_of_ne_zero hxSq hxNonzero
 
 end InfoGeometry.Algebra

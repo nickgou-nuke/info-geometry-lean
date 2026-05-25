@@ -209,7 +209,7 @@ theorem scalarScale_negLogVolumeJacobian_eq
     (u : ℝˣ) (hu : 0 < (u : ℝ)) :
     zornNegLogVolumeJacobian scalarScaleDetCharacter u =
       -8 * Real.log (u : ℝ) := by
-  have _ : 0 < (u : ℝ) := hu
+  let _ := hu
   unfold zornNegLogVolumeJacobian
   rw [scalarScale_volumeJacobian_eq_eight_power]
   unfold negLog

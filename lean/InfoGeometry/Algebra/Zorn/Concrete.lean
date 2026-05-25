@@ -37,6 +37,112 @@ variable {R : Type*} [CommRing R]
 def detZ (X : ZornCell R) : R :=
   X.r * X.s - (X.x1 * X.y1 + X.x2 * X.y2 + X.x3 * X.y3)
 
+/-! ## Zorn polar form: the bilinear form behind `Cl(4,4)` -/
+
+/-- Coordinatewise addition of concrete Zorn cells. -/
+def addZ (X Y : ZornCell R) : ZornCell R where
+  r := X.r + Y.r
+  s := X.s + Y.s
+  x1 := X.x1 + Y.x1
+  x2 := X.x2 + Y.x2
+  x3 := X.x3 + Y.x3
+  y1 := X.y1 + Y.y1
+  y2 := X.y2 + Y.y2
+  y3 := X.y3 + Y.y3
+
+/--
+The polar form of the Zorn determinant.
+
+This is the bilinear form obtained from the quadratic form `detZ`:
+
+`B_Z(X,Y) = detZ(X+Y) - detZ X - detZ Y`.
+-/
+def polarZ (X Y : ZornCell R) : R :=
+  detZ (addZ X Y) - detZ X - detZ Y
+
+/--
+Self-polarization identity for the Zorn determinant:
+
+`B_Z(X,X) = 2 detZ(X)`.
+-/
+theorem polarZ_self (X : ZornCell R) :
+    polarZ X X = 2 * detZ X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  unfold polarZ addZ detZ
+  ring
+
+/-- A Zorn-null vector is self-orthogonal for the polar form. -/
+theorem polarZ_self_of_detZ_zero
+    (X : ZornCell R)
+    (hX : detZ X = 0) :
+    polarZ X X = 0 := by
+  rw [polarZ_self, hX]
+  ring
+
+/--
+Conversely, if `2 ≠ 0` and the base ring has no zero divisors, then
+self-orthogonality for the polar form implies Zorn-nullness.
+-/
+theorem detZ_zero_of_polarZ_self_zero
+    [NoZeroDivisors R]
+    (h2 : (2 : R) ≠ 0)
+    (X : ZornCell R)
+    (hX : polarZ X X = 0) :
+    detZ X = 0 := by
+  rw [polarZ_self] at hX
+  rcases mul_eq_zero.mp hX with htwo | hdet
+  · exact False.elim (h2 htwo)
+  · exact hdet
+
+/--
+Over a ring with no zero divisors and `2 ≠ 0`, the Zorn null equation is
+equivalent to self-orthogonality for the associated polar bilinear form.
+-/
+theorem polarZ_self_zero_iff_detZ_zero_of_two_ne_zero
+    [NoZeroDivisors R]
+    (h2 : (2 : R) ≠ 0)
+    (X : ZornCell R) :
+    polarZ X X = 0 ↔ detZ X = 0 := by
+  constructor
+  · exact detZ_zero_of_polarZ_self_zero h2 X
+  · exact polarZ_self_of_detZ_zero X
+
+/--
+Closed coordinate form of the Zorn polar pairing.
+-/
+theorem polarZ_closed (X Y : ZornCell R) :
+    polarZ X Y =
+      X.r * Y.s + Y.r * X.s
+      - (X.x1 * Y.y1 + Y.x1 * X.y1
+        + (X.x2 * Y.y2 + Y.x2 * X.y2)
+        + (X.x3 * Y.y3 + Y.x3 * X.y3)) := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
+  unfold polarZ addZ detZ
+  ring
+
+/-- The Zorn polar pairing is symmetric. -/
+theorem polarZ_comm (X Y : ZornCell R) :
+    polarZ X Y = polarZ Y X := by
+  rw [polarZ_closed, polarZ_closed]
+  ring
+
+/-- Additivity of `polarZ` in the left argument. -/
+theorem polarZ_add_left (X Y Z : ZornCell R) :
+    polarZ (addZ X Y) Z = polarZ X Z + polarZ Y Z := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  rcases Y with ⟨r', s', x1', x2', x3', y1', y2', y3'⟩
+  rcases Z with ⟨r'', s'', x1'', x2'', x3'', y1'', y2'', y3''⟩
+  unfold polarZ addZ detZ
+  ring
+
+/-- Additivity of `polarZ` in the right argument. -/
+theorem polarZ_add_right (X Y Z : ZornCell R) :
+    polarZ X (addZ Y Z) = polarZ X Y + polarZ X Z := by
+  rw [polarZ_comm X (addZ Y Z)]
+  rw [polarZ_add_left Y Z X]
+  rw [polarZ_comm Y X, polarZ_comm Z X]
+
 /--
 Correct Zorn product.
 

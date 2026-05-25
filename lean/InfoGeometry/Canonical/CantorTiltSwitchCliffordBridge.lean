@@ -151,6 +151,14 @@ theorem localMajoranaC_D_anticomm (j : ℕ) :
   rw [← mul_assoc, TS.S_sq j]
   simp
 
+/-- `d_j c_j + c_j d_j = 0`. -/
+@[rep_depth operator]
+theorem localMajoranaD_C_anticomm (j : ℕ) :
+    TS.localMajoranaD j * TS.localMajoranaC j +
+      TS.localMajoranaC j * TS.localMajoranaD j = 0 := by
+  rw [add_comm]
+  exact TS.localMajoranaC_D_anticomm j
+
 /-- The local split-Majorana parity is the normalized tilt operator. -/
 @[rep_depth operator]
 theorem localMajoranaParity_eq_tilt (j : ℕ) :
@@ -158,6 +166,340 @@ theorem localMajoranaParity_eq_tilt (j : ℕ) :
   unfold localMajoranaParity localMajoranaC localMajoranaD
   rw [← mul_assoc, TS.S_sq j]
   simp
+
+/-- Twice the CAR creation/nilpotent generator: `2 ε_j = c_j + d_j`. -/
+@[rep_depth operator]
+def localCARCreationTwice (j : ℕ) : Op :=
+  TS.localMajoranaC j + TS.localMajoranaD j
+
+/-- Twice the CAR annihilation/nilpotent generator: `2 ι_j = c_j - d_j`. -/
+@[rep_depth operator]
+def localCARAnnihilationTwice (j : ℕ) : Op :=
+  TS.localMajoranaC j - TS.localMajoranaD j
+
+/--
+The reconstructed creation generator is square-zero, up to the harmless factor
+`2`: `(2 ε_j)^2 = 0`.
+-/
+@[rep_depth operator]
+theorem localCARCreationTwice_sq (j : ℕ) :
+    TS.localCARCreationTwice j * TS.localCARCreationTwice j = 0 := by
+  let c : Op := TS.localMajoranaC j
+  let d : Op := TS.localMajoranaD j
+  have hc : c * c = 1 := by
+    dsimp [c]
+    exact TS.localMajoranaC_sq j
+  have hd : d * d = -1 := by
+    dsimp [d]
+    exact TS.localMajoranaD_sq j
+  have hcd : c * d + d * c = 0 := by
+    dsimp [c, d]
+    exact TS.localMajoranaC_D_anticomm j
+  change (c + d) * (c + d) = 0
+  calc
+    (c + d) * (c + d)
+        = c * c + (c * d + d * c) + d * d := by
+            noncomm_ring
+    _ = 1 + 0 + (-1 : Op) := by
+            rw [hc, hcd, hd]
+    _ = 0 := by
+            simp
+
+/--
+The reconstructed annihilation generator is square-zero, up to the harmless
+factor `2`: `(2 ι_j)^2 = 0`.
+-/
+@[rep_depth operator]
+theorem localCARAnnihilationTwice_sq (j : ℕ) :
+    TS.localCARAnnihilationTwice j * TS.localCARAnnihilationTwice j = 0 := by
+  let c : Op := TS.localMajoranaC j
+  let d : Op := TS.localMajoranaD j
+  have hc : c * c = 1 := by
+    dsimp [c]
+    exact TS.localMajoranaC_sq j
+  have hd : d * d = -1 := by
+    dsimp [d]
+    exact TS.localMajoranaD_sq j
+  have hcd : c * d + d * c = 0 := by
+    dsimp [c, d]
+    exact TS.localMajoranaC_D_anticomm j
+  change (c - d) * (c - d) = 0
+  calc
+    (c - d) * (c - d)
+        = c * c - (c * d + d * c) + d * d := by
+            noncomm_ring
+    _ = 1 - 0 + (-1 : Op) := by
+            rw [hc, hcd, hd]
+    _ = 0 := by
+            simp
+
+/--
+The unnormalized CAR anticommutator:
+
+`(2ι_j)(2ε_j) + (2ε_j)(2ι_j) = 4`.
+
+After adjoining `1/2`, this is exactly `{ι_j, ε_j} = 1`.
+-/
+@[rep_depth operator]
+theorem localCARTwice_anticomm (j : ℕ) :
+    TS.localCARAnnihilationTwice j * TS.localCARCreationTwice j +
+      TS.localCARCreationTwice j * TS.localCARAnnihilationTwice j =
+        (4 : Op) := by
+  let c : Op := TS.localMajoranaC j
+  let d : Op := TS.localMajoranaD j
+  have hc : c * c = 1 := by
+    dsimp [c]
+    exact TS.localMajoranaC_sq j
+  have hd : d * d = -1 := by
+    dsimp [d]
+    exact TS.localMajoranaD_sq j
+  change (c - d) * (c + d) + (c + d) * (c - d) = (4 : Op)
+  calc
+    (c - d) * (c + d) + (c + d) * (c - d)
+        = (c * c - d * d) + (c * c - d * d) := by
+            noncomm_ring
+    _ = (1 - (-1 : Op)) + (1 - (-1 : Op)) := by
+            rw [hc, hd]
+    _ = (4 : Op) := by
+            norm_num
+
+/-- Explicit local split-Majorana product readout: `c_j d_j = T_j`. -/
+@[rep_depth operator]
+theorem localMajoranaC_mul_D_eq_tilt (j : ℕ) :
+    TS.localMajoranaC j * TS.localMajoranaD j = TS.T j := by
+  simpa [localMajoranaParity] using TS.localMajoranaParity_eq_tilt j
+
+/-- Local parity squares to one. -/
+@[rep_depth operator]
+theorem localMajoranaParity_sq (j : ℕ) :
+    TS.localMajoranaParity j * TS.localMajoranaParity j = 1 := by
+  rw [TS.localMajoranaParity_eq_tilt]
+  exact TS.T_sq j
+
+/--
+Unscaled exterior creation operator recovered from the local split-Majorana
+generators:
+
+`ε̃_j = c_j + d_j`.
+
+The normalized CAR creation is `(1/2) ε̃_j` when `2` is invertible.
+-/
+@[rep_depth operator]
+def localCreationUnscaled (j : ℕ) : Op :=
+  TS.localMajoranaC j + TS.localMajoranaD j
+
+/--
+Unscaled contraction/annihilation operator recovered from the local split-Majorana
+generators:
+
+`ι̃_j = c_j - d_j`.
+
+The normalized CAR contraction is `(1/2) ι̃_j` when `2` is invertible.
+-/
+@[rep_depth operator]
+def localAnnihilationUnscaled (j : ℕ) : Op :=
+  TS.localMajoranaC j - TS.localMajoranaD j
+
+/-- The recovered unscaled creation operator squares to zero. -/
+@[rep_depth operator]
+theorem localCreationUnscaled_sq_zero (j : ℕ) :
+    TS.localCreationUnscaled j * TS.localCreationUnscaled j = 0 := by
+  unfold localCreationUnscaled
+  calc
+    (TS.localMajoranaC j + TS.localMajoranaD j) *
+        (TS.localMajoranaC j + TS.localMajoranaD j)
+        =
+      TS.localMajoranaC j * TS.localMajoranaC j
+        + (TS.localMajoranaC j * TS.localMajoranaD j
+            + TS.localMajoranaD j * TS.localMajoranaC j)
+        + TS.localMajoranaD j * TS.localMajoranaD j := by
+          noncomm_ring
+    _ = 1 + 0 + (-1 : Op) := by
+          rw [TS.localMajoranaC_sq j,
+            TS.localMajoranaC_D_anticomm j,
+            TS.localMajoranaD_sq j]
+    _ = 0 := by
+          simp
+
+/-- The recovered unscaled annihilation/contraction operator squares to zero. -/
+@[rep_depth operator]
+theorem localAnnihilationUnscaled_sq_zero (j : ℕ) :
+    TS.localAnnihilationUnscaled j * TS.localAnnihilationUnscaled j = 0 := by
+  unfold localAnnihilationUnscaled
+  calc
+    (TS.localMajoranaC j - TS.localMajoranaD j) *
+        (TS.localMajoranaC j - TS.localMajoranaD j)
+        =
+      TS.localMajoranaC j * TS.localMajoranaC j
+        - (TS.localMajoranaC j * TS.localMajoranaD j
+            + TS.localMajoranaD j * TS.localMajoranaC j)
+        + TS.localMajoranaD j * TS.localMajoranaD j := by
+          noncomm_ring
+    _ = 1 - 0 + (-1 : Op) := by
+          rw [TS.localMajoranaC_sq j,
+            TS.localMajoranaC_D_anticomm j,
+            TS.localMajoranaD_sq j]
+    _ = 0 := by
+          simp
+
+/--
+The unscaled CAR anticommutator is `4`.
+
+After normalization by `1/2`, this becomes `{ι_j, ε_j} = 1`.
+-/
+@[rep_depth operator]
+theorem localAnnihilation_creation_anticomm_unscaled (j : ℕ) :
+    TS.localAnnihilationUnscaled j * TS.localCreationUnscaled j
+      + TS.localCreationUnscaled j * TS.localAnnihilationUnscaled j
+        = (4 : Op) := by
+  unfold localAnnihilationUnscaled localCreationUnscaled
+  calc
+    (TS.localMajoranaC j - TS.localMajoranaD j) *
+        (TS.localMajoranaC j + TS.localMajoranaD j)
+      + (TS.localMajoranaC j + TS.localMajoranaD j) *
+        (TS.localMajoranaC j - TS.localMajoranaD j)
+        =
+      (TS.localMajoranaC j * TS.localMajoranaC j
+        + TS.localMajoranaC j * TS.localMajoranaC j)
+        - (TS.localMajoranaD j * TS.localMajoranaD j
+        + TS.localMajoranaD j * TS.localMajoranaD j) := by
+          noncomm_ring
+    _ = (1 + 1 : Op) - ((-1 : Op) + (-1 : Op)) := by
+          rw [TS.localMajoranaC_sq j, TS.localMajoranaD_sq j]
+    _ = (4 : Op) := by
+          norm_num
+
+section CommCARReconstruction
+
+variable {OpC : Type*} [CommRing OpC]
+variable (TSC : TiltSwitchSystem OpC)
+
+/-- CAR reconstruction: `ε_j = (c_j + d_j)/2`. -/
+@[rep_depth operator]
+def localEpsilon [Invertible (2 : OpC)] (j : ℕ) : OpC :=
+  ⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)
+
+/-- CAR reconstruction: `ι_j = (c_j - d_j)/2`. -/
+@[rep_depth operator]
+def localIota [Invertible (2 : OpC)] (j : ℕ) : OpC :=
+  ⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)
+
+/-- Reconstructed CAR creator is square-zero. -/
+@[rep_depth operator]
+theorem localEpsilon_sq [Invertible (2 : OpC)] (j : ℕ) :
+    TSC.localEpsilon j * TSC.localEpsilon j = 0 := by
+  unfold localEpsilon
+  have hsum_sq : (TSC.localMajoranaC j + TSC.localMajoranaD j) ^ 2 = 0 := by
+    calc
+      (TSC.localMajoranaC j + TSC.localMajoranaD j) ^ 2
+          = TSC.localMajoranaC j * TSC.localMajoranaC j +
+              (TSC.localMajoranaC j * TSC.localMajoranaD j +
+                TSC.localMajoranaD j * TSC.localMajoranaC j) +
+              TSC.localMajoranaD j * TSC.localMajoranaD j := by ring
+      _ = 1 + 0 + (-1) := by
+            simp [TSC.localMajoranaC_sq j, TSC.localMajoranaC_D_anticomm j, TSC.localMajoranaD_sq j]
+      _ = 0 := by ring
+  calc
+    (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) *
+      (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j))
+        = (⅟ (2 : OpC)) ^ 2 * (TSC.localMajoranaC j + TSC.localMajoranaD j) ^ 2 := by ring
+    _ = 0 := by simp [hsum_sq]
+
+/-- Reconstructed CAR annihilator is square-zero. -/
+@[rep_depth operator]
+theorem localIota_sq [Invertible (2 : OpC)] (j : ℕ) :
+    TSC.localIota j * TSC.localIota j = 0 := by
+  unfold localIota
+  have hdiff_sq : (TSC.localMajoranaC j - TSC.localMajoranaD j) ^ 2 = 0 := by
+    calc
+      (TSC.localMajoranaC j - TSC.localMajoranaD j) ^ 2
+          = TSC.localMajoranaC j * TSC.localMajoranaC j -
+              (TSC.localMajoranaC j * TSC.localMajoranaD j +
+                TSC.localMajoranaD j * TSC.localMajoranaC j) +
+              TSC.localMajoranaD j * TSC.localMajoranaD j := by ring
+      _ = 1 - 0 + (-1) := by
+            simp [TSC.localMajoranaC_sq j, TSC.localMajoranaC_D_anticomm j, TSC.localMajoranaD_sq j]
+      _ = 0 := by ring
+  calc
+    (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) *
+      (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j))
+        = (⅟ (2 : OpC)) ^ 2 * (TSC.localMajoranaC j - TSC.localMajoranaD j) ^ 2 := by ring
+    _ = 0 := by simp [hdiff_sq]
+
+/-- Reconstructed CAR anticommutator: `ι_j ε_j + ε_j ι_j = 1`. -/
+@[rep_depth operator]
+theorem localIota_localEpsilon_anticomm [Invertible (2 : OpC)] (j : ℕ) :
+    TSC.localIota j * TSC.localEpsilon j + TSC.localEpsilon j * TSC.localIota j = 1 := by
+  unfold localIota localEpsilon
+  have hmix :
+      (TSC.localMajoranaC j - TSC.localMajoranaD j) * (TSC.localMajoranaC j + TSC.localMajoranaD j) +
+        (TSC.localMajoranaC j + TSC.localMajoranaD j) * (TSC.localMajoranaC j - TSC.localMajoranaD j) = 4 := by
+    calc
+      (TSC.localMajoranaC j - TSC.localMajoranaD j) * (TSC.localMajoranaC j + TSC.localMajoranaD j) +
+          (TSC.localMajoranaC j + TSC.localMajoranaD j) * (TSC.localMajoranaC j - TSC.localMajoranaD j)
+          = 2 * (TSC.localMajoranaC j * TSC.localMajoranaC j) -
+              2 * (TSC.localMajoranaD j * TSC.localMajoranaD j) := by ring
+      _ = 2 * 1 - 2 * (-1) := by simp [TSC.localMajoranaC_sq j, TSC.localMajoranaD_sq j]
+      _ = 4 := by ring
+  have hfac :
+      (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) *
+          (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) +
+        (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) *
+          (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) =
+      (⅟ (2 : OpC)) ^ 2 *
+        ((TSC.localMajoranaC j - TSC.localMajoranaD j) * (TSC.localMajoranaC j + TSC.localMajoranaD j) +
+          (TSC.localMajoranaC j + TSC.localMajoranaD j) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) := by
+    ring
+  have hhalf : (⅟ (2 : OpC)) * (2 : OpC) = 1 := by
+    simpa using (invOf_mul_self (2 : OpC))
+  calc
+    (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)) *
+        (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) +
+      (⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)) *
+        (⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j))
+        = (⅟ (2 : OpC)) ^ 2 * 4 := by
+            rw [hfac, hmix]
+    _ = 1 := by
+          calc
+            (⅟ (2 : OpC)) ^ 2 * 4 = ((⅟ (2 : OpC)) * (2 : OpC)) * ((⅟ (2 : OpC)) * (2 : OpC)) := by
+              ring
+            _ = 1 := by
+              simp [hhalf]
+
+/-- CAR number operator reconstructed from `ε_j, ι_j`. -/
+@[rep_depth operator]
+def localNumber [Invertible (2 : OpC)] (j : ℕ) : OpC :=
+  TSC.localEpsilon j * TSC.localIota j
+
+/-- CAR parity reconstructed from `ε_j, ι_j`: `1 - 2N_j`. -/
+@[rep_depth operator]
+def localParityFromCAR [Invertible (2 : OpC)] (j : ℕ) : OpC :=
+  1 - (2 : OpC) * TSC.localNumber j
+
+/--
+Commutative reconstruction consequence:
+the CAR parity readout `1 - 2(ε_j ι_j)` vanishes.
+-/
+@[rep_depth operator]
+theorem localParityFromCAR_eq_zero [Invertible (2 : OpC)] (j : ℕ) :
+    TSC.localParityFromCAR j = 0 := by
+  have hcar : TSC.localIota j * TSC.localEpsilon j + TSC.localEpsilon j * TSC.localIota j = 1 :=
+    TSC.localIota_localEpsilon_anticomm j
+  have hcomm : TSC.localIota j * TSC.localEpsilon j = TSC.localEpsilon j * TSC.localIota j := by
+    simp [mul_comm]
+  have htwoN : (2 : OpC) * TSC.localNumber j = 1 := by
+    unfold localNumber
+    calc
+      (2 : OpC) * (TSC.localEpsilon j * TSC.localIota j)
+          = TSC.localEpsilon j * TSC.localIota j + TSC.localEpsilon j * TSC.localIota j := by ring
+      _ = TSC.localIota j * TSC.localEpsilon j + TSC.localEpsilon j * TSC.localIota j := by
+            rw [hcomm]
+      _ = 1 := hcar
+  unfold localParityFromCAR
+  rw [htwoN]
+  ring
+
+end CommCARReconstruction
 
 end TiltSwitchSystem
 

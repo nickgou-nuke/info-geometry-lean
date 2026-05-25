@@ -16,6 +16,8 @@ namespace InfoGeometry
 namespace Canonical
 
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
+open InfoGeometry.Canonical.ErlangenOperator2
+open InfoGeometry.Canonical.ErlangenOperator2.ErlangenOperatorDatum
 
 /--
 Pull back a coadjoint response tensor along the moment map.
@@ -82,11 +84,16 @@ Build an Erlangen datum on the coadjoint carrier directly from a coadjoint
 entropy symmetry context, with supplied response and Onsager/J channels.
 -/
 def coadjointErlangenDatum
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : Gdual → Sym → Sym → ℝ)
     (onsagerPairing : Gdual → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ ξ : Gdual, C.coadjointAction 1 ξ = ξ)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ ξ : Gdual,
+        C.coadjointAction (g * h) ξ =
+          C.coadjointAction g (C.coadjointAction h ξ))
     (hresp :
       ∀ X A B ξ,
         responseMetric (C.coadjointAction X ξ) A B =
@@ -95,14 +102,25 @@ def coadjointErlangenDatum
       ∀ A B ξ,
         onsagerPairing ξ A B =
           onsagerPairing ξ (casimirJ B) (casimirJ A)) :
-    ErlangenOperatorDatum ℝ Gdual Sym where
+    ErlangenOperatorDatum ℝ Sym Gdual Sym where
   entropy := C.entropy
   responseMetric := responseMetric
   onsagerPairing := onsagerPairing
-  symmetryFlow := C.coadjointAction
+  stateAct := C.coadjointAction
+  obsAct := fun _ A => A
   casimirJ := casimirJ
+  stateAct_one := hStateActOne
+  stateAct_mul := hStateActMul
+  obsAct_one := by
+    intro A
+    rfl
+  obsAct_mul := by
+    intro g h A
+    rfl
   entropy_invariant := C.entropy_casimir_invariant
-  response_invariant := hresp
+  response_invariant := by
+    intro X A B s
+    simpa using hresp X A B s
   onsager_reciprocity := hons
 
 /--
@@ -111,11 +129,15 @@ through the context moment map, with supplied state-level response and Onsager/J
 channels.
 -/
 def stateMomentErlangenDatum
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : State → Sym → Sym → ℝ)
     (onsagerPairing : State → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ s : State, C.stateAction 1 s = s)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ s : State,
+        C.stateAction (g * h) s = C.stateAction g (C.stateAction h s))
     (hresp :
       ∀ X A B s,
         responseMetric (C.stateAction X s) A B =
@@ -124,16 +146,27 @@ def stateMomentErlangenDatum
       ∀ A B s,
         onsagerPairing s A B =
           onsagerPairing s (casimirJ B) (casimirJ A)) :
-    ErlangenOperatorDatum ℝ State Sym where
+    ErlangenOperatorDatum ℝ Sym State Sym where
   entropy := fun s => C.entropy (C.data.moment s)
   responseMetric := responseMetric
   onsagerPairing := onsagerPairing
-  symmetryFlow := C.stateAction
+  stateAct := C.stateAction
+  obsAct := fun _ A => A
   casimirJ := casimirJ
+  stateAct_one := hStateActOne
+  stateAct_mul := hStateActMul
+  obsAct_one := by
+    intro A
+    rfl
+  obsAct_mul := by
+    intro g h A
+    rfl
   entropy_invariant := by
     intro X s
     exact C.entropy_invariant_on_state_orbit X s
-  response_invariant := hresp
+  response_invariant := by
+    intro X A B s
+    simpa using hresp X A B s
   onsager_reciprocity := hons
 
 /--
@@ -141,11 +174,16 @@ Bridge closure theorem on the coadjoint carrier:
 the bridge-assembled datum satisfies the Erlangen geometry synthesis theorem.
 -/
 theorem coadjoint_geometry_as_symmetry_invariants
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : Gdual → Sym → Sym → ℝ)
     (onsagerPairing : Gdual → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ ξ : Gdual, C.coadjointAction 1 ξ = ξ)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ ξ : Gdual,
+        C.coadjointAction (g * h) ξ =
+          C.coadjointAction g (C.coadjointAction h ξ))
     (hresp :
       ∀ X A B ξ,
         responseMetric (C.coadjointAction X ξ) A B =
@@ -155,9 +193,11 @@ theorem coadjoint_geometry_as_symmetry_invariants
         onsagerPairing ξ A B =
           onsagerPairing ξ (casimirJ B) (casimirJ A)) :
     ErlangenOperatorGeometry
-      (coadjointErlangenDatum C responseMetric onsagerPairing casimirJ hresp hons) :=
+      (coadjointErlangenDatum C responseMetric onsagerPairing casimirJ
+        hStateActOne hStateActMul hresp hons) :=
   geometry_as_symmetry_invariants
-    (coadjointErlangenDatum C responseMetric onsagerPairing casimirJ hresp hons)
+    (coadjointErlangenDatum C responseMetric onsagerPairing casimirJ
+      hStateActOne hStateActMul hresp hons)
 
 /--
 Bridge closure theorem on the state carrier:
@@ -165,11 +205,15 @@ the moment-pullback bridge datum satisfies the Erlangen geometry synthesis
 theorem.
 -/
 theorem state_geometry_as_symmetry_invariants
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : State → Sym → Sym → ℝ)
     (onsagerPairing : State → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ s : State, C.stateAction 1 s = s)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ s : State,
+        C.stateAction (g * h) s = C.stateAction g (C.stateAction h s))
     (hresp :
       ∀ X A B s,
         responseMetric (C.stateAction X s) A B =
@@ -179,19 +223,25 @@ theorem state_geometry_as_symmetry_invariants
         onsagerPairing s A B =
           onsagerPairing s (casimirJ B) (casimirJ A)) :
     ErlangenOperatorGeometry
-      (stateMomentErlangenDatum C responseMetric onsagerPairing casimirJ hresp hons) :=
+      (stateMomentErlangenDatum C responseMetric onsagerPairing casimirJ
+        hStateActOne hStateActMul hresp hons) :=
   geometry_as_symmetry_invariants
-    (stateMomentErlangenDatum C responseMetric onsagerPairing casimirJ hresp hons)
+    (stateMomentErlangenDatum C responseMetric onsagerPairing casimirJ
+      hStateActOne hStateActMul hresp hons)
 
 /--
 Canonical pulled-back state datum from coadjoint response and Onsager channels.
 -/
 def stateMomentErlangenDatum_of_pullback
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : Gdual → Sym → Sym → ℝ)
     (onsagerPairing : Gdual → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ s : State, C.stateAction 1 s = s)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ s : State,
+        C.stateAction (g * h) s = C.stateAction g (C.stateAction h s))
     (hresp :
       ∀ X A B ξ,
         responseMetric (C.coadjointAction X ξ) A B =
@@ -200,12 +250,14 @@ def stateMomentErlangenDatum_of_pullback
       ∀ A B ξ,
         onsagerPairing ξ A B =
           onsagerPairing ξ (casimirJ B) (casimirJ A)) :
-    ErlangenOperatorDatum ℝ State Sym :=
+    ErlangenOperatorDatum ℝ Sym State Sym :=
   stateMomentErlangenDatum
     C
     (responseMetricPullback C responseMetric)
     (onsagerPairingPullback C onsagerPairing)
     casimirJ
+    hStateActOne
+    hStateActMul
     (responseMetricPullback_invariant C responseMetric hresp)
     (onsagerPairingPullback_reciprocity C onsagerPairing casimirJ hons)
 
@@ -213,11 +265,15 @@ def stateMomentErlangenDatum_of_pullback
 Closure theorem for the canonical pullback state datum.
 -/
 theorem state_pullback_geometry_as_symmetry_invariants
-    {Sym G Gdual State : Type*}
+    {Sym G Gdual State : Type*} [Group Sym]
     (C : CoadjointEntropySymmetryContext Sym G Gdual State)
     (responseMetric : Gdual → Sym → Sym → ℝ)
     (onsagerPairing : Gdual → Sym → Sym → ℝ)
     (casimirJ : Sym → Sym)
+    (hStateActOne : ∀ s : State, C.stateAction 1 s = s)
+    (hStateActMul :
+      ∀ g h : Sym, ∀ s : State,
+        C.stateAction (g * h) s = C.stateAction g (C.stateAction h s))
     (hresp :
       ∀ X A B ξ,
         responseMetric (C.coadjointAction X ξ) A B =
@@ -227,9 +283,11 @@ theorem state_pullback_geometry_as_symmetry_invariants
         onsagerPairing ξ A B =
           onsagerPairing ξ (casimirJ B) (casimirJ A)) :
     ErlangenOperatorGeometry
-      (stateMomentErlangenDatum_of_pullback C responseMetric onsagerPairing casimirJ hresp hons) :=
+      (stateMomentErlangenDatum_of_pullback C responseMetric onsagerPairing casimirJ
+        hStateActOne hStateActMul hresp hons) :=
   geometry_as_symmetry_invariants
-    (stateMomentErlangenDatum_of_pullback C responseMetric onsagerPairing casimirJ hresp hons)
+    (stateMomentErlangenDatum_of_pullback C responseMetric onsagerPairing casimirJ
+      hStateActOne hStateActMul hresp hons)
 
 end Canonical
 end InfoGeometry

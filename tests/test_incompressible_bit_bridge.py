@@ -11,6 +11,9 @@ def test_incompressible_bit_bridge_exposes_relative_volume_and_cramer_rao_bits()
 
     assert "structure UnitRelativeVolumeBit" in text
     assert "relativeVolumeChangeRN n M = 1" in text
+    assert "theorem kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit" in text
+    assert "theorem chiralScale_eq_zero_of_unitRelativeVolumeBit" in text
+    assert "bit.unit_relative_volume" in text
     assert "theorem unitOfAction_eq_zero_of_unitRelativeVolumeBit" in text
     assert "structure IncompressibleCramerRaoBit" in text
     assert "theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit" in text

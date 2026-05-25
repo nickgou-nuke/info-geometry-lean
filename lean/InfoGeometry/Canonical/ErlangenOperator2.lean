@@ -1,112 +1,131 @@
-import InfoGeometry.Canonical.SouriauThermodynamics
-import InfoGeometry.Thermo.SusceptibilityOnsagerStress
-import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
-import InfoGeometry.Canonical.OnsagerCasimirJ
-import InfoGeometry.Canonical.CoadjointCasimirEntropy
+import Mathlib.Algebra.Group.Defs
 
 /-!
-# Erlangen Operator 2.0
+# InfoGeometry.Canonical.ErlangenOperator2
 
-This file closes the canonical synthesis theorem:
+Erlangen Operator 2.0:
+geometry as invariant tensorial data under an operator symmetry action.
 
-* Souriau entropy is treated as a generalized Casimir invariant.
-* Koszul/Fisher response tensors are the induced invariant geometry.
-* Onsager/J reciprocity supplies the operatorial two-form channel.
-* The resulting geometry is the symmetry-invariant packet.
+This file is a pure synthesis layer. It does not construct:
 
-This file is a synthesis layer. It does not construct:
-
-* the split Clifford CAR source,
-* the split-octonion projective incidence geometry,
-* the affine current algebra,
-* the Sugawara/Virasoro representation.
+* split-Clifford CAR source currents;
+* split-octonion projective incidence geometry;
+* affine current algebra;
+* Sugawara/Virasoro representations;
+* concrete `G₂(2)` or `Spin(5,5)` coadjoint-orbit models.
 
 Those remain separate owner branches.
+
+Repository policy boundary:
+this file packages invariance predicates under supplied group actions and does
+not assert trajectory-level entropy production statements (`dS/dt = 0`).
 -/
 
-namespace InfoGeometry
-namespace Canonical
+noncomputable section
+
+namespace InfoGeometry.Canonical.ErlangenOperator2
+
+/--
+A scalar functional is a generalized Casimir for a symmetry action if it is
+constant along all symmetry directions.
+-/
+def IsGeneralizedCasimir
+    {𝕜 G State : Type*}
+    (S : State → 𝕜)
+    (stateAct : G → State → State) : Prop :=
+  ∀ g s, S (stateAct g s) = S s
+
+/--
+A response tensor is geometry-invariant if it is preserved by the symmetry
+action on both the state/base point and observable/tangent slots.
+-/
+def IsGeometryInvariant
+    {𝕜 G State Obs : Type*}
+    (metric : State → Obs → Obs → 𝕜)
+    (stateAct : G → State → State)
+    (obsAct : G → Obs → Obs) : Prop :=
+  ∀ g A B s,
+    metric (stateAct g s) (obsAct g A) (obsAct g B) = metric s A B
+
+/--
+Onsager/J reciprocity condition.
+-/
+def HasJReciprocity
+    {𝕜 State Obs : Type*}
+    (pairing : State → Obs → Obs → 𝕜)
+    (J : Obs → Obs) : Prop :=
+  ∀ A B s, pairing s A B = pairing s (J B) (J A)
 
 /--
 Erlangen Operator 2.0 datum.
 
-This packages the symmetry action, entropy functional, response metric, Onsager
-pairing, and Casimir/J-recipient structure without claiming that any lower
-layer constructs all the others.
+This packages symmetry actions and invariant readouts without claiming that any
+lower layer constructs them.
 -/
 structure ErlangenOperatorDatum
-    (𝕜 State Obs : Type*) where
+    (𝕜 G State Obs : Type*) [Group G] where
   entropy : State → 𝕜
   responseMetric : State → Obs → Obs → 𝕜
   onsagerPairing : State → Obs → Obs → 𝕜
-  symmetryFlow : Obs → State → State
+  stateAct : G → State → State
+  obsAct : G → Obs → Obs
   casimirJ : Obs → Obs
+  stateAct_one : ∀ s, stateAct 1 s = s
+  stateAct_mul : ∀ g h s, stateAct (g * h) s = stateAct g (stateAct h s)
+  obsAct_one : ∀ A, obsAct 1 A = A
+  obsAct_mul : ∀ g h A, obsAct (g * h) A = obsAct g (obsAct h A)
+  entropy_invariant : IsGeneralizedCasimir entropy stateAct
+  response_invariant : IsGeometryInvariant responseMetric stateAct obsAct
+  onsager_reciprocity : HasJReciprocity onsagerPairing casimirJ
 
-  entropy_invariant :
-    ∀ X s, entropy (symmetryFlow X s) = entropy s
+namespace ErlangenOperatorDatum
 
-  response_invariant :
-    ∀ X A B s,
-      responseMetric (symmetryFlow X s) A B =
-        responseMetric s A B
-
-  onsager_reciprocity :
-    ∀ A B s,
-      onsagerPairing s A B =
-        onsagerPairing s (casimirJ B) (casimirJ A)
-
-theorem erlangen_entropy_is_generalized_casimir
-    {𝕜 State Obs : Type*}
-    (E : ErlangenOperatorDatum 𝕜 State Obs) :
-    IsGeneralizedCasimir E.entropy E.symmetryFlow := by
-  intro X s
-  exact E.entropy_invariant X s
-
-theorem erlangen_responseMetric_is_geometry_invariant
-    {𝕜 State Obs : Type*}
-    (E : ErlangenOperatorDatum 𝕜 State Obs) :
-    IsGeometryInvariant E.responseMetric E.symmetryFlow := by
-  intro X A B s
-  exact E.response_invariant X A B s
+variable {𝕜 G State Obs : Type*} [Group G]
 
 /--
-Bundled Erlangen 2.0 geometry closure data.
+Bundled closure data for Erlangen Operator 2.0.
 -/
 structure ErlangenOperatorGeometry
-    {𝕜 State Obs : Type*}
-    (E : ErlangenOperatorDatum 𝕜 State Obs) where
-  entropy_is_casimir :
-    IsGeneralizedCasimir E.entropy E.symmetryFlow
-  response_is_geometry :
-    IsGeometryInvariant E.responseMetric E.symmetryFlow
-  onsager_has_J_reciprocity :
-    ∀ A B s,
-      E.onsagerPairing s A B =
-        E.onsagerPairing s (E.casimirJ B) (E.casimirJ A)
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) where
+  entropy_is_casimir : IsGeneralizedCasimir E.entropy E.stateAct
+  response_is_geometry : IsGeometryInvariant E.responseMetric E.stateAct E.obsAct
+  onsager_has_J_reciprocity : HasJReciprocity E.onsagerPairing E.casimirJ
 
 /--
-Erlangen Operator 2.0 closure theorem.
-
-Entropy is a generalized Casimir invariant, and the induced response geometry
-is invariant under the same operator symmetry, with Onsager/J reciprocity.
+Main Erlangen Operator 2.0 theorem:
+geometry is invariant tensorial data under symmetry action.
 -/
 theorem geometry_as_symmetry_invariants
-    {𝕜 State Obs : Type*}
-    (E : ErlangenOperatorDatum 𝕜 State Obs) :
-    ErlangenOperatorGeometry E :=
-{
-  entropy_is_casimir := erlangen_entropy_is_generalized_casimir E
-  response_is_geometry := erlangen_responseMetric_is_geometry_invariant E
-  onsager_has_J_reciprocity := by
-    intro A B s
-    exact E.onsager_reciprocity A B s
-}
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) :
+    ErlangenOperatorGeometry E where
+  entropy_is_casimir := E.entropy_invariant
+  response_is_geometry := E.response_invariant
+  onsager_has_J_reciprocity := E.onsager_reciprocity
 
+/-- Readout: entropy is invariant. -/
+theorem entropy_is_generalized_casimir
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) :
+    IsGeneralizedCasimir E.entropy E.stateAct :=
+  E.entropy_invariant
+
+/-- Readout: response metric is invariant geometry. -/
+theorem responseMetric_is_geometryInvariant
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) :
+    IsGeometryInvariant E.responseMetric E.stateAct E.obsAct :=
+  E.response_invariant
+
+/-- Readout: Onsager pairing satisfies J-reciprocity. -/
+theorem onsagerPairing_has_J_reciprocity
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) :
+    HasJReciprocity E.onsagerPairing E.casimirJ :=
+  E.onsager_reciprocity
+
+/-- Alias theorem name used by downstream bridge files. -/
 theorem erlangen_operator_geometry_closure
-    {𝕜 State Obs : Type*}
-    (E : ErlangenOperatorDatum 𝕜 State Obs) :
+    (E : ErlangenOperatorDatum 𝕜 G State Obs) :
     ErlangenOperatorGeometry E :=
   geometry_as_symmetry_invariants E
 
-end Canonical
-end InfoGeometry
+end ErlangenOperatorDatum
+
+end InfoGeometry.Canonical.ErlangenOperator2

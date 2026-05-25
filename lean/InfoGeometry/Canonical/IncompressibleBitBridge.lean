@@ -45,7 +45,7 @@ structure UnitRelativeVolumeBit (n : Nat) (M : SinkhornMatrix n) : Prop where
   unit_relative_volume : relativeVolumeChangeRN n M = 1
 
 /-- Constructor from the existing RN unit-relative-volume equality. -/
-@[rep_depth operator]
+@[rep_depth projective]
 theorem unitRelativeVolumeBit_of_eq_one
     {n : Nat} {M : SinkhornMatrix n}
     (hUnit : relativeVolumeChangeRN n M = 1) :
@@ -53,10 +53,43 @@ theorem unitRelativeVolumeBit_of_eq_one
   ⟨hUnit⟩
 
 /--
+The unit relative-volume bit kills the RN Kähler potential.
+-/
+@[rep_depth projective]
+theorem kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (bit : UnitRelativeVolumeBit n M) :
+    kahlerPotentialRN n M = 0 := by
+  have hNegKZero : -kahlerPotentialRN n M = 0 := by
+    have hLog :
+        Real.log (relativeVolumeChangeRN n M) = Real.log (1 : ℝ) :=
+      congrArg Real.log bit.unit_relative_volume
+    simpa [relativeVolumeChangeRN] using hLog
+  have hKZero := congrArg Neg.neg hNegKZero
+  simpa using hKZero
+
+/--
+If the conformal chiral scale is identified with the RN Kähler potential, then
+unit relative volume kills the conformal anomaly scale.
+-/
+@[rep_depth thermo]
+theorem chiralScale_eq_zero_of_unitRelativeVolumeBit
+    (CI : ConformalInference E)
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeBit n M) :
+    CI.chiralScale = 0 := by
+  calc
+    CI.chiralScale = kahlerPotentialRN n M := hScaleFromKahler
+    _ = 0 := kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit (M := M) bit
+
+/--
 The unit relative-volume bit is exactly the input needed by the existing
 conformal owner theorem to enter the normal phase.
 -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 theorem isNormalInference_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -65,23 +98,6 @@ theorem isNormalInference_of_unitRelativeVolumeBit
     (bit : UnitRelativeVolumeBit n M) :
     CI.IsNormalInference := by
   exact CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit.unit_relative_volume
-
-/--
-The incompressible unit relative-volume bit is enough to force zero chiral scale
-through the existing Kähler/log-det owner theorem.  This is the witness-packet
-variant of the older route that required a bare
-`relativeVolumeChangeRN n M = 1` hypothesis.
--/
-@[rep_depth thermo, capstone]
-theorem chiralScale_eq_zero_of_unitRelativeVolumeBit
-    (CI : ConformalInference E)
-    {n : Nat}
-    (M : SinkhornMatrix n)
-    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
-    (bit : UnitRelativeVolumeBit n M) :
-    CI.chiralScale = 0 := by
-  exact CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
 /--

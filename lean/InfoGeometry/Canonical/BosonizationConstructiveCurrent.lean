@@ -2138,4 +2138,119 @@ theorem normalOrderedCurrent_heisenberg_from_matrixUnit
 
 end RawCARAlgebra
 
+/-! ## Finite-window represented current bridge (explicit double-sum form) -/
+
+/--
+Finite-window represented normal-ordered current:
+
+`J⁽ᴺ⁾_n = ∑_{k ∈ [-N,N]} E_{k,k+n}`.
+-/
+def representedCutoffCurrent
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A)
+    (N : Nat)
+    (n : Int) : A :=
+  ∑ k ∈ integerWindow N, C.matrixUnit k (k + n)
+
+/--
+Finite-window current commutator expansion from the Wick matrix-unit theorem.
+-/
+theorem representedCutoffCurrent_commutator_expand
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A)
+    (N M : Nat)
+    (m n : Int) :
+    comm
+        (representedCutoffCurrent C N m)
+        (representedCutoffCurrent C M n)
+      =
+      ∑ k ∈ integerWindow N,
+        ∑ l ∈ integerWindow M,
+          ((if k + m = l then C.matrixUnit k (l + n) else 0)
+            -
+            (if k = l + n then C.matrixUnit l (k + m) else 0)
+            +
+            (if k + m = l ∧ k = l + n then
+              (occ k - occ (k + m)) • C.central
+            else
+              0)) := by
+  unfold representedCutoffCurrent
+  rw [comm_sum_sum]
+  refine Finset.sum_congr rfl ?_
+  intro k hk
+  refine Finset.sum_congr rfl ?_
+  intro l hl
+  simpa [add_assoc, add_left_comm, add_comm] using
+    (RawCARModeCompletion.normalOrdered_matrixUnit_commutator_from_rawCAR
+      C k (k + m) l (l + n))
+
+/--
+Finite-window represented current commutator expansion.
+
+This is a real represented finite-sum lemma: it expands the commutator of two
+finite normal-ordered diagonal current cutoffs using the already-proved Wick
+matrix-unit commutator.
+-/
+theorem representedCutoffCurrent_commutator_expand_from_rawCAR
+    {A : Type*} [Ring A]
+    (C : RawCARModeCompletion A)
+    (N M : Nat)
+    (m n : Int) :
+    comm
+        (∑ k ∈ integerWindow N, C.matrixUnit k (k + m))
+        (∑ l ∈ integerWindow M, C.matrixUnit l (l + n))
+      =
+      ∑ k ∈ integerWindow N,
+        ∑ l ∈ integerWindow M,
+          ((if k + m = l then C.matrixUnit k (l + n) else 0)
+            -
+            (if k = l + n then C.matrixUnit l (k + m) else 0)
+            +
+            (if k + m = l ∧ k = l + n then
+              (occ k - occ (k + m)) • C.central
+            else
+              0)) := by
+  rw [comm_sum_sum]
+  refine Finset.sum_congr rfl ?_
+  intro k hk
+  refine Finset.sum_congr rfl ?_
+  intro l hl
+  simpa [add_assoc, add_left_comm, add_comm] using
+    (C.normalOrdered_matrixUnit_commutator_from_rawCAR
+      k (k + m) l (l + n))
+
+namespace RawCARModeCompletion
+
+variable {A : Type*} [Ring A]
+variable (C : RawCARModeCompletion A)
+
+/--
+The finite-window crossing term is already the Heisenberg central coefficient
+once the cutoff window contains the full crossing strip.
+-/
+theorem cutoffWindowCrossingTerm_eq_heisenberg_of_natAbs_le
+    (N : Nat) (m n : Int) (hN : m.natAbs ≤ N) :
+    cutoffWindowCrossingTerm C N m n =
+      if m + n = 0 then m • C.central else 0 := by
+  unfold cutoffWindowCrossingTerm
+  by_cases hmn : m + n = 0
+  · have hsum :
+        (∑ a ∈ cutoffWindow N, (occ a - occ (a + m))) = m := by
+      simpa using crossingNumber_cutoff_eq_mode_of_large_cutoff N m hN
+    simp [hmn, hsum]
+  · simp [hmn]
+
+/--
+Finite cutoff-current commutator with the crossing term evaluated.
+-/
+theorem cutoffCurrent_commutator_eq_boundary_add_heisenberg_of_natAbs_le
+    (N : Nat) (m n : Int) (hN : m.natAbs ≤ N) :
+    comm (cutoffCurrent C N m) (cutoffCurrent C N n) =
+      cutoffBoundaryTerm C N m n +
+        (if m + n = 0 then m • C.central else 0) := by
+  rw [cutoffCurrent_commutator_eq_boundary_add_windowCrossing C N m n]
+  rw [cutoffWindowCrossingTerm_eq_heisenberg_of_natAbs_le C N m n hN]
+
+end RawCARModeCompletion
+
 end InfoGeometry.Canonical.BosonizationConstructiveCurrent

@@ -17,6 +17,7 @@ The boundary layer is explicit and honest:
 
 No split-octonion theorem is claimed here.
 No definitional equality `TwistorSpace = SplitOctonions` is claimed here.
+No quantized twistor CCR realization theorem is claimed here.
 -/
 
 open scoped Classical

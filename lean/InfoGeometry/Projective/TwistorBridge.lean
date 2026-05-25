@@ -19,6 +19,8 @@ this file does not identify twistor space with split-octonions. Any
 split-octonion/twistor relation is a carried-structure theorem target, not a
 definitional equality.
 It also does not claim a quantized twistor CCR realization by itself.
+The intended target is Penrose's carried-structure statement:
+the quantized twistor algebra carries split-octonion and `G2*` structure.
 -/
 
 namespace InfoGeometry.Projective.TwistorBridge

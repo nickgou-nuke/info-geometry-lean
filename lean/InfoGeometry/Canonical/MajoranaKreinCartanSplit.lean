@@ -316,6 +316,45 @@ theorem comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
       ((isPotentialKillingOperator_iff_comparisonReadoutStationary
         (E := E) P ψ A).2 hPair)
 
+/--
+Constructive phase-part collapse from the exact thermodynamic stationary packet.
+
+This avoids reintroducing a separate Killing witness when the caller already
+owns the smaller readout-stationarity predicate.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_phasePart_eq_zero_of_isThermodynamicReadoutStationary
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hStationary : IsThermodynamicReadoutStationary (E := E) P ψ A) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
+      =
+    (0, 0) := by
+  simpa [stateGaugeDynamics, stateSourceDynamics] using
+    (comparisonReadout_kSplit_eq_zero_of_isThermodynamicReadoutStationary
+      (E := E) P ψ A hStationary)
+
 @[rep_depth transport]
 theorem comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))

@@ -136,4 +136,102 @@ theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_nonempty
     Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   ⟨chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α⟩
 
+/-! ## Direct constructive closure (no witness wrapper in theorem statements) -/
+
+/--
+Direct source-side closure on the explicit charged-Fock current family:
+truncation and full Heisenberg commutator law.
+-/
+theorem chargedFockSpace_current_constructive_J_trunc_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (∀ v : VirasoroProject.ChargedFockSpace 𝕜 α,
+      ∀ᶠ l : Int in atTop,
+        (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J l v = 0)
+      ∧
+    (∀ m n : Int,
+      ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m).commutator
+          ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
+        =
+      if m + n = 0 then
+        (m : 𝕜) •
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)
+      else
+        0) := by
+  exact ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc,
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm⟩
+
+/--
+Direct existence theorem for a source current family `J` satisfying truncation
+and the full Heisenberg commutator law.
+-/
+theorem chargedFockSpace_current_exists_J_trunc_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ∃ J : Int →
+      VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+        VirasoroProject.ChargedFockSpace 𝕜 α,
+      (∀ v, ∀ᶠ l : Int in atTop, J l v = 0)
+      ∧
+      (∀ m n : Int,
+        (J m).commutator (J n) =
+          if m + n = 0 then
+            (m : 𝕜) •
+              (1 :
+                VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+                  VirasoroProject.ChargedFockSpace 𝕜 α)
+          else
+            0) := by
+  refine ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J, ?_⟩
+  exact ⟨(chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc,
+    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm⟩
+
+/--
+Concrete central-mode readout from the explicit charged-Fock current family:
+`[J₁, J₋₁] = 1 • id`.
+-/
+theorem chargedFockSpace_current_commutator_one_negOne
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J 1).commutator
+        ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J (-1))
+      =
+    (1 : 𝕜) •
+      (1 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm 1 (-1)
+
+/--
+Off-resonance current commutator vanishes:
+if `m + n ≠ 0`, then `[J_m, J_n] = 0`.
+-/
+theorem chargedFockSpace_current_commutator_zero_of_add_ne_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n : Int)
+    (h : m + n ≠ 0) :
+    ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m).commutator
+        ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
+      =
+      (0 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+
+/--
+Resonant current commutator is central:
+if `m + n = 0`, then `[J_m, J_n] = m • id`.
+-/
+theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜)
+    (m n : Int)
+    (h : m + n = 0) :
+    ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J m).commutator
+        ((chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n)
+      =
+      (m : 𝕜) •
+        (1 :
+          VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+            VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
+
 end InfoGeometry.Canonical.SplitCARCurrentSource

@@ -82,4 +82,91 @@ theorem log_prod_of_pos
   intro i hi
   exact ne_of_gt (hf i hi)
 
+/-! ## Real lemma: finite log-volume factorization with occupations -/
+
+/--
+For a positive real number `x`, `log (x^n) = n * log x`.
+-/
+theorem log_pow_nat_of_pos
+    (x : ℝ)
+    (n : ℕ)
+    (hx : 0 < x) :
+    Real.log (x ^ n) = (n : ℝ) * Real.log x := by
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      have hxpow : 0 < x ^ n := pow_pos hx n
+      rw [pow_succ]
+      rw [Real.log_mul (ne_of_gt hxpow) (ne_of_gt hx)]
+      rw [ih]
+      rw [Nat.cast_add, Nat.cast_one]
+      ring
+
+/--
+Finite log-volume factorization:
+
+`log (∏ i in s, v i ^ a i) = ∑ i in s, (a i) * log (v i)`,
+for positive mode volumes `v i`.
+-/
+theorem log_prod_pow_of_pos
+    {ι : Type*}
+    (s : Finset ι)
+    (v : ι → ℝ)
+    (a : ι → ℕ)
+    (hv : ∀ i ∈ s, 0 < v i) :
+    Real.log (Finset.prod s (fun i => v i ^ a i)) =
+      Finset.sum s (fun i => (a i : ℝ) * Real.log (v i)) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simp
+  | @insert i s his ih =>
+      have hvi : 0 < v i := hv i (by simp)
+      have hvs : ∀ j ∈ s, 0 < v j := by
+        intro j hj
+        exact hv j (by simp [hj])
+      have hpow_i : 0 < v i ^ a i := pow_pos hvi (a i)
+      have hprod_s : 0 < Finset.prod s (fun j => v j ^ a j) := by
+        exact Finset.prod_pos (fun j hj => pow_pos (hvs j hj) (a j))
+      rw [Finset.prod_insert his, Finset.sum_insert his]
+      rw [Real.log_mul (ne_of_gt hpow_i) (ne_of_gt hprod_s)]
+      rw [log_pow_nat_of_pos (v i) (a i) hvi]
+      rw [ih hvs]
+
+/--
+Prime-volume specialization of finite log-volume factorization.
+
+For positive natural modes on a finite support:
+
+`log (∏ i in s, (i:ℝ)^(a i)) = ∑ i in s, (a i) * log (i:ℝ)`.
+-/
+theorem log_prod_prime_pow_of_pos
+    (s : Finset ℕ)
+    (a : ℕ → ℕ)
+    (hs : ∀ i ∈ s, 0 < i) :
+    Real.log (Finset.prod s (fun i => (i : ℝ) ^ a i)) =
+      Finset.sum s (fun i => (a i : ℝ) * Real.log (i : ℝ)) := by
+  refine log_prod_pow_of_pos (s := s) (v := fun i => (i : ℝ)) (a := a) ?_
+  intro i hi
+  have hi' : (0 : ℝ) < (i : ℝ) := by
+    exact_mod_cast hs i hi
+  simpa using hi'
+
+/--
+Prime-specialized finite log-volume factorization.
+
+If every index in `s` is prime, positivity is automatic, so
+`log (∏ i∈s, i^(a i)) = ∑ i∈s (a i) log i`.
+-/
+theorem log_prod_prime_pow_of_prime
+    (s : Finset ℕ)
+    (a : ℕ → ℕ)
+    (hprime : ∀ i ∈ s, Nat.Prime i) :
+    Real.log (Finset.prod s (fun i => (i : ℝ) ^ a i)) =
+      Finset.sum s (fun i => (a i : ℝ) * Real.log (i : ℝ)) := by
+  refine log_prod_prime_pow_of_pos (s := s) (a := a) ?_
+  intro i hi
+  exact Nat.Prime.pos (hprime i hi)
+
 end InfoGeometry.Arithmetic.PrimeBosonFermionGas

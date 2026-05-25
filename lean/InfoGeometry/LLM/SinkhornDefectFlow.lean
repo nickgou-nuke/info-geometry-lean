@@ -1130,6 +1130,42 @@ noncomputable def WeylThermodynamicProfileComparison.ofSinkhornRNBarrier
       simpa [δ_ZD_thermo] using C.central_readout_budget }
 
 /--
+Mass-normalized row counts at a column-normalization phase directly package the
+Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
+-/
+noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.col)
+    {hrow : HasPositiveRowSums n (C.T.state C.k)}
+    (hMass : countMass (rowSumCounts n (C.T.state C.k)) hrow = n) :
+    WeylThermodynamicProfileComparison (E := E)
+      C.B.routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
+    (SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
+      (T := C.T) (k := C.k) hk hMass)
+
+/--
+Mass-normalized column counts at a row-normalization phase directly package the
+Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
+-/
+noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedColCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.row)
+    {hcol : HasPositiveColSums n (C.T.state C.k)}
+    (hMass : countMass (colSumCounts n (C.T.state C.k)) hcol = n) :
+    WeylThermodynamicProfileComparison (E := E)
+      C.B.routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
+    (SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
+      (T := C.T) (k := C.k) hk hMass)
+
+/--
 The Sinkhorn-derived profile comparison gives the corrected readout inequality.
 -/
 theorem operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile
@@ -1160,9 +1196,10 @@ theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
     C.B.comparison.operatorInformationNormReadout
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) := by
   exact
-    operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile (E := E) C
-      (SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
-        (T := C.T) (k := C.k) hk hMass)
+    RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+      (E := E)
+      (WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
+        (E := E) C hk hMass)
 
 /--
 Mass-normalized column counts at a row-normalization phase are enough to route
@@ -1180,9 +1217,10 @@ theorem operatorInformationNormReadout_le_of_massNormalizedColCounts
     C.B.comparison.operatorInformationNormReadout
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) := by
   exact
-    operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile (E := E) C
-      (SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts
-        (T := C.T) (k := C.k) hk hMass)
+    RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+      (E := E)
+      (WeylThermodynamicProfileComparison.ofMassNormalizedColCounts
+        (E := E) C hk hMass)
 
 /--
 Volume anomaly monotonicity forces one-step odd-defect monotonicity.

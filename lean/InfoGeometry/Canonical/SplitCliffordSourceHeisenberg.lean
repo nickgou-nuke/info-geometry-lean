@@ -15,6 +15,7 @@ namespace InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 open Filter
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+open InfoGeometry.Canonical.SplitCliffordSourceCurrent
 
 /--
 Bundle a proved endomorphism-valued current family into the split Heisenberg
@@ -71,5 +72,48 @@ theorem strictWitness_of_represented_current
   rcases represented_current_commutator_chargedFock (𝕜 := 𝕜) α with
     ⟨J, hTruncLift, hCommLift⟩
   exact ⟨packagedHeisenbergWitness J hTruncLift hCommLift⟩
+
+/-! ## Packaging from split source lift data -/
+
+universe u
+
+/--
+Any split-source current lift datum gives eventual truncation for its lifted
+mode family.
+-/
+theorem truncLift_of_splitCurrentLiftDatum
+    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V)) :
+    ∀ v : V, ∀ᶠ l : Int in atTop, L.Jlift l v = 0 :=
+  L.trunc
+
+/--
+If a split-source lifted current family satisfies the endomorphism-valued Wick
+commutator law, it packages into a split Heisenberg witness.
+
+This is the strict bridge step from source-side lift data to the existing
+`CurrentHeisenbergRep` interface.
+-/
+theorem strictWitness_of_splitCurrentLiftDatum
+    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
+    (hCommLift : SplitSourceEndWickLaw L.Jlift) :
+    Nonempty (SplitCliffordHeisenbergWitness 𝕜 V) := by
+  exact ⟨packagedHeisenbergWitness L.Jlift L.trunc hCommLift⟩
+
+/--
+The same source-side hypotheses already yield the existing repository
+`CurrentHeisenbergRep` package.
+-/
+theorem currentRep_nonempty_of_splitCurrentLiftDatum
+    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
+    [AddCommGroup V] [Module 𝕜 V]
+    (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
+    (hCommLift : SplitSourceEndWickLaw L.Jlift) :
+    Nonempty (InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V) := by
+  rcases strictWitness_of_splitCurrentLiftDatum L hCommLift with ⟨W⟩
+  exact splitClifford_to_currentHeisenbergRep W
 
 end InfoGeometry.Canonical.SplitCliffordSourceHeisenberg

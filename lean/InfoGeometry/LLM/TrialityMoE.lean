@@ -440,6 +440,33 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
   ⟨cmp⟩
 
 /--
+Constructive witness packet for the corrected Weyl/thermodynamic observer-defect
+bound. This carries the comparison packet as explicit data, so downstream
+constructors do not need to consume a bare `Nonempty` proposition when an
+honest witness is already available.
+-/
+@[rep_depth transport]
+structure ObserverDefectResidualWeylThermodynamicControl
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) where
+  comparison :
+    WeylThermodynamicOperatorComparison (E := E)
+      (observerDefectResidual CIK obs)
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+An explicit Weyl/thermodynamic control witness closes the theorem-level bounded
+observer-defect target.
+-/
+@[rep_depth transport]
+theorem ObserverDefectResidualWeylThermodynamicBoundedByZD_of_control
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
+  ⟨c.comparison⟩
+
+/--
 Thermodynamic router bridge.
 
 This is the corrected D3 bridge surface: the router residual is identified with
@@ -535,6 +562,31 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD
   dsimp [ObserverDefectResidualWeylThermodynamicBoundedByZD] at *
   subst routerResidual
   exact ⟨comparison⟩
+
+/--
+Canonical constructor for the thermodynamic router bridge from an explicit
+Weyl/thermodynamic comparison witness packet.
+
+This keeps the corrected D3 transport on the theorem-backed constructor lane
+without requiring downstream callers to eliminate the theorem-level `Nonempty`
+packet themselves.
+-/
+noncomputable def ofWeylThermodynamicControl
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    RouterDefectThermodynamicBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow c.comparison
+
+@[simp] theorem ofWeylThermodynamicControl_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    (ofWeylThermodynamicControl (E := E) CIK obs flow c).routerResidual =
+      observerDefectResidual CIK obs := by
+  simp [ofWeylThermodynamicControl]
 
 /--
 Canonical constructor for the thermodynamic router bridge from the theorem-level

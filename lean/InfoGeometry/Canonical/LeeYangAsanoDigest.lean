@@ -1,4 +1,7 @@
 import Mathlib
+import InfoGeometry.Analysis.AsanoContractionNative
+import InfoGeometry.Analysis.AsanoRuelleObstruction
+import InfoGeometry.Canonical.AsanoRuelleCounterexample
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.LeeYangStabilityPacket
@@ -373,6 +376,19 @@ end TwoVarAffinePolynomial
 def asanoForbiddenSet (K1 K2 : Set ℂ) : Set ℂ :=
   {z : ℂ | ∃ u ∈ K1, ∃ v ∈ K2, z = -u * v}
 
+/--
+Monotonicity of the Asano forbidden set under factor-set inclusion.
+-/
+@[rep_depth thermo]
+theorem asanoForbiddenSet_mono
+    {K1 K1' K2 K2' : Set ℂ}
+    (h1 : K1 ⊆ K1')
+    (h2 : K2 ⊆ K2') :
+    asanoForbiddenSet K1 K2 ⊆ asanoForbiddenSet K1' K2' := by
+  intro z hz
+  rcases hz with ⟨u, hu, v, hv, hzuv⟩
+  exact ⟨u, h1 hu, v, h2 hv, hzuv⟩
+
 /-- Introduction rule for the Asano forbidden set. -/
 @[rep_depth thermo]
 theorem mem_asanoForbiddenSet
@@ -479,6 +495,243 @@ def AsanoRuelleLemmaSourceClaim : Prop :=
     0 ∉ K1 → 0 ∉ K2 →
       (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
         ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+
+/--
+Truly unrestricted Asano-Ruelle source claim (no `0 ∉ K₁`, `0 ∉ K₂` guards).
+
+This shape is known to be false; see
+`asanoRuelleLemmaSourceClaimUnrestricted_false`.
+-/
+@[rep_depth thermo]
+def AsanoRuelleLemmaSourceClaimUnrestricted : Prop :=
+  ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
+    (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
+      ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+
+/--
+The truly unrestricted Asano-Ruelle source claim is false.
+
+This is the vacuity counterexample (`K₁ = univ`, `K₂ = {0}`) proved in
+`Analysis.AsanoRuelleObstruction`.
+-/
+@[rep_depth thermo]
+theorem asanoRuelleLemmaSourceClaimUnrestricted_false :
+    ¬ AsanoRuelleLemmaSourceClaimUnrestricted := by
+  intro hU
+  have hObs :
+      ∀ (A B C D : ℂ) (K₁ K₂ : Set ℂ),
+        (∀ z₁ z₂ : ℂ,
+          z₁ ∉ K₁ →
+          z₂ ∉ K₂ →
+          InfoGeometry.Analysis.AsanoRuelleObstruction.Phi A B C D z₁ z₂ ≠ 0) →
+        ∀ z : ℂ,
+          z ∉ InfoGeometry.Analysis.AsanoRuelleObstruction.forbiddenProductSet K₁ K₂ →
+          InfoGeometry.Analysis.AsanoRuelleObstruction.contractedQ A D z ≠ 0 := by
+    intro A B C D K₁ K₂ hPhi z hz
+    let P : TwoVarAffinePolynomial := ⟨A, B, C, D⟩
+    have hPhi' :
+        ∀ z1 z2 : ℂ, z1 ∉ K₁ → z2 ∉ K₂ → P.eval z1 z2 ≠ 0 := by
+      intro z1 z2 hz1 hz2
+      simpa [P, TwoVarAffinePolynomial.eval, InfoGeometry.Analysis.AsanoRuelleObstruction.Phi]
+        using hPhi z1 z2 hz1 hz2
+    have hz' : z ∉ asanoForbiddenSet K₁ K₂ := by
+      simpa [asanoForbiddenSet, InfoGeometry.Analysis.AsanoRuelleObstruction.forbiddenProductSet] using hz
+    have hq' : P.contract z ≠ 0 := hU K₁ K₂ P hPhi' z hz'
+    simpa [P, TwoVarAffinePolynomial.contract, InfoGeometry.Analysis.AsanoRuelleObstruction.contractedQ]
+      using hq'
+  exact InfoGeometry.Analysis.AsanoRuelleObstruction.asanoRuelle_unrestricted_claim_false hObs
+
+/--
+Unrestricted nondegenerate Asano-Ruelle source claim.
+
+This strengthens the unrestricted shape by adding `P.D ≠ 0` and
+`P.A * P.D - P.B * P.C ≠ 0`, but still without any closed/circular-region
+hypothesis on `K₁`, `K₂`.
+-/
+@[rep_depth thermo]
+def AsanoRuelleLemmaSourceClaimUnrestrictedNondegenerate : Prop :=
+  ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
+    P.D ≠ 0 →
+    P.A * P.D - P.B * P.C ≠ 0 →
+    (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
+      ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+
+/--
+Even the unrestricted nondegenerate source claim is false.
+
+This imports the concrete canonical counterexample (`Phi = z₁ z₂ - 1`,
+`Q = -1 + z`, `K₁ = {z | z ≠ 0}`, `K₂ = ∅`).
+-/
+@[rep_depth thermo]
+theorem asanoRuelleLemmaSourceClaimUnrestrictedNondegenerate_false :
+    ¬ AsanoRuelleLemmaSourceClaimUnrestrictedNondegenerate := by
+  intro hN
+  let P : TwoVarAffinePolynomial := ⟨(-1 : ℂ), 0, 0, 1⟩
+  have hD : P.D ≠ 0 := by
+    simpa [P] using
+      InfoGeometry.Canonical.AsanoRuelleCounterexample.nondegenerate_coefficients.1
+  have hDet : P.A * P.D - P.B * P.C ≠ 0 := by
+    simpa [P] using
+      InfoGeometry.Canonical.AsanoRuelleCounterexample.nondegenerate_coefficients.2
+  have hPhi :
+      ∀ z1 z2 : ℂ,
+        z1 ∉ InfoGeometry.Canonical.AsanoRuelleCounterexample.K₁ →
+        z2 ∉ InfoGeometry.Canonical.AsanoRuelleCounterexample.K₂ →
+        P.eval z1 z2 ≠ 0 := by
+    intro z1 z2 hz1 hz2
+    have h0 :
+        InfoGeometry.Canonical.AsanoRuelleCounterexample.Phi z1 z2 ≠ 0 :=
+      InfoGeometry.Canonical.AsanoRuelleCounterexample.Phi_zero_free_off_K₁_K₂
+        z1 z2 hz1 hz2
+    simpa
+      [P, TwoVarAffinePolynomial.eval,
+       InfoGeometry.Canonical.AsanoRuelleCounterexample.Phi,
+       sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+      using h0
+  have hQ :
+      P.contract (1 : ℂ) = 0 := by
+    simpa [P, TwoVarAffinePolynomial.contract, InfoGeometry.Canonical.AsanoRuelleCounterexample.Q]
+      using InfoGeometry.Canonical.AsanoRuelleCounterexample.Q_one_eq_zero
+  have hNotForbidden :
+      (1 : ℂ) ∉ asanoForbiddenSet
+        InfoGeometry.Canonical.AsanoRuelleCounterexample.K₁
+        InfoGeometry.Canonical.AsanoRuelleCounterexample.K₂ := by
+    simpa [asanoForbiddenSet, InfoGeometry.Canonical.AsanoRuelleCounterexample.forbiddenProduct]
+      using InfoGeometry.Canonical.AsanoRuelleCounterexample.one_not_mem_forbiddenProduct
+  exact (hN
+      InfoGeometry.Canonical.AsanoRuelleCounterexample.K₁
+      InfoGeometry.Canonical.AsanoRuelleCounterexample.K₂
+      P hD hDet hPhi (1 : ℂ) hNotForbidden) hQ
+
+/--
+Closed-set variant of the Asano-Ruelle source claim.
+
+This is the exact shape consumed by the native topological reduction corridor.
+-/
+@[rep_depth thermo]
+def AsanoRuelleLemmaSourceClaimClosed : Prop :=
+  ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
+    0 ∉ K1 → 0 ∉ K2 →
+      IsClosed K1 → IsClosed K2 →
+      (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
+        ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+
+/--
+Corrected Asano-Ruelle source claim with explicit analytic guards.
+
+This is the practical theorem surface for the Lee--Yang lane:
+in addition to zero-exclusion and zero-freeness off `K₁ × K₂`,
+we require `K₁`, `K₂` to be closed and bounded.
+-/
+@[rep_depth thermo]
+def AsanoRuelleLemmaSourceClaimClosedBounded : Prop :=
+  ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
+    0 ∉ K1 → 0 ∉ K2 →
+      IsClosed K1 → IsClosed K2 →
+      Bornology.IsBounded K1 → Bornology.IsBounded K2 →
+      (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
+        ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
+
+/--
+Unrestricted Asano-Ruelle source claim implies the closed-set variant.
+-/
+@[rep_depth thermo]
+theorem asanoRuelleLemmaSourceClaimClosed_of_sourceClaim
+    (hAR : AsanoRuelleLemmaSourceClaim) :
+    AsanoRuelleLemmaSourceClaimClosed := by
+  intro K1 K2 P h0K1 h0K2 _hClosed1 _hClosed2 hPhi z hzOff
+  exact hAR K1 K2 P h0K1 h0K2 hPhi z hzOff
+
+/--
+The unrestricted guarded source claim implies the closed-bounded claim.
+-/
+@[rep_depth thermo]
+theorem asanoRuelleLemmaSourceClaimClosedBounded_of_sourceClaim
+    (hAR : AsanoRuelleLemmaSourceClaim) :
+    AsanoRuelleLemmaSourceClaimClosedBounded := by
+  intro K1 K2 P h0K1 h0K2 _hClosed1 _hClosed2 _hB1 _hB2 hPhi z hzOff
+  exact hAR K1 K2 P h0K1 h0K2 hPhi z hzOff
+
+/--
+Pointwise eliminator for the closed-bounded corrected source claim.
+-/
+@[rep_depth thermo]
+theorem asanoRuelleClosedBounded_apply
+    (hARcb : AsanoRuelleLemmaSourceClaimClosedBounded)
+    {K1 K2 : Set ℂ} (P : TwoVarAffinePolynomial)
+    (h0K1 : 0 ∉ K1) (h0K2 : 0 ∉ K2)
+    (hClosed1 : IsClosed K1) (hClosed2 : IsClosed K2)
+    (hB1 : Bornology.IsBounded K1) (hB2 : Bornology.IsBounded K2)
+    (hPhi : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
+    {z : ℂ} (hzOff : z ∉ asanoForbiddenSet K1 K2) :
+    P.contract z ≠ 0 :=
+  hARcb K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hB1 hB2 hPhi z hzOff
+
+/--
+Pointwise eliminator for the closed-set Asano-Ruelle source claim.
+-/
+@[rep_depth thermo]
+theorem asanoRuelleClosed_apply
+    (hARc : AsanoRuelleLemmaSourceClaimClosed)
+    {K1 K2 : Set ℂ} (P : TwoVarAffinePolynomial)
+    (h0K1 : 0 ∉ K1) (h0K2 : 0 ∉ K2)
+    (hClosed1 : IsClosed K1) (hClosed2 : IsClosed K2)
+    (hPhi : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
+    {z : ℂ} (hzOff : z ∉ asanoForbiddenSet K1 K2) :
+    P.contract z ≠ 0 :=
+  hARc K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
+
+/--
+Asano-Ruelle source claim from the explicit endpoint-nondegenerate branch
+hypothesis.
+
+This theorem is fully constructive in Lean and routes through
+`Analysis.AsanoContractionNative` (no `sorry`).
+-/
+@[rep_depth thermo]
+theorem asanoRuelleLemmaSourceClaim_of_endpointNonDeg
+    (hEndpointNonDeg :
+      ∀ {K₁ K₂ : Set ℂ} {A B C D : ℂ},
+        (0 : ℂ) ∉ K₁ →
+        (0 : ℂ) ∉ K₂ →
+        (∀ z₁ z₂ : ℂ,
+          z₁ ∉ K₁ →
+          z₂ ∉ K₂ →
+          InfoGeometry.Analysis.AsanoContractionNative.asanoPoly A B C D z₁ z₂ ≠ 0) →
+        D ≠ 0 →
+        A * D - B * C ≠ 0 →
+        ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))) :
+    AsanoRuelleLemmaSourceClaim := by
+  intro K1 K2 P h0K1 h0K2 hPhi z hzOff
+  have hzf :
+      InfoGeometry.Analysis.AsanoContractionNative.ZeroFreeOutside
+        K1 K2 P.A P.B P.C P.D := by
+    intro z1 z2 hz1 hz2
+    simpa
+      [InfoGeometry.Analysis.AsanoContractionNative.ZeroFreeOutside,
+       InfoGeometry.Analysis.AsanoContractionNative.asanoPoly,
+       TwoVarAffinePolynomial.eval]
+      using hPhi z1 z2 hz1 hz2
+  have hzOff' :
+      z ∉ InfoGeometry.Analysis.AsanoContractionNative.signedProductSet K1 K2 := by
+    simpa
+      [InfoGeometry.Analysis.AsanoContractionNative.signedProductSet,
+       asanoForbiddenSet]
+      using hzOff
+  have hEndpoint :
+      P.D ≠ 0 →
+      P.A * P.D - P.B * P.C ≠ 0 →
+      ((P.C ≠ 0 ∧ -(P.C / P.D) ∈ K1) ∨ (P.B ≠ 0 ∧ -(P.B / P.D) ∈ K2)) := by
+    intro hD hDet
+    exact hEndpointNonDeg h0K1 h0K2 hzf hD hDet
+  have hne :
+      InfoGeometry.Analysis.AsanoContractionNative.asanoContract P.A P.D z ≠ 0 :=
+    InfoGeometry.Analysis.AsanoContractionNative.asanoContract_ne_zero_outside_signedProduct_of_endpoint_nonDeg
+      h0K1 h0K2 hzf hEndpoint hzOff'
+  simpa
+    [InfoGeometry.Analysis.AsanoContractionNative.asanoContract,
+     TwoVarAffinePolynomial.contract]
+    using hne
 
 /--
 Source theorem shape for Grace's theorem in the Lee--Yang proof family.

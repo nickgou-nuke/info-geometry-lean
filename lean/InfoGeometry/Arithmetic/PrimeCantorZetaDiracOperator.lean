@@ -253,6 +253,42 @@ theorem annihilationKernel_of_not_annihilate {P : PrimeCutoff}
     annihilationKernel amplitude holonomy p S T = 0 := by
   simp [annihilationKernel, h]
 
+/--
+Single-axis creation action equals the corresponding single-axis kernel action.
+-/
+@[rep_depth thermo]
+theorem creationPush_eq_creationKernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    amplitude p * holonomy p * creationPush p f S =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T => creationKernel amplitude holonomy p S T * f T) := by
+  classical
+  unfold creationPush creationKernel optionEval
+  cases h : PrimeExteriorGraphDirac.create p S with
+  | none =>
+      simp [h]
+  | some U =>
+      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
+
+/--
+Single-axis annihilation action equals the corresponding single-axis kernel action.
+-/
+@[rep_depth thermo]
+theorem annihilationPush_eq_annihilationKernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    amplitude p * (holonomy p)⁻¹ * annihilationPush p f S =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T => annihilationKernel amplitude holonomy p S T * f T) := by
+  classical
+  unfold annihilationPush annihilationKernel optionEval
+  cases h : PrimeExteriorGraphDirac.annihilate p S with
+  | none =>
+      simp [h]
+  | some U =>
+      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
+
 /-! ## 3. Supercharges and finite Cantor--Dirac operator -/
 
 /--
@@ -301,6 +337,168 @@ theorem cantorDiracOperator_eq_supercharge_sum {P : PrimeCutoff}
     cantorDiracOperator amplitude holonomy f S =
       creationSupercharge amplitude holonomy f S +
         dualAnnihilationSupercharge amplitude holonomy f S := rfl
+
+/--
+Kernel-action form of the creation supercharge.
+-/
+@[rep_depth thermo]
+theorem creationSupercharge_apply_eq_creationKernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (f : CantorField P) (S : Vertex P) :
+    creationSupercharge amplitude holonomy f S =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T =>
+          Finset.sum (Finset.univ : Finset (PrimeMode P))
+            (fun p => creationKernel amplitude holonomy p S T * f T)) := by
+  classical
+  unfold creationSupercharge
+  calc
+    Finset.sum (Finset.univ : Finset (PrimeMode P))
+      (fun p => amplitude p * holonomy p * creationPush p f S)
+        =
+      Finset.sum (Finset.univ : Finset (PrimeMode P))
+        (fun p =>
+          Finset.sum (Finset.univ : Finset (Vertex P))
+            (fun T => creationKernel amplitude holonomy p S T * f T)) := by
+          refine Finset.sum_congr rfl ?_
+          intro p hp
+          exact creationPush_eq_creationKernel_sum amplitude holonomy p f S
+    _ =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T =>
+          Finset.sum (Finset.univ : Finset (PrimeMode P))
+            (fun p => creationKernel amplitude holonomy p S T * f T)) := by
+          rw [Finset.sum_comm]
+
+/--
+Kernel-action form of the dual annihilation supercharge.
+-/
+@[rep_depth thermo]
+theorem dualAnnihilationSupercharge_apply_eq_annihilationKernel_sum {P : PrimeCutoff}
+    (amplitude holonomy : PrimeMode P → ℂ)
+    (f : CantorField P) (S : Vertex P) :
+    dualAnnihilationSupercharge amplitude holonomy f S =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T =>
+          Finset.sum (Finset.univ : Finset (PrimeMode P))
+            (fun p => annihilationKernel amplitude holonomy p S T * f T)) := by
+  classical
+  unfold dualAnnihilationSupercharge
+  calc
+    Finset.sum (Finset.univ : Finset (PrimeMode P))
+      (fun p => amplitude p * (holonomy p)⁻¹ * annihilationPush p f S)
+        =
+      Finset.sum (Finset.univ : Finset (PrimeMode P))
+        (fun p =>
+          Finset.sum (Finset.univ : Finset (Vertex P))
+            (fun T => annihilationKernel amplitude holonomy p S T * f T)) := by
+          refine Finset.sum_congr rfl ?_
+          intro p hp
+          exact annihilationPush_eq_annihilationKernel_sum amplitude holonomy p f S
+    _ =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T =>
+          Finset.sum (Finset.univ : Finset (PrimeMode P))
+            (fun p => annihilationKernel amplitude holonomy p S T * f T)) := by
+          rw [Finset.sum_comm]
+
+/-! ## Concrete normalized zeta holonomy -/
+
+/--
+Concrete finite normalized zeta holonomy in log-energy form.
+
+For `E_p = log p`, this is
+
+`exp(((1/2 - Re s) E_p)) * exp(-i (Im s) E_p)`,
+
+i.e. the Lean-real-polar form of `p^(1/2 - s)`.
+-/
+@[rep_depth thermo]
+def normalizedPrimeHolonomy {P : PrimeCutoff}
+    (logPrime : PrimeMode P → ℝ) (s : ℂ) (p : PrimeMode P) : ℂ :=
+  { re :=
+      Real.exp (((1 : ℝ) / 2 - s.re) * logPrime p) *
+        Real.cos (-(s.im * logPrime p)),
+    im :=
+      Real.exp (((1 : ℝ) / 2 - s.re) * logPrime p) *
+        Real.sin (-(s.im * logPrime p)) }
+
+/--
+Norm-square of the concrete normalized zeta holonomy.
+
+This is the finite-mode algebraic content of
+
+`|p^(1/2-s)|^2 = p^(1-2 Re(s))`.
+-/
+@[rep_depth thermo]
+theorem normalizedPrimeHolonomy_normSq {P : PrimeCutoff}
+    (logPrime : PrimeMode P → ℝ) (s : ℂ) (p : PrimeMode P) :
+    Complex.normSq (normalizedPrimeHolonomy logPrime s p) =
+      (Real.exp (((1 : ℝ) / 2 - s.re) * logPrime p)) ^ 2 := by
+  unfold normalizedPrimeHolonomy Complex.normSq
+  set a : ℝ := ((1 : ℝ) / 2 - s.re) * logPrime p
+  set θ : ℝ := -(s.im * logPrime p)
+  simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
+  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 := by
+    simpa [add_comm] using Real.cos_sq_add_sin_sq θ
+  nlinarith [htrig]
+
+/--
+Single-mode critical-line criterion for the concrete normalized holonomy.
+
+No infinite product. No RH claim.
+-/
+@[rep_depth thermo]
+theorem normalizedPrimeHolonomy_normSq_eq_one_iff {P : PrimeCutoff}
+    (logPrime : PrimeMode P → ℝ) (s : ℂ) (p : PrimeMode P)
+    (hpos : 0 < logPrime p) :
+    Complex.normSq (normalizedPrimeHolonomy logPrime s p) = 1
+      ↔ s.re = (1 : ℝ) / 2 := by
+  rw [normalizedPrimeHolonomy_normSq]
+  set a : ℝ := ((1 : ℝ) / 2 - s.re) * logPrime p
+  change (Real.exp a) ^ 2 = 1 ↔ s.re = (1 : ℝ) / 2
+  constructor
+  · intro hsq
+    rcases sq_eq_one_iff.mp hsq with h1 | hneg
+    · have ha : a = 0 := (Real.exp_eq_one_iff a).1 h1
+      dsimp [a] at ha
+      nlinarith [hpos]
+    · have hgt : 0 < Real.exp a := Real.exp_pos a
+      nlinarith
+  · intro hs
+    have ha : a = 0 := by
+      dsimp [a]
+      rw [hs]
+      ring
+    rw [ha, Real.exp_zero]
+    ring
+
+/--
+Finite-cutoff version: all concrete normalized holonomies are unit-norm exactly
+on the critical line.
+
+The `Nonempty` assumption prevents the empty cutoff from making the left side
+vacuously true.
+-/
+@[rep_depth thermo]
+theorem normalizedPrimeHolonomy_all_normSq_eq_one_iff {P : PrimeCutoff}
+    [Nonempty (PrimeMode P)]
+    (logPrime : PrimeMode P → ℝ)
+    (hpos : ∀ p : PrimeMode P, 0 < logPrime p)
+    (s : ℂ) :
+    (∀ p : PrimeMode P,
+        Complex.normSq (normalizedPrimeHolonomy logPrime s p) = 1)
+      ↔ s.re = (1 : ℝ) / 2 := by
+  constructor
+  · intro h
+    let p0 : PrimeMode P := Classical.choice inferInstance
+    exact
+      (normalizedPrimeHolonomy_normSq_eq_one_iff
+        logPrime s p0 (hpos p0)).mp (h p0)
+  · intro hs p
+    exact
+      (normalizedPrimeHolonomy_normSq_eq_one_iff
+        logPrime s p (hpos p)).mpr hs
 
 /-! ## 3.5 Critical-line holonomy specialization (finite) -/
 
@@ -396,6 +594,63 @@ theorem zetaHolonomy_unitaryAt_iff_re_eq_half
     · have hnorm : ‖zetaHolonomy s p‖ = 1 :=
         (norm_zetaHolonomy_eq_one_iff_re_eq_half (s := s) (p := p)).2 hs
       simpa using Complex.inv_eq_conj hnorm
+
+/--
+Finite critical-line predicate.
+-/
+@[rep_depth thermo]
+def CriticalLine (s : ℂ) : Prop := s.re = 1 / 2
+
+/--
+Concrete normalized prime holonomy:
+`h_p(s) = exp(((1/2)-s) * log p)`.
+-/
+@[rep_depth thermo]
+def zetaNormalizedPrimeHolonomy {P : PrimeCutoff}
+    (s : ℂ) (p : PrimeMode P) : ℂ :=
+  Complex.exp ((((1 / 2 : ℝ) : ℂ) - s) * ((Real.log (p.1 : ℝ) : ℝ) : ℂ))
+
+/--
+Closed-form modulus of the normalized prime holonomy.
+-/
+@[rep_depth thermo]
+def zetaNormalizedPrimeHolonomyNorm {P : PrimeCutoff}
+    (s : ℂ) (p : PrimeMode P) : ℝ :=
+  Real.exp (((1 / 2 : ℝ) - s.re) * Real.log (p.1 : ℝ))
+
+/--
+The normalized prime-holonomy norm is `1` exactly on the critical line.
+-/
+@[rep_depth thermo]
+theorem zetaNormalizedPrimeHolonomyNorm_eq_one_iff_criticalLine
+    {P : PrimeCutoff} (s : ℂ) (p : PrimeMode P) :
+    zetaNormalizedPrimeHolonomyNorm s p = 1 ↔ CriticalLine s := by
+  unfold zetaNormalizedPrimeHolonomyNorm CriticalLine
+  rw [← norm_zetaHolonomy_eq (s := s) (p := p)]
+  exact norm_zetaHolonomy_eq_one_iff_re_eq_half (s := s) (p := p)
+
+/--
+Finite all-modes unitary criterion via normalized holonomy norm.
+-/
+@[rep_depth thermo]
+def ZetaHolonomyUnitaryAt {P : PrimeCutoff} (s : ℂ) : Prop :=
+  ∀ p : PrimeMode P, zetaNormalizedPrimeHolonomyNorm s p = 1
+
+/--
+On a nonempty finite prime cutoff, all-mode normalized holonomy unitarity is
+equivalent to the critical-line condition.
+-/
+@[rep_depth thermo]
+theorem zetaHolonomyUnitaryAt_iff_criticalLine
+    {P : PrimeCutoff} (hP : P.primes.Nonempty) (s : ℂ) :
+    ZetaHolonomyUnitaryAt (P := P) s ↔ CriticalLine s := by
+  constructor
+  · intro hU
+    rcases hP with ⟨p0, hp0⟩
+    let p : PrimeMode P := ⟨p0, hp0⟩
+    exact (zetaNormalizedPrimeHolonomyNorm_eq_one_iff_criticalLine (s := s) (p := p)).1 (hU p)
+  · intro hs p
+    exact (zetaNormalizedPrimeHolonomyNorm_eq_one_iff_criticalLine (s := s) (p := p)).2 hs
 
 /--
 Basis delta field on the finite Cantor/Fock lattice.
@@ -557,6 +812,64 @@ theorem cantorDiracOperator_basisDelta_eq_kernel {P : PrimeCutoff}
   rw [dualAnnihilationSupercharge_basisDelta_eq_kernel_sum]
   rw [Finset.sum_add_distrib]
 
+/-! ## 5a. Concrete critical-line holonomy modulus -/
+
+/--
+Modulus of the intended zeta holonomy
+
+`p^(1/2 - s)`
+
+written in real exponential/logarithmic form.
+
+This is the norm readout only. It does not replace the abstract holonomy field
+of `FiniteCantorZetaDirac`.
+-/
+@[rep_depth thermo]
+def criticalLineHolonomyModulus
+    (s : ℂ) (p : ℕ) : ℝ :=
+  Real.exp (((1 / 2 : ℝ) - s.re) * Real.log (p : ℝ))
+
+/--
+For a real prime scale `p > 1`, the intended zeta-holonomy modulus is one
+exactly on the critical line.
+
+This is the finite concrete lemma:
+`‖p^(1/2-s)‖ = 1 ↔ Re(s)=1/2`,
+expressed without committing the whole operator packet to this holonomy.
+-/
+@[rep_depth thermo]
+theorem criticalLineHolonomyModulus_eq_one_iff
+    {p : ℕ} (hp : 1 < (p : ℝ)) (s : ℂ) :
+    criticalLineHolonomyModulus s p = 1 ↔
+      s.re = (1 / 2 : ℝ) := by
+  unfold criticalLineHolonomyModulus
+  have hlog_pos : 0 < Real.log (p : ℝ) := Real.log_pos hp
+  constructor
+  · intro h
+    have hexp : Real.exp (((1 / 2 : ℝ) - s.re) * Real.log (p : ℝ)) = Real.exp 0 := by
+      simpa using h
+    have hmul : ((1 / 2 : ℝ) - s.re) * Real.log (p : ℝ) = 0 := by
+      exact Real.exp_injective hexp
+    rcases mul_eq_zero.mp hmul with hleft | hlog
+    · linarith
+    · exact False.elim (hlog_pos.ne' hlog)
+  · intro hs
+    simp [hs]
+
+/--
+Prime-mode version of the critical-line holonomy modulus criterion.
+-/
+@[rep_depth thermo]
+theorem criticalLineHolonomyModulus_primeMode_eq_one_iff
+    {P : PrimeCutoff} (p : PrimeMode P) (s : ℂ) :
+    criticalLineHolonomyModulus s (p : ℕ) = 1 ↔
+      s.re = (1 / 2 : ℝ) := by
+  have hpPrime : Nat.Prime (p : ℕ) :=
+    P.prime_mem (p : ℕ) p.property
+  have hp : 1 < ((p : ℕ) : ℝ) := by
+    exact_mod_cast hpPrime.one_lt
+  exact criticalLineHolonomyModulus_eq_one_iff hp s
+
 namespace FiniteCantorZetaDirac
 
 variable {P : PrimeCutoff}
@@ -582,6 +895,141 @@ Pointwise holonomy unitarity at spectral parameter `s`:
 @[rep_depth thermo]
 def HolonomyUnitaryAt (s : ℂ) : Prop :=
   ∀ p : PrimeMode P, (D.holonomy s p) ≠ 0 ∧ (D.holonomy s p)⁻¹ = star (D.holonomy s p)
+
+/-! ## 5A. Concrete critical-line holonomy norm -/
+
+/--
+Norm readout of the intended critical-line holonomy
+
+`p^(1/2 - s) = exp((1/2 - s) log p)`.
+
+We keep only the real norm readout here:
+
+`exp((1/2 - Re s) log p)`.
+
+This avoids hard-coding a full complex-power API while proving the real
+critical-line criterion needed by the finite operator lane.
+-/
+@[rep_depth thermo]
+def criticalLineHolonomyNorm
+    (s : ℂ)
+    (p : PrimeMode P) : ℝ :=
+  Real.exp (((1 : ℝ) / 2 - s.re) * Real.log (p.1 : ℝ))
+
+/--
+The critical-line holonomy norm is positive.
+-/
+@[rep_depth thermo]
+theorem criticalLineHolonomyNorm_pos
+    (s : ℂ)
+    (p : PrimeMode P) :
+    0 < criticalLineHolonomyNorm (P := P) s p := by
+  dsimp [criticalLineHolonomyNorm]
+  positivity
+
+/--
+Concrete holonomy criterion for one prime mode:
+
+`‖p^(1/2-s)‖ = 1` iff `Re(s)=1/2`.
+
+This is the first finite critical-line theorem. It is independent of any
+infinite Euler product or RH claim.
+-/
+@[rep_depth thermo]
+theorem criticalLineHolonomyNorm_eq_one_iff
+    (s : ℂ)
+    (p : PrimeMode P)
+    (hp : 1 < p.1) :
+    criticalLineHolonomyNorm (P := P) s p = 1 ↔
+      s.re = (1 : ℝ) / 2 := by
+  have hlog_pos : 0 < Real.log (p.1 : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast hp)
+
+  constructor
+  · intro h
+    have hzero :
+        ((1 : ℝ) / 2 - s.re) * Real.log (p.1 : ℝ) = 0 := by
+      exact (Real.exp_eq_one_iff _).mp h
+
+    have hleft :
+        (1 : ℝ) / 2 - s.re = 0 := by
+      rcases mul_eq_zero.mp hzero with hcoeff | hlog
+      · exact hcoeff
+      · exact False.elim (hlog_pos.ne' hlog)
+
+    linarith
+
+  · intro hs
+    dsimp [criticalLineHolonomyNorm]
+    have hzero :
+        ((1 : ℝ) / 2 - s.re) * Real.log (p.1 : ℝ) = 0 := by
+      rw [hs]
+      ring
+    rw [hzero]
+    simp
+
+/-- Log-norm readout for `p^(1/2-s)` in finite mode form. -/
+@[rep_depth thermo]
+def zetaCriticalHolonomyLogNorm (s : ℂ) (p : ℕ) : ℝ :=
+  ((1 / 2 : ℝ) - s.re) * Real.log (p : ℝ)
+
+/-- Real norm readout for `p^(1/2-s)` in finite mode form. -/
+@[rep_depth thermo]
+def zetaCriticalHolonomyNorm (s : ℂ) (p : ℕ) : ℝ :=
+  Real.exp (zetaCriticalHolonomyLogNorm s p)
+
+/--
+Concrete finite-mode criterion:
+
+`‖p^(1/2-s)‖ = 1 ↔ Re(s)=1/2`, for `p>1`.
+-/
+@[rep_depth thermo]
+theorem zetaCriticalHolonomyNorm_eq_one_iff_re_eq_half
+    {p : ℕ} (hp : 1 < p) (s : ℂ) :
+    zetaCriticalHolonomyNorm s p = 1 ↔ s.re = 1 / 2 := by
+  unfold zetaCriticalHolonomyNorm zetaCriticalHolonomyLogNorm
+  rw [Real.exp_eq_one_iff]
+  have hlog_pos : 0 < Real.log (p : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast hp)
+  have hlog_ne : Real.log (p : ℝ) ≠ 0 := hlog_pos.ne'
+  constructor
+  · intro hmul
+    have hhalf : (1 / 2 : ℝ) - s.re = 0 := by
+      rcases mul_eq_zero.mp hmul with hleft | hright
+      · exact hleft
+      · exact False.elim (hlog_ne hright)
+    linarith
+  · intro hs
+    rw [hs]
+    ring
+
+/-- Prime-mode version of the zeta critical-line holonomy norm criterion. -/
+@[rep_depth thermo]
+theorem zetaCriticalHolonomyNorm_primeMode_eq_one_iff_re_eq_half
+    (p : PrimeMode P) (s : ℂ) :
+    zetaCriticalHolonomyNorm s (p : ℕ) = 1 ↔ s.re = 1 / 2 := by
+  have hp_prime : Nat.Prime (p : ℕ) := P.prime_mem p.1 p.property
+  exact zetaCriticalHolonomyNorm_eq_one_iff_re_eq_half hp_prime.one_lt s
+
+/-- Finite-cutoff norm-unitarity predicate for the concrete zeta holonomy readout. -/
+@[rep_depth thermo]
+def ZetaCriticalHolonomyNormUnitaryAt (s : ℂ) : Prop :=
+  ∀ p : PrimeMode P, zetaCriticalHolonomyNorm s (p : ℕ) = 1
+
+/--
+For nonempty finite cutoff, all-mode concrete zeta holonomy norm-unitarity is
+equivalent to `Re(s)=1/2`.
+-/
+@[rep_depth thermo]
+theorem zetaCriticalHolonomyNormUnitaryAt_iff_re_eq_half
+    [Nonempty (PrimeMode P)] (s : ℂ) :
+    ZetaCriticalHolonomyNormUnitaryAt (P := P) s ↔ s.re = 1 / 2 := by
+  constructor
+  · intro hunit
+    let p0 : PrimeMode P := Classical.choice (inferInstance : Nonempty (PrimeMode P))
+    exact (zetaCriticalHolonomyNorm_primeMode_eq_one_iff_re_eq_half (P := P) p0 s).mp (hunit p0)
+  · intro hs p
+    exact (zetaCriticalHolonomyNorm_primeMode_eq_one_iff_re_eq_half (P := P) p s).mpr hs
 
 /--
 Bundled critical-line criterion for pointwise holonomy unitarity under the
@@ -718,6 +1166,158 @@ theorem pairing_sum_right (f : CantorField P) (s : Finset (PrimeMode P))
       simp [ha, pairing_add_right, ih]
 
 /--
+Modewise finite adjointness on the Cantor/Fock pairing:
+creation along a prime axis is adjoint to annihilation along the same axis.
+-/
+@[rep_depth thermo]
+theorem creationPush_isAdjointPair_annihilationPush
+    (p : PrimeMode P) :
+    IsAdjointPair (P := P)
+      (fun f S => creationPush p f S)
+      (fun f S => annihilationPush p f S) := by
+  classical
+  intro f g
+  unfold pairing
+  have hL :
+      (Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun S => star (creationPush p f S) * g S)) =
+      Finset.sum ((Finset.univ : Finset (Vertex P)).filter (fun S => p ∉ S))
+        (fun S => star (f (insert p S)) * g S) := by
+    calc
+      Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun S => star (creationPush p f S) * g S)
+          =
+          Finset.sum (Finset.univ : Finset (Vertex P))
+            (fun S => if p ∉ S then star (f (insert p S)) * g S else 0) := by
+              refine Finset.sum_congr rfl ?_
+              intro S hS
+              by_cases hpS : p ∈ S
+              · simp [creationPush, PrimeExteriorGraphDirac.create, hpS]
+              · simp [creationPush, PrimeExteriorGraphDirac.create, hpS]
+      _ =
+          Finset.sum ((Finset.univ : Finset (Vertex P)).filter (fun S => p ∉ S))
+            (fun S => star (f (insert p S)) * g S) := by
+              simpa [Finset.sum_filter] using
+                (Finset.sum_filter (s := (Finset.univ : Finset (Vertex P)))
+                  (p := fun S : Vertex P => p ∉ S)
+                  (f := fun S => star (f (insert p S)) * g S)).symm
+  have hR :
+      (Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun S => star (f S) * annihilationPush p g S)) =
+      Finset.sum ((Finset.univ : Finset (Vertex P)).filter (fun S => p ∈ S))
+        (fun S => star (f S) * g (S.erase p)) := by
+    calc
+      Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun S => star (f S) * annihilationPush p g S)
+          =
+          Finset.sum (Finset.univ : Finset (Vertex P))
+            (fun S => if p ∈ S then star (f S) * g (S.erase p) else 0) := by
+              refine Finset.sum_congr rfl ?_
+              intro S hS
+              by_cases hpS : p ∈ S
+              · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hpS]
+              · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hpS]
+      _ =
+          Finset.sum ((Finset.univ : Finset (Vertex P)).filter (fun S => p ∈ S))
+            (fun S => star (f S) * g (S.erase p)) := by
+              simpa [Finset.sum_filter] using
+                (Finset.sum_filter (s := (Finset.univ : Finset (Vertex P)))
+                  (p := fun S : Vertex P => p ∈ S)
+                  (f := fun S => star (f S) * g (S.erase p))).symm
+  rw [hL, hR]
+  refine Finset.sum_bij'
+    (fun S _ => insert p S)
+    (fun T _ => Finset.erase T p)
+    (fun S hS => by
+      exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by simp⟩)
+    (fun T hT => by
+      exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by simp⟩)
+    (fun S hS => by
+      have hpS : p ∉ S := (Finset.mem_filter.mp hS).2
+      simp [hpS])
+    (fun T hT => by
+      have hpT : p ∈ T := (Finset.mem_filter.mp hT).2
+      simp [hpT])
+    (fun S hS => by
+      have hpS : p ∉ S := (Finset.mem_filter.mp hS).2
+      simp [hpS])
+
+/--
+Modewise weighted adjointness for the creation-to-annihilation channel.
+
+If amplitudes are self-adjoint scalars and holonomy is unitary at `s`, then
+`a_p h_p ε_p` is adjoint to `a_p h_p⁻¹ ι_p` for each prime mode.
+-/
+@[rep_depth thermo]
+theorem weighted_mode_isAdjointPair_of_unitary
+    (s : ℂ)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (hU : D.HolonomyUnitaryAt s)
+    (p : PrimeMode P) :
+    IsAdjointPair (P := P)
+      (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+      (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) := by
+  intro f g
+  let c : ℂ := D.amplitude p * D.holonomy s p
+  let d : ℂ := D.amplitude p * (D.holonomy s p)⁻¹
+  have hbase := creationPush_isAdjointPair_annihilationPush (P := P) p f g
+  have hcd : star c = d := by
+    dsimp [c, d]
+    have hhol : (D.holonomy s p)⁻¹ = star (D.holonomy s p) := (hU p).2
+    calc
+      star (D.amplitude p * D.holonomy s p)
+          = star (D.holonomy s p) * star (D.amplitude p) := by
+              simp [star_mul]
+      _ = (D.holonomy s p)⁻¹ * D.amplitude p := by
+              simp [hhol, hAmp p]
+      _ = D.amplitude p * (D.holonomy s p)⁻¹ := by
+              ring
+  calc
+    pairing ((fun f S => c * creationPush p f S) f) g
+        = pairing (c • fun S => creationPush p f S) g := by
+            rfl
+    _ = star c * pairing (fun S => creationPush p f S) g := by
+          simpa using pairing_smul_left (P := P) c (fun S => creationPush p f S) g
+    _ = star c * pairing f (fun S => annihilationPush p g S) := by
+          rw [hbase]
+    _ = d * pairing f (fun S => annihilationPush p g S) := by
+          rw [hcd]
+    _ = pairing f (d • fun S => annihilationPush p g S) := by
+          simpa using (pairing_smul_right (P := P) d f (fun S => annihilationPush p g S)).symm
+    _ = pairing f ((fun f S => d * annihilationPush p f S) g) := by
+          rfl
+
+/--
+Modewise weighted reverse adjointness for the annihilation-to-creation channel.
+
+Derived from forward weighted adjointness plus conjugate symmetry of `pairing`.
+-/
+@[rep_depth thermo]
+theorem weighted_mode_isAdjointPairRev_of_unitary
+    (s : ℂ)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (hU : D.HolonomyUnitaryAt s)
+    (p : PrimeMode P) :
+    IsAdjointPair (P := P)
+      (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
+      (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S) := by
+  intro f g
+  have hfw :
+      IsAdjointPair (P := P)
+        (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
+        (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) :=
+    weighted_mode_isAdjointPair_of_unitary (D := D) s hAmp hU p
+  have hswap := IsAdjointPair.conj_swap (P := P) hfw g f
+  calc
+    pairing ((fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) f) g
+        = star (pairing g ((fun f S =>
+            D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) f)) := by
+            simpa using (pairing_conj_symm (P := P) g
+              ((fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S) f)).symm
+    _ = pairing f ((fun f S => D.amplitude p * D.holonomy s p * creationPush p f S) g) := by
+          simpa using hswap
+
+/--
 If each prime-axis creation/annihilation channel is adjoint for the finite
 pairing, and the holonomy is unitary with real amplitudes, then `Q♯` is the
 adjoint partner of `Q`.
@@ -819,6 +1419,98 @@ theorem op_isSelfAdjoint_of_unitary
     _ = pairing f (D.Q s g + D.Qsharp s g) := by abel_nf
 
 /--
+Kernel action formula: applying the finite Cantor--Dirac operator is the finite
+matrix-kernel action on fields.
+-/
+@[rep_depth thermo]
+theorem op_apply_eq_kernel_sum
+    (s : ℂ) (f : CantorField P) (S : Vertex P) :
+    D.op s f S =
+      Finset.sum (Finset.univ : Finset (Vertex P))
+        (fun T => D.kernel s S T * f T) := by
+  calc
+    D.op s f S
+        = D.Q s f S + D.Qsharp s f S := by
+            exact D.op_eq_Q_add_Qsharp s f S
+    _ = creationSupercharge D.amplitude (D.holonomy s) f S +
+          dualAnnihilationSupercharge D.amplitude (D.holonomy s) f S := by
+            rfl
+    _ =
+        (Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun T =>
+            Finset.sum (Finset.univ : Finset (PrimeMode P))
+              (fun p => creationKernel D.amplitude (D.holonomy s) p S T * f T)))
+        +
+        (Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun T =>
+            Finset.sum (Finset.univ : Finset (PrimeMode P))
+              (fun p => annihilationKernel D.amplitude (D.holonomy s) p S T * f T))) := by
+          rw [creationSupercharge_apply_eq_creationKernel_sum,
+            dualAnnihilationSupercharge_apply_eq_annihilationKernel_sum]
+    _ =
+        Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun T =>
+            Finset.sum (Finset.univ : Finset (PrimeMode P))
+              (fun p =>
+                (creationKernel D.amplitude (D.holonomy s) p S T +
+                  annihilationKernel D.amplitude (D.holonomy s) p S T) * f T)) := by
+          rw [← Finset.sum_add_distrib]
+          refine Finset.sum_congr rfl ?_
+          intro T hT
+          rw [← Finset.sum_add_distrib]
+          refine Finset.sum_congr rfl ?_
+          intro p hp
+          ring
+    _ =
+        Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun T =>
+            (Finset.sum (Finset.univ : Finset (PrimeMode P))
+              (fun p =>
+                creationKernel D.amplitude (D.holonomy s) p S T +
+                  annihilationKernel D.amplitude (D.holonomy s) p S T)) * f T) := by
+          refine Finset.sum_congr rfl ?_
+          intro T hT
+          rw [Finset.sum_mul]
+    _ =
+        Finset.sum (Finset.univ : Finset (Vertex P))
+          (fun T => D.kernel s S T * f T) := by
+          refine Finset.sum_congr rfl ?_
+          intro T hT
+          rw [← D.kernel_eq_sum s S T]
+
+/--
+Kernel Hermitian symmetry implies the full finite pairing Hermitian law for `D.op s`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_kernel_conj_symm
+    (s : ℂ)
+    (hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  unfold pairing
+  simp [D.op_apply_eq_kernel_sum]
+  calc
+    ∑ S, (∑ T, star (D.kernel s S T) * star (f T)) * g S
+        = ∑ S, ∑ T, (star (D.kernel s S T) * star (f T)) * g S := by
+            simp [Finset.sum_mul]
+    _ = ∑ S, ∑ T, star (f T) * (star (D.kernel s S T) * g S) := by
+            simp [mul_assoc, mul_left_comm, mul_comm]
+    _ = ∑ T, ∑ S, star (f T) * (star (D.kernel s S T) * g S) := by
+            rw [Finset.sum_comm]
+    _ = ∑ T, ∑ S, star (f T) * (D.kernel s T S * g S) := by
+            refine Finset.sum_congr rfl ?_
+            intro T hT
+            refine Finset.sum_congr rfl ?_
+            intro S hS
+            rw [hK S T]
+    _ = ∑ T, star (f T) * ∑ S, D.kernel s T S * g S := by
+            refine Finset.sum_congr rfl ?_
+            intro T hT
+            rw [← Finset.mul_sum]
+    _ = ∑ S, star (f S) * ∑ T, D.kernel s S T * g T := by
+            simpa
+
+/--
 Direct finite self-adjointness corollary from modewise adjointness.
 
 If each prime-mode channel is adjoint in both directions, then the finite
@@ -843,60 +1535,85 @@ theorem op_isSelfAdjoint_of_modewiseAdjoint
   · exact D.Q_isAdjointPair_of_unitary (s := s) hAdjModeRev
 
 /--
-Zeta-specialized finite self-adjointness of the Cantor--Dirac operator on the
-critical line.
+Direct finite self-adjointness from scalar/holonomy conditions, without
+external modewise-adjoint assumptions.
 
-This theorem stays inside the existing owner lane: once modewise adjointness is
-available and `D.holonomy` is specialized to `zetaHolonomy`, `Re(s)=1/2`
-implies self-adjointness of `D.op s` for the finite pairing.
+If amplitudes are self-adjoint scalars and holonomy is unitary at `s`, then
+the finite Cantor--Dirac operator `op = Q + Q♯` is self-adjoint for the
+finite pairing.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_unitary_data
+    (s : ℂ)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (hU : D.HolonomyUnitaryAt s) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  apply D.op_isSelfAdjoint_of_modewiseAdjoint (s := s)
+  · intro p
+    exact D.weighted_mode_isAdjointPair_of_unitary s hAmp hU p
+  · intro p
+    exact D.weighted_mode_isAdjointPairRev_of_unitary s hAmp hU p
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_isSelfAdjoint_of_unitary_data_of_zetaHolonomy`.
 -/
 @[rep_depth thermo]
 theorem op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
     (hP : P.primes.Nonempty) (s : ℂ)
     (hhol : D.holonomy s = zetaHolonomy (P := P) s)
     (hs : s.re = 1 / 2)
-    (hAdjMode :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
-    (hAdjModeRev :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
     IsAdjointPair (P := P) (D.op s) (D.op s) := by
   have hU : D.HolonomyUnitaryAt s :=
     D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
-  exact D.op_isSelfAdjoint_of_modewiseAdjoint s hAdjMode hAdjModeRev
+  exact D.op_isSelfAdjoint_of_unitary_data s hAmp hU
 
 /--
-Zeta-specialized finite self-adjointness from pointwise holonomy unitarity.
+Legacy compatibility alias.
 
-This is the direct `HolonomyUnitaryAt` entrypoint: if the zeta-specialized
-holonomy is unitary at `s`, then `D.op s` is self-adjoint once modewise
-adjointness is provided.
+Prefer `op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
 -/
 @[rep_depth thermo]
 theorem op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
     (hP : P.primes.Nonempty) (s : ℂ)
     (hhol : D.holonomy s = zetaHolonomy (P := P) s)
     (hU : D.HolonomyUnitaryAt s)
-    (hAdjMode :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
-    (hAdjModeRev :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)) :
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
     IsAdjointPair (P := P) (D.op s) (D.op s) := by
-  have hs : s.re = 1 / 2 :=
-    D.re_eq_half_of_HolonomyUnitaryAt_of_zetaHolonomy hP s hhol hU
-  exact D.op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
-    hP s hhol hs hAdjMode hAdjModeRev
+  exact D.op_isSelfAdjoint_of_unitary_data s hAmp hU
+
+/--
+Zeta-specialized finite self-adjointness from unitary-data assumptions.
+
+This eliminates explicit modewise adjoint hypotheses by deriving them from
+`hAmp` and `HolonomyUnitaryAt`.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  exact D.op_isSelfAdjoint_of_unitary_data s hAmp hU
+
+/--
+Critical-line specialization of finite self-adjointness from unitary-data
+assumptions.
+-/
+@[rep_depth thermo]
+theorem op_isSelfAdjoint_of_unitary_data_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
+    IsAdjointPair (P := P) (D.op s) (D.op s) := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    hP s hhol hU hAmp
 
 /--
 Kernel Hermitian symmetry induced by finite self-adjointness:
@@ -922,31 +1639,320 @@ theorem kernel_conj_symm_of_op_isSelfAdjoint
   exact hpair
 
 /--
-Zeta-specialized kernel Hermitian symmetry on the critical line:
+Direct finite pairing Hermitian law from self-adjointness of `D.op s`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_op_isSelfAdjoint
+    (s : ℂ)
+    (hself : IsAdjointPair (P := P) (D.op s) (D.op s))
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  exact hself f g
 
-`star (K_s(S,T)) = K_s(T,S)`.
+/--
+Direct kernel Hermitian symmetry from the finite pairing Hermitian law for `D.op s`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_op_pairing_hermitian
+    (s : ℂ)
+    (hpair :
+      ∀ f g : CantorField P, pairing (D.op s f) g = pairing f (D.op s g))
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) := by
+    intro f g
+    exact hpair f g
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `kernel_conj_symm_of_unitary_data_of_zetaHolonomy`.
 -/
 @[rep_depth thermo]
 theorem kernel_conj_symm_of_modewiseAdjoint_of_zetaHolonomy
     (hP : P.primes.Nonempty) (s : ℂ)
     (hhol : D.holonomy s = zetaHolonomy (P := P) s)
     (hs : s.re = 1 / 2)
-    (hAdjMode :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S))
-    (hAdjModeRev :
-      ∀ p : PrimeMode P,
-        IsAdjointPair (P := P)
-          (fun f S => D.amplitude p * (D.holonomy s p)⁻¹ * annihilationPush p f S)
-          (fun f S => D.amplitude p * D.holonomy s p * creationPush p f S))
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
     (S T : Vertex P) :
     star (D.kernel s S T) = D.kernel s T S := by
   have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
     D.op_isSelfAdjoint_of_modewiseAdjoint_of_zetaHolonomy
-      hP s hhol hs hAdjMode hAdjModeRev
+      hP s hhol hs hAmp
   exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `kernel_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+
+/--
+Kernel Hermitian symmetry from unitary-data assumptions under zeta specialization.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+
+/--
+Kernel Hermitian symmetry from unitary-data assumptions on the critical line
+under zeta specialization.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_unitary_data_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.kernel_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    hP s hhol hU hAmp S T
+
+/--
+Matrix-coefficient Hermitian symmetry on basis deltas:
+
+`star (D.op s δ_T (S)) = D.op s δ_S (T)`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_kernel_conj_symm
+    (s : ℂ)
+    (hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  calc
+    star (D.op s (basisDelta T) S)
+        = star (D.kernel s S T) := by
+            rw [D.op_basisDelta_eq_kernel (s := s) (S := S) (T := T)]
+    _ = D.kernel s T S := hK S T
+    _ = D.op s (basisDelta S) T := by
+          rw [D.op_basisDelta_eq_kernel (s := s) (S := T) (T := S)]
+
+/--
+Matrix-coefficient Hermitian symmetry on basis deltas induced by finite
+self-adjointness of `D.op s`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_op_isSelfAdjoint
+    (s : ℂ)
+    (hself : IsAdjointPair (P := P) (D.op s) (D.op s))
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S := by
+    intro S T
+    exact D.kernel_conj_symm_of_op_isSelfAdjoint s hself S T
+  exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
+
+/--
+Conversely, matrix-coefficient Hermitian symmetry on basis deltas implies
+kernel Hermitian symmetry.
+-/
+@[rep_depth thermo]
+theorem kernel_conj_symm_of_op_basisDelta_conj_symm
+    (s : ℂ)
+    (hOp : ∀ S T : Vertex P,
+      star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T)
+    (S T : Vertex P) :
+    star (D.kernel s S T) = D.kernel s T S := by
+  calc
+    star (D.kernel s S T)
+        = star (D.op s (basisDelta T) S) := by
+            rw [D.op_basisDelta_eq_kernel (s := s) (S := S) (T := T)]
+    _ = D.op s (basisDelta S) T := hOp S T
+    _ = D.kernel s T S := by
+          rw [D.op_basisDelta_eq_kernel (s := s) (S := T) (T := S)]
+
+/--
+Kernel Hermitian symmetry is equivalent to matrix-coefficient Hermitian symmetry
+on basis deltas.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_iff_kernel_conj_symm
+    (s : ℂ) :
+    (∀ S T : Vertex P, star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T) ↔
+      (∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S) := by
+  constructor
+  · intro hOp S T
+    exact D.kernel_conj_symm_of_op_basisDelta_conj_symm s hOp S T
+  · intro hK S T
+    exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_basisDelta_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S := by
+    intro S T
+    exact D.kernel_conj_symm_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp S T
+  exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
+
+/--
+Basis-delta Hermitian symmetry from unitary-data assumptions under zeta specialization.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S := by
+    intro S T
+    exact D.kernel_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp S T
+  exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
+
+/--
+Basis-delta Hermitian symmetry from unitary-data assumptions on the critical
+line under zeta specialization.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_unitary_data_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_basisDelta_conj_symm_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    hP s hhol hU hAmp S T
+
+/--
+Matrix-coefficient Hermitian symmetry on basis deltas from the full finite
+pairing Hermitian law.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_op_pairing_hermitian
+    (s : ℂ)
+    (hpair :
+      ∀ f g : CantorField P, pairing (D.op s f) g = pairing f (D.op s g))
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  have hK : ∀ S T : Vertex P, star (D.kernel s S T) = D.kernel s T S := by
+    intro S T
+    exact D.kernel_conj_symm_of_op_pairing_hermitian s hpair S T
+  exact D.op_basisDelta_conj_symm_of_kernel_conj_symm s hK S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_basisDelta_conj_symm_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_basisDelta_conj_symm_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (S T : Vertex P) :
+    star (D.op s (basisDelta T) S) = D.op s (basisDelta S) T := by
+  exact D.op_basisDelta_conj_symm_of_unitary_data_of_zetaHolonomy
+    hP s hhol hs hAmp S T
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_pairing_hermitian_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_modewiseAdjoint_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact hself f g
+
+/--
+Full finite Hermitian pairing law from unitary-data assumptions under
+zeta specialization.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hU : D.HolonomyUnitaryAt s)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  have hself : IsAdjointPair (P := P) (D.op s) (D.op s) :=
+    D.op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+      hP s hhol hU hAmp
+  exact hself f g
+
+/--
+Full finite Hermitian pairing law from unitary-data assumptions on the critical
+line under zeta specialization.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_unitary_data_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  have hU : D.HolonomyUnitaryAt s :=
+    D.HolonomyUnitaryAt_of_re_eq_half_of_zetaHolonomy hP s hhol hs
+  exact D.op_pairing_hermitian_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
+    hP s hhol hU hAmp f g
+
+/--
+Legacy compatibility alias.
+
+Prefer `op_pairing_hermitian_of_unitary_data_of_zetaHolonomy`.
+-/
+@[rep_depth thermo]
+theorem op_pairing_hermitian_of_modewiseAdjoint_of_zetaHolonomy
+    (hP : P.primes.Nonempty) (s : ℂ)
+    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (hs : s.re = 1 / 2)
+    (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p)
+    (f g : CantorField P) :
+    pairing (D.op s f) g = pairing f (D.op s g) := by
+  exact D.op_pairing_hermitian_of_unitary_data_of_zetaHolonomy
+    hP s hhol hs hAmp f g
 
 end FiniteCantorZetaDirac
 

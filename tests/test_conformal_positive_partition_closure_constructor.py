@@ -22,4 +22,5 @@ def test_conformal_positive_partition_has_tkk_cone_square_witness_routes():
     assert "theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness" in text
     assert "theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_TKKConeWitness" in text
     assert "theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness" in text
+    assert "theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeWitness" in text
     assert "W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y" in text

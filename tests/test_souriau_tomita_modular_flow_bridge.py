@@ -33,8 +33,8 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
     assert "theorem mk_of_kms" in text
     assert "def toSouriauTomitaKMSContext" in text
     assert "theorem toSouriauTomitaKMSContext_state_eq" in text
-    assert "state := C.kms.state" in text
-    assert "kms_state_eq := rfl" in text
+    assert "C.kms.state" in text
+    assert "theorem kms_state_eq" in text
     assert "theorem mk_of_state_kms" in text
     assert "theorem mk_of_minimal_kms" in text
     assert "∃ ctx : SouriauTomitaKMSContext" in text
@@ -57,6 +57,9 @@ def test_souriau_tomita_bridge_exposes_cyclic_standard_form_kms_owner_route() ->
     assert "theorem sigma_apply_eq_self" in text
     assert "theorem toStandardFormCarrier_Delta_eq_zero" in text
     assert "theorem toStandardFormCarrier_modularFlow_apply_eq_self" in text
+    assert "def ofCyclicZeroThermal" in text
+    assert "theorem ofCyclicZeroThermal_state_eq" in text
+    assert "theorem mk_of_cyclic_zero_thermal" in text
     assert "theorem mk_of_cyclic" in text
     assert "C.toMinimalSouriauTomitaKMSContext" in text
     assert "theorem mk_broad_of_cyclic" in text

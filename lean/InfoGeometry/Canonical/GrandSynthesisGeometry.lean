@@ -210,6 +210,35 @@ private theorem vacuumEinsteinEquation_of_rnEntropySource
       (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
       (M := M) hSource hUnit hBridge
 
+/--
+Proof-carrying entropy/unit-volume packet for the RN -> gravity lane.
+
+This bundles the concrete Sinkhorn model together with the RN-entropy source and
+the constructive `UnitRelativeVolumeBit`, so downstream gravity theorems can
+consume one witness packet instead of separately threading `M`, `hSource`, and
+`bit`.
+-/
+structure RNEntropyUnitRelativeVolumeWitness
+    (Kgeo : KaehlerInformationGeometry X) where
+  /-- Concrete Sinkhorn model feeding the RN/Monge-Ampere lane. -/
+  M : SinkhornMatrix n
+  /-- RN/Kähler source of the Monge-Ampère density. -/
+  hSource : RNEntropySourcesMongeAmpere n Kgeo M
+  /-- Proof-carrying unit relative-volume closure for the same model. -/
+  bit : UnitRelativeVolumeBit n M
+
+omit [FiniteDimensional ℝ X] in
+/--
+Recover the geometric unit-volume state from the bundled RN source / unit-bit
+witness.
+-/
+theorem unitRelativeVolumeState_of_rnEntropyWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo) :
+    UnitRelativeVolumeState Kgeo := by
+  exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit
+    (n := n) (Kgeo := Kgeo) (M := W.M) W.hSource W.bit
+
 omit [FiniteDimensional ℝ X] in
 /--
 Entropy-sourced geometric gravity statement through the proof-carrying unit
@@ -294,6 +323,27 @@ theorem gravity_generated_by_unitRelativeVolumeState
       (R := R) (K := Kgeo) (x := x) hUnitState hBridge,
     vacuumEinsteinEquation_of_unitRelativeVolumeState
       (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hBridge⟩
+
+omit [FiniteDimensional ℝ X] in
+/--
+Entropy-to-gravity capstone through the bundled RN source / unit-volume witness.
+
+This removes the explicit triple `(M, hSource, bit)` from the public surface:
+callers provide one constructive packet, which is first converted into
+`UnitRelativeVolumeState Kgeo` and then routed through the existing smaller
+owner theorem `gravity_generated_by_unitRelativeVolumeState`.
+-/
+theorem gravity_generated_by_rnEntropyWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_unitRelativeVolumeState
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
+    hBridge
 
 omit [FiniteDimensional ℝ X] in
 /--

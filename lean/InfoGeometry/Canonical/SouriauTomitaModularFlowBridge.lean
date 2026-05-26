@@ -666,3 +666,52 @@ theorem mk_broad_of_cyclic :
   C.mk_of_cyclic
 
 end CyclicSouriauTomitaKMSContext
+
+namespace MinimalSouriauTomitaKMSContext
+
+/--
+Direct constructive minimal KMS constructor from cyclicity on the zero-thermal
+Souriau/Tomita branch.
+
+This removes the explicit `kms : KMSState ...` packet from the minimal surface:
+the KMS witness is constructed from the cyclic state, the zero-thermal
+logarithmic context, and the inverse temperature.
+-/
+@[rep_depth operator]
+noncomputable def ofCyclicZeroThermal
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ) :
+    MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) :=
+  let C : CyclicSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) :=
+    { geometricTemperature := geometricTemperature
+      state := state
+      beta := beta }
+  C.toMinimalSouriauTomitaKMSContext
+
+/-- The direct cyclic zero-thermal constructor reads back the cyclic state. -/
+@[rep_depth operator]
+theorem ofCyclicZeroThermal_state_eq
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ) :
+    (ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+      geometricTemperature state beta).state = state.state := by
+  simp [ofCyclicZeroThermal, MinimalSouriauTomitaKMSContext.state,
+    CyclicSouriauTomitaKMSContext.toMinimalSouriauTomitaKMSContext,
+    CyclicSouriauTomitaKMSContext.kms]
+
+/-- Existential constructor theorem for the minimal cyclic zero-thermal branch. -/
+@[rep_depth operator]
+theorem mk_of_cyclic_zero_thermal
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ) :
+    ∃ ctx : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry),
+      ctx.state = state.state := by
+  refine ⟨ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+    geometricTemperature state beta, ?_⟩
+  simpa using ofCyclicZeroThermal_state_eq (H := H) (Symmetry := Symmetry)
+    geometricTemperature state beta
+
+end MinimalSouriauTomitaKMSContext

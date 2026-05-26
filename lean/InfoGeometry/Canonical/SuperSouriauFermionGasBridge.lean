@@ -502,6 +502,20 @@ theorem toContext_is_weyl_invariant (S : IdentityBalancedStressSeed G Gdual Orbi
       S.moment S.geometricTemperature S.pairing S.parityOfGenerator
       S.stressTensorProjection S.point).is_weyl_invariant
 
+/--
+Constructive readback from the identity-balanced seed to the full
+supertrace-free/Weyl-invariant stress packet.
+
+This removes the need to carry an explicit
+`WeylSupertraceFreeStressContext BalancedScalarStress` hypothesis on the
+identity-balanced branch: both required fields are derived from the seed.
+-/
+@[rep_depth thermo]
+theorem toContext_superTrace_eq_zero_and_is_weyl_invariant
+    (S : IdentityBalancedStressSeed G Gdual Orbit) :
+    S.toContext.superTrace S.toContext.stress = 0 ∧ S.toContext.weylInvariant := by
+  exact ⟨S.toContext_superTrace_eq_zero, S.toContext_is_weyl_invariant⟩
+
 end IdentityBalancedStressSeed
 
 end InfoGeometry.Canonical.SuperSouriauFermionGasBridge

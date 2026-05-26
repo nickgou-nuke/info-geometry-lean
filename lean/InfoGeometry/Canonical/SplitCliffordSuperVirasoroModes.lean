@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
+import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes
@@ -36,11 +37,34 @@ theorem emergent_super_conformal_scaling_with_defect :
   abel_nf
 
 /-- Shifted supercurrent self-square vanishes in this finite block. -/
-def GG_defect : M4R := G1 * G1
+theorem shifted_supercurrent_nilpotent :
+    G1 * G1 = 0 := by
+  simpa [G1, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus]
+    using
+      (InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_square_zero)
 
-/-- Nilpotent closure readback with explicit residual term. -/
-theorem shifted_supercurrent_nilpotent_with_defect :
-    G1 * G1 = GG_defect := by
-  rfl
+/-- Shifted supercurrent is nonzero in the finite two-mode block. -/
+theorem shifted_supercurrent_nonzero :
+    G1 ≠ 0 := by
+  simpa [G1, InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus]
+    using
+      (InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.Jplus_ne_zero)
+
+/-- Fermionic self-anticommutator vanishes in the shifted block. -/
+theorem shifted_supercurrent_self_anticomm_zero :
+    G1 * G1 + G1 * G1 = 0 := by
+  simp [shifted_supercurrent_nilpotent]
+
+/-- The shifted supercurrent is not idempotent (nontrivial nilpotent). -/
+theorem shifted_supercurrent_not_idempotent :
+    G1 * G1 ≠ G1 := by
+  rw [shifted_supercurrent_nilpotent]
+  exact shifted_supercurrent_nonzero.symm
+
+/-- The self-commutator of the shifted supercurrent vanishes. -/
+theorem shifted_supercurrent_comm_self_zero :
+    InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.commM4 G1 G1 = 0 := by
+  unfold InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent.commM4
+  simp [shifted_supercurrent_nilpotent]
 
 end InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes

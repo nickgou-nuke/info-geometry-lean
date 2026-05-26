@@ -602,6 +602,58 @@ theorem topologicalBekensteinBound_of_connesCocycle_natMatch
     (hBridge := hBridge) (hMatch := hMatch)
 
 /--
+Proof-carrying nat-match packet for the cocycle entropy potential.
+
+This bundles the selected scalar cocycle bridge together with the integer-time
+identification of the cocycle entropy potential and the canonical trajectory
+RN-generator potential.
+-/
+structure CocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hMatch :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k
+
+/--
+Constructive nat-match witness route to the cocycle generator lift.
+
+This removes the explicit `hBridge` and `hMatch` pair from the generator-lift
+construction: one proof-carrying witness packet suffices.
+-/
+theorem cocycleGeneratorLift_of_cocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : CocycleNatMatchWitness (n := n) (H := H) σ u T) :
+    CocycleGeneratorLift n T
+      (CocycleEntropyPotential (H := H) σ u W.hBridge) := by
+  exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
+    (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge) (T := T) W.hMatch
+
+/--
+Constructive nat-match witness route to the topological Bekenstein bound.
+
+This narrows `topologicalBekensteinBound_of_natMatch` to a single proof-carrying
+witness packet instead of separate `hBridge` and `hMatch` inputs.
+-/
+theorem topologicalBekensteinBound_of_cocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : CocycleNatMatchWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_cocycleGeneratorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := W.hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_cocycleNatMatchWitness
+        (n := n) (H := H) (σ := σ) (u := u) (T := T) W)
+
+/--
 Proof-carrying zero-normalized cocycle generator packet.
 
 This bundles the bridge, concrete generator lift, and zero-time normalization

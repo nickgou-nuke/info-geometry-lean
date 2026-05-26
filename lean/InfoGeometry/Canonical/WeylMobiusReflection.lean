@@ -32,12 +32,12 @@ noncomputable def W : M2R := K
 
 /-- Weyl involution (`W² = 1`). -/
 theorem weyl_involution : W * W = (1 : M2R) := by
-  simpa [W, K] using (E_sq : E * E = (1 : M2R))
+  simp [W, K]
 
 /-- Cartan generator is fixed by conjugation with `W`. -/
 theorem weyl_conj_K :
     W * K * W = K := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j <;> (fin_cases i; fin_cases j) <;>
     norm_num [W, K, E, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Left nilpotent lane flips sign under Weyl conjugation. -/
@@ -49,7 +49,7 @@ theorem weyl_conj_N :
 /-- Right nilpotent lane (`Nt`) flips sign under Weyl conjugation. -/
 theorem weyl_conj_Nt :
     W * Nt * W = -Nt := by
-  ext i j <;> (fin_cases i <;> fin_cases j) <;>
+  ext i j <;> (fin_cases i; fin_cases j) <;>
     norm_num [W, K, E, Nt, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Transpose-lane version, normalized through existing `Nt = Nᵀ`. -/

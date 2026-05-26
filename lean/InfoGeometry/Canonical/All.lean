@@ -143,6 +143,9 @@ import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 import InfoGeometry.Canonical.SplitCliffordSourceWickBase
 import InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
+import InfoGeometry.Canonical.SplitCliffordCantorFock
+import InfoGeometry.Canonical.SplitCliffordBinaryFock
+import InfoGeometry.Canonical.SuperAlgebraEquilibrium
 import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoMode
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
 import InfoGeometry.Canonical.SplitCliffordFiniteCurrentObstruction
@@ -440,6 +443,7 @@ import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.HestenesModularBregman
 import InfoGeometry.Canonical.HestenesComplexTranslation
+import InfoGeometry.Canonical.HestenesKreinVacuum
 import InfoGeometry.Canonical.HestenesCommutantGeometry
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge

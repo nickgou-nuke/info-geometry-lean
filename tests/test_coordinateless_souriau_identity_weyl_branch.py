@@ -26,3 +26,6 @@ def test_identity_weyl_constructive_branch_removes_explicit_weyl_packet() -> Non
     assert "weylGauge : WeylAlgebraGauge" not in block
     assert "def toFull" in text
     assert "theorem toFull_weylGauge_eq_identity" in text
+    assert "def toObservableMinimalIdentityWeylCoordinatelessSouriauContext" in text
+    assert "theorem toObservableMinimalIdentityWeylCoordinatelessSouriauContext_sigma_eq" in text
+    assert "theorem mk_observable_identityWeyl_of_cyclic" in text

@@ -1987,6 +1987,30 @@ theorem fisherOnsagerProduction_eq_square_of_squareResponse
     (W.toConstructiveSquarePositiveContext weylGauge tkkParameter hTKK hCone X Y
       amplitude selfResponse_eq_square).fisherOnsagerProduction_eq_square
 
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the positive-partition constructive branch, using proof-carrying TKK
+and cone witnesses instead of bare `tkkParameter`/`hTKK` and `hCone` inputs,
+while still accepting the direct square-response equality surface.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    (ConformalOperatorAdmissibilityWitness.toPositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).fisherOnsagerProduction = amplitude ^ (2 : ℕ) := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).fisherOnsagerProduction_eq_square
+
 end ConformalPositivePartitionWitness
 
 namespace ConformalCartanOddPartitionWitness

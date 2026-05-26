@@ -138,6 +138,38 @@ theorem localParity_eq_tilt (p : Idx) :
   rw [← mul_assoc, N.S_sq]
   simp
 
+/-- Distinct-site current commutes with the positive split-Majorana component. -/
+@[rep_depth thermo]
+theorem localParity_commutes_c_offdiag
+    (p q : Idx) (hpq : p ≠ q) :
+    (N.c p * N.d p) * N.c q = N.c q * (N.c p * N.d p) := by
+  calc
+    (N.c p * N.d p) * N.c q
+        = N.T p * N.c q := by rw [N.localParity_eq_tilt p]
+    _ = N.c q * N.T p := by
+        unfold c
+        exact N.T_S_comm_ne p q hpq
+    _ = N.c q * (N.c p * N.d p) := by rw [N.localParity_eq_tilt p]
+
+/-- Distinct-site current commutes with the negative split-Majorana component. -/
+@[rep_depth thermo]
+theorem localParity_commutes_d_offdiag
+    (p q : Idx) (hpq : p ≠ q) :
+    (N.c p * N.d p) * N.d q = N.d q * (N.c p * N.d p) := by
+  calc
+    (N.c p * N.d p) * N.d q
+        = N.T p * N.d q := by rw [N.localParity_eq_tilt p]
+    _ = N.d q * N.T p := by
+        unfold d
+        calc
+          N.T p * (N.S q * N.T q)
+              = (N.T p * N.S q) * N.T q := by rw [mul_assoc]
+          _ = (N.S q * N.T p) * N.T q := by rw [N.T_S_comm_ne p q hpq]
+          _ = N.S q * (N.T p * N.T q) := by rw [mul_assoc]
+          _ = N.S q * (N.T q * N.T p) := by rw [N.T_comm p q hpq]
+          _ = (N.S q * N.T q) * N.T p := by rw [mul_assoc]
+    _ = N.d q * (N.c p * N.d p) := by rw [N.localParity_eq_tilt p]
+
 end WeylGaugeTiltSwitchNormalization
 
 /--

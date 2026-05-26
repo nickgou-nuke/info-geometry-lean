@@ -514,6 +514,43 @@ theorem constructiveDrazinCandidate_power
     _ = T ^ hR.k := by simp
 
 /--
+Foundational constructive Drazin data already carries a canonical Drazin witness
+for its stored inverse, without first re-expanding through the Riesz package.
+-/
+@[rep_depth operator]
+theorem isDrazinInverse_of_constructiveDrazinData
+    {T : E →L[𝕂] E}
+    (h : ConstructiveDrazinData (𝕂 := 𝕂) T) :
+    Drazin.IsDrazinInverse T h.inverse h.k := by
+  refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
+  · calc
+      T * h.inverse = h.projector := h.right_inverse_on_regular
+      _ = h.inverse * T := h.left_inverse_on_regular.symm
+  · calc
+      h.inverse * T * h.inverse = h.projector * h.inverse := by
+          rw [h.left_inverse_on_regular]
+      _ = h.inverse := h.inverse_supported_on_regular_right
+  · calc
+      T ^ (h.k + 1) * h.inverse = T ^ h.k * (T * h.inverse) := by
+          simp [pow_succ, mul_assoc]
+      _ = T ^ h.k * h.projector := by rw [h.right_inverse_on_regular]
+      _ = T ^ h.k * (1 - (1 - h.projector)) := by simp
+      _ = T ^ h.k * 1 - T ^ h.k * (1 - h.projector) := by rw [mul_sub]
+      _ = T ^ h.k - 0 := by rw [mul_one, h.nilpotent_on_defect]
+      _ = T ^ h.k := by simp
+
+/--
+Foundational constructive Drazin data yields a canonical existential Drazin
+witness without first converting to a constructive Riesz package.
+-/
+@[rep_depth operator]
+theorem exists_drazinInverse_of_constructiveDrazinData
+    {T : E →L[𝕂] E}
+    (h : ConstructiveDrazinData (𝕂 := 𝕂) T) :
+    ∃ k TD, Drazin.IsDrazinInverse T TD k :=
+  ⟨h.k, h.inverse, isDrazinInverse_of_constructiveDrazinData (𝕂 := 𝕂) h⟩
+
+/--
 Constructive Riesz decomposition at `0` yields a canonical Drazin witness.
 -/
 @[rep_depth operator]

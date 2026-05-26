@@ -1329,6 +1329,33 @@ theorem externalInfiniteJ_exists_trunc_and_heisenberg_full
   exact externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α
 
 /--
+Sharper owner-side existence theorem tailored to the upstream level-one debt.
+
+This does not identify the symbolic prime-OPE carrier with the concrete source
+current. It only states that there exists a truncating current family whose low
+modes satisfy the level-one resonant and off-diagonal Heisenberg laws.
+-/
+theorem externalInfiniteJ_exists_trunc_and_level_one_heisenberg
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ∃ J :
+      Int →
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α,
+      _root_.InfoGeometry.Canonical.SplitCliffordSourceCurrent.SplitLiftTruncation
+        𝕜
+        (VirasoroProject.ChargedFockSpace 𝕜 α)
+        J
+      ∧ (J 1).commutator (J (-1)) =
+          (1 :
+            VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+              VirasoroProject.ChargedFockSpace 𝕜 α)
+      ∧ (J 1).commutator (J 0) = 0 := by
+  refine ⟨externalInfiniteJ 𝕜 α, ?_⟩
+  refine ⟨externalInfiniteJ_splitLiftTruncation (𝕜 := 𝕜) α, ?_, ?_⟩
+  · simpa using externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α 1 (-1)
+  · simpa using externalInfiniteJ_heisenberg_comm_full (𝕜 := 𝕜) α 1 0
+
+/--
 Typed non-fake closure guard:
 no current family supported only on `±1` can be upgraded to a full
 `CurrentHeisenbergRep`.
@@ -1401,6 +1428,36 @@ theorem externalInfiniteJ_currentHeisenbergRep_comm_full
       else
         0 := by
   exact (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).comm m n
+
+/--
+Resonant source-current commutator at modes `(1,-1)`.
+
+This is the first concrete Heisenberg readback from the explicit source-side
+current: the resonant pair activates exactly the central channel.
+-/
+theorem externalInfiniteJ_currentHeisenbergRep_comm_one_neg_one
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J 1).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J (-1))
+      =
+      (1 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa using externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α 1 (-1)
+
+/--
+Off-diagonal source-current commutator at modes `(1,0)`.
+
+Away from the resonant diagonal `m + n = 0`, the explicit source current has no
+central contribution and the commutator vanishes.
+-/
+theorem externalInfiniteJ_currentHeisenbergRep_comm_one_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J 1).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).J 0)
+      =
+      0 := by
+  simpa using externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α 1 0
 
 /--
 Single-shot closure theorem for the explicit source-side Heisenberg object:
@@ -1508,6 +1565,38 @@ theorem externalInfiniteJ_currentSugawara_lgen_commutator
   by_cases hmn : m + n = 0
   · simp [hmn, externalInfiniteJ_currentSugawara_central (𝕜 := 𝕜) α]
   · simp [hmn]
+
+/--
+Resonant Virasoro `lgen` commutator at modes `(1,-1)` in the explicit
+Sugawara representation generated from `externalInfiniteJ`.
+-/
+theorem externalInfiniteJ_currentSugawara_lgen_commutator_one_neg_one
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 (-1)))
+      =
+      (2 : 𝕜) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0) := by
+  simpa using externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α 1 (-1)
+
+/--
+Off-diagonal Virasoro `lgen` commutator at modes `(1,0)` in the explicit
+Sugawara representation generated from `externalInfiniteJ`.
+-/
+theorem externalInfiniteJ_currentSugawara_lgen_commutator_one_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+      (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1)).commutator
+      ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+        (VirasoroProject.VirasoroAlgebra.lgen 𝕜 0))
+      =
+      (1 : 𝕜) •
+        (externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
+          (VirasoroProject.VirasoroAlgebra.lgen 𝕜 1) := by
+  simpa using externalInfiniteJ_currentSugawara_lgen_commutator (𝕜 := 𝕜) α 1 0
 
 /--
 Skew-symmetry of the concrete Virasoro `lgen` commutator in the
@@ -1660,6 +1749,29 @@ theorem heisenberg_comm_full
         0 := by
   simpa [externalInfiniteJ_currentHeisenbergRep] using
     externalInfiniteJ_currentHeisenbergRep_comm_full (𝕜 := 𝕜) α m n
+
+/--
+Level-one resonant Heisenberg law for the explicit source current `externalInfiniteJ`.
+
+This is the minimal owner-side readback matching the outstanding current-current
+level-one debt shape upstream: the source current itself satisfies the resonant
+Heisenberg commutator with unit central coefficient.
+-/
+theorem heisenberg_comm_one_neg_one
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (externalInfiniteJ 𝕜 α 1).commutator (externalInfiniteJ 𝕜 α (-1)) =
+      (1 :
+        VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
+          VirasoroProject.ChargedFockSpace 𝕜 α) := by
+  simpa using heisenberg_comm_full (𝕜 := 𝕜) α 1 (-1)
+
+/--
+Off-diagonal low-mode Heisenberg law for the explicit source current `externalInfiniteJ`.
+-/
+theorem heisenberg_comm_one_zero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (externalInfiniteJ 𝕜 α 1).commutator (externalInfiniteJ 𝕜 α 0) = 0 := by
+  simpa using heisenberg_comm_full (𝕜 := 𝕜) α 1 0
 
 /--
 Jacobi closure for the explicit infinite current family.

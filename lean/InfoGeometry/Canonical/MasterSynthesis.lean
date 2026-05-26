@@ -4322,6 +4322,111 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     hCapstone j t hTime
 
 /--
+Proof-carrying cocycle generator-lift packet for the RN-cocycle Bekenstein lane.
+
+This bundles the additive modular flow, cocycle bridge, and generator-lift
+witness used to discharge the topological Bekenstein clause in the cocycle-
+sourced capstone route.
+-/
+private structure CocycleGeneratorLiftWitness
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n) where
+  /-- Carrier for the cocycle lane. -/
+  G : Type
+  /-- Normed additive group structure on the cocycle carrier. -/
+  instNormedAddCommGroup : NormedAddCommGroup G
+  /-- Inner-product structure on the cocycle carrier. -/
+  instInnerProductSpace : InnerProductSpace ℝ G
+  /-- Completeness witness on the cocycle carrier. -/
+  instCompleteSpace : CompleteSpace G
+  /-- Finite-dimensional witness needed by the topological Bekenstein route. -/
+  instFiniteDimensional : FiniteDimensional ℝ G
+  /-- Additive modular flow used by the cocycle entropy potential. -/
+  σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G)
+  /-- Cocycle implementing the same modular flow. -/
+  u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G
+  /-- Exact cocycle witness for `(σ, u)`. -/
+  hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u
+  /-- Scalar bridge identifying the cocycle entropy potential. -/
+  hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ
+  /-- Sinkhorn generator-lift witness for the induced cocycle entropy potential. -/
+  hGeneratorLift : CocycleGeneratorLift n Tflow (CocycleEntropyPotential (H := G) σ u hBridge)
+
+/--
+Cocycle-sourced capstone route under a single proof-carrying cocycle packet.
+
+This is the constructive narrowing on the RN-cocycle Bekenstein lane: the
+explicit cocycle/bridge/generator-lift surface
+`(σ, u, hCocycle, hBridge, hGeneratorLift)` is replaced by one
+`CocycleGeneratorLiftWitness` object while the broader theorem surface remains
+available as a compatibility wrapper below.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced_of_cocycleGeneratorLiftWitness
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    (Wcocycle : CocycleGeneratorLiftWitness n Tflow) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  letI := Wcocycle.instNormedAddCommGroup
+  letI := Wcocycle.instInnerProductSpace
+  letI := Wcocycle.instCompleteSpace
+  letI := Wcocycle.instFiniteDimensional
+  rcases bits_to_gravity_to_fluid_capstone
+      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+      (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N) with
+    ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12⟩
+  refine ⟨h1, h2, h3, h4, h5, h6, h7, h8, ?_, h10, h11, h12⟩
+  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
+    (n := n) (H := Wcocycle.G) (σ := Wcocycle.σ) (u := Wcocycle.u) (T := Tflow)
+    Wcocycle.hCocycle Wcocycle.hBridge Wcocycle.hGeneratorLift
+
+/--
 Cocycle-sourced capstone variant:
 the topological Bekenstein clause is discharged from the RN cocycle layer
 via `topologicalBekensteinBound_of_connesCocycle`.
@@ -4380,19 +4485,23 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
         ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
           Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-  rcases bits_to_gravity_to_fluid_capstone
-      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
-      (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
-      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
-      (hAnomalySkew := hAnomalySkew)
-      (hHelicity := hHelicity)
-      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
-      (n := n) (Tflow := Tflow)
-      (γ := γ) (N := N) with
-    ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12⟩
-  refine ⟨h1, h2, h3, h4, h5, h6, h7, h8, ?_, h10, h11, h12⟩
-  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
-    (n := n) (H := G) (σ := σ) (u := u) (T := Tflow) hCocycle hBridge hGeneratorLift
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced_of_cocycleGeneratorLiftWitness
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+    { G := G
+      instNormedAddCommGroup := inferInstance
+      instInnerProductSpace := inferInstance
+      instCompleteSpace := inferInstance
+      instFiniteDimensional := inferInstance
+      σ := σ
+      u := u
+      hCocycle := hCocycle
+      hBridge := hBridge
+      hGeneratorLift := hGeneratorLift }
 
 /--
 KMS-closure / pairing-witness cocycle-sourced capstone variant:

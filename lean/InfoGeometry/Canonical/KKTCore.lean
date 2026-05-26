@@ -598,6 +598,13 @@ theorem uMinus_mul_uMinus_eq_zero
     _ = A + (-B) := by rw [hA, hneg]
     _ = A - B := by simp [sub_eq_add_neg]
 
+@[rep_depth krein] theorem isGZero_add
+    (X : RealSplitCl11Action H) {A B : EndH}
+    (hA : IsGZero X A) (hB : IsGZero X B) :
+    IsGZero X (A + B) := by
+  unfold IsGZero at hA hB ⊢
+  simp [gZeroPart_add, hA, hB]
+
 @[rep_depth krein] theorem isGZero_smul
     (X : RealSplitCl11Action H) (r : ℝ) {A : EndH}
     (hA : IsGZero X A) :
@@ -622,6 +629,75 @@ theorem commutator_uPlus_uMinus_isGZero
     IsGZero X (commutator (uPlus X A) (uMinus X B)) := by
   simpa [uPlus, uMinus] using
     (commutator_gOne_gNegOne_isGZero (X := X) A B)
+
+/--
+Symmetry-adapted KKT closure packet:
+
+* positive circular-polarized odd channel is square-zero;
+* negative circular-polarized odd channel is square-zero;
+* mixed commutator closes in the even (`g₀`) channel.
+
+This is the operator-level closure statement behind the chiral-anomaly
+isolation mechanism in the split `TKK/KKT` lane.
+-/
+@[rep_depth krein]
+theorem chiral_polarized_kkt_closure_packet
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    uPlus X A * uPlus X B = 0 ∧
+    uMinus X A * uMinus X B = 0 ∧
+    IsGZero X (commutator (uPlus X A) (uMinus X B)) := by
+  refine ⟨uPlus_mul_uPlus_eq_zero (X := X) A B, ?_, ?_⟩
+  · exact uMinus_mul_uMinus_eq_zero (X := X) A B
+  · exact commutator_uPlus_uMinus_isGZero (X := X) A B
+
+/--
+Odd-lane anticommutator collapse:
+both same-chirality odd anticommutators vanish.
+-/
+@[rep_depth krein]
+theorem chiral_odd_anticommutator_zero
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    (uPlus X A * uPlus X B + uPlus X B * uPlus X A = 0) ∧
+    (uMinus X A * uMinus X B + uMinus X B * uMinus X A = 0) := by
+  constructor
+  ·
+    rw [uPlus_mul_uPlus_eq_zero (X := X) A B, uPlus_mul_uPlus_eq_zero (X := X) B A]
+    simp
+  ·
+    rw [uMinus_mul_uMinus_eq_zero (X := X) A B, uMinus_mul_uMinus_eq_zero (X := X) B A]
+    simp
+
+/--
+Mixed odd anticommutator closes in the even (`g₀`) lane.
+-/
+@[rep_depth krein]
+theorem anticommutator_uPlus_uMinus_isGZero
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    IsGZero X (uPlus X A * uMinus X B + uMinus X B * uPlus X A) := by
+  apply isGZero_add (X := X)
+  · simpa [uPlus, uMinus] using gOnePart_mul_gNegOnePart_isGZero (X := X) A B
+  · simpa [uPlus, uMinus] using gNegOnePart_mul_gOnePart_isGZero (X := X) B A
+
+/--
+Symmetry-adapted odd/even closure package for the split `TKK/KKT` lane.
+
+It combines:
+* same-chirality odd nilpotency;
+* mixed odd commutator closure into `g₀`;
+* mixed odd anticommutator closure into `g₀`.
+-/
+@[rep_depth krein]
+theorem chiral_superclosure_packet
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    uPlus X A * uPlus X B = 0 ∧
+    uMinus X A * uMinus X B = 0 ∧
+    IsGZero X (commutator (uPlus X A) (uMinus X B)) ∧
+    IsGZero X (uPlus X A * uMinus X B + uMinus X B * uPlus X A) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact uPlus_mul_uPlus_eq_zero (X := X) A B
+  · exact uMinus_mul_uMinus_eq_zero (X := X) A B
+  · exact commutator_uPlus_uMinus_isGZero (X := X) A B
+  · exact anticommutator_uPlus_uMinus_isGZero (X := X) A B
 
 @[rep_depth krein] theorem commutator_isGZero_of_isGOne_of_isGNegOne
     (X : RealSplitCl11Action H) {A B : EndH}

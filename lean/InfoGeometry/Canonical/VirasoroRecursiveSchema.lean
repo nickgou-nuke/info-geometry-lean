@@ -18,11 +18,11 @@ section
 variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
 
 /-- Single-step adjoint action by `L_n`. -/
-def adL (n : ℤ) (X : VirasoroAlgebra 𝕜) : VirasoroAlgebra 𝕜 :=
+noncomputable def adL (n : ℤ) (X : VirasoroAlgebra 𝕜) : VirasoroAlgebra 𝕜 :=
   ⁅lgen 𝕜 n, X⁆
 
 /-- Recursive iterated adjoint action by `L_n`. -/
-def adPowL (n : ℤ) : ℕ → VirasoroAlgebra 𝕜 → VirasoroAlgebra 𝕜
+noncomputable def adPowL (n : ℤ) : ℕ → VirasoroAlgebra 𝕜 → VirasoroAlgebra 𝕜
   | 0, X => X
   | k + 1, X => adL 𝕜 n (adPowL n k X)
 

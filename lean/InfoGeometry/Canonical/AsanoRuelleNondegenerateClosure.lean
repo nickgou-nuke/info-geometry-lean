@@ -88,4 +88,47 @@ theorem asano_nondegenerate_closure_bdd_or
         A B C D z K1 K2 hD hNondeg hK1_closed hK2_bdd
         hK1_no_zero hK2_no_zero h_zerofree hz
 
+/--
+Contrapositive nondegenerate closure (bounded `K₂`):
+if `z ∉ -(K₁K₂)` then `A + D*z ≠ 0`.
+-/
+theorem asano_nondegenerate_not_root_of_not_mem_negProductSet_left_bdd
+    (A B C D z : ℂ) (K1 K2 : Set ℂ)
+    (hD : D ≠ 0)
+    (hNondeg : A * D - B * C ≠ 0)
+    (hK1_closed : IsClosed K1)
+    (hK2_bdd : Bornology.IsBounded K2)
+    (hK1_no_zero : (0 : ℂ) ∉ K1)
+    (hK2_no_zero : (0 : ℂ) ∉ K2)
+    (h_zerofree : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → A + B * z1 + C * z2 + D * z1 * z2 ≠ 0)
+    (hz_not : z ∉ negProductSet K1 K2) :
+    A + D * z ≠ 0 := by
+  intro hz
+  exact hz_not <|
+    asano_nondegenerate_closure_left_bdd
+      A B C D z K1 K2 hD hNondeg hK1_closed hK2_bdd
+      hK1_no_zero hK2_no_zero h_zerofree hz
+
+/--
+Contrapositive nondegenerate closure (combined boundedness):
+if `z ∉ -(K₁K₂)` then `A + D*z ≠ 0`.
+-/
+theorem asano_nondegenerate_not_root_of_not_mem_negProductSet_bdd_or
+    (A B C D z : ℂ) (K1 K2 : Set ℂ)
+    (hD : D ≠ 0)
+    (hNondeg : A * D - B * C ≠ 0)
+    (hK1_closed : IsClosed K1)
+    (hK2_closed : IsClosed K2)
+    (h_bdd_or : Bornology.IsBounded K1 ∨ Bornology.IsBounded K2)
+    (hK1_no_zero : (0 : ℂ) ∉ K1)
+    (hK2_no_zero : (0 : ℂ) ∉ K2)
+    (h_zerofree : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → A + B * z1 + C * z2 + D * z1 * z2 ≠ 0)
+    (hz_not : z ∉ negProductSet K1 K2) :
+    A + D * z ≠ 0 := by
+  intro hz
+  exact hz_not <|
+    asano_nondegenerate_closure_bdd_or
+      A B C D z K1 K2 hD hNondeg hK1_closed hK2_closed h_bdd_or
+      hK1_no_zero hK2_no_zero h_zerofree hz
+
 end InfoGeometry.Canonical.AsanoRuelle

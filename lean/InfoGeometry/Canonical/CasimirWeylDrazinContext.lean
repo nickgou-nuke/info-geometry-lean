@@ -201,6 +201,50 @@ theorem sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
     simp [sourcedGenerator, sourcedModularGenerator, hZero]
 
 /--
+Compressed-deviation-zero is exactly the Drazin-complement boundary-excitation
+background-collapse surface on the owner lane. This removes the intermediate
+`observerDefectResidual = 0` packet for callers that already own the smaller
+compressed commutator witness.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_iff_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector
+        ↔ CIK.spectralComplementaryProjector *
+            DrazinSupercharge.commutator
+              (observerProjectorDeviation CIK C.observer) CIK.dilationGap *
+            CIK.spectralComplementaryProjector = 0 := by
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_observerDefectResidual_eq_zero
+      (E := E) CIK C).trans
+      (by
+        simpa [observerDefectResidual_eq_projectorCompression_commutator_deviation
+          (CIK := CIK) (obs := C.observer)])
+
+/--
+Compressed-deviation-zero is a constructive owner route forcing Drazin-complement
+boundary excitation collapse to the background block.
+-/
+@[rep_depth transport]
+theorem sourcedGenerator_boundary_excitation_eq_background_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (C : CasimirWeylDrazinData (E := E) CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator
+          (observerProjectorDeviation CIK C.observer) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    CIK.spectralComplementaryProjector * sourcedGenerator (E := E) CIK C *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * C.flow.K0 * CIK.spectralComplementaryProjector := by
+  exact
+    (sourcedGenerator_boundary_excitation_eq_background_iff_compressedDeviation_eq_zero
+      (E := E) CIK C).2 hZero
+
+/--
 Under zero central defect, the Drazin-complement boundary excitation collapses to
 its background block exactly when the exact owner-side `Z_D` deviation-control
 predicate holds.

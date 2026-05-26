@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.CalabiYauWBridge
+import InfoGeometry.Canonical.IncompressibleBitBridge
 
 namespace InfoGeometry
 
@@ -31,6 +32,34 @@ structure EntropicMetricCanopyPackage
   metric_bridge : MetricRNRicciBridge R Kgeo x
 
 /--
+Constructive canopy package replacing the bare unit-relative-volume equality
+with the proof-carrying `UnitRelativeVolumeBit` witness.
+-/
+structure EntropicMetricCanopyBitPackage
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (R : RicciTensor E)
+    (x : E)
+    (M : SinkhornMatrix n) : Prop where
+  entropy_source : RNEntropySourcesMongeAmpere n Kgeo M
+  unit_relative_volume_bit :
+    InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
+  metric_bridge : MetricRNRicciBridge R Kgeo x
+
+/--
+Recover the legacy canopy package from the proof-carrying bit package.
+-/
+theorem EntropicMetricCanopyBitPackage.toPackage
+    {n : Nat}
+    {Kgeo : KaehlerInformationGeometry E}
+    {R : RicciTensor E}
+    {x : E}
+    {M : SinkhornMatrix n}
+    (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
+    EntropicMetricCanopyPackage n Kgeo R x M :=
+  ⟨P.entropy_source, P.unit_relative_volume_bit.unit_relative_volume, P.metric_bridge⟩
+
+/--
 First canopy closure: package data yields the unit-relative-volume state on the
 geometric branch.
 -/
@@ -44,6 +73,21 @@ theorem canopy_unitRelativeVolumeState
     UnitRelativeVolumeState Kgeo := by
   exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
     (n := n) (Kgeo := Kgeo) (M := M) P.entropy_source P.unit_relative_volume
+
+/--
+Constructive canopy closure from the proof-carrying unit-relative-volume bit.
+-/
+theorem canopy_unitRelativeVolumeState_of_bitPackage
+    {n : Nat}
+    {Kgeo : KaehlerInformationGeometry E}
+    {R : RicciTensor E}
+    {x : E}
+    {M : SinkhornMatrix n}
+    (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
+    UnitRelativeVolumeState Kgeo := by
+  exact canopy_unitRelativeVolumeState
+    (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (M := M)
+    P.toPackage
 
 /--
 Main canopy closure: RN entropy source + unit-volume closure + metric bridge
@@ -61,6 +105,22 @@ theorem canopy_isRicciFlat_and_vacuumEinstein
   exact isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
     (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
     (M := M) P.entropy_source P.unit_relative_volume P.metric_bridge
+
+/--
+Constructive canopy closure from the proof-carrying unit-relative-volume bit.
+-/
+theorem canopy_isRicciFlat_and_vacuumEinstein_of_bitPackage
+    {n : Nat}
+    {Kgeo : KaehlerInformationGeometry E}
+    {R : RicciTensor E}
+    {x : E}
+    (Λ : ℝ)
+    {M : SinkhornMatrix n}
+    (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact canopy_isRicciFlat_and_vacuumEinstein
+    (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M)
+    P.toPackage
 
 /--
 Trunk-to-canopy closure packet for the Calabi-Yau lane:
@@ -83,6 +143,25 @@ theorem calabiYau_trunk_to_canopy_closure
       (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) P
 
 /--
+Bit-package trunk-to-canopy closure for the Calabi-Yau lane.
+-/
+theorem calabiYau_trunk_to_canopy_closure_of_bitPackage
+    {n : Nat}
+    {Kgeo : KaehlerInformationGeometry E}
+    {R : RicciTensor E}
+    {x : E}
+    (Λ : ℝ)
+    {M : SinkhornMatrix n}
+    (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
+    UnitRelativeVolumeState Kgeo ∧
+      IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  refine ⟨?_, ?_⟩
+  · exact canopy_unitRelativeVolumeState_of_bitPackage
+      (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (M := M) P
+  · exact canopy_isRicciFlat_and_vacuumEinstein_of_bitPackage
+      (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) P
+
+/--
 Root-factorization packet: one canopy package witnesses the complete geometric
 closure tuple on the Calabi-Yau branch.
 -/
@@ -98,6 +177,24 @@ theorem calabiYau_root_factorization
       IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   refine ⟨canopy_unitRelativeVolumeState (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (M := M) P, ?_⟩
   simpa using canopy_isRicciFlat_and_vacuumEinstein
+    (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) P
+
+/--
+Bit-package root-factorization for the Calabi-Yau canopy lane.
+-/
+theorem calabiYau_root_factorization_of_bitPackage
+    {n : Nat}
+    {Kgeo : KaehlerInformationGeometry E}
+    {R : RicciTensor E}
+    {x : E}
+    (Λ : ℝ)
+    {M : SinkhornMatrix n}
+    (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
+    ∃ _ : UnitRelativeVolumeState Kgeo,
+      IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  refine ⟨canopy_unitRelativeVolumeState_of_bitPackage
+    (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (M := M) P, ?_⟩
+  simpa using canopy_isRicciFlat_and_vacuumEinstein_of_bitPackage
     (E := E) (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) P
 
 end CanopyAssembly

@@ -267,6 +267,44 @@ theorem ObserverDeviationControlledByZD.of_control
   c.bound
 
 /--
+The exact deviation-channel control predicate is equivalent to the existence of
+an explicit owner-side `ObserverDeviationControl` witness packet. This lets
+callers route through the proof-carrying bound record instead of a bare
+`Prop` hypothesis.
+-/
+theorem observerDeviationControlledByZD_iff_nonempty_control
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    ObserverDeviationControlledByZD CIK obs ↔ Nonempty (ObserverDeviationControl CIK obs) := by
+  constructor
+  · intro hControl
+    exact ⟨{ bound := hControl }⟩
+  · rintro ⟨c⟩
+    exact ObserverDeviationControlledByZD.of_control c
+
+/--
+A bare owner-side `ObserverDeviationControlledByZD` proof can always be repacked
+as an explicit `ObserverDeviationControl` witness packet.
+-/
+theorem nonempty_observerDeviationControl_of_deviationControlledByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
+    Nonempty (ObserverDeviationControl CIK obs) := by
+  exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).1 hControl
+
+/--
+If an explicit owner-side `ObserverDeviationControl` witness packet exists, then
+so does the original deviation-channel control predicate.
+-/
+theorem observerDeviationControlledByZD_of_nonempty_control
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : Nonempty (ObserverDeviationControl CIK obs)) :
+    ObserverDeviationControlledByZD CIK obs := by
+  exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).2 hControl
+
+/--
 General observer-defect `Z_D` bound from the exact deviation-channel control.
 
 The proof is constructive: the regular spectral-projector commutator is first
@@ -411,6 +449,47 @@ theorem observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
   exact norm_eq_zero.mp hNormZero
 
 /--
+Under zero central defect, exact owner-side `Z_D` deviation control already
+forces the compressed deviation channel itself to vanish.
+-/
+@[rep_depth krein]
+theorem compressedDeviation_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) hControl hZD
+  simpa [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+    using hResidual
+
+/--
+Under zero central defect, the compressed deviation channel vanishes exactly
+when the owner-side `Z_D` deviation-control predicate holds.
+-/
+theorem compressedDeviation_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) ↔
+      ObserverDeviationControlledByZD CIK obs := by
+  constructor
+  · intro hZero
+    exact observerDeviationControlledByZD_of_compressedDeviation_eq_zero
+      (CIK := CIK) (obs := obs) hZero
+  · intro hControl
+    exact compressedDeviation_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) hControl hZD
+
+/--
 Constructive zero-`Z_D` collapse from an explicit deviation-control witness.
 
 This is the proof-carrying companion to
@@ -550,6 +629,20 @@ theorem observerDeviationControlledByZD_of_deviation_eq_zero
   exact observerDefectResidual_norm_le_ZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
 
 /--
+Constructive witness-packet route: if the observer slice agrees with the
+certified spectral projector, then the owner-side `ObserverDeviationControl`
+record is available directly. This removes the need to carry the bare
+`ObserverDeviationControlledByZD` proposition on the deviation-zero branch.
+-/
+theorem observerDeviationControl_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    ObserverDeviationControl CIK obs :=
+  { bound := observerDeviationControlledByZD_of_deviation_eq_zero
+      (CIK := CIK) (obs := obs) hDev }
+
+/--
 Defect compression is stable under left/right `Q₀` action.
 -/
 theorem observerDefectResidual_isDefectSupported
@@ -640,6 +733,20 @@ theorem observerDeviationControlledByZD_of_aligned
     ObserverDeviationControlledByZD CIK obs := by
   rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
   exact observerDefectResidual_norm_le_ZD_of_aligned (CIK := CIK) (obs := obs) hAlign
+
+/--
+Constructive witness-packet route: an aligned observer yields an explicit
+`ObserverDeviationControl` record, so downstream constructors can consume the
+proof object directly instead of a bare `ObserverDeviationControlledByZD`
+proposition.
+-/
+theorem observerDeviationControl_of_aligned
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hAlign : observerOrientationResidual CIK obs = 0) :
+    ObserverDeviationControl CIK obs :=
+  { bound := observerDeviationControlledByZD_of_aligned
+      (CIK := CIK) (obs := obs) hAlign }
 
 /--
 Scalarized observer strain (pre-thermodynamic cost) via operator norm.

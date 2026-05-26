@@ -1004,6 +1004,48 @@ theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeS
     (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
 
 /--
+Constructive reverse-lane iff: the local clock-gauge certificate upgrades the
+winding-obstruction criterion all the way to the raw non-equilibrium defect
+surface, not just the packaged clock-equilibrium predicate.
+-/
+theorem nonEquilibriumClockDefect_eq_zero_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N) :
+    nonEquilibriumClockDefect (H := H) hMod = 0 ↔
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0 := by
+  show IsClockEquilibriumLane (H := H) hMod ↔
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0
+  exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (H := H) hMod N C
+
+/--
+Constructive reverse-lane readback: on a certified local clock-gauge branch,
+zero winding obstruction already forces vanishing of the non-equilibrium clock
+defect, without a separate faithful-branch hypothesis.
+-/
+theorem nonEquilibriumClockDefect_eq_zero_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    (hMod : EndH) (N : ℤ)
+    (C : LocalClockGaugeSymmetryCertificate
+      (H := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      N)
+    (hObs :
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0) :
+    nonEquilibriumClockDefect (H := H) hMod = 0 := by
+  exact
+    (nonEquilibriumClockDefect_eq_zero_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+      (H := H) hMod N C).2 hObs
+
+/--
 Clock-equilibrium gives branch periodicity for the modular transport generator.
 -/
 theorem winding_orbit_periodicity_of_clockEquilibrium

@@ -271,6 +271,43 @@ theorem mk_broad_of_witness :
       B.kms.state = W.state :=
   ⟨W.toKMSBridge, rfl⟩
 
+/--
+Constructive readback: the narrowed witness packet already determines the vacuum
+vector realization of the complex state, without reintroducing a broad
+`kms : KMSState ...` bridge argument.
+-/
+@[rep_depth krein]
+theorem complexEval_eq_vacuum_readout
+    (A : Op) :
+    W.state.eval A =
+      (KreinSpace.kreinInner (H := H) (W.vacuum.natural.act A W.vacuum.Omega)
+        W.vacuum.Omega : ℂ) := by
+  calc
+    W.state.eval A = (W.vacuum.natural.eval W.omegaState A : ℂ) :=
+      W.complexEval_eq_realConeEval A
+    _ =
+        (KreinSpace.kreinInner (H := H)
+          (W.vacuum.natural.act A (W.vacuum.natural.coneVector W.omegaState))
+          (W.vacuum.natural.coneVector W.omegaState) : ℂ) := by
+          rw [W.vacuum.natural.eval_eq_krein_vector_readout W.omegaState A]
+    _ =
+        (KreinSpace.kreinInner (H := H) (W.vacuum.natural.act A W.vacuum.Omega)
+          W.vacuum.Omega : ℂ) := by
+          rw [W.coneVector_eq_Omega]
+
+/-- Constructive readback of real-time invariance on the narrowed witness lane. -/
+@[rep_depth krein]
+theorem flow_invariant_readback
+    (t : ℝ) (A : Op) :
+    W.state.eval (W.flow.flow t A) = W.state.eval A :=
+  W.flow_invariant t A
+
+/-- Constructive readback of the analytic KMS boundary certificate. -/
+@[rep_depth krein]
+theorem kms_boundary_holds_readback :
+    W.kms_boundary_condition :=
+  W.kms_boundary_holds
+
 end HestenesKreinNaturalConeKMSWitness
 
 /--

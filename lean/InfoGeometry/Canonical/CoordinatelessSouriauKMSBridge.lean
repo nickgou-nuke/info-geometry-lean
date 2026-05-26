@@ -576,6 +576,12 @@ def toFull :
   fisherMetric := C.fisherMetric
   weylGauge := C.weylGauge
 
+/-- On the full adapter, the removed Weyl-gauge packet is reconstructed as the identity gauge. -/
+@[rep_depth operator]
+theorem toFull_weylGauge_eq_identity :
+    C.toFull.weylGauge = identityWeylAlgebraGauge (H := H) C.state :=
+  rfl
+
 end MinimalIdentityWeylCoordinatelessSouriauContext
 
 namespace MinimalCoordinatelessSouriauFisherContext
@@ -1215,6 +1221,44 @@ theorem toModularTimeKMSContext_sigma_eq :
 theorem toModularTimeKMSContext_kms_eq :
     C.toModularTimeKMSContext.kms = C.toIdentityKMSState :=
   rfl
+
+/--
+Compatibility adapter from the observable-minimal cyclic branch to the narrowed
+identity-Weyl broad coordinateless context.
+
+This removes the remaining explicit `sigma`, `kms`, `fisherMetric`, and
+`weylGauge` packets from callers that already live on the observable-minimal
+identity-SLD lane while staying on the identity-Weyl branch.
+-/
+@[rep_depth operator]
+def toObservableMinimalIdentityWeylCoordinatelessSouriauContext :
+    MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Obs where
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.toIdentityKMSState
+  souriauMoment := C.souriauMoment
+  fisherMetric := C.fisherMetric
+
+/-- On the narrowed observable identity-Weyl adapter, the modular flow is definitionally the owned identity flow. -/
+@[rep_depth operator]
+theorem toObservableMinimalIdentityWeylCoordinatelessSouriauContext_sigma_eq :
+    C.toObservableMinimalIdentityWeylCoordinatelessSouriauContext.sigma = C.sigma :=
+  rfl
+
+/--
+Constructor theorem routing the narrowed observable identity-Weyl packet
+through the observable-minimal cyclic constructive branch.
+
+This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
+constructor surface for callers that already own an
+`ObservableMinimalCyclicCoordinatelessSouriauContext` witness and only need the
+identity-Weyl branch.
+-/
+@[rep_depth operator]
+theorem mk_observable_identityWeyl_of_cyclic :
+    ∃ ctx : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Obs,
+      ctx.state = C.state.state :=
+  ⟨C.toObservableMinimalIdentityWeylCoordinatelessSouriauContext, rfl⟩
 
 /--
 Compatibility adapter from the observable-minimal cyclic branch to the narrowed

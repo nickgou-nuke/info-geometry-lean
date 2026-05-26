@@ -258,6 +258,55 @@ theorem NSourceProj_mul_NRangeProj :
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-! ## Chiral circular-polarized projector corridor -/
+
+/--
+Symmetry-adapted chiral decomposition:
+every operator splits into `(+,-)` channels via `Pplus + Pminus = 1`.
+-/
+theorem chiral_projector_decomposition (X : Mat2) :
+    X = Pplus * X + Pminus * X := by
+  calc
+    X = (1 : Mat2) * X := by simp
+    _ = (Pplus + Pminus) * X := by rw [Pplus_add_Pminus]
+    _ = Pplus * X + Pminus * X := by rw [add_mul]
+
+/--
+Nilpotent boundary channel is isolated by chiral projectors:
+`Pminus * N = 0` and `N * Pplus = 0`.
+-/
+theorem chiral_nilpotent_isolation_left_right :
+    Pminus * N = (0 : Mat2) ∧ N * Pplus = (0 : Mat2) := by
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Complementary nilpotent channel survives exactly in the opposite chirality:
+`Pplus * N = N` and `N * Pminus = N`.
+-/
+theorem chiral_nilpotent_survives_complement :
+    Pplus * N = N ∧ N * Pminus = N := by
+  constructor
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Owner-side closure packet for the `Op² = -1, +1, 0` corridor with chiral isolation.
+-/
+theorem hypercomplex_chiral_closure_packet :
+    I * I = -(1 : Mat2) ∧
+    E * E = (1 : Mat2) ∧
+    N * N = (0 : Mat2) ∧
+    Pminus * N = (0 : Mat2) ∧
+    N * Pplus = (0 : Mat2) := by
+  rcases chiral_nilpotent_isolation_left_right with ⟨hL, hR⟩
+  exact ⟨I_sq, E_sq, N_sq, hL, hR⟩
+
 /--
 First Moore--Penrose equation:
 

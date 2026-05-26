@@ -1,39 +1,99 @@
-import Mathlib
-import InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
+import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 
 /-!
 # InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
 
-Finite multi-mode SUSY seed using explicit two-mode current blocks.
+Concrete multi-mode finite truncation readouts for the mixed Super-Virasoro
+bracket at shifted modes.
+
+This file specializes the finite-window owner surface to the explicit shifted
+configuration `(m,r) = (1,0)` and keeps the boundary defect as an explicit
+operator remainder.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
 
-open Matrix
-open InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent
+open InfoGeometry.Canonical.SuperVirasoroFiniteWindow
 
-abbrev M4R := Matrix (Fin 4) (Fin 4) ℝ
+variable {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
-/-- Computable stress seed (diagonal mode operator). -/
-def L0 : M4R :=
-  !![1, 0, 0, 0;
-     0, 1, 0, 0;
-     0, 0, -1, 0;
-     0, 0, 0, -1]
+local notation "EndV" => Module.End 𝕜 V
 
-/-- Shifted supercurrent seed from the two-mode current table. -/
-def G1 : M4R := Jplus
+/-- Explicit mixed-mode boundary remainder at `(m,r)=(1,0)`. -/
+def boundaryDefect_m1_r0
+    (N : ℤ) (J ψ : ℤ → EndV) : EndV :=
+  boundaryDefect_LG (𝕜 := 𝕜) N 1 0 J ψ
 
-/-- Multi-mode scaling commutator seed. -/
-theorem emergent_super_conformal_scaling :
-    L0 * G1 - G1 * L0 = (-2 : ℝ) • G1 := by
-  dsimp [L0, G1, Jplus, a1Dag, a2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_four]
+/--
+Finite-window mixed bracket at shifted modes:
+`[L₁^N, G₀^N] = (1/2) • G₁^N + boundary defect`.
+-/
+theorem mixedBracket_m1_r0_decompose
+    (N : ℤ) (J ψ : ℤ → EndV) :
+    (L_trunc N 1 J ψ) * (G_trunc N 0 J ψ)
+      - (G_trunc N 0 J ψ) * (L_trunc N 1 J ψ)
+    = ((1 : 𝕜) / 2) • (G_trunc N 1 J ψ)
+      + boundaryDefect_m1_r0 (𝕜 := 𝕜) N J ψ := by
+  simpa [boundaryDefect_m1_r0, LG_coeff] using
+    (superBracket_LG_decompose (𝕜 := 𝕜) N 1 0 J ψ)
 
-/-- Shifted mode square vanishes in this finite block. -/
-theorem shifted_supercurrent_nilpotent :
-    G1 * G1 = 0 := by
-  simpa [G1] using Jplus_square_zero
+/--
+If the shifted-mode boundary defect vanishes, the shifted finite mixed bracket
+closes exactly with coefficient `1/2`.
+-/
+theorem mixedBracket_m1_r0_of_boundary_zero
+    (N : ℤ) (J ψ : ℤ → EndV)
+    (hdef : boundaryDefect_m1_r0 (𝕜 := 𝕜) N J ψ = 0) :
+    (L_trunc N 1 J ψ) * (G_trunc N 0 J ψ)
+      - (G_trunc N 0 J ψ) * (L_trunc N 1 J ψ)
+    = ((1 : 𝕜) / 2) • (G_trunc N 1 J ψ) := by
+  simpa [boundaryDefect_m1_r0, LG_coeff] using
+    (superBracket_LG_of_boundaryDefect_zero (𝕜 := 𝕜) N 1 0 J ψ hdef)
+
+/--
+Concrete witness evaluation of the shifted boundary defect.
+
+For the witness families `J_witness A` (mode `0`) and `psi_witness B` (mode `1`),
+the shifted defect is exactly `- (1/2) • (A * B)`.
+-/
+theorem boundaryDefect_m1_r0_witness_eq
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) :
+    boundaryDefect_m1_r0 (𝕜 := 𝕜) N
+      (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B)
+    = -((1 : 𝕜) / 2) • (A * B) := by
+  unfold boundaryDefect_m1_r0 boundaryDefect_LG
+  simp [LG_coeff,
+    G_trunc_r0_witness_eq_zero (𝕜 := 𝕜) N A B,
+    L_trunc_witness_n1_eq_zero (𝕜 := 𝕜) N A B,
+    G_trunc_r1_witness_eq (𝕜 := 𝕜) N A B hN]
+
+/--
+Under the explicit witness lane and algebraic side condition `A * B = 0`,
+the shifted boundary defect vanishes.
+-/
+theorem boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
+    boundaryDefect_m1_r0 (𝕜 := 𝕜) N
+      (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) = 0 := by
+  rw [boundaryDefect_m1_r0_witness_eq (𝕜 := 𝕜) N A B hN, hAB]
+  simp
+
+/--
+Concrete shifted-mode exact closure in the witness lane under `A * B = 0`.
+-/
+theorem mixedBracket_m1_r0_witness_of_mul_zero
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
+    (L_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+        * (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+      - (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+        * (L_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+    = ((1 : 𝕜) / 2) •
+        (G_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B)) := by
+  exact mixedBracket_m1_r0_of_boundary_zero (𝕜 := 𝕜) N
+    (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B)
+    (boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero (𝕜 := 𝕜) N A B hN hAB)
 
 end InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
+

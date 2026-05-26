@@ -116,6 +116,29 @@ noncomputable def splitEightSugawaraKernel
   simp [conjugateEnd]
 
 /--
+Scalar multiples of the identity are central in the endomorphism algebra.
+
+This is the algebraic core needed for Jacobi closure of the Heisenberg
+central extension term.
+-/
+theorem heisenberg_central_term_commutes
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (c : 𝕜) (J : V →ₗ[𝕜] V) :
+    (c • (1 : V →ₗ[𝕜] V)) * J - J * (c • (1 : V →ₗ[𝕜] V)) = 0 := by
+  ext v
+  simp [sub_eq_add_neg]
+
+/--
+Commutator form of `heisenberg_central_term_commutes`.
+-/
+theorem heisenberg_central_term_commutator_eq_zero
+    {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
+    (c : 𝕜) (J : V →ₗ[𝕜] V) :
+    (c • (1 : V →ₗ[𝕜] V)).commutator J = 0 := by
+  simpa [LinearMap.commutator] using
+    heisenberg_central_term_commutes (𝕜 := 𝕜) (V := V) c J
+
+/--
 Conjugation by a linear equivalence preserves the endomorphism commutator.
 -/
 theorem conjugateEnd_commutator

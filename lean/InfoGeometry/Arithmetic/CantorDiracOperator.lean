@@ -195,6 +195,124 @@ private theorem anticomm_smul_smul
   simp [anticomm, smul_mul_assoc, mul_smul_comm, smul_smul, smul_add, mul_comm, mul_left_comm, mul_assoc]
 
 /--
+A weighted square-sum lemma for finite Majorana systems.
+
+If `γ_p γ_q + γ_q γ_p = 2δ_pq` on a finite set `S`, then
+
+`(Σ p∈S, a_p γ_p)^2 = Σ p∈S, a_p^2`.
+
+This is the algebraic core of the finite Lichnerowicz law.
+-/
+@[rep_depth thermo]
+theorem weighted_majorana_sum_sq
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    {P : PrimeRegister} {γ : ℕ → Op}
+    (hγ : IsMajoranaCliffordRepresentation P γ)
+    (a : ℕ → ℝ)
+    (S : Finset ℕ)
+    (hS : S ⊆ P.primes) :
+    (Finset.sum S (fun p => a p • γ p)) ^ 2 =
+      Finset.sum S (fun p => (a p * a p) • (1 : Op)) := by
+  classical
+  revert hS
+  refine Finset.induction_on S ?empty ?insert
+  · intro _hS
+    simp
+  · intro p S hpS ih hsub
+    have hpP : p ∈ P.primes := hsub (by simp)
+    have hSsub : S ⊆ P.primes := by
+      intro q hq
+      exact hsub (by simp [hq])
+    have ihS :
+        (Finset.sum S (fun q => a q • γ q)) ^ 2 =
+          Finset.sum S (fun q => (a q * a q) • (1 : Op)) :=
+      ih hSsub
+    have hdiag :
+        (a p • γ p) * (a p • γ p) =
+          (a p * a p) • (1 : Op) := by
+      calc
+        (a p • γ p) * (a p • γ p)
+            = a p • (γ p * (a p • γ p)) := by
+                rw [smul_mul_assoc]
+        _ = a p • (a p • (γ p * γ p)) := by
+                rw [mul_smul_comm]
+        _ = (a p * a p) • (γ p * γ p) := by
+                rw [smul_smul]
+        _ = (a p * a p) • (1 : Op) := by
+                rw [majorana_sq_one_of_clifford hγ hpP]
+    have hcross :
+        (a p • γ p) * (Finset.sum S (fun q => a q • γ q)) +
+          (Finset.sum S (fun q => a q • γ q)) * (a p • γ p) = 0 := by
+      rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib]
+      refine Finset.sum_eq_zero ?_
+      intro q hq
+      have hqP : q ∈ P.primes := hSsub hq
+      have hpq : p ≠ q := by
+        intro hpq
+        subst q
+        exact hpS hq
+      have hanti :
+          γ p * γ q + γ q * γ p = 0 :=
+        majorana_anticomm_zero_of_ne hγ hpP hqP hpq
+      have hmul₁ :
+          (a p • γ p) * (a q • γ q) =
+            (a p * a q) • (γ p * γ q) := by
+        calc
+          (a p • γ p) * (a q • γ q)
+              = a p • (γ p * (a q • γ q)) := by
+                  rw [smul_mul_assoc]
+          _ = a p • (a q • (γ p * γ q)) := by
+                  rw [mul_smul_comm]
+          _ = (a p * a q) • (γ p * γ q) := by
+                  rw [smul_smul]
+      have hmul₂ :
+          (a q • γ q) * (a p • γ p) =
+            (a q * a p) • (γ q * γ p) := by
+        calc
+          (a q • γ q) * (a p • γ p)
+              = a q • (γ q * (a p • γ p)) := by
+                  rw [smul_mul_assoc]
+          _ = a q • (a p • (γ q * γ p)) := by
+                  rw [mul_smul_comm]
+          _ = (a q * a p) • (γ q * γ p) := by
+                  rw [smul_smul]
+      calc
+        (a p • γ p) * (a q • γ q) +
+            (a q • γ q) * (a p • γ p)
+            =
+            (a p * a q) • (γ p * γ q) +
+              (a q * a p) • (γ q * γ p) := by
+                rw [hmul₁, hmul₂]
+        _ =
+            (a p * a q) • (γ p * γ q) +
+              (a p * a q) • (γ q * γ p) := by
+                rw [mul_comm (a q) (a p)]
+        _ =
+            (a p * a q) • (γ p * γ q + γ q * γ p) := by
+                rw [← smul_add]
+        _ = 0 := by
+                rw [hanti, smul_zero]
+    calc
+      (Finset.sum (insert p S) (fun q => a q • γ q)) ^ 2
+          =
+          ((a p • γ p) + Finset.sum S (fun q => a q • γ q)) ^ 2 := by
+            rw [Finset.sum_insert hpS]
+      _ =
+          (a p • γ p) * (a p • γ p) +
+            (Finset.sum S (fun q => a q • γ q)) ^ 2 +
+            ((a p • γ p) * (Finset.sum S (fun q => a q • γ q)) +
+              (Finset.sum S (fun q => a q • γ q)) * (a p • γ p)) := by
+            simp [pow_two, mul_add, add_mul, add_assoc, add_left_comm, add_comm]
+      _ =
+          (a p * a p) • (1 : Op) +
+            Finset.sum S (fun q => (a q * a q) • (1 : Op)) + 0 := by
+            rw [hdiag, ihS, hcross]
+      _ =
+          Finset.sum (insert p S) (fun q => (a q * a q) • (1 : Op)) := by
+            rw [Finset.sum_insert hpS]
+            abel
+
+/--
 Finite Cantor-Dirac Lichnerowicz square law.
 
 If the finite prime-register generators satisfy the Majorana Clifford
@@ -222,123 +340,13 @@ theorem cantorDirac_sq_eq_hamiltonian_of_clifford
 
   let a : ℕ → ℝ := fun p => Real.sqrt (Real.log (p : ℝ))
 
-  have hsum :
-      ∀ S : Finset ℕ,
-        S ⊆ P.primes →
-          (Finset.sum S (fun p => a p • γ p)) ^ 2 =
-            Finset.sum S (fun p => (a p * a p) • (1 : Op)) := by
-    intro S
-    refine Finset.induction_on S ?empty ?insert
-    · intro _hS
-      simp
-    · intro p S hpS ih hsub
-      have hpP : p ∈ P.primes := hsub (by simp)
-      have hSsub : S ⊆ P.primes := by
-        intro q hq
-        exact hsub (by simp [hq])
-
-      have ihS :
-          (Finset.sum S (fun q => a q • γ q)) ^ 2 =
-            Finset.sum S (fun q => (a q * a q) • (1 : Op)) :=
-        ih hSsub
-
-      have hdiag :
-          (a p • γ p) * (a p • γ p) =
-            (a p * a p) • (1 : Op) := by
-        calc
-          (a p • γ p) * (a p • γ p)
-              = a p • (γ p * (a p • γ p)) := by
-                  rw [smul_mul_assoc]
-          _ = a p • (a p • (γ p * γ p)) := by
-                  rw [mul_smul_comm]
-          _ = (a p * a p) • (γ p * γ p) := by
-                  rw [smul_smul]
-          _ = (a p * a p) • (1 : Op) := by
-                  rw [majorana_sq_one_of_clifford hγ hpP]
-
-      have hcross :
-          (a p • γ p) * (Finset.sum S (fun q => a q • γ q)) +
-            (Finset.sum S (fun q => a q • γ q)) * (a p • γ p) = 0 := by
-        rw [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_add_distrib]
-        refine Finset.sum_eq_zero ?_
-        intro q hq
-
-        have hqP : q ∈ P.primes := hSsub hq
-        have hpq : p ≠ q := by
-          intro hpq
-          subst q
-          exact hpS hq
-
-        have hanti :
-            γ p * γ q + γ q * γ p = 0 :=
-          majorana_anticomm_zero_of_ne hγ hpP hqP hpq
-
-        have hmul₁ :
-            (a p • γ p) * (a q • γ q) =
-              (a p * a q) • (γ p * γ q) := by
-          calc
-            (a p • γ p) * (a q • γ q)
-                = a p • (γ p * (a q • γ q)) := by
-                    rw [smul_mul_assoc]
-            _ = a p • (a q • (γ p * γ q)) := by
-                    rw [mul_smul_comm]
-            _ = (a p * a q) • (γ p * γ q) := by
-                    rw [smul_smul]
-
-        have hmul₂ :
-            (a q • γ q) * (a p • γ p) =
-              (a q * a p) • (γ q * γ p) := by
-          calc
-            (a q • γ q) * (a p • γ p)
-                = a q • (γ q * (a p • γ p)) := by
-                    rw [smul_mul_assoc]
-            _ = a q • (a p • (γ q * γ p)) := by
-                    rw [mul_smul_comm]
-            _ = (a q * a p) • (γ q * γ p) := by
-                    rw [smul_smul]
-
-        calc
-          (a p • γ p) * (a q • γ q) +
-              (a q • γ q) * (a p • γ p)
-              =
-              (a p * a q) • (γ p * γ q) +
-              (a q * a p) • (γ q * γ p) := by
-                rw [hmul₁, hmul₂]
-          _ =
-              (a p * a q) • (γ p * γ q) +
-              (a p * a q) • (γ q * γ p) := by
-                rw [mul_comm (a q) (a p)]
-          _ =
-              (a p * a q) • (γ p * γ q + γ q * γ p) := by
-                rw [← smul_add]
-          _ = 0 := by
-                rw [hanti, smul_zero]
-
-      calc
-        (Finset.sum (insert p S) (fun q => a q • γ q)) ^ 2
-            =
-            ((a p • γ p) + Finset.sum S (fun q => a q • γ q)) ^ 2 := by
-              rw [Finset.sum_insert hpS]
-        _ =
-            (a p • γ p) * (a p • γ p) +
-              (Finset.sum S (fun q => a q • γ q)) ^ 2 +
-              ((a p • γ p) * (Finset.sum S (fun q => a q • γ q)) +
-                (Finset.sum S (fun q => a q • γ q)) * (a p • γ p)) := by
-              simp [pow_two, mul_add, add_mul, add_assoc, add_left_comm, add_comm]
-        _ =
-            (a p * a p) • (1 : Op) +
-              Finset.sum S (fun q => (a q * a q) • (1 : Op)) + 0 := by
-              rw [hdiag, ihS, hcross]
-        _ =
-            Finset.sum (insert p S) (fun q => (a q * a q) • (1 : Op)) := by
-              rw [Finset.sum_insert hpS]
-              abel
-
   have hmain :
       cantorDiracOperator P γ ^ 2 =
         Finset.sum P.primes (fun p => (a p * a p) • (1 : Op)) := by
     simpa [cantorDiracOperator, a] using
-      hsum P.primes (by intro p hp; exact hp)
+      weighted_majorana_sum_sq
+        (P := P) (γ := γ) hγ a P.primes
+        (by intro p hp; exact hp)
 
   calc
     cantorDiracOperator P γ ^ 2

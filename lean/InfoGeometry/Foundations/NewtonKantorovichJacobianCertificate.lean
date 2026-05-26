@@ -104,10 +104,10 @@ def zeroResidualCertificate
     (_hLnonneg : 0 ≤ L) :
     NKScalarCertificate := by
   refine mkStrict L 0 0 0 ?_ ?_ ?_ ?_
-  · exact le_rfl
+  · norm_num
   · have : L * 0 < (1 / 2 : ℝ) := by
       have hhalf : (0 : ℝ) < 1 / 2 := by norm_num
-      exact (by simpa using hhalf)
+      nlinarith
     exact this
   · norm_num
   · intro n

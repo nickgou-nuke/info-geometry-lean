@@ -26,7 +26,7 @@ def G1 : M4R := Jplus
 
 /-- Multi-mode scaling commutator seed. -/
 theorem emergent_super_conformal_scaling :
-    L0 * G1 - G1 * L0 = (2 : ℝ) • G1 := by
+    L0 * G1 - G1 * L0 = (-2 : ℝ) • G1 := by
   dsimp [L0, G1, Jplus, a1Dag, a2]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [Matrix.mul_apply, Fin.sum_univ_four]
@@ -37,4 +37,3 @@ theorem shifted_supercurrent_nilpotent :
   simpa [G1] using Jplus_square_zero
 
 end InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro
-

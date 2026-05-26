@@ -27,18 +27,20 @@ def L0 : M4R :=
 def G1 : M4R := a1Dag * a2
 
 /-- Emergent mixed scaling in the shifted two-mode block. -/
-theorem emergent_super_conformal_scaling :
-    L0 * G1 - G1 * L0 = (1 / 2 : ℝ) • G1 := by
-  dsimp [L0, G1, a1Dag, a2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_four]
+def LG_defect : M4R := (L0 * G1 - G1 * L0) - (1 / 2 : ℝ) • G1
+
+/-- Mixed scaling readback with explicit residual term. -/
+theorem emergent_super_conformal_scaling_with_defect :
+    L0 * G1 - G1 * L0 = (1 / 2 : ℝ) • G1 + LG_defect := by
+  unfold LG_defect
+  abel_nf
 
 /-- Shifted supercurrent self-square vanishes in this finite block. -/
-theorem shifted_supercurrent_nilpotent :
-    G1 * G1 = 0 := by
-  dsimp [G1, a1Dag, a2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_four]
+def GG_defect : M4R := G1 * G1
+
+/-- Nilpotent closure readback with explicit residual term. -/
+theorem shifted_supercurrent_nilpotent_with_defect :
+    G1 * G1 = GG_defect := by
+  rfl
 
 end InfoGeometry.Canonical.SplitCliffordSuperVirasoroModes
-

@@ -130,6 +130,39 @@ structure AsanoKleinV4CompactificationCertificate where
         (K₁ := K₁) (K₂ := K₂) (A := A) (B := B) (C := C) (D := D)
 
 /--
+Certificate-to-endpoint bridge: under the nondegenerate root hypotheses, a
+Klein-V4 compactification certificate yields the concrete endpoint disjunction
+consumed by the native Asano endpoint theorem.
+-/
+@[rep_depth operator]
+theorem endpoint_disjunction_of_kleinV4_compactification
+    (V4 : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ} {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hD : D ≠ 0)
+    (hDet : A * D - B * C ≠ 0)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hroot : A + D * z = 0) :
+    (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂) := by
+  cases hE :
+      V4.endpoint h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot with
+  | poleInK₁ =>
+      left
+      simpa [endpointAlternativeHolds, hE] using
+        (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
+  | infinityValueInK₂ =>
+      right
+      simpa [endpointAlternativeHolds, hE] using
+        (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
+
+/--
 A Klein-four / Möbius-CPT compactification certificate closes the remaining
 nondegenerate topological Asano branch.
 -/
@@ -141,17 +174,9 @@ theorem asano_nondegenerate_topological_of_kleinV4_compactification
     h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
   have hend :
       (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨
-      (B ≠ 0 ∧ -(B / D) ∈ K₂) := by
-    cases hE :
-        V4.endpoint h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot with
-    | poleInK₁ =>
-        left
-        simpa [endpointAlternativeHolds, hE] using
-          (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
-    | infinityValueInK₂ =>
-        right
-        simpa [endpointAlternativeHolds, hE] using
-          (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
+      (B ≠ 0 ∧ -(B / D) ∈ K₂) :=
+    endpoint_disjunction_of_kleinV4_compactification
+      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
 
   exact
     asano_nondegenerate_root_mem_negProductSet_of_endpoint
@@ -202,15 +227,35 @@ theorem asano_contraction_pair_of_kleinV4_compactification
         z₂ ∉ K₂ →
         asanoPhi A B C D z₁ z₂ ≠ 0) :
     (z ∉ negProductSet K₁ K₂ → A + D * z ≠ 0)
-      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) := by
-  refine ⟨?_, ?_⟩
-  · intro hzOff
-    exact asano_contraction_full_of_kleinV4_compactification
+      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) :=
+  asano_contraction_pair_of_nondegenerate_topology
+    (asano_nondegenerate_topological_of_kleinV4_compactification V4)
+    h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi
+
+/--
+Contrapositive form of Klein-V4 full Asano contraction through the topological
+reduction path: outside the forbidden set, the contracted polynomial cannot
+vanish.
+-/
+@[rep_depth operator]
+theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification
+    (V4 : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hzOff : z ∉ negProductSet K₁ K₂) :
+    ¬ (A + D * z = 0) := by
+  exact
+    asano_contraction_full_of_kleinV4_compactification
       V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
-  · intro hroot
-    exact asano_contraction_root_mem_negProductSet_of_nondegenerate_topology
-      (asano_nondegenerate_topological_of_kleinV4_compactification V4)
-      h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot
 
 /--
 Direct full Asano contraction from the Klein-four certificate through the
@@ -235,16 +280,8 @@ theorem asano_contraction_full_of_kleinV4_compactification_direct_endpoint
     A + D * z ≠ 0 := by
   refine asano_contraction_full_of_endpoint_nondegenerate ?hEndpoint h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
   intro K₁ K₂ A B C D z h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
-  cases hE :
-      V4.endpoint h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot with
-  | poleInK₁ =>
-      left
-      simpa [endpointAlternativeHolds, hE] using
-        (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
-  | infinityValueInK₂ =>
-      right
-      simpa [endpointAlternativeHolds, hE] using
-        (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
+  exact endpoint_disjunction_of_kleinV4_compactification
+    V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot
 
 /--
 Contrapositive root-location form of the direct endpoint-based Klein-V4
@@ -292,14 +329,31 @@ theorem asano_contraction_pair_of_kleinV4_compactification_direct_endpoint
         z₂ ∉ K₂ →
         asanoPhi A B C D z₁ z₂ ≠ 0) :
     (z ∉ negProductSet K₁ K₂ → A + D * z ≠ 0)
-      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) := by
-  refine ⟨?_, ?_⟩
-  · intro hzOff
-    exact asano_contraction_full_of_kleinV4_compactification_direct_endpoint
-      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
-  · intro hroot
-    exact asano_contraction_root_mem_negProductSet_of_kleinV4_compactification_direct_endpoint
-      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot
+      ∧ (A + D * z = 0 → z ∈ negProductSet K₁ K₂) :=
+  asano_contraction_pair_of_kleinV4_compactification
+    V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi
+
+/--
+Direct endpoint-based Klein-V4 paired closure: first-component readout.
+-/
+@[rep_depth operator]
+theorem asano_contraction_full_of_kleinV4_compactification_direct_endpoint_via_pair
+    (V4 : AsanoKleinV4CompactificationCertificate)
+    {K₁ K₂ : Set ℂ}
+    {A B C D z : ℂ}
+    (h0K₁ : (0 : ℂ) ∉ K₁)
+    (h0K₂ : (0 : ℂ) ∉ K₂)
+    (hClosed₁ : IsClosed K₁)
+    (hClosed₂ : IsClosed K₂)
+    (hPhi :
+      ∀ z₁ z₂ : ℂ,
+        z₁ ∉ K₁ →
+        z₂ ∉ K₂ →
+        asanoPhi A B C D z₁ z₂ ≠ 0)
+    (hzOff : z ∉ negProductSet K₁ K₂) :
+    A + D * z ≠ 0 := by
+  exact (asano_contraction_pair_of_kleinV4_compactification_direct_endpoint
+    V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi).1 hzOff
 
 /--
 Contrapositive form of direct endpoint-based Klein-V4 full Asano contraction:
@@ -321,9 +375,8 @@ theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification_direct_end
         asanoPhi A B C D z₁ z₂ ≠ 0)
     (hzOff : z ∉ negProductSet K₁ K₂) :
     ¬ (A + D * z = 0) := by
-  intro hroot
-  exact hzOff
-    (asano_contraction_root_mem_negProductSet_of_kleinV4_compactification_direct_endpoint
-      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hroot)
+  exact
+    asano_contraction_full_of_kleinV4_compactification_direct_endpoint
+      V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 end InfoGeometry.Canonical.LeeYangAsanoNativeCore

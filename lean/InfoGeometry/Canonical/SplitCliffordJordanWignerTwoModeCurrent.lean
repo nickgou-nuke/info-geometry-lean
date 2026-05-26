@@ -241,4 +241,26 @@ theorem Jfin_commutator_table :
      Jfin_comm_1_neg1_explicit,
      Jfin_comm_neg1_1_explicit⟩
 
+/--
+Owner-side SUSY scaling identity on the concrete two-mode current core:
+`[Hdiag, Jplus] = 2 • Jplus`.
+-/
+theorem Hdiag_comm_Jplus :
+    commM4 Hdiag Jplus = (2 : ℝ) • Jplus := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num
+      [commM4, Hdiag, Jplus, a1, a1Dag, a2, a2Dag,
+       Matrix.mul_apply, Fin.sum_univ_four]
+
+/--
+Owner-side SUSY scaling identity on the concrete two-mode current core:
+`[Hdiag, Jminus] = -2 • Jminus`.
+-/
+theorem Hdiag_comm_Jminus :
+    commM4 Hdiag Jminus = (-2 : ℝ) • Jminus := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num
+      [commM4, Hdiag, Jminus, a1, a1Dag, a2, a2Dag,
+       Matrix.mul_apply, Fin.sum_univ_four]
+
 end InfoGeometry.Canonical.SplitCliffordJordanWignerTwoModeCurrent

@@ -1,7 +1,8 @@
 import InfoGeometry.Algebra.Zorn.ConcreteComposition
 
-#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornMatrix
-#check InfoGeometry.Algebra.Zorn.ConcreteComposition.concreteCrossProduct3
-#check InfoGeometry.Algebra.Zorn.ConcreteComposition.mulZ
-#check InfoGeometry.Algebra.Zorn.ConcreteComposition.detZ_mul
-#check InfoGeometry.Algebra.Zorn.ConcreteComposition.concreteCompositionDatum.detZ_mul
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.polarZ
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.mulZ
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.detZ_mul
+#check InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell.negLogDet_mul

@@ -9,6 +9,8 @@ def test_boundary_excitation_owner_readback_theorems_exist() -> None:
     text = CASIMIR.read_text(encoding="utf-8")
 
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_iff_observerDefectResidual_eq_zero" in text
+    assert "theorem sourcedGenerator_boundary_excitation_eq_background_iff_compressedDeviation_eq_zero" in text
+    assert "theorem sourcedGenerator_boundary_excitation_eq_background_of_compressedDeviation_eq_zero" in text
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_of_deviationControlledByZD_of_ZD_eq_zero" in text
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero" in text
 
@@ -19,3 +21,4 @@ def test_boundary_excitation_owner_readback_routes_through_existing_owner_theore
     assert "sourcedGenerator_boundary_excitation (E := E) CIK C" in text
     assert "observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero" in text
     assert "observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero" in text
+    assert "observerDefectResidual_eq_projectorCompression_commutator_deviation" in text

@@ -44,8 +44,13 @@ Prime current OPE packet.
 
 `PrimeLabel` indexes the prime directions.  `Field` is the symbolic field
 carrier used by the OPE backend, and `Coeff` is the symbolic singular-coefficient
-carrier.  The level-one current-current OPE is kept as a witness field because
-this file does not choose Laurent-series semantics.
+carrier.  The repository now contains owner-side same-mode and off-diagonal
+current-action laws for `j_p = c_p d_p`, together with specialized transport of
+those laws into the symbolic `MobiusCurrentOPE` socket in a concrete owner
+corridor.  This file still keeps the symbolic current socket and the level-one
+current-current OPE as witness fields because it does not yet choose a
+Laurent-series/OPE realization identifying this symbolic carrier with the
+concrete owner current and its level-one current-current law.
 -/
 @[rep_depth operator]
 structure PrimeCurrentOPEPacket
@@ -61,7 +66,12 @@ structure PrimeCurrentOPEPacket
   /-- Symbolic level-one current-current OPE law. -/
   -- DEBT_ID: PVS-CCL1-001
   -- DEBT_KIND: THEOREM_DEBT
-  -- THEOREM_DEBT: level-one current-current OPE law still needs an owner proof.
+  -- THEOREM_DEBT: owner-side same-mode and off-diagonal current-action laws for
+  -- `j_p = c_p d_p` now exist, and a specialized concrete owner corridor also
+  -- transports them into the symbolic `MobiusCurrentOPE` socket; what this file
+  -- still lacks is the Laurent/OPE realization transporting the owner
+  -- current-current level-one theorem into the symbolic
+  -- `PrimeCurrentOPEPacket` carrier.
   current_current_level_one_data : Unit
 
 namespace PrimeCurrentOPEPacket
@@ -72,8 +82,13 @@ variable (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff)
 /--
 The level-one current-current OPE law attached to the prime current packet.
 
-This remains an explicit theorem debt until a concrete Laurent/OPE owner
-construction is wired into this corridor.
+The remaining debt is now precise: the repository already contains owner-side
+same-mode and off-diagonal current-action laws for `j_p = c_p d_p`, together
+with specialized transport of those laws into the symbolic `MobiusCurrentOPE`
+socket, and it already contains a concrete owner current with the correct
+level-one Heisenberg commutator.  What is still missing here is the
+Laurent/OPE realization that transports that owner current-current theorem into
+the symbolic `PrimeCurrentOPEPacket` interface.
 -/
 def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop := by
   exact _P.current_current_level_one_data = ()

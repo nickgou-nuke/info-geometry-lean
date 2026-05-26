@@ -30,3 +30,11 @@ def test_deviation_zero_forces_zero_strain() -> None:
     assert "observerDefectResidual_eq_zero_of_deviation_eq_zero" in text
     assert "observerOrientationStrain_eq_zero_iff" in text
     assert "observerDefectResidual_eq_zero_of_deviation_eq_zero" in text
+
+
+def test_deviation_zero_constructs_control_witness_packet() -> None:
+    text = OBSERVER_DEFECT.read_text(encoding="utf-8")
+
+    assert "theorem observerDeviationControl_of_deviation_eq_zero" in text
+    assert "theorem observerDeviationControlledByZD_of_deviation_eq_zero" in text
+    assert "{ bound := observerDeviationControlledByZD_of_deviation_eq_zero" in text

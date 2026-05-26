@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CurrentSugawaraMetricDatum
 import InfoGeometry.Canonical.MetricSugawaraBridge
 import InfoGeometry.Canonical.BosonizationConstructiveCurrent
+import InfoGeometry.Canonical.NilpotentFluxVirasoroReadout
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.FockSpace
 
@@ -209,6 +210,125 @@ theorem sugawaraStressMode_virasoroBracket
             (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
           else 0 :=
   sugawaraVirasoro_from_heisenbergCurrent H.J H.trunc H.comm m n
+
+/--
+The Sugawara central term vanishes on the global conformal modes
+`m = -1, 0, 1`.
+
+This is the representation-level version of the identity `m^3 - m = 0`
+on the embedded `sl₂` modes.
+-/
+theorem sugawaraCentralTerm_zero_of_global_mode
+    (H : CurrentHeisenbergRep 𝕜 V)
+    {m n : Int}
+    (hm : m = -1 ∨ m = 0 ∨ m = 1) :
+    (if m + n = 0 then
+        (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
+      else
+        0) = 0 := by
+  rcases hm with hm | hm | hm
+  · subst m
+    by_cases hmn : (-1 : Int) + n = 0
+    · simp [hmn]
+      left
+      norm_num
+    · simp [hmn]
+  · subst m
+    by_cases hmn : (0 : Int) + n = 0
+    · simp [hmn]
+    · simp [hmn]
+  · subst m
+    by_cases hmn : (1 : Int) + n = 0
+    · simp [hmn]
+    · simp [hmn]
+
+/--
+On the global conformal modes `m = -1, 0, 1`, the Sugawara Virasoro bracket
+has no central contribution.
+
+This is the concrete `sl₂` subalgebra readout inside the already-developed
+infinite-dimensional Virasoro/Sugawara representation.
+-/
+theorem sugawaraStressMode_virasoroBracket_global_mode
+    (H : CurrentHeisenbergRep 𝕜 V)
+    {m n : Int}
+    (hm : m = -1 ∨ m = 0 ∨ m = 1) :
+    ((H.sugawaraStressMode m).commutator
+        (H.sugawaraStressMode n)) =
+      (m - n) • H.sugawaraStressMode (m + n) := by
+  rw [H.sugawaraStressMode_virasoroBracket m n]
+  rw [H.sugawaraCentralTerm_zero_of_global_mode hm]
+  simp
+
+/-- Scalar central coefficient in the Sugawara Virasoro bracket. -/
+def sugawaraCentralScalar (m n : Int) : 𝕜 :=
+  if m + n = 0 then ((m ^ 3 - m : 𝕜) / (12 : 𝕜)) else 0
+
+/--
+Owner-side readout: the central operator term is exactly the scalar central
+coefficient times the identity.
+-/
+theorem sugawaraCentralTerm_eq_scalar_smul_one
+    (m n : Int) :
+    (if m + n = 0 then
+        (((m ^ 3 - m : 𝕜) / (12 : 𝕜)) • (1 : V →ₗ[𝕜] V))
+      else 0)
+    = (sugawaraCentralScalar (𝕜 := 𝕜) m n) • (1 : V →ₗ[𝕜] V) := by
+  unfold sugawaraCentralScalar
+  by_cases hmn : m + n = 0
+  · simp [hmn]
+  · simp [hmn]
+
+/--
+Scalar-level vanishing of the Sugawara central coefficient on global conformal
+modes `m = -1, 0, 1`.
+-/
+theorem sugawaraCentralScalar_zero_of_global_mode
+    {m n : Int}
+    (hm : m = -1 ∨ m = 0 ∨ m = 1) :
+    sugawaraCentralScalar (𝕜 := 𝕜) m n = 0 := by
+  unfold sugawaraCentralScalar
+  rcases hm with hm | hm | hm
+  · subst m
+    by_cases hmn : (-1 : Int) + n = 0
+    · simp [hmn]
+      norm_num
+    · simp [hmn]
+  · subst m
+    by_cases hmn : (0 : Int) + n = 0
+    · simp [hmn]
+    · simp [hmn]
+  · subst m
+    by_cases hmn : (1 : Int) + n = 0
+    · simp [hmn]
+    · simp [hmn]
+
+/--
+Concrete bridge readout (real scalars):
+the Sugawara central scalar equals the finite nilpotent-flux central
+coefficient already proved in the finite seed corridor.
+-/
+theorem sugawaraCentralScalar_eq_nilpotentFluxCentralCoefficient
+    (m n : Int) :
+    sugawaraCentralScalar (𝕜 := ℝ) m n =
+      InfoGeometry.Canonical.NilpotentFluxVirasoroReadout.nilpotentFluxCentralCoefficient m n := by
+  rw [InfoGeometry.Canonical.NilpotentFluxVirasoroReadout.nilpotentFluxCentralCoefficient_eq_virasoro]
+  unfold sugawaraCentralScalar
+  by_cases hmn : m + n = 0
+  · simp [hmn]
+  · simp [hmn]
+
+/--
+Real-scalar global-mode bridge readout:
+the Sugawara central scalar vanishes on `m = -1,0,1` by transport through the
+finite nilpotent-flux theorem.
+-/
+theorem sugawaraCentralScalar_zero_of_global_mode_via_nilpotentFlux
+    {m n : Int}
+    (hm : m = -1 ∨ m = 0 ∨ m = 1) :
+    sugawaraCentralScalar (𝕜 := ℝ) m n = 0 := by
+  rw [sugawaraCentralScalar_eq_nilpotentFluxCentralCoefficient]
+  exact InfoGeometry.Canonical.NilpotentFluxVirasoroReadout.nilpotentFluxCentralCoefficient_zero_of_global_mode hm
 
 /-- In the current Sugawara representation, the Virasoro central generator acts as identity. -/
 theorem currentSugawaraRepresentation_central

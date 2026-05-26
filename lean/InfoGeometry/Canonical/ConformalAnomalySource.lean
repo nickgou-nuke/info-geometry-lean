@@ -667,6 +667,22 @@ theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolu
   exact CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
     (M := M) hScaleFromKahler bit.unit_relative_volume
 
+/--
+Proof-carrying self-concordance mechanics route using the single
+`KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
+`hScaleFromKahler` and `hUnitVolume` hypotheses.
+-/
+theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolumeWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    kahlerPotentialRN n M = 0
+      ∧ CI.chiralScale = 0
+      ∧ (CI.spectralChiralProjector * CI.metricChiralProjector
+            = CI.metricChiralProjector * CI.spectralChiralProjector) := by
+  exact CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
+    (M := M) W.scale_from_kahler W.unit_relative_volume
+
 section
 
 /--

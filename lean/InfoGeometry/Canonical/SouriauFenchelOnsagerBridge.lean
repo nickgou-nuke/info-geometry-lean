@@ -179,6 +179,80 @@ theorem operatorLegendre_entropy_affineCoAd_invariant
   rw [hmassieu_affine g (beta Q)]
   abel
 
+/--
+Contact is preserved under affine coadjoint transport.
+
+If the operatorial Fenchel gap vanishes at `(Q, ξ)`, then it also vanishes at
+`(coAd g Q + theta g, Ad g ξ)` under the same affine-covariance hypotheses.
+-/
+theorem operatorFenchel_contact_affineCoAd_preserved
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (hentropy_affine :
+      ∀ g Q,
+        entropy (coAd g Q + theta g) = entropy Q)
+    (g : G) (Q : LieDual) (ξ : Lie)
+    (hcontact : operatorFenchelGap pair massieu entropy Q ξ = 0) :
+    operatorFenchelGap pair massieu entropy
+        (coAd g Q + theta g) (Ad g ξ) = 0 := by
+  rw [operatorFenchelGap_affineCoAd_invariant
+      Ad coAd theta pair massieu entropy
+      hpair_add hpair_coAd_Ad hmassieu_affine hentropy_affine g Q ξ]
+  exact hcontact
+
+/--
+Affine coadjoint transport preserves the zero-Fenchel-contact locus exactly.
+
+This is the bidirectional (`↔`) form of contact preservation:
+the transported pair has zero gap iff the original pair has zero gap.
+-/
+theorem operatorFenchel_contact_affineCoAd_iff
+    {𝕜 G Lie LieDual : Type*}
+    [AddCommGroup 𝕜] [AddCommGroup LieDual]
+    (Ad : G → Lie → Lie)
+    (coAd : G → LieDual → LieDual)
+    (theta : G → LieDual)
+    (pair : LieDual → Lie → 𝕜)
+    (massieu : Lie → 𝕜)
+    (entropy : LieDual → 𝕜)
+    (hpair_add :
+      ∀ Q R ξ,
+        pair (Q + R) ξ = pair Q ξ + pair R ξ)
+    (hpair_coAd_Ad :
+      ∀ g Q ξ,
+        pair (coAd g Q) (Ad g ξ) = pair Q ξ)
+    (hmassieu_affine :
+      ∀ g ξ,
+        massieu (Ad g ξ) =
+          massieu ξ + pair (theta g) (Ad g ξ))
+    (hentropy_affine :
+      ∀ g Q,
+        entropy (coAd g Q + theta g) = entropy Q)
+    (g : G) (Q : LieDual) (ξ : Lie) :
+    operatorFenchelGap pair massieu entropy
+        (coAd g Q + theta g) (Ad g ξ) = 0
+      ↔
+    operatorFenchelGap pair massieu entropy Q ξ = 0 := by
+  simpa [operatorFenchelGap_affineCoAd_invariant
+      Ad coAd theta pair massieu entropy
+      hpair_add hpair_coAd_Ad hmassieu_affine hentropy_affine g Q ξ]
+
 /-! ## Fenchel-Legendre bridge to finite Souriau Massieu potential -/
 
 /--

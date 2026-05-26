@@ -524,6 +524,29 @@ def weylGauge : WeylAlgebraGauge (H := H) C.state :=
   identityWeylAlgebraGauge (H := H) C.state
 
 /--
+Constructor theorem for the narrowed identity-Weyl KMS/Fisher lane.
+
+This removes the explicit `weylGauge` hypothesis by constructing the canonical
+identity gauge definitionally on the minimal identity-Weyl branch.
+-/
+@[rep_depth operator]
+theorem mk_of_kms
+    (sigma : AdditiveModularFlow (H := H))
+    (beta : ℝ)
+    (kms : KMSState (H := H) sigma beta)
+    (souriauMoment : OperatorSouriauMoment (H := H) Symmetry)
+    (fisherMetric : QuantumFisherSLDMetric (H := H) Tangent kms.state) :
+    ∃ ctx : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent,
+      ctx.state = kms.state := by
+  refine ⟨{
+    sigma := sigma
+    beta := beta
+    kms := kms
+    souriauMoment := souriauMoment
+    fisherMetric := fisherMetric
+  }, rfl⟩
+
+/--
 Convert the identity-Weyl branch to the existing minimal broad coordinateless
 context by constructing the removed Weyl packet definitionally.
 -/

@@ -1,0 +1,45 @@
+import Mathlib
+
+/-!
+# InfoGeometry.Canonical.EmergentKillingField
+
+Finite-dimensional operator-level Killing identity for the trace-form metric.
+-/
+
+namespace InfoGeometry.Canonical.EmergentKillingField
+
+open Matrix
+
+abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+
+/-- Trace on `2×2` real matrices. -/
+def tr (A : M2R) : ℝ := A 0 0 + A 1 1
+
+/-- Trace-form metric. -/
+def traceForm (A B : M2R) : ℝ := tr (A * B)
+
+/-- Trace of a commutator vanishes. -/
+theorem trace_commutator_zero (A B : M2R) :
+    tr (A * B - B * A) = 0 := by
+  unfold tr
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Trace cyclicity in `2×2`: `tr (A * B) = tr (B * A)`. -/
+theorem tr_mul_comm (A B : M2R) :
+    tr (A * B) = tr (B * A) := by
+  have h := trace_commutator_zero A B
+  have : tr (A * B) - tr (B * A) = 0 := by
+    simpa [tr, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+  linarith
+
+/--
+Operator Killing equation for the commutator flow and trace-form metric.
+-/
+theorem emergent_killing_equation (X A B : M2R) :
+    traceForm (X * A - A * X) B + traceForm A (X * B - B * X) = 0 := by
+  unfold traceForm tr
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+end InfoGeometry.Canonical.EmergentKillingField

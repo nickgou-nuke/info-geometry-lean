@@ -59,6 +59,7 @@ import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.MassieuOptimalTransport
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
@@ -541,6 +542,9 @@ import InfoGeometry.Canonical.MajoranaJKOErgoBridge
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.MajoranaLiftPacketBridge
+import InfoGeometry.Canonical.MassieuNewtonKantorovichBridge
+import InfoGeometry.Canonical.MassieuOptimalTransport
+import InfoGeometry.Canonical.EmergentKillingField
 import InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 import InfoGeometry.Canonical.ManifoldDegreeCore
 import InfoGeometry.Canonical.ManifoldDegreeIntegration
@@ -618,6 +622,7 @@ import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.OperatorialLogGeneratingPotential
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.OperatorValuedSouriauFamily
+import InfoGeometry.Canonical.OperatorSurprisal
 import InfoGeometry.Canonical.OperatorialVolumePreservation
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorJKOStep
@@ -912,6 +917,7 @@ import InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow
 import InfoGeometry.Canonical.WeylCharacterEquivalence
+import InfoGeometry.Canonical.WeylMobiusReflection
 import InfoGeometry.Canonical.WeylA1Character
 import InfoGeometry.Canonical.WeylCharacterVandermondeShadow
 import InfoGeometry.Canonical.WeylGaugeField

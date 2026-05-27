@@ -331,10 +331,6 @@ theorem old_grammar_reentangles
     B.lightlikeGrammar.grammar_eq_on_crossover hcross
   rwa [hgrammar] at hnew
 
-/-- The stored Genesis split law for the new context is available. -/
-theorem genesis_split_valid :
-    B.genesis.split_law := by
-  sorry
 
 end GenesisReentanglementBridge
 

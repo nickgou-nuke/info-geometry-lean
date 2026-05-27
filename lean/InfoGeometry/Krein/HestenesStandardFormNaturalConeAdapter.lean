@@ -61,8 +61,6 @@ def toCanonical :
   coneVector_mem := fun ω hω => hω
   eval_eq_vector_readout := fun ω B _ => A.hestenes.eval_eq_krein_vector_readout ω B
   J_fixes_cone := A.hestenes.J_fixes_cone
-  cone_self_dual := A.hestenes.naturalCone_self_dual
-  cone_self_dual_holds := A.hestenes.naturalCone_self_dual_holds
 
 /-- Readback: the induced canonical cone is the supplied Hestenes/Krein cone. -/
 @[rep_depth krein]
@@ -126,12 +124,6 @@ theorem toCanonical_J_fixes_coneVector
       (A.toCanonical).coneVector ω :=
   NaturalConeStandardFormInterface.J_fixes_coneVector
     A.toCanonical ω (A.toCanonical_isNormalPositive ω)
-
-/-- Readback: the canonical self-duality certificate is exactly the supplied Krein one. -/
-@[rep_depth krein]
-theorem toCanonical_cone_self_dual :
-    (A.toCanonical).cone_self_dual :=
-  A.hestenes.naturalCone_self_dual_holds
 
 end HestenesStandardFormNaturalConeAdapter
 

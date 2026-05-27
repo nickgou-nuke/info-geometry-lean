@@ -372,6 +372,28 @@ abbrev HasCartanGradeForcingSeed (hMod : EndH) : Prop :=
   IsDetailedEquilibriumSeed (H := H) hMod
 
 /--
+Proof-carrying witness for the detailed-equilibrium forcing surface.
+
+This narrows the remaining bare `hEq : IsDetailedEquilibriumSeed ...` hypothesis
+on the winding owner lane to an explicit witness object.
+-/
+@[rep_depth transport]
+structure DetailedEquilibriumWitness (hMod : EndH) where
+  hEq : IsDetailedEquilibriumSeed (H := H) hMod
+
+namespace DetailedEquilibriumWitness
+
+/-- Recover the detailed-equilibrium proposition from the proof-carrying witness. -/
+@[rep_depth transport]
+theorem detailedEquilibrium_of_witness
+    {hMod : EndH}
+    (W : DetailedEquilibriumWitness (H := H) hMod) :
+    IsDetailedEquilibriumSeed (H := H) hMod :=
+  W.hEq
+
+end DetailedEquilibriumWitness
+
+/--
 Detailed-equilibrium forcing on the modular transport lane:
 vanishing Cartan-odd scale sector forces commutation with the clock axis.
 -/
@@ -402,6 +424,20 @@ theorem modularTransportGenerator_commutes_clockAxis_of_cartanGradeForcingSeed
       (clockAxis H) := by
   exact modularTransportGenerator_commutes_clockAxis_of_detailedEquilibrium
     (H := H) hMod hForce
+
+/--
+Witness-routed owner theorem for the detailed-equilibrium forcing lane.
+This removes the bare `hEq` argument for callers that already own the explicit
+proof-carrying detailed-equilibrium witness.
+-/
+theorem modularTransportGenerator_commutes_clockAxis_of_detailedEquilibriumWitness
+    (hMod : EndH)
+    (W : DetailedEquilibriumWitness (H := H) hMod) :
+    Commute
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H) := by
+  exact modularTransportGenerator_commutes_clockAxis_of_detailedEquilibrium
+    (H := H) hMod W.hEq
 
 /--
 Winding periodicity obtained from detailed equilibrium, with no explicit

@@ -930,6 +930,35 @@ theorem modularDeriv_eq_modularGaugeDeriv_of_commute_scalePart
 
 omit [CompleteSpace E] in
 /--
+On the proof-carrying zero-scale branch, the full modular derivation reduces to
+its gauge channel without a separate scaling-commutation hypothesis.
+-/
+theorem ModularScaleZeroWitness.modularDeriv_eq_modularGaugeDeriv
+    (W : ModularScaleZeroWitness (E := E))
+    (A : EndH) :
+    modularDeriv (E := E) W.hMod A = modularGaugeDeriv (E := E) W.hMod A := by
+  rw [modularDeriv_split]
+  unfold modularScaleDeriv
+  rw [W.scalePart_eq_zero]
+  unfold transportCommutator
+  simp [modularGaugeDeriv]
+
+omit [CompleteSpace E] in
+/--
+On the proof-carrying zero-scale branch, gauge commutation alone forces the full
+modular derivation to vanish.
+-/
+theorem ModularScaleZeroWitness.modularDeriv_eq_zero_of_commute_gaugePart
+    (W : ModularScaleZeroWitness (E := E))
+    (A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) W.hMod)) :
+    modularDeriv (E := E) W.hMod A = 0 := by
+  rw [W.modularDeriv_eq_modularGaugeDeriv (E := E) (A := A)]
+  unfold modularGaugeDeriv transportCommutator
+  exact sub_eq_zero.mpr hCommGauge.eq.symm
+
+omit [CompleteSpace E] in
+/--
 If an operator commutes with both gauge and scaling sectors, its modular
 derivation vanishes.
 -/

@@ -104,6 +104,28 @@ def CommutatorOrthogonalOnOmega
   ∀ A B : AlgebraEnd F, inner ℝ (((A * B - B * A) Ω)) Ω = 0
 
 /--
+Proof-carrying seed witness for the structural KMS lane: a concrete doubled seed
+vector together with its nonzero, joint-kernel, and commutator-orthogonality
+certificates.
+-/
+structure ExpectationSeedStructuralWitness
+    (K : AlgebraEnd F) (β : ℝ) where
+  Ω : DoubledSpace F
+  hΩ : Ω ≠ 0
+  jointKernel : JointKernelOnOmega (F := F) K β Ω
+  commutatorOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω
+
+namespace ExpectationSeedStructuralWitness
+
+/-- Nontriviality of `ωSeed` extracted from a structural witness. -/
+theorem omegaSeed_nonzero
+    (W : ExpectationSeedStructuralWitness (F := F) K β) :
+    omegaSeed (F := F) W.Ω ≠ 0 :=
+  InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_nonzero (F := F) W.Ω W.hΩ
+
+end ExpectationSeedStructuralWitness
+
+/--
 At zero modular time (`β = 0`), the joint-kernel condition holds identically.
 -/
 @[simp] lemma jointKernelOnOmega_beta_zero
@@ -262,6 +284,34 @@ theorem omegaSeed_kms_of_jointKernel_commutator
     (cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal)
 
 /--
+Witness-routed KMS law for `ωSeed`, replacing the raw structural hypothesis pair
+with a proof-carrying seed packet.
+-/
+theorem omegaSeed_kms_of_structuralWitness
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (W : ExpectationSeedStructuralWitness (F := F) K β) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) W.Ω) β := by
+  exact omegaSeed_kms_of_jointKernel_commutator
+    (F := F) (K := K) (β := β) (Ω := W.Ω) W.jointKernel W.commutatorOrthogonal
+
+/--
+Constructive seed witness from a pairwise-commutative operator lane.
+-/
+def ExpectationSeedStructuralWitness.ofPairwiseCommute
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
+    ExpectationSeedStructuralWitness (F := F) K β where
+  Ω := Ω
+  hΩ := hΩ
+  jointKernel := jointKernelOnOmega_of_pairwise_commute (F := F) K β Ω hComm
+  commutatorOrthogonal :=
+    commutatorOrthogonalOnOmega_of_pairwise_commute (F := F) (Ω := Ω) hComm
+
+/--
 Constructive any-temperature surface:
 if the operator lane is pairwise commutative, `ωSeed` satisfies KMS for any
 inverse temperature `β`.
@@ -272,14 +322,20 @@ theorem omegaSeed_kms_of_pairwise_commute
     (Ω : DoubledSpace F)
     (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
     SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
-  have hJoint :
-      JointKernelOnOmega (F := F) K β Ω :=
-    jointKernelOnOmega_of_pairwise_commute (F := F) K β Ω hComm
-  have hOrth :
-      CommutatorOrthogonalOnOmega (F := F) Ω :=
-    commutatorOrthogonalOnOmega_of_pairwise_commute (F := F) (Ω := Ω) hComm
-  exact omegaSeed_kms_of_jointKernel_commutator
-    (F := F) (K := K) (β := β) (Ω := Ω) hJoint hOrth
+  by_cases hΩ : Ω = 0
+  · subst hΩ
+    have hJoint :
+        JointKernelOnOmega (F := F) K β (0 : DoubledSpace F) :=
+      jointKernelOnOmega_of_pairwise_commute (F := F) K β 0 hComm
+    have hOrth :
+        CommutatorOrthogonalOnOmega (F := F) (0 : DoubledSpace F) :=
+      commutatorOrthogonalOnOmega_of_pairwise_commute (F := F) (Ω := 0) hComm
+    exact omegaSeed_kms_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := 0) hJoint hOrth
+  · exact omegaSeed_kms_of_structuralWitness
+      (F := F) (K := K) (β := β)
+      (ExpectationSeedStructuralWitness.ofPairwiseCommute
+        (F := F) K β Ω hΩ hComm)
 
 /--
 Constructive zero-temperature surface:

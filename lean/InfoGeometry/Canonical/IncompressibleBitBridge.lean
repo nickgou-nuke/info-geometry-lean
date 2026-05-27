@@ -247,6 +247,30 @@ theorem cramerRaoVolumePotential_eq_zero_of_incompressibleBit
   simp
 
 /--
+If the anomaly scale is the negative Cramer-Rao log-volume mode, the
+incompressible Cramer-Rao bit forces the conformal chiral scale to vanish.
+
+This is the direct zero-scale owner export behind the normal-inference route.
+-/
+@[rep_depth thermo, capstone]
+theorem chiralScale_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromNegLogVolume :
+      CI.chiralScale =
+        -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|)) :
+    CI.chiralScale = 0 := by
+  calc
+    CI.chiralScale = -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) :=
+      hScaleFromNegLogVolume
+    _ = 0 := by
+      simpa [cramerRaoVolumePotential, cramerRaoVolumeShadow,
+        cramerRaoMetricOperatorOwner] using
+        cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
+
+/--
 If the conformal anomaly scale is identified with the Kähler/RN potential
 coming from the Cramer-Rao logarithmic volume mode, then an incompressible
 Cramer-Rao bit forces normal inference.
@@ -264,12 +288,26 @@ theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLo
       CI.chiralScale =
         -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|)) :
     CI.IsNormalInference := by
-  have hNegLogZero :
-      -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-    simpa [cramerRaoVolumePotential, cramerRaoVolumeShadow,
-      cramerRaoMetricOperatorOwner] using
-      cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
-  simpa [ConformalInference.IsNormalInference, hScaleFromNegLogVolume] using hNegLogZero
+  simpa [ConformalInference.IsNormalInference] using
+    chiralScale_eq_zero_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
+      (CI := CI) (H := H) bit x hScaleFromNegLogVolume
+
+/--
+Operator-owner version: an incompressible Cramer-Rao bit kills the conformal
+chiral scale when that scale is read from the Cramer-Rao volume potential.
+-/
+@[rep_depth thermo, capstone]
+theorem chiralScale_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (hScaleFromPotential :
+      CI.chiralScale = cramerRaoVolumePotential H x) :
+    CI.chiralScale = 0 := by
+  calc
+    CI.chiralScale = cramerRaoVolumePotential H x := hScaleFromPotential
+    _ = 0 := cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
 
 /--
 Operator-owner version of the same normal-phase collapse theorem.
@@ -283,9 +321,9 @@ theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolume
     (hScaleFromPotential :
       CI.chiralScale = cramerRaoVolumePotential H x) :
     CI.IsNormalInference := by
-  have hPotZero : cramerRaoVolumePotential H x = 0 :=
-    cramerRaoVolumePotential_eq_zero_of_incompressibleBit (H := H) bit x
-  simpa [ConformalInference.IsNormalInference, hScaleFromPotential] using hPotZero
+  simpa [ConformalInference.IsNormalInference] using
+    chiralScale_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x hScaleFromPotential
 
 /--
 If the anomaly scale is the negative Cramer-Rao log-volume mode, the

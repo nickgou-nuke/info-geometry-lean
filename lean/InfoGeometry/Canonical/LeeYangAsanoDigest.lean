@@ -78,6 +78,225 @@ theorem eval_affine_right (P : TwoVarAffinePolynomial) (z1 z2 : ℂ) :
   unfold eval
   ring
 
+/-! ## Nondegenerate Asano algebra: root maps and pole exclusion -/
+
+/--
+Solving the bivariate affine equation for the second variable.
+
+If `C + D*z1 ≠ 0`, then the zero of
+
+`A + B*z1 + C*z2 + D*z1*z2`
+
+in the second variable is
+
+`z2 = -(A + B*z1)/(C + D*z1)`.
+-/
+@[rep_depth thermo]
+theorem root_iff_z2_eq_of_right_coeff_ne
+    (P : TwoVarAffinePolynomial)
+    (z1 z2 : ℂ)
+    (hcoeff : P.C + P.D * z1 ≠ 0) :
+    P.eval z1 z2 = 0 ↔
+      z2 = - (P.A + P.B * z1) / (P.C + P.D * z1) := by
+  constructor
+  · intro hroot
+    have hroot' :
+        (P.A + P.B * z1) + (P.C + P.D * z1) * z2 = 0 := by
+      simpa [P.eval_affine_right z1 z2] using hroot
+    have hlin :
+        (P.C + P.D * z1) * z2 = - (P.A + P.B * z1) := by
+      calc
+        (P.C + P.D * z1) * z2
+            =
+          ((P.A + P.B * z1) + (P.C + P.D * z1) * z2)
+            - (P.A + P.B * z1) := by ring
+        _ = 0 - (P.A + P.B * z1) := by rw [hroot']
+        _ = - (P.A + P.B * z1) := by ring
+    exact
+      (eq_div_iff_mul_eq hcoeff :
+        z2 = - (P.A + P.B * z1) / (P.C + P.D * z1)
+          ↔
+        z2 * (P.C + P.D * z1) = - (P.A + P.B * z1)).2
+        (by simpa [mul_comm] using hlin)
+  · intro hz2
+    rw [P.eval_affine_right, hz2]
+    have hmul :
+        (P.C + P.D * z1) * (-(P.A + P.B * z1) / (P.C + P.D * z1))
+          = - (P.A + P.B * z1) := by
+      field_simp [hcoeff]
+    rw [hmul]
+    ring
+
+/--
+Solving the bivariate affine equation for the first variable.
+
+If `B + D*z2 ≠ 0`, then the zero in the first variable is
+
+`z1 = -(A + C*z2)/(B + D*z2)`.
+-/
+@[rep_depth thermo]
+theorem root_iff_z1_eq_of_left_coeff_ne
+    (P : TwoVarAffinePolynomial)
+    (z1 z2 : ℂ)
+    (hcoeff : P.B + P.D * z2 ≠ 0) :
+    P.eval z1 z2 = 0 ↔
+      z1 = - (P.A + P.C * z2) / (P.B + P.D * z2) := by
+  constructor
+  · intro hroot
+    have hroot' :
+        (P.A + P.C * z2) + (P.B + P.D * z2) * z1 = 0 := by
+      simpa [P.eval_affine_left z1 z2] using hroot
+    have hlin :
+        (P.B + P.D * z2) * z1 = - (P.A + P.C * z2) := by
+      calc
+        (P.B + P.D * z2) * z1
+            =
+          ((P.A + P.C * z2) + (P.B + P.D * z2) * z1)
+            - (P.A + P.C * z2) := by ring
+        _ = 0 - (P.A + P.C * z2) := by rw [hroot']
+        _ = - (P.A + P.C * z2) := by ring
+    exact
+      (eq_div_iff_mul_eq hcoeff :
+        z1 = - (P.A + P.C * z2) / (P.B + P.D * z2)
+          ↔
+        z1 * (P.B + P.D * z2) = - (P.A + P.C * z2)).2
+        (by simpa [mul_comm] using hlin)
+  · intro hz1
+    rw [P.eval_affine_left, hz1]
+    have hmul :
+        (P.B + P.D * z2) * (-(P.A + P.C * z2) / (P.B + P.D * z2))
+          = - (P.A + P.C * z2) := by
+      field_simp [hcoeff]
+    rw [hmul]
+    ring
+
+/--
+Nondegenerate left-pole exclusion.
+
+If `A*D - B*C ≠ 0`, then no zero of `P.eval` can occur at a point satisfying
+`C + D*z1 = 0`.
+-/
+@[rep_depth thermo]
+theorem no_root_at_left_pole_of_det_ne_zero
+    (P : TwoVarAffinePolynomial)
+    (hdet : P.A * P.D - P.B * P.C ≠ 0)
+    {z1 z2 : ℂ}
+    (hpole : P.C + P.D * z1 = 0) :
+    P.eval z1 z2 ≠ 0 := by
+  intro hroot
+
+  have hnum : P.A + P.B * z1 = 0 := by
+    have hroot' :
+        (P.A + P.B * z1) + (P.C + P.D * z1) * z2 = 0 := by
+      simpa [P.eval_affine_right z1 z2] using hroot
+    rw [hpole] at hroot'
+    simpa using hroot'
+
+  have hdet_zero : P.A * P.D - P.B * P.C = 0 := by
+    calc
+      P.A * P.D - P.B * P.C
+          =
+        (P.A + P.B * z1) * P.D - P.B * (P.C + P.D * z1) := by
+          ring
+      _ = 0 * P.D - P.B * 0 := by
+          rw [hnum, hpole]
+      _ = 0 := by ring
+
+  exact hdet hdet_zero
+
+/--
+Nondegenerate right-pole exclusion.
+
+If `A*D - B*C ≠ 0`, then no zero of `P.eval` can occur at a point satisfying
+`B + D*z2 = 0`.
+-/
+@[rep_depth thermo]
+theorem no_root_at_right_pole_of_det_ne_zero
+    (P : TwoVarAffinePolynomial)
+    (hdet : P.A * P.D - P.B * P.C ≠ 0)
+    {z1 z2 : ℂ}
+    (hpole : P.B + P.D * z2 = 0) :
+    P.eval z1 z2 ≠ 0 := by
+  intro hroot
+
+  have hnum : P.A + P.C * z2 = 0 := by
+    have hroot' :
+        (P.A + P.C * z2) + (P.B + P.D * z2) * z1 = 0 := by
+      simpa [P.eval_affine_left z1 z2] using hroot
+    rw [hpole] at hroot'
+    simpa using hroot'
+
+  have hdet_zero : P.A * P.D - P.B * P.C = 0 := by
+    calc
+      P.A * P.D - P.B * P.C
+          =
+        (P.A + P.C * z2) * P.D - (P.B + P.D * z2) * P.C := by
+          ring
+      _ = 0 * P.D - 0 * P.C := by
+          rw [hnum, hpole]
+      _ = 0 := by ring
+
+  exact hdet hdet_zero
+
+/--
+Graph constraint from the zero-free hypothesis.
+
+If `z1 ∉ K1`, and the second-variable root is defined, then that root must
+lie in `K2`; otherwise one obtains a forbidden zero off `K1 × K2`.
+-/
+@[rep_depth thermo]
+theorem rootMap_z2_mem_K2_of_zero_free
+    (P : TwoVarAffinePolynomial)
+    (K1 K2 : Set ℂ)
+    (hzeroFree :
+      ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
+    {z1 : ℂ}
+    (hz1 : z1 ∉ K1)
+    (hcoeff : P.C + P.D * z1 ≠ 0) :
+    - (P.A + P.B * z1) / (P.C + P.D * z1) ∈ K2 := by
+  by_contra hnot
+  have hroot :
+      P.eval z1
+        (- (P.A + P.B * z1) / (P.C + P.D * z1)) = 0 := by
+    exact
+      (P.root_iff_z2_eq_of_right_coeff_ne
+        z1
+        (- (P.A + P.B * z1) / (P.C + P.D * z1))
+        hcoeff).2 rfl
+  exact hzeroFree z1
+    (- (P.A + P.B * z1) / (P.C + P.D * z1))
+    hz1 hnot hroot
+
+/--
+Dual graph constraint from the zero-free hypothesis.
+
+If `z2 ∉ K2`, and the first-variable root is defined, then that root must
+lie in `K1`.
+-/
+@[rep_depth thermo]
+theorem rootMap_z1_mem_K1_of_zero_free
+    (P : TwoVarAffinePolynomial)
+    (K1 K2 : Set ℂ)
+    (hzeroFree :
+      ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0)
+    {z2 : ℂ}
+    (hz2 : z2 ∉ K2)
+    (hcoeff : P.B + P.D * z2 ≠ 0) :
+    - (P.A + P.C * z2) / (P.B + P.D * z2) ∈ K1 := by
+  by_contra hnot
+  have hroot :
+      P.eval
+        (- (P.A + P.C * z2) / (P.B + P.D * z2))
+        z2 = 0 := by
+    exact
+      (P.root_iff_z1_eq_of_left_coeff_ne
+        (- (P.A + P.C * z2) / (P.B + P.D * z2))
+        z2
+        hcoeff).2 rfl
+  exact hzeroFree
+    (- (P.A + P.C * z2) / (P.B + P.D * z2))
+    z2 hnot hz2 hroot
+
 /--
 Determinant-zero factorization of a separately affine polynomial.
 
@@ -493,6 +712,7 @@ polynomial `A + D z` is nonvanishing whenever `z ∉ -K1·K2`.
 def AsanoRuelleLemmaSourceClaim : Prop :=
   ∀ (K1 K2 : Set ℂ) (P : TwoVarAffinePolynomial),
     0 ∉ K1 → 0 ∉ K2 →
+      IsClosed K1 → IsClosed K2 →
       (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
         ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
 
@@ -639,8 +859,8 @@ Unrestricted Asano-Ruelle source claim implies the closed-set variant.
 theorem asanoRuelleLemmaSourceClaimClosed_of_sourceClaim
     (hAR : AsanoRuelleLemmaSourceClaim) :
     AsanoRuelleLemmaSourceClaimClosed := by
-  intro K1 K2 P h0K1 h0K2 _hClosed1 _hClosed2 hPhi z hzOff
-  exact hAR K1 K2 P h0K1 h0K2 hPhi z hzOff
+  intro K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
+  exact hAR K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
 
 /--
 The unrestricted guarded source claim implies the closed-bounded claim.
@@ -649,8 +869,8 @@ The unrestricted guarded source claim implies the closed-bounded claim.
 theorem asanoRuelleLemmaSourceClaimClosedBounded_of_sourceClaim
     (hAR : AsanoRuelleLemmaSourceClaim) :
     AsanoRuelleLemmaSourceClaimClosedBounded := by
-  intro K1 K2 P h0K1 h0K2 _hClosed1 _hClosed2 _hB1 _hB2 hPhi z hzOff
-  exact hAR K1 K2 P h0K1 h0K2 hPhi z hzOff
+  intro K1 K2 P h0K1 h0K2 hClosed1 hClosed2 _hB1 _hB2 hPhi z hzOff
+  exact hAR K1 K2 P h0K1 h0K2 hClosed1 hClosed2 hPhi z hzOff
 
 /--
 Pointwise eliminator for the closed-bounded corrected source claim.
@@ -702,7 +922,7 @@ theorem asanoRuelleLemmaSourceClaim_of_endpointNonDeg
         A * D - B * C ≠ 0 →
         ((C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂))) :
     AsanoRuelleLemmaSourceClaim := by
-  intro K1 K2 P h0K1 h0K2 hPhi z hzOff
+  intro K1 K2 P h0K1 h0K2 _hClosed1 _hClosed2 hPhi z hzOff
   have hzf :
       InfoGeometry.Analysis.AsanoContractionNative.ZeroFreeOutside
         K1 K2 P.A P.B P.C P.D := by

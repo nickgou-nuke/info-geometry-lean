@@ -722,6 +722,22 @@ theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolu
   exact CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
     (flow := flow) hNorm (M := M) hScaleFromKahler bit.unit_relative_volume
 
+/--
+Proof-carrying anomaly-flow discharge using the single
+`KahlerLogDetUnitRelativeVolumeWitness` packet instead of the separate
+`hScaleFromKahler` and `bit` hypotheses.
+-/
+theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized_unitRelativeVolumeWitness
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+      (fun _ => CI.chiralScale) := by
+  exact CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+    (flow := flow) hNorm (M := M) W.scale_from_kahler W.unit_relative_volume
+
 end
 
 /--

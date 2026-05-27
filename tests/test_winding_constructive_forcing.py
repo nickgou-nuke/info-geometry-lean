@@ -19,3 +19,12 @@ def test_has_clock_axis_forcing_seed_routes_through_cartan_grade_owner() -> None
     assert "show IsClockEquilibriumLane (H := H) hMod ↔" in text
     assert "exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry" in text
     assert "theorem noncommutingScaleLane_iff_not_detailedEquilibrium" in text
+
+
+def test_detailed_equilibrium_witness_surface_exists() -> None:
+    text = WINDING.read_text(encoding="utf-8")
+
+    assert "structure DetailedEquilibriumWitness (hMod : EndH) where" in text
+    assert "theorem detailedEquilibrium_of_witness" in text
+    assert "theorem modularTransportGenerator_commutes_clockAxis_of_detailedEquilibriumWitness" in text
+    assert "W.hEq" in text

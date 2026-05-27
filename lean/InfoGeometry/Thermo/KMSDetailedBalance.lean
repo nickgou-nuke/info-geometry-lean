@@ -181,14 +181,8 @@ structure KMSDetailedBalance
   /-- Closed geometric/Stokes detailed-balance form. -/
   form :
     KMSDetailedBalanceForm Region Point Tangent Value I
-  /--
-  Model-specific law identifying the geometric form with the thermal
-  correlation readout.
-  -/
-  form_calibration_law : Prop
-  /-- Proof/certificate of the calibration law. -/
-  form_calibration_certificate :
-    form_calibration_law
+  /-- Model-specific identification of geometric form with thermal readout. -/
+  form_calibration : Prop
 
 namespace KMSDetailedBalance
 
@@ -222,10 +216,9 @@ variable
 
 variable (D : KMSDetailedBalance A Region Point Tangent Value I)
 
-/-- The stored calibration law is available. -/
-theorem form_calibration_valid :
-    D.form_calibration_law :=
-  D.form_calibration_certificate
+/-- The stored calibration proposition. -/
+def form_calibration_valid : Prop :=
+  D.form_calibration
 
 /-- Algebraic KMS/detailed-balance boundary identity. -/
 theorem kms_boundary
@@ -248,6 +241,40 @@ theorem boundaryIntegral_eq_zero
     (Ω : Region) :
     I.boundaryIntegral Ω D.form.modularForm = 0 :=
   D.form.boundaryIntegral_eq_zero Ω
+
+/-! ## 5. Owner target -/
+
+/--
+Owner target for the constructive KMS/Stokes bridge.
+
+This target records only the kernel-checked consequences already proved from the
+stored algebraic KMS data and the closed-form/Stokes backend. It does not keep
+the model-specific calibration proposition as theorem force.
+-/
+def KMSDetailedBalanceOwnerTarget
+    (A Region Point Tangent Value : Type*)
+    [Mul A]
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value) : Prop :=
+  ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)
+    (t : ℝ) (a b : A) (Ω : Region),
+      lowerKMSCorrelation D.kms t a b = upperKMSCorrelation D.kms t a b ∧
+      lowerKMSCorrelation D.kms t a b =
+        D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a ∧
+      I.boundaryIntegral Ω D.form.modularForm = 0
+
+/--
+Any installed KMS detailed-balance packet satisfies the owner-side KMS boundary,
+thermal Wilson, and Stokes vanishing laws proved in this file.
+-/
+theorem kmsDetailedBalanceOwnerTarget
+    (A Region Point Tangent Value : Type*)
+    [Mul A]
+    [AddCommGroup Value] [Module ℝ Value]
+    (I : GeometricIntegralBackend Region Point Tangent Value) :
+    KMSDetailedBalanceOwnerTarget A Region Point Tangent Value I := by
+  intro D t a b Ω
+  exact ⟨D.kms_boundary t a b, D.kms_boundary_wilson t a b, D.boundaryIntegral_eq_zero Ω⟩
 
 end KMSDetailedBalance
 

@@ -61,8 +61,6 @@ structure CliffordWaveletUncertainty
 
   /-- Non-collapse / localization tradeoff in the Clifford wavelet phase space. -/
   noncollapse_law : Prop
-  noncollapse_certificate :
-    noncollapse_law
 
 namespace CliffordWaveletUncertaintyOps
 
@@ -77,12 +75,6 @@ theorem heisenberg
     U.uncertaintyConstant * (U.normSq f)^2
       ≤ U.spaceVariance f * U.spectralVariance f :=
   U.heisenberg_clifford_wavelet hAdm f
-
-/-- Re-export of the non-collapse law. -/
-@[rep_depth operator]
-theorem noncollapse :
-    U.noncollapse_law :=
-  U.noncollapse_certificate
 
 end CliffordWaveletUncertaintyOps
 

@@ -294,11 +294,6 @@ structure Pin44CoverDatum
   /-- The induced linear split-orthogonal transformation. -/
   cover : ∀ a : PinEl, isPin a → Orthogonal44 Q
 
-  /-- Odd Pin elements are available; this is what Spin would lose. -/
-  odd_reflection_socket : Prop
-
-  /-- Even Pin elements form the Spin-like subcover. -/
-  even_spin_subcover_socket : Prop
 
 /--
 A chiral volume/sign operator attached to the Pin cover.
@@ -615,8 +610,6 @@ structure ConformalMobius44Extension
   base_orthogonal_lift :
     Orthogonal44 baseQ → Orthogonal55 ambientQ
 
-  /-- Translations/dilations/special conformal transformations may be added here. -/
-  full_mobius_generation_certificate : Prop
 
 namespace ConformalMobius44Extension
 
@@ -773,8 +766,6 @@ structure PinMobiusProjective44
   /-- Projective states/rays are the declared target of the conformal action. -/
   acts_on_projective_null_rays : Prop
 
-  /-- Reflection/chiral classification is retained by using Pin rather than Spin. -/
-  reflection_and_chiral_classification_certificate : Prop
 
 namespace PinMobiusProjective44
 
@@ -815,7 +806,6 @@ structure O44PinMobiusProjectiveConstructionData
   conformalPin : Pin55CoverDatum (W := W) (PinEl := PinConf) mobius.ambientQ
   basePin_lifts_to_conformalPin : Prop
   acts_on_projective_null_rays : Prop
-  reflection_and_chiral_classification_certificate : Prop
 
 namespace O44PinMobiusProjectiveConstructionData
 
@@ -835,8 +825,6 @@ def toPinMobiusProjective44 :
   conformalPin := D.conformalPin
   basePin_lifts_to_conformalPin := D.basePin_lifts_to_conformalPin
   acts_on_projective_null_rays := D.acts_on_projective_null_rays
-  reflection_and_chiral_classification_certificate :=
-    D.reflection_and_chiral_classification_certificate
 
 end O44PinMobiusProjectiveConstructionData
 

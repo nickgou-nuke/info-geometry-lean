@@ -1,5 +1,4 @@
 import InfoGeometry.GromovWittenErlangen.CP1DrazinNilpotentDefectModel
-import InfoGeometry.GromovWittenErlangen.ProjectiveCountProbabilityDrazinBridge
 import InfoGeometry.Quantum.KitaevChain
 
 /-!
@@ -18,14 +17,14 @@ residue/noise sector    1
 
 The count representative remains strictly positive, so it descends through the
 repo-owned `countRay → gaugeSectionFinProb → density/surprisal operator`
-corridor.  The Drazin residue is carried separately by the already compiled
-`CP1DrazinNilpotentDefectModel`, whose unique edge has square-zero residue
-`(0, 2) : ℤ × ZMod 4`.
+corridor.  The Drazin residue is carried separately by the concrete
+`CP1DrazinNilpotentDefectModel.defectEdgeDrazin` data, whose unique edge has
+square-zero residue `(0, 2) : ℤ × ZMod 4`.
 
 This file does not construct a concrete BdG/Kitaev Hamiltonian.  The DIII
-`topologicalIndexZ2 = 1` datum is recorded as a witness packet, so a later model
-can supply the actual chain/bulk-boundary certificate without changing the
-count/probability/Drazin corridor.
+`topologicalIndexZ2 = 1` datum is recorded as a witness packet, so the actual
+chain/bulk-boundary proof remains separate from the count/probability/Drazin
+corridor.
 -/
 
 noncomputable section
@@ -34,6 +33,8 @@ namespace InfoGeometry.GromovWittenErlangen.Examples.DIIITopologicalCountExample
 
 open InfoGeometry.Canonical.RelativePotentialCountBridge
 open InfoGeometry.Quantum.KitaevChain
+
+attribute [local instance] starRingOfComm
 
 abbrev G := CP1DrazinNilpotentDefectModel.G
 abbrev T := CP1DrazinNilpotentDefectModel.T
@@ -120,20 +121,6 @@ def vertexAtom : CP1DrazinModel.Fixed → Fin 3
 def edgeAtom : CP1DrazinModel.Edge → Fin 3
   | CP1DrazinModel.Edge.line => 2
 
-/--
-Constructive finite-carrier shadow law:
-the primitive `CountProfile` and the finite positive `RelativeCounts 3` carrier
-agree on all three active labels.
--/
-def finiteCarrierShadowLaw : Prop :=
-  ∀ i : Fin 3, countProfile i.val = counts i
-
-/-- The finite-carrier shadow law is proved by exhausting the three labels. -/
-theorem finiteCarrierShadow_valid :
-    finiteCarrierShadowLaw := by
-  intro i
-  fin_cases i <;> norm_num [finiteCarrierShadowLaw, countProfile, counts]
-
 /-- GW localization count-shadow calibration for the concrete three-sector profile. -/
 def projectiveCountCalibration : GWProjectiveCountCalibration G T Target Coeff where
   localization := CP1DrazinNilpotentDefectModel.virtualLocalization
@@ -144,8 +131,6 @@ def projectiveCountCalibration : GWProjectiveCountCalibration G T Target Coeff w
   vertexAtom := vertexAtom
   edgeAtom := edgeAtom
   coeffReadout := fun z => (z : ℝ)
-  countShadowLaw := finiteCarrierShadowLaw
-  countShadow_valid := finiteCarrierShadow_valid
 
 /-- Canonical count-ray/probability/operator bridge for the concrete counts. -/
 def canonicalCountRayBridge : GWCanonicalCountRayBridge 3 G T Target Coeff where
@@ -154,50 +139,11 @@ def canonicalCountRayBridge : GWCanonicalCountRayBridge 3 G T Target Coeff where
   ref := referenceCounts
   counts_pos := counts_pos
   ref_pos := referenceCounts_pos
-  finiteCarrierShadowLaw := finiteCarrierShadowLaw
-  finiteCarrierShadow_valid := finiteCarrierShadow_valid
-
-/--
-Constructive probability-gauge law:
-the `FinProb` gauge section of the projective count ray is exactly the
-normalized finite count profile.
--/
-def probabilityGaugeLaw : Prop :=
-  ∀ i : Fin 3,
-    (canonicalCountRayBridge.stateFinProb i).toReal =
-      counts i / countMass counts counts_pos
-
-/-- The probability-gauge law follows from the repo-owned count-ray gauge theorem. -/
-theorem probabilityGauge_valid :
-    probabilityGaugeLaw := by
-  intro i
-  exact canonicalCountRayBridge.stateFinProb_apply_toReal i
 
 /-- Probability/operator bridge for the concrete count-ray target. -/
 def projectiveProbabilityBridge :
     GWProjectiveCountProbabilityBridge 3 G T Target Coeff where
   canonical := canonicalCountRayBridge
-  probabilityGaugeLaw := probabilityGaugeLaw
-  probabilityGauge_valid := probabilityGauge_valid
-
-/-- Drazin-attached bridge for the concrete three-sector count target. -/
-def projectiveCountDrazinBridge :
-    GWProjectiveCountDrazinBridge 3 G T Target Coeff Algebra where
-  projectiveProbability := projectiveProbabilityBridge
-  drazin := CP1DrazinNilpotentDefectModel.bridge
-  localization_packet_eq := rfl
-  edgeEulerWeight_eq_projectiveCountReadout :=
-    ∀ _ : CP1DrazinModel.Edge,
-      ((1, (2 : ZMod 4)) : Algebra) = ((1, (2 : ZMod 4)) : Algebra)
-  edgeEulerWeight_eq_projectiveCountReadout_valid := by
-    intro _
-    rfl
-  drazinResidue_eq_projectiveSingularityReadout :=
-    ∀ _ : CP1DrazinModel.Edge,
-      ((0, (2 : ZMod 4)) : Algebra) = ((0, (2 : ZMod 4)) : Algebra)
-  drazinResidue_eq_projectiveSingularityReadout_valid := by
-    intro _
-    rfl
 
 /-- The probability gauge of the bulk sector is the normalized count value. -/
 theorem stateFinProb_bulk_toReal :
@@ -227,19 +173,22 @@ theorem entropy_eq_surprisal_expectation :
 
 /-- The Drazin residue in the edge sector is square-zero. -/
 theorem drazin_residue_square_zero :
-    ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 :=
-  CP1DrazinNilpotentDefectModel.residue_square_zero
+    CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedDrazinResidue *
+        CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedDrazinResidue = 0 := by
+  change (((0 : ℤ), (2 : ZMod 4)) : CP1DrazinNilpotentDefectModel.Algebra) *
+      (((0 : ℤ), (2 : ZMod 4)) : CP1DrazinNilpotentDefectModel.Algebra) = 0
+  exact CP1DrazinNilpotentDefectModel.residue_square_zero
 
 /-- The nonzero Drazin residue is killed by the regular inverse on the right. -/
 theorem drazin_residue_mul_regularInverse :
-    CP1DrazinNilpotentDefectModel.bridge.edgeLocalizedDrazinResidue CP1DrazinModel.Edge.line *
-        CP1DrazinNilpotentDefectModel.bridge.edgeLocalizedRegularInverse CP1DrazinModel.Edge.line = 0 :=
+    CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedDrazinResidue *
+        CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedRegularInverse = 0 :=
   CP1DrazinNilpotentDefectModel.edgeLocalizedDrazinResidue_mul_regularInverse_line
 
 /-- The regular inverse kills the nonzero Drazin residue on the left. -/
 theorem drazin_regularInverse_mul_residue :
-    CP1DrazinNilpotentDefectModel.bridge.edgeLocalizedRegularInverse CP1DrazinModel.Edge.line *
-        CP1DrazinNilpotentDefectModel.bridge.edgeLocalizedDrazinResidue CP1DrazinModel.Edge.line = 0 :=
+    CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedRegularInverse *
+        CP1DrazinNilpotentDefectModel.defectEdgeDrazin.localizedDrazinResidue = 0 :=
   CP1DrazinNilpotentDefectModel.edgeRegularInverse_mul_localizedDrazinResidue_line
 
 end InfoGeometry.GromovWittenErlangen.Examples.DIIITopologicalCountExample

@@ -168,15 +168,12 @@ theorem minusHarmonic_iff_loop_zero
 
 end ChiralHodgeDiracSocket
 
-/-! ## 3. Hodge theorem/calibration socket -/
+/-! ## 3. Chiral Hodge/Dirac calibration data -/
 
 /--
-Explicit witness that a chiral complex and a chiral Hodge/Dirac socket are
-calibrated.
-
-This is where a future Hodge theorem may be installed. Until such a witness is
-supplied, `ker Δ±` is only the harmonic readout, not automatically a homology
-quotient.
+Explicit data aligning a chiral complex and a chiral Hodge/Dirac socket.
+This file does not assert a Hodge theorem identifying harmonic representatives
+with homology classes.
 -/
 @[rep_depth krein]
 structure ChiralHodgeHomologyCalibration
@@ -191,34 +188,6 @@ structure ChiralHodgeHomologyCalibration
   /-- The Hodge `D⁻` agrees with the differential `d⁻`. -/
   Dminus_eq_dMinus :
     ∀ y : Cminus, hodge.Dminus y = complex.dMinus y
-
-  /-- Plus harmonic representatives are supplied as the readout of plus homology. -/
-  plus_harmonic_represents_homology : Prop
-  plus_harmonic_represents_homology_holds : plus_harmonic_represents_homology
-
-  /-- Minus harmonic representatives are supplied as the readout of minus homology. -/
-  minus_harmonic_represents_homology : Prop
-  minus_harmonic_represents_homology_holds : minus_harmonic_represents_homology
-
-namespace ChiralHodgeHomologyCalibration
-
-variable {Cplus Cminus : Type*}
-variable [Zero Cplus] [Zero Cminus]
-variable (K : ChiralHodgeHomologyCalibration Cplus Cminus)
-
-/-- Readback of the plus Hodge/homology calibration witness. -/
-@[rep_depth krein]
-theorem plus_hodge_witness :
-    K.plus_harmonic_represents_homology :=
-  K.plus_harmonic_represents_homology_holds
-
-/-- Readback of the minus Hodge/homology calibration witness. -/
-@[rep_depth krein]
-theorem minus_hodge_witness :
-    K.minus_harmonic_represents_homology :=
-  K.minus_harmonic_represents_homology_holds
-
-end ChiralHodgeHomologyCalibration
 
 /-! ## 4. File-level owner target -/
 
@@ -241,11 +210,7 @@ def ChiralDiracHomologyBridgeOwnerTarget : Prop :=
       H.plusHarmonic x ↔ H.Dminus (H.Dplus x) = 0) ∧
   (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
       (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus),
-      H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0) ∧
-  (∀ {Cplus Cminus : Type*} [Zero Cplus] [Zero Cminus]
-      (K : ChiralHodgeHomologyCalibration Cplus Cminus),
-      K.plus_harmonic_represents_homology ∧
-      K.minus_harmonic_represents_homology)
+      H.minusHarmonic y ↔ H.Dplus (H.Dminus y) = 0)
 
 /-- The chiral/Dirac homology owner target is discharged by the local witnesses. -/
 theorem chiralDiracHomologyBridgeOwnerTarget :
@@ -259,11 +224,8 @@ theorem chiralDiracHomologyBridgeOwnerTarget :
     · constructor
       · intro Cplus Cminus instC instM H x
         exact H.plusHarmonic_iff_loop_zero x
-      · constructor
-        · intro Cplus Cminus instC instM H y
-          exact H.minusHarmonic_iff_loop_zero y
-        · intro Cplus Cminus instC instM K
-          exact ⟨K.plus_hodge_witness, K.minus_hodge_witness⟩
+      · intro Cplus Cminus instC instM H y
+        exact H.minusHarmonic_iff_loop_zero y
 
 /-! ## 4. Root doubled-carrier readbacks from the owner lane -/
 

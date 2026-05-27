@@ -78,11 +78,6 @@ theorem leakage_eq_zero_below_gap
     S.leakage ε = 0 :=
   S.no_leakage_below_gap_law ε hε
 
-/-- The perfect-reflection certificate is available when installed. -/
-theorem perfect_reflection_valid :
-    S.perfect_reflection_below_gap_law :=
-  S.perfect_reflection_below_gap_certificate
-
 end PoincareAndreevBoundary
 
 end InfoGeometry.OperatorAlgebra.PoincareAndreev

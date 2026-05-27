@@ -83,10 +83,6 @@ structure HeckeSugawaraIntertwining
   -/
   hecke_sugawara_compatibility_law : Prop
 
-  /-- Certificate for the supplied Hecke/Sugawara compatibility law. -/
-  hecke_sugawara_compatible :
-    hecke_sugawara_compatibility_law
-
   /--
   Resonance match: the zero-value of a completed L-function matches the
   Euler-product value at s=0 for the corresponding spectral character.
@@ -131,11 +127,6 @@ variable
 
 variable
     (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
-
-/-- Re-export of the supplied Hecke/Sugawara compatibility certificate. -/
-theorem hecke_sugawara_compatibility :
-    H.hecke_sugawara_compatibility_law :=
-  H.hecke_sugawara_compatible
 
 /-- Re-export of the purified central-charge/L-value calibration. -/
 theorem purified_charge_eq_l_value

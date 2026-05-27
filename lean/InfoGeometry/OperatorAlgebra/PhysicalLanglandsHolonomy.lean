@@ -497,11 +497,6 @@ variable
     (G : PhysicalGeometricLanglandsInterpretation
       GState GdualState GLoop GdualLoop Scalar K)
 
-/-- The supplied geometric Langlands interpretation certificate is available. -/
-theorem geometric_langlands_valid :
-    G.geometric_langlands_law :=
-  G.geometric_langlands_certificate
-
 end PhysicalGeometricLanglandsInterpretation
 
 /-! ## 7. Owner targets -/

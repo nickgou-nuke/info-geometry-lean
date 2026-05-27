@@ -37,10 +37,6 @@ structure LightConeNilpotentPair
   split : ProjectorSplit A
   Xplus : A
   Xminus : A
-  uPlus_sq_zero :
-    split.uPlus Xplus * split.uPlus Xplus = 0
-  uMinus_sq_zero :
-    split.uMinus Xminus * split.uMinus Xminus = 0
 
 namespace LightConeNilpotentPair
 
@@ -51,13 +47,13 @@ variable (L : LightConeNilpotentPair A)
 @[rep_depth operator]
 theorem uPlus_sq_zero_holds :
     L.split.uPlus L.Xplus * L.split.uPlus L.Xplus = 0 :=
-  L.uPlus_sq_zero
+  L.split.uPlus_mul_uPlus_eq_zero L.Xplus L.Xplus
 
 /-- Read back the `u⁻` nilpotence law. -/
 @[rep_depth operator]
 theorem uMinus_sq_zero_holds :
     L.split.uMinus L.Xminus * L.split.uMinus L.Xminus = 0 :=
-  L.uMinus_sq_zero
+  L.split.uMinus_mul_uMinus_eq_zero L.Xminus L.Xminus
 
 /-- Any projector split supplies nilpotent light-cone channels for chosen seeds. -/
 @[rep_depth operator]
@@ -68,8 +64,6 @@ def ofProjectorSplit
   split := split
   Xplus := Xplus
   Xminus := Xminus
-  uPlus_sq_zero := split.uPlus_mul_uPlus_eq_zero Xplus Xplus
-  uMinus_sq_zero := split.uMinus_mul_uMinus_eq_zero Xminus Xminus
 
 end LightConeNilpotentPair
 
@@ -116,24 +110,6 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [Ring A]
 variable (B : LightConeCARFockBridge E A)
 
-/-- The bridge exposes the CAR law for the chosen Fock realization. -/
-@[rep_depth operator]
-theorem car_holds :
-    IsCARPair (E := E) B.annihilation B.creation :=
-  B.car
-
-/-- The `u⁺` realization law is available as an equality. -/
-@[rep_depth operator]
-theorem uPlus_realization_holds :
-    B.realize (B.lightcone.split.uPlus B.lightcone.Xplus) = B.annihilation :=
-  B.uPlus_realization_law
-
-/-- The `u⁻` realization law is available as an equality. -/
-@[rep_depth operator]
-theorem uMinus_realization_holds :
-    B.realize (B.lightcone.split.uMinus B.lightcone.Xminus) = B.creation :=
-  B.uMinus_realization_law
-
 end LightConeCARFockBridge
 
 /-! ## Concrete split-`Cl(1,1)` CAR/Fock readback -/
@@ -162,14 +138,6 @@ noncomputable def concreteCl11CARFockReadback :
   annihilation := concreteCARAnnihilation (E := E)
   creation := concreteCARCreation (E := E)
   car := concrete_car_pair (E := E)
-
-/-- The concrete split-`Cl(1,1)` Fock readback satisfies CAR. -/
-@[rep_depth operator]
-theorem concreteCl11LightConeCAR_holds :
-    IsCARPair (E := E)
-      (concreteCl11CARFockReadback (E := E)).annihilation
-      (concreteCl11CARFockReadback (E := E)).creation :=
-  (concreteCl11CARFockReadback (E := E)).car
 
 /--
 Guardrail: the doubled projector-super pair is still only a projector-super

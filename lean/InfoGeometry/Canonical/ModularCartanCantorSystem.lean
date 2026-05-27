@@ -276,12 +276,6 @@ structure StandardFormNormalCone where
   /-- `J` fixes natural-cone vectors pointwise. -/
   J_fixes_naturalCone : ∀ ⦃ξ : H⦄, ξ ∈ naturalCone → J ξ = ξ
 
-  /-- Backend certificate that the cone is selfdual in the real `J`-fixed space. -/
-  selfdual_cone_certificate : Prop
-
-  /-- Evidence for selfduality. -/
-  selfdual_cone_holds : selfdual_cone_certificate
-
   /-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
   outward_normal_cone_law :
     ∀ ξ : H, ξ ∈ naturalCone →
@@ -307,12 +301,6 @@ theorem coneVector_mem_naturalCone (ω : Functional) :
 theorem J_fixes_coneVector (ω : Functional) :
     S.J (S.coneVector ω) = S.coneVector ω :=
   S.J_fixes_naturalCone (S.coneVector_mem ω)
-
-/-- Readback of the supplied selfduality certificate. -/
-@[rep_depth operator]
-theorem selfdual_cone_readback :
-    S.selfdual_cone_certificate :=
-  S.selfdual_cone_holds
 
 /-- Outward normal cone at a cone vector is `-P ∩ ξᗮ`. -/
 @[rep_depth operator]
@@ -414,7 +402,9 @@ represented by Connes cocycle/spatial-derivative data.  Finite determinant
 barriers can only enter through the explicit `finite_split_approximant_law`.
 -/
 @[socket_debt_tag, rep_depth operator]
-structure RelativeEntropyBarrierSocket where
+structure RelativeEntropyBarrierSocket
+    (A Modular Weight Deriv Score : Type*)
+    [Ring A] [One Deriv] [Mul Deriv] [Zero Score] [Add Score] where
   /-- Araki/Connes relative entropy socket. -/
   relativeEntropy :
     UnnormalizedRelativeEntropyDatum A Modular
@@ -431,25 +421,19 @@ structure RelativeEntropyBarrierSocket where
   modularScore :
     Weight → Weight → Score
 
-  /-- Certificate that the score is derived from cocycle/spatial derivative data. -/
-  modular_score_law : Prop
+  /-- The modular score vanishes for identical weights. -/
+  modular_score_self_law :
+    ∀ φ, modularScore φ φ = 0
 
-  /-- Evidence for the modular score certificate. -/
-  modular_score_holds : modular_score_law
+  /-- The modular score satisfies the additive chain rule. -/
+  modular_score_chain_rule :
+    ∀ φ ψ η, modularScore φ ψ + modularScore ψ η = modularScore φ η
 
-  /--
-  Optional finite/split approximant law.  This is where determinant barriers or
-  finite relative entropy approximants belong, never in the bare Type III lane.
-  -/
-  finite_split_approximant_law : Prop
-
-  /-- Evidence for the finite/split approximant certificate. -/
-  finite_split_approximant_holds : finite_split_approximant_law
 
 namespace RelativeEntropyBarrierSocket
 
-variable (B : RelativeEntropyBarrierSocket (A := A) (Modular := Modular)
-  (Weight := Weight) (Deriv := Deriv) (Score := Score))
+variable [Ring A] [One Deriv] [Mul Deriv] [Zero Score] [Add Score]
+variable (B : RelativeEntropyBarrierSocket A Modular Weight Deriv Score)
 
 /-- Relative entropy is the barrier readout; self-divergence vanishes. -/
 @[rep_depth operator]
@@ -471,26 +455,26 @@ theorem connesCocycle_same_weight
     (φ : Weight)
     (t : ℝ) :
     B.connesCocycle.cocycle φ φ t = 1 :=
-  B.connesCocycle.same_weight_apply φ t
+  B.connesCocycle.same_weight φ t
 
 /-- Same-weight spatial derivative is identity. -/
 @[rep_depth operator]
 theorem spatialDerivative_same_weight
     (φ : Weight) :
     B.spatialDerivative.spatialDerivative φ φ = 1 :=
-  B.spatialDerivative.same_weight_apply φ
+  B.spatialDerivative.same_weight φ
 
-/-- Readback: the modular score is certified as cocycle/spatial-derivative data. -/
+/-- The modular score vanishes for identical weights. -/
 @[rep_depth operator]
-theorem modular_score_readback :
-    B.modular_score_law :=
-  B.modular_score_holds
+theorem modular_score_self (φ : Weight) :
+    B.modularScore φ φ = 0 :=
+  B.modular_score_self_law φ
 
-/-- Readback: finite/split approximants are explicitly witness-gated (Native Closure Mandated: Closure Debt). -/
+/-- The modular score satisfies the additive chain rule. -/
 @[rep_depth operator]
-theorem finite_split_approximant_readback :
-    B.finite_split_approximant_law :=
-  B.finite_split_approximant_holds
+theorem modular_score_chain (φ ψ η : Weight) :
+    B.modularScore φ ψ + B.modularScore ψ η = B.modularScore φ η :=
+  B.modular_score_chain_rule φ ψ η
 
 end RelativeEntropyBarrierSocket
 
@@ -530,15 +514,6 @@ structure ModularInformationMetricPullback where
       metric x u v =
         modularMetric (stateMap x) (stateDerivative x u) (stateDerivative x v)
 
-  /--
-  Certificate that `modularMetric` is the intended Hessian of Araki relative
-  entropy / BKM metric, or another explicitly supplied modular metric.
-  -/
-  modular_metric_certificate : Prop
-
-  /-- Evidence for the modular metric certificate. -/
-  modular_metric_holds : modular_metric_certificate
-
 namespace ModularInformationMetricPullback
 
 variable (P : ModularInformationMetricPullback (Base := Base) (State := State)
@@ -550,12 +525,6 @@ theorem metric_eq_pullback (x : Base) (u v : Tangent x) :
     P.metric x u v =
       P.modularMetric (P.stateMap x) (P.stateDerivative x u) (P.stateDerivative x v) :=
   P.metric_pullback_law x u v
-
-/-- Readback of the modular metric backend certificate. -/
-@[rep_depth operator]
-theorem modular_metric_readback :
-    P.modular_metric_certificate :=
-  P.modular_metric_holds
 
 end ModularInformationMetricPullback
 

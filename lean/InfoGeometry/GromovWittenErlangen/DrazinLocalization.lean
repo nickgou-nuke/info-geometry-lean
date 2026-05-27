@@ -32,7 +32,7 @@ Drazin decomposition of its Euler denominator, representing the rule:
 * retain controlled nilpotent/singular residue data.
 -/
 structure GWDrazinLocalizationPacket
-    (G T Target Coeff Algebra : Type*) [Ring Algebra] where
+    (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   /-- Existing fixed/edge-sector localization graph packet. -/
   virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff
 
@@ -58,21 +58,10 @@ structure GWDrazinLocalizationPacket
   /-- Total localized readout. -/
   localizationValue : Algebra
 
-  /-- Supplied finite/localization assembly law. -/
-  localizationAssemblyLaw : Prop
-
-  /-- Certificate for the assembly law. -/
-  localizationAssemblyCertificate : localizationAssemblyLaw
-
 namespace GWDrazinLocalizationPacket
 
-variable {G T Target Coeff Algebra : Type*} [Ring Algebra]
+variable {G T Target Coeff Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable (P : GWDrazinLocalizationPacket G T Target Coeff Algebra)
-
-/-- The supplied localization assembly law is available. -/
-theorem localizationAssembly_valid :
-    P.localizationAssemblyLaw :=
-  P.localizationAssemblyCertificate
 
 /-- Every localization edge supplies Drazin inverse data for its Euler weight. -/
 def edgeDrazinData (e : P.virtualLocalization.graph.Edge) :
@@ -134,31 +123,17 @@ theorem edgeRegularInverse_mul_residue
 end GWDrazinLocalizationPacket
 
 /--
-Divisor axiom socket for a localization graph.
+Divisor-weight data for a localization graph.
 
-This does not prove the GW divisor axiom; it stores the finite edge/degree
-weights that a model uses to certify divisor insertions on fixed-graph sectors.
+This does not prove the GW divisor axiom; it only stores finite edge/degree
+weights that a model may use as input to a future theorem-facing divisor axiom.
 -/
-structure LocalizationDivisorAxiomPacket
+structure LocalizationDivisorWeightData
     (G T Target Coeff : Type*) where
   virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff
   DivisorClass : Type*
   divisorDegreeWeight :
     DivisorClass → virtualLocalization.graph.Edge → ℝ
-  divisorInsertionLaw : Prop
-  divisorInsertionCertificate : divisorInsertionLaw
-
-namespace LocalizationDivisorAxiomPacket
-
-variable {G T Target Coeff : Type*}
-variable (D : LocalizationDivisorAxiomPacket G T Target Coeff)
-
-/-- The supplied divisor insertion law is available. -/
-theorem divisorInsertion_valid :
-    D.divisorInsertionLaw :=
-  D.divisorInsertionCertificate
-
-end LocalizationDivisorAxiomPacket
 
 /--
 Semisimple/Frobenius calibration for a localized GW coefficient algebra.
@@ -167,21 +142,15 @@ In a commutative semisimple quantum cohomology model over an algebraically
 closed field, the residue blocks specialize to field factors.  This packet keeps
 that as supplied finite data, together with a Frobenius self-duality pairing.
 -/
-structure LocalizedFrobeniusSemisimplePacket (Algebra : Type*) [Mul Algebra] where
+structure LocalizedFrobeniusSemisimplePacket (Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   frobenius : FrobeniusSelfDualPacket Algebra
   residueBlocks : DivisionResidueBlockPacket
-  semisimplicityLaw : Prop
-  semisimplicityCertificate : semisimplicityLaw
+  semisimple : IsSemisimpleRing Algebra
 
 namespace LocalizedFrobeniusSemisimplePacket
 
-variable {Algebra : Type*} [Mul Algebra]
+variable {Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable (S : LocalizedFrobeniusSemisimplePacket Algebra)
-
-/-- The supplied semisimplicity law is available. -/
-theorem semisimplicity_valid :
-    S.semisimplicityLaw :=
-  S.semisimplicityCertificate
 
 /-- Frobenius compatibility of the localized pairing. -/
 theorem pairing_mul_left_eq_pairing_mul_right
@@ -193,39 +162,15 @@ end LocalizedFrobeniusSemisimplePacket
 
 /-- Integrated Drazin/GW localization doctrine packet. -/
 structure DrazinGromovWittenLocalizationBridge
-    (G T Target Coeff Algebra : Type*) [Ring Algebra] where
+    (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra
-  divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff
+  divisorWeights : LocalizationDivisorWeightData G T Target Coeff
   frobeniusSemisimple : LocalizedFrobeniusSemisimplePacket Algebra
-
-  /-- Compatibility between divisor weights and Drazin-regularized edge sectors. -/
-  divisorDrazinCompatibilityLaw : Prop
-  divisorDrazinCompatibilityCertificate : divisorDrazinCompatibilityLaw
 
 namespace DrazinGromovWittenLocalizationBridge
 
-variable {G T Target Coeff Algebra : Type*} [Ring Algebra]
+variable {G T Target Coeff Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable (B : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra)
-
-/-- The localization assembly law carried by the Drazin packet is available. -/
-theorem localizationAssembly_valid :
-    B.drazinLocalization.localizationAssemblyLaw :=
-  B.drazinLocalization.localizationAssembly_valid
-
-/-- The divisor axiom law carried by the divisor packet is available. -/
-theorem divisorInsertion_valid :
-    B.divisorAxiom.divisorInsertionLaw :=
-  B.divisorAxiom.divisorInsertion_valid
-
-/-- The semisimplicity law carried by the Frobenius packet is available. -/
-theorem semisimplicity_valid :
-    B.frobeniusSemisimple.semisimplicityLaw :=
-  B.frobeniusSemisimple.semisimplicity_valid
-
-/-- The supplied divisor/Drazin compatibility law is available. -/
-theorem divisorDrazinCompatibility_valid :
-    B.divisorDrazinCompatibilityLaw :=
-  B.divisorDrazinCompatibilityCertificate
 
 /--
 For every localization edge, the bridge provides algebraic Drazin inverse data
@@ -273,14 +218,14 @@ This is intentionally a calibration layer:
 * `gwVolume` is the supplied fixed-sector/virtual/localized volume readout;
 * `cleanDrazinVolume` is the regular-core contribution after Drazin separation;
 * `entropyReadout` is calibrated to `Real.log cleanDrazinVolume`;
-* a separate law records when the clean Drazin volume agrees with the chosen GW
+* an explicit equality records when the clean Drazin volume agrees with the chosen GW
   volume readout.
 
 No unconditional claim is made that every GW volume is positive, finite, or
 equal to a state count.
 -/
 structure GWDrazinEntropyCalibration
-    {G T Target Coeff Algebra : Type*} [Ring Algebra]
+    {G T Target Coeff Algebra : Type*} [Ring Algebra] [StarRing Algebra]
     (B : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra) where
   /-- Localized GW volume/readout supplied by the model. -/
   gwVolume : ℝ
@@ -307,20 +252,9 @@ structure GWDrazinEntropyCalibration
   cleanDrazinVolume_eq_gwVolume :
     cleanDrazinVolume = gwVolume
 
-  /--
-  Residue accounting law for singular edge sectors.
-
-  This is model-specific: the packet records how edge residue volumes enter the
-  localized readout, but does not assert a universal residue formula.
-  -/
-  residueAccountingLaw : Prop
-
-  /-- Certificate for the residue accounting law. -/
-  residueAccountingCertificate : residueAccountingLaw
-
 namespace GWDrazinEntropyCalibration
 
-variable {G T Target Coeff Algebra : Type*} [Ring Algebra]
+variable {G T Target Coeff Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable {B : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra}
 variable (C : GWDrazinEntropyCalibration B)
 
@@ -338,11 +272,6 @@ theorem clean_volume_eq_gw_volume :
 theorem entropy_eq_log_gw_volume :
     C.entropyReadout = Real.log C.gwVolume := by
   rw [C.entropy_eq_log_cleanDrazinVolume, C.cleanDrazinVolume_eq_gwVolume]
-
-/-- The supplied residue accounting law is available. -/
-theorem residueAccounting_valid :
-    C.residueAccountingLaw :=
-  C.residueAccountingCertificate
 
 /-- Each edge entropy packet still exposes the operator-level Drazin residue. -/
 def edgeOperatorDrazinResidue

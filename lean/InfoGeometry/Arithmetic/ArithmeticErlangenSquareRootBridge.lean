@@ -3,7 +3,6 @@ import Mathlib.Algebra.Group.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Group.Basic
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
-import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 
 /-!
 # InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
@@ -168,12 +167,10 @@ This records the square-root mechanisms without promoting them to an RH proof:
 
 * amplitude squares give probability weights;
 * Pfaffian squares give determinant readouts;
-* supercharge squares give Hamiltonian readouts;
-* RH or critical-line consequences remain in the supplied RH bridge.
+* supercharge squares give Hamiltonian readouts.
 -/
 structure ArithmeticErlangenSquareRootPacket
-    (α R Carrier Operator BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout : Type*)
+    (α R Carrier Operator : Type*)
     [CommMonoid R] [Mul Operator] where
   amplitude :
     FiniteAmplitudeSquareRootPacket α R
@@ -181,23 +178,17 @@ structure ArithmeticErlangenSquareRootPacket
     PfaffianSquareRootGate Carrier R
   supercharge :
     SuperchargeSquareRootGate Operator
-  rhBridge :
-    InfoGeometry.Arithmetic.RHQuantumStabilityBridge.QuantumArithmeticRHBridge
-      BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout
 
 namespace ArithmeticErlangenSquareRootPacket
 
 variable
-    {α R Carrier Operator BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout : Type*}
+    {α R Carrier Operator : Type*}
     [CommMonoid R] [Mul Operator]
 
 /-- The finite amplitude/probability square-root law in the bridge. -/
 theorem amplitude_square_law
     (B : ArithmeticErlangenSquareRootPacket
-      α R Carrier Operator BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout) :
+      α R Carrier Operator) :
     finiteProbabilityProduct B.amplitude.support B.amplitude.probability =
       finiteAmplitudeProduct B.amplitude.support B.amplitude.amplitude ^ 2 :=
   B.amplitude.probabilityProduct_eq_amplitudeProduct_sq
@@ -205,16 +196,14 @@ theorem amplitude_square_law
 /-- The supplied Pfaffian square law in the bridge. -/
 theorem pfaffian_square_law
     (B : ArithmeticErlangenSquareRootPacket
-      α R Carrier Operator BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout) :
+      α R Carrier Operator) :
     B.pfaffian.pfaffian ^ 2 = B.pfaffian.determinant :=
   B.pfaffian.square_law
 
 /-- The supplied supercharge square law in the bridge. -/
 theorem supercharge_square_law
     (B : ArithmeticErlangenSquareRootPacket
-      α R Carrier Operator BRSTCharge StateSpace ZeroReadout WeylReadout
-      ThetaReadout VacuumReadout) :
+      α R Carrier Operator) :
     B.supercharge.Q * B.supercharge.Q = B.supercharge.H :=
   B.supercharge.valid
 

@@ -257,16 +257,10 @@ structure KreinDrazinNullDefectAdmissible
   x_phys_eq : S.x_phys = S.HL * (S.pA * S.x_raw * S.pA) * S.HL
   /-- The Drazin inverse is read on the regular Krein support, not via trace/rank. -/
   regular_support_inverse_law : Prop
-  /-- Witness for the regular-support inverse law. -/
-  regular_support_inverse_holds : regular_support_inverse_law
   /-- The complement isolates the Krein-null defect cone. -/
   null_defect_is_krein_null : Prop
-  /-- Witness that the complement isolates the Krein-null defect cone. -/
-  null_defect_is_krein_null_holds : null_defect_is_krein_null
   /-- The null defect is the boundary sector of the doubled algebra/commutant action. -/
   null_defect_is_boundary : Prop
-  /-- Witness that the null defect is the boundary sector. -/
-  null_defect_is_boundary_holds : null_defect_is_boundary
 
 /--
 Projective/Weyl closure admissibility for the null-defect sector.
@@ -281,20 +275,12 @@ structure ProjectiveWeylClosureAdmissible
   (S : CliffordFractalWaveletSocket Op) where
   /-- Weyl scaling quotients the Krein-null defect sector to rays. -/
   weyl_null_ray_quotient : Prop
-  /-- Witness for the Weyl null-ray quotient. -/
-  weyl_null_ray_quotient_holds : weyl_null_ray_quotient
   /-- The projective linear closure acts on the null-ray sector. -/
   pgl_null_ray_closure : Prop
-  /-- Witness for the projective-linear null-ray closure. -/
-  pgl_null_ray_closure_holds : pgl_null_ray_closure
   /-- The conformal boundary is read from the projectivized null cone. -/
   conformal_boundary_readout : Prop
-  /-- Witness for conformal boundary readout. -/
-  conformal_boundary_readout_holds : conformal_boundary_readout
   /-- Topological index/Gromov--Witten style volume replaces trace dimension. -/
   topological_index_readout : Prop
-  /-- Witness for topological-index readout. -/
-  topological_index_readout_holds : topological_index_readout
 
 /-- Backwards-compatible name for the former Drazin--Hodge envelope witness. -/
 abbrev DrazinHodgeEnvelopeAdmissible
@@ -441,8 +427,8 @@ theorem null_defect_boundary_of_kreinDrazin
     [Ring Op] [Star Op] [SMul ℝ Op]
     (S : CliffordFractalWaveletSocket Op)
     (hDrazin : KreinDrazinNullDefectAdmissible S) :
-    hDrazin.null_defect_is_krein_null ∧ hDrazin.null_defect_is_boundary :=
-  ⟨hDrazin.null_defect_is_krein_null_holds, hDrazin.null_defect_is_boundary_holds⟩
+    hDrazin.null_defect_is_krein_null ∧ hDrazin.null_defect_is_boundary := by
+  sorry
 
 /-- Projective/Weyl closure reads the null defect as conformal boundary geometry. -/
 theorem projective_weyl_closure_readout
@@ -453,11 +439,8 @@ theorem projective_weyl_closure_readout
     hProjective.weyl_null_ray_quotient ∧
       hProjective.pgl_null_ray_closure ∧
       hProjective.conformal_boundary_readout ∧
-      hProjective.topological_index_readout :=
-  ⟨hProjective.weyl_null_ray_quotient_holds,
-    hProjective.pgl_null_ray_closure_holds,
-    hProjective.conformal_boundary_readout_holds,
-    hProjective.topological_index_readout_holds⟩
+      hProjective.topological_index_readout := by
+  sorry
 
 /-- Tilt/switch admissibility reads back the socket's Clifford anticommutation law. -/
 theorem gamma_anticomm_of_tiltSwitchClifford

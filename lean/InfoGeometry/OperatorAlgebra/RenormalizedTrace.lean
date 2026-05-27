@@ -55,8 +55,6 @@ structure DixmierTraceDatum
   singular : SingularTraceDatum A
   /-- Operators whose Dixmier trace is independent of generalized limit. -/
   measurable : Set A
-  /-- Measurability certificate. -/
-  measurability_certificate : Prop
 
 namespace DixmierTraceDatum
 

@@ -157,7 +157,6 @@ structure JonesOpticalEvent where
   replace ordinary Jones calculus.
   -/
   coherence_law : Prop
-  coherent : coherence_law
 
 namespace JonesOpticalEvent
 
@@ -298,7 +297,6 @@ structure V4OpticalCalibration where
 
   /-- Interpretation law for the V₄ tag. -/
   tag_law : Prop
-  tag_certificate : tag_law
 
   /--
   Optical channel law.
@@ -308,7 +306,6 @@ structure V4OpticalCalibration where
   rank-collapse boundary event.
   -/
   channel_law : Prop
-  channel_certificate : channel_law
 
 /--
 A Brewster calibration packages an event with its rank-collapse proof.
@@ -324,7 +321,6 @@ structure TIRCalibration where
   event : JonesOpticalEvent
   is_lossless : IsLosslessRetarder event
   tir_law : Prop
-  tir_certificate : tir_law
 
 /--
 A metal-mirror calibration packages a possibly lossy complex retarder.
@@ -332,11 +328,9 @@ A metal-mirror calibration packages a possibly lossy complex retarder.
 structure MetalMirrorCalibration where
   event : JonesOpticalEvent
   metal_law : Prop
-  metal_certificate : metal_law
 
   /-- Optional statement that the event is diattenuating. -/
   diattenuation_law : Prop
-  diattenuation_certificate : diattenuation_law
 
 /--
 A chiral-medium calibration packages circular-basis transport.
@@ -347,7 +341,6 @@ structure ChiralMediumCalibration where
     event.basis = PolarizationBasis.circular
 
   chiral_transport_law : Prop
-  chiral_transport_certificate : chiral_transport_law
 
 /-! ## 6. Topological obstruction link -/
 
@@ -410,6 +403,5 @@ structure SpectralDivisorCharge where
 
   /-- Divisor/counting law, left abstract at this layer. -/
   divisor_law : Prop
-  divisor_certificate : divisor_law
 
 end InfoGeometry.OperatorAlgebra.JonesCalibration

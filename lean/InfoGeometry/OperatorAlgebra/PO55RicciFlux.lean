@@ -295,8 +295,6 @@ structure HiddenInertiaReadout
   /-- Stability under admissible PO(5,5)/TKK flow. -/
   stable_under_admissible_flow : Prop
 
-  /-- Observational/model certificate, e.g. lensing/clustering/non-coupling. -/
-  phenomenology_certificate : Prop
 
 /--
 Hidden conformal inertia hypothesis.
@@ -331,37 +329,21 @@ structure HiddenConformalInertia
   gPlus_probe_dark :
     ∀ x : J, probe (gPlus x) = probe 0
 
-  /-- Law asserting that the hidden sector carries inertial content on selected states. -/
-  gPlus_inertial_law : Prop
-
-  /-- Proof of the hidden-sector inertial law. -/
-  gPlus_inertial :
-    gPlus_inertial_law
+  /-- Hidden sector carries inertial content on selected states. -/
+  gPlus_inertial : Prop
 
   /--
   The hidden sector back-reacts through the conformal/TKK ledger.
 
   This is where `[g₋₁,g₊₁] → g₀` becomes visible as curvature.
   -/
-  cross_bracket_gravitationally_visible_law : Prop
+  cross_bracket_gravitationally_visible : Prop
 
-  /-- Proof that cross-bracket backreaction is visible in the curvature ledger. -/
-  cross_bracket_gravitationally_visible :
-    cross_bracket_gravitationally_visible_law
+  /-- Stability under admissible modular/conformal flow. -/
+  stable_under_admissible_flow : Prop
 
-  /-- Law asserting stability under admissible modular/conformal flow. -/
-  stable_under_admissible_flow_law : Prop
-
-  /-- Proof of stability under admissible modular/conformal flow. -/
-  stable_under_admissible_flow :
-    stable_under_admissible_flow_law
-
-  /-- Law asserting phenomenological matching: lensing, clustering, CMB, etc. -/
-  phenomenology_law : Prop
-
-  /-- Proof/certificate of phenomenological matching. -/
-  phenomenology_certificate :
-    phenomenology_law
+  /-- Phenomenological matching: lensing, clustering, CMB, etc. -/
+  phenomenology : Prop
 
 /--
 The positive-grade sector is a dark-matter candidate in a supplied model.
@@ -376,21 +358,17 @@ structure IsDarkMatterCandidate
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
     [AddCommGroup Geometry] [Module ℝ Geometry]
-    (H : HiddenConformalInertia J L Probe Geometry) : Prop where
+    (H : HiddenConformalInertia J L Probe Geometry) where
   probe_dark :
     ∀ x : J, H.probe (H.gPlus x) = H.probe 0
 
-  inertial :
-    H.gPlus_inertial_law
+  inertial : Prop
 
-  gravitationally_visible :
-    H.cross_bracket_gravitationally_visible_law
+  gravitationally_visible : Prop
 
-  stable :
-    H.stable_under_admissible_flow_law
+  stable : Prop
 
-  phenomenology :
-    H.phenomenology_law
+  phenomenology : Prop
 
 namespace HiddenConformalInertia
 
@@ -411,13 +389,13 @@ theorem probe_dark
 A fully witnessed hidden-conformal-inertia datum is a dark-matter candidate in
 that model.
 -/
-theorem isDarkMatterCandidate :
+def isDarkMatterCandidate :
     IsDarkMatterCandidate J L Probe Geometry H where
   probe_dark := H.gPlus_probe_dark
   inertial := H.gPlus_inertial
   gravitationally_visible := H.cross_bracket_gravitationally_visible
   stable := H.stable_under_admissible_flow
-  phenomenology := H.phenomenology_certificate
+  phenomenology := H.phenomenology
 
 end HiddenConformalInertia
 
@@ -439,8 +417,6 @@ structure ConformalHeightDatum
   height_pos :
     ∀ X : ConformalState55 Q, X ∈ stateDomain → 0 < height X
 
-  /-- Projective normalization/chart certificate. -/
-  chart_certificate : Prop
 
   /-- Compatibility with the chosen Weyl/log-radial coordinate. -/
   log_height_compatibility : Prop

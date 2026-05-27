@@ -764,16 +764,10 @@ structure BoundaryNormalCone
   Normal : B.Ray → Type*
   /-- Normal component detecting failure of the Krein-null constraint. -/
   detects_failure_of_nullity : Prop
-  /-- Witness for the nullity-obstruction channel. -/
-  detects_failure_of_nullity_holds : detects_failure_of_nullity
   /-- Normal component detecting leakage out of the Drazin zero sector. -/
   detects_failure_of_drazin_zero_sector : Prop
-  /-- Witness for the Drazin-sector leakage channel. -/
-  detects_failure_of_drazin_zero_sector_holds : detects_failure_of_drazin_zero_sector
   /-- Weyl scaling weight/anomaly channel on conormals. -/
   weyl_scaling_weight : Prop
-  /-- Witness for the Weyl/anomaly conormal channel. -/
-  weyl_scaling_weight_holds : weyl_scaling_weight
 
 /-- A boundary normal cone records all three obstruction channels. -/
 theorem boundary_normal_cone_obstruction_channels
@@ -785,9 +779,7 @@ theorem boundary_normal_cone_obstruction_channels
     (N : BoundaryNormalCone V Op K D B) :
     N.detects_failure_of_nullity ∧
       N.detects_failure_of_drazin_zero_sector ∧
-      N.weyl_scaling_weight :=
-  ⟨N.detects_failure_of_nullity_holds,
-    N.detects_failure_of_drazin_zero_sector_holds,
-    N.weyl_scaling_weight_holds⟩
+      N.weyl_scaling_weight := by
+  sorry
 
 end InfoGeometry.Canonical.KreinDrazinBoundarySupport

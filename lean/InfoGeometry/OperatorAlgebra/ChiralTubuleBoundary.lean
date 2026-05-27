@@ -205,9 +205,6 @@ structure ChiralResidue
   /-- Residue object. -/
   residue : Residue
 
-  /-- Majorana-Weyl / DIII / chiral-sector certificate, depending on model. -/
-  chiral_residue_certificate : Prop
-
   /-- Stability law. -/
   stable : Prop
 

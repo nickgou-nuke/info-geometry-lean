@@ -187,8 +187,11 @@ structure ConformalClosureWitness
 theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
     {CI : ConformalInference H}
     {X : InfoGeometry.Quantum.RealSplitCl11Action H}
-    (_CW : ConformalClosureWitness CI X) :
-    True := trivial
+    (CW : ConformalClosureWitness CI X) :
+    ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
+      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+  exact Canonical.ConformalUnification.canopy_operator_and_scalar
+    (E := H) (CI := CI) (X := X) CW.canopy
 
 /-! ## Consolidated Packet -/
 

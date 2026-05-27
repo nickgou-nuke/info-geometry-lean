@@ -77,18 +77,10 @@ structure GenesisSplitDatum
   -/
   split_law : Prop
 
-  /-- Proof/certificate of the split law. -/
-  split_certificate : split_law
-
 namespace GenesisSplitDatum
 
 variable {Latent Observable Hidden Boundary : Type*}
 variable (G : GenesisSplitDatum Latent Observable Hidden Boundary)
-
-/-- The stored split law is available. -/
-theorem split_valid :
-    G.split_law :=
-  G.split_certificate
 
 end GenesisSplitDatum
 
@@ -143,18 +135,10 @@ structure HorizonEvaporationDatum
   -/
   evaporation_law : Prop
 
-  /-- Proof/certificate of the evaporation law. -/
-  evaporation_certificate : evaporation_law
-
 namespace HorizonEvaporationDatum
 
 variable {Time Entropy : Type*}
 variable (E : HorizonEvaporationDatum Time Entropy)
-
-/-- The stored evaporation law is available. -/
-theorem evaporation_valid :
-    E.evaporation_law :=
-  E.evaporation_certificate
 
 end HorizonEvaporationDatum
 
@@ -297,14 +281,6 @@ for the ledger.
 theorem no_faithful_recovery :
     ¬ Nonempty (RevelationRecoveryDatum W.ledger) :=
   ExteriorCollapseWitness.no_faithful_recovery W.collapse
-
-/--
-The evaporation law remains true, but it does not overcome the recovery
-obstruction.
--/
-theorem evaporation_valid :
-    W.evaporation.evaporation_law :=
-  W.evaporation.evaporation_valid
 
 end EvaporationWithoutRecoveryWitness
 
@@ -652,7 +628,6 @@ should use the more specific bridge structures above.
 structure HorizonProcessClassification where
   outcome : HorizonOutcome
   classification_law : Prop
-  classification_certificate : classification_law
 
 /-! ## 11. Owner targets -/
 

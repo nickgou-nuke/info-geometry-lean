@@ -115,8 +115,6 @@ structure BulgarianFamilyAInterface (β Q Obs : Type _) where
   covarianceRealizesFisher : Prop
   fisherSymmetric : Prop
   fisherNonnegative : Prop
-  fisherSymmetric_holds : fisherSymmetric
-  fisherNonnegative_holds : fisherNonnegative
 
 def familyA_fisher_symmetric
     {β Q Obs : Type _} (A : BulgarianFamilyAInterface β Q Obs) : Prop :=
@@ -134,8 +132,6 @@ structure BulgarianFamilyBInterface (β Q : Type _) where
   betaOfQ : Q → β
   entropyGradientRecoversBeta : Prop
   entropyHessianRealizesInverseFisher : Prop
-  entropyGradientRecoversBeta_holds : entropyGradientRecoversBeta
-  entropyHessianRealizesInverseFisher_holds : entropyHessianRealizesInverseFisher
 
 def familyB_entropy_gradient_eq_beta
     {β Q : Type _} (B : BulgarianFamilyBInterface β Q) : Prop :=
@@ -154,8 +150,6 @@ structure BulgarianFamilyCInterface (Q X : Type _) where
   currentEqOnsagerForce : Prop
   onsagerSymmetric : Prop
   onsagerPositiveSemidefinite : Prop
-  onsagerSymmetric_holds : onsagerSymmetric
-  onsagerPositiveSemidefinite_holds : onsagerPositiveSemidefinite
 
 def familyC_onsager_symmetric
     {Q X : Type _} (C : BulgarianFamilyCInterface Q X) : Prop :=
@@ -172,8 +166,6 @@ structure BulgarianFamilyDInterface (X : Type _) where
   quadraticFormRealization : Prop
   nonnegative : Prop
   vanishesAtEquilibrium : Prop
-  nonnegative_holds : nonnegative
-  vanishesAtEquilibrium_holds : vanishesAtEquilibrium
 
 def familyD_entropyProduction_nonnegative
     {X : Type _} (D : BulgarianFamilyDInterface X) : Prop :=
@@ -189,8 +181,6 @@ structure BulgarianFamilyEInterface (S : Type _) where
   poissonPreservesEntropy : Prop
   metricIncreasesEntropy : Prop
   conservativeDissipativeSeparation : Prop
-  poissonPreservesEntropy_holds : poissonPreservesEntropy
-  metricIncreasesEntropy_holds : metricIncreasesEntropy
 
 def familyE_poisson_entropy_constant
     {S : Type _} (E : BulgarianFamilyEInterface S) : Prop :=

@@ -214,11 +214,6 @@ variable
     (G : GeometricLanglandsInterpretation
       ElectricState MagneticState Charge S)
 
-/-- The supplied geometric Langlands interpretation law is available. -/
-theorem geometric_langlands_valid :
-    G.geometric_langlands_law :=
-  G.geometric_langlands_certificate
-
 end GeometricLanglandsInterpretation
 
 /-! ## 6. Exceptional symmetry socket -/

@@ -59,9 +59,9 @@ theorem denominator_is_prime_euler_product :
       B.souriauWeyl.denominatorBridge.primeEulerProduct :=
   SouriauWeylPartitionPacket.denominator_is_prime_euler_product B.souriauWeyl
 
-/-- The parity-trace witness is available on the stored squarefree lane. -/
+/-- The parity-trace readback is available on the stored squarefree lane. -/
 @[rep_depth transport]
-theorem parity_trace_witness
+theorem parity_trace_readback
     (n : ℕ) (h : B.souriauWeyl.parityWitness.squareFree n) :
     B.souriauWeyl.parityWitness.signature
         (B.souriauWeyl.parityWitness.squareFreeToWeyl n h) =

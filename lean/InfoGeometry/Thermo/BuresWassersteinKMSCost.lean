@@ -103,16 +103,6 @@ structure BuresWassersteinDatum
   squaredDist_self :
     ∀ ρ : PositiveState Ω, squaredDist ρ ρ = 0
 
-  /--
-  Backend law saying this is the intended Bures-Wasserstein geometry.
-
-  In a finite matrix model, this is where one supplies the concrete formula.
-  -/
-  bures_wasserstein_law : Prop
-
-  /-- Proof/certificate of the Bures-Wasserstein backend law. -/
-  bures_wasserstein_certificate :
-    bures_wasserstein_law
 
 namespace BuresWassersteinDatum
 
@@ -130,11 +120,6 @@ theorem cost_self
     (ρ : PositiveState Ω) :
     BW.squaredDist ρ ρ = 0 :=
   BW.squaredDist_self ρ
-
-/-- The backend Bures-Wasserstein law is available. -/
-theorem bures_wasserstein_valid :
-    BW.bures_wasserstein_law :=
-  BW.bures_wasserstein_certificate
 
 end BuresWassersteinDatum
 
@@ -160,29 +145,6 @@ structure KMSHolonomyTransport
   preserves_domain :
     ∀ ρ : State, ρ ∈ Ω.carrier → transport ρ ∈ Ω.carrier
 
-  /--
-  KMS origin law.
-
-  This is where the analytic strip, modular flow, and thermal boundary
-  condition are installed.
-  -/
-  kms_origin_law : Prop
-
-  /-- Proof/certificate of the KMS origin law. -/
-  kms_origin_certificate :
-    kms_origin_law
-
-  /--
-  Wilson/holonomy origin law.
-
-  This is where a concrete connection/thermal cylinder holonomy model is
-  installed.
-  -/
-  holonomy_law : Prop
-
-  /-- Proof/certificate of the holonomy origin law. -/
-  holonomy_certificate :
-    holonomy_law
 
 namespace KMSHolonomyTransport
 
@@ -194,16 +156,6 @@ def transported
     (ρ : PositiveState Ω) : PositiveState Ω where
   val := H.transport ρ.val
   mem := H.preserves_domain ρ.val ρ.mem
-
-/-- The KMS origin law is available. -/
-theorem kms_origin_valid :
-    H.kms_origin_law :=
-  H.kms_origin_certificate
-
-/-- The holonomy origin law is available. -/
-theorem holonomy_valid :
-    H.holonomy_law :=
-  H.holonomy_certificate
 
 end KMSHolonomyTransport
 
@@ -319,19 +271,11 @@ structure BilingualKMSHolonomyCompatibility
   holonomy :
     KMSHolonomyTransport State Ω
 
-  /-- Bilingual/Stokes analytic law producing the holonomy. -/
-  bilingual_stokes_holonomy_law : Prop
+  /-- Bilingual/Stokes analytic origin of the holonomy transport. -/
+  bilingual_stokes_holonomy : Prop
 
-  /-- Proof/certificate of the bilingual/Stokes holonomy law. -/
-  bilingual_stokes_holonomy_certificate :
-    bilingual_stokes_holonomy_law
-
-  /-- Thermal-cylinder / KMS-strip interpretation law. -/
-  thermal_cylinder_law : Prop
-
-  /-- Proof/certificate of the thermal-cylinder law. -/
-  thermal_cylinder_certificate :
-    thermal_cylinder_law
+  /-- Thermal-cylinder / KMS-strip interpretation. -/
+  thermal_cylinder : Prop
 
 namespace BilingualKMSHolonomyCompatibility
 
@@ -342,16 +286,6 @@ variable
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
 variable (C : BilingualKMSHolonomyCompatibility State Region Point Tangent Value Ω I)
-
-/-- The bilingual/Stokes holonomy law is available. -/
-theorem bilingual_stokes_holonomy_valid :
-    C.bilingual_stokes_holonomy_law :=
-  C.bilingual_stokes_holonomy_certificate
-
-/-- The thermal-cylinder law is available. -/
-theorem thermal_cylinder_valid :
-    C.thermal_cylinder_law :=
-  C.thermal_cylinder_certificate
 
 end BilingualKMSHolonomyCompatibility
 

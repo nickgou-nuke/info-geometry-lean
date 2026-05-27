@@ -53,14 +53,12 @@ structure FiveGradedTwistorIncidencePacket where
 
   /-- Classical twistor incidence equation, stored as an explicit witness. -/
   incidenceEquation : Prop
-  incidenceEquation_holds : incidenceEquation
   incidenceEquation_eq :
     incidenceEquation ↔
       twistor.1 = InfoGeometry.Twistor.Incidence.pointAction point twistor.2
 
   /-- Majorana boundary reality condition, stored as an explicit witness. -/
   majoranaEquation : Prop
-  majoranaEquation_holds : majoranaEquation
   majoranaEquation_eq :
     majoranaEquation ↔ (phaseAxis twistor.1, phaseAxis twistor.2) = twistor
 
@@ -70,7 +68,6 @@ structure FiveGradedTwistorIncidencePacket where
 
   /-- Projection-selected boundary equation. -/
   boundaryProjection : Prop
-  boundaryProjection_holds : boundaryProjection
   boundaryProjection_eq :
     boundaryProjection ↔
       boundaryProjector twistor.1 = twistor.1 ∧ boundaryProjector twistor.2 = twistor.2
@@ -80,7 +77,6 @@ structure FiveGradedTwistorIncidencePacket where
 
   /-- Boundary zero-mode equation. -/
   boundaryZeroMode : Prop
-  boundaryZeroMode_holds : boundaryZeroMode
   boundaryZeroMode_eq :
     boundaryZeroMode ↔
       boundaryOperator twistor.1 = 0 ∧ boundaryOperator twistor.2 = 0

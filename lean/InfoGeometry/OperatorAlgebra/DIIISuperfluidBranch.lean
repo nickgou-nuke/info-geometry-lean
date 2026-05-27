@@ -238,8 +238,6 @@ structure DIIITopologicalInvariant
   /-- Optional mod-two invariant. -/
   modTwo : ZMod 2
 
-  /-- Certificate that this invariant is attached to the chosen DIII model. -/
-  invariant_certificate : Prop
 
 /--
 A DIII topological superfluid model is a DIII symmetry datum together with a

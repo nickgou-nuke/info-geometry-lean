@@ -88,20 +88,10 @@ structure CliffordDonohoStark (W : CliffordWaveletModel) where
   /-- The noncollapse law is part of the owner surface. -/
   noncollapse_law : Prop
 
-  /-- Explicit certificate for the noncollapse law. -/
-  noncollapse_certificate :
-    noncollapse_law
-
 namespace CliffordDonohoStarkOps
 
 variable {W : CliffordWaveletModel}
 variable (D : CliffordDonohoStark W)
-
-/-- Re-export of the stored noncollapse law. -/
-@[rep_depth operator]
-theorem noncollapse :
-    D.noncollapse_law :=
-  D.noncollapse_certificate
 
 /-- Re-export of the stored Donoho--Stark lower bound. -/
 @[rep_depth operator]

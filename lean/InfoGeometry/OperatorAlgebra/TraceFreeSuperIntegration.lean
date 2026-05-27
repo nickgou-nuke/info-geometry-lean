@@ -149,11 +149,6 @@ theorem superReadout_apply
     S.superReadout x = S.backendReadout (S.grading.chi * x) :=
   S.superReadout_eq x
 
-/-- The supplied graded cyclicity/KMS/cocycle law is available. -/
-theorem graded_cyclicity_or_kms_valid :
-    S.graded_cyclicity_or_kms_law :=
-  S.graded_cyclicity_or_kms_certificate
-
 end SuperIntegrationDatum
 
 /-! ## 4. Modular superweight backend -/
@@ -195,11 +190,6 @@ namespace ModularWeightBackend
 variable {A : Type*}
 variable (B : ModularWeightBackend A)
 
-/-- The supplied KMS/modular covariance law is available. -/
-theorem kms_valid :
-    B.kms_law :=
-  B.kms_certificate
-
 end ModularWeightBackend
 
 /--
@@ -233,11 +223,6 @@ namespace ModularSuperWeightDatum
 
 variable {A : Type*} [Ring A]
 variable (M : ModularSuperWeightDatum A)
-
-/-- The supplied modular super-KMS law is available. -/
-theorem modular_super_kms_valid :
-    M.modular_super_kms_law :=
-  M.modular_super_kms_certificate
 
 end ModularSuperWeightDatum
 
@@ -290,11 +275,6 @@ theorem superReadoutOfBase_apply
       C.coreReadout (C.coreGrading.chi * C.embed x) :=
   C.superReadoutOfBase_eq x
 
-/-- The supplied core law is available. -/
-theorem core_valid :
-    C.core_law :=
-  C.core_certificate
-
 end CoreSuperTraceDatum
 
 /-! ## 6. Renormalized supertrace backends -/
@@ -331,11 +311,6 @@ theorem superDixmierReadout_apply
     D.superDixmierReadout x = D.dixmierReadout (D.grading.chi * x) :=
   D.superDixmierReadout_eq x
 
-/-- The supplied logarithmic divergence law is available. -/
-theorem logarithmic_divergence_valid :
-    D.logarithmic_divergence_law :=
-  D.logarithmic_divergence_certificate
-
 end DixmierSuperTraceDatum
 
 /--
@@ -359,11 +334,6 @@ namespace ZetaSuperTraceDatum
 
 variable {A : Type*} [Ring A]
 variable (Z : ZetaSuperTraceDatum A)
-
-/-- The supplied zeta-super law is available. -/
-theorem zeta_super_valid :
-    Z.zeta_super_law :=
-  Z.zeta_super_certificate
 
 end ZetaSuperTraceDatum
 
@@ -396,11 +366,6 @@ theorem superCocycleReadout_apply
     (x : A) :
     C.superCocycleReadout x = C.cocycleReadout (C.grading.chi * x) :=
   C.superCocycleReadout_eq x
-
-/-- The supplied cyclic-cocycle law is available. -/
-theorem cyclic_cocycle_valid :
-    C.cyclic_cocycle_law :=
-  C.cyclic_cocycle_certificate
 
 end CyclicSuperCocycleDatum
 
@@ -446,16 +411,6 @@ namespace TypeIIISuperIntegrationDatum
 
 variable {M Core Scalar : Type*} [Ring M] [Ring Core]
 variable (T : TypeIIISuperIntegrationDatum M Core Scalar)
-
-/-- The supplied Type III law is available. -/
-theorem typeIII_valid :
-    T.typeIII_law :=
-  T.typeIII_certificate
-
-/-- The supplied no-bare-trace guardrail is available. -/
-theorem no_bare_trace_on_base_valid :
-    T.no_bare_trace_on_base_law :=
-  T.no_bare_trace_on_base_certificate
 
 end TypeIIISuperIntegrationDatum
 

@@ -86,11 +86,6 @@ theorem crossover_imbalance_anti_fixed :
     W.reflection_law
     W.newMetric_to_oldNull
 
-/-- The supplied crossover interpretation certificate is available. -/
-theorem crossover_interpretation_valid :
-    W.crossover_interpretation_law :=
-  W.crossover_interpretation_certificate
-
 end CosmicCrossoverWitness
 
 end InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover

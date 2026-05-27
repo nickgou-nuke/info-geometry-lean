@@ -84,9 +84,6 @@ structure DrivenOperatorFlow
   flow_add :
     ∀ s t x, flow (s + t) x = flow s (flow t x)
 
-  /-- Model certificate: this flow is the intended modular/chemical flow. -/
-  flow_certificate : Prop
-
 /--
 Shear produced by applying the flow to an observable before taking the
 commutator with the inertial generator.
@@ -217,9 +214,6 @@ structure ExtendedAnomalyHeightDatum
   height_relation :
     height * anomaly = capacity 1
 
-  /-- Branch certificate: finite positive, infinite boundary, or model-specific. -/
-  branch_certificate : Prop
-
 /-! ## 5. Anomaly as projective obstruction -/
 
 /--
@@ -233,9 +227,6 @@ structure ProtectedAnomalyDatum
     (State : Type*) where
   anomalyReadout : State → ℝ
   topologicalCharge : State → ℤ
-
-  charge_invariant_under_admissible_flow :
-    Prop
 
   anomaly_protected_by_charge :
     ∀ s : State,
@@ -295,12 +286,5 @@ structure ErlangerGRReconstructionWitness
   /-- Height/scale reconstructed from anomaly data. -/
   heightDatum :
     FiniteAnomalyHeightDatum Op
-
-  /--
-  Physical/model certificate: the reconstructed geometry satisfies the intended
-  Einstein/stress-balance relation.
-  -/
-  einstein_equilibrium_certificate :
-    Prop
 
 end InfoGeometry.Geometry.AnomalousErlangerHeight

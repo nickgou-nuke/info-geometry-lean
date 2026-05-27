@@ -20,9 +20,8 @@ The theorem-owned identities here are:
 * `Q_D = [P_D, Γ_G]`;
 * `{Γ_S, Q_D} = 0`.
 
-The physical square split `Q_D² = H_kin + Z` is kept witness-gated by
-`SuperchargeSquareSplit`.  This file does not assert that every certified
-kernel automatically carries a thermodynamic heat/memory split.
+This file does not assert that every certified kernel automatically carries a
+thermodynamic heat/memory split.
 -/
 
 open scoped InnerProductSpace
@@ -189,48 +188,6 @@ theorem regularKineticBlackBook_support_flow_package
   simpa [drazinSupportBlackBook, drazinDefectSupportBlackBook, regularKineticBlackBook] using
     DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian_support_flow_package
       (CIK := CIK) t
-
-/--
-Witness-gated square split for the physical heat/memory reading.
-
-Supplying this packet is what licenses the statement
-`Q_D² = H_kin + Z`.  The lane laws are deliberately fields, not inferred
-theorems.
--/
-@[rep_depth krein]
-structure SuperchargeSquareSplit where
-  Hkin : EndH
-  Z : EndH
-  square_split :
-    drazinSuperchargeBlackBook CIK * drazinSuperchargeBlackBook CIK = Hkin + Z
-  heat_lane_law : Prop
-  heat_lane_certificate : heat_lane_law
-  defect_lane_law : Prop
-  defect_lane_certificate : defect_lane_law
-
-namespace SuperchargeSquareSplit
-
-variable (S : SuperchargeSquareSplit CIK)
-
-/-- Readback of the supplied square split `Q_D² = H_kin + Z`. -/
-@[rep_depth krein]
-theorem square_split_law :
-    drazinSuperchargeBlackBook CIK * drazinSuperchargeBlackBook CIK = S.Hkin + S.Z :=
-  S.square_split
-
-/-- Readback of the supplied heat-lane law. -/
-@[rep_depth krein]
-theorem heat_lane :
-    S.heat_lane_law :=
-  S.heat_lane_certificate
-
-/-- Readback of the supplied defect-lane law. -/
-@[rep_depth krein]
-theorem defect_lane :
-    S.defect_lane_law :=
-  S.defect_lane_certificate
-
-end SuperchargeSquareSplit
 
 end CertifiedInverseKernel
 

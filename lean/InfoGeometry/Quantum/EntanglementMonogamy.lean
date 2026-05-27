@@ -77,11 +77,6 @@ theorem state_maxEntangled :
     E.MaxEntangled E.state :=
   E.max_entangled
 
-/-- The readout calibration certificate is available explicitly. -/
-theorem correlation_valid :
-    E.correlation_calibration :=
-  E.correlation_certificate
-
 end EntanglementDatum
 
 /-! ## 1A. Explicit observable correlation witnesses -/

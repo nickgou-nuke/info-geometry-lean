@@ -127,7 +127,6 @@ structure StinespringDilation
 
   /-- Certificate that this dilation is the intended Stinespring/Tomita model. -/
   dilation_law : Prop
-  dilation_certificate : dilation_law
 
 namespace StinespringDilation
 
@@ -303,8 +302,6 @@ structure HeatHiddenInformationBridge
 
   /-- Calibration law explaining why this readout is thermodynamic heat. -/
   thermodynamic_calibration_law : Prop
-  thermodynamic_calibration :
-    thermodynamic_calibration_law
 
 namespace HeatHiddenInformationBridge
 
@@ -370,8 +367,6 @@ structure MetalMirrorStinespringModel
 
   /-- Optical calibration: this open-system channel is a metal mirror. -/
   metal_mirror_law : Prop
-  metal_mirror_certificate :
-    metal_mirror_law
 
 namespace MetalMirrorStinespringModel
 
@@ -469,19 +464,11 @@ structure StinespringTomitaDilation
   -/
   tomita_commutant_routing_law : Prop
 
-  /-- Evidence for the Tomita commutant/environment routing law. -/
-  tomita_commutant_routing :
-    tomita_commutant_routing_law
-
   /--
   Law saying that the hidden sector is inaccessible to the chosen visible
   observer.
   -/
   hidden_inaccessible_to_visible_observer_law : Prop
-
-  /-- Evidence that the hidden sector is inaccessible to the visible observer. -/
-  hidden_inaccessible_to_visible_observer :
-    hidden_inaccessible_to_visible_observer_law
 
 namespace StinespringTomitaDilation
 

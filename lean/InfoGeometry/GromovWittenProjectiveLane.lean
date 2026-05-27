@@ -28,9 +28,6 @@ structure ProjectiveBundlePacket where
   hyperplaneClass : Type*
   chernData : Type*
 
-def ProjectiveBundlePacketTarget (_P : ProjectiveBundlePacket) : Prop :=
-  True
-
 /--
 Lightweight packet for Gromov–Witten virtual localization data.
 
@@ -46,9 +43,6 @@ structure GWVirtualLocalizationPacket where
   EulerDenominator : Type*
   localizedContribution : Type*
 
-def GWVirtualLocalizationPacketTarget (_P : GWVirtualLocalizationPacket) : Prop :=
-  True
-
 /--
 Lightweight packet for operator-algebraic quantum-metric side data.
 
@@ -60,9 +54,6 @@ structure QuantumMetricOperatorPacket where
   StateSpace : Type*
   quantumDistance : Type*
   convergenceWitness : Type*
-
-def QuantumMetricOperatorPacketTarget (_P : QuantumMetricOperatorPacket) : Prop :=
-  True
 
 /--
 Correspondence from the full Erlangen/Langlands lane packet to projective-bundle data.
@@ -196,7 +187,7 @@ def ErlangenLanglandsGromovLaneTarget
   ∃ _GM : GWMetricCorrespondence _GW _Metric,
   ∃ _LM : LanglandsMetricCorrespondence
     (E := E) (D := D) (Z := Z) (W := W) (P := P)
-    (Full := _Full) _Metric, True
+    (Full := _Full) _Metric, Nonempty _LM.relation
 
 /--
 Correspondence-safe constructor from explicit correspondences.
@@ -240,7 +231,7 @@ theorem constructErlangenLanglandsGromovLaneTarget
     ErlangenLanglandsGromovLaneTarget
       D Z W P Full _Bundle _GW _Metric S Wr Tr G _K :=
 by
-  exact ⟨_LP, _PG, _GM, _LM, trivial⟩
+  exact ⟨_LP, _PG, _GM, _LM, ⟨_LM.witness⟩⟩
 
 /--
 Packet constructor: supply a full correspondence packet, obtain the integrated target.

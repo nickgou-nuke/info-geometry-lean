@@ -2240,6 +2240,28 @@ theorem selfResponse_nonneg_of_squareResponse
     W.selfResponse_nonneg_of_squareWitness weylGauge tkkParameter hTKK hCone X Y
       { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }
 
+/--
+The conformal self-response is nonnegative on the Cartan-odd constructive
+branch, using proof-carrying TKK and cone witnesses instead of bare
+`tkkParameter`/`hTKK` and `hCone` inputs while still accepting the direct
+square-response equality surface.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareResponse_of_TKKConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).selfResponse_nonneg
+
 -- theorem-class: bridge
 /--
 Diagonal conformal Fisher/Onsager production is nonnegative on the Cartan-odd

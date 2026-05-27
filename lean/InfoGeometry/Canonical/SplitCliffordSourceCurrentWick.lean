@@ -2452,7 +2452,7 @@ theorem virasoro_rep_on_fock_central_commutator_orders_eq
 /--
 Normalized closure readout: the represented central/L-mode commutator vanishes.
 -/
-theorem virasoro_rep_on_fock_lgen_cgen_commutator_eq_zero_iff
+theorem virasoro_rep_on_fock_lgen_cgen_commutator_eq_zero
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
     ((externalInfiniteJ_currentHeisenbergRep (𝕜 := 𝕜) α).currentSugawaraRepresentation
       (VirasoroProject.VirasoroAlgebra.lgen 𝕜 n)).commutator
@@ -2461,13 +2461,8 @@ theorem virasoro_rep_on_fock_lgen_cgen_commutator_eq_zero_iff
       =
     (0 :
       VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜]
-        VirasoroProject.ChargedFockSpace 𝕜 α)
-      ↔ True := by
-  constructor
-  · intro _
-    trivial
-  · intro _
-    exact virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n
+        VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  virasoro_rep_on_fock_lgen_cgen_commutator_zero (𝕜 := 𝕜) α n
 
 /--
 Equivalent zero-conditions for the two represented central commutator orders.

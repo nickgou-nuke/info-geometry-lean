@@ -175,9 +175,9 @@ end MinimalHestenesAnalyticKMSWitness
 /--
 Constructive witness surface for the Hestenes-analytic KMS corridor.
 
-This narrows the explicit `kms : KMSState ...` packet to the exact ingredients
-used in this file: the underlying state, while preserving the flow-covariance
-owner data.
+This keeps the operator-flow covariance data while removing duplicate KMS
+proof packets from the witness surface.  Boundary and real-time invariance
+facts are read back from the owned `KMSState` certificate.
 -/
 structure HestenesAnalyticKMSWitness where
   /-- Operator flow, e.g. a modular flow, on doubled real observables. -/
@@ -207,21 +207,13 @@ structure HestenesAnalyticKMSWitness where
   /-- Inverse temperature / period parameter for the existing KMS socket. -/
   beta : ℝ
 
-  /-- Underlying KMS certificate for the narrowed witness route. -/
+  /-- Underlying KMS certificate for the narrowed witness route.
+
+  This is the only KMS proof payload on the narrowed route: real-time
+  invariance and the boundary condition are read back from this owner
+  certificate, not duplicated as independent witness fields. -/
   kms :
     KMSState EndH flow beta
-
-  /-- Real-time invariance of the state under the flow. -/
-  flow_invariant :
-    ∀ t x, kms.state.eval (flow.flow t x) = kms.state.eval x
-
-  /-- KMS analytic boundary certificate. -/
-  kms_boundary_condition :
-    Prop
-
-  /-- Evidence for the KMS analytic boundary certificate. -/
-  kms_boundary_condition_holds :
-    kms_boundary_condition
 
 namespace HestenesAnalyticKMSWitness
 
@@ -236,15 +228,28 @@ def toBridge : HestenesAnalyticKMSBridge (E := E) where
   phase_right_covariant := W.phase_right_covariant
   beta := W.beta
   kms := W.kms
-  flow_invariant := W.flow_invariant
-  kms_boundary_condition := W.kms_boundary_condition
-  kms_boundary_condition_holds := W.kms_boundary_condition_holds
+  flow_invariant := W.kms.flow_invariant
+  kms_boundary_condition := W.kms.kms_boundary_condition
+  kms_boundary_condition_holds := W.kms.kms_boundary_condition_holds
 
 /-- The compatibility adapter reads back the same underlying state definitionally. -/
 @[rep_depth krein]
 theorem toBridge_state_eq :
     W.toBridge.kms.state = W.kms.state :=
   rfl
+
+/-- The narrowed witness recovers real-time invariance from its owned `KMSState`. -/
+@[rep_depth krein]
+theorem toBridge_flow_invariant
+    (t : ℝ) (x : EndH) :
+    W.toBridge.kms.state.eval (W.toBridge.flow.flow t x) = W.toBridge.kms.state.eval x :=
+  W.kms.flow_invariant t x
+
+/-- The narrowed witness recovers the KMS boundary condition from its owned `KMSState`. -/
+@[rep_depth krein]
+theorem toBridge_kms_boundary_condition :
+    W.toBridge.kms_boundary_condition :=
+  W.kms.kms_boundary_condition_holds
 
 /--
 Route the legacy broad KMS bridge through a narrowed witness packet.
@@ -258,8 +263,7 @@ end HestenesAnalyticKMSWitness
 
 /-- Turn a legacy bridge into a narrowed witness structure by extracting the
 underlying `KMSState` fields definitionally. This removes the explicit
-`kms : KMSState ...` packet from the exposed surface on the witness route while
-preserving the same owner data. -/
+preserving the same owner data and without copying the KMS proof fields. -/
 @[simp]
 def HestenesAnalyticKMSBridge.fromBridge
     (B : HestenesAnalyticKMSBridge (E := E)) :
@@ -270,9 +274,6 @@ def HestenesAnalyticKMSBridge.fromBridge
   phase_right_covariant := B.phase_right_covariant
   beta := B.beta
   kms := B.kms
-  flow_invariant := B.flow_invariant
-  kms_boundary_condition := B.kms_boundary_condition
-  kms_boundary_condition_holds := B.kms_boundary_condition_holds
 
 /-- The bridge-to-witness conversion reads back the same state definitionally. -/
 @[simp]

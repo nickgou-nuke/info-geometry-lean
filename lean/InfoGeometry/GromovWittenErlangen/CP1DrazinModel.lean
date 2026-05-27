@@ -3,9 +3,9 @@ import InfoGeometry.GromovWittenErlangen.DrazinLocalization
 /-!
 # Minimal CP1-style Drazin localization model
 
-This file instantiates the Drazin/GW localization bridge on the smallest
-two-fixed-point, one-edge localization graph.  It is a smoke model for the
-interface, not a proof of Atiyah-Bott localization for `CP^1`.
+This file records the concrete two-fixed-point, one-edge localization graph and
+the regular Drazin decomposition of its unit edge denominator. It is not a proof
+of Atiyah-Bott localization for `CP^1`.
 -/
 
 noncomputable section
@@ -102,9 +102,10 @@ def regularProjections : SelfAdjointIdempotentPair Algebra where
   support_residue_zero := by norm_num
   residue_support_zero := by norm_num
   support_add_residue := by norm_num
-  selfAdjointLaw := (1 : ℤ) * 0 = 0 ∧ (0 : ℤ) * 1 = 0
-  selfAdjointCertificate := by
-    constructor <;> norm_num
+  support_selfAdjoint := by
+    norm_num
+  residue_selfAdjoint := by
+    norm_num
 
 /-- The regular edge denominator `1` has Drazin inverse `1` and zero residue. -/
 def regularEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
@@ -114,44 +115,18 @@ def regularEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
   coreInv := 1
   nilpotentPart := 0
   element_eq_regular_add_nilpotent := by norm_num
-  regular_supported_left := by rfl
-  regular_supported_right := by rfl
+  regular_supported_left := by norm_num [regularProjections]
+  regular_supported_right := by norm_num [regularProjections]
   nilpotent_residue_supported_left := by norm_num
   nilpotent_residue_supported_right := by norm_num
-  coreInv_supported_left := by rfl
-  coreInv_supported_right := by rfl
-  regular_mul_coreInv := by rfl
-  coreInv_mul_regular := by rfl
+  coreInv_supported_left := by norm_num [regularProjections]
+  coreInv_supported_right := by norm_num [regularProjections]
+  regular_mul_coreInv := by norm_num [regularProjections]
+  coreInv_mul_regular := by norm_num [regularProjections]
   nilpotent_mul_coreInv := by norm_num
   coreInv_mul_nilpotent := by norm_num
-  nilpotentResidueLaw := (0 : ℤ) * 0 = 0
-  nilpotentResidueCertificate := by
-    norm_num
-
-/-- Drazin localization packet for the minimal graph. -/
-def drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra where
-  virtualLocalization := virtualLocalization
-  edgeEulerWeight := fun _ => 1
-  edgeDrazin := fun _ => regularEdgeDrazin
-  edgeDrazin_element_eq := by
-    intro e
-    cases e
-    rfl
-  vertexAlgebraContribution := fun _ => 1
-  edgeAlgebraContribution := fun _ => 1
-  localizationValue := 1
-  localizationAssemblyLaw := (1 : ℤ) = 1
-  localizationAssemblyCertificate := rfl
-
-/-- Minimal divisor packet: one divisor class with unit line degree. -/
-def divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff where
-  virtualLocalization := virtualLocalization
-  DivisorClass := Unit
-  divisorDegreeWeight := fun _ _ => 1
-  divisorInsertionLaw := ∀ _ : Edge, (1 : ℝ) = 1
-  divisorInsertionCertificate := by
-    intro _
-    rfl
+  nilpotent_isNilpotent := by
+    exact IsNilpotent.zero
 
 /-- Trivial Frobenius self-duality packet over the integer coefficient algebra. -/
 def frobenius : FrobeniusSelfDualPacket Algebra where
@@ -159,66 +134,21 @@ def frobenius : FrobeniusSelfDualPacket Algebra where
   pairing_mul_left_eq_pairing_mul_right := by
     intro a b c
     norm_num [mul_assoc]
-  nondegeneracyLaw := (1 : ℤ) * 1 = 1
-  nondegeneracyCertificate := by norm_num
-
-/-- Trivial residue block packet for the regular one-edge model. -/
-def residueBlocks : DivisionResidueBlockPacket where
-  Block := Unit
-  DivisionCarrier := fun _ => Unit
-  residueProjection := fun _ => Unit
-  simpleResidueLaw := Nonempty Unit
-  simpleResidueCertificate := ⟨()⟩
-
-/-- Minimal semisimple/Frobenius packet. -/
-def frobeniusSemisimple : LocalizedFrobeniusSemisimplePacket Algebra where
-  frobenius := frobenius
-  residueBlocks := residueBlocks
-  semisimplicityLaw := Nonempty Unit
-  semisimplicityCertificate := ⟨()⟩
-
-/-- Integrated Drazin/GW localization bridge for the minimal graph. -/
-def bridge : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra where
-  drazinLocalization := drazinLocalization
-  divisorAxiom := divisorAxiom
-  frobeniusSemisimple := frobeniusSemisimple
-  divisorDrazinCompatibilityLaw := ∀ _ : Edge, (1 : ℤ) = 1
-  divisorDrazinCompatibilityCertificate := by
-    intro _
-    rfl
+  nondegenerate := by
+    intro a h
+    have h1 : ((a * 1 : ℤ) : ℝ) = 0 := h 1
+    norm_num at h1
+    exact_mod_cast h1
 
 /-- The unique edge carries the regular Drazin denominator `1`. -/
 theorem edgeDrazinData_element_line :
-    (bridge.edgeDrazinData Edge.line).element = 1 :=
-  bridge.drazinLocalization.edgeDrazinData_element_eq_weight Edge.line
+    regularEdgeDrazin.element = 1 :=
+  rfl
 
 /-- The unique edge has zero localized Drazin residue. -/
 theorem edgeLocalizedDrazinResidue_line :
-    bridge.edgeLocalizedDrazinResidue Edge.line = 0 :=
+    regularEdgeDrazin.localizedDrazinResidue = 0 :=
   rfl
-
-/-- Calibrated entropy packet: clean volume `1`, entropy `log 1`. -/
-def entropyCalibration : GWDrazinEntropyCalibration bridge where
-  gwVolume := 1
-  cleanDrazinVolume := 1
-  entropyReadout := Real.log 1
-  edgeRegularVolume := fun _ => 1
-  edgeResidueVolume := fun _ => 0
-  entropy_eq_log_cleanDrazinVolume := rfl
-  cleanDrazinVolume_eq_gwVolume := rfl
-  residueAccountingLaw := Real.log (1 : ℝ) = Real.log 1 ∧ (1 : ℝ) = 1
-  residueAccountingCertificate := by
-    constructor <;> rfl
-
-/-- The minimal model entropy is the logarithm of its calibrated GW volume. -/
-theorem entropy_eq_log_gw_volume :
-    entropyCalibration.entropyReadout = Real.log entropyCalibration.gwVolume :=
-  entropyCalibration.entropy_eq_log_gw_volume
-
-/-- The calibrated GW volume is the exponential of the entropy readout. -/
-theorem log_gw_volume_eq_entropy :
-    Real.log entropyCalibration.gwVolume = entropyCalibration.entropyReadout := by
-  simpa [eq_comm] using entropy_eq_log_gw_volume.symm
 
 end CP1DrazinModel
 end GromovWittenErlangen

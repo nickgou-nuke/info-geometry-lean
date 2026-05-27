@@ -28,12 +28,6 @@ structure ProjectivePolarizationState
   /-- Idempotence of the representative. -/
   idem : IsProjector P
 
-  /-- Normalization certificate. -/
-  normalization_law : Prop
-
-  /-- Proof of the normalization certificate. -/
-  normalized : normalization_law
-
 /--
 A Jones transport takes one projective state to another.
 -/
@@ -92,13 +86,6 @@ structure JonesTransportMetricDatum
       JonesTransportRealizes J A B →
         distance A B ≤ cost J
 
-  /--
-  Minimal-cost reconstruction certificate.
-
-  A concrete implementation may state this as an infimum over all admissible
-  Jones paths, or as the Fubini-Study/Poincare formula in a coordinate bridge.
-  -/
-  distance_is_minimal_transport_cost : Prop
 
 namespace JonesTransportMetricDatum
 

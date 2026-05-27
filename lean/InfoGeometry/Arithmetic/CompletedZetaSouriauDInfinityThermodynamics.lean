@@ -306,13 +306,19 @@ structure FisherSouriauMetricPacket where
   momentMap : ℂ → ℂ
   fisherMetric : ℂ → ℂ
 
-  /-- `g = ∂²Φ`, equivalently the derivative of the moment map, in the model. -/
-  fisher_metric_law : Prop
-  fisher_metric_certificate : fisher_metric_law
+  /-- The moment map is the derivative of the potential. -/
+  moment_variation_law : ∀ s, momentMap s = deriv potential s
 
-  /-- Singularities/double-pole behavior at completed-zeta zeros, if modeled. -/
-  zero_singularity_law : Prop
-  zero_singularity_certificate : zero_singularity_law
+  /-- The Fisher metric is the derivative of the moment map. -/
+  fisher_metric_law : ∀ s, fisherMetric s = deriv momentMap s
+
+  /--
+  The Fisher metric exhibits singularities at potential poles.
+  Replacing the former vacuous Prop field.
+  -/
+  zero_singularity_law :
+    ∀ (s₀ : ℂ), Filter.Tendsto (fun s => Complex.abs (potential s)) (nhdsWithin s₀ {s₀}ᶜ) atTop →
+      Filter.Tendsto (fun s => Complex.abs (fisherMetric s)) (nhdsWithin s₀ {s₀}ᶜ) atTop
 
 namespace FisherSouriauMetricPacket
 
@@ -320,13 +326,22 @@ variable (F : FisherSouriauMetricPacket)
 
 /-- Re-export of the supplied Fisher/Souriau metric law. -/
 @[rep_depth thermo]
-theorem metric_law : F.fisher_metric_law :=
-  F.fisher_metric_certificate
+theorem metric_law (s : ℂ) : F.fisherMetric s = deriv F.momentMap s :=
+  F.fisher_metric_law s
+
+/-- The moment map is indeed the variation of the potential. -/
+@[rep_depth thermo]
+theorem moment_variation (s : ℂ) : F.momentMap s = deriv F.potential s :=
+  F.moment_variation_law s
+
 
 /-- Re-export of the supplied zero-singularity law. -/
 @[rep_depth thermo]
-theorem zero_singularity : F.zero_singularity_law :=
-  F.zero_singularity_certificate
+theorem zero_singularity
+    (s₀ : ℂ)
+    (h_pole : Filter.Tendsto (fun s => Complex.abs (F.potential s)) (nhdsWithin s₀ {s₀}ᶜ) atTop) :
+    Filter.Tendsto (fun s => Complex.abs (F.fisherMetric s)) (nhdsWithin s₀ {s₀}ᶜ) atTop :=
+  F.zero_singularity_law s₀ h_pole
 
 end FisherSouriauMetricPacket
 
@@ -344,8 +359,10 @@ structure SouriauSymplecticCocyclePacket
   momentMap : ℂ → ℂ
   cocycle : G → ℂ → ℂ
 
-  equivariance_defect_law : Prop
-  equivariance_defect_certificate : equivariance_defect_law
+  /-- The cocycle is the defect in moment-map equivariance. -/
+  equivariance_defect_law :
+    ∀ (g : G) (s : ℂ),
+      momentMap (actOnBeta g s) = momentMap s + cocycle g s
 
   cocycle_vanishes_on_criticalLine :
     ∀ (g : G) (s : ℂ), CriticalLine s → cocycle g s = 0
@@ -357,8 +374,9 @@ variable (C : SouriauSymplecticCocyclePacket G)
 
 /-- Re-export of the supplied equivariance-defect law. -/
 @[rep_depth thermo]
-theorem equivariance_defect : C.equivariance_defect_law :=
-  C.equivariance_defect_certificate
+theorem equivariance_defect (g : G) (s : ℂ) :
+    C.momentMap (C.actOnBeta g s) = C.momentMap s + C.cocycle g s :=
+  C.equivariance_defect_law g s
 
 /-- The supplied cocycle vanishes on the critical line. -/
 @[rep_depth thermo]
@@ -408,9 +426,9 @@ structure DInfinitySouriauThermodynamics
   reflection₀_sq : reflection₀ * reflection₀ = 1
   reflection₁_sq : reflection₁ * reflection₁ = 1
 
-  /-- Product of the two reflections has infinite order / no extra relation. -/
-  product_infinite_order_law : Prop
-  product_infinite_order_certificate : product_infinite_order_law
+  /-- Product of the two reflections has infinite order. -/
+  product_infinite_order_law :
+    ∀ (n : ℕ), n > 0 → (reflection₀ * reflection₁) ^ n ≠ 1
 
   actOnBeta : G → ℂ → ℂ
   one_act :
@@ -435,10 +453,11 @@ namespace DInfinitySouriauThermodynamics
 variable {G : Type*} [Group G]
 variable (D : DInfinitySouriauThermodynamics G)
 
-/-- Re-export of the abstract `D_∞` product-order witness. -/
+/-- Re-export of the infinite order law. -/
 @[rep_depth thermo]
-theorem product_infinite_order : D.product_infinite_order_law :=
-  D.product_infinite_order_certificate
+theorem product_infinite_order (n : ℕ) (hn : n > 0) :
+    (D.reflection₀ * D.reflection₁) ^ n ≠ 1 :=
+  D.product_infinite_order_law n hn
 
 /-- Re-export of the group action composition law. -/
 @[rep_depth thermo]
@@ -480,8 +499,13 @@ structure BostConnesArchimedeanCompletionSocket where
       completedPartition s =
         rawPrimePartition s * archimedeanHeatBath s
 
-  raw_phase_transition_law : Prop
-  raw_phase_transition_certificate : raw_phase_transition_law
+  /--
+  The raw partition function has a pole at `s = 1`.
+  Replacing the former vacuous Prop field.
+  -/
+  raw_partition_pole_at_one_law :
+    ∀ (M : ℝ), ∃ (δ : ℝ), δ > 0 ∧
+      ∀ (s : ℂ), s ≠ 1 ∧ Complex.abs (s - 1) < δ → M < Complex.abs (rawPrimePartition s)
 
   completed_duality_law :
     ∀ s : ℂ, completedPartition s = completedPartition (functionalReflection s)
@@ -504,10 +528,12 @@ theorem completed_duality (s : ℂ) :
       B.completedPartition (functionalReflection s) :=
   B.completed_duality_law s
 
-/-- Re-export of the supplied raw phase-transition law. -/
+/-- Re-export of the raw-partition pole law. -/
 @[rep_depth thermo]
-theorem raw_phase_transition : B.raw_phase_transition_law :=
-  B.raw_phase_transition_certificate
+theorem raw_partition_pole_at_one (M : ℝ) :
+    ∃ (δ : ℝ), δ > 0 ∧
+      ∀ (s : ℂ), s ≠ 1 ∧ Complex.abs (s - 1) < δ → M < Complex.abs (B.rawPrimePartition s) :=
+  B.raw_partition_pole_at_one_law M
 
 end BostConnesArchimedeanCompletionSocket
 

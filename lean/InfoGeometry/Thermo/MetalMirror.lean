@@ -71,19 +71,11 @@ structure MetalMirrorChannel
       U ∈ regularPositiveConeOmegaD c →
         idealFlow U ∈ regularPositiveConeOmegaD c
 
-  /-- Law that the actual reflected branch is the physical dissipative reduced channel. -/
-  actual_dissipative_branch_law : Prop
+  /-- Actual reflected branch is the physical dissipative reduced channel. -/
+  actual_dissipative_branch : Prop
 
-  /-- Certificate that the actual reflected branch is dissipative/reduced. -/
-  actual_dissipative_branch_certificate :
-    actual_dissipative_branch_law
-
-  /-- Law that the ideal branch is the lossless/unitary comparison branch. -/
-  ideal_lossless_branch_law : Prop
-
-  /-- Certificate that the ideal branch is lossless/unitary. -/
-  ideal_lossless_branch_certificate :
-    ideal_lossless_branch_law
+  /-- Ideal branch is the lossless/unitary comparison branch. -/
+  ideal_lossless_branch : Prop
 
 namespace MetalMirrorChannel
 
@@ -144,17 +136,11 @@ structure StinespringTomitaMirrorDilation
     ∀ U : OperatorEnd E,
       M.idealFlow U = M.actualFlow U + mirror (leakFlow U)
 
-  /-- Law that the mirror is the intended Tomita/CPT routing. -/
-  tomita_mirror_law : Prop
+  /-- Mirror is the intended Tomita/CPT routing. -/
+  tomita_mirror : Prop
 
-  /-- Evidence that the mirror is the intended Tomita/CPT routing. -/
-  tomita_mirror_certificate : tomita_mirror_law
-
-  /-- Law that the total dilated evolution is information-conserving. -/
-  dilation_conservation_law : Prop
-
-  /-- Evidence that the total dilated evolution is information-conserving. -/
-  dilation_conservation_certificate : dilation_conservation_law
+  /-- Total dilated evolution is information-conserving. -/
+  dilation_conservation : Prop
 
 namespace StinespringTomitaMirrorDilation
 
@@ -290,13 +276,8 @@ structure MetalMirrorRicciFluxBridge
       macroscopicHeatLoss M ω gradPhi U =
         R.flux (sourceLeft U) (sourceRight U)
 
-  /--
-  Certificate that the heat/Ricci-flux identification is compatible with the
-  supplied Bregman second-variation bridge.
-  -/
-  bregman_bridge_compatibility_law : Prop
-  bregman_bridge_compatibility_certificate :
-    bregman_bridge_compatibility_law
+  /-- Heat/Ricci-flux identification is compatible with the supplied bridge. -/
+  bregman_bridge_compatibility : Prop
 
 namespace MetalMirrorRicciFluxBridge
 
@@ -442,19 +423,11 @@ structure MetalMirrorChannel
       U ∈ Ω.cone →
         idealUnitary U ∈ Ω.cone
 
-  /-- Physical law: the actual branch is dissipative/reduced. -/
-  actual_dissipative_branch_law : Prop
+  /-- Physical branch property: actual branch is dissipative/reduced. -/
+  actual_dissipative_branch : Prop
 
-  /-- Evidence that the actual branch is dissipative/reduced. -/
-  actual_dissipative_branch_certificate :
-    actual_dissipative_branch_law
-
-  /-- Physical law: the ideal branch is lossless/reference. -/
-  ideal_lossless_branch_law : Prop
-
-  /-- Evidence that the ideal branch is lossless/reference. -/
-  ideal_lossless_branch_certificate :
-    ideal_lossless_branch_law
+  /-- Physical branch property: ideal branch is lossless/reference. -/
+  ideal_lossless_branch : Prop
 
 namespace MetalMirrorChannel
 
@@ -602,17 +575,11 @@ structure MetalMirrorHeatRicciFluxBridge
     ∀ U : RegularConePoint Ω,
       macroscopicHeatLoss B M U = R.flux U.op
 
-  /-- Law identifying the Ricci readout with TKK grade slippage. -/
-  tkk_grade_slippage_law : Prop
+  /-- Ricci readout is identified with TKK grade slippage. -/
+  tkk_grade_slippage : Prop
 
-  /-- Evidence for the TKK grade-slippage law. -/
-  tkk_grade_slippage_certificate : tkk_grade_slippage_law
-
-  /-- Law identifying the Bregman Hessian with the selected flux readout. -/
-  bregman_hessian_law : Prop
-
-  /-- Evidence for the Bregman Hessian law. -/
-  bregman_hessian_certificate : bregman_hessian_law
+  /-- Bregman Hessian is identified with the selected flux readout. -/
+  bregman_hessian : Prop
 
 namespace MetalMirrorHeatRicciFluxBridge
 
@@ -647,18 +614,10 @@ structure MetalMirrorOpticalCalibration
   ellipticity : Op → ℝ
   refractiveIndexReadout : Op → ℂ
 
-  heat_controls_absorption_law : Prop
-  heat_controls_absorption_certificate : heat_controls_absorption_law
-
-  hessian_controls_retardance_law : Prop
-  hessian_controls_retardance_certificate : hessian_controls_retardance_law
-
-  retardance_controls_ellipticity_law : Prop
-  retardance_controls_ellipticity_certificate :
-    retardance_controls_ellipticity_law
-
-  refractive_index_calibration_law : Prop
-  refractive_index_calibration_certificate : refractive_index_calibration_law
+  heat_controls_absorption : Prop
+  hessian_controls_retardance : Prop
+  retardance_controls_ellipticity : Prop
+  refractive_index_calibration : Prop
 
 /-! ### Admissibility package -/
 
@@ -706,11 +665,8 @@ structure MetalMirrorRicciFluxAdmissible
     ∀ U : RegularConePoint readout.Ω,
       readout.heatFlux U = ricciFlux U.op
 
-  tkk_grade_slippage_law : Prop
-  tkk_grade_slippage_certificate : tkk_grade_slippage_law
-
-  bregman_hessian_law : Prop
-  bregman_hessian_certificate : bregman_hessian_law
+  tkk_grade_slippage : Prop
+  bregman_hessian : Prop
 
 /-- A calibrated Ricci-flux bridge exists from admissible data. -/
 theorem metalMirrorRicciFluxBridge_nonempty_of_admissible
@@ -722,10 +678,8 @@ theorem metalMirrorRicciFluxBridge_nonempty_of_admissible
           { flux := h.ricciFlux }) := by
   refine ⟨{
     heat_eq_flux := ?_
-    tkk_grade_slippage_law := h.tkk_grade_slippage_law
-    tkk_grade_slippage_certificate := h.tkk_grade_slippage_certificate
-    bregman_hessian_law := h.bregman_hessian_law
-    bregman_hessian_certificate := h.bregman_hessian_certificate
+    tkk_grade_slippage := h.tkk_grade_slippage
+    bregman_hessian := h.bregman_hessian
   }⟩
   intro U
   change macroscopicHeatLoss h.readout.bregman h.readout.channel U =

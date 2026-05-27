@@ -75,12 +75,13 @@ theorem drazin_readout_eq_mellin_realPart :
 /-- The shared scalar readout lies on the critical line whenever the Majorana
 packet is normalizable. -/
 @[rep_depth operator]
-theorem scalarReadout_on_criticalLine :
+theorem scalarReadout_on_criticalLine
+    (hNormalizable : B.majorana.normalizable_law) :
     InfoGeometry.Arithmetic.RHQuantumStabilityBridge.IsCriticalLineRealPart
       B.scalarReadout := by
   simpa [B.majorana_readout] using
     InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaZeroModeNormalizabilityPacket.criticalLine_of_normalizable
-      B.majorana
+      B.majorana hNormalizable
 
 end DrazinMajoranaMellinCalibration
 

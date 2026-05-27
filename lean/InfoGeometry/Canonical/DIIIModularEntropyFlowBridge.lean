@@ -49,10 +49,6 @@ structure ModularDrazinEntropyFlow
   /-- Model-specific entropy transport law. -/
   entropyTransportLaw : Prop
 
-  /-- Certificate for the entropy transport law. -/
-  entropyTransport_valid :
-    entropyTransportLaw
-
   /-- Nonnegative entropy is preserved along valid flow lines. -/
   entropy_nonneg_preserved :
     ∀ t s,
@@ -72,11 +68,6 @@ theorem valid_along
     (hs : F.readout.valid s) :
     F.readout.valid (M.flow t s) :=
   M.valid_preserved t s hs
-
-/-- The supplied entropy transport law is available. -/
-theorem entropyTransport_holds :
-    M.entropyTransportLaw :=
-  M.entropyTransport_valid
 
 /-- Nonnegative entropy is preserved along valid flow lines. -/
 theorem entropy_nonneg_along

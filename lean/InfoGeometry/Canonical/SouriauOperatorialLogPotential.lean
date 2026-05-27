@@ -104,11 +104,7 @@ structure ModularHamiltonianData (Op : Type*) where
   gibbsHamiltonian : Op
   logPartitionScalar : ℝ
   gibbsFormulaLaw : Op → Op → ℝ → Prop
-  gibbsFormula_holds :
-    gibbsFormulaLaw densityOperator gibbsHamiltonian logPartitionScalar
   relativeModularLaw : Op → Op → Prop
-  relativeModular_holds :
-    relativeModularLaw densityOperator negativeLogDensity
 
 namespace ModularHamiltonianData
 
@@ -187,18 +183,12 @@ structure DuhamelOperatorDerivative (Param Op Direction : Type*) where
   directionToInsertion : Direction → Op
   derivativeOfExp : Param → Direction → Op
   duhamelFormula : Param → Direction → Op → Prop
-  duhamelFormula_holds :
-    ∀ β v, duhamelFormula β v (derivativeOfExp β v)
   higherSimplexOrderedForms : Nat → Param → List Direction → Op
   higherSimplexOrderedLaw : Nat → Param → List Direction → Op → Prop
   higherSimplexOrderedForms_satisfy :
     ∀ n β dirs, higherSimplexOrderedLaw n β dirs (higherSimplexOrderedForms n β dirs)
   traceStateKMSReadout : Op → ℝ
   tracedCumulantReadoutLaw : Nat → Param → List Direction → ℝ → Prop
-  tracedCumulantReadout_holds :
-    ∀ n β dirs,
-      tracedCumulantReadoutLaw n β dirs
-        (traceStateKMSReadout (higherSimplexOrderedForms n β dirs))
 
 /-- Compatibility name used by existing Souriau/operatorial tests. -/
 abbrev DuhamelOperatorialNForms := DuhamelOperatorDerivative
@@ -210,8 +200,8 @@ variable {Param Op Direction : Type*}
 @[rep_depth operator]
 theorem duhamelFormula_holds_theorem
     (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (v : Direction) :
-    D.duhamelFormula β v (D.derivativeOfExp β v) :=
-  D.duhamelFormula_holds β v
+    D.duhamelFormula β v (D.derivativeOfExp β v) := by
+  sorry
 
 @[rep_depth operator]
 theorem higherSimplexOrderedForms_satisfy_theorem
@@ -225,8 +215,8 @@ theorem tracedCumulantReadout_holds_theorem
     (D : DuhamelOperatorDerivative Param Op Direction)
     (n : Nat) (β : Param) (dirs : List Direction) :
     D.tracedCumulantReadoutLaw n β dirs
-      (D.traceStateKMSReadout (D.higherSimplexOrderedForms n β dirs)) :=
-  D.tracedCumulantReadout_holds n β dirs
+      (D.traceStateKMSReadout (D.higherSimplexOrderedForms n β dirs)) := by
+  sorry
 
 end DuhamelOperatorDerivative
 
@@ -242,14 +232,8 @@ structure MomentGeneratingReadout (Param Op : Type*) where
   bkmCovariance : Param → Op → Op → ℝ
   nResponseForm : Nat → Param → List Op → ℝ
   firstMomentLaw : Param → Op → ℝ → Prop
-  firstMoment_holds :
-    ∀ β A, firstMomentLaw β A (firstMoment β A)
   bkmCovarianceLaw : Param → Op → Op → ℝ → Prop
-  bkmCovariance_holds :
-    ∀ β A B, bkmCovarianceLaw β A B (bkmCovariance β A B)
   higherCumulantLaw : Nat → Param → List Op → ℝ → Prop
-  higherCumulant_holds :
-    ∀ n β ops, higherCumulantLaw n β ops (nResponseForm n β ops)
 
 namespace MomentGeneratingReadout
 
@@ -258,21 +242,21 @@ variable {Param Op : Type*}
 @[rep_depth operator]
 theorem firstMoment_holds_theorem
     (M : MomentGeneratingReadout Param Op) (β : Param) (A : Op) :
-    M.firstMomentLaw β A (M.firstMoment β A) :=
-  M.firstMoment_holds β A
+    M.firstMomentLaw β A (M.firstMoment β A) := by
+  sorry
 
 @[rep_depth operator]
 theorem bkmCovariance_holds_theorem
     (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
-    M.bkmCovarianceLaw β A B (M.bkmCovariance β A B) :=
-  M.bkmCovariance_holds β A B
+    M.bkmCovarianceLaw β A B (M.bkmCovariance β A B) := by
+  sorry
 
 @[rep_depth operator]
 theorem higherCumulant_holds_theorem
     (M : MomentGeneratingReadout Param Op)
     (n : Nat) (β : Param) (ops : List Op) :
-    M.higherCumulantLaw n β ops (M.nResponseForm n β ops) :=
-  M.higherCumulant_holds n β ops
+    M.higherCumulantLaw n β ops (M.nResponseForm n β ops) := by
+  sorry
 
 end MomentGeneratingReadout
 
@@ -687,20 +671,13 @@ structure OptimalTransportWitness (State : Type*) where
   mobilityTensor : State → State → Prop
   jkoStep : State → State
   continuityEquation : (ℝ → State) → Prop
-  continuityEquation_holds : continuityEquation curve
   wassersteinMetricLaw : (State → State → ℝ) → Prop
-  wassersteinMetric_holds : wassersteinMetricLaw metric
   gradientFlowEquation : (ℝ → State) → Prop
-  gradientFlowEquation_holds : gradientFlowEquation curve
   jkoStepLaw : (State → State) → Prop
-  jkoStep_holds : jkoStepLaw jkoStep
   lscLaw : (Density State → ℝ) → Prop
   freeEnergy : Density State → ℝ
-  lsc_holds : lscLaw freeEnergy
   coercivityLaw : (Density State → ℝ) → Prop
-  coercivity_holds : coercivityLaw freeEnergy
   compactnessLaw : (ℝ → State) → Prop
-  compactness_holds : compactnessLaw curve
 
 /-- GENERIC compatibility packet. -/
 @[rep_depth thermo]

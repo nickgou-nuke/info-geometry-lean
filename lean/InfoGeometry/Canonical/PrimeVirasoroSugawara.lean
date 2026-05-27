@@ -94,42 +94,6 @@ the symbolic `PrimeCurrentOPEPacket` interface.
 def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop := by
   exact _P.current_current_level_one_data = ()
 
-/-- The supplied `c c` split-Majorana OPE law is available. -/
-@[rep_depth operator]
-theorem cc_valid (p q : PrimeLabel) :
-    P.splitMajorana.cc_singular p q :=
-  P.splitMajorana.cc_valid p q
-
-/-- The supplied `d d` split-Majorana OPE law is available. -/
-@[rep_depth operator]
-theorem dd_valid (p q : PrimeLabel) :
-    P.splitMajorana.dd_singular p q :=
-  P.splitMajorana.dd_valid p q
-
-/-- The supplied `c d` regularity law is available. -/
-@[rep_depth operator]
-theorem cd_regular_valid (p q : PrimeLabel) :
-    P.splitMajorana.cd_regular p q :=
-  P.splitMajorana.cd_regular_valid p q
-
-/-- The supplied current-on-`c` OPE law is available. -/
-@[rep_depth operator]
-theorem current_c_valid :
-    P.mobiusCurrent.current_c_law :=
-  P.mobiusCurrent.current_c_valid
-
-/-- The supplied current-on-`d` OPE law is available. -/
-@[rep_depth operator]
-theorem current_d_valid :
-    P.mobiusCurrent.current_d_law :=
-  P.mobiusCurrent.current_d_valid
-
-/-- The supplied level-one current-current OPE law is available. -/
-@[rep_depth operator]
-theorem current_current_level_one_valid :
-    CurrentCurrentLevelOneLaw P := by
-  simp [CurrentCurrentLevelOneLaw]
-
 end PrimeCurrentOPEPacket
 
 /-! ## Concrete external infinite-current readback -/

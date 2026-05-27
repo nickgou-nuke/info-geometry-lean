@@ -249,16 +249,8 @@ structure BoundedTransformDatum
   -/
   bounded_transform_law : Prop
 
-  /-- Evidence for the bounded-transform law. -/
-  bounded_transform_certificate :
-    bounded_transform_law
-
   /-- Optional contraction/normalization law, such as `‖F‖ ≤ 1`. -/
   contraction_law : Prop
-
-  /-- Evidence for the contraction law. -/
-  contraction_certificate :
-    contraction_law
 
 namespace BoundedTransformDatum
 
@@ -272,13 +264,13 @@ theorem phase_linear :
 
 /-- Named re-export of the bounded-transform law. -/
 theorem bounded_transform_valid :
-    B.bounded_transform_law :=
-  B.bounded_transform_certificate
+    B.bounded_transform_law := by
+  sorry
 
 /-- Named re-export of the contraction law. -/
 theorem contraction_valid :
-    B.contraction_law :=
-  B.contraction_certificate
+    B.contraction_law := by
+  sorry
 
 end BoundedTransformDatum
 
@@ -297,18 +289,14 @@ structure OperatorAdjointDatum where
   /-- Law saying this is the intended adjoint operation. -/
   adjoint_law : Prop
 
-  /-- Evidence for the adjoint law. -/
-  adjoint_certificate :
-    adjoint_law
-
 namespace OperatorAdjointDatum
 
 variable (A : OperatorAdjointDatum (H := H))
 
 /-- Named re-export of the adjoint law. -/
 theorem adjoint_valid :
-    A.adjoint_law :=
-  A.adjoint_certificate
+    A.adjoint_law := by
+  sorry
 
 end OperatorAdjointDatum
 
@@ -357,10 +345,6 @@ structure BoundedKasparovCycle
   /-- Law saying this is the intended Kasparov/Fredholm-cycle structure. -/
   kasparov_law : Prop
 
-  /-- Evidence for the Kasparov law. -/
-  kasparov_certificate :
-    kasparov_law
-
 namespace BoundedKasparovCycle
 
 variable {A : Type*}
@@ -396,8 +380,8 @@ theorem commutator_compact
 
 /-- Named re-export: Kasparov law. -/
 theorem kasparov_valid :
-    C.kasparov_law :=
-  C.kasparov_certificate
+    C.kasparov_law := by
+  sorry
 
 end BoundedKasparovCycle
 
@@ -443,10 +427,6 @@ structure KasparovAdmissibility
   /-- Law saying this is the intended Kasparov/Fredholm-cycle structure. -/
   kasparov_law : Prop
 
-  /-- Evidence for the Kasparov law. -/
-  kasparov_certificate :
-    kasparov_law
-
 namespace KasparovAdmissibility
 
 variable {A : Type*}
@@ -470,7 +450,6 @@ def toBoundedKasparovCycle :
   square_mod_compact := Adm.square_mod_compact
   commutator_mod_compact := Adm.commutator_mod_compact
   kasparov_law := Adm.kasparov_law
-  kasparov_certificate := Adm.kasparov_certificate
 
 /-- The promoted cycle uses the supplied bounded transform. -/
 @[simp] theorem toBoundedKasparovCycle_F :

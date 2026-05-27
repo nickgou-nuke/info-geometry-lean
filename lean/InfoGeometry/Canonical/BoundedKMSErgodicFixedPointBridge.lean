@@ -139,19 +139,6 @@ theorem ergodicMean_isSelfSimilarFixedPoint (A : EndH) :
     B.IsSelfSimilarFixedPoint (B.ergodicMean A) :=
   ⟨B.ergodicMean_isModularFixed A, B.ergodicMean_isScaleFixed A⟩
 
-/-- The ergodic mean is idempotent. -/
-@[rep_depth thermo]
-theorem ergodicMean_idempotent_readback (A : EndH) :
-    B.ergodicMean (B.ergodicMean A) = B.ergodicMean A :=
-  B.ergodicMean_idempotent A
-
-/-- Renormalization preserves modular fixed points. -/
-@[rep_depth thermo]
-theorem renorm_preserves_modularFixed_readback
-    (A : EndH) (hA : B.IsModularFixed A) :
-    B.IsModularFixed (B.renorm A) :=
-  B.renorm_preserves_modularFixed A hA
-
 /-- Self-similar fixed points are modular fixed. -/
 @[rep_depth thermo]
 theorem modularFixed_of_selfSimilarFixedPoint
@@ -166,30 +153,12 @@ theorem scaleFixed_of_selfSimilarFixedPoint
     B.IsScaleFixed A :=
   hA.2
 
-/-- Modular fixed points land in the supplied centralizer-like predicate. -/
-@[rep_depth thermo]
-theorem modularFixed_mem_centralizerLike_readback
-    {A : EndH} (hA : B.IsModularFixed A) :
-    B.centralizerLike A :=
-  B.modularFixed_mem_centralizerLike A hA
-
 /-- The ergodic mean lands in the supplied centralizer-like predicate. -/
 @[rep_depth thermo]
 theorem ergodicMean_mem_centralizerLike (A : EndH) :
     B.centralizerLike (B.ergodicMean A) :=
-  B.modularFixed_mem_centralizerLike_readback
+  B.modularFixed_mem_centralizerLike
     (A := B.ergodicMean A) (B.ergodicMean_isModularFixed A)
-
-/-- Regular-support commutation is preserved by the supplied ergodic mean. -/
-@[rep_depth thermo]
-theorem ergodicMean_regularSupportStable_readback
-    (A : EndH)
-    (hA :
-      B.kms.boundedFlow.souriau.superBridge.CIK.spectralProjector * A =
-        A * B.kms.boundedFlow.souriau.superBridge.CIK.spectralProjector) :
-    B.kms.boundedFlow.souriau.superBridge.CIK.spectralProjector * B.ergodicMean A =
-      B.ergodicMean A * B.kms.boundedFlow.souriau.superBridge.CIK.spectralProjector :=
-  B.ergodicMean_regularSupportStable A hA
 
 end BoundedKMSErgodicFixedPointBridge
 

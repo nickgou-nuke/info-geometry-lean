@@ -73,10 +73,6 @@ structure KMSReadoutDatum
   -/
   kms_boundary_law : Prop
 
-  /-- Proof/certificate of the KMS law. -/
-  kms_boundary_certificate :
-    kms_boundary_law
-
 namespace KMSReadoutDatum
 
 variable
@@ -108,11 +104,6 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   K.flow_add s t x
-
-/-- The stored KMS boundary certificate is available. -/
-theorem kms_boundary :
-    K.kms_boundary_law :=
-  K.kms_boundary_certificate
 
 end KMSReadoutDatum
 
@@ -157,11 +148,6 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   KMSReadoutDatum.flow_add_apply K s t x
-
-/-- Compatibility alias for `KMSReadoutDatum.kms_boundary`. -/
-theorem kms_boundary :
-    K.kms_boundary_law :=
-  KMSReadoutDatum.kms_boundary K
 
 end KMSStateDatum
 
@@ -212,10 +198,6 @@ structure HorizonKMSNormalization where
   is supplied.
   -/
   horizon_modular_calibration : Prop
-
-  /-- Proof/certificate of the calibration. -/
-  horizon_modular_calibration_certificate :
-    horizon_modular_calibration
 
 namespace HorizonKMSNormalization
 
@@ -711,11 +693,6 @@ theorem kms_event_ne_zero_of_hidden_memory_ne_zero
     H.kms.state (R.eventObservable x y) ≠ 0 := by
   rw [R.kms_event_eq_hidden_memory x y]
   exact h
-
-/-- The same KMS state carries its analytic boundary certificate. -/
-theorem kms_boundary :
-    H.kms.kms_boundary_law :=
-  H.kms.kms_boundary_certificate
 
 /-- The KMS state is invariant under real modular time. -/
 theorem kms_flow_invariant

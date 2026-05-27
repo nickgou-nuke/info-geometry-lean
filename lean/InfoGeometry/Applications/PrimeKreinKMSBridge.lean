@@ -60,8 +60,6 @@ structure PositivePrimonGibbsGate
   operator-algebra model.
   -/
   KMS_condition : Prop
-  /-- Certificate of the supplied KMS condition. -/
-  KMS_certificate : KMS_condition
 
 /-- The convergence half-plane is the positive normalization gate. -/
 theorem positivePrimon_beta_gt_one
@@ -76,13 +74,6 @@ theorem positivePrimon_partition_pos
     (G : PositivePrimonGibbsGate State Observable) :
     0 < G.partition :=
   G.partition_pos
-
-/-- Re-export of the supplied positive KMS condition. -/
-theorem positivePrimon_KMS_condition
-    {State Observable : Type*}
-    (G : PositivePrimonGibbsGate State Observable) :
-    G.KMS_condition :=
-  G.KMS_certificate
 
 /-! ## 2. Thermofield / purification sector -/
 
@@ -141,15 +132,6 @@ structure TomitaModularGate
   modular_automorphism_group : Prop
   /-- KMS condition in normalized modular time. -/
   KMS_in_modular_time : Prop
-  /-- Certificate of the modular-time KMS gate. -/
-  KMS_in_modular_time_certificate : KMS_in_modular_time
-
-/-- Re-export of the supplied Tomita modular KMS gate. -/
-theorem tomita_KMS_gate
-    {Algebra ModularOperator ModularConjugation : Type*}
-    (T : TomitaModularGate Algebra ModularOperator ModularConjugation) :
-    T.KMS_in_modular_time :=
-  T.KMS_in_modular_time_certificate
 
 /-! ## 4. Abstract real Krein carrier -/
 
@@ -223,8 +205,6 @@ structure MobiusKreinIndexGate
     signedTrace = inverseZetaReadout
   /-- Explicit warning gate: this readout is not a positive Gibbs state. -/
   is_index_not_state : Prop
-  /-- Certificate of the warning gate. -/
-  is_index_not_state_certificate : is_index_not_state
 
 /-- Re-export of the signed-trace / inverse-zeta calibration. -/
 theorem mobius_signedTrace_eq_inverseZeta
@@ -232,13 +212,6 @@ theorem mobius_signedTrace_eq_inverseZeta
     (M : MobiusKreinIndexGate FermionSpace Operator) :
     M.signedTrace = M.inverseZetaReadout :=
   M.signedTrace_eq_inverseZeta
-
-/-- Re-export of the index-not-state certificate. -/
-theorem mobius_index_not_positive_state
-    {FermionSpace Operator : Type*}
-    (M : MobiusKreinIndexGate FermionSpace Operator) :
-    M.is_index_not_state :=
-  M.is_index_not_state_certificate
 
 /-! ## 5. Doubled Krein Liouvillean sector -/
 
@@ -260,26 +233,8 @@ structure KreinLiouvilleanGate
   liouvillean : Operator
   /-- Krein-self-adjointness gate. -/
   krein_self_adjoint : Prop
-  /-- Certificate for the Krein-self-adjointness gate. -/
-  krein_self_adjoint_certificate : krein_self_adjoint
   /-- The induced flow preserves the indefinite form. -/
   eta_unitary_flow : Prop
-  /-- Certificate that the induced flow preserves the indefinite form. -/
-  eta_unitary_flow_certificate : eta_unitary_flow
-
-/-- Re-export of supplied Krein self-adjointness. -/
-theorem krein_liouvillean_self_adjoint
-    {K Operator : Type*} [AddCommGroup K] [Module ℝ K]
-    (L : KreinLiouvilleanGate K Operator) :
-    L.krein_self_adjoint :=
-  L.krein_self_adjoint_certificate
-
-/-- Re-export of supplied `η`-unitarity for the Liouvillean flow. -/
-theorem krein_liouvillean_eta_unitary
-    {K Operator : Type*} [AddCommGroup K] [Module ℝ K]
-    (L : KreinLiouvilleanGate K Operator) :
-    L.eta_unitary_flow :=
-  L.eta_unitary_flow_certificate
 
 /-! ## 6. Modular Hamiltonian normalization -/
 
@@ -305,26 +260,8 @@ structure GibbsModularHamiltonianGate
   K_beta : ModularHamiltonian
   /-- Symbolic statement of `Kβ = βH + log Z · 1`. -/
   normalization_formula : Prop
-  /-- Certificate for the symbolic normalization formula. -/
-  normalization_formula_certificate : normalization_formula
   /-- Modular time rescales physical time by `β`. -/
   modular_time_rescaling : Prop
-  /-- Certificate for modular-time rescaling. -/
-  modular_time_rescaling_certificate : modular_time_rescaling
-
-/-- Re-export of the modular-time rescaling certificate. -/
-theorem modular_time_rescaling
-    {Hamiltonian ModularHamiltonian : Type*}
-    (K : GibbsModularHamiltonianGate Hamiltonian ModularHamiltonian) :
-    K.modular_time_rescaling :=
-  K.modular_time_rescaling_certificate
-
-/-- Re-export of the modular Hamiltonian normalization formula. -/
-theorem modular_normalization_formula
-    {Hamiltonian ModularHamiltonian : Type*}
-    (K : GibbsModularHamiltonianGate Hamiltonian ModularHamiltonian) :
-    K.normalization_formula :=
-  K.normalization_formula_certificate
 
 /-! ## 7. Optional Type-III thermodynamic-limit gate -/
 
@@ -365,15 +302,6 @@ structure PositiveKreinReadoutComparison
   kreinIndex : IndexReadout → ℝ
   /-- Supplied comparison law. -/
   comparison_law : Prop
-  /-- Certificate of the comparison law. -/
-  comparison_certificate : comparison_law
-
-/-- Re-export of the supplied positive/Krein comparison law. -/
-theorem positiveKrein_comparison_law
-    {Observable IndexReadout : Type*}
-    (C : PositiveKreinReadoutComparison Observable IndexReadout) :
-    C.comparison_law :=
-  C.comparison_certificate
 
 /-! ## 9. Full bridge package -/
 
@@ -457,22 +385,6 @@ theorem mobius_index_eq_inverseZeta
       FermionSpace Operator K Hamiltonian ModularHamiltonian) :
     D.mobiusIndex.signedTrace = D.mobiusIndex.inverseZetaReadout :=
   D.mobiusIndex.signedTrace_eq_inverseZeta
-
-/-- The direct-sum doubled Liouvillean preserves the indefinite structure. -/
-theorem eta_unitary_flow
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
-    D.kreinLiouvillean.eta_unitary_flow :=
-  D.kreinLiouvillean.eta_unitary_flow_certificate
-
-/-- The positive modular Hamiltonian has the supplied modular-time rescaling. -/
-theorem modular_time_rescaling
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra ModularOperator ModularConjugation
-      FermionSpace Operator K Hamiltonian ModularHamiltonian) :
-    D.modularHamiltonian.modular_time_rescaling :=
-  D.modularHamiltonian.modular_time_rescaling_certificate
 
 /-- Readback of temperature consistency between the positive and thermofield lanes. -/
 theorem positive_beta_eq_thermofield_beta

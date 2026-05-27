@@ -19,9 +19,9 @@ RelativeCounts
   → GWDrazinLocalizationPacket / DrazinGromovWittenLocalizationBridge
 ```
 
-No virtual localization theorem, Moore-Penrose theorem, Frobenius theorem, or
-Drazin existence theorem is proved here.  The connection to edge Euler weights
-and residues is witness-gated.
+No virtual localization theorem, Moore-Penrose theorem, Frobenius theorem,
+Drazin existence theorem, edge-Euler readout theorem, or residue/singularity
+identification theorem is proved here.
 -/
 
 noncomputable section
@@ -50,37 +50,11 @@ structure GWProjectiveCountProbabilityBridge
   canonical :
     GWCanonicalCountRayBridge n G T Target Coeff
 
-  /--
-  Law saying the probability gauge section is the intended normalized readout
-  of the GW localization count shadow.
-  -/
-  probabilityGaugeLaw :
-    Prop
-
-  /-- Certificate for the probability gauge law. -/
-  probabilityGauge_valid :
-    probabilityGaugeLaw
-
 namespace GWProjectiveCountProbabilityBridge
 
 variable {n : ℕ} [Nonempty (Fin n)]
 variable {G T Target Coeff : Type*}
 variable (B : GWProjectiveCountProbabilityBridge n G T Target Coeff)
-
-/-- The GW localization-to-count shadow law is available. -/
-theorem countShadow_holds :
-    B.canonical.projectiveCounts.countShadowLaw :=
-  B.canonical.countShadow_holds
-
-/-- The finite carrier realizes the GW count shadow. -/
-theorem finiteCarrierShadow_holds :
-    B.canonical.finiteCarrierShadowLaw :=
-  B.canonical.finiteCarrierShadow_holds
-
-/-- The supplied probability-gauge law is available. -/
-theorem probabilityGauge_holds :
-    B.probabilityGaugeLaw :=
-  B.probabilityGauge_valid
 
 /-- Probability gauge of the localized count ray. -/
 def stateFinProb : InfoGeometry.FinProb (Fin n) :=
@@ -143,7 +117,7 @@ lane.
 @[rep_depth operator]
 structure GWProjectiveCountDrazinBridge
     (n : ℕ) [Nonempty (Fin n)]
-    (G T Target Coeff Algebra : Type*) [Ring Algebra] where
+    (G T Target Coeff Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   /-- Count/probability/operator readout of the GW localization graph. -/
   projectiveProbability :
     GWProjectiveCountProbabilityBridge n G T Target Coeff
@@ -160,59 +134,17 @@ structure GWProjectiveCountDrazinBridge
     drazin.drazinLocalization.virtualLocalization =
       projectiveProbability.canonical.projectiveCounts.localization
 
-  /--
-  Witness that edge Euler weights are read from the projective count/probability
-  lane.
-  -/
-  edgeEulerWeight_eq_projectiveCountReadout :
-    Prop
-
-  /-- Certificate for the edge Euler/projective-count readout law. -/
-  edgeEulerWeight_eq_projectiveCountReadout_valid :
-    edgeEulerWeight_eq_projectiveCountReadout
-
-  /--
-  Witness that Drazin residues are the operator-algebraic readout of singular
-  or degenerate projective count strata.
-  -/
-  drazinResidue_eq_projectiveSingularityReadout :
-    Prop
-
-  /-- Certificate for the Drazin residue/projective-singularity law. -/
-  drazinResidue_eq_projectiveSingularityReadout_valid :
-    drazinResidue_eq_projectiveSingularityReadout
-
 namespace GWProjectiveCountDrazinBridge
 
 variable {n : ℕ} [Nonempty (Fin n)]
-variable {G T Target Coeff Algebra : Type*} [Ring Algebra]
+variable {G T Target Coeff Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable (B : GWProjectiveCountDrazinBridge n G T Target Coeff Algebra)
-
-/-- The underlying GW count shadow law is available. -/
-theorem countShadow_holds :
-    B.projectiveProbability.canonical.projectiveCounts.countShadowLaw :=
-  B.projectiveProbability.countShadow_holds
-
-/-- The probability gauge law is available. -/
-theorem probabilityGauge_holds :
-    B.projectiveProbability.probabilityGaugeLaw :=
-  B.projectiveProbability.probabilityGauge_holds
 
 /-- The Drazin and projective-count packets use the same localization graph. -/
 theorem localization_packet_matches_projectiveCounts :
     B.drazin.drazinLocalization.virtualLocalization =
       B.projectiveProbability.canonical.projectiveCounts.localization :=
   B.localization_packet_eq
-
-/-- The supplied edge Euler/projective-count readout law is available. -/
-theorem edgeEulerWeight_eq_projectiveCountReadout_holds :
-    B.edgeEulerWeight_eq_projectiveCountReadout :=
-  B.edgeEulerWeight_eq_projectiveCountReadout_valid
-
-/-- The supplied Drazin residue/projective-singularity law is available. -/
-theorem drazinResidue_eq_projectiveSingularityReadout_holds :
-    B.drazinResidue_eq_projectiveSingularityReadout :=
-  B.drazinResidue_eq_projectiveSingularityReadout_valid
 
 /-- Edge Drazin residues annihilate the corresponding regular inverse on the left. -/
 theorem edgeResidue_mul_regularInverse

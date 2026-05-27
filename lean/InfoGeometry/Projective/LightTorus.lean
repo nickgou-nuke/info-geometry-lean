@@ -44,20 +44,25 @@ structure LightTorusCoords where
   theta : ℝ -- phase in S^1
   phi : ℝ   -- phase in S^1
 
+/-- An explicit nonzero null split quaternion on the light torus. -/
+def lightTorusBasePoint : LightTorus := by
+  refine ⟨⟨1, 0, 1, 0⟩, ?_⟩
+  constructor
+  · intro h
+    have hw : ((1 : ℝ)) = 0 := by
+      simpa using congrArg SplitQuaternion.w h
+    norm_num at hw
+  · unfold IsNullSplitQuaternion splitNormSq
+    norm_num
+
 /--
-The structural mapping demonstrating that the null manifold corresponds to
-the light torus parameter space.
+The light-torus owner surface is inhabited by an explicit nonzero null point.
 
-HONEST THEOREM DEBT:
-The explicit topological equivalence is deferred. The transformation uses:
-$w = t \cos \theta$, $x = t \sin \theta$
-$y = t \cos \phi$, $z = t \sin \phi$
-
--- DEBT_KIND: SORRY
+This is the honest theorem currently proved in this file.  The stronger global
+topological equivalence with `ℝ_{>0} × S¹ × S¹` remains open until an explicit
+forward and inverse map are formalized.
 -/
-def LightTorusEquivExists : Prop := True
-
-theorem lightTorusEquiv : LightTorusEquivExists := by
-  trivial
+theorem lightTorus_nonempty : Nonempty LightTorus :=
+  ⟨lightTorusBasePoint⟩
 
 end InfoGeometry.Projective

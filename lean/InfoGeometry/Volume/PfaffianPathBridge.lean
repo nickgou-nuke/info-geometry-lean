@@ -286,14 +286,17 @@ structure PfaffianPathBridgePacket where
   -/
   pfaffianToDeterminantShadowWitness : Type*
 
-/-- Owner target for the Pfaffian path bridge. -/
-def PfaffianPathBridgeTarget : Prop :=
-  True
+/--
+Owner-side bridge theorem currently available from explicit Pfaffian/path data:
+the Pfaffian matching packet carries the even-volume shadow identity.
 
-/-- Constructor from explicit Pfaffian path bridge data. -/
+This is the honest theorem currently owed by the packet. Stronger signed path /
+chiral-word comparison theorems require witness terms, not just witness types.
+-/
 theorem constructPfaffianPathBridgeTarget
-    (_ : PfaffianPathBridgePacket) :
-    PfaffianPathBridgeTarget := by
-  trivial
+    (P : PfaffianPathBridgePacket) :
+    P.pfaffianPairings.pfaffianAmplitude ^ 2 =
+      P.pfaffianPairings.determinantEvenVolume :=
+  P.pfaffianPairings.pfaffian_sq_eq_determinantEvenVolume
 
 end InfoGeometry.Volume.PfaffianPathBridge

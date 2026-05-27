@@ -321,9 +321,6 @@ structure SheetPacket
   /-- Amplitude/readout attached to each sheet. -/
   amplitude : ℤ → Amplitude
 
-  /-- Conservation or normalization certificate. -/
-  packet_conservation : Prop
-
 /-! ## 6. Spectral divisor / logarithmic monodromy calibration -/
 
 /--
@@ -349,12 +346,6 @@ structure SpectralDivisorMonodromyCalibration
     ∀ s : Spectral,
       s ∈ spectralDivisor →
         logPhaseReadout s ∈ C.branchLocus
-
-  /--
-  Certificate identifying this divisor as the intended spectral zero/pole
-  divisor, such as a zeta or automorphic L-function divisor.
-  -/
-  spectral_calibration_certificate : Prop
 
 namespace SpectralDivisorMonodromyCalibration
 
@@ -395,4 +386,3 @@ def SpectralDivisorMonodromyOwnerTarget
       (SpectralDivisorMonodromyCalibration Spectral Base Cover C)
 
 end InfoGeometry.Geometry.HelicalCovering
-

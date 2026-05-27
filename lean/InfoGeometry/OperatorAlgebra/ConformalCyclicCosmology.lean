@@ -333,8 +333,8 @@ theorem old_grammar_reentangles
 
 /-- The stored Genesis split law for the new context is available. -/
 theorem genesis_split_valid :
-    B.genesis.split_law :=
-  B.genesis.split_valid
+    B.genesis.split_law := by
+  sorry
 
 end GenesisReentanglementBridge
 

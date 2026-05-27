@@ -284,10 +284,6 @@ structure VortexCoreMajoranaWitness
   /-- Model-specific localization predicate. -/
   localized_at_core : Prop
 
-  /-- Proof/certificate of localization. -/
-  localized_certificate :
-    localized_at_core
-
 namespace VortexCoreMajoranaWitness
 
 variable
@@ -306,11 +302,6 @@ theorem core_mode_zero :
 theorem core_mode_fixed :
     W.majorana.mode ∈ B.Fixed :=
   W.majorana.fixed
-
-/-- The vortex-core witness supplies localization at the core. -/
-theorem core_mode_localized :
-    W.localized_at_core :=
-  W.localized_certificate
 
 end VortexCoreMajoranaWitness
 

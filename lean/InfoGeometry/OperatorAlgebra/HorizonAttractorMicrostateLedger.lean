@@ -171,13 +171,6 @@ variable
 variable
     (T : HorizonThermalLedger State ThermalReadout)
 
-/-- The supplied thermal/KMS certificate is available. -/
-theorem thermal_valid
-    {s : State}
-    (hs : T.IsThermal s) :
-    T.IsThermal s :=
-  T.thermal_certificate s hs
-
 end HorizonThermalLedger
 
 /-! ## 4. Owner target -/

@@ -54,7 +54,8 @@ noncomputable def familyAInterfaceOfSouriau
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
     (hdet : 0 ≤ (souriauFisherResponseMatrix M T).det) :
-    BulgarianFamilyAInterface GeometricTemperature BulgarianFiniteMoment BulgarianFiniteObservable where
+    InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket.BulgarianFamilyAInterface
+      GeometricTemperature BulgarianFiniteMoment BulgarianFiniteObservable where
   potential := souriauMassieuPotential M
   moment := finiteThermodynamicMoment M
   fisherMetric := fun T₁ T₂ =>
@@ -81,10 +82,6 @@ noncomputable def familyAInterfaceOfSouriau
         (souriauFisherResponseMatrix M T).muMu
   fisherSymmetric := (souriauFisherResponseMatrix M T).Symmetric
   fisherNonnegative := (souriauFisherResponseMatrix M T).PositiveSemidefinite
-  fisherSymmetric_holds :=
-    souriauFisherResponseMatrix_symmetric M T
-  fisherNonnegative_holds :=
-    souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg M T hdet
 
 /--
 Concrete Bulgarian family-D interface realized by finite Souriau Onsager entropy
@@ -97,7 +94,8 @@ noncomputable def familyDInterfaceOfSouriau
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature)
     (hdet : 0 ≤ (souriauFisherResponseMatrix M T).det) :
-    BulgarianFamilyDInterface BulgarianFiniteForce where
+    InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket.BulgarianFamilyDInterface
+      BulgarianFiniteForce where
   entropyProduction := fun x => souriauEntropyProduction M T x.1 x.2
   quadraticFormRealization :=
     ∀ x : BulgarianFiniteForce,
@@ -108,12 +106,6 @@ noncomputable def familyDInterfaceOfSouriau
       0 ≤ souriauEntropyProduction M T x.1 x.2
   vanishesAtEquilibrium :=
     souriauEntropyProduction M T 0 0 = 0
-  nonnegative_holds := by
-    intro x
-    exact souriauEntropyProduction_nonneg_of_det_nonneg M T hdet x.1 x.2
-  vanishesAtEquilibrium_holds := by
-    simp [souriauEntropyProduction, ResponseMatrix2.entropyProduction,
-      ResponseMatrix2.betaFlux, ResponseMatrix2.muFlux]
 
 /--
 Family-A bridge theorem: the Bulgarian packet's Fisher/Hessian layer is owned
@@ -128,8 +120,8 @@ theorem familyA_bridge_packet
     let A := familyAInterfaceOfSouriau M T hdet
     A.fisherSymmetric ∧ A.fisherNonnegative := by
   refine ⟨?_, ?_⟩
-  · exact (familyAInterfaceOfSouriau M T hdet).fisherSymmetric_holds
-  · exact (familyAInterfaceOfSouriau M T hdet).fisherNonnegative_holds
+  · exact souriauFisherResponseMatrix_symmetric M T
+  · exact souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg M T hdet
 
 /-- Family-D bridge theorem: the Bulgarian entropy-production layer is realized
 by the finite Souriau Onsager second-law theorem. -/
@@ -141,6 +133,6 @@ theorem familyD_bridge_packet
     (x : BulgarianFiniteForce) :
     let D := familyDInterfaceOfSouriau M T hdet
     0 ≤ D.entropyProduction x := by
-  exact (familyDInterfaceOfSouriau M T hdet).nonnegative_holds x
+  exact souriauEntropyProduction_nonneg_of_det_nonneg M T hdet x.1 x.2
 
 end InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge

@@ -86,13 +86,12 @@ theorem fermion_heisenberg_law (m n : ℤ) :
   · simp [h]
 
 /--
-Readback: the map being used is a faithful Fock-level current intertwiner, not
-a raw finite Clifford/current algebra isomorphism.
+Readback: the map being used is a faithful Fock-level current intertwiner.
 -/
 @[rep_depth transport]
 theorem intertwiner_level :
-    True :=
-  trivial
+    Function.Injective X.toBoson :=
+  X.toBoson_injective
 
 end FockLevelCurrentIntertwiner
 

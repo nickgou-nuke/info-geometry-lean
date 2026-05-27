@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Canonical.ActionDuality
+import InfoGeometry.Canonical.InductiveInvarianceTKKPacket
 import InfoGeometry.Canonical.CoadjointCasimirEntropy
 import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.Canonical.ErlangenOperator2Bridge
@@ -128,6 +129,8 @@ import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
 import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CelikKocakCantorOperators
+import InfoGeometry.Canonical.CelikKocakCl11ConcretePacket
+import InfoGeometry.Canonical.CelikKocakCl11DoubledDictionary
 import InfoGeometry.Canonical.JordanChevalleyPolynomialBridge
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
 import InfoGeometry.Canonical.NilpotentLegendreConformalBridge

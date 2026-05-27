@@ -458,11 +458,6 @@ structure GlobalAnomalyClass where
   reduction_law :
     cyclicIndex = (integerLift : ZMod 16)
 
-  /--
-  Model-specific certificate that local signs assemble into this global class.
-  This is intentionally a certificate, not a canonical isomorphism.
-  -/
-  assembly_certificate : Prop
 
 namespace GlobalAnomalyClass
 
@@ -473,7 +468,7 @@ def toLocalToGlobalAnomalyDatum : LocalToGlobalAnomalyDatum where
   localCharge := G.localSector
   globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
   reductionMod16 := G.cyclicIndex = (G.integerLift : ZMod 16)
-  compatibility := G.assembly_certificate
+  compatibility := G.cyclicIndex = (G.integerLift : ZMod 16)
 
 end GlobalAnomalyClass
 

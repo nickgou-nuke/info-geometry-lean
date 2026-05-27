@@ -59,22 +59,14 @@ end ProjectiveTomitaReturn
 /-! ## 2. Interpretation certificate -/
 
 /--
-A non-orientable return interpretation certificate.
+A non-orientable return interpretation surface.
 
-This is where a model may say “the projective Tomita return is represented
-topologically as a Moebius/Klein-type gluing.”
+This records the interface point where a model may interpret projective
+Tomita return topologically as a Moebius/Klein-type gluing.
 -/
 structure NonOrientableReturnInterpretation
     (Op : Type*) [Ring Op]
     (T : TomitaCommutantDatum Op)
     (R : ProjectiveTomitaReturn Op T) where
-  /-- Certificate for non-orientable gluing. -/
-  nonorientable_gluing_certificate : Prop
-
-  /-- Certificate for the chosen boundary model. -/
-  v4_boundary_certificate : Prop
-
-  /-- CPT/PT interpretation certificate. -/
-  cpt_or_pt_interpretation_certificate : Prop
 
 end InfoGeometry.OperatorAlgebra.KleinianReturn

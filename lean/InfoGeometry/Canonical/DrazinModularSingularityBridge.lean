@@ -148,7 +148,7 @@ the canonical generator on `Preg`, annihilation of `Pzero`, and the Penrose
 alignment criterion for the remaining metric compression.
 -/
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_corridor
+theorem operator_ratio_regularization_corridor
     (c : CertifiedModularReduction (E := H₂)) :
     let KambientCanonical :=
       compress (CertifiedModularReduction.Preg c)
@@ -186,13 +186,13 @@ No finite diagonal model is used here. The proof runs only through the certified
 regular-lane operator package and the Drazin/Penrose projector algebra.
 -/
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_kills_defect_of_alignment
+theorem operator_ratio_regularization_kills_defect_of_alignment
     (c : CertifiedModularReduction (E := H₂))
     (hAlign : CertifiedModularReduction.SpectralMetricAlignment (c := c)) :
     c.logAdmissible (CertifiedModularReduction.Δreg c)
       ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
       ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) := by
-  have hCorridor := certified_operator_ratio_regularization_corridor (E := E) c
+  have hCorridor := operator_ratio_regularization_corridor (E := E) c
   have hAnomaly :
       CertifiedModularReduction.anomaly c = 0 :=
     hCorridor.2.2.2.2.2.2.mpr hAlign
@@ -207,7 +207,7 @@ This is the same theorem with the existing `InertialRegularLane` predicate
 (`anomaly = 0`) as input.
 -/
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane
+theorem operator_ratio_regularization_kills_defect_of_inertial_lane
     (c : CertifiedModularReduction (E := H₂))
     (hInertial : CertifiedModularReduction.InertialRegularLane (c := c)) :
     c.logAdmissible (CertifiedModularReduction.Δreg c)
@@ -216,7 +216,7 @@ theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane
   have hAlign :
       CertifiedModularReduction.SpectralMetricAlignment (c := c) :=
     (CertifiedModularReduction.inertial_regular_lane_iff_alignment (c := c)).mp hInertial
-  exact certified_operator_ratio_regularization_kills_defect_of_alignment
+  exact operator_ratio_regularization_kills_defect_of_alignment
     (E := E) c hAlign
 
 /--

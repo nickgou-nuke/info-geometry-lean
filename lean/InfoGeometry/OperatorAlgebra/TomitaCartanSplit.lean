@@ -1296,17 +1296,6 @@ structure TomitaCartanSplitDatum
     InfoGeometry.Geometry.KreinIsotropicCone.DefectMapsToIsotropic
       Split H kreinQuadratic
 
-  /--
-  Certificate that compact Cartan lifts model the mirror-even/global compact
-  sector.
-  -/
-  compact_sector_certificate : Prop
-
-  /--
-  Certificate that noncompact Cartan lifts model the mirror-odd/modular boost
-  sector.
-  -/
-  noncompact_sector_certificate : Prop
 
 namespace TomitaCartanSplitDatum
 

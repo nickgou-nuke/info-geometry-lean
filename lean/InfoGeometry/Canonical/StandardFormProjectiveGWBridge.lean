@@ -115,9 +115,6 @@ structure StandardFormProjectiveGWBridge where
   /-- Optional backend certificate tying the standard-form sector to the state. -/
   standardForm_state_calibration : Prop
 
-  /-- Evidence for the standard-form/state calibration certificate. -/
-  standardForm_state_valid : standardForm_state_calibration
-
 namespace StandardFormProjectiveGWBridge
 
 variable (B : StandardFormProjectiveGWBridge (H := H) (Functional := Functional)
@@ -135,18 +132,6 @@ theorem J_fixes_coneVector :
     B.standardCone.J (B.standardCone.coneVector B.normalFunctional) =
       B.standardCone.coneVector B.normalFunctional :=
   B.standardCone.J_fixes_coneVector B.normalFunctional
-
-/-- The supplied standard-form/state calibration is available. -/
-@[rep_depth projective]
-theorem standardForm_state_holds :
-    B.standardForm_state_calibration :=
-  B.standardForm_state_valid
-
-/-- The GW localization-to-count shadow law is available. -/
-@[rep_depth projective]
-theorem countShadow_holds :
-    B.projectiveGW.countState.countShadowLaw :=
-  B.projectiveGW.countShadow_holds
 
 /-- The projective count shape is invariant under nonzero rescaling. -/
 @[rep_depth projective]
@@ -221,9 +206,6 @@ structure StandardFormProjectiveGWFaceBridge where
   /-- Optional certificate tying the projective state to the localized face data. -/
   face_state_calibration : Prop
 
-  /-- Evidence for the face/state calibration certificate. -/
-  face_state_valid : face_state_calibration
-
 namespace StandardFormProjectiveGWFaceBridge
 
 variable (B : StandardFormProjectiveGWFaceBridge (H := H) (Functional := Functional)
@@ -250,12 +232,6 @@ theorem cone_face_localization
     StandardFormProjectiveGWFaceBridge.localizationOp B w ξ ∈
       B.faceBridge.naturalCone :=
   BinaryWordModularFaceBridge.cone_face_localization B.faceBridge w hξ
-
-/-- The supplied face/state calibration is available. -/
-@[rep_depth projective]
-theorem face_state_holds :
-    B.face_state_calibration :=
-  B.face_state_valid
 
 /-- The base projective GW/Weyl volume readout remains scale invariant. -/
 @[rep_depth projective]

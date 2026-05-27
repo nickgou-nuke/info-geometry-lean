@@ -110,11 +110,6 @@ namespace MaterialResponseModel
 variable {State : Type*}
 variable (M : MaterialResponseModel State)
 
-/-- Re-export of the material-response law. -/
-theorem material_law_valid :
-    M.material_law :=
-  M.material_law_holds
-
 end MaterialResponseModel
 
 /--
@@ -148,18 +143,6 @@ variable {H : HessianResponseDatum State}
 variable {M : MaterialResponseModel State}
 variable (C : HessianSusceptibilityCalibration State H M)
 
-/-- Re-export of the Hessian-to-susceptibility calibration. -/
-theorem hessian_controls_susceptibility_valid :
-    C.hessian_controls_susceptibility :=
-  C.hessian_controls_susceptibility_holds
-
-/-- Re-export of regular-response validity. -/
-theorem regular_response_valid_apply
-    {U : State}
-    (hU : H.regularAt U) :
-    C.regular_response_law U hU :=
-  C.regular_response_valid U hU
-
 end HessianSusceptibilityCalibration
 
 /-! ## 3. Fresnel/Jones coefficient calibration -/
@@ -188,11 +171,6 @@ namespace FresnelCoefficientReadout
 
 variable {State : Type*}
 variable (F : FresnelCoefficientReadout State)
-
-/-- Re-export of the Fresnel boundary law. -/
-theorem fresnel_law_valid :
-    F.fresnel_law :=
-  F.fresnel_law_holds
 
 end FresnelCoefficientReadout
 
@@ -230,16 +208,6 @@ namespace StatePolarizationEigenResponse
 
 variable {State : Type*}
 variable (E : StatePolarizationEigenResponse State)
-
-/-- Re-export of the `s` eigen-response law. -/
-theorem s_eigen_valid :
-    E.s_eigen_law :=
-  E.s_eigen_law_holds
-
-/-- Re-export of the `p` eigen-response law. -/
-theorem p_eigen_valid :
-    E.p_eigen_law :=
-  E.p_eigen_law_holds
 
 end StatePolarizationEigenResponse
 
@@ -297,7 +265,6 @@ def spJonesEventOfFresnel
   coeff1 := F.rp U
   tag := V4Tag.id
   coherence_law := F.fresnel_law
-  coherent := F.fresnel_law_holds
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}
@@ -388,12 +355,6 @@ variable {M : MaterialResponseModel State}
 variable {F : FresnelCoefficientReadout State}
 variable (C : JonesFromMaterialCalibration State M F)
 
-/-- Re-export that the event uses the `s/p` Fresnel basis. -/
-theorem event_basis_sp_valid
-    (U : State) :
-    (C.eventOf U).basis = PolarizationBasis.sp :=
-  C.event_basis_sp U
-
 /--
 The calibrated Jones matrix has `r_s` in the first diagonal channel.
 -/
@@ -464,16 +425,6 @@ namespace RetardanceReadout
 
 variable {State : Type*}
 variable (R : RetardanceReadout State)
-
-/-- Re-export of the retardance law. -/
-theorem retardance_valid :
-    R.retardance_law :=
-  R.retardance_law_holds
-
-/-- Re-export of the ellipticity law. -/
-theorem ellipticity_valid :
-    R.ellipticity_law :=
-  R.ellipticity_law_holds
 
 end RetardanceReadout
 
@@ -605,22 +556,6 @@ theorem jones_offdiag_10_zero
     (C.eventOf U).jones 1 0 = 0 :=
   C.jonesCalibration.jones_offdiag_10_zero U
 
-/-- Re-export that the event uses the `s/p` Fresnel basis. -/
-theorem event_basis_sp_valid
-    (U : State) :
-    (C.eventOf U).basis = PolarizationBasis.sp :=
-  C.jonesCalibration.event_basis_sp_valid U
-
-/-- Re-export of the optical-response control law. -/
-theorem hessian_controls_optical_response_valid :
-    C.hessian_controls_optical_response :=
-  C.hessian_controls_optical_response_holds
-
-/-- Re-export of the Bregman heat calibration law. -/
-theorem absorption_matches_bregman_heat_valid :
-    C.absorption_matches_bregman_heat :=
-  C.absorption_matches_bregman_heat_holds
-
 end OpticalResponseCalibration
 
 /--
@@ -713,24 +648,6 @@ theorem jones_11_eq_rp
     (U : State) :
     (C.jonesCalibration.eventOf U).jones 1 1 = F.rp U :=
   C.jonesCalibration.jones_11_eq_rp U
-
-/-- Re-export of the Hessian optical-response law. -/
-theorem hessian_controls_optical_response_valid :
-    ∀ C : OpticalResponseEigenCalibration State H M E F,
-    C.hessian_controls_optical_response :=
-  fun C => C.hessian_controls_optical_response_holds
-
-/-- Re-export of the Bregman heat calibration law. -/
-theorem absorption_matches_bregman_heat_valid :
-    ∀ C : OpticalResponseEigenCalibration State H M E F,
-    C.absorption_matches_bregman_heat :=
-  fun C => C.absorption_matches_bregman_heat_holds
-
-/-- Re-export of the retardance calibration law. -/
-theorem hessian_controls_retardance_valid :
-    ∀ C : OpticalResponseEigenCalibration State H M E F,
-    C.hessian_controls_retardance :=
-  fun C => C.hessian_controls_retardance_holds
 
 end OpticalResponseEigenCalibration
 
@@ -1257,11 +1174,6 @@ theorem event_tag_eq_PT
     (K.eventOf U).tag = V4Tag.PT :=
   K.event_tag_pt U
 
-/-- Re-export of the PT commutant-sector certificate. -/
-theorem pt_commutant_sector_valid :
-    K.pt_commutant_sector_law :=
-  K.pt_commutant_sector_certificate
-
 /--
 Optical absorption is exactly the hidden commutant-information readout.
 -/
@@ -1312,16 +1224,6 @@ theorem visible_deficit_eq_recovered_hidden
       D.recoverHidden (D.hiddenFlow (K.opticalHeat.stateToSystem U)) :=
   D.ideal_sub_actual_eq_recovered_hidden (K.opticalHeat.stateToSystem U)
 
-/-- Re-export of the Tomita commutant-routing certificate. -/
-theorem tomita_commutant_routing_valid :
-    D.tomita_commutant_routing_law :=
-  D.tomita_commutant_routing
-
-/-- Re-export of the visible-observer inaccessibility certificate. -/
-theorem hidden_inaccessible_to_visible_observer_valid :
-    D.hidden_inaccessible_to_visible_observer_law :=
-  D.hidden_inaccessible_to_visible_observer
-
 end OpticalPTStinespringClinch
 
 /-! ## 7. Bregman/Fenchel Hessian to Jones calibration -/
@@ -1370,11 +1272,6 @@ theorem hessian_nonnegative
     (X : Tangent) :
     0 ≤ H.hessianAt s X X :=
   H.nonnegative s X
-
-/-- Re-export the potential-origin certificate. -/
-theorem bregman_hessian_valid :
-    H.bregman_hessian_law :=
-  H.bregman_hessian_certificate
 
 end BregmanHessianResponse
 
@@ -1576,11 +1473,6 @@ theorem coeff_p_is_response_eigenvalue
       C.responseEigenvalues.eigenvalue s omega theta 1 :=
   C.coeff_p_eq_eigen_one s omega theta
 
-/-- Re-export of the end-to-end calibration law. -/
-theorem end_to_end_optical_response_valid :
-    C.end_to_end_optical_response_law :=
-  C.end_to_end_optical_response_certificate
-
 end SusceptibilityFresnelCalibration
 
 /--
@@ -1628,7 +1520,6 @@ def eventOf
   coeff1 := C.response.fresnel.coeff_p s omega theta
   tag := C.tagOf s omega theta
   coherence_law := C.coherence_law s omega theta
-  coherent := C.coherent s omega theta
 
 /--
 The first Jones coefficient is the calibrated `s`/first-channel Fresnel
@@ -1837,15 +1728,9 @@ attribute [rep_depth operator]
   HessianResponseDatum.not_regular_of_singular
   IsHessianDegenerate
   MaterialResponseModel
-  MaterialResponseModel.material_law_valid
   HessianSusceptibilityCalibration
-  HessianSusceptibilityCalibration.hessian_controls_susceptibility_valid
-  HessianSusceptibilityCalibration.regular_response_valid_apply
   FresnelCoefficientReadout
-  FresnelCoefficientReadout.fresnel_law_valid
   StatePolarizationEigenResponse
-  StatePolarizationEigenResponse.s_eigen_valid
-  StatePolarizationEigenResponse.p_eigen_valid
   FresnelFromStateEigenResponse
   FresnelFromStateEigenResponse.responseS_eq_rs
   FresnelFromStateEigenResponse.responseP_eq_rp
@@ -1857,14 +1742,11 @@ attribute [rep_depth operator]
   spJonesEventOfFresnel_jones_11
   JonesFromMaterialCalibration
   jonesFromMaterialCalibrationOfFresnel
-  JonesFromMaterialCalibration.event_basis_sp_valid
   JonesFromMaterialCalibration.jones_00_eq_rs
   JonesFromMaterialCalibration.jones_11_eq_rp
   JonesFromMaterialCalibration.jones_offdiag_01_zero
   JonesFromMaterialCalibration.jones_offdiag_10_zero
   RetardanceReadout
-  RetardanceReadout.retardance_valid
-  RetardanceReadout.ellipticity_valid
   OpticalAbsorptionReadout
   OpticalResponseCalibration
   OpticalResponseCalibration.ofFresnel
@@ -1873,17 +1755,11 @@ attribute [rep_depth operator]
   OpticalResponseCalibration.jones_11_eq_rp
   OpticalResponseCalibration.jones_offdiag_01_zero
   OpticalResponseCalibration.jones_offdiag_10_zero
-  OpticalResponseCalibration.event_basis_sp_valid
-  OpticalResponseCalibration.hessian_controls_optical_response_valid
-  OpticalResponseCalibration.absorption_matches_bregman_heat_valid
   OpticalResponseEigenCalibration
   OpticalResponseEigenCalibration.responseS_eq_rs
   OpticalResponseEigenCalibration.responseP_eq_rp
   OpticalResponseEigenCalibration.jones_00_eq_rs
   OpticalResponseEigenCalibration.jones_11_eq_rp
-  OpticalResponseEigenCalibration.hessian_controls_optical_response_valid
-  OpticalResponseEigenCalibration.absorption_matches_bregman_heat_valid
-  OpticalResponseEigenCalibration.hessian_controls_retardance_valid
   InformationPotentialDatum
   InformationPotentialDatum.hessian_symmetric
   InformationPotentialDatum.hessian_nonneg
@@ -1915,18 +1791,14 @@ attribute [rep_depth operator]
   OpticalStinespringHeatCalibration.absorption_eq_hidden_information
   OpticalPTStinespringClinch
   OpticalPTStinespringClinch.event_tag_eq_PT
-  OpticalPTStinespringClinch.pt_commutant_sector_valid
   OpticalPTStinespringClinch.absorption_eq_hidden_information
   OpticalPTStinespringClinch.heat_eq_hidden_information
   OpticalPTStinespringClinch.hidden_information_nonneg
   OpticalPTStinespringClinch.absorption_nonneg
   OpticalPTStinespringClinch.visible_deficit_eq_recovered_hidden
-  OpticalPTStinespringClinch.tomita_commutant_routing_valid
-  OpticalPTStinespringClinch.hidden_inaccessible_to_visible_observer_valid
   BregmanHessianResponse
   BregmanHessianResponse.hessian_symmetric
   BregmanHessianResponse.hessian_nonnegative
-  BregmanHessianResponse.bregman_hessian_valid
   SusceptibilityDatum
   StateDielectricResponseDatum
   ComplexRefractiveIndexDatum
@@ -1936,7 +1808,6 @@ attribute [rep_depth operator]
   SusceptibilityFresnelCalibration
   SusceptibilityFresnelCalibration.coeff_s_is_response_eigenvalue
   SusceptibilityFresnelCalibration.coeff_p_is_response_eigenvalue
-  SusceptibilityFresnelCalibration.end_to_end_optical_response_valid
   HessianJonesCalibration
   HessianJonesCalibration.eventOf
   HessianJonesCalibration.event_coeff0_eq_fresnel_s

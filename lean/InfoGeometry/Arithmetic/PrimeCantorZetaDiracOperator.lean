@@ -295,6 +295,49 @@ theorem majoranaPlus_minus_anticomm {P : PrimeCutoff}
     simp [majoranaPlusPush, majoranaMinusPush, hp, hmem, herase]
 
 /--
+Operator form of the split-Majorana anticommutator:
+
+`(c_p d_p + d_p c_p) f = 0` as an extensional equality of field transforms.
+-/
+@[rep_depth thermo]
+theorem majoranaPlus_minus_anticomm_funext {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) :
+    (fun S =>
+      majoranaPlusPush p (majoranaMinusPush p f) S
+        + majoranaMinusPush p (majoranaPlusPush p f) S)
+      = (fun _ => (0 : ℂ)) := by
+  funext S
+  exact majoranaPlus_minus_anticomm p f S
+
+/--
+Operator commutation form of the split-Majorana anticommutator:
+
+`c_p d_p = - d_p c_p` pointwise on fields.
+-/
+@[rep_depth thermo]
+theorem majoranaPlus_comp_minus_eq_neg_minus_comp_plus
+    {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    majoranaPlusPush p (majoranaMinusPush p f) S
+      =
+    - majoranaMinusPush p (majoranaPlusPush p f) S := by
+  have h := majoranaPlus_minus_anticomm p f S
+  exact eq_neg_of_add_eq_zero_left h
+
+/--
+Extensional operator form of `c_p d_p = - d_p c_p`.
+-/
+@[rep_depth thermo]
+theorem majoranaPlus_comp_minus_eq_neg_minus_comp_plus_funext
+    {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) :
+    (fun S => majoranaPlusPush p (majoranaMinusPush p f) S)
+      =
+    (fun S => - majoranaMinusPush p (majoranaPlusPush p f) S) := by
+  funext S
+  exact majoranaPlus_comp_minus_eq_neg_minus_comp_plus p f S
+
+/--
 Local Witt-generator square-law closure on one prime mode:
 
 `ε_p^2 = 0`, `ι_p^2 = 0`, `{ε_p, ι_p} = 1`
@@ -344,6 +387,118 @@ theorem annihilationPush_eq_half_minus_majorana
       (majoranaPlusPush p f S - majoranaMinusPush p f S) / 2 := by
   unfold majoranaPlusPush majoranaMinusPush
   ring
+
+/--
+Weighted plus-Majorana Dirac block:
+
+  D_p = a c_p.
+-/
+@[rep_depth thermo]
+def weightedMajoranaPlusPush {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) (S : Vertex P) : ℂ :=
+  a * majoranaPlusPush p f S
+
+/--
+Weighted minus-Majorana Dirac block:
+
+  D'_p = a d_p.
+-/
+@[rep_depth thermo]
+def weightedMajoranaMinusPush {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) (S : Vertex P) : ℂ :=
+  a * majoranaMinusPush p f S
+
+/--
+The weighted plus-Majorana Dirac block squares to scalar multiplication:
+
+  `(a c_p)^2 = a^2`.
+-/
+@[rep_depth thermo]
+theorem weightedMajoranaPlusPush_sq {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    weightedMajoranaPlusPush a p (weightedMajoranaPlusPush a p f) S =
+      (a * a) * f S := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by
+      simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [weightedMajoranaPlusPush, majoranaPlusPush, hp, hnot, hins]
+    ring
+  · have hmem : p ∈ insert p S := by
+      simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · simp [Finset.mem_erase, hq]
+    simp [weightedMajoranaPlusPush, majoranaPlusPush, hp, hmem, herase]
+    ring
+
+/--
+The weighted minus-Majorana Dirac block squares to negative scalar multiplication:
+
+  `(a d_p)^2 = -a^2`.
+-/
+@[rep_depth thermo]
+theorem weightedMajoranaMinusPush_sq {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    weightedMajoranaMinusPush a p (weightedMajoranaMinusPush a p f) S =
+      - ((a * a) * f S) := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by
+      simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [weightedMajoranaMinusPush, majoranaMinusPush, hp, hnot, hins]
+    ring
+  · have hmem : p ∈ insert p S := by
+      simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · simp [Finset.mem_erase, hq]
+    simp [weightedMajoranaMinusPush, majoranaMinusPush, hp, hmem, herase]
+    ring
+
+/--
+Weighted split-Majorana anticommutator:
+
+`(a c_p)(a d_p) + (a d_p)(a c_p) = 0`.
+-/
+@[rep_depth thermo]
+theorem weightedMajoranaPlus_minus_anticomm {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    weightedMajoranaPlusPush a p (weightedMajoranaMinusPush a p f) S
+      + weightedMajoranaMinusPush a p (weightedMajoranaPlusPush a p f) S = 0 := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [weightedMajoranaPlusPush, weightedMajoranaMinusPush,
+      majoranaPlusPush, majoranaMinusPush, hp, hnot, hins]
+  · have hmem : p ∈ insert p S := by simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · simp [Finset.mem_erase, hq]
+    simp [weightedMajoranaPlusPush, weightedMajoranaMinusPush,
+      majoranaPlusPush, majoranaMinusPush, hp, hmem, herase]
+
+/--
+Extensional form of the weighted split-Majorana anticommutator.
+-/
+@[rep_depth thermo]
+theorem weightedMajoranaPlus_minus_anticomm_funext {P : PrimeCutoff}
+    (a : ℂ) (p : PrimeMode P) (f : CantorField P) :
+    (fun S =>
+      weightedMajoranaPlusPush a p (weightedMajoranaMinusPush a p f) S
+        + weightedMajoranaMinusPush a p (weightedMajoranaPlusPush a p f) S)
+      = (fun _ => (0 : ℂ)) := by
+  funext S
+  exact weightedMajoranaPlus_minus_anticomm a p f S
 
 /-! ## 1b. Local Witt → projector/majorana algebra (no wrappers) -/
 
@@ -510,6 +665,30 @@ theorem localVacuum_mul_number_eq_zero
             simp
 
 /--
+Right-orthogonality of number and vacuum projectors:
+
+`N_j * (1 - N_j) = 0` where `N_j := ε_j * ι_j`.
+-/
+@[rep_depth thermo]
+theorem localNumber_mul_vacuum_eq_zero
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (ε_j * ι_j) * (1 - ε_j * ι_j) = 0 := by
+  have hN : (ε_j * ι_j) * (ε_j * ι_j) = ε_j * ι_j :=
+    localNumber_idempotent (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
+  calc
+    (ε_j * ι_j) * (1 - ε_j * ι_j)
+        = ε_j * ι_j - (ε_j * ι_j) * (ε_j * ι_j) := by
+            noncomm_ring
+    _ = ε_j * ι_j - ε_j * ι_j := by
+            rw [hN]
+    _ = 0 := by
+            simp
+
+/--
 Local number/hole complement identity:
 
 `N_j + H_j = 1` with `N_j := ε_j*ι_j` and `H_j := ι_j*ε_j`.
@@ -520,6 +699,49 @@ theorem localNumber_hole_complement
     {ε_j ι_j : R}
     (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
     ε_j * ι_j + ι_j * ε_j = 1 := hcar
+
+/--
+Vacuum and number projectors sum to identity:
+
+`(1 - N_j) + N_j = 1` where `N_j := ε_j*ι_j`.
+-/
+@[rep_depth thermo]
+theorem localVacuum_add_number_eq_one
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R} :
+    (1 - ε_j * ι_j) + (ε_j * ι_j) = 1 := by
+  noncomm_ring
+
+/--
+Number and vacuum projectors are complementary in both orders:
+
+`(1 - N_j) + N_j = 1` and `N_j + (1 - N_j) = 1`.
+-/
+@[rep_depth thermo]
+theorem localVacuum_number_complement_pair
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R} :
+    ((1 - ε_j * ι_j) + (ε_j * ι_j) = 1) ∧
+    ((ε_j * ι_j) + (1 - ε_j * ι_j) = 1) := by
+  refine ⟨?_, ?_⟩
+  · exact localVacuum_add_number_eq_one (ε_j := ε_j) (ι_j := ι_j)
+  · noncomm_ring
+
+/--
+Vacuum/number projectors annihilate each other in both orders.
+-/
+@[rep_depth thermo]
+theorem localVacuum_number_annihilate_pair
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    ((1 - ε_j * ι_j) * (ε_j * ι_j) = 0) ∧
+    ((ε_j * ι_j) * (1 - ε_j * ι_j) = 0) := by
+  refine ⟨?_, ?_⟩
+  · exact localVacuum_mul_number_eq_zero (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
+  · exact localNumber_mul_vacuum_eq_zero (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
 
 /--
 Orthogonality of the local number/hole projectors:
@@ -546,6 +768,45 @@ theorem localProjector_orthogonal
         noncomm_ring
       _ = 0 := by
         rw [hε]
+        simp
+
+/--
+CAR number/hole projectors resolve identity on the left:
+
+`(N_j + H_j) * x = x` for all `x`, where
+`N_j := ε_j*ι_j`, `H_j := ι_j*ε_j`, and `N_j + H_j = 1`.
+-/
+@[rep_depth thermo]
+theorem localProjector_resolution_left
+    {R : Type*} [Ring R]
+    {ε_j ι_j x : R}
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (ε_j * ι_j + ι_j * ε_j) * x = x := by
+  calc
+    (ε_j * ι_j + ι_j * ε_j) * x = (1 : R) * x := by
+      rw [hcar]
+    _ = x := by
+      simp
+
+/--
+CAR projectors resolve identity on both sides:
+
+`(N_j + H_j) * x = x` and `x * (N_j + H_j) = x`, where
+`N_j := ε_j*ι_j`, `H_j := ι_j*ε_j`.
+-/
+@[rep_depth thermo]
+theorem localProjector_resolution_two_sided
+    {R : Type*} [Ring R]
+    {ε_j ι_j x : R}
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    ((ε_j * ι_j + ι_j * ε_j) * x = x) ∧
+    (x * (ε_j * ι_j + ι_j * ε_j) = x) := by
+  refine ⟨?_, ?_⟩
+  · exact localProjector_resolution_left (ε_j := ε_j) (ι_j := ι_j) (x := x) hcar
+  · calc
+      x * (ε_j * ι_j + ι_j * ε_j) = x * (1 : R) := by
+        rw [hcar]
+      _ = x := by
         simp
 
 /--

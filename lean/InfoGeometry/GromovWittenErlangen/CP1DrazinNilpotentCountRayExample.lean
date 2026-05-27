@@ -28,6 +28,8 @@ open InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 
+attribute [local instance] starRingOfComm
+
 /-! ## Positive finite count/probability/operator corridor -/
 
 /-- Concrete positive sample counts `(20, 30, 10)`. -/
@@ -181,10 +183,8 @@ def defectProjections : SelfAdjointIdempotentPair Algebra where
   support_residue_zero := by ext <;> norm_num
   residue_support_zero := by ext <;> norm_num
   support_add_residue := by ext <;> norm_num
-  selfAdjointLaw := ((1, 0) : Algebra) * ((0, 1) : Algebra) = 0 ∧
-      ((0, 1) : Algebra) * ((1, 0) : Algebra) = 0
-  selfAdjointCertificate := by
-    constructor <;> ext <;> norm_num
+  support_selfAdjoint := by ext <;> norm_num
+  residue_selfAdjoint := by ext <;> norm_num
 
 /--
 One-edge Drazin decomposition with regular denominator in the first factor and
@@ -207,9 +207,8 @@ def defectEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
   coreInv_mul_regular := by ext <;> norm_num [defectProjections]
   nilpotent_mul_coreInv := by ext <;> norm_num
   coreInv_mul_nilpotent := by ext <;> norm_num
-  nilpotentResidueLaw :=
-    ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0
-  nilpotentResidueCertificate := by
+  nilpotent_isNilpotent := by
+    refine ⟨2, ?_⟩
     ext
     · norm_num
     · native_decide
@@ -231,104 +230,33 @@ theorem defectRegularInverse_mul_residue :
     ((1, (0 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 := by
   ext <;> norm_num
 
-/-- Drazin localization packet with a nonzero residue sector. -/
-def drazinLocalization : GWDrazinLocalizationPacket G T Target Coeff Algebra where
-  virtualLocalization := virtualLocalization
-  edgeEulerWeight := fun _ => (1, 2)
-  edgeDrazin := fun _ => defectEdgeDrazin
-  edgeDrazin_element_eq := by
-    intro e
-    cases e
-    rfl
-  vertexAlgebraContribution := fun _ => (1, 0)
-  edgeAlgebraContribution := fun _ => (1, 0)
-  localizationValue := (1, 0)
-  localizationAssemblyLaw :=
-    ((1, (0 : ZMod 4)) : Algebra) =
-      ((1, (0 : ZMod 4)) : Algebra) *
-        ((1, (0 : ZMod 4)) : Algebra) *
-          ((1, (0 : ZMod 4)) : Algebra)
-  localizationAssemblyCertificate := by
-    ext <;> norm_num
-
-/-- Minimal divisor packet: one divisor class with unit line degree. -/
-def divisorAxiom : LocalizationDivisorAxiomPacket G T Target Coeff where
-  virtualLocalization := virtualLocalization
-  DivisorClass := Unit
-  divisorDegreeWeight := fun _ _ => 1
-  divisorInsertionLaw := ∀ e : Edge, (1 : ℝ) = 1
-  divisorInsertionCertificate := by
-    intro e
-    rfl
-
-/-- Trivial Frobenius self-duality packet over the product coefficient algebra. -/
--- DEBT_ID: CP1DNC_TRIVIAL_FROBENIUS
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: Trivial Frobenius placeholder for smoke model
-def frobenius : FrobeniusSelfDualPacket Algebra where
-  pairing := fun _ _ => 0
-  pairing_mul_left_eq_pairing_mul_right := by
-    intro a b c
-    rfl
-  nondegeneracyLaw := ∀ a b : Algebra, (0 : ℤ) = 0
-  nondegeneracyCertificate := by
-    intro a b
-    rfl
-
-/-- Trivial residue block packet for the product smoke model. -/
-def residueBlocks : DivisionResidueBlockPacket where
-  Block := Unit
-  DivisionCarrier := fun _ => Unit
-  residueProjection := fun _ => Unit
-  simpleResidueLaw := Nonempty Unit
-  simpleResidueCertificate := ⟨()⟩
-
-/-- Minimal semisimple/Frobenius packet. -/
-def frobeniusSemisimple : LocalizedFrobeniusSemisimplePacket Algebra where
-  frobenius := frobenius
-  residueBlocks := residueBlocks
-  semisimplicityLaw := Nonempty Unit
-  semisimplicityCertificate := ⟨()⟩
-
-/-- Integrated Drazin/GW bridge for the nonzero-residue smoke model. -/
-def bridge : DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra where
-  drazinLocalization := drazinLocalization
-  divisorAxiom := divisorAxiom
-  frobeniusSemisimple := frobeniusSemisimple
-  divisorDrazinCompatibilityLaw :=
-    ∀ e : Edge, drazinLocalization.edgeEulerWeight e = ((1, (2 : ZMod 4)) : Algebra)
-  divisorDrazinCompatibilityCertificate := by
-    intro e
-    cases e
-    rfl
-
 /-- The unique edge carries the product denominator `(1, 2)`. -/
 theorem edgeDrazinData_element_line :
-    (bridge.edgeDrazinData Edge.line).element = (1, 2) :=
-  bridge.drazinLocalization.edgeDrazinData_element_eq_weight Edge.line
+    defectEdgeDrazin.element = (1, 2) :=
+  rfl
 
 /-- The unique edge has a visibly nonzero localized Drazin residue. -/
 theorem edgeLocalizedDrazinResidue_line :
-    bridge.edgeLocalizedDrazinResidue Edge.line = (0, 2) :=
+    defectEdgeDrazin.localizedDrazinResidue = (0, 2) :=
   rfl
 
-/-- The bridge-level localized residue is square-zero. -/
+/-- The localized residue is square-zero. -/
 theorem edgeLocalizedDrazinResidue_square_zero_line :
-    bridge.edgeLocalizedDrazinResidue Edge.line *
-        bridge.edgeLocalizedDrazinResidue Edge.line = 0 := by
+    defectEdgeDrazin.localizedDrazinResidue *
+        defectEdgeDrazin.localizedDrazinResidue = 0 := by
   exact defectResidue_square_zero
 
-/-- The bridge-level residue is killed by the localized regular inverse. -/
+/-- The residue is killed by the localized regular inverse. -/
 theorem edgeResidue_mul_regularInverse_line :
-    bridge.edgeLocalizedDrazinResidue Edge.line *
-        bridge.edgeLocalizedRegularInverse Edge.line = 0 :=
-  bridge.edgeResidue_mul_regularInverse Edge.line
+    defectEdgeDrazin.localizedDrazinResidue *
+        defectEdgeDrazin.localizedRegularInverse = 0 :=
+  defectEdgeDrazin.residue_mul_regularInverse
 
-/-- The localized regular inverse kills the bridge-level residue on the left. -/
+/-- The localized regular inverse kills the residue on the left. -/
 theorem edgeRegularInverse_mul_residue_line :
-    bridge.edgeLocalizedRegularInverse Edge.line *
-        bridge.edgeLocalizedDrazinResidue Edge.line = 0 :=
-  bridge.drazinLocalization.edgeRegularInverse_mul_residue Edge.line
+    defectEdgeDrazin.localizedRegularInverse *
+        defectEdgeDrazin.localizedDrazinResidue = 0 :=
+  defectEdgeDrazin.regularInverse_mul_residue
 
 end CP1DrazinNilpotentCountRayExample
 end GromovWittenErlangen

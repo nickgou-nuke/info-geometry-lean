@@ -359,11 +359,6 @@ namespace EulerProductWitness
 variable {L : ℂ → ℂ}
 variable (E : EulerProductWitness L)
 
-/-- The supplied Euler-product law is available. -/
-theorem euler_product_valid :
-    HasEulerProduct L E.PrimeIndex E.localFactor E.convergenceRegion :=
-  E.euler_product_certificate
-
 /--
 Forgetful adapter to the legacy placeholder `EulerProductData`.
 
@@ -402,11 +397,6 @@ namespace CompletedLFunctionWitness
 
 variable {L : ℂ → ℂ}
 variable (C : CompletedLFunctionWitness L)
-
-/-- The supplied completed-functional-equation law is available. -/
-theorem completed_functional_equation_valid :
-    HasCompletedFunctionalEquation L C.completedL :=
-  C.completed_functional_equation_certificate
 
 /--
 Forgetful adapter to the legacy completed-functional-equation predicate.
@@ -458,17 +448,6 @@ def toWeakWitness :
   completedL := R.completed.completedL
   completedFunctionalEquation :=
     R.completed.toHasCompletedFunctionalEquation
-
-/-- The Euler-product certificate is available. -/
-theorem euler_product_valid :
-    HasEulerProduct P.L R.eulerProduct.PrimeIndex R.eulerProduct.localFactor
-      R.eulerProduct.convergenceRegion :=
-  R.eulerProduct.euler_product_valid
-
-/-- The completed-functional-equation certificate is available. -/
-theorem completed_functional_equation_valid :
-    HasCompletedFunctionalEquation P.L R.completed.completedL :=
-  R.completed.completed_functional_equation_valid
 
 end LanglandsPrimeResonanceStrongWitness
 

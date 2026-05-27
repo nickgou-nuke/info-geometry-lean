@@ -53,11 +53,6 @@ variable
 
 variable (B : AndreevHorizonBridge V HorizonData)
 
-/-- The supplied horizon-as-Andreev analogue law is available. -/
-theorem horizon_as_andreev_boundary_valid :
-    B.horizon_as_andreev_boundary_law :=
-  B.horizon_as_andreev_boundary_certificate
-
 /-- The bridge exports the Andreev diagonal fixedness theorem. -/
 theorem horizon_diagonal_fixed :
     B.andreev.electron + B.andreev.hole ∈

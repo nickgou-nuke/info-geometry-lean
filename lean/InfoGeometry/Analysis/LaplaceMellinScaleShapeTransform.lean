@@ -39,45 +39,4 @@ structure LaplaceMellinScaleShapePacket where
   laplaceShapeCompatible : Prop
   scaleShapeBlockSplit : Prop
 
-  scaleChannel_certificate : scaleChannel
-  shapeChannel_certificate : shapeChannel
-  mellinScaleCompatible_certificate : mellinScaleCompatible
-  laplaceShapeCompatible_certificate : laplaceShapeCompatible
-  scaleShapeBlockSplit_certificate : scaleShapeBlockSplit
-
-/-- Re-export of the Mellin scale channel witness. -/
-@[rep_depth operator]
-theorem scaleChannel_law
-    (P : LaplaceMellinScaleShapePacket) :
-    P.scaleChannel :=
-  P.scaleChannel_certificate
-
-/-- Re-export of the Laplace shape channel witness. -/
-@[rep_depth operator]
-theorem shapeChannel_law
-    (P : LaplaceMellinScaleShapePacket) :
-    P.shapeChannel :=
-  P.shapeChannel_certificate
-
-/-- Re-export of the Mellin compatibility witness. -/
-@[rep_depth operator]
-theorem mellinScaleCompatible_law
-    (P : LaplaceMellinScaleShapePacket) :
-    P.mellinScaleCompatible :=
-  P.mellinScaleCompatible_certificate
-
-/-- Re-export of the Laplace compatibility witness. -/
-@[rep_depth operator]
-theorem laplaceShapeCompatible_law
-    (P : LaplaceMellinScaleShapePacket) :
-    P.laplaceShapeCompatible :=
-  P.laplaceShapeCompatible_certificate
-
-/-- Re-export of the scale-shape block split witness. -/
-@[rep_depth operator]
-theorem scaleShapeBlockSplit_law
-    (P : LaplaceMellinScaleShapePacket) :
-    P.scaleShapeBlockSplit :=
-  P.scaleShapeBlockSplit_certificate
-
 end InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform

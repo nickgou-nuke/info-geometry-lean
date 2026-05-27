@@ -130,19 +130,6 @@ theorem ergodicMean_isSelfSimilarFixedPoint (A : EndH) :
     B.IsSelfSimilarFixedPoint (B.ergodicMean A) :=
   ⟨B.ergodicMean_isModularFixed A, B.ergodicMean_isScaleFixed A⟩
 
-/-- The ergodic mean is idempotent. -/
-@[rep_depth thermo]
-theorem ergodicMean_idempotent_readback (A : EndH) :
-    B.ergodicMean (B.ergodicMean A) = B.ergodicMean A :=
-  B.ergodicMean_idempotent A
-
-/-- Renormalization preserves modular fixed points. -/
-@[rep_depth thermo]
-theorem renorm_preserves_modularFixed_readback
-    (A : EndH) (hA : B.IsModularFixed A) :
-    B.IsModularFixed (B.renorm A) :=
-  B.renorm_preserves_modularFixed A hA
-
 /-- Self-similar fixed points are modular fixed. -/
 @[rep_depth thermo]
 theorem modularFixed_of_selfSimilarFixedPoint
@@ -157,29 +144,11 @@ theorem scaleFixed_of_selfSimilarFixedPoint
     B.IsScaleFixed A :=
   hA.2
 
-/-- Modular fixed points land in the supplied centralizer-like predicate. -/
-@[rep_depth thermo]
-theorem modularFixed_mem_centralizerLike_readback
-    {A : EndH} (hA : B.IsModularFixed A) :
-    B.centralizerLike A :=
-  B.modularFixed_mem_centralizerLike A hA
-
 /-- The ergodic mean lands in the supplied centralizer-like predicate. -/
 @[rep_depth thermo]
 theorem ergodicMean_mem_centralizerLike (A : EndH) :
     B.centralizerLike (B.ergodicMean A) :=
-  B.modularFixed_mem_centralizerLike_readback (A := B.ergodicMean A) (B.ergodicMean_isModularFixed A)
-
-/-- Regular-support commutation is preserved by the supplied ergodic mean. -/
-@[rep_depth thermo]
-theorem ergodicMean_regularSupportStable_readback
-    (A : EndH)
-    (hA :
-      B.kms.bounded.souriau.superBridge.CIK.spectralProjector * A =
-        A * B.kms.bounded.souriau.superBridge.CIK.spectralProjector) :
-    B.kms.bounded.souriau.superBridge.CIK.spectralProjector * B.ergodicMean A =
-      B.ergodicMean A * B.kms.bounded.souriau.superBridge.CIK.spectralProjector :=
-  B.ergodicMean_regularSupportStable A hA
+  B.modularFixed_mem_centralizerLike (A := B.ergodicMean A) (B.ergodicMean_isModularFixed A)
 
 end OperatorErgodicFixedPointBridge
 
@@ -213,16 +182,8 @@ namespace CantorDyadicRenormalization
 
 variable (C : CantorDyadicRenormalization Op)
 
-/-- Readback of the supplied dyadic renormalization law. -/
-@[rep_depth projective]
-theorem renorm_cylinder_readback (w : BinaryWord) :
-    C.renorm (C.cylinder w) =
-      C.cylinder (BinaryWord.child w false) + C.cylinder (BinaryWord.child w true) :=
-  C.renorm_cylinder w
-
 end CantorDyadicRenormalization
 
 end Cantor
 
 end InfoGeometry.Canonical.ErgodicFixedPointBridge
-

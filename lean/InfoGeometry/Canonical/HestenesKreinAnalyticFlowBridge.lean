@@ -66,20 +66,6 @@ namespace HestenesKreinAnalyticFlow
 
 variable (F : HestenesKreinAnalyticFlow (E := E))
 
-/-- Readback: the flow fixes operators at time zero. -/
-@[rep_depth krein]
-theorem flow_zero_readback
-    (A : EndH) :
-    F.flow 0 A = A :=
-  F.flow_zero A
-
-/-- Readback: the supplied flow obeys additive time composition. -/
-@[rep_depth krein]
-theorem flow_add_readback
-    (t s : ℝ) (A : EndH) :
-    F.flow (t + s) A = F.flow t (F.flow s A) :=
-  F.flow_add t s A
-
 /-- Readback: Hestenes analyticity is preserved under the supplied flow. -/
 @[rep_depth krein]
 theorem flow_preserves_hestenesAnalytic

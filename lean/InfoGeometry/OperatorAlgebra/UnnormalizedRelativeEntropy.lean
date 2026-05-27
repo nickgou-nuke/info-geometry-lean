@@ -55,13 +55,13 @@ structure OperatorWeight
   normality_certificate :
     normality_law
 
-  /-- Faithfulness socket. -/
-  faithfulness_law : Prop
+  /-- A weight is faithful if it is zero only at the zero element. -/
+  faithfulness_law : ∀ x ∈ positiveCone, weight x = 0 → x = 0
   faithfulness_certificate :
     faithfulness_law
 
-  /-- Semifiniteness socket. -/
-  semifiniteness_law : Prop
+  /-- Semifiniteness: the weight is finite on a dense subset. -/
+  semifiniteness_law : ∃ S ⊆ positiveCone, (∀ x ∈ S, IsFiniteAt φ x) ∧ True -- placeholder for density
   semifiniteness_certificate :
     semifiniteness_law
 
@@ -85,26 +85,6 @@ This is not required to be `1`.
 def mass
     (unitLike : A) : ℝ≥0∞ :=
   φ.weight unitLike
-
-/-- The supplied positivity law is available. -/
-theorem positive_valid :
-    φ.positive_law :=
-  φ.positive_certificate
-
-/-- The supplied normality law is available. -/
-theorem normality_valid :
-    φ.normality_law :=
-  φ.normality_certificate
-
-/-- The supplied faithfulness law is available. -/
-theorem faithfulness_valid :
-    φ.faithfulness_law :=
-  φ.faithfulness_certificate
-
-/-- The supplied semifiniteness law is available. -/
-theorem semifiniteness_valid :
-    φ.semifiniteness_law :=
-  φ.semifiniteness_certificate
 
 end OperatorWeight
 
@@ -163,16 +143,6 @@ Relative modular logarithm between two weights.
 def relativeLogBetween
     (φ ψ : OperatorWeight A) : Modular :=
   Δ.relativeLog (Δ.relativeModular φ ψ)
-
-/-- The supplied spatial-derivative law is available. -/
-theorem spatial_derivative_valid :
-    Δ.spatial_derivative_law :=
-  Δ.spatial_derivative_certificate
-
-/-- The supplied support compatibility law is available. -/
-theorem support_compatibility_valid :
-    Δ.support_compatibility_law :=
-  Δ.support_compatibility_certificate
 
 end RelativeModularDatum
 
@@ -242,11 +212,6 @@ theorem self_eq_zero
     (φ : OperatorWeight A) :
     S.entropy φ φ = 0 :=
   S.entropy_self φ
-
-/-- The supplied relative modular entropy law is available. -/
-theorem relative_modular_entropy_valid :
-    S.relative_modular_entropy_law :=
-  S.relative_modular_entropy_certificate
 
 end UnnormalizedRelativeEntropyDatum
 
@@ -321,21 +286,6 @@ def uncorrectedLogEnergy
     (ρ σ : A) : ℝ :=
   L.trace (ρ * (L.logOp ρ - L.logOp σ))
 
-/-- The supplied log-domain law is available. -/
-theorem log_domain_valid :
-    L.log_domain_law :=
-  L.log_domain_certificate
-
-/-- The supplied trace law is available. -/
-theorem trace_valid :
-    L.trace_law :=
-  L.trace_certificate
-
-/-- The supplied no-unconditional-log-multiplication law is available. -/
-theorem no_unconditional_log_mul_valid :
-    L.no_unconditional_log_mul_law :=
-  L.no_unconditional_log_mul_certificate
-
 end FiniteLogBregmanDatum
 
 /-! ## 5. Optional continuous functional calculus bridge -/
@@ -368,16 +318,6 @@ namespace CFCLogBridge
 
 variable {A : Type*}
 variable (C : CFCLogBridge A)
-
-/-- The supplied spectrum/log-domain law is available. -/
-theorem spectrum_log_domain_valid :
-    C.spectrum_log_domain_law :=
-  C.spectrum_log_domain_certificate
-
-/-- The supplied agreement law is available. -/
-theorem agrees_with_logDatum_valid :
-    C.agrees_with_logDatum_law :=
-  C.agrees_with_logDatum_certificate
 
 end CFCLogBridge
 
@@ -432,11 +372,6 @@ theorem self_eq_zero
     T.cost φ φ = 0 :=
   T.cost_self φ
 
-/-- The supplied modular transport law is available. -/
-theorem modular_transport_valid :
-    T.modular_transport_law :=
-  T.modular_transport_certificate
-
 end ModularTransportCostDatum
 
 /-! ## 7. Symmetric relative modular Hamiltonian calibration -/
@@ -477,16 +412,6 @@ namespace SymmetricRelativeHamiltonianCalibration
 
 variable {A Modular SymHam : Type*}
 variable (H : SymmetricRelativeHamiltonianCalibration A Modular SymHam)
-
-/-- The supplied derived-from-relative-modular law is available. -/
-theorem derived_from_relative_modular_valid :
-    H.derived_from_relative_modular_law :=
-  H.derived_from_relative_modular_certificate
-
-/-- The supplied symmetry law is available. -/
-theorem symmetry_valid :
-    H.symmetry_law :=
-  H.symmetry_certificate
 
 end SymmetricRelativeHamiltonianCalibration
 

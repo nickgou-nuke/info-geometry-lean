@@ -8,7 +8,7 @@ import InfoGeometry.Meta.SocketTarget
 /-!
 # InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 
-witness-gated (Native Closure Mandated: Closure Debt) spectral socket for a Majorana/Pólya--Hilbert program.
+Analytic obligation ledger for a Majorana/Pólya--Hilbert program.
 
 This file deliberately does **not** construct a self-adjoint operator whose
 spectrum proves RH.  It records the exact analytic obligations such a program
@@ -88,31 +88,6 @@ structure BerryKeatingOperatorPacket
   momentum : Operator
   symmetrizedDilation : Operator
 
-namespace BerryKeatingOperatorPacket
-
-variable {Carrier Operator Domain : Type*}
-variable (B : BerryKeatingOperatorPacket Carrier Operator Domain)
-
-/-- Symmetrized `xp + px` formula law. -/
-theorem symmetrizedDilation_formula : B.symmetrizedDilation = B.symmetrizedDilation := by
-  -- DEBT_ID: MPHS_BK_FORMULA
-  -- DEBT_KIND: SORRY
-  rfl
-
-/-- Symmetry-on-domain law. -/
-theorem symmetric_on_domain : B.domain = B.domain := by
-  -- DEBT_ID: MPHS_BK_SYMMETRIC
-  -- DEBT_KIND: SORRY
-  rfl
-
-/-- Self-adjoint extension law. -/
-theorem self_adjoint_extension : B.symmetrizedDilation = B.symmetrizedDilation := by
-  -- DEBT_ID: MPHS_BK_SELF_ADJOINT
-  -- DEBT_KIND: SORRY
-  rfl
-
-end BerryKeatingOperatorPacket
-
 /--
 Majorana modification of a Berry--Keating spectral operator.
 
@@ -128,13 +103,9 @@ structure MajoranaBerryKeatingOperatorPacket
   majoranaDirac : Operator
   squareRootEnergyCoefficient : Mode → ℝ
   splitClifford_law : Prop
-  splitClifford_certificate : splitClifford_law
   squareRootEnergy_law : Prop
-  squareRootEnergy_certificate : squareRootEnergy_law
   dirac_square_law : Prop
-  dirac_square_certificate : dirac_square_law
   self_adjoint_law : Prop
-  self_adjoint_certificate : self_adjoint_law
   bk_mellin_sector_fixes_criticalLine_law : Prop
   bk_mellin_sector_fixes_criticalLine_certificate :
     bk_mellin_sector_fixes_criticalLine_law
@@ -143,34 +114,6 @@ structure MajoranaBerryKeatingOperatorPacket
     majorana_fock_sector_produces_pfaffianCharacter_law
 
 namespace MajoranaBerryKeatingOperatorPacket
-
-/-- Re-export of the supplied split-Clifford compatibility law. -/
-theorem splitClifford
-    {Carrier Operator Domain Mode : Type*}
-    (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.splitClifford_law :=
-  M.splitClifford_certificate
-
-/-- Re-export of the supplied `sqrt(log p)` normalization law. -/
-theorem squareRootEnergy
-    {Carrier Operator Domain Mode : Type*}
-    (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.squareRootEnergy_law :=
-  M.squareRootEnergy_certificate
-
-/-- Re-export of the supplied Dirac-square law. -/
-theorem dirac_square
-    {Carrier Operator Domain Mode : Type*}
-    (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.dirac_square_law :=
-  M.dirac_square_certificate
-
-/-- Re-export of the supplied self-adjointness law. -/
-theorem self_adjoint
-    {Carrier Operator Domain Mode : Type*}
-    (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.self_adjoint_law :=
-  M.self_adjoint_certificate
 
 /-- Re-export: the Mellin/BK sector is the critical-line mechanism. -/
 theorem bk_mellin_sector_fixes_criticalLine
@@ -320,29 +263,13 @@ structure MajoranaZeroModeNormalizabilityPacket
   zeroMode : ZeroMode
   normReadout : NormReadout
   isZeroMode_law : Prop
-  isZeroMode_certificate : isZeroMode_law
   normalizable_law : Prop
-  normalizable_certificate : normalizable_law
   normalizable_iff_criticalLine_law :
     normalizable_law ↔ IsCriticalLineRealPart realPart
   normalizable_iff_criticalLine_certificate :
     normalizable_law ↔ IsCriticalLineRealPart realPart
 
 namespace MajoranaZeroModeNormalizabilityPacket
-
-/-- The supplied zero-mode law is available. -/
-theorem isZeroMode
-    {ZeroMode NormReadout : Type*}
-    (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout) :
-    Z.isZeroMode_law :=
-  Z.isZeroMode_certificate
-
-/-- The supplied normalizability law is available. -/
-theorem normalizable
-    {ZeroMode NormReadout : Type*}
-    (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout) :
-    Z.normalizable_law :=
-  Z.normalizable_certificate
 
 /--
 If the supplied analytic packet proves normalizability, the real part lies on
@@ -353,9 +280,10 @@ normalizability criterion.
 -/
 theorem criticalLine_of_normalizable
     {ZeroMode NormReadout : Type*}
-    (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout) :
+    (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout)
+    (h : Z.normalizable_law) :
     IsCriticalLineRealPart Z.realPart :=
-  (Z.normalizable_iff_criticalLine_certificate).mp Z.normalizable_certificate
+  (Z.normalizable_iff_criticalLine_certificate).mp h
 
 /-- Conversely, the packet says critical-line real part implies normalizability. -/
 theorem normalizable_of_criticalLine
@@ -817,12 +745,10 @@ structure CompletedXiHilbertPolyaReduction
   renormalizedPfaffianAtHeight : RenormalizedPfaffianReadout
   spectralKernelAtHeight : SpectralKernel
   self_adjoint_law : Prop
-  self_adjoint_certificate : self_adjoint_law
   renormalizedPfaffian_eq_completedXi_law : Prop
   renormalizedPfaffian_eq_completedXi_certificate :
     renormalizedPfaffian_eq_completedXi_law
   completedXiZero_law : Prop
-  completedXiZero_certificate : completedXiZero_law
   completedXiZero_iff_spectralKernel_law :
     completedXiZero_law ↔ Nonempty SpectralKernel
   completedXiZero_iff_spectralKernel_certificate :
@@ -837,16 +763,6 @@ structure CompletedXiHilbertPolyaReduction
 
 namespace CompletedXiHilbertPolyaReduction
 
-/-! Re-export of self-adjointness for the supplied spectral operator. -/
-@[bridge_target_tag]
-theorem self_adjoint
-    {SpectralOperator SpectralKernel CompletedXiReadout
-      RenormalizedPfaffianReadout : Type*}
-    (R : CompletedXiHilbertPolyaReduction
-      SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout) :
-    R.self_adjoint_law :=
-  R.self_adjoint_certificate
-
 /-! Re-export of the renormalized Pfaffian/completed-`Xi` identity. -/
 @[bridge_target_tag]
 theorem renormalizedPfaffian_eq_completedXi
@@ -857,42 +773,23 @@ theorem renormalizedPfaffian_eq_completedXi
     R.renormalizedPfaffian_eq_completedXi_law :=
   R.renormalizedPfaffian_eq_completedXi_certificate
 
-/-! Re-export of completed-`Xi` zero data. -/
-@[bridge_target_tag]
-theorem completedXiZero
-    {SpectralOperator SpectralKernel CompletedXiReadout
-      RenormalizedPfaffianReadout : Type*}
-    (R : CompletedXiHilbertPolyaReduction
-      SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout) :
-    R.completedXiZero_law :=
-  R.completedXiZero_certificate
-
 /-! Completed-`Xi` zero data gives a spectral kernel by supplied identity. -/
 @[bridge_target_tag]
 theorem spectralKernel_of_completedXiZero
     {SpectralOperator SpectralKernel CompletedXiReadout
       RenormalizedPfaffianReadout : Type*}
     (R : CompletedXiHilbertPolyaReduction
-      SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout) :
+      SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout)
+    (hZero : R.completedXiZero_law) :
     Nonempty SpectralKernel :=
-  (R.completedXiZero_iff_spectralKernel_certificate).mp R.completedXiZero_certificate
-
-/-! Conditional RH readback from the completed-`Xi` spectral reduction. -/
-@[bridge_target_tag]
-theorem classicalRH_of_completedXi_spectral_reduction
-    {SpectralOperator SpectralKernel CompletedXiReadout
-      RenormalizedPfaffianReadout : Type*}
-    (R : CompletedXiHilbertPolyaReduction
-      SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout) :
-    R.classicalRHStatement :=
-  R.criticalLine_completedXiZeros_imply_RH_law R.spectralZero_on_criticalLine_law
+  (R.completedXiZero_iff_spectralKernel_certificate).mp hZero
 
 end CompletedXiHilbertPolyaReduction
 
 /-! ## 5. Full Pólya--Hilbert bridge packet -/
 
 /--
-Complete witness-gated (Native Closure Mandated: Closure Debt) Majorana/Pólya--Hilbert bridge.
+Complete Majorana/Pólya--Hilbert analytic obligation packet.
 
 The final implication to a classical RH proposition is a field, not a theorem
 derived by this module.  A concrete analytic construction must supply it.
@@ -956,26 +853,6 @@ theorem zeroModes_match_zetaZeros
     B.zeroModes_match_zetaZeros_law :=
   B.zeroModes_match_zetaZeros_certificate
 
-/--
-Conditional RH readback from the supplied analytic bridge.
-
-The proof uses the packet's normalizability criterion and the packet's own
-implication from critical-line real part to the classical RH statement.
--/
-@[bridge_target_tag]
-theorem classicalRH_of_supplied_majorana_spectral_witness
-    {Carrier Operator Domain Mode ZeroMode NormReadout
-      SpectralParameter PfaffianReadout ZetaReadout : Type*}
-    (B : MajoranaPolyaHilbertBridge
-      Carrier Operator Domain Mode ZeroMode NormReadout
-      SpectralParameter PfaffianReadout ZetaReadout
-      MellinWave MellinNorm WittenCharacter CompletedXiReadout
-      SpectralPfaffianReadout FockState MellinState FockNorm) :
-    B.classicalRHStatement :=
-  B.criticalLine_implies_classicalRH_law
-    (MajoranaZeroModeNormalizabilityPacket.criticalLine_of_normalizable
-      B.zeroModeNormalizability)
-
 /-- The bridge records that the BK/Mellin sector supplies the critical-line condition. -/
 @[bridge_target_tag]
 theorem criticalLine_from_mellinPlancherel
@@ -1035,9 +912,8 @@ sockets:
   a spectral-zero readout;
 * heat-trace/Mellin data targeting the Riemann--Weil explicit formula.
 
-This packet is still witness-gated.  It records the exact obligations but does
-not assert an infinite determinant, analytic continuation, or RH proof by
-construction.
+This packet records the exact obligations but does not assert an infinite
+determinant, analytic continuation, or RH proof by construction.
 -/
 structure MajoranaBKTraceFormulaBridge
     (Carrier Operator Domain Mode ZeroMode NormReadout
@@ -1081,33 +957,6 @@ structure MajoranaBKTraceFormulaBridge
   explicitFormula_is_finalTraceTest_guard : Type*
 
 namespace MajoranaBKTraceFormulaBridge
-
-/-- The extended packet inherits the base conditional RH readback. -/
-theorem classicalRH_of_base_witness
-    {Carrier Operator Domain Mode ZeroMode NormReadout
-      SpectralParameter PfaffianReadout ZetaReadout
-      MellinWave MellinNorm WittenCharacter CompletedXiReadout
-      SpectralPfaffianReadout FockState MellinState FockNorm
-      BosonicReadout FermionicReadout SuperdeterminantReadout
-      InverseZetaReadout ArchimedeanReadout FinitePrimeReadout
-      BoundaryData ScatteringMatrix ContinuousSpectrum
-      DiscreteOrAbsorptionReadout PhaseShiftReadout
-      HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout : Type*}
-    (B : MajoranaBKTraceFormulaBridge
-      Carrier Operator Domain Mode ZeroMode NormReadout
-      SpectralParameter PfaffianReadout ZetaReadout
-      MellinWave MellinNorm WittenCharacter CompletedXiReadout
-      SpectralPfaffianReadout FockState MellinState FockNorm
-      BosonicReadout FermionicReadout SuperdeterminantReadout
-      InverseZetaReadout ArchimedeanReadout FinitePrimeReadout
-      BoundaryData ScatteringMatrix ContinuousSpectrum
-      DiscreteOrAbsorptionReadout PhaseShiftReadout
-      HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
-      ExplicitFormulaReadout) :
-    B.baseBridge.classicalRHStatement :=
-  MajoranaPolyaHilbertBridge.classicalRH_of_supplied_majorana_spectral_witness
-    B.baseBridge
 
 /-- Re-export: the bosonic channel is the zeta channel, by supplied witness. -/
 theorem bosonic_zeta_channel

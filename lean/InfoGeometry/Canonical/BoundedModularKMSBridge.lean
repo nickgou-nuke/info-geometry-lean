@@ -116,26 +116,13 @@ theorem kms_invariant_under_bounded_modularFlow
   rw [← B.operatorFlow_eq_modularFlow t A]
   exact B.kms_invariant_under_operatorFlow t A
 
-/-- Readback: the KMS operator flow is the bounded ring-level modular flow. -/
-@[rep_depth thermo]
-theorem operatorFlow_eq_modularFlow_readback
-    (t : ℝ) (A : EndH) :
-    B.operatorFlow.flow t A = B.bounded.modularFlow.flow t A :=
-  B.operatorFlow_eq_modularFlow t A
-
-/-- The analytic KMS boundary certificate is available from the owner socket. -/
-@[rep_depth thermo]
-theorem kms_boundary_holds :
-    B.kms.kms_boundary_condition :=
-  B.kms.kms_boundary_holds
-
 /-- The bounded flow is calibrated to the Drazin/MP surrogate action. -/
 @[rep_depth thermo]
 theorem bounded_flow_eq_exp_Ksur
     (t : ℝ) :
     B.bounded.flow t =
       NormedSpace.exp (t • B.bounded.souriau.superBridge.Ksur) :=
-  B.bounded.flow_eq_exp_Ksur_readback t
+  B.bounded.flow_eq_exp_Ksur t
 
 /-- The bounded flow is equivalently calibrated to the Souriau bare source. -/
 @[rep_depth thermo]
@@ -144,12 +131,6 @@ theorem bounded_flow_eq_exp_Khat_beta
     B.bounded.flow t =
       NormedSpace.exp (t • B.bounded.souriau.family.Khat_beta) :=
   B.bounded.flow_eq_exp_Khat_beta t
-
-/-- The bounded KMS-like compatibility witness from the bounded-flow owner. -/
-@[rep_depth thermo]
-theorem bounded_kmsLikeCompatibility :
-    B.bounded.kmsLikeCompatibility :=
-  B.bounded.kmsLikeCompatibility_readback
 
 /-- Zero-time readback for the operator-flow owner. -/
 @[rep_depth thermo]
@@ -181,7 +162,7 @@ theorem operatorFlow_preserves_commuting_with_spectralProjector
     (t : ℝ) :
     B.bounded.spectralProjector * B.operatorFlow.flow t A =
       B.operatorFlow.flow t A * B.bounded.spectralProjector := by
-  rw [B.operatorFlow_eq_modularFlow_readback t A]
+  rw [B.operatorFlow_eq_modularFlow t A]
   exact
     B.bounded.modularFlow_preserves_commuting_with_spectralProjector
       hFix A hComm t

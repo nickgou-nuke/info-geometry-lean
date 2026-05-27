@@ -119,17 +119,6 @@ structure HestenesCPTONNDualityBridge where
       onnDualityAction (arithmetic.hurwitzRoot i) =
         arithmetic.hurwitzRoot (onnRootAction i)
 
-  /-- Backend certificate that `onnDualityAction` is the intended `O(N,N)` move. -/
-  onn_duality_certificate : Prop
-
-  /-- Evidence for the `O(N,N)` backend certificate. -/
-  onn_duality_holds : onn_duality_certificate
-
-  /-- Backend certificate that `theta` realizes the intended CPT/Tomita symmetry. -/
-  cpt_certificate : Prop
-
-  /-- Evidence for the CPT/Tomita certificate. -/
-  cpt_holds : cpt_certificate
 
 namespace HestenesCPTONNDualityBridge
 
@@ -216,18 +205,6 @@ theorem hurwitzRoot_expectation_theta_invariant (i : Fin 24) :
       B.arithmetic.moebius.wilson.volume.volumeState (B.arithmetic.hurwitzRoot i) := by
   rw [← B.theta_hurwitzRoot_covariant i]
   exact B.volumeState_theta_invariant (B.arithmetic.hurwitzRoot i)
-
-/-- Readback of the selected `O(N,N)`/T-duality certificate. -/
-@[rep_depth krein]
-theorem onn_duality_readback :
-    B.onn_duality_certificate :=
-  B.onn_duality_holds
-
-/-- Readback of the selected CPT/Tomita certificate. -/
-@[rep_depth krein]
-theorem cpt_readback :
-    B.cpt_certificate :=
-  B.cpt_holds
 
 /-- The selected `O(N,N)`/T-duality action preserves the Ω-volume readout. -/
 @[rep_depth operator]

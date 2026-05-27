@@ -92,12 +92,6 @@ structure BoundedKMSHestenesConnesWilsonBridge
       radonNikodymLog parent child =
         NaturalConeVolumeBridge.modularVolumeIncrement volume parent child
 
-  /-- Concrete Connes-cycle/Wilson-loop backend certificate. -/
-  connes_two_cycle_certificate : Prop
-
-  /-- Evidence for the Connes-cycle/Wilson-loop backend certificate. -/
-  connes_two_cycle_holds : connes_two_cycle_certificate
-
 namespace BoundedKMSHestenesConnesWilsonBridge
 
 variable {Word : Type*}
@@ -122,8 +116,6 @@ def toHestenesConnesWilsonBridge :
   wilsonHolonomy_eq_radonNikodymLog := B.wilsonHolonomy_eq_radonNikodymLog
   radonNikodymLog_eq_modularVolumeIncrement :=
     B.radonNikodymLog_eq_modularVolumeIncrement
-  connes_two_cycle_certificate := B.connes_two_cycle_certificate
-  connes_two_cycle_holds := B.connes_two_cycle_holds
 
 /-- Readback: the induced Connes--Wilson real state is the bounded real state. -/
 @[rep_depth krein]
@@ -196,12 +188,6 @@ theorem wilsonHolonomy_eq_neg_log_ratio
         (NaturalConeVolumeBridge.atomExpectation B.volume child /
           NaturalConeVolumeBridge.atomExpectation B.volume parent) :=
   B.toHestenesConnesWilsonBridge.wilsonHolonomy_eq_neg_log_ratio parent child
-
-/-- The Connes-cycle/Wilson-loop backend certificate is available. -/
-@[rep_depth projective]
-theorem connes_two_cycle :
-    B.connes_two_cycle_certificate :=
-  B.connes_two_cycle_holds
 
 end BoundedKMSHestenesConnesWilsonBridge
 

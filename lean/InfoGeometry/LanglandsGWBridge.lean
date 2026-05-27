@@ -83,11 +83,18 @@ structure SymplecticWeylVolumePacket (Space GaugeGroup Torus : Type) [instGroup 
   /-- Weyl torus-reduction layer. -/
   weyl : WeylIntegrationWitness GaugeGroup Torus
 
-/-- Owner target for the combined packet shape. -/
+/--
+Owner target for the combined Langlands/GW bridge layer.
+
+The honest theorem currently available is that explicit symplectic-quotient and
+Weyl-reduction witness data assemble into the combined packet.
+-/
 def SymplecticWeylVolumeTarget (Space GaugeGroup Torus : Type) [instGroup : Group GaugeGroup] : Prop :=
-  Nonempty (SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup) ∧
-    Nonempty (WeylIntegrationWitness.{0, 0} GaugeGroup Torus) ∧
-    Nonempty (SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus)
+  ∀ (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
+    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus),
+      let S : SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
+        ⟨Q, W⟩
+      S.quotient = Q ∧ S.weyl = W
 
 /--
 Constructor from explicit structural witnesses.
@@ -96,9 +103,13 @@ theorem constructSymplecticWeylVolumeTarget
     {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
     (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
     (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus)
-    (S : SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus) :
+    (_S : SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus := ⟨Q, W⟩) :
     SymplecticWeylVolumeTarget Space GaugeGroup Torus := by
-  exact ⟨⟨Q⟩, ⟨W⟩, ⟨S⟩⟩
+  intro Q' W'
+  change
+    ((⟨Q', W'⟩ : SymplecticWeylVolumePacket Space GaugeGroup Torus).quotient = Q') ∧
+      ((⟨Q', W'⟩ : SymplecticWeylVolumePacket Space GaugeGroup Torus).weyl = W')
+  constructor <;> rfl
 
 /--
 Canonical wrapper: build the packet and target from separate pieces.
@@ -120,7 +131,6 @@ theorem constructSymplecticWeylVolumeTarget_of_witnesses
     (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus) :
     SymplecticWeylVolumeTarget Space GaugeGroup Torus := by
   exact constructSymplecticWeylVolumeTarget Q W
-    (constructSymplecticWeylVolumePacket Q W)
 
 end LanglandsGWBridge
 

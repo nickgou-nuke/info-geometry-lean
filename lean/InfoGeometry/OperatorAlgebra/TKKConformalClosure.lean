@@ -145,11 +145,6 @@ namespace TKKThreeGrading
 variable {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (G : TKKThreeGrading L)
 
-/-- The grading spans the full Lie algebra. -/
-theorem decomposition_valid :
-    ⊤ = G.gMinus ⊔ G.gZero ⊔ G.gPlus :=
-  G.decomposition_law
-
 /-- Re-export: the negative grade is abelian. -/
 theorem minus_minus_eq_zero
     {X Y : L}

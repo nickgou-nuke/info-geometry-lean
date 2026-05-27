@@ -110,16 +110,8 @@ structure BoundedKMSConditionBridge where
   -/
   infinitesimalGeneratorLaw : Prop
 
-  /-- Supplied proof of the infinitesimal generator law. -/
-  infinitesimalGeneratorLaw_holds :
-    infinitesimalGeneratorLaw
-
   /-- KMS analytic boundary law, supplied by the concrete model. -/
   kms_boundary_law : Prop
-
-  /-- Supplied proof/certificate of the KMS boundary law. -/
-  kms_boundary_certificate :
-    kms_boundary_law
 
 namespace BoundedKMSConditionBridge
 
@@ -136,43 +128,6 @@ def toKMSReadoutDatum : KMSReadoutDatum EndH where
   flow_add := K.kmsFlow_add
   flow_invariant := K.state_invariant
   kms_boundary_law := K.kms_boundary_law
-  kms_boundary_certificate := K.kms_boundary_certificate
-
-/-- Readback: zero-time observable flow. -/
-@[rep_depth thermo]
-theorem kmsFlow_zero_readback (A : EndH) :
-    K.kmsFlow 0 A = A :=
-  K.kmsFlow_zero A
-
-/-- Readback: additive observable flow law. -/
-@[rep_depth thermo]
-theorem kmsFlow_add_readback (s t : ℝ) (A : EndH) :
-    K.kmsFlow (s + t) A = K.kmsFlow s (K.kmsFlow t A) :=
-  K.kmsFlow_add s t A
-
-/-- Readback: observable flow as the supplied bounded adjoint action. -/
-@[rep_depth thermo]
-theorem kmsFlow_eq_bounded_adjoint_readback (t : ℝ) (A : EndH) :
-    K.kmsFlow t A = K.bounded.flow t * A * K.bounded.flow (-t) :=
-  K.kmsFlow_eq_bounded_adjoint t A
-
-/-- Readback: state invariance under real modular time. -/
-@[rep_depth thermo]
-theorem state_invariant_readback (t : ℝ) (A : EndH) :
-    K.state (K.kmsFlow t A) = K.state A :=
-  K.state_invariant t A
-
-/-- Readback: KMS boundary certificate. -/
-@[rep_depth thermo]
-theorem kms_boundary :
-    K.kms_boundary_law :=
-  K.kms_boundary_certificate
-
-/-- Readback: the bridge installs a genuine `KMSReadoutDatum` boundary law. -/
-@[rep_depth thermo]
-theorem toKMSReadoutDatum_kms_boundary :
-    (K.toKMSReadoutDatum).kms_boundary_law :=
-  K.kms_boundary
 
 /-- The KMS inverse temperature is nonzero. -/
 @[rep_depth thermo]
@@ -207,12 +162,6 @@ theorem partition_potential_flow_central (t : ℝ) (A : EndH) :
         (K.bounded.souriau.family.opScale
           K.bounded.souriau.family.partitionPotential A) :=
   K.partitionPotential_flow_central t A
-
-/-- Readback of the supplied infinitesimal commutator/generator law. -/
-@[rep_depth thermo]
-theorem infinitesimalGeneratorLaw_readback :
-    K.infinitesimalGeneratorLaw :=
-  K.infinitesimalGeneratorLaw_holds
 
 end BoundedKMSConditionBridge
 

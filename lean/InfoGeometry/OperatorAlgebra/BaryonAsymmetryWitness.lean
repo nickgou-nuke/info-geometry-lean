@@ -76,21 +76,6 @@ theorem asymmetry_eq_transfer :
     B.asymmetry = B.ledger.condensateTransfer :=
   B.asymmetry_eq_condensateTransfer
 
-/-- Baryon-number violation certificate is available. -/
-theorem baryon_number_violation_valid :
-    B.baryon_number_violation_law :=
-  B.baryon_number_violation_certificate
-
-/-- CP-violation certificate is available. -/
-theorem cp_violation_valid :
-    B.cp_violation_law :=
-  B.cp_violation_certificate
-
-/-- Out-of-equilibrium certificate is available. -/
-theorem out_of_equilibrium_valid :
-    B.out_of_equilibrium_law :=
-  B.out_of_equilibrium_certificate
-
 end BaryonAsymmetryAccounting
 
 end InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness

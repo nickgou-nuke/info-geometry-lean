@@ -108,10 +108,6 @@ theorem isSpectralZero_iff
   unfold IsSpectralZero
   exact D.zeroLocus_spec s
 
-theorem divisor_law_valid :
-    D.divisor_law :=
-  D.divisor_law_holds
-
 end SpectralDivisorDatum
 
 /--
@@ -149,10 +145,6 @@ theorem sheet_eq_charge
     (x : State) :
     H.sheet x = D.chargeOf (C.spectralRegion x) :=
   C.sheet_eq_divisor_charge x
-
-theorem monodromy_law_valid :
-    C.monodromy_law :=
-  C.monodromy_law_holds
 
 end HelicalSpectralChargeCalibration
 
@@ -236,10 +228,6 @@ theorem visible_deficit_eq_recovered_hidden
       D.recoverHidden (D.hiddenFlow x) :=
   D.ideal_sub_actual_eq_recovered_hidden x
 
-theorem one_turn_hidden_charge_law_valid :
-    K.one_turn_hidden_charge_law :=
-  K.one_turn_hidden_charge_law_holds
-
 end HelicalStinespringCalibration
 
 /-! ## 5. Riemann/L-function divisor branch -/
@@ -303,4 +291,3 @@ theorem helicalStinespringOwnerTarget :
   exact K.hidden_sheet_eq_visible_sheet_apply x
 
 end InfoGeometry.OperatorAlgebra.HelicalTimeStinespring
-

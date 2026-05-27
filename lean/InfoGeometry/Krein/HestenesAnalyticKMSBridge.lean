@@ -248,8 +248,8 @@ theorem toBridge_flow_invariant
 /-- The narrowed witness recovers the KMS boundary condition from its owned `KMSState`. -/
 @[rep_depth krein]
 theorem toBridge_kms_boundary_condition :
-    W.toBridge.kms_boundary_condition :=
-  W.kms.kms_boundary_condition_holds
+    W.toBridge.kms_boundary_condition := by
+  exact W.kms.kms_boundary_condition_holds
 
 /--
 Route the legacy broad KMS bridge through a narrowed witness packet.
@@ -262,8 +262,8 @@ theorem mk_broad_of_witness :
 end HestenesAnalyticKMSWitness
 
 /-- Turn a legacy bridge into a narrowed witness structure by extracting the
-underlying `KMSState` fields definitionally. This removes the explicit
-preserving the same owner data and without copying the KMS proof fields. -/
+owned KMS certificate definitionally, preserving the same owner data without
+copying duplicate KMS proof fields. -/
 @[simp]
 def HestenesAnalyticKMSBridge.fromBridge
     (B : HestenesAnalyticKMSBridge (E := E)) :

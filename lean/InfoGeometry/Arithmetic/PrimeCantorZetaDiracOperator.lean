@@ -738,6 +738,65 @@ theorem superDirac_commutes_superLaplacian
       (Q * Qsharp + Qsharp * Q) * (Q + Qsharp) := by
           noncomm_ring
 
+/--
+Stage-`n` Dirac/Laplacian closure packaged as a pure theorem tuple.
+
+This is the recurrence seed:
+from nilpotent odd supercharges `Qn, Qn♯`, define
+`Dn := Qn + Qn♯` and `Δn := Qn*Qn♯ + Qn♯*Qn`,
+then obtain `Dn^2 = Δn` and commutation with `Δn`.
+-/
+@[rep_depth thermo]
+theorem supergraded_stage_closure
+    {R : Type*} [Ring R]
+    {Qn Qnsharp : R}
+    (hQn : Qn * Qn = 0)
+    (hQnsharp : Qnsharp * Qnsharp = 0) :
+    let Dn := Qn + Qnsharp
+    let Δn := Qn * Qnsharp + Qnsharp * Qn
+    (Dn * Dn = Δn) ∧
+    (Qn * Δn = Δn * Qn) ∧
+    (Qnsharp * Δn = Δn * Qnsharp) ∧
+    (Dn * Δn = Δn * Dn) := by
+  dsimp
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact superDirac_sq_eq_superLaplacian (Q := Qn) (Qsharp := Qnsharp) hQn hQnsharp
+  · exact supercharge_commutes_superLaplacian (Q := Qn) (Qsharp := Qnsharp) hQn
+  · exact dualSupercharge_commutes_superLaplacian (Q := Qn) (Qsharp := Qnsharp) hQnsharp
+  · exact superDirac_commutes_superLaplacian (Q := Qn) (Qsharp := Qnsharp) hQn hQnsharp
+
+/--
+Two-step recurrence closure.
+
+If both stage-`n` and stage-`n+1` odd pairs are nilpotent, both induced
+Dirac/Laplacian pairs satisfy the same closure laws. This is the direct
+induction road for supergraded supercharge towers.
+-/
+@[rep_depth thermo]
+theorem supergraded_two_step_recurrence_closure
+    {R : Type*} [Ring R]
+    {Qn Qnsharp Qnext Qnextsharp : R}
+    (hQn : Qn * Qn = 0)
+    (hQnsharp : Qnsharp * Qnsharp = 0)
+    (hQnext : Qnext * Qnext = 0)
+    (hQnextsharp : Qnextsharp * Qnextsharp = 0) :
+    (let Dn := Qn + Qnsharp
+     let Δn := Qn * Qnsharp + Qnsharp * Qn
+     (Dn * Dn = Δn) ∧
+     (Qn * Δn = Δn * Qn) ∧
+     (Qnsharp * Δn = Δn * Qnsharp) ∧
+     (Dn * Δn = Δn * Dn))
+    ∧
+    (let Dnext := Qnext + Qnextsharp
+     let Δnext := Qnext * Qnextsharp + Qnextsharp * Qnext
+     (Dnext * Dnext = Δnext) ∧
+     (Qnext * Δnext = Δnext * Qnext) ∧
+     (Qnextsharp * Δnext = Δnext * Qnextsharp) ∧
+     (Dnext * Δnext = Δnext * Dnext)) := by
+  refine ⟨?_, ?_⟩
+  · exact supergraded_stage_closure (Qn := Qn) (Qnsharp := Qnsharp) hQn hQnsharp
+  · exact supergraded_stage_closure (Qn := Qnext) (Qnsharp := Qnextsharp) hQnext hQnextsharp
+
 /-! ## 2. Kernel-level Cantor--Dirac readouts -/
 
 /--

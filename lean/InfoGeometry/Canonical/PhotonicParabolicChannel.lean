@@ -39,6 +39,22 @@ theorem chiral_collapse_to_parabolic
   unfold channelOfOmega
   simp [h_nilpotent]
 
+/-- Reverse direction: parabolic channel classification forces `Ω² = 0`. -/
+theorem nilpotent_of_chiral_collapse
+    (Ω : ParOp) (hPar : channelOfOmega Ω = ChiralChannel.Parabolic) :
+    mul Ω Ω = zero := by
+  unfold channelOfOmega at hPar
+  by_cases h : mul Ω Ω = zero
+  · exact h
+  · simp [h] at hPar
+
+/-- Exact classifier equivalence. -/
+theorem chiral_collapse_iff_nilpotent (Ω : ParOp) :
+    channelOfOmega Ω = ChiralChannel.Parabolic ↔ mul Ω Ω = zero := by
+  constructor
+  · exact nilpotent_of_chiral_collapse Ω
+  · exact chiral_collapse_to_parabolic Ω
+
 /-- Concrete pure-directional witness from the parabolic contraction bridge. -/
 theorem pure_directional_collapse (χ : ℝ) :
     channelOfOmega ({ scalar := (0 : ℝ), directional := χ } : ParOp) = ChiralChannel.Parabolic := by

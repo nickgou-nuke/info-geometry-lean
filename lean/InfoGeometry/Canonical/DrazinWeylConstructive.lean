@@ -116,6 +116,30 @@ structure ClassicalRieszWeylWitness (T : EndH) where
     classical_riesz.D.comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp classical_riesz.D
 
+/--
+Proof-carrying classical Riesz witness replacing a direct spectral-sheet
+commutation proof by local Weyl symmetry of the classical Riesz lane.
+
+This is the classical analogue of
+`DrazinInfiniteLocalWeylSymmetryWitness`: keep the owned classical Riesz
+package and force the regular inverse by operator/projector `ε`-symmetry plus
+uniqueness on the regular lane.
+-/
+structure ClassicalRieszLocalWeylSymmetryWitness (T : EndH) where
+  classical_riesz : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T
+  operator_commutes_spectralEpsilon :
+    T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T
+  projector_commutes_spectralEpsilon :
+    classical_riesz.P.comp (spectral_epsilon (E := E))
+      = (spectral_epsilon (E := E)).comp classical_riesz.P
+  regular_inverse_unique :
+    ∀ S' : EndH,
+      S' * T = classical_riesz.P →
+      T * S' = classical_riesz.P →
+      S' * classical_riesz.P = S' →
+      classical_riesz.P * S' = S' →
+        S' = classical_riesz.D
+
 /-- Shim theorem exporting constructive commutation into legacy Weyl compatibility. -/
 theorem drazinInverse_isWeylCompatible
     (D : ConstructiveDrazinWeylData (E := E)) :
@@ -275,6 +299,40 @@ def constructiveRieszWeylData_of_classicalRieszWeylWitness
     (E := E) W.classical_riesz W.classical_candidate_commutes_spectralEpsilon
 
 /--
+Convert the classical local-Weyl-symmetry witness into the narrower
+constructive local-symmetry owner packet.
+-/
+def constructiveRieszLocalWeylSymmetryData_of_classicalRieszLocalWeylSymmetryWitness
+    {T : EndH}
+    (W : ClassicalRieszLocalWeylSymmetryWitness (E := E) T) :
+    ConstructiveRieszLocalWeylSymmetryData (E := E) T where
+  riesz :=
+    constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+      (𝕂 := ℝ) W.classical_riesz
+  operator_commutes_spectralEpsilon := W.operator_commutes_spectralEpsilon
+  projector_commutes_spectralEpsilon := by
+    simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
+      using W.projector_commutes_spectralEpsilon
+  regular_inverse_unique := by
+    intro S' hLeft hRight hSupportLeft hSupportRight
+    simpa [constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
+      using W.regular_inverse_unique S' hLeft hRight hSupportLeft hSupportRight
+
+/--
+Classical local-Weyl-symmetry route into the constructive Weyl bridge packet.
+This removes the direct classical-candidate commutation witness on the honest
+`ε`-symmetric branch.
+-/
+def constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetryWitness
+    {T : EndH}
+    (W : ClassicalRieszLocalWeylSymmetryWitness (E := E) T) :
+    ConstructiveRieszWeylData (E := E) T :=
+  constructiveRieszWeylData_of_localWeylSymmetry
+    (E := E)
+    (constructiveRieszLocalWeylSymmetryData_of_classicalRieszLocalWeylSymmetryWitness
+      (E := E) W)
+
+/--
 Package the broad infinite Drazin assumption lane into the constructive Weyl
 bridge using its owned classical Riesz component.
 -/
@@ -333,6 +391,23 @@ theorem constructiveDrazinCandidate_isWeylCompatible_of_classicalRieszWeylWitnes
   exact constructiveDrazinCandidate_isWeylCompatible
     (E := E)
     (constructiveRieszWeylData_of_classicalRieszWeylWitness (E := E) W)
+
+/--
+Classical local-symmetry route: the converted constructive Drazin candidate is
+Weyl-compatible without carrying a separate direct commutation proof for the
+classical Drazin witness.
+-/
+theorem constructiveDrazinCandidate_isWeylCompatible_of_classicalRieszLocalWeylSymmetryWitness
+    {T : EndH}
+    (W : ClassicalRieszLocalWeylSymmetryWitness (E := E) T) :
+    IsWeylCompatible (E := E)
+      (constructiveDrazinCandidate
+        (constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+          (𝕂 := ℝ) W.classical_riesz)) := by
+  exact constructiveDrazinCandidate_isWeylCompatible
+    (E := E)
+    (constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetryWitness
+      (E := E) W)
 
 /--
 Broad infinite witness route: the constructive Drazin candidate extracted from
@@ -411,6 +486,22 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_classicalRieszWeylWitness
     exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
       (E := E)
       (constructiveRieszWeylData_of_classicalRieszWeylWitness (E := E) W)
+
+/--
+Classical local-Weyl-symmetry witness route into the constructive Drazin/Weyl
+existence theorem. This removes the explicit classical-candidate commutation
+witness from the classical Riesz lane on the honest `ε`-symmetric branch.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_classicalRieszLocalWeylSymmetryWitness
+    {T : EndH}
+    (W : ClassicalRieszLocalWeylSymmetryWitness (E := E) T) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
+      (E := E)
+      (constructiveRieszWeylData_of_classicalRieszLocalWeylSymmetryWitness
+        (E := E) W)
 
 /--
 Classical Riesz witness lane exports the same constructive Drazin/Weyl package

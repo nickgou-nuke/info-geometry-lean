@@ -1274,6 +1274,28 @@ theorem topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitnes
       (u := u) (T := T) (W := W)
 
 /--
+Tomita flow-unit zero-normalized witness endpoint on the canonical welded cocycle lane.
+
+This removes the explicit cocycle choice and scalar bridge from the zero-anchored
+Tomita witness surface by specializing to the owned flow-unit cocycle and unit
+scalar bridge.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitZeroNormalizedCocycleGeneratorWitness
+    (T : SinkhornTrajectory n)
+    (W : ZeroNormalizedCocycleGeneratorWitness (n := n) (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      T) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_tomitaZeroNormalizedCocycleGeneratorWitness
+      (n := n) (H := H)
+      (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      (T := T) (W := W)
+
+/--
 Tomita-specialized zero-anchored cocycle-to-bound theorem.
 -/
 theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
@@ -1299,6 +1321,39 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
         (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
         (u := u)
         (hCocycle := hCocycle) (hBridge := hBridge) }
+
+/--
+Tomita flow-unit zero-anchored cocycle-to-bound theorem.
+
+This discharges the explicit `IsConnesCocycle` witness, scalar bridge, and
+zero-normalization proof from the welded Tomita flow surface; only the concrete
+generator lift remains.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_generatorLift_zero
+    (T : SinkhornTrajectory n)
+    (hLift :
+      CocycleGeneratorLift n T
+        (TomitaCocycleEntropyPotential (H := H)
+          (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+          (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))))) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_tomitaFlowUnitZeroNormalizedCocycleGeneratorWitness
+    (n := n) (H := H) (T := T)
+    { hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      hLift := hLift
+      hZero := cocycleEntropyPotential_zero_of_connesCocycle
+        (H := H)
+        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+          (H := H)
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))) }
 
 /--
 Tomita-specialized Casini-route cocycle-to-bound theorem.

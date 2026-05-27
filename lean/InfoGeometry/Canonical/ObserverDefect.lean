@@ -941,6 +941,22 @@ theorem observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero
       (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).1 hStrain
 
 /--
+Under zero central defect, the existence of an explicit owner-side deviation-control
+witness packet directly forces the observer-defect residual to vanish. This is the
+one-way export of `observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero`
+for downstream callers that already own the witness packet.
+-/
+theorem observerDefectResidual_eq_zero_of_nonempty_control_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
+    (hControl : Nonempty (ObserverDeviationControl CIK obs)) :
+    observerDefectResidual CIK obs = 0 := by
+  exact
+    (observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero
+      (CIK := CIK) (obs := obs) hZD).2 hControl
+
+/--
 Under zero central defect, scalarized observer strain is equivalent to the exact
 owner-side `Z_D` deviation-control predicate. This lets downstream callers use
 whichever witness they already own instead of carrying both packets.

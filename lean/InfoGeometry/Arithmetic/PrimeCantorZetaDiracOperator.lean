@@ -180,6 +180,564 @@ theorem creation_annihilation_push_anticomm_identity_funext {P : PrimeCutoff}
   funext S
   exact creation_annihilation_push_anticomm_identity p f S
 
+/-! ## 1a. Split-Majorana operators from nilpotent creation/annihilation -/
+
+/--
+Split-Majorana plus operator:
+
+  c_p = ε_p + ι_p.
+
+This is the prime-axis bit-flip operator.
+-/
+@[rep_depth thermo]
+def majoranaPlusPush {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) : ℂ :=
+  creationPush p f S + annihilationPush p f S
+
+/--
+Split-Majorana minus operator:
+
+  d_p = ε_p - ι_p.
+
+Together with `majoranaPlusPush`, this gives the split Clifford pair.
+-/
+@[rep_depth thermo]
+def majoranaMinusPush {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) : ℂ :=
+  creationPush p f S - annihilationPush p f S
+
+/--
+The plus Majorana squares to the identity:
+
+  (ε_p + ι_p)^2 = 1.
+
+This is the concrete `Op² = 1` lemma.
+-/
+@[rep_depth thermo]
+theorem majoranaPlusPush_sq_identity {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    majoranaPlusPush p (majoranaPlusPush p f) S = f S := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by
+      simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [majoranaPlusPush, hp, hnot, hins]
+  · have hmem : p ∈ insert p S := by
+      simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · have hpq : p ≠ q := by
+          intro h
+          exact hq h.symm
+        simp [Finset.mem_erase, hq]
+    simp [majoranaPlusPush, hp, hmem, herase]
+
+/--
+The minus Majorana squares to negative identity:
+
+  (ε_p - ι_p)^2 = -1.
+
+This is the concrete `Op² = -1` lemma.
+-/
+@[rep_depth thermo]
+theorem majoranaMinusPush_sq_neg_identity {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    majoranaMinusPush p (majoranaMinusPush p f) S = - f S := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by
+      simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [majoranaMinusPush, hp, hnot, hins]
+  · have hmem : p ∈ insert p S := by
+      simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · have hpq : p ≠ q := by
+          intro h
+          exact hq h.symm
+        simp [Finset.mem_erase, hq]
+    simp [majoranaMinusPush, hp, hmem, herase]
+
+/--
+The split Majoranas anticommute:
+
+  (ε_p + ι_p)(ε_p - ι_p) + (ε_p - ι_p)(ε_p + ι_p) = 0.
+
+This is the concrete split-Clifford anticommutator lemma.
+-/
+@[rep_depth thermo]
+theorem majoranaPlus_minus_anticomm {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    majoranaPlusPush p (majoranaMinusPush p f) S
+      + majoranaMinusPush p (majoranaPlusPush p f) S = 0 := by
+  by_cases hp : p ∈ S
+  · have hnot : p ∉ S.erase p := by
+      simp
+    have hins : insert p (S.erase p) = S := Finset.insert_erase hp
+    simp [majoranaPlusPush, majoranaMinusPush, hp, hnot, hins]
+  · have hmem : p ∈ insert p S := by
+      simp
+    have herase : (insert p S).erase p = S := by
+      ext q
+      by_cases hq : q = p
+      · subst q
+        simp [hp]
+      · have hpq : p ≠ q := by
+          intro h
+          exact hq h.symm
+        simp [Finset.mem_erase, hq]
+    simp [majoranaPlusPush, majoranaMinusPush, hp, hmem, herase]
+
+/--
+Local Witt-generator square-law closure on one prime mode:
+
+`ε_p^2 = 0`, `ι_p^2 = 0`, `{ε_p, ι_p} = 1`
+imply
+`(ε_p + ι_p)^2 = 1` and `(ε_p - ι_p)^2 = -1`.
+-/
+@[rep_depth thermo]
+theorem witt_square_law_closure {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    creationPush p (creationPush p f) S = 0 ∧
+    annihilationPush p (annihilationPush p f) S = 0 ∧
+    (creationPush p (annihilationPush p f) S
+      + annihilationPush p (creationPush p f) S = f S) ∧
+    majoranaPlusPush p (majoranaPlusPush p f) S = f S ∧
+    majoranaMinusPush p (majoranaMinusPush p f) S = -f S := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact creationPush_sq_zero p f S
+  · exact annihilationPush_sq_zero p f S
+  · exact creation_annihilation_push_anticomm_identity p f S
+  · exact majoranaPlusPush_sq_identity p f S
+  · exact majoranaMinusPush_sq_neg_identity p f S
+
+/--
+Inverse coordinate formula:
+
+`ε_p = (c_p + d_p)/2`, with `c_p = ε_p + ι_p`, `d_p = ε_p - ι_p`.
+-/
+@[rep_depth thermo]
+theorem creationPush_eq_half_plus_majorana
+    {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    creationPush p f S =
+      (majoranaPlusPush p f S + majoranaMinusPush p f S) / 2 := by
+  unfold majoranaPlusPush majoranaMinusPush
+  ring
+
+/--
+Inverse coordinate formula:
+
+`ι_p = (c_p - d_p)/2`, with `c_p = ε_p + ι_p`, `d_p = ε_p - ι_p`.
+-/
+@[rep_depth thermo]
+theorem annihilationPush_eq_half_minus_majorana
+    {P : PrimeCutoff}
+    (p : PrimeMode P) (f : CantorField P) (S : Vertex P) :
+    annihilationPush p f S =
+      (majoranaPlusPush p f S - majoranaMinusPush p f S) / 2 := by
+  unfold majoranaPlusPush majoranaMinusPush
+  ring
+
+/-! ## 1b. Local Witt → projector/majorana algebra (no wrappers) -/
+
+/--
+From a local nilpotent CAR/Witt pair `ε, ι`, the number and hole operators
+are idempotent:
+
+* `N = ε*ι` with `N^2 = N`;
+* `H = ι*ε` with `H^2 = H`.
+-/
+@[rep_depth thermo]
+theorem projector_from_nilpotents
+    {R : Type*} [Ring R]
+    {ε ι : R}
+    (hε : ε * ε = 0)
+    (hι : ι * ι = 0)
+    (hcar : ε * ι + ι * ε = 1) :
+    (ε * ι) * (ε * ι) = ε * ι ∧
+    (ι * ε) * (ι * ε) = ι * ε := by
+  refine ⟨?_, ?_⟩
+  · calc
+      (ε * ι) * (ε * ι) = ε * (ι * ε) * ι := by
+        noncomm_ring
+      _ = ε * (1 - ε * ι) * ι := by
+        have hιε : ι * ε = 1 - ε * ι := by
+          rw [← hcar]
+          noncomm_ring
+        rw [hιε]
+      _ = (ε * (1 - ε * ι)) * ι := by
+        rw [mul_assoc]
+      _ = (ε * 1 - ε * (ε * ι)) * ι := by
+        rw [mul_sub]
+      _ = (ε - (ε * ε) * ι) * ι := by
+        rw [mul_one, mul_assoc]
+      _ = (ε - 0 * ι) * ι := by
+        rw [hε]
+      _ = ε * ι := by
+        simp
+  · calc
+      (ι * ε) * (ι * ε) = ι * (ε * ι) * ε := by
+        noncomm_ring
+      _ = ι * (1 - ι * ε) * ε := by
+        have hει : ε * ι = 1 - ι * ε := by
+          rw [← hcar]
+          noncomm_ring
+        rw [hει]
+      _ = (ι * (1 - ι * ε)) * ε := by
+        rw [mul_assoc]
+      _ = (ι * 1 - ι * (ι * ε)) * ε := by
+        rw [mul_sub]
+      _ = (ι - (ι * ι) * ε) * ε := by
+        rw [mul_one, mul_assoc]
+      _ = (ι - 0 * ε) * ε := by
+        rw [hι]
+      _ = ι * ε := by
+        simp
+
+/--
+For split Majoranas `c = ε + ι`, `d = ε - ι`, the product is parity:
+
+`c*d = 1 - 2*(ε*ι)`.
+-/
+@[rep_depth thermo]
+theorem parity_from_majorana_product
+    {R : Type*} [Ring R]
+    {ε ι : R}
+    (hε : ε * ε = 0)
+    (hι : ι * ι = 0)
+    (hcar : ε * ι + ι * ε = 1) :
+    (ε + ι) * (ε - ι) = 1 - (2 : R) * (ε * ι) := by
+  calc
+    (ε + ι) * (ε - ι)
+        = ε * ε - ε * ι + ι * ε - ι * ι := by
+            noncomm_ring
+    _ = 0 - ε * ι + ι * ε - 0 := by
+            rw [hε, hι]
+    _ = ι * ε - ε * ι := by
+            noncomm_ring
+    _ = (1 - ε * ι) - ε * ι := by
+            have hιε : ι * ε = 1 - ε * ι := by
+              rw [← hcar]
+              noncomm_ring
+            rw [hιε]
+    _ = 1 - (2 : R) * (ε * ι) := by
+            noncomm_ring
+
+/--
+Local number operator idempotency:
+
+`N_j := ε_j * ι_j` satisfies `N_j * N_j = N_j`.
+-/
+@[rep_depth thermo]
+theorem localNumber_idempotent
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (ε_j * ι_j) * (ε_j * ι_j) = ε_j * ι_j := by
+  exact (projector_from_nilpotents (ε := ε_j) (ι := ι_j) hε hι hcar).1
+
+/--
+Local parity/tilt identity:
+
+`Π_j = 1 - 2 * N_j` for `Π_j := (ε_j + ι_j) * (ε_j - ι_j)` and
+`N_j := ε_j * ι_j`.
+-/
+@[rep_depth thermo]
+theorem localParity_eq_one_sub_two_number
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (ε_j + ι_j) * (ε_j - ι_j) = 1 - (2 : R) * (ε_j * ι_j) := by
+  exact parity_from_majorana_product (ε := ε_j) (ι := ι_j) hε hι hcar
+
+/--
+Local vacuum projector idempotency:
+
+`(1 - N_j)^2 = 1 - N_j` where `N_j := ε_j * ι_j`.
+-/
+@[rep_depth thermo]
+theorem localVacuumProjector_idempotent
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (1 - ε_j * ι_j) * (1 - ε_j * ι_j) = 1 - ε_j * ι_j := by
+  have hN : (ε_j * ι_j) * (ε_j * ι_j) = ε_j * ι_j :=
+    localNumber_idempotent (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
+  calc
+    (1 - ε_j * ι_j) * (1 - ε_j * ι_j)
+        = 1 - (2 : R) * (ε_j * ι_j) + (ε_j * ι_j) * (ε_j * ι_j) := by
+            noncomm_ring
+    _ = 1 - (2 : R) * (ε_j * ι_j) + (ε_j * ι_j) := by
+            rw [hN]
+    _ = 1 - ε_j * ι_j := by
+            noncomm_ring
+
+/--
+Orthogonality of vacuum and number projectors:
+
+`(1 - N_j) * N_j = 0` where `N_j := ε_j * ι_j`.
+-/
+@[rep_depth thermo]
+theorem localVacuum_mul_number_eq_zero
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (1 - ε_j * ι_j) * (ε_j * ι_j) = 0 := by
+  have hN : (ε_j * ι_j) * (ε_j * ι_j) = ε_j * ι_j :=
+    localNumber_idempotent (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
+  calc
+    (1 - ε_j * ι_j) * (ε_j * ι_j)
+        = ε_j * ι_j - (ε_j * ι_j) * (ε_j * ι_j) := by
+            noncomm_ring
+    _ = ε_j * ι_j - ε_j * ι_j := by
+            rw [hN]
+    _ = 0 := by
+            simp
+
+/--
+Local number/hole complement identity:
+
+`N_j + H_j = 1` with `N_j := ε_j*ι_j` and `H_j := ι_j*ε_j`.
+-/
+@[rep_depth thermo]
+theorem localNumber_hole_complement
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    ε_j * ι_j + ι_j * ε_j = 1 := hcar
+
+/--
+Orthogonality of the local number/hole projectors:
+
+`(ε_j*ι_j)*(ι_j*ε_j) = 0` and `(ι_j*ε_j)*(ε_j*ι_j) = 0`.
+-/
+@[rep_depth thermo]
+theorem localProjector_orthogonal
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0) :
+    (ε_j * ι_j) * (ι_j * ε_j) = 0 ∧
+    (ι_j * ε_j) * (ε_j * ι_j) = 0 := by
+  refine ⟨?_, ?_⟩
+  · calc
+      (ε_j * ι_j) * (ι_j * ε_j) = ε_j * (ι_j * ι_j) * ε_j := by
+        noncomm_ring
+      _ = 0 := by
+        rw [hι]
+        simp
+  · calc
+      (ι_j * ε_j) * (ε_j * ι_j) = ι_j * (ε_j * ε_j) * ι_j := by
+        noncomm_ring
+      _ = 0 := by
+        rw [hε]
+        simp
+
+/--
+Local parity involution:
+
+`Π_j := 1 - 2*N_j` with `N_j := ε_j*ι_j` satisfies `Π_j^2 = 1`.
+-/
+@[rep_depth thermo]
+theorem localParity_sq_identity
+    {R : Type*} [Ring R]
+    {ε_j ι_j : R}
+    (hε : ε_j * ε_j = 0)
+    (hι : ι_j * ι_j = 0)
+    (hcar : ε_j * ι_j + ι_j * ε_j = 1) :
+    (1 - (2 : R) * (ε_j * ι_j)) * (1 - (2 : R) * (ε_j * ι_j)) = 1 := by
+  have hN : (ε_j * ι_j) * (ε_j * ι_j) = ε_j * ι_j :=
+    localNumber_idempotent (ε_j := ε_j) (ι_j := ι_j) hε hι hcar
+  calc
+    (1 - (2 : R) * (ε_j * ι_j)) * (1 - (2 : R) * (ε_j * ι_j))
+        = 1 - (4 : R) * (ε_j * ι_j) + (4 : R) * ((ε_j * ι_j) * (ε_j * ι_j)) := by
+            noncomm_ring
+    _ = 1 - (4 : R) * (ε_j * ι_j) + (4 : R) * (ε_j * ι_j) := by
+            rw [hN]
+    _ = 1 := by
+            noncomm_ring
+
+/--
+If two local modes anticommute, the square of their sum is the sum of their
+squares.
+
+This is the local Clifford/Majorana cancellation mechanism.
+-/
+@[rep_depth thermo]
+theorem square_add_of_anticomm
+    {R : Type*} [Ring R]
+    {x y wx wy : R}
+    (hx : x * x = wx)
+    (hy : y * y = wy)
+    (hanti : x * y + y * x = 0) :
+    (x + y) * (x + y) = wx + wy := by
+  calc
+    (x + y) * (x + y)
+        = x * x + (x * y + y * x) + y * y := by
+          noncomm_ring
+    _ = wx + 0 + wy := by
+          rw [hx, hy, hanti]
+    _ = wx + wy := by
+          simp
+
+/--
+A square-zero CAR pair generates the local `0 / +1 / -1` trichotomy.
+
+`u² = v² = 0` are the chiral/spinor channels.
+`u + v` is the Clifford involution.
+`u - v` is the phase/clock axis.
+-/
+@[rep_depth thermo]
+theorem squareZero_pair_gives_clifford_axes
+    {R : Type*} [Ring R]
+    {u v : R}
+    (hu : u * u = 0)
+    (hv : v * v = 0)
+    (hcar : u * v + v * u = 1) :
+    (u + v) * (u + v) = 1 ∧
+    (u - v) * (u - v) = -(1 : R) := by
+  constructor
+  · calc
+      (u + v) * (u + v)
+          = u * u + (u * v + v * u) + v * v := by
+            noncomm_ring
+      _ = 0 + 1 + 0 := by
+            rw [hu, hv, hcar]
+      _ = 1 := by
+            simp
+  · calc
+      (u - v) * (u - v)
+          = u * u - (u * v + v * u) + v * v := by
+            noncomm_ring
+      _ = 0 - 1 + 0 := by
+            rw [hu, hv, hcar]
+      _ = -(1 : R) := by
+            simp
+
+/--
+Nilpotent supercharges generate a Dirac operator whose square is the
+super-Laplacian.
+
+This is the algebraic core:
+
+  D = Q + Q♯
+  Δ = Q Q♯ + Q♯ Q
+  D² = Δ
+-/
+@[rep_depth thermo]
+theorem superDirac_sq_eq_superLaplacian
+    {R : Type*} [Ring R]
+    {Q Qsharp : R}
+    (hQ : Q * Q = 0)
+    (hQsharp : Qsharp * Qsharp = 0) :
+    (Q + Qsharp) * (Q + Qsharp) =
+      Q * Qsharp + Qsharp * Q := by
+  calc
+    (Q + Qsharp) * (Q + Qsharp)
+        = Q * Q + (Q * Qsharp + Qsharp * Q) + Qsharp * Qsharp := by
+          noncomm_ring
+    _ = 0 + (Q * Qsharp + Qsharp * Q) + 0 := by
+          rw [hQ, hQsharp]
+    _ = Q * Qsharp + Qsharp * Q := by
+          simp
+
+/--
+The left supercharge commutes with the super-Laplacian.
+
+This is the abstract form of `[Q, Δ] = 0`.
+-/
+@[rep_depth thermo]
+theorem supercharge_commutes_superLaplacian
+    {R : Type*} [Ring R]
+    {Q Qsharp : R}
+    (hQ : Q * Q = 0) :
+    Q * (Q * Qsharp + Qsharp * Q) =
+      (Q * Qsharp + Qsharp * Q) * Q := by
+  calc
+    Q * (Q * Qsharp + Qsharp * Q)
+        = (Q * Q) * Qsharp + Q * Qsharp * Q := by
+          noncomm_ring
+    _ = 0 * Qsharp + Q * Qsharp * Q := by
+          rw [hQ]
+    _ = Q * Qsharp * Q := by
+          simp
+    _ = Q * Qsharp * Q + Qsharp * (Q * Q) := by
+          rw [hQ]
+          simp
+    _ = (Q * Qsharp + Qsharp * Q) * Q := by
+          noncomm_ring
+
+/--
+The dual supercharge commutes with the super-Laplacian.
+
+This is the abstract form of `[Q♯, Δ] = 0`.
+-/
+@[rep_depth thermo]
+theorem dualSupercharge_commutes_superLaplacian
+    {R : Type*} [Ring R]
+    {Q Qsharp : R}
+    (hQsharp : Qsharp * Qsharp = 0) :
+    Qsharp * (Q * Qsharp + Qsharp * Q) =
+      (Q * Qsharp + Qsharp * Q) * Qsharp := by
+  calc
+    Qsharp * (Q * Qsharp + Qsharp * Q)
+        = Qsharp * Q * Qsharp + (Qsharp * Qsharp) * Q := by
+          noncomm_ring
+    _ = Qsharp * Q * Qsharp + 0 * Q := by
+          rw [hQsharp]
+    _ = Qsharp * Q * Qsharp := by
+          simp
+    _ = Q * (Qsharp * Qsharp) + Qsharp * Q * Qsharp := by
+          rw [hQsharp]
+          simp
+    _ = (Q * Qsharp + Qsharp * Q) * Qsharp := by
+          noncomm_ring
+
+/--
+The Dirac operator commutes with its Laplacian.
+
+This is `[D, Δ] = 0` for `D = Q + Q♯`.
+-/
+@[rep_depth thermo]
+theorem superDirac_commutes_superLaplacian
+    {R : Type*} [Ring R]
+    {Q Qsharp : R}
+    (hQ : Q * Q = 0)
+    (hQsharp : Qsharp * Qsharp = 0) :
+    (Q + Qsharp) * (Q * Qsharp + Qsharp * Q) =
+      (Q * Qsharp + Qsharp * Q) * (Q + Qsharp) := by
+  calc
+    (Q + Qsharp) * (Q * Qsharp + Qsharp * Q)
+        =
+      Q * (Q * Qsharp + Qsharp * Q) +
+        Qsharp * (Q * Qsharp + Qsharp * Q) := by
+          noncomm_ring
+    _ =
+      (Q * Qsharp + Qsharp * Q) * Q +
+        (Q * Qsharp + Qsharp * Q) * Qsharp := by
+          rw [
+            supercharge_commutes_superLaplacian (Q := Q) (Qsharp := Qsharp) hQ,
+            dualSupercharge_commutes_superLaplacian (Q := Q) (Qsharp := Qsharp) hQsharp
+          ]
+    _ =
+      (Q * Qsharp + Qsharp * Q) * (Q + Qsharp) := by
+          noncomm_ring
+
 /-! ## 2. Kernel-level Cantor--Dirac readouts -/
 
 /--

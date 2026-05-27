@@ -5,6 +5,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
+import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 /-!
 # InfoGeometry.Canonical.PrimeVirasoroSugawara
@@ -130,6 +131,40 @@ theorem current_current_level_one_valid :
   simp [CurrentCurrentLevelOneLaw]
 
 end PrimeCurrentOPEPacket
+
+/-! ## Concrete external infinite-current readback -/
+
+section ConcreteInfiniteCurrentReadback
+
+open InfoGeometry.Canonical.SplitCliffordInfiniteCurrent
+open InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
+
+variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+
+/--
+Concrete level-one current-current readback on the canonical infinite-current
+owner carrier.
+
+This theorem is the exact owner theorem currently available to the prime
+Sugawara corridor.  The remaining gap is not the proof itself but the fact that
+`PrimeCurrentOPEPacket.current_current_level_one_data` is only a `Unit` witness,
+so the bracket equality cannot yet be stored in the packet as typed data.
+-/
+@[rep_depth operator]
+theorem canonicalInfiniteCurrent_level_one_readback :
+    ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
+  canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
+
+/--
+Concrete reverse level-one readback on the canonical infinite-current owner
+carrier.
+-/
+@[rep_depth operator]
+theorem canonicalInfiniteCurrent_level_one_readback_reverse :
+    ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 :=
+  canonicalInfiniteCurrent_lie_neg_one_one (𝕜 := 𝕜)
+
+end ConcreteInfiniteCurrentReadback
 
 /-! ## Affine Kac--Moody / Virasoro / Sugawara layer -/
 

@@ -4563,6 +4563,59 @@ private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSClosure
         hClosure hPair)
 
 /--
+KMS-closure / pairing-witness cocycle-sourced capstone variant with a single
+fluid-production witness.  This narrowed constructive route derives anomaly
+skewness from the regularization owner packet and recovers the helicity probes
+from the bundled matched-helicity witness, instead of exposing `hReg` and
+`hHelicity` as loose theorem arguments.
+-/
+private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSClosure_pairingFluidWitness
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (Wfluid : FluidHelicityProductionWitness (E := E) A B_mp B_dr)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (K : InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G)
+    (ωKMS :
+      Nat → InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure
+        n Tflow K ωKMS β)
+    (hPair :
+      KMSPairingWitness (n := n) (E := G) Tflow σ u hBridge K ωKMS β) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSClosure_pairingWitness
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (hReg := Wfluid.regularization) (hHelicity := Wfluid.helicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (K := K) (ωKMS := ωKMS) (β := β)
+    (hClosure := hClosure) (hPair := hPair)
+
+/--
 KMS-closure / pairing-witness cocycle-sourced capstone variant with the
 ZPE/gravity owner packet.
 

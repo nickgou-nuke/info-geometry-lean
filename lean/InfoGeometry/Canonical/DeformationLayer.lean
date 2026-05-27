@@ -53,8 +53,8 @@ theorem q_identification_requires_witness
 
 @[rep_depth thermo]
 theorem q_not_identified_with_expNegBeta_without_witness
-    (_D : DeformationParameter) :
-    True :=
-  trivial
+    (W : DeformationParameterWitness) :
+    W.q = W.thermalParameter :=
+  W.q_eq_thermalParameter
 
 end InfoGeometry.Canonical.DeformationLayer

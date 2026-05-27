@@ -109,7 +109,6 @@ structure SpectralDivisorCharge where
   number, spectral flow, or scattering phase.
   -/
   divisor_law : Prop
-  divisor_certificate : divisor_law
 
 namespace SpectralDivisorCharge
 
@@ -151,7 +150,6 @@ structure HelicalPacket
   component : ℤ → State
   /-- Support/readout law for the packet. -/
   packet_law : Prop
-  packet_certificate : packet_law
 
 namespace HelicalPacket
 
@@ -248,13 +246,11 @@ structure HelicalStinespringAccounting
   hiddenSheetCharge : Env → ℤ
   /-- Hidden component of a state has the declared sheet charge. -/
   hidden_charge_law : Prop
-  hidden_charge_certificate : hidden_charge_law
   /--
   Interpretation law: nonzero hidden sheet charge means hidden/non-flat branch
   information.
   -/
   nonzero_charge_hidden_law : Prop
-  nonzero_charge_hidden_certificate : nonzero_charge_hidden_law
 
 namespace HelicalStinespringAccounting
 
@@ -309,28 +305,16 @@ structure SpectralFunctionDivisorCalibration
   divisor charge.
   -/
   spectral_divisor_law : Prop
-  spectral_divisor_certificate : spectral_divisor_law
   /--
   Optional statement that this function is the intended Riemann/L-function,
   material scattering determinant, or optical transfer determinant.
   -/
   interpretation_law : Prop
-  interpretation_certificate : interpretation_law
 
 namespace SpectralFunctionDivisorCalibration
 
 variable {State : Type*}
 variable (C : SpectralFunctionDivisorCalibration State)
-
-/-- The stored spectral-divisor calibration law is available as a proof. -/
-theorem spectral_divisor_valid :
-    C.spectral_divisor_law :=
-  C.spectral_divisor_certificate
-
-/-- The stored interpretation law is available as a proof. -/
-theorem interpretation_valid :
-    C.interpretation_law :=
-  C.interpretation_certificate
 
 end SpectralFunctionDivisorCalibration
 

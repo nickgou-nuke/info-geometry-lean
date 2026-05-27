@@ -182,6 +182,14 @@ echo "[strict-check] enforcing closure debt frontier gate"
 python3 tools/quality/check_closure_debt_gate.py \
   --policy tools/quality/closure_debt_gate.json
 
+echo "[strict-check] enforcing no-hypothesis mandate gate"
+python3 tools/quality/check_no_hypothesis_mandate.py \
+  --root lean/InfoGeometry
+
+echo "[strict-check] enforcing proof-only mandate gate"
+python3 tools/quality/proof_only_mandate_gate.py \
+  --policy tools/quality/proof_only_mandate_policy.json
+
 CLOSURE_DEBT_BUILD_TARGETS=(
   InfoGeometry.Core.CartanPhaseAxisForcing
   InfoGeometry.Canonical.WindingOrbitClosure

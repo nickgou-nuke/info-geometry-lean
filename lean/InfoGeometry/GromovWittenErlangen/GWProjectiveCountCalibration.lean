@@ -23,8 +23,8 @@ The point is deliberately conservative:
   modulo positive scale.
 
 No virtual localization theorem or probability normalization theorem is proved
-here.  The model supplies the law that its localization data has the declared
-count shadow.
+here.  The fields below are finite count/readout data only; they do not package
+a separate count-shadow proof.
 -/
 
 noncomputable section
@@ -70,26 +70,10 @@ structure GWProjectiveCountCalibration
   /-- Scalar readout of a localization contribution. -/
   coeffReadout : Coeff → ℝ
 
-  /--
-  The supplied count profile is the projective count shadow of the localization
-  graph.
-  -/
-  countShadowLaw : Prop
-
-  /-- Certificate for the count-shadow law. -/
-  countShadow_valid :
-    countShadowLaw
-
 namespace GWProjectiveCountCalibration
 
 variable {G T Target Coeff : Type*}
 variable (C : GWProjectiveCountCalibration G T Target Coeff)
-
-/-- The supplied GW-to-count shadow law is available. -/
-@[rep_depth count]
-theorem countShadow_holds :
-    C.countShadowLaw :=
-  C.countShadow_valid
 
 /-- Finite arithmetic partition attached to the GW projective count state. -/
 @[rep_depth projective]

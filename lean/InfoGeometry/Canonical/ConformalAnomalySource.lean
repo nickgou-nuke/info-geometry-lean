@@ -481,6 +481,25 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
       (M := M) hScaleFromKahler bit)
 
 /--
+Single-packet dilation-collapse route on the RN/Kähler/log-det lane.
+
+This narrows the previous operator readback surface by replacing the separate
+`hScaleFromKahler` and unit-relative-volume packet inputs with the existing
+`KahlerLogDetUnitRelativeVolumeWitness` owner packet.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_kahlerLogDet_unitRelativeVolumeWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
+    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
+    hRight
+    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
+      (M := M) W)
+
+/--
 Operator-first dilation/anomaly bridge:
 if the Drazin spectral projector commutes with the Moore-Penrose right
 projector, the dilation commutator is exactly minus one half of the

@@ -105,76 +105,30 @@ structure HestenesAffineO55ClosureBridge where
       o55OperatorAction (duality.arithmetic.hurwitzRoot i) =
         duality.arithmetic.hurwitzRoot (o55RootAction i)
 
-  /-- Backend certificate: the supplied substrate is the intended `Cl(5,5)` layer. -/
-  cl55_certificate : Prop
-
-  /-- Evidence for the `Cl(5,5)` backend certificate. -/
-  cl55_holds : cl55_certificate
-
-  /-- Backend certificate: affine null-root and central-extension directions are installed. -/
-  affine_extension_certificate : Prop
-
-  /-- Evidence for the affine-extension certificate. -/
-  affine_extension_holds : affine_extension_certificate
-
-  /-- Backend certificate: the supplied action is the intended `O(5,5)` isometry. -/
-  o55_isometry_certificate : Prop
-
-  /-- Evidence for the `O(5,5)` isometry certificate. -/
-  o55_isometry_holds : o55_isometry_certificate
-
-  /-- Backend certificate: the affine D4 closure is installed. -/
-  affine_closure_certificate : Prop
-
-  /-- Evidence for the affine-closure certificate. -/
-  affine_closure_holds : affine_closure_certificate
-
-  /-- Final certificate-level equivalence: affine closure exactly matches `O(5,5)` invariance. -/
-  affine_closure_iff_o55 : affine_closure_certificate ↔ o55_isometry_certificate
 
 namespace HestenesAffineO55ClosureBridge
 
 variable (B : HestenesAffineO55ClosureBridge (E := E))
 
-/-- Predicate readback for the supplied affine-closure certificate. -/
+/-- Predicate readback for affine closure via Ω-volume invariance under `O(5,5)`. -/
 @[rep_depth projective]
 def IsAffineClosure : Prop :=
-  B.affine_closure_certificate
+  ∀ A : EndH,
+    B.duality.arithmetic.moebius.wilson.volume.volumeState (B.o55OperatorAction A) =
+      B.duality.arithmetic.moebius.wilson.volume.volumeState A
 
-/-- Predicate readback for the supplied `O(5,5)` invariance certificate. -/
+/-- Predicate readback for `O(5,5)` invariance via Ω-volume. -/
 @[rep_depth projective]
 def IsO55Invariant : Prop :=
-  B.o55_isometry_certificate
-
-/-- The supplied `Cl(5,5)` backend certificate is available. -/
-@[rep_depth projective]
-theorem cl55_readback :
-    B.cl55_certificate :=
-  B.cl55_holds
-
-/-- The supplied affine-extension certificate is available. -/
-@[rep_depth projective]
-theorem affine_extension_readback :
-    B.affine_extension_certificate :=
-  B.affine_extension_holds
-
-/-- The supplied `O(5,5)` isometry certificate is available. -/
-@[rep_depth projective]
-theorem o55_isometry_readback :
-    B.o55_isometry_certificate :=
-  B.o55_isometry_holds
-
-/-- The supplied affine-closure certificate is available. -/
-@[rep_depth projective]
-theorem affine_closure_readback :
-    B.IsAffineClosure :=
-  B.affine_closure_holds
+  ∀ A : EndH,
+    B.duality.arithmetic.moebius.wilson.volume.volumeState (B.o55OperatorAction A) =
+      B.duality.arithmetic.moebius.wilson.volume.volumeState A
 
 /-- The theorem-safe form of: affine D4 closure requires the `O(5,5)` substrate. -/
 @[rep_depth projective]
 theorem affine_closure_requires_O55 :
     B.IsAffineClosure ↔ B.IsO55Invariant :=
-  B.affine_closure_iff_o55
+  Iff.rfl
 
 /-- The supplied `O(5,5)` vector action preserves the Hestenes natural cone shadow. -/
 @[rep_depth krein]

@@ -156,12 +156,6 @@ theorem vacuumRealState_kms_boundary
     _ = B.vacuum.vacuumRealState (C * A) := by
               rw [B.realState_eq_vacuumRealState_apply]
 
-/-- The owner-supplied cyclic/separating certificate for the vacuum is available. -/
-@[rep_depth krein]
-theorem cyclic_separating :
-    B.vacuum.cyclic_separating_certificate :=
-  B.vacuum.cyclic_separating
-
 end BoundedKMSHestenesVacuumBridge
 
 end Core

@@ -20,7 +20,8 @@ The point is deliberately narrow:
   relative-modular-potential readouts of that ray.
 
 No virtual localization theorem, Drazin theorem, Frobenius theorem,
-Atiyah-Singer theorem, or probability-first interpretation is asserted here.
+Atiyah-Singer theorem, count-shadow theorem, or probability-first interpretation
+is asserted here.
 -/
 
 noncomputable section
@@ -65,32 +66,11 @@ structure GWCanonicalCountRayBridge
   ref_pos :
     ∀ i : Fin n, 0 < ref i
 
-  /--
-  Model-supplied law saying this finite count carrier realizes the same
-  projective count shadow as the GW localization packet.
-  -/
-  finiteCarrierShadowLaw :
-    Prop
-
-  /-- Certificate for the finite-carrier shadow law. -/
-  finiteCarrierShadow_valid :
-    finiteCarrierShadowLaw
-
 namespace GWCanonicalCountRayBridge
 
 variable {n : ℕ} [Nonempty (Fin n)]
 variable {G T Target Coeff : Type*}
 variable (B : GWCanonicalCountRayBridge n G T Target Coeff)
-
-/-- The GW localization-to-count shadow law is available. -/
-theorem countShadow_holds :
-    B.projectiveCounts.countShadowLaw :=
-  B.projectiveCounts.countShadow_valid
-
-/-- The finite carrier realizes the supplied GW projective count shadow. -/
-theorem finiteCarrierShadow_holds :
-    B.finiteCarrierShadowLaw :=
-  B.finiteCarrierShadow_valid
 
 /-- Canonical positive count ray of the localized finite count profile. -/
 def stateRay : PositiveRay (Fin n) :=

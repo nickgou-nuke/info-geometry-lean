@@ -171,12 +171,6 @@ theorem modularWeight_isModularMonogenic :
   (modularDerivation_eq_zero_iff_commutes D D.modularWeight).mpr
     D.modularWeight_comm_generator.symm
 
-/-- The modular generator is Krein self-adjoint. -/
-theorem generator_krein_selfadjoint_holds :
-    D.fundamentalSymmetry * D.modularGenerator * D.fundamentalSymmetry =
-      D.modularGenerator :=
-  D.generator_krein_selfadjoint
-
 /--
 Krein self-adjointness of the generator implies that the fundamental symmetry
 commutes with the generator.
@@ -542,18 +536,6 @@ variable
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {D : KreinHestenesModularDatum E}
     (C : KreinModularCoreProjector D)
-
-/-- The modular core projector is idempotent. -/
-@[simp]
-theorem core_idempotent_holds :
-    C.coreProjector * C.coreProjector = C.coreProjector :=
-  C.core_idempotent
-
-/-- The modular nil projector is idempotent. -/
-@[simp]
-theorem nil_idempotent_holds :
-    C.nilProjector * C.nilProjector = C.nilProjector :=
-  C.nil_idempotent
 
 /-- Pointwise idempotence of the modular core projector. -/
 @[simp]

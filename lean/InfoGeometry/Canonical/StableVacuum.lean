@@ -74,10 +74,6 @@ structure SpectralGroundState
   /-- Normalization condition for the vacuum, supplied by the concrete model. -/
   normalized : Prop
 
-  /-- Evidence for the normalization condition. -/
-  normalized_holds :
-    normalized
-
   /-- The vacuum lies in the bottom eigenspace. -/
   ground :
     H Omega = 0
@@ -99,11 +95,6 @@ def groundSubspace : Submodule ℝ V :=
 theorem omega_mem_groundSubspace :
     S.Omega ∈ S.groundSubspace :=
   S.ground
-
-/-- Re-export of the vacuum normalization evidence. -/
-theorem vacuum_normalized :
-    S.normalized :=
-  S.normalized_holds
 
 /-- Re-export of physical Hamiltonian positivity. -/
 theorem hamiltonian_quadratic_nonnegative
@@ -526,11 +517,6 @@ theorem kms_flow_invariant
     E.kms.state.eval (sigma.flow t A) = E.kms.state.eval A :=
   InfoGeometry.OperatorAlgebra.Thermodynamics.KMSState.flow_invariant_apply E.kms t A
 
-/-- Re-export of the analytic KMS boundary condition. -/
-theorem kms_boundary_holds :
-    E.kms.kms.boundaryCondition :=
-  InfoGeometry.OperatorAlgebra.Thermodynamics.KMSState.kms_boundary_holds E.kms
-
 /-- Re-export of passivity for cyclic perturbations. -/
 theorem cyclicWork_nonnegative
     {U : Op}
@@ -636,11 +622,6 @@ variable (S : StableVacuumArchitecture V Op Index Tangent sigma beta)
 theorem spectral_ground :
     S.spectral.H S.spectral.Omega = 0 :=
   S.spectral.ground
-
-/-- The thermal layer supplies the KMS analytic boundary condition. -/
-theorem kms_boundary_holds :
-    S.thermal.kms.kms.boundaryCondition :=
-  S.thermal.kms_boundary_holds
 
 /-- The deformation metric is positive semidefinite. -/
 theorem deformation_metric_posSemidef

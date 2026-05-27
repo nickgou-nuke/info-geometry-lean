@@ -255,19 +255,11 @@ structure ObserverReduction
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
-  /-- Law: the commutant is inaccessible to the local observer. -/
-  commutant_inaccessible_law : Prop
+  /-- The commutant is inaccessible to the local observer. -/
+  commutant_inaccessible : Prop
 
-  /-- Evidence that the commutant is inaccessible to the local observer. -/
-  commutant_inaccessible :
-    commutant_inaccessible_law
-
-  /-- Law for the selected restriction/reduction backend. -/
-  reduction_backend_law : Prop
-
-  /-- Evidence for the selected restriction/reduction backend. -/
-  reduction_backend_valid :
-    reduction_backend_law
+  /-- Selected restriction/reduction backend is valid. -/
+  reduction_backend_valid : Prop
 
 namespace ObserverReduction
 
@@ -306,19 +298,11 @@ structure TomitaKMSThermalization
   thermal_eq_reduction :
     ∀ A : Op, thermal.state.eval A = reduction.observableEval A
 
-  /-- Law that the modular flow is the Tomita flow of the pair/state. -/
-  modular_origin_law : Prop
+  /-- The modular flow is the Tomita flow of the pair/state. -/
+  modular_origin : Prop
 
-  /-- Evidence that the modular flow is the Tomita flow of the pair/state. -/
-  modular_origin :
-    modular_origin_law
-
-  /-- Optional geometric/horizon law, e.g. wedge or Killing horizon data. -/
-  horizon_or_wedge_origin_law : Prop
-
-  /-- Evidence for the optional geometric/horizon law. -/
-  horizon_or_wedge_origin :
-    horizon_or_wedge_origin_law
+  /-- Optional geometric/horizon origin (e.g. wedge or Killing horizon data). -/
+  horizon_or_wedge_origin : Prop
 
 namespace TomitaKMSThermalization
 
@@ -388,12 +372,8 @@ structure HorizonCommutantBoundary
   boundary_maps_observable_to_commutant :
     ∀ A : Op, A ∈ T.M → boundary A ∈ T.Mcomm
 
-  /-- Law saying this boundary is the intended defect/horizon locus. -/
-  boundary_is_defect_locus_law : Prop
-
-  /-- Evidence that this boundary is the intended defect/horizon locus. -/
-  boundary_is_defect_locus :
-    boundary_is_defect_locus_law
+  /-- This boundary is the intended defect/horizon locus. -/
+  boundary_is_defect_locus : Prop
 
 /--
 Full thermodynamic horizon witness:
@@ -460,8 +440,6 @@ structure ModularKMSDatum
   /-- The modular/KMS state. -/
   kms : KMSState Op modularFlow beta
 
-  /-- Tomita-Takesaki modular theorem certificate. -/
-  tomita_takesaki_certificate : Prop
 
 /-! ## 6. Horizon / Unruh / Hawking calibration -/
 
@@ -486,13 +464,6 @@ structure HorizonFlowCalibration
       σ.flow t x =
         physicalFlow.flow (time_rescaling * t) x
 
-  /--
-  Geometric theorem certificate.
-
-  Intended examples include Bisognano-Wichmann for Rindler wedge/Unruh and
-  horizon/Killing-flow calibration for Hawking.
-  -/
-  geometric_calibration_certificate : Prop
 
 /--
 Emergent thermal radiation datum.
@@ -571,11 +542,8 @@ structure BipartiteTomitaState
   /-- Global state/readout. -/
   eval : Op → ℂ
 
-  /-- State/weight certificate. -/
-  state_certificate : Prop
-
-  /-- Certificate that the state is adapted to the Tomita pair. -/
-  tomita_pair_certificate : Prop
+  /-- State/weight data is adapted to the selected Tomita pair. -/
+  state_adapted_to_tomita_pair : Prop
 
 /--
 Accessible restriction backend.
@@ -1133,23 +1101,15 @@ structure ObserverReduction
   agrees_on_observable :
     ∀ A : Op, A ∈ T.M → observableEval A = globalEval A
 
-  /-- Law: the commutant is inaccessible to the local observer. -/
-  commutant_inaccessible_law : Prop
-
-  /-- Evidence that the commutant is inaccessible to the local observer. -/
-  commutant_inaccessible :
-    commutant_inaccessible_law
+  /-- The commutant is inaccessible to the local observer. -/
+  commutant_inaccessible : Prop
 
   /--
-  Law that the reduction is implemented by the selected backend:
+  Reduction is implemented by the selected backend:
   finite partial trace, restriction, conditional expectation, modular weight,
   or core trace.
   -/
-  reduction_backend_law : Prop
-
-  /-- Evidence for the selected reduction backend law. -/
-  reduction_backend_valid :
-    reduction_backend_law
+  reduction_backend_valid : Prop
 
 namespace ObserverReduction
 
@@ -1190,19 +1150,11 @@ structure TomitaKMSThermalization
   thermal_eq_reduction :
     ∀ A : Op, thermal.state.eval A = reduction.observableEval A
 
-  /-- Law that the modular flow is the Tomita flow of the pair/state. -/
-  modular_origin_law : Prop
+  /-- The modular flow is the Tomita flow of the pair/state. -/
+  modular_origin : Prop
 
-  /-- Evidence that the modular flow is the Tomita flow of the pair/state. -/
-  modular_origin :
-    modular_origin_law
-
-  /-- Optional geometric/horizon law, e.g. wedge or Killing horizon data. -/
-  horizon_or_wedge_origin_law : Prop
-
-  /-- Evidence for the optional geometric/horizon law. -/
-  horizon_or_wedge_origin :
-    horizon_or_wedge_origin_law
+  /-- Optional geometric/horizon origin, e.g. wedge or Killing horizon data. -/
+  horizon_or_wedge_origin : Prop
 
 namespace TomitaKMSThermalization
 
@@ -1273,12 +1225,8 @@ structure HorizonCommutantBoundary
   boundary_maps_observable_to_commutant :
     ∀ A : Op, A ∈ T.M → boundary A ∈ T.Mcomm
 
-  /-- Law saying this boundary is the intended Drazin/null/horizon locus. -/
-  boundary_is_defect_locus_law : Prop
-
-  /-- Evidence that this boundary is the intended Drazin/null/horizon locus. -/
-  boundary_is_defect_locus :
-    boundary_is_defect_locus_law
+  /-- This boundary is the intended Drazin/null/horizon locus. -/
+  boundary_is_defect_locus : Prop
 
 /--
 Full thermodynamic horizon witness:

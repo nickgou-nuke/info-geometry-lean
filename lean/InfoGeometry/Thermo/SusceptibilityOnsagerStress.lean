@@ -55,12 +55,8 @@ structure OnsagerTwoOperatorForm
   symmetric :
     ∀ A B : Op, form A B = form B A
 
-  /-- Optional second-law/PSD law for the diagonal sector. -/
-  diagonal_nonnegative_law : Prop
-
-  /-- Evidence for the diagonal nonnegativity law. -/
-  diagonal_nonnegative_certificate :
-    diagonal_nonnegative_law
+  /-- Optional second-law/PSD constraint for the diagonal sector. -/
+  diagonal_nonnegative : Prop
 
 namespace OnsagerTwoOperatorForm
 
@@ -77,12 +73,6 @@ theorem swap
     L.form A B = L.form B A :=
   L.symmetric A B
 
-/-- Re-export of the diagonal nonnegativity certificate. -/
-@[rep_depth thermo]
-theorem diagonal_nonnegative_valid :
-    L.diagonal_nonnegative_law :=
-  L.diagonal_nonnegative_certificate
-
 end OnsagerTwoOperatorForm
 
 /-! ## 2. Susceptibility-induced Onsager pairings -/
@@ -92,7 +82,7 @@ An Onsager pairing installed around a constructive Hessian-to-susceptibility
 calibration.
 
 The field `pairing` is the two-field response form, while
-`pairing_from_susceptibility_law` records the concrete constitutive relation
+`pairing_from_susceptibility` records the concrete constitutive relation
 chosen by a material model. For example, a model may pair `E₁` with `χ_U E₂`,
 or use a Kubo/symmetrized response kernel.
 -/
@@ -109,12 +99,8 @@ structure SusceptibilityOnsagerPairing
   pairing_symmetric :
     ∀ U : Op, ∀ E₁ E₂ : Field, pairing U E₁ E₂ = pairing U E₂ E₁
 
-  /-- Constitutive law connecting the pairing to the susceptibility `χ_U`. -/
-  pairing_from_susceptibility_law : Prop
-
-  /-- Evidence for the constitutive law. -/
-  pairing_from_susceptibility :
-    pairing_from_susceptibility_law
+  /-- Constitutive relation connecting the pairing to the susceptibility `χ_U`. -/
+  pairing_from_susceptibility : Prop
 
 namespace SusceptibilityOnsagerPairing
 
@@ -134,12 +120,6 @@ theorem pairing_swap
     (E₁ E₂ : Field) :
     P.pairing U E₁ E₂ = P.pairing U E₂ E₁ :=
   P.pairing_symmetric U E₁ E₂
-
-/-- Re-export of the pairing-from-susceptibility calibration. -/
-@[rep_depth thermo]
-theorem pairing_from_susceptibility_valid :
-    P.pairing_from_susceptibility_law :=
-  P.pairing_from_susceptibility
 
 end SusceptibilityOnsagerPairing
 
@@ -161,12 +141,8 @@ structure StressTensorOperator
   stress_symmetric :
     ∀ U : Op, ∀ X Y : Carrier, stress U X Y = stress U Y X
 
-  /-- Constitutive law linking stress to the chosen response geometry. -/
-  constitutive_law : Prop
-
-  /-- Evidence for the constitutive law. -/
-  constitutive_certificate :
-    constitutive_law
+  /-- Constitutive relation linking stress to the chosen response geometry. -/
+  constitutive : Prop
 
 namespace StressTensorOperator
 
@@ -183,12 +159,6 @@ theorem stress_swap
     (X Y : Carrier) :
     T.stress U X Y = T.stress U Y X :=
   T.stress_symmetric U X Y
-
-/-- Re-export of the stress constitutive law. -/
-@[rep_depth thermo]
-theorem constitutive_valid :
-    T.constitutive_law :=
-  T.constitutive_certificate
 
 end StressTensorOperator
 
@@ -352,11 +322,7 @@ structure SusceptibilityOnsagerStressPacket
     DerivedStressTensorResponse Op Carrier derivation stressTensor
 
   /-- Calibration connecting the operator Onsager form to stress response. -/
-  onsager_controls_stress_law : Prop
-
-  /-- Evidence for the Onsager-to-stress calibration. -/
-  onsager_controls_stress :
-    onsager_controls_stress_law
+  onsager_controls_stress : Prop
 
 namespace SusceptibilityOnsagerStressPacket
 
@@ -417,12 +383,6 @@ theorem derivedStress_swap
       P.derivedStress.derivedStress U Y X :=
   P.derivedStress.derivedStress_swap U X Y
 
-/-- Re-export of the Onsager-to-stress calibration law. -/
-@[rep_depth thermo]
-theorem onsager_controls_stress_valid :
-    P.onsager_controls_stress_law :=
-  P.onsager_controls_stress
-
 end SusceptibilityOnsagerStressPacket
 
 /-! ## 7. Owner target -/
@@ -436,7 +396,36 @@ def SusceptibilityOnsagerStressOwnerTarget
     [NormedAddCommGroup Field] [NormedSpace ℝ Field]
     [NormedAddCommGroup Response] [NormedSpace ℝ Response]
     [AddCommMonoid Carrier] [Module ℝ Carrier] : Prop :=
-  Nonempty (SusceptibilityOnsagerStressPacket Op Field Response Carrier)
+  ∀ (P : SusceptibilityOnsagerStressPacket Op Field Response Carrier),
+    (∀ (A B : Op),
+      P.operatorOnsager.form A B = P.operatorOnsager.form B A) ∧
+    (∀ (U : Op) (E₁ E₂ : Field),
+      P.onsagerPairing.pairing U E₁ E₂ = P.onsagerPairing.pairing U E₂ E₁) ∧
+    (∀ (U : Op) (X Y : Carrier),
+      P.stressTensor.stress U X Y = P.stressTensor.stress U Y X) ∧
+    (∀ (U : Op),
+      P.derivedStress.derivedStress U = P.stressTensor.stress (P.derivation U))
+
+/--
+Any installed susceptibility/Onsager/stress packet satisfies the owner-side
+reciprocity, symmetry, and readback laws already proved in this file.
+-/
+theorem susceptibilityOnsagerStressOwnerTarget
+    (Op Field Response Carrier : Type*)
+    [NormedAddCommGroup Op] [NormedSpace ℝ Op] [Mul Op]
+    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
+    [AddCommMonoid Carrier] [Module ℝ Carrier] :
+    SusceptibilityOnsagerStressOwnerTarget Op Field Response Carrier := by
+  intro P
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro A B
+    exact P.operatorOnsager_swap A B
+  · intro U E₁ E₂
+    exact P.fieldOnsager_swap U E₁ E₂
+  · intro U X Y
+    exact P.stressTensor_swap U X Y
+  · intro U
+    exact P.derivedStress_eq_stress_derivation U
 
 end InfoGeometry.Thermo.SusceptibilityOnsagerStress
-

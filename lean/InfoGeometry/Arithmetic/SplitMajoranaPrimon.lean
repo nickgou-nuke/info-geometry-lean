@@ -17,7 +17,8 @@ This file packages the finite-cutoff algebraic bridge
   `∑_{S⊆P} (-1)^|S| ∏_{p∈S} q p = ∏_{p∈P} (1 - q p)`;
 * the finite block-Pfaffian product shadow;
 * the spinor square-root pairing `1 - r_p^2 = 1 - q_p`;
-* the stable-vs-raw hyperbolic branch guardrail.
+* the stable-vs-raw hyperbolic branch guardrail;
+* the mathlib-backed Euler product readout for `ζ`.
 
 No infinite Euler product, analytic continuation, RH theorem, or genuine
 matrix Pfaffian API is asserted here.
@@ -250,42 +251,12 @@ theorem rawHyperbolicChiralIndex_eq_pfaffian_difference
   rw [majoranaPfaffianProduct_eq_dirichletWittenCharacter,
     majoranaPfaffianProduct_eq_dirichletWittenCharacter]
 
-/-! ## Infinite/zeta bridge socket -/
+/-! ## Infinite/zeta readout -/
 
 /-- Mathlib-backed infinite Euler-product readout on the standard half-plane. -/
 @[bridge_target_tag]
 theorem infiniteEulerProductZeta_readout {s : ℂ} (hs : 1 < s.re) :
     (∏' p : Nat.Primes, (1 - ((p : ℕ) : ℂ) ^ (-s))⁻¹) = riemannZeta s := by
   simpa using InfoGeometry.Canonical.Arithmetic.zeta_euler_product_bridge hs
-
-/--
-Witness-gated infinite Euler product bridge.
-
-For a concrete analytic model this should state that, on an admissible domain,
-the infinite cutoff limit of the finite character equals `1 / ζ(s)`.
-The actual prime-product readout is reexported above from the canonical
-mathlib-backed bridge.
--/
-@[socket_debt_tag]
-structure InfiniteEulerProductZetaBridge
-    (Param Scalar : Type*) where
-  IsAdmissible : Param → Prop
-  finiteCutoffCharacter : ℕ → Param → Scalar
-  reciprocalZeta : Param → Scalar
-  cutoff_limit_law : Prop
-  cutoff_limit_certificate : cutoff_limit_law
-
-namespace InfiniteEulerProductZetaBridge
-
-variable {Param Scalar : Type*}
-variable (B : InfiniteEulerProductZetaBridge Param Scalar)
-
-/-- The supplied cutoff-limit law is available. -/
-@[bridge_target_tag]
-theorem cutoff_limit_valid :
-    B.cutoff_limit_law :=
-  B.cutoff_limit_certificate
-
-end InfiniteEulerProductZetaBridge
 
 end InfoGeometry.Arithmetic.SplitMajoranaPrimon

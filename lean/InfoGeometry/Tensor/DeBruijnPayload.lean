@@ -25,14 +25,6 @@ structure GraphEndpoints where
 
 namespace GraphEndpoints
 
-/-- Read back the storage source endpoint. -/
-theorem source_readback (g : GraphEndpoints) : g.source = g.source :=
-  rfl
-
-/-- Read back the storage target endpoint. -/
-theorem target_readback (g : GraphEndpoints) : g.target = g.target :=
-  rfl
-
 end GraphEndpoints
 
 /-- External edge-payload coordinates that can be read back to a Lean
@@ -192,16 +184,6 @@ theorem conductive_iff (r : CandidateContractionRecord) :
 theorem promotable_iff (r : CandidateContractionRecord) :
     r.Promotable ↔ r.payload.toEdge.ContractionSound :=
   r.conductive_iff
-
-/-- The candidate source endpoint is preserved as graph-navigation data. -/
-theorem endpoint_source_readback (r : CandidateContractionRecord) :
-    r.endpoints.source = r.endpoints.source :=
-  rfl
-
-/-- The candidate target endpoint is preserved as graph-navigation data. -/
-theorem endpoint_target_readback (r : CandidateContractionRecord) :
-    r.endpoints.target = r.endpoints.target :=
-  rfl
 
 /-- Read back source-port boundedness from direct lower-kernel conductivity. -/
 theorem source_port_lt {r : CandidateContractionRecord} (h : r.Conductive) :

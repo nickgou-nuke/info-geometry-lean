@@ -16,7 +16,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.DrazinProjectionLocalization
 
 /-- A pair of complementary idempotent projections. -/
-structure SelfAdjointIdempotentPair (A : Type*) [Ring A] where
+structure SelfAdjointIdempotentPair (A : Type*) [Ring A] [StarRing A] where
   support : A
   residue : A
   support_idem : support * support = support
@@ -24,17 +24,13 @@ structure SelfAdjointIdempotentPair (A : Type*) [Ring A] where
   support_residue_zero : support * residue = 0
   residue_support_zero : residue * support = 0
   support_add_residue : support + residue = 1
-  selfAdjointLaw : Prop
-  selfAdjointCertificate : selfAdjointLaw
+  support_selfAdjoint : star support = support
+  residue_selfAdjoint : star residue = residue
 
 namespace SelfAdjointIdempotentPair
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [StarRing A]
 variable (P : SelfAdjointIdempotentPair A)
-
-/-- The supplied self-adjointness law is available. -/
-theorem selfAdjoint_valid : P.selfAdjointLaw :=
-  P.selfAdjointCertificate
 
 end SelfAdjointIdempotentPair
 
@@ -167,7 +163,7 @@ Regular core plus singular residue data relative to complementary projections.
 singular/residue sector; no claim is made that the total element is globally
 invertible.
 -/
-structure RelativeCoreNilpotentDecomposition (A : Type*) [Ring A] where
+structure RelativeCoreNilpotentDecomposition (A : Type*) [Ring A] [StarRing A] where
   projections : SelfAdjointIdempotentPair A
   element : A
   regularPart : A
@@ -195,17 +191,12 @@ structure RelativeCoreNilpotentDecomposition (A : Type*) [Ring A] where
     nilpotentPart * coreInv = 0
   coreInv_mul_nilpotent :
     coreInv * nilpotentPart = 0
-  nilpotentResidueLaw : Prop
-  nilpotentResidueCertificate : nilpotentResidueLaw
+  nilpotent_isNilpotent : IsNilpotent nilpotentPart
 
 namespace RelativeCoreNilpotentDecomposition
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [StarRing A]
 variable (D : RelativeCoreNilpotentDecomposition A)
-
-/-- The supplied residue law is available. -/
-theorem nilpotentResidue_valid : D.nilpotentResidueLaw :=
-  D.nilpotentResidueCertificate
 
 /-- The localized Drazin residue is the singular/nilpotent component. -/
 def localizedDrazinResidue : A :=
@@ -290,57 +281,42 @@ structure DivisionResidueBlockPacket where
   Block : Type*
   DivisionCarrier : Block → Type*
   residueProjection : Block → Type*
-  simpleResidueLaw : Prop
-  simpleResidueCertificate : simpleResidueLaw
+  carrier_divisionRing : ∀ b, DivisionRing (DivisionCarrier b)
 
 namespace DivisionResidueBlockPacket
 
 variable (P : DivisionResidueBlockPacket)
 
-/-- The supplied simple-residue law is available. -/
-theorem simpleResidue_valid : P.simpleResidueLaw :=
-  P.simpleResidueCertificate
-
 end DivisionResidueBlockPacket
 
 /-- Frobenius/self-dual pairing socket for the localized algebra. -/
-structure FrobeniusSelfDualPacket (A : Type*) [Mul A] where
+structure FrobeniusSelfDualPacket (A : Type*) [Ring A] where
   pairing : A → A → ℝ
   pairing_mul_left_eq_pairing_mul_right :
     ∀ a b c : A, pairing (a * b) c = pairing a (b * c)
-  nondegeneracyLaw : Prop
-  nondegeneracyCertificate : nondegeneracyLaw
+  nondegenerate : ∀ a, (∀ b, pairing a b = 0) → a = 0
 
 namespace FrobeniusSelfDualPacket
 
-variable {A : Type*} [Mul A]
+variable {A : Type*} [Ring A]
 variable (P : FrobeniusSelfDualPacket A)
-
-/-- The supplied nondegeneracy law is available. -/
-theorem nondegeneracy_valid : P.nondegeneracyLaw :=
-  P.nondegeneracyCertificate
 
 end FrobeniusSelfDualPacket
 
 /-- Regular/singular divisor strata controlled by Drazin data. -/
-structure SpectralDivisorStratification (A : Type*) [Ring A] where
+structure SpectralDivisorStratification (A : Type*) [Ring A] [StarRing A] where
   Point : Type*
   weight : Point → A
   drazinAt : Point → RelativeCoreNilpotentDecomposition A
   drazin_weight_eq : ∀ p : Point, (drazinAt p).element = weight p
   regularLocus : Set Point
   singularLocus : Set Point
-  locusCoverLaw : Prop
-  locusCoverCertificate : locusCoverLaw
+  locusCover : regularLocus ∪ singularLocus = Set.univ
 
 namespace SpectralDivisorStratification
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [StarRing A]
 variable (S : SpectralDivisorStratification A)
-
-/-- The supplied regular/singular cover law is available. -/
-theorem locusCover_valid : S.locusCoverLaw :=
-  S.locusCoverCertificate
 
 /-- Every point has Drazin data for its weight. -/
 def drazinDataAt (p : S.Point) : DrazinInverseData A :=
@@ -354,20 +330,15 @@ theorem drazinDataAt_element_eq_weight (p : S.Point) :
 end SpectralDivisorStratification
 
 /-- Two-projection Drazin localization packet used by operator/GW bridges. -/
-structure TwoProjectionDrazinLocalizationPacket (A : Type*) [Ring A] where
+structure TwoProjectionDrazinLocalizationPacket (A : Type*) [Ring A] [StarRing A] where
   decomposition : RelativeCoreNilpotentDecomposition A
   residueBlocks : DivisionResidueBlockPacket
-  localizationLaw : Prop
-  localizationCertificate : localizationLaw
+  drazin_localization_eq : decomposition.coreInv = decomposition.coreInv * decomposition.element * decomposition.coreInv
 
 namespace TwoProjectionDrazinLocalizationPacket
 
-variable {A : Type*} [Ring A]
+variable {A : Type*} [Ring A] [StarRing A]
 variable (P : TwoProjectionDrazinLocalizationPacket A)
-
-/-- The supplied localization law is available. -/
-theorem localization_valid : P.localizationLaw :=
-  P.localizationCertificate
 
 /-- The packet exposes Drazin inverse data for its decomposition element. -/
 def drazinData : DrazinInverseData A :=

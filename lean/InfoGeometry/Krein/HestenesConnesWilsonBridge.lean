@@ -188,12 +188,6 @@ structure HestenesConnesWilsonBridge
       radonNikodymLog parent child =
         NaturalConeVolumeBridge.modularVolumeIncrement volume parent child
 
-  /-- Concrete Connes-cycle/Wilson-loop backend certificate. -/
-  connes_two_cycle_certificate : Prop
-
-  /-- Evidence for the Connes-cycle/Wilson-loop backend certificate. -/
-  connes_two_cycle_holds : connes_two_cycle_certificate
-
 namespace HestenesConnesWilsonBridge
 
 variable {Word : Type*}
@@ -371,12 +365,6 @@ theorem radon_nikodym_log_weyl_gauge_invariant
 theorem total_wilson_atom_volume_is_unity :
     (∑ w : Word, NaturalConeVolumeBridge.atomExpectation W.volume w) = 1 :=
   NaturalConeVolumeBridge.total_expectation_is_unity W.volume
-
-/-- The supplied Connes/Wilson backend certificate is available. -/
-@[rep_depth projective]
-theorem connes_two_cycle :
-    W.connes_two_cycle_certificate :=
-  W.connes_two_cycle_holds
 
 end HestenesConnesWilsonBridge
 

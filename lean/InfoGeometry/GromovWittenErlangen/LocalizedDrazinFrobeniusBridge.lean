@@ -1,21 +1,19 @@
 import InfoGeometry.GromovWittenErlangen.DrazinLocalization
 
 /-!
-# Localized Drazin-Frobenius Bridge
+# Localized Drazin-Frobenius Readout
 
 This module records the theorem-safe version of the slogan:
 
 ```text
 Fredholm/localization operator
   -> Drazin regular core + singular obstruction residue
-  -> equivariant divisor/Euler-weight calibration
   -> localized finite Frobenius readout
-  -> semisimple residue/division-block certificate
 ```
 
 It does **not** prove virtual localization, Fredholm index theory,
 Wedderburn-Artin, Dubrovin semisimplicity, or Moore-Penrose existence.  Those
-remain model-specific certificates.  The theorem-bearing content here is the
+remain outside this file.  The theorem-bearing content here is the
 algebra already available from `RelativeCoreNilpotentDecomposition`: the
 regular inverse kills the singular residue and produces Drazin inverse data for
 the localized operator.
@@ -37,7 +35,7 @@ Cauchy-Riemann/Fredholm linearization, obstruction operator, or any finite
 algebraic readout of that analytic surface.
 -/
 structure FredholmDrazinLocalizationPacket
-    (ModuliOperator Algebra : Type*) [Ring Algebra] where
+    (ModuliOperator Algebra : Type*) [Ring Algebra] [StarRing Algebra] where
   /-- The model-specific Fredholm/localization operator. -/
   fredholmOperator : ModuliOperator
 
@@ -52,35 +50,9 @@ structure FredholmDrazinLocalizationPacket
   drazin_element_eq_operator :
     drazinDecomposition.element = operatorToAlgebra fredholmOperator
 
-  /-- Equivariant Euler/divisor classes used by the localization model. -/
-  EquivariantDivisor : Type*
-
-  /-- Algebraic weight/readout of each equivariant divisor. -/
-  divisorWeight : EquivariantDivisor → Algebra
-
-  /--
-  Model-specific law saying that inverting/calibrating the equivariant divisors
-  isolates the Drazin regular core.
-  -/
-  divisors_isolate_regular_core_law : Prop
-
-  /-- Certificate for divisor/core isolation. -/
-  divisors_isolate_regular_core_certificate :
-    divisors_isolate_regular_core_law
-
-  /--
-  Model-specific law identifying the singular/nilpotent residue with the
-  obstruction sector.
-  -/
-  obstruction_residue_law : Prop
-
-  /-- Certificate for the obstruction/residue law. -/
-  obstruction_residue_certificate :
-    obstruction_residue_law
-
 namespace FredholmDrazinLocalizationPacket
 
-variable {ModuliOperator Algebra : Type*} [Ring Algebra]
+variable {ModuliOperator Algebra : Type*} [Ring Algebra] [StarRing Algebra]
 variable (P : FredholmDrazinLocalizationPacket ModuliOperator Algebra)
 
 /-- The Drazin regular core of the realized Fredholm/localization operator. -/
@@ -114,85 +86,35 @@ theorem regularInverse_mul_obstructionResidue :
     P.regularInverse * P.obstructionResidue = 0 :=
   P.drazinDecomposition.regularInverse_mul_residue
 
-/-- The supplied divisor/core isolation law is available. -/
-theorem divisors_isolate_regular_core_valid :
-    P.divisors_isolate_regular_core_law :=
-  P.divisors_isolate_regular_core_certificate
-
-/-- The supplied obstruction/residue law is available. -/
-theorem obstruction_residue_valid :
-    P.obstruction_residue_law :=
-  P.obstruction_residue_certificate
-
 end FredholmDrazinLocalizationPacket
 
 /--
-Localized Drazin-Frobenius bridge.
+Localized Drazin-Frobenius readout.
 
 This connects a Fredholm/moduli-operator Drazin split to the existing
-Gromov-Witten fixed-sector Drazin localization packet and its localized
-Frobenius/semisimple readout.
+Gromov-Witten fixed-sector Drazin localization packet.  The only exported
+facts are direct Drazin residue annihilation and the Frobenius associativity
+already carried by the localized Frobenius packet.
 -/
 structure LocalizedDrazinFrobeniusBridge
-    (G T Target Coeff Algebra ModuliOperator : Type*) [Ring Algebra] where
-  /-- Existing GW fixed-sector Drazin localization bridge. -/
+    (G T Target Coeff Algebra ModuliOperator : Type*) [Ring Algebra] [StarRing Algebra] where
+  /-- Existing GW fixed-sector Drazin localization data. -/
   gwDrazin :
-    DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra
+    @DrazinGromovWittenLocalizationBridge G T Target Coeff Algebra _ _
 
   /-- Fredholm/moduli-operator Drazin decomposition. -/
   fredholmDrazin :
-    FredholmDrazinLocalizationPacket ModuliOperator Algebra
-
-  /--
-  The Fredholm/moduli Drazin regular core and the graph-localized Drazin
-  denominators are compatible.
-  -/
-  fredholm_core_matches_localization_law : Prop
-
-  /-- Certificate for Fredholm/core localization compatibility. -/
-  fredholm_core_matches_localization_certificate :
-    fredholm_core_matches_localization_law
-
-  /--
-  The localized Frobenius pairing is the self-dual readout for the Drazin
-  regular fixed-sector algebra.
-  -/
-  frobenius_self_dual_readout_law : Prop
-
-  /-- Certificate for Frobenius self-dual readout compatibility. -/
-  frobenius_self_dual_readout_certificate :
-    frobenius_self_dual_readout_law
-
-  /--
-  In the semisimple regime, the supplied residue blocks are the division-block
-  readout of the Drazin-regular localized algebra.
-  -/
-  semisimple_division_blocks_law : Prop
-
-  /-- Certificate for semisimple division-block compatibility. -/
-  semisimple_division_blocks_certificate :
-    semisimple_division_blocks_law
+    @FredholmDrazinLocalizationPacket ModuliOperator Algebra _ _
 
 namespace LocalizedDrazinFrobeniusBridge
 
-variable {G T Target Coeff Algebra ModuliOperator : Type*} [Ring Algebra]
+variable {G T Target Coeff Algebra ModuliOperator : Type*} [Ring Algebra] [StarRing Algebra]
 variable (B :
   LocalizedDrazinFrobeniusBridge G T Target Coeff Algebra ModuliOperator)
 
-/-- The GW localization assembly law carried by the base bridge is available. -/
-theorem localizationAssembly_valid :
-    B.gwDrazin.drazinLocalization.localizationAssemblyLaw :=
-  B.gwDrazin.localizationAssembly_valid
-
-/-- The divisor/Drazin compatibility law carried by the base bridge is available. -/
-theorem divisorDrazinCompatibility_valid :
-    B.gwDrazin.divisorDrazinCompatibilityLaw :=
-  B.gwDrazin.divisorDrazinCompatibility_valid
-
-/-- The localized Frobenius semisimplicity law is available. -/
-theorem semisimplicity_valid :
-    B.gwDrazin.frobeniusSemisimple.semisimplicityLaw :=
-  B.gwDrazin.semisimplicity_valid
+/-- The localized algebra carries the semisimple ring instance supplied by the base data. -/
+def semisimpleRing : IsSemisimpleRing Algebra :=
+  B.gwDrazin.frobeniusSemisimple.semisimple
 
 /-- The Fredholm/moduli operator supplies Drazin inverse data. -/
 def fredholmDrazinData : DrazinInverseData Algebra :=
@@ -210,23 +132,8 @@ theorem regularInverse_mul_obstructionResidue :
         B.fredholmDrazin.obstructionResidue = 0 :=
   B.fredholmDrazin.regularInverse_mul_obstructionResidue
 
-/-- The supplied Fredholm/core localization compatibility law is available. -/
-theorem fredholm_core_matches_localization_valid :
-    B.fredholm_core_matches_localization_law :=
-  B.fredholm_core_matches_localization_certificate
-
-/-- The supplied Frobenius self-dual readout law is available. -/
-theorem frobenius_self_dual_readout_valid :
-    B.frobenius_self_dual_readout_law :=
-  B.frobenius_self_dual_readout_certificate
-
-/-- The supplied semisimple division-block compatibility law is available. -/
-theorem semisimple_division_blocks_valid :
-    B.semisimple_division_blocks_law :=
-  B.semisimple_division_blocks_certificate
-
 /-- Frobenius compatibility of the localized self-dual pairing. -/
-  theorem frobenius_pairing_mul_left_eq_pairing_mul_right
+theorem frobenius_pairing_mul_left_eq_pairing_mul_right
     (a b c : Algebra) :
     B.gwDrazin.frobeniusSemisimple.frobenius.pairing (a * b) c =
       B.gwDrazin.frobeniusSemisimple.frobenius.pairing a (b * c) :=

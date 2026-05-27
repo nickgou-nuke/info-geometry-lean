@@ -1,0 +1,23 @@
+{
+  "root": "lean/InfoGeometry",
+  "forbiddenDeclarationKeywords": [
+    "axiom",
+    "postulate"
+  ],
+  "forbiddenDeclarationNameRegex": [
+    "(?m)^\\s*(?:theorem|lemma|def|abbrev|structure|class)\\s+[A-Za-z0-9_']*(_valid|_readback|_certificate|_witness|_socket)\\b",
+    "(?m)^\\s*(?:theorem|lemma|def|abbrev)\\s+(?:witness|certificate|socket|placeholder)\\b"
+  ],
+  "forbiddenTermRegex": [
+    ":=\\s*by\\s*sorry\\b",
+    ":=\\s*by\\s*admit\\b",
+    "(?m)^\\s*sorry\\b",
+    "(?m)^\\s*admit\\b"
+  ],
+  "forbiddenPropFieldRegex": [
+    "(?m)^\\s+[A-Za-z0-9_]*(axiom|socket|certificate|witness)[A-Za-z0-9_]*\\s*:\\s*Prop\\b"
+  ],
+  "forbiddenFieldNameRegex": [
+    "(?m)^\\s+[A-Za-z0-9_]*(_valid|_readback|_certificate|_witness|_socket)\\s*:"
+  ]
+}

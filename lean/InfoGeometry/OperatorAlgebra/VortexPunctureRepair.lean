@@ -74,20 +74,12 @@ structure VortexCoreDatum
   -/
   vortex_core_law : Prop
 
-  /-- Proof/certificate of the vortex-core law. -/
-  vortex_core_certificate : vortex_core_law
-
 namespace VortexCoreDatum
 
 variable
     {Memory : Type*} [AddCommGroup Memory] [Module ℝ Memory]
 
 variable (V : VortexCoreDatum Memory)
-
-/-- The vortex-core model certificate is available. -/
-theorem vortex_core_valid :
-    V.vortex_core_law :=
-  V.vortex_core_certificate
 
 end VortexCoreDatum
 
@@ -116,9 +108,6 @@ structure MajoranaPlugWitness
   -/
   protection_law : Prop
 
-  /-- Proof/certificate of the protection law. -/
-  protection_certificate : protection_law
-
 namespace MajoranaPlugWitness
 
 variable
@@ -138,11 +127,6 @@ theorem theta_coreState_eq_coreState
     V.closure.theta V.coreState = V.coreState := by
   rw [MajoranaPlugWitness.core_eq_plug P]
   exact P.theta_plug_eq_plug
-
-/-- The model-specific protection certificate is available. -/
-theorem protection_valid :
-    P.protection_law :=
-  P.protection_certificate
 
 end MajoranaPlugWitness
 
@@ -169,9 +153,6 @@ structure SubgapRepairWitness
   /-- The puncture is considered resolved by this localized state. -/
   resolved : Prop
 
-  /-- Certificate of local resolution. -/
-  resolved_certificate : resolved
-
 namespace SubgapRepairWitness
 
 variable
@@ -179,11 +160,6 @@ variable
     {V : VortexCoreDatum Memory}
 
 variable (S : SubgapRepairWitness Memory V)
-
-/-- The localized repair certificate is available. -/
-theorem resolved_valid :
-    S.resolved :=
-  S.resolved_certificate
 
 /-- The core state is represented by the subgap state. -/
 theorem core_eq_subgap_state :
@@ -222,9 +198,6 @@ structure VortexRepairBridge
   -/
   repair_law : Prop
 
-  /-- Proof/certificate of the repair law. -/
-  repair_certificate : repair_law
-
 namespace VortexRepairBridge
 
 variable
@@ -236,11 +209,6 @@ variable (B : VortexRepairBridge Memory)
 theorem audit_repaired_benign :
     audit B.context B.repairedResidue = ChiralAuditVerdict.benign :=
   (B.context.audit_benign_iff B.repairedResidue).mpr B.repaired_benign
-
-/-- The supplied repair law is available. -/
-theorem repair_valid :
-    B.repair_law :=
-  B.repair_certificate
 
 end VortexRepairBridge
 

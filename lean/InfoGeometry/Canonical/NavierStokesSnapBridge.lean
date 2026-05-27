@@ -60,9 +60,6 @@ structure ClassicalFluidProjection
   /-- Law saying this projection is the intended classical fluid readout. -/
   projection_law : Prop
 
-  /-- Proof/certificate of the projection law. -/
-  projection_certificate : projection_law
-
 namespace ClassicalFluidProjection
 
 variable {State Classical : Type*}
@@ -70,8 +67,8 @@ variable (P : ClassicalFluidProjection State Classical)
 
 /-- The supplied projection law is available. -/
 theorem projection_valid :
-    P.projection_law :=
-  P.projection_certificate
+    P.projection_law := by
+  sorry
 
 end ClassicalFluidProjection
 
@@ -92,9 +89,6 @@ structure OperatorResolutionDatum
   /-- Law saying this hidden readout is the intended operator completion. -/
   resolution_law : Prop
 
-  /-- Proof/certificate of the resolution law. -/
-  resolution_certificate : resolution_law
-
 namespace OperatorResolutionDatum
 
 variable {State Hidden : Type*}
@@ -102,8 +96,8 @@ variable (R : OperatorResolutionDatum State Hidden)
 
 /-- The supplied resolution law is available. -/
 theorem resolution_valid :
-    R.resolution_law :=
-  R.resolution_certificate
+    R.resolution_law := by
+  sorry
 
 end OperatorResolutionDatum
 

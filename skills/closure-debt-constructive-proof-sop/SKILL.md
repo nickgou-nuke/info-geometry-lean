@@ -151,3 +151,26 @@ Policy requirements:
 - **Do not “resolve” debt with wording.** Progress must be structural, not just textual.
 - **Do not remove debt labels** unless there is a native explicit Lean proof term checked by the kernel closing that specific debt.
 - **Real progress** = replacing certificate/witness fields with theorem-backed native derivations.
+
+## BREAK-GLASS PROHIBITION (MANDATORY)
+
+This skill now enforces a non-bypass policy:
+
+- Do not introduce declaration names containing:
+  - `of_witness`
+  - `witness`
+  - `certificate`
+  - `certified`
+  - `hypothesis`
+  - `assumption`
+- Do not introduce non-honest proof-hole tokens:
+  - `admit`, `axiom`, `postulate`
+  - `sorry` is allowed only as explicit open-debt marker.
+
+Mandatory gate before completion:
+
+```bash
+python3 tools/quality/check_no_hypothesis_mandate.py --root lean/InfoGeometry
+```
+
+If this gate fails, the task is not complete.

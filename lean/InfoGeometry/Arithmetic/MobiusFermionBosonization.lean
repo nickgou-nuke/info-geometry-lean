@@ -14,7 +14,8 @@ dictionary:
 * fermionic states are square-free/exterior subsets of prime modes;
 * repeated occupation is killed by the exterior product;
 * disjoint states multiply by union;
-* the graded finite trace is the Euler/Weyl denominator.
+* the graded finite trace is the Euler/Weyl denominator;
+* diagonal determinant and finite scale-density readouts remain explicit.
 
 No infinite CFT, OPE analytic limit, zeta analytic continuation, or RH theorem
 is asserted here.
@@ -243,73 +244,5 @@ theorem valid
   G.comparison_law
 
 end DeterminantVandermondeComparisonGate
-
-/--
-Bosonization interpretation gate.
-
-The Klein-factor anticommutation, vertex-operator OPE, and analytic CFT
-realization are supplied by an owner model.  This finite module only owns the
-exterior-state algebra and trace product.
--/
-structure MobiusFermionBosonizationGate
-    (PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout : Type*) where
-  cft_charge_unit : Prop
-  arithmetic_energy_separate : Prop
-  klein_anticommutation_law : Prop
-  vertex_ope_law : Prop
-  determinant_vandermonde :
-    DeterminantVandermondeComparisonGate
-      DeterminantReadout VandermondeReadout
-  central_charge_guardrail :
-    CentralChargeGuardrail CFTCentralCharge ScaleDensityReadout
-  certificate :
-    cft_charge_unit ∧
-      arithmetic_energy_separate ∧
-        klein_anticommutation_law ∧
-          vertex_ope_law
-
-namespace MobiusFermionBosonizationGate
-
-/-- Re-export of the supplied Klein-factor anticommutation law. -/
-theorem klein_anticommutation
-    {PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout : Type*}
-    (G : MobiusFermionBosonizationGate
-      PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout) :
-    G.klein_anticommutation_law :=
-  G.certificate.2.2.1
-
-/-- Re-export of the supplied vertex-OPE law. -/
-theorem vertex_ope
-    {PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout : Type*}
-    (G : MobiusFermionBosonizationGate
-      PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout) :
-    G.vertex_ope_law :=
-  G.certificate.2.2.2
-
-/-- Re-export of the supplied determinant/Vandermonde comparison. -/
-theorem determinant_vandermonde_valid
-    {PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout : Type*}
-    (G : MobiusFermionBosonizationGate
-      PrimeLabel KleinFactor VertexOperator
-      DeterminantReadout VandermondeReadout
-      CFTCentralCharge ScaleDensityReadout) :
-    G.determinant_vandermonde.compare
-      G.determinant_vandermonde.determinant
-      G.determinant_vandermonde.vandermonde :=
-  G.determinant_vandermonde.valid
-
-end MobiusFermionBosonizationGate
 
 end InfoGeometry.Arithmetic.MobiusFermionBosonization

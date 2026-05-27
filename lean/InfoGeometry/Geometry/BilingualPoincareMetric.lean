@@ -1183,10 +1183,6 @@ structure BilingualMobiusSymmetry
   aut :
     BilingualAutomorphism H Q
 
-  /-- Phase/Krein/positivity admissibility certificate. -/
-  admissible :
-    Prop
-
 /--
 Metric covariance under an admissible Mobius/Erlanger symmetry.
 -/
@@ -1227,10 +1223,6 @@ structure PoincareMetricSpectralBackend
       (U V : TangentAt Z),
         G.innerAt Z U V =
           spectralPairing (tangentOperator Z U) (tangentOperator Z V)
-
-  /-- Backend certificate: trace, weight, core trace, Dixmier, zeta, or cocycle. -/
-  backend_certificate :
-    Prop
 
 /-! ### Owner targets -/
 
@@ -1274,8 +1266,7 @@ def BilingualMobiusIsometryOwnerTarget : Prop :=
   ∀ Q : KreinQuadraticDatum H,
   ∀ G : PoincareMetricDatum H Q,
   ∀ M : BilingualMobiusSymmetry H Q,
-    M.admissible →
-      MobiusIsometryLaw G M
+    MobiusIsometryLaw G M
 
 end BilingualPoincareMetric
 

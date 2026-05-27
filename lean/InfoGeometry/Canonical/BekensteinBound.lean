@@ -101,6 +101,37 @@ theorem topologicalBekensteinBound_of_barrierLift
   exact abs_nonneg _
 
 /--
+Proof-carrying barrier-lift witness.
+
+This packages the scalar cocycle bridge together with the exact barrier-lift
+identity needed for the smallest constructive barrier route.
+-/
+structure BarrierLiftWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k =
+    |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|
+
+/--
+Constructive barrier-lift witness route to the topological Bekenstein bound.
+
+This removes the explicit `hBridge` and `hBarrierLift` pair from
+`topologicalBekensteinBound_of_barrierLift`: one proof-carrying witness packet
+suffices.
+-/
+theorem topologicalBekensteinBound_of_barrierLiftWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : BarrierLiftWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_barrierLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hBridge := W.hBridge) (hBarrierLift := W.hBarrierLift)
+
+/--
 Compatibility cocycle-to-bound theorem.  The `IsConnesCocycle` hypothesis is
 retained for named-argument callers, but the proof now routes through the
 smaller barrier-lift theorem above; the bound itself does not use the additive
@@ -825,6 +856,23 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
       hZero := cocycleEntropyPotential_zero_of_connesCocycle
         (H := H) (σ := σ) (u := u)
         (hCocycle := hCocycle) (hBridge := hBridge) }
+
+/--
+Constructive zero-anchored generator-lift witness route to the topological
+Bekenstein bound.  This removes the explicit `(hLift, hZero)` hypothesis pair
+from the zero-normalized bound surface while keeping the selected scalar bridge
+visible in the witness type.
+-/
+theorem topologicalBekensteinBound_of_cocycleLiftZeroWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (W : CocycleLiftZeroWitness (n := n) (H := H) σ u hBridge T) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    { hBridge := hBridge, hLift := W.hLift, hZero := W.hZero }
 
 /--
 Casini-style relative-entropy profile on discrete Sinkhorn steps.

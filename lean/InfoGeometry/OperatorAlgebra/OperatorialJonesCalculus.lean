@@ -88,11 +88,8 @@ structure OperatorialJonesDatum
   /-- Surface/transport classification. -/
   kind : JonesSurfaceKind
 
-  /-- Coherence certificate: if false in a concrete model, use Mueller/Stokes data. -/
-  coherence_law : Prop
-
-  /-- Proof of the coherence certificate. -/
-  coherent : coherence_law
+  /-- Coherence flag: if false in a concrete model, use Mueller/Stokes data. -/
+  coherent : Prop
 
 namespace OperatorialJonesDatum
 
@@ -125,8 +122,7 @@ def compose
     intro P hP
     exact J₂.acts_projectively (J₁.transform P) (J₁.acts_projectively P hP)
   kind := JonesSurfaceKind.abstractTransport
-  coherence_law := J₁.coherence_law ∧ J₂.coherence_law
-  coherent := ⟨J₁.coherent, J₂.coherent⟩
+  coherent := J₁.coherent ∧ J₂.coherent
 
 end OperatorialJonesDatum
 
@@ -190,18 +186,11 @@ lossy mirrors should not be forced into this structure.
 structure JUnitaryCalibratedJonesDatum
     (Op : Type*) [Mul Op] where
   base : OperatorialJonesDatum Op
-  junitary_law : Prop
-  junitary_calibration : junitary_law
+  junitary : Prop
 
 namespace JUnitaryCalibratedJonesDatum
 
 variable {Op : Type*} [Mul Op]
-
-/-- Re-export the supplied J-unitary calibration certificate. -/
-theorem calibration_holds
-    (J : JUnitaryCalibratedJonesDatum Op) :
-    J.junitary_law :=
-  J.junitary_calibration
 
 end JUnitaryCalibratedJonesDatum
 
@@ -213,18 +202,11 @@ A Brewster surface is projective but non-unitary: it collapses to a sector.
 structure BrewsterSurfaceDatum
     (Op : Type*) [Mul Op] where
   base : ChiralityPreservingJonesDatum Op
-  rank_collapse_law : Prop
-  rank_collapse : rank_collapse_law
+  rank_collapse : Prop
 
 namespace BrewsterSurfaceDatum
 
 variable {Op : Type*} [Mul Op]
-
-/-- Re-export the supplied rank-collapse certificate. -/
-theorem rank_collapse_holds
-    (B : BrewsterSurfaceDatum Op) :
-    B.rank_collapse_law :=
-  B.rank_collapse
 
 end BrewsterSurfaceDatum
 
@@ -234,18 +216,11 @@ Total internal reflection is a lossless phase-retarder branch.
 structure TotalInternalReflectionDatum
     (Op : Type*) [Mul Op] where
   base : JUnitaryCalibratedJonesDatum Op
-  phase_retarder_law : Prop
-  phase_retarder : phase_retarder_law
+  phase_retarder : Prop
 
 namespace TotalInternalReflectionDatum
 
 variable {Op : Type*} [Mul Op]
-
-/-- Re-export the supplied phase-retarder certificate. -/
-theorem phase_retarder_holds
-    (T : TotalInternalReflectionDatum Op) :
-    T.phase_retarder_law :=
-  T.phase_retarder
 
 end TotalInternalReflectionDatum
 
@@ -256,18 +231,11 @@ J-unitary and not automatically chirality-preserving.
 structure MetalMirrorDatum
     (Op : Type*) [Mul Op] where
   base : OperatorialJonesDatum Op
-  lossy_retarder_law : Prop
-  lossy_retarder : lossy_retarder_law
+  lossy_retarder : Prop
 
 namespace MetalMirrorDatum
 
 variable {Op : Type*} [Mul Op]
-
-/-- Re-export the supplied lossy-retarder certificate. -/
-theorem lossy_retarder_holds
-    (M : MetalMirrorDatum Op) :
-    M.lossy_retarder_law :=
-  M.lossy_retarder
 
 end MetalMirrorDatum
 
@@ -278,18 +246,11 @@ birefringence or dichroism.
 structure ChiralMediumDatum
     (Op : Type*) [Mul Op] where
   base : OperatorialJonesDatum Op
-  circular_cartan_law : Prop
-  circular_cartan : circular_cartan_law
+  circular_cartan : Prop
 
 namespace ChiralMediumDatum
 
 variable {Op : Type*} [Mul Op]
-
-/-- Re-export the supplied circular-Cartan certificate. -/
-theorem circular_cartan_holds
-    (C : ChiralMediumDatum Op) :
-    C.circular_cartan_law :=
-  C.circular_cartan
 
 end ChiralMediumDatum
 

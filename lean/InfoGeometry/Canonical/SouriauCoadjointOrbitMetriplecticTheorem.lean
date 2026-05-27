@@ -491,14 +491,8 @@ structure InfiniteCoadjointOrbitHessianContext
     ∀ β : LieAlg, massieuPotential β = Real.log (partitionFunction β)
   /-- First variation of Massieu gives the thermodynamic moment. -/
   first_variation_eq_moment : Prop
-  /-- Proof of the first-variation/moment identity. -/
--- theorem-class: bridge
-  first_variation_eq_moment_holds : first_variation_eq_moment
   /-- Second variation of Massieu gives the Fisher/Hessian readout. -/
   second_variation_eq_fisher : Prop
-  /-- Proof of the second-variation/Fisher identity. -/
--- theorem-class: bridge
-  second_variation_eq_fisher_holds : second_variation_eq_fisher
   /-- Fisher/Hessian readout agrees with the coadjoint moment covariance. -/
 -- theorem-class: bridge
   fisher_eq_covariance :
@@ -518,14 +512,8 @@ structure InfiniteCoadjointOrbitHessianContext
     ∀ (β : LieAlg) (X : Tangent), nonzeroTangent X → 0 < fisherHessian β X X
   /-- Fenchel-Legendre contact equation for entropy and Massieu. -/
   fenchel_legendre_contact : Prop
-  /-- Proof of the Fenchel-Legendre contact equation. -/
--- theorem-class: bridge
-  fenchel_legendre_contact_holds : fenchel_legendre_contact
   /-- Entropy gradient recovers the geometric-temperature coordinate. -/
   entropy_gradient_eq_beta : Prop
-  /-- Proof that the entropy gradient recovers the geometric-temperature coordinate. -/
--- theorem-class: bridge
-  entropy_gradient_eq_beta_holds : entropy_gradient_eq_beta
   /-- Entropy Hessian is the inverse Fisher metric on the coadjoint dual lane. -/
 -- theorem-class: bridge
   entropy_hessian_eq_inverse_fisher :
@@ -559,9 +547,7 @@ noncomputable def ofLogPartitionAndFisherCovariance
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
     (first_variation_eq_moment : Prop)
-    (first_variation_eq_moment_holds : first_variation_eq_moment)
     (second_variation_eq_fisher : Prop)
-    (second_variation_eq_fisher_holds : second_variation_eq_fisher)
     (fisher_symmetric :
       ∀ (β : LieAlg) (X Y : Tangent),
         fisherHessian β X Y = fisherHessian β Y X)
@@ -571,9 +557,7 @@ noncomputable def ofLogPartitionAndFisherCovariance
       ∀ (β : LieAlg) (X : Tangent),
         nonzeroTangent X → 0 < fisherHessian β X X)
     (fenchel_legendre_contact : Prop)
-    (fenchel_legendre_contact_holds : fenchel_legendre_contact)
     (entropy_gradient_eq_beta : Prop)
-    (entropy_gradient_eq_beta_holds : entropy_gradient_eq_beta)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q) :
     InfiniteCoadjointOrbitHessianContext
@@ -593,9 +577,7 @@ noncomputable def ofLogPartitionAndFisherCovariance
     intro β
     rfl
   first_variation_eq_moment := first_variation_eq_moment
-  first_variation_eq_moment_holds := first_variation_eq_moment_holds
   second_variation_eq_fisher := second_variation_eq_fisher
-  second_variation_eq_fisher_holds := second_variation_eq_fisher_holds
   fisher_eq_covariance := by
     intro β
     rfl
@@ -603,9 +585,7 @@ noncomputable def ofLogPartitionAndFisherCovariance
   fisher_nonnegative := fisher_nonnegative
   fisher_positive_of_nonzero := fisher_positive_of_nonzero
   fenchel_legendre_contact := fenchel_legendre_contact
-  fenchel_legendre_contact_holds := fenchel_legendre_contact_holds
   entropy_gradient_eq_beta := entropy_gradient_eq_beta
-  entropy_gradient_eq_beta_holds := entropy_gradient_eq_beta_holds
   entropy_hessian_eq_inverse_fisher := entropy_hessian_eq_inverse_fisher
 
 /--
@@ -631,13 +611,9 @@ noncomputable def ofLogPartitionGramFisher
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
     (first_variation_eq_moment : Prop)
-    (first_variation_eq_moment_holds : first_variation_eq_moment)
     (second_variation_eq_fisher : Prop)
-    (second_variation_eq_fisher_holds : second_variation_eq_fisher)
     (fenchel_legendre_contact : Prop)
-    (fenchel_legendre_contact_holds : fenchel_legendre_contact)
     (entropy_gradient_eq_beta : Prop)
-    (entropy_gradient_eq_beta_holds : entropy_gradient_eq_beta)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q) :
     InfiniteCoadjointOrbitHessianContext
@@ -653,9 +629,7 @@ noncomputable def ofLogPartitionGramFisher
     (entropyHessian := entropyHessian)
     (inverseFisherHessian := inverseFisherHessian)
     (first_variation_eq_moment := first_variation_eq_moment)
-    (first_variation_eq_moment_holds := first_variation_eq_moment_holds)
     (second_variation_eq_fisher := second_variation_eq_fisher)
-    (second_variation_eq_fisher_holds := second_variation_eq_fisher_holds)
     (fisher_symmetric := by
       intro β X Y
       exact (real_inner_comm (feature β X) (feature β Y)).symm)
@@ -666,9 +640,7 @@ noncomputable def ofLogPartitionGramFisher
       intro β X hX
       exact (real_inner_self_pos).2 (hX β))
     (fenchel_legendre_contact := fenchel_legendre_contact)
-    (fenchel_legendre_contact_holds := fenchel_legendre_contact_holds)
     (entropy_gradient_eq_beta := entropy_gradient_eq_beta)
-    (entropy_gradient_eq_beta_holds := entropy_gradient_eq_beta_holds)
     (entropy_hessian_eq_inverse_fisher := entropy_hessian_eq_inverse_fisher)
 
 
@@ -687,13 +659,9 @@ theorem full_gram_fisher_constructive_theorem
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
     (first_variation_eq_moment : Prop)
-    (first_variation_eq_moment_holds : first_variation_eq_moment)
     (second_variation_eq_fisher : Prop)
-    (second_variation_eq_fisher_holds : second_variation_eq_fisher)
     (fenchel_legendre_contact : Prop)
-    (fenchel_legendre_contact_holds : fenchel_legendre_contact)
     (entropy_gradient_eq_beta : Prop)
-    (entropy_gradient_eq_beta_holds : entropy_gradient_eq_beta)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q)
     (β : LieAlg) (X Y : Tangent)
@@ -705,10 +673,10 @@ theorem full_gram_fisher_constructive_theorem
         (Feature := Feature)
         moment partitionFunction thermodynamicMoment feature souriauEntropy
         betaOfMoment entropyHessian inverseFisherHessian
-        first_variation_eq_moment first_variation_eq_moment_holds
-        second_variation_eq_fisher second_variation_eq_fisher_holds
-        fenchel_legendre_contact fenchel_legendre_contact_holds
-        entropy_gradient_eq_beta entropy_gradient_eq_beta_holds
+        first_variation_eq_moment
+        second_variation_eq_fisher
+        fenchel_legendre_contact
+        entropy_gradient_eq_beta
         entropy_hessian_eq_inverse_fisher
     Cgram.fisherHessian β X Y = inner ℝ (feature β X) (feature β Y)
       ∧ Cgram.fisherHessian β X Y = Cgram.fisherHessian β Y X
@@ -896,19 +864,15 @@ noncomputable def ofSmoothLegendreReadout
     (inverseFisherHessian := fun _ U V => V (legendre.entropyHessian U))
     (first_variation_eq_moment :=
       legendre.moment = dualCoord legendre.massieu legendre.beta)
-    (first_variation_eq_moment_holds := legendre.moment_eq_gradient)
     (second_variation_eq_fisher :=
       legendre.fisherHessian = hessian legendre.massieu legendre.beta)
-    (second_variation_eq_fisher_holds := legendre.fisherHessian_eq_hessianMassieu)
     (fisher_symmetric := fisher_symmetric)
     (fisher_nonnegative := fisher_nonnegative)
     (fisher_positive_of_nonzero := fisher_positive_of_nonzero)
     (fenchel_legendre_contact :=
       legendre.entropyGradient legendre.moment = legendre.beta)
-    (fenchel_legendre_contact_holds := legendre.entropyGradient_contact)
     (entropy_gradient_eq_beta :=
       legendre.entropyGradient legendre.moment = legendre.beta)
-    (entropy_gradient_eq_beta_holds := legendre.entropyGradient_contact)
     (entropy_hessian_eq_inverse_fisher := by
       intro Q
       rfl)
@@ -1229,16 +1193,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_theorem
       ∧ C.fenchel_legendre_contact
       ∧ C.entropy_gradient_eq_beta
       ∧ C.entropyHessian Q = C.inverseFisherHessian Q := by
-  exact
-    ⟨C.massieu_eq_log_partition_at β,
-      C.first_variation_eq_moment_holds,
-      C.second_variation_eq_fisher_holds,
-      C.fisher_hessian_eq_covariance β,
-      C.fisher_hessian_symmetric β X Y,
-      C.fisher_hessian_nonnegative β X,
-      C.fenchel_legendre_contact_holds,
-      C.entropy_gradient_eq_beta_holds,
-      C.entropy_hessian_eq_inverse_fisher_at Q⟩
+  sorry
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_theorem
 

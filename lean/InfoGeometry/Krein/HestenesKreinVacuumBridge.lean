@@ -52,11 +52,6 @@ structure HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) where
     ∀ (t : ℝ) (A : EndH),
       P.hestenesExpectation omega (P.modularFlow.flow t A) = P.hestenesExpectation omega A
 
-  /-- Owner-supplied cyclic/separating/uniqueness statement. -/
-  cyclic_separating_certificate : Prop
-
-  /-- Evidence for the owner-supplied cyclic/separating/uniqueness statement. -/
-  cyclic_separating_holds : cyclic_separating_certificate
 
 namespace HestenesKreinVacuum
 
@@ -115,12 +110,6 @@ theorem vacuum_not_null :
     KreinSpace.kreinInner (H := E) V.omega V.omega ≠ 0 := by
   rw [V.omega_normalized]
   exact one_ne_zero
-
-/-- The owner-supplied cyclic/separating certificate is available. -/
-@[rep_depth krein]
-theorem cyclic_separating :
-    V.cyclic_separating_certificate :=
-  V.cyclic_separating_holds
 
 /-- If the vacuum state is supplied as KMS, then its Hestenes boundary law holds. -/
 @[rep_depth krein]

@@ -333,11 +333,6 @@ theorem isNull_of_isNull
   rw [A.minkowskiNorm_preserved L X]
   exact hX
 
-/-- The stored double-cover law. -/
-theorem double_cover_valid :
-    A.double_cover_law :=
-  A.double_cover_certificate
-
 end LorentzSpinActionBridge
 
 /--
@@ -398,16 +393,6 @@ theorem singular_representative
   (B.isNull_iff_isSingularRepresentative (F.momentumOf lam)).mp
     (F.momentum_null lam)
 
-/-- The stored orientation law. -/
-theorem orientation_valid :
-    F.orientation_law :=
-  F.orientation_certificate
-
-/-- The stored rank-one law. -/
-theorem rank_one_valid :
-    F.rank_one_law :=
-  F.rank_one_certificate
-
 end SpinorHelicityFactorization
 
 /-! ## 4. Spin is a rotor/bivector readout, not a paravector component -/
@@ -424,25 +409,24 @@ structure PauliParavectorDatum
   /-- Operator/paravector representative of four-momentum. -/
   P : Op
 
-  /-- Minkowski norm or mass-shell readout. -/
-  minkowskiNorm : ℝ
+  /-- Pauli matrix associated to the momentum. -/
+  pauliMatrix : Matrix (Fin 2) (Fin 2) ℂ
 
-  /-- Determinant/metric calibration law. -/
-  determinant_metric_law : Prop
+  /-- Minkowski norm square readout. -/
+  minkowskiNormSq : ℝ
 
-  /-- Proof of the determinant/metric calibration law. -/
-  determinant_metric_certificate :
-    determinant_metric_law
+  /-- The determinant of the Pauli matrix recovers the Minkowski norm. -/
+  determinant_metric_law :
+    Matrix.det pauliMatrix = (minkowskiNormSq : ℂ)
 
 namespace PauliParavectorDatum
 
 variable {Op : Type*}
 variable (P : PauliParavectorDatum Op)
 
-/-- The stored determinant/metric calibration law. -/
-theorem determinant_metric_valid :
-    P.determinant_metric_law :=
-  P.determinant_metric_certificate
+/-- Null vectors/paravectors are zero-norm elements. -/
+def IsNull : Prop :=
+  P.minkowskiNormSq = 0
 
 end PauliParavectorDatum
 
@@ -454,44 +438,39 @@ are coupled because the same rotor frame transports both.
 -/
 @[rep_depth operator]
 structure SpinMomentumFrame
-    (Op : Type*) where
+    (Op : Type*) [Ring Op] where
   /-- Four-momentum/paravector datum. -/
   momentum : PauliParavectorDatum Op
 
   /-- Rotor/spinor frame element. -/
   rotor : Op
 
+  /-- Inverse rotor. -/
+  rotorInv : Op
+
   /-- Spin plane/bivector readout. -/
   spinBivector : Op
 
-  /-- Law saying the rotor transports the momentum paravector. -/
-  momentum_transport_law : Prop
+  /-- Reference momentum in the rest frame. -/
+  referenceMomentum : Op
 
-  /-- Proof of the momentum transport law. -/
-  momentum_transport :
-    momentum_transport_law
+  /-- The rotor transports the reference momentum to the current momentum. -/
+  momentum_transport_law :
+    momentum.P = rotor * referenceMomentum * rotorInv
 
-  /-- Law saying the same rotor transports the spin bivector/plane. -/
-  spin_transport_law : Prop
-
-  /-- Proof of the spin transport law. -/
-  spin_transport :
-    spin_transport_law
+  /-- The rotor also transports some reference spin bivector. -/
+  spin_transport_law :
+    ∃ S₀ : Op, spinBivector = rotor * S₀ * rotorInv
 
 namespace SpinMomentumFrame
 
-variable {Op : Type*}
-variable (F : SpinMomentumFrame Op)
+variable {Op : Type*} [Ring Op]
+variable (M : SpinMomentumFrame Op)
 
-/-- The stored momentum transport law. -/
-theorem momentum_transport_valid :
-    F.momentum_transport_law :=
-  F.momentum_transport
-
-/-- The stored spin transport law. -/
-theorem spin_transport_valid :
-    F.spin_transport_law :=
-  F.spin_transport
+/-- Re-export of the momentum transport law. -/
+theorem momentum_transport :
+    M.momentum.P = M.rotor * M.referenceMomentum * M.rotorInv :=
+  M.momentum_transport_law
 
 end SpinMomentumFrame
 
@@ -506,10 +485,7 @@ It does not identify spin with a component of the momentum paravector.
 -/
 @[rep_depth operator]
 structure LorentzSpinRepresentationCoupling
-    (SpinGroup Op : Type*) where
-  /-- The spin-momentum frame being transported. -/
-  frame : SpinMomentumFrame Op
-
+    (SpinGroup Op : Type*) [Ring Op] where
   /-- Spin-group action on momentum/paravector data. -/
   actMomentum :
     SpinGroup → PauliParavectorDatum Op → PauliParavectorDatum Op
@@ -518,44 +494,32 @@ structure LorentzSpinRepresentationCoupling
   actSpinBivector :
     SpinGroup → Op → Op
 
-  /--
-  Shared-action law.
-
-  Intended concrete meaning: the same `SL(2,C)`/`Spin⁺(1,3)` element transports
-  the momentum paravector and the spin bivector.
+  /-- 
+  The shared-action law: the group action on the paravector and bivector 
+  is consistent with the representation.
   -/
-  shared_spin_action_law : Prop
-
-  /-- Proof of the shared-action law. -/
-  shared_spin_action :
-    shared_spin_action_law
+  shared_spin_action_law :
+    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op) (S : Op),
+      (actMomentum g P).minkowskiNormSq = P.minkowskiNormSq
 
   /--
-  Representation-coupling law.
-
-  Intended concrete meaning: momentum and spin are coupled by the common
-  Lorentz-spin representation, not by being different parts of one matrix.
+  Representation-coupling law: the action on momentum is derived from the
+  action on the spinor frame.
   -/
-  representation_coupling_law : Prop
-
-  /-- Proof of the representation-coupling law. -/
-  representation_coupling :
-    representation_coupling_law
+  representation_coupling_law :
+    ∀ (g : SpinGroup) (F : SpinMomentumFrame Op),
+      (actMomentum g F.momentum).P = (actSpinBivector g F.rotor) * F.referenceMomentum * (actSpinBivector g F.rotorInv)
 
 namespace LorentzSpinRepresentationCoupling
 
-variable {SpinGroup Op : Type*}
+variable {SpinGroup Op : Type*} [Ring Op]
 variable (C : LorentzSpinRepresentationCoupling SpinGroup Op)
 
-/-- The stored shared spin-group action law. -/
-theorem shared_spin_action_valid :
-    C.shared_spin_action_law :=
-  C.shared_spin_action
-
-/-- The stored representation-theoretic coupling law. -/
-theorem representation_coupling_valid :
-    C.representation_coupling_law :=
-  C.representation_coupling
+/-- Re-export of the shared spin action law. -/
+theorem shared_spin_action :
+    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op) (S : Op),
+      (C.actMomentum g P).minkowskiNormSq = P.minkowskiNormSq :=
+  C.shared_spin_action_law
 
 end LorentzSpinRepresentationCoupling
 
@@ -567,35 +531,30 @@ spin readout is helicity locked to the null momentum direction.
 -/
 @[rep_depth operator]
 structure MasslessSpinMomentumFrame
-    (Op : Type*) where
+    (Op : Type*) [Ring Op] [SMul ℝ Op] where
   /-- Underlying spin-momentum frame. -/
   frame : SpinMomentumFrame Op
 
   /-- Null/massless determinant condition. -/
   detP_eq_zero :
-    frame.momentum.minkowskiNorm = 0
+    frame.momentum.minkowskiNormSq = 0
 
-  /-- Helicity is locked to the null momentum direction. -/
-  helicity_locked_to_momentum_law : Prop
-
-  /-- Proof of the helicity-lock law. -/
-  helicity_locked_to_momentum :
-    helicity_locked_to_momentum_law
+  /-- 
+  Helicity is locked to the null momentum direction.
+  Replacing the former vacuous Prop field.
+  -/
+  helicity_locked_to_momentum_law :
+    ∃ (h : ℝ), ∃ (ref : Op), frame.spinBivector = h • (frame.rotor * ref * frame.rotorInv)
 
 namespace MasslessSpinMomentumFrame
 
-variable {Op : Type*}
+variable {Op : Type*} [Ring Op] [SMul ℝ Op]
 variable (F : MasslessSpinMomentumFrame Op)
 
 /-- The underlying momentum datum is null/massless. -/
 theorem momentum_null :
-    F.frame.momentum.minkowskiNorm = 0 :=
+    F.frame.momentum.minkowskiNormSq = 0 :=
   F.detP_eq_zero
-
-/-- The stored helicity-lock law. -/
-theorem helicity_locked_valid :
-    F.helicity_locked_to_momentum_law :=
-  F.helicity_locked_to_momentum
 
 end MasslessSpinMomentumFrame
 
@@ -649,21 +608,6 @@ namespace HestenesSpinorRotorDatum
 variable {Spinor Rotor Bivector : Type*}
 variable (D : HestenesSpinorRotorDatum Spinor Rotor Bivector)
 
-/-- The stored momentum-readout law. -/
-theorem momentum_readout_valid :
-    D.momentum_readout_law :=
-  D.momentum_readout_certificate
-
-/-- The stored spin-bivector law. -/
-theorem spin_bivector_valid :
-    D.spin_bivector_law :=
-  D.spin_bivector_certificate
-
-/-- The stored rotor-transport law. -/
-theorem rotor_transport_valid :
-    D.rotor_transport_law :=
-  D.rotor_transport_certificate
-
 end HestenesSpinorRotorDatum
 
 /-! ## 5. Spin-momentum coupling and helicity sockets -/
@@ -712,11 +656,6 @@ namespace SpinMomentumBridge
 variable {Spinor Momentum SpinPlane : Type*}
 variable (B : SpinMomentumBridge Spinor Momentum SpinPlane)
 
-/-- The stored same-rotor-frame law. -/
-theorem sameRotorFrame_valid :
-    B.sameRotorFrame_law :=
-  B.sameRotorFrame
-
 /-- The mass-shell compatibility carried by the spin-momentum bridge. -/
 theorem mass_is_scalar_invariant
     (ψ : Spinor) :
@@ -747,11 +686,6 @@ namespace MasslessSpinMomentumBranch
 variable {Spinor Momentum SpinPlane : Type*}
 variable {B : SpinMomentumBridge Spinor Momentum SpinPlane}
 variable (M : MasslessSpinMomentumBranch Spinor Momentum SpinPlane B)
-
-/-- The stored null/massless branch law. -/
-theorem nullMomentumCondition_valid :
-    M.nullMomentumCondition_law :=
-  M.nullMomentumCondition
 
 end MasslessSpinMomentumBranch
 
@@ -797,16 +731,6 @@ namespace CovariantSpinorRotorReadouts
 variable {Spinor Momentum SpinPlane : Type*}
 variable (R : CovariantSpinorRotorReadouts Spinor Momentum SpinPlane)
 
-/-- The stored common spinor/rotor source law. -/
-theorem common_source_valid :
-    R.common_source_law :=
-  R.common_source
-
-/-- The stored different-readouts law. -/
-theorem distinct_readout_valid :
-    R.distinct_readout_law :=
-  R.distinct_readout
-
 /-- The momentum readout inherited from the underlying bridge. -/
 def momentumOf :
     Spinor → Momentum :=
@@ -846,11 +770,6 @@ namespace UncertaintyReadoutGuard
 
 variable {Observable : Type*}
 variable (U : UncertaintyReadoutGuard Observable)
-
-/-- The stored uncertainty law for the explicitly chosen pair. -/
-theorem noncommuting_pair_valid :
-    U.noncommuting_pair_law :=
-  U.noncommuting_pair
 
 end UncertaintyReadoutGuard
 
@@ -897,16 +816,6 @@ namespace SpinMomentumCoupling
 variable {Spinor Rotor Bivector SpinInvariant : Type*}
 variable {D : HestenesSpinorRotorDatum Spinor Rotor Bivector}
 variable (C : SpinMomentumCoupling Spinor Rotor Bivector SpinInvariant D)
-
-/-- The stored spin-momentum coupling law. -/
-theorem coupling_valid :
-    C.momentum_spin_coupling_law :=
-  C.momentum_spin_coupling
-
-/-- The stored Lorentz/spin-frame transport law. -/
-theorem frame_transport_valid :
-    C.frame_transport_law :=
-  C.frame_transport
 
 end SpinMomentumCoupling
 
@@ -955,11 +864,6 @@ theorem singular_pauli_of_null_momentum
     (D.momentumReadout ψ).IsSingularPauli :=
   (PauliParavector.isNull_iff_isSingularPauli (D.momentumReadout ψ)).mp
     (H.null_momentum ψ)
-
-/-- The stored helicity law. -/
-theorem helicity_valid :
-    H.helicity_law :=
-  H.helicity_certificate
 
 end HelicityCalibration
 
@@ -1053,44 +957,44 @@ attribute [rep_depth operator]
   LorentzSpinActionBridge
   LorentzSpinActionBridge.minkowskiNorm_preserved
   LorentzSpinActionBridge.isNull_of_isNull
-  LorentzSpinActionBridge.double_cover_valid
+  LorentzSpinActionBridge.double_cover_certificate
   SpinorHelicityFactorization
   SpinorHelicityFactorization.singular_representative
-  SpinorHelicityFactorization.orientation_valid
-  SpinorHelicityFactorization.rank_one_valid
+  SpinorHelicityFactorization.orientation_certificate
+  SpinorHelicityFactorization.rank_one_certificate
   PauliParavectorDatum
-  PauliParavectorDatum.determinant_metric_valid
+  PauliParavectorDatum.determinant_metric_law
   SpinMomentumFrame
-  SpinMomentumFrame.momentum_transport_valid
-  SpinMomentumFrame.spin_transport_valid
+  SpinMomentumFrame.momentum_transport
+  SpinMomentumFrame.spin_transport
   LorentzSpinRepresentationCoupling
-  LorentzSpinRepresentationCoupling.shared_spin_action_valid
-  LorentzSpinRepresentationCoupling.representation_coupling_valid
+  LorentzSpinRepresentationCoupling.shared_spin_action
+  LorentzSpinRepresentationCoupling.representation_coupling
   MasslessSpinMomentumFrame
   MasslessSpinMomentumFrame.momentum_null
-  MasslessSpinMomentumFrame.helicity_locked_valid
+  MasslessSpinMomentumFrame.helicity_locked_to_momentum
   HestenesSpinorRotorDatum
-  HestenesSpinorRotorDatum.momentum_readout_valid
-  HestenesSpinorRotorDatum.spin_bivector_valid
-  HestenesSpinorRotorDatum.rotor_transport_valid
+  HestenesSpinorRotorDatum.momentum_readout_certificate
+  HestenesSpinorRotorDatum.spin_bivector_certificate
+  HestenesSpinorRotorDatum.rotor_transport_certificate
   SpinMomentumBridge
-  SpinMomentumBridge.sameRotorFrame_valid
+  SpinMomentumBridge.sameRotorFrame
   SpinMomentumBridge.mass_is_scalar_invariant
   MasslessSpinMomentumBranch
-  MasslessSpinMomentumBranch.nullMomentumCondition_valid
+  MasslessSpinMomentumBranch.nullMomentumCondition
   CovariantSpinorRotorReadouts
-  CovariantSpinorRotorReadouts.common_source_valid
-  CovariantSpinorRotorReadouts.distinct_readout_valid
+  CovariantSpinorRotorReadouts.common_source
+  CovariantSpinorRotorReadouts.distinct_readout
   CovariantSpinorRotorReadouts.momentumOf
   CovariantSpinorRotorReadouts.spinPlaneOf
   UncertaintyReadoutGuard
-  UncertaintyReadoutGuard.noncommuting_pair_valid
+  UncertaintyReadoutGuard.noncommuting_pair
   SpinMomentumCoupling
-  SpinMomentumCoupling.coupling_valid
-  SpinMomentumCoupling.frame_transport_valid
+  SpinMomentumCoupling.momentum_spin_coupling
+  SpinMomentumCoupling.frame_transport
   HelicityCalibration
   HelicityCalibration.singular_pauli_of_null_momentum
-  HelicityCalibration.helicity_valid
+  HelicityCalibration.helicity_certificate
   ChiralLightconeReadoutDatum
   PauliHestenesChiralLightconeBridge
   PauliHestenesChiralLightconeBridge.chiral_lightcone_readout_of_null_momentum

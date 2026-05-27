@@ -254,7 +254,7 @@ shadow is formally non-scalar whenever:
 - the Drazin defect projector is nontrivial (`Q₀ ≠ 0`, `Q₀ ≠ 1`).
 -/
 @[rep_depth transport]
-theorem intrinsic_nonScalar_shadow_witness
+theorem intrinsic_nonScalar_shadow_nonScalar
     (CIK : CertifiedInverseKernel H₂)
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (hX : ChiralFredholmSurface X)
@@ -272,7 +272,7 @@ theorem intrinsic_nonScalar_shadow_witness
 Integrated intrinsic bridge + strict non-scalarity witness.
 -/
 @[rep_depth transport]
-theorem exists_internal_split_with_intrinsic_nonScalar_shadow_and_witness
+theorem exists_internal_split_with_intrinsic_nonScalar_shadow_and_nonScalar
     (CIK : CertifiedInverseKernel H₂)
     (V : BogoliubovVielbeinBundle (E := F))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
@@ -319,7 +319,7 @@ theorem exists_internal_split_with_intrinsic_nonScalar_shadow_and_witness
   refine ⟨?_, ?_⟩
   · exact exists_internal_split_with_intrinsic_nonScalar_shadow
       (A := A) (B := B) CIK V X hX hEven t
-  · exact intrinsic_nonScalar_shadow_witness
+  · exact intrinsic_nonScalar_shadow_nonScalar
       (A := A) (B := B) CIK X hX hCharge hQ0ne0 hQ0ne1
 
 end DrazinLane

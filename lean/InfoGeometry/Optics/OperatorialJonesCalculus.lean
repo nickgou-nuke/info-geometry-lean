@@ -436,8 +436,6 @@ structure LossyMetalMirrorBranch
   R_eq :
     R = PolarizationProjectorPair.fresnelReflector projectors r_s r_p
 
-  /-- Certificate that this is the intended lossy metal/ellipsometric branch. -/
-  lossy_metal_certificate : Prop
 
 /-! ## 4. Statistical channel layer -/
 
@@ -461,8 +459,6 @@ structure PolarizationChannel
   /-- Channel action. -/
   channel : Op → Op
 
-  /-- Channel is represented as a branch sum, left abstract if infinite. -/
-  channel_law : Prop
 
 /--
 Rough reflection belongs to the channel/Mueller layer, not the pure Jones
@@ -471,8 +467,6 @@ single-operator layer.
 structure RoughReflectionChannel
     (Op : Type*) [Ring Op]
     extends PolarizationChannel Op where
-  /-- Certificate that roughness/depolarization invalidates a single global Jones operator. -/
-  depolarizing_or_direction_mixing : Prop
 
 /-! ## 5. Owner target -/
 

@@ -121,10 +121,6 @@ structure MajoranaJKOErgoBridge
   jko_bayes_compatibility_law :
     Prop
 
-  /-- Proof/certificate of the compatibility law. -/
-  jko_bayes_compatibility_certificate :
-    jko_bayes_compatibility_law
-
   /--
   Dual-flat projection orthogonality for feasible alternatives.
 
@@ -157,11 +153,6 @@ def priorLatent : E :=
 /-- Posterior latent point induced by the next JKO density. -/
 def posteriorLatent : E :=
   B.encodeDensity B.jko.next
-
-/-- The stored JKO/Bayesian compatibility law is available as a proof. -/
-theorem compatibility_valid :
-    B.jko_bayes_compatibility_law :=
-  B.jko_bayes_compatibility_certificate
 
 /-- The JKO step minimizes its stored objective. -/
 theorem jko_minimizing
@@ -311,15 +302,27 @@ theorem majorana_qgt_compat
   B.majorana.compat u v
 
 /--
-A packaged ergo-transfer theorem: the supplied bridge simultaneously provides
+A packaged ergo-transfer proposition: the supplied bridge targets
 
 * the JKO variational minimizing property,
 * the Bregman/Bayesian projection identity,
-* and the JKO/Bayes compatibility certificate.
+* and the JKO/Bayes compatibility law.
 -/
-theorem ergo_transfer_payload
+def ergo_transfer_payload
+    (ρ alt : Density State) : Prop :=
+  B.jko.objective B.jko.next ≤ B.jko.objective ρ
+    ∧
+  B.encodedDivergence alt B.jko.previous =
+    B.encodedDivergence alt B.jko.next +
+      B.encodedDivergence B.jko.next B.jko.previous
+    ∧
+  B.jko_bayes_compatibility_law
+
+/-- Constructor lemma for the packaged ergo-transfer payload. -/
+theorem ergo_transfer_payload_intro
     (ρ alt : Density State)
-    (halt : B.feasibleAlternative alt) :
+    (halt : B.feasibleAlternative alt)
+    (hCompat : B.jko_bayes_compatibility_law) :
     B.jko.objective B.jko.next ≤ B.jko.objective ρ
       ∧
     B.encodedDivergence alt B.jko.previous =
@@ -330,7 +333,7 @@ theorem ergo_transfer_payload
   exact
     ⟨B.jko_minimizing ρ,
       B.bayesian_projection_identity alt halt,
-      B.compatibility_valid⟩
+      hCompat⟩
 
 /--
 The Majorana/Hestenes carrier is available as data.

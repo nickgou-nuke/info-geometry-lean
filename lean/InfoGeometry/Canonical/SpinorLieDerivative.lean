@@ -74,7 +74,7 @@ theorem bilinear_equilibrium_global
 Metric-side equilibrium witnesses imply spinor-side global Lie-bilinear
 invariance through the conformal Souriau bridge.
 -/
-theorem bilinear_equilibrium_from_metric_equilibrium_witness
+theorem bilinear_equilibrium_from_metric_equilibrium
     (g : CoordinateFreeMetric (T := T))
     (C : ConformalSouriau (M := M) (T := T) g)
     (B : SpinorBilinear (S := S))
@@ -95,7 +95,7 @@ Converse spinor-side extraction:
 if at each point there is a nondegenerate spinor test pair and the bilinear
 Lie-derivative expression vanishes on that pair, then `sigma = 0` pointwise.
 -/
-theorem sigma_zero_of_bilinear_equilibrium_witness
+theorem sigma_zero_of_bilinear_equilibrium
     (g : CoordinateFreeMetric (T := T))
     (C : ConformalSouriau (M := M) (T := T) g)
     (B : SpinorBilinear (S := S))
@@ -114,7 +114,7 @@ theorem sigma_zero_of_bilinear_equilibrium_witness
 /--
 Two-way spinor equilibrium criterion under nondegenerate spinor witnesses.
 -/
-theorem sigma_zero_iff_bilinear_equilibrium_witness
+theorem sigma_zero_iff_bilinear_equilibrium
     (g : CoordinateFreeMetric (T := T))
     (C : ConformalSouriau (M := M) (T := T) g)
     (B : SpinorBilinear (S := S))
@@ -131,7 +131,7 @@ theorem sigma_zero_iff_bilinear_equilibrium_witness
     exact bilinear_equilibrium_of_sigma_zero
       (g := g) (C := C) (B := B) (A := A) (p := p) (hs := hs p) (ψ := ψ) (χ := χ)
   · intro hEq
-    exact sigma_zero_of_bilinear_equilibrium_witness
+    exact sigma_zero_of_bilinear_equilibrium
       (g := g) (C := C) (B := B) (A := A) hEq
 
 end

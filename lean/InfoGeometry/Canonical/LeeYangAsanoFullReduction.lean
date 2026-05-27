@@ -137,7 +137,7 @@ theorem asanoNondegenerateTopologicalTheorem_of_asanoRuelleSource
     (hAR :
       InfoGeometry.Canonical.LeeYangAsanoDigest.AsanoRuelleLemmaSourceClaim) :
     AsanoNondegenerateTopologicalTheorem := by
-  intro K₁ K₂ A B C D z h0K₁ h0K₂ _hClosed₁ _hClosed₂ _hD _hDet hPhi hroot
+  intro K₁ K₂ A B C D z h0K₁ h0K₂ hClosed₁ hClosed₂ _hD _hDet hPhi hroot
   let P : InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial :=
     { A := A, B := B, C := C, D := D }
   have hPhiP :
@@ -152,7 +152,7 @@ theorem asanoNondegenerateTopologicalTheorem_of_asanoRuelleSource
     simpa [negProductSet, InfoGeometry.Canonical.LeeYangAsanoDigest.asanoForbiddenSet] using hzNot
   have hcontractNe :
       InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z ≠ 0 :=
-    hAR K₁ K₂ P h0K₁ h0K₂ hPhiP z hzNotForbidden
+    hAR K₁ K₂ P h0K₁ h0K₂ hClosed₁ hClosed₂ hPhiP z hzNotForbidden
   have hcontractZero :
       InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z = 0 := by
     simpa [P, InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract, asanoPhi] using hroot
@@ -194,7 +194,7 @@ theorem asano_contraction_full_of_asanoRuelleSource
     simpa [negProductSet, InfoGeometry.Canonical.LeeYangAsanoDigest.asanoForbiddenSet] using hzOff
   have hcontractNe :
       InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract P z ≠ 0 :=
-    hAR K₁ K₂ P h0K₁ h0K₂ hPhiP z hzOffForbidden
+    hAR K₁ K₂ P h0K₁ h0K₂ hClosed₁ hClosed₂ hPhiP z hzOffForbidden
   simpa [P, InfoGeometry.Canonical.LeeYangAsanoDigest.TwoVarAffinePolynomial.contract, asanoPhi]
     using hcontractNe
 

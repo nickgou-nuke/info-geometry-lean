@@ -54,11 +54,11 @@ def toCanonical :
   act := A.hestenes.act
   J := KreinSpace.jCLM (H := H)
   cone := A.hestenes.naturalCone
-  isNormalPositive := fun _ => True
+  isNormalPositive := fun ω => A.hestenes.coneVector ω ∈ A.hestenes.naturalCone
   coneVector := A.hestenes.coneVector
   eval := A.hestenes.eval
   innerReadout := KreinSpace.kreinInner (H := H)
-  coneVector_mem := fun ω _ => A.hestenes.coneVector_mem ω
+  coneVector_mem := fun ω hω => hω
   eval_eq_vector_readout := fun ω B _ => A.hestenes.eval_eq_krein_vector_readout ω B
   J_fixes_cone := A.hestenes.J_fixes_cone
   cone_self_dual := A.hestenes.naturalCone_self_dual
@@ -103,7 +103,7 @@ theorem toCanonical_coneVector
 theorem toCanonical_isNormalPositive
     (ω : NormalPositive) :
     (A.toCanonical).isNormalPositive ω :=
-  trivial
+  A.hestenes.coneVector_mem ω
 
 /--
 Readback: the canonical standard-form vector expectation is the Krein vector
@@ -125,7 +125,7 @@ theorem toCanonical_J_fixes_coneVector
     (A.toCanonical).J ((A.toCanonical).coneVector ω) =
       (A.toCanonical).coneVector ω :=
   NaturalConeStandardFormInterface.J_fixes_coneVector
-    A.toCanonical ω trivial
+    A.toCanonical ω (A.toCanonical_isNormalPositive ω)
 
 /-- Readback: the canonical self-duality certificate is exactly the supplied Krein one. -/
 @[rep_depth krein]

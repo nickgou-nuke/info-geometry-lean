@@ -109,12 +109,6 @@ structure BoundedKMSHestenesMoebiusClosureBridge
           ((wordAction g) parent) ((wordAction g) child) =
         boundedWilson.toHestenesConnesWilsonBridge.wilsonHolonomy parent child
 
-  /-- Concrete Möbius/CFT/Jones/Cantor backend closure certificate. -/
-  moebius_closure_certificate : Prop
-
-  /-- Evidence for the closure certificate. -/
-  moebius_closure_holds : moebius_closure_certificate
-
 namespace BoundedKMSHestenesMoebiusClosureBridge
 
 variable {Word : Type*}
@@ -136,8 +130,6 @@ def toHestenesMoebiusClosureBridge :
   wordAction := B.wordAction
   atomExpectation_wordAction_invariant := B.atomExpectation_wordAction_invariant
   wilsonHolonomy_wordAction_invariant := B.wilsonHolonomy_wordAction_invariant
-  moebius_closure_certificate := B.moebius_closure_certificate
-  moebius_closure_holds := B.moebius_closure_holds
 
 /-- Readback: the induced Möbius owner uses the bounded Connes--Wilson owner. -/
 @[rep_depth krein]
@@ -195,12 +187,6 @@ theorem wilsonHolonomy_wordAction_invariant_apply
         ((B.wordAction g) parent) ((B.wordAction g) child) =
       B.boundedWilson.toHestenesConnesWilsonBridge.wilsonHolonomy parent child :=
   B.wilsonHolonomy_wordAction_invariant g parent child
-
-/-- The Möbius closure backend certificate is available. -/
-@[rep_depth projective]
-theorem moebius_closure :
-    B.moebius_closure_certificate :=
-  B.moebius_closure_holds
 
 end BoundedKMSHestenesMoebiusClosureBridge
 

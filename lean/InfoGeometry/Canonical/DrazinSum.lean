@@ -207,29 +207,11 @@ structure GeneralizedDrazinBanachSumFormula
   hypotheses : Prop
   convergenceWitness : Prop
   generalizedDrazinInverseWitness : Prop
-  hypotheses_witness : hypotheses
-  convergence_witness : convergenceWitness
-  generalizedDrazinInverse_witness : generalizedDrazinInverseWitness
 
 namespace GeneralizedDrazinBanachSumFormula
 
 variable {Alg : Type*}
 variable (F : GeneralizedDrazinBanachSumFormula Alg)
-
-/-- The analytic hypotheses for the supplied generalized-Drazin sum formula hold. -/
-@[rep_depth operator]
-theorem hypotheses_hold : F.hypotheses :=
-  F.hypotheses_witness
-
-/-- The infinite series/convergence side condition is supplied analytically. -/
-@[rep_depth operator]
-theorem convergence_holds : F.convergenceWitness :=
-  F.convergence_witness
-
-/-- The candidate is certified as the generalized Drazin inverse at the Banach layer. -/
-@[rep_depth operator]
-theorem generalizedDrazinInverse_holds : F.generalizedDrazinInverseWitness :=
-  F.generalizedDrazinInverse_witness
 
 end GeneralizedDrazinBanachSumFormula
 
@@ -247,29 +229,11 @@ structure KolihaPierceDrazinBlockPacket
   regularBlockInvertibleWitness : Prop
   singularBlockQuasinilpotentWitness : Prop
   blockFormulaWitness : Prop
-  regularBlockInvertible_witness : regularBlockInvertibleWitness
-  singularBlockQuasinilpotent_witness : singularBlockQuasinilpotentWitness
-  blockFormula_witness : blockFormulaWitness
 
 namespace KolihaPierceDrazinBlockPacket
 
 variable {Alg Block11 Block12 Block21 Block22 : Type*}
 variable (P : KolihaPierceDrazinBlockPacket Alg Block11 Block12 Block21 Block22)
-
-/-- The regular Pierce block is invertible by supplied analytic/algebraic data. -/
-@[rep_depth operator]
-theorem regularBlock_invertible : P.regularBlockInvertibleWitness :=
-  P.regularBlockInvertible_witness
-
-/-- The singular Pierce block is quasinilpotent by supplied analytic data. -/
-@[rep_depth operator]
-theorem singularBlock_quasinilpotent : P.singularBlockQuasinilpotentWitness :=
-  P.singularBlockQuasinilpotent_witness
-
-/-- The block formula is a witness-gated (Native Closure Mandated: Closure Debt) computational readback. -/
-@[rep_depth operator]
-theorem blockFormula_holds : P.blockFormulaWitness :=
-  P.blockFormula_witness
 
 end KolihaPierceDrazinBlockPacket
 

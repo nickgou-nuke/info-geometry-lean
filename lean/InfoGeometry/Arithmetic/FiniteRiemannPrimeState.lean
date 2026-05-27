@@ -10,8 +10,6 @@ from the bosonic/fermionic primon Fock gas:
 
 * a finite state is a normalized weighted superposition over a finite support;
 * the finite probability weights sum to `1`;
-* Hardy--Littlewood entanglement, BRST, modular-invariance, CFT, and critical
-  line claims are represented only by witness gates.
 
 No infinite Hilbert-space state, analytic continuation theorem, BRST anomaly
 cancellation theorem, Riemann Hypothesis statement, or CFT/bosonization theorem
@@ -95,96 +93,4 @@ theorem probability_sum_eq_one :
 
 end FiniteRiemannStatePacket
 
-/-! ## 2. Interpretation gates for entanglement and conformal structure -/
-
-/--
-Hardy--Littlewood entanglement witness gate.
-
-This records a model-supplied relation between an entanglement readout and an
-arithmetic correlation readout.  It is not derived from finite normalization.
--/
-structure HardyLittlewoodEntanglementGate
-    (EntanglementReadout CorrelationReadout : Type*) where
-  entanglement : EntanglementReadout
-  correlation : CorrelationReadout
-  compare : EntanglementReadout → CorrelationReadout → Prop
-  comparison_law : compare entanglement correlation
-
-namespace HardyLittlewoodEntanglementGate
-
-/-- Re-export of the supplied entanglement/correlation comparison. -/
-theorem valid
-    {EntanglementReadout CorrelationReadout : Type*}
-    (G : HardyLittlewoodEntanglementGate EntanglementReadout CorrelationReadout) :
-    G.compare G.entanglement G.correlation :=
-  G.comparison_law
-
-end HardyLittlewoodEntanglementGate
-
-/--
-BRST critical-line gate.
-
-BRST nilpotence, anomaly cancellation, and any critical-line consequence are
-model-dependent claims.  This structure records them as supplied witnesses
-instead of proving RH-level consequences from the finite prime-state packet.
--/
-structure BRSTCriticalLineGate
-    (BRSTCharge StateSpace : Type*) where
-  Q : BRSTCharge
-  stateSpace : StateSpace
-  nilpotence_law : Prop
-  anomaly_cancellation_law : Prop
-  critical_line_law : Prop
-  certificate :
-    nilpotence_law ∧ anomaly_cancellation_law ∧ critical_line_law
-
-namespace BRSTCriticalLineGate
-
-/-- The supplied BRST nilpotence law. -/
-theorem nilpotent
-    {BRSTCharge StateSpace : Type*}
-    (G : BRSTCriticalLineGate BRSTCharge StateSpace) :
-    G.nilpotence_law :=
-  G.certificate.1
-
-/-- The supplied BRST anomaly-cancellation law. -/
-theorem anomaly_cancelled
-    {BRSTCharge StateSpace : Type*}
-    (G : BRSTCriticalLineGate BRSTCharge StateSpace) :
-    G.anomaly_cancellation_law :=
-  G.certificate.2.1
-
-/-- The supplied critical-line law. -/
-theorem critical_line
-    {BRSTCharge StateSpace : Type*}
-    (G : BRSTCriticalLineGate BRSTCharge StateSpace) :
-    G.critical_line_law :=
-  G.certificate.2.2
-
-end BRSTCriticalLineGate
-
-/--
-Modular-invariance witness gate for a finite or completed Riemann-state model.
-
-Finite normalization alone does not imply modular invariance.
--/
-structure RiemannStateModularInvarianceGate
-    (State Transform : Type*) where
-  state : State
-  transform : Transform
-  modular_invariance_law : Prop
-  certificate : modular_invariance_law
-
-namespace RiemannStateModularInvarianceGate
-
-/-- Re-export of the supplied modular-invariance law. -/
-theorem valid
-    {State Transform : Type*}
-    (G : RiemannStateModularInvarianceGate State Transform) :
-    G.modular_invariance_law :=
-  G.certificate
-
-end RiemannStateModularInvarianceGate
-
 end InfoGeometry.Arithmetic.FiniteRiemannPrimeState
-

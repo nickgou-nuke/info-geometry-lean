@@ -93,11 +93,6 @@ structure D4LatticeKacMoodyBridge
   /-- Evidence for the self-duality certificate. -/
   d4_self_dual_lattice_holds : d4_self_dual_lattice
 
-  /-- Backend certificate: the discrete Möbius action is the intended arithmetic symmetry. -/
-  discrete_moebius_certificate : Prop
-
-  /-- Evidence for the discrete-Möbius certificate. -/
-  discrete_moebius_holds : discrete_moebius_certificate
 
   /-- Triality action on the three outer nodes of the D4 diagram. -/
   triality_action : Automorphism → Equiv.Perm (Fin 3)
@@ -144,12 +139,6 @@ theorem hurwitz_maximal_order_readback :
 theorem d4_self_dual_in_krein :
     B.d4_self_dual_lattice :=
   B.d4_self_dual_lattice_holds
-
-/-- Readback: the discrete Möbius/quaternionic symmetry certificate is available. -/
-@[rep_depth projective]
-theorem discrete_moebius_readback :
-    B.discrete_moebius_certificate :=
-  B.discrete_moebius_holds
 
 /-- Readback: triality is supplied by the arithmetic backend. -/
 @[rep_depth projective]
@@ -208,17 +197,6 @@ structure D4HurwitzArithmeticBridge where
   affineNullRootMinus_eq_uMinus :
     ∀ A : EndH, affineNullRootMinus A = drazinSplit.uMinus A
 
-  /-- Backend certificate: the 24 supplied roots carry the D4/Hurwitz arithmetic. -/
-  d4_hurwitz_certificate : Prop
-
-  /-- Evidence for the D4/Hurwitz certificate. -/
-  d4_hurwitz_holds : d4_hurwitz_certificate
-
-  /-- Backend certificate: the D4/Hurwitz layer is self-dual in the Krein readout. -/
-  d4_self_dual_certificate : Prop
-
-  /-- Evidence for the self-duality certificate. -/
-  d4_self_dual_holds : d4_self_dual_certificate
 
   /-- Triality action on the three outer nodes of the D4 diagram. -/
   trialityAction : MoebiusParameter → Equiv.Perm (Fin 3)
@@ -226,11 +204,6 @@ structure D4HurwitzArithmeticBridge where
   /-- Triality has order dividing three for every Möbius parameter. -/
   triality_holds : ∀ g : MoebiusParameter, trialityAction g ^ 3 = 1
 
-  /-- Backend certificate: affine Kac--Moody structure is installed. -/
-  affine_kac_moody_certificate : Prop
-
-  /-- Evidence for the affine Kac--Moody certificate. -/
-  affine_kac_moody_holds : affine_kac_moody_certificate
 
   /-- Calibrated affine central charge. -/
   affineCentralCharge : ℝ
@@ -245,29 +218,11 @@ namespace D4HurwitzArithmeticBridge
 
 variable (B : D4HurwitzArithmeticBridge (E := E))
 
-/-- The supplied D4/Hurwitz certificate is available. -/
-@[rep_depth projective]
-theorem d4_hurwitz_root_certificate :
-    B.d4_hurwitz_certificate :=
-  B.d4_hurwitz_holds
-
-/-- The supplied D4 self-duality certificate is available. -/
-@[rep_depth projective]
-theorem d4_self_dual_in_krein :
-    B.d4_self_dual_certificate :=
-  B.d4_self_dual_holds
-
 /-- The supplied triality certificate is available. -/
 @[rep_depth projective]
 theorem triality_readback :
     ∀ g : MoebiusParameter, B.trialityAction g ^ 3 = 1 :=
   B.triality_holds
-
-/-- The supplied affine Kac--Moody certificate is available. -/
-@[rep_depth projective]
-theorem affine_kac_moody_readback :
-    B.affine_kac_moody_certificate :=
-  B.affine_kac_moody_holds
 
 /-- Readback of the affine central-charge calibration. -/
 @[rep_depth projective]

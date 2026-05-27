@@ -43,12 +43,8 @@ structure HessianResponseDatum
   /-- Material response readout. -/
   responseReadout : Op → Response
 
-  /-- Law that this Hessian is the intended linear-response geometry. -/
-  hessian_response_law : Prop
-
-  /-- Evidence that this Hessian is the intended linear-response geometry. -/
-  hessian_response_certificate :
-    hessian_response_law
+  /-- This Hessian is the intended linear-response geometry. -/
+  hessian_response : Prop
 
 namespace HessianResponseDatum
 
@@ -59,11 +55,6 @@ variable
     [NormedAddCommGroup Response] [NormedSpace ℝ Response]
 
 variable (H : HessianResponseDatum Op Field Response)
-
-/-- Re-export of the Hessian/linear-response certificate. -/
-theorem hessian_response_valid :
-    H.hessian_response_law :=
-  H.hessian_response_certificate
 
 end HessianResponseDatum
 
@@ -83,12 +74,8 @@ structure SusceptibilityDatum
   /-- Linear material susceptibility at the chosen state/parameter. -/
   susceptibility : Op → Field →L[ℝ] Response
 
-  /-- Law that susceptibility is obtained from the Hessian response. -/
-  derived_from_hessian_law : Prop
-
-  /-- Evidence that susceptibility is obtained from the Hessian response. -/
-  derived_from_hessian :
-    derived_from_hessian_law
+  /-- Susceptibility is obtained from the Hessian response. -/
+  derived_from_hessian : Prop
 
 namespace SusceptibilityDatum
 
@@ -98,11 +85,6 @@ variable
     [NormedAddCommGroup Response] [NormedSpace ℝ Response]
 
 variable (S : SusceptibilityDatum Op Field Response)
-
-/-- Re-export of the susceptibility-from-Hessian certificate. -/
-theorem derived_from_hessian_valid :
-    S.derived_from_hessian_law :=
-  S.derived_from_hessian
 
 end SusceptibilityDatum
 
@@ -181,14 +163,11 @@ uninterpreted external hypothesis.
 def toSusceptibilityDatum :
     SusceptibilityDatum Op Field Response where
   susceptibility := C.susceptibility
-  derived_from_hessian_law :=
+  derived_from_hessian :=
     ∀ U : Op,
       C.susceptibility U =
         (C.responseFromTangent U).comp
           ((C.hessianResponse.hessian U).comp (C.fieldToTangent U))
-  derived_from_hessian := by
-    intro U
-    rfl
 
 /-- The generated susceptibility datum has the constructive susceptibility map. -/
 theorem toSusceptibilityDatum_susceptibility :
@@ -222,36 +201,21 @@ structure DielectricResponseDatum
   /-- Complex refractive index readout. -/
   refractiveIndex : Op → ℂ
 
-  /--
-  Calibration law, e.g. `N² = εᵣ μᵣ`, or `N² = εᵣ` in a nonmagnetic model.
-  -/
-  refractive_index_calibration_law : Prop
+  /-- Susceptibility/material readout feeding dielectric response. -/
+  susceptibilityEpsilonReadout : Op → ℂ
 
-  /-- Evidence for the refractive-index calibration law. -/
+  /-- Calibration equation, e.g. `N² = εᵣ μᵣ` or `N² = εᵣ` in a nonmagnetic model. -/
   refractive_index_calibration :
-    refractive_index_calibration_law
+    ∀ U : Op, refractiveIndex U ^ (2 : ℕ) = epsilon U
 
-  /-- Law connecting susceptibility to dielectric response. -/
-  susceptibility_to_epsilon_law : Prop
-
-  /-- Evidence connecting susceptibility to dielectric response. -/
+  /-- Connection between susceptibility readout and dielectric response. -/
   susceptibility_to_epsilon :
-    susceptibility_to_epsilon_law
+    ∀ U : Op, epsilon U = susceptibilityEpsilonReadout U
 
 namespace DielectricResponseDatum
 
 variable {Op : Type*}
 variable (D : DielectricResponseDatum Op)
-
-/-- Re-export of the refractive-index calibration law. -/
-theorem refractive_index_calibration_valid :
-    D.refractive_index_calibration_law :=
-  D.refractive_index_calibration
-
-/-- Re-export of the susceptibility-to-dielectric calibration law. -/
-theorem susceptibility_to_epsilon_valid :
-    D.susceptibility_to_epsilon_law :=
-  D.susceptibility_to_epsilon
 
 end DielectricResponseDatum
 
@@ -294,11 +258,8 @@ def toDielectricResponseDatum :
     DielectricResponseDatum Op where
   epsilon := C.epsilon
   refractiveIndex := C.refractiveIndex
-  refractive_index_calibration_law :=
-    ∀ U : Op, C.refractiveIndex U ^ (2 : ℕ) = C.epsilon U
+  susceptibilityEpsilonReadout := C.susceptibilityEpsilonReadout
   refractive_index_calibration := C.refractive_index_sq
-  susceptibility_to_epsilon_law :=
-    ∀ U : Op, C.epsilon U = C.susceptibilityEpsilonReadout U
   susceptibility_to_epsilon := C.epsilon_eq_susceptibility_readout
 
 /-- The generated dielectric datum keeps the supplied `ε` readout. -/
@@ -310,20 +271,6 @@ theorem toDielectricResponseDatum_epsilon :
 theorem toDielectricResponseDatum_refractiveIndex :
     C.toDielectricResponseDatum.refractiveIndex = C.refractiveIndex :=
   rfl
-
-/-- The generated dielectric datum proves `N² = ε` from the explicit branch law. -/
-theorem refractive_index_sq_valid
-    (U : Op) :
-    C.toDielectricResponseDatum.refractiveIndex U ^ (2 : ℕ) =
-      C.toDielectricResponseDatum.epsilon U :=
-  C.refractive_index_sq U
-
-/-- The generated dielectric datum proves the susceptibility-to-`ε` readout equality. -/
-theorem epsilon_eq_susceptibility_readout_valid
-    (U : Op) :
-    C.toDielectricResponseDatum.epsilon U =
-      C.susceptibilityEpsilonReadout U :=
-  C.epsilon_eq_susceptibility_readout U
 
 end ConstructiveDielectricResponseCalibration
 
@@ -341,21 +288,12 @@ structure OpticalInterfaceGeometry where
   /-- Transmission/refraction angle, if applicable. -/
   theta_t : ℝ
 
-  /-- Geometric/Snell-law calibration law. -/
-  angle_calibration_law : Prop
-
-  /-- Evidence for the geometric/Snell-law calibration. -/
-  angle_calibration :
-    angle_calibration_law
+  /-- Geometric/Snell-law calibration proof payload. -/
+  angle_calibration : Prop
 
 namespace OpticalInterfaceGeometry
 
 variable (G : OpticalInterfaceGeometry)
-
-/-- Re-export of the interface angle calibration law. -/
-theorem angle_calibration_valid :
-    G.angle_calibration_law :=
-  G.angle_calibration
 
 end OpticalInterfaceGeometry
 
@@ -376,30 +314,13 @@ structure FresnelFromSusceptibilityCalibration
   /-- Fresnel coefficients supplied to the Jones layer. -/
   coeffs : InfoGeometry.Optics.JonesCalibration.FresnelCoefficientDatum
 
-  /--
-  Law that `coeffs.r_s` and `coeffs.r_p` are the Fresnel coefficients
-  determined by `dielectric` and `interfaceGeometry`.
-  -/
-  fresnel_from_dielectric_law : Prop
-
-  /-- Evidence for the Fresnel-from-dielectric law. -/
-  fresnel_from_dielectric :
-    fresnel_from_dielectric_law
+  /-- Proof payload that `coeffs` are determined by dielectric and interface data. -/
+  fresnel_from_dielectric : Prop
 
 namespace FresnelFromSusceptibilityCalibration
 
 variable {Op : Type*}
 variable (F : FresnelFromSusceptibilityCalibration Op)
-
-/-- Re-export of the Fresnel-from-dielectric calibration law. -/
-theorem fresnel_from_dielectric_valid :
-    F.fresnel_from_dielectric_law :=
-  F.fresnel_from_dielectric
-
-/-- Re-export of the Jones-layer Fresnel law carried by the coefficients. -/
-theorem coeffs_fresnel_valid :
-    F.coeffs.fresnel_law :=
-  F.coeffs.fresnel_certificate
 
 end FresnelFromSusceptibilityCalibration
 
@@ -494,12 +415,8 @@ structure FresnelEigenvalueCalibration
     ∀ U : State,
       (coeffs U).r_p = E.eigenvalue FresnelChannel.p U
 
-  /-- Law that the eigenvalues come from the intended Fresnel boundary problem. -/
-  fresnel_boundary_calibration_law : Prop
-
-  /-- Evidence that the eigenvalues come from the intended Fresnel boundary problem. -/
-  fresnel_boundary_calibration :
-    fresnel_boundary_calibration_law
+  /-- Proof payload that the eigenvalues come from the intended Fresnel boundary problem. -/
+  fresnel_boundary_calibration : Prop
 
 namespace FresnelEigenvalueCalibration
 
@@ -565,11 +482,6 @@ theorem response_mul_projectorOf_eq_coeff
   rw [F.coeffOf_eq_eigenvalue U c]
   exact E.response_mul_projectorOf U c
 
-/-- Re-export of the Fresnel boundary calibration certificate. -/
-theorem fresnel_boundary_calibration_valid :
-    F.fresnel_boundary_calibration_law :=
-  F.fresnel_boundary_calibration
-
 end FresnelEigenvalueCalibration
 
 /-! ## Metal mirror susceptibility calibration -/
@@ -601,33 +513,17 @@ structure MetalMirrorSusceptibilityCalibration
   fresnel :
     FresnelFromSusceptibilityCalibration Op
 
-  /-- Law that Hessian response determines susceptibility in this model. -/
-  hessian_controls_susceptibility_law : Prop
+  /-- Hessian response determines susceptibility in this model. -/
+  hessian_controls_susceptibility : Prop
 
-  /-- Evidence that Hessian response determines susceptibility. -/
-  hessian_controls_susceptibility :
-    hessian_controls_susceptibility_law
+  /-- Susceptibility/dielectric response controls absorption. -/
+  susceptibility_controls_absorption : Prop
 
-  /-- Law that susceptibility/dielectric response controls absorption. -/
-  susceptibility_controls_absorption_law : Prop
+  /-- Susceptibility/dielectric response controls retardance. -/
+  susceptibility_controls_retardance : Prop
 
-  /-- Evidence that susceptibility/dielectric response controls absorption. -/
-  susceptibility_controls_absorption :
-    susceptibility_controls_absorption_law
-
-  /-- Law that susceptibility/dielectric response controls retardance. -/
-  susceptibility_controls_retardance_law : Prop
-
-  /-- Evidence that susceptibility/dielectric response controls retardance. -/
-  susceptibility_controls_retardance :
-    susceptibility_controls_retardance_law
-
-  /-- Law that the Jones reflector is calibrated by the Fresnel coefficients. -/
-  jones_calibrated_law : Prop
-
-  /-- Evidence that the Jones reflector is calibrated by the Fresnel coefficients. -/
-  jones_calibrated :
-    jones_calibrated_law
+  /-- Jones reflector is calibrated by the Fresnel coefficients. -/
+  jones_calibrated : Prop
 
 namespace MetalMirrorSusceptibilityCalibration
 
@@ -639,32 +535,12 @@ variable
 
 variable (M : MetalMirrorSusceptibilityCalibration Op Field Response)
 
-/-- Re-export of Hessian-to-susceptibility control. -/
-theorem hessian_controls_susceptibility_valid :
-    M.hessian_controls_susceptibility_law :=
-  M.hessian_controls_susceptibility
-
-/-- Re-export of susceptibility/dielectric absorption control. -/
-theorem susceptibility_controls_absorption_valid :
-    M.susceptibility_controls_absorption_law :=
-  M.susceptibility_controls_absorption
-
-/-- Re-export of susceptibility/dielectric retardance control. -/
-theorem susceptibility_controls_retardance_valid :
-    M.susceptibility_controls_retardance_law :=
-  M.susceptibility_controls_retardance
-
-/-- Re-export of the Jones/Fresnel calibration. -/
-theorem jones_calibrated_valid :
-    M.jones_calibrated_law :=
-  M.jones_calibrated
-
 /--
 The installed Fresnel coefficients carry the Jones-layer Fresnel certificate.
 -/
 theorem fresnel_coefficients_certified :
     M.fresnel.coeffs.fresnel_law :=
-  M.fresnel.coeffs_fresnel_valid
+  M.fresnel.coeffs.fresnel_certificate
 
 end MetalMirrorSusceptibilityCalibration
 
@@ -717,32 +593,16 @@ structure SusceptibilityHessianJonesCalibration
     FresnelEigenvalueCalibration State JonesOp projectors eigenResponse
 
   /-- Hessian response controls susceptibility in the chosen material model. -/
-  hessian_controls_susceptibility_law : Prop
-
-  /-- Evidence that Hessian response controls susceptibility. -/
-  hessian_controls_susceptibility :
-    hessian_controls_susceptibility_law
+  hessian_controls_susceptibility : Prop
 
   /-- Susceptibility controls dielectric response. -/
-  susceptibility_controls_dielectric_law : Prop
-
-  /-- Evidence that susceptibility controls dielectric response. -/
-  susceptibility_controls_dielectric :
-    susceptibility_controls_dielectric_law
+  susceptibility_controls_dielectric : Prop
 
   /-- Dielectric response plus interface geometry controls Fresnel coefficients. -/
-  dielectric_controls_fresnel_law : Prop
-
-  /-- Evidence that dielectric response plus interface geometry controls Fresnel coefficients. -/
-  dielectric_controls_fresnel :
-    dielectric_controls_fresnel_law
+  dielectric_controls_fresnel : Prop
 
   /-- Jones reflector is calibrated by the resulting Fresnel coefficients. -/
-  jones_calibrated_law : Prop
-
-  /-- Evidence that the Jones reflector is calibrated by the Fresnel coefficients. -/
-  jones_calibrated :
-    jones_calibrated_law
+  jones_calibrated : Prop
 
 namespace SusceptibilityHessianJonesCalibration
 
@@ -781,26 +641,6 @@ theorem r_p_eq_p_eigenvalue
       C.eigenResponse.eigenvalue FresnelChannel.p U :=
   C.fresnel.jones_r_p_eq_eigenvalue U
 
-/-- Re-export of Hessian-to-susceptibility calibration. -/
-theorem hessian_controls_susceptibility_valid :
-    C.hessian_controls_susceptibility_law :=
-  C.hessian_controls_susceptibility
-
-/-- Re-export of susceptibility-to-dielectric calibration. -/
-theorem susceptibility_controls_dielectric_valid :
-    C.susceptibility_controls_dielectric_law :=
-  C.susceptibility_controls_dielectric
-
-/-- Re-export of dielectric/interface-to-Fresnel calibration. -/
-theorem dielectric_controls_fresnel_valid :
-    C.dielectric_controls_fresnel_law :=
-  C.dielectric_controls_fresnel
-
-/-- Re-export of Jones reflector calibration. -/
-theorem jones_calibrated_valid :
-    C.jones_calibrated_law :=
-  C.jones_calibrated
-
 end SusceptibilityHessianJonesCalibration
 
 /--
@@ -831,33 +671,17 @@ structure MetalMirrorSusceptibilityHessianCalibration
   /-- Complex-index readout. -/
   complexIndex : State → ℂ
 
-  /-- Law that absorption is controlled by the dissipative part of response. -/
-  response_controls_absorption_law : Prop
+  /-- Absorption is controlled by the dissipative part of response. -/
+  response_controls_absorption : Prop
 
-  /-- Evidence that absorption is controlled by the dissipative part of response. -/
-  response_controls_absorption :
-    response_controls_absorption_law
+  /-- Retardance is controlled by relative phase of `s/p` eigenvalues. -/
+  eigenphase_controls_retardance : Prop
 
-  /-- Law that retardance is controlled by relative phase of `s/p` eigenvalues. -/
-  eigenphase_controls_retardance_law : Prop
+  /-- Ellipticity is controlled by amplitude imbalance plus retardance. -/
+  eigenresponse_controls_ellipticity : Prop
 
-  /-- Evidence that retardance is controlled by relative phase of `s/p` eigenvalues. -/
-  eigenphase_controls_retardance :
-    eigenphase_controls_retardance_law
-
-  /-- Law that ellipticity is controlled by amplitude imbalance plus retardance. -/
-  eigenresponse_controls_ellipticity_law : Prop
-
-  /-- Evidence that ellipticity is controlled by amplitude imbalance plus retardance. -/
-  eigenresponse_controls_ellipticity :
-    eigenresponse_controls_ellipticity_law
-
-  /-- Law that complex index is calibrated to the dielectric response. -/
-  complex_index_calibrated_law : Prop
-
-  /-- Evidence that complex index is calibrated to the dielectric response. -/
-  complex_index_calibrated :
-    complex_index_calibrated_law
+  /-- Complex index is calibrated to the dielectric response. -/
+  complex_index_calibrated : Prop
 
 namespace MetalMirrorSusceptibilityHessianCalibration
 
@@ -870,26 +694,6 @@ variable
 
 variable (M :
   MetalMirrorSusceptibilityHessianCalibration State Field Response JonesOp)
-
-/-- Re-export of response-to-absorption calibration. -/
-theorem response_controls_absorption_valid :
-    M.response_controls_absorption_law :=
-  M.response_controls_absorption
-
-/-- Re-export of eigenphase-to-retardance calibration. -/
-theorem eigenphase_controls_retardance_valid :
-    M.eigenphase_controls_retardance_law :=
-  M.eigenphase_controls_retardance
-
-/-- Re-export of eigenresponse-to-ellipticity calibration. -/
-theorem eigenresponse_controls_ellipticity_valid :
-    M.eigenresponse_controls_ellipticity_law :=
-  M.eigenresponse_controls_ellipticity
-
-/-- Re-export of complex-index calibration. -/
-theorem complex_index_calibrated_valid :
-    M.complex_index_calibrated_law :=
-  M.complex_index_calibrated
 
 /--
 The `s` Fresnel/Jones coefficient is the calibrated `s` eigenvalue for the
@@ -953,9 +757,7 @@ def MetalMirrorSusceptibilityHessianOwnerTarget
 
 attribute [rep_depth operator]
   HessianResponseDatum
-  HessianResponseDatum.hessian_response_valid
   SusceptibilityDatum
-  SusceptibilityDatum.derived_from_hessian_valid
   ConstructiveHessianSusceptibilityCalibration
   ConstructiveHessianSusceptibilityCalibration.susceptibility
   ConstructiveHessianSusceptibilityCalibration.susceptibility_eq_hessian_response
@@ -964,19 +766,12 @@ attribute [rep_depth operator]
   ConstructiveHessianSusceptibilityCalibration.toSusceptibilityDatum_susceptibility
   ConstructiveHessianSusceptibilityCalibration.toSusceptibilityDatum_derived_from_hessian
   DielectricResponseDatum
-  DielectricResponseDatum.refractive_index_calibration_valid
-  DielectricResponseDatum.susceptibility_to_epsilon_valid
   ConstructiveDielectricResponseCalibration
   ConstructiveDielectricResponseCalibration.toDielectricResponseDatum
   ConstructiveDielectricResponseCalibration.toDielectricResponseDatum_epsilon
   ConstructiveDielectricResponseCalibration.toDielectricResponseDatum_refractiveIndex
-  ConstructiveDielectricResponseCalibration.refractive_index_sq_valid
-  ConstructiveDielectricResponseCalibration.epsilon_eq_susceptibility_readout_valid
   OpticalInterfaceGeometry
-  OpticalInterfaceGeometry.angle_calibration_valid
   FresnelFromSusceptibilityCalibration
-  FresnelFromSusceptibilityCalibration.fresnel_from_dielectric_valid
-  FresnelFromSusceptibilityCalibration.coeffs_fresnel_valid
   SPEigenResponseCalibration
   SPEigenResponseCalibration.response_mul_s_projector
   SPEigenResponseCalibration.response_mul_p_projector
@@ -988,26 +783,13 @@ attribute [rep_depth operator]
   FresnelEigenvalueCalibration.jones_r_p_eq_eigenvalue
   FresnelEigenvalueCalibration.coeffOf_eq_eigenvalue
   FresnelEigenvalueCalibration.response_mul_projectorOf_eq_coeff
-  FresnelEigenvalueCalibration.fresnel_boundary_calibration_valid
   MetalMirrorSusceptibilityCalibration
-  MetalMirrorSusceptibilityCalibration.hessian_controls_susceptibility_valid
-  MetalMirrorSusceptibilityCalibration.susceptibility_controls_absorption_valid
-  MetalMirrorSusceptibilityCalibration.susceptibility_controls_retardance_valid
-  MetalMirrorSusceptibilityCalibration.jones_calibrated_valid
   MetalMirrorSusceptibilityCalibration.fresnel_coefficients_certified
   SusceptibilityHessianJonesCalibration
   SusceptibilityHessianJonesCalibration.jonesReflector
   SusceptibilityHessianJonesCalibration.r_s_eq_s_eigenvalue
   SusceptibilityHessianJonesCalibration.r_p_eq_p_eigenvalue
-  SusceptibilityHessianJonesCalibration.hessian_controls_susceptibility_valid
-  SusceptibilityHessianJonesCalibration.susceptibility_controls_dielectric_valid
-  SusceptibilityHessianJonesCalibration.dielectric_controls_fresnel_valid
-  SusceptibilityHessianJonesCalibration.jones_calibrated_valid
   MetalMirrorSusceptibilityHessianCalibration
-  MetalMirrorSusceptibilityHessianCalibration.response_controls_absorption_valid
-  MetalMirrorSusceptibilityHessianCalibration.eigenphase_controls_retardance_valid
-  MetalMirrorSusceptibilityHessianCalibration.eigenresponse_controls_ellipticity_valid
-  MetalMirrorSusceptibilityHessianCalibration.complex_index_calibrated_valid
   MetalMirrorSusceptibilityHessianCalibration.r_s_eq_s_eigenvalue
   MetalMirrorSusceptibilityHessianCalibration.r_p_eq_p_eigenvalue
   MetalMirrorSusceptibilityCalibrationOwnerTarget

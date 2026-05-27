@@ -45,7 +45,7 @@ class Sorry:
     documentation: List[str]
     in_declaration: Optional[str] = None
 
-SORRY_TOKEN_PATTERN = re.compile(r"(?<![A-Za-z0-9_!?'])sorry(?![A-Za-z0-9_!?'])")
+SORRY_TOKEN_PATTERN = re.compile(r"(?<![A-Za-z0-9_!?'.`«])sorry(?![A-Za-z0-9_!?'.»])")
 
 def strip_lean_comments_and_strings(line: str, block_comment_depth: int) -> Tuple[str, int]:
     """Return code-only text for a line and updated Lean block-comment depth.

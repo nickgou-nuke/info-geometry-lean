@@ -1,0 +1,49 @@
+name: proof-only-sop
+description: "Apply the proof-only SOP: classify Lean proof holes, reject vacuous wrappers, and enforce Mathlib-style proof work."
+
+nodes:
+  - id: inventory
+    prompt: |
+      Run the proof-only inventory for info-geometry-lean.
+
+      Required reads:
+      - .agents/workflows/proof_only_sop.md
+      - .agents/workflows/mathlib_rules_sop.md
+      - .agents/workflows/honest_proof_policy.md
+      - skills/proof-only-mandate/SKILL.md
+
+      Required commands:
+      - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+      - python3 tools/quality/check_no_hypothesis_mandate.py --root lean/InfoGeometry
+      - python3 tools/quality/proof_only_mandate_gate.py
+
+      Write a concise inventory to .archon/task_results/proof-only-sop-inventory.md.
+      Do not hide any proof hole behind witnesses, laws, certificates, assumptions, or reexports.
+    assistant: pi
+
+  - id: classify
+    depends_on: [inventory]
+    prompt: |
+      Classify the remaining proof holes and policy violations.
+
+      For every real sorry:
+      - state the exact theorem and goal;
+      - classify as genuine theorem vs vacuous/readback shell;
+      - list lower lemmas currently available;
+      - list external sources that must be searched (Mathlib, Lean Zulip, arXiv, papers, other Lean libraries).
+
+      Write .archon/task_results/proof-only-sop-classification.md.
+    assistant: pi
+
+  - id: plan
+    depends_on: [classify]
+    prompt: |
+      Produce the next executable proof-only plan.
+
+      The plan must only contain tasks that either:
+      - prove a theorem from lower lemmas; or
+      - delete/refactor a vacuous proof shell without replacing it by another proxy.
+
+      Include validation commands for each task.
+      Write .archon/task_results/proof-only-sop-plan.md.
+    assistant: pi

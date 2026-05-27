@@ -62,6 +62,24 @@ theorem isEP_of_dilationGap_eq_zero
     exact (smul_eq_zero.mp hSmul).resolve_left (by norm_num)
   exact sub_eq_zero.mp hDiff
 
+/--
+Vanishing dilation gap is a smaller constructive route to projector agreement:
+the EP packet is recovered internally from the gap collapse.
+-/
+theorem mpRangeProjector_eq_metricProjector_of_dilationGap_eq_zero
+    (hGap : IK.dilationGap = 0) :
+    IK.mpRangeProjector = IK.metricProjector :=
+  IK.mpRangeProjector_eq_metricProjector_of_isEP (IK.isEP_of_dilationGap_eq_zero hGap)
+
+/--
+Vanishing dilation gap is a smaller constructive route to mismatch agreement:
+the EP packet is recovered internally from the gap collapse.
+-/
+theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
+    (hGap : IK.dilationGap = 0) :
+    IK.rightProjectorMismatch = IK.projectorMismatch :=
+  IK.rightProjectorMismatch_eq_projectorMismatch_of_isEP (IK.isEP_of_dilationGap_eq_zero hGap)
+
 /-- EP is equivalent to vanishing dilation gap. -/
 theorem isEP_iff_dilationGap_eq_zero :
     IK.IsEP ↔ IK.dilationGap = 0 := by
@@ -164,6 +182,24 @@ theorem isEP_of_dilationGap_eq_zero
   simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.dilationGap,
     CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.isEP_of_dilationGap_eq_zero hGap
+
+/--
+Certified gap-collapse route to projector agreement: callers that already own
+`dilationGap = 0` do not need to provide a separate `CIK.IsEP` packet.
+-/
+theorem mpRangeProjector_eq_metricProjector_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    CIK.mpRangeProjector = CIK.metricProjector :=
+  CIK.mpRangeProjector_eq_metricProjector_of_isEP (CIK.isEP_of_dilationGap_eq_zero hGap)
+
+/--
+Certified gap-collapse route to mismatch agreement: callers that already own
+`dilationGap = 0` do not need to provide a separate `CIK.IsEP` packet.
+-/
+theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
+    (hGap : CIK.dilationGap = 0) :
+    CIK.rightProjectorMismatch = CIK.projectorMismatch :=
+  CIK.rightProjectorMismatch_eq_projectorMismatch_of_isEP (CIK.isEP_of_dilationGap_eq_zero hGap)
 
 /-- Certified EP is equivalent to vanishing dilation gap. -/
 theorem isEP_iff_dilationGap_eq_zero :

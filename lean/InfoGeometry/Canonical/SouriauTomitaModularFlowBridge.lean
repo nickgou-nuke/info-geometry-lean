@@ -658,6 +658,28 @@ theorem mk_of_cyclic :
     (SouriauTomitaKMSContext.mk_of_minimal_kms
       (H := H) (Symmetry := Symmetry) C.toMinimalSouriauTomitaKMSContext)
 
+/--
+Search-facing constructive KMS packet on the cyclic zero-thermal branch.
+
+This removes the explicit `kms : KMSState ...` packet from the theorem-facing
+surface: cyclicity plus the zero-thermal logarithmic lane are enough to recover
+all four readbacks through the constructed Souriau/Tomita KMS context.
+-/
+@[rep_depth operator]
+theorem constructive_kms_packet
+    (A B : Obs) (s t : ℝ) :
+    C.state.state.eval (A * C.logContext.souriauAdditiveModularFlow C.beta B) =
+        C.state.state.eval (B * A) ∧
+    C.logContext.souriauAdditiveModularFlow (s + t) =
+        C.logContext.souriauAdditiveModularFlow s *
+          C.logContext.souriauAdditiveModularFlow t ∧
+    C.logContext.souriauAdditiveModularFlow 0 = 1 ∧
+    C.logContext.modularHamiltonian =
+      C.logContext.souriauMoment.momentOperator
+        C.logContext.souriauMoment.geometricTemperature := by
+  simpa [C.toSouriauTomitaKMSContext_state_eq] using
+    (C.toSouriauTomitaKMSContext.constructive_kms_packet A B s t)
+
 /-- Backward-compatible broad constructor theorem from the cyclic zero-thermal branch. -/
 @[rep_depth operator]
 theorem mk_broad_of_cyclic :

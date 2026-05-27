@@ -69,112 +69,6 @@ theorem contracted_affine_root_unique
   exact sub_eq_zero.mp hzw
 
 /--
-Scaling invariance of the contracted affine root equation.
-
-For nonzero `λ`, the equation `A + D z = 0` is equivalent to
-`(λA) + (λD) z = 0`.
--/
-theorem contracted_affine_root_scale_iff
-    {A D z l : ℂ}
-    (hl : l ≠ 0) :
-    A + D * z = 0 ↔ (l * A) + (l * D) * z = 0 := by
-  constructor
-  · intro hz
-    calc
-      (l * A) + (l * D) * z
-          = l * (A + D * z) := by ring
-      _ = l * 0 := by rw [hz]
-      _ = 0 := by ring
-  · intro hscaled
-    have hmul : l * (A + D * z) = 0 := by
-      calc
-        l * (A + D * z) = (l * A) + (l * D) * z := by ring
-        _ = 0 := hscaled
-    exact (mul_eq_zero.mp hmul).resolve_left hl
-
-/--
-Scaling formula for the Asano nondegeneracy discriminant.
--/
-theorem asano_discriminant_scale
-    {A B C D l : ℂ} :
-    (l * A) * (l * D) - (l * B) * (l * C)
-      = l^2 * (A * D - B * C) := by
-  ring
-
-/--
-For nonzero `l`, nondegeneracy `AD - BC ≠ 0` is invariant under scaling
-`(A,B,C,D) ↦ (lA,lB,lC,lD)`.
--/
-theorem asano_discriminant_scale_ne_zero_iff
-    {A B C D l : ℂ}
-    (hl : l ≠ 0) :
-    (A * D - B * C ≠ 0) ↔
-      ((l * A) * (l * D) - (l * B) * (l * C) ≠ 0) := by
-  rw [asano_discriminant_scale]
-  have hl2 : l^2 ≠ 0 := by
-    simpa [pow_two] using mul_ne_zero hl hl
-  constructor
-  · intro h
-    exact mul_ne_zero hl2 h
-  · intro h
-    exact (mul_ne_zero_iff.mp h).2
-
-/--
-For nonzero `l`, degeneracy `AD - BC = 0` is invariant under scaling
-`(A,B,C,D) ↦ (lA,lB,lC,lD)`.
--/
-theorem asano_discriminant_scale_eq_zero_iff
-    {A B C D l : ℂ}
-    (hl : l ≠ 0) :
-    (A * D - B * C = 0) ↔
-      ((l * A) * (l * D) - (l * B) * (l * C) = 0) := by
-  rw [asano_discriminant_scale]
-  constructor
-  · intro h
-    simp [h]
-  · intro h
-    have hl2 : l^2 ≠ 0 := by
-      simpa [pow_two] using mul_ne_zero hl hl
-    exact (mul_eq_zero.mp h).resolve_left hl2
-
-/--
-Root uniqueness is invariant under nonzero coefficient scaling.
-
-If `D ≠ 0`, scaling by `l ≠ 0` preserves uniqueness of roots of the affine
-contracted equation.
--/
-theorem contracted_affine_root_unique_scaled
-    {A D z w l : ℂ}
-    (hl : l ≠ 0)
-    (hD : D ≠ 0)
-    (hz : (l * A) + (l * D) * z = 0)
-    (hw : (l * A) + (l * D) * w = 0) :
-    z = w := by
-  have hDl : l * D ≠ 0 := mul_ne_zero hl hD
-  exact contracted_affine_root_unique hDl hz hw
-
-/--
-Scaled endpoint-root criterion.
-
-If a scaled affine equation has root `z` and the scaled endpoint `-(u*v)` is
-also a root, then `z ∈ -(K₁K₂)`; this is the scaled form of
-`contracted_root_mem_negProductSet_of_endpoint_root`.
--/
-theorem contracted_root_mem_negProductSet_of_endpoint_root_scaled
-    (K₁ K₂ : Set ℂ)
-    {A D u v z l : ℂ}
-    (hl : l ≠ 0)
-    (hD : D ≠ 0)
-    (hu : u ∈ K₁)
-    (hv : v ∈ K₂)
-    (hz : (l * A) + (l * D) * z = 0)
-    (hendpoint : (l * A) + (l * D) * (-(u * v)) = 0) :
-    z ∈ negProductSet K₁ K₂ := by
-  have hz_eq : z = -(u * v) := by
-    exact contracted_affine_root_unique_scaled hl hD hz hendpoint
-  exact contracted_root_mem_negProductSet_of_endpoint K₁ K₂ hu hv hz_eq
-
-/--
 Endpoint root criterion.
 
 If `z` is a root of `A + D z`, and the endpoint product `-u*v`
@@ -225,8 +119,8 @@ theorem degenerate_contracted_root_mem_negProductSet
     exact sub_eq_zero.mp hdeg
 
   have hz_eq : z = -A / D := by
+    have hz' : D * z + A = 0 := by simpa [add_comm] using hz
     have hDz : D * z = -A := by
-      have hz' : D * z + A = 0 := by simpa [add_comm] using hz
       exact eq_neg_of_add_eq_zero_left hz'
     calc
       z = (D * z) / D := by

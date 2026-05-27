@@ -91,11 +91,6 @@ structure BoundedKMSHestenesPhaseVolumeBridge
       phaseVolume A =
         boundedMoebius.boundedWilson.toHestenesConnesWilsonBridge.volume.volumeState A
 
-  /-- Concrete determinant/regularized-volume backend certificate. -/
-  determinant_channel_certificate : Prop
-
-  /-- Evidence for the determinant/regularized-volume backend certificate. -/
-  determinant_channel_holds : determinant_channel_certificate
 
 namespace BoundedKMSHestenesPhaseVolumeBridge
 
@@ -219,12 +214,6 @@ theorem wilsonHolonomy_eq_neg_log_phaseVolume_ratio
         unfold NaturalConeVolumeBridge.atomExpectation
         rw [B.phaseVolume_eq_volumeState_apply,
           B.phaseVolume_eq_volumeState_apply]
-
-/-- The determinant/regularized-volume backend certificate is available. -/
-@[rep_depth projective]
-theorem determinant_channel :
-    B.determinant_channel_certificate :=
-  B.determinant_channel_holds
 
 end BoundedKMSHestenesPhaseVolumeBridge
 

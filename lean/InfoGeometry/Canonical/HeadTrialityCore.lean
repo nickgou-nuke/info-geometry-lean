@@ -81,7 +81,7 @@ structure CertifiedBlockedTrialityDatum (blocks cellDim : Nat)
   structured : IsStructuredTrinity toBlockedTrialityDatum
 
 /-- In a certified package, each blockwise route equals its `V`-cell. -/
-theorem routedCell_eq_value_of_certified
+theorem routedCell_eq_value_of_structured
     {blocks cellDim : Nat}
     (T : CertifiedBlockedTrialityDatum blocks cellDim) (b : Fin blocks) :
     routedCell T.toBlockedTrialityDatum b = T.qkv.V b :=
@@ -180,7 +180,7 @@ def IsBlockedTriality128 (T : BlockedTriality128) : Prop :=
   IsStructuredTrinity T
 
 /-- Certified 128-head packages satisfy the blocked triality proposition. -/
-theorem isBlockedTriality128_of_certified (T : CertifiedBlockedTriality128) :
+theorem isBlockedTriality128_of_structured (T : CertifiedBlockedTriality128) :
     IsBlockedTriality128 T.toBlockedTrialityDatum := by
   exact T.structured
 

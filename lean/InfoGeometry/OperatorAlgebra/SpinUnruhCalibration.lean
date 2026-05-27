@@ -69,16 +69,6 @@ theorem acceleration_positive :
     0 < S.acceleration :=
   S.acceleration_pos
 
-/-- Re-export of the modular/physical flow calibration. -/
-theorem modular_physical_calibration_valid :
-    S.modular_physical_calibration_law :=
-  S.modular_physical_calibration
-
-/-- Re-export of the spin-connection/boost compatibility law. -/
-theorem spin_connection_generates_boost_valid :
-    S.spin_connection_generates_boost_law :=
-  S.spin_connection_generates_boost
-
 end SpinModularCompatibility
 
 /--
@@ -122,21 +112,6 @@ theorem temperature_eq_acceleration_over_two_pi :
     U.temperature =
       U.spinModular.acceleration / (2 * Real.pi) :=
   U.temperature_eq_unruh
-
-/--
-The boost/KMS normalization certificate required for the Unruh temperature.
--/
-theorem modular_physical_calibration_valid :
-    U.spinModular.modular_physical_calibration_law :=
-  U.spinModular.modular_physical_calibration_valid
-
-/--
-The spin-connection/boost generation certificate required for the Unruh
-temperature.
--/
-theorem spin_connection_generates_boost_valid :
-    U.spinModular.spin_connection_generates_boost_law :=
-  U.spinModular.spin_connection_generates_boost_valid
 
 end UnruhTemperatureCalibration
 
@@ -251,11 +226,6 @@ variable {σ : OperatorFlow Op}
 variable {beta : ℝ}
 variable (C : ModularBoostTemperatureCalibration Op σ beta)
 
-/-- Re-export of the geometric boost-flow calibration. -/
-theorem modular_flow_is_boost_flow_valid :
-    C.modular_flow_is_boost_flow :=
-  C.modular_flow_is_boost_flow_holds
-
 /--
 The calibrated physical temperature is `a / 2π`.
 -/
@@ -288,13 +258,9 @@ def SpinUnruhCalibrationOwnerTarget
 attribute [rep_depth operator]
   SpinModularCompatibility
   SpinModularCompatibility.acceleration_positive
-  SpinModularCompatibility.modular_physical_calibration_valid
-  SpinModularCompatibility.spin_connection_generates_boost_valid
   unruhTemperatureNatural
   UnruhTemperatureCalibration
   UnruhTemperatureCalibration.temperature_eq_acceleration_over_two_pi
-  UnruhTemperatureCalibration.modular_physical_calibration_valid
-  UnruhTemperatureCalibration.spin_connection_generates_boost_valid
   ModularAccelerationCalibration
   ModularAccelerationCalibration.modular_beta_eq_two_pi
   ModularAccelerationCalibration.physical_beta
@@ -302,7 +268,6 @@ attribute [rep_depth operator]
   unruhTemperature
   unruhBeta
   ModularBoostTemperatureCalibration
-  ModularBoostTemperatureCalibration.modular_flow_is_boost_flow_valid
   ModularBoostTemperatureCalibration.temperature_eq_unruh
   ModularUnruhCalibrationOwnerTarget
   SpinUnruhCalibrationOwnerTarget

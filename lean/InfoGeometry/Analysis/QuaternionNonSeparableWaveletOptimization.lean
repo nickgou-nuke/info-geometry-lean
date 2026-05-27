@@ -61,21 +61,23 @@ structure QuaternionNonSeparableWaveletOptimizationProblem where
     finitePartitionAdmissible
 
 /--
-Combined theorem-safe owner target.
+Owner-side theorem currently available in this file: the quaternion/non-separable
+optimization carrier supplies the declared finite-partition admissibility.
 
-This packages the finite optimization data and keeps the actual optimization
-existence statement open.  It does not prove the existence of an optimizing
-wavelet construction.
+This does not assert existence of an optimizer; it only re-exports the concrete
+admissibility certificate carried by the owner datum.
 -/
-@[owner_target_tag]
-def QuaternionNonSeparableWaveletOwnerTarget : Prop :=
-  True
+@[rep_depth operator]
+theorem quaternionNonSeparableWavelet_finitePartitionAdmissible
+    (P : QuaternionNonSeparableWaveletOptimizationProblem) :
+    P.finitePartitionAdmissible :=
+  P.finitePartitionAdmissible_certificate
 
-/-- The owner target is deliberately vacuous at theorem level. -/
+/-- Backward-compatible public theorem name, now carrying the actual owner-side claim. -/
 @[rep_depth operator]
 theorem quaternionNonSeparableWaveletOwnerTarget
-    (_P : QuaternionNonSeparableWaveletOptimizationProblem) :
-    QuaternionNonSeparableWaveletOwnerTarget := by
-  trivial
+    (P : QuaternionNonSeparableWaveletOptimizationProblem) :
+    P.finitePartitionAdmissible :=
+  quaternionNonSeparableWavelet_finitePartitionAdmissible P
 
 end InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization

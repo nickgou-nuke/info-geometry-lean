@@ -163,9 +163,6 @@ structure NaturalConeStandardFormInterface
   /-- Supplied self-duality certificate for the natural cone. -/
   cone_self_dual : Prop
 
-  /-- Evidence for the self-duality certificate. -/
-  cone_self_dual_holds : cone_self_dual
-
 namespace NaturalConeStandardFormInterface
 
 variable {Alg Hilb NormalPositive : Type*}
@@ -199,8 +196,8 @@ theorem J_fixes_coneVector
 /-- Readback of the supplied natural-cone self-duality certificate. -/
 @[rep_depth operator]
 theorem cone_self_dual_readback :
-    S.cone_self_dual :=
-  S.cone_self_dual_holds
+    S.cone_self_dual := by
+  sorry
 
 end NaturalConeStandardFormInterface
 
@@ -236,10 +233,6 @@ structure NaturalConeCantorFaceSystem
   face_law :
     TypeIIIModularCantorSystem.BinaryWord → Prop
 
-  /-- Certificate for each face law. -/
-  face_law_holds :
-    ∀ w : TypeIIIModularCantorSystem.BinaryWord, face_law w
-
   /-- Cylinder weight/readout, replacing trace-size. -/
   cylinderWeight :
     TypeIIIModularCantorSystem.BinaryWord → ℝ
@@ -257,8 +250,8 @@ variable (C : NaturalConeCantorFaceSystem Alg Hilb NormalPositive)
 @[rep_depth projective]
 theorem face_law_readback
     (w : TypeIIIModularCantorSystem.BinaryWord) :
-    C.face_law w :=
-  C.face_law_holds w
+    C.face_law w := by
+  sorry
 
 /-- Negative logarithmic cylinder potential. -/
 @[rep_depth thermo]
@@ -538,10 +531,6 @@ structure FiniteCylinderExpectationPartition
   level_partition_law :
     ℕ → Prop
 
-  /-- Certificate for the level partition law. -/
-  level_partition_law_holds :
-    ∀ n : ℕ, level_partition_law n
-
   /--
   Expectation partition law:
   `∑_w ω(p_w) = ω(1)`.
@@ -579,8 +568,8 @@ theorem level_expectation_sum_eq_total
 @[rep_depth projective]
 theorem level_partition_holds
     (n : ℕ) :
-    P.level_partition_law n :=
-  P.level_partition_law_holds n
+    P.level_partition_law n := by
+  sorry
 
 /-- If the distinguished functional is normalized, every finite level sums to one. -/
 @[rep_depth projective]

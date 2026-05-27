@@ -166,28 +166,6 @@ theorem curvature_eq_zero_of_inertial
     S.spin.curvature θ = 0 :=
   S.spin.inertial_curvature_zero θ hθ
 
-/--
-The supplied representation certificate validates the Bogoliubov-frame law.
--/
-theorem omega_generates_bogoliubov_frame_valid :
-    S.omega_generates_bogoliubov_frame_law :=
-  S.omega_generates_bogoliubov_frame
-
-/--
-The supplied representation certificate validates the curvature/shear law.
--/
-theorem curvature_controls_hidden_shear_valid :
-    S.curvature_controls_hidden_shear_law :=
-  S.curvature_controls_hidden_shear
-
-/--
-The supplied representation certificate validates the Tomita-commutant
-calibration.
--/
-theorem tomita_commutant_calibration_valid :
-    S.tomita_commutant_calibration_law :=
-  S.tomita_commutant_calibration
-
 end SpinBogoliubovFrame
 
 /-! ## Heat and hidden-information calibration -/
@@ -260,13 +238,6 @@ theorem heat_eq_zero_of_inertial
     heatLoss C.bregman (S.channel θ) x = 0 :=
   S.heatLoss_eq_zero_of_inertial C.bregman θ hθ x
 
-/--
-The supplied representation certificate validates the heat/shear calibration.
--/
-theorem heat_is_spin_shear_calibration_valid :
-    C.heat_is_spin_shear_calibration_law :=
-  C.heat_is_spin_shear_calibration
-
 end SpinHeatCalibration
 
 /-! ## Curvature / Einstein readout socket -/
@@ -313,20 +284,6 @@ variable
     {S : SpinBogoliubovFrame Frame Sys Comm}
 
 variable (E : SpinEinsteinReadoutCalibration Frame Sys Comm Curv Stress S)
-
-/--
-The supplied model validates the field-equation calibration law.
--/
-theorem field_equation_calibration_valid :
-    E.field_equation_calibration_law :=
-  E.field_equation_calibration
-
-/--
-The supplied model validates that heat sources the stress readout.
--/
-theorem heat_sources_stress_calibration_valid :
-    E.heat_sources_stress_calibration_law :=
-  E.heat_sources_stress_calibration
 
 end SpinEinsteinReadoutCalibration
 
@@ -389,17 +346,11 @@ attribute [rep_depth operator]
   SpinBogoliubovFrame.deficit_eq_recovered_hidden
   SpinBogoliubovFrame.heatLoss_eq_zero_of_inertial
   SpinBogoliubovFrame.curvature_eq_zero_of_inertial
-  SpinBogoliubovFrame.omega_generates_bogoliubov_frame_valid
-  SpinBogoliubovFrame.curvature_controls_hidden_shear_valid
-  SpinBogoliubovFrame.tomita_commutant_calibration_valid
   SpinHeatCalibration
   SpinHeatCalibration.heat_eq_hidden_information
   SpinHeatCalibration.heat_nonneg
   SpinHeatCalibration.heat_eq_zero_of_inertial
-  SpinHeatCalibration.heat_is_spin_shear_calibration_valid
   SpinEinsteinReadoutCalibration
-  SpinEinsteinReadoutCalibration.field_equation_calibration_valid
-  SpinEinsteinReadoutCalibration.heat_sources_stress_calibration_valid
   SpinBogoliubovConservationOwnerTarget
   spinBogoliubovConservationOwnerTarget
   SpinHeatHiddenInformationOwnerTarget

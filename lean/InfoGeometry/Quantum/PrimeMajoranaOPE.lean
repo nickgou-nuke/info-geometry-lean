@@ -74,34 +74,4 @@ def toArithmeticSplitMajoranaOPE
   dd_certificate := hdd
   cd_certificate := hcd
 
-theorem toArithmeticSplitMajoranaOPE_cc_valid
-    {PrimeLabel Field Kernel : Type*} [Zero Kernel] [Neg Kernel]
-    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel)
-    (hcc : IsCCOPE OPE)
-    (hdd : IsDDOPE OPE)
-    (hcd : IsCDRegular OPE)
-    (p q : PrimeLabel) :
-    (toArithmeticSplitMajoranaOPE OPE hcc hdd hcd).cc_singular p q := by
-  exact hcc p q
-
-theorem toArithmeticSplitMajoranaOPE_dd_valid
-    {PrimeLabel Field Kernel : Type*} [Zero Kernel] [Neg Kernel]
-    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel)
-    (hcc : IsCCOPE OPE)
-    (hdd : IsDDOPE OPE)
-    (hcd : IsCDRegular OPE)
-    (p q : PrimeLabel) :
-    (toArithmeticSplitMajoranaOPE OPE hcc hdd hcd).dd_singular p q := by
-  exact hdd p q
-
-theorem toArithmeticSplitMajoranaOPE_cd_regular_valid
-    {PrimeLabel Field Kernel : Type*} [Zero Kernel] [Neg Kernel]
-    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel)
-    (hcc : IsCCOPE OPE)
-    (hdd : IsDDOPE OPE)
-    (hcd : IsCDRegular OPE)
-    (p q : PrimeLabel) :
-    (toArithmeticSplitMajoranaOPE OPE hcc hdd hcd).cd_regular p q := by
-  exact hcd p q
-
 end InfoGeometry.Quantum.PrimeMajoranaOPE

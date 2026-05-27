@@ -153,8 +153,6 @@ def toMobiusCurrentOPE
   current := current F
   current_c_law := sameModeCurrentCLaw F
   current_d_law := sameModeCurrentDLaw F
-  current_c_certificate := sameModeCurrentCLaw_valid F
-  current_d_certificate := sameModeCurrentDLaw_valid F
 
 theorem toMobiusCurrentOPE_current_c_valid
     (F : PrimeLocalCARFamily PrimeLabel Op) :
@@ -237,8 +235,6 @@ def toMobiusCurrentOPE :
   current := fun p => N.c p * N.d p
   current_c_law := sameModeCurrentCLaw N ∧ offDiagCurrentCLaw N
   current_d_law := sameModeCurrentDLaw N ∧ offDiagCurrentDLaw N
-  current_c_certificate := ⟨sameModeCurrentCLaw_valid N, offDiagCurrentCLaw_valid N⟩
-  current_d_certificate := ⟨sameModeCurrentDLaw_valid N, offDiagCurrentDLaw_valid N⟩
 
 theorem toMobiusCurrentOPE_current_c_valid :
     (toMobiusCurrentOPE N).current_c_law :=

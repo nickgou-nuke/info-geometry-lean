@@ -148,9 +148,6 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
   superVirasoro_law :
     superVirasoro.super_bracket_law
 
-  /-- Certificate for the super-Virasoro bracket law. -/
-  superVirasoro_law_holds :
-    superVirasoro.super_bracket_law
 
 namespace FractalCantorCuntzKacMoodyVirasoroBridge
 
@@ -252,12 +249,6 @@ theorem sugawara_uses_bridge_valid :
 theorem superVirasoro_law_valid :
     B.superVirasoro.super_bracket_law :=
   B.superVirasoro_law
-
-/-- The super-Virasoro law certificate is available directly. -/
-@[rep_depth operator]
-theorem superVirasoro_law_holds_valid :
-    B.superVirasoro.super_bracket_law :=
-  B.superVirasoro_law_holds
 
 end FractalCantorCuntzKacMoodyVirasoroBridge
 

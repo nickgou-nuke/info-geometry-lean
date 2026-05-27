@@ -9,7 +9,7 @@ Carrier layer for the Araki--Connes--Haagerup triad.
 
 This file does not prove Tomita--Takesaki theory, construct a crossed product,
 or define an unbounded relative modular logarithm.  It only records the
-compatibility sockets:
+data interfaces:
 
 * Haagerup/standard-form natural cone;
 * Connes cocycle / Weyl transport channel;
@@ -27,9 +27,8 @@ open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 /--
 Araki--Connes--Haagerup compatibility carrier.
 
-All analytic compatibility statements are explicit certificates.  The bridge is
-therefore safe to use as a downstream interface without asserting that the
-standard form, cocycle, entropy, or core were constructed in this file.
+This structure records carriers and readouts only.  It does not expose
+entropy/cocycle or cone/core compatibility as theorem-like fields.
 -/
 @[rep_depth operator]
 structure ArakiConnesHaagerupTriad
@@ -53,18 +52,6 @@ structure ArakiConnesHaagerupTriad
   /-- Core weight/trace-like readout. -/
   coreWeight :
     Core → ℝ
-
-  /-- Compatibility between cocycle potential and entropy. -/
-  entropy_cocycle_compatibility : Prop
-
-  /-- Evidence for entropy/cocycle compatibility. -/
-  entropy_cocycle_holds : entropy_cocycle_compatibility
-
-  /-- Compatibility between standard-form cone data and core-weight readout. -/
-  cone_core_compatibility : Prop
-
-  /-- Evidence for cone/core compatibility. -/
-  cone_core_holds : cone_core_compatibility
 
 namespace ArakiConnesHaagerupTriad
 
@@ -95,18 +82,6 @@ theorem eval_eq_vector_readout_of_normal
 theorem cone_self_dual_readback :
     T.standard.cone_self_dual :=
   T.standard.cone_self_dual_readback
-
-/-- Readback: entropy/cocycle compatibility is explicitly supplied. -/
-@[rep_depth operator]
-theorem entropy_cocycle_readback :
-    T.entropy_cocycle_compatibility :=
-  T.entropy_cocycle_holds
-
-/-- Readback: cone/core compatibility is explicitly supplied. -/
-@[rep_depth operator]
-theorem cone_core_readback :
-    T.cone_core_compatibility :=
-  T.cone_core_holds
 
 end ArakiConnesHaagerupTriad
 
@@ -141,12 +116,6 @@ structure StandardFormCantorConeSystem
   referenceWeight_pos :
     ∀ w : BinaryWord, 0 < referenceWeight w
 
-  /-- Supplied compatibility between reflection and cylinder projections. -/
-  reflectedCylinder_law : Prop
-
-  /-- Evidence for the reflection/cylinder compatibility. -/
-  reflectedCylinder_holds : reflectedCylinder_law
-
 namespace StandardFormCantorConeSystem
 
 variable {Alg Hilb NormalPositive : Type*}
@@ -171,13 +140,6 @@ theorem cylinderPotential_child
       C.cylinderPotential w + C.branchIncrement w b :=
   TypeIIIModularCantorSystem.cylinderPotential_child C.referenceWeight C.referenceWeight_pos w b
 
-/-- Readback: reflection/cylinder compatibility is explicitly supplied. -/
-@[rep_depth thermo]
-theorem reflectedCylinder_readback :
-    C.reflectedCylinder_law :=
-  C.reflectedCylinder_holds
-
 end StandardFormCantorConeSystem
 
 end InfoGeometry.Canonical.ArakiConnesHaagerupBridge
-

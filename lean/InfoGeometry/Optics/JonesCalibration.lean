@@ -513,11 +513,6 @@ theorem coreInverse_kills_p :
     J.brewsterCoreInverse * J.projectors.P_p = 0 :=
   J.brewsterCoreInverse_mul_Pp_eq_zero
 
-/-- Stored Drazin-rank-collapse interpretation. -/
-theorem drazin_rank_collapse_valid :
-    B.drazin_rank_collapse_law :=
-  BrewsterDrazinCalibration.drazin_rank_collapse_certificate B
-
 end BrewsterDrazinCalibration
 
 /-! ## 6. Metal mirror calibration -/

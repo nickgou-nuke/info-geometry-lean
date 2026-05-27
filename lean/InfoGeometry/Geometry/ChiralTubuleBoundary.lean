@@ -38,9 +38,6 @@ structure BregmanHessianDatum
   /-- Regularity predicate for the Hessian. -/
   isInvertibleAt : Op → Prop
 
-  /-- Certificate that this Hessian comes from the intended Bregman geometry. -/
-  bregman_hessian_certificate : Prop
-
 /--
 The topological snap boundary is the locus where the Hessian ceases to be
 invertible.
@@ -63,9 +60,6 @@ structure DualFlatOperatorGeometry
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
   nablaExp : Op → (Op →L[ℝ] Op)
   nablaMix : Op → (Op →L[ℝ] Op)
-
-  /-- Levi-Civita balance certificate for the symmetric connection. -/
-  levi_civita_balance : Prop
 
 /-- Amari-Chentsov shear operator. -/
 def torsionShear
@@ -109,9 +103,6 @@ structure ThermalDriveDatum
 
   /-- Critical temperature/readout. -/
   criticalTemperature : ℝ
-
-  /-- Calibration certificate, e.g. Unruh/Bisognano-Wichmann normalization. -/
-  thermal_calibration_certificate : Prop
 
 /--
 The state is thermally critical when its calibrated thermal drive exceeds the
@@ -164,15 +155,6 @@ structure MajoranaWeylResidueDatum
   /-- The residue is topologically nontrivial. -/
   charge_nonzero : charge ≠ 0
 
-  /-- Majorana reality certificate. -/
-  majorana_certificate : Prop
-
-  /-- Weyl/chiral certificate. -/
-  weyl_chiral_certificate : Prop
-
-  /-- Lightlike/null support certificate. -/
-  lightlike_certificate : Prop
-
 /-! ## 5. Chiral tubule crystallization -/
 
 /--
@@ -206,15 +188,6 @@ structure ChiralTubuleCrystallization
   /-- Stable residue generated at the boundary. -/
   residue :
     MajoranaWeylResidueDatum Charge Residue
-
-  /-- Exponential/system connection trapped in right phase. -/
-  exponential_connection_trapped_in_R : Prop
-
-  /-- Mixture/commutant connection trapped in left phase. -/
-  mixture_connection_trapped_in_L : Prop
-
-  /-- PT/CPT inversion boundary calibration. -/
-  PT_inversion_boundary_calibration : Prop
 
 namespace ChiralTubuleCrystallization
 

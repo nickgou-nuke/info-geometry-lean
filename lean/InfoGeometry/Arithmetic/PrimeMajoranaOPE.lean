@@ -3,7 +3,7 @@ import Mathlib
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaOPE
 
-Witness-gated split-Majorana OPE surface for prime-indexed fields.
+Split-Majorana OPE surface for prime-indexed fields.
 
 This file records the OPE grammar
 
@@ -71,10 +71,11 @@ theorem cd_regular_valid
 end SplitMajoranaOPE
 
 /--
-Möbius current OPE socket.
+Möbius current OPE data.
 
 The current is intended to be `j_p = :c_p d_p:`. Its action on the
-split-Majorana fields is supplied as OPE laws by a future CFT backend.
+split-Majorana fields is visible as propositions on concrete owner data; this
+file does not prove abstract current-action laws without such data.
 -/
 structure MobiusCurrentOPE
     (PrimeLabel Field : Type*) where
@@ -83,23 +84,11 @@ structure MobiusCurrentOPE
   current : PrimeLabel → Field
   current_c_law : Prop
   current_d_law : Prop
-  current_c_certificate : current_c_law
-  current_d_certificate : current_d_law
 
 namespace MobiusCurrentOPE
 
 variable {PrimeLabel Field : Type*}
 variable (J : MobiusCurrentOPE PrimeLabel Field)
-
-/-- The supplied current-on-`c` OPE law is available. -/
-theorem current_c_valid :
-    J.current_c_law :=
-  J.current_c_certificate
-
-/-- The supplied current-on-`d` OPE law is available. -/
-theorem current_d_valid :
-    J.current_d_law :=
-  J.current_d_certificate
 
 end MobiusCurrentOPE
 

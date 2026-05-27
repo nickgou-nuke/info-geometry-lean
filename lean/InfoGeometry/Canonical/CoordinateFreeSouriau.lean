@@ -143,7 +143,7 @@ if every point admits a test pair with nonzero metric pairing and the
 Lie-derivative expression vanishes on that pair, then the conformal anomaly
 scalar vanishes pointwise.
 -/
-theorem sigma_eq_zero_of_equilibrium_with_nondegenerate_witness
+theorem sigma_eq_zero_of_equilibrium_with_nondegenerate_pair
     (g : CoordinateFreeMetric (T := T))
     (S : ConformalSouriau (M := M) (T := T) g)
     (hEq : ∀ p : M, ∃ X Y : T,
@@ -177,7 +177,7 @@ theorem sigma_zero_iff_exists_equilibrium_pair
     rw [S.lie_derivative_metric_conformal p X Y, hs p]
     ring
   · intro hEq
-    exact sigma_eq_zero_of_equilibrium_with_nondegenerate_witness
+    exact sigma_eq_zero_of_equilibrium_with_nondegenerate_pair
       (g := g) (S := S) hEq
 
 end Conformal

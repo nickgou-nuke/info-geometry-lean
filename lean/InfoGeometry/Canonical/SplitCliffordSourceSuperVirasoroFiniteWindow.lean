@@ -335,46 +335,46 @@ theorem eventually_superBracket_LG_closure_of_psi_zero
 /-! ### Concrete nontrivial witness family: `J ≠ 0`, `ψ ≠ 0` but index-mismatched -/
 
 /-- Single-mode witness for currents, supported at index `0`. -/
-def J_witness (A : EndV) : ℤ → EndV :=
+def J_mode0 (A : EndV) : ℤ → EndV :=
   fun n => if n = 0 then A else 0
 
 /-- Single-mode witness for fermions, supported at index `1`. -/
-def psi_witness (B : EndV) : ℤ → EndV :=
+def psi_mode1 (B : EndV) : ℤ → EndV :=
   fun n => if n = 1 then B else 0
 
-theorem J_witness_at_zero (A : EndV) :
-    J_witness (𝕜 := 𝕜) A 0 = A := by
-  simp [J_witness]
+theorem J_mode0_at_zero (A : EndV) :
+    J_mode0 (𝕜 := 𝕜) A 0 = A := by
+  simp [J_mode0]
 
-theorem psi_witness_at_one (B : EndV) :
-    psi_witness (𝕜 := 𝕜) B 1 = B := by
-  simp [psi_witness]
+theorem psi_mode1_at_one (B : EndV) :
+    psi_mode1 (𝕜 := 𝕜) B 1 = B := by
+  simp [psi_mode1]
 
-theorem J_witness_nontrivial (A : EndV) (hA : A ≠ 0) :
-    ∃ n : ℤ, J_witness (𝕜 := 𝕜) A n ≠ 0 := by
+theorem J_mode0_nontrivial (A : EndV) (hA : A ≠ 0) :
+    ∃ n : ℤ, J_mode0 (𝕜 := 𝕜) A n ≠ 0 := by
   refine ⟨0, ?_⟩
-  simpa [J_witness] using hA
+  simpa [J_mode0] using hA
 
-theorem psi_witness_nontrivial (B : EndV) (hB : B ≠ 0) :
-    ∃ n : ℤ, psi_witness (𝕜 := 𝕜) B n ≠ 0 := by
+theorem psi_mode1_nontrivial (B : EndV) (hB : B ≠ 0) :
+    ∃ n : ℤ, psi_mode1 (𝕜 := 𝕜) B n ≠ 0 := by
   refine ⟨1, ?_⟩
-  simpa [psi_witness] using hB
+  simpa [psi_mode1] using hB
 
 /--
 For the explicit witness family with `J` at mode `0` and `ψ` at mode `1`,
 the truncated supercurrent at `r = 0` vanishes for every cutoff.
 -/
-theorem G_trunc_r0_witness_eq_zero
+theorem G_trunc_r0_mode01_eq_zero
     (N : ℤ) (A B : EndV) :
-    G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) = 0 := by
+    G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = 0 := by
   classical
   unfold G_trunc
   refine Finset.sum_eq_zero ?_
   intro k hk
   by_cases hk0 : k = 0
   · subst hk0
-    simp [J_witness, psi_witness]
-  · have hJ : J_witness (𝕜 := 𝕜) A k = 0 := by simp [J_witness, hk0]
+    simp [J_mode0, psi_mode1]
+  · have hJ : J_mode0 (𝕜 := 𝕜) A k = 0 := by simp [J_mode0, hk0]
     simp [hJ]
 
 /--
@@ -382,98 +382,98 @@ Concrete real lemma (nontrivial witness family):
 for `J = J_witness A`, `ψ = psi_witness B`, and `r = 0`,
 the mixed finite-window defect is identically zero for all `N,m`.
 -/
-theorem boundaryDefect_LG_witness_r0_eq_zero
+theorem boundaryDefect_LG_mode01_r0_eq_zero
     (N : ℤ) (A B : EndV) :
     boundaryDefect_LG (𝕜 := 𝕜) N 0 0
-      (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) = 0 := by
-  simp [boundaryDefect_LG, G_trunc_r0_witness_eq_zero]
+      (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = 0 := by
+  simp [boundaryDefect_LG, G_trunc_r0_mode01_eq_zero]
 
 /--
 Stabilization for the same nontrivial witness family at `r = 0`.
 -/
-theorem stabilizes_boundaryDefect_LG_witness_r0
+theorem stabilizes_boundaryDefect_LG_mode01_r0
     (A B : EndV) (N0 : ℤ) :
     StabilizesFrom
       (fun N =>
         boundaryDefect_LG (𝕜 := 𝕜) N 0 0
-          (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+          (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
       N0 := by
   intro N hN
-  simp [boundaryDefect_LG_witness_r0_eq_zero]
+  simp [boundaryDefect_LG_mode01_r0_eq_zero]
 
 /--
 Concrete eventual closure in the explicit nontrivial witness lane
 for `(m,r) = (0,0)`.
 -/
-theorem eventually_superBracket_LG_closure_witness_r0
+theorem eventually_superBracket_LG_closure_mode01_r0
     (A B : EndV) :
     ∀ᶠ N : ℤ in atTop,
-      (L_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-        - (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (L_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+      (L_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+        - (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (L_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
       = (LG_coeff (𝕜 := 𝕜) 0 0)
-          • (G_trunc N (0 + 0) (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B)) := by
+          • (G_trunc N (0 + 0) (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)) := by
   exact eventually_superBracket_LG_closure_of_stable_zero
     (𝕜 := 𝕜) 0 0
-    (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) 0
-    (stabilizes_boundaryDefect_LG_witness_r0 (𝕜 := 𝕜) A B 0)
-    (boundaryDefect_LG_witness_r0_eq_zero (𝕜 := 𝕜) 0 A B)
+    (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) 0
+    (stabilizes_boundaryDefect_LG_mode01_r0 (𝕜 := 𝕜) A B 0)
+    (boundaryDefect_LG_mode01_r0_eq_zero (𝕜 := 𝕜) 0 A B)
 
 /--
 Nontrivial explicit witness lane (both families nonzero somewhere) with
 proved eventual closure at `(m,r) = (0,0)`.
 -/
-theorem nontrivial_witness_family_with_eventual_closure
+theorem nontrivial_mode01_family_with_eventual_closure
     (A B : EndV) (hA : A ≠ 0) (hB : B ≠ 0) :
-    (∃ n : ℤ, J_witness (𝕜 := 𝕜) A n ≠ 0) ∧
-    (∃ n : ℤ, psi_witness (𝕜 := 𝕜) B n ≠ 0) ∧
+    (∃ n : ℤ, J_mode0 (𝕜 := 𝕜) A n ≠ 0) ∧
+    (∃ n : ℤ, psi_mode1 (𝕜 := 𝕜) B n ≠ 0) ∧
     (∀ᶠ N : ℤ in atTop,
-      (L_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-        - (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (L_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+      (L_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+        - (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (L_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
       = (LG_coeff (𝕜 := 𝕜) 0 0)
-          • (G_trunc N (0 + 0) (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))) := by
-  refine ⟨J_witness_nontrivial (𝕜 := 𝕜) A hA, psi_witness_nontrivial (𝕜 := 𝕜) B hB, ?_⟩
-  exact eventually_superBracket_LG_closure_witness_r0 (𝕜 := 𝕜) A B
+          • (G_trunc N (0 + 0) (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))) := by
+  refine ⟨J_mode0_nontrivial (𝕜 := 𝕜) A hA, psi_mode1_nontrivial (𝕜 := 𝕜) B hB, ?_⟩
+  exact eventually_superBracket_LG_closure_mode01_r0 (𝕜 := 𝕜) A B
 
 /-! ### Concrete `{G,G}` witness lane with explicit central stabilization -/
 
 /-- Explicit central profile used in the concrete witness lane. -/
 def centralZero : ℤ → ℤ → 𝕜 := fun _ _ => 0
 
-theorem G_trunc_r1_witness_eq
+theorem G_trunc_r1_mode01_eq
     (N : ℤ) (A B : EndV) (hN : 0 ≤ N) :
-    G_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) = A * B := by
+    G_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = A * B := by
   classical
   unfold G_trunc
   have hmem0 : (0 : ℤ) ∈ Icc (-N) N := by
     simp [hN]
   rw [Finset.sum_eq_single_of_mem 0 hmem0]
-  · simp [J_witness, psi_witness]
+  · simp [J_mode0, psi_mode1]
   · intro y hy hy0
     by_cases hy0' : y = 0
     · exact (hy0 hy0').elim
-    · have hJ : J_witness (𝕜 := 𝕜) A y = 0 := by simp [J_witness, hy0']
+    · have hJ : J_mode0 (𝕜 := 𝕜) A y = 0 := by simp [J_mode0, hy0']
       simp [hJ]
 
-theorem L_bosonic_trunc_witness_n1_eq_zero
+theorem L_bosonic_trunc_mode0_n1_eq_zero
     (N : ℤ) (A : EndV) :
-    L_bosonic_trunc N 1 (J_witness (𝕜 := 𝕜) A) = 0 := by
+    L_bosonic_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) = 0 := by
   classical
   unfold L_bosonic_trunc
   refine Finset.sum_eq_zero ?_
   intro k hk
   by_cases hk0 : k = 0
   · subst hk0
-    simp [J_witness]
-  · have hJ : J_witness (𝕜 := 𝕜) A k = 0 := by simp [J_witness, hk0]
+    simp [J_mode0]
+  · have hJ : J_mode0 (𝕜 := 𝕜) A k = 0 := by simp [J_mode0, hk0]
     simp [hJ]
 
-theorem L_fermionic_trunc_witness_n1_eq_zero
+theorem L_fermionic_trunc_mode1_n1_eq_zero
     (N : ℤ) (B : EndV) :
-    L_fermionic_trunc (𝕜 := 𝕜) N 1 (psi_witness (𝕜 := 𝕜) B) = 0 := by
+    L_fermionic_trunc (𝕜 := 𝕜) N 1 (psi_mode1 (𝕜 := 𝕜) B) = 0 := by
   classical
   unfold L_fermionic_trunc
   refine Finset.sum_eq_zero ?_
@@ -481,44 +481,44 @@ theorem L_fermionic_trunc_witness_n1_eq_zero
   by_cases hneg : -k = 1
   · have hkval : k = -1 := by omega
     subst hkval
-    simp [psi_witness]
-  · have hψ : psi_witness (𝕜 := 𝕜) B (-k) = 0 := by simp [psi_witness, hneg]
+    simp [psi_mode1]
+  · have hψ : psi_mode1 (𝕜 := 𝕜) B (-k) = 0 := by simp [psi_mode1, hneg]
     simp [hψ]
 
-theorem L_trunc_witness_n1_eq_zero
+theorem L_trunc_mode01_n1_eq_zero
     (N : ℤ) (A B : EndV) :
-    L_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) = 0 := by
-  simp [L_trunc, L_bosonic_trunc_witness_n1_eq_zero, L_fermionic_trunc_witness_n1_eq_zero]
+    L_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = 0 := by
+  simp [L_trunc, L_bosonic_trunc_mode0_n1_eq_zero, L_fermionic_trunc_mode1_n1_eq_zero]
 
-theorem boundaryDefect_GG_witness_r0_s1_centralZero_eq_zero
+theorem boundaryDefect_GG_mode01_r0_s1_centralZero_eq_zero
     (N : ℤ) (A B : EndV) :
     boundaryDefect_GG (𝕜 := 𝕜) N 0 1
-      (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) centralZero = 0 := by
-  simp [boundaryDefect_GG, centralZero, G_trunc_r0_witness_eq_zero, L_trunc_witness_n1_eq_zero]
+      (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) centralZero = 0 := by
+  simp [boundaryDefect_GG, centralZero, G_trunc_r0_mode01_eq_zero, L_trunc_mode01_n1_eq_zero]
 
-theorem stabilizes_boundaryDefect_GG_witness_r0_s1_centralZero
+theorem stabilizes_boundaryDefect_GG_mode01_r0_s1_centralZero
     (A B : EndV) (N0 : ℤ) :
     StabilizesFrom
       (fun N =>
         boundaryDefect_GG (𝕜 := 𝕜) N 0 1
-          (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) centralZero)
+          (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) centralZero)
       N0 := by
   intro N hN
-  simp [boundaryDefect_GG_witness_r0_s1_centralZero_eq_zero]
+  simp [boundaryDefect_GG_mode01_r0_s1_centralZero_eq_zero]
 
-theorem eventually_superBracket_GG_closure_witness_r0_s1_centralZero
+theorem eventually_superBracket_GG_closure_mode01_r0_s1_centralZero
     (A B : EndV) :
     ∀ᶠ N : ℤ in atTop,
-      (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (G_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-        + (G_trunc N 1 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-          * (G_trunc N 0 (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
-      = (2 : 𝕜) • (L_trunc N (0 + 1) (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B))
+      (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (G_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+        + (G_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+          * (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+      = (2 : 𝕜) • (L_trunc N (0 + 1) (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
         + (centralZero (𝕜 := 𝕜) 0 1) • (1 : EndV) := by
   exact eventually_superBracket_GG_closure_of_stable_zero
     (𝕜 := 𝕜) 0 1
-    (J_witness (𝕜 := 𝕜) A) (psi_witness (𝕜 := 𝕜) B) centralZero 0
-    (stabilizes_boundaryDefect_GG_witness_r0_s1_centralZero (𝕜 := 𝕜) A B 0)
-    (boundaryDefect_GG_witness_r0_s1_centralZero_eq_zero (𝕜 := 𝕜) 0 A B)
+    (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) centralZero 0
+    (stabilizes_boundaryDefect_GG_mode01_r0_s1_centralZero (𝕜 := 𝕜) A B 0)
+    (boundaryDefect_GG_mode01_r0_s1_centralZero_eq_zero (𝕜 := 𝕜) 0 A B)
 
 end InfoGeometry.Canonical.SuperVirasoroFiniteWindow

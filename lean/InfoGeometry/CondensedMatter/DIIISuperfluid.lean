@@ -98,15 +98,6 @@ structure DIIISuperfluidDatum
   -/
   chiral_is_phase_corrected_product : Prop
 
-  /--
-  Topological phase/winding certificate.
-
-  In 3D free-fermion DIII this is an integer winding number.  With strong
-  interactions the free `Z` classification may reduce, for example to `Z16` in
-  standard 3D class DIII.
-  -/
-  topological_classification_certificate : Prop
-
 namespace DIIISuperfluidDatum
 
 variable
@@ -185,9 +176,6 @@ structure DIIITopologicalReadout
 
   /-- Chosen invariant value/readout. -/
   invariant : invariantType
-
-  /-- Certificate that the readout is compatible with the supplied DIII model. -/
-  invariant_certificate : Prop
 
 /-! ## 3. Owner target -/
 

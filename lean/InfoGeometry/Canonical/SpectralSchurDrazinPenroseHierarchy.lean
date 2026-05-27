@@ -136,10 +136,6 @@ structure SpectralSchurCollapse
   triangular_is_diagonal : Prop
   /-- The diagonal readout agrees with the spectral eigenvalue readout. -/
   diagonal_agrees_with_spectrum : Prop
-  /-- Certificate for diagonal Schur collapse. -/
-  triangular_is_diagonal_holds : triangular_is_diagonal
-  /-- Certificate for spectral/Schur diagonal agreement. -/
-  diagonal_agrees_with_spectrum_holds : diagonal_agrees_with_spectrum
 
 /-! ## 3. Drazin and Moore--Penrose readout layers -/
 
@@ -221,48 +217,6 @@ theorem penrose_laws (M : MoorePenroseMetricReadoutPacket Op) :
   M.isMoorePenrose
 
 end MoorePenroseMetricReadoutPacket
-
-/--
-Compatibility witness for the ideal normal/self-adjoint regular sector.
-
-In that clean regime the spectral zero projector, Drazin nil projector, and
-Moore--Penrose kernel projector can be identified.  This is not automatic in
-non-normal or indefinite/Krein settings.
--/
-structure NormalSectorInverseCompatibility
-    (Op Scalar Proj : Type*) [Ring Op] [StarRing Op]
-    (S : HilbertSpectralTheoremPacket Op Scalar Proj)
-    (D : DrazinZeroSurgeryPacket Op)
-    (M : MoorePenroseMetricReadoutPacket Op) where
-  /-- The Drazin and Moore--Penrose inverse candidates agree in the normal sector. -/
-  drazin_eq_moorePenrose : Prop
-  /-- The regular projectors agree. -/
-  regularProjectorsAgree : Prop
-  /-- The singular/kernel projectors agree with the spectral zero projector. -/
-  zeroProjectorsAgree : Prop
-  /-- Certificate for inverse equality. -/
-  drazin_eq_moorePenrose_holds : drazin_eq_moorePenrose
-  /-- Certificate for regular-projector agreement. -/
-  regularProjectorsAgree_holds : regularProjectorsAgree
-  /-- Certificate for zero-projector agreement. -/
-  zeroProjectorsAgree_holds : zeroProjectorsAgree
-
-namespace NormalSectorInverseCompatibility
-
-variable {Op Scalar Proj : Type*} [Ring Op] [StarRing Op]
-variable {S : HilbertSpectralTheoremPacket Op Scalar Proj}
-variable {D : DrazinZeroSurgeryPacket Op}
-variable {M : MoorePenroseMetricReadoutPacket Op}
-
-/-- In the clean normal sector, Drazin and Moore--Penrose are compatible by witness. -/
-theorem inverse_and_projector_agreement
-    (C : NormalSectorInverseCompatibility Op Scalar Proj S D M) :
-    C.drazin_eq_moorePenrose ∧ C.regularProjectorsAgree ∧ C.zeroProjectorsAgree :=
-  ⟨C.drazin_eq_moorePenrose_holds,
-    C.regularProjectorsAgree_holds,
-    C.zeroProjectorsAgree_holds⟩
-
-end NormalSectorInverseCompatibility
 
 /-! ## 4. Krein, Jordan, and automorphic spectral packets -/
 
@@ -371,9 +325,6 @@ structure SpectralSchurDrazinPenroseHierarchy
   /-- Moore--Penrose metric readout packet. -/
   moorePenrose :
     MoorePenroseMetricReadoutPacket Op
-  /-- Normal-sector compatibility of spectral/Drazin/Moore--Penrose projectors. -/
-  normalSectorCompatibility :
-    NormalSectorInverseCompatibility Op Scalar Proj spectral drazin moorePenrose
   /-- Krein/split-signature spectral packet. -/
   krein :
     KreinSpectralAnalysisPacket Op Mode
@@ -385,8 +336,6 @@ structure SpectralSchurDrazinPenroseHierarchy
     AutomorphicSiegelHeckeSpectralPacket Bulk Boundary Eigenpacket
   /-- Guardrail: spectral theorem is the clean regular-phase law, not Drazin surgery. -/
   spectralAboveSchurGuard : Type*
-  /-- Guardrail: Drazin and Moore--Penrose agree only under explicit compatibility. -/
-  inverseCompatibilityGuard : Type*
   /-- Guardrail: Krein and automorphic spectral theorems are separate witness layers. -/
   nonHilbertSpectralGuard : Type*
 
@@ -426,16 +375,6 @@ theorem moorePenrose_metric_readout
         Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
     IsMoorePenroseInverse H.moorePenrose.A H.moorePenrose.Aplus :=
   H.moorePenrose.isMoorePenrose
-
-/-- In the clean normal sector, inverse/projector agreement is supplied explicitly. -/
-theorem normal_sector_inverse_projector_agreement
-    (H :
-      SpectralSchurDrazinPenroseHierarchy
-        Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
-    H.normalSectorCompatibility.drazin_eq_moorePenrose ∧
-      H.normalSectorCompatibility.regularProjectorsAgree ∧
-        H.normalSectorCompatibility.zeroProjectorsAgree :=
-  NormalSectorInverseCompatibility.inverse_and_projector_agreement H.normalSectorCompatibility
 
 end SpectralSchurDrazinPenroseHierarchy
 

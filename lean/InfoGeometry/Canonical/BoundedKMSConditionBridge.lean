@@ -75,107 +75,6 @@ structure BoundedKMSConditionBridge where
       beta
       state
 
-/--
-Constructive witness for the missing reverse-route ingredient on a broad bounded
-KMS bridge.
-
-The broad bridge already carries the state and analytic KMS certificate.  The
-remaining datum needed to recover an integrated `KMSState` is explicit
-real-time invariance of that state under the bounded modular flow.
--/
-@[rep_depth thermo]
-structure BoundedFlowInvariantStateWitness
-    (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)) where
-  /-- Real-time invariance of the broad bridge state under the bounded flow datum. -/
-  flow_invariant :
-    ∀ t : ℝ, ∀ A : EndH,
-      B.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) = B.state.eval A
-
-/--
-Proof-carrying witness that an observable commutes with the bounded bridge's
-spectral projector.
--/
-@[rep_depth thermo]
-structure SpectralProjectorCommutationWitness
-    (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)) where
-  /-- Observable whose commutation with the spectral projector is tracked. -/
-  A : EndH
-  /-- Explicit commutation of the observable with the spectral projector. -/
-  commutes :
-    B.boundedFlow.spectralProjector * A = A * B.boundedFlow.spectralProjector
-
-/--
-Proof-carrying witness that the bounded modular flow fixes the bridge spectral
-projector.
--/
-@[rep_depth thermo]
-structure FlowFixesSpectralProjectorWitness
-    (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)) where
-  /-- Explicit fixed-projector witness for the bounded modular flow. -/
-  fixes : B.boundedFlow.FlowFixesSpectralProjector
-
-/--
-Proof-carrying witness that the bounded modular flow commutes with the Souriau
-`opScale` action used by the partition-potential lane.
--/
-@[rep_depth thermo]
-structure FlowCommutesWithOpScaleWitness
-    (B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)) where
-  /-- Explicit `opScale`-commutation witness for the bounded modular flow. -/
-  commutes : B.boundedFlow.FlowCommutesWithOpScale
-
-namespace BoundedFlowInvariantStateWitness
-
-variable {B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)}
-
-/-- Recover the real-time flow-invariance proposition from the witness packet. -/
-@[rep_depth thermo]
-theorem flow_invariant_of_witness
-    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    ∀ t : ℝ, ∀ A : EndH,
-      B.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) = B.state.eval A :=
-  W.flow_invariant
-
-end BoundedFlowInvariantStateWitness
-
-namespace SpectralProjectorCommutationWitness
-
-variable {B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)}
-
-/-- Recover the spectral-projector commutation proposition from the witness packet. -/
-@[rep_depth thermo]
-theorem commutes_of_witness
-    (W : SpectralProjectorCommutationWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    B.boundedFlow.spectralProjector * W.A = W.A * B.boundedFlow.spectralProjector :=
-  W.commutes
-
-end SpectralProjectorCommutationWitness
-
-namespace FlowFixesSpectralProjectorWitness
-
-variable {B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)}
-
-/-- Recover the spectral-projector fixedness proposition from the witness packet. -/
-@[rep_depth thermo]
-theorem fixes_of_witness
-    (W : FlowFixesSpectralProjectorWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    B.boundedFlow.FlowFixesSpectralProjector :=
-  W.fixes
-
-end FlowFixesSpectralProjectorWitness
-
-namespace FlowCommutesWithOpScaleWitness
-
-variable {B : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra)}
-
-/-- Recover the `opScale`-commutation proposition from the witness packet. -/
-@[rep_depth thermo]
-theorem commutes_of_witness
-    (W : FlowCommutesWithOpScaleWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    B.boundedFlow.FlowCommutesWithOpScale :=
-  W.commutes
-
-end FlowCommutesWithOpScaleWitness
 
 /--
 Minimal bounded KMS condition bridge.
@@ -215,12 +114,6 @@ def toBoundedKMSConditionBridge :
 theorem state_eq_kms_state :
     B.toBoundedKMSConditionBridge.state = B.kms.state :=
   rfl
-
-/-- The analytic KMS boundary certificate is recovered from the integrated KMS state. -/
-@[rep_depth thermo]
-theorem kms_boundary_holds :
-    B.toBoundedKMSConditionBridge.kms.boundaryCondition :=
-  B.kms.kms_boundary_holds
 
 /--
 The integrated bounded KMS packet also reconstructs the real-time invariance
@@ -285,53 +178,6 @@ theorem flow_add_apply
     B.flowDatum.flow (s + t) A =
       B.flowDatum.flow s (B.flowDatum.flow t A) :=
   B.boundedFlow.modularFlow.flow_add s t A
-
-/-- Re-export the KMS analytic boundary condition. -/
-@[rep_depth thermo]
-theorem kms_boundary_holds :
-    B.kms.boundaryCondition :=
-  B.kms.boundaryCondition_holds
-
-/--
-Constructive reverse route: recover the narrowed integrated KMS packet from a
-proof-carrying flow-invariance witness instead of a bare hypothesis argument.
--/
-@[rep_depth thermo]
-def toMinimalBoundedKMSConditionBridgeOfWitness
-    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) where
-  boundedFlow := B.boundedFlow
-  beta := B.beta
-  kms := {
-    state := B.state
-    flow_invariant := W.flow_invariant
-    kms := B.kms
-  }
-
-/-- The witness-routed reverse route recovers the legacy state definitionally. -/
-@[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridgeOfWitness_state_eq
-    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    (B.toMinimalBoundedKMSConditionBridgeOfWitness W).kms.state = B.state :=
-  rfl
-
-/-- The witness-routed reverse route round-trips back to the broad bridge. -/
-@[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridgeOfWitness_toBoundedKMSConditionBridge
-    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    (B.toMinimalBoundedKMSConditionBridgeOfWitness W).toBoundedKMSConditionBridge = B :=
-  rfl
-
-/--
-Compatibility wrapper: build the narrowed integrated KMS packet from a broad
-bridge using a proof-carrying flow-invariance witness.
--/
-@[rep_depth thermo]
-theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant_witness
-    (W : BoundedFlowInvariantStateWitness (E := E) (LieAlgebra := LieAlgebra) B) :
-    ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
-      M.kms.state = B.state := by
-  exact ⟨B.toMinimalBoundedKMSConditionBridgeOfWitness W, rfl⟩
 
 /--
 Build the narrowed integrated KMS packet from the broad bounded bridge once
@@ -405,40 +251,6 @@ theorem flow_preserves_commuting_with_spectralProjector
       hFix A hComm t
 
 /--
-Witness-routed version of spectral-projector commutation preservation along the
-bounded KMS flow.
--/
-@[rep_depth thermo]
-theorem flow_preserves_commuting_with_spectralProjector_of_witness
-    (hFix : B.boundedFlow.FlowFixesSpectralProjector)
-    (W : SpectralProjectorCommutationWitness (E := E) (LieAlgebra := LieAlgebra) B)
-    (t : ℝ) :
-    B.boundedFlow.spectralProjector * B.flowDatum.flow t W.A =
-      B.flowDatum.flow t W.A * B.boundedFlow.spectralProjector := by
-  exact
-    B.flow_preserves_commuting_with_spectralProjector hFix W.A
-      (SpectralProjectorCommutationWitness.commutes_of_witness W) t
-
-/--
-Fully witness-routed spectral-projector commutation preservation along the
-bounded KMS flow.
-
-This removes the remaining bare `hFix` hypothesis by packaging the fixedness of
-the spectral projector as an explicit witness packet alongside the observable
-commutation witness.
--/
-@[rep_depth thermo]
-theorem flow_preserves_commuting_with_spectralProjector_of_fix_and_commutation_witnesses
-    (WFix : FlowFixesSpectralProjectorWitness (E := E) (LieAlgebra := LieAlgebra) B)
-    (WComm : SpectralProjectorCommutationWitness (E := E) (LieAlgebra := LieAlgebra) B)
-    (t : ℝ) :
-    B.boundedFlow.spectralProjector * B.flowDatum.flow t WComm.A =
-      B.flowDatum.flow t WComm.A * B.boundedFlow.spectralProjector := by
-  exact
-    B.flow_preserves_commuting_with_spectralProjector_of_witness
-      (FlowFixesSpectralProjectorWitness.fixes_of_witness WFix) WComm t
-
-/--
 The Massieu/partition-potential shift is compatible with the bounded KMS flow
 when the bounded modular-flow owner is supplied with Souriau `opScale`
 compatibility.
@@ -454,25 +266,6 @@ theorem partition_potential_flow_central
         B.boundedFlow.souriau.family.partitionPotential
         (B.flowDatum.flow t A) :=
   B.boundedFlow.partition_potential_modularFlow_central hScale t A
-
-/--
-Witness-routed partition-potential centrality along the bounded KMS flow.
-
-This removes the remaining bare `hScale` compatibility hypothesis by consuming
-an explicit proof-carrying `opScale` commutation witness.
--/
-@[rep_depth thermo]
-theorem partition_potential_flow_central_of_witness
-    (WScale : FlowCommutesWithOpScaleWitness (E := E) (LieAlgebra := LieAlgebra) B)
-    (t : ℝ) (A : EndH) :
-    B.flowDatum.flow t
-        (B.boundedFlow.souriau.family.opScale
-          B.boundedFlow.souriau.family.partitionPotential A) =
-      B.boundedFlow.souriau.family.opScale
-        B.boundedFlow.souriau.family.partitionPotential
-        (B.flowDatum.flow t A) :=
-  B.partition_potential_flow_central
-    (FlowCommutesWithOpScaleWitness.commutes_of_witness WScale) t A
 
 end BoundedKMSConditionBridge
 

@@ -115,19 +115,6 @@ namespace SiegelJacobiStandardLFunctionPacket
 variable {D : SiegelJacobiDatum}
 variable {F : SiegelJacobiFormPacket D}
 
-/-- The attached Euler-product law is available from the supplied packet. -/
-theorem euler_product_valid
-    (P : SiegelJacobiStandardLFunctionPacket D F) :
-    HasEulerProduct P.L P.eulerProduct.PrimeIndex P.eulerProduct.localFactor
-      P.eulerProduct.convergenceRegion :=
-  P.eulerProduct.euler_product_valid
-
-/-- The attached completed-functional-equation law is available. -/
-theorem completed_functional_equation_valid
-    (P : SiegelJacobiStandardLFunctionPacket D F) :
-    HasCompletedFunctionalEquation P.L P.completedLFunction.completedL :=
-  P.completedLFunction.completed_functional_equation_valid
-
 /--
 Forget the strong Siegel--Jacobi packet to the existing weak Euler-product data
 used by `LanglandsPrimeResonanceWitness`.

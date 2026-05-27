@@ -89,12 +89,6 @@ def IsBoundaryLZero
     (b : Boundary) : Prop :=
   L.completedL (L.spectralOfBoundary b) = 0
 
-omit [AddCommGroup Boundary] [Module ℝ Boundary] in
-/-- The completed functional-equation certificate is available. -/
-theorem functional_equation_valid :
-    L.functional_equation_law :=
-  L.functional_equation_certificate
-
 end CompletedLReadout
 
 /--
@@ -137,12 +131,6 @@ variable (S : SugawaraCentralReadout Boundary Stress Scalar)
 def HasCentralZero
     (b : Boundary) : Prop :=
   S.centralReadout (S.stressOfBoundary b) = 0
-
-omit [AddCommGroup Boundary] [Module ℝ Boundary] in
-/-- The supplied Sugawara/affine law is available. -/
-theorem sugawara_valid :
-    S.sugawara_law :=
-  S.sugawara_certificate
 
 end SugawaraCentralReadout
 

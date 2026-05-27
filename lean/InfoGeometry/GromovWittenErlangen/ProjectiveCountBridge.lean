@@ -28,8 +28,8 @@ open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 Projective count substrate for a GW localization packet.
 
 The raw data is an unnormalized count profile.  The projective geometry is the
-positive ray of that profile.  A model supplies the law connecting localization
-vertices/edges to the count profile.
+positive ray of that profile.  This structure stores count/readout data only;
+it does not package a count-shadow theorem.
 -/
 structure GWProjectiveCountState
     (G T Target Coeff : Type*) where
@@ -58,26 +58,10 @@ structure GWProjectiveCountState
   coeffReadout :
     Coeff → ℝ
 
-  /--
-  Model-supplied law saying the localization graph is represented by this
-  count profile.
-  -/
-  countShadowLaw :
-    Prop
-
-  /-- Certificate for the count-shadow law. -/
-  countShadow_valid :
-    countShadowLaw
-
 namespace GWProjectiveCountState
 
 variable {G T Target Coeff : Type*}
 variable (C : GWProjectiveCountState G T Target Coeff)
-
-/-- The supplied GW-to-count shadow law is available. -/
-theorem countShadow_holds :
-    C.countShadowLaw :=
-  C.countShadow_valid
 
 /-- Finite partition/gauge readout of the projective count state. -/
 def finitePartition (β : ℝ) : ℝ :=
@@ -173,22 +157,11 @@ structure ProjectiveCountVolumeGauge
   entropy_eq_kB_log_volume :
     entropy = kB * Real.log volume
 
-  /-- Model-specific volume gauge law. -/
-  volumeGaugeLaw : Prop
-
-  /-- Certificate for the volume gauge law. -/
-  volumeGauge_valid : volumeGaugeLaw
-
 namespace ProjectiveCountVolumeGauge
 
 variable {G T Target Coeff : Type*}
 variable {C : GWProjectiveCountState G T Target Coeff}
 variable (Γ : ProjectiveCountVolumeGauge C)
-
-/-- The supplied volume gauge law is available. -/
-theorem volumeGauge_holds :
-    Γ.volumeGaugeLaw :=
-  Γ.volumeGauge_valid
 
 /-- Entropy is nonnegative when the selected gauge volume is at least one. -/
 theorem entropy_nonneg_of_one_le_volume
@@ -209,8 +182,8 @@ end ProjectiveCountVolumeGauge
 /--
 Projective-count bridge without gauge fixing.
 
-This is the L0/L1/L2 owner surface: localization data has a count-shadow law,
-and the finite normalized shape is scale-invariant by construction.
+This is the L0/L1/L2 owner surface: localization data supplies explicit count
+readouts, and the finite normalized shape is scale-invariant by construction.
 -/
 structure GWProjectiveCountBridge
     (G T Target Coeff : Type*) where
@@ -221,11 +194,6 @@ namespace GWProjectiveCountBridge
 
 variable {G T Target Coeff : Type*}
 variable (B : GWProjectiveCountBridge G T Target Coeff)
-
-/-- The localization-to-count law is available. -/
-theorem countShadow_holds :
-    B.countState.countShadowLaw :=
-  B.countState.countShadow_valid
 
 /-- Scale invariance of the projective normalized shape. -/
 theorem normalizedShape_scale_counts
@@ -255,16 +223,6 @@ namespace GaugeFixedGWProjectiveCountBridge
 
 variable {G T Target Coeff : Type*}
 variable (B : GaugeFixedGWProjectiveCountBridge G T Target Coeff)
-
-/-- The localization-to-count law is available. -/
-theorem countShadow_holds :
-    B.projective.countState.countShadowLaw :=
-  B.projective.countShadow_holds
-
-/-- The volume-gauge law is available. -/
-theorem volumeGauge_holds :
-    B.gauge.volumeGaugeLaw :=
-  B.gauge.volumeGauge_valid
 
 /-- Entropy is nonnegative when the selected gauge volume is at least one. -/
 theorem entropy_nonneg_of_one_le_volume

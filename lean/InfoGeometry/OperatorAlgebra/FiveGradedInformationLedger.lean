@@ -353,11 +353,6 @@ theorem hiddenGradeTwoSum_ne_zero_of_memoryReadout_ne_zero
     hiddenGradeTwoSum B x y ≠ 0 :=
   B.hidden_part_stored_as_memory x y hmem
 
-/-- Stored full recovery law. -/
-theorem full_ledger_recovery_valid :
-    B.full_ledger_recovery_law :=
-  B.full_ledger_recovery_law_holds
-
 end BlackHoleInformationLedger
 
 /-! ## 4. Visible/memory conservation ledger -/

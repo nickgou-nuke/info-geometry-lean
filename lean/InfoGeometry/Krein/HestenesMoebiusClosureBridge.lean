@@ -137,12 +137,6 @@ structure HestenesMoebiusClosureBridge
       wilson.wilsonHolonomy ((wordAction g) parent) ((wordAction g) child) =
         wilson.wilsonHolonomy parent child
 
-  /-- Concrete Möbius/CFT/Jones/Cantor backend closure certificate. -/
-  moebius_closure_certificate : Prop
-
-  /-- Evidence for the closure certificate. -/
-  moebius_closure_holds : moebius_closure_certificate
-
 namespace HestenesMoebiusClosureBridge
 
 variable {Word : Type*}
@@ -326,12 +320,6 @@ theorem modularVolumeIncrement_moebius_invariant
             M.radonNikodymLog_moebius_invariant g parent child
     _ = M.wilson.volume.modularVolumeIncrement parent child :=
             M.wilson.radonNikodymLog_eq_modularVolumeIncrement parent child
-
-/-- The supplied Möbius backend closure certificate is available. -/
-@[rep_depth projective]
-theorem moebius_closure :
-    M.moebius_closure_certificate :=
-  M.moebius_closure_holds
 
 /--
 Alias for the final finite-level projective closure readback.

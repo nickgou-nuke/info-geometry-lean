@@ -115,26 +115,6 @@ structure VirtualLocalizationOrbitPacket (G T Target Coeff : Type*) where
   edgeContribution : graph.Edge → Coeff
 
 /--
-Owner-level target shape for the Klein--Gromov skeleton package.
--/
-def KleinGromovSynthesisTarget
-    (G T Target Coeff : Type*) : Prop :=
-  Nonempty (LieOrbitCurveWitness G T Target) ∧
-  Nonempty (LocalizationGraphWitness G T Target) ∧
-  Nonempty (VirtualLocalizationOrbitPacket G T Target Coeff)
-
-/--
-Constructor from explicit data witnesses.
--/
-theorem constructKleinGromovSynthesisTarget
-    {G T Target Coeff : Type*}
-    (orbit : LieOrbitCurveWitness G T Target)
-    (graph : LocalizationGraphWitness G T Target)
-    (sector : VirtualLocalizationOrbitPacket G T Target Coeff) :
-    KleinGromovSynthesisTarget G T Target Coeff := by
-  exact ⟨⟨orbit⟩, ⟨graph⟩, ⟨sector⟩⟩
-
-/--
 Langlands-dual transport of orbit-curve degree labels.
 
 This is the structural bridge only: coroot-like classes on the `G` side are

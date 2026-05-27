@@ -233,8 +233,6 @@ structure BoundedTransformDatum
   unbounded/spectral generator in the concrete model.
   -/
   bounded_transform_law : Prop
-  bounded_transform_certificate :
-    bounded_transform_law
 
 namespace BoundedTransformDatum
 
@@ -430,8 +428,6 @@ structure BoundedKasparovCycle
   Kasparov/Fredholm module in the concrete model.
   -/
   kasparov_cycle_law : Prop
-  kasparov_cycle_certificate :
-    kasparov_cycle_law
 
 namespace BoundedKasparovCycle
 
@@ -471,11 +467,6 @@ theorem rep_phase
     (a : A) :
     PhaseLinear Kcy.K (Kcy.representation.rep a) :=
   Kcy.rep_phase_linear a
-
-/-- The stored Kasparov-cycle law. -/
-theorem kasparov_valid :
-    Kcy.kasparov_cycle_law :=
-  Kcy.kasparov_cycle_certificate
 
 end BoundedKasparovCycle
 

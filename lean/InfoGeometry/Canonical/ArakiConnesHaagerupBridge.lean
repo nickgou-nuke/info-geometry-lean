@@ -77,12 +77,6 @@ theorem eval_eq_vector_readout_of_normal
         (T.standard.coneVector ω) :=
   T.standard.eval_eq_vector_readout_of_normal ω A hω
 
-/-- Readback: the natural cone self-duality certificate is available. -/
-@[rep_depth operator]
-theorem cone_self_dual_readback :
-    T.standard.cone_self_dual :=
-  T.standard.cone_self_dual_readback
-
 end ArakiConnesHaagerupTriad
 
 /-! ## Cantor extension socket -/

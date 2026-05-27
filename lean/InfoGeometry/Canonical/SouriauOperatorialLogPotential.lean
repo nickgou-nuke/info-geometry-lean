@@ -198,25 +198,11 @@ namespace DuhamelOperatorDerivative
 variable {Param Op Direction : Type*}
 
 @[rep_depth operator]
-theorem duhamelFormula_holds_theorem
-    (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (v : Direction) :
-    D.duhamelFormula β v (D.derivativeOfExp β v) := by
-  sorry
-
-@[rep_depth operator]
 theorem higherSimplexOrderedForms_satisfy_theorem
     (D : DuhamelOperatorDerivative Param Op Direction)
     (n : Nat) (β : Param) (dirs : List Direction) :
     D.higherSimplexOrderedLaw n β dirs (D.higherSimplexOrderedForms n β dirs) :=
   D.higherSimplexOrderedForms_satisfy n β dirs
-
-@[rep_depth operator]
-theorem tracedCumulantReadout_holds_theorem
-    (D : DuhamelOperatorDerivative Param Op Direction)
-    (n : Nat) (β : Param) (dirs : List Direction) :
-    D.tracedCumulantReadoutLaw n β dirs
-      (D.traceStateKMSReadout (D.higherSimplexOrderedForms n β dirs)) := by
-  sorry
 
 end DuhamelOperatorDerivative
 
@@ -238,25 +224,6 @@ structure MomentGeneratingReadout (Param Op : Type*) where
 namespace MomentGeneratingReadout
 
 variable {Param Op : Type*}
-
-@[rep_depth operator]
-theorem firstMoment_holds_theorem
-    (M : MomentGeneratingReadout Param Op) (β : Param) (A : Op) :
-    M.firstMomentLaw β A (M.firstMoment β A) := by
-  sorry
-
-@[rep_depth operator]
-theorem bkmCovariance_holds_theorem
-    (M : MomentGeneratingReadout Param Op) (β : Param) (A B : Op) :
-    M.bkmCovarianceLaw β A B (M.bkmCovariance β A B) := by
-  sorry
-
-@[rep_depth operator]
-theorem higherCumulant_holds_theorem
-    (M : MomentGeneratingReadout Param Op)
-    (n : Nat) (β : Param) (ops : List Op) :
-    M.higherCumulantLaw n β ops (M.nResponseForm n β ops) := by
-  sorry
 
 end MomentGeneratingReadout
 

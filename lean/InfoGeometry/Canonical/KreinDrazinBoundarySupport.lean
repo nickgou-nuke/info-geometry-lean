@@ -769,17 +769,5 @@ structure BoundaryNormalCone
   /-- Weyl scaling weight/anomaly channel on conormals. -/
   weyl_scaling_weight : Prop
 
-/-- A boundary normal cone records all three obstruction channels. -/
-theorem boundary_normal_cone_obstruction_channels
-    {V Op : Type*}
-    [One Op] [Mul Op] [Sub Op] [Pow Op ℕ]
-    {K : DoubledKreinCarrier V Op}
-    {D : AlgebraicDrazinData Op}
-    {B : DrazinKreinNullBoundary V Op K D}
-    (N : BoundaryNormalCone V Op K D B) :
-    N.detects_failure_of_nullity ∧
-      N.detects_failure_of_drazin_zero_sector ∧
-      N.weyl_scaling_weight := by
-  sorry
 
 end InfoGeometry.Canonical.KreinDrazinBoundarySupport

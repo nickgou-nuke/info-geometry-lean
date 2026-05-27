@@ -57,21 +57,6 @@ structure ClassicalFluidProjection
   /-- Projected extreme event, e.g. blow-up criterion or excessive shear. -/
   ClassicalExtreme : Classical → Prop
 
-  /-- Law saying this projection is the intended classical fluid readout. -/
-  projection_law : Prop
-
-namespace ClassicalFluidProjection
-
-variable {State Classical : Type*}
-variable (P : ClassicalFluidProjection State Classical)
-
-/-- The supplied projection law is available. -/
-theorem projection_valid :
-    P.projection_law := by
-  sorry
-
-end ClassicalFluidProjection
-
 /--
 An extended operator resolution datum for a projected classical extreme event.
 
@@ -85,21 +70,6 @@ structure OperatorResolutionDatum
 
   /-- Predicate saying the hidden sector is populated/nontrivial. -/
   HiddenNontrivial : Hidden → Prop
-
-  /-- Law saying this hidden readout is the intended operator completion. -/
-  resolution_law : Prop
-
-namespace OperatorResolutionDatum
-
-variable {State Hidden : Type*}
-variable (R : OperatorResolutionDatum State Hidden)
-
-/-- The supplied resolution law is available. -/
-theorem resolution_valid :
-    R.resolution_law := by
-  sorry
-
-end OperatorResolutionDatum
 
 /-! ## 2. Snap routing bridge -/
 

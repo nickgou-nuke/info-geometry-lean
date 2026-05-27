@@ -374,9 +374,9 @@ theorem parabolicLog_mul_of_pos
             simp [mul]
       _ = A.directional / A.scalar + B.directional / B.scalar := by
             field_simp [hA.ne', hB.ne', hABnz]
-      _ = (add (parabolicLog A) (parabolicLog B)).directional := by
-            dsimp [add, parabolicLog]
             ring
+      _ = (add (parabolicLog A) (parabolicLog B)).directional := by
+            simp [add, parabolicLog]
 
 /-- Parabolic analog of `P_+ = (1+Ω)/2` in the `Ω² = 0` lane. -/
 def parabolicPPlus : GeneralizedOperator 0 := ⟨(1 / 2 : ℝ), (1 / 2 : ℝ)⟩

@@ -455,6 +455,48 @@ theorem gravity_generated_by_unitRelativeVolumeState_metricDerived
       (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM⟩
 
 /--
+Metric-derived vacuum equation through the bundled RN source / unit-volume
+witness.
+
+This removes the explicit triple `(M, hSource, bit)` from the metric-derived
+vacuum-equation surface: callers provide one constructive witness packet, which
+is first converted into `UnitRelativeVolumeState Kgeo` and then routed through
+the existing smaller metric-derived owner theorem.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropyWitness_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_unitRelativeVolumeState_metricDerived
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
+    hM
+
+/--
+Metric-derived entropy-to-gravity capstone through the bundled RN source /
+unit-volume witness.
+
+This removes the explicit triple `(M, hSource, bit)` from the metric-derived
+gravity surface: callers provide one constructive witness packet, which is
+first converted into `UnitRelativeVolumeState Kgeo` and then routed through the
+existing smaller metric-derived owner theorem.
+-/
+theorem gravity_generated_by_rnEntropyWitness_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_unitRelativeVolumeState_metricDerived
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
+    hM
+
+/--
 Metric-derived entropy-to-gravity capstone through the proof-carrying unit-volume
 bit.  This keeps the compatibility theorem above for `MetricRNRicciBridge`
 callers while routing through the smaller `UnitRelativeVolumeState` owner route.

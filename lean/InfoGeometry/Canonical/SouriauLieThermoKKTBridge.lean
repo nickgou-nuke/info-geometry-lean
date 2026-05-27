@@ -736,7 +736,32 @@ theorem algebraic_equilibrium_packet
       0 ≤ K.quantumFisherMetric :=
   ⟨hKMS, hWeyl, K.fisherMetric_nonneg⟩
 
+/--
+Proof-carrying algebraic equilibrium witness for the coordinateless KMS/Fisher lane.
+
+This narrows the old two-hypothesis `(hKMS, hWeyl)` surface to one constructive
+object carrying exactly the owned equilibrium proofs needed to recover the
+existing algebraic packet.
+-/
+@[rep_depth operator]
+structure EquilibriumWitness where
+  state : CoordinatelessKMSFisherState Obs
+  hKMS : state.kmsEquilibrium
+  hWeyl : state.weylAutomorphismInvariant
+
+namespace EquilibriumWitness
+
+/-- Recover the old algebraic equilibrium packet from the proof-carrying witness. -/
+@[rep_depth operator]
+theorem packet (W : CoordinatelessKMSFisherState.EquilibriumWitness (Obs := Obs)) :
+    W.state.kmsEquilibrium ∧ W.state.weylAutomorphismInvariant ∧
+      0 ≤ W.state.quantumFisherMetric :=
+  W.state.algebraic_equilibrium_packet W.hKMS W.hWeyl
+
+end EquilibriumWitness
+
 attribute [terminal] algebraic_equilibrium_packet
+attribute [terminal] EquilibriumWitness.packet
 
 end CoordinatelessKMSFisherState
 

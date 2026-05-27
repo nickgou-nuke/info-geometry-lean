@@ -28,3 +28,11 @@ def test_zero_zd_owner_iff_exports_residual_zero_to_control_witness() -> None:
     assert "theorem observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero" in text
     assert "observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero" in text
     assert "observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)" in text
+
+
+def test_zero_zd_owner_iff_exports_one_way_residual_zero_of_nonempty_control() -> None:
+    text = OBSERVER_DEFECT.read_text(encoding="utf-8")
+
+    assert "theorem observerDefectResidual_eq_zero_of_nonempty_control_of_ZD_eq_zero" in text
+    assert "observerDefectResidual_eq_zero_iff_nonempty_control_of_ZD_eq_zero" in text
+    assert ").2 hControl" in text

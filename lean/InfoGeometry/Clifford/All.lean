@@ -16,6 +16,7 @@ import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 import InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
 import InfoGeometry.Clifford.AlbertBottConformalBridge
 import InfoGeometry.Clifford.ThreeDHurwitz

@@ -167,4 +167,59 @@ theorem FiniteSlabParabolicInterfacePacket.single_parabolic_slab_transport_class
   unfold transportClass
   simp [P.collapseWitness]
 
+/--
+Real owner-side implication (no witness field):
+if slab boundary maps preserve the local scattering labels and both boundary
+readouts are parabolic, then the underlying carrier is nilpotent (`Ω² = 0`).
+-/
+theorem slab_boundary_parabolic_implies_nilpotent
+    (Ω : ParOp)
+    (entry exit : ChiralChannel → ChiralChannel)
+    (hCompat :
+      entry (scatteringOfOmega Ω).Splus = (scatteringOfOmega Ω).Splus ∧
+      exit (scatteringOfOmega Ω).Sminus = (scatteringOfOmega Ω).Sminus)
+    (hBoundary :
+      entry (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic ∧
+      exit (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic) :
+    mul Ω Ω = zero := by
+  have hPlus : (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic := by
+    calc
+      (scatteringOfOmega Ω).Splus
+          = entry (scatteringOfOmega Ω).Splus := by simpa [hCompat.1] using (hCompat.1).symm
+      _ = ChiralChannel.Parabolic := hBoundary.1
+  have hChan : channelOfOmega Ω = ChiralChannel.Parabolic := by
+    simpa [scatteringOfOmega] using hPlus
+  exact InfoGeometry.Canonical.PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
+
+/--
+Stronger owner-side consequence:
+if one compatible slab boundary readout is parabolic, then the carrier is
+nilpotent and both scattering lanes collapse to parabolic.
+-/
+theorem slab_entry_parabolic_implies_full_collapse
+    (Ω : ParOp)
+    (entry exit : ChiralChannel → ChiralChannel)
+    (hCompat :
+      entry (scatteringOfOmega Ω).Splus = (scatteringOfOmega Ω).Splus ∧
+      exit (scatteringOfOmega Ω).Sminus = (scatteringOfOmega Ω).Sminus)
+    (hEntryParabolic : entry (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic) :
+    mul Ω Ω = zero ∧
+    (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic ∧
+    (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic := by
+  have hPlus : (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic := by
+    calc
+      (scatteringOfOmega Ω).Splus
+          = entry (scatteringOfOmega Ω).Splus := by simpa [hCompat.1] using (hCompat.1).symm
+      _ = ChiralChannel.Parabolic := hEntryParabolic
+  have hChan : channelOfOmega Ω = ChiralChannel.Parabolic := by
+    simpa [scatteringOfOmega] using hPlus
+  have hNil : mul Ω Ω = zero :=
+    InfoGeometry.Canonical.PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hChan
+  refine ⟨hNil, ?_, ?_⟩
+  · exact hPlus
+  · have hMinus : (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic := by
+      simpa [scatteringOfOmega] using
+        InfoGeometry.Canonical.PhotonicParabolicChannel.chiral_collapse_to_parabolic Ω hNil
+    exact hMinus
+
 end InfoGeometry.Canonical.PhotonicScatteringParabolicBridge

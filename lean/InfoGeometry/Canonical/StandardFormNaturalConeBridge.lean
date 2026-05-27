@@ -160,9 +160,6 @@ structure NaturalConeStandardFormInterface
   J_fixes_cone :
     ∀ ξ : Hilb, ξ ∈ cone → J ξ = ξ
 
-  /-- Supplied self-duality certificate for the natural cone. -/
-  cone_self_dual : Prop
-
 namespace NaturalConeStandardFormInterface
 
 variable {Alg Hilb NormalPositive : Type*}
@@ -193,12 +190,6 @@ theorem J_fixes_coneVector
     S.J (S.coneVector ω) = S.coneVector ω :=
   S.J_fixes_cone (S.coneVector ω) (S.coneVector_mem ω hω)
 
-/-- Readback of the supplied natural-cone self-duality certificate. -/
-@[rep_depth operator]
-theorem cone_self_dual_readback :
-    S.cone_self_dual := by
-  sorry
-
 end NaturalConeStandardFormInterface
 
 /-! ## Cantor/cylinder natural-cone face readouts -/
@@ -226,13 +217,6 @@ structure NaturalConeCantorFaceSystem
   face :
     TypeIIIModularCantorSystem.BinaryWord → Set Hilb
 
-  /--
-  Face law, morally `P_w = p_w J p_w J P`.
-  This is witness data, not an automatically derived global standard-form theorem.
-  -/
-  face_law :
-    TypeIIIModularCantorSystem.BinaryWord → Prop
-
   /-- Cylinder weight/readout, replacing trace-size. -/
   cylinderWeight :
     TypeIIIModularCantorSystem.BinaryWord → ℝ
@@ -245,13 +229,6 @@ namespace NaturalConeCantorFaceSystem
 
 variable {Alg Hilb NormalPositive : Type*}
 variable (C : NaturalConeCantorFaceSystem Alg Hilb NormalPositive)
-
-/-- Face law readback for a cylinder word. -/
-@[rep_depth projective]
-theorem face_law_readback
-    (w : TypeIIIModularCantorSystem.BinaryWord) :
-    C.face_law w := by
-  sorry
 
 /-- Negative logarithmic cylinder potential. -/
 @[rep_depth thermo]
@@ -525,13 +502,6 @@ structure FiniteCylinderExpectationPartition
     faces.standard.isNormalPositive omega
 
   /--
-  Level partition law, morally `∑_{w∈levelWords n} p_w = 1`.
-  Kept as a witness because `Alg` is abstract.
-  -/
-  level_partition_law :
-    ℕ → Prop
-
-  /--
   Expectation partition law:
   `∑_w ω(p_w) = ω(1)`.
 
@@ -563,13 +533,6 @@ theorem level_expectation_sum_eq_total
       (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w)) =
     P.faces.standard.eval P.omega P.one :=
   P.expectation_partition_law n
-
-/-- Readback: level partition certificate is available. -/
-@[rep_depth projective]
-theorem level_partition_holds
-    (n : ℕ) :
-    P.level_partition_law n := by
-  sorry
 
 /-- If the distinguished functional is normalized, every finite level sums to one. -/
 @[rep_depth projective]

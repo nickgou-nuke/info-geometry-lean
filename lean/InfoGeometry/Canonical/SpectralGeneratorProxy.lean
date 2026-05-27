@@ -243,15 +243,6 @@ structure BoundedTransformDatum
   F_phase_linear :
     PhaseLinear K F
 
-  /--
-  Law saying this bounded operator is the intended bounded transform of the
-  underlying unbounded spectral generator.
-  -/
-  bounded_transform_law : Prop
-
-  /-- Optional contraction/normalization law, such as `‖F‖ ≤ 1`. -/
-  contraction_law : Prop
-
 namespace BoundedTransformDatum
 
 variable {K : EndR H}
@@ -261,16 +252,6 @@ variable (B : BoundedTransformDatum K)
 theorem phase_linear :
     PhaseLinear K B.F :=
   B.F_phase_linear
-
-/-- Named re-export of the bounded-transform law. -/
-theorem bounded_transform_valid :
-    B.bounded_transform_law := by
-  sorry
-
-/-- Named re-export of the contraction law. -/
-theorem contraction_valid :
-    B.contraction_law := by
-  sorry
 
 end BoundedTransformDatum
 
@@ -285,20 +266,6 @@ layer while keeping every downstream compact-defect statement bounded.
 structure OperatorAdjointDatum where
   /-- Abstract adjoint operation. -/
   adj : EndR H → EndR H
-
-  /-- Law saying this is the intended adjoint operation. -/
-  adjoint_law : Prop
-
-namespace OperatorAdjointDatum
-
-variable (A : OperatorAdjointDatum (H := H))
-
-/-- Named re-export of the adjoint law. -/
-theorem adjoint_valid :
-    A.adjoint_law := by
-  sorry
-
-end OperatorAdjointDatum
 
 /--
 Bounded Kasparov/Fredholm-cycle socket.
@@ -342,9 +309,6 @@ structure BoundedKasparovCycle
     ∀ a : A,
       F.comp (rep a) - (rep a).comp F ∈ compactIdeal
 
-  /-- Law saying this is the intended Kasparov/Fredholm-cycle structure. -/
-  kasparov_law : Prop
-
 namespace BoundedKasparovCycle
 
 variable {A : Type*}
@@ -377,11 +341,6 @@ theorem commutator_compact
     (a : A) :
     C.F.comp (C.rep a) - (C.rep a).comp C.F ∈ C.compactIdeal :=
   C.commutator_mod_compact a
-
-/-- Named re-export: Kasparov law. -/
-theorem kasparov_valid :
-    C.kasparov_law := by
-  sorry
 
 end BoundedKasparovCycle
 
@@ -424,9 +383,6 @@ structure KasparovAdmissibility
     ∀ a : A,
       B.F.comp (rep a) - (rep a).comp B.F ∈ compactIdeal
 
-  /-- Law saying this is the intended Kasparov/Fredholm-cycle structure. -/
-  kasparov_law : Prop
-
 namespace KasparovAdmissibility
 
 variable {A : Type*}
@@ -449,7 +405,6 @@ def toBoundedKasparovCycle :
   selfadjoint_mod_compact := Adm.selfadjoint_mod_compact
   square_mod_compact := Adm.square_mod_compact
   commutator_mod_compact := Adm.commutator_mod_compact
-  kasparov_law := Adm.kasparov_law
 
 /-- The promoted cycle uses the supplied bounded transform. -/
 @[simp] theorem toBoundedKasparovCycle_F :

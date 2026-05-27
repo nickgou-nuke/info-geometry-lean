@@ -421,27 +421,6 @@ theorem physical_wavelet_envelope_of_admissible
     S.x_phys = physicalCliffordFractalWavelet S.pA S.HL S.x_raw :=
   hDrazin.x_phys_eq
 
-/-- The Drazin complement is witnessed as the Krein-null boundary defect channel. -/
-theorem null_defect_boundary_of_kreinDrazin
-    {Op : Type*}
-    [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op)
-    (hDrazin : KreinDrazinNullDefectAdmissible S) :
-    hDrazin.null_defect_is_krein_null ∧ hDrazin.null_defect_is_boundary := by
-  sorry
-
-/-- Projective/Weyl closure reads the null defect as conformal boundary geometry. -/
-theorem projective_weyl_closure_readout
-    {Op : Type*}
-    [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op)
-    (hProjective : ProjectiveWeylClosureAdmissible S) :
-    hProjective.weyl_null_ray_quotient ∧
-      hProjective.pgl_null_ray_closure ∧
-      hProjective.conformal_boundary_readout ∧
-      hProjective.topological_index_readout := by
-  sorry
-
 /-- Tilt/switch admissibility reads back the socket's Clifford anticommutation law. -/
 theorem gamma_anticomm_of_tiltSwitchClifford
     {Op : Type*}
@@ -543,7 +522,6 @@ theorem clifford_fractal_wavelets_to_geometry
     (S : CliffordFractalWaveletSocket Op)
     (hClifford : TiltSwitchCliffordAdmissible S)
     (hDrazin : KreinDrazinNullDefectAdmissible S)
-    (hProjective : ProjectiveWeylClosureAdmissible S)
     (hFierz : FierzPauliKofinkAdmissible S.coords) :
     CliffordFractalWaveletFierzKleinResidual S.coords = 0 := by
   have _hCliffordReadback :
@@ -552,15 +530,6 @@ theorem clifford_fractal_wavelets_to_geometry
   have _hDrazinReadback :
       S.x_phys = physicalCliffordFractalWavelet S.pA S.HL S.x_raw :=
     physical_wavelet_envelope_of_admissible S hDrazin
-  have _hNullBoundaryReadback :
-      hDrazin.null_defect_is_krein_null ∧ hDrazin.null_defect_is_boundary :=
-    null_defect_boundary_of_kreinDrazin S hDrazin
-  have _hProjectiveReadback :
-      hProjective.weyl_null_ray_quotient ∧
-        hProjective.pgl_null_ray_closure ∧
-        hProjective.conformal_boundary_readout ∧
-        hProjective.topological_index_readout :=
-    projective_weyl_closure_readout S hProjective
   exact hFierz.R_null
 
 /-- Compatibility wrapper for callers that already package the closure law. -/
@@ -574,7 +543,6 @@ theorem CliffordFractalWaveletFierzKleinLaw.to_geometry
     law.socket
     law.clifford_admissible
     law.drazin_admissible
-    law.projective_admissible
     law.fierz_admissible
 
 end InfoGeometry.Canonical

@@ -326,6 +326,114 @@ theorem zero_mode_iff_pfaffian_zero_extract (A : MajoranaBdGFourByFour M4) :
 
 end MajoranaBdGFourByFour
 
+/-! ### Real `2 × 2` Pauli seed -/
+
+/-- Concrete real `2 × 2` matrix with explicit coordinates. -/
+structure RealMatrix2 where
+  m00 : ℝ
+  m01 : ℝ
+  m10 : ℝ
+  m11 : ℝ
+
+namespace RealMatrix2
+
+/-- Extensionality for concrete real `2 × 2` matrices. -/
+@[ext] theorem ext {A B : RealMatrix2}
+    (h00 : A.m00 = B.m00) (h01 : A.m01 = B.m01)
+    (h10 : A.m10 = B.m10) (h11 : A.m11 = B.m11) : A = B := by
+  cases A
+  cases B
+  simp_all
+
+/-- The identity real `2 × 2` matrix. -/
+def identity : RealMatrix2 where
+  m00 := 1
+  m01 := 0
+  m10 := 0
+  m11 := 1
+
+instance : One RealMatrix2 where
+  one := identity
+
+/-- Negation of real `2 × 2` matrices. -/
+def matNeg (A : RealMatrix2) : RealMatrix2 where
+  m00 := -A.m00
+  m01 := -A.m01
+  m10 := -A.m10
+  m11 := -A.m11
+
+instance : Neg RealMatrix2 where
+  neg := matNeg
+
+/-- Multiplication of real `2 × 2` matrices. -/
+def matMul (A B : RealMatrix2) : RealMatrix2 where
+  m00 := A.m00 * B.m00 + A.m01 * B.m10
+  m01 := A.m00 * B.m01 + A.m01 * B.m11
+  m10 := A.m10 * B.m00 + A.m11 * B.m10
+  m11 := A.m10 * B.m01 + A.m11 * B.m11
+
+instance : Mul RealMatrix2 where
+  mul := matMul
+
+/-- The real Pauli generator `σ₁`. -/
+def sigma1 : RealMatrix2 where
+  m00 := 0
+  m01 := 1
+  m10 := 1
+  m11 := 0
+
+/-- The real Pauli generator `σ₃`. -/
+def sigma3 : RealMatrix2 where
+  m00 := 1
+  m01 := 0
+  m10 := 0
+  m11 := -1
+
+/-- The real skew phase generator `J = 1/2 [σ₁, σ₃]`. -/
+def phaseJ : RealMatrix2 where
+  m00 := 0
+  m01 := -1
+  m10 := 1
+  m11 := 0
+
+/-- The real Pauli generator `σ₁` squares to `1`. -/
+theorem sigma1_sq : sigma1 * sigma1 = 1 := by
+  change matMul sigma1 sigma1 = identity
+  apply RealMatrix2.ext <;> norm_num [sigma1, matMul, identity]
+
+/-- The real Pauli generator `σ₃` squares to `1`. -/
+theorem sigma3_sq : sigma3 * sigma3 = 1 := by
+  change matMul sigma3 sigma3 = identity
+  apply RealMatrix2.ext <;> norm_num [sigma3, matMul, identity]
+
+/-- The real phase generator `J` squares to `-1`. -/
+theorem phaseJ_sq : phaseJ * phaseJ = -1 := by
+  change matMul phaseJ phaseJ = matNeg identity
+  apply RealMatrix2.ext <;> norm_num [phaseJ, matMul, matNeg, identity]
+
+/-- Determinant of a real `2 × 2` matrix. -/
+def determinant (A : RealMatrix2) : ℝ :=
+  A.m00 * A.m11 - A.m01 * A.m10
+
+/-- Real Pauli/chiral operator `t I + x σ₁ + z σ₃ + y J`. -/
+def pauliChiralOperator (t x y z : ℝ) : RealMatrix2 where
+  m00 := t + z
+  m01 := x - y
+  m10 := x + y
+  m11 := t - z
+
+/--
+The raw real `2 × 2` Pauli/chiral determinant has split signature, not the
+physical `3+1` Minkowski signature.
+-/
+theorem determinant_pauliChiralOperator (t x y z : ℝ) :
+    determinant (pauliChiralOperator t x y z) = t * t - x * x - z * z + y * y := by
+  simp [determinant, pauliChiralOperator]
+  ring
+
+end RealMatrix2
+
+/-! ### Realified Hermitian Pauli spacetime slice -/
 
 /-- Concrete real `4 × 4` matrix with explicit coordinates.  This layer is used
 to kernel-check the realification identities behind the abstract Pfaffian owner
@@ -460,6 +568,10 @@ def transpose (A : RealMatrix4) : RealMatrix4 := {
   m33 := A.m33
 }
 
+/-- Trace of a real `4 × 4` matrix. -/
+def trace (A : RealMatrix4) : ℝ :=
+  A.m00 + A.m11 + A.m22 + A.m33
+
 /-- Pfaffian formula for a skew `4 × 4` matrix, read from upper entries. -/
 def pfaffianSkew4 (A : RealMatrix4) : ℝ :=
   A.m01 * A.m23 - A.m02 * A.m13 + A.m03 * A.m12
@@ -520,6 +632,18 @@ theorem concreteSpacetimeMatrix_commutes_with_J (c : MinkowskiCoordinates) :
 theorem concreteSpacetimeMatrix_symmetric (c : MinkowskiCoordinates) :
     RealMatrix4.transpose (concreteSpacetimeMatrix c) = concreteSpacetimeMatrix c := by
   ext <;> simp [RealMatrix4.transpose, concreteSpacetimeMatrix]
+
+/-- The realified Hermitian Pauli trace recovers four times the time coordinate. -/
+theorem concreteSpacetimeMatrix_trace (c : MinkowskiCoordinates) :
+    RealMatrix4.trace (concreteSpacetimeMatrix c) = 4 * c.t := by
+  simp [RealMatrix4.trace, concreteSpacetimeMatrix]
+  ring
+
+/-- The time coordinate is the normalized trace of the realified Hermitian Pauli slice. -/
+theorem concreteSpacetimeMatrix_time_eq_trace_div_four (c : MinkowskiCoordinates) :
+    RealMatrix4.trace (concreteSpacetimeMatrix c) / 4 = c.t := by
+  rw [concreteSpacetimeMatrix_trace]
+  ring
 
 theorem concrete_pfaffianSJ_eq_neg_interval (c : MinkowskiCoordinates) :
     RealMatrix4.pfaffianSkew4 (concreteSpacetimeMatrix c * concreteComplexStructureJ) =

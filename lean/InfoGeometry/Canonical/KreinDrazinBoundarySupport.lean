@@ -161,15 +161,6 @@ theorem generalizedZeroSector_iff_defectSupport
     P.generalizedZeroSector x ↔ D.carrier.act D.drazin.q x = x :=
   P.generalizedZeroSector_eq_defectSupport x
 
-/-- The supplied realification identifies realified Tomita `J` with Krein symmetry. -/
-theorem realifiedJ_eq_kreinSymmetry
-    {K Op : Type*}
-    [Ring Op]
-    {D : KreinDrazinBoundarySupport K Op}
-    (P : TomitaRealifiedDrazinBoundaryPolarization K Op D) :
-    P.tomitaRealification.realifiedJ_eq_kreinSymmetry_law :=
-  P.tomitaRealification.realifiedJ_eq_kreinSymmetry_certificate
-
 end TomitaRealifiedDrazinBoundaryPolarization
 
 /-- A vector lies in the Drazin defect support when `q x = x`. -/

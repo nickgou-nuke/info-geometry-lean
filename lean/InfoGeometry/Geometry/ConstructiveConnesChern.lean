@@ -32,7 +32,7 @@ theorem index_eq_boundary_integral
     (Ω : Region) :
     I.boundaryIntegral Ω CC.ccForm =
       I.volumeIntegral Ω (fun _ => D.P) := by
-  have stokes := I.stokes_law Ω CC.ccForm
+  have stokes := I.stokes_eq Ω CC.ccForm
   have defect_subst :
       I.geometricDerivative CC.ccForm = fun _ => D.P := by
     ext p
@@ -52,7 +52,7 @@ theorem kasparov_defect_is_quantized
     I.volumeIntegral Ω (fun _ => D.P) =
       (W.winding Ω : ℝ) • N.phasePeriod := by
   have h_index := (index_eq_boundary_integral I D CC Ω).symm
-  have h_wind := W.residue_law Ω
+  have h_wind := W.boundaryIntegral_eq_winding_smul Ω
   rw [h_index]
   exact h_wind
 

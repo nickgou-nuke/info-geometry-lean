@@ -8,8 +8,9 @@ pair.  It separates:
 
 * nilpotent off-diagonal projector channels from `DrazinLightConeDictionary`;
 * genuine creation/annihilation operators satisfying `IsCARPair`;
-* an explicit representation witness identifying a chosen light-cone pair with
-  a chosen CAR/Fock pair.
+* separate CAR/Fock data.  Any representation theorem identifying a chosen
+  light-cone pair with a chosen CAR/Fock pair must be proved explicitly outside
+  the data carrier.
 -/
 
 import InfoGeometry.Canonical.DrazinLightConeDictionary
@@ -68,11 +69,11 @@ def ofProjectorSplit
 end LightConeNilpotentPair
 
 /--
-A proof-carrying CAR/Fock realization of a light-cone pair.
+CAR/Fock data associated with a light-cone pair.
 
-The realization laws are equations, not comments: the represented light-cone
-channels must equal the supplied annihilation and creation operators.  Without
-these fields, no CAR conclusion is exported from a Drazin projector split.
+This structure stores the algebraic light-cone data, a representation map, and
+a genuine CAR pair.  It does not assert that the represented light-cone channels
+are the CAR operators; concrete models must prove those equations separately.
 -/
 @[rep_depth operator]
 structure LightConeCARFockBridge
@@ -95,14 +96,6 @@ structure LightConeCARFockBridge
   /-- Genuine CAR law for the chosen Fock realization. -/
   car : IsCARPair (E := E) annihilation creation
 
-  /-- The chosen light-cone `u⁺` channel is represented by annihilation. -/
-  uPlus_realization_law :
-    realize (lightcone.split.uPlus lightcone.Xplus) = annihilation
-
-  /-- The chosen light-cone `u⁻` channel is represented by creation. -/
-  uMinus_realization_law :
-    realize (lightcone.split.uMinus lightcone.Xminus) = creation
-
 namespace LightConeCARFockBridge
 
 variable {E : Type} {A : Type*}
@@ -118,23 +111,22 @@ variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Concrete split-`Cl(1,1)` CAR/Fock readback.
+Concrete split-`Cl(1,1)` CAR/Fock data.
 
 This is intentionally not a `LightConeCARFockBridge`: it supplies the genuine
 CAR pair, but it does not assert an arbitrary Drazin projector split realizes
-that pair.  A full bridge is obtained only when the two realization equations
-in `LightConeCARFockBridge` are supplied.
+that pair.
 -/
 @[rep_depth operator]
-structure ConcreteCl11CARFockReadback where
+structure ConcreteCl11CARFockData where
   annihilation : FockEndomorphism E
   creation : FockEndomorphism E
   car : IsCARPair (E := E) annihilation creation
 
-/-- The repo-owned concrete split-`Cl(1,1)` CAR pair as a Fock readback. -/
+/-- The repo-owned concrete split-`Cl(1,1)` CAR pair as Fock data. -/
 @[rep_depth operator]
-noncomputable def concreteCl11CARFockReadback :
-    ConcreteCl11CARFockReadback (E := E) where
+noncomputable def concreteCl11CARFockData :
+    ConcreteCl11CARFockData (E := E) where
   annihilation := concreteCARAnnihilation (E := E)
   creation := concreteCARCreation (E := E)
   car := concrete_car_pair (E := E)

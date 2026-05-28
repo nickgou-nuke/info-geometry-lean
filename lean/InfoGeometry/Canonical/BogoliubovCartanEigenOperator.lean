@@ -405,9 +405,9 @@ namely `[H,X] = lam • X`.  The integrated statement
 
 `exp(tH) X exp(-tH) = exp(t lam) • X`
 
-requires an exponential/ODE or functional-calculus backend.  This carrier records
-that integrated law as supplied calibration data, without deriving it from the
-infinitesimal law.
+requires an exponential/ODE or functional-calculus backend.  This carrier stores
+only the chosen exponential family; any integrated eigen-operator law must be
+provided explicitly to the theorem that uses it.
 -/
 structure CartanExponentialAdjointCalibration
     (H : EndH) where
@@ -416,17 +416,6 @@ structure CartanExponentialAdjointCalibration
 
   /-- Exponential identity at zero. -/
   expCartan_zero : expCartan 0 = 1
-
-  /--
-  Supplied integrated eigen-operator law.
-
-  This is the theorem-safe form of
-  `exp(tH) X exp(-tH) = exp(t lam) X`.
-  -/
-  eigen_adjointFlow_law :
-    ∀ {X : EndH} {lam : ℝ},
-      IsCartanEigenOperator (E := E) H X lam →
-        ∀ t : ℝ, expCartan t * X * expCartan (-t) = Real.exp (t * lam) • X
 
 namespace CartanExponentialAdjointCalibration
 
@@ -449,36 +438,42 @@ theorem adjointExponentialFlow_zero
   simp
 
 /--
-Readback: a Cartan eigen-operator scales exponentially under the supplied
-adjoint flow.
+A Cartan eigen-operator scales exponentially under an explicitly supplied
+integrated adjoint-flow theorem.
 -/
 theorem cartanEigenOperator_integrates_to_exponential_flow
     {H : EndH}
     (C : CartanExponentialAdjointCalibration (E := E) H)
+    (hflow : ∀ {X : EndH} {lam : ℝ},
+      IsCartanEigenOperator (E := E) H X lam →
+        ∀ t : ℝ, C.expCartan t * X * C.expCartan (-t) = Real.exp (t * lam) • X)
     {X : EndH} {lam : ℝ}
     (hX : IsCartanEigenOperator (E := E) H X lam)
     (t : ℝ) :
     adjointExponentialFlow (E := E) H C t X = Real.exp (t * lam) • X := by
   unfold adjointExponentialFlow
-  exact C.eigen_adjointFlow_law hX t
+  exact hflow hX t
 
 /--
-Additive-time readback on a Cartan eigen-operator.
+Additive-time identity on a Cartan eigen-operator.
 
-This uses only the supplied integrated law and the scalar exponential identity;
-it does not prove existence of the exponential flow from the infinitesimal
-derivation law.
+This uses only the explicitly supplied integrated flow theorem and the scalar
+exponential identity; it does not prove existence of the exponential flow from
+the infinitesimal derivation law.
 -/
 theorem adjointExponentialFlow_add_on_eigenoperator
     {H : EndH}
     (C : CartanExponentialAdjointCalibration (E := E) H)
+    (hflow : ∀ {X : EndH} {lam : ℝ},
+      IsCartanEigenOperator (E := E) H X lam →
+        ∀ t : ℝ, C.expCartan t * X * C.expCartan (-t) = Real.exp (t * lam) • X)
     {X : EndH} {lam : ℝ}
     (hX : IsCartanEigenOperator (E := E) H X lam)
     (t s : ℝ) :
     adjointExponentialFlow (E := E) H C (t + s) X =
       Real.exp (t * lam) • adjointExponentialFlow (E := E) H C s X := by
-  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hX (t + s)]
-  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hX s]
+  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hflow hX (t + s)]
+  rw [cartanEigenOperator_integrates_to_exponential_flow (E := E) C hflow hX s]
   have harg : (t + s) * lam = t * lam + s * lam := by
     rw [add_mul]
   rw [harg, Real.exp_add, smul_smul]

@@ -1,4 +1,6 @@
 import InfoGeometry.Algebra.FiniteN2Induction
+import InfoGeometry.Algebra.N2ModeCentralExtension
+import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.Sugawara
@@ -61,6 +63,83 @@ theorem finite_iterate_n2_square_structural_plus_central
     (iterateEnd φ n) (Q + R) * (iterateEnd φ n) (Q + R) =
       (iterateEnd φ n) H + (iterateEnd φ n) Z := by
   exact iterateEnd_preserves_n2_square_closure φ n Q R H Z hQ hR hQR
+
+/-! ## N=2 mode central-extension closure -/
+
+/--
+N=2 mode central-extension generator closure.
+
+This integrates the direct-sum N=2 lane with the external-Virasoro-style
+central-extension lane: the lifted `Qᵢ,Rⱼ` bracket closes on the resonant
+central generator.
+-/
+theorem n2_mode_qgen_rgen_bracket_central
+    {ι : Type u} [DecidableEq ι]
+    (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+    (i j : ι) :
+    ⁅N2ModeCentralExtension.N2CentralExt.qgen 𝕜 i,
+      N2ModeCentralExtension.N2CentralExt.rgen 𝕜 j⁆
+      =
+      if i = j
+      then N2ModeCentralExtension.N2CentralExt.cgen (ι := ι) 𝕜
+      else 0 := by
+  simpa [N2ModeCentralExtension.N2CentralExt.cgen] using
+    N2ModeCentralExtension.N2CentralExt.qgen_lie_rgen (ι := ι) (𝕜 := 𝕜) i j
+
+/--
+N=2 mode central-extension readback for arbitrary finite-support mode
+combinations.
+
+The bracket decomposes into the base Lie bracket and the explicit N=2 cocycle,
+exactly like the Virasoro/Heisenberg central-extension readbacks below.
+-/
+theorem n2_mode_bracket_eq_base_bracket_plus_cocycle
+    {ι : Type u} [DecidableEq ι]
+    (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+    (X Y : N2ModeCentralExtension.N2CentralExt ι 𝕜) :
+    ⁅X, Y⁆ =
+      ⟨⁅X.fst, Y.fst⁆,
+        N2ModeCentralExtension.N2ModeCocycle.cocycle (ι := ι) 𝕜 X.fst Y.fst⟩ := by
+  exact N2ModeCentralExtension.N2CentralExt.bracket_readback (ι := ι) (𝕜 := 𝕜) X Y
+
+/--
+The central component of the N=2 lifted `Qᵢ,Rⱼ` bracket is the resonant
+Kronecker coefficient.
+-/
+theorem n2_mode_qgen_rgen_central_component
+    {ι : Type u} [DecidableEq ι]
+    (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+    (i j : ι) :
+    ⁅N2ModeCentralExtension.N2CentralExt.qgen 𝕜 i,
+      N2ModeCentralExtension.N2CentralExt.rgen 𝕜 j⁆.snd
+      =
+      if i = j then 1 else 0 := by
+  simp [N2ModeCentralExtension.N2CentralExt.qgen,
+    N2ModeCentralExtension.N2CentralExt.rgen,
+    N2ModeCentralExtension.N2CentralExt.ofBase,
+    VirasoroProject.LieTwoCocycle.CentralExtension.lie_def]
+
+/--
+The ordinary central-extension bracket and the supergraded odd-odd cocycle
+carry the same resonant central coefficient on `Qᵢ,Rⱼ`.
+
+The signs differ only in the opposite order: ordinary Lie cocycles are skew,
+while the N=2 odd-odd super-cocycle is symmetric.
+-/
+theorem n2_mode_lie_central_component_eq_super_oddOdd_cocycle
+    {ι : Type u} [DecidableEq ι]
+    (𝕜 : Type u) [Field 𝕜] [CharZero 𝕜]
+    (i j : ι) :
+    ⁅N2ModeCentralExtension.N2CentralExt.qgen 𝕜 i,
+      N2ModeCentralExtension.N2CentralExt.rgen 𝕜 j⁆.snd
+      =
+      SupergradedCocycle.superBilin 𝕜
+        (N2ModeCentralExtension.N2ModeBase.qgen 𝕜 i)
+        (N2ModeCentralExtension.N2ModeBase.rgen 𝕜 j) := by
+  simp [N2ModeCentralExtension.N2CentralExt.qgen,
+    N2ModeCentralExtension.N2CentralExt.rgen,
+    N2ModeCentralExtension.N2CentralExt.ofBase,
+    VirasoroProject.LieTwoCocycle.CentralExtension.lie_def]
 
 /-! ## Virasoro mode closure -/
 

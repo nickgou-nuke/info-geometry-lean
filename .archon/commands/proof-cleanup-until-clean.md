@@ -34,6 +34,8 @@ MAX_ITERATIONS=0                  # no iteration limit
 MAX_STALE_ITERATIONS=0            # no stale-progress stop
 ARCHON_CYCLE_TIMEOUT_SECONDS=0    # no per-cycle timeout wrapper
 STOP_WHEN_CLEAN=0                 # continue even if clean
+INTERVAL_SECONDS=0                # no artificial sleep between ticks
+POST_TICK_COMMAND=''              # optional deterministic mathlib/full-repo gate
 ```
 
 **PHASE_1_CHECKPOINT:**
@@ -72,6 +74,7 @@ STOP_WHEN_CLEAN=1
 If the command exits, report:
 
 - stop reason or interrupt;
+- PID file path `reports/cleanup-loop/archon-repo-cleanup.pid` if still present;
 - summary TSV path under `reports/cleanup-loop/<RUN_ID>/summary.tsv`;
 - latest before/after heartbeat counts;
 - any nonzero Archon exit codes.

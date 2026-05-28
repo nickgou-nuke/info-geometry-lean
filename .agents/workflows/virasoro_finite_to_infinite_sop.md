@@ -112,10 +112,17 @@ not merely:
 Pointwise theorems are acceptable, but the direct-sum equality is the stronger
 Virasoro-style endpoint.
 
-### Template B: basis + cocycle + central extension
+### Template B: basis + cocycle + ordinary Lie central extension
 
-Use this when closure has an anomaly/central-charge term and you want the full
+Use this when closure has an anomaly/central-charge term that is genuinely an
+ordinary Lie-bracket central extension and you want the full
 external-Virasoro-style construction.
+
+This template applies to Witt/Virasoro/Heisenberg/affine Kac--Moody-style
+ordinary Lie brackets. It does **not** by itself formalize an odd--odd
+super-anticommutator. For N=2/SUSY odd closure, use Template C for the
+anticommutator theorem and optionally use this Template B only for the ordinary
+Lie central-extension skeleton/readback layer.
 
 Required proof shape:
 
@@ -146,7 +153,32 @@ central_law : Prop
 central_certificate : central_law
 ```
 
-### Template C: locally finite operator sums
+### Template C: super/odd anticommutator direct-sum closure
+
+Use this when the finite law is an odd--odd super-anticommutator, e.g.
+`{Q,R}=H+Z`, rather than an ordinary Lie bracket.
+
+Required proof shape:
+
+1. Define the finite anticommutator theorem in a ring or associative algebra.
+2. Define the infinite carrier as a finitely supported direct sum when possible,
+   e.g. `ι →₀ A`.
+3. Define the anticommutator mode operation as an actual `Finsupp` object, not
+   a wrapper/predicate.
+4. Prove support control for the operation, e.g. support contained in
+   `Q.support ∪ R.support`.
+5. State closure as object equality in the direct-sum carrier:
+   `anticommutatorMode Q R = H + Z`.
+6. Prove finite iterate transport with `Finsupp.mapRange` or the relevant
+   homomorphic transport.
+7. Keep any ordinary Lie central-extension analogy in a separate layer; do not
+   pretend `LieTwoCocycle.CentralExtension` is the super-anticommutator itself.
+
+This is the correct methodology for the N=2 odd closure files. The ordinary
+central-extension pipeline may still be useful as a companion skeleton, but the
+SUSY anticommutator theorem lives in the direct-sum anticommutator layer.
+
+### Template D: locally finite operator sums
 
 Use this for Sugawara/normal-ordering/Fock-style constructions.
 
@@ -170,7 +202,7 @@ Do not replace this with:
 sugawara_converges_certificate : Prop
 ```
 
-### Template D: finite iterates / inductive systems
+### Template E: finite iterates / inductive systems
 
 Use this when a bonding/symmetry map is iterated finitely.
 
@@ -180,12 +212,12 @@ Required proof shape:
    functor iterate, etc.).
 2. Prove the local law is preserved by one homomorphism.
 3. Apply that theorem to the finite iterate.
-4. If mode-indexed, combine with Template A or B.
+4. If mode-indexed, combine with Template A, B, or C as appropriate.
 
 This proves **finite-stage** transport only.  It is not an infinite colimit or
 completion theorem unless the colimit/completion is separately constructed.
 
-### Template E: genuine analytic limit/completion
+### Template F: genuine analytic limit/completion
 
 Use only when the file formalizes the analytic infrastructure.
 
@@ -255,7 +287,7 @@ or local-truncation theorem before it is used in a proof.
 
 A theorem about `φ^[n]` for every `n : ℕ` is a finite-stage theorem.  It is not
 an infinite limit theorem.  Do not describe it as a completed infinite limit
-unless Template E is also implemented.
+unless Template F is also implemented.
 
 ### 7. Validation gates
 

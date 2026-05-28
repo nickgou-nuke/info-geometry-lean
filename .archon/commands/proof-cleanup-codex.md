@@ -16,6 +16,8 @@ Start the repository proof-cleanup heartbeat with Codex as the one-cycle cleanup
 **Loop script**: `tools/heartbeat/archon_repo_cleanup_loop.sh`
 **Inner workflow**: `proof-sop-cycle-codex`
 
+This command intentionally does **not** use an Archon `loop:` node because loop nodes require `max_iterations`. The Codex cleanup heartbeat is a shell-level life-force loop and stops by Ctrl-C.
+
 ---
 
 ## Phase 1: LOAD - Check Prerequisites

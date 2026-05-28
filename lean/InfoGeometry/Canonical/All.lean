@@ -573,6 +573,7 @@ import InfoGeometry.Canonical.MeasureScaleShape
 import InfoGeometry.Canonical.MetricTransportWitness
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularCartanCantorSystem
+import InfoGeometry.Canonical.ModularCoproductFlux
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge

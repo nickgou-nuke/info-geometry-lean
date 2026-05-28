@@ -1,6 +1,6 @@
 # proof-cleanup-forever
 
-Run the Archon proof-cleanup heartbeat continuously.
+Run the Archon proof-cleanup heartbeat continuously. The workflow uses an AI starter node rather than a deterministic bash node because Archon bash nodes require a positive timeout; the heartbeat itself is intentionally unbounded and is stopped by Ctrl-C.
 
 ```bash
 SCOPE=lean/InfoGeometry/Canonical \

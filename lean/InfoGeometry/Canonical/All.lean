@@ -110,6 +110,7 @@ import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.CalabiYauWBridge
+import InfoGeometry.Canonical.CantorBinaryHopCharge
 import InfoGeometry.Canonical.CantorCliffordFunctionModel
 import InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
 import InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge

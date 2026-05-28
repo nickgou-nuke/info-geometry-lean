@@ -1,0 +1,162 @@
+import InfoGeometry.Canonical.CantorCuntzBasis
+import InfoGeometry.Canonical.SplitCliffordCantorFock
+import Mathlib.Tactic
+
+/-!
+# InfoGeometry.Canonical.CantorBinaryHopCharge
+
+Concrete binary Cantor hop and charge-parity lemmas.
+
+This file connects the Cantor binary-word carrier to the local split-Clifford
+fermionic hop.
+
+It proves:
+
+* binary head-hop is involutive;
+* head-hop flips `ZMod 2` charge on nonempty words;
+* charge returns after two hops;
+* the local matrix creation/annihilation operators realize the two Boolean hops;
+* the creation and annihilation operators are square-zero.
+
+This is finite, local, and theorem-level.
+No infinite-factor theorem.
+No current-algebra origin claim.
+No infinite-limit claim.
+-/
+
+namespace InfoGeometry.Canonical.CantorBinaryHopCharge
+
+open Matrix
+open InfoGeometry.Canonical
+open InfoGeometry.Canonical.CantorCuntzBasis
+open InfoGeometry.Canonical.SplitCliffordCantorFock
+
+/--
+Bit charge in `ZMod 2`.
+
+`false` has charge `0`; `true` has charge `1`.
+-/
+def bitCharge : Bool → ZMod 2
+  | false => 0
+  | true => 1
+
+/-- The local Boolean hop: flip the bit. -/
+def hopBit : Bool → Bool
+  | false => true
+  | true => false
+
+@[simp]
+theorem hopBit_involutive (b : Bool) :
+    hopBit (hopBit b) = b := by
+  cases b <;> rfl
+
+/-- Flipping one bit changes its `ZMod 2` charge by `1`. -/
+@[simp]
+theorem bitCharge_hopBit (b : Bool) :
+    bitCharge (hopBit b) = bitCharge b + 1 := by
+  cases b <;> native_decide
+
+/-- Total parity charge of a finite binary Cantor word. -/
+def wordCharge : BinaryWord → ZMod 2
+  | [] => 0
+  | b :: w => bitCharge b + wordCharge w
+
+/--
+Head-hop on a binary word.
+
+The empty word is fixed. A nonempty word has its first bit flipped.
+-/
+def hopHead : BinaryWord → BinaryWord
+  | [] => []
+  | b :: w => hopBit b :: w
+
+/-- Head-hop is involutive. -/
+@[simp]
+theorem hopHead_involutive (w : BinaryWord) :
+    hopHead (hopHead w) = w := by
+  cases w with
+  | nil => rfl
+  | cons b w =>
+      cases b <;> rfl
+
+/-- On a nonempty binary word, one head-hop flips total `ZMod 2` charge. -/
+theorem charge_flip_once_cons (b : Bool) (w : BinaryWord) :
+    wordCharge (hopHead (b :: w)) = wordCharge (b :: w) + 1 := by
+  simp [hopHead, wordCharge, bitCharge_hopBit]
+  abel
+
+/-- After two head-hops, total charge returns. -/
+theorem charge_flip_twice (w : BinaryWord) :
+    wordCharge (hopHead (hopHead w)) = wordCharge w := by
+  simp
+
+/-- The empty word is fixed by head-hop. -/
+@[simp]
+theorem hopHead_nil :
+    hopHead ([] : BinaryWord) = [] := by
+  rfl
+
+/-- The empty word has zero charge after head-hop. -/
+@[simp]
+theorem charge_hopHead_nil :
+    wordCharge (hopHead ([] : BinaryWord)) = 0 := by
+  rfl
+
+/-! ## Matrix realization of the local Boolean hop -/
+
+/-- Creation realizes the Boolean hop from `false` to `true`. -/
+theorem creation_realizes_false_hop :
+    aDag_op * cantorState false = cantorState (hopBit false) := by
+  simpa [hopBit] using create_false_eq_true
+
+/-- Annihilation realizes the Boolean hop from `true` to `false`. -/
+theorem annihilation_realizes_true_hop :
+    a_op * cantorState true = cantorState (hopBit true) := by
+  simpa [hopBit] using annihilate_true_eq_false
+
+/-- The annihilation operator is square-zero. -/
+@[simp]
+theorem a_op_sq_zero :
+    a_op * a_op = (0 : M2R) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a_op, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The creation operator is square-zero. -/
+@[simp]
+theorem aDag_op_sq_zero :
+    aDag_op * aDag_op = (0 : M2R) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [aDag_op, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Local CAR identity on the Cantor/Fock Boolean cell. -/
+theorem local_car_identity :
+    a_op * aDag_op + aDag_op * a_op = (1 : M2R) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a_op, aDag_op, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Applying creation twice to the local vacuum is zero.
+
+This is the concrete `Op² = 0` Pauli-exclusion channel.
+-/
+theorem create_create_false_eq_zero :
+    aDag_op * (aDag_op * cantorState false) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [aDag_op, cantorState, state_false, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Applying annihilation twice to the occupied state is zero.
+
+This is the dual square-zero local channel.
+-/
+theorem annihilate_annihilate_true_eq_zero :
+    a_op * (a_op * cantorState true) = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a_op, cantorState, state_true, Matrix.mul_apply, Fin.sum_univ_two]
+
+end InfoGeometry.Canonical.CantorBinaryHopCharge

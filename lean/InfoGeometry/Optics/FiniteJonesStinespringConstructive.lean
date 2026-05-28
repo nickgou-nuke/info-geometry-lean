@@ -177,7 +177,7 @@ def toStinespringIsometry :
     InfoGeometry.Optics.FiniteJonesStinespring.StinespringIsometry JonesMat where
   R := D.R
   V := D.V
-  isometry_law := D.blockColumn_isometry
+  isometry_eq_one := D.blockColumn_isometry
 
 @[simp]
 theorem toStinespringIsometry_R :

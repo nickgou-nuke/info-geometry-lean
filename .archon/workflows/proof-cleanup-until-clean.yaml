@@ -12,25 +12,6 @@ worktree:
 
 nodes:
   - id: cleanup-heartbeat
+    command: proof-cleanup-until-clean
     assistant: pi
     always_run: true
-    prompt: |
-      Start the repository proof-cleanup heartbeat from the live checkout.
-
-      Run exactly this command and let it continue until the user interrupts it
-      with Ctrl-C:
-
-      ```bash
-      tools/heartbeat/archon_repo_cleanup_loop.sh
-      ```
-
-      Important:
-      - Do not add MAX_ITERATIONS.
-      - Do not add MAX_STALE_ITERATIONS.
-      - Do not add ARCHON_CYCLE_TIMEOUT_SECONDS.
-      - Do not set STOP_WHEN_CLEAN=1.
-      - The outer heartbeat is intentionally unbounded.
-      - Do not stage generated logs/reports/artifacts.
-
-      The script itself repeatedly runs the configured one-cycle workflow and
-      records summaries under reports/cleanup-loop/<RUN_ID>/.

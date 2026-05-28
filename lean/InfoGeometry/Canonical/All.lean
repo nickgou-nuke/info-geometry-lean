@@ -294,6 +294,7 @@ import InfoGeometry.Canonical.DiscreteModularSpectrum
 import InfoGeometry.Canonical.DiscreteCPTGroup
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinChiralLightconeBoundary
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap
@@ -397,6 +398,7 @@ import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.FierzStressProjectionBridge
 import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
+import InfoGeometry.Canonical.FiniteInvariantTransport
 import InfoGeometry.Canonical.FiniteStageInvariantTransport
 import InfoGeometry.Canonical.FirstQuantizationProbability
 import InfoGeometry.Canonical.FisherVolumeBridge

@@ -40,7 +40,14 @@ A valid finite-to-infinite theorem must use one of these honest mechanisms:
    - Define the structural bracket and the cocycle explicitly, then form the
      extension.
    - Central terms are cocycles/central coordinates, not stored theorem fields.
-5. **Genuine analytic/topological completion**
+5. **Algebraic direct limit / colimit**
+   - Construct the actual colimit object, e.g. Mathlib `DirectLimit`, with
+     explicit transition maps and canonical injections.
+   - Prove the directed-system laws and canonical-image compatibility.
+   - State closure on canonical images, and expose the universal compatible-cone
+     lift when an external target is needed.
+   - Do not call this a topological completion.
+6. **Genuine analytic/topological completion**
    - Only if the topology, Cauchy/convergence notion, continuity, and limiting
      theorem are formalized and proved.
    - Otherwise leave visible debt or keep the file data-only.
@@ -78,6 +85,20 @@ The shared invariant shape is:
 ```text
 closure = shifted structural term + explicit central/cocycle term
 ```
+
+Repo-owned superclosure/direct-limit exemplars:
+
+- `lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean` — finite
+  single and mixed superclosure induction over typed stages.
+- `lean/InfoGeometry/Algebra/InfiniteSuperClosureLemmas.lean` — explicit
+  target-image closure via maps `Stage n →+* Limit`.
+- `lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean` — actual
+  Mathlib `DirectLimit`, canonical maps, compatible-cone lift, and closure on
+  canonical images.
+- `lean/InfoGeometry/Algebra/FinsuppN2ModeInduction.lean` — Finsupp/direct-sum
+  object-equality N=2 anticommutator closure.
+- `lean/InfoGeometry/Algebra/SupergradedCocycle.lean` — symmetric odd--odd
+  super-cocycle separated from ordinary skew Lie central extensions.
 
 ## General transition templates
 
@@ -217,7 +238,42 @@ Required proof shape:
 This proves **finite-stage** transport only.  It is not an infinite colimit or
 completion theorem unless the colimit/completion is separately constructed.
 
-### Template F: genuine analytic limit/completion
+### Template F: algebraic direct limit / colimit
+
+Use this when the infinite object is a genuine algebraic colimit of finite
+stages, not merely an external target image.
+
+Required proof shape:
+
+1. Define all transition maps between finite stages, not only informal arrows.
+   For a one-step chain this usually means an iterated map such as:
+   `bondMap bond m n h : Stage m →+* Stage n`.
+2. Instantiate the directed-system laws (`map_self`, `map_map`) for those
+   transition maps.
+3. Define the actual colimit object, e.g. Mathlib's algebraic `DirectLimit`.
+4. Define explicit canonical maps from each stage, e.g.
+   `directLimitOf bond n : Stage n →+* DirectLimit...`.
+5. Prove canonical-image compatibility along every transition map and the
+   one-step bonding maps.
+6. If an external target is used, define a compatible cone and the universal
+   lift out of the direct limit, with a readback theorem on canonical images.
+7. State closure only for canonical images or elements generated/represented by
+   the direct-limit construction. Do not assert arbitrary analytic completion
+   or global centrality without separate owner theorems.
+
+Repo-owned examples:
+
+```lean
+InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf
+InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitLift
+InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimit_superClosure_all
+```
+
+This proves an **algebraic colimit** theorem. It is still not a Banach/Hilbert,
+KMS, spectral, Type III, or convergence theorem.
+
+### Template G: genuine analytic limit/completion
 
 Use only when the file formalizes the analytic infrastructure.
 
@@ -241,6 +297,9 @@ Before writing Lean code, choose exactly one primary mechanism:
 - mode family plus proved support preservation;
 - central extension by explicit cocycle;
 - locally finite/truncated sum;
+- finite inductive chain only;
+- explicit target-image theorem;
+- algebraic `DirectLimit`/colimit;
 - genuine topological completion.
 
 Record the choice in the module docstring.
@@ -285,9 +344,23 @@ or local-truncation theorem before it is used in a proof.
 
 ### 6. Separate finite-stage from infinite-limit claims
 
-A theorem about `φ^[n]` for every `n : ℕ` is a finite-stage theorem.  It is not
-an infinite limit theorem.  Do not describe it as a completed infinite limit
-unless Template F is also implemented.
+A theorem about `φ^[n]` for every `n : ℕ` is a finite-stage theorem. It is not
+an infinite target-image theorem, an algebraic colimit theorem, or an analytic
+completion theorem.
+
+Use the following vocabulary precisely:
+
+- **finite-stage theorem**: proves a law for each `n` by induction;
+- **target-image theorem**: maps every finite stage into an explicit target
+  `L` and proves the law on `ι n (x n)`;
+- **algebraic direct-limit theorem**: constructs the Mathlib direct limit,
+  canonical maps, and compatible-cone lift;
+- **analytic completion theorem**: adds topology/convergence/continuity and
+  proves a completed limit law.
+
+Do not describe a finite-stage theorem as a completed infinite limit. Algebraic
+DirectLimit work from Template F is a colimit theorem, not an analytic
+completion theorem.
 
 ### 7. Validation gates
 
@@ -332,7 +405,8 @@ Ask before accepting a finite-to-infinite theorem:
 5. Where is the cocycle/central obstruction defined?
 6. Is the cocycle support/resonance explicit (`m+n=0`, residue, etc.)?
 7. If a sum over modes appears, where is local truncation proved?
-8. Is this only finite-stage transport, or is a real colimit/completion built?
+8. Is this finite-stage transport, target-image transport, algebraic
+   DirectLimit/colimit, or genuine analytic completion?
 9. Does the theorem prove closure from definitions, or re-export a stored law?
 10. Would UlamAI report placeholders or axioms?
 11. Does the heartbeat improve without introducing new proxy fields?

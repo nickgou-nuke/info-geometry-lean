@@ -33,6 +33,14 @@ The external Virasoro package is the model for the algebraic cases:
 - `lean/InfoGeometry/External/Virasoro/Sugawara.lean`
 - `lean/InfoGeometry/External/Virasoro/CentralExtension.lean`
 
+Repo-owned superclosure/direct-limit exemplars:
+
+- `lean/InfoGeometry/Algebra/InductiveSuperClosureLemmas.lean`
+- `lean/InfoGeometry/Algebra/InfiniteSuperClosureLemmas.lean`
+- `lean/InfoGeometry/Algebra/DirectLimitSuperClosureLemmas.lean`
+- `lean/InfoGeometry/Algebra/FinsuppN2ModeInduction.lean`
+- `lean/InfoGeometry/Algebra/SupergradedCocycle.lean`
+
 ## Core policy
 
 Never close an infinite theorem by hiding the missing proof in a law,
@@ -44,7 +52,11 @@ A valid finite-to-infinite theorem must use one of these mechanisms:
 2. mode families with proved finite-support preservation;
 3. explicit central extension by a cocycle;
 4. locally finite/truncated sums with support proof before summing;
-5. genuine analytic completion with topology, convergence, and continuity
+5. finite-stage induction along homomorphic bonding maps;
+6. explicit target-image theorem via maps `ι n : Stage n →+* L`;
+7. algebraic direct limit/colimit via Mathlib `DirectLimit`, canonical maps,
+   and compatible-cone lift;
+8. genuine analytic completion with topology, convergence, and continuity
    formalized.
 
 If none is available, leave an honest `sorry` or keep the artifact data-only.
@@ -84,8 +96,11 @@ Virasoro-style endpoint when feasible.
    control.
 7. For sums, prove local truncation/finite support before using the sum.
 8. For finite iterates, do not call the result an infinite limit unless a real
-   colimit/completion is built.
-9. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
+   target-image, colimit, or completion theorem is built.
+9. For algebraic direct limits, construct the transition maps, instantiate the
+   directed-system laws, define the canonical maps, prove canonical-image
+   compatibility, and expose the universal compatible-cone lift.
+10. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
    theorem that carries the missing proof.
 
 ## Allowed examples
@@ -103,6 +118,11 @@ anticommutatorMode Q R = H + Z
 
 -- Sugawara/local operator sums require truncation
 heiTrunc : ∀ v, atTop.Eventually (fun l => heiOper l v = 0)
+
+-- algebraic direct-limit chain with explicit canonical maps
+bondMap bond m n h : Stage m →+* Stage n
+directLimitOf bond n : Stage n →+* DirectLimitSuperClosure bond
+directLimitLift bond toLimit hcone : DirectLimitSuperClosure bond →+* Limit
 ```
 
 ## Forbidden examples
@@ -120,6 +140,17 @@ convergence_certificate : claimed_convergence
 
 Also forbidden: a theorem whose proof is only `P.some_law`,
 `P.some_certificate`, or equivalent readback.
+
+Use vocabulary precisely:
+
+- finite-stage theorem: induction over `n` only;
+- target-image theorem: closure after explicit maps into a target `L`;
+- algebraic direct-limit theorem: actual `DirectLimit` plus canonical maps and
+  compatible-cone lift;
+- analytic completion theorem: topology/convergence/continuity plus completed
+  limit law.
+
+Do not describe an algebraic direct limit as a topological completion.
 
 ## Validation commands
 
@@ -144,6 +175,7 @@ Do not commit generated UlamAI reports unless explicitly requested.
 A finite-to-infinite bridge is acceptable only if one of these is true:
 
 - it is a kernel-checked theorem derived from direct sums, finite support,
-  local truncation, explicit cocycles, or proved convergence;
+  finite-stage induction, explicit target images, algebraic `DirectLimit`, local
+  truncation, explicit cocycles, or proved analytic convergence;
 - it is data-only and makes no theorem claim;
 - the missing theorem is marked by an honest visible `sorry`.

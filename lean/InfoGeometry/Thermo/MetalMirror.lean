@@ -48,8 +48,8 @@ trace-nonincreasing when viewed alone.
 
 `idealFlow` is the lossless comparison branch, used as the reversible reference.
 
-The analytic facts such as complete positivity, trace behavior, and optical
-realizability are kept as proof-carrying certificates.
+Analytic facts such as complete positivity, trace behavior, and optical
+realizability belong to concrete channel theorems layered above this datum.
 -/
 structure MetalMirrorChannel
     (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)) where
@@ -111,16 +111,15 @@ theorem idealPoint_op
 
 end MetalMirrorChannel
 
-/-! ## 2. Stinespring-Tomita dilation socket -/
+/-! ## 2. Stinespring-Tomita dilation -/
 
 /--
 A Stinespring-Tomita dilation witness for a metal mirror.
 
-The conservation law says that the ideal lossless comparison branch decomposes
-into the actual reflected system branch plus a Tomita-mirrored commutant leak.
-
-This is not a full Stinespring theorem. It is the proof-carrying socket into
-which a concrete dilation theorem can later be installed.
+The conservation equality says that the ideal lossless comparison branch
+decomposes into the actual reflected system branch plus a Tomita-mirrored
+commutant leak.  Model-specific Tomita/CPT identifications should be stated as
+separate theorem hypotheses, not as generic proposition fields here.
 -/
 structure StinespringTomitaMirrorDilation
     {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
@@ -131,16 +130,10 @@ structure StinespringTomitaMirrorDilation
   /-- Leaked/environment branch. -/
   leakFlow : OperatorEnd E →L[ℝ] OperatorEnd E
 
-  /-- Conservation law: `ideal = actual + mirrored leak`. -/
-  conservation_law :
+  /-- Conservation equality: `ideal = actual + mirrored leak`. -/
+  conservation_eq :
     ∀ U : OperatorEnd E,
       M.idealFlow U = M.actualFlow U + mirror (leakFlow U)
-
-  /-- Mirror is the intended Tomita/CPT routing. -/
-  tomita_mirror : Prop
-
-  /-- Total dilated evolution is information-conserving. -/
-  dilation_conservation : Prop
 
 namespace StinespringTomitaMirrorDilation
 
@@ -149,11 +142,11 @@ variable
     {M : MetalMirrorChannel c}
     (D : StinespringTomitaMirrorDilation M)
 
-/-- Re-export of the Stinespring-Tomita conservation law. -/
-theorem ideal_eq_actual_add_mirrored_leak
+/-- The Stinespring-Tomita conservation equality. -/
+theorem conservation
     (U : OperatorEnd E) :
     M.idealFlow U = M.actualFlow U + D.mirror (D.leakFlow U) :=
-  D.conservation_law U
+  D.conservation_eq U
 
 end StinespringTomitaMirrorDilation
 
@@ -245,7 +238,7 @@ theorem macroscopicHeatLoss_zero_of_actual_eq_ideal
 /--
 A metal mirror Ricci-flux bridge.
 
-This is the proof-carrying capstone socket. It does not assert that every metal
+This is a proof-carrying capstone datum. It does not assert that every metal
 mirror automatically realizes a given TKK Ricci flux. Instead, it records the
 concrete generator assignment and the equality between macroscopic heat loss
 and scalar Ricci-flux readout.
@@ -305,36 +298,6 @@ theorem heat_eq_flux
   X.heat_eq_ricci_flux U
 
 end MetalMirrorRicciFluxBridge
-
-/-! ## 5. Owner targets -/
-
-/-- Owner target for a metal mirror dissipative channel over the regular cone. -/
-def MetalMirrorChannelOwnerTarget
-    (c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)) : Prop :=
-  Nonempty (MetalMirrorChannel c)
-
-/-- Owner target for a Stinespring-Tomita dilation of a metal mirror channel. -/
-def StinespringTomitaMirrorDilationOwnerTarget
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    (M : MetalMirrorChannel c) : Prop :=
-  Nonempty (StinespringTomitaMirrorDilation M)
-
-/-- Owner target for the metal mirror Ricci-flux bridge. -/
-def MetalMirrorRicciFluxBridgeOwnerTarget
-    {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
-    {ω : OperatorEnd E →L[ℝ] ℝ}
-    {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
-    {F : ModularRegularConeFlow c}
-    {D2 : SecondVariationAtZero}
-    {J L Obs : Type*}
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    {T : TKKLieClosure J L}
-    {R : RicciFluxReadout J L Obs T}
-    (M : MetalMirrorChannel c)
-    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R) : Prop :=
-  Nonempty (MetalMirrorRicciFluxBridge M B)
 
 end RegularCone
 
@@ -467,7 +430,7 @@ structure StinespringMirrorDilation
   mirror : Op →L[ℝ] Op
   commutantFlow : Op →L[ℝ] Op
 
-  conservation_law :
+  conservation_eq :
     ∀ U : Op,
       M.idealUnitary U = M.actualFlow U + mirror (commutantFlow U)
 
@@ -484,7 +447,7 @@ theorem ideal_sub_actual_eq_mirror_commutant
     (U : Op) :
     M.idealUnitary U - M.actualFlow U =
       D.mirror (D.commutantFlow U) := by
-  have h := D.conservation_law U
+  have h := D.conservation_eq U
   rw [h]
   abel
 
@@ -548,7 +511,7 @@ theorem macroscopicHeatLoss_eq_zero_of_actual_eq_ideal
   rw [h]
   exact B.self_eq_zero_on_cone (M.ideal_preserves_cone U.op U.mem)
 
-/-! ### Ricci-flux bridge socket -/
+/-! ### Ricci-flux bridge -/
 
 /--
 Ricci/Bregman flux readout.
@@ -562,8 +525,6 @@ structure RicciFluxReadout
 
 /--
 Bridge saying that the metal-mirror Bregman heat equals the Ricci flux readout.
-
-This is a witness, not an unconditional theorem.
 -/
 structure MetalMirrorHeatRicciFluxBridge
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
@@ -574,12 +535,6 @@ structure MetalMirrorHeatRicciFluxBridge
   heat_eq_flux :
     ∀ U : RegularConePoint Ω,
       macroscopicHeatLoss B M U = R.flux U.op
-
-  /-- Ricci readout is identified with TKK grade slippage. -/
-  tkk_grade_slippage : Prop
-
-  /-- Bregman Hessian is identified with the selected flux readout. -/
-  bregman_hessian : Prop
 
 namespace MetalMirrorHeatRicciFluxBridge
 
@@ -599,13 +554,13 @@ theorem heat_is_ricci_flux
 
 end MetalMirrorHeatRicciFluxBridge
 
-/-! ### Optical calibration socket -/
+/-! ### Optical calibration readouts -/
 
 /--
-Optical calibration for a metal mirror.
+Optical readouts for a metal mirror.
 
-This is where the thermodynamic shear is connected to measurable optical data:
-reflectivity, retardance, and refractive-index readouts.
+Equations connecting thermodynamic shear to measured reflectivity, retardance,
+ellipticity, or refractive index belong to concrete optical material theorems.
 -/
 structure MetalMirrorOpticalCalibration
     (Op : Type*) where
@@ -613,11 +568,6 @@ structure MetalMirrorOpticalCalibration
   retardance : Op → ℝ
   ellipticity : Op → ℝ
   refractiveIndexReadout : Op → ℂ
-
-  heat_controls_absorption : Prop
-  hessian_controls_retardance : Prop
-  retardance_controls_ellipticity : Prop
-  refractive_index_calibration : Prop
 
 /-! ### Admissibility package -/
 
@@ -665,22 +615,16 @@ structure MetalMirrorRicciFluxAdmissible
     ∀ U : RegularConePoint readout.Ω,
       readout.heatFlux U = ricciFlux U.op
 
-  tkk_grade_slippage : Prop
-  bregman_hessian : Prop
-
-/-- A calibrated Ricci-flux bridge exists from admissible data. -/
-theorem metalMirrorRicciFluxBridge_nonempty_of_admissible
+/-- A calibrated Ricci-flux bridge from admissible data. -/
+theorem metalMirrorRicciFluxBridge_of_admissible
     {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
     (h : MetalMirrorRicciFluxAdmissible Op) :
-    Nonempty
-      (MetalMirrorHeatRicciFluxBridge
-        Op h.readout.bregman h.readout.channel
-          { flux := h.ricciFlux }) := by
-  refine ⟨{
+    MetalMirrorHeatRicciFluxBridge
+      Op h.readout.bregman h.readout.channel
+        { flux := h.ricciFlux } := by
+  refine {
     heat_eq_flux := ?_
-    tkk_grade_slippage := h.tkk_grade_slippage
-    bregman_hessian := h.bregman_hessian
-  }⟩
+  }
   intro U
   change macroscopicHeatLoss h.readout.bregman h.readout.channel U =
     h.ricciFlux U.op

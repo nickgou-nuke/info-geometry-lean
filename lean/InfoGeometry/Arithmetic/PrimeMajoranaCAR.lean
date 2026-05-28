@@ -26,6 +26,134 @@ def anticomm
     (A B : Op) : Op :=
   A * B + B * A
 
+/-- Ring homomorphisms preserve anticommutators. -/
+theorem map_anticomm
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    (X Y : A) :
+    φ (anticomm X Y) = anticomm (φ X) (φ Y) := by
+  simp [anticomm]
+
+/--
+Transport of a two-supercharge closure relation.
+
+If `{Q,R} = H + Z`, then after any ring homomorphism,
+`{φ Q, φ R} = φ H + φ Z`.
+-/
+theorem map_supercharge_closure
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q R H Z : A}
+    (h : anticomm Q R = H + Z) :
+    anticomm (φ Q) (φ R) = φ H + φ Z := by
+  calc
+    anticomm (φ Q) (φ R) = φ (anticomm Q R) := by
+      exact (map_anticomm φ Q R).symm
+    _ = φ (H + Z) := by
+      rw [h]
+    _ = φ H + φ Z := by
+      simp
+
+/--
+Transport of a diagonal supercharge closure relation.
+-/
+theorem map_self_supercharge_closure
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q H Z : A}
+    (h : anticomm Q Q = H + Z) :
+    anticomm (φ Q) (φ Q) = φ H + φ Z := by
+  exact map_supercharge_closure φ h
+
+/--
+Transport of the normalized closure relation `{Q,Q} = 2 * (H + Z)`.
+-/
+theorem map_self_supercharge_closure_two
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q H Z : A}
+    (h : anticomm Q Q = (2 : A) * (H + Z)) :
+    anticomm (φ Q) (φ Q) = (2 : B) * (φ H + φ Z) := by
+  calc
+    anticomm (φ Q) (φ Q) = φ (anticomm Q Q) := by
+      exact (map_anticomm φ Q Q).symm
+    _ = φ ((2 : A) * (H + Z)) := by
+      rw [h]
+    _ = (2 : B) * (φ H + φ Z) := by
+      simpa using congrArg (fun t : B => t * (φ H + φ Z)) (map_natCast φ 2)
+
+/-- Centrality is preserved on the image of a ring homomorphism. -/
+theorem map_commutes_with_image
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Z X : A}
+    (hZX : Z * X = X * Z) :
+    φ Z * φ X = φ X * φ Z := by
+  calc
+    φ Z * φ X = φ (Z * X) := by
+      exact (map_mul φ Z X).symm
+    _ = φ (X * Z) := by
+      rw [hZX]
+    _ = φ X * φ Z := by
+      exact map_mul φ X Z
+
+/-- Ring equivalences preserve anticommutators. -/
+theorem ringEquiv_anticomm
+    {A B : Type*} [Ring A] [Ring B]
+    (e : A ≃+* B)
+    (X Y : A) :
+    anticomm (e X) (e Y) = e (anticomm X Y) := by
+  simp [anticomm]
+
+/--
+Duality transport of a two-supercharge closure relation.
+-/
+theorem ringEquiv_supercharge_closure
+    {A B : Type*} [Ring A] [Ring B]
+    (e : A ≃+* B)
+    {Q R H Z : A}
+    (h : anticomm Q R = H + Z) :
+    anticomm (e Q) (e R) = e H + e Z := by
+  calc
+    anticomm (e Q) (e R) = e (anticomm Q R) := by
+      exact ringEquiv_anticomm e Q R
+    _ = e (H + Z) := by
+      rw [h]
+    _ = e H + e Z := by
+      simp
+
+/--
+Duality transport of the normalized closure relation `{Q,Q} = 2 * (H + Z)`.
+-/
+theorem ringEquiv_self_supercharge_closure_two
+    {A B : Type*} [Ring A] [Ring B]
+    (e : A ≃+* B)
+    {Q H Z : A}
+    (h : anticomm Q Q = (2 : A) * (H + Z)) :
+    anticomm (e Q) (e Q) = (2 : B) * (e H + e Z) := by
+  calc
+    anticomm (e Q) (e Q) = e (anticomm Q Q) := by
+      exact ringEquiv_anticomm e Q Q
+    _ = e ((2 : A) * (H + Z)) := by
+      rw [h]
+    _ = (2 : B) * (e H + e Z) := by
+      simpa using congrArg (fun t : B => t * (e H + e Z)) (map_natCast e 2)
+
+/-- Ring equivalences preserve centrality on transported elements. -/
+theorem ringEquiv_commutes_with_image
+    {A B : Type*} [Ring A] [Ring B]
+    (e : A ≃+* B)
+    {Z X : A}
+    (hZX : Z * X = X * Z) :
+    e Z * e X = e X * e Z := by
+  calc
+    e Z * e X = e (Z * X) := by
+      exact (map_mul e Z X).symm
+    _ = e (X * Z) := by
+      rw [hZX]
+    _ = e X * e Z := by
+      exact map_mul e X Z
+
 /--
 A local exterior CAR pair.
 
@@ -166,6 +294,13 @@ theorem dMajorana_mul_cMajorana_eq_neg :
                     rw [P.eps_sq_zero, P.iota_sq_zero]
                     abel]
           abel
+
+/-- The split Majoranas anticommute: `{c,d}=0`. -/
+theorem cMajorana_dMajorana_anticomm_zero :
+    P.cMajorana * P.dMajorana + P.dMajorana * P.cMajorana = 0 := by
+  rw [P.dMajorana_mul_cMajorana_eq_neg]
+  dsimp [parityOp]
+  abel
 
 /--
 The local parity squares to one.

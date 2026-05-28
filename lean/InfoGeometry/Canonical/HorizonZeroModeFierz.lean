@@ -114,8 +114,9 @@ Horizon zero-mode Fierz law.
 
 The coordinates are expectation values of Drazin-stabilized channel
 observables.  The channels are required to be horizon zero modes, but the raw
-operator `Aᴰ` is not required to be a modular zero mode.  The residual law is
-explicitly supplied.
+operator `Aᴰ` is not required to be a modular zero mode.  No Fierz quadric
+identity is stored here; concrete models must prove any residual equation from
+lower definitions.
 -/
 @[rep_depth operator]
 structure HorizonZeroModeFierzLaw
@@ -139,8 +140,6 @@ structure HorizonZeroModeFierzLaw
           channels
           sanctuary.horizon
           ch
-  quadric_law :
-    residual.residual coords = 0
 
 namespace HorizonZeroModeFierzLaw
 
@@ -161,7 +160,7 @@ theorem channels_are_zero_modes :
 
 /-- Final coordinates are horizon expectation values of Drazin-stabilized channels. -/
 @[rep_depth operator]
-theorem coords_are_horizon_expectations_readback
+theorem coords_are_horizon_expectations_eq
     (ch : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel) :
     F.coords.coord ch =
       centralizerExpectationFierzCoordinate
@@ -170,12 +169,6 @@ theorem coords_are_horizon_expectations_readback
         F.sanctuary.horizon
         ch :=
   F.coords_are_horizon_expectations ch
-
-/-- Final residual-zero law for the supplied horizon Fierz packet. -/
-@[rep_depth operator]
-theorem residual_eq_zero :
-    F.residual.residual F.coords = 0 :=
-  F.quadric_law
 
 end HorizonZeroModeFierzLaw
 

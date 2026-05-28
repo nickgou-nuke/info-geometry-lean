@@ -13,16 +13,11 @@ Majorana--Berry--Keating operator, does not construct a Krein-space extension,
 does not prove trace-class/temperedness of a relative heat kernel, and does not
 identify a Mellin transform with the logarithmic derivative of completed `xi`.
 
-It records the exact analytic socket:
+It records the finite/infinite MBK operator readouts together with later
+analytic socket fields for the unresolved spectral statements.
 
-* finite-volume operators `D_Λ = H_BK ⊗ 1 + ρ ⊗ Q_Λ`;
-* a free reference `D₀ = H_BK ⊗ 1`;
-* an infinite-volume limit/extension law for `D`;
-* a well-defined relative heat trace;
-* a Mellin transform identity with `- d/ds log ξ(s)`;
-* singular-support matching with completed-`xi` zero frequencies.
-
-All infinite-dimensional spectral statements remain explicit certificates.
+In this cleanup cycle, the vacuous finite-volume law/certificate wrappers were
+removed rather than preserved as proof proxies.
 -/
 
 noncomputable section
@@ -57,32 +52,6 @@ structure FiniteMBKDiracData
     PrimeLabel → ℝ
   rho :
     Operator
-  finite_dirac_law : Prop
-  finite_dirac_certificate :
-    finite_dirac_law
-  free_reference_law : Prop
-  free_reference_certificate :
-    free_reference_law
-
-namespace FiniteMBKDiracData
-
-variable {Cutoff ContinuousHilbert FockSpace Operator PrimeLabel : Type*}
-variable
-  (F : FiniteMBKDiracData Cutoff ContinuousHilbert FockSpace Operator PrimeLabel)
-
-/-- Re-export of the finite `D_Λ = H_BK ⊗ 1 + ρ ⊗ Q_Λ` law. -/
-@[rep_depth operator]
-theorem finite_dirac :
-    F.finite_dirac_law :=
-  F.finite_dirac_certificate
-
-/-- Re-export of the free-reference `D₀ = H_BK ⊗ 1` law. -/
-@[rep_depth operator]
-theorem free_reference :
-    F.free_reference_law :=
-  F.free_reference_certificate
-
-end FiniteMBKDiracData
 
 /--
 Infinite-volume MBK extension packet.

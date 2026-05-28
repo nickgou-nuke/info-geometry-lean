@@ -286,6 +286,7 @@ import InfoGeometry.Meta.DrazinRefactor
 import InfoGeometry.Meta.GromovErgostructureBridge
 import InfoGeometry.Meta.HiveLogos
 import InfoGeometry.Meta.InductiveInvariantPacket
+import InfoGeometry.Meta.InductiveLimitClosureInterface
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy

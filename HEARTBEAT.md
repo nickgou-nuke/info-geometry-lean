@@ -33,5 +33,6 @@ Goal: clean vacuous Lean content and maintain Mathlib-style, proof-only developm
 - Status: flowing
 - Last manual setup: 2026-05-28
 - Current scope: `lean/InfoGeometry/Canonical`
-- Current known counts after last manual cycle: `sorry: 0`, `proxy_field: 170`, `prop_socket: 66`, `reexport_proxy: 122`
-- Next target: `ProjectiveCCR.lean` or next heartbeat top target
+- Last proof-cleanup cycle: `2026-05-28T03:07:02Z`
+- Current known counts after this cycle: `sorry: 0`, `proxy_field: 160`, `prop_socket: 64`, `reexport_proxy: 115`
+- Next target: `lean/InfoGeometry/Canonical/PrimeMBKSelfAdjointTrace.lean` (`finite_to_infinite_limit_law`)

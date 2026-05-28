@@ -9,9 +9,26 @@ Dirac-Hestenes lane.  It intentionally keeps the phase generator as a real
 bivector field of the spacetime algebra: the distinguished spin plane
 `sigma3Phase` squares to `-1`, while boost planes square to `+1`.
 
+The concrete `4 × 4` realified Hermitian Pauli slice below is the physical
+`(+---)` Minkowski lane, not the split `(2,2)` signature of raw `M₂(ℝ)`.
+Spacetime four-vectors are encoded as real symmetric `4 × 4` matrices
+commuting with a fixed real complex structure `J`.  The scalar/time coordinate
+is recovered by trace normalization, while the signed Minkowski interval is
+recovered from the Pfaffian of `S * J`.  In the concrete owner:
+
+* `concreteSpacetimeMatrix_commutes_with_J` proves the realification slice
+  commutes with `J`;
+* `concreteSpacetimeMatrix_time_eq_trace_div_four` proves
+  `trace S / 4 = t`;
+* `concrete_pfaffianSJ_eq_neg_interval` proves
+  `Pf(SJ) = -(t² - x² - y² - z²)`;
+* `concrete_null_cone_iff_pfaffian_zero` proves the light cone is exactly the
+  Pfaffian-zero locus.
+
 The declarations are conservative: conservation and spin-transport laws are
-not smuggled in as global axioms.  They are carried by explicit owner packets
-until a lower analytic owner proves them from a concrete differential model.
+not smuggled in as global assumptions.  They are carried by explicit owner
+packets until a lower analytic owner proves them from a concrete differential
+model.
 -/
 
 namespace InfoGeometry.Clifford.HestenesDirac
@@ -411,6 +428,10 @@ theorem phaseJ_sq : phaseJ * phaseJ = -1 := by
   change matMul phaseJ phaseJ = matNeg identity
   apply RealMatrix2.ext <;> norm_num [phaseJ, matMul, matNeg, identity]
 
+/-- Trace of a real `2 × 2` matrix. -/
+def trace (A : RealMatrix2) : ℝ :=
+  A.m00 + A.m11
+
 /-- Determinant of a real `2 × 2` matrix. -/
 def determinant (A : RealMatrix2) : ℝ :=
   A.m00 * A.m11 - A.m01 * A.m10
@@ -431,9 +452,52 @@ theorem determinant_pauliChiralOperator (t x y z : ℝ) :
   simp [determinant, pauliChiralOperator]
   ring
 
+/-- The trace of the real Pauli/chiral operator recovers twice the scalar coordinate. -/
+theorem trace_pauliChiralOperator (t x y z : ℝ) :
+    trace (pauliChiralOperator t x y z) = 2 * t := by
+  simp [trace, pauliChiralOperator]
+  ring
+
+/-- Trace-normalized real Pauli/chiral operator, defined when `t` is nonzero. -/
+noncomputable def normalizedPauliChiralOperator (t x y z : ℝ) : RealMatrix2 where
+  m00 := (t + z) / (2 * t)
+  m01 := (x - y) / (2 * t)
+  m10 := (x + y) / (2 * t)
+  m11 := (t - z) / (2 * t)
+
+/-- The trace-normalized real Pauli/chiral operator has trace one. -/
+theorem trace_normalizedPauliChiralOperator {t x y z : ℝ} (ht : t ≠ 0) :
+    trace (normalizedPauliChiralOperator t x y z) = 1 := by
+  unfold trace normalizedPauliChiralOperator
+  field_simp [ht]
+  ring
+
+/--
+The determinant of the trace-normalized real Pauli/chiral operator is the split
+quadratic form divided by `4t²`.
+-/
+theorem determinant_normalizedPauliChiralOperator {t x y z : ℝ} (ht : t ≠ 0) :
+    determinant (normalizedPauliChiralOperator t x y z) =
+      (t * t - x * x - z * z + y * y) / (4 * t * t) := by
+  unfold determinant normalizedPauliChiralOperator
+  field_simp [ht]
+  ring
+
 end RealMatrix2
 
 /-! ### Realified Hermitian Pauli spacetime slice -/
+
+/-!
+This is the checked real `4 × 4` replacement for the complex Hermitian Pauli
+matrix `[[t+z, x-iy], [x+iy, t-z]]`.  The real complex structure `J` carries the
+role of scalar `i`; the spacetime matrix `S` is symmetric and satisfies
+`S * J = J * S`.  The determinant readout is the squared interval, while the
+Pfaffian of `S * J` gives the signed interval without taking a square root.
+
+The affine trace-one/Bloch-ball interpretation is downstream geometry: this
+file proves the realification, trace, Pfaffian, determinant-square, and null
+cone identities used by that interpretation.
+-/
 
 /-- Concrete real `4 × 4` matrix with explicit coordinates.  This layer is used
 to kernel-check the realification identities behind the abstract Pfaffian owner

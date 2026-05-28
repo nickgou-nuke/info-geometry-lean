@@ -458,7 +458,7 @@ theorem bregman_invariant_affineCoadjoint
     bregmanDivergence Φ nablaΦ x y := by
   unfold bregmanDivergence pairing
   have harg : T x - T y = T (x - y) := by
-    simpa using (map_sub T x y).symm
+    simp [map_sub]
   have hpair :
       ((nablaΦ y).comp (T.symm : V →ₗ[ℝ] V) + θ) (T (x - y))
         =

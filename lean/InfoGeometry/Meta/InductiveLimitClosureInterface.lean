@@ -112,6 +112,119 @@ theorem include_image_central
     SupergradedClosureAt.ImageCentral I (C.includeStage n) :=
   SupergradedClosureAt.map_image_central I (C.includeStage n)
 
+/--
+Square-zero closure is unchanged when the next-stage representative is included
+through the explicit compatible cone.
+-/
+theorem include_bond_odd_sq_zero
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    C.includeStage (n + 1) (bond n I.Q) *
+        C.includeStage (n + 1) (bond n I.Q) = 0 := by
+  rw [C.compatible n I.Q]
+  exact include_odd_sq_zero C I
+
+/--
+Projector/idempotent closure is unchanged when the next-stage representative is
+included through the explicit compatible cone.
+-/
+theorem include_bond_parity_idempotent
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    C.includeStage (n + 1) (bond n I.P) *
+        C.includeStage (n + 1) (bond n I.P) =
+      C.includeStage (n + 1) (bond n I.P) := by
+  rw [C.compatible n I.P]
+  exact include_parity_idempotent C I
+
+/--
+Odd-odd star closure is unchanged when the next-stage representative is
+included through the explicit compatible cone.
+-/
+theorem include_bond_odd_odd_closure
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    C.includeStage (n + 1) (bond n I.Q) *
+          star (C.includeStage (n + 1) (bond n I.Q)) +
+        star (C.includeStage (n + 1) (bond n I.Q)) *
+          C.includeStage (n + 1) (bond n I.Q) =
+      C.includeStage (n + 1) (bond n I.H) := by
+  rw [C.compatible n I.Q, C.compatible n I.H]
+  exact include_odd_odd_closure C I
+
+/--
+Parity/odd anticommutation is unchanged when the next-stage representative is
+included through the explicit compatible cone.
+-/
+theorem include_bond_parity_odd_anticomm
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    C.includeStage (n + 1) (bond n I.P) *
+          C.includeStage (n + 1) (bond n I.Q) +
+        C.includeStage (n + 1) (bond n I.Q) *
+          C.includeStage (n + 1) (bond n I.P) = 0 := by
+  rw [C.compatible n I.P, C.compatible n I.Q]
+  exact include_parity_odd_anticomm C I
+
+/--
+Image-centrality is unchanged when both representatives are advanced by one
+bonding map before inclusion into the explicit target.
+-/
+theorem include_bond_image_central
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    ∀ X : Stage n,
+      C.includeStage (n + 1) (bond n I.C) *
+          C.includeStage (n + 1) (bond n X) =
+        C.includeStage (n + 1) (bond n X) *
+          C.includeStage (n + 1) (bond n I.C) := by
+  intro X
+  rw [C.compatible n I.C, C.compatible n X]
+  exact include_image_central C I X
+
+/--
+One-step compatible-cone invariance packet.
+
+This is the algebraic finite-to-target SOP rule: if a finite-stage closure
+packet is advanced by one bonding map and then included in the target, the same
+image-local closure identities hold there.  No global target centrality,
+completion, density, or analytic limit is asserted.
+-/
+theorem include_bond_image_closure
+    (C : AlgebraicLimitCone Stage Limit bond)
+    {n : Nat}
+    (I : SupergradedClosureAt (Stage n)) :
+    C.includeStage (n + 1) (bond n I.Q) *
+        C.includeStage (n + 1) (bond n I.Q) = 0 ∧
+    C.includeStage (n + 1) (bond n I.P) *
+        C.includeStage (n + 1) (bond n I.P) =
+      C.includeStage (n + 1) (bond n I.P) ∧
+    C.includeStage (n + 1) (bond n I.Q) *
+          star (C.includeStage (n + 1) (bond n I.Q)) +
+        star (C.includeStage (n + 1) (bond n I.Q)) *
+          C.includeStage (n + 1) (bond n I.Q) =
+      C.includeStage (n + 1) (bond n I.H) ∧
+    C.includeStage (n + 1) (bond n I.P) *
+          C.includeStage (n + 1) (bond n I.Q) +
+        C.includeStage (n + 1) (bond n I.Q) *
+          C.includeStage (n + 1) (bond n I.P) = 0 ∧
+    (∀ X : Stage n,
+      C.includeStage (n + 1) (bond n I.C) *
+          C.includeStage (n + 1) (bond n X) =
+        C.includeStage (n + 1) (bond n X) *
+          C.includeStage (n + 1) (bond n I.C)) := by
+  exact
+    ⟨include_bond_odd_sq_zero C I,
+      include_bond_parity_idempotent C I,
+      include_bond_odd_odd_closure C I,
+      include_bond_parity_odd_anticomm C I,
+      include_bond_image_central C I⟩
+
 end AlgebraicLimitCone
 
 end InfoGeometry.Meta.InductiveLimitClosureInterface

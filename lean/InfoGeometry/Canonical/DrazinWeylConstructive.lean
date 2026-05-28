@@ -378,6 +378,26 @@ def constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetryWit
       using W.regular_inverse_unique S' hLeft hRight hSupportLeft hSupportRight
 
 /--
+Convert the broad infinite local-Weyl-symmetry package into the older infinite
+Weyl witness interface.  This removes the direct classical-candidate
+commutation proof from callers that can instead supply operator/projector
+`ε`-symmetry plus regular-inverse uniqueness on the infinite Drazin lane.
+-/
+def drazinInfiniteWeylWitness_of_drazinInfiniteLocalWeylSymmetryWitness
+    {T : EndH}
+    (W : DrazinInfiniteLocalWeylSymmetryWitness (E := E) T) :
+    DrazinInfiniteWeylWitness (E := E) T where
+  assumptions := W.assumptions
+  classical_candidate_commutes_spectralEpsilon := by
+    simpa [constructiveRieszWeylData_of_localWeylSymmetry,
+      constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetryWitness,
+      constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero]
+      using
+        (constructiveRieszWeylData_of_localWeylSymmetry (E := E)
+          (constructiveRieszLocalWeylSymmetryData_of_drazinInfiniteLocalWeylSymmetryWitness
+            (E := E) W)).candidate_commutes_spectralEpsilon
+
+/--
 Classical Riesz Weyl witness route: the converted constructive Drazin candidate
 is Weyl-compatible without carrying a separate free commutation hypothesis.
 -/
@@ -520,6 +540,37 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_hasClassicalRieszDecompositio
       (E := E)
       { classical_riesz := h
         classical_candidate_commutes_spectralEpsilon := hComm }
+
+/--
+Classical Riesz local-Weyl route into the same constructive Drazin/Weyl
+existence theorem.  This avoids the direct candidate commutation hypothesis
+`h.D.comp ε = ε.comp h.D`; the commutation is forced by operator/projector
+`ε`-symmetry plus uniqueness of the regular inverse on the classical Riesz lane.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_hasClassicalRieszLocalWeylSymmetry
+    {T : EndH}
+    (h : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T)
+    (hOperator :
+      T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T)
+    (hProjector :
+      h.P.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.P)
+    (hUnique :
+      ∀ S' : EndH,
+        S' * T = h.P →
+        T * S' = h.P →
+        S' * h.P = S' →
+        h.P * S' = S' →
+          S' = h.D) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  exact
+    exists_isDrazinInverse_isWeylCompatible_of_classicalRieszLocalWeylSymmetryWitness
+      (E := E)
+      { classical_riesz := h
+        operator_commutes_spectralEpsilon := hOperator
+        projector_commutes_spectralEpsilon := hProjector
+        regular_inverse_unique := hUnique }
 
 /--
 Broad infinite Drazin assumptions export the same constructive Drazin/Weyl

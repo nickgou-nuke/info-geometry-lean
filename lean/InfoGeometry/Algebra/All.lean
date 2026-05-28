@@ -17,6 +17,7 @@ import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FinsuppN2ModeInduction

@@ -115,7 +115,7 @@ Sugawara corridor.  The remaining gap is not the proof itself but the fact that
 so the bracket equality cannot yet be stored in the packet as typed data.
 -/
 @[rep_depth operator]
-theorem canonicalInfiniteCurrent_level_one_readback :
+theorem canonicalInfiniteCurrent_level_one_commutator :
     ⁅Jinf 𝕜 1, Jinf 𝕜 (-1)⁆ = (1 : 𝕜) • Kinf 𝕜 :=
   canonicalInfiniteCurrent_lie_one_neg_one (𝕜 := 𝕜)
 
@@ -124,7 +124,7 @@ Concrete reverse level-one readback on the canonical infinite-current owner
 carrier.
 -/
 @[rep_depth operator]
-theorem canonicalInfiniteCurrent_level_one_readback_reverse :
+theorem canonicalInfiniteCurrent_level_one_commutator_reverse :
     ⁅Jinf 𝕜 (-1), Jinf 𝕜 1⁆ = ((-1 : Int) : 𝕜) • Kinf 𝕜 :=
   canonicalInfiniteCurrent_lie_neg_one_one (𝕜 := 𝕜)
 

@@ -40,7 +40,7 @@ deriving DecidableEq, Repr
 A minimal V₄-style PT label.
 
 This is the optical boundary bookkeeping for parity/time flips. It is not yet
-a full group implementation; it is the charge-label socket.
+a full group implementation.
 -/
 structure V4Label where
   parityFlip : Bool
@@ -143,19 +143,15 @@ end SPProjectorPair
 /--
 Abstract Fresnel coefficient datum.
 
-The actual Fresnel equations are supplied by later optical models. This layer
-only needs the two complex amplitudes plus proof-carrying calibration sockets.
+This layer only records the two complex amplitudes.  Equations connecting these
+amplitudes to a concrete dielectric/interface model belong to the corresponding
+model theorem, not to a generic proposition/evidence field.
 -/
 structure FresnelCoefficientDatum where
+  /-- The `s`-polarized reflection amplitude. -/
   r_s : ℂ
+  /-- The `p`-polarized reflection amplitude. -/
   r_p : ℂ
-
-  /-- Law that the coefficients come from the intended optical model. -/
-  fresnel_law : Prop
-
-  /-- Evidence that the coefficients come from the intended optical model. -/
-  fresnel_certificate :
-    fresnel_law
 
 namespace FresnelCoefficientDatum
 
@@ -176,25 +172,15 @@ def IsTotalInternalReflection
   ‖F.r_s‖ = 1 ∧ ‖F.r_p‖ = 1
 
 /--
-Metal mirror / complex material branch certificate.
+Absorptive/metal branch predicate for the coefficient pair.
 
-This is a socket for a complex refractive-index material model.
--/
-structure MetalBranchDatum
-    (F : FresnelCoefficientDatum) where
-  /-- Law that this coefficient datum is in the metal/material branch. -/
-  metal_branch_law : Prop
-
-  /-- Evidence that this coefficient datum is in the metal/material branch. -/
-  metal_branch_certificate :
-    metal_branch_law
-
-/--
-The coefficient datum is calibrated as a metal/material branch.
+At this generic Jones level we can assert only the observable lossy condition:
+at least one polarization channel is not unit-modulus.  Any stronger material
+claim must be proved in a dielectric/interface model.
 -/
 def IsMetalBranch
     (F : FresnelCoefficientDatum) : Prop :=
-  Nonempty (MetalBranchDatum F)
+  ‖F.r_s‖ ≠ 1 ∨ ‖F.r_p‖ ≠ 1
 
 end FresnelCoefficientDatum
 
@@ -403,15 +389,14 @@ theorem brewsterCoreInverse_mul_Pp_eq_zero :
 
 end JonesReflector
 
-/-! ## 5. Brewster collapse and Drazin socket -/
+/-! ## 5. Brewster collapse and Drazin readouts -/
 
 /--
 Brewster rank-collapse calibration.
 
 At Brewster angle, `r_p = 0`, so the reflected operator is projectively a
 scalar multiple of `P_s`. The elementary core/nil support facts are derived as
-theorems from `brewster`; only the deeper Drazin inverse interpretation remains
-proof-carrying at this generic algebraic level.
+theorems from `brewster`.
 -/
 structure BrewsterDrazinCalibration
     (Op : Type*) [Ring Op] [Algebra ℂ Op]
@@ -419,18 +404,6 @@ structure BrewsterDrazinCalibration
   /-- Brewster branch hypothesis. -/
   brewster :
     J.IsBrewsterBranch
-
-  /--
-  Drazin interpretation law.
-
-  Intended concrete statement: if `R = r_s P_s` and `r_s ≠ 0`, then
-  `Rᴰ = r_s⁻¹ P_s`, `R Rᴰ = P_s`, and `1 - R Rᴰ = P_p`.
-  -/
-  drazin_rank_collapse_law : Prop
-
-  /-- Evidence for the Drazin rank-collapse law. -/
-  drazin_rank_collapse_certificate :
-    drazin_rank_collapse_law
 
 namespace BrewsterDrazinCalibration
 
@@ -539,33 +512,6 @@ structure MetalMirrorJonesCalibration
   /-- Complex refractive-index readout. -/
   refractiveIndex : Op → ℂ
 
-  /-- Law that heat/Bregman readout controls absorption. -/
-  heat_controls_absorption_law : Prop
-
-  /-- Evidence that heat/Bregman readout controls absorption. -/
-  heat_controls_absorption :
-    heat_controls_absorption_law
-
-  /-- Law that Hessian/susceptibility readout controls retardance. -/
-  hessian_controls_retardance_law : Prop
-
-  /-- Evidence that Hessian/susceptibility readout controls retardance. -/
-  hessian_controls_retardance :
-    hessian_controls_retardance_law
-
-  /-- Law that retardance and amplitude imbalance control ellipticity. -/
-  retardance_controls_ellipticity_law : Prop
-
-  /-- Evidence that retardance and amplitude imbalance control ellipticity. -/
-  retardance_controls_ellipticity :
-    retardance_controls_ellipticity_law
-
-  /-- Law that the complex refractive-index model is calibrated. -/
-  refractive_index_calibration_law : Prop
-
-  /-- Evidence that the complex refractive-index model is calibrated. -/
-  refractive_index_calibrated :
-    refractive_index_calibration_law
 
 /-! ## 7. V₄ sector calibration -/
 
@@ -590,11 +536,11 @@ structure V4JonesCalibration
   -/
   operatorOfLabel : V4Label → Op
 
-  /-- `s` channel calibration certificate. -/
+  /-- The `s` channel is represented by the calibrated `s` projector. -/
   s_channel_calibrated :
     operatorOfLabel (labelOfChannel FresnelChannel.s) = P.P_s
 
-  /-- `p` channel calibration certificate. -/
+  /-- The `p` channel is represented by the calibrated `p` projector. -/
   p_channel_calibrated :
     operatorOfLabel (labelOfChannel FresnelChannel.p) = P.P_p
 
@@ -613,12 +559,6 @@ structure JonesObstructionFlow
     InfoGeometry.OperatorAlgebra.TopologicalSnap.ConservedObstructionFlow
       State Charge
 
-  /-- Law that this is the Jones/optical sector flow. -/
-  optical_calibration_law : Prop
-
-  /-- Evidence that this is the Jones/optical sector flow. -/
-  optical_calibration :
-    optical_calibration_law
 
 namespace JonesObstructionFlow
 
@@ -636,31 +576,5 @@ theorem nontrivial_cannot_relax_to_flat
   F.obstructionFlow.nontrivial_cannot_flow_to_flat hx t
 
 end JonesObstructionFlow
-
-/-! ## 9. Owner targets -/
-
-/--
-Owner target for an operatorial Jones calibration.
--/
-def JonesCalibrationOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] : Prop :=
-  ∃ P : SPProjectorPair Op,
-    Nonempty (V4JonesCalibration Op P)
-
-/--
-Owner target for a Brewster/Drazin calibration.
--/
-def BrewsterDrazinCalibrationOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] : Prop :=
-  ∃ J : JonesReflector Op,
-    Nonempty (BrewsterDrazinCalibration Op J)
-
-/--
-Owner target for a metal-mirror optical calibration.
--/
-def MetalMirrorJonesCalibrationOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] : Prop :=
-  ∃ J : JonesReflector Op,
-    Nonempty (MetalMirrorJonesCalibration Op J)
 
 end InfoGeometry.Optics.JonesCalibration

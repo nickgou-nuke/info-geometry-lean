@@ -1,23 +1,56 @@
-# SOP: External Virasoro Finite-to-Infinite Transition Pattern
+# SOP: Finite-to-Infinite Algebraic Transition Pattern
 
 ## Purpose
 
-Use the external Virasoro library as the canonical model for converting finite/local algebraic closure laws into honest infinite-mode Lean formalizations without analytic hand-waving or proof proxies.
+Use the external Virasoro library as a worked exemplar for a broader rule:
+finite/local algebraic laws may be lifted to infinite-indexed systems only by
+building an honest infinite carrier and proving the finiteness, locality, or
+convergence obligations required by that carrier.
 
-This SOP applies when formalizing bridges from finite current/supercharge/Kac--Moody data to infinite indexed Virasoro, Witt, Heisenberg, affine Kac--Moody, or Sugawara-style structures.
+This SOP applies to any Lean formalization that claims a finite-to-infinite or
+local-to-global transition, including:
+
+- Witt/Virasoro/Heisenberg/affine Kac--Moody/Sugawara mode algebras;
+- finite N=2 supercharge closure transported to infinite mode families;
+- central-charge, cocycle, or anomaly-extension corridors;
+- direct sums, inductive systems, locally finite operator sums, and genuine
+  topological/analytic completions.
 
 ## Core rule
 
-Do **not** encode an infinite-dimensional theorem as a finite theorem plus an assumed limit/certificate.  The external Virasoro library uses one of two honest mechanisms:
+Do **not** encode an infinite-dimensional theorem as a finite theorem plus an
+assumed limit, law, certificate, witness, guard, or readback field.
 
-1. **Algebraic direct sum over infinitely many modes** via finitely supported functions, e.g. `ℤ →₀ 𝕜`.
-2. **Locally finite/truncated infinite sums** where every vector sees only finitely many nonzero summands.
+A valid finite-to-infinite theorem must use one of these honest mechanisms:
 
-If neither finite support nor local truncation is proved, the theorem must remain visible debt (`sorry`) or be refactored into data-only definitions.
+1. **Algebraic direct sum / finite support**
+   - Carrier example: `ι →₀ A` or `ℤ →₀ 𝕜`.
+   - Infinite index set is allowed because each element is finitely supported.
+   - Closure should preferably be an equality in the direct-sum carrier, not
+     only pointwise prose.
+2. **Modewise family with proved finite-support preservation**
+   - Carrier example: `ι → A` plus a proved finite-support predicate.
+   - Use only when a dependent/flexible family is needed; prefer `Finsupp` if
+     direct-sum object equality is available.
+3. **Locally finite/truncated operator sums**
+   - Every vector/state/input sees finitely many nonzero summands.
+   - Prove the support of the summand is finite before defining or using the
+     sum.
+4. **Central extension by explicit cocycle**
+   - Define the structural bracket and the cocycle explicitly, then form the
+     extension.
+   - Central terms are cocycles/central coordinates, not stored theorem fields.
+5. **Genuine analytic/topological completion**
+   - Only if the topology, Cauchy/convergence notion, continuity, and limiting
+     theorem are formalized and proved.
+   - Otherwise leave visible debt or keep the file data-only.
 
-## Reference files
+If none of these mechanisms is available, the theorem must remain an honest
+visible `sorry` or be refactored into definitions/data with no theorem claim.
 
-Inspect these files before implementing a finite-to-infinite bridge:
+## Reference exemplar: external Virasoro package
+
+Use these files as the canonical model for the algebraic cases:
 
 - `lean/InfoGeometry/External/Virasoro/WittAlgebra.lean`
 - `lean/InfoGeometry/External/Virasoro/VirasoroCocycle.lean`
@@ -28,131 +61,207 @@ Inspect these files before implementing a finite-to-infinite bridge:
 - `lean/InfoGeometry/External/Virasoro/CentralExtension.lean`
 - `lean/InfoGeometry/External/Virasoro/BosonizationConstructiveCurrent.lean`
 
-## Standard transition pattern
-
-The implemented pattern is:
+The Virasoro pattern is:
 
 ```text
 finite/local generator law
-→ infinitely indexed basis with finite support
-→ bracket/cocycle defined on basis modes
+→ infinite index set with finitely supported carrier (`ℤ →₀ 𝕜`)
+→ basis-mode bracket/cocycle
 → bilinear extension
 → central extension
 → mode-generator bracket theorem
-→ locally finite Sugawara/representation construction, if needed
+→ locally finite Sugawara construction, if sums are needed
 ```
 
 The shared invariant shape is:
 
 ```text
-bracket/current closure = shifted structural mode + central cocycle
+closure = shifted structural term + explicit central/cocycle term
 ```
 
-Examples:
+## General transition templates
 
-- Witt:
-  ```text
-  [ℓ_n, ℓ_m] = (n - m) • ℓ_{n+m}
-  ```
-- Virasoro:
-  ```text
-  [L_n, L_m] = (n - m) • L_{n+m} + cocycle(n,m) • c
-  ```
-- Heisenberg:
-  ```text
-  [J_k, J_l] = if k + l = 0 then k • central else 0
-  ```
-- Affine Kac--Moody:
-  ```text
-  [J_m^x, J_n^y] = J_{m+n}^{[x,y]} + residue cocycle
-  ```
-- Sugawara:
-  ```text
-  Heisenberg commutator + local truncation
-  → normal-ordered quadratic modes L_n
-  → Virasoro commutator
-  ```
+### Template A: algebraic direct sum
 
-## Implementation checklist
-
-### 1. Classify the intended infinite object
-
-Before writing Lean code, decide which construction is actually justified:
-
-- **Finitely supported mode algebra**: use a direct-sum/finsupp representation such as `ℤ →₀ 𝕜`.
-- **Central extension**: define an explicit Lie 2-cocycle on basis modes and extend it bilinearly.
-- **Sugawara/normal-ordered sum**: prove local truncation/finite support before defining any mode sum.
-- **Analytic Hilbert-space limit**: do not assert unless a real analytic convergence theorem is available.
-
-### 2. Encode basis-mode laws first
-
-Prove generator-level laws before proving arbitrary-element laws:
+Use this when the infinite object is a finite linear combination of modes.
 
 ```lean
--- mode theorem first
-[J m, J n] = structuralTerm (m+n) + centralTerm m n
+abbrev ModeFamily (ι A : Type*) [Zero A] := ι →₀ A
 ```
 
-Then extend by linearity/finsupp induction if needed.
+Required proof shape:
 
-### 3. Make the central obstruction explicit
+1. Define the operation as a `Finsupp` object (`onFinset`, `mapRange`,
+   `zipWith`, linear extension, or basis construction).
+2. Prove support control.
+3. State closure as object equality in `ι →₀ A`.
+4. Derive pointwise statements only as corollaries.
 
-Central charges must be cocycles or central-extension coordinates, not hidden fields.
-
-Allowed:
+Example target style:
 
 ```lean
-γ basis_m basis_n = if m + n = 0 then ... else 0
+anticommutatorMode Q R = H + Z
+```
+
+not merely:
+
+```lean
+∀ i, anticommutator (Q i) (R i) = H i + Z i
+```
+
+Pointwise theorems are acceptable, but the direct-sum equality is the stronger
+Virasoro-style endpoint.
+
+### Template B: central extension
+
+Use this when closure has an anomaly/central-charge term.
+
+Required proof shape:
+
+1. Define the base algebra/bracket on basis modes.
+2. Define an explicit 2-cocycle, including its support condition.
+3. Form the central extension.
+4. Prove generator bracket and arbitrary-element readback from the extension.
+
+Allowed pattern:
+
+```lean
+γ basis_m basis_n = if resonance m n then centralValue m n else 0
 CentralExtension γ
 ```
 
-Disallowed:
+Forbidden pattern:
 
 ```lean
 central_law : Prop
 central_certificate : central_law
 ```
 
-### 4. For Sugawara, prove local finiteness before summing
+### Template C: locally finite operator sums
 
-A formal sum such as
+Use this for Sugawara/normal-ordering/Fock-style constructions.
 
-```text
-L_n v = 1/2 • ∑ᶠ k, :J_{n-k} J_k: v
-```
+Required proof shape:
 
-is only acceptable after proving the summand is finitely supported for each `v`, typically from a truncation hypothesis like:
+1. State local truncation as an input theorem/hypothesis about the operator
+   family, not as a proof-carrying structure field.
+2. Prove the summand support is finite for each vector/state.
+3. Define the finite sum.
+4. Prove commutator/closure from the finite-support lemma.
+
+Typical truncation input:
 
 ```lean
 ∀ v, atTop.Eventually (fun l => J l v = 0)
 ```
 
-Do not replace this with a convergence assumption/certificate.
+Do not replace this with:
 
-### 5. Map finite induction to infinite modes carefully
-
-Finite supercharge or central-charge induction lemmas correspond only to the algebraic skeleton:
-
-```text
-anticommutator/bracket closure = structural term + central cocycle
+```lean
+sugawara_converges_certificate : Prop
 ```
 
-To upgrade to Virasoro-style infinite modes, add:
+### Template D: finite iterates / inductive systems
 
-- an integer mode index;
-- finite support or local truncation;
-- explicit shifted mode arithmetic (`m+n`, `n-k`);
-- explicit cocycle support (`m+n=0`).
+Use this when a bonding/symmetry map is iterated finitely.
 
-### 6. Validation gates
+Required proof shape:
+
+1. Define finite iterate as a homomorphism (`iterateEnd`, composition chain,
+   functor iterate, etc.).
+2. Prove the local law is preserved by one homomorphism.
+3. Apply that theorem to the finite iterate.
+4. If mode-indexed, combine with Template A or B.
+
+This proves **finite-stage** transport only.  It is not an infinite colimit or
+completion theorem unless the colimit/completion is separately constructed.
+
+### Template E: genuine analytic limit/completion
+
+Use only when the file formalizes the analytic infrastructure.
+
+Required proof shape:
+
+1. Specify topology/uniformity/norm/filter.
+2. Define finite approximants.
+3. Prove Cauchy or convergence.
+4. Prove operations are continuous/closed under the limit.
+5. State and prove the limiting closure theorem.
+
+If any step is missing, do not state the infinite analytic theorem as closed.
+
+## Implementation checklist
+
+### 1. Classify the infinite carrier
+
+Before writing Lean code, choose exactly one primary mechanism:
+
+- `Finsupp`/direct sum;
+- mode family plus proved support preservation;
+- central extension by explicit cocycle;
+- locally finite/truncated sum;
+- genuine topological completion.
+
+Record the choice in the module docstring.
+
+### 2. Prove generator/local laws first
+
+For mode algebras, prove basis-mode laws before arbitrary-element laws:
+
+```lean
+[J m, J n] = structuralTerm (m+n) + centralTerm m n
+```
+
+Then extend by linearity, `Finsupp` extensionality, basis construction, or the
+central-extension readback theorem.
+
+### 3. Prefer object equality over pointwise-only closure
+
+For a direct-sum carrier, the best theorem is equality inside the carrier:
+
+```lean
+operationMode X Y = structuralMode + centralMode
+```
+
+Use pointwise statements to prove this via extensionality, not as the final
+claim when object equality is feasible.
+
+### 4. Make central/obstruction terms explicit
+
+Central charges, anomalies, and defects must appear as:
+
+- cocycles;
+- central-extension coordinates;
+- explicit mode families;
+- proved structural terms.
+
+They must not appear as opaque proof payload fields.
+
+### 5. For sums, prove local finiteness before summing
+
+Any expression over infinitely many modes must be justified by a finite-support
+or local-truncation theorem before it is used in a proof.
+
+### 6. Separate finite-stage from infinite-limit claims
+
+A theorem about `φ^[n]` for every `n : ℕ` is a finite-stage theorem.  It is not
+an infinite limit theorem.  Do not describe it as a completed infinite limit
+unless Template E is also implemented.
+
+### 7. Validation gates
 
 For each touched file run:
 
 ```bash
 lake env lean <file>
 ulam checkpoint <file> --lean-project . --strict --no-allow-axioms
-python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 30
 python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+```
+
+For canonical/vacuity cleanup also run:
+
+```bash
+python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 30
 ```
 
 Do not stage generated UlamAI JSON unless explicitly requested.
@@ -162,29 +271,36 @@ Do not stage generated UlamAI JSON unless explicitly requested.
 Reject these patterns during review:
 
 - `finite_to_infinite_limit_law : Prop` plus certificate field.
-- `centrality_witness`, `closure_law`, `sugawara_certificate`, or similar proof-payload fields.
+- `centrality_witness`, `closure_law`, `sugawara_certificate`,
+  `convergence_guard`, or similar proof-payload fields.
 - Theorems that merely re-export a structure field.
-- Infinite sums without a finite-support/local-truncation proof.
+- Infinite sums without finite-support/local-truncation proofs.
 - Analytic convergence claimed by a datum field.
-- A finite theorem renamed as an infinite theorem without mode-indexed construction.
+- A finite theorem renamed as an infinite theorem without an infinite carrier.
+- Pointwise-only infinite closure when a direct-sum object equality is feasible.
+- Colimit/completion language for finite-iterate theorems.
 
 ## Review questions
 
 Ask before accepting a finite-to-infinite theorem:
 
-1. What is the infinite carrier? Is it finitely supported?
-2. Where is the basis-mode bracket proved?
-3. Where is the central cocycle defined?
-4. Is the cocycle support explicit (`m+n=0`, residue, etc.)?
-5. If a sum over modes appears, where is local truncation proved?
-6. Does the theorem prove closure from definitions, or re-export a stored law?
-7. Would UlamAI report placeholders or axioms?
-8. Does the heartbeat count decrease without introducing new proxy fields?
+1. What is the infinite carrier?
+2. Is finite support built into the type (`ι →₀ A`) or proved separately?
+3. If direct-sum carrier is used, is closure stated as object equality?
+4. Where is the basis/local bracket or anticommutator law proved?
+5. Where is the cocycle/central obstruction defined?
+6. Is the cocycle support/resonance explicit (`m+n=0`, residue, etc.)?
+7. If a sum over modes appears, where is local truncation proved?
+8. Is this only finite-stage transport, or is a real colimit/completion built?
+9. Does the theorem prove closure from definitions, or re-export a stored law?
+10. Would UlamAI report placeholders or axioms?
+11. Does the heartbeat improve without introducing new proxy fields?
 
 ## Output standard
 
-A compliant bridge should leave one of these outcomes:
+A compliant finite-to-infinite bridge must leave one of these outcomes:
 
-- a kernel-checked theorem built from finite support/local truncation and explicit cocycles;
-- a data-only structure with no theorem claims; or
-- an honest visible `sorry` at the exact missing analytic theorem.
+- a kernel-checked theorem built from direct sums, finite support, local
+  truncation, explicit cocycles, or proved convergence;
+- a data-only structure with no theorem claim;
+- or an honest visible `sorry` at the exact missing theorem.

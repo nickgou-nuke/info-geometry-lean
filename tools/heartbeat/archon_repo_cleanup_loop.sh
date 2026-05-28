@@ -12,14 +12,30 @@ MAX_ITERATIONS="${MAX_ITERATIONS:-0}"
 MAX_STALE_ITERATIONS="${MAX_STALE_ITERATIONS:-0}"
 STOP_WHEN_CLEAN="${STOP_WHEN_CLEAN:-0}"
 ARCHON_CYCLE_TIMEOUT_SECONDS="${ARCHON_CYCLE_TIMEOUT_SECONDS:-0}"
+# Optional breathing room between ticks. Default 0 preserves the life-force loop.
+INTERVAL_SECONDS="${INTERVAL_SECONDS:-0}"
+# Optional deterministic command run after each iteration for mathlib/full-repo gates.
+# Example: POST_TICK_COMMAND='lake build InfoGeometry.Canonical.All'
+POST_TICK_COMMAND="${POST_TICK_COMMAND:-}"
 TOP="${TOP:-20}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 LOG_DIR="$ROOT/reports/cleanup-loop/$RUN_ID"
 LOCK_FILE="$ROOT/reports/cleanup-loop/archon-repo-cleanup.lock"
+PID_FILE="$ROOT/reports/cleanup-loop/archon-repo-cleanup.pid"
 SUMMARY_FILE="$LOG_DIR/summary.tsv"
 
 mkdir -p "$LOG_DIR" "$(dirname "$LOCK_FILE")"
 cd "$ROOT"
+echo $$ > "$PID_FILE"
+
+on_interrupt() {
+  local code="$?"
+  echo "cleanup-loop: interrupted/exiting code=$code run_id=$RUN_ID summary=$SUMMARY_FILE" >&2
+  rm -f "$PID_FILE"
+  exit "$code"
+}
+trap on_interrupt INT TERM HUP
+trap 'rm -f "$PID_FILE"' EXIT
 
 # Archon doctor reports Pi as unconfigured if PI_CODING_AGENT is missing or set
 # to a boolean sentinel. Point it at the installed Pi binary when available.
@@ -48,7 +64,7 @@ write_report() {
   local iter="$1" phase="$2" out="$3"
   {
     echo "=== cleanup-loop $RUN_ID iter=$iter phase=$phase $(date -Is) ==="
-    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS stop_when_clean=$STOP_WHEN_CLEAN timeout=$ARCHON_CYCLE_TIMEOUT_SECONDS"
+    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS stop_when_clean=$STOP_WHEN_CLEAN timeout=$ARCHON_CYCLE_TIMEOUT_SECONDS interval=$INTERVAL_SECONDS post_tick=${POST_TICK_COMMAND:-none}"
     python3 tools/quality/proof_heartbeat.py "$SCOPE" --top "$TOP" || true
     echo
     python3 tools/lean4-skills/sorry_analyzer.py "$SCOPE" --format=summary || true
@@ -73,6 +89,22 @@ run_archon_cycle() {
       archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
   else
     archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
+  fi
+}
+
+run_post_tick_command() {
+  local iter="$1"
+  local out="$LOG_DIR/iter-$(printf '%03d' "$iter")-post-tick.log"
+  if [[ -n "$POST_TICK_COMMAND" ]]; then
+    {
+      echo "=== post-tick command iter=$iter $(date -Is) ==="
+      echo "$POST_TICK_COMMAND"
+      bash -lc "$POST_TICK_COMMAND"
+      echo "=== post-tick command done iter=$iter $(date -Is) ==="
+    } > "$out" 2>&1 || {
+      local code=$?
+      echo "cleanup-loop: post-tick command exited code=$code; see $out" | tee -a "$out"
+    }
   fi
 }
 
@@ -126,6 +158,8 @@ while true; do
   append_summary "$iter" after "$after"
   after_score="$(score_from_report "$after")"
 
+  run_post_tick_command "$iter"
+
   if [[ "$after_score" -eq 0 ]]; then
     echo "cleanup-loop: clean after iteration $iter; continuing heartbeat. summary=$SUMMARY_FILE"
     if [[ "$STOP_WHEN_CLEAN" == "1" ]]; then
@@ -144,6 +178,10 @@ while true; do
   if [[ "$MAX_STALE_ITERATIONS" -gt 0 && "$stale_iterations" -ge "$MAX_STALE_ITERATIONS" ]]; then
     echo "cleanup-loop: stopped after $stale_iterations stale iterations; best_score=$best_score summary=$SUMMARY_FILE"
     exit 2
+  fi
+
+  if [[ "$INTERVAL_SECONDS" -gt 0 ]]; then
+    sleep "$INTERVAL_SECONDS"
   fi
 
   iter=$((iter + 1))

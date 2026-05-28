@@ -66,6 +66,12 @@ ARCHON_CYCLE_TIMEOUT_SECONDS
 STOP_WHEN_CLEAN=1
 ```
 
+Optional mathlib/full-repo deterministic gate after each tick:
+
+```bash
+POST_TICK_COMMAND='lake build InfoGeometry.Canonical.All'
+```
+
 Optional bounded batch mode, only on explicit request:
 
 ```bash
@@ -90,6 +96,7 @@ tools/heartbeat/archon_repo_cleanup_loop.sh
 If the command exits, report:
 
 - stop reason or interrupt;
+- PID file path `reports/cleanup-loop/archon-repo-cleanup.pid` if still present;
 - summary TSV path under `reports/cleanup-loop/<RUN_ID>/summary.tsv`;
 - latest before/after heartbeat counts;
 - any nonzero Archon or Codex exit codes.

@@ -68,17 +68,24 @@ Use these files as the canonical model for the algebraic cases:
 - `lean/InfoGeometry/External/Virasoro/CentralExtension.lean`
 - `lean/InfoGeometry/External/Virasoro/BosonizationConstructiveCurrent.lean`
 
-The Virasoro pattern is:
+The Virasoro pattern is **primarily finite-support algebra**, not a completed
+colimit construction:
 
 ```text
-finite/local generator law
-→ infinite index set with finitely supported carrier (`ℤ →₀ 𝕜`)
-→ basis-mode bracket/cocycle
-→ bilinear extension
-→ central extension
-→ mode-generator bracket theorem
-→ locally finite Sugawara construction, if sums are needed
+infinite mode index set
+→ finitely supported carrier (`ℤ →₀ 𝕜`, `ι →₀ 𝕜`)
+→ basis generators
+→ basis-level bracket/product/cocycle formulas
+→ bilinear or multilinear extension by basis/Finsupp machinery
+→ generator readback theorems
+→ central extension, if the cocycle is an ordinary skew Lie cocycle
+→ locally finite Sugawara construction, only when sums are genuinely needed
 ```
+
+Use algebraic `DirectLimit` only when the object is genuinely a tower of finite
+stages with bonding maps and identifications. Do not replace the simpler
+Virasoro/Finsupp pattern by a staged colimit unless the mathematics calls for a
+real transition system.
 
 The shared invariant shape is:
 
@@ -100,11 +107,29 @@ Repo-owned superclosure/direct-limit exemplars:
 - `lean/InfoGeometry/Algebra/SupergradedCocycle.lean` — symmetric odd--odd
   super-cocycle separated from ordinary skew Lie central extensions.
 
+## Method hierarchy
+
+Choose the lightest honest mechanism that matches the mathematics:
+
+1. **Finsupp/direct-sum mode algebra** when elements are finite linear
+   combinations of infinitely many modes. This is the default Virasoro/Witt/
+   Heisenberg pattern.
+2. **Locally finite operator sums** when formulas are genuinely infinite but
+   each vector/state sees finitely many nonzero terms. This is the Sugawara
+   pattern.
+3. **Algebraic DirectLimit** when there are actual finite stages and bonding
+   maps whose images must be identified.
+4. **Explicit target-image theorem** when finite stages map into an external
+   target but no universal colimit is needed.
+5. **Analytic/topological completion** only after topology, convergence, and
+   continuity are formalized.
+
 ## General transition templates
 
-### Template A: algebraic direct sum
+### Template A: Finsupp/direct-sum mode algebra
 
-Use this when the infinite object is a finite linear combination of modes.
+Use this when the infinite object is a finite linear combination of modes. This
+is the default external-Virasoro method.
 
 ```lean
 abbrev ModeFamily (ι A : Type*) [Zero A] := ι →₀ A
@@ -112,11 +137,17 @@ abbrev ModeFamily (ι A : Type*) [Zero A] := ι →₀ A
 
 Required proof shape:
 
-1. Define the operation as a `Finsupp` object (`onFinset`, `mapRange`,
-   `zipWith`, linear extension, or basis construction).
-2. Prove support control.
-3. State closure as object equality in `ι →₀ A`.
-4. Derive pointwise statements only as corollaries.
+1. Define the carrier as a finite-support object, typically `ι →₀ 𝕜` or
+   `ι →₀ A`.
+2. Define named generators as basis/single elements, e.g. `gen i`.
+3. Define bracket/product/cocycle formulas on basis generators.
+4. Extend bilinearly/multilinearly using `Basis.constr`, Finsupp extensionality,
+   or equivalent finite-support machinery.
+5. Prove support control where operations are not already handled by the basis
+   API.
+6. Prove generator readbacks before arbitrary-element readbacks.
+7. State closure as object equality in `ι →₀ A` when feasible.
+8. Derive pointwise statements only as corollaries.
 
 Example target style:
 
@@ -241,7 +272,9 @@ completion theorem unless the colimit/completion is separately constructed.
 ### Template F: algebraic direct limit / colimit
 
 Use this when the infinite object is a genuine algebraic colimit of finite
-stages, not merely an external target image.
+stages, not merely an external target image. This is appropriate when later
+stages structurally identify/enlarge earlier stages via bonding maps; it is not
+the default Virasoro mode-algebra pattern.
 
 Required proof shape:
 
@@ -385,6 +418,8 @@ Do not stage generated UlamAI JSON unless explicitly requested.
 Reject these patterns during review:
 
 - `finite_to_infinite_limit_law : Prop` plus certificate field.
+- Treating `ι →₀ 𝕜`/`Finsupp` as a topological completion, Laurent-series
+  space, distribution space, Hilbert completion, or operator closure.
 - `centrality_witness`, `closure_law`, `sugawara_certificate`,
   `convergence_guard`, or similar proof-payload fields.
 - Theorems that merely re-export a structure field.
@@ -393,12 +428,15 @@ Reject these patterns during review:
 - A finite theorem renamed as an infinite theorem without an infinite carrier.
 - Pointwise-only infinite closure when a direct-sum object equality is feasible.
 - Colimit/completion language for finite-iterate theorems.
+- Replacing a natural Finsupp mode algebra by a staged DirectLimit without a
+  real mathematical transition system.
 
 ## Review questions
 
 Ask before accepting a finite-to-infinite theorem:
 
-1. What is the infinite carrier?
+1. What is the infinite carrier, and why is it the right mechanism rather than
+   a simpler `Finsupp` carrier or a stronger colimit/completion claim?
 2. Is finite support built into the type (`ι →₀ A`) or proved separately?
 3. If direct-sum carrier is used, is closure stated as object equality?
 4. Where is the basis/local bracket or anticommutator law proved?

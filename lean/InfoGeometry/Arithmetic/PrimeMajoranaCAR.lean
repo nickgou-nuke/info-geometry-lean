@@ -154,6 +154,88 @@ theorem ringEquiv_commutes_with_image
     _ = e X * e Z := by
       exact map_mul e X Z
 
+/-! ## Finite-stage invariant transport under ring homomorphisms -/
+
+section RingHomInvariantTransport
+
+variable {A B : Type*} [Ring A] [Ring B]
+variable (f : A →+* B)
+
+/-- A ring homomorphism preserves square-zero operators. -/
+theorem ringHom_preserves_square_zero
+    {x : A}
+    (hx : x * x = 0) :
+    f x * f x = 0 := by
+  simpa using congrArg f hx
+
+/-- A ring homomorphism preserves idempotents. -/
+theorem ringHom_preserves_idempotent
+    {p : A}
+    (hp : p * p = p) :
+    f p * f p = f p := by
+  simpa using congrArg f hp
+
+/-- A ring homomorphism preserves involutions. -/
+theorem ringHom_preserves_involution
+    {e : A}
+    (he : e * e = 1) :
+    f e * f e = 1 := by
+  simpa using congrArg f he
+
+/--
+A ring homomorphism preserves an anticommutator identity.
+
+This is the finite-stage CAR transport lemma: if `{x,y} = c` in the source
+algebra, then `{f x, f y} = f c`.
+-/
+theorem ringHom_preserves_anticommutator_eq
+    {x y c : A}
+    (hxy : x * y + y * x = c) :
+    f x * f y + f y * f x = f c := by
+  simpa using congrArg f hxy
+
+/--
+A ring homomorphism preserves a zero anticommutator.
+
+This is the finite-stage odd-odd closure transport lemma.
+-/
+theorem ringHom_preserves_anticommutator_zero
+    {x y : A}
+    (hxy : x * y + y * x = 0) :
+    f x * f y + f y * f x = 0 := by
+  simpa using ringHom_preserves_anticommutator_eq (f := f) hxy
+
+/--
+A ring homomorphism preserves a commutator identity.
+
+If `[x,y] = c`, then `[f x, f y] = f c`.
+-/
+theorem ringHom_preserves_commutator_eq
+    {x y c : A}
+    (hxy : x * y - y * x = c) :
+    f x * f y - f y * f x = f c := by
+  simpa using congrArg f hxy
+
+/-- A ring homomorphism preserves a zero commutator. -/
+theorem ringHom_preserves_commutator_zero
+    {x y : A}
+    (hxy : x * y - y * x = 0) :
+    f x * f y - f y * f x = 0 := by
+  simpa using ringHom_preserves_commutator_eq (f := f) hxy
+
+/--
+A ring homomorphism transports the one-mode CAR identity.
+
+If `a a† + a† a = 1`, then the transported operators satisfy the same identity.
+-/
+theorem ringHom_preserves_CAR_one
+    {a adag : A}
+    (hcar : a * adag + adag * a = 1) :
+    f a * f adag + f adag * f a = 1 := by
+  simpa using ringHom_preserves_anticommutator_eq (f := f) hcar
+
+end RingHomInvariantTransport
+
 /--
 A local exterior CAR pair.
 

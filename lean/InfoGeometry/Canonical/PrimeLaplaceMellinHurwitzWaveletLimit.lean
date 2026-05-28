@@ -82,20 +82,8 @@ structure PrimeHurwitzWaveletXiRealization
   /-- Full reconstruction equals the Cayley pullback of completed xi. -/
   reconstruction_eq_xi_cayley : Prop
 
-  /-- Final Hurwitz-ready convergence statement. -/
+  /-- Final Hurwitz-ready convergence statement to be proved by a concrete model. -/
   locallyUniformRenormalizedLimit : Prop
-  locallyUniformRenormalizedLimit_certificate :
-    locallyUniformRenormalizedLimit
-
-/-- Extract the Hurwitz-ready convergence input from the prime realization. -/
-@[rep_depth operator]
-theorem locallyUniformLimit_of_primeHurwitzWaveletXiRealization
-    {F : ParaunitaryCliffordFilterBank}
-    {A : PrimeLeeYangApproximants}
-    {Ξ : CompletedXiFunction}
-    (R : PrimeHurwitzWaveletXiRealization F A Ξ) :
-    R.locallyUniformRenormalizedLimit :=
-  R.locallyUniformRenormalizedLimit_certificate
 
 /--
 Bridge from the Laplace--Mellin realization to the discrete Hurwitz--Clifford
@@ -115,7 +103,5 @@ def toPrimeHurwitzCliffordCascadeRealization
   compactUniformTailControl := R.compactUniformTailControl
   reconstruction_eq_xi_cayley := R.reconstruction_eq_xi_cayley
   locallyUniformRenormalizedLimit := R.locallyUniformRenormalizedLimit
-  locallyUniformRenormalizedLimit_certificate :=
-    R.locallyUniformRenormalizedLimit_certificate
 
 end InfoGeometry.Canonical.PrimeLaplaceMellinHurwitzWaveletLimit

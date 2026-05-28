@@ -75,7 +75,7 @@ A finite prime-labelled ferromagnetic chain.
 structure PrimeFerromagneticChain
     (n : ℕ) where
   prime : Fin n → ℕ
-  prime_law : ∀ i : Fin n, Nat.Prime (prime i)
+  prime_isPrime : ∀ i : Fin n, Nat.Prime (prime i)
   kappa : ℝ
   kappa_nonneg : 0 ≤ kappa
 
@@ -104,7 +104,7 @@ theorem siteEnergy_nonneg
     0 ≤ C.siteEnergy i := by
   unfold siteEnergy
   exact Real.log_nonneg (by
-    exact_mod_cast (Nat.Prime.one_lt (C.prime_law i)).le)
+    exact_mod_cast (Nat.Prime.one_lt (C.prime_isPrime i)).le)
 
 /-- Prime-site logarithmic energy is positive. -/
 theorem siteEnergy_pos
@@ -112,7 +112,7 @@ theorem siteEnergy_pos
     0 < C.siteEnergy i := by
   unfold siteEnergy
   exact Real.log_pos (by
-    exact_mod_cast Nat.Prime.one_lt (C.prime_law i))
+    exact_mod_cast Nat.Prime.one_lt (C.prime_isPrime i))
 
 /-- The prime-chain interaction is ferromagnetic: `Jᵢⱼ ≥ 0`. -/
 theorem coupling_nonneg
@@ -307,7 +307,7 @@ theorem primeMinusOne_log_nonneg
     (i : Fin n) :
     0 ≤ Real.log ((C.prime i - 1 : ℕ) : ℝ) := by
   exact Real.log_nonneg (by
-    have hp : 1 < C.prime i := Nat.Prime.one_lt (C.prime_law i)
+    have hp : 1 < C.prime i := Nat.Prime.one_lt (C.prime_isPrime i)
     have hle : 1 ≤ C.prime i - 1 := Nat.le_sub_one_of_lt hp
     exact_mod_cast hle)
 

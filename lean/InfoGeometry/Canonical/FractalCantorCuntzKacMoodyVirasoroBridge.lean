@@ -144,10 +144,6 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
   superVirasoro :
     SuperVirasoroAlgebraDatum Alg
 
-  /-- The super-Virasoro bracket law is supplied as model data. -/
-  superVirasoro_law :
-    superVirasoro.super_bracket_law
-
 
 namespace FractalCantorCuntzKacMoodyVirasoroBridge
 
@@ -160,19 +156,6 @@ variable
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
 
 variable (B : FractalCantorCuntzKacMoodyVirasoroBridge E Op H Finite Alg)
-
-/-- The tilt-bit operators satisfy the local anticommutation law. -/
-@[rep_depth operator]
-theorem tilt_bitOperator_anticomm :
-    B.tilt.bitOperator false * B.tilt.bitOperator true +
-      B.tilt.bitOperator true * B.tilt.bitOperator false = 0 :=
-  B.tilt.bitOperator_anticomm
-
-/-- The Möbius action preserves the upper-half-plane. -/
-@[rep_depth operator]
-theorem moebius_action_valid (g : SL2R) :
-    (g • B.moebius).y > 0 :=
-  (g • B.moebius).y_pos
 
 /-- The spinor-boost dictionary validates the bilinear partition law. -/
 @[rep_depth operator]
@@ -225,30 +208,6 @@ theorem bogoljubov_packet_valid
         (E := E) H =
         BogoliubovTransport.modularTransportGenerator (E := E) H :=
   bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow (E := E) H
-
-/-- The affine and Virasoro layers are explicitly compatible. -/
-@[rep_depth operator]
-theorem bridge_affine_eq_valid :
-    B.bridge.affine = B.kacMoody :=
-  B.bridge_affine_eq
-
-/-- The Virasoro layer is explicitly compatible with the supplied Virasoro datum. -/
-@[rep_depth operator]
-theorem bridge_virasoro_eq_valid :
-    B.bridge.virasoro = B.virasoro :=
-  B.bridge_virasoro_eq
-
-/-- The Sugawara datum is calibrated against the same affine/Virasoro bridge. -/
-@[rep_depth operator]
-theorem sugawara_uses_bridge_valid :
-    B.sugawara.bridge = B.bridge :=
-  B.sugawara_uses_bridge
-
-/-- The super-Virasoro bracket law is carried by the owner packet. -/
-@[rep_depth operator]
-theorem superVirasoro_law_valid :
-    B.superVirasoro.super_bracket_law :=
-  B.superVirasoro_law
 
 end FractalCantorCuntzKacMoodyVirasoroBridge
 

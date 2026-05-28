@@ -295,6 +295,7 @@ import InfoGeometry.Canonical.DiscreteCPTGroup
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinChiralLightconeBoundary
+import InfoGeometry.Canonical.DrazinCl55LightconeAlignment
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap

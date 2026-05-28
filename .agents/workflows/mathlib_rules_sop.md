@@ -44,10 +44,25 @@ Downloaded references are stored under `external_refs/mathlib_docs/`:
 
 ### Naming
 
-- Use descriptive lower-case theorem names with underscores.
+- File names should generally be UpperCamelCase.
+- Theorem and lemma names, i.e. terms of `Prop`, use snake_case.
+- `Prop`, `Type`, `Sort`, structures, classes, and inductive types use UpperCamelCase.
+- Value-level definitions and fields returning ordinary data use lowerCamelCase.
+- Functions are named like their return values; a function returning a proposition is named like
+  a proposition, and a function returning data is named like data.
+- When an UpperCamelCase declaration is mentioned inside a theorem name, use lowerCamelCase.
+- Use American English in declaration names.
 - Name conclusions directly where possible (`map_zero`, `mul_assoc`, `foo_eq_bar`).
-- Use `_of_` to encode essential hypotheses only when mathematically meaningful.
-- Do not use names that suggest proof closure when the declaration is only a proxy (`*_valid`, `*_readback`, `*_certificate`, `*_witness`, `*_law`).
+- Theorem names state the conclusion first; use `_of_` for essential hypotheses in hypothesis
+  order (`lt_of_le_of_ne`, not reverse order).
+- Use standard symbol words: `eq`, `ne`, `zero`, `one`, `add`, `sub`, `mul`, `smul`, `pow`,
+  `mem`, `notMem`, `union`, `inter`, `iUnion`, `iInter`, `le`, `lt`, `ge`, `gt`.
+- Prefer standard structural names: `.ext`, `.ext_iff`, `_injective`, `_inj`, `_surjective`,
+  `_mono`, `_monotone`, `_strictMono`, etc.
+- Predicates usually appear as prefixes (`isClosed_Icc`), except for established suffix families
+  such as `_injective`, `_surjective`, `_monotone`, and `_strictMono`.
+- Do not use names that suggest proof closure when the declaration is only a proxy (`*_valid`,
+  `*_readback`, `*_certificate`, `*_witness`, `*_law`, `*_socket`).
 
 ### Proof discipline
 
@@ -80,6 +95,7 @@ python3 tools/quality/check_no_hypothesis_mandate.py --root lean/InfoGeometry
 python3 tools/quality/proof_only_mandate_gate.py
 python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
 python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
+python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
 ```
 
 ## Upstreaming posture

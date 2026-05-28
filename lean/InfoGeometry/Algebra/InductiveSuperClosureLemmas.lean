@@ -1,0 +1,133 @@
+import Mathlib
+
+/-!
+# Finite inductive superclosure lemmas
+
+This file proves finite local-to-global preservation of supergraded closure
+relations along a typed inductive chain of ring homomorphisms.
+
+It is deliberately finite-stage only: no colimit, completion, extra data
+carrier, or analytic limit claim is introduced.
+-/
+
+namespace InfoGeometry.Algebra.InductiveSuperClosureLemmas
+
+universe u
+
+/-- Super-anticommutator in a multiplicative additive carrier. -/
+def anticommutator {A : Type u} [Mul A] [Add A] (x y : A) : A :=
+  x * y + y * x
+
+/-- Ring homomorphisms preserve the super-anticommutator. -/
+theorem map_anticommutator
+    {A B : Type u} [Semiring A] [Semiring B]
+    (f : A →+* B) (x y : A) :
+    f (anticommutator x y) = anticommutator (f x) (f y) := by
+  simp [anticommutator]
+
+section Chain
+
+variable {Stage : Nat → Type u} [∀ n : Nat, Semiring (Stage n)]
+
+/-- Stagewise single-supercharge closure: `{Qₙ,Qₙ}=Hₙ+Zₙ`. -/
+def SuperClosureAt
+    (Q H Z : ∀ n : Nat, Stage n) (n : Nat) : Prop :=
+  anticommutator (Q n) (Q n) = H n + Z n
+
+/--
+One-step preservation of single-supercharge closure along a bonding ring
+homomorphism preserving the named generators.
+-/
+theorem superClosure_step
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q H Z : ∀ n : Nat, Stage n)
+    (n : Nat)
+    (hQ : bond n (Q n) = Q (n + 1))
+    (hH : bond n (H n) = H (n + 1))
+    (hZ : bond n (Z n) = Z (n + 1))
+    (h : SuperClosureAt Q H Z n) :
+    SuperClosureAt Q H Z (n + 1) := by
+  unfold SuperClosureAt at h ⊢
+  rw [← hQ, ← hH, ← hZ]
+  calc
+    anticommutator (bond n (Q n)) (bond n (Q n))
+        = bond n (anticommutator (Q n) (Q n)) := by
+          exact (map_anticommutator (bond n) (Q n) (Q n)).symm
+    _ = bond n (H n + Z n) := by
+          rw [h]
+    _ = bond n (H n) + bond n (Z n) := by
+          simp
+
+/--
+Finite induction theorem for single-supercharge closure along a typed
+inductive system.
+-/
+theorem superClosure_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q H Z : ∀ n : Nat, Stage n)
+    (h0 : SuperClosureAt Q H Z 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1))
+    (hH : ∀ n, bond n (H n) = H (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat, SuperClosureAt Q H Z n := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      exact superClosure_step bond Q H Z n (hQ n) (hH n) (hZ n) ih
+
+/-- Mixed odd-odd closure: `{Q⁽ᴬ⁾ₙ,Q⁽ᴮ⁾ₙ}=Kₙ+Zₙ`. -/
+def MixedSuperClosureAt
+    (QA QB K Z : ∀ n : Nat, Stage n) (n : Nat) : Prop :=
+  anticommutator (QA n) (QB n) = K n + Z n
+
+/--
+One-step preservation of mixed odd-odd closure along a bonding ring homomorphism
+preserving the named generators.
+-/
+theorem mixedSuperClosure_step
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (QA QB K Z : ∀ n : Nat, Stage n)
+    (n : Nat)
+    (hQA : bond n (QA n) = QA (n + 1))
+    (hQB : bond n (QB n) = QB (n + 1))
+    (hK : bond n (K n) = K (n + 1))
+    (hZ : bond n (Z n) = Z (n + 1))
+    (h : MixedSuperClosureAt QA QB K Z n) :
+    MixedSuperClosureAt QA QB K Z (n + 1) := by
+  unfold MixedSuperClosureAt at h ⊢
+  rw [← hQA, ← hQB, ← hK, ← hZ]
+  calc
+    anticommutator (bond n (QA n)) (bond n (QB n))
+        = bond n (anticommutator (QA n) (QB n)) := by
+          exact (map_anticommutator (bond n) (QA n) (QB n)).symm
+    _ = bond n (K n + Z n) := by
+          rw [h]
+    _ = bond n (K n) + bond n (Z n) := by
+          simp
+
+/--
+Finite induction theorem for mixed odd-odd closure along a typed inductive
+system.
+-/
+theorem mixedSuperClosure_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (QA QB K Z : ∀ n : Nat, Stage n)
+    (h0 : MixedSuperClosureAt QA QB K Z 0)
+    (hQA : ∀ n, bond n (QA n) = QA (n + 1))
+    (hQB : ∀ n, bond n (QB n) = QB (n + 1))
+    (hK : ∀ n, bond n (K n) = K (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat, MixedSuperClosureAt QA QB K Z n := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      exact mixedSuperClosure_step bond QA QB K Z n
+        (hQA n) (hQB n) (hK n) (hZ n) ih
+
+end Chain
+
+end InfoGeometry.Algebra.InductiveSuperClosureLemmas

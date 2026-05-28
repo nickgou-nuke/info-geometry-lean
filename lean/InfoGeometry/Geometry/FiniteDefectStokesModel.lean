@@ -132,7 +132,7 @@ def defectBackend : GeometricIntegralBackend Region Point Tangent Mat2 where
   boundaryIntegral := fun _ _ => P
   volumeIntegral := fun _ f => f ()
   geometricDerivative := fun _ _ => P
-  stokes_law := by
+  stokes_eq := by
     intro Ω ω
     rfl
   volumeIntegral_zero_of_pointwise_zero := by
@@ -159,7 +159,7 @@ theorem volumeIntegral_defect :
 theorem boundaryIntegral_eq_volumeIntegral_defect :
     defectBackend.boundaryIntegral () ccForm =
       defectBackend.volumeIntegral () (fun _ => boundedDirac.P) :=
-  defectBackend.stokes_law () ccForm
+  defectBackend.stokes_eq () ccForm
 
 /--
 The finite model also gives a one-turn residue normalizer.  Integer multiples
@@ -178,7 +178,7 @@ def defectNormalizer : PhaseResidueNormalizer Mat2 where
 /-- Certified winding datum for the one-point finite defect region. -/
 def windingDatum : WindingNumberDatum defectBackend defectNormalizer ccForm where
   winding := fun _ => 1
-  residue_law := by
+  boundaryIntegral_eq_winding_smul := by
     intro Ω
     ext i j
     fin_cases i <;> fin_cases j <;>
@@ -188,7 +188,7 @@ def windingDatum : WindingNumberDatum defectBackend defectNormalizer ccForm wher
 theorem boundaryIntegral_eq_one_period :
     defectBackend.boundaryIntegral () ccForm =
       ((1 : ℤ) : ℝ) • defectNormalizer.phasePeriod :=
-  windingDatum.residue_law ()
+  windingDatum.boundaryIntegral_eq_winding_smul ()
 
 /-- The finite defect volume is quantized by the certified one-turn winding. -/
 theorem volumeIntegral_defect_eq_one_period :
@@ -199,6 +199,6 @@ theorem volumeIntegral_defect_eq_one_period :
         = defectBackend.boundaryIntegral () ccForm := by
           rw [boundaryIntegral_eq_volumeIntegral_defect]
     _ = ((windingDatum.winding () : ℤ) : ℝ) • defectNormalizer.phasePeriod :=
-          windingDatum.residue_law ()
+          windingDatum.boundaryIntegral_eq_winding_smul ()
 
 end InfoGeometry.Geometry.FiniteDefectStokesModel

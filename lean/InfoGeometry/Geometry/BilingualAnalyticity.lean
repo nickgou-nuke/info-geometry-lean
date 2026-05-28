@@ -332,7 +332,7 @@ structure GeometricIntegralBackend
     OperatorOneForm Point Tangent Value → Point → Value
 
   /-- Generalized Stokes/Gauss theorem. -/
-  stokes_law :
+  stokes_eq :
     ∀ Ω ω,
       boundaryIntegral Ω ω =
         volumeIntegral Ω (geometricDerivative ω)
@@ -341,8 +341,8 @@ structure GeometricIntegralBackend
   If a density vanishes pointwise on the relevant region, its volume integral
   vanishes.
 
-  The precise support/membership condition is model-dependent, so this socket
-  uses a global pointwise-zero form.
+  The precise support/membership condition is model-dependent, so this generic
+  backend uses a global pointwise-zero form.
   -/
   volumeIntegral_zero_of_pointwise_zero :
     ∀ Ω f,
@@ -376,7 +376,7 @@ theorem boundaryIntegral_eq_zero_of_closed
     (ω : OperatorOneForm Point Tangent Value)
     (hclosed : I.IsClosedGeometricForm ω) :
     I.boundaryIntegral Ω ω = 0 := by
-  rw [I.stokes_law Ω ω]
+  rw [I.stokes_eq Ω ω]
   exact I.volumeIntegral_zero_of_pointwise_zero Ω
     (I.geometricDerivative ω)
     hclosed
@@ -413,16 +413,6 @@ structure HestenesAnalyticOn
   cauchyForm :
     OperatorOneForm Point Tangent Value
 
-  /--
-  Law saying this one-form is the intended Cauchy/geometric form associated to
-  `F`.
-  -/
-  cauchyForm_represents_F_law : Prop
-
-  /-- Proof/certificate that the form represents `F`. -/
-  cauchyForm_represents_F_certificate :
-    cauchyForm_represents_F_law
-
   /-- The form is closed/monogenic. -/
   closed_form :
     I.IsClosedGeometricForm cauchyForm
@@ -437,11 +427,6 @@ variable
 
 variable (A : HestenesAnalyticOn I F)
 
-/-- The supplied form-representation law is available. -/
-theorem cauchyForm_represents_F :
-    A.cauchyForm_represents_F_law :=
-  A.cauchyForm_represents_F_certificate
-
 /--
 Cauchy theorem in Hestenes-Stokes form:
 
@@ -455,13 +440,9 @@ theorem boundaryIntegral_eq_zero
 /-- Construct a Hestenes-analytic datum from a closed geometric form. -/
 def ofClosedForm
     (ω : OperatorOneForm Point Tangent Value)
-    (hrep : Prop)
-    (hrep_cert : hrep)
     (hω : I.IsClosedGeometricForm ω) :
     HestenesAnalyticOn I F where
   cauchyForm := ω
-  cauchyForm_represents_F_law := hrep
-  cauchyForm_represents_F_certificate := hrep_cert
   closed_form := hω
 
 /-- The boundary integral of a closed form vanishes. -/
@@ -482,8 +463,6 @@ def ofCalibration
     (hclosed : I.IsClosedGeometricForm (C.formOf F)) :
     HestenesAnalyticOn I F where
   cauchyForm := C.formOf F
-  cauchyForm_represents_F_law := C.formOf F = C.formOf F
-  cauchyForm_represents_F_certificate := rfl
   closed_form := hclosed
 
 @[simp]
@@ -522,18 +501,6 @@ structure CauchyHestenesCompatibility
   /-- Geometric Cauchy form associated to a real derivative. -/
   cauchyFormOf :
     (X →L[ℝ] Y) → OperatorOneForm Point Tangent Value
-
-  /--
-  Law saying the derivative-built Cauchy form is the intended geometric form
-  for `Fgeo`.
-  -/
-  cauchyFormOf_represents :
-    (X →L[ℝ] Y) → (Point → Value) → Prop
-
-  /-- Proof of the derivative-built form representation law. -/
-  cauchyFormOf_represents_certificate :
-    ∀ (L : X →L[ℝ] Y) (Fgeo : Point → Value),
-      cauchyFormOf_represents L Fgeo
 
   /--
   Cauchy/Hestenes obstruction associated to a derivative.
@@ -598,10 +565,6 @@ def hestenesAnalyticOfCauchy
     (A : CauchyAnalyticAt Kdom Ktar F x) :
     HestenesAnalyticOn I Fgeo where
   cauchyForm := B.cauchyFormOf A.deriv
-  cauchyForm_represents_F_law :=
-    B.cauchyFormOf_represents A.deriv Fgeo
-  cauchyForm_represents_F_certificate :=
-    B.cauchyFormOf_represents_certificate A.deriv Fgeo
   closed_form := B.closed_form_of_cauchyAnalyticAt A
 
 /--
@@ -731,7 +694,7 @@ theorem boundaryIntegral_eq_zero
 
 end BilingualAnalyticAt
 
-/-! ## 7. Operator target specialization sockets -/
+/-! ## 7. Operator target specializations -/
 
 /--
 A noncommutative operator analyticity side.
@@ -863,7 +826,7 @@ theorem leftForm_eq_rightForm_of_scalarValued
 
 end multiplicativeCauchyFormCalibration
 
-/-! ## 8. Noncommutative Cauchy kernel socket -/
+/-! ## 8. Noncommutative Cauchy kernel -/
 
 /--
 A noncommutative Cauchy kernel datum.
@@ -947,60 +910,7 @@ theorem kernel_unique
 
 end NoncommutativeCauchyKernel
 
-/-! ## 9. Cauchy integral formula socket -/
-
-/--
-Cauchy integral formula socket.
-
-This remains witness-gated because the formula requires concrete domain,
-orientation, regularity, integral, and kernel hypotheses.
-
-The kernel itself is not vacuous: it carries explicit two-sided inverse laws
-on admissible pairs.
--/
-structure CauchyIntegralFormulaDatum
-    (Region Param Point Tangent Value : Type*)
-    [Ring Value]
-    [Module ℝ Value]
-    (I : GeometricIntegralBackend Region Point Tangent Value)
-    (K : NoncommutativeCauchyKernel Param Point Value) where
-
-  /--
-  Whether the kernel acts on the left, on the right, or in a two-sided
-  calibrated way.
-  -/
-  side : OperatorAnalyticSide
-
-  /--
-  Model-specific Cauchy formula law.
-
-  This may later be expanded into an actual boundary integral identity.
-  -/
-  cauchy_formula_law : Prop
-
-  /-- Proof/certificate of the formula law. -/
-  cauchy_formula_certificate :
-    cauchy_formula_law
-
-namespace CauchyIntegralFormulaDatum
-
-variable
-    {Region Param Point Tangent Value : Type*}
-    [Ring Value]
-    [Module ℝ Value]
-    {I : GeometricIntegralBackend Region Point Tangent Value}
-    {K : NoncommutativeCauchyKernel Param Point Value}
-
-variable (C : CauchyIntegralFormulaDatum Region Param Point Tangent Value I K)
-
-/-- The stored Cauchy integral formula law is available as a proof. -/
-theorem cauchy_formula_valid :
-    C.cauchy_formula_law :=
-  C.cauchy_formula_certificate
-
-end CauchyIntegralFormulaDatum
-
-/-! ## 10. Scalar complex Cauchy kernel -/
+/-! ## 9. Scalar complex Cauchy kernel -/
 
 /--
 The scalar complex Cauchy kernel.

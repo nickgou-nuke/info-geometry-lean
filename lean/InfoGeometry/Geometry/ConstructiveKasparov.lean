@@ -355,7 +355,7 @@ theorem boundaryIntegral_eq_volumeDefect
     (Ω : Region) :
     I.boundaryIntegral Ω ω =
       I.volumeIntegral Ω B.defectDensity := by
-  rw [I.stokes_law Ω ω]
+  rw [I.stokes_eq Ω ω]
   exact
     congrArg (I.volumeIntegral Ω)
       (funext B.geometricDerivative_eq_defectDensity)
@@ -405,7 +405,7 @@ theorem volumeDefect_eq_winding_period
     I.volumeIntegral Ω B.defectDensity =
       (W.winding Ω : ℝ) • N.phasePeriod := by
   rw [← boundaryIntegral_eq_volumeDefect B Ω]
-  exact W.residue_law Ω
+  exact W.boundaryIntegral_eq_winding_smul Ω
 
 /--
 The volume defect vanishes iff the winding vanishes.
@@ -490,7 +490,7 @@ theorem boundaryIntegral_eq_finiteKernelIndex_period
   calc
     I.boundaryIntegral (regionOf x) ω =
         (W.winding (regionOf x) : ℝ) • N.phasePeriod :=
-      W.residue_law (regionOf x)
+      W.boundaryIntegral_eq_winding_smul (regionOf x)
     _ = (K.index x : ℝ) • N.phasePeriod := by
       rw [← hindex_winding x]
 

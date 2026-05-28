@@ -471,7 +471,7 @@ structure WindingNumberDatum
   /-- Integer winding/monodromy/charge readout for a region. -/
   winding : Region → ℤ
   /-- Residue law: `∮ ω = winding(Ω) • phasePeriod`. -/
-  residue_law :
+  boundaryIntegral_eq_winding_smul :
     ∀ Ω : Region,
       I.boundaryIntegral Ω ω =
         (winding Ω : ℝ) • N.phasePeriod
@@ -492,14 +492,14 @@ theorem boundaryIntegral_eq
     (Ω : Region) :
     I.boundaryIntegral Ω ω =
       (W.winding Ω : ℝ) • N.phasePeriod :=
-  W.residue_law Ω
+  W.boundaryIntegral_eq_winding_smul Ω
 
 /-- If the winding number is zero, the boundary integral vanishes. -/
 theorem boundaryIntegral_eq_zero_of_winding_zero
     {Ω : Region}
     (hΩ : W.winding Ω = 0) :
     I.boundaryIntegral Ω ω = 0 := by
-  rw [W.residue_law Ω, hΩ]
+  rw [W.boundaryIntegral_eq_winding_smul Ω, hΩ]
   simp
 
 /--
@@ -512,7 +512,7 @@ theorem winding_eq_zero_of_boundaryIntegral_eq_zero
     W.winding Ω = 0 := by
   apply N.integer_period_injective
   change (W.winding Ω : ℝ) • N.phasePeriod = ((0 : ℤ) : ℝ) • N.phasePeriod
-  rw [← W.residue_law Ω, hΩ]
+  rw [← W.boundaryIntegral_eq_winding_smul Ω, hΩ]
   simp
 
 /-- Boundary integral vanishes iff winding vanishes. -/
@@ -561,7 +561,7 @@ theorem winding_eq_of_boundaryIntegral_eq
   apply N.integer_period_injective
   change (W.winding Ω₁ : ℝ) • N.phasePeriod =
     (W.winding Ω₂ : ℝ) • N.phasePeriod
-  rw [← W.residue_law Ω₁, ← W.residue_law Ω₂]
+  rw [← W.boundaryIntegral_eq_winding_smul Ω₁, ← W.boundaryIntegral_eq_winding_smul Ω₂]
   exact hΩ
 
 /-- Boundary residues are equal iff the winding numbers are equal. -/
@@ -574,7 +574,7 @@ theorem boundaryIntegral_eq_iff_winding_eq
   · intro h
     exact W.winding_eq_of_boundaryIntegral_eq h
   · intro h
-    rw [W.residue_law Ω₁, W.residue_law Ω₂, h]
+    rw [W.boundaryIntegral_eq_winding_smul Ω₁, W.boundaryIntegral_eq_winding_smul Ω₂, h]
 
 /-- Regions with the same certified winding have the same boundary residue. -/
 theorem boundaryIntegral_eq_of_winding_eq
@@ -692,7 +692,7 @@ theorem boundaryIntegral_eq_divisor_count_period
   calc
     I.boundaryIntegral Ω ω =
         (W.winding Ω : ℝ) • N.phasePeriod :=
-      W.residue_law Ω
+      W.boundaryIntegral_eq_winding_smul Ω
     _ = (C.enclosedMultiplicity Ω : ℝ) • N.phasePeriod := by
       rw [C.winding_is_divisor_count Ω]
 
@@ -798,7 +798,7 @@ theorem boundaryIntegral_eq_index_period
   calc
     I.boundaryIntegral (T.regionOf c) ω =
         (W.winding (T.regionOf c) : ℝ) • N.phasePeriod :=
-      W.residue_law (T.regionOf c)
+      W.boundaryIntegral_eq_winding_smul (T.regionOf c)
     _ = (T.index c : ℝ) • N.phasePeriod := by
       rw [← T.index_eq_winding c]
 

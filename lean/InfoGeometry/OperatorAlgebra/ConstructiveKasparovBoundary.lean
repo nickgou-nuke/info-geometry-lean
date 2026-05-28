@@ -235,7 +235,7 @@ theorem boundaryIntegral_eq_volumeDefect
     (Ω : Region) :
     I.boundaryIntegral Ω L.omega =
       I.volumeIntegral Ω L.defectDensity := by
-  rw [I.stokes_law Ω L.omega]
+  rw [I.stokes_eq Ω L.omega]
   have h :
       I.geometricDerivative L.omega = L.defectDensity :=
     funext L.derivative_eq_defect

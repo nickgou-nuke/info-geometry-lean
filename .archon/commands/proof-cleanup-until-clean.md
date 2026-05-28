@@ -15,7 +15,7 @@ Start the repository proof-cleanup heartbeat from the live checkout and let it r
 
 **Loop script**: `tools/heartbeat/archon_repo_cleanup_loop.sh`
 
-The workflow uses an AI starter node rather than a deterministic Archon `bash:` node because Archon bash nodes require a positive timeout. The heartbeat itself is intentionally unbounded.
+The workflow uses an AI starter node rather than a deterministic Archon `bash:` node because Archon bash nodes require a positive timeout. It also intentionally does **not** use an Archon `loop:` node: Archon loop nodes require `max_iterations`, which is the wrong primitive for this life-force heartbeat. The heartbeat itself is intentionally unbounded and lives in the shell process until Ctrl-C.
 
 ---
 

@@ -518,6 +518,24 @@ theorem cocycleLogPotential_add
   · exact abs_ne_zero.mpr (Units.ne_zero _)
 
 /--
+Canonical flow-unit branch of logarithmic cocycle additivity.
+
+This removes the explicit `hCocycle : IsConnesCocycle σ u` argument on the
+flow-native unit branch by constructing the cocycle witness from `σ` itself via
+`flowUnitCocycle_isConnesCocycle`.
+-/
+theorem cocycleLogPotential_add_flowUnitCocycle
+  (σ : AdditiveModularFlow (H := H))
+    (B : ScalarCocycleBridge (H := H) σ) :
+    ∀ s t : ℝ,
+      cocycleLogPotential (H := H) σ (flowUnitCocycle (H := H) σ) B (s + t)
+        = cocycleLogPotential (H := H) σ (flowUnitCocycle (H := H) σ) B s
+          + cocycleLogPotential (H := H) σ (flowUnitCocycle (H := H) σ) B t :=
+  cocycleLogPotential_add
+    (H := H) σ (flowUnitCocycle (H := H) σ)
+    (flowUnitCocycle_isConnesCocycle (H := H) σ) B
+
+/--
 Theorem: The Log-Cocycle generates an Additive Potential.
 In the Type III context, the derivative of the Connes cocycle recovers
 the relative entropy / modular Hamiltonian.

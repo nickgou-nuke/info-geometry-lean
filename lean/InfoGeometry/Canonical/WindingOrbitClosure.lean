@@ -220,6 +220,47 @@ theorem winding_orbit_periodicity_of_IsPhaseLinear_modularTransportGenerator
   exact winding_orbit_periodicity_of_forcingSeed (H := H) hMod N hPhase
 
 /--
+Successor branch-cut periodicity for the canonical modular transport generator
+obtained from the forcing predicate.  This removes the raw `Commute` hypothesis
+from the successor-readback surface by first deriving clock-axis commutation from
+the phase-linear owner route.
+-/
+theorem winding_orbit_periodicity_succ_of_forcingSeed
+    (hMod : EndH) (N : ℤ)
+    (hForce : HasClockAxisForcingSeed (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  have hCommLocal :
+      Commute
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        (clockAxis H) :=
+    modularTransportGenerator_commutes_clockAxis_of_forcingSeed (H := H) hMod hForce
+  exact winding_orbit_periodicity_succ
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N) hCommLocal
+
+/--
+Successor branch-cut periodicity for a phase-linear seed, exposed without the
+raw commutation packet required by `winding_orbit_periodicity_succ`.
+-/
+theorem winding_orbit_periodicity_succ_of_IsPhaseLinear_modularTransportGenerator
+    (hMod : EndH) (N : ℤ)
+    (hPhase :
+      InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  exact winding_orbit_periodicity_succ_of_forcingSeed (H := H) hMod N hPhase
+
+/--
 Winding obstruction: deviation from exact branch-periodic closure at winding `N`.
 -/
 @[rep_depth transport]
@@ -295,6 +336,23 @@ theorem windingOrbitObstruction_eq_zero_of_commute
   unfold windingOrbitObstruction
   rw [winding_orbit_periodicity (K := K) (N := N) hComm]
   simp
+
+/--
+On a clock-faithful exponential branch, zero winding obstruction is exactly
+clock-axis commutation.  This packages the generic reverse direction at the
+owner surface instead of forcing downstream modular-transport callers to carry a
+bare `Commute K (clockAxis H)` hypothesis.
+-/
+theorem windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
+    (K : EndH) (N : ℤ)
+    (hFaithful : IsClockFaithfulExponentialBranch (H := H) K N) :
+    windingOrbitObstruction K N = 0 ↔ Commute K (clockAxis H) := by
+  constructor
+  · intro hObs
+    apply hFaithful
+    exact sub_eq_zero.mp hObs
+  · intro hComm
+    exact windingOrbitObstruction_eq_zero_of_commute (H := H) K N hComm
 
 /--
 Phase-linearity of the modular seed forces zero winding obstruction for the
@@ -462,6 +520,22 @@ theorem winding_orbit_periodicity_of_detailedEquilibrium
     (N := N) hCommLocal
 
 /--
+Witness-routed winding periodicity theorem on the detailed-equilibrium lane.
+This removes the bare `hEq` proof argument for callers that own the explicit
+`DetailedEquilibriumWitness` packet.
+-/
+theorem winding_orbit_periodicity_of_detailedEquilibriumWitness
+    (hMod : EndH) (N : ℤ)
+    (W : DetailedEquilibriumWitness (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
+  exact winding_orbit_periodicity_of_detailedEquilibrium
+    (H := H) hMod N W.hEq
+
+/--
 Branch-cut numbering theorem on the detailed-equilibrium lane:
 `N → N + 1` is exactly one period winding.
 -/
@@ -484,6 +558,22 @@ theorem winding_orbit_periodicity_succ_of_detailedEquilibrium
     (H := H)
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
+
+/--
+Witness-routed branch-cut numbering theorem on the detailed-equilibrium lane.
+This removes the bare `hEq` proof argument in favor of the explicit witness.
+-/
+theorem winding_orbit_periodicity_succ_of_detailedEquilibriumWitness
+    (hMod : EndH) (N : ℤ)
+    (W : DetailedEquilibriumWitness (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+        (multiBranchedGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  exact winding_orbit_periodicity_succ_of_detailedEquilibrium
+    (H := H) hMod N W.hEq
 
 /--
 Backward-compatible API surface: Cartan-grade forcing routes through the

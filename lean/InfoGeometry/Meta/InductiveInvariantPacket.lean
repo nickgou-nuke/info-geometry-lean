@@ -140,6 +140,15 @@ def ImageCentral (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
   ∀ X : A, φ I.C * φ X = φ X * φ I.C
 
 /--
+Named image-preservation packet for the central lane.
+
+This is deliberately weaker than global centrality in the target algebra: it only
+asserts centrality against elements that actually come from the source stage.
+-/
+structure PreservesClosureImage (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop where
+  image_central : ∀ X : A, φ I.C * φ X = φ X * φ I.C
+
+/--
 The finite closure relations transported to the image of a bonding map.
 
 This is intentionally image-local: no global centrality in `B` is asserted.
@@ -149,7 +158,7 @@ def ImageClosure (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
   φ I.P * φ I.P = φ I.P ∧
   φ I.Q * star (φ I.Q) + star (φ I.Q) * φ I.Q = φ I.H ∧
   φ I.P * φ I.Q + φ I.Q * φ I.P = 0 ∧
-  ImageCentral I φ
+  PreservesClosureImage I φ
 
 /-- Square-zero odd lane transports under a star-preserving bonding map. -/
 theorem map_odd_sq_zero
@@ -200,6 +209,12 @@ theorem map_image_central
     _ = φ (X * I.C) := by rw [I.central_commutes X]
     _ = φ X * φ I.C := by simp
 
+/-- Named image-preservation packet induced by a bonding map. -/
+theorem map_preserves_closure_image
+    (I : SupergradedClosureAt A) (φ : StarRingHom A B) :
+    PreservesClosureImage I φ where
+  image_central := map_image_central I φ
+
 /--
 Finite Erlangen transport theorem: all local closure identities hold on the
 image of a star-preserving bonding map.
@@ -212,7 +227,7 @@ theorem map_image_closure
       map_parity_idempotent I φ,
       map_odd_odd_closure I φ,
       map_parity_odd_anticomm I φ,
-      map_image_central I φ⟩
+      map_preserves_closure_image I φ⟩
 
 /--
 All local closure identities are preserved on the image of every finite

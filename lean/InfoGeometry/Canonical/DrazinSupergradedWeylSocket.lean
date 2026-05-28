@@ -133,6 +133,44 @@ def DrazinKillsPrimitiveNilpotent
     (D : DrazinSupportData Obs) : Prop :=
   D.A * D.A = 0 → D.AD = 0
 
+namespace PrimitiveFermion
+
+variable {Obs : Type*} [Ring Obs]
+
+/-- A primitive fermion carries its nilpotent/noise witness without requiring a
+separate square-zero hypothesis at the call site. -/
+@[rep_depth operator]
+theorem nilpotentNoise
+    (F : PrimitiveFermion Obs) :
+    IsNilpotentNoise F.op :=
+  F.nilpotent
+
+/-- A primitive fermion carries its oddness witness without requiring a separate
+supergrading hypothesis at the call site. -/
+@[rep_depth operator]
+theorem odd_readback
+    (F : PrimitiveFermion Obs) :
+    IsOdd F.grading F.op :=
+  F.odd
+
+end PrimitiveFermion
+
+/--
+Constructive Drazin-kill route for a primitive fermion input: callers can pass
+an explicit `PrimitiveFermion` package instead of re-supplying the bare
+square-zero proof `D.A * D.A = 0`, when the Drazin input is definitionally the
+primitive operator.
+-/
+@[rep_depth operator]
+theorem drazinKillsPrimitiveFermion
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (D : DrazinSupportData Obs)
+    (hD : DrazinKillsPrimitiveNilpotent D)
+    (F : PrimitiveFermion Obs)
+    (hA : D.A = F.op) :
+    D.AD = 0 := by
+  exact hD (by simpa [hA] using F.nilpotent)
+
 /--
 Drazin preservation law for a stable scaled projector.
 

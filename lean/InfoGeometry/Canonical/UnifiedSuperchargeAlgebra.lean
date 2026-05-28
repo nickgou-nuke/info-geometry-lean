@@ -2915,6 +2915,35 @@ theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_central :
           simp [drazinCentralCandidate, smul_add]
 
 /--
+Central term extracted from the projected odd-odd Drazin bracket.
+
+This is the finite N=2-style closure readout:
+`Z_D = {Q_D,Q_D} - 2P_D`.
+
+It is an algebraic consequence of the already-owned projected odd-odd bracket
+split, not a new wrapper.
+-/
+@[rep_depth transport]
+theorem drazinCentralCandidate_eq_oddOdd_bracket_sub_two_smul_translation :
+    drazinCentralCandidate U =
+      InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+        - (2 : ℝ) • drazinTranslationCandidate U := by
+  rw [projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)]
+  abel
+
+/--
+Defect-supported central term extracted from the projected odd-odd Drazin
+bracket.
+-/
+@[rep_depth transport]
+theorem drazinDefectCandidate_eq_oddOdd_bracket_sub_two_smul_translation :
+    drazinDefectCandidate U =
+      InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+        - (2 : ℝ) • drazinTranslationCandidate U := by
+  rw [← drazinCentralCandidate_eq_defectCandidate (U := U)]
+  exact drazinCentralCandidate_eq_oddOdd_bracket_sub_two_smul_translation (U := U)
+
+/--
 Equivalent defect-language readout of the same odd-odd Drazin bracket.
 -/
 @[rep_depth transport]
@@ -2979,6 +3008,22 @@ theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central_of_co
     (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
   rw [paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi (U := U) (M := M) hCL hCR]
   exact projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
+
+/--
+Central term extracted from the Majorana-compatible paired odd-odd bracket.
+-/
+@[rep_depth transport]
+theorem drazinCentralCandidate_eq_paired_majoranaBracket_sub_two_smul_translation_of_commute_chi
+    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (U.kernel.chiralAnomaly))
+    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+    drazinCentralCandidate U =
+      InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
+          (QD U) (drazinMajoranaConjugateCandidate U)
+        - (2 : ℝ) • drazinTranslationCandidate U := by
+  rw [paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central_of_commute_chi
+    (U := U) (M := M) hCL hCR]
+  abel
 
 /--
 Equivalent defect-language version of the conditional paired-bracket readout.

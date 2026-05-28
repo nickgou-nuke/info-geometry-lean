@@ -195,6 +195,25 @@ theorem Pplus_add_Pminus :
   fin_cases i <;> fin_cases j <;>
     norm_num [Pplus, Pminus, E]
 
+/--
+The theorem-owned finite Cayley--Klein atom.
+
+This is the local algebraic grammar used before any Type III, KMS, Drazin, or
+condensed-matter completion is asserted: elliptic square `-1`, hyperbolic square
+`+1`, parabolic square `0`, and the split idempotent decomposition.
+-/
+theorem local_cayley_klein_atom :
+    I * I = -(1 : Mat2) ∧
+    E * E = (1 : Mat2) ∧
+    N * N = (0 : Mat2) ∧
+    Pplus * Pplus = Pplus ∧
+    Pminus * Pminus = Pminus ∧
+    Pplus * Pminus = (0 : Mat2) ∧
+    Pplus + Pminus = (1 : Mat2) := by
+  exact ⟨I_sq, E_sq, N_sq,
+    Pplus_idempotent, Pminus_idempotent,
+    Pplus_mul_Pminus, Pplus_add_Pminus⟩
+
 /-! ## Moore--Penrose inverse of the parabolic nilpotent -/
 
 /--

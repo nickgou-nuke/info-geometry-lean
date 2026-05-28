@@ -112,16 +112,25 @@ not merely:
 Pointwise theorems are acceptable, but the direct-sum equality is the stronger
 Virasoro-style endpoint.
 
-### Template B: central extension
+### Template B: basis + cocycle + central extension
 
-Use this when closure has an anomaly/central-charge term.
+Use this when closure has an anomaly/central-charge term and you want the full
+external-Virasoro-style construction.
 
 Required proof shape:
 
-1. Define the base algebra/bracket on basis modes.
-2. Define an explicit 2-cocycle, including its support condition.
-3. Form the central extension.
-4. Prove generator bracket and arbitrary-element readback from the extension.
+1. Define an explicit mode-label type.
+2. Define the base algebra as a finitely supported basis carrier, typically
+   `AbelianLieAlgebraOn labels 𝕜` or `labels →₀ 𝕜`.
+3. Define basis generators (`qgen`, `rgen`, `hgen`, `lgen`, `jgen`, etc.).
+4. Define an explicit alternating 2-cocycle on basis labels.
+5. Extend the cocycle bilinearly using the basis constructor.
+6. Prove skewness/self-zero and the cocycle condition.
+7. Form `LieTwoCocycle.CentralExtension`.
+8. Lift basis generators into the central extension.
+9. Prove generator bracket laws first.
+10. Prove arbitrary-element bracket readback from the central-extension
+    definition.
 
 Allowed pattern:
 

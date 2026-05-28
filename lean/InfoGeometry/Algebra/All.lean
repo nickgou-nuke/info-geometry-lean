@@ -14,6 +14,7 @@ import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
 import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
+import InfoGeometry.Algebra.N2ModeCentralExtension
 import InfoGeometry.Algebra.InfiniteN2ModeInduction
 import InfoGeometry.Algebra.FiniteInfiniteModeBridge
 /-!

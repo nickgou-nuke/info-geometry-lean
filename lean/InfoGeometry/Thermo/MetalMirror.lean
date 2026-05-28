@@ -238,10 +238,10 @@ theorem macroscopicHeatLoss_zero_of_actual_eq_ideal
 /--
 A metal mirror Ricci-flux bridge.
 
-This is a proof-carrying capstone datum. It does not assert that every metal
-mirror automatically realizes a given TKK Ricci flux. Instead, it records the
-concrete generator assignment and the equality between macroscopic heat loss
-and scalar Ricci-flux readout.
+This datum does not assert that every metal mirror automatically realizes a
+given TKK Ricci flux.  For each installed instance, the proof of the bridge is
+exactly the `heat_eq_ricci_flux` field below; concrete geometry modules must
+supply that equality theorem when constructing the instance.
 -/
 structure MetalMirrorRicciFluxBridge
     {c : CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)}
@@ -268,9 +268,6 @@ structure MetalMirrorRicciFluxBridge
     ∀ U : RegularConePoint c,
       macroscopicHeatLoss M ω gradPhi U =
         R.flux (sourceLeft U) (sourceRight U)
-
-  /-- Heat/Ricci-flux identification is compatible with the supplied bridge. -/
-  bregman_bridge_compatibility : Prop
 
 namespace MetalMirrorRicciFluxBridge
 

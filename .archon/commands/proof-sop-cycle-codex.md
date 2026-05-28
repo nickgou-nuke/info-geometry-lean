@@ -37,6 +37,11 @@ raw URLs in docs should use angle brackets, sectioning comments should use
 module-doc comments, and docstrings should describe mathematical meaning without
 overclaiming unproved bridges.
 
+Apply the Mathlib naming conventions: theorem/lemma names use snake_case, Types
+and Props use UpperCamelCase, value-level definitions use lowerCamelCase, theorem
+names describe the conclusion first with `_of_` for essential hypotheses, and
+avoid proxy names such as `_law`, `_certificate`, `_witness`, or `_socket`.
+
 **PHASE_1_CHECKPOINT:**
 - [ ] Proof-only policy loaded
 - [ ] Honest proof policy loaded
@@ -54,6 +59,7 @@ python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
 python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
 python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
 python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
+python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
 ```
 
 Select the first real vacuity/proxy target from the heartbeat. Use semantic inspection before editing:
@@ -124,6 +130,7 @@ python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
 python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
 python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
 python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
+python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
 ```
 
 If useful for the touched file, run Ulam:
@@ -138,6 +145,7 @@ ulam checkpoint <file> --lean-project . --strict --no-allow-axioms
 - [ ] Heartbeat rerun
 - [ ] Mathlib style audit rerun
 - [ ] Mathlib documentation audit rerun
+- [ ] Mathlib naming audit rerun
 - [ ] No axioms/admits/fake closure introduced
 
 ---

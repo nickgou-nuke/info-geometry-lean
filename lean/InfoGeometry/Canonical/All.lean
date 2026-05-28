@@ -117,6 +117,7 @@ import InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
 import InfoGeometry.Canonical.CantorCylinderLattice
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
+import InfoGeometry.Canonical.CantorDiracSeaHopping
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

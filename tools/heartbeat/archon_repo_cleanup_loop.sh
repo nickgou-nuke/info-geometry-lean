@@ -17,6 +17,9 @@ INTERVAL_SECONDS="${INTERVAL_SECONDS:-0}"
 # Optional deterministic command run after each iteration for mathlib/full-repo gates.
 # Example: POST_TICK_COMMAND='lake build InfoGeometry.Canonical.All'
 POST_TICK_COMMAND="${POST_TICK_COMMAND:-}"
+# Include Mathlib-style audit in the loop score by default.
+RUN_STYLE_AUDIT="${RUN_STYLE_AUDIT:-1}"
+STYLE_SCOPE="${STYLE_SCOPE:-$SCOPE}"
 TOP="${TOP:-20}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 LOG_DIR="$ROOT/reports/cleanup-loop/$RUN_ID"
@@ -52,35 +55,50 @@ metric_value() {
 
 score_from_report() {
   local file="$1"
-  local sorry proxy prop reexport
+  local sorry proxy prop reexport style
   sorry="$(metric_value "$file" sorry)"
   proxy="$(metric_value "$file" proxy_field)"
   prop="$(metric_value "$file" prop_socket)"
   reexport="$(metric_value "$file" reexport_proxy)"
-  echo $((sorry + proxy + prop + reexport))
+  style="$(style_violations_value "$file")"
+  echo $((sorry + proxy + prop + reexport + style))
+}
+
+style_violations_value() {
+  local file="$1"
+  awk '
+    /^Found [0-9]+ style rule violations:/ {print $2; found=1; exit}
+    /No style violations found/ {print 0; found=1; exit}
+    END {if (!found) print 0}
+  ' "$file"
 }
 
 write_report() {
   local iter="$1" phase="$2" out="$3"
   {
     echo "=== cleanup-loop $RUN_ID iter=$iter phase=$phase $(date -Is) ==="
-    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS stop_when_clean=$STOP_WHEN_CLEAN timeout=$ARCHON_CYCLE_TIMEOUT_SECONDS interval=$INTERVAL_SECONDS post_tick=${POST_TICK_COMMAND:-none}"
+    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS stop_when_clean=$STOP_WHEN_CLEAN timeout=$ARCHON_CYCLE_TIMEOUT_SECONDS interval=$INTERVAL_SECONDS post_tick=${POST_TICK_COMMAND:-none} style_audit=$RUN_STYLE_AUDIT style_scope=$STYLE_SCOPE"
     python3 tools/quality/proof_heartbeat.py "$SCOPE" --top "$TOP" || true
     echo
     python3 tools/lean4-skills/sorry_analyzer.py "$SCOPE" --format=summary || true
+    if [[ "$RUN_STYLE_AUDIT" == "1" ]]; then
+      echo
+      python3 tools/quality/audit_style.py "$STYLE_SCOPE" || true
+    fi
   } > "$out" 2>&1
 }
 
 append_summary() {
   local iter="$1" phase="$2" report="$3"
-  local sorry proxy prop reexport score
+  local sorry proxy prop reexport style score
   sorry="$(metric_value "$report" sorry)"
   proxy="$(metric_value "$report" proxy_field)"
   prop="$(metric_value "$report" prop_socket)"
   reexport="$(metric_value "$report" reexport_proxy)"
-  score=$((sorry + proxy + prop + reexport))
-  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
-    "$iter" "$phase" "$sorry" "$proxy" "$prop" "$reexport" "$score" "$report" >> "$SUMMARY_FILE"
+  style="$(style_violations_value "$report")"
+  score=$((sorry + proxy + prop + reexport + style))
+  printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
+    "$iter" "$phase" "$sorry" "$proxy" "$prop" "$reexport" "$style" "$score" "$report" >> "$SUMMARY_FILE"
 }
 
 run_archon_cycle() {
@@ -109,7 +127,7 @@ run_post_tick_command() {
 }
 
 if [[ ! -f "$SUMMARY_FILE" ]]; then
-  printf "iter\tphase\tsorry\tproxy_field\tprop_socket\treexport_proxy\tscore\treport\n" > "$SUMMARY_FILE"
+  printf "iter\tphase\tsorry\tproxy_field\tprop_socket\treexport_proxy\tstyle_violations\tscore\treport\n" > "$SUMMARY_FILE"
 fi
 
 best_score=999999999

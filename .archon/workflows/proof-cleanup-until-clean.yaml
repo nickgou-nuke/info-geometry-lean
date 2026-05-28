@@ -1,0 +1,33 @@
+name: proof-cleanup-until-clean
+description: "Bounded supervisor loop for proof cleanup: repeatedly run the one-cycle proof SOP until heartbeat metrics are clean, stale, timed out, or iteration budget is exhausted."
+
+nodes:
+  - id: cleanup-until-clean
+    assistant: pi
+    prompt: |
+      Run the repository proof cleanup supervisor loop from the repo root.
+
+      Command:
+      - tools/heartbeat/archon_repo_cleanup_loop.sh
+
+      Default safety bounds:
+      - MAX_ITERATIONS=25
+      - MAX_STALE_ITERATIONS=3
+      - ARCHON_CYCLE_TIMEOUT_SECONDS=1800
+      - SCOPE=lean/InfoGeometry/Canonical
+      - WORKFLOW=proof-sop-cycle
+
+      Required behavior:
+      - Do not bypass the bounds.
+      - Do not stage generated logs/reports/artifacts.
+      - Each inner iteration must use the existing `proof-sop-cycle` workflow,
+        which is responsible for making at most one bounded cleanup, validating,
+        committing, and pushing.
+      - Stop when heartbeat score reaches zero, when progress stalls, on timeout,
+        or when the iteration budget is exhausted.
+
+      After the command exits, summarize:
+      - stopping reason;
+      - path to the cleanup-loop summary TSV;
+      - latest before/after counts;
+      - any nonzero Archon exit/timeout codes.

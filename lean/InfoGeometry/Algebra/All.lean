@@ -13,6 +13,7 @@ import InfoGeometry.Algebra.NilpotentNonunit
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
 import InfoGeometry.Algebra.FiniteInductiveSUSY
+import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas

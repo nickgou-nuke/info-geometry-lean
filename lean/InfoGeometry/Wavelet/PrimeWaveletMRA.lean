@@ -216,7 +216,6 @@ def toPrimeLeeYangConvergenceSocket :
   limitF := W.limitF
   xiCayleyPullback := W.xiCayleyPullback
   locallyUniformRenormalizedLimit := W.locallyUniformWaveletLimit
-  limit_eq_xiCayleyPullback_law := W.waveletLimit_eq_xiCayleyPullback_law
   nontrivial_in := W.nontrivial_in
   nontrivial_out := W.nontrivial_out
   inner_zero_free := W.inner_mra_zero_free

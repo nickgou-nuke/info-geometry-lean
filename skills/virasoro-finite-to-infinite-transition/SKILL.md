@@ -76,6 +76,41 @@ A valid finite-to-infinite theorem must use one of these mechanisms:
 
 If none is available, leave an honest `sorry` or keep the artifact data-only.
 
+## Mandatory synthesis-claim downgrade
+
+Before implementing from a report, manifesto, or uploaded batch, classify every
+claim by the strongest mechanism actually formalized:
+
+```text
+finite algebraic identity     → theorem candidate
+finite iteration for all n    → finite-stage theorem only
+explicit maps into target     → image-local target theorem
+actual DirectLimit            → algebraic colimit theorem only
+topology + convergence        → analytic completion theorem candidate
+operator domains + continuity → unbounded/KMS/spectral theorem candidate
+cohomology map + cocycle proof → central-charge identification candidate
+```
+
+Reject or downgrade any statement that says finite algebra alone proves:
+
+- Fuglede--Kadison determinant, Markov trace, or Type II/Type III factor
+  existence;
+- infinite CAR/Dirac-sea construction from finite Jordan--Wigner strings;
+- Jones subfactor limit from finite idempotents;
+- Virasoro central charge from a Hopf cross term without a cocycle/cohomology
+  bridge theorem;
+- KKT/TKK exponentiation into global Virasoro without a representation theorem;
+- KMS analyticity from Hestenes phase-commutation without the supplied KMS state
+  hypotheses, domains, continuity, and boundary condition;
+- global centrality in a target from non-surjective stage inclusions;
+- analytic completion from Finsupp or algebraic DirectLimit alone.
+
+The safe action is to extract a finite theorem, an image-local theorem, or an
+assumption-explicit interface.  If the global bridge is desired, create a
+separate interface file whose fields are the missing topology, continuity,
+domain, convergence, density, or cohomology assumptions; do not hide those
+assumptions in proof-carrying packet fields.
+
 ## Preferred theorem shape
 
 For direct-sum carriers, prefer object equality in the carrier:

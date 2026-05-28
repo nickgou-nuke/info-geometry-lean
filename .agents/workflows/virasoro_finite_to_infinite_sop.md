@@ -55,6 +55,53 @@ A valid finite-to-infinite theorem must use one of these honest mechanisms:
 If none of these mechanisms is available, the theorem must remain an honest
 visible `sorry` or be refactored into definitions/data with no theorem claim.
 
+## Synthesis-claim firewall
+
+When a research note, uploaded batch, agent report, or design discussion mixes
+finite algebra with global physical language, apply this downgrade rule before
+editing Lean or documentation:
+
+```text
+finite algebraic identity     → theorem candidate
+finite iteration for all n    → finite-stage theorem only
+explicit maps into target     → image-local target theorem
+actual DirectLimit            → algebraic colimit theorem only
+topology + convergence        → analytic completion theorem candidate
+operator domains + continuity → unbounded/KMS/spectral theorem candidate
+cohomology map + cocycle proof → central-charge identification candidate
+```
+
+Do **not** promote any of the following slogans to theorem/doctrine unless the
+named owner theorem exists and consumes the relevant formal machinery:
+
+- determinant/log-trace finite scaling proves a Fuglede--Kadison determinant,
+  Markov trace, or Type II/Type III factor;
+- Jordan--Wigner finite strings construct an infinite CAR/Dirac-sea operator
+  algebra;
+- Jones/Temperley--Lieb idempotents construct a subfactor limit;
+- Hopf cross-flux `N ⊗ N` is the Virasoro central charge;
+- KKT/TKK local cells exponentiate into global Virasoro;
+- Hestenes/Krein phase-commutation proves KMS analyticity or a completed
+  infinite Virasoro representation;
+- an algebraic colimit is a Hilbert/Banach/von-Neumann completion;
+- an image-central element is globally central in a non-surjective target.
+
+Safe repository action is to extract only the theorem-level finite or
+assumption-explicit content.  Examples of safe slices already used in this repo:
+
+- finite determinant/log-trace scaling lemmas;
+- finite ring/algebra-hom invariant transport;
+- finite supergraded closure transport on images;
+- finite binary Cantor hopping and score functionals;
+- exact finite modular coproduct/cross-flux identities;
+- algebraic limit interfaces with explicit stage inclusions and image-local
+  closure, but no density/continuity/completion result.
+
+Global statements must either be omitted, moved to a design note labeled as a
+bridge target, or expressed as an interface whose fields are the missing
+continuity/domain/cohomology assumptions.  Never encode the missing global step
+as a `law`, `certificate`, `witness`, `guard`, `readback`, or proxy field.
+
 ## Reference exemplar: external Virasoro package
 
 Use these files as the canonical model for the algebraic cases:

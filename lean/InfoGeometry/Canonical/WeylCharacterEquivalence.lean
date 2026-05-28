@@ -137,7 +137,6 @@ structure DeformedSouriauWeylCharacter (𝔤 : Type*) where
   undeformedCharacter : ℝ
   undeformed_eq_partitionFunction :
     undeformedCharacter = representation.partitionFunction beta
-  deformation_law : Prop
 
 namespace DeformedSouriauWeylCharacter
 

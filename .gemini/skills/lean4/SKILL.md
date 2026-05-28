@@ -5,7 +5,7 @@ description: "Use when editing .lean files, debugging Lean 4 builds (type mismat
 
 ## Constructive Closure Mandate
 
-Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. **Vacuous scaffolding is strictly prohibited.** Never use `law : Prop`, `certificate : law`, witness fields, packet fields, or projection-only theorems to obscure missing proofs. Structures must carry explicit mathematical identities (e.g., `det P = minkowskiNormSq`) or explicitly named theorem obligations whose proof is supplied in the owner lane. Treat literature owners, graph edges, physics analogies, and AI proof sketches as closure debt until discharged by kernel-checked Lean or imported Mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
 
 # Lean 4 Theorem Proving
 
@@ -13,9 +13,11 @@ Use this skill whenever you're editing Lean 4 proofs, debugging Lean builds, for
 
 ## Core Principles
 
+**Truth-First Structural Design.** Before proving, ensure that structures and definitions are mathematically meaningful. Avoid semantic cheating by defining laws as concrete algebraic or analytic identities rather than opaque propositions. If the right identity is not known, leave explicit open debt instead of inventing a weaker carrier.
+
 **Search before prove.** Many mathematical facts already exist in mathlib. Search exhaustively before writing tactics.
 
-**Build incrementally.** Lean's type checker is your test suite—if it compiles with no sorries and standard axioms only, the proof is sound.
+**Build incrementally.** Lean's type checker is your test suite. Build success is necessary but not sufficient: also scan the agreed scope for `sorry`, custom `axiom`, `admit`, `law : Prop`, certificate/witness fields, and projection-only wrappers before calling a theorem closed.
 
 **Respect scope.** Follow the user's preference: fill one sorry, its transitive dependencies, all sorries in a file, or everything. Ask if unclear.
 

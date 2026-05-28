@@ -142,6 +142,16 @@ noncomputable def hestenesSymmetryCommutator (A B : EndH) : EndH :=
 def IsHestenesAnalyticSymmetry (A : EndH) : Prop :=
   IsHestenesHolomorphicDifferential (E := E) (F := E) A
 
+/-- The identity endomorphism is a Hestenes-analytic symmetry generator.
+
+This is the constructive owner route for the identity-mode branch: callers no
+longer need to pass a bare phase-axis-preservation hypothesis for the identity
+operator before using commutator closure. -/
+@[rep_depth krein]
+theorem id_isHestenesAnalyticSymmetry :
+    IsHestenesAnalyticSymmetry (E := E) (ContinuousLinearMap.id ℝ H₂) := by
+  exact id_isHestenesHolomorphicDifferential (E := E)
+
 /-- Hestenes-analytic symmetry generators are closed under operator commutator. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator
@@ -167,6 +177,30 @@ theorem hestenesAnalyticSymmetry_commutator
             rw [hA, hB]
     _ = (InfoGeometry.Krein.clockAxis (E := E)).comp (A.comp B - B.comp A) := by
             simp [ContinuousLinearMap.comp_sub, ContinuousLinearMap.comp_assoc]
+
+/-- Right-identity commutator branch with the identity analytic witness derived
+constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
+hypothesis. -/
+@[rep_depth krein]
+theorem hestenesAnalyticSymmetry_commutator_id_right
+    {A : EndH}
+    (hA : IsHestenesAnalyticSymmetry (E := E) A) :
+    IsHestenesAnalyticSymmetry (E := E)
+      (hestenesSymmetryCommutator (E := E) A (ContinuousLinearMap.id ℝ H₂)) := by
+  exact hestenesAnalyticSymmetry_commutator (E := E) hA
+    (id_isHestenesAnalyticSymmetry (E := E))
+
+/-- Left-identity commutator branch with the identity analytic witness derived
+constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
+hypothesis. -/
+@[rep_depth krein]
+theorem hestenesAnalyticSymmetry_commutator_id_left
+    {A : EndH}
+    (hA : IsHestenesAnalyticSymmetry (E := E) A) :
+    IsHestenesAnalyticSymmetry (E := E)
+      (hestenesSymmetryCommutator (E := E) (ContinuousLinearMap.id ℝ H₂) A) := by
+  exact hestenesAnalyticSymmetry_commutator (E := E)
+    (id_isHestenesAnalyticSymmetry (E := E)) hA
 
 variable {𝔤 : Type*}
 variable [AddCommGroup 𝔤] [Module ℝ 𝔤] [LieRing 𝔤] [LieAlgebra ℝ 𝔤]

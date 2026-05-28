@@ -38,15 +38,19 @@ structure MoorePenroseInverseG where
   penrose₃_G : Prop
   penrose₄_G : Prop
 
-/-- Similarity + metric transport witness between two projector pairs. -/
+/-- Similarity transport data between two projector pairs.
+
+The metric-transport side is recorded as prose metadata, not as a proof-bearing
+certificate field; the checked projector equations below are the Lean authority
+available in this packet.
+-/
 @[rep_depth transport]
 structure SimilarityTransportWitness (P P' : ProjectorPair R) where
   g : R
   gInv : R
   leftInv : gInv * g = 1
   rightInv : g * gInv = 1
-  transportedMetricWitness : Prop
-  transportedMetricCertified : transportedMetricWitness
+  transportedMetricExplanation : String
   drazin_transport : P'.PD = g * P.PD * gInv
   moorePenrose_transport : P'.PMP = g * P.PMP * gInv
 
@@ -91,7 +95,6 @@ theorem transported_mismatch_covariant
 @[rep_depth transport]
 structure MetricCompensatorWitness (P P' : ProjectorPair R) where
   transport : SimilarityTransportWitness P P'
-  transport_law : transport.transportedMetricWitness
   mp_transport : P'.PMP = transport.g * P.PMP * transport.gInv
   mismatch_transport : mismatch_G P' = transport.g * mismatch_G P * transport.gInv
 

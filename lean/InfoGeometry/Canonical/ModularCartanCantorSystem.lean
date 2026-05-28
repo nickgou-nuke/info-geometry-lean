@@ -392,7 +392,7 @@ open InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 open InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 
 variable {A Modular Weight Deriv Score : Type*}
-variable [Ring A] [One Deriv] [Mul Deriv]
+variable [Ring A] [Zero Modular] [Mul Modular] [One Deriv] [Mul Deriv]
 
 /--
 Type III-safe replacement for determinant barriers.
@@ -404,7 +404,7 @@ barriers can only enter through the explicit `finite_split_approximant_law`.
 @[socket_debt_tag, rep_depth operator]
 structure RelativeEntropyBarrierSocket
     (A Modular Weight Deriv Score : Type*)
-    [Ring A] [One Deriv] [Mul Deriv] [Zero Score] [Add Score] where
+    [Ring A] [Zero Modular] [Mul Modular] [One Deriv] [Mul Deriv] [Zero Score] [Add Score] where
   /-- Araki/Connes relative entropy socket. -/
   relativeEntropy :
     UnnormalizedRelativeEntropyDatum A Modular
@@ -432,7 +432,7 @@ structure RelativeEntropyBarrierSocket
 
 namespace RelativeEntropyBarrierSocket
 
-variable [Ring A] [One Deriv] [Mul Deriv] [Zero Score] [Add Score]
+variable [Ring A] [Zero Modular] [Mul Modular] [One Deriv] [Mul Deriv] [Zero Score] [Add Score]
 variable (B : RelativeEntropyBarrierSocket A Modular Weight Deriv Score)
 
 /-- Relative entropy is the barrier readout; self-divergence vanishes. -/

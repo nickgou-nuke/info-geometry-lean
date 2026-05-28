@@ -476,6 +476,26 @@ theorem vacuumEinsteinEquation_of_rnEntropyWitness_metricDerived
     hM
 
 /--
+Metric-derived Ricci-flatness through the bundled RN source / unit-volume
+witness.
+
+This is the direct theorem surface for callers that only need Ricci-flatness:
+it removes the explicit triple `(M, hSource, bit)` and routes the derived
+`UnitRelativeVolumeState` into the metric-derived owner theorem.
+-/
+theorem isRicciFlat_of_rnEntropyWitness_metricDerived
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    IsRicciFlat R := by
+  exact isRicciFlat_of_unitRelativeVolume_metricDerived
+    (R := R) (K := Kgeo) (x := x)
+    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
+    hM
+
+/--
 Metric-derived entropy-to-gravity capstone through the bundled RN source /
 unit-volume witness.
 

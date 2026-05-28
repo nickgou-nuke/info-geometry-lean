@@ -98,6 +98,21 @@ constructive bit to `CI.IsNormalInference`, instead of forcing them to unpack
   (CI.normalPhaseDegeneratePackage_of_unitRelativeVolumeBit
     (M := M) hScaleFromKahler bit).isNormalInference
 
+/--
+The local unit-relative-volume witness also forces the degenerate projector
+obstruction to vanish, via the normal-phase package.  This gives downstream
+callers a direct constructive readback and avoids carrying a separate raw
+`CI.projectorObstruction = 0` hypothesis after the RN/Kähler bit is available.
+-/
+@[rep_depth operator] theorem projectorObstruction_eq_zero_of_unitRelativeVolumeBit
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (bit : UnitRelativeVolumeBit n M) :
+    CI.projectorObstruction = 0 :=
+  (CI.normalPhaseDegeneratePackage_of_unitRelativeVolumeBit
+    (M := M) hScaleFromKahler bit).projectorObstruction_eq_zero
+
 end ConformalInference
 
 end InfoGeometry.Canonical.ConformalUnification

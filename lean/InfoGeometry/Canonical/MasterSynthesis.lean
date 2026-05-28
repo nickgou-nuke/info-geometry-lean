@@ -641,6 +641,18 @@ private theorem anomalySkew_of_regularizationWitness
     hReg.h_mp hReg.k hReg.h_drazin hReg.h_star
 
 /--
+Recover anomaly skewness from the proof-carrying fluid/helicity production
+packet.  This narrows skew-adjoint consumers from the explicit regularization
+witness surface to the single production witness used by capstone branches.
+-/
+private theorem anomalySkew_of_productionWitness
+    (A B_mp B_dr : VelocityField E)
+    (W : FluidHelicityProductionWitness (E := E) A B_mp B_dr) :
+    ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+      = -EinsteinAnomaly A B_mp B_dr :=
+  anomalySkew_of_regularizationWitness (E := E) A B_mp B_dr W.regularization
+
+/--
 Witness-routed regularization bridge:
 derive the anomaly skewness and fluid/helicity packet from one regularization
 witness instead of four separate regularization hypotheses.
@@ -1149,7 +1161,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_ownerWitnesses_and_producti
     (hZPEGravity := hZPEGravity)
     (A := A) (B_mp := B_mp) (B_dr := B_dr)
     (hAnomalySkew :=
-      anomalySkew_of_regularizationWitness (E := E) A B_mp B_dr Wfluid.regularization)
+      anomalySkew_of_productionWitness (E := E) A B_mp B_dr Wfluid)
     (hHelicity := Wfluid.helicity)
     (hThermalBott := hThermalBott)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
@@ -3147,7 +3159,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel_of_p
     (hZPEGravity := hZPEGravity)
     (A := A) (B_mp := B_mp) (B_dr := B_dr)
     (hAnomalySkew :=
-      anomalySkew_of_regularizationWitness (E := E) A B_mp B_dr Wfluid.regularization)
+      anomalySkew_of_productionWitness (E := E) A B_mp B_dr Wfluid)
     (hHelicity := Wfluid.helicity)
     (hThermalBott := hThermalBott)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)

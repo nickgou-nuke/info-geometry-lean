@@ -1183,7 +1183,11 @@ assumptions.
 -/
 @[rep_depth transport]
 theorem full_infinite_dimensional_coadjoint_orbit_hessian_theorem
-    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) :
+    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent)
+    (hFirst : C.first_variation_eq_moment)
+    (hSecond : C.second_variation_eq_fisher)
+    (hFenchel : C.fenchel_legendre_contact)
+    (hEntropyGradient : C.entropy_gradient_eq_beta) :
     C.massieuPotential β = Real.log (C.partitionFunction β)
       ∧ C.first_variation_eq_moment
       ∧ C.second_variation_eq_fisher
@@ -1193,7 +1197,16 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_theorem
       ∧ C.fenchel_legendre_contact
       ∧ C.entropy_gradient_eq_beta
       ∧ C.entropyHessian Q = C.inverseFisherHessian Q := by
-  sorry
+  exact
+    ⟨C.massieu_eq_log_partition β,
+      hFirst,
+      hSecond,
+      C.fisher_eq_covariance β,
+      C.fisher_symmetric β X Y,
+      C.fisher_nonnegative β X,
+      hFenchel,
+      hEntropyGradient,
+      C.entropy_hessian_eq_inverse_fisher Q⟩
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_theorem
 
@@ -1222,7 +1235,11 @@ the explicit nondegenerate-tangent gate needed for strict Fisher positivity.
 @[rep_depth transport]
 theorem full_infinite_dimensional_coadjoint_orbit_strict_hessian_theorem
     (β : LieAlg) (Q : LieCoalg) (X Y : Tangent)
-    (hX : C.nonzeroTangent X) :
+    (hX : C.nonzeroTangent X)
+    (hFirst : C.first_variation_eq_moment)
+    (hSecond : C.second_variation_eq_fisher)
+    (hFenchel : C.fenchel_legendre_contact)
+    (hEntropyGradient : C.entropy_gradient_eq_beta) :
     C.massieuPotential β = Real.log (C.partitionFunction β)
       ∧ C.first_variation_eq_moment
       ∧ C.second_variation_eq_fisher
@@ -1234,7 +1251,8 @@ theorem full_infinite_dimensional_coadjoint_orbit_strict_hessian_theorem
       ∧ C.entropy_gradient_eq_beta
       ∧ C.entropyHessian Q = C.inverseFisherHessian Q := by
   have hH :=
-    C.full_infinite_dimensional_coadjoint_orbit_hessian_theorem β Q X Y
+    C.full_infinite_dimensional_coadjoint_orbit_hessian_theorem
+      β Q X Y hFirst hSecond hFenchel hEntropyGradient
   exact
     ⟨hH.1,
       hH.2.1,
@@ -1506,7 +1524,11 @@ identity surface plus metriplectic second law.
 -/
 @[rep_depth transport]
 theorem full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
-    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit) :
+    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit)
+    (hFirst : C.hessian.first_variation_eq_moment)
+    (hSecond : C.hessian.second_variation_eq_fisher)
+    (hFenchel : C.hessian.fenchel_legendre_contact)
+    (hEntropyGradient : C.hessian.entropy_gradient_eq_beta) :
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1522,7 +1544,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
       ∧ 0 ≤ C.metriplectic.totalEntropyRate x := by
   have hH :=
     C.hessian.full_infinite_dimensional_coadjoint_orbit_hessian_theorem
-      β Q X Y
+      β Q X Y hFirst hSecond hFenchel hEntropyGradient
   exact
     ⟨hH.1,
       hH.2.1,
@@ -1546,7 +1568,11 @@ orbit-level metriplectic second law.
 @[rep_depth transport]
 theorem full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_theorem
     (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit)
-    (hX : C.hessian.nonzeroTangent X) :
+    (hX : C.hessian.nonzeroTangent X)
+    (hFirst : C.hessian.first_variation_eq_moment)
+    (hSecond : C.hessian.second_variation_eq_fisher)
+    (hFenchel : C.hessian.fenchel_legendre_contact)
+    (hEntropyGradient : C.hessian.entropy_gradient_eq_beta) :
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1563,7 +1589,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_th
       ∧ 0 ≤ C.metriplectic.totalEntropyRate x := by
   have hH :=
     C.hessian.full_infinite_dimensional_coadjoint_orbit_strict_hessian_theorem
-      β Q X Y hX
+      β Q X Y hX hFirst hSecond hFenchel hEntropyGradient
   exact
     ⟨hH.1,
       hH.2.1,
@@ -1639,6 +1665,10 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
           nonzeroTangent souriauEntropy legendre fisher_symmetric
           fisher_nonnegative fisher_positive_of_nonzero)
       β Q X Y x
+      legendre.moment_eq_gradient
+      legendre.fisherHessian_eq_hessianMassieu
+      legendre.entropyGradient_contact
+      legendre.entropyGradient_contact
 
 attribute [terminal] full_smooth_legendre_square_dissipation_constructive_theorem
 

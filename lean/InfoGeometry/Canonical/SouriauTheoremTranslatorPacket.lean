@@ -1025,7 +1025,11 @@ theorem claimCD_fullCoadjointOrbit_hessian_packet
     (C :
       InfiniteCoadjointOrbitHessianContext
         Orbit LieAlg LieCoalg Tangent DualTangent)
-    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) :
+    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent)
+    (hFirst : C.first_variation_eq_moment)
+    (hSecond : C.second_variation_eq_fisher)
+    (hFenchel : C.fenchel_legendre_contact)
+    (hEntropyGradient : C.entropy_gradient_eq_beta) :
     C.massieuPotential β = Real.log (C.partitionFunction β)
       ∧ C.first_variation_eq_moment
       ∧ C.second_variation_eq_fisher
@@ -1035,7 +1039,8 @@ theorem claimCD_fullCoadjointOrbit_hessian_packet
       ∧ C.fenchel_legendre_contact
       ∧ C.entropy_gradient_eq_beta
       ∧ C.entropyHessian Q = C.inverseFisherHessian Q :=
-  C.full_infinite_dimensional_coadjoint_orbit_hessian_theorem β Q X Y
+  C.full_infinite_dimensional_coadjoint_orbit_hessian_theorem
+    β Q X Y hFirst hSecond hFenchel hEntropyGradient
 
 /--
 Strict infinite-dimensional Claim C/D enrichment under the explicit
@@ -1049,7 +1054,11 @@ theorem claimCD_fullCoadjointOrbit_strict_hessian_packet
       InfiniteCoadjointOrbitHessianContext
         Orbit LieAlg LieCoalg Tangent DualTangent)
     (β : LieAlg) (Q : LieCoalg) (X Y : Tangent)
-    (hX : C.nonzeroTangent X) :
+    (hX : C.nonzeroTangent X)
+    (hFirst : C.first_variation_eq_moment)
+    (hSecond : C.second_variation_eq_fisher)
+    (hFenchel : C.fenchel_legendre_contact)
+    (hEntropyGradient : C.entropy_gradient_eq_beta) :
     C.massieuPotential β = Real.log (C.partitionFunction β)
       ∧ C.first_variation_eq_moment
       ∧ C.second_variation_eq_fisher
@@ -1061,7 +1070,7 @@ theorem claimCD_fullCoadjointOrbit_strict_hessian_packet
       ∧ C.entropy_gradient_eq_beta
       ∧ C.entropyHessian Q = C.inverseFisherHessian Q :=
   C.full_infinite_dimensional_coadjoint_orbit_strict_hessian_theorem
-    β Q X Y hX
+    β Q X Y hX hFirst hSecond hFenchel hEntropyGradient
 
 /--
 Infinite-dimensional Claim C/D/E enrichment: full coadjoint-orbit Hessian
@@ -1074,7 +1083,11 @@ theorem claimCDE_fullCoadjointOrbit_hessian_metriplectic_packet
     (C :
       InfiniteCoadjointOrbitHessianMetriplecticContext
         Orbit LieAlg LieCoalg Tangent DualTangent)
-    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit) :
+    (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit)
+    (hFirst : C.hessian.first_variation_eq_moment)
+    (hSecond : C.hessian.second_variation_eq_fisher)
+    (hFenchel : C.hessian.fenchel_legendre_contact)
+    (hEntropyGradient : C.hessian.entropy_gradient_eq_beta) :
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1089,7 +1102,7 @@ theorem claimCDE_fullCoadjointOrbit_hessian_metriplectic_packet
         C.hessian.inverseFisherHessian Q
       ∧ 0 ≤ C.metriplectic.totalEntropyRate x :=
   C.full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
-    β Q X Y x
+    β Q X Y x hFirst hSecond hFenchel hEntropyGradient
 
 /--
 Strict infinite-dimensional Claim C/D/E enrichment: full coadjoint-orbit
@@ -1103,7 +1116,11 @@ theorem claimCDE_fullCoadjointOrbit_strict_hessian_metriplectic_packet
       InfiniteCoadjointOrbitHessianMetriplecticContext
         Orbit LieAlg LieCoalg Tangent DualTangent)
     (β : LieAlg) (Q : LieCoalg) (X Y : Tangent) (x : Orbit)
-    (hX : C.hessian.nonzeroTangent X) :
+    (hX : C.hessian.nonzeroTangent X)
+    (hFirst : C.hessian.first_variation_eq_moment)
+    (hSecond : C.hessian.second_variation_eq_fisher)
+    (hFenchel : C.hessian.fenchel_legendre_contact)
+    (hEntropyGradient : C.hessian.entropy_gradient_eq_beta) :
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1119,6 +1136,6 @@ theorem claimCDE_fullCoadjointOrbit_strict_hessian_metriplectic_packet
         C.hessian.inverseFisherHessian Q
       ∧ 0 ≤ C.metriplectic.totalEntropyRate x :=
   C.full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_theorem
-    β Q X Y x hX
+    β Q X Y x hX hFirst hSecond hFenchel hEntropyGradient
 
 end InfoGeometry.Canonical.SouriauTheoremTranslatorPacket

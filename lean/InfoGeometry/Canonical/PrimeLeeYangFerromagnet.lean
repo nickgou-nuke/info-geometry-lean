@@ -61,7 +61,7 @@ def toPrimeFerromagneticChain
     (hLam : 0 ≤ lam) :
     PrimeFerromagneticChain N where
   prime := D.p
-  prime_law := D.prime
+  prime_isPrime := D.prime
   kappa := lam
   kappa_nonneg := hLam
 

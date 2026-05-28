@@ -60,9 +60,6 @@ structure PrimeLeeYangConvergenceSocket
   locallyUniformRenormalizedLimit :
     LocallyUniformLimit A.renormZ limitF
 
-  /-- Identification of the abstract limit with the completed-`xi` Cayley pullback. -/
-  limit_eq_xiCayleyPullback_law : Prop
-
   /-- The limit is not identically zero on the inner component. -/
   nontrivial_in :
     ∃ z : ℂ, InUnitDisk z ∧ limitF z ≠ 0
@@ -94,16 +91,6 @@ namespace PrimeLeeYangConvergenceSocket
 variable {Ξ : CompletedXiZeroPredicate}
 variable {A : LeeYangApproximants}
 variable (S : PrimeLeeYangConvergenceSocket Ξ A)
-
-/-- Re-export of the supplied completed-`xi` Cayley-pullback identity law. -/
-@[bridge_target_tag, rep_depth operator]
-def limit_eq_xiCayleyPullback : Prop :=
-  PrimeLeeYangConvergenceSocket.limit_eq_xiCayleyPullback_law S
-
-/-- Re-export of the supplied no-spurious-zeros law. -/
-@[bridge_target_tag, rep_depth operator]
-def noSpuriousZeros_law : Prop :=
-  PrimeLeeYangConvergenceSocket.noSpuriousZeros S
 
 /-- Zero-free complement transfer induced by the convergence socket. -/
 @[bridge_target_tag, rep_depth operator]

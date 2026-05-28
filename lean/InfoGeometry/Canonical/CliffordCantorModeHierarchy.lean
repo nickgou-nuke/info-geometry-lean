@@ -349,7 +349,7 @@ structure CliffordCantorModeHierarchyPacket (n : ℕ) (m q : ℤ) : Prop where
   heisenberg_central_extension_definition :
     HeisenbergAlgebra ℝ =
       LieTwoCocycle.CentralExtension (AbelianLieAlgebraOn.heisenbergCocycle ℝ)
-  heisenberg_mode_law :
+  heisenberg_mode_eq :
     ⁅HeisenbergAlgebra.jgen ℝ m, HeisenbergAlgebra.jgen ℝ q⁆
       = if m + q = 0 then (m : ℝ) • HeisenbergAlgebra.kgen ℝ else 0
   heisenberg_cocycle_nontrivial :
@@ -364,7 +364,7 @@ structure CliffordCantorModeHierarchyPacket (n : ℕ) (m q : ℤ) : Prop where
   virasoro_central_extension_definition :
     VirasoroAlgebra ℝ =
       LieTwoCocycle.CentralExtension (WittAlgebra.virasoroCocycle ℝ)
-  virasoro_mode_law :
+  virasoro_mode_eq :
     ⁅VirasoroAlgebra.lgen ℝ m, VirasoroAlgebra.lgen ℝ q⁆
       = (m - q : ℝ) • VirasoroAlgebra.lgen ℝ (m + q)
         + if m + q = 0 then ((m ^ 3 - m : ℝ) / 12) • VirasoroAlgebra.cgen ℝ else 0
@@ -398,12 +398,12 @@ theorem cliffordCantorModeHierarchyPacket
       combined_sector_idempotent := ?_
       local_krein_involution := local_krein_lattice_involution_sq
       heisenberg_central_extension_definition := rfl
-      heisenberg_mode_law := HeisenbergAlgebra.lie_jgen ℝ m q
+      heisenberg_mode_eq := HeisenbergAlgebra.lie_jgen ℝ m q
       heisenberg_cocycle_nontrivial :=
         AbelianLieAlgebraOn.heisenbergCocycle_nontriviality ℝ
       kac_moody_central_extension_definition := ?_
       virasoro_central_extension_definition := rfl
-      virasoro_mode_law := VirasoroAlgebra.lgen_bracket ℝ m q
+      virasoro_mode_eq := VirasoroAlgebra.lgen_bracket ℝ m q
       virasoro_cocycle_nontrivial :=
         WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero ℝ
       sugawara_central_charge_one :=

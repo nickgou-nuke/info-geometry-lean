@@ -56,20 +56,13 @@ structure BosonicPrimonTFDModel where
   purifiedVectorWitness : Type*
   modularOperator : Type*
   liouvillean : Type*
-  typeI_modular_law : Prop
-  typeI_modular_certificate : typeI_modular_law
 
 namespace BosonicPrimonTFDModel
 
-/-- Re-export of the trace/Hilbert zeta partition calibration. -/
+/-- The trace/Hilbert zeta partition calibration. -/
 theorem partition_eq_zeta_theorem (T : BosonicPrimonTFDModel) :
     T.partitionFunction = T.zetaValue :=
   T.partition_eq_zeta
-
-/-- Re-export of the supplied finite/type-I modular law. -/
-theorem typeI_modular (T : BosonicPrimonTFDModel) :
-    T.typeI_modular_law :=
-  T.typeI_modular_certificate
 
 end BosonicPrimonTFDModel
 
@@ -85,18 +78,9 @@ structure FullMobiusPartialParity where
   FullState : Type*
   GammaMu : Type*
   squareFreeProjection : Type*
-  gamma_sq_eq_squarefree_projection_law : Prop
-  gamma_sq_eq_squarefree_projection_certificate :
-    gamma_sq_eq_squarefree_projection_law
   not_global_fundamental_symmetry_guard : Type*
 
 namespace FullMobiusPartialParity
-
-/-- Re-export of the supplied `μ² = P_sf` law. -/
-theorem gamma_sq_eq_squarefree_projection
-    (M : FullMobiusPartialParity) :
-    M.gamma_sq_eq_squarefree_projection_law :=
-  M.gamma_sq_eq_squarefree_projection_certificate
 
 end FullMobiusPartialParity
 
@@ -108,25 +92,11 @@ This is the sector where `Γ² = 1` is theorem-safe.
 structure SquarefreeMobiusKreinSector where
   SFState : Type*
   Gamma : Type*
-  gamma_sq_one_law : Prop
-  gamma_sq_one_certificate : gamma_sq_one_law
-  gamma_self_adjoint_law : Prop
-  gamma_self_adjoint_certificate : gamma_self_adjoint_law
   kreinForm : Type*
   mobius_squarefree_parity_guard : Type*
   fullCarrierPartialParity : FullMobiusPartialParity
 
 namespace SquarefreeMobiusKreinSector
-
-/-- Re-export of the square-free fundamental-symmetry law. -/
-theorem gamma_sq_one (S : SquarefreeMobiusKreinSector) :
-    S.gamma_sq_one_law :=
-  S.gamma_sq_one_certificate
-
-/-- Re-export of the supplied self-adjointness law. -/
-theorem gamma_self_adjoint (S : SquarefreeMobiusKreinSector) :
-    S.gamma_self_adjoint_law :=
-  S.gamma_self_adjoint_certificate
 
 end SquarefreeMobiusKreinSector
 
@@ -151,45 +121,8 @@ structure TomitaKreinRealificationWitness where
   tomitaJ : Type*
   realifiedJ : Type*
   kreinSymmetry : Type*
-  tomita_antilinear_law : Prop
-  tomita_antilinear_certificate : tomita_antilinear_law
-  realifiedJ_real_linear_law : Prop
-  realifiedJ_real_linear_certificate : realifiedJ_real_linear_law
-  realifiedJ_involutive_law : Prop
-  realifiedJ_involutive_certificate : realifiedJ_involutive_law
-  anticommutesWithComplexStructure_law : Prop
-  anticommutesWithComplexStructure_certificate :
-    anticommutesWithComplexStructure_law
-  realifiedJ_eq_kreinSymmetry_law : Prop
-  realifiedJ_eq_kreinSymmetry_certificate :
-    realifiedJ_eq_kreinSymmetry_law
 
 namespace TomitaKreinRealificationWitness
-
-/-- Re-export of anti-linearity in the complex Hilbert category. -/
-theorem tomita_antilinear (W : TomitaKreinRealificationWitness) :
-    W.tomita_antilinear_law :=
-  W.tomita_antilinear_certificate
-
-/-- Re-export of real-linearity after realification. -/
-theorem realifiedJ_real_linear (W : TomitaKreinRealificationWitness) :
-    W.realifiedJ_real_linear_law :=
-  W.realifiedJ_real_linear_certificate
-
-/-- Re-export of the realified involution law. -/
-theorem realifiedJ_involutive (W : TomitaKreinRealificationWitness) :
-    W.realifiedJ_involutive_law :=
-  W.realifiedJ_involutive_certificate
-
-/-- Re-export of `J I = -I J` in realified form. -/
-theorem anticommutesWithComplexStructure (W : TomitaKreinRealificationWitness) :
-    W.anticommutesWithComplexStructure_law :=
-  W.anticommutesWithComplexStructure_certificate
-
-/-- Re-export of the supplied identification with the Krein polarization. -/
-theorem realifiedJ_eq_kreinSymmetry (W : TomitaKreinRealificationWitness) :
-    W.realifiedJ_eq_kreinSymmetry_law :=
-  W.realifiedJ_eq_kreinSymmetry_certificate
 
 end TomitaKreinRealificationWitness
 
@@ -205,34 +138,10 @@ structure DoubledKreinTFDSector where
   squarefree : SquarefreeMobiusKreinSector
   DirectDoubledCarrier : Type*
   KreinJ : Type*
-  kreinJ_sq_one_law : Prop
-  kreinJ_sq_one_certificate : kreinJ_sq_one_law
-  kreinJ_self_adjoint_law : Prop
-  kreinJ_self_adjoint_certificate : kreinJ_self_adjoint_law
   Liouvillian : Type*
-  liouvillian_krein_self_adjoint_law : Prop
-  liouvillian_krein_self_adjoint_certificate :
-    liouvillian_krein_self_adjoint_law
-  evolution_krein_unitary_law : Prop
-  evolution_krein_unitary_certificate : evolution_krein_unitary_law
   tomitaKreinRealification : TomitaKreinRealificationWitness
 
 namespace DoubledKreinTFDSector
-
-/-- Re-export of the doubled Krein fundamental-symmetry law. -/
-theorem kreinJ_sq_one (D : DoubledKreinTFDSector) :
-    D.kreinJ_sq_one_law :=
-  D.kreinJ_sq_one_certificate
-
-/-- Re-export of the Krein-unitary evolution law. -/
-theorem evolution_krein_unitary (D : DoubledKreinTFDSector) :
-    D.evolution_krein_unitary_law :=
-  D.evolution_krein_unitary_certificate
-
-/-- Re-export of the realified Tomita/Krein polarization witness. -/
-theorem tomita_realifies_to_kreinSymmetry (D : DoubledKreinTFDSector) :
-    D.tomitaKreinRealification.realifiedJ_eq_kreinSymmetry_law :=
-  D.tomitaKreinRealification.realifiedJ_eq_kreinSymmetry_certificate
 
 end DoubledKreinTFDSector
 
@@ -293,15 +202,8 @@ structure TFDKreinSupertraceDuality where
   tfdExpectation : HilbertObservable → ℝ
   kreinSupertrace : KreinObservable → ℝ
   translate : HilbertObservable → KreinObservable
-  dualityLaw : Prop
-  dualityCertificate : dualityLaw
 
 namespace TFDKreinSupertraceDuality
-
-/-- Re-export of the supplied TFD/Krein readout duality law. -/
-theorem duality (D : TFDKreinSupertraceDuality) :
-    D.dualityLaw :=
-  D.dualityCertificate
 
 end TFDKreinSupertraceDuality
 
@@ -316,25 +218,9 @@ structure HestenesKreinOrbitChannel where
   generator : Type*
   windingNumber : ℤ
   windingObstruction : Type*
-  clock_commutation_law : Prop
-  clock_commutation_certificate : clock_commutation_law
-  periodicityLaw : Prop
-  periodicityCertificate : periodicityLaw
-  obstruction_zero_law : Prop
-  obstruction_zero_certificate : obstruction_zero_law
   obstruction_vs_zeta_zero_guard : Type*
 
 namespace HestenesKreinOrbitChannel
-
-/-- Re-export of the supplied periodicity law. -/
-theorem periodicity (O : HestenesKreinOrbitChannel) :
-    O.periodicityLaw :=
-  O.periodicityCertificate
-
-/-- Re-export of the supplied winding-obstruction zero law. -/
-theorem obstruction_zero (O : HestenesKreinOrbitChannel) :
-    O.obstruction_zero_law :=
-  O.obstruction_zero_certificate
 
 end HestenesKreinOrbitChannel
 
@@ -349,17 +235,9 @@ structure WitnessGatedZetaZeroSocket where
   spectralObject : Type*
   zetaZeroReadout : Type*
   analyticContinuationWitness : Type*
-  zeroLocationLaw : Prop
-  zeroLocationCertificate : zeroLocationLaw
   not_implied_by_winding_obstruction_guard : Type*
 
 namespace WitnessGatedZetaZeroSocket
-
-/-- Re-export of the supplied zero-location law. -/
-@[bridge_target_tag]
-theorem zero_location (Z : WitnessGatedZetaZeroSocket) :
-    Z.zeroLocationLaw :=
-  Z.zeroLocationCertificate
 
 end WitnessGatedZetaZeroSocket
 
@@ -381,18 +259,5 @@ structure PrimonTFDKreinMobiusBridge (A : Type*) [Mul A] where
   tfd_modular_compatibility : Type*
   krein_mobius_compatibility : Type*
 
-/--
-Main theorem-safe bridge conclusion.
-
-It only exports the certified TFD/Krein readout duality and the certified
-Hestenes periodicity law.  It does not assert a Type III trace formula and does
-not identify winding-obstruction zeros with zeta zeros.
--/
-@[bridge_target_tag]
-theorem tfd_krein_mobius_duality_channel
-    {A : Type*} [Mul A]
-    (P : PrimonTFDKreinMobiusBridge A) :
-    P.duality.dualityLaw ∧ P.orbit.periodicityLaw :=
-  ⟨P.duality.dualityCertificate, P.orbit.periodicityCertificate⟩
 
 end InfoGeometry.Canonical.PrimonTFDKreinMobiusBridge

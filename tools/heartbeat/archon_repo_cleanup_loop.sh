@@ -4,9 +4,14 @@ set -euo pipefail
 ROOT="${ROOT:-/home/goutev/repos/info-geometry-lean}"
 SCOPE="${SCOPE:-lean/InfoGeometry/Canonical}"
 WORKFLOW="${WORKFLOW:-proof-sop-cycle}"
-MAX_ITERATIONS="${MAX_ITERATIONS:-25}"
-MAX_STALE_ITERATIONS="${MAX_STALE_ITERATIONS:-3}"
-ARCHON_CYCLE_TIMEOUT_SECONDS="${ARCHON_CYCLE_TIMEOUT_SECONDS:-1800}"
+# Defaults are intentionally unbounded: this is a living cleanup heartbeat.
+# Stop it with Ctrl-C. Set MAX_ITERATIONS>0, MAX_STALE_ITERATIONS>0,
+# STOP_WHEN_CLEAN=1, or ARCHON_CYCLE_TIMEOUT_SECONDS>0 only when a bounded
+# batch run is explicitly desired.
+MAX_ITERATIONS="${MAX_ITERATIONS:-0}"
+MAX_STALE_ITERATIONS="${MAX_STALE_ITERATIONS:-0}"
+STOP_WHEN_CLEAN="${STOP_WHEN_CLEAN:-0}"
+ARCHON_CYCLE_TIMEOUT_SECONDS="${ARCHON_CYCLE_TIMEOUT_SECONDS:-0}"
 TOP="${TOP:-20}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 LOG_DIR="$ROOT/reports/cleanup-loop/$RUN_ID"
@@ -43,7 +48,7 @@ write_report() {
   local iter="$1" phase="$2" out="$3"
   {
     echo "=== cleanup-loop $RUN_ID iter=$iter phase=$phase $(date -Is) ==="
-    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS"
+    echo "root=$ROOT scope=$SCOPE workflow=$WORKFLOW max_iterations=$MAX_ITERATIONS max_stale=$MAX_STALE_ITERATIONS stop_when_clean=$STOP_WHEN_CLEAN timeout=$ARCHON_CYCLE_TIMEOUT_SECONDS"
     python3 tools/quality/proof_heartbeat.py "$SCOPE" --top "$TOP" || true
     echo
     python3 tools/lean4-skills/sorry_analyzer.py "$SCOPE" --format=summary || true
@@ -62,14 +67,29 @@ append_summary() {
     "$iter" "$phase" "$sorry" "$proxy" "$prop" "$reexport" "$score" "$report" >> "$SUMMARY_FILE"
 }
 
+run_archon_cycle() {
+  if [[ "$ARCHON_CYCLE_TIMEOUT_SECONDS" -gt 0 ]]; then
+    timeout "$ARCHON_CYCLE_TIMEOUT_SECONDS" \
+      archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
+  else
+    archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
+  fi
+}
+
 if [[ ! -f "$SUMMARY_FILE" ]]; then
   printf "iter\tphase\tsorry\tproxy_field\tprop_socket\treexport_proxy\tscore\treport\n" > "$SUMMARY_FILE"
 fi
 
 best_score=999999999
 stale_iterations=0
+iter=1
 
-for ((iter=1; iter<=MAX_ITERATIONS; iter++)); do
+while true; do
+  if [[ "$MAX_ITERATIONS" -gt 0 && "$iter" -gt "$MAX_ITERATIONS" ]]; then
+    echo "cleanup-loop: reached MAX_ITERATIONS=$MAX_ITERATIONS. summary=$SUMMARY_FILE"
+    exit 3
+  fi
+
   before="$LOG_DIR/iter-$(printf '%03d' "$iter")-before.log"
   after="$LOG_DIR/iter-$(printf '%03d' "$iter")-after.log"
   archon_log="$LOG_DIR/iter-$(printf '%03d' "$iter")-archon.log"
@@ -79,8 +99,11 @@ for ((iter=1; iter<=MAX_ITERATIONS; iter++)); do
   before_score="$(score_from_report "$before")"
 
   if [[ "$before_score" -eq 0 ]]; then
-    echo "cleanup-loop: clean before iteration $iter; stopping. summary=$SUMMARY_FILE"
-    exit 0
+    echo "cleanup-loop: clean before iteration $iter; continuing heartbeat. summary=$SUMMARY_FILE"
+    if [[ "$STOP_WHEN_CLEAN" == "1" ]]; then
+      echo "cleanup-loop: STOP_WHEN_CLEAN=1; stopping. summary=$SUMMARY_FILE"
+      exit 0
+    fi
   fi
 
   if ! flock -n 9; then
@@ -91,8 +114,7 @@ for ((iter=1; iter<=MAX_ITERATIONS; iter++)); do
   {
     echo "=== archon workflow run iter=$iter $(date -Is) ==="
     echo "before_score=$before_score"
-    timeout "$ARCHON_CYCLE_TIMEOUT_SECONDS" \
-      archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
+    run_archon_cycle
     echo "=== archon workflow done iter=$iter $(date -Is) ==="
   } > "$archon_log" 2>&1 || {
     code=$?
@@ -105,8 +127,11 @@ for ((iter=1; iter<=MAX_ITERATIONS; iter++)); do
   after_score="$(score_from_report "$after")"
 
   if [[ "$after_score" -eq 0 ]]; then
-    echo "cleanup-loop: clean after iteration $iter; stopping. summary=$SUMMARY_FILE"
-    exit 0
+    echo "cleanup-loop: clean after iteration $iter; continuing heartbeat. summary=$SUMMARY_FILE"
+    if [[ "$STOP_WHEN_CLEAN" == "1" ]]; then
+      echo "cleanup-loop: STOP_WHEN_CLEAN=1; stopping. summary=$SUMMARY_FILE"
+      exit 0
+    fi
   fi
 
   if [[ "$after_score" -lt "$best_score" ]]; then
@@ -116,12 +141,10 @@ for ((iter=1; iter<=MAX_ITERATIONS; iter++)); do
     stale_iterations=$((stale_iterations + 1))
   fi
 
-  if [[ "$stale_iterations" -ge "$MAX_STALE_ITERATIONS" ]]; then
+  if [[ "$MAX_STALE_ITERATIONS" -gt 0 && "$stale_iterations" -ge "$MAX_STALE_ITERATIONS" ]]; then
     echo "cleanup-loop: stopped after $stale_iterations stale iterations; best_score=$best_score summary=$SUMMARY_FILE"
     exit 2
   fi
 
+  iter=$((iter + 1))
 done 9>"$LOCK_FILE"
-
-echo "cleanup-loop: reached MAX_ITERATIONS=$MAX_ITERATIONS without full cleanup. summary=$SUMMARY_FILE"
-exit 3

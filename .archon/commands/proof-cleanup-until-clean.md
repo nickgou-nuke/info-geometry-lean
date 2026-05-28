@@ -1,13 +1,31 @@
-# proof-cleanup-until-clean
+# proof-cleanup-forever
 
-Run a bounded Archon proof-cleanup supervisor loop.
+Run the Archon proof-cleanup heartbeat continuously.
+
+```bash
+SCOPE=lean/InfoGeometry/Canonical \
+WORKFLOW=proof-sop-cycle \
+tools/heartbeat/archon_repo_cleanup_loop.sh
+```
+
+Default behavior is intentionally unbounded:
+
+```text
+MAX_ITERATIONS=0                  # no iteration limit
+MAX_STALE_ITERATIONS=0            # no stale-progress stop
+ARCHON_CYCLE_TIMEOUT_SECONDS=0    # no per-cycle timeout wrapper
+STOP_WHEN_CLEAN=0                 # continue even if the current score is clean
+```
+
+Stop it with Ctrl-C.
+
+Optional bounded batch mode is still available when explicitly requested:
 
 ```bash
 MAX_ITERATIONS=25 \
 MAX_STALE_ITERATIONS=3 \
 ARCHON_CYCLE_TIMEOUT_SECONDS=1800 \
-SCOPE=lean/InfoGeometry/Canonical \
-WORKFLOW=proof-sop-cycle \
+STOP_WHEN_CLEAN=1 \
 tools/heartbeat/archon_repo_cleanup_loop.sh
 ```
 
@@ -16,13 +34,6 @@ The loop repeatedly runs the existing one-cycle workflow:
 ```bash
 archon workflow run proof-sop-cycle --cwd "$ROOT" --no-worktree
 ```
-
-It stops when one of these happens:
-
-1. heartbeat score reaches zero;
-2. progress stalls for `MAX_STALE_ITERATIONS` iterations;
-3. an inner cycle times out or exits nonzero and no later progress is made;
-4. `MAX_ITERATIONS` is reached.
 
 The heartbeat score is:
 

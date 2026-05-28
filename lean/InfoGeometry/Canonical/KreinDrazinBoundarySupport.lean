@@ -148,11 +148,6 @@ structure TomitaRealifiedDrazinBoundaryPolarization
   /-- The generalized-zero sector is the Drazin defect support. -/
   generalizedZeroSector_eq_defectSupport :
     ∀ x : K, generalizedZeroSector x ↔ D.carrier.act D.drazin.q x = x
-  /-- Realified Tomita/Krein form agrees with the boundary Krein form. -/
-  realifiedTomitaForm_eq_kreinForm_law : Prop
-  /-- Supplied certificate for the form-identification law. -/
-  realifiedTomitaForm_eq_kreinForm_certificate :
-    realifiedTomitaForm_eq_kreinForm_law
 
 namespace TomitaRealifiedDrazinBoundaryPolarization
 
@@ -165,15 +160,6 @@ theorem generalizedZeroSector_iff_defectSupport
     (x : K) :
     P.generalizedZeroSector x ↔ D.carrier.act D.drazin.q x = x :=
   P.generalizedZeroSector_eq_defectSupport x
-
-/-- The boundary Krein form is certified as the realified Tomita/Krein form. -/
-theorem realifiedTomitaForm_eq_kreinForm
-    {K Op : Type*}
-    [Ring Op]
-    {D : KreinDrazinBoundarySupport K Op}
-    (P : TomitaRealifiedDrazinBoundaryPolarization K Op D) :
-    P.realifiedTomitaForm_eq_kreinForm_law :=
-  P.realifiedTomitaForm_eq_kreinForm_certificate
 
 /-- The supplied realification identifies realified Tomita `J` with Krein symmetry. -/
 theorem realifiedJ_eq_kreinSymmetry

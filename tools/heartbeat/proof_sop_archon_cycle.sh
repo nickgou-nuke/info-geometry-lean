@@ -28,7 +28,8 @@ while true; do
     python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20 || true
     python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary || true
     if flock -n 9; then
-      archon workflow run proof-sop-cycle --cwd "$ROOT" --no-worktree || true
+      timeout "${ARCHON_CYCLE_TIMEOUT_SECONDS:-1800}" \
+        archon workflow run proof-sop-cycle --cwd "$ROOT" --no-worktree || true
     else
       echo "cycle skipped: lock held"
     fi 9>"$LOCK_FILE"

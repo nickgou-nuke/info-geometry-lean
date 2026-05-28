@@ -12,6 +12,7 @@ import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
+import InfoGeometry.Algebra.FiniteN2Induction
 /-!
 # InfoGeometry.Algebra.All
 

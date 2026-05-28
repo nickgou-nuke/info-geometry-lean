@@ -113,10 +113,12 @@ variable (B : DIIIModularEntropyFlowBridge (S := S) M P0 Op State Time)
 omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 /-- The DIII sector state remains valid under modular/decoherence flow. -/
 theorem state_valid_along_DIII_modular_flow
+    (hvalid : B.base.divisionEntropy.calibration.functional.readout.valid
+      B.base.stateOfChain)
     (t : Time) :
     B.base.divisionEntropy.calibration.functional.readout.valid
       (B.modularEntropyFlow.flow t B.base.stateOfChain) :=
-  B.modularEntropyFlow.valid_along t B.base.stateOfChain B.base.state_valid
+  B.modularEntropyFlow.valid_along t B.base.stateOfChain hvalid
 
 omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 /--
@@ -124,6 +126,8 @@ The static DIII entropy nonnegativity result is preserved along the supplied
 modular/decoherence flow.
 -/
 theorem entropy_nonneg_along_DIII_modular_flow
+    (hvalid : B.base.divisionEntropy.calibration.functional.readout.valid
+      B.base.stateOfChain)
     (t : Time) :
     0 ≤
       B.base.divisionEntropy.calibration.functional.entropy
@@ -131,14 +135,20 @@ theorem entropy_nonneg_along_DIII_modular_flow
   B.modularEntropyFlow.entropy_nonneg_along
     t
     B.base.stateOfChain
-    B.base.state_valid
-    B.base.entropy_nonneg_of_DIII_Z2_sector
+    hvalid
+    (B.base.divisionEntropy.entropy_nonneg_of_division_identity
+      B.base.stateOfChain
+      hvalid
+      B.base.divisionFiber_of_topologicalSector
+      B.base.representedNontrivially_of_topologicalSector)
 
 /--
 Dynamic capstone: the DIII/Z₂ sector supplies a boundary zero mode, and the
 supplied modular/decoherence flow preserves nonnegative MP/Drazin entropy.
 -/
 theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg_along_flow
+    (hvalid : B.base.divisionEntropy.calibration.functional.readout.valid
+      B.base.stateOfChain)
     (t : Time) :
     HasZeroMode
       (S := S)
@@ -149,7 +159,7 @@ theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg_along_flow
       B.base.divisionEntropy.calibration.functional.entropy
         (B.modularEntropyFlow.flow t B.base.stateOfChain) :=
   ⟨B.base.hasSurfaceZeroMode,
-    B.entropy_nonneg_along_DIII_modular_flow t⟩
+    B.entropy_nonneg_along_DIII_modular_flow hvalid t⟩
 
 end DIIIModularEntropyFlowBridge
 

@@ -110,12 +110,12 @@ sector.
 theorem fixedOperator_mem_centralizerLike
     (w : Word) :
     B.ergodic.centralizerLike (B.fixedOperatorOfWord w) :=
-  OperatorErgodicFixedPointBridge.modularFixed_mem_centralizerLike_readback
-    B.ergodic (A := B.fixedOperatorOfWord w) (B.fixedOperator_isModularFixed w)
+  B.ergodic.modularFixed_mem_centralizerLike
+    (A := B.fixedOperatorOfWord w) (B.fixedOperator_isModularFixed w)
 
 /--
-Readback: the calibrated volume of a self-similar fixed observable is the
-standard-form localized `Ω`-face expectation.
+The calibrated volume of a self-similar fixed observable is the standard-form
+localized `Ω`-face expectation.
 -/
 @[rep_depth transport]
 theorem fixedOperator_volume_eq_localizedExpectation

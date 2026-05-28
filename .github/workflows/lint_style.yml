@@ -1,0 +1,20 @@
+name: Lean style lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint-style:
+    name: Lint Lean style
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run mathlib style linter
+        uses: leanprover-community/lint-style-action@main
+        with:
+          mode: check
+          lint-bib-file: false

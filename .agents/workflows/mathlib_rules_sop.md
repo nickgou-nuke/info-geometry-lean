@@ -98,6 +98,9 @@ python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
 python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
 ```
 
+CI also runs the upstream mathlib style linter through
+`leanprover-community/lint-style-action` in `.github/workflows/lint_style.yml`.
+
 ## Upstreaming posture
 
 When code is intended to become a Mathlib contribution, make it independent of repository-specific physics/geometry naming and split it into the smallest reusable mathematical lemmas first.

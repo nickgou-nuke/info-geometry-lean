@@ -104,6 +104,61 @@ theorem cl55_conformal_null_pair_preserved_along_ringHom_chain
     simpa [uₖ, vₖ, hone] using hchain
 
 /--
+A finite-stage ring homomorphism transports the Drazin regular/defect projector
+packet and the Drazin-power annihilation identities.
+-/
+theorem ringHom_transports_drazin_defect_packet
+    {R S : Type*} [Ring R] [Ring S]
+    (f : R →+* S) {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let P := InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b
+    let Q := InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b
+    f Q * f Q = f Q ∧
+      f P * f Q = 0 ∧
+      f Q * f P = 0 ∧
+      f P + f Q = 1 ∧
+      (f a) ^ m * f Q = 0 ∧
+      f Q * (f a) ^ m = 0 := by
+  intro P Q
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [Q] using congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
+  · simpa [P, Q] using congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
+  · simpa [P, Q] using congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
+  · simpa [P, Q] using congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+        (a := a) (b := b))
+  · have h := congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
+    simpa [Q, map_pow] using h
+  · have h := congrArg f
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
+    simpa [Q, map_pow] using h
+
+/--
+The transported finite alignment theorem: a target finite stage receives both a
+transported `Cl(5,5)` conformal null pair and a transported Drazin defect packet.
+-/
+theorem ringHom_transports_cl55_drazin_finite_alignment
+    {R S B : Type*} [Ring R] [Ring S] [Ring B]
+    (g : Cl55 →+* B) (f : R →+* S)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    (∃ u' v' : B, u' ^ 2 = 0 ∧ v' ^ 2 = 0 ∧ u' * v' + v' * u' = 1) ∧
+      (let P := InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b
+       let Q := InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b
+       f Q * f Q = f Q ∧
+        f P * f Q = 0 ∧
+        f Q * f P = 0 ∧
+        f P + f Q = 1 ∧
+        (f a) ^ m * f Q = 0 ∧
+        f Q * (f a) ^ m = 0) := by
+  exact ⟨ringHom_image_contains_conformal_null_pair g,
+    ringHom_transports_drazin_defect_packet f hD⟩
+
+/--
 The split `Cl(5,5)` lightcone lane and Drazin defect lane align at the finite
 algebraic level: `Cl(5,5)` supplies a conformal null pair, while the Drazin
 complement supplies an idempotent defect projector annihilated by the Drazin

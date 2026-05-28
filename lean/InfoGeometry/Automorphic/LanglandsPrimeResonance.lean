@@ -1,10 +1,10 @@
 /-
 InfoGeometry/Automorphic/LanglandsPrimeResonance.lean
 
-Langlands prime resonance / Sugawara bridge socket.
+Langlands prime resonance / Sugawara bridge.
 
 This module sits above the operator-first Siegel-Eisenstein splitting and the
-existing automorphic L-function resonance socket.
+existing automorphic L-function resonance data.
 
 It does not prove E9, affine Sugawara, Virasoro, geometric Langlands, Euler
 products, functional equations, or zero theorems.
@@ -43,7 +43,7 @@ variable {Bulk : Type uBulk} {Boundary : Type uBoundary}
 variable [AddCommGroup Bulk] [Module ℝ Bulk]
 variable [AddCommGroup Boundary] [Module ℝ Boundary]
 
-/-! ## 1. Completed L-function and Sugawara readout sockets -/
+/-! ## 1. Completed L-function and Sugawara readouts -/
 
 /--
 Completed L-function readout attached to Siegel boundary data.
@@ -51,8 +51,8 @@ Completed L-function readout attached to Siegel boundary data.
 `Spectral` is the spectral/Langlands parameter type.
 `Scalar` is the value type, usually `ℂ`.
 
-The functional equation remains a law/certificate socket.  This file only uses
-the pointwise completed-L readout and its zero locus.
+This file only uses the pointwise completed-L readout and its zero locus;
+functional-equation theorems belong to concrete completed-L backends.
 -/
 structure CompletedLReadout
     (Boundary : Type uBoundary)
@@ -66,14 +66,6 @@ structure CompletedLReadout
   /-- Completed L-function value. -/
   completedL :
     Spectral → Scalar
-
-  /-- Model-specific completed functional-equation law. -/
-  functional_equation_law :
-    Prop
-
-  /-- Certificate for the functional-equation law. -/
-  functional_equation_certificate :
-    functional_equation_law
 
 namespace CompletedLReadout
 
@@ -109,14 +101,6 @@ structure SugawaraCentralReadout
   /-- Central/stress/anomaly scalar readout. -/
   centralReadout :
     Stress → Scalar
-
-  /-- Model-specific Sugawara/affine stress law. -/
-  sugawara_law :
-    Prop
-
-  /-- Certificate for the Sugawara/affine law. -/
-  sugawara_certificate :
-    sugawara_law
 
 namespace SugawaraCentralReadout
 
@@ -394,8 +378,8 @@ structure LanglandsPrimeResonanceAdmissible
   bridge :
     LanglandsSugawaraBridge W completed sugawara
 
-/-- A Langlands prime resonance witness exists from admissible data. -/
-theorem langlandsPrimeResonanceWitness_nonempty_of_admissible
+/-- A Langlands prime resonance witness from admissible data. -/
+def langlandsPrimeResonanceWitness_of_admissible
     {W : SiegelEisensteinWitness Bulk Boundary}
     {Stress : Type uStress}
     {Spectral : Type uSpectral}
@@ -405,46 +389,14 @@ theorem langlandsPrimeResonanceWitness_nonempty_of_admissible
       LanglandsPrimeResonanceAdmissible.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
         (Bulk := Bulk) (Boundary := Boundary)
         (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W) :
-    Nonempty
-      (LanglandsPrimeResonanceWitness.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
-        (Bulk := Bulk) (Boundary := Boundary)
-        (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W) :=
-  ⟨{
+    LanglandsPrimeResonanceWitness.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
+      (Bulk := Bulk) (Boundary := Boundary)
+      (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W :=
+  {
     automorphic := h.automorphic
     completed := h.completed
     sugawara := h.sugawara
     bridge := h.bridge
-  }⟩
-
-/--
-Conditional owner target for Langlands prime resonance.
-
-The target is intentionally conditional on admissible automorphic, completed-L,
-and Sugawara bridge data.
--/
-@[owner_target_tag]
-def LanglandsPrimeResonanceOwnerTarget : Prop :=
-  ∀ (Bulk : Type uBulk) [AddCommGroup Bulk] [Module ℝ Bulk],
-  ∀ (Boundary : Type uBoundary) [AddCommGroup Boundary] [Module ℝ Boundary],
-  ∀ (Stress : Type uStress),
-  ∀ (Spectral : Type uSpectral),
-  ∀ (Scalar : Type uScalar) [Zero Scalar],
-  ∀ W : SiegelEisensteinWitness Bulk Boundary,
-    LanglandsPrimeResonanceAdmissible.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
-      (Bulk := Bulk) (Boundary := Boundary)
-      (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W →
-      Nonempty
-        (LanglandsPrimeResonanceWitness.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
-          (Bulk := Bulk) (Boundary := Boundary)
-          (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W)
-
-/--
-The Langlands prime resonance owner target follows from the supplied
-admissibility data.
--/
-theorem langlandsPrimeResonanceOwnerTarget :
-    LanglandsPrimeResonanceOwnerTarget := by
-  intro Bulk _ _ Boundary _ _ Stress Spectral Scalar _ W h
-  exact langlandsPrimeResonanceWitness_nonempty_of_admissible h
+  }
 
 end InfoGeometry.Automorphic.LanglandsPrimeResonance

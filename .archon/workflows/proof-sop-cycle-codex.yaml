@@ -1,0 +1,39 @@
+name: proof-sop-cycle-codex
+description: "Run one proof-cleanup SOP cycle using the Codex CLI assistant. Same proof-only rules as proof-sop-cycle."
+
+nodes:
+  - id: cleanup-cycle
+    assistant: codex
+    prompt: |
+      Run exactly one bounded proof-cleanup SOP cycle for this repository.
+
+      Required reads:
+      - HEARTBEAT.md
+      - .agents/workflows/proof_only_sop.md
+      - .agents/workflows/mathlib_rules_sop.md
+      - .agents/workflows/honest_proof_policy.md
+      - skills/proof-only-mandate/SKILL.md
+
+      Required analysis commands:
+      - python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
+      - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+
+      Work rules:
+      - Select the first real vacuity/proxy target from the heartbeat.
+      - Use semantic inspection (`rg`, `lake env lean`, source reads) before editing.
+      - Make one bounded cleanup only: either prove from real lower lemmas, or delete/refactor a vacuous proxy surface.
+      - Never replace missing math with witnesses, certificates, laws, assumptions, guards, sockets, or reexport wrappers.
+      - If no real proof is available, keep an honest visible `sorry`; do not fake closure.
+      - Avoid generated artifacts and reports unless essential; do not stage `.changes/`, `artifacts/`, `reports/`, or external refs.
+
+      Required validation after edits:
+      - lake env lean <each touched Lean file>
+      - python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
+      - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+
+      Finish:
+      - Update the State block in HEARTBEAT.md with timestamp, counts, and next target.
+      - Stage only source/SOP files changed by this cycle.
+      - Commit with a concise proof-cleanup message.
+      - Push to both `origin main` and `upstream main`.
+      - Write a concise tick summary to .archon/task_results/proof-sop-cycle-last.md.

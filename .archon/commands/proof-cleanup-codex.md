@@ -1,16 +1,51 @@
-# proof-cleanup-codex
+---
+description: Start the unbounded proof-cleanup heartbeat using the Codex-backed one-cycle workflow.
+argument-hint: '[optional scope overrides]'
+---
 
-Run the unbounded proof-cleanup heartbeat with the Codex CLI assistant.
+# Proof Cleanup Forever with Codex
 
-Prerequisites:
+**Input**: $ARGUMENTS
+
+---
+
+## Your Mission
+
+Start the repository proof-cleanup heartbeat with Codex as the one-cycle cleanup agent. Let it run continuously until the user interrupts it with Ctrl-C.
+
+**Loop script**: `tools/heartbeat/archon_repo_cleanup_loop.sh`
+**Inner workflow**: `proof-sop-cycle-codex`
+
+---
+
+## Phase 1: LOAD - Check Prerequisites
+
+### 1.1 Confirm Codex CLI
+
+Run:
 
 ```bash
 command -v codex
-codex login
 ```
 
-Archon config owns the binary path and model under `assistants.codex`.
-No Codex tokens should be committed; use local Codex auth or environment variables.
+If missing, report that Codex must be installed with:
+
+```bash
+npm install -g @openai/codex
+```
+
+### 1.2 Confirm Auth Is Local
+
+Codex authentication must come from local `codex login` or environment variables. Never print or commit Codex tokens.
+
+**PHASE_1_CHECKPOINT:**
+- [ ] `codex` binary exists
+- [ ] No secrets printed
+- [ ] No secrets staged
+
+---
+
+## Phase 2: RUN - Start Codex Heartbeat
 
 Run until Ctrl-C:
 
@@ -20,7 +55,16 @@ WORKFLOW=proof-sop-cycle-codex \
 tools/heartbeat/archon_repo_cleanup_loop.sh
 ```
 
-Optional bounded batch mode:
+Do not add bounds unless explicitly requested:
+
+```text
+MAX_ITERATIONS
+MAX_STALE_ITERATIONS
+ARCHON_CYCLE_TIMEOUT_SECONDS
+STOP_WHEN_CLEAN=1
+```
+
+Optional bounded batch mode, only on explicit request:
 
 ```bash
 MAX_ITERATIONS=5 \
@@ -32,4 +76,27 @@ WORKFLOW=proof-sop-cycle-codex \
 tools/heartbeat/archon_repo_cleanup_loop.sh
 ```
 
-Generated loop logs stay under `reports/cleanup-loop/<RUN_ID>/` and should not be staged.
+**PHASE_2_CHECKPOINT:**
+- [ ] Codex heartbeat started
+- [ ] Inner workflow is `proof-sop-cycle-codex`
+- [ ] Outer loop is unbounded unless explicitly overridden
+
+---
+
+## Phase 3: REPORT - If Interrupted or Exited
+
+If the command exits, report:
+
+- stop reason or interrupt;
+- summary TSV path under `reports/cleanup-loop/<RUN_ID>/summary.tsv`;
+- latest before/after heartbeat counts;
+- any nonzero Archon or Codex exit codes.
+
+Generated loop logs stay under `reports/cleanup-loop/<RUN_ID>/` and must not be staged.
+
+## Success Criteria
+
+- **CODEX_AVAILABLE**: Codex CLI was found.
+- **HEARTBEAT_STARTED**: The Codex cleanup loop is running.
+- **UNBOUNDED_BY_DEFAULT**: No iteration/stale/timeout/clean stop was added.
+- **SECRETS_LOCAL**: No Codex credentials were printed or committed.

@@ -399,6 +399,7 @@ import InfoGeometry.Canonical.FierzKleinFoundation
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.FierzStressProjectionBridge
 import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
+import InfoGeometry.Canonical.FiniteDeterminantTower
 import InfoGeometry.Canonical.FiniteInvariantTransport
 import InfoGeometry.Canonical.FiniteStageInvariantTransport
 import InfoGeometry.Canonical.FirstQuantizationProbability

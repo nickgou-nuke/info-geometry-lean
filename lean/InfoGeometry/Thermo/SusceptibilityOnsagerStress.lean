@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # Susceptibility Onsager Stress
 
-Two-operator Onsager forms, stress-tensor readouts, and derivation sockets for
+Two-operator Onsager forms, stress-tensor readouts, and derivations for
 the susceptibility Hessian layer.
 
 The module keeps the dependencies proof-carrying:
@@ -13,7 +13,7 @@ The module keeps the dependencies proof-carrying:
 * the Hessian/susceptibility layer supplies material response;
 * an Onsager two-operator form supplies reciprocal response coefficients;
 * a stress-tensor operator reads material response as a bilinear carrier form;
-* a derivation socket records how stress changes under operator transport.
+* a mathlib-linear derivation records how stress changes under operator transport.
 
 It does not assert a concrete constitutive law. Material models provide the
 calibration fields.
@@ -42,7 +42,7 @@ abbrev TwoOperatorForm
 An Onsager two-operator form.
 
 The symmetry field is the reciprocal-response law. Positivity is kept as a
-separate proof-carrying certificate because indefinite/Krein response channels
+a separate theorem-owner obligation because indefinite/Krein response channels
 are not automatically positive.
 -/
 structure OnsagerTwoOperatorForm
@@ -162,66 +162,56 @@ theorem stress_swap
 
 end StressTensorOperator
 
-/-! ## 4. Operator derivation sockets -/
+/-! ## 4. Operator derivations -/
 
 /--
-A noncommutative operator derivation socket.
+A noncommutative operator derivation on a real module with multiplication.
 
-The map is linear in the intended model and obeys Leibniz in the intended
-algebra. Those facts are carried as certificates because the ambient operator
-carrier may be a noncommutative algebra, a bounded-operator algebra, or a
-representation-specific response algebra.
+Linearity is represented by mathlib's `LinearMap`; the only extra datum is the
+product rule for the chosen multiplication.
 -/
 structure ThermodynamicOperatorDerivation
     (Op : Type*)
-    [Add Op] [SMul ℝ Op] [Mul Op] where
-  /-- Derivation/readout map. -/
-  toFun : Op → Op
+    [AddCommMonoid Op] [Module ℝ Op] [Mul Op] where
+  /-- Linear derivation/readout map. -/
+  toLinearMap : Op →ₗ[ℝ] Op
 
-  /-- Additivity law for the derivation. -/
-  map_add_law :
-    ∀ A B : Op, toFun (A + B) = toFun A + toFun B
-
-  /-- Real homogeneity law for the derivation. -/
-  map_smul_law :
-    ∀ (c : ℝ) (A : Op), toFun (c • A) = c • toFun A
-
-  /-- Leibniz law. -/
-  leibniz_law :
-    ∀ A B : Op, toFun (A * B) = toFun A * B + A * toFun B
+  /-- Product rule for the derivation. -/
+  map_mul_eq :
+    ∀ A B : Op, toLinearMap (A * B) = toLinearMap A * B + A * toLinearMap B
 
 namespace ThermodynamicOperatorDerivation
 
 variable
     {Op : Type*}
-    [Add Op] [SMul ℝ Op] [Mul Op]
+    [AddCommMonoid Op] [Module ℝ Op] [Mul Op]
 
 instance : CoeFun (ThermodynamicOperatorDerivation Op) (fun _ => Op → Op) where
-  coe D := D.toFun
+  coe D := D.toLinearMap
 
 variable (D : ThermodynamicOperatorDerivation Op)
 
-/-- Re-export of additivity. -/
+/-- Additivity follows from the underlying mathlib linear map. -/
 @[rep_depth thermo]
 theorem map_add
     (A B : Op) :
     D (A + B) = D A + D B :=
-  D.map_add_law A B
+  D.toLinearMap.map_add A B
 
-/-- Re-export of real homogeneity. -/
+/-- Real homogeneity follows from the underlying mathlib linear map. -/
 @[rep_depth thermo]
 theorem map_smul
     (c : ℝ)
     (A : Op) :
     D (c • A) = c • D A :=
-  D.map_smul_law c A
+  D.toLinearMap.map_smul c A
 
-/-- Re-export of Leibniz. -/
+/-- Product rule for the derivation. -/
 @[rep_depth thermo]
-theorem leibniz
+theorem map_mul
     (A B : Op) :
     D (A * B) = D A * B + A * D B :=
-  D.leibniz_law A B
+  D.map_mul_eq A B
 
 end ThermodynamicOperatorDerivation
 
@@ -237,7 +227,7 @@ susceptibility alone.
 -/
 structure DerivedStressTensorResponse
     (Op Carrier : Type*)
-    [Add Op] [SMul ℝ Op] [Mul Op]
+    [AddCommMonoid Op] [Module ℝ Op] [Mul Op]
     [AddCommMonoid Carrier] [Module ℝ Carrier]
     (D : ThermodynamicOperatorDerivation Op)
     (T : StressTensorOperator Op Carrier) where
@@ -252,7 +242,7 @@ namespace DerivedStressTensorResponse
 
 variable
     {Op Carrier : Type*}
-    [Add Op] [SMul ℝ Op] [Mul Op]
+    [AddCommMonoid Op] [Module ℝ Op] [Mul Op]
     [AddCommMonoid Carrier] [Module ℝ Carrier]
     {D : ThermodynamicOperatorDerivation Op}
     {T : StressTensorOperator Op Carrier}

@@ -64,7 +64,7 @@ structure StinespringIsometry
     (Op : Type*) [Ring Op] [StarRing Op] where
   R : Op
   V : Op
-  isometry_law :
+  isometry_eq_one :
     star R * R + star V * V = 1
 
 namespace StinespringIsometry
@@ -81,7 +81,7 @@ theorem defect_eq_hiddenGain :
   calc
     1 - star S.R * S.R
         = (star S.R * S.R + star S.V * S.V) - star S.R * S.R := by
-            rw [S.isometry_law]
+            rw [S.isometry_eq_one]
     _ = star S.V * S.V := by
             abel
 
@@ -119,7 +119,7 @@ Visible intensity plus hidden environment gain is ideal.
 theorem visibleIntensity_add_environmentGain :
     visibleIntensity S.R + environmentGain S.V = 1 := by
   dsimp [visibleIntensity, environmentGain, hiddenGain]
-  exact S.isometry_law
+  exact S.isometry_eq_one
 
 end StinespringIsometry
 
@@ -167,7 +167,7 @@ def diagonalStinespringIsometry
     StinespringIsometry JonesMat where
   R := diagonalVisibleChannel rs rp
   V := diagonalEnvironmentChannel vs vp
-  isometry_law := diagonal_left_column_isometry rs rp vs vp hs hp
+  isometry_eq_one := diagonal_left_column_isometry rs rp vs vp hs hp
 
 /--
 For a diagonal lossy mirror, visible defect equals hidden gain.

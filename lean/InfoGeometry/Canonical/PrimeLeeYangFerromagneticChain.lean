@@ -463,12 +463,13 @@ theorem centeredOccupationCoupling_symm
   ring
 
 /--
-Lee--Yang stability socket for a concrete finite prime chain.
+Lee--Yang stability data for a concrete finite prime chain.
 
 The finite Ising Hamiltonian and ferromagnetic matrix are defined above.  A
 real Lee--Yang theorem still requires a concrete partition polynomial and the
-usual positivity/stability hypotheses. Those are supplied here as certificates,
-not inferred from the existence of nonnegative `Jᵢⱼ` alone.
+usual positivity/stability proof.  This structure stores only the polynomial
+readout data; the Lee--Yang theorem must be supplied explicitly to any theorem
+that uses it.
 -/
 @[socket_debt_tag]
 structure LeeYangStabilityWitness where
@@ -476,28 +477,19 @@ structure LeeYangStabilityWitness where
   chain : PrimeFerromagneticChain n
   partitionPolynomial : Polynomial ℂ
   fieldToFugacity : (Fin n → ℝ) → ℂ
-  finitePartitionLaw : Prop
-  finitePartitionCertificate :
-    finitePartitionLaw
-  leeYangStabilityLaw :
-    ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z
   noRiemannHypothesisClaimGuard : Type*
 
 namespace LeeYangStabilityWitness
 
 variable (W : LeeYangStabilityWitness (n := n))
 
-/-- Re-export of the supplied finite partition law. -/
-theorem finitePartition_valid :
-    W.finitePartitionLaw :=
-  W.finitePartitionCertificate
-
-/-- Re-export of the supplied Lee--Yang circle law. -/
-theorem leeYang_valid
+/-- Apply an externally proved Lee--Yang circle theorem to the stored polynomial. -/
+theorem root_lies_on_leeYang_circle
+    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     (z : ℂ)
     (hz : W.partitionPolynomial.IsRoot z) :
     OnLeeYangCircle z :=
-  W.leeYangStabilityLaw z hz
+  hLeeYang z hz
 
 end LeeYangStabilityWitness
 

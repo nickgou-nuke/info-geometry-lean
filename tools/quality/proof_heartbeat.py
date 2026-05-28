@@ -91,7 +91,14 @@ def main() -> int:
             if not decl:
                 continue
             window = "\n".join(lines[i : min(i + 12, len(lines))])
-            if ":=" in window and PROXY_USE_RE.search(window):
+            if ":=" not in window:
+                continue
+            proof_tail = window.split(":=", 1)[1].lstrip()
+            # Heuristic only: count direct field-projection wrappers, not real
+            # tactic proofs that happen to use a field named `*_law` internally.
+            if proof_tail.startswith("by"):
+                continue
+            if PROXY_USE_RE.search(proof_tail):
                 counts["reexport_proxy"] += 1
                 examples["reexport_proxy"].append(f"{rel}:{i + 1}:{decl.group('name')}")
 

@@ -13,6 +13,8 @@ import InfoGeometry.Algebra.NilpotentNonunit
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
 import InfoGeometry.Algebra.FiniteInductiveSUSY
+import InfoGeometry.Algebra.InductiveSuperClosureLemmas
+import InfoGeometry.Algebra.InfiniteInductiveSUSY
 import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
 import InfoGeometry.Algebra.N2ModeCentralExtension

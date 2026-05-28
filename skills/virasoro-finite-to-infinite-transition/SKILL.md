@@ -46,9 +46,14 @@ Repo-owned superclosure/direct-limit exemplars:
 Never close an infinite theorem by hiding the missing proof in a law,
 certificate, witness, guard, readback, or structure field.
 
+The external Virasoro package is mostly **Finsupp first**, not colimit first:
+use `ι →₀ 𝕜`, basis generators, basis-level formulas, bilinear extension, and
+generator readbacks whenever the infinite object is a finite linear combination
+of modes. Use `DirectLimit` only when there is a real staged transition system.
+
 A valid finite-to-infinite theorem must use one of these mechanisms:
 
-1. algebraic direct sum / finite support, preferably `ι →₀ A`;
+1. algebraic direct sum / finite support, preferably `ι →₀ A` or `ι →₀ 𝕜`;
 2. mode families with proved finite-support preservation;
 3. explicit central extension by a cocycle;
 4. locally finite/truncated sums with support proof before summing;
@@ -80,16 +85,17 @@ Virasoro-style endpoint when feasible.
 
 ## Implementation procedure
 
-1. Classify the carrier:
-   - `Finsupp`/direct sum;
-   - flexible mode family plus finite-support theorem;
-   - central extension;
-   - local finite sum;
-   - analytic completion.
+1. Classify the carrier, preferring the lightest honest mechanism:
+   - `Finsupp`/direct sum for finite linear combinations of modes;
+   - locally finite operator sums for Sugawara/Fock expressions;
+   - algebraic `DirectLimit` only for real staged transition systems;
+   - explicit target image for external targets without a universal colimit;
+   - analytic completion only with topology/convergence/continuity.
 2. Write the carrier choice in the module docstring.
 3. For the full external-package pattern, define mode labels, a finitely
-   supported basis carrier, basis generators, an explicit alternating cocycle,
-   its bilinear basis extension, and then `LieTwoCocycle.CentralExtension`.
+   supported basis carrier, basis generators, basis-level bracket/product data,
+   an explicit alternating cocycle when needed, its bilinear basis extension,
+   and then `LieTwoCocycle.CentralExtension` for ordinary skew Lie extensions.
 4. Prove generator/local laws first, then arbitrary-element readback.
 5. Define cocycles/central obstructions explicitly.
 6. For direct sums, define operations as `Finsupp` objects and prove support
@@ -106,7 +112,7 @@ Virasoro-style endpoint when feasible.
 ## Allowed examples
 
 ```lean
--- finitely supported infinite mode algebra
+-- finitely supported infinite mode algebra: the default Virasoro pattern
 def WittAlgebra := ℤ →₀ 𝕜
 abbrev ModeFamily (ι A : Type*) [Zero A] := ι →₀ A
 
@@ -139,7 +145,9 @@ convergence_certificate : claimed_convergence
 ```
 
 Also forbidden: a theorem whose proof is only `P.some_law`,
-`P.some_certificate`, or equivalent readback.
+`P.some_certificate`, or equivalent readback; treating `Finsupp` as a
+completion; or using DirectLimit language when the natural construction is just
+finite-support mode algebra.
 
 Use vocabulary precisely:
 

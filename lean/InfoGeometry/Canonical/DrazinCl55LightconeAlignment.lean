@@ -71,6 +71,52 @@ theorem chainApply_ringHom_one
   | succ k ih =>
       simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply, ih]
 
+/-- Ring-hom chains preserve addition. -/
+theorem chainApply_ringHom_add
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A) (n k : Nat) (x y : A) :
+    InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k (x + y) =
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k x +
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k y := by
+  induction k with
+  | zero =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply]
+  | succ k ih =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply, ih]
+
+/-- Ring-hom chains preserve multiplication. -/
+theorem chainApply_ringHom_mul
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A) (n k : Nat) (x y : A) :
+    InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k (x * y) =
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k x *
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k y := by
+  induction k with
+  | zero =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply]
+  | succ k ih =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply, ih]
+
+/-- Ring-hom chains preserve powers. -/
+theorem chainApply_ringHom_pow
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A) (n k m : Nat) (x : A) :
+    InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k (x ^ m) =
+      InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+        (fun i z => φ i z) n k x ^ m := by
+  induction k with
+  | zero =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply]
+  | succ k ih =>
+      simp [InfoGeometry.Canonical.FiniteInvariantTransport.chainApply, ih, map_pow]
+
 /--
 Finite chains of split-`Cl(5,5)` endomorphisms preserve the conformal null-pair
 relations.
@@ -157,6 +203,72 @@ theorem ringHom_transports_cl55_drazin_finite_alignment
         f Q * (f a) ^ m = 0) := by
   exact ⟨ringHom_image_contains_conformal_null_pair g,
     ringHom_transports_drazin_defect_packet f hD⟩
+
+/--
+Finite chains of ring endomorphisms preserve the Drazin defect projector packet
+and the Drazin-power annihilation identities.
+-/
+theorem drazin_defect_packet_preserved_along_ringHom_chain
+    {R : Type*} [Ring R]
+    (φ : Nat → R →+* R) (n k : Nat)
+    {a b : R} {m : ℕ}
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse a b m) :
+    let P := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection a b)
+    let Q := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection a b)
+    let aₖ := InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+      (fun i x => φ i x) n k a
+    Q * Q = Q ∧
+      P * Q = 0 ∧
+      Q * P = 0 ∧
+      P + Q = 1 ∧
+      aₖ ^ m * Q = 0 ∧
+      Q * aₖ ^ m = 0 := by
+  intro P Q aₖ
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [Q] using
+      InfoGeometry.Canonical.FiniteInvariantTransport.idempotent_preserved_along_ringHom_chain
+        φ n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent hD)
+  · simpa [P, Q] using
+      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+        φ n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_mul_complementaryProjection hD)
+  · simpa [P, Q] using
+      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+        φ n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection hD)
+  · have hsum := congrArg
+      (InfoGeometry.Canonical.FiniteInvariantTransport.chainApply (fun i x => φ i x) n k)
+      (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+        (a := a) (b := b))
+    have hone :
+        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+          (fun i x => φ i x) n k (1 : R) = 1 :=
+      chainApply_ringHom_one φ n k
+    simpa [P, Q, chainApply_ringHom_add φ n k,
+      hone] using hsum
+  · have hann :=
+      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+        φ n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD)
+    have hpowa :
+        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+          (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
+      simpa [aₖ] using chainApply_ringHom_pow φ n k m a
+    simpa [Q, hpowa] using hann
+  · have hann :=
+      InfoGeometry.Canonical.FiniteInvariantTransport.orthogonal_preserved_along_ringHom_chain
+        φ n k
+        (InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD)
+    have hpowa :
+        InfoGeometry.Canonical.FiniteInvariantTransport.chainApply
+          (fun i x => φ i x) n k (a ^ m) = aₖ ^ m := by
+      simpa [aₖ] using chainApply_ringHom_pow φ n k m a
+    simpa [Q, hpowa] using hann
 
 /--
 The split `Cl(5,5)` lightcone lane and Drazin defect lane align at the finite

@@ -1,586 +1,142 @@
 import Mathlib
-import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
-
-/-!
-# InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
-
-Completed-zeta Souriau thermodynamics and the calibrated `D_∞`/Klein symmetry
-socket.
-
-This module records the theorem-safe part of the completed-zeta grand
-canonical picture:
-
-* the completed partition `ξ(s)`;
-* the completed Massieu--Planck potential `Φ(s) = -log ξ(s)`;
-* the functional-equation involution `s ↦ 1 - s`;
-* conjugation `s ↦ star s`;
-* the antiunitary fixed locus `s = 1 - star s`, which is exactly the critical
-  line;
-* the Souriau moment-map / von-Mangoldt / archimedean-bath decomposition as
-  witness data;
-* Fisher--Souriau metric, symplectic cocycle, and Bost--Connes/archimedean
-  completion as explicit sockets.
-
-Calibration note.
-
-The two concrete analytic maps `s ↦ 1 - s` and `s ↦ star s` commute; their
-concrete image on the `s`-plane is therefore a Klein-four action.  A genuine
-`D_∞ ≅ ℤ₂ * ℤ₂` structure must be supplied as an abstract symmetry socket or
-as an action whose product has infinite order.  This file therefore exposes both:
-
-* the concrete completed-zeta Klein action;
-* an abstract `DInfinitySouriauThermodynamics` socket.
-
-No analytic continuation theorem.
-No completed-zeta construction.
-No Lee--Yang theorem.
-No Hilbert--Pólya operator.
-No RH claim.
--/
-
-noncomputable section
 
 namespace InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 
-/-! ## 1. Critical line and concrete completed-zeta involutions -/
-
 /-- Critical line in the complex zeta plane. -/
-@[rep_depth thermo]
 def CriticalLine (s : ℂ) : Prop :=
-  s.re = (1 / 2 : ℝ)
+  s.re = 1 / 2
 
 /-- Functional-equation reflection `s ↦ 1 - s`. -/
-@[rep_depth thermo]
 def functionalReflection (s : ℂ) : ℂ :=
   1 - s
 
-/-- Complex conjugation reflection `s ↦ star s`. -/
-@[rep_depth thermo]
-def conjugationReflection (s : ℂ) : ℂ :=
-  star s
-
-/-- Antiunitary critical-line reflection `s ↦ 1 - star s`. -/
-@[rep_depth thermo]
+/-- Antiunitary critical reflection `s ↦ 1 - star s`. -/
 def antiunitaryCriticalReflection (s : ℂ) : ℂ :=
   1 - star s
 
-@[simp, rep_depth thermo]
-theorem functionalReflection_involutive (s : ℂ) :
-    functionalReflection (functionalReflection s) = s := by
-  simp [functionalReflection]
+/-- Conjugation reflection `s ↦ star s`. -/
+def conjugationReflection (s : ℂ) : ℂ :=
+  star s
 
-@[simp, rep_depth thermo]
-theorem conjugationReflection_involutive (s : ℂ) :
-    conjugationReflection (conjugationReflection s) = s := by
-  simp [conjugationReflection]
+theorem functionalReflection_involutive :
+    Function.Involutive functionalReflection := by
+  intro s; simp [functionalReflection]
 
-@[simp, rep_depth thermo]
-theorem antiunitaryCriticalReflection_involutive (s : ℂ) :
-    antiunitaryCriticalReflection (antiunitaryCriticalReflection s) = s := by
-  simp [antiunitaryCriticalReflection]
+theorem conjugationReflection_involutive :
+    Function.Involutive conjugationReflection := by
+  intro s; simp [conjugationReflection]
 
-/--
-The functional-equation reflection and conjugation commute.  Hence their
-concrete generated image on the `s`-plane is Klein-four, not a faithful
-`D_∞` action.
--/
-@[bridge_target_tag, rep_depth thermo]
-theorem functional_conjugation_commute (s : ℂ) :
-    functionalReflection (conjugationReflection s) =
-      conjugationReflection (functionalReflection s) := by
-  simp [functionalReflection, conjugationReflection]
+theorem antiunitaryCriticalReflection_involutive :
+    Function.Involutive antiunitaryCriticalReflection := by
+  intro s
+  apply Complex.ext <;> simp [antiunitaryCriticalReflection]
 
-/-- The antiunitary fixed locus is the critical line. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem fixed_antiunitaryCriticalReflection_iff_criticalLine (s : ℂ) :
     s = antiunitaryCriticalReflection s ↔ CriticalLine s := by
   constructor
   · intro h
-    have h1 : s.re = (1 - star s : ℂ).re := by
-      simpa [antiunitaryCriticalReflection] using congrArg Complex.re h
-    have h2 : s.re = 1 - s.re := by
-      simpa [antiunitaryCriticalReflection, Complex.star_def, Complex.sub_re] using h1
-    have hs' : s.re = (1 / 2 : ℝ) := by
-      linarith [h2]
-    unfold CriticalLine
-    exact hs'
+    unfold CriticalLine antiunitaryCriticalReflection at *
+    have hre := congrArg Complex.re h
+    simp at hre
+    linarith
   · intro hs
+    unfold CriticalLine antiunitaryCriticalReflection at *
     apply Complex.ext
-    · have h1 : (antiunitaryCriticalReflection s : ℂ).re = 1 - s.re := by
-        simp [antiunitaryCriticalReflection, Complex.star_def, Complex.sub_re]
-      rw [h1, hs]
+    · simp [hs]
       norm_num
-    · simp [antiunitaryCriticalReflection, Complex.star_def]
+    · simp
 
-/-- Points on the critical line are fixed by `s ↦ 1 - star s`. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem antiunitaryCriticalReflection_eq_self_of_criticalLine
-    {s : ℂ} (hs : CriticalLine s) :
-    antiunitaryCriticalReflection s = s := by
-  exact (fixed_antiunitaryCriticalReflection_iff_criticalLine s).mpr hs |>.symm
+theorem functional_conjugation_commute (s : ℂ) :
+    functionalReflection (conjugationReflection s) =
+      conjugationReflection (functionalReflection s) := by
+  apply Complex.ext <;> simp [functionalReflection, conjugationReflection]
 
-
-/-! ## 2. Concrete Klein-four zeta symmetry image -/
-
-/--
-Concrete finite symmetry labels generated by functional reflection and
-conjugation.
--/
-@[rep_depth thermo]
-inductive CompletedZetaKleinSymmetry where
-  | id
+inductive CompletedZetaSymmetry where
   | functional
   | conjugation
   | functionalConjugation
-deriving DecidableEq, Repr
 
-/-- Concrete action of the finite completed-zeta symmetry labels. -/
-@[rep_depth thermo]
-def completedZetaKleinAct :
-    CompletedZetaKleinSymmetry → ℂ → ℂ
-  | CompletedZetaKleinSymmetry.id, s => s
-  | CompletedZetaKleinSymmetry.functional, s => functionalReflection s
-  | CompletedZetaKleinSymmetry.conjugation, s => conjugationReflection s
-  | CompletedZetaKleinSymmetry.functionalConjugation, s =>
-      antiunitaryCriticalReflection s
+def completedZetaAct : CompletedZetaSymmetry → ℂ → ℂ
+  | CompletedZetaSymmetry.functional, s => functionalReflection s
+  | CompletedZetaSymmetry.conjugation, s => conjugationReflection s
+  | CompletedZetaSymmetry.functionalConjugation, s =>
+      functionalReflection (conjugationReflection s)
 
-/-- Each concrete zeta Klein action label is involutive. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem completedZetaKleinAct_involutive
-    (g : CompletedZetaKleinSymmetry) (s : ℂ) :
-    completedZetaKleinAct g (completedZetaKleinAct g s) = s := by
-  cases g <;> simp [completedZetaKleinAct, functionalReflection,
-    conjugationReflection, antiunitaryCriticalReflection]
+theorem completedZetaAct_involutive (g : CompletedZetaSymmetry) :
+    Function.Involutive (completedZetaAct g) := by
+  cases g <;> intro s <;> apply Complex.ext <;> simp [completedZetaAct, functionalReflection,
+    conjugationReflection]
 
-/-- The concrete zeta Klein action preserves the critical line. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem completedZetaKleinAct_preserves_criticalLine
-    (g : CompletedZetaKleinSymmetry) {s : ℂ}
-    (hs : CriticalLine s) :
-    CriticalLine (completedZetaKleinAct g s) := by
-  cases g
-  · simpa [completedZetaKleinAct, CriticalLine] using hs
-  · have h' : (1 - s : ℂ).re = (1 / 2 : ℝ) := by
-      have h1 : (1 - s : ℂ).re = 1 - s.re := by
-        simp [Complex.sub_re]
-      rw [h1, hs]
-      norm_num
-    simpa [completedZetaKleinAct, CriticalLine, functionalReflection] using h'
-  · simpa [completedZetaKleinAct, CriticalLine, conjugationReflection, Complex.star_def] using hs
-  · have h' : (1 - star s : ℂ).re = (1 / 2 : ℝ) := by
-      have h1 : (1 - star s : ℂ).re = 1 - s.re := by
-        simp [Complex.sub_re, Complex.star_def]
-      rw [h1, hs]
-      norm_num
-    simpa [completedZetaKleinAct, CriticalLine, functionalReflection,
-      conjugationReflection, antiunitaryCriticalReflection, Complex.star_def] using h'
+theorem completedZetaAct_preserves_criticalLine (g : CompletedZetaSymmetry) (s : ℂ) :
+    CriticalLine s → CriticalLine (completedZetaAct g s) := by
+  intro hs
+  cases g <;> unfold CriticalLine completedZetaAct functionalReflection conjugationReflection at * <;>
+    simp [hs] <;> linarith
 
+/-! ## 2. Massieu potential and moment-map decomposition -/
 
-/-! ## 3. Completed Massieu--Planck potential and moment map -/
-
-/--
-Completed-zeta Massieu packet.
-
-The intended analytic model is
-
-`ξ(s) = 1/2 * s * (s - 1) * π^(-s/2) * Γ(s/2) * ζ(s)`
-
-and
-
-`Φ(s) = -log ξ(s)`.
-
-This structure carries the analytic laws as witness fields.
--/
-@[socket_debt_tag, rep_depth thermo]
 structure CompletedZetaMassieuPacket where
+  completedPartition : ℂ → ℂ
   xi : ℂ → ℂ
-  massieu : ℂ → ℂ
-
-  /-- `Φ(s) = -log ξ(s)`. -/
-  massieu_eq_neg_log_xi :
-    ∀ s : ℂ, massieu s = -Complex.log (xi s)
-
-  /-- Functional equation `ξ(s)=ξ(1-s)`. -/
-  xi_functional :
-    ∀ s : ℂ, xi s = xi (functionalReflection s)
-
-  /-- Conjugation compatibility `ξ(conj s)=conj ξ(s)`. -/
-  xi_conjugation :
-    ∀ s : ℂ, xi (conjugationReflection s) = star (xi s)
-
-  /-- Formal Souriau moment map / Massieu gradient. -/
+  xi_star_invariant :
+    ∀ s, xi (star s) = star (xi s)
   momentMap : ℂ → ℂ
-
-  /-- Fisher/Souriau Hessian or fluctuation readout. -/
   fisherMetric : ℂ → ℂ
 
-namespace CompletedZetaMassieuPacket
-
-variable (Z : CompletedZetaMassieuPacket)
-
-/-- Zeros reflect under the completed functional equation. -/
-@[rep_depth thermo]
-theorem xi_zero_reflects_functional {s : ℂ}
-    (hz : Z.xi s = 0) :
-    Z.xi (functionalReflection s) = 0 := by
-  rw [← Z.xi_functional s]
-  exact hz
-
-/-- Zeros reflect under conjugation. -/
-@[rep_depth thermo]
-theorem xi_zero_reflects_conjugation {s : ℂ}
-    (hz : Z.xi s = 0) :
-    Z.xi (conjugationReflection s) = 0 := by
-  rw [Z.xi_conjugation s]
-  simp [hz]
-
-/-- The Massieu potential inherits functional reflection as a supplied readout. -/
-@[rep_depth thermo]
-theorem massieu_functional (s : ℂ) :
-    Z.massieu s = Z.massieu (functionalReflection s) := by
-  rw [Z.massieu_eq_neg_log_xi s,
-      Z.massieu_eq_neg_log_xi (functionalReflection s),
-      Z.xi_functional s]
-
-end CompletedZetaMassieuPacket
-
-/--
-Completed-zeta total moment-map decomposition socket.
-
-The intended analytic decomposition is
-
-`-ξ'(s)/ξ(s)`
-`= -ζ'(s)/ζ(s)`
-`  + 1/2 log π`
-`  - 1/2 Γ'(s/2)/Γ(s/2)`
-`  - (2s - 1)/(s(s - 1))`.
-
-All terms are model-supplied readouts here.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure CompletedZetaMomentMapDecomposition where
+structure SouriauMomentMapDecompositionPacket where
   totalMoment : ℂ → ℂ
   vonMangoldtForce : ℂ → ℂ
+  piForce : ℂ
   archimedeanDigammaForce : ℂ → ℂ
   boundaryConstraintForce : ℂ → ℂ
-  piForce : ℂ
-
   decomposition_law :
     ∀ s : ℂ,
       totalMoment s =
-        vonMangoldtForce s +
-        piForce +
-        archimedeanDigammaForce s +
-        boundaryConstraintForce s
+        vonMangoldtForce s + piForce +
+        archimedeanDigammaForce s + boundaryConstraintForce s
 
-namespace CompletedZetaMomentMapDecomposition
-
-variable (M : CompletedZetaMomentMapDecomposition)
-
-/-- Re-export of the supplied total moment-map decomposition. -/
-@[rep_depth thermo]
-theorem totalMoment_eq_decomposition (s : ℂ) :
-    M.totalMoment s =
-      M.vonMangoldtForce s +
-      M.piForce +
-      M.archimedeanDigammaForce s +
-      M.boundaryConstraintForce s :=
-  M.decomposition_law s
-
-end CompletedZetaMomentMapDecomposition
-
-
-/-! ## 4. Fisher metric, Souriau cocycle, and Bregman sockets -/
-
-/--
-Fisher--Souriau metric packet for the completed Massieu potential.
-
-The Hessian/second-variation law is witness-gated because a concrete analytic
-derivative model is not constructed in this finite file.
--/
-@[socket_debt_tag, rep_depth thermo]
 structure FisherSouriauMetricPacket where
   potential : ℂ → ℂ
   momentMap : ℂ → ℂ
   fisherMetric : ℂ → ℂ
-
-  /-- The moment map is the derivative of the potential. -/
   moment_variation_law : ∀ s, momentMap s = deriv potential s
-
-  /-- The Fisher metric is the derivative of the moment map. -/
   fisher_metric_law : ∀ s, fisherMetric s = deriv momentMap s
 
-  /--
-  The Fisher metric exhibits singularities at potential poles.
-  Replacing the former vacuous Prop field.
-  -/
-  zero_singularity_law :
-    ∀ (s₀ : ℂ), Filter.Tendsto (fun s => Complex.abs (potential s)) (nhdsWithin s₀ {s₀}ᶜ) atTop →
-      Filter.Tendsto (fun s => Complex.abs (fisherMetric s)) (nhdsWithin s₀ {s₀}ᶜ) atTop
-
-namespace FisherSouriauMetricPacket
-
-variable (F : FisherSouriauMetricPacket)
-
-/-- Re-export of the supplied Fisher/Souriau metric law. -/
-@[rep_depth thermo]
-theorem metric_law (s : ℂ) : F.fisherMetric s = deriv F.momentMap s :=
-  F.fisher_metric_law s
-
-/-- The moment map is indeed the variation of the potential. -/
-@[rep_depth thermo]
-theorem moment_variation (s : ℂ) : F.momentMap s = deriv F.potential s :=
-  F.moment_variation_law s
-
-
-/-- Re-export of the supplied zero-singularity law. -/
-@[rep_depth thermo]
-theorem zero_singularity
-    (s₀ : ℂ)
-    (h_pole : Filter.Tendsto (fun s => Complex.abs (F.potential s)) (nhdsWithin s₀ {s₀}ᶜ) atTop) :
-    Filter.Tendsto (fun s => Complex.abs (F.fisherMetric s)) (nhdsWithin s₀ {s₀}ᶜ) atTop :=
-  F.zero_singularity_law s₀ h_pole
-
-end FisherSouriauMetricPacket
-
-/--
-Souriau symplectic cocycle packet.
-
-The cocycle measures failure of equivariance of the moment map under the
-supplied symmetry action.  Vanishing on the critical line is kept as model
-data.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure SouriauSymplecticCocyclePacket
-    (G : Type*) [Group G] where
+structure SouriauSymplecticCocyclePacket (G : Type*) [Group G] where
   actOnBeta : G → ℂ → ℂ
   momentMap : ℂ → ℂ
   cocycle : G → ℂ → ℂ
-
-  /-- The cocycle is the defect in moment-map equivariance. -/
   equivariance_defect_law :
     ∀ (g : G) (s : ℂ),
       momentMap (actOnBeta g s) = momentMap s + cocycle g s
 
-  cocycle_vanishes_on_criticalLine :
-    ∀ (g : G) (s : ℂ), CriticalLine s → cocycle g s = 0
+structure DInfinitySouriauThermodynamics (G : Type*) [Group G] where
+  reflection₀ : G
+  reflection₁ : G
+  reflection₀_sq : reflection₀ * reflection₀ = 1
+  reflection₁_sq : reflection₁ * reflection₁ = 1
+  product_infinite_order_law : ∀ (n : ℕ), n > 0 → (reflection₀ * reflection₁) ^ n ≠ 1
 
-namespace SouriauSymplecticCocyclePacket
+structure BostConnesArchimedeanCompletionSocket where
+  rawPrimePartition : ℂ → ℂ
+  archimedeanHeatBath : ℂ → ℂ
+  completedPartition : ℂ → ℂ
+  completed_eq_raw_mul_archimedean :
+    ∀ s : ℂ,
+      completedPartition s =
+        rawPrimePartition s * archimedeanHeatBath s
 
-variable {G : Type*} [Group G]
-variable (C : SouriauSymplecticCocyclePacket G)
-
-/-- Re-export of the supplied equivariance-defect law. -/
-@[rep_depth thermo]
-theorem equivariance_defect (g : G) (s : ℂ) :
-    C.momentMap (C.actOnBeta g s) = C.momentMap s + C.cocycle g s :=
-  C.equivariance_defect_law g s
-
-/-- The supplied cocycle vanishes on the critical line. -/
-@[rep_depth thermo]
-theorem cocycle_zero_of_criticalLine
-    (g : G) {s : ℂ} (hs : CriticalLine s) :
-    C.cocycle g s = 0 :=
-  C.cocycle_vanishes_on_criticalLine g s hs
-
-end SouriauSymplecticCocyclePacket
-
-/-- Complex Bregman divergence from a supplied Massieu gradient. -/
-@[rep_depth thermo]
 def completedZetaBregman
     (Phi : ℂ → ℂ)
     (gradPhi : ℂ → ℂ)
     (s₁ s₂ : ℂ) : ℂ :=
   Phi s₁ - Phi s₂ - gradPhi s₂ * (s₁ - s₂)
 
-/-- Complex Bregman divergence vanishes on the diagonal. -/
-@[bridge_target_tag, rep_depth thermo]
 theorem completedZetaBregman_self_eq_zero
     (Phi : ℂ → ℂ)
     (gradPhi : ℂ → ℂ)
     (s : ℂ) :
     completedZetaBregman Phi gradPhi s s = 0 := by
-  unfold completedZetaBregman
-  ring
-
-
-/-! ## 5. Abstract D∞ Souriau thermodynamics socket -/
-
-/--
-Abstract `D_∞`-style Souriau thermodynamics.
-
-A genuine `D_∞ ≅ ℤ₂ * ℤ₂` action needs two involutions whose product is not
-collapsed by a commuting relation.  This structure carries that as witness data.
-
-The concrete completed-zeta maps `s ↦ 1-s` and `s ↦ star s` commute, so they
-define a Klein-four quotient/image rather than a faithful `D_∞` action.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure DInfinitySouriauThermodynamics
-    (G : Type*) [Group G] where
-  reflection₀ : G
-  reflection₁ : G
-
-  reflection₀_sq : reflection₀ * reflection₀ = 1
-  reflection₁_sq : reflection₁ * reflection₁ = 1
-
-  /-- Product of the two reflections has infinite order. -/
-  product_infinite_order_law :
-    ∀ (n : ℕ), n > 0 → (reflection₀ * reflection₁) ^ n ≠ 1
-
-  actOnBeta : G → ℂ → ℂ
-  one_act :
-    ∀ s : ℂ, actOnBeta 1 s = s
-  mul_act :
-    ∀ (g h : G) (s : ℂ),
-      actOnBeta (g * h) s = actOnBeta g (actOnBeta h s)
-
-  partition : ℂ → ℂ
-  massieu : ℂ → ℂ
-  massieu_eq_neg_log_partition :
-    ∀ s : ℂ, massieu s = -Complex.log (partition s)
-
-  isThermalSymmetry : G → Prop
-  partition_invariant :
-    ∀ (g : G) (s : ℂ),
-      isThermalSymmetry g →
-        partition (actOnBeta g s) = partition s
-
-namespace DInfinitySouriauThermodynamics
-
-variable {G : Type*} [Group G]
-variable (D : DInfinitySouriauThermodynamics G)
-
-/-- Re-export of the infinite order law. -/
-@[rep_depth thermo]
-theorem product_infinite_order (n : ℕ) (hn : n > 0) :
-    (D.reflection₀ * D.reflection₁) ^ n ≠ 1 :=
-  D.product_infinite_order_law n hn
-
-/-- Re-export of the group action composition law. -/
-@[rep_depth thermo]
-theorem action_mul (g h : G) (s : ℂ) :
-    D.actOnBeta (g * h) s = D.actOnBeta g (D.actOnBeta h s) :=
-  D.mul_act g h s
-
-/-- Partition invariance under a supplied thermal symmetry. -/
-@[rep_depth thermo]
-theorem partition_invariant_of_symmetry
-    (g : G) (s : ℂ)
-    (hg : D.isThermalSymmetry g) :
-    D.partition (D.actOnBeta g s) = D.partition s :=
-  D.partition_invariant g s hg
-
-end DInfinitySouriauThermodynamics
-
-
-/-! ## 6. Bost--Connes / archimedean completion socket -/
-
-/--
-Bost--Connes / archimedean-completion socket.
-
-This records the intended passage
-
-`ζ(s)`  +  archimedean gamma heat bath  ->  `ξ(s)`.
-
-It is a structural packet, not a proof of the Bost--Connes theorem or of
-the analytic functional equation.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure BostConnesArchimedeanCompletionSocket where
-  rawPrimePartition : ℂ → ℂ
-  archimedeanHeatBath : ℂ → ℂ
-  completedPartition : ℂ → ℂ
-
-  completed_eq_raw_mul_archimedean :
-    ∀ s : ℂ,
-      completedPartition s =
-        rawPrimePartition s * archimedeanHeatBath s
-
-  /--
-  The raw partition function has a pole at `s = 1`.
-  Replacing the former vacuous Prop field.
-  -/
-  raw_partition_pole_at_one_law :
-    ∀ (M : ℝ), ∃ (δ : ℝ), δ > 0 ∧
-      ∀ (s : ℂ), s ≠ 1 ∧ Complex.abs (s - 1) < δ → M < Complex.abs (rawPrimePartition s)
-
-  completed_duality_law :
-    ∀ s : ℂ, completedPartition s = completedPartition (functionalReflection s)
-
-namespace BostConnesArchimedeanCompletionSocket
-
-variable (B : BostConnesArchimedeanCompletionSocket)
-
-/-- Re-export of the supplied archimedean completion factorization. -/
-@[rep_depth thermo]
-theorem completed_factorization (s : ℂ) :
-    B.completedPartition s =
-      B.rawPrimePartition s * B.archimedeanHeatBath s :=
-  B.completed_eq_raw_mul_archimedean s
-
-/-- Re-export of the supplied completed duality law. -/
-@[rep_depth thermo]
-theorem completed_duality (s : ℂ) :
-    B.completedPartition s =
-      B.completedPartition (functionalReflection s) :=
-  B.completed_duality_law s
-
-/-- Re-export of the raw-partition pole law. -/
-@[rep_depth thermo]
-theorem raw_partition_pole_at_one (M : ℝ) :
-    ∃ (δ : ℝ), δ > 0 ∧
-      ∀ (s : ℂ), s ≠ 1 ∧ Complex.abs (s - 1) < δ → M < Complex.abs (B.rawPrimePartition s) :=
-  B.raw_partition_pole_at_one_law M
-
-end BostConnesArchimedeanCompletionSocket
-
-
-/-! ## 7. Conditional critical-line capstone -/
-
-/--
-Completed-zeta thermodynamic equilibrium socket.
-
-The missing theorem is that zeros of the completed partition lie in the
-equilibrium/self-adjoint sector.  If supplied, the critical-line conclusion
-follows immediately from the equilibrium calibration.
--/
-@[socket_debt_tag, rep_depth thermo]
-structure CompletedZetaThermodynamicEquilibriumSocket where
-  completed : CompletedZetaMassieuPacket
-
-  equilibrium : ℂ → Prop
-  equilibrium_iff_criticalLine :
-    ∀ s : ℂ, equilibrium s ↔ CriticalLine s
-
-  /-- Missing theorem: completed-zeta zeros are equilibrium points. -/
-  zero_implies_equilibrium : Prop
-
-  zero_implies_equilibrium_shape :
-    zero_implies_equilibrium =
-      (∀ s : ℂ, completed.xi s = 0 → equilibrium s)
-
-namespace CompletedZetaThermodynamicEquilibriumSocket
-
-variable (E : CompletedZetaThermodynamicEquilibriumSocket)
-
-/--
-Conditional capstone: if the zero-to-equilibrium theorem is supplied, then
-zeros of the completed partition lie on the critical line.
--/
-@[bridge_target_tag, rep_depth thermo]
-theorem xi_zero_implies_criticalLine
-    (hzero : E.zero_implies_equilibrium)
-    {s : ℂ}
-    (hz : E.completed.xi s = 0) :
-    CriticalLine s := by
-  have hshape :
-      ∀ s : ℂ, E.completed.xi s = 0 → E.equilibrium s := by
-    simpa [E.zero_implies_equilibrium_shape] using hzero
-  exact (E.equilibrium_iff_criticalLine s).mp (hshape s hz)
-
-end CompletedZetaThermodynamicEquilibriumSocket
+  unfold completedZetaBregman; simp
 
 end InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics

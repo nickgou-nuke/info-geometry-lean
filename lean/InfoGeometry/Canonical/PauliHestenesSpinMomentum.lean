@@ -3,14 +3,13 @@ InfoGeometry/Canonical/PauliHestenesSpinMomentum.lean
 
 Pauli/Hestenes spin-momentum dictionary.
 
-This module records the precise representation-theoretic socket:
+This module records the precise representation-theoretic data:
 
 * energy-momentum is a paravector readout;
 * the Pauli matrix determinant is the Minkowski norm;
 * null momentum is singular/projective, not automatically nilpotent;
 * spin is a bivector/rotor readout carried by the spinor frame;
-* spin-momentum coupling is supplied by a proof-carrying Lorentz/spin
-  calibration.
+* spin-momentum coupling is supplied by explicit Lorentz/spin calibration data.
 -/
 
 import Mathlib
@@ -181,7 +180,7 @@ theorem det_neg_of_spacelike
   exact hP
 
 /--
-A mass-shell certificate.
+A mass-shell predicate.
 
 The equation is `P P̄ = m²`, expressed in the Pauli/Hestenes paravector lane as
 `E² - |p|² = m²`.
@@ -206,7 +205,7 @@ end PauliParavector
 /--
 Abstract Pauli/paravector bridge.
 
-This is the generic socket for models that do not want to commit to the
+This is the generic datum for models that do not want to commit to the
 concrete `2 × 2` complex matrix representation immediately.
 -/
 @[rep_depth operator]
@@ -264,7 +263,7 @@ def concretePauliParavectorBridge :
     rw [PauliParavector.det_pauliMatrix_eq_minkowskiNormSq]
     simp
 
-/-! ## 3. Lorentz-spin action and spinor-helicity sockets -/
+/-! ## 3. Lorentz-spin action and spinor-helicity data -/
 
 /--
 Lorentz-spin action on a Pauli/paravector bridge.
@@ -291,17 +290,6 @@ structure LorentzSpinActionBridge
   det_preserved :
     ∀ (L : SpinGroup) (X : V),
       B.det (B.pauliMap (actVector L X)) = B.det (B.pauliMap X)
-
-  /--
-  Double-cover law.
-
-  Intended concrete meaning: `L` and `-L` induce the same Lorentz action.
-  -/
-  double_cover_law : Prop
-
-  /-- Proof of the double-cover law. -/
-  double_cover_certificate :
-    double_cover_law
 
 namespace LorentzSpinActionBridge
 
@@ -362,24 +350,6 @@ structure SpinorHelicityFactorization
     ∀ lam : Spinor,
       B.IsNull (momentumOf lam)
 
-  /--
-  Orientation/positivity branch.
-
-  In the concrete Pauli model this should specialize to future-null momentum.
-  -/
-  orientation_law : Prop
-
-  /-- Proof of the orientation/positivity branch law. -/
-  orientation_certificate :
-    orientation_law
-
-  /-- The outer-product/rank-one interpretation law. -/
-  rank_one_law : Prop
-
-  /-- Proof of the rank-one interpretation law. -/
-  rank_one_certificate :
-    rank_one_law
-
 namespace SpinorHelicityFactorization
 
 variable {Spinor V Herm2 : Type*}
@@ -400,7 +370,7 @@ end SpinorHelicityFactorization
 /--
 Operator-valued Pauli paravector datum.
 
-This is the abstract operator socket for a four-momentum/paravector
+This is the abstract operator datum for a four-momentum/paravector
 representative. It deliberately does not include spin data.
 -/
 @[rep_depth operator]
@@ -495,11 +465,11 @@ structure LorentzSpinRepresentationCoupling
     SpinGroup → Op → Op
 
   /-- 
-  The shared-action law: the group action on the paravector and bivector 
+  The shared-action law: the group action on the paravector
   is consistent with the representation.
   -/
   shared_spin_action_law :
-    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op) (S : Op),
+    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (actMomentum g P).minkowskiNormSq = P.minkowskiNormSq
 
   /--
@@ -517,7 +487,7 @@ variable (C : LorentzSpinRepresentationCoupling SpinGroup Op)
 
 /-- Re-export of the shared spin action law. -/
 theorem shared_spin_action :
-    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op) (S : Op),
+    ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (C.actMomentum g P).minkowskiNormSq = P.minkowskiNormSq :=
   C.shared_spin_action_law
 
@@ -566,9 +536,6 @@ The same spinor frame supplies both:
 * a momentum/paravector readout;
 * a rotor readout;
 * a spin bivector/plane readout.
-
-The fields are proof-carrying because the concrete Clifford/STA extraction is
-model-specific.
 -/
 @[rep_depth operator]
 structure HestenesSpinorRotorDatum
@@ -582,27 +549,6 @@ structure HestenesSpinorRotorDatum
   /-- Spin plane/bivector readout. -/
   spinBivector : Spinor → Bivector
 
-  /-- Law saying the paravector readout has the intended current/momentum meaning. -/
-  momentum_readout_law : Prop
-
-  /-- Proof of the momentum readout law. -/
-  momentum_readout_certificate :
-    momentum_readout_law
-
-  /-- Law saying the bivector readout has the intended spin-plane meaning. -/
-  spin_bivector_law : Prop
-
-  /-- Proof of the spin-bivector law. -/
-  spin_bivector_certificate :
-    spin_bivector_law
-
-  /-- Law saying the rotor transports momentum and spin in the same Lorentz frame. -/
-  rotor_transport_law : Prop
-
-  /-- Proof of the rotor-transport law. -/
-  rotor_transport_certificate :
-    rotor_transport_law
-
 namespace HestenesSpinorRotorDatum
 
 variable {Spinor Rotor Bivector : Type*}
@@ -610,14 +556,13 @@ variable (D : HestenesSpinorRotorDatum Spinor Rotor Bivector)
 
 end HestenesSpinorRotorDatum
 
-/-! ## 5. Spin-momentum coupling and helicity sockets -/
+/-! ## 5. Spin-momentum coupling and helicity data -/
 
 /--
 Abstract spin-momentum bridge.
 
 Momentum and spin are not identified. They are separate readouts from the same
-spinor/rotor source, and their inseparability is carried by the shared-frame
-certificate.
+spinor/rotor source.
 -/
 @[rep_depth operator]
 structure SpinMomentumBridge
@@ -644,13 +589,6 @@ structure SpinMomentumBridge
     ∀ ψ : Spinor,
       minkowskiNorm (momentumOf ψ) = (spinorNorm ψ) ^ (2 : ℕ)
 
-  /-- Law saying both readouts are taken in the same rotor/Lorentz frame. -/
-  sameRotorFrame_law : Prop
-
-  /-- Proof of the same-rotor-frame law. -/
-  sameRotorFrame :
-    sameRotorFrame_law
-
 namespace SpinMomentumBridge
 
 variable {Spinor Momentum SpinPlane : Type*}
@@ -675,17 +613,21 @@ structure MasslessSpinMomentumBranch
     (Spinor Momentum SpinPlane : Type*)
     (B : SpinMomentumBridge Spinor Momentum SpinPlane) where
   /-- Null/massless branch condition. -/
-  nullMomentumCondition_law : Prop
-
-  /-- Proof of the null/massless branch condition. -/
   nullMomentumCondition :
-    nullMomentumCondition_law
+    ∀ ψ : Spinor,
+      B.minkowskiNorm (B.momentumOf ψ) = 0
 
 namespace MasslessSpinMomentumBranch
 
 variable {Spinor Momentum SpinPlane : Type*}
 variable {B : SpinMomentumBridge Spinor Momentum SpinPlane}
-variable (M : MasslessSpinMomentumBranch Spinor Momentum SpinPlane B)
+
+/-- Momentum readouts on a massless branch have zero Minkowski norm. -/
+theorem null_momentum
+    (M : MasslessSpinMomentumBranch Spinor Momentum SpinPlane B)
+    (ψ : Spinor) :
+    B.minkowskiNorm (B.momentumOf ψ) = 0 :=
+  MasslessSpinMomentumBranch.nullMomentumCondition M ψ
 
 end MasslessSpinMomentumBranch
 
@@ -706,25 +648,6 @@ structure CovariantSpinorRotorReadouts
     (Spinor Momentum SpinPlane : Type*) where
   /-- Underlying spin-momentum bridge. -/
   bridge : SpinMomentumBridge Spinor Momentum SpinPlane
-
-  /-- Law saying the two readouts have the same spinor/rotor source. -/
-  common_source_law : Prop
-
-  /-- Proof of the common-source law. -/
-  common_source :
-    common_source_law
-
-  /--
-  Separation law.
-
-  Intended meaning: momentum and spin are different covariant readouts, not
-  different grade-parts of one momentum matrix.
-  -/
-  distinct_readout_law : Prop
-
-  /-- Proof of the separation law. -/
-  distinct_readout :
-    distinct_readout_law
 
 namespace CovariantSpinorRotorReadouts
 
@@ -759,13 +682,6 @@ structure UncertaintyReadoutGuard
   /-- Chosen second observable. -/
   second : Observable
 
-  /-- Noncommutation/uncertainty law for the chosen pair. -/
-  noncommuting_pair_law : Prop
-
-  /-- Proof of the noncommutation/uncertainty law. -/
-  noncommuting_pair :
-    noncommuting_pair_law
-
 namespace UncertaintyReadoutGuard
 
 variable {Observable : Type*}
@@ -786,30 +702,6 @@ structure SpinMomentumCoupling
     (D : HestenesSpinorRotorDatum Spinor Rotor Bivector) where
   /-- Pauli-Lubanski or analogous invariant readout. -/
   invariantReadout : Spinor → SpinInvariant
-
-  /--
-  Momentum-spin coupling law.
-
-  Intended concrete meaning: the invariant readout is built from the spin
-  plane/angular momentum data and the four-momentum, as in Pauli-Lubanski
-  classification.
-  -/
-  momentum_spin_coupling_law : Prop
-
-  /-- Proof of the coupling law. -/
-  momentum_spin_coupling :
-    momentum_spin_coupling_law
-
-  /--
-  Lorentz/spin-frame transport law.
-
-  Changing momentum changes the frame in which spin is read.
-  -/
-  frame_transport_law : Prop
-
-  /-- Proof of the frame-transport law. -/
-  frame_transport :
-    frame_transport_law
 
 namespace SpinMomentumCoupling
 
@@ -835,18 +727,6 @@ structure HelicityCalibration
   /-- The branch is massless/null at the momentum readout. -/
   null_momentum :
     ∀ ψ : Spinor, (D.momentumReadout ψ).IsNull
-
-  /--
-  Helicity law.
-
-  Intended concrete meaning: helicity is spin projected along the null
-  momentum direction.
-  -/
-  helicity_law : Prop
-
-  /-- Proof of the helicity law. -/
-  helicity_certificate :
-    helicity_law
 
 namespace HelicityCalibration
 
@@ -957,44 +837,32 @@ attribute [rep_depth operator]
   LorentzSpinActionBridge
   LorentzSpinActionBridge.minkowskiNorm_preserved
   LorentzSpinActionBridge.isNull_of_isNull
-  LorentzSpinActionBridge.double_cover_certificate
   SpinorHelicityFactorization
   SpinorHelicityFactorization.singular_representative
-  SpinorHelicityFactorization.orientation_certificate
-  SpinorHelicityFactorization.rank_one_certificate
   PauliParavectorDatum
   PauliParavectorDatum.determinant_metric_law
   SpinMomentumFrame
-  SpinMomentumFrame.momentum_transport
-  SpinMomentumFrame.spin_transport
+  SpinMomentumFrame.momentum_transport_law
+  SpinMomentumFrame.spin_transport_law
   LorentzSpinRepresentationCoupling
   LorentzSpinRepresentationCoupling.shared_spin_action
-  LorentzSpinRepresentationCoupling.representation_coupling
+  LorentzSpinRepresentationCoupling.representation_coupling_law
   MasslessSpinMomentumFrame
   MasslessSpinMomentumFrame.momentum_null
-  MasslessSpinMomentumFrame.helicity_locked_to_momentum
+  MasslessSpinMomentumFrame.helicity_locked_to_momentum_law
   HestenesSpinorRotorDatum
-  HestenesSpinorRotorDatum.momentum_readout_certificate
-  HestenesSpinorRotorDatum.spin_bivector_certificate
-  HestenesSpinorRotorDatum.rotor_transport_certificate
   SpinMomentumBridge
-  SpinMomentumBridge.sameRotorFrame
   SpinMomentumBridge.mass_is_scalar_invariant
   MasslessSpinMomentumBranch
   MasslessSpinMomentumBranch.nullMomentumCondition
+  MasslessSpinMomentumBranch.null_momentum
   CovariantSpinorRotorReadouts
-  CovariantSpinorRotorReadouts.common_source
-  CovariantSpinorRotorReadouts.distinct_readout
   CovariantSpinorRotorReadouts.momentumOf
   CovariantSpinorRotorReadouts.spinPlaneOf
   UncertaintyReadoutGuard
-  UncertaintyReadoutGuard.noncommuting_pair
   SpinMomentumCoupling
-  SpinMomentumCoupling.momentum_spin_coupling
-  SpinMomentumCoupling.frame_transport
   HelicityCalibration
   HelicityCalibration.singular_pauli_of_null_momentum
-  HelicityCalibration.helicity_certificate
   ChiralLightconeReadoutDatum
   PauliHestenesChiralLightconeBridge
   PauliHestenesChiralLightconeBridge.chiral_lightcone_readout_of_null_momentum

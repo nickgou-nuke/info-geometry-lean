@@ -407,6 +407,35 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
 end
 
 /--
+Zero anomaly scale implies vanishing of the canonical projector obstruction.
+
+This is the operator-level owner export behind the scalar zero-scale route; it
+lets downstream users consume `CI.projectorObstruction = 0` directly instead of
+repeating the nonnegative-norm descent from `CI.chiralScale = 0`.
+-/
+theorem projectorObstruction_eq_zero_of_chiralScale_eq_zero
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.projectorObstruction = 0 := by
+  have hObsNorm : ‖CI.projectorObstruction‖₊ = 0 := by
+    simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
+  exact (nnnorm_eq_zero).1 hObsNorm
+
+/--
+Scalar zero anomaly is equivalent to vanishing of the canonical projector
+obstruction.
+
+This removes the need for a bare scalar-zero hypothesis at obstruction-level
+call sites: callers may route through the explicit operator equality, and the
+scalar compatibility wrapper remains available by the reverse direction.
+-/
+theorem chiralScale_eq_zero_iff_projectorObstruction_eq_zero :
+    CI.chiralScale = 0 ↔ CI.projectorObstruction = 0 := by
+  constructor
+  · exact CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero
+  · intro hObsZero
+    simp [chiralScale, obstructionScale, hObsZero]
+
+/--
 Zero anomaly scale implies projector commutation.
 
 This gives a direct algebraic closure path from scalar normality (`χ = 0`)
@@ -416,11 +445,9 @@ theorem projectors_commute_of_chiralScale_eq_zero
     (hScaleZero : CI.chiralScale = 0) :
     CI.spectralChiralProjector * CI.metricChiralProjector
       = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
-    simpa [obstructionScale, chiralAnomalyOperator] using hScaleZero
-  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
-    (nnnorm_eq_zero).1 hNormAnom
-  exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
+  have hObsZero : CI.projectorObstruction = 0 :=
+    CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero
+  exact (CI.projectorObstruction_eq_zero_iff_commute).1 hObsZero |>.eq
 
 /--
 Constructive iff route between scalar zero anomaly and projector commutation.
@@ -434,14 +461,12 @@ theorem chiralScale_eq_zero_iff_projectors_commute :
       ↔ Commute CI.spectralChiralProjector CI.metricChiralProjector := by
   constructor
   · intro hScaleZero
-    have hObsNorm : ‖CI.projectorObstruction‖₊ = 0 := by
-      simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
     exact (CI.projectorObstruction_eq_zero_iff_commute).1
-      ((nnnorm_eq_zero).1 hObsNorm)
+      (CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero)
   · intro hComm
     have hObsZero : CI.projectorObstruction = 0 :=
       CI.projectorObstruction_eq_zero_of_commute hComm
-    simp [chiralScale, obstructionScale, hObsZero]
+    exact (CI.chiralScale_eq_zero_iff_projectorObstruction_eq_zero).2 hObsZero
 
 /--
 If the Drazin spectral projector commutes with the Moore-Penrose right
@@ -453,15 +478,11 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
       CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
     (hScaleZero : CI.chiralScale = 0) :
     CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  have hNormObs : ‖CI.projectorObstruction‖₊ = 0 := by
-    simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
-  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
-    simpa [projectorObstruction] using hNormObs
-  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
-    (nnnorm_eq_zero).1 hNormAnom
-  exact
+  have hObsZero : CI.projectorObstruction = 0 :=
+    CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero hScaleZero
+  simpa [projectorObstruction] using
     CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
-      hRight hAnomZero
+      hRight hObsZero
 
 /--
 Proof-carrying dilation-collapse route using the compact

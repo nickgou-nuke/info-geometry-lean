@@ -56,9 +56,8 @@ structure FiniteMBKDiracData
 /--
 Infinite-volume MBK extension packet.
 
-`selfAdjointOrUniqueKreinExtension_law` is intentionally disjunctive at the
-interface level: a future analytic owner may prove essential self-adjointness on
-a Hilbert domain or unique self-adjoint extension in the chosen Krein metric.
+This is data only.  Essential self-adjointness or uniqueness of a Krein-space
+extension is not asserted here.
 -/
 @[rep_depth operator]
 structure MBKLimitExtension
@@ -71,33 +70,6 @@ structure MBKLimitExtension
     Domain
   kreinMetric :
     KreinMetric
-  finite_to_infinite_limit_law : Prop
-  finite_to_infinite_limit_certificate :
-    finite_to_infinite_limit_law
-  selfAdjointOrUniqueKreinExtension_law : Prop
-  selfAdjointOrUniqueKreinExtension_certificate :
-    selfAdjointOrUniqueKreinExtension_law
-
-namespace MBKLimitExtension
-
-variable {Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric : Type*}
-variable
-  (E : MBKLimitExtension
-    Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric)
-
-/-- Re-export of the infinite-volume limit law. -/
-@[rep_depth operator]
-theorem finite_to_infinite_limit :
-    E.finite_to_infinite_limit_law :=
-  E.finite_to_infinite_limit_certificate
-
-/-- Re-export of the supplied self-adjointness/unique-extension law. -/
-@[rep_depth operator]
-theorem selfAdjointOrUniqueKreinExtension :
-    E.selfAdjointOrUniqueKreinExtension_law :=
-  E.selfAdjointOrUniqueKreinExtension_certificate
-
-end MBKLimitExtension
 
 /-! ## Relative heat trace and Mellin transform -/
 
@@ -106,7 +78,7 @@ Relative heat-trace packet for the coupled/free MBK pair.
 
 `relativeHeatTrace τ` is the intended readout
 `Tr_rel (exp (-τ D²) - exp (-τ D₀²))`.  Well-definedness and temperedness are
-analytic laws, stored as certificates.
+not asserted in this data packet.
 -/
 @[rep_depth operator]
 structure RelativeHeatTracePacket
@@ -119,45 +91,6 @@ structure RelativeHeatTracePacket
     ℝ → HeatTrace
   relativeDistribution :
     Distribution
-  heatTrace_formula_law : Prop
-  heatTrace_formula_certificate :
-    heatTrace_formula_law
-  wellDefined_for_tau_pos_law : Prop
-  wellDefined_for_tau_pos_certificate :
-    wellDefined_for_tau_pos_law
-  temperedDistribution_law : Prop
-  temperedDistribution_certificate :
-    temperedDistribution_law
-
-namespace RelativeHeatTracePacket
-
-variable
-  {Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-    HeatTrace Distribution : Type*}
-variable
-  (T : RelativeHeatTracePacket
-    Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-    HeatTrace Distribution)
-
-/-- Re-export of the relative heat-trace formula law. -/
-@[rep_depth operator]
-theorem heatTrace_formula :
-    T.heatTrace_formula_law :=
-  T.heatTrace_formula_certificate
-
-/-- Re-export of the positive-time well-definedness law. -/
-@[rep_depth operator]
-theorem wellDefined_for_tau_pos :
-    T.wellDefined_for_tau_pos_law :=
-  T.wellDefined_for_tau_pos_certificate
-
-/-- Re-export of the tempered-distribution law. -/
-@[rep_depth operator]
-theorem temperedDistribution :
-    T.temperedDistribution_law :=
-  T.temperedDistribution_certificate
-
-end RelativeHeatTracePacket
 
 /--
 Mellin transform and completed-`xi` logarithmic-derivative packet.
@@ -183,61 +116,5 @@ structure MBKMellinXiTracePacket
     SpectralDensity
   zeroFrequency :
     ℂ → FrequencyReadout
-  mellin_integral_law : Prop
-  mellin_integral_certificate :
-    mellin_integral_law
-  mellin_eq_neg_dlog_completedXi_law : Prop
-  mellin_eq_neg_dlog_completedXi_certificate :
-    mellin_eq_neg_dlog_completedXi_law
-  singularSupport_eq_xiZeroFrequencies_law : Prop
-  singularSupport_eq_xiZeroFrequencies_certificate :
-    singularSupport_eq_xiZeroFrequencies_law
-  no_unconditional_RH_claim_guard : Type
-
-namespace MBKMellinXiTracePacket
-
-variable
-  {Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-    HeatTrace Distribution MellinReadout SpectralDensity FrequencyReadout : Type*}
-variable
-  (P : MBKMellinXiTracePacket
-    Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-    HeatTrace Distribution MellinReadout SpectralDensity FrequencyReadout)
-
-/-- Re-export of the Mellin-integral representation law. -/
-@[rep_depth operator]
-theorem mellin_integral :
-    P.mellin_integral_law :=
-  P.mellin_integral_certificate
-
-/-- Re-export of the `- d/ds log ξ(s)` trace identity law. -/
-@[rep_depth operator]
-theorem mellin_eq_neg_dlog_completedXi :
-    P.mellin_eq_neg_dlog_completedXi_law :=
-  P.mellin_eq_neg_dlog_completedXi_certificate
-
-/-- Re-export of the singular-support/zero-frequency matching law. -/
-@[rep_depth operator]
-theorem singularSupport_eq_xiZeroFrequencies :
-    P.singularSupport_eq_xiZeroFrequencies_law :=
-  P.singularSupport_eq_xiZeroFrequencies_certificate
-
-/--
-Owner theorem: the MBK trace packet re-exports the three analytic pillars from
-the problem statement.
--/
-@[rep_depth operator]
-theorem extension_trace_reexports :
-    P.heatTrace.extension.selfAdjointOrUniqueKreinExtension_law ∧
-      P.heatTrace.temperedDistribution_law ∧
-        P.mellin_eq_neg_dlog_completedXi_law ∧
-          P.singularSupport_eq_xiZeroFrequencies_law := by
-  exact ⟨
-    P.heatTrace.extension.selfAdjointOrUniqueKreinExtension,
-    P.heatTrace.temperedDistribution,
-    P.mellin_eq_neg_dlog_completedXi,
-    P.singularSupport_eq_xiZeroFrequencies⟩
-
-end MBKMellinXiTracePacket
 
 end InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace

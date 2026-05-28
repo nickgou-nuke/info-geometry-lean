@@ -5,35 +5,30 @@ description: Visual auditing and goal state inspection for Lean 4. Use when debu
 
 ## Constructive Closure Mandate
 
-Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. Treat witness packets, certificate fields, external certificates, assumption interfaces, literature owners, graph edges, and physics analogies as closure debt until discharged by kernel-checked Lean or imported mathlib theorems. Follow docs/CONSTRUCTIVE_CLOSURE_MANDATE.md; never promote anonymous or unformalized sockets as complete.
+Replacing witness-gated and external-certificate leftovers with native Lean 4 proofs is the highest mandate. **Kernel-Checked Evidence Only.** Paperproof is an inspection aid for checking that proof branches terminate in genuine Lean evidence, not vacuous placeholders. Never use visual clarity to obscure a lack of symbolic rigor. Every node in the tree must represent a valid step toward kernel-checked closure, and final authority remains the Lean kernel plus explicit axiom-surface audit.
 
 # paperproof-validator
 
 ## Visual Auditing and Tactic State Inspection for Lean 4
 
-This skill enables the **Paperproof Validator** workflow within the **Info-Geometry Spire**. It transforms opaque tactic blocks into interactive proof trees to ensure nomological closure and eliminate "vibe-based" logical gaps.
+This skill enables the **Paperproof Validator** workflow within the **Info-Geometry Spire**. It transforms opaque tactic blocks into interactive proof trees to ensure nomological closure and eliminate "vibe-based" or vacuous logical gaps.
 
 ### When to Use
-- Auditing complex inductive proofs or deep tactic chains.
-- Inspecting goal splitting behavior (e.g., `cases`, `induction`, `apply`).
-- Verifying that all hypotheses are correctly utilized and no goals remain unproven.
-- Performing a "Distrustful Audit" of AI-generated proof skeletons.
+- Auditing complex inductive proofs or deep tactic chains (e.g., $N=2$ supercharge transport).
+- Inspecting goal splitting behavior to ensure no sub-goals are bypassed by "semantic cheating".
+- Verifying that all hypotheses are correctly utilized to derive concrete mathematical identities.
+- Performing a "Distrustful Audit" of AI-generated proof skeletons to detect "empty" proof paths.
 
 ### Core Workflow: The Visual Audit
 1.  **Instrument**: Add `import Paperproof` to the top of the target Lean module.
 2.  **Activate**: Click the **Paperproof icon** in the VS Code editor title bar while inside a `by` block.
 3.  **Inspect**:
-    - **Green Nodes**: Hypotheses/Assumptions. Verify these match the intended physical invariants.
-    - **Red Nodes**: Active Goals. These must be systematically eliminated.
+    - **Green Nodes**: Hypotheses/Assumptions. Verify these are mathematically robust and not just vacuous `Prop` fields.
+    - **Red Nodes**: Active Goals. These must be systematically eliminated via native Lean tactics.
     - **Dashed Nodes**: Tactics. Audit the effect of each tactic on the hypothesis state.
-4.  **Verify Closure**: A proof is valid only when the Paperproof tree shows no remaining Red nodes and every branch terminates at an axiom or proven lemma.
+4.  **Verify Closure**: A proof is valid only when the Paperproof tree shows no remaining Red nodes and every branch terminates at a proven lemma, definitional equality, or allowed Mathlib/root theorem. Do not accept custom axioms, arbitrary field projections, or `True`/`trivial` endpoints as closure.
 
 ### Clinical Standards (Pauli Integration)
-- **Zero-Sorry Mandate**: Paperproof must be used to find the exact location of any `sorry` within a complex proof tree.
-- **Tactic Parsimony**: If Paperproof reveals excessive goal splitting or redundant tactics, use the `/lean4 golf` command to simplify the proof.
-- **Semantic Fidelity**: Cross-reference the visual tree with the original math/physics definitions to ensure the "Multilingual Bridge" is intact.
-
-### Tool Configuration
-- **Lean Version**: Pins to `v4.28.0`.
-- **VS Code Extension**: Requires version `v2.7.0` (matching our toolchain).
-- **Lake Integration**: Added via `require paperproof` in `lakefile.lean`.
+- **Zero-Sorry Mandate**: Paperproof must be used to find and eliminate the exact location of any `sorry` or "fake" root.
+- **Structural Integrity**: Cross-reference the visual tree with the non-vacuous definitions in files like `UnnormalizedRelativeEntropy.lean` to ensure the derivation is sound.
+- **Axiom-Surface Seal**: Ensure the proof tree does not leak into custom axioms; it must be rooted in Mathlib or project-local proven lemmas.

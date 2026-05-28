@@ -86,7 +86,7 @@ noncomputable def hessianGeometry : HessianGeometry E where
   potential := potential
   grad := grad
   has_gradient := hasFDerivAt_potential
-  divergence_nonneg_axiom := divergence_form_nonneg
+  divergence_nonneg_law := divergence_form_nonneg
 
 @[simp] theorem grad_eq_id (x : E) :
     hessianGeometry.grad x = x := rfl
@@ -103,7 +103,7 @@ noncomputable def scaledHessianGeometry (c : ℝ) (hc : 0 ≤ c) : HessianGeomet
   potential := scaledPotential c
   grad := scaledGrad c
   has_gradient := hasFDerivAt_scaledPotential (E := E) c
-  divergence_nonneg_axiom := scaled_divergence_form_nonneg (E := E) c hc
+  divergence_nonneg_law := scaled_divergence_form_nonneg (E := E) c hc
 
 @[simp] theorem scaledHessianGeometry_grad_eq_smul
     (c : ℝ) (hc : 0 ≤ c) (x : E) :

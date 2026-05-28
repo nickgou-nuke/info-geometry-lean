@@ -53,6 +53,27 @@ theorem unitRelativeVolumeBit_of_eq_one
   ⟨hUnit⟩
 
 /--
+The proof-carrying unit-relative-volume bit is exactly the constructive form of
+`relativeVolumeChangeRN n M = 1`.  Downstream theorem routes can consume the
+bit packet and recover the old equality only at compatibility boundaries.
+-/
+@[rep_depth projective]
+theorem unitRelativeVolumeBit_iff_eq_one
+    {n : Nat} {M : SinkhornMatrix n} :
+    UnitRelativeVolumeBit n M ↔ relativeVolumeChangeRN n M = 1 :=
+  ⟨fun bit => bit.unit_relative_volume, unitRelativeVolumeBit_of_eq_one⟩
+
+/--
+Recover the raw unit-volume equality from the constructive bit packet.
+-/
+@[rep_depth projective]
+theorem relativeVolumeChangeRN_eq_one_of_unitRelativeVolumeBit
+    {n : Nat} {M : SinkhornMatrix n}
+    (bit : UnitRelativeVolumeBit n M) :
+    relativeVolumeChangeRN n M = 1 :=
+  unitRelativeVolumeBit_iff_eq_one.mp bit
+
+/--
 The unit relative-volume bit kills the RN Kähler potential.
 -/
 @[rep_depth projective]
@@ -62,9 +83,11 @@ theorem kahlerPotentialRN_eq_zero_of_unitRelativeVolumeBit
     (bit : UnitRelativeVolumeBit n M) :
     kahlerPotentialRN n M = 0 := by
   have hNegKZero : -kahlerPotentialRN n M = 0 := by
+    have hUnit : relativeVolumeChangeRN n M = 1 :=
+      relativeVolumeChangeRN_eq_one_of_unitRelativeVolumeBit bit
     have hLog :
         Real.log (relativeVolumeChangeRN n M) = Real.log (1 : ℝ) :=
-      congrArg Real.log bit.unit_relative_volume
+      congrArg Real.log hUnit
     simpa [relativeVolumeChangeRN] using hLog
   have hKZero := congrArg Neg.neg hNegKZero
   simpa using hKZero
@@ -98,7 +121,8 @@ theorem isNormalInference_of_unitRelativeVolumeBit
     (bit : UnitRelativeVolumeBit n M) :
     CI.IsNormalInference := by
   exact CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit.unit_relative_volume
+    (M := M) hScaleFromKahler
+    (relativeVolumeChangeRN_eq_one_of_unitRelativeVolumeBit bit)
 
 /--
 Projector commutation from the proof-carrying unit relative-volume bit.  This

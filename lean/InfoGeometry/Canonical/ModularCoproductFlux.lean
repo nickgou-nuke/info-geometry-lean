@@ -78,6 +78,32 @@ theorem readout_liftFlux_eq_readout_primitive_of_cross_zero
     readout (liftFlux (R := R) N) = readout (primitiveFlux (R := R) N) := by
   simp [liftFlux, hcross]
 
+/--
+If the cross-flux term itself vanishes, the exact group-like flux reduces to
+the primitive flux.
+
+This is still a finite algebraic statement: the primitive law is obtained only
+under the explicit hypothesis `N ⊗ N = 0`.
+-/
+theorem liftFlux_eq_primitive_of_cross_zero
+    (N : A)
+    (hcross : crossFlux (R := R) N = 0) :
+    liftFlux (R := R) N = primitiveFlux (R := R) N := by
+  simp [liftFlux, hcross]
+
+/--
+Under cross-flux annihilation, the centered group-like tensor product reduces
+to the primitive expression.
+-/
+theorem one_add_tmul_one_add_sub_one_eq_primitive_of_cross_zero
+    (N : A)
+    (hcross : crossFlux (R := R) N = 0) :
+    ((1 + N) ⊗ₜ[R] (1 + N) : A ⊗[R] A) -
+        ((1 : A) ⊗ₜ[R] (1 : A)) =
+      primitiveFlux (R := R) N := by
+  rw [one_add_tmul_one_add_sub_one_eq_liftFlux]
+  exact liftFlux_eq_primitive_of_cross_zero (R := R) N hcross
+
 theorem tensor_nilpotent_sq_zero
     (N : A) (hN : N * N = 0) :
     crossFlux (R := R) N * crossFlux (R := R) N = 0 := by

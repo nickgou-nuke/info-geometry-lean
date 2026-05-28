@@ -7,6 +7,7 @@ import InfoGeometry.Convex.LogSumExp
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Convex.Legendre
 import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Convex.RadialLogBarrier
 import InfoGeometry.Convex.RadonHelly
 import InfoGeometry.Convex.SelfDualCone
 import InfoGeometry.Convex.SpinFactorHessian

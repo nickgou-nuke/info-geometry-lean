@@ -39,6 +39,227 @@ open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Krein
 
+section RecursiveAlgebra
+
+/--
+The square of a recursively extended odd supercharge.
+
+For `Qnext = Q + R`, the new square is the old square plus the
+odd--odd cross bracket plus the new square.
+-/
+@[rep_depth transport]
+theorem recursive_supercharge_square
+    {A : Type*} [Ring A]
+    (Q R : A) :
+    (Q + R) * (Q + R) =
+      Q * Q + (Q * R + R * Q) + R * R := by
+  noncomm_ring
+
+/--
+If both odd layers are nilpotent, the square of the recursive supercharge is
+exactly the odd--odd anticommutator.
+-/
+@[rep_depth transport]
+theorem recursive_nilpotent_supercharge_square_eq_anticommutator
+    {A : Type*} [Ring A]
+    {Q R : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0) :
+    (Q + R) * (Q + R) = Q * R + R * Q := by
+  calc
+    (Q + R) * (Q + R)
+        = Q * Q + (Q * R + R * Q) + R * R := by
+          exact recursive_supercharge_square Q R
+    _ = 0 + (Q * R + R * Q) + 0 := by
+          rw [hQ, hR]
+    _ = Q * R + R * Q := by
+          simp
+
+/--
+Central-charge extraction from two nilpotent recursive supercharges.
+
+If the odd--odd cross bracket is `Z`, then the square of the extended
+supercharge is exactly `Z`.
+-/
+@[rep_depth transport]
+theorem recursive_nilpotent_supercharge_square_eq_centralCharge
+    {A : Type*} [Ring A]
+    {Q R Z : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z) :
+    (Q + R) * (Q + R) = Z := by
+  rw [recursive_nilpotent_supercharge_square_eq_anticommutator hQ hR]
+  exact hZ
+
+/--
+If the odd--odd cross bracket is a central element `Z`, then the recursive
+supercharge square is central.
+-/
+@[rep_depth transport]
+theorem recursive_supercharge_square_is_central
+    {A : Type*} [Ring A]
+    {Q R Z : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z)
+    (hCentral : ∀ X : A, Z * X = X * Z) :
+    ∀ X : A, ((Q + R) * (Q + R)) * X = X * ((Q + R) * (Q + R)) := by
+  intro X
+  rw [recursive_nilpotent_supercharge_square_eq_centralCharge hQ hR hZ]
+  exact hCentral X
+
+/--
+Ring homomorphisms preserve the odd--odd anticommutator.
+
+This is the finite functorial transport lemma for the central obstruction.
+-/
+@[rep_depth transport]
+theorem ringHom_map_anticommutator
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    (Q R : A) :
+    φ (Q * R + R * Q) =
+      φ Q * φ R + φ R * φ Q := by
+  simp
+
+/--
+A ring homomorphism transports the recursive central-charge equation.
+
+If `{Q,R}=Z` in the source algebra, then `{φQ,φR}=φZ` in the target algebra.
+-/
+@[rep_depth transport]
+theorem ringHom_preserves_centralCharge_bracket
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q R Z : A}
+    (hZ : Q * R + R * Q = Z) :
+    φ Q * φ R + φ R * φ Q = φ Z := by
+  rw [← ringHom_map_anticommutator φ Q R]
+  rw [hZ]
+
+/--
+A ring homomorphism transports nilpotent recursive supercharge closure.
+
+If `Q²=0`, `R²=0`, and `{Q,R}=Z`, then the transported extended supercharge
+has square `φ Z`.
+-/
+@[rep_depth transport]
+theorem ringHom_preserves_recursive_nilpotent_centralCharge_square
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q R Z : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z) :
+    (φ Q + φ R) * (φ Q + φ R) = φ Z := by
+  have hφQ : φ Q * φ Q = 0 := by
+    rw [← map_mul, hQ, map_zero]
+  have hφR : φ R * φ R = 0 := by
+    rw [← map_mul, hR, map_zero]
+  have hφZ : φ Q * φ R + φ R * φ Q = φ Z :=
+    ringHom_preserves_centralCharge_bracket φ hZ
+  exact recursive_nilpotent_supercharge_square_eq_centralCharge hφQ hφR hφZ
+
+/--
+Centrality is preserved by a surjective ring homomorphism.
+
+This is the finite quotient/transport form needed for bonding maps: if `Z` is
+central in `A` and every target element is hit by `φ`, then `φ Z` is central in
+`B`.
+-/
+@[rep_depth transport]
+theorem ringHom_preserves_central_of_surjective
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Z : A}
+    (hCentral : ∀ X : A, Z * X = X * Z)
+    (hSurj : Function.Surjective φ) :
+    ∀ Y : B, φ Z * Y = Y * φ Z := by
+  intro Y
+  rcases hSurj Y with ⟨X, rfl⟩
+  calc
+    φ Z * φ X = φ (Z * X) := by
+      rw [map_mul]
+    _ = φ (X * Z) := by
+      rw [hCentral X]
+    _ = φ X * φ Z := by
+      rw [map_mul]
+
+/--
+Surjective transport of the whole recursive central-charge square: the
+transported square equals `φ Z`, and `φ Z` is central.
+-/
+@[rep_depth transport]
+theorem ringHom_preserves_recursive_central_square_and_centrality
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q R Z : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z)
+    (hCentral : ∀ X : A, Z * X = X * Z)
+    (hSurj : Function.Surjective φ) :
+    ((φ Q + φ R) * (φ Q + φ R) = φ Z)
+      ∧
+    (∀ Y : B, φ Z * Y = Y * φ Z) := by
+  exact
+    ⟨ringHom_preserves_recursive_nilpotent_centralCharge_square φ hQ hR hZ,
+      ringHom_preserves_central_of_surjective φ hCentral hSurj⟩
+
+/--
+Finite three-layer expansion.
+
+All self-squares plus all odd--odd cross anticommutators appear explicitly.
+-/
+@[rep_depth transport]
+theorem three_supercharge_square
+    {A : Type*} [Ring A]
+    (Q₁ Q₂ Q₃ : A) :
+    (Q₁ + Q₂ + Q₃) * (Q₁ + Q₂ + Q₃) =
+      Q₁ * Q₁ + Q₂ * Q₂ + Q₃ * Q₃
+      + (Q₁ * Q₂ + Q₂ * Q₁)
+      + (Q₁ * Q₃ + Q₃ * Q₁)
+      + (Q₂ * Q₃ + Q₃ * Q₂) := by
+  noncomm_ring
+
+/--
+If three recursive odd layers are nilpotent, the square of their sum is exactly
+the sum of the three pairwise odd--odd anticommutators.
+-/
+@[rep_depth transport]
+theorem three_nilpotent_supercharge_square_eq_pairwise_anticommutators
+    {A : Type*} [Ring A]
+    {Q₁ Q₂ Q₃ : A}
+    (h₁ : Q₁ * Q₁ = 0)
+    (h₂ : Q₂ * Q₂ = 0)
+    (h₃ : Q₃ * Q₃ = 0) :
+    (Q₁ + Q₂ + Q₃) * (Q₁ + Q₂ + Q₃) =
+      (Q₁ * Q₂ + Q₂ * Q₁)
+      + (Q₁ * Q₃ + Q₃ * Q₁)
+      + (Q₂ * Q₃ + Q₃ * Q₂) := by
+  calc
+    (Q₁ + Q₂ + Q₃) * (Q₁ + Q₂ + Q₃)
+        =
+      Q₁ * Q₁ + Q₂ * Q₂ + Q₃ * Q₃
+      + (Q₁ * Q₂ + Q₂ * Q₁)
+      + (Q₁ * Q₃ + Q₃ * Q₁)
+      + (Q₂ * Q₃ + Q₃ * Q₂) := by
+        exact three_supercharge_square Q₁ Q₂ Q₃
+    _ =
+      0 + 0 + 0
+      + (Q₁ * Q₂ + Q₂ * Q₁)
+      + (Q₁ * Q₃ + Q₃ * Q₁)
+      + (Q₂ * Q₃ + Q₃ * Q₂) := by
+        rw [h₁, h₂, h₃]
+    _ =
+      (Q₁ * Q₂ + Q₂ * Q₁)
+      + (Q₁ * Q₃ + Q₃ * Q₁)
+      + (Q₂ * Q₃ + Q₃ * Q₂) := by
+        simp
+
+end RecursiveAlgebra
+
 section Core
 
 variable {A B E : Type}

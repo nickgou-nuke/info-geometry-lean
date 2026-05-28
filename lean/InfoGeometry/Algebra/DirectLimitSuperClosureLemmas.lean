@@ -218,6 +218,122 @@ theorem directLimitLift_of
   rfl
 
 /--
+Categorical uniqueness of the direct-limit lift.
+
+Any semiring homomorphism out of the algebraic direct limit is determined by
+its values on the canonical finite-stage maps.
+-/
+theorem directLimitLift_unique
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (g : DirectLimitSuperClosure bond →+* Limit)
+    (hg : ∀ n : Nat, g.comp (directLimitOf bond n) = toLimit n) :
+    g = directLimitLift bond toLimit hcone := by
+  apply DirectLimit.Ring.hom_ext
+  intro n
+  ext x
+  change g (directLimitOf bond n x) =
+    directLimitLift bond toLimit hcone (directLimitOf bond n x)
+  calc
+    g (directLimitOf bond n x) = toLimit n x := by
+      exact congrArg (fun φ : Stage n →+* Limit => φ x) (hg n)
+    _ = directLimitLift bond toLimit hcone (directLimitOf bond n x) := by
+      exact (directLimitLift_of bond toLimit hcone n x).symm
+
+/--
+Two compatible cones out of the same direct system induce the same map from the
+direct limit when they agree on every finite stage.
+-/
+theorem directLimitLift_ext
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit₁ toLimit₂ : ∀ n : Nat, Stage n →+* Limit)
+    (hcone₁ : CompatibleCone bond toLimit₁)
+    (hcone₂ : CompatibleCone bond toLimit₂)
+    (hstage : ∀ n : Nat, toLimit₁ n = toLimit₂ n) :
+    directLimitLift bond toLimit₁ hcone₁ =
+      directLimitLift bond toLimit₂ hcone₂ := by
+  apply DirectLimit.Ring.hom_ext
+  intro n
+  ext x
+  change directLimitLift bond toLimit₁ hcone₁ (directLimitOf bond n x) =
+    directLimitLift bond toLimit₂ hcone₂ (directLimitOf bond n x)
+  rw [directLimitLift_of, directLimitLift_of, hstage n]
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+single-supercharge closure transported to the direct limit and then lifted is
+the same closure seen directly by the compatible cone.
+-/
+theorem directLimitLift_superClosure_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (Q H Z : ∀ n : Nat, Stage n)
+    (h0 : SuperClosureAt Q H Z 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1))
+    (hH : ∀ n, bond n (H n) = H (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat,
+      anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n))) =
+        directLimitLift bond toLimit hcone (directLimitOf bond n (H n)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond n (Z n)) := by
+  intro n
+  rw [directLimitLift_of, directLimitLift_of, directLimitLift_of]
+  have hstage : SuperClosureAt Q H Z n :=
+    superClosure_all bond Q H Z h0 hQ hH hZ n
+  unfold SuperClosureAt at hstage
+  calc
+    anticommutator (toLimit n (Q n)) (toLimit n (Q n))
+        = toLimit n (anticommutator (Q n) (Q n)) := by
+          exact (map_anticommutator (toLimit n) (Q n) (Q n)).symm
+    _ = toLimit n (H n + Z n) := by
+          rw [hstage]
+    _ = toLimit n (H n) + toLimit n (Z n) := by
+          exact map_add (toLimit n) (H n) (Z n)
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+mixed odd-odd closure transported to the direct limit and then lifted is the
+same closure seen directly by the compatible cone.
+-/
+theorem directLimitLift_mixedSuperClosure_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (QA QB K Z : ∀ n : Nat, Stage n)
+    (h0 : MixedSuperClosureAt QA QB K Z 0)
+    (hQA : ∀ n, bond n (QA n) = QA (n + 1))
+    (hQB : ∀ n, bond n (QB n) = QB (n + 1))
+    (hK : ∀ n, bond n (K n) = K (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat,
+      anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QA n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QB n))) =
+        directLimitLift bond toLimit hcone (directLimitOf bond n (K n)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond n (Z n)) := by
+  intro n
+  rw [directLimitLift_of, directLimitLift_of, directLimitLift_of, directLimitLift_of]
+  have hstage : MixedSuperClosureAt QA QB K Z n :=
+    mixedSuperClosure_all bond QA QB K Z h0 hQA hQB hK hZ n
+  unfold MixedSuperClosureAt at hstage
+  calc
+    anticommutator (toLimit n (QA n)) (toLimit n (QB n))
+        = toLimit n (anticommutator (QA n) (QB n)) := by
+          exact (map_anticommutator (toLimit n) (QA n) (QB n)).symm
+    _ = toLimit n (K n + Z n) := by
+          rw [hstage]
+    _ = toLimit n (K n) + toLimit n (Z n) := by
+          exact map_add (toLimit n) (K n) (Z n)
+
+/--
 Single-supercharge closure holds on the canonical image of every finite stage
 inside the direct limit.
 -/

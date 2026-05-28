@@ -34,6 +34,32 @@ local instance : CompleteSpace EndH := inferInstance
 noncomputable def oddOddBracket (Qi Qj : EndH) : EndH :=
   Qi * Qj + Qj * Qi
 
+/--
+Odd-odd supercharge closure is natural under ring homomorphisms.
+
+This proves the algebraic transport law:
+
+`φ({Qᵢ,Qⱼ}) = {φ(Qᵢ), φ(Qⱼ)}`.
+-/
+@[rep_depth krein]
+theorem oddOddBracket_map
+    (φ : EndH →+* EndH)
+    (Qi Qj : EndH) :
+    φ (oddOddBracket Qi Qj) =
+      oddOddBracket (φ Qi) (φ Qj) := by
+  simp [oddOddBracket]
+
+/--
+Odd-odd supercharge closure is natural under ring equivalences.
+-/
+@[rep_depth krein]
+theorem oddOddBracket_ringEquiv
+    (Φ : EndH ≃+* EndH)
+    (Qi Qj : EndH) :
+    Φ (oddOddBracket Qi Qj) =
+      oddOddBracket (Φ Qi) (Φ Qj) := by
+  simp [oddOddBracket]
+
 /-- The discrete hopping operator is the odd-odd self-closure `{Q,Q}`. -/
 @[rep_depth krein]
 theorem susyHoppingOperator_eq_oddOddBracket_self

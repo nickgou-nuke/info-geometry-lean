@@ -26,8 +26,8 @@ An orbit-current Stokes datum.
 `surfaceIntegral x η` is the filled-surface pairing.
 `d` is the supplied differential/defect operator on forms.
 
-The only law is Stokes on closed orbits.  This is a witness surface, not an
-existence theorem for surfaces, currents, or analytic contours.
+The only theorem input is Stokes on closed orbits.  This is datum for a chosen
+model, not an existence theorem for surfaces, currents, or analytic contours.
 -/
 @[rep_depth operator]
 structure OrbitCurrentStokesDatum
@@ -38,7 +38,7 @@ structure OrbitCurrentStokesDatum
   orbitIntegral : State → Form → Value
   surfaceIntegral : State → Form → Value
   d : Form → Form
-  stokes_law :
+  stokes_eq :
     ∀ x ω,
       isClosedOrbit x →
         orbitIntegral x ω = surfaceIntegral x (d ω)
@@ -54,7 +54,7 @@ theorem orbitIntegral_eq_surfaceIntegral_d
     (hx : S.isClosedOrbit x)
     (ω : Form) :
     S.orbitIntegral x ω = S.surfaceIntegral x (S.d ω) :=
-  S.stokes_law x ω hx
+  S.stokes_eq x ω hx
 
 end OrbitCurrentStokesDatum
 
@@ -71,9 +71,9 @@ structure DefectOrbitCurrentDatum
       OrbitCurrentStokesDatum Time State Form Value where
   defectCurrent : Form
   primitiveForm : Form
-  defect_law : d primitiveForm = defectCurrent
+  d_primitiveForm_eq_defectCurrent : d primitiveForm = defectCurrent
   residue : State → Value
-  residue_law :
+  residue_eq_orbitIntegral' :
     ∀ x,
       isClosedOrbit x →
         residue x = orbitIntegral x primitiveForm
@@ -88,7 +88,7 @@ theorem residue_eq_orbitIntegral
     {x : State}
     (hx : D.isClosedOrbit x) :
     D.residue x = D.orbitIntegral x D.primitiveForm :=
-  D.residue_law x hx
+  D.residue_eq_orbitIntegral' x hx
 
 /-- The primitive orbit-current pairing is the surface pairing of the defect. -/
 theorem orbitIntegral_primitive_eq_surfaceIntegral_defect
@@ -97,7 +97,7 @@ theorem orbitIntegral_primitive_eq_surfaceIntegral_defect
     D.orbitIntegral x D.primitiveForm =
       D.surfaceIntegral x D.defectCurrent := by
   rw [D.toOrbitCurrentStokesDatum.orbitIntegral_eq_surfaceIntegral_d hx]
-  rw [D.defect_law]
+  rw [D.d_primitiveForm_eq_defectCurrent]
 
 /-- The residue is the defect surface pairing on closed orbits. -/
 theorem residue_eq_surfaceIntegral_defect
@@ -110,11 +110,12 @@ theorem residue_eq_surfaceIntegral_defect
 end DefectOrbitCurrentDatum
 
 /--
-Resolvent orbit-current socket.
+Resolvent orbit-current data.
 
-This records that a verified Cauchy/resolvent kernel family supplies the form
-being integrated around an orbit.  It does not assert a Riesz projection or
-Drazin projector formula; those require separate spectral-contour hypotheses.
+This records that a verified Cauchy/resolvent kernel family supplies a family
+of forms available for integration around an orbit.  It does not assert a Riesz
+projection or Drazin projector formula; those require separate spectral-contour
+hypotheses.
 -/
 @[rep_depth operator]
 structure ResolventOrbitCurrentDatum
@@ -124,21 +125,6 @@ structure ResolventOrbitCurrentDatum
   stokes : OrbitCurrentStokesDatum Time State Form Value
   kernelFamily : VerifiedCauchyKernel.VerifiedKernelFamily K Z
   kernelForm : ℝ → Form
-  kernelForm_law : Prop
-  kernelForm_witness : kernelForm_law
-
-namespace ResolventOrbitCurrentDatum
-
-variable {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
-variable {Time State Form : Type*} {K Z : Value}
-variable (R : ResolventOrbitCurrentDatum Time State Form K Z)
-
-/-- The supplied kernel-form compatibility law. -/
-theorem kernelForm_law_holds :
-    R.kernelForm_law :=
-  R.kernelForm_witness
-
-end ResolventOrbitCurrentDatum
 
 /-! ## Finite defect Stokes readback -/
 
@@ -161,7 +147,7 @@ def finiteDefectOrbitCurrentStokesDatum :
   orbitIntegral := fun _ _ => defectBackend.boundaryIntegral () ccForm
   surfaceIntegral := fun _ _ => defectBackend.volumeIntegral () (fun _ => boundedDirac.P)
   d := fun _ => ()
-  stokes_law := by
+  stokes_eq := by
     intro x ω hx
     exact boundaryIntegral_eq_volumeIntegral_defect
 
@@ -177,7 +163,7 @@ theorem finiteDefect_orbitIntegral_eq_surfaceIntegral :
 by
   have hClosed : finiteDefectOrbitCurrentStokesDatum.isClosedOrbit () :=
     finiteDefect_isClosedOrbit
-  exact finiteDefectOrbitCurrentStokesDatum.stokes_law () () hClosed
+  exact finiteDefectOrbitCurrentStokesDatum.stokes_eq () () hClosed
 
 /--
 The finite one-point defect model as a defect orbit-current datum.
@@ -190,9 +176,9 @@ def finiteDefectOrbitCurrentDatum :
   toOrbitCurrentStokesDatum := finiteDefectOrbitCurrentStokesDatum
   defectCurrent := ()
   primitiveForm := ()
-  defect_law := rfl
+  d_primitiveForm_eq_defectCurrent := rfl
   residue := fun _ => defectBackend.boundaryIntegral () ccForm
-  residue_law := by
+  residue_eq_orbitIntegral' := by
     intro x hx
     rfl
 
@@ -207,7 +193,7 @@ theorem finiteDefect_residue_eq_surfaceIntegral_defect :
       finiteDefectOrbitCurrentDatum.surfaceIntegral () finiteDefectOrbitCurrentDatum.defectCurrent :=
 by
   have hClosed : finiteDefectOrbitCurrentDatum.isClosedOrbit () := by
-    simpa [finiteDefectOrbitCurrentDatum, finiteDefectOrbitCurrentStokesDatum] using finiteDefect_isClosedOrbit
+    simp [finiteDefectOrbitCurrentDatum, finiteDefectOrbitCurrentStokesDatum]
   exact finiteDefectOrbitCurrentDatum.residue_eq_surfaceIntegral_defect hClosed
 
 end InfoGeometry.Geometry.OrbitCurrentStokes

@@ -737,8 +737,7 @@ def commutator
 theorem commutator_self
     (Z : BilingualUpperHalfPlane D) :
     commutator Z Z = 0 := by
-  simpa [commutator] using
-    (operatorCommutator_self (D := D) Z.tau)
+  simp [commutator, operatorCommutator_self]
 
 /--
 The algebraic core of the operatorial Poincare metric.
@@ -758,56 +757,6 @@ def poincareMetricCore
     (ξ η : TangentAt Z) : ℝ :=
   let Yinv : EndH := (Y.unit⁻¹).val
   Tr.tr ((Yinv.comp ξ.op).comp (Yinv.comp η.op))
-
-/-! ## Owner target -/
-
-/--
-Metric compatibility of the Hestenes phase axis.
-
-A future concrete version should include skew-adjointness/orthogonality of `K`
-with respect to the real doubled-space metric.
--/
-def KMetricCompatible
-    (_D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) : Prop :=
-  True
-
-/--
-Regularity of the `K`-positive cone.
-
-A future concrete version should assert that the operatorial half-plane is
-nonempty and open inside the phase-linear endomorphisms.
--/
-def KPositiveConeRegular
-    (_D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) : Prop :=
-  True
-
-/--
-Admissibility assumptions for constructing the bilingual Poincare metric.
-
-The elliptic condition `K² = -I` is explicit. If `K² = +I`, the target is a
-split/para-Hermitian half-plane, not the classical Poincare upper half-plane.
--/
-structure BilingualPoincareMetricAdmissible
-    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) where
-  K_square_neg :
-    D.K.comp D.K = -(ContinuousLinearMap.id ℝ H₂)
-
-  K_metric_compatible :
-    KMetricCompatible D
-
-  K_positive_cone_regular :
-    KPositiveConeRegular D
-
-/--
-Owner target for constructing the canonical bilingual Poincare metric from
-admissible Krein-Hestenes data.
--/
-@[owner_target_tag]
-def BilingualPoincareMetricOwnerTarget : Prop :=
-  ∀ (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-  ∀ D : ProjectivePolarizedBigradedBogoliubovDatum (E := E),
-    BilingualPoincareMetricAdmissible D →
-      Nonempty (BilingualUpperHalfPlane.PoincareMetricDatum D)
 
 end BilingualUpperHalfPlane
 
@@ -1055,15 +1004,6 @@ structure PoincareMetricDatum
       (U : TangentAt Z),
         innerAt Z U U = 0 → U.vel = 0
 
-  /--
-  Boundary compatibility placeholder.
-
-  The metric is defined on the positive interior and degenerates/diverges only
-  relative to the isotropic boundary in model-specific limit theorems.
-  -/
-  boundary_absolute :
-    Prop
-
 namespace PoincareMetricDatum
 
 variable
@@ -1153,10 +1093,6 @@ structure BilingualAutomorphism
     ∀ Z : BilingualUpperHalfPlanePoint H Q,
       TangentAt Z → TangentAt (map Z)
 
-  /-- Placeholder for invertibility/group law data. -/
-  automorphism_law :
-    Prop
-
 /--
 A bilingual automorphism is an isometry of the Poincare metric.
 -/
@@ -1223,50 +1159,6 @@ structure PoincareMetricSpectralBackend
       (U V : TangentAt Z),
         G.innerAt Z U V =
           spectralPairing (tangentOperator Z U) (tangentOperator Z V)
-
-/-! ### Owner targets -/
-
-/--
-Admissibility assumptions for constructing a bilingual Poincare metric.
-
-This prevents the owner target from claiming that every homogeneous quadratic
-readout automatically determines a canonical hyperbolic metric.
--/
-structure PoincareMetricAdmissible
-    (H : Type*) [AddCommGroup H] [Module ℝ H]
-    (Q : KreinQuadraticDatum H) where
-  /-- The positive cone is nonempty. -/
-  positiveCone_nonempty :
-    ∃ v : H, v ∈ PositiveKreinCone Q
-
-  /-- The isotropic cone is intended as the projective boundary. -/
-  isotropicCone_is_boundary :
-    Prop
-
-  /-- The model supplies a hyperbolic/Poincare metric construction. -/
-  metric_construction_available :
-    Prop
-
-/--
-Owner target for the future construction of the bilingual Poincare metric.
--/
-@[owner_target_tag]
-def BilingualPoincareMetricOwnerTarget : Prop :=
-  ∀ (H : Type*) [AddCommGroup H] [Module ℝ H],
-  ∀ Q : KreinQuadraticDatum H,
-    PoincareMetricAdmissible H Q →
-      Nonempty (PoincareMetricDatum H Q)
-
-/--
-Owner target for proving that admissible Mobius symmetries are isometries.
--/
-@[owner_target_tag]
-def BilingualMobiusIsometryOwnerTarget : Prop :=
-  ∀ (H : Type*) [AddCommGroup H] [Module ℝ H],
-  ∀ Q : KreinQuadraticDatum H,
-  ∀ G : PoincareMetricDatum H Q,
-  ∀ M : BilingualMobiusSymmetry H Q,
-    MobiusIsometryLaw G M
 
 end BilingualPoincareMetric
 

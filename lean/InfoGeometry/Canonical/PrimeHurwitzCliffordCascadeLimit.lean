@@ -54,21 +54,7 @@ structure PrimeHurwitzCliffordCascadeRealization
   /-- Full cascade reconstruction equals the Cayley pullback of `xi`. -/
   reconstruction_eq_xi_cayley : Prop
 
-  /-- Final Hurwitz-ready convergence statement. -/
+  /-- Final Hurwitz-ready convergence statement to be proved by a concrete model. -/
   locallyUniformRenormalizedLimit : Prop
-  locallyUniformRenormalizedLimit_certificate :
-    locallyUniformRenormalizedLimit
-
-/-- Extract the Hurwitz-ready convergence statement from the discrete
-Hurwitz--Clifford cascade realization. -/
-@[rep_depth operator]
-theorem locallyUniformLimit_of_hurwitzCliffordCascade
-    {F : ParaunitaryCliffordFilterBank}
-    {C : CliffordCascadeSystem F}
-    {A : PrimeLeeYangApproximants}
-    {Xi : CompletedXiFunction}
-    (R : PrimeHurwitzCliffordCascadeRealization F C A Xi) :
-    R.locallyUniformRenormalizedLimit :=
-  R.locallyUniformRenormalizedLimit_certificate
 
 end InfoGeometry.Canonical.PrimeHurwitzCliffordCascadeLimit

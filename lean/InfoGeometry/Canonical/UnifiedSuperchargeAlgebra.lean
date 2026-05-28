@@ -935,6 +935,139 @@ theorem recursive_nilpotent_supercharge_square_eq_centralCharge
   rw [recursive_nilpotent_supercharge_square_eq_anticommutator hQ hR]
   exact hZ
 
+/-! ## Finite inductive preservation of SUSY central-charge closure -/
+
+/--
+Ring homomorphisms preserve square-zero elements.
+-/
+@[rep_depth thermo]
+theorem ringHom_preserves_square_zero
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q : A}
+    (hQ : Q * Q = 0) :
+    φ Q * φ Q = 0 := by
+  simpa using congrArg φ hQ
+
+/--
+Ring homomorphisms preserve odd--odd anticommutators.
+-/
+@[rep_depth thermo]
+theorem ringHom_map_anticommutator
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    (Q R : A) :
+    φ (Q * R + R * Q) = φ Q * φ R + φ R * φ Q := by
+  simp
+
+/--
+Ring homomorphisms preserve centrality on the image.
+
+For non-surjective bonding maps this is the correct statement: the transported
+central term commutes with transported observables. Global centrality in the
+larger algebra needs surjectivity or an extra centralizer theorem.
+-/
+@[rep_depth thermo]
+theorem ringHom_preserves_central_on_image
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Z : A}
+    (hCentral : ∀ X : A, Z * X = X * Z) :
+    ∀ X : A, φ Z * φ X = φ X * φ Z := by
+  intro X
+  simpa using congrArg φ (hCentral X)
+
+/--
+Surjective ring homomorphisms preserve global centrality.
+-/
+@[rep_depth thermo]
+theorem ringHom_preserves_central_surjective
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    (hSurj : Function.Surjective φ)
+    {Z : A}
+    (hCentral : ∀ X : A, Z * X = X * Z) :
+    ∀ Y : B, φ Z * Y = Y * φ Z := by
+  intro Y
+  rcases hSurj Y with ⟨X, rfl⟩
+  exact ringHom_preserves_central_on_image φ hCentral X
+
+/--
+Ring homomorphism transport of the recursive central-charge law.
+
+This is the finite functorial step: if a stage has `Q² = R² = 0` and
+`{Q,R}=Z`, then the transported stage has `(φ Q + φ R)² = φ Z`.
+-/
+@[rep_depth thermo]
+theorem ringHom_transport_recursive_centralCharge
+    {A B : Type*} [Ring A] [Ring B]
+    (φ : A →+* B)
+    {Q R Z : A}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z) :
+    (φ Q + φ R) * (φ Q + φ R) = φ Z := by
+  have h := congrArg φ
+    (recursive_nilpotent_supercharge_square_eq_centralCharge
+      (Q := Q) (R := R) (Z := Z) hQ hR hZ)
+  simpa using h
+
+/--
+One finite inductive step.
+
+A bonding map `φₙ : Aₙ → Aₙ₊₁` preserving the named elements transports:
+* square-zero of both odd charges;
+* odd--odd central closure;
+* recursive square/central-charge law.
+-/
+@[rep_depth thermo]
+theorem inductive_step_transport_recursive_susy
+    {Stage : ℕ → Type*} [∀ n, Ring (Stage n)]
+    (φ : ∀ n, Stage n →+* Stage (n + 1))
+    (n : ℕ)
+    {Q R Z : Stage n}
+    {Q' R' Z' : Stage (n + 1)}
+    (hQ : Q * Q = 0)
+    (hR : R * R = 0)
+    (hZ : Q * R + R * Q = Z)
+    (hQ' : Q' = φ n Q)
+    (hR' : R' = φ n R)
+    (hZ' : Z' = φ n Z) :
+    Q' * Q' = 0 ∧
+      R' * R' = 0 ∧
+      Q' * R' + R' * Q' = Z' ∧
+      (Q' + R') * (Q' + R') = Z' := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [hQ']
+    exact ringHom_preserves_square_zero (φ n) hQ
+  · rw [hR']
+    exact ringHom_preserves_square_zero (φ n) hR
+  · rw [hQ', hR', hZ']
+    calc
+      φ n Q * φ n R + φ n R * φ n Q
+          = φ n (Q * R + R * Q) := by
+            exact (ringHom_map_anticommutator (φ n) Q R).symm
+      _ = φ n Z := by
+            rw [hZ]
+  · rw [hQ', hR', hZ']
+    exact ringHom_transport_recursive_centralCharge (φ n) hQ hR hZ
+
+/--
+Inductive-step preservation of centrality on the transported image.
+
+This is the correct statement for injective/bonding maps: `φ Z` commutes with
+all elements coming from the previous stage.
+-/
+@[rep_depth thermo]
+theorem inductive_step_preserves_central_on_image
+    {Stage : ℕ → Type*} [∀ n, Ring (Stage n)]
+    (φ : ∀ n, Stage n →+* Stage (n + 1))
+    (n : ℕ)
+    {Z : Stage n}
+    (hCentral : ∀ X : Stage n, Z * X = X * Z) :
+    ∀ X : Stage n, φ n Z * φ n X = φ n X * φ n Z :=
+  ringHom_preserves_central_on_image (φ n) hCentral
+
 /--
 If the odd--odd cross bracket is a central element `Z`, then the recursive
 supercharge square is central.

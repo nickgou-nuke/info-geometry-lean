@@ -75,14 +75,17 @@ Virasoro-style endpoint when feasible.
    - local finite sum;
    - analytic completion.
 2. Write the carrier choice in the module docstring.
-3. Prove generator/local laws first.
-4. Define cocycles/central obstructions explicitly.
-5. For direct sums, define operations as `Finsupp` objects and prove support
+3. For the full external-package pattern, define mode labels, a finitely
+   supported basis carrier, basis generators, an explicit alternating cocycle,
+   its bilinear basis extension, and then `LieTwoCocycle.CentralExtension`.
+4. Prove generator/local laws first, then arbitrary-element readback.
+5. Define cocycles/central obstructions explicitly.
+6. For direct sums, define operations as `Finsupp` objects and prove support
    control.
-6. For sums, prove local truncation/finite support before using the sum.
-7. For finite iterates, do not call the result an infinite limit unless a real
+7. For sums, prove local truncation/finite support before using the sum.
+8. For finite iterates, do not call the result an infinite limit unless a real
    colimit/completion is built.
-8. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
+9. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
    theorem that carries the missing proof.
 
 ## Allowed examples

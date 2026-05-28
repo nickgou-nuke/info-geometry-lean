@@ -31,7 +31,8 @@ Mertens-type partial sum.  `randomWalkScale` is the comparison scale, such as a
 square-root scale with logarithmic correction.  `defectExponent` records which
 exponents are interpreted as macroscopic random-field defects.
 
-All asymptotic estimates are carried as laws with certificates.
+All asymptotic estimates must be proved in concrete downstream models; this
+packet stores only the readout data.
 -/
 structure MertensDefectBoundary where
   /-- Signed arithmetic magnetization readout. -/
@@ -43,33 +44,12 @@ structure MertensDefectBoundary where
   /-- Predicate for exponents that would represent macroscopic defects. -/
   defectExponent : ℝ → Prop
 
-  /-- Mertens/random-walk type bound law. -/
-  mertensBound_law : Prop
-
-  /-- Large-deviation suppression law for excursions beyond the chosen scale. -/
-  largeDeviationSuppression_law : Prop
-
-  /-- No surviving macroscopic bias/random-field-defect law. -/
-  noMacroscopicBias_law : Prop
-
   /-- Guardrail: this boundary packet is not a proof of RH or Mertens. -/
   no_unconditional_RH_claim_guard : Type
 
 namespace MertensDefectBoundary
 
 variable (M : MertensDefectBoundary)
-
-/-- Re-export of the supplied Mertens/random-walk bound law. -/
-def mertensBound : Prop :=
-  M.mertensBound_law
-
-/-- Re-export of the supplied large-deviation suppression law. -/
-def largeDeviationSuppression : Prop :=
-  M.largeDeviationSuppression_law
-
-/-- Re-export of the supplied no-macroscopic-bias law. -/
-def noMacroscopicBias : Prop :=
-  M.noMacroscopicBias_law
 
 end MertensDefectBoundary
 
@@ -192,79 +172,12 @@ structure MertensToDefectFreeBridge
   largeDeviation :
     PrimeChainLargeDeviationWitness
 
-  /-- Mertens/random-walk boundary implies zero mean/no spontaneous magnetization. -/
-  zeroMean_from_mertens_law : Prop
-
-  /-- Mertens/random-walk boundary implies Gaussian or CLT-scale fluctuations. -/
-  gaussian_from_mertens_law : Prop
-
-  /-- Mertens/random-walk boundary excludes random-field defects. -/
-  noDefects_from_mertens_law : Prop
-
-  /-- Lee--Yang stability persistence supplied by the analytic model. -/
-  leeYangStabilityPersists_law : Prop
-
-  /-- Completed-`xi` Cayley limit supplied by the analytic model. -/
-  xiCayleyLimit_law : Prop
-
-  /-- Conditional critical-line zero-location reduction supplied by the model. -/
-  defectFreeLimit_implies_criticalLineZeros_law : Prop
 
 namespace MertensToDefectFreeBridge
 
 variable {CompletedXiReadout : Type}
 variable (B : MertensToDefectFreeBridge CompletedXiReadout)
 
-/-- Re-export of the supplied zero-mean implication law. -/
-def zeroMean_from_mertens : Prop :=
-  B.zeroMean_from_mertens_law
-
-/-- Re-export of the supplied Gaussian/CLT implication law. -/
-def gaussian_from_mertens : Prop :=
-  B.gaussian_from_mertens_law
-
-/-- Re-export of the supplied no-defect implication law. -/
-def noDefects_from_mertens : Prop :=
-  B.noDefects_from_mertens_law
-
 end MertensToDefectFreeBridge
-
-/--
-Build a defect-free Lee--Yang limit packet from a Mertens/random-walk boundary
-and the remaining analytic bridge data.
-
-This theorem does not prove the laws.  It assembles the downstream packet from
-the supplied certificates.
--/
-def defectFreeLimit_of_mertensBoundary
-    {CompletedXiReadout : Type}
-    (M : MertensDefectBoundary)
-    (B : MertensToDefectFreeBridge CompletedXiReadout) :
-    DefectFreeLimitPacket CompletedXiReadout where
-  approximation := B.approximation
-  largeDeviation := B.largeDeviation
-  zeroMeanMagnetization_law :=
-    M.mertensBound_law ∧ B.zeroMean_from_mertens_law
-  gaussianFluctuation_law :=
-    M.largeDeviationSuppression_law ∧ B.gaussian_from_mertens_law
-  noRandomFieldDefects_law :=
-    M.noMacroscopicBias_law ∧ B.noDefects_from_mertens_law
-  leeYangStabilityPersists_law :=
-    B.leeYangStabilityPersists_law
-  xiCayleyLimit_law :=
-    B.xiCayleyLimit_law
-  defectFreeLimit_implies_criticalLineZeros_law :=
-    B.defectFreeLimit_implies_criticalLineZeros_law
-  no_unconditional_RH_claim_guard :=
-    M.no_unconditional_RH_claim_guard
-
-/-- Owner re-export proposition for the assembled defect-free packet laws. -/
-abbrev defectFreeLimit_of_mertensBoundary_reexports
-    {CompletedXiReadout : Type}
-    (M : MertensDefectBoundary)
-    (B : MertensToDefectFreeBridge CompletedXiReadout) :=
-  (defectFreeLimit_of_mertensBoundary M B).zeroMeanMagnetization_law ∧
-  (defectFreeLimit_of_mertensBoundary M B).gaussianFluctuation_law ∧
-  (defectFreeLimit_of_mertensBoundary M B).noRandomFieldDefects_law
 
 end InfoGeometry.Canonical.PrimeMertensDefectBoundary

@@ -168,11 +168,15 @@ structure FierzKleinResidual where
   residual : (FierzChannel → ℝ) → ℝ
 
 /--
-Fierz--Klein law for projective Weyl/KMS counts.
+Projective Weyl/KMS count readout data for Fierz--Klein coordinates.
 
-The quadric statement is witness-gated by `quadric_law`.
+This structure intentionally contains only data.  The former `quadric_law`
+field claimed the Fierz--Klein relation by storing the target proposition as a
+field, and the downstream theorem merely read that field back.  A concrete
+model must now prove any equation such as `residual.residual coords = 0`
+directly from its definitions and lower lemmas.
 -/
-structure ProjectiveCountFierzKleinLaw
+structure ProjectiveCountFierzKleinData
     (Γ : Type*)
     [Fintype Γ] where
 
@@ -187,29 +191,6 @@ structure ProjectiveCountFierzKleinLaw
     fun ch =>
       readout.coord ch
         (fun γ => projectiveOrbitCoordinate Ω φ γ)
-
-  quadric_law :
-    residual.residual coords = 0
-
-/-- Read back the witness-gated Fierz--Klein quadric law. -/
-theorem projective_count_lies_on_fierz_klein_quadric
-    {Γ : Type*}
-    [Fintype Γ]
-    (P : ProjectiveCountFierzKleinLaw Γ) :
-    P.residual.residual P.coords = 0 :=
-  P.quadric_law
-
-/-- Parameterized owner target for Weyl/KMS projective count geometry. -/
-def WeylKMSProjectiveCountTarget (Γ : Type*) [Fintype Γ] : Prop :=
-  Nonempty (ProjectiveCountFierzKleinLaw Γ)
-
-/-- Constructor for the parameterized owner target. -/
-theorem constructWeylKMSProjectiveCountTarget
-    {Γ : Type*}
-    [Fintype Γ]
-    (P : ProjectiveCountFierzKleinLaw Γ) :
-    WeylKMSProjectiveCountTarget Γ :=
-  ⟨P⟩
 
 end InfoGeometry.Canonical.WeylKMSGromovWittenCounts
 

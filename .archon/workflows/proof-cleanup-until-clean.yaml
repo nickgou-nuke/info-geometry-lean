@@ -1,8 +1,8 @@
-name: proof-cleanup-until-clean
-description: "Bounded supervisor loop for proof cleanup: repeatedly run the one-cycle proof SOP until heartbeat metrics are clean, stale, timed out, or iteration budget is exhausted."
+name: proof-cleanup-forever
+description: "Unbounded proof-cleanup heartbeat: repeatedly run the one-cycle proof SOP until the user stops it with Ctrl-C."
 
 nodes:
-  - id: cleanup-until-clean
+  - id: cleanup-forever
     assistant: pi
     prompt: |
       Run the repository proof cleanup supervisor loop from the repo root.
@@ -10,24 +10,28 @@ nodes:
       Command:
       - tools/heartbeat/archon_repo_cleanup_loop.sh
 
-      Default safety bounds:
-      - MAX_ITERATIONS=25
-      - MAX_STALE_ITERATIONS=3
-      - ARCHON_CYCLE_TIMEOUT_SECONDS=1800
+      Default behavior is intentionally unbounded:
+      - MAX_ITERATIONS=0 means no iteration limit.
+      - MAX_STALE_ITERATIONS=0 means no stale-progress stop.
+      - ARCHON_CYCLE_TIMEOUT_SECONDS=0 means no per-cycle timeout wrapper.
+      - STOP_WHEN_CLEAN=0 means the heartbeat keeps running even when the
+        current score is clean.
+      - The user stops the loop with Ctrl-C.
+
+      Defaults:
       - SCOPE=lean/InfoGeometry/Canonical
       - WORKFLOW=proof-sop-cycle
 
       Required behavior:
-      - Do not bypass the bounds.
       - Do not stage generated logs/reports/artifacts.
       - Each inner iteration must use the existing `proof-sop-cycle` workflow,
         which is responsible for making at most one bounded cleanup, validating,
         committing, and pushing.
-      - Stop when heartbeat score reaches zero, when progress stalls, on timeout,
-        or when the iteration budget is exhausted.
+      - The outer supervisor is the living heartbeat and should continue until
+        interrupted by the user, unless explicit environment bounds are supplied.
 
-      After the command exits, summarize:
-      - stopping reason;
+      If the command exits, summarize:
+      - stopping reason or interrupt;
       - path to the cleanup-loop summary TSV;
       - latest before/after counts;
-      - any nonzero Archon exit/timeout codes.
+      - any nonzero Archon exit codes.

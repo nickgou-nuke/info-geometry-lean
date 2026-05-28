@@ -67,6 +67,36 @@ instance : CoeFun (StarRingHom A B) (fun _ => A → B) where
     φ (star x) = star (φ x) :=
   φ.map_star' x
 
+variable {C : Type*} [Ring C] [StarRing C]
+
+/-- Identity star-preserving ring homomorphism. -/
+def id (A : Type*) [Ring A] [StarRing A] : StarRingHom A A where
+  toRingHom := RingHom.id A
+  map_star' := by
+    intro x
+    rfl
+
+/-- Composition of star-preserving ring homomorphisms. -/
+def comp (ψ : StarRingHom B C) (φ : StarRingHom A B) : StarRingHom A C where
+  toRingHom := ψ.toRingHom.comp φ.toRingHom
+  map_star' := by
+    intro x
+    simp
+
+/-- Apply a star-preserving endomorphism chain from stage index `n` for `k` steps. -/
+def chain (φ : Nat → StarRingHom A A) (n : Nat) : Nat → StarRingHom A A
+  | 0 => id A
+  | k + 1 => comp (φ (n + k)) (chain φ n k)
+
+@[simp] theorem chain_zero (φ : Nat → StarRingHom A A) (n : Nat) :
+    chain φ n 0 = id A := by
+  rfl
+
+/-- Readback for one successor step of a finite star-hom chain. -/
+theorem chain_succ_apply (φ : Nat → StarRingHom A A) (n k : Nat) (x : A) :
+    chain φ n (k + 1) x = φ (n + k) (chain φ n k x) := by
+  rfl
+
 end StarRingHom
 
 /--
@@ -183,6 +213,53 @@ theorem map_image_closure
       map_odd_odd_closure I φ,
       map_parity_odd_anticomm I φ,
       map_image_central I φ⟩
+
+/--
+All local closure identities are preserved on the image of every finite
+star-preserving endomorphism chain.
+
+This is the finite inductive-system invariance theorem for a common ambient
+algebra: compose any bounded number of bonding maps, and the transported packet
+still satisfies the supergraded closure relations on the transported image.
+-/
+theorem chain_image_closure
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    ImageClosure I (StarRingHom.chain φ n k) :=
+  map_image_closure I (StarRingHom.chain φ n k)
+
+/-- Centrality is preserved on the image of every finite star-hom chain. -/
+theorem chain_image_central
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    ImageCentral I (StarRingHom.chain φ n k) :=
+  map_image_central I (StarRingHom.chain φ n k)
+
+/-- Square-zero odd closure after a finite star-hom chain. -/
+theorem chain_odd_sq_zero
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    StarRingHom.chain φ n k I.Q * StarRingHom.chain φ n k I.Q = 0 :=
+  map_odd_sq_zero I (StarRingHom.chain φ n k)
+
+/-- Projector/idempotent closure after a finite star-hom chain. -/
+theorem chain_parity_idempotent
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    StarRingHom.chain φ n k I.P * StarRingHom.chain φ n k I.P =
+      StarRingHom.chain φ n k I.P :=
+  map_parity_idempotent I (StarRingHom.chain φ n k)
+
+/-- Odd-odd closure after a finite star-hom chain. -/
+theorem chain_odd_odd_closure
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    StarRingHom.chain φ n k I.Q * star (StarRingHom.chain φ n k I.Q) +
+        star (StarRingHom.chain φ n k I.Q) * StarRingHom.chain φ n k I.Q =
+      StarRingHom.chain φ n k I.H :=
+  map_odd_odd_closure I (StarRingHom.chain φ n k)
+
+/-- Parity/odd anticommutation after a finite star-hom chain. -/
+theorem chain_parity_odd_anticomm
+    (I : SupergradedClosureAt A) (φ : Nat → StarRingHom A A) (n k : Nat) :
+    StarRingHom.chain φ n k I.P * StarRingHom.chain φ n k I.Q +
+        StarRingHom.chain φ n k I.Q * StarRingHom.chain φ n k I.P = 0 :=
+  map_parity_odd_anticomm I (StarRingHom.chain φ n k)
 
 /--
 If the bonding map is surjective, image-centrality upgrades to global centrality

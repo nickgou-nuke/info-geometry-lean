@@ -51,6 +51,16 @@ use `ι →₀ 𝕜`, basis generators, basis-level formulas, bilinear extension
 generator readbacks whenever the infinite object is a finite linear combination
 of modes. Use `DirectLimit` only when there is a real staged transition system.
 
+Decision rule:
+
+- mode algebra → Finsupp/basis API first;
+- super odd--odd mode closure → supergraded Finsupp lane with symmetric
+  anticommutator/cocycle data;
+- operator sum → local finite-support theorem before `∑ᶠ`;
+- staged inclusions/identifications → algebraic `DirectLimit`;
+- external target only → compatible-cone image theorem;
+- completion/spectrum/KMS/Type III → separate topology/analysis owner theorem.
+
 A valid finite-to-infinite theorem must use one of these mechanisms:
 
 1. algebraic direct sum / finite support, preferably `ι →₀ A` or `ι →₀ 𝕜`;
@@ -87,6 +97,7 @@ Virasoro-style endpoint when feasible.
 
 1. Classify the carrier, preferring the lightest honest mechanism:
    - `Finsupp`/direct sum for finite linear combinations of modes;
+   - supergraded `Finsupp` for odd--odd N=2/SUSY mode closure;
    - locally finite operator sums for Sugawara/Fock expressions;
    - algebraic `DirectLimit` only for real staged transition systems;
    - explicit target image for external targets without a universal colimit;
@@ -106,8 +117,10 @@ Virasoro-style endpoint when feasible.
 9. For algebraic direct limits, construct the transition maps, instantiate the
    directed-system laws, define the canonical maps, prove canonical-image
    compatibility, and expose the universal compatible-cone lift.
-10. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
-   theorem that carries the missing proof.
+10. For supergraded/N=2 odd closure, keep the symmetric odd--odd cocycle lane
+    separate from ordinary skew `LieTwoCocycle` central extensions.
+11. Reject any `*_law`, `*_certificate`, `*_witness`, `*_guard`, or pure reexport
+    theorem that carries the missing proof.
 
 ## Allowed examples
 
@@ -124,6 +137,11 @@ anticommutatorMode Q R = H + Z
 
 -- Sugawara/local operator sums require truncation
 heiTrunc : ∀ v, atTop.Eventually (fun l => heiOper l v = 0)
+
+-- supergraded Finsupp lane for odd-odd closure
+modeGen i : Mode →₀ 𝕜
+superBilin Q R = centralCoefficient
+anticommutatorMode Q R = H + Z
 
 -- algebraic direct-limit chain with explicit canonical maps
 bondMap bond m n h : Stage m →+* Stage n

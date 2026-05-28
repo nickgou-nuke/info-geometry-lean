@@ -371,6 +371,122 @@ theorem exists_right_right_supercharge_for_neg_two
       S.superAnticommutator Q R = Z :=
   S.right_right_neg_two_surjective Z hZ
 
+/-! ## 2A. Finite bonding-map preservation lemmas -/
+
+/--
+A finite bonding/intertwiner map preserves mixed-supercharge translation
+charges, provided it preserves chirality and the super-anticommutator.
+
+This is the local induction step for the translation lane.
+-/
+theorem map_mixed_supercharge_mem_translation
+    {L₁ L₂ Odd₁ Odd₂ : Type*}
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup Odd₁] [Module ℝ Odd₁]
+    [AddCommGroup Odd₂] [Module ℝ Odd₂]
+    {G₁ : FiveGrading L₁}
+    {G₂ : FiveGrading L₂}
+    (S₁ : SuperchargeSquareRoot L₁ Odd₁ G₁)
+    (S₂ : SuperchargeSquareRoot L₂ Odd₂ G₂)
+    (fL : L₁ →ₗ[ℝ] L₂)
+    (fOdd : Odd₁ →ₗ[ℝ] Odd₂)
+    (hLeft :
+      ∀ Q : Odd₁, Q ∈ S₁.qLeft → fOdd Q ∈ S₂.qLeft)
+    (hRight :
+      ∀ Q : Odd₁, Q ∈ S₁.qRight → fOdd Q ∈ S₂.qRight)
+    (hSuper :
+      ∀ Q R : Odd₁,
+        fL (S₁.superAnticommutator Q R) =
+          S₂.superAnticommutator (fOdd Q) (fOdd R))
+    {Q R : Odd₁}
+    (hQ : Q ∈ S₁.qLeft)
+    (hR : R ∈ S₁.qRight) :
+    fL (S₁.superAnticommutator Q R) ∈ G₂.gNegOne := by
+  rw [hSuper Q R]
+  exact
+    S₂.mixed_supercharges_mem_translation
+      (hLeft Q hQ)
+      (hRight R hR)
+
+/--
+A finite bonding/intertwiner map preserves same-left-chirality grade-two
+central/topological charges, provided it preserves chirality and the
+super-anticommutator.
+
+This is the local induction step for the positive central lane.
+-/
+theorem map_left_left_supercharge_mem_pos_two
+    {L₁ L₂ Odd₁ Odd₂ : Type*}
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup Odd₁] [Module ℝ Odd₁]
+    [AddCommGroup Odd₂] [Module ℝ Odd₂]
+    {G₁ : FiveGrading L₁}
+    {G₂ : FiveGrading L₂}
+    (S₁ : SuperchargeSquareRoot L₁ Odd₁ G₁)
+    (S₂ : SuperchargeSquareRoot L₂ Odd₂ G₂)
+    (fL : L₁ →ₗ[ℝ] L₂)
+    (fOdd : Odd₁ →ₗ[ℝ] Odd₂)
+    (hLeft :
+      ∀ Q : Odd₁, Q ∈ S₁.qLeft → fOdd Q ∈ S₂.qLeft)
+    (hSuper :
+      ∀ Q R : Odd₁,
+        fL (S₁.superAnticommutator Q R) =
+          S₂.superAnticommutator (fOdd Q) (fOdd R))
+    {Q R : Odd₁}
+    (hQ : Q ∈ S₁.qLeft)
+    (hR : R ∈ S₁.qLeft) :
+    fL (S₁.superAnticommutator Q R) ∈ G₂.gPosTwo := by
+  rw [hSuper Q R]
+  exact
+    S₂.left_left_mem_grade_two
+      (hLeft Q hQ)
+      (hLeft R hR)
+
+/--
+Finite bonding maps preserve the abelian closure of same-left grade-two
+charges.
+
+If two source charges are represented by left-left supercharge pairs, then
+their transported target charges commute because they land in the target
+positive grade-two sector.
+-/
+theorem map_left_left_supercharge_charges_commute
+    {L₁ L₂ Odd₁ Odd₂ : Type*}
+    [AddCommGroup L₁] [Module ℝ L₁] [LieRing L₁] [LieAlgebra ℝ L₁]
+    [AddCommGroup L₂] [Module ℝ L₂] [LieRing L₂] [LieAlgebra ℝ L₂]
+    [AddCommGroup Odd₁] [Module ℝ Odd₁]
+    [AddCommGroup Odd₂] [Module ℝ Odd₂]
+    {G₁ : FiveGrading L₁}
+    {G₂ : FiveGrading L₂}
+    (S₁ : SuperchargeSquareRoot L₁ Odd₁ G₁)
+    (S₂ : SuperchargeSquareRoot L₂ Odd₂ G₂)
+    (fL : L₁ →ₗ[ℝ] L₂)
+    (fOdd : Odd₁ →ₗ[ℝ] Odd₂)
+    (hLeft :
+      ∀ Q : Odd₁, Q ∈ S₁.qLeft → fOdd Q ∈ S₂.qLeft)
+    (hSuper :
+      ∀ Q R : Odd₁,
+        fL (S₁.superAnticommutator Q R) =
+          S₂.superAnticommutator (fOdd Q) (fOdd R))
+    {Q R Q' R' : Odd₁}
+    (hQ : Q ∈ S₁.qLeft)
+    (hR : R ∈ S₁.qLeft)
+    (hQ' : Q' ∈ S₁.qLeft)
+    (hR' : R' ∈ S₁.qLeft) :
+    ⁅fL (S₁.superAnticommutator Q R),
+      fL (S₁.superAnticommutator Q' R')⁆ = 0 := by
+  rw [hSuper Q R, hSuper Q' R']
+  exact
+    G₂.pos_two_is_abelian
+      (S₂.left_left_mem_grade_two
+        (hLeft Q hQ)
+        (hLeft R hR))
+      (S₂.left_left_mem_grade_two
+        (hLeft Q' hQ')
+        (hLeft R' hR'))
+
 end SuperchargeSquareRoot
 
 /-! ## 3. TKK defect absorption into grade two -/

@@ -114,15 +114,30 @@ Choose the lightest honest mechanism that matches the mathematics:
 1. **Finsupp/direct-sum mode algebra** when elements are finite linear
    combinations of infinitely many modes. This is the default Virasoro/Witt/
    Heisenberg pattern.
-2. **Locally finite operator sums** when formulas are genuinely infinite but
+2. **Supergraded Finsupp mode lane** when the mode algebra is genuinely
+   super/odd and the law is a symmetric odd--odd anticommutator. Keep this
+   separate from ordinary skew `LieTwoCocycle` central extensions.
+3. **Locally finite operator sums** when formulas are genuinely infinite but
    each vector/state sees finitely many nonzero terms. This is the Sugawara
    pattern.
-3. **Algebraic DirectLimit** when there are actual finite stages and bonding
+4. **Algebraic DirectLimit** when there are actual finite stages and bonding
    maps whose images must be identified.
-4. **Explicit target-image theorem** when finite stages map into an external
+5. **Explicit target-image theorem** when finite stages map into an external
    target but no universal colimit is needed.
-5. **Analytic/topological completion** only after topology, convergence, and
+6. **Analytic/topological completion** only after topology, convergence, and
    continuity are formalized.
+
+Decision table:
+
+| Mathematical situation | Default mechanism | Do not replace with |
+| --- | --- | --- |
+| Infinite modes, finite linear combinations | `ι →₀ 𝕜` / Finsupp basis API | DirectLimit or completion |
+| Ordinary skew Lie anomaly | explicit `LieTwoCocycle` + `CentralExtension` | stored central law field |
+| N=2/SUSY odd--odd closure | symmetric supergraded anticommutator/cocycle lane | ordinary skew `LieTwoCocycle` |
+| Normal-ordered/Sugawara sum | local truncation + finite support of summand | assumed convergence certificate |
+| Genuine staged inclusions/identifications | algebraic `DirectLimit` with `bondMap` | Finsupp if stages really identify |
+| External target only | compatible cone / image-local theorem | global target theorem |
+| Completion/convergence/spectrum/KMS/Type III | topology + continuity + convergence owner | algebraic Finsupp/DirectLimit alone |
 
 ## General transition templates
 
@@ -229,6 +244,22 @@ Required proof shape:
 This is the correct methodology for the N=2 odd closure files. The ordinary
 central-extension pipeline may still be useful as a companion skeleton, but the
 SUSY anticommutator theorem lives in the direct-sum anticommutator layer.
+
+Reusable API target for future work:
+
+```text
+Mode →₀ 𝕜 or parity-indexed Finsupp carrier
+parity : Mode → ZMod 2
+modeGen : Mode → carrier
+oddOddCocycle : Mode → Mode → 𝕜   -- symmetric on odd/odd inputs
+superBilin : carrier → carrier → 𝕜
+anticommutatorMode : carrier → carrier → carrier
+```
+
+Required readbacks should include generator-level odd--odd closure, symmetry of
+the odd--odd cocycle, bilinear extension, and object-equality closure in the
+Finsupp carrier. Do not add this API as a proof-payload structure; prove the
+laws from the definitions.
 
 ### Template D: locally finite operator sums
 

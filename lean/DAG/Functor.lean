@@ -30,7 +30,7 @@ and instance binders. This keeps authority separate from extraction, while still
 harvesting declarations such as `X.toY` that are parameterized over universes
 and typeclasses before their principal object argument.
 -/
-partial def extractDirectMorphismSignature (e : Expr) : Option (Expr × Expr) :=
+def extractDirectMorphismSignature (e : Expr) : Option (Expr × Expr) :=
   match e with
   | .forallE _ d b bi =>
       if bi.isExplicit then

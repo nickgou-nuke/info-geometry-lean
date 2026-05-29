@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
-import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 
 /-!
 # Operator Erlangen--Legendre principle

@@ -130,20 +130,14 @@ typed action/support/generator contracts.
 -/
 @[rep_depth operator]
 def pairedFunctionPresentation (α : Type) : Presentation where
-  Scalar := Nat
+  Scalar := α × α
   State := α × α
   Observable := α → α
   act := fun o s => (o s.1, o s.2)
-  support := fun _ => True
+  support := fun s => s.1 = s.2
   generator := fun s => (s.2, s.1)
-  -- DEBT_ID: QPR_PAIRED_METRIC
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial metric for paired function model
-  metricReadout := fun _ => 0
-  -- DEBT_ID: QPR_PAIRED_PHASE
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial phase for paired function model
-  phaseReadout := fun _ => 0
+  metricReadout := fun s => s
+  phaseReadout := fun s => (s.2, s.1)
 
 /-- Non-identity symmetry intertwiner on the paired-function presentation. -/
 @[rep_depth krein]
@@ -151,14 +145,14 @@ def pairedSwapIntertwiner (α : Type) :
     Intertwiner (pairedFunctionPresentation α) (pairedFunctionPresentation α) where
   mapState := fun s => (s.2, s.1)
   mapObservable := fun o => o
-  mapScalar := fun x => x
+  mapScalar := fun x => (x.2, x.1)
   map_act := by
     intro o s
     cases s
     rfl
   map_support := by
     intro s hs
-    trivial
+    exact hs.symm
   map_generator := by
     intro s
     cases s
@@ -170,9 +164,11 @@ def pairedSwapReadoutPreservation (α : Type) :
     ReadoutPreservation (pairedSwapIntertwiner α) where
   metric := by
     intro s
+    cases s
     rfl
   phase := by
     intro s
+    cases s
     rfl
 
 @[rep_depth krein]

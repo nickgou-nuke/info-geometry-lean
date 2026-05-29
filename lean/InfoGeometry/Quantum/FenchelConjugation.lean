@@ -30,10 +30,7 @@ noncomputable def fenchel_conjugation (x : HurwitzSpace) : HurwitzSpace :=
   (tr - x.1, -x.2)
 
 /--
-HONEST THEOREM DEBT:
 The geometric reflection perfectly matches the algebraic conjugation operation.
-
--- DEBT_KIND: SORRY
 -/
 theorem fenchel_conjugation_eq_hurwitz_conj (x : HurwitzSpace) :
     fenchel_conjugation x = hurwitz_conj x := by
@@ -43,7 +40,6 @@ theorem fenchel_conjugation_eq_hurwitz_conj (x : HurwitzSpace) :
   · dsimp [fenchel_conjugation, hurwitz_conj]
 
 /--
-HONEST THEOREM DEBT:
 The Operatorial Fenchel Loop evaluates reflexivity directly.
 $\overline{\overline{x}} = x$
 -/

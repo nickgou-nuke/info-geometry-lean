@@ -29,9 +29,6 @@ namespace DiagonalObservable
 
 instance : CoeFun (DiagonalObservable n) (fun _ => Fin n → ℝ) := ⟨fun A => A.coeff⟩
 
--- DEBT_ID: THM-ZD-001
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: canonical zero diagonal observable
 instance : Zero (DiagonalObservable n) := ⟨⟨fun _ => 0⟩⟩
 instance : One (DiagonalObservable n) := ⟨⟨fun _ => 1⟩⟩
 instance : Add (DiagonalObservable n) := ⟨fun A B => ⟨fun i => A i + B i⟩⟩

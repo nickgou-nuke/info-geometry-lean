@@ -1,6 +1,5 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeBitLattice
-import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite

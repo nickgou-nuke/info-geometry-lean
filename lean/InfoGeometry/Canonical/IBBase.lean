@@ -30,10 +30,21 @@ structure IBProblem where
   beta_pos : 0 < beta
 
 /-- `Y` is inhabited whenever an `IBProblem` exists. -/
-private theorem nonemptyY (prob : IBProblem (X := X) (Y := Y)) : Nonempty Y := by
-  have h_supp := prob.pXY.support_nonempty
-  rcases h_supp with ⟨xy, _⟩
-  exact ⟨xy.2⟩
+private theorem nonemptyY (prob : IBProblem (X := X) (Y := Y)) : Nonempty Y :=
+  let ⟨xy, _hxy⟩ := prob.pXY.support_nonempty
+  ⟨xy.2⟩
+
+/-- A fallback `Y`-point obtained from the finite universe, not from choice. -/
+private noncomputable def supportDefaultY (prob : IBProblem (X := X) (Y := Y)) : Y :=
+  match h : (Finset.univ : Finset Y).toList with
+  | [] =>
+      False.elim <| by
+        rcases prob.pXY.support_nonempty with ⟨xy, _hxy⟩
+        have hmem : xy.2 ∈ (Finset.univ : Finset Y) := Finset.mem_univ xy.2
+        have hmemList : xy.2 ∈ (Finset.univ : Finset Y).toList := by
+          simpa using hmem
+        simpa [h] using hmemList
+  | y :: _ => y
 
 /-! ### Monadic Probability Manipulations -/
 
@@ -98,8 +109,7 @@ noncomputable def condYGivenX (prob : IBProblem (X := X) (Y := Y)) (x : X) : Fin
   classical
   let f : Y → ℝ≥0∞ := fun y => prob.pXY (x, y)
   by_cases h0 : (∑' y, f y) = 0
-  · let _ : Nonempty Y := nonemptyY prob
-    exact PMF.pure (Classical.arbitrary Y)
+  · exact PMF.pure (supportDefaultY prob)
   · exact PMF.normalize f h0 (cond_slice_ne_top prob x)
 
 /-- Induced Bayesian projection $m(y|t) = p(y,t) / q(t)$. -/
@@ -110,8 +120,7 @@ noncomputable def inducedMProjection (prob : IBProblem (X := X) (Y := Y))
   let pYT := jointYT prob pT_givenX
   let f : Y → ℝ≥0∞ := fun y => pYT (y, t)
   by_cases h0 : (∑' y, f y) = 0
-  · let _ : Nonempty Y := nonemptyY prob
-    exact PMF.pure (Classical.arbitrary Y)
+  · exact PMF.pure (supportDefaultY prob)
   · exact PMF.normalize f h0 (jointYT_slice_ne_top prob pT_givenX t)
 
 section InformationTheory

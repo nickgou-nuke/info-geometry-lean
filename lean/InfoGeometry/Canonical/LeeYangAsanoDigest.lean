@@ -3,7 +3,6 @@ import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoRuelleObstruction
 import InfoGeometry.Canonical.AsanoRuelleCounterexample
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
-import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.LeeYangStabilityPacket
 
 /-!

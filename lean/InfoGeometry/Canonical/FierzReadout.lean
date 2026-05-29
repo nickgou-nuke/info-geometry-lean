@@ -75,11 +75,11 @@ def toQuantumPresentationWith
   phaseReadout := R.symplectic
 
 /--
-Default support lane used by lightweight translator consumers.
+Default Majorana-shadow support lane used by lightweight translator consumers.
 -/
 @[rep_depth operator]
 def defaultSupport (R : FierzChannelReadout) : R.State → Prop :=
-  fun _ => True
+  R.IsMajoranaShadow
 
 /--
 Default generator lane used by lightweight translator consumers.

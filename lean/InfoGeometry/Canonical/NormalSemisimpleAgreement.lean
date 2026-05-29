@@ -104,6 +104,15 @@ theorem normalSemisimple_no_mismatch_of_constructive
     W.pair.ProjectorAgreement :=
   W.no_mismatch
 
+/-- Constructive compatibility route for downstream users that can read back the
+commutator collapse directly from the owner zero-mismatch predicate, without
+first packaging a raw projector equality. -/
+theorem normalSemisimple_projectorCommutator_eq_zero_of_constructive
+    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
+    W.pair.ProjectorCommutator = 0 :=
+  ProjectorPair.projectorAgreement_implies_commutator_eq_zero (P := W.pair)
+    W.projectorAgreementOwner
+
 /-- Constructive compatibility route for downstream users that need the full no-anomaly
 readback, not just the mismatch-equality packet. -/
 theorem normalSemisimple_no_projector_anomaly_of_constructive

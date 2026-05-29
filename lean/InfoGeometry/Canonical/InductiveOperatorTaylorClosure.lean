@@ -62,6 +62,20 @@ theorem TaylorCoefficientRecursion.prefix_succ {V : Type*} [AddCommGroup V] [Mod
     R.prefix (N + 1) A = R.prefix N A + R.coeff N • (A ^ N) :=
   operatorTaylorPrefix_succ R.coeff N A
 
+/-- Coefficientwise sums become sums of finite operator-Taylor prefixes. -/
+theorem operatorTaylorPrefix_add_coeff {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (c d : ℕ → ℂ) (N : ℕ) (A : V →ₗ[ℂ] V) :
+    operatorTaylorPrefix (fun k => c k + d k) N A =
+      operatorTaylorPrefix c N A + operatorTaylorPrefix d N A := by
+  simp [operatorTaylorPrefix, add_smul, Finset.sum_add_distrib]
+
+/-- Scalar rescaling of coefficients becomes scalar rescaling of the finite prefix. -/
+theorem operatorTaylorPrefix_smul_coeff {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (a : ℂ) (c : ℕ → ℂ) (N : ℕ) (A : V →ₗ[ℂ] V) :
+    operatorTaylorPrefix (fun k => a * c k) N A =
+      a • operatorTaylorPrefix c N A := by
+  simp [operatorTaylorPrefix, mul_smul, Finset.smul_sum]
+
 namespace SectorDecomposition
 
 variable {V : Type*} [AddCommGroup V] [Module ℂ V]

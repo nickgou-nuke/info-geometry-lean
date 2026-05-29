@@ -24,8 +24,6 @@ the contraction/readout theorem.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.TKKClosure
-import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.Meta.SocketTarget
 

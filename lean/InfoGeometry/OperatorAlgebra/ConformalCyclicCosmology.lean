@@ -15,9 +15,7 @@ the operator-Erlangen boundary:
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
-import InfoGeometry.OperatorAlgebra.HorizonEschaton
 
 noncomputable section
 

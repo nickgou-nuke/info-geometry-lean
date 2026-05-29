@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.DrazinCentralizerErlangen
 
 /-!
 # Modular Mirror Horizon

@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.DrazinFierzBridge
-import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 

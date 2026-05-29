@@ -79,15 +79,13 @@ open InfoGeometry.Canonical.CurrentSugawaraBridge
 open InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 
 /--
-External-lane packaging witness: the charged Fock current datum canonically
-yields a Sugawara morphism package.
+External-lane packaging: the charged Fock current datum canonically yields a
+Sugawara morphism package.
 -/
-theorem chargedFock_currentSugawaraMorphism_nonempty
+noncomputable def chargedFock_currentSugawaraMorphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty
-      (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  CurrentSugawaraMorphism.nonempty
-    (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
+    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  CurrentSugawaraMorphism.ofHeisenberg (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
 /--
 External Sugawara owner readout: in the packaged morphism, the Virasoro

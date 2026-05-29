@@ -242,6 +242,23 @@ theorem phaseLinearPart_eq_self_of_IsPhaseLinear
     _ = ((2 : ℝ) * (1 / 2 : ℝ)) • A := by simp [smul_smul]
     _ = A := by norm_num
 
+/--
+The phase-linear packet can be recovered from the constructive projection being
+fixed. This lets callers replace a bare `IsPhaseLinear A` hypothesis by the
+operatorial readback `phaseLinearPart A = A` when that readback is the owned
+route.
+-/
+theorem phaseLinearPart_eq_self_iff_isPhaseLinear
+    (A : EndH) :
+    phaseLinearPart (E := E) A = A ↔ IsPhaseLinear (E := E) A := by
+  constructor
+  · intro hFixed
+    have hProj : IsPhaseLinear (E := E) (phaseLinearPart (E := E) A) :=
+      phaseLinearPart_isPhaseLinear (E := E) A
+    simpa [hFixed] using hProj
+  · intro hA
+    exact phaseLinearPart_eq_self_of_IsPhaseLinear (E := E) A hA
+
 theorem phaseAntilinearPart_eq_self_of_IsPhaseAntilinear
     (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
     phaseAntilinearPart (E := E) A = A := by
@@ -254,6 +271,22 @@ theorem phaseAntilinearPart_eq_self_of_IsPhaseAntilinear
       simpa [two_smul] using (two_smul ℝ ((1 / 2 : ℝ) • A)).symm
     _ = ((2 : ℝ) * (1 / 2 : ℝ)) • A := by simp [smul_smul]
     _ = A := by norm_num
+
+/--
+The phase-antilinear packet can likewise be recovered from the constructive
+projection being fixed, avoiding a direct `IsPhaseAntilinear A` assumption when
+callers already own the projection readback.
+-/
+theorem phaseAntilinearPart_eq_self_iff_isPhaseAntilinear
+    (A : EndH) :
+    phaseAntilinearPart (E := E) A = A ↔ IsPhaseAntilinear (E := E) A := by
+  constructor
+  · intro hFixed
+    have hProj : IsPhaseAntilinear (E := E) (phaseAntilinearPart (E := E) A) :=
+      phaseAntilinearPart_isPhaseAntilinear (E := E) A
+    simpa [hFixed] using hProj
+  · intro hA
+    exact phaseAntilinearPart_eq_self_of_IsPhaseAntilinear (E := E) A hA
 
 theorem phaseLinearPart_eq_zero_of_IsPhaseAntilinear
     (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :

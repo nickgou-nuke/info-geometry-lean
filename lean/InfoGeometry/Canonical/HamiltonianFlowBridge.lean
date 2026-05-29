@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Canonical.LatticeHoppingDiffusionFlow
 import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.RGFlow
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib

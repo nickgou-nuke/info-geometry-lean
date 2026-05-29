@@ -168,7 +168,8 @@ lemma marginal_x_toReal_pos_of_joint_toReal_pos
     (hpos : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal) :
     ∀ x : X, 0 < (marginal_x p x).toReal := by
   intro x
-  let θ0 : Θ := Classical.choice inferInstance
+  rcases (Finset.univ_nonempty : ∃ θ : Θ, θ ∈ (Finset.univ : Finset Θ)) with
+    ⟨θ0, _hθ0_mem⟩
   have hterm_pos : 0 < (p (x, θ0)).toReal := hpos x θ0
   have hterm_le : p (x, θ0) ≤ marginal_x p x := by
     rw [marginal_x_apply_sum]

@@ -237,7 +237,7 @@ private def ensureDeclNode (env : Environment) (name : Name) : ExportM String :=
         }
       pure key
 
-partial def visitExpr
+def visitExpr
     (env : Environment)
     (declName : Name)
     (sectionTag : String)

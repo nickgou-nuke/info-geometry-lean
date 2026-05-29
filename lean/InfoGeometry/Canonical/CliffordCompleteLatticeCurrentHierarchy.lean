@@ -37,6 +37,80 @@ variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
+Current-free constructive core of the complete-lattice hierarchy.
+
+This packet keeps only the data already owned by the complete-projection and
+Tomita/Krein nilpotent-atom constructors.  It deliberately has no `heiOper`,
+`heiTrunc`, or `hComm` arguments: the current/Sugawara layer remains a separate
+source-side socket, while the lattice/CAR branch is theorem-backed here.
+-/
+structure CompleteLatticeProjectionCARPacket (n : ℕ) : Prop where
+  finite_projection_complete :
+    ∀ T : Set (FiniteProjectionCompletion n), IsLUB T (sSup T) ∧ IsGLB T (sInf T)
+  infinite_projection_complete :
+    ∀ T : Set InfiniteProjectionCompletion, IsLUB T (sSup T) ∧ IsGLB T (sInf T)
+  self_similar_projection_complete :
+    ∀ T : Set SelfSimilarProjectionCompletion, IsLUB T (sSup T) ∧ IsGLB T (sInf T)
+  refinement_coarse_galois :
+    GaloisConnection (@refineProjectionAssignment n) (@coarseProjectionAssignment n)
+  finite_split_null_atom :
+    (concreteCARCreation (E := E)).comp (concreteCARCreation (E := E)) = 0
+      ∧ (concreteCARAnnihilation (E := E)).comp
+          (concreteCARAnnihilation (E := E)) = 0
+      ∧ (concreteCARCreation (E := E)).comp (concreteCARAnnihilation (E := E))
+          = spectralPlusProj (E := E)
+      ∧ (concreteCARAnnihilation (E := E)).comp (concreteCARCreation (E := E))
+          = spectralMinusProj (E := E)
+      ∧ CCRBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARAnnihilation (E := E))
+          = spectral_epsilon (E := E)
+
+/--
+The complete-lattice/CAR core is constructive without any source-current
+hypotheses.  This is the honest narrowed route below the broader boundary packet:
+projection completeness comes from `completeLatticeProjectionArchitecture`, and
+the split-null CAR atom comes from `TomitaKreinNilpotentAtom`.
+-/
+@[rep_depth transport]
+theorem complete_lattice_projection_car_packet
+    (n : ℕ) :
+    CompleteLatticeProjectionCARPacket (E := E) n := by
+  rcases completeLatticeProjectionArchitecture n with
+    ⟨hfinite, hinfinite, hself, hrefine⟩
+  exact
+    { finite_projection_complete := hfinite
+      infinite_projection_complete := hinfinite
+      self_similar_projection_complete := hself
+      refinement_coarse_galois := hrefine
+      finite_split_null_atom :=
+        ⟨concrete_creation_square_zero (E := E),
+          concrete_annihilation_square_zero (E := E),
+          concrete_creation_comp_annihilation_eq_spectralPlusProj (E := E),
+          concrete_annihilation_comp_creation_eq_spectralMinusProj (E := E),
+          concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon (E := E)⟩ }
+
+/--
+Compatibility readback: the narrowed lattice/CAR packet supplies exactly the
+finite split-null atom without carrying current/Sugawara hypotheses.
+-/
+@[rep_depth transport]
+theorem projection_car_packet_finite_split_null_atom
+    {n : ℕ} (P : CompleteLatticeProjectionCARPacket (E := E) n) :
+    (concreteCARCreation (E := E)).comp (concreteCARCreation (E := E)) = 0
+      ∧ (concreteCARAnnihilation (E := E)).comp
+          (concreteCARAnnihilation (E := E)) = 0
+      ∧ (concreteCARCreation (E := E)).comp (concreteCARAnnihilation (E := E))
+          = spectralPlusProj (E := E)
+      ∧ (concreteCARAnnihilation (E := E)).comp (concreteCARCreation (E := E))
+          = spectralMinusProj (E := E)
+      ∧ CCRBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARAnnihilation (E := E))
+          = spectral_epsilon (E := E) :=
+  P.finite_split_null_atom
+
+/--
 The theorem-level packet for the corrected hierarchy.
 
 The complete-lattice fields are order-theoretic closure data.  The

@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Meta.Architecture
 
 /-!

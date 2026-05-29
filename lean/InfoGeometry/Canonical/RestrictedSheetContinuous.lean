@@ -349,12 +349,18 @@ end GaugeBalancedEquiv
 
 end NamedRestrictions
 
-/-- Trivial restriction for early integration/testing. -/
+/-- Identity-only restriction for early integration/testing. -/
 def trivialSheetRestriction (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     SheetRestriction E where
-  Holds := fun _ => True
-  one_mem := trivial
-  mul_mem := by intro _ _ _ _; trivial
-  inv_mem := by intro _ _; trivial
+  Holds := fun g => g = 1
+  one_mem := rfl
+  mul_mem := by
+    intro g h hg hh
+    rw [hg, hh]
+    simp
+  inv_mem := by
+    intro g hg
+    rw [hg]
+    simp
 
 end InfoGeometry.Canonical.RestrictedSheetContinuous

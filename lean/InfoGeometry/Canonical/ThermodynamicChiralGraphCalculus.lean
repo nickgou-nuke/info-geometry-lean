@@ -817,16 +817,22 @@ def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex Triangl
     | TriangleEdge.AB => T.kBA
     | TriangleEdge.BC => T.kCB
     | TriangleEdge.CA => T.kAC
-  -- DEBT_ID: CTG_TRIVIAL_READOUTS
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial placeholders for triangle graph model
-  conductance := fun _ => 0
-  bias := fun _ => 0
-  capacity := fun _ => 0
-  probability := fun _ => 0
+  conductance := fun _ => 1
+  bias
+    | TriangleEdge.AB => T.kAB - T.kBA
+    | TriangleEdge.BC => T.kBC - T.kCB
+    | TriangleEdge.CA => T.kCA - T.kAC
+  capacity := fun _ => 1
+  probability := fun _ => 1
   potential := fun _ => 0
-  flow := fun _ => 0
-  affinity := fun _ => 0
+  flow
+    | TriangleEdge.AB => T.kAB - T.kBA
+    | TriangleEdge.BC => T.kBC - T.kCB
+    | TriangleEdge.CA => T.kCA - T.kAC
+  affinity
+    | TriangleEdge.AB => Real.log (T.kAB / T.kBA)
+    | TriangleEdge.BC => Real.log (T.kBC / T.kCB)
+    | TriangleEdge.CA => Real.log (T.kCA / T.kAC)
 
 /-- The ordered oriented triangle cycle `A → B → C → A`. -/
 def cycle : Cycle TriangleEdge where
@@ -863,49 +869,63 @@ theorem graph_cycleCurvatureLog_gauge_invariant
     DirectedThermoGraph.cycleCurvatureLog_gauge_invariant (graph T) φ cycle
       (graph_cycleGaugeClosed T)
 
+/-- The triangle graph flow is the stochastic current induced by unit vertex probabilities. -/
+theorem graph_flow_eq_stochasticCurrent (T : ChiralTriangleRates) (e : TriangleEdge) :
+    (graph T).flow e = (graph T).stochasticCurrent e := by
+  cases e <;> simp [graph, DirectedThermoGraph.stochasticCurrent]
+
+/-- The triangle graph flow is also the circuit current for the installed unit
+conductance, zero potential, and rate-difference bias. -/
+theorem graph_flow_eq_circuitCurrent (T : ChiralTriangleRates) (e : TriangleEdge) :
+    (graph T).flow e = (graph T).circuitCurrent e := by
+  cases e <;> simp [graph, DirectedThermoGraph.circuitCurrent]
+
+/-- The triangle graph affinity is the log-affinity of its rate ratio. -/
+theorem graph_affinity_eq_logAffinity (T : ChiralTriangleRates) (e : TriangleEdge) :
+    (graph T).affinity e = (graph T).logAffinity e := by
+  cases e <;> simp [graph, DirectedThermoGraph.logAffinity]
+
 end ChiralTriangleGraph
 
 /-- Conservative interface packet connecting de Bruijn syntax to decorated graph semantics.
 
-The fields are deliberately proof-carrying assumptions/witnesses, not analytic
-closure claims.  Later modules can replace these fields by owner theorems. -/
+The fields are concrete readout equalities, not arbitrary semantic
+certificates.  A packet supplies enough algebra to identify the installed graph
+flow with both the stochastic and circuit formulas and to identify edge
+affinity with the log rate-ratio connection. -/
 structure ThermodynamicGraphLambdaPacket where
   term : ThermoTerm
   Vertex : Type
   Edge : Type
   graph : DirectedThermoGraph Vertex Edge
-  semanticInterpretation : Prop
-  linearResourceDiscipline : Prop
-  probabilisticSemantics : Prop
-  circuitSemantics : Prop
-  wilsonLoopSemantics : Prop
-  semanticInterpretation_cert : semanticInterpretation
-  linearResourceDiscipline_cert : linearResourceDiscipline
-  probabilisticSemantics_cert : probabilisticSemantics
-  circuitSemantics_cert : circuitSemantics
-  wilsonLoopSemantics_cert : wilsonLoopSemantics
+  flow_eq_stochasticCurrent : ∀ e : Edge, graph.flow e = graph.stochasticCurrent e
+  flow_eq_circuitCurrent : ∀ e : Edge, graph.flow e = graph.circuitCurrent e
+  affinity_eq_logAffinity : ∀ e : Edge, graph.affinity e = graph.logAffinity e
 
 namespace ThermodynamicGraphLambdaPacket
 
 @[simp] theorem semanticInterpretation_valid (P : ThermodynamicGraphLambdaPacket) :
-    P.semanticInterpretation :=
-  P.semanticInterpretation_cert
+    ∀ e : P.Edge, P.graph.affinity e = P.graph.logAffinity e :=
+  P.affinity_eq_logAffinity
 
 @[simp] theorem linearResourceDiscipline_valid (P : ThermodynamicGraphLambdaPacket) :
-    P.linearResourceDiscipline :=
-  P.linearResourceDiscipline_cert
+    ∀ e : P.Edge, P.graph.flow e = P.graph.stochasticCurrent e :=
+  P.flow_eq_stochasticCurrent
 
 @[simp] theorem probabilisticSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
-    P.probabilisticSemantics :=
-  P.probabilisticSemantics_cert
+    ∀ e : P.Edge, P.graph.flow e = P.graph.stochasticCurrent e :=
+  P.flow_eq_stochasticCurrent
 
 @[simp] theorem circuitSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
-    P.circuitSemantics :=
-  P.circuitSemantics_cert
+    ∀ e : P.Edge, P.graph.flow e = P.graph.circuitCurrent e :=
+  P.flow_eq_circuitCurrent
 
 @[simp] theorem wilsonLoopSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
-    P.wilsonLoopSemantics :=
-  P.wilsonLoopSemantics_cert
+    ∀ C : Cycle P.Edge,
+      DirectedThermoGraph.DetailedBalanceOnCycle P.graph C ↔
+        DirectedThermoGraph.wilsonLoop P.graph C = 1 := by
+  intro C
+  rfl
 
 end ThermodynamicGraphLambdaPacket
 

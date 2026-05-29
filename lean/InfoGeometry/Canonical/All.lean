@@ -129,6 +129,7 @@ import InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
 import InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
 import InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
 import InfoGeometry.Canonical.SymmetryClosureConformalBlocks
+import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

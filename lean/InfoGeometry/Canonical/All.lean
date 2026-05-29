@@ -137,6 +137,7 @@ import InfoGeometry.Canonical.AFRecursiveLimitBridge
 import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.FiniteJaynesFormalism
+import InfoGeometry.Canonical.FiniteJaynesInductiveFormalism
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

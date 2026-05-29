@@ -31,8 +31,11 @@ structure HurwitzInteger where
                 ¬a.isInt ∧ ¬b.isInt ∧ ¬c.isInt ∧ ¬d.isInt)
 
 /--
-Coordinate embedding of a Hurwitz integer into the `2 × 2` real block carrier.
-This is a coordinate map only, not an algebra equivalence.
+HONEST THEOREM DEBT:
+The exact mapping of the discrete `HurwitzInteger` lattice into the $2 \times 2$
+`TwistorBlock` real matrices is deferred.
+
+-- DEBT_KIND: SORRY
 -/
 noncomputable def hurwitzToTwistorBlock : HurwitzInteger → TwistorBlock :=
   fun h =>

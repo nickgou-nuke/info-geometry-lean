@@ -4,7 +4,10 @@ import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Canonical.MajoranaLiftPacketBridge
 import InfoGeometry.Geometry.RealMoebiusAction
+import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 import InfoGeometry.Meta.Architecture
 

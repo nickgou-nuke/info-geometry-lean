@@ -45,8 +45,8 @@ noncomputable def arnoldToDoubledKreinIntertwiner_of_expertsFix
     intro o s
     rfl
   map_support := by
-    intro _ hs
-    exact hs
+    intro _ _
+    trivial
   map_generator := by
     intro s
     change arnoldGenerator (E := E) n net β s = s

@@ -18,17 +18,17 @@ namespace InfoGeometry.Analysis
 
 open Complex
 
-/-- The fixed model spatial domain used by this finite algebraic sidecar. -/
+/-- Placeholder for the spatial domain $\Omega \subset \mathbb{R}^d$. -/
 abbrev DomainPoint := Fin 3 → ℝ
 
 /-- The complex coefficient matrix function $\mu : \Omega \to \mathcal{L}(\mathbb{C}^d)$.
     It decomposes into real and imaginary parts: $\mu_R(x) + i \mu_I(x)$. -/
 abbrev ComplexCoefficientMatrix (d : ℕ) := DomainPoint → Matrix (Fin d) (Fin d) ℂ
 
-/-- Function space used by this finite algebraic sidecar. -/
+/-- Placeholder for the Sobolev space $W^{1,2}(\Omega, \mathbb{C})$. -/
 abbrev SobolevSpace := DomainPoint → ℂ
 
-/-- Zero-gradient model used until an owned weak-derivative interface is installed. -/
+/-- Placeholder for the weak gradient operator $\nabla$. -/
 noncomputable def gradient (_u : SobolevSpace) : DomainPoint → Fin 3 → ℂ :=
   fun _ _ => 0
 
@@ -36,9 +36,7 @@ noncomputable def gradient (_u : SobolevSpace) : DomainPoint → Fin 3 → ℂ :
 The continuous bilinear Dirichlet form:
 $t(u, v) = \int_{\Omega} \mu \nabla u \cdot \overline{\nabla v} \, \mathrm{d}x$
 
-This sidecar has no measure/weak-derivative owner yet, so the installed model
-is the unit algebraic form. Analytic sectoriality is supplied explicitly in
-downstream theorems rather than derived here.
+-- DEBT_KIND: SORRY
 -/
 noncomputable def dirichletForm (μ : ComplexCoefficientMatrix 3) (u v : SobolevSpace) : ℂ :=
   1

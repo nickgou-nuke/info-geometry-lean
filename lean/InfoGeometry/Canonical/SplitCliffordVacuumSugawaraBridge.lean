@@ -27,13 +27,13 @@ open Filter
 Given explicit truncation and Wick commutator laws, the source current family
 closes to the external `CurrentHeisenbergRep`.
 -/
-noncomputable def vacuum_closes_external_heisenberg_rep
+theorem vacuum_closes_external_heisenberg_rep
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (J : Int → V →ₗ[𝕜] V)
     (h_trunc : ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0)
     (h_wick : SplitSourceEndWickLaw J) :
-    CurrentHeisenbergRep 𝕜 V := by
+    Nonempty (CurrentHeisenbergRep 𝕜 V) := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
     packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentHeisenbergRep W
@@ -41,13 +41,13 @@ noncomputable def vacuum_closes_external_heisenberg_rep
 /--
 The same data also closes to the packaged external Sugawara morphism surface.
 -/
-noncomputable def vacuum_closes_external_sugawara_morphism
+theorem vacuum_closes_external_sugawara_morphism
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (J : Int → V →ₗ[𝕜] V)
     (h_trunc : ∀ v : V, ∀ᶠ l : Int in atTop, J l v = 0)
     (h_wick : SplitSourceEndWickLaw J) :
-    CurrentSugawaraMorphism 𝕜 V := by
+    Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
   let W : SplitCliffordHeisenbergWitness 𝕜 V :=
     packagedHeisenbergWitness J h_trunc h_wick
   exact splitClifford_to_currentSugawaraMorphism W
@@ -104,3 +104,4 @@ theorem chargedFock_external_sugawara_vacuum_highest_weight_packet
   chargedFock_sugawara_vacuum_highest_weight_packet (𝕜 := 𝕜) α
 
 end InfoGeometry.Canonical.SplitCliffordVacuumSugawaraBridge
+

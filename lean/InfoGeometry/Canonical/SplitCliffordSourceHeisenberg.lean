@@ -97,26 +97,26 @@ commutator law, it packages into a split Heisenberg witness.
 This is the strict bridge step from source-side lift data to the existing
 `CurrentHeisenbergRep` interface.
 -/
-def strictWitness_of_splitCurrentLiftDatum
+theorem strictWitness_of_splitCurrentLiftDatum
     {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
     (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    SplitCliffordHeisenbergWitness 𝕜 V :=
-  packagedHeisenbergWitness L.Jlift L.trunc hCommLift
+    Nonempty (SplitCliffordHeisenbergWitness 𝕜 V) := by
+  exact ⟨packagedHeisenbergWitness L.Jlift L.trunc hCommLift⟩
 
 /--
 The same source-side hypotheses already yield the existing repository
 `CurrentHeisenbergRep` package.
 -/
-noncomputable def currentRep_of_splitCurrentLiftDatum
+theorem currentRep_nonempty_of_splitCurrentLiftDatum
     {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
     (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V :=
-  splitClifford_to_currentHeisenbergRep
-    (strictWitness_of_splitCurrentLiftDatum L hCommLift)
+    Nonempty (InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep 𝕜 V) := by
+  rcases strictWitness_of_splitCurrentLiftDatum L hCommLift with ⟨W⟩
+  exact splitClifford_to_currentHeisenbergRep W
 
 /-! ## Explicit infinite-current consumer readouts -/
 

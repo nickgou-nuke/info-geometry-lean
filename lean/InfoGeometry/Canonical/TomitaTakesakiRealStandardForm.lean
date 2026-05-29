@@ -101,62 +101,6 @@ structure RealStandardForm where
 
 namespace RealStandardForm
 
-/--
-Canonical identity standard-form carrier on the full doubled endomorphism algebra.
-
-This is the constructive identity branch: the left/right transport fields of
-`RealStandardForm` are discharged by the explicit full-algebra choice and
-`J = 1`, rather than being supplied as separate hypotheses.
--/
-@[rep_depth krein]
-def identityCarrier : RealStandardForm (E := E) where
-  leftAlgebra := Set.univ
-  rightAlgebra := Set.univ
-  J := 1
-  J_sq := by simp
-  J_left_to_right := by
-    intro A _hA
-    simp
-  J_right_to_left := by
-    intro A _hA
-    simp
-
-omit [CompleteSpace E] in
-/-- The identity carrier has the full algebra as its left algebra. -/
-@[rep_depth krein]
-theorem identityCarrier_mem_leftAlgebra (A : EndH) :
-    A ∈ (identityCarrier (E := E)).leftAlgebra := by
-  simp [identityCarrier]
-
-omit [CompleteSpace E] in
-/-- The identity carrier has the full algebra as its right algebra. -/
-@[rep_depth krein]
-theorem identityCarrier_mem_rightAlgebra (A : EndH) :
-    A ∈ (identityCarrier (E := E)).rightAlgebra := by
-  simp [identityCarrier]
-
-omit [CompleteSpace E] in
-/--
-On the identity carrier, Tomita conjugation lands in the right algebra without an
-external membership packet.
--/
-@[rep_depth krein]
-theorem identityCarrier_jConjugate_mem_rightAlgebra (A : EndH) :
-    jConjugate (identityCarrier (E := E)).J A
-      ∈ (identityCarrier (E := E)).rightAlgebra := by
-  exact (identityCarrier (E := E)).J_left_to_right (identityCarrier_mem_leftAlgebra (E := E) A)
-
-omit [CompleteSpace E] in
-/--
-On the identity carrier, Tomita conjugation lands in the left algebra without an
-external membership packet.
--/
-@[rep_depth krein]
-theorem identityCarrier_jConjugate_mem_leftAlgebra (A : EndH) :
-    jConjugate (identityCarrier (E := E)).J A
-      ∈ (identityCarrier (E := E)).leftAlgebra := by
-  exact (identityCarrier (E := E)).J_right_to_left (identityCarrier_mem_rightAlgebra (E := E) A)
-
 variable (S : RealStandardForm (E := E))
 
 /-- Orientation gauge: `J ↦ -J` preserves the standard-form transport laws. -/

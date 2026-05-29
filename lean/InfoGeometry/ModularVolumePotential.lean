@@ -519,14 +519,14 @@ def ModularVolumePotentialTarget
     (_ln : LogRadonNikodymPacket) (_rs : RelativeSurprisalPacket)
     (_ge : GibbsFreeEnergyPacket) (_mf : ModularFlowPacket)
     (_sv : SupervolumePacket) (_gk : GKSLPacket) : Prop :=
-  (∀ μ x, _ln.logPotential μ x = -Real.log (_ln.relativeDensity μ x)) ∧
-  (∀ μ η, _rs.klReadout μ η = _rs.klReadout μ η) ∧
-  (∀ s, _ge.gibbsWeight s =
-      Real.exp (-( _ge.inverseTemperature * _ge.energy s) - _ge.logPartitionConstant)) ∧
-  (∀ s, _ge.freeEnergy s = _ge.energy s + _ge.inverseTemperature⁻¹ * _ge.klToGibbs s) ∧
-  (∀ x, _sv.supertrace x = _sv.evenTrace x - _sv.oddTrace x) ∧
-  (∀ ρ t, _gk.freeEnergyDecay ρ t) ∧
-  (∀ ρ t, 0 ≤ t → _gk.freeEnergyShadow (_gk.generator t ρ) ≤ _gk.freeEnergyShadow ρ)
+  (∃ _hln : ∀ μ x, _ln.logPotential μ x = -Real.log (_ln.relativeDensity μ x), True) ∧
+  (∃ _hrs : ∀ μ η, _rs.klReadout μ η = _rs.klReadout μ η, True) ∧
+  (∃ _hgw : ∀ s, _ge.gibbsWeight s =
+      Real.exp (-( _ge.inverseTemperature * _ge.energy s) - _ge.logPartitionConstant), True) ∧
+  (∃ _hef : ∀ s, _ge.freeEnergy s = _ge.energy s + _ge.inverseTemperature⁻¹ * _ge.klToGibbs s, True) ∧
+  (∃ _hst : ∀ x, _sv.supertrace x = _sv.evenTrace x - _sv.oddTrace x, True) ∧
+  (∃ _hfd : ∀ ρ t, _gk.freeEnergyDecay ρ t, True) ∧
+  (∃ _hfm : ∀ ρ t, 0 ≤ t → _gk.freeEnergyShadow (_gk.generator t ρ) ≤ _gk.freeEnergyShadow ρ, True)
 
 /--
 Constructor that lifts explicit layer witnesses into the target shape.
@@ -539,9 +539,9 @@ theorem constructModularVolumePotentialTarget
     (_sv : SupervolumePacket)
     (_gk : GKSLPacket) :
     ModularVolumePotentialTarget _ln _rs _ge _mf _sv _gk := by
-  exact ⟨_ln.logPotential_eq, _rs.klReadout_eq,
-    _ge.gibbsWeight_eq, _ge.freeEnergy_eq, _sv.supertrace_eq,
-    _gk.freeEnergyDecay_holds, _gk.freeEnergy_monotone⟩
+  refine ⟨⟨_ln.logPotential_eq, trivial⟩, ⟨_rs.klReadout_eq, trivial⟩,
+    ⟨_ge.gibbsWeight_eq, trivial⟩, ⟨_ge.freeEnergy_eq, trivial⟩, ⟨_sv.supertrace_eq, trivial⟩,
+    ⟨_gk.freeEnergyDecay_holds, trivial⟩, ⟨_gk.freeEnergy_monotone, trivial⟩⟩
 
 namespace LogRadonNikodymPacket
 

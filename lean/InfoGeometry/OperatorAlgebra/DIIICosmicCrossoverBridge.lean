@@ -15,6 +15,7 @@ anti-fixed without an additional reflection witness.
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.CosmicAndreevCrossover
 import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 
 noncomputable section

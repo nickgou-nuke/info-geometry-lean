@@ -99,78 +99,6 @@ theorem projectorObstruction_minusProjector_mul_mul_plusProjector_eq_zero_of_kkt
     CI.chiralAnomalyOperator_minusProjector_mul_mul_plusProjector_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
 
-/--
-Witness-routed projector-obstruction bridge: a single `KKTWingWitness` replaces
-three separate wing-placement hypotheses for the grade-zero readback.
--/
-theorem projectorObstruction_isGZero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    InfoGeometry.Canonical.KKTCore.IsGZero X CI.projectorObstruction := by
-  simpa [projectorObstruction] using
-    CI.chiralAnomalyOperator_isGZero_of_kktWingWitness (X := X) W
-
-/--
-Witness-routed positive-wing readback for the projector obstruction.
--/
-theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    InfoGeometry.Canonical.KKTCore.gOnePart X CI.projectorObstruction = 0 := by
-  exact InfoGeometry.Canonical.KKTCore.gOnePart_eq_zero_of_isGZero
-    (X := X) (A := CI.projectorObstruction)
-    (CI.projectorObstruction_isGZero_of_kktWingWitness W)
-
-/--
-Witness-routed negative-wing readback for the projector obstruction.
--/
-theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    InfoGeometry.Canonical.KKTCore.gNegOnePart X CI.projectorObstruction = 0 := by
-  exact InfoGeometry.Canonical.KKTCore.gNegOnePart_eq_zero_of_isGZero
-    (X := X) (A := CI.projectorObstruction)
-    (CI.projectorObstruction_isGZero_of_kktWingWitness W)
-
-/--
-Witness-routed diagonal-block readback for the projector obstruction.
--/
-theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    CI.projectorObstruction
-      = InfoGeometry.Canonical.KKTCore.plusProjector X * CI.projectorObstruction
-          * InfoGeometry.Canonical.KKTCore.plusProjector X
-        + InfoGeometry.Canonical.KKTCore.minusProjector X * CI.projectorObstruction
-          * InfoGeometry.Canonical.KKTCore.minusProjector X := by
-  exact InfoGeometry.Canonical.KKTCore.eq_diagonal_blocks_of_isGZero
-    (X := X) (A := CI.projectorObstruction)
-    (CI.projectorObstruction_isGZero_of_kktWingWitness W)
-
-/--
-Witness-routed off-diagonal plus/minus annihilation for the projector obstruction.
--/
-theorem projectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    InfoGeometry.Canonical.KKTCore.plusProjector X * CI.projectorObstruction
-      * InfoGeometry.Canonical.KKTCore.minusProjector X = 0 := by
-  exact InfoGeometry.Canonical.KKTCore.plusProjector_mul_mul_minusProjector_eq_zero_of_isGZero
-    (X := X) (A := CI.projectorObstruction)
-    (CI.projectorObstruction_isGZero_of_kktWingWitness W)
-
-/--
-Witness-routed off-diagonal minus/plus annihilation for the projector obstruction.
--/
-theorem projectorObstruction_minusProjector_mul_mul_plusProjector_eq_zero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    InfoGeometry.Canonical.KKTCore.minusProjector X * CI.projectorObstruction
-      * InfoGeometry.Canonical.KKTCore.plusProjector X = 0 := by
-  exact InfoGeometry.Canonical.KKTCore.minusProjector_mul_mul_plusProjector_eq_zero_of_isGZero
-    (X := X) (A := CI.projectorObstruction)
-    (CI.projectorObstruction_isGZero_of_kktWingWitness W)
-
 /-- Primary scalar readout of the noncommutative projector obstruction. -/
 noncomputable def obstructionScale : ℝ :=
   ‖CI.projectorObstruction‖₊
@@ -491,21 +419,6 @@ theorem projectorObstruction_eq_zero_of_chiralScale_eq_zero
   have hObsNorm : ‖CI.projectorObstruction‖₊ = 0 := by
     simpa [CI.chiralScale_eq_projectorObstruction_nnnorm] using hScaleZero
   exact (nnnorm_eq_zero).1 hObsNorm
-
-/--
-Constructive RN/Kähler/log-det route to vanishing of the canonical projector
-obstruction.
-
-This removes the separate scalar-zero hypothesis at the obstruction surface when
-callers already own the proof-carrying `KahlerLogDetUnitRelativeVolumeWitness`.
--/
-theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
-    {n : Nat}
-    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
-    (W : KahlerLogDetUnitRelativeVolumeWitness CI n M) :
-    CI.projectorObstruction = 0 := by
-  exact CI.projectorObstruction_eq_zero_of_chiralScale_eq_zero
-    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness (M := M) W)
 
 /--
 Scalar zero anomaly is equivalent to vanishing of the canonical projector

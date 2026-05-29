@@ -55,10 +55,10 @@ def toCurrentHeisenbergRep
   comm := W.comm
 
 /-- Any such witness yields a `CurrentHeisenbergRep`. -/
-def toCurrentHeisenbergRep_current
+theorem toCurrentHeisenbergRep_nonempty
     (W : SplitCARCurrentWitness 𝕜 A V) :
-    CurrentHeisenbergRep 𝕜 V :=
-  W.toCurrentHeisenbergRep
+    Nonempty (CurrentHeisenbergRep 𝕜 V) :=
+  ⟨W.toCurrentHeisenbergRep⟩
 
 end SplitCARCurrentWitness
 
@@ -102,14 +102,14 @@ noncomputable def chargedFockSpaceSplitCARCurrentWitness
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
   rfl
 
-/-- The concrete charged-Fock CAR witness. -/
-noncomputable def chargedFockSpaceSplitCARCurrentWitness_concrete
+/-- The concrete charged-Fock CAR witness is nonempty. -/
+theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    SplitCARCurrentWitness 𝕜
+    Nonempty (SplitCARCurrentWitness 𝕜
       (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
         (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
-      (VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  chargedFockSpaceSplitCARCurrentWitness 𝕜 α
+      (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  ⟨chargedFockSpaceSplitCARCurrentWitness 𝕜 α⟩
 
 /-- The concrete charged-Fock CAR witness canonically yields a Sugawara morphism. -/
 noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
@@ -131,10 +131,10 @@ noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
   rfl
 
 /-- The concrete charged-Fock CAR witness also yields the packaged Sugawara surface. -/
-noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism_concrete
+theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_nonempty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α
+    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  ⟨chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α⟩
 
 /-! ## Direct constructive closure (no witness wrapper in theorem statements) -/
 

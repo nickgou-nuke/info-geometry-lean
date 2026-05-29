@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-!
 # InfoGeometry.Canonical.PrimeBooleanCubeSugawara
@@ -11,7 +12,7 @@ Finite Sugawara/CFT readout for the prime Boolean cube.
 This file stays in the finite algebraic lane:
 
 * the canonical Boolean cube is imported from `PrimeBooleanCube`;
-* a finite Sugawara arithmetic datum is installed;
+* a trivial affine/Virasoro bridge is installed over the real carrier;
 * the Sugawara normalization is chosen so that the central charge readout is
   exactly the vertex cardinality `|S|`.
 
@@ -42,10 +43,10 @@ directly in the finite packet.
 -/
 structure PrimeBooleanCubeSugawaraPacket (P : PrimeRegister) where
   vertex : Vertex P
-  bridge : SugawaraDatum
+  bridge : AffineVirasoroBridgeDatum ℝ ℝ
   level_eq_one : bridge.level = 1
-  finiteDimension_eq_card : bridge.dimG = (vertex.val.card : ℝ)
-  dualCoxeterNumber_eq_zero : bridge.hDual = 0
+  finiteDimension_eq_card : bridge.finiteDimension = (vertex.val.card : ℝ)
+  dualCoxeterNumber_eq_zero : bridge.dualCoxeterNumber = 0
   centralCharge_eq_card : bridge.centralCharge = (vertex.val.card : ℝ)
 
 namespace PrimeBooleanCubeSugawaraPacket
@@ -59,37 +60,41 @@ theorem centralCharge_eq_card_theorem (B : PrimeBooleanCubeSugawaraPacket P) :
 
 end PrimeBooleanCubeSugawaraPacket
 
-/-- Formula-calibrated finite Sugawara datum with level `1` and dual Coxeter
-readout `0`.  This is only the arithmetic central-charge surface; it does not
-install affine currents or Virasoro generators. -/
-def finiteVertexSugawaraDatum (dimension : ℝ) : SugawaraDatum where
-  level := 1
-  dimG := dimension
-  hDual := 0
-  centralCharge := dimension
+/-- Trivial affine-current datum used only to keep the finite readout kernel-checkable. -/
+-- DEBT_ID: PBCS_TRIVIAL_AFFINE
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
+def trivialAffineCurrentDatum : AffineCurrentDatum ℝ ℝ where
+  Current := fun _ _ => 0
+  kCentral := 0
+  killingForm := fun _ _ => 0
 
-/-- Legacy blueprint-compatible alias for the zero-dimensional finite
-Sugawara datum.  It is not an affine-current object. -/
-def trivialAffineCurrentDatum : SugawaraDatum :=
-  finiteVertexSugawaraDatum 0
-
-/-- Legacy blueprint-compatible alias for the zero-dimensional finite
-Sugawara datum.  It is not a Virasoro-generator object. -/
-def trivialVirasoroDatum : SugawaraDatum :=
-  finiteVertexSugawaraDatum 0
+/-- Trivial Virasoro datum used only to keep the finite readout kernel-checkable. -/
+-- DEBT_ID: PBCS_TRIVIAL_VIRASORO
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Trivial placeholder for finite Boolean cube readout
+def trivialVirasoroDatum : VirasoroDatum ℝ where
+  Lmode := fun _ => 0
+  central := 0
 
 /--
 Canonical finite Sugawara packet for a Boolean-cube vertex.
 
 The carrier is deliberately trivial on the affine/Virasoro side; the
-Sugawara calibration is used only as a finite arithmetic readout that returns
-the vertex cardinality.
+Sugawara calibration is used only as a finite readout that returns the
+vertex cardinality.
 -/
 def booleanCubeSugawaraPacket
     (P : PrimeRegister) (v : Vertex P) :
     PrimeBooleanCubeSugawaraPacket P where
   vertex := v
-  bridge := finiteVertexSugawaraDatum v.val.card
+  bridge :=
+    { affine := trivialAffineCurrentDatum
+      virasoro := trivialVirasoroDatum
+      centralCharge := v.val.card
+      level := 1
+      finiteDimension := v.val.card
+      dualCoxeterNumber := 0 }
   level_eq_one := rfl
   finiteDimension_eq_card := rfl
   dualCoxeterNumber_eq_zero := rfl
@@ -106,9 +111,9 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
     (P : PrimeRegister) (v : Vertex P) :
     (booleanCubeSugawaraPacket P v).bridge.centralCharge =
       (booleanCubeSugawaraPacket P v).bridge.level *
-        (booleanCubeSugawaraPacket P v).bridge.dimG /
+        (booleanCubeSugawaraPacket P v).bridge.finiteDimension /
           ((booleanCubeSugawaraPacket P v).bridge.level +
-            (booleanCubeSugawaraPacket P v).bridge.hDual) := by
-  norm_num [booleanCubeSugawaraPacket, finiteVertexSugawaraDatum]
+            (booleanCubeSugawaraPacket P v).bridge.dualCoxeterNumber) := by
+  simp [booleanCubeSugawaraPacket]
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

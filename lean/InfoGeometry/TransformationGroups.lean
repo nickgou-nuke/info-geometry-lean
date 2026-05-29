@@ -42,7 +42,7 @@ lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
     (hall : ∀ a b : α, p a = p b) :
     ∀ a : α, p a = 1 / (Fintype.card α : ℝ≥0∞) := by
   classical
-  intro a0
+  let a0 : α := Classical.choice (by infer_instance : Nonempty α)
   let c : ℝ≥0∞ := p a0
   have hc : ∀ a : α, p a = c := by
     intro a
@@ -67,8 +67,9 @@ lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
         (Fintype.card α : ℝ≥0∞)⁻¹ := by
       simpa [mul_assoc] using hEq'
     simpa [hcancel] using hEq''
+  intro a
   calc
-    p a0 = c := hc a0
+    p a = c := hc a
     _ = 1 / (Fintype.card α : ℝ≥0∞) := by
           simpa [div_eq_mul_inv] using hcval
 

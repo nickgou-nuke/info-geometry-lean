@@ -10,6 +10,7 @@ lightcone calibration are supplied.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.OperatorAlgebra.StinespringDilation
 
 noncomputable section
 

@@ -152,17 +152,6 @@ theorem id_isHestenesAnalyticSymmetry :
     IsHestenesAnalyticSymmetry (E := E) (ContinuousLinearMap.id ℝ H₂) := by
   exact id_isHestenesHolomorphicDifferential (E := E)
 
-/-- The zero endomorphism is a Hestenes-analytic symmetry generator.
-
-This is the constructive owner route for zero-mode/central-collapse branches:
-callers no longer need to pass a bare phase-axis-preservation hypothesis for the
-zero operator before using commutator closure. -/
-@[rep_depth krein]
-theorem zero_isHestenesAnalyticSymmetry :
-    IsHestenesAnalyticSymmetry (E := E) (0 : EndH) := by
-  unfold IsHestenesAnalyticSymmetry IsHestenesHolomorphicDifferential
-  simp
-
 /-- Hestenes-analytic symmetry generators are closed under operator commutator. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator
@@ -212,30 +201,6 @@ theorem hestenesAnalyticSymmetry_commutator_id_left
       (hestenesSymmetryCommutator (E := E) (ContinuousLinearMap.id ℝ H₂) A) := by
   exact hestenesAnalyticSymmetry_commutator (E := E)
     (id_isHestenesAnalyticSymmetry (E := E)) hA
-
-/-- Right-zero commutator branch with the zero analytic witness derived
-constructively from `zero_isHestenesAnalyticSymmetry` rather than passed as a raw
-hypothesis. -/
-@[rep_depth krein]
-theorem hestenesAnalyticSymmetry_commutator_zero_right
-    {A : EndH}
-    (hA : IsHestenesAnalyticSymmetry (E := E) A) :
-    IsHestenesAnalyticSymmetry (E := E)
-      (hestenesSymmetryCommutator (E := E) A (0 : EndH)) := by
-  exact hestenesAnalyticSymmetry_commutator (E := E) hA
-    (zero_isHestenesAnalyticSymmetry (E := E))
-
-/-- Left-zero commutator branch with the zero analytic witness derived
-constructively from `zero_isHestenesAnalyticSymmetry` rather than passed as a raw
-hypothesis. -/
-@[rep_depth krein]
-theorem hestenesAnalyticSymmetry_commutator_zero_left
-    {A : EndH}
-    (hA : IsHestenesAnalyticSymmetry (E := E) A) :
-    IsHestenesAnalyticSymmetry (E := E)
-      (hestenesSymmetryCommutator (E := E) (0 : EndH) A) := by
-  exact hestenesAnalyticSymmetry_commutator (E := E)
-    (zero_isHestenesAnalyticSymmetry (E := E)) hA
 
 variable {𝔤 : Type*}
 variable [AddCommGroup 𝔤] [Module ℝ 𝔤] [LieRing 𝔤] [LieAlgebra ℝ 𝔤]

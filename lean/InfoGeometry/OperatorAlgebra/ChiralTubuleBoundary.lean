@@ -16,8 +16,13 @@ calibration is supplied, but temperature alone is not the snap theorem.
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
+import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
+import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
+import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
+import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

@@ -3,6 +3,7 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 
 /-!
 # InfoGeometry.Canonical.SelfConcordantZetaBarrier

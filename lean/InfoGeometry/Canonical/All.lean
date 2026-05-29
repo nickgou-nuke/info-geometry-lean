@@ -131,6 +131,7 @@ import InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
 import InfoGeometry.Canonical.SymmetryClosureConformalBlocks
 import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
 import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
+import InfoGeometry.Canonical.BoundaryLoopSuperClosure
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

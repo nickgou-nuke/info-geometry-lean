@@ -18,10 +18,7 @@ $\langle x \bullet \overline{y}, 1 \rangle = \langle x, y \rangle$
 
 namespace InfoGeometry.Quantum
 
-/-- 
-Placeholder for the Hurwitz inner product space over the real scalars. 
-This space carries a quadratic norm $n(x)$ and an involution $\overline{x}$.
--/
+/-- The concrete real two-dimensional Hurwitz model used in this file. -/
 abbrev HurwitzSpace := ℝ × ℝ
 
 /-- The unit element $1$ in the Hurwitz space. -/
@@ -44,12 +41,9 @@ noncomputable def hurwitz_mul (x y : HurwitzSpace) : HurwitzSpace :=
   (x.1 * y.1 - x.2 * y.2, x.1 * y.2 + x.2 * y.1)
 
 /--
-HONEST THEOREM DEBT:
 The exact Fenchel coordinate equality.
 The metric property $\langle x \bullet \overline{y}, 1 \rangle = \langle x, y \rangle$
 binds the Fenchel-Young inequality tightly without calculus limits.
-
--- DEBT_KIND: SORRY
 -/
 theorem hurwitz_fenchel_equality (x y : HurwitzSpace) :
     hurwitz_inner (hurwitz_mul x (hurwitz_conj y)) hurwitz_one = hurwitz_inner x y := by

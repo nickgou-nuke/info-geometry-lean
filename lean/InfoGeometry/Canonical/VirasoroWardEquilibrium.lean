@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.OperatorThermodynamics
-import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Meta.Architecture
 
 noncomputable section

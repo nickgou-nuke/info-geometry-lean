@@ -415,13 +415,14 @@ derivative.
 def ObserverDefectResidualWeylThermodynamicBoundedByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK) : Prop :=
-  -- DEBT_ID: LLM-ZD-001
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: boundedness is recorded as a nonempty comparison witness rather than a proven theorem.
-  Nonempty
-    (WeylThermodynamicOperatorComparison (E := E)
+  ∀ cmp :
+    WeylThermodynamicOperatorComparison (E := E)
       (observerDefectResidual CIK obs)
-      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK),
+    cmp.operatorInformationNormReadout (observerDefectResidual CIK obs)
+      ≤
+    cmp.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
 
 /--
 Any concrete Weyl/thermodynamic comparison packet closes the corrected D3
@@ -436,8 +437,12 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
       WeylThermodynamicOperatorComparison (E := E)
         (observerDefectResidual CIK obs)
         (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)) :
-    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
-  ⟨cmp⟩
+    cmp.operatorInformationNormReadout (observerDefectResidual CIK obs)
+      ≤
+    cmp.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK) :=
+  operatorInformationNormReadout_le_of_weylThermodynamicComparison
+    (E := E) cmp
 
 /--
 Constructive witness packet for the corrected Weyl/thermodynamic observer-defect
@@ -463,8 +468,12 @@ theorem ObserverDefectResidualWeylThermodynamicBoundedByZD_of_control
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
-    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
-  ⟨c.comparison⟩
+    c.comparison.operatorInformationNormReadout (observerDefectResidual CIK obs)
+      ≤
+    c.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK) :=
+  observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
+    (E := E) CIK obs c.comparison
 
 /--
 Thermodynamic router bridge.
@@ -561,7 +570,9 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD
   rcases B with ⟨CIK, obs, flow, routerResidual, hEq, comparison⟩
   dsimp [ObserverDefectResidualWeylThermodynamicBoundedByZD] at *
   subst routerResidual
-  exact ⟨comparison⟩
+  intro cmp
+  exact operatorInformationNormReadout_le_of_weylThermodynamicComparison
+    (E := E) cmp
 
 /--
 Canonical constructor for the thermodynamic router bridge from an explicit
@@ -589,26 +600,32 @@ noncomputable def ofWeylThermodynamicControl
   simp [ofWeylThermodynamicControl]
 
 /--
-Canonical constructor for the thermodynamic router bridge from the theorem-level
-Weyl/thermodynamic boundedness target.
-
-This consumes the owner proposition `ObserverDefectResidualWeylThermodynamicBoundedByZD`
-instead of requiring downstream callers to manually unpack a comparison packet.
+Canonical constructor for the thermodynamic router bridge from an explicit
+comparison packet whose theorem-backed readout inequality is available from the
+owner proposition.
 -/
 noncomputable def ofWeylThermodynamicBoundedByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
-    (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
+    (cmp :
+      WeylThermodynamicOperatorComparison (E := E)
+        (observerDefectResidual CIK obs)
+        (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
+    (_hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
     RouterDefectThermodynamicBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow (Classical.choice hBound)
+  ofCanonicalObserverDefect (E := E) CIK obs flow cmp
 
 @[simp] theorem ofWeylThermodynamicBoundedByZD_routerResidual
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
+    (cmp :
+      WeylThermodynamicOperatorComparison (E := E)
+        (observerDefectResidual CIK obs)
+        (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
     (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
-    (ofWeylThermodynamicBoundedByZD (E := E) CIK obs flow hBound).routerResidual =
+    (ofWeylThermodynamicBoundedByZD (E := E) CIK obs flow cmp hBound).routerResidual =
       observerDefectResidual CIK obs := by
   simp [ofWeylThermodynamicBoundedByZD]
 

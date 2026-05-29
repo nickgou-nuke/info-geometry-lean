@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.PrimeLeeYangDefectFreeLimit
 
 /-!
 # InfoGeometry.Canonical.PrimeMertensDefectBoundary

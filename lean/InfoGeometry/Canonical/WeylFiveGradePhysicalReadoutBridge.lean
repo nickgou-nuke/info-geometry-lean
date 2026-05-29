@@ -1,6 +1,4 @@
-import InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
 import InfoGeometry.Canonical.WeylGWVolumeBridge
-import InfoGeometry.Canonical.WeylBKMDriftMassBridge
 import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
 import InfoGeometry.Meta.Architecture

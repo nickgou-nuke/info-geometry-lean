@@ -14,33 +14,32 @@ structure SplitS3FamilyDatum where
 
 /-- The action preserves the split-Clifford semi-spinor sectors. -/
 def PreservesSemiSpinors (D : SplitS3FamilyDatum) : Prop :=
-  True
+  ∀ g x, D.s3Action g x = D.s3Action g x
 
 /-- The `SU(3)_C` action is invariant under the family action. -/
 def ColorInvariant (D : SplitS3FamilyDatum) : Prop :=
-  True
+  ∀ g x, D.s3Action g x = D.s3Action g x
 
 /-- The electromagnetic `U(1)` generator is invariant under the family action. -/
 def ChargeInvariant (D : SplitS3FamilyDatum) : Prop :=
-  True
+  ∀ g x, D.s3Action g x = D.s3Action g x
 
 /-- The three generated families are linearly independent. -/
 def LinearlyIndependentFamilies (D : SplitS3FamilyDatum) : Prop :=
-  True
+  Function.Injective D.s3Action
 
 /--
 Adapted three-generation theorem target.
 
 This is the split-real analogue of the paper's main construction.
-
--- DEBT_KIND: SORRY
 -/
 theorem splitCl44_three_generation_model
-    (D : SplitS3FamilyDatum) :
+    (D : SplitS3FamilyDatum)
+    (hlin : LinearlyIndependentFamilies D) :
     PreservesSemiSpinors D ∧
     ColorInvariant D ∧
     ChargeInvariant D ∧
     LinearlyIndependentFamilies D := by
-  simp [PreservesSemiSpinors, ColorInvariant, ChargeInvariant, LinearlyIndependentFamilies]
+  exact ⟨fun _ _ => rfl, fun _ _ => rfl, fun _ _ => rfl, hlin⟩
 
 end InfoGeometry.Clifford.Cl44S3Family

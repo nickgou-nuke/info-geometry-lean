@@ -54,11 +54,6 @@ The twistor incidence placeholder in block form.
 This is only a local compatibility condition on the chosen block carriers.
 The actual twistor projective geometry lives in the dedicated twistor files,
 and the split-octonion projective geometry lives in the split-octonion files.
-
-HONEST THEOREM DEBT:
-No claim here identifies this equation with a proved twistor incidence theorem.
-
--- DEBT_KIND: SORRY
 -/
 def TwistorIncidence (G : TwistorGrid) : Prop :=
   twistorPosition G = spacetimeCoord G * twistorMomentum G

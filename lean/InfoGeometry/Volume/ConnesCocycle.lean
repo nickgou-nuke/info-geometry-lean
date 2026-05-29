@@ -692,7 +692,7 @@ noncomputable def scalarStabilizerCharacter
     (hCocycle : IsConnesCocycle σ u)
     (B : ScalarCocycleBridge (H := H) σ)
     (t : Multiplicative ℝ) :
-    scalarStabilizerCharacter (H := H) σ u hCocycle B ⟨t, by trivial⟩ =
+    scalarStabilizerCharacter (H := H) σ u hCocycle B ⟨t, Subgroup.mem_top t⟩ =
       scalarCocycle (H := H) σ u B t.toAdd :=
   rfl
 

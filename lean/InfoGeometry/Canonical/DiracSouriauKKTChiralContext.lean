@@ -37,22 +37,15 @@ structure KKTChiralContext (S : DiracSouriauSector ℝ) where
   drazin : DiracSouriauSector.DrazinWitnessContext S
 
 /--
-Construct the KKT/chiral bridge context for a real finite Dirac-Souriau sector
-without requiring an externally supplied Drazin witness.  The Drazin component
-is built from the field-level finite-dimensional Drazin existence theorem.
+Construct the KKT/chiral bridge context from an explicit Drazin witness.
 -/
-noncomputable def KKTChiralContext.ofField
-    (S : DiracSouriauSector ℝ) (CIK : CertifiedInverseKernel E) :
+def KKTChiralContext.ofExplicit
+    (S : DiracSouriauSector ℝ)
+    (CIK : CertifiedInverseKernel E)
+    (drazin : DiracSouriauSector.DrazinWitnessContext S) :
     KKTChiralContext (E := E) S where
   CIK := CIK
-  drazin := DiracSouriauSector.DrazinWitnessContext.ofField S
-
-/-- The field-constructed context carries the canonical Drazin witness. -/
-theorem hasDrazinInverse_of_kktChiralContext_ofField
-    (S : DiracSouriauSector ℝ) (CIK : CertifiedInverseKernel E) :
-    S.HasDrazinInverse
-      (KKTChiralContext.ofField (E := E) S CIK).drazin.k :=
-  DiracSouriauSector.hasDrazinInverse_of_fieldContext S
+  drazin := drazin
 
 /-- The context carries the local Dirac-Souriau Drazin hypothesis. -/
 theorem hasDrazinInverse_of_kktChiralContext

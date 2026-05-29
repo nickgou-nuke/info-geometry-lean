@@ -501,18 +501,13 @@ noncomputable def ofHeisenberg (H : CurrentHeisenbergRep 𝕜 V) :
     exact H.currentSugawaraRepresentation_lgen_apply n
   central_apply := H.currentSugawaraRepresentation_central
 
-/-- Every Heisenberg current datum canonically yields a Sugawara morphism package. -/
-theorem nonempty (H : CurrentHeisenbergRep 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) :=
-  ⟨ofHeisenberg H⟩
-
 end CurrentSugawaraMorphism
 
 /-- The charged Fock space canonically yields a current Sugawara morphism package. -/
-theorem chargedFockSpace_currentSugawaraMorphism_nonempty
+noncomputable def chargedFockSpace_currentSugawaraMorphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  CurrentSugawaraMorphism.nonempty (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
+    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+  CurrentSugawaraMorphism.ofHeisenberg (chargedFockSpaceCurrentHeisenbergRep 𝕜 α)
 
 /--
 Semantic adapter for the quantum Ricci scalar on the raw CAR mode algebra.

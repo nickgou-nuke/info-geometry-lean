@@ -37,7 +37,7 @@ def addEdge (source target : Nat) (role : String) : GraphM Unit := do
   let edge := { source := source, target := target, role := role : GraphEdge }
   set (map, { g with edges := g.edges.push edge })
 
-partial def visitExpr (e : Expr) : GraphM Nat := do
+def visitExpr (e : Expr) : GraphM Nat := do
   let (map, _) ← get
   if let some id := map.get? e then
     return id

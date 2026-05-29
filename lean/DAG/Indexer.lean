@@ -149,7 +149,7 @@ def moduleToLeanFile (sp : SearchPath) (mod : Name) : MetaM String := do
   | none => pure "unknown"
 
 /-- Recursively extract all constants mentioned in an Expr. -/
-partial def collectConsts (e : Expr) : NameSet :=
+def collectConsts (e : Expr) : NameSet :=
   e.foldConsts {} (fun n acc => acc.insert n)
 
 /-- Recognize morphisms and extract Domain/Codomain.

@@ -15,7 +15,7 @@ the square-free/Cantor occupation register:
 
 This is the finite real algebraic content of the "Majorana is a bit-flipper"
 picture.  Kitaev-chain, Pfaffian zero-mode, and RH interpretations remain
-witness-gated.
+explicit downstream theorem obligations, not proof-carrying gates in this file.
 -/
 
 noncomputable section
@@ -85,77 +85,35 @@ theorem card_majoranaFlip_add_one_of_mem
     (majoranaFlip p S).card + 1 = S.card := by
   simpa [majoranaFlip, h] using Finset.card_erase_add_one h
 
-/-! ## 2. Witness gates for Majorana chains and zero modes -/
+/-! ## 2. Data carriers for downstream Majorana interpretations -/
 
 /--
-Finite Majorana Clifford/CAR gate.
+Finite Majorana operator data.
 
-Concrete anticommutation and self-adjointness laws are supplied by an owner
-operator model.  The finite register theorem above only proves the bit-flip
-shadow.
+This structure intentionally stores only the mode-to-operator map plus a prose
+explanation of the intended external model.  Self-adjointness, Clifford/CAR,
+and bit-flip representation laws must be stated and proved in the concrete
+owner model that supplies `Operator`; this file proves only the finite register
+bit-flip theorems above.
 -/
 structure PrimeMajoranaCARGate
     (PrimeLabel Operator : Type*) where
   majorana : PrimeLabel → Operator
-  self_adjoint_law : Prop
-  clifford_law : Prop
-  bit_flip_model_law : Prop
-  certificate :
-    self_adjoint_law ∧ clifford_law ∧ bit_flip_model_law
-
-namespace PrimeMajoranaCARGate
-
-/-- Re-export of the supplied Clifford/CAR law. -/
-theorem clifford
-    {PrimeLabel Operator : Type*}
-    (G : PrimeMajoranaCARGate PrimeLabel Operator) :
-    G.clifford_law :=
-  G.certificate.2.1
-
-/-- Re-export of the supplied bit-flip model law. -/
-theorem bit_flip_model
-    {PrimeLabel Operator : Type*}
-    (G : PrimeMajoranaCARGate PrimeLabel Operator) :
-    G.bit_flip_model_law :=
-  G.certificate.2.2
-
-end PrimeMajoranaCARGate
+  modelExplanation : String
 
 /--
-Majorana zero-mode interpretation gate.
+Majorana zero-mode interpretation data.
 
-This is deliberately a witness interface.  It does not assert that zeta zeros
-are Majorana zero modes or prove RH.
+This structure intentionally stores only the chosen Hamiltonian, zero-mode, and
+readout objects plus prose.  Commutation, zero-energy, and spectral/readout
+comparison claims are not stored as certificate fields here; they remain
+explicit theorem obligations in downstream owner files.
 -/
 structure MajoranaZeroModeGate
     (Hamiltonian ZeroMode ZeroReadout : Type*) where
   hamiltonian : Hamiltonian
   zeroMode : ZeroMode
   zeroReadout : ZeroReadout
-  commutes_with_hamiltonian_law : Prop
-  zero_energy_law : Prop
-  zero_readout_comparison_law : Prop
-  certificate :
-    commutes_with_hamiltonian_law ∧
-      zero_energy_law ∧
-        zero_readout_comparison_law
-
-namespace MajoranaZeroModeGate
-
-/-- Re-export of the supplied zero-energy law. -/
-theorem zero_energy
-    {Hamiltonian ZeroMode ZeroReadout : Type*}
-    (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout) :
-    G.zero_energy_law :=
-  G.certificate.2.1
-
-/-- Re-export of the supplied zero-readout comparison law. -/
-theorem zero_readout_comparison
-    {Hamiltonian ZeroMode ZeroReadout : Type*}
-    (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout) :
-    G.zero_readout_comparison_law :=
-  G.certificate.2.2
-
-end MajoranaZeroModeGate
+  modelExplanation : String
 
 end InfoGeometry.Arithmetic.PrimeMajoranaBitFlip

@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.ArnoldApproximationCore
 import InfoGeometry.Canonical.QuantumPresentation
+import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -18,6 +19,7 @@ namespace InfoGeometry.Canonical.ArnoldNetworkPresentation
 open InfoGeometry.Canonical.QuantumPresentation
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.ArnoldApproximationCore
+open InfoGeometry.Quantum.Fierz
 
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -59,7 +61,7 @@ noncomputable def toQuantumPresentation
   State := ArnoldMajoranaCarrier E
   Observable := ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E
   act := fun A ψ => A ψ
-  support := fun _ => True
+  support := fun ψ => infoArea ψ = 0
   generator := arnoldGenerator n net β
   metricReadout := arnoldMetricReadout
   phaseReadout := arnoldPhaseReadout

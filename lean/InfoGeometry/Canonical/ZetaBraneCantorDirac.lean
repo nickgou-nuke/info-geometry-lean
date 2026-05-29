@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.ZetaBraneCantorDirac
@@ -13,11 +12,11 @@ Lean skeleton for the Cantor/Dirac zeta-brane program.
 This file packages the architecture as a theorem-safe interface:
 * a generic `CantorDiracProgram` spine;
 * a finite Möbius/Fock toy carrier;
-* a socketed finite-operator equivalence target.
+* a finite self-adjoint/unitary calibration datum.
 
-The actual Cantor--Dirac zeta-brane socket remains in
-`CantorDiracZetaBraneSocket`.  This file only makes the logical shape
-machine-visible without claiming a new RH proof.
+The actual Cantor--Dirac zeta-brane conjectural layer remains in
+`CantorDiracZetaBraneSocket`.  Importing the owner module is enough; this file
+only states local consequences without re-export wrappers.
 -/
 
 noncomputable section
@@ -77,25 +76,21 @@ theorem mobiusParity_sq {N : ℕ} (ε : FockState N) :
   unfold mobiusParity
   by_cases h : Even (fermionNumber ε) <;> simp [h]
 
-/-! ## Socketed finite-operator equivalence target -/
+/-! ## Finite-operator calibration datum -/
 
 /--
 Finite Cantor-Dirac self-adjointness / unitarity calibration.
 
-This is the exact gap the skeleton leaves open.  It is recorded as a socket
-interface instead of being turned into a fake theorem.
+The predicates are part of the concrete model, and the field is the actual
+equivalence between them, not an arbitrary `Prop` plus a certificate.  Consumers
+should use `S.selfAdjoint_iff_unitary p` directly after importing this module,
+matching mathlib style instead of adding a duplicate re-export theorem.
 -/
-@[socket_debt_tag, rep_depth operator]
-structure FiniteCantorDiracSelfAdjointSocket where
-  finiteCantorDirac_selfAdjoint_iff_unitary_law : Prop
-  finiteCantorDirac_selfAdjoint_iff_unitary_certificate :
-    finiteCantorDirac_selfAdjoint_iff_unitary_law
-
-/-- Reexport of the supplied finite Cantor-Dirac self-adjointness law. -/
-@[bridge_target_tag, rep_depth operator]
-theorem finiteCantorDirac_selfAdjoint_iff_unitary_valid
-    (S : FiniteCantorDiracSelfAdjointSocket) :
-    S.finiteCantorDirac_selfAdjoint_iff_unitary_law :=
-  S.finiteCantorDirac_selfAdjoint_iff_unitary_certificate
+@[rep_depth operator]
+structure FiniteCantorDiracSelfAdjointCalibration where
+  Parameter : Type*
+  SelfAdjoint : Parameter → Prop
+  UnitaryHolonomy : Parameter → Prop
+  selfAdjoint_iff_unitary : ∀ p : Parameter, SelfAdjoint p ↔ UnitaryHolonomy p
 
 end InfoGeometry.Canonical.ZetaBraneCantorDirac

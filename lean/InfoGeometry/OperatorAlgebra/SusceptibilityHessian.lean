@@ -16,7 +16,6 @@ and boundary calibration are proof-carrying data.
 
 import Mathlib
 import InfoGeometry.OperatorAlgebra.JonesCalibration
-import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
 

@@ -45,16 +45,16 @@ theorem SusceptibilityHessianData.hessian_law (S : SusceptibilityHessianData) :
 
 -- 4) Kubo conductivity
 structure KuboData where
-  Gᴿ : ℂ → ℂ
+  G_R : ℂ → ℂ
   σ : ℂ → ℂ
   χdia : ℂ
   kubo_eq :
     ∀ ω : ℂ, ω ≠ 0 →
-      σ ω = (Gᴿ ω - Gᴿ 0 + χdia) / (Complex.I * ω)
+      σ ω = (G_R ω - G_R 0 + χdia) / (Complex.I * ω)
 
 theorem KuboData.kubo_law (K : KuboData) :
   ∀ ω ≠ 0, K.σ ω =
-    (K.Gᴿ ω - K.Gᴿ 0 + K.χdia) / (Complex.I * ω) :=
+    (K.G_R ω - K.G_R 0 + K.χdia) / (Complex.I * ω) :=
   K.kubo_eq
 
 -- 5) Chiral graph contraction
@@ -107,23 +107,27 @@ theorem L2CompleteData.complete_law {E : Type*} [TopologicalSpace E] (L : L2Comp
 
 section Tests
 
--- Test 1: SusceptibilityHessianData with F(x) = x^2
--- In a full file, this would rely on `fun_trans` or `simp` derivative lemmas.
+-- Test 1: SusceptibilityHessianData with F(x) = x^2.
 noncomputable def testSusceptibilityHessian : SusceptibilityHessianData where
   F := fun x => x^2
   χ := 2
   hessian_eq := by
-    -- Evaluates deriv (deriv (fun x => x^2)) 0
-    -- Mathlib knows deriv(x^2) = 2x, and deriv(2x) = 2.
-    sorry
+    have h1 : deriv (fun x : ℝ => x^2) = fun x : ℝ => 2 * x := by
+      ext x
+      simpa [pow_one] using (hasDerivAt_pow (𝕜 := ℝ) 2 x).deriv
+    rw [h1]
+    have h2 : HasDerivAt (fun x : ℝ => 2 * x) 2 0 := by
+      simpa using
+        ((hasDerivAt_const (x := (0 : ℝ)) (c := (2 : ℝ))).mul
+          (hasDerivAt_id (x := (0 : ℝ))))
+    exact h2.deriv.symm
 
--- Test 2: L2CompleteData with a complete space model (e.g., ℝ)
--- ℝ automatically provides [TopologicalSpace ℝ] via Mathlib's instances.
-noncomputable def testL2CompleteReal : L2CompleteData ℝ where
-  lim := fun _ => 0 -- Dummy limit operator for testing the signature
+-- Test 2: canonical convergent model on the one-point topological space.
+def testL2CompletePUnit : L2CompleteData PUnit where
+  lim := fun _ => PUnit.unit
   lim_spec := by
-    -- Proof that a sequence tends to the limit in the `𝓝` (nhds) filter
-    sorry
+    intro u
+    simp
 
 end Tests
 

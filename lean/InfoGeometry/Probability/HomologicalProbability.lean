@@ -18,7 +18,6 @@ This module formalizes the **structural shapes** of the theorems in the bank.
 It does not claim analytic proofs.  Statements are classified as:
 
 - `theorem ... := by ...`    — mechanically verified
-- `theorem ... := by sorry`  — mathematically stated, analytic proof deferred
 - `def ...`                  — definitional / structural surface
 - `-- CONJECTURE:`           — open problem, not asserted in Lean
 
@@ -1933,6 +1932,19 @@ structure ModularRadonNikodymPacket where
   arakiRelativeEntropy : ℝ
 
 /--
+Pointwise commutative Radon-Nikodym comparison witness.
+
+In the classical specialization both the relative modular operator and the
+Connes cocycle lane are represented by scalar functions on the same state
+space, so the theorem-level witness is pointwise equality rather than a
+vacuous predicate.
+-/
+def pointwiseModularNCRadonNikodymWitness
+    {StateSpace : Type*}
+    (Δ cocycle : StateSpace → ℝ) : Prop :=
+  ∀ x : StateSpace, cocycle x = Δ x
+
+/--
 **Theorem 25.2a — Classical RN packet embeds into the modular RN packet.**
 
 Every classical Radon–Nikodym packet provides a commutative specialization
@@ -1948,8 +1960,15 @@ def classicalToModularWitness
     RelativeModularOperator    := cl.StateSpace → ℝ   -- multiplication by dν/dμ
     ConnescCocycle             := cl.StateSpace → ℝ   -- pointwise r^{it}
     RelativeModularHamiltonian := cl.StateSpace → ℝ   -- pointwise log r
-    modularNCRadonNikodymWitness := fun _ _ => True
+    modularNCRadonNikodymWitness := pointwiseModularNCRadonNikodymWitness
     arakiRelativeEntropy       := cl.klDivergence }
+
+theorem classicalToModularWitness_modularNCRadonNikodymWitness_iff
+    (cl : ClassicalRadonNikodymPacket)
+    (Δ cocycle : cl.StateSpace → ℝ) :
+    (classicalToModularWitness cl).modularNCRadonNikodymWitness Δ cocycle
+      ↔ ∀ x : cl.StateSpace, cocycle x = Δ x := by
+  rfl
 
 /--
 **Packet 25.3 — Gibbs–KMS thermodynamic layer.**

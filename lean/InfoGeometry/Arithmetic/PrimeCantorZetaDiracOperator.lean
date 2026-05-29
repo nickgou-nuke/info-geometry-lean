@@ -1369,7 +1369,7 @@ theorem normalizedPrimeHolonomy_all_normSq_eq_one_iff {P : PrimeCutoff}
       ↔ s.re = (1 : ℝ) / 2 := by
   constructor
   · intro h
-    let p0 : PrimeMode P := Classical.choice inferInstance
+    rcases (inferInstance : Nonempty (PrimeMode P)) with ⟨p0⟩
     exact
       (normalizedPrimeHolonomy_normSq_eq_one_iff
         logPrime s p0 (hpos p0)).mp (h p0)
@@ -1904,7 +1904,7 @@ theorem zetaCriticalHolonomyNormUnitaryAt_iff_re_eq_half
     ZetaCriticalHolonomyNormUnitaryAt (P := P) s ↔ s.re = 1 / 2 := by
   constructor
   · intro hunit
-    let p0 : PrimeMode P := Classical.choice (inferInstance : Nonempty (PrimeMode P))
+    rcases (inferInstance : Nonempty (PrimeMode P)) with ⟨p0⟩
     exact (zetaCriticalHolonomyNorm_primeMode_eq_one_iff_re_eq_half (P := P) p0 s).mp (hunit p0)
   · intro hs p
     exact (zetaCriticalHolonomyNorm_primeMode_eq_one_iff_re_eq_half (P := P) p s).mpr hs

@@ -5,7 +5,7 @@ import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
 /-!
 InfoGeometry/OperatorAlgebra/DrazinLaplacianLocalization.lean
 
-Witness-gated Drazin-Laplacian localization layer.
+Drazin-Laplacian localization layer.
 
 This module implements the next finite stage of the Drazin/Gromov-Witten bridge:
 
@@ -120,7 +120,7 @@ structure GWDrazinLaplacianBridge
   edgeState :
     virtualLocalization.graph.Edge -> State
   /-- Assigned edge states are valid for the Drazin-Laplacian calibration. -/
-  edge_valid :
+  edgeState_mem_domain :
     ∀ e : virtualLocalization.graph.Edge,
       laplacianCalibration.functional.readout.valid (edgeState e)
   /-- Euler weight supplied by the localization model on each edge. -/
@@ -149,7 +149,7 @@ theorem edgeEulerWeight_pos
     (e : B.virtualLocalization.graph.Edge) :
     0 < B.edgeEulerWeight e := by
   rw [B.edgeEulerWeight_eq_laplacianWeight e]
-  exact B.laplacianCalibration.eulerWeight_pos (B.edgeState e) (B.edge_valid e)
+  exact B.laplacianCalibration.eulerWeight_pos (B.edgeState e) (B.edgeState_mem_domain e)
 
 /-- Edge contribution readout as `k_B log` of the calibrated edge Euler weight. -/
 theorem edgeContribution_eq_kB_log_edgeEulerWeight
@@ -163,7 +163,7 @@ theorem edgeContribution_eq_kB_log_edgeEulerWeight
     _ = B.laplacianCalibration.functional.kB *
           Real.log (B.laplacianCalibration.eulerWeight (B.edgeState e)) :=
             B.laplacianCalibration.entropy_eq_kB_log_eulerWeight
-              (B.edgeState e) (B.edge_valid e)
+              (B.edgeState e) (B.edgeState_mem_domain e)
     _ = B.laplacianCalibration.functional.kB * Real.log (B.edgeEulerWeight e) := by
             rw [B.edgeEulerWeight_eq_laplacianWeight e]
 

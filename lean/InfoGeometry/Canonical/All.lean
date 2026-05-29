@@ -126,6 +126,7 @@ import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 import InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonMatrices
 import InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
+import InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

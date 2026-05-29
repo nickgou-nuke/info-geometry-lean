@@ -18,15 +18,19 @@ abbrev ParOp := InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOper
 
 /-- Minimal channel labels for the local polarization readout. -/
 inductive ChiralChannel
-  | NonParabolic
+  | E_plus
+  | E_minus
   | Parabolic
 deriving DecidableEq, Repr
 
-/-- Local channel classifier by the proved nilpotence predicate `Ω² = 0`. -/
+/--
+Local channel classifier:
+if `Ω² = 0`, classify as `Parabolic`; otherwise keep an `E_plus` placeholder.
+-/
 noncomputable def channelOfOmega (Ω : ParOp) : ChiralChannel :=
   by
     classical
-    exact if mul Ω Ω = zero then ChiralChannel.Parabolic else ChiralChannel.NonParabolic
+    exact if mul Ω Ω = zero then ChiralChannel.Parabolic else ChiralChannel.E_plus
 
 /-- Nilpotent collapse theorem: `Ω² = 0` forces the parabolic channel. -/
 theorem chiral_collapse_to_parabolic

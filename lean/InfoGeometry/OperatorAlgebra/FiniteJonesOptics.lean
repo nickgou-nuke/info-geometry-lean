@@ -51,6 +51,9 @@ def diagonalEvent
   coeff0 := a
   coeff1 := b
   tag := tag
+  coherence_law := diagJones a b 0 1 = 0 ∧ diagJones a b 1 0 = 0
+  coherent := by
+    simp [diagJones]
 
 /-- A diagonal event in the `s/p` Fresnel basis. -/
 def diagonalSPEvent

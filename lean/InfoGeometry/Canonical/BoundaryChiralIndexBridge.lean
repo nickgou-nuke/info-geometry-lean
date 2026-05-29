@@ -93,34 +93,17 @@ noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_z
     (hodd :
       PolarizationOdd (M := M) P0
         (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
-    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
-    (v : H₂)
-    (hv : InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0)
-    (hvne : v ≠ 0)
-    (Q_MP Q_D : H₂ →L[ℝ] H₂)
-    (k : ℕ)
-    (hMP :
-      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
-        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) Q_MP)
-    (hD :
-      InfoGeometry.Canonical.Drazin.IsDrazinInverse
-        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) Q_D k) :
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
     ZeroModeRegularizationPackage (S := H₂)
       (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) := by
   have hdim :
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus :=
     dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
       (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hCentral
-  have _hZeroFromIndex :
-      HasZeroMode (S := H₂)
-        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) :=
-    hasZeroMode_of_dim_mismatch (M := M) P0
-      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) hodd hdim
   exact
-    zeroModeRegularizationPackage_of_explicit
-      (S := H₂)
-      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
-      v hv hvne Q_MP Q_D k hMP hD
+    zeroModeRegularizationPackage_of_dim_mismatch
+      (S := H₂) (M := M) P0
+      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) hodd hdim
 
 /--
 Under the same identification and oddness hypotheses, nonzero operatorial
@@ -143,18 +126,13 @@ theorem transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identified
     (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
     HasZeroMode (S := H₂)
       (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) := by
+  let pkg :=
+    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
   unfold HasZeroMode
-  have hdim :
-      Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus :=
-    dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
-      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hCentral
-  have hZero :
-      HasZeroMode (S := H₂)
-        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) :=
-    hasZeroMode_of_dim_mismatch (M := M) P0
-      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) hodd hdim
-  unfold HasZeroMode at hZero
-  exact hZero
+  refine ((InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker).ne_bot_iff.mpr ?_
+  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
+  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
 
 /--
 Witness form of the transported zero-mode consequence.
@@ -177,15 +155,11 @@ theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identi
     ∃ v : H₂,
       v ∈ (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker
         ∧ v ≠ 0 := by
-  have hZero :
-      HasZeroMode (S := H₂)
-        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) :=
-    transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+  let pkg :=
+    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
       (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
-  exact (InfoGeometry.Quantum.BulkBoundary.exists_zeroMode_of_hasZeroMode
-    (S := H₂)
-    (H := InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
-    hZero)
+  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
+  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
 
 end Core
 

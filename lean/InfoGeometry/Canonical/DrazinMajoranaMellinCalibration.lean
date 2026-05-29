@@ -1,4 +1,6 @@
 import Mathlib
+import InfoGeometry.Canonical.DrazinCentralizerErlangen
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 
 /-!

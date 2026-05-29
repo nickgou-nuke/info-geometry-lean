@@ -347,47 +347,6 @@ theorem gravity_generated_by_rnEntropyWitness
 
 omit [FiniteDimensional ℝ X] in
 /--
-Direct vacuum-equation readback from the bundled RN source / unit-volume witness.
-
-This is the smaller theorem surface for callers that only need the vacuum
-Einstein equation: it removes the explicit triple `(M, hSource, bit)` and reuses
-the geometric `UnitRelativeVolumeState` owner route directly.
--/
-theorem vacuumEinsteinEquation_of_rnEntropyWitness
-    (Kgeo : KaehlerInformationGeometry X)
-    (R : RicciTensor X)
-    (x : X) (Λ : ℝ)
-    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
-    (hBridge : MetricRNRicciBridge R Kgeo x) :
-    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  exact vacuumEinsteinEquation_of_unitRelativeVolumeState
-    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
-    hBridge
-
-omit [FiniteDimensional ℝ X] in
-/--
-Direct Ricci-flat readback from the bundled RN source / unit-volume witness.
-
-This is the smaller theorem surface for callers that only need Ricci-flatness:
-it removes the explicit triple `(M, hSource, bit)` and reuses the geometric
-`UnitRelativeVolumeState` owner route instead of forcing consumers through the
-paired gravity capstone.
--/
-theorem isRicciFlat_of_rnEntropyWitness
-    (Kgeo : KaehlerInformationGeometry X)
-    (R : RicciTensor X)
-    (x : X)
-    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
-    (hBridge : MetricRNRicciBridge R Kgeo x) :
-    IsRicciFlat R := by
-  exact isRicciFlat_of_unitRelativeVolume
-    (R := R) (K := Kgeo) (x := x)
-    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
-    hBridge
-
-omit [FiniteDimensional ℝ X] in
-/--
 Entropy-sourced Ricci-flat route through the proof-carrying unit relative-volume
 bit.
 

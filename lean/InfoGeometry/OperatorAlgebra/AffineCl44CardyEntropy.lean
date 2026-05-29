@@ -1,3 +1,4 @@
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-!
 # Affine Cl(4,4) / so(4,4) Cardy Entropy Socket

@@ -488,6 +488,24 @@ structure ProbeFaithfulFirstVariationZeroWitness
   hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P
   hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0
 
+namespace ProbeFaithfulFirstVariationZeroWitness
+
+variable {P : PotentialDatum (E := E)} {comparison : H₂} {A : EndH}
+
+@[rep_depth transport]
+theorem probeFaithful
+    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P :=
+  W.hFaithful
+
+@[rep_depth transport]
+theorem firstVariation_eq_zero
+    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
+    InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0 :=
+  W.hFirst
+
+end ProbeFaithfulFirstVariationZeroWitness
+
 @[rep_depth transport]
 theorem toRelationalInformationDatum_bohmMadelung_stationary_of_probeFaithfulFirstVariationZeroWitness
     (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH)

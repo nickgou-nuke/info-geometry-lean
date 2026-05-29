@@ -150,6 +150,14 @@ structure JonesOpticalEvent where
   coeff1 : ℂ
   tag : V4Tag
 
+  /--
+  Coherence law.
+
+  If the event is strongly depolarizing, a Stokes/Mueller/channel model should
+  replace ordinary Jones calculus.
+  -/
+  coherence_law : Prop
+
 namespace JonesOpticalEvent
 
 /-- Jones matrix of a calibrated optical event. -/
@@ -287,8 +295,17 @@ structure V4OpticalCalibration where
   /-- Event being calibrated. -/
   event : JonesOpticalEvent
 
-  /-- Prose interpretation of the V₄ tag and optical channel model. -/
-  modelExplanation : String
+  /-- Interpretation law for the V₄ tag. -/
+  tag_law : Prop
+
+  /--
+  Optical channel law.
+
+  This is where a concrete module may say, for example, that a metal mirror is
+  represented by a PT-tagged lossy retarder, or that Brewster reflection is a
+  rank-collapse boundary event.
+  -/
+  channel_law : Prop
 
 /--
 A Brewster calibration packages an event with its rank-collapse proof.
@@ -303,16 +320,17 @@ A total-internal-reflection calibration packages a lossless retarder event.
 structure TIRCalibration where
   event : JonesOpticalEvent
   is_lossless : IsLosslessRetarder event
-  /-- Prose pointer to the concrete total-internal-reflection model theorem. -/
-  modelExplanation : String
+  tir_law : Prop
 
 /--
 A metal-mirror calibration packages a possibly lossy complex retarder.
 -/
 structure MetalMirrorCalibration where
   event : JonesOpticalEvent
-  /-- Prose pointer to the concrete metal/absorptive-model theorem. -/
-  modelExplanation : String
+  metal_law : Prop
+
+  /-- Optional statement that the event is diattenuating. -/
+  diattenuation_law : Prop
 
 /--
 A chiral-medium calibration packages circular-basis transport.
@@ -321,8 +339,8 @@ structure ChiralMediumCalibration where
   event : JonesOpticalEvent
   circular_basis :
     event.basis = PolarizationBasis.circular
-  /-- Prose pointer to the concrete circular transport theorem. -/
-  modelExplanation : String
+
+  chiral_transport_law : Prop
 
 /-! ## 6. Topological obstruction link -/
 
@@ -383,7 +401,7 @@ structure SpectralDivisorCharge where
   /-- Charge extracted from a region or contour label. -/
   chargeOf : Set ℂ → ℤ
 
-  /-- Prose pointer to the concrete divisor/counting theorem. -/
-  modelExplanation : String
+  /-- Divisor/counting law, left abstract at this layer. -/
+  divisor_law : Prop
 
 end InfoGeometry.OperatorAlgebra.JonesCalibration

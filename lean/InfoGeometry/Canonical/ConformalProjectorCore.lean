@@ -519,19 +519,6 @@ noncomputable abbrev leftChiralAnomaly : E →L[ℝ] E := CI.chiralAnomaly
 noncomputable abbrev leftChiralAnomalyOperator : E →L[ℝ] E := CI.leftChiralAnomaly
 
 /--
-Proof-carrying KKT wing certificate for a conformal inference packet.
-
-This bundles the three grade-placement hypotheses for `A`, `A_MP`, and `A_D`
-into one constructive socket so downstream anomaly-owner routes do not need to
-carry three unrelated proposition arguments.
--/
-structure KKTWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E) where
-  hA : IsGOne X CI.A
-  hAMP : IsGNegOne X CI.A_MP
-  hAD : IsGNegOne X CI.A_D
-
-/--
 KKT operator bridge: if `A`, `A_MP`, and `A_D` occupy the expected `g₁/g₋₁`
 wings for a split-`Cl(1,1)` action, then the projector-obstruction operator
 lies in grade zero.
@@ -599,17 +586,6 @@ lies in grade zero.
       _ = ((CI.P_D * CI.P_MP - CI.P_MP * CI.P_D) * X.eps) u := by
             simp [mul_assoc]
   exact isGZero_of_eps_commute (X := X) hObsComm
-
-/--
-Witness-routed KKT operator bridge: the same grade-zero anomaly conclusion is
-obtained from a single proof-carrying wing certificate instead of three separate
-hypothesis arguments.
--/
-@[rep_depth krein] theorem chiralAnomalyOperator_isGZero_of_kktWingWitness
-    {X : InfoGeometry.Quantum.RealSplitCl11Action E}
-    (W : CI.KKTWingWitness X) :
-    IsGZero X CI.chiralAnomalyOperator :=
-  CI.chiralAnomalyOperator_isGZero_of_kkt_wings X W.hA W.hAMP W.hAD
 
 @[rep_depth krein] theorem chiralAnomalyOperator_gOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)

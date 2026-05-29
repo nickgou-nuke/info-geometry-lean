@@ -914,57 +914,8 @@ theorem supergradedFisherOnsagerBlock_cramerRaoResponse_CAR_packet
       hCAR,
       hCCR⟩
 
-/--
-Supergraded operatorial Fisher/Onsager block packet from the regular Drazin/Krein
-positive cone.  This removes the scalar PSD packet from this block route: the
-nonnegative entropy-production component is derived from explicit regular-cone
-operator witnesses and their probe readbacks.
--/
-@[rep_depth transport]
-theorem supergradedFisherOnsagerBlock_regularConeResponse_CAR_packet
-    (R : RegularConeOperatorialResponseContext C)
-    (evenForce oddForce : ℝ) :
-    C.metricResponse =
-        (2 : ℝ)⁻¹ *
-          (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
-            + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A))
-      ∧ C.diagonalMetricResponse = C.P.probe R.Hxx
-      ∧ C.yDiagonalMetricResponse = C.P.probe R.Hyy
-      ∧ R.Hxx ∈ regularPositiveConeOmegaD R.c
-      ∧ R.Hyy ∈ regularPositiveConeOmegaD R.c
-      ∧ C.weylCovariantThermodynamicDerivation =
-        C.zeroWeightThermodynamicDerivation
-          + C.weight • C.phaseAxisThermodynamicDerivation
-      ∧ C.operatorialEntropyProduction evenForce oddForce =
-        C.diagonalMetricResponse * evenForce ^ (2 : ℕ)
-          + 2 * C.mixedMetricResponseXY * evenForce * oddForce
-            + C.yDiagonalMetricResponse * oddForce ^ (2 : ℕ)
-      ∧ 0 ≤ C.operatorialEntropyProduction evenForce oddForce
-      ∧ SuperchargeCARCCRBridge.CARBracket (E := E)
-          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
-          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
-        = 0
-      ∧ SuperchargeCARCCRBridge.CCRBracket (E := E)
-          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
-          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
-        = (2 : ℝ) • SuperchargeCARCCRBridge.cptSuperchargeOp (E := E) := by
-  rcases SuperchargeCARCCRBridge.harmonic_oscillator_spine (E := E) with
-    ⟨hCAR, hCCR, _⟩
-  exact
-    ⟨C.metricResponse_eq_half_probe_observableLieHessian_add_swap,
-      R.diagonalMetricResponse_eq_probe_Hxx,
-      R.yDiagonalMetricResponse_eq_probe_Hyy,
-      R.Hxx_mem,
-      R.Hyy_mem,
-      C.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis,
-      C.operatorialEntropyProduction_eq_quadratic evenForce oddForce,
-      C.operatorialEntropyProduction_nonneg_of_regularCone R evenForce oddForce,
-      hCAR,
-      hCCR⟩
-
 attribute [terminal] supergradedFisherOnsagerBlock_squareResponse_CAR_packet
 attribute [terminal] supergradedFisherOnsagerBlock_cramerRaoResponse_CAR_packet
-attribute [terminal] supergradedFisherOnsagerBlock_regularConeResponse_CAR_packet
 
 end OperatorialMetriplecticContext
 

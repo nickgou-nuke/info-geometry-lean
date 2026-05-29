@@ -153,39 +153,6 @@ theorem partitionAdmissible_of_square :
 
 -- theorem-class: bridge
 /--
-Stationarity/complementarity residual equalities construct a proof-carrying KKT
-witness while deriving cone and finite-partition admissibility from the square
-residual channels.  This narrows the old four-field KKT packet to the two exact
-residual equations that are not automatic from the residual model.
--/
-@[rep_depth thermo]
-def witness_of_stationarity_and_slack
-    (hStationarity : R.stationarityResidual = 0)
-    (hSlack : R.complementarityResidual = 0) :
-    KKTEntropyStationarityShadow.Witness where
-  shadow := R.toShadow
-  hCone := R.coneAdmissible_of_square
-  hStationarity := hStationarity
-  hSlack := hSlack
-  hFinite := R.partitionAdmissible_of_square
-
--- theorem-class: bridge
-/--
-A residual model with zero stationarity and complementarity residuals recovers
-the full KKT stationarity packet without separate cone or finite-partition
-hypotheses.
--/
-@[rep_depth thermo]
-theorem stationarity_packet_of_residual_zero
-    (hStationarity : R.stationarityResidual = 0)
-    (hSlack : R.complementarityResidual = 0) :
-    R.toShadow.coneAdmissible ∧ R.toShadow.stationarity ∧
-      R.toShadow.complementarySlackness ∧ R.toShadow.finitePartitionAdmissible := by
-  simpa [witness_of_stationarity_and_slack] using
-    (witness_of_stationarity_and_slack (R := R) hStationarity hSlack).packet
-
--- theorem-class: bridge
-/--
 Exact residuals construct a proof-carrying KKT witness without external KKT
 hypotheses.
 -/

@@ -1,4 +1,5 @@
 import InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
+import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 
 /-!
 # InfoGeometry.Quantum.PrimeMajoranaOPE

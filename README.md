@@ -276,6 +276,83 @@ unless they have been regenerated or explicitly re-audited.
 `docs/black_books/` is intentionally protected exploration material and is not
 rewritten by the Markdown cleanup lane.
 
+## Key Results
+
+### 4. Thermodynamic Synthesis: Non-Commutative Bregman Divergence
+
+This repository formalizes the local modular free-energy identity
+
+`A_info = (Δ - 1) - log Δ`
+
+as an exact operator-valued Helmholtz free-energy coordinate in the finite nilpotent sector.
+
+In `CoproductToVirasoroCocycleBridge`, the modular seed is `Δ = 1 + N` with `N^2 = 0` (`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.modularDisplacement_eq`,
+`InfoGeometry.Canonical.ModularNilpotentAutomorphism.N_sq_zero`). The local free-energy operator
+`informationFreeEnergy` is defined as
+
+`informationFreeEnergy := modularDisplacement - ModularNilpotentAutomorphism.logModular`.
+
+Because `modularDisplacement = logModular` in this square-zero model, it satisfies
+`informationFreeEnergy = 0` and thus has zero vacuum expectation (`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.informationFreeEnergy_eq_zero`,
+`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.vacuumExpectation_informationFreeEnergy_vac`).
+
+Interpretively, this matches the classical thermodynamic identification
+`A = U - TS` with `log Δ` as modular Hamiltonian (`U`) and `Δ - 1` as regularized entropy-flux (`TS`) in a quantum information-geometric setting.
+
+Under coproduct perturbations, the same construction tracks Bregman-generated boundary free energy through
+`crossFlux`/`liftFlux` terms and feeds directly into the Virasoro/relative-entropy bridge stack already established in this file.
+
+The local modular flow is algebraically finite:
+`σ_t(A) = A + t•[N,A] - t^2•(NAN)`. Consequently, in this sector the KMS
+tests are purely polynomial/algebraic in `t` (and in `βt`), with no analytic continuation
+singularities at finite level.
+
+### 5. Part IV: Infinite Clifford/Fock and Cantor boundary geometry
+
+`Cantor`-style finite-sector nilpotency (`N^2 = 0`) is now connected to the Cantor/Fock carrier lane through a new bridge module:
+
+`lean/InfoGeometry/Canonical/CantorFockSpace.lean`.
+
+In this bridge:
+
+- the local Wick seed is re-exported as the fermionic annihilation coordinate (`localAnnihilation = a`),
+  with proofs that `a^2 = 0`, `a^\u2020² = 0`, `{a,a^\u2020}=1`, and vacuum annihilation.
+- the corresponding local CAR package is packaged as `localCARPair` over `M₂(ℝ)`.
+- `entropyFlux = localAnnihilation` is re-stated in the same local algebraic sector,
+  with `informationFreeEnergy = 0` preserved as the free-energy invariant.
+- finite Cantor-prefix readout is defined via `cantorPrefixState` into the Hilbert basis from
+  `CelikKocakInfiniteFockCarrierData`, with orthogonality and reconstruction lemmas
+  (`cantorPrefixState_succ`, `cantorPrefixState_orthogonal_of_distinct_prefix`).
+- the vacuum binary boundary `0000...` is represented by `vacuumBoundary` and its finite-cylinder map
+  `cantorVacuumPrefixState`.
+
+This aligns the project’s algebraic core (`N^2 = 0`) with the infinite Cantor-symbolic picture (`{0,1}^ℕ`) in a theorem-safe, non-analytic way: the finite stages are fully explicit and no AF/CAR-axiom extension is asserted as a completed analytic theorem in this file.
+
+A dedicated bridge file now packages this as the repository’s canonical Dirac-sea narrative:
+`lean/InfoGeometry/Canonical/DiracSea.lean`.
+
+It presents the finite-seed step operator as a strict square-zero bit-interface flip on a
+combinatorial `ℤ → Bool` profile (`...111|00...` → `...110|10...`), and proves the nilpotent
+`Option`-step law `diracSeaStep` (two applications annihilate). It also
+connects `A_info = (Δ-1)-logΔ = 0`, and re-exports the finite-prefix boundary readouts
+against the existing `CelikKocakInfiniteFockCarrierData` Hilbert carrier.
+
+This section therefore serves as the repository’s current, theorem-safe canonical
+visualization of the Dirac-sea boundary flip narrative, explicitly scoped to the
+finite nilpotent sector and finite-cylinder reconstruction.
+
+### IV. The Continuum Limit: The Dirac Sea & Infinite Binary Words
+
+How does this algebra act at infinity? By mapping the infinite spatial limit to a **Dirac Sea of bi-infinite binary words**, the vacuum state becomes the perfect polarized boundary:
+$$ | \Omega \rangle = | \dots 11111.00000 \dots \rangle $$
+In this coordinate-free combinatorial space, the regularized modular operator $$N = \Delta - \mathbf{1}$$ acts purely as a **boundary bit-flip operator** creating a particle-hole excitation across the interface.
+
+* **The Pauli Exclusion Nilpotency:** Because you cannot place a particle where one already exists, the bit-flip operator is inherently square-zero: **$N^2 = 0$**.
+* **The Thermodynamic Ground State:** The information free energy evaluates to zero ($N - N = 0$) perfectly reflecting the unperturbed Dirac sea.
+* **The Central Charge Anomaly:** The Virasoro Central Charge $c$ is cleanly resolved as the macroscopic chiral anomaly—the topological obstruction to shifting the infinite binary Fermi sea.
+
+*(See `lean/InfoGeometry/Canonical/DiracSea.lean` for the formal verification of the combinatorial zero-energy state).
+
 ## Current Audit Note
 
 This README was rewritten on 2026-05-02 to match the current code surface.

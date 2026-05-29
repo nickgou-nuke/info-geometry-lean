@@ -1,4 +1,5 @@
 import InfoGeometry.OperatorAlgebra.RealHestenesONNCliffordCPT
+import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ModularWeldBridge

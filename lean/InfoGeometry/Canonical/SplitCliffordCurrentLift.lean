@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 open scoped TensorProduct
 
@@ -23,6 +24,9 @@ noncomputable instance splitCliffordInfinityLieAlgebra :
       Algebra.smul_mul_assoc, Algebra.mul_smul_comm, sub_eq_add_neg]
 
 /-- A zero-central current datum on the split direct limit. -/
+-- DEBT_ID: SCCL_ZERO_CENTRAL_DATUM
+-- DEBT_KIND: ZERO_DATUM
+-- ZERO_DATUM: Zero central charge lift for split direct limit
 noncomputable def splitCliffordInfinityCurrentDatum :
     AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity where
   Current := fun _ X => X

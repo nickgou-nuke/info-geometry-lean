@@ -3,6 +3,7 @@ import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 import InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology
+import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
 import InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 import InfoGeometry.OperatorAlgebra.KleinianReturn
 import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
@@ -12,6 +13,7 @@ import InfoGeometry.Automorphic.ProjectedLFunction
 import InfoGeometry.Automorphic.RoelckeSelbergSpectral
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Automorphic.LanglandsPrimeResonance
+import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Canonical.KleinBottleOrientifold
 import InfoGeometry.Canonical.BerryRotorBridge

@@ -26,24 +26,6 @@ No topological or analytic completion claim.
 
 namespace InfoGeometry.OperatorAlgebra.AlgebraicPositiveNormalCone
 
-/-! ## Inductive invariant principle -/
-
-/--
-The bare induction principle for an invariant transported by a successor map.
-
-This is the kernel-level essence used below: a base point has an invariant, and
-one successor step preserves it, so every finite iterate has it.  No limit,
-completion, or analytic continuation is asserted.
--/
-theorem inductiveInvariant_iterate {α : Type*} (P : α → Prop) (next : α → α)
-    {x₀ : α} (h0 : P x₀) (hstep : ∀ x : α, P x → P (next x)) :
-    ∀ n : ℕ, P ((next^[n]) x₀) := by
-  intro n
-  induction n with
-  | zero => simpa using h0
-  | succ n ih =>
-      simpa [Function.iterate_succ_apply'] using hstep ((next^[n]) x₀) ih
-
 /-! ## Algebraic positivity and normality -/
 
 variable {A : Type*} [NonUnitalNonAssocSemiring A] [StarMul A]
@@ -99,22 +81,6 @@ theorem mem_normalCone_iff (x : A) :
     x ∈ normalCone A ↔ IsNormalElement x :=
   Iff.rfl
 
-/-- Algebraic positivity is preserved along every finite iterate of a positivity-preserving map. -/
-theorem IsAlgebraicallyPositive.iterate_of_preserving
-    (f : A → A) {x₀ : A}
-    (h0 : IsAlgebraicallyPositive x₀)
-    (hf : ∀ x : A, IsAlgebraicallyPositive x → IsAlgebraicallyPositive (f x)) :
-    ∀ n : ℕ, IsAlgebraicallyPositive ((f^[n]) x₀) :=
-  inductiveInvariant_iterate IsAlgebraicallyPositive f h0 hf
-
-/-- Algebraic normality is preserved along every finite iterate of a normality-preserving map. -/
-theorem IsNormalElement.iterate_of_preserving
-    (f : A → A) {x₀ : A}
-    (h0 : IsNormalElement x₀)
-    (hf : ∀ x : A, IsNormalElement x → IsNormalElement (f x)) :
-    ∀ n : ℕ, IsNormalElement ((f^[n]) x₀) :=
-  inductiveInvariant_iterate IsNormalElement f h0 hf
-
 /-! ## Cartan eigenspace split -/
 
 section Cartan
@@ -155,22 +121,6 @@ theorem hyperbolic_apply {θ : CartanInvolution (V := V)} {x : V}
     (hx : θ.IsHyperbolic x) :
     θ.theta x = -x :=
   hx
-
-/-- Compact Cartan-sector membership is preserved along finite iterates of a sector-preserving map. -/
-theorem IsCompact.iterate_of_preserving
-    (θ : CartanInvolution (V := V)) (f : V → V) {x₀ : V}
-    (h0 : θ.IsCompact x₀)
-    (hf : ∀ x : V, θ.IsCompact x → θ.IsCompact (f x)) :
-    ∀ n : ℕ, θ.IsCompact ((f^[n]) x₀) :=
-  inductiveInvariant_iterate θ.IsCompact f h0 hf
-
-/-- Hyperbolic Cartan-sector membership is preserved along finite iterates of a sector-preserving map. -/
-theorem IsHyperbolic.iterate_of_preserving
-    (θ : CartanInvolution (V := V)) (f : V → V) {x₀ : V}
-    (h0 : θ.IsHyperbolic x₀)
-    (hf : ∀ x : V, θ.IsHyperbolic x → θ.IsHyperbolic (f x)) :
-    ∀ n : ℕ, θ.IsHyperbolic ((f^[n]) x₀) :=
-  inductiveInvariant_iterate θ.IsHyperbolic f h0 hf
 
 end CartanInvolution
 

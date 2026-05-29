@@ -178,21 +178,6 @@ theorem ofStrainZeroObserver_isRouterEquilibrium
     (ofStrainZeroObserver_δ_odd_eq_zero
       (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hStrain := hStrain))
 
-/--
-A strain-zero observer already collapses the Sinkhorn sourced generator to the
-background flow on the infinite-dimensional owner lane.
--/
-@[rep_depth transport]
-theorem ofStrainZeroObserver_sourcedGenerator_eq_flow
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
-    (obs : InfoGeometry.Canonical.ObserverDefect.ObserverL5 CIK)
-    (flow : BackgroundModularFlow CIK)
-    (hStrain : InfoGeometry.Canonical.ObserverDefect.observerOrientationStrain CIK obs = 0) :
-    (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator = flow.K0 := by
-  simpa using
-    InfoGeometry.LLM.TrialityMoE.RouterDefectBoundBridge.ofStrainZeroObserver_sourcedGenerator_eq_flow
-      (E := E) CIK obs flow hStrain
-
 /-- The sourced-generator deviation is exactly `δ_odd`. -/
 theorem sourcedGenerator_deviation_eq_δ_odd
     (B : RouterDefectBoundBridge (E := E)) :

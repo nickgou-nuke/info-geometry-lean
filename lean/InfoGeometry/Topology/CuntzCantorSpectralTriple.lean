@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.OperatorAlgebra.ErlangenNet
+import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Meta.Architecture
 

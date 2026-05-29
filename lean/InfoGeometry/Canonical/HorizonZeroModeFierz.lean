@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Canonical.DrazinCentralizerErlangen
 import InfoGeometry.Meta.Architecture
 
 /-!

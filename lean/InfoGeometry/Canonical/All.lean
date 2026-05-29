@@ -134,12 +134,8 @@ import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
 import InfoGeometry.Canonical.InductiveOperatorTaylorClosure
 import InfoGeometry.Canonical.AFRecursiveLimitBridge
-import InfoGeometry.Canonical.JaynesCategoricalInductionBridge
-import InfoGeometry.Canonical.JaynesFormalism
 import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
-import InfoGeometry.Canonical.FiniteJaynesFormalism
-import InfoGeometry.Canonical.FiniteJaynesInductiveFormalism
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection
@@ -148,6 +144,7 @@ import InfoGeometry.Canonical.StableVacuum
 import InfoGeometry.Canonical.CompletionPathway
 import InfoGeometry.Canonical.ConformalEngine
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+import InfoGeometry.Canonical.DiracSea
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
 import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
@@ -201,6 +198,7 @@ import InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
 import InfoGeometry.Canonical.CasimirWeylDrazinContext
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.CayleyBregmanBridge
+import InfoGeometry.Canonical.CayleyMobiusPowerLaws
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.CertifiedInverseKernel

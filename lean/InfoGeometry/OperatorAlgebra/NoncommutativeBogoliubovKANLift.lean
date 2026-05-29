@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.OperatorAlgebra.ModularSignCPT

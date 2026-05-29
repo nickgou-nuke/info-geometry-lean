@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Canonical.FierzKleinFoundation
+import InfoGeometry.Canonical.DrazinModularPersistence
 import InfoGeometry.Canonical.InformationalLichnerowicz
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Canonical.QuasilatticeDirac

@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
+import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 
 /-!
@@ -26,6 +27,7 @@ noncomputable section
 namespace InfoGeometry.Arithmetic.PrimonMajoranaCurrent
 
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
+open InfoGeometry.Arithmetic.PrimeMajoranaOPE
 
 namespace PrimeMajoranaCAR.ExteriorCARPair
 
@@ -136,6 +138,32 @@ theorem sameModeCurrentDLaw_valid (F : PrimeLocalCARFamily PrimeLabel Op) :
   intro p
   exact PrimeMajoranaCAR.ExteriorCARPair.dMajorana_mul_parityOp (F.pair p)
 
+/--
+Transport the concrete same-mode current action to the symbolic arithmetic
+current socket.
+
+Boundary: this only packages same-mode local action laws. Distinct-prime OPE
+relations and Laurent/VOA semantics remain open owner debt.
+-/
+def toMobiusCurrentOPE
+    (F : PrimeLocalCARFamily PrimeLabel Op) :
+    MobiusCurrentOPE PrimeLabel Op where
+  cField := cField F
+  dField := dField F
+  current := current F
+  current_c_law := sameModeCurrentCLaw F
+  current_d_law := sameModeCurrentDLaw F
+
+theorem toMobiusCurrentOPE_current_c_valid
+    (F : PrimeLocalCARFamily PrimeLabel Op) :
+    (toMobiusCurrentOPE F).current_c_law :=
+  sameModeCurrentCLaw_valid F
+
+theorem toMobiusCurrentOPE_current_d_valid
+    (F : PrimeLocalCARFamily PrimeLabel Op) :
+    (toMobiusCurrentOPE F).current_d_law :=
+  sameModeCurrentDLaw_valid F
+
 end PrimeLocalCARFamily
 
 namespace PrimeWeylGaugeCantorFockBridge.WeylGaugeTiltSwitchNormalization
@@ -192,6 +220,29 @@ theorem offDiagCurrentDLaw_valid :
     offDiagCurrentDLaw N := by
   intro p q hpq
   exact N.localParity_commutes_d_offdiag p q hpq
+
+/--
+Concrete transport of the normalized Weyl-gauge owner current into the symbolic
+current socket.
+
+The current laws are packaged as conjunctions of same-mode action and
+off-diagonal commutation. Laurent/OPE singular-part semantics still remain open.
+-/
+def toMobiusCurrentOPE :
+    MobiusCurrentOPE Idx Op where
+  cField := N.c
+  dField := N.d
+  current := fun p => N.c p * N.d p
+  current_c_law := sameModeCurrentCLaw N ∧ offDiagCurrentCLaw N
+  current_d_law := sameModeCurrentDLaw N ∧ offDiagCurrentDLaw N
+
+theorem toMobiusCurrentOPE_current_c_valid :
+    (toMobiusCurrentOPE N).current_c_law :=
+  ⟨sameModeCurrentCLaw_valid N, offDiagCurrentCLaw_valid N⟩
+
+theorem toMobiusCurrentOPE_current_d_valid :
+    (toMobiusCurrentOPE N).current_d_law :=
+  ⟨sameModeCurrentDLaw_valid N, offDiagCurrentDLaw_valid N⟩
 
 end PrimeWeylGaugeCantorFockBridge.WeylGaugeTiltSwitchNormalization
 

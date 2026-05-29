@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11Projectors
+import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.Meta.Architecture
 

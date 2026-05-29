@@ -311,51 +311,6 @@ theorem stateInducedDynamics_eq_zero_of_comparisonMetricReadout_eq_zero
       to_doubled] using hEval
 
 /--
-Owner-dynamics stationarity forces the comparison metric readout to vanish,
-without requiring callers to supply a separate metric-stationarity packet.
--/
-@[rep_depth transport]
-theorem comparisonMetricReadout_eq_zero_of_stateInducedDynamics_eq_zero
-    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
-    (hDyn : stateInducedDynamics (E := E) P.modularData ψ A = 0) :
-    comparisonMetricReadout (E := E) P ψ A = 0 := by
-  have hPair :=
-    comparisonReadout_pair_eq_zero_of_isPotentialKillingOperator
-      (E := E) P ψ A hDyn
-  simpa using congrArg Prod.fst hPair
-
-/--
-Owner-dynamics stationarity forces the comparison phase readout to vanish,
-without requiring callers to supply a separate phase-stationarity packet.
--/
-@[rep_depth transport]
-theorem comparisonPhaseReadout_eq_zero_of_stateInducedDynamics_eq_zero
-    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
-    (hDyn : stateInducedDynamics (E := E) P.modularData ψ A = 0) :
-    comparisonPhaseReadout (E := E) P ψ A = 0 := by
-  have hPair :=
-    comparisonReadout_pair_eq_zero_of_isPotentialKillingOperator
-      (E := E) P ψ A hDyn
-  simpa using congrArg Prod.snd hPair
-
-/--
-The comparison-metric stationarity packet is equivalent to the underlying
-owner dynamics vanishing.  Downstream routes can now consume the owner dynamics
-witness directly instead of carrying the explicit metric-readout hypothesis.
--/
-@[rep_depth transport]
-theorem comparisonMetricReadout_eq_zero_iff_stateInducedDynamics_eq_zero
-    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) :
-    comparisonMetricReadout (E := E) P ψ A = 0
-      ↔
-    stateInducedDynamics (E := E) P.modularData ψ A = 0 := by
-  constructor
-  · exact stateInducedDynamics_eq_zero_of_comparisonMetricReadout_eq_zero
-      (E := E) P ψ A
-  · exact comparisonMetricReadout_eq_zero_of_stateInducedDynamics_eq_zero
-      (E := E) P ψ A
-
-/--
 Metric stationarity of the comparison-state thermodynamic readout is equivalent
 to the operatorial Killing condition on the entropy potential.
 -/

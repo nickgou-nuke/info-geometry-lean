@@ -2067,7 +2067,7 @@ def PrimitiveLargeDivisorAnalyticInput : Prop :=
 /--
 Assembly statement: the analytic input implies the finite ESS statement.
 
-Kept as a `Prop` rather than an asserted theorem because this module does not
+Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
 claim the analytic proof. This records the logical dependence without asserting
 an unproved or false theorem.
 -/

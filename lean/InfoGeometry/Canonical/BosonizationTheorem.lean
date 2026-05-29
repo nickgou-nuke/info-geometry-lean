@@ -85,10 +85,13 @@ the split completion has a current boundary package, and any supplied
 Heisenberg current datum canonically yields the external Sugawara morphism
 package.
 -/
-noncomputable def splitClifford_current_boundary_and_sugawara_morphism
+theorem splitClifford_current_boundary_and_sugawara_morphism
     (H : CurrentHeisenbergRep 𝕜 V) :
-    SplitCliffordCurrentMorphism × CurrentSugawaraMorphism 𝕜 V :=
-  ⟨splitCliffordInfinityCurrentMorphism, CurrentSugawaraMorphism.ofHeisenberg H⟩
+    Nonempty SplitCliffordCurrentMorphism ∧
+    Nonempty (CurrentSugawaraMorphism 𝕜 V) := by
+  constructor
+  · exact ⟨splitCliffordInfinityCurrentMorphism⟩
+  · exact CurrentSugawaraMorphism.nonempty H
 
 end Core
 

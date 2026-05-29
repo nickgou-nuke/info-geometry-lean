@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.FiniteJaynesFormalism
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.JaynesLDDSBridge
 import InfoGeometry.Canonical.JaynesInductiveLimitBridge
+import InfoGeometry.Canonical.JaynesCategoricalInductionBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.MaxEnt.DualBridge
@@ -17,7 +18,7 @@ finite entropy, centered-score, and direct-limit layers under one namespace:
 
 * finite Shannon/cross/KL/LDDS identities;
 * finite centered-score and relative-density readback;
-* Jaynes-style compatible direct-limit transport;
+* Jaynes-style compatible direct-limit/categorical cone transport;
 * canonical Gibbs/MaxEnt and modular-affine facades.
 
 The measure-theoretic and spectral completions remain separate owners.
@@ -27,6 +28,7 @@ namespace InfoGeometry.Canonical.JaynesFormalism
 
 open Finset
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
+open InfoGeometry.Canonical.JaynesCategoricalInductionBridge
 open InfoGeometry.Canonical.JaynesLDDSCentering
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 open InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge.FiniteReferenceStateOps

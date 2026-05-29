@@ -88,6 +88,8 @@ def changed_lean_files(root: Path, *, include_untracked: bool) -> list[Path]:
     for path in sorted(changed_paths(root, include_untracked=include_untracked)):
         if path.suffix != ".lean":
             continue
+        if not path.exists():
+            continue
         try:
             rel = path.resolve().relative_to(root.resolve())
         except ValueError:

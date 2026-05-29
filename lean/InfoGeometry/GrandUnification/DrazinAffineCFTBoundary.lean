@@ -2,7 +2,6 @@ import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Singular.Drazin
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.Cl11Matrix
-import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-!
 # InfoGeometry.GrandUnification.DrazinAffineCFTBoundary

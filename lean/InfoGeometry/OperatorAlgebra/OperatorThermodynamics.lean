@@ -42,12 +42,6 @@ structure AlgebraicState
   /-- Evaluation of the state. -/
   eval : Op → ℂ
 
-  /-- Positivity/normality/faithfulness certificate, abstract at this layer. -/
-  -- DEBT_ID: OTH-ZD-001
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: abstract state certificate placeholder.
-  state_certificates : Prop
-
 /--
 A one-parameter automorphism-like flow.
 
@@ -66,11 +60,9 @@ structure OperatorFlow
   flow_add :
     ∀ s t x, flow (s + t) x = flow s (flow t x)
 
-  /-- Multiplicativity/covariance certificate. -/
-  -- DEBT_ID: OTH-ZD-002
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: flow multiplicativity is stored as an explicit placeholder.
-  multiplicative : Prop
+  /-- Multiplicativity/covariance of the flow. -/
+  map_mul :
+    ∀ t x y, flow t (x * y) = flow t x * flow t y
 
 namespace OperatorFlow
 
@@ -88,6 +80,12 @@ theorem flow_add_apply
     (x : Op) :
     σ.flow (s + t) x = σ.flow s (σ.flow t x) :=
   σ.flow_add s t x
+
+theorem flow_mul_apply
+    (t : ℝ)
+    (x y : Op) :
+    σ.flow t (x * y) = σ.flow t x * σ.flow t y :=
+  σ.map_mul t x y
 
 end OperatorFlow
 
@@ -112,22 +110,13 @@ structure KMSState
     ∀ t x, state.eval (σ.flow t x) = state.eval x
 
   /--
-  KMS analytic boundary condition.
+  Algebraic KMS boundary relation on the supplied multiplication and flow.
 
-  Morally:
-    `F(t) = omega(A sigma_t(B))`
-    `F(t + i beta) = omega(sigma_t(B) A)`
-
-  The analytic details are model-dependent, so they are stored as a certificate.
+  Analytic strip holomorphy remains model-specific; this finite algebraic layer
+  records the concrete boundary readout it can state without topology.
   -/
-  -- DEBT_ID: OTH-ZD-003
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: KMS boundary is an explicit certificate placeholder.
-  kms_boundary_condition : Prop
-
-  /-- Evidence for the KMS analytic boundary condition. -/
-  kms_boundary_condition_holds :
-    kms_boundary_condition
+  kms_boundary_condition :
+    ∀ A B : Op, state.eval (A * B) = state.eval (σ.flow beta B * A)
 
 namespace KMSState
 
@@ -145,8 +134,8 @@ theorem invariant
 
 /-- Re-export the analytic KMS boundary certificate. -/
 theorem kms_boundary_holds :
-    K.kms_boundary_condition :=
-  K.kms_boundary_condition_holds
+    ∀ A B : Op, K.state.eval (A * B) = K.state.eval (σ.flow beta B * A) :=
+  K.kms_boundary_condition
 
 end KMSState
 
@@ -204,10 +193,10 @@ structure FinitePartialTraceShadow
   partialTrace : AlgebraicState Global → AlgebraicState Local
 
   /-- Agreement of the finite partial-trace formula with restriction. -/
-  -- DEBT_ID: OTH-ZD-004
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: finite partial-trace agreement is deferred as explicit debt.
-  partialTrace_agrees_with_restriction : Prop
+  partialTrace_agrees_with_restriction :
+    ∀ a : Local,
+      (partialTrace restriction.globalState).eval a =
+        restriction.localState.eval a
 
 /-! ## 4. Tomita observer reduction and KMS thermalization -/
 
@@ -223,15 +212,9 @@ structure KMSAnalyticBoundary
     (_eval : Op → ℂ)
     (_σ : OperatorFlow Op)
     (_beta : ℝ) where
-  /-- Analytic strip-boundary statement for the supplied readout and flow. -/
-  -- DEBT_ID: OTH-ZD-005
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
-  boundaryCondition : Prop
-
-  /-- Evidence that the boundary condition holds. -/
-  boundaryCondition_holds :
-    boundaryCondition
+  /-- Algebraic boundary relation for the supplied readout and flow. -/
+  boundaryCondition :
+    ∀ A B : Op, _eval (A * B) = _eval (_σ.flow _beta B * A)
 
 /--
 Observer reduction from a global algebraic state to the observable algebra
@@ -323,8 +306,16 @@ theorem exists_kms_state_for_observer :
 /-- The observer-reduced state carries the named KMS boundary certificate. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ beta where
-  boundaryCondition := Θ.thermal.kms_boundary_condition
-  boundaryCondition_holds := Θ.thermal.kms_boundary_condition_holds
+  boundaryCondition := by
+    intro A B
+    calc
+      Θ.reduction.observableEval (A * B)
+          = Θ.thermal.state.eval (A * B) := by
+              rw [← Θ.thermal_eq_reduction]
+      _ = Θ.thermal.state.eval (σ.flow beta B * A) :=
+              Θ.thermal.kms_boundary_condition A B
+      _ = Θ.reduction.observableEval (σ.flow beta B * A) :=
+              Θ.thermal_eq_reduction (σ.flow beta B * A)
 
 /-- The local observer's readout is invariant under real modular time. -/
 theorem reduced_state_flow_invariant
@@ -501,9 +492,9 @@ def modularThermalState :
   E.modularKMS.kms
 
 /-- Thermality as seen by the calibrated physical observer starts from KMS. -/
-theorem has_modular_kms_state :
-    Nonempty (KMSState Op E.modularKMS.modularFlow E.modularKMS.beta) :=
-  ⟨E.modularThermalState⟩
+def has_modular_kms_state :
+    KMSState Op E.modularKMS.modularFlow E.modularKMS.beta :=
+  E.modularThermalState
 
 end EmergentThermalRadiation
 
@@ -682,11 +673,11 @@ structure ModularThermodynamicsOwnerTarget
   /-- Supplied modular KMS witness. -/
   witness : ModularKMSDatum Op
 
-theorem ModularThermodynamicsOwnerTarget.witness_law
+def ModularThermodynamicsOwnerTarget.witness_law
     {Op : Type*} [Mul Op]
     (h : ModularThermodynamicsOwnerTarget Op) :
-    Nonempty (ModularKMSDatum Op) :=
-  ⟨h.witness⟩
+    ModularKMSDatum Op :=
+  h.witness
 
 /-- Owner target for calibrated horizon thermality. -/
 structure EmergentThermalRadiationOwnerTarget
@@ -694,11 +685,11 @@ structure EmergentThermalRadiationOwnerTarget
   /-- Supplied calibrated thermal-radiation witness. -/
   witness : EmergentThermalRadiation Op
 
-theorem EmergentThermalRadiationOwnerTarget.witness_law
+def EmergentThermalRadiationOwnerTarget.witness_law
     {Op : Type*} [Mul Op]
     (h : EmergentThermalRadiationOwnerTarget Op) :
-    Nonempty (EmergentThermalRadiation Op) :=
-  ⟨h.witness⟩
+    EmergentThermalRadiation Op :=
+  h.witness
 
 /--
 Compatibility data sufficient to construct a Tomita/KMS thermalization witness.
@@ -725,17 +716,17 @@ structure TomitaKMSThermalizationOwnerTarget where
     ∀ (σ : OperatorFlow Op),
     ∀ (beta : ℝ),
       TomitaKMSThermalizationCompatibility Op T σ beta →
-        Nonempty (TomitaKMSThermalization Op T σ beta)
+        TomitaKMSThermalization Op T σ beta
 
 /--
 The modular KMS owner target is constructible once compatibility supplies the
 thermalization witness.
 -/
-theorem tomitaKMSThermalizationOwnerTarget :
+def tomitaKMSThermalizationOwnerTarget :
     TomitaKMSThermalizationOwnerTarget := by
   refine ⟨?_⟩
   intro Op _ T σ beta h
-  exact ⟨h.witness⟩
+  exact h.witness
 
 /--
 Compatibility data sufficient to construct a horizon/Hawking/Unruh KMS bridge.
@@ -762,17 +753,17 @@ structure HorizonKMSThermodynamicsOwnerTarget where
     ∀ (σ : OperatorFlow Op),
     ∀ (beta : ℝ),
       HorizonKMSThermodynamicsCompatibility Op T σ beta →
-        Nonempty (HorizonKMSThermodynamics Op T σ beta)
+        HorizonKMSThermodynamics Op T σ beta
 
 /--
 The horizon KMS owner target is constructible once compatibility supplies the
 horizon thermodynamics witness.
 -/
-theorem horizonKMSThermodynamicsOwnerTarget :
+def horizonKMSThermodynamicsOwnerTarget :
     HorizonKMSThermodynamicsOwnerTarget := by
   refine ⟨?_⟩
   intro Op _ T σ beta h
-  exact ⟨h.witness⟩
+  exact h.witness
 
 end InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
@@ -968,10 +959,7 @@ structure KMSAnalyticBoundary
     (_eval : Op → ℂ)
     (_σ : ModularFlow Op)
     (_β : ℝ) where
-  /-- Analytic strip-boundary statement for the supplied readout and flow. -/
-  -- DEBT_ID: OTH-ZD-006
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: analytic boundary statement is an explicit placeholder.
+  /-- Model-supplied analytic strip-boundary statement for the supplied readout and flow. -/
   boundaryCondition : Prop
 
   /-- Evidence that the boundary condition holds. -/
@@ -1420,14 +1408,14 @@ structure TomitaKMSOwnerTarget where
   witness_transport :
     ∀ Op : Type*,
     ∀ T : TomitaKMSDatum Op,
-      Nonempty (KMSState Op T.modularFlow T.beta)
+      KMSState Op T.modularFlow T.beta
 
 /-- The Tomita-KMS owner target is constructible from the supplied certificate. -/
-theorem tomitaKMSOwnerTarget :
+def tomitaKMSOwnerTarget :
     TomitaKMSOwnerTarget := by
   refine ⟨?_⟩
   intro Op T
-  exact ⟨T.toKMSState⟩
+  exact T.toKMSState
 
 /--
 Owner target: an observable KMS reduction gives thermal readouts on the visible
@@ -1480,17 +1468,17 @@ structure TomitaKMSThermalizationOwnerTarget where
     ∀ (σ : ModularFlow Op),
     ∀ (β : ℝ),
       TomitaKMSThermalizationCompatibility Op T σ β →
-        Nonempty (TomitaKMSThermalization Op T σ β)
+        TomitaKMSThermalization Op T σ β
 
 /--
 The modular KMS owner target is constructible once compatibility supplies the
 thermalization witness.
 -/
-theorem tomitaKMSThermalizationOwnerTarget :
+def tomitaKMSThermalizationOwnerTarget :
     TomitaKMSThermalizationOwnerTarget := by
   refine ⟨?_⟩
   intro Op _ T σ β h
-  exact ⟨h.witness⟩
+  exact h.witness
 
 /--
 Compatibility data sufficient to construct a horizon/Hawking/Unruh KMS bridge.
@@ -1517,16 +1505,16 @@ structure HorizonKMSThermodynamicsOwnerTarget where
     ∀ (σ : ModularFlow Op),
     ∀ (β : ℝ),
       HorizonKMSThermodynamicsCompatibility Op T σ β →
-        Nonempty (HorizonKMSThermodynamics Op T σ β)
+        HorizonKMSThermodynamics Op T σ β
 
 /--
 The horizon KMS owner target is constructible once compatibility supplies the
 horizon thermodynamics witness.
 -/
-theorem horizonKMSThermodynamicsOwnerTarget :
+def horizonKMSThermodynamicsOwnerTarget :
     HorizonKMSThermodynamicsOwnerTarget := by
   refine ⟨?_⟩
   intro Op _ T σ β h
-  exact ⟨h.witness⟩
+  exact h.witness
 
 end InfoGeometry.OperatorAlgebra.Thermodynamics

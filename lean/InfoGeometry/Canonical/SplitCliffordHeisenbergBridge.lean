@@ -93,14 +93,6 @@ theorem toCurrentHeisenbergRep_trunc
   rfl
 
 /--
-Existence form of the bridge into the existing current interface.
--/
-theorem nonempty_currentHeisenbergRep
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) :=
-  ⟨W.toCurrentHeisenbergRep⟩
-
-/--
 Pack the witness into the downstream Sugawara morphism interface.
 
 This stays on the safe side of the bridge: it does not construct the source
@@ -123,12 +115,6 @@ theorem toCurrentSugawaraMorphism_virasoro
     W.toCurrentSugawaraMorphism.virasoro =
       (W.toCurrentHeisenbergRep).currentSugawaraRepresentation :=
   rfl
-
-/-- Every split-Clifford current witness yields a Sugawara morphism package. -/
-theorem nonempty_currentSugawaraMorphism
-    (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) :=
-  ⟨W.toCurrentSugawaraMorphism⟩
 
 /--
 Sugawara representation obtained from the existing owner surface.
@@ -183,19 +169,17 @@ Bundled source-side theorem surface: a split-Clifford current witness gives
 both the exact Heisenberg current representation and the downstream Sugawara
 representation.
 -/
-theorem current_and_sugawara_nonempty
+noncomputable def current_and_sugawara
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) ∧
-      Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
-  ⟨⟨W.toCurrentHeisenbergRep⟩,
-    ⟨W.currentSugawaraRepresentation⟩⟩
+    CurrentHeisenbergRep 𝕜 V ×
+      (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
+  ⟨W.toCurrentHeisenbergRep, W.currentSugawaraRepresentation⟩
 
 /-- Bundled source-side theorem surface through the Sugawara morphism. -/
-theorem currentSugawaraMorphism_and_current_nonempty
+noncomputable def currentSugawaraMorphism_and_current
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) ∧
-      Nonempty (CurrentHeisenbergRep 𝕜 V) :=
-  ⟨⟨W.toCurrentSugawaraMorphism⟩, ⟨W.toCurrentHeisenbergRep⟩⟩
+    CurrentSugawaraMorphism 𝕜 V × CurrentHeisenbergRep 𝕜 V :=
+  ⟨W.toCurrentSugawaraMorphism, W.toCurrentHeisenbergRep⟩
 
 end SplitCliffordHeisenbergWitness
 
@@ -207,12 +191,12 @@ Source-side bridge into the existing `CurrentHeisenbergRep`.
 
 This is the theorem requested by the implementation plan.
 -/
-theorem splitClifford_to_currentHeisenbergRep
+noncomputable def splitClifford_to_currentHeisenbergRep
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) :=
-  W.nonempty_currentHeisenbergRep
+    CurrentHeisenbergRep 𝕜 V :=
+  W.toCurrentHeisenbergRep
 
 /--
 Source-side bridge into the existing Sugawara/Virasoro owner surface.
@@ -220,42 +204,41 @@ Source-side bridge into the existing Sugawara/Virasoro owner surface.
 No new Sugawara theorem is proved here; the result is obtained by applying the
 existing construction to the current witness.
 -/
-theorem splitClifford_to_sugawaraRepresentation
+noncomputable def splitClifford_to_sugawaraRepresentation
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
-  ⟨W.currentSugawaraRepresentation⟩
+    VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) :=
+  W.currentSugawaraRepresentation
 
 /-- Source-side bridge into the packaged Sugawara morphism surface. -/
-theorem splitClifford_to_currentSugawaraMorphism
+noncomputable def splitClifford_to_currentSugawaraMorphism
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) :=
-  W.nonempty_currentSugawaraMorphism
+    CurrentSugawaraMorphism 𝕜 V :=
+  W.toCurrentSugawaraMorphism
 
 /--
 The strongest theorem surface for this bridge: once a split-Clifford source
 witness supplies the Heisenberg current laws, both the current representation
 and Sugawara representation are available.
 -/
-theorem splitClifford_current_and_sugawara
+noncomputable def splitClifford_current_and_sugawara
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentHeisenbergRep 𝕜 V) ∧
-      Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
-  W.current_and_sugawara_nonempty
+    CurrentHeisenbergRep 𝕜 V ×
+      (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V)) :=
+  W.current_and_sugawara
 
 /-- The bridge also exposes the packaged Sugawara morphism and current datum. -/
-theorem splitClifford_currentSugawara_and_current
+noncomputable def splitClifford_currentSugawara_and_current
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
     [AddCommGroup V] [Module 𝕜 V]
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
-    Nonempty (CurrentSugawaraMorphism 𝕜 V) ∧
-      Nonempty (CurrentHeisenbergRep 𝕜 V) :=
-  W.currentSugawaraMorphism_and_current_nonempty
+    CurrentSugawaraMorphism 𝕜 V × CurrentHeisenbergRep 𝕜 V :=
+  W.currentSugawaraMorphism_and_current
 
 /-! ## Explicit infinite-current consumer surface (external Heisenberg engine) -/
 

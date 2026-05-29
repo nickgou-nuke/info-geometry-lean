@@ -101,12 +101,15 @@ structure ChiralGrading
   chi_square : chi.comp chi = 1
   chi_phase_linear : PhasePreserving K.K K.K chi
 
-/-- Bounded placeholder for the spectral/Dirac generator. -/
+/--
+Bounded spectral/Dirac generator for the real phase layer.
+
+No opaque self-adjointness or summability `Prop` slots are bundled here; those
+belong in concrete analytic owner modules with the relevant mathlib structure.
+-/
 structure SpectralGenerator
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   D : RealEnd H
-  selfAdjointOrKreinSelfAdjoint : Prop
-  summabilityOrCompactResolvent : Prop
 
 /-- Commutator of bounded real endomorphisms. -/
 def commutator

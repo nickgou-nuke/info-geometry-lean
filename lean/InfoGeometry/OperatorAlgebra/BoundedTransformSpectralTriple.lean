@@ -14,11 +14,11 @@ Instead, an unbounded spectral generator is represented by bounded proxies:
     F = D(1 + D^2)^(-1/2)
 
 The analytic facts that these proxies come from a closed, densely-defined
-self-adjoint operator are carried as proof/certificate fields.
+self-adjoint operator are not certified here; this file keeps the bounded
+algebraic data and leaves unbounded-domain theorems to concrete owner modules.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.SpectralTriple
 
 noncomputable section
 
@@ -32,10 +32,11 @@ set_option linter.dupNamespace false
 /-! ## 1. Closed unbounded source socket -/
 
 /--
-A closed, densely-defined self-adjoint source operator socket.
+A closed, densely-defined self-adjoint source operator data socket.
 
-This deliberately does not define a full unbounded operator API. It records
-the analytic source data as proof-carrying certificates.
+This deliberately does not define a full unbounded operator API and does not
+store density/closedness/self-adjointness as certificate fields.  Those analytic
+properties must be stated and proved in a concrete unbounded-operator owner.
 -/
 structure ClosedSelfAdjointSource
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
@@ -48,20 +49,8 @@ structure ClosedSelfAdjointSource
   /-- Inclusion of the domain into the Hilbert/Krein carrier. -/
   includeDomain : Domain → H
 
-  /-- Densely-defined certificate. -/
-  denselyDefined_law : Prop
-  denselyDefined_certificate :
-    denselyDefined_law
-
-  /-- Closed-graph certificate. -/
-  closedGraph_law : Prop
-  closedGraph_certificate :
-    closedGraph_law
-
-  /-- Self-adjoint or Krein-self-adjoint certificate. -/
-  selfAdjoint_law : Prop
-  selfAdjoint_certificate :
-    selfAdjoint_law
+  /-- Prose pointer to the external density/closedness/self-adjointness obligations. -/
+  modelExplanation : String
 
 /-! ## 2. Bounded Cayley transform datum -/
 
@@ -72,7 +61,9 @@ For a genuine unbounded self-adjoint `D`, this is intended as
 
 `U = (D - K)(D + K)^(-1)`.
 
-The actual domain/resolvent theorem is carried as `cayley_source_law`.
+This structure stores only the bounded operator and the phase-linear theorem
+that this file can use algebraically.  Unitarity, domain/resolvent origin, and
+unbounded-source recovery are external owner obligations.
 -/
 structure CayleyTransformDatum
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -84,26 +75,8 @@ structure CayleyTransformDatum
   U_phase_linear :
     PhaseLinear K.K U
 
-  /-- Unitary/isometric law, model-dependent. -/
-  unitary_law : Prop
-  unitary_certificate :
-    unitary_law
-
-  /--
-  Source law: `U` is the Cayley transform of the intended closed operator.
-  This is where `(D + K)^(-1)` and the resolvent theorem enter.
-  -/
-  cayley_source_law : Prop
-  cayley_source_certificate :
-    cayley_source_law
-
-  /--
-  Recovery/domain law: the Cayley transform determines the unbounded source on
-  the appropriate domain, e.g. via `(1 - U)` range data.
-  -/
-  recovery_law : Prop
-  recovery_certificate :
-    recovery_law
+  /-- Prose pointer to the external unitary/resolvent/source-recovery obligations. -/
+  modelExplanation : String
 
 namespace CayleyTransformDatum
 
@@ -271,7 +244,9 @@ For an unbounded self-adjoint `D`, this is intended as
 
 `F = D(1 + D^2)^(-1/2)`.
 
-The functional-calculus construction is carried as proof data.
+The functional-calculus construction is not certified by this bounded proxy;
+self-adjointness, contraction, summability/Fredholm, and source-transform claims
+remain external owner theorems.
 -/
 structure BoundedTransformDatum
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -283,28 +258,8 @@ structure BoundedTransformDatum
   F_phase_linear :
     PhaseLinear K.K F
 
-  /-- Self-adjoint/Krein-self-adjoint certificate. -/
-  selfAdjoint_law : Prop
-  selfAdjoint_certificate :
-    selfAdjoint_law
-
-  /-- Contraction or boundedness certificate. -/
-  bounded_transform_law : Prop
-  bounded_transform_certificate :
-    bounded_transform_law
-
-  /-- Summability/Fredholm/compact-defect certificate. -/
-  fredholm_or_summability_law : Prop
-  fredholm_or_summability_certificate :
-    fredholm_or_summability_law
-
-  /--
-  Source law: `F` is the bounded transform of the intended unbounded spectral
-  generator.
-  -/
-  source_transform_law : Prop
-  source_transform_certificate :
-    source_transform_law
+  /-- Prose pointer to external bounded-transform/summability/source obligations. -/
+  modelExplanation : String
 
 namespace BoundedTransformDatum
 
@@ -348,14 +303,10 @@ structure UnboundedSpectralBridge
     BoundedTransformDatum H K
 
   /--
-  Compatibility law between the Cayley proxy and bounded-transform proxy.
-  This is model-dependent.
+  Prose pointer to the external compatibility theorem between the Cayley proxy
+  and bounded-transform proxy.
   -/
-  cayley_boundedTransform_compatible_law : Prop
-
-  /-- Proof/certificate of compatibility. -/
-  cayley_boundedTransform_compatible_certificate :
-    cayley_boundedTransform_compatible_law
+  compatibilityExplanation : String
 
 /-! ## 6. Bounded-transform spectral triple socket -/
 
@@ -387,16 +338,11 @@ structure BoundedTransformSpectralTriple
     BoundedTransformDatum H triple.phaseAxis
 
   /--
-  Metric sensor compatibility.
-
-  This is where the model states that commutator/Lipschitz readouts using the
-  bounded transform agree with the intended unbounded spectral geometry.
+  Prose pointer to the external metric-sensor compatibility theorem: the model
+  must prove that commutator/Lipschitz readouts using the bounded transform agree
+  with the intended unbounded spectral geometry.
   -/
-  metric_sensor_compatibility_law : Prop
-
-  /-- Proof/certificate of the metric compatibility law. -/
-  metric_sensor_compatibility_certificate :
-    metric_sensor_compatibility_law
+  metricSensorExplanation : String
 
 namespace BoundedTransformSpectralTriple
 

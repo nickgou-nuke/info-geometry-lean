@@ -194,7 +194,8 @@ lemma partition_pos_of_fullSupport
     (hprior : J.FullSupportPrior) (lam : ι → ℝ) :
     0 < J.partition lam := by
   classical
-  let x0 : α := Classical.choice ‹Nonempty α›
+  rcases (Finset.univ_nonempty : ∃ x : α, x ∈ (Finset.univ : Finset α)) with
+    ⟨x0, _hx0_mem⟩
   have hx0 :
       0 < (J.prior x0).toReal * Real.exp (J.energy lam x0) := by
     exact mul_pos (hprior x0) (Real.exp_pos _)

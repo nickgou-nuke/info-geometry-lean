@@ -3,12 +3,13 @@ import Mathlib
 /-!
 # InfoGeometry.LanglandsGWBridge
 
-Theorem-safe witness surface for gauge-theoretic reduction in the
-Langlands--GW layer.
+Data-only gauge-reduction and Weyl-reduction carriers for the Langlands--GW
+layer.
 
-This module does not prove the Atiyah–Bott moment-map theorem or the full
-Weyl integration formula. It packages the raw structural data that a later
-owner pipeline can transport, combine, and evaluate.
+This module does not prove the Atiyah–Bott moment-map theorem or the full Weyl
+integration formula. It exposes only raw data and definitional readback lemmas;
+missing analytic/geometric closure remains outside this file rather than being
+packaged as a theorem-like target.
 -/
 
 noncomputable section
@@ -18,119 +19,112 @@ namespace InfoGeometry
 namespace LanglandsGWBridge
 
 /--
-Symplectic quotient witness for a gauge action.
+Raw symplectic-quotient data for a gauge action.
 
-The fields are intentionally abstract:
-
-* `symplecticForm` is the symplectic-geometry carrier;
-* `momentumMap` plays the role of a conserved/constraint-valued map `μ`;
-* `zeroMomentum` marks the reduction locus `μ = 0`;
-* `moduliSpace` is the reduced moduli object exported as a witness field.
-* `gaugeAction` is the group action by the provided `Group` parameter.
---/
-structure SymplecticQuotientWitness (Space : Type) (GaugeGroup : Type) [instGroup : Group GaugeGroup] where
-  /-- Abstract symplectic-geometry data on the configuration space. -/
+The constrained locus is deliberately a namespace `def`, not a stored field plus
+a proof field: membership is definitionally the equation
+`momentumMap a = zeroMomentum`.
+-/
+structure SymplecticQuotientData (Space : Type) (GaugeGroup : Type)
+    [instGroup : Group GaugeGroup] where
+  /-- Abstract symplectic-geometry carrier on the configuration space. -/
   symplecticForm : Type*
-  /-- Optional momentum-value type for the moment map. -/
+  /-- Momentum-value type for the moment map. -/
   momentumValue : Type*
   /-- Momentum map `μ : Space → momentumValue`. -/
   momentumMap : Space → momentumValue
   /-- Distinguished zero element in the momentum-value type. -/
   zeroMomentum : momentumValue
-  /-- Fixed-point locus `μ⁻¹(0)` as a set-theoretic carrier. -/
-  zeroLocus : Set Space
-  /-- Compatibility with the stated momentum map and zero value. -/
-  zeroLocus_eq :
-    zeroLocus = {a : Space | momentumMap a = zeroMomentum}
   /-- Group action on the configuration space by the provided `Group` parameter. -/
   gaugeAction : GaugeGroup → Space → Space
-  /-- Moduli object obtained from the constrained quotient. -/
+  /-- Moduli object associated with the constrained carrier. -/
   moduliSpace : Type*
-  /-- The moduli witness map from constrained points into the quotient object. -/
-  moduliProjection : {a : Space // a ∈ zeroLocus} → moduliSpace
+  /-- Map from constrained points into the quotient object. -/
+  moduliProjection :
+    {a : Space // momentumMap a = zeroMomentum} → moduliSpace
+
+namespace SymplecticQuotientData
+
+variable {Space GaugeGroup : Type} [Group GaugeGroup]
+
+/-- The zero-momentum locus determined by the stored momentum map. -/
+def zeroLocus (Q : SymplecticQuotientData Space GaugeGroup) : Set Space :=
+  {a : Space | Q.momentumMap a = Q.zeroMomentum}
+
+@[simp]
+theorem mem_zeroLocus_iff (Q : SymplecticQuotientData Space GaugeGroup) (a : Space) :
+    a ∈ Q.zeroLocus ↔ Q.momentumMap a = Q.zeroMomentum := by
+  rfl
+
+end SymplecticQuotientData
 
 /--
-Weyl-reduction witness for measure/integral descent from a group to a torus.
+Raw Weyl-reduction data for measure/integral descent from a group to a torus.
 
-This witness stores the root data and a Jacobian-type root weight map that is
-used as the reduction factor in Weyl-style formulas.
+This stores only the maps and scalar shadows currently formalized here. It does
+not assert a Weyl integration formula.
 -/
-structure WeylIntegrationWitness (GaugeGroup Torus : Type) where
+structure WeylIntegrationData (GaugeGroup Torus : Type) where
   /-- Weyl group controlling residual symmetries. -/
   weylGroup : Type*
   /-- Positive root labels appearing in the Jacobian factor. -/
   positiveRoots : Type*
-  /-- A root-valued weight used as a Jacobian ingredient (e.g. Vandermonde). -/
+  /-- A root-valued weight used as a Jacobian ingredient. -/
   rootWeight : positiveRoots → ℝ
   /-- A distinguished torus reduction map from the original group. -/
   torusMap : GaugeGroup → Torus
-  /-- Pullback along the torus map. -/
-  pullback : (Torus → ℝ) → GaugeGroup → ℝ := fun f g => f (torusMap g)
-  /-- Total root-weight product; the structural shadow of the denominator factor. -/
+  /-- Total root-weight product; a stored scalar shadow, not a formula theorem. -/
   rootMeasureProduct : ℝ := 0
   /-- Numerical shadow of the reduced volume/integral. -/
   volumeShadow : ℝ
 
-/--
-Combined witness packet for Atiyah–Bott/Abelian-reduction style localization.
+namespace WeylIntegrationData
 
-The combined witness is an owner-level shape: the moduli object is presented with
-its momentum constraint and a Weyl-type torus reduction shadow.
--/
-structure SymplecticWeylVolumePacket (Space GaugeGroup Torus : Type) [instGroup : Group GaugeGroup] where
+variable {GaugeGroup Torus : Type}
+
+/-- Pull back a real-valued torus function along the stored torus map. -/
+def pullback (W : WeylIntegrationData GaugeGroup Torus) (f : Torus → ℝ) (g : GaugeGroup) : ℝ :=
+  f (W.torusMap g)
+
+@[simp]
+theorem pullback_apply (W : WeylIntegrationData GaugeGroup Torus)
+    (f : Torus → ℝ) (g : GaugeGroup) :
+    W.pullback f g = f (W.torusMap g) := by
+  rfl
+
+end WeylIntegrationData
+
+/-- Combined raw data for Atiyah–Bott/Abelian-reduction style localization. -/
+structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
+    [instGroup : Group GaugeGroup] where
   /-- Symplectic quotient layer. -/
-  quotient : SymplecticQuotientWitness Space GaugeGroup
+  quotient : SymplecticQuotientData Space GaugeGroup
   /-- Weyl torus-reduction layer. -/
-  weyl : WeylIntegrationWitness GaugeGroup Torus
+  weyl : WeylIntegrationData GaugeGroup Torus
 
-/--
-Owner target for the combined Langlands/GW bridge layer.
-
-The honest theorem currently available is that explicit symplectic-quotient and
-Weyl-reduction witness data assemble into the combined packet.
--/
-def SymplecticWeylVolumeTarget (Space GaugeGroup Torus : Type) [instGroup : Group GaugeGroup] : Prop :=
-  ∀ (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus),
-      let S : SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
-        ⟨Q, W⟩
-      S.quotient = Q ∧ S.weyl = W
-
-/--
-Constructor from explicit structural witnesses.
--/
-theorem constructSymplecticWeylVolumeTarget
+/-- Build the combined data from separate pieces. -/
+def constructSymplecticWeylVolumeData
     {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus)
-    (_S : SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus := ⟨Q, W⟩) :
-    SymplecticWeylVolumeTarget Space GaugeGroup Torus := by
-  intro Q' W'
-  change
-    ((⟨Q', W'⟩ : SymplecticWeylVolumePacket Space GaugeGroup Torus).quotient = Q') ∧
-      ((⟨Q', W'⟩ : SymplecticWeylVolumePacket Space GaugeGroup Torus).weyl = W')
-  constructor <;> rfl
-
-/--
-Canonical wrapper: build the packet and target from separate pieces.
--/
-def constructSymplecticWeylVolumePacket
-    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus) :
-    SymplecticWeylVolumePacket.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
+    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
+    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
+    SymplecticWeylVolumeData.{0, 0, 0, 0, 0} Space GaugeGroup Torus :=
   ⟨Q, W⟩
 
-/--
-Constructive target route that no longer asks callers to prepackage the combined
-`symplectic + Weyl` packet.
--/
-theorem constructSymplecticWeylVolumeTarget_of_witnesses
+@[simp]
+theorem constructSymplecticWeylVolumeData_quotient
     {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
-    (Q : SymplecticQuotientWitness.{0, 0, 0} Space GaugeGroup)
-    (W : WeylIntegrationWitness.{0, 0} GaugeGroup Torus) :
-    SymplecticWeylVolumeTarget Space GaugeGroup Torus := by
-  exact constructSymplecticWeylVolumeTarget Q W
+    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
+    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
+    (constructSymplecticWeylVolumeData Q W).quotient = Q := by
+  rfl
+
+@[simp]
+theorem constructSymplecticWeylVolumeData_weyl
+    {Space GaugeGroup Torus : Type} [instGroup : Group GaugeGroup]
+    (Q : SymplecticQuotientData.{0, 0, 0} Space GaugeGroup)
+    (W : WeylIntegrationData.{0, 0} GaugeGroup Torus) :
+    (constructSymplecticWeylVolumeData Q W).weyl = W := by
+  rfl
 
 end LanglandsGWBridge
 

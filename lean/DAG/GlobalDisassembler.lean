@@ -51,7 +51,7 @@ def writeDecl (h : IO.FS.Handle) (name : String) (module : String) : GraphM Nat 
   h.putStrLn (toJson decl).compress
   return id
 
-partial def visitExprGlobal (hNodes hEdges : IO.FS.Handle) (e : Expr) : GraphM Nat := do
+def visitExprGlobal (hNodes hEdges : IO.FS.Handle) (e : Expr) : GraphM Nat := do
   let (map, _, _) ← get
   if let some id := map.get? e then
     return id

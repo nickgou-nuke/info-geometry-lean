@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
-import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
 import InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture

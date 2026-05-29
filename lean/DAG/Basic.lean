@@ -25,32 +25,29 @@ instance [Repr α] [BEq α] [Hashable α] :
   reprPrec h _ :=
     s!"HydratedGraph ⟨nodes := {repr h.toGraph.nodes}, sccs := {repr h.sccs}, topo := {repr h.topo}⟩"
 
-/-- Collect projection head names in an expression. -/
-partial def projHeads (e : Lean.Expr) : Lean.NameSet :=
-  let rec go (todo : List Lean.Expr) (seen : Std.HashSet Lean.Expr) (out : Lean.NameSet) :=
-    match todo with
-    | [] => out
-    | x :: xs =>
-      if seen.contains x then
-        go xs seen out
-      else
-        let seen := seen.insert x
-        match x with
-        | .proj s _ body =>
-            go (body :: xs) seen (out.insert s)
-        | .app f a =>
-            go (f :: a :: xs) seen out
-        | .lam _ ty body _ =>
-            go (ty :: body :: xs) seen out
-        | .forallE _ ty body _ =>
-            go (ty :: body :: xs) seen out
-        | .letE _ ty val body _ =>
-            go (ty :: val :: body :: xs) seen out
-        | .mdata _ body =>
-            go (body :: xs) seen out
-        | _ =>
-            go xs seen out
-  go [e] {} Lean.NameSet.empty
+/-- Collect projection head names in an expression.
+
+The traversal is structural on `Lean.Expr`, so this no longer needs a `partial`
+meta recursion bypass.  Expressions are acyclic syntax trees; duplicate sharing is
+harmless because the result is a `NameSet`.
+-/
+def projHeads (e : Lean.Expr) : Lean.NameSet :=
+  let rec go (x : Lean.Expr) (out : Lean.NameSet) : Lean.NameSet :=
+    match x with
+    | .proj s _ body =>
+        go body (out.insert s)
+    | .app f a =>
+        go a (go f out)
+    | .lam _ ty body _ =>
+        go body (go ty out)
+    | .forallE _ ty body _ =>
+        go body (go ty out)
+    | .letE _ ty val body _ =>
+        go body (go val (go ty out))
+    | .mdata _ body =>
+        go body out
+    | _ => out
+  go e Lean.NameSet.empty
 
 /-- Collect constant names appearing in an expression. -/
 def collectExprConsts (e : Lean.Expr) : Lean.NameSet :=

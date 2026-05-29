@@ -86,6 +86,57 @@ structure ErgodicWeylGWVolumeBridge where
 
 namespace ErgodicWeylGWVolumeBridge
 
+/--
+Constructive zero-phase branch of the ergodic Weyl/GW bridge.
+
+This removes the two explicit phase-volume invariance packets by computing the
+phase-volume readout as the zero functional.  The broader structure above is
+kept for models with a nontrivial determinant/phase-volume readout, but callers
+on the zero-phase branch no longer have to supply `phaseVolume_flow_invariant`
+or `phaseVolume_renorm_invariant_of_selfSimilar` as independent hypotheses.
+-/
+@[rep_depth projective]
+def ofZeroPhaseVolume
+    (ergodicOmega :
+      ErgodicOmegaVolumeBridge (E := E) (H := H)
+        (LieAlgebra := LieAlgebra) (Word := Word))
+    (faceGW :
+      StandardFormFaceWeylGWVolumeFusion (H := H) (Functional := Functional)
+        (State := State) (G := G) (T := T) (Target := Target)
+        (Coeff := Coeff) (Word := Word))
+    (omegaVolume_eq : faceGW.omegaVolume = ergodicOmega.omegaVolume) :
+    ErgodicWeylGWVolumeBridge (E := E) (H := H) (LieAlgebra := LieAlgebra)
+      (Functional := Functional) (State := State) (G := G) (T := T)
+      (Target := Target) (Coeff := Coeff) (Word := Word) where
+  ergodicOmega := ergodicOmega
+  faceGW := faceGW
+  omegaVolume_eq := omegaVolume_eq
+  phaseVolume := fun _ => 0
+  phaseVolume_flow_invariant := by
+    intro _t _A
+    rfl
+  phaseVolume_renorm_invariant_of_selfSimilar := by
+    intro _A _hSelfSimilar
+    rfl
+
+/-- The zero-phase constructor computes the phase-volume readout definitionally. -/
+@[rep_depth projective]
+theorem ofZeroPhaseVolume_phaseVolume
+    (ergodicOmega :
+      ErgodicOmegaVolumeBridge (E := E) (H := H)
+        (LieAlgebra := LieAlgebra) (Word := Word))
+    (faceGW :
+      StandardFormFaceWeylGWVolumeFusion (H := H) (Functional := Functional)
+        (State := State) (G := G) (T := T) (Target := Target)
+        (Coeff := Coeff) (Word := Word))
+    (omegaVolume_eq : faceGW.omegaVolume = ergodicOmega.omegaVolume)
+    (A : EndE) :
+    (ofZeroPhaseVolume (E := E) (H := H) (LieAlgebra := LieAlgebra)
+      (Functional := Functional) (State := State) (G := G) (T := T)
+      (Target := Target) (Coeff := Coeff) (Word := Word)
+      ergodicOmega faceGW omegaVolume_eq).phaseVolume A = 0 :=
+  rfl
+
 variable (B : ErgodicWeylGWVolumeBridge
   (E := E) (H := H) (LieAlgebra := LieAlgebra)
   (Functional := Functional) (State := State) (G := G) (T := T)

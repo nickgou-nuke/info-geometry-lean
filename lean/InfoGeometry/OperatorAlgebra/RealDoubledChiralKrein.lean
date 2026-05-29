@@ -376,21 +376,20 @@ theorem offSubmodule_comp_off
   IsOffBlockDiagonal.comp hX hY
 
 /--
-Witness package for a concrete real chiral Liouvillean.
+Data package for a concrete real chiral Liouvillean.
 
 The generator is required to be off-block.  Krein self-adjointness and
-flow-level invariance remain separate gates because they depend on the chosen
-adjoint/domain model.
+flow-level invariance are not stored here as proof-carrying laws; those depend
+on the chosen adjoint/domain model and must be proved in that concrete owner
+corridor.
 -/
 structure RealChiralLiouvillean where
   /-- Chiral Liouvillean candidate. -/
   L : EndH₂ (E := E)
   /-- Algebraic oddness: `L` exchanges the chiral sectors. -/
   off_block : L ∈ offBlockSubmodule (E := E)
-  /-- Model-dependent Krein self-adjointness gate. -/
-  krein_self_adjoint_law : Prop
-  /-- Model-dependent equation-of-motion gate. -/
-  equation_of_motion_law : Prop
+  /-- Prose pointer to the external self-adjointness/equation-of-motion owner obligations. -/
+  modelExplanation : String
 
 namespace RealChiralLiouvillean
 
@@ -471,11 +470,12 @@ theorem etaChiral_comp_right_projector :
 /-! ## 6. Hyperbolic-flow socket -/
 
 /--
-Witness socket for a real hyperbolic primon flow.
+Data socket for a real hyperbolic primon flow.
 
 The exponential `exp(t L)` is not constructed here.  A concrete owner module may
-supply such a flow together with preservation of the chosen Krein form and any
-differential law.
+supply such a flow together with preservation of the chosen Krein form; regularity
+and generator/equation-of-motion claims are external theorem obligations, not
+proof fields in this algebraic file.
 -/
 structure HyperbolicPrimonFlow where
   /-- One-parameter family of real doubled operators. -/
@@ -485,10 +485,8 @@ structure HyperbolicPrimonFlow where
     ∀ t u v,
       chiralKreinForm (U t u) (U t v) =
         chiralKreinForm u v
-  /-- Continuity/differentiability law, supplied by a concrete model. -/
-  regularity_law : Prop
-  /-- Generator/equation-of-motion law, supplied by a concrete model. -/
-  generator_law : Prop
+  /-- Prose pointer to external regularity/generator owner obligations. -/
+  modelExplanation : String
 
 namespace HyperbolicPrimonFlow
 
@@ -507,14 +505,14 @@ end HyperbolicPrimonFlow
 /-! ## 7. Chiral Liouvillean versus Möbius heat-supertrace calibration -/
 
 /--
-Regularized comparison between a chiral Liouvillean readout and a Möbius heat
+Data record comparing a chiral Liouvillean readout and a Möbius heat
 supertrace.
 
-This is deliberately a witness gate.  The expression
-`Tr(J_chiral exp(-β L_chiral / 2))` is not automatically the positive-decay
-Möbius heat trace `Tr(Γ exp(-β H))`: the raw hyperbolic calculation contains
-growing `sinh(βH/2)` terms and requires a concrete regulator/projection before
-it can be compared to the inverse-zeta Dirichlet series.
+This file does not prove `Tr(J_chiral exp(-β L_chiral / 2))` equals the
+positive-decay Möbius heat trace `Tr(Γ exp(-β H))`.  The raw hyperbolic
+calculation contains growing `sinh(βH/2)` terms and requires a concrete
+regulator/projection before any comparison theorem can be stated in an owner
+module.
 -/
 structure ChiralMobiusSupertraceCalibration
     (Readout : Type*) where
@@ -528,25 +526,10 @@ structure ChiralMobiusSupertraceCalibration
   chiralReadout : Readout
   /-- Positive-decay Möbius heat readout, intended as `Tr(Γ exp(-βH))`. -/
   mobiusHeatReadout : Readout
-  /-- Regulator/projection law killing non-decaying hyperbolic pieces. -/
-  regulator_law : Prop
-  /-- Trace-class/summability law for the chosen readouts. -/
-  summability_law : Prop
-  /-- Supplied comparison law after regularization. -/
-  calibrated_eq : chiralReadout = mobiusHeatReadout
+  /-- Prose pointer to regulator, summability, and comparison owner obligations. -/
+  modelExplanation : String
 
 namespace ChiralMobiusSupertraceCalibration
-
-omit [CompleteSpace E] in
-/--
-The calibrated equality is available only because it is supplied by the
-regularized model.
--/
-theorem calibrated_readout_eq
-    {Readout : Type*}
-    (C : ChiralMobiusSupertraceCalibration (E := E) Readout) :
-    C.chiralReadout = C.mobiusHeatReadout :=
-  C.calibrated_eq
 
 omit [CompleteSpace E] in
 /-- The Liouvillean in a calibration packet is algebraically off-block. -/
@@ -559,37 +542,23 @@ theorem liouvillean_isOffBlock
 end ChiralMobiusSupertraceCalibration
 
 /--
-Analytic inverse-zeta witness for the positive-decay Möbius heat trace.
+Data record for a proposed analytic inverse-zeta comparison of the
+positive-decay Möbius heat trace.
 
-This is separate from the chiral Liouvillean calibration.  The theorem
-`Σ μ(n)n^{-s} = 1 / ζ(s)` belongs to an analytic Dirichlet-series/Euler-product
-owner, not to the finite real doubled operator algebra.
+The theorem `Σ μ(n)n^{-s} = 1 / ζ(s)` belongs to an analytic
+Dirichlet-series/Euler-product owner, not to the finite real doubled operator
+algebra.  This structure therefore stores only the proposed readouts and a prose
+obligation pointer.
 -/
 structure MobiusHeatInverseZetaWitness
     (Readout ZetaReadout : Type*) where
   /-- Analytic spectral parameter. -/
   s : ℝ
-  /-- Domain/convergence condition, e.g. `1 < s`. -/
-  admissible : Prop
   /-- Positive-decay Möbius heat/supertrace readout. -/
   mobiusHeatReadout : Readout
   /-- Reciprocal-zeta readout. -/
   inverseZetaReadout : ZetaReadout
-  /-- Supplied comparison between the two readout types. -/
-  compare : Readout → ZetaReadout → Prop
-  /-- Analytic calibration law. -/
-  heat_eq_inverseZeta :
-    compare mobiusHeatReadout inverseZetaReadout
-
-namespace MobiusHeatInverseZetaWitness
-
-/-- Re-export of the supplied analytic inverse-zeta calibration. -/
-theorem valid
-    {Readout ZetaReadout : Type*}
-    (W : MobiusHeatInverseZetaWitness Readout ZetaReadout) :
-    W.compare W.mobiusHeatReadout W.inverseZetaReadout :=
-  W.heat_eq_inverseZeta
-
-end MobiusHeatInverseZetaWitness
+  /-- Prose pointer to the analytic owner theorem and domain/convergence obligations. -/
+  modelExplanation : String
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein

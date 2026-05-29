@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.FiniteTiltDiracShell
-import InfoGeometry.OperatorAlgebra.ChiralLightconeStinespring
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
 import InfoGeometry.Meta.Architecture
 

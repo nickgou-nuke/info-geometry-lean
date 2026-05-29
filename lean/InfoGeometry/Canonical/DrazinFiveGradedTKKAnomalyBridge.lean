@@ -1,7 +1,6 @@
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
-import InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace

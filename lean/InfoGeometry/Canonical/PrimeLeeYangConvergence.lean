@@ -3,7 +3,6 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeHurwitzLimit
-import InfoGeometry.Canonical.PrimePartitionPolynomials
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangConvergence

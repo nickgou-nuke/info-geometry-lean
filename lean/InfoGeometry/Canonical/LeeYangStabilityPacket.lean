@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.PrimeHurwitzLimit
-import InfoGeometry.Canonical.PrimePartitionPolynomials
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 
 /-!

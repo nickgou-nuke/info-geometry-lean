@@ -142,20 +142,19 @@ structure DrazinWitnessContext (S : DiracSouriauSector R) where
   isDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k
 
 /--
-Construct the local Drazin witness context for any finite Dirac-Souriau sector
-over a field.  This removes the need to pass a local Drazin witness as an
-independent hypothesis in real/field-based downstream contexts.
--/
+Construct the local Drazin witness context from explicit owned Drazin data.
 
-noncomputable def DrazinWitnessContext.ofField
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    DrazinWitnessContext S := by
-  let h := S.exists_drazinInverse
-  let k := Classical.choose h
-  let hDExists := Classical.choose_spec h
-  let D := Classical.choose hDExists
-  let hD := Classical.choose_spec hDExists
-  exact ⟨k, D, hD⟩
+Field-level finite-dimensional existence remains available as an existential
+theorem; a structure-valued context must be supplied with the actual witness it
+stores.
+-/
+def DrazinWitnessContext.ofExplicit
+    (S : DiracSouriauSector R)
+    (k : ℕ)
+    (D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R)
+    (hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k) :
+    DrazinWitnessContext S :=
+  ⟨k, D, hD⟩
 
 /-- A Drazin witness context discharges the local hypothesis predicate. -/
 
@@ -164,33 +163,17 @@ theorem hasDrazinInverse_of_context
     S.HasDrazinInverse Ctxt.k := by
   exact ⟨Ctxt.D, Ctxt.isDrazin⟩
 
-/-- The constructed field witness context discharges the local Drazin predicate. -/
-
-theorem hasDrazinInverse_of_fieldContext
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
-  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
-
 /--
-The field-constructed Drazin witness context really packages the explicit
-inverse witness that appears in `exists_drazinInverse`.
--/
-theorem drazinWitnessContext_ofField_spec
-    {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    ∃ D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) K,
-      InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D
-        (DrazinWitnessContext.ofField S).k := by
-  exact ⟨(DrazinWitnessContext.ofField S).D,
-    (DrazinWitnessContext.ofField S).isDrazin⟩
+Field-level existence can be presented as an explicit context existential.
 
-/--
-The local Drazin witness context discharges the existence predicate on the
-same index that it stores.
+This stays in `Prop`, so unpacking the field-level existence theorem does not
+manufacture a data object by hidden choice.
 -/
-theorem hasDrazinInverse_of_fieldContext_spec
+theorem exists_drazinWitnessContext_of_field
     {K : Type*} [Field K] (S : DiracSouriauSector K) :
-    S.HasDrazinInverse (DrazinWitnessContext.ofField S).k := by
-  exact hasDrazinInverse_of_context (DrazinWitnessContext.ofField S)
+    ∃ Ctxt : DrazinWitnessContext S, S.HasDrazinInverse Ctxt.k := by
+  rcases S.exists_drazinInverse with ⟨k, D, hD⟩
+  exact ⟨DrazinWitnessContext.ofExplicit S k D hD, D, hD⟩
 
 /-- Unpack a Drazin hypothesis into its explicit witness. -/
 
@@ -228,6 +211,34 @@ theorem hasDrazinInverse_zero_of_twoSidedInverse
     (hDS : D * S.toMatrix = 1) :
     S.HasDrazinInverse 0 := by
   exact ⟨D, (drazinWitnessContext_zero_of_twoSidedInverse S D hSD hDS).isDrazin⟩
+
+/--
+Constructive Drazin witness from an explicit unit for the full assembled `4×4`
+block operator.
+-/
+def drazinWitnessContext_zero_of_unit_toMatrix
+    (S : DiracSouriauSector R)
+    (u : (Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R)ˣ)
+    (hu : (u : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R) = S.toMatrix) :
+    DrazinWitnessContext S := by
+  refine drazinWitnessContext_zero_of_twoSidedInverse S (↑u⁻¹) ?_ ?_
+  · rw [← hu]
+    exact Units.mul_inv u
+  · rw [← hu]
+    exact Units.inv_mul u
+
+/--
+A unit witness for the assembled block operator discharges the local Drazin
+predicate at index `0`, without separately passing the inverse matrix or the two
+inverse-law hypotheses.
+-/
+theorem hasDrazinInverse_zero_of_isUnit_toMatrix
+    (S : DiracSouriauSector R)
+    (hUnit : IsUnit S.toMatrix) :
+    S.HasDrazinInverse 0 := by
+  rcases hUnit with ⟨u, hu⟩
+  exact ⟨(↑u⁻¹),
+    (drazinWitnessContext_zero_of_unit_toMatrix S u hu).isDrazin⟩
 
 /--
 Definition-level supersymmetric stability.
@@ -270,6 +281,37 @@ theorem pfaffian_sq_eq_det_of_det_nonneg
     S.pfaffian ^ (2 : ℕ) = S.K.det := by
   unfold pfaffian
   exact Real.sq_sqrt hdet
+
+/--
+Constructive Gram-factor witness for the topological block.  A sector with
+`K = PᵀP` has nonnegative determinant by the native determinant-square route,
+so callers do not need to provide the bare hypothesis `0 ≤ det K`.
+-/
+@[rep_depth transport]
+structure TopologicalGramWitness (S : DiracSouriauSector ℝ) where
+  /-- Explicit Gram factor for the topological block. -/
+  P : Matrix (Fin 2) (Fin 2) ℝ
+  /-- The topological block is the Gram square of `P`. -/
+  K_eq_gram : S.K = P.transpose * P
+
+/-- A Gram-factor witness constructively discharges determinant nonnegativity. -/
+@[rep_depth transport]
+theorem det_nonneg_of_topologicalGramWitness
+    {S : DiracSouriauSector ℝ} (W : TopologicalGramWitness S) :
+    0 ≤ S.K.det := by
+  rw [W.K_eq_gram, Matrix.det_mul, Matrix.det_transpose]
+  simpa [pow_two] using sq_nonneg W.P.det
+
+/--
+The Pfaffian proxy squares to `det K` on the Gram-factor branch, with no bare
+`0 ≤ det K` hypothesis at the call site.
+-/
+@[rep_depth transport]
+theorem pfaffian_sq_eq_det_of_topologicalGramWitness
+    {S : DiracSouriauSector ℝ} (W : TopologicalGramWitness S) :
+    S.pfaffian ^ (2 : ℕ) = S.K.det := by
+  exact pfaffian_sq_eq_det_of_det_nonneg S
+    (det_nonneg_of_topologicalGramWitness W)
 
 /--
 Formal Pfaffian-Berezinian entropy expression.

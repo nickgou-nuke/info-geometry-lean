@@ -353,6 +353,47 @@ theorem observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD
     exact hBound
 
 /--
+If the full observer-defect residual is already zero, then the `Z_D` budget is
+constructed directly, without carrying a separate residual-bound hypothesis.
+-/
+@[rep_depth krein]
+theorem observerDefectResidual_norm_le_ZD_of_residual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hResidual : observerDefectResidual CIK obs = 0) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  rw [hResidual]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+A zero full observer-defect residual constructs the deviation-control predicate.
+This gives downstream exact-collapse branches a theorem-backed route to
+`ObserverDeviationControlledByZD` without introducing a free norm-budget packet.
+-/
+theorem observerDeviationControlledByZD_of_residual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hResidual : observerDefectResidual CIK obs = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
+  exact observerDefectResidual_norm_le_ZD_of_residual_eq_zero (CIK := CIK) (obs := obs) hResidual
+
+/--
+A zero full observer-defect residual yields the explicit owner-side
+`ObserverDeviationControl` witness packet.
+-/
+theorem observerDeviationControl_of_residual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hResidual : observerDefectResidual CIK obs = 0) :
+    ObserverDeviationControl CIK obs :=
+  { bound := observerDeviationControlledByZD_of_residual_eq_zero
+      (CIK := CIK) (obs := obs) hResidual }
+
+/--
 If the compressed observer-deviation channel itself vanishes, then the `Z_D`
 control predicate is constructed without any residual-bound hypothesis.
 -/
@@ -608,13 +649,9 @@ theorem observerDefectResidual_norm_le_ZD_of_deviation_eq_zero
     (obs : ObserverL5 CIK)
     (hDev : observerProjectorDeviation CIK obs = 0) :
     ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
-  rw [hZero]
-  calc
-    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
-    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
-      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+  exact observerDefectResidual_norm_le_ZD_of_residual_eq_zero
+    (CIK := CIK) (obs := obs)
+    (observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev)
 
 /--
 If the observer slice agrees with the certified spectral projector, the exact

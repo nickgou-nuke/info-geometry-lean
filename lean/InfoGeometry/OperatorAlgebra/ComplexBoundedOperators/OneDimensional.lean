@@ -63,7 +63,7 @@ theorem span_oneKet_eq_top :
   ext x
   constructor
   · intro _
-    exact trivial
+    exact Submodule.mem_top
   · intro _
     rw [Submodule.mem_span_singleton]
     exact ⟨oneDimIso x, oneDim_decompose x⟩

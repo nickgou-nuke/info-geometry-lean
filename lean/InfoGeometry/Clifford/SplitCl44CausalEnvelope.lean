@@ -165,20 +165,12 @@ noncomputable def penroseNullTwistor_toProjectiveNullBoundary44
     (z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier)
     (hz : z ≠ 0)
     (hnull : InfoGeometry.Twistor.PenroseTwistor.helicity z = 0)
-    (hmodel :
-      ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
-        Function.Injective L ∧
-          ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
-            SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z) :
-    ProjectiveNullBoundary44 := by
-  classical
-  let L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier :=
-    Classical.choose hmodel
-  have hLin : Function.Injective L := (Classical.choose_spec hmodel).1
-  have hQ :
+    (L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier)
+    (hLin : Function.Injective L)
+    (hQ :
       ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
-        SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z :=
-    (Classical.choose_spec hmodel).2
+        SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z) :
+    ProjectiveNullBoundary44 := by
   have hLz_ne_zero : L z ≠ 0 := by
     intro hzero
     exact hz <| hLin <| by simpa using hzero

@@ -134,6 +134,7 @@ import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
 import InfoGeometry.Canonical.InductiveOperatorTaylorClosure
 import InfoGeometry.Canonical.AFRecursiveLimitBridge
+import InfoGeometry.Canonical.JaynesFormalism
 import InfoGeometry.Canonical.JaynesLDDSCentering
 import InfoGeometry.Canonical.FiniteJaynesCenteredScoreBridge
 import InfoGeometry.Canonical.FiniteJaynesFormalism

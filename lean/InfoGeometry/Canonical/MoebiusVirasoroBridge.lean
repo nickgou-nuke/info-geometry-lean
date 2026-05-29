@@ -2,7 +2,6 @@ import Mathlib
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import SelfReference.Moebius
 
 /-!

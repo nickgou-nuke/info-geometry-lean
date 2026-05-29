@@ -32,7 +32,7 @@ structure FossilArtifact where
 
 abbrev jsonPrefix : String := "HIVE_JSON "
 
-partial def toShapeString : Expr → String
+def toShapeString : Expr → String
   | .bvar idx        => s!"(bvar {idx})"
   | .fvar _          => "(error unabstracted_fvar)"
   | .mvar _          => "(error unassigned_mvar)"

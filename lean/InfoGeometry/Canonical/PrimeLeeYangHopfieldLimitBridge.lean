@@ -2,7 +2,6 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
-import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge

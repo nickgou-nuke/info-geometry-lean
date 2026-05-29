@@ -272,8 +272,8 @@ def PolarizedRecompositionData.exactPotentialRecomposition
     ring
   · intro hexact
     classical
-    let bplus0 : βplus := Classical.choice ‹Nonempty βplus›
-    let bminus0 : βminus := Classical.choice ‹Nonempty βminus›
+    rcases ‹Nonempty βplus› with ⟨bplus0⟩
+    rcases ‹Nonempty βminus› with ⟨bminus0⟩
     have h0 := hexact bplus0 bminus0
     rw [PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_add_coupling] at h0
     have h1 := congrArg (fun x => x - R.recomposedCommonCarrierLogDensity bplus0 bminus0) h0
@@ -312,8 +312,8 @@ def PolarizedRecompositionData.exactPotentialRecomposition
       (R := R) (hcoupling := hcoupling) (bplus := bplus) (bminus := bminus)
   · intro hexact
     classical
-    let bplus0 : βplus := Classical.choice ‹Nonempty βplus›
-    let bminus0 : βminus := Classical.choice ‹Nonempty βminus›
+    rcases ‹Nonempty βplus› with ⟨bplus0⟩
+    rcases ‹Nonempty βminus› with ⟨bminus0⟩
     have h0 := hexact bplus0 bminus0
     rw [PolarizedRecompositionData.recomposedModularPotential_eq_commonCarrier_add_coupling] at h0
     have h1 := congrArg (fun x => x - R.recomposedCommonCarrierModularPotential bplus0 bminus0) h0

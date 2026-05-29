@@ -720,26 +720,29 @@ variable [FiniteDimensional ℝ E]
 
 /--
 Finite-dimensional continuous-operator bridge into the Riesz-style package.
+
+This is an owned existence theorem, not an unstructured `Nonempty` witness.
 -/
 @[rep_depth operator]
-theorem nonempty_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
-    Nonempty (RieszDrazinData T) := by
+theorem exists_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
+    ∃ h : RieszDrazinData T, Drazin.IsDrazinInverse T h.D h.k := by
   rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
       (E := E) T with ⟨k, D, hD⟩
-  exact ⟨
+  refine ⟨
     { k := k
       D := D
       P := Drazin.IsDrazinInverse.projection T D
       hIsDrazin := hD
       hP := rfl
-    }⟩
+    }, hD⟩
 
 /--
-Canonical finite-dimensional Riesz-Drazin package chosen from existence.
+Canonical finite-dimensional Riesz-Drazin package selected from the owned
+finite-dimensional existence theorem.
 -/
 noncomputable def canonicalRieszDrazinData_endCLM (T : E →L[ℝ] E) :
     RieszDrazinData T :=
-  Classical.choice (nonempty_rieszDrazinData_endCLM (E := E) T)
+  (exists_rieszDrazinData_endCLM (E := E) T).choose
 
 /-- Canonical finite-dimensional Drazin index. -/
 noncomputable def canonicalDrazinIndex_endCLM (T : E →L[ℝ] E) : ℕ :=

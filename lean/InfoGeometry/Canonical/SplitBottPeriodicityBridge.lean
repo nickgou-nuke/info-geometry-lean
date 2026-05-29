@@ -28,35 +28,34 @@ abbrev BottTensor3 : Type :=
   InfoGeometry.Canonical.BottPeriodicity.BottTensor 3
 
 /--
-The split Bott `Cl(4,4)` anchor, its separate `ℂ`-comparison, and the
-tensorized `ℂ`-comparison all exist as repo-owned theorem data.
+The split Bott `Cl(4,4)` anchor as the explicit equivalence owned by the tower.
 -/
-theorem splitBott_anchor_and_complexification :
-    Nonempty (SplitBottClifford 4 ≃ₐ[ℝ] BottTensor3) ∧
-      Nonempty (ℂ ⊗[ℝ] SplitBottClifford 4 ≃ₐ[ℝ] ℂ ⊗[ℝ] BottTensor3) ∧
-      Nonempty (Cl44Complex ≃ₐ[ℂ] ℂ ⊗[ℝ] Cl44) := by
-  constructor
-  · exact ⟨cl44_as_splitBottStep⟩
-  constructor
-  · exact ⟨Algebra.TensorProduct.congr (AlgEquiv.refl : ℂ ≃ₐ[ℝ] ℂ)
-      cl44_as_splitBottStep⟩
-  · exact ⟨cl44ComplexificationEquiv⟩
+noncomputable def cl44_as_splitBottStep_anchor :
+    SplitBottClifford 4 ≃ₐ[ℝ] BottTensor3 :=
+  cl44_as_splitBottStep
 
-/-- The `Cl(4,4)` anchor is exactly the split Bott step already owned by the tower. -/
-theorem cl44_as_splitBottStep_anchor :
-    Nonempty (SplitBottClifford 4 ≃ₐ[ℝ] BottTensor3) :=
-  ⟨cl44_as_splitBottStep⟩
-
-/-- The tensorized `ℂ`-extension of the `Cl(4,4)` anchor is available. -/
-theorem cl44_complexification_tensor_anchor :
-    Nonempty (ℂ ⊗[ℝ] SplitBottClifford 4 ≃ₐ[ℝ] ℂ ⊗[ℝ] BottTensor3) :=
-  ⟨Algebra.TensorProduct.congr (AlgEquiv.refl : ℂ ≃ₐ[ℝ] ℂ)
-    cl44_as_splitBottStep⟩
+/-- The tensorized `ℂ`-extension of the `Cl(4,4)` anchor. -/
+noncomputable def cl44_complexification_tensor_anchor :
+    ℂ ⊗[ℝ] SplitBottClifford 4 ≃ₐ[ℝ] ℂ ⊗[ℝ] BottTensor3 :=
+  Algebra.TensorProduct.congr (AlgEquiv.refl : ℂ ≃ₐ[ℝ] ℂ)
+    cl44_as_splitBottStep
 
 /-- The split `Cl(4,4)` complexification comparison is the owner base-change
 equivalence, kept separate from the split Bott step. -/
-theorem cl44_complexification_anchor :
-    Nonempty (Cl44Complex ≃ₐ[ℂ] ℂ ⊗[ℝ] Cl44) :=
-  ⟨cl44ComplexificationEquiv⟩
+noncomputable def cl44_complexification_anchor :
+    Cl44Complex ≃ₐ[ℂ] ℂ ⊗[ℝ] Cl44 :=
+  cl44ComplexificationEquiv
+
+/--
+The split Bott `Cl(4,4)` anchor, its separate `ℂ`-comparison, and the
+tensorized `ℂ`-comparison as concrete repo-owned equivalences.
+-/
+noncomputable def splitBott_anchor_and_complexification :
+    (SplitBottClifford 4 ≃ₐ[ℝ] BottTensor3) ×
+      (ℂ ⊗[ℝ] SplitBottClifford 4 ≃ₐ[ℝ] ℂ ⊗[ℝ] BottTensor3) ×
+      (Cl44Complex ≃ₐ[ℂ] ℂ ⊗[ℝ] Cl44) :=
+  (cl44_as_splitBottStep_anchor,
+    cl44_complexification_tensor_anchor,
+    cl44_complexification_anchor)
 
 end InfoGeometry.Canonical.SplitBottPeriodicityBridge

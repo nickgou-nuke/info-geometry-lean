@@ -1,6 +1,9 @@
 import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
+import InfoGeometry.Canonical.FiniteBoundaryLoopAlgebraicClosure
+import InfoGeometry.Canonical.FiniteFibonacciSymmetryClosureBridge
+import InfoGeometry.Canonical.FiniteFibonacciComputationalSpace
 
 /-!
 # InfoGeometry.Topological.FibonacciBraiding
@@ -32,6 +35,8 @@ open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 open InfoGeometry.Canonical.BoundaryLoopSuperClosure
+open InfoGeometry.Canonical.FiniteBoundaryLoopAlgebraicClosure
+open InfoGeometry.Canonical.FiniteFibonacciSymmetryClosureBridge
 
 /-! ## Fibonacci fusion readbacks -/
 
@@ -151,5 +156,38 @@ theorem fourFibonacciAnyon_det_F (P : FourFibonacciAnyonPacket) :
 theorem fourFibonacciAnyon_B_eq_FRF (P : FourFibonacciAnyonPacket) :
     P.B = P.F * P.R * P.F :=
   FourAnyonFusionPacket.B_eq_FRF P
+
+/-- The finite Fibonacci/Cayley wrapper is closed under the boundary-loop algebraic packet. -/
+abbrev FibonacciBoundaryClosurePacket := FiniteBoundaryAlgebraicClosurePacket
+
+/-- The finite Fibonacci boundary wrapper preserves the boundary sector by construction. -/
+theorem fibonacciBoundaryClosure_preserves_boundary
+    (P : FibonacciBoundaryClosurePacket)
+    {p : AlgebraicCompactification ℕ}
+    (hp : AlgebraicCompactification.IsBoundary p) :
+    AlgebraicCompactification.IsBoundary (boundaryLoopAction P.loop p) :=
+  P.preserves_boundary hp
+
+/-- The finite Fibonacci boundary wrapper commutes with Cayley--Möbius inversion. -/
+theorem fibonacciBoundaryClosure_cayley_commutes
+    (P : FibonacciBoundaryClosurePacket)
+    (p : AlgebraicCompactification ℕ) :
+    P.cayley.compactifiedInversion (boundaryLoopAction P.loop p) =
+      boundaryLoopAction P.loop (P.cayley.compactifiedInversion p) :=
+  P.cayley_commutes_loop p
+
+/-- The finite Fibonacci boundary wrapper commutes with the double-cover deck involution. -/
+theorem fibonacciBoundaryClosure_lifted_commutes_deck
+    (P : FibonacciBoundaryClosurePacket)
+    (x : DoubleCover (AlgebraicCompactification ℕ)) :
+    liftedBoundaryLoopAction P.loop (deckInvolution x) =
+      deckInvolution (liftedBoundaryLoopAction P.loop x) :=
+  P.lifted_commutes_deck x
+
+/-- The finite Fibonacci wrapper is compatible with the symmetry-closure bridge. -/
+theorem fibonacciBoundaryClosure_symmetry_target (N : ℕ) :
+    Fintype.card (InfoGeometry.Canonical.FiniteFibonacciComputationalSpace.ComputationalVector N) =
+      2 ^ N :=
+  section8_symmetry_closure_target N
 
 end InfoGeometry.Topological.FibonacciBraiding

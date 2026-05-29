@@ -15,6 +15,7 @@ Scaffolding for the cone-first, projective-state approach:
 namespace InfoGeometry.Convex
 
 open scoped LinearAlgebra.Projectivization
+open scoped RealInnerProductSpace
 
 section Inner
 
@@ -27,6 +28,44 @@ structure SelfDualCone (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ
 
 @[simp] lemma SelfDualCone.innerDual_eq (C : SelfDualCone E) :
     ProperCone.innerDual (C.cone : Set E) = C.cone := C.self_dual
+
+/--
+Membership in a self-dual cone is exactly nonnegative inner pairing against
+every element of the cone.
+-/
+theorem SelfDualCone.mem_iff_forall_inner_nonneg
+    (C : SelfDualCone E) (x : E) :
+    x ∈ C.cone ↔ ∀ y : E, y ∈ C.cone → 0 ≤ inner ℝ y x := by
+  constructor
+  · intro hx
+    have hxDual : x ∈ ProperCone.innerDual (C.cone : Set E) := by
+      rw [C.self_dual]
+      exact hx
+    exact (ProperCone.mem_innerDual (s := (C.cone : Set E)) (y := x)).mp hxDual
+  · intro hx
+    have hxDual : x ∈ ProperCone.innerDual (C.cone : Set E) :=
+      (ProperCone.mem_innerDual (s := (C.cone : Set E)) (y := x)).mpr hx
+    rw [C.self_dual] at hxDual
+    exact hxDual
+
+/--
+Any two elements of a self-dual cone have nonnegative inner pairing.
+-/
+theorem SelfDualCone.inner_nonneg_of_mem
+    (C : SelfDualCone E) {x y : E}
+    (hx : x ∈ C.cone) (hy : y ∈ C.cone) :
+    0 ≤ inner ℝ x y := by
+  exact (C.mem_iff_forall_inner_nonneg y).mp hy x hx
+
+/--
+The self-dual cone is contained in its inner dual, read as a pointwise theorem.
+-/
+theorem SelfDualCone.mem_innerDual_of_mem
+    (C : SelfDualCone E) {x : E}
+    (hx : x ∈ C.cone) :
+    x ∈ ProperCone.innerDual (C.cone : Set E) := by
+  rw [C.self_dual]
+  exact hx
 
 /-- Projective rays represented by nonzero cone points. -/
 def ConeRay (C : ProperCone ℝ E) : Type _ :=
@@ -54,6 +93,26 @@ structure PairedSelfDualCone where
   dual_eq : ProperCone.dual pairing coneE = coneF
 
 instance (C : PairedSelfDualCone (E := E) (F := F)) : C.pairing.IsContPerfPair := C.is_perf
+
+/--
+Membership in the paired dual cone is exactly nonnegative pairing against every
+source-cone element.
+-/
+theorem PairedSelfDualCone.mem_coneF_iff_forall_pairing_nonneg
+    (C : PairedSelfDualCone (E := E) (F := F)) (y : F) :
+    y ∈ C.coneF ↔ ∀ x : E, x ∈ C.coneE → 0 ≤ C.pairing x y := by
+  rw [← C.dual_eq]
+  simp
+
+/--
+Elements of paired self-dual cones pair nonnegatively.
+-/
+theorem PairedSelfDualCone.pairing_nonneg_of_mem
+    (C : PairedSelfDualCone (E := E) (F := F))
+    {x : E} {y : F}
+    (hx : x ∈ C.coneE) (hy : y ∈ C.coneF) :
+    0 ≤ C.pairing x y := by
+  exact (C.mem_coneF_iff_forall_pairing_nonneg y).mp hy x hx
 
 end Pairing
 

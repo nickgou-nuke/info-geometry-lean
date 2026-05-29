@@ -21,6 +21,24 @@ variable {𝕜 V ι : Type*}
 variable [CommRing 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 /--
+Modewise proof-carrying CAR vacuum data on a finite set of modes.
+
+This narrows the finite-sum contraction route from two loose hypotheses
+`h_car` and `h_vac` to one explicit constructive packet whose fields are the
+CAR relation and vacuum-annihilation witnesses for each indexed mode.
+-/
+structure CARVacuumContractionFamily
+    [DecidableEq ι]
+    (S : Finset ι)
+    (A C : ι → V →ₗ[𝕜] V)
+    (c : ι → 𝕜)
+    (v : V) where
+  car :
+    ∀ i ∈ S,
+      (A i).comp (C i) + (C i).comp (A i) = (c i) • (LinearMap.id : V →ₗ[𝕜] V)
+  vacuum : ∀ i ∈ S, A i v = 0
+
+/--
 Single-mode CAR vacuum contraction.
 -/
 theorem car_vacuum_contraction
@@ -66,5 +84,22 @@ theorem car_vacuum_contraction_sum
             car_vacuum_contraction (A i) (C i) (c i) (h_car i hi) v (h_vac i hi)
     _ = (Finset.sum S c) • v := by
           simpa using (Finset.sum_smul (s := S) (f := c) (x := v)).symm
+
+/--
+Witness-routed finite-sum CAR contraction.
+
+This is the constructive replacement route for callers that already have a
+modewise CAR/vacuum packet: the loose hypotheses `h_car` and `h_vac` are read
+from `W` rather than threaded as separate theorem arguments.
+-/
+theorem car_vacuum_contraction_sum_of_family
+    [DecidableEq ι]
+    (S : Finset ι)
+    (A C : ι → V →ₗ[𝕜] V)
+    (c : ι → 𝕜)
+    (v : V)
+    (W : CARVacuumContractionFamily (𝕜 := 𝕜) (V := V) S A C c v) :
+    (Finset.sum S (fun i => (A i).comp (C i))) v = (Finset.sum S c) • v :=
+  car_vacuum_contraction_sum S A C c v W.car W.vacuum
 
 end InfoGeometry.Canonical.CARVacuumContraction

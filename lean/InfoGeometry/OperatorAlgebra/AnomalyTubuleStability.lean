@@ -11,7 +11,6 @@ analytic classification theorem.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 
 noncomputable section

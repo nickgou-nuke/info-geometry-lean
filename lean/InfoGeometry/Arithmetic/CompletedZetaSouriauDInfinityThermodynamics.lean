@@ -29,21 +29,23 @@ theorem conjugationReflection_involutive :
 theorem antiunitaryCriticalReflection_involutive :
     Function.Involutive antiunitaryCriticalReflection := by
   intro s
-  apply Complex.ext <;> simp [antiunitaryCriticalReflection]
+  unfold antiunitaryCriticalReflection
+  simp
 
 theorem fixed_antiunitaryCriticalReflection_iff_criticalLine (s : ℂ) :
     s = antiunitaryCriticalReflection s ↔ CriticalLine s := by
   constructor
   · intro h
-    unfold CriticalLine antiunitaryCriticalReflection at *
-    have hre := congrArg Complex.re h
-    simp at hre
+    unfold antiunitaryCriticalReflection at h
+    have h_re := congrArg Complex.re h
+    simp at h_re
+    unfold CriticalLine
     linarith
-  · intro hs
-    unfold CriticalLine antiunitaryCriticalReflection at *
+  · intro h
+    unfold CriticalLine at h
+    unfold antiunitaryCriticalReflection
     apply Complex.ext
-    · simp [hs]
-      norm_num
+    · simp [h]; norm_num
     · simp
 
 theorem functional_conjugation_commute (s : ℂ) :
@@ -64,14 +66,23 @@ def completedZetaAct : CompletedZetaSymmetry → ℂ → ℂ
 
 theorem completedZetaAct_involutive (g : CompletedZetaSymmetry) :
     Function.Involutive (completedZetaAct g) := by
-  cases g <;> intro s <;> apply Complex.ext <;> simp [completedZetaAct, functionalReflection,
-    conjugationReflection]
+  cases g <;> intro s
+  · exact functionalReflection_involutive s
+  · exact conjugationReflection_involutive s
+  · apply Complex.ext <;> simp [completedZetaAct, functionalReflection, conjugationReflection]
 
 theorem completedZetaAct_preserves_criticalLine (g : CompletedZetaSymmetry) (s : ℂ) :
     CriticalLine s → CriticalLine (completedZetaAct g s) := by
-  intro hs
-  cases g <;> unfold CriticalLine completedZetaAct functionalReflection conjugationReflection at * <;>
-    simp [hs] <;> linarith
+  cases g <;> intro h
+  · unfold completedZetaAct functionalReflection CriticalLine at *
+    simp at *
+    linarith
+  · unfold completedZetaAct conjugationReflection CriticalLine at *
+    simp at *
+    exact h
+  · unfold completedZetaAct functionalReflection conjugationReflection CriticalLine at *
+    simp at *
+    linarith
 
 /-! ## 2. Massieu potential and moment-map decomposition -/
 

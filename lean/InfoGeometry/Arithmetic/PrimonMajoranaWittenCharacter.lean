@@ -1,7 +1,6 @@
 import Mathlib
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
-import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 import InfoGeometry.Meta.OwnerTarget
 
 /-!
@@ -193,46 +192,6 @@ namespace SplitMajoranaOPEDatum
 
 variable {Prime Field Singular : Type*}
 variable [DecidableEq Prime] [Zero Singular] [One Singular] [Neg Singular]
-
-/--
-Transport a concrete split-Majorana OPE owner datum to the arithmetic witness
-packet.
-
-This is an owner-side transport: the equalities live in the datum itself, and
-the arithmetic socket merely re-expresses them as proof-carrying fields.
--/
-def toArithmeticSplitMajoranaOPE
-    (O : SplitMajoranaOPEDatum Prime Field Singular) :
-    InfoGeometry.Arithmetic.PrimeMajoranaOPE.SplitMajoranaOPE Prime Field Singular where
-  cField := O.cField
-  dField := O.dField
-  delta := fun p q => if p = q then 1 else 0
-  zeroCoeff := 0
-  neg := Neg.neg
-  cc_singular := fun p q =>
-    O.singular (O.cField p) (O.cField q) = if p = q then 1 else 0
-  dd_singular := fun p q =>
-    O.singular (O.dField p) (O.dField q) = if p = q then -1 else 0
-  cd_regular := fun p q =>
-    O.singular (O.cField p) (O.dField q) = 0
-  cc_certificate := O.c_c_singular
-  dd_certificate := O.d_d_singular
-  cd_certificate := O.c_d_regular
-
-theorem toArithmeticSplitMajoranaOPE_cc_valid
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).cc_singular p q := by
-  exact O.c_c_singular p q
-
-theorem toArithmeticSplitMajoranaOPE_dd_valid
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).dd_singular p q := by
-  exact O.d_d_singular p q
-
-theorem toArithmeticSplitMajoranaOPE_cd_regular_valid
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).cd_regular p q := by
-  exact O.c_d_regular p q
 
 end SplitMajoranaOPEDatum
 

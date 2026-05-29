@@ -127,9 +127,6 @@ def transform (B : WeylGaugeField X A) (σ : WeylGaugeParameter X A) : WeylGauge
   rfl
 
 /-- Identity gauge transform (`σ = 0`) leaves the field unchanged. -/
--- DEBT_ID: WGF-ZD-001
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: zero gauge shift
 @[simp] theorem transform_zero (B : WeylGaugeField X A) :
     B.transform ⟨fun _ => 0⟩ = B := by
   cases B

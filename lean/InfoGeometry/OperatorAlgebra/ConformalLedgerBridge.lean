@@ -23,7 +23,6 @@ material, and topological ledgers.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
 import InfoGeometry.Meta.OwnerTarget
 

@@ -71,27 +71,24 @@ theorem usesLightConeAffineBridge_holds :
 
 /--
 Constructive witness for lightcone/Sugawara bridge compatibility.
-Now a pure data structure.
+This is proof-carrying: it stores the actual bridge-equality law, not a dummy.
 -/
 @[rep_depth operator]
 structure UsesLightConeAffineBridgeWitness where
-  -- DEBT_ID: LCSC-ZD-001
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial witness for lightcone/Sugawara bridge compatibility
-  dummy : PUnit
+  proof : S.UsesLightConeAffineBridge
 
 /-- Recover the compatibility law as honest debt. -/
 theorem UsesLightConeAffineBridgeWitness.use
-    (W : UsesLightConeAffineBridgeWitness) :
+    (W : UsesLightConeAffineBridgeWitness S) :
     S.UsesLightConeAffineBridge := by
-  exact S.uses_lightcone_affine_bridge
+  exact W.proof
 
 /-- Recover the compatibility proposition from its witness packet. -/
 @[rep_depth operator]
 theorem usesLightConeAffineBridge_of_witness
-    (W : UsesLightConeAffineBridgeWitness) :
+    (W : UsesLightConeAffineBridgeWitness S) :
     S.UsesLightConeAffineBridge :=
-  W.use S
+  W.use
 
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
@@ -241,7 +238,7 @@ consuming a proof-carrying witness packet.
 -/
 @[rep_depth operator]
 theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
-    (W : UsesLightConeAffineBridgeWitness)
+    (W : UsesLightConeAffineBridgeWitness S)
     (m n : ℤ) :
     (hact :
       ∀ (m n : ℤ) (X : Finite),

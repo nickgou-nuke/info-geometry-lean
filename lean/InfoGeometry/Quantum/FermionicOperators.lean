@@ -22,12 +22,9 @@ the non-commutative generation of fermionic creation and annihilation operators.
 namespace InfoGeometry.Quantum
 
 /-- 
-HONEST THEOREM DEBT:
 The alternativity condition for the Hurwitz Fenchel coordinate patch.
 Because the elements $x$ and $\overline{x}$ generate an associative subalgebra,
 their action on any state $y$ perfectly associates, stabilizing the fermionic transition.
-
--- DEBT_KIND: SORRY
 -/
 theorem fenchel_alternativity_patch (x y : HurwitzSpace) :
     hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = 
@@ -39,7 +36,6 @@ theorem fenchel_alternativity_patch (x y : HurwitzSpace) :
     ring
 
 /-- 
-HONEST THEOREM DEBT:
 The composition normalization on the state $y$.
 $(x \bullet \overline{x}) \bullet y = n(x)y$
 -/

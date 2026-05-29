@@ -6,6 +6,7 @@ import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
+import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.LaplaceFourierComparison
 import InfoGeometry.Analysis.LaplaceUniqueness
 import InfoGeometry.Analysis.LaplaceContour

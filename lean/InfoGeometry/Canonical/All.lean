@@ -123,6 +123,7 @@ import InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
+import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

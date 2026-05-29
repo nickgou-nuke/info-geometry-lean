@@ -25,14 +25,11 @@ structure OperatorWeight (A : Type*) [Zero A] where
   /-- Extended nonnegative weight readout. -/
   weight : A → ℝ≥0∞
 
-  /-- Positivity: the weight is non-negative on the positive cone. -/
-  positive_law : ∀ x ∈ positiveCone, 0 ≤ weight x
-
   /-- A weight is faithful if it is zero only at the zero element. -/
-  faithfulness_law : ∀ x ∈ positiveCone, weight x = 0 → x = 0
+  faithful_on_positiveCone : ∀ x ∈ positiveCone, weight x = 0 → x = 0
 
-  /-- Semifiniteness: the weight is finite on a dense subset. -/
-  semifiniteness_law : ∃ S ⊆ positiveCone, ∀ x ∈ S, weight x < ⊤
+  /-- Semifiniteness: the weight is finite on a supplied positive subset. -/
+  semifinite_on_positiveCone : ∃ S ⊆ positiveCone, ∀ x ∈ S, weight x < ⊤
 
 namespace OperatorWeight
 
@@ -40,12 +37,12 @@ variable {A : Type*} [Zero A]
 variable (φ : OperatorWeight A)
 
 /-- Positivity of the weight on the positive cone. -/
-theorem positive {x : A} (hx : x ∈ φ.positiveCone) : 0 ≤ φ.weight x :=
-  φ.positive_law x hx
+theorem positive {x : A} (_hx : x ∈ φ.positiveCone) : 0 ≤ φ.weight x :=
+  bot_le
 
 /-- Faithfulness of the weight. -/
 theorem faithfulness {x : A} (hx : x ∈ φ.positiveCone) (hw : φ.weight x = 0) : x = 0 :=
-  φ.faithfulness_law x hx hw
+  φ.faithful_on_positiveCone x hx hw
 
 end OperatorWeight
 
@@ -66,14 +63,14 @@ structure RelativeModularDatum (A Modular : Type*) [Zero A] [Zero Modular] [Mul 
     Modular → Modular
 
   /-- The relative modular operator satisfies a multiplicative chain rule. -/
-  chain_rule_law :
+  relativeModular_mul :
     ∀ φ ψ η : OperatorWeight A,
       relativeModular φ ψ * relativeModular ψ η = relativeModular φ η
 
   /--
   Support compatibility.
   -/
-  support_compatibility_law :
+  relativeModular_eq_zero_iff_disjoint :
     ∀ φ ψ : OperatorWeight A,
       relativeModular φ ψ = 0 ↔ Disjoint φ.positiveCone ψ.positiveCone
 
@@ -105,15 +102,9 @@ structure UnnormalizedRelativeEntropyDatum (A Modular : Type*) [Zero A] [Zero Mo
     OperatorWeight A → OperatorWeight A → ℝ≥0∞
 
   /--
-  Entropy is nonnegative.
-  -/
-  entropy_nonnegative_law :
-    ∀ φ ψ : OperatorWeight A, 0 ≤ entropy φ ψ
-
-  /--
   Zero self-divergence.
   -/
-  entropy_self_law :
+  entropy_self_eq_zero :
     ∀ φ : OperatorWeight A, entropy φ φ = 0
 
 namespace UnnormalizedRelativeEntropyDatum
@@ -125,13 +116,13 @@ variable (S : UnnormalizedRelativeEntropyDatum A Modular)
 Relative entropy is nonnegative.
 -/
 theorem nonnegative (φ ψ : OperatorWeight A) : 0 ≤ S.entropy φ ψ :=
-  S.entropy_nonnegative_law φ ψ
+  bot_le
 
 /--
 Self-relative entropy vanishes.
 -/
 theorem self_eq_zero (φ : OperatorWeight A) : S.entropy φ φ = 0 :=
-  S.entropy_self_law φ
+  S.entropy_self_eq_zero φ
 
 end UnnormalizedRelativeEntropyDatum
 
@@ -153,13 +144,8 @@ structure FiniteLogBregmanDatum (A : Type*) [Ring A] [Module ℝ A] where
   /-- Admissible positive cone/domain. -/
   positiveCone : Set A
 
-  /-- The logarithm is defined on the positive cone. -/
-  log_domain_law : ∀ x ∈ positiveCone, ∃ y, logOp x = y
-
-  /--
-  Trace cyclicity on the admissible domain.
-  -/
-  trace_law : ∀ x y, trace (x * y) = trace (y * x)
+  /-- Trace cyclicity on the admissible domain. -/
+  trace_mul_comm : ∀ x y, trace (x * y) = trace (y * x)
 
 namespace FiniteLogBregmanDatum
 
@@ -185,7 +171,7 @@ structure CFCLogBridge (A : Type*) [NormedRing A] [CompleteSpace A] [Algebra ℝ
   cfcLog : A → A
 
   /-- The spectrum of the element must be in the domain of the logarithm. -/
-  spectrum_log_domain_law : ∀ x : A, spectrum ℝ x ⊆ Set.Ioi (0 : ℝ)
+  spectrum_subset_log_domain : ∀ x : A, spectrum ℝ x ⊆ Set.Ioi (0 : ℝ)
 
 namespace CFCLogBridge
 
@@ -207,18 +193,14 @@ structure ModularTransportCostDatum (A Modular : Type*) [Zero A] [Zero Modular] 
   cost :
     OperatorWeight A → OperatorWeight A → ℝ≥0∞
 
-  /-- Nonnegativity. -/
-  cost_nonnegative_law :
-    ∀ φ ψ, 0 ≤ cost φ ψ
-
   /-- Zero self-cost. -/
-  cost_self_law :
+  cost_self_eq_zero :
     ∀ φ, cost φ φ = 0
 
   /--
   Transport cost is bounded by relative entropy.
   -/
-  modular_transport_law :
+  cost_le_entropy :
     ∀ φ ψ, cost φ ψ ≤ relativeEntropy.entropy φ ψ
 
 namespace ModularTransportCostDatum
@@ -227,10 +209,10 @@ variable {A Modular : Type*} [Zero A] [Zero Modular] [Mul Modular]
 variable (T : ModularTransportCostDatum A Modular)
 
 theorem nonnegative (φ ψ : OperatorWeight A) : 0 ≤ T.cost φ ψ :=
-  T.cost_nonnegative_law φ ψ
+  bot_le
 
 theorem self_eq_zero (φ : OperatorWeight A) : T.cost φ φ = 0 :=
-  T.cost_self_law φ
+  T.cost_self_eq_zero φ
 
 end ModularTransportCostDatum
 
@@ -251,7 +233,7 @@ structure SymmetricRelativeHamiltonianCalibration (A Modular SymHam : Type*) [Ze
   /--
   The Hamiltonian is symmetric.
   -/
-  symmetry_law :
+  symmetricHamiltonian_comm :
     ∀ φ ψ, symmetricHamiltonian φ ψ = symmetricHamiltonian ψ φ
 
 namespace SymmetricRelativeHamiltonianCalibration

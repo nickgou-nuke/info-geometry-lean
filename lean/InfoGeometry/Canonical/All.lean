@@ -119,6 +119,7 @@ import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.CantorDiracSeaHopping
 import InfoGeometry.Canonical.CantorModularScoreFunctional
+import InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 import InfoGeometry.Canonical.KreinProjectorLattice
 import InfoGeometry.Canonical.SectorLattice
 import InfoGeometry.Canonical.RefinementGaloisConnection

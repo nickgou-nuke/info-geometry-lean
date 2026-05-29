@@ -11,6 +11,7 @@ This file is honest about its scope:
 -/
 
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 noncomputable section
 

@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
+import InfoGeometry.Arithmetic.PrimeMajoranaOPE
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge

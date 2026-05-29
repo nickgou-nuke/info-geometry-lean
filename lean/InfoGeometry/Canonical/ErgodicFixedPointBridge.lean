@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.KMSConditionBridge
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
 open scoped InnerProductSpace

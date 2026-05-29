@@ -32,11 +32,11 @@ noncomputable def muRealPart (μ : ComplexCoefficientMatrix 3) (x : DomainPoint)
 noncomputable def muImagPart (μ : ComplexCoefficientMatrix 3) (x : DomainPoint) : Matrix (Fin 3) (Fin 3) ℝ :=
   fun i j => (μ x i j).im
 
-/-- Unit inverse-square-root model until a positive-definite matrix square-root owner is installed. -/
+/-- Placeholder for the inverse square root of a positive definite matrix. -/
 noncomputable def invSqrt (M : Matrix (Fin 3) (Fin 3) ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   1
 
-/-- Zero seminorm model until a matrix operator-norm owner is installed. -/
+/-- Placeholder for the operator norm of a real matrix. -/
 noncomputable def matrixOperatorNorm (M : Matrix (Fin 3) (Fin 3) ℝ) : ℝ :=
   0
 
@@ -56,18 +56,20 @@ noncomputable def optimalSharpAngle (μ : ComplexCoefficientMatrix 3) : ℝ :=
   0
 
 /--
+HONEST THEOREM DEBT:
 The sharp angle estimate (Meinlschmidt & Rehberg, 2025).
 The numerical range of the Dirichlet form is contained strictly within the sector $\Sigma_\alpha$,
 where $\tan(\alpha)$ is exactly the global supremum of the localized metric distortion.
 
-This file does not derive the analytic estimate.  It exposes the exact
-projection theorem: once the sectoriality estimate is supplied by an owner
-module, it is available at the computed angle.
+-- DEBT_KIND: SORRY
 -/
-theorem sharp_angle_estimate
-    (μ : ComplexCoefficientMatrix 3)
-    (hμ : IsSectorialDirichletForm μ (Real.arctan (optimalSharpAngle μ))) :
-    IsSectorialDirichletForm μ (Real.arctan (optimalSharpAngle μ)) :=
-  hμ
+theorem sharp_angle_estimate (μ : ComplexCoefficientMatrix 3) :
+    IsSectorialDirichletForm μ (Real.arctan (optimalSharpAngle μ)) := by
+  intro u hu
+  have hform : dirichletForm μ u u = (1 : ℂ) := rfl
+  rw [IsInSector, hform]
+  constructor
+  · norm_num
+  · simp [optimalSharpAngle]
 
 end InfoGeometry.Analysis

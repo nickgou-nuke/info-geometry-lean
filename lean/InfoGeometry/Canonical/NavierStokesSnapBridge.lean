@@ -25,6 +25,7 @@ import Mathlib
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Geometry.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
+import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 
 noncomputable section
 

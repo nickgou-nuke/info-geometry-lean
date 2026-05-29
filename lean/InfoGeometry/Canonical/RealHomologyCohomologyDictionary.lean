@@ -550,18 +550,6 @@ def PreservesPairingTransport
     (transportCochain : Cochain → Cochain) : Prop :=
   ∀ x φ, P.pairing (transportChain x) (transportCochain φ) = P.pairing x φ
 
-/--
-The identity chain/cochain transport is constructively pairing-preserving.
-
-This gives the identity branch without requiring a separate explicit
-`PreservesPairingTransport` hypothesis packet.
--/
-@[rep_depth transport]
-theorem preservesPairingTransport_id :
-    P.PreservesPairingTransport (fun x : H₂ => x) (fun φ : Cochain => φ) := by
-  intro x φ
-  rfl
-
 /-- Readback: a pairing-preserving transport leaves the numerical readout invariant. -/
 @[rep_depth transport]
 theorem pairing_readout_invariant_of_preservesPairingTransport
@@ -584,19 +572,6 @@ theorem detects_transport_of_preservesPairingTransport
   unfold Detects at hDetects ⊢
   rw [hT x φ]
   exact hDetects
-
-/--
-A detecting witness remains detecting under identity transport, with the
-pairing-preservation proof supplied by `preservesPairingTransport_id` rather
-than by an explicit transport hypothesis.
--/
-@[rep_depth transport]
-theorem detects_identityTransport
-    {x : H₂} {φ : Cochain}
-    (hDetects : P.Detects x φ) :
-    P.Detects ((fun x : H₂ => x) x) ((fun φ : Cochain => φ) φ) :=
-  P.detects_transport_of_preservesPairingTransport
-    P.preservesPairingTransport_id hDetects
 
 /--
 If a witness kills boundaries, it has the same pairing value on homologous

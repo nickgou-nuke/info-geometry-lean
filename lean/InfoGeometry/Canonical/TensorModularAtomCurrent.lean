@@ -94,38 +94,38 @@ noncomputable def tensorModularAtomHeisenbergWitness :
   rfl
 
 /-- The tensor modular atom witness yields the exact current interface. -/
-noncomputable def tensorModularAtom_toCurrentHeisenbergRep :
-    CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+theorem tensorModularAtom_toCurrentHeisenbergRep_nonempty :
+    Nonempty (CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   splitClifford_to_currentHeisenbergRep (tensorModularAtomHeisenbergWitness 𝕜 α)
 
 /-- The tensor modular atom witness yields the packaged Sugawara morphism. -/
-noncomputable def tensorModularAtom_toCurrentSugawaraMorphism :
-    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+theorem tensorModularAtom_toCurrentSugawaraMorphism_nonempty :
+    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   splitClifford_to_currentSugawaraMorphism (tensorModularAtomHeisenbergWitness 𝕜 α)
 
 /--
 Bundled bridge export via owner theorem route: packaged Sugawara morphism together
 with exact current representation on the tensor modular-atom carrier.
 -/
-noncomputable def tensorModularAtom_toCurrentSugawaraMorphism_and_current :
-    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
-      CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
+theorem tensorModularAtom_toCurrentSugawaraMorphism_and_current_nonempty :
+    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) ∧
+      Nonempty (CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   splitClifford_currentSugawara_and_current (tensorModularAtomHeisenbergWitness 𝕜 α)
 
 /-- The tensor modular atom witness yields the downstream Sugawara representation. -/
-noncomputable def tensorModularAtom_to_sugawaraRepresentation :
-    VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
-      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  (tensorModularAtomHeisenbergWitness 𝕜 α).currentSugawaraRepresentation
+theorem tensorModularAtom_to_sugawaraRepresentation_nonempty :
+    Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
+      (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  ⟨(tensorModularAtomHeisenbergWitness 𝕜 α).currentSugawaraRepresentation⟩
 
 /--
 Bundled bridge export via owner theorem route: exact current representation
 plus downstream Sugawara representation on the tensor modular-atom carrier.
 -/
-noncomputable def tensorModularAtom_toCurrentAndSugawara
+theorem tensorModularAtom_toCurrentAndSugawara_nonempty
     :
-    CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
-      (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
+    Nonempty (CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) ∧
+      Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
         (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) :=
   splitClifford_current_and_sugawara (tensorModularAtomHeisenbergWitness 𝕜 α)
 
@@ -133,22 +133,22 @@ noncomputable def tensorModularAtom_toCurrentAndSugawara
 The exact source-side bridge: the charged-Fock current witness is already a
 split-Clifford witness, so the current and Sugawara packages are immediate.
 -/
-noncomputable def tensorModularAtom_current_and_sugawara
+theorem tensorModularAtom_current_and_sugawara
     :
-    CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
-      (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
-        (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  tensorModularAtom_toCurrentAndSugawara (𝕜 := 𝕜) (α := α)
+    Nonempty (CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) ∧
+      Nonempty (VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
+        (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  simpa using tensorModularAtom_toCurrentAndSugawara_nonempty (𝕜 := 𝕜) (α := α)
 
 /--
 Companion bridge surface exposing the packaged Sugawara morphism together with
 its current witness on the tensor modular-atom carrier.
 -/
-noncomputable def tensorModularAtom_currentSugawara_and_current
+theorem tensorModularAtom_currentSugawara_and_current
     :
-    CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) ×
-      CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
-  tensorModularAtom_toCurrentSugawaraMorphism_and_current (𝕜 := 𝕜) (α := α)
+    Nonempty (CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) ∧
+      Nonempty (CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)) := by
+  simpa using tensorModularAtom_toCurrentSugawaraMorphism_and_current_nonempty (𝕜 := 𝕜) (α := α)
 
 end ChargedFockWitness
 

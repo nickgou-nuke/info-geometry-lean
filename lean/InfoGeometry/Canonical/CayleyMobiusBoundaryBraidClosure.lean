@@ -110,6 +110,41 @@ theorem compactifiedInversion_involutive (p : AlgebraicCompactification X) :
   | interior x => simp [compactifiedInversion, AlgebraicCompactification.map, C.inv_inv]
   | boundary x => simp [compactifiedInversion, AlgebraicCompactification.map, C.inv_inv]
 
+/-- Compactified involution has even iterates equal to identity. -/
+theorem compactifiedInversion_iterate_even (n : ℕ) (p : AlgebraicCompactification X) :
+    (C.compactifiedInversion)^[2 * n] p = p := by
+  induction n with
+  | zero => simp [Nat.iterate]
+  | succ n ih =>
+      have hdecomp := congrArg (fun F => F p) (Function.iterate_add C.compactifiedInversion 2 (2 * n))
+      have hdecomp' :
+          (C.compactifiedInversion)^[2 * n + 2] p =
+            (C.compactifiedInversion)^[2] ((C.compactifiedInversion)^[2 * n] p) := by
+        simpa [Function.comp, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hdecomp
+      calc
+        (C.compactifiedInversion)^[2 * (n + 1)] p =
+            (C.compactifiedInversion)^[2 * n + 2] p := by
+          simp [Nat.mul_succ, two_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+        _ = (C.compactifiedInversion)^[2] ((C.compactifiedInversion)^[2 * n] p) := hdecomp'
+        _ = (C.compactifiedInversion)^[2 * n] p := by
+          simp [Nat.iterate, C.compactifiedInversion_involutive]
+        _ = p := ih
+
+/-- Compactified involution has odd iterates equal to one inversion. -/
+theorem compactifiedInversion_iterate_odd (n : ℕ) (p : AlgebraicCompactification X) :
+    (C.compactifiedInversion)^[2 * n + 1] p = C.compactifiedInversion p := by
+  have hdecomp := congrArg (fun F => F p) (Function.iterate_add C.compactifiedInversion 1 (2 * n))
+  have hdecomp' :
+      (C.compactifiedInversion)^[1 + 2 * n] p =
+        (C.compactifiedInversion)^[1] ((C.compactifiedInversion)^[2 * n] p) := by
+    simpa [Function.comp, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hdecomp
+  calc
+    (C.compactifiedInversion)^[2 * n + 1] p = (C.compactifiedInversion)^[1 + 2 * n] p := by
+      simp [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
+    _ = (C.compactifiedInversion)^[1] ((C.compactifiedInversion)^[2 * n] p) := hdecomp'
+    _ = C.compactifiedInversion ((C.compactifiedInversion)^[2 * n] p) := rfl
+    _ = C.compactifiedInversion p := by simp [compactifiedInversion_iterate_even]
+
 /-- Compactified inversion preserves boundary states. -/
 theorem compactifiedInversion_preserves_boundary {p : AlgebraicCompactification X}
     (hp : AlgebraicCompactification.IsBoundary p) :
@@ -130,6 +165,37 @@ theorem deckInvolution_involutive {X : Type*} (x : DoubleCover X) :
     deckInvolution (deckInvolution x) = x := by
   cases x with
   | mk sheet base => cases sheet <;> rfl
+
+/-- Deck involution has even iterates equal to identity. -/
+theorem deckInvolution_iterate_even {X : Type*} (n : ℕ) (x : DoubleCover X) :
+    deckInvolution^[2 * n] x = x := by
+  induction n with
+  | zero => simp [Nat.iterate]
+  | succ n ih =>
+      have hdecomp := congrArg (fun F => F x) (Function.iterate_add deckInvolution 2 (2 * n))
+      have hdecomp' :
+          deckInvolution^[2 * n + 2] x = deckInvolution^[2] (deckInvolution^[2 * n] x) := by
+        simpa [Function.comp, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hdecomp
+      calc
+        deckInvolution^[2 * (n + 1)] x = deckInvolution^[2 * n + 2] x := by
+          simp [Nat.mul_succ, two_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+        _ = deckInvolution^[2] (deckInvolution^[2 * n] x) := hdecomp'
+        _ = deckInvolution^[2 * n] x := by simp [Nat.iterate, deckInvolution_involutive]
+        _ = x := ih
+
+/-- Deck involution has odd iterates equal to one deck involution. -/
+theorem deckInvolution_iterate_odd {X : Type*} (n : ℕ) (x : DoubleCover X) :
+    deckInvolution^[2 * n + 1] x = deckInvolution x := by
+  have hdecomp := congrArg (fun F => F x) (Function.iterate_add deckInvolution 1 (2 * n))
+  have hdecomp' :
+      deckInvolution^[1 + 2 * n] x = deckInvolution^[1] (deckInvolution^[2 * n] x) := by
+    simpa [Function.comp, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hdecomp
+  calc
+    deckInvolution^[2 * n + 1] x = deckInvolution^[1 + 2 * n] x := by
+      simp [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
+    _ = deckInvolution^[1] (deckInvolution^[2 * n] x) := hdecomp'
+    _ = deckInvolution (deckInvolution^[2 * n] x) := rfl
+    _ = deckInvolution x := by simp [deckInvolution_iterate_even]
 
 /-- Lift a map to the double cover without changing sheets. -/
 def liftToDoubleCover {X : Type*} (f : X → X) : DoubleCover X → DoubleCover X :=

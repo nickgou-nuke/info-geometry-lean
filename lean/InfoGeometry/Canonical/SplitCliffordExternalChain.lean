@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.CelikKocakSplitCliffordBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
 import InfoGeometry.Probability.HomologicalProbability
+import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ModeExtensionBoundary
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
@@ -9,6 +10,7 @@ import InfoGeometry.Canonical.CurrentSugawaraBridge
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
+import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.External.Virasoro.FockSpaceSugawara
 
 noncomputable section
@@ -123,9 +125,9 @@ theorem externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight (α : �
   VirasoroProject.ChargedFockSpace.virasoroVermaToChargedFockSpace_highestWeight ℂ α
 
 /-- The charged Fock space canonically yields a current/Sugawara morphism package. -/
-noncomputable def externalHeisenberg_currentSugawaraMorphism (α : ℂ) :
-    CurrentSugawaraMorphism ℂ (VirasoroProject.ChargedFockSpace ℂ α) :=
-  CurrentSugawaraBridge.chargedFockSpace_currentSugawaraMorphism ℂ α
+theorem externalHeisenberg_currentSugawaraMorphism_nonempty (α : ℂ) :
+    Nonempty (CurrentSugawaraMorphism ℂ (VirasoroProject.ChargedFockSpace ℂ α)) :=
+  CurrentSugawaraBridge.chargedFockSpace_currentSugawaraMorphism_nonempty ℂ α
 
 /-- The external Heisenberg-owned Sugawara datum has central charge `1`. -/
 theorem externalHeisenberg_sugawaraDatum_centralCharge_one :

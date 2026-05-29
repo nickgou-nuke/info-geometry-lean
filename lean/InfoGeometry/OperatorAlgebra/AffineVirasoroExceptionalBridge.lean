@@ -13,6 +13,8 @@ This is proof-carrying calibration data, not an unconditional theorem that
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
+import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section

@@ -89,28 +89,6 @@ theorem complementaryProjection_is_idempotent (h : IsDrazinInverse a b k) :
   unfold complementaryProjection
   noncomm_ring [hP]
 
-/-- The Drazin spectral projector is its own Drazin inverse at index `1`.
-
-This removes the need for downstream projector-level callers to carry a separate
-idempotence proof: the projector idempotence is derived from the original Drazin
-inverse witness and then routed through `of_idempotent`.
--/
-@[rep_depth krein]
-theorem projection_isDrazinInverse_self (h : IsDrazinInverse a b k) :
-    IsDrazinInverse (projection a b) (projection a b) 1 := by
-  exact of_idempotent (projection_is_idempotent h)
-
-/-- The complementary Drazin spectral projector is its own Drazin inverse at index `1`.
-
-This is the complementary projector analogue of
-`projection_isDrazinInverse_self`, deriving the idempotence route from the
-original Drazin inverse witness rather than requiring a bare projector hypothesis.
--/
-@[rep_depth krein]
-theorem complementaryProjection_isDrazinInverse_self (h : IsDrazinInverse a b k) :
-    IsDrazinInverse (complementaryProjection a b) (complementaryProjection a b) 1 := by
-  exact of_idempotent (complementaryProjection_is_idempotent h)
-
 /-- The Drazin projector and its complement are left-orthogonal. -/
 @[rep_depth krein]
 theorem projection_mul_complementaryProjection (h : IsDrazinInverse a b k) :
@@ -513,10 +491,11 @@ construction. It contains no certificate shortcut: the proof reduces the block
 data to the root algebraic theorem `of_core_nilpotent_split`.
 -/
 @[rep_depth krein]
-theorem inversePart_isDrazinInverse_of_fittingDecomposition
+theorem exists_drazinInverse_of_fittingDecomposition
     {a : R}
     (D : DrazinFittingDecomposition a) :
-    IsDrazinInverse a D.inversePart (D.nilpotentIndex + 1) := by
+    ∃ (k : ℕ) (d : R), IsDrazinInverse a d k := by
+  refine ⟨D.nilpotentIndex + 1, D.inversePart, ?_⟩
   exact of_core_nilpotent_split
     (a := a)
     (u := D.corePart)
@@ -532,20 +511,6 @@ theorem inversePart_isDrazinInverse_of_fittingDecomposition
     D.core_inverse_core
     D.inverse_core_inverse
     D.nilpotent
-
-/--
-Construct a Drazin inverse from explicit Fitting block data.
-
-Compatibility existential wrapper over
-`inversePart_isDrazinInverse_of_fittingDecomposition`.
--/
-@[rep_depth krein]
-theorem exists_drazinInverse_of_fittingDecomposition
-    {a : R}
-    (D : DrazinFittingDecomposition a) :
-    ∃ (k : ℕ) (d : R), IsDrazinInverse a d k := by
-  exact ⟨D.nilpotentIndex + 1, D.inversePart,
-    inversePart_isDrazinInverse_of_fittingDecomposition D⟩
 
 /-! ### Continuous operator block data -/
 

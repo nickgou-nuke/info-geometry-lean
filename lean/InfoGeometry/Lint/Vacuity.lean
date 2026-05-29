@@ -193,13 +193,9 @@ def eraseCertifiedMarker (declName : Name) : String :=
 def eraseCertifiedMarkerLeaf (declName : Name) : String :=
   (declNameLeaf declName).replace "certified" ""
 
-/-- Strip leading metadata and binders from a declaration type.
-
-This is structural recursion on `Expr`; it replaces the former `partial` traversal
-while preserving the intended `consumeMData` behavior for leading metadata. -/
-def stripForall (e : Expr) : Expr :=
-  match e with
-  | .mdata _ body => stripForall body
+/-- Strip leading binders from a declaration type. -/
+partial def stripForall (e : Expr) : Expr :=
+  match e.consumeMData with
   | .forallE _ _ b _ => stripForall b
   | e => e
 

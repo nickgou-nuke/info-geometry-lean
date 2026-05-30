@@ -17,6 +17,7 @@ This file proves:
 * the negative log determinant shifts by `- log(u^2)`;
 * the relative-volume/Radon--Nikodym ratio is `detZ Y / detZ X`;
 * `-log RN(X,Y) = φ(Y) - φ(X)`, where `φ = -log detZ`;
+* finite-stage normalized log determinants are stable under square bonding;
 * the induced dimension-8 Jacobian exponent is `u^8`.
 
 No new projective datum.
@@ -27,6 +28,67 @@ No extended-real barrier claim.
 namespace InfoGeometry.Projective.SplitOctonions
 
 noncomputable section
+
+/--
+Finite-stage normalized log-determinant stabilization.
+
+This is the algebraic core behind the determinant stabilization in the
+tensor-doubling tower. If the next-stage determinant is the square of the
+current-stage determinant, then the volume-normalized log determinant is
+unchanged:
+
+`log(det_{N+1}) / 2^(N+1) = log(det_N) / 2^N`.
+
+This is the finite theorem behind the trace-log / Fuglede-Kadison intuition.
+It does not assert the existence of an infinite von Neumann algebra limit.
+-/
+theorem normalized_logdet_stable_of_square
+    (δ δnext : ℝ) (N : ℕ)
+    (hδ : 0 < δ)
+    (hnext : δnext = δ ^ 2) :
+    Real.log δnext / ((2 : ℝ) ^ (N + 1)) =
+      Real.log δ / ((2 : ℝ) ^ N) := by
+  subst δnext
+  have hδ_ne : δ ≠ 0 := ne_of_gt hδ
+  have hden_ne : ((2 : ℝ) ^ N) ≠ 0 := by
+    exact pow_ne_zero N (by norm_num)
+  have htwo_ne : (2 : ℝ) ≠ 0 := by
+    norm_num
+  have hden_mul_ne : (((2 : ℝ) ^ N) * 2) ≠ 0 := by
+    exact mul_ne_zero hden_ne htwo_ne
+  have hden_succ :
+      ((2 : ℝ) ^ (N + 1)) = ((2 : ℝ) ^ N) * 2 := by
+    simpa using (pow_succ (2 : ℝ) N)
+  calc
+    Real.log (δ ^ 2) / ((2 : ℝ) ^ (N + 1))
+        = Real.log (δ * δ) / (((2 : ℝ) ^ N) * 2) := by
+            rw [show δ ^ 2 = δ * δ by ring]
+            rw [hden_succ]
+    _ = (Real.log δ + Real.log δ) / (((2 : ℝ) ^ N) * 2) := by
+            rw [Real.log_mul hδ_ne hδ_ne]
+    _ = Real.log δ / ((2 : ℝ) ^ N) := by
+            field_simp [hden_ne, hden_mul_ne]
+            ring
+
+/--
+Stage-function version of normalized log-determinant stabilization.
+
+Use this when a finite tower has determinant values `detStage N` and the
+bonding step satisfies `detStage (N+1) = detStage N ^ 2`.
+-/
+theorem normalized_logdet_stage_stable
+    (detStage : ℕ → ℝ)
+    (N : ℕ)
+    (hpos : 0 < detStage N)
+    (hsquare : detStage (N + 1) = detStage N ^ 2) :
+    Real.log (detStage (N + 1)) / ((2 : ℝ) ^ (N + 1)) =
+      Real.log (detStage N) / ((2 : ℝ) ^ N) :=
+  normalized_logdet_stable_of_square
+    (δ := detStage N)
+    (δnext := detStage (N + 1))
+    (N := N)
+    hpos
+    hsquare
 
 namespace ZornCell
 

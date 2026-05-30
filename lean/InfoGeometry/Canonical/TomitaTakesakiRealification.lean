@@ -526,6 +526,241 @@ structure CausalConeProjectorRegularization where
   modular_stability_on_bulk_identity : Prop
   modular_stability_on_bulk_certificate : modular_stability_on_bulk_identity
 
+/--
+Parabolic five-grading socket for conformal closure.
+
+This packet records the five graded pieces, an abstract bracket, and owner
+certificates that this realizes the intended `so(6,6)` conformal closure lane.
+-/
+@[rep_depth transport]
+structure FiveGradedConformalClosureSocket where
+  grade : Int → Set EndR
+  bracket : EndR → EndR → EndR
+  support_identity : Prop
+  support_certificate : support_identity
+  bracket_respects_grading_identity : Prop
+  bracket_respects_grading_certificate : bracket_respects_grading_identity
+  conformal_so66_identity : Prop
+  conformal_so66_certificate : conformal_so66_identity
+  parabolic_null2plane_identity : Prop
+  parabolic_null2plane_certificate : parabolic_null2plane_identity
+  levi_component_identity : Prop
+  levi_component_certificate : levi_component_identity
+
+namespace FiveGradedConformalClosureSocket
+
+@[rep_depth transport]
+def gNeg2 (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
+  G.grade (-2)
+
+@[rep_depth transport]
+def gNeg1 (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
+  G.grade (-1)
+
+@[rep_depth transport]
+def gZero (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
+  G.grade 0
+
+@[rep_depth transport]
+def gPos1 (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
+  G.grade 1
+
+@[rep_depth transport]
+def gPos2 (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
+  G.grade 2
+
+@[rep_depth transport]
+theorem support_readback
+    (G : FiveGradedConformalClosureSocket (HR := HR)) :
+    G.support_identity :=
+  G.support_certificate
+
+@[rep_depth transport]
+theorem bracket_respects_grading_readback
+    (G : FiveGradedConformalClosureSocket (HR := HR)) :
+    G.bracket_respects_grading_identity :=
+  G.bracket_respects_grading_certificate
+
+@[rep_depth transport]
+theorem conformal_so66_readback
+    (G : FiveGradedConformalClosureSocket (HR := HR)) :
+    G.conformal_so66_identity :=
+  G.conformal_so66_certificate
+
+@[rep_depth transport]
+theorem parabolic_null2plane_readback
+    (G : FiveGradedConformalClosureSocket (HR := HR)) :
+    G.parabolic_null2plane_identity :=
+  G.parabolic_null2plane_certificate
+
+@[rep_depth transport]
+theorem levi_component_readback
+    (G : FiveGradedConformalClosureSocket (HR := HR)) :
+    G.levi_component_identity :=
+  G.levi_component_certificate
+
+end FiveGradedConformalClosureSocket
+
+/--
+Möbius inversion socket with log-scale parity readback.
+-/
+@[rep_depth transport]
+structure MobiusLogScaleReflectionSocket where
+  carrier : Set HR
+  quadForm : HR → ℝ
+  radial : HR → ℝ
+  logScale : HR → ℝ
+  inversion : HR → HR
+  inversion_formula_law :
+    ∀ x : HR, x ∈ carrier → quadForm x ≠ 0 →
+      inversion x = (quadForm x)⁻¹ • x
+  radial_inversion_law :
+    ∀ x : HR, x ∈ carrier → radial (inversion x) = (radial x)⁻¹
+  logScale_reflection_law :
+    ∀ x : HR, x ∈ carrier → logScale (inversion x) = - logScale x
+  unitBoundary : Set HR
+  unitBoundary_fixed_law :
+    ∀ x : HR, x ∈ unitBoundary → inversion x ∈ unitBoundary
+  unitBoundary_log_zero_law :
+    ∀ x : HR, x ∈ unitBoundary → logScale x = 0
+
+namespace MobiusLogScaleReflectionSocket
+
+@[rep_depth transport]
+theorem inversion_formula_readback
+    (M : MobiusLogScaleReflectionSocket (HR := HR))
+    (x : HR) (hx : x ∈ M.carrier) (hq : M.quadForm x ≠ 0) :
+    M.inversion x = (M.quadForm x)⁻¹ • x :=
+  M.inversion_formula_law x hx hq
+
+@[rep_depth transport]
+theorem radial_inversion_readback
+    (M : MobiusLogScaleReflectionSocket (HR := HR))
+    (x : HR) (hx : x ∈ M.carrier) :
+    M.radial (M.inversion x) = (M.radial x)⁻¹ :=
+  M.radial_inversion_law x hx
+
+@[rep_depth transport]
+theorem logScale_reflection_readback
+    (M : MobiusLogScaleReflectionSocket (HR := HR))
+    (x : HR) (hx : x ∈ M.carrier) :
+    M.logScale (M.inversion x) = - M.logScale x :=
+  M.logScale_reflection_law x hx
+
+@[rep_depth transport]
+theorem unitBoundary_fixed_readback
+    (M : MobiusLogScaleReflectionSocket (HR := HR))
+    (x : HR) (hx : x ∈ M.unitBoundary) :
+    M.inversion x ∈ M.unitBoundary :=
+  M.unitBoundary_fixed_law x hx
+
+@[rep_depth transport]
+theorem unitBoundary_log_zero_readback
+    (M : MobiusLogScaleReflectionSocket (HR := HR))
+    (x : HR) (hx : x ∈ M.unitBoundary) :
+    M.logScale x = 0 :=
+  M.unitBoundary_log_zero_law x hx
+
+end MobiusLogScaleReflectionSocket
+
+/--
+Projective compactification socket with origin/infinity swap law.
+-/
+@[rep_depth transport]
+structure CompactifiedNullConeSocket where
+  n0 : HR
+  nInf : HR
+  embed : HR → HR
+  inversionConjugation : EndR
+  null_pairing_identity : Prop
+  null_pairing_certificate : null_pairing_identity
+  embedding_formula_identity : Prop
+  embedding_formula_certificate : embedding_formula_identity
+  inversion_swaps_origin_infinity :
+    inversionConjugation n0 = nInf ∧ inversionConjugation nInf = n0
+  infinity_to_origin_identity : Prop
+  infinity_to_origin_certificate : infinity_to_origin_identity
+
+namespace CompactifiedNullConeSocket
+
+@[rep_depth transport]
+theorem null_pairing_readback
+    (C : CompactifiedNullConeSocket (HR := HR)) :
+    C.null_pairing_identity :=
+  C.null_pairing_certificate
+
+@[rep_depth transport]
+theorem embedding_formula_readback
+    (C : CompactifiedNullConeSocket (HR := HR)) :
+    C.embedding_formula_identity :=
+  C.embedding_formula_certificate
+
+@[rep_depth transport]
+theorem inversion_swaps_origin_infinity_readback
+    (C : CompactifiedNullConeSocket (HR := HR)) :
+    C.inversionConjugation C.n0 = C.nInf ∧ C.inversionConjugation C.nInf = C.n0 :=
+  C.inversion_swaps_origin_infinity
+
+@[rep_depth transport]
+theorem infinity_to_origin_readback
+    (C : CompactifiedNullConeSocket (HR := HR)) :
+    C.infinity_to_origin_identity :=
+  C.infinity_to_origin_certificate
+
+end CompactifiedNullConeSocket
+
+/--
+Bridge packet combining 5-grading closure, Möbius log-scale inversion, and
+compactified origin/infinity transport.
+-/
+@[rep_depth transport]
+structure ConformalCGAParabolicCompactificationBridge where
+  grading : FiveGradedConformalClosureSocket (HR := HR)
+  mobius : MobiusLogScaleReflectionSocket (HR := HR)
+  compactification : CompactifiedNullConeSocket (HR := HR)
+  scale_reflection_matches_grade0_involution_identity : Prop
+  scale_reflection_matches_grade0_involution_certificate :
+    scale_reflection_matches_grade0_involution_identity
+  infinity_origin_compactification_identity : Prop
+  infinity_origin_compactification_certificate :
+    infinity_origin_compactification_identity
+
+namespace ConformalCGAParabolicCompactificationBridge
+
+@[rep_depth transport]
+theorem scale_reflection_matches_grade0_involution_readback
+    (B : ConformalCGAParabolicCompactificationBridge (HR := HR)) :
+    B.scale_reflection_matches_grade0_involution_identity :=
+  B.scale_reflection_matches_grade0_involution_certificate
+
+@[rep_depth transport]
+theorem infinity_origin_compactification_readback
+    (B : ConformalCGAParabolicCompactificationBridge (HR := HR)) :
+    B.infinity_origin_compactification_identity :=
+  B.infinity_origin_compactification_certificate
+
+@[rep_depth transport]
+theorem logScale_reflection_transport
+    (B : ConformalCGAParabolicCompactificationBridge (HR := HR))
+    (x : HR) (hx : x ∈ B.mobius.carrier) :
+    B.mobius.logScale (B.mobius.inversion x) = - B.mobius.logScale x :=
+  B.mobius.logScale_reflection_readback x hx
+
+@[bridge_target_tag]
+theorem bridge_logScale_reflection_target
+    (B : ConformalCGAParabolicCompactificationBridge (HR := HR))
+    (x : HR) (hx : x ∈ B.mobius.carrier) :
+    B.mobius.logScale (B.mobius.inversion x) = - B.mobius.logScale x :=
+  B.logScale_reflection_transport x hx
+
+@[bridge_target_tag]
+theorem bridge_origin_infinity_swap_target
+    (B : ConformalCGAParabolicCompactificationBridge (HR := HR)) :
+    B.compactification.inversionConjugation B.compactification.n0
+      = B.compactification.nInf :=
+  (B.compactification.inversion_swaps_origin_infinity_readback).1
+
+end ConformalCGAParabolicCompactificationBridge
 
 end HestenesKreinSockets
 
@@ -695,6 +930,88 @@ theorem toyBridge_J0_sq_apply
     (x : ℝ) :
     toyBridge.algebraic.J0 (toyBridge.algebraic.J0 x) = x :=
   toyBridge.algebraic.J0_sq_apply x
+
+/-- Toy five-grading socket on scalar operators over `ℝ`. -/
+@[rep_depth transport]
+def toyFiveGradedConformal : FiveGradedConformalClosureSocket (HR := ℝ) where
+  grade := fun _ => Set.univ
+  bracket := fun A B => A * B - B * A
+  support_identity := True
+  support_certificate := trivial
+  bracket_respects_grading_identity := True
+  bracket_respects_grading_certificate := trivial
+  conformal_so66_identity := True
+  conformal_so66_certificate := trivial
+  parabolic_null2plane_identity := True
+  parabolic_null2plane_certificate := trivial
+  levi_component_identity := True
+  levi_component_certificate := trivial
+
+/-- Toy Möbius/log-scale socket on `ℝ`. -/
+@[rep_depth transport]
+def toyMobiusLogScale : MobiusLogScaleReflectionSocket (HR := ℝ) where
+  carrier := Set.univ
+  quadForm := fun _ => -1
+  radial := fun _ => 1
+  logScale := fun x => x
+  inversion := fun x => -x
+  inversion_formula_law := by
+    intro x hx hq
+    simp
+  radial_inversion_law := by
+    intro x hx
+    simp
+  logScale_reflection_law := by
+    intro x hx
+    simp
+  unitBoundary := {x | x = 0}
+  unitBoundary_fixed_law := by
+    intro x hx
+    simpa [Set.mem_setOf_eq, hx]
+  unitBoundary_log_zero_law := by
+    intro x hx
+    simpa [Set.mem_setOf_eq] using hx
+
+/-- Toy compactification socket with a degenerate origin/infinity witness. -/
+@[rep_depth transport]
+def toyCompactifiedNullCone : CompactifiedNullConeSocket (HR := ℝ) where
+  n0 := 0
+  nInf := 0
+  embed := fun x => x
+  inversionConjugation := 1
+  null_pairing_identity := True
+  null_pairing_certificate := trivial
+  embedding_formula_identity := True
+  embedding_formula_certificate := trivial
+  inversion_swaps_origin_infinity := by
+    constructor <;> simp
+  infinity_to_origin_identity := True
+  infinity_to_origin_certificate := trivial
+
+/-- Toy bridge combining grading, Möbius reflection, and compactification sockets. -/
+@[rep_depth transport]
+def toyConformalBridge : ConformalCGAParabolicCompactificationBridge (HR := ℝ) where
+  grading := toyFiveGradedConformal
+  mobius := toyMobiusLogScale
+  compactification := toyCompactifiedNullCone
+  scale_reflection_matches_grade0_involution_identity := True
+  scale_reflection_matches_grade0_involution_certificate := trivial
+  infinity_origin_compactification_identity := True
+  infinity_origin_compactification_certificate := trivial
+
+@[rep_depth transport]
+theorem toyConformalBridge_logScale_reflection
+    (x : ℝ) :
+    toyConformalBridge.mobius.logScale (toyConformalBridge.mobius.inversion x)
+      = - toyConformalBridge.mobius.logScale x := by
+  simp [toyConformalBridge, toyMobiusLogScale]
+
+@[rep_depth transport]
+theorem toyConformalBridge_origin_infinity_swap
+    : toyConformalBridge.compactification.inversionConjugation
+        toyConformalBridge.compactification.n0
+        = toyConformalBridge.compactification.nInf :=
+  (toyConformalBridge.compactification.inversion_swaps_origin_infinity_readback).1
 
 end ToyExample
 

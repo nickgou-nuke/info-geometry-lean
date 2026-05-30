@@ -25,6 +25,10 @@ import InfoGeometry.Algebra.N2ModeCentralExtension
 import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.InfiniteN2ModeInduction
 import InfoGeometry.Algebra.FiniteInfiniteModeBridge
+import InfoGeometry.Algebra.ScaleCocycleInvariant
+import InfoGeometry.Algebra.FractalScaleTransport
+import InfoGeometry.Algebra.IdempotentProjector
+import InfoGeometry.Algebra.HessianThermodynamicManifold
 /-!
 # InfoGeometry.Algebra.All
 

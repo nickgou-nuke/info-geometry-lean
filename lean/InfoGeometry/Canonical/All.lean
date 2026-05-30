@@ -19,7 +19,15 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Canonical.ActionDuality
+import InfoGeometry.Canonical.SO3FenchelDuality
+import InfoGeometry.Canonical.CliffordDiracAlgebra
 import InfoGeometry.Canonical.InductiveInvarianceTKKPacket
+import InfoGeometry.Canonical.InductiveClosurePacket
+import InfoGeometry.Canonical.CantorCellInduction
+import InfoGeometry.Canonical.ErlangenInductiveClosure
+import InfoGeometry.Canonical.ErlangenColimitResolution
+import InfoGeometry.Canonical.ConformalSubalgebraDebt
+import InfoGeometry.Canonical.FractalInvariantOperatorLimit
 import InfoGeometry.Canonical.CoadjointCasimirEntropy
 import InfoGeometry.Canonical.ErlangenOperator2
 import InfoGeometry.Canonical.ErlangenOperator2Bridge
@@ -761,6 +769,7 @@ import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
 import InfoGeometry.Canonical.RelativeModularCommutingLift
+import InfoGeometry.Canonical.RelativeModularCenteredFunctional
 import InfoGeometry.Canonical.RelativeModularCore
 import InfoGeometry.Canonical.RelativeModularHamiltonian
 import InfoGeometry.Canonical.RelativeModularHamiltonianSupport
@@ -921,7 +930,12 @@ import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Thermal.FiniteMatrix
 import InfoGeometry.Canonical.TimeReversalKramers
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.TomitaTakesakiRealification
 import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
+import InfoGeometry.Canonical.RealTomitaStandardSubspace
+import InfoGeometry.Canonical.CausalConeProjectorBridge
+import InfoGeometry.Canonical.TrichotomyClosureBundle
+import InfoGeometry.Canonical.TrichotomySummaryTheorems
 import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalGapShadow
 import InfoGeometry.Canonical.TopologicalInvariantInvariance

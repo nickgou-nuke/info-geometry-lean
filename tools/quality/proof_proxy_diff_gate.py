@@ -37,6 +37,10 @@ PROXY_DECL_NAME_RE = re.compile(
     r"(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|(?:^|_)of_witness(?:_|$))",
     re.IGNORECASE,
 )
+PROXY_FILE_RE = re.compile(
+    r"(Witness|Certificate|Socket|Proxy|Packet|Carrier)\.lean$",
+    re.IGNORECASE,
+)
 PROPISH_TYPE_RE = re.compile(
     r"\bProp\b|=|↔|<->|≤|>=|≥|<|>|∈|∉|⊆|⊂|⊇|∧|∨|∀|∃"
 )
@@ -83,13 +87,26 @@ def structure_fields(src: str) -> dict[str, set[str]]:
     return fields
 
 
-def added_lean_files(base: str) -> list[str]:
-    out = git(["diff", "--name-only", base, "--", "*.lean"])
+def lean_pathspecs(paths: list[str]) -> list[str]:
+    if not paths:
+        return ["*.lean"]
+    specs: list[str] = []
+    for path in paths:
+        p = Path(path)
+        if path.endswith(".lean") or p.is_file():
+            specs.append(path)
+        else:
+            specs.append(f"{path.rstrip('/')}/**/*.lean")
+    return specs
+
+
+def added_lean_files(base: str, paths: list[str]) -> list[str]:
+    out = git(["diff", "--name-only", base, "--", *lean_pathspecs(paths)])
     return [line.strip() for line in out.splitlines() if line.strip()]
 
 
-def diff_added_lines(base: str) -> list[tuple[str, int | None, str]]:
-    out = git(["diff", "--unified=0", base, "--", "*.lean"])
+def diff_added_lines(base: str, paths: list[str]) -> list[tuple[str, int | None, str]]:
+    out = git(["diff", "--unified=0", base, "--", *lean_pathspecs(paths)])
     return parse_added_lines(out)
 
 
@@ -132,13 +149,13 @@ def parse_removed_decl_entries(out: str) -> list[tuple[str, str, str]]:
     return removed
 
 
-def diff_removed_decl_files(base: str) -> set[str]:
-    out = git(["diff", "--unified=0", base, "--", "*.lean"])
+def diff_removed_decl_files(base: str, paths: list[str]) -> set[str]:
+    out = git(["diff", "--unified=0", base, "--", *lean_pathspecs(paths)])
     return parse_removed_decl_files(out)
 
 
-def diff_removed_decl_entries(base: str) -> list[tuple[str, str, str]]:
-    out = git(["diff", "--unified=0", base, "--", "*.lean"])
+def diff_removed_decl_entries(base: str, paths: list[str]) -> list[tuple[str, str, str]]:
+    out = git(["diff", "--unified=0", base, "--", *lean_pathspecs(paths)])
     return parse_removed_decl_entries(out)
 
 
@@ -201,11 +218,17 @@ def main() -> int:
 
     failures: list[str] = []
     snapshot = Path(args.snapshot) if args.snapshot else None
-    changed_files = snapshot_changed_files(snapshot, args.paths) if snapshot else added_lean_files(args.base)
-    added_lines = snapshot_added_lines(snapshot, changed_files) if snapshot else diff_added_lines(args.base)
-    removed_decl_files = snapshot_removed_decl_files(snapshot, changed_files) if snapshot else diff_removed_decl_files(args.base)
+    changed_files = snapshot_changed_files(snapshot, args.paths) if snapshot else added_lean_files(args.base, args.paths)
+    added_lines = snapshot_added_lines(snapshot, changed_files) if snapshot else diff_added_lines(args.base, args.paths)
+    removed_decl_files = (
+        snapshot_removed_decl_files(snapshot, changed_files)
+        if snapshot
+        else diff_removed_decl_files(args.base, args.paths)
+    )
     removed_decl_entries = (
-        snapshot_removed_decl_entries(snapshot, changed_files) if snapshot else diff_removed_decl_entries(args.base)
+        snapshot_removed_decl_entries(snapshot, changed_files)
+        if snapshot
+        else diff_removed_decl_entries(args.base, args.paths)
     )
     debt_comment_files: set[str] = set()
 
@@ -234,6 +257,8 @@ def main() -> int:
         )
 
     for path, kind, name in removed_decl_entries:
+        if PROXY_FILE_RE.search(path):
+            continue
         if not PROXY_DECL_NAME_RE.search(name):
             failures.append(
                 f"{path}: deleted non-proxy Lean declaration `{kind} {name}` during proof cleanup"

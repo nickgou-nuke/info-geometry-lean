@@ -11,7 +11,7 @@ repository, that language is translated into phase-axis preservation on the
 real doubled carrier.  For the finite four-anyon surface, the relevant
 theorem-level content is:
 
-* the diagonal `b₁` / `b₃` readout preserves the channel label;
+* the repo-native diagonal `b₁` / `b₃` readout preserves the channel label;
 * the vacuum channel picks up the `q⁻⁴` phase;
 * the Fibonacci channel picks up the `q³` phase;
 * this is recorded as a Hestenes-style phase-axis preserving finite symmetry,
@@ -39,7 +39,7 @@ def IsFourAnyonHestenesAnalytic
     (f : PhasedFourAnyonBlock → PhasedFourAnyonBlock) : Prop :=
   ∀ v : PhasedFourAnyonBlock, (f v).2 = v.2
 
-/-- The diagonal four-anyon readout is Hestenes-analytic in the finite sense. -/
+/-- The repo-native diagonal four-anyon readout is Hestenes-analytic in the finite sense. -/
 theorem diagonalRAction_isFourAnyonHestenesAnalytic (q : Units ℂ) :
     IsFourAnyonHestenesAnalytic (diagonalRAction q) := by
   intro v
@@ -55,7 +55,7 @@ theorem fourAnyonFibBasis_channel (q : Units ℂ) :
     (diagonalRAction q fourAnyonFibBasis).2 = fourAnyonFibBasis.2 := by
   simp [fourAnyonFibBasis, diagonalRAction]
 
-/-- The finite Hestenes-style readout preserves the channel label. -/
+/-- The repo-native finite Hestenes-style readout preserves the channel label. -/
 theorem fourAnyonHestenesAnalytic (q : Units ℂ) :
     IsFourAnyonHestenesAnalytic (fun v => diagonalRAction q v) := by
   exact diagonalRAction_isFourAnyonHestenesAnalytic q

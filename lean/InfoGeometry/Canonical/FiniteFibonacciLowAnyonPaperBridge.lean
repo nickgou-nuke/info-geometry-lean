@@ -66,7 +66,7 @@ theorem sectionSix_n5_middle_artin_from_identity
       pi5_b3 q3 B * pi5_b2 q3 B * pi5_b3 q3 B :=
   pi5_middle_artin_from_identity q3 B h
 
-/-- The `n = 6` basis and matrices are the next finite template in the paper. -/
+/-- The repo-owned `n = 6` endpoint braid templates are the next finite owner surface exposed here. -/
 theorem sectionSix_n6_endpoint_templates (qNeg4 q3 : ℂ) :
     pi6_b1 qNeg4 q3 0 0 = qNeg4 ∧
       pi6_b5 qNeg4 q3 4 4 = q3 :=

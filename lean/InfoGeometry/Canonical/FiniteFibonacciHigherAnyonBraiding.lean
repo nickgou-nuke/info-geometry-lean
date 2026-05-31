@@ -79,15 +79,32 @@ theorem recursiveFibonacciDimension_step (k : ℕ) :
       recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) :=
   rfl
 
+instance recursiveFibonacciBlockBasisFintype :
+    ∀ n : ℕ, Fintype (RecursiveFibonacciBlockBasis n)
+  | 0 => by
+      simpa [RecursiveFibonacciBlockBasis] using (inferInstance : Fintype PUnit)
+  | 1 => by
+      simpa [RecursiveFibonacciBlockBasis] using (inferInstance : Fintype PUnit)
+  | k + 2 => by
+      letI := recursiveFibonacciBlockBasisFintype k
+      letI := recursiveFibonacciBlockBasisFintype (k + 1)
+      simpa [RecursiveFibonacciBlockBasis] using
+        (inferInstance : Fintype (RecursiveFibonacciBlockBasis k ⊕ RecursiveFibonacciBlockBasis (k + 1)))
+
 /-- The recursive basis type has exactly the recursive Fibonacci cardinality. -/
 theorem recursiveFibonacciBlockBasis_card :
     ∀ n : ℕ,
       Fintype.card (RecursiveFibonacciBlockBasis n) = recursiveFibonacciDimension n
   | 0 => by
+      letI := recursiveFibonacciBlockBasisFintype 0
       simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension]
   | 1 => by
+      letI := recursiveFibonacciBlockBasisFintype 1
       simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension]
   | k + 2 => by
+      letI := recursiveFibonacciBlockBasisFintype k
+      letI := recursiveFibonacciBlockBasisFintype (k + 1)
+      letI := recursiveFibonacciBlockBasisFintype (k + 2)
       simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension,
         recursiveFibonacciBlockBasis_card k, recursiveFibonacciBlockBasis_card (k + 1)]
 
@@ -107,7 +124,7 @@ theorem recursiveFibonacciDimension_eq_fib_succ :
         _ = Nat.fib (k + 3) := by
               symm
               simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
-                (Nat.fib_add_two (k + 1))
+                (Nat.fib_add_two (n := k + 1))
 
 /-- Local admissibility for a braid generator seeing a triple of sector labels. -/
 def TripleAdmissible (left middle right : SectorLabel) : Prop :=

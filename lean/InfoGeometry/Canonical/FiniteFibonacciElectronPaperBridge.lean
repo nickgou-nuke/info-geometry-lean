@@ -15,7 +15,7 @@ This file exposes only that finite algebraic content:
 * electron counts are multiples of three;
 * a symmetric electron factor is invariant under anyon permutations;
 * the `R`, `F`, and `B = F R F` readouts are independent of `r`;
-* the same explicit Artin matrix identity is transported to every `r` sector.
+* a base-sector Artin matrix identity transports unchanged to every `r` sector.
 
 No electron-coordinate polynomials.
 No hypergeometric continuation.
@@ -87,7 +87,7 @@ theorem fibonacciBMatrixWithElectrons_eq_FRF
   InfoGeometry.Canonical.FiniteFibonacciElectronIndependence.fibonacciBMatrixWithElectrons_eq_FRF
     r q τ root
 
-/-- The Artin matrix identity transports unchanged to every electron sector. -/
+/-- A base-sector Artin matrix identity transports unchanged to every electron sector. -/
 theorem fibonacciWithElectrons_artin_from_matrix_identity
     (r : ℕ) (q : Units ℂ) (τ root : ℂ)
     (hArtin : fibonacciRMatrix q * fibonacciBMatrix q τ root * fibonacciRMatrix q =

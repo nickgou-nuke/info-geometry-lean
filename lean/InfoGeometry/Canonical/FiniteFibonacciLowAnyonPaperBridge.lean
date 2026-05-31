@@ -57,7 +57,7 @@ theorem sectionSix_n5_b3_outer_block (q3 : ℂ) (B : BBlockEntries) :
       pi5_b3 q3 B 2 2 = B.B11 :=
   pi5_b3_outer_block q3 B
 
-/-- The `n = 5` middle Artin compatibility is an explicit matrix identity. -/
+/-- An assumed `n = 5` middle Artin matrix identity is re-expressed unchanged. -/
 theorem sectionSix_n5_middle_artin_from_identity
     (q3 : ℂ) (B : BBlockEntries)
     (h : pi5_b2 q3 B * pi5_b3 q3 B * pi5_b2 q3 B =
@@ -93,7 +93,7 @@ theorem sectionSix_n6_b5_diagonal_entries (qNeg4 q3 : ℂ) :
       pi6_b5 qNeg4 q3 4 4 = q3 :=
   pi6_b5_diagonal_entries qNeg4 q3
 
-/-- The `n = 6` adjacent Artin relations are explicit matrix identities. -/
+/-- Assumed `n = 6` adjacent Artin matrix identities are re-expressed unchanged. -/
 theorem sectionSix_n6_adjacent_artin_from_identities
     (qNeg4 q3 : ℂ) (B : BBlockEntries)
     (h12 : pi6_b1 qNeg4 q3 * pi6_b2 q3 B * pi6_b1 qNeg4 q3 =

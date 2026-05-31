@@ -22,6 +22,8 @@ FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.+?)\s*$")
 TOP_ANY_DECL_RE = re.compile(
     r"^\s*(?:@\[[^\n]+\]\s*)?(axiom|theorem|lemma|def|abbrev|structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
+NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)\b")
+END_NAMESPACE_RE = re.compile(r"^\s*end(?:\s+([A-Za-z_][A-Za-z0-9_'.]*))?\s*$")
 DEBT_BURIAL_COMMENT_RE = re.compile(
     r"\b(DEBT|OPEN CLOSURE DEBT|missing proof|not a proof|removed|no Lean declaration|owner-side proof)\b",
     re.IGNORECASE,
@@ -34,7 +36,7 @@ PROHIBITED_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 PROXY_DECL_NAME_RE = re.compile(
-    r"(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|(?:^|_)of_witness(?:_|$))",
+    r"(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier|(?:^|_)of_witness(?:_|$)|(?:^|_)of_identification(?:_|$))",
     re.IGNORECASE,
 )
 PROXY_FILE_RE = re.compile(
@@ -85,6 +87,32 @@ def structure_fields(src: str) -> dict[str, set[str]]:
             if fm and not line.lstrip().startswith(("--", "/-", "where")):
                 fields.setdefault(current, set()).add(fm.group(1))
     return fields
+
+
+def declaration_namespaces(src: str) -> dict[str, tuple[str, ...]]:
+    namespaces: list[str] = []
+    result: dict[str, tuple[str, ...]] = {}
+    for line in src.splitlines():
+        ns = NAMESPACE_RE.match(line)
+        if ns:
+            namespaces.append(ns.group(1))
+            continue
+        m = TOP_ANY_DECL_RE.match(line.strip())
+        if m:
+            result.setdefault(m.group(2), tuple(namespaces))
+            continue
+        e = END_NAMESPACE_RE.match(line)
+        if e and namespaces:
+            name = e.group(1)
+            if name is None or namespaces[-1] == name:
+                namespaces.pop()
+            elif name in namespaces:
+                del namespaces[namespaces.index(name) :]
+    return result
+
+
+def is_proxy_namespace(namespaces: tuple[str, ...]) -> bool:
+    return any(PROXY_DECL_NAME_RE.search(part) for part in namespaces)
 
 
 def lean_pathspecs(paths: list[str]) -> list[str]:
@@ -231,6 +259,8 @@ def main() -> int:
         else diff_removed_decl_entries(args.base, args.paths)
     )
     debt_comment_files: set[str] = set()
+    before_text_cache: dict[str, str] = {}
+    namespace_cache: dict[str, dict[str, tuple[str, ...]]] = {}
 
     for path, line_no, line in added_lines:
         loc = f"{path}:{line_no}" if line_no is not None else path
@@ -259,13 +289,28 @@ def main() -> int:
     for path, kind, name in removed_decl_entries:
         if PROXY_FILE_RE.search(path):
             continue
+        if path not in before_text_cache:
+            before_text_cache[path] = (
+                (snapshot / path).read_text()
+                if snapshot and (snapshot / path).exists()
+                else read_at(args.base, path)
+            )
+            namespace_cache[path] = declaration_namespaces(before_text_cache[path])
+        if is_proxy_namespace(namespace_cache[path].get(name, ())):
+            continue
         if not PROXY_DECL_NAME_RE.search(name):
             failures.append(
                 f"{path}: deleted non-proxy Lean declaration `{kind} {name}` during proof cleanup"
             )
 
     for path in changed_files:
-        before_text = (snapshot / path).read_text() if snapshot and (snapshot / path).exists() else read_at(args.base, path)
+        before_text = before_text_cache.get(path)
+        if before_text is None:
+            before_text = (
+                (snapshot / path).read_text()
+                if snapshot and (snapshot / path).exists()
+                else read_at(args.base, path)
+            )
         before = structure_fields(before_text)
         after = structure_fields(read_current(path))
         for struct_name in sorted(after.keys() - before.keys()):

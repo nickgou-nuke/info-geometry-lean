@@ -434,6 +434,45 @@ theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
         (hCocycle := hCocycle) (hBridge := hBridge) }
 
 /--
+Proof-carrying zero-normalization witness for a selected cocycle entropy
+potential.
+
+This packages the scalar cocycle bridge together with the zero-time
+normalization needed for the smallest generator-lift ↔ nat-step matching route.
+-/
+structure CocyclePotentialZeroWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
+
+/--
+Witness-routed zero-normalized route for generator-lift equivalence.
+
+This removes the explicit pair `(hBridge, hZero)` from the hypothesis-minimal
+nat-step matching equivalence.
+-/
+theorem cocycleGeneratorLift_iff_natMatch_of_cocyclePotentialZeroWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : CocyclePotentialZeroWitness (n := n) (H := H) σ u T) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u W.hBridge)
+      ↔
+    (∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u W.hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k) := by
+  constructor
+  · intro hLift
+    exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge) (T := T)
+      hLift W.hZero
+  · intro hMatch
+    exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := W.hBridge) (T := T) hMatch
+
+/--
 Zero-normalized route for generator-lift equivalence.
 
 The integer-time matching equivalence only needs the concrete generator lift and
@@ -451,14 +490,10 @@ theorem cocycleGeneratorLift_iff_natMatch_of_cocyclePotential_zero
     (∀ k : Nat,
       CocycleEntropyPotential (H := H) σ u hBridge k
         = trajectoryRNGeneratorPotential (n := n) T k) := by
-  constructor
-  · intro hLift
-    exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
-      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
-      hLift hZero
-  · intro hMatch
-    exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
-      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch
+  exact cocycleGeneratorLift_iff_natMatch_of_cocyclePotentialZeroWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    { hBridge := hBridge
+      hZero := hZero }
 
 /--
 Under a Connes cocycle law, the concrete generator-lift condition is equivalent

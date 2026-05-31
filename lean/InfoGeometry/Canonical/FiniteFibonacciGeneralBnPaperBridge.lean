@@ -74,13 +74,13 @@ theorem general_blockDimension_step_from_recursive (k : ℕ) :
 theorem general_recursiveBasis_card_eight :
     Fintype.card (RecursiveFibonacciBlockBasis 6) = 13 := by
   rw [general_recursiveBasis_card_eq_blockDimension]
-  simpa using FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension_eight
+  exact FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension_eight
 
 /-- The `n = 8` sparse template matches the recursive-basis cardinality at `k = 6`. -/
 theorem general_sparse_basis8_matches_recursive_basis :
     Fintype.card FiniteFibonacciSparseLowAnyonMatrices.Basis8 =
       Fintype.card (RecursiveFibonacciBlockBasis 6) := by
-  rw [general_sparse_basis8_card, general_recursiveBasis_card_eight]
+  rw [sectionSix_basis8_card, general_recursiveBasis_card_eight]
 
 /-- The left end generator is `b₁`. -/
 theorem general_leftEndBraidIndex :

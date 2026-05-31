@@ -25,7 +25,11 @@ import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
+import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
+import InfoGeometry.Canonical.LogarithmicCFTModularDecomposition
+import InfoGeometry.Canonical.KreinDrazinWeylSplit
 import InfoGeometry.Canonical.GeometricCalculusSTUBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.ModularTomitaGeometry

@@ -71,12 +71,12 @@ structure OperatorErlangenLegendrePacket
     StateSpace → Obs → Obs
 
   /-- Supplied law saying the modular derivation has the intended behavior. -/
-  modularDerivation_law :
+  modularDerivation_True :
     Prop
 
   /-- Proof/witness of the modular derivation law. -/
-  modularDerivation_valid :
-    modularDerivation_law
+  modularDerivation_holds :
+    modularDerivation_True
 
   /-- A polarization/sector is chosen downstream of a state. -/
   Polarization :
@@ -87,12 +87,12 @@ structure OperatorErlangenLegendrePacket
     StateSpace → Sym → Prop
 
   /-- Supplied law governing the stabilizer/sector-selection interpretation. -/
-  stabilizer_law :
+  stabilizer_True :
     Prop
 
   /-- Proof/witness of the stabilizer law. -/
-  stabilizer_valid :
-    stabilizer_law
+  stabilizer_holds :
+    stabilizer_True
 
   /-- Exponential-family positive weight/readout shadow. -/
   exponentialWeight :
@@ -103,12 +103,12 @@ structure OperatorErlangenLegendrePacket
     StateSpace → ℝ
 
   /-- Supplied law tying exponential weights to Legendre/free-energy readouts. -/
-  exponentialLegendre_law :
+  exponentialLegendre_True :
     Prop
 
   /-- Proof/witness of the exponential/Legendre law. -/
-  exponentialLegendre_valid :
-    exponentialLegendre_law
+  exponentialLegendre_holds :
+    exponentialLegendre_True
 
   /--
   Guard: spectra and determinant counts are downstream readouts, not the
@@ -136,19 +136,19 @@ variable
 variable (P : OperatorErlangenLegendrePacket Obs Sym StateSpace)
 
 /-- The supplied modular-derivation law is available as a theorem. -/
-theorem modular_derivation_law :
-    P.modularDerivation_law :=
-  P.modularDerivation_valid
+theorem modular_derivation_True :
+    P.modularDerivation_True :=
+  P.modularDerivation_holds
 
 /-- The supplied stabilizer/sector-selection law is available as a theorem. -/
-theorem stabilizer_law_valid :
-    P.stabilizer_law :=
-  P.stabilizer_valid
+theorem stabilizer_law_holds :
+    P.stabilizer_True :=
+  P.stabilizer_holds
 
 /-- The supplied exponential/Legendre law is available as a theorem. -/
-theorem exponential_legendre_law_valid :
-    P.exponentialLegendre_law :=
-  P.exponentialLegendre_valid
+theorem exponential_legendre_law_holds :
+    P.exponentialLegendre_True :=
+  P.exponentialLegendre_holds
 
 /-- The state stabilizer as a set of symmetries. -/
 def StateStabilizer
@@ -234,7 +234,7 @@ structure HilbertPolyaOperatorPacket where
     Prop
 
   /-- Proof/witness of self-adjointness/symmetry. -/
-  selfAdjoint_valid :
+  selfAdjoint_holds :
     selfAdjointWitness
 
   /-- Supplied determinant/scattering/zeta witness. -/
@@ -242,7 +242,7 @@ structure HilbertPolyaOperatorPacket where
     Prop
 
   /-- Proof/witness of determinant/scattering/zeta compatibility. -/
-  determinant_valid :
+  determinant_holds :
     determinantWitness
 
   /--
@@ -261,7 +261,7 @@ structure HilbertPolyaOperatorPacket where
     Prop
 
   /-- Proof/witness of the functional-equation/reflection symmetry. -/
-  functionalEquation_valid :
+  functionalEquation_holds :
     functionalEquationSymmetry
 
 namespace HilbertPolyaOperatorPacket
@@ -269,14 +269,14 @@ namespace HilbertPolyaOperatorPacket
 variable (P : HilbertPolyaOperatorPacket.{uH, uD})
 
 /-- The supplied self-adjointness/symmetry witness is available. -/
-theorem selfAdjoint_law :
+theorem selfAdjoint_True :
     P.selfAdjointWitness :=
-  P.selfAdjoint_valid
+  P.selfAdjoint_holds
 
 /-- The supplied determinant/scattering/zeta witness is available. -/
-theorem determinant_law :
+theorem determinant_True :
     P.determinantWitness :=
-  P.determinant_valid
+  P.determinant_holds
 
 /--
 If a Hilbert--Polya packet is supplied, its critical-line zeroes are exactly
@@ -289,9 +289,9 @@ theorem criticalLine_zero_iff_spectral_value :
   P.zero_iff_spectral_value
 
 /-- The supplied functional-equation/reflection symmetry is available. -/
-theorem functionalEquation_law :
+theorem functionalEquation_True :
     P.functionalEquationSymmetry :=
-  P.functionalEquation_valid
+  P.functionalEquation_holds
 
 end HilbertPolyaOperatorPacket
 

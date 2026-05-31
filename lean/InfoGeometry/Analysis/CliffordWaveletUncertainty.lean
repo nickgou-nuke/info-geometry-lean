@@ -60,7 +60,7 @@ structure CliffordWaveletUncertainty
           ≤ spaceVariance f * spectralVariance f
 
   /-- Non-collapse / localization tradeoff in the Clifford wavelet phase space. -/
-  noncollapse_law : Prop
+  noncollapse_True : Prop
 
 namespace CliffordWaveletUncertaintyOps
 

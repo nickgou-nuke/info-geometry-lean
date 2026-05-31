@@ -62,13 +62,13 @@ lemma familyPartition_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) :
     intro y hy
     exact mul_nonneg (le_of_lt (F.base_pos y)) (le_of_lt (Real.exp_pos _))
   obtain ⟨y, hy⟩ := (Finset.univ_nonempty : (Finset.univ : Finset α).Nonempty)
-  have hpos_witness :
+  have hpos_sorry :
       ∃ y ∈ (Finset.univ : Finset α),
         0 < (F.base y).toReal * Real.exp (θ * F.stat y) := by
     exact ⟨y, hy, mul_pos (F.base_pos y) (Real.exp_pos _)⟩
   have hpos' :
       0 < ∑ y ∈ (Finset.univ : Finset α), (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    exact Finset.sum_pos' hnonneg hpos_witness
+    exact Finset.sum_pos' hnonneg hpos_sorry
   simpa using hpos'
 
 lemma familyDensity_eq (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :

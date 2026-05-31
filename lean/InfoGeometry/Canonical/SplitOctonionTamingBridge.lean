@@ -113,22 +113,22 @@ variable (P : InfoGeometry.OperatorAlgebra.DrazinInformationExtractionPacket
   Op State Info Residue)
 
 /--
-The stable-information law is available on valid states. In the split-octonion
+The stable-information law is available on admissible states. In the split-octonion
 interpretation, this is the stable associative/tamed readout side.
 -/
-theorem stableInformation_holds_on_valid
-    (s : State) (hs : P.readout.valid s) :
+theorem stableInformation_holds_on_state
+    (s : State) (h_state : P.readout.valid s) :
     P.stableInformationLaw s :=
-  P.stableInformation_holds s hs
+  P.stableInformation_holds s h_state
 
 /--
-The singular-residue law is available on valid states. In the split-octonion
+The singular-residue law is available on admissible states. In the split-octonion
 interpretation, this is where null/nilpotent defect data are retained.
 -/
-theorem singularResidue_holds_on_valid
-    (s : State) (hs : P.readout.valid s) :
+theorem singularResidue_holds_on_state
+    (s : State) (h_state : P.readout.valid s) :
     P.singularResidueLaw s :=
-  P.singularResidue_holds s hs
+  P.singularResidue_holds s h_state
 
 end DrazinInformation
 

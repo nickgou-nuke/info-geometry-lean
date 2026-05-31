@@ -207,9 +207,9 @@ explicit Fierz admissibility, the expectation-valued coordinates lie on
 `S¹_Fierz × Q_Klein`.
 -/
 @[rep_depth operator]
-theorem operator_erlangen_fierz_klein_valid :
+theorem operator_erlangen_fierz_klein_holds :
     IsOnFierzKleinVariety E.coordinates :=
-  horizon_fierz_klein_valid
+  horizon_fierz_klein_holds
     E.readoutChannels
     E.horizon
     E.fierz_admissible

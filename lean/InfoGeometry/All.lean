@@ -156,6 +156,7 @@ import InfoGeometry.Geometry.RealSiegelSpace
 import InfoGeometry.Geometry.SplitOrthogonalSpace
 import InfoGeometry.Geometry.RealMoebiusAction
 import InfoGeometry.ProjectiveFoundation
+import InfoGeometry.Modular.PSL2Z
 import InfoGeometry.Geometry.AnomalousErlangerHeight
 import InfoGeometry.Geometry.OperatorBregmanDivergence
 import InfoGeometry.Geometry.TKKBregmanRicciBridge
@@ -163,6 +164,7 @@ import InfoGeometry.GW.All
 import InfoGeometry.Geometry.OperatorialJonesConnection
 import InfoGeometry.Geometry.OpticalJonesV4
 import InfoGeometry.Geometry.BilingualAnalyticity
+import InfoGeometry.Geometry.FiniteHestenesCR
 import InfoGeometry.Geometry.ConstructiveCauchyKernel
 import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Geometry.IndividuatedUHP
@@ -189,7 +191,9 @@ import InfoGeometry.Algebraic.OddNilpotentOSpBridge
 import InfoGeometry.Algebraic.PrimonKreinRingConstraints
 import InfoGeometry.Algebraic.SplitMajoranaOPEBridge
 import InfoGeometry.Exceptional.Freudenthal
+import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.STUDatum
+import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Canonical.SplitAlbert
 import InfoGeometry.Application.STUOperatorBridge
 import InfoGeometry.Canonical.GeometricCalculusSTUBridge

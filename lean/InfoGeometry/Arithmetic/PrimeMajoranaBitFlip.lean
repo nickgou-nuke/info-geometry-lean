@@ -97,11 +97,11 @@ shadow.
 structure PrimeMajoranaCARGate
     (PrimeLabel Operator : Type*) where
   majorana : PrimeLabel → Operator
-  self_adjoint_law : Prop
-  clifford_law : Prop
-  bit_flip_model_law : Prop
+  self_adjoint_True : Prop
+  clifford_True : Prop
+  bit_flip_model_True : Prop
   certificate :
-    self_adjoint_law ∧ clifford_law ∧ bit_flip_model_law
+    self_adjoint_True ∧ clifford_True ∧ bit_flip_model_True
 
 namespace PrimeMajoranaCARGate
 
@@ -109,14 +109,14 @@ namespace PrimeMajoranaCARGate
 theorem clifford
     {PrimeLabel Operator : Type*}
     (G : PrimeMajoranaCARGate PrimeLabel Operator) :
-    G.clifford_law :=
+    G.clifford_True :=
   G.certificate.2.1
 
 /-- Re-export of the supplied bit-flip model law. -/
 theorem bit_flip_model
     {PrimeLabel Operator : Type*}
     (G : PrimeMajoranaCARGate PrimeLabel Operator) :
-    G.bit_flip_model_law :=
+    G.bit_flip_model_True :=
   G.certificate.2.2
 
 end PrimeMajoranaCARGate
@@ -132,13 +132,13 @@ structure MajoranaZeroModeGate
   hamiltonian : Hamiltonian
   zeroMode : ZeroMode
   zeroReadout : ZeroReadout
-  commutes_with_hamiltonian_law : Prop
-  zero_energy_law : Prop
-  zero_readout_comparison_law : Prop
+  commutes_with_hamiltonian_True : Prop
+  zero_energy_True : Prop
+  zero_readout_comparison_True : Prop
   certificate :
-    commutes_with_hamiltonian_law ∧
-      zero_energy_law ∧
-        zero_readout_comparison_law
+    commutes_with_hamiltonian_True ∧
+      zero_energy_True ∧
+        zero_readout_comparison_True
 
 namespace MajoranaZeroModeGate
 
@@ -146,14 +146,14 @@ namespace MajoranaZeroModeGate
 theorem zero_energy
     {Hamiltonian ZeroMode ZeroReadout : Type*}
     (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout) :
-    G.zero_energy_law :=
+    G.zero_energy_True :=
   G.certificate.2.1
 
 /-- Re-export of the supplied zero-readout comparison law. -/
 theorem zero_readout_comparison
     {Hamiltonian ZeroMode ZeroReadout : Type*}
     (G : MajoranaZeroModeGate Hamiltonian ZeroMode ZeroReadout) :
-    G.zero_readout_comparison_law :=
+    G.zero_readout_comparison_True :=
   G.certificate.2.2
 
 end MajoranaZeroModeGate

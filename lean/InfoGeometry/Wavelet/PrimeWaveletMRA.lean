@@ -54,12 +54,12 @@ to form `F_N(z) = R_N(z) * Z_N(z)`.
 @[rep_depth operator]
 structure WaveletScalingFilter
     (A : LeeYangApproximants) where
-  refinement_law : Prop
-  refinement_certificate :
-    refinement_law
-  agrees_with_renormalization_law : Prop
-  agrees_with_renormalization_certificate :
-    agrees_with_renormalization_law
+  refinement_True : Prop
+  refinement_sorryProof :
+    refinement_True
+  agrees_with_renormalization_True : Prop
+  agrees_with_renormalization_sorryProof :
+    agrees_with_renormalization_True
 
 namespace WaveletScalingFilter
 
@@ -69,14 +69,14 @@ variable (R : WaveletScalingFilter A)
 /-- Re-export of the supplied wavelet refinement law. -/
 @[rep_depth operator]
 theorem refinement :
-    R.refinement_law :=
-  R.refinement_certificate
+    R.refinement_True :=
+  R.refinement_sorryProof
 
 /-- Re-export of the supplied agreement with the Lee--Yang renormalization. -/
 @[rep_depth operator]
 theorem agrees_with_renormalization :
-    R.agrees_with_renormalization_law :=
-  R.agrees_with_renormalization_certificate
+    R.agrees_with_renormalization_True :=
+  R.agrees_with_renormalization_sorryProof
 
 end WaveletScalingFilter
 
@@ -107,14 +107,14 @@ structure WaveletMRACompletionWitness
     WaveletScalingFilter A
 
   /-- Nested MRA law: increasing the cutoff refines the resolution space. -/
-  nested_mra_law : Prop
-  nested_mra_certificate :
-    nested_mra_law
+  nested_mra_True : Prop
+  nested_mra_sorryProof :
+    nested_mra_True
 
   /-- Density of the inductive-limit MRA in the intended adelic/fractal Hilbert space. -/
-  dense_inductive_limit_law : Prop
-  dense_inductive_limit_certificate :
-    dense_inductive_limit_law
+  dense_inductive_limit_True : Prop
+  dense_inductive_limit_sorryProof :
+    dense_inductive_limit_True
 
   /-- Limiting wavelet readout. -/
   limitF :
@@ -129,9 +129,9 @@ structure WaveletMRACompletionWitness
     LocallyUniformLimit A.renormZ limitF
 
   /-- The wavelet limit matches the completed-`xi` Cayley pullback. -/
-  waveletLimit_eq_xiCayleyPullback_law : Prop
-  waveletLimit_eq_xiCayleyPullback_certificate :
-    waveletLimit_eq_xiCayleyPullback_law
+  waveletLimit_eq_xiCayleyPullback_True : Prop
+  waveletLimit_eq_xiCayleyPullback_sorryProof :
+    waveletLimit_eq_xiCayleyPullback_True
 
   /-- Nontriviality on the inner zero-free component. -/
   nontrivial_in :
@@ -151,7 +151,7 @@ structure WaveletMRACompletionWitness
 
   /-- No spurious zeros are produced by the scaling filter or limiting process. -/
   noSpuriousZeros : Prop
-  noSpuriousZeros_certificate :
+  noSpuriousZeros_sorryProof :
     noSpuriousZeros
 
   /-- Completed-`xi` zeros are exactly zeros of the wavelet limit in the Cayley chart. -/
@@ -167,26 +167,26 @@ variable (W : WaveletMRACompletionWitness Ξ A)
 /-- Re-export of the nested-MRA law. -/
 @[rep_depth operator]
 theorem nested_mra :
-    W.nested_mra_law :=
-  W.nested_mra_certificate
+    W.nested_mra_True :=
+  W.nested_mra_sorryProof
 
 /-- Re-export of the dense-inductive-limit law. -/
 @[rep_depth operator]
 theorem dense_inductive_limit :
-    W.dense_inductive_limit_law :=
-  W.dense_inductive_limit_certificate
+    W.dense_inductive_limit_True :=
+  W.dense_inductive_limit_sorryProof
 
 /-- Re-export of the wavelet-limit/completed-`xi` identification law. -/
 @[rep_depth operator]
 theorem waveletLimit_eq_xiCayleyPullback :
-    W.waveletLimit_eq_xiCayleyPullback_law :=
-  W.waveletLimit_eq_xiCayleyPullback_certificate
+    W.waveletLimit_eq_xiCayleyPullback_True :=
+  W.waveletLimit_eq_xiCayleyPullback_sorryProof
 
 /-- Re-export of the no-spurious-zeros law. -/
 @[rep_depth operator]
-theorem noSpuriousZeros_law :
+theorem noSpuriousZeros_True :
     W.noSpuriousZeros :=
-  W.noSpuriousZeros_certificate
+  W.noSpuriousZeros_sorryProof
 
 /-- Zero-free complement transfer supplied by the MRA witness. -/
 @[rep_depth operator]

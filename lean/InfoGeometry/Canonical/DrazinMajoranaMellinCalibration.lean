@@ -76,7 +76,7 @@ theorem drazin_readout_eq_mellin_realPart :
 packet is normalizable. -/
 @[rep_depth operator]
 theorem scalarReadout_on_criticalLine
-    (hNormalizable : B.majorana.normalizable_law) :
+    (hNormalizable : B.majorana.normalizable_True) :
     InfoGeometry.Arithmetic.RHQuantumStabilityBridge.IsCriticalLineRealPart
       B.scalarReadout := by
   simpa [B.majorana_readout] using

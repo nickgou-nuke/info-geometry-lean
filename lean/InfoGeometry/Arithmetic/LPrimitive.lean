@@ -131,8 +131,8 @@ end LTrichotomyInput
 /-- Density data for a single `L_a` surface. -/
 structure LMultipleDensityWitness (a : ℕ) where
   density : ℝ
-  density_law : Prop
-  density_law_holds : density_law
+  density_True : Prop
+  density_law_holds : density_True
 
 /-- Log-density data for `L_A`. -/
 structure LPrimitiveLogDensityWitness (A : Set ℕ) where

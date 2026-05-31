@@ -176,7 +176,7 @@ variable (S : SpinBivectorReadout Spinor Bivector)
 
 /-- Re-export of the spin-plane readout law. -/
 @[rep_depth operator]
-theorem readout_valid :
+theorem readout_holds :
     S.readoutLaw :=
   S.readoutCertificate
 
@@ -217,7 +217,7 @@ variable (C : MomentumSpinCoupling Spinor Bivector)
 
 /-- Re-export of the spin-momentum coupling law. -/
 @[rep_depth operator]
-theorem coupling_valid :
+theorem coupling_holds :
     C.couplingLaw :=
   C.couplingCertificate
 

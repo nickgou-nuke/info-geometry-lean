@@ -202,7 +202,7 @@ def toBridgeData
   cuspAnomaly := D.cuspAnomaly
   cusp_tendsto := by
     simpa [rotorCocycle, mapRotorCocycle] using D.cusp_tendsto
-  finite_stokes_law := by
+  finite_stokes_True := by
     intro Y
     simpa [rotorCocycle, mapRotorCocycle] using D.finite_stokes Y
 

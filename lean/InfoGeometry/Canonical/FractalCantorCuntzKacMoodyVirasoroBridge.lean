@@ -159,7 +159,7 @@ variable (B : FractalCantorCuntzKacMoodyVirasoroBridge E Op H Finite Alg)
 
 /-- The spinor-boost dictionary validates the bilinear partition law. -/
 @[rep_depth operator]
-theorem boost_bilinear_partition_valid :
+theorem boost_bilinear_partition_holds :
     finitePrimeSpinorBilinearProduct B.boost.modes B.boost.amplitude =
       finitePrimeWeylDenominator B.boost.modes
         (fun p => scalarWeightFromSpinor (B.boost.amplitude p)) :=
@@ -176,7 +176,7 @@ theorem majorana_packet_K_sq_eq_neg_id :
 
 /-- Backwards-compatible name for the Majorana packet square law. -/
 @[rep_depth krein]
-theorem majorana_packet_valid :
+theorem majorana_packet_holds :
     B.majorana.K.comp B.majorana.K =
       -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
   majorana_packet_K_sq_eq_neg_id (B := B)
@@ -198,7 +198,7 @@ theorem bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow
 
 /-- Backwards-compatible name for the Bogoljubov phase-axis force law. -/
 @[rep_depth operator]
-theorem bogoljubov_packet_valid
+theorem bogoljubov_packet_holds
     [CompleteSpace E]
     (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
         (E := E)) :

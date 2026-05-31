@@ -118,7 +118,7 @@ structure MajoranaJKOErgoBridge
   This is the ergo-transfer certificate: continuous transport and discrete
   projection are the same update only in models that provide this witness.
   -/
-  jko_bayes_compatibility_law :
+  jko_bayes_compatibility_True :
     Prop
 
   /--
@@ -316,20 +316,20 @@ def ergo_transfer_payload
     B.encodedDivergence alt B.jko.next +
       B.encodedDivergence B.jko.next B.jko.previous
     ∧
-  B.jko_bayes_compatibility_law
+  B.jko_bayes_compatibility_True
 
 /-- Constructor lemma for the packaged ergo-transfer payload. -/
 theorem ergo_transfer_payload_intro
     (ρ alt : Density State)
     (halt : B.feasibleAlternative alt)
-    (hCompat : B.jko_bayes_compatibility_law) :
+    (hCompat : B.jko_bayes_compatibility_True) :
     B.jko.objective B.jko.next ≤ B.jko.objective ρ
       ∧
     B.encodedDivergence alt B.jko.previous =
       B.encodedDivergence alt B.jko.next +
         B.encodedDivergence B.jko.next B.jko.previous
       ∧
-    B.jko_bayes_compatibility_law := by
+    B.jko_bayes_compatibility_True := by
   exact
     ⟨B.jko_minimizing ρ,
       B.bayesian_projection_identity alt halt,

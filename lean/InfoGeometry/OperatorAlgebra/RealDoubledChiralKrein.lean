@@ -388,9 +388,9 @@ structure RealChiralLiouvillean where
   /-- Algebraic oddness: `L` exchanges the chiral sectors. -/
   off_block : L ∈ offBlockSubmodule (E := E)
   /-- Model-dependent Krein self-adjointness gate. -/
-  krein_self_adjoint_law : Prop
+  krein_self_adjoint_True : Prop
   /-- Model-dependent equation-of-motion gate. -/
-  equation_of_motion_law : Prop
+  equation_of_motion_True : Prop
 
 namespace RealChiralLiouvillean
 
@@ -486,9 +486,9 @@ structure HyperbolicPrimonFlow where
       chiralKreinForm (U t u) (U t v) =
         chiralKreinForm u v
   /-- Continuity/differentiability law, supplied by a concrete model. -/
-  regularity_law : Prop
+  regularity_True : Prop
   /-- Generator/equation-of-motion law, supplied by a concrete model. -/
-  generator_law : Prop
+  generator_True : Prop
 
 namespace HyperbolicPrimonFlow
 
@@ -529,9 +529,9 @@ structure ChiralMobiusSupertraceCalibration
   /-- Positive-decay Möbius heat readout, intended as `Tr(Γ exp(-βH))`. -/
   mobiusHeatReadout : Readout
   /-- Regulator/projection law killing non-decaying hyperbolic pieces. -/
-  regulator_law : Prop
+  regulator_True : Prop
   /-- Trace-class/summability law for the chosen readouts. -/
-  summability_law : Prop
+  summability_True : Prop
   /-- Supplied comparison law after regularization. -/
   calibrated_eq : chiralReadout = mobiusHeatReadout
 

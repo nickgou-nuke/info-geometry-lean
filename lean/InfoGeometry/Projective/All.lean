@@ -8,6 +8,8 @@ import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.LogSumIneq
 import InfoGeometry.Projective.KleinCrossRatioInvariant
+import InfoGeometry.Projective.Quadrics.PluckerKlein
+import InfoGeometry.Projective.Quadrics.Polarization
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Projective.KleinQuadricPlucker
 import InfoGeometry.Projective.KleinQuadricIncidence
@@ -19,6 +21,9 @@ import InfoGeometry.Projective.Orthant
 import InfoGeometry.Projective.PhysicalKinematics
 import InfoGeometry.Projective.Projective
 import InfoGeometry.Projective.ProjectiveMap
+import InfoGeometry.Projective.Quadrics.MonomialBulk2x2
+import InfoGeometry.Projective.Quadrics.PluckerKlein
+import InfoGeometry.Projective.Quadrics.Polarization
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.SelfDualCone
 import InfoGeometry.Projective.SplitOctonions

@@ -73,13 +73,13 @@ def toSecondLawCertificate
 
 /-- Every regular-corner force has nonnegative entropy production. -/
 @[rep_depth krein]
-theorem second_law
+theorem second_True
     (F : DrazinThermoFrame Op)
     (x : Op)
     (hx : InRegularCorner F.support x) :
     0 ≤ F.entropyProduction x := by
   simpa [DrazinThermoFrame.entropyProduction] using
-    certificate_second_law F.toSecondLawCertificate x hx
+    certificate_second_True F.toSecondLawCertificate x hx
 
 /-- Modular fixedness gives two-sided no leakage. -/
 @[rep_depth krein]
@@ -116,13 +116,13 @@ def frameEntropyProduction
 
 /-- Second Law readout for a Drazin thermodynamic frame. -/
 @[rep_depth krein]
-theorem frame_second_law
+theorem frame_second_True
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (F : DrazinThermoFrame Op)
     (x : Op)
     (hx : InRegularCorner F.support x) :
     0 ≤ frameEntropyProduction F x :=
-  F.second_law x hx
+  F.second_True x hx
 
 /--
 Frame-level no leakage.
@@ -244,7 +244,7 @@ theorem arrow_target_entropy_nonnegative
     (x : Op)
     (hx : InRegularCorner F.support x) :
     0 ≤ frameEntropyProduction G (α.map x) :=
-  frame_second_law G (α.map x) (α.regular_preserving x hx)
+  frame_second_True G (α.map x) (α.regular_preserving x hx)
 
 /-- Left identity law for arrow maps. -/
 @[rep_depth krein]

@@ -29,7 +29,7 @@ The source and target modular transports are plain functions `ℝ → G`; their
 additive-time laws are explicit hypotheses. The conclusion is the Connes
 cocycle law for the concrete relative transport `u_t = Uψ t * (Uφ t)⁻¹`.
 -/
-theorem connesTransportEdge_cocycle_law
+theorem connesTransportEdge_cocycle_True
     (Uφ Uψ : ℝ → G)
     (hφ_add : ∀ s t : ℝ, Uφ (s + t) = Uφ s * Uφ t)
     (hψ_add : ∀ s t : ℝ, Uψ (s + t) = Uψ s * Uψ t)

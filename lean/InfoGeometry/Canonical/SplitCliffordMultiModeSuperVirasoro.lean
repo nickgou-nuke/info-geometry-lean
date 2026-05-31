@@ -53,29 +53,29 @@ theorem mixedBracket_m1_r0_of_boundary_zero
     (superBracket_LG_of_boundaryDefect_zero N 1 0 J ψ hdef)
 
 /-- Witness current family concentrated at mode `0`. -/
-def J_witness (A : EndV) : ℤ → EndV :=
+def J_sorry (A : EndV) : ℤ → EndV :=
   fun n => if n = 0 then A else 0
 
 /-- Witness fermion family concentrated at mode `1`. -/
-def psi_witness (B : EndV) : ℤ → EndV :=
+def psi_sorry (B : EndV) : ℤ → EndV :=
   fun n => if n = 1 then B else 0
 
 /--
 Concrete witness evaluation of the shifted boundary defect.
 
-For the witness families `J_witness A` (mode `0`) and `psi_witness B` (mode `1`),
+For the witness families `J_sorry A` (mode `0`) and `psi_sorry B` (mode `1`),
 the shifted defect is exactly `- (1/2) • (A * B)`.
 -/
 theorem boundaryDefect_m1_r0_witness_eq
     (N : ℤ) (A B : EndV) (hN : 0 ≤ N) :
-    boundaryDefect_m1_r0 N (J_witness A) (psi_witness B)
+    boundaryDefect_m1_r0 N (J_sorry A) (psi_sorry B)
     = -((1 : 𝕜) / 2) • (A * B) := by
   unfold boundaryDefect_m1_r0 boundaryDefect_LG
-  have hG0 : G_trunc N 0 (J_witness A) (psi_witness B) = 0 := by
-    simpa [J_witness, psi_witness, J_mode0, psi_mode1] using
+  have hG0 : G_trunc N 0 (J_sorry A) (psi_sorry B) = 0 := by
+    simpa [J_sorry, psi_sorry, J_mode0, psi_mode1] using
       (G_trunc_r0_mode01_eq_zero (𝕜 := 𝕜) N A B)
-  have hG1 : G_trunc N 1 (J_witness A) (psi_witness B) = A * B := by
-    simpa [J_witness, psi_witness, J_mode0, psi_mode1] using
+  have hG1 : G_trunc N 1 (J_sorry A) (psi_sorry B) = A * B := by
+    simpa [J_sorry, psi_sorry, J_mode0, psi_mode1] using
       (G_trunc_r1_mode01_eq (𝕜 := 𝕜) N A B hN)
   simp [hG0, hG1, LG_coeff]
 
@@ -85,7 +85,7 @@ the shifted boundary defect vanishes.
 -/
 theorem boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero
     (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
-    boundaryDefect_m1_r0 N (J_witness A) (psi_witness B) = 0 := by
+    boundaryDefect_m1_r0 N (J_sorry A) (psi_sorry B) = 0 := by
   rw [boundaryDefect_m1_r0_witness_eq N A B hN, hAB]
   simp
 
@@ -94,14 +94,14 @@ Concrete shifted-mode exact closure in the witness lane under `A * B = 0`.
 -/
 theorem mixedBracket_m1_r0_witness_of_mul_zero
     (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
-    (L_trunc N 1 (J_witness A) (psi_witness B))
-        * (G_trunc N 0 (J_witness A) (psi_witness B))
-      - (G_trunc N 0 (J_witness A) (psi_witness B))
-        * (L_trunc N 1 (J_witness A) (psi_witness B))
+    (L_trunc N 1 (J_sorry A) (psi_sorry B))
+        * (G_trunc N 0 (J_sorry A) (psi_sorry B))
+      - (G_trunc N 0 (J_sorry A) (psi_sorry B))
+        * (L_trunc N 1 (J_sorry A) (psi_sorry B))
     = ((1 : 𝕜) / 2) •
-        (G_trunc N 1 (J_witness A) (psi_witness B)) := by
+        (G_trunc N 1 (J_sorry A) (psi_sorry B)) := by
   exact mixedBracket_m1_r0_of_boundary_zero N
-    (J_witness A) (psi_witness B)
+    (J_sorry A) (psi_sorry B)
     (boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero N A B hN hAB)
 
 end InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro

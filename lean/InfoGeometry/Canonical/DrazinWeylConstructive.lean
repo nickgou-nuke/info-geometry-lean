@@ -479,6 +479,37 @@ theorem constructiveDrazinCandidate_isWeylCompatible_of_localWeylSymmetry
         (E := E) D)
 
 /--
+Raw classical local-Weyl-symmetry route into direct Weyl compatibility for the
+constructive Drazin candidate. This removes the explicit classical-candidate
+commutation witness on the honest `ε`-symmetric branch.
+-/
+theorem constructiveDrazinCandidate_isWeylCompatible_of_hasClassicalRieszLocalWeylSymmetry
+    {T : EndH}
+    (h : HasClassicalRieszDecompositionAtZero (𝕂 := ℝ) T)
+    (hOperator :
+      T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T)
+    (hProjector :
+      h.P.comp (spectral_epsilon (E := E))
+        = (spectral_epsilon (E := E)).comp h.P)
+    (hUnique :
+      ∀ S' : EndH,
+        S' * T = h.P →
+        T * S' = h.P →
+        S' * h.P = S' →
+        h.P * S' = S' →
+          S' = h.D) :
+    IsWeylCompatible (E := E)
+      (constructiveDrazinCandidate
+        (constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+          (𝕂 := ℝ) h)) := by
+  exact constructiveDrazinCandidate_isWeylCompatible_of_classicalRieszLocalWeylSymmetryWitness
+    (E := E)
+    { classical_riesz := h
+      operator_commutes_spectralEpsilon := hOperator
+      projector_commutes_spectralEpsilon := hProjector
+      regular_inverse_unique := hUnique }
+
+/--
 Constructive Riesz-side Weyl package yields a Drazin witness together with Weyl
 compatibility for the same candidate, without any nonconstructive choice.
 -/

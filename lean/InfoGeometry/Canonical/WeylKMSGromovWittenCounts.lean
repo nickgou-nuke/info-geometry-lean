@@ -170,7 +170,7 @@ structure FierzKleinResidual where
 /--
 Projective Weyl/KMS count readout data for Fierz--Klein coordinates.
 
-This structure intentionally contains only data.  The former `quadric_law`
+This structure intentionally contains only data.  The former `quadric_True`
 field claimed the Fierz--Klein relation by storing the target proposition as a
 field, and the downstream theorem merely read that field back.  A concrete
 model must now prove any equation such as `residual.residual coords = 0`

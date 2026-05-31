@@ -222,6 +222,23 @@ noncomputable def cramerRaoVolumePotential
     (H : HessianGeometry E) (x : E) : ℝ :=
   -Real.log (cramerRaoVolumeShadow H x)
 
+/--
+Constructive witness that the conformal chiral scale is read from the
+operatorial Cramer-Rao volume potential.
+-/
+@[rep_depth transport]
+structure ChiralScaleCramerRaoVolumePotentialWitness
+    (CI : ConformalInference E) (H : HessianGeometry E) (x : E) : Prop where
+  scale_eq_potential : CI.chiralScale = cramerRaoVolumePotential H x
+
+/-- Recover the raw scale/potential equality from the constructive witness. -/
+@[rep_depth transport]
+theorem chiralScale_eq_cramerRaoVolumePotential_of_witness
+    {CI : ConformalInference E} {H : HessianGeometry E} {x : E}
+    (W : ChiralScaleCramerRaoVolumePotentialWitness CI H x) :
+    CI.chiralScale = cramerRaoVolumePotential H x :=
+  W.scale_eq_potential
+
 /-- Constructor from the existing incompressible Monge-Ampere predicate. -/
 @[rep_depth operator]
 theorem incompressibleCramerRaoBit_of_incompressible

@@ -56,21 +56,21 @@ structure TomitaCliffordJordanLieBridge where
   Calibration law: the compact/mirror-even sector feeds the symmetric
   observable/Jordan readout.
   -/
-  compact_even_feeds_jordan_law : Prop
+  compact_even_feeds_jordan_True : Prop
 
   /-- Evidence for the compact/Jordan calibration law. -/
   compact_even_feeds_jordan :
-    compact_even_feeds_jordan_law
+    compact_even_feeds_jordan_True
 
   /--
   Calibration law: the noncompact/mirror-odd sector feeds the antisymmetric
   generator/Lie readout.
   -/
-  noncompact_odd_feeds_lie_law : Prop
+  noncompact_odd_feeds_lie_True : Prop
 
   /-- Evidence for the noncompact/Lie calibration law. -/
   noncompact_odd_feeds_lie :
-    noncompact_odd_feeds_lie_law
+    noncompact_odd_feeds_lie_True
 
 namespace TomitaCliffordJordanLieBridge
 
@@ -119,8 +119,8 @@ Stored calibration: compact/mirror-even Tomita-Cartan parity feeds the
 symmetric observable/Jordan readout.
 -/
 @[rep_depth transport]
-theorem compact_even_feeds_jordan_valid :
-    B.compact_even_feeds_jordan_law :=
+theorem compact_even_feeds_jordan_holds :
+    B.compact_even_feeds_jordan_True :=
   B.compact_even_feeds_jordan
 
 /--
@@ -128,8 +128,8 @@ Stored calibration: noncompact/mirror-odd Tomita-Cartan parity feeds the
 antisymmetric generator/Lie readout.
 -/
 @[rep_depth transport]
-theorem noncompact_odd_feeds_lie_valid :
-    B.noncompact_odd_feeds_lie_law :=
+theorem noncompact_odd_feeds_lie_holds :
+    B.noncompact_odd_feeds_lie_True :=
   B.noncompact_odd_feeds_lie
 
 /--
@@ -152,15 +152,15 @@ theorem tomita_clifford_jordan_lie_packet
           B.packet.closure.gibbs.conformalGeometricTemperature
           B.packet.closure.weylTemperature =
             (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl
-      ∧ B.compact_even_feeds_jordan_law
-      ∧ B.noncompact_odd_feeds_lie_law := by
+      ∧ B.compact_even_feeds_jordan_True
+      ∧ B.noncompact_odd_feeds_lie_True := by
   exact
     ⟨B.compactLift_mirror_even x,
       B.noncompactLift_mirror_odd y,
       B.commutator_eq_two_smul_lieProduct,
       B.anticommutator_eq_two_smul_jordanProduct,
-      B.compact_even_feeds_jordan_valid,
-      B.noncompact_odd_feeds_lie_valid⟩
+      B.compact_even_feeds_jordan_holds,
+      B.noncompact_odd_feeds_lie_holds⟩
 
 end TomitaCliffordJordanLieBridge
 

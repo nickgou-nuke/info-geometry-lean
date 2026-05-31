@@ -266,7 +266,7 @@ structure DualHolonomyRecoveryWitness
   Recovery law: hidden memory is decoded by the dual 't Hooft readout for
   recovery-calibrated loops.
   -/
-  recovery_law :
+  recovery_True :
     ∀ γ : GLoop,
       recoveringLoop γ →
         ∀ s : GState,
@@ -297,7 +297,7 @@ theorem recovered_dualHolonomy_eq_hiddenMemory
     R.recoverFromDualHolonomy
         (T.thooft (D.loopDual γ) (D.stateDual s)) =
       R.hiddenMemory s :=
-  R.recovery_law γ hγ s
+  R.recovery_True γ hγ s
 
 /--
 The Wilson readout also recovers hidden memory via KW duality, for
@@ -358,12 +358,12 @@ theorem dualHolonomy_ne_of_hiddenMemory_ne
     R.hiddenMemory s₁
         = R.recoverFromDualHolonomy
             (T.thooft (D.loopDual γ) (D.stateDual s₁)) := by
-              exact (R.recovery_law γ hγ s₁).symm
+              exact (R.recovery_True γ hγ s₁).symm
     _ = R.recoverFromDualHolonomy
             (T.thooft (D.loopDual γ) (D.stateDual s₂)) := by
               rw [hread]
     _ = R.hiddenMemory s₂ := by
-              exact R.recovery_law γ hγ s₂
+              exact R.recovery_True γ hγ s₂
 
 /--
 Faithful recovery separates hidden memories on the Wilson channel.
@@ -477,12 +477,12 @@ structure PhysicalGeometricLanglandsInterpretation
   Model-specific geometric Langlands statement attached to this physical
   duality witness.
   -/
-  geometric_langlands_law :
+  geometric_langlands_True :
     Prop
 
   /-- Certificate for the model-specific statement. -/
-  geometric_langlands_certificate :
-    geometric_langlands_law
+  geometric_langlands_sorryProof :
+    geometric_langlands_True
 
 namespace PhysicalGeometricLanglandsInterpretation
 

@@ -109,7 +109,7 @@ structure StandardFormProjectiveGWBridge where
       inverseWeylGauge (scaleState c s) = (c ^ 2)⁻¹ * inverseWeylGauge s
 
   /-- Physical volume is the product of intensity and inverse Weyl gauge. -/
-  physicalVolume_law :
+  physicalVolume_True :
     ∀ s : State, physicalVolume s = gwIntensity s * inverseWeylGauge s
 
   /-- Optional backend certificate tying the standard-form sector to the state. -/
@@ -170,14 +170,14 @@ theorem physicalVolume_scale_invariant
     B.physicalVolume (B.scaleState c s)
         = B.gwIntensity (B.scaleState c s) *
             B.inverseWeylGauge (B.scaleState c s) := by
-            rw [B.physicalVolume_law]
+            rw [B.physicalVolume_True]
     _ = (c ^ 2 * B.gwIntensity s) * ((c ^ 2)⁻¹ * B.inverseWeylGauge s) := by
             rw [B.gwIntensity_weight_two c s hc,
               B.inverseWeylGauge_weight_minus_two c s hc]
     _ = B.gwIntensity s * B.inverseWeylGauge s := by
             field_simp [hc2]
     _ = B.physicalVolume s := by
-            rw [B.physicalVolume_law]
+            rw [B.physicalVolume_True]
 
 end StandardFormProjectiveGWBridge
 

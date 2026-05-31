@@ -87,15 +87,15 @@ interface instead of being turned into a fake theorem.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure FiniteCantorDiracSelfAdjointSocket where
-  finiteCantorDirac_selfAdjoint_iff_unitary_law : Prop
-  finiteCantorDirac_selfAdjoint_iff_unitary_certificate :
-    finiteCantorDirac_selfAdjoint_iff_unitary_law
+  finiteCantorDirac_selfAdjoint_iff_unitary_True : Prop
+  finiteCantorDirac_selfAdjoint_iff_unitary_sorryProof :
+    finiteCantorDirac_selfAdjoint_iff_unitary_True
 
 /-- Reexport of the supplied finite Cantor-Dirac self-adjointness law. -/
 @[bridge_target_tag, rep_depth operator]
-theorem finiteCantorDirac_selfAdjoint_iff_unitary_valid
+theorem finiteCantorDirac_selfAdjoint_iff_unitary_holds
     (S : FiniteCantorDiracSelfAdjointSocket) :
-    S.finiteCantorDirac_selfAdjoint_iff_unitary_law :=
-  S.finiteCantorDirac_selfAdjoint_iff_unitary_certificate
+    S.finiteCantorDirac_selfAdjoint_iff_unitary_True :=
+  S.finiteCantorDirac_selfAdjoint_iff_unitary_sorryProof
 
 end InfoGeometry.Canonical.ZetaBraneCantorDirac

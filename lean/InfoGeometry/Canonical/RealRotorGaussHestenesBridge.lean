@@ -61,7 +61,7 @@ structure RealRotorCalculus
     [LieRing Biv] [LieAlgebra ℝ Biv]
     [Group Rotor] [BerryRotorBridge.BivectorPhaseAlgebra Biv Rotor] where
   rotorOfBivector : Biv → Rotor
-  rotor_law : rotorOfBivector =
+  rotor_True : rotorOfBivector =
     BerryRotorBridge.BivectorPhaseAlgebra.expBiv
   phaseLineReadout : Biv → Prop
   phaseLineReadout_iff :
@@ -80,7 +80,7 @@ variable
 @[rep_depth operator]
 theorem rotorOfBivector_eq_exp (R : RealRotorCalculus Biv Rotor) :
     R.rotorOfBivector = BerryRotorBridge.BivectorPhaseAlgebra.expBiv :=
-  R.rotor_law
+  R.rotor_True
 
 /-- Phase-line membership is the real bivector line, not a complex scalar line. -/
 @[rep_depth operator]
@@ -105,7 +105,7 @@ structure RealGaussStokesReadout
   boundaryOf : Chain → Boundary
   boundaryReadout : Boundary → ℝ
   bulkReadout : Chain → ℝ
-  gaussStokes_law : ∀ c, boundaryReadout (boundaryOf c) = bulkReadout c
+  gaussStokes_True : ∀ c, boundaryReadout (boundaryOf c) = bulkReadout c
 
 namespace RealGaussStokesReadout
 
@@ -116,7 +116,7 @@ variable {Chain Boundary : Type*}
 theorem boundary_eq_bulk
     (G : RealGaussStokesReadout Chain Boundary) (c : Chain) :
     G.boundaryReadout (G.boundaryOf c) = G.bulkReadout c :=
-  G.gaussStokes_law c
+  G.gaussStokes_True c
 
 end RealGaussStokesReadout
 
@@ -153,11 +153,11 @@ structure RealGeometryReplacesComplexAnalysisGuard where
   scalar_i_replaced_by_real_rotor : Prop
   contour_residue_replaced_by_real_gauss_stokes : Prop
   complex_analysis_is_optional_shadow : Prop
-  scalar_i_replaced_by_real_rotor_witness :
+  scalar_i_replaced_by_real_rotor_sorry :
     scalar_i_replaced_by_real_rotor
-  contour_residue_replaced_by_real_gauss_stokes_witness :
+  contour_residue_replaced_by_real_gauss_stokes_sorry :
     contour_residue_replaced_by_real_gauss_stokes
-  complex_analysis_is_optional_shadow_witness :
+  complex_analysis_is_optional_shadow_sorry :
     complex_analysis_is_optional_shadow
 
 namespace RealGeometryReplacesComplexAnalysisGuard
@@ -167,21 +167,21 @@ namespace RealGeometryReplacesComplexAnalysisGuard
 theorem scalar_i_replaced
     (G : RealGeometryReplacesComplexAnalysisGuard) :
     G.scalar_i_replaced_by_real_rotor :=
-  G.scalar_i_replaced_by_real_rotor_witness
+  G.scalar_i_replaced_by_real_rotor_sorry
 
 /-- Real Gauss/Stokes is the owner replacement for contour-residue language. -/
 @[rep_depth operator]
 theorem contour_residue_replaced
     (G : RealGeometryReplacesComplexAnalysisGuard) :
     G.contour_residue_replaced_by_real_gauss_stokes :=
-  G.contour_residue_replaced_by_real_gauss_stokes_witness
+  G.contour_residue_replaced_by_real_gauss_stokes_sorry
 
 /-- Complex analysis remains only a calibrated optional shadow. -/
 @[rep_depth operator]
 theorem complex_shadow_optional
     (G : RealGeometryReplacesComplexAnalysisGuard) :
     G.complex_analysis_is_optional_shadow :=
-  G.complex_analysis_is_optional_shadow_witness
+  G.complex_analysis_is_optional_shadow_sorry
 
 end RealGeometryReplacesComplexAnalysisGuard
 
@@ -200,7 +200,7 @@ structure RealRotorGaussHestenesBridge
   hestenesKreinReadout : Op → ℝ
   rotorReadout : Op → Op
   rotorReadout_preserves_real_lane : Prop
-  rotorReadout_preserves_real_lane_witness :
+  rotorReadout_preserves_real_lane_sorry :
     rotorReadout_preserves_real_lane
 
 namespace RealRotorGaussHestenesBridge
@@ -216,25 +216,25 @@ theorem phaseAxis_sq
 
 /-- The bridge readout uses real Gauss/Stokes. -/
 @[rep_depth transport]
-theorem gaussStokes_law
+theorem gaussStokes_True
     (B : RealRotorGaussHestenesBridge Op Chain Boundary) (c : Chain) :
     B.gaussStokes.boundaryReadout (B.gaussStokes.boundaryOf c)
       = B.gaussStokes.bulkReadout c :=
-  B.gaussStokes.gaussStokes_law c
+  B.gaussStokes.gaussStokes_True c
 
 /-- Complex analysis is only an optional representation shadow for this bridge. -/
 @[rep_depth operator]
 theorem complex_shadow_optional
     (B : RealRotorGaussHestenesBridge Op Chain Boundary) :
     B.guard.complex_analysis_is_optional_shadow :=
-  B.guard.complex_analysis_is_optional_shadow_witness
+  B.guard.complex_analysis_is_optional_shadow_sorry
 
 /-- Rotor readout stays in the declared real lane. -/
 @[rep_depth operator]
 theorem rotorReadout_preserves_real_lane_holds
     (B : RealRotorGaussHestenesBridge Op Chain Boundary) :
     B.rotorReadout_preserves_real_lane :=
-  B.rotorReadout_preserves_real_lane_witness
+  B.rotorReadout_preserves_real_lane_sorry
 
 end RealRotorGaussHestenesBridge
 

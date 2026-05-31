@@ -75,7 +75,7 @@ structure GenesisSplitDatum
   This remains model-specific: Tomita split, Stinespring dilation, horizon
   factorization, etc.
   -/
-  split_law : Prop
+  split_True : Prop
 
 namespace GenesisSplitDatum
 
@@ -133,7 +133,7 @@ structure HorizonEvaporationDatum
   Concrete models may express monotonicity, late-time limits, shrinking area,
   Hawking flux, etc.
   -/
-  evaporation_law : Prop
+  evaporation_True : Prop
 
 namespace HorizonEvaporationDatum
 
@@ -627,7 +627,7 @@ should use the more specific bridge structures above.
 -/
 structure HorizonProcessClassification where
   outcome : HorizonOutcome
-  classification_law : Prop
+  classification_True : Prop
 
 /-! ## 11. Owner targets -/
 

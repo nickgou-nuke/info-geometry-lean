@@ -857,52 +857,87 @@ theorem claimM_coadjointLeaf_Casimir_transverseOnsager_square_packet
     exact sq_nonneg (dissipationAmplitude x)
 
 /--
+Constructive owner route for the finite Souriau/KKT packet, removing redundant KKT
+hypotheses by consuming `claimK_kktEntropyStationarity_packet_ofExactResiduals`.
+-/
+@[rep_depth thermo]
+theorem structuredSouriauKKTTranslatorPacket_ofExactWitness
+ [Fintype α] [Nonempty α]
+ (C : SouriauFenchelContext (α := α))
+ (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
+ (eta xβ xμ : ℝ) :
+ (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+ ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
+ -souriauMeanShift C.M C.T
+ ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
+ C.T.beta * souriauMeanNumber C.M C.T
+ ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+ varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+ ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+ C.T.beta ^ (2 : ℕ) *
+ varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+ ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+ ∧ 0 ≤ C.model.fenchelGap C.theta eta
+ ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+ ∧ souriauMassieuPotential C.M C.T +
+ C.model.φ (C.model.dualCoord C.theta) =
+ C.theta * C.model.dualCoord C.theta
+ ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+ ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
+ ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
+ ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
+ ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
+ exact
+ ⟨structuredSouriauTranslatorPacket C hPSD eta xβ xμ,
+  claimK_kktEntropyStationarity_packet_ofExactResiduals⟩
+
+/--
 Literature-facing finite Souriau/KKT theorem packet.
 
 This is the conservative Lean target for the prose synthesis:
-
-* Massieu/log-partition and finite moment readouts;
+* Massieu/log-partition and finite Souriau thermodynamic readouts;
 * finite Fisher/covariance and Onsager PSD entropy production;
 * Fenchel-Legendre contact and gap nonnegativity;
-* Karush-Kuhn-Tucker stationarity kept as explicit hypotheses.
+* Karush-Kuhn-Tucker stationarity as a constructive owner theorem packet
+  (no redundant bare Prop hypotheses).
 
-The theorem is finite.  Full smooth/coadjoint-orbit Hessian and metriplectic
+The theorem is finite. Full smooth/coadjoint-orbit Hessian and metriplectic
 statements are exposed separately by the infinite-dimensional enrichment
 packets below.
 -/
 @[rep_depth thermo]
 theorem structuredSouriauKKTTranslatorPacket
-    [Fintype α] [Nonempty α]
-    (C : SouriauFenchelContext (α := α))
-    (K : KKTEntropyStationarityShadow)
-    (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
-    (hCone : K.coneAdmissible)
-    (hStationarity : K.stationarity)
-    (hSlack : K.complementarySlackness)
-    (hFinite : K.finitePartitionAdmissible)
-    (eta xβ xμ : ℝ) :
-    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
-      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
-        -souriauMeanShift C.M C.T
-      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
-        C.T.beta * souriauMeanNumber C.M C.T
-      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
-        C.T.beta ^ (2 : ℕ) *
-          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
-      ∧ 0 ≤ C.model.fenchelGap C.theta eta
-      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
-      ∧ souriauMassieuPotential C.M C.T +
-          C.model.φ (C.model.dualCoord C.theta) =
-        C.theta * C.model.dualCoord C.theta
-      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
-      ∧ K.coneAdmissible ∧ K.stationarity ∧
-        K.complementarySlackness ∧ K.finitePartitionAdmissible :=
-  ⟨structuredSouriauTranslatorPacket C hPSD eta xβ xμ,
-    claimK_kktEntropyStationarity_packet
-      K hCone hStationarity hSlack hFinite⟩
+ [Fintype α] [Nonempty α]
+ (C : SouriauFenchelContext (α := α))
+ (K : KKTEntropyStationarityShadow)
+ (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
+ (hCone : K.coneAdmissible)
+ (hStationarity : K.stationarity)
+ (hSlack : K.complementarySlackness)
+ (hFinite : K.finitePartitionAdmissible)
+ (eta xβ xμ : ℝ) :
+ (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+ ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
+ -souriauMeanShift C.M C.T
+ ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
+ C.T.beta * souriauMeanNumber C.M C.T
+ ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+ varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+ ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+ C.T.beta ^ (2 : ℕ) *
+ varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+ ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+ ∧ 0 ≤ C.model.fenchelGap C.theta eta
+ ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+ ∧ souriauMassieuPotential C.M C.T +
+ C.model.φ (C.model.dualCoord C.theta) =
+ C.theta * C.model.dualCoord C.theta
+ ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+ ∧ K.coneAdmissible ∧ K.stationarity ∧
+ K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+  exact
+    ⟨(structuredSouriauKKTTranslatorPacket_ofExactWitness C hPSD eta xβ xμ).1,
+      hCone, hStationarity, hSlack, hFinite⟩
 
 /--
 Combined theorem packet using the dimension-agnostic exact KKT residual owner.

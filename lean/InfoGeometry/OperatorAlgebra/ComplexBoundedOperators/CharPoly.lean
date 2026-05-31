@@ -135,6 +135,237 @@ theorem charPoly_upperTriangular
     intro i j hij
     exact hA hij)
 
+/-- Explicit 2×2 determinant readout. -/
+def det_2x2 (M : Matrix (Fin 2) (Fin 2) ℂ) : ℂ :=
+  M 0 0 * M 1 1 - M 0 1 * M 1 0
+
+/-- Explicit 2×2 characteristic polynomial readout. -/
+def char_poly_2x2 (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ) : ℂ :=
+  det_2x2 (x • (1 : Matrix (Fin 2) (Fin 2) ℂ) - M)
+
+/-- The explicit 2×2 readout agrees with the matrix characteristic polynomial evaluation. -/
+theorem char_poly_2x2_eq_eval_charpoly
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ) :
+    char_poly_2x2 M x = (Matrix.charpoly M).eval x := by
+  simpa [char_poly_2x2, det_2x2, Matrix.smul_eq_mul_diagonal, Matrix.sub_apply,
+    Matrix.smul_apply, Matrix.det_fin_two] using (Matrix.eval_charpoly M x).symm
+
+/-- The explicit `2×2` complex characteristic polynomial evaluates to the Zhukovsky form. -/
+theorem char_poly_eq_zhukovsky
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1) :
+    char_poly_2x2 M x = x^2 - Tr * x + 1 := by
+  rw [char_poly_2x2_eq_eval_charpoly, Matrix.charpoly_fin_two, h_tr, h_det]
+  simp [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_pow,
+    Polynomial.eval_X, Polynomial.eval_C]
+
+/-- Nonzero roots of the explicit determinant-one characteristic polynomial satisfy the Zhukovsky relation. -/
+theorem eigenvalue_zhukovsky_relation_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) (hx : x ≠ 0) :
+    x + x⁻¹ = Tr := by
+  have hchar := char_poly_eq_zhukovsky M x Tr h_tr h_det
+  rw [h_eigen] at hchar
+  have hquad : x^2 - Tr * x + 1 = 0 := hchar.symm
+  have hmul : x * (x + x⁻¹ - Tr) = 0 := by
+    field_simp [hx]
+    ring_nf at hquad ⊢
+    exact hquad
+  exact sub_eq_zero.mp ((mul_eq_zero.mp hmul).resolve_left hx)
+
+/-- For nonzero `x`, the explicit determinant-one root condition is equivalent to the Zhukovsky relation. -/
+theorem char_poly_2x2_root_iff_zhukovsky_relation
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1) (hx : x ≠ 0) :
+    char_poly_2x2 M x = 0 ↔ x + x⁻¹ = Tr := by
+  constructor
+  · intro h_eigen
+    exact eigenvalue_zhukovsky_relation_2x2 M x Tr h_tr h_det h_eigen hx
+  · intro hrel
+    rw [char_poly_eq_zhukovsky M x Tr h_tr h_det]
+    have hmul : x * (x + x⁻¹ - Tr) = 0 := by
+      rw [hrel]
+      ring
+    field_simp [hx] at hmul
+    ring_nf at hmul ⊢
+    exact hmul
+
+/-- Nonzero roots of the explicit determinant-one characteristic polynomial are closed under spectral inversion. -/
+theorem inverse_root_of_root_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) (hx : x ≠ 0) :
+    char_poly_2x2 M x⁻¹ = 0 := by
+  have hrel : x + x⁻¹ = Tr :=
+    eigenvalue_zhukovsky_relation_2x2 M x Tr h_tr h_det h_eigen hx
+  exact (char_poly_2x2_root_iff_zhukovsky_relation M x⁻¹ Tr h_tr h_det (inv_ne_zero hx)).mpr
+    (by simpa [inv_inv, add_comm] using hrel)
+
+/-- A trace-free determinant-one `2×2` complex matrix has eigenvalues satisfying `x^2 = -1`. -/
+theorem trace_free_eigenvalue_compact_C_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) :
+    x^2 = -1 := by
+  have hchar : x^2 + 1 = 0 := by
+    have h := char_poly_eq_zhukovsky (M := M) (x := x) (Tr := 0) h_tr h_det
+    rw [h_eigen] at h
+    simpa [mul_comm, mul_left_comm, mul_assoc] using h.symm
+  exact eq_neg_of_add_eq_zero_left hchar
+
+/-- A complex number whose square is `-1` lies on the squared-norm unit circle. -/
+theorem normSq_eq_one_of_sq_eq_neg_one (x : ℂ) (h : x^2 = -1) :
+    Complex.normSq x = 1 := by
+  have hnorm : Complex.normSq (x^2) = Complex.normSq (-1 : ℂ) := by
+    rw [h]
+  have hs : Complex.normSq x * Complex.normSq x = 1 := by
+    simpa [pow_two] using hnorm
+  have hn : 0 ≤ Complex.normSq x := Complex.normSq_nonneg x
+  nlinarith
+
+/-- The only complex roots of `x^2 = -1` are `I` and `-I`. -/
+theorem sq_eq_neg_one_iff_eq_I_or_neg_I (x : ℂ) :
+    x^2 = -1 ↔ x = Complex.I ∨ x = -Complex.I := by
+  constructor
+  · intro h
+    have hf : (x - Complex.I) * (x + Complex.I) = 0 := by
+      calc
+        (x - Complex.I) * (x + Complex.I) = x^2 - Complex.I^2 := by ring
+        _ = x^2 + 1 := by simp [Complex.I_mul_I, pow_two]
+        _ = 0 := by rw [h]; norm_num
+    rcases mul_eq_zero.mp hf with hx | hx
+    · left
+      exact sub_eq_zero.mp hx
+    · right
+      exact eq_neg_of_add_eq_zero_left hx
+  · intro h
+    rcases h with rfl | rfl <;> norm_num
+
+/-- Explicit `2×2` trace-free determinant-one roots lie on the squared-norm unit circle. -/
+theorem trace_free_eigenvalue_normSq_eq_one_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) :
+    Complex.normSq x = 1 :=
+  normSq_eq_one_of_sq_eq_neg_one x
+    (trace_free_eigenvalue_compact_C_2x2 M x h_tr h_det h_eigen)
+
+/-- Explicit `2×2` trace-free determinant-one roots are exactly the two complex points `±I`. -/
+theorem trace_free_eigenvalue_eq_I_or_neg_I_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) :
+    x = Complex.I ∨ x = -Complex.I :=
+  (sq_eq_neg_one_iff_eq_I_or_neg_I x).mp
+    (trace_free_eigenvalue_compact_C_2x2 M x h_tr h_det h_eigen)
+
+/-- Explicit `2×2` trace-free determinant-one roots have inverse equal to their negative. -/
+theorem trace_free_eigenvalue_inv_eq_neg_2x2
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : char_poly_2x2 M x = 0) :
+    x⁻¹ = -x := by
+  have hsq : x^2 = -1 := trace_free_eigenvalue_compact_C_2x2 M x h_tr h_det h_eigen
+  apply inv_eq_of_mul_eq_one_right
+  calc
+    x * (-x) = -(x^2) := by ring
+    _ = 1 := by rw [hsq]; norm_num
+
+/-- The `2×2` complex characteristic polynomial evaluates to the Zhukovsky quadratic form. -/
+theorem charPoly_eval_fin_two_zhukovsky
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1) :
+    (Matrix.charpoly M).eval x = x^2 - Tr * x + 1 := by
+  rw [Matrix.charpoly_fin_two, h_tr, h_det]
+  simp [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_pow,
+    Polynomial.eval_X, Polynomial.eval_C]
+
+/-- Nonzero roots of the Mathlib determinant-one characteristic polynomial satisfy the Zhukovsky relation. -/
+theorem charPoly_eigenvalue_zhukovsky_relation
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) (hx : x ≠ 0) :
+    x + x⁻¹ = Tr := by
+  have hchar := charPoly_eval_fin_two_zhukovsky M x Tr h_tr h_det
+  rw [h_eigen] at hchar
+  have hquad : x^2 - Tr * x + 1 = 0 := hchar.symm
+  have hmul : x * (x + x⁻¹ - Tr) = 0 := by
+    field_simp [hx]
+    ring_nf at hquad ⊢
+    exact hquad
+  exact sub_eq_zero.mp ((mul_eq_zero.mp hmul).resolve_left hx)
+
+/-- For nonzero `x`, the Mathlib determinant-one root condition is equivalent to the Zhukovsky relation. -/
+theorem charPoly_root_iff_zhukovsky_relation
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1) (hx : x ≠ 0) :
+    (Matrix.charpoly M).eval x = 0 ↔ x + x⁻¹ = Tr := by
+  constructor
+  · intro h_eigen
+    exact charPoly_eigenvalue_zhukovsky_relation M x Tr h_tr h_det h_eigen hx
+  · intro hrel
+    rw [charPoly_eval_fin_two_zhukovsky M x Tr h_tr h_det]
+    have hmul : x * (x + x⁻¹ - Tr) = 0 := by
+      rw [hrel]
+      ring
+    field_simp [hx] at hmul
+    ring_nf at hmul ⊢
+    exact hmul
+
+/-- Nonzero roots of the Mathlib determinant-one characteristic polynomial are closed under spectral inversion. -/
+theorem charPoly_inverse_root_of_root
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x Tr : ℂ)
+    (h_tr : Matrix.trace M = Tr) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) (hx : x ≠ 0) :
+    (Matrix.charpoly M).eval x⁻¹ = 0 := by
+  have hrel : x + x⁻¹ = Tr :=
+    charPoly_eigenvalue_zhukovsky_relation M x Tr h_tr h_det h_eigen hx
+  exact (charPoly_root_iff_zhukovsky_relation M x⁻¹ Tr h_tr h_det (inv_ne_zero hx)).mpr
+    (by simpa [inv_inv, add_comm] using hrel)
+
+/-- A trace-free determinant-one `2×2` complex matrix has eigenvalues satisfying `x^2 = -1`. -/
+theorem trace_free_eigenvalue_compact_C
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) :
+    x^2 = -1 := by
+  have hchar : x^2 + 1 = 0 := by
+    have h := charPoly_eval_fin_two_zhukovsky (M := M) (x := x) (Tr := 0) h_tr h_det
+    rw [h_eigen] at h
+    simpa [mul_comm, mul_left_comm, mul_assoc] using h.symm
+  exact eq_neg_of_add_eq_zero_left hchar
+
+/-- Matrix-characteristic-polynomial trace-free determinant-one roots lie on the squared-norm unit circle. -/
+theorem trace_free_eigenvalue_normSq_eq_one
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) :
+    Complex.normSq x = 1 :=
+  normSq_eq_one_of_sq_eq_neg_one x
+    (trace_free_eigenvalue_compact_C M x h_tr h_det h_eigen)
+
+/-- Matrix-characteristic-polynomial trace-free determinant-one roots are exactly `±I`. -/
+theorem trace_free_eigenvalue_eq_I_or_neg_I
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) :
+    x = Complex.I ∨ x = -Complex.I :=
+  (sq_eq_neg_one_iff_eq_I_or_neg_I x).mp
+    (trace_free_eigenvalue_compact_C M x h_tr h_det h_eigen)
+
+/-- Matrix-characteristic-polynomial trace-free determinant-one roots have inverse equal to their negative. -/
+theorem trace_free_eigenvalue_inv_eq_neg
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ)
+    (h_tr : Matrix.trace M = 0) (h_det : Matrix.det M = 1)
+    (h_eigen : (Matrix.charpoly M).eval x = 0) :
+    x⁻¹ = -x := by
+  have hsq : x^2 = -1 := trace_free_eigenvalue_compact_C M x h_tr h_det h_eigen
+  apply inv_eq_of_mul_eq_one_right
+  calc
+    x * (-x) = -(x^2) := by ring
+    _ = 1 := by rw [hsq]; norm_num
+
 /-- witness-gated (Native Closure Mandated: Closure Debt) characteristic-polynomial invariance under similarity. -/
 structure SimilarCharPolyPacket {K ι : Type*}
     [CommRing K] [Fintype ι] [DecidableEq ι]
@@ -153,7 +384,7 @@ theorem charPoly_similar {K ι : Type*}
   P.charpoly_eq
 
 /-- Native characteristic-polynomial invariance under explicit similarity data. -/
-theorem charPoly_similar_of_witness {K ι : Type*}
+theorem charPoly_similar_of_sorry {K ι : Type*}
     [CommRing K] [Fintype ι] [DecidableEq ι]
     {A B : Matrix ι ι K}
     (W : SimilarMatrixWitness A B) :

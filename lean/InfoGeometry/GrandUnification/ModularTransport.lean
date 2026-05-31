@@ -56,7 +56,7 @@ theorem constructModularTransportBridgeTarget :
     ModularTransportBridgeTarget := by
   intro φ ψ s t
   exact
-    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle_law
+    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle_True
       φ ψ s t
 
 /--

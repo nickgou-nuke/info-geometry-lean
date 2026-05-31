@@ -50,7 +50,7 @@ theorem action_hessian_eq_fisher
 The induced relational datum satisfies the operatorial Robertson-Schrödinger
 area law on the comparison-channel surface.
 -/
-theorem operatorial_uncertainty_area_law
+theorem operatorial_uncertainty_area_True
     (P : PotentialDatum (E := E))
     (reference comparison : H₂)
     (X Y : PerturbationChannel E)

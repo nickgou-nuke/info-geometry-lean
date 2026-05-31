@@ -35,7 +35,7 @@ structure VirasoroAlgebraDatum
   centralCharge : L
 
   /-- The central charge commutes with every element. -/
-  central_law :
+  central_True :
     ∀ X : L, ⁅centralCharge, X⁆ = 0
 
   /--
@@ -44,11 +44,11 @@ structure VirasoroAlgebraDatum
   Morally:
   `[L_m,L_n] = (m-n)L_{m+n} + c/12 * (m^3-m) δ_{m+n,0}`.
   -/
-  virasoro_bracket_law : Prop
+  virasoro_bracket_True : Prop
 
   /-- Proof of the bracket law. -/
   virasoro_bracket_law_holds :
-    virasoro_bracket_law
+    virasoro_bracket_True
 
 namespace VirasoroAlgebraDatum
 
@@ -60,7 +60,7 @@ variable (V : VirasoroAlgebraDatum L)
 theorem central_commutes
     (X : L) :
     ⁅V.centralCharge, X⁆ = 0 :=
-  V.central_law X
+  V.central_True X
 
 end VirasoroAlgebraDatum
 
@@ -113,11 +113,11 @@ structure SuperVirasoroAlgebraDatum
   Morally:
   `{G_r,G_s} = 2L_{r+s} + central term`.
   -/
-  super_bracket_law : Prop
+  super_bracket_True : Prop
 
   /-- Proof of the super bracket law. -/
   super_bracket_law_holds :
-    super_bracket_law
+    super_bracket_True
 
 /-! ## 4. Central charge bridge -/
 

@@ -114,7 +114,7 @@ structure DrazinFrequencyData
   LD : Obs
   harmonicProj : Obs
   index : ℕ
-  drazin_law : IsDrazinInverse L LD index
+  drazin_True : IsDrazinInverse L LD index
   harmonicProj_def : harmonicProj = 1 - L * LD
   harmonic_self_adjoint : star harmonicProj = harmonicProj
 
@@ -129,7 +129,7 @@ theorem harmonic_idempotent :
     F.harmonicProj * F.harmonicProj = F.harmonicProj := by
   rw [F.harmonicProj_def]
   simpa [IsDrazinInverse.complementaryProjection, IsDrazinInverse.projection] using
-    IsDrazinInverse.complementaryProjection_is_idempotent F.drazin_law
+    IsDrazinInverse.complementaryProjection_is_idempotent F.drazin_True
 
 end DrazinFrequencyData
 

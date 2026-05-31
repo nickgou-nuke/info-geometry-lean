@@ -99,11 +99,11 @@ structure MaterialResponseModel
   susceptibility : State → ℂ
 
   /-- Material law connecting the readouts. -/
-  material_law : Prop
+  material_True : Prop
 
   /-- Evidence for the material law. -/
   material_law_holds :
-    material_law
+    material_True
 
 namespace MaterialResponseModel
 
@@ -129,12 +129,12 @@ structure HessianSusceptibilityCalibration
     hessian_controls_susceptibility
 
   /-- Regular states have a valid material response in the chosen model. -/
-  regular_response_law :
+  regular_response_True :
     ∀ U : State, H.regularAt U → Prop
 
   /-- Evidence for regular-response validity. -/
-  regular_response_valid :
-    ∀ U : State, ∀ hU : H.regularAt U, regular_response_law U hU
+  regular_response_holds :
+    ∀ U : State, ∀ hU : H.regularAt U, regular_response_True U hU
 
 namespace HessianSusceptibilityCalibration
 
@@ -161,11 +161,11 @@ structure FresnelCoefficientReadout
   rp : State → ℂ
 
   /-- Fresnel boundary law for the supplied material/interface model. -/
-  fresnel_law : Prop
+  fresnel_True : Prop
 
   /-- Evidence for the Fresnel boundary law. -/
   fresnel_law_holds :
-    fresnel_law
+    fresnel_True
 
 namespace FresnelCoefficientReadout
 
@@ -191,18 +191,18 @@ structure StatePolarizationEigenResponse
   responseP : State → ℂ
 
   /-- Certificate that `responseS` is the calibrated `s` eigen-response. -/
-  s_eigen_law : Prop
+  s_eigen_True : Prop
 
   /-- Evidence for the `s` eigen-response law. -/
   s_eigen_law_holds :
-    s_eigen_law
+    s_eigen_True
 
   /-- Certificate that `responseP` is the calibrated `p` eigen-response. -/
-  p_eigen_law : Prop
+  p_eigen_True : Prop
 
   /-- Evidence for the `p` eigen-response law. -/
   p_eigen_law_holds :
-    p_eigen_law
+    p_eigen_True
 
 namespace StatePolarizationEigenResponse
 
@@ -264,7 +264,7 @@ def spJonesEventOfFresnel
   coeff0 := F.rs U
   coeff1 := F.rp U
   tag := V4Tag.id
-  coherence_law := F.fresnel_law
+  coherence_True := F.fresnel_True
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}
@@ -408,18 +408,18 @@ structure RetardanceReadout
   ellipticity : State → ℝ
 
   /-- Retardance/ellipticity law. -/
-  retardance_law : Prop
+  retardance_True : Prop
 
   /-- Evidence for the retardance/ellipticity law. -/
   retardance_law_holds :
-    retardance_law
+    retardance_True
 
   /-- Ellipticity law, separated for modules that only need amplitude/shape data. -/
-  ellipticity_law : Prop
+  ellipticity_True : Prop
 
   /-- Evidence for the ellipticity law. -/
   ellipticity_law_holds :
-    ellipticity_law
+    ellipticity_True
 
 namespace RetardanceReadout
 
@@ -440,11 +440,11 @@ structure OpticalAbsorptionReadout
   absorption : State → ℝ
 
   /-- Absorption law. -/
-  absorption_law : Prop
+  absorption_True : Prop
 
   /-- Evidence for the absorption law. -/
   absorption_law_holds :
-    absorption_law
+    absorption_True
 
 /--
 Full optical response calibration.
@@ -1150,11 +1150,11 @@ structure OpticalPTStinespringClinch
     ∀ U : State, (eventOf U).tag = V4Tag.PT
 
   /-- Model-specific law that this PT sector is the intended commutant/dark readout. -/
-  pt_commutant_sector_law : Prop
+  pt_commutant_sector_True : Prop
 
   /-- Evidence for the PT commutant-sector law. -/
-  pt_commutant_sector_certificate :
-    pt_commutant_sector_law
+  pt_commutant_sector_sorryProof :
+    pt_commutant_sector_True
 
 namespace OpticalPTStinespringClinch
 
@@ -1248,11 +1248,11 @@ structure BregmanHessianResponse
     ∀ s X, 0 ≤ hessianAt s X X
 
   /-- Certificate that this Hessian comes from the intended potential. -/
-  bregman_hessian_law : Prop
+  bregman_hessian_True : Prop
 
   /-- Evidence for the Hessian law. -/
-  bregman_hessian_certificate :
-    bregman_hessian_law
+  bregman_hessian_sorryProof :
+    bregman_hessian_True
 
 namespace BregmanHessianResponse
 
@@ -1287,11 +1287,11 @@ structure SusceptibilityDatum
   susceptibility : State → Freq → ℂ
 
   /-- Material-response law. -/
-  susceptibility_law : Prop
+  susceptibility_True : Prop
 
   /-- Evidence for the susceptibility law. -/
-  susceptibility_certificate :
-    susceptibility_law
+  susceptibility_sorryProof :
+    susceptibility_True
 
 /--
 State-indexed dielectric response calibrated from susceptibility.
@@ -1308,11 +1308,11 @@ structure StateDielectricResponseDatum
   mu : State → Freq → ℂ
 
   /-- Relation between susceptibility and dielectric response. -/
-  dielectric_law : Prop
+  dielectric_True : Prop
 
   /-- Evidence for the dielectric law. -/
-  dielectric_certificate :
-    dielectric_law
+  dielectric_sorryProof :
+    dielectric_True
 
 /--
 Complex refractive-index response.
@@ -1325,11 +1325,11 @@ structure ComplexRefractiveIndexDatum
   N : State → Freq → ℂ
 
   /-- Branch/material law connecting `N` to dielectric data. -/
-  refractive_index_law : Prop
+  refractive_index_True : Prop
 
   /-- Evidence for the refractive-index law. -/
-  refractive_index_certificate :
-    refractive_index_law
+  refractive_index_sorryProof :
+    refractive_index_True
 
 /--
 Calibration from a Bregman Hessian to material susceptibility.
@@ -1349,11 +1349,11 @@ structure BregmanHessianSusceptibilityCalibration
     SusceptibilityDatum State Freq
 
   /-- Bridge law from Hessian response to susceptibility. -/
-  hessian_controls_susceptibility_law : Prop
+  hessian_controls_susceptibility_True : Prop
 
   /-- Evidence for the bridge law. -/
-  hessian_controls_susceptibility_certificate :
-    hessian_controls_susceptibility_law
+  hessian_controls_susceptibility_sorryProof :
+    hessian_controls_susceptibility_True
 
 /--
 Fresnel coefficient readout from a complex refractive-index model.
@@ -1369,11 +1369,11 @@ structure FresnelFromRefractiveIndex
   coeff_p : State → Freq → Angle → ℂ
 
   /-- Fresnel law certificate. -/
-  fresnel_law : Prop
+  fresnel_True : Prop
 
   /-- Evidence for the Fresnel law. -/
-  fresnel_certificate :
-    fresnel_law
+  fresnel_sorryProof :
+    fresnel_True
 
 /--
 Response eigenvalues in the local polarization basis.
@@ -1389,11 +1389,11 @@ structure OpticalResponseEigenvalues
   basis : PolarizationBasis
 
   /-- Eigenvalue law/certificate. -/
-  eigenvalue_law : Prop
+  eigenvalue_True : Prop
 
   /-- Evidence for the eigenvalue law. -/
-  eigenvalue_certificate :
-    eigenvalue_law
+  eigenvalue_sorryProof :
+    eigenvalue_True
 
 /--
 Complete Hessian/Fresnel calibration.
@@ -1437,11 +1437,11 @@ structure SusceptibilityFresnelCalibration
         responseEigenvalues.eigenvalue s omega theta 1
 
   /-- End-to-end calibration law. -/
-  end_to_end_optical_response_law : Prop
+  end_to_end_optical_response_True : Prop
 
   /-- Evidence for the end-to-end calibration law. -/
-  end_to_end_optical_response_certificate :
-    end_to_end_optical_response_law
+  end_to_end_optical_response_sorryProof :
+    end_to_end_optical_response_True
 
 namespace SusceptibilityFresnelCalibration
 
@@ -1492,12 +1492,12 @@ structure HessianJonesCalibration
   tagOf : State → Freq → Angle → V4Tag
 
   /-- Coherence law for the Jones description. -/
-  coherence_law : State → Freq → Angle → Prop
+  coherence_True : State → Freq → Angle → Prop
 
   /-- Evidence for coherence. -/
   coherent :
     ∀ s : State, ∀ omega : Freq, ∀ theta : Angle,
-      coherence_law s omega theta
+      coherence_True s omega theta
 
 namespace HessianJonesCalibration
 
@@ -1519,7 +1519,7 @@ def eventOf
   coeff0 := C.response.fresnel.coeff_s s omega theta
   coeff1 := C.response.fresnel.coeff_p s omega theta
   tag := C.tagOf s omega theta
-  coherence_law := C.coherence_law s omega theta
+  coherence_True := C.coherence_True s omega theta
 
 /--
 The first Jones coefficient is the calibrated `s`/first-channel Fresnel
@@ -1589,25 +1589,25 @@ structure MetalMirrorSusceptibilityCalibration
     HessianJonesCalibration State Tangent Freq Angle
 
   /-- The event is interpreted as a metal mirror response. -/
-  metal_mirror_law : Prop
+  metal_mirror_True : Prop
 
   /-- Evidence for the metal mirror law. -/
-  metal_mirror_certificate :
-    metal_mirror_law
+  metal_mirror_sorryProof :
+    metal_mirror_True
 
   /-- Absorptive part of response controls Bregman/thermal loss. -/
-  absorption_heat_law : Prop
+  absorption_heat_True : Prop
 
   /-- Evidence for the absorption/heat law. -/
-  absorption_heat_certificate :
-    absorption_heat_law
+  absorption_heat_sorryProof :
+    absorption_heat_True
 
   /-- Reactive part of response controls retardance/ellipticity. -/
-  retardance_law : Prop
+  retardance_True : Prop
 
   /-- Evidence for the retardance law. -/
-  retardance_certificate :
-    retardance_law
+  retardance_sorryProof :
+    retardance_True
 
 namespace MetalMirrorSusceptibilityCalibration
 
@@ -1650,11 +1650,11 @@ structure VacuumResponseCalibration
     SusceptibilityDatum State Freq
 
   /-- Vacuum susceptibility law. -/
-  vacuum_susceptibility_law : Prop
+  vacuum_susceptibility_True : Prop
 
   /-- Evidence for the vacuum susceptibility law. -/
-  vacuum_susceptibility_certificate :
-    vacuum_susceptibility_law
+  vacuum_susceptibility_sorryProof :
+    vacuum_susceptibility_True
 
 /--
 Matter response calibration.
@@ -1670,11 +1670,11 @@ structure MatterResponseCalibration
     SusceptibilityFresnelCalibration State Tangent Freq Angle
 
   /-- Matter response law. -/
-  matter_response_law : Prop
+  matter_response_True : Prop
 
   /-- Evidence for the matter response law. -/
-  matter_response_certificate :
-    matter_response_law
+  matter_response_sorryProof :
+    matter_response_True
 
 /--
 Compatibility predicate for the material-response Hessian/Fresnel bridge.

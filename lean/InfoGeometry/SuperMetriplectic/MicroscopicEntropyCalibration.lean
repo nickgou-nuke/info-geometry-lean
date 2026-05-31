@@ -41,7 +41,7 @@ structure BlackHoleThermodynamics (P : PlanckScaleCalibration) (State : Type*) w
   /-- Mass field used in the horizon temperature relation. -/
   mass : State → ℝ
   /-- Area law for valid states. -/
-  area_entropy_law :
+  area_entropy_True :
     ∀ s, valid_state s → entropy s = area s / (4 * P.planckLengthSq)
   /-- Temperature normalization for valid states. -/
   temperature : State → ℝ
@@ -79,7 +79,7 @@ theorem temperature_pos_of_valid_state
 /-- Entropy nonnegativity from area nonnegativity and the area law. -/
 theorem entropy_nonneg_of_valid_state
     (s : State) (hs : BH.valid_state s) : 0 ≤ BH.entropy s := by
-  rw [BH.area_entropy_law s hs]
+  rw [BH.area_entropy_True s hs]
   have hden : 0 < 4 * P.planckLengthSq := by
     exact mul_pos (by norm_num) P.planckLengthSq_pos
   exact div_nonneg (BH.area_nonneg s hs) hden.le
@@ -136,7 +136,7 @@ theorem area_law_eq_log_card
   calc
     BH.area s / (4 * P.planckLengthSq)
         = BH.entropy s := by
-            exact (BH.area_entropy_law s hs).symm
+            exact (BH.area_entropy_True s hs).symm
     _ = C.microEntropy s := C.entropy_eq_microEntropy s hs
     _ = Real.log ((C.microstatesOf s).card : ℝ) :=
       C.valid_microEntropy s hs
@@ -184,7 +184,7 @@ theorem entropy_area_count_packet
       BH.area s / (4 * P.planckLengthSq) =
         Real.log ((C.microstatesOf s).card : ℝ) := by
   have hArea : BH.entropy s = BH.area s / (4 * P.planckLengthSq) :=
-    BH.area_entropy_law s hs
+    BH.area_entropy_True s hs
   have hCount : BH.entropy s = Real.log ((C.microstatesOf s).card : ℝ) :=
     entropy_eq_log_card (C := C) s hs
   exact ⟨hArea, hCount, by rw [← hArea, hCount]⟩

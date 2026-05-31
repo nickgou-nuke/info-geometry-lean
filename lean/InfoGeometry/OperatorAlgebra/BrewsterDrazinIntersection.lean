@@ -142,9 +142,9 @@ structure BrewsterDrazinCalibration
   Calibration law connecting the Jones coefficient collapse to the operator
   killed sector.
   -/
-  coefficient_collapse_law : Prop
-  coefficient_collapse_certificate :
-    coefficient_collapse_law
+  coefficient_collapse_True : Prop
+  coefficient_collapse_sorryProof :
+    coefficient_collapse_True
 
 namespace BrewsterDrazinCalibration
 
@@ -201,9 +201,9 @@ structure HessianDegeneracyDatum
   singularDirection : State → Prop
 
   /-- Calibration law for the Hessian degeneracy. -/
-  degeneracy_law : Prop
-  degeneracy_certificate :
-    degeneracy_law
+  degeneracy_True : Prop
+  degeneracy_sorryProof :
+    degeneracy_True
 
 /--
 Bridge saying that Hessian degeneracy is calibrated to Brewster collapse.

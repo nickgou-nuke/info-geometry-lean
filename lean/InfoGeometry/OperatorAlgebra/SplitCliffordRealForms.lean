@@ -342,17 +342,17 @@ variable {X : Type*}
 variable (G : GWRealFormCriterion X)
 
 /-- Measure-equivalence witness is available. -/
-theorem measure_equivalence_valid :
+theorem measure_equivalence_holds :
     G.measure_equivalent_under_complement :=
   G.splitting_hypotheses_hold.1
 
 /-- Multiplicity-symmetry witness is available. -/
-theorem multiplicity_symmetry_valid :
+theorem multiplicity_symmetry_holds :
     G.multiplicity_symmetric :=
   G.splitting_hypotheses_hold.2.1
 
 /-- Measurable real-cocycle witness is available. -/
-theorem measurable_real_cocycle_valid :
+theorem measurable_real_cocycle_holds :
     G.measurable_real_cocycle :=
   G.splitting_hypotheses_hold.2.2
 

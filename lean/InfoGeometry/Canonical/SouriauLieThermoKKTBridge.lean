@@ -1513,6 +1513,46 @@ theorem kktStationarity_packet
         C.kktStationarity.finitePartitionAdmissible :=
   C.kktStationarity.packet hCone hStationarity hSlack hFinite
 
+/--
+Proof-carrying witness for the local `kktStationarity` shadow of
+`SouriauLieThermoKKTContext`.
+
+This narrows the explicit four-hypothesis packet to a single constructive object
+whose shadow is definitionally tied back to `C.kktStationarity`.
+-/
+@[rep_depth thermo]
+structure KKTStationarityWitness where
+  witness : KKTEntropyStationarityShadow.Witness
+  shadow_eq : witness.shadow = C.kktStationarity
+
+namespace KKTStationarityWitness
+
+/-- Recover the local KKT stationarity packet from the proof-carrying witness. -/
+@[rep_depth thermo]
+theorem packet (W : C.KKTStationarityWitness) :
+    C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
+      C.kktStationarity.complementarySlackness ∧
+        C.kktStationarity.finitePartitionAdmissible := by
+  rw [← W.shadow_eq]
+  exact W.witness.packet
+
+end KKTStationarityWitness
+
+-- theorem-class: bridge
+/--
+Proof-carrying witness route for the local KKT stationarity packet.
+
+This removes the four separate explicit KKT hypotheses in favor of one
+constructive witness object on the same theorem surface.
+-/
+@[rep_depth thermo]
+theorem kktStationarity_packet_of_witness
+    (W : C.KKTStationarityWitness) :
+    C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
+      C.kktStationarity.complementarySlackness ∧
+        C.kktStationarity.finitePartitionAdmissible :=
+  W.packet
+
 -- theorem-class: bridge
 /-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/
 @[rep_depth thermo]

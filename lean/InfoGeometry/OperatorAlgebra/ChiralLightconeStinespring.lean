@@ -135,9 +135,9 @@ structure ChiralLightconeStage
     ∀ x : State, x ∈ rightCone → mirror x ∈ leftCone
 
   /-- Interpretation law: the commutant cone is the hidden mirrored sector. -/
-  commutant_law : Prop
-  commutant_certificate :
-    commutant_law
+  commutant_True : Prop
+  commutant_sorryProof :
+    commutant_True
 
 namespace ChiralLightconeStage
 
@@ -229,9 +229,9 @@ structure StinespringTomitaClinch
   Calibration law: this is the intended Tomita/Stinespring interpretation of
   absorption as hidden-sector transfer.
   -/
-  clinch_law : Prop
-  clinch_certificate :
-    clinch_law
+  clinch_True : Prop
+  clinch_sorryProof :
+    clinch_True
 
 namespace StinespringTomitaClinch
 
@@ -396,22 +396,22 @@ structure ChiralLightconeRouting
 
   observed left-cone loss is routed into the hidden right-cone branch.
   -/
-  left_visible_routes_to_right_hidden_law : Prop
+  left_visible_routes_to_right_hidden_True : Prop
 
   /-- Proof of the left-to-right routing law. -/
   left_visible_routes_to_right_hidden :
-    left_visible_routes_to_right_hidden_law
+    left_visible_routes_to_right_hidden_True
 
   /--
   Opposite routing law:
 
   observed right-cone loss is routed into the hidden left-cone branch.
   -/
-  right_visible_routes_to_left_hidden_law : Prop
+  right_visible_routes_to_left_hidden_True : Prop
 
   /-- Proof of the right-to-left routing law. -/
   right_visible_routes_to_left_hidden :
-    right_visible_routes_to_left_hidden_law
+    right_visible_routes_to_left_hidden_True
 
 /--
 A stronger, directly usable chiral-lightcone routing law for a concrete
@@ -495,11 +495,11 @@ structure ChiralLightconeStinespringClinch
   Intended meaning: the hidden branch is the commutant/Tomita mirror branch,
   not an arbitrary environment.
   -/
-  tomita_cpt_calibration_law : Prop
+  tomita_cpt_calibration_True : Prop
 
   /-- Proof of the Tomita/CPT calibration law. -/
   tomita_cpt_calibration :
-    tomita_cpt_calibration_law
+    tomita_cpt_calibration_True
 
 namespace ChiralLightconeStinespringClinch
 

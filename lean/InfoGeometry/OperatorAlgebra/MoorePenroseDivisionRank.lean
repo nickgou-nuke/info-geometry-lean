@@ -38,7 +38,7 @@ structure MoorePenroseVolumeCalibration (Op State : Type*) where
   /-- Model-specific law saying the chosen Moore--Penrose support projector is valid. -/
   projectorLaw : State -> Prop
   /-- The projector law holds on valid states. -/
-  projectorLaw_valid :
+  projectorLaw_holds :
     ∀ s : State, functional.readout.valid s -> projectorLaw s
   /-- Core metric link: Drazin stable volume equals trace of the MP projector. -/
   volume_eq_mp_trace :
@@ -51,10 +51,10 @@ variable {Op State : Type*}
 variable (C : MoorePenroseVolumeCalibration Op State)
 
 /-- The Moore--Penrose projector law is available on valid states. -/
-theorem projectorLaw_holds
+theorem projectorLaw_holds_of_valid
     (s : State) (hs : C.functional.readout.valid s) :
     C.projectorLaw s :=
-  C.projectorLaw_valid s hs
+  C.projectorLaw_holds s hs
 
 /-- Entropy expressed through the Moore--Penrose trace/rank readout. -/
 theorem entropy_eq_log_mp_trace
@@ -149,23 +149,23 @@ variable (L : MoorePenroseDivisionIdentityLaw Op State)
 /-- The MP trace/rank is at least one on valid division fibers. -/
 theorem trace_ge_one_of_division
     (s : State)
-    (hs_valid : L.calibration.functional.readout.valid s)
+    (hs_holds : L.calibration.functional.readout.valid s)
     (hs_div : L.faithfulTrace.isDivisionAlgebraFiber s)
     (hs_rep : L.faithfulTrace.representedNontrivially s) :
     1 ≤ L.calibration.trace (L.calibration.mpProjector s) := by
-  rw [L.mpProjector_eq_identity_of_division s hs_valid hs_div hs_rep]
+  rw [L.mpProjector_eq_identity_of_division s hs_holds hs_div hs_rep]
   rw [← L.faithfulTrace_trace_eq]
   exact L.faithfulTrace.trace_identity_ge_one s hs_div hs_rep
 
 /-- Entropy is nonnegative on valid division fibers by faithful MP rank. -/
 theorem entropy_nonneg_of_division_identity
     (s : State)
-    (hs_valid : L.calibration.functional.readout.valid s)
+    (hs_holds : L.calibration.functional.readout.valid s)
     (hs_div : L.faithfulTrace.isDivisionAlgebraFiber s)
     (hs_rep : L.faithfulTrace.representedNontrivially s) :
     0 ≤ L.calibration.functional.entropy s :=
-  L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_valid
-    (L.trace_ge_one_of_division s hs_valid hs_div hs_rep)
+  L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_holds
+    (L.trace_ge_one_of_division s hs_holds hs_div hs_rep)
 
 end MoorePenroseDivisionIdentityLaw
 
@@ -205,12 +205,12 @@ Drazin-extracted entropy is nonnegative.
 -/
 theorem entropy_nonneg_of_division_fiber
     (s : State)
-    (hs_valid : L.calibration.functional.readout.valid s)
+    (hs_holds : L.calibration.functional.readout.valid s)
     (hs_div : L.isDivisionAlgebraFiber s)
     (hs_rep : L.representedNontrivially s) :
     0 ≤ L.calibration.functional.entropy s :=
-  L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_valid
-    (L.trace_ge_one_of_division s hs_valid hs_div hs_rep)
+  L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_holds
+    (L.trace_ge_one_of_division s hs_holds hs_div hs_rep)
 
 end DivisionAlgebraFiberRankCertificate
 
@@ -247,21 +247,21 @@ its calibrated Drazin entropy is nonnegative.
 -/
 theorem entropy_nonneg_of_division_fiber
     (s : State)
-    (hs_valid : L.calibration.functional.readout.valid s)
+    (hs_holds : L.calibration.functional.readout.valid s)
     (hs_div : L.isDivisionAlgebraFiber s) :
     0 ≤ L.calibration.functional.entropy s := by
-  exact L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_valid
-    (L.trace_ge_one_of_division s hs_valid hs_div)
+  exact L.calibration.entropy_nonneg_of_one_le_mp_trace s hs_holds
+    (L.trace_ge_one_of_division s hs_holds hs_div)
 
 /-- Entropy of a division fiber as the log of its MP trace/rank readout. -/
 theorem entropy_eq_log_mp_trace_of_division_fiber
     (s : State)
-    (hs_valid : L.calibration.functional.readout.valid s)
+    (hs_holds : L.calibration.functional.readout.valid s)
     (_hs_div : L.isDivisionAlgebraFiber s) :
     L.calibration.functional.entropy s =
       L.calibration.functional.kB *
         Real.log (L.calibration.trace (L.calibration.mpProjector s)) :=
-  L.calibration.entropy_eq_log_mp_trace s hs_valid
+  L.calibration.entropy_eq_log_mp_trace s hs_holds
 
 end DivisionAlgebraFiberLemma
 

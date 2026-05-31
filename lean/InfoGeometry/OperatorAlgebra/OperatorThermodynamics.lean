@@ -259,7 +259,7 @@ structure ObserverReduction
   commutant_inaccessible : Prop
 
   /-- Selected restriction/reduction backend is valid. -/
-  reduction_backend_valid : Prop
+  reduction_backend_holds : Prop
 
 namespace ObserverReduction
 
@@ -682,7 +682,7 @@ structure ModularThermodynamicsOwnerTarget
   /-- Supplied modular KMS witness. -/
   witness : ModularKMSDatum Op
 
-theorem ModularThermodynamicsOwnerTarget.witness_law
+theorem ModularThermodynamicsOwnerTarget.witness_True
     {Op : Type*} [Mul Op]
     (h : ModularThermodynamicsOwnerTarget Op) :
     Nonempty (ModularKMSDatum Op) :=
@@ -694,7 +694,7 @@ structure EmergentThermalRadiationOwnerTarget
   /-- Supplied calibrated thermal-radiation witness. -/
   witness : EmergentThermalRadiation Op
 
-theorem EmergentThermalRadiationOwnerTarget.witness_law
+theorem EmergentThermalRadiationOwnerTarget.witness_True
     {Op : Type*} [Mul Op]
     (h : EmergentThermalRadiationOwnerTarget Op) :
     Nonempty (EmergentThermalRadiation Op) :=
@@ -1109,7 +1109,7 @@ structure ObserverReduction
   finite partial trace, restriction, conditional expectation, modular weight,
   or core trace.
   -/
-  reduction_backend_valid : Prop
+  reduction_backend_holds : Prop
 
 namespace ObserverReduction
 

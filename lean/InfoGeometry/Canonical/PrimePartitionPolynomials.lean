@@ -446,8 +446,8 @@ structure LocalFugacityProjectionWitness
     Fin N → ℂ → ℂ
   globalFugacity :
     ℂ → ℂ
-  projection_law : Prop
-  preserves_unit_circle_law : Prop
+  projection_True : Prop
+  preserves_unit_circle_True : Prop
 
 namespace LocalFugacityProjectionWitness
 
@@ -458,7 +458,7 @@ def projection
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
     Prop :=
-  W.projection_law
+  W.projection_True
 
 /-- Re-export of the supplied unit-circle preservation law. -/
 @[rep_depth thermo]
@@ -467,7 +467,7 @@ def preserves_unit_circle
     {D : FinitePrimeChainData N}
     (W : LocalFugacityProjectionWitness N D) :
     Prop :=
-  W.preserves_unit_circle_law
+  W.preserves_unit_circle_True
 
 end LocalFugacityProjectionWitness
 

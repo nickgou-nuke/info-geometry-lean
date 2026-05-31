@@ -178,8 +178,7 @@ theorem nilpotentFlowM2_flux_vacuum
     (t : ℝ) :
     (nilpotentFlowM2 t - (1 : M2R)) * vac = 0 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [nilpotentFlowM2, N, vac, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
+    norm_num [nilpotentFlowM2, N, vac, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- The nilpotent-flow flux functional is zero for every `t`. -/
 theorem nilpotentFlowM2_flux_functional_zero

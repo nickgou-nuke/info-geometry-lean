@@ -179,6 +179,38 @@ theorem flow_add_apply
       B.flowDatum.flow s (B.flowDatum.flow t A) :=
   B.boundedFlow.modularFlow.flow_add s t A
 
+/-- Re-export the bounded KMS analytic boundary certificate. -/
+@[rep_depth thermo]
+theorem kms_boundary_holds :
+    B.kms.boundaryCondition :=
+  B.kms.boundaryCondition_holds
+
+/--
+Proof-carrying witness for real-time flow invariance on the broad bounded KMS
+bridge.
+
+This packages the exact reverse-route hypothesis needed to upgrade the broad
+bridge into the narrower `KMSState` surface, so callers do not have to pass the
+raw invariance proposition as a loose theorem argument.
+-/
+@[rep_depth thermo]
+structure FlowInvariantWitness : Prop where
+  flow_invariant :
+    ∀ t : ℝ, ∀ A : EndH,
+      B.state.eval (B.flowDatum.flow t A) = B.state.eval A
+
+namespace FlowInvariantWitness
+
+/-- Recover the real-time invariance proposition from the witness packet. -/
+@[rep_depth thermo]
+theorem flow_invariant_apply
+    (W : FlowInvariantWitness (B := B))
+    (t : ℝ) (A : EndH) :
+    B.state.eval (B.flowDatum.flow t A) = B.state.eval A :=
+  W.flow_invariant t A
+
+end FlowInvariantWitness
+
 /--
 Build the narrowed integrated KMS packet from the broad bounded bridge once
 real-time flow invariance is supplied explicitly.
@@ -201,6 +233,19 @@ def toMinimalBoundedKMSConditionBridge
     kms := B.kms
   }
 
+/--
+Witness-routed reverse constructor for the narrowed bounded KMS bridge.
+
+This removes the loose explicit `hInvariant` theorem argument from the reverse
+route when the caller already owns the proof-carrying
+`FlowInvariantWitness` packet.
+-/
+@[rep_depth thermo]
+def toMinimalBoundedKMSConditionBridgeOfWitness
+    (W : FlowInvariantWitness (B := B)) :
+    MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra) :=
+  B.toMinimalBoundedKMSConditionBridge (FlowInvariantWitness.flow_invariant W)
+
 /-- The direct narrowed reverse route recovers the legacy state definitionally. -/
 @[rep_depth thermo]
 theorem toMinimalBoundedKMSConditionBridge_state_eq
@@ -208,6 +253,13 @@ theorem toMinimalBoundedKMSConditionBridge_state_eq
       ∀ t : ℝ, ∀ A : EndH,
         B.state.eval (B.flowDatum.flow t A) = B.state.eval A) :
     (B.toMinimalBoundedKMSConditionBridge hInvariant).kms.state = B.state :=
+  rfl
+
+/-- Witness-routed state readback for the narrowed bounded KMS bridge. -/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_state_eq_of_witness
+    (W : FlowInvariantWitness (B := B)) :
+    (B.toMinimalBoundedKMSConditionBridgeOfWitness W).kms.state = B.state :=
   rfl
 
 /-- The direct narrowed reverse route round-trips back to the broad bridge. -/
@@ -233,6 +285,20 @@ theorem toMinimalBoundedKMSConditionBridge_of_flow_invariant
   exact ⟨B.toMinimalBoundedKMSConditionBridge hInvariant, rfl⟩
 
 /--
+Witness-routed compatibility wrapper for the narrowed bounded KMS bridge.
+
+This theorem removes the loose explicit flow-invariance argument from the
+existential reverse route when the caller already owns the
+`FlowInvariantWitness` packet.
+-/
+@[rep_depth thermo]
+theorem toMinimalBoundedKMSConditionBridge_of_flowInvariantWitness
+    (W : FlowInvariantWitness (B := B)) :
+    ∃ M : MinimalBoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra),
+      M.kms.state = B.state := by
+  exact ⟨B.toMinimalBoundedKMSConditionBridgeOfWitness W, rfl⟩
+
+/--
 The bounded KMS socket inherits the Drazin regular-sector commutant stability
 from the bounded modular-flow calibration when that flow fixes `P_D`.
 -/
@@ -249,6 +315,52 @@ theorem flow_preserves_commuting_with_spectralProjector
   exact
     B.boundedFlow.modularFlow_preserves_commuting_with_spectralProjector
       hFix A hComm t
+
+/--
+Proof-carrying witness that the bounded modular flow fixes the Drazin spectral
+projector.
+
+This packages the exact owner hypothesis consumed by
+`flow_preserves_commuting_with_spectralProjector`, so downstream users on the
+bounded KMS lane can route through a named constructive packet instead of a
+loose proposition argument.
+-/
+@[rep_depth thermo]
+structure FlowFixesSpectralProjectorWitness : Prop where
+  flow_fixes_spectralProjector : B.boundedFlow.FlowFixesSpectralProjector
+
+namespace FlowFixesSpectralProjectorWitness
+
+/-- Recover the owner spectral-projector-fixing hypothesis from the witness packet. -/
+@[rep_depth thermo]
+theorem flow_fixes_spectralProjector_apply
+    (W : FlowFixesSpectralProjectorWitness (B := B)) :
+    B.boundedFlow.FlowFixesSpectralProjector :=
+  W.flow_fixes_spectralProjector
+
+end FlowFixesSpectralProjectorWitness
+
+/--
+Witness-routed spectral-projector commutant preservation for the bounded KMS
+flow.
+
+This removes the loose explicit `hFix` argument from the theorem-facing route
+when the caller already owns the proof-carrying
+`FlowFixesSpectralProjectorWitness` packet.
+-/
+@[rep_depth thermo]
+theorem flow_preserves_commuting_with_spectralProjector_of_witness
+    (W : FlowFixesSpectralProjectorWitness (B := B))
+    (A : EndH)
+    (hComm :
+      B.boundedFlow.spectralProjector * A =
+        A * B.boundedFlow.spectralProjector)
+    (t : ℝ) :
+    B.boundedFlow.spectralProjector * B.flowDatum.flow t A =
+      B.flowDatum.flow t A * B.boundedFlow.spectralProjector := by
+  exact
+    B.flow_preserves_commuting_with_spectralProjector
+      W.flow_fixes_spectralProjector A hComm t
 
 /--
 The Massieu/partition-potential shift is compatible with the bounded KMS flow

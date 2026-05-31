@@ -107,7 +107,7 @@ structure ProjectiveRelativeEntropyCalibration
     ∀ A : Finset ℕ, RelativeEntropyWitness A
 
   /-- The state readout agrees with the supplied finite witness. -/
-  readout_eq_witness :
+  readout_eq_sorry :
     ∀ A : Finset ℕ, ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
       relativeReadout (stateOfFinset A) u =
         (witnessOfFinset A).relativeReadout u
@@ -123,14 +123,14 @@ theorem readout_eq_density_difference
     C.relativeReadout (C.stateOfFinset A) u =
       primitiveInvertedPartitionDensity A u -
         arithmeticPrimeInvertedPartitionDensity A u := by
-  rw [C.readout_eq_witness A u hu]
+  rw [C.readout_eq_sorry A u hu]
   exact (C.witnessOfFinset A).readout_eq_density_difference hu
 
 /-- The calibrated relative readout is nonnegative when supplied by the witness. -/
 theorem readout_nonneg
     (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     0 ≤ C.relativeReadout (C.stateOfFinset A) u := by
-  rw [C.readout_eq_witness A u hu]
+  rw [C.readout_eq_sorry A u hu]
   exact (C.witnessOfFinset A).readout_nonneg hu
 
 /-- Calibrated nonnegativity gives pointwise prime-density domination. -/

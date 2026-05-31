@@ -251,15 +251,15 @@ structure RealMajoranaWittenIndexGate
   parity : Operator
   pfaffianReadout : PfaffianReadout
   zeroModeReadout : ZeroModeReadout
-  square_law : Prop
-  parity_anticommutation_law : Prop
-  pfaffian_comparison_law : Prop
-  zero_mode_index_law : Prop
+  square_True : Prop
+  parity_anticommutation_True : Prop
+  pfaffian_comparison_True : Prop
+  zero_mode_index_True : Prop
   certificate :
-    square_law ∧
-      parity_anticommutation_law ∧
-        pfaffian_comparison_law ∧
-          zero_mode_index_law
+    square_True ∧
+      parity_anticommutation_True ∧
+        pfaffian_comparison_True ∧
+          zero_mode_index_True
 
 namespace RealMajoranaWittenIndexGate
 
@@ -267,21 +267,21 @@ namespace RealMajoranaWittenIndexGate
 theorem square
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.square_law :=
+    G.square_True :=
   G.certificate.1
 
 /-- Re-export of the supplied Pfaffian comparison law. -/
 theorem pfaffian_comparison
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.pfaffian_comparison_law :=
+    G.pfaffian_comparison_True :=
   G.certificate.2.2.1
 
 /-- Re-export of the supplied zero-mode index law. -/
 theorem zero_mode_index
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.zero_mode_index_law :=
+    G.zero_mode_index_True :=
   G.certificate.2.2.2
 
 end RealMajoranaWittenIndexGate
@@ -298,7 +298,7 @@ structure PrimeSpinorWittenIndexPacket
     InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.PrimeMajoranaCARGate PrimeLabel Operator
   wittenGate :
     RealMajoranaWittenIndexGate Unit Operator PfaffianReadout ZeroModeReadout
-  finite_readout_law :
+  finite_readout_True :
     finiteRealSpinorWittenReadout modes amplitude =
       finitePrimeWeylDenominator modes
         (fun p => scalarWeightFromSpinor (amplitude p))
@@ -314,7 +314,7 @@ theorem finite_readout
     finiteRealSpinorWittenReadout P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
         (fun p => scalarWeightFromSpinor (P.amplitude p)) :=
-  P.finite_readout_law
+  P.finite_readout_True
 
 end PrimeSpinorWittenIndexPacket
 

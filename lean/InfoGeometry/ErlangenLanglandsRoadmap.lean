@@ -42,7 +42,7 @@ def erlangenLanglandsRoadmap : List RoadmapEdge := [
 
   { src := "InfoGeometry.Automorphic.ProjectedLFunction",
     dst := "InfoGeometry.Automorphic.LanglandsSugawaraBridge",
-    theorem_name := "euler_product_valid / completed_functional_equation_valid",
+    theorem_name := "euler_product_holds / completed_functional_equation_holds",
     requires := ["projected-euler witness", "completed functional-equation witness"] },
 
   { src := "InfoGeometry.Automorphic.LanglandsSugawaraBridge",

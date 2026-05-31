@@ -849,5 +849,35 @@ theorem nilpotent_mul_core_eq_zero (h : IsDrazinInverse a b k) :
     _ = a * a * (Q * P) := by noncomm_ring
     _ = 0 := by rw [hOrth]; simp
 
+/-- The earlier Fitting regular summand is the later Drazin core notation. -/
+@[rep_depth krein]
+theorem fittingRegularPart_eq_core :
+    fittingRegularPart a b = core a b := by
+  unfold fittingRegularPart core projection
+  noncomm_ring
+
+/-- The earlier Fitting nilpotent summand is the later Drazin nilpotent notation. -/
+@[rep_depth krein]
+theorem fittingNilpotentPart_eq_nilpotent :
+    fittingNilpotentPart a b = nilpotent a b := by
+  rw [nilpotent_eq_mul_complementaryProjection]
+  rfl
+
+/-- The Fitting regular summand annihilates the Fitting nilpotent summand on the left. -/
+@[rep_depth krein]
+theorem fittingRegularPart_mul_fittingNilpotentPart_eq_zero
+    (h : IsDrazinInverse a b k) :
+    fittingRegularPart a b * fittingNilpotentPart a b = 0 := by
+  rw [fittingRegularPart_eq_core, fittingNilpotentPart_eq_nilpotent]
+  exact core_mul_nilpotent_eq_zero h
+
+/-- The Fitting nilpotent summand annihilates the Fitting regular summand on the left. -/
+@[rep_depth krein]
+theorem fittingNilpotentPart_mul_fittingRegularPart_eq_zero
+    (h : IsDrazinInverse a b k) :
+    fittingNilpotentPart a b * fittingRegularPart a b = 0 := by
+  rw [fittingRegularPart_eq_core, fittingNilpotentPart_eq_nilpotent]
+  exact nilpotent_mul_core_eq_zero h
+
 end IsDrazinInverse
 end InfoGeometry.Canonical.Drazin

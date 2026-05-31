@@ -194,10 +194,11 @@ def eraseCertifiedMarkerLeaf (declName : Name) : String :=
   (declNameLeaf declName).replace "certified" ""
 
 /-- Strip leading binders from a declaration type. -/
-partial def stripForall (e : Expr) : Expr :=
-  match e.consumeMData with
+def stripForall (e : Expr) : Expr :=
+  match e with
   | .forallE _ _ b _ => stripForall b
-  | e => e
+  | .mdata _ b       => stripForall b
+  | e                => e
 
 /-- Whether an expression is syntactically `Prop` as a type. -/
 def isPropSortExpr (e : Expr) : Bool :=

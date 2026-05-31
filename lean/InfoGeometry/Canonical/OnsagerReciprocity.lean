@@ -494,12 +494,14 @@ variable {P : PotentialDatum (E := E)} {comparison : H₂} {A : EndH}
 
 @[rep_depth transport]
 theorem probeFaithful
+    (comparison : H₂) (A : EndH)
     (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
     InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P :=
   W.hFaithful
 
 @[rep_depth transport]
 theorem firstVariation_eq_zero
+    (comparison : H₂) (A : EndH)
     (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
     InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0 :=
   W.hFirst

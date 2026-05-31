@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
+import InfoGeometry.Categorical.FibonacciBraiding
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
 
 /-!
@@ -17,7 +18,9 @@ finite algebraic layers:
 * lifted boundary actions commute with the algebraic double-cover deck
   involution;
 * four-anyon fusion matrices satisfy the finite involutivity/determinant
-  readbacks already proved in the canonical layer.
+  readbacks already proved in the canonical layer;
+* the matrix packet carrying an explicit Artin witness is imported from the
+  categorical layer.
 
 No analytic continuation.
 No conformal-block analytic construction.

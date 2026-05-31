@@ -18,7 +18,7 @@ from pathlib import Path
 TOP_DECL_RE = re.compile(
     r"^\s*(?:@\[[^\n]+\]\s*)?(structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
-FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.+?)\s*$")
+FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.*?)\s*$")
 TOP_ANY_DECL_RE = re.compile(
     r"^\s*(?:@\[[^\n]+\]\s*)?(axiom|theorem|lemma|def|abbrev|structure|class)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
@@ -66,14 +66,14 @@ def read_current(path: str) -> str:
         return ""
 
 
-def structure_fields(src: str) -> dict[str, set[str]]:
-    fields: dict[str, set[str]] = {}
+def structure_fields(src: str) -> dict[str, dict[str, str]]:
+    fields: dict[str, dict[str, str]] = {}
     current: str | None = None
     for line in src.splitlines():
         m = TOP_DECL_RE.match(line)
         if m:
             current = m.group(2)
-            fields.setdefault(current, set())
+            fields.setdefault(current, {})
             continue
         if current is not None:
             if END_RE.match(line) and not line.startswith((" ", "\t")):
@@ -81,17 +81,17 @@ def structure_fields(src: str) -> dict[str, set[str]]:
                 m2 = TOP_DECL_RE.match(line)
                 if m2:
                     current = m2.group(2)
-                    fields.setdefault(current, set())
+                    fields.setdefault(current, {})
                 continue
             fm = FIELD_RE.match(line)
             if fm and not line.lstrip().startswith(("--", "/-", "where")):
-                fields.setdefault(current, set()).add(fm.group(1))
+                fields.setdefault(current, {})[fm.group(1)] = fm.group(2).strip()
     return fields
 
 
-def declaration_namespaces(src: str) -> dict[str, tuple[str, ...]]:
+def declaration_namespaces(src: str) -> dict[str, list[tuple[str, ...]]]:
     namespaces: list[str] = []
-    result: dict[str, tuple[str, ...]] = {}
+    result: dict[str, list[tuple[str, ...]]] = {}
     for line in src.splitlines():
         ns = NAMESPACE_RE.match(line)
         if ns:
@@ -99,7 +99,7 @@ def declaration_namespaces(src: str) -> dict[str, tuple[str, ...]]:
             continue
         m = TOP_ANY_DECL_RE.match(line.strip())
         if m:
-            result.setdefault(m.group(2), tuple(namespaces))
+            result.setdefault(m.group(2), []).append(tuple(namespaces))
             continue
         e = END_NAMESPACE_RE.match(line)
         if e and namespaces:
@@ -113,6 +113,14 @@ def declaration_namespaces(src: str) -> dict[str, tuple[str, ...]]:
 
 def is_proxy_namespace(namespaces: tuple[str, ...]) -> bool:
     return any(PROXY_DECL_NAME_RE.search(part) for part in namespaces)
+
+
+def has_proxy_namespace(namespace_options: list[tuple[str, ...]]) -> bool:
+    return any(is_proxy_namespace(namespaces) for namespaces in namespace_options)
+
+
+def is_proxy_field(name: str, typ: str) -> bool:
+    return bool(PROXY_DECL_NAME_RE.search(name) or PROXY_DECL_NAME_RE.search(typ))
 
 
 def lean_pathspecs(paths: list[str]) -> list[str]:
@@ -260,7 +268,8 @@ def main() -> int:
     )
     debt_comment_files: set[str] = set()
     before_text_cache: dict[str, str] = {}
-    namespace_cache: dict[str, dict[str, tuple[str, ...]]] = {}
+    namespace_cache: dict[str, dict[str, list[tuple[str, ...]]]] = {}
+    added_field_cache: dict[str, set[str]] = {}
 
     for path, line_no, line in added_lines:
         loc = f"{path}:{line_no}" if line_no is not None else path
@@ -296,8 +305,19 @@ def main() -> int:
                 else read_at(args.base, path)
             )
             namespace_cache[path] = declaration_namespaces(before_text_cache[path])
-        if is_proxy_namespace(namespace_cache[path].get(name, ())):
+        if has_proxy_namespace(namespace_cache[path].get(name, [])):
             continue
+        if kind in {"def", "abbrev"}:
+            if path not in added_field_cache:
+                after_text = read_current(path)
+                before_fields = structure_fields(before_text_cache[path])
+                after_fields = structure_fields(after_text)
+                added_fields: set[str] = set()
+                for struct_name in after_fields.keys() & before_fields.keys():
+                    added_fields.update(after_fields[struct_name].keys() - before_fields[struct_name].keys())
+                added_field_cache[path] = added_fields
+            if name in added_field_cache[path]:
+                continue
         if not PROXY_DECL_NAME_RE.search(name):
             failures.append(
                 f"{path}: deleted non-proxy Lean declaration `{kind} {name}` during proof cleanup"
@@ -317,7 +337,17 @@ def main() -> int:
             if not args.allow_new_structures:
                 failures.append(f"{path}: added new structure/class `{struct_name}` during proof cleanup")
         for struct_name in sorted(after.keys() & before.keys()):
-            added = sorted(after[struct_name] - before[struct_name])
+            before_fields = before[struct_name]
+            after_fields = after[struct_name]
+            added = sorted(after_fields.keys() - before_fields.keys())
+            removed = sorted(before_fields.keys() - after_fields.keys())
+            removed_proxy_field = any(
+                is_proxy_field(field, before_fields[field]) for field in removed
+            )
+            added = [
+                field for field in added
+                if not (removed_proxy_field and not is_proxy_field(field, after_fields[field]))
+            ]
             if added:
                 failures.append(
                     f"{path}: added fields to existing structure/class `{struct_name}`: {', '.join(added)}"

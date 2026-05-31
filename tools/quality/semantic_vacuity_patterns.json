@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "purpose": "Living registry of semantic vacuity forms discovered during proof-only cleanup. Extend this file when a new proof-debt-hiding pattern is found.",
+  "categories": {
+    "proof_carrier_field": {
+      "severity": "error",
+      "description": "A structure/class field carries a proposition, equality, witness, law, certificate, guard, socket, validity claim, or readback instead of proving an owner-side theorem.",
+      "name_regex": "(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof|sorryProof|True|preserved|compatible|holds|condition|property|inv)(?:_|$)",
+      "type_regex": "\\bProp\\b|=|↔|<->|≤|>=|≥|<|>|∈|∉|⊆|⊂|⊇|∧|∨|∀|∃"
+    },
+    "proof_like_field_type": {
+      "severity": "warning",
+      "description": "A structure/class field has proposition/equality/order/quantifier shape. This includes split proof cargo such as J_sq : J * J = 1 even when the field name avoids witness vocabulary."
+    },
+    "carrier_witness_name": {
+      "severity": "error",
+      "description": "A structure/class name itself advertises witness/certificate/socket/guard/proxy packaging.",
+      "name_regex": "(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet)"
+    },
+    "projection_reexport": {
+      "severity": "error",
+      "description": "A theorem/lemma is only a projection or direct re-export of a proof-carrying field/hypothesis.",
+      "proof_regex": "\\b[A-Za-z0-9_'.]+_(?:law|laws|certificate|cert|witness|valid|guard|socket|readback|proof|sorryProof|True)\\b"
+    },
+    "trivial_surface": {
+      "severity": "warning",
+      "description": "A promoted theorem/lemma has only a trivial/rfl/exact-True proof shape; may be valid for definitional lemmas but requires semantic owner review.",
+      "proof_regex": "^(by\\s+(trivial|rfl|simp)|rfl|trivial|by\\s+exact\\s+True\\.intro)\\b"
+    },
+    "placeholder_token": {
+      "severity": "error",
+      "description": "A forbidden or open-debt proof token appears in Lean source.",
+      "token_regex": "\\b(admit|axiom|postulate|sorry)\\b"
+    },
+    "dynamic_literal_definition": {
+      "severity": "warning",
+      "description": "A dynamically named definition collapses to literal 0 or 1.",
+      "name_tokens": [
+        "flow",
+        "transport",
+        "update",
+        "cocycle",
+        "trajectory",
+        "evolution",
+        "dynamics",
+        "connection",
+        "metric",
+        "volume",
+        "state",
+        "operator",
+        "closure",
+        "limit",
+        "semantic",
+        "conformal",
+        "virasoro",
+        "jaynes"
+      ]
+    },
+    "direct_alias_abbrev": {
+      "severity": "warning",
+      "description": "An abbrev directly aliases another declaration and may be an expository wrapper rather than a theorem owner."
+    },
+    "constant_function": {
+      "severity": "warning",
+      "description": "A field or function body ignores input and returns 0, 1, True, or False."
+    },
+    "identity_or_noop_function": {
+      "severity": "warning",
+      "description": "A field or function body is syntactically the identity or a constant identity map."
+    }
+  }
+}

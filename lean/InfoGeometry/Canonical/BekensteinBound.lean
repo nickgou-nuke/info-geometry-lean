@@ -1584,26 +1584,6 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
       (hCocycle := hCocycle) (hBridge := hBridge) (hMatch := hMatch)
 
 /--
-Tomita-specialized nat-match witness route to the topological Bekenstein bound.
-
-This removes the explicit `{hCocycle, hBridge, hMatch}` surface from
-`topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch`: the Tomita lane now
-accepts the smaller proof-carrying `CocycleNatMatchWitness` packet directly.
--/
-theorem topologicalBekensteinBound_of_tomitaCocycleNatMatchWitness
-    (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n)
-    (W : CocycleNatMatchWitness (n := n) (H := H)
-      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-      u T) :
-    TopologicalBekensteinBound n T := by
-  simpa [TomitaCocycleEntropyPotential] using
-    topologicalBekensteinBound_of_cocycleNatMatchWitness
-      (n := n) (H := H)
-      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-      (u := u) (T := T) (W := W)
-
-/--
 Tomita-specialized zero-normalized witness route to the topological Bekenstein bound.
 
 This narrows the specialized zero-anchored Tomita lane to the existing

@@ -94,6 +94,13 @@ def theorem_window(lines: list[str], start: int) -> str:
     return ""
 
 
+def is_trivial_surface(proof: str, trivial_re: re.Pattern[str]) -> bool:
+    proof_lines = [line.strip() for line in proof.splitlines() if line.strip()]
+    if len(proof_lines) > 2 and proof_lines[0] == "by":
+        return False
+    return bool(trivial_re.search(proof))
+
+
 def strip_comments(text: str) -> str:
     out: list[str] = []
     i = 0
@@ -300,7 +307,7 @@ def audit_text(path_label: str, raw_text: str, categories: dict[str, Any]) -> li
             findings.append(
                 Finding(rel, i, "projection_reexport", projection_cfg.get("severity", "error"), name, proof.splitlines()[0][:180])
             )
-        if trivial_re.search(proof):
+        if is_trivial_surface(proof, trivial_re):
             findings.append(
                 Finding(rel, i, "trivial_surface", trivial_cfg.get("severity", "warning"), name, proof.splitlines()[0][:180])
             )

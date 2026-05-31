@@ -83,6 +83,7 @@ import InfoGeometry.Canonical.GrandCanonicalLFunctionBridge
 import InfoGeometry.Automorphic.HeckePurification
 import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Canonical.HamiltonianFlowBridge
+import InfoGeometry.Canonical.Cl11TensorTowerBridge
 import InfoGeometry.Canonical.DrazinMajoranaMellinCalibration
 import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
 import InfoGeometry.Canonical.PrimeOptimalTransportBridge
@@ -138,6 +139,7 @@ import InfoGeometry.Canonical.FiniteFibonacciPailRopeQubits
 import InfoGeometry.Canonical.FiniteFibonacciQubitNoLeakage
 import InfoGeometry.Canonical.SymmetryClosureConformalBlocks
 import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
+import InfoGeometry.Canonical.SuperBracketInvolutionParity
 import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
 import InfoGeometry.Canonical.BoundaryLoopSuperClosure
 import InfoGeometry.Canonical.InductiveOperatorTaylorClosure
@@ -198,6 +200,9 @@ import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 import InfoGeometry.Canonical.SplitCliffordExternalChain
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+import InfoGeometry.Canonical.CompactifiedThermalOperators
+import InfoGeometry.Canonical.CompactifiedThermalConeBridge
+import InfoGeometry.Canonical.StandardFormExpectationUpdate
 import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
@@ -207,6 +212,10 @@ import InfoGeometry.Canonical.CasimirWeylDrazinContext
 import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.CayleyMobiusPowerLaws
+import InfoGeometry.Canonical.ThermalCompactRecurrence
+import InfoGeometry.Canonical.ModularPoissonCompact
+import InfoGeometry.Canonical.ModularCompactOperatorCore
+import InfoGeometry.Canonical.SL2CZhukovsky
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.CertifiedInverseKernel
@@ -243,6 +252,7 @@ import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 import InfoGeometry.Canonical.ChiralKMSOwner
 import InfoGeometry.Canonical.ChiralDrazinLightConeBridge
 import InfoGeometry.Canonical.ChiralLightConeTensorTower
+import InfoGeometry.Canonical.CartanSuperbracketClosure
 import InfoGeometry.Canonical.ChiralNullSpaceBridge
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.ChiralRadiationCones
@@ -258,6 +268,7 @@ import InfoGeometry.Canonical.SplitCayleyDicksonTrace
 import InfoGeometry.Canonical.SplitComplex
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Canonical.SplitHierarchy
+import InfoGeometry.Canonical.SplitQuaternionConcrete
 import InfoGeometry.Canonical.SplitQuaternionMatrixModel
 import InfoGeometry.Clifford.Cl11Quaternion
 import InfoGeometry.Clifford.SplitQ11CausalCone
@@ -307,6 +318,7 @@ import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Canonical.DepthLogScaleInvariant
 import InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
 import InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
@@ -426,6 +438,7 @@ import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.EPDefectAlgebra
 import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Canonical.FierzKleinFoundation
+import InfoGeometry.Canonical.FierzKleinQuarticBridge
 import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.FierzStressProjectionBridge
 import InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
@@ -437,6 +450,7 @@ import InfoGeometry.Canonical.FisherVolumeBridge
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.FormalScaffold
+import InfoGeometry.Canonical.FormalVerificationPacket
 import InfoGeometry.Basic
 import InfoGeometry.Core
 import InfoGeometry.Convex
@@ -486,6 +500,7 @@ import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.HestenesModularBregman
 import InfoGeometry.Canonical.HestenesComplexTranslation
+import InfoGeometry.Canonical.ComplexRealHestenesFinite
 import InfoGeometry.Canonical.HestenesKreinVacuum
 import InfoGeometry.Canonical.HestenesCommutantGeometry
 import InfoGeometry.Canonical.HestenesAnalyticity
@@ -497,6 +512,7 @@ import InfoGeometry.Canonical.HestenesPhaseSpectral
 import InfoGeometry.Canonical.DrazinChiralFrameEquivariance
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.HyperbolicRotor
+import InfoGeometry.Canonical.ModularRotorFlow
 import InfoGeometry.Canonical.IBBase
 import InfoGeometry.Canonical.IBCanonical
 import InfoGeometry.Canonical.IBTrajectory

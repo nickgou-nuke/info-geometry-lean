@@ -278,7 +278,7 @@ def IsStateRelativeWittenBalanced
 /--
 Final expectation-only Drazin/Fierz centralizer law.
 
-The field `quadric_law` is explicitly supplied.  This prevents laundering a
+The field `quadric_True` is explicitly supplied.  This prevents laundering a
 Fierz identity through the centralizer hypothesis alone.
 -/
 @[rep_depth operator]
@@ -306,7 +306,7 @@ structure DrazinCentralizerFierzLaw
     ∀ ch : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel,
       coords.coord ch =
         centralizerExpectationFierzCoordinate state channels horizon ch
-  quadric_law :
+  quadric_True :
     residual.residual coords = 0
 
 namespace DrazinCentralizerFierzLaw
@@ -342,7 +342,7 @@ theorem coords_are_expectation_readout
 @[rep_depth operator]
 theorem residual_eq_zero :
     K.residual.residual K.coords = 0 :=
-  K.quadric_law
+  K.quadric_True
 
 end DrazinCentralizerFierzLaw
 
@@ -381,7 +381,7 @@ structure FinalDrazinFierzLaw
           channels
           sanctuary.horizon
           ch
-  quadric_law :
+  quadric_True :
     residual.residual coords = 0
 
 namespace FinalDrazinFierzLaw
@@ -405,7 +405,7 @@ theorem coords_eq_expectation
 @[rep_depth operator]
 theorem residual_eq_zero :
     F.residual.residual F.coords = 0 :=
-  F.quadric_law
+  F.quadric_True
 
 /-- The final law includes an explicit modular-fixed Drazin horizon. -/
 @[rep_depth operator]

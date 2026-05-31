@@ -65,9 +65,9 @@ structure SplitCliffordCurrentMorphism where
   datum :
     AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity
   /-- The current-mode bracket law inherited from the split lift. -/
-  current_mode_bracket_law : datum.current_mode_bracket_law
+  current_mode_bracket_True : datum.current_mode_bracket_True
   /-- The central element commutes with everything. -/
-  current_central_commutes_law : datum.current_central_commutes_law
+  current_central_commutes_True : datum.current_central_commutes_True
 
 /--
 Concrete witness of the split completion current boundary.
@@ -78,10 +78,10 @@ current-layer surface currently supported by the split completion file.
 noncomputable def splitCliffordInfinityCurrentMorphism :
     SplitCliffordCurrentMorphism where
   datum := splitCliffordInfinityCurrentDatum
-  current_mode_bracket_law := by
+  current_mode_bracket_True := by
     intro m n X Y
     simpa using splitCliffordInfinity_current_mode_bracket m n X Y
-  current_central_commutes_law := by
+  current_central_commutes_True := by
     intro X
     simpa using splitCliffordInfinity_current_central_commutes X
 

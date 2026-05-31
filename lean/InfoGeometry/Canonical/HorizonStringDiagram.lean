@@ -126,7 +126,7 @@ theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
     D.homogeneousReadout.readout (D.homogeneousReadout.scale c x)
       =
     c ^ D.homogeneousReadout.weight * D.homogeneousReadout.readout x :=
-  D.homogeneousReadout.scale_law c x
+  D.homogeneousReadout.scale_True c x
 
 end WeylWeightedHorizonStringDiagram
 

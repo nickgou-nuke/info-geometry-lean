@@ -256,7 +256,7 @@ structure KreinDrazinNullDefectAdmissible
   /-- The physical observable is the regular-support/null-defect sandwich. -/
   x_phys_eq : S.x_phys = S.HL * (S.pA * S.x_raw * S.pA) * S.HL
   /-- The Drazin inverse is read on the regular Krein support, not via trace/rank. -/
-  regular_support_inverse_law : Prop
+  regular_support_inverse_True : Prop
   /-- The complement isolates the Krein-null defect cone. -/
   null_defect_is_krein_null : Prop
   /-- The null defect is the boundary sector of the doubled algebra/commutant action. -/
@@ -375,7 +375,7 @@ structure CliffordFractalWaveletFierzKleinLaw
       "Reality is the subset of binary information that remains invariant
        under the thermodynamic and spectral limits of the universe."
   -/
-  quadric_law : CliffordFractalWaveletFierzKleinResidual socket.coords = 0
+  quadric_True : CliffordFractalWaveletFierzKleinResidual socket.coords = 0
 
   /-- Fierz--Pauli--Kofink witness; separate from Clifford anticommutation. -/
   fierz_admissible : FierzPauliKofinkAdmissible socket.coords

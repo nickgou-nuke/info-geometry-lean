@@ -623,6 +623,45 @@ structure DrazinInfiniteAssumptions (T : E →L[𝕂] E) where
   generalized_riesz : HasGeneralizedRieszDecompositionAtZero (𝕂 := 𝕂) T
 
 /--
+The bundled infinite-dimensional Drazin assumptions already carry a classical
+Riesz packet, so they recover the witness-free constructive Riesz surface
+without reintroducing a separate `HasClassicalRieszDecompositionAtZero`
+hypothesis.
+-/
+@[rep_depth operator]
+def constructiveRieszDecompositionAtZero_of_drazinInfiniteAssumptions
+    {T : E →L[𝕂] E}
+    (h : DrazinInfiniteAssumptions (𝕂 := 𝕂) T) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T :=
+  constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
+    (𝕂 := 𝕂) h.classical_riesz
+
+/--
+The bundled infinite-dimensional Drazin assumptions already determine the
+canonical Drazin witness attached to their classical Riesz field.
+-/
+@[rep_depth operator]
+theorem isDrazinInverse_of_drazinInfiniteAssumptions
+    {T : E →L[𝕂] E}
+    (h : DrazinInfiniteAssumptions (𝕂 := 𝕂) T) :
+    Drazin.IsDrazinInverse T h.classical_riesz.D h.classical_riesz.k :=
+  h.classical_riesz.hIsDrazin
+
+/--
+Bundled infinite-dimensional Drazin assumptions yield a Drazin inverse through
+their owned classical Riesz component, removing the need to thread that packet
+as a separate theorem argument.
+-/
+@[rep_depth operator]
+theorem exists_drazinInverse_of_drazinInfiniteAssumptions
+    {T : E →L[𝕂] E}
+    (h : DrazinInfiniteAssumptions (𝕂 := 𝕂) T) :
+    ∃ k TD, Drazin.IsDrazinInverse T TD k :=
+  exists_drazinInverse_of_constructiveRieszDecompositionAtZero
+    (hR := constructiveRieszDecompositionAtZero_of_drazinInfiniteAssumptions
+      (𝕂 := 𝕂) h)
+
+/--
 Classical Riesz decomposition immediately yields the canonical Drazin witness.
 -/
 @[rep_depth operator]

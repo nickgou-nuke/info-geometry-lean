@@ -44,7 +44,7 @@ structure SuperchargeModularHamiltonianBridge where
   The surrogate modular Hamiltonian is exactly the calibrated regular-support
   compression of the Drazin/MP supercharge Hamiltonian.
   -/
-  Ksur_law :
+  Ksur_True :
     Ksur =
       modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian CIK
@@ -59,13 +59,13 @@ theorem Ksur_eq_calibrated_regularRestrictedSuperHamiltonian :
     H.Ksur =
       H.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK :=
-  H.Ksur_law
+  H.Ksur_True
 
 /-- Left regular-support invariance: `P_D * K_sur = K_sur`. -/
 @[rep_depth krein]
 theorem spectralProjector_mul_Ksur :
     H.CIK.spectralProjector * H.Ksur = H.Ksur := by
-  rw [H.Ksur_law]
+  rw [H.Ksur_True]
   calc
     H.CIK.spectralProjector *
         (H.modularEnergyUnit •
@@ -86,7 +86,7 @@ theorem spectralProjector_mul_Ksur :
 @[rep_depth krein]
 theorem Ksur_mul_spectralProjector :
     H.Ksur * H.CIK.spectralProjector = H.Ksur := by
-  rw [H.Ksur_law]
+  rw [H.Ksur_True]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)
@@ -107,7 +107,7 @@ theorem Ksur_mul_spectralProjector :
 @[rep_depth krein]
 theorem spectralComplementaryProjector_mul_Ksur_eq_zero :
     H.CIK.spectralComplementaryProjector * H.Ksur = 0 := by
-  rw [H.Ksur_law]
+  rw [H.Ksur_True]
   calc
     H.CIK.spectralComplementaryProjector *
         (H.modularEnergyUnit •
@@ -127,7 +127,7 @@ theorem spectralComplementaryProjector_mul_Ksur_eq_zero :
 @[rep_depth krein]
 theorem Ksur_mul_spectralComplementaryProjector_eq_zero :
     H.Ksur * H.CIK.spectralComplementaryProjector = 0 := by
-  rw [H.Ksur_law]
+  rw [H.Ksur_True]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)
@@ -147,7 +147,7 @@ theorem Ksur_mul_spectralComplementaryProjector_eq_zero :
 @[rep_depth krein]
 theorem Ksur_commutes_GammaS :
     H.Ksur * H.CIK.GammaS = H.CIK.GammaS * H.Ksur := by
-  rw [H.Ksur_law]
+  rw [H.Ksur_True]
   calc
     (H.modularEnergyUnit •
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian H.CIK)

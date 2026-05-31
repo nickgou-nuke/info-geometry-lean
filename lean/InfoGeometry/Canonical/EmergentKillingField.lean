@@ -33,6 +33,26 @@ theorem tr_mul_comm (A B : M2R) :
     simpa [tr, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
   linarith
 
+/-- Scalar compatibility of the concrete `2×2` trace. -/
+theorem tr_smul (c : ℝ) (A : M2R) :
+    tr (c • A) = c * tr A := by
+  unfold tr
+  simp
+  ring
+
+/--
+Finite `2×2` modular spectral selection rule: a nonzero commutator eigenmode
+has zero concrete trace.
+-/
+theorem modular_spectral_selection_rule (H X : M2R) (lam : ℝ)
+    (hEig : H * X - X * H = lam • X) (hlam : lam ≠ 0) :
+    tr X = 0 := by
+  have htr_comm : tr (H * X - X * H) = 0 := trace_commutator_zero H X
+  have h : lam * tr X = 0 := by
+    rw [← tr_smul lam X, ← hEig]
+    exact htr_comm
+  exact eq_zero_of_ne_zero_of_mul_left_eq_zero hlam h
+
 /--
 Operator Killing equation for the commutator flow and trace-form metric.
 -/

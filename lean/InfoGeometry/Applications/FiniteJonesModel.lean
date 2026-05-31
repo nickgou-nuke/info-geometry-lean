@@ -248,7 +248,7 @@ theorem operator_eq_s_core_of_brewster
 /--
 Constructive-witness variant of `operator_eq_s_core_of_brewster`.
 -/
-theorem operator_eq_s_core_of_witness
+theorem operator_eq_s_core_of_sorry
     (E : FiniteJonesEvent)
     (w : BrewsterWitness E) :
     E.operator = E.r_s • Ps := by

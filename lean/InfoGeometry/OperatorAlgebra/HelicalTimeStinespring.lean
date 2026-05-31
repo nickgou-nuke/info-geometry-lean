@@ -89,8 +89,8 @@ structure SpectralDivisorDatum where
   chargeOf : Set ℂ → ℤ
   zeroLocus_spec :
     ∀ s : ℂ, s ∈ zeroLocus ↔ L s = 0
-  divisor_law : Prop
-  divisor_law_holds : divisor_law
+  divisor_True : Prop
+  divisor_law_holds : divisor_True
 
 /-- A point is a spectral zero of the divisor datum. -/
 def IsSpectralZero
@@ -129,8 +129,8 @@ structure HelicalSpectralChargeCalibration
   Calibration law saying the sheet jump is the logarithmic/argument monodromy
   around the relevant divisor.
   -/
-  monodromy_law : Prop
-  monodromy_law_holds : monodromy_law
+  monodromy_True : Prop
+  monodromy_law_holds : monodromy_True
 
 namespace HelicalSpectralChargeCalibration
 
@@ -193,9 +193,9 @@ structure HelicalStinespringCalibration
       hiddenHelix.sheet (D.hiddenFlow x) =
         visibleHelix.sheet x
   /-- One-turn visible flow corresponds to sheet bookkeeping in the hidden sector. -/
-  one_turn_hidden_charge_law : Prop
+  one_turn_hidden_charge_True : Prop
   one_turn_hidden_charge_law_holds :
-    one_turn_hidden_charge_law
+    one_turn_hidden_charge_True
 
 namespace HelicalStinespringCalibration
 

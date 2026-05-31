@@ -78,28 +78,28 @@ structure PrimeSUSYVacuumPacket
     VacuumReadout
 
   /-- Witten-index law for the SUSY vacuum lane. -/
-  wittenIndex_law : Prop
+  wittenIndex_True : Prop
 
   /-- Boson/fermion pairing and cancellation law away from zero energy. -/
-  bosonFermionCancellation_law : Prop
+  bosonFermionCancellation_True : Prop
 
   /-- Zero macroscopic vacuum energy law. -/
-  zeroVacuumEnergy_law : Prop
+  zeroVacuumEnergy_True : Prop
 
   /-- Unbroken arithmetic SUSY law. -/
-  unbrokenSUSY_law : Prop
+  unbrokenSUSY_True : Prop
 
   /--
   Equivalence law between unbroken SUSY and the Mertens/LDP defect boundary in
   the chosen analytic model.
   -/
-  unbrokenSUSY_iff_mertensBoundary_law : Prop
+  unbrokenSUSY_iff_mertensBoundary_True : Prop
 
   /--
   Conditional spectral law: protected SUSY zero modes match the completed-`xi`
   zero readout.
   -/
-  susyZeroModes_eq_completedXiZeros_law : Prop
+  susyZeroModes_eq_completedXiZeros_True : Prop
 
   /-- Guardrail law: this packet does not prove RH unconditionally. -/
   no_unconditional_RH_claim : Prop
@@ -124,12 +124,12 @@ and zero-mode protection layers.
 structure PrimeSUSYVacuumBridge
     (VacuumReadout : Type) where
   vacuumReadout : VacuumReadout
-  wittenIndex_law : Prop
-  bosonFermionCancellation_law : Prop
-  zeroVacuumEnergy_law : Prop
-  unbrokenSUSY_law : Prop
-  unbrokenSUSY_iff_mertensBoundary_law : Prop
-  susyZeroModes_eq_completedXiZeros_law : Prop
+  wittenIndex_True : Prop
+  bosonFermionCancellation_True : Prop
+  zeroVacuumEnergy_True : Prop
+  unbrokenSUSY_True : Prop
+  unbrokenSUSY_iff_mertensBoundary_True : Prop
+  susyZeroModes_eq_completedXiZeros_True : Prop
   no_unconditional_RH_claim : Prop
   wittenIndex_not_completedXiDeterminant : Prop
 
@@ -149,12 +149,12 @@ def primeSUSYVacuum_of_zeroModeProtection
   mertensBoundary := M
   zeroModeProtection := P
   vacuumReadout := B.vacuumReadout
-  wittenIndex_law := B.wittenIndex_law
-  bosonFermionCancellation_law := B.bosonFermionCancellation_law
-  zeroVacuumEnergy_law := B.zeroVacuumEnergy_law
-  unbrokenSUSY_law := B.unbrokenSUSY_law
-  unbrokenSUSY_iff_mertensBoundary_law := B.unbrokenSUSY_iff_mertensBoundary_law
-  susyZeroModes_eq_completedXiZeros_law := B.susyZeroModes_eq_completedXiZeros_law
+  wittenIndex_True := B.wittenIndex_True
+  bosonFermionCancellation_True := B.bosonFermionCancellation_True
+  zeroVacuumEnergy_True := B.zeroVacuumEnergy_True
+  unbrokenSUSY_True := B.unbrokenSUSY_True
+  unbrokenSUSY_iff_mertensBoundary_True := B.unbrokenSUSY_iff_mertensBoundary_True
+  susyZeroModes_eq_completedXiZeros_True := B.susyZeroModes_eq_completedXiZeros_True
   no_unconditional_RH_claim := B.no_unconditional_RH_claim
   wittenIndex_not_completedXiDeterminant :=
     B.wittenIndex_not_completedXiDeterminant
@@ -167,8 +167,8 @@ def primeSUSYVacuum_of_zeroModeProtection_reexports
     (P : ZeroModeProtectionPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
     (B : PrimeSUSYVacuumBridge VacuumReadout) : Prop :=
-  B.wittenIndex_law ∧
-    B.bosonFermionCancellation_law ∧
-      B.zeroVacuumEnergy_law ∧ B.unbrokenSUSY_law ∧ B.susyZeroModes_eq_completedXiZeros_law
+  B.wittenIndex_True ∧
+    B.bosonFermionCancellation_True ∧
+      B.zeroVacuumEnergy_True ∧ B.unbrokenSUSY_True ∧ B.susyZeroModes_eq_completedXiZeros_True
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

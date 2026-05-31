@@ -85,7 +85,7 @@ theorem bilinear_equilibrium_from_metric_equilibrium
     ∀ p : M, ∀ ψ χ : S,
       B.pair (A.lieSpinor p ψ) χ + B.pair ψ (A.lieSpinor p χ) = 0 := by
   have hsigma : ∀ p : M, C.sigma p = 0 :=
-    sigma_eq_zero_of_equilibrium_with_nondegenerate_witness
+    sigma_eq_zero_of_equilibrium_with_nondegenerate_pair
       (g := g) (S := C) hEq
   exact bilinear_equilibrium_global
     (g := g) (C := C) (B := B) (A := A) hsigma

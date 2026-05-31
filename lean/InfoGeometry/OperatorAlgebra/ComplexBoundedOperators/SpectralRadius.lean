@@ -259,7 +259,7 @@ theorem spectralRadius_jnf_norm_bound_less_one {n : Nat}
 If an eigenvector has an eigenvalue of norm greater than one, powers grow along
 that eigenvector by the corresponding exponential scalar.
 -/
-theorem spectralRadius_gt_one_witness {n : Nat}
+theorem spectralRadius_gt_one_sorry {n : Nat}
     {A : Matrix (Fin n) (Fin n) ℂ} {v : Fin n → ℂ} {c : ℂ}
     (hv : Eigenvector A v c)
     (hc : 1 < ‖c‖) :

@@ -299,7 +299,7 @@ def fierzKleinCoordinates
 
 /-- The normalized scalar-phase and chiral Pluecker coordinates satisfy the FK constraints. -/
 @[rep_depth operator]
-theorem fierzKleinCoordinates_valid
+theorem fierzKleinCoordinates_holds
     (F : FierzBilinears)
     (N : FierzNormalization F) :
     IsOnFierzKleinVariety
@@ -451,7 +451,7 @@ This theorem is compatibility-derived through `HorizonFierzAdmissible`; it does
 not assert that arbitrary expectation channels satisfy FPK identities.
 -/
 @[rep_depth operator]
-theorem horizon_fierz_klein_valid
+theorem horizon_fierz_klein_holds
     {Obs : Type*}
     [Ring Obs] [Star Obs]
     (C : FierzReadoutChannels Obs)
@@ -461,7 +461,7 @@ theorem horizon_fierz_klein_valid
       (fierzKleinCoordinates
         (horizonFierzBilinears C D)
         h.normalization) :=
-  fierzKleinCoordinates_valid
+  fierzKleinCoordinates_holds
     (horizonFierzBilinears C D)
     h.normalization
 

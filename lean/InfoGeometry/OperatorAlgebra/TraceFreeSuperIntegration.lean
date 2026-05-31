@@ -130,11 +130,11 @@ structure SuperIntegrationDatum
 
   The exact law depends on the backend.
   -/
-  graded_cyclicity_or_kms_law : Prop
+  graded_cyclicity_or_kms_True : Prop
 
   /-- Proof/certificate of the backend law. -/
-  graded_cyclicity_or_kms_certificate :
-    graded_cyclicity_or_kms_law
+  graded_cyclicity_or_kms_sorryProof :
+    graded_cyclicity_or_kms_True
 
 namespace SuperIntegrationDatum
 
@@ -179,11 +179,11 @@ structure ModularWeightBackend
     ∀ s t x, modularFlow (s + t) x = modularFlow s (modularFlow t x)
 
   /-- KMS/modular covariance law. -/
-  kms_law : Prop
+  kms_True : Prop
 
   /-- Proof/certificate of KMS/modular covariance. -/
-  kms_certificate :
-    kms_law
+  kms_sorryProof :
+    kms_True
 
 namespace ModularWeightBackend
 
@@ -213,11 +213,11 @@ structure ModularSuperWeightDatum
   superWeight : A → ℂ
 
   /-- Modular graded/KMS covariance law. -/
-  modular_super_kms_law : Prop
+  modular_super_kms_True : Prop
 
   /-- Proof/certificate. -/
-  modular_super_kms_certificate :
-    modular_super_kms_law
+  modular_super_kms_sorryProof :
+    modular_super_kms_True
 
 namespace ModularSuperWeightDatum
 
@@ -255,11 +255,11 @@ structure CoreSuperTraceDatum
         coreReadout (coreGrading.chi * embed x)
 
   /-- Core trace/cocycle/KMS scaling law. -/
-  core_law : Prop
+  core_True : Prop
 
   /-- Proof/certificate. -/
-  core_certificate :
-    core_law
+  core_sorryProof :
+    core_True
 
 namespace CoreSuperTraceDatum
 
@@ -296,9 +296,9 @@ structure DixmierSuperTraceDatum
     ∀ x : A,
       superDixmierReadout x = dixmierReadout (grading.chi * x)
 
-  logarithmic_divergence_law : Prop
-  logarithmic_divergence_certificate :
-    logarithmic_divergence_law
+  logarithmic_divergence_True : Prop
+  logarithmic_divergence_sorryProof :
+    logarithmic_divergence_True
 
 namespace DixmierSuperTraceDatum
 
@@ -326,9 +326,9 @@ structure ZetaSuperTraceDatum
   superResidue : A → ℂ → ℂ
   superFinitePart : A → ℂ → ℂ
 
-  zeta_super_law : Prop
-  zeta_super_certificate :
-    zeta_super_law
+  zeta_super_True : Prop
+  zeta_super_sorryProof :
+    zeta_super_True
 
 namespace ZetaSuperTraceDatum
 
@@ -352,9 +352,9 @@ structure CyclicSuperCocycleDatum
     ∀ x : A,
       superCocycleReadout x = cocycleReadout (grading.chi * x)
 
-  cyclic_cocycle_law : Prop
-  cyclic_cocycle_certificate :
-    cyclic_cocycle_law
+  cyclic_cocycle_True : Prop
+  cyclic_cocycle_sorryProof :
+    cyclic_cocycle_True
 
 namespace CyclicSuperCocycleDatum
 
@@ -392,20 +392,20 @@ structure TypeIIISuperIntegrationDatum
     Option (CoreSuperTraceDatum M Core Scalar)
 
   /-- Type III certificate. -/
-  typeIII_law : Prop
+  typeIII_True : Prop
 
   /-- Proof/certificate. -/
-  typeIII_certificate :
-    typeIII_law
+  typeIII_sorryProof :
+    typeIII_True
 
   /--
   Explicit guardrail: the foundational datum contains no bare base trace.
   -/
-  no_bare_trace_on_base_law : Prop
+  no_bare_trace_on_base_True : Prop
 
   /-- Proof/certificate. -/
-  no_bare_trace_on_base_certificate :
-    no_bare_trace_on_base_law
+  no_bare_trace_on_base_sorryProof :
+    no_bare_trace_on_base_True
 
 namespace TypeIIISuperIntegrationDatum
 

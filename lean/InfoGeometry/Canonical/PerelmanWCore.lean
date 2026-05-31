@@ -29,8 +29,8 @@ def SatisfiesWLaw
     (flow : ScalarRicciFlow E) (τ f diss : ℝ → ℝ) : Prop :=
   ∀ s : ℝ, WDissipation flow τ f s = diss s
 
-/-- Lemma `deriv_WFunctional_eq_of_law`. -/
-lemma deriv_WFunctional_eq_of_law
+/-- Lemma `deriv_WFunctional_eq_of_True`. -/
+lemma deriv_WFunctional_eq_of_True
     (flow : ScalarRicciFlow E) (τ f diss : ℝ → ℝ)
     (hLaw : SatisfiesWLaw flow τ f diss) (s : ℝ) :
     deriv (fun t => WFunctional flow τ f t) s = diss s := by
@@ -47,7 +47,7 @@ theorem WFunctional_monotone_of_nonneg_dissipation
     Monotone (fun t => WFunctional flow τ f t) := by
   apply monotone_of_deriv_nonneg hDiff
   intro s
-  rw [deriv_WFunctional_eq_of_law flow τ f diss hLaw s]
+  rw [deriv_WFunctional_eq_of_True flow τ f diss hLaw s]
   exact hNonneg s
 
 /--
@@ -60,7 +60,7 @@ private theorem WFunctional_strictMono_of_pos_dissipation
     StrictMono (fun t => WFunctional flow τ f t) := by
   apply strictMono_of_deriv_pos
   intro s
-  rw [deriv_WFunctional_eq_of_law flow τ f diss hLaw s]
+  rw [deriv_WFunctional_eq_of_True flow τ f diss hLaw s]
   exact hPos s
 
 /--

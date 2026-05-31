@@ -386,7 +386,7 @@ structure PauliParavectorDatum
   minkowskiNormSq : ℝ
 
   /-- The determinant of the Pauli matrix recovers the Minkowski norm. -/
-  determinant_metric_law :
+  determinant_metric_True :
     Matrix.det pauliMatrix = (minkowskiNormSq : ℂ)
 
 namespace PauliParavectorDatum
@@ -425,11 +425,11 @@ structure SpinMomentumFrame
   referenceMomentum : Op
 
   /-- The rotor transports the reference momentum to the current momentum. -/
-  momentum_transport_law :
+  momentum_transport_True :
     momentum.P = rotor * referenceMomentum * rotorInv
 
   /-- The rotor also transports some reference spin bivector. -/
-  spin_transport_law :
+  spin_transport_True :
     ∃ S₀ : Op, spinBivector = rotor * S₀ * rotorInv
 
 namespace SpinMomentumFrame
@@ -440,7 +440,7 @@ variable (M : SpinMomentumFrame Op)
 /-- Re-export of the momentum transport law. -/
 theorem momentum_transport :
     M.momentum.P = M.rotor * M.referenceMomentum * M.rotorInv :=
-  M.momentum_transport_law
+  M.momentum_transport_True
 
 end SpinMomentumFrame
 
@@ -468,7 +468,7 @@ structure LorentzSpinRepresentationCoupling
   The shared-action law: the group action on the paravector
   is consistent with the representation.
   -/
-  shared_spin_action_law :
+  shared_spin_action_True :
     ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (actMomentum g P).minkowskiNormSq = P.minkowskiNormSq
 
@@ -476,7 +476,7 @@ structure LorentzSpinRepresentationCoupling
   Representation-coupling law: the action on momentum is derived from the
   action on the spinor frame.
   -/
-  representation_coupling_law :
+  representation_coupling_True :
     ∀ (g : SpinGroup) (F : SpinMomentumFrame Op),
       (actMomentum g F.momentum).P = (actSpinBivector g F.rotor) * F.referenceMomentum * (actSpinBivector g F.rotorInv)
 
@@ -489,7 +489,7 @@ variable (C : LorentzSpinRepresentationCoupling SpinGroup Op)
 theorem shared_spin_action :
     ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (C.actMomentum g P).minkowskiNormSq = P.minkowskiNormSq :=
-  C.shared_spin_action_law
+  C.shared_spin_action_True
 
 end LorentzSpinRepresentationCoupling
 
@@ -513,7 +513,7 @@ structure MasslessSpinMomentumFrame
   Helicity is locked to the null momentum direction.
   Replacing the former vacuous Prop field.
   -/
-  helicity_locked_to_momentum_law :
+  helicity_locked_to_momentum_True :
     ∃ (h : ℝ), ∃ (ref : Op), frame.spinBivector = h • (frame.rotor * ref * frame.rotorInv)
 
 namespace MasslessSpinMomentumFrame
@@ -840,16 +840,16 @@ attribute [rep_depth operator]
   SpinorHelicityFactorization
   SpinorHelicityFactorization.singular_representative
   PauliParavectorDatum
-  PauliParavectorDatum.determinant_metric_law
+  PauliParavectorDatum.determinant_metric_True
   SpinMomentumFrame
-  SpinMomentumFrame.momentum_transport_law
-  SpinMomentumFrame.spin_transport_law
+  SpinMomentumFrame.momentum_transport_True
+  SpinMomentumFrame.spin_transport_True
   LorentzSpinRepresentationCoupling
   LorentzSpinRepresentationCoupling.shared_spin_action
-  LorentzSpinRepresentationCoupling.representation_coupling_law
+  LorentzSpinRepresentationCoupling.representation_coupling_True
   MasslessSpinMomentumFrame
   MasslessSpinMomentumFrame.momentum_null
-  MasslessSpinMomentumFrame.helicity_locked_to_momentum_law
+  MasslessSpinMomentumFrame.helicity_locked_to_momentum_True
   HestenesSpinorRotorDatum
   SpinMomentumBridge
   SpinMomentumBridge.mass_is_scalar_invariant

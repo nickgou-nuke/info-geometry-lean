@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Clifford.Lift
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Hestenes Geometric Algebra for Information Fluids
@@ -82,6 +83,27 @@ Identifies the top-level GA form with the Radon-Nikodym derivative.
 -/
 def IsSignedVolume (RN : ℝ) : Prop :=
   ∃ ρ : Cl11 →ₗ[ℝ] ℝ, ρ Pseudoscalar = RN
+
+/-- The commutator bracket on `Cl(1,1)` as an inner derivation. -/
+def cl11_commutator (K X : Cl11) : Cl11 :=
+  K * X - X * K
+
+/-- Associativity of the concrete `Cl(1,1)` algebra. -/
+theorem Cl11_mul_assoc (q1 q2 q3 : Cl11) :
+    (q1 * q2) * q3 = q1 * (q2 * q3) := by
+  exact mul_assoc q1 q2 q3
+
+/-- The commutator is a derivation for the product in `Cl(1,1)`. -/
+theorem cl11_commutator_is_derivation (K X Y : Cl11) :
+    cl11_commutator K (X * Y) = cl11_commutator K X * Y + X * cl11_commutator K Y := by
+  unfold cl11_commutator
+  noncomm_ring
+
+/-- Additivity of the infinitesimal Connes/Radon--Nikodym commutator in the generator. -/
+theorem radon_nikodym_infinitesimal_additivity (K1 K2 X : Cl11) :
+    cl11_commutator (K1 - K2) X = cl11_commutator K1 X - cl11_commutator K2 X := by
+  unfold cl11_commutator
+  noncomm_ring
 
 section Representation
 

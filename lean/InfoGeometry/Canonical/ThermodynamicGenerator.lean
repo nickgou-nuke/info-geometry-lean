@@ -262,6 +262,18 @@ theorem comparisonReadout_pair_eq_zero_of_isPotentialKillingOperator
       (E := E) (P := P) (ψ := ψ) (A := A) hKill
 
 /--
+Proof-carrying owner packet for the faithful first-variation zero lane.
+
+This bundles the exact constructive hypotheses needed to derive thermodynamic
+readout collapse on the infinite/operatorial corridor.
+-/
+@[rep_depth transport]
+structure FirstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) : Prop where
+  faithful : ProbeFaithful (E := E) P
+  first_zero : firstVariation (E := E) P ψ A = 0
+
+/--
 Faithful thermodynamic probing upgrades vanishing first variation directly into
 vanishing state-QGT readout on the doubled carrier.
 -/
@@ -278,6 +290,23 @@ theorem stateQGTReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
     (E := E) (P := P) (ψ := ψ) (A := A)
     (isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) P ψ A hFaithful hFirst)
+
+/--
+Proof-carrying owner route for state-QGT readout collapse.
+
+This replaces the separate `ProbeFaithful` and `firstVariation = 0` hypotheses
+with one explicit constructive witness packet on the infinite/operatorial lane.
+-/
+@[rep_depth transport]
+theorem stateQGTReadout_pair_eq_zero_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    ( ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).metric)
+    , ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).phase) )
+      =
+    (0, 0) := by
+  exact stateQGTReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
 
 /--
 Vanishing comparison-state metric readout is faithful: it forces the underlying
@@ -362,6 +391,23 @@ theorem isPotentialKillingOperator_iff_isThermodynamicReadoutStationary
         (E := E) P ψ A).2 hMetric
 
 /--
+Vanishing bundled thermodynamic readout already suffices to force vanishing
+state-QGT readout on the doubled carrier.
+-/
+@[rep_depth transport]
+theorem stateQGTReadout_pair_eq_zero_of_isThermodynamicReadoutStationary
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hReadout : IsThermodynamicReadoutStationary (E := E) P ψ A) :
+    ( ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).metric)
+    , ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).phase) )
+      =
+    (0, 0) := by
+  exact stateQGTReadout_pair_eq_zero_of_isPotentialKillingOperator
+    (E := E) (P := P) (ψ := ψ) (A := A)
+    ((isPotentialKillingOperator_iff_isThermodynamicReadoutStationary
+      (E := E) P ψ A).2 hReadout)
+
+/--
 Under a faithful probe, thermodynamic readout stationarity is equivalent to
 vanishing first variation of the entropy potential.
 -/
@@ -408,6 +454,21 @@ theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithfu
     (E := E) P ψ A hFaithful hFirst
 
 /--
+Proof-carrying owner route for comparison-state readout collapse.
+
+This removes the explicit `ProbeFaithful` / `firstVariation = 0` hypothesis pair
+for callers that already own the constructive witness packet.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_pair_eq_zero_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    (comparisonMetricReadout (E := E) P ψ A,
+      comparisonPhaseReadout (E := E) P ψ A) = (0, 0) := by
+  exact comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
+
+/--
 Faithful thermodynamic probing upgrades vanishing first variation into vanishing
 comparison-state metric readout directly.
 -/
@@ -420,6 +481,21 @@ theorem comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithf
   exact congrArg Prod.fst
     (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) P ψ A hFaithful hFirst)
+
+/--
+Proof-carrying owner route for comparison-state metric-readout collapse.
+
+This removes the separate `ProbeFaithful` and `firstVariation = 0` hypotheses
+from the metric-readout branch when callers already own the single
+`FirstVariationProbeWitness` packet.
+-/
+@[rep_depth transport]
+theorem comparisonMetricReadout_eq_zero_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    comparisonMetricReadout (E := E) P ψ A = 0 := by
+  exact comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
 
 /--
 Faithful thermodynamic probing upgrades vanishing first variation all the way to
@@ -438,6 +514,21 @@ theorem stateInducedDynamics_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) P ψ A hFaithful hFirst)
 
 /--
+Proof-carrying owner route from vanishing first variation to zero induced
+thermodynamic dynamics.
+
+This packages the faithful-probe and vanishing-first-variation assumptions into
+one witness object on the infinite/operatorial lane.
+-/
+@[rep_depth transport]
+theorem stateInducedDynamics_eq_zero_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    stateInducedDynamics (E := E) P.modularData ψ A = 0 := by
+  exact stateInducedDynamics_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
+
+/--
 Faithful thermodynamic probing upgrades vanishing first variation into vanishing
 comparison-state phase readout directly.
 -/
@@ -450,6 +541,21 @@ theorem comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithfu
   exact congrArg Prod.snd
     (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) P ψ A hFaithful hFirst)
+
+/--
+Proof-carrying owner route for comparison-state phase-readout collapse.
+
+This removes the separate `ProbeFaithful` and `firstVariation = 0` hypotheses
+from the phase-readout branch when callers already own the single
+`FirstVariationProbeWitness` packet.
+-/
+@[rep_depth transport]
+theorem comparisonPhaseReadout_eq_zero_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    comparisonPhaseReadout (E := E) P ψ A = 0 := by
+  exact comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
 
 end Core
 

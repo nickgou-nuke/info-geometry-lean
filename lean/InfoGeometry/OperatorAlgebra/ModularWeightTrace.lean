@@ -124,6 +124,49 @@ theorem cyclic_apply
 
 end TraceDatum
 
+/-! ## 2a. No-wrapper cyclic linear trace selection rule -/
+
+/-- Algebra commutator used by the no-wrapper spectral selection rule. -/
+def modularSpectralCommutator {A : Type*} [Ring A] (H X : A) : A :=
+  H * X - X * H
+
+/-- Eigenstate equation `[H, X] = λX` for a real algebra. -/
+def IsModularSpectralEigenstate {A : Type*} [Ring A] [Algebra ℝ A]
+    (H X : A) (lam : ℝ) : Prop :=
+  modularSpectralCommutator H X = (algebraMap ℝ A lam) * X
+
+/-- A cyclic real-linear trace vanishes on algebra commutators. -/
+theorem linearTrace_modularSpectralCommutator_zero
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (tau : A →ₗ[ℝ] ℝ)
+    (hcyclic : ∀ x y : A, tau (x * y) = tau (y * x))
+    (H X : A) :
+    tau (modularSpectralCommutator H X) = 0 := by
+  unfold modularSpectralCommutator
+  rw [tau.map_sub]
+  rw [hcyclic H X]
+  ring
+
+/--
+No-wrapper modular spectral selection rule.
+
+If a real-linear cyclic trace is compatible with left scalar multiplication and
+`X` is a nonzero-frequency commutator eigenmode, then the trace of `X` is zero.
+-/
+theorem modular_spectral_selection_rule
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (tau : A →ₗ[ℝ] ℝ)
+    (hcyclic : ∀ x y : A, tau (x * y) = tau (y * x))
+    (hscale : ∀ (c : ℝ) (x : A), tau ((algebraMap ℝ A c) * x) = c * tau x)
+    (H X : A) (lam : ℝ)
+    (hEig : IsModularSpectralEigenstate H X lam) (hlam : lam ≠ 0) :
+    tau X = 0 := by
+  have htr := linearTrace_modularSpectralCommutator_zero tau hcyclic H X
+  unfold IsModularSpectralEigenstate at hEig
+  rw [hEig] at htr
+  rw [hscale lam X] at htr
+  exact eq_zero_of_ne_zero_of_mul_left_eq_zero hlam htr
+
 namespace WeightDatum
 
 variable {A : Type*} [AddCommMonoid A]

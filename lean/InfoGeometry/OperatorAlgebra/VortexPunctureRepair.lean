@@ -72,7 +72,7 @@ structure VortexCoreDatum
 
   This remains a socket because concrete BdG/vortex analysis is model-specific.
   -/
-  vortex_core_law : Prop
+  vortex_core_True : Prop
 
 namespace VortexCoreDatum
 
@@ -106,7 +106,7 @@ structure MajoranaPlugWitness
 
   This is where a concrete topological-superconductor theorem belongs.
   -/
-  protection_law : Prop
+  protection_True : Prop
 
 namespace MajoranaPlugWitness
 
@@ -196,7 +196,7 @@ structure VortexRepairBridge
   This is intentionally abstract: it may be a Möbius twist, local parity flip,
   YSR localization, vortex-core plug, or another model-specific operation.
   -/
-  repair_law : Prop
+  repair_True : Prop
 
 namespace VortexRepairBridge
 

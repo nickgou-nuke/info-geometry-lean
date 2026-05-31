@@ -69,11 +69,11 @@ def d23HurwitzCliffordFilterBank : ParaunitaryCliffordFilterBank where
   polyphaseMatrix := Nonempty (Fin 2 → HurwitzNode)
   paraunitary := Nonempty (Fin 2 → HurwitzNode)
   perfectReconstruction := Nonempty (Fin 2 → HurwitzNode)
-  perfectReconstruction_certificate := by
+  perfectReconstruction_sorryProof := by
     intro _hpara
     exact ⟨fun _ => node 0 0 0 0⟩
   energyPreservation := Nonempty (Fin 2 → HurwitzNode)
-  energyPreservation_certificate := by
+  energyPreservation_sorryProof := by
     intro _hpara
     exact ⟨fun _ => node 0 0 0 0⟩
 
@@ -83,18 +83,34 @@ theorem d23HurwitzCliffordFilterBank_paraunitary :
     d23HurwitzCliffordFilterBank.paraunitary := by
   exact ⟨fun _ => node 0 0 0 0⟩
 
+/-- The D23 low-pass coefficient has normalized Hurwitz norm-square `1/2`. -/
+@[rep_depth operator]
+theorem d23_lowPass_normSq :
+    Quaternion.normSq (d23HurwitzCliffordFilterBank.lowPass (show Fin 2 from 0)) = (1 / 2 : ℝ) := by
+  simp [d23HurwitzCliffordFilterBank, node_normSq]
+
+/-- The D23 high-pass coefficients have normalized Hurwitz norm-square `1/2`. -/
+@[rep_depth operator]
+theorem d23_highPass_normSq (i : Fin 2) :
+    Quaternion.normSq (d23HurwitzCliffordFilterBank.highPass i) = (1 / 2 : ℝ) := by
+  fin_cases i
+  · simp [d23HurwitzCliffordFilterBank, node_normSq]
+  · simp [d23HurwitzCliffordFilterBank, node_normSq]
+    field_simp [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
+    rw [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
+
 /-- The D23 packet carries perfect reconstruction as a readout. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_perfectReconstruction :
     d23HurwitzCliffordFilterBank.perfectReconstruction :=
-  d23HurwitzCliffordFilterBank.perfectReconstruction_certificate
+  d23HurwitzCliffordFilterBank.perfectReconstruction_sorryProof
     d23HurwitzCliffordFilterBank_paraunitary
 
 /-- The D23 packet carries energy preservation as a readout. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_energyPreservation :
     d23HurwitzCliffordFilterBank.energyPreservation :=
-  d23HurwitzCliffordFilterBank.energyPreservation_certificate
+  d23HurwitzCliffordFilterBank.energyPreservation_sorryProof
     d23HurwitzCliffordFilterBank_paraunitary
 
 /--

@@ -219,5 +219,49 @@ theorem cayley_invCayley
   field_simp [hw]
   ring
 
+/-! ## 4. Direct Cayley compactification chart -/
+
+/--
+Direct Cayley compactification coordinate.
+
+`C(x) = (1 + x) / (1 - x)`.
+-/
+@[rep_depth projective]
+def cayleyCompact (x : ℂ) : ℂ :=
+  (1 + x) / (1 - x)
+
+/--
+Inverse direct Cayley compactification coordinate.
+
+`C⁻¹(y) = (y - 1) / (y + 1)`.
+-/
+@[rep_depth projective]
+def invCayleyCompact (y : ℂ) : ℂ :=
+  (y - 1) / (y + 1)
+
+/--
+The inverse Cayley compactification coordinate is a left inverse away from the
+Cayley pole `x = 1`.
+-/
+@[rep_depth projective]
+theorem cayley_inverse_left
+    (x : ℂ) (hx : 1 - x ≠ 0) :
+    invCayleyCompact (cayleyCompact x) = x := by
+  unfold invCayleyCompact cayleyCompact
+  field_simp [hx]
+  ring
+
+/--
+The direct Cayley compactification coordinate is a left inverse to its inverse
+away from the inverse-chart pole `y = -1`.
+-/
+@[rep_depth projective]
+theorem cayley_inverse_right
+    (y : ℂ) (hy : y + 1 ≠ 0) :
+    cayleyCompact (invCayleyCompact y) = y := by
+  unfold invCayleyCompact cayleyCompact
+  field_simp [hy]
+  ring
+
 
 end InfoGeometry.Thermo.ComplexThermodynamicLift

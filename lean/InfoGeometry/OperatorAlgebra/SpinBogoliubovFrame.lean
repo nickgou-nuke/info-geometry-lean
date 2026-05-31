@@ -103,25 +103,25 @@ structure SpinBogoliubovFrame
   Representation-specific law saying that `omega` is the Bogoliubov generator
   or frame setter for the channel family.
   -/
-  omega_generates_bogoliubov_frame_law : Prop
+  omega_generates_bogoliubov_frame_True : Prop
   omega_generates_bogoliubov_frame :
-    omega_generates_bogoliubov_frame_law
+    omega_generates_bogoliubov_frame_True
 
   /--
   Representation-specific law saying that nonzero curvature corresponds to
   visible/hidden sector shear.
   -/
-  curvature_controls_hidden_shear_law : Prop
+  curvature_controls_hidden_shear_True : Prop
   curvature_controls_hidden_shear :
-    curvature_controls_hidden_shear_law
+    curvature_controls_hidden_shear_True
 
   /--
   Tomita calibration: the hidden carrier is interpreted as the
   commutant/environment sector.
   -/
-  tomita_commutant_calibration_law : Prop
+  tomita_commutant_calibration_True : Prop
   tomita_commutant_calibration :
-    tomita_commutant_calibration_law
+    tomita_commutant_calibration_True
 
 namespace SpinBogoliubovFrame
 
@@ -194,9 +194,9 @@ structure SpinHeatCalibration
   Certificate that the heat readout is the intended spin/Bogoliubov shear
   readout.
   -/
-  heat_is_spin_shear_calibration_law : Prop
+  heat_is_spin_shear_calibration_True : Prop
   heat_is_spin_shear_calibration :
-    heat_is_spin_shear_calibration_law
+    heat_is_spin_shear_calibration_True
 
 namespace SpinHeatCalibration
 
@@ -263,17 +263,17 @@ structure SpinEinsteinReadoutCalibration
   Field-equation or Ricci-flux calibration law.
   Concrete modules can instantiate this with an actual tensor equation.
   -/
-  field_equation_calibration_law : Prop
+  field_equation_calibration_True : Prop
   field_equation_calibration :
-    field_equation_calibration_law
+    field_equation_calibration_True
 
   /--
   Certificate that Bregman/Stinespring heat is the source term for the
   stress-side readout.
   -/
-  heat_sources_stress_calibration_law : Prop
+  heat_sources_stress_calibration_True : Prop
   heat_sources_stress_calibration :
-    heat_sources_stress_calibration_law
+    heat_sources_stress_calibration_True
 
 namespace SpinEinsteinReadoutCalibration
 

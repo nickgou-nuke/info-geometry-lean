@@ -379,7 +379,7 @@ theorem G_trunc_r0_mode01_eq_zero
 
 /--
 Concrete real lemma (nontrivial witness family):
-for `J = J_witness A`, `ψ = psi_witness B`, and `r = 0`,
+for `J = J_sorry A`, `ψ = psi_sorry B`, and `r = 0`,
 the mixed finite-window defect is identically zero for all `N,m`.
 -/
 theorem boundaryDefect_LG_mode01_r0_eq_zero

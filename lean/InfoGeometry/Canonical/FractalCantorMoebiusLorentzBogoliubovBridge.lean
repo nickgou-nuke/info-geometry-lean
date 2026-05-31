@@ -91,7 +91,7 @@ variable (B : FractalCantorMoebiusLorentzBogoliubovBridge E Op Hilb Spin Finite 
 
 /-- The normalized hyperbolic tilt witness is exactly `ofAngle`. -/
 @[rep_depth operator]
-theorem tilt_normalized_valid :
+theorem tilt_normalized_holds :
     B.tilt = InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle
       B.tiltAngle :=
   B.tilt_eq_ofAngle

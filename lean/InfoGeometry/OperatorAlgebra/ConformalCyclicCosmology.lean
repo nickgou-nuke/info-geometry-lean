@@ -296,7 +296,7 @@ structure GenesisReentanglementBridge
     Grammar → Latent → Prop
 
   /-- The new carrier grammar is re-entangled into the new latent context. -/
-  reentanglement_law :
+  reentanglement_True :
     ∀ o : Old, ∀ n : New,
       C.crossoverRel o n →
         reentangles
@@ -324,7 +324,7 @@ theorem old_grammar_reentangles
     B.reentangles
       (B.lightlikeGrammar.grammar (C.oldCarrier o))
       (B.latentOfNew n) := by
-  have hnew := B.reentanglement_law o n hcross
+  have hnew := B.reentanglement_True o n hcross
   have hgrammar :
       B.lightlikeGrammar.grammar (C.newCarrier n) =
         B.lightlikeGrammar.grammar (C.oldCarrier o) :=
@@ -360,7 +360,7 @@ structure CrossoverMemoryRecoveryBridge
     Residue → Memory
 
   /-- Faithful recovery law for crossover-related states. -/
-  recovery_law :
+  recovery_True :
     ∀ o : Old, ∀ n : New,
       C.crossoverRel o n →
         decode (newResidue n) = oldMemory o
@@ -381,7 +381,7 @@ theorem residue_recovers_old_memory
     {n : New}
     (hcross : C.crossoverRel o n) :
     B.decode (B.newResidue n) = B.oldMemory o :=
-  B.recovery_law o n hcross
+  B.recovery_True o n hcross
 
 end CrossoverMemoryRecoveryBridge
 

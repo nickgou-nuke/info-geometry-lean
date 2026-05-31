@@ -301,12 +301,12 @@ structure NoisyJKOUpdate
     Weight
 
   /-- Model-specific correction law. -/
-  correction_law :
+  correction_True :
     Prop
 
   /-- Certificate for the correction law. -/
-  correction_certificate :
-    correction_law
+  correction_sorryProof :
+    correction_True
 
 namespace NoisyJKOUpdate
 
@@ -316,9 +316,9 @@ variable {P : OperatorJKOPotential Weight}
 variable (N : NoisyJKOUpdate (Weight := Weight) (Noise := Noise) P)
 
 /-- The installed noisy correction certificate is available. -/
-theorem correction_valid :
-    N.correction_law :=
-  N.correction_certificate
+theorem correction_holds :
+    N.correction_True :=
+  N.correction_sorryProof
 
 end NoisyJKOUpdate
 
@@ -340,12 +340,12 @@ structure JKOModularFlowLimitCalibration
     FlowReadout
 
   /-- Model-specific limit/convergence statement. -/
-  limit_law :
+  limit_True :
     Prop
 
   /-- Certificate for the model-specific limit statement. -/
-  limit_certificate :
-    limit_law
+  limit_sorryProof :
+    limit_True
 
 namespace JKOModularFlowLimitCalibration
 
@@ -355,9 +355,9 @@ variable {P : OperatorJKOPotential Weight}
 variable (C : JKOModularFlowLimitCalibration (Weight := Weight) (FlowReadout := FlowReadout) P)
 
 /-- The installed modular-flow limit certificate is available. -/
-theorem limit_valid :
-    C.limit_law :=
-  C.limit_certificate
+theorem limit_holds :
+    C.limit_True :=
+  C.limit_sorryProof
 
 end JKOModularFlowLimitCalibration
 

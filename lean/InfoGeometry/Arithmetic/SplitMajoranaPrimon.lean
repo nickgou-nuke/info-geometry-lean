@@ -65,7 +65,7 @@ theorem parity_eq_one_sub_twoN :
   M.Pi_eq_one_sub_twoN
 
 /-- The supplied CAR law is available. -/
-theorem car_valid :
+theorem car_holds :
     M.iota * M.eps + M.eps * M.iota = 1 :=
   M.car
 

@@ -74,19 +74,19 @@ namespace RelativeDeterminantScatteringPacket
 variable (P : RelativeDeterminantScatteringPacket.{uH, uScat})
 
 /-- Re-export: supplied self-adjointness/symmetry witness. -/
-def selfAdjoint_law : Prop :=
+def selfAdjoint_True : Prop :=
   P.selfAdjointLaw
 
 /-- Re-export: supplied meromorphic continuation witness. -/
-def meromorphicContinuation_law : Prop :=
+def meromorphicContinuation_True : Prop :=
   P.meromorphicContinuationLaw
 
 /-- Re-export: supplied determinant/scattering compatibility witness. -/
-def determinant_scattering_identity_law : Prop :=
+def determinant_scattering_identity_True : Prop :=
   P.determinant_scattering_identity
 
 /-- Re-export: supplied pole/zero conversion witness. -/
-def pole_zero_conversion_law : Prop :=
+def pole_zero_conversion_True : Prop :=
   P.pole_zero_conversion
 
 /-- Guard re-export: no unconditional RH theorem is asserted here. -/

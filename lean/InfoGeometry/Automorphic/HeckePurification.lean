@@ -81,7 +81,7 @@ structure HeckeSugawaraIntertwining
   sockets to state Hecke compatibility, but this file does not derive the
   physical commutation theorem from first principles.
   -/
-  hecke_sugawara_compatibility_law : Prop
+  hecke_sugawara_compatibility_True : Prop
 
   /--
   Resonance match: the zero-value of a completed L-function matches the
@@ -95,7 +95,7 @@ structure HeckeSugawaraIntertwining
   The spectral L-function value at the resonance point matches the purified 
   Sugawara readout of the corresponding eigenpacket.
   -/
-  purification_law :
+  purification_True :
     ∀ (chi : JointEigenvalue HeckeIndex) (_P : CuspidalEigenpacket R chi) (s : State),
       charge_eval (EAV.centralChargeReadout s) =
         L_func.value chi 0
@@ -136,7 +136,7 @@ theorem purified_charge_eq_l_value
     (s : State) :
     charge_eval (EAV.centralChargeReadout s) =
       L_func.value chi 0 :=
-  H.purification_law chi P s
+  H.purification_True chi P s
 
 /-- The hidden grade-memory readout also matches the Hecke L-value at zero. -/
 theorem hiddenGradeMemory_eq_l_value

@@ -92,7 +92,7 @@ def cosmicCrossoverInterpretationLaw : Prop :=
     D.cptClosure.theta D.P_right = D.P_left
 
 /-- The DIII projector-swap law is constructively supplied by CPT conjugation. -/
-theorem cosmicCrossoverInterpretation_valid :
+theorem cosmicCrossoverInterpretation_holds :
     D.cosmicCrossoverInterpretationLaw :=
   ⟨D.cptClosure_theta_P_left, D.cptClosure_theta_P_right⟩
 
@@ -104,9 +104,9 @@ def toCosmicCrossoverWitness : CosmicCrossoverWitness Op where
   boundary := D.toAndreevBoundaryDatum
   oldNullData := D.P_left
   newMetricData := D.P_right
-  reflection_law := D.cptClosure_theta_P_left
-  crossover_interpretation_law := D.cosmicCrossoverInterpretationLaw
-  crossover_interpretation_certificate := D.cosmicCrossoverInterpretation_valid
+  reflection_True := D.cptClosure_theta_P_left
+  crossover_interpretation_True := D.cosmicCrossoverInterpretationLaw
+  crossover_interpretation_sorryProof := D.cosmicCrossoverInterpretation_holds
 
 /-- The DIII chiral diagonal survives the CPT/crossover closure. -/
 theorem cpt_crossover_diagonal_fixed :

@@ -46,13 +46,13 @@ structure SeparatedDeformationWitness where
 
 /-- Identification of `q` with a thermal parameter is available only from witness data. -/
 @[rep_depth thermo]
-theorem q_identification_requires_witness
+theorem q_identification_requires_sorry
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 
 @[rep_depth thermo]
-theorem q_not_identified_with_expNegBeta_without_witness
+theorem q_not_identified_with_expNegBeta_without_sorry
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter

@@ -351,7 +351,7 @@ structure EulerProductWitness
   convergenceRegion : Set ℂ
 
   /-- Proof/certificate of the Euler-product law. -/
-  euler_product_certificate :
+  euler_product_sorryProof :
     HasEulerProduct L PrimeIndex localFactor convergenceRegion
 
 namespace EulerProductWitness
@@ -369,11 +369,11 @@ def toEulerProductData :
   PrimeIndex := E.PrimeIndex
   localFactor := E.localFactor
   convergenceRegion := E.convergenceRegion
-  hasEulerProduct := E.euler_product_certificate
+  hasEulerProduct := E.euler_product_sorryProof
 
 @[simp]
 theorem toEulerProductData_hasEulerProduct :
-    (E.toEulerProductData).hasEulerProduct = E.euler_product_certificate :=
+    (E.toEulerProductData).hasEulerProduct = E.euler_product_sorryProof :=
   rfl
 
 end EulerProductWitness
@@ -390,7 +390,7 @@ structure CompletedLFunctionWitness
   completedL : ℂ → ℂ
 
   /-- Proof/certificate of the completed-functional-equation law. -/
-  completed_functional_equation_certificate :
+  completed_functional_equation_sorryProof :
     HasCompletedFunctionalEquation L completedL
 
 namespace CompletedLFunctionWitness
@@ -403,7 +403,7 @@ Forgetful adapter to the legacy completed-functional-equation predicate.
 -/
 theorem toHasCompletedFunctionalEquation :
     HasCompletedFunctionalEquation L C.completedL :=
-  C.completed_functional_equation_certificate
+  C.completed_functional_equation_sorryProof
 
 end CompletedLFunctionWitness
 

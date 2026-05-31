@@ -230,6 +230,90 @@ theorem hasDrazinInverse_zero_of_twoSidedInverse
   exact ⟨D, (drazinWitnessContext_zero_of_twoSidedInverse S D hSD hDS).isDrazin⟩
 
 /--
+In the decoupled case `B = 0` (hence also `C = 0`), explicit two-sided
+inverses of the bosonic and topological `2×2` blocks assemble into a two-sided
+inverse of the full `4×4` Dirac-Souriau operator.
+-/
+theorem toMatrix_has_twoSidedInverse_of_decoupled
+    (S : DiracSouriauSector R)
+    (Ainv Kinv : Matrix (Fin 2) (Fin 2) R)
+    (hB : S.B = 0)
+    (hA_right : S.A * Ainv = 1)
+    (hA_left : Ainv * S.A = 1)
+    (hK_right : S.K * Kinv = 1)
+    (hK_left : Kinv * S.K = 1) :
+    let D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+      fromBlocks Ainv 0 0 Kinv
+    S.toMatrix * D = 1 ∧ D * S.toMatrix = 1 := by
+  let D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+    fromBlocks Ainv 0 0 Kinv
+  have hC : S.C = 0 := by
+    simp [DiracSouriauSector.C, hB]
+  refine ⟨?_, ?_⟩
+  · ext i j <;> cases i <;> cases j <;>
+      simp [DiracSouriauSector.toMatrix, DiracSouriauSector.C, hB,
+        Matrix.fromBlocks_multiply, Matrix.one_apply, hA_right, hK_right]
+  · ext i j <;> cases i <;> cases j <;>
+      simp [DiracSouriauSector.toMatrix, DiracSouriauSector.C, hB,
+        Matrix.fromBlocks_multiply, Matrix.one_apply, hA_left, hK_left]
+
+/--
+A decoupled Dirac-Souriau sector with explicit inverse blocks has Drazin index
+`0`, hence lies entirely in the regular (non-nilpotent) lane.
+-/
+theorem hasDrazinInverse_zero_of_decoupled
+    (S : DiracSouriauSector R)
+    (Ainv Kinv : Matrix (Fin 2) (Fin 2) R)
+    (hB : S.B = 0)
+    (hA_right : S.A * Ainv = 1)
+    (hA_left : Ainv * S.A = 1)
+    (hK_right : S.K * Kinv = 1)
+    (hK_left : Kinv * S.K = 1) :
+    S.HasDrazinInverse 0 := by
+  let D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+    fromBlocks Ainv 0 0 Kinv
+  have hInv :=
+    toMatrix_has_twoSidedInverse_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left
+  exact hasDrazinInverse_zero_of_twoSidedInverse S D hInv.1 hInv.2
+
+/--
+Constructive witness context for the decoupled `B = 0` lane with explicit block
+inverses. This exports the existing decoupled Drazin route as a proof-carrying
+witness object instead of only the proposition `HasDrazinInverse 0`.
+-/
+def drazinWitnessContext_zero_of_decoupled
+    (S : DiracSouriauSector R)
+    (Ainv Kinv : Matrix (Fin 2) (Fin 2) R)
+    (hB : S.B = 0)
+    (hA_right : S.A * Ainv = 1)
+    (hA_left : Ainv * S.A = 1)
+    (hK_right : S.K * Kinv = 1)
+    (hK_left : Kinv * S.K = 1) :
+    DrazinWitnessContext S := by
+  let D : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+    fromBlocks Ainv 0 0 Kinv
+  have hInv :=
+    toMatrix_has_twoSidedInverse_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left
+  exact drazinWitnessContext_zero_of_twoSidedInverse S D hInv.1 hInv.2
+
+/--
+The constructive decoupled witness context recovers the old proposition-level
+surface at index `0`.
+-/
+theorem hasDrazinInverse_zero_of_decoupled_context
+    (S : DiracSouriauSector R)
+    (Ainv Kinv : Matrix (Fin 2) (Fin 2) R)
+    (hB : S.B = 0)
+    (hA_right : S.A * Ainv = 1)
+    (hA_left : Ainv * S.A = 1)
+    (hK_right : S.K * Kinv = 1)
+    (hK_left : Kinv * S.K = 1) :
+    S.HasDrazinInverse
+      (drazinWitnessContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left).k := by
+  exact hasDrazinInverse_of_context
+    (drazinWitnessContext_zero_of_decoupled S Ainv Kinv hB hA_right hA_left hK_right hK_left)
+
+/--
 Definition-level supersymmetric stability.
 The operator preserves the $C\ell(4,4)$ vacuum if the intertwiner B is
 balanced by its supersymmetric partner C.
@@ -303,7 +387,7 @@ def IsBPSProtected (S : DiracSouriauSector ℝ) (κ_crit : ℝ) : Prop :=
 
 /-- The original `IsBPSProtected` predicate is equivalent to the existence of a witness. -/
 @[rep_depth transport]
-theorem IsBPSProtected_iff_exists_witness (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
+theorem IsBPSProtected_iff_exists (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
     IsBPSProtected S κ_crit ↔ S.berezinian < κ_crit := by
   constructor
   · rintro ⟨w, rfl⟩

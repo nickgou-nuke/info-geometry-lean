@@ -119,7 +119,116 @@ theorem comp
 
 end PhaseLinear
 
-/-! ## 2. Phase-compatible Cayley transform -/
+/-! ## 2. Operator Cayley identities -/
+
+/--
+Right Cayley transform relation.
+
+Let `U` be a right inverse witness for `1 - X` in the sense
+
+`U * (1 - X) = 1`.
+
+For the right Cayley expression
+
+`Y = (1 + X) * U`,
+
+we have
+
+`(Y - 1) * (1 - X) = 2 * X`.
+
+This is the noncommutative operator version of the scalar identity underlying
+`C⁻¹(C(x)) = x`, before dividing by `2`.
+-/
+theorem operator_cayley_right_sub_relation
+    {R : Type*} [Ring R]
+    (X U : R)
+    (hU : U * (1 - X) = 1) :
+    (((1 + X) * U) - 1) * (1 - X) = (2 : R) * X := by
+  calc
+    (((1 + X) * U) - 1) * (1 - X)
+        = (1 + X) * (U * (1 - X)) - (1 - X) := by
+          noncomm_ring
+    _ = (1 + X) * 1 - (1 - X) := by
+          rw [hU]
+    _ = (2 : R) * X := by
+          noncomm_ring
+
+/--
+Right Cayley denominator relation.
+
+Under the same hypothesis,
+
+`(((1 + X) * U) + 1) * (1 - X) = 2`.
+
+This is the operator denominator identity behind the inverse Cayley formula.
+-/
+theorem operator_cayley_right_add_relation
+    {R : Type*} [Ring R]
+    (X U : R)
+    (hU : U * (1 - X) = 1) :
+    (((1 + X) * U) + 1) * (1 - X) = (2 : R) := by
+  calc
+    (((1 + X) * U) + 1) * (1 - X)
+        = (1 + X) * (U * (1 - X)) + (1 - X) := by
+          noncomm_ring
+    _ = (1 + X) * 1 + (1 - X) := by
+          rw [hU]
+    _ = (2 : R) := by
+          norm_num
+
+/-! ## Common Gibbs half-factor lemmas -/
+
+/--
+Common Gibbs half-factor for the bosonic denominator.
+
+If `Eminus * Eplus = 1`, then
+
+`1 - Eminus * Eminus = Eminus * (Eplus - Eminus)`.
+
+In the thermal specialization:
+
+`Eplus = exp(βH/2)`,
+`Eminus = exp(-βH/2)`,
+so this is
+
+`1 - exp(-βH) = exp(-βH/2) * (exp(βH/2) - exp(-βH/2))`.
+-/
+theorem common_gibbs_half_factor_sub
+    {R : Type*} [Ring R]
+    {Eplus Eminus : R}
+    (hInv : Eminus * Eplus = 1) :
+    1 - Eminus * Eminus = Eminus * (Eplus - Eminus) := by
+  calc
+    1 - Eminus * Eminus
+        = Eminus * Eplus - Eminus * Eminus := by
+          rw [hInv]
+    _ = Eminus * (Eplus - Eminus) := by
+          rw [mul_sub]
+
+/--
+Common Gibbs half-factor for the fermionic factor.
+
+If `Eminus * Eplus = 1`, then
+
+`1 + Eminus * Eminus = Eminus * (Eplus + Eminus)`.
+
+In the thermal specialization:
+
+`1 + exp(-βH) = exp(-βH/2) * (exp(βH/2) + exp(-βH/2))`.
+-/
+theorem common_gibbs_half_factor_add
+    {R : Type*} [Ring R]
+    {Eplus Eminus : R}
+    (hInv : Eminus * Eplus = 1) :
+    1 + Eminus * Eminus = Eminus * (Eplus + Eminus) := by
+  calc
+    1 + Eminus * Eminus
+        = Eminus * Eplus + Eminus * Eminus := by
+          rw [hInv]
+    _ = Eminus * (Eplus + Eminus) := by
+          rw [mul_add]
+
+/-! ## 3. Phase-compatible Cayley transform -/
 
 /--
 Phase-compatible resolvent datum for the bounded Cayley transform.
@@ -232,7 +341,7 @@ structure BoundedTransformDatum
   Proof-carrying certificate that `F` is the intended bounded transform of the
   unbounded/spectral generator in the concrete model.
   -/
-  bounded_transform_law : Prop
+  bounded_transform_True : Prop
 
 namespace BoundedTransformDatum
 
@@ -322,7 +431,7 @@ structure AdjointBackend
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   adj : EndR H → EndR H
 
-  adjoint_law : Prop
+  adjoint_True : Prop
 
 /--
 Compact/ideal backend for Kasparov compact defects.
@@ -427,7 +536,7 @@ structure BoundedKasparovCycle
   Certificate that these compact-defect laws instantiate the intended
   Kasparov/Fredholm module in the concrete model.
   -/
-  kasparov_cycle_law : Prop
+  kasparov_cycle_True : Prop
 
 namespace BoundedKasparovCycle
 
@@ -484,12 +593,50 @@ def PhaseResolventOwnerTarget : Prop :=
     Nonempty (PhaseResolventDatum H)
 
 /--
+The phase-resolvent owner target is constructively inhabited by the trivial
+choice `K = 0`, `D = id`, `denomInv = id`, so that `D + K = id`.
+-/
+theorem phaseResolventOwnerTarget :
+    PhaseResolventOwnerTarget := by
+  intro H _ _
+  refine ⟨{
+    K := 0
+    D := ContinuousLinearMap.id ℝ H
+    denomInv := ContinuousLinearMap.id ℝ H
+    D_phase_linear := ?_
+    denomInv_phase_linear := ?_
+    denom_right := ?_
+    denom_left := ?_
+  }⟩
+  · ext x
+    simp
+  · exact PhaseLinear.zero 0
+  · ext x
+    simp
+  · ext x
+    simp
+
+/--
 Owner target for constructing a bounded transform proxy.
 -/
 @[owner_target_tag]
 def BoundedTransformOwnerTarget : Prop :=
   ∀ (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H],
     Nonempty (BoundedTransformDatum H)
+
+/--
+The bounded-transform owner target is constructively inhabited by choosing the
+zero phase axis and the zero bounded transform.
+-/
+theorem boundedTransformOwnerTarget :
+    BoundedTransformOwnerTarget := by
+  intro H _ _
+  exact ⟨{
+    K := 0
+    F := 0
+    F_phase_linear := PhaseLinear.zero 0
+    bounded_transform_True := True
+  }⟩
 
 /--
 Owner target for constructing a bounded Kasparov cycle.

@@ -217,7 +217,7 @@ variable
 variable (D : KMSDetailedBalance A Region Point Tangent Value I)
 
 /-- The stored calibration proposition. -/
-def form_calibration_valid : Prop :=
+def form_calibration_holds : Prop :=
   D.form_calibration
 
 /-- Algebraic KMS/detailed-balance boundary identity. -/

@@ -223,20 +223,20 @@ variable (B : MoebiusBogoliubovVirasoroBridge E Op Hilb Spin Finite Alg)
 
 /-- The Möbius boost matrix is the explicit diagonal boost readout. -/
 @[rep_depth projective]
-theorem moebiusMatrix_eq_diagonalBoost_valid :
+theorem moebiusMatrix_eq_diagonalBoost_holds :
     B.moebiusMatrix =
       diagonalBoost B.boostParameter B.boostParameter_pos :=
   B.moebiusMatrix_eq_diagonalBoost
 
 /-- The hyperbolic Bogoliubov tilt is normalized as the boost-induced angle. -/
 @[rep_depth projective]
-theorem tilt_normalized_valid :
+theorem tilt_normalized_holds :
     B.tilt = bogoliubovTiltOfBoost B.boostParameter :=
   B.tilt_eq_ofAngle
 
 /-- The Virasoro dilation readout is exactly the exponential depth scale. -/
 @[rep_depth operator]
-theorem virasoroDilation_eq_valid :
+theorem virasoroDilation_eq_holds :
     ∀ w : FiniteBinaryWord, B.virasoroDilation w = virasoroL0Dilation B.virasoroL0 w :=
   B.virasoroDilation_eq
 

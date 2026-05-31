@@ -177,7 +177,7 @@ structure TransverseJKOFlow
   transverseLaw : State → State → Prop
 
   /-- The supplied step satisfies the transverse law from points on the leaf. -/
-  step_law :
+  step_True :
     ∀ ⦃x : State⦄, x ∈ L.carrier → transverseLaw x (step x)
 
 namespace TransverseJKOFlow
@@ -187,11 +187,11 @@ variable {L : SymplecticLeaf State}
 variable (J : TransverseJKOFlow L)
 
 /-- Re-export the supplied transverse law for one JKO-style step. -/
-theorem transverse_step_law
+theorem transverse_step_True
     {x : State}
     (hx : x ∈ L.carrier) :
     J.transverseLaw x (J.step x) :=
-  J.step_law hx
+  J.step_True hx
 
 end TransverseJKOFlow
 

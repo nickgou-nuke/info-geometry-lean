@@ -255,7 +255,7 @@ theorem toBridge_kms_boundary_condition :
 Route the legacy broad KMS bridge through a narrowed witness packet.
 -/
 @[rep_depth krein]
-theorem mk_broad_of_witness :
+theorem mk_broad_of_sorry :
     ∃ B : HestenesAnalyticKMSBridge (E := E), B.kms.state = W.kms.state :=
   ⟨W.toBridge, rfl⟩
 
@@ -314,7 +314,7 @@ theorem phase_right_covariance
 
 /-- Readback: the underlying state is KMS relative to the operator flow. -/
 @[rep_depth krein]
-theorem kms_valid :
+theorem kms_holds :
     B.kms.kms_boundary_condition :=
   B.kms.kms_boundary_condition_holds
 

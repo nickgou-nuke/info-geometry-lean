@@ -26,7 +26,7 @@ structure WeylHomogeneousOperatorReadout (Op : Type*) where
   readout : Op → ℝ
   scale : ℝ → Op → Op
   weight : ℕ
-  scale_law :
+  scale_True :
     ∀ c A, readout (scale c A) = c ^ weight * readout A
 
 namespace WeylHomogeneousOperatorReadout
@@ -38,7 +38,7 @@ variable (W : WeylHomogeneousOperatorReadout Op)
 @[rep_depth operator]
 theorem readout_scale :
     ∀ c A, W.readout (W.scale c A) = c ^ W.weight * W.readout A :=
-  W.scale_law
+  W.scale_True
 
 /-- Weight-zero readouts are scale-invariant. -/
 @[rep_depth operator]
@@ -47,7 +47,7 @@ theorem readout_scale_of_weight_zero
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = W.readout A := by
-  rw [W.scale_law, hW]
+  rw [W.scale_True, hW]
   simp
 
 /-- Weight-one readouts scale linearly. -/
@@ -57,7 +57,7 @@ theorem readout_scale_of_weight_one
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c * W.readout A := by
-  rw [W.scale_law, hW]
+  rw [W.scale_True, hW]
   simp
 
 /-- Weight-two readouts scale quadratically. -/
@@ -67,7 +67,7 @@ theorem readout_scale_of_weight_two
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c ^ 2 * W.readout A := by
-  rw [W.scale_law, hW]
+  rw [W.scale_True, hW]
 
 end WeylHomogeneousOperatorReadout
 
@@ -81,7 +81,7 @@ homogeneous representative does not change the shape readout.
 structure WeylInvariantShapeReadout (Op Shape : Type*) where
   shape : Op → Shape
   scale : ℝ → Op → Op
-  shape_scale_law :
+  shape_scale_True :
     ∀ c A, c ≠ 0 → shape (scale c A) = shape A
 
 namespace WeylInvariantShapeReadout
@@ -96,7 +96,7 @@ theorem shape_scale
     (A : Op)
     (hc : c ≠ 0) :
     S.shape (S.scale c A) = S.shape A :=
-  S.shape_scale_law c A hc
+  S.shape_scale_True c A hc
 
 end WeylInvariantShapeReadout
 
@@ -116,7 +116,7 @@ structure WeylPhysicalReadoutFactorization (Op Shape : Type*) where
   shape : Op → Shape
   scaleFactor : Op → ℝ
   weight : ℕ
-  factorization_law :
+  factorization_True :
     ∀ A,
       physicalReadout A =
         scaleFactor A ^ weight * shapeReadout (shape A)
@@ -132,7 +132,7 @@ theorem physical_eq_scale_pow_mul_shape
     (A : Op) :
     F.physicalReadout A =
       F.scaleFactor A ^ F.weight * F.shapeReadout (F.shape A) :=
-  F.factorization_law A
+  F.factorization_True A
 
 end WeylPhysicalReadoutFactorization
 

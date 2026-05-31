@@ -127,11 +127,11 @@ structure ChiralHodgeDiracSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminu
   LapMinus : Cminus → Cminus
 
   /-- Positive-sector Hodge loop `Δ₊ = D⁻D⁺`. -/
-  LapPlus_law :
+  LapPlus_True :
     ∀ x : Cplus, LapPlus x = Dminus (Dplus x)
 
   /-- Negative-sector Hodge loop `Δ₋ = D⁺D⁻`. -/
-  LapMinus_law :
+  LapMinus_True :
     ∀ y : Cminus, LapMinus y = Dplus (Dminus y)
 
 namespace ChiralHodgeDiracSocket
@@ -156,7 +156,7 @@ theorem plusHarmonic_iff_loop_zero
     (x : Cplus) :
     plusHarmonic H x ↔ H.Dminus (H.Dplus x) = 0 := by
   unfold plusHarmonic
-  rw [H.LapPlus_law x]
+  rw [H.LapPlus_True x]
 
 /-- Readback: minus harmonic means the `D⁺D⁻` loop vanishes. -/
 @[rep_depth krein]
@@ -164,7 +164,7 @@ theorem minusHarmonic_iff_loop_zero
     (y : Cminus) :
     minusHarmonic H y ↔ H.Dplus (H.Dminus y) = 0 := by
   unfold minusHarmonic
-  rw [H.LapMinus_law y]
+  rw [H.LapMinus_True y]
 
 end ChiralHodgeDiracSocket
 

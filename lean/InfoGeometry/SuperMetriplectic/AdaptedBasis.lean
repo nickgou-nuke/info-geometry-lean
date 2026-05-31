@@ -178,7 +178,7 @@ theorem drazin_defect_projector_eq
 theorem body_fisher_nonnegative
     (B : InvolutionAdaptedSuperMetriplecticBasis) :
     0 ≤ B.fisher.bodyFisherQuadratic :=
-  B.fisher.body_second_law
+  B.fisher.body_second_True
 
 /-- The raw supertrace readout remains signed in the adapted basis. -/
 theorem supertrace_signed

@@ -220,7 +220,7 @@ theorem Ksur_eq_calibrated :
       C.bridge.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
           C.bridge.CIK :=
-  C.bridge.Ksur_law
+  C.bridge.Ksur_True
 
 end WeylModularHamiltonianPhysicalReadoutCarrier
 

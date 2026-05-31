@@ -616,7 +616,7 @@ end GKSLPacket
 
 namespace SpectralThermalNormalizationPacket
 
-theorem boltzmannTilt_valid
+theorem boltzmannTilt_holds
     (_P : SpectralThermalNormalizationPacket) :
     _P.boltzmannTilt := by
   exact _P.boltzmannTilt_proof
@@ -625,7 +625,7 @@ end SpectralThermalNormalizationPacket
 
 namespace ModularTransportBridgePacket
 
-theorem cocycleTransport_valid
+theorem cocycleTransport_holds
     (_P : ModularTransportBridgePacket) : _P.cocycleTransportCertificate := by
   exact _P.cocycleTransportCertificateWitness
 
@@ -633,7 +633,7 @@ end ModularTransportBridgePacket
 
 namespace ModularVolumeBridgePacket
 
-theorem entropyComparison_valid
+theorem entropyComparison_holds
     (P : ModularVolumeBridgePacket) : P.entropyComparison := by
   exact P.entropyComparisonLaw
 

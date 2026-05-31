@@ -29,7 +29,7 @@ The variance is constrained by the Cramer-Rao bound for the Spin Factor geometry
 structure SpinFactorState (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] [FiniteDimensional ℝ E] where
   x : E
-  domain_valid : SpinFactorDomain x
+  domain_holds : SpinFactorDomain x
   -- The fundamental variance bound derived from the geometry
   variance_limit : ℝ
   -- The generalized Cramer-Rao bound establishes a floor for the minimal variance.

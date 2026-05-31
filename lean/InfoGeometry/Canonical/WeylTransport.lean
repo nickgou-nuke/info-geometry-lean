@@ -403,7 +403,7 @@ If transformed holonomy picks up exactly the expected endpoint Weyl factors,
 then the boundary-compensated observable equals the original (untransformed)
 transport.
 -/
-theorem gaugeCompensatedHolonomy_eq_base_of_boundary_law
+theorem gaugeCompensatedHolonomy_eq_base_of_boundary_True
     (Δ : WeylDifferentialOperator K X A)
     (Λ : WeylLineIntegrator I A S)
     (H : WeylHolonomyMap S P)

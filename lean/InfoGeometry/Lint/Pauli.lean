@@ -22,7 +22,7 @@ register_option linter.pauli.grandUnity : Bool := {
 /-- Option to control the Pauli witness-pack linter. -/
 register_option linter.pauli.witness : Bool := {
   defValue := true
-  descr := "warn about structures with generic Prop _statement/_witness field pairs"
+  descr := "warn about structures with generic Prop _statement/_sorry field pairs"
 }
 
 private def isCanonical (declName : Name) : Bool :=

@@ -317,10 +317,10 @@ The direct Arango expression graph is exported with:
 lake env lean --run lean/DAG/ExprArangoExport.lean DAG.Basic DAG artifacts/expr-graph/arango-smoke 50 true
 ```
 
-For the full repo namespace surface:
+For the current full repo namespace surface:
 
 ```bash
-lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.Audit InfoGeometry artifacts/expr-graph/arango 0 true
+lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.All InfoGeometry artifacts/expr-graph/arango 0 true true
 ```
 
 Then ingest to Arango:

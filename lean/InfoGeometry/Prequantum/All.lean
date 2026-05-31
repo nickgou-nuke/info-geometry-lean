@@ -1,4 +1,11 @@
 import InfoGeometry.Prequantum.Scaling
+import InfoGeometry.Prequantum.LiouvilleCapacity
+import InfoGeometry.Prequantum.AlgebraicGNSState
+import InfoGeometry.Prequantum.SouriauJaynesTrace
+import InfoGeometry.Prequantum.FiniteSymmetryAtoms
+import InfoGeometry.Prequantum.GNSBridge
+import InfoGeometry.Prequantum.SouriauJonesNilpotentBridge
+import InfoGeometry.Prequantum.JaynesKLPotential
 
 namespace InfoGeometry
 

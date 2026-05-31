@@ -116,12 +116,12 @@ noncomputable def weylBoundarySpinorPair_of_nontrivial_chiralKernelSlices_of_ide
   have hminus_ne' : M.chiralityPolarization.minus ≠ ⊥ := by
     rw [hminus]
     exact hminus_ne
-  let hplus_witness := (M.chiralityPolarization.plus).ne_bot_iff.mp hplus_ne'
-  let ψplus := Classical.choose hplus_witness
-  let hplus_witness_spec := Classical.choose_spec hplus_witness
-  let hminus_witness := (M.chiralityPolarization.minus).ne_bot_iff.mp hminus_ne'
-  let ψminus := Classical.choose hminus_witness
-  let hminus_witness_spec := Classical.choose_spec hminus_witness
+  let hplus_sorry := (M.chiralityPolarization.plus).ne_bot_iff.mp hplus_ne'
+  let ψplus := Classical.choose hplus_sorry
+  let hplus_witness_spec := Classical.choose_spec hplus_sorry
+  let hminus_sorry := (M.chiralityPolarization.minus).ne_bot_iff.mp hminus_ne'
+  let ψminus := Classical.choose hminus_sorry
+  let hminus_witness_spec := Classical.choose_spec hminus_sorry
   have hψplus_mem : ψplus ∈ M.chiralityPolarization.plus := hplus_witness_spec.1
   have hψplus_ne : ψplus ≠ 0 := hplus_witness_spec.2
   have hψminus_mem : ψminus ∈ M.chiralityPolarization.minus := hminus_witness_spec.1

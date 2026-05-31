@@ -44,11 +44,11 @@ structure CantorDiracSeaChargeHestenesPacket
   hestenes : CantorDiracSeaHestenesPacket (E := E) Op (Z2Charge Bool)
   walk_eq : hestenes.walk = chargeDatum.walk
   chargeReadout : H₂ → Z2Charge Bool
-  left_realized_charge_law :
+  left_realized_charge_True :
     ∀ (w : FiniteBinaryWord) (ξ : H₂),
       chargeReadout (hestenes.realizeLeftHop w ξ) =
         flipBit false (chargeReadout ξ)
-  right_realized_charge_law :
+  right_realized_charge_True :
     ∀ (w : FiniteBinaryWord) (ξ : H₂),
       chargeReadout (hestenes.realizeRightHop w ξ) =
         flipBit true (chargeReadout ξ)
@@ -64,7 +64,7 @@ theorem left_realized_flips_false_bit
     (w : FiniteBinaryWord) (ξ : H₂) :
     P.chargeReadout (P.hestenes.realizeLeftHop w ξ) false =
       !(P.chargeReadout ξ false) := by
-  rw [P.left_realized_charge_law]
+  rw [P.left_realized_charge_True]
   simp
 
 /-- The doubled-carrier left hop preserves the true-bit charge coordinate. -/
@@ -73,7 +73,7 @@ theorem left_realized_preserves_true_bit
     (w : FiniteBinaryWord) (ξ : H₂) :
     P.chargeReadout (P.hestenes.realizeLeftHop w ξ) true =
       P.chargeReadout ξ true := by
-  rw [P.left_realized_charge_law]
+  rw [P.left_realized_charge_True]
   simp
 
 /-- The doubled-carrier right hop flips the true-bit charge coordinate. -/
@@ -82,7 +82,7 @@ theorem right_realized_flips_true_bit
     (w : FiniteBinaryWord) (ξ : H₂) :
     P.chargeReadout (P.hestenes.realizeRightHop w ξ) true =
       !(P.chargeReadout ξ true) := by
-  rw [P.right_realized_charge_law]
+  rw [P.right_realized_charge_True]
   simp
 
 /-- The doubled-carrier right hop preserves the false-bit charge coordinate. -/
@@ -91,28 +91,28 @@ theorem right_realized_preserves_false_bit
     (w : FiniteBinaryWord) (ξ : H₂) :
     P.chargeReadout (P.hestenes.realizeRightHop w ξ) false =
       P.chargeReadout ξ false := by
-  rw [P.right_realized_charge_law]
+  rw [P.right_realized_charge_True]
   simp
 
 /-- Owner-side left charge law readback through the shared walk datum. -/
 @[rep_depth operator]
-theorem owner_left_charge_law
+theorem owner_left_charge_True
     (w : FiniteBinaryWord) :
     P.hestenes.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
       flipBit false (P.hestenes.walk.charge w) := by
   rw [P.walk_eq]
-  exact P.chargeDatum.left_charge_law w
+  exact P.chargeDatum.left_charge_True w
 
 /-- Owner-side right charge law readback through the shared walk datum. -/
 @[rep_depth operator]
-theorem owner_right_charge_law
+theorem owner_right_charge_True
     (w : FiniteBinaryWord) :
     P.hestenes.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
       flipBit true (P.hestenes.walk.charge w) := by
   rw [P.walk_eq]
-  exact P.chargeDatum.right_charge_law w
+  exact P.chargeDatum.right_charge_True w
 
 end CantorDiracSeaChargeHestenesPacket
 

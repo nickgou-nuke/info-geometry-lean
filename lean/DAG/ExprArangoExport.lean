@@ -53,11 +53,11 @@ structure ExportMeta where
 deriving Repr, ToJson
 
 structure ExportState where
-  nodes : Array NodeRow := #[]
-  edges : Array EdgeRow := #[]
   declKeyMap : Std.HashMap Name String := {}
   nextExprNodeId : Nat := 0
   nextEdgeId : Nat := 0
+  nodeCount : Nat := 0
+  edgeCount : Nat := 0
   brokenBVarCount : Nat := 0
 deriving Inhabited
 
@@ -176,10 +176,12 @@ private def freshEdgeKey : ExportM String := do
   set { st with nextEdgeId := st.nextEdgeId + 1 }
   pure key
 
-private def addNode (row : NodeRow) : ExportM Unit :=
-  modify fun st => { st with nodes := st.nodes.push row }
+private def addNode (hNodes : IO.FS.Handle) (row : NodeRow) : ExportM Unit := do
+  hNodes.putStrLn (toJson row).compress
+  modify fun st => { st with nodeCount := st.nodeCount + 1 }
 
 private def addEdge
+    (hEdges : IO.FS.Handle)
     (fromKey toKey kind role decl sectionTag : String)
     (deBruijnIdx? : Option Nat := none)
     (incidenceHash : String := "")
@@ -199,12 +201,13 @@ private def addEdge
     quality := quality
     notes := notes
   }
-  modify fun st => { st with edges := st.edges.push row }
+  hEdges.putStrLn (toJson row).compress
+  modify fun st => { st with edgeCount := st.edgeCount + 1 }
 
 private def bumpBrokenBVar : ExportM Unit :=
   modify fun st => { st with brokenBVarCount := st.brokenBVarCount + 1 }
 
-private def ensureDeclNode (env : Environment) (name : Name) : ExportM String := do
+private def ensureDeclNode (hNodes : IO.FS.Handle) (env : Environment) (name : Name) : ExportM String := do
   let st ← get
   match st.declKeyMap.get? name with
   | some key => pure key
@@ -230,14 +233,16 @@ private def ensureDeclNode (env : Environment) (name : Name) : ExportM String :=
         shapeHash := (hash (toString name)).toNat
         quality := if env.find? name |>.isSome then "ok" else "broken"
       }
+      hNodes.putStrLn (toJson row).compress
       modify fun s =>
         { s with
-          nodes := s.nodes.push row
+          nodeCount := s.nodeCount + 1
           declKeyMap := s.declKeyMap.insert name key
         }
       pure key
 
 def visitExpr
+    (hNodes hEdges : IO.FS.Handle)
     (env : Environment)
     (declName : Name)
     (sectionTag : String)
@@ -269,83 +274,78 @@ def visitExpr
         deBruijnHash := deBruijnNodeHash (toString declName) sectionTag path idx
         quality := if isBroken then "broken" else "ok"
       }
-      addNode row
+      addNode hNodes row
       match binderAt? binders idx with
       | some binderKey =>
-          addEdge key binderKey "bind" "bound_by" (toString declName) sectionTag
+          addEdge hEdges key binderKey "bind" "bound_by" (toString declName) sectionTag
             (some idx)
             (deBruijnIncidenceHash (toString declName) sectionTag key binderKey idx)
       | none =>
           bumpBrokenBVar
       pure key
   | .fvar _ =>
-      addNode base
+      addNode hNodes base
       pure key
   | .mvar _ =>
-      addNode base
+      addNode hNodes base
       pure key
   | .sort _ =>
-      addNode base
+      addNode hNodes base
       pure key
   | .const cname _ =>
-      addNode base
+      addNode hNodes base
       if includeExternalDecls then
-        let target ← ensureDeclNode env cname
-        addEdge key target "const_ref" "const_ref" (toString declName) sectionTag
+        let target ← ensureDeclNode hNodes env cname
+        addEdge hEdges key target "const_ref" "const_ref" (toString declName) sectionTag
       pure key
   | .app fn arg =>
-      addNode base
-      let fnKey ← visitExpr env declName sectionTag (path ++ ".fn") binders includeExternalDecls fn
-      let argKey ← visitExpr env declName sectionTag (path ++ ".arg") binders includeExternalDecls arg
-      addEdge key fnKey "ast" "fn" (toString declName) sectionTag
-      addEdge key argKey "ast" "arg" (toString declName) sectionTag
+      addNode hNodes base
+      let fnKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".fn") binders includeExternalDecls fn
+      let argKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".arg") binders includeExternalDecls arg
+      addEdge hEdges key fnKey "ast" "fn" (toString declName) sectionTag
+      addEdge hEdges key argKey "ast" "arg" (toString declName) sectionTag
       pure key
   | .lam _ ty body _ =>
-      addNode base
-      let tyKey ← visitExpr env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
-      addEdge key tyKey "ast" "type" (toString declName) sectionTag
-      let bodyKey ← visitExpr env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
-      addEdge key bodyKey "ast" "body" (toString declName) sectionTag
+      addNode hNodes base
+      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
+      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .forallE _ ty body _ =>
-      addNode base
-      let tyKey ← visitExpr env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
-      addEdge key tyKey "ast" "type" (toString declName) sectionTag
-      let bodyKey ← visitExpr env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
-      addEdge key bodyKey "ast" "body" (toString declName) sectionTag
+      addNode hNodes base
+      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
+      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .letE _ ty val body _ =>
-      addNode base
-      let tyKey ← visitExpr env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
-      let valKey ← visitExpr env declName sectionTag (path ++ ".value") binders includeExternalDecls val
-      addEdge key tyKey "ast" "type" (toString declName) sectionTag
-      addEdge key valKey "ast" "value" (toString declName) sectionTag
-      let bodyKey ← visitExpr env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
-      addEdge key bodyKey "ast" "body" (toString declName) sectionTag
+      addNode hNodes base
+      let tyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".type") binders includeExternalDecls ty
+      let valKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".value") binders includeExternalDecls val
+      addEdge hEdges key tyKey "ast" "type" (toString declName) sectionTag
+      addEdge hEdges key valKey "ast" "value" (toString declName) sectionTag
+      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".body") (binders.push key) includeExternalDecls body
+      addEdge hEdges key bodyKey "ast" "body" (toString declName) sectionTag
       pure key
   | .lit _ =>
-      addNode base
+      addNode hNodes base
       pure key
   | .mdata _ body =>
-      addNode base
-      let bodyKey ← visitExpr env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
-      addEdge key bodyKey "ast" "expr" (toString declName) sectionTag
+      addNode hNodes base
+      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
+      addEdge hEdges key bodyKey "ast" "expr" (toString declName) sectionTag
       pure key
   | .proj _ _ body =>
-      addNode base
-      let bodyKey ← visitExpr env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
-      addEdge key bodyKey "ast" "expr" (toString declName) sectionTag
+      addNode hNodes base
+      let bodyKey ← visitExpr hNodes hEdges env declName sectionTag (path ++ ".expr") binders includeExternalDecls body
+      addEdge hEdges key bodyKey "ast" "expr" (toString declName) sectionTag
       pure key
 
 private def createDirAllFrom (path : System.FilePath) : IO Unit :=
   match path.parent with
   | some p => IO.FS.createDirAll p
   | none => pure ()
-
-private def writeJsonl {α} [ToJson α] (path : System.FilePath) (rows : Array α) : IO Unit := do
-  createDirAllFrom path
-  let lines := String.intercalate "\n" <| rows.toList.map (fun row => (toJson row).compress)
-  IO.FS.writeFile path (if lines.isEmpty then "" else lines ++ "\n")
 
 private def writeMetadata (path : System.FilePath) (metadata : ExportMeta) : IO Unit := do
   createDirAllFrom path
@@ -395,38 +395,45 @@ private def runExport
   IO.println s!"[ExprArangoExport] imported modules={importModsStr}"
   IO.println s!"[ExprArangoExport] selected declarations={targets.size}"
 
+  let outDir := System.FilePath.mk outDirStr
+  let nodesPath := outDir / "ig_nodes.jsonl"
+  let edgesPath := outDir / "ig_edges.jsonl"
+  createDirAllFrom nodesPath
+  createDirAllFrom edgesPath
+  let hNodes ← IO.FS.Handle.mk nodesPath IO.FS.Mode.write
+  let hEdges ← IO.FS.Handle.mk edgesPath IO.FS.Mode.write
+
   let mut st : ExportState := {}
 
   for name in targets do
-    let (declKey, st1) ← (ensureDeclNode env name).run st
+    let (declKey, st1) ← (ensureDeclNode hNodes env name).run st
     st := st1
     match env.find? name with
     | none => pure ()
     | some ci =>
         let (typeRoot, st2) ←
-          (visitExpr env name "type" "type" #[] includeExternalDecls ci.type).run st
+          (visitExpr hNodes hEdges env name "type" "type" #[] includeExternalDecls ci.type).run st
         st := st2
-        let (_, st3) ← (addEdge declKey typeRoot "decl_root" "type_root" (toString name) "type").run st
+        let (_, st3) ← (addEdge hEdges declKey typeRoot "decl_root" "type_root" (toString name) "type").run st
         st := st3
         match ci.value? with
         | none => pure ()
         | some val =>
             let (valRoot, st4) ←
-              (visitExpr env name "value" "value" #[] includeExternalDecls val).run st
+              (visitExpr hNodes hEdges env name "value" "value" #[] includeExternalDecls val).run st
             st := st4
-            let (_, st5) ← (addEdge declKey valRoot "decl_root" "value_root" (toString name) "value").run st
+            let (_, st5) ← (addEdge hEdges declKey valRoot "decl_root" "value_root" (toString name) "value").run st
             st := st5
 
-  let outDir := System.FilePath.mk outDirStr
-  writeJsonl (outDir / "ig_nodes.jsonl") st.nodes
-  writeJsonl (outDir / "ig_edges.jsonl") st.edges
+  hNodes.flush
+  hEdges.flush
   writeMetadata (outDir / "metadata.json") {
     schemaVersion := schemaVersion
     importModules := importModsStr
     namespacePrefix := nsPrefix
     selectedDecls := targets.size
-    nodes := st.nodes.size
-    edges := st.edges.size
+    nodes := st.nodeCount
+    edges := st.edgeCount
     brokenBVarCount := st.brokenBVarCount
     includeExternalDecls := includeExternalDecls
     includeGeneratedDecls := includeGeneratedDecls
@@ -456,7 +463,7 @@ def main (args : List String) : IO UInt32 := do
   | _ =>
       IO.eprintln "usage: ExprArangoExport <import-module[,module2,...]> <namespace-prefix|*> <output-dir> [max-decls] [include-external-decls] [include-generated-decls]"
       IO.eprintln "example:"
-      IO.eprintln "  lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.Audit InfoGeometry artifacts/expr-graph/raw-lossless 0 true true"
+      IO.eprintln "  lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.All InfoGeometry artifacts/expr-graph/raw-lossless 0 true true"
       pure 1
 
 end DAG.ExprArangoExport

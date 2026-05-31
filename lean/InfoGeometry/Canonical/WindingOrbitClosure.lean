@@ -355,6 +355,39 @@ theorem windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
     exact windingOrbitObstruction_eq_zero_of_commute (H := H) K N hComm
 
 /--
+A certified local clock-gauge symmetry package supplies the faithful branch
+needed to recover raw clock-axis commutation from vanishing winding
+obstruction, removing the explicit
+`IsClockFaithfulExponentialBranch` hypothesis from the reverse D1 owner lane.
+-/
+theorem commute_clockAxis_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
+    {K : EndH} {N : ℤ}
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N)
+    (hObs : windingOrbitObstruction K N = 0) :
+    Commute K (clockAxis H) := by
+  exact
+    (windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
+      (H := H)
+      K
+      N
+      (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)).1 hObs
+
+/--
+A certified local clock-gauge symmetry package also upgrades the full
+winding-obstruction/commutation equivalence to a theorem surface that no longer
+exposes the faithful-branch predicate separately.
+-/
+theorem windingOrbitObstruction_eq_zero_iff_commute_of_localClockGaugeSymmetry
+    {K : EndH} {N : ℤ}
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
+    windingOrbitObstruction K N = 0 ↔ Commute K (clockAxis H) := by
+  exact windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch
+    (H := H)
+    K
+    N
+    (clockFaithfulExponentialBranch_of_localClockGaugeSymmetry (H := H) C)
+
+/--
 Phase-linearity of the modular seed forces zero winding obstruction for the
 induced transport generator branch.
 -/
@@ -991,6 +1024,28 @@ theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem
   rw [hFullEqScale, hScaleTransport]
 
 /--
+Detailed equilibrium is equivalent to the existence of the explicit
+`DetailedEquilibriumWitness` packet on the exact clock-defect-zero lane.
+This removes the remaining bare `IsDetailedEquilibriumSeed` proposition from
+callers that already own the proof-carrying witness object.
+-/
+theorem nonEquilibriumClockDefect_eq_zero_iff_nonempty_detailedEquilibriumWitness
+    (hMod : EndH) :
+    nonEquilibriumClockDefect (H := H) hMod = 0 ↔
+      Nonempty (DetailedEquilibriumWitness (H := H) hMod) := by
+  constructor
+  · intro hZero
+    refine ⟨⟨?_⟩⟩
+    exact
+      (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
+        (H := H) hMod).1 hZero
+  · intro hW
+    rcases hW with ⟨W⟩
+    exact
+      (nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
+        (H := H) hMod).2 W.hEq
+
+/--
 Detailed equilibrium kills the non-equilibrium defect exactly.
 -/
 theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
@@ -1000,6 +1055,20 @@ theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
   exact (nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).2
     (modularTransportGenerator_commutes_clockAxis_of_detailedEquilibrium
       (H := H) hMod hEq)
+
+/--
+Proof-carrying owner export of
+`nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium`.
+Callers can supply the explicit `DetailedEquilibriumWitness` packet instead of
+reopening the bare detailed-equilibrium proposition.
+-/
+theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibriumWitness
+    (hMod : EndH)
+    (W : DetailedEquilibriumWitness (H := H) hMod) :
+    nonEquilibriumClockDefect (H := H) hMod = 0 := by
+  exact
+    (nonEquilibriumClockDefect_eq_zero_iff_nonempty_detailedEquilibriumWitness
+      (H := H) hMod).2 ⟨W⟩
 
 /--
 Detailed equilibrium implies zero winding obstruction for the transport

@@ -111,7 +111,10 @@ structure BoundedKMSConditionBridge where
   infinitesimalGeneratorLaw : Prop
 
   /-- KMS analytic boundary law, supplied by the concrete model. -/
-  kms_boundary_law : Prop
+  kms_boundary_True : Prop
+
+  /-- Certificate that the supplied KMS boundary law holds. -/
+  kms_boundary_sorryProof : kms_boundary_True
 
 namespace BoundedKMSConditionBridge
 
@@ -127,7 +130,8 @@ def toKMSReadoutDatum : KMSReadoutDatum EndH where
   flow_zero := K.kmsFlow_zero
   flow_add := K.kmsFlow_add
   flow_invariant := K.state_invariant
-  kms_boundary_law := K.kms_boundary_law
+  kms_boundary_True := K.kms_boundary_True
+  kms_boundary_sorryProof := K.kms_boundary_sorryProof
 
 /-- The KMS inverse temperature is nonzero. -/
 @[rep_depth thermo]

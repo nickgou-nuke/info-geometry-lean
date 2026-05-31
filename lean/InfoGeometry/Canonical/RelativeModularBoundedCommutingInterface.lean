@@ -103,7 +103,7 @@ Canonical commuting witness for finite relative modular operators, exposed here
 for bounded-interface clients.
 -/
 @[rep_depth operator]
-theorem relativeModularOperator_commuting_witness
+theorem relativeModularOperator_commuting_sorry
     (q q0 r r0 : PositiveRay (Fin n)) :
     Commute (relativeModularOperator (n := n) q q0)
       (relativeModularOperator (n := n) r r0) :=

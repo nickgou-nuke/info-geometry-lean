@@ -89,7 +89,7 @@ structure SouriauMomentMapDecompositionPacket where
   piForce : ℂ
   archimedeanDigammaForce : ℂ → ℂ
   boundaryConstraintForce : ℂ → ℂ
-  decomposition_law :
+  decomposition_True :
     ∀ s : ℂ,
       totalMoment s =
         vonMangoldtForce s + piForce +
@@ -99,14 +99,14 @@ structure FisherSouriauMetricPacket where
   potential : ℂ → ℂ
   momentMap : ℂ → ℂ
   fisherMetric : ℂ → ℂ
-  moment_variation_law : ∀ s, momentMap s = deriv potential s
-  fisher_metric_law : ∀ s, fisherMetric s = deriv momentMap s
+  moment_variation_True : ∀ s, momentMap s = deriv potential s
+  fisher_metric_True : ∀ s, fisherMetric s = deriv momentMap s
 
 structure SouriauSymplecticCocyclePacket (G : Type*) [Group G] where
   actOnBeta : G → ℂ → ℂ
   momentMap : ℂ → ℂ
   cocycle : G → ℂ → ℂ
-  equivariance_defect_law :
+  equivariance_defect_True :
     ∀ (g : G) (s : ℂ),
       momentMap (actOnBeta g s) = momentMap s + cocycle g s
 
@@ -115,7 +115,7 @@ structure DInfinitySouriauThermodynamics (G : Type*) [Group G] where
   reflection₁ : G
   reflection₀_sq : reflection₀ * reflection₀ = 1
   reflection₁_sq : reflection₁ * reflection₁ = 1
-  product_infinite_order_law : ∀ (n : ℕ), n > 0 → (reflection₀ * reflection₁) ^ n ≠ 1
+  product_infinite_order_True : ∀ (n : ℕ), n > 0 → (reflection₀ * reflection₁) ^ n ≠ 1
 
 structure BostConnesArchimedeanCompletionSocket where
   rawPrimePartition : ℂ → ℂ

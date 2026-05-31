@@ -70,8 +70,8 @@ def toArithmeticSplitMajoranaOPE
     OPE.singularPart (OPE.d p) (OPE.d q) = OPE.negDeltaPole p q
   cd_regular := fun p q =>
     OPE.singularPart (OPE.c p) (OPE.d q) = OPE.regularPart
-  cc_certificate := hcc
-  dd_certificate := hdd
-  cd_certificate := hcd
+  cc_sorryProof := hcc
+  dd_sorryProof := hdd
+  cd_sorryProof := hcd
 
 end InfoGeometry.Quantum.PrimeMajoranaOPE

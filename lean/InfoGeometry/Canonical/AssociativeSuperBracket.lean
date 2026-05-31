@@ -15,7 +15,7 @@ namespace InfoGeometry.Canonical.AssociativeSuperBracket
 
 open InfoGeometry.Canonical.SuperAnomaly
 
-variable {A : Type*} [Ring A] [Algebra ℝ A]
+variable {A B : Type*} [Ring A] [Algebra ℝ A] [Ring B] [Algebra ℝ B]
 
 /-- Graded bracket `[a,b}` on an associative `ℝ`-algebra. -/
 @[rep_depth krein]
@@ -57,6 +57,12 @@ noncomputable abbrev anticommutator (a b : A) : A :=
     superBracket p q a (r • b) = r • superBracket p q a b := by
   unfold superBracket
   simp [sub_eq_add_neg, smul_smul, mul_comm]
+
+/-- Algebra homomorphisms preserve the graded superbracket. -/
+@[rep_depth krein, simp] theorem map_superBracket
+    (f : A →ₐ[ℝ] B) (p q : SuperParity) (a b : A) :
+    f (superBracket p q a b) = superBracket p q (f a) (f b) := by
+  simp [superBracket]
 
 @[rep_depth krein, simp] lemma superBracket_even_left
     (q : SuperParity) (a b : A) :

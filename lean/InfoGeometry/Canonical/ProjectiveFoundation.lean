@@ -797,7 +797,7 @@ variable
     {Γ X R Op : Type*}
     [Group Γ] [MulAction Γ X] [Group R] [Monoid Op]
 
-theorem projective_comp_law
+theorem projective_comp_True
     (K : KreinProjectiveCarrier Γ X R Op)
     (g h : Γ) (x : X) :
     K.op (g * h) x =

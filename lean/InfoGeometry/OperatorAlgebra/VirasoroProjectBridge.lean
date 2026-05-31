@@ -43,13 +43,13 @@ theorem virasoroProjectVirasoroDatum_realizes :
 
 /-- The concrete central element commutes, via the partial affine bridge laws. -/
 theorem virasoroProjectVirasoroDatum_central_commutes :
-    VirasoroDatum.central_commutes_law virasoroProjectVirasoroDatum := by
+    VirasoroDatum.central_commutes_True virasoroProjectVirasoroDatum := by
   intro X
   simpa [virasoroProjectVirasoroDatum] using VirasoroAlgebra.cgen_bracket (𝕜 := ℝ) X
 
 /-- The concrete Virasoro bracket law is the expected one. -/
 theorem virasoroProjectVirasoroDatum_bracket :
-    VirasoroDatum.virasoro_bracket_law virasoroProjectVirasoroDatum := by
+    VirasoroDatum.virasoro_bracket_True virasoroProjectVirasoroDatum := by
   intro m n
   by_cases hmn : m + n = 0
   · simpa [virasoroProjectVirasoroDatum, virasoroCentralCoefficient, hmn] using
@@ -82,9 +82,9 @@ def heisenbergSugawaraDatum : AffineVirasoroBridge.SugawaraDatum where
   centralCharge := 1
 
 /-- The concrete Sugawara datum satisfies the expected central-charge law. -/
-theorem heisenbergSugawaraDatum_sugawara_law :
-    heisenbergSugawaraDatum.sugawara_law := by
-  unfold SugawaraDatum.sugawara_law sugawaraCentralCharge heisenbergSugawaraDatum
+theorem heisenbergSugawaraDatum_sugawara_True :
+    heisenbergSugawaraDatum.sugawara_True := by
+  unfold SugawaraDatum.sugawara_True sugawaraCentralCharge heisenbergSugawaraDatum
   norm_num
 
 end InfoGeometry.OperatorAlgebra.VirasoroProjectBridge

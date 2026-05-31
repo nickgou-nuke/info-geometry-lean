@@ -370,8 +370,8 @@ linear algebra. -/
 structure SchnakenbergDecomposition [Fintype E] [DecidableEq V] (A : EdgeField (E := E)) where
   gradientPart : EdgeField (E := E)
   cyclePart : EdgeField (E := E)
-  gradient_witness : G.IsGradientFlow gradientPart
-  cycle_witness : G.IsCycleFlow cyclePart
+  gradient_sorry : G.IsGradientFlow gradientPart
+  cycle_sorry : G.IsCycleFlow cyclePart
   reconstruct : ∀ e, A e = gradientPart e + cyclePart e
   unique : ∀ B C : EdgeField (E := E),
     G.IsGradientFlow B → G.IsCycleFlow C → (∀ e, A e = B e + C e) →
@@ -383,7 +383,7 @@ theorem schnakenberg_decomposition [Fintype E] [DecidableEq V]
     (A : EdgeField (E := E)) (H : G.SchnakenbergDecomposition A) :
     ∃! P : EdgeField (E := E) × EdgeField (E := E),
       G.IsGradientFlow P.1 ∧ G.IsCycleFlow P.2 ∧ ∀ e, A e = P.1 e + P.2 e := by
-  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_witness, H.cycle_witness,
+  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_sorry, H.cycle_sorry,
     H.reconstruct⟩, ?_⟩
   intro P hP
   rcases P with ⟨B, C⟩
@@ -515,7 +515,7 @@ structure PathProbabilityRatioLaw (PathSample : Type) where
   forwardProbability : PathSample → ℝ
   backwardProbability : PathSample → ℝ
   entropyProduction : PathSample → ℝ
-  ratio_law : ∀ ω, forwardProbability ω / backwardProbability ω =
+  ratio_True : ∀ ω, forwardProbability ω / backwardProbability ω =
     Real.exp (entropyProduction ω)
 
 /-- Forward/backward path probability ratio equals exponentiated path entropy
@@ -523,10 +523,10 @@ production by direct readback from the owner law. -/
 theorem forward_backward_path_probability_ratio_eq_exp_entropy
     {PathSample : Type} (L : PathProbabilityRatioLaw PathSample) (ω : PathSample) :
     L.forwardProbability ω / L.backwardProbability ω = Real.exp (L.entropyProduction ω) :=
-  L.ratio_law ω
+  L.ratio_True ω
 
 /-- Read back the detailed-balance/log-curvature equivalence from an owner law. -/
-theorem detailedBalanceOnCycle_iff_cycleCurvatureLog_eq_zero_of_law
+theorem detailedBalanceOnCycle_iff_cycleCurvatureLog_eq_zero_of_True
     (C : Cycle E) (H : G.LogWilsonCycleLaw C) :
     G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
   H.detailedBalance_iff_zero_log_curvature
@@ -887,23 +887,23 @@ structure ThermodynamicGraphLambdaPacket where
 
 namespace ThermodynamicGraphLambdaPacket
 
-@[simp] theorem semanticInterpretation_valid (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaPacket) :
     P.semanticInterpretation :=
   P.semanticInterpretation_cert
 
-@[simp] theorem linearResourceDiscipline_valid (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaPacket) :
     P.linearResourceDiscipline :=
   P.linearResourceDiscipline_cert
 
-@[simp] theorem probabilisticSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     P.probabilisticSemantics :=
   P.probabilisticSemantics_cert
 
-@[simp] theorem circuitSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     P.circuitSemantics :=
   P.circuitSemantics_cert
 
-@[simp] theorem wilsonLoopSemantics_valid (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
     P.wilsonLoopSemantics :=
   P.wilsonLoopSemantics_cert
 
@@ -946,7 +946,7 @@ structure DeBruijnEdge (n : ℕ) where
   source : Word α (n + 1)
   symbol : α
   target : Word α (n + 1)
-  shift_law : target = deBruijnShift α source symbol
+  shift_True : target = deBruijnShift α source symbol
 
 /-- Rate-decorated de Bruijn graph: each shift edge carries forward and reverse
 transition rates, enabling thermodynamic analysis of memory/shift dynamics. -/

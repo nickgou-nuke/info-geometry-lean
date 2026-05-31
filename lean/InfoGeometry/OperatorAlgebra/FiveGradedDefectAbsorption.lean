@@ -83,8 +83,8 @@ algebra.
 structure ThreeGradeClosureDefect
     (State Defect : Type*) where
   defect : State → Defect
-  defect_law : Prop
-  defect_law_holds : defect_law
+  defect_True : Prop
+  defect_law_holds : defect_True
 
 /--
 Absorption of a three-grade closure defect into the positive grade-two
@@ -107,10 +107,10 @@ structure DefectAbsorbedInPlusTwo
   Calibration law saying the old TKK closure defect is represented by this
   top-grade element in the extended algebra.
   -/
-  absorption_law : Prop
+  absorption_True : Prop
 
   /-- Proof of the absorption law. -/
-  absorption_law_holds : absorption_law
+  absorption_law_holds : absorption_True
 
 namespace DefectAbsorbedInPlusTwo
 
@@ -235,16 +235,16 @@ structure BlackHoleFiveGradeLedger
     ∀ v : Visible, memoryToPlusTwo (memory v) ∈ grading.gPosTwo
 
   /-- Local observers do not see the full five-grade state. -/
-  local_reduction_law : Prop
+  local_reduction_True : Prop
 
   /-- Proof of the local-reduction law. -/
-  local_reduction_law_holds : local_reduction_law
+  local_reduction_law_holds : local_reduction_True
 
   /-- The hidden/memory data are part of the enlarged algebraic state. -/
-  full_ledger_law : Prop
+  full_ledger_True : Prop
 
   /-- Proof of the full-ledger law. -/
-  full_ledger_law_holds : full_ledger_law
+  full_ledger_law_holds : full_ledger_True
 
 namespace BlackHoleFiveGradeLedger
 

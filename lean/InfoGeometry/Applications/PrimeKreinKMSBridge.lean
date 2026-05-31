@@ -301,7 +301,7 @@ structure PositiveKreinReadoutComparison
   /-- Signed Krein/Möbius index readout. -/
   kreinIndex : IndexReadout → ℝ
   /-- Supplied comparison law. -/
-  comparison_law : Prop
+  comparison_True : Prop
 
 /-! ## 9. Full bridge package -/
 

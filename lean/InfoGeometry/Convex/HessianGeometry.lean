@@ -96,7 +96,7 @@ structure HessianGeometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace 
   potential : E → ℝ
   grad : E → E
   has_gradient : ∀ x, HasFDerivAt potential (InnerProductSpace.toDual ℝ E (grad x)) x
-  divergence_nonneg_law :
+  divergence_nonneg_True :
     ∀ x y, 0 ≤ potential x - potential y - inner ℝ (grad y) (x - y)
 
 namespace HessianGeometry
@@ -134,7 +134,7 @@ convexity/first-order lower-bound witness carried by each concrete
 theorem divergence_nonneg (x y : E) :
     0 ≤ H.divergence x y := by
   simpa [HessianGeometry.divergence, HessianGeometry.dualMap] using
-    H.divergence_nonneg_law x y
+    H.divergence_nonneg_True x y
 
 /-- Gradient pairing induced by the Hessian dual coordinate. -/
 noncomputable def gradientPairing (x : E) : E →ₗ[ℝ] ℝ :=

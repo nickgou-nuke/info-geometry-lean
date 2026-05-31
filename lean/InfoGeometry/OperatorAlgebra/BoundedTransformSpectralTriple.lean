@@ -49,19 +49,19 @@ structure ClosedSelfAdjointSource
   includeDomain : Domain → H
 
   /-- Densely-defined certificate. -/
-  denselyDefined_law : Prop
-  denselyDefined_certificate :
-    denselyDefined_law
+  denselyDefined_True : Prop
+  denselyDefined_sorryProof :
+    denselyDefined_True
 
   /-- Closed-graph certificate. -/
-  closedGraph_law : Prop
-  closedGraph_certificate :
-    closedGraph_law
+  closedGraph_True : Prop
+  closedGraph_sorryProof :
+    closedGraph_True
 
   /-- Self-adjoint or Krein-self-adjoint certificate. -/
-  selfAdjoint_law : Prop
-  selfAdjoint_certificate :
-    selfAdjoint_law
+  selfAdjoint_True : Prop
+  selfAdjoint_sorryProof :
+    selfAdjoint_True
 
 /-! ## 2. Bounded Cayley transform datum -/
 
@@ -72,7 +72,7 @@ For a genuine unbounded self-adjoint `D`, this is intended as
 
 `U = (D - K)(D + K)^(-1)`.
 
-The actual domain/resolvent theorem is carried as `cayley_source_law`.
+The actual domain/resolvent theorem is carried as `cayley_source_True`.
 -/
 structure CayleyTransformDatum
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -85,25 +85,25 @@ structure CayleyTransformDatum
     PhaseLinear K.K U
 
   /-- Unitary/isometric law, model-dependent. -/
-  unitary_law : Prop
-  unitary_certificate :
-    unitary_law
+  unitary_True : Prop
+  unitary_sorryProof :
+    unitary_True
 
   /--
   Source law: `U` is the Cayley transform of the intended closed operator.
   This is where `(D + K)^(-1)` and the resolvent theorem enter.
   -/
-  cayley_source_law : Prop
-  cayley_source_certificate :
-    cayley_source_law
+  cayley_source_True : Prop
+  cayley_source_sorryProof :
+    cayley_source_True
 
   /--
   Recovery/domain law: the Cayley transform determines the unbounded source on
   the appropriate domain, e.g. via `(1 - U)` range data.
   -/
-  recovery_law : Prop
-  recovery_certificate :
-    recovery_law
+  recovery_True : Prop
+  recovery_sorryProof :
+    recovery_True
 
 namespace CayleyTransformDatum
 
@@ -284,27 +284,27 @@ structure BoundedTransformDatum
     PhaseLinear K.K F
 
   /-- Self-adjoint/Krein-self-adjoint certificate. -/
-  selfAdjoint_law : Prop
-  selfAdjoint_certificate :
-    selfAdjoint_law
+  selfAdjoint_True : Prop
+  selfAdjoint_sorryProof :
+    selfAdjoint_True
 
   /-- Contraction or boundedness certificate. -/
-  bounded_transform_law : Prop
-  bounded_transform_certificate :
-    bounded_transform_law
+  bounded_transform_True : Prop
+  bounded_transform_sorryProof :
+    bounded_transform_True
 
   /-- Summability/Fredholm/compact-defect certificate. -/
-  fredholm_or_summability_law : Prop
-  fredholm_or_summability_certificate :
-    fredholm_or_summability_law
+  fredholm_or_summability_True : Prop
+  fredholm_or_summability_sorryProof :
+    fredholm_or_summability_True
 
   /--
   Source law: `F` is the bounded transform of the intended unbounded spectral
   generator.
   -/
-  source_transform_law : Prop
-  source_transform_certificate :
-    source_transform_law
+  source_transform_True : Prop
+  source_transform_sorryProof :
+    source_transform_True
 
 namespace BoundedTransformDatum
 
@@ -351,11 +351,11 @@ structure UnboundedSpectralBridge
   Compatibility law between the Cayley proxy and bounded-transform proxy.
   This is model-dependent.
   -/
-  cayley_boundedTransform_compatible_law : Prop
+  cayley_boundedTransform_compatible_True : Prop
 
   /-- Proof/certificate of compatibility. -/
-  cayley_boundedTransform_compatible_certificate :
-    cayley_boundedTransform_compatible_law
+  cayley_boundedTransform_compatible_sorryProof :
+    cayley_boundedTransform_compatible_True
 
 /-! ## 6. Bounded-transform spectral triple socket -/
 
@@ -392,11 +392,11 @@ structure BoundedTransformSpectralTriple
   This is where the model states that commutator/Lipschitz readouts using the
   bounded transform agree with the intended unbounded spectral geometry.
   -/
-  metric_sensor_compatibility_law : Prop
+  metric_sensor_compatibility_True : Prop
 
   /-- Proof/certificate of the metric compatibility law. -/
-  metric_sensor_compatibility_certificate :
-    metric_sensor_compatibility_law
+  metric_sensor_compatibility_sorryProof :
+    metric_sensor_compatibility_True
 
 namespace BoundedTransformSpectralTriple
 

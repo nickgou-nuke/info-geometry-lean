@@ -209,7 +209,7 @@ theorem contourReadout_eq_operatorRealization :
 
 /-- The bridge inherits the palatial noncommutative commutator law. -/
 @[rep_depth operator]
-theorem palatial_commutator_law :
+theorem palatial_commutator_True :
     B.palatial.commutator B.palatial.coordinate B.palatial.derivative =
       B.palatial.scalarEmbed B.palatial.heisenbergScalar :=
   B.palatial.coordinate_derivative_commutator_eq

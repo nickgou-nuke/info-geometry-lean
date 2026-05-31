@@ -168,8 +168,8 @@ structure StableBranchRegularization
   regularizedReadout : R
   projectStable : Prop
   removesUnstableBranch : Prop
-  projectStable_certificate : projectStable
-  removesUnstableBranch_certificate : removesUnstableBranch
+  projectStable_sorryProof : projectStable
+  removesUnstableBranch_sorryProof : removesUnstableBranch
   regularized_eq_stable :
     regularizedReadout = stableChiralIndex modes qStable
 
@@ -184,14 +184,14 @@ theorem regularized_eq_stable_branch :
   B.regularized_eq_stable
 
 /-- The stable-branch projection certificate carried by the packet. -/
-theorem projectStable_valid :
+theorem projectStable_holds :
     B.projectStable :=
-  B.projectStable_certificate
+  B.projectStable_sorryProof
 
 /-- The unstable-branch removal certificate carried by the packet. -/
-theorem removesUnstableBranch_valid :
+theorem removesUnstableBranch_holds :
     B.removesUnstableBranch :=
-  B.removesUnstableBranch_certificate
+  B.removesUnstableBranch_sorryProof
 
 end StableBranchRegularization
 
@@ -269,7 +269,7 @@ structure MellinThermalVsDiracHeatKernelGuard where
   mellinThermalReadout : Type*
   diracHeatReadout : Type*
   readouts_are_separate : Prop
-  readouts_are_separate_certificate : readouts_are_separate
+  readouts_are_separate_sorryProof : readouts_are_separate
 
 namespace MellinThermalVsDiracHeatKernelGuard
 
@@ -277,7 +277,7 @@ namespace MellinThermalVsDiracHeatKernelGuard
 theorem readouts_separate
     (G : MellinThermalVsDiracHeatKernelGuard) :
     G.readouts_are_separate :=
-  G.readouts_are_separate_certificate
+  G.readouts_are_separate_sorryProof
 
 end MellinThermalVsDiracHeatKernelGuard
 

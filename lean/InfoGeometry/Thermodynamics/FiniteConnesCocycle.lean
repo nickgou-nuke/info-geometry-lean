@@ -1,4 +1,5 @@
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
+import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Tactic
 
@@ -72,19 +73,66 @@ theorem finiteConnesFlux_eq_one_of_same
 
 variable {ι : Type*}
 
+/-- Time-parametrized finite positive density ratio `exp (-t ΔK)` for a real generator. -/
+noncomputable def finitePositiveDensityRatioAtTime
+    (ΔK : ι → ℝ) (t : ℝ) (i : ι) : ℝ :=
+  Real.exp (-(t * ΔK i))
+
 /-- Positive finite Radon--Nikodym density ratio for a real relative generator. -/
 noncomputable def finitePositiveDensityRatio (ΔK : ι → ℝ) (i : ι) : ℝ :=
-  Real.exp (-(ΔK i))
+  finitePositiveDensityRatioAtTime ΔK 1 i
 
 /-- Positive finite density ratio attached to two finite Cartan temperatures. -/
 noncomputable def finitePositiveDensityRatioOfStates
     (φ ψ : FiniteTemperature ι) (i : ι) : ℝ :=
   finitePositiveDensityRatio (relativeHamiltonian φ ψ) i
 
+@[simp] theorem finitePositiveDensityRatioAtTime_zero
+    (ΔK : ι → ℝ) (i : ι) :
+    finitePositiveDensityRatioAtTime ΔK 0 i = 1 := by
+  simp [finitePositiveDensityRatioAtTime]
+
+@[simp] theorem finitePositiveDensityRatioAtTime_one
+    (ΔK : ι → ℝ) (i : ι) :
+    finitePositiveDensityRatioAtTime ΔK 1 i = finitePositiveDensityRatio ΔK i := by
+  rfl
+
+/-- The time-parametrized positive density ratio is multiplicative in time. -/
+theorem finitePositiveDensityRatioAtTime_add
+    (ΔK : ι → ℝ) (s t : ℝ) (i : ι) :
+    finitePositiveDensityRatioAtTime ΔK (s + t) i =
+      finitePositiveDensityRatioAtTime ΔK s i * finitePositiveDensityRatioAtTime ΔK t i := by
+  unfold finitePositiveDensityRatioAtTime
+  have h : -((s + t) * ΔK i) = -(s * ΔK i) + -(t * ΔK i) := by ring
+  rw [h, Real.exp_add]
+
+/-- The scalar `exp (-t ΔK)` path has the expected derivative. -/
+theorem finitePositiveDensityRatioAtTime_hasDerivAt
+    (ΔK : ι → ℝ) (t : ℝ) (i : ι) :
+    HasDerivAt
+      (fun τ : ℝ => finitePositiveDensityRatioAtTime ΔK τ i)
+      ((-ΔK i) * finitePositiveDensityRatioAtTime ΔK t i)
+      t := by
+  have hlin : HasDerivAt (fun τ : ℝ => -(τ * ΔK i)) (-ΔK i) t := by
+    simpa [neg_mul, mul_comm, mul_left_comm, mul_assoc] using
+      (((hasDerivAt_id' t).mul_const (ΔK i)).neg)
+  simpa [finitePositiveDensityRatioAtTime, mul_comm, mul_left_comm, mul_assoc] using
+    (Real.hasDerivAt_exp (-(t * ΔK i))).comp t hlin
+
+/-- At modular time zero, the infinitesimal scalar generator is `-ΔK`. -/
+theorem finitePositiveDensityRatioAtTime_hasDerivAt_zero
+    (ΔK : ι → ℝ) (i : ι) :
+    HasDerivAt
+      (fun τ : ℝ => finitePositiveDensityRatioAtTime ΔK τ i)
+      (-ΔK i)
+      0 := by
+  simpa using finitePositiveDensityRatioAtTime_hasDerivAt ΔK 0 i
+
 /-- The finite positive density ratio is strictly positive. -/
 theorem finitePositiveDensityRatio_pos
     (ΔK : ι → ℝ) (i : ι) :
     0 < finitePositiveDensityRatio ΔK i := by
+  unfold finitePositiveDensityRatio
   exact Real.exp_pos _
 
 /-- Unitary finite commuting Connes phase for a real relative generator. -/
@@ -102,8 +150,8 @@ theorem finitePositiveDensityRatio_add
     (ΔK₁ ΔK₂ : ι → ℝ) (i : ι) :
     finitePositiveDensityRatio (fun j => ΔK₁ j + ΔK₂ j) i =
       finitePositiveDensityRatio ΔK₁ i * finitePositiveDensityRatio ΔK₂ i := by
-  unfold finitePositiveDensityRatio
-  have h : -(ΔK₁ i + ΔK₂ i) = -ΔK₁ i + -ΔK₂ i := by ring
+  unfold finitePositiveDensityRatio finitePositiveDensityRatioAtTime
+  have h : -(1 * (ΔK₁ i + ΔK₂ i)) = -(1 * ΔK₁ i) + -(1 * ΔK₂ i) := by ring
   rw [h, Real.exp_add]
 
 /-- The finite commuting Connes phase is normalized at time zero. -/
@@ -164,7 +212,7 @@ Roadmap-facing theorem name for the finite commuting Connes cocycle law.
 This is the same proved scalar Cartan specialization as
 `finiteCommutingConnesPhase_connesLaw_trivialReference`.
 -/
-theorem finite_commuting_connes_cocycle_satisfies_cocycle_law
+theorem finite_commuting_connes_cocycle_satisfies_cocycle_True
     (φ ψ : FiniteTemperature ι) (s t : ℝ) :
     (fun i => finiteCommutingConnesPhaseOfStates φ ψ (s + t) i) =
       fun i =>

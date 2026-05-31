@@ -239,7 +239,7 @@ structure BodyEntropyProduction where
 namespace BodyEntropyProduction
 
 /-- Observable body-level second-law statement. -/
-theorem body_second_law (E : BodyEntropyProduction) :
+theorem body_second_True (E : BodyEntropyProduction) :
     0 ≤ E.production :=
   E.production_nonneg
 

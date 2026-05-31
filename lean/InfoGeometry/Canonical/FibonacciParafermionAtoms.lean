@@ -568,7 +568,8 @@ theorem computationalProjection3_kills_nonComputationalVec :
 /-- Every projected finite three-state vector has zero non-computational coordinate. -/
 theorem computationalProjection3_range_third_zero (v : Fin 3 → ℝ) :
     (computationalProjection3.mulVec v) 2 = 0 := by
-  simp [Matrix.mulVec, computationalProjection3]
+  change ∑ j, computationalProjection3 2 j * v j = 0
+  simp [computationalProjection3, Fin.sum_univ_three]
 
 /-- Left multiplication by the computational projection fixes matrices with zero third row. -/
 theorem computationalProjection3_mul_left_of_third_row_zero
@@ -620,5 +621,81 @@ theorem computationalProjection3_compress_idempotent
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [computationalProjection3, Matrix.mul_apply, Matrix.vecMul, Fin.sum_univ_three]
+
+/-- Embed a two-channel matrix into the computational block of a three-state register. -/
+def embed2x2Computational3 (M : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+  !![M 0 0, M 0 1, 0; M 1 0, M 1 1, 0; 0, 0, 0]
+
+/-- The embedded two-channel block has zero third row. -/
+theorem embed2x2Computational3_third_row_zero
+    (M : Matrix (Fin 2) (Fin 2) ℝ) (j : Fin 3) :
+    embed2x2Computational3 M 2 j = 0 := by
+  fin_cases j <;> simp [embed2x2Computational3]
+
+/-- The embedded two-channel block has zero third column. -/
+theorem embed2x2Computational3_third_col_zero
+    (M : Matrix (Fin 2) (Fin 2) ℝ) (i : Fin 3) :
+    embed2x2Computational3 M i 2 = 0 := by
+  fin_cases i <;> simp [embed2x2Computational3]
+
+/-- Left projection fixes every embedded two-channel computational block. -/
+theorem computationalProjection3_mul_embed2x2Computational3
+    (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    computationalProjection3 * embed2x2Computational3 M = embed2x2Computational3 M :=
+  computationalProjection3_mul_left_of_third_row_zero _
+    (embed2x2Computational3_third_row_zero M)
+
+/-- Right projection fixes every embedded two-channel computational block. -/
+theorem embed2x2Computational3_mul_computationalProjection3
+    (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    embed2x2Computational3 M * computationalProjection3 = embed2x2Computational3 M :=
+  computationalProjection3_mul_right_of_third_col_zero _
+    (embed2x2Computational3_third_col_zero M)
+
+/-- Every embedded two-channel computational block commutes with the projection. -/
+theorem embed2x2Computational3_commutes_computationalProjection3
+    (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    computationalProjection3 * embed2x2Computational3 M =
+      embed2x2Computational3 M * computationalProjection3 :=
+  computationalProjection3_commutes_of_third_row_col_zero _
+    (embed2x2Computational3_third_row_zero M)
+    (embed2x2Computational3_third_col_zero M)
+
+/-- Embedding the two-channel computational block preserves multiplication. -/
+theorem embed2x2Computational3_mul
+    (M N : Matrix (Fin 2) (Fin 2) ℝ) :
+    embed2x2Computational3 M * embed2x2Computational3 N = embed2x2Computational3 (M * N) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [embed2x2Computational3, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_three]
+
+/-- Embedding the two-channel identity gives the three-state computational projection. -/
+theorem embed2x2Computational3_one :
+    embed2x2Computational3 (1 : Matrix (Fin 2) (Fin 2) ℝ) = computationalProjection3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [embed2x2Computational3, computationalProjection3]
+
+/-- Any two-channel Artin identity embeds into the three-state computational block. -/
+theorem embed2x2Computational3_artin
+    (R B : Matrix (Fin 2) (Fin 2) ℝ)
+    (h : R * B * R = B * R * B) :
+    embed2x2Computational3 R * embed2x2Computational3 B * embed2x2Computational3 R =
+      embed2x2Computational3 B * embed2x2Computational3 R * embed2x2Computational3 B := by
+  rw [embed2x2Computational3_mul]
+  rw [embed2x2Computational3_mul]
+  rw [embed2x2Computational3_mul]
+  rw [embed2x2Computational3_mul]
+  rw [h]
+
+/-- The finite conditional `RBR = BRB` identity in the three-state computational block. -/
+theorem computational3_R_B_R_eq_B_R_B (a b q : ℝ)
+    (hF : IsFibonacciRelation a b)
+    (hA : a ^ 2 * (q ^ (-4 : ℤ) - q ^ 3) ^ 2 + q ^ (-4 : ℤ) * q ^ 3 = 0) :
+    embed2x2Computational3 (R_matrix q) * embed2x2Computational3 (B_matrix a b q) *
+        embed2x2Computational3 (R_matrix q) =
+      embed2x2Computational3 (B_matrix a b q) * embed2x2Computational3 (R_matrix q) *
+        embed2x2Computational3 (B_matrix a b q) :=
+  embed2x2Computational3_artin _ _ (R_B_R_eq_B_R_B a b q hF hA)
 
 end InfoGeometry.Canonical.FibonacciParafermionAtoms

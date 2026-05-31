@@ -1,5 +1,9 @@
 import InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Krein.KreinSpace
+
+set_option linter.unusedSectionVars false
+open InfoGeometry.Krein
 
 namespace InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv
 
@@ -124,9 +128,9 @@ structure ChiralDrazinKreinPackage where
   J : EndH
   eps : EndH
   K : EndH
-  form_preserved : Prop
-  drazin_split_compatible : Prop
-  cl11_laws : Prop
+  form_preserved : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (J x) (J y) = KreinSpace.kreinInner (H := H₂) x y
+  drazin_split_compatible : J * drazinProjection A AD = drazinProjection A AD * J
+  cl11_laws : eps * eps = 1 ∧ J * J = -1 ∧ eps * J = -J * eps
 
 /--
 A Bogoliubov frame represented over a fixed owner package.
@@ -136,9 +140,9 @@ structure BogoliubovFrameOver (P : ChiralDrazinKreinPackage (E := E)) where
   Uinv : EndH
   left_inv : Uinv.comp U = 1
   right_inv : U.comp Uinv = 1
-  compatible_with_drazin_split : Prop
-  compatible_with_phase_axis : Prop
-  compatible_with_krein_form : Prop
+  compatible_with_drazin_split : U * drazinProjection P.A P.AD = drazinProjection P.A P.AD * U
+  compatible_with_phase_axis : U * P.J = P.J * U
+  compatible_with_krein_form : ∀ x y : H₂, KreinSpace.kreinInner (H := H₂) (U x) (U y) = KreinSpace.kreinInner (H := H₂) x y
 
 /--
 Frame equivalence relation: existence of a structure-preserving automorphism
@@ -200,7 +204,7 @@ theorem projected_frame_readout_invariant
   calc
     Φ ((drazinProjection (E := E) P.A P.AD).comp G.U)
         = Φ ((drazinProjection (E := E) P.A P.AD).comp (U.comp F.U)) := by
-            simpa [hFrame]
+            simp [hFrame]
     _ = Φ (U.comp ((drazinProjection (E := E) P.A P.AD).comp F.U)) := by
           rw [htransport]
     _ = Φ ((drazinProjection (E := E) P.A P.AD).comp F.U) := by

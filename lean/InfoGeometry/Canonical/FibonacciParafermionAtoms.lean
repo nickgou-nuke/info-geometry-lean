@@ -808,6 +808,30 @@ theorem O_mul_proj_vacancy (O : A) (h : O ^ 3 = O) :
 
 end
 
+/-! ## Finite zero-mode commutation lemma -/
+
+section BoundaryZeroMode
+
+variable {A : Type*} [Ring A]
+
+/-- A commuting edge operator preserves an explicit bulk-eigenstate equation. -/
+theorem boundary_costs_zero_energy
+    (H_bulk O_edge State E : A)
+    (h_boundary_commutes : H_bulk * O_edge = O_edge * H_bulk)
+    (h_eigenstate : H_bulk * State = E * State)
+    (h_energy_commutes : E * O_edge = O_edge * E) :
+    H_bulk * (O_edge * State) = E * (O_edge * State) := by
+  calc
+    H_bulk * (O_edge * State) = (H_bulk * O_edge) * State := by rw [← mul_assoc]
+    _ = (O_edge * H_bulk) * State := by rw [h_boundary_commutes]
+    _ = O_edge * (H_bulk * State) := by rw [mul_assoc]
+    _ = O_edge * (E * State) := by rw [h_eigenstate]
+    _ = (O_edge * E) * State := by rw [← mul_assoc]
+    _ = (E * O_edge) * State := by rw [h_energy_commutes.symm]
+    _ = E * (O_edge * State) := by rw [mul_assoc]
+
+end BoundaryZeroMode
+
 /-! ## Three-state computational/leakage projection -/
 
 /-- Finite three-state projection onto the first two computational coordinates. -/

@@ -5,7 +5,7 @@ import Experimental.SpinorKLBridge
 namespace Experimental.ALEXANDRIA
 
 export Experimental.WeylDenominatorPrimeCutoff (PrimeGasPartition)
-export Experimental.ModularBerryBridge (RelativeModularCarrier)
+export Experimental.ModularBerryBridge (modularRNFlow_add_and_hestenesBerry_phase)
 export Experimental.SpinorKLBridge (SpinorLikelihoodModel)
 
 end Experimental.ALEXANDRIA

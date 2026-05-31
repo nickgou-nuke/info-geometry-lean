@@ -64,6 +64,9 @@ def test_souriau_tomita_bridge_exposes_cyclic_standard_form_kms_owner_route() ->
     assert "C.toMinimalSouriauTomitaKMSContext" in text
     assert "theorem mk_broad_of_cyclic" in text
     assert "C.toSouriauTomitaKMSContext" in text
+    assert "noncomputable def SouriauTomitaKMSContext.ofCyclicZeroThermal" in text
+    assert "theorem SouriauTomitaKMSContext.ofCyclicZeroThermal_state_eq" in text
+    assert "theorem SouriauTomitaKMSContext.ofCyclicZeroThermal_kms_eval_mul_souriau_modular_eq_eval_flip" in text
     assert "theorem kms_eval_mul_souriau_modular_eq_eval_flip" in text
     assert "theorem constructive_kms_packet" in text
 

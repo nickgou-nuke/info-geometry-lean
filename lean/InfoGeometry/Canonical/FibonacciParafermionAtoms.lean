@@ -519,4 +519,55 @@ theorem proj_completeness (O : A) :
 
 end
 
+/-! ## Three-state computational/leakage projection -/
+
+/-- Finite three-state projection onto the first two computational coordinates. -/
+def computationalProjection3 : Matrix (Fin 3) (Fin 3) ℝ :=
+  !![1, 0, 0; 0, 1, 0; 0, 0, 0]
+
+/-- First computational basis vector. -/
+def compVec0 : Fin 3 → ℝ :=
+  ![1, 0, 0]
+
+/-- Second computational basis vector. -/
+def compVec1 : Fin 3 → ℝ :=
+  ![0, 1, 0]
+
+/-- Non-computational basis vector in a finite three-state register. -/
+def nonComputationalVec : Fin 3 → ℝ :=
+  ![0, 0, 1]
+
+/-- The finite computational projection is idempotent. -/
+theorem computationalProjection3_idempotent :
+    computationalProjection3 * computationalProjection3 = computationalProjection3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [computationalProjection3, Matrix.mul_apply, Fin.sum_univ_three]
+
+/-- The finite computational projection preserves the first computational basis vector. -/
+theorem computationalProjection3_preserves_compVec0 :
+    computationalProjection3.mulVec compVec0 = compVec0 := by
+  ext i
+  fin_cases i <;>
+    simp [Matrix.mulVec, computationalProjection3, compVec0]
+
+/-- The finite computational projection preserves the second computational basis vector. -/
+theorem computationalProjection3_preserves_compVec1 :
+    computationalProjection3.mulVec compVec1 = compVec1 := by
+  ext i
+  fin_cases i <;>
+    simp [Matrix.mulVec, computationalProjection3, compVec1]
+
+/-- The finite computational projection kills the non-computational basis vector. -/
+theorem computationalProjection3_kills_nonComputationalVec :
+    computationalProjection3.mulVec nonComputationalVec = 0 := by
+  ext i
+  fin_cases i <;>
+    simp [Matrix.mulVec, computationalProjection3, nonComputationalVec]
+
+/-- Every projected finite three-state vector has zero non-computational coordinate. -/
+theorem computationalProjection3_range_third_zero (v : Fin 3 → ℝ) :
+    (computationalProjection3.mulVec v) 2 = 0 := by
+  simp [Matrix.mulVec, computationalProjection3]
+
 end InfoGeometry.Canonical.FibonacciParafermionAtoms

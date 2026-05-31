@@ -27,3 +27,12 @@ def test_conformal_positive_partition_has_tkk_cone_square_witness_routes():
     assert "theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeWitness" in text
     assert "W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y" in text
     assert "(ConformalOperatorAdmissibilityWitness.toPositiveContext\n      (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)" in text
+
+
+def test_conformal_positive_partition_has_tkk_cone_context_constructors():
+    text = SOURCE.read_text()
+
+    assert "noncomputable def toConstructiveSquarePositiveContextOfWitnessOfTKKConeWitness" in text
+    assert "noncomputable def toPositiveContextOfWitnessOfTKKConeWitness" in text
+    assert "W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y" in text
+    assert "(W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeWitness weylGauge hTKK hCone X Y\n    hSquare).toPositiveContext" in text

@@ -151,6 +151,51 @@ theorem R_B_R_eq_B_R_B (a b q : ℝ)
   simpa [R_matrix, B_matrix, B_matrix_diag, diagonalBraidMatrix] using
     (diagonal_artin_relation a b (q ^ (-4 : ℤ)) (q ^ 3) hF hA)
 
+/-- Diagonal braid matrices compose by multiplying their diagonal entries. -/
+theorem diagonalBraidMatrix_mul (r₁ t₁ r₂ t₂ : ℝ) :
+    diagonalBraidMatrix r₁ t₁ * diagonalBraidMatrix r₂ t₂ =
+      diagonalBraidMatrix (r₁ * r₂) (t₁ * t₂) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+
+/--
+Dual-basis braid matrices compose by multiplying the underlying diagonal
+phases, because `F² = 1`.
+-/
+theorem B_matrix_diag_mul (a b r₁ t₁ r₂ t₂ : ℝ)
+    (hF : IsFibonacciRelation a b) :
+    B_matrix_diag a b r₁ t₁ * B_matrix_diag a b r₂ t₂ =
+      B_matrix_diag a b (r₁ * r₂) (t₁ * t₂) := by
+  unfold B_matrix_diag
+  have hFsq : F_matrix a b * F_matrix a b = (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
+    F_matrix_sq a b hF
+  calc
+    (F_matrix a b * diagonalBraidMatrix r₁ t₁ * F_matrix a b) *
+        (F_matrix a b * diagonalBraidMatrix r₂ t₂ * F_matrix a b)
+        = F_matrix a b * diagonalBraidMatrix r₁ t₁ *
+            (F_matrix a b * F_matrix a b) * diagonalBraidMatrix r₂ t₂ * F_matrix a b := by
+          simp only [mul_assoc]
+    _ = F_matrix a b * diagonalBraidMatrix r₁ t₁ * 1 * diagonalBraidMatrix r₂ t₂ * F_matrix a b := by
+          rw [hFsq]
+    _ = F_matrix a b * (diagonalBraidMatrix r₁ t₁ * diagonalBraidMatrix r₂ t₂) * F_matrix a b := by
+          simp only [mul_one, mul_assoc]
+    _ = F_matrix a b * diagonalBraidMatrix (r₁ * r₂) (t₁ * t₂) * F_matrix a b := by
+          rw [diagonalBraidMatrix_mul]
+
+/-- Squaring a dual-basis braid matrix squares the underlying diagonal phases. -/
+theorem B_matrix_diag_sq (a b r t : ℝ) (hF : IsFibonacciRelation a b) :
+    B_matrix_diag a b r t * B_matrix_diag a b r t =
+      B_matrix_diag a b (r * r) (t * t) := by
+  exact B_matrix_diag_mul a b r t r t hF
+
+/-- Composition law for two `B_matrix` values with independent phase parameters. -/
+theorem B_matrix_mul_eq_diag (a b q₁ q₂ : ℝ) (hF : IsFibonacciRelation a b) :
+    B_matrix a b q₁ * B_matrix a b q₂ =
+      B_matrix_diag a b (q₁ ^ (-4 : ℤ) * q₂ ^ (-4 : ℤ)) (q₁ ^ 3 * q₂ ^ 3) := by
+  simpa [B_matrix, R_matrix, B_matrix_diag, diagonalBraidMatrix] using
+    (B_matrix_diag_mul a b (q₁ ^ (-4 : ℤ)) (q₁ ^ 3) (q₂ ^ (-4 : ℤ)) (q₂ ^ 3) hF)
+
 /-! ## `Z₃` parafermion composite charge -/
 
 section ParafermionCharge

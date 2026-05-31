@@ -226,7 +226,30 @@ theorem parafermion_composite_charge
 
 end ParafermionCharge
 
-/-! ## `Z₃` projector algebra -/
+/-! ## `Z₃` projector algebra
+
+Honesty status for the algebraic projector fragment below:
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+[Fully verified lemmas with zero remaining goals. Kernel-checked in this file.]
+- `Z3Parafermion.half_add_half_eq_one`
+- `Z3Parafermion.half_mul_two_eq`
+- `Z3Parafermion.proj_completeness`
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+[Kernel-checked theorems whose statements explicitly require the witness `O^3 = O`.]
+- `Z3Parafermion.O_pow_4`
+- `Z3Parafermion.O_pow_4_eq_O_sq`
+- `Z3Parafermion.proj_up_orthogonal_down`
+- `Z3Parafermion.proj_up_orthogonal_vac`
+- `Z3Parafermion.proj_down_orthogonal_vac`
+- `Z3Parafermion.proj_vac_idempotent`
+- `Z3Parafermion.proj_up_idempotent`
+- `Z3Parafermion.proj_down_idempotent`
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+- None inside this algebraic fragment.
+-/
 
 namespace Z3Parafermion
 

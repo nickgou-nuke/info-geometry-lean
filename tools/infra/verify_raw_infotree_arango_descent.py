@@ -172,10 +172,11 @@ FOR d IN raw_infotree_decl_links
 FOR d IN raw_infotree_decl_links
   FILTER d.declName != null
   FILTER d.declName != ""
+  FILTER CONTAINS(d.declName, ".")
+  FILTER d.declName != SUBSTITUTE(d.module, "lean.", "")
   LET matches = (
     FOR n IN ig_nodes
-      FILTER n.graphKind == "decl"
-      FILTER n.decl == d.declName
+      FILTER n.name == d.declName
       LIMIT 1
       RETURN n._id
   )
@@ -190,10 +191,11 @@ FOR d IN raw_infotree_decl_links
 FOR d IN raw_infotree_decl_links
   FILTER d.declName != null
   FILTER d.declName != ""
+  FILTER CONTAINS(d.declName, ".")
+  FILTER d.declName != SUBSTITUTE(d.module, "lean.", "")
   LET matches = (
     FOR n IN ig_nodes
-      FILTER n.graphKind == "decl"
-      FILTER n.decl == d.declName
+      FILTER n.name == d.declName
       RETURN n._id
   )
   FILTER LENGTH(matches) > 1
@@ -207,10 +209,11 @@ FOR d IN raw_infotree_decl_links
 FOR a IN raw_infotree_tactic_arguments
   FILTER a.declName != null
   FILTER a.declName != ""
+  FILTER CONTAINS(a.declName, ".")
+  FILTER a.declName != SUBSTITUTE(a.module, "lean.", "")
   LET matches = (
     FOR n IN ig_nodes
-      FILTER n.graphKind == "decl"
-      FILTER n.decl == a.declName
+      FILTER n.name == a.declName
       LIMIT 1
       RETURN n._id
   )

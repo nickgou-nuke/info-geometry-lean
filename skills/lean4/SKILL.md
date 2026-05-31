@@ -244,6 +244,8 @@ ${LEAN4_PYTHON_BIN:-python3} "$LEAN4_SCRIPTS/sorry_analyzer.py" . --report-only
 
 **Internals:** [review-hook-schema](references/review-hook-schema.md)
 
+**Repo-specific induction:** [induction-systematics](../induction-systematics/SKILL.md) — use when the proof shape is Nat induction, recursive trajectories, finite-stage transport, tensor-algebra induction, or algebraic direct limits in InfoGeometry.
+
 ## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
 
 Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.

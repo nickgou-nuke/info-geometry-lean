@@ -13,6 +13,8 @@ def test_boundary_excitation_owner_readback_theorems_exist() -> None:
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_of_compressedDeviation_eq_zero" in text
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_of_deviationControlledByZD_of_ZD_eq_zero" in text
     assert "theorem sourcedGenerator_boundary_excitation_eq_background_iff_deviationControlledByZD_of_ZD_eq_zero" in text
+    assert "theorem sourcedGenerator_eq_background_iff_observerDefectResidual_norm_le_ZD_of_ZD_eq_zero" in text
+    assert "theorem sourcedGenerator_eq_background_of_observerDefectResidual_norm_le_ZD_of_ZD_eq_zero" in text
 
 
 def test_boundary_excitation_owner_readback_routes_through_existing_owner_theorems() -> None:
@@ -22,3 +24,5 @@ def test_boundary_excitation_owner_readback_routes_through_existing_owner_theore
     assert "observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero" in text
     assert "observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero" in text
     assert "observerDefectResidual_eq_projectorCompression_commutator_deviation" in text
+    assert "observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD" in text
+    assert "(sourcedGenerator_eq_background_iff_observerDefectResidual_norm_le_ZD_of_ZD_eq_zero" in text

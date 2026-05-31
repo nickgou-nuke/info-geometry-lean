@@ -16,8 +16,11 @@ def test_has_clock_axis_forcing_seed_routes_through_cartan_grade_owner() -> None
     assert "theorem nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium" in text
     assert "theorem nonEquilibriumClockDefect_eq_zero_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry" in text
     assert "theorem nonEquilibriumClockDefect_eq_zero_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry" in text
+    assert "theorem commute_clockAxis_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry" in text
+    assert "theorem windingOrbitObstruction_eq_zero_iff_commute_of_localClockGaugeSymmetry" in text
     assert "show IsClockEquilibriumLane (H := H) hMod ↔" in text
     assert "exact clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry" in text
+    assert "exact\n    (windingOrbitObstruction_eq_zero_iff_commute_of_clockFaithfulBranch" in text
     assert "theorem noncommutingScaleLane_iff_not_detailedEquilibrium" in text
 
 

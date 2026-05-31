@@ -549,7 +549,9 @@ def run_axiom_report(
     module_names: list[str],
     approved_axioms: set[str],
 ) -> dict[str, Any]:
-    cmd = ["lake", "env", "lean", "--run", str(AUDIT_AXIOMS_REPORT_PATH.relative_to(ROOT)), *module_names]
+    # If auditing the whole codebase, let the Lean script default to all modules rather than passing hundreds of arguments.
+    args = module_names if len(module_names) < 50 else []
+    cmd = ["lake", "env", "lean", "--run", str(AUDIT_AXIOMS_REPORT_PATH.relative_to(ROOT))] + args
     proc = subprocess.run(
         cmd,
         cwd=ROOT,

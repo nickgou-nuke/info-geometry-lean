@@ -49,6 +49,35 @@ noncomputable def fibonacciRMatrix (q : Units ℂ) : Matrix ChannelIndex Channel
 noncomputable def fibonacciBMatrix (q : Units ℂ) (τ s : ℂ) : Matrix ChannelIndex ChannelIndex ℂ :=
   fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s
 
+/-- Top-left entry of the complex middle-generator matrix `B = F R F`. -/
+theorem fibonacciBMatrix_apply_zero_zero (q : Units ℂ) (τ s : ℂ) :
+    fibonacciBMatrix q τ s 0 0 = τ * τ * q ^ (-4 : ℤ) + s * s * q ^ (3 : ℤ) := by
+  simp [fibonacciBMatrix, fibonacciFusionMatrix, fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Top-right entry of the complex middle-generator matrix `B = F R F`. -/
+theorem fibonacciBMatrix_apply_zero_one (q : Units ℂ) (τ s : ℂ) :
+    fibonacciBMatrix q τ s 0 1 = τ * s * q ^ (-4 : ℤ) - τ * s * q ^ (3 : ℤ) := by
+  simp [fibonacciBMatrix, fibonacciFusionMatrix, fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Bottom-left entry of the complex middle-generator matrix `B = F R F`. -/
+theorem fibonacciBMatrix_apply_one_zero (q : Units ℂ) (τ s : ℂ) :
+    fibonacciBMatrix q τ s 1 0 = τ * s * q ^ (-4 : ℤ) - τ * s * q ^ (3 : ℤ) := by
+  simp [fibonacciBMatrix, fibonacciFusionMatrix, fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Bottom-right entry of the complex middle-generator matrix `B = F R F`. -/
+theorem fibonacciBMatrix_apply_one_one (q : Units ℂ) (τ s : ℂ) :
+    fibonacciBMatrix q τ s 1 1 = s * s * q ^ (-4 : ℤ) + τ * τ * q ^ (3 : ℤ) := by
+  simp [fibonacciBMatrix, fibonacciFusionMatrix, fibonacciRMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- The complex middle-generator matrix `B = F R F` is symmetric. -/
+theorem fibonacciBMatrix_symmetric (q : Units ℂ) (τ s : ℂ) :
+    fibonacciBMatrix q τ s 0 1 = fibonacciBMatrix q τ s 1 0 := by
+  rw [fibonacciBMatrix_apply_zero_one, fibonacciBMatrix_apply_one_zero]
+
 /-- The fusion matrix is involutive when `s² = τ` and `τ² + τ = 1`. -/
 theorem fibonacciFusionMatrix_sq
     {τ s : ℂ} (hs : s ^ 2 = τ) (hτ : τ ^ 2 + τ = 1) :

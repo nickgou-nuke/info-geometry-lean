@@ -612,6 +612,138 @@ theorem drazin_vacancy_orthogonal (O : A) (h : O ^ 3 = O) :
     _ = O ^ 2 - O * O := by rw [h]
     _ = 0 := by noncomm_ring
 
+/-- Orthogonality of the two scalar-smul chiral sectors under `O³ = O`. -/
+theorem proj_up_orthogonal_down (O : A) (h : O ^ 3 = O) :
+    proj_up O * proj_down O = 0 := by
+  unfold proj_up proj_down
+  rw [smul_mul_smul]
+  have h_eq : (O ^ 2 + O) * (O ^ 2 - O) = 0 := by
+    calc
+      (O ^ 2 + O) * (O ^ 2 - O) = O ^ 4 - O ^ 2 := by noncomm_ring
+      _ = O ^ 2 - O ^ 2 := by
+        rw [show O ^ 4 = O ^ 2 by
+          have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+          rw [h_pow4, h]
+          noncomm_ring]
+      _ = 0 := by noncomm_ring
+  rw [h_eq, smul_zero]
+
+omit [Algebra ℝ A] in
+/-- Idempotency of the scalar-smul vacancy projector under `O³ = O`. -/
+theorem proj_vacancy_idempotent (O : A) (h : O ^ 3 = O) :
+    proj_vacancy O * proj_vacancy O = proj_vacancy O := by
+  unfold proj_vacancy
+  calc
+    (1 - O ^ 2) * (1 - O ^ 2) = 1 - O ^ 2 - O ^ 2 + O ^ 4 := by noncomm_ring
+    _ = 1 - O ^ 2 - O ^ 2 + O ^ 2 := by
+      rw [show O ^ 4 = O ^ 2 by
+        have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+        rw [h_pow4, h]
+        noncomm_ring]
+    _ = 1 - O ^ 2 := by noncomm_ring
+
+/-- Idempotency of the scalar-smul up-sector projector under `O³ = O`. -/
+theorem proj_up_idempotent (O : A) (h : O ^ 3 = O) :
+    proj_up O * proj_up O = proj_up O := by
+  unfold proj_up
+  rw [smul_mul_smul]
+  have h_eq : (O ^ 2 + O) * (O ^ 2 + O) = (2 : ℝ) • (O ^ 2 + O) := by
+    calc
+      (O ^ 2 + O) * (O ^ 2 + O) = O ^ 4 + O ^ 3 + O ^ 3 + O ^ 2 := by noncomm_ring
+      _ = O ^ 2 + O + O + O ^ 2 := by
+        have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+        rw [h_pow4, h]
+        noncomm_ring
+      _ = (2 : ℝ) • (O ^ 2 + O) := by
+        rw [two_smul]
+        noncomm_ring
+  rw [h_eq, smul_smul]
+  have h_scalar : (1 / 2 : ℝ) * (1 / 2 : ℝ) * 2 = 1 / 2 := by norm_num
+  rw [h_scalar]
+
+/-- Idempotency of the scalar-smul down-sector projector under `O³ = O`. -/
+theorem proj_down_idempotent (O : A) (h : O ^ 3 = O) :
+    proj_down O * proj_down O = proj_down O := by
+  unfold proj_down
+  rw [smul_mul_smul]
+  have h_eq : (O ^ 2 - O) * (O ^ 2 - O) = (2 : ℝ) • (O ^ 2 - O) := by
+    calc
+      (O ^ 2 - O) * (O ^ 2 - O) = O ^ 4 - O ^ 3 - O ^ 3 + O ^ 2 := by noncomm_ring
+      _ = O ^ 2 - O - O + O ^ 2 := by
+        have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+        rw [h_pow4, h]
+        noncomm_ring
+      _ = (2 : ℝ) • (O ^ 2 - O) := by
+        rw [two_smul]
+        noncomm_ring
+  rw [h_eq, smul_smul]
+  have h_scalar : (1 / 2 : ℝ) * (1 / 2 : ℝ) * 2 = 1 / 2 := by norm_num
+  rw [h_scalar]
+
+/-- Reversed orthogonality of the two scalar-smul chiral sectors under `O³ = O`. -/
+theorem proj_down_orthogonal_up (O : A) (h : O ^ 3 = O) :
+    proj_down O * proj_up O = 0 := by
+  unfold proj_down proj_up
+  rw [smul_mul_smul]
+  have h_eq : (O ^ 2 - O) * (O ^ 2 + O) = 0 := by
+    calc
+      (O ^ 2 - O) * (O ^ 2 + O) = O ^ 4 - O ^ 2 := by noncomm_ring
+      _ = O ^ 2 - O ^ 2 := by
+        rw [show O ^ 4 = O ^ 2 by
+          have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+          rw [h_pow4, h]
+          noncomm_ring]
+      _ = 0 := by noncomm_ring
+  rw [h_eq, smul_zero]
+
+/-- The scalar-smul chiral projectors reconstruct the operator by `P₊ - P₋ = O`. -/
+theorem spectral_decomposition (O : A) :
+    proj_up O - proj_down O = O := by
+  unfold proj_up proj_down
+  simp only [smul_add, smul_sub]
+  have h1 :
+      (1 / 2 : ℝ) • O ^ 2 + (1 / 2 : ℝ) • O -
+        ((1 / 2 : ℝ) • O ^ 2 - (1 / 2 : ℝ) • O) =
+      (1 / 2 : ℝ) • O + (1 / 2 : ℝ) • O := by
+    abel
+  rw [h1, ← add_smul]
+  have h2 : (1 / 2 : ℝ) + (1 / 2 : ℝ) = 1 := by norm_num
+  rw [h2, one_smul]
+
+/-- Left action of `O` fixes the scalar-smul up-sector projector under `O³ = O`. -/
+theorem O_mul_proj_up (O : A) (h : O ^ 3 = O) :
+    O * proj_up O = proj_up O := by
+  unfold proj_up
+  rw [mul_smul_comm]
+  have h_eq : O * (O ^ 2 + O) = O ^ 2 + O := by
+    calc
+      O * (O ^ 2 + O) = O ^ 3 + O ^ 2 := by noncomm_ring
+      _ = O + O ^ 2 := by rw [h]
+      _ = O ^ 2 + O := by noncomm_ring
+  rw [h_eq]
+
+/-- Left action of `O` acts by `-1` on the scalar-smul down-sector projector under `O³ = O`. -/
+theorem O_mul_proj_down (O : A) (h : O ^ 3 = O) :
+    O * proj_down O = -proj_down O := by
+  unfold proj_down
+  rw [mul_smul_comm]
+  have h_eq : O * (O ^ 2 - O) = -(O ^ 2 - O) := by
+    calc
+      O * (O ^ 2 - O) = O ^ 3 - O ^ 2 := by noncomm_ring
+      _ = O - O ^ 2 := by rw [h]
+      _ = -(O ^ 2 - O) := by noncomm_ring
+  rw [h_eq, smul_neg]
+
+omit [Algebra ℝ A] in
+/-- Left action of `O` kills the scalar-smul vacancy projector under `O³ = O`. -/
+theorem O_mul_proj_vacancy (O : A) (h : O ^ 3 = O) :
+    O * proj_vacancy O = 0 := by
+  unfold proj_vacancy
+  calc
+    O * (1 - O ^ 2) = O - O ^ 3 := by noncomm_ring
+    _ = O - O := by rw [h]
+    _ = 0 := by noncomm_ring
+
 end
 
 /-! ## Three-state computational/leakage projection -/

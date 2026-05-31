@@ -265,10 +265,29 @@ Start with:
 - [docs/OperationalIntent.md](docs/OperationalIntent.md)
 - [docs/GenerativeDiscoveryArchitecture.md](docs/GenerativeDiscoveryArchitecture.md)
 - [docs/FormalizationDiscipline.md](docs/FormalizationDiscipline.md)
+- [docs/InductionSystematics.md](docs/InductionSystematics.md)
+- [docs/InductionHowTo.md](docs/InductionHowTo.md)
 - [docs/ARANGO_DAG_REFRESH_METHODOLOGY.md](docs/ARANGO_DAG_REFRESH_METHODOLOGY.md)
 - [PAULI_MANDATE.md](PAULI_MANDATE.md)
 - [Installation.md](Installation.md)
 - [NEWCOMER_PATH.md](NEWCOMER_PATH.md)
+
+## Induction Systematics
+
+For the repo’s induction patterns, finite-stage transport, categorical
+colimits, and tensor-algebra induction, see the linked guides below.
+The theory is intentionally recursive/inductive at the operator level: when an
+operator is defined by an iterative formula, the inductive recurrence is the
+primary definition, not an analytic completion or Taylor-style limit.
+Formal exp/log/geometric series are treated as algebraic `PowerSeries`
+constructions with coefficientwise lemmas; they are not analytic completion
+claims. Historically, exponential/logarithmic functions were handled by
+iteration, inversion, and differential/algebraic laws before Taylor-series
+formulations became the standard presentation.
+
+- [docs/InductionSystematics.md](docs/InductionSystematics.md)
+- [docs/InductionHowTo.md](docs/InductionHowTo.md)
+- [skills/induction-systematics/SKILL.md](skills/induction-systematics/SKILL.md)
 
 Do not treat old reports, synthesis notes, or handover packets as live state
 unless they have been regenerated or explicitly re-audited.

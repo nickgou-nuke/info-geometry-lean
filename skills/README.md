@@ -41,5 +41,9 @@ All castes are strictly bound by the top-priority mandate:
 - `lean-formula-function-policy`: formulas are `def`s/functions, not prose
   labels or structure fields, and downstream Lean code must call them directly.
 
+## Induction Skills
+
+- [`induction-systematics`](induction-systematics/SKILL.md): the repo’s induction, recursive-trajectory, finite-stage transport, tensor-algebra, and direct-limit playbook.
+
 ## Integration
 This architecture ensures that the Hive is not a one-pass theorem proposer, but a persistent system of recurrent symbolic propagation governed by the Logos of the Lean kernel.

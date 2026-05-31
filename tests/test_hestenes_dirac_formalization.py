@@ -3,6 +3,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "HestenesDirac.lean"
+CR_MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "HestenesCauchyRiemann.lean"
+SQ_FLOW_MODULE = ROOT / "lean" / "InfoGeometry" / "Clifford" / "SplitQuaternionNilpotentFlow.lean"
 CLIFFORD_ALL = ROOT / "lean" / "InfoGeometry" / "Clifford" / "All.lean"
 
 
@@ -189,6 +191,44 @@ def test_hestenes_dirac_imported_by_clifford_all():
     assert "import InfoGeometry.Clifford.HestenesDirac" in text
 
 
+def test_hestenes_cauchy_riemann_module_declares_complex_real_and_cr_equivalence():
+    text = CR_MODULE.read_text()
+    assert "namespace InfoGeometry.Clifford.HestenesCauchyRiemann" in text
+    assert "structure ComplexReal" in text
+    assert "def c_mul" in text
+    assert "structure RealLinearMap" in text
+    assert "def is_complex_linear" in text
+    assert "def satisfy_cauchy_riemann" in text
+    assert "theorem complex_linear_iff_cauchy_riemann" in text
+    assert "axiom " not in text
+
+
+def test_hestenes_cauchy_riemann_module_declares_real_hestenes_spinor_and_cr_bridge():
+    text = CR_MODULE.read_text()
+    assert "structure HestenesSpinor" in text
+    assert "def hMul" in text
+    assert "def reverse" in text
+    assert "def h_norm" in text
+    assert "def krein_inner" in text
+    assert "def bivector_i" in text
+    assert "theorem even_algebra_mul_assoc" in text
+    assert "theorem spinor_mul_reverse" in text
+    assert "theorem bivector_i_squared" in text
+    assert "theorem krein_inner_symmetry" in text
+    assert "structure HestenesPartialDerivs" in text
+    assert "def satisfy_hestenes_cr" in text
+    assert "structure StandardCRComponents" in text
+    assert "theorem hestenes_cr_equivalence" in text
+    assert "structure WeierstrassAnalyticSocket" in text
+    assert "structure HestenesAnalyticSocket" in text
+    assert "axiom " not in text
+
+
+def test_hestenes_cauchy_riemann_imported_by_clifford_all():
+    text = CLIFFORD_ALL.read_text()
+    assert "import InfoGeometry.Clifford.HestenesCauchyRiemann" in text
+
+
 def test_hestenes_dirac_module_builds():
     result = subprocess.run(
         [
@@ -204,3 +244,61 @@ def test_hestenes_dirac_module_builds():
         timeout=240,
     )
     assert result.returncode == 0, result.stdout
+
+
+def test_hestenes_cauchy_riemann_module_builds():
+    result = subprocess.run(
+        [
+            "python3",
+            "tools/infra/run_locked_lake_build.py",
+            "--wait-for-build-lock",
+            "InfoGeometry.Clifford.HestenesCauchyRiemann",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=240,
+    )
+    assert result.returncode == 0, result.stdout
+
+
+def test_split_quaternion_nilpotent_flow_declares_closed_owner_surface_without_axioms():
+    text = SQ_FLOW_MODULE.read_text()
+    assert "namespace InfoGeometry.Clifford.SplitQuaternionNilpotentFlow" in text
+    assert "def sq_smul" in text
+    assert "def sq_recursive_prod" in text
+    assert "def recursive_sum" in text
+    assert "def N_nil" in text
+    assert "def sq_nilpotent_exp" in text
+    assert "def sq_finite_prod_seq" in text
+    assert "def sq_tendsto" in text
+    assert "theorem N_nil_sq" in text
+    assert "theorem sq_nilpotent_prod_induction_N" in text
+    assert "theorem sq_finite_to_infinite_limit" in text
+    assert "axiom " not in text
+    assert "sorry" not in text
+
+
+def test_split_quaternion_nilpotent_flow_imported_by_clifford_all():
+    text = CLIFFORD_ALL.read_text()
+    assert "import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow" in text
+
+
+def test_split_quaternion_nilpotent_flow_module_builds():
+    result = subprocess.run(
+        [
+            "python3",
+            "tools/infra/run_locked_lake_build.py",
+            "--wait-for-build-lock",
+            "InfoGeometry.Clifford.SplitQuaternionNilpotentFlow",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=240,
+    )
+    assert result.returncode == 0, result.stdout
+
+

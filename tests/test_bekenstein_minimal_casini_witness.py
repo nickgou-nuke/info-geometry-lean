@@ -10,12 +10,14 @@ def test_bekenstein_exposes_minimal_casini_witness_route() -> None:
 
     assert "structure MinimalCasiniIncrementWitness" in text
     assert "theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrementWitness" in text
+    assert "theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrementWitness" in text
+    assert "theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrement" in text
     assert "theorem topologicalBekensteinBound_of_minimalCasiniIncrementWitness" in text
 
     increment_block = text.split(
         "theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_minimalCasiniIncrementWitness", 1
     )[1].split(
-        "theorem topologicalBekensteinBound_of_minimalCasiniIncrementWitness", 1
+        "theorem cocycleGeneratorLift_of_minimalCasiniIncrementWitness", 1
     )[0]
 
     assert "(W : MinimalCasiniIncrementWitness" in increment_block
@@ -26,6 +28,29 @@ def test_bekenstein_exposes_minimal_casini_witness_route() -> None:
     assert "(hBridge := W.hBridge)" in increment_block
     assert "(relEnt := W.relEnt)" in increment_block
     assert "(hCasini := W.hCasini)" in increment_block
+
+    nat_match_block = text.split(
+        "theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrementWitness", 1
+    )[1].split(
+        "theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrement", 1
+    )[0]
+
+    assert "(W : MinimalCasiniIncrementWitness" in nat_match_block
+    assert "(hBridge : ScalarCocycleBridge" not in nat_match_block
+    assert "(relEnt : RelativeEntropyProfile)" not in nat_match_block
+    assert "(hCasini : MinimalCasiniIncrementBridge" not in nat_match_block
+    assert "cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift" in nat_match_block
+    assert "cocycleGeneratorLift_of_minimalCasiniIncrementWitness" in nat_match_block
+
+    nat_match_wrapper = text.split(
+        "theorem cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrement", 1
+    )[1].split(
+        "theorem topologicalBekensteinBound_of_minimalCasiniIncrementWitness", 1
+    )[0]
+    assert "cocycleEntropyPotential_natMatch_of_connesCocycle_minimalCasiniIncrementWitness" in nat_match_wrapper
+    assert "{ hBridge := hBridge" in nat_match_wrapper
+    assert "relEnt := relEnt" in nat_match_wrapper
+    assert "hCasini := hCasini" in nat_match_wrapper
 
     block = text.split(
         "theorem topologicalBekensteinBound_of_minimalCasiniIncrementWitness", 1

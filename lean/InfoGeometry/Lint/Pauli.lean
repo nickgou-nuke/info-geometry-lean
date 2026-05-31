@@ -2,6 +2,7 @@ import Lean
 import InfoGeometry.Meta.Trust
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Lint.WitnessLint
+import InfoGeometry.Lint.NonTriviality
 
 open Lean Elab Command InfoGeometry.Meta
 
@@ -93,6 +94,10 @@ def pauliLinter : Linter where
                 if let some (.thmInfo info) := env.find? declName then
                   if info.value.isAppOfArity ``Eq.refl 2 || info.value.isAppOfArity ``rfl 2 then
                      logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} is proved via trivial `rfl`. Ensure this is not masking missing logic."
+                  else
+                    let isGenuine ← Meta.MetaM.run' (auditExprTriviality info.value)
+                    if !isGenuine then
+                      logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} recursively evaluates to a trivial or tautological proof. Ensure this is not masking missing logic."
 
             -- 3. No-Mask Mandate (Heuristic)
             let physicalKeywords := #["Einstein", "Boltzmann", "Hamiltonian", "Entropy", "Physics", "Gravity", "Condensate"]

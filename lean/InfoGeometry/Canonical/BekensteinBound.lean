@@ -132,6 +132,38 @@ theorem topologicalBekensteinBound_of_barrierLiftWitness
     (hBridge := W.hBridge) (hBarrierLift := W.hBarrierLift)
 
 /--
+Proof-carrying Connes-cocycle barrier-lift witness.
+
+This is the smallest compatibility packet for the cocycle-to-bound lane: it
+retains the named `IsConnesCocycle` witness for legacy callers while bundling
+the exact barrier-lift route into one constructive object.
+-/
+structure ConnesCocycleBarrierLiftWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hCocycle : IsConnesCocycle σ u
+  barrierLift : BarrierLiftWitness (n := n) (H := H) σ u T
+
+/--
+Constructive Connes-cocycle route to the topological Bekenstein bound.
+
+This removes the explicit triple `(hCocycle, hBridge, hBarrierLift)` from the
+compatibility surface: callers provide one proof-carrying packet, and the bound
+is discharged through the smaller barrier-lift witness route.
+-/
+theorem topologicalBekensteinBound_of_connesCocycleBarrierLiftWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ConnesCocycleBarrierLiftWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  have _ : IsConnesCocycle σ u := W.hCocycle
+  exact topologicalBekensteinBound_of_barrierLiftWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    W.barrierLift
+
+/--
 Compatibility cocycle-to-bound theorem.  The `IsConnesCocycle` hypothesis is
 retained for named-argument callers, but the proof now routes through the
 smaller barrier-lift theorem above; the bound itself does not use the additive
@@ -146,10 +178,12 @@ theorem topologicalBekensteinBound_of_connesCocycle
     (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k =
       |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|) :
     TopologicalBekensteinBound n T := by
-  have _ : IsConnesCocycle σ u := hCocycle
-  exact topologicalBekensteinBound_of_barrierLift
+  exact topologicalBekensteinBound_of_connesCocycleBarrierLiftWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hBridge := hBridge) (hBarrierLift := hBarrierLift)
+    { hCocycle := hCocycle
+      barrierLift :=
+        { hBridge := hBridge
+          hBarrierLift := hBarrierLift } }
 
 /--
 Concrete generator lift from a cocycle potential to the trajectory RN generator.
@@ -778,6 +812,60 @@ theorem topologicalBekensteinBound_of_cocycleNatMatchWitness
     (hLift :=
       cocycleGeneratorLift_of_cocycleNatMatchWitness
         (n := n) (H := H) (σ := σ) (u := u) (T := T) W)
+
+/--
+Proof-carrying Connes-cocycle nat-match packet.
+
+This keeps the legacy `IsConnesCocycle` witness for compatibility-sensitive
+callers while bundling the concrete bridge and integer-time nat-match route into
+one constructive object.
+-/
+structure ConnesCocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n) where
+  hCocycle : IsConnesCocycle σ u
+  natMatch : CocycleNatMatchWitness (n := n) (H := H) σ u T
+
+/--
+Constructive Connes-cocycle nat-match route to increment-level RN-barrier
+control.
+
+This removes the explicit triple `(hCocycle, hBridge, hMatch)` from the
+increment-control surface: callers provide one proof-carrying packet, and the
+bound is discharged through the smaller nat-match witness route.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ConnesCocycleNatMatchWitness (n := n) (H := H) σ u T) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u W.natMatch.hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u W.natMatch.hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  have _ : IsConnesCocycle σ u := W.hCocycle
+  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleNatMatchWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    W.natMatch
+
+/--
+Constructive Connes-cocycle nat-match route to the topological Bekenstein
+bound.
+
+This removes the explicit triple `(hCocycle, hBridge, hMatch)` from the
+compatibility theorem surface: one proof-carrying packet now suffices.
+-/
+theorem topologicalBekensteinBound_of_connesCocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ConnesCocycleNatMatchWitness (n := n) (H := H) σ u T) :
+    TopologicalBekensteinBound n T := by
+  have _ : IsConnesCocycle σ u := W.hCocycle
+  exact topologicalBekensteinBound_of_cocycleNatMatchWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    W.natMatch
 
 /--
 Proof-carrying zero-normalized cocycle generator packet.

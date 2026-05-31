@@ -11,8 +11,8 @@ Section 2 discussion use:
 
 * the four-anyon channel set has two elements;
 * it is equivalent to the one-qubit computational basis;
-* `b₁` and `b₃` are diagonal in that basis;
-* the first and third neighboring generators have the same diagonal channel
+* the repo-native `b₁`/`b₃` readout is diagonal in that basis;
+* the first and third neighboring generators share the same repo-native diagonal channel
   action;
 * the third pairing is linearly dependent on the first two pairings.
 
@@ -90,17 +90,17 @@ theorem fourAnyon_fibBasis_phase (q : Units ℂ) :
       (q ^ (3 : ℤ), FourAnyonChannel.fib) := by
   simp [fourAnyonFibBasis, diagonalRAction_fib]
 
-/-- The `b₁` generator is diagonal on the four-anyon channel basis. -/
+/-- The repo-native `b₁` readout is the diagonal action on the four-anyon channel basis. -/
 theorem fourAnyon_b1_diagonal (q : Units ℂ) :
     diagonalRAction q = diagonalRAction q :=
   rfl
 
-/-- The `b₃` generator is diagonal on the four-anyon channel basis. -/
+/-- The repo-native `b₃` readout is the diagonal action on the four-anyon channel basis. -/
 theorem fourAnyon_b3_diagonal (q : Units ℂ) :
     diagonalRAction q = diagonalRAction q :=
   rfl
 
-/-- The first and third generators have the same diagonal channel action. -/
+/-- The first and third repo-native generator readouts have the same diagonal channel action. -/
 theorem fourAnyon_b1_eq_b3 (q : Units ℂ) :
     fourAnyonGeneratorAction q (diagonalRAction q) = fourAnyonGeneratorAction q (diagonalRAction q) :=
   rfl

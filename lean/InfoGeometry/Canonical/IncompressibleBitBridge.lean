@@ -424,6 +424,24 @@ theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralS
       (CI := CI) (H := H) bit x hScaleFromPotential
 
 /--
+Constructive witness route for the same operator-owner packet: the scale/
+potential identification is carried as a proof-carrying witness instead of a raw
+separate equality hypothesis.
+-/
+@[rep_depth thermo, capstone]
+theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScaleCramerRaoVolumePotentialWitness
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (W : ChiralScaleCramerRaoVolumePotentialWitness CI H x) :
+    CI.IsNormalInference ∧ CI.unitOfAction = 0 := by
+  exact
+    normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x
+      (chiralScale_eq_cramerRaoVolumePotential_of_witness W)
+
+/--
 Non-vacuity witness (operator-owner form): if the conformal unit of action is
 provably nonzero while the chiral scale is read from the Cramer-Rao
 volume-potential owner, then no incompressible Cramer-Rao bit can exist.

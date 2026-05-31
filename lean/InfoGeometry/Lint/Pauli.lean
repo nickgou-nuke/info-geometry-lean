@@ -95,7 +95,7 @@ def pauliLinter : Linter where
                   if info.value.isAppOfArity ``Eq.refl 2 || info.value.isAppOfArity ``rfl 2 then
                      logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} is proved via trivial `rfl`. Ensure this is not masking missing logic."
                   else
-                    let isGenuine ← Meta.MetaM.run' (auditExprTriviality info.value)
+                    let isGenuine ← liftCoreM (Meta.MetaM.run' (auditExprTriviality info.value))
                     if !isGenuine then
                       logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} recursively evaluates to a trivial or tautological proof. Ensure this is not masking missing logic."
 

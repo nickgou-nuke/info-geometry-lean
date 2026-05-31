@@ -52,6 +52,7 @@ import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.ArnoldNetworkIntertwiner
 import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Canonical.AssociativeSuperBracket
+import InfoGeometry.Canonical.SuperBracketInvolutionParity
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionDiracBridge
 import InfoGeometry.Canonical.AttentionEuclidean

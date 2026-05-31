@@ -607,23 +607,6 @@ theorem sourcedGenerator_eq_background_of_nonempty_control_of_ZD_eq_zero
       (E := E) CIK C hZD).2 hControl
 
 /--
-Proof-carrying owner variant of
-`sourcedGenerator_eq_background_of_strain_eq_zero_of_ZD_eq_zero`.
-Callers can supply the explicit `ZeroStrainWitness` packet instead of a bare
-`observerOrientationStrain = 0` proposition on the exact zero-`Z_D` lane.
--/
-@[rep_depth transport]
-theorem sourcedGenerator_eq_background_of_zeroStrainWitness_of_ZD_eq_zero
-    (CIK : CertifiedInverseKernel H₂)
-    (C : CasimirWeylDrazinData (E := E) CIK)
-    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0)
-    (W : ZeroStrainWitness CIK C.observer) :
-    sourcedGenerator (E := E) CIK C = C.flow.K0 := by
-  exact
-    sourcedGenerator_eq_background_of_strain_eq_zero_of_ZD_eq_zero
-      (E := E) CIK C hZD W.strain_eq_zero
-
-/--
 The regular Drazin-core Hamiltonian is supported on the Drazin projector and
 annihilated by the complementary cut on both sides.
 -/

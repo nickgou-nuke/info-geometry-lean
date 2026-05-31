@@ -15,7 +15,7 @@
     "carrier_witness_name": {
       "severity": "error",
       "description": "A structure/class name itself advertises witness/certificate/socket/guard/proxy packaging.",
-      "name_regex": "(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet)"
+      "name_regex": "(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier)"
     },
     "projection_reexport": {
       "severity": "error",

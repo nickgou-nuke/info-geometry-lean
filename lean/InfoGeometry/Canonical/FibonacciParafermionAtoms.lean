@@ -570,4 +570,55 @@ theorem computationalProjection3_range_third_zero (v : Fin 3 → ℝ) :
     (computationalProjection3.mulVec v) 2 = 0 := by
   simp [Matrix.mulVec, computationalProjection3]
 
+/-- Left multiplication by the computational projection fixes matrices with zero third row. -/
+theorem computationalProjection3_mul_left_of_third_row_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ)
+    (hrow : ∀ j : Fin 3, M 2 j = 0) :
+    computationalProjection3 * M = M := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [computationalProjection3, Matrix.mul_apply, Fin.sum_univ_three, hrow]
+
+/-- Right multiplication by the computational projection fixes matrices with zero third column. -/
+theorem computationalProjection3_mul_right_of_third_col_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ)
+    (hcol : ∀ i : Fin 3, M i 2 = 0) :
+    M * computationalProjection3 = M := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [computationalProjection3, Matrix.mul_apply, Fin.sum_univ_three, hcol]
+
+/-- A matrix with zero third row and column commutes with the computational projection. -/
+theorem computationalProjection3_commutes_of_third_row_col_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ)
+    (hrow : ∀ j : Fin 3, M 2 j = 0)
+    (hcol : ∀ i : Fin 3, M i 2 = 0) :
+    computationalProjection3 * M = M * computationalProjection3 := by
+  rw [computationalProjection3_mul_left_of_third_row_zero M hrow,
+    computationalProjection3_mul_right_of_third_col_zero M hcol]
+
+/-- Compression by the computational projection always has zero third row. -/
+theorem computationalProjection3_compress_third_row_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ) (j : Fin 3) :
+    (computationalProjection3 * M * computationalProjection3) 2 j = 0 := by
+  fin_cases j <;>
+    simp [computationalProjection3, Matrix.mul_apply, Matrix.vecMul]
+
+/-- Compression by the computational projection always has zero third column. -/
+theorem computationalProjection3_compress_third_col_zero
+    (M : Matrix (Fin 3) (Fin 3) ℝ) (i : Fin 3) :
+    (computationalProjection3 * M * computationalProjection3) i 2 = 0 := by
+  fin_cases i <;>
+    simp [computationalProjection3, Matrix.mul_apply, Matrix.vecMul, Fin.sum_univ_three]
+
+/-- Compressing twice by the computational projection is the same as compressing once. -/
+theorem computationalProjection3_compress_idempotent
+    (M : Matrix (Fin 3) (Fin 3) ℝ) :
+    computationalProjection3 * (computationalProjection3 * M * computationalProjection3) *
+        computationalProjection3 =
+      computationalProjection3 * M * computationalProjection3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [computationalProjection3, Matrix.mul_apply, Matrix.vecMul, Fin.sum_univ_three]
+
 end InfoGeometry.Canonical.FibonacciParafermionAtoms

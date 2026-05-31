@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonPaperBridge
+import InfoGeometry.Canonical.FiniteFibonacciGeneralBraidGenerators
 import InfoGeometry.Canonical.FiniteFibonacciRegisterWords
 import InfoGeometry.Canonical.FiniteFibonacciRegisterSubgroup
 import InfoGeometry.Canonical.FiniteFibonacciSparseLowAnyonPaperBridge
@@ -48,6 +49,38 @@ theorem general_recursiveFibonacciDimension_step (k : ℕ) :
     recursiveFibonacciDimension (k + 2) =
       recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) :=
   finiteRecursiveFibonacciDimension_step k
+
+/-- The higher-anyon recursive dimension matches the general block count at shifted arity. -/
+theorem general_recursiveDimension_eq_blockDimension (k : ℕ) :
+    recursiveFibonacciDimension k =
+      FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension (k + 2) := by
+  rw [recursiveFibonacciDimension_eq_fib_succ]
+  simp [FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension]
+
+/-- The higher-anyon recursive basis has the same cardinality as the general block count. -/
+theorem general_recursiveBasis_card_eq_blockDimension (k : ℕ) :
+    Fintype.card (RecursiveFibonacciBlockBasis k) =
+      FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension (k + 2) := by
+  rw [recursiveFibonacciBlockBasis_card, general_recursiveDimension_eq_blockDimension]
+
+/-- Re-indexed recurrence for the general block count induced by the higher-anyon recursion. -/
+theorem general_blockDimension_step_from_recursive (k : ℕ) :
+    FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension (k + 4) =
+      FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension (k + 2) +
+        FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension (k + 3) := by
+  simpa using FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension_step k
+
+/-- The first recursive-basis cardinalities recover the explicit low-anyon examples `1,1,2,3,5,8,13`. -/
+theorem general_recursiveBasis_card_eight :
+    Fintype.card (RecursiveFibonacciBlockBasis 6) = 13 := by
+  rw [general_recursiveBasis_card_eq_blockDimension]
+  simpa using FiniteFibonacciGeneralBraidGenerators.fibonacciBlockDimension_eight
+
+/-- The `n = 8` sparse template matches the recursive-basis cardinality at `k = 6`. -/
+theorem general_sparse_basis8_matches_recursive_basis :
+    Fintype.card FiniteFibonacciSparseLowAnyonMatrices.Basis8 =
+      Fintype.card (RecursiveFibonacciBlockBasis 6) := by
+  rw [general_sparse_basis8_card, general_recursiveBasis_card_eight]
 
 /-- The left end generator is `b₁`. -/
 theorem general_leftEndBraidIndex :

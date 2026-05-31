@@ -166,6 +166,63 @@ theorem operator_odd_odd_commutator_even
     _ = (X * Y - Y * X) * Γ := by
             noncomm_ring
 
+/-- Even-even anticommutator closure. -/
+theorem operator_even_even_anticommutator_even
+    (Γ X Y : V →ₗ[𝕜] V)
+    (hX : Γ * X = X * Γ)
+    (hY : Γ * Y = Y * Γ) :
+    Γ * (X * Y + Y * X) = (X * Y + Y * X) * Γ := by
+  calc
+    Γ * (X * Y + Y * X)
+        = Γ * X * Y + Γ * Y * X := by
+            noncomm_ring
+    _ = (X * Γ) * Y + (Y * Γ) * X := by
+            rw [hX, hY]
+    _ = X * (Γ * Y) + Y * (Γ * X) := by
+            noncomm_ring
+    _ = X * (Y * Γ) + Y * (X * Γ) := by
+            rw [hY, hX]
+    _ = (X * Y + Y * X) * Γ := by
+            noncomm_ring
+
+/-- Even-odd anticommutator closure. -/
+theorem operator_even_odd_anticommutator_odd
+    (Γ X Y : V →ₗ[𝕜] V)
+    (hX : Γ * X = X * Γ)
+    (hY : Γ * Y = -Y * Γ) :
+    Γ * (X * Y + Y * X) = -(X * Y + Y * X) * Γ := by
+  calc
+    Γ * (X * Y + Y * X)
+        = Γ * X * Y + Γ * Y * X := by
+            noncomm_ring
+    _ = (X * Γ) * Y + (-Y * Γ) * X := by
+            rw [hX, hY]
+    _ = X * (Γ * Y) + (-Y) * (Γ * X) := by
+            noncomm_ring
+    _ = X * (-Y * Γ) + (-Y) * (X * Γ) := by
+            rw [hY, hX]
+    _ = -(X * Y + Y * X) * Γ := by
+            noncomm_ring
+
+/-- Odd-even anticommutator closure. -/
+theorem operator_odd_even_anticommutator_odd
+    (Γ X Y : V →ₗ[𝕜] V)
+    (hX : Γ * X = -X * Γ)
+    (hY : Γ * Y = Y * Γ) :
+    Γ * (X * Y + Y * X) = -(X * Y + Y * X) * Γ := by
+  calc
+    Γ * (X * Y + Y * X)
+        = Γ * X * Y + Γ * Y * X := by
+            noncomm_ring
+    _ = (-X * Γ) * Y + (Y * Γ) * X := by
+            rw [hX, hY]
+    _ = (-X) * (Γ * Y) + Y * (Γ * X) := by
+            noncomm_ring
+    _ = (-X) * (Y * Γ) + Y * (-X * Γ) := by
+            rw [hY, hX]
+    _ = -(X * Y + Y * X) * Γ := by
+            noncomm_ring
+
 /-- Odd-odd anticommutator closure. -/
 theorem operator_odd_odd_anticommutator_even
     (Γ X Y : V →ₗ[𝕜] V)
@@ -184,6 +241,18 @@ theorem operator_odd_odd_anticommutator_even
             rw [hY, hX]
     _ = (X * Y + Y * X) * Γ := by
             noncomm_ring
+
+/-- Even square is even. -/
+theorem operator_even_square_even
+    (Γ Q : V →ₗ[𝕜] V)
+    (hQ : Γ * Q = Q * Γ) :
+    Γ * (Q * Q) = (Q * Q) * Γ := by
+  calc
+    Γ * (Q * Q) = Γ * Q * Q := by noncomm_ring
+    _ = (Q * Γ) * Q := by rw [hQ]
+    _ = Q * (Γ * Q) := by noncomm_ring
+    _ = Q * (Q * Γ) := by rw [hQ]
+    _ = (Q * Q) * Γ := by noncomm_ring
 
 /-- Odd square is even. -/
 theorem operator_odd_square_even

@@ -181,6 +181,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceWickBase
 import InfoGeometry.Canonical.SplitCliffordSourceWickBaseExternalBridge
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.SplitCliffordCantorFock
+import InfoGeometry.Canonical.SplitCliffordCantorHop
 import InfoGeometry.Canonical.SplitCliffordBinaryFock
 import InfoGeometry.Canonical.NilpotentFluxVirasoroReadout
 import InfoGeometry.Canonical.SuperAlgebraEquilibrium

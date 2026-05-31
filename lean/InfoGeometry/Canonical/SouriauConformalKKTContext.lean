@@ -2892,9 +2892,31 @@ theorem selfResponse_nonneg_of_squareResponse
 
 /--
 The conformal self-response is nonnegative on the Cartan-odd constructive
+branch, using a proof-carrying cone witness instead of a bare `hCone` input
+while still accepting the direct square-response equality surface.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareResponse_of_ConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y)
+      amplitude selfResponse_eq_square).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the Cartan-odd constructive
 branch, using a proof-carrying TKK witness instead of a bare
 `tkkParameter`/`hTKK` pair while still accepting the direct square-response
- equality surface.
+equality surface.
 -/
 @[rep_depth transport]
 theorem selfResponse_nonneg_of_squareResponse_of_TKKWitness

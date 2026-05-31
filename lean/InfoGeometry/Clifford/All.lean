@@ -51,6 +51,7 @@ import InfoGeometry.Clifford.SplitQ11CausalCone
 import InfoGeometry.Clifford.SplitQ11ChiralDecomposition
 import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 import InfoGeometry.Clifford.SplitCl44Complexification
+import InfoGeometry.Clifford.FibonacciCl55Carrier
 import InfoGeometry.Clifford.SplitCliffordBoundaryPacket
 import InfoGeometry.Clifford.Cl44GenerationRotation
 import InfoGeometry.Clifford.Cl44C8Comparison

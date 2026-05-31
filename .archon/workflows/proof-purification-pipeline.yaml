@@ -1,0 +1,158 @@
+name: proof-purification-pipeline
+description: "Recursive semantic-vacuity purification pipeline with literature search, Lean formalization, and hard proof gates."
+
+worktree:
+  enabled: false
+
+nodes:
+  - id: semantic-audit
+    assistant: pi
+    prompt: |
+      [SYSTEM CONSTRAINTS: ZERO PROSE, ZERO WRAPPERS, PURE VERIFICATION]
+
+      You are the Semantic Vacuity Auditor.
+
+      Goal: audit the whole Lean tree and select exactly one highest-value purification target.
+
+      Required reads:
+      - tools/quality/semantic_vacuity_patterns.json
+      - .archon/prompts/prover-prover.md
+      - skills/proof-only-mandate/SKILL.md
+
+      Required commands:
+      - python3 tools/quality/committed_baseline_gate.py lean --require-pushed
+      - python3 tools/quality/proof_heartbeat.py lean --top 50
+      - python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 100 --json-out reports/semantic-vacuity-latest.json
+      - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+
+      Required analysis:
+      - Audit file-by-file.
+      - Classify visible debt into:
+        * proof_carrier_field
+        * proof_like_field_type
+        * carrier_witness_name
+        * projection_reexport
+        * trivial_surface
+        * placeholder_token
+        * constant_function
+        * identity_or_noop_function
+        * direct_alias_abbrev
+        * dynamic_literal_definition
+        * newly discovered vacuity form, if any
+      - If a new vacuity form is discovered, update tools/quality/semantic_vacuity_patterns.json before continuing.
+      - Select one target where a real owner-side proof or deletion/refactor of a vacuous surface is plausible.
+
+      Output only:
+      - .archon/task_results/semantic-audit-target.md
+
+      The output must name:
+      - file
+      - declaration/debt
+      - exact vacuity class
+      - why current code is vacuous
+      - owner corridor to inspect
+      - whether literature search is needed
+
+  - id: literature-scout
+    depends_on: [semantic-audit]
+    assistant: pi
+    prompt: |
+      Read .archon/task_results/semantic-audit-target.md.
+      Read .archon/prompts/literature-scout.md.
+
+      Act as the Literature Scout. Search existing repo/source/DAG context first, then Mathlib, Lean community sources, GitHub, arXiv, papers, and forums as needed.
+
+      Do not edit Lean files.
+      Do not propose wrappers, witnesses, certificates, sockets, laws, guards, or added structure/class fields.
+      Every source claim must include a URL, repository path, theorem name, paper locator, or Mathlib declaration.
+
+      Write the proof dossier to .archon/task_results/literature-scout-current.md.
+
+  - id: formalize
+    depends_on: [literature-scout]
+    assistant: pi
+    prompt: |
+      [SYSTEM CONSTRAINTS: ZERO PROSE, ZERO WRAPPERS, PURE VERIFICATION]
+
+      Persona: Audit, proof-only Lean formalizer.
+
+      Required reads:
+      - .archon/task_results/semantic-audit-target.md
+      - .archon/task_results/literature-scout-current.md
+      - .archon/prompts/prover-prover.md
+      - tools/quality/semantic_vacuity_patterns.json
+
+      Task:
+      - Implement exactly one bounded purification in the selected owner file.
+      - Prefer genuine theorem proofs from lower definitions/theorems.
+      - If the target is an explicitly vacuous surface with no mathematical content, delete/refactor it only if all imports/builds remain correct and no open theorem/debt is buried in prose.
+      - If no proof is available, keep the open debt compiler-visible; do not fake closure.
+      - Do not delete a theorem/lemma/axiom/definition merely to describe the missing proof in natural-language comments outside kernel attention.
+
+      Hard prohibitions:
+      - No new `structure` or `class` declarations as proof cleanup.
+      - No added fields to existing structures/classes.
+      - No renaming `*_law` to `*_True` or similar laundering.
+      - No witness/certificate/socket/readback/proxy theorem closure.
+      - No `axiom`, `admit`, or hidden proof carrier.
+      - No natural-language burial of open debt by deleting Lean declarations and replacing them with comments.
+
+      Required validation before handoff:
+      - lake env lean <each touched Lean file>
+      - lake build <touched Lean module or enclosing package>
+      - python3 tools/quality/semantic_vacuity_gate.py <each touched Lean file> --fail-on none --top 50
+      - Do not use the global staged proof-proxy gate as a success criterion in a dirty checkout; it audits pre-existing staged debt.
+      - Before semantic/proxy audit, commit and push the touched file(s); never restore an uncommitted audited file from HEAD or a snapshot.
+      - The heartbeat wrapper is the hard committed-diff proof-proxy gate: python3 tools/quality/proof_proxy_diff_gate.py --base <pre-cycle-committed-ref> <scope>.
+      - The heartbeat wrapper is also the hard committed-diff semantic regression gate: python3 tools/quality/semantic_regression_gate.py --base <pre-cycle-committed-ref> <scope>.
+
+      Write .archon/task_results/formalize-current.md with a three-bucket Lean-audit summary.
+
+  - id: proof-gate
+    depends_on: [formalize]
+    assistant: pi
+    prompt: |
+      You are the hard proof gate. You are not a prover; you are a rejection filter.
+
+      Required commands:
+      - python3 tools/quality/committed_baseline_gate.py lean --require-pushed
+      - git diff --stat
+      - git diff --cached --stat
+      - Do not run python3 tools/quality/proof_proxy_staged_gate.py as a global pass/fail gate while the checkout has pre-existing staged debt.
+      - Confirm that the outer heartbeat committed-diff gate ran: python3 tools/quality/proof_proxy_diff_gate.py --base <pre-cycle-committed-ref> <scope>
+      - Confirm that the changed-file semantic regression gate ran: python3 tools/quality/semantic_regression_gate.py --base <pre-cycle-committed-ref> <scope>
+      - python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 100 --json-out reports/semantic-vacuity-latest.json
+      - python3 tools/quality/proof_heartbeat.py lean --top 50
+      - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+      - lake script run changedVerify
+
+      Reject the formalizer's Lean edits if any of these occurred; do not auto-revert the worktree:
+      - audited files were not committed and pushed before audit
+      - new structures/classes introduced for proof cleanup
+      - fields added to structures/classes
+      - proof carrier renamed rather than eliminated
+      - theorem closes only by projecting a field/hypothesis/witness/certificate/socket/readback
+      - Lean declarations are deleted and replaced by prose debt comments
+      - semantic vacuity count increases in touched files
+      - Lean validation fails
+
+      If accepted:
+      - stage only source/SOP/tooling files changed by this cycle
+      - commit with concise message
+      - write .archon/task_results/proof-gate-current.md
+
+  - id: recurse
+    depends_on: [proof-gate]
+    loop:
+      max_iterations: 100
+      prompt: |
+        Continue the purification furnace if semantic vacuity remains.
+
+        Required command:
+        - python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 20
+
+        If errors remain, request another pipeline iteration by recording CONTINUE in .archon/task_results/purification-loop-state.md.
+        If no errors remain, record COMPLETE.
+      until: COMPLETE
+      fresh_context: true
+    assistant: pi

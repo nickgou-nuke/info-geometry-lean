@@ -674,6 +674,39 @@ theorem drazin_vacancy_orthogonal (O : A) (h : O ^ 3 = O) :
     _ = O ^ 2 - O * O := by rw [h]
     _ = 0 := by noncomm_ring
 
+omit [Algebra ℝ A] in
+/-- Bulk-plus-boundary completeness for `1 - O²` and `O²`. -/
+theorem bulk_boundary_completeness (O : A) :
+    proj_vacancy O + drazin_projector O = 1 := by
+  unfold proj_vacancy drazin_projector
+  noncomm_ring
+
+omit [Algebra ℝ A] in
+/-- Bulk-boundary orthogonality for `1 - O²` followed by `O²`, under `O³ = O`. -/
+theorem bulk_boundary_orthogonal (O : A) (h : O ^ 3 = O) :
+    proj_vacancy O * drazin_projector O = 0 := by
+  unfold proj_vacancy drazin_projector
+  calc
+    (1 - O ^ 2) * O ^ 2 = O ^ 2 - O ^ 4 := by noncomm_ring
+    _ = O ^ 2 - O * O ^ 3 := by
+      have hp : O ^ 4 = O * O ^ 3 := by noncomm_ring
+      rw [hp]
+    _ = O ^ 2 - O * O := by rw [h]
+    _ = 0 := by noncomm_ring
+
+omit [Algebra ℝ A] in
+/-- Boundary-bulk orthogonality for `O²` followed by `1 - O²`, under `O³ = O`. -/
+theorem boundary_bulk_orthogonal (O : A) (h : O ^ 3 = O) :
+    drazin_projector O * proj_vacancy O = 0 := by
+  unfold drazin_projector proj_vacancy
+  calc
+    O ^ 2 * (1 - O ^ 2) = O ^ 2 - O ^ 4 := by noncomm_ring
+    _ = O ^ 2 - O * O ^ 3 := by
+      have hp : O ^ 4 = O * O ^ 3 := by noncomm_ring
+      rw [hp]
+    _ = O ^ 2 - O * O := by rw [h]
+    _ = 0 := by noncomm_ring
+
 /-- Orthogonality of the two scalar-smul chiral sectors under `O³ = O`. -/
 theorem proj_up_orthogonal_down (O : A) (h : O ^ 3 = O) :
     proj_up O * proj_down O = 0 := by
@@ -829,6 +862,19 @@ theorem boundary_costs_zero_energy
     _ = (O_edge * E) * State := by rw [← mul_assoc]
     _ = (E * O_edge) * State := by rw [h_energy_commutes.symm]
     _ = E * (O_edge * State) := by rw [mul_assoc]
+
+/-- A commuting edge operator preserves an explicit zero-bulk-energy equation. -/
+theorem boundary_preserves_zero_energy
+    (H_bulk O_edge State : A)
+    (h_boundary_commutes : H_bulk * O_edge = O_edge * H_bulk)
+    (h_zero : H_bulk * State = 0) :
+    H_bulk * (O_edge * State) = 0 := by
+  calc
+    H_bulk * (O_edge * State) = (H_bulk * O_edge) * State := by rw [← mul_assoc]
+    _ = (O_edge * H_bulk) * State := by rw [h_boundary_commutes]
+    _ = O_edge * (H_bulk * State) := by rw [mul_assoc]
+    _ = O_edge * 0 := by rw [h_zero]
+    _ = 0 := by rw [mul_zero]
 
 end BoundaryZeroMode
 

@@ -1,5 +1,6 @@
 import InfoGeometry.Volume.Base
 import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Volume.CocycleFlowEquiv
 import InfoGeometry.Volume.ConnesInfinitesimal
 import InfoGeometry.Volume.ConnesTomitaKreinBridge
 import InfoGeometry.Volume.DeterminantBundle

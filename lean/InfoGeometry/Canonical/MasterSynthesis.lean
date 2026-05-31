@@ -5107,6 +5107,73 @@ private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch_fluidWitn
     (hMatch := hMatch)
 
 /--
+Integer-time cocycle-match capstone variant with the ZPE/gravity owner packet and
+one fluid-production witness.
+
+This removes the explicit `(hRankPos, hEin)` theorem surface from
+`bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch_fluidWitness` for
+callers that already own the proof-carrying `ZPEGravityWitness` packet.
+-/
+private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch_fluidWitness_of_zpeGravityWitness
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hZPEGravity : ZPEGravityWitness (E := E) S c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (Wfluid : FluidHelicityProductionWitness (E := E) A B_mp B_dr)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (hMatch :
+      ∀ k : Nat,
+        CocycleEntropyPotential (H := G) σ u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) Tflow k) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch_fluidWitness
+    (S := S) (hRankPos := hZPEGravity.hRankPos) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) (hEin := hZPEGravity.hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Wfluid := Wfluid)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hMatch := hMatch)
+
+/--
 Tomita-specialized cocycle-sourced capstone variant using the canonical
 modular-sign additive flow.
 -/

@@ -60,7 +60,7 @@ theorem sinkhornIterate_sinkhornKMSCapstone_of_closure
     (hClosure : SinkhornKMSClosure n
       (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β) :
     SinkhornKMSCapstone n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β := by
-  exact hClosure
+  simpa [SinkhornKMSCapstone] using hClosure
 
 end KMSCapstone
 

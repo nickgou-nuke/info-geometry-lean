@@ -80,7 +80,9 @@ theorem map_self_supercharge_closure_two
     _ = φ ((2 : A) * (H + Z)) := by
       rw [h]
     _ = (2 : B) * (φ H + φ Z) := by
-      simpa using congrArg (fun t : B => t * (φ H + φ Z)) (map_natCast φ 2)
+      rw [map_mul, map_add]
+      have h2 : φ 2 = 2 := map_ofNat φ 2
+      rw [h2]
 
 /-- Centrality is preserved on the image of a ring homomorphism. -/
 theorem map_commutes_with_image
@@ -137,7 +139,9 @@ theorem ringEquiv_self_supercharge_closure_two
     _ = e ((2 : A) * (H + Z)) := by
       rw [h]
     _ = (2 : B) * (e H + e Z) := by
-      simpa using congrArg (fun t : B => t * (e H + e Z)) (map_natCast e 2)
+      rw [map_mul, map_add]
+      have h2 : e 2 = 2 := map_ofNat e 2
+      rw [h2]
 
 /-- Ring equivalences preserve centrality on transported elements. -/
 theorem ringEquiv_commutes_with_image

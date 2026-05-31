@@ -241,6 +241,149 @@ theorem general_lastButOneGenerator_B11_from_localDoublet
     FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator_B11
       (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root) i
 
+/-- The last generator has no off-diagonal support inside the first singlet block. -/
+theorem general_lastGenerator_first_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ)) (Sum.inl i) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator, hij]
+
+/-- The last generator has no off-diagonal support inside the middle singlet block. -/
+theorem general_lastGenerator_middle_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) {i j : Fin b} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inl i)) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator, hij]
+
+/-- The last generator has no off-diagonal support inside the last singlet block. -/
+theorem general_lastGenerator_last_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inr i)) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator, hij]
+
+/-- The last generator has zero support from the first block to the middle block. -/
+theorem general_lastGenerator_left_middle_zero
+    {a b : ℕ} (q : Units ℂ) (i : Fin a) (j : Fin b) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inl i) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last generator has zero support from the first block to the last block. -/
+theorem general_lastGenerator_left_right_zero
+    {a b : ℕ} (q : Units ℂ) (i j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inl i) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last generator has zero support from the middle block to the first block. -/
+theorem general_lastGenerator_middle_left_zero
+    {a b : ℕ} (q : Units ℂ) (i : Fin b) (j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inl i)) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last generator has zero support from the middle block to the last block. -/
+theorem general_lastGenerator_middle_right_zero
+    {a b : ℕ} (q : Units ℂ) (i : Fin b) (j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inl i)) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last generator has zero support from the last block to the first block. -/
+theorem general_lastGenerator_right_left_zero
+    {a b : ℕ} (q : Units ℂ) (i j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inr i)) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last generator has zero support from the last block to the middle block. -/
+theorem general_lastGenerator_right_middle_zero
+    {a b : ℕ} (q : Units ℂ) (i : Fin a) (j : Fin b) :
+    FiniteFibonacciGeneralBraidGenerators.lastGenerator
+        (a := a) (b := b) (q ^ (-4 : ℤ)) (q ^ (3 : ℤ))
+        (Sum.inr (Sum.inr i)) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastGenerator]
+
+/-- The last-but-one generator has no off-diagonal support inside the top-left `B00` block. -/
+theorem general_lastButOneGenerator_B00_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inl i) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator, hij]
+
+/-- The last-but-one generator has no off-diagonal support inside the top-right `B01` block. -/
+theorem general_lastButOneGenerator_B01_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inl i) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator, hij]
+
+/-- The last-but-one generator has no off-diagonal support inside the middle singlet block. -/
+theorem general_lastButOneGenerator_middle_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) {i j : Fin b} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inl i)) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator, hij]
+
+/-- The last-but-one generator has no off-diagonal support inside the bottom-left `B10` block. -/
+theorem general_lastButOneGenerator_B10_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inr i)) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator, hij]
+
+/-- The last-but-one generator has no off-diagonal support inside the bottom-right `B11` block. -/
+theorem general_lastButOneGenerator_B11_offDiagonal_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) {i j : Fin a} (hij : i ≠ j) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inr i)) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator, hij]
+
+/-- The last-but-one generator has zero support from the first block to the middle block. -/
+theorem general_lastButOneGenerator_left_middle_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) (i : Fin a) (j : Fin b) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inl i) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator]
+
+/-- The last-but-one generator has zero support from the middle block to the first block. -/
+theorem general_lastButOneGenerator_middle_left_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) (i : Fin b) (j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inl i)) (Sum.inl j) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator]
+
+/-- The last-but-one generator has zero support from the middle block to the last block. -/
+theorem general_lastButOneGenerator_middle_right_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) (i : Fin b) (j : Fin a) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inl i)) (Sum.inr (Sum.inr j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator]
+
+/-- The last-but-one generator has zero support from the last block to the middle block. -/
+theorem general_lastButOneGenerator_right_middle_zero
+    {a b : ℕ} (q : Units ℂ) (τ root : ℂ) (i : Fin a) (j : Fin b) :
+    FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator
+        (a := a) (b := b) (q ^ (3 : ℤ)) (general_doubletBlockEntries q τ root)
+        (Sum.inr (Sum.inr i)) (Sum.inr (Sum.inl j)) = 0 := by
+  simp [FiniteFibonacciGeneralBraidGenerators.lastButOneGenerator]
+
 /-- The left end generator is `b₁`. -/
 theorem general_leftEndBraidIndex :
     leftEndBraidIndex = 1 :=

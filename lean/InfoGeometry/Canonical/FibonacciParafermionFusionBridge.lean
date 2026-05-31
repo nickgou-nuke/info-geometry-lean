@@ -34,12 +34,13 @@ theorem ofReal_R_matrix (q : Units ℝ) :
       fibonacciRMatrix (Units.map Complex.ofRealHom.toMonoidHom q) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [R_matrix, fibonacciRMatrix]
+  all_goals rfl
 
 /-- The real dual-basis braid atom `B = F R F` is the real-coefficient specialization of the complex middle-generator matrix. -/
 theorem ofReal_B_matrix (a b : ℝ) (q : Units ℝ) :
     Matrix.map (B_matrix a b (q : ℝ)) Complex.ofRealHom =
       fibonacciBMatrix (Units.map Complex.ofRealHom.toMonoidHom q) (a : ℂ) (b : ℂ) := by
-  simp [B_matrix, fibonacciBMatrix, ofReal_F_matrix, ofReal_R_matrix]
+  simp [B_matrix, fibonacciBMatrix, Matrix.map_mul, ofReal_F_matrix, ofReal_R_matrix, mul_assoc]
 
 /-- The real Fibonacci relation implied by the standard complex four-anyon scalar constraints. -/
 theorem real_IsFibonacciRelation_of_complex_constraints
@@ -55,9 +56,11 @@ theorem ofReal_F_matrix_sq
     {a b : ℝ} (hb : b ^ 2 = a) (ha : a ^ 2 + a = 1) :
     Matrix.map (F_matrix a b * F_matrix a b) Complex.ofRealHom =
       (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  have hReal : IsFibonacciRelation a b :=
-    real_IsFibonacciRelation_of_complex_constraints hb ha
-  rw [Matrix.map_mul, F_matrix_sq a b hReal]
-  rfl
+  rw [Matrix.map_mul, ofReal_F_matrix]
+  have hbC : ((b : ℂ) ^ 2) = (a : ℂ) := by
+    exact_mod_cast hb
+  have haC : ((a : ℂ) ^ 2) + (a : ℂ) = 1 := by
+    exact_mod_cast ha
+  simpa using fibonacciFusionMatrix_sq (τ := (a : ℂ)) (s := (b : ℂ)) hbC haC
 
 end InfoGeometry.Canonical.FibonacciParafermionFusionBridge

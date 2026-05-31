@@ -203,13 +203,18 @@ theorem operator_odd_square_even
     _ = (Q * Q) * Γ := by
             noncomm_ring
 
-/-- Nilpotent square remains zero after grading conjugation. -/
-theorem operator_square_zero_stable
+/-- Nilpotent odd lane remains zero under grading conjugation. -/
+theorem operator_odd_square_zero_stable
     (Γ Q : V →ₗ[𝕜] V)
+    (hQ : Γ * Q = -Q * Γ)
     (hzero : Q * Q = 0) :
     Γ * (Q * Q) * Γ = 0 := by
-  rw [hzero]
-  simp
+  have hEven : Γ * (Q * Q) = (Q * Q) * Γ :=
+    operator_odd_square_even Γ Q hQ
+  calc
+    Γ * (Q * Q) * Γ = ((Q * Q) * Γ) * Γ := by rw [hEven]
+    _ = (0 * Γ) * Γ := by rw [hzero]
+    _ = 0 := by simp
 
 /-- Operator Cartan/superbracket closure in conjugation form. -/
 theorem operator_cartan_superbracket_conjugation_profile

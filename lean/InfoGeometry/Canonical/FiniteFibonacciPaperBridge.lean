@@ -17,7 +17,7 @@ finite statements that match the paper's introduction:
 * Fibonacci fusion rules;
 * finite vacuum-channel counts;
 * finite `N`-qubit computational subspaces;
-* braid-word monodromy/readout invariance;
+* braid-word rewrite invariance for the repo-native monodromy/readout abstraction;
 * finite compass-chain braid transport.
 
 No conformal blocks.
@@ -76,7 +76,7 @@ theorem fibonacci_nonComputationalCount_three :
     FiniteFibonacciComputationalSpace.nonComputationalCount 3 = 5 :=
   FiniteFibonacciComputationalSpace.nonComputationalCount_three
 
-/-- Fibonacci braid-word monodromy readout is invariant under the braid rewrite. -/
+/-- The repo-native monodromy/readout abstraction is invariant under the braid rewrite. -/
 theorem fibonacci_monodromy_braid_rewrite
     {Gate : Type*} [SMul (Units ℂ) Gate]
     (χ : Equiv.Perm ℕ → Units ℂ) (readout : Equiv.Perm ℕ → Gate)
@@ -85,7 +85,7 @@ theorem fibonacci_monodromy_braid_rewrite
       monodromy (Gate := Gate) χ readout (left ++ [i + 1, i, i + 1] ++ right) :=
   monodromy_braid_rewrite χ readout i left right
 
-/-- Fibonacci braid-word monodromy readout is invariant under separated commutation. -/
+/-- The repo-native monodromy/readout abstraction is invariant under separated commutation. -/
 theorem fibonacci_monodromy_commute_rewrite
     {Gate : Type*} [SMul (Units ℂ) Gate]
     (χ : Equiv.Perm ℕ → Units ℂ) (readout : Equiv.Perm ℕ → Gate)

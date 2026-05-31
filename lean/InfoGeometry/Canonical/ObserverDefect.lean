@@ -891,6 +891,46 @@ theorem observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero
       (CIK := CIK) (obs := obs) hZD c
 
 /--
+Proof-carrying zero-strain witness on the infinite observer-defect lane.
+
+This is the smallest constructive replacement for the bare equality hypothesis
+`observerOrientationStrain CIK obs = 0`: downstream routes can now carry an
+explicit witness object instead of rethreading the proposition directly.
+-/
+structure ObserverStrainZeroWitness
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) where
+  hStrain : observerOrientationStrain CIK obs = 0
+
+namespace ObserverStrainZeroWitness
+
+/--
+Recover exact deviation-channel control from a proof-carrying zero-strain
+witness.
+-/
+theorem deviationControlledByZD
+    {CIK : CertifiedInverseKernel H₂}
+    {obs : ObserverL5 CIK}
+    (W : @ObserverStrainZeroWitness E _ _ _ CIK obs) :
+    ObserverDeviationControlledByZD CIK obs := by
+  exact observerDeviationControlledByZD_of_strain_eq_zero
+    (CIK := CIK) (obs := obs) W.hStrain
+
+/--
+Recover the explicit owner-side deviation-control packet from a proof-carrying
+zero-strain witness.
+-/
+theorem deviationControl
+    {CIK : CertifiedInverseKernel H₂}
+    {obs : ObserverL5 CIK}
+    (W : @ObserverStrainZeroWitness E _ _ _ CIK obs) :
+    ObserverDeviationControl CIK obs := by
+  exact observerDeviationControl_of_strain_eq_zero
+    (CIK := CIK) (obs := obs) W.hStrain
+
+end ObserverStrainZeroWitness
+
+/--
 Zero scalarized observer strain produces an explicit owner-side deviation-control
 witness packet.
 -/

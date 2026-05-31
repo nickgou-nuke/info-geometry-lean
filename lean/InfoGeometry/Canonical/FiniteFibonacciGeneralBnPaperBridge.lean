@@ -19,8 +19,10 @@ paper's Section 7 abstracts:
 * finite block-diagonal no-leakage on the computational sector;
 * the first explicit low-anyon templates (`n = 5,6,7,8`) as finite examples.
 
-The determinant recurrence from the paper is represented here only as a
-hypothesis-carrying schedule interface, not as a derived general matrix theorem.
+The determinant recurrence from the paper is represented here only as an
+assumption-carrying schedule interface.  This file does not derive a general
+matrix family or a theorem that the paper's determinant schedule follows from
+repository-owned monodromy data.
 
 No conformal blocks.
 No all-`n` monodromy matrices.
@@ -443,11 +445,12 @@ theorem general_sparse_basis8_card :
   sectionSix_basis8_card
 
 /--
-Hypothesis-carrying determinant schedule for the paper's Section 7 recurrence.
+Assumption-carrying determinant schedule for the paper's Section 7 recurrence.
 
-This does not derive the determinant sequence from a general matrix family; it
-packages the recurrence as a proof-carrying interface, which is the honest
-boundary currently owned by the repository.
+This does not derive the determinant sequence from a repository-owned general
+matrix family.  It records the recurrence only as explicit schedule data, so the
+remaining all-`n` determinant closure stays visible instead of being implied by
+naming.
 -/
 structure BraidDeterminantSchedule (q : Units ℂ) where
   /-- Determinant/phase value at each stage `n`. -/

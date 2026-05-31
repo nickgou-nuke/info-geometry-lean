@@ -79,6 +79,36 @@ theorem recursiveFibonacciDimension_step (k : ℕ) :
       recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) :=
   rfl
 
+/-- The recursive basis type has exactly the recursive Fibonacci cardinality. -/
+theorem recursiveFibonacciBlockBasis_card :
+    ∀ n : ℕ,
+      Fintype.card (RecursiveFibonacciBlockBasis n) = recursiveFibonacciDimension n
+  | 0 => by
+      simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension]
+  | 1 => by
+      simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension]
+  | k + 2 => by
+      simp [RecursiveFibonacciBlockBasis, recursiveFibonacciDimension,
+        recursiveFibonacciBlockBasis_card k, recursiveFibonacciBlockBasis_card (k + 1)]
+
+/-- The recursive dimension counter is the shifted Fibonacci sequence `fib (n + 1)`. -/
+theorem recursiveFibonacciDimension_eq_fib_succ :
+    ∀ n : ℕ, recursiveFibonacciDimension n = Nat.fib (n + 1)
+  | 0 => by simp [recursiveFibonacciDimension]
+  | 1 => by simp [recursiveFibonacciDimension]
+  | k + 2 => by
+      calc
+        recursiveFibonacciDimension (k + 2)
+            = recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) := by
+                rfl
+        _ = Nat.fib (k + 1) + Nat.fib (k + 2) := by
+              rw [recursiveFibonacciDimension_eq_fib_succ k,
+                recursiveFibonacciDimension_eq_fib_succ (k + 1)]
+        _ = Nat.fib (k + 3) := by
+              symm
+              simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+                (Nat.fib_add_two (k + 1))
+
 /-- Local admissibility for a braid generator seeing a triple of sector labels. -/
 def TripleAdmissible (left middle right : SectorLabel) : Prop :=
   AdjacentAdmissible left middle ∧ AdjacentAdmissible middle right

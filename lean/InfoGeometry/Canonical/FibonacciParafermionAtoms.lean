@@ -280,6 +280,7 @@ Honesty status for the algebraic projector fragment below:
 - `Z3Parafermion.half_add_half_eq_one`
 - `Z3Parafermion.half_mul_two_eq`
 - `Z3Parafermion.proj_completeness`
+- `Z3Parafermion.drazin_eq_chiral_sum`
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [Kernel-checked theorems whose statements explicitly require the witness `O^3 = O`.]
@@ -291,6 +292,8 @@ Honesty status for the algebraic projector fragment below:
 - `Z3Parafermion.proj_vac_idempotent`
 - `Z3Parafermion.proj_up_idempotent`
 - `Z3Parafermion.proj_down_idempotent`
+- `Z3Parafermion.drazin_idempotent`
+- `Z3Parafermion.drazin_orthogonal_vac`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 - None inside this algebraic fragment.
@@ -313,6 +316,10 @@ def P_down (O : A) : A :=
 /-- Vacancy-sector algebraic projector. -/
 def P_vac (O : A) : A :=
   1 - O ^ 2
+
+/-- Drazin/boundary projector for the `Z₃` parafermion algebraic fragment. -/
+def drazin_projector (O : A) : A :=
+  O ^ 2
 
 omit [Algebra ℝ A] in
 lemma O_pow_4 {O : A} (hO3 : O ^ 3 = O) : O ^ 4 = O ^ 2 := by
@@ -354,6 +361,15 @@ theorem proj_completeness {O : A} :
         = (c + c) * O ^ 2 + 1 - O ^ 2 := by noncomm_ring
     _ = 1 * O ^ 2 + 1 - O ^ 2 := by rw [half_add_half_eq_one]
     _ = 1 := by noncomm_ring
+
+theorem drazin_eq_chiral_sum {O : A} :
+    drazin_projector O = P_up O + P_down O := by
+  dsimp [drazin_projector, P_up, P_down]
+  set c := algebraMap ℝ A (1 / 2)
+  calc
+    O ^ 2 = 1 * O ^ 2 := by noncomm_ring
+    _ = (c + c) * O ^ 2 := by rw [half_add_half_eq_one]
+    _ = c * (O ^ 2 + O) + c * (O ^ 2 - O) := by noncomm_ring
 
 theorem proj_up_orthogonal_down {O : A} (hO3 : O ^ 3 = O) :
     P_up O * P_down O = 0 := by
@@ -448,6 +464,22 @@ theorem proj_down_idempotent {O : A} (hO3 : O ^ 3 = O) :
     _ = c * (c * ((O ^ 2 - O) + (O ^ 2 - O))) := by noncomm_ring
     _ = c * (O ^ 2 - O) := by rw [half_mul_two_eq]
 
+omit [Algebra ℝ A] in
+theorem drazin_idempotent {O : A} (hO3 : O ^ 3 = O) :
+    drazin_projector O * drazin_projector O = drazin_projector O := by
+  dsimp [drazin_projector]
+  have hpow : O ^ 2 * O ^ 2 = O ^ 4 := by noncomm_ring
+  rw [hpow, O_pow_4 hO3]
+
+omit [Algebra ℝ A] in
+theorem drazin_orthogonal_vac {O : A} (hO3 : O ^ 3 = O) :
+    drazin_projector O * P_vac O = 0 := by
+  dsimp [drazin_projector, P_vac]
+  calc
+    O ^ 2 * (1 - O ^ 2) = O ^ 2 - O ^ 4 := by noncomm_ring
+    _ = O ^ 2 - O ^ 2 := by rw [O_pow_4 hO3]
+    _ = 0 := by noncomm_ring
+
 end
 
 end Z3Parafermion
@@ -516,6 +548,69 @@ theorem proj_completeness (O : A) :
   have step2 : (1 / 2 : ℝ) + (1 / 2 : ℝ) = 1 := by norm_num
   rw [step2, one_smul]
   abel
+
+/-- Algebraic projector onto the non-vacancy sector `O²`. -/
+def drazin_projector (O : A) : A :=
+  O ^ 2
+
+/-- The non-vacancy projector is the sum of the two scalar-smul chiral sectors. -/
+theorem drazin_eq_chiral_sum (O : A) :
+    drazin_projector O = proj_up O + proj_down O := by
+  unfold drazin_projector proj_up proj_down
+  simp only [smul_add, smul_sub]
+  have step :
+      (1 / 2 : ℝ) • O ^ 2 + (1 / 2 : ℝ) • O +
+        ((1 / 2 : ℝ) • O ^ 2 - (1 / 2 : ℝ) • O) =
+      (1 / 2 : ℝ) • O ^ 2 + (1 / 2 : ℝ) • O ^ 2 := by
+    abel
+  rw [step, ← add_smul]
+  have h : (1 / 2 : ℝ) + (1 / 2 : ℝ) = 1 := by norm_num
+  rw [h, one_smul]
+
+omit [Algebra ℝ A] in
+/-- Under `O³ = O`, the non-vacancy projector is idempotent. -/
+theorem drazin_idempotent (O : A) (h : O ^ 3 = O) :
+    drazin_projector O * drazin_projector O = drazin_projector O := by
+  unfold drazin_projector
+  calc
+    O ^ 2 * O ^ 2 = O ^ 4 := by noncomm_ring
+    _ = O ^ 2 := by
+      have hp : O ^ 4 = O * O ^ 3 := by noncomm_ring
+      rw [hp, h]
+      noncomm_ring
+
+omit [Algebra ℝ A] in
+/-- Under `O³ = O`, the non-vacancy and vacancy projectors are left-orthogonal. -/
+theorem drazin_orthogonal_vacancy (O : A) (h : O ^ 3 = O) :
+    drazin_projector O * proj_vacancy O = 0 := by
+  unfold drazin_projector proj_vacancy
+  calc
+    O ^ 2 * (1 - O ^ 2) = O ^ 2 - O ^ 4 := by noncomm_ring
+    _ = O ^ 2 - O * O ^ 3 := by
+      have hp : O ^ 4 = O * O ^ 3 := by noncomm_ring
+      rw [hp]
+    _ = O ^ 2 - O * O := by rw [h]
+    _ = 0 := by noncomm_ring
+
+omit [Algebra ℝ A] in
+/-- The non-vacancy and vacancy projectors sum to the identity. -/
+theorem drazin_add_vacancy (O : A) :
+    drazin_projector O + proj_vacancy O = 1 := by
+  unfold drazin_projector proj_vacancy
+  noncomm_ring
+
+omit [Algebra ℝ A] in
+/-- Under `O³ = O`, the vacancy and non-vacancy projectors are right-orthogonal. -/
+theorem drazin_vacancy_orthogonal (O : A) (h : O ^ 3 = O) :
+    proj_vacancy O * drazin_projector O = 0 := by
+  unfold drazin_projector proj_vacancy
+  calc
+    (1 - O ^ 2) * O ^ 2 = O ^ 2 - O ^ 4 := by noncomm_ring
+    _ = O ^ 2 - O * O ^ 3 := by
+      have hp : O ^ 4 = O * O ^ 3 := by noncomm_ring
+      rw [hp]
+    _ = O ^ 2 - O * O := by rw [h]
+    _ = 0 := by noncomm_ring
 
 end
 

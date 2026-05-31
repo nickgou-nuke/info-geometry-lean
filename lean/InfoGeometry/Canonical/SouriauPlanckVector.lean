@@ -172,4 +172,22 @@ theorem comparisonReadout_pair_eq_zero_of_equilibriumSeed
       = (0, 0) := by
   exact isThermodynamicReadoutStationary_of_equilibriumSeed (E := E) hEq
 
+/--
+Faithful probing plus vanishing first variation imply vanishing operatorial
+metric/phase readout without carrying an explicit equilibrium-seed packet.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    (InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A,
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A)
+      = (0, 0) := by
+  exact comparisonReadout_pair_eq_zero_of_equilibriumSeed (E := E)
+    (equilibriumSeed_of_probeFaithful_of_firstVariation_eq_zero
+      (E := E) hFaithful hFirst)
+
 end InfoGeometry.Canonical.SouriauPlanckVector

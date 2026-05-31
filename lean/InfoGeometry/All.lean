@@ -233,6 +233,7 @@ import InfoGeometry.Algebraic.MatrixAutomorphyFactor
 import InfoGeometry.Topological.RealCuspLimitT
 import InfoGeometry.Topological.CartanBoundaryLimit
 import InfoGeometry.Topological.FibonacciBraiding
+import InfoGeometry.Categorical.Z3Parafermion
 import InfoGeometry.Bridge.RealModularBerryBridge
 import InfoGeometry.Differential.RealAbelianCurvature
 import InfoGeometry.Canonical.RealBerryRotorBridge

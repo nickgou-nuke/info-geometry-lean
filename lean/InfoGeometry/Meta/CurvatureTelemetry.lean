@@ -41,7 +41,7 @@ instance : ToJson CurvatureStats where
       ] ++ bestNameField
 
 /-- Structural AST weight used by the cheap curvature telemetry. -/
-partial def exprWeight : Expr → Nat
+def exprWeight : Expr → Nat
   | .app f a => 1 + exprWeight f + exprWeight a
   | .lam _ d b _ => 1 + exprWeight d + exprWeight b
   | .forallE _ d b _ => 1 + exprWeight d + exprWeight b

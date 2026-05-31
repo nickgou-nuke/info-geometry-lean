@@ -83,7 +83,7 @@ theorem finiteLocalSingletPhase_qThree (q : Units ℂ) :
     localSingletPhase q LocalBraidBlockKind.singletQThree = some (q ^ (3 : ℤ)) :=
   rfl
 
-/-- The local doublet readout is the same `B = F R F` matrix used for four anyons. -/
+/-- The local doublet readout reuses the repo-owned four-anyon `B = F R F` matrix readout. -/
 theorem finiteLocalDoubletMatrix_doublet (q : Units ℂ) (τ root : ℂ) :
     localDoubletMatrix q τ root LocalBraidBlockKind.doubletB =
       some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) :=
@@ -97,7 +97,7 @@ theorem finiteLocalDoubletMatrix_independent_of_r
       some (fibonacciBMatrixWithElectrons s q τ root) := by
   simpa using localDoubletMatrix_independent_of_r r s q τ root
 
-/-- The four-anyon `B = F R F` block is the local doublet readout used for higher `n`. -/
+/-- The higher-anyon local doublet readout is identified with the repo-owned four-anyon `B = F R F` readout. -/
 theorem finiteHigherAnyonLocalDoubletMatrix_eq_FRF (q : Units ℂ) (τ root : ℂ) :
     localDoubletMatrix q τ root LocalBraidBlockKind.doubletB =
       some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) :=

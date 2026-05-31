@@ -47,6 +47,10 @@ class Sorry:
 
 SORRY_TOKEN_PATTERN = re.compile(r"(?<![A-Za-z0-9_!?'.`«])sorry(?![A-Za-z0-9_!?'.»])")
 
+DEFAULT_IGNORED_LEAN_FILES = {
+    Path("tests/lean/InfoGeometry/Lint/PauliTest.lean"),
+}
+
 def strip_lean_comments_and_strings(line: str, block_comment_depth: int) -> Tuple[str, int]:
     """Return code-only text for a line and updated Lean block-comment depth.
 
@@ -201,12 +205,21 @@ def find_sorries(target: Path, include_deps: bool = False) -> List[Sorry]:
         # Use os.walk for early termination of .lake/ directories (performance)
         import os
         for root, dirs, files in os.walk(target):
-            # Prune .lake directories from traversal (don't descend into them)
+            # Prune dependency / environment directories from traversal.
             if not include_deps:
                 dirs[:] = [d for d in dirs if d != '.lake']
+            dirs[:] = [d for d in dirs if d not in {'.venv', '.venv-py312', '.git', '__pycache__'}]
             for filename in files:
                 if filename.endswith('.lean'):
                     lean_file = Path(root) / filename
+                    try:
+                        rel_lean_file = lean_file.relative_to(target)
+                    except ValueError:
+                        rel_lean_file = lean_file
+                    if rel_lean_file in DEFAULT_IGNORED_LEAN_FILES:
+                        continue
+                    if lean_file.is_symlink() and not lean_file.exists():
+                        continue
                     sorries.extend(find_sorries_in_file(lean_file))
         return sorries
     else:

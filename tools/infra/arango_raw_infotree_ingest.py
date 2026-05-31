@@ -293,6 +293,18 @@ def prefixed_key(prefix: str, value: Any) -> str:
     return f"{prefix}_{safe}"
 
 
+def bounded_prefixed_key(prefix: str, value: Any, *, max_len: int = 254) -> str:
+    key = prefixed_key(prefix, value)
+    if len(key) <= max_len:
+        return key
+    digest = stable_row_hash({"prefix": prefix, "value": str(value)})
+    head_budget = max_len - len(prefix) - len(digest) - 2
+    if head_budget < 1:
+        return f"{prefix}_{digest}"[:max_len]
+    head = key[:head_budget]
+    return f"{head}_{digest}"
+
+
 def normalize_row(collection: str, row: dict[str, Any]) -> dict[str, Any]:
     out = dict(row)
     if collection == "raw_infotree_roots":
@@ -327,7 +339,10 @@ def normalize_row(collection: str, row: dict[str, Any]) -> dict[str, Any]:
         out["_key"] = str(row["messageKey"])
     elif collection == "raw_infotree_projection_leakage":
         node = row.get("nodeKey") if row.get("nodeKey") is not None else "root"
-        out["_key"] = prefixed_key("itlkg", f"{row.get('rootKey')}:{node}:{row.get('field')}:{stable_row_hash(row)}")
+        out["_key"] = bounded_prefixed_key(
+            "itlkg",
+            f"{row.get('rootKey')}:{node}:{row.get('field')}:{stable_row_hash(row)}",
+        )
     else:
         raise ValueError(f"unknown raw_infotree collection: {collection}")
     return out
@@ -628,7 +643,7 @@ def iter_edge_rows(input_dir: Path, collection: str) -> Iterator[dict[str, Any]]
                 continue
             yield edge_doc(
                 "node_has_projection_leakage",
-                prefixed_key("itenl", leakage_key),
+                bounded_prefixed_key("itenl", leakage_key),
                 f"raw_infotree_nodes/{node_key}",
                 f"raw_infotree_projection_leakage/{leakage_key}",
                 field=row.get("field"),

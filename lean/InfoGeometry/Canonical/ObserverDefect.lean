@@ -289,36 +289,36 @@ as an explicit `ObserverDeviationControl` witness packet.
 theorem nonempty_observerDeviationControl_of_deviationControlledByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
-    (hControl : ObserverDeviationControlledByZD CIK obs) :
-    Nonempty (ObserverDeviationControl CIK obs) := by
-  exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).1 hControl
+    /--
+    General observer-defect `Z_D` bound from the exact deviation-channel control.
 
-/--
-If an explicit owner-side `ObserverDeviationControl` witness packet exists, then
-so does the original deviation-channel control predicate.
--/
-theorem observerDeviationControlledByZD_of_nonempty_control
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (hControl : Nonempty (ObserverDeviationControl CIK obs)) :
-    ObserverDeviationControlledByZD CIK obs := by
-  exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).2 hControl
+    The proof is constructive: the regular spectral-projector commutator is first
+    eliminated by defect compression, and the remaining term is precisely the
+    controlled deviation commutator.
+    -/
+    @[rep_depth krein]
+    theorem observerDefectResidual_norm_le_ZD
+      (CIK : CertifiedInverseKernel H₂)
+      (obs : ObserverL5 CIK)
+      (hControl : ObserverDeviationControlledByZD CIK obs) :
+      ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+      rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+      exact hControl
 
-/--
-General observer-defect `Z_D` bound from the exact deviation-channel control.
+    /--
+    General observer-defect `Z_D` bound from the exact deviation-channel control.
 
-The proof is constructive: the regular spectral-projector commutator is first
-eliminated by defect compression, and the remaining term is precisely the
-controlled deviation commutator.
--/
-@[rep_depth krein]
-theorem observerDefectResidual_norm_le_ZD
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (hControl : ObserverDeviationControlledByZD CIK obs) :
-    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
-  rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
-  exact hControl
+    The proof is constructive: the regular spectral-projector commutator is first
+    eliminated by defect compression, and the remaining term is precisely the
+    controlled deviation commutator.
+    -/
+    @[rep_depth krein]
+    theorem observerDefectResidual_norm_le_ZD_constructive
+      {CIK : CertifiedInverseKernel H₂} {obs : ObserverL5 CIK}
+      (c : ObserverDeviationControl CIK obs) :
+      ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+      rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+      exact c.bound
 
 /--
 |Constructive owner route to the observer-defect `Z_D` budget: instead of a bare

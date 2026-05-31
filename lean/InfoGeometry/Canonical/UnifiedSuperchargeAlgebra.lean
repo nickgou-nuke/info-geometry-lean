@@ -62,7 +62,7 @@ theorem conjugation_square_covariant
     _ = ↑u * (x * x) * ↑u⁻¹ := by noncomm_ring
 
 /--
-Conjugation preserves the hyperbolic square law `x^2 = 1`.
+Conjugation preserves hyperbolic square law `x² = 1`.
 -/
 @[rep_depth thermo]
 theorem conjugation_preserves_square_one
@@ -77,47 +77,20 @@ theorem conjugation_preserves_square_one
     _ = 1 := by simp
 
 /--
-Conjugation preserves the elliptic square law `x^2 = -1`.
+Conjugation preserves elliptic square law `x² = -1`.
 -/
 @[rep_depth thermo]
 theorem conjugation_preserves_square_neg_one
- {A : Type*} [Ring A]
- (u : Units A) (x : A)
- (hx : x * x = -(1 : A)) :
- (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = -(1 : A) := by
- calc
- (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹)
- = ↑u * (x * x) * ↑u⁻¹ := conjugation_square_covariant u x
- _ = ↑u * (-(1 : A)) * ↑u⁻¹ := by rw [hx]
- _ = -(1 : A) := by simp
+    {A : Type*} [Ring A]
+    (u : Units A) (x : A)
+    (hx : x * x = -(1 : A)) :
+    (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = -(1 : A) := by
+  calc
+    (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹)
+        = ↑u * (x * x) * ↑u⁻¹ := conjugation_square_covariant u x
+    _ = ↑u * (-(1 : A)) * ↑u⁻¹ := by rw [hx]
+    _ = -(1 : A) := by simp
 
-/--
-Conjugation preserves hyperbolic square law `x² = 1` via constructive signature witness.
--/
-@[rep_depth thermo]
-theorem conjugation_preserves_square_one_of_witness
- {A : Type*} [Ring A]
- (u : Units A) (x : A)
- (hx : UnifiedSuperchargeAlgebra.hasCKSignature x CKSignature.hyperbolic) :
- (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = 1 := by
- rw [hasCKSignature] at hx
- exact conjugation_preserves_square_one u x hx
-
-/--
-Conjugation preserves elliptic square law `x² = -1` via constructive signature witness.
--/
-@[rep_depth thermo]
-theorem conjugation_preserves_square_neg_one_of_witness
- {A : Type*} [Ring A]
- (u : Units A) (x : A)
- (hx : UnifiedSuperchargeAlgebra.hasCKSignature x CKSignature.elliptic) :
- (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = -(1 : A) := by
- rw [hasCKSignature] at hx
- exact conjugation_preserves_square_neg_one u x hx
-
-/--
-Conjugation preserves the parabolic square law `x^2 = 0`.
--/
 @[rep_depth thermo]
 theorem conjugation_preserves_square_zero_local
     {A : Type*} [Ring A]
@@ -347,6 +320,17 @@ theorem hasCKSignature_of_square_eq_neg_one
     {z : ℂ} (h : z * z = -1) :
     hasCKSignature z CKSignature.elliptic := by
   simpa [hasCKSignature] using h
+
+/--
+Conjugation preserves hyperbolic square law `x² = 1` via constructive signature witness.
+-/
+@[rep_depth thermo]
+theorem conjugation_preserves_square_one_of_witness
+    (u : Units ℂ) (x : ℂ)
+    (hx : hasCKSignature x CKSignature.hyperbolic) :
+    (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = 1 := by
+  rw [hasCKSignature] at hx
+  exact conjugation_preserves_square_one u x hx
 
 /--
 Ring-equivalence transport preserves hyperbolic class membership (`x² = 1`).

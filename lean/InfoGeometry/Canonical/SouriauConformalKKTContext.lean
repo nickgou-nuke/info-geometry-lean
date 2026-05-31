@@ -2297,6 +2297,23 @@ theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness
 
 /--
 The conformal self-response is nonnegative on the positive-partition
+constructive branch, using a single proof-carrying TKK+cone witness bundle
+instead of separate `hTKK` and `hCone` arguments.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareWitness_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y hSquare).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the positive-partition
 constructive branch, using the explicit partition witness instead of a bare
 operator-admissibility packet.
 -/

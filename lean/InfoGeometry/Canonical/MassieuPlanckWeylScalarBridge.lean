@@ -1,5 +1,4 @@
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
-import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 open scoped InnerProductSpace BigOperators
@@ -24,7 +23,6 @@ namespace InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
 
 open InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 open InfoGeometry.Arithmetic.ProjectiveWeylGauge
-open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 section WeylPartition
@@ -113,79 +111,6 @@ theorem totalReadout_eq_weylScalar_mul_shapeCore :
 end MassieuPlanckWeylScalarCalibration
 
 end WeylPartition
-
-section Volume
-
-variable {State LieAlgebra Obs H Word : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-variable [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace H)]
-variable [Fintype Word] [DecidableEq Word]
-
-/--
-Optional volume calibration for the Massieu/Weyl scalar.
-
-The bridge does not derive a volume form from the partition function; it records
-the supplied identification with the standard-form Ω-volume logarithmic readout.
--/
-@[rep_depth projective]
-structure MassieuPlanckVolumeBridge extends
-    MassieuPlanckWeylScalarCalibration (State := State) (LieAlgebra := LieAlgebra)
-      (Obs := Obs) where
-  /-- Standard-form Ω-volume owner. -/
-  omegaVolume : NaturalConeVolumeBridge (H := H) Word
-
-  /-- Chosen atom/cylinder whose volume readout is calibrated. -/
-  word : Word
-
-  /--
-  Model-specific calibration between the Souriau Massieu/log-partition readout
-  and the chosen atom-volume readout.
-
-  This is not a general identification of determinant volume with the
-  statistical Massieu potential.  It is an explicit bridge assumption for this
-  packet: since `modularVolumePotential = -log(atomExpectation)`, the field
-  states `Φ = - modularVolumePotential` for the chosen word.
-  -/
-  partitionPotential_eq_neg_modularVolumePotential_readback :
-    souriau.partitionPotential =
-      -NaturalConeVolumeBridge.modularVolumePotential omegaVolume word
-
-namespace MassieuPlanckVolumeBridge
-
-variable (B : MassieuPlanckVolumeBridge (State := State) (LieAlgebra := LieAlgebra)
-    (Obs := Obs) (H := H) (Word := Word))
-
-/-- Readback of the supplied Massieu/log-volume calibration. -/
-@[rep_depth projective]
-theorem partitionPotential_eq_neg_modularVolumePotential :
-    B.souriau.partitionPotential =
-      -NaturalConeVolumeBridge.modularVolumePotential B.omegaVolume B.word :=
-  B.partitionPotential_eq_neg_modularVolumePotential_readback
-
-/-- Under volume calibration, Massieu is the logarithm of the atom expectation. -/
-@[rep_depth projective]
-theorem partitionPotential_eq_log_atomExpectation :
-    B.souriau.partitionPotential =
-      Real.log (NaturalConeVolumeBridge.atomExpectation B.omegaVolume B.word) := by
-  rw [B.partitionPotential_eq_neg_modularVolumePotential]
-  rw [NaturalConeVolumeBridge.modularVolumePotential_eq_neg_log_atomExpectation]
-  simp
-
-/--
-Combined scalar chain:
-`log(WeylScalar) = log(atomExpectation)` under the partition and volume
-calibrations.
--/
-@[rep_depth projective]
-theorem log_weylScalar_eq_log_atomExpectation :
-    Real.log B.toMassieuPlanckWeylScalarCalibration.weylScalar =
-      Real.log (NaturalConeVolumeBridge.atomExpectation B.omegaVolume B.word) := by
-  rw [← B.toMassieuPlanckWeylScalarCalibration.partitionPotential_eq_log_weylScalar]
-  exact B.partitionPotential_eq_log_atomExpectation
-
-end MassieuPlanckVolumeBridge
-
-end Volume
 
 section Bregman
 

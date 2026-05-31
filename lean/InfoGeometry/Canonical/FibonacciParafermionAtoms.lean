@@ -98,6 +98,59 @@ theorem B_matrix_symmetric (a b q : ℝ) :
     B_matrix a b q 0 1 = B_matrix a b q 1 0 := by
   rw [B_matrix_apply_zero_one, B_matrix_apply_one_zero]
 
+/-- Diagonal two-channel braid matrix with independent diagonal entries. -/
+noncomputable def diagonalBraidMatrix (r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![r, 0; 0, t]
+
+/-- Dual-basis braid matrix for an arbitrary diagonal pair `(r,t)`. -/
+noncomputable def B_matrix_diag (a b r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  F_matrix a b * diagonalBraidMatrix r t * F_matrix a b
+
+/--
+Finite two-channel Artin relation from explicit scalar constraints.
+
+This proves the matrix identity `R B R = B R B` for a diagonal braid matrix
+`diag(r,t)` and `B = F R F`, assuming only the finite algebraic relations
+`a² + b² = 1` and `a²(r-t)² + r t = 0`.
+-/
+theorem diagonal_artin_relation (a b r t : ℝ)
+    (hF : IsFibonacciRelation a b)
+    (hA : a ^ 2 * (r - t) ^ 2 + r * t = 0) :
+    diagonalBraidMatrix r t * B_matrix_diag a b r t * diagonalBraidMatrix r t =
+      B_matrix_diag a b r t * diagonalBraidMatrix r t * B_matrix_diag a b r t := by
+  unfold IsFibonacciRelation at hF
+  have hg : a ^ 2 + b ^ 2 - 1 = 0 := by nlinarith [hF]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [B_matrix_diag, diagonalBraidMatrix, F_matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  · linear_combination
+      (-t * (3 * a ^ 2 * r ^ 2 - 3 * a ^ 2 * r * t + a ^ 2 * t ^ 2 + b ^ 2 * r * t - r ^ 2 + r * t)) * hg +
+      (-(a - 1) * (a + 1) * (r - t)) * hA
+  · linear_combination
+      (-2 * a * b * r * t * (r - t)) * hg +
+      (-a * b * (r - t)) * hA
+  · linear_combination
+      (-2 * a * b * r * t * (r - t)) * hg +
+      (-a * b * (r - t)) * hA
+  · linear_combination
+      (-r * (a ^ 2 * r ^ 2 - 3 * a ^ 2 * r * t + 3 * a ^ 2 * t ^ 2 + b ^ 2 * r * t + r * t - t ^ 2)) * hg +
+      ((a - 1) * (a + 1) * (r - t)) * hA
+
+/--
+Finite two-channel braid relation for `R_matrix q` and `B_matrix a b q`.
+
+The theorem is conditional on the explicit scalar Artin constraint for the two
+chosen diagonal phases.  It does not assert a general braid-group
+representation.
+-/
+theorem R_B_R_eq_B_R_B (a b q : ℝ)
+    (hF : IsFibonacciRelation a b)
+    (hA : a ^ 2 * (q ^ (-4 : ℤ) - q ^ 3) ^ 2 + q ^ (-4 : ℤ) * q ^ 3 = 0) :
+    R_matrix q * B_matrix a b q * R_matrix q =
+      B_matrix a b q * R_matrix q * B_matrix a b q := by
+  simpa [R_matrix, B_matrix, B_matrix_diag, diagonalBraidMatrix] using
+    (diagonal_artin_relation a b (q ^ (-4 : ℤ)) (q ^ 3) hF hA)
+
 /-! ## `Z₃` parafermion composite charge -/
 
 section ParafermionCharge

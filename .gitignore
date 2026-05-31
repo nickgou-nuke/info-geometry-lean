@@ -140,3 +140,14 @@ logs/
 
 # Archon state directory
 .archon/
+!.archon/
+.archon/*
+!.archon/workflows/
+.archon/workflows/*
+!.archon/workflows/proof-purification-pipeline.yaml
+!.archon/prompts/
+.archon/prompts/*
+!.archon/prompts/literature-scout.md
+!.archon/commands/
+.archon/commands/*
+!.archon/commands/proof-purification-pipeline.md

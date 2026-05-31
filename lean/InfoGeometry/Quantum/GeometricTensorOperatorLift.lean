@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Volume.ConnesInfinitesimal
 
 open scoped InnerProductSpace
 
@@ -81,6 +82,18 @@ omit [CompleteSpace E] in
   ext u v
   simp [metricOfOperator_apply, real_inner_smul_left, smul_eq_mul]
   ring
+
+/--
+If an operator commutes with the modular Hamiltonian, then its operatorial metric
+seed is fixed by the modular flow.
+-/
+@[simp] theorem metricOfOperator_modularHamiltonianAction_eq_self_of_commute
+    (K A : EndH) (t : ℝ) (hComm : Commute A K) :
+    metricOfOperator (E := E)
+      (InfoGeometry.Volume.ConnesInfinitesimal.modularHamiltonianAction (H := E) K A t)
+      = metricOfOperator (E := E) A := by
+  rw [InfoGeometry.Volume.ConnesInfinitesimal.modularHamiltonianAction_eq_self_of_commute
+    (H := E) K A t hComm]
 
 /--
 Operatorial Berry 2-form seed on doubled space, induced from the operatorial

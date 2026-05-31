@@ -828,6 +828,23 @@ structure ConnesCocycleNatMatchWitness
   natMatch : CocycleNatMatchWitness (n := n) (H := H) σ u T
 
 /--
+Constructive Connes-cocycle nat-match route to the cocycle generator lift.
+
+This removes the explicit triple `(hCocycle, hBridge, hMatch)` from the
+generator-lift surface: once the proof-carrying nat-match packet is present, the
+generator lift is recovered directly through the smaller nat-match witness route.
+-/
+theorem cocycleGeneratorLift_of_connesCocycleNatMatchWitness
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (W : ConnesCocycleNatMatchWitness (n := n) (H := H) σ u T) :
+    CocycleGeneratorLift n T
+      (CocycleEntropyPotential (H := H) σ u W.natMatch.hBridge) := by
+  exact cocycleGeneratorLift_of_cocycleNatMatchWitness
+    (n := n) (H := H) (σ := σ) (u := u) (T := T) W.natMatch
+
+/--
 Constructive Connes-cocycle nat-match route to increment-level RN-barrier
 control.
 

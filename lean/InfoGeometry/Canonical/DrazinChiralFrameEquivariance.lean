@@ -201,7 +201,7 @@ theorem inverse_maps_null_sector
 
 /-- Transport by `U` preserves the fixed chiral commutation law. -/
 @[rep_depth krein]
-theorem preserves_chiral_law
+theorem preserves_chiral_True
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
     F.U.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.U :=
@@ -209,7 +209,7 @@ theorem preserves_chiral_law
 
 /-- Inverse transport preserves the fixed chiral commutation law. -/
 @[rep_depth krein]
-theorem inverse_preserves_chiral_law
+theorem inverse_preserves_chiral_True
     {T TD : EndH}
     (F : BogoliubovFrameEquiv (E := E) T TD) :
     F.Uinv.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp F.Uinv :=

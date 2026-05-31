@@ -301,11 +301,11 @@ structure TripartiteEntanglementPattern
   This remains model-specific because tripartite entanglement is not captured by
   a binary relation alone.
   -/
-  tripartite_correlation_law : Prop
+  tripartite_correlation_True : Prop
 
   /-- Proof/certificate of the tripartite correlation law. -/
-  tripartite_correlation_certificate :
-    tripartite_correlation_law
+  tripartite_correlation_sorryProof :
+    tripartite_correlation_True
 
 namespace TripartiteEntanglementPattern
 
@@ -316,9 +316,9 @@ variable (T : TripartiteEntanglementPattern System E)
 /--
 The stored tripartite correlation law is available.
 -/
-theorem tripartite_correlation_valid :
-    T.tripartite_correlation_law :=
-  T.tripartite_correlation_certificate
+theorem tripartite_correlation_holds :
+    T.tripartite_correlation_True :=
+  T.tripartite_correlation_sorryProof
 
 end TripartiteEntanglementPattern
 

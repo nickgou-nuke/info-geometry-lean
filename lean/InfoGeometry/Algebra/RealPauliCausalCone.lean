@@ -1,9 +1,12 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring
+import InfoGeometry.Clifford.SplitQuaternion
 
 set_option autoImplicit false
 
 namespace InfoGeometry.Algebra.RealPauliCausalCone
+
+open InfoGeometry.Clifford
 
 /-- Base structure representing the 4-vector spacetime / M₂(ℝ) operator space 
     using the real Pauli matrices basis: I, σx, ε=iσy, σz. -/
@@ -40,6 +43,16 @@ lemma trace_smul (c : ℝ) (X : RealPauliOp) :
   dsimp
   ring
 
+/-- CLOSED THEOREM 3: Trace is affine on convex combinations. -/
+lemma trace_affine_combo (A B : RealPauliOp) (p : ℝ) :
+    trace ⟨p * A.t + (1 - p) * B.t,
+           p * A.x + (1 - p) * B.x,
+           p * A.y + (1 - p) * B.y,
+           p * A.z + (1 - p) * B.z⟩
+      = p * trace A + (1 - p) * trace B := by
+  unfold trace
+  ring
+
 
 /- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
 -- [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
@@ -73,12 +86,45 @@ theorem pure_state_lightcone (X : RealPauliOp) (c : ℝ) (h_det : det X = 0) :
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 -- [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
 
-/-- DEBT 1: Realize the explicit non-commutative matrix multiplication for `RealPauliOp` to prove local operator nilpotency. -/
-axiom RealPauliOp_mul (A B : RealPauliOp) : RealPauliOp
+/-- Transport `RealPauliOp` to the split-quaternion algebra used elsewhere in the repo. -/
+def toSplitQuaternion (X : RealPauliOp) : SplitQuaternion :=
+  ⟨X.t, X.y, X.x, X.z⟩
+
+/-- Transport split quaternions back to `RealPauliOp`. -/
+def fromSplitQuaternion (q : SplitQuaternion) : RealPauliOp :=
+  ⟨q.w, q.y, q.x, q.z⟩
+
+/-- Non-commutative multiplication via the split-quaternion model. -/
+def RealPauliOp_mul (A B : RealPauliOp) : RealPauliOp :=
+  fromSplitQuaternion (toSplitQuaternion A * toSplitQuaternion B)
+
+lemma det_eq_norm (X : RealPauliOp) : det X = InfoGeometry.Clifford.norm (toSplitQuaternion X) := by
+  change X.t ^ 2 - X.x ^ 2 + X.y ^ 2 - X.z ^ 2 =
+    InfoGeometry.Clifford.norm (⟨X.t, X.y, X.x, X.z⟩ : SplitQuaternion)
+  simp [InfoGeometry.Clifford.norm]
+  ring
 
 /-- DEBT 2: Prove that if X^2 = 0 (Nilpotent Operator Flux), then det(X) = 0 (Locks precisely to the Celestial Sphere lightcone boundary). -/
-axiom nilpotent_is_lightlike (X : RealPauliOp) :
-  RealPauliOp_mul X X = ⟨0, 0, 0, 0⟩ → det X = 0
+theorem nilpotent_is_lightlike (X : RealPauliOp) :
+  RealPauliOp_mul X X = ⟨0, 0, 0, 0⟩ → det X = 0 := by
+  intro h
+  have hsq : toSplitQuaternion X * toSplitQuaternion X = 0 := by
+    apply SplitQuaternion.ext
+    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.t h
+    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.y h
+    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.x h
+    · simpa [RealPauliOp_mul, toSplitQuaternion, fromSplitQuaternion] using congrArg RealPauliOp.z h
+  have hmul := InfoGeometry.Clifford.norm_mul (toSplitQuaternion X) (toSplitQuaternion X)
+  rw [hsq] at hmul
+  have hzero : InfoGeometry.Clifford.norm (0 : SplitQuaternion) = 0 := by
+    change (0 : ℝ) * (0 : ℝ) + (0 : ℝ) * (0 : ℝ) - (0 : ℝ) * (0 : ℝ) - (0 : ℝ) * (0 : ℝ) = 0
+    ring
+  rw [hzero] at hmul
+  have hsq2 : InfoGeometry.Clifford.norm (toSplitQuaternion X) * InfoGeometry.Clifford.norm (toSplitQuaternion X) = 0 := by
+    simpa using hmul
+  have hnorm : InfoGeometry.Clifford.norm (toSplitQuaternion X) = 0 := by
+    nlinarith [hsq2]
+  rw [det_eq_norm, hnorm]
 
 /-- DEBT 3: Convex Affine Geometry Mapping (The Hessian Interior).
     Formally prove that the interior space of mixed states (trace=1 and det > 0) is strictly convex. -/
@@ -96,6 +142,7 @@ end InfoGeometry.Algebra.RealPauliCausalCone
 [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 - `det_smul` : Proves quadratic scaling of determinant metric under scalar multiplication.
 - `trace_smul` : Proves linear scaling of trace under scalar multiplication.
+- `trace_affine_combo` : Trace is affine on convex combinations.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
@@ -104,7 +151,5 @@ end InfoGeometry.Algebra.RealPauliCausalCone
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
-- `RealPauliOp_mul` : Define non-commutative multiplication for RealPauliOp.
-- `nilpotent_is_lightlike` : Show nilpotent operator flux lies on the lightcone.
 - `density_interior_convex` : Convexity of the state interior (Hessian domain).
 -/

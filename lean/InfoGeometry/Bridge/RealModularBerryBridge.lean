@@ -66,7 +66,7 @@ structure RealModularBerryBridgeData
 
   The exponentiated bulk integral is resolved by the ordered boundary anomaly.
   -/
-  finite_stokes_law :
+  finite_stokes_True :
     ∀ Y : ℝ,
       exponentiate (bulkIntegral Y) =
         stabilizerProduct * cocycle cuspGenerator (cuspRay Y)
@@ -108,7 +108,7 @@ theorem bulkBoundary_tendsto
           D.stabilizerProduct *
             D.cocycle D.cuspGenerator (D.cuspRay Y) := by
     funext Y
-    rw [RealModularBerryBridgeData.bulkRotor, D.finite_stokes_law Y]
+    rw [RealModularBerryBridgeData.bulkRotor, D.finite_stokes_True Y]
   rw [hfun]
   simpa [RealModularBerryBridgeData.boundaryRotor] using hmul
 
@@ -194,7 +194,7 @@ def canonicalModularBerry
 def canonicalSpecialization
     (D : RealModularBerryBridgeData G X Rotor Bivector) :
     GeometricSpecialization (canonicalModularBerry D) where
-  finite_stokes := { stokes_match := fun Y => D.finite_stokes_law Y }
+  finite_stokes := { stokes_match := fun Y => D.finite_stokes_True Y }
   cusp_convergence := by
     refine ⟨?_⟩
     have hmul :

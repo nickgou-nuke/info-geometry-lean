@@ -53,20 +53,24 @@ structure DefectFreeLimitPacket
   largeDeviation :
     PrimeChainLargeDeviationWitness
 
+  /-- Finite-volume Lee--Yang circle law for each approximation polynomial. -/
+  finiteLeeYang_circle_True :
+    ∀ (N : ℕ) (z : ℂ), (approximation.Z N).IsRoot z → OnLeeYangCircle z
+
   /-- No spontaneous magnetization in the chosen thermodynamic scaling. -/
-  zeroMeanMagnetization_law : Prop
+  zeroMeanMagnetization_True : Prop
 
   /-- Gaussian/CLT-scale fluctuation law for the weighted prime magnetization. -/
-  gaussianFluctuation_law : Prop
+  gaussianFluctuation_True : Prop
 
   /-- Defect-exclusion law: no macroscopic random-field bias survives. -/
-  noRandomFieldDefects_law : Prop
+  noRandomFieldDefects_True : Prop
 
   /--
   Persistence law saying the finite Lee--Yang circle property survives the
   renormalized thermodynamic limit.
   -/
-  leeYangStabilityPersists_law : Prop
+  leeYangStabilityPersists_True : Prop
 
   /--
   The completed-`xi` Cayley limit law for the defect-free sequence.
@@ -74,7 +78,7 @@ structure DefectFreeLimitPacket
   This is separate from the finite Lee--Yang law; it is the analytic bridge
   where a concrete scattering/determinant construction must enter.
   -/
-  xiCayleyLimit_law : Prop
+  xiCayleyLimit_True : Prop
 
   /--
   The final conditional reduction from the defect-free Lee--Yang/`xi` limit to
@@ -82,7 +86,7 @@ structure DefectFreeLimitPacket
 
   This field is intentionally a law, not an unconditional theorem.
   -/
-  defectFreeLimit_implies_criticalLineZeros_law : Prop
+  defectFreeLimit_implies_criticalLineZeros_True : Prop
 
   /-- Guardrail: this packet is not an unconditional RH proof. -/
   no_unconditional_RH_claim_guard : Type
@@ -94,27 +98,27 @@ variable (W : DefectFreeLimitPacket CompletedXiReadout)
 
 /-- Re-export of the supplied zero-mean magnetization law. -/
 def zeroMeanMagnetization : Prop :=
-  W.zeroMeanMagnetization_law
+  W.zeroMeanMagnetization_True
 
 /-- Re-export of the supplied Gaussian/CLT fluctuation law. -/
 def gaussianFluctuation : Prop :=
-  W.gaussianFluctuation_law
+  W.gaussianFluctuation_True
 
 /-- Re-export of the supplied no-random-field-defect law. -/
 def noRandomFieldDefects : Prop :=
-  W.noRandomFieldDefects_law
+  W.noRandomFieldDefects_True
 
 /-- Re-export of the supplied Lee--Yang stability persistence law. -/
 def leeYangStabilityPersists : Prop :=
-  W.leeYangStabilityPersists_law
+  W.leeYangStabilityPersists_True
 
 /-- Re-export of the supplied completed-`xi` Cayley limit law. -/
 def xiCayleyLimit : Prop :=
-  W.xiCayleyLimit_law
+  W.xiCayleyLimit_True
 
 /-- Re-export of the supplied conditional critical-line zero-location reduction. -/
 def defectFreeLimit_implies_criticalLineZeros : Prop :=
-  W.defectFreeLimit_implies_criticalLineZeros_law
+  W.defectFreeLimit_implies_criticalLineZeros_True
 
 /--
 The defect-free packet contains the upstream finite Lee--Yang circle law.
@@ -127,7 +131,7 @@ theorem finiteZeros_on_unitCircle
     (z : ℂ)
     (hz : (W.approximation.Z N).IsRoot z) :
     OnLeeYangCircle z :=
-  W.approximation.leeYang N z hz
+  W.finiteLeeYang_circle_True N z hz
 
 /--
 The defect-free packet contains the upstream finite large-deviation principle

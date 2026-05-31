@@ -47,24 +47,24 @@ structure OperatorWeight
   weight : A → ℝ≥0∞
 
   /-- Positivity law. -/
-  positivity_law : Prop
-  positivity_certificate :
-    positivity_law
+  positivity_True : Prop
+  positivity_sorryProof :
+    positivity_True
 
   /-- Normality law. -/
-  normality_law : Prop
-  normality_certificate :
-    normality_law
+  normality_True : Prop
+  normality_sorryProof :
+    normality_True
 
   /-- Faithfulness law. -/
-  faithfulness_law : Prop
-  faithfulness_certificate :
-    faithfulness_law
+  faithfulness_True : Prop
+  faithfulness_sorryProof :
+    faithfulness_True
 
   /-- Semifiniteness law. -/
-  semifiniteness_law : Prop
-  semifiniteness_certificate :
-    semifiniteness_law
+  semifiniteness_True : Prop
+  semifiniteness_sorryProof :
+    semifiniteness_True
 
 namespace OperatorWeight
 
@@ -164,16 +164,16 @@ structure ConnesCocycleDerivative
   Intended form:
   `u_{s+t} = u_s * σ_s^ψ(u_t)`, convention-dependent.
   -/
-  modular_cocycle_law : Prop
-  modular_cocycle_certificate :
-    modular_cocycle_law
+  modular_cocycle_True : Prop
+  modular_cocycle_sorryProof :
+    modular_cocycle_True
 
   /--
   Unitarity/partial-isometry/support law for the cocycle.
   -/
-  support_unitarity_law : Prop
-  support_unitarity_certificate :
-    support_unitarity_law
+  support_unitarity_True : Prop
+  support_unitarity_sorryProof :
+    support_unitarity_True
 
 namespace ConnesCocycleDerivative
 
@@ -231,9 +231,9 @@ structure ConnesSpatialDerivative
 
   This is where singular-support and infinite-entropy cases are handled.
   -/
-  support_law : Prop
-  support_certificate :
-    support_law
+  support_True : Prop
+  support_sorryProof :
+    support_True
 
 namespace ConnesSpatialDerivative
 
@@ -278,14 +278,14 @@ structure SymmetricRelativeHamiltonianCalibration
     Weight → Weight → SymHam
 
   /-- Law saying this readout is derived from the spatial derivative. -/
-  derived_from_spatial_law : Prop
-  derived_from_spatial_certificate :
-    derived_from_spatial_law
+  derived_from_spatial_True : Prop
+  derived_from_spatial_sorryProof :
+    derived_from_spatial_True
 
   /-- Optional symmetry convention. -/
-  symmetry_law : Prop
-  symmetry_certificate :
-    symmetry_law
+  symmetry_True : Prop
+  symmetry_sorryProof :
+    symmetry_True
 
 /-! ## 6. Abstract BKM socket from spatial derivative -/
 
@@ -308,9 +308,9 @@ structure BKMMetricDatum
     ∀ φ X, 0 ≤ metric φ X X
 
   /-- Derivation from Connes spatial derivative / relative modular response. -/
-  derived_from_spatial_derivative_law : Prop
-  derived_from_spatial_derivative_certificate :
-    derived_from_spatial_derivative_law
+  derived_from_spatial_derivative_True : Prop
+  derived_from_spatial_derivative_sorryProof :
+    derived_from_spatial_derivative_True
 
 namespace BKMMetricDatum
 
@@ -456,9 +456,9 @@ def scalarBKMMetricDatum :
   metric := scalarBKMMetric
   symmetric := scalarBKMMetric_symmetric
   nonnegative := scalarBKMMetric_nonnegative
-  derived_from_spatial_derivative_law := ∀ φ : PositiveScalarWeight, ∀ X : ℝ,
+  derived_from_spatial_derivative_True := ∀ φ : PositiveScalarWeight, ∀ X : ℝ,
     0 ≤ scalarBKMMetric φ X X
-  derived_from_spatial_derivative_certificate := by
+  derived_from_spatial_derivative_sorryProof := by
     intro φ X
     exact scalarBKMMetric_nonnegative φ X
 
@@ -470,8 +470,8 @@ def scalarSpatialDerivativeDatum :
   spatialDerivative := spatialDerivative
   same_weight := spatialDerivative_self
   chain_rule := spatialDerivative_chain
-  support_law := ∀ φ : PositiveScalarWeight, spatialDerivative φ φ = 1
-  support_certificate := by
+  support_True := ∀ φ : PositiveScalarWeight, spatialDerivative φ φ = 1
+  support_sorryProof := by
     intro φ
     exact spatialDerivative_self φ
 

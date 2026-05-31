@@ -157,17 +157,17 @@ namespace SplitMajoranaCAR
 variable {Prime Op : Type*} [DecidableEq Prime] [Ring Op]
 variable (C : SplitMajoranaCAR Prime Op)
 
-theorem c_c_valid (p q : Prime) :
+theorem c_c_holds (p q : Prime) :
     anticommutator (C.c p) (C.c q) =
       if p = q then (2 : Op) else 0 :=
   C.c_c p q
 
-theorem d_d_valid (p q : Prime) :
+theorem d_d_holds (p q : Prime) :
     anticommutator (C.d p) (C.d q) =
       if p = q then -(2 : Op) else 0 :=
   C.d_d p q
 
-theorem c_d_valid (p q : Prime) :
+theorem c_d_holds (p q : Prime) :
     anticommutator (C.c p) (C.d q) = 0 :=
   C.c_d p q
 
@@ -215,21 +215,21 @@ def toArithmeticSplitMajoranaOPE
     O.singular (O.dField p) (O.dField q) = if p = q then -1 else 0
   cd_regular := fun p q =>
     O.singular (O.cField p) (O.dField q) = 0
-  cc_certificate := O.c_c_singular
-  dd_certificate := O.d_d_singular
-  cd_certificate := O.c_d_regular
+  cc_sorryProof := O.c_c_singular
+  dd_sorryProof := O.d_d_singular
+  cd_sorryProof := O.c_d_regular
 
-theorem toArithmeticSplitMajoranaOPE_cc_valid
+theorem toArithmeticSplitMajoranaOPE_cc_holds
     (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
     (toArithmeticSplitMajoranaOPE O).cc_singular p q := by
   exact O.c_c_singular p q
 
-theorem toArithmeticSplitMajoranaOPE_dd_valid
+theorem toArithmeticSplitMajoranaOPE_dd_holds
     (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
     (toArithmeticSplitMajoranaOPE O).dd_singular p q := by
   exact O.d_d_singular p q
 
-theorem toArithmeticSplitMajoranaOPE_cd_regular_valid
+theorem toArithmeticSplitMajoranaOPE_cd_regular_holds
     (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
     (toArithmeticSplitMajoranaOPE O).cd_regular p q := by
   exact O.c_d_regular p q

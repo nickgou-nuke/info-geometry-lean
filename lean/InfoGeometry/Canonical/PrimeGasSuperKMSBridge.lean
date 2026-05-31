@@ -82,6 +82,34 @@ structure PrimeGasSuperKMSBridge where
   superTemperature_eq :
     superTemperature = toSuperGeometricTemperature kmsTarget
 
+/-- Witness-form compatibility surface for the super-temperature/KMS target match. -/
+@[rep_depth operator]
+structure SuperTemperatureCompatibilityWitness where
+  kmsTarget : PrimeGasKMSTargetBridge
+  superTemperature : SuperGeometricTemperature
+  superTemperature_eq :
+    superTemperature = toSuperGeometricTemperature kmsTarget
+
+/-- Recover the compatibility equality from an explicit witness packet. -/
+theorem superTemperature_eq_toSuperGeometricTemperature_of_witness
+    (W : SuperTemperatureCompatibilityWitness) :
+    W.superTemperature = toSuperGeometricTemperature W.kmsTarget :=
+  W.superTemperature_eq
+
+/-- Construct the witness-form compatibility packet from a bridge. -/
+def PrimeGasSuperKMSBridge.toSuperTemperatureCompatibilityWitness
+    (B : PrimeGasSuperKMSBridge) : SuperTemperatureCompatibilityWitness where
+  kmsTarget := B.kmsTarget
+  superTemperature := B.superTemperature
+  superTemperature_eq := B.superTemperature_eq
+
+/-- Witness-routed readback of the bridge temperature/KMS compatibility. -/
+theorem PrimeGasSuperKMSBridge.superTemperature_eq_toSuperGeometricTemperature_viaWitness
+    (B : PrimeGasSuperKMSBridge) :
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget := by
+  exact superTemperature_eq_toSuperGeometricTemperature_of_witness
+    (B.toSuperTemperatureCompatibilityWitness)
+
 namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)

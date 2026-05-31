@@ -26,8 +26,10 @@ structure RelativeModularCarrier (E : Type) [NormedAddCommGroup E] [InnerProduct
   modularFlow : ℝ → EndH E → EndH E
   transportMap : EndH E → EndH E
   identification : modularHamiltonian = S.K
-  modularHamiltonian_eq_neg_log_delta_witness : modularHamiltonian = (-Real.log M.rnDerivative) • idEndH E
-  modularTransport_eq_conjugation_witness : ∀ t X, modularFlow t X = M.modularAutomorphismGroup t X
+  modularHamiltonian_eq_neg_log_delta_hyp :
+    modularHamiltonian = (-Real.log M.rnDerivative) • idEndH E
+  modularTransport_eq_conjugation_hyp :
+    ∀ t X, modularFlow t X = M.modularAutomorphismGroup t X
 
 namespace RelativeModularCarrier
 
@@ -36,18 +38,18 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 /-- Identification: The modular Hamiltonian is the generator of the modular flow. -/
 theorem modularHamiltonian_eq_neg_log_delta (C : RelativeModularCarrier E) :
     C.modularHamiltonian = (-Real.log C.M.rnDerivative) • idEndH E :=
-  C.modularHamiltonian_eq_neg_log_delta_witness
+  C.modularHamiltonian_eq_neg_log_delta_hyp
 
 /-- The modular transport is defined by the conjugation action. -/
 theorem modularTransport_eq_conjugation (C : RelativeModularCarrier E) (t : ℝ) (X : EndH E) :
     C.modularFlow t X = C.M.modularAutomorphismGroup t X :=
-  C.modularTransport_eq_conjugation_witness t X
+  C.modularTransport_eq_conjugation_hyp t X
 
 /-- The modular flow preserves the support of the operator. -/
 theorem modularTransport_preserves_support (C : RelativeModularCarrier E) :
     C.modularFlow = C.M.modularAutomorphismGroup := by
   funext t X
-  exact C.modularTransport_eq_conjugation_witness t X
+  exact C.modularTransport_eq_conjugation_hyp t X
 
 /--
 **Theorem: Modular Berry-Phase Correspondence**

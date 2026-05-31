@@ -88,7 +88,7 @@ theorem J_fixes_coneVector
 
 /-- Re-export the supplied self-duality certificate. -/
 @[rep_depth krein]
-theorem naturalCone_self_dual_certificate :
+theorem naturalCone_self_dual_sorryProof :
     B.naturalCone_self_dual :=
   B.naturalCone_self_dual_holds
 
@@ -265,7 +265,7 @@ theorem toKMSBridge_state_eq :
 
 /-- Route the legacy broad KMS bridge through the narrowed witness packet. -/
 @[rep_depth krein]
-theorem mk_broad_of_witness :
+theorem mk_broad_of_sorry :
     ∃ B : HestenesKreinNaturalConeKMSBridge (H := H)
       (NormalPositive := NormalPositive) (Op := Op),
       B.kms.state = W.state :=

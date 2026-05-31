@@ -302,9 +302,9 @@ structure SouriauNegativeLogRNDerivative (State LieAlgebra LieDual : Type*) wher
   expectationBeta : (Density State) → ℝ
   entropy : ℝ
   Q : LieDual
-  entropy_eq_expectation_modularPotential_witness :
+  entropy_eq_expectation_modularPotential_sorry :
     entropy = expectationBeta (fun x => -Real.log (rnDerivative x))
-  entropy_eq_Phi_add_pairing_Q_beta_witness :
+  entropy_eq_Phi_add_pairing_Q_beta_sorry :
     entropy = souriau.partitionPotential + souriau.pairing Q souriau.beta
 
 /-- Compatibility name emphasizing the relative modular/sign layer. -/
@@ -339,13 +339,13 @@ theorem modularPotential_eq_K_beta_add_Phi
 theorem entropy_eq_expectation_modularPotential
     (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
     D.entropy = D.expectationBeta D.modularPotential := by
-  simpa [modularPotential] using D.entropy_eq_expectation_modularPotential_witness
+  simpa [modularPotential] using D.entropy_eq_expectation_modularPotential_sorry
 
 @[rep_depth thermo]
 theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
     (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
     D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta :=
-  D.entropy_eq_Phi_add_pairing_Q_beta_witness
+  D.entropy_eq_Phi_add_pairing_Q_beta_sorry
 
 /-- Existing-test compatibility theorem name. -/
 @[rep_depth thermo]
@@ -401,7 +401,7 @@ structure SouriauKLBregmanWitness (State LieAlgebra LieDual : Type*) where
   alphaPartitionPotential : ℝ
   alphaMinusBeta : LieAlgebra
   klValue : ℝ
-  kl_eq_bregman_witness :
+  kl_eq_bregman_sorry :
     klValue =
       alphaPartitionPotential
         - generator.souriau.partitionPotential
@@ -422,7 +422,7 @@ theorem KL_eq_souriau_Bregman
       B.alphaPartitionPotential
         - B.generator.souriau.partitionPotential
         - B.generator.dPhi B.alphaMinusBeta :=
-  B.kl_eq_bregman_witness
+  B.kl_eq_bregman_sorry
 
 /-- Existing-test compatibility theorem name. -/
 @[rep_depth thermo]
@@ -511,7 +511,7 @@ structure RenyiMellinSouriauReadout (State : Type*) where
     massieuAtGammaBeta = Real.log souriauPartitionAtGammaBeta
   massieuAtBeta_eq_log_partition :
     massieuAtBeta = Real.log souriauPartitionAtBeta
-  renyiMellin_eq_temperature_rescaling_witness :
+  renyiMellin_eq_temperature_rescaling_sorry :
     renyiPartition =
       souriauPartitionAtGammaBeta / souriauPartitionAtBeta ^ gamma
   renyiLogGenerator_eq_log_partition :
@@ -531,7 +531,7 @@ theorem renyiMellin_eq_temperature_rescaling
     (R : RenyiMellinSouriauReadout State) :
     R.renyiPartition =
       R.souriauPartitionAtGammaBeta / R.souriauPartitionAtBeta ^ R.gamma :=
-  R.renyiMellin_eq_temperature_rescaling_witness
+  R.renyiMellin_eq_temperature_rescaling_sorry
 
 @[rep_depth thermo]
 theorem renyiLogGenerator_eq_massieu_rescaling_shift
@@ -555,7 +555,7 @@ theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat
 theorem renyiPartition_pos
     (R : RenyiMellinSouriauReadout State) :
     0 < R.renyiPartition := by
-  rw [R.renyiMellin_eq_temperature_rescaling_witness]
+  rw [R.renyiMellin_eq_temperature_rescaling_sorry]
   exact div_pos R.souriauPartitionAtGammaBeta_pos
     (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma)
 
@@ -590,9 +590,9 @@ structure SouriauMetriplecticOnsager (State Observable : Type*) where
   variationOfRelativeFreeEnergy : Density State → Density State
   onsagerOperator : Density State → Density State
   freeEnergyDerivative : Density State → ℝ
-  force_eq_variation_witness :
+  force_eq_variation_sorry :
     ∀ ρ, force ρ = variationOfRelativeFreeEnergy ρ
-  dissipativeFlow_eq_onsager_force_witness :
+  dissipativeFlow_eq_onsager_force_sorry :
     ∀ ρ, dissipativeFlow ρ = -onsagerOperator (force ρ)
   freeEnergyDerivative_nonpos :
     ∀ ρ, freeEnergyDerivative ρ ≤ 0
@@ -612,13 +612,13 @@ variable {State Observable : Type*}
 theorem force_eq_variation_of_relativeFreeEnergy
     (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
     O.force ρ = O.variationOfRelativeFreeEnergy ρ :=
-  O.force_eq_variation_witness ρ
+  O.force_eq_variation_sorry ρ
 
 @[rep_depth thermo]
 theorem dissipativeFlow_eq_onsager_force
     (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
     O.dissipativeFlow ρ = -O.onsagerOperator (O.force ρ) :=
-  O.dissipativeFlow_eq_onsager_force_witness ρ
+  O.dissipativeFlow_eq_onsager_force_sorry ρ
 
 @[rep_depth thermo]
 theorem freeEnergyDerivative_nonpos_theorem

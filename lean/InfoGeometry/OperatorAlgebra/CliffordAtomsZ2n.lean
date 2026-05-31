@@ -455,7 +455,7 @@ structure GlobalAnomalyClass where
   integerLift : ℤ
 
   /-- The cyclic class is the mod-16 reduction of the integer lift. -/
-  reduction_law :
+  reduction_True :
     cyclicIndex = (integerLift : ZMod 16)
 
 
@@ -489,7 +489,7 @@ structure DIIIIndexCalibration
   Model-specific stacking law, for example a carry rule, eta invariant, bordism
   invariant, or interaction calibration.
   -/
-  calibration_law : Prop
+  calibration_True : Prop
 
 /--
 A DIII interaction calibration for the four-bit `Cl(1,1)^⊗4` address space.
@@ -502,7 +502,7 @@ structure DIIIInteractionCalibration where
   Model-specific stacking law, for example a carry rule, eta invariant, bordism
   invariant, or interaction calibration.
   -/
-  stacking_law : Prop
+  stacking_True : Prop
 
 namespace DIIIInteractionCalibration
 
@@ -511,7 +511,7 @@ variable (C : DIIIInteractionCalibration)
 /-- Repackage the four-bit interaction calibration as the generic index calibration. -/
 def toDIIIIndexCalibration : DIIIIndexCalibration Charge4 where
   dIIIIndex := C.encode
-  calibration_law := C.stacking_law
+  calibration_True := C.stacking_True
 
 end DIIIInteractionCalibration
 

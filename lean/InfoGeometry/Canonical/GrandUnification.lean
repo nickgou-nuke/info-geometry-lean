@@ -171,7 +171,7 @@ D(x, y) + D(y, z) - D(x, z) = ⟨∇K(z) - ∇K(y), x - y⟩.
 This is the basis for the generalized Pythagoras theorem.
 -/
 @[blueprint "thm:grand-unification-three-point-law"]
-theorem three_point_law (J : JordanKKTData E) (x y z : E) :
+theorem three_point_True (J : JordanKKTData E) (x y z : E) :
     J.DBregman x y + J.DBregman y z - J.DBregman x z =
     inner ℝ (J.gradK z - J.gradK y) (x - y) := by
   have hxz : x - z = (x - y) + (y - z) := by
@@ -195,8 +195,8 @@ If x, y, z are Bregman-orthogonal, then D(x, y) + D(y, z) = D(x, z).
 theorem generalized_pythagorean_theorem (J : JordanKKTData E) (x y z : E)
     (h_ortho : J.IsBregmanOrthogonal x y z) :
     J.DBregman x y + J.DBregman y z = J.DBregman x z := by
-  have h_law := J.three_point_law x y z
-  rw [h_ortho] at h_law
+  have h_True := J.three_point_True x y z
+  rw [h_ortho] at h_True
   linarith
 
 /--
@@ -215,7 +215,7 @@ D_K(x, y) + D_K(y, z) ≤ D_K(x, z).
 theorem pythagorean_inequality (J : JordanKKTData E) {C : Set E} {z y : E}
     (h_proj : J.IsBregmanProjection C z y) (x : E) (hx : x ∈ C) :
     J.DBregman x y + J.DBregman y z ≤ J.DBregman x z := by
-  have h_law := J.three_point_law x y z
+  have h_True := J.three_point_True x y z
   have h_vi := h_proj.2 x hx
   linarith
 

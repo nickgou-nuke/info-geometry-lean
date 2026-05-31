@@ -188,7 +188,7 @@ structure DrazinKineticDefectSplit
   Z_D :
     Op
 
-  split_law :
+  split_True :
     supercharge.Q_alg * supercharge.Q_alg = T_D + (0.5 : ℝ) • Z_D
 
   T_D_regular :
@@ -204,7 +204,7 @@ variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] (S : DrazinKineticDefect
 /-- Readback of the normalized square split. -/
 theorem supercharge_square_split :
     S.supercharge.Q_alg * S.supercharge.Q_alg = S.T_D + (0.5 : ℝ) • S.Z_D :=
-  S.split_law
+  S.split_True
 
 /-- Readback: the kinetic/translation term is regular-supported. -/
 theorem translation_regular_support :
@@ -360,7 +360,7 @@ theorem drazin_supercharge_square_split
     (S : DrazinKineticDefectSplit Op) :
     S.supercharge.Q_alg * S.supercharge.Q_alg =
       S.T_D + (0.5 : ℝ) • S.Z_D :=
-  S.split_law
+  S.split_True
 
 /--
 If the Moore--Penrose range and domain supports agree, the dilation gap

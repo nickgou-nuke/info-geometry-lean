@@ -174,7 +174,7 @@ structure RealVonNeumannAlgebraData where
   mul_mem : ∀ {A B : EndR}, A ∈ carrier → B ∈ carrier → A * B ∈ carrier
   star_mem : ∀ {A : EndR}, A ∈ carrier → star A ∈ carrier
   weakly_closed_identity : Prop
-  weakly_closed_certificate : weakly_closed_identity
+  weakly_closed_sorryProof : weakly_closed_identity
 
 namespace RealVonNeumannAlgebraData
 
@@ -186,7 +186,7 @@ def commutant (R : RealVonNeumannAlgebraData (HR := HR)) : Set EndR :=
 theorem weakly_closed
     (R : RealVonNeumannAlgebraData (HR := HR)) :
     R.weakly_closed_identity :=
-  R.weakly_closed_certificate
+  R.weakly_closed_sorryProof
 
 @[rep_depth operator]
 theorem one_mem_commutant
@@ -235,15 +235,15 @@ structure RealTomitaAlgebraicData where
   algebra : RealVonNeumannAlgebraData (HR := HR)
   omega : HR
   cyclic_identity : Prop
-  cyclic_certificate : cyclic_identity
+  cyclic_sorryProof : cyclic_identity
   separating_identity : Prop
-  separating_certificate : separating_identity
+  separating_sorryProof : separating_identity
   S0 : EndR
   S0_on_orbit :
     ∀ A : EndR, A ∈ algebra.carrier → S0 (A omega) = (star A) omega
   sigma : ℝ → EndR → EndR
   sigma_real_star_automorphism_identity : Prop
-  sigma_real_star_automorphism_certificate : sigma_real_star_automorphism_identity
+  sigma_real_star_automorphism_sorryProof : sigma_real_star_automorphism_identity
   J0 : EndR
   J0_sq : J0 * J0 = 1
   J0_maps_algebra_to_commutant :
@@ -255,13 +255,13 @@ namespace RealTomitaAlgebraicData
 theorem cyclic
     (T : RealTomitaAlgebraicData (HR := HR)) :
     T.cyclic_identity :=
-  T.cyclic_certificate
+  T.cyclic_sorryProof
 
 @[rep_depth transport]
 theorem separating
     (T : RealTomitaAlgebraicData (HR := HR)) :
     T.separating_identity :=
-  T.separating_certificate
+  T.separating_sorryProof
 
 @[rep_depth transport]
 theorem S0_on_orbit_readback
@@ -274,7 +274,7 @@ theorem S0_on_orbit_readback
 theorem sigma_real_star_automorphism
     (T : RealTomitaAlgebraicData (HR := HR)) :
     T.sigma_real_star_automorphism_identity :=
-  T.sigma_real_star_automorphism_certificate
+  T.sigma_real_star_automorphism_sorryProof
 
 @[rep_depth transport]
 theorem J0_commutant_transport
@@ -302,25 +302,25 @@ def ofCommutativeCarrier
     (R : RealVonNeumannAlgebraData (HR := HR))
     (hcomm : R.IsCommutative)
     (cyclic_identity : Prop)
-    (cyclic_certificate : cyclic_identity)
+    (cyclic_sorryProof : cyclic_identity)
     (separating_identity : Prop)
-    (separating_certificate : separating_identity)
+    (separating_sorryProof : separating_identity)
     (sigma_real_star_automorphism_identity : Prop)
-    (sigma_real_star_automorphism_certificate : sigma_real_star_automorphism_identity) :
+    (sigma_real_star_automorphism_sorryProof : sigma_real_star_automorphism_identity) :
     RealTomitaAlgebraicData (HR := HR) where
   algebra := R
   omega := 0
   cyclic_identity := cyclic_identity
-  cyclic_certificate := cyclic_certificate
+  cyclic_sorryProof := cyclic_sorryProof
   separating_identity := separating_identity
-  separating_certificate := separating_certificate
+  separating_sorryProof := separating_sorryProof
   S0 := 0
   S0_on_orbit := by
     intro A hA
     simp
   sigma := fun _ A => A
   sigma_real_star_automorphism_identity := sigma_real_star_automorphism_identity
-  sigma_real_star_automorphism_certificate := sigma_real_star_automorphism_certificate
+  sigma_real_star_automorphism_sorryProof := sigma_real_star_automorphism_sorryProof
   J0 := 1
   J0_sq := by simp
   J0_maps_algebra_to_commutant := by
@@ -349,7 +349,7 @@ structure SpatialAlgebraicRealificationBridge where
   modularConjugation_transport :
     ∀ x : HC, realify (spatial.J x) = algebraic.J0 (realify x)
   modularFlow_transport_identity : Prop
-  modularFlow_transport_certificate : modularFlow_transport_identity
+  modularFlow_transport_sorryProof : modularFlow_transport_identity
 
 namespace SpatialAlgebraicRealificationBridge
 
@@ -371,7 +371,7 @@ theorem modularConjugation_transport_readback
 theorem modularFlow_transport_readback
     (B : SpatialAlgebraicRealificationBridge (HC := HC) (HR := HR)) :
     B.modularFlow_transport_identity :=
-  B.modularFlow_transport_certificate
+  B.modularFlow_transport_sorryProof
 
 @[rep_depth transport]
 theorem tomita_transport_iterate
@@ -433,12 +433,12 @@ pseudoscalar and Tomita conjugation is recorded as a reversion law.
 @[rep_depth krein]
 structure HestenesGeometricComplexData where
   pseudoscalar : EndR
-  pseudoscalar_sq_neg_one_law : pseudoscalar * pseudoscalar = -(1 : EndR)
+  pseudoscalar_sq_neg_one_True : pseudoscalar * pseudoscalar = -(1 : EndR)
   reversionOp : EndR → EndR
-  reversion_involutive_law : ∀ A : EndR, reversionOp (reversionOp A) = A
-  reversion_mul_law : ∀ A B : EndR, reversionOp (A * B) = reversionOp B * reversionOp A
+  reversion_involutive_True : ∀ A : EndR, reversionOp (reversionOp A) = A
+  reversion_mul_True : ∀ A B : EndR, reversionOp (A * B) = reversionOp B * reversionOp A
   tomita_reversion_identity : Prop
-  tomita_reversion_certificate : tomita_reversion_identity
+  tomita_reversion_sorryProof : tomita_reversion_identity
 
 namespace HestenesGeometricComplexData
 
@@ -450,20 +450,20 @@ def iMulGA (G : HestenesGeometricComplexData (HR := HR)) (A : EndR) : EndR :=
 theorem pseudoscalar_sq_neg_one
     (G : HestenesGeometricComplexData (HR := HR)) :
     G.pseudoscalar * G.pseudoscalar = -(1 : EndR) :=
-  G.pseudoscalar_sq_neg_one_law
+  G.pseudoscalar_sq_neg_one_True
 
 @[rep_depth krein]
 theorem reversion_involutive
     (G : HestenesGeometricComplexData (HR := HR))
     (A : EndR) :
     G.reversionOp (G.reversionOp A) = A :=
-  G.reversion_involutive_law A
+  G.reversion_involutive_True A
 
 @[rep_depth krein]
 theorem tomita_reversion_readback
     (G : HestenesGeometricComplexData (HR := HR)) :
     G.tomita_reversion_identity :=
-  G.tomita_reversion_certificate
+  G.tomita_reversion_sorryProof
 
 end HestenesGeometricComplexData
 
@@ -477,9 +477,9 @@ Krein-adjoint socket in the Hestenes language.
 structure KreinAdjointSocket where
   geometric : HestenesGeometricComplexData (HR := HR)
   eta : EndR
-  eta_sq_law : eta * eta = (1 : EndR)
-  eta_reversion_fixed_law : geometric.reversionOp eta = eta
-  kreinAdjoint_involutive_law :
+  eta_sq_True : eta * eta = (1 : EndR)
+  eta_reversion_fixed_True : geometric.reversionOp eta = eta
+  kreinAdjoint_involutive_True :
     ∀ A : EndR,
       eta * geometric.reversionOp (eta * geometric.reversionOp A * eta) * eta = A
 
@@ -495,11 +495,11 @@ structure GASymplecticDualitySocket where
   K : Set HR
   Kdual : Set HR
   J : EndR
-  J_maps_K_to_dual_law : ∀ x : HR, x ∈ K → J x ∈ Kdual
+  J_maps_K_to_dual_True : ∀ x : HR, x ∈ K → J x ∈ Kdual
   imag_part_as_pseudoscalar_component_identity : Prop
-  imag_part_as_pseudoscalar_component_certificate : imag_part_as_pseudoscalar_component_identity
+  imag_part_as_pseudoscalar_component_sorryProof : imag_part_as_pseudoscalar_component_identity
   duality_readback_identity : Prop
-  duality_readback_certificate : duality_readback_identity
+  duality_readback_sorryProof : duality_readback_identity
 
 
 /--
@@ -516,15 +516,15 @@ structure CausalConeProjectorRegularization where
   nullCone : Set HR
   drazinProjector : EndR
   moorePenroseProjector : EndR
-  drazin_idempotent_law : drazinProjector * drazinProjector = drazinProjector
-  moorePenrose_idempotent_law :
+  drazin_idempotent_True : drazinProjector * drazinProjector = drazinProjector
+  moorePenrose_idempotent_True :
     moorePenroseProjector * moorePenroseProjector = moorePenroseProjector
   grading_split_identity : Prop
-  grading_split_certificate : grading_split_identity
+  grading_split_sorryProof : grading_split_identity
   closure_repaired_identity : Prop
-  closure_repaired_certificate : closure_repaired_identity
+  closure_repaired_sorryProof : closure_repaired_identity
   modular_stability_on_bulk_identity : Prop
-  modular_stability_on_bulk_certificate : modular_stability_on_bulk_identity
+  modular_stability_on_bulk_sorryProof : modular_stability_on_bulk_identity
 
 /--
 Parabolic five-grading socket for conformal closure.
@@ -537,15 +537,15 @@ structure FiveGradedConformalClosureSocket where
   grade : Int → Set EndR
   bracket : EndR → EndR → EndR
   support_identity : Prop
-  support_certificate : support_identity
+  support_sorryProof : support_identity
   bracket_respects_grading_identity : Prop
-  bracket_respects_grading_certificate : bracket_respects_grading_identity
+  bracket_respects_grading_sorryProof : bracket_respects_grading_identity
   conformal_so66_identity : Prop
-  conformal_so66_certificate : conformal_so66_identity
+  conformal_so66_sorryProof : conformal_so66_identity
   parabolic_null2plane_identity : Prop
-  parabolic_null2plane_certificate : parabolic_null2plane_identity
+  parabolic_null2plane_sorryProof : parabolic_null2plane_identity
   levi_component_identity : Prop
-  levi_component_certificate : levi_component_identity
+  levi_component_sorryProof : levi_component_identity
 
 namespace FiveGradedConformalClosureSocket
 
@@ -573,31 +573,31 @@ def gPos2 (G : FiveGradedConformalClosureSocket (HR := HR)) : Set EndR :=
 theorem support_readback
     (G : FiveGradedConformalClosureSocket (HR := HR)) :
     G.support_identity :=
-  G.support_certificate
+  G.support_sorryProof
 
 @[rep_depth transport]
 theorem bracket_respects_grading_readback
     (G : FiveGradedConformalClosureSocket (HR := HR)) :
     G.bracket_respects_grading_identity :=
-  G.bracket_respects_grading_certificate
+  G.bracket_respects_grading_sorryProof
 
 @[rep_depth transport]
 theorem conformal_so66_readback
     (G : FiveGradedConformalClosureSocket (HR := HR)) :
     G.conformal_so66_identity :=
-  G.conformal_so66_certificate
+  G.conformal_so66_sorryProof
 
 @[rep_depth transport]
 theorem parabolic_null2plane_readback
     (G : FiveGradedConformalClosureSocket (HR := HR)) :
     G.parabolic_null2plane_identity :=
-  G.parabolic_null2plane_certificate
+  G.parabolic_null2plane_sorryProof
 
 @[rep_depth transport]
 theorem levi_component_readback
     (G : FiveGradedConformalClosureSocket (HR := HR)) :
     G.levi_component_identity :=
-  G.levi_component_certificate
+  G.levi_component_sorryProof
 
 end FiveGradedConformalClosureSocket
 
@@ -611,17 +611,17 @@ structure MobiusLogScaleReflectionSocket where
   radial : HR → ℝ
   logScale : HR → ℝ
   inversion : HR → HR
-  inversion_formula_law :
+  inversion_formula_True :
     ∀ x : HR, x ∈ carrier → quadForm x ≠ 0 →
       inversion x = (quadForm x)⁻¹ • x
-  radial_inversion_law :
+  radial_inversion_True :
     ∀ x : HR, x ∈ carrier → radial (inversion x) = (radial x)⁻¹
-  logScale_reflection_law :
+  logScale_reflection_True :
     ∀ x : HR, x ∈ carrier → logScale (inversion x) = - logScale x
   unitBoundary : Set HR
-  unitBoundary_fixed_law :
+  unitBoundary_fixed_True :
     ∀ x : HR, x ∈ unitBoundary → inversion x ∈ unitBoundary
-  unitBoundary_log_zero_law :
+  unitBoundary_log_zero_True :
     ∀ x : HR, x ∈ unitBoundary → logScale x = 0
 
 namespace MobiusLogScaleReflectionSocket
@@ -631,35 +631,35 @@ theorem inversion_formula_readback
     (M : MobiusLogScaleReflectionSocket (HR := HR))
     (x : HR) (hx : x ∈ M.carrier) (hq : M.quadForm x ≠ 0) :
     M.inversion x = (M.quadForm x)⁻¹ • x :=
-  M.inversion_formula_law x hx hq
+  M.inversion_formula_True x hx hq
 
 @[rep_depth transport]
 theorem radial_inversion_readback
     (M : MobiusLogScaleReflectionSocket (HR := HR))
     (x : HR) (hx : x ∈ M.carrier) :
     M.radial (M.inversion x) = (M.radial x)⁻¹ :=
-  M.radial_inversion_law x hx
+  M.radial_inversion_True x hx
 
 @[rep_depth transport]
 theorem logScale_reflection_readback
     (M : MobiusLogScaleReflectionSocket (HR := HR))
     (x : HR) (hx : x ∈ M.carrier) :
     M.logScale (M.inversion x) = - M.logScale x :=
-  M.logScale_reflection_law x hx
+  M.logScale_reflection_True x hx
 
 @[rep_depth transport]
 theorem unitBoundary_fixed_readback
     (M : MobiusLogScaleReflectionSocket (HR := HR))
     (x : HR) (hx : x ∈ M.unitBoundary) :
     M.inversion x ∈ M.unitBoundary :=
-  M.unitBoundary_fixed_law x hx
+  M.unitBoundary_fixed_True x hx
 
 @[rep_depth transport]
 theorem unitBoundary_log_zero_readback
     (M : MobiusLogScaleReflectionSocket (HR := HR))
     (x : HR) (hx : x ∈ M.unitBoundary) :
     M.logScale x = 0 :=
-  M.unitBoundary_log_zero_law x hx
+  M.unitBoundary_log_zero_True x hx
 
 end MobiusLogScaleReflectionSocket
 
@@ -673,13 +673,13 @@ structure CompactifiedNullConeSocket where
   embed : HR → HR
   inversionConjugation : EndR
   null_pairing_identity : Prop
-  null_pairing_certificate : null_pairing_identity
+  null_pairing_sorryProof : null_pairing_identity
   embedding_formula_identity : Prop
-  embedding_formula_certificate : embedding_formula_identity
+  embedding_formula_sorryProof : embedding_formula_identity
   inversion_swaps_origin_infinity :
     inversionConjugation n0 = nInf ∧ inversionConjugation nInf = n0
   infinity_to_origin_identity : Prop
-  infinity_to_origin_certificate : infinity_to_origin_identity
+  infinity_to_origin_sorryProof : infinity_to_origin_identity
 
 namespace CompactifiedNullConeSocket
 
@@ -687,13 +687,13 @@ namespace CompactifiedNullConeSocket
 theorem null_pairing_readback
     (C : CompactifiedNullConeSocket (HR := HR)) :
     C.null_pairing_identity :=
-  C.null_pairing_certificate
+  C.null_pairing_sorryProof
 
 @[rep_depth transport]
 theorem embedding_formula_readback
     (C : CompactifiedNullConeSocket (HR := HR)) :
     C.embedding_formula_identity :=
-  C.embedding_formula_certificate
+  C.embedding_formula_sorryProof
 
 @[rep_depth transport]
 theorem inversion_swaps_origin_infinity_readback
@@ -705,7 +705,7 @@ theorem inversion_swaps_origin_infinity_readback
 theorem infinity_to_origin_readback
     (C : CompactifiedNullConeSocket (HR := HR)) :
     C.infinity_to_origin_identity :=
-  C.infinity_to_origin_certificate
+  C.infinity_to_origin_sorryProof
 
 end CompactifiedNullConeSocket
 
@@ -719,10 +719,10 @@ structure ConformalCGAParabolicCompactificationBridge where
   mobius : MobiusLogScaleReflectionSocket (HR := HR)
   compactification : CompactifiedNullConeSocket (HR := HR)
   scale_reflection_matches_grade0_involution_identity : Prop
-  scale_reflection_matches_grade0_involution_certificate :
+  scale_reflection_matches_grade0_involution_sorryProof :
     scale_reflection_matches_grade0_involution_identity
   infinity_origin_compactification_identity : Prop
-  infinity_origin_compactification_certificate :
+  infinity_origin_compactification_sorryProof :
     infinity_origin_compactification_identity
 
 namespace ConformalCGAParabolicCompactificationBridge
@@ -731,13 +731,13 @@ namespace ConformalCGAParabolicCompactificationBridge
 theorem scale_reflection_matches_grade0_involution_readback
     (B : ConformalCGAParabolicCompactificationBridge (HR := HR)) :
     B.scale_reflection_matches_grade0_involution_identity :=
-  B.scale_reflection_matches_grade0_involution_certificate
+  B.scale_reflection_matches_grade0_involution_sorryProof
 
 @[rep_depth transport]
 theorem infinity_origin_compactification_readback
     (B : ConformalCGAParabolicCompactificationBridge (HR := HR)) :
     B.infinity_origin_compactification_identity :=
-  B.infinity_origin_compactification_certificate
+  B.infinity_origin_compactification_sorryProof
 
 @[rep_depth transport]
 theorem logScale_reflection_transport
@@ -877,7 +877,7 @@ def toyRealVonNeumann : RealVonNeumannAlgebraData (HR := ℝ) where
     rcases hA with ⟨a, rfl⟩
     exact ⟨a, by simp⟩
   weakly_closed_identity := True
-  weakly_closed_certificate := trivial
+  weakly_closed_sorryProof := trivial
 
 /-- Toy algebraic Tomita packet on `ℝ`. -/
 @[rep_depth transport]
@@ -885,16 +885,16 @@ def toyAlgebraic : RealTomitaAlgebraicData (HR := ℝ) where
   algebra := toyRealVonNeumann
   omega := 0
   cyclic_identity := True
-  cyclic_certificate := trivial
+  cyclic_sorryProof := trivial
   separating_identity := True
-  separating_certificate := trivial
+  separating_sorryProof := trivial
   S0 := 1
   S0_on_orbit := by
     intro A hA
     simp
   sigma := fun _ A => A
   sigma_real_star_automorphism_identity := True
-  sigma_real_star_automorphism_certificate := trivial
+  sigma_real_star_automorphism_sorryProof := trivial
   J0 := 1
   J0_sq := by simp
   J0_maps_algebra_to_commutant := by
@@ -916,7 +916,7 @@ def toyBridge : SpatialAlgebraicRealificationBridge (HC := ℂ) (HR := ℝ) wher
     intro x
     simp [toySpatial, toyAlgebraic]
   modularFlow_transport_identity := True
-  modularFlow_transport_certificate := trivial
+  modularFlow_transport_sorryProof := trivial
 
 @[rep_depth transport]
 theorem toyBridge_tomita_iterate
@@ -937,15 +937,15 @@ def toyFiveGradedConformal : FiveGradedConformalClosureSocket (HR := ℝ) where
   grade := fun _ => Set.univ
   bracket := fun A B => A * B - B * A
   support_identity := True
-  support_certificate := trivial
+  support_sorryProof := trivial
   bracket_respects_grading_identity := True
-  bracket_respects_grading_certificate := trivial
+  bracket_respects_grading_sorryProof := trivial
   conformal_so66_identity := True
-  conformal_so66_certificate := trivial
+  conformal_so66_sorryProof := trivial
   parabolic_null2plane_identity := True
-  parabolic_null2plane_certificate := trivial
+  parabolic_null2plane_sorryProof := trivial
   levi_component_identity := True
-  levi_component_certificate := trivial
+  levi_component_sorryProof := trivial
 
 /-- Toy Möbius/log-scale socket on `ℝ`. -/
 @[rep_depth transport]
@@ -955,20 +955,20 @@ def toyMobiusLogScale : MobiusLogScaleReflectionSocket (HR := ℝ) where
   radial := fun _ => 1
   logScale := fun x => x
   inversion := fun x => -x
-  inversion_formula_law := by
+  inversion_formula_True := by
     intro x hx hq
     simp
-  radial_inversion_law := by
+  radial_inversion_True := by
     intro x hx
     simp
-  logScale_reflection_law := by
+  logScale_reflection_True := by
     intro x hx
     simp
   unitBoundary := {x | x = 0}
-  unitBoundary_fixed_law := by
+  unitBoundary_fixed_True := by
     intro x hx
     simpa [Set.mem_setOf_eq, hx]
-  unitBoundary_log_zero_law := by
+  unitBoundary_log_zero_True := by
     intro x hx
     simpa [Set.mem_setOf_eq] using hx
 
@@ -980,13 +980,13 @@ def toyCompactifiedNullCone : CompactifiedNullConeSocket (HR := ℝ) where
   embed := fun x => x
   inversionConjugation := 1
   null_pairing_identity := True
-  null_pairing_certificate := trivial
+  null_pairing_sorryProof := trivial
   embedding_formula_identity := True
-  embedding_formula_certificate := trivial
+  embedding_formula_sorryProof := trivial
   inversion_swaps_origin_infinity := by
     constructor <;> simp
   infinity_to_origin_identity := True
-  infinity_to_origin_certificate := trivial
+  infinity_to_origin_sorryProof := trivial
 
 /-- Toy bridge combining grading, Möbius reflection, and compactification sockets. -/
 @[rep_depth transport]
@@ -995,9 +995,9 @@ def toyConformalBridge : ConformalCGAParabolicCompactificationBridge (HR := ℝ)
   mobius := toyMobiusLogScale
   compactification := toyCompactifiedNullCone
   scale_reflection_matches_grade0_involution_identity := True
-  scale_reflection_matches_grade0_involution_certificate := trivial
+  scale_reflection_matches_grade0_involution_sorryProof := trivial
   infinity_origin_compactification_identity := True
-  infinity_origin_compactification_certificate := trivial
+  infinity_origin_compactification_sorryProof := trivial
 
 @[rep_depth transport]
 theorem toyConformalBridge_logScale_reflection

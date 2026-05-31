@@ -212,6 +212,70 @@ namespace ConformalInference
 variable (CI : ConformalInference E)
 
 /--
+Proof-carrying witness that thermodynamic readout stationarity forces vanishing
+chiral scale for the current conformal inference packet.
+
+This is the smallest honest constructive replacement for the bare bridge
+hypothesis
+`IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`.
+-/
+@[rep_depth transport]
+structure StationaryScaleZeroWitness
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
+    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) : Prop where
+  use :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A → CI.chiralScale = 0
+
+/--
+Recover the stationarity-to-zero-scale bridge from the proof-carrying witness.
+-/
+@[rep_depth transport]
+theorem stationaryScaleZero_of_witness
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : InfoGeometry.Krein.DoubledSpace E}
+    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (W : StationaryScaleZeroWitness (E := E) CI P ψ A) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A → CI.chiralScale = 0 :=
+  W.use
+
+/--
+Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
+
+This theorem does not assert the false unconditional claim that a
+`GibbsSouriauEquilibriumSeed` alone determines the conformal anomaly scale.
+It removes the low-level `hScaleZero` gate only when the caller supplies the
+missing semantic witness from thermodynamic readout stationarity to
+`CI.chiralScale = 0`.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : InfoGeometry.Krein.DoubledSpace E}
+    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hEq :
+      InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
+        (E := E) P ψ A)
+    (W : StationaryScaleZeroWitness (E := E) CI P ψ A)
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hStationary :
+      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A :=
+    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_equilibriumSeed
+      (E := E) hEq
+  exact
+    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft
+      (stationaryScaleZero_of_witness (E := E) (CI := CI) W hStationary)
+
+/--
 Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
 
 This theorem does not assert the false unconditional claim that a
@@ -237,14 +301,9 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypothes
       ∧ CI.epsilon = 0
       ∧ CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  have hStationary :
-      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-        (E := E) P ψ A :=
-    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_equilibriumSeed
-      (E := E) hEq
   exact
-    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
-      (CI := CI) hProj hLeft (hStationaryToScaleZero hStationary)
+    semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
+      (CI := CI) hEq ⟨hStationaryToScaleZero⟩ hProj hLeft
 
 /--
 Smaller constructive zero-scale packet from the proof-carrying unit-relative-volume
@@ -281,6 +340,38 @@ need to carry `GibbsSouriauEquilibriumSeed` as a bridge hypothesis when the raw
 stationarity witness is already available.
 -/
 @[rep_depth transport]
+theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_stationaryScaleZeroWitness
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : InfoGeometry.Krein.DoubledSpace E}
+    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0)
+    (W : StationaryScaleZeroWitness (E := E) CI P ψ A)
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hStationary :
+      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A :=
+    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) hFaithful hFirst
+  exact
+    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft
+      (stationaryScaleZero_of_witness (E := E) (CI := CI) W hStationary)
+
+/--
+Smaller constructive zero-scale packet from the proof-carrying stationarity to
+scale-zero witness.  This removes the bare bridge hypothesis
+`hStationaryToScaleZero : IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`
+from the new theorem surface while keeping the older compatibility theorem
+available.
+-/
+@[rep_depth transport]
 theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful
     {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
     {ψ : InfoGeometry.Krein.DoubledSpace E}
@@ -297,14 +388,9 @@ theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful
       ∧ CI.epsilon = 0
       ∧ CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
-  have hStationary :
-      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-        (E := E) P ψ A :=
-    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
-      (E := E) hFaithful hFirst
   exact
-    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
-      (CI := CI) hProj hLeft (hStationaryToScaleZero hStationary)
+    semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_stationaryScaleZeroWitness
+      (CI := CI) hFaithful hFirst ⟨hStationaryToScaleZero⟩ hProj hLeft
 
 end ConformalInference
 

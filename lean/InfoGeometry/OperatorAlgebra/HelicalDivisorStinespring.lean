@@ -108,7 +108,7 @@ structure SpectralDivisorCharge where
   A concrete implementation should connect this to a contour integral, winding
   number, spectral flow, or scattering phase.
   -/
-  divisor_law : Prop
+  divisor_True : Prop
 
 namespace SpectralDivisorCharge
 
@@ -149,7 +149,7 @@ structure HelicalPacket
     (State : Type*) where
   component : ℤ → State
   /-- Support/readout law for the packet. -/
-  packet_law : Prop
+  packet_True : Prop
 
 namespace HelicalPacket
 
@@ -245,12 +245,12 @@ structure HelicalStinespringAccounting
   /-- Assign a helical sheet charge to hidden environment components. -/
   hiddenSheetCharge : Env → ℤ
   /-- Hidden component of a state has the declared sheet charge. -/
-  hidden_charge_law : Prop
+  hidden_charge_True : Prop
   /--
   Interpretation law: nonzero hidden sheet charge means hidden/non-flat branch
   information.
   -/
-  nonzero_charge_hidden_law : Prop
+  nonzero_charge_hidden_True : Prop
 
 namespace HelicalStinespringAccounting
 
@@ -304,12 +304,12 @@ structure SpectralFunctionDivisorCalibration
   Calibration law connecting zeroes/poles of `spectralFunction` to the integer
   divisor charge.
   -/
-  spectral_divisor_law : Prop
+  spectral_divisor_True : Prop
   /--
   Optional statement that this function is the intended Riemann/L-function,
   material scattering determinant, or optical transfer determinant.
   -/
-  interpretation_law : Prop
+  interpretation_True : Prop
 
 namespace SpectralFunctionDivisorCalibration
 

@@ -71,7 +71,7 @@ already-defined `LeeYangPolydiscWitness` payload. It does not prove the
 Asano/Ruelle theorem itself.
 -/
 @[bridge_target_tag]
-theorem highTemperatureLeeYangSourceClaim_of_witness
+theorem highTemperatureLeeYangSourceClaim
     {N : ℕ}
     (LY : LeeYangPolydiscWitness) :
     HighTemperatureLeeYangSourceClaim N := by

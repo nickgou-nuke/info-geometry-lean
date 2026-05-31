@@ -58,7 +58,7 @@ structure VerifiedKMSState (K : EndK) where
   ω(A * σ_β(B)) = ω(B * A)
   This realizes imaginary time iβ as a real shift β in the K-axis.
   -/
-  kms_law : satisfies_kms_like K ω β
+  kms_True : satisfies_kms_like K ω β
 
 /-! ## 2. The Casimir-Thermal Anchor -/
 

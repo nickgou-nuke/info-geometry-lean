@@ -16,7 +16,7 @@ def PrequantumData.holonomyScale (P : PrequantumData) : ℝ :=
 theorem PrequantumData.holonomyScale_eq_omega_over_hbar
     (P : PrequantumData) :
     P.holonomyScale = P.omegaScale / P.hbar :=
-  P.curvature_law
+  P.curvature_True
 
 namespace InfoGeometry.Prequantum
 

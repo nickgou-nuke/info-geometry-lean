@@ -1029,7 +1029,7 @@ An idempotent even witness at stage `0` transports to an idempotent even
 witness at every stage.
 -/
 @[rep_depth thermo]
-theorem transported_projector_witness
+theorem transported_projector_sorry
     {P0 : C.Stage 0}
     (hP0_even : (C.Invariant 0).is_even P0)
     (hP0_idem : P0 * P0 = P0) :
@@ -1054,7 +1054,7 @@ theorem projector_exists_along_chain_from_zero :
       ∀ n, (C.Invariant n).is_even (C.iterMap n P0) ∧
         (C.iterMap n P0) * (C.iterMap n P0) = C.iterMap n P0 := by
   rcases (C.Invariant 0).projector_identity with ⟨P0, hEven0, hIdem0⟩
-  exact ⟨P0, hEven0, hIdem0, C.transported_projector_witness hEven0 hIdem0⟩
+  exact ⟨P0, hEven0, hIdem0, C.transported_projector_sorry hEven0 hIdem0⟩
 
 /--
 Two-step functorial law for odd-odd anticommutator transport:

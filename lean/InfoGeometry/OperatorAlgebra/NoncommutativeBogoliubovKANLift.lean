@@ -293,7 +293,7 @@ Diagonal readout is available as a packet field.
 `Cartan`-sector readout can be carried to scalar/character traces, but it is
 not the base modular operator object.
 -/
-theorem diagonal_shadow_witness :
+theorem diagonal_shadow_sorry :
     P.diagonalShadow = P.diagonalShadow := by
   rfl
 

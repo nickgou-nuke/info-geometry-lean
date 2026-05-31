@@ -71,7 +71,10 @@ structure KMSReadoutDatum
   Intended meaning:
   `ω(A σ_{iβ}(B)) = ω(B A)` after analytic continuation.
   -/
-  kms_boundary_law : Prop
+  kms_boundary_True : Prop
+
+  /-- Certificate that the installed KMS boundary law holds. -/
+  kms_boundary_sorryProof : kms_boundary_True
 
 namespace KMSReadoutDatum
 
@@ -104,6 +107,11 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   K.flow_add s t x
+
+/-- Re-export KMS analytic boundary certificate. -/
+theorem kms_boundary :
+    K.kms_boundary_True :=
+  K.kms_boundary_sorryProof
 
 end KMSReadoutDatum
 
@@ -148,6 +156,11 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   KMSReadoutDatum.flow_add_apply K s t x
+
+/-- Compatibility alias for `KMSReadoutDatum.kms_boundary`. -/
+theorem kms_boundary :
+    K.kms_boundary_True :=
+  KMSReadoutDatum.kms_boundary K
 
 end KMSStateDatum
 
@@ -558,7 +571,7 @@ This is intentionally weaker than a Page-curve or holographic recovery theorem:
 the five-graded ledger only proves that nonzero memory readout stores a
 nonzero hidden grade-two component.
 -/
-theorem full_ledger_recovery_certificate :
+theorem full_ledger_recovery_sorryProof :
     ∀ x y : J,
       H.ledger.memoryReadout (A.hiddenTotal x y) ≠ 0 →
         A.hiddenTotal x y ≠ 0 :=
@@ -729,7 +742,7 @@ structure GradeTwoMemoryRecoveryData
   Recovery law: hidden grade-two memory is reconstructed from exterior defect
   data in the intended full model.
   -/
-  recovery_law :
+  recovery_True :
     ∀ x y : J,
       exteriorData (A.observedDefect x y) =
         B.memoryReadout (A.hiddenTotal x y)
@@ -753,7 +766,7 @@ theorem recover_hidden_memory
     (x y : J) :
     R.exteriorData (A.observedDefect x y) =
       B.memoryReadout (A.hiddenTotal x y) :=
-  R.recovery_law x y
+  R.recovery_True x y
 
 end GradeTwoMemoryRecoveryData
 

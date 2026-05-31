@@ -70,8 +70,8 @@ theorem pathDependence_of_twistedInference
     UpdateOrderPathDependent T.dual.nabla :=
   twistedInference_updateOrderPathDependent (T := T)
 
-/-- Theorem `exists_gaugeOrderHysteresis_witness`. -/
-theorem exists_gaugeOrderHysteresis_witness :
+/-- Theorem `exists_gaugeOrderHysteresis_sorry`. -/
+theorem exists_gaugeOrderHysteresis_sorry :
     ∃ (M : Coupling 2)
       (hrow : HasPositiveRowSums 2 M)
       (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))

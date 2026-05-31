@@ -114,7 +114,7 @@ This is the thermodynamic dual of the Majorana-cancellation in the operator
 algebra.
 -/
 @[rep_depth transport]
-theorem weyl_cancellation_valid
+theorem weyl_cancellation_holds
     (h : ∀ p ∈ B.positiveRoots, 1 - souriauEvaluation p B.temperature.s ≠ 0) :
     finitePrimeBosonicInverseDenominator B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) *
       finitePrimeWeylDenominator B.positiveRoots (fun p => souriauEvaluation p B.temperature.s) = 1 :=

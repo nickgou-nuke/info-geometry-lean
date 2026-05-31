@@ -230,7 +230,7 @@ structure CliffordFractalWaveletFierzKleinLaw
     ∀ ch : FierzChannel,
       coords ch = readout.channel ch stabilized.physicalEnvelope
 
-  quadric_law :
+  quadric_True :
     residual coords = 0
 
 namespace CliffordFractalWaveletFierzKleinLaw
@@ -248,7 +248,7 @@ theorem coords_from_physicalEnvelope (ch : FierzChannel) :
 @[rep_depth operator]
 theorem quadric_zero :
     L.residual L.coords = 0 :=
-  L.quadric_law
+  L.quadric_True
 
 end CliffordFractalWaveletFierzKleinLaw
 

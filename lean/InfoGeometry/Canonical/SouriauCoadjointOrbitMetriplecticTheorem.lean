@@ -374,7 +374,7 @@ the orbit closure, Casimir, and operatorial Onsager positivity hypotheses must
 be supplied explicitly.
 -/
 @[rep_depth transport]
-theorem coadjoint_orbit_metriplectic_second_law (x : Orbit) :
+theorem coadjoint_orbit_metriplectic_second_True (x : Orbit) :
     0 ≤ C.totalEntropyRate x := by
   rw [C.totalEntropyRate_eq_metricEntropyRate x]
   exact C.metricEntropyRate_nonnegative x
@@ -400,7 +400,7 @@ theorem full_coadjoint_orbit_metriplectic_theorem (x : Orbit) :
       C.reversibleEntropyRate_eq_zero x,
       C.metricEntropyRate_nonnegative x,
       C.totalEntropyRate_eq_metricEntropyRate x,
-      C.coadjoint_orbit_metriplectic_second_law x⟩
+      C.coadjoint_orbit_metriplectic_second_True x⟩
 
 attribute [terminal] full_coadjoint_orbit_metriplectic_theorem
 
@@ -1555,7 +1555,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
       hH.2.2.2.2.2.2.1,
       hH.2.2.2.2.2.2.2.1,
       hH.2.2.2.2.2.2.2.2,
-      C.metriplectic.coadjoint_orbit_metriplectic_second_law x⟩
+      C.metriplectic.coadjoint_orbit_metriplectic_second_True x⟩
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_hessian_metriplectic_theorem
 
@@ -1601,7 +1601,7 @@ theorem full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_th
       hH.2.2.2.2.2.2.2.1,
       hH.2.2.2.2.2.2.2.2.1,
       hH.2.2.2.2.2.2.2.2.2,
-      C.metriplectic.coadjoint_orbit_metriplectic_second_law x⟩
+      C.metriplectic.coadjoint_orbit_metriplectic_second_True x⟩
 
 attribute [terminal] full_infinite_dimensional_coadjoint_orbit_strict_hessian_metriplectic_theorem
 

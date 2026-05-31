@@ -88,7 +88,7 @@ theorem UsesLightConeAffineBridgeWitness.use
 
 /-- Recover the compatibility proposition from its witness packet. -/
 @[rep_depth operator]
-theorem usesLightConeAffineBridge_of_witness
+theorem usesLightConeAffineBridge_of_sorry
     (W : UsesLightConeAffineBridgeWitness) :
     S.UsesLightConeAffineBridge :=
   W.use S
@@ -240,7 +240,7 @@ This removes the bare compatibility proposition argument from this route by
 consuming a proof-carrying witness packet.
 -/
 @[rep_depth operator]
-theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
+theorem sugawara_virasoro_acts_on_uPlusCurrent_of_sorry
     (W : UsesLightConeAffineBridgeWitness)
     (m n : ℤ) :
     (hact :

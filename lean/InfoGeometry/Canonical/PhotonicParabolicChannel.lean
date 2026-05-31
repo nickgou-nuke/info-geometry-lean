@@ -55,11 +55,18 @@ theorem chiral_collapse_iff_nilpotent (Ω : ParOp) :
   · exact nilpotent_of_chiral_collapse Ω
   · exact chiral_collapse_to_parabolic Ω
 
-/-- Concrete pure-directional witness from the parabolic contraction bridge. -/
+/-- Concrete pure-directional nilpotence theorem from the parabolic contraction bridge. -/
+theorem pure_directional_nilpotent (χ : ℝ) :
+  mul ({ scalar := (0 : ℝ), directional := χ } : ParOp)
+      ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero := by
+  simpa using (
+    InfoGeometry.Canonical.ParabolicContractionBridge.metricParabolic_kernel_sorry χ)
+
+/-- Concrete pure-directional channel collapse. -/
 theorem pure_directional_collapse (χ : ℝ) :
-    channelOfOmega ({ scalar := (0 : ℝ), directional := χ } : ParOp) = ChiralChannel.Parabolic := by
+  channelOfOmega ({ scalar := (0 : ℝ), directional := χ } : ParOp) =
+    ChiralChannel.Parabolic := by
   apply chiral_collapse_to_parabolic
-  simpa using
-    (InfoGeometry.Canonical.ParabolicContractionBridge.metricParabolic_kernel_witness χ)
+  exact pure_directional_nilpotent χ
 
 end InfoGeometry.Canonical.PhotonicParabolicChannel

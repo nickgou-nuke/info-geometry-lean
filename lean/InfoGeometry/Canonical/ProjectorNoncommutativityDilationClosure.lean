@@ -154,7 +154,7 @@ def dilation_witness_of_source
     DilationFromProjectorNoncommutativity CI :=
   ⟨hSource, hSourceCertified, CI.obstructionScale_eq_projectorObstruction_nnnorm⟩
 
-theorem noncommutativity_requires_dilation_witness
+theorem noncommutativity_requires_dilation_sorry
     (CI : ConformalInference H)
     (hSource : Prop)
     (hSourceCertified : hSource) :

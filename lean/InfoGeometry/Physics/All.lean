@@ -1,5 +1,6 @@
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.FisherKreinLorentz
+import InfoGeometry.Physics.FermionicAndreevReflection
 import InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.FreeEntropySouriauBridge

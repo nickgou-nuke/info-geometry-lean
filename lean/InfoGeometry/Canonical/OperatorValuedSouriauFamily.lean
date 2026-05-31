@@ -87,10 +87,10 @@ structure OperatorValuedSouriauFamily
   Supplied law: the Souriau generator is the operator contraction/order-sensitive
   product of beta data with quantum moment-map data.
   -/
-  souriauGenerator_law : Prop
+  souriauGenerator_True : Prop
 
   /-- Supplied law: the untraced exponential family evaluates to `expWeight`. -/
-  expWeight_law : Prop
+  expWeight_True : Prop
 
   /-- Guard: beta is an operatorial thermal/modular direction, not a scalar owner. -/
   beta_is_operatorial_thermal_direction : Prop
@@ -147,15 +147,15 @@ def scalar_beta_chart_shadow_only : Prop :=
   P.scalar_beta_is_chart_shadow_only
 
 /-- The operator Souriau generator obeys the supplied contraction/order law. -/
-def souriauGenerator_law_valid : Prop :=
-  P.souriauGenerator_law
+def souriauGenerator_law_holds : Prop :=
+  P.souriauGenerator_True
 
 /-- The untraced exponential weight obeys the supplied operator exponential law. -/
-def expWeight_law_valid : Prop :=
-  P.expWeight_law
+def expWeight_law_holds : Prop :=
+  P.expWeight_True
 
 /-- Noncommutative differentiation is represented by the supplied Duhamel law. -/
-def duhamel_derivative_law : Prop :=
+def duhamel_derivative_True : Prop :=
   P.duhamelDerivativeLaw
 
 /-- Scalar thermodynamic data are downstream readouts, not owner-layer data. -/
@@ -163,12 +163,12 @@ def scalar_readout_downstream_only : Prop :=
   P.scalarReadoutDownstreamOnly
 
 /-- The existing operatorial exponential family has generator `K_B` at operator beta. -/
-theorem exponentialFamily_K_beta_eq_souriauGenerator_valid :
+theorem exponentialFamily_K_beta_eq_souriauGenerator_holds :
     P.exponentialFamily.K P.betaOperator = P.souriauGenerator :=
   P.exponentialFamily_K_beta_eq_souriauGenerator
 
 /-- The existing operatorial exponential family has untraced weight `exp(-K_B)`. -/
-theorem exponentialFamily_untraced_beta_eq_expWeight_valid :
+theorem exponentialFamily_untraced_beta_eq_expWeight_holds :
     P.exponentialFamily.untracedExponential P.betaOperator = P.expWeight :=
   P.exponentialFamily_untraced_beta_eq_expWeight
 

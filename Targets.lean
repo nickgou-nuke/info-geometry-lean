@@ -15,7 +15,7 @@ structure KMSEquation (A : Type*) where
       ω (mul (τ t a) b) =
         ω (mul b (τ (t + β) a))
 
-theorem KMSEquation.kms_law {A : Type*} (K : KMSEquation A) :
+theorem KMSEquation.kms_True {A : Type*} (K : KMSEquation A) :
   ∀ t a b, K.ω (K.mul (K.τ t a) b) =
            K.ω (K.mul b (K.τ (t + K.β) a)) :=
   K.kms_eq
@@ -28,7 +28,7 @@ structure TomitaCartanData (H : Type*) where
   split_eq :
     ∀ x : H, S x = J (Δ x)
 
-theorem TomitaCartanData.split_law {H : Type*} (T : TomitaCartanData H) :
+theorem TomitaCartanData.split_True {H : Type*} (T : TomitaCartanData H) :
   ∀ x, T.S x = T.J (T.Δ x) :=
   T.split_eq
 
@@ -39,7 +39,7 @@ structure SusceptibilityHessianData where
   hessian_eq :
     χ = (deriv (deriv F)) 0
 
-theorem SusceptibilityHessianData.hessian_law (S : SusceptibilityHessianData) :
+theorem SusceptibilityHessianData.hessian_True (S : SusceptibilityHessianData) :
   S.χ = (deriv (deriv S.F)) 0 :=
   S.hessian_eq
 
@@ -52,7 +52,7 @@ structure KuboData where
     ∀ ω : ℂ, ω ≠ 0 →
       σ ω = (G_R ω - G_R 0 + χdia) / (Complex.I * ω)
 
-theorem KuboData.kubo_law (K : KuboData) :
+theorem KuboData.kubo_True (K : KuboData) :
   ∀ ω ≠ 0, K.σ ω =
     (K.G_R ω - K.G_R 0 + K.χdia) / (Complex.I * ω) :=
   K.kubo_eq
@@ -65,7 +65,7 @@ structure ChiralGraphData where
   contract_eq :
     ∀ i j, contract i j = weight i * weight j
 
-theorem ChiralGraphData.contract_law (G : ChiralGraphData) :
+theorem ChiralGraphData.contract_True (G : ChiralGraphData) :
   ∀ i j, G.contract i j = G.weight i * G.weight j :=
   G.contract_eq
 
@@ -76,7 +76,7 @@ structure SinkhornDefectFlowData where
   flow_eq :
     ∀ t, deriv D t = - flow t
 
-theorem SinkhornDefectFlowData.flow_law (S : SinkhornDefectFlowData) :
+theorem SinkhornDefectFlowData.flow_True (S : SinkhornDefectFlowData) :
   ∀ t, deriv S.D t = - S.flow t :=
   S.flow_eq
 
@@ -86,7 +86,7 @@ structure DoubledExtData (E : Type*) where
   ext_eq :
     ∀ x y : E, toPair x y = toPair y x → x = y
 
-theorem DoubledExtData.ext_law {E : Type*} (D : DoubledExtData E) :
+theorem DoubledExtData.ext_True {E : Type*} (D : DoubledExtData E) :
   ∀ x y, D.toPair x y = D.toPair y x → x = y :=
   D.ext_eq
 
@@ -97,7 +97,7 @@ structure L2CompleteData (E : Type*) [TopologicalSpace E] where
   lim_spec :
     ∀ u, Tendsto u atTop (𝓝 (lim u))
 
-theorem L2CompleteData.complete_law {E : Type*} [TopologicalSpace E] (L : L2CompleteData E) :
+theorem L2CompleteData.complete_True {E : Type*} [TopologicalSpace E] (L : L2CompleteData E) :
   ∀ u, Tendsto u atTop (𝓝 (L.lim u)) :=
   L.lim_spec
 

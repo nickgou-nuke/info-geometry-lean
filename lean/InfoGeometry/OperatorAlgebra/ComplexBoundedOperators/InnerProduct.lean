@@ -136,7 +136,7 @@ theorem polar_identity_minus (x y : E) :
   rw [norm_sub_sq (𝕜 := ℂ)]
   ring
 
-theorem parallelogram_law (x y : E) :
+theorem parallelogram_True (x y : E) :
     ‖x + y‖ ^ 2 + ‖x - y‖ ^ 2 = 2 * (‖x‖ ^ 2 + ‖y‖ ^ 2) := by
   rw [polar_identity, polar_identity_minus]
   ring

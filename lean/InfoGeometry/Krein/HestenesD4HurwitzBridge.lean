@@ -113,7 +113,7 @@ structure D4LatticeKacMoodyBridge
   modular_discriminant_readout : ℝ
 
   /-- Central-charge calibration by the modular-discriminant readout. -/
-  affine_central_charge_law :
+  affine_central_charge_True :
     affine_central_charge = modular_discriminant_readout
 
 namespace D4LatticeKacMoodyBridge
@@ -156,7 +156,7 @@ theorem affine_kac_moody_closure_readback :
 @[rep_depth projective]
 theorem affine_central_charge_calibrated :
     B.affine_central_charge = B.modular_discriminant_readout :=
-  B.affine_central_charge_law
+  B.affine_central_charge_True
 
 end D4LatticeKacMoodyBridge
 
@@ -212,7 +212,7 @@ structure D4HurwitzArithmeticBridge where
   expectedAffineCentralCharge : ℝ
 
   /-- Central-charge calibration law. -/
-  affineCentralCharge_law : affineCentralCharge = expectedAffineCentralCharge
+  affineCentralCharge_True : affineCentralCharge = expectedAffineCentralCharge
 
 namespace D4HurwitzArithmeticBridge
 
@@ -228,7 +228,7 @@ theorem triality_readback :
 @[rep_depth projective]
 theorem affineCentralCharge_calibrated :
     B.affineCentralCharge = B.expectedAffineCentralCharge :=
-  B.affineCentralCharge_law
+  B.affineCentralCharge_True
 
 /-- The Hurwitz root expectation is the existing atom expectation. -/
 @[rep_depth projective]

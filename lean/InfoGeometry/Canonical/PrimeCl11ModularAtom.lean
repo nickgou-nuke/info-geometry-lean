@@ -116,15 +116,15 @@ structure LaplaceMellinWaveletTransform
 
   /-- Paraunitary boundedness / energy preservation witness. -/
   paraunitary_boundedness : Prop
-  paraunitary_boundedness_certificate : paraunitary_boundedness
+  paraunitary_boundedness_sorryProof : paraunitary_boundedness
 
 /-- Re-export of the paraunitary boundedness witness. -/
 @[rep_depth operator]
-theorem paraunitary_boundedness_law
+theorem paraunitary_boundedness_True
     {Ξ : CompletedXiZeroPredicate}
     (WT : LaplaceMellinWaveletTransform Ξ) :
     WT.paraunitary_boundedness :=
-  WT.paraunitary_boundedness_certificate
+  WT.paraunitary_boundedness_sorryProof
 
 /--
 CPT invariance transfers a finite zero to the reciprocal point.

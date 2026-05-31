@@ -309,7 +309,7 @@ theorem fisher_positive_definite_of_nonconstant_linearStats
         0 ≤ density F θ x * (centeredLinearStat F θ v x) ^ (2 : ℕ) := by
     intro x hx
     exact mul_nonneg (density_nonneg F θ x) (pow_two_nonneg _)
-  have h_pos_witness :
+  have h_pos_sorry :
       ∃ x ∈ (Finset.univ : Finset α),
         0 < density F θ x * (centeredLinearStat F θ v x) ^ (2 : ℕ) := by
     refine ⟨x0, Finset.mem_univ x0, ?_⟩
@@ -319,7 +319,7 @@ theorem fisher_positive_definite_of_nonconstant_linearStats
       apply hx0
       exact sub_eq_zero.mp (by simpa [centeredLinearStat] using hzero)
     exact mul_pos (density_pos F θ x0) (pow_two_pos_of_ne_zero h_centered_ne)
-  exact Finset.sum_pos' h_nonneg h_pos_witness
+  exact Finset.sum_pos' h_nonneg h_pos_sorry
 
 theorem fisher_positive_definite
     {d : ℕ}

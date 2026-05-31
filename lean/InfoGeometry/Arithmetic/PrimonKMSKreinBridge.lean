@@ -254,7 +254,7 @@ theorem liouvillean_plus_minus_sign_laws
   constructor <;> simp [doubledLiouvilleEnergy, ThermalCopy.sign]
 
 /-- The positive KMS condition is formally satisfied. -/
-theorem positiveKMS_valid :
+theorem positiveKMS_holds :
     ∀ A B : State → ℝ, P.positiveKMS.state (A * B) = P.positiveKMS.state (B * A) :=
   P.positiveKMS.satisfies_kms
 

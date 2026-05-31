@@ -131,11 +131,11 @@ structure BoundedTransformFunctionalCalculusBridge
   A concrete model must prove that `F` is the functional calculus image of
   `scalarBoundedTransform`.
   -/
-  F_is_functional_calculus_law : Prop
+  F_is_functional_calculus_True : Prop
 
   /-- Proof of the functional-calculus construction law. -/
-  F_is_functional_calculus_certificate :
-    F_is_functional_calculus_law
+  F_is_functional_calculus_proof :
+    F_is_functional_calculus_True
 
   /--
   Spectral/order lift:

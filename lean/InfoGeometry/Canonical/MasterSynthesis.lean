@@ -101,7 +101,7 @@ omit [FiniteDimensional ℝ E] in
 /--
 Constructive anomaly-exclusion witness from the canonical lightlike split-`Cl(1,1)` mode.
 -/
-private theorem anomalyExclusion_witness :
+private theorem anomalyExclusion_exists :
     ∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q := by
   let Q : AlgebraEnd E := InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ))
   refine ⟨Q, ?_⟩
@@ -122,7 +122,7 @@ private theorem anomalyExclusion_package_of_chiralAnomaly_eq_zero
       = CI.metricChiralProjector * CI.spectralChiralProjector
       ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q) := by
   refine ⟨CI.projectors_commute_of_chiralAnomaly_eq_zero hAnom, ?_⟩
-  exact anomalyExclusion_witness (E := E)
+  exact anomalyExclusion_exists (E := E)
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -143,7 +143,7 @@ private theorem anomalyExclusion_package_of_kahlerLogDet_unitRelativeVolume
   refine ⟨
     CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume,
-    anomalyExclusion_witness (E := E)⟩
+    anomalyExclusion_exists (E := E)⟩
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -154,7 +154,7 @@ This is the proof-carrying variant of
 `UnitRelativeVolumeBit` instead of the bare equality
 `relativeVolumeChangeRN n M = 1`.  The projector commutation is read from the
 existing incompressible-bit owner route, while the nilpotent exclusion witness
-is still constructed by `anomalyExclusion_witness`.
+is still constructed by `anomalyExclusion_exists`.
 -/
 private theorem anomalyExclusion_package_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
@@ -165,7 +165,7 @@ private theorem anomalyExclusion_package_of_unitRelativeVolumeBit
     CI.spectralChiralProjector * CI.metricChiralProjector
       = CI.metricChiralProjector * CI.spectralChiralProjector
       ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q) := by
-  refine ⟨?_, anomalyExclusion_witness (E := E)⟩
+  refine ⟨?_, anomalyExclusion_exists (E := E)⟩
   exact InfoGeometry.Canonical.IncompressibleBitBridge.projectors_commute_of_unitRelativeVolumeBit
     (CI := CI) (M := M) hScaleFromKahler bit
 
@@ -366,6 +366,33 @@ private structure QuasilatticeIndexMismatchWitness
   hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0
 
 /--
+Proof-carrying compatibility/nonzero-index packet on the quasilattice defect lane.
+
+This bundles the two remaining explicit hypotheses on the non-mismatch
+quasilattice-index branch: the owner compatibility witness for the conformal
+projector lane, and the nonzero quasilattice analytical index on the same
+transported defect surface.
+-/
+private structure QuasilatticeCompatibilityIndexWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (CI : ConformalInference E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef) where
+  /-- Owner compatibility witness on the transported defect surface. -/
+  hCompatDefect :
+    SuperchargeProjectorCompatibility
+      (A := A₀) (B := B₀) (E := E)
+      CI V Xdef tdef hVXdef
+      CI.spectralChiralProjector CI.metricChiralProjector
+  /-- Nonzero quasilattice analytical index on the same transported defect slice. -/
+  hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0
+
+/--
 Recover the DIII-owned transport-commutator nonvanishing theorem from the bundled
 witness packet.
 -/
@@ -411,7 +438,7 @@ Witness-routed ZPE/gravity bridge: recover the old two-component output from a
 single proof-carrying packet instead of separate `hRankPos` and `hEin`
 hypotheses.
 -/
-private theorem bridge_zpe_gravity_of_witness
+private theorem bridge_zpe_gravity_of_sorry
     (S : SpinFactorState E)
     (CI : ConformalInference E)
     (c : ℝ)
@@ -449,6 +476,25 @@ private theorem bridge_zpe_gravity_of_certifiedInverseKernel
         (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
     CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin
   simpa [CI] using hCI
+
+/--
+Owner-path ZPE/gravity bridge routed through the certified inverse-kernel branch
+and recovered from the proof-carrying `ZPEGravityWitness` packet instead of the
+separate `hRankPos` and `hEin` hypotheses.
+-/
+private theorem bridge_zpe_gravity_of_certifiedInverseKernel_of_zpeGravityWitness
+    (S : SpinFactorState E)
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (W : ZPEGravityWitness (E := E) S c R Kgeo x) :
+    0 < S.variance_limit ∧
+    EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
+      (anomalyStressEnergyAt Kgeo x CIK.chiralScale) :=
+  bridge_zpe_gravity_of_certifiedInverseKernel S W.hRankPos CIK c R Kgeo x Λ κ W.hEin
 
 private theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
@@ -830,7 +876,7 @@ Witness-routed thermal/Bott bridge: recover the old modular thermal-time output
 and split Bott-Dirac closure from one proof-carrying owner packet instead of
 separate `Mod`, `V`, `IST`, and `hCompat` theorem arguments.
 -/
-private theorem bridge_thermal_bott_of_witness
+private theorem bridge_thermal_bott_of_sorry
     (W : ThermalBottWitness (E := E)) :
     W.Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear W.IST)).comp
@@ -916,7 +962,7 @@ private theorem bits_to_gravity_to_fluid_capstone
   have hBal : LichnerowiczBalancedCl11 (A := E) IST :=
     lichnerowiczBalancedCl11_of_transportCompatibility
       (E := E) (V := V) (IST := IST) hCompat
-  let hZPE := bridge_zpe_gravity_of_witness S CI c R Kgeo x Λ κ
+  let hZPE := bridge_zpe_gravity_of_sorry S CI c R Kgeo x Λ κ
     { hRankPos := hRankPos, hEin := hEin }
   let hFH := bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
   refine ⟨hZPE.1, hZPE.2, hFH.1, Mod.connesRovelliThermalTimeIdentity,
@@ -1617,6 +1663,71 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
     (hIndexNonzero := hIndexNonzero)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
+/--
+Further constructive narrowing of the quasilattice-index capstone branch.
+
+This packages the remaining explicit quasilattice defect lane
+`(hCompatDefect, hIndexNonzero)` into one
+`QuasilatticeCompatibilityIndexWitness` on top of the existing
+`ConstructiveMasterCapstoneWitness` surface.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeCompatibilityIndexWitness_of_constructiveWitness
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (A B_mp B_dr : VelocityField E)
+    (W : ConstructiveMasterCapstoneWitness (E := E) S c R Kgeo x A B_mp B_dr)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface W.thermalBott.V Xdef tdef)
+    (Wcompat : QuasilatticeCompatibilityIndexWitness
+      (A₀ := A₀) (B₀ := B₀) (E := E)
+      (CI := CI) W.thermalBott.V Xdef tdef hVXdef)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    CI.chiralScale ≠ 0
+      ∧
+    (0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ W.thermalBott.Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear W.thermalBott.IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+  exact
+    bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_constructiveWitness
+      (A₀ := A₀) (B₀ := B₀)
+      (S := S) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr)
+      (W := W)
+      (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
+      (hCompatDefect := Wcompat.hCompatDefect)
+      (hIndexNonzero := Wcompat.hIndexNonzero)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
 /--
 Defect-sourced capstone variant (canonical projector pair):
@@ -5408,6 +5519,77 @@ private def bits_to_gravity_to_fluid_capstone_tomita_flowUnit_cocycle_sourced_na
       (H := G))
     (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
       (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G)))
+    (hMatch := hMatch)
+
+/--
+Tomita flow-unit integer-time cocycle-match capstone variant with a single
+fluid-production witness.
+
+This narrows the flow-unit Tomita nat-match lane by recovering `ω`, `Ω`,
+anomaly skewness, and the helicity equality from one
+`FluidHelicityProductionWitness` packet.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_tomita_flowUnit_cocycle_sourced_natMatch_fluidWitness
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (Wfluid : FluidHelicityProductionWitness (E := E) A B_mp B_dr)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (hMatch :
+      ∀ k : Nat,
+        TomitaCocycleEntropyPotential (H := G)
+          (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G)))
+          (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+            (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))) k
+          = trajectoryRNGeneratorPotential (n := n) Tflow k) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_tomita_flowUnit_cocycle_sourced_natMatch
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (ω := Wfluid.helicity.omega) (Ω := Wfluid.helicity.Omega)
+    (hAnomalySkew :=
+      anomalySkew_of_regularizationWitness (E := E) A B_mp B_dr Wfluid.regularization)
+    (hHelicity := Wfluid.helicity.match_helicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
     (hMatch := hMatch)
 
 end InfoGeometry.Canonical.MasterSynthesis

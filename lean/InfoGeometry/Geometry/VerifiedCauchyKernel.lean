@@ -2,7 +2,7 @@
 InfoGeometry/Geometry/VerifiedCauchyKernel.lean
 
 The individuation of the Cauchy Kernel.
-Replacing the "resolvent_law" shadow with a constructive resolvent.
+Replacing the "resolvent_True" shadow with a constructive resolvent.
 -/
 
 import InfoGeometry.Geometry.BilingualAnalyticity

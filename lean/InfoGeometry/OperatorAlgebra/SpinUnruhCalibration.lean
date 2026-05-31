@@ -46,18 +46,18 @@ structure SpinModularCompatibility
   Intended meaning: modular time and physical boost time differ by the
   Bisognano-Wichmann/Unruh normalization.
   -/
-  modular_physical_calibration_law : Prop
+  modular_physical_calibration_True : Prop
 
   /-- Evidence for the modular/physical flow calibration. -/
   modular_physical_calibration :
-    modular_physical_calibration_law
+    modular_physical_calibration_True
 
   /-- Spin-connection/boost compatibility law. -/
-  spin_connection_generates_boost_law : Prop
+  spin_connection_generates_boost_True : Prop
 
   /-- Evidence for spin-connection/boost compatibility. -/
   spin_connection_generates_boost :
-    spin_connection_generates_boost_law
+    spin_connection_generates_boost_True
 
 namespace SpinModularCompatibility
 

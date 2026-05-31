@@ -221,7 +221,7 @@ structure LightconeReadoutBoundary where
   nullConeCertified : Prop
   projectivizationWitness : Prop
 
-theorem entanglement_claim_requires_witness
+theorem entanglement_claim_requires_sorry
     {ω₀ : A → ℝ} (W : EntanglementWitness (A := A) ω₀) :
     IsEntangled (A := A) ω₀ :=
   entanglementWitness_implies_entangled (ω₀ := ω₀) W

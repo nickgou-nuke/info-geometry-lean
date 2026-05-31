@@ -234,7 +234,7 @@ theorem closure_defect_is_anomaly
   W.heat_eq_scalar_closure_defect_of_curvature_stationary x hstat
 
 /-- Compatibility alias for legacy closure-defect anomaly witness naming. -/
-def closure_defect_is_anomaly_law
+def closure_defect_is_anomaly_True
     (x : Sys) : Prop :=
   heatLoss B C x =
     W.scalarReadout.scalar
@@ -246,7 +246,7 @@ theorem closure_defect_is_anomaly_law_holds
     (hstat :
       R.derivativeAlong.deriv R.curvatureReadout.curvature
           (W.generatorOf x) (W.stateOf x) = 0) :
-    W.closure_defect_is_anomaly_law x :=
+    W.closure_defect_is_anomaly_True x :=
   W.closure_defect_is_anomaly x hstat
 
 end StinespringTKKRicciFluxBridge
@@ -256,7 +256,7 @@ end StinespringTKKRicciFluxBridge
 /--
 Closure-defect anomaly identification bridge.
 
-This is the proof-carrying reinstantiation of `closure_defect_is_anomaly_law`.
+This is the proof-carrying reinstantiation of `closure_defect_is_anomaly_True`.
 
 An explicit anomaly readout function `anomalyReadout : Sys → ℝ` is supplied,
 and the bridge asserts:
@@ -295,7 +295,7 @@ structure ClosureDefectAnomalyBridge
 
   `scalar(closureDefect(generatorOf x)(stateOf x)) = anomalyReadout x`.
   -/
-  closure_defect_is_anomaly_law :
+  closure_defect_is_anomaly_True :
     ∀ x : Sys,
       heatBridge.scalarReadout.scalar
         (R.closureDefect.defect
@@ -326,7 +326,7 @@ theorem closure_defect_eq_anomaly (x : Sys) :
         (W.heatBridge.generatorOf x)
         (W.heatBridge.stateOf x)) =
       W.anomalyReadout x :=
-  W.closure_defect_is_anomaly_law x
+  W.closure_defect_is_anomaly_True x
 
 /--
 When curvature is stationary, the Bregman heat equals the anomaly readout.

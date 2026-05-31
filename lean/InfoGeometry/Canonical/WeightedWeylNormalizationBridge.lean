@@ -306,6 +306,57 @@ theorem densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_ph
     simpa [hBerryZero] using hPhase
 
 /--
+Faithful probing plus vanishing first variation kill the full weighted
+density-lifted readout whenever the observable channel commutes with the
+phase-axis correction.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful_of_commute_phaseAxis
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0)
+    (hComm :
+      Commute A
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)))
+    (w : ℝ) :
+    ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
+      = (0, 0) := by
+  have hWeighted :=
+    densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) (P := P) (ψ := ψ) (A := A) hFaithful hFirst w
+  have hCommZero :
+      transportCommutator (E := E)
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A
+        = 0 := by
+    unfold transportCommutator
+    exact sub_eq_zero.mpr hComm.eq.symm
+  have hCommZeroComplex :
+      transportCommutator (E := E) (InfoGeometry.Krein.complex_i (E := E)) A = 0 := by
+    rw [← InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis_eq_complex_i]
+    exact hCommZero
+  have hMetricZero :
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator (E := E)
+        (transportCommutator (E := E)
+          (InfoGeometry.Krein.complex_i (E := E)) A) = 0 := by
+    rw [hCommZeroComplex]
+    ext u v
+    simp [InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator]
+  have hBerryZero :
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator (E := E)
+        (transportCommutator (E := E)
+          (InfoGeometry.Krein.complex_i (E := E)) A) = 0 := by
+    rw [hCommZeroComplex]
+    ext u v
+    simp [InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator]
+  apply Prod.ext
+  · have hMetric := congrArg Prod.fst hWeighted
+    simpa [hMetricZero] using hMetric
+  · have hPhase := congrArg Prod.snd hWeighted
+    simpa [hBerryZero] using hPhase
+
+/--
 On the canonical phase-axis observable branch, the phase-axis commutation
 hypothesis is discharged constructively by reflexivity.
 -/
@@ -328,6 +379,31 @@ theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_equilibriumSeed
   exact densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_phaseAxis
     (E := E) (A := InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E))
     hEq (Commute.refl _) w
+
+/--
+On the canonical phase-axis observable branch, faithful probing plus vanishing
+first variation discharge the commutation hypothesis constructively by
+reflexivity.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation
+      (E := E) P ψ
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) = 0)
+    (w : ℝ) :
+    ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) w).metric,
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) w).phase)
+      = (0, 0) := by
+  exact densityWeightLiftedReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful_of_commute_phaseAxis
+    (E := E) (A := InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E))
+    hFaithful hFirst (Commute.refl _) w
 
 end Core
 

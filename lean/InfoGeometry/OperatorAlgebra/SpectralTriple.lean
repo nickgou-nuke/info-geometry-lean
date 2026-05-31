@@ -352,9 +352,9 @@ structure DixmierTraceDatum
     ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ dixmierTrace x
   traceLikeCyclicity :
     ∀ a b : A, dixmierTrace (a * b) = dixmierTrace (b * a)
-  logarithmicDivergenceExtraction_law : Prop
-  logarithmicDivergenceExtraction_certificate :
-    logarithmicDivergenceExtraction_law
+  logarithmicDivergenceExtraction_True : Prop
+  logarithmicDivergenceExtraction_sorryProof :
+    logarithmicDivergenceExtraction_True
 
 /--
 Zeta-function renormalization backend.
@@ -369,9 +369,9 @@ structure ZetaRenormalizationDatum
   poleSet : Set ℂ
   residueReadout : A → ℂ → ℂ
   finitePartReadout : A → ℂ → ℂ
-  meromorphicContinuation_law : Prop
-  meromorphicContinuation_certificate :
-    meromorphicContinuation_law
+  meromorphicContinuation_True : Prop
+  meromorphicContinuation_sorryProof :
+    meromorphicContinuation_True
 
 /--
 Renormalized integration backend.
@@ -384,8 +384,8 @@ inductive RenormalizedIntegrationBackend
   | zetaRenormalization (ζ : ZetaRenormalizationDatum A)
   | cyclicCocycle
       (readout : A → ℝ)
-      (cyclicity_law : Prop)
-      (cyclicity_certificate : cyclicity_law)
+      (cyclicity_True : Prop)
+      (cyclicity_sorryProof : cyclicity_True)
 
 /-! ## 9. Real, phase-compatible spectral triple -/
 

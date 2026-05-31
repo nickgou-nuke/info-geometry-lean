@@ -41,9 +41,9 @@ structure SplitMajoranaOPE
   cc_singular : PrimeLabel → PrimeLabel → Prop
   dd_singular : PrimeLabel → PrimeLabel → Prop
   cd_regular : PrimeLabel → PrimeLabel → Prop
-  cc_certificate : ∀ p q, cc_singular p q
-  dd_certificate : ∀ p q, dd_singular p q
-  cd_certificate : ∀ p q, cd_regular p q
+  cc_sorryProof : ∀ p q, cc_singular p q
+  dd_sorryProof : ∀ p q, dd_singular p q
+  cd_sorryProof : ∀ p q, cd_regular p q
 
 namespace SplitMajoranaOPE
 
@@ -51,22 +51,22 @@ variable {PrimeLabel Field Coeff : Type*}
 variable (O : SplitMajoranaOPE PrimeLabel Field Coeff)
 
 /-- The supplied `c c` OPE law is available. -/
-theorem cc_valid
+theorem cc_holds
     (p q : PrimeLabel) :
     O.cc_singular p q :=
-  O.cc_certificate p q
+  O.cc_sorryProof p q
 
 /-- The supplied `d d` OPE law is available. -/
-theorem dd_valid
+theorem dd_holds
     (p q : PrimeLabel) :
     O.dd_singular p q :=
-  O.dd_certificate p q
+  O.dd_sorryProof p q
 
 /-- The supplied `c d` regularity law is available. -/
-theorem cd_regular_valid
+theorem cd_regular_holds
     (p q : PrimeLabel) :
     O.cd_regular p q :=
-  O.cd_certificate p q
+  O.cd_sorryProof p q
 
 end SplitMajoranaOPE
 
@@ -82,8 +82,8 @@ structure MobiusCurrentOPE
   cField : PrimeLabel → Field
   dField : PrimeLabel → Field
   current : PrimeLabel → Field
-  current_c_law : Prop
-  current_d_law : Prop
+  current_c_True : Prop
+  current_d_True : Prop
 
 namespace MobiusCurrentOPE
 

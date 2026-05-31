@@ -92,11 +92,11 @@ theorem bracket_modes_normalized
   exact hnorm m n
 
 /-- Compatibility alias for legacy witness naming of the Virasoro bracket law. -/
-def virasoro_bracket_law : Prop :=
+def virasoro_bracket_True : Prop :=
   ∀ m n : ℤ, ⁅V.Lmode m, V.Lmode n⁆ = (m - n : ℝ) • V.Lmode (m + n) + (virasoroCentralCoefficient m n : ℝ) • V.central
 
 /-- Compatibility alias for legacy central commutation witness naming. -/
-def central_commutes_law : Prop :=
+def central_commutes_True : Prop :=
   ∀ X : Alg, ⁅V.central, X⁆ = 0
 
 /-- Legacy Virasoro bracket law is a direct projection of the explicit field. -/
@@ -106,7 +106,7 @@ theorem virasoro_bracket_law_holds :
         ⁅V.Lmode m, V.Lmode n⁆ =
           (m - n : ℝ) • V.Lmode (m + n) +
             (virasoroCentralCoefficient m n : ℝ) • V.central) →
-    V.virasoro_bracket_law := by
+    V.virasoro_bracket_True := by
   intro hnorm
   intro m n
   exact hnorm m n
@@ -114,7 +114,7 @@ theorem virasoro_bracket_law_holds :
 /-- Legacy central-commutation law is a direct projection of the explicit field. -/
 theorem central_commutes_law_holds :
     (hcentral : ∀ X : Alg, ⁅V.central, X⁆ = 0) →
-    V.central_commutes_law := by
+    V.central_commutes_True := by
   intro hcentral
   exact hcentral
 
@@ -150,15 +150,15 @@ theorem centralCharge_eq :
   exact hS
 
 /-- Compatibility alias for legacy witness naming of the Sugawara law. -/
-def sugawara_law : Prop :=
+def sugawara_True : Prop :=
   S.centralCharge = sugawaraCentralCharge S.level S.dimG S.hDual
 
 /-- The Sugawara compatibility law is installed by the bridge calibration. -/
 theorem sugawara_holds :
     (hS : S.centralCharge = (S.level * S.dimG) / (S.level + S.hDual)) →
-    S.sugawara_law := by
+    S.sugawara_True := by
   intro hS
-  simpa [sugawara_law, sugawaraCentralCharge] using hS
+  simpa [sugawara_True, sugawaraCentralCharge] using hS
 
 end SugawaraDatum
 
@@ -238,7 +238,7 @@ theorem current_mode_bracket
   exact hbr m n X Y
 
 /-- Compatibility alias for legacy witness naming of the affine bracket law. -/
-def current_mode_bracket_law : Prop :=
+def current_mode_bracket_True : Prop :=
   ∀ (m n : ℤ) (X Y : Finite),
     ⁅A.Current m X, A.Current n Y⁆ =
       A.Current (m + n) ⁅X, Y⁆ +
@@ -251,7 +251,7 @@ theorem current_mode_bracket_law_holds :
         ⁅A.Current m X, A.Current n Y⁆ =
           A.Current (m + n) ⁅X, Y⁆ +
             ((m : ℝ) * A.killingForm X Y) • (if m + n = 0 then A.kCentral else 0)) →
-    A.current_mode_bracket_law := by
+    A.current_mode_bracket_True := by
   intro hbr
   intro m n X Y
   exact hbr m n X Y
@@ -264,13 +264,13 @@ theorem central_commutes_with
   exact hcentral X
 
 /-- Compatibility alias for legacy affine-central commutation witness naming. -/
-def current_central_commutes_law : Prop :=
+def current_central_commutes_True : Prop :=
   ∀ X : Alg, ⁅A.kCentral, X⁆ = 0
 
 /-- Legacy commutation law is a direct projection of the explicit field. -/
 theorem current_central_commutes_law_holds :
     (hcentral : ∀ X : Alg, ⁅A.kCentral, X⁆ = 0) →
-    A.current_central_commutes_law := by
+    A.current_central_commutes_True := by
   intro hcentral
   exact hcentral
 
@@ -342,7 +342,7 @@ theorem centralCharge_calibrated :
   exact hcc
 
 /-- Compatibility alias for legacy witness naming of the Sugawara law. -/
-def sugawara_law : Prop :=
+def sugawara_True : Prop :=
   B.centralCharge =
     B.level * B.finiteDimension / (B.level + B.dualCoxeterNumber)
 
@@ -350,12 +350,12 @@ def sugawara_law : Prop :=
 theorem sugawara_holds :
     (hcc : B.centralCharge =
       B.level * B.finiteDimension / (B.level + B.dualCoxeterNumber)) →
-    B.sugawara_law := by
+    B.sugawara_True := by
   intro hcc
-  simpa [sugawara_law] using hcc
+  simpa [sugawara_True] using hcc
 
 /-- Compatibility alias for legacy Virasoro/current witness naming. -/
-def virasoro_acts_on_currents_law : Prop :=
+def virasoro_acts_on_currents_True : Prop :=
   ∀ (m n : ℤ) (X : Finite),
     ⁅B.virasoro.Lmode m, B.affine.Current n X⁆ =
       (-(n : ℝ)) • B.affine.Current (m + n) X
@@ -366,7 +366,7 @@ theorem virasoro_acts_on_currents_law_holds :
       ∀ (m n : ℤ) (X : Finite),
         ⁅B.virasoro.Lmode m, B.affine.Current n X⁆ =
           (-(n : ℝ)) • B.affine.Current (m + n) X) →
-    B.virasoro_acts_on_currents_law := by
+    B.virasoro_acts_on_currents_True := by
   intro hact
   intro m n X
   exact hact m n X
@@ -553,20 +553,20 @@ theorem virasoro_is_helical_reparametrization_holds :
 /--
 Identity law for the affine/helical symmetry-flow group action.
 -/
-def affine_symmetry_identity_law : Prop :=
+def affine_symmetry_identity_True : Prop :=
   ∀ s : State, M.modularFlow 0 s = s
 
 /--
 Composition law for the affine/helical symmetry-flow group action.
 -/
-def affine_symmetry_composition_law : Prop :=
+def affine_symmetry_composition_True : Prop :=
   ∀ (t₁ t₂ : ℝ) (s : State),
     M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s)
 
 /--
 Inverse law for the affine/helical symmetry-flow group action.
 -/
-def affine_symmetry_inverse_law : Prop :=
+def affine_symmetry_inverse_True : Prop :=
   ∀ (t : ℝ) (s : State),
     M.modularFlow (-t) (M.modularFlow t s) = s ∧
       M.modularFlow t (M.modularFlow (-t) s) = s
@@ -574,7 +574,7 @@ def affine_symmetry_inverse_law : Prop :=
 /-- The affine/helical symmetry action has identity at parameter `0`. -/
 theorem affine_symmetry_identity_holds :
     (hzero : ∀ s : State, M.modularFlow 0 s = s) →
-    M.affine_symmetry_identity_law := by
+    M.affine_symmetry_identity_True := by
   intro hzero
   exact hzero
 
@@ -582,7 +582,7 @@ theorem affine_symmetry_identity_holds :
 theorem affine_symmetry_composition_holds :
     (hadd : ∀ (t₁ t₂ : ℝ) (s : State),
       M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s)) →
-    M.affine_symmetry_composition_law := by
+    M.affine_symmetry_composition_True := by
   intro hadd
   exact hadd
 
@@ -624,7 +624,7 @@ theorem affine_symmetry_inverse_holds :
     (hzero : ∀ s : State, M.modularFlow 0 s = s) →
     (hadd : ∀ (t₁ t₂ : ℝ) (s : State),
       M.modularFlow (t₁ + t₂) s = M.modularFlow t₁ (M.modularFlow t₂ s)) →
-    M.affine_symmetry_inverse_law := by
+    M.affine_symmetry_inverse_True := by
   intro hzero hadd
   intro t s
   exact ⟨M.affine_symmetry_left_inverse t s hzero hadd, M.affine_symmetry_right_inverse t s hzero hadd⟩

@@ -508,7 +508,7 @@ structure FiniteCylinderExpectationPartition
   This is supplied because it requires finite-sum additivity/linearity of the
   concrete readout and the concrete partition law.
   -/
-  expectation_partition_law :
+  expectation_partition_True :
     ∀ n : ℕ,
       Finset.sum (levelWords n)
         (fun w => faces.standard.eval omega (faces.cylinderProjection w)) =
@@ -532,7 +532,7 @@ theorem level_expectation_sum_eq_total
     Finset.sum (P.levelWords n)
       (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w)) =
     P.faces.standard.eval P.omega P.one :=
-  P.expectation_partition_law n
+  P.expectation_partition_True n
 
 /-- If the distinguished functional is normalized, every finite level sums to one. -/
 @[rep_depth projective]

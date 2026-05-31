@@ -41,7 +41,7 @@ variable (C : SelfConcordantZetaBarrierCalibrationPacket)
 
 /-- Reexport of the supplied barrier-critical bridge. -/
 @[bridge_target_tag, rep_depth operator]
-theorem zeros_are_barrier_critical_law :
+theorem zeros_are_barrier_critical_True :
     C.barrier.zeros_are_barrier_critical :=
   C.zeros_are_barrier_critical
 

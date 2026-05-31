@@ -49,7 +49,7 @@ structure DrazinSupportData
   AD : Obs
   p : Obs
   index : ℕ
-  drazin_law : IsDrazinInverse A AD index
+  drazin_True : IsDrazinInverse A AD index
   p_def : p = A * AD
   p_self_adjoint : star p = p
 
@@ -64,7 +64,7 @@ theorem p_idempotent :
     D.p * D.p = D.p := by
   rw [D.p_def]
   simpa [IsDrazinInverse.projection] using
-    IsDrazinInverse.projection_is_idempotent D.drazin_law
+    IsDrazinInverse.projection_is_idempotent D.drazin_True
 
 /-- The Drazin complementary projector. -/
 @[rep_depth operator]
@@ -222,7 +222,7 @@ structure RealExpectationState
     (Obs : Type*) [Monoid Obs] [Star Obs] where
   expect : Obs → ℝ
   unital : expect 1 = 1
-  positivity_law : Prop
+  positivity_True : Prop
 
 /--
 Expectation-valued leakage energy.
@@ -317,7 +317,7 @@ structure DrazinTransportCertificate
     (flow : ModularFlow Obs)
     (D : DrazinSupportData Obs)
     (t : ℝ) where
-  transported_law :
+  transported_True :
     IsDrazinInverse (flow.flow t D.A) (flow.flow t D.AD) D.index
 
 /--

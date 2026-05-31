@@ -47,11 +47,11 @@ structure LocalChannel
   map_one : map 1 = 1
 
   /-- Completely-positive/channel law. -/
-  completelyPositive_law : Prop
+  completelyPositive_True : Prop
 
   /-- Evidence for the completely-positive/channel law. -/
   completelyPositive :
-    completelyPositive_law
+    completelyPositive_True
 
 namespace LocalChannel
 
@@ -139,11 +139,11 @@ structure StinespringTomitaDilation
   This may later be specialized to a unitary/isometric/Stinespring minimality
   theorem.
   -/
-  global_reversible_law : Prop
+  global_reversible_True : Prop
 
   /-- Evidence for global reversibility in the intended backend. -/
   global_reversible :
-    global_reversible_law
+    global_reversible_True
 
 namespace StinespringTomitaDilation
 

@@ -549,6 +549,68 @@ theorem proj_completeness (O : A) :
   rw [step2, one_smul]
   abel
 
+/-- The scalar-smul chiral projectors reconstruct the operator by `P₊ - P₋ = O`. -/
+theorem O_reconstruction (O : A) :
+    proj_up O - proj_down O = O := by
+  unfold proj_up proj_down
+  simp only [smul_add, smul_sub]
+  have h1 :
+      (1 / 2 : ℝ) • O ^ 2 + (1 / 2 : ℝ) • O -
+        ((1 / 2 : ℝ) • O ^ 2 - (1 / 2 : ℝ) • O) =
+      (1 / 2 : ℝ) • O + (1 / 2 : ℝ) • O := by
+    abel
+  rw [h1, ← add_smul]
+  have h2 : (1 / 2 : ℝ) + (1 / 2 : ℝ) = 1 := by norm_num
+  rw [h2, one_smul]
+
+/-- The scalar-smul chiral projectors reconstruct the square by `P₊ + P₋ = O²`. -/
+theorem O_sq_reconstruction (O : A) :
+    proj_up O + proj_down O = O ^ 2 := by
+  unfold proj_up proj_down
+  rw [← smul_add]
+  have h2 : O ^ 2 + O + (O ^ 2 - O) = (2 : ℝ) • O ^ 2 := by
+    calc
+      O ^ 2 + O + (O ^ 2 - O) = O ^ 2 + O ^ 2 := by noncomm_ring
+      _ = (2 : ℝ) • O ^ 2 := by
+        rw [two_smul]
+  rw [h2, smul_smul]
+  have h3 : (1 / 2 : ℝ) * 2 = 1 := by norm_num
+  rw [h3, one_smul]
+
+/-- Symmetric vacancy/up orthogonality under `O³ = O`. -/
+theorem proj_vacancy_orthogonal_up (O : A) (h : O ^ 3 = O) :
+    proj_vacancy O * proj_up O = 0 := by
+  unfold proj_vacancy proj_up
+  rw [mul_smul_comm]
+  have h_eq : (1 - O ^ 2) * (O ^ 2 + O) = 0 := by
+    calc
+      (1 - O ^ 2) * (O ^ 2 + O) = O ^ 2 + O - O ^ 4 - O ^ 3 := by noncomm_ring
+      _ = O ^ 2 + O - O ^ 2 - O ^ 3 := by
+        rw [show O ^ 4 = O ^ 2 by
+          have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+          rw [h_pow4, h]
+          noncomm_ring]
+      _ = O ^ 2 + O - O ^ 2 - O := by rw [h]
+      _ = 0 := by noncomm_ring
+  rw [h_eq, smul_zero]
+
+/-- Symmetric vacancy/down orthogonality under `O³ = O`. -/
+theorem proj_vacancy_orthogonal_down (O : A) (h : O ^ 3 = O) :
+    proj_vacancy O * proj_down O = 0 := by
+  unfold proj_vacancy proj_down
+  rw [mul_smul_comm]
+  have h_eq : (1 - O ^ 2) * (O ^ 2 - O) = 0 := by
+    calc
+      (1 - O ^ 2) * (O ^ 2 - O) = O ^ 2 - O - O ^ 4 + O ^ 3 := by noncomm_ring
+      _ = O ^ 2 - O - O ^ 2 + O ^ 3 := by
+        rw [show O ^ 4 = O ^ 2 by
+          have h_pow4 : O ^ 4 = O * O ^ 3 := by noncomm_ring
+          rw [h_pow4, h]
+          noncomm_ring]
+      _ = O ^ 2 - O - O ^ 2 + O := by rw [h]
+      _ = 0 := by noncomm_ring
+  rw [h_eq, smul_zero]
+
 /-- Algebraic projector onto the non-vacancy sector `O²`. -/
 def drazin_projector (O : A) : A :=
   O ^ 2

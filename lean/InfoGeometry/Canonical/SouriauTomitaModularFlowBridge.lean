@@ -274,55 +274,6 @@ theorem matchedCarrier_packet
 
 end MatchedCarrierOwner
 
-/-- Constructive owner route: build a matched-carrier packet directly from a `StandardFormCarrier`,
-eliminating the need for an intermediate `SouriauTomitaLogContext` hypothesis.
--/
-@[rep_depth operator]
-noncomputable def MatchedCarrierOwner.ofStandardFormCarrier
- (std : StandardFormCarrier H) :
- MatchedCarrierOwner (H := H) (Symmetry := Symmetry) where
- logContext := {
- souriauMoment := zeroThermalSouriauMoment (H := H) std.referenceState
- }
-
-namespace MatchedCarrierOwner
-
-variable (M : MatchedCarrierOwner (H := H) (Symmetry := Symmetry))
-
-/-- Construct a `MatchedCarrierOwner` directly from a `StandardFormCarrier`.
-Moved to `MatchedCarrierOwner.ofStandardFormCarrier` for clarity.
--/
-@[deprecated] noncomputable def ofStandardFormCarrier
- (std : StandardFormCarrier H) :
- MatchedCarrierOwner (H := H) (Symmetry := Symmetry) :=
- MatchedCarrierOwner.ofStandardFormCarrier (H := H) (Symmetry := Symmetry) std
-
-variable (M : MatchedCarrierOwner (H := H) (Symmetry := Symmetry))
-
-/-- Truthful export theorem: the matched-carrier packet follows directly from a
-`StandardFormCarrier` without additional hypotheses.
--/
-@[rep_depth operator]
-theorem matchedCarrier_packet_of_standardFormCarrier
- (std : StandardFormCarrier H) (t : ℝ) (A : Obs) :
- (M.ofStandardFormCarrier std).negativeLogDensity = (M.ofStandardFormCarrier std).modularHamiltonian ∧
- (M.ofStandardFormCarrier std).standardFormCarrier.Delta = (M.ofStandardFormCarrier std).modularHamiltonian ∧
- (M.ofStandardFormCarrier std).standardFormCarrier.seed.modularFlow = (M.ofStandardFormCarrier std).modularFamily ∧
- (M.ofStandardFormCarrier std).modularFamily t A =
- InfoGeometry.Krein.modular_shift (E := H) (M.ofStandardFormCarrier std).modularHamiltonian t A :=
- let M' := M.ofStandardFormCarrier std
- ⟨
- show M'.negativeLogDensity = M'.modularHamiltonian by unfold negativeLogDensity modularHamiltonian ofStandardFormCarrier; rw [M'.logContext.tomita_deltaLog_eq_modularHamiltonian],
- show M'.standardFormCarrier.Delta = M'.modularHamiltonian by unfold standardFormCarrier modularHamiltonian ofStandardFormCarrier; simpa,
- show M'.standardFormCarrier.seed.modularFlow = M'.modularFamily by unfold standardFormCarrier modularFamily ofStandardFormCarrier; simp [std.modularFlow_eq_generator],
- show M'.modularFamily t A = InfoGeometry.Krein.modular_shift _ M'.modularHamiltonian t A by
-   unfold modularFamily ofStandardFormCarrier;
-   suffices M'.standardFormCarrier.seed.modularFlow t A = InfoGeometry.Krein.modular_shift _ M'.modularHamiltonian t A by simpa,
-   exact M'.standardFormCarrier.modularFlow_apply
- ⟩
-
-end MatchedCarrierOwner
-
 end SouriauTomitaLogContext
 
 /-- Zero thermal-moment Souriau datum on an arbitrary symmetry carrier. -/

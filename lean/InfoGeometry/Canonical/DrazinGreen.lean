@@ -150,7 +150,7 @@ structure DrazinGreenKernelPacket
   hDrazin : IsDrazinInverse A D index
   GreenKernel : Space → Space → ℝ
   kernelRepresentsGreen : Prop
-  kernelRepresentsGreen_witness : kernelRepresentsGreen
+  kernelRepresentsGreen_sorry : kernelRepresentsGreen
 
 namespace DrazinGreenKernelPacket
 
@@ -166,7 +166,7 @@ def greenOperator : R :=
 @[rep_depth operator]
 theorem kernel_represents_green :
     K.kernelRepresentsGreen :=
-  K.kernelRepresentsGreen_witness
+  K.kernelRepresentsGreen_sorry
 
 end DrazinGreenKernelPacket
 

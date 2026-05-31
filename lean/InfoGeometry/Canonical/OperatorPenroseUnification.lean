@@ -175,7 +175,7 @@ theorem spinorModularIdentification_of_capstone
 structure UnificationDependencies (S : UnifiedCompactificationSystem) : Prop where
   junction1_realizedProjector_tomita : RealizedProjectorTomitaIdentification S
   junction2_countProjective_polarized_attach : CountProjectivePolarizedAttachment S
-  junction3_twisted_finite_witness : TwistedFiniteDimensionalWitness S
+  junction3_twisted_finite_sorry : TwistedFiniteDimensionalWitness S
   junction4_tightened_weyl_response : TightenedWeylAnomalyResponse S
   junction5_spinor_modular_identification : SpinorModularIdentification S
 
@@ -197,11 +197,11 @@ theorem junction2_countProjective_polarized_attach
 
 /-- Dependency projection 3 (build order). -/
 @[rep_depth krein]
-theorem junction3_twisted_finite_witness
+theorem junction3_twisted_finite_sorry
     (S : UnifiedCompactificationSystem)
     (h : UnificationDependencies S) :
     TwistedFiniteDimensionalWitness S :=
-  h.junction3_twisted_finite_witness
+  h.junction3_twisted_finite_sorry
 
 /-- Dependency projection 4 (build order). -/
 @[rep_depth krein]
@@ -237,7 +237,7 @@ theorem unificationDependencies_of_capstone
     { junction1_realizedProjector_tomita := realizedProjectorTomitaIdentification_canonical S
       junction2_countProjective_polarized_attach :=
         countProjectivePolarizedAttachment_of_capstone S Φ hReadout
-      junction3_twisted_finite_witness := hFinite
+      junction3_twisted_finite_sorry := hFinite
       junction4_tightened_weyl_response :=
         tightenedWeylAnomalyResponse_of_capstone S Φ hGenerator
       junction5_spinor_modular_identification :=

@@ -114,7 +114,7 @@ structure TKKThreeGrading
   gPlus : Submodule ℝ L
 
   /-- The Lie algebra decomposes as `L = g₋₁ ⊕ g₀ ⊕ g₊₁`. -/
-  decomposition_law : ⊤ = gMinus ⊔ gZero ⊔ gPlus
+  decomposition_True : ⊤ = gMinus ⊔ gZero ⊔ gPlus
 
   /-- `[g_-1, g_-1] = 0` for the short grading. -/
   bracket_minus_minus :
@@ -244,7 +244,7 @@ variable
 variable (T : TKKClosureDatum J L)
 
 /-- The TKK triple-product symmetry. -/
-theorem tkk_identity_valid
+theorem tkk_identity_holds
     (x y z : J) :
     ⁅⁅T.toMinus x, T.toPlus y⁆, T.toMinus z⁆ =
       ⁅⁅T.toMinus z, T.toPlus y⁆, T.toMinus x⁆ :=
@@ -289,7 +289,7 @@ structure TKKInfinitesimalAction
   This says the action is a Lie representation:
   `act [X,Y] = act X ∘ act Y - act Y ∘ act X`.
   -/
-  lie_action_law :
+  lie_action_True :
     ∀ X Y : L,
       act ⁅X, Y⁆ =
         (act X).comp (act Y) - (act Y).comp (act X)
@@ -308,7 +308,7 @@ theorem act_lie
     (X Y : L) :
     A.act ⁅X, Y⁆ =
       (A.act X).comp (A.act Y) - (A.act Y).comp (A.act X) :=
-  A.lie_action_law X Y
+  A.lie_action_True X Y
 
 end TKKInfinitesimalAction
 
@@ -666,14 +666,14 @@ Explicit anomaly/closure-defect identification law.
 This reintroduces the old witness name as an equation-level contract: an
 `anomaly` readout is exactly the TKK closure defect readout.
 -/
-def anomaly_is_closure_defect_law
+def anomaly_is_closure_defect_True
     (anomaly : L → State → Geometry) : Prop :=
   ∀ X s, anomaly X s = R.closureDefect.defect X s
 
 /-- Re-export of the anomaly/closure-defect equation. -/
 theorem anomaly_is_closure_defect_law_at
     {anomaly : L → State → Geometry}
-    (h : R.anomaly_is_closure_defect_law anomaly)
+    (h : R.anomaly_is_closure_defect_True anomaly)
     (X : L)
     (s : State) :
     anomaly X s = R.closureDefect.defect X s :=

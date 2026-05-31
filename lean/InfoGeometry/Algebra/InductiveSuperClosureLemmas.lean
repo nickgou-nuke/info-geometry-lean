@@ -25,6 +25,47 @@ theorem map_anticommutator
     f (anticommutator x y) = anticommutator (f x) (f y) := by
   simp [anticommutator]
 
+/-- Ring homomorphisms preserve square-zero operators. -/
+theorem ringHom_preserves_square_zero
+    {A B : Type u} [Semiring A] [Semiring B]
+    (f : A →+* B) {Q : A}
+    (hQ : Q * Q = 0) :
+    f Q * f Q = 0 := by
+  rw [← map_mul, hQ, map_zero]
+
+/-- Ring homomorphisms transport an anticommutator identity exactly. -/
+theorem ringHom_map_anticommutator
+    {A B : Type u} [Semiring A] [Semiring B]
+    (f : A →+* B) {Q R Z : A}
+    (hQR : anticommutator Q R = Z) :
+    anticommutator (f Q) (f R) = f Z := by
+  rw [← map_anticommutator f Q R, hQR]
+
+/-- Finite-stage superbracket transport along a bonding homomorphism. -/
+theorem finite_stage_superbracket_transport
+    {A B : Type u} [Semiring A] [Semiring B]
+    (bond : A →+* B) {Q R Z : A}
+    (hQR : anticommutator Q R = Z) :
+    anticommutator (bond Q) (bond R) = bond Z :=
+  ringHom_map_anticommutator bond hQR
+
+/-- Centrality on the source transports to centrality on the image. -/
+theorem finite_stage_centrality_on_image
+    {A B : Type u} [Semiring A] [Semiring B]
+    (bond : A →+* B) {Z X : A}
+    (hZX : Commute Z X) :
+    Commute (bond Z) (bond X) :=
+  hZX.map bond
+
+/-- A commuting Cartan family remains commuting after finite-stage transport. -/
+theorem finite_cartan_commuting_family_transport
+    {A B : Type u} {ι : Type*} [Semiring A] [Semiring B]
+    (bond : A →+* B) (H : ι → A)
+    (hH : ∀ i j, Commute (H i) (H j)) :
+    ∀ i j, Commute (bond (H i)) (bond (H j)) := by
+  intro i j
+  exact finite_stage_centrality_on_image bond (hH i j)
+
 section Chain
 
 variable {Stage : Nat → Type u} [∀ n : Nat, Semiring (Stage n)]

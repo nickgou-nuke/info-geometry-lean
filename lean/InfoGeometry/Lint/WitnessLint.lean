@@ -16,11 +16,11 @@ The pattern:
 ```
 structure Foo where
   bar_statement : Sort 0
-  bar_witness   : bar_statement
+  bar_sorry   : bar_statement
 ```
 
 is vacuous because an instantiator can supply `True` for `bar_statement`
-and `True.intro` for `bar_witness`.  The Lean kernel checks structural
+and `True.intro` for `bar_sorry`.  The Lean kernel checks structural
 correctness, but the mathematical content is zero — the user chose what
 to prove at construction time and could have chosen `True`.
 
@@ -35,11 +35,11 @@ A pair `(f, g)` of structure fields is a **witness-pack pair** when:
 1. `f` is a field whose *name* ends in `_statement`, AND
 2. `f`'s projected type, after stripping the self-parameter binder, is
    bare `Prop` (i.e. `Sort 0`), AND
-3. there exists a field `g` whose name equals `stem ++ "_witness"` where
+3. there exists a field `g` whose name equals `stem ++ "_sorry"` where
    `stem` is `f` with the `_statement` suffix removed.
 
 A slightly broader variant also fires when a field named `*_statement`
-or `*_witness` has type `Prop` regardless of whether a companion field
+or `*_sorry` has type `Prop` regardless of whether a companion field
 exists — because a bare `Prop` field with either suffix is almost always
 vacuous.
 -/
@@ -68,14 +68,14 @@ private def isBarePropSort (e : Expr) : Bool :=
 private def endsWithStatement (s : String) : Bool :=
   s.endsWith "_statement"
 
-/-- True if a string ends with `_witness`. -/
+/-- True if a string ends with `_sorry`. -/
 private def endsWithWitness (s : String) : Bool :=
-  s.endsWith "_witness"
+  s.endsWith "_sorry"
 
 /-- Compute the expected witness field name from a statement field name.
-    `foo_statement` → `foo_witness`. -/
+    `foo_statement` → `foo_sorry`. -/
 private def witnessNameOf (statementName : String) : String :=
-  (statementName.dropEnd "_statement".length).toString ++ "_witness"
+  (statementName.dropEnd "_statement".length).toString ++ "_sorry"
 
 -- ============================================================
 -- § Pair detection
@@ -85,7 +85,7 @@ private def witnessNameOf (statementName : String) : String :=
 structure WitnessPackPair where
   /-- Name of the generic statement field. -/
   statementField : Name
-  /-- Name of the companion `_witness` field, if present. -/
+  /-- Name of the companion `_sorry` field, if present. -/
   witnessField?  : Option Name
   deriving Repr, Inhabited
 
@@ -93,11 +93,11 @@ structure WitnessPackPair where
 Detect generic statement/witness pairs in the fields of a structure.
 
 For each field `f`:
-- whose leaf name ends in `_statement` or `_witness`, AND
+- whose leaf name ends in `_statement` or `_sorry`, AND
 - whose projected type (after stripping the implicit self-binder) is bare `Prop`,
 
 we check whether a statement field has a companion field named
-`stem_witness` among the structure's fields.  Bare witness fields of type `Prop`
+`stem_sorry` among the structure's fields.  Bare witness fields of type `Prop`
 are reported directly.
 
 Returns an array of detected pairs (with or without companion).

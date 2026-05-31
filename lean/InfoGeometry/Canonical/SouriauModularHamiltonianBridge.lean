@@ -143,7 +143,7 @@ theorem Khat_beta_eq_calibrated_regularRestrictedSuperHamiltonian :
       B.superBridge.modularEnergyUnit •
         DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
           B.superBridge.CIK := by
-  rw [B.Khat_beta_eq_Ksur, B.superBridge.Ksur_law]
+  rw [B.Khat_beta_eq_Ksur, B.superBridge.Ksur_True]
 
 /--
 The normalized Souriau modular Hamiltonian is the Drazin/supercharge surrogate
@@ -182,7 +182,7 @@ theorem modularHamiltonian_eq_calibrated_regularRestrictedSuperHamiltonian_add_p
           DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonian
             B.superBridge.CIK
         + B.family.partitionPotential • (1 : EndH) := by
-  rw [B.modularHamiltonian_eq_Ksur_add_partitionPotential_one, B.superBridge.Ksur_law]
+  rw [B.modularHamiltonian_eq_Ksur_add_partitionPotential_one, B.superBridge.Ksur_True]
 
 /-- The Souriau bare generator is left-supported on the Drazin regular sector. -/
 @[rep_depth operator]

@@ -25,33 +25,37 @@ def metricParabolic : ParOp → ParOp → ParOp := fun A B => mul A B
 def leibnizParabolic : ParOp → ParOp → ParOp := fun A B => add (poissonParabolic A B) (metricParabolic A B)
 
 theorem metricParabolic_symm (A B : ParOp) :
-    metricParabolic A B = metricParabolic B A := by
+  metricParabolic A B = metricParabolic B A := by
   apply InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.ext <;>
-    dsimp [metricParabolic, mul] <;> ring
+  dsimp [metricParabolic, mul] <;> ring
 
 theorem leibnizParabolic_eq_metric (A B : ParOp) :
-    leibnizParabolic A B = metricParabolic A B := by
+  leibnizParabolic A B = metricParabolic A B := by
   apply InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.ext <;>
-    dsimp [leibnizParabolic, poissonParabolic, metricParabolic, add, zero] <;> ring
+  dsimp [leibnizParabolic, poissonParabolic, metricParabolic, add, zero] <;> ring
 
-theorem metricParabolic_kernel_witness (χ : ℝ) :
-    metricParabolic ({ scalar := (0 : ℝ), directional := χ } : ParOp)
-      ({ scalar := (0 : ℝ), directional := χ } : ParOp)
-      = zero := by
+theorem metricParabolic_kernel_nilpotent (χ : ℝ) :
+  metricParabolic ({ scalar := (0 : ℝ), directional := χ } : ParOp)
+      ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero := by
   simpa [metricParabolic] using
     (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolic_pure_square_zero χ)
 
+/-- Alias backwards-compatible name for the pure-nilpotence theorem readout. -/
+theorem metricParabolic_kernel_sorry (χ : ℝ) :
+  metricParabolic ({ scalar := (0 : ℝ), directional := χ } : ParOp)
+      ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero :=
+    metricParabolic_kernel_nilpotent χ
+
 theorem parabolicExp_pure_composition (χ₁ χ₂ : ℝ) :
-    InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
-      ({ scalar := (0 : ℝ), directional := χ₁ + χ₂ } : ParOp)
-      =
+  InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+    ({ scalar := (0 : ℝ), directional := χ₁ + χ₂ } : ParOp)
+    =
     metricParabolic
-      (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
-        ({ scalar := (0 : ℝ), directional := χ₁ } : ParOp))
-      (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
-        ({ scalar := (0 : ℝ), directional := χ₂ } : ParOp)) := by
+    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+      ({ scalar := (0 : ℝ), directional := χ₁ } : ParOp))
+    (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp
+      ({ scalar := (0 : ℝ), directional := χ₂ } : ParOp)) := by
   simpa [metricParabolic] using
     (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp_pure_nilpotent_add χ₁ χ₂)
 
 end InfoGeometry.Canonical.ParabolicContractionBridge
-

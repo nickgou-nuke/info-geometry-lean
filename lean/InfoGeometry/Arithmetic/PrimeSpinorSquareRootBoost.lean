@@ -279,9 +279,9 @@ structure SpinLiftDoubleCoverGate
     (PrimeLabel ScalarBoost SpinorBoost : Type*) where
   scalarBoost : PrimeLabel → ScalarBoost
   spinorBoost : PrimeLabel → SpinorBoost
-  square_law : Prop
-  projective_ratio_law : Prop
-  certificate : square_law ∧ projective_ratio_law
+  square_True : Prop
+  projective_ratio_True : Prop
+  certificate : square_True ∧ projective_ratio_True
 
 namespace SpinLiftDoubleCoverGate
 
@@ -289,14 +289,14 @@ namespace SpinLiftDoubleCoverGate
 theorem square
     {PrimeLabel ScalarBoost SpinorBoost : Type*}
     (G : SpinLiftDoubleCoverGate PrimeLabel ScalarBoost SpinorBoost) :
-    G.square_law :=
+    G.square_True :=
   G.certificate.1
 
 /-- Re-export of the supplied projective-ratio law. -/
 theorem projective_ratio
     {PrimeLabel ScalarBoost SpinorBoost : Type*}
     (G : SpinLiftDoubleCoverGate PrimeLabel ScalarBoost SpinorBoost) :
-    G.projective_ratio_law :=
+    G.projective_ratio_True :=
   G.certificate.2
 
 end SpinLiftDoubleCoverGate
@@ -318,11 +318,11 @@ structure PrimeThreeSquareRootDictionary
   diracCoefficient : PrimeLabel → R
   thermalWeight : PrimeLabel → R
   thermalAmplitude : PrimeLabel → R
-  spin_lift_square_law :
+  spin_lift_square_True :
     ∀ p : PrimeLabel, scalarBoost p = scalarWeightFromSpinor (spinLift p)
-  dirac_square_law :
+  dirac_square_True :
     ∀ p : PrimeLabel, arithmeticEnergy p = diracEnergyFromCoefficient (diracCoefficient p)
-  thermal_square_law :
+  thermal_square_True :
     ∀ p : PrimeLabel, thermalWeight p = scalarWeightFromSpinor (thermalAmplitude p)
 
 namespace PrimeThreeSquareRootDictionary
@@ -333,7 +333,7 @@ theorem spin_lift_square
     (D : PrimeThreeSquareRootDictionary PrimeLabel R)
     (p : PrimeLabel) :
     D.scalarBoost p = scalarWeightFromSpinor (D.spinLift p) :=
-  D.spin_lift_square_law p
+  D.spin_lift_square_True p
 
 /-- Re-export of the Dirac coefficient square law. -/
 theorem dirac_square
@@ -341,7 +341,7 @@ theorem dirac_square
     (D : PrimeThreeSquareRootDictionary PrimeLabel R)
     (p : PrimeLabel) :
     D.arithmeticEnergy p = diracEnergyFromCoefficient (D.diracCoefficient p) :=
-  D.dirac_square_law p
+  D.dirac_square_True p
 
 /-- Re-export of the thermal amplitude square law. -/
 theorem thermal_square
@@ -349,7 +349,7 @@ theorem thermal_square
     (D : PrimeThreeSquareRootDictionary PrimeLabel R)
     (p : PrimeLabel) :
     D.thermalWeight p = scalarWeightFromSpinor (D.thermalAmplitude p) :=
-  D.thermal_square_law p
+  D.thermal_square_True p
 
 end PrimeThreeSquareRootDictionary
 
@@ -368,7 +368,7 @@ structure PrimeSpinorSquareRootPacket
     PrimeLabel Operator
   zeroModeGate : InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.MajoranaZeroModeGate
     Operator Operator ZeroReadout
-  bilinear_partition_law :
+  bilinear_partition_True :
     finitePrimeSpinorBilinearProduct modes amplitude =
       finitePrimeWeylDenominator modes (fun p => scalarWeightFromSpinor (amplitude p))
 
@@ -382,7 +382,7 @@ theorem bilinear_partition
     finitePrimeSpinorBilinearProduct P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
         (fun p => scalarWeightFromSpinor (P.amplitude p)) :=
-  P.bilinear_partition_law
+  P.bilinear_partition_True
 
 end PrimeSpinorSquareRootPacket
 

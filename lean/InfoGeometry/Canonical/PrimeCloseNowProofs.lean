@@ -64,6 +64,59 @@ theorem cayley_real_boundary_of_critical
     σ ^ 2 + t ^ 2 = (1 - σ) ^ 2 + t ^ 2 :=
   (cayley_unit_circle_real_reduction σ t).mpr h
 
+/-! ## 1b. Real Cayley / Möbius inverse lemmas -/
+
+/--
+Left inverse for the real Cayley transform.
+
+For
+
+  C x = (1 + x) / (1 - x)
+
+and
+
+  C⁻¹ y = (y - 1) / (y + 1),
+
+we have `C⁻¹ (C x) = x`, away from the pole `x = 1`.
+-/
+@[rep_depth operator]
+theorem real_cayley_inverse_left
+    (x : ℝ)
+    (hx : x ≠ 1) :
+    (((1 + x) / (1 - x) - 1) /
+      (((1 + x) / (1 - x)) + 1)) = x := by
+  have hx' : (1 - x : ℝ) ≠ 0 := by
+    intro h
+    apply hx
+    linarith
+  field_simp [hx']
+  ring
+
+/--
+Right inverse for the real Cayley transform.
+
+For
+
+  C x = (1 + x) / (1 - x)
+
+and
+
+  C⁻¹ y = (y - 1) / (y + 1),
+
+we have `C (C⁻¹ y) = y`, away from the pole `y = -1`.
+-/
+@[rep_depth operator]
+theorem real_cayley_inverse_right
+    (y : ℝ)
+    (hy : y ≠ -1) :
+    ((1 + ((y - 1) / (y + 1))) /
+      (1 - ((y - 1) / (y + 1)))) = y := by
+  have hy' : (y + 1 : ℝ) ≠ 0 := by
+    intro h
+    apply hy
+    linarith
+  field_simp [hy']
+  ring
 
 /-! ## 2. Ferromagnetic prime-chain matrix -/
 

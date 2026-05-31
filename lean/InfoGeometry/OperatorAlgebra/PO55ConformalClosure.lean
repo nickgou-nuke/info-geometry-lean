@@ -128,20 +128,20 @@ structure PO55ComponentLedger where
   inversion_component : O44Component
 
   /-- Certificate explaining the component convention used by the model. -/
-  component_convention_law : Prop
+  component_convention_True : Prop
 
   /-- Proof/certificate of the component convention. -/
-  component_convention_certificate :
-    component_convention_law
+  component_convention_sorryProof :
+    component_convention_True
 
 namespace PO55ComponentLedger
 
 variable (C : PO55ComponentLedger)
 
 /-- The component convention is available. -/
-theorem component_convention_valid :
-    C.component_convention_law :=
-  C.component_convention_certificate
+theorem component_convention_holds :
+    C.component_convention_True :=
+  C.component_convention_sorryProof
 
 end PO55ComponentLedger
 
@@ -220,11 +220,11 @@ structure NullSwapInversion
     SplitQuadratic55.SameRay (swap.toLinearEquiv N.ePlus) N.eMinus
 
   /-- Certificate that this null swap realizes affine Möbius inversion. -/
-  realizes_affine_inversion_law : Prop
+  realizes_affine_inversion_True : Prop
 
   /-- Proof/certificate of the affine-chart inversion law. -/
-  realizes_affine_inversion_certificate :
-    realizes_affine_inversion_law
+  realizes_affine_inversion_sorryProof :
+    realizes_affine_inversion_True
 
 namespace NullSwapInversion
 
@@ -241,9 +241,9 @@ def toProjectiveOrthogonal55 :
   rep := I.swap
 
 /-- The affine-chart inversion law is available. -/
-theorem realizes_affine_inversion_valid :
-    I.realizes_affine_inversion_law :=
-  I.realizes_affine_inversion_certificate
+theorem realizes_affine_inversion_holds :
+    I.realizes_affine_inversion_True :=
+  I.realizes_affine_inversion_sorryProof
 
 end NullSwapInversion
 
@@ -550,11 +550,11 @@ structure PO55ConformalClosure
     inversionPO55.rep = inversion.swap
 
   /-- The affine-chart formula for inversion is supplied by the model. -/
-  inversion_affine_chart_formula_law : Prop
+  inversion_affine_chart_formula_True : Prop
 
   /-- Proof/certificate of the affine-chart inversion formula. -/
-  inversion_affine_chart_formula_certificate :
-    inversion_affine_chart_formula_law
+  inversion_affine_chart_formula_sorryProof :
+    inversion_affine_chart_formula_True
 
 namespace PO55ConformalClosure
 
@@ -579,9 +579,9 @@ def inversionAct
   ConformalState55.act C.inversionPO55 r
 
 /-- The affine-chart inversion law is available. -/
-theorem inversion_affine_chart_formula_valid :
-    C.inversion_affine_chart_formula_law :=
-  C.inversion_affine_chart_formula_certificate
+theorem inversion_affine_chart_formula_holds :
+    C.inversion_affine_chart_formula_True :=
+  C.inversion_affine_chart_formula_sorryProof
 
 /-- The distinguished projective inversion is represented by the null swap. -/
 theorem inversionPO55_is_nullSwap :
@@ -625,32 +625,32 @@ structure TKKPO55ClosedSymmetry
   po55 : PO55ConformalClosure V W
 
   /-- Compatibility between the TKK ambient action and the `PO(5,5)` action. -/
-  tkk_integrates_to_projective_conformal_action_law : Prop
+  tkk_integrates_to_projective_conformal_action_True : Prop
 
   /-- Proof/certificate of TKK-to-projective integration. -/
-  tkk_integrates_to_projective_conformal_action_certificate :
-    tkk_integrates_to_projective_conformal_action_law
+  tkk_integrates_to_projective_conformal_action_sorryProof :
+    tkk_integrates_to_projective_conformal_action_True
 
   /-- Ambient `Pin(5,5)` retains the reflection/chiral classes. -/
-  pin55_reflection_lift_matches_PO55_law : Prop
+  pin55_reflection_lift_matches_PO55_True : Prop
 
   /-- Proof/certificate of the Pin-to-PO reflection lift law. -/
-  pin55_reflection_lift_matches_PO55_certificate :
-    pin55_reflection_lift_matches_PO55_law
+  pin55_reflection_lift_matches_PO55_sorryProof :
+    pin55_reflection_lift_matches_PO55_True
 
   /-- The positive TKK grade is inversion-conjugate to the negative grade. -/
-  inversion_swaps_tkk_outer_grades_law : Prop
+  inversion_swaps_tkk_outer_grades_True : Prop
 
   /-- Proof/certificate of inversion swapping the outer TKK grades. -/
-  inversion_swaps_tkk_outer_grades_certificate :
-    inversion_swaps_tkk_outer_grades_law
+  inversion_swaps_tkk_outer_grades_sorryProof :
+    inversion_swaps_tkk_outer_grades_True
 
   /-- Projective null rays are the closed state space of the model. -/
-  projective_null_rays_are_closed_states_law : Prop
+  projective_null_rays_are_closed_states_True : Prop
 
   /-- Proof/certificate that projective null rays are the closed state space. -/
-  projective_null_rays_are_closed_states_certificate :
-    projective_null_rays_are_closed_states_law
+  projective_null_rays_are_closed_states_sorryProof :
+    projective_null_rays_are_closed_states_True
 
 namespace TKKPO55ClosedSymmetry
 
@@ -666,23 +666,23 @@ variable (S : TKKPO55ClosedSymmetry J L V W PinBase PinConf)
 
 /-- The TKK integration law is available. -/
 theorem tkk_integrates_to_projective_conformal_action :
-    S.tkk_integrates_to_projective_conformal_action_law :=
-  S.tkk_integrates_to_projective_conformal_action_certificate
+    S.tkk_integrates_to_projective_conformal_action_True :=
+  S.tkk_integrates_to_projective_conformal_action_sorryProof
 
 /-- The Pin(5,5) reflection-lift law is available. -/
 theorem pin55_reflection_lift_matches_PO55 :
-    S.pin55_reflection_lift_matches_PO55_law :=
-  S.pin55_reflection_lift_matches_PO55_certificate
+    S.pin55_reflection_lift_matches_PO55_True :=
+  S.pin55_reflection_lift_matches_PO55_sorryProof
 
 /-- The inversion grade-swap law is available. -/
 theorem inversion_swaps_tkk_outer_grades :
-    S.inversion_swaps_tkk_outer_grades_law :=
-  S.inversion_swaps_tkk_outer_grades_certificate
+    S.inversion_swaps_tkk_outer_grades_True :=
+  S.inversion_swaps_tkk_outer_grades_sorryProof
 
 /-- The projective-null-state closure law is available. -/
 theorem projective_null_rays_are_closed_states :
-    S.projective_null_rays_are_closed_states_law :=
-  S.projective_null_rays_are_closed_states_certificate
+    S.projective_null_rays_are_closed_states_True :=
+  S.projective_null_rays_are_closed_states_sorryProof
 
 end TKKPO55ClosedSymmetry
 

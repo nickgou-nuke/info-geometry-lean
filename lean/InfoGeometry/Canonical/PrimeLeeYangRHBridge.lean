@@ -119,7 +119,7 @@ theorem leeYang
 
 /-- Re-export of the supplied nonvanishing-renormalization law. -/
 @[rep_depth operator]
-theorem renormalization_nonzero_valid
+theorem renormalization_nonzero_holds
     (N : ℕ)
     (z : ℂ) :
     A.renormalization N z ≠ 0 :=

@@ -342,14 +342,14 @@ structure ColimitInvarianceSocket where
   /-- Embedding of each finite stage into the colimit. -/
   embed : ∀ n, chain.Stage n → Colimit
   /-- Compatibility: embeddings commute with bonding maps. -/
-  embed_compatible_law : Prop
+  embed_compatible_True : Prop
   /-- The colimit carries supergraded invariant data. -/
   colimitInvariant : @SupergradedInvariantAt Colimit colimitRing
   /-- Each finite-stage embedding preserves the invariant lanes. -/
-  embed_preserves_odd_law : Prop
-  embed_preserves_even_law : Prop
-  embed_preserves_central_law : Prop
+  embed_preserves_odd_True : Prop
+  embed_preserves_even_True : Prop
+  embed_preserves_central_True : Prop
   /-- Density: the union of embedded finite stages is dense in the colimit. -/
-  density_law : Prop
+  density_True : Prop
 
 end InfoGeometry.Canonical.InductiveInvarianceTKKPacket

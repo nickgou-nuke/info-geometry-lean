@@ -42,25 +42,25 @@ structure BaryonAsymmetryAccounting
     asymmetry = ledger.condensateTransfer
 
   /-- Baryon-number violation witness. -/
-  baryon_number_violation_law : Prop
+  baryon_number_violation_True : Prop
 
   /-- C/CP violation witness. -/
-  cp_violation_law : Prop
+  cp_violation_True : Prop
 
   /-- Out-of-equilibrium witness. -/
-  out_of_equilibrium_law : Prop
+  out_of_equilibrium_True : Prop
 
   /-- Proof/certificate of baryon-number violation. -/
-  baryon_number_violation_certificate :
-    baryon_number_violation_law
+  baryon_number_violation_sorryProof :
+    baryon_number_violation_True
 
   /-- Proof/certificate of CP violation. -/
-  cp_violation_certificate :
-    cp_violation_law
+  cp_violation_sorryProof :
+    cp_violation_True
 
   /-- Proof/certificate of departure from equilibrium. -/
-  out_of_equilibrium_certificate :
-    out_of_equilibrium_law
+  out_of_equilibrium_sorryProof :
+    out_of_equilibrium_True
 
 namespace BaryonAsymmetryAccounting
 

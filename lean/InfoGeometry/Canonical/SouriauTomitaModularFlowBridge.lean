@@ -376,6 +376,26 @@ noncomputable def sigma : AdditiveModularFlow (H := H) :=
 def modularBeta : ℝ :=
   C.beta
 
+/-- The minimal Souriau/Tomita modular automorphism group is additive. -/
+@[rep_depth operator]
+theorem sigma_add (s t : ℝ) :
+    C.sigma (s + t) = C.sigma s * C.sigma t :=
+  AdditiveModularFlow.map_add C.sigma s t
+
+/-- The minimal Souriau/Tomita modular automorphism group starts at identity. -/
+@[rep_depth operator]
+theorem sigma_zero :
+    C.sigma 0 = 1 :=
+  AdditiveModularFlow.map_zero C.sigma
+
+/-- The modular Hamiltonian is the Souriau moment at geometric temperature. -/
+@[rep_depth operator]
+theorem modularHamiltonian_eq_moment_geometricTemperature :
+    C.logContext.modularHamiltonian =
+      C.logContext.souriauMoment.momentOperator
+        C.logContext.souriauMoment.geometricTemperature :=
+  C.logContext.modularHamiltonian_eq_moment_geometricTemperature
+
 /--
 Minimal constructive KMS identity over the Souriau-generated modular flow.
 
@@ -389,6 +409,29 @@ theorem kms_eval_mul_souriau_modular_eq_eval_flip
     C.state.eval (A * C.sigma C.modularBeta B) =
       C.state.eval (B * A) := by
   exact C.kms.eval_mul_modular_eq_eval_flip A B
+
+/--
+Search-facing constructive KMS packet on the minimal Souriau/Tomita branch.
+
+This keeps the narrowed branch on `MinimalSouriauTomitaKMSContext`: the KMS
+state is still read definitionally from the proof-carrying `KMSState`, and no
+separate `state` or `kms_state_eq` packet is reintroduced.
+-/
+@[rep_depth operator]
+theorem constructive_kms_packet
+    (A B : Obs) (s t : ℝ) :
+    C.state.eval (A * C.sigma C.modularBeta B) =
+        C.state.eval (B * A) ∧
+    C.sigma (s + t) = C.sigma s * C.sigma t ∧
+    C.sigma 0 = 1 ∧
+    C.logContext.modularHamiltonian =
+      C.logContext.souriauMoment.momentOperator
+        C.logContext.souriauMoment.geometricTemperature := by
+  exact ⟨
+    C.kms_eval_mul_souriau_modular_eq_eval_flip A B,
+    C.sigma_add s t,
+    C.sigma_zero,
+    C.modularHamiltonian_eq_moment_geometricTemperature⟩
 
 /-- Compatibility adapter back to the broad Souriau/Tomita KMS context. -/
 @[rep_depth operator]
@@ -787,3 +830,57 @@ theorem mk_of_cyclic_zero_thermal
     geometricTemperature state beta
 
 end MinimalSouriauTomitaKMSContext
+
+/--
+Direct constructive broad KMS constructor from cyclicity on the zero-thermal
+Souriau/Tomita branch.
+
+This removes the explicit `kms : KMSState ...` packet from the broad theorem
+surface while preserving the standard `SouriauTomitaKMSContext` API for
+compatibility consumers.
+-/
+@[rep_depth operator]
+noncomputable def SouriauTomitaKMSContext.ofCyclicZeroThermal
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ) :
+    SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry) :=
+  (MinimalSouriauTomitaKMSContext.ofCyclicZeroThermal
+    (H := H) (Symmetry := Symmetry) geometricTemperature state beta).toSouriauTomitaKMSContext
+
+/-- The direct broad cyclic zero-thermal constructor reads back the cyclic state. -/
+@[rep_depth operator]
+theorem SouriauTomitaKMSContext.ofCyclicZeroThermal_state_eq
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ) :
+    (SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+      geometricTemperature state beta).state = state.state := by
+  simpa [SouriauTomitaKMSContext.ofCyclicZeroThermal] using
+    (MinimalSouriauTomitaKMSContext.toSouriauTomitaKMSContext_state_eq
+      (H := H) (Symmetry := Symmetry)
+      (MinimalSouriauTomitaKMSContext.ofCyclicZeroThermal
+        (H := H) (Symmetry := Symmetry) geometricTemperature state beta)).trans
+      (MinimalSouriauTomitaKMSContext.ofCyclicZeroThermal_state_eq
+        (H := H) (Symmetry := Symmetry) geometricTemperature state beta)
+
+/--
+The direct broad cyclic zero-thermal constructor satisfies the Souriau/Tomita
+KMS identity without an explicit `kms : KMSState ...` argument.
+-/
+@[rep_depth operator]
+theorem SouriauTomitaKMSContext.ofCyclicZeroThermal_kms_eval_mul_souriau_modular_eq_eval_flip
+    (geometricTemperature : Symmetry)
+    (state : CyclicAlgebraicState (H := H))
+    (beta : ℝ)
+    (A B : Obs) :
+    (SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+      geometricTemperature state beta).state.eval
+        (A * (SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+          geometricTemperature state beta).logContext.souriauAdditiveModularFlow beta B) =
+      (SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+        geometricTemperature state beta).state.eval (B * A) := by
+  simpa [SouriauTomitaKMSContext.ofCyclicZeroThermal, SouriauTomitaKMSContext.sigma,
+    SouriauTomitaKMSContext.modularBeta] using
+    ((SouriauTomitaKMSContext.ofCyclicZeroThermal (H := H) (Symmetry := Symmetry)
+      geometricTemperature state beta).kms_eval_mul_souriau_modular_eq_eval_flip A B)

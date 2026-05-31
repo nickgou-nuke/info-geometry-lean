@@ -127,13 +127,13 @@ def sameModeCurrentDLaw (F : PrimeLocalCARFamily PrimeLabel Op) : Prop :=
   ∀ p, dField F p * current F p = cField F p
 
 /-- The explicit local current sends `c_p` to `d_p` on the same prime mode. -/
-theorem sameModeCurrentCLaw_valid (F : PrimeLocalCARFamily PrimeLabel Op) :
+theorem sameModeCurrentCLaw_holds (F : PrimeLocalCARFamily PrimeLabel Op) :
     sameModeCurrentCLaw F := by
   intro p
   exact PrimeMajoranaCAR.ExteriorCARPair.cMajorana_mul_parityOp (F.pair p)
 
 /-- The explicit local current sends `d_p` to `c_p` on the same prime mode. -/
-theorem sameModeCurrentDLaw_valid (F : PrimeLocalCARFamily PrimeLabel Op) :
+theorem sameModeCurrentDLaw_holds (F : PrimeLocalCARFamily PrimeLabel Op) :
     sameModeCurrentDLaw F := by
   intro p
   exact PrimeMajoranaCAR.ExteriorCARPair.dMajorana_mul_parityOp (F.pair p)
@@ -151,18 +151,18 @@ def toMobiusCurrentOPE
   cField := cField F
   dField := dField F
   current := current F
-  current_c_law := sameModeCurrentCLaw F
-  current_d_law := sameModeCurrentDLaw F
+  current_c_True := sameModeCurrentCLaw F
+  current_d_True := sameModeCurrentDLaw F
 
-theorem toMobiusCurrentOPE_current_c_valid
+theorem toMobiusCurrentOPE_current_c_holds
     (F : PrimeLocalCARFamily PrimeLabel Op) :
-    (toMobiusCurrentOPE F).current_c_law :=
-  sameModeCurrentCLaw_valid F
+    (toMobiusCurrentOPE F).current_c_True :=
+  sameModeCurrentCLaw_holds F
 
-theorem toMobiusCurrentOPE_current_d_valid
+theorem toMobiusCurrentOPE_current_d_holds
     (F : PrimeLocalCARFamily PrimeLabel Op) :
-    (toMobiusCurrentOPE F).current_d_law :=
-  sameModeCurrentDLaw_valid F
+    (toMobiusCurrentOPE F).current_d_True :=
+  sameModeCurrentDLaw_holds F
 
 end PrimeLocalCARFamily
 
@@ -189,7 +189,7 @@ def offDiagCurrentCLaw : Prop :=
 def offDiagCurrentDLaw : Prop :=
   ∀ p q, p ≠ q → (N.c p * N.d p) * N.d q = N.d q * (N.c p * N.d p)
 
-theorem sameModeCurrentCLaw_valid :
+theorem sameModeCurrentCLaw_holds :
     sameModeCurrentCLaw N := by
   intro p
   calc
@@ -197,7 +197,7 @@ theorem sameModeCurrentCLaw_valid :
         = (N.c p * N.c p) * N.d p := by noncomm_ring
     _ = N.d p := by rw [N.c_sq p]; simp
 
-theorem sameModeCurrentDLaw_valid :
+theorem sameModeCurrentDLaw_holds :
     sameModeCurrentDLaw N := by
   intro p
   calc
@@ -211,12 +211,12 @@ theorem sameModeCurrentDLaw_valid :
     _ = -(N.c p * (N.d p * N.d p)) := by noncomm_ring
     _ = N.c p := by rw [N.d_sq p]; simp
 
-theorem offDiagCurrentCLaw_valid :
+theorem offDiagCurrentCLaw_holds :
     offDiagCurrentCLaw N := by
   intro p q hpq
   exact N.localParity_commutes_c_offdiag p q hpq
 
-theorem offDiagCurrentDLaw_valid :
+theorem offDiagCurrentDLaw_holds :
     offDiagCurrentDLaw N := by
   intro p q hpq
   exact N.localParity_commutes_d_offdiag p q hpq
@@ -233,16 +233,16 @@ def toMobiusCurrentOPE :
   cField := N.c
   dField := N.d
   current := fun p => N.c p * N.d p
-  current_c_law := sameModeCurrentCLaw N ∧ offDiagCurrentCLaw N
-  current_d_law := sameModeCurrentDLaw N ∧ offDiagCurrentDLaw N
+  current_c_True := sameModeCurrentCLaw N ∧ offDiagCurrentCLaw N
+  current_d_True := sameModeCurrentDLaw N ∧ offDiagCurrentDLaw N
 
-theorem toMobiusCurrentOPE_current_c_valid :
-    (toMobiusCurrentOPE N).current_c_law :=
-  ⟨sameModeCurrentCLaw_valid N, offDiagCurrentCLaw_valid N⟩
+theorem toMobiusCurrentOPE_current_c_holds :
+    (toMobiusCurrentOPE N).current_c_True :=
+  ⟨sameModeCurrentCLaw_holds N, offDiagCurrentCLaw_holds N⟩
 
-theorem toMobiusCurrentOPE_current_d_valid :
-    (toMobiusCurrentOPE N).current_d_law :=
-  ⟨sameModeCurrentDLaw_valid N, offDiagCurrentDLaw_valid N⟩
+theorem toMobiusCurrentOPE_current_d_holds :
+    (toMobiusCurrentOPE N).current_d_True :=
+  ⟨sameModeCurrentDLaw_holds N, offDiagCurrentDLaw_holds N⟩
 
 end PrimeWeylGaugeCantorFockBridge.WeylGaugeTiltSwitchNormalization
 

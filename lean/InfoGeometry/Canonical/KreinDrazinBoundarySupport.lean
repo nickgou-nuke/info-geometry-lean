@@ -449,7 +449,7 @@ structure AlgebraicDrazinData
   /-- Algebraic reflexivity law. -/
   reflexive : LD * L * LD = LD
   /-- Algebraic Drazin power law. -/
-  power_law : L ^ (index + 1) * LD = L ^ index
+  power_True : L ^ (index + 1) * LD = L ^ index
   /-- Complement definition `H = 1 - L Lᴰ`. -/
   H_def : H = 1 - L * LD
   /-- Complement idempotence. -/
@@ -513,7 +513,7 @@ structure CarrierKreinAdjointData
   /-- Krein adjoint on operators. -/
   sharp : Op → Op
   /-- Defining adjoint law for the indefinite form. -/
-  adjoint_law :
+  adjoint_True :
     ∀ A v w, K.kreinForm (K.act A v) w =
       K.kreinForm v (K.act (sharp A) w)
 
@@ -538,7 +538,7 @@ structure KreinConformalSymmetry
   /-- The scale is positive. -/
   scale_positive : 0 < scale
   /-- Conformal law for the Krein form. -/
-  conformal_law :
+  conformal_True :
     ∀ v w : V, K.kreinForm (K.act U v) (K.act U w) =
       scale * K.kreinForm v w
 

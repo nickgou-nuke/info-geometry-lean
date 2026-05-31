@@ -150,7 +150,7 @@ The Virasoro flow generators satisfy the conformal commutator law.
 This ensures the 'bits' evolve into 'waves' (integrable systems like KdV).
 -/
 @[rep_depth transport]
-theorem conformal_flow_valid (m n : ℤ) :
+theorem conformal_flow_holds (m n : ℤ) :
     ∃ (bracket : (Orbit → Orbit) → (Orbit → Orbit) → (Orbit → Orbit)),
         bracket (B.virasoro_flow_generator m) (B.virasoro_flow_generator n) =
           B.virasoro_flow_generator (m + n) :=
@@ -158,9 +158,9 @@ theorem conformal_flow_valid (m n : ℤ) :
 
 /-- The coadjoint-orbit metriplectic second law is available from the owner layer. -/
 @[rep_depth transport]
-theorem coadjoint_orbit_metriplectic_second_law (x : Orbit) :
+theorem coadjoint_orbit_metriplectic_second_True (x : Orbit) :
     0 ≤ B.dynamics.totalEntropyRate x :=
-  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
+  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_True
     (C := B.dynamics) x
 
 /-- Packed coadjoint-orbit metriplectic outputs are available from the owner layer. -/

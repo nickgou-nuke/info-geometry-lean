@@ -185,6 +185,67 @@ theorem denom_commutes_inverse :
 
 end VerifiedPhaseResolvent
 
+/-! ## 3b. Operator Cayley identities -/
+
+/--
+Right Cayley transform relation.
+
+Let `U` be a right inverse witness for `1 - X` in the sense
+
+`U * (1 - X) = 1`.
+
+For the right Cayley expression
+
+`Y = (1 + X) * U`,
+
+we have
+
+`(Y - 1) * (1 - X) = 2 * X`.
+
+This is the noncommutative operator version of the scalar identity underlying
+`C⁻¹(C(x)) = x`, before dividing by `2`.
+-/
+@[rep_depth operator]
+theorem operator_cayley_right_sub_relation
+    {R : Type*} [Ring R]
+    (X U : R)
+    (hU : U * (1 - X) = 1) :
+    (((1 + X) * U) - 1) * (1 - X) = (2 : R) * X := by
+  calc
+    (((1 + X) * U) - 1) * (1 - X)
+        = (1 + X) * (U * (1 - X)) - (1 - X) := by
+          noncomm_ring
+    _ = (1 + X) * 1 - (1 - X) := by
+          rw [hU]
+    _ = X + X := by
+          noncomm_ring
+    _ = (2 : R) * X := by
+          simp [two_mul]
+
+/--
+Right Cayley denominator relation.
+
+Under the same hypothesis,
+
+`(((1 + X) * U) + 1) * (1 - X) = 2`.
+
+This is the operator denominator identity behind the inverse Cayley formula.
+-/
+@[rep_depth operator]
+theorem operator_cayley_right_add_relation
+    {R : Type*} [Ring R]
+    (X U : R)
+    (hU : U * (1 - X) = 1) :
+    (((1 + X) * U) + 1) * (1 - X) = (2 : R) := by
+  calc
+    (((1 + X) * U) + 1) * (1 - X)
+        = (1 + X) * (U * (1 - X)) + (1 - X) := by
+          noncomm_ring
+    _ = (1 + X) * 1 + (1 - X) := by
+          rw [hU]
+    _ = 2 := by
+          norm_num
+
 /-! ## 4. Constructive Cayley transform -/
 
 /-- The bounded Cayley transform: `U = (D - K)(D + K)^(-1)`. -/
@@ -602,6 +663,8 @@ attribute [rep_depth operator]
   inverse_phaseLinear
   VerifiedPhaseResolvent
   VerifiedPhaseResolvent.denomInv_phase_linear
+  operator_cayley_right_sub_relation
+  operator_cayley_right_add_relation
   boundedCayley
   D_add_K_commutes_D_sub_K
   cayley_factors_commute

@@ -83,12 +83,12 @@ structure StandardFormNormalConeLite
   J_fixes_naturalCone : ∀ ⦃ξ : E⦄, ξ ∈ naturalCone → J ξ = ξ
 
   /-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
-  outward_normal_cone_law :
+  outward_normal_cone_True :
     ∀ ξ : E, ξ ∈ naturalCone →
       convexOutwardNormalCone naturalCone ξ = outwardConeOrthogonal naturalCone ξ
 
   /-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
-  inward_normal_cone_law :
+  inward_normal_cone_True :
     ∀ ξ : E, ξ ∈ naturalCone →
       convexInwardNormalCone naturalCone ξ = inwardConeOrthogonal naturalCone ξ
 
@@ -115,14 +115,14 @@ theorem J_fixes_coneVector (ω : Functional) :
 theorem outwardNormalCone_coneVector (ω : Functional) :
     convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
       outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.outward_normal_cone_law (S.coneVector ω) (S.coneVector_mem ω)
+  S.outward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
 
 /-- Inward normal cone at a cone vector. -/
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector (ω : Functional) :
     convexInwardNormalCone S.naturalCone (S.coneVector ω) =
       inwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.inward_normal_cone_law (S.coneVector ω) (S.coneVector_mem ω)
+  S.inward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
 
 end StandardFormNormalConeLite
 

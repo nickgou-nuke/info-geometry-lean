@@ -192,7 +192,7 @@ theorem completedFunctionalReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.functionalReflection
       (CompletedZetaSouriauDInfinityThermodynamics.functionalReflection s) = s := by
   exact
-    (CompletedZetaSouriauDInfinityThermodynamics.functionalReflection_involutive (s := s))
+    CompletedZetaSouriauDInfinityThermodynamics.functionalReflection_involutive s
 
 /-- Conjugation is an involution on the completed-zeta symmetry plane. -/
 @[simp, rep_depth thermo]
@@ -200,7 +200,7 @@ theorem completedConjugationReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection
       (CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection s) = s := by
   exact
-    (CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection_involutive (s := s))
+    CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection_involutive s
 
 /-- The antiunitary reflection is an involution. -/
 @[simp, rep_depth thermo]
@@ -208,8 +208,7 @@ theorem completedAntiunitaryReflection_involutive (s : ℂ) :
     CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection
       (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s) = s := by
   exact
-    (CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection_involutive
-      (s := s))
+    CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection_involutive s
 
 /-- The reflection and conjugation commute on the concrete completed-zeta plane. -/
 @[rep_depth thermo]
@@ -233,20 +232,20 @@ theorem completedAntiunitaryReflection_fixed_iff_criticalLine (s : ℂ) :
 /-- The concrete completed-zeta finite symmetry preserves the critical line. -/
 @[rep_depth thermo]
 theorem completedZetaKleinAct_preserves_criticalLine
-    (g : CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry) {s : ℂ}
+    (g : CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaSymmetry) {s : ℂ}
     (hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s) :
     CompletedZetaSouriauDInfinityThermodynamics.CriticalLine
-      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct g s) := by
-  exact CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct_preserves_criticalLine
-    g hs
+      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct g s) := by
+  exact CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct_preserves_criticalLine
+    g s hs
 
 /-- The concrete completed-zeta finite symmetry is involutive. -/
 @[simp, rep_depth thermo]
 theorem completedZetaKleinAct_involutive
-    (g : CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry) (s : ℂ) :
-    CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct g
-      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct g s) = s := by
-  exact CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct_involutive g s
+    (g : CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaSymmetry) (s : ℂ) :
+    CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct g
+      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct g s) = s := by
+  exact CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct_involutive g s
 
 /-! ## 6. Imported Virasoro closure -/
 
@@ -545,8 +544,8 @@ theorem primonCollectedNativeClosure
     (s : ℂ)
     (hs : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s) :
     CompletedZetaSouriauDInfinityThermodynamics.CriticalLine
-      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct
-        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry.functional s)
+      (CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct
+        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaSymmetry.functional s)
     ∧
     ((InfoGeometry.Probability.Homological.fiveGradedHomologicalPipeline G bracket).toNumericalShadow =
       fun _ => 5)
@@ -554,8 +553,8 @@ theorem primonCollectedNativeClosure
     P.affineVirasoro.centralCharge = (S.card : ℝ) := by
   refine ⟨?_, ?_, ?_⟩
   · exact
-      CompletedZetaSouriauDInfinityThermodynamics.completedZetaKleinAct_preserves_criticalLine
-        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaKleinSymmetry.functional hs
+      CompletedZetaSouriauDInfinityThermodynamics.completedZetaAct_preserves_criticalLine
+        CompletedZetaSouriauDInfinityThermodynamics.CompletedZetaSymmetry.functional s hs
   · rfl
   · exact
       InfoGeometry.Canonical.PrimeVirasoroSugawara.centralCharge_eq_card_of_level_one_dualCoxeter_zero

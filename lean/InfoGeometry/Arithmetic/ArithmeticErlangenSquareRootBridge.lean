@@ -128,7 +128,7 @@ structure PfaffianSquareRootGate
 namespace PfaffianSquareRootGate
 
 /-- Re-export of the supplied Pfaffian square law. -/
-theorem square_law
+theorem square_True
     {Carrier Scalar : Type*} [CommMonoid Scalar]
     (P : PfaffianSquareRootGate Carrier Scalar) :
     P.pfaffian ^ 2 = P.determinant :=
@@ -146,7 +146,7 @@ structure SuperchargeSquareRootGate
     (Operator : Type*) [Mul Operator] where
   Q : Operator
   H : Operator
-  square_law :
+  square_True :
     Q * Q = H
 
 namespace SuperchargeSquareRootGate
@@ -156,7 +156,7 @@ theorem valid
     {Operator : Type*} [Mul Operator]
     (S : SuperchargeSquareRootGate Operator) :
     S.Q * S.Q = S.H :=
-  S.square_law
+  S.square_True
 
 end SuperchargeSquareRootGate
 
@@ -186,7 +186,7 @@ variable
     [CommMonoid R] [Mul Operator]
 
 /-- The finite amplitude/probability square-root law in the bridge. -/
-theorem amplitude_square_law
+theorem amplitude_square_True
     (B : ArithmeticErlangenSquareRootPacket
       α R Carrier Operator) :
     finiteProbabilityProduct B.amplitude.support B.amplitude.probability =
@@ -194,14 +194,14 @@ theorem amplitude_square_law
   B.amplitude.probabilityProduct_eq_amplitudeProduct_sq
 
 /-- The supplied Pfaffian square law in the bridge. -/
-theorem pfaffian_square_law
+theorem pfaffian_square_True
     (B : ArithmeticErlangenSquareRootPacket
       α R Carrier Operator) :
     B.pfaffian.pfaffian ^ 2 = B.pfaffian.determinant :=
-  B.pfaffian.square_law
+  B.pfaffian.square_True
 
 /-- The supplied supercharge square law in the bridge. -/
-theorem supercharge_square_law
+theorem supercharge_square_True
     (B : ArithmeticErlangenSquareRootPacket
       α R Carrier Operator) :
     B.supercharge.Q * B.supercharge.Q = B.supercharge.H :=

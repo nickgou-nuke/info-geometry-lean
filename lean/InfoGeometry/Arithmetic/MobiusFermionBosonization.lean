@@ -231,7 +231,7 @@ structure DeterminantVandermondeComparisonGate
   determinant : DeterminantReadout
   vandermonde : VandermondeReadout
   compare : DeterminantReadout → VandermondeReadout → Prop
-  comparison_law : compare determinant vandermonde
+  comparison_True : compare determinant vandermonde
 
 namespace DeterminantVandermondeComparisonGate
 
@@ -241,7 +241,7 @@ theorem valid
     (G : DeterminantVandermondeComparisonGate
       DeterminantReadout VandermondeReadout) :
     G.compare G.determinant G.vandermonde :=
-  G.comparison_law
+  G.comparison_True
 
 end DeterminantVandermondeComparisonGate
 

@@ -73,10 +73,10 @@ structure ParaunitaryCliffordFilterBank where
   polyphaseMatrix : Prop
   paraunitary : Prop
   perfectReconstruction : Prop
-  perfectReconstruction_certificate :
+  perfectReconstruction_sorryProof :
     paraunitary → perfectReconstruction
   energyPreservation : Prop
-  energyPreservation_certificate :
+  energyPreservation_sorryProof :
     paraunitary → energyPreservation
 
 /-- Extract the owned perfect-reconstruction certificate from paraunitarity. -/
@@ -85,7 +85,7 @@ theorem perfectReconstruction_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : F.paraunitary) :
     F.perfectReconstruction :=
-  F.perfectReconstruction_certificate h
+  F.perfectReconstruction_sorryProof h
 
 /-- Extract the owned energy-preservation certificate from paraunitarity. -/
 @[rep_depth operator]
@@ -93,7 +93,7 @@ theorem energyPreservation_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : F.paraunitary) :
     F.energyPreservation :=
-  F.energyPreservation_certificate h
+  F.energyPreservation_sorryProof h
 
 /--
 Discrete cascade system attached to a paraunitary Clifford filter bank.
@@ -111,17 +111,17 @@ structure CliffordCascadeSystem
   waveletDetail : ℕ → Signal
 
   cascadeAlgorithm : Prop
-  cascadeAlgorithm_certificate : cascadeAlgorithm
+  cascadeAlgorithm_sorryProof : cascadeAlgorithm
   regularityWitness : Prop
-  regularityWitness_certificate : regularityWitness
+  regularityWitness_sorryProof : regularityWitness
   sumRuleWitness : Prop
-  sumRuleWitness_certificate : sumRuleWitness
+  sumRuleWitness_sorryProof : sumRuleWitness
   cascadeConvergesL2 : Prop
-  cascadeConvergesL2_certificate : cascadeConvergesL2
+  cascadeConvergesL2_sorryProof : cascadeConvergesL2
   compactUniformUpgrade : Prop
-  compactUniformUpgrade_certificate : compactUniformUpgrade
+  compactUniformUpgrade_sorryProof : compactUniformUpgrade
   reconstructionExists : Prop
-  reconstructionExists_certificate : reconstructionExists
+  reconstructionExists_sorryProof : reconstructionExists
 
 namespace CliffordCascadeSystem
 
@@ -130,15 +130,15 @@ variable (C : CliffordCascadeSystem F)
 
 /-- Re-export of the stored cascade convergence claim. -/
 @[rep_depth operator]
-theorem cascadeConvergesL2_law :
+theorem cascadeConvergesL2_True :
     C.cascadeConvergesL2 :=
-  C.cascadeConvergesL2_certificate
+  C.cascadeConvergesL2_sorryProof
 
 /-- Re-export of the stored compact-uniform upgrade claim. -/
 @[rep_depth operator]
-theorem compactUniformUpgrade_law :
+theorem compactUniformUpgrade_True :
     C.compactUniformUpgrade :=
-  C.compactUniformUpgrade_certificate
+  C.compactUniformUpgrade_sorryProof
 
 end CliffordCascadeSystem
 

@@ -455,6 +455,187 @@ theorem gravity_generated_by_unitRelativeVolumeState_metricDerived
       (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM⟩
 
 /--
+Proof-carrying metric-derived gravity witness on the unit-relative-volume lane.
+
+This is the next constructive narrowing after
+`gravity_generated_by_unitRelativeVolumeState_metricDerived`: callers provide one
+witness packet carrying both the geometric unit-relative-volume state and the
+metric-derived RN/Ricci bridge, instead of threading the pair
+`(hUnitState, hM)` separately.
+-/
+structure MetricDerivedUnitRelativeVolumeStateWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) where
+  hUnitState : UnitRelativeVolumeState Kgeo
+  hM : MetricDerivedRNRicciBridge R Kgeo x
+
+namespace MetricDerivedUnitRelativeVolumeStateWitness
+
+/-- Recover the unit-relative-volume state from the proof-carrying witness. -/
+theorem unitRelativeVolumeState
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x) :
+    UnitRelativeVolumeState Kgeo :=
+  W.hUnitState
+
+/-- Recover the metric-derived RN/Ricci bridge from the proof-carrying witness. -/
+theorem metricDerivedBridge
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x) :
+    MetricDerivedRNRicciBridge R Kgeo x :=
+  W.hM
+
+end MetricDerivedUnitRelativeVolumeStateWitness
+
+/--
+Proof-carrying metric-derived entropy witness on the RN/unit-volume lane.
+
+This is the next constructive narrowing after
+`gravity_generated_by_rnEntropyWitness_metricDerived`: callers provide one
+witness packet carrying both the RN/unit-relative-volume source data and the
+metric-derived RN/Ricci bridge, instead of threading the pair `(W, hM)`
+separately.
+-/
+structure MetricDerivedRNEntropyUnitRelativeVolumeWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) where
+  rnEntropy : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo
+  hM : MetricDerivedRNRicciBridge R Kgeo x
+
+namespace MetricDerivedRNEntropyUnitRelativeVolumeWitness
+
+/--
+Recover the smaller metric-derived unit-relative-volume witness from the bundled
+RN-entropy / metric-derived packet.
+-/
+theorem toMetricDerivedUnitRelativeVolumeStateWitness
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x where
+  hUnitState := unitRelativeVolumeState_of_rnEntropyWitness
+    (n := n) (Kgeo := Kgeo) W.rnEntropy
+  hM := W.hM
+
+end MetricDerivedRNEntropyUnitRelativeVolumeWitness
+
+/--
+Metric-derived gravity capstone from one proof-carrying witness packet.
+
+This removes the explicit pair `(hUnitState, hM)` from the metric-derived owner
+surface by routing through `MetricDerivedUnitRelativeVolumeStateWitness`.
+-/
+theorem gravity_generated_by_metricDerivedUnitRelativeVolumeStateWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_unitRelativeVolumeState_metricDerived
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    W.hUnitState W.hM
+
+/--
+Metric-derived vacuum equation from one proof-carrying unit-relative-volume
+witness packet.
+
+This removes the explicit pair `(hUnitState, hM)` from the direct
+vacuum-equation surface on the smallest metric-derived owner lane.
+-/
+theorem vacuumEinsteinEquation_of_metricDerivedUnitRelativeVolumeStateWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact
+    (gravity_generated_by_metricDerivedUnitRelativeVolumeStateWitness
+      (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) W).2
+
+/--
+Metric-derived Ricci-flatness from one proof-carrying unit-relative-volume
+witness packet.
+
+This removes the explicit pair `(hUnitState, hM)` from the direct Ricci-flatness
+surface on the smallest metric-derived owner lane.
+-/
+theorem isRicciFlat_of_metricDerivedUnitRelativeVolumeStateWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X)
+    (W : MetricDerivedUnitRelativeVolumeStateWitness (Kgeo := Kgeo) R x) :
+    IsRicciFlat R := by
+  exact
+    (gravity_generated_by_metricDerivedUnitRelativeVolumeStateWitness
+      (Kgeo := Kgeo) (R := R) (x := x) (Λ := 0) W).1
+
+/--
+Metric-derived entropy-to-gravity capstone from one proof-carrying witness
+packet.
+
+This removes the explicit pair `(W, hM)` from the metric-derived RN-entropy
+gravity surface: callers provide one constructive packet, which is first
+converted into `MetricDerivedUnitRelativeVolumeStateWitness` and then routed
+through the existing smaller owner theorem.
+-/
+theorem gravity_generated_by_metricDerivedRNEntropyUnitRelativeVolumeWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_metricDerivedUnitRelativeVolumeStateWitness
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (MetricDerivedRNEntropyUnitRelativeVolumeWitness.toMetricDerivedUnitRelativeVolumeStateWitness
+      (n := n) W)
+
+/--
+Metric-derived vacuum equation from one proof-carrying RN-entropy / metric-derived
+witness packet.
+
+This removes the remaining explicit metric-derived bridge hypothesis from the
+metric-derived vacuum-equation surface: callers provide one
+`MetricDerivedRNEntropyUnitRelativeVolumeWitness`, which is routed through the
+existing smaller metric-derived gravity theorem and then projected to its vacuum
+Einstein component.
+-/
+theorem vacuumEinsteinEquation_of_metricDerivedRNEntropyUnitRelativeVolumeWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact
+    (gravity_generated_by_metricDerivedRNEntropyUnitRelativeVolumeWitness
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) W).2
+
+/--
+Metric-derived Ricci-flatness from one proof-carrying RN-entropy / metric-derived
+witness packet.
+
+This is the direct theorem surface for callers that only need Ricci-flatness:
+it removes the remaining explicit metric-derived bridge hypothesis from the
+metric-derived RN-entropy lane by consuming
+`MetricDerivedRNEntropyUnitRelativeVolumeWitness` directly.
+-/
+theorem isRicciFlat_of_metricDerivedRNEntropyUnitRelativeVolumeWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X)
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    IsRicciFlat R := by
+  exact
+    (gravity_generated_by_metricDerivedRNEntropyUnitRelativeVolumeWitness
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := 0) W).1
+
+/--
 Metric-derived vacuum equation through the bundled RN source / unit-volume
 witness.
 

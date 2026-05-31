@@ -294,6 +294,9 @@ structure Pin44CoverDatum
   /-- The induced linear split-orthogonal transformation. -/
   cover : ∀ a : PinEl, isPin a → Orthogonal44 Q
 
+  /-- Socket asserting the odd-reflection lane is available in the model. -/
+  odd_reflection_socket : Prop
+
 
 /--
 A chiral volume/sign operator attached to the Pin cover.

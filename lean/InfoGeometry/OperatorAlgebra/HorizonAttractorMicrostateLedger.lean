@@ -72,12 +72,12 @@ structure HorizonAttractorMicrostateLedger
     Charge → Scalar
 
   /-- Attractor-style entropy law. -/
-  entropy_attractor_law :
+  entropy_attractor_True :
     ∀ s : State,
       entropyReadout s = entropyOfCharge (chargeReadout s)
 
   /-- Attractor-style central-charge law. -/
-  centralCharge_attractor_law :
+  centralCharge_attractor_True :
     ∀ s : State,
       centralCharge s = centralChargeOfCharge (chargeReadout s)
 
@@ -93,13 +93,13 @@ variable
 theorem entropyReadout_eq_entropyOfCharge
     (s : State) :
     L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) :=
-  L.entropy_attractor_law s
+  L.entropy_attractor_True s
 
 /-- The central-charge readout is determined by charge data. -/
 theorem centralCharge_eq_centralChargeOfCharge
     (s : State) :
     L.centralCharge s = L.centralChargeOfCharge (L.chargeReadout s) :=
-  L.centralCharge_attractor_law s
+  L.centralCharge_attractor_True s
 
 end HorizonAttractorMicrostateLedger
 
@@ -119,7 +119,7 @@ structure HorizonMemoryRecoveryWitness
     State → Memory
 
   /-- Recovery law: the visible recovered memory equals the hidden memory. -/
-  recovery_law :
+  recovery_True :
     ∀ s : State,
       recoveredMemory s = L.hiddenMemory s
 
@@ -136,7 +136,7 @@ variable
 theorem recoveredMemory_eq_hiddenMemory
     (s : State) :
     R.recoveredMemory s = L.hiddenMemory s :=
-  R.recovery_law s
+  R.recovery_True s
 
 end HorizonMemoryRecoveryWitness
 
@@ -159,7 +159,7 @@ structure HorizonThermalLedger
     State → Prop
 
   /-- Certificate that a selected state is thermal. -/
-  thermal_certificate :
+  thermal_sorryProof :
     ∀ s : State,
       IsThermal s → IsThermal s
 

@@ -156,7 +156,7 @@ structure JonesOpticalEvent where
   If the event is strongly depolarizing, a Stokes/Mueller/channel model should
   replace ordinary Jones calculus.
   -/
-  coherence_law : Prop
+  coherence_True : Prop
 
 namespace JonesOpticalEvent
 
@@ -296,7 +296,7 @@ structure V4OpticalCalibration where
   event : JonesOpticalEvent
 
   /-- Interpretation law for the V₄ tag. -/
-  tag_law : Prop
+  tag_True : Prop
 
   /--
   Optical channel law.
@@ -305,7 +305,7 @@ structure V4OpticalCalibration where
   represented by a PT-tagged lossy retarder, or that Brewster reflection is a
   rank-collapse boundary event.
   -/
-  channel_law : Prop
+  channel_True : Prop
 
 /--
 A Brewster calibration packages an event with its rank-collapse proof.
@@ -320,17 +320,17 @@ A total-internal-reflection calibration packages a lossless retarder event.
 structure TIRCalibration where
   event : JonesOpticalEvent
   is_lossless : IsLosslessRetarder event
-  tir_law : Prop
+  tir_True : Prop
 
 /--
 A metal-mirror calibration packages a possibly lossy complex retarder.
 -/
 structure MetalMirrorCalibration where
   event : JonesOpticalEvent
-  metal_law : Prop
+  metal_True : Prop
 
   /-- Optional statement that the event is diattenuating. -/
-  diattenuation_law : Prop
+  diattenuation_True : Prop
 
 /--
 A chiral-medium calibration packages circular-basis transport.
@@ -340,7 +340,7 @@ structure ChiralMediumCalibration where
   circular_basis :
     event.basis = PolarizationBasis.circular
 
-  chiral_transport_law : Prop
+  chiral_transport_True : Prop
 
 /-! ## 6. Topological obstruction link -/
 
@@ -402,6 +402,6 @@ structure SpectralDivisorCharge where
   chargeOf : Set ℂ → ℤ
 
   /-- Divisor/counting law, left abstract at this layer. -/
-  divisor_law : Prop
+  divisor_True : Prop
 
 end InfoGeometry.OperatorAlgebra.JonesCalibration

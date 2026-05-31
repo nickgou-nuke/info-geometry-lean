@@ -64,21 +64,21 @@ variable (B : QuasilatticeWaveMechanicsBridge (E := E))
 
 /-- The triadic route norm compatibility is carried by the packet. -/
 @[rep_depth transport]
-theorem triadic_route_norm_compat_valid (q k : ℝ × ℝ) :
+theorem triadic_route_norm_compat_holds (q k : ℝ × ℝ) :
     B.triadic.quadV (B.triadic.route q k) =
       B.triadic.quadQ q + B.triadic.quadK k + 2 * B.triadic.interact q k :=
   B.triadic.route_norm_compat q k
 
 /-- The quasilattice Dirac operator is fixed at zero flow. -/
 @[rep_depth transport]
-theorem quasilatticeDirac_zero_valid :
+theorem quasilatticeDirac_zero_holds :
     quasilatticeDirac B.vielbein B.diracSeed 0 = B.diracSeed := by
   simpa using
     (QuasilatticeDirac.quasilatticeDirac_zero B.vielbein B.diracSeed)
 
 /-- The infinitesimal quasilattice Dirac transport is the commutator flow. -/
 @[rep_depth transport]
-theorem quasilatticeDirac_deriv_valid (t : ℝ) :
+theorem quasilatticeDirac_deriv_holds (t : ℝ) :
     deriv (fun s => quasilatticeDirac B.vielbein B.diracSeed s) t
       =
     B.vielbein.connectionGenerator * (quasilatticeDirac B.vielbein B.diracSeed t)
@@ -145,7 +145,7 @@ theorem dirac_transport_preserves_fierz_klein_variety
       (fierzKleinCoordinates
         (horizonFierzBilinears readout horizon)
         horizonAdmissible.normalization) := by
-  exact InfoGeometry.Canonical.FierzKleinFoundation.horizon_fierz_klein_valid
+  exact InfoGeometry.Canonical.FierzKleinFoundation.horizon_fierz_klein_holds
     readout horizon horizonAdmissible
 
 end QuasilatticeWaveMechanicsBridge

@@ -83,9 +83,69 @@ theorem eta_one_eq_zero
 def uniformMean {n : Nat} (f : BinaryWord n → ℝ) : ℝ :=
   (Fintype.card (BinaryWord n) : ℝ)⁻¹ * ∑ w : BinaryWord n, f w
 
+/-- Point density on `BinaryWord n`: `Δ_w(v) = card * 1_{v=w}`. -/
+def pointDensity {n : Nat} (w : BinaryWord n) : BinaryWord n → ℝ :=
+  fun v => if v = w then (Fintype.card (BinaryWord n) : ℝ) else 0
+
 /-- Centered finite-level score at a chosen binary word. -/
 def scoreAt {n : Nat} (w : BinaryWord n) (f : BinaryWord n → ℝ) : ℝ :=
   f w - uniformMean f
+
+/-- Centered score written in `Δ-1` form against the uniform mean. -/
+theorem scoreAt_eq_uniformMean_delta_sub_one
+    {n : Nat} (w : BinaryWord n) (a : BinaryWord n → ℝ) :
+    scoreAt w a = uniformMean (fun v => (pointDensity w v - 1) * a v) := by
+  classical
+  unfold scoreAt uniformMean pointDensity
+  let cardN : ℝ := (Fintype.card (BinaryWord n) : ℝ)
+  have hcard : cardN ≠ 0 := by
+    dsimp [cardN]
+    exact_mod_cast (Fintype.card_ne_zero (α := BinaryWord n))
+  have hsum :
+      (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v) =
+        cardN * a w := by
+    classical
+    have hsum' :
+        (∑ v ∈ (Finset.univ : Finset (BinaryWord n)),
+            (if v = w then cardN else (0 : ℝ)) * a v) =
+          (if w = w then cardN else (0 : ℝ)) * a w := by
+      refine Finset.sum_eq_single (a := w)
+        (s := (Finset.univ : Finset (BinaryWord n)))
+        (f := fun v : BinaryWord n => (if v = w then cardN else (0 : ℝ)) * a v) ?_ ?_
+      · intro v hv hvw
+        simp [hvw]
+      · intro hw
+        simp at hw
+    simpa [Finset.mem_univ, if_pos rfl] using hsum'
+  have hsum_sub :
+      (∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
+        = (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v)
+            - ∑ v : BinaryWord n, a v := by
+    calc
+      (∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v)
+          = ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) * a v - a v) := by
+              refine Finset.sum_congr rfl ?_
+              intro v hv
+              ring
+      _ = (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v)
+            - ∑ v : BinaryWord n, a v := by
+              simp [Finset.sum_sub_distrib]
+  have hrhs :
+      cardN⁻¹ * ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v
+        = a w - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
+    calc
+      cardN⁻¹ * ∑ v : BinaryWord n, ((if v = w then cardN else (0 : ℝ)) - 1) * a v
+          = cardN⁻¹ *
+              (∑ v : BinaryWord n, (if v = w then cardN else (0 : ℝ)) * a v
+                - ∑ v : BinaryWord n, a v) := by
+                rw [hsum_sub]
+      _ = cardN⁻¹ * (cardN * a w - ∑ v : BinaryWord n, a v) := by
+            rw [hsum]
+      _ = cardN⁻¹ * (cardN * a w) - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
+            ring
+      _ = a w - cardN⁻¹ * ∑ v : BinaryWord n, a v := by
+            field_simp [hcard]
+  exact hrhs.symm
 
 /-- The finite level of binary words is nonempty. -/
 theorem binaryWord_card_ne_zero (n : Nat) :

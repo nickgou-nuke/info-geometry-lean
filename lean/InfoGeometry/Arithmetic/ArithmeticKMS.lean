@@ -127,7 +127,7 @@ structure ArithmeticKMSWitness
         arithmeticGibbsPartition A β
 
   /-- Supplied KMS certificate for the encoded finite support at `β`. -/
-  kms_certificate :
+  kms_sorryProof :
     ∀ A : Finset ℕ, ∀ β : ℝ,
       IsKMSAt (stateOfFinset A) β
 
@@ -147,7 +147,7 @@ theorem modularFlowReadout_eq_gibbsPartition
 theorem isKMSAt
     (A : Finset ℕ) (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
-  K.kms_certificate A β
+  K.kms_sorryProof A β
 
 /-- The calibrated modular-flow readout is nonnegative. -/
 theorem modularFlowReadout_nonneg
@@ -210,7 +210,7 @@ theorem kms_at_all_temperatures
     (A : Finset ℕ)
     (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
-  K.kms_certificate A β
+  K.kms_sorryProof A β
 
 /-- Two KMS witnesses with matching state encoding, modular flow, and KMS
 predicate are equal. -/
@@ -261,7 +261,7 @@ structure ProjectiveArithmeticKMSWitness
         projectiveArithmeticGibbsPartition A u
 
   /-- Supplied projective KMS certificate in the compact cold sector. -/
-  projective_kms_certificate :
+  projective_kms_sorryProof :
     ∀ A : Finset ℕ, ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
       IsProjectiveKMSAt (stateOfFinset A) u
 
@@ -281,7 +281,7 @@ theorem projectiveModularFlowReadout_eq_gibbsPartition
 theorem isProjectiveKMSAt
     (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     K.IsProjectiveKMSAt (K.stateOfFinset A) u :=
-  K.projective_kms_certificate A u hu
+  K.projective_kms_sorryProof A u hu
 
 /-- The calibrated projective modular-flow readout is nonnegative. -/
 theorem projectiveModularFlowReadout_nonneg

@@ -141,6 +141,56 @@ theorem modularBetaDeviation_one (Kmod : EndH) :
       = NormedSpace.exp (-Kmod) - modularIdentity (E := E) := by
   simp [modularBetaDeviation, modularDeviation, modularBetaFlow]
 
+/-! ## Common Gibbs half-factor lemmas -/
+
+/--
+Common Gibbs half-factor for the bosonic denominator.
+
+If `Eminus * Eplus = 1`, then
+
+`1 - Eminus * Eminus = Eminus * (Eplus - Eminus)`.
+
+In the thermal specialization:
+
+`Eplus = exp(βH/2)`,
+`Eminus = exp(-βH/2)`,
+so this is
+
+`1 - exp(-βH) = exp(-βH/2) * (exp(βH/2) - exp(-βH/2))`.
+-/
+@[rep_depth operator]
+theorem common_gibbs_half_factor_sub
+    {R : Type*} [Ring R]
+    {Eplus Eminus : R}
+    (hInv : Eminus * Eplus = 1) :
+    1 - Eminus * Eminus = Eminus * (Eplus - Eminus) := by
+  calc
+    1 - Eminus * Eminus
+        = Eminus * Eplus - Eminus * Eminus := by rw [hInv]
+    _ = Eminus * (Eplus - Eminus) := by rw [mul_sub]
+
+/--
+Common Gibbs half-factor for the fermionic factor.
+
+If `Eminus * Eplus = 1`, then
+
+`1 + Eminus * Eminus = Eminus * (Eplus + Eminus)`.
+
+In the thermal specialization:
+
+`1 + exp(-βH) = exp(-βH/2) * (exp(βH/2) + exp(-βH/2))`.
+-/
+@[rep_depth operator]
+theorem common_gibbs_half_factor_add
+    {R : Type*} [Ring R]
+    {Eplus Eminus : R}
+    (hInv : Eminus * Eplus = 1) :
+    1 + Eminus * Eminus = Eminus * (Eplus + Eminus) := by
+  calc
+    1 + Eminus * Eminus
+        = Eminus * Eplus + Eminus * Eminus := by rw [hInv]
+    _ = Eminus * (Eplus + Eminus) := by rw [mul_add]
+
 /--
 Canonical Tomita modular Hamiltonian readback.
 

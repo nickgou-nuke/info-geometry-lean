@@ -51,27 +51,27 @@ structure DrazinStableReadout (Op State : Type*) where
   /-- Model-specific Drazin law. -/
   drazinLaw : State -> Prop
   /-- The decomposition law holds on valid states. -/
-  decomposition_valid : ∀ s : State, valid s -> decompositionLaw s
+  decomposition_holds : ∀ s : State, valid s -> decompositionLaw s
   /-- The Drazin law holds on valid states. -/
-  drazin_valid : ∀ s : State, valid s -> drazinLaw s
+  drazin_holds : ∀ s : State, valid s -> drazinLaw s
 
 namespace DrazinStableReadout
 
 variable {Op State : Type*}
 
 /-- The supplied decomposition certificate is available on valid states. -/
-theorem decomposition_holds
+theorem decomposition_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
     D.decompositionLaw s :=
-  D.decomposition_valid s hs
+  D.decomposition_holds s hs
 
 /-- The supplied Drazin certificate is available on valid states. -/
-theorem drazin_holds
+theorem drazin_holds_readback
     (D : DrazinStableReadout Op State)
     (s : State) (hs : D.valid s) :
     D.drazinLaw s :=
-  D.drazin_valid s hs
+  D.drazin_holds s hs
 
 /-- The stable Drazin volume is nonzero on valid states. -/
 theorem stableVolume_ne_zero
@@ -284,9 +284,9 @@ structure DrazinInformationExtractionPacket (Op State Info Residue : Type*) wher
   singularResidue : State -> Residue
   stableInformationLaw : State -> Prop
   singularResidueLaw : State -> Prop
-  stableInformation_valid :
+  stableInformation_holds :
     ∀ s : State, readout.valid s -> stableInformationLaw s
-  singularResidue_valid :
+  singularResidue_holds :
     ∀ s : State, readout.valid s -> singularResidueLaw s
 
 namespace DrazinInformationExtractionPacket
@@ -295,16 +295,16 @@ variable {Op State Info Residue : Type*}
 variable (P : DrazinInformationExtractionPacket Op State Info Residue)
 
 /-- Stable information law is available on valid states. -/
-theorem stableInformation_holds
+theorem stableInformation_holds_readback
     (s : State) (hs : P.readout.valid s) :
     P.stableInformationLaw s :=
-  P.stableInformation_valid s hs
+  P.stableInformation_holds s hs
 
 /-- Singular residue law is available on valid states. -/
-theorem singularResidue_holds
+theorem singularResidue_holds_readback
     (s : State) (hs : P.readout.valid s) :
     P.singularResidueLaw s :=
-  P.singularResidue_valid s hs
+  P.singularResidue_holds s hs
 
 end DrazinInformationExtractionPacket
 

@@ -120,7 +120,7 @@ theorem jordanNF_charpoly {n : Nat} {A : Matrix (Fin n) (Fin n) ℂ}
   calc
     Matrix.charpoly A = Matrix.charpoly (jordanMatrixTransport blocks h) := by
       simpa using
-        InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly.charPoly_similar_of_witness W
+        InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly.charPoly_similar_of_sorry W
     _ = jordanMatrixPoly blocks := jordanMatrixTransport_charpoly (blocks := blocks) h
 
 /-- The matrix-endomorphism associated to a square complex matrix on the standard basis. -/

@@ -277,12 +277,12 @@ structure StandardFormNormalCone where
   J_fixes_naturalCone : ∀ ⦃ξ : H⦄, ξ ∈ naturalCone → J ξ = ξ
 
   /-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
-  outward_normal_cone_law :
+  outward_normal_cone_True :
     ∀ ξ : H, ξ ∈ naturalCone →
       convexOutwardNormalCone naturalCone ξ = outwardConeOrthogonal naturalCone ξ
 
   /-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
-  inward_normal_cone_law :
+  inward_normal_cone_True :
     ∀ ξ : H, ξ ∈ naturalCone →
       convexInwardNormalCone naturalCone ξ = inwardConeOrthogonal naturalCone ξ
 
@@ -307,14 +307,14 @@ theorem J_fixes_coneVector (ω : Functional) :
 theorem outwardNormalCone_coneVector (ω : Functional) :
     convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
       outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.outward_normal_cone_law (S.coneVector ω) (S.coneVector_mem ω)
+  S.outward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
 
 /-- Inward normal cone at a cone vector is `P ∩ ξᗮ`. -/
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector (ω : Functional) :
     convexInwardNormalCone S.naturalCone (S.coneVector ω) =
       inwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.inward_normal_cone_law (S.coneVector ω) (S.coneVector_mem ω)
+  S.inward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
 
 end StandardFormNormalCone
 
@@ -352,7 +352,7 @@ structure SupportedNaturalConeFaces where
       standardForm.coneVector ω ∈ face (supportProjection ω)
 
   /-- Outward normal cone at `ξ_ω` is the negative complementary face. -/
-  outward_normal_at_support_law :
+  outward_normal_at_support_True :
     ∀ ω : Functional,
       convexOutwardNormalCone standardForm.naturalCone (standardForm.coneVector ω) =
         {η | -η ∈ face (complementProjection (supportProjection ω))}
@@ -380,7 +380,7 @@ theorem coneVector_mem_supportFace_readback (ω : Functional) :
 theorem outwardNormalCone_eq_negative_complementary_face (ω : Functional) :
     convexOutwardNormalCone F.standardForm.naturalCone (F.standardForm.coneVector ω) =
       {η | -η ∈ F.face (F.complementProjection (F.supportProjection ω))} :=
-  F.outward_normal_at_support_law ω
+  F.outward_normal_at_support_True ω
 
 end SupportedNaturalConeFaces
 
@@ -399,7 +399,7 @@ Type III-safe replacement for determinant barriers.
 
 The barrier is a relative-entropy readout, and the logarithmic derivative is
 represented by Connes cocycle/spatial-derivative data.  Finite determinant
-barriers can only enter through the explicit `finite_split_approximant_law`.
+barriers can only enter through the explicit `finite_split_approximant_True`.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure RelativeEntropyBarrierSocket
@@ -422,7 +422,7 @@ structure RelativeEntropyBarrierSocket
     Weight → Weight → Score
 
   /-- The modular score vanishes for identical weights. -/
-  modular_score_self_law :
+  modular_score_self_True :
     ∀ φ, modularScore φ φ = 0
 
   /-- The modular score satisfies the additive chain rule. -/
@@ -468,7 +468,7 @@ theorem spatialDerivative_same_weight
 @[rep_depth operator]
 theorem modular_score_self (φ : Weight) :
     B.modularScore φ φ = 0 :=
-  B.modular_score_self_law φ
+  B.modular_score_self_True φ
 
 /-- The modular score satisfies the additive chain rule. -/
 @[rep_depth operator]
@@ -509,7 +509,7 @@ structure ModularInformationMetricPullback where
   metric : ∀ x : Base, Tangent x → Tangent x → MetricValue
 
   /-- Certificate that the base metric is the pullback of `modularMetric`. -/
-  metric_pullback_law :
+  metric_pullback_True :
     ∀ (x : Base) (u v : Tangent x),
       metric x u v =
         modularMetric (stateMap x) (stateDerivative x u) (stateDerivative x v)
@@ -524,7 +524,7 @@ variable (P : ModularInformationMetricPullback (Base := Base) (State := State)
 theorem metric_eq_pullback (x : Base) (u v : Tangent x) :
     P.metric x u v =
       P.modularMetric (P.stateMap x) (P.stateDerivative x u) (P.stateDerivative x v) :=
-  P.metric_pullback_law x u v
+  P.metric_pullback_True x u v
 
 end ModularInformationMetricPullback
 

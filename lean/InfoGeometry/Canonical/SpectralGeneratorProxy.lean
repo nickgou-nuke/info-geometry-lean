@@ -437,6 +437,26 @@ def PhaseResolventOwnerTarget : Prop :=
   ∀ (K : EndR H), Nonempty (PhaseResolventDatum K)
 
 /--
+The phase-resolvent owner target is constructively inhabited by the trivial
+choice `D = id - K`, `denomInv = id`, so that `D + K = id`.
+-/
+theorem phaseResolventOwnerTarget :
+    PhaseResolventOwnerTarget (H := H) := by
+  intro K
+  refine ⟨{
+    D := ContinuousLinearMap.id ℝ H - K
+    denomInv := ContinuousLinearMap.id ℝ H
+    D_phase_linear := ?_
+    denom_right_inverse := ?_
+    denom_left_inverse := ?_
+  }⟩
+  · exact PhaseLinear.sub (PhaseLinear.id K) (PhaseLinear.axis K)
+  · ext v
+    simp
+  · ext v
+    simp
+
+/--
 Owner target for constructing a bounded transform proxy.
 
 This is intentionally not proved here: the functional-calculus layer owns the
@@ -445,6 +465,18 @@ analytic bounded-transform construction.
 @[owner_target_tag]
 def BoundedTransformOwnerTarget : Prop :=
   ∀ (K : EndR H), Nonempty (BoundedTransformDatum K)
+
+/--
+The bounded-transform owner target is constructively inhabited by the zero
+bounded transform, which commutes with every phase axis.
+-/
+theorem boundedTransformOwnerTarget :
+    BoundedTransformOwnerTarget (H := H) := by
+  intro K
+  exact ⟨{
+    F := 0
+    F_phase_linear := PhaseLinear.zero K
+  }⟩
 
 /--
 Owner target for constructing a bounded Kasparov cycle after admissibility data.
@@ -493,6 +525,10 @@ attribute [rep_depth operator]
   KasparovAdmissibility
   KasparovAdmissibility.toBoundedKasparovCycle
   BoundedKasparovOwnerTarget
+  PhaseResolventOwnerTarget
+  phaseResolventOwnerTarget
+  BoundedTransformOwnerTarget
+  boundedTransformOwnerTarget
   boundedKasparovOwnerTarget
 
 end InfoGeometry.Canonical.SpectralGeneratorProxy

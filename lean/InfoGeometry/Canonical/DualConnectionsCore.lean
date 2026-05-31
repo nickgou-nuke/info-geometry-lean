@@ -180,7 +180,7 @@ noncomputable def mkFromReference
 noncomputable def Gamma (A : alphaConnection p αc) : ConnectionTensor Θ α :=
   alphaConnectionTensor A.Gamma0 p αc
 
-@[simp] lemma deformation_law (A : alphaConnection p αc) :
+@[simp] lemma deformation_True (A : alphaConnection p αc) :
     A.Gamma = alphaConnectionTensor A.Gamma0 p αc := rfl
 
 /-- Change `α` to `-α` while preserving the same reference tensor and compatibilities. -/

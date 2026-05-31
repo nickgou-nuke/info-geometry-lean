@@ -70,7 +70,7 @@ theorem S_sq : S P * S P = 1 := by
         = P.u * P.u + (P.u * P.v + P.v * P.u) + P.v * P.v := by
             noncomm_ring
     _ = 0 + 1 + 0 := by rw [hu, hv, P.anticomm]
-    _ = 1 := by noncomm_ring
+    _ = 1 := by simp
 
 /-- Conjugation by `S = u + v` sends `u` to `v`. -/
 theorem S_u_S : S P * P.u * S P = P.v := by
@@ -84,10 +84,11 @@ theorem S_u_S : S P * P.u * S P = P.v := by
       P.v * P.u * P.v = P.v * (P.u * P.v) := by noncomm_ring
       _ = P.v * (1 - P.v * P.u) := by rw [hsub]
       _ = P.v - P.v * P.v * P.u := by noncomm_ring
-      _ = P.v := by rw [hv]; noncomm_ring
+      _ = P.v := by rw [hv]; simp
   calc
     (P.u + P.v) * P.u * (P.u + P.v)
-        = P.v * P.u * P.v := by rw [hu]; noncomm_ring
+        = P.u * (P.u * P.u) + P.v * (P.u * P.u) + (P.u * P.u) * P.v + P.v * P.u * P.v := by noncomm_ring
+    _ = P.v * P.u * P.v := by rw [hu]; simp
     _ = P.v := hvuv
 
 /-- Conjugation by `S = u + v` sends `v` to `u`. -/
@@ -105,10 +106,11 @@ theorem S_v_S : S P * P.v * S P = P.u := by
       P.u * P.v * P.u = P.u * (P.v * P.u) := by noncomm_ring
       _ = P.u * (1 - P.u * P.v) := by rw [hsub]
       _ = P.u - P.u * P.u * P.v := by noncomm_ring
-      _ = P.u := by rw [hu]; noncomm_ring
+      _ = P.u := by rw [hu]; simp
   calc
     (P.u + P.v) * P.v * (P.u + P.v)
-        = P.u * P.v * P.u := by rw [hv]; noncomm_ring
+        = P.u * (P.v * P.v) + P.v * (P.v * P.v) + (P.v * P.v) * P.u + P.u * P.v * P.u := by noncomm_ring
+    _ = P.u * P.v * P.u := by rw [hv]; simp
     _ = P.u := huvu
 
 /-- If `x` anticommutes with the null pair, then it anticommutes with `S`. -/
@@ -117,7 +119,7 @@ theorem x_mul_S_eq_neg_S_mul_x (x : Cl55)
     (hx_ortho_v : x * P.v = - P.v * x) :
     x * S P = - S P * x := by
   dsimp [S]
-  rw [mul_add, add_mul, hx_ortho_u, hx_ortho_v]
+  rw [mul_add, hx_ortho_u, hx_ortho_v]
   noncomm_ring
 
 /-- If `x` anticommutes with the null pair, then `S*x*S = -x`. -/

@@ -111,7 +111,7 @@ structure AffineDrazinBoundaryEntropyBridge
   cardy :
     CardyEntropyCalibration
   entropyAgreementLaw : Prop
-  entropyAgreement_valid :
+  entropyAgreement_holds :
     entropyAgreementLaw
 
 namespace AffineDrazinBoundaryEntropyBridge
@@ -124,9 +124,9 @@ variable
 variable (B : AffineDrazinBoundaryEntropyBridge (Finite := Finite) (Alg := Alg))
 
 /-- The supplied Drazin/Cardy entropy agreement law is available. -/
-theorem entropyAgreement_holds :
+theorem entropyAgreement_holds_of_bridge :
     B.entropyAgreementLaw :=
-  B.entropyAgreement_valid
+  B.entropyAgreement_holds
 
 end AffineDrazinBoundaryEntropyBridge
 

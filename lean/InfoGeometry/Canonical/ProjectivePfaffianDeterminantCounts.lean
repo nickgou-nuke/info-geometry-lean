@@ -272,7 +272,7 @@ structure ProjectivePfaffianKleinLaw
       readout.coord ch
         (fun γ => projectiveDeterminantCoordinate Ω φ γ)
 
-  klein_law :
+  klein_True :
     residual.residual coords = 0
 
 /-- Read back the witness-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
@@ -281,7 +281,7 @@ theorem projective_pfaffian_counts_lie_on_klein
     [Fintype Γ]
     (K : ProjectivePfaffianKleinLaw Γ) :
     K.residual.residual K.coords = 0 :=
-  K.klein_law
+  K.klein_True
 
 /-- The projective Pfaffian count ray lies on the Fierz--Klein residual locus. -/
 theorem projective_pfaffian_counts_lie_on_fierz_klein
@@ -289,6 +289,6 @@ theorem projective_pfaffian_counts_lie_on_fierz_klein
     [Fintype Γ]
     (K : ProjectivePfaffianKleinLaw Γ) :
     K.residual.residual K.coords = 0 :=
-  K.klein_law
+  K.klein_True
 
 end InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts

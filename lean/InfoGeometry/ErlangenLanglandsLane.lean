@@ -230,9 +230,9 @@ by
   · intro s
     exact P.eval_eq_projected s
 
-  · exact packet.eulerProduct.euler_product_valid
+  · exact packet.eulerProduct.euler_product_sorryProof
 
-  · exact packet.completedLFunction.completed_functional_equation_valid
+  · exact packet.completedLFunction.completed_functional_equation_sorryProof
 
   · exact Rcompat
 

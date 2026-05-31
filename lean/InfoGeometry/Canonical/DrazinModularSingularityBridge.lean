@@ -174,6 +174,22 @@ theorem operator_ratio_regularization_corridor
     hAlign
   ⟩
 
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_corridor
+    (c : CertifiedModularReduction (E := H₂)) :
+    let KambientCanonical :=
+      compress (CertifiedModularReduction.Preg c)
+        (K_neg_log_PregDelta (V := E) c)
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ ¬ c.logAdmissible (compress (CertifiedModularReduction.Pzero c) c.Δ)
+      ∧ (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical)
+      ∧ (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical)
+      ∧ (CertifiedModularReduction.Pzero c * KambientCanonical = 0)
+      ∧ (KambientCanonical * CertifiedModularReduction.Pzero c = 0)
+      ∧ (CertifiedModularReduction.anomaly c = 0
+          ↔ CertifiedModularReduction.SpectralMetricAlignment c) :=
+  operator_ratio_regularization_corridor (E := E) c
+
 /--
 Noncommutative regularized-ratio closure under spectral/metric alignment.
 
@@ -200,6 +216,15 @@ theorem operator_ratio_regularization_kills_defect_of_alignment
     CertifiedModularReduction.Kphys_kills_Pzero_of_alignment (c := c) hAnomaly
   exact ⟨hCorridor.1, hKill.1, hKill.2⟩
 
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_kills_defect_of_alignment
+    (c : CertifiedModularReduction (E := H₂))
+    (hAlign : CertifiedModularReduction.SpectralMetricAlignment (c := c)) :
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
+      ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) :=
+  operator_ratio_regularization_kills_defect_of_alignment (E := E) c hAlign
+
 /--
 Noncommutative regularized-ratio closure under the inertial-lane formulation.
 
@@ -218,6 +243,15 @@ theorem operator_ratio_regularization_kills_defect_of_inertial_lane
     (CertifiedModularReduction.inertial_regular_lane_iff_alignment (c := c)).mp hInertial
   exact operator_ratio_regularization_kills_defect_of_alignment
     (E := E) c hAlign
+
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane
+    (c : CertifiedModularReduction (E := H₂))
+    (hInertial : CertifiedModularReduction.InertialRegularLane (c := c)) :
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
+      ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) :=
+  operator_ratio_regularization_kills_defect_of_inertial_lane (E := E) c hInertial
 
 /--
 Inertial regular-lane closure package (`χ = 0`):

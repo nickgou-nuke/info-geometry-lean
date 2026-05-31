@@ -48,7 +48,7 @@ structure PoincareAndreevBoundary
   This is supplied because perfect/no-leakage behavior depends on the concrete
   interface model.
   -/
-  no_leakage_below_gap_law :
+  no_leakage_below_gap_True :
     ∀ ε : ℝ, ε < gapDelta → leakage ε = 0
 
   /--
@@ -57,12 +57,12 @@ structure PoincareAndreevBoundary
   This is stronger than no single-particle leakage and requires extra interface
   assumptions.
   -/
-  perfect_reflection_below_gap_law :
+  perfect_reflection_below_gap_True :
     Prop
 
   /-- Proof/certificate of the perfect-reflection law. -/
-  perfect_reflection_below_gap_certificate :
-    perfect_reflection_below_gap_law
+  perfect_reflection_below_gap_sorryProof :
+    perfect_reflection_below_gap_True
 
 namespace PoincareAndreevBoundary
 
@@ -76,7 +76,7 @@ theorem leakage_eq_zero_below_gap
     (ε : ℝ)
     (hε : ε < S.gapDelta) :
     S.leakage ε = 0 :=
-  S.no_leakage_below_gap_law ε hε
+  S.no_leakage_below_gap_True ε hε
 
 end PoincareAndreevBoundary
 

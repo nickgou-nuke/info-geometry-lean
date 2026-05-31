@@ -1471,6 +1471,46 @@ theorem toCyclicCoordinatelessSouriauFisherContext_weylGauge_eq :
   rfl
 
 /--
+Compatibility adapter from the minimal constructive branch to the modular-time
+KMS context.
+
+This removes the explicit `sigma` and `kms` packets from callers that already
+live on `MinimalCyclicCoordinatelessSouriauContext`: both are reconstructed
+constructively from cyclicity and the owned identity modular flow.
+-/
+@[rep_depth operator]
+def toModularTimeKMSContext :
+    ModularTimeKMSContext (H := H) where
+  sigma := C.sigma
+  beta := C.beta
+  kms := C.state.toIdentityKMSState C.beta
+
+/-- On the modular-time adapter, the modular flow is definitionally the owned identity flow. -/
+@[rep_depth operator]
+theorem toModularTimeKMSContext_sigma_eq :
+    C.toModularTimeKMSContext.sigma = C.sigma :=
+  rfl
+
+/-- On the modular-time adapter, the KMS witness is definitionally the constructive identity-flow one. -/
+@[rep_depth operator]
+theorem toModularTimeKMSContext_kms_eq :
+    C.toModularTimeKMSContext.kms = C.state.toIdentityKMSState C.beta :=
+  rfl
+
+/--
+Constructor theorem routing the modular-time KMS packet directly through the
+minimal cyclic constructive branch.
+
+This removes the explicit `sigma` and `kms` constructor surface for callers
+that already own a `MinimalCyclicCoordinatelessSouriauContext` witness.
+-/
+@[rep_depth operator]
+theorem mk_modularTime_of_cyclic :
+    ∃ ctx : ModularTimeKMSContext (H := H),
+      ctx.kms.state = C.state.state :=
+  ⟨C.toModularTimeKMSContext, rfl⟩
+
+/--
 Compatibility adapter from the minimal constructive branch to the narrowed
 identity-Weyl broad coordinateless context.
 

@@ -178,14 +178,14 @@ structure QuantumCountingGate
 namespace QuantumCountingGate
 
 /-- The supplied query-bound law. -/
-theorem query_bound_valid
+theorem query_bound_holds
     {Estimator ErrorModel : Type*}
     (G : QuantumCountingGate Estimator ErrorModel) :
     G.query_bound :=
   G.certificate.1
 
 /-- The supplied counting-accuracy law. -/
-theorem counting_accuracy_valid
+theorem counting_accuracy_holds
     {Estimator ErrorModel : Type*}
     (G : QuantumCountingGate Estimator ErrorModel) :
     G.counting_accuracy :=

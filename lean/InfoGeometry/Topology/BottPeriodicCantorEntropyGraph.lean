@@ -202,7 +202,7 @@ variable (C : BottStreamEntropyCoupling kind)
 
 /-- Coupling is the non-additive residual between joint and stream entropies. -/
 @[rep_depth transport]
-theorem coupling_law :
+theorem coupling_True :
     C.couplingReadout =
       C.jointEntropy - Finset.univ.sum (fun phase : BottPhase kind => C.streamEntropy phase) :=
   C.coupling_eq_joint_sub_streams
@@ -237,12 +237,12 @@ theorem depth_entropy_nonnegative (n : ℕ) :
 
 /-- The coupling law at depth `n`. -/
 @[rep_depth transport]
-theorem coupling_law (n : ℕ) :
+theorem coupling_True (n : ℕ) :
     (P.coupling n).couplingReadout =
       (P.coupling n).jointEntropy -
         Finset.univ.sum
           (fun phase : BottPhase kind => (P.coupling n).streamEntropy phase) :=
-  (P.coupling n).coupling_law
+  (P.coupling n).coupling_True
 
 end BottPeriodicCantorEntropyPacket
 
@@ -334,7 +334,7 @@ structure BottPeriodicFierzKleinLaw
   socket : BottPeriodicItFromBitSocket Op
   coords : FractalCantorFockWitness.FierzChannel → ℝ
   residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ
-  quadric_law : residual coords = 0
+  quadric_True : residual coords = 0
 
 namespace BottPeriodicFierzKleinLaw
 
@@ -345,7 +345,7 @@ variable (L : BottPeriodicFierzKleinLaw Op)
 @[rep_depth operator]
 theorem quadric_zero :
     L.residual L.coords = 0 :=
-  L.quadric_law
+  L.quadric_True
 
 end BottPeriodicFierzKleinLaw
 

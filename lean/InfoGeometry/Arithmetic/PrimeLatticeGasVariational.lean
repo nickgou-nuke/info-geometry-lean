@@ -154,13 +154,13 @@ structure PrimeCountingVariationalModel where
 namespace PrimeCountingVariationalModel
 
 /-- Re-export the supplied explicit-formula law. -/
-theorem explicitFormula_valid
+theorem explicitFormula_holds
     (V : PrimeCountingVariationalModel) :
     V.explicitFormulaLaw :=
   V.explicitFormulaCertificate
 
 /-- Re-export the supplied extremum condition. -/
-theorem extremum_valid
+theorem extremum_holds
     (V : PrimeCountingVariationalModel) :
     V.extremumCondition :=
   V.extremumCertificate

@@ -47,25 +47,25 @@ structure Cl11ModularAtom (E : Type*)
 
   /-- CPT invariance of the modular atom, stored as a witness field. -/
   cptInvariant : Prop
-  cptInvariant_certificate : cptInvariant
+  cptInvariant_sorryProof : cptInvariant
 
   /-- Scale/shape compatibility of the modular atom, stored as a witness field. -/
   scaleShapeSplit : Prop
-  scaleShapeSplit_certificate : scaleShapeSplit
+  scaleShapeSplit_sorryProof : scaleShapeSplit
 
 /-- Re-export of the CPT-invariance witness. -/
 @[rep_depth transport]
-theorem cptInvariant_law
+theorem cptInvariant_True
     (A : Cl11ModularAtom E) :
     A.cptInvariant :=
-  A.cptInvariant_certificate
+  A.cptInvariant_sorryProof
 
 /-- Re-export of the scale/shape compatibility witness. -/
 @[rep_depth transport]
-theorem scaleShapeSplit_law
+theorem scaleShapeSplit_True
     (A : Cl11ModularAtom E) :
     A.scaleShapeSplit :=
-  A.scaleShapeSplit_certificate
+  A.scaleShapeSplit_sorryProof
 
 /-- The derived typed `K`-axis is the one extracted from the modular atom. -/
 @[rep_depth transport]

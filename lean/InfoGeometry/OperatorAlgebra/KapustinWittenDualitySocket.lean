@@ -198,11 +198,11 @@ structure GeometricLanglandsInterpretation
     (S : SDualityDatum ElectricState MagneticState Charge) where
 
   /-- Model-specific statement of the geometric Langlands law. -/
-  geometric_langlands_law : Prop
+  geometric_langlands_True : Prop
 
   /-- Proof/certificate of the model-specific law. -/
-  geometric_langlands_certificate :
-    geometric_langlands_law
+  geometric_langlands_sorryProof :
+    geometric_langlands_True
 
 namespace GeometricLanglandsInterpretation
 

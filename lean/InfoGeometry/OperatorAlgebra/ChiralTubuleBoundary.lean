@@ -209,7 +209,7 @@ structure ChiralResidue
   stable : Prop
 
   /-- Evidence for stability. -/
-  stable_certificate :
+  stable_sorryProof :
     stable
 
 /-! ## 4. Chiral tubule boundary witness -/
@@ -299,7 +299,7 @@ theorem collapse_state_crosses_threshold :
 theorem exists_stable_chiral_residue :
     ∃ r : Residue,
       r = B.residue.residue ∧ B.residue.stable :=
-  ⟨B.residue.residue, rfl, B.residue.stable_certificate⟩
+  ⟨B.residue.residue, rfl, B.residue.stable_sorryProof⟩
 
 end ChiralTubuleBoundaryWitness
 

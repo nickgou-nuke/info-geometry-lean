@@ -12,6 +12,11 @@ import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
+import InfoGeometry.Algebra.TensorAlgebraCanonical
+import InfoGeometry.Algebra.TensorAlgebraInduction
+import InfoGeometry.Algebra.IterativeExponentiation
+import InfoGeometry.Algebra.FormalSeriesCalculus
+import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 import InfoGeometry.Algebra.FiniteInductiveSUSY
 import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
@@ -22,6 +27,7 @@ import InfoGeometry.Algebra.InfiniteInductiveSUSY
 import InfoGeometry.Algebra.FiniteN2Induction
 import InfoGeometry.Algebra.FinsuppN2ModeInduction
 import InfoGeometry.Algebra.N2ModeCentralExtension
+import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Algebra.SupergradedCocycle
 import InfoGeometry.Algebra.InfiniteN2ModeInduction
 import InfoGeometry.Algebra.FiniteInfiniteModeBridge

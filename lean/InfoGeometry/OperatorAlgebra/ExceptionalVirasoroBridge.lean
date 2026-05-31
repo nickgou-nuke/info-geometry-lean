@@ -84,14 +84,14 @@ structure HiddenMemoryAffineCurrentCalibration
         affineVirasoro.affine.Current (modeOf x y) (finiteChargeOf x y)
 
   /-- The finite algebra is physically interpreted as split real `E8(8)` or similar. -/
-  finite_exceptional_law : Prop
+  finite_exceptional_True : Prop
   finite_exceptional_law_holds :
-    finite_exceptional_law
+    finite_exceptional_True
 
   /-- The affine algebra is interpreted as the corresponding loop/current extension. -/
-  affine_exceptional_law : Prop
+  affine_exceptional_True : Prop
   affine_exceptional_law_holds :
-    affine_exceptional_law
+    affine_exceptional_True
 
 namespace HiddenMemoryAffineCurrentCalibration
 
@@ -122,7 +122,7 @@ theorem sugawara_holds :
     (hcc : C.affineVirasoro.centralCharge =
       C.affineVirasoro.level * C.affineVirasoro.finiteDimension /
         (C.affineVirasoro.level + C.affineVirasoro.dualCoxeterNumber)) →
-    C.affineVirasoro.sugawara_law :=
+    C.affineVirasoro.sugawara_True :=
   C.affineVirasoro.sugawara_holds
 
 /-- The Virasoro-current reparametrization law is available through the bridge. -/
@@ -131,7 +131,7 @@ theorem virasoro_acts_on_currents :
       ∀ (m n : ℤ) (X : Finite),
         ⁅C.affineVirasoro.virasoro.Lmode m, C.affineVirasoro.affine.Current n X⁆ =
           (-(n : ℝ)) • C.affineVirasoro.affine.Current (m + n) X) →
-    C.affineVirasoro.virasoro_acts_on_currents_law :=
+    C.affineVirasoro.virasoro_acts_on_currents_True :=
   C.affineVirasoro.virasoro_acts_on_currents_law_holds
 
 /-- The central charge is the explicit Sugawara-calibrated value of the bridge. -/
@@ -196,9 +196,9 @@ structure HiddenMemoryVirasoroReadout
         memoryScalar (hiddenMemoryReadout H.ledger x y)
 
   /-- Central charge / anomaly calibration law. -/
-  central_anomaly_law : Prop
+  central_anomaly_True : Prop
   central_anomaly_law_holds :
-    central_anomaly_law
+    central_anomaly_True
 
 namespace HiddenMemoryVirasoroReadout
 
@@ -277,7 +277,7 @@ theorem observed_hidden_projection_scalar_eq_current_stress
 
 /-- The installed central anomaly law is available. -/
 theorem central_anomaly :
-    R.central_anomaly_law :=
+    R.central_anomaly_True :=
   R.central_anomaly_law_holds
 
 end HiddenMemoryVirasoroReadout
@@ -319,14 +319,14 @@ structure HorizonExceptionalVirasoroBridge
     HiddenMemoryVirasoroReadout J L Obs Memory Finite AffineAlg currentCalibration
 
   /-- Law saying the KMS thermal flux readout is calibrated by Virasoro stress/anomaly. -/
-  kms_flux_eq_virasoro_stress_law : Prop
+  kms_flux_eq_virasoro_stress_True : Prop
   kms_flux_eq_virasoro_stress_law_holds :
-    kms_flux_eq_virasoro_stress_law
+    kms_flux_eq_virasoro_stress_True
 
   /-- Law saying the affine/Virasoro central charge is the boundary version of memory. -/
-  central_charge_is_grade_two_memory_law : Prop
+  central_charge_is_grade_two_memory_True : Prop
   central_charge_is_grade_two_memory_law_holds :
-    central_charge_is_grade_two_memory_law
+    central_charge_is_grade_two_memory_True
 
 namespace HorizonExceptionalVirasoroBridge
 
@@ -346,8 +346,8 @@ variable (B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A
 
 /-- The exterior observer carries the installed KMS boundary law. -/
 theorem observer_has_kms_boundary :
-    B.horizon.kms.kms_boundary_law :=
-  B.horizon.kms.kms_boundary_certificate
+    B.horizon.kms.kms_boundary_True :=
+  B.horizon.kms.kms_boundary_sorryProof
 
 /-- The observed defect is the visible projection of hidden grade-two memory. -/
 theorem observed_defect_is_hidden_projection
@@ -409,7 +409,7 @@ theorem sugawara_holds :
         B.currentCalibration.affineVirasoro.finiteDimension /
           (B.currentCalibration.affineVirasoro.level +
             B.currentCalibration.affineVirasoro.dualCoxeterNumber)) →
-    B.currentCalibration.affineVirasoro.sugawara_law :=
+    B.currentCalibration.affineVirasoro.sugawara_True :=
   B.currentCalibration.sugawara_holds
 
 /-- The Virasoro-current reparametrization law is available in the bridge. -/
@@ -420,17 +420,17 @@ theorem virasoro_acts_on_currents :
           B.currentCalibration.affineVirasoro.affine.Current n X⁆ =
           (-(n : ℝ)) •
             B.currentCalibration.affineVirasoro.affine.Current (m + n) X) →
-    B.currentCalibration.affineVirasoro.virasoro_acts_on_currents_law :=
+    B.currentCalibration.affineVirasoro.virasoro_acts_on_currents_True :=
   B.currentCalibration.virasoro_acts_on_currents
 
 /-- The installed KMS/Virasoro flux law is available. -/
 theorem kms_flux_eq_virasoro_stress :
-    B.kms_flux_eq_virasoro_stress_law :=
+    B.kms_flux_eq_virasoro_stress_True :=
   B.kms_flux_eq_virasoro_stress_law_holds
 
 /-- The installed central-charge/memory law is available. -/
 theorem central_charge_is_grade_two_memory :
-    B.central_charge_is_grade_two_memory_law :=
+    B.central_charge_is_grade_two_memory_True :=
   B.central_charge_is_grade_two_memory_law_holds
 
 end HorizonExceptionalVirasoroBridge
@@ -481,9 +481,9 @@ structure HiddenMemoryCentralChargeReadout
   This is where a concrete model says the affine/Virasoro element is the
   intended stress tensor, central anomaly, or boundary helical readout.
   -/
-  boundary_stress_interpretation_law : Prop
-  boundary_stress_interpretation_certificate :
-    boundary_stress_interpretation_law
+  boundary_stress_interpretation_True : Prop
+  boundary_stress_interpretation_sorryProof :
+    boundary_stress_interpretation_True
 
 namespace HiddenMemoryCentralChargeReadout
 
@@ -525,8 +525,8 @@ theorem central_readout_eq_hidden_memory_readout_of_current
 
 /- The installed boundary stress interpretation law is available. -/
 theorem boundary_stress_interpretation :
-    R.boundary_stress_interpretation_law :=
-  R.boundary_stress_interpretation_certificate
+    R.boundary_stress_interpretation_True :=
+  R.boundary_stress_interpretation_sorryProof
 
 end HiddenMemoryCentralChargeReadout
 
@@ -656,7 +656,7 @@ def ExceptionalVirasoroBridgeOwnerTarget : Prop :=
   ∀ G : FiveGrading L,
   ∀ A : FiveGradeProjectedAccounting J L Obs G,
   ∀ B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A,
-    B.horizon.kms.kms_boundary_law ∧
+    B.horizon.kms.kms_boundary_True ∧
     (∀ x y : J,
       B.currentCalibration.memoryToAffine
           (hiddenMemoryReadout B.horizon.ledger x y) =

@@ -227,14 +227,14 @@ structure ProjectiveKLCalibration
       IntegratedProjectiveKLWitness candidate reference
 
   /-- Pointwise state readout agrees with the supplied witness. -/
-  pointwise_eq_witness :
+  pointwise_eq_sorry :
     ∀ candidate reference : Finset ℕ,
     ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
       klReadout (stateOfPair candidate reference) u =
         (witnessOfPair candidate reference).pointwise.klReadout u
 
   /-- Integrated state readout agrees with the supplied witness. -/
-  integrated_eq_witness :
+  integrated_eq_sorry :
     ∀ candidate reference : Finset ℕ,
       integratedKLReadout (stateOfPair candidate reference) =
         (witnessOfPair candidate reference).integratedKL
@@ -250,7 +250,7 @@ theorem pointwise_eq_primitiveToPrime
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     C.klReadout (C.stateOfPair candidate reference) u =
       primitiveToPrimeProjectiveKL candidate reference u := by
-  rw [C.pointwise_eq_witness candidate reference u hu]
+  rw [C.pointwise_eq_sorry candidate reference u hu]
   exact (C.witnessOfPair candidate reference).pointwise.readout_eq_primitiveToPrime hu
 
 /-- Calibrated pointwise KL readout is nonnegative. -/
@@ -258,14 +258,14 @@ theorem pointwise_nonneg
     (candidate reference : Finset ℕ)
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     0 ≤ C.klReadout (C.stateOfPair candidate reference) u := by
-  rw [C.pointwise_eq_witness candidate reference u hu]
+  rw [C.pointwise_eq_sorry candidate reference u hu]
   exact (C.witnessOfPair candidate reference).pointwise.readout_nonneg hu
 
 /-- Calibrated integrated KL readout is nonnegative. -/
 theorem integrated_nonneg
     (candidate reference : Finset ℕ) :
     0 ≤ C.integratedKLReadout (C.stateOfPair candidate reference) := by
-  rw [C.integrated_eq_witness candidate reference]
+  rw [C.integrated_eq_sorry candidate reference]
   exact (C.witnessOfPair candidate reference).integratedKL_nonneg
 
 /-- Calibrated integrated KL is strictly positive away from the supplied reference state. -/
@@ -273,7 +273,7 @@ theorem integrated_pos_of_ne_reference
     (candidate reference : Finset ℕ)
     (hne : (C.witnessOfPair candidate reference).pointwise.candidate_ne_reference) :
     0 < C.integratedKLReadout (C.stateOfPair candidate reference) := by
-  rw [C.integrated_eq_witness candidate reference]
+  rw [C.integrated_eq_sorry candidate reference]
   exact (C.witnessOfPair candidate reference).integratedKL_pos_of_ne_reference hne
 
 end ProjectiveKLCalibration

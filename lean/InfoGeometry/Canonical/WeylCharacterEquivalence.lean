@@ -175,7 +175,7 @@ theorem denominator_is_prime_euler_product :
   P.denominatorBridge.weylDenominator_eq_primeEulerProduct
 
 @[rep_depth thermo]
-theorem parity_trace_witness
+theorem parity_trace_sorry
     (n : ℕ) (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
       mobiusCoefficient n :=

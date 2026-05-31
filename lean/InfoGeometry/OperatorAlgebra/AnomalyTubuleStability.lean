@@ -182,7 +182,7 @@ structure DIIIInteractionInvariant where
   nuInteracting : ZMod 16
 
   /-- Reduction law from the free integer invariant to the cyclic class. -/
-  reduction_law :
+  reduction_True :
     nuInteracting = (nuFree : ZMod 16)
 
 /--

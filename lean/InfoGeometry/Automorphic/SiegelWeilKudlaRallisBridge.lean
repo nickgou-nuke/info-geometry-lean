@@ -211,7 +211,7 @@ structure PullbackDecompositionFormulaWitness
     Cusp → ℂ
 
   /-- Decomposition formula. -/
-  decomposition_law :
+  decomposition_True :
     ∀ g₁ g₂ : GState,
       pullbackEisenstein g₁ g₂ =
         basis.sum
@@ -234,7 +234,7 @@ theorem pullbackEisenstein_eq_sum
           D.evalLeft f g₁ *
             D.evalRight f g₂ *
               D.normalizedCoefficient f) :=
-  D.decomposition_law g₁ g₂
+  D.decomposition_True g₁ g₂
 
 end PullbackDecompositionFormulaWitness
 

@@ -47,9 +47,9 @@ structure MellinPlancherelCriticalLinePacket
   imaginaryHeight : ℝ
   mellinWave : MellinWave
   mellinNorm : MellinNorm
-  bk_generalizedEigenvalue_law : IsCriticalLineRealPart realPart
-  selfAdjoint_forces_realEigenvalue_law : IsCriticalLineRealPart realPart
-  criticalLine_law : IsCriticalLineRealPart realPart
+  bk_generalizedEigenvalue_True : IsCriticalLineRealPart realPart
+  selfAdjoint_forces_realEigenvalue_True : IsCriticalLineRealPart realPart
+  criticalLine_True : IsCriticalLineRealPart realPart
   /-- Guardrail: ordinary Fock norm is not the analytic source. -/
   ordinaryFockNorm_not_source_guard : Type*
 
@@ -60,15 +60,15 @@ variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
 
 /-- Berry--Keating generalized-eigenvalue law. -/
 theorem bk_generalizedEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.bk_generalizedEigenvalue_law
+  exact P.bk_generalizedEigenvalue_True
 
 /-- Self-adjoint operators force real eigenvalues. -/
 theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart := by
-  exact P.selfAdjoint_forces_realEigenvalue_law
+  exact P.selfAdjoint_forces_realEigenvalue_True
 
 /-- The packet places the real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
-  exact P.criticalLine_law
+  exact P.criticalLine_True
 
 end MellinPlancherelCriticalLinePacket
 
@@ -102,16 +102,16 @@ structure MajoranaBerryKeatingOperatorPacket
   thermalOperator : Mode → Operator
   majoranaDirac : Operator
   squareRootEnergyCoefficient : Mode → ℝ
-  splitClifford_law : Prop
-  squareRootEnergy_law : Prop
-  dirac_square_law : Prop
-  self_adjoint_law : Prop
-  bk_mellin_sector_fixes_criticalLine_law : Prop
-  bk_mellin_sector_fixes_criticalLine_certificate :
-    bk_mellin_sector_fixes_criticalLine_law
-  majorana_fock_sector_produces_pfaffianCharacter_law : Prop
-  majorana_fock_sector_produces_pfaffianCharacter_certificate :
-    majorana_fock_sector_produces_pfaffianCharacter_law
+  splitClifford_True : Prop
+  squareRootEnergy_True : Prop
+  dirac_square_True : Prop
+  self_adjoint_True : Prop
+  bk_mellin_sector_fixes_criticalLine_True : Prop
+  bk_mellin_sector_fixes_criticalLine_sorryProof :
+    bk_mellin_sector_fixes_criticalLine_True
+  majorana_fock_sector_produces_pfaffianCharacter_True : Prop
+  majorana_fock_sector_produces_pfaffianCharacter_sorryProof :
+    majorana_fock_sector_produces_pfaffianCharacter_True
 
 namespace MajoranaBerryKeatingOperatorPacket
 
@@ -119,15 +119,15 @@ namespace MajoranaBerryKeatingOperatorPacket
 theorem bk_mellin_sector_fixes_criticalLine
     {Carrier Operator Domain Mode : Type*}
     (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.bk_mellin_sector_fixes_criticalLine_law :=
-  M.bk_mellin_sector_fixes_criticalLine_certificate
+    M.bk_mellin_sector_fixes_criticalLine_True :=
+  M.bk_mellin_sector_fixes_criticalLine_sorryProof
 
 /-- Re-export: the Majorana/Fock sector is the Pfaffian/Witten-character mechanism. -/
 theorem majorana_fock_sector_produces_pfaffianCharacter
     {Carrier Operator Domain Mode : Type*}
     (M : MajoranaBerryKeatingOperatorPacket Carrier Operator Domain Mode) :
-    M.majorana_fock_sector_produces_pfaffianCharacter_law :=
-  M.majorana_fock_sector_produces_pfaffianCharacter_certificate
+    M.majorana_fock_sector_produces_pfaffianCharacter_True :=
+  M.majorana_fock_sector_produces_pfaffianCharacter_sorryProof
 
 end MajoranaBerryKeatingOperatorPacket
 
@@ -152,22 +152,22 @@ structure RealMajoranaBerryKeatingProblem
   chiralityRho : Operator
   majoranaDiracCutoff : Operator
   combinedDirac : Operator
-  combinedDirac_formula_law : Prop
-  combinedDirac_formula_certificate :
-    combinedDirac_formula_law
-  rho_anticommutes_realBK_law : Prop
-  rho_anticommutes_realBK_certificate :
-    rho_anticommutes_realBK_law
-  majoranaDirac_square_law : Prop
-  majoranaDirac_square_certificate :
-    majoranaDirac_square_law
-  combinedDirac_square_law : Prop
-  combinedDirac_square_certificate :
-    combinedDirac_square_law
+  combinedDirac_formula_True : Prop
+  combinedDirac_formula_sorryProof :
+    combinedDirac_formula_True
+  rho_anticommutes_realBK_True : Prop
+  rho_anticommutes_realBK_sorryProof :
+    rho_anticommutes_realBK_True
+  majoranaDirac_square_True : Prop
+  majoranaDirac_square_sorryProof :
+    majoranaDirac_square_True
+  combinedDirac_square_True : Prop
+  combinedDirac_square_sorryProof :
+    combinedDirac_square_True
   modeEnergyCoefficient : Mode → ℝ
-  modeEnergyCoefficient_sqrtLog_law : Prop
-  modeEnergyCoefficient_sqrtLog_certificate :
-    modeEnergyCoefficient_sqrtLog_law
+  modeEnergyCoefficient_sqrtLog_True : Prop
+  modeEnergyCoefficient_sqrtLog_sorryProof :
+    modeEnergyCoefficient_sqrtLog_True
 
 namespace RealMajoranaBerryKeatingProblem
 
@@ -175,36 +175,36 @@ namespace RealMajoranaBerryKeatingProblem
 theorem combinedDirac_formula
     {Carrier Operator Mode Cutoff : Type*}
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
-    P.combinedDirac_formula_law :=
-  P.combinedDirac_formula_certificate
+    P.combinedDirac_formula_True :=
+  P.combinedDirac_formula_sorryProof
 
 /-- Re-export of the `ρ`/Berry--Keating anticommutation law. -/
 theorem rho_anticommutes_realBK
     {Carrier Operator Mode Cutoff : Type*}
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
-    P.rho_anticommutes_realBK_law :=
-  P.rho_anticommutes_realBK_certificate
+    P.rho_anticommutes_realBK_True :=
+  P.rho_anticommutes_realBK_sorryProof
 
 /-- Re-export of the finite-cutoff Majorana Dirac-square law. -/
 theorem majoranaDirac_square
     {Carrier Operator Mode Cutoff : Type*}
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
-    P.majoranaDirac_square_law :=
-  P.majoranaDirac_square_certificate
+    P.majoranaDirac_square_True :=
+  P.majoranaDirac_square_sorryProof
 
 /-- Re-export of the combined square law. -/
 theorem combinedDirac_square
     {Carrier Operator Mode Cutoff : Type*}
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
-    P.combinedDirac_square_law :=
-  P.combinedDirac_square_certificate
+    P.combinedDirac_square_True :=
+  P.combinedDirac_square_sorryProof
 
 /-- Re-export of the `sqrt(log p)` coefficient law. -/
 theorem modeEnergyCoefficient_sqrtLog
     {Carrier Operator Mode Cutoff : Type*}
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
-    P.modeEnergyCoefficient_sqrtLog_law :=
-  P.modeEnergyCoefficient_sqrtLog_certificate
+    P.modeEnergyCoefficient_sqrtLog_True :=
+  P.modeEnergyCoefficient_sqrtLog_sorryProof
 
 end RealMajoranaBerryKeatingProblem
 
@@ -223,12 +223,12 @@ structure FockVsMellinNormalizabilityGuard
   mellinState : MellinState
   fockNorm : FockNorm
   mellinNorm : MellinNorm
-  fockSummabilityDomain_law : Prop
-  fockSummabilityDomain_certificate :
-    fockSummabilityDomain_law
-  mellinCriticalLine_law : Prop
-  mellinCriticalLine_certificate :
-    mellinCriticalLine_law
+  fockSummabilityDomain_True : Prop
+  fockSummabilityDomain_sorryProof :
+    fockSummabilityDomain_True
+  mellinCriticalLine_True : Prop
+  mellinCriticalLine_sorryProof :
+    mellinCriticalLine_True
   criticalLine_not_from_ordinaryFockNorm_guard : Type*
 
 namespace FockVsMellinNormalizabilityGuard
@@ -237,15 +237,15 @@ namespace FockVsMellinNormalizabilityGuard
 theorem fockSummabilityDomain
     {FockState MellinState FockNorm MellinNorm : Type*}
     (G : FockVsMellinNormalizabilityGuard FockState MellinState FockNorm MellinNorm) :
-    G.fockSummabilityDomain_law :=
-  G.fockSummabilityDomain_certificate
+    G.fockSummabilityDomain_True :=
+  G.fockSummabilityDomain_sorryProof
 
 /-- Re-export of the Mellin critical-line law. -/
 theorem mellinCriticalLine
     {FockState MellinState FockNorm MellinNorm : Type*}
     (G : FockVsMellinNormalizabilityGuard FockState MellinState FockNorm MellinNorm) :
-    G.mellinCriticalLine_law :=
-  G.mellinCriticalLine_certificate
+    G.mellinCriticalLine_True :=
+  G.mellinCriticalLine_sorryProof
 
 end FockVsMellinNormalizabilityGuard
 
@@ -262,12 +262,12 @@ structure MajoranaZeroModeNormalizabilityPacket
   imaginaryHeight : ℝ
   zeroMode : ZeroMode
   normReadout : NormReadout
-  isZeroMode_law : Prop
-  normalizable_law : Prop
-  normalizable_iff_criticalLine_law :
-    normalizable_law ↔ IsCriticalLineRealPart realPart
-  normalizable_iff_criticalLine_certificate :
-    normalizable_law ↔ IsCriticalLineRealPart realPart
+  isZeroMode_True : Prop
+  normalizable_True : Prop
+  normalizable_iff_criticalLine_True :
+    normalizable_True ↔ IsCriticalLineRealPart realPart
+  normalizable_iff_criticalLine_sorryProof :
+    normalizable_True ↔ IsCriticalLineRealPart realPart
 
 namespace MajoranaZeroModeNormalizabilityPacket
 
@@ -281,17 +281,17 @@ normalizability criterion.
 theorem criticalLine_of_normalizable
     {ZeroMode NormReadout : Type*}
     (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout)
-    (h : Z.normalizable_law) :
+    (h : Z.normalizable_True) :
     IsCriticalLineRealPart Z.realPart :=
-  (Z.normalizable_iff_criticalLine_certificate).mp h
+  (Z.normalizable_iff_criticalLine_sorryProof).mp h
 
 /-- Conversely, the packet says critical-line real part implies normalizability. -/
 theorem normalizable_of_criticalLine
     {ZeroMode NormReadout : Type*}
     (Z : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout)
     (h : IsCriticalLineRealPart Z.realPart) :
-    Z.normalizable_law :=
-  (Z.normalizable_iff_criticalLine_certificate).mpr h
+    Z.normalizable_True :=
+  (Z.normalizable_iff_criticalLine_sorryProof).mpr h
 
 end MajoranaZeroModeNormalizabilityPacket
 
@@ -308,13 +308,13 @@ structure MajoranaPfaffianZetaSpectralSocket
   parameter : SpectralParameter
   pfaffianReadout : PfaffianReadout
   zetaReadout : ZetaReadout
-  pfaffian_zeta_identity_law : Prop
-  pfaffian_zeta_identity_certificate :
-    pfaffian_zeta_identity_law
-  zetaZero_law : Prop
-  reciprocalZetaSingularity_law : Prop
+  pfaffian_zeta_identity_True : Prop
+  pfaffian_zeta_identity_sorryProof :
+    pfaffian_zeta_identity_True
+  zetaZero_True : Prop
+  reciprocalZetaSingularity_True : Prop
   zetaZero_implies_reciprocalSingularity :
-    zetaZero_law → reciprocalZetaSingularity_law
+    zetaZero_True → reciprocalZetaSingularity_True
 
 namespace MajoranaPfaffianZetaSpectralSocket
 
@@ -323,16 +323,16 @@ theorem pfaffian_zeta_identity
     {SpectralParameter PfaffianReadout ZetaReadout : Type*}
     (S : MajoranaPfaffianZetaSpectralSocket
       SpectralParameter PfaffianReadout ZetaReadout) :
-    S.pfaffian_zeta_identity_law :=
-  S.pfaffian_zeta_identity_certificate
+    S.pfaffian_zeta_identity_True :=
+  S.pfaffian_zeta_identity_sorryProof
 
 /-- Zeta zero data gives reciprocal-zeta singularity data in the supplied socket. -/
 theorem reciprocalSingularity_of_zetaZero
     {SpectralParameter PfaffianReadout ZetaReadout : Type*}
     (S : MajoranaPfaffianZetaSpectralSocket
       SpectralParameter PfaffianReadout ZetaReadout)
-    (hz : S.zetaZero_law) :
-    S.reciprocalZetaSingularity_law :=
+    (hz : S.zetaZero_True) :
+    S.reciprocalZetaSingularity_True :=
   S.zetaZero_implies_reciprocalSingularity hz
 
 end MajoranaPfaffianZetaSpectralSocket
@@ -354,18 +354,18 @@ structure WittenCharacterVsCompletedXiSocket
   wittenCharacter : WittenCharacter
   completedXi : CompletedXiReadout
   spectralPfaffian : SpectralPfaffianReadout
-  wittenCharacter_inverseZeta_law : Prop
-  wittenCharacter_inverseZeta_certificate :
-    wittenCharacter_inverseZeta_law
-  spectralPfaffian_completedXi_law : Prop
-  spectralPfaffian_completedXi_certificate :
-    spectralPfaffian_completedXi_law
-  zetaZeros_are_poles_of_inverseZeta_law : Prop
-  zetaZeros_are_poles_of_inverseZeta_certificate :
-    zetaZeros_are_poles_of_inverseZeta_law
-  completedXiZeros_are_spectralZeros_law : Prop
-  completedXiZeros_are_spectralZeros_certificate :
-    completedXiZeros_are_spectralZeros_law
+  wittenCharacter_inverseZeta_True : Prop
+  wittenCharacter_inverseZeta_sorryProof :
+    wittenCharacter_inverseZeta_True
+  spectralPfaffian_completedXi_True : Prop
+  spectralPfaffian_completedXi_sorryProof :
+    spectralPfaffian_completedXi_True
+  zetaZeros_are_poles_of_inverseZeta_True : Prop
+  zetaZeros_are_poles_of_inverseZeta_sorryProof :
+    zetaZeros_are_poles_of_inverseZeta_True
+  completedXiZeros_are_spectralZeros_True : Prop
+  completedXiZeros_are_spectralZeros_sorryProof :
+    completedXiZeros_are_spectralZeros_True
 
 namespace WittenCharacterVsCompletedXiSocket
 
@@ -376,8 +376,8 @@ theorem wittenCharacter_inverseZeta
     (S : WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout) :
-    S.wittenCharacter_inverseZeta_law :=
-  S.wittenCharacter_inverseZeta_certificate
+    S.wittenCharacter_inverseZeta_True :=
+  S.wittenCharacter_inverseZeta_sorryProof
 
 /-- Re-export: the spectral Pfaffian target is the completed `Xi` channel. -/
 theorem spectralPfaffian_completedXi
@@ -386,8 +386,8 @@ theorem spectralPfaffian_completedXi
     (S : WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout) :
-    S.spectralPfaffian_completedXi_law :=
-  S.spectralPfaffian_completedXi_certificate
+    S.spectralPfaffian_completedXi_True :=
+  S.spectralPfaffian_completedXi_sorryProof
 
 /-- Re-export: zeros of zeta are poles of the inverse-zeta Witten channel. -/
 theorem zetaZeros_are_poles_of_inverseZeta
@@ -396,8 +396,8 @@ theorem zetaZeros_are_poles_of_inverseZeta
     (S : WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout) :
-    S.zetaZeros_are_poles_of_inverseZeta_law :=
-  S.zetaZeros_are_poles_of_inverseZeta_certificate
+    S.zetaZeros_are_poles_of_inverseZeta_True :=
+  S.zetaZeros_are_poles_of_inverseZeta_sorryProof
 
 /-- Re-export: completed-`Xi` zeros are the spectral zero target. -/
 theorem completedXiZeros_are_spectralZeros
@@ -406,8 +406,8 @@ theorem completedXiZeros_are_spectralZeros
     (S : WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout) :
-    S.completedXiZeros_are_spectralZeros_law :=
-  S.completedXiZeros_are_spectralZeros_certificate
+    S.completedXiZeros_are_spectralZeros_True :=
+  S.completedXiZeros_are_spectralZeros_sorryProof
 
 end WittenCharacterVsCompletedXiSocket
 
@@ -423,10 +423,10 @@ theorem WittenCharacterVsCompletedXiOwnerTarget
     (S : WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout) :
-    S.wittenCharacter_inverseZeta_law ∧
-    S.spectralPfaffian_completedXi_law ∧
-    S.zetaZeros_are_poles_of_inverseZeta_law ∧
-    S.completedXiZeros_are_spectralZeros_law := by
+    S.wittenCharacter_inverseZeta_True ∧
+    S.spectralPfaffian_completedXi_True ∧
+    S.zetaZeros_are_poles_of_inverseZeta_True ∧
+    S.completedXiZeros_are_spectralZeros_True := by
   exact ⟨S.wittenCharacter_inverseZeta, S.spectralPfaffian_completedXi,
     S.zetaZeros_are_poles_of_inverseZeta, S.completedXiZeros_are_spectralZeros⟩
 
@@ -449,15 +449,15 @@ structure BosonFermionSuperdeterminantSocket
   superdeterminantReadout : SuperdeterminantReadout
   zetaReadout : ZetaReadout
   inverseZetaReadout : InverseZetaReadout
-  bosonic_eq_zeta_law : Prop
-  bosonic_eq_zeta_certificate :
-    bosonic_eq_zeta_law
-  fermionic_eq_inverseZeta_law : Prop
-  fermionic_eq_inverseZeta_certificate :
-    fermionic_eq_inverseZeta_law
-  superdeterminant_inversion_law : Prop
-  superdeterminant_inversion_certificate :
-    superdeterminant_inversion_law
+  bosonic_eq_zeta_True : Prop
+  bosonic_eq_zeta_sorryProof :
+    bosonic_eq_zeta_True
+  fermionic_eq_inverseZeta_True : Prop
+  fermionic_eq_inverseZeta_sorryProof :
+    fermionic_eq_inverseZeta_True
+  superdeterminant_inversion_True : Prop
+  superdeterminant_inversion_sorryProof :
+    superdeterminant_inversion_True
   zeta_zero_is_inverseZeta_pole_guard : Type*
 
 namespace BosonFermionSuperdeterminantSocket
@@ -469,8 +469,8 @@ theorem bosonic_eq_zeta
     (S : BosonFermionSuperdeterminantSocket
       BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout) :
-    S.bosonic_eq_zeta_law :=
-  S.bosonic_eq_zeta_certificate
+    S.bosonic_eq_zeta_True :=
+  S.bosonic_eq_zeta_sorryProof
 
 /-- Re-export: the Majorana/Fock parity channel is the inverse-zeta channel. -/
 theorem fermionic_eq_inverseZeta
@@ -479,8 +479,8 @@ theorem fermionic_eq_inverseZeta
     (S : BosonFermionSuperdeterminantSocket
       BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout) :
-    S.fermionic_eq_inverseZeta_law :=
-  S.fermionic_eq_inverseZeta_certificate
+    S.fermionic_eq_inverseZeta_True :=
+  S.fermionic_eq_inverseZeta_sorryProof
 
 /-- Re-export of the supplied superdeterminant inversion law. -/
 theorem superdeterminant_inversion
@@ -489,8 +489,8 @@ theorem superdeterminant_inversion
     (S : BosonFermionSuperdeterminantSocket
       BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout) :
-    S.superdeterminant_inversion_law :=
-  S.superdeterminant_inversion_certificate
+    S.superdeterminant_inversion_True :=
+  S.superdeterminant_inversion_sorryProof
 
 end BosonFermionSuperdeterminantSocket
 
@@ -509,15 +509,15 @@ structure ArchimedeanGammaFactorSocket
   archimedeanReadout : ArchimedeanReadout
   finitePrimeReadout : FinitePrimeReadout
   completedZetaReadout : CompletedZetaReadout
-  gammaFactor_law : Prop
-  gammaFactor_certificate :
-    gammaFactor_law
-  polynomialCompletion_law : Prop
-  polynomialCompletion_certificate :
-    polynomialCompletion_law
-  completedZeta_factorization_law : Prop
-  completedZeta_factorization_certificate :
-    completedZeta_factorization_law
+  gammaFactor_True : Prop
+  gammaFactor_sorryProof :
+    gammaFactor_True
+  polynomialCompletion_True : Prop
+  polynomialCompletion_sorryProof :
+    polynomialCompletion_True
+  completedZeta_factorization_True : Prop
+  completedZeta_factorization_sorryProof :
+    completedZeta_factorization_True
   finitePrimes_alone_not_completed_guard : Type*
 
 namespace ArchimedeanGammaFactorSocket
@@ -528,8 +528,8 @@ theorem gammaFactor
       CompletedZetaReadout : Type*}
     (A : ArchimedeanGammaFactorSocket
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
-    A.gammaFactor_law :=
-  A.gammaFactor_certificate
+    A.gammaFactor_True :=
+  A.gammaFactor_sorryProof
 
 /-- Re-export of the supplied polynomial completion law. -/
 theorem polynomialCompletion
@@ -537,8 +537,8 @@ theorem polynomialCompletion
       CompletedZetaReadout : Type*}
     (A : ArchimedeanGammaFactorSocket
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
-    A.polynomialCompletion_law :=
-  A.polynomialCompletion_certificate
+    A.polynomialCompletion_True :=
+  A.polynomialCompletion_sorryProof
 
 /-- Re-export of the completed-zeta factorization law. -/
 theorem completedZeta_factorization
@@ -546,8 +546,8 @@ theorem completedZeta_factorization
       CompletedZetaReadout : Type*}
     (A : ArchimedeanGammaFactorSocket
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
-    A.completedZeta_factorization_law :=
-  A.completedZeta_factorization_certificate
+    A.completedZeta_factorization_True :=
+  A.completedZeta_factorization_sorryProof
 
 end ArchimedeanGammaFactorSocket
 
@@ -562,9 +562,9 @@ theorem ArchimedeanGammaFactorOwnerTarget
       CompletedZetaReadout : Type*}
     (A : ArchimedeanGammaFactorSocket
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
-    A.gammaFactor_law ∧
-    A.polynomialCompletion_law ∧
-    A.completedZeta_factorization_law := by
+    A.gammaFactor_True ∧
+    A.polynomialCompletion_True ∧
+    A.completedZeta_factorization_True := by
   exact ⟨A.gammaFactor, A.polynomialCompletion, A.completedZeta_factorization⟩
 
 /--
@@ -584,15 +584,15 @@ structure BoundaryScatteringDiscretizationSocket
   continuousSpectrum : ContinuousSpectrum
   discreteOrAbsorptionReadout : DiscreteOrAbsorptionReadout
   phaseShiftReadout : PhaseShiftReadout
-  boundary_or_scattering_law : Prop
-  boundary_or_scattering_certificate :
-    boundary_or_scattering_law
-  continuous_to_spectralZeroReadout_law : Prop
-  continuous_to_spectralZeroReadout_certificate :
-    continuous_to_spectralZeroReadout_law
-  phaseShift_matches_zetaArgument_law : Prop
-  phaseShift_matches_zetaArgument_certificate :
-    phaseShift_matches_zetaArgument_law
+  boundary_or_scattering_True : Prop
+  boundary_or_scattering_sorryProof :
+    boundary_or_scattering_True
+  continuous_to_spectralZeroReadout_True : Prop
+  continuous_to_spectralZeroReadout_sorryProof :
+    continuous_to_spectralZeroReadout_True
+  phaseShift_matches_zetaArgument_True : Prop
+  phaseShift_matches_zetaArgument_sorryProof :
+    phaseShift_matches_zetaArgument_True
   bareBK_continuousSpectrum_guard : Type*
 
 namespace BoundaryScatteringDiscretizationSocket
@@ -604,8 +604,8 @@ theorem boundary_or_scattering
     (B : BoundaryScatteringDiscretizationSocket
       BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout) :
-    B.boundary_or_scattering_law :=
-  B.boundary_or_scattering_certificate
+    B.boundary_or_scattering_True :=
+  B.boundary_or_scattering_sorryProof
 
 /-- Re-export of the spectral-zero readout law. -/
 theorem continuous_to_spectralZeroReadout
@@ -614,8 +614,8 @@ theorem continuous_to_spectralZeroReadout
     (B : BoundaryScatteringDiscretizationSocket
       BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout) :
-    B.continuous_to_spectralZeroReadout_law :=
-  B.continuous_to_spectralZeroReadout_certificate
+    B.continuous_to_spectralZeroReadout_True :=
+  B.continuous_to_spectralZeroReadout_sorryProof
 
 /-- Re-export of the phase-shift/zeta-argument comparison law. -/
 theorem phaseShift_matches_zetaArgument
@@ -624,8 +624,8 @@ theorem phaseShift_matches_zetaArgument
     (B : BoundaryScatteringDiscretizationSocket
       BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout) :
-    B.phaseShift_matches_zetaArgument_law :=
-  B.phaseShift_matches_zetaArgument_certificate
+    B.phaseShift_matches_zetaArgument_True :=
+  B.phaseShift_matches_zetaArgument_sorryProof
 
 end BoundaryScatteringDiscretizationSocket
 
@@ -645,18 +645,18 @@ structure MBKHeatTraceExplicitFormulaSocket
   arithmeticHeatTrace : ArithmeticHeatTrace
   mellinTransformReadout : MellinTransformReadout
   explicitFormulaReadout : ExplicitFormulaReadout
-  heatTrace_factorization_law : Prop
-  heatTrace_factorization_certificate :
-    heatTrace_factorization_law
-  arithmeticHeatTrace_primeSum_law : Prop
-  arithmeticHeatTrace_primeSum_certificate :
-    arithmeticHeatTrace_primeSum_law
-  bkHeatTrace_mellinContinuum_law : Prop
-  bkHeatTrace_mellinContinuum_certificate :
-    bkHeatTrace_mellinContinuum_law
-  mellinTransform_eq_explicitFormula_law : Prop
-  mellinTransform_eq_explicitFormula_certificate :
-    mellinTransform_eq_explicitFormula_law
+  heatTrace_factorization_True : Prop
+  heatTrace_factorization_sorryProof :
+    heatTrace_factorization_True
+  arithmeticHeatTrace_primeSum_True : Prop
+  arithmeticHeatTrace_primeSum_sorryProof :
+    arithmeticHeatTrace_primeSum_True
+  bkHeatTrace_mellinContinuum_True : Prop
+  bkHeatTrace_mellinContinuum_sorryProof :
+    bkHeatTrace_mellinContinuum_True
+  mellinTransform_eq_explicitFormula_True : Prop
+  mellinTransform_eq_explicitFormula_sorryProof :
+    mellinTransform_eq_explicitFormula_True
 
 namespace MBKHeatTraceExplicitFormulaSocket
 
@@ -667,8 +667,8 @@ theorem heatTrace_factorization
     (T : MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    T.heatTrace_factorization_law :=
-  T.heatTrace_factorization_certificate
+    T.heatTrace_factorization_True :=
+  T.heatTrace_factorization_sorryProof
 
 /-- Re-export of the arithmetic prime-sum heat-trace law. -/
 theorem arithmeticHeatTrace_primeSum
@@ -677,8 +677,8 @@ theorem arithmeticHeatTrace_primeSum
     (T : MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    T.arithmeticHeatTrace_primeSum_law :=
-  T.arithmeticHeatTrace_primeSum_certificate
+    T.arithmeticHeatTrace_primeSum_True :=
+  T.arithmeticHeatTrace_primeSum_sorryProof
 
 /-- Re-export of the BK Mellin-continuum heat-trace law. -/
 theorem bkHeatTrace_mellinContinuum
@@ -687,8 +687,8 @@ theorem bkHeatTrace_mellinContinuum
     (T : MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    T.bkHeatTrace_mellinContinuum_law :=
-  T.bkHeatTrace_mellinContinuum_certificate
+    T.bkHeatTrace_mellinContinuum_True :=
+  T.bkHeatTrace_mellinContinuum_sorryProof
 
 /-- Re-export of the Mellin-transform explicit-formula law. -/
 theorem mellinTransform_eq_explicitFormula
@@ -697,8 +697,8 @@ theorem mellinTransform_eq_explicitFormula
     (T : MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    T.mellinTransform_eq_explicitFormula_law :=
-  T.mellinTransform_eq_explicitFormula_certificate
+    T.mellinTransform_eq_explicitFormula_True :=
+  T.mellinTransform_eq_explicitFormula_sorryProof
 
 end MBKHeatTraceExplicitFormulaSocket
 
@@ -714,10 +714,10 @@ theorem MBKHeatTraceExplicitFormulaOwnerTarget
     (T : MBKHeatTraceExplicitFormulaSocket
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    T.heatTrace_factorization_law ∧
-    T.arithmeticHeatTrace_primeSum_law ∧
-    T.bkHeatTrace_mellinContinuum_law ∧
-    T.mellinTransform_eq_explicitFormula_law := by
+    T.heatTrace_factorization_True ∧
+    T.arithmeticHeatTrace_primeSum_True ∧
+    T.bkHeatTrace_mellinContinuum_True ∧
+    T.mellinTransform_eq_explicitFormula_True := by
   exact ⟨T.heatTrace_factorization, T.arithmeticHeatTrace_primeSum,
     T.bkHeatTrace_mellinContinuum, T.mellinTransform_eq_explicitFormula⟩
 
@@ -744,20 +744,20 @@ structure CompletedXiHilbertPolyaReduction
   completedXiAtHeight : CompletedXiReadout
   renormalizedPfaffianAtHeight : RenormalizedPfaffianReadout
   spectralKernelAtHeight : SpectralKernel
-  self_adjoint_law : Prop
-  renormalizedPfaffian_eq_completedXi_law : Prop
-  renormalizedPfaffian_eq_completedXi_certificate :
-    renormalizedPfaffian_eq_completedXi_law
-  completedXiZero_law : Prop
-  completedXiZero_iff_spectralKernel_law :
-    completedXiZero_law ↔ Nonempty SpectralKernel
-  completedXiZero_iff_spectralKernel_certificate :
-    completedXiZero_law ↔ Nonempty SpectralKernel
-  spectralHeight_real_law : Prop
-  spectralHeight_real_certificate :
-    spectralHeight_real_law
-  spectralZero_on_criticalLine_law : IsCriticalLineRealPart (1 / 2 : ℝ)
-  criticalLine_completedXiZeros_imply_RH_law :
+  self_adjoint_True : Prop
+  renormalizedPfaffian_eq_completedXi_True : Prop
+  renormalizedPfaffian_eq_completedXi_sorryProof :
+    renormalizedPfaffian_eq_completedXi_True
+  completedXiZero_True : Prop
+  completedXiZero_iff_spectralKernel_True :
+    completedXiZero_True ↔ Nonempty SpectralKernel
+  completedXiZero_iff_spectralKernel_sorryProof :
+    completedXiZero_True ↔ Nonempty SpectralKernel
+  spectralHeight_real_True : Prop
+  spectralHeight_real_sorryProof :
+    spectralHeight_real_True
+  spectralZero_on_criticalLine_True : IsCriticalLineRealPart (1 / 2 : ℝ)
+  criticalLine_completedXiZeros_imply_RH_True :
     IsCriticalLineRealPart (1 / 2 : ℝ) → classicalRHStatement
   no_RH_without_completedXi_spectral_identity_guard : Type*
 
@@ -770,8 +770,8 @@ theorem renormalizedPfaffian_eq_completedXi
       RenormalizedPfaffianReadout : Type*}
     (R : CompletedXiHilbertPolyaReduction
       SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout) :
-    R.renormalizedPfaffian_eq_completedXi_law :=
-  R.renormalizedPfaffian_eq_completedXi_certificate
+    R.renormalizedPfaffian_eq_completedXi_True :=
+  R.renormalizedPfaffian_eq_completedXi_sorryProof
 
 /-! Completed-`Xi` zero data gives a spectral kernel by supplied identity. -/
 @[bridge_target_tag]
@@ -780,9 +780,9 @@ theorem spectralKernel_of_completedXiZero
       RenormalizedPfaffianReadout : Type*}
     (R : CompletedXiHilbertPolyaReduction
       SpectralOperator SpectralKernel CompletedXiReadout RenormalizedPfaffianReadout)
-    (hZero : R.completedXiZero_law) :
+    (hZero : R.completedXiZero_True) :
     Nonempty SpectralKernel :=
-  (R.completedXiZero_iff_spectralKernel_certificate).mp hZero
+  (R.completedXiZero_iff_spectralKernel_sorryProof).mp hZero
 
 end CompletedXiHilbertPolyaReduction
 
@@ -814,13 +814,13 @@ structure MajoranaPolyaHilbertBridge
   wittenVsXi :
     WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout
-  selfAdjoint_spectrum_real_law : Prop
-  selfAdjoint_spectrum_real_certificate :
-    selfAdjoint_spectrum_real_law
-  zeroModes_match_zetaZeros_law : Prop
-  zeroModes_match_zetaZeros_certificate :
-    zeroModes_match_zetaZeros_law
-  criticalLine_implies_classicalRH_law :
+  selfAdjoint_spectrum_real_True : Prop
+  selfAdjoint_spectrum_real_sorryProof :
+    selfAdjoint_spectrum_real_True
+  zeroModes_match_zetaZeros_True : Prop
+  zeroModes_match_zetaZeros_sorryProof :
+    zeroModes_match_zetaZeros_True
+  criticalLine_implies_classicalRH_True :
     IsCriticalLineRealPart zeroModeNormalizability.realPart →
       classicalRHStatement
   no_RH_without_analytic_witness_guard : Type*
@@ -837,8 +837,8 @@ theorem selfAdjoint_spectrum_real
       SpectralParameter PfaffianReadout ZetaReadout
       MellinWave MellinNorm WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout FockState MellinState FockNorm) :
-    B.selfAdjoint_spectrum_real_law :=
-  B.selfAdjoint_spectrum_real_certificate
+    B.selfAdjoint_spectrum_real_True :=
+  B.selfAdjoint_spectrum_real_sorryProof
 
 /-- Re-export of the supplied zero-mode/zeta-zero matching law. -/
 @[bridge_target_tag]
@@ -850,8 +850,8 @@ theorem zeroModes_match_zetaZeros
       SpectralParameter PfaffianReadout ZetaReadout
       MellinWave MellinNorm WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout FockState MellinState FockNorm) :
-    B.zeroModes_match_zetaZeros_law :=
-  B.zeroModes_match_zetaZeros_certificate
+    B.zeroModes_match_zetaZeros_True :=
+  B.zeroModes_match_zetaZeros_sorryProof
 
 /-- The bridge records that the BK/Mellin sector supplies the critical-line condition. -/
 @[bridge_target_tag]
@@ -880,8 +880,8 @@ theorem wittenCharacter_inverseZeta_channel
       SpectralParameter PfaffianReadout ZetaReadout
       MellinWave MellinNorm WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout FockState MellinState FockNorm) :
-    B.wittenVsXi.wittenCharacter_inverseZeta_law :=
-  B.wittenVsXi.wittenCharacter_inverseZeta_certificate
+    B.wittenVsXi.wittenCharacter_inverseZeta_True :=
+  B.wittenVsXi.wittenCharacter_inverseZeta_sorryProof
 
 /-- The bridge records that spectral zeros target completed `Xi`, not `1 / ζ`. -/
 @[bridge_target_tag]
@@ -895,8 +895,8 @@ theorem spectralPfaffian_completedXi_channel
       SpectralParameter PfaffianReadout ZetaReadout
       MellinWave MellinNorm WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout FockState MellinState FockNorm) :
-    B.wittenVsXi.spectralPfaffian_completedXi_law :=
-  B.wittenVsXi.spectralPfaffian_completedXi_certificate
+    B.wittenVsXi.spectralPfaffian_completedXi_True :=
+  B.wittenVsXi.spectralPfaffian_completedXi_sorryProof
 
 end MajoranaPolyaHilbertBridge
 
@@ -981,8 +981,8 @@ theorem bosonic_zeta_channel
       DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    B.bosonFermion.bosonic_eq_zeta_law :=
-  B.bosonFermion.bosonic_eq_zeta_certificate
+    B.bosonFermion.bosonic_eq_zeta_True :=
+  B.bosonFermion.bosonic_eq_zeta_sorryProof
 
 /-- Re-export: the fermionic Majorana channel is the inverse-zeta channel. -/
 theorem fermionic_inverseZeta_channel
@@ -1007,8 +1007,8 @@ theorem fermionic_inverseZeta_channel
       DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    B.bosonFermion.fermionic_eq_inverseZeta_law :=
-  B.bosonFermion.fermionic_eq_inverseZeta_certificate
+    B.bosonFermion.fermionic_eq_inverseZeta_True :=
+  B.bosonFermion.fermionic_eq_inverseZeta_sorryProof
 
 /-- Re-export: the completed target includes the supplied Archimedean factor. -/
 theorem completedZeta_archimedean_channel
@@ -1033,8 +1033,8 @@ theorem completedZeta_archimedean_channel
       DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    B.archimedean.completedZeta_factorization_law :=
-  B.archimedean.completedZeta_factorization_certificate
+    B.archimedean.completedZeta_factorization_True :=
+  B.archimedean.completedZeta_factorization_sorryProof
 
 /-- Re-export: boundary/scattering data supplies the spectral-zero readout lane. -/
 theorem boundary_scattering_spectralZero_channel
@@ -1059,8 +1059,8 @@ theorem boundary_scattering_spectralZero_channel
       DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    B.discretization.continuous_to_spectralZeroReadout_law :=
-  B.discretization.continuous_to_spectralZeroReadout_certificate
+    B.discretization.continuous_to_spectralZeroReadout_True :=
+  B.discretization.continuous_to_spectralZeroReadout_sorryProof
 
 /-- Re-export: the heat-trace Mellin transform targets the explicit formula. -/
 theorem heatTrace_explicitFormula_channel
@@ -1085,8 +1085,8 @@ theorem heatTrace_explicitFormula_channel
       DiscreteOrAbsorptionReadout PhaseShiftReadout
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout) :
-    B.heatTraceExplicit.mellinTransform_eq_explicitFormula_law :=
-  B.heatTraceExplicit.mellinTransform_eq_explicitFormula_certificate
+    B.heatTraceExplicit.mellinTransform_eq_explicitFormula_True :=
+  B.heatTraceExplicit.mellinTransform_eq_explicitFormula_sorryProof
 
 end MajoranaBKTraceFormulaBridge
 
@@ -1129,25 +1129,25 @@ structure RelativeMBKDeterminantScatteringPacket
   spectralKernel : SpectralKernel
 
   /-- Essential/self-adjointness of the relative MBK realization. -/
-  self_adjoint_relativeMBK_law : Prop
-  self_adjoint_relativeMBK_certificate :
-    self_adjoint_relativeMBK_law
+  self_adjoint_relativeMBK_True : Prop
+  self_adjoint_relativeMBK_sorryProof :
+    self_adjoint_relativeMBK_True
   /-- Relative determinant/Pfaffian equals the completed critical-line target. -/
-  relativeDeterminant_eq_completedXi_law : Prop
-  relativeDeterminant_eq_completedXi_certificate :
-    relativeDeterminant_eq_completedXi_law
+  relativeDeterminant_eq_completedXi_True : Prop
+  relativeDeterminant_eq_completedXi_sorryProof :
+    relativeDeterminant_eq_completedXi_True
   /-- Relative scattering trace reproduces the Riemann--Weil explicit formula. -/
-  scatteringTrace_eq_explicitFormula_law : Prop
-  scatteringTrace_eq_explicitFormula_certificate :
-    scatteringTrace_eq_explicitFormula_law
+  scatteringTrace_eq_explicitFormula_True : Prop
+  scatteringTrace_eq_explicitFormula_sorryProof :
+    scatteringTrace_eq_explicitFormula_True
   /-- Spectral shift is the relative trace density used by the scattering formula. -/
-  spectralShift_traceFormula_law : Prop
-  spectralShift_traceFormula_certificate :
-    spectralShift_traceFormula_law
+  spectralShift_traceFormula_True : Prop
+  spectralShift_traceFormula_sorryProof :
+    spectralShift_traceFormula_True
   /-- Completed-`Xi` zeros are exactly the spectral-kernel/absorption readout. -/
-  completedXiZero_iff_spectralKernel_law : Prop
-  completedXiZero_iff_spectralKernel_certificate :
-    completedXiZero_iff_spectralKernel_law
+  completedXiZero_iff_spectralKernel_True : Prop
+  completedXiZero_iff_spectralKernel_sorryProof :
+    completedXiZero_iff_spectralKernel_True
 
   /--
   Classical RH statement owned by the future analytic construction.
@@ -1156,11 +1156,11 @@ structure RelativeMBKDeterminantScatteringPacket
   but this file does not derive it from finite prime algebra.
   -/
   classicalRHStatement : Prop
-  hilbertPolya_reduction_law : Prop
-  hilbertPolya_reduction_certificate :
-    hilbertPolya_reduction_law
+  hilbertPolya_reduction_True : Prop
+  hilbertPolya_reduction_sorryProof :
+    hilbertPolya_reduction_True
   hilbertPolya_reduction_implies_RH :
-    hilbertPolya_reduction_law → classicalRHStatement
+    hilbertPolya_reduction_True → classicalRHStatement
 
   /-- Guardrail: the raw Majorana Witten character is `1 / zeta`, not this target. -/
   inverseZetaWittenCharacter_not_relativeDeterminant_guard : Type*
@@ -1181,8 +1181,8 @@ theorem self_adjoint_relativeMBK
       Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
-    P.self_adjoint_relativeMBK_law :=
-  P.self_adjoint_relativeMBK_certificate
+    P.self_adjoint_relativeMBK_True :=
+  P.self_adjoint_relativeMBK_sorryProof
 
 /-! Re-export of the supplied relative determinant/completed-`Xi` identity. -/
 @[bridge_target_tag]
@@ -1194,8 +1194,8 @@ theorem relativeDeterminant_eq_completedXi
       Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
-    P.relativeDeterminant_eq_completedXi_law :=
-  P.relativeDeterminant_eq_completedXi_certificate
+    P.relativeDeterminant_eq_completedXi_True :=
+  P.relativeDeterminant_eq_completedXi_sorryProof
 
 /-! Re-export of the supplied scattering-trace/explicit-formula identity. -/
 @[bridge_target_tag]
@@ -1207,8 +1207,8 @@ theorem scatteringTrace_eq_explicitFormula
       Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
-    P.scatteringTrace_eq_explicitFormula_law :=
-  P.scatteringTrace_eq_explicitFormula_certificate
+    P.scatteringTrace_eq_explicitFormula_True :=
+  P.scatteringTrace_eq_explicitFormula_sorryProof
 
 /-! Re-export of the supplied spectral-shift trace formula law. -/
 @[bridge_target_tag]
@@ -1220,8 +1220,8 @@ theorem spectralShift_traceFormula
       Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
-    P.spectralShift_traceFormula_law :=
-  P.spectralShift_traceFormula_certificate
+    P.spectralShift_traceFormula_True :=
+  P.spectralShift_traceFormula_sorryProof
 
 /-! Re-export of the supplied completed-`Xi` zero/spectral-kernel law. -/
 @[bridge_target_tag]
@@ -1233,8 +1233,8 @@ theorem completedXiZero_iff_spectralKernel
       Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
-    P.completedXiZero_iff_spectralKernel_law :=
-  P.completedXiZero_iff_spectralKernel_certificate
+    P.completedXiZero_iff_spectralKernel_True :=
+  P.completedXiZero_iff_spectralKernel_sorryProof
 
 /-! Conditional RH readback from the supplied Hilbert--Polya reduction.
 
@@ -1242,7 +1242,7 @@ This theorem only consumes the packet's own analytic certificate; it is not an
 unconditional proof of RH.
 -/
 @[bridge_target_tag]
-theorem classicalRH_of_relativeMBK_witness
+theorem classicalRH_of_relativeMBK_sorry
     {Carrier Operator Mode Cutoff BoundaryData ScatteringMatrix
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel : Type*}
@@ -1251,7 +1251,7 @@ theorem classicalRH_of_relativeMBK_witness
       SpectralShiftReadout RelativeDeterminantReadout RelativeTraceReadout
       CompletedXiReadout ExplicitFormulaReadout SpectralKernel) :
     P.classicalRHStatement :=
-  P.hilbertPolya_reduction_implies_RH P.hilbertPolya_reduction_certificate
+  P.hilbertPolya_reduction_implies_RH P.hilbertPolya_reduction_sorryProof
 
 end RelativeMBKDeterminantScatteringPacket
 
@@ -1276,18 +1276,18 @@ structure EssentialSelfAdjointLimitSocket
   closureReadout : ClosureReadout
   commutatorControl : CommutatorControl
   representationLimit : RepresentationLimit
-  finiteCutoff_essentialSelfAdjoint_law : Prop
-  finiteCutoff_essentialSelfAdjoint_certificate :
-    finiteCutoff_essentialSelfAdjoint_law
-  denseCore_invariant_law : Prop
-  denseCore_invariant_certificate :
-    denseCore_invariant_law
-  infiniteLimit_exists_law : Prop
-  infiniteLimit_exists_certificate :
-    infiniteLimit_exists_law
-  infiniteOperator_essentialSelfAdjoint_law : Prop
-  infiniteOperator_essentialSelfAdjoint_certificate :
-    infiniteOperator_essentialSelfAdjoint_law
+  finiteCutoff_essentialSelfAdjoint_True : Prop
+  finiteCutoff_essentialSelfAdjoint_sorryProof :
+    finiteCutoff_essentialSelfAdjoint_True
+  denseCore_invariant_True : Prop
+  denseCore_invariant_sorryProof :
+    denseCore_invariant_True
+  infiniteLimit_exists_True : Prop
+  infiniteLimit_exists_sorryProof :
+    infiniteLimit_exists_True
+  infiniteOperator_essentialSelfAdjoint_True : Prop
+  infiniteOperator_essentialSelfAdjoint_sorryProof :
+    infiniteOperator_essentialSelfAdjoint_True
   /-- Guardrail: the infinite prime limit is not automatic from finite cutoff algebra. -/
   finiteCutoff_does_not_imply_infiniteSelfAdjoint_guard : Type*
   /-- Guardrail: unbounded `Q∞` requires real analytic commutator/control data. -/
@@ -1302,8 +1302,8 @@ theorem denseCore_invariant
     (S : EssentialSelfAdjointLimitSocket
       FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
       CommutatorControl RepresentationLimit) :
-    S.denseCore_invariant_law :=
-  S.denseCore_invariant_certificate
+    S.denseCore_invariant_True :=
+  S.denseCore_invariant_sorryProof
 
 /-- Re-export of the supplied infinite-limit law. -/
 theorem infiniteLimit_exists
@@ -1312,8 +1312,8 @@ theorem infiniteLimit_exists
     (S : EssentialSelfAdjointLimitSocket
       FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
       CommutatorControl RepresentationLimit) :
-    S.infiniteLimit_exists_law :=
-  S.infiniteLimit_exists_certificate
+    S.infiniteLimit_exists_True :=
+  S.infiniteLimit_exists_sorryProof
 
 /-- Re-export of the supplied essential self-adjointness law for the infinite operator. -/
 theorem infiniteOperator_essentialSelfAdjoint
@@ -1322,8 +1322,8 @@ theorem infiniteOperator_essentialSelfAdjoint
     (S : EssentialSelfAdjointLimitSocket
       FiniteCutoff InfiniteCarrier InfiniteOperator DenseCore ClosureReadout
       CommutatorControl RepresentationLimit) :
-    S.infiniteOperator_essentialSelfAdjoint_law :=
-  S.infiniteOperator_essentialSelfAdjoint_certificate
+    S.infiniteOperator_essentialSelfAdjoint_True :=
+  S.infiniteOperator_essentialSelfAdjoint_sorryProof
 
 end EssentialSelfAdjointLimitSocket
 
@@ -1345,18 +1345,18 @@ structure ZetaRegularizedPfaffianSocket
   finitePart : FinitePart
   regularizedPfaffian : RegularizedPfaffian
   meromorphicReadout : MeromorphicReadout
-  heatKernel_asymptotic_law : Prop
-  heatKernel_asymptotic_certificate :
-    heatKernel_asymptotic_law
-  counterterm_subtraction_law : Prop
-  counterterm_subtraction_certificate :
-    counterterm_subtraction_law
-  finitePart_exists_law : Prop
-  finitePart_exists_certificate :
-    finitePart_exists_law
-  regularizedPfaffian_meromorphic_law : Prop
-  regularizedPfaffian_meromorphic_certificate :
-    regularizedPfaffian_meromorphic_law
+  heatKernel_asymptotic_True : Prop
+  heatKernel_asymptotic_sorryProof :
+    heatKernel_asymptotic_True
+  counterterm_subtraction_True : Prop
+  counterterm_subtraction_sorryProof :
+    counterterm_subtraction_True
+  finitePart_exists_True : Prop
+  finitePart_exists_sorryProof :
+    finitePart_exists_True
+  regularizedPfaffian_meromorphic_True : Prop
+  regularizedPfaffian_meromorphic_sorryProof :
+    regularizedPfaffian_meromorphic_True
   /-- Guardrail: ordinary trace-class determinant is not assumed. -/
   not_traceClassDeterminant_guard : Type*
   /-- Guardrail: renormalization counterterms must be explicitly supplied. -/
@@ -1371,8 +1371,8 @@ theorem heatKernel_asymptotic
     (S : ZetaRegularizedPfaffianSocket
       Operator HeatKernel SmallTimeAsymptotics Counterterm FinitePart
       RegularizedPfaffian MeromorphicReadout) :
-    S.heatKernel_asymptotic_law :=
-  S.heatKernel_asymptotic_certificate
+    S.heatKernel_asymptotic_True :=
+  S.heatKernel_asymptotic_sorryProof
 
 /-- Re-export of the supplied finite-part existence law. -/
 theorem finitePart_exists
@@ -1381,8 +1381,8 @@ theorem finitePart_exists
     (S : ZetaRegularizedPfaffianSocket
       Operator HeatKernel SmallTimeAsymptotics Counterterm FinitePart
       RegularizedPfaffian MeromorphicReadout) :
-    S.finitePart_exists_law :=
-  S.finitePart_exists_certificate
+    S.finitePart_exists_True :=
+  S.finitePart_exists_sorryProof
 
 /-- Re-export of the supplied regularized-Pfaffian meromorphic law. -/
 theorem regularizedPfaffian_meromorphic
@@ -1391,8 +1391,8 @@ theorem regularizedPfaffian_meromorphic
     (S : ZetaRegularizedPfaffianSocket
       Operator HeatKernel SmallTimeAsymptotics Counterterm FinitePart
       RegularizedPfaffian MeromorphicReadout) :
-    S.regularizedPfaffian_meromorphic_law :=
-  S.regularizedPfaffian_meromorphic_certificate
+    S.regularizedPfaffian_meromorphic_True :=
+  S.regularizedPfaffian_meromorphic_sorryProof
 
 end ZetaRegularizedPfaffianSocket
 
@@ -1413,18 +1413,18 @@ structure CompletedXiSuperdeterminantIdentitySocket
   superdeterminantReadout : SuperdeterminantReadout
   completedXiReadout : CompletedXiReadout
   spectralZeroReadout : SpectralZeroReadout
-  boson_fermion_inversion_law : Prop
-  boson_fermion_inversion_certificate :
-    boson_fermion_inversion_law
-  archimedean_completion_law : Prop
-  archimedean_completion_certificate :
-    archimedean_completion_law
-  superdeterminant_eq_completedXi_law : Prop
-  superdeterminant_eq_completedXi_certificate :
-    superdeterminant_eq_completedXi_law
-  completedXiZero_iff_spectralZero_law : Prop
-  completedXiZero_iff_spectralZero_certificate :
-    completedXiZero_iff_spectralZero_law
+  boson_fermion_inversion_True : Prop
+  boson_fermion_inversion_sorryProof :
+    boson_fermion_inversion_True
+  archimedean_completion_True : Prop
+  archimedean_completion_sorryProof :
+    archimedean_completion_True
+  superdeterminant_eq_completedXi_True : Prop
+  superdeterminant_eq_completedXi_sorryProof :
+    superdeterminant_eq_completedXi_True
+  completedXiZero_iff_spectralZero_True : Prop
+  completedXiZero_iff_spectralZero_sorryProof :
+    completedXiZero_iff_spectralZero_True
   /-- Guardrail: inverse-zeta poles do not directly give Majorana zero modes. -/
   inverseZeta_poles_not_zeroModes_guard : Type*
   /-- Guardrail: the Archimedean factor is part of the determinant identity. -/
@@ -1439,8 +1439,8 @@ theorem boson_fermion_inversion
     (S : CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    S.boson_fermion_inversion_law :=
-  S.boson_fermion_inversion_certificate
+    S.boson_fermion_inversion_True :=
+  S.boson_fermion_inversion_sorryProof
 
 /-- Re-export of the supplied Archimedean completion law. -/
 theorem archimedean_completion
@@ -1449,8 +1449,8 @@ theorem archimedean_completion
     (S : CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    S.archimedean_completion_law :=
-  S.archimedean_completion_certificate
+    S.archimedean_completion_True :=
+  S.archimedean_completion_sorryProof
 
 /-- Re-export of the supplied superdeterminant/completed-`Xi` identity. -/
 theorem superdeterminant_eq_completedXi
@@ -1459,8 +1459,8 @@ theorem superdeterminant_eq_completedXi
     (S : CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    S.superdeterminant_eq_completedXi_law :=
-  S.superdeterminant_eq_completedXi_certificate
+    S.superdeterminant_eq_completedXi_True :=
+  S.superdeterminant_eq_completedXi_sorryProof
 
 /-- Re-export of the supplied completed-`Xi` zero/spectral-zero law. -/
 theorem completedXiZero_iff_spectralZero
@@ -1469,8 +1469,8 @@ theorem completedXiZero_iff_spectralZero
     (S : CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    S.completedXiZero_iff_spectralZero_law :=
-  S.completedXiZero_iff_spectralZero_certificate
+    S.completedXiZero_iff_spectralZero_True :=
+  S.completedXiZero_iff_spectralZero_sorryProof
 
 end CompletedXiSuperdeterminantIdentitySocket
 
@@ -1500,9 +1500,9 @@ structure MBKAnalyticFrontier
     CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout
-  all_three_fronts_closed_law : Prop
-  all_three_fronts_closed_certificate :
-    all_three_fronts_closed_law
+  all_three_fronts_closed_True : Prop
+  all_three_fronts_closed_sorryProof :
+    all_three_fronts_closed_True
   /-- Guardrail: this is the analytic task list, not an unconditional RH proof. -/
   not_unconditional_RH_proof_guard : Type*
 
@@ -1521,8 +1521,8 @@ theorem all_three_fronts_closed
       Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    F.all_three_fronts_closed_law :=
-  F.all_three_fronts_closed_certificate
+    F.all_three_fronts_closed_True :=
+  F.all_three_fronts_closed_sorryProof
 
 /-- The frontier includes an essential self-adjointness witness for the infinite operator. -/
 theorem infiniteOperator_essentialSelfAdjoint
@@ -1537,8 +1537,8 @@ theorem infiniteOperator_essentialSelfAdjoint
       Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_law :=
-  F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_certificate
+    F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_True :=
+  F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_sorryProof
 
 /-- The frontier includes a zeta-regularized Pfaffian/meromorphic readout witness. -/
 theorem regularizedPfaffian_meromorphic
@@ -1553,8 +1553,8 @@ theorem regularizedPfaffian_meromorphic
       Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    F.regularizedPfaffian.regularizedPfaffian_meromorphic_law :=
-  F.regularizedPfaffian.regularizedPfaffian_meromorphic_certificate
+    F.regularizedPfaffian.regularizedPfaffian_meromorphic_True :=
+  F.regularizedPfaffian.regularizedPfaffian_meromorphic_sorryProof
 
 /-- The frontier includes the completed-`Xi` superdeterminant identity witness. -/
 theorem superdeterminant_eq_completedXi
@@ -1569,8 +1569,8 @@ theorem superdeterminant_eq_completedXi
       Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    F.completedXiIdentity.superdeterminant_eq_completedXi_law :=
-  F.completedXiIdentity.superdeterminant_eq_completedXi_certificate
+    F.completedXiIdentity.superdeterminant_eq_completedXi_True :=
+  F.completedXiIdentity.superdeterminant_eq_completedXi_sorryProof
 
 /-- Owner-target packaging for the MBK analytic frontier.
 
@@ -1591,12 +1591,12 @@ theorem MBKAnalyticFrontierOwnerTarget
       Counterterm FinitePart RegularizedPfaffian MeromorphicReadout
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout) :
-    F.all_three_fronts_closed_law ∧
-      F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_law ∧
-      F.regularizedPfaffian.regularizedPfaffian_meromorphic_law ∧
-      F.completedXiIdentity.archimedean_completion_law ∧
-      F.completedXiIdentity.superdeterminant_eq_completedXi_law ∧
-      F.completedXiIdentity.completedXiZero_iff_spectralZero_law := by
+    F.all_three_fronts_closed_True ∧
+      F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint_True ∧
+      F.regularizedPfaffian.regularizedPfaffian_meromorphic_True ∧
+      F.completedXiIdentity.archimedean_completion_True ∧
+      F.completedXiIdentity.superdeterminant_eq_completedXi_True ∧
+      F.completedXiIdentity.completedXiZero_iff_spectralZero_True := by
   exact ⟨
     F.all_three_fronts_closed,
     F.selfAdjointLimit.infiniteOperator_essentialSelfAdjoint,

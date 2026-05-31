@@ -24,7 +24,7 @@ set_option linter.dupNamespace false
 /--
 Witness-gated bridge between horizon data and an Andreev boundary.
 
-`horizon_as_andreev_boundary_law` is the installed analogue/holographic model
+`horizon_as_andreev_boundary_True` is the installed analogue/holographic model
 law. Without it, this structure makes no claim that horizons are
 superconducting interfaces.
 -/
@@ -38,12 +38,12 @@ structure AndreevHorizonBridge
     HorizonData
 
   /-- Model-specific law identifying the horizon boundary with the Andreev closure. -/
-  horizon_as_andreev_boundary_law :
+  horizon_as_andreev_boundary_True :
     Prop
 
   /-- Proof/certificate of the analogue horizon/Andreev law. -/
-  horizon_as_andreev_boundary_certificate :
-    horizon_as_andreev_boundary_law
+  horizon_as_andreev_boundary_sorryProof :
+    horizon_as_andreev_boundary_True
 
 namespace AndreevHorizonBridge
 

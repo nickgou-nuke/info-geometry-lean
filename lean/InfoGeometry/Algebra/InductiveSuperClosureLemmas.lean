@@ -183,6 +183,61 @@ theorem commutingFamily_all
     (fun n => H n i) (fun n => H n j)
     (h0 i j) (fun n => hH n i) (fun n => hH n j) n
 
+/--
+Fixed-point transport for a compatible family of stage endomorphisms.
+
+If `θ₀ X₀ = X₀`, `X` is transported by the bonds, and `θ` commutes with the
+bonds, then `θₙ Xₙ = Xₙ` at every finite stage.
+-/
+theorem endomorphism_fixed_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (θ : ∀ n : Nat, Stage n →+* Stage n)
+    (X : ∀ n : Nat, Stage n)
+    (hθ : ∀ n (x : Stage n), θ (n + 1) (bond n x) = bond n (θ n x))
+    (h0 : θ 0 (X 0) = X 0)
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat, θ n (X n) = X n := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      calc
+        θ (n + 1) (X (n + 1))
+            = θ (n + 1) (bond n (X n)) := by rw [hX n]
+        _ = bond n (θ n (X n)) := hθ n (X n)
+        _ = bond n (X n) := by rw [ih]
+        _ = X (n + 1) := hX n
+
+/--
+Neg-fixed-point transport for a compatible family of stage endomorphisms.
+
+This is the finite algebraic grading rule for odd elements:
+if `θ₀ X₀ = -X₀`, the transported representatives remain neg-fixed at every
+finite stage.
+-/
+theorem endomorphism_neg_fixed_all
+    {RingStage : Nat → Type u} [∀ n : Nat, Ring (RingStage n)]
+    (bond : ∀ n : Nat, RingStage n →+* RingStage (n + 1))
+    (θ : ∀ n : Nat, RingStage n →+* RingStage n)
+    (X : ∀ n : Nat, RingStage n)
+    (hθ : ∀ n (x : RingStage n), θ (n + 1) (bond n x) = bond n (θ n x))
+    (h0 : θ 0 (X 0) = -X 0)
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat, θ n (X n) = -X n := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      calc
+        θ (n + 1) (X (n + 1))
+            = θ (n + 1) (bond n (X n)) := by rw [hX n]
+        _ = bond n (θ n (X n)) := hθ n (X n)
+        _ = bond n (-X n) := by rw [ih]
+        _ = -bond n (X n) := by rw [map_neg]
+        _ = -X (n + 1) := by rw [hX n]
+
 /-- Stagewise single-supercharge closure: `{Qₙ,Qₙ}=Hₙ+Zₙ`. -/
 def SuperClosureAt
     (Q H Z : ∀ n : Nat, Stage n) (n : Nat) : Prop :=

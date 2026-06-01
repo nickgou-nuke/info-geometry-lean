@@ -222,6 +222,41 @@ theorem superBracket_odd_odd
   rw [map_add, map_mul, map_mul, hX, hY]
   noncomm_ring
 
+/-! ## Zero and square-zero superbracket reductions -/
+
+/-- A commuting pair has zero repository even-even superbracket. -/
+theorem superBracket_even_even_eq_zero_of_mul_comm
+    {X Y : A}
+    (h : X * Y = Y * X) :
+    InfoGeometry.Algebra.SupergradedBracket.superBracket false false X Y = 0 := by
+  change X * Y - Y * X = 0
+  rw [h]
+  noncomm_ring
+
+/-- Mutually annihilating elements have zero repository odd-odd superbracket. -/
+theorem superBracket_odd_odd_eq_zero_of_mutual_annihilation
+    {X Y : A}
+    (hXY : X * Y = 0)
+    (hYX : Y * X = 0) :
+    InfoGeometry.Algebra.SupergradedBracket.superBracket true true X Y = 0 := by
+  change X * Y + Y * X = 0
+  rw [hXY, hYX]
+  abel
+
+/-- The repository odd-odd self-superbracket is the doubled square. -/
+theorem superBracket_odd_odd_self_eq_square_add_square
+    (X : A) :
+    InfoGeometry.Algebra.SupergradedBracket.superBracket true true X X = X * X + X * X := by
+  rfl
+
+/-- Square-zero elements have zero repository odd-odd self-superbracket. -/
+theorem superBracket_odd_odd_self_eq_zero_of_square_zero
+    {X : A}
+    (hX : X * X = 0) :
+    InfoGeometry.Algebra.SupergradedBracket.superBracket true true X X = 0 := by
+  rw [superBracket_odd_odd_self_eq_square_add_square, hX]
+  abel
+
 end RingStage
 
 end InfoGeometry.Canonical.SuperBracketInvolutionParity

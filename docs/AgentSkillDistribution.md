@@ -50,6 +50,19 @@ Produce a candidate dossier first.
 Do not edit Lean source until the owner file and validation target are known.
 ```
 
+For LeanTrail surgery planning, agents must run the kernel-backed biopsy stream
+before planning:
+
+```bash
+lake script run leantrailVacuityAudit
+lake script run leantrailVacuityIngest
+lake script run leantrailSurgeryPlan
+```
+
+If `surgery_plan_report.json` says `vacuity_evidence_nodes: 0`, the planner was
+given a plain graph snapshot. That is a missing-evidence state, not a cleanup
+verdict.
+
 ## Token policy
 
 Send the full `SKILL.md` only to agents that need to act. Send the short pointer

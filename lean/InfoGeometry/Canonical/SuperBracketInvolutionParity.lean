@@ -1,3 +1,4 @@
+import InfoGeometry.Algebra.SupergradedBracket
 import Mathlib.Tactic
 
 /-!
@@ -171,6 +172,55 @@ theorem map_odd_square_zero
     (hNil : X * X = 0) :
     σ (X * X) = 0 := by
   rw [square_of_odd_is_even σ hX, hNil]
+
+/-! ## Parity closure for the repository superbracket -/
+
+/-- The repository superbracket of two even elements is even. -/
+theorem superBracket_even_even
+    (σ : A →+* A)
+    {X Y : A}
+    (hX : σ X = X)
+    (hY : σ Y = Y) :
+    σ (InfoGeometry.Algebra.SupergradedBracket.superBracket false false X Y) =
+      InfoGeometry.Algebra.SupergradedBracket.superBracket false false X Y := by
+  change σ (X * Y - Y * X) = X * Y - Y * X
+  rw [map_sub, map_mul, map_mul, hX, hY]
+
+/-- The repository superbracket of an even and an odd element is odd. -/
+theorem superBracket_even_odd
+    (σ : A →+* A)
+    {X Y : A}
+    (hX : σ X = X)
+    (hY : σ Y = -Y) :
+    σ (InfoGeometry.Algebra.SupergradedBracket.superBracket false true X Y) =
+      -InfoGeometry.Algebra.SupergradedBracket.superBracket false true X Y := by
+  change σ (X * Y - Y * X) = -(X * Y - Y * X)
+  rw [map_sub, map_mul, map_mul, hX, hY]
+  noncomm_ring
+
+/-- The repository superbracket of an odd and an even element is odd. -/
+theorem superBracket_odd_even
+    (σ : A →+* A)
+    {X Y : A}
+    (hX : σ X = -X)
+    (hY : σ Y = Y) :
+    σ (InfoGeometry.Algebra.SupergradedBracket.superBracket true false X Y) =
+      -InfoGeometry.Algebra.SupergradedBracket.superBracket true false X Y := by
+  change σ (X * Y - Y * X) = -(X * Y - Y * X)
+  rw [map_sub, map_mul, map_mul, hX, hY]
+  noncomm_ring
+
+/-- The repository odd-odd superbracket, i.e. the anticommutator, is even. -/
+theorem superBracket_odd_odd
+    (σ : A →+* A)
+    {X Y : A}
+    (hX : σ X = -X)
+    (hY : σ Y = -Y) :
+    σ (InfoGeometry.Algebra.SupergradedBracket.superBracket true true X Y) =
+      InfoGeometry.Algebra.SupergradedBracket.superBracket true true X Y := by
+  change σ (X * Y + Y * X) = X * Y + Y * X
+  rw [map_add, map_mul, map_mul, hX, hY]
+  noncomm_ring
 
 end RingStage
 

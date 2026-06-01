@@ -68,8 +68,6 @@ instance sameRaySetoid : Setoid (PositiveMeasure α ℝ) :=
     ⟩
   ⟩
 
-namespace PositiveMeasure
-
 lemma SameRay.refl (μ : PositiveMeasure α ℝ) : SameRay μ μ := by
   refine ⟨⟨1, zero_lt_one⟩, ?_⟩
   ext a
@@ -100,8 +98,6 @@ lemma SameRay.trans {μ ν κ : PositiveMeasure α ℝ}
     (d.1 * c.1) * μ a = d.1 * (c.1 * μ a) := by ring
     _ = d.1 * ν a := by rw [hc']
     _ = κ a := by rw [hd']
-
-end PositiveMeasure
 
 /-- The projectivized positive cone (rays). -/
 def Proj := Quotient (sameRaySetoid (α := α))

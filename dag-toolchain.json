@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 2,
+  "build": {
+    "buildTarget": "InfoGeometry.All",
+    "importRoot": "InfoGeometry.All",
+    "namespaceFilter": "InfoGeometry",
+    "runMode": "exe"
+  },
+  "authoritativeArtifacts": {
+    "indexDir": "artifacts/dag/index",
+    "graphOut": "artifacts/dag/full_graph.json",
+    "structureOut": "artifacts/dag/structural-topology.json"
+  },
+  "derivedReports": {
+    "coverageReportJson": "reports/dag/true-root-order.json",
+    "reportSequence": [
+      [
+        "tools/infra/reports/generate_repository_surface_index.py",
+        "--md-out",
+        "reports/dag/repository-surface-index.md",
+        "--json-out",
+        "reports/dag/repository-surface-index.json"
+      ],
+      [
+        "tools/infra/generate_theorem_surface_index.py"
+      ],
+      [
+        "tools/infra/generate_equivalence_dictionary.py",
+        "--curated-json",
+        "docs/NameEquivalenceRegistry.json",
+        "--json-out",
+        "reports/dag/equivalence-dictionary.json",
+        "--md-out",
+        "reports/dag/equivalence-dictionary.md"
+      ],
+      [
+        "tools/infra/generate_expr_alpha_dedup.py",
+        "--input-dir",
+        "artifacts/expr-graph/arango",
+        "--json-out",
+        "reports/dag/expr-alpha-dedup.json",
+        "--md-out",
+        "reports/dag/expr-alpha-dedup.md",
+        "--const-mode",
+        "normalize",
+        "--allow-missing-input"
+      ],
+      [
+        "tools/infra/reports/generate_bilingual_spine_report.py",
+        "--out",
+        "reports/dag/bilingual-spine-report.md",
+        "--json-out",
+        "reports/dag/bilingual-spine-report.json"
+      ],
+      [
+        "tools/infra/generate_source_sink_compression.py"
+      ],
+      [
+        "tools/infra/generate_causal_report.py",
+        "--md-out",
+        "reports/dag/true-root-order.md",
+        "--json-out",
+        "reports/dag/true-root-order.json"
+      ],
+      [
+        "tools/theorem_significance.py"
+      ],
+      [
+        "tools/infra/generate_sorry_equivalence.py"
+      ],
+      [
+        "tools/infra/plot_decl_graph.py"
+      ],
+      [
+        "tools/infra/generate_replacement_frontier.py"
+      ]
+    ]
+  },
+  "policies": {
+    "coverage": {
+      "requireFullCoverage": true,
+      "maxMissingDeclFiles": 0
+    },
+    "leakage": {
+      "reportSidecar": "artifacts/dag/index/edge-leakage.json",
+      "warnOnly": true
+    }
+  }
+}

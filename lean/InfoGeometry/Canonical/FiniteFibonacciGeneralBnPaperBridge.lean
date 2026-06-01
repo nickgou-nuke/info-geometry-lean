@@ -87,7 +87,7 @@ theorem general_sparse_basis8_matches_recursive_basis :
   rw [sectionSix_basis8_card, general_recursiveBasis_card_eight]
 
 /-- With endpoints `0,0`, local admissibility is exactly the `010` condition. -/
-theorem general_tripleAdmissible_zero_zero_iff {middle : SectorLabel} :
+theorem general_tripleAdmissible_zero_zero_iff {middle : Bool} :
     TripleAdmissible false middle false ↔ middle = true := by
   constructor
   · intro h
@@ -96,7 +96,7 @@ theorem general_tripleAdmissible_zero_zero_iff {middle : SectorLabel} :
     constructor <;> simp [AdjacentAdmissible, hm]
 
 /-- With endpoints `0,1`, local admissibility is exactly the `011` condition. -/
-theorem general_tripleAdmissible_zero_one_iff {middle : SectorLabel} :
+theorem general_tripleAdmissible_zero_one_iff {middle : Bool} :
     TripleAdmissible false middle true ↔ middle = true := by
   constructor
   · intro h
@@ -105,7 +105,7 @@ theorem general_tripleAdmissible_zero_one_iff {middle : SectorLabel} :
     constructor <;> simp [AdjacentAdmissible, hm]
 
 /-- With endpoints `1,0`, local admissibility is exactly the `110` condition. -/
-theorem general_tripleAdmissible_one_zero_iff {middle : SectorLabel} :
+theorem general_tripleAdmissible_one_zero_iff {middle : Bool} :
     TripleAdmissible true middle false ↔ middle = true := by
   constructor
   · intro h
@@ -115,28 +115,28 @@ theorem general_tripleAdmissible_one_zero_iff {middle : SectorLabel} :
 
 /-- The admissible `010` local block has the `q⁻⁴` singlet phase. -/
 theorem general_localSingletPhase_of_zero_zero
-    (q : Units ℂ) {middle : SectorLabel} (h : TripleAdmissible false middle false) :
+    (q : Units ℂ) {middle : Bool} (h : TripleAdmissible false middle false) :
     localSingletPhase q (localBraidBlockKind false middle false) = some (q ^ (-4 : ℤ)) := by
   rw [localBraidBlockKind_of_zero_zero h]
   rfl
 
 /-- The admissible `011` local block has the `q³` singlet phase. -/
 theorem general_localSingletPhase_of_zero_one
-    (q : Units ℂ) {middle : SectorLabel} (h : TripleAdmissible false middle true) :
+    (q : Units ℂ) {middle : Bool} (h : TripleAdmissible false middle true) :
     localSingletPhase q (localBraidBlockKind false middle true) = some (q ^ (3 : ℤ)) := by
   rw [localBraidBlockKind_of_zero_one h]
   rfl
 
 /-- The admissible `110` local block has the `q³` singlet phase. -/
 theorem general_localSingletPhase_of_one_zero
-    (q : Units ℂ) {middle : SectorLabel} (h : TripleAdmissible true middle false) :
+    (q : Units ℂ) {middle : Bool} (h : TripleAdmissible true middle false) :
     localSingletPhase q (localBraidBlockKind true middle false) = some (q ^ (3 : ℤ)) := by
   rw [localBraidBlockKind_of_one_zero h]
   rfl
 
 /-- Any `1 _ 1` local block reads out as the four-anyon `B = F R F` matrix. -/
 theorem general_localDoubletMatrix_of_one_one
-    (q : Units ℂ) (τ root : ℂ) (middle : SectorLabel) :
+    (q : Units ℂ) (τ root : ℂ) (middle : Bool) :
     localDoubletMatrix q τ root (localBraidBlockKind true middle true) =
       some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) := by
   rw [localBraidBlockKind_of_one_one middle]
@@ -388,17 +388,20 @@ theorem general_lastButOneGenerator_right_middle_zero
 
 /-- The left end generator is `b₁`. -/
 theorem general_leftEndBraidIndex :
-    leftEndBraidIndex = 1 :=
+    leftEndBraidIndex = 1 := by
+  change 1 = 1
   rfl
 
 /-- The right end generator is `b_{2N+1}`. -/
 theorem general_rightEndBraidIndex (N : ℕ) :
-    rightEndBraidIndex N = 2 * N + 1 :=
+    rightEndBraidIndex N = 2 * N + 1 := by
+  change 2 * N + 1 = 2 * N + 1
   rfl
 
 /-- The even generator attached to a qubit position is `b_{2(k+1)}`. -/
 theorem general_evenBraidIndex (N : ℕ) (k : Fin N) :
-    evenBraidIndex k = 2 * (k.val + 1) :=
+    evenBraidIndex k = 2 * (k.val + 1) := by
+  change 2 * (k.val + 1) = 2 * (k.val + 1)
   rfl
 
 /-- Distinct even generators are separated Artin generators. -/
@@ -443,23 +446,5 @@ theorem general_sparse_basis7_card :
 theorem general_sparse_basis8_card :
     Fintype.card FiniteFibonacciSparseLowAnyonMatrices.Basis8 = 13 :=
   sectionSix_basis8_card
-
-/--
-Assumption-carrying determinant schedule for the paper's Section 7 recurrence.
-
-This does not derive the determinant sequence from a repository-owned general
-matrix family.  It records the recurrence only as explicit schedule data, so the
-remaining all-`n` determinant closure stays visible instead of being implied by
-naming.
--/
-structure BraidDeterminantSchedule (q : Units ℂ) where
-  /-- Determinant/phase value at each stage `n`. -/
-  D : ℕ → Units ℂ
-  /-- Recurrence `Dₙ = Dₙ₋₂ · Dₙ₋₁` for `n ≥ 4`. -/
-  step : ∀ n : ℕ, 4 ≤ n → D n = D (n - 2) * D (n - 1)
-  /-- Base value `D₂ = q⁻⁴`. -/
-  init_two : D 2 = q ^ (-4 : ℤ)
-  /-- Base value `D₃ = q³`. -/
-  init_three : D 3 = q ^ (3 : ℤ)
 
 end InfoGeometry.Canonical.FiniteFibonacciGeneralBnPaperBridge

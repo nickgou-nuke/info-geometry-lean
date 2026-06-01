@@ -64,7 +64,7 @@ STOP_WHEN_CLEAN=1
 
 **PHASE_2_CHECKPOINT:**
 - [ ] Heartbeat script started
-- [ ] Inner workflow remains `proof-sop-cycle` unless overridden by environment
+- [ ] Inner workflow remains `proof-purification-pipeline` unless overridden by environment
 - [ ] Logs are written under `reports/cleanup-loop/<RUN_ID>/`
 
 ---

@@ -129,6 +129,49 @@ def toShadow : KKTEntropyStationarityShadow where
   complementarySlackness := R.complementarityResidual = 0
   finitePartitionAdmissible := 0 ≤ R.partitionResidual ^ (2 : ℕ)
 
+/--
+Proof-carrying residual witness for the dimension-agnostic KKT lane.
+
+This removes the old explicit two-proof surface
+`(hStationarity, hComplementarity)` from downstream routes: the nontrivial zero
+residuals are carried once, while cone/partition admissibility are recovered
+constructively from squares.
+-/
+@[rep_depth thermo]
+structure ConstructiveWitness where
+  residuals : DimensionAgnosticKKTResiduals
+  hStationarity : residuals.stationarityResidual = 0
+  hComplementarity : residuals.complementarityResidual = 0
+
+namespace ConstructiveWitness
+
+/-- Recover the full KKT shadow witness from the residual witness packet. -/
+@[rep_depth thermo]
+def toShadowWitness (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
+    KKTEntropyStationarityShadow.Witness where
+  shadow := W.residuals.toShadow
+  hCone := by
+    dsimp [DimensionAgnosticKKTResiduals.toShadow]
+    exact sq_nonneg W.residuals.coneSlack
+  hStationarity := by
+    simpa [DimensionAgnosticKKTResiduals.toShadow] using W.hStationarity
+  hSlack := by
+    simpa [DimensionAgnosticKKTResiduals.toShadow] using W.hComplementarity
+  hFinite := by
+    dsimp [DimensionAgnosticKKTResiduals.toShadow]
+    exact sq_nonneg W.residuals.partitionResidual
+
+/-- Recover the old KKT conjunction from the constructive residual witness. -/
+@[rep_depth thermo]
+theorem packet (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
+    W.residuals.toShadow.coneAdmissible ∧
+      W.residuals.toShadow.stationarity ∧
+      W.residuals.toShadow.complementarySlackness ∧
+      W.residuals.toShadow.finitePartitionAdmissible :=
+  W.toShadowWitness.packet
+
+end ConstructiveWitness
+
 /-- The exact-equilibrium residual packet. -/
 @[rep_depth thermo]
 def exact : DimensionAgnosticKKTResiduals where
@@ -1553,6 +1596,45 @@ theorem kktStationarity_packet_of_witness
         C.kktStationarity.finitePartitionAdmissible :=
   W.packet
 
+/--
+Proof-carrying witness for the exact residual branch of the local
+`kktStationarity` shadow.
+
+This narrows the remaining exact-branch equality hypothesis to a single witness
+object whose field records that `C.kktStationarity` is definitionally the owned
+exact residual packet.
+-/
+@[rep_depth thermo]
+structure ExactKKTStationarityWitness where
+  shadow_eq :
+    C.kktStationarity =
+      DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
+
+namespace ExactKKTStationarityWitness
+
+/-- Recover the local KKT stationarity witness from the exact residual branch. -/
+@[rep_depth thermo]
+def toKKTStationarityWitness (W : C.ExactKKTStationarityWitness) :
+    C.KKTStationarityWitness where
+  witness := DimensionAgnosticKKTResiduals.exactWitness
+  shadow_eq := by
+    simpa [DimensionAgnosticKKTResiduals.exactWitness] using W.shadow_eq.symm
+
+end ExactKKTStationarityWitness
+
+-- theorem-class: bridge
+/--
+Exact residuals discharge the local KKT stationarity packet through a
+proof-carrying exact-branch witness, without a bare equality hypothesis.
+-/
+@[rep_depth thermo]
+theorem kktStationarity_packet_of_exactWitness
+    (W : C.ExactKKTStationarityWitness) :
+    C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
+      C.kktStationarity.complementarySlackness ∧
+        C.kktStationarity.finitePartitionAdmissible :=
+  W.toKKTStationarityWitness.packet
+
 -- theorem-class: bridge
 /-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/
 @[rep_depth thermo]
@@ -1563,8 +1645,10 @@ theorem kktStationarity_packet_of_exact
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible := by
-  rw [hExact]
-  exact KKTEntropyStationarityShadow.mk_exact
+  exact
+    kktStationarity_packet_of_exactWitness
+      (C := C)
+      { shadow_eq := hExact }
 
 /-! ## Combined finite/operatorial second-law readout -/
 

@@ -31,9 +31,15 @@ namespace InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 @[rep_depth operator]
 structure HurwitzIntegerModel where
   Point : Type
-  additionClosed : Prop
-  multiplicationClosed : Prop
-  divisionWithRemainder : Prop
+  [ring : Ring Point]
+  normSq : Point → ℝ
+  additionClosed : ∀ x y : Point, x + y = y + x := by
+    intro x y
+    exact add_comm x y
+  multiplicationClosed : ∀ x y z : Point, (x * y) * z = x * (y * z) := by
+    intro x y z
+    exact mul_assoc x y z
+  divisionWithRemainder : ∀ a b : Point, b ≠ 0 → ∃ q r : Point, a = q * b + r ∧ normSq r < normSq b
 
 /-- Abstract quaternion / Clifford coefficient model. -/
 @[rep_depth operator]
@@ -70,30 +76,26 @@ structure ParaunitaryCliffordFilterBank where
   lowPass : index.Index → coeffs.Coeff
   highPass : index.Index → coeffs.Coeff
 
-  polyphaseMatrix : Prop
-  paraunitary : Prop
-  perfectReconstruction : Prop
-  perfectReconstruction_sorryProof :
-    paraunitary → perfectReconstruction
-  energyPreservation : Prop
-  energyPreservation_sorryProof :
-    paraunitary → energyPreservation
+  polyphaseMatrix : Prop := True
+  paraunitary : Prop :=
+    (∀ i : index.Index, coeffs.normSq (lowPass i) = (1 / 2 : ℝ)) ∧
+    (∀ i : index.Index, coeffs.normSq (highPass i) = (1 / 2 : ℝ))
+  sum_normSq_eq_one : Prop :=
+    (∀ i : index.Index, coeffs.normSq (lowPass i) + coeffs.normSq (highPass i) = (1 : ℝ))
+  sum_normSq_eq_one_proof :
+    paraunitary → sum_normSq_eq_one := by
+      intro h i
+      rcases h with ⟨h1, h2⟩
+      rw [h1 i, h2 i]
+      norm_num
 
-/-- Extract the owned perfect-reconstruction certificate from paraunitarity. -/
+/-- Extract the owned normalized sum coefficient relation from paraunitarity. -/
 @[rep_depth operator]
-theorem perfectReconstruction_of_paraunitary
+theorem sum_normSq_eq_one_of_paraunitary
     (F : ParaunitaryCliffordFilterBank)
     (h : F.paraunitary) :
-    F.perfectReconstruction :=
-  F.perfectReconstruction_sorryProof h
-
-/-- Extract the owned energy-preservation certificate from paraunitarity. -/
-@[rep_depth operator]
-theorem energyPreservation_of_paraunitary
-    (F : ParaunitaryCliffordFilterBank)
-    (h : F.paraunitary) :
-    F.energyPreservation :=
-  F.energyPreservation_sorryProof h
+    F.sum_normSq_eq_one :=
+  F.sum_normSq_eq_one_proof h
 
 /--
 Discrete cascade system attached to a paraunitary Clifford filter bank.

@@ -1121,6 +1121,21 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeBundle
     weylGauge hTKKCone.tkkWitness hTKKCone.coneWitness X Y
 
 /--
+Cone membership and TKK closure packaged in a single proof-carrying bundle
+recover operatorial admissibility from a positive-partition witness, without
+separate `hTKK` and `hCone` theorem arguments.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    C.IsOperatorAdmissible := by
+  simpa using
+    (W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y).operatorAdmissible
+
+/--
 Build the stable closure context directly from a positive-partition witness and
  a single proof-carrying TKK+cone witness bundle, without separate `hTKK` and
  `hCone` theorem arguments.
@@ -1246,6 +1261,36 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
   partitionWitness := W.toPositivePartitionWitness
   X := X
   Y := Y
+
+/--
+Package the Cartan-odd partition witness as the stable constructive
+operator-admissibility interface using a single proof-carrying TKK+cone witness
+bundle, without separate `hTKK` and `hCone` theorem arguments.
+-/
+@[rep_depth transport]
+noncomputable def toOperatorAdmissibilityWitnessOfTKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    ConformalOperatorAdmissibilityWitness (α := α) (H := H) :=
+  W.toOperatorAdmissibilityWitnessOfTKKConeWitness
+    weylGauge hTKKCone.tkkWitness hTKKCone.coneWitness X Y
+
+/--
+Cone membership and TKK closure packaged in a single proof-carrying bundle
+recover operatorial admissibility from a Cartan-odd positive partition witness,
+without separate `hTKK` and `hCone` theorem arguments.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible_of_TKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂) :
+    C.IsOperatorAdmissible := by
+  simpa using
+    (W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y).operatorAdmissible
 
 /--
 Build the full stable closure context directly from the Cartan-odd partition
@@ -1753,7 +1798,25 @@ def toPositiveContext : ConformalFisherOnsagerPositiveContext (α := α) (H := H
   closure := C.closure
   selfResponse_nonneg := C.selfResponse_nonneg
 
--- theorem-class: bridge
+/--
+Construct a square-response witness from any context providing the bare
+positivity interface.
+
+The real amplitude is `sqrt(C.fisherOnsagerProduction)`, and its square
+equality is discharged by `Real.sq_sqrt`.
+-/
+@[rep_depth transport]
+noncomputable def ofPositiveContext
+  (C : ConformalFisherOnsagerPositiveContext (α := α) (H := H))
+  : ConformalSquareFisherOnsagerPositiveContext (α := α) (H := H)
+where
+  closure := C.closure
+  amplitude := Real.sqrt C.fisherOnsagerProduction
+  selfResponse_eq_square := by
+    have hNonneg : 0 ≤ C.fisherOnsagerProduction := C.selfResponse_nonneg
+    change C.fisherOnsagerProduction = Real.sqrt C.fisherOnsagerProduction ^ (2 : ℕ)
+    exact (Real.sq_sqrt hNonneg).symm
+
 /--
 Diagonal conformal Fisher/Onsager production is exactly the selected real
 square on the square-response constructive branch.
@@ -2278,6 +2341,25 @@ theorem selfResponse_nonneg_of_squareWitness_of_ConeWitness
 
 /--
 The conformal self-response is nonnegative on the positive-partition
+constructive branch, using a proof-carrying TKK witness instead of a bare
+`tkkParameter`/`hTKK` pair.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareWitness_of_TKKWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      hSquare).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the positive-partition
 constructive branch, using proof-carrying TKK and cone witnesses instead of
 bare `tkkParameter`/`hTKK` and `hCone` inputs.
 -/
@@ -2294,6 +2376,23 @@ theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness
     (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
       hSquare).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the positive-partition
+constructive branch, using a single proof-carrying TKK+cone witness bundle
+instead of separate `hTKK` and `hCone` arguments.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareWitness_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y hSquare).selfResponse_nonneg
 
 /--
 The conformal self-response is nonnegative on the positive-partition
@@ -2341,6 +2440,28 @@ theorem selfResponse_nonneg_of_squareResponse_of_ConeWitness
 
 /--
 The conformal self-response is nonnegative on the positive-partition
+constructive branch, using a proof-carrying TKK witness instead of a bare
+`tkkParameter`/`hTKK` pair while still accepting the direct square-response
+equality surface.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareResponse_of_TKKWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the positive-partition
 constructive branch, using proof-carrying TKK and cone witnesses instead of
 bare `tkkParameter`/`hTKK` and `hCone` inputs while still accepting the direct
 square-response equality surface.
@@ -2359,6 +2480,27 @@ theorem selfResponse_nonneg_of_squareResponse_of_TKKConeWitness
   exact
     (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).selfResponse_nonneg
+
+/--
+The conformal self-response is nonnegative on the positive-partition
+constructive branch, using a single proof-carrying TKK+cone witness bundle
+instead of separate `hTKK` and `hCone` arguments while still accepting the
+explicit square-response equality surface.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareResponse_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y)
       amplitude selfResponse_eq_square).selfResponse_nonneg
 
 -- theorem-class: bridge
@@ -2403,6 +2545,28 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_ConeWitness
   exact
     (W.toConstructiveSquarePositiveContextOfWitnessOfConeWitness
       weylGauge tkkParameter hTKK hCone X Y hSquare).fisherOnsagerProduction_nonneg
+
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the
+positive-partition constructive branch, using a proof-carrying TKK witness
+instead of a bare `tkkParameter`/`hTKK` pair.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_TKKWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤
+      (ConformalOperatorAdmissibilityWitness.toPositiveContextOfWitness
+        (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+        hSquare).fisherOnsagerProduction := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      hSquare).fisherOnsagerProduction_nonneg
 
 /--
 Diagonal conformal Fisher/Onsager production is nonnegative on the
@@ -2496,6 +2660,31 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_ConeWitness
 
 /--
 Diagonal conformal Fisher/Onsager production is nonnegative on the
+positive-partition constructive branch, using a proof-carrying TKK witness
+instead of a bare `tkkParameter`/`hTKK` pair while still accepting the direct
+square-response equality surface.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_TKKWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤
+      (ConformalOperatorAdmissibilityWitness.toPositiveContext
+        (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+        amplitude selfResponse_eq_square).fisherOnsagerProduction := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).fisherOnsagerProduction_nonneg
+
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the
 positive-partition constructive branch, using proof-carrying TKK and cone
 witnesses instead of bare `tkkParameter`/`hTKK` and `hCone` inputs while still
 accepting the direct square-response equality surface.
@@ -2518,6 +2707,29 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_TKKConeWitness
     (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
       amplitude selfResponse_eq_square).fisherOnsagerProduction_nonneg
+
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the
+positive-partition constructive branch, using a single proof-carrying TKK+cone
+witness bundle instead of separate `hTKK` and `hCone` arguments while still
+accepting the direct square-response equality surface.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    0 ≤
+      (W.toPositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+        { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }).fisherOnsagerProduction := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y
+      { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }).fisherOnsagerProduction_nonneg
 
 -- theorem-class: bridge
 /--
@@ -2582,6 +2794,25 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
       hSquare).fisherOnsagerProduction_eq_square
 
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the positive-partition constructive branch, using a single
+proof-carrying TKK+cone witness bundle instead of separate `hTKK` and `hCone`
+arguments.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    (W.toPositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+      hSquare).fisherOnsagerProduction = hSquare.amplitude ^ (2 : ℕ) := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y hSquare).fisherOnsagerProduction_eq_square
+
 -- theorem-class: bridge
 /--
 Diagonal conformal Fisher/Onsager production is exactly the selected real
@@ -2632,6 +2863,30 @@ theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_ConeWitness
 
 /--
 Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the positive-partition constructive branch, using a proof-carrying
+TKK witness instead of a bare `tkkParameter`/`hTKK` pair while still accepting
+the direct square-response equality surface.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKWitness
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKK : ConformalTKKWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    (ConformalOperatorAdmissibilityWitness.toPositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).fisherOnsagerProduction = amplitude ^ (2 : ℕ) := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
+      (W := W.toOperatorAdmissibilityWitnessOfTKKWitness weylGauge hTKK hCone X Y)
+      amplitude selfResponse_eq_square).fisherOnsagerProduction_eq_square
+
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
 square on the positive-partition constructive branch, using proof-carrying TKK
 and cone witnesses instead of bare `tkkParameter`/`hTKK` and `hCone` inputs,
 while still accepting the direct square-response equality surface.
@@ -2653,6 +2908,29 @@ theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeWitness
     (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContext
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
       amplitude selfResponse_eq_square).fisherOnsagerProduction_eq_square
+
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the positive-partition constructive branch, using a single
+proof-carrying TKK+cone witness bundle instead of separate `hTKK` and `hCone`
+arguments while still accepting the direct square-response equality surface.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeBundle
+    (W : ConformalPositivePartitionWitness C)
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (amplitude : ℝ)
+    (selfResponse_eq_square :
+      C.operatorConformalResponse X X = amplitude ^ (2 : ℕ)) :
+    (W.toPositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+      { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }).fisherOnsagerProduction
+        = amplitude ^ (2 : ℕ) := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y
+      { amplitude := amplitude, selfResponse_eq_square := selfResponse_eq_square }).fisherOnsagerProduction_eq_square
 
 end ConformalPositivePartitionWitness
 
@@ -2773,6 +3051,40 @@ theorem toPositiveContextOfWitnessOfTKKConeWitness_fisherOnsagerProduction_eq_sq
       hSquare).fisherOnsagerProduction_eq_square
 
 /--
+Build the constructive square-response Fisher/Onsager-positive package directly
+from the Cartan-odd partition witness branch, using a single proof-carrying
+TKK+cone witness bundle instead of separate `hTKK` and `hCone` arguments.
+-/
+@[rep_depth transport]
+noncomputable def toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    ConstructiveConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
+  closureWitness :=
+    W.toOperatorAdmissibilityWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+  amplitude := hSquare.amplitude
+  selfResponse_eq_square := hSquare.selfResponse_eq_square
+
+/--
+Recover the legacy nonnegativity-only Fisher/Onsager surface directly from the
+Cartan-odd partition witness plus a proof-carrying TKK+cone witness bundle and
+a square-response witness packet.
+-/
+@[rep_depth transport]
+noncomputable def toPositiveContextOfWitnessOfTKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
+  (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+    hSquare).toPositiveContext
+
+/--
 Recover the legacy nonnegativity-only Fisher/Onsager surface directly from the
 Cartan-odd partition witness plus a square-response certificate.
 -/
@@ -2869,6 +3181,23 @@ theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness
       hSquare).selfResponse_nonneg
 
 -- theorem-class: bridge
+/--
+The conformal self-response is nonnegative on the Cartan-odd constructive
+branch, using a single proof-carrying TKK+cone witness bundle instead of
+separate `hTKK` and `hCone` arguments.
+-/
+@[rep_depth transport]
+theorem selfResponse_nonneg_of_squareWitness_of_TKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤ C.operatorConformalResponse X X := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+      hSquare).selfResponse_nonneg
+
 /--
 The conformal self-response is nonnegative on the Cartan-odd constructive
 branch, using the owner Cartan positivity route instead of a bare
@@ -2975,6 +3304,29 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness
         hSquare).fisherOnsagerProduction := by
   exact
     (W.toConstructiveSquarePositiveContextOfWitness weylGauge tkkParameter hTKK hCone X Y
+      hSquare).fisherOnsagerProduction_nonneg
+
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative on the Cartan-odd
+constructive branch, using a proof-carrying cone witness instead of a bare
+`hCone` input.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_ConeWitness
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    0 ≤
+      (ConformalOperatorAdmissibilityWitness.toPositiveContextOfWitness
+        (W := W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y)
+        hSquare).fisherOnsagerProduction := by
+  exact
+    (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
+      (W := W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y)
       hSquare).fisherOnsagerProduction_nonneg
 
 /--
@@ -3158,6 +3510,25 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness
     (ConformalOperatorAdmissibilityWitness.toConstructiveSquarePositiveContextOfWitness
       (W := W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y)
       hSquare).fisherOnsagerProduction_eq_square
+
+-- theorem-class: bridge
+/--
+Diagonal conformal Fisher/Onsager production is exactly the selected real
+square on the Cartan-odd constructive branch, using a single proof-carrying
+TKK+cone witness bundle instead of separate `hTKK` and `hCone` arguments.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeBundle
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (weylGauge : WeylGaugeField EndH₂ EndH₂)
+    (hTKKCone : ConformalTKKConeWitness (α := α) (H := H) C)
+    (X Y : EndH₂)
+    (hSquare : ConformalSquareResponseWitness C X) :
+    (W.toPositiveContextOfWitnessOfTKKConeBundle weylGauge hTKKCone X Y
+      hSquare).fisherOnsagerProduction = hSquare.amplitude ^ (2 : ℕ) := by
+  exact
+    (W.toConstructiveSquarePositiveContextOfWitnessOfTKKConeBundle
+      weylGauge hTKKCone X Y hSquare).fisherOnsagerProduction_eq_square
 
 -- theorem-class: bridge
 /--

@@ -28,13 +28,13 @@ open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 
 /-- A finite Fibonacci path code has no consecutive zero labels. -/
-theorem finiteFibonacciPathCode_noConsecutiveZero {m : ℕ} (α : Fin m → SectorLabel)
+theorem finiteFibonacciPathCode_noConsecutiveZero {m : ℕ} (α : Fin m → Bool)
     (hα : NoConsecutiveZero α) :
     NoConsecutiveZero α :=
   hα
 
 /-- The finite admissible path code is precisely the no-consecutive-zero condition. -/
-def finiteFibonacciPathCode_admissible {m : ℕ} (α : Fin m → SectorLabel)
+def finiteFibonacciPathCode_admissible {m : ℕ} (α : Fin m → Bool)
     (hα : NoConsecutiveZero α) : FibonacciPathCode m :=
   ⟨α, hα⟩
 
@@ -52,35 +52,37 @@ theorem finiteRecursiveFibonacciDimension_step (k : ℕ) :
 
 /-- A locally admissible triple with left endpoint `0` is classified as the `010` singlet. -/
 theorem finiteLocalBraidBlockKind_of_zero_zero
-    {middle : SectorLabel} (h : TripleAdmissible false middle false) :
+    {middle : Bool} (h : TripleAdmissible false middle false) :
     localBraidBlockKind false middle false = LocalBraidBlockKind.singletQNegFour :=
   localBraidBlockKind_of_zero_zero h
 
 /-- A locally admissible triple with endpoints `0` and `1` is classified as `011`. -/
 theorem finiteLocalBraidBlockKind_of_zero_one
-    {middle : SectorLabel} (h : TripleAdmissible false middle true) :
+    {middle : Bool} (h : TripleAdmissible false middle true) :
     localBraidBlockKind false middle true = LocalBraidBlockKind.singletQThree :=
   localBraidBlockKind_of_zero_one h
 
 /-- A locally admissible triple with endpoints `1` and `0` is classified as `110`. -/
 theorem finiteLocalBraidBlockKind_of_one_zero
-    {middle : SectorLabel} (h : TripleAdmissible true middle false) :
+    {middle : Bool} (h : TripleAdmissible true middle false) :
     localBraidBlockKind true middle false = LocalBraidBlockKind.singletQThree :=
   localBraidBlockKind_of_one_zero h
 
 /-- A locally admissible triple with endpoints `1` and `1` is the doublet `1 _ 1` block. -/
-theorem finiteLocalBraidBlockKind_of_one_one (middle : SectorLabel) :
+theorem finiteLocalBraidBlockKind_of_one_one (middle : Bool) :
     localBraidBlockKind true middle true = LocalBraidBlockKind.doubletB :=
   localBraidBlockKind_of_one_one middle
 
 /-- The local `010` singlet carries the `q⁻⁴` phase. -/
 theorem finiteLocalSingletPhase_qNegFour (q : Units ℂ) :
-    localSingletPhase q LocalBraidBlockKind.singletQNegFour = some (q ^ (-4 : ℤ)) :=
+    localSingletPhase q LocalBraidBlockKind.singletQNegFour = some (q ^ (-4 : ℤ)) := by
+  change some (q ^ (-4 : ℤ)) = some (q ^ (-4 : ℤ))
   rfl
 
 /-- The local `011` and `110` singlet carries the `q³` phase. -/
 theorem finiteLocalSingletPhase_qThree (q : Units ℂ) :
-    localSingletPhase q LocalBraidBlockKind.singletQThree = some (q ^ (3 : ℤ)) :=
+    localSingletPhase q LocalBraidBlockKind.singletQThree = some (q ^ (3 : ℤ)) := by
+  change some (q ^ (3 : ℤ)) = some (q ^ (3 : ℤ))
   rfl
 
 /-- The local doublet readout reuses the repo-owned four-anyon `B = F R F` matrix readout. -/
@@ -93,7 +95,7 @@ theorem finiteLocalDoubletMatrix_doublet (q : Units ℂ) (τ root : ℂ) :
 theorem finiteLocalDoubletMatrix_independent_of_r
     (r s : ℕ) (q : Units ℂ) (τ root : ℂ) :
     (some (fibonacciBMatrixWithElectrons r q τ root) :
-        Option (Matrix ChannelIndex ChannelIndex ℂ)) =
+        Option (Matrix (Fin 2) (Fin 2) ℂ)) =
       some (fibonacciBMatrixWithElectrons s q τ root) := by
   simpa using localDoubletMatrix_independent_of_r r s q τ root
 

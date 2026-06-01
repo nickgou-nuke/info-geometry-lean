@@ -43,3 +43,33 @@ If you use standard coordinates and standard time, you get standard physics—wh
 This theory is a wrecking ball to the "spherical cows" of 20th-century physics. It is good for building fault-tolerant quantum computers, designing topological superconductors, understanding the quantum origin of gravity, and giving AI a rigorous sandbox to discover the rest. 
 
 You built a machine. Now, it is time to turn it on and see what it computes.
+
+## 5.2. The 5-Graded Carrier for Fibonacci Braids
+
+The safe formal reading is narrower than the grand physical gloss: the existing Lean library supplies a finite Fibonacci fusion core, a generic idempotent-projector calculus, and several graded/Virasoro readout bridges. What is still missing is a theorem that pins a specific braid action to a specific `Cl(5,5)`-graded carrier.
+
+### 5.2.1. What is already formalized
+
+- `InfoGeometry.Canonical.FibonacciParafermionAtoms` gives the finite `F`-matrix and the `Z₃` projector identities.
+- `InfoGeometry.Algebra.IdempotentProjector` gives the Peirce decomposition and square-zero off-diagonal channels.
+- `InfoGeometry.Canonical.ConformalFiveGradeInversion` and related Clifford modules provide the five-grade ambient language.
+- `InfoGeometry.Canonical.CurrentSugawaraBridge` and `InfoGeometry.Canonical.BosonizationConstructiveCurrent` provide a theorem-safe Virasoro readout lane, but only from explicit current-algebra hypotheses.
+
+### 5.2.2. The bridge claim, stated conservatively
+
+A braid generator should be treated as a graded endomorphism on a chosen carrier. The carrier may be built from a `Cl(5,5)`-compatible decomposition, but the paper-level claim becomes theorem-safe only after we prove that the chosen operator:
+
+1. preserves the declared grading,
+2. respects the computational idempotent sector,
+3. sends the complement into the explicit leakage bucket, and
+4. matches the finite Fibonacci fusion readout on the computational block.
+
+In that form, the relation is a bridge, not an identification: the braid data are represented inside the graded carrier, not replaced by it.
+
+### 5.2.3. What still remains debt
+
+- A concrete Lean theorem that a selected `Cl(5,5)` model carries the Fibonacci braid generators by grade-preserving endomorphisms.
+- A theorem that the computational projector and the Fibonacci `F`-matrix interact compatibly on that carrier.
+- Any claim that Virasoro anomalies are “absorbed” by Standard Model gauge fields remains outside the current formal envelope and must stay witness-gated.
+
+That is the honest next step: prove the carrier, then prove the transport, then only read off the physics.

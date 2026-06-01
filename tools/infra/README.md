@@ -642,6 +642,7 @@ Run the native audit before trusting the representation-depth reports. Run the m
 ## Operational Rules
 
 - use `run_locked_lake_build.py` for umbrella builds
+- if `.lake` was cleaned or a worktree is fresh, hydrate the precompiled mathlib cache first (`lake exe cache get`); the locked build wrapper also auto-hydrates when `Mathlib.olean` is missing
 - `refresh_decl_graph.py` now prebuilds `dagIndexer` for `--run-mode exe` and `DAG.Indexer` for `--run-mode run`, together with the import root, under the build lock
 - do not run concurrent umbrella builds
 - do not hand-edit `artifacts/dag/*`

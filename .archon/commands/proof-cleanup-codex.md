@@ -1,5 +1,5 @@
 ---
-description: Start the unbounded proof-cleanup heartbeat using the Codex-backed one-cycle workflow.
+description: Start the unbounded recursive proof-purification heartbeat using the Codex-backed workflow.
 argument-hint: '[optional scope overrides]'
 ---
 
@@ -11,10 +11,10 @@ argument-hint: '[optional scope overrides]'
 
 ## Your Mission
 
-Start the repository proof-cleanup heartbeat with Codex as the one-cycle cleanup agent. Let it run continuously until the user interrupts it with Ctrl-C.
+Start the repository proof-cleanup heartbeat with Codex as the cleanup agent. Let it run continuously until the user interrupts it with Ctrl-C.
 
 **Loop script**: `tools/heartbeat/archon_repo_cleanup_loop.sh`
-**Inner workflow**: `proof-sop-cycle-codex`
+**Inner workflow**: `proof-purification-pipeline`
 
 This command intentionally does **not** use an Archon `loop:` node because loop nodes require `max_iterations`. The Codex cleanup heartbeat is a shell-level life-force loop and stops by Ctrl-C.
 
@@ -52,8 +52,8 @@ Codex authentication must come from local `codex login` or environment variables
 Run until Ctrl-C:
 
 ```bash
-SCOPE=lean/InfoGeometry/Canonical \
-WORKFLOW=proof-sop-cycle-codex \
+SCOPE=lean \
+WORKFLOW=proof-purification-pipeline \
 tools/heartbeat/archon_repo_cleanup_loop.sh
 ```
 
@@ -79,14 +79,14 @@ MAX_ITERATIONS=5 \
 MAX_STALE_ITERATIONS=2 \
 ARCHON_CYCLE_TIMEOUT_SECONDS=1800 \
 STOP_WHEN_CLEAN=1 \
-SCOPE=lean/InfoGeometry/Canonical \
-WORKFLOW=proof-sop-cycle-codex \
+SCOPE=lean \
+WORKFLOW=proof-purification-pipeline \
 tools/heartbeat/archon_repo_cleanup_loop.sh
 ```
 
 **PHASE_2_CHECKPOINT:**
 - [ ] Codex heartbeat started
-- [ ] Inner workflow is `proof-sop-cycle-codex`
+- [ ] Inner workflow is `proof-purification-pipeline`
 - [ ] Outer loop is unbounded unless explicitly overridden
 
 ---

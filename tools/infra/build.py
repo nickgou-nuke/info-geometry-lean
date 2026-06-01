@@ -76,10 +76,25 @@ def compute_lean_source_hash(root: Path) -> str:
     return h.hexdigest()
 
 
+def ensure_mathlib_cache(root: Path) -> None:
+    """Hydrate the precompiled mathlib cache if the local build artifacts are missing."""
+    mathlib_olean = (
+        root / ".lake" / "packages" / "mathlib" / ".lake" / "build" / "lib" / "lean" / "Mathlib.olean"
+    )
+    if mathlib_olean.exists():
+        return
+    print(
+        "[locked-lake-build] hydrating precompiled mathlib cache via `lake exe cache get`",
+        flush=True,
+    )
+    subprocess.run(["lake", "exe", "cache", "get"], cwd=root, check=True)
+
+
 def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
 ) -> int:
     root = repo_root()
+    ensure_mathlib_cache(root)
     target_label = " ".join(targets) if targets else "<default>"
     owner = f"locked-lake-build:{os.getpid()}:{target_label}"
     log_spectral_stage("PREP", target_label, "establishing locked build vacuum")

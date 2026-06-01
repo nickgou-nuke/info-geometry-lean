@@ -103,6 +103,54 @@ def streamPrefix (s : BitStream) : ℕ → TypeIIIModularCantorSystem.BinaryWord
   | 0 => []
   | n + 1 => streamPrefix s n ++ [s n]
 
+@[simp, rep_depth projective]
+theorem streamPrefix_zero (s : BitStream) :
+    streamPrefix s 0 = [] := by
+  rfl
+
+@[simp, rep_depth projective]
+theorem streamPrefix_succ (s : BitStream) (n : ℕ) :
+    streamPrefix s (n + 1) = streamPrefix s n ++ [s n] := by
+  rfl
+
+/-- A finite stream prefix is the child of the previous prefix. -/
+@[simp, rep_depth projective]
+theorem streamPrefix_child (s : BitStream) (n : ℕ) :
+    streamPrefix s (n + 1) =
+      TypeIIIModularCantorSystem.BinaryWord.child (streamPrefix s n) (s n) := by
+  simp [streamPrefix, TypeIIIModularCantorSystem.BinaryWord.child]
+
+/-- Stream prefixes have the expected finite length. -/
+@[simp, rep_depth projective]
+theorem streamPrefix_length (s : BitStream) (n : ℕ) :
+    (streamPrefix s n).length = n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp [streamPrefix, ih]
+
+/-- A longer stream prefix always lies in the closed cylinder of any earlier prefix. -/
+@[rep_depth projective]
+theorem streamPrefix_mem_closedCylinder_of_le (s : BitStream) (m n : ℕ) (h : m ≤ n) :
+    streamPrefix s n ∈ TypeIIIModularCantorSystem.BinaryWord.closedCylinder (streamPrefix s m) := by
+  refine Nat.le_induction
+    (m := m)
+    (P := fun t _ =>
+      streamPrefix s t ∈ TypeIIIModularCantorSystem.BinaryWord.closedCylinder (streamPrefix s m))
+    ?base ?succ n h
+  · refine ⟨[], ?_⟩
+    simp [TypeIIIModularCantorSystem.BinaryWord.closedCylinder]
+  · intro t hmt ih
+    rcases ih with ⟨u, hu⟩
+    refine ⟨u ++ [s t], ?_⟩
+    simp [TypeIIIModularCantorSystem.BinaryWord.closedCylinder, streamPrefix, hu, List.append_assoc]
+
+/-- Each new stream prefix extends the previous prefix by one bit. -/
+@[rep_depth projective]
+theorem streamPrefix_mem_closedCylinder_succ (s : BitStream) (n : ℕ) :
+    streamPrefix s (n + 1) ∈ TypeIIIModularCantorSystem.BinaryWord.closedCylinder (streamPrefix s n) := by
+  simpa using (streamPrefix_mem_closedCylinder_of_le (s := s) n (n + 1) (Nat.le_succ n))
+
 /--
 A radioactive decay channel is a Poissonian count source.
 

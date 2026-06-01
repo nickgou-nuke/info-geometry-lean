@@ -90,7 +90,106 @@ theorem compactified_doubling_step
   have h := compactified_doubling_step_two_torsion qn Tn T2n hTn hT2n
   exact sub_eq_zero.mp (h2Cancel _ h)
 
+/--
+Cross-multiplied compactified-coordinate relation.
+
+This is the finite algebraic socket `T * (1 + q) = 1 - q`; it is not a KMS
+condition, an operator logarithm identity, or a functional-calculus statement.
+-/
+def CompactifiedRelation (q T : R) : Prop :=
+  T * (1 + q) = 1 - q
+
+/-- Ring homomorphisms preserve the compactified-coordinate relation. -/
+theorem map_compactifiedRelation
+    {S : Type*} [CommRing S]
+    (f : R →+* S) {q T : R}
+    (h : CompactifiedRelation q T) :
+    CompactifiedRelation (f q) (f T) := by
+  simpa [CompactifiedRelation] using congrArg f h
+
 end RingLemmas
+
+section StageTransport
+
+variable {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
+variable {Limit : Type*} [CommRing Limit]
+
+/--
+A compactified-coordinate relation transported along every finite stage of a
+one-step ring-hom tower.
+
+The theorem proves only finite-stage algebraic preservation of the
+cross-multiplied relation.  No direct-limit object, completion, KMS condition,
+or analytic modular flow is asserted.
+-/
+theorem compactifiedRelation_stage_chain
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (q T : ∀ n : Nat, Stage n)
+    (h0 : CompactifiedRelation (q 0) (T 0))
+    (hq : ∀ n : Nat, q (n + 1) = bond n (q n))
+    (hT : ∀ n : Nat, T (n + 1) = bond n (T n)) :
+    ∀ n : Nat, CompactifiedRelation (q n) (T n) := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      rw [hq n, hT n]
+      exact map_compactifiedRelation (bond n) ih
+
+/--
+Image-local compactified-coordinate relation in an explicit target ring.
+
+Each finite stage is first proved algebraically, then mapped into the target by
+`toLimit n`.  This does not assert that `Limit` is a topological completion or
+that arbitrary target elements satisfy the relation.
+-/
+theorem compactifiedRelation_limit_image_chain
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (q T : ∀ n : Nat, Stage n)
+    (h0 : CompactifiedRelation (q 0) (T 0))
+    (hq : ∀ n : Nat, q (n + 1) = bond n (q n))
+    (hT : ∀ n : Nat, T (n + 1) = bond n (T n)) :
+    ∀ n : Nat, CompactifiedRelation (toLimit n (q n)) (toLimit n (T n)) := by
+  intro n
+  exact map_compactifiedRelation (toLimit n)
+    (compactifiedRelation_stage_chain bond q T h0 hq hT n)
+
+/--
+Compatible-cone readback for transported compactified coordinates.
+
+If the target maps are compatible with the finite tower, then the target images
+of the transported `q` and `T` coordinates are stage-independent.
+-/
+theorem compactifiedRelation_cone_readback
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : ∀ (n : Nat) (x : Stage n), toLimit (n + 1) (bond n x) = toLimit n x)
+    (q T : ∀ n : Nat, Stage n)
+    (hq : ∀ n : Nat, q (n + 1) = bond n (q n))
+    (hT : ∀ n : Nat, T (n + 1) = bond n (T n)) :
+    ∀ n : Nat,
+      toLimit n (q n) = toLimit 0 (q 0) ∧
+      toLimit n (T n) = toLimit 0 (T 0) := by
+  intro n
+  induction n with
+  | zero =>
+      exact ⟨rfl, rfl⟩
+  | succ n ih =>
+      constructor
+      · calc
+          toLimit (n + 1) (q (n + 1))
+              = toLimit (n + 1) (bond n (q n)) := by rw [hq n]
+          _ = toLimit n (q n) := hcone n (q n)
+          _ = toLimit 0 (q 0) := ih.1
+      · calc
+          toLimit (n + 1) (T (n + 1))
+              = toLimit (n + 1) (bond n (T n)) := by rw [hT n]
+          _ = toLimit n (T n) := hcone n (T n)
+          _ = toLimit 0 (T 0) := ih.2
+
+end StageTransport
 
 section NoncommRingLemmas
 

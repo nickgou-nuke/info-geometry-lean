@@ -83,6 +83,30 @@ def structuralKind : ClMod8 → RealCliffordStructuralKind
 @[simp] theorem structuralKind_r6 : structuralKind .r6 = .centralSimple := rfl
 @[simp] theorem structuralKind_r7 : structuralKind .r7 = .complexCentered := rfl
 
+/-- Residue successor on the Bott 8-cycle. -/
+def bottShift : ClMod8 → ClMod8
+  | .r0 => .r1
+  | .r1 => .r2
+  | .r2 => .r3
+  | .r3 => .r4
+  | .r4 => .r5
+  | .r5 => .r6
+  | .r6 => .r7
+  | .r7 => .r0
+
+@[simp] theorem bottShift_r0 : bottShift .r0 = .r1 := rfl
+@[simp] theorem bottShift_r1 : bottShift .r1 = .r2 := rfl
+@[simp] theorem bottShift_r2 : bottShift .r2 = .r3 := rfl
+@[simp] theorem bottShift_r3 : bottShift .r3 = .r4 := rfl
+@[simp] theorem bottShift_r4 : bottShift .r4 = .r5 := rfl
+@[simp] theorem bottShift_r5 : bottShift .r5 = .r6 := rfl
+@[simp] theorem bottShift_r6 : bottShift .r6 = .r7 := rfl
+@[simp] theorem bottShift_r7 : bottShift .r7 = .r0 := rfl
+
+/-- The Bott residue successor has period eight. -/
+theorem bottShift_iterate_eight (r : ClMod8) : bottShift^[8] r = r := by
+  cases r <;> rfl
+
 /-- Sign of a Varlamov / Dabrowski square. -/
 inductive VSign where
   | plus

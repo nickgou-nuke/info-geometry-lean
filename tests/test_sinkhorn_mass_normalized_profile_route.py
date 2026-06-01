@@ -8,12 +8,16 @@ SINKHORN = REPO / "lean" / "InfoGeometry" / "LLM" / "SinkhornDefectFlow.lean"
 def test_mass_normalized_count_profiles_route_directly_to_sinkhorn_profile_lifts() -> None:
     text = SINKHORN.read_text(encoding="utf-8")
 
+    assert "structure RowCountMassNormalizedWitness" in text
+    assert "noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness" in text
     assert "noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts" in text
     assert "noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedColCounts" in text
     assert "RowRNBarrierCountProfileLift.ofMassNormalized" in text
     assert "ColRNBarrierCountProfileLift.ofMassNormalized" in text
     assert "PhaseRNBarrierProfileLift.ofRowCounts" in text
     assert "PhaseRNBarrierProfileLift.ofColCounts" in text
+    assert "W.hrow" in text
+    assert "W.hMass" in text
 
 
 def test_mass_normalized_count_profiles_route_directly_to_operator_readout_bound() -> None:

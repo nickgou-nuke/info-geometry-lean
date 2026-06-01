@@ -113,6 +113,9 @@ Lake scripts defined in `lakefile.lean` include:
 - `leantrailFailureHarvest`
 - `leantrailPathLock`
 - `leantrailHolePackets`
+- `leantrailVacuityIngest`
+- `leantrailSurgeryPlan`
+- `leantrailSurgeryApply`
 
 ## Quick Start
 
@@ -371,6 +374,21 @@ In this coordinate-free combinatorial space, the regularized modular operator $$
 * **The Central Charge Anomaly:** The Virasoro Central Charge $c$ is cleanly resolved as the macroscopic chiral anomaly—the topological obstruction to shifting the infinite binary Fermi sea.
 
 *(See `lean/InfoGeometry/Canonical/DiracSea.lean` for the formal verification of the combinatorial zero-energy state).
+
+## LeanTrail Vacuum Surgery & Honest Sorry Policy (v1.3)
+
+This repository incorporates the **LeanTrail Vacuum Surgery** toolchain coupled with the **Honest Sorry** policy. 
+
+### 1. Honest Sorry Policy
+Explicit `sorry` (`sorryAx`) is permitted and tracked solely as **honest, visible closure debt**. The toolchain strictly rejects or blocks hidden/disguised substitutes (such as local axioms, opaque placeholders, witness wrappers, proof sockets, or renamed `sorry` variants) to prevent fake closure.
+- **Explicit `sorry`**: Treated as honest open proof obligation; indexed and quarantined into proof-hole packets. Eligible for development mode but not eligible for vacuum contraction/deletion.
+- **Hidden wrappers / nonstandard `admit`**: Blocked and routed to quarantine or rejection.
+
+### 2. Vacuum Surgery Pipeline
+Automated tools are provided under `tools/leantrail/` to perform safe semantic audits and contractions of proof terms:
+- `leantrailVacuityIngest`: Merges vacuity biopsy data back into the LeanTrail graph snapshot under the node `attrs` payload.
+- `leantrailSurgeryPlan`: Analyzes the vacuity-enriched snapshot to plan Tier 2 contractions (`vacuum_packets.jsonl`), axiomatic candidates (`bridge_packets.jsonl`), and honest closure obligations (`proof_hole_packets.jsonl`).
+- `leantrailSurgeryApply`: Safe binary-level splicing tool that applies certified vacuum contraction packets using reverse-byte order verification, hash checks, and local `lake env lean` compile-time validation.
 
 ## Current Audit Note
 

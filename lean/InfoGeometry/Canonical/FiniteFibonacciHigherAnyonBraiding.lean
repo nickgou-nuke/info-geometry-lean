@@ -32,24 +32,21 @@ namespace InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
 open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 
-/-- Sector labels: `false` is `[0]`, `true` is `[1]`. -/
-abbrev SectorLabel := Bool
-
 /-- Adjacent labels are admissible exactly when they are not both `0`. -/
-def AdjacentAdmissible (a b : SectorLabel) : Prop :=
+def AdjacentAdmissible (a b : Bool) : Prop :=
   a = true ∨ b = true
 
 /-- A finite internal Bratteli label path has no consecutive zero labels. -/
-def NoConsecutiveZero {m : ℕ} (α : Fin m → SectorLabel) : Prop :=
+def NoConsecutiveZero {m : ℕ} (α : Fin m → Bool) : Prop :=
   ∀ (i : Fin m) (hnext : i.val + 1 < m),
     α i = false → α ⟨i.val + 1, hnext⟩ = true
 
 /-- Finite path code for the internal labels of an `n`-anyon Fibonacci block. -/
 def FibonacciPathCode (m : ℕ) : Type :=
-  { α : Fin m → SectorLabel // NoConsecutiveZero α }
+  { α : Fin m → Bool // NoConsecutiveZero α }
 
 /-- The path after a zero label must have a one label. -/
-theorem next_eq_true_of_current_eq_false {m : ℕ} {α : Fin m → SectorLabel}
+theorem next_eq_true_of_current_eq_false {m : ℕ} {α : Fin m → Bool}
     (hα : NoConsecutiveZero α) (i : Fin m) (hnext : i.val + 1 < m)
     (hi : α i = false) :
     α ⟨i.val + 1, hnext⟩ = true :=
@@ -70,13 +67,17 @@ def recursiveFibonacciDimension : ℕ → ℕ
 /-- The recursive basis has the direct-sum shape `Vₖ₊₂ = Vₖ ⊕ Vₖ₊₁`. -/
 theorem recursiveBasis_step (k : ℕ) :
     RecursiveFibonacciBlockBasis (k + 2) =
-      (RecursiveFibonacciBlockBasis k ⊕ RecursiveFibonacciBlockBasis (k + 1)) :=
+      (RecursiveFibonacciBlockBasis k ⊕ RecursiveFibonacciBlockBasis (k + 1)) := by
+  change (RecursiveFibonacciBlockBasis k ⊕ RecursiveFibonacciBlockBasis (k + 1)) =
+      (RecursiveFibonacciBlockBasis k ⊕ RecursiveFibonacciBlockBasis (k + 1))
   rfl
 
 /-- The recursive dimension counter satisfies the Fibonacci recurrence. -/
 theorem recursiveFibonacciDimension_step (k : ℕ) :
     recursiveFibonacciDimension (k + 2) =
-      recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) :=
+      recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) := by
+  change recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1) =
+      recursiveFibonacciDimension k + recursiveFibonacciDimension (k + 1)
   rfl
 
 instance recursiveFibonacciBlockBasisFintype :
@@ -127,11 +128,11 @@ theorem recursiveFibonacciDimension_eq_fib_succ :
                 (Nat.fib_add_two (n := k + 1))
 
 /-- Local admissibility for a braid generator seeing a triple of sector labels. -/
-def TripleAdmissible (left middle right : SectorLabel) : Prop :=
+def TripleAdmissible (left middle right : Bool) : Prop :=
   AdjacentAdmissible left middle ∧ AdjacentAdmissible middle right
 
 /-- If the left endpoint is `0`, local admissibility forces the middle label to be `1`. -/
-theorem middle_eq_true_of_left_zero {middle right : SectorLabel}
+theorem middle_eq_true_of_left_zero {middle right : Bool}
     (h : TripleAdmissible false middle right) :
     middle = true := by
   rcases h.1 with hleft | hmid
@@ -139,7 +140,7 @@ theorem middle_eq_true_of_left_zero {middle right : SectorLabel}
   · exact hmid
 
 /-- If the right endpoint is `0`, local admissibility forces the middle label to be `1`. -/
-theorem middle_eq_true_of_right_zero {left middle : SectorLabel}
+theorem middle_eq_true_of_right_zero {left middle : Bool}
     (h : TripleAdmissible left middle false) :
     middle = true := by
   rcases h.2 with hmid | hright
@@ -157,7 +158,7 @@ inductive LocalBraidBlockKind where
   deriving DecidableEq, Repr
 
 /-- Local braid-block classification for admissible triples. -/
-def localBraidBlockKind (left middle right : SectorLabel) : LocalBraidBlockKind :=
+def localBraidBlockKind (left middle right : Bool) : LocalBraidBlockKind :=
   match left, middle, right with
   | false, true, false => LocalBraidBlockKind.singletQNegFour
   | false, true, true => LocalBraidBlockKind.singletQThree
@@ -168,32 +169,37 @@ def localBraidBlockKind (left middle right : SectorLabel) : LocalBraidBlockKind 
 
 @[simp]
 theorem localBraidBlockKind_010 :
-    localBraidBlockKind false true false = LocalBraidBlockKind.singletQNegFour :=
+    localBraidBlockKind false true false = LocalBraidBlockKind.singletQNegFour := by
+  change LocalBraidBlockKind.singletQNegFour = LocalBraidBlockKind.singletQNegFour
   rfl
 
 @[simp]
 theorem localBraidBlockKind_011 :
-    localBraidBlockKind false true true = LocalBraidBlockKind.singletQThree :=
+    localBraidBlockKind false true true = LocalBraidBlockKind.singletQThree := by
+  change LocalBraidBlockKind.singletQThree = LocalBraidBlockKind.singletQThree
   rfl
 
 @[simp]
 theorem localBraidBlockKind_110 :
-    localBraidBlockKind true true false = LocalBraidBlockKind.singletQThree :=
+    localBraidBlockKind true true false = LocalBraidBlockKind.singletQThree := by
+  change LocalBraidBlockKind.singletQThree = LocalBraidBlockKind.singletQThree
   rfl
 
 @[simp]
 theorem localBraidBlockKind_101 :
-    localBraidBlockKind true false true = LocalBraidBlockKind.doubletB :=
+    localBraidBlockKind true false true = LocalBraidBlockKind.doubletB := by
+  change LocalBraidBlockKind.doubletB = LocalBraidBlockKind.doubletB
   rfl
 
 @[simp]
 theorem localBraidBlockKind_111 :
-    localBraidBlockKind true true true = LocalBraidBlockKind.doubletB :=
+    localBraidBlockKind true true true = LocalBraidBlockKind.doubletB := by
+  change LocalBraidBlockKind.doubletB = LocalBraidBlockKind.doubletB
   rfl
 
 /-- Any locally admissible triple with both endpoints `0` is the `010` singlet. -/
 theorem localBraidBlockKind_of_zero_zero
-    {middle : SectorLabel} (h : TripleAdmissible false middle false) :
+    {middle : Bool} (h : TripleAdmissible false middle false) :
     localBraidBlockKind false middle false = LocalBraidBlockKind.singletQNegFour := by
   have hm : middle = true := middle_eq_true_of_left_zero h
   cases hm
@@ -201,7 +207,7 @@ theorem localBraidBlockKind_of_zero_zero
 
 /-- Any locally admissible triple with left endpoint `0` and right endpoint `1` is `011`. -/
 theorem localBraidBlockKind_of_zero_one
-    {middle : SectorLabel} (h : TripleAdmissible false middle true) :
+    {middle : Bool} (h : TripleAdmissible false middle true) :
     localBraidBlockKind false middle true = LocalBraidBlockKind.singletQThree := by
   have hm : middle = true := middle_eq_true_of_left_zero h
   cases hm
@@ -209,14 +215,14 @@ theorem localBraidBlockKind_of_zero_one
 
 /-- Any locally admissible triple with left endpoint `1` and right endpoint `0` is `110`. -/
 theorem localBraidBlockKind_of_one_zero
-    {middle : SectorLabel} (h : TripleAdmissible true middle false) :
+    {middle : Bool} (h : TripleAdmissible true middle false) :
     localBraidBlockKind true middle false = LocalBraidBlockKind.singletQThree := by
   have hm : middle = true := middle_eq_true_of_right_zero h
   cases hm
   rfl
 
 /-- Any locally admissible triple with both endpoints `1` is a two-dimensional `B` block. -/
-theorem localBraidBlockKind_of_one_one (middle : SectorLabel) :
+theorem localBraidBlockKind_of_one_one (middle : Bool) :
     localBraidBlockKind true middle true = LocalBraidBlockKind.doubletB := by
   cases middle <;> rfl
 
@@ -228,7 +234,7 @@ def localSingletPhase (q : Units ℂ) : LocalBraidBlockKind → Option (Units �
 
 /-- Matrix readout attached to a doublet local braid block. -/
 noncomputable def localDoubletMatrix (q : Units ℂ) (τ root : ℂ) :
-    LocalBraidBlockKind → Option (Matrix ChannelIndex ChannelIndex ℂ)
+    LocalBraidBlockKind → Option (Matrix (Fin 2) (Fin 2) ℂ)
   | LocalBraidBlockKind.singletQNegFour => none
   | LocalBraidBlockKind.singletQThree => none
   | LocalBraidBlockKind.doubletB => some (fibonacciBMatrix q τ root)
@@ -236,14 +242,18 @@ noncomputable def localDoubletMatrix (q : Units ℂ) (τ root : ℂ) :
 /-- The local doublet readout is exactly the four-anyon `B = F R F` matrix. -/
 theorem localDoubletMatrix_doublet (q : Units ℂ) (τ root : ℂ) :
     localDoubletMatrix q τ root LocalBraidBlockKind.doubletB =
-      some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) :=
+      some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) := by
+  change some (fibonacciBMatrix q τ root) =
+      some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root)
+  change some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root) =
+      some (fibonacciFusionMatrix τ root * fibonacciRMatrix q * fibonacciFusionMatrix τ root)
   rfl
 
 /-- Electron triples do not affect the local doublet braid block. -/
 theorem localDoubletMatrix_independent_of_r
     (r s : ℕ) (q : Units ℂ) (τ root : ℂ) :
     (some (fibonacciBMatrixWithElectrons r q τ root) :
-        Option (Matrix ChannelIndex ChannelIndex ℂ)) =
+        Option (Matrix (Fin 2) (Fin 2) ℂ)) =
       some (fibonacciBMatrixWithElectrons s q τ root) := by
   rw [fibonacciBMatrixWithElectrons_independent_of_r]
 

@@ -853,9 +853,8 @@ def CantorTiltSwitchCliffordBridgeTarget : Prop :=
 /-- Constructor for the direct Cantor tilt/switch Clifford owner target. -/
 @[rep_depth operator]
 theorem constructCantorTiltSwitchCliffordBridgeTarget
-    {Op : Type} [Ring Op]
-    (R : CantorCliffordRepresentation Op) :
-    CantorTiltSwitchCliffordBridgeTarget := by
-  exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
-
+{Op : Type} [Ring Op]
+(R : CantorCliffordRepresentation Op) :
+CantorTiltSwitchCliffordBridgeTarget := by
+exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
 end InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge

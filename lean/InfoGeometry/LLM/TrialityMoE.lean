@@ -947,6 +947,42 @@ theorem ofControlObserver_sourcedGenerator_eq_flow_of_strain_eq_zero
   simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 /--
+On the exact projector-deviation-zero branch, the control-witness constructor
+already collapses the router residual without any extra `Z_D = 0` hypothesis.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).routerResidual = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviation_eq_zero
+      (CIK := CIK) (obs := obs) hDev
+  simpa [ofControlObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
+
+/--
+On the exact projector-deviation-zero branch, the control-witness constructor
+already collapses the sourced generator to the background flow without any extra
+`Z_D = 0` hypothesis.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_eq_flow_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator = flow.K0 := by
+  exact
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofControlObserver (E := E) CIK obs flow c)).2
+      (ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
+        (E := E) (CIK := CIK) (obs := obs) (flow := flow) (c := c) (hDev := hDev))
+
+/--
 Under zero central defect, the control-witness constructor forces zero scalarized
 observer strain on the owner lane.
 -/

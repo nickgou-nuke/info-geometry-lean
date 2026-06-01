@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.SimpRw
 
 open scoped InnerProductSpace
 
@@ -177,15 +178,13 @@ theorem densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisRead
       InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator_smul]
 
 /--
-At equilibrium, the weighted density-lifted readout is exactly the explicit
-weighted phase-axis response.
+Constructive route: equilibrium seed → zero-weight vanishing → explicit weighted phase-axis response.
 
-This is still an infinite operatorial theorem on the doubled carrier. The
-zero-weight packet is killed by the theorem-backed Gibbs-Souriau equilibrium
-seed, leaving only the weight-sector correction.
+This removes the explicit equilibrium-seed hypothesis packet by rerouting through
+the existing zero-weight owner theorem in `DensityWeightIntertwinerBridge`.
 -/
 @[rep_depth transport]
-theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibriumSeed
+theorem densityWeightLiftedReadout_pair_eq_weightedPhaseAxisReadout_of_equilibriumSeed_constructive
     {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
     {ψ : H₂} {A : EndH}
     (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A)
@@ -201,19 +200,71 @@ theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibr
           (E := E)
           (transportCommutator (E := E)
             (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
-  have hSplit :=
-    densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisReadout
+  have hSplit :
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).metric,
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).phase)
+      =
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A 0).metric
+        + w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A 0).phase
+        + w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+    exact densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisReadout
       (P := P) (ψ := ψ) (A := A) (w := w)
   have hZero :=
     InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout_zero_pair_eq_zero_of_equilibriumSeed
       (E := E) hEq
   have hMetricZero :
-      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).metric = 0 := by
-    exact congrArg Prod.fst hZero
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ A 0).metric = 0 :=
+    congrArg Prod.fst hZero
   have hPhaseZero :
-      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).phase = 0 := by
-    exact congrArg Prod.snd hZero
-  simpa [hMetricZero, hPhaseZero] using hSplit
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ A 0).phase = 0 :=
+    congrArg Prod.snd hZero
+  apply Prod.ext
+  · have hMetric := congrArg Prod.fst hSplit
+    simpa [hMetricZero] using hMetric
+  · have hPhase := congrArg Prod.snd hSplit
+    simpa [hPhaseZero] using hPhase
+
+/--
+At equilibrium, the weighted density-lifted readout is exactly the explicit
+weighted phase-axis response.
+
+This is still an infinite operatorial theorem on the doubled carrier. The
+zero-weight packet is killed by the theorem-backed Gibbs-Souriau equilibrium
+seed, leaving only the weight-sector correction.
+
+This compatibility wrapper reroutes through the constructive route.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_pair_eq_weightedPhaseAxisReadout_of_equilibriumSeed
+ {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+ {ψ : H₂} {A : EndH}
+ (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A)
+ (w : ℝ) :
+ ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
+ (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
+ =
+ (w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+ (E := E)
+ (transportCommutator (E := E)
+ (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+ w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+ (E := E)
+ (transportCommutator (E := E)
+ (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+ exact densityWeightLiftedReadout_pair_eq_weightedPhaseAxisReadout_of_equilibriumSeed_constructive hEq w
 
 /--
 Faithful probing plus vanishing first variation kill the zero-weight packet, so
@@ -237,19 +288,42 @@ theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_firstVar
           (E := E)
           (transportCommutator (E := E)
             (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
-  have hSplit :=
-    densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisReadout
+  have hSplit :
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).metric,
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).phase)
+      =
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A 0).metric
+        + w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A 0).phase
+        + w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+    exact densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisReadout
       (P := P) (ψ := ψ) (A := A) (w := w)
   have hZero :=
     densityWeightLiftedReadout_zero_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) (P := P) (ψ := ψ) (A := A) hFaithful hFirst
   have hMetricZero :
-      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).metric = 0 := by
-    exact congrArg Prod.fst hZero
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ A 0).metric = 0 :=
+    congrArg Prod.fst hZero
   have hPhaseZero :
-      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A 0).phase = 0 := by
-    exact congrArg Prod.snd hZero
-  simpa [hMetricZero, hPhaseZero] using hSplit
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+        (E := E) P ψ A 0).phase = 0 :=
+    congrArg Prod.snd hZero
+  apply Prod.ext
+  · have hMetric := congrArg Prod.fst hSplit
+    simpa [hMetricZero] using hMetric
+  · have hPhase := congrArg Prod.snd hSplit
+    simpa [hPhaseZero] using hPhase
 
 /--
 If the observable channel commutes with the density-weight phase axis, then a
@@ -272,8 +346,21 @@ theorem densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_ph
     ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
       (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
       = (0, 0) := by
-  have hWeighted :=
-    densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibriumSeed
+  have hWeighted :
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).metric,
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).phase)
+      =
+      (w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+        w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+    exact densityWeightLiftedReadout_pair_eq_weightedPhaseAxisReadout_of_equilibriumSeed_constructive
       (E := E) hEq w
   have hCommZero :
       transportCommutator (E := E)
@@ -323,8 +410,21 @@ theorem densityWeightLiftedReadout_pair_eq_zero_of_firstVariation_eq_zero_of_pro
     ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
       (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
       = (0, 0) := by
-  have hWeighted :=
-    densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_firstVariation_eq_zero_of_probeFaithful
+  have hWeighted :
+      ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).metric,
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout
+          (E := E) P ψ A w).phase)
+      =
+      (w • InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A),
+        w • InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+            (E := E)
+            (transportCommutator (E := E)
+              (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A)) := by
+    exact densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) (P := P) (ψ := ψ) (A := A) hFaithful hFirst w
   have hCommZero :
       transportCommutator (E := E)

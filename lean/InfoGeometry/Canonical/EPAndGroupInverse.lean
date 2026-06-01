@@ -116,6 +116,23 @@ theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
     IK.rightProjectorMismatch = IK.projectorMismatch :=
   IK.rightProjectorMismatch_eq_projectorMismatch_of_isEP (IK.isEP_of_dilationGap_eq_zero hGap)
 
+/--
+Agreement of the left/right mismatch operators is itself a constructive route
+to gap collapse: the dilation witness is recovered directly from the mismatch
+identity without packaging a separate `IK.IsEP` hypothesis.
+-/
+theorem dilationGap_eq_zero_of_rightProjectorMismatch_eq_projectorMismatch
+    (hMismatch : IK.rightProjectorMismatch = IK.projectorMismatch) :
+    IK.dilationGap = 0 := by
+  have hTwice : (2 : ℝ) • IK.dilationGap = 0 := by
+    calc
+      (2 : ℝ) • IK.dilationGap
+          = IK.projectorMismatch - IK.rightProjectorMismatch := by
+              symm
+              exact IK.projectorMismatch_sub_rightProjectorMismatch_eq_two_smul_dilationGap
+      _ = 0 := by rw [hMismatch]; simp
+  exact (smul_eq_zero.mp hTwice).resolve_left (by norm_num)
+
 /-- EP is equivalent to vanishing dilation gap. -/
 theorem isEP_iff_dilationGap_eq_zero :
     IK.IsEP ↔ IK.dilationGap = 0 := by
@@ -295,6 +312,23 @@ theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
     (hGap : CIK.dilationGap = 0) :
     CIK.rightProjectorMismatch = CIK.projectorMismatch :=
   CIK.rightProjectorMismatch_eq_projectorMismatch_of_isEP (CIK.isEP_of_dilationGap_eq_zero hGap)
+
+/--
+Certified left/right mismatch agreement is itself a constructive route to gap
+collapse: callers that already own the mismatch identity do not need to package
+either `CIK.IsEP` or a separate dilation-gap witness.
+-/
+theorem dilationGap_eq_zero_of_rightProjectorMismatch_eq_projectorMismatch
+    (hMismatch : CIK.rightProjectorMismatch = CIK.projectorMismatch) :
+    CIK.dilationGap = 0 := by
+  have hTwice : (2 : ℝ) • CIK.dilationGap = 0 := by
+    calc
+      (2 : ℝ) • CIK.dilationGap
+          = CIK.projectorMismatch - CIK.rightProjectorMismatch := by
+              symm
+              exact CIK.projectorMismatch_sub_rightProjectorMismatch_eq_two_smul_dilationGap
+      _ = 0 := by rw [hMismatch]; simp
+  exact (smul_eq_zero.mp hTwice).resolve_left (by norm_num)
 
 /-- Certified EP is equivalent to vanishing dilation gap. -/
 theorem isEP_iff_dilationGap_eq_zero :

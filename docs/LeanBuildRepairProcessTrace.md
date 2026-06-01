@@ -23,6 +23,7 @@ Toolchain bootstrap used in-session:
   - `~/.elan/bin/lake`
 - download Mathlib cache:
   - `~/.elan/bin/lake exe cache get`
+  - this is the first recovery step after `lake clean` or a fresh worktree; the repo build wrapper also auto-hydrates when `Mathlib.olean` is missing
 
 ## Build/Test Commands Used
 

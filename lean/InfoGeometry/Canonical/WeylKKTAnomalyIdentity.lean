@@ -95,6 +95,32 @@ theorem epsilon_eq_projectorObstruction_nnnorm :
     _ = ‖CI.projectorObstruction‖₊ := CI.obstructionScale_eq_projectorObstruction_nnnorm
 
 /--
+Proof-carrying witness for the structured projector hypotheses on the Weyl/KKT
+anomaly lane.
+
+This packages the paired projector identities into one constructive witness so
+downstream collapse routes need not carry the raw `hProj`/`hLeft` pair.
+-/
+@[rep_depth transport]
+structure StructuredProjectorHypothesesWitness where
+  hProj : CI.P_MP_right = CI.P_MP
+  hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
+
+/--
+Proof-carrying RN/Kähler witness for the conformal zero-scale lane.
+
+This bundles the Kähler readback identification together with the owned
+unit-relative-volume bit, so downstream zero-collapse routes need not carry the
+raw `(hScaleFromKahler, bit)` pair.
+-/
+@[rep_depth transport]
+structure UnitRelativeVolumeScaleWitness
+    {n : Nat} (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) where
+  hScaleFromKahler :
+    CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M
+  bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
+
+/--
 Structured dilation-source closure:
 the Weyl dilation commutator is exactly `-1/2` times the obstruction operator.
 -/
@@ -107,6 +133,18 @@ theorem dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProject
   exact
     CI.dilationSource_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses
       hProj hLeft
+
+/--
+Witness-routed version of the structured dilation-source closure theorem.
+-/
+@[rep_depth transport]
+theorem dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorWitness
+    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.P_D * CI.D - CI.D * CI.P_D
+      = -((2 : ℝ)⁻¹) • CI.projectorObstruction := by
+  exact
+    dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses
+      (CI := CI) W.hProj W.hLeft
 
 /--
 Semantic-collapse packet for the operatorial Weyl anomaly lane:
@@ -175,6 +213,27 @@ theorem semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_e
   exact ⟨hScaleZero, hEpsZero, hObsDil.1, hObsDil.2⟩
 
 /--
+Zero-scale semantic collapse packet through the proof-carrying structured
+projector witness.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_structuredProjectorWitness_of_chiralScale_eq_zero
+    (W : StructuredProjectorHypothesesWitness (CI := CI))
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hObsDil :=
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) W.hProj W.hLeft hScaleZero
+  have hEpsZero : CI.epsilon = 0 := by
+    calc
+      CI.epsilon = CI.chiralScale := by symm; exact chiralScale_eq_epsilon (CI := CI)
+      _ = 0 := hScaleZero
+  exact ⟨hScaleZero, hEpsZero, hObsDil.1, hObsDil.2⟩
+
+/--
 Smaller constructive projector/dilation zero packet from the proof-carrying
 unit-relative-volume bit route.
 
@@ -197,6 +256,48 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
       (CI := CI) hProj hLeft
       (InfoGeometry.Canonical.IncompressibleBitBridge.chiralScale_eq_zero_of_unitRelativeVolumeBit
         (CI := CI) (M := M) hScaleFromKahler bit)
+
+/--
+Smaller constructive projector/dilation zero packet through the proof-carrying
+structured projector witness and the unit-relative-volume bit route.
+
+This removes the raw `hProj`/`hLeft` projector pair together with the explicit
+`hScaleZero : CI.chiralScale = 0` gate when the caller already owns both
+constructive witness packets.
+-/
+@[rep_depth transport]
+theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler :
+      CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
+      (CI := CI) (M := M) hScaleFromKahler bit W.hProj W.hLeft
+
+/--
+Smaller constructive projector/dilation zero packet from a single RN/Kähler
+witness packet together with the structured projector witness.
+
+This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
+surface when the caller already owns the proof-carrying
+`UnitRelativeVolumeScaleWitness`.
+-/
+@[rep_depth transport]
+theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
+    {n : Nat}
+    {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}
+    (WV : UnitRelativeVolumeScaleWitness (CI := CI) M)
+    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorWitness
+      (CI := CI) (M := M) WV.hScaleFromKahler WV.bit W
 
 end ConformalInference
 
@@ -276,6 +377,31 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
       (stationaryScaleZero_of_witness (E := E) (CI := CI) W hStationary)
 
 /--
+Souriau-to-Weyl zero-scale packet through explicit stationarity and structured
+projector witness packets.
+
+This removes the raw `hProj`/`hLeft` pair from the equilibrium-seed route when
+callers already own the proof-carrying projector witness.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorWitness
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : InfoGeometry.Krein.DoubledSpace E}
+    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hEq :
+      InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
+        (E := E) P ψ A)
+    (WScale : StationaryScaleZeroWitness (E := E) CI P ψ A)
+    (WProj : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
+      (CI := CI) hEq WScale WProj.hProj WProj.hLeft
+
+/--
 Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
 
 This theorem does not assert the false unconditional claim that a
@@ -305,6 +431,7 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypothes
     semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorHypotheses
       (CI := CI) hEq ⟨hStationaryToScaleZero⟩ hProj hLeft
 
+
 /--
 Smaller constructive zero-scale packet from the proof-carrying unit-relative-volume
 bit route.
@@ -332,6 +459,52 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHy
       (CI := CI) hProj hLeft
       (InfoGeometry.Canonical.IncompressibleBitBridge.chiralScale_eq_zero_of_unitRelativeVolumeBit
         (CI := CI) (M := M) hScaleFromKahler bit)
+
+/--
+Smaller constructive zero-scale packet through the proof-carrying structured
+projector witness and the unit-relative-volume bit route.
+
+This removes the raw `hProj`/`hLeft` projector pair together with the explicit
+bridge-to-zero-scale hypothesis when the caller already owns both constructive
+witness packets.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWitness
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler :
+      CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
+    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
+      (CI := CI) (M := M) hScaleFromKahler bit W.hProj W.hLeft
+
+/--
+Smaller constructive zero-scale packet from a single RN/Kähler witness packet
+and the structured projector witness.
+
+This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
+surface when the caller already owns the proof-carrying
+`UnitRelativeVolumeScaleWitness`.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
+    {n : Nat}
+    {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}
+    (WV : UnitRelativeVolumeScaleWitness (CI := CI) M)
+    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  exact
+    semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWitness
+      (CI := CI) (M := M) WV.hScaleFromKahler WV.bit W
 
 /--
 Souriau-to-Weyl zero-scale packet from the smaller constructive thermodynamic

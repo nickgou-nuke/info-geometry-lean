@@ -55,11 +55,13 @@ avoid proxy names such as `_law`, `_certificate`, `_witness`, or `_socket`.
 Run:
 
 ```bash
-python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
+python3 tools/quality/proof_heartbeat.py lean --top 20
+python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 50
 python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
-python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
-python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
-python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
+python3 tools/quality/semantic_content_audit.py --scope all --gate-review
+python3 tools/quality/audit_style.py lean
+python3 tools/quality/audit_docstrings.py lean
+python3 tools/quality/audit_naming.py lean
 ```
 
 Select the first real vacuity/proxy target from the heartbeat. Use semantic inspection before editing:
@@ -99,6 +101,11 @@ Nonempty placeholders
 axioms/admit
 ```
 
+If a recurring vacuity pattern is not yet detected, extend
+`tools/quality/semantic_vacuity_patterns.json` with a narrow category or regex
+and rerun `semantic_vacuity_gate.py`. The definition of vacuous code is living
+policy, not a fixed prompt phrase.
+
 Do not stage generated files:
 
 ```text
@@ -126,11 +133,13 @@ lake env lean <file>
 Then run:
 
 ```bash
-python3 tools/quality/proof_heartbeat.py lean/InfoGeometry/Canonical --top 20
+python3 tools/quality/proof_heartbeat.py lean --top 20
+python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 50
 python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
-python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
-python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
-python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
+python3 tools/quality/semantic_content_audit.py --scope all --gate-review
+python3 tools/quality/audit_style.py lean
+python3 tools/quality/audit_docstrings.py lean
+python3 tools/quality/audit_naming.py lean
 ```
 
 If useful for the touched file, run Ulam:

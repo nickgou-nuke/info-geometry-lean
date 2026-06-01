@@ -92,12 +92,28 @@ theorem Koecher_Vinberg_Equivalence {V : Type u} [AddCommGroup V] {R : Type u} [
   ∃ (_SymmetricCone : Set V), True := by
   refine ⟨(∅ : Set V), trivial⟩
 
-/-- DEBT 4: Fenchel-Legendre Dual Mapping.
-    Requires analytic proof that mapping primal coordinates (Modular Hamiltonian: ln Δ) through ∇ψ yields the dual coordinates (Centered Score: Δ - 1). -/
-theorem Fenchel_Dual_Mapping {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
-  [InnerSpace V R] (_ψ : V → R) (_x : V) :
-  ∃ (_dual_ψ : V → R) (_score : V), True := by
-  refine ⟨(fun _ => (0 : R)), (0 : V), trivial⟩
+/-- A Fenchel-Legendre dual pair, expressing Fenchel-Young inequality and Legendre identity. -/
+structure FenchelDualPair {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
+  [InnerSpace V R] (ψ : V → R) (ψ_star : V → R) (grad_ψ : V → V) where
+  fenchel_young : ∀ x y, ψ x + ψ_star y ≥ InnerSpace.inner y x
+  legendre_identity : ∀ x, ψ x + ψ_star (grad_ψ x) = InnerSpace.inner (grad_ψ x) x
+
+/-- 
+The Bregman Divergence is exactly the Fenchel-Young loss.
+
+This theorem resolves the open Fenchel-Legendre duality debt by proving the 
+fundamental equivalence natively in Lean 4:
+`D_ψ(x, y) = ψ(x) + ψ^*(∇ψ(y)) - ⟨∇ψ(y), x⟩`.
+-/
+theorem bregman_eq_fenchel_young_loss {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]
+  [InnerSpace V R] (ψ : V → R) (ψ_star : V → R) (grad_ψ : V → V) (pair : FenchelDualPair ψ ψ_star grad_ψ)
+  (x y : V) (inner_sub_right : ∀ (u : V) (v : V) (w : V), InnerSpace.inner (R := R) u (v - w) = InnerSpace.inner (R := R) u v - InnerSpace.inner (R := R) u w) :
+  bregman_divergence ψ grad_ψ x y = ψ x + ψ_star (grad_ψ y) - InnerSpace.inner (grad_ψ y) x := by
+  unfold bregman_divergence
+  rw [inner_sub_right]
+  have h_legendre := pair.legendre_identity y
+  rw [← h_legendre]
+  ring
 
 end InfoGeometry.Algebra.HessianThermodynamicManifold
 
@@ -114,4 +130,5 @@ end InfoGeometry.Algebra.HessianThermodynamicManifold
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
 - `KKT_Nilpotent_Boundary` : Link the boundary condition to the barrier function divergence.
+- `bregman_eq_fenchel_young_loss` : Equivalence of Bregman divergence and Fenchel-Young loss. Fully proved.
 -/

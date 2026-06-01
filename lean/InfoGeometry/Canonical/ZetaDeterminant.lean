@@ -267,9 +267,8 @@ theorem capstone_logAbsVolume_add_from_zeta
     (f g : W ≃ₗ[ℝ] W) :
     InfoGeometry.Volume.LogPotential.LogAbsVolume (f.trans g)
       = InfoGeometry.Volume.LogPotential.LogAbsVolume f
-        + InfoGeometry.Volume.LogPotential.LogAbsVolume g := by
-  simpa [zetaRegularizedLogVolume_eq_logAbsVolume (W := W)] using
-    (zetaRegularizedLogVolume_add (W := W) (f := f) (g := g))
+        + InfoGeometry.Volume.LogPotential.LogAbsVolume g :=
+  InfoGeometry.Volume.LogPotential.logAbsVolume_add (f := f) (g := g)
 
 end UniversalVolumeBridge
 

@@ -1003,6 +1003,20 @@ theorem toMinimalCyclicCoordinatelessSouriauContext_sld_eq_id (A : Obs) :
     C.toMinimalCyclicCoordinatelessSouriauContext.sld A = A :=
   rfl
 
+/--
+Constructor theorem routing the observable-minimal identity-SLD packet through
+ the minimal constructive cyclic branch.
+
+This removes the explicit `sld` constructor surface for callers that already own
+an `ObservableMinimalCyclicCoordinatelessSouriauContext` witness and only need
+`MinimalCyclicCoordinatelessSouriauContext` on the same constructive lane.
+-/
+@[rep_depth operator]
+theorem mk_observable_minimalCyclic_of_cyclic :
+    ∃ ctx : MinimalCyclicCoordinatelessSouriauContext (H := H) Symmetry Obs,
+      ctx.state = C.state :=
+  ⟨C.toMinimalCyclicCoordinatelessSouriauContext, rfl⟩
+
 end ObservableMinimalCyclicCoordinatelessSouriauContext
 
 /--

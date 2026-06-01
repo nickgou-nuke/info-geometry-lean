@@ -165,6 +165,23 @@ def HasClockAxisForcingSeed (hMod : EndH) : Prop :=
   InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := H) hMod
 
 /--
+Proof-carrying witness for the phase-linear forcing seed on the modular
+transport lane. This narrows the remaining bare
+`hForce : HasClockAxisForcingSeed ...` hypothesis to an explicit witness packet.
+-/
+structure ClockAxisForcingSeedWitness (hMod : EndH) where
+  hForce : HasClockAxisForcingSeed (H := H) hMod
+
+/--
+Recover the original forcing predicate from the witness packet.
+-/
+theorem forcingSeed_of_witness
+    {hMod : EndH}
+    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
+    HasClockAxisForcingSeed (H := H) hMod :=
+  W.hForce
+
+/--
 Commutator forcing theorem on the modular transport lane:
 phase-linearity of the seed implies commutation with the winding clock axis.
 -/
@@ -182,6 +199,18 @@ theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeed
   have hAxis : clockAxis H = InfoGeometry.Krein.clockAxis (E := H) := by
     rfl
   simpa [hAxis] using hCommGlobal.symm
+
+/--
+Witness-routed clock-axis commutation on the modular transport lane.
+-/
+theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeedWitness
+    (hMod : EndH)
+    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
+    Commute
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H) :=
+  modularTransportGenerator_commutes_clockAxis_of_forcingSeed (H := H) hMod
+    (forcingSeed_of_witness (H := H) W)
 
 /--
 Winding periodicity obtained from the forcing predicate, with no explicit
@@ -203,6 +232,20 @@ theorem winding_orbit_periodicity_of_forcingSeed
   exact winding_orbit_periodicity
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
+
+/--
+Witness-routed winding periodicity on the modular transport lane.
+-/
+theorem winding_orbit_periodicity_of_forcingSeedWitness
+    (hMod : EndH) (N : ℤ)
+    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) :=
+  winding_orbit_periodicity_of_forcingSeed (H := H) hMod N
+    (forcingSeed_of_witness (H := H) W)
 
 /--
 Derived periodic closure for the canonical modular transport generator: if the
@@ -243,6 +286,22 @@ theorem winding_orbit_periodicity_succ_of_forcingSeed
     (H := H)
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N) hCommLocal
+
+/--
+Successor branch-cut periodicity on the modular transport lane routed through the
+explicit forcing-seed witness packet.
+-/
+theorem winding_orbit_periodicity_succ_of_forcingSeedWitness
+    (hMod : EndH) (N : ℤ)
+    (W : ClockAxisForcingSeedWitness (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) :=
+  winding_orbit_periodicity_succ_of_forcingSeed (H := H) hMod N
+    (forcingSeed_of_witness (H := H) W)
 
 /--
 Successor branch-cut periodicity for a phase-linear seed, exposed without the

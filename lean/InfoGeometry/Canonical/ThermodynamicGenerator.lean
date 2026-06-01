@@ -274,6 +274,22 @@ structure FirstVariationProbeWitness
   first_zero : firstVariation (E := E) P ψ A = 0
 
 /--
+Proof-carrying owner route from faithful first-variation stationarity to the
+operatorial Killing condition.
+
+This removes the separate `ProbeFaithful` and `firstVariation = 0` hypotheses
+for callers that already own the constructive `FirstVariationProbeWitness`
+packet.
+-/
+@[rep_depth transport]
+theorem isPotentialKillingOperator_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness P ψ A) :
+    IsPotentialKillingOperator (E := E) P ψ A := by
+  exact isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
+
+/--
 Faithful thermodynamic probing upgrades vanishing first variation directly into
 vanishing state-QGT readout on the doubled carrier.
 -/
@@ -438,6 +454,21 @@ theorem isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaith
     IsThermodynamicReadoutStationary (E := E) P ψ A :=
   (isThermodynamicReadoutStationary_iff_firstVariation_eq_zero_of_probeFaithful
     (E := E) P ψ A hFaithful).2 hFirst
+
+/--
+Proof-carrying owner route for thermodynamic readout stationarity.
+
+This removes the separate `ProbeFaithful` and `firstVariation = 0` hypotheses
+for the exact stationarity predicate when callers already own the constructive
+`FirstVariationProbeWitness` packet.
+-/
+@[rep_depth transport]
+theorem isThermodynamicReadoutStationary_of_firstVariationProbeWitness
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (W : FirstVariationProbeWitness (E := E) P ψ A) :
+    IsThermodynamicReadoutStationary (E := E) P ψ A := by
+  exact isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A W.faithful W.first_zero
 
 /--
 Faithful thermodynamic probing upgrades vanishing first variation into vanishing

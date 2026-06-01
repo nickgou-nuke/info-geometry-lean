@@ -38,6 +38,8 @@ def lean_files(root: Path):
     for path in root.rglob("*.lean"):
         if any(part in {".lake", ".changes"} for part in path.parts):
             continue
+        if not path.exists():
+            continue
         yield path
 
 

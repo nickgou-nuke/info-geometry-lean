@@ -424,6 +424,42 @@ theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralS
       (CI := CI) (H := H) bit x hScaleFromPotential
 
 /--
+Constructive witness route for the operator-owner normal-inference theorem: the
+scale/potential identification is carried as a proof-carrying witness instead
+of a raw separate equality hypothesis.
+-/
+@[rep_depth thermo, capstone]
+theorem isNormalInference_of_incompressibleBit_of_chiralScaleCramerRaoVolumePotentialWitness
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (W : ChiralScaleCramerRaoVolumePotentialWitness CI H x) :
+    CI.IsNormalInference := by
+  exact
+    isNormalInference_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x
+      (chiralScale_eq_cramerRaoVolumePotential_of_witness W)
+
+/--
+Constructive witness route for the operator-owner unit-of-action collapse:
+the scale/potential identification is carried as a proof-carrying witness
+instead of a raw separate equality hypothesis.
+-/
+@[rep_depth thermo, capstone]
+theorem unitOfAction_eq_zero_of_incompressibleBit_of_chiralScaleCramerRaoVolumePotentialWitness
+    (CI : ConformalInference E)
+    (H : HessianGeometry E)
+    (bit : IncompressibleCramerRaoBit H)
+    (x : E)
+    (W : ChiralScaleCramerRaoVolumePotentialWitness CI H x) :
+    CI.unitOfAction = 0 := by
+  exact
+    unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
+      (CI := CI) (H := H) bit x
+      (chiralScale_eq_cramerRaoVolumePotential_of_witness W)
+
+/--
 Constructive witness route for the same operator-owner packet: the scale/
 potential identification is carried as a proof-carrying witness instead of a raw
 separate equality hypothesis.
@@ -436,10 +472,13 @@ theorem normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralS
     (x : E)
     (W : ChiralScaleCramerRaoVolumePotentialWitness CI H x) :
     CI.IsNormalInference ∧ CI.unitOfAction = 0 := by
-  exact
-    normalInference_and_unitOfAction_eq_zero_of_incompressibleBit_of_chiralScale_eq_cramerRaoVolumePotential
-      (CI := CI) (H := H) bit x
-      (chiralScale_eq_cramerRaoVolumePotential_of_witness W)
+  refine ⟨?_, ?_⟩
+  · exact
+      isNormalInference_of_incompressibleBit_of_chiralScaleCramerRaoVolumePotentialWitness
+        (CI := CI) (H := H) bit x W
+  · exact
+      unitOfAction_eq_zero_of_incompressibleBit_of_chiralScaleCramerRaoVolumePotentialWitness
+        (CI := CI) (H := H) bit x W
 
 /--
 Non-vacuity witness (operator-owner form): if the conformal unit of action is

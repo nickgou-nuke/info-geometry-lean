@@ -26,6 +26,10 @@ def evenBlock {R : Type*} [Zero R] (a d : R) : Matrix (Fin 2) (Fin 2) R :=
 def oddBlock {R : Type*} [Zero R] (b c : R) : Matrix (Fin 2) (Fin 2) R :=
   !![0, b; c, 0]
 
+/-- The concrete `1|1` parity operator: `+1` on the even line, `-1` on the odd line. -/
+def parityBlock {R : Type*} [Zero R] [One R] [Neg R] : Matrix (Fin 2) (Fin 2) R :=
+  !![1, 0; 0, -1]
+
 @[simp] theorem evenBlock_apply00 {R : Type*} [Zero R] (a d : R) :
     evenBlock a d 0 0 = a := by
   rfl
@@ -115,5 +119,23 @@ theorem oddOdd_koszul_neg_square
     {R : Type*} [Ring R] (x : R) :
     -((-x) * x) = x * x := by
   noncomm_ring
+
+/-! ## Parity conjugation -/
+
+/-- Conjugation by the finite parity operator fixes even `1|1` matrices. -/
+theorem parityBlock_mul_evenBlock_mul_parityBlock
+    {R : Type*} [CommRing R] (a d : R) :
+    parityBlock * evenBlock a d * parityBlock = evenBlock a d := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [parityBlock, evenBlock, Matrix.mul_apply]
+
+/-- Conjugation by the finite parity operator negates odd `1|1` matrices. -/
+theorem parityBlock_mul_oddBlock_mul_parityBlock
+    {R : Type*} [CommRing R] (b c : R) :
+    parityBlock * oddBlock b c * parityBlock = -oddBlock b c := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [parityBlock, oddBlock, Matrix.mul_apply]
 
 end InfoGeometry.Algebra.SupermatrixKoszul

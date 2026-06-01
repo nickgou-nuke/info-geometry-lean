@@ -98,6 +98,19 @@ LeanTrail lanes:
 ```bash
 lake script run leantrailConformance
 
+lake script run leantrailVacuityAudit \
+  --snapshot artifacts/leantrail/graph_snapshot.json \
+  --out artifacts/leantrail/vacuity_audit.jsonl \
+  --json-out artifacts/leantrail/vacuity_audit_report.json \
+  --module-batch-size 25 \
+  --keep-going
+
+lake script run leantrailVacuityIngest \
+  --snapshot artifacts/leantrail/graph_snapshot.json \
+  --audit artifacts/leantrail/vacuity_audit.jsonl \
+  --out artifacts/leantrail/graph_snapshot.vacuity.json \
+  --json-out artifacts/leantrail/vacuity_ingest_report.json
+
 lake script run leantrailSurgeryPlan \
   --snapshot artifacts/leantrail/graph_snapshot.vacuity.json \
   --json-out artifacts/leantrail/surgery_plan_report.json \
@@ -132,6 +145,10 @@ lake script run leantrailCriticIngest \
   --out artifacts/leantrail/graph_snapshot.critic.json \
   --json-out artifacts/leantrail/critic_ingest_report.json
 ```
+
+If `surgery_plan_report.json` reports `vacuity_evidence_nodes: 0`, the input
+snapshot is not biopsy-enriched. Treat zero surgery packets as "missing audit
+evidence", not as proof that the repository has no redundant wires.
 
 If the repo has a shadow-ledger script, run it before any automated contraction
 attempt. Otherwise treat `vacuum_packets.jsonl` as review evidence only:

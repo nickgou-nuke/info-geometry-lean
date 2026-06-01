@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -259,6 +260,10 @@ def plan(snapshot_path: Path, locks_path: Path | None = None) -> tuple[list[dict
     bridge: list[dict[str, Any]] = []
     alignment: list[dict[str, Any]] = []
     proof_holes: list[dict[str, Any]] = []
+    role_counts: Counter[str] = Counter()
+    contamination_counts: Counter[str] = Counter()
+    source_patch_counts: Counter[str] = Counter()
+    vacuity_evidence_nodes = 0
 
     for node in snapshot.nodes:
         if node.kind != "Declaration":
@@ -266,6 +271,18 @@ def plan(snapshot_path: Path, locks_path: Path | None = None) -> tuple[list[dict
         attrs = node.attrs if isinstance(node.attrs, dict) else {}
         role = str(_get_nested(attrs, "vacuity.role", "unknown") or "unknown")
         contamination = str(_get_nested(attrs, "contamination.state", "clean") or "clean")
+        if isinstance(attrs.get("vacuity"), dict):
+            vacuity_evidence_nodes += 1
+        role_counts[role] += 1
+        contamination_counts[contamination] += 1
+        sp_for_count = attrs.get("source_patch", {}) if isinstance(attrs.get("source_patch", {}), dict) else {}
+        source_patch_counts[
+            "|".join([
+                str(sp_for_count.get("decl_span_kind", "unknown")),
+                str(sp_for_count.get("patch_span_kind", "unknown")),
+                str(sp_for_count.get("source_info_kind", "unknown")),
+            ])
+        ] += 1
         is_prop = bool(_get_nested(attrs, "vacuity.is_prop", False))
         sid = scc_of.get(node.id, -1)
         scc_size = len(members.get(sid, {node.id})) if sid >= 0 else 1
@@ -437,6 +454,10 @@ def plan(snapshot_path: Path, locks_path: Path | None = None) -> tuple[list[dict
         "snapshot_hash": snapshot_hash,
         "nodes": len(snapshot.nodes),
         "edges": len(snapshot.edges),
+        "vacuity_evidence_nodes": vacuity_evidence_nodes,
+        "role_counts": dict(sorted(role_counts.items())),
+        "contamination_counts": dict(sorted(contamination_counts.items())),
+        "source_patch_counts": dict(source_patch_counts.most_common(20)),
         "vacuum_packets": len(vacuum),
         "bridge_packets": len(bridge),
         "alignment_packets": len(alignment),

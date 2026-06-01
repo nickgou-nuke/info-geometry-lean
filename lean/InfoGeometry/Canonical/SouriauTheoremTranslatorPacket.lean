@@ -916,71 +916,80 @@ theorem structuredSouriauKKTTranslatorPacket
  (hSlack : K.complementarySlackness)
  (hFinite : K.finitePartitionAdmissible)
  (eta xβ xμ : ℝ) :
- (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
- ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
- -souriauMeanShift C.M C.T
- ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
- C.T.beta * souriauMeanNumber C.M C.T
- ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
- varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
- ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
- C.T.beta ^ (2 : ℕ) *
- varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
- ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
- ∧ 0 ≤ C.model.fenchelGap C.theta eta
- ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
- ∧ souriauMassieuPotential C.M C.T +
- C.model.φ (C.model.dualCoord C.theta) =
- C.theta * C.model.dualCoord C.theta
- ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
- ∧ K.coneAdmissible ∧ K.stationarity ∧
- K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-  exact
-    ⟨(structuredSouriauKKTTranslatorPacket_ofExactWitness C hPSD eta xβ xμ).1,
-      hCone, hStationarity, hSlack, hFinite⟩
+   (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+    ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
+       -souriauMeanShift C.M C.T
+    ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
+       C.T.beta * souriauMeanNumber C.M C.T
+    ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+       varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+    ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+       C.T.beta ^ (2 : ℕ) *
+       varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+    ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+    ∧ 0 ≤ C.model.fenchelGap C.theta eta
+    ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+    ∧ souriauMassieuPotential C.M C.T +
+       C.model.φ (C.model.dualCoord C.theta) =
+       C.theta * C.model.dualCoord C.theta
+    ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+   ∧ K.coneAdmissible ∧ K.stationarity ∧
+   K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+   exact
+   ⟨(structuredSouriauKKTTranslatorPacket_ofExactWitness C hPSD eta xβ xμ).1,
+   hCone, hStationarity, hSlack, hFinite⟩
 
-/--
-Combined theorem packet using the dimension-agnostic exact KKT residual owner.
-
-The exact KKT branch is not supplied by finite ad hoc hypotheses.  It is
-projected from `DimensionAgnosticKKTResiduals.exact.toShadow` and the terminal
-`DimensionAgnosticKKTResiduals.exact_stationarity_packet`.
--/
-@[rep_depth thermo]
-theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals
-    [Fintype α] [Nonempty α]
-    (C : SouriauFenchelContext (α := α))
-    (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
-    (eta xβ xμ : ℝ) :
-    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
-      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
-        -souriauMeanShift C.M C.T
-      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
-        C.T.beta * souriauMeanNumber C.M C.T
-      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
-        C.T.beta ^ (2 : ℕ) *
-          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
-      ∧ 0 ≤ C.model.fenchelGap C.theta eta
-      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
-      ∧ souriauMassieuPotential C.M C.T +
-          C.model.φ (C.model.dualCoord C.theta) =
-        C.theta * C.model.dualCoord C.theta
-      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
-  let K : KKTEntropyStationarityShadow := DimensionAgnosticKKTResiduals.exact.toShadow
-  have packet :
-      K.coneAdmissible ∧ K.stationarity ∧
-        K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-    simpa [K] using DimensionAgnosticKKTResiduals.exact_stationarity_packet
-  simpa [K] using
-    (structuredSouriauKKTTranslatorPacket (C := C) (K := K)
-      hPSD packet.1 packet.2.1 packet.2.2.1 packet.2.2.2 eta xβ xμ)
+ /--
+ Constructive route through `DimensionAgnosticKKTResiduals.exact`.
+ Eliminates the explicit `hResiduals` hypothesis.
+ -/
+ @[rep_depth thermo]
+ theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals
+   [Fintype α] [Nonempty α]
+   (C : SouriauFenchelContext (α := α))
+   (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
+   (eta xβ xμ : ℝ)
+   :
+   (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
+    ∧ deriv (fun β => souriauMassieuPotential C.M (have __src := C.T; { beta := β, mu := __src.mu })) C.T.beta =
+       -souriauMeanShift C.M C.T
+    ∧ deriv (fun μ => souriauMassieuPotential C.M (have __src := C.T; { beta := __src.beta, mu := μ })) C.T.mu =
+       C.T.beta * souriauMeanNumber C.M C.T
+    ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
+       varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+    ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
+       C.T.beta ^ (2 : ℕ) *
+       varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+    ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
+    ∧ 0 ≤ C.model.fenchelGap C.theta eta
+    ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
+    ∧ souriauMassieuPotential C.M C.T +
+       C.model.φ (C.model.dualCoord C.theta) =
+       C.theta * C.model.dualCoord C.theta
+    ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
+   ∧ DimensionAgnosticKKTResiduals.exact.toShadow.coneAdmissible
+   ∧ DimensionAgnosticKKTResiduals.exact.toShadow.stationarity
+   ∧ DimensionAgnosticKKTResiduals.exact.toShadow.complementarySlackness
+   ∧ DimensionAgnosticKKTResiduals.exact.toShadow.finitePartitionAdmissible
+   := by
+   let K_exact := DimensionAgnosticKKTResiduals.exact.toShadow
+   have : K_exact.coneAdmissible ∧ K_exact.stationarity ∧ K_exact.complementarySlackness ∧ K_exact.finitePartitionAdmissible := by
+     exact DimensionAgnosticKKTResiduals.exact_stationarity_packet
+   rcases this with ⟨hCone, hStationarity, hSlack, hFinite⟩
+   have out := structuredSouriauKKTTranslatorPacket C K_exact hPSD hCone hStationarity hSlack hFinite eta xβ xμ
+   exact ⟨out.1, hCone, hStationarity, hSlack, hFinite⟩
+   rcases hK with ⟨hCone, hStationarity, hSlack, hFinite⟩
+   have out :=
+     structuredSouriauKKTTranslatorPacket (C := C) (K := K_exact)
+       hPSD hCone hStationarity hSlack hFinite eta xβ xμ
+   rcases out with ⟨hFiniteSouriau, hCone', hStationarity', hSlack', hFinite'⟩
+   rcases hFiniteSouriau with
+     ⟨hMassieu, hBeta, hMu, hBetaBeta, hMuMu, hSymm, hGap,
+      hContact, hLegendre, _hEntropyProduction⟩
+   exact
+     ⟨⟨hMassieu, hBeta, hMu, hBetaBeta, hMuMu, hSymm, hGap, hContact,
+       hLegendre⟩,
+      hCone', hStationarity', hSlack', hFinite'⟩
 
 /--
 Exact-residual KKT translator packet with only the determinant/non-spinodal

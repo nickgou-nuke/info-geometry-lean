@@ -498,14 +498,11 @@ theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals_det_nonneg
  ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
  ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
  ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
- ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
- have finitePacket :=
- structuredSouriauTranslatorPacket_of_det_nonneg
- (C := C) hdet eta xβ xμ
- have exactPacket :=
- DimensionAgnosticKKTResiduals.exact_stationarity_packet
- exact ⟨finitePacket, exactPacket.1, exactPacket.2.1,
- exactPacket.2.2.1, exactPacket.2.2.2⟩
+  ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
+ exact
+ ⟨structuredSouriauTranslatorPacket_of_det_nonneg C hdet eta xβ xμ,
+ claimK_kktEntropyStationarity_packet_ofExactResiduals⟩
+
 
 /--
 Constructive route through `souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg`.
@@ -667,11 +664,11 @@ theorem translatorPacket_of_seed
  (pairing : G → Gdual → ℝ)
  (parityOfGenerator : G →
  InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
- (stressTensorProjection : Gdual → ℝ)
- (point : Orbit)
- (J : SuperSouriauFermionGasBridge.SuperMomentMapData G Gdual Gdual)
- (P : SuperSouriauFermionGasBridge.SuperSouriauPairing G Gdual Gdual)
- (B : InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams)
+  (stressTensorProjection : Gdual → ℝ)
+  (x : Orbit)
+  (J : SuperSouriauFermionGasBridge.SuperMomentMapData Orbit Gdual Gdual)
+  (P : SuperSouriauFermionGasBridge.SuperSouriauPairing Orbit Gdual Gdual)
+  (B : InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams)
  (Hop Qodd : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism H)
  (mu betaOdd : ℝ)
  (F :
@@ -739,17 +736,17 @@ theorem claimF_superSouriauFermionGas_packet_ofIdentityBalancedStress
  (Hop Qodd : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism H)
  (mu betaOdd : ℝ)
  (F :
- SuperSouriauFermionGasBridge.FermionicCAROperatorPair (E := H)) :
- let W :=
- SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
- (G := Unit) (Gdual := EvenMoment) (Orbit := State)
- J.evenMoment
- ()
- (fun _ _ => 0)
- (fun _ => SuperParity.even)
- J.stressTensorReadout
- x
- J.stressTensor x = J.stressTensorReadout (J.evenMoment x)
+  SuperSouriauFermionGasBridge.FermionicCAROperatorPair (E := H)) :
+  let W :=
+    (SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
+      (G := Unit) (Gdual := EvenMoment) (Orbit := State)
+      J.evenMoment
+      (() : Unit)
+      (fun (_ : Unit) (_ : EvenMoment) => 0)
+      (fun (_ : Unit) => SuperParity.even)
+      J.stressTensorReadout
+      x);
+  J.stressTensor x = J.stressTensorReadout (J.evenMoment x)
  ∧ J.supercurrent x = J.supercurrentReadout (J.oddMoment x)
  ∧ P.action x =
  P.beta.betaEven * P.evenEnergy x + P.beta.betaOdd * P.oddSource x
@@ -776,14 +773,14 @@ theorem claimF_superSouriauFermionGas_packet_ofIdentityBalancedStress
  ∧ W.superTrace W.stress = 0
  ∧ W.weylInvariant := by
  let W :=
- SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
- (G := Unit) (Gdual := EvenMoment) (Orbit := State)
- J.evenMoment
- ()
- (fun _ _ => 0)
- (fun _ => SuperParity.even)
- J.stressTensorReadout
- x
+   (SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
+     (G := Unit) (Gdual := EvenMoment) (Orbit := State)
+     J.evenMoment
+     (() : Unit)
+     (fun (_ : Unit) (_ : EvenMoment) => 0)
+     (fun (_ : Unit) => SuperParity.even)
+     J.stressTensorReadout
+     x)
  exact
  ⟨J.stressTensor_eq_even_readout x,
  J.supercurrent_eq_odd_readout x,

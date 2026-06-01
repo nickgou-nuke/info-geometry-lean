@@ -22,6 +22,7 @@ import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.InductiveTransportDirectLimitSUSY
 import InfoGeometry.Algebra.FiniteTensorDeterminantStabilization
 import InfoGeometry.Algebra.FiniteSuperTensorKoszul
 import InfoGeometry.Algebra.InfiniteInductiveSUSY

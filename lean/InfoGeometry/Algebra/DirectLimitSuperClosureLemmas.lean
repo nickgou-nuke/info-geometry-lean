@@ -180,6 +180,22 @@ theorem directLimit_squareZero_all
   exact ringHom_preserves_square_zero (directLimitOf bond n) hstage
 
 /--
+Fixed power-zero laws transported along the finite chain hold on every
+canonical finite-stage image inside the algebraic direct limit.
+-/
+theorem directLimit_powZero_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q : ∀ n : Nat, Stage n)
+    (k : Nat)
+    (h0 : Q 0 ^ k = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat, directLimitOf bond n (Q n) ^ k = 0 := by
+  intro n
+  have hstage : Q n ^ k = 0 :=
+    powZero_all bond Q k h0 hQ n
+  exact ringHom_preserves_pow_zero (directLimitOf bond n) k hstage
+
+/--
 Idempotent laws transported along the finite chain hold on every canonical
 finite-stage image inside the algebraic direct limit.
 -/
@@ -317,6 +333,28 @@ theorem directLimitLift_squareZero_all
   have hstage : Q n * Q n = 0 :=
     squareZero_all bond Q h0 hQ n
   exact ringHom_preserves_square_zero (toLimit n) hstage
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+fixed power-zero laws transported to the direct limit and then lifted are the
+same power-zero laws seen directly by the compatible cone.
+-/
+theorem directLimitLift_powZero_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (Q : ∀ n : Nat, Stage n)
+    (k : Nat)
+    (h0 : Q 0 ^ k = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat,
+      directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)) ^ k = 0 := by
+  intro n
+  simp only [directLimitLift_of]
+  have hstage : Q n ^ k = 0 :=
+    powZero_all bond Q k h0 hQ n
+  exact ringHom_preserves_pow_zero (toLimit n) k hstage
 
 /--
 Functorial readback from the direct limit to an external compatible target:

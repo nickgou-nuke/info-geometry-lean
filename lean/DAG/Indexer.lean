@@ -221,7 +221,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
     attrs
 
   let typeFingerprint := computeFingerprint ci.type
-  let valueFingerprint := ci.value?.map computeFingerprint
+  let valueFingerprint := (ci.value? (allowOpaque := true)).map computeFingerprint
 
   modify fun st =>
     { st with
@@ -244,7 +244,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
     if d != name then
       addEdge nameStr d.toString "type"
 
-  if let some v := ci.value? then
+  if let some v := ci.value? (allowOpaque := true) then
     let valDeps := (collectConsts v).toList
     for d in valDeps do
       if d != name then

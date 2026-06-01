@@ -1,7 +1,7 @@
 # ⚖️ Pauli Authority Audit: Truthful Significance Index
 
 > **Protocol:** Truth lives in Lean; structure lives in the graph.
-> **Snapshot:** 89772 declarations analysed via Pauli Authority.
+> **Snapshot:** 90556 declarations analysed via Pauli Authority.
 
 ## 💎 High Causal Mass (The Spire's Pillars)
 | Declaration | Causal Mass | Depth | Fan-In |
@@ -10,18 +10,21 @@
 | `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure` | 0 | 0 | 18 |
 | `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondDirectedSystem` | 0 | 0 | 44 |
 | `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap` | 0 | 0 | 53 |
-| `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_refl` | 0 | 0 | 6 |
+| `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_refl` | 0 | 0 | 8 |
 | `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitLift` | 0 | 0 | 8 |
 | `InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf` | 0 | 0 | 17 |
-| `InfoGeometry.Algebra.FiniteInductiveSUSY.anticomm` | 0 | 0 | 12 |
+| `InfoGeometry.Algebra.FiniteInductiveSUSY.anticomm` | 0 | 0 | 14 |
 | `InfoGeometry.Algebra.FiniteN2Induction.anticommutator` | 0 | 0 | 16 |
 | `InfoGeometry.Algebra.FiniteN2Induction.iterateEnd` | 0 | 0 | 8 |
 | `InfoGeometry.Algebra.FinsuppN2ModeInduction.ModeFamily` | 0 | 0 | 13 |
 | `InfoGeometry.Algebra.FinsuppN2ModeInduction.ModeN2Closure` | 0 | 0 | 6 |
 | `InfoGeometry.Algebra.FractalScaleTransport.iter` | 0 | 0 | 8 |
+| `InfoGeometry.Algebra.HessianThermodynamicManifold.InnerSpace` | 0 | 0 | 7 |
+| `InfoGeometry.Algebra.HessianThermodynamicManifold.JordanAlgebra` | 0 | 0 | 6 |
 | `InfoGeometry.Algebra.HypercomplexTriad.E` | 0 | 0 | 8 |
+| `InfoGeometry.Algebra.HypercomplexTriad.E_sq` | 0 | 0 | 6 |
 | `InfoGeometry.Algebra.HypercomplexTriad.I` | 0 | 0 | 8 |
-| `InfoGeometry.Algebra.HypercomplexTriad.Mat2` | 0 | 0 | 56 |
+| `InfoGeometry.Algebra.HypercomplexTriad.Mat2` | 0 | 0 | 60 |
 | `InfoGeometry.Algebra.HypercomplexTriad.N` | 0 | 0 | 44 |
 | `InfoGeometry.Algebra.HypercomplexTriad.NRangeProj` | 0 | 0 | 9 |
 | `InfoGeometry.Algebra.HypercomplexTriad.NSourceProj` | 0 | 0 | 9 |
@@ -31,8 +34,9 @@
 | `InfoGeometry.Algebra.HypercomplexTriadMatrix.N` | 0 | 0 | 7 |
 | `InfoGeometry.Algebra.InductiveSuperClosureLemmas.MixedSuperClosureAt` | 0 | 0 | 9 |
 | `InfoGeometry.Algebra.InductiveSuperClosureLemmas.SuperClosureAt` | 0 | 0 | 11 |
-| `InfoGeometry.Algebra.InductiveSuperClosureLemmas.anticommutator` | 0 | 0 | 14 |
-| `InfoGeometry.Algebra.InductiveSuperClosureLemmas.map_anticommutator` | 0 | 0 | 8 |
+| `InfoGeometry.Algebra.InductiveSuperClosureLemmas.anticommutator` | 0 | 0 | 16 |
+| `InfoGeometry.Algebra.InductiveSuperClosureLemmas.map_anticommutator` | 0 | 0 | 9 |
+| `InfoGeometry.Algebra.InfiniteInductiveSUSY.CompatibleCone` | 0 | 0 | 7 |
 | `InfoGeometry.Algebra.InfiniteN2ModeInduction.FinsuppModeFamily` | 0 | 0 | 13 |
 | `InfoGeometry.Algebra.InfiniteSuperClosureLemmas.CompatibleCone` | 0 | 0 | 6 |
 | `InfoGeometry.Algebra.InvariantTransport.anticommutator` | 0 | 0 | 7 |
@@ -51,11 +55,7 @@
 | `InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.q` | 0 | 0 | 20 |
 | `InfoGeometry.Algebra.N2ModeCentralExtension.N2ModeLabel.r` | 0 | 0 | 19 |
 | `InfoGeometry.Algebra.PrimeA1RootSystem` | 0 | 0 | 6 |
-| `InfoGeometry.Algebra.RealPauliCausalCone.RealPauliOp` | 0 | 0 | 6 |
-| `InfoGeometry.Algebra.ScaleCocycleInvariant.iter` | 0 | 0 | 8 |
-| `InfoGeometry.Algebra.SupergradedBracket.superBracket` | 0 | 0 | 14 |
-| `InfoGeometry.Algebra.SupergradedCocycle.superBilin` | 0 | 0 | 7 |
-| `InfoGeometry.Algebra.SupergradedCocycle.superLabelCocycle` | 0 | 0 | 9 |
+| `InfoGeometry.Algebra.RealPauliCausalCone.RealPauliOp` | 0 | 0 | 13 |
 
 ## 🧬 Deep Identifications (Algebraic Unifications)
 | Milestone | Mass | Depth |

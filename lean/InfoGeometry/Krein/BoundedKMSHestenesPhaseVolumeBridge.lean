@@ -6,7 +6,7 @@ open scoped InnerProductSpace BigOperators
 noncomputable section
 
 /-!
-# InfoGeometry.Krein.BoundedKMSHestenesPhaseVolumeBridge
+# InfoGeometry.Krein.BoundedKMSHestenesPhaseVolume
 
 Phase-volume/determinant-channel adapter for the bounded KMS/Hestenes lane.
 
@@ -16,7 +16,7 @@ general operator phase-volume is a supplied readout with explicit invariance
 witnesses.
 -/
 
-namespace InfoGeometry.Krein.BoundedKMSHestenesPhaseVolumeBridge
+namespace InfoGeometry.Krein.BoundedKMSHestenesPhaseVolume
 
 open InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
 open InfoGeometry.Krein.HestenesMoebiusClosureBridge
@@ -219,4 +219,4 @@ end BoundedKMSHestenesPhaseVolumeBridge
 
 end Core
 
-end InfoGeometry.Krein.BoundedKMSHestenesPhaseVolumeBridge
+end InfoGeometry.Krein.BoundedKMSHestenesPhaseVolume

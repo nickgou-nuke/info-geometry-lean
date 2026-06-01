@@ -147,6 +147,23 @@ theorem directLimitOf_bond
   exact directLimitOf_bondMap bond n (n + 1) (Nat.le_succ n) x
 
 /--
+Zero-exactness for the one-step semiring direct-limit chain.
+
+If a finite-stage element maps to zero in the algebraic direct limit, then it
+already becomes zero at some later finite stage.
+-/
+theorem directLimitOf_zero_exact
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    {n : Nat} {x : Stage n}
+    (h : directLimitOf bond n x = 0) :
+    ∃ m : Nat, ∃ hnm : n ≤ m, bondMap bond n m hnm x = 0 := by
+  exact
+    (DirectLimit.exists_eq_zero
+      (G := Stage)
+      (f := fun m k h => bondMap bond m k h)
+      ⟨n, x⟩).mp h
+
+/--
 If finite-stage data are transported by the bonding maps, all their canonical
 direct-limit images agree with the stage-zero image.
 -/

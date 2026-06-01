@@ -38,6 +38,7 @@ import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
+import InfoGeometry.Algebra.SplitQuaternionFlows
 import InfoGeometry.Algebra.NilpotentModularAutomorphism
 /-!
 # InfoGeometry.Algebra.All

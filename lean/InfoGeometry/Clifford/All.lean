@@ -1,10 +1,12 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Clifford.BottSupergradedCartanBridge
 import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
 import InfoGeometry.Clifford.BudinichSpinorsNullVectors
 import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
+import InfoGeometry.Clifford.KoszulFoundation
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.Cl11Matrix
@@ -12,6 +14,7 @@ import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 import InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
+import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion
 import InfoGeometry.Clifford.Cl11SupergradedTensorBridge
 import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.Cl11TensorTowerLimit

@@ -4,16 +4,10 @@ import InfoGeometry.Canonical.FibonacciFiveGradeBridge
 /-!
 # InfoGeometry.Clifford.FibonacciCl55Carrier
 
-A concrete `Cl(5,5)`-anchored carrier packet for the finite Fibonacci braid
-bridge.
-
-This file remains theorem-safe:
-
-* it specializes the abstract five-grade Fibonacci bridge to the repo-owned
-  split `Cl(5,5)` stage;
-* it records an explicit conformal null pair in `Cl(5,5)`;
-* it does **not** claim a concrete braid formula beyond the supplied witness;
-* it packages the bridge as data, not as an unsupported identification.
+Concrete `Cl(5,5)`-anchored finite Fibonacci braid statements, written with
+explicit terms and hypotheses rather than carrier packets.  The file records no
+concrete braid formula beyond supplied preservation hypotheses and makes no
+unsupported identification between the five-grade carrier and Fibonacci theory.
 -/
 
 noncomputable section
@@ -22,102 +16,100 @@ namespace InfoGeometry.Clifford.FibonacciCl55Carrier
 
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Canonical.FibonacciFiveGradeBridge
+open InfoGeometry.Canonical.ConformalFiveGradeInversion
+open InfoGeometry.Canonical.FibonacciParafermionAtoms
 
-/-- Repo-owned split `Cl(5,5)` stage. -/
-abbrev Cl55 := ConformalLift55.Cl55
+/-- An explicit conformal null-pair hypothesis gives isotropy of the first leg. -/
+theorem nullPair_u_square (u v : ConformalLift55.Cl55)
+    (h_u : u ^ 2 = 0) (_h_v : v ^ 2 = 0)
+    (_h_anticomm : u * v + v * u = 1) :
+    u ^ 2 = 0 :=
+  h_u
 
-/--
-Concrete `Cl(5,5)` carrier packet for the finite Fibonacci braid bridge.
+/-- An explicit conformal null-pair hypothesis gives isotropy of the second leg. -/
+theorem nullPair_v_square (u v : ConformalLift55.Cl55)
+    (_h_u : u ^ 2 = 0) (h_v : v ^ 2 = 0)
+    (_h_anticomm : u * v + v * u = 1) :
+    v ^ 2 = 0 :=
+  h_v
 
-The packet stores:
+/-- An explicit conformal null-pair hypothesis gives the anticommutator relation. -/
+theorem nullPair_anticomm (u v : ConformalLift55.Cl55)
+    (_h_u : u ^ 2 = 0) (_h_v : v ^ 2 = 0)
+    (h_anticomm : u * v + v * u = 1) :
+    u * v + v * u = 1 :=
+  h_anticomm
 
-* a conformal null pair in `Cl(5,5)`;
-* an explicit `Cl(5,5)`-valued Fibonacci bridge packet.
--/
-structure CarrierPacket where
-  /-- The conformal null pair living in the `Cl(5,5)` stage. -/
-  nullPair : ConformalLift55.ConformalNullPair
-  /-- The finite Fibonacci bridge instantiated on `Cl(5,5)`. -/
-  bridge : FiveGradeFibonacciBridge Cl55
+/-- The finite Fibonacci matrix from explicit coefficients is involutive. -/
+theorem fusionMatrix_sq (a b : ℝ) (h : IsFibonacciRelation a b) :
+    F_matrix a b * F_matrix a b = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  exact InfoGeometry.Canonical.FibonacciFiveGradeBridge.fusionMatrix_sq a b h
 
-namespace CarrierPacket
+/-- The supplied braid action preserves grade. -/
+theorem braid_preserves_grade (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55) :
+    grade (braid x) = grade x :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_grade grade braid h_grade x
 
-/-- Read back the bridge packet as a first-class value. -/
-def asBridge (C : CarrierPacket) : FiveGradeFibonacciBridge Cl55 := C.bridge
+/-- The supplied braid action preserves the computational sector. -/
+theorem braid_preserves_computational
+    (computationalSet : Set ConformalLift55.Cl55) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_comp : ∀ x : ConformalLift55.Cl55, x ∈ computationalSet → braid x ∈ computationalSet)
+    (x : ConformalLift55.Cl55) (hx : x ∈ computationalSet) :
+    braid x ∈ computationalSet :=
+  h_comp x hx
 
-/-- The stored null pair is isotropic on the first leg. -/
-theorem nullPair_u_square (C : CarrierPacket) : C.nullPair.u ^ 2 = 0 :=
-  C.nullPair.u_square
+/-- The supplied braid action preserves the leakage sector. -/
+theorem braid_preserves_leakage
+    (leakageSet : Set ConformalLift55.Cl55) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_leak : ∀ x : ConformalLift55.Cl55, x ∈ leakageSet → braid x ∈ leakageSet)
+    (x : ConformalLift55.Cl55) (hx : x ∈ leakageSet) :
+    braid x ∈ leakageSet :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_leakage leakageSet braid h_leak hx
 
-/-- The stored null pair is isotropic on the second leg. -/
-theorem nullPair_v_square (C : CarrierPacket) : C.nullPair.v ^ 2 = 0 :=
-  C.nullPair.v_square
+/-- The supplied braid action blocks leakage from the computational sector. -/
+theorem braid_not_leakage_of_computational
+    (computationalSet leakageSet : Set ConformalLift55.Cl55) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_comp : ∀ x : ConformalLift55.Cl55, x ∈ computationalSet → braid x ∈ computationalSet)
+    (h_disjoint : ∀ x : ConformalLift55.Cl55, x ∈ computationalSet → x ∈ leakageSet → False)
+    (x : ConformalLift55.Cl55) (hx : x ∈ computationalSet) :
+    ¬ braid x ∈ leakageSet :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_not_leakage_of_computational
+    computationalSet leakageSet braid h_comp h_disjoint hx
 
-/-- The stored null pair anticommutes to the unit scalar. -/
-theorem nullPair_anticomm (C : CarrierPacket) :
-    C.nullPair.u * C.nullPair.v + C.nullPair.v * C.nullPair.u = 1 :=
-  C.nullPair.anticomm
+/-- The supplied braid action preserves the `+2` source sector. -/
+theorem braid_preserves_source (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55)
+    (hx : grade x = ConformalGrade.posTwo) :
+    grade (braid x) = ConformalGrade.posTwo :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_source grade braid h_grade hx
 
-/-- The packet's Fibonacci matrix is involutive. -/
-theorem fusionMatrix_sq (C : CarrierPacket) :
-    C.asBridge.fusionMatrix * C.asBridge.fusionMatrix =
-      (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  simpa [asBridge] using (C.bridge.fusionMatrix_sq)
+/-- The supplied braid action preserves the `-2` sink sector. -/
+theorem braid_preserves_sink (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55)
+    (hx : grade x = ConformalGrade.negTwo) :
+    grade (braid x) = ConformalGrade.negTwo :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_sink grade braid h_grade hx
 
-/-- The packet's braid action preserves grade. -/
-theorem braid_preserves_grade (C : CarrierPacket) (x : Cl55) :
-    C.asBridge.inversion.grade (C.asBridge.braid x) =
-      C.asBridge.inversion.grade x :=
-  C.bridge.braid_preserves_grade x
+/-- The supplied braid action preserves the outgoing boundary sector. -/
+theorem braid_preserves_outgoing (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55)
+    (hx : grade x = ConformalGrade.posOne) :
+    grade (braid x) = ConformalGrade.posOne :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_outgoing grade braid h_grade hx
 
-/-- The packet's braid action preserves the computational sector. -/
-theorem braid_preserves_computational (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.computationalSet) :
-    C.asBridge.braid x ∈ C.asBridge.computationalSet :=
-  C.bridge.braid_computational_preserving x hx
+/-- The supplied braid action preserves the incoming boundary sector. -/
+theorem braid_preserves_incoming (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55)
+    (hx : grade x = ConformalGrade.negOne) :
+    grade (braid x) = ConformalGrade.negOne :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_incoming grade braid h_grade hx
 
-/-- The packet's braid action preserves the leakage sector. -/
-theorem braid_preserves_leakage (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.leakageSet) :
-    C.asBridge.braid x ∈ C.asBridge.leakageSet :=
-  C.bridge.braid_leakage_preserving x hx
-
-/-- The packet blocks leakage from the computational sector. -/
-theorem braid_not_leakage_of_computational (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.computationalSet) :
-    ¬ C.asBridge.braid x ∈ C.asBridge.leakageSet := by
-  exact C.bridge.braid_not_leakage_of_computational hx
-
-/-- The packet's braid action preserves the `+2` source sector. -/
-theorem braid_preserves_source (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.inversion.sourceSet) :
-    C.asBridge.braid x ∈ C.asBridge.inversion.sourceSet :=
-  C.bridge.braid_preserves_source hx
-
-/-- The packet's braid action preserves the `-2` sink sector. -/
-theorem braid_preserves_sink (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.inversion.sinkSet) :
-    C.asBridge.braid x ∈ C.asBridge.inversion.sinkSet :=
-  C.bridge.braid_preserves_sink hx
-
-/-- The packet's braid action preserves the outgoing boundary sector. -/
-theorem braid_preserves_outgoing (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.inversion.outgoingSet) :
-    C.asBridge.braid x ∈ C.asBridge.inversion.outgoingSet :=
-  C.bridge.braid_preserves_outgoing hx
-
-/-- The packet's braid action preserves the incoming boundary sector. -/
-theorem braid_preserves_incoming (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.inversion.incomingSet) :
-    C.asBridge.braid x ∈ C.asBridge.inversion.incomingSet :=
-  C.bridge.braid_preserves_incoming hx
-
-/-- The packet's braid action preserves the modular center. -/
-theorem braid_preserves_center (C : CarrierPacket) (x : Cl55)
-    (hx : x ∈ C.asBridge.inversion.centerSet) :
-    C.asBridge.braid x ∈ C.asBridge.inversion.centerSet :=
-  C.bridge.braid_preserves_center hx
-
-end CarrierPacket
+/-- The supplied braid action preserves the modular center. -/
+theorem braid_preserves_center (grade : ConformalLift55.Cl55 → ConformalGrade) (braid : ConformalLift55.Cl55 → ConformalLift55.Cl55)
+    (h_grade : ∀ x : ConformalLift55.Cl55, grade (braid x) = grade x) (x : ConformalLift55.Cl55)
+    (hx : grade x = ConformalGrade.zero) :
+    grade (braid x) = ConformalGrade.zero :=
+  InfoGeometry.Canonical.FibonacciFiveGradeBridge.braid_preserves_center grade braid h_grade hx
 
 end InfoGeometry.Clifford.FibonacciCl55Carrier

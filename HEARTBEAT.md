@@ -33,6 +33,6 @@ Goal: clean vacuous Lean content and maintain Mathlib-style, proof-only developm
 - Status: flowing
 - Last manual setup: 2026-05-28
 - Current scope: `lean/InfoGeometry/Canonical`
-- Last proof-cleanup cycle: `2026-05-31T12:27:03Z`
-- Current known counts after this cycle: `sorry: 0`, `proxy_field: 0`, `prop_socket: 2`, `reexport_proxy: 69`
-- Next target: `lean/InfoGeometry/Canonical/DrazinBogoliubovFrameEquiv.lean` (`cl11_laws`)
+- Last proof-cleanup cycle: `2026-05-31T12:33:38Z`
+- Current known counts after this cycle: `sorry: 0`, `proxy_field: 0`, `prop_socket: 1`, `reexport_proxy: 69`
+- Next target: `lean/InfoGeometry/Canonical/TomitaTakesakiRealification.lean` (`duality_readback_identity`)

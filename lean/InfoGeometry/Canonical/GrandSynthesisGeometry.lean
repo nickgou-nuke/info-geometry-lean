@@ -347,6 +347,123 @@ theorem gravity_generated_by_rnEntropyWitness
 
 omit [FiniteDimensional ℝ X] in
 /--
+Entropy-to-vacuum route through the bundled RN source / unit-volume witness.
+
+This removes the explicit triple `(M, hSource, bit)` from the non-metric-derived
+vacuum-equation surface: callers provide one constructive packet, which is
+first converted into `UnitRelativeVolumeState Kgeo` and then routed through the
+existing smaller owner theorem.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropyWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_unitRelativeVolumeState
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W)
+    hBridge
+
+/--
+Proof-carrying RN-entropy / metric-RN-Ricci witness on the non-metric-derived
+gravity lane.
+
+This bundles the existing constructive RN-entropy / unit-relative-volume packet
+with the `MetricRNRicciBridge` needed by the Ricci-flat / vacuum-Einstein owner
+routes, removing the explicit pair `(W, hBridge)` from downstream surfaces.
+-/
+structure RNEntropyMetricRNRicciWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) where
+  rnEntropy : RNEntropyUnitRelativeVolumeWitness (n := n) Kgeo
+  hBridge : MetricRNRicciBridge R Kgeo x
+
+namespace RNEntropyMetricRNRicciWitness
+
+omit [FiniteDimensional ℝ X] in
+/-- Recover the unit-relative-volume state from the bundled non-metric witness. -/
+theorem unitRelativeVolumeState
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : RNEntropyMetricRNRicciWitness (n := n) (Kgeo := Kgeo) R x) :
+    UnitRelativeVolumeState Kgeo :=
+  unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W.rnEntropy
+
+omit [FiniteDimensional ℝ X] in
+/-- Recover the metric RN/Ricci bridge from the bundled non-metric witness. -/
+theorem metricRNRicciBridge
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : RNEntropyMetricRNRicciWitness (n := n) (Kgeo := Kgeo) R x) :
+    MetricRNRicciBridge R Kgeo x :=
+  W.hBridge
+
+end RNEntropyMetricRNRicciWitness
+
+omit [FiniteDimensional ℝ X] in
+/--
+Entropy-to-gravity capstone from one proof-carrying RN-entropy / metric-RN-Ricci
+witness packet.
+
+This removes the explicit pair `(W, hBridge)` from the non-metric-derived
+gravity surface: callers provide one constructive packet, which is first
+converted into `UnitRelativeVolumeState Kgeo` and then routed through the
+existing smaller owner theorem `gravity_generated_by_unitRelativeVolumeState`.
+-/
+theorem gravity_generated_by_rnEntropyMetricRNRicciWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyMetricRNRicciWitness (n := n) (Kgeo := Kgeo) R x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact gravity_generated_by_unitRelativeVolumeState
+    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (RNEntropyMetricRNRicciWitness.unitRelativeVolumeState (n := n) W)
+    (RNEntropyMetricRNRicciWitness.metricRNRicciBridge (n := n) W)
+
+omit [FiniteDimensional ℝ X] in
+/--
+Entropy-to-vacuum route from one proof-carrying RN-entropy / metric-RN-Ricci
+witness packet.
+
+This removes the explicit pair `(W, hBridge)` from the non-metric-derived
+vacuum-Einstein surface.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropyMetricRNRicciWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X) (Λ : ℝ)
+    (W : RNEntropyMetricRNRicciWitness (n := n) (Kgeo := Kgeo) R x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  exact
+    (gravity_generated_by_rnEntropyMetricRNRicciWitness
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) W).2
+
+omit [FiniteDimensional ℝ X] in
+/--
+Entropy-sourced Ricci-flatness from one proof-carrying RN-entropy /
+metric-RN-Ricci witness packet.
+
+This removes the explicit pair `(W, hBridge)` from the direct Ricci-flatness
+surface on the non-metric-derived RN-entropy lane.
+-/
+theorem isRicciFlat_of_rnEntropyMetricRNRicciWitness
+    (Kgeo : KaehlerInformationGeometry X)
+    (R : RicciTensor X)
+    (x : X)
+    (W : RNEntropyMetricRNRicciWitness (n := n) (Kgeo := Kgeo) R x) :
+    IsRicciFlat R := by
+  exact
+    (gravity_generated_by_rnEntropyMetricRNRicciWitness
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := 0) W).1
+
+omit [FiniteDimensional ℝ X] in
+/--
 Entropy-sourced Ricci-flat route through the proof-carrying unit relative-volume
 bit.
 
@@ -511,6 +628,30 @@ structure MetricDerivedRNEntropyUnitRelativeVolumeWitness
 namespace MetricDerivedRNEntropyUnitRelativeVolumeWitness
 
 /--
+Construct the bundled metric-derived RN-entropy witness directly from the
+concrete RN source, proof-carrying unit-relative-volume bit, and the
+metric-derived RN/Ricci bridge.
+
+This is the smallest constructive constructor on the metric-derived bit lane:
+callers no longer need to manually assemble the nested RN witness packet before
+using the one-packet gravity/vacuum routes.
+-/
+def ofSourceAndBit
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (bit : UnitRelativeVolumeBit n M)
+    (hM : MetricDerivedRNRicciBridge R Kgeo x) :
+    MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x where
+  rnEntropy :=
+    { M := M
+      hSource := hSource
+      bit := bit }
+  hM := hM
+
+/--
 Recover the smaller metric-derived unit-relative-volume witness from the bundled
 RN-entropy / metric-derived packet.
 -/
@@ -523,6 +664,37 @@ theorem toMetricDerivedUnitRelativeVolumeStateWitness
   hUnitState := unitRelativeVolumeState_of_rnEntropyWitness
     (n := n) (Kgeo := Kgeo) W.rnEntropy
   hM := W.hM
+
+/--
+Recover the unit-relative-volume state directly from the bundled RN-entropy /
+metric-derived witness.
+
+This is the smallest one-way owner export on the metric-derived RN-entropy lane:
+downstream callers that already own the bundled witness no longer need to reopen
+`rnEntropy` manually to obtain `UnitRelativeVolumeState Kgeo`.
+-/
+theorem unitRelativeVolumeState
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    UnitRelativeVolumeState Kgeo :=
+  unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W.rnEntropy
+
+/--
+Recover the metric-derived RN/Ricci bridge directly from the bundled RN-entropy /
+metric-derived witness.
+
+This removes the need for downstream callers to thread the bridge hypothesis
+separately once they already own the larger constructive packet.
+-/
+theorem metricDerivedBridge
+    {Kgeo : KaehlerInformationGeometry X}
+    {R : RicciTensor X}
+    {x : X}
+    (W : MetricDerivedRNEntropyUnitRelativeVolumeWitness (n := n) (Kgeo := Kgeo) R x) :
+    MetricDerivedRNRicciBridge R Kgeo x :=
+  W.hM
 
 end MetricDerivedRNEntropyUnitRelativeVolumeWitness
 
@@ -711,11 +883,10 @@ theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit_metricDerived
     (bit : UnitRelativeVolumeBit n M)
     (hM : MetricDerivedRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  have hUnitState : UnitRelativeVolumeState Kgeo :=
-    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
-      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
-  exact gravity_generated_by_unitRelativeVolumeState_metricDerived
-    (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) hUnitState hM
+  exact gravity_generated_by_metricDerivedRNEntropyUnitRelativeVolumeWitness
+    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+    (MetricDerivedRNEntropyUnitRelativeVolumeWitness.ofSourceAndBit
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) M hSource bit hM)
 
 end EntropicCalabiBridge
 

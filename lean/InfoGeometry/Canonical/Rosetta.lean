@@ -240,8 +240,8 @@ export InfoGeometry.Canonical.ChiralCliffordBridge (
 )
 
 export InfoGeometry.Canonical.CliffordBridge (
-  q_agrees_with_Gauge_quad
-  B_agrees_with_Gauge_bilinear
+  splitQuadratic_eq_gaugeQuadratic
+  splitBilinear_eq_gaugeBilinear
 )
 
 export InfoGeometry.Canonical.ChiralTorsionBridge (

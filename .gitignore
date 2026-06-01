@@ -151,3 +151,46 @@ logs/
 !.archon/commands/
 .archon/commands/*
 !.archon/commands/proof-purification-pipeline.md
+
+# Local runtime/cache/artifact directories discovered by source-tracking audit
+.antigravitycli/
+.changes/
+.pi/
+.ulam/
+artifacts/
+graph_overlay_out/
+node_modules/
+tools/tmp/
+
+# Local secrets and transient proxy experiments
+.env
+index.html
+index.js
+install.sh
+package.json
+package-lock.json
+proxy.js
+stream.js
+
+# Scratch Lean/proof-generation leftovers
+scratch*.lean
+temp_trace.lean
+test.lean
+fix_file.py
+fix_generator_lemmas.py
+gen_proofs.py
+gen_proofs_4.py
+generate_scratch.py
+patch.py
+patch_file.py
+revert.py
+
+# Downloaded external corpora and vendored mirrors kept out of Git history
+external/gromov_probability_sources/**/*.pdf
+external/gromov_probability_sources/videos/
+external/afp/
+external/FrogBird/theorem_index.json
+external_refs/afp/
+external_refs/mathlib/
+leantrail_v13_honest_sorry_dropins/
+leantrail_v14_critic_lane/

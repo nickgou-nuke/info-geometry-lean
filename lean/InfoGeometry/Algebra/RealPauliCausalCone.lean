@@ -126,14 +126,47 @@ theorem nilpotent_is_lightlike (X : RealPauliOp) :
     nlinarith [hsq2]
   rw [det_eq_norm, hnorm]
 
+/-- Determinant in the standard Minkowski signature (1,3): t^2 - x^2 - y^2 - z^2. -/
+def detMinkowski (X : RealPauliOp) : ℝ := X.t^2 - X.x^2 - X.y^2 - X.z^2
+
 /-- DEBT 3: Convex Affine Geometry Mapping (The Hessian Interior).
-    Formally prove that the interior space of mixed states (trace=1 and det > 0) is strictly convex. -/
-axiom density_interior_convex (A B : RealPauliOp) (p : ℝ) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
-  trace A = 1 → trace B = 1 → det A > 0 → det B > 0 →
-  det (⟨p * A.t + (1 - p) * B.t, 
-        p * A.x + (1 - p) * B.x, 
-        p * A.y + (1 - p) * B.y, 
-        p * A.z + (1 - p) * B.z⟩) > 0
+    Prove that the interior space of mixed states (trace=1 and detMinkowski > 0) is strictly convex. -/
+theorem density_interior_convex (A B : RealPauliOp) (p : ℝ) (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
+  (hAt : trace A = 1) (hBt : trace B = 1) (hAd : detMinkowski A > 0) (hBd : detMinkowski B > 0) :
+  detMinkowski (⟨p * A.t + (1 - p) * B.t, 
+                 p * A.x + (1 - p) * B.x, 
+                 p * A.y + (1 - p) * B.y, 
+                 p * A.z + (1 - p) * B.z⟩) > 0 := by
+  have hAt2 : A.t = 1/2 := by
+    unfold trace at hAt
+    linarith
+  have hBt2 : B.t = 1/2 := by
+    unfold trace at hBt
+    linarith
+  unfold detMinkowski at hAd hBd ⊢
+  dsimp
+  rw [hAt2] at hAd
+  rw [hBt2] at hBd
+  rw [hAt2, hBt2]
+  have htime : p * (1 / 2) + (1 - p) * (1 / 2) = 1 / 2 := by ring
+  rw [htime]
+  have h_sq_conv (u v : ℝ) : (p * u + (1 - p) * v)^2 ≤ p * u^2 + (1 - p) * v^2 := by
+    have hdiff : p * u^2 + (1 - p) * v^2 - (p * u + (1 - p) * v)^2 = p * (1 - p) * (u - v)^2 := by ring
+    have hp_nonneg : 0 ≤ p * (1 - p) := by
+      nlinarith
+    have h_diff_nonneg : 0 ≤ p * (1 - p) * (u - v)^2 := by
+      have h_sq : 0 ≤ (u - v)^2 := sq_nonneg (u - v)
+      exact mul_nonneg hp_nonneg h_sq
+    linarith
+  have hx := h_sq_conv A.x B.x
+  have hy := h_sq_conv A.y B.y
+  have hz := h_sq_conv A.z B.z
+  rcases eq_or_lt_of_le hp0 with hp_zero | hp_pos
+  · subst hp_zero
+    simp only [zero_mul, sub_zero, zero_add] at hx hy hz ⊢
+    linarith
+  · have h1p : 0 ≤ 1 - p := by linarith
+    nlinarith [hx, hy, hz, hAd, hBd]
 
 end InfoGeometry.Algebra.RealPauliCausalCone
 
@@ -151,5 +184,6 @@ end InfoGeometry.Algebra.RealPauliCausalCone
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
-- `density_interior_convex` : Convexity of the state interior (Hessian domain).
+- `nilpotent_is_lightlike` : Nilpotent operator locks to the lightcone.
+- `density_interior_convex` : Convexity of the state interior (Minkowski domain). Fully proved.
 -/

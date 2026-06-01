@@ -236,6 +236,31 @@ theorem exteriorCARPair_parityOp_limit_image
         _ = ι n ((P n).parityOp) := hcone n ((P n).parityOp)
         _ = ι 0 ((P 0).parityOp) := ih
 
+/-- The image of the transported number operator remains idempotent at every stage. -/
+theorem exteriorCARPair_limit_image_numberOp_idem
+    (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
+    ∀ n : ℕ,
+      ι n ((P n).numberOp) * ι n ((P n).numberOp) = ι n ((P n).numberOp) := by
+  intro n
+  simpa using congrArg (ι n) ((P n).numberOp_idem)
+
+/--
+The image of the transported parity operator satisfies `Π = 1 - 2N` at every stage.
+-/
+theorem exteriorCARPair_limit_image_parityOp_eq_one_sub_two_numberOp
+    (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
+    ∀ n : ℕ,
+      ι n ((P n).parityOp) = 1 - (2 : L) * ι n ((P n).numberOp) := by
+  intro n
+  have h2 : ι n (2 : A n) = (2 : L) := by
+    simpa using (map_natCast (ι n) 2)
+  calc
+    ι n ((P n).parityOp) = ι n (1 - (2 : A n) * (P n).numberOp) := by
+      simpa using congrArg (ι n) ((P n).parityOp_eq_one_sub_two_numberOp)
+    _ = 1 - ι n (2 : A n) * ι n ((P n).numberOp) := by
+      simp
+    _ = 1 - (2 : L) * ι n ((P n).numberOp) := by
+      rw [h2]
 /--
 Finite split-Majorana laws hold in every finite-stage image in the target ring.
 

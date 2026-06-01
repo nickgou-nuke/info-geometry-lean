@@ -13,7 +13,7 @@ Fibonacci channel do not depend on `r`.
 This file exposes only that finite algebraic content:
 
 * electron counts are multiples of three;
-* a symmetric electron factor is invariant under anyon permutations;
+* an explicit symmetric electron factor hypothesis is invariant under anyon permutations;
 * the `R`, `F`, and `B = F R F` readouts are independent of `r`;
 * a base-sector Artin matrix identity transports unchanged to every `r` sector.
 
@@ -38,10 +38,12 @@ theorem electronCount_three_dvd (r : ℕ) :
 /-- A symmetric electron factor is invariant under swapping anyon labels. -/
 theorem symmetricElectronFactor_swap_invariant
     {ElectronData Value : Type*}
-    (Q : SymmetricElectronFactor ElectronData Value)
+    (eval : ElectronData → Value)
+    (permute : Equiv.Perm (Fin 4) → ElectronData → ElectronData)
+    (hperm : ∀ (σ : Equiv.Perm (Fin 4)) (z : ElectronData), eval (permute σ z) = eval z)
     (z : ElectronData) :
-    Q.eval (Q.permute (Equiv.swap (0 : Fin 4) 1) z) = Q.eval z :=
-  Q.swap01_invariant z
+    eval (permute (Equiv.swap (0 : Fin 4) 1) z) = eval z :=
+  electronFactor_swap01_invariant eval permute hperm z
 
 /-- The diagonal `R` matrix in the electron sector is independent of `r`. -/
 theorem fibonacciRMatrixWithElectrons_independent (r s : ℕ) (q : Units ℂ) :

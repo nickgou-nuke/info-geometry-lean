@@ -99,6 +99,7 @@ import InfoGeometry.Canonical.BoundedKMSErgodicOmegaVolumeBridge
 import InfoGeometry.Canonical.BoundedKMSErgodicWeylGWVolumeBridge
 import InfoGeometry.Canonical.BoundedModularKMSBridge
 import InfoGeometry.Canonical.BottDirac
+import InfoGeometry.Canonical.AtiyahBottShapiroBridge
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 import InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
@@ -218,6 +219,7 @@ import InfoGeometry.Canonical.CasiniBekensteinBound
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.CayleyMobiusPowerLaws
 import InfoGeometry.Canonical.ThermalCompactRecurrence
+import InfoGeometry.Canonical.InfiniteKMSCondition
 import InfoGeometry.Canonical.ModularPoissonCompact
 import InfoGeometry.Canonical.ModularCompactOperatorCore
 import InfoGeometry.Canonical.SL2CZhukovsky
@@ -503,6 +505,7 @@ import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral
 import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
+import InfoGeometry.Canonical.InfiniteHestenesKrein
 import InfoGeometry.Canonical.HestenesModularBregman
 import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Canonical.ComplexRealHestenesFinite

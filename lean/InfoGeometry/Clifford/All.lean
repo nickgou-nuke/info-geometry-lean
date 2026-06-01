@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.BottPeriodicity
+import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.BottSupergradedCartanBridge
 import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
@@ -7,6 +8,7 @@ import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.KoszulFoundation
+import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
 import InfoGeometry.Clifford.Cl11Matrix

@@ -34,19 +34,16 @@ namespace InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 open Matrix
 open InfoGeometry.Canonical.FiniteFibonacciFourAnyonBlocks
 
-/-- The two-dimensional channel index. -/
-abbrev ChannelIndex := Fin 2
-
 /-- The Fibonacci fusion matrix `F = [[τ, s], [s, -τ]]`. -/
-noncomputable def fibonacciFusionMatrix (τ s : ℂ) : Matrix ChannelIndex ChannelIndex ℂ :=
+noncomputable def fibonacciFusionMatrix (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![τ, s; s, -τ]
 
 /-- The diagonal four-anyon `R` matrix with entries `q⁻⁴` and `q³`. -/
-noncomputable def fibonacciRMatrix (q : Units ℂ) : Matrix ChannelIndex ChannelIndex ℂ :=
+noncomputable def fibonacciRMatrix (q : Units ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![(q ^ (-4 : ℤ) : Units ℂ), 0; 0, (q ^ (3 : ℤ) : Units ℂ)]
 
 /-- The middle-generator matrix obtained by changing to the dual basis and back. -/
-noncomputable def fibonacciBMatrix (q : Units ℂ) (τ s : ℂ) : Matrix ChannelIndex ChannelIndex ℂ :=
+noncomputable def fibonacciBMatrix (q : Units ℂ) (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s
 
 /-- Top-left entry of the complex middle-generator matrix `B = F R F`. -/
@@ -105,13 +102,6 @@ theorem fibonacciFusionMatrix_inv_eq_self
     fibonacciFusionMatrix τ s * fibonacciFusionMatrix τ s = 1 :=
   fibonacciFusionMatrix_sq hs hτ
 
-/-- In the dual basis the middle generator is diagonal by definition of the readout. -/
-theorem fibonacciBMatrix_def
-    (q : Units ℂ) (τ s : ℂ) :
-    fibonacciBMatrix q τ s =
-      fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s :=
-  rfl
-
 /--
 Finite Artin check for the four-anyon matrices, kept theorem-owned by requiring
 the exact matrix equality as an explicit algebraic hypothesis.
@@ -123,54 +113,5 @@ theorem fibonacci_fourAnyon_artin_from_matrix_identity
     fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
       fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s :=
   hArtin
-
-/-- The first and third diagonal generators commute in the finite matrix model. -/
-theorem fibonacciRMatrix_commutes_with_self (q : Units ℂ) :
-    fibonacciRMatrix q * fibonacciRMatrix q = fibonacciRMatrix q * fibonacciRMatrix q :=
-  rfl
-
-/-- A finite four-anyon matrix packet containing only theorem-owned algebraic data. -/
-structure FourAnyonFusionPacket where
-  /-- Primitive phase parameter. -/
-  q : Units ℂ
-  /-- Inverse-golden-ratio parameter. -/
-  τ : ℂ
-  /-- Square-root parameter for `τ`. -/
-  s : ℂ
-  /-- Square-root relation. -/
-  s_sq : s ^ 2 = τ
-  /-- Fibonacci relation for `τ`. -/
-  tau_sq_add_tau : τ ^ 2 + τ = 1
-
-namespace FourAnyonFusionPacket
-
-/-- The packet fusion matrix. -/
-noncomputable def F (P : FourAnyonFusionPacket) : Matrix ChannelIndex ChannelIndex ℂ :=
-  fibonacciFusionMatrix P.τ P.s
-
-/-- The packet diagonal `R` matrix. -/
-noncomputable def R (P : FourAnyonFusionPacket) : Matrix ChannelIndex ChannelIndex ℂ :=
-  fibonacciRMatrix P.q
-
-/-- The packet middle-generator matrix `B = F R F`. -/
-noncomputable def B (P : FourAnyonFusionPacket) : Matrix ChannelIndex ChannelIndex ℂ :=
-  fibonacciBMatrix P.q P.τ P.s
-
-/-- The packet fusion matrix is involutive. -/
-theorem F_sq (P : FourAnyonFusionPacket) :
-    P.F * P.F = 1 :=
-  fibonacciFusionMatrix_sq P.s_sq P.tau_sq_add_tau
-
-/-- The packet fusion matrix has determinant `-1`. -/
-theorem det_F (P : FourAnyonFusionPacket) :
-    P.F.det = -1 :=
-  det_fibonacciFusionMatrix P.s_sq P.tau_sq_add_tau
-
-/-- The packet middle generator is `F R F`. -/
-theorem B_eq_FRF (P : FourAnyonFusionPacket) :
-    P.B = P.F * P.R * P.F :=
-  rfl
-
-end FourAnyonFusionPacket
 
 end InfoGeometry.Canonical.FiniteFibonacciFusionMatrix

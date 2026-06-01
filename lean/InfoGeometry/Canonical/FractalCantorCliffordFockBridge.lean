@@ -129,6 +129,29 @@ theorem boundaryPrefix_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
     boundaryPrefix (Nat.succ n) ξ = boundaryHead ξ :: boundaryPrefix n (boundaryTail ξ) := by
   rfl
 
+/-- Finite boundary prefixes have the expected length. -/
+@[simp, rep_depth operator]
+theorem boundaryPrefix_length (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    (boundaryPrefix n ξ).length = n := by
+  induction n generalizing ξ with
+  | zero => rfl
+  | succ n ih =>
+      simp [boundaryPrefix, ih]
+
+/-- Prefixing a head symbol shifts the boundary prefix by one step. -/
+@[simp, rep_depth operator]
+theorem boundaryPrefix_succ_boundaryCons
+    (a : Bool) (ξ : InfiniteBinaryWordSpace) (n : ℕ) :
+    boundaryPrefix (Nat.succ n) (boundaryCons a ξ) = a :: boundaryPrefix n ξ := by
+  simp [boundaryPrefix, boundaryCons]
+
+/-- Tail extraction after prefixing recovers the original boundary tail. -/
+@[simp, rep_depth operator]
+theorem boundaryIterateTail_succ_boundaryCons
+    (a : Bool) (ξ : InfiniteBinaryWordSpace) (n : ℕ) :
+    boundaryIterateTail (Nat.succ n) (boundaryCons a ξ) = boundaryIterateTail n ξ := by
+  simp [boundaryIterateTail, boundaryCons]
+
 @[simp, rep_depth operator]
 theorem boundaryConsList_nil (ξ : InfiniteBinaryWordSpace) :
     boundaryConsList [] ξ = ξ := by

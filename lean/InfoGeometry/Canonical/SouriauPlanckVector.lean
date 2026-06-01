@@ -173,6 +173,32 @@ theorem comparisonReadout_pair_eq_zero_of_equilibriumSeed
   exact isThermodynamicReadoutStationary_of_equilibriumSeed (E := E) hEq
 
 /--
+Stationary Gibbs-Souriau data forces the metric readout itself to vanish.
+This owner-side projection removes the need for downstream callers to unpack the
+paired `(metric, phase) = (0, 0)` packet when they only need the metric branch.
+-/
+@[rep_depth transport]
+theorem comparisonMetricReadout_eq_zero_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.fst (comparisonReadout_pair_eq_zero_of_equilibriumSeed (E := E) hEq)
+
+/--
+Stationary Gibbs-Souriau data forces the phase readout itself to vanish.
+This owner-side projection removes the need for downstream callers to unpack the
+paired `(metric, phase) = (0, 0)` packet when they only need the phase branch.
+-/
+@[rep_depth transport]
+theorem comparisonPhaseReadout_eq_zero_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.snd (comparisonReadout_pair_eq_zero_of_equilibriumSeed (E := E) hEq)
+
+/--
 Faithful probing plus vanishing first variation imply vanishing operatorial
 metric/phase readout without carrying an explicit equilibrium-seed packet.
 -/
@@ -188,6 +214,38 @@ theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithfu
       = (0, 0) := by
   exact comparisonReadout_pair_eq_zero_of_equilibriumSeed (E := E)
     (equilibriumSeed_of_probeFaithful_of_firstVariation_eq_zero
+      (E := E) hFaithful hFirst)
+
+/--
+Faithful probing plus vanishing first variation imply vanishing metric readout
+without carrying an explicit `GibbsSouriauEquilibriumSeed` packet.
+-/
+@[rep_depth transport]
+theorem comparisonMetricReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.fst
+    (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) hFaithful hFirst)
+
+/--
+Faithful probing plus vanishing first variation imply vanishing phase readout
+without carrying an explicit `GibbsSouriauEquilibriumSeed` packet.
+-/
+@[rep_depth transport]
+theorem comparisonPhaseReadout_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
+    (hFirst :
+      InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0) :
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A = 0 := by
+  exact congrArg Prod.snd
+    (comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
       (E := E) hFaithful hFirst)
 
 end InfoGeometry.Canonical.SouriauPlanckVector

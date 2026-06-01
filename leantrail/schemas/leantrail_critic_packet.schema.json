@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailCriticPacket",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "packet_stream",
+    "target",
+    "critic_kind",
+    "severity",
+    "confidence",
+    "evidence_refs",
+    "claim",
+    "recommended_action",
+    "allowed_next_actions",
+    "source_modification_allowed"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 1},
+    "packet_stream": {"type": "string", "enum": ["critic"]},
+    "created_at": {"type": "string"},
+    "target": {"type": "string", "minLength": 1},
+    "module": {"type": "string"},
+    "file": {"type": ["string", "null"]},
+    "critic_kind": {
+      "type": "string",
+      "enum": [
+        "proof_shape_name_mismatch",
+        "docstring_statement_mismatch",
+        "honest_sorry_triage",
+        "obfuscation_suspicion",
+        "orphan_genuine_review",
+        "axiomatic_frontier_review",
+        "alignment_candidate_review",
+        "educational_alias_protection"
+      ]
+    },
+    "severity": {"type": "string", "enum": ["high", "medium", "low", "info"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "claim": {"type": "object"},
+    "recommended_action": {"type": "string"},
+    "allowed_next_actions": {"type": "array", "items": {"type": "string"}},
+    "source_modification_allowed": {"type": "boolean", "const": false}
+  },
+  "additionalProperties": true
+}

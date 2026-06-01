@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "created_at": "2026-06-01T00:00:00Z",
+    "commit_sha": "fixture",
+    "toolchain": "fixture",
+    "artifact_version": 1
+  },
+  "nodes": [
+    {
+      "id": "InfoGeometry.Canonical.GrandBridge",
+      "name": "InfoGeometry.Canonical.GrandBridge",
+      "kind": "Declaration",
+      "module": "InfoGeometry.Canonical",
+      "file": "lean/InfoGeometry/Canonical/GrandBridge.lean",
+      "line": 10,
+      "rep_depth": null,
+      "role": "owner",
+      "module_family": "InfoGeometry.Canonical",
+      "commit_sha": "fixture",
+      "toolchain": "fixture",
+      "artifact_version": 1,
+      "attrs": {
+        "doc": "Establishes the full canonical reconstruction bridge.",
+        "vacuity": {
+          "role": "fake_transport",
+          "certificate_ref": "artifacts/leantrail/vacuity/certificates/GrandBridge.json"
+        },
+        "contamination": {"state": "clean"}
+      }
+    },
+    {
+      "id": "InfoGeometry.Experimental.OpenLemma",
+      "name": "InfoGeometry.Experimental.OpenLemma",
+      "kind": "Declaration",
+      "module": "InfoGeometry.Experimental",
+      "file": "lean/InfoGeometry/Experimental/OpenLemma.lean",
+      "line": 42,
+      "rep_depth": null,
+      "role": "owner",
+      "module_family": "InfoGeometry.Experimental",
+      "commit_sha": "fixture",
+      "toolchain": "fixture",
+      "artifact_version": 1,
+      "attrs": {
+        "vacuity": {"role": "closure_debt"},
+        "hole": {"state": "explicit_sorry"},
+        "contamination": {"state": "honest_sorry"}
+      }
+    },
+    {
+      "id": "InfoGeometry.Standalone.DenseTheory",
+      "name": "InfoGeometry.Standalone.DenseTheory",
+      "kind": "Declaration",
+      "module": "InfoGeometry.Standalone",
+      "file": "lean/InfoGeometry/Standalone/DenseTheory.lean",
+      "line": 88,
+      "rep_depth": null,
+      "role": "owner",
+      "module_family": "InfoGeometry.Standalone",
+      "commit_sha": "fixture",
+      "toolchain": "fixture",
+      "artifact_version": 1,
+      "attrs": {
+        "vacuity": {"role": "orphan_genuine"},
+        "hodge": {"orphan_forest": true, "forest_overlap_candidates": []}
+      }
+    }
+  ],
+  "edges": []
+}

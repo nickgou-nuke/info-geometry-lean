@@ -11,7 +11,12 @@ namespace InfoGeometry.Lint
 /-- Option to control the Pauli sorry linter. -/
 register_option linter.pauli.sorry : Bool := {
   defValue := true
-  descr := "warn about declarations in Canonical namespace depending on sorryAx"
+  descr := "report declarations in Canonical namespace depending on explicit sorryAx as visible closure debt"
+}
+
+register_option linter.pauli.sorryAsClosureDebt : Bool := {
+  defValue := true
+  descr := "treat explicit sorryAx as permitted closure debt instead of a hard warning; disguised substitutes remain lint targets"
 }
 
 /-- Option to control the Pauli grand unity linter. -/
@@ -72,7 +77,7 @@ def pauliLinter : Linter where
             if isInfoGeometry structName then
               let pairs := detectWitnessPackPairs env structName
               for diag in renderAllWitnessPackDiags structName pairs do
-                logWarningAt id diag
+                logError diag
 
       if declKind == ``Lean.Parser.Command.theorem ||
          declKind == ``Lean.Parser.Command.definition ||
@@ -86,18 +91,28 @@ def pauliLinter : Linter where
               -- 1. Axiom-Surface Seal
               if linter.pauli.sorry.get (← getOptions) then
                 let axioms ← Lean.collectAxioms declName
-                if axioms.contains ``sorryAx || axioms.contains "admitAx".toName then
-                  logWarningAt id m!"[Pauli/Axiom-Surface Seal] {declName} depends on `sorryAx` or `admitAx`."
+                if axioms.contains ``sorryAx then
+                  if linter.pauli.sorryAsClosureDebt.get (← getOptions) then
+                    logInfo m!"[Pauli/Closure Debt] {declName} explicitly depends on `sorryAx`; permitted as honest closure debt, not eligible for contraction/deletion."
+                  else
+                    logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on `sorryAx`."
+                else if axioms.contains "admitAx".toName then
+                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
 
               -- 2. Grand Unity (rfl)
               if linter.pauli.grandUnity.get (← getOptions) then
                 if let some (.thmInfo info) := env.find? declName then
                   if info.value.isAppOfArity ``Eq.refl 2 || info.value.isAppOfArity ``rfl 2 then
-                     logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} is proved via trivial `rfl`. Ensure this is not masking missing logic."
+                     logError m!"[Pauli/Identity-via-Reflexivity] {declName} is proved via trivial `rfl`."
                   else
-                    let isGenuine ← liftCoreM (Meta.MetaM.run' (auditExprTriviality info.value))
-                    if !isGenuine then
-                      logWarningAt id m!"[Pauli/Identity-via-Reflexivity] {declName} recursively evaluates to a trivial or tautological proof. Ensure this is not masking missing logic."
+                       let auditResult ←
+                         liftCoreM
+                           (Meta.MetaM.run'
+                             (auditExprTrivialityDetailed AuditConfig.default env [declName]
+                               (AuditConfig.maxLocalUnfoldDepth AuditConfig.default) info.value))
+                       let metric := AuditResult.toMetric auditResult
+                       if !MathfulnessMetric.isGenuine metric then
+                         logError m!"[Pauli/Identity-via-Reflexivity] {declName} recursively evaluates to a trivial/tautological proof. Metric: {repr metric}"
 
             -- 3. No-Mask Mandate (Heuristic)
             let physicalKeywords := #["Einstein", "Boltzmann", "Hamiltonian", "Entropy", "Physics", "Gravity", "Condensate"]

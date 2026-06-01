@@ -40,7 +40,7 @@ abbrev AuditConfig :=
 namespace AuditConfig
 
 def default : AuditConfig :=
-  ([`InfoGeometry], 32, true, [], true)
+  ([`InfoGeometry], 32, true, [``propext, ``Quot.sound, ``Classical.choice], true)
 
 def projectRoots : AuditConfig → List Name
   | (roots, _, _, _, _) => roots

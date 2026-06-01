@@ -606,6 +606,16 @@ script leantrailVacuityIngest (args) do
   }
   child.wait
 
+script leantrailVacuityAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/vacuity_audit.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script leantrailSurgeryPlan (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

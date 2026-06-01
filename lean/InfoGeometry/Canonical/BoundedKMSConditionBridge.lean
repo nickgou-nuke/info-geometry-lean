@@ -379,6 +379,49 @@ theorem partition_potential_flow_central
         (B.flowDatum.flow t A) :=
   B.boundedFlow.partition_potential_modularFlow_central hScale t A
 
+/--
+Proof-carrying witness that the bounded modular flow commutes with Souriau
+`opScale` on the partition-potential lane.
+
+This packages the exact owner hypothesis consumed by
+`partition_potential_flow_central`, so downstream users on the bounded KMS lane
+can route through a named constructive packet instead of a loose proposition
+argument.
+-/
+@[rep_depth thermo]
+structure FlowCommutesWithOpScaleWitness : Prop where
+  flow_commutes_with_opScale : B.boundedFlow.FlowCommutesWithOpScale
+
+namespace FlowCommutesWithOpScaleWitness
+
+/-- Recover the owner `opScale`-commutation hypothesis from the witness packet. -/
+@[rep_depth thermo]
+theorem flow_commutes_with_opScale_apply
+    (W : FlowCommutesWithOpScaleWitness (B := B)) :
+    B.boundedFlow.FlowCommutesWithOpScale :=
+  W.flow_commutes_with_opScale
+
+end FlowCommutesWithOpScaleWitness
+
+/--
+Witness-routed partition-potential centrality for the bounded KMS flow.
+
+This removes the loose explicit `hScale` argument from the theorem-facing route
+when the caller already owns the proof-carrying
+`FlowCommutesWithOpScaleWitness` packet.
+-/
+@[rep_depth thermo]
+theorem partition_potential_flow_central_of_witness
+    (W : FlowCommutesWithOpScaleWitness (B := B))
+    (t : ℝ) (A : EndH) :
+    B.flowDatum.flow t
+        (B.boundedFlow.souriau.family.opScale
+          B.boundedFlow.souriau.family.partitionPotential A) =
+      B.boundedFlow.souriau.family.opScale
+        B.boundedFlow.souriau.family.partitionPotential
+        (B.flowDatum.flow t A) := by
+  exact B.partition_potential_flow_central W.flow_commutes_with_opScale t A
+
 end BoundedKMSConditionBridge
 
 end Core

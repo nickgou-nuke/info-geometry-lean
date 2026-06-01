@@ -375,6 +375,50 @@ theorem ofDetailedEquilibrium_isRouterEquilibrium
     (ofDetailedEquilibrium_δ_odd_eq_zero (E := E) (CIK := CIK) (flow := flow)
       (hMod := hMod) (hEq := hEq))
 
+/--
+Witness-routed detailed-equilibrium constructor on the clock-defect bridge.
+
+This removes the bare `hEq` proof argument for callers that already own the
+explicit `DetailedEquilibriumWitness` packet on the winding owner lane.
+-/
+noncomputable def ofDetailedEquilibriumWitness
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
+    RouterClockDefectBridge (E := E) :=
+  ofDetailedEquilibrium (E := E) CIK flow hMod W.hEq
+
+@[simp] theorem ofDetailedEquilibriumWitness_routerResidual
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
+    (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound.routerResidual = 0 := by
+  simpa [ofDetailedEquilibriumWitness] using
+    ofDetailedEquilibrium_routerResidual (E := E) (CIK := CIK) (flow := flow)
+      (hMod := hMod) (hEq := W.hEq)
+
+@[simp] theorem ofDetailedEquilibriumWitness_δ_odd_eq_zero
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
+    δ_odd (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound = 0 := by
+  simpa [ofDetailedEquilibriumWitness] using
+    ofDetailedEquilibrium_δ_odd_eq_zero (E := E) (CIK := CIK) (flow := flow)
+      (hMod := hMod) (hEq := W.hEq)
+
+theorem ofDetailedEquilibriumWitness_isRouterEquilibrium
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) hMod) :
+    IsRouterEquilibrium (ofDetailedEquilibriumWitness (E := E) CIK flow hMod W).bound := by
+  simpa [ofDetailedEquilibriumWitness] using
+    ofDetailedEquilibrium_isRouterEquilibrium (E := E) (CIK := CIK) (flow := flow)
+      (hMod := hMod) (hEq := W.hEq)
+
 end RouterClockDefectBridge
 
 /--
@@ -436,6 +480,30 @@ theorem router_equilibrium_of_detailedEquilibrium
     IsRouterEquilibrium B.bound := by
   exact equilibrium_of_δ_odd_eq_zero (E := E) B.bound
     (δ_odd_eq_zero_of_detailedEquilibrium (E := E) B hEq)
+
+/--
+Witness-routed zero-defect theorem on the clock-defect bridge.
+
+This removes the bare detailed-equilibrium proposition in favor of the explicit
+`DetailedEquilibriumWitness` packet.
+-/
+theorem δ_odd_eq_zero_of_detailedEquilibriumWitness
+    (B : RouterClockDefectBridge (E := E))
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) B.hMod) :
+    δ_odd B.bound = 0 :=
+  δ_odd_eq_zero_of_detailedEquilibrium (E := E) B W.hEq
+
+/--
+Witness-routed router-equilibrium theorem on the clock-defect bridge.
+
+This removes the bare detailed-equilibrium proposition in favor of the explicit
+`DetailedEquilibriumWitness` packet.
+-/
+theorem router_equilibrium_of_detailedEquilibriumWitness
+    (B : RouterClockDefectBridge (E := E))
+    (W : InfoGeometry.Canonical.WindingOrbitClosure.DetailedEquilibriumWitness (H := E) B.hMod) :
+    IsRouterEquilibrium B.bound :=
+  router_equilibrium_of_detailedEquilibrium (E := E) B W.hEq
 
 /--
 Positive odd-sector defect implies noncommuting scale lane on the same
@@ -879,6 +947,20 @@ structure ColRNBarrierCountProfileLift
           (countRay (colSumCounts n M) hcol)
 
 /--
+Proof-carrying row-count mass-normalization witness for the RN-barrier profile
+lift.
+
+This packages the positivity and total-mass certificate needed to route a raw
+row-count profile into the projective information-geometric readback lane.
+-/
+structure RowCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (M : SinkhornMatrix n) where
+  hrow : HasPositiveRowSums n M
+  hMass : countMass (rowSumCounts n M) hrow = n
+
+/--
 Construct the row RN-barrier profile lift from positive observed row counts
 once the raw count profile has the expected carrier mass `n`.
 
@@ -1063,6 +1145,28 @@ noncomputable def SinkhornRNBarrierProfileLift.ofMassNormalizedRowCounts
           (n := n) (M := T.state k) hrow hMass))
 
 /--
+Witness-routed row-count constructor for the trajectory-local RN-barrier
+profile lift.
+
+This narrows the explicit `hrow` / `hMass` pair to a single proof-carrying
+mass-normalization witness.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {T : SinkhornTrajectory n}
+    {k : Nat}
+    (hk : phaseAt k = SinkhornPhase.col)
+    (W : RowCountMassNormalizedWitness (M := T.state k)) :
+    SinkhornRNBarrierProfileLift n T k :=
+  SinkhornRNBarrierProfileLift.ofPhase
+    (T := T) (k := k)
+    (hk.symm ▸
+      PhaseRNBarrierProfileLift.ofRowCounts
+        (RowRNBarrierCountProfileLift.ofMassNormalized
+          (n := n) (M := T.state k) W.hrow W.hMass))
+
+/--
 If the current Sinkhorn phase is row-normalization, then a mass-normalized
 column-count lift produces the trajectory-local RN-barrier profile lift
 directly.
@@ -1148,6 +1252,23 @@ noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
       (T := C.T) (k := C.k) hk hMass)
 
 /--
+Witness-routed row-count constructor for the profile Weyl/thermodynamic
+comparison packet.
+-/
+noncomputable def WeylThermodynamicProfileComparison.ofRowCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.col)
+    (W : RowCountMassNormalizedWitness (M := C.T.state C.k)) :
+    WeylThermodynamicProfileComparison (E := E)
+      C.B.routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
+    (SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+      (T := C.T) (k := C.k) hk W)
+
+/--
 Mass-normalized column counts at a row-normalization phase directly package the
 Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
 -/
@@ -1200,6 +1321,26 @@ theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
       (E := E)
       (WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
         (E := E) C hk hMass)
+
+/--
+Witness-routed row-count mass-normalization is enough to derive the operator
+readout inequality.
+-/
+theorem operatorInformationNormReadout_le_of_rowCountMassNormalizedWitness
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : phaseAt C.k = SinkhornPhase.col)
+    (W : RowCountMassNormalizedWitness (M := C.T.state C.k)) :
+    C.B.comparison.operatorInformationNormReadout C.B.routerResidual
+      ≤
+    C.B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) := by
+  exact
+    RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+      (E := E)
+      (WeylThermodynamicProfileComparison.ofRowCountMassNormalizedWitness
+        (E := E) C hk W)
 
 /--
 Mass-normalized column counts at a row-normalization phase are enough to route

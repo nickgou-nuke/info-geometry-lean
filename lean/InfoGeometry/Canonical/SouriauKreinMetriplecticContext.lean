@@ -864,6 +864,53 @@ theorem supergradedFisherOnsagerBlock_squareResponse_CAR_packet
       hCCR⟩
 
 /--
+Supergraded operatorial Fisher/Onsager block packet from the regular
+Drazin/Krein cone lane.
+
+This removes the old bare positivity route on the two-channel operatorial block:
+nonnegativity now descends from explicit regular-cone witnesses for both
+operatorial Hessian channels together with the mixed-determinant witness already
+carried by `RegularConeOperatorialResponseContext`.
+-/
+@[rep_depth transport]
+theorem supergradedFisherOnsagerBlock_regularCone_CAR_packet
+    (R : RegularConeOperatorialResponseContext C)
+    (evenForce oddForce : ℝ) :
+    C.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
+            + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A))
+      ∧ C.diagonalMetricResponse = C.P.probe R.Hxx
+      ∧ C.yDiagonalMetricResponse = C.P.probe R.Hyy
+      ∧ C.weylCovariantThermodynamicDerivation =
+        C.zeroWeightThermodynamicDerivation
+          + C.weight • C.phaseAxisThermodynamicDerivation
+      ∧ C.operatorialEntropyProduction evenForce oddForce =
+        C.diagonalMetricResponse * evenForce ^ (2 : ℕ)
+          + 2 * C.mixedMetricResponseXY * evenForce * oddForce
+            + C.yDiagonalMetricResponse * oddForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialEntropyProduction evenForce oddForce
+      ∧ SuperchargeCARCCRBridge.CARBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = 0
+      ∧ SuperchargeCARCCRBridge.CCRBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = (2 : ℝ) • SuperchargeCARCCRBridge.cptSuperchargeOp (E := E) := by
+  rcases SuperchargeCARCCRBridge.harmonic_oscillator_spine (E := E) with
+    ⟨hCAR, hCCR, _⟩
+  exact
+    ⟨C.metricResponse_eq_half_probe_observableLieHessian_add_swap,
+      R.diagonalMetricResponse_eq_probe_Hxx,
+      R.yDiagonalMetricResponse_eq_probe_Hyy,
+      C.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis,
+      C.operatorialEntropyProduction_eq_quadratic evenForce oddForce,
+      C.operatorialEntropyProduction_nonneg_of_regularCone R evenForce oddForce,
+      hCAR,
+      hCCR⟩
+
+/--
 Supergraded operatorial Fisher/Onsager block packet from the Cramer-Rao owner lane.
 
 This is the companion to the square-response packet above, but it no longer

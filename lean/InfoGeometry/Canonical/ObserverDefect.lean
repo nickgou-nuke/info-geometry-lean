@@ -286,12 +286,24 @@ theorem observerDeviationControlledByZD_iff_nonempty_control
 A bare owner-side `ObserverDeviationControlledByZD` proof can always be repacked
 as an explicit `ObserverDeviationControl` witness packet.
 -/
+theorem observerDeviationControl_of_deviationControlledByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
+    ObserverDeviationControl CIK obs :=
+  { bound := hControl }
+
+/--
+A bare owner-side `ObserverDeviationControlledByZD` proof can always be repacked
+as an explicit `ObserverDeviationControl` witness packet.
+-/
 theorem nonempty_observerDeviationControl_of_deviationControlledByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (hControl : ObserverDeviationControlledByZD CIK obs) :
     Nonempty (ObserverDeviationControl CIK obs) := by
-  exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).1 hControl
+  exact ⟨observerDeviationControl_of_deviationControlledByZD
+    (CIK := CIK) (obs := obs) hControl⟩
 
 /--
 If an explicit owner-side `ObserverDeviationControl` witness packet exists, then
@@ -303,6 +315,32 @@ theorem observerDeviationControlledByZD_of_nonempty_control
     (hControl : Nonempty (ObserverDeviationControl CIK obs)) :
     ObserverDeviationControlledByZD CIK obs := by
   exact (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).2 hControl
+
+/--
+The residual `Z_D` budget is equivalent to the existence of an explicit
+owner-side `ObserverDeviationControl` witness packet. This removes the
+intermediate bare `ObserverDeviationControlledByZD` proposition from the
+readback route.
+-/
+theorem observerDefectResidual_norm_le_ZD_iff_nonempty_control
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    ‖observerDefectResidual CIK obs‖ ≤
+        ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ ↔
+      Nonempty (ObserverDeviationControl CIK obs) := by
+  constructor
+  · intro hBound
+    refine ⟨?_⟩
+    refine {
+      bound := ?_
+    }
+    rw [← observerDefectResidual_eq_projectorCompression_commutator_deviation
+      (CIK := CIK) (obs := obs)]
+    exact hBound
+  · rintro ⟨c⟩
+    rw [observerDefectResidual_eq_projectorCompression_commutator_deviation
+      (CIK := CIK) (obs := obs)]
+    exact c.bound
 
 /--
 General observer-defect `Z_D` bound from the exact deviation-channel control.
@@ -332,7 +370,9 @@ theorem observerDefectResidual_norm_le_ZD
   (obs : ObserverL5 CIK)
   (hControl : ObserverDeviationControlledByZD CIK obs) :
   ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
-  obtain ⟨c⟩ := (observerDeviationControlledByZD_iff_nonempty_control (CIK := CIK) (obs := obs)).1 hControl
+  let c : ObserverDeviationControl CIK obs :=
+    observerDeviationControl_of_deviationControlledByZD
+      (CIK := CIK) (obs := obs) hControl
   exact observerDefectResidual_norm_le_ZD_constructive c
 /--
 The owner-level deviation-channel predicate is equivalent to the old residual
@@ -840,8 +880,11 @@ theorem observerDeviationControlledByZD_of_strain_eq_zero
     (obs : ObserverL5 CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     ObserverDeviationControlledByZD CIK obs := by
-  rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
-  exact observerDefectResidual_norm_le_ZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  unfold ObserverDeviationControlledByZD
+  rw [← observerDefectResidual_eq_projectorCompression_commutator_deviation
+    (CIK := CIK) (obs := obs)]
+  exact observerDefectResidual_norm_le_ZD_of_strain_eq_zero
+    (CIK := CIK) (obs := obs) hStrain
 
 /--
 Constructive witness-packet route: zero scalarized observer strain yields an
@@ -916,6 +959,33 @@ theorem observerOrientationStrain_eq_zero_of_nonempty_control_of_ZD_eq_zero
     (CIK := CIK) (obs := obs) hZD c
 
 /--
+Zero observer-defect residual already produces an explicit owner-side deviation-control
+witness packet. This removes the intermediate scalarized-strain hypothesis from
+callers that already own the exact residual-zero witness.
+-/
+theorem observerDeviationControl_of_observerDefectResidual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hResidual : observerDefectResidual CIK obs = 0) :
+    ObserverDeviationControl CIK obs := by
+  have hStrain : observerOrientationStrain CIK obs = 0 :=
+    (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).2 hResidual
+  exact observerDeviationControl_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+
+/--
+Zero observer-defect residual already forces the exact owner-side `Z_D`
+deviation-control predicate via the explicit witness packet above.
+-/
+theorem observerDeviationControlledByZD_of_observerDefectResidual_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hResidual : observerDefectResidual CIK obs = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  exact ObserverDeviationControlledByZD.of_control
+    (observerDeviationControl_of_observerDefectResidual_eq_zero
+      (CIK := CIK) (obs := obs) hResidual)
+
+/--
 Under zero central defect, zero observer-defect residual is equivalent to the
 existence of an explicit owner-side deviation-control witness packet. This
 removes the intermediate scalarized-strain hypothesis from the zero-`Z_D` owner
@@ -957,15 +1027,15 @@ theorem observerDefectResidual_eq_zero_of_nonempty_control_of_ZD_eq_zero
       (CIK := CIK) (obs := obs) hZD).2 hControl
 
 /--
-Under zero central defect, scalarized observer strain is equivalent to the exact
-owner-side `Z_D` deviation-control predicate. This lets downstream callers use
+Under zero central defect, scalarized observer strain is equivalent to the
+observer-side `Z_D` deviation-control predicate. This lets downstream callers use
 whichever witness they already own instead of carrying both packets.
 -/
 theorem observerOrientationStrain_eq_zero_iff_deviationControlledByZD_of_ZD_eq_zero
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
-    observerOrientationStrain CIK obs = 0 ↔ ObserverDeviationControlledByZD CIK obs := by
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (hZD : InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+  observerOrientationStrain CIK obs = 0 ↔ ObserverDeviationControlledByZD CIK obs := by
   constructor
   · intro hStrain
     exact observerDeviationControlledByZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain

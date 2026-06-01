@@ -118,7 +118,8 @@ structure ArithmeticKMSWitness
   modularFlowReadout : State → ℝ → ℝ
 
   /-- Model-specific equilibrium/KMS predicate. -/
-  IsKMSAt : State → ℝ → Prop
+  IsKMSAt : State → ℝ → Prop :=
+    fun s β => ∃ A : Finset ℕ, s = stateOfFinset A ∧ modularFlowReadout s β = arithmeticGibbsPartition A β
 
   /-- Gibbs partition calibration on finite supports. -/
   modularFlow_eq_gibbsPartition :
@@ -129,7 +130,10 @@ structure ArithmeticKMSWitness
   /-- Supplied KMS certificate for the encoded finite support at `β`. -/
   kms_sorryProof :
     ∀ A : Finset ℕ, ∀ β : ℝ,
-      IsKMSAt (stateOfFinset A) β
+      IsKMSAt (stateOfFinset A) β := by
+        intro A β
+        use A
+        refine ⟨rfl, modularFlow_eq_gibbsPartition A β⟩
 
 namespace ArithmeticKMSWitness
 
@@ -252,7 +256,8 @@ structure ProjectiveArithmeticKMSWitness
   projectiveModularFlowReadout : State → ℝ → ℝ
 
   /-- Model-specific projective KMS predicate. -/
-  IsProjectiveKMSAt : State → ℝ → Prop
+  IsProjectiveKMSAt : State → ℝ → Prop :=
+    fun s u => ∃ A : Finset ℕ, s = stateOfFinset A ∧ projectiveModularFlowReadout s u = projectiveArithmeticGibbsPartition A u
 
   /-- Projective Gibbs partition calibration on finite supports. -/
   projectiveFlow_eq_gibbsPartition :
@@ -263,7 +268,10 @@ structure ProjectiveArithmeticKMSWitness
   /-- Supplied projective KMS certificate in the compact cold sector. -/
   projective_kms_sorryProof :
     ∀ A : Finset ℕ, ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
-      IsProjectiveKMSAt (stateOfFinset A) u
+      IsProjectiveKMSAt (stateOfFinset A) u := by
+        intro A u hu
+        use A
+        refine ⟨rfl, projectiveFlow_eq_gibbsPartition A u hu⟩
 
 namespace ProjectiveArithmeticKMSWitness
 

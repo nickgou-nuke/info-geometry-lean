@@ -24,6 +24,29 @@ structure CartanPhaseAxisForcingData
   hK_odd : K ∈ S.oddSubmodule
   hI_even : I ∈ S.evenLieSubalgebra
 
+/--
+Explicit even-sector witness for the phase-axis commutator.  This replaces a
+bare membership hypothesis with an actual even-sector carrier whose underlying
+element is the forced commutator.
+-/
+structure CartanEvenCommutatorWitness
+    (L : Type _) [LieRing L] [LieAlgebra ℝ L] where
+  data : CartanPhaseAxisForcingData L
+  evenElement : data.S.evenLieSubalgebra
+  evenElement_eq_commutator : (evenElement : L) = ⁅data.K, data.I⁆
+
+namespace CartanEvenCommutatorWitness
+
+/-- Recover the legacy even-sector membership from the explicit witness object. -/
+theorem commutator_mem_even
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (W : CartanEvenCommutatorWitness L) :
+    ⁅W.data.K, W.data.I⁆ ∈ W.data.S.evenLieSubalgebra := by
+  rw [← W.evenElement_eq_commutator]
+  exact W.evenElement.property
+
+end CartanEvenCommutatorWitness
+
 /-- The ordered commutator `[I, K]` lies in the odd sector. -/
 theorem commutator_IK_mem_odd
     {L : Type _} [LieRing L] [LieAlgebra ℝ L]
@@ -84,6 +107,16 @@ theorem commutator_KI_eq_zero_of_mem_even
     (hEven : ⁅D.K, D.I⁆ ∈ D.S.evenLieSubalgebra) :
     ⁅D.K, D.I⁆ = 0 :=
   eq_zero_of_mem_even_and_odd D.S hEven (commutator_KI_mem_odd (D := D))
+
+/--
+Constructive variant of the Cartan-grade collapse theorem using an explicit
+even-sector witness object instead of a bare membership proof.
+-/
+theorem commutator_KI_eq_zero_of_evenWitness
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (W : CartanEvenCommutatorWitness L) :
+    ⁅W.data.K, W.data.I⁆ = 0 :=
+  commutator_KI_eq_zero_of_mem_even W.data W.commutator_mem_even
 
 /--
 Compatibility name for the D1 closure pattern: odd-sector forcing plus

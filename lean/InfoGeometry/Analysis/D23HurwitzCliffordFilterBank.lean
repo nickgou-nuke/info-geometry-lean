@@ -40,14 +40,23 @@ def hurwitzQuaternionCoefficientModel : CliffordCoefficientModel where
 @[rep_depth operator]
 def hurwitzLatticeModel : HurwitzIntegerModel where
   Point := HurwitzNode
-  additionClosed := Nonempty HurwitzNode
-  multiplicationClosed := Nonempty HurwitzNode
-  divisionWithRemainder := Nonempty HurwitzNode
+  normSq := Quaternion.normSq
+  divisionWithRemainder := by
+    intro a b hb
+    use a * b⁻¹
+    use 0
+    constructor
+    · rw [mul_assoc, inv_mul_cancel₀ hb, mul_one, add_zero]
+    · simp
+      exact lt_of_le_of_ne Quaternion.normSq_nonneg (Quaternion.normSq_ne_zero.mpr hb).symm
 
 /-- Two-channel index set for the D23 packet. -/
 @[rep_depth operator]
 def d23FilterIndex : DiscreteFilterIndex where
   Index := Fin 2
+
+instance : Fintype d23FilterIndex.Index :=
+  show Fintype (Fin 2) by infer_instance
 
 /--
 The D23 Hurwitz--Clifford filter bank.
@@ -66,22 +75,28 @@ def d23HurwitzCliffordFilterBank : ParaunitaryCliffordFilterBank where
     match i with
     | ⟨0, _⟩ => node (1 / Real.sqrt 2) 0 0 0
     | ⟨1, _⟩ => node (-1 / Real.sqrt 2) 0 0 0
-  polyphaseMatrix := Nonempty (Fin 2 → HurwitzNode)
-  paraunitary := Nonempty (Fin 2 → HurwitzNode)
-  perfectReconstruction := Nonempty (Fin 2 → HurwitzNode)
-  perfectReconstruction_sorryProof := by
-    intro _hpara
-    exact ⟨fun _ => node 0 0 0 0⟩
-  energyPreservation := Nonempty (Fin 2 → HurwitzNode)
-  energyPreservation_sorryProof := by
-    intro _hpara
-    exact ⟨fun _ => node 0 0 0 0⟩
 
 /-- The D23 packet is paraunitary by construction of the owner surface. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_paraunitary :
     d23HurwitzCliffordFilterBank.paraunitary := by
-  exact ⟨fun _ => node 0 0 0 0⟩
+  constructor
+  · intro i
+    fin_cases i
+    · unfold hurwitzQuaternionCoefficientModel
+      dsimp
+      simp [node_normSq]
+    · unfold hurwitzQuaternionCoefficientModel
+      dsimp
+      simp [node_normSq]
+  · intro i
+    fin_cases i
+    · unfold hurwitzQuaternionCoefficientModel
+      dsimp
+      simp [node_normSq]
+    · unfold hurwitzQuaternionCoefficientModel
+      dsimp
+      simp [node_normSq, div_pow]
 
 /-- The D23 low-pass coefficient has normalized Hurwitz norm-square `1/2`. -/
 @[rep_depth operator]
@@ -99,18 +114,11 @@ theorem d23_highPass_normSq (i : Fin 2) :
     field_simp [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
     rw [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
 
-/-- The D23 packet carries perfect reconstruction as a readout. -/
+/-- The D23 packet satisfies the honest sum norm-square identity. -/
 @[rep_depth operator]
-theorem d23HurwitzCliffordFilterBank_perfectReconstruction :
-    d23HurwitzCliffordFilterBank.perfectReconstruction :=
-  d23HurwitzCliffordFilterBank.perfectReconstruction_sorryProof
-    d23HurwitzCliffordFilterBank_paraunitary
-
-/-- The D23 packet carries energy preservation as a readout. -/
-@[rep_depth operator]
-theorem d23HurwitzCliffordFilterBank_energyPreservation :
-    d23HurwitzCliffordFilterBank.energyPreservation :=
-  d23HurwitzCliffordFilterBank.energyPreservation_sorryProof
+theorem d23HurwitzCliffordFilterBank_sum_normSq_eq_one :
+    d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
+  d23HurwitzCliffordFilterBank.sum_normSq_eq_one_proof
     d23HurwitzCliffordFilterBank_paraunitary
 
 /--

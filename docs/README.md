@@ -110,6 +110,12 @@ They are not theorem authority, but they are the best map for the runtime:
 - [hive_neural_backbone_architecture.md](hive_neural_backbone_architecture.md)
 - [hive_beehive_swarm_implementation_plan.md](hive_beehive_swarm_implementation_plan.md)
 
+## Reference Notes
+
+These are useful routing notes, but they are not current authority:
+
+- [gromov_jaynes_probability_note.md](gromov_jaynes_probability_note.md)
+
 ## Protected Markdown
 
 These paths are intentionally excluded from content-rewrite cleanup:

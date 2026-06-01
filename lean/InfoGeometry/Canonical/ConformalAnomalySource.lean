@@ -15,6 +15,20 @@ namespace ConformalInference
 
 variable (CI : ConformalInference E)
 
+/--
+Proof-carrying KKT wing witness for the conformal projector-obstruction lane.
+
+This packages the three grading hypotheses that drive the grade-zero descent of
+the anomaly/projector obstruction, so downstream callers can route through a
+single constructive witness instead of threading a bare `(hA, hAMP, hAD)`
+triple.
+-/
+structure KKTWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E) where
+  hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A
+  hAMP : InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP
+  hAD : InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D
+
 /-- Canonical obstruction operator: the spectral/metric projector commutator. -/
 noncomputable abbrev projectorObstruction : E →L[ℝ] E :=
   CI.chiralAnomalyOperator
@@ -43,6 +57,17 @@ theorem projectorObstruction_isGZero_of_kkt_wings
     CI.chiralAnomalyOperator_isGZero_of_kkt_wings
       (X := X) hA hAMP hAD
 
+/--
+The projector obstruction is grade zero from a single proof-carrying KKT wing
+witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis triple.
+-/
+theorem projectorObstruction_isGZero_of_kktWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (W : CI.KKTWingWitness X) :
+    InfoGeometry.Canonical.KKTCore.IsGZero X CI.projectorObstruction := by
+  exact
+    CI.projectorObstruction_isGZero_of_kkt_wings X W.hA W.hAMP W.hAD
+
 theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A)
@@ -53,6 +78,18 @@ theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
     CI.chiralAnomalyOperator_gOnePart_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
 
+/--
+The grade-`+1` projector-obstruction component vanishes from a proof-carrying
+KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
+triple.
+-/
+theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (W : CI.KKTWingWitness X) :
+    InfoGeometry.Canonical.KKTCore.gOnePart X CI.projectorObstruction = 0 := by
+  exact
+    CI.projectorObstruction_gOnePart_eq_zero_of_kkt_wings X W.hA W.hAMP W.hAD
+
 theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A)
@@ -62,6 +99,18 @@ theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
   simpa [projectorObstruction] using
     CI.chiralAnomalyOperator_gNegOnePart_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
+
+/--
+The grade-`-1` projector-obstruction component vanishes from a proof-carrying
+KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
+triple.
+-/
+theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (W : CI.KKTWingWitness X) :
+    InfoGeometry.Canonical.KKTCore.gNegOnePart X CI.projectorObstruction = 0 := by
+  exact
+    CI.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings X W.hA W.hAMP W.hAD
 
 theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -76,6 +125,22 @@ theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
   simpa [projectorObstruction] using
     CI.chiralAnomalyOperator_eq_diagonal_blocks_of_kkt_wings
       (X := X) hA hAMP hAD
+
+/--
+The projector obstruction is supported on the diagonal KKT blocks from a single
+proof-carrying KKT wing witness, without threading the explicit
+`(hA, hAMP, hAD)` hypothesis triple.
+-/
+theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (W : CI.KKTWingWitness X) :
+    CI.projectorObstruction
+      = InfoGeometry.Canonical.KKTCore.plusProjector X * CI.projectorObstruction
+          * InfoGeometry.Canonical.KKTCore.plusProjector X
+        + InfoGeometry.Canonical.KKTCore.minusProjector X * CI.projectorObstruction
+          * InfoGeometry.Canonical.KKTCore.minusProjector X := by
+  exact
+    CI.projectorObstruction_eq_diagonal_blocks_of_kkt_wings X W.hA W.hAMP W.hAD
 
 theorem projectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -607,6 +672,18 @@ theorem squashedProjectorObstruction_isGZero_of_kkt_wings
     (CI.projectorObstruction_isGZero_of_kkt_wings (X := X) hA hAMP hAD)
 
 /--
+The bounded squashed obstruction inherits grade-zero structure from a single
+proof-carrying KKT wing witness, without threading the explicit
+`(hA, hAMP, hAD)` hypothesis triple.
+-/
+theorem squashedProjectorObstruction_isGZero_of_kktWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (W : CI.KKTWingWitness X) :
+    InfoGeometry.Canonical.KKTCore.IsGZero X CI.squashedProjectorObstruction := by
+  exact
+    CI.squashedProjectorObstruction_isGZero_of_kkt_wings X W.hA W.hAMP W.hAD
+
+/--
 The bounded squashed obstruction remains block-diagonal in the KKT split.
 -/
 theorem squashedProjectorObstruction_eq_diagonal_blocks_of_kkt_wings
@@ -661,6 +738,33 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
   simpa [projectorObstruction] using
     CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
       hRight hObsZero
+
+/--
+Under right-projector commutation, vanishing of the dilation commutator is
+exactly vanishing of the projector obstruction.
+
+This replaces the raw multiplication-equality hypothesis on the owner route with
+an explicit `Commute` witness and packages both directions as a single
+operator-level iff.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_iff_projectorObstruction_eq_zero_of_rightProjectorCommute
+    (hRight : Commute CI.P_D CI.P_MP_right) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 ↔ CI.projectorObstruction = 0 := by
+  constructor
+  · intro hCommZero
+    have hScaledZero : -((2 : ℝ)⁻¹) • CI.projectorObstruction = 0 := by
+      calc
+        -((2 : ℝ)⁻¹) • CI.projectorObstruction = CI.P_D * CI.D - CI.D * CI.P_D := by
+          symm
+          exact CI.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_rightProjector_commute
+            hRight.eq
+        _ = 0 := hCommZero
+    have hScalar : (-((2 : ℝ)⁻¹) : ℝ) ≠ 0 := by
+      norm_num
+    exact (smul_eq_zero.mp hScaledZero).resolve_left hScalar
+  · intro hObsZero
+    exact CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_projectorObstruction_eq_zero
+      hRight.eq hObsZero
 
 /--
 Projector commutation directly from the Kähler/log-det layer:

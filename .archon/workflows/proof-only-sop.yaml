@@ -14,6 +14,7 @@ nodes:
 
       Required commands:
       - python3 tools/lean4-skills/sorry_analyzer.py lean --format=summary
+      - python3 tools/quality/semantic_vacuity_gate.py lean --fail-on none --top 120
       - python3 tools/quality/check_no_hypothesis_mandate.py --root lean/InfoGeometry
       - python3 tools/quality/proof_only_mandate_gate.py
 
@@ -35,8 +36,32 @@ nodes:
       Write .archon/task_results/proof-only-sop-classification.md.
     assistant: pi
 
-  - id: plan
+  - id: literature
     depends_on: [classify]
+    prompt: |
+      Search for genuine mathematical proof routes for the highest-priority target.
+
+      Required sources:
+      - repo declarations via `rg`;
+      - Mathlib declarations/imports;
+      - Lean Zulip/forums or Mathlib docs;
+      - GitHub Lean repositories;
+      - arXiv/source TeX and primary literature when Mathlib/repo is missing.
+
+      Write `.archon/task_results/proof-only-sop-literature.md` with:
+      - TARGET
+      - SOURCES
+      - VERIFIED CLAIMS
+      - LEAN OWNER FILE
+      - CANDIDATE STATEMENT
+      - PROOF PLAN
+      - BLOCKERS
+
+      Do not edit Lean files. Do not present a witness packet as a proof route.
+    assistant: pi
+
+  - id: plan
+    depends_on: [literature]
     prompt: |
       Produce the next executable proof-only plan.
 

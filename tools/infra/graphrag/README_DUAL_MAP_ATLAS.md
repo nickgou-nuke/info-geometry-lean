@@ -77,7 +77,7 @@ Generate the raw expression graph:
 
 ```bash
 lake env lean --run lean/DAG/ExprArangoExport.lean \
-  InfoGeometry.Audit InfoGeometry artifacts/expr-graph/arango 0 true
+  InfoGeometry.All InfoGeometry artifacts/expr-graph/arango 0 true true
 ```
 
 Ingest the raw expression graph into ArangoDB:

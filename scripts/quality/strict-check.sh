@@ -225,6 +225,25 @@ if [[ "${STRICT_CHECK_MATHFULNESS_GATE:-0}" == "1" ]]; then
 fi
 "${mathfulness_cmd[@]}"
 
+echo "[strict-check] generating semantic vacuity audit"
+semantic_vacuity_cmd=(
+  python3 tools/quality/semantic_vacuity_gate.py
+  lean
+  --json-out reports/dag/semantic-vacuity-audit.json
+  --top 20
+  --fail-on none
+)
+if [[ "${STRICT_CHECK_SEMANTIC_VACUITY_GATE:-0}" != "0" ]]; then
+  semantic_vacuity_cmd=(
+    python3 tools/quality/semantic_vacuity_gate.py
+    lean
+    --json-out reports/dag/semantic-vacuity-audit.json
+    --top 20
+    --fail-on "${STRICT_CHECK_SEMANTIC_VACUITY_GATE}"
+  )
+fi
+"${semantic_vacuity_cmd[@]}"
+
 echo "[strict-check] running surrogate dependency audit"
 scripts/audit_surrogates.sh
 

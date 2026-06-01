@@ -45,6 +45,30 @@ noncomputable def oddOddKoszulTensorMatrix
      0, 0, 0, -a * d;
      0, 0, b * c, 0]
 
+/--
+The concrete parity operator for the ordered tensor basis `(00,11,01,10)`:
+the first two basis vectors have even total parity and the last two have odd
+total parity.
+-/
+noncomputable def tensorParityMatrix
+    {R : Type*} [Zero R] [One R] [Neg R] : Matrix (Fin 4) (Fin 4) R :=
+  !![(1 : R), 0, 0, 0;
+     0, 1, 0, 0;
+     0, 0, -1, 0;
+     0, 0, 0, -1]
+
+/--
+The odd-odd Koszul tensor is even: conjugation by the total-parity operator
+fixes the concrete `1|1 ⊗ 1|1` matrix.
+-/
+theorem tensorParity_conj_oddOddKoszulTensorMatrix
+    {R : Type*} [CommRing R] (a b c d : R) :
+    tensorParityMatrix * oddOddKoszulTensorMatrix a b c d * tensorParityMatrix =
+      oddOddKoszulTensorMatrix a b c d := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [tensorParityMatrix, oddOddKoszulTensorMatrix, Matrix.mul_apply, Fin.sum_univ_four]
+
 /-- The even-parity block of the odd-odd Koszul tensor matrix has determinant `abcd`. -/
 theorem oddOddKoszul_evenBlock_det
     {R : Type*} [CommRing R] (a b c d : R) :

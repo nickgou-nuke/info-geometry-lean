@@ -17,9 +17,9 @@ identifications needed to instantiate `HestenesConnesWilsonBridge` from the
 bounded KMS state-functional pipeline.
 -/
 
-namespace InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+namespace InfoGeometry.Krein.BoundedKMSHestenesConnesWilson
 
-open InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
+open InfoGeometry.Krein.BoundedKMSHestenesVacuum
 open InfoGeometry.Krein.HestenesConnesWilsonBridge
 open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 
@@ -193,4 +193,4 @@ end BoundedKMSHestenesConnesWilsonBridge
 
 end Core
 
-end InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+end InfoGeometry.Krein.BoundedKMSHestenesConnesWilson

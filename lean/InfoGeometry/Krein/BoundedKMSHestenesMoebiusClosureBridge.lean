@@ -17,9 +17,9 @@ This file packages the additional Möbius action witnesses needed to build a
 derive a Möbius representation theorem.
 -/
 
-namespace InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
+namespace InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosure
 
-open InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+open InfoGeometry.Krein.BoundedKMSHestenesConnesWilson
 open InfoGeometry.Krein.HestenesMoebiusClosureBridge
 open InfoGeometry.Canonical.HestenesAnalyticity
 
@@ -192,4 +192,4 @@ end BoundedKMSHestenesMoebiusClosureBridge
 
 end Core
 
-end InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
+end InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosure

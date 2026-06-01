@@ -17,9 +17,9 @@ with a real Krein vacuum expectation `[AΩ, Ω]_J`, when such an `Ω` witness is
 supplied.
 -/
 
-namespace InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
+namespace InfoGeometry.Krein.BoundedKMSHestenesVacuum
 
-open InfoGeometry.Krein.BoundedKMSHestenesBridge
+open InfoGeometry.Krein.BoundedKMSHestenes
 open InfoGeometry.Krein.HestenesKreinVacuumBridge
 
 section Core
@@ -160,4 +160,4 @@ end BoundedKMSHestenesVacuumBridge
 
 end Core
 
-end InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
+end InfoGeometry.Krein.BoundedKMSHestenesVacuum

@@ -17,7 +17,7 @@ construct the Hestenes rotor.  It records the calibration data needed to read
 the bounded modular flow as a real Hestenes/Krein modular rotor flow.
 -/
 
-namespace InfoGeometry.Krein.BoundedKMSHestenesBridge
+namespace InfoGeometry.Krein.BoundedKMSHestenes
 
 open InfoGeometry.Canonical.BoundedKMSConditionBridge
 open InfoGeometry.Krein.HestenesModularKMSBridge
@@ -159,4 +159,4 @@ end BoundedKMSHestenesBridge
 
 end Core
 
-end InfoGeometry.Krein.BoundedKMSHestenesBridge
+end InfoGeometry.Krein.BoundedKMSHestenes

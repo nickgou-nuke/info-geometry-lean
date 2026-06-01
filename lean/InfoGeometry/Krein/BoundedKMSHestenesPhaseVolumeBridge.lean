@@ -18,9 +18,9 @@ witnesses.
 
 namespace InfoGeometry.Krein.BoundedKMSHestenesPhaseVolume
 
-open InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosureBridge
+open InfoGeometry.Krein.BoundedKMSHestenesMoebiusClosure
 open InfoGeometry.Krein.HestenesMoebiusClosureBridge
-open InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge
+open InfoGeometry.Krein.BoundedKMSHestenesConnesWilson
 open InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 
 section Core

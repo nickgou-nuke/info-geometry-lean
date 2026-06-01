@@ -33,6 +33,14 @@ theorem ringHom_preserves_square_zero
     f Q * f Q = 0 := by
   rw [← map_mul, hQ, map_zero]
 
+/-- Ring homomorphisms preserve fixed power-zero laws. -/
+theorem ringHom_preserves_pow_zero
+    {A B : Type u} [Semiring A] [Semiring B]
+    (f : A →+* B) {Q : A} (k : Nat)
+    (hQ : Q ^ k = 0) :
+    f Q ^ k = 0 := by
+  rw [← map_pow, hQ, map_zero]
+
 /-- Ring homomorphisms preserve idempotents. -/
 theorem ringHom_preserves_idempotent
     {A B : Type u} [Semiring A] [Semiring B]
@@ -97,6 +105,27 @@ theorem squareZero_all
   | succ n ih =>
       rw [← hQ n]
       exact ringHom_preserves_square_zero (bond n) ih
+
+/--
+Fixed power-zero transport along a typed inductive chain.
+
+If `Q₀^k = 0` and `Q` is transported by every bonding homomorphism, then
+`Qₙ^k = 0` at every finite stage.
+-/
+theorem powZero_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q : ∀ n : Nat, Stage n)
+    (k : Nat)
+    (h0 : Q 0 ^ k = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat, Q n ^ k = 0 := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      rw [← hQ n]
+      exact ringHom_preserves_pow_zero (bond n) k ih
 
 /--
 Idempotent transport along a typed inductive chain.

@@ -297,6 +297,52 @@ theorem directLimitLift_ext
 
 /--
 Functorial readback from the direct limit to an external compatible target:
+square-zero laws transported to the direct limit and then lifted are the same
+square-zero laws seen directly by the compatible cone.
+-/
+theorem directLimitLift_squareZero_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (Q : ∀ n : Nat, Stage n)
+    (h0 : Q 0 * Q 0 = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat,
+      directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)) *
+          directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)) =
+        0 := by
+  intro n
+  simp only [directLimitLift_of]
+  have hstage : Q n * Q n = 0 :=
+    squareZero_all bond Q h0 hQ n
+  exact ringHom_preserves_square_zero (toLimit n) hstage
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+idempotent laws transported to the direct limit and then lifted are the same
+idempotent laws seen directly by the compatible cone.
+-/
+theorem directLimitLift_idempotent_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (P : ∀ n : Nat, Stage n)
+    (h0 : P 0 * P 0 = P 0)
+    (hP : ∀ n, bond n (P n) = P (n + 1)) :
+    ∀ n : Nat,
+      directLimitLift bond toLimit hcone (directLimitOf bond n (P n)) *
+          directLimitLift bond toLimit hcone (directLimitOf bond n (P n)) =
+        directLimitLift bond toLimit hcone (directLimitOf bond n (P n)) := by
+  intro n
+  simp only [directLimitLift_of]
+  have hstage : P n * P n = P n :=
+    idempotent_all bond P h0 hP n
+  exact ringHom_preserves_idempotent (toLimit n) hstage
+
+/--
+Functorial readback from the direct limit to an external compatible target:
 single-supercharge closure transported to the direct limit and then lifted is
 the same closure seen directly by the compatible cone.
 -/

@@ -79,7 +79,7 @@ def directBlocker
   let moduleName := declarationModuleName env name
   let trustedModule := isTrustedModule moduleName trusted
   let hasDirectSorry : Bool :=
-    ci.type.hasSorry || (match ci.value? with
+    ci.type.hasSorry || (match ci.value? (allowOpaque := true) with
       | none => false
       | some v => v.hasSorry)
   if !trustedModule then

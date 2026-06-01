@@ -626,6 +626,36 @@ script leantrailSurgeryApply (args) do
   }
   child.wait
 
+script leantrailCriticPackets (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/critic_packets.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailCriticPrompts (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/critic_prompt_builder.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailCriticIngest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/critic_ingest.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script chatgptCollaborator (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

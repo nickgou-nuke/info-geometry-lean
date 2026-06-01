@@ -68,9 +68,9 @@ private def isBarePropSort (e : Expr) : Bool :=
 private def endsWithStatement (s : String) : Bool :=
   s.endsWith "_statement"
 
-/-- True if a string ends with `_sorry`. -/
+/-- True if a string ends with `_sorry` or `_sorryProof`. -/
 private def endsWithWitness (s : String) : Bool :=
-  s.endsWith "_sorry"
+  s.endsWith "_sorry" || s.endsWith "_sorryProof"
 
 /-- Compute the expected witness field name from a statement field name.
     `foo_statement` → `foo_sorry`. -/
@@ -106,14 +106,8 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
     Array WitnessPackPair := Id.run do
   let fields := getStructureFields env structName
   if fields.isEmpty then return #[]
-  -- Build a set of field leaf-names for fast lookup
-  let fieldLeafSet : Std.HashSet String :=
-    fields.foldl (init := {}) fun acc fn =>
-      acc.insert (toString fn)
   let mut pairs : Array WitnessPackPair := #[]
   for fieldName in fields do
-    let leafStr := toString fieldName
-    unless endsWithStatement leafStr || endsWithWitness leafStr do continue
     -- Check that the projected type is bare Prop.
     -- The projection function `structName.fieldName` has type
     --   ∀ (self : StructType ...), FieldType
@@ -124,18 +118,8 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
         let projType := cinfo.type
         let body := stripForalls projType
         unless isBarePropSort body do continue
-        if endsWithStatement leafStr then
-          -- Check for companion witness field.
-          let expectedWitness := witnessNameOf leafStr
-          let companion :=
-            if fieldLeafSet.contains expectedWitness then
-              some expectedWitness.toName
-            else
-              none
-          pairs := pairs.push { statementField := fieldName, witnessField? := companion }
-        else
-          -- Bare witness field of type `Prop`.
-          pairs := pairs.push { statementField := fieldName, witnessField? := some fieldName }
+        -- Every bare Prop field is a witness violation: report it directly as a cheat.
+        pairs := pairs.push { statementField := fieldName, witnessField? := some fieldName }
     | none => continue
   return pairs
 

@@ -443,6 +443,79 @@ theorem directLimitLift_ext
   rw [directLimitLift_of, directLimitLift_of, hstage n]
 
 /--
+A compatible family of stage endomorphisms induces an endomorphism of the
+algebraic direct limit.
+-/
+def directLimitEndomorphism
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (θ : ∀ n : Nat, Stage n →+* Stage n)
+    (hθ : ∀ n (x : Stage n), θ (n + 1) (bond n x) = bond n (θ n x)) :
+    DirectLimitSuperClosure bond →+* DirectLimitSuperClosure bond :=
+  directLimitLift bond
+    (fun n => (directLimitOf bond n).comp (θ n))
+    (by
+      intro n x
+      change
+        directLimitOf bond (n + 1) (θ (n + 1) (bond n x)) =
+          directLimitOf bond n (θ n x)
+      rw [hθ n x, directLimitOf_bond])
+
+@[simp]
+theorem directLimitEndomorphism_of
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (θ : ∀ n : Nat, Stage n →+* Stage n)
+    (hθ : ∀ n (x : Stage n), θ (n + 1) (bond n x) = bond n (θ n x))
+    (n : Nat) (x : Stage n) :
+    directLimitEndomorphism bond θ hθ (directLimitOf bond n x) =
+      directLimitOf bond n (θ n x) := by
+  exact directLimitLift_of bond
+    (fun n => (directLimitOf bond n).comp (θ n))
+    (by
+      intro n x
+      change
+        directLimitOf bond (n + 1) (θ (n + 1) (bond n x)) =
+          directLimitOf bond n (θ n x)
+      rw [hθ n x, directLimitOf_bond])
+    n x
+
+/--
+Fixed representatives for a compatible stage endomorphism remain fixed after
+canonical insertion into the direct limit.
+-/
+theorem directLimitEndomorphism_fixed_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (θ : ∀ n : Nat, Stage n →+* Stage n)
+    (X : ∀ n : Nat, Stage n)
+    (hθ : ∀ n (x : Stage n), θ (n + 1) (bond n x) = bond n (θ n x))
+    (h0 : θ 0 (X 0) = X 0)
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat,
+      directLimitEndomorphism bond θ hθ (directLimitOf bond n (X n)) =
+        directLimitOf bond n (X n) := by
+  intro n
+  rw [directLimitEndomorphism_of,
+    endomorphism_fixed_all bond θ X hθ h0 hX n]
+
+/--
+Neg-fixed representatives for a compatible stage endomorphism remain neg-fixed
+after canonical insertion into the direct limit.
+-/
+theorem directLimitEndomorphism_neg_fixed_all
+    {RingStage : Nat → Type u} [∀ n : Nat, Ring (RingStage n)]
+    (bond : ∀ n : Nat, RingStage n →+* RingStage (n + 1))
+    (θ : ∀ n : Nat, RingStage n →+* RingStage n)
+    (X : ∀ n : Nat, RingStage n)
+    (hθ : ∀ n (x : RingStage n), θ (n + 1) (bond n x) = bond n (θ n x))
+    (h0 : θ 0 (X 0) = -X 0)
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat,
+      directLimitEndomorphism bond θ hθ (directLimitOf bond n (X n)) =
+        -directLimitOf bond n (X n) := by
+  intro n
+  rw [directLimitEndomorphism_of,
+    endomorphism_neg_fixed_all bond θ X hθ h0 hX n, map_neg]
+
+/--
 Functorial readback from the direct limit to an external compatible target:
 square-zero laws transported to the direct limit and then lifted are the same
 square-zero laws seen directly by the compatible cone.

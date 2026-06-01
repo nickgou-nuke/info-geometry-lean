@@ -33,6 +33,14 @@ theorem ringHom_preserves_square_zero
     f Q * f Q = 0 := by
   rw [← map_mul, hQ, map_zero]
 
+/-- Ring homomorphisms preserve idempotents. -/
+theorem ringHom_preserves_idempotent
+    {A B : Type u} [Semiring A] [Semiring B]
+    (f : A →+* B) {P : A}
+    (hP : P * P = P) :
+    f P * f P = f P := by
+  rw [← map_mul, hP]
+
 /-- Ring homomorphisms transport an anticommutator identity exactly. -/
 theorem ringHom_map_anticommutator
     {A B : Type u} [Semiring A] [Semiring B]
@@ -69,6 +77,46 @@ theorem finite_cartan_commuting_family_transport
 section Chain
 
 variable {Stage : Nat → Type u} [∀ n : Nat, Semiring (Stage n)]
+
+/--
+Square-zero transport along a typed inductive chain.
+
+If `Q₀² = 0` and `Q` is transported by every bonding homomorphism, then
+`Qₙ² = 0` at every finite stage.
+-/
+theorem squareZero_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q : ∀ n : Nat, Stage n)
+    (h0 : Q 0 * Q 0 = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat, Q n * Q n = 0 := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      rw [← hQ n]
+      exact ringHom_preserves_square_zero (bond n) ih
+
+/--
+Idempotent transport along a typed inductive chain.
+
+If `P₀² = P₀` and `P` is transported by every bonding homomorphism, then
+`Pₙ² = Pₙ` at every finite stage.
+-/
+theorem idempotent_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (P : ∀ n : Nat, Stage n)
+    (h0 : P 0 * P 0 = P 0)
+    (hP : ∀ n, bond n (P n) = P (n + 1)) :
+    ∀ n : Nat, P n * P n = P n := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      rw [← hP n]
+      exact ringHom_preserves_idempotent (bond n) ih
 
 /-- Stagewise single-supercharge closure: `{Qₙ,Qₙ}=Hₙ+Zₙ`. -/
 def SuperClosureAt

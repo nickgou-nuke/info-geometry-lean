@@ -230,6 +230,50 @@ theorem directLimit_idempotent_all
   exact ringHom_preserves_idempotent (directLimitOf bond n) hstage
 
 /--
+Commutation transported along the finite chain holds on every canonical
+finite-stage image inside the algebraic direct limit.
+-/
+theorem directLimit_commute_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Z X : ∀ n : Nat, Stage n)
+    (h0 : Commute (Z 0) (X 0))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1))
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat,
+      Commute (directLimitOf bond n (Z n)) (directLimitOf bond n (X n)) := by
+  intro n
+  exact (commute_all bond Z X h0 hZ hX n).map (directLimitOf bond n)
+
+/--
+Commutation transported along the finite chain can be read in the direct limit
+at the stage-zero representatives.
+-/
+theorem directLimit_commute_zeroStage
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Z X : ∀ n : Nat, Stage n)
+    (h0 : Commute (Z 0) (X 0))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat,
+      Commute (directLimitOf bond n (Z n)) (directLimitOf bond 0 (X 0)) := by
+  intro n
+  rw [directLimitOf_eq_zero_stage bond Z hZ n]
+  exact (h0.map (directLimitOf bond 0))
+
+/--
+A commuting family transported along the finite chain remains commuting on
+every canonical finite-stage image inside the algebraic direct limit.
+-/
+theorem directLimit_commutingFamily_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    {ι : Type*} (H : ∀ n : Nat, ι → Stage n)
+    (h0 : ∀ i j, Commute (H 0 i) (H 0 j))
+    (hH : ∀ n i, bond n (H n i) = H (n + 1) i) :
+    ∀ n i j,
+      Commute (directLimitOf bond n (H n i)) (directLimitOf bond n (H n j)) := by
+  intro n i j
+  exact (commutingFamily_all bond H h0 hH n i j).map (directLimitOf bond n)
+
+/--
 Compatibility of a cone out of the one-step chain, stated directly on the
 one-step maps.
 -/
@@ -395,6 +439,49 @@ theorem directLimitLift_idempotent_all
   have hstage : P n * P n = P n :=
     idempotent_all bond P h0 hP n
   exact ringHom_preserves_idempotent (toLimit n) hstage
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+commutation transported to the direct limit and then lifted is the same
+commutation law seen directly by the compatible cone.
+-/
+theorem directLimitLift_commute_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (Z X : ∀ n : Nat, Stage n)
+    (h0 : Commute (Z 0) (X 0))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1))
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat,
+      Commute
+        (directLimitLift bond toLimit hcone (directLimitOf bond n (Z n)))
+        (directLimitLift bond toLimit hcone (directLimitOf bond n (X n))) := by
+  intro n
+  simp only [directLimitLift_of]
+  exact (commute_all bond Z X h0 hZ hX n).map (toLimit n)
+
+/--
+Functorial readback from the direct limit to an external compatible target:
+a transported commuting family remains commuting after compatible cone
+evaluation.
+-/
+theorem directLimitLift_commutingFamily_all
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    {ι : Type*} (H : ∀ n : Nat, ι → Stage n)
+    (h0 : ∀ i j, Commute (H 0 i) (H 0 j))
+    (hH : ∀ n i, bond n (H n i) = H (n + 1) i) :
+    ∀ n i j,
+      Commute
+        (directLimitLift bond toLimit hcone (directLimitOf bond n (H n i)))
+        (directLimitLift bond toLimit hcone (directLimitOf bond n (H n j))) := by
+  intro n i j
+  simp only [directLimitLift_of]
+  exact (commutingFamily_all bond H h0 hH n i j).map (toLimit n)
 
 /--
 Functorial readback from the direct limit to an external compatible target:

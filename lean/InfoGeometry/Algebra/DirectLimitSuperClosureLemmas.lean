@@ -164,6 +164,39 @@ theorem directLimitOf_eq_zero_stage
       exact ih
 
 /--
+Square-zero laws transported along the finite chain hold on every canonical
+finite-stage image inside the algebraic direct limit.
+-/
+theorem directLimit_squareZero_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Q : ∀ n : Nat, Stage n)
+    (h0 : Q 0 * Q 0 = 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1)) :
+    ∀ n : Nat,
+      directLimitOf bond n (Q n) * directLimitOf bond n (Q n) = 0 := by
+  intro n
+  have hstage : Q n * Q n = 0 :=
+    squareZero_all bond Q h0 hQ n
+  exact ringHom_preserves_square_zero (directLimitOf bond n) hstage
+
+/--
+Idempotent laws transported along the finite chain hold on every canonical
+finite-stage image inside the algebraic direct limit.
+-/
+theorem directLimit_idempotent_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (P : ∀ n : Nat, Stage n)
+    (h0 : P 0 * P 0 = P 0)
+    (hP : ∀ n, bond n (P n) = P (n + 1)) :
+    ∀ n : Nat,
+      directLimitOf bond n (P n) * directLimitOf bond n (P n) =
+        directLimitOf bond n (P n) := by
+  intro n
+  have hstage : P n * P n = P n :=
+    idempotent_all bond P h0 hP n
+  exact ringHom_preserves_idempotent (directLimitOf bond n) hstage
+
+/--
 Compatibility of a cone out of the one-step chain, stated directly on the
 one-step maps.
 -/

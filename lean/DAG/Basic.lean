@@ -64,7 +64,7 @@ def edgesFromConstantInfo (ci : Lean.ConstantInfo)
       (fun n => (n, EdgeKind.type))
 
   let valueEdges :=
-    match ci.value? with
+    match ci.value? (allowOpaque := true) with
     | none => #[]
     | some v =>
         (collectExprConsts v).toList.toArray.map

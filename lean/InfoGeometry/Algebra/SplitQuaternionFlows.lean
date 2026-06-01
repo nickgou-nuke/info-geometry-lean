@@ -84,10 +84,10 @@ theorem norm_parabolic_flow (T : ℝ) :
   ring
 
 /-- Compatibility alias for the user's snake-case notation. -/
-abbrev elliptic_flow := ellipticFlow
+noncomputable abbrev elliptic_flow := ellipticFlow
 
 /-- Compatibility alias for the user's snake-case notation. -/
-abbrev hyperbolic_flow := hyperbolicFlow
+noncomputable abbrev hyperbolic_flow := hyperbolicFlow
 
 /-- Compatibility alias for the user's snake-case notation. -/
 abbrev parabolic_flow := parabolicFlow

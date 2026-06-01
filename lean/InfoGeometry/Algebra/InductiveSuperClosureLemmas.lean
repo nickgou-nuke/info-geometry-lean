@@ -147,6 +147,42 @@ theorem idempotent_all
       rw [← hP n]
       exact ringHom_preserves_idempotent (bond n) ih
 
+/--
+Commutation transport along a typed inductive chain.
+
+If `Z₀` commutes with `X₀` and both elements are transported by every bonding
+homomorphism, then `Zₙ` commutes with `Xₙ` at every finite stage.
+-/
+theorem commute_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (Z X : ∀ n : Nat, Stage n)
+    (h0 : Commute (Z 0) (X 0))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1))
+    (hX : ∀ n, bond n (X n) = X (n + 1)) :
+    ∀ n : Nat, Commute (Z n) (X n) := by
+  intro n
+  induction n with
+  | zero =>
+      exact h0
+  | succ n ih =>
+      rw [← hZ n, ← hX n]
+      exact ih.map (bond n)
+
+/--
+A commuting family transported along a typed inductive chain remains commuting
+at every finite stage.
+-/
+theorem commutingFamily_all
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    {ι : Type*} (H : ∀ n : Nat, ι → Stage n)
+    (h0 : ∀ i j, Commute (H 0 i) (H 0 j))
+    (hH : ∀ n i, bond n (H n i) = H (n + 1) i) :
+    ∀ n i j, Commute (H n i) (H n j) := by
+  intro n i j
+  exact commute_all bond
+    (fun n => H n i) (fun n => H n j)
+    (h0 i j) (fun n => hH n i) (fun n => hH n j) n
+
 /-- Stagewise single-supercharge closure: `{Qₙ,Qₙ}=Hₙ+Zₙ`. -/
 def SuperClosureAt
     (Q H Z : ∀ n : Nat, Stage n) (n : Nat) : Prop :=

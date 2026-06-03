@@ -203,12 +203,13 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                 attempt += 1
                 logger.info("Proof Seeker: attempt %d/3 — ChatGPT audit for '%s'", attempt, target_name)
                 try:
-                    candidate = seeker.audit_via_chatgpt(target_name, context_code, target_line)
-                    if candidate.proof_lean:
-                        logger.info("  Attempt %d: ChatGPT audit (%.2f confidence)", attempt, candidate.confidence)
-                        if target_line > 0 and context_file.exists():
-                            formalized = seeker.formalize(candidate, context_file, target_line)
-                            logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                    # Full chain: send to ChatGPT, extract formatted code, save, compile, fix
+                    success = seeker.audit_via_chatgpt(context_file, target_name, target_line)
+                    if success:
+                        logger.info("  Attempt %d: ✓ ChatGPT audit SUCCESS", attempt)
+                        formalized = True
+                    else:
+                        logger.info("  Attempt %d: ✗ ChatGPT audit FAILED", attempt)
                     if formalized:
                         sought += 1
                         continue

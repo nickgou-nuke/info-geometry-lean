@@ -259,78 +259,68 @@ class ProofSeeker:
 
     def audit_via_chatgpt(
         self,
+        target_file: Path,
         target_name: str,
-        context_code: str,
         target_line: int,
-        extended_pro: bool = False,
-    ) -> ProofCandidate:
-        """Audit via ChatGPT thinking mode in browser (~15-30s per theorem).
+    ) -> bool:
+        """Full chain: ChatGPT audit -> save -> compile -> fix.
 
-        Uses browser-harness (CDP) to paste code + audit prompt into chatgpt.com.
-        Uses whatever model is currently selected (thinking mode by default).
-        Extended Pro is available for manual execution only.
+        Sends full file content to ChatGPT via browser-harness (CDP).
+        Extracts formatted code using innerText (preserves line structure).
+        Saves to target_file and compiles. On failure, sends errors back for fix.
 
-        NOTES:
-        - Requires ``browser-harness`` installed and Chrome with remote debugging.
-        - ChatGPT model must be pre-selected (thinking mode or Extended Pro).
-        - The same browser tab persists across calls — context accumulates.
+        Returns True if the file compiles after the audit chain.
         """
-        import subprocess
+        import subprocess, tempfile
 
-        logger.info("Auditing '%s' via ChatGPT thinking mode...", target_name)
+        logger.info("ChatGPT audit chain for '%s'...", target_name)
 
-        short_ctx = context_code[:8000].strip() if context_code else ""
+        if not target_file.exists():
+            logger.warning("Target file not found: %s", target_file)
+            return False
+
+        context_code = target_file.read_text(errors="replace")
 
         prompt = (
             f"Prove `{target_name}` in Lean 4.\n"
-            f"Context:\n```lean4\n{short_ctx}\n```\n"
-            f"Output ONLY valid Lean 4 code. Use field_simp, ring, simp as appropriate. Zero prose."
+            f"Context:\n```lean4\n{context_code}\n```\n"
+            f"Output ONLY valid Lean 4 code. Zero prose."
         )
 
-        # Write prompt + runner script to temp files (avoids shell escaping)
-        import tempfile
-        prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, prefix='audit_prompt_')
+        # Write prompt to temp file for browser-harness
+        prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, prefix='audit_')
         prompt_file.write(prompt)
         prompt_file.close()
 
-        # The runner script is pre-written at a known path
         runner = _REPO / "tmp" / "browser-harness" / "run_audit.py"
         if not runner.exists():
-            logger.warning("Audit runner script not found at %s — ChatGPT audit skipped", runner)
+            logger.warning("Audit runner not found at %s", runner)
             os.unlink(prompt_file.name)
-            return ProofCandidate(source_results=[], confidence=0.0)
+            return False
 
         try:
             result = subprocess.run(
                 ["browser-harness", "-c",
                  f"exec(open('{runner}').read()); "
-                 f"run_audit(open('{prompt_file.name}').read(), timeout=90)"],
-                capture_output=True, text=True, timeout=120,
+                 f"run_audit_and_save("
+                 f"'{target_file}', "
+                 f"open('{prompt_file.name}').read(), "
+                 f"{target_line}, "
+                 f"'{_REPO}')"],
+                capture_output=True, text=True, timeout=360,
             )
             output = (result.stdout or "") + (result.stderr or "")
+            success = "COMPILE_SUCCESS" in output or "COMPILE_FIXED" in output
+            logger.info("ChatGPT audit: %s", "SUCCESS" if success else "FAILED")
+            return success
         except subprocess.TimeoutExpired:
-            logger.warning("ChatGPT audit timed out (120s)")
-            output = ""
-        except FileNotFoundError:
-            logger.warning("browser-harness not installed — ChatGPT audit skipped")
-            output = ""
+            logger.warning("ChatGPT audit timed out (360s)")
+            return False
         except Exception as exc:
             logger.warning("ChatGPT audit failed: %s", exc)
-            output = ""
-
-        if not output.strip():
-            return ProofCandidate(source_results=[], confidence=0.0)
-
-        import re as _re
-        blocks = _re.findall(r"```(?:lean4|lean)?\s*\n(.*?)```", output, _re.DOTALL)
-        lean_code = "\n\n".join(b.strip() for b in blocks) if blocks else ""
-
-        return ProofCandidate(
-            source_results=[SearchResult(source="chatgpt", title=f"Audit: {target_name}")],
-            proof_lean=lean_code,
-            proof_natural=output[:2000],
-            confidence=0.8 if lean_code else 0.3,
-        )
+            return False
+        finally:
+            os.unlink(prompt_file.name)
 
     def formalize(
         self,

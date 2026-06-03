@@ -94,6 +94,7 @@ import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Compatibility.PSLDescentShadow
 import InfoGeometry.Core.ExtendedField
+import InfoGeometry.Foundations.All
 import InfoGeometry.Erlangen.InvariantGeometry
 import InfoGeometry.Erlangen.KillingFisher
 import InfoGeometry.Erlangen.ProjectiveLineGeometry

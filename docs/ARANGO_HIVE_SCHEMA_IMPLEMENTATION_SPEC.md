@@ -1,4 +1,4 @@
-# Arango Hive Schema Implementation Spec
+    # Arango Hive Schema Implementation Spec
 
 > Status: `reference memory`
 > Audited: 2026-05-02

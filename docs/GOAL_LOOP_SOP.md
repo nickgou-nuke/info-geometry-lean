@@ -1,13 +1,32 @@
-# Goal Loop SOP
+# Goal Loop SOP — Autonomous Closure Loop
 
-> Status: `current policy`
-> Scope: repo agents, closure-debt loops, native Lean repair runs.
+> Status: `production — 2026-06-03`
+> Scope: self-evolving autonomous pipeline for closing certificate debt.
 
-This repository carries a Hermes-style standing-goal loop as local tooling in
-`tools/infra/goal_loop.py`.
+## Architecture
 
-The goal loop is a bounded continuation state machine. It is not proof
-authority. It never closes Lean mathematics by itself; it only keeps agents
+The goal loop is implemented as a systemd daemon (`evolution-worker.service`)
+that polls the ArangoDB `skill-evolution` queue every 5 seconds. Each task
+triggers the full pipeline:
+
+```
+Queue → GEPA/DSPy → RealEvaluator → 3-Stage Prover → VacuityCritic → Archive
+```
+
+The pipeline is not a bounded state machine — it is a continuous self-improving
+loop. Each generation improves the skill. Each failure expands the detection
+dictionary. Each success is archived with fitness score.
+
+## Agents
+
+| Agent | Module | Function |
+|---|---|---|
+| GEPA/DSPy | `gepa_evolver.py` | Mutates skill via Pareto genetic search |
+| RealEvaluator | `gepa_real_eval.py` | Tests skill against real `_True` fields |
+| Pi Coding Agent | `@earendil-works/pi` | Proof generation + compile → fix → repeat |
+| ChatGPT Auditor | `run_audit.py` | Browser CDP → full file context → formatted code extraction |
+| Vacuity Critic | `vacuity_critic.py` | Discovers new obfuscation pattern synonyms |
+| Proof Seeker | `proof_seeker.py` | arXiv/Mathlib search on failure |
 focused on a declared task until the task is done, blocked, paused, cleared, or
 preempted by the user.
 

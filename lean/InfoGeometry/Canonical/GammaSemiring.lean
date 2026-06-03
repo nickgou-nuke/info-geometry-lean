@@ -13,7 +13,12 @@ and the predicate `IsLeftGammaIdeal`.
 
 ## Audit Protocol Map
 - BUCKET 1: CLOSED FINITE THEOREMS:
-  `standardGammaOp_isGammaSemiringOp`,
+  `gammaSemiring_op_add_left`, `gammaSemiring_op_add_right`,
+  `gammaSemiring_op_add_middle`, `gammaSemiring_op_assoc`,
+  `gammaSemiring_op_zero_left`, `gammaSemiring_op_zero_right`,
+  `gammaSemiring_op_zero_middle`, `standardGammaOp_isGammaSemiringOp`,
+  `leftGammaIdeal_zero_mem`, `leftGammaIdeal_add_mem`,
+  `leftGammaIdeal_left_mem`, `mem_leftGammaIdealInter`,
   `leftGammaIdealInter_is_left_ideal`.
 - BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES:
   `leftGammaIdealInter_is_left_ideal` is conditional on the explicit premises
@@ -46,6 +51,52 @@ def IsGammaSemiringOp {S : Type u} {Gamma : Type v}
     (∀ (gamma : Gamma) (b : S), op 0 gamma b = 0) ∧
     (∀ (a : S) (gamma : Gamma), op a gamma 0 = 0) ∧
     (∀ (a b : S), op a 0 b = 0)
+
+theorem gammaSemiring_op_add_left {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a b : S) (gamma : Gamma) (c : S),
+      op (a + b) gamma c = op a gamma c + op b gamma c := by
+  exact h.1
+
+theorem gammaSemiring_op_add_right {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a : S) (gamma : Gamma) (b c : S),
+      op a gamma (b + c) = op a gamma b + op a gamma c := by
+  exact h.2.1
+
+theorem gammaSemiring_op_add_middle {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a : S) (gamma₁ gamma₂ : Gamma) (b : S),
+      op a (gamma₁ + gamma₂) b = op a gamma₁ b + op a gamma₂ b := by
+  exact h.2.2.1
+
+theorem gammaSemiring_op_assoc {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a : S) (gamma₁ : Gamma) (b : S) (gamma₂ : Gamma) (c : S),
+      op (op a gamma₁ b) gamma₂ c = op a gamma₁ (op b gamma₂ c) := by
+  exact h.2.2.2.1
+
+theorem gammaSemiring_op_zero_left {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (gamma : Gamma) (b : S), op 0 gamma b = 0 := by
+  exact h.2.2.2.2.1
+
+theorem gammaSemiring_op_zero_right {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a : S) (gamma : Gamma), op a gamma 0 = 0 := by
+  exact h.2.2.2.2.2.1
+
+theorem gammaSemiring_op_zero_middle {S : Type u} {Gamma : Type v}
+    [AddCommMonoid S] [AddCommMonoid Gamma] {op : GammaOp S Gamma}
+    (h : IsGammaSemiringOp op) :
+    ∀ (a b : S), op a 0 b = 0 := by
+  exact h.2.2.2.2.2.2
 
 /-- The canonical Gamma-operation on a semiring, with the same type as middle parameters. -/
 def standardGammaOp (S : Type u) [Semiring S] : GammaOp S S :=
@@ -85,6 +136,20 @@ def IsLeftGammaIdeal (op : GammaOp S Gamma) (I : Set S) : Prop :=
   (0 : S) ∈ I ∧
     (∀ {x y : S}, x ∈ I → y ∈ I → x + y ∈ I) ∧
     (∀ (s : S) (gamma : Gamma) {x : S}, x ∈ I → op s gamma x ∈ I)
+
+theorem leftGammaIdeal_zero_mem {op : GammaOp S Gamma} {I : Set S}
+    (hI : IsLeftGammaIdeal op I) : (0 : S) ∈ I := by
+  exact hI.1
+
+theorem leftGammaIdeal_add_mem {op : GammaOp S Gamma} {I : Set S}
+    (hI : IsLeftGammaIdeal op I) :
+    ∀ {x y : S}, x ∈ I → y ∈ I → x + y ∈ I := by
+  exact hI.2.1
+
+theorem leftGammaIdeal_left_mem {op : GammaOp S Gamma} {I : Set S}
+    (hI : IsLeftGammaIdeal op I) :
+    ∀ (s : S) (gamma : Gamma) {x : S}, x ∈ I → op s gamma x ∈ I := by
+  exact hI.2.2
 
 /-- The set-theoretic intersection used for left Gamma-ideals. -/
 def leftGammaIdealInter (I J : Set S) : Set S :=

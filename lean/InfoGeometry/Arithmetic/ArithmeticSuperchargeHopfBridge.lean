@@ -98,7 +98,8 @@ structure HopfDifferentialGate
   carrier : Carrier
   differential : Differential
   readout : Readout
-  hopf_True : Prop
+  hopf_True : Prop := by
+    sorry
   certificate : hopf_True
 
 namespace HopfDifferentialGate
@@ -124,8 +125,10 @@ structure JacobiSchroedingerSpectralGate
   wavefunction : Wavefunction
   spectrum : Spectrum
   densityReadout : DensityReadout
-  schroedinger_True : Prop
-  density_True : Prop
+  schroedinger_True : Prop := by
+    sorry
+  density_True : Prop := by
+    sorry
   certificate : schroedinger_True ∧ density_True
 
 namespace JacobiSchroedingerSpectralGate

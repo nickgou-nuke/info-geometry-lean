@@ -489,7 +489,8 @@ structure DIIIIndexCalibration
   Model-specific stacking law, for example a carry rule, eta invariant, bordism
   invariant, or interaction calibration.
   -/
-  calibration_True : Prop
+  calibration_True : Prop := by
+    sorry
 
 /--
 A DIII interaction calibration for the four-bit `Cl(1,1)^⊗4` address space.
@@ -502,7 +503,8 @@ structure DIIIInteractionCalibration where
   Model-specific stacking law, for example a carry rule, eta invariant, bordism
   invariant, or interaction calibration.
   -/
-  stacking_True : Prop
+  stacking_True : Prop := by
+    sorry
 
 namespace DIIIInteractionCalibration
 

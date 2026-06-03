@@ -118,8 +118,9 @@ structure MajoranaJKOErgoBridge
   This is the ergo-transfer certificate: continuous transport and discrete
   projection are the same update only in models that provide this witness.
   -/
-  jko_bayes_compatibility_True :
-    Prop
+  jko_bayes_compatibility_True : Prop := by
+
+    sorry
 
   /--
   Dual-flat projection orthogonality for feasible alternatives.

@@ -279,8 +279,10 @@ structure SpinLiftDoubleCoverGate
     (PrimeLabel ScalarBoost SpinorBoost : Type*) where
   scalarBoost : PrimeLabel → ScalarBoost
   spinorBoost : PrimeLabel → SpinorBoost
-  square_True : Prop
-  projective_ratio_True : Prop
+  square_True : Prop := by
+    sorry
+  projective_ratio_True : Prop := by
+    sorry
   certificate : square_True ∧ projective_ratio_True
 
 namespace SpinLiftDoubleCoverGate

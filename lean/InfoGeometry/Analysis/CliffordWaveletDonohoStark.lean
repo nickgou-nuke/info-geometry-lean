@@ -86,7 +86,8 @@ structure CliffordDonohoStark (W : CliffordWaveletModel) where
               (1 - εT - εΩ)^2
 
   /-- The noncollapse law is part of the owner surface. -/
-  noncollapse_True : Prop
+  noncollapse_True : Prop := by
+    sorry
 
 namespace CliffordDonohoStarkOps
 

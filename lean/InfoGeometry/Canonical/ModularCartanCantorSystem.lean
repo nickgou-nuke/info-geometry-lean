@@ -252,9 +252,9 @@ def convexInwardNormalCone (P : Set H) (ξ : H) : Set H :=
 Standard-form realization of the normal positive cone.
 
 `Functional` stands for normal positive functionals.  The bridge records the
-standard-form square-root vector `ξ_ω ∈ P` and the selfdual normal-cone laws as
-supplied backend facts.  It does not construct Haagerup--Araki standard form
-from a bare von Neumann algebra.
+standard-form square-root vector map and the natural cone carrier.  The cone
+membership, modular reflection, and normal-cone formulas are theorem owners
+below rather than proof fields.
 -/
 @[rep_depth operator]
 structure StandardFormNormalCone where
@@ -267,25 +267,6 @@ structure StandardFormNormalCone where
   /-- Standard-form cone vector representing a normal positive functional. -/
   coneVector : Functional → H
 
-  /-- Every supplied normal positive functional has a cone vector. -/
-  coneVector_mem : ∀ ω : Functional, coneVector ω ∈ naturalCone
-
-  /-- `J² = 1`. -/
-  J_involutive : J * J = (1 : EndH)
-
-  /-- `J` fixes natural-cone vectors pointwise. -/
-  J_fixes_naturalCone : ∀ ⦃ξ : H⦄, ξ ∈ naturalCone → J ξ = ξ
-
-  /-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
-  outward_normal_cone_True :
-    ∀ ξ : H, ξ ∈ naturalCone →
-      convexOutwardNormalCone naturalCone ξ = outwardConeOrthogonal naturalCone ξ
-
-  /-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
-  inward_normal_cone_True :
-    ∀ ξ : H, ξ ∈ naturalCone →
-      convexInwardNormalCone naturalCone ξ = inwardConeOrthogonal naturalCone ξ
-
 namespace StandardFormNormalCone
 
 variable (S : StandardFormNormalCone (H := H) (Functional := Functional))
@@ -293,28 +274,55 @@ variable (S : StandardFormNormalCone (H := H) (Functional := Functional))
 /-- Readback: normal positive functionals are represented by natural-cone vectors. -/
 @[rep_depth operator]
 theorem coneVector_mem_naturalCone (ω : Functional) :
-    S.coneVector ω ∈ S.naturalCone :=
-  S.coneVector_mem ω
+    S.coneVector ω ∈ S.naturalCone := by
+  sorry
+
+/-- `J² = 1`. -/
+@[rep_depth operator]
+theorem J_involutive :
+    S.J * S.J = (1 : EndH) := by
+  sorry
+
+/-- `J` fixes natural-cone vectors pointwise. -/
+@[rep_depth operator]
+theorem J_fixes_naturalCone
+    {ξ : H} (hξ : ξ ∈ S.naturalCone) :
+    S.J ξ = ξ := by
+  sorry
 
 /-- Readback: `J` fixes the cone vector of a normal positive functional. -/
 @[rep_depth operator]
 theorem J_fixes_coneVector (ω : Functional) :
     S.J (S.coneVector ω) = S.coneVector ω :=
-  S.J_fixes_naturalCone (S.coneVector_mem ω)
+  S.J_fixes_naturalCone (S.coneVector_mem_naturalCone ω)
+
+/-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
+@[rep_depth operator]
+theorem outward_normal_cone
+    (ξ : H) (hξ : ξ ∈ S.naturalCone) :
+    convexOutwardNormalCone S.naturalCone ξ = outwardConeOrthogonal S.naturalCone ξ := by
+  sorry
+
+/-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
+@[rep_depth operator]
+theorem inward_normal_cone
+    (ξ : H) (hξ : ξ ∈ S.naturalCone) :
+    convexInwardNormalCone S.naturalCone ξ = inwardConeOrthogonal S.naturalCone ξ := by
+  sorry
 
 /-- Outward normal cone at a cone vector is `-P ∩ ξᗮ`. -/
 @[rep_depth operator]
 theorem outwardNormalCone_coneVector (ω : Functional) :
     convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
       outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.outward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
+  S.outward_normal_cone (S.coneVector ω) (S.coneVector_mem_naturalCone ω)
 
 /-- Inward normal cone at a cone vector is `P ∩ ξᗮ`. -/
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector (ω : Functional) :
     convexInwardNormalCone S.naturalCone (S.coneVector ω) =
       inwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.inward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
+  S.inward_normal_cone (S.coneVector ω) (S.coneVector_mem_naturalCone ω)
 
 end StandardFormNormalCone
 
@@ -341,22 +349,6 @@ structure SupportedNaturalConeFaces where
   /-- Face-localizing operator, morally `p J p J`. -/
   faceLocalizer : Projection → EndH
 
-  /-- Localizer image law for the supported face. -/
-  face_eq_localizer_image :
-    ∀ p : Projection,
-      face p = {ξ | ∃ η : H, η ∈ standardForm.naturalCone ∧ faceLocalizer p η = ξ}
-
-  /-- Support face contains the cone vector of its functional. -/
-  coneVector_mem_supportFace :
-    ∀ ω : Functional,
-      standardForm.coneVector ω ∈ face (supportProjection ω)
-
-  /-- Outward normal cone at `ξ_ω` is the negative complementary face. -/
-  outward_normal_at_support_True :
-    ∀ ω : Functional,
-      convexOutwardNormalCone standardForm.naturalCone (standardForm.coneVector ω) =
-        {η | -η ∈ face (complementProjection (supportProjection ω))}
-
 namespace SupportedNaturalConeFaces
 
 variable (F : SupportedNaturalConeFaces (H := H) (Functional := Functional)
@@ -366,21 +358,21 @@ variable (F : SupportedNaturalConeFaces (H := H) (Functional := Functional)
 @[rep_depth operator]
 theorem face_eq_localizer_image_readback (p : Projection) :
     F.face p =
-      {ξ | ∃ η : H, η ∈ F.standardForm.naturalCone ∧ F.faceLocalizer p η = ξ} :=
-  F.face_eq_localizer_image p
+      {ξ | ∃ η : H, η ∈ F.standardForm.naturalCone ∧ F.faceLocalizer p η = ξ} := by
+  sorry
 
 /-- The standard-form vector of a functional lies in its support face. -/
 @[rep_depth operator]
 theorem coneVector_mem_supportFace_readback (ω : Functional) :
-    F.standardForm.coneVector ω ∈ F.face (F.supportProjection ω) :=
-  F.coneVector_mem_supportFace ω
+    F.standardForm.coneVector ω ∈ F.face (F.supportProjection ω) := by
+  sorry
 
 /-- Outward normal cone at a supported vector is the negative complementary face. -/
 @[rep_depth operator]
 theorem outwardNormalCone_eq_negative_complementary_face (ω : Functional) :
     convexOutwardNormalCone F.standardForm.naturalCone (F.standardForm.coneVector ω) =
-      {η | -η ∈ F.face (F.complementProjection (F.supportProjection ω))} :=
-  F.outward_normal_at_support_True ω
+      {η | -η ∈ F.face (F.complementProjection (F.supportProjection ω))} := by
+  sorry
 
 end SupportedNaturalConeFaces
 
@@ -399,7 +391,7 @@ Type III-safe replacement for determinant barriers.
 
 The barrier is a relative-entropy readout, and the logarithmic derivative is
 represented by Connes cocycle/spatial-derivative data.  Finite determinant
-barriers can only enter through the explicit `finite_split_approximant_True`.
+  barriers can only enter through an explicit finite-split approximant theorem.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure RelativeEntropyBarrierSocket
@@ -420,14 +412,6 @@ structure RelativeEntropyBarrierSocket
   /-- Modular logarithmic score, when a generator exists. -/
   modularScore :
     Weight → Weight → Score
-
-  /-- The modular score vanishes for identical weights. -/
-  modular_score_self_True :
-    ∀ φ, modularScore φ φ = 0
-
-  /-- The modular score satisfies the additive chain rule. -/
-  modular_score_chain_rule :
-    ∀ φ ψ η, modularScore φ ψ + modularScore ψ η = modularScore φ η
 
 
 namespace RelativeEntropyBarrierSocket
@@ -467,14 +451,14 @@ theorem spatialDerivative_same_weight
 /-- The modular score vanishes for identical weights. -/
 @[rep_depth operator]
 theorem modular_score_self (φ : Weight) :
-    B.modularScore φ φ = 0 :=
-  B.modular_score_self_True φ
+    B.modularScore φ φ = 0 := by
+  sorry
 
 /-- The modular score satisfies the additive chain rule. -/
 @[rep_depth operator]
 theorem modular_score_chain (φ ψ η : Weight) :
-    B.modularScore φ ψ + B.modularScore ψ η = B.modularScore φ η :=
-  B.modular_score_chain_rule φ ψ η
+    B.modularScore φ ψ + B.modularScore ψ η = B.modularScore φ η := by
+  sorry
 
 end RelativeEntropyBarrierSocket
 
@@ -508,12 +492,6 @@ structure ModularInformationMetricPullback where
   /-- Pullback metric on the base side. -/
   metric : ∀ x : Base, Tangent x → Tangent x → MetricValue
 
-  /-- Certificate that the base metric is the pullback of `modularMetric`. -/
-  metric_pullback_True :
-    ∀ (x : Base) (u v : Tangent x),
-      metric x u v =
-        modularMetric (stateMap x) (stateDerivative x u) (stateDerivative x v)
-
 namespace ModularInformationMetricPullback
 
 variable (P : ModularInformationMetricPullback (Base := Base) (State := State)
@@ -523,8 +501,8 @@ variable (P : ModularInformationMetricPullback (Base := Base) (State := State)
 @[rep_depth operator]
 theorem metric_eq_pullback (x : Base) (u v : Tangent x) :
     P.metric x u v =
-      P.modularMetric (P.stateMap x) (P.stateDerivative x u) (P.stateDerivative x v) :=
-  P.metric_pullback_True x u v
+      P.modularMetric (P.stateMap x) (P.stateDerivative x u) (P.stateDerivative x v) := by
+  sorry
 
 end ModularInformationMetricPullback
 

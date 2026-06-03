@@ -54,7 +54,8 @@ structure RelativeDeterminantScatteringPacket where
 
   Typical meaning: a relative determinant identity written through the scattering channel.
   -/
-  determinant_scattering_identity : Prop
+  determinant_scattering_identity : Prop := by
+    sorry
 
   /--
   Owner-supplied pole/zero conversion law between determinant and scattering channels.

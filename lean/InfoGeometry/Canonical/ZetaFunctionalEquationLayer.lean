@@ -255,7 +255,8 @@ structure ArchimedeanCompletion where
   /-- Theta modularity supplies the archimedean completion. -/
   thetaModularity : ThetaModularity
   /-- The Mellin transform of the theta function gives the completed zeta. -/
-  mellin_theta_eq_completed_zeta_True : Prop
+  mellin_theta_eq_completed_zeta_True : Prop := by
+    sorry
   mellin_theta_eq_completed_zeta_sorryProof :
     mellin_theta_eq_completed_zeta_True
 

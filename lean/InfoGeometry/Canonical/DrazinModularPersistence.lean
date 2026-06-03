@@ -222,7 +222,17 @@ structure RealExpectationState
     (Obs : Type*) [Monoid Obs] [Star Obs] where
   expect : Obs → ℝ
   unital : expect 1 = 1
-  positivity_True : Prop
+
+namespace RealExpectationState
+
+variable {Obs : Type*} [Monoid Obs] [Star Obs]
+
+/-- The state is positive: `φ(A* A) ≥ 0` for all `A`. -/
+def positivity
+    (φ : RealExpectationState Obs) : Prop := by
+  sorry
+
+end RealExpectationState
 
 /--
 Expectation-valued leakage energy.

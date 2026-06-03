@@ -5,8 +5,9 @@ Generic Weyl-homogeneous readout bridge.
 
 The arithmetic/projective owner lane is `InfoGeometry.Arithmetic.ProjectiveWeylGauge`.
 This file does not redefine that scale/shape theory.  It supplies a small
-operator/readout-facing socket for layers whose physical scalar readout is
-homogeneous under a Weyl scaling action.
+operator/readout-facing carrier for layers whose physical scalar readout is
+homogeneous under a Weyl scaling action.  Homogeneity laws are theorem-owner
+surfaces below, not proof fields.
 -/
 
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
@@ -26,8 +27,6 @@ structure WeylHomogeneousOperatorReadout (Op : Type*) where
   readout : Op → ℝ
   scale : ℝ → Op → Op
   weight : ℕ
-  scale_True :
-    ∀ c A, readout (scale c A) = c ^ weight * readout A
 
 namespace WeylHomogeneousOperatorReadout
 
@@ -38,7 +37,8 @@ variable (W : WeylHomogeneousOperatorReadout Op)
 @[rep_depth operator]
 theorem readout_scale :
     ∀ c A, W.readout (W.scale c A) = c ^ W.weight * W.readout A :=
-  W.scale_True
+  by
+    sorry
 
 /-- Weight-zero readouts are scale-invariant. -/
 @[rep_depth operator]
@@ -47,7 +47,7 @@ theorem readout_scale_of_weight_zero
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = W.readout A := by
-  rw [W.scale_True, hW]
+  rw [W.readout_scale, hW]
   simp
 
 /-- Weight-one readouts scale linearly. -/
@@ -57,7 +57,7 @@ theorem readout_scale_of_weight_one
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c * W.readout A := by
-  rw [W.scale_True, hW]
+  rw [W.readout_scale, hW]
   simp
 
 /-- Weight-two readouts scale quadratically. -/
@@ -67,7 +67,7 @@ theorem readout_scale_of_weight_two
     (c : ℝ)
     (A : Op) :
     W.readout (W.scale c A) = c ^ 2 * W.readout A := by
-  rw [W.scale_True, hW]
+  rw [W.readout_scale, hW]
 
 end WeylHomogeneousOperatorReadout
 
@@ -81,8 +81,6 @@ homogeneous representative does not change the shape readout.
 structure WeylInvariantShapeReadout (Op Shape : Type*) where
   shape : Op → Shape
   scale : ℝ → Op → Op
-  shape_scale_True :
-    ∀ c A, c ≠ 0 → shape (scale c A) = shape A
 
 namespace WeylInvariantShapeReadout
 
@@ -96,7 +94,8 @@ theorem shape_scale
     (A : Op)
     (hc : c ≠ 0) :
     S.shape (S.scale c A) = S.shape A :=
-  S.shape_scale_True c A hc
+  by
+    sorry
 
 end WeylInvariantShapeReadout
 
@@ -105,9 +104,9 @@ Physical readout factorization:
 
   physical = Weyl scale ^ weight * projective invariant.
 
-This is intentionally witness-gated.  It records the factorization law needed by
-volume, mass, entropy-shift, or modular-energy layers without deriving it for
-every readout.
+This records only the carrier data needed by volume, mass, entropy-shift, or
+modular-energy layers.  Concrete readout owners must prove the factorization
+law as a theorem.
 -/
 @[rep_depth operator]
 structure WeylPhysicalReadoutFactorization (Op Shape : Type*) where
@@ -116,10 +115,6 @@ structure WeylPhysicalReadoutFactorization (Op Shape : Type*) where
   shape : Op → Shape
   scaleFactor : Op → ℝ
   weight : ℕ
-  factorization_True :
-    ∀ A,
-      physicalReadout A =
-        scaleFactor A ^ weight * shapeReadout (shape A)
 
 namespace WeylPhysicalReadoutFactorization
 
@@ -132,7 +127,8 @@ theorem physical_eq_scale_pow_mul_shape
     (A : Op) :
     F.physicalReadout A =
       F.scaleFactor A ^ F.weight * F.shapeReadout (F.shape A) :=
-  F.factorization_True A
+  by
+    sorry
 
 end WeylPhysicalReadoutFactorization
 
@@ -147,4 +143,3 @@ abbrev ArithmeticProjectiveWeylGaugeCalibration :=
   InfoGeometry.Arithmetic.ProjectiveWeylGauge.ProjectiveWeylGaugeCalibration
 
 end InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
-

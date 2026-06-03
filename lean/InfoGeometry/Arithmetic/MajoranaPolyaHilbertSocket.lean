@@ -102,14 +102,20 @@ structure MajoranaBerryKeatingOperatorPacket
   thermalOperator : Mode → Operator
   majoranaDirac : Operator
   squareRootEnergyCoefficient : Mode → ℝ
-  splitClifford_True : Prop
-  squareRootEnergy_True : Prop
-  dirac_square_True : Prop
-  self_adjoint_True : Prop
-  bk_mellin_sector_fixes_criticalLine_True : Prop
+  splitClifford_True : Prop := by
+    sorry
+  squareRootEnergy_True : Prop := by
+    sorry
+  dirac_square_True : Prop := by
+    sorry
+  self_adjoint_True : Prop := by
+    sorry
+  bk_mellin_sector_fixes_criticalLine_True : Prop := by
+    sorry
   bk_mellin_sector_fixes_criticalLine_sorryProof :
     bk_mellin_sector_fixes_criticalLine_True
-  majorana_fock_sector_produces_pfaffianCharacter_True : Prop
+  majorana_fock_sector_produces_pfaffianCharacter_True : Prop := by
+    sorry
   majorana_fock_sector_produces_pfaffianCharacter_sorryProof :
     majorana_fock_sector_produces_pfaffianCharacter_True
 
@@ -152,20 +158,25 @@ structure RealMajoranaBerryKeatingProblem
   chiralityRho : Operator
   majoranaDiracCutoff : Operator
   combinedDirac : Operator
-  combinedDirac_formula_True : Prop
+  combinedDirac_formula_True : Prop := by
+    sorry
   combinedDirac_formula_sorryProof :
     combinedDirac_formula_True
-  rho_anticommutes_realBK_True : Prop
+  rho_anticommutes_realBK_True : Prop := by
+    sorry
   rho_anticommutes_realBK_sorryProof :
     rho_anticommutes_realBK_True
-  majoranaDirac_square_True : Prop
+  majoranaDirac_square_True : Prop := by
+    sorry
   majoranaDirac_square_sorryProof :
     majoranaDirac_square_True
-  combinedDirac_square_True : Prop
+  combinedDirac_square_True : Prop := by
+    sorry
   combinedDirac_square_sorryProof :
     combinedDirac_square_True
   modeEnergyCoefficient : Mode → ℝ
-  modeEnergyCoefficient_sqrtLog_True : Prop
+  modeEnergyCoefficient_sqrtLog_True : Prop := by
+    sorry
   modeEnergyCoefficient_sqrtLog_sorryProof :
     modeEnergyCoefficient_sqrtLog_True
 
@@ -223,10 +234,12 @@ structure FockVsMellinNormalizabilityGuard
   mellinState : MellinState
   fockNorm : FockNorm
   mellinNorm : MellinNorm
-  fockSummabilityDomain_True : Prop
+  fockSummabilityDomain_True : Prop := by
+    sorry
   fockSummabilityDomain_sorryProof :
     fockSummabilityDomain_True
-  mellinCriticalLine_True : Prop
+  mellinCriticalLine_True : Prop := by
+    sorry
   mellinCriticalLine_sorryProof :
     mellinCriticalLine_True
   criticalLine_not_from_ordinaryFockNorm_guard : Type*
@@ -262,8 +275,10 @@ structure MajoranaZeroModeNormalizabilityPacket
   imaginaryHeight : ℝ
   zeroMode : ZeroMode
   normReadout : NormReadout
-  isZeroMode_True : Prop
-  normalizable_True : Prop
+  isZeroMode_True : Prop := by
+    sorry
+  normalizable_True : Prop := by
+    sorry
   normalizable_iff_criticalLine_True :
     normalizable_True ↔ IsCriticalLineRealPart realPart
   normalizable_iff_criticalLine_sorryProof :
@@ -308,11 +323,14 @@ structure MajoranaPfaffianZetaSpectralSocket
   parameter : SpectralParameter
   pfaffianReadout : PfaffianReadout
   zetaReadout : ZetaReadout
-  pfaffian_zeta_identity_True : Prop
+  pfaffian_zeta_identity_True : Prop := by
+    sorry
   pfaffian_zeta_identity_sorryProof :
     pfaffian_zeta_identity_True
-  zetaZero_True : Prop
-  reciprocalZetaSingularity_True : Prop
+  zetaZero_True : Prop := by
+    sorry
+  reciprocalZetaSingularity_True : Prop := by
+    sorry
   zetaZero_implies_reciprocalSingularity :
     zetaZero_True → reciprocalZetaSingularity_True
 
@@ -354,16 +372,20 @@ structure WittenCharacterVsCompletedXiSocket
   wittenCharacter : WittenCharacter
   completedXi : CompletedXiReadout
   spectralPfaffian : SpectralPfaffianReadout
-  wittenCharacter_inverseZeta_True : Prop
+  wittenCharacter_inverseZeta_True : Prop := by
+    sorry
   wittenCharacter_inverseZeta_sorryProof :
     wittenCharacter_inverseZeta_True
-  spectralPfaffian_completedXi_True : Prop
+  spectralPfaffian_completedXi_True : Prop := by
+    sorry
   spectralPfaffian_completedXi_sorryProof :
     spectralPfaffian_completedXi_True
-  zetaZeros_are_poles_of_inverseZeta_True : Prop
+  zetaZeros_are_poles_of_inverseZeta_True : Prop := by
+    sorry
   zetaZeros_are_poles_of_inverseZeta_sorryProof :
     zetaZeros_are_poles_of_inverseZeta_True
-  completedXiZeros_are_spectralZeros_True : Prop
+  completedXiZeros_are_spectralZeros_True : Prop := by
+    sorry
   completedXiZeros_are_spectralZeros_sorryProof :
     completedXiZeros_are_spectralZeros_True
 
@@ -449,13 +471,16 @@ structure BosonFermionSuperdeterminantSocket
   superdeterminantReadout : SuperdeterminantReadout
   zetaReadout : ZetaReadout
   inverseZetaReadout : InverseZetaReadout
-  bosonic_eq_zeta_True : Prop
+  bosonic_eq_zeta_True : Prop := by
+    sorry
   bosonic_eq_zeta_sorryProof :
     bosonic_eq_zeta_True
-  fermionic_eq_inverseZeta_True : Prop
+  fermionic_eq_inverseZeta_True : Prop := by
+    sorry
   fermionic_eq_inverseZeta_sorryProof :
     fermionic_eq_inverseZeta_True
-  superdeterminant_inversion_True : Prop
+  superdeterminant_inversion_True : Prop := by
+    sorry
   superdeterminant_inversion_sorryProof :
     superdeterminant_inversion_True
   zeta_zero_is_inverseZeta_pole_guard : Type*
@@ -509,13 +534,16 @@ structure ArchimedeanGammaFactorSocket
   archimedeanReadout : ArchimedeanReadout
   finitePrimeReadout : FinitePrimeReadout
   completedZetaReadout : CompletedZetaReadout
-  gammaFactor_True : Prop
+  gammaFactor_True : Prop := by
+    sorry
   gammaFactor_sorryProof :
     gammaFactor_True
-  polynomialCompletion_True : Prop
+  polynomialCompletion_True : Prop := by
+    sorry
   polynomialCompletion_sorryProof :
     polynomialCompletion_True
-  completedZeta_factorization_True : Prop
+  completedZeta_factorization_True : Prop := by
+    sorry
   completedZeta_factorization_sorryProof :
     completedZeta_factorization_True
   finitePrimes_alone_not_completed_guard : Type*
@@ -584,13 +612,16 @@ structure BoundaryScatteringDiscretizationSocket
   continuousSpectrum : ContinuousSpectrum
   discreteOrAbsorptionReadout : DiscreteOrAbsorptionReadout
   phaseShiftReadout : PhaseShiftReadout
-  boundary_or_scattering_True : Prop
+  boundary_or_scattering_True : Prop := by
+    sorry
   boundary_or_scattering_sorryProof :
     boundary_or_scattering_True
-  continuous_to_spectralZeroReadout_True : Prop
+  continuous_to_spectralZeroReadout_True : Prop := by
+    sorry
   continuous_to_spectralZeroReadout_sorryProof :
     continuous_to_spectralZeroReadout_True
-  phaseShift_matches_zetaArgument_True : Prop
+  phaseShift_matches_zetaArgument_True : Prop := by
+    sorry
   phaseShift_matches_zetaArgument_sorryProof :
     phaseShift_matches_zetaArgument_True
   bareBK_continuousSpectrum_guard : Type*
@@ -645,16 +676,20 @@ structure MBKHeatTraceExplicitFormulaSocket
   arithmeticHeatTrace : ArithmeticHeatTrace
   mellinTransformReadout : MellinTransformReadout
   explicitFormulaReadout : ExplicitFormulaReadout
-  heatTrace_factorization_True : Prop
+  heatTrace_factorization_True : Prop := by
+    sorry
   heatTrace_factorization_sorryProof :
     heatTrace_factorization_True
-  arithmeticHeatTrace_primeSum_True : Prop
+  arithmeticHeatTrace_primeSum_True : Prop := by
+    sorry
   arithmeticHeatTrace_primeSum_sorryProof :
     arithmeticHeatTrace_primeSum_True
-  bkHeatTrace_mellinContinuum_True : Prop
+  bkHeatTrace_mellinContinuum_True : Prop := by
+    sorry
   bkHeatTrace_mellinContinuum_sorryProof :
     bkHeatTrace_mellinContinuum_True
-  mellinTransform_eq_explicitFormula_True : Prop
+  mellinTransform_eq_explicitFormula_True : Prop := by
+    sorry
   mellinTransform_eq_explicitFormula_sorryProof :
     mellinTransform_eq_explicitFormula_True
 
@@ -744,16 +779,20 @@ structure CompletedXiHilbertPolyaReduction
   completedXiAtHeight : CompletedXiReadout
   renormalizedPfaffianAtHeight : RenormalizedPfaffianReadout
   spectralKernelAtHeight : SpectralKernel
-  self_adjoint_True : Prop
-  renormalizedPfaffian_eq_completedXi_True : Prop
+  self_adjoint_True : Prop := by
+    sorry
+  renormalizedPfaffian_eq_completedXi_True : Prop := by
+    sorry
   renormalizedPfaffian_eq_completedXi_sorryProof :
     renormalizedPfaffian_eq_completedXi_True
-  completedXiZero_True : Prop
+  completedXiZero_True : Prop := by
+    sorry
   completedXiZero_iff_spectralKernel_True :
     completedXiZero_True ↔ Nonempty SpectralKernel
   completedXiZero_iff_spectralKernel_sorryProof :
     completedXiZero_True ↔ Nonempty SpectralKernel
-  spectralHeight_real_True : Prop
+  spectralHeight_real_True : Prop := by
+    sorry
   spectralHeight_real_sorryProof :
     spectralHeight_real_True
   spectralZero_on_criticalLine_True : IsCriticalLineRealPart (1 / 2 : ℝ)
@@ -814,10 +853,12 @@ structure MajoranaPolyaHilbertBridge
   wittenVsXi :
     WittenCharacterVsCompletedXiSocket
       SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout
-  selfAdjoint_spectrum_real_True : Prop
+  selfAdjoint_spectrum_real_True : Prop := by
+    sorry
   selfAdjoint_spectrum_real_sorryProof :
     selfAdjoint_spectrum_real_True
-  zeroModes_match_zetaZeros_True : Prop
+  zeroModes_match_zetaZeros_True : Prop := by
+    sorry
   zeroModes_match_zetaZeros_sorryProof :
     zeroModes_match_zetaZeros_True
   criticalLine_implies_classicalRH_True :
@@ -1129,23 +1170,28 @@ structure RelativeMBKDeterminantScatteringPacket
   spectralKernel : SpectralKernel
 
   /-- Essential/self-adjointness of the relative MBK realization. -/
-  self_adjoint_relativeMBK_True : Prop
+  self_adjoint_relativeMBK_True : Prop := by
+    sorry
   self_adjoint_relativeMBK_sorryProof :
     self_adjoint_relativeMBK_True
   /-- Relative determinant/Pfaffian equals the completed critical-line target. -/
-  relativeDeterminant_eq_completedXi_True : Prop
+  relativeDeterminant_eq_completedXi_True : Prop := by
+    sorry
   relativeDeterminant_eq_completedXi_sorryProof :
     relativeDeterminant_eq_completedXi_True
   /-- Relative scattering trace reproduces the Riemann--Weil explicit formula. -/
-  scatteringTrace_eq_explicitFormula_True : Prop
+  scatteringTrace_eq_explicitFormula_True : Prop := by
+    sorry
   scatteringTrace_eq_explicitFormula_sorryProof :
     scatteringTrace_eq_explicitFormula_True
   /-- Spectral shift is the relative trace density used by the scattering formula. -/
-  spectralShift_traceFormula_True : Prop
+  spectralShift_traceFormula_True : Prop := by
+    sorry
   spectralShift_traceFormula_sorryProof :
     spectralShift_traceFormula_True
   /-- Completed-`Xi` zeros are exactly the spectral-kernel/absorption readout. -/
-  completedXiZero_iff_spectralKernel_True : Prop
+  completedXiZero_iff_spectralKernel_True : Prop := by
+    sorry
   completedXiZero_iff_spectralKernel_sorryProof :
     completedXiZero_iff_spectralKernel_True
 
@@ -1156,7 +1202,8 @@ structure RelativeMBKDeterminantScatteringPacket
   but this file does not derive it from finite prime algebra.
   -/
   classicalRHStatement : Prop
-  hilbertPolya_reduction_True : Prop
+  hilbertPolya_reduction_True : Prop := by
+    sorry
   hilbertPolya_reduction_sorryProof :
     hilbertPolya_reduction_True
   hilbertPolya_reduction_implies_RH :
@@ -1276,16 +1323,20 @@ structure EssentialSelfAdjointLimitSocket
   closureReadout : ClosureReadout
   commutatorControl : CommutatorControl
   representationLimit : RepresentationLimit
-  finiteCutoff_essentialSelfAdjoint_True : Prop
+  finiteCutoff_essentialSelfAdjoint_True : Prop := by
+    sorry
   finiteCutoff_essentialSelfAdjoint_sorryProof :
     finiteCutoff_essentialSelfAdjoint_True
-  denseCore_invariant_True : Prop
+  denseCore_invariant_True : Prop := by
+    sorry
   denseCore_invariant_sorryProof :
     denseCore_invariant_True
-  infiniteLimit_exists_True : Prop
+  infiniteLimit_exists_True : Prop := by
+    sorry
   infiniteLimit_exists_sorryProof :
     infiniteLimit_exists_True
-  infiniteOperator_essentialSelfAdjoint_True : Prop
+  infiniteOperator_essentialSelfAdjoint_True : Prop := by
+    sorry
   infiniteOperator_essentialSelfAdjoint_sorryProof :
     infiniteOperator_essentialSelfAdjoint_True
   /-- Guardrail: the infinite prime limit is not automatic from finite cutoff algebra. -/
@@ -1345,16 +1396,20 @@ structure ZetaRegularizedPfaffianSocket
   finitePart : FinitePart
   regularizedPfaffian : RegularizedPfaffian
   meromorphicReadout : MeromorphicReadout
-  heatKernel_asymptotic_True : Prop
+  heatKernel_asymptotic_True : Prop := by
+    sorry
   heatKernel_asymptotic_sorryProof :
     heatKernel_asymptotic_True
-  counterterm_subtraction_True : Prop
+  counterterm_subtraction_True : Prop := by
+    sorry
   counterterm_subtraction_sorryProof :
     counterterm_subtraction_True
-  finitePart_exists_True : Prop
+  finitePart_exists_True : Prop := by
+    sorry
   finitePart_exists_sorryProof :
     finitePart_exists_True
-  regularizedPfaffian_meromorphic_True : Prop
+  regularizedPfaffian_meromorphic_True : Prop := by
+    sorry
   regularizedPfaffian_meromorphic_sorryProof :
     regularizedPfaffian_meromorphic_True
   /-- Guardrail: ordinary trace-class determinant is not assumed. -/
@@ -1413,16 +1468,20 @@ structure CompletedXiSuperdeterminantIdentitySocket
   superdeterminantReadout : SuperdeterminantReadout
   completedXiReadout : CompletedXiReadout
   spectralZeroReadout : SpectralZeroReadout
-  boson_fermion_inversion_True : Prop
+  boson_fermion_inversion_True : Prop := by
+    sorry
   boson_fermion_inversion_sorryProof :
     boson_fermion_inversion_True
-  archimedean_completion_True : Prop
+  archimedean_completion_True : Prop := by
+    sorry
   archimedean_completion_sorryProof :
     archimedean_completion_True
-  superdeterminant_eq_completedXi_True : Prop
+  superdeterminant_eq_completedXi_True : Prop := by
+    sorry
   superdeterminant_eq_completedXi_sorryProof :
     superdeterminant_eq_completedXi_True
-  completedXiZero_iff_spectralZero_True : Prop
+  completedXiZero_iff_spectralZero_True : Prop := by
+    sorry
   completedXiZero_iff_spectralZero_sorryProof :
     completedXiZero_iff_spectralZero_True
   /-- Guardrail: inverse-zeta poles do not directly give Majorana zero modes. -/
@@ -1500,7 +1559,8 @@ structure MBKAnalyticFrontier
     CompletedXiSuperdeterminantIdentitySocket
       BosonicSector FermionicSector ArchimedeanSector SuperdeterminantReadout
       CompletedXiReadout SpectralZeroReadout
-  all_three_fronts_closed_True : Prop
+  all_three_fronts_closed_True : Prop := by
+    sorry
   all_three_fronts_closed_sorryProof :
     all_three_fronts_closed_True
   /-- Guardrail: this is the analytic task list, not an unconditional RH proof. -/

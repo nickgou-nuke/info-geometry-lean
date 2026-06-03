@@ -99,7 +99,8 @@ structure MaterialResponseModel
   susceptibility : State → ℂ
 
   /-- Material law connecting the readouts. -/
-  material_True : Prop
+  material_True : Prop := by
+    sorry
 
   /-- Evidence for the material law. -/
   material_law_holds :
@@ -161,7 +162,8 @@ structure FresnelCoefficientReadout
   rp : State → ℂ
 
   /-- Fresnel boundary law for the supplied material/interface model. -/
-  fresnel_True : Prop
+  fresnel_True : Prop := by
+    sorry
 
   /-- Evidence for the Fresnel boundary law. -/
   fresnel_law_holds :
@@ -191,14 +193,16 @@ structure StatePolarizationEigenResponse
   responseP : State → ℂ
 
   /-- Certificate that `responseS` is the calibrated `s` eigen-response. -/
-  s_eigen_True : Prop
+  s_eigen_True : Prop := by
+    sorry
 
   /-- Evidence for the `s` eigen-response law. -/
   s_eigen_law_holds :
     s_eigen_True
 
   /-- Certificate that `responseP` is the calibrated `p` eigen-response. -/
-  p_eigen_True : Prop
+  p_eigen_True : Prop := by
+    sorry
 
   /-- Evidence for the `p` eigen-response law. -/
   p_eigen_law_holds :
@@ -408,14 +412,16 @@ structure RetardanceReadout
   ellipticity : State → ℝ
 
   /-- Retardance/ellipticity law. -/
-  retardance_True : Prop
+  retardance_True : Prop := by
+    sorry
 
   /-- Evidence for the retardance/ellipticity law. -/
   retardance_law_holds :
     retardance_True
 
   /-- Ellipticity law, separated for modules that only need amplitude/shape data. -/
-  ellipticity_True : Prop
+  ellipticity_True : Prop := by
+    sorry
 
   /-- Evidence for the ellipticity law. -/
   ellipticity_law_holds :
@@ -440,7 +446,8 @@ structure OpticalAbsorptionReadout
   absorption : State → ℝ
 
   /-- Absorption law. -/
-  absorption_True : Prop
+  absorption_True : Prop := by
+    sorry
 
   /-- Evidence for the absorption law. -/
   absorption_law_holds :
@@ -1150,7 +1157,8 @@ structure OpticalPTStinespringClinch
     ∀ U : State, (eventOf U).tag = V4Tag.PT
 
   /-- Model-specific law that this PT sector is the intended commutant/dark readout. -/
-  pt_commutant_sector_True : Prop
+  pt_commutant_sector_True : Prop := by
+    sorry
 
   /-- Evidence for the PT commutant-sector law. -/
   pt_commutant_sector_sorryProof :
@@ -1248,7 +1256,8 @@ structure BregmanHessianResponse
     ∀ s X, 0 ≤ hessianAt s X X
 
   /-- Certificate that this Hessian comes from the intended potential. -/
-  bregman_hessian_True : Prop
+  bregman_hessian_True : Prop := by
+    sorry
 
   /-- Evidence for the Hessian law. -/
   bregman_hessian_sorryProof :
@@ -1287,7 +1296,8 @@ structure SusceptibilityDatum
   susceptibility : State → Freq → ℂ
 
   /-- Material-response law. -/
-  susceptibility_True : Prop
+  susceptibility_True : Prop := by
+    sorry
 
   /-- Evidence for the susceptibility law. -/
   susceptibility_sorryProof :
@@ -1308,7 +1318,8 @@ structure StateDielectricResponseDatum
   mu : State → Freq → ℂ
 
   /-- Relation between susceptibility and dielectric response. -/
-  dielectric_True : Prop
+  dielectric_True : Prop := by
+    sorry
 
   /-- Evidence for the dielectric law. -/
   dielectric_sorryProof :
@@ -1325,7 +1336,8 @@ structure ComplexRefractiveIndexDatum
   N : State → Freq → ℂ
 
   /-- Branch/material law connecting `N` to dielectric data. -/
-  refractive_index_True : Prop
+  refractive_index_True : Prop := by
+    sorry
 
   /-- Evidence for the refractive-index law. -/
   refractive_index_sorryProof :
@@ -1349,7 +1361,8 @@ structure BregmanHessianSusceptibilityCalibration
     SusceptibilityDatum State Freq
 
   /-- Bridge law from Hessian response to susceptibility. -/
-  hessian_controls_susceptibility_True : Prop
+  hessian_controls_susceptibility_True : Prop := by
+    sorry
 
   /-- Evidence for the bridge law. -/
   hessian_controls_susceptibility_sorryProof :
@@ -1369,7 +1382,8 @@ structure FresnelFromRefractiveIndex
   coeff_p : State → Freq → Angle → ℂ
 
   /-- Fresnel law certificate. -/
-  fresnel_True : Prop
+  fresnel_True : Prop := by
+    sorry
 
   /-- Evidence for the Fresnel law. -/
   fresnel_sorryProof :
@@ -1389,7 +1403,8 @@ structure OpticalResponseEigenvalues
   basis : PolarizationBasis
 
   /-- Eigenvalue law/certificate. -/
-  eigenvalue_True : Prop
+  eigenvalue_True : Prop := by
+    sorry
 
   /-- Evidence for the eigenvalue law. -/
   eigenvalue_sorryProof :
@@ -1437,7 +1452,8 @@ structure SusceptibilityFresnelCalibration
         responseEigenvalues.eigenvalue s omega theta 1
 
   /-- End-to-end calibration law. -/
-  end_to_end_optical_response_True : Prop
+  end_to_end_optical_response_True : Prop := by
+    sorry
 
   /-- Evidence for the end-to-end calibration law. -/
   end_to_end_optical_response_sorryProof :
@@ -1589,21 +1605,24 @@ structure MetalMirrorSusceptibilityCalibration
     HessianJonesCalibration State Tangent Freq Angle
 
   /-- The event is interpreted as a metal mirror response. -/
-  metal_mirror_True : Prop
+  metal_mirror_True : Prop := by
+    sorry
 
   /-- Evidence for the metal mirror law. -/
   metal_mirror_sorryProof :
     metal_mirror_True
 
   /-- Absorptive part of response controls Bregman/thermal loss. -/
-  absorption_heat_True : Prop
+  absorption_heat_True : Prop := by
+    sorry
 
   /-- Evidence for the absorption/heat law. -/
   absorption_heat_sorryProof :
     absorption_heat_True
 
   /-- Reactive part of response controls retardance/ellipticity. -/
-  retardance_True : Prop
+  retardance_True : Prop := by
+    sorry
 
   /-- Evidence for the retardance law. -/
   retardance_sorryProof :
@@ -1650,7 +1669,8 @@ structure VacuumResponseCalibration
     SusceptibilityDatum State Freq
 
   /-- Vacuum susceptibility law. -/
-  vacuum_susceptibility_True : Prop
+  vacuum_susceptibility_True : Prop := by
+    sorry
 
   /-- Evidence for the vacuum susceptibility law. -/
   vacuum_susceptibility_sorryProof :
@@ -1670,7 +1690,8 @@ structure MatterResponseCalibration
     SusceptibilityFresnelCalibration State Tangent Freq Angle
 
   /-- Matter response law. -/
-  matter_response_True : Prop
+  matter_response_True : Prop := by
+    sorry
 
   /-- Evidence for the matter response law. -/
   matter_response_sorryProof :

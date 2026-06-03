@@ -58,19 +58,23 @@ structure DefectFreeLimitPacket
     ∀ (N : ℕ) (z : ℂ), (approximation.Z N).IsRoot z → OnLeeYangCircle z
 
   /-- No spontaneous magnetization in the chosen thermodynamic scaling. -/
-  zeroMeanMagnetization_True : Prop
+  zeroMeanMagnetization_True : Prop := by
+    sorry
 
   /-- Gaussian/CLT-scale fluctuation law for the weighted prime magnetization. -/
-  gaussianFluctuation_True : Prop
+  gaussianFluctuation_True : Prop := by
+    sorry
 
   /-- Defect-exclusion law: no macroscopic random-field bias survives. -/
-  noRandomFieldDefects_True : Prop
+  noRandomFieldDefects_True : Prop := by
+    sorry
 
   /--
   Persistence law saying the finite Lee--Yang circle property survives the
   renormalized thermodynamic limit.
   -/
-  leeYangStabilityPersists_True : Prop
+  leeYangStabilityPersists_True : Prop := by
+    sorry
 
   /--
   The completed-`xi` Cayley limit law for the defect-free sequence.
@@ -78,7 +82,8 @@ structure DefectFreeLimitPacket
   This is separate from the finite Lee--Yang law; it is the analytic bridge
   where a concrete scattering/determinant construction must enter.
   -/
-  xiCayleyLimit_True : Prop
+  xiCayleyLimit_True : Prop := by
+    sorry
 
   /--
   The final conditional reduction from the defect-free Lee--Yang/`xi` limit to
@@ -86,7 +91,8 @@ structure DefectFreeLimitPacket
 
   This field is intentionally a law, not an unconditional theorem.
   -/
-  defectFreeLimit_implies_criticalLineZeros_True : Prop
+  defectFreeLimit_implies_criticalLineZeros_True : Prop := by
+    sorry
 
   /-- Guardrail: this packet is not an unconditional RH proof. -/
   no_unconditional_RH_claim_guard : Type

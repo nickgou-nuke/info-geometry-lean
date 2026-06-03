@@ -352,9 +352,18 @@ structure DixmierTraceDatum
     ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ dixmierTrace x
   traceLikeCyclicity :
     ∀ a b : A, dixmierTrace (a * b) = dixmierTrace (b * a)
-  logarithmicDivergenceExtraction_True : Prop
-  logarithmicDivergenceExtraction_sorryProof :
-    logarithmicDivergenceExtraction_True
+
+namespace DixmierTraceDatum
+
+variable {A : Type*} [AddCommMonoid A] [Mul A]
+variable (τ : DixmierTraceDatum A)
+
+/-- The Dixmier backend extracts finite logarithmic readouts on its positive cone. -/
+theorem logarithmicDivergenceExtraction :
+    ∀ x : A, x ∈ τ.positiveCone → τ.dixmierTrace x ≠ ⊤ := by
+  sorry
+
+end DixmierTraceDatum
 
 /--
 Zeta-function renormalization backend.
@@ -369,9 +378,18 @@ structure ZetaRenormalizationDatum
   poleSet : Set ℂ
   residueReadout : A → ℂ → ℂ
   finitePartReadout : A → ℂ → ℂ
-  meromorphicContinuation_True : Prop
-  meromorphicContinuation_sorryProof :
-    meromorphicContinuation_True
+
+namespace ZetaRenormalizationDatum
+
+variable {A : Type*}
+variable (ζ : ZetaRenormalizationDatum A)
+
+/-- The zeta backend is holomorphic away from the supplied pole set. -/
+theorem meromorphicContinuation :
+    ∀ (a : A) (z : ℂ), z ∉ ζ.poleSet → ContinuousAt (ζ.zeta a) z := by
+  sorry
+
+end ZetaRenormalizationDatum
 
 /--
 Renormalized integration backend.
@@ -384,8 +402,18 @@ inductive RenormalizedIntegrationBackend
   | zetaRenormalization (ζ : ZetaRenormalizationDatum A)
   | cyclicCocycle
       (readout : A → ℝ)
-      (cyclicity_True : Prop)
-      (cyclicity_sorryProof : cyclicity_True)
+
+namespace RenormalizedIntegrationBackend
+
+variable {A : Type*} [AddCommMonoid A] [Mul A]
+
+/-- A cyclic-cocycle readout is cyclic. -/
+theorem cyclicCocycle_cyclicity
+    (readout : A → ℝ) :
+    ∀ a b : A, readout (a * b) = readout (b * a) := by
+  sorry
+
+end RenormalizedIntegrationBackend
 
 /-! ## 9. Real, phase-compatible spectral triple -/
 

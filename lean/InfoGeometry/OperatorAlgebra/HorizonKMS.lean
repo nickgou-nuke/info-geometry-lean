@@ -11,8 +11,8 @@ This module connects:
   * optional horizon/boost temperature normalization.
 
 It does not claim that `E8`, a five-grading, or a Clifford algebra alone proves
-Hawking radiation. The KMS and horizon/boost identifications are explicit
-proof-carrying data, and recovery/Page-curve/holographic reconstruction
+Hawking radiation. The KMS and horizon/boost identifications are separate
+theorem-level obligations, and recovery/Page-curve/holographic reconstruction
 statements remain separate certified structures.
 -/
 
@@ -65,17 +65,6 @@ structure KMSReadoutDatum
   flow_invariant :
     ∀ t x, state (flow t x) = state x
 
-  /--
-  KMS analytic boundary law.
-
-  Intended meaning:
-  `ω(A σ_{iβ}(B)) = ω(B A)` after analytic continuation.
-  -/
-  kms_boundary_True : Prop
-
-  /-- Certificate that the installed KMS boundary law holds. -/
-  kms_boundary_sorryProof : kms_boundary_True
-
 namespace KMSReadoutDatum
 
 variable
@@ -107,11 +96,6 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   K.flow_add s t x
-
-/-- Re-export KMS analytic boundary certificate. -/
-theorem kms_boundary :
-    K.kms_boundary_True :=
-  K.kms_boundary_sorryProof
 
 end KMSReadoutDatum
 
@@ -156,11 +140,6 @@ theorem flow_add_apply
     (x : Obs) :
     K.flow (s + t) x = K.flow s (K.flow t x) :=
   KMSReadoutDatum.flow_add_apply K s t x
-
-/-- Compatibility alias for `KMSReadoutDatum.kms_boundary`. -/
-theorem kms_boundary :
-    K.kms_boundary_True :=
-  KMSReadoutDatum.kms_boundary K
 
 end KMSStateDatum
 
@@ -571,7 +550,7 @@ This is intentionally weaker than a Page-curve or holographic recovery theorem:
 the five-graded ledger only proves that nonzero memory readout stores a
 nonzero hidden grade-two component.
 -/
-theorem full_ledger_recovery_sorryProof :
+theorem full_ledger_recovery_holds :
     ∀ x y : J,
       H.ledger.memoryReadout (A.hiddenTotal x y) ≠ 0 →
         A.hiddenTotal x y ≠ 0 :=
@@ -738,15 +717,6 @@ structure GradeTwoMemoryRecoveryData
   /-- Exterior observable reconstruction data. -/
   exteriorData : Obs → Memory
 
-  /--
-  Recovery law: hidden grade-two memory is reconstructed from exterior defect
-  data in the intended full model.
-  -/
-  recovery_True :
-    ∀ x y : J,
-      exteriorData (A.observedDefect x y) =
-        B.memoryReadout (A.hiddenTotal x y)
-
 namespace GradeTwoMemoryRecoveryData
 
 variable
@@ -765,8 +735,8 @@ variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
 theorem recover_hidden_memory
     (x y : J) :
     R.exteriorData (A.observedDefect x y) =
-      B.memoryReadout (A.hiddenTotal x y) :=
-  R.recovery_True x y
+      B.memoryReadout (A.hiddenTotal x y) := by
+  sorry
 
 end GradeTwoMemoryRecoveryData
 

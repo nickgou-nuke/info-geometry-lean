@@ -22,13 +22,16 @@ certificate, witness packet, or structure field is used to hide a proof.
  splitCartan_iUnion_stageCarrier_eq_univ,
  splitCartan_selfDualCone_extends,
  splitCartan_selfDualCone_extends_to_univ,
+ splitCartan_stage_mem_iff_dualPositive,
+ splitCartan_colimit_mem_iff_dualPositive,
  splitCartan_symmetry_preserves_stageCarrier,
  splitCartan_symmetry_stageCarrier_mem_iff,
  splitCartan_symmetry_preserves_colimit,
  splitCartan_symmetry_colimit_mem_iff,
  splitCartan_dualPositive_cartan_invariant,
  splitCartan_stage_cartan_selfDual_readback,
- splitCartan_selfDualCone_cartan_mem_iff]
+ splitCartan_selfDualCone_cartan_mem_iff,
+ splitCartan_cartan_selfDual_readback]
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
 The self-dual extension theorem is conditional on a stagewise self-duality
@@ -223,6 +226,33 @@ theorem splitCartan_selfDualCone_extends_to_univ
       Set.iUnion (splitCartanStageCarrier X) = (Set.univ : Set (SplitCartanAmbient X)) :=
     splitCartan_iUnion_stageCarrier_eq_univ X
   simpa [hUnion] using splitCartan_selfDualCone_extends X pairing hself
+
+/--
+Finite-stage split-Cartan carrier membership is exactly dual positivity against
+that same finite cumulative carrier.
+-/
+theorem splitCartan_stage_mem_iff_dualPositive
+    (X : ∀ n : ℕ, SplitOrthogonalCartanSpace n)
+    (pairing : SplitCartanAmbient X → SplitCartanAmbient X → ℝ)
+    (hself : ∀ n : ℕ, IsSelfDualCone pairing (splitCartanStageCarrier X n))
+    (n : ℕ)
+    (x : SplitCartanAmbient X) :
+    x ∈ splitCartanStageCarrier X n ↔
+      ∀ y, y ∈ splitCartanStageCarrier X n → 0 ≤ pairing x y := by
+  exact hself n x
+
+/--
+Colimit split-Cartan carrier membership is exactly dual positivity against the
+whole split-Cartan colimit carrier.
+-/
+theorem splitCartan_colimit_mem_iff_dualPositive
+    (X : ∀ n : ℕ, SplitOrthogonalCartanSpace n)
+    (pairing : SplitCartanAmbient X → SplitCartanAmbient X → ℝ)
+    (hself : ∀ n : ℕ, IsSelfDualCone pairing (splitCartanStageCarrier X n))
+    (x : SplitCartanAmbient X) :
+    x ∈ Set.iUnion (splitCartanStageCarrier X) ↔
+      ∀ y, y ∈ Set.iUnion (splitCartanStageCarrier X) → 0 ≤ pairing x y := by
+  exact splitCartan_selfDualCone_extends X pairing hself x
 
 /--
 A Cartan symmetry that preserves the stage index preserves every cumulative

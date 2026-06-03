@@ -256,7 +256,8 @@ structure KreinDrazinNullDefectAdmissible
   /-- The physical observable is the regular-support/null-defect sandwich. -/
   x_phys_eq : S.x_phys = S.HL * (S.pA * S.x_raw * S.pA) * S.HL
   /-- The Drazin inverse is read on the regular Krein support, not via trace/rank. -/
-  regular_support_inverse_True : Prop
+  regular_support_inverse_True : Prop := by
+    sorry
   /-- The complement isolates the Krein-null defect cone. -/
   null_defect_is_krein_null : Prop
   /-- The null defect is the boundary sector of the doubled algebra/commutant action. -/

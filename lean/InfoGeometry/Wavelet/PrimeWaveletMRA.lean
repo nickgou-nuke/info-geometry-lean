@@ -54,12 +54,8 @@ to form `F_N(z) = R_N(z) * Z_N(z)`.
 @[rep_depth operator]
 structure WaveletScalingFilter
     (A : LeeYangApproximants) where
-  refinement_True : Prop
-  refinement_sorryProof :
-    refinement_True
-  agrees_with_renormalization_True : Prop
-  agrees_with_renormalization_sorryProof :
-    agrees_with_renormalization_True
+  refinement_prop : Prop
+  agrees_with_renormalization_prop : Prop
 
 namespace WaveletScalingFilter
 
@@ -69,14 +65,14 @@ variable (R : WaveletScalingFilter A)
 /-- Re-export of the supplied wavelet refinement law. -/
 @[rep_depth operator]
 theorem refinement :
-    R.refinement_True :=
-  R.refinement_sorryProof
+    R.refinement_prop := by
+  sorry
 
 /-- Re-export of the supplied agreement with the Lee--Yang renormalization. -/
 @[rep_depth operator]
 theorem agrees_with_renormalization :
-    R.agrees_with_renormalization_True :=
-  R.agrees_with_renormalization_sorryProof
+    R.agrees_with_renormalization_prop := by
+  sorry
 
 end WaveletScalingFilter
 
@@ -107,14 +103,10 @@ structure WaveletMRACompletionWitness
     WaveletScalingFilter A
 
   /-- Nested MRA law: increasing the cutoff refines the resolution space. -/
-  nested_mra_True : Prop
-  nested_mra_sorryProof :
-    nested_mra_True
+  nested_mra_prop : Prop
 
   /-- Density of the inductive-limit MRA in the intended adelic/fractal Hilbert space. -/
-  dense_inductive_limit_True : Prop
-  dense_inductive_limit_sorryProof :
-    dense_inductive_limit_True
+  dense_inductive_limit_prop : Prop
 
   /-- Limiting wavelet readout. -/
   limitF :
@@ -129,9 +121,7 @@ structure WaveletMRACompletionWitness
     LocallyUniformLimit A.renormZ limitF
 
   /-- The wavelet limit matches the completed-`xi` Cayley pullback. -/
-  waveletLimit_eq_xiCayleyPullback_True : Prop
-  waveletLimit_eq_xiCayleyPullback_sorryProof :
-    waveletLimit_eq_xiCayleyPullback_True
+  waveletLimit_eq_xiCayleyPullback_prop : Prop
 
   /-- Nontriviality on the inner zero-free component. -/
   nontrivial_in :
@@ -150,9 +140,7 @@ structure WaveletMRACompletionWitness
     ∀ z : ℂ, OutsideUnitDisk z → limitF z ≠ 0
 
   /-- No spurious zeros are produced by the scaling filter or limiting process. -/
-  noSpuriousZeros : Prop
-  noSpuriousZeros_sorryProof :
-    noSpuriousZeros
+  noSpuriousZeros_prop : Prop
 
   /-- Completed-`xi` zeros are exactly zeros of the wavelet limit in the Cayley chart. -/
   xi_zero_iff_waveletLimit_zero :
@@ -167,26 +155,26 @@ variable (W : WaveletMRACompletionWitness Ξ A)
 /-- Re-export of the nested-MRA law. -/
 @[rep_depth operator]
 theorem nested_mra :
-    W.nested_mra_True :=
-  W.nested_mra_sorryProof
+    W.nested_mra_prop := by
+  sorry
 
 /-- Re-export of the dense-inductive-limit law. -/
 @[rep_depth operator]
 theorem dense_inductive_limit :
-    W.dense_inductive_limit_True :=
-  W.dense_inductive_limit_sorryProof
+    W.dense_inductive_limit_prop := by
+  sorry
 
 /-- Re-export of the wavelet-limit/completed-`xi` identification law. -/
 @[rep_depth operator]
 theorem waveletLimit_eq_xiCayleyPullback :
-    W.waveletLimit_eq_xiCayleyPullback_True :=
-  W.waveletLimit_eq_xiCayleyPullback_sorryProof
+    W.waveletLimit_eq_xiCayleyPullback_prop := by
+  sorry
 
-/-- Re-export of the no-spurious-zeros law. -/
+/-- Honest theorem target for the no-spurious-zeros law. -/
 @[rep_depth operator]
-theorem noSpuriousZeros_True :
-    W.noSpuriousZeros :=
-  W.noSpuriousZeros_sorryProof
+theorem noSpuriousZeros :
+    W.noSpuriousZeros_prop := by
+  sorry
 
 /-- Zero-free complement transfer supplied by the MRA witness. -/
 @[rep_depth operator]
@@ -204,7 +192,7 @@ def toCorrectHurwitzZeroTransferWitness :
   locallyUniformRenormalizedLimit := W.locallyUniformWaveletLimit
   nontrivial_in := W.nontrivial_in
   nontrivial_out := W.nontrivial_out
-  noSpuriousZeros := W.noSpuriousZeros
+  noSpuriousZeros := W.noSpuriousZeros_prop
   transfer := W.zeroFreeTransfer
   transfer_limitF := rfl
   xi_zero_iff_limit_zero := W.xi_zero_iff_waveletLimit_zero
@@ -220,7 +208,7 @@ def toPrimeLeeYangConvergenceSocket :
   nontrivial_out := W.nontrivial_out
   inner_zero_free := W.inner_mra_zero_free
   outer_zero_free := W.outer_mra_zero_free
-  noSpuriousZeros := W.noSpuriousZeros
+  noSpuriousZeros := W.noSpuriousZeros_prop
   xi_zero_iff_limit_zero := W.xi_zero_iff_waveletLimit_zero
 
 /-- The wavelet MRA witness maps completed-`xi` zeros to the Lee--Yang circle. -/

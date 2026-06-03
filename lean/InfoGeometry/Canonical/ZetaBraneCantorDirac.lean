@@ -87,7 +87,8 @@ interface instead of being turned into a fake theorem.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure FiniteCantorDiracSelfAdjointSocket where
-  finiteCantorDirac_selfAdjoint_iff_unitary_True : Prop
+  finiteCantorDirac_selfAdjoint_iff_unitary_True : Prop := by
+    sorry
   finiteCantorDirac_selfAdjoint_iff_unitary_sorryProof :
     finiteCantorDirac_selfAdjoint_iff_unitary_True
 

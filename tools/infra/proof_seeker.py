@@ -262,107 +262,71 @@ class ProofSeeker:
         target_name: str,
         context_code: str,
         target_line: int,
+        extended_pro: bool = False,
     ) -> ProofCandidate:
-        """Audit via ChatGPT in browser — slow (30-90s) but highly reliable.
+        """Audit via ChatGPT thinking mode in browser (~15-30s per theorem).
 
-        Uses browser-harness (CDP) to paste the code + audit persona prompt into
-        chatgpt.com, wait for the response, and extract the Lean code.
+        Uses browser-harness (CDP) to paste code + audit prompt into chatgpt.com.
+        Uses whatever model is currently selected (thinking mode by default).
+        Extended Pro is available for manual execution only.
+
+        NOTES:
+        - Requires ``browser-harness`` installed and Chrome with remote debugging.
+        - ChatGPT model must be pre-selected (thinking mode or Extended Pro).
+        - The same browser tab persists across calls — context accumulates.
         """
-        import subprocess, tempfile
+        import subprocess
 
-        logger.info("Auditing '%s' via ChatGPT (browser CDP)...", target_name)
+        logger.info("Auditing '%s' via ChatGPT thinking mode...", target_name)
 
-        short_ctx = context_code[:12000].strip() if context_code else ""
+        short_ctx = context_code[:8000].strip() if context_code else ""
 
-        audit_prompt = (
-            f"Persona: Audit, a rigorous mathematical proof assistant specialized in Lean 4.\n\n"
-            f"Read the Lean code below. For each `_True : Prop := by sorry` field or `sorry`:\n"
-            f"- If provable from existing fields → generate the proof (BUCKET 1)\n"
-            f"- If requires external witnesses → state premises (BUCKET 2)\n"
-            f"- If the statement is unspecified → label as OPEN CLOSURE DEBT (BUCKET 3)\n\n"
-            f"Specific target: `{target_name}` at line {target_line}.\n"
-            f"Output the audit map at the top, then the complete Lean code. Zero prose.\n\n"
-            f"Code:\n```lean4\n{short_ctx}\n```"
+        prompt = (
+            f"Prove `{target_name}` in Lean 4.\n"
+            f"Context:\n```lean4\n{short_ctx}\n```\n"
+            f"Output ONLY valid Lean 4 code. Use field_simp, ring, simp as appropriate. Zero prose."
         )
 
-        # Write prompt to a temp file
-        prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
-        prompt_file.write(audit_prompt)
+        # Write prompt + runner script to temp files (avoids shell escaping)
+        import tempfile
+        prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, prefix='audit_prompt_')
+        prompt_file.write(prompt)
         prompt_file.close()
 
+        # The runner script is pre-written at a known path
+        runner = _REPO / "tmp" / "browser-harness" / "run_audit.py"
+        if not runner.exists():
+            logger.warning("Audit runner script not found at %s — ChatGPT audit skipped", runner)
+            os.unlink(prompt_file.name)
+            return ProofCandidate(source_results=[], confidence=0.0)
+
         try:
-            # Use browser-harness to send to ChatGPT
             result = subprocess.run(
                 ["browser-harness", "-c",
-                 f"""
-import time
-prompt = open('{prompt_file.name}').read()
-new_tab("https://chatgpt.com")
-wait_for_load()
-time.sleep(2)
-capture_screenshot()
-# Click the input area (near bottom)
-viewport = js("return {{w: window.innerWidth, h: window.innerHeight}}")
-click_at_xy(viewport["w"] // 2, viewport["h"] - 100)
-time.sleep(1)
-# Paste the prompt
-js(f'''
-  const editor = document.querySelector("[contenteditable=\\\"true\\\"]");
-  if (editor) {{
-    editor.focus();
-    const dt = new DataTransfer();
-    dt.setData("text/plain", `{prompt.replace(chr(96), "\\\\" + chr(96))}`);
-    editor.dispatchEvent(new ClipboardEvent("paste", {{ clipboardData: dt }}));
-  }}
-''')
-capture_screenshot()
-# Click send
-send_btn = js('return document.querySelector("[data-testid=\\"send-button\\"]")')
-if send_btn:
-    js('document.querySelector("[data-testid=\\"send-button\\"]").click()')
-# Wait for response (poll for up to 120s)
-for _ in range(24):
-    time.sleep(5)
-    result = js('''
-      const msgs = document.querySelectorAll("[data-message-author-role=\\"assistant\\"]");
-      const last = msgs[msgs.length - 1];
-      return last ? last.innerText.slice(0, 100) : "";
-    ''')
-    if result and len(result) > 20:
-        break
-# Extract full response
-full = js('''
-  const msgs = document.querySelectorAll("[data-message-author-role=\\"assistant\\"]");
-  const last = msgs[msgs.length - 1];
-  return last ? last.innerText : "";
-''')
-print(full[:20000])
-"""],
-                capture_output=True, text=True, timeout=180,
+                 f"exec(open('{runner}').read()); "
+                 f"run_audit(open('{prompt_file.name}').read(), timeout=90)"],
+                capture_output=True, text=True, timeout=120,
             )
             output = (result.stdout or "") + (result.stderr or "")
         except subprocess.TimeoutExpired:
-            logger.warning("ChatGPT audit timed out (180s)")
+            logger.warning("ChatGPT audit timed out (120s)")
             output = ""
         except FileNotFoundError:
-            logger.warning("browser-harness not installed")
+            logger.warning("browser-harness not installed — ChatGPT audit skipped")
             output = ""
         except Exception as exc:
             logger.warning("ChatGPT audit failed: %s", exc)
             output = ""
-        finally:
-            os.unlink(prompt_file.name)
 
         if not output.strip():
             return ProofCandidate(source_results=[], confidence=0.0)
 
-        # Extract Lean code blocks from ChatGPT's response
         import re as _re
         blocks = _re.findall(r"```(?:lean4|lean)?\s*\n(.*?)```", output, _re.DOTALL)
         lean_code = "\n\n".join(b.strip() for b in blocks) if blocks else ""
 
         return ProofCandidate(
-            source_results=[SearchResult(source="chatgpt", title="ChatGPT Audit")],
+            source_results=[SearchResult(source="chatgpt", title=f"Audit: {target_name}")],
             proof_lean=lean_code,
             proof_natural=output[:2000],
             confidence=0.8 if lean_code else 0.3,

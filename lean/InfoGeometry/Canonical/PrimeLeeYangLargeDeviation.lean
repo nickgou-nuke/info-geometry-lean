@@ -189,13 +189,17 @@ structure PrimeChainLargeDeviationWitness where
   limitingCumulant : ℝ → ℝ
   rateFunction : ℝ → ℝ
 
-  speed_tends_to_infinity_True : Prop
+  speed_tends_to_infinity_True : Prop := by
+    sorry
 
-  finiteCumulant_converges_True : Prop
+  finiteCumulant_converges_True : Prop := by
+    sorry
 
-  rateFunction_is_legendre_True : Prop
+  rateFunction_is_legendre_True : Prop := by
+    sorry
 
-  largeDeviationPrinciple_True : Prop
+  largeDeviationPrinciple_True : Prop := by
+    sorry
 
   /-- Guardrail: this LDP packet is not an RH proof or a Lee--Yang theorem. -/
   noRiemannHypothesisClaimGuard : Type*

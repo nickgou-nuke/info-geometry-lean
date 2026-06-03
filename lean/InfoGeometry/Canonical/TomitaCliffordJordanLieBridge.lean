@@ -56,7 +56,8 @@ structure TomitaCliffordJordanLieBridge where
   Calibration law: the compact/mirror-even sector feeds the symmetric
   observable/Jordan readout.
   -/
-  compact_even_feeds_jordan_True : Prop
+  compact_even_feeds_jordan_True : Prop := by
+    sorry
 
   /-- Evidence for the compact/Jordan calibration law. -/
   compact_even_feeds_jordan :
@@ -66,7 +67,8 @@ structure TomitaCliffordJordanLieBridge where
   Calibration law: the noncompact/mirror-odd sector feeds the antisymmetric
   generator/Lie readout.
   -/
-  noncompact_odd_feeds_lie_True : Prop
+  noncompact_odd_feeds_lie_True : Prop := by
+    sorry
 
   /-- Evidence for the noncompact/Lie calibration law. -/
   noncompact_odd_feeds_lie :

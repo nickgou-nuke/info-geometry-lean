@@ -14,6 +14,7 @@ certificate, witness packet, or structure field is used to hide a proof.
 #### BUCKET 1: CLOSED FINITE/COLIMIT THEOREMS
 [selfDualCone_cartan_mem_iff,
  selfDualCone_dualPositive_cartan_invariant,
+ selfDualCone_cartan_selfDual_readback,
  splitCartan_stageCarrier_mono,
  splitCartan_stage_mem_pairing_nonneg_colimit,
  splitCartan_colimit_pairing_nonneg,
@@ -22,9 +23,11 @@ certificate, witness packet, or structure field is used to hide a proof.
  splitCartan_selfDualCone_extends,
  splitCartan_selfDualCone_extends_to_univ,
  splitCartan_symmetry_preserves_stageCarrier,
+ splitCartan_symmetry_stageCarrier_mem_iff,
  splitCartan_symmetry_preserves_colimit,
  splitCartan_symmetry_colimit_mem_iff,
  splitCartan_dualPositive_cartan_invariant,
+ splitCartan_stage_cartan_selfDual_readback,
  splitCartan_selfDualCone_cartan_mem_iff]
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
@@ -94,6 +97,25 @@ theorem selfDualCone_dualPositive_cartan_invariant
       hpair (θ x) y
     rw [← hpair']
     simpa [hinvol x] using h
+
+/--
+Self-dual readback under an involutive carrier-preserving Cartan symmetry:
+membership of the transformed point is exactly dual positivity of the original
+point.
+-/
+theorem selfDualCone_cartan_selfDual_readback
+    {E : Type*}
+    (pairing : E → E → ℝ)
+    (K : Set E)
+    (θ : E → E)
+    (hmap : Set.MapsTo θ K K)
+    (hinvol : ∀ x : E, θ (θ x) = x)
+    (hpair : ∀ x y, pairing (θ x) (θ y) = pairing x y)
+    (hself : IsSelfDualCone pairing K)
+    (x : E) :
+    θ x ∈ K ↔ ∀ y, y ∈ K → 0 ≤ pairing x y := by
+  exact (hself (θ x)).trans
+    (selfDualCone_dualPositive_cartan_invariant pairing K θ hmap hinvol hpair x)
 
 /-! ## Split-Cartan proper-carrier geometry -/
 
@@ -216,6 +238,26 @@ theorem splitCartan_symmetry_preserves_stageCarrier
   dsimp [splitCartanStageCarrier] at hz ⊢
   simpa [hstage z] using hz
 
+/--
+An involutive stage-preserving Cartan symmetry preserves and reflects
+membership in each cumulative finite stage carrier.
+-/
+theorem splitCartan_symmetry_stageCarrier_mem_iff
+    (X : ∀ n : ℕ, SplitOrthogonalCartanSpace n)
+    (θ : SplitCartanAmbient X → SplitCartanAmbient X)
+    (hstage : ∀ z : SplitCartanAmbient X, (θ z).1 = z.1)
+    (hinvol : ∀ z : SplitCartanAmbient X, θ (θ z) = z)
+    (n : ℕ)
+    (z : SplitCartanAmbient X) :
+    θ z ∈ splitCartanStageCarrier X n ↔ z ∈ splitCartanStageCarrier X n := by
+  constructor
+  · intro hθz
+    have hθθz : θ (θ z) ∈ splitCartanStageCarrier X n :=
+      splitCartan_symmetry_preserves_stageCarrier X θ hstage n hθz
+    simpa [hinvol z] using hθθz
+  · intro hz
+    exact splitCartan_symmetry_preserves_stageCarrier X θ hstage n hz
+
 /-- A stage-preserving Cartan symmetry preserves the algebraic colimit carrier. -/
 theorem splitCartan_symmetry_preserves_colimit
     (X : ∀ n : ℕ, SplitOrthogonalCartanSpace n)
@@ -272,6 +314,33 @@ theorem splitCartan_dualPositive_cartan_invariant
     x
 
 /--
+Finite-stage self-dual readback under a split-Cartan symmetry: membership of
+the transformed point in a finite cumulative carrier is exactly dual positivity
+of the original point against that finite carrier.
+-/
+theorem splitCartan_stage_cartan_selfDual_readback
+    (X : ∀ n : ℕ, SplitOrthogonalCartanSpace n)
+    (pairing : SplitCartanAmbient X → SplitCartanAmbient X → ℝ)
+    (θ : SplitCartanAmbient X → SplitCartanAmbient X)
+    (hself : ∀ n : ℕ, IsSelfDualCone pairing (splitCartanStageCarrier X n))
+    (hstage : ∀ z : SplitCartanAmbient X, (θ z).1 = z.1)
+    (hinvol : ∀ z : SplitCartanAmbient X, θ (θ z) = z)
+    (hpair : ∀ x y, pairing (θ x) (θ y) = pairing x y)
+    (n : ℕ)
+    (x : SplitCartanAmbient X) :
+    θ x ∈ splitCartanStageCarrier X n ↔
+      ∀ y, y ∈ splitCartanStageCarrier X n → 0 ≤ pairing x y := by
+  exact selfDualCone_cartan_selfDual_readback
+    pairing
+    (splitCartanStageCarrier X n)
+    θ
+    (splitCartan_symmetry_preserves_stageCarrier X θ hstage n)
+    hinvol
+    hpair
+    (hself n)
+    x
+
+/--
 Self-dual cone membership is invariant under a pairing-preserving involutive
 stage-preserving Cartan symmetry.
 -/
@@ -319,9 +388,14 @@ theorem splitCartan_cartan_selfDual_readback
     (x : SplitCartanAmbient X) :
     θ x ∈ Set.iUnion (splitCartanStageCarrier X) ↔
       ∀ y, y ∈ Set.iUnion (splitCartanStageCarrier X) → 0 ≤ pairing x y := by
-  have hcone : IsSelfDualCone pairing (Set.iUnion (splitCartanStageCarrier X)) :=
-    splitCartan_selfDualCone_extends X pairing hself
-  exact (hcone (θ x)).trans
-    (splitCartan_dualPositive_cartan_invariant X pairing θ hstage hinvol hpair x)
+  exact selfDualCone_cartan_selfDual_readback
+    pairing
+    (Set.iUnion (splitCartanStageCarrier X))
+    θ
+    (splitCartan_symmetry_preserves_colimit X θ hstage)
+    hinvol
+    hpair
+    (splitCartan_selfDualCone_extends X pairing hself)
+    x
 
 end InfoGeometry.OperatorAlgebra.SymmetricSplitSelfDualCartanSpaces

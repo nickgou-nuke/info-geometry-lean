@@ -420,6 +420,7 @@ import InfoGeometry.Canonical.HorizonZitterFierzReadout
 import InfoGeometry.Canonical.HorizonZitterFierzReadback
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
+import InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge

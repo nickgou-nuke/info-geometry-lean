@@ -10,24 +10,36 @@ noncomputable section
 --- AUDIT PROTOCOL MAP ---
 
 BUCKET 1: CLOSED FINITE THEOREMS:
-  - tri_facet_resolution (Demonstrates the geometric sum to identity over the Tri-Facet operator graph node).
-  - hodge_krein_orthogonality (Proves that the exact and coexact sectors decouple under the indefinite Krein metric).
-  - shear_preserves_kernel (Proves that the nilpotent boundary operator dynamically stabilizes the harmonic vacuum).
+  - tri_facet_resolution (Geometric sum to identity of the exact, coexact, and harmonic projectors)
+  - exact_projector_idempotent (Idempotency of the exact projection sector)
+  - coexact_projector_idempotent (Idempotency of the coexact projection sector)
+  - harmonic_projector_idempotent (Idempotency of the harmonic boundary projection sector)
+  - exact_coexact_disjoint (Orthogonal decoupling of exact and coexact projections)
+  - coexact_exact_disjoint (Orthogonal decoupling of coexact and exact projections)
+  - exact_harmonic_disjoint (Orthogonal decoupling of exact and harmonic projections)
+  - coexact_harmonic_disjoint (Orthogonal decoupling of coexact and harmonic projections)
+  - harmonic_exact_disjoint (Orthogonal decoupling of harmonic and exact projections)
+  - harmonic_coexact_disjoint (Orthogonal decoupling of harmonic and coexact projections)
+  - hodge_krein_orthogonality (Symmetric decoupling of exact and coexact sectors under the Krein metric)
+  - shear_preserves_kernel (Nilpotent boundary operator preserves the topological zero-mode kernel)
+  - shear_zero_on_harmonic_image (Boundary shear stabilizes the isolated harmonic projection sector)
+  - verlinde_symm_ab (Permutation symmetry of fusion coefficients between channels a and b)
+  - verlinde_symm_bc (Permutation symmetry of fusion coefficients between channels b and c)
+  - verlinde_symm_ac (Permutation symmetry of fusion coefficients between channels a and c)
 
 BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES:
-  - The axiomatic dependency graph of the theory is explicitly modeled via Lean 4 `class` inheritance. The directed graph structure (Node 0 → Node 5) resolves strictly through Typeclass inference constraints.
+  - All theorems are conditional on the explicit witnesses bundled in:
+    Node0_KreinSpace, Node1_TriFacetOperator, Node3_NilpotentShear, and Node5_VerlindeFusionRing.
 
 BUCKET 3: OPEN CLOSURE DEBT:
   - None.
 --------------------------
 -/
 
-section AxiomaticDependencyGraph
+section HodgeKreinTriFacet
 
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
--- [GRAPH NODE 0: KREIN SPACE METRIC]
--- The root of the axiomatic graph. Extends generic vector spaces to split-signature indefinite metrics.
 class Node0_KreinSpace (V : Type*) [AddCommGroup V] [Module ℝ V] where
   B : V → V → ℝ
   B_add_left : ∀ x y z, B (x + y) z = B x z + B y z
@@ -37,25 +49,23 @@ class Node0_KreinSpace (V : Type*) [AddCommGroup V] [Module ℝ V] where
   J_sq : ∀ x, J (J x) = x
   J_adj : ∀ x y, B (J x) y = B x (J y)
 
--- [GRAPH NODE 1: TRI-FACET OPERATOR ENGINE]
--- Depends on Node 0. Injects the ternary OP^3 = OP split-signature algebraic constraint.
 class Node1_TriFacetOperator (V : Type*) [AddCommGroup V] [Module ℝ V] [Node0_KreinSpace V] where
   O : V →ₗ[ℝ] V
   O_cubed : ∀ x, O (O (O x)) = O x
   O_adj : ∀ x y, Node0_KreinSpace.B (O x) y = Node0_KreinSpace.B x (O y)
 
--- [GRAPH NODE 2: HODGE-KREIN DECOMPOSITION]
--- Functional mappings and topological separation derived natively from Node 1.
-def exact_projector [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x : V) : V :=
+variable [Node0_KreinSpace V] [Node1_TriFacetOperator V]
+
+def exact_projector (x : V) : V :=
   (1 / 2 : ℝ) • (Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) + Node1_TriFacetOperator.O x)
 
-def coexact_projector [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x : V) : V :=
+def coexact_projector (x : V) : V :=
   (1 / 2 : ℝ) • (Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) - Node1_TriFacetOperator.O x)
 
-def harmonic_projector [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x : V) : V :=
+def harmonic_projector (x : V) : V :=
   x - Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x)
 
-theorem tri_facet_resolution [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x : V) :
+theorem tri_facet_resolution (x : V) :
     exact_projector x + coexact_projector x + harmonic_projector x = x := by
   dsimp [exact_projector, coexact_projector, harmonic_projector]
   rw [smul_add, smul_sub]
@@ -67,17 +77,108 @@ theorem tri_facet_resolution [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x 
   rw [h_num, one_smul]
   abel
 
-theorem hodge_krein_orthogonality [Node0_KreinSpace V] [Node1_TriFacetOperator V] (x y : V) :
+theorem exact_projector_idempotent (x : V) :
+    exact_projector (exact_projector x) = exact_projector x := by
+  have hO : Node1_TriFacetOperator.O (exact_projector x) = exact_projector x := by
+    dsimp [exact_projector]
+    rw [map_smul, map_add, Node1_TriFacetOperator.O_cubed, add_comm]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (exact_projector x)) = exact_projector x := by
+    rw [hO, hO]
+  rw [exact_projector, hOO, hO]
+  have h_add : exact_projector x + exact_projector x = (2 : ℝ) • exact_projector x := by
+    rw [← one_smul ℝ (exact_projector x), ← add_smul]
+    norm_num
+  rw [h_add, ← mul_smul]
+  norm_num
+
+theorem coexact_projector_idempotent (x : V) :
+    coexact_projector (coexact_projector x) = coexact_projector x := by
+  have hO : Node1_TriFacetOperator.O (coexact_projector x) = - coexact_projector x := by
+    dsimp [coexact_projector]
+    rw [map_smul, map_sub, Node1_TriFacetOperator.O_cubed, ← smul_neg, neg_sub]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (coexact_projector x)) = coexact_projector x := by
+    rw [hO, LinearMap.map_neg, hO, neg_neg]
+  rw [coexact_projector, hOO, hO, sub_neg_eq_add]
+  have h_add : coexact_projector x + coexact_projector x = (2 : ℝ) • coexact_projector x := by
+    rw [← one_smul ℝ (coexact_projector x), ← add_smul]
+    norm_num
+  rw [h_add, ← mul_smul]
+  norm_num
+
+theorem harmonic_projector_idempotent (x : V) :
+    harmonic_projector (harmonic_projector x) = harmonic_projector x := by
+  have hO : Node1_TriFacetOperator.O (harmonic_projector x) = 0 := by
+    dsimp [harmonic_projector]
+    rw [map_sub, Node1_TriFacetOperator.O_cubed, sub_self]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (harmonic_projector x)) = 0 := by
+    rw [hO, LinearMap.map_zero]
+  rw [harmonic_projector, hOO, sub_zero]
+
+theorem exact_coexact_disjoint (x : V) :
+    exact_projector (coexact_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (coexact_projector x) = - coexact_projector x := by
+    dsimp [coexact_projector]
+    rw [map_smul, map_sub, Node1_TriFacetOperator.O_cubed, ← smul_neg, neg_sub]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (coexact_projector x)) = coexact_projector x := by
+    rw [hO, LinearMap.map_neg, hO, neg_neg]
+  rw [exact_projector, hOO, hO, add_neg_cancel, smul_zero]
+
+theorem coexact_exact_disjoint (x : V) :
+    coexact_projector (exact_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (exact_projector x) = exact_projector x := by
+    dsimp [exact_projector]
+    rw [map_smul, map_add, Node1_TriFacetOperator.O_cubed, add_comm]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (exact_projector x)) = exact_projector x := by
+    rw [hO, hO]
+  rw [coexact_projector, hOO, hO, sub_self, smul_zero]
+
+theorem exact_harmonic_disjoint (x : V) :
+    exact_projector (harmonic_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (harmonic_projector x) = 0 := by
+    dsimp [harmonic_projector]
+    rw [map_sub, Node1_TriFacetOperator.O_cubed, sub_self]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (harmonic_projector x)) = 0 := by
+    rw [hO, LinearMap.map_zero]
+  rw [exact_projector, hOO, hO, add_zero, smul_zero]
+
+theorem coexact_harmonic_disjoint (x : V) :
+    coexact_projector (harmonic_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (harmonic_projector x) = 0 := by
+    dsimp [harmonic_projector]
+    rw [map_sub, Node1_TriFacetOperator.O_cubed, sub_self]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (harmonic_projector x)) = 0 := by
+    rw [hO, LinearMap.map_zero]
+  rw [coexact_projector, hOO, hO, sub_zero, smul_zero]
+
+theorem harmonic_exact_disjoint (x : V) :
+    harmonic_projector (exact_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (exact_projector x) = exact_projector x := by
+    dsimp [exact_projector]
+    rw [map_smul, map_add, Node1_TriFacetOperator.O_cubed, add_comm]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (exact_projector x)) = exact_projector x := by
+    rw [hO, hO]
+  rw [harmonic_projector, hOO, sub_self]
+
+theorem harmonic_coexact_disjoint (x : V) :
+    harmonic_projector (coexact_projector x) = 0 := by
+  have hO : Node1_TriFacetOperator.O (coexact_projector x) = - coexact_projector x := by
+    dsimp [coexact_projector]
+    rw [map_smul, map_sub, Node1_TriFacetOperator.O_cubed, ← smul_neg, neg_sub]
+  have hOO : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O (coexact_projector x)) = coexact_projector x := by
+    rw [hO, LinearMap.map_neg, hO, neg_neg]
+  rw [harmonic_projector, hOO, sub_self]
+
+theorem hodge_krein_orthogonality (x y : V) :
     Node0_KreinSpace.B (exact_projector x) (coexact_projector y) = 0 := by
   dsimp [exact_projector, coexact_projector]
   have h_add_left : ∀ (u1 u2 v : V), Node0_KreinSpace.B (u1 + u2) v = Node0_KreinSpace.B u1 v + Node0_KreinSpace.B u2 v := Node0_KreinSpace.B_add_left
   have h_smul1 : ∀ (c : ℝ) (u v : V), Node0_KreinSpace.B (c • u) v = c * Node0_KreinSpace.B u v := Node0_KreinSpace.B_smul_left
   have h_smul2 : ∀ (c : ℝ) (u v : V), Node0_KreinSpace.B u (c • v) = c * Node0_KreinSpace.B u v := by
     intro c u v
-    rw [Node0_KreinSpace.B_comm, h_smul1, Node0_KreinSpace.B_comm]
+    rw [Node0_KreinSpace.B_comm u (c • v), h_smul1, Node0_KreinSpace.B_comm u v]
   have h_add_right : ∀ (u v1 v2 : V), Node0_KreinSpace.B u (v1 + v2) = Node0_KreinSpace.B u v1 + Node0_KreinSpace.B u v2 := by
     intro u v1 v2
-    rw [Node0_KreinSpace.B_comm, h_add_left, Node0_KreinSpace.B_comm, Node0_KreinSpace.B_comm v2 u]
+    rw [Node0_KreinSpace.B_comm u (v1 + v2), h_add_left, Node0_KreinSpace.B_comm v1 u, Node0_KreinSpace.B_comm v2 u]
   have B_zero_right : ∀ (u : V), Node0_KreinSpace.B u 0 = 0 := by
     intro u
     have h : Node0_KreinSpace.B u (0 + 0) = Node0_KreinSpace.B u 0 + Node0_KreinSpace.B u 0 := h_add_right u 0 0
@@ -109,35 +210,67 @@ theorem hodge_krein_orthogonality [Node0_KreinSpace V] [Node1_TriFacetOperator V
   rw [term1, term2]
   ring
 
--- [GRAPH NODE 3: NILPOTENT SHEAR (PARABOLIC BOUNDARY)]
--- Depends on Node 1 & 2. Formalizes the geometric boundary translation.
-class Node3_NilpotentShear (V : Type*) [AddCommGroup V] [Module ℝ V] [Node0_KreinSpace V] [Node1_TriFacetOperator V] where
+class Node3_NilpotentShear (V : Type*) [AddCommGroup V] [Module ℝ V]
+  [Node0_KreinSpace V] [Node1_TriFacetOperator V] where
   N : V →ₗ[ℝ] V
   N_nilpotent : ∀ x, N (N x) = 0
   N_locks_kernel : ∀ x, Node1_TriFacetOperator.O x = 0 → N x = 0
 
-theorem shear_preserves_kernel [Node0_KreinSpace V] [Node1_TriFacetOperator V] [Node3_NilpotentShear V] (x : V) :
-    Node1_TriFacetOperator.O x = 0 → Node1_TriFacetOperator.O (Node3_NilpotentShear.N x) = 0 := by
+variable [Node3_NilpotentShear V]
+
+theorem shear_preserves_kernel (x : V) :
+    Node1_TriFacetOperator.O x = 0 →
+    Node1_TriFacetOperator.O (Node3_NilpotentShear.N x) = 0 := by
   intro h
-  have hN : Node3_NilpotentShear.N x = 0 := Node3_NilpotentShear.N_locks_kernel x h
-  rw [hN]
+  rw [Node3_NilpotentShear.N_locks_kernel x h]
   exact LinearMap.map_zero Node1_TriFacetOperator.O
 
--- [GRAPH NODE 4: MACROSCOPIC CONDENSATE (MAJORANA BEC)]
--- Depends on Node 3. Connects isolated boundary zero-modes to a globally phase-locked topological condensate.
-class Node4_MajoranaBEC (V : Type*) [AddCommGroup V] [Module ℝ V] [Node0_KreinSpace V] [Node1_TriFacetOperator V] [Node3_NilpotentShear V] where
-  B_condensate : V →ₗ[ℝ] (V →ₗ[ℝ] ℝ)
-  Condensate_energy_zero : ∀ x y, Node1_TriFacetOperator.O x = 0 → Node1_TriFacetOperator.O y = 0 → B_condensate x y = 0
+theorem shear_zero_on_harmonic_image (x : V)
+    (h : Node1_TriFacetOperator.O (harmonic_projector x) = 0) :
+    Node3_NilpotentShear.N (harmonic_projector x) = 0 :=
+  Node3_NilpotentShear.N_locks_kernel (harmonic_projector x) h
 
--- [GRAPH NODE 5: VERLINDE FUSION RING (TOPOLOGICAL COMPUTATION)]
--- Terminal Node. Maps the thermodynamic phase transitions into discrete Fibonacci Anyon logic on a Torus.
+class Node4_MajoranaBEC (V : Type*) [AddCommGroup V] [Module ℝ V]
+  [Node0_KreinSpace V] [Node1_TriFacetOperator V] [Node3_NilpotentShear V] where
+  B_condensate : V →ₗ[ℝ] (V →ₗ[ℝ] ℝ)
+  Condensate_energy_zero :
+    ∀ x y,
+    Node1_TriFacetOperator.O x = 0 →
+    Node1_TriFacetOperator.O y = 0 →
+    B_condensate x y = 0
+
 class Node5_VerlindeFusionRing (Idx : Type*) [Fintype Idx] where
   vac : Idx
   S : Idx → Idx → ℝ
   N_fuse : Idx → Idx → Idx → ℝ
-  verlinde_formula : ∀ a b c, N_fuse a b c = ∑ x, (S a x * S b x * S c x) / S vac x
+  verlinde_formula :
+    ∀ a b c, N_fuse a b c = ∑ x, (S a x * S b x * S c x) / S vac x
 
-end AxiomaticDependencyGraph
+theorem verlinde_symm_ab {Idx : Type*} [Fintype Idx] [Node5_VerlindeFusionRing Idx] (a b c : Idx) :
+    Node5_VerlindeFusionRing.N_fuse a b c = Node5_VerlindeFusionRing.N_fuse b a c := by
+  rw [Node5_VerlindeFusionRing.verlinde_formula a b c]
+  rw [Node5_VerlindeFusionRing.verlinde_formula b a c]
+  apply Finset.sum_congr rfl
+  intro x _
+  ring
+
+theorem verlinde_symm_bc {Idx : Type*} [Fintype Idx] [Node5_VerlindeFusionRing Idx] (a b c : Idx) :
+    Node5_VerlindeFusionRing.N_fuse a b c = Node5_VerlindeFusionRing.N_fuse a c b := by
+  rw [Node5_VerlindeFusionRing.verlinde_formula a b c]
+  rw [Node5_VerlindeFusionRing.verlinde_formula a c b]
+  apply Finset.sum_congr rfl
+  intro x _
+  ring
+
+theorem verlinde_symm_ac {Idx : Type*} [Fintype Idx] [Node5_VerlindeFusionRing Idx] (a b c : Idx) :
+    Node5_VerlindeFusionRing.N_fuse a b c = Node5_VerlindeFusionRing.N_fuse c b a := by
+  rw [Node5_VerlindeFusionRing.verlinde_formula a b c]
+  rw [Node5_VerlindeFusionRing.verlinde_formula c b a]
+  apply Finset.sum_congr rfl
+  intro x _
+  ring
+
+end HodgeKreinTriFacet
 
 end
 

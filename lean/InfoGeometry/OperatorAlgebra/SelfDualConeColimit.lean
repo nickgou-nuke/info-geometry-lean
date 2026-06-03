@@ -78,6 +78,45 @@ theorem selfDualCone_directed_system_compatible
   exact selfDualCone_closed_under_carrier_step pairing K hmono hself hx hy
 
 /--
+Finite-to-colimit positivity, one staged element at a time.
+
+If `x` is in a finite carrier stage, then it pairs nonnegatively with every
+element of the directed union.
+-/
+theorem selfDualCone_stage_mem_pairing_nonneg_iUnion
+    {E : Type*}
+    (pairing : E → E → ℝ)
+    (K : ℕ → Set E)
+    (hmono : Monotone K)
+    (hself : ∀ n : ℕ, IsSelfDualCone pairing (K n))
+    {n : ℕ} {x : E}
+    (hx : x ∈ K n) :
+    ∀ y, y ∈ Set.iUnion K → 0 ≤ pairing x y := by
+  intro y hy
+  rcases Set.mem_iUnion.mp hy with ⟨j, hyj⟩
+  exact selfDualCone_closed_under_carrier_step pairing K hmono hself hx hyj
+
+/--
+Finite-to-colimit positivity for two elements of the directed union.
+
+Both elements have finite-stage witnesses, hence both lie in a common finite
+carrier where self-duality gives nonnegative pairing.
+-/
+theorem selfDualCone_iUnion_pairing_nonneg
+    {E : Type*}
+    (pairing : E → E → ℝ)
+    (K : ℕ → Set E)
+    (hmono : Monotone K)
+    (hself : ∀ n : ℕ, IsSelfDualCone pairing (K n))
+    {x y : E}
+    (hx : x ∈ Set.iUnion K)
+    (hy : y ∈ Set.iUnion K) :
+    0 ≤ pairing x y := by
+  rcases Set.mem_iUnion.mp hx with ⟨i, hxi⟩
+  rcases Set.mem_iUnion.mp hy with ⟨j, hyj⟩
+  exact selfDualCone_closed_under_carrier_step pairing K hmono hself hxi hyj
+
+/--
 Directed colimit of self-dual cone carriers.
 
 If `K n` is an increasing sequence of self-dual carriers, then its directed
@@ -101,11 +140,8 @@ theorem isSelfDualCone_iUnion_nat
     IsSelfDualCone pairing (Set.iUnion K) := by
   intro x
   constructor
-  · intro hx
-    rcases Set.mem_iUnion.mp hx with ⟨i, hxi⟩
-    intro y hy
-    rcases Set.mem_iUnion.mp hy with ⟨j, hyj⟩
-    exact selfDualCone_closed_under_carrier_step pairing K hmono hself hxi hyj
+  · intro hx y hy
+    exact selfDualCone_iUnion_pairing_nonneg pairing K hmono hself hx hy
   · intro hpositive
     exact hdual_exhaustive x hpositive
 

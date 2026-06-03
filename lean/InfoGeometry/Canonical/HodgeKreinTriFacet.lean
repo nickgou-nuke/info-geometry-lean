@@ -25,7 +25,7 @@ Hodge representatives.
   `P_ext_P_coext`, `P_coext_P_ext`, `O_P_harm`, `O_O_P_harm`,
   `P_ext_P_harm`, `P_coext_P_harm`, `P_core_eq_ext_add_coext`,
   `P_core_add_P_harm`, `P_core_add_P_nil`, `P_core_P_nil`,
-  `P_nil_P_core`.
+  `P_nil_P_core`, `range_eq_ker_sub_id`, `tri_facet_decomposition_equiv`.
 - BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES:
   The projector identities are conditional on `half + half = 1` and, where
   needed, the cubic operator law `∀ x, O (O (O x)) = O x`.
@@ -39,24 +39,24 @@ namespace InfoGeometry.Canonical.HodgeKreinTriFacet
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- Exact-sector projector: `P_ext = half * (O^2 + O)`. -/
-def P_ext (O : V →ₗ[ℝ] V) (half : ℝ) (x : V) : V :=
-  half • (O (O x) + O x)
+def P_ext (O : V →ₗ[ℝ] V) (half : ℝ) : V →ₗ[ℝ] V :=
+  half • (O.comp O + O)
 
 /-- Coexact-sector projector: `P_coext = half * (O^2 - O)`. -/
-def P_coext (O : V →ₗ[ℝ] V) (half : ℝ) (x : V) : V :=
-  half • (O (O x) - O x)
+def P_coext (O : V →ₗ[ℝ] V) (half : ℝ) : V →ₗ[ℝ] V :=
+  half • (O.comp O - O)
 
 /-- Harmonic-sector projector: `P_harm = I - O^2`. -/
-def P_harm (O : V →ₗ[ℝ] V) (x : V) : V :=
-  x - O (O x)
+def P_harm (O : V →ₗ[ℝ] V) : V →ₗ[ℝ] V :=
+  LinearMap.id - O.comp O
 
 /-- Compact-core projector: `P_core = O^2`. -/
-def P_core (O : V →ₗ[ℝ] V) (x : V) : V :=
-  O (O x)
+def P_core (O : V →ₗ[ℝ] V) : V →ₗ[ℝ] V :=
+  O.comp O
 
 /-- Nilpotent-boundary projector: `P_nil = I - O^2`. -/
-def P_nil (O : V →ₗ[ℝ] V) (x : V) : V :=
-  x - O (O x)
+def P_nil (O : V →ₗ[ℝ] V) : V →ₗ[ℝ] V :=
+  LinearMap.id - O.comp O
 
 /-- Scalar half of a doubled vector is the vector. -/
 theorem half_smul_add_self (half : ℝ) (h_half : half + half = 1) (x : V) :
@@ -89,6 +89,7 @@ theorem P_ext_add_P_coext
     (x : V) :
     P_ext O half x + P_coext O half x = O (O x) := by
   unfold P_ext P_coext
+  dsimp
   exact half_smul_add_sub_eq_left half h_half (O (O x)) (O x)
 
 /-- The tri-facet components sum to the original vector. -/
@@ -100,6 +101,7 @@ theorem tri_facet_sum
     P_ext O half x + P_coext O half x + P_harm O x = x := by
   rw [P_ext_add_P_coext O half h_half x]
   unfold P_harm
+  dsimp
   abel
 
 /-- The exact projector is fixed by `O^2`. -/
@@ -110,6 +112,7 @@ theorem O_O_P_ext
     (x : V) :
     O (O (P_ext O half x)) = P_ext O half x := by
   unfold P_ext
+  dsimp
   rw [map_smul, map_smul, map_add, map_add]
   rw [hO3 (O x), hO3 x]
 
@@ -121,6 +124,7 @@ theorem O_P_ext
     (x : V) :
     O (P_ext O half x) = P_ext O half x := by
   unfold P_ext
+  dsimp
   rw [map_smul, map_add, hO3 x, add_comm]
 
 /-- The coexact projector is fixed by `O^2`. -/
@@ -131,6 +135,7 @@ theorem O_O_P_coext
     (x : V) :
     O (O (P_coext O half x)) = P_coext O half x := by
   unfold P_coext
+  dsimp
   rw [map_smul, map_smul, map_sub, map_sub]
   rw [hO3 (O x), hO3 x]
 
@@ -142,6 +147,7 @@ theorem O_P_coext
     (x : V) :
     O (P_coext O half x) = -P_coext O half x := by
   unfold P_coext
+  dsimp
   rw [map_smul, map_sub, hO3 x]
   have h : O x - O (O x) = -(O (O x) - O x) := by abel
   rw [h, smul_neg]
@@ -153,6 +159,7 @@ theorem O_P_harm
     (x : V) :
     O (P_harm O x) = 0 := by
   unfold P_harm
+  dsimp
   rw [map_sub, hO3 x]
   abel
 
@@ -208,6 +215,7 @@ theorem P_harm_P_ext
     (x : V) :
     P_harm O (P_ext O half x) = 0 := by
   unfold P_harm
+  dsimp
   rw [O_O_P_ext O hO3 half x, sub_self]
 
 /-- The harmonic projector annihilates the coexact sector. -/
@@ -218,6 +226,7 @@ theorem P_harm_P_coext
     (x : V) :
     P_harm O (P_coext O half x) = 0 := by
   unfold P_harm
+  dsimp
   rw [O_O_P_coext O hO3 half x, sub_self]
 
 /-- The exact projector annihilates the coexact sector. -/
@@ -228,6 +237,7 @@ theorem P_ext_P_coext
     (x : V) :
     P_ext O half (P_coext O half x) = 0 := by
   unfold P_ext
+  dsimp
   rw [O_O_P_coext O hO3 half x, O_P_coext O hO3 half x]
   rw [add_neg_cancel, smul_zero]
 
@@ -239,6 +249,7 @@ theorem P_coext_P_ext
     (x : V) :
     P_coext O half (P_ext O half x) = 0 := by
   unfold P_coext
+  dsimp
   rw [O_O_P_ext O hO3 half x, O_P_ext O hO3 half x]
   rw [sub_self, smul_zero]
 
@@ -250,6 +261,7 @@ theorem P_ext_P_harm
     (x : V) :
     P_ext O half (P_harm O x) = 0 := by
   unfold P_ext
+  dsimp
   rw [O_O_P_harm O hO3 x, O_P_harm O hO3 x]
   simp
 
@@ -261,6 +273,7 @@ theorem P_coext_P_harm
     (x : V) :
     P_coext O half (P_harm O x) = 0 := by
   unfold P_coext
+  dsimp
   rw [O_O_P_harm O hO3 x, O_P_harm O hO3 x]
   simp
 
@@ -278,12 +291,14 @@ theorem P_core_eq_ext_add_coext
 theorem P_core_add_P_harm (O : V →ₗ[ℝ] V) (x : V) :
     P_core O x + P_harm O x = x := by
   unfold P_core P_harm
+  dsimp
   abel
 
 /-- The compact core and nilpotent boundary partition the vector. -/
 theorem P_core_add_P_nil (O : V →ₗ[ℝ] V) (x : V) :
     P_core O x + P_nil O x = x := by
   unfold P_core P_nil
+  dsimp
   abel
 
 /-- The compact core annihilates the nilpotent boundary. -/
@@ -293,6 +308,7 @@ theorem P_core_P_nil
     (x : V) :
     P_core O (P_nil O x) = 0 := by
   unfold P_core P_nil
+  dsimp
   rw [map_sub, hO3 x]
   rw [sub_self, map_zero]
 
@@ -303,7 +319,59 @@ theorem P_nil_P_core
     (x : V) :
     P_nil O (P_core O x) = 0 := by
   unfold P_nil P_core
+  dsimp
   rw [hO3 (O x)]
   abel
+
+/-- Range of an idempotent operator is the kernel of (I - P). -/
+theorem range_eq_ker_sub_id {P : V →ₗ[ℝ] V} (hP : P.comp P = P) :
+    LinearMap.range P = LinearMap.ker (LinearMap.id - P) := by
+  ext x
+  constructor
+  · intro hx
+    rcases hx with ⟨y, rfl⟩
+    have h1 : P (P y) = P y := by
+      have h_comp : (P.comp P) y = P y := by rw [hP]
+      exact h_comp
+    simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero]
+    exact h1.symm
+  · intro hx
+    simp only [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at hx
+    exact ⟨x, hx.symm⟩
+
+/-- Linear equivalence for the tri-facet direct sum decomposition. -/
+def tri_facet_decomposition_equiv
+    (O : V →ₗ[ℝ] V) (hO3 : ∀ x : V, O (O (O x)) = O x)
+    (half : ℝ) (h_half : half + half = 1) :
+    V ≃ₗ[ℝ] (LinearMap.range (P_ext O half) × LinearMap.range (P_coext O half) × LinearMap.range (P_harm O)) where
+  toFun x := ⟨⟨P_ext O half x, ⟨x, rfl⟩⟩, ⟨P_coext O half x, ⟨x, rfl⟩⟩, ⟨P_harm O x, ⟨x, rfl⟩⟩⟩
+  map_add' x y := by
+    ext <;> simp [map_add]
+  map_smul' c x := by
+    ext <;> simp [map_smul]
+  invFun p := p.1.1 + p.2.1 + p.2.2.1
+  left_inv x := by
+    dsimp
+    exact tri_facet_sum O half h_half x
+  right_inv p := by
+    rcases p with ⟨⟨u1, ⟨x1, rfl⟩⟩, ⟨u2, ⟨x2, rfl⟩⟩, ⟨u3, ⟨x3, rfl⟩⟩⟩
+    dsimp
+    -- We need to prove that applying the projectors to u1 + u2 + u3 recovers u1, u2, u3 respectively.
+    -- First, since u1 = P_ext O half x1, and P_ext is idempotent:
+    have hu1 : P_ext O half (P_ext O half x1) = P_ext O half x1 := P_ext_idempotent O hO3 half h_half x1
+    -- Similarly for u2, u3:
+    have hu2 : P_coext O half (P_coext O half x2) = P_coext O half x2 := P_coext_idempotent O hO3 half h_half x2
+    have hu3 : P_harm O (P_harm O x3) = P_harm O x3 := P_harm_idempotent O hO3 x3
+    -- And we have pairwise annihilation:
+    have h12 : P_ext O half (P_coext O half x2) = 0 := P_ext_P_coext O hO3 half x2
+    have h13 : P_ext O half (P_harm O x3) = 0 := P_ext_P_harm O hO3 half x3
+    have h21 : P_coext O half (P_ext O half x1) = 0 := P_coext_P_ext O hO3 half x1
+    have h23 : P_coext O half (P_harm O x3) = 0 := P_coext_P_harm O hO3 half x3
+    have h31 : P_harm O (P_ext O half x1) = 0 := P_harm_P_ext O hO3 half x1
+    have h32 : P_harm O (P_coext O half x2) = 0 := P_harm_P_coext O hO3 half x2
+    ext
+    · simp [map_add, hu1, h12, h13]
+    · simp [map_add, hu2, h21, h23]
+    · simp [map_add, hu3, h31, h32]
 
 end InfoGeometry.Canonical.HodgeKreinTriFacet

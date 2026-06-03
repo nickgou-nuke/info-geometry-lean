@@ -31,6 +31,41 @@ noncomputable def coexact_projector (x : V) : V :=
 def harmonic_projector (x : V) : V :=
   x - Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x)
 
+/-- `exact_projector` as a linear map. -/
+noncomputable def exact_projector_lin : V →ₗ[ℝ] V where
+  toFun := exact_projector
+  map_add' x y := by
+    unfold exact_projector
+    simp only [map_add, smul_add]
+    abel
+  map_smul' r x := by
+    unfold exact_projector
+    simp only [map_smul, RingHom.id_apply, smul_add]
+    rw [smul_comm r (1 / 2 : ℝ), smul_comm r (1 / 2 : ℝ)]
+
+/-- `coexact_projector` as a linear map. -/
+noncomputable def coexact_projector_lin : V →ₗ[ℝ] V where
+  toFun := coexact_projector
+  map_add' x y := by
+    unfold coexact_projector
+    simp only [map_add, smul_add, smul_sub]
+    abel
+  map_smul' r x := by
+    unfold coexact_projector
+    simp only [map_smul, RingHom.id_apply, smul_sub]
+    rw [smul_comm r (1 / 2 : ℝ), smul_comm r (1 / 2 : ℝ)]
+
+/-- `harmonic_projector` as a linear map. -/
+def harmonic_projector_lin : V →ₗ[ℝ] V where
+  toFun := harmonic_projector
+  map_add' x y := by
+    unfold harmonic_projector
+    simp only [map_add, sub_eq_add_neg, neg_add]
+    abel
+  map_smul' r x := by
+    unfold harmonic_projector
+    simp only [map_smul, RingHom.id_apply, smul_sub]
+
 theorem tri_facet_resolution (x : V) :
     exact_projector x + coexact_projector x + harmonic_projector x = x := by
   unfold exact_projector coexact_projector harmonic_projector
@@ -209,10 +244,10 @@ theorem shear_preserves_kernel (x : V) :
   rw [Node3_NilpotentShear.N_locks_kernel x h]
   exact LinearMap.map_zero Node1_TriFacetOperator.O
 
-theorem shear_zero_on_harmonic_image (x : V)
-    (h : Node1_TriFacetOperator.O (harmonic_projector x) = 0) :
+theorem shear_zero_on_harmonic_image (x : V) :
     Node3_NilpotentShear.N (harmonic_projector x) = 0 :=
-  Node3_NilpotentShear.N_locks_kernel (harmonic_projector x) h
+  Node3_NilpotentShear.N_locks_kernel (harmonic_projector x)
+    (O_harmonic_projector (V := V) x)
 
 class Node4_MajoranaBEC (V : Type*) [AddCommGroup V] [Module ℝ V]
   [Node0_KreinSpace V] [Node1_TriFacetOperator V] [Node3_NilpotentShear V] where
@@ -253,6 +288,63 @@ theorem verlinde_symm_ac {Idx : Type*} [Fintype Idx] [Node5_VerlindeFusionRing I
   apply Finset.sum_congr rfl
   intro x _
   ring
+
+/-- The tri-facet decomposition as a direct-sum relation of linear maps. -/
+theorem tri_facet_resolution_lin : (exact_projector_lin : V →ₗ[ℝ] V) + coexact_projector_lin + harmonic_projector_lin = LinearMap.id := by
+  ext x
+  simp only [LinearMap.add_apply, LinearMap.id_apply]
+  exact tri_facet_resolution x
+
+/-- `exact_projector_lin` is idempotent. -/
+theorem exact_projector_lin_idempotent : (exact_projector_lin : V →ₗ[ℝ] V).comp exact_projector_lin = exact_projector_lin := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply]
+  exact exact_projector_idempotent x
+
+/-- `coexact_projector_lin` is idempotent. -/
+theorem coexact_projector_lin_idempotent : (coexact_projector_lin : V →ₗ[ℝ] V).comp coexact_projector_lin = coexact_projector_lin := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply]
+  exact coexact_projector_idempotent x
+
+/-- `harmonic_projector_lin` is idempotent. -/
+theorem harmonic_projector_lin_idempotent : (harmonic_projector_lin : V →ₗ[ℝ] V).comp harmonic_projector_lin = harmonic_projector_lin := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply]
+  exact harmonic_projector_idempotent x
+
+/-- `exact_projector_lin` and `coexact_projector_lin` annihilate each other. -/
+theorem exact_comp_coexact_lin : (exact_projector_lin : V →ₗ[ℝ] V).comp coexact_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact exact_coexact_disjoint x
+
+theorem coexact_comp_exact_lin : (coexact_projector_lin : V →ₗ[ℝ] V).comp exact_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact coexact_exact_disjoint x
+
+/-- `exact_projector_lin` and `harmonic_projector_lin` annihilate each other. -/
+theorem exact_comp_harmonic_lin : (exact_projector_lin : V →ₗ[ℝ] V).comp harmonic_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact exact_harmonic_disjoint x
+
+theorem harmonic_comp_exact_lin : (harmonic_projector_lin : V →ₗ[ℝ] V).comp exact_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact harmonic_exact_disjoint x
+
+/-- `coexact_projector_lin` and `harmonic_projector_lin` annihilate each other. -/
+theorem coexact_comp_harmonic_lin : (coexact_projector_lin : V →ₗ[ℝ] V).comp harmonic_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact coexact_harmonic_disjoint x
+
+theorem harmonic_comp_coexact_lin : (harmonic_projector_lin : V →ₗ[ℝ] V).comp coexact_projector_lin = 0 := by
+  ext x
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
+  exact harmonic_coexact_disjoint x
 
 end HodgeKreinTriFacet
 

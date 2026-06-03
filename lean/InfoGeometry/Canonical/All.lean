@@ -598,6 +598,7 @@ import InfoGeometry.Krein.CartanDecomposition
 import InfoGeometry.Krein.Clifford
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.FundamentalSymmetryProjectors
 import InfoGeometry.Krein.OrthogonalGroup
 import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge

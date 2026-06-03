@@ -44,7 +44,9 @@ Publication-safe Drazin centralizer sanctuary.
 
 `horizon` already carries the projection-level facts used in this file:
 `p = A * AD`, Drazin laws, and `star p = p`.  The field
-`finite_compressed_weight_holds` records the extra state/weight finiteness
+`finite_compressed_weight_law` records the supplied proof of the extra
+state/weight finiteness proposition
+`finite_compressed_weight`
 condition needed to normalize a compressed state.
 -/
 @[rep_depth operator]
@@ -63,7 +65,7 @@ structure DrazinCentralizerSanctuary
     ModularInvariantDrazinBoundary flow horizon
   finite_compressed_weight :
     Prop
-  finite_compressed_weight_holds :
+  finite_compressed_weight_law :
     finite_compressed_weight
 
 /--
@@ -130,7 +132,7 @@ theorem horizon_idempotent :
 @[rep_depth operator]
 theorem finite_compressed_weight_readback :
     S.finite_compressed_weight :=
-  S.finite_compressed_weight_holds
+  S.finite_compressed_weight_law
 
 end DrazinCentralizerSanctuary
 
@@ -278,8 +280,8 @@ def IsStateRelativeWittenBalanced
 /--
 Final expectation-only Drazin/Fierz centralizer law.
 
-The field `quadric_True` is explicitly supplied.  This prevents laundering a
-Fierz identity through the centralizer hypothesis alone.
+The field `residual_eq_zero_law` is explicitly supplied.  This prevents
+laundering a Fierz identity through the centralizer hypothesis alone.
 -/
 @[rep_depth operator]
 structure DrazinCentralizerFierzLaw
@@ -306,7 +308,7 @@ structure DrazinCentralizerFierzLaw
     ∀ ch : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel,
       coords.coord ch =
         centralizerExpectationFierzCoordinate state channels horizon ch
-  quadric_True :
+  residual_eq_zero_law :
     residual.residual coords = 0
 
 namespace DrazinCentralizerFierzLaw
@@ -342,7 +344,7 @@ theorem coords_are_expectation_readout
 @[rep_depth operator]
 theorem residual_eq_zero :
     K.residual.residual K.coords = 0 :=
-  K.quadric_True
+  K.residual_eq_zero_law
 
 end DrazinCentralizerFierzLaw
 
@@ -381,7 +383,7 @@ structure FinalDrazinFierzLaw
           channels
           sanctuary.horizon
           ch
-  quadric_True :
+  residual_eq_zero_law :
     residual.residual coords = 0
 
 namespace FinalDrazinFierzLaw
@@ -405,7 +407,7 @@ theorem coords_eq_expectation
 @[rep_depth operator]
 theorem residual_eq_zero :
     F.residual.residual F.coords = 0 :=
-  F.quadric_True
+  F.residual_eq_zero_law
 
 /-- The final law includes an explicit modular-fixed Drazin horizon. -/
 @[rep_depth operator]

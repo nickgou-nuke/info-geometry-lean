@@ -53,21 +53,15 @@ by
   simp [splitCliffordInfinityCurrentDatum]
 
 /--
-Proof-carrying boundary package for the split completion as a current datum.
+Boundary package for the split completion as a current datum.
 
-This records the exact morphism surface that is currently proved: the split
-direct limit carries an affine current datum with zero central charge, and the
-current-mode bracket law is discharged by the lift above.
-It does not claim a locally truncated Heisenberg representation.
+The current-mode bracket and central-commutation laws are supplied as separate
+theorems below, not as proof fields of this structure.
 -/
 structure SplitCliffordCurrentMorphism where
   /-- The affine current datum on the split direct limit. -/
   datum :
     AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity
-  /-- The current-mode bracket law inherited from the split lift. -/
-  current_mode_bracket_True : datum.current_mode_bracket_True
-  /-- The central element commutes with everything. -/
-  current_central_commutes_True : datum.current_central_commutes_True
 
 /--
 Concrete witness of the split completion current boundary.
@@ -78,11 +72,25 @@ current-layer surface currently supported by the split completion file.
 noncomputable def splitCliffordInfinityCurrentMorphism :
     SplitCliffordCurrentMorphism where
   datum := splitCliffordInfinityCurrentDatum
-  current_mode_bracket_True := by
-    intro m n X Y
-    simpa using splitCliffordInfinity_current_mode_bracket m n X Y
-  current_central_commutes_True := by
-    intro X
-    simpa using splitCliffordInfinity_current_central_commutes X
+
+/-- The split completion's current-mode bracket law is inherited from the split lift. -/
+theorem splitCliffordInfinityCurrentMorphism_current_mode_bracket :
+    ∀ (m n : ℤ) (X Y : SplitCliffordInfinity),
+      ⁅splitCliffordInfinityCurrentMorphism.datum.Current m X,
+          splitCliffordInfinityCurrentMorphism.datum.Current n Y⁆ =
+        splitCliffordInfinityCurrentMorphism.datum.Current (m + n) ⁅X, Y⁆ +
+          ((m : ℝ) * splitCliffordInfinityCurrentMorphism.datum.killingForm X Y) •
+            (if m + n = 0 then splitCliffordInfinityCurrentMorphism.datum.kCentral else 0) := by
+  intro m n X Y
+  simpa [splitCliffordInfinityCurrentMorphism] using
+    splitCliffordInfinity_current_mode_bracket m n X Y
+
+/-- The split completion's current central element commutes with everything. -/
+theorem splitCliffordInfinityCurrentMorphism_current_central_commutes :
+    ∀ X : SplitCliffordInfinity,
+      ⁅splitCliffordInfinityCurrentMorphism.datum.kCentral, X⁆ = 0 := by
+  intro X
+  simpa [splitCliffordInfinityCurrentMorphism] using
+    splitCliffordInfinity_current_central_commutes X
 
 end InfoGeometry.Canonical.SplitCliffordCurrentLift

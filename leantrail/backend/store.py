@@ -17,6 +17,23 @@ class GraphStore:
             self.out_edges.setdefault(edge.src, []).append(edge)
             self.in_edges.setdefault(edge.dst, []).append(edge)
 
+    @staticmethod
+    def _structural_dedup_payload(node: NodeRecord) -> dict[str, Any]:
+        attrs = node.attrs if isinstance(node.attrs, dict) else {}
+        payload = attrs.get("structural_dedup")
+        return payload if isinstance(payload, dict) else {}
+
+    @classmethod
+    def _dedup_status(cls, node: NodeRecord) -> str:
+        payload = cls._structural_dedup_payload(node)
+        if not payload:
+            return "none"
+        subtype = str(payload.get("relation_subtype", "")).strip()
+        action = str(payload.get("recommended_action", "")).strip()
+        if subtype == "compatibility_alias_candidate" or action == "review_as_alias_family":
+            return "suppressed"
+        return "active"
+
     def search(self, query: str, limit: int = 50) -> list[dict[str, Any]]:
         q = query.lower().strip()
         if not q:
@@ -73,6 +90,41 @@ class GraphStore:
             if (e.src, e.dst, e.kind) in edge_keys and e.src in visited and e.dst in visited
         ]
         return {"nodes": nodes, "edges": edges}
+
+    def dedup_candidates(self, status: str = "active", limit: int = 50) -> dict[str, Any]:
+        normalized = str(status).strip().lower() or "active"
+        if normalized not in {"active", "suppressed", "all", "none"}:
+            raise ValueError(f"unsupported dedup status: {status}")
+
+        summary = {"active": 0, "suppressed": 0, "none": 0}
+        rows: list[dict[str, Any]] = []
+        for node in self.snapshot.nodes:
+            if node.kind != "Declaration":
+                continue
+            dedup_status = self._dedup_status(node)
+            summary[dedup_status] += 1
+            if normalized != "all" and dedup_status != normalized:
+                continue
+            if normalized == "none" and dedup_status != "none":
+                continue
+            if dedup_status == "none" and normalized != "none":
+                continue
+            rows.append(
+                {
+                    "node": node.to_dict(),
+                    "dedup_status": dedup_status,
+                    "structural_dedup": self._structural_dedup_payload(node),
+                }
+            )
+
+        rows.sort(
+            key=lambda row: (
+                0 if row["dedup_status"] == "active" else 1,
+                -int(row["structural_dedup"].get("member_count", 0) or 0),
+                str(row["node"].get("name", "")),
+            )
+        )
+        return {"status": normalized, "summary": summary, "results": rows[:limit]}
 
     def shortest_path(self, src: str, dst: str, lawful_only: bool = True) -> dict[str, Any]:
         return self.shortest_path_with_state_policy(

@@ -1,12 +1,10 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
 /-!
-# InfoGeometry.Canonical.MoebiusClosureBridge
+# InfoGeometry.Canonical.MoebiusClosure
 
 Theorem-safe Möbius closure socket.
 
@@ -22,7 +20,7 @@ The theorem surface is intentionally only readbacks:
 * the Wilson holonomy readout is invariant.
 -/
 
-namespace InfoGeometry.Canonical.MoebiusClosureBridge
+namespace InfoGeometry.Canonical.MoebiusClosure
 
 /-- A real `SL(2,R)` matrix, carried as explicit data. -/
 @[rep_depth projective]
@@ -100,6 +98,6 @@ theorem wilsonHolonomy_moebius_invariant
 
 end MoebiusClosureBridge
 
-end InfoGeometry.Canonical.MoebiusClosureBridge
+end InfoGeometry.Canonical.MoebiusClosure
 
 end

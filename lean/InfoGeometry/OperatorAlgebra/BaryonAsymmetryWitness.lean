@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/BaryonAsymmetryWitness.lean
 
-Witness-gated baryon-asymmetry accounting.
+Baryon-asymmetry accounting.
 
 This module does not derive baryogenesis. It records an optional model in which
 an asymmetry readout is related to a condensate-transfer readout.
@@ -17,10 +17,10 @@ namespace InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 
 /--
-Baryon-asymmetry accounting witness.
+Baryon-asymmetry accounting datum.
 
-This is not a baryogenesis theorem. A physical baryogenesis model must also
-supply the relevant violation/out-of-equilibrium witnesses.
+This is not a baryogenesis theorem. The structure stores only the algebraic
+readout equality used below.
 -/
 structure BaryonAsymmetryAccounting
     (V Charge : Type*)
@@ -40,27 +40,6 @@ structure BaryonAsymmetryAccounting
   -/
   asymmetry_eq_condensateTransfer :
     asymmetry = ledger.condensateTransfer
-
-  /-- Baryon-number violation witness. -/
-  baryon_number_violation_True : Prop
-
-  /-- C/CP violation witness. -/
-  cp_violation_True : Prop
-
-  /-- Out-of-equilibrium witness. -/
-  out_of_equilibrium_True : Prop
-
-  /-- Proof/certificate of baryon-number violation. -/
-  baryon_number_violation_sorryProof :
-    baryon_number_violation_True
-
-  /-- Proof/certificate of CP violation. -/
-  cp_violation_sorryProof :
-    cp_violation_True
-
-  /-- Proof/certificate of departure from equilibrium. -/
-  out_of_equilibrium_sorryProof :
-    out_of_equilibrium_True
 
 namespace BaryonAsymmetryAccounting
 

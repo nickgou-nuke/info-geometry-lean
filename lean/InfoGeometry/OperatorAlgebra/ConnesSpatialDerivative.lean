@@ -6,8 +6,9 @@ Connes spatial derivative and unnormalized modular comparison.
 This module replaces normalized-state geometry and trace-based shortcuts with
 weight comparison data.
 
-The abstract Type III layer is witness-gated by Connes cocycle / spatial
-derivative laws.
+The abstract Type III layer records only explicit algebraic cocycle / spatial
+derivative laws. Analytic normality, support, and affiliated-operator
+regularity are not encoded here.
 
 The scalar positive-cone branch is fully constructive and proves:
 
@@ -46,26 +47,6 @@ structure OperatorWeight
   /-- Extended nonnegative weight readout. -/
   weight : A → ℝ≥0∞
 
-  /-- Positivity law. -/
-  positivity_True : Prop
-  positivity_sorryProof :
-    positivity_True
-
-  /-- Normality law. -/
-  normality_True : Prop
-  normality_sorryProof :
-    normality_True
-
-  /-- Faithfulness law. -/
-  faithfulness_True : Prop
-  faithfulness_sorryProof :
-    faithfulness_True
-
-  /-- Semifiniteness law. -/
-  semifiniteness_True : Prop
-  semifiniteness_sorryProof :
-    semifiniteness_True
-
 namespace OperatorWeight
 
 variable {A : Type*}
@@ -82,7 +63,7 @@ def mass
 
 end OperatorWeight
 
-/-! ## 2. Modular flow socket -/
+/-! ## 2. Modular flow data -/
 
 /--
 Algebraic modular flow.
@@ -131,7 +112,7 @@ theorem flow_mul_apply
 
 end ModularFlow
 
-/-! ## 3. Connes cocycle derivative socket -/
+/-! ## 3. Connes cocycle derivative data -/
 
 /--
 Connes cocycle derivative datum.
@@ -158,22 +139,6 @@ structure ConnesCocycleDerivative
     ∀ φ ψ η t,
       cocycle φ ψ t * cocycle ψ η t = cocycle φ η t
 
-  /--
-  Cocycle identity in modular time.
-
-  Intended form:
-  `u_{s+t} = u_s * σ_s^ψ(u_t)`, convention-dependent.
-  -/
-  modular_cocycle_True : Prop
-  modular_cocycle_sorryProof :
-    modular_cocycle_True
-
-  /--
-  Unitarity/partial-isometry/support law for the cocycle.
-  -/
-  support_unitarity_True : Prop
-  support_unitarity_sorryProof :
-    support_unitarity_True
 
 namespace ConnesCocycleDerivative
 
@@ -201,7 +166,7 @@ theorem chain_rule_apply
 
 end ConnesCocycleDerivative
 
-/-! ## 4. Spatial derivative socket -/
+/-! ## 4. Spatial derivative data -/
 
 /--
 Connes spatial derivative datum.
@@ -226,14 +191,6 @@ structure ConnesSpatialDerivative
       spatialDerivative φ ψ * spatialDerivative ψ η =
         spatialDerivative φ η
 
-  /--
-  Support/absolute-continuity law.
-
-  This is where singular-support and infinite-entropy cases are handled.
-  -/
-  support_True : Prop
-  support_sorryProof :
-    support_True
 
 namespace ConnesSpatialDerivative
 
@@ -277,23 +234,13 @@ structure SymmetricRelativeHamiltonianCalibration
   symHamiltonian :
     Weight → Weight → SymHam
 
-  /-- Law saying this readout is derived from the spatial derivative. -/
-  derived_from_spatial_True : Prop
-  derived_from_spatial_sorryProof :
-    derived_from_spatial_True
-
-  /-- Optional symmetry convention. -/
-  symmetry_True : Prop
-  symmetry_sorryProof :
-    symmetry_True
-
-/-! ## 6. Abstract BKM socket from spatial derivative -/
+/-! ## 6. Abstract BKM data from spatial derivative -/
 
 /--
 BKM metric datum on the unnormalized positive cone.
 
-This is witness-gated at the Type III level.  Positivity is not proved from an
-arbitrary `metric` field; it is supplied by the concrete modular model.
+Positivity is not proved from an arbitrary `metric` field; it is an explicit
+law of this datum and is supplied by each concrete modular model.
 
 The scalar constructive branch below proves the first model explicitly.
 -/
@@ -306,11 +253,6 @@ structure BKMMetricDatum
 
   nonnegative :
     ∀ φ X, 0 ≤ metric φ X X
-
-  /-- Derivation from Connes spatial derivative / relative modular response. -/
-  derived_from_spatial_derivative_True : Prop
-  derived_from_spatial_derivative_sorryProof :
-    derived_from_spatial_derivative_True
 
 namespace BKMMetricDatum
 
@@ -456,11 +398,6 @@ def scalarBKMMetricDatum :
   metric := scalarBKMMetric
   symmetric := scalarBKMMetric_symmetric
   nonnegative := scalarBKMMetric_nonnegative
-  derived_from_spatial_derivative_True := ∀ φ : PositiveScalarWeight, ∀ X : ℝ,
-    0 ≤ scalarBKMMetric φ X X
-  derived_from_spatial_derivative_sorryProof := by
-    intro φ X
-    exact scalarBKMMetric_nonnegative φ X
 
 /--
 Scalar spatial derivative as a constructive `ConnesSpatialDerivative` datum.
@@ -470,10 +407,6 @@ def scalarSpatialDerivativeDatum :
   spatialDerivative := spatialDerivative
   same_weight := spatialDerivative_self
   chain_rule := spatialDerivative_chain
-  support_True := ∀ φ : PositiveScalarWeight, spatialDerivative φ φ = 1
-  support_sorryProof := by
-    intro φ
-    exact spatialDerivative_self φ
 
 end PositiveScalarWeight
 

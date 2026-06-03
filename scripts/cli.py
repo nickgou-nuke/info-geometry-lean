@@ -11,6 +11,9 @@ from . import (
     build_doc_map,
     emit_markdown_index,
     filter_project_decls,
+    leantrail_decl,
+    leantrail_dedup,
+    leantrail_snapshot,
     proof_gap_report,
 )
 
@@ -18,6 +21,9 @@ COMMAND_MODULES: dict[str, Callable[[], int]] = {
     "build-doc-map": build_doc_map.main,
     "emit-markdown-index": emit_markdown_index.main,
     "filter-project-decls": filter_project_decls.main,
+    "leantrail-decl": leantrail_decl.main,
+    "leantrail-dedup": leantrail_dedup.main,
+    "leantrail-snapshot": leantrail_snapshot.main,
     "proof-gap-report": proof_gap_report.main,
 }
 

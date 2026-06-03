@@ -1,12 +1,11 @@
 /-
 InfoGeometry/OperatorAlgebra/AndreevHorizonBridge.lean
 
-Optional Andreev/horizon analogue bridge.
+Optional Andreev/horizon analogue carrier.
 
 This module does not assert that a black-hole horizon is literally a
-superconducting surface. It records an optional witness saying that a concrete
-model treats a horizon boundary as an Andreev-like closure mirror, then exports
-only the algebraic Andreev consequences.
+superconducting surface. It records a concrete Andreev boundary datum together
+with opaque horizon data, then exports only the algebraic Andreev consequences.
 -/
 
 import Mathlib
@@ -21,13 +20,7 @@ open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 set_option linter.dupNamespace false
 
-/--
-Witness-gated bridge between horizon data and an Andreev boundary.
-
-`horizon_as_andreev_boundary_True` is the installed analogue/holographic model
-law. Without it, this structure makes no claim that horizons are
-superconducting interfaces.
--/
+/-- Carrier pairing horizon data with an installed Andreev boundary datum. -/
 structure AndreevHorizonBridge
     (V HorizonData : Type*)
     [AddCommGroup V] [Module ℝ V] where
@@ -36,14 +29,6 @@ structure AndreevHorizonBridge
 
   horizonData :
     HorizonData
-
-  /-- Model-specific law identifying the horizon boundary with the Andreev closure. -/
-  horizon_as_andreev_boundary_True :
-    Prop
-
-  /-- Proof/certificate of the analogue horizon/Andreev law. -/
-  horizon_as_andreev_boundary_sorryProof :
-    horizon_as_andreev_boundary_True
 
 namespace AndreevHorizonBridge
 

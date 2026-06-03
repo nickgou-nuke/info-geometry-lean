@@ -34,9 +34,8 @@ open InfoGeometry.OperatorAlgebra.OperatorChiralLightcone
 /--
 A local observable channel.
 
-This is the algebraic socket for a completely positive map. The concrete
-operator-algebraic positivity API is not unfolded here; it is carried as a
-certificate.
+This is the algebraic carrier for a unital local observable map. Concrete
+operator-algebraic positivity should be supplied by a separate owner theorem.
 -/
 structure LocalChannel
     (Op : Type*) [Ring Op] [Module ℝ Op] where
@@ -45,13 +44,6 @@ structure LocalChannel
 
   /-- Unitality, when the channel is meant to preserve the unit. -/
   map_one : map 1 = 1
-
-  /-- Completely-positive/channel law. -/
-  completelyPositive_True : Prop
-
-  /-- Evidence for the completely-positive/channel law. -/
-  completelyPositive :
-    completelyPositive_True
 
 namespace LocalChannel
 
@@ -131,19 +123,6 @@ structure StinespringTomitaDilation
     ∀ x : Op,
       globalEvolution (embed x) =
         embed (Φ.map x) + leakage x
-
-  /--
-  Law that the global dilation is information-preserving/reversible in the
-  intended backend.
-
-  This may later be specialized to a unitary/isometric/Stinespring minimality
-  theorem.
-  -/
-  global_reversible_True : Prop
-
-  /-- Evidence for global reversibility in the intended backend. -/
-  global_reversible :
-    global_reversible_True
 
 namespace StinespringTomitaDilation
 

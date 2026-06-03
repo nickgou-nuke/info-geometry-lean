@@ -138,14 +138,6 @@ structure BrewsterDrazinCalibration
   split :
     BrewsterDrazinSplit Op
 
-  /--
-  Calibration law connecting the Jones coefficient collapse to the operator
-  killed sector.
-  -/
-  coefficient_collapse_True : Prop
-  coefficient_collapse_sorryProof :
-    coefficient_collapse_True
-
 namespace BrewsterDrazinCalibration
 
 variable {Op : Type*} [Ring Op]
@@ -199,11 +191,6 @@ structure HessianDegeneracyDatum
 
   /-- Singular direction/readout, for example the p-sector. -/
   singularDirection : State → Prop
-
-  /-- Calibration law for the Hessian degeneracy. -/
-  degeneracy_True : Prop
-  degeneracy_sorryProof :
-    degeneracy_True
 
 /--
 Bridge saying that Hessian degeneracy is calibrated to Brewster collapse.

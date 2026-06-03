@@ -47,6 +47,7 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "GET /search?q=...",
                             "GET /decl/{name}",
                             "GET /neighborhood/{name}?radius=2",
+                            "GET /dedup/candidates?status=active&limit=50",
                             "GET /path?from=...&to=...&lawful_only=true&state_policy=any",
                             "GET /proofstate?file=...&line=...&col=...",
                             "GET /coherence/hotspots",
@@ -57,6 +58,7 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "/api/v1/search",
                             "/api/v1/decl/{name}",
                             "/api/v1/neighborhood/{name}",
+                            "/api/v1/dedup/candidates",
                             "/api/v1/path",
                             "/api/v1/proofstate",
                             "/api/v1/coherence/hotspots",
@@ -71,6 +73,12 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                 q = (query.get("q") or [""])[0]
                 limit = int((query.get("limit") or ["50"])[0])
                 self._write_json(self.api.search(q, limit=limit))
+                return
+
+            if path in {"/dedup/candidates", "/api/v1/dedup/candidates"}:
+                status = (query.get("status") or ["active"])[0]
+                limit = int((query.get("limit") or ["50"])[0])
+                self._write_json(self.api.dedup_candidates(status=status, limit=limit))
                 return
 
             if path.startswith("/decl/") or path.startswith("/api/v1/decl/"):

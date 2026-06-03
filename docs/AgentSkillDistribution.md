@@ -60,8 +60,9 @@ lake script run leantrailSurgeryPlan
 ```
 
 If `surgery_plan_report.json` says `vacuity_evidence_nodes: 0`, the planner was
-given a plain graph snapshot. That is a missing-evidence state, not a cleanup
-verdict.
+given a plain graph snapshot. The planner fails by default in this state. Use
+`--allow-unaudited-snapshot` only for diagnostics; never treat zero surgery
+packets from an unaudited snapshot as a cleanup verdict.
 
 ## Token policy
 

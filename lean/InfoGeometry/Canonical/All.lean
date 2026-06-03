@@ -423,6 +423,7 @@ import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
 import InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
 import InfoGeometry.Canonical.HodgeKreinTriFacet
+import InfoGeometry.Canonical.HodgeKreinBoundary
 import InfoGeometry.Canonical.HodgeKreinTriFacetProjectors
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge

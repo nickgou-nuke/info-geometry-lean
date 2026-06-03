@@ -28,7 +28,7 @@ namespace InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 
-/-! ## 1. Spin-frame and Bogoliubov-frame sockets -/
+/-! ## 1. Spin-frame and Bogoliubov-frame carriers -/
 
 /--
 A local spin/Clifford frame.
@@ -41,25 +41,6 @@ structure LocalSpinFrame
     (Frame : Type*) where
   /-- Underlying local frame representative. -/
   frame : Frame
-
-  /-- Certificate that this is an admissible spin/Clifford frame. -/
-  admissible_True : Prop
-
-  /-- Proof of admissibility. -/
-  admissible :
-    admissible_True
-
-namespace LocalSpinFrame
-
-variable {Frame : Type*}
-variable (F : LocalSpinFrame Frame)
-
-/-- The stored admissibility law. -/
-theorem admissible_holds :
-    F.admissible_True :=
-  F.admissible
-
-end LocalSpinFrame
 
 /--
 A Bogoliubov frame on a state/operator module.
@@ -76,25 +57,6 @@ structure BogoliubovFrame
   /-- Creation, commutant, or negative-frequency half of the splitting. -/
   creator : Mode → State
 
-  /-- Certificate that the two halves form an admissible Bogoliubov splitting. -/
-  bogoliubov_True : Prop
-
-  /-- Proof of the Bogoliubov splitting law. -/
-  bogoliubov_sorryProof :
-    bogoliubov_True
-
-namespace BogoliubovFrame
-
-variable {Mode State : Type*} [AddCommGroup State] [Module ℝ State]
-variable (B : BogoliubovFrame Mode State)
-
-/-- The stored Bogoliubov splitting law. -/
-theorem bogoliubov_holds :
-    B.bogoliubov_True :=
-  B.bogoliubov_sorryProof
-
-end BogoliubovFrame
-
 /--
 A spin connection transports spin frames.
 
@@ -105,37 +67,6 @@ structure SpinConnectionTransport
     (Base Frame : Type*) where
   /-- Transport a frame between two base points. -/
   transport : Base → Base → Frame → Frame
-
-  /-- Transport preserves admissible frame structure. -/
-  preserves_admissibility_True : Prop
-
-  /-- Proof of admissibility preservation. -/
-  preserves_admissibility :
-    preserves_admissibility_True
-
-  /-- Curvature/torsion/holonomy certificate, left abstract at this layer. -/
-  connection_geometry_True : Prop
-
-  /-- Proof of the connection-geometry law. -/
-  connection_geometry_sorryProof :
-    connection_geometry_True
-
-namespace SpinConnectionTransport
-
-variable {Base Frame : Type*}
-variable (Ω : SpinConnectionTransport Base Frame)
-
-/-- The stored admissibility-preservation law. -/
-theorem preserves_admissibility_holds :
-    Ω.preserves_admissibility_True :=
-  Ω.preserves_admissibility
-
-/-- The stored connection-geometry law. -/
-theorem connection_geometry_holds :
-    Ω.connection_geometry_True :=
-  Ω.connection_geometry_sorryProof
-
-end SpinConnectionTransport
 
 /-! ## 1a. Dimension-agnostic constructive owners -/
 
@@ -160,32 +91,6 @@ noncomputable def spinConnectionEndTransport
     SpinConnectionTransport ℝ EndN where
   transport := fun s t A =>
     InfoGeometry.Canonical.transportEnd S (t - s) A
-  preserves_admissibility_True :=
-    ∀ (s t : ℝ) (A B : EndN),
-      InfoGeometry.Canonical.transportEnd S (t - s) (A + B)
-          =
-          InfoGeometry.Canonical.transportEnd S (t - s) A
-            + InfoGeometry.Canonical.transportEnd S (t - s) B
-      ∧
-      InfoGeometry.Canonical.transportEnd S (t - s) (A * B)
-          =
-          InfoGeometry.Canonical.transportEnd S (t - s) A
-            * InfoGeometry.Canonical.transportEnd S (t - s) B
-      ∧
-      InfoGeometry.Canonical.transportEnd S (t - s) ⁅A, B⁆
-          =
-          ⁅InfoGeometry.Canonical.transportEnd S (t - s) A,
-            InfoGeometry.Canonical.transportEnd S (t - s) B⁆
-  preserves_admissibility := by
-    intro s t A B
-    exact ⟨
-      InfoGeometry.Canonical.transportEnd_add S (t - s) A B,
-      InfoGeometry.Canonical.transportEnd_mul S (t - s) A B,
-      InfoGeometry.Canonical.transportEnd_lie S (t - s) A B⟩
-  connection_geometry_True :=
-    S.U 0 = 1 ∧ ∀ s t : ℝ, S.U (s + t) = S.U s * S.U t
-  connection_geometry_sorryProof :=
-    ⟨S.U_zero, S.U_add⟩
 
 @[simp] theorem spinConnectionEndTransport_apply
     (S : InfoGeometry.Canonical.SpinConnection E)
@@ -193,6 +98,40 @@ noncomputable def spinConnectionEndTransport
     (spinConnectionEndTransport (E := E) S).transport s t A =
       InfoGeometry.Canonical.transportEnd S (t - s) A :=
   rfl
+
+@[simp] theorem spinConnectionEndTransport_add
+    (S : InfoGeometry.Canonical.SpinConnection E)
+    (s t : ℝ) (A B : EndN) :
+    (spinConnectionEndTransport (E := E) S).transport s t (A + B) =
+      (spinConnectionEndTransport (E := E) S).transport s t A +
+        (spinConnectionEndTransport (E := E) S).transport s t B :=
+  InfoGeometry.Canonical.transportEnd_add S (t - s) A B
+
+@[simp] theorem spinConnectionEndTransport_mul
+    (S : InfoGeometry.Canonical.SpinConnection E)
+    (s t : ℝ) (A B : EndN) :
+    (spinConnectionEndTransport (E := E) S).transport s t (A * B) =
+      (spinConnectionEndTransport (E := E) S).transport s t A *
+        (spinConnectionEndTransport (E := E) S).transport s t B :=
+  InfoGeometry.Canonical.transportEnd_mul S (t - s) A B
+
+@[simp] theorem spinConnectionEndTransport_lie
+    (S : InfoGeometry.Canonical.SpinConnection E)
+    (s t : ℝ) (A B : EndN) :
+    (spinConnectionEndTransport (E := E) S).transport s t ⁅A, B⁆ =
+      ⁅(spinConnectionEndTransport (E := E) S).transport s t A,
+        (spinConnectionEndTransport (E := E) S).transport s t B⁆ :=
+  InfoGeometry.Canonical.transportEnd_lie S (t - s) A B
+
+@[simp] theorem spinConnectionEndTransport_U_zero
+    (S : InfoGeometry.Canonical.SpinConnection E) :
+    S.U 0 = 1 :=
+  S.U_zero
+
+theorem spinConnectionEndTransport_U_add
+    (S : InfoGeometry.Canonical.SpinConnection E) (s t : ℝ) :
+    S.U (s + t) = S.U s * S.U t :=
+  S.U_add s t
 
 /--
 Canonical phase Bogoliubov splitting on the doubled real carrier.
@@ -207,26 +146,6 @@ noncomputable def canonicalPhaseBogoliubovFrame :
     InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart (E := E)
   creator :=
     InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart (E := E)
-  bogoliubov_True :=
-    ∀ A : EndH,
-      InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart (E := E) A
-        + InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart (E := E) A
-          = A
-      ∧
-      InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := E)
-        (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart (E := E) A)
-      ∧
-      InfoGeometry.Canonical.BogoliubovTransport.IsPhaseAntilinear (E := E)
-        (InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart (E := E) A)
-  bogoliubov_sorryProof := by
-    intro A
-    exact ⟨
-      InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart_add_phaseAntilinearPart
-        (E := E) A,
-      InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart_isPhaseLinear
-        (E := E) A,
-      InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart_isPhaseAntilinear
-        (E := E) A⟩
 
 omit [CompleteSpace E] in
 @[simp] theorem canonicalPhaseBogoliubovFrame_annihilator
@@ -247,21 +166,24 @@ theorem canonicalPhaseBogoliubovFrame_reconstruct
     (A : EndH) :
     (canonicalPhaseBogoliubovFrame (E := E)).annihilator A
       + (canonicalPhaseBogoliubovFrame (E := E)).creator A = A :=
-  (canonicalPhaseBogoliubovFrame (E := E)).bogoliubov_sorryProof A |>.1
+  InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart_add_phaseAntilinearPart
+    (E := E) A
 
 omit [CompleteSpace E] in
 theorem canonicalPhaseBogoliubovFrame_annihilator_phaseLinear
     (A : EndH) :
     InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear (E := E)
       ((canonicalPhaseBogoliubovFrame (E := E)).annihilator A) :=
-  ((canonicalPhaseBogoliubovFrame (E := E)).bogoliubov_sorryProof A).2.1
+  InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart_isPhaseLinear
+    (E := E) A
 
 omit [CompleteSpace E] in
 theorem canonicalPhaseBogoliubovFrame_creator_phaseAntilinear
     (A : EndH) :
     InfoGeometry.Canonical.BogoliubovTransport.IsPhaseAntilinear (E := E)
       ((canonicalPhaseBogoliubovFrame (E := E)).creator A) :=
-  ((canonicalPhaseBogoliubovFrame (E := E)).bogoliubov_sorryProof A).2.2
+  InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart_isPhaseAntilinear
+    (E := E) A
 
 end DimensionAgnosticConstructors
 
@@ -278,28 +200,6 @@ structure SpinFrameBogoliubovCalibration
 
   /-- Convert a local spin frame into a Bogoliubov frame. -/
   bogoliubovOfFrame : Frame → BogoliubovFrame Mode State
-
-  /--
-  The spin-connection transport induces the corresponding Bogoliubov-frame
-  transport.
-  -/
-  spin_transport_sets_bogoliubov_frame_True : Prop
-
-  /-- Proof of the spin-to-Bogoliubov calibration law. -/
-  spin_transport_sets_bogoliubov_frame :
-    spin_transport_sets_bogoliubov_frame_True
-
-namespace SpinFrameBogoliubovCalibration
-
-variable {Base Frame Mode State : Type*} [AddCommGroup State] [Module ℝ State]
-variable (C : SpinFrameBogoliubovCalibration Base Frame Mode State)
-
-/-- The stored spin-frame/Bogoliubov-frame calibration law. -/
-theorem spin_transport_sets_bogoliubov_frame_holds :
-    C.spin_transport_sets_bogoliubov_frame_True :=
-  C.spin_transport_sets_bogoliubov_frame
-
-end SpinFrameBogoliubovCalibration
 
 /-! ## 2. Frame mismatch and induced open channel -/
 
@@ -348,13 +248,6 @@ structure BogoliubovFrameMismatch
   /-- Model-specific readout saying the two Bogoliubov splittings differ. -/
   mismatchReadout : State → State
 
-  /-- Mismatch certificate. -/
-  mismatch_True : Prop
-
-  /-- Proof of the mismatch law. -/
-  mismatch_sorryProof :
-    mismatch_True
-
 namespace BogoliubovFrameMismatch
 
 variable {Base Frame Mode State : Type*} [AddCommGroup State] [Module ℝ State]
@@ -376,11 +269,6 @@ theorem targetBogoliubov_eq_bogoliubovOfFrame :
     M.targetBogoliubov = C.bogoliubovOfFrame M.transportedFrame :=
   M.targetBogoliubov_eq
 
-/-- The stored Bogoliubov-frame mismatch law. -/
-theorem mismatch_holds :
-    M.mismatch_True :=
-  M.mismatch_sorryProof
-
 end BogoliubovFrameMismatch
 
 /--
@@ -400,29 +288,6 @@ structure SpinInducedOpenChannel
   /-- Observer-reduced open-system channel. -/
   channel :
     OpenSystemChannel State
-
-  /--
-  Certificate that the channel is induced by the spin-connection/Bogoliubov
-  mismatch.
-  -/
-  channel_from_spin_mismatch_True : Prop
-
-  /-- Proof of the channel-induction law. -/
-  channel_from_spin_mismatch_sorryProof :
-    channel_from_spin_mismatch_True
-
-namespace SpinInducedOpenChannel
-
-variable {Base Frame Mode State : Type*} [AddCommGroup State] [Module ℝ State]
-variable {C : SpinFrameBogoliubovCalibration Base Frame Mode State}
-variable (O : SpinInducedOpenChannel Base Frame Mode State C)
-
-/-- The stored spin-mismatch/open-channel law. -/
-theorem channel_from_spin_mismatch_holds :
-    O.channel_from_spin_mismatch_True :=
-  O.channel_from_spin_mismatch_sorryProof
-
-end SpinInducedOpenChannel
 
 /-! ## 3. Stinespring-Tomita accounting for spin-induced channels -/
 
@@ -447,16 +312,6 @@ structure SpinBogoliubovStinespringClinch
   dilation :
     StinespringDilation State Env Joint spinChannel.channel
 
-  /--
-  Calibration law: the Stinespring hidden component is the commutant/environment
-  side of the Bogoliubov frame mismatch.
-  -/
-  hidden_component_is_bogoliubov_dual_True : Prop
-
-  /-- Proof of the hidden-component/Bogoliubov-dual law. -/
-  hidden_component_is_bogoliubov_dual :
-    hidden_component_is_bogoliubov_dual_True
-
 namespace SpinBogoliubovStinespringClinch
 
 variable {Base Frame Mode State Env Joint : Type*}
@@ -465,11 +320,6 @@ variable [AddCommGroup Env] [Module ℝ Env]
 variable [AddCommGroup Joint] [Module ℝ Joint]
 variable {C : SpinFrameBogoliubovCalibration Base Frame Mode State}
 variable (S : SpinBogoliubovStinespringClinch Base Frame Mode State Env Joint C)
-
-/-- The stored hidden-component/Bogoliubov-dual calibration law. -/
-theorem hidden_component_is_bogoliubov_dual_holds :
-    S.hidden_component_is_bogoliubov_dual_True :=
-  S.hidden_component_is_bogoliubov_dual
 
 /--
 The observed deficit of the spin-induced open channel is exactly the mirrored
@@ -514,40 +364,6 @@ structure SpinModularCompatibility
 
   /-- Modular/time evolution on the state carrier. -/
   modularFlow : ℝ → State → State
-
-  /-- Modular flow law, e.g. `flow (s+t) = flow s ∘ flow t`. -/
-  modular_flow_True : Prop
-
-  /-- Proof of the modular flow law. -/
-  modular_flow_sorryProof :
-    modular_flow_True
-
-  /--
-  Covariance law connecting spin-frame transport with modular evolution.
-  This is a witness, not a definitional equality.
-  -/
-  spin_modular_covariance_True : Prop
-
-  /-- Proof of the spin/modular covariance law. -/
-  spin_modular_covariance_sorryProof :
-    spin_modular_covariance_True
-
-namespace SpinModularCompatibility
-
-variable {Base Frame State : Type*} [AddCommGroup State] [Module ℝ State]
-variable (M : SpinModularCompatibility Base Frame State)
-
-/-- The stored modular-flow law. -/
-theorem modular_flow_holds :
-    M.modular_flow_True :=
-  M.modular_flow_sorryProof
-
-/-- The stored spin/modular covariance law. -/
-theorem spin_modular_covariance_holds :
-    M.spin_modular_covariance_True :=
-  M.spin_modular_covariance_sorryProof
-
-end SpinModularCompatibility
 
 /-! ## 5. Thermodynamic bridge -/
 
@@ -625,37 +441,6 @@ structure SpinConnectionDatum
   /-- The spin connection / Bogoliubov frame setter. -/
   omega : Connection
 
-  /-- Certificate that `omega` is a valid spin connection. -/
-  valid_spin_connection_True : Prop
-
-  /-- Proof that the connection is valid. -/
-  valid_spin_connection :
-    valid_spin_connection_True
-
-  /-- Certificate that the connection acts as a Bogoliubov frame setter. -/
-  induces_bogoliubov_frame_True : Prop
-
-  /-- Proof that the connection sets the Bogoliubov frame. -/
-  induces_bogoliubov_frame :
-    induces_bogoliubov_frame_True
-
-namespace SpinConnectionDatum
-
-variable {Connection : Type*}
-variable (Ω : SpinConnectionDatum Connection)
-
-/-- The stored spin-connection validity law. -/
-theorem valid_spin_connection_holds :
-    Ω.valid_spin_connection_True :=
-  Ω.valid_spin_connection
-
-/-- The stored Bogoliubov-frame-setting law. -/
-theorem induces_bogoliubov_frame_holds :
-    Ω.induces_bogoliubov_frame_True :=
-  Ω.induces_bogoliubov_frame
-
-end SpinConnectionDatum
-
 /--
 Two transports on the same operator module.
 
@@ -720,21 +505,14 @@ end SpinModularTransport
 /--
 A local observable channel.
 
-This is the algebraic socket for a completely positive map. Positivity is kept
-as a certificate at this abstraction layer.
+This is the algebraic carrier for a linear local observable map. Positivity
+requires a separate operator-algebra owner theorem.
 -/
 @[rep_depth operator]
 structure LocalChannel
     (Op : Type*) [AddCommGroup Op] [Module ℝ Op] where
   /-- The local observable map. -/
   map : Op →ₗ[ℝ] Op
-
-  /-- Completely-positive/channel law. -/
-  completelyPositive_True : Prop
-
-  /-- Evidence for the completely-positive/channel law. -/
-  completelyPositive :
-    completelyPositive_True
 
 namespace LocalChannel
 
@@ -745,11 +523,6 @@ variable (Φ : LocalChannel Op)
 def IsLocallyLost
     (x : Op) : Prop :=
   Φ.map x = 0
-
-/-- The stored completely-positive/channel law. -/
-theorem completelyPositive_holds :
-    Φ.completelyPositive_True :=
-  Φ.completelyPositive
 
 end LocalChannel
 
@@ -789,13 +562,6 @@ structure StinespringLedger
       globalEvolution (embed x) =
         embed (Φ.map x) + leakage x
 
-  /-- Certificate that global evolution preserves the intended information backend. -/
-  global_information_preserving_True : Prop
-
-  /-- Proof of the global information-preservation law. -/
-  global_information_preserving :
-    global_information_preserving_True
-
 namespace StinespringLedger
 
 variable {Op GlobalOp : Type*}
@@ -821,11 +587,6 @@ theorem locally_lost_global_eq_leakage
   dsimp [LocalChannel.IsLocallyLost] at hx
   rw [L.accounting x, hx]
   simp
-
-/-- The stored global information-preservation law. -/
-theorem global_information_preserving_holds :
-    L.global_information_preserving_True :=
-  L.global_information_preserving
 
 end StinespringLedger
 
@@ -959,13 +720,6 @@ structure SpinBogoliubovStinespringFrame
   /-- Stinespring-Tomita ledger. -/
   ledger : StinespringTomitaLedger Op GlobalOp Φ
 
-  /-- Certificate that the spin connection induces the ledger frame. -/
-  omega_induces_ledger_True : Prop
-
-  /-- Proof that the spin connection induces the ledger frame. -/
-  omega_induces_ledger :
-    omega_induces_ledger_True
-
 namespace SpinBogoliubovStinespringFrame
 
 variable {Connection Op GlobalOp : Type*}
@@ -990,14 +744,9 @@ theorem transport_not_commuting_of_shear_ne_zero
     ¬ F.transport.CommutesAt t s x :=
   F.transport.not_commutesAt_of_shear_ne_zero h
 
-/-- The stored spin-connection-to-ledger law. -/
-theorem omega_induces_ledger_holds :
-    F.omega_induces_ledger_True :=
-  F.omega_induces_ledger
-
 end SpinBogoliubovStinespringFrame
 
-/-! ## 7. Einstein-readout bridge socket -/
+/-! ## 7. Einstein-readout bridge carrier -/
 
 /--
 A future bridge from spin/modular shear to effective geometric curvature.
@@ -1017,35 +766,17 @@ structure EinsteinReadoutBridge
   /-- Cosmological/global tear readout. -/
   cosmologicalReadout : Tensor
 
-  /-- Certificate that the chosen readouts satisfy the target consistency law. -/
-  einstein_consistency_True : Prop
-
-  /-- Proof of the target Einstein-type consistency law. -/
-  einstein_consistency :
-    einstein_consistency_True
-
-namespace EinsteinReadoutBridge
-
-variable {Op Tensor : Type*} [AddCommGroup Op] [Module ℝ Op]
-variable (E : EinsteinReadoutBridge Op Tensor)
-
-/-- The stored Einstein-type consistency law. -/
-theorem einstein_consistency_holds :
-    E.einstein_consistency_True :=
-  E.einstein_consistency
-
-end EinsteinReadoutBridge
-
 attribute [rep_depth operator]
   LocalSpinFrame
-  LocalSpinFrame.admissible_holds
   BogoliubovFrame
-  BogoliubovFrame.bogoliubov_holds
   SpinConnectionTransport
-  SpinConnectionTransport.preserves_admissibility_holds
-  SpinConnectionTransport.connection_geometry_holds
   spinConnectionEndTransport
   spinConnectionEndTransport_apply
+  spinConnectionEndTransport_add
+  spinConnectionEndTransport_mul
+  spinConnectionEndTransport_lie
+  spinConnectionEndTransport_U_zero
+  spinConnectionEndTransport_U_add
   canonicalPhaseBogoliubovFrame
   canonicalPhaseBogoliubovFrame_annihilator
   canonicalPhaseBogoliubovFrame_creator
@@ -1053,27 +784,19 @@ attribute [rep_depth operator]
   canonicalPhaseBogoliubovFrame_annihilator_phaseLinear
   canonicalPhaseBogoliubovFrame_creator_phaseAntilinear
   SpinFrameBogoliubovCalibration
-  SpinFrameBogoliubovCalibration.spin_transport_sets_bogoliubov_frame_holds
   BogoliubovFrameMismatch
   BogoliubovFrameMismatch.transportedFrame_eq_transport
   BogoliubovFrameMismatch.sourceBogoliubov_eq_bogoliubovOfFrame
   BogoliubovFrameMismatch.targetBogoliubov_eq_bogoliubovOfFrame
-  BogoliubovFrameMismatch.mismatch_holds
   SpinInducedOpenChannel
-  SpinInducedOpenChannel.channel_from_spin_mismatch_holds
   SpinBogoliubovStinespringClinch
-  SpinBogoliubovStinespringClinch.hidden_component_is_bogoliubov_dual_holds
   SpinBogoliubovStinespringClinch.spin_deficit_eq_hidden_component
   SpinBogoliubovStinespringClinch.actual_eq_ideal_of_zero_hidden_component
   SpinModularCompatibility
-  SpinModularCompatibility.modular_flow_holds
-  SpinModularCompatibility.spin_modular_covariance_holds
   SpinBogoliubovThermodynamicReadout
   SpinBogoliubovThermodynamicReadout.heat_eq_hidden_information
   SpinBogoliubovThermodynamicReadout.heat_nonneg
   SpinConnectionDatum
-  SpinConnectionDatum.valid_spin_connection_holds
-  SpinConnectionDatum.induces_bogoliubov_frame_holds
   SpinModularTransport
   SpinModularTransport.shear
   SpinModularTransport.CommutesAt
@@ -1081,11 +804,9 @@ attribute [rep_depth operator]
   SpinModularTransport.not_commutesAt_of_shear_ne_zero
   LocalChannel
   LocalChannel.IsLocallyLost
-  LocalChannel.completelyPositive_holds
   StinespringLedger
   StinespringLedger.channel_eq_compressed_global
   StinespringLedger.locally_lost_global_eq_leakage
-  StinespringLedger.global_information_preserving_holds
   GlobalReadout
   GlobalReadout.readout_ledger_decomposition
   GlobalReadout.readout_of_locally_lost
@@ -1096,8 +817,6 @@ attribute [rep_depth operator]
   SpinBogoliubovStinespringFrame
   SpinBogoliubovStinespringFrame.locally_lost_routes_to_commutant
   SpinBogoliubovStinespringFrame.transport_not_commuting_of_shear_ne_zero
-  SpinBogoliubovStinespringFrame.omega_induces_ledger_holds
   EinsteinReadoutBridge
-  EinsteinReadoutBridge.einstein_consistency_holds
 
 end InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring

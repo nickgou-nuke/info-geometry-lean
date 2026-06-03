@@ -197,13 +197,6 @@ structure GeometricLanglandsInterpretation
     (ElectricState MagneticState Charge : Type*)
     (S : SDualityDatum ElectricState MagneticState Charge) where
 
-  /-- Model-specific statement of the geometric Langlands law. -/
-  geometric_langlands_True : Prop
-
-  /-- Proof/certificate of the model-specific law. -/
-  geometric_langlands_sorryProof :
-    geometric_langlands_True
-
 namespace GeometricLanglandsInterpretation
 
 variable
@@ -213,6 +206,14 @@ variable
 variable
     (G : GeometricLanglandsInterpretation
       ElectricState MagneticState Charge S)
+
+/-- Model-specific geometric Langlands law for the supplied interpretation. -/
+theorem geometric_langlands :
+    ∀ {ψ : ElectricState} {χ : Charge},
+      IsWilsonEigen S.electric ψ χ →
+        IsTHooftEigen S.magnetic (S.dualize ψ) χ := by
+  intro ψ χ hψ
+  exact S.wilsonEigen_transports_to_tHooftEigen hψ
 
 end GeometricLanglandsInterpretation
 

@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Meta.Architecture
 
 /-!
-# InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
+# InfoGeometry.Canonical.MoebiusBogoliubovVirasoro
 
 Theorem-safe bridge for the Möbius / Lorentz / Bogoliubov / Virasoro lane.
 
@@ -23,11 +23,11 @@ The bridge is intentionally narrow and proof-carrying.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
+namespace InfoGeometry.Canonical.MoebiusBogoliubovVirasoro
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
+open InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubov
 open InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
@@ -240,4 +240,4 @@ theorem virasoroDilation_eq_holds :
     ∀ w : FiniteBinaryWord, B.virasoroDilation w = virasoroL0Dilation B.virasoroL0 w :=
   B.virasoroDilation_eq
 
-end InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
+end InfoGeometry.Canonical.MoebiusBogoliubovVirasoro

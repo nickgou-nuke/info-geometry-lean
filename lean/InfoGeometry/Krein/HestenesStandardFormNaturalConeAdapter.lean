@@ -18,7 +18,7 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H]
 
 /--
-Adapter from the Hestenes/Krein natural-cone socket to the canonical
+Adapter from the Hestenes/Krein natural-cone carrier to the canonical
 standard-form natural-cone interface.
 
 This is a specialization adapter only.  It does not prove the analytic
@@ -46,7 +46,7 @@ Canonical standard-form interface induced by the Hestenes/Krein carrier.
 
 All states in `NormalPositive` are treated as already selected normal-positive
 readouts because the Hestenes/Krein carrier itself is the supplied positive
-state socket.
+state carrier.
 -/
 @[rep_depth krein]
 def toCanonical :
@@ -58,9 +58,6 @@ def toCanonical :
   coneVector := A.hestenes.coneVector
   eval := A.hestenes.eval
   innerReadout := KreinSpace.kreinInner (H := H)
-  coneVector_mem := fun ω hω => hω
-  eval_eq_vector_readout := fun ω B _ => A.hestenes.eval_eq_krein_vector_readout ω B
-  J_fixes_cone := A.hestenes.J_fixes_cone
 
 /-- Readback: the induced canonical cone is the supplied Hestenes/Krein cone. -/
 @[rep_depth krein]
@@ -128,10 +125,10 @@ theorem toCanonical_J_fixes_coneVector
 end HestenesStandardFormNaturalConeAdapter
 
 /--
-Compatibility witness for an already supplied canonical interface and an
+Compatibility data for an already supplied canonical interface and an
 already supplied Hestenes/Krein carrier.
 
-Use this when the canonical socket was constructed elsewhere and must be
+Use this when the canonical carrier was constructed elsewhere and must be
 recorded as realized by a Hestenes/Krein model without replacing it by
 `toCanonical`.
 -/

@@ -295,18 +295,6 @@ structure TripartiteEntanglementPattern
   not_entangled_BC :
     ¬ E.Entangled B C
 
-  /--
-  Tripartite correlation/entanglement law.
-
-  This remains model-specific because tripartite entanglement is not captured by
-  a binary relation alone.
-  -/
-  tripartite_correlation_True : Prop
-
-  /-- Proof/certificate of the tripartite correlation law. -/
-  tripartite_correlation_sorryProof :
-    tripartite_correlation_True
-
 namespace TripartiteEntanglementPattern
 
 variable {System : Type*}
@@ -314,11 +302,16 @@ variable {E : MaxEntanglementRelation System}
 variable (T : TripartiteEntanglementPattern System E)
 
 /--
-The stored tripartite correlation law is available.
+Tripartite correlation/entanglement law.
+
+This remains model-specific because tripartite entanglement is not captured by
+a binary relation alone.
 -/
 theorem tripartite_correlation_holds :
-    T.tripartite_correlation_True :=
-  T.tripartite_correlation_sorryProof
+    ¬ E.Entangled T.A T.B ∧
+      ¬ E.Entangled T.A T.C ∧
+        ¬ E.Entangled T.B T.C := by
+  exact ⟨T.not_entangled_AB, T.not_entangled_AC, T.not_entangled_BC⟩
 
 end TripartiteEntanglementPattern
 

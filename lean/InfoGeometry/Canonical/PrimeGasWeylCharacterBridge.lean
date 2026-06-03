@@ -1,8 +1,8 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 
 /-!
-# InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
+# InfoGeometry.Canonical.PrimeGasWeylCharacter
 
 Witness-gated prime-gas/Weyl-character bridge.
 
@@ -13,9 +13,7 @@ data explicitly.
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
-namespace InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
+namespace InfoGeometry.Canonical.PrimeGasWeylCharacter
 
 /-- Raw prime-gas data used by the Weyl-character bridge. -/
 @[rep_depth operator]
@@ -78,4 +76,4 @@ theorem weylCharacter_eq_primeGas_character :
 
 end PrimeGasWeylCharacterBridge
 
-end InfoGeometry.Canonical.PrimeGasWeylCharacterBridge
+end InfoGeometry.Canonical.PrimeGasWeylCharacter

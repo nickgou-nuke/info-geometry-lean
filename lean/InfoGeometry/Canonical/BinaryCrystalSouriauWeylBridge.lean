@@ -1,9 +1,8 @@
-import Mathlib
 import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 import InfoGeometry.Canonical.WeylCharacterEquivalence
 
 /-!
-# InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
+# InfoGeometry.Canonical.BinaryCrystalSouriauWeyl
 
 Specialization bridge for the binary-fractal crystal and Souriau/Weyl
 partition surface.
@@ -16,7 +15,7 @@ should use the owner theorem directly or prove the needed statement in place.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
+namespace InfoGeometry.Canonical.BinaryCrystalSouriauWeyl
 
 open InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 open InfoGeometry.Canonical.WeylCharacterEquivalence
@@ -47,4 +46,4 @@ theorem binaryCrystal_ownerTarget :
 
 end BinaryCrystalSouriauWeylBridge
 
-end InfoGeometry.Canonical.BinaryCrystalSouriauWeylBridge
+end InfoGeometry.Canonical.BinaryCrystalSouriauWeyl

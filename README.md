@@ -1,125 +1,581 @@
 # InfoGeometry Lean Fusion
 
 > Status: `reference memory`
-> Audited: 2026-05-02
-> Note: Maintained against the live code surface.
-> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+> Last verified: 2026-06-02
+> Commit: `37f7cca04` — toolchain `leanprover/lean4:v4.28.0`
+> Working tree: **dirty** (26 tracked files modified, 22 untracked additions)
 
-This file is stale as an authority source. Do not use it as current proof or
-design truth without re-auditing against `lean/` and `lakefile.lean`.
+---
 
-This repository has two live code surfaces:
+**Table of Contents**
 
-- `lean/`: the Lean 4 theorem library and its architecture/audit layer
-- `src/igf/` plus `tools/`: the Python CLI and repo tooling that build, validate,
-  normalize, ingest, and report on generated graph artifacts
+- [Repository Architecture](#repository-architecture)
+- [Current Repository State (2026-06-02)](#current-repository-state-2026-06-02)
+- [Constructive Closure Mandate](#constructive-closure-mandate)
+- [Authority Order & Trust Rules](#authority-order--trust-rules)
+- [Lean Foundation: Kernel-Checked Graph Subsystems](#lean-foundation-kernel-checked-graph-subsystems)
+- [LeanTrail: Advanced Graph Analysis Pipeline](#leantrail-advanced-graph-analysis-pipeline)
+- [LeanTrail Vacuum Surgery & Honest Sorry Policy (v1.3)](#leantrail-vacuum-surgery--honest-sorry-policy-v13)
+- [Pipeline State: Current Snapshot Facts](#pipeline-state-current-snapshot-facts)
+- [Live Repository Surface](#live-repository-surface)
+- [Quick Start](#quick-start)
+- [Quick Command Reference](#quick-command-reference)
+- [Closure-Debt Constructive-Proof SOP](#closure-debt-constructive-proof-sop)
+- [Key Results](#key-results)
+- [Documentation Map](#documentation-map)
+- [UTMOST MANDATE](#utmost-mandate-native-lean-proof-closure-over-witnesscertificate-scaffolding)
 
-It also has a maintained generative-discovery layer:
+---
 
-- structured LLM dialogue and Socratic regeneration for theorem emergence
-- packetized translation from symbolic generation into formal candidate work
-- strict separation between generative ideation and proof authority
-- a live Pauli auditor discipline that rejects inflated or underived closure
+## Repository Architecture
 
-If prose and code disagree, trust the code.
+This repository is **three coupled systems** at once:
+
+1. **A Lean 4 theorem library** — ~2,442 `.lean` files across 84 subdirectories
+   under `lean/InfoGeometry/`, formalizing information geometry, non-commutative
+   Bregman divergence, thermodynamic synthesis, Virasoro/cocycle bridges,
+   Clifford algebras, operator algebras, quantum dynamics, topological phases,
+   optimal transport, and more.
+
+2. **A kernel-checked graph export and meta-analysis layer** — `lean/DAG/` (60+
+   files) is the Lean-side graph export system, building the declaration
+   dependency graph directly from the Lean **kernel-checked environment** via
+   `buildGraphFromEnv()`. This is not metadata; it is a finite explicit object
+   induced by kernel-checked declarations and their dependency structure.
+   `lean/InfoGeometry/Meta/` (28 files) provides the Lean-native meta-layer for
+   architecture, trust, proof shape, induction, vacuity, and audits. Both are
+   **compiled and verified by the Lean kernel** — they are not Python wrappers.
+
+3. **A Python tooling and orchestration layer** — LeanTrail (17+ scripts),
+   DAG refresh infrastructure, ArangoDB ingestion, graph algorithms (WL, Hodge,
+   motifs), critic/surgery pipelines, and generative discovery bridges. These
+   tools are **navigation and audit infrastructure**: they consume kernel-verified
+   artifacts and help surface candidates, but **never decide theorem truth**.
+
+The key distinction: **Lean-compiled code is kernel-verified truth**. Python tools
+are evidence for navigation, review, and automation — the Lean kernel remains the
+sole proof authority.
+
+```
+┌══════════════════════════════════════════════════════════════════════┐
+║  KERNEL-CHECKED LAYER (Lean 4, lake build verified)                 ║
+║                                                                      ║
+║  lean/InfoGeometry/  (2,442 files — theorem library)                 ║
+║  lean/InfoGeometry/Meta/  (28 files — architecture, trust, proof)    ║
+║  lean/DAG/   (60+ files — graph export, Hodge, SCC, kernel equiv)   ║
+║  lean/DAG/Algo/  (5 files — traversal, check, core algorithms)      ║
+║  lean/scripts/DAG/Exploration/  (15 files — servers, search)        ║
+║  lean/AuditNative.lean, lean/AuditStrict.lean  (native audit)       ║
+║  lean/InfoGeometry/Lint/  (5 files — NonTriviality, Pauli, etc.)    ║
+║                                                                      ║
+║  lake build → dagIndexer (Lean exe) → artifacts/dag/index/          ║
+║   93,554 nodes, 782,004 edges, 5,473 types, 9,929 morphisms         ║
+╚══════════════════════════════════════════════════════════════════════╝
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│  PYTHON TOOLING LAYER (navigation, audit, automation)                │
+│                                                                      │
+│  tools/leantrail/  (17 scripts) — LeanTrail pipeline                  │
+│  tools/infra/      (~50 scripts) — DAG refresh, Arango ingest        │
+│  tools/frontier/   — semantic snapshots, LLM bridges                 │
+│  tools/quality/    — closure debt, placeholder audit                 │
+│                                                                      │
+│  Pipeline:                                                           │
+│  DAG index ──► Lossless InfoTree ──► ArangoDB algorithms              │
+│       │                                                              │
+│       └──► LeanTrail Snapshot ──► Critic Packets ──► Surgery Plan    │
+│                                   8,711 packets     ⚠ blocked         │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+## Current Repository State (2026-06-02)
+
+### Clean/Maintained
+
+| Area | Status | Details |
+|------|--------|---------|
+| Lean build target | ✅ Indexed | Commit `37f7cca04`, toolchain `leanprover/lean4:v4.28.0` |
+| `dagIndexer` export | ✅ Fresh Jun 2 | 93,554 nodes, 782,004 edges, 5,473 types, 9,929 morphisms |
+| `dagDoctor` conformance | ✅ Passes | 10/10 checks, 0% node/edge drift |
+| LeanTrail snapshot | ✅ `graph_snapshot.json` | 375 MB, Jun 2 08:30 |
+| Critic packets | ✅ Generated | 8,711 `obfuscation_suspicion` (high severity) |
+| Critic prompts | ✅ Generated | 25 MB of LLM-ready prompts |
+| Critic ingest | ✅ Merged | 8,719 nodes enriched → `graph_snapshot.critic.json` (379 MB) |
+| Failed transitions | ✅ Tracked | 5,560 edges with failed proof-state transitions |
+
+### Dirty/In-Progress
+
+| Area | Status | Details |
+|------|--------|--------|
+| `vacuity_audit.py` | 🔧 Modified | 103 lines changed — under active development |
+| `vacuity_ingest.py` | 🔧 Modified | 5 lines changed |
+| `surgery_plan.py` | 🔧 Modified | 18 lines changed |
+| `shadow_ledger.py` | 🆕 Untracked | New tool, `lake` script added but file untracked |
+| Vacuity audit | ❌ Not run | No kernel biopsies on current snapshot |
+| Surgery plan | ⚠ Blocked | Zero packets: `vacuity_evidence_nodes: 0` |
+| New Lean modules | 🆕 Untracked (22 files) | Dynamics/ (8), Clifford/ (5 new), OperatorAlgebra/ (5), OptimalTransport/, Topological/ (3), Cantor/, Codes/ |
+| `Lint/SurgeryContract.lean` | 🆕 Untracked | New lint contract module |
+| `leantrail/backend/query_api.py` | 🔧 Modified | Query API changes |
+| Lean source files | 🔧 Modified (11 files) | `All.lean`, `Clifford/*.lean`, `OperatorAlgebra/*.lean`, `Quantum/*.lean`, etc. |
 
 ## Constructive Closure Mandate
 
-Replacing witness-gated and external-certificate leftovers with native Lean 4
-proofs is the repository's highest proof-engineering priority.
-
-All agents and skills must follow
-[docs/CONSTRUCTIVE_CLOSURE_MANDATE.md](docs/CONSTRUCTIVE_CLOSURE_MANDATE.md):
-witness packets, certificate fields, external certificates, assumption
-interfaces, graph edges, literature citations, and physics analogies are closure
-debt until discharged by kernel-checked Lean proofs or imported mathlib
-theorems. No anonymous witnesses and no promotion of unformalized sockets.
+Replacing witness-gated and external-certificate leftovers with **native Lean 4
+proofs** is the repository's highest proof-engineering priority. See
+[docs/CONSTRUCTIVE_CLOSURE_MANDATE.md](docs/CONSTRUCTIVE_CLOSURE_MANDATE.md).
 
 The formula/function rule is also current policy:
-[docs/FORMULA_FUNCTION_POLICY.md](docs/FORMULA_FUNCTION_POLICY.md).
-Formulas are definitions, functions are functions, and downstream code must
-call the function directly rather than storing the formula as prose or a field
-label.
+[docs/FORMULA_FUNCTION_POLICY.md](docs/FORMULA_FUNCTION_POLICY.md). Formulas are
+definitions, functions are functions, and downstream code must call the function
+directly rather than storing the formula as prose or a field label.
 
-## What Is Current
+## Authority Order & Trust Rules
 
-The current authority order is:
+If documentation and code disagree, trust:
 
-1. `lean/` and `lakefile.lean`
-2. `src/igf/` and maintained scripts under `tools/`
-3. `docs/CODEBASE_STATUS.md`
-4. this file and the other maintained docs listed in `docs/README.md`
+1. **`lean/` and `lakefile.lean`** — Lean source, kernel-compiled. This is proof
+   authority. Everything below is navigation and audit infrastructure.
+2. **`tools/`, `src/igf/`** — Python tooling. Kernel-checked artifacts are input;
+   Python derives reports, visualizations, and candidate lists. Python never
+   overrides Lean truth.
+3. **`docs/CODEBASE_STATUS.md`** — Current verified state (stale as of 2026-05-02;
+   re-audit before relying).
+4. **`docs/` maintained entry docs** — Reference memory; re-audit against code.
 
-The repository is not a pure prose knowledge base. Most Markdown outside the
-maintained entry docs is reference memory, archived handover material, or a
-generated report snapshot.
+### Core Law
 
-## Beehive / Swarm Architecture
+```text
+Graph tools identify candidate wires.
+Lean owner files decide truth.
+Only kernel-checked source edits count.
+```
 
-The local-first swarm / beehive layer is documented in the maintained docs.
-Use these as the current design map for agent orchestration, provider routing,
-and long-running worker layout:
+### What This Means in Practice
 
-- [docs/README.md](docs/README.md)
-- [docs/hive_greenfield_architecture.md](docs/hive_greenfield_architecture.md)
-- [docs/hive_migration_plan.md](docs/hive_migration_plan.md)
-- [docs/hive_beehive_implementation_checklist.md](docs/hive_beehive_implementation_checklist.md)
-- [docs/hive_beehive_operator_runbook.md](docs/hive_beehive_operator_runbook.md)
-- [docs/hive_beehive_systemd_units.md](docs/hive_beehive_systemd_units.md)
-- [docs/hive_beehive_overrides.md](docs/hive_beehive_overrides.md)
-- [scripts/install_hive_beehive_systemd_units.sh](scripts/install_hive_beehive_systemd_units.sh)
-- [scripts/uninstall_hive_beehive_systemd_units.sh](scripts/uninstall_hive_beehive_systemd_units.sh)
-- [docs/hive_graph_resident_os.md](docs/hive_graph_resident_os.md)
-- [docs/hermes_recursive_hive_architecture.md](docs/hermes_recursive_hive_architecture.md)
-- [docs/hive_neural_backbone_architecture.md](docs/hive_neural_backbone_architecture.md)
-- [docs/hive_beehive_swarm_implementation_plan.md](docs/hive_beehive_swarm_implementation_plan.md)
+- **`lean/DAG/` exports are kernel-checked** — the graph is built from the Lean
+  environment, not from syntactic scraping. Tarjan SCC, dominators, Hodge
+  operators, 2-complex, kernel equivalence, and triple homomorphism checkers are
+  all Lean4 code that compiles.
+- **Python-derived hashes, WL classes, Hodge cones, and critic packets** are
+  navigation evidence, never proof authority. They may propose candidate pairs,
+  but only the Lean kernel (`Lean.Meta.isDefEq`, `lake build`) may certify them.
+- **LeanTrail is the most advanced pipeline** — it integrates kernel biopsies
+  (`#biopsy_non_triviality`), SCC analysis, critic semantic analysis, and surgery
+  planning. It is under active development (3 scripts currently dirty).
+
+## Lean Foundation: Kernel-Checked Graph Subsystems
+
+### `lean/DAG/` — The Lean-Side Graph Export Layer (60+ files)
+
+The DAG subsystem is **not metadata**. It is a finite, explicit object induced by
+kernel-checked declarations and their dependency structure. It compiles as part
+of the Lean library and runs as Lean executables (`dagIndexer`, `infotreeExtract`,
+`disconnectedAudit`, `exactProoflessnessAudit`) or interactive commands.
+
+#### Core Graph Construction (kernel-verified types)
+
+| File | What It Does |
+|------|-------------|
+| `Basic.lean` | `EdgeKind` enum, `Graph α`, `HydratedGraph α` types; `buildGraphFromEnv()` extracts declarations and edges from the Lean environment |
+| `SCC.lean` | Tarjan's algorithm — strongly connected component decomposition |
+| `Hydrate.lean` | Chains Tarjan → SCC-to-DAG → topological sort → dominator computation |
+| `Topo.lean` | BFS in-degree topological sort on compressed SCC DAG |
+| `Dominators.lean` | Bitset-based dominator computation for impact analysis |
+| `Analysis.lean` | `pathCountFrom`, `distanceMap`, `influenceFrom`, `vulnerabilityOf`, `rootSet`, `capstoneSet` |
+
+#### Higher Graph Theory (Lean-checked)
+
+| File | What It Does |
+|------|-------------|
+| `GraphHodge.lean` | Finite Hodge/Laplacian/Dirac/chiral operators on the declaration 2-complex |
+| `GraphHodgeBridge.lean` | Canonical finite graph-Hodge bridge packet |
+| `TwoComplex.lean` | 2-complex (cell complex) structure over the declaration DAG |
+| `Betti.lean` | Betti-number / homological rank computations |
+| `Impact.lean` | Forward/reverse BFS reachability at SCC level → declaration level |
+| `ConeCommand.lean` | Interactive `#deps_dot`, `#deps_json`, `#cone_json` for causal-diamond prompts |
+
+#### Kernel-Certified Equivalence and Triple Checking
+
+| File | What It Does |
+|------|-------------|
+| `KernelEquivalenceExport.lean` | **Native certificate checker**: imports a module and promotes candidate pairs only when `Lean.Meta.isDefEq` verifies type/value equality. **Only this Lean-native tool may set `leanVerified=true` or `safeForAutoRewrite=true`** |
+| `TripleSystem.lean` | Lean-native typed subject-predicate-object incidence systems |
+| `TripleHomomorphismExport.lean` | Finite preservation checker: `(s,p,o) in source ⇒ (F_Obj(s), F_Rel(p), F_Obj(o)) in target` |
+| `ExactMorphism.lean` | Exact-sequence detection in morphism chains |
+| `Isomorphism.lean` | Isomorphism detection and equivalence tracking |
+| `LiftNaturality.lean` | Naturality verification for lifted morphisms |
+| `SubgraphMatch.lean` | Subgraph pattern matching |
+| `CategoryBridge.lean` | Maps declarations to `CategoryTheory.Quiver`; verifies composition in `MetaM` |
+
+#### Export Pipelines
+
+| File | Output | Description |
+|------|--------|-------------|
+| `Indexer.lean` | `full_graph.json`, `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl` | Main export: `DeclNode`, `DepEdge`, `Morphism`, `TypeNode` records |
+| `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth, dominators, roots, layers |
+| `ProcessFlowExport.lean` | `process-flow/*.jsonl` | 8 dependency roles, boundary/locality/polarity/defect |
+| `ExprArangoExport.lean` | `ig_nodes.jsonl`, `ig_edges.jsonl` | Expression-level Arango export with De Bruijn `bvar` annotations |
+| `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags |
+| `SkeletonExport.lean` | `skeleton.json` | Vulnerability-ranked theorem skeleton |
+| `BlockExport.lean` | block-level JSON | File slicing: blocks, spine tags, tactics, docstrings |
+| `RawInfoTreeExport.lean` | InfoTree raw export | Tree-structured export for downstream ingestion |
+
+#### Lean Scripts for Exploration (`lean/scripts/DAG/Exploration/` — 15 files)
+
+| File | Purpose |
+|------|---------|
+| `SemanticBlockServer.lean` | Lean executable — semantic block query server |
+| `SemanticSnapshotServer.lean` | Lean executable — LLM proof-snapshot server |
+| `CompilerBridgeServer.lean` | Lean executable — compiler bridge server |
+| `SemanticBlockExport.lean` | Lean executable — semantic block export |
+| `QueryEngine.lean`, `Search.lean` | Structured query evaluation over graph metadata |
+| `Disassembler.lean` | Expression-level disassembly |
+| `NaturalityDiagnostics.lean`, `NaturalityPromoter.lean` | Naturality verification |
+| `SquarePromoter.lean` | Square-commuting diagram promotion |
+| `Betti.lean`, `Isomorphism.lean`, `FinalSearch.lean`, `SearchRank.lean` | Specialized analysis tools |
+
+#### Kernel Equivalence Discipline
+
+Candidate equivalence promotion must go through the Lean/kernel lane:
+
+```bash
+lake env lean --run lean/DAG/KernelEquivalenceExport.lean \
+  InfoGeometry \
+  artifacts/expr-graph/translation-candidates/pairs.jsonl \
+  artifacts/expr-graph/translation-candidates/lean-kernel-equivalence.jsonl \
+  --mode type
+```
+
+Modes:
+- **`type`**: certifies definitional equality of types/statements. May set
+  `leanVerified=true`. Must **not** set `safeForAutoRewrite=true`.
+- **`value`**: certifies body equality only when types are also definitionally
+  compatible. Can mark rewrite-safe only when both type and value pass.
+- **`type-and-value`**: both lanes. One of the only modes that can set
+  `safeForAutoRewrite=true`.
+
+Python-derived hashes, role tokens, graph SCCs, and vector neighborhoods may
+propose candidate pairs but are **never allowed to set `leanVerified`** — only
+this Lean-native exporter or a future Lean-native checker with the same kernel
+authority may do that.
+
+For finite RDF/Arango-style triple preservation:
+
+```bash
+lake env lean --run lean/DAG/TripleHomomorphismExport.lean \
+  artifacts/triples/source.jsonl \
+  artifacts/triples/target.jsonl \
+  artifacts/triples/maps.jsonl \
+  artifacts/triples/triple-homomorphism-audit.json \
+  artifacts/triples/missing-triples.jsonl
+```
+
+### `lean/InfoGeometry/Meta/` — Lean-Native Meta Layer (28 files)
+
+This is the **Lean-compiled meta layer** — not Python, not Markdown. These
+modules define the architecture, trust, proof shape, induction, and vacuity
+framework that the kernel itself can reason about.
+
+| File | Purpose |
+|------|---------|
+| `Architecture.lean` | Repository architecture grammar and design intent |
+| `Trust.lean` | First-pass forbidden axioms beyond explicit `sorryAx` detection |
+| `ProofShape.lean` | Head shape of elaborated theorem proofs and definitions |
+| `Vacuity.lean` | Vacuity analysis definitions |
+| `Admission.lean` | Admission/debt tracking |
+| `HonestyPolicy.lean` | Honest sorry policy implementation |
+| `OwnerTarget.lean` | Owner-target declaration marking |
+| `SocketTarget.lean` | Socket/wire target tracking |
+| `BridgeTarget.lean` | Bridge target tracking |
+| `ClosureAttribute.lean` | Closure debt attributes |
+| `DefectRegistry.lean` | Defect registration and query |
+| `RegionPolicy.lean` | Region/policy enforcement |
+| `StrictDef.lean` | Strict definition requirements |
+| `StrictSurface.lean` | Strict surface area tracking |
+| `CompilerTelemetry.lean` | Compiler telemetry capture |
+| `CurvatureTelemetry.lean` | Curvature telemetry |
+| `DrazinRefactor.lean` | Drazin refactor patterns |
+| `CalibrationReexport.lean` | Calibration re-export |
+| `HiveLogos.lean` | Hive/logos integration |
+| `EssenceOfInductiveProof.lean` | Inductive proof essence |
+| `InductionHandbook.lean` | Induction methodology handbook |
+| `InductionHowTo` (separate file) | Induction implementation guide |
+| `InductiveInvariantPacket.lean` | Inductive invariant packet definitions |
+| `FiniteToInfiniteTransitionSOP.lean` | Finite→infinite transition SOP |
+| `InductiveLimitClosureInterface.lean` | Inductive limit closure interface |
+| `MarkovJonesInduction.lean` | Markov/Jones induction patterns |
+| `TestTactic.lean` | Test tactics for meta layer |
+| `DvorakTactics.lean` | Custom tactics |
+
+All of these compile **as part of `lean_lib InfoGeometryMeta`** — they are
+kernel-checked Lean code, not documentation.
+
+### `lean/InfoGeometry/Lint/` — Lint and Audit Modules (5 files, kernel-checked)
+
+| File | Purpose |
+|------|---------|
+| `NonTriviality.lean` | **Kernel biopsy**: provides `#biopsy_non_triviality` command used by LeanTrail vacuity audit |
+| `Pauli.lean` | Pauli auditor — rejects inflated or underived closure claims |
+| `Vacuity.lean` | Vacuity analysis lint |
+| `WitnessLint.lean` | Witness/certificate linting |
+| `SurgeryContract.lean` | 🆕 Surgery contract module (untracked, new) |
+
+## LeanTrail: Advanced Graph Analysis Pipeline
+
+LeanTrail is the repository's **most advanced and actively developed tool**
+(3 scripts currently dirty, `shadow_ledger.py` newly added). It integrates:
+
+- **Kernel-checked graph data** from `lean/DAG/` exports
+- **Lean kernel biopsies** via `#biopsy_non_triviality` (from `lean/InfoGeometry/Lint/NonTriviality.lean`)
+- **Python orchestration** for large-scale analysis (17+ scripts in `tools/leantrail/`)
+- **ArangoDB** for scalable graph algorithms
+
+The LeanTrail tooling lives in two places:
+
+| Component | Location | Language | Role |
+|-----------|----------|----------|------|
+| Backend models & store | `leantrail/backend/` (7 files) | Python | `GraphSnapshot`, `NodeRecord`, `EdgeRecord`, `GraphStore` |
+| Query API | `leantrail/backend/query_api.py` | Python | REST-style graph queries (🔧 modified) |
+| Schemas | `leantrail/schemas/` (7 JSON schemas) | JSON Schema | Graph snapshot, bridge request, critic packet schemas |
+| API server | `leantrail/api/server.py` | Python | OpenAPI server |
+| UI | `leantrail/ui/index.html` | HTML | Browser-based graph explorer |
+| **Tools (active)** | `tools/leantrail/` (17 scripts) | Python | Full pipeline: conformance, vacuity, surgery, critic |
+
+### LeanTrail Scripts
+
+| Script | Purpose | Status |
+|--------|---------|--------|
+| `conformance.py` | Compare snapshots (node/edge drift, SCC, path queries, hotspot Jaccard) | ✅ |
+| `export.py` | Export to GraphML, Neo4j CSV, Arango JSON | ✅ |
+| `vacuity_audit.py` | Spawn Lean kernel biopsies via `#biopsy_non_triviality` | 🔧 Dirty |
+| `vacuity_ingest.py` | Merge biopsy data into snapshot → `graph_snapshot.vacuity.json` | 🔧 Dirty |
+| `surgery_plan.py` | SCC analysis → 4 packet streams (vacuum, bridge, proof_hole, alignment) | 🔧 Dirty |
+| `shadow_ledger.py` | Approve/reject vacuum packets | 🆕 Untracked |
+| `surgery_apply.py` | Byte-level splice + `lake env lean` validation | ✅ |
+| `critic_packets.py` | Semantic analysis (obfuscation, docstring mismatch, witness packaging) | ✅ |
+| `critic_prompt_builder.py` | LLM review prompts from critic packets | ✅ |
+| `critic_ingest.py` | Merge critic judgments into snapshot | ✅ |
+| `hole_packets.py` | Extract proof hole packets | ✅ |
+| `failure_harvester.py` | Extract failed proof-state transitions | ✅ |
+| `path_lock_registry.py` | Lock/unlock paths in the snapshot | ✅ |
+| `arango_ingest.py` | Ingest LeanTrail snapshot into ArangoDB | ✅ |
+| `arango_physics_evaluator.py` | Physics-motivated graph evaluation | ✅ |
+| `adapters.py` | Snapshot load/save, format conversion | ✅ |
+
+### LeanTrail Data Flow
+
+```
+graph_snapshot.json                    (raw graph from dagIndexer, 375 MB)
+       │
+       ▼
+VacuityAudit ──► vacuity_audit.jsonl  (kernel biopsy per declaration)
+       │                                ⚠ NOT YET RUN on current snapshot
+       ▼
+VacuityIngest ──► graph_snapshot.vacuity.json  (biopsy-enriched)
+       │                                ⚠ NOT YET RUN on current snapshot
+       ▼
+SurgeryPlan ──► 4 packet streams:
+    vacuum_packets.jsonl          (contractible fake_transport/pure_conductor)
+    bridge_packets.jsonl          (axiomatic/orphan bridge obligations)
+    proof_hole_packets.jsonl      (honest sorry / closure debt)
+    alignment_packets.jsonl       (Hodge forest overlap candidates)
+       │                           ⚠ ALL EMPTY (no vacuity evidence yet)
+       ▼
+ShadowLedger ──► shadow_approved_packets.jsonl  (human/automated review gate)
+       │                           🆕 tool exists, not yet run
+       ▼
+CriticPackets ──► critic_packets.jsonl  8,711 packets  ✅ DONE
+       │                           (all obfuscation_suspicion / high severity)
+       ▼
+CriticPrompts ──► critic_prompts.jsonl  25 MB  ✅ DONE
+       │
+       ▼
+CriticIngest ──► graph_snapshot.critic.json  379 MB  ✅ DONE (8,719 nodes)
+       │
+       ▼
+SurgeryApply ──► byte-level splice + lake env lean validation
+                ⚠ BLOCKED (no approved vacuum packets yet)
+```
+
+## LeanTrail Vacuum Surgery & Honest Sorry Policy (v1.3)
+
+### 1. Honest Sorry Policy
+
+Explicit `sorry` (`sorryAx`) is permitted and tracked solely as **honest, visible
+closure debt**. The toolchain strictly rejects hidden/disguised substitutes
+(local axioms, opaque placeholders, witness wrappers, proof sockets, renamed
+`sorry` variants).
+
+- **Explicit `sorry`**: Honest open proof obligation; indexed and quarantined
+  into proof-hole packets. Not eligible for vacuum contraction.
+- **Hidden wrappers**: Blocked and routed to quarantine or rejection.
+
+The policy is implemented in `lean/InfoGeometry/Meta/HonestyPolicy.lean`
+(kernel-checked) and enforced by `lean/InfoGeometry/Lint/Pauli.lean`.
+
+### 2. Critic Packet Semantic Analysis
+
+The critic packet pipeline has been run on the current snapshot, producing
+**8,711 `obfuscation_suspicion` packets** at **high severity**. This means every
+declaration currently triggers an obfuscation suspicion — expected when no kernel
+biopsy data exists. A prior run on a vacuity-enriched snapshot produced 5,571
+critic packets.
+
+| Category | What It Detects |
+|----------|----------------|
+| **Obfuscation suspicion** | `_statement`/`_sorry` pairs, `readback` sockets, opaque boundaries, witness field packaging |
+| **Docstring/statement mismatch** | Declaration name vs. docstring claims |
+| **Axiomatic frontier review** | Declarations that introduce axioms instead of proving |
+| **Compatibility shim detection** | Unused forwarding modules, stale dropins, namespace duplicates |
+
+### 3. Surgery Packet Streams
+
+When run on a vacuity-enriched snapshot, `surgery_plan.py` classifies each SCC
+into a role (priority: `contaminated > protected > exported > unknown > gate >
+orphan_genuine > closure_debt > translator > pure_conductor > fake_transport >
+dead_socket`) and emits four streams:
+
+| Stream | Action | Targets | Gate |
+|--------|--------|---------|------|
+| **vacuum** | `contract` | `fake_transport`, `pure_conductor`; `is_prop=true`; `scc_size=1` | Shadow-approved + kernel check |
+| **bridge** | `bridge` | Contaminated, protected, exported, orphan_genuine | Manual review |
+| **proof_hole** | `quarantine` | `closure_debt`, `honest_sorry` | Tracked explicitly |
+| **alignment** | `align` | Hodge forest overlap candidates | Signature-level alignment |
+
+### 4. Source-Edit Gate
+
+Before any auto-contraction, **all of these** must hold:
+
+```text
+packet_stream = vacuum
+action_phase = contract
+state = shadow_approved (or certified for manual debug)
+decl_span_kind = top_level_decl
+patch_span_kind = decl_body
+source_info_kind = original
+scc_size = 1
+contamination = clean
+is_prop = true
+fileHash matches
+no high-severity unresolved critic packet
+```
+
+### 5. Context Graph Tools
+
+```bash
+# Search Lean source for imports/references
+rg -n "<NameOrNamespace>" lean -g '*.lean'
+rg -n "import <Module.Path>" lean -g '*.lean'
+
+# Use Lean-native interactive commands in any file:
+# #deps_dot Some.Theorem
+# #deps_json Some.Theorem
+# #cone_json Some.Theorem   (bounded causal cone)
+
+# Interactive cone → Arango-backed prompt
+python3 tools/infra/arango_causal_chiral_cone_prompt.py \
+  --decl InfoGeometry.Some.Module.some_theorem \
+  --json-out artifacts/cones/some_theorem.json \
+  --md-out artifacts/cones/some_theorem.md
+
+# Visualize the cone before LLM submission
+python3 tools/infra/visualize_causal_chiral_cone_packet.py \
+  --json-in artifacts/cones/some_theorem.json \
+  --html-out artifacts/cones/some_theorem.html
+
+# Kernel-equivalence certification (Lean-native)
+lake env lean --run lean/DAG/KernelEquivalenceExport.lean \
+  InfoGeometry \
+  artifacts/expr-graph/translation-candidates/pairs.jsonl \
+  artifacts/expr-graph/translation-candidates/lean-kernel-equivalence.jsonl \
+  --mode type
+```
+
+## Pipeline State: Current Snapshot Facts
+
+1. **The DAG is fresh** — built at commit `37f7cca04`, toolchain `v4.28.0`.
+   93,554 nodes, 782,004 edges, 5,473 types, 9,929 morphisms.
+
+2. **Conformance passes** — 10/10 checks, 0% node/edge drift, 1.0 Jaccard
+   for coherence and holonomy hotspots.
+
+3. **Critic analysis is complete** — 8,711 obfuscation-suspicion packets
+   generated and ingested (8,719 nodes enriched).
+
+4. **Vacuity audit has NOT been run** on the current snapshot. The tool is
+   under active development (103 lines modified). Without kernel biopsy data,
+   the surgery plan produces zero packets.
+
+5. **Surgery plan reports `vacuity_evidence_nodes: 0`**. This is expected and
+   documented: without biopsy enrichment, the planner cannot classify SCCs.
+
+6. **22 untracked Lean files** add new modules in Dynamics, Clifford,
+   OperatorAlgebra, OptimalTransport, Topological, Cantor, and Codes.
 
 ## Live Repository Surface
 
-Lean:
+### Lean Libraries
 
-- package name: `infogeometry`
-- main library entry: `lean/InfoGeometry.lean`
-- full umbrella: `lean/InfoGeometry/All.lean`
-- native audit/architecture anchors:
-  - `lean/InfoGeometry/Audit.lean`
-  - `lean/InfoGeometry/Meta/`
+| Library | `lake` name | Source | Description |
+|---------|------------|--------|-------------|
+| InfoGeometry | `lean_lib InfoGeometry` | `lean/InfoGeometry/` | Main theorem library (84 dirs, 2,442 files) |
+| DAG | `lean_lib DAG` | `lean/DAG/` | Lean-side graph export (60+ files) |
+| InfoGeometryMeta | `lean_lib InfoGeometryMeta` | `lean/InfoGeometry/Meta/` | Lean-native meta layer (28 files) |
+| InfoGeometryCanonical | `lean_lib InfoGeometryCanonical` | `lean/InfoGeometry/Canonical/All.lean` | Canonical theorems root |
+| InfoGeometryLLM | `lean_lib InfoGeometryLLM` | `lean/InfoGeometry/LLM/` | LLM interaction layer |
+| Agent | `lean_lib Agent` | `lean/Agent/` | Agent/runtime interface |
+| Docs | `lean_lib Docs` | `lean/Docs/` | Doc generation support |
+| Socratic | `lean_lib Socratic` | `lean/Socratic/` | Socratic dialogue framework |
+| SelfReference | `lean_lib SelfReference` | `lean/SelfReference/` | Self-referential constructions |
+| Experimental | `lean_lib Experimental` | `lean/Experimental/` | Experimental / in-progress work |
+| AuditNative | `lean_lib AuditNative` | `lean/AuditNative.lean` | Native audit/verification |
+| AuditStrict | `lean_lib AuditStrict` | `lean/AuditStrict.lean` | Strict linting and audit |
+| PrimitiveSetsAboveX | `lean_lib PrimitiveSetsAboveX` | `external/` | Pinned Erdos #1196 proof (v4.30.0-rc1) |
+| scripts | `lean_lib scripts` | `lean/scripts/` | Lake script helper modules |
 
-Python:
+### Lean Executables
 
-- package: `infogeometry`
-- CLIs:
-  - `igf` -> `src/igf/cli.py`
-  - `infogeometry` -> `scripts.cli:main`
-- maintained script lanes:
-  - `tools/infra/`
-  - `tools/frontier/`
-  - `tools/docs/`
-  - `tools/leantrail/`
+| Executable | Module Root | Purpose |
+|------------|-------------|---------|
+| `dagIndexer` | `DAG.Indexer` | Declaration graph indexer (main export pipeline) |
+| `groundTruthHarvester` | `DAG.GroundTruthHarvester` | Ground truth extraction |
+| `infotreeExtract` | `DAG.InfoTreeExtract` | InfoTree extraction |
+| `disconnectedAudit` | `DAG.DisconnectedAudit` | Disconnected declaration audit |
+| `exactProoflessnessAudit` | `DAG.ExactProoflessnessAudit` | Proof-less declaration audit |
+| `semanticBlockExport` | `scripts.DAG.Exploration.SemanticBlockExport` | Semantic block export |
+| `semanticBlockServer` | `scripts.DAG.Exploration.SemanticBlockServer` | Semantic block query server |
+| `compilerBridgeServer` | `scripts.DAG.Exploration.CompilerBridgeServer` | Compiler bridge server |
+| `semanticSnapshotServer` | `scripts.DAG.Exploration.SemanticSnapshotServer` | LLM proof-snapshot server |
 
-Lake scripts defined in `lakefile.lean` include:
+### Python
 
-- `strictCheck`
-- `dagStatus`
-- `dagRefresh`
-- `dagReports`
-- `dagDoctor`
-- `dagAll`
-- `changedVerify`
-- `leantrailConformance`
-- `leantrailExport`
-- `leantrailArangoIngest`
-- `leantrailArangoPhysicsEval`
-- `leantrailFailureHarvest`
-- `leantrailPathLock`
-- `leantrailHolePackets`
-- `leantrailVacuityIngest`
-- `leantrailSurgeryPlan`
-- `leantrailSurgeryApply`
+| Component | Path | Role |
+|-----------|------|------|
+| LeanTrail tools | `tools/leantrail/` (17 scripts) | Vacuity, surgery, critic, conformance pipeline |
+| DAG infrastructure | `tools/infra/` (~50 scripts) | DAG refresh, Arango ingest, algorithms |
+| Frontier | `tools/frontier/` | Semantic snapshots, proof sessions |
+| Quality | `tools/quality/` | Closure debt crawl, placeholder audit |
+| Observability | `tools/observability/` | Graph overlay HTML reports |
+| Alexandria | `tools/alexandria/` | External knowledge integration |
+| CLI package | `src/igf/` | Maintained CLI (`igf` command) |
+| CLI entry | `scripts/cli.py` | `infogeometry` console script |
+| Total | 451 Python files | |
+
+### Generated & Operational Artifacts
+
+| Directory | Size | Contents |
+|-----------|------|----------|
+| `artifacts/dag/index/` | 3.3 GB | `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl`, `types.jsonl`, topology overlays, `meta.json` |
+| `artifacts/dag/process-flow/` | — | `flow-edges.jsonl`, `process-events.jsonl`, `defects.jsonl`, lawful-path candidates |
+| `artifacts/leantrail/` | 1.8 GB | Snapshots, vacuity/critic data, surgery packets, conformance reports |
+| `artifacts/infotree/` | — | Lossless InfoTree materializations |
+| `artifacts/graph_overlay/` | — | HTML graph overlay reports |
+| `reports/` | — | Generated audit and debt reports |
 
 ## Quick Start
 
-Install Python tooling:
+### Python Tooling (first time)
 
 ```bash
 python3 -m venv .venv
@@ -128,21 +584,62 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-Basic Lean-oriented checks:
+### Basic Lean + DAG Checks
 
 ```bash
-lake script run changedVerify
-lake script run dagStatus
-lake script run dagDoctor
+lake script run changedVerify    # verify changed files build
+lake script run dagStatus        # check DAG freshness
+lake script run dagDoctor        # detailed DAG diagnostics
 ```
 
-Whole DAG/report refresh:
+### Full DAG Refresh
 
 ```bash
-lake script run dagAll
+lake script run dagAll           # full pipeline: build → index → report
 ```
 
-IGF pipeline CLI examples:
+### Run Vacuity Audit (the next step to unblock surgery)
+
+```bash
+lake script run leantrailVacuityAudit \
+  --snapshot artifacts/leantrail/graph_snapshot.json \
+  --out artifacts/leantrail/vacuity_audit.jsonl \
+  --module-batch-size 25 --keep-going
+
+lake script run leantrailVacuityIngest \
+  --snapshot artifacts/leantrail/graph_snapshot.json \
+  --audit artifacts/leantrail/vacuity_audit.jsonl
+
+lake script run leantrailSurgeryPlan \
+  --snapshot artifacts/leantrail/graph_snapshot.vacuity.json
+```
+
+### Review Critic Packets (already available)
+
+```bash
+# Generate LLM review prompts from existing critic packets
+lake script run leantrailCriticPrompts \
+  --packets artifacts/leantrail/critic_packets.jsonl
+
+# View reports
+cat artifacts/leantrail/critic_report.md
+cat artifacts/leantrail/critic_prompts.md
+
+# Inspect a single packet
+head -1 artifacts/leantrail/critic_packets.jsonl | python3 -m json.tool | head -40
+```
+
+### Kernel Equivalence (Lean-native certification)
+
+```bash
+lake env lean --run lean/DAG/KernelEquivalenceExport.lean \
+  InfoGeometry \
+  artifacts/expr-graph/translation-candidates/pairs.jsonl \
+  artifacts/expr-graph/translation-candidates/lean-kernel-equivalence.jsonl \
+  --mode type
+```
+
+### IGF Pipeline CLI
 
 ```bash
 igf preflight
@@ -151,43 +648,84 @@ igf run --strict --print-json
 igf validate --strict --print-json
 ```
 
-## GraphRAG Explorer
-
-Use the unified natural-language explorer to search Lean declarations, docs, black books, handover material, and external mirrors:
+### GraphRAG Explorer
 
 ```bash
 python3 tools/infra/ask_repo.py "Weyl character formula" --top-k 8
-python3 tools/infra/ask_repo.py "Weyl character formula" --top-k 8 --no-gravity --format json
 ```
 
-The explorer is retrieval-only for prose and external mirrors; Lean remains the proof authority.
+## Quick Command Reference
 
-## Repository Layout
+### Lake Scripts
 
-- `lean/`
-  Lean theorem sources
-- `src/igf/`
-  maintained Python package for artifact processing and Arango-backed workflows
-- `tools/`
-  operational scripts and compatibility wrappers
-- `tests/`
-  Python and Lean tests
-- `docs/`
-  maintained entry docs plus large reference-memory corpus
-- `reports/`
-  generated or point-in-time Markdown/JSON reports
-- `artifacts/`
-  generated outputs, snapshots, and run payloads
-- `archive/`
-  historical material kept for provenance
-- `handover/`
-  packet and runbook history, not current authority
+| Command | Purpose | Status |
+|---------|---------|--------|
+| `dagStatus` | Check DAG freshness | ✅ |
+| `dagDoctor` | DAG diagnostics | ✅ |
+| `dagRefresh` | Full DAG re-index | ✅ |
+| `dagReports` | Generate DAG reports | ✅ |
+| `dagAll` | Full DAG pipeline | ✅ |
+| `leanGraphSlice` | Project hydrated DAG slice to lean-graph JSON | ✅ |
+| `changedVerify` | Verify changed files build | ✅ |
+| `strictCheck` | Strict Lean lint driver | ✅ |
+| `leantrailConformance` | Compare snapshots | ✅ |
+| `leantrailExport` | Export to GraphML/Neo4j/Arango | ✅ |
+| `leantrailVacuityAudit` | Kernel biopsy audit | 🔧 Modified, not yet run |
+| `leantrailVacuityIngest` | Merge audit into snapshot | 🔧 Modified, not yet run |
+| `leantrailSurgeryPlan` | Generate surgery packets | 🔧 Modified, blocked |
+| `leantrailShadowLedger` | Approve/reject packets | 🆕 Untracked |
+| `leantrailCriticPackets` | Semantic analysis | ✅ 8,711 packets |
+| `leantrailCriticPrompts` | LLM review prompts | ✅ 25 MB |
+| `leantrailCriticIngest` | Merge critic judgments | ✅ 8,719 nodes |
+| `leantrailHolePackets` | Extract proof hole packets | ✅ |
+| `leantrailArangoIngest` | Ingest into ArangoDB | ✅ |
+| `leantrailArangoPhysicsEval` | Arango physics evaluation | ✅ |
+| `leantrailFailureHarvest` | Harvest failure data | ✅ 5,560 failures |
+| `leantrailPathLock` | Path lock registry | ✅ |
+| `leantrailSurgeryApply` | Apply approved surgery | ⚠ Blocked |
+| `semanticAudit` | Run semantic audit | ✅ |
+| `semanticSnapshot` | Build semantic snapshot | ✅ |
+| `proofSession` | Proof session handler | ✅ |
+| `proofPrint` | Proof reconstruction printer | ✅ |
+| `chatgptCollaborator` | ChatGPT bridge | ✅ |
+| `blueprintAlexandriaBridge` | Blueprint ↔ Alexandria | ✅ |
+| `blueprintArangoMatch` | Blueprint ↔ Arango | ✅ |
+| `paperproofTraceBridge` | Paperproof trace | ✅ |
+| `leanParanoiaAudit` | LeanParanoia audit bridge | ✅ |
+| `refreshBlueprintTags` | Refresh blueprint tags | ✅ |
+| `bilingualSpineReport` | Generate bilingual spine report | ✅ |
+| `leanAutoTraceBridge` | Lean auto trace bridge | ✅ |
+
+### Lean Executables (run directly)
+
+```bash
+lake env lean --run lean/DAG/KernelEquivalenceExport.lean <args>
+lake env lean --run lean/DAG/TripleHomomorphismExport.lean <args>
+lake env lean --run lean/DAG/ProcessFlowExport.lean <args>
+lake env lean --run lean/DAG/ExprArangoExport.lean <args>
+```
+
+### Lean Interactive Commands (in any .lean file)
+
+```lean
+import DAG.ConeCommand
+#deps_dot Some.Theorem
+#deps_json Some.Theorem
+#cone_json Some.Theorem
+```
+
+### Lean Build
+
+```bash
+lake env lean <file>.lean           # check single file
+lake build <Module.Name>            # build specific module
+lake build                          # full library
+lake build InfoGeometry.All         # umbrella build
+```
 
 ## Closure-Debt Constructive-Proof SOP
 
-Use this SOP when reducing closure debt in Lean modules.
-
-1. Run deterministic debt discovery first
+### 1. Run deterministic debt discovery first
 
 ```bash
 python3 tools/quality/closure_debt_crawler.py \
@@ -203,210 +741,92 @@ python3 tools/quality/placeholder_audit.py \
   --signals-out reports/audit/repo-placeholder-signals.json
 ```
 
-For agentic file-by-file audit, run the resumable wrapper. It invokes
-`closure_debt_crawler.py` once per Lean file and passes each generated prompt to
-the configured coding agent:
+Agentic file-by-file audit:
 
 ```bash
 python3 tools/quality/run_agentic_closure_debt_audit.py \
   --root lean \
   --coding-agent-command 'codex exec --json' \
   --out-dir reports/audit/agentic-closure-debt \
-  --print-progress
+  --limit 1 --print-progress
 ```
 
-Smoke run:
+### 2. Prioritize work
 
-```bash
-python3 tools/quality/run_agentic_closure_debt_audit.py \
-  --root lean \
-  --coding-agent-command 'codex exec --json' \
-  --limit 1 \
-  --print-progress
-```
+- **P0**: hard findings (`sorry`, `admit`, unsafe proof holes)
+- **P1**: owner-target propositions lacking theorem-backed constructive chains
+- **P2**: soft/advisory debt (skeletal proofs, packaging debt)
 
-This is an audit lane, not a proof lane. The agent reports gaps and repair
-strategies; closing a gap still requires Lean edits and successful targeted
-`lake env lean` / `lake build`.
+### 3. Enforce proof authority policy
 
-2. Prioritize work in this order
-- P0: hard findings (`sorry`, `admit`, unsafe proof holes)
-- P1: owner-target propositions that currently lack theorem-backed constructive chains
-- P2: soft/advisory debt (skeletal proofs, packaging debt)
-
-3. Enforce proof authority policy
 - No witness placeholders as final authority.
 - Green compile is necessary but not sufficient.
-- Every promoted proposition must be backed by explicit derivation notes: target theorem -> local lemmas -> upstream owner lemmas -> mathlib roots.
-- Prefer existing mathlib lemmas first; if missing, add minimal intermediate lemmas in-repo with full proofs.
-- External literature (AFP/arXiv/etc.) is input for theorem design only; authority is Lean+mathlib-checked proof terms.
-- Reject vacuous packaging as closure evidence (`Nonempty`, `Exists`, `_valid` projection-only readbacks, interface/witness shells) unless fully discharged by theorem derivation.
+- Every promoted proposition must be backed by explicit derivation notes.
+- Prefer existing mathlib lemmas; add minimal intermediate lemmas as needed.
+- External literature is input for theorem design only.
+- Reject vacuous packaging as closure evidence.
 
-4. Verify each touched module immediately
+### 4–7. Verify, re-scan, commit, deduplicate
 
-```bash
-lake env lean lean/<Path/To/Module>.lean
-lake build <Module.Name>
-```
+See the full SOP in the [dag-wire-refactor skill](skills/lean-dag-wire-refactor/SKILL.md)
+for the dedicated deduplication/wire-removal protocol.
 
-5. Re-run debt scanners after each batch and record artifacts
-- Keep JSON/MD outputs under `reports/audit/` for each pass.
-- Do not claim debt reduction without scanner evidence and green Lean build evidence.
+## Key Results
 
-6. Commit discipline
-- Keep commits surgical (module + directly related tests/scripts only).
-- If asked to push, push both remotes (`origin` and `upstream`).
+### 1. Thermodynamic Synthesis: Non-Commutative Bregman Divergence
 
-## Documentation Rules
+Formalizes `A_info = (Δ - 1) - log Δ` as operator-valued Helmholtz free energy
+in the finite nilpotent sector (`CoproductToVirasoroCocycleBridge`, `N^2 = 0`).
 
-Start with:
+### 2. Cantor/Fock and Dirac Sea Geometry
 
-- [docs/README.md](docs/README.md)
-- [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
-- [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md)
-- [docs/ModuleMap.md](docs/ModuleMap.md)
-- [docs/OperationalIntent.md](docs/OperationalIntent.md)
-- [docs/GenerativeDiscoveryArchitecture.md](docs/GenerativeDiscoveryArchitecture.md)
-- [docs/FormalizationDiscipline.md](docs/FormalizationDiscipline.md)
-- [docs/InductionSystematics.md](docs/InductionSystematics.md)
-- [docs/InductionHowTo.md](docs/InductionHowTo.md)
-- [docs/ARANGO_DAG_REFRESH_METHODOLOGY.md](docs/ARANGO_DAG_REFRESH_METHODOLOGY.md)
-- [PAULI_MANDATE.md](PAULI_MANDATE.md)
-- [Installation.md](Installation.md)
-- [NEWCOMER_PATH.md](NEWCOMER_PATH.md)
+- `CantorFockSpace.lean` — fermionic annihilation (`a^2 = 0`), Cantor prefix readout
+- `DiracSea.lean` — combinatorial `ℤ → Bool` boundary flip, nilpotent `diracSeaStep`
 
-## Induction Systematics
+### 3. Ongoing Expansions (untracked, 22 new files)
 
-For the repo’s induction patterns, finite-stage transport, categorical
-colimits, and tensor-algebra induction, see the linked guides below.
-The theory is intentionally recursive/inductive at the operator level: when an
-operator is defined by an iterative formula, the inductive recurrence is the
-primary definition, not an analytic completion or Taylor-style limit.
-Formal exp/log/geometric series are treated as algebraic `PowerSeries`
-constructions with coefficientwise lemmas; they are not analytic completion
-claims. Historically, exponential/logarithmic functions were handled by
-iteration, inversion, and differential/algebraic laws before Taylor-series
-formulations became the standard presentation.
+| Area | Files | Topics |
+|------|-------|--------|
+| **Dynamics** | 8 | BisognanoWichmann, TomitaTakesaki, KMS, Rindler, Wasserstein |
+| **Clifford** | 5 new | Bott, Moebius, S-matrix, Log CFT, Modular CFT |
+| **OperatorAlgebra** | 5 new | Continuum limit, Erlangen-Jaynes-Gromov, Log monodromy |
+| **Topological** | 3 new | Anyons, Fibonacci |
+| **OptimalTransport** | New dir | OT bridge module |
+| **Cantor, Codes** | New dirs | Cantor constructions, code families |
 
+## Documentation Map
+
+Start with these:
+
+| Document | What It Covers |
+|----------|---------------|
+| [docs/README.md](docs/README.md) | Documentation routing system & philosophy |
+| [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md) | Previous verified state (stale: 2026-05-02) |
+| [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) | High-level repo structure |
+| [docs/ModuleMap.md](docs/ModuleMap.md) | Lean module dependency structure |
+| [docs/LeanTrail.md](docs/LeanTrail.md) | LeanTrail blueprint and API surface |
+| [docs/ARANGO_DAG_REFRESH_METHODOLOGY.md](docs/ARANGO_DAG_REFRESH_METHODOLOGY.md) | Full Arango refresh runbook |
+| [lean/DAG/README.md](lean/DAG/README.md) | DAG subsystem documentation (kernel-checked graph export) |
+| [leantrail/README.md](leantrail/README.md) | LeanTrail backend docs |
+| [docs/CONSTRUCTIVE_CLOSURE_MANDATE.md](docs/CONSTRUCTIVE_CLOSURE_MANDATE.md) | Closure mandate policy |
+| [docs/FORMULA_FUNCTION_POLICY.md](docs/FORMULA_FUNCTION_POLICY.md) | Formula/function discipline |
+| [PAULI_MANDATE.md](PAULI_MANDATE.md) | Pauli auditor discipline |
+| [skills/lean-dag-wire-refactor/SKILL.md](skills/lean-dag-wire-refactor/SKILL.md) | Wire removal/refactor skill |
+
+For induction systematics:
 - [docs/InductionSystematics.md](docs/InductionSystematics.md)
 - [docs/InductionHowTo.md](docs/InductionHowTo.md)
 - [skills/induction-systematics/SKILL.md](skills/induction-systematics/SKILL.md)
 
-Do not treat old reports, synthesis notes, or handover packets as live state
-unless they have been regenerated or explicitly re-audited.
-
-`docs/black_books/` is intentionally protected exploration material and is not
-rewritten by the Markdown cleanup lane.
-
-## Key Results
-
-### 4. Thermodynamic Synthesis: Non-Commutative Bregman Divergence
-
-This repository formalizes the local modular free-energy identity
-
-`A_info = (Δ - 1) - log Δ`
-
-as an exact operator-valued Helmholtz free-energy coordinate in the finite nilpotent sector.
-
-In `CoproductToVirasoroCocycleBridge`, the modular seed is `Δ = 1 + N` with `N^2 = 0` (`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.modularDisplacement_eq`,
-`InfoGeometry.Canonical.ModularNilpotentAutomorphism.N_sq_zero`). The local free-energy operator
-`informationFreeEnergy` is defined as
-
-`informationFreeEnergy := modularDisplacement - ModularNilpotentAutomorphism.logModular`.
-
-Because `modularDisplacement = logModular` in this square-zero model, it satisfies
-`informationFreeEnergy = 0` and thus has zero vacuum expectation (`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.informationFreeEnergy_eq_zero`,
-`InfoGeometry.Canonical.CoproductToVirasoroCocycleBridge.vacuumExpectation_informationFreeEnergy_vac`).
-
-Interpretively, this matches the classical thermodynamic identification
-`A = U - TS` with `log Δ` as modular Hamiltonian (`U`) and `Δ - 1` as regularized entropy-flux (`TS`) in a quantum information-geometric setting.
-
-Under coproduct perturbations, the same construction tracks Bregman-generated boundary free energy through
-`crossFlux`/`liftFlux` terms and feeds directly into the Virasoro/relative-entropy bridge stack already established in this file.
-
-The local modular flow is algebraically finite:
-`σ_t(A) = A + t•[N,A] - t^2•(NAN)`. Consequently, in this sector the KMS
-tests are purely polynomial/algebraic in `t` (and in `βt`), with no analytic continuation
-singularities at finite level.
-
-### 5. Part IV: Infinite Clifford/Fock and Cantor boundary geometry
-
-`Cantor`-style finite-sector nilpotency (`N^2 = 0`) is now connected to the Cantor/Fock carrier lane through a new bridge module:
-
-`lean/InfoGeometry/Canonical/CantorFockSpace.lean`.
-
-In this bridge:
-
-- the local Wick seed is re-exported as the fermionic annihilation coordinate (`localAnnihilation = a`),
-  with proofs that `a^2 = 0`, `a^\u2020² = 0`, `{a,a^\u2020}=1`, and vacuum annihilation.
-- the corresponding local CAR package is packaged as `localCARPair` over `M₂(ℝ)`.
-- `entropyFlux = localAnnihilation` is re-stated in the same local algebraic sector,
-  with `informationFreeEnergy = 0` preserved as the free-energy invariant.
-- finite Cantor-prefix readout is defined via `cantorPrefixState` into the Hilbert basis from
-  `CelikKocakInfiniteFockCarrierData`, with orthogonality and reconstruction lemmas
-  (`cantorPrefixState_succ`, `cantorPrefixState_orthogonal_of_distinct_prefix`).
-- the vacuum binary boundary `0000...` is represented by `vacuumBoundary` and its finite-cylinder map
-  `cantorVacuumPrefixState`.
-
-This aligns the project’s algebraic core (`N^2 = 0`) with the infinite Cantor-symbolic picture (`{0,1}^ℕ`) in a theorem-safe, non-analytic way: the finite stages are fully explicit and no AF/CAR-axiom extension is asserted as a completed analytic theorem in this file.
-
-A dedicated bridge file now packages this as the repository’s canonical Dirac-sea narrative:
-`lean/InfoGeometry/Canonical/DiracSea.lean`.
-
-It presents the finite-seed step operator as a strict square-zero bit-interface flip on a
-combinatorial `ℤ → Bool` profile (`...111|00...` → `...110|10...`), and proves the nilpotent
-`Option`-step law `diracSeaStep` (two applications annihilate). It also
-connects `A_info = (Δ-1)-logΔ = 0`, and re-exports the finite-prefix boundary readouts
-against the existing `CelikKocakInfiniteFockCarrierData` Hilbert carrier.
-
-This section therefore serves as the repository’s current, theorem-safe canonical
-visualization of the Dirac-sea boundary flip narrative, explicitly scoped to the
-finite nilpotent sector and finite-cylinder reconstruction.
-
-### IV. The Continuum Limit: The Dirac Sea & Infinite Binary Words
-
-How does this algebra act at infinity? By mapping the infinite spatial limit to a **Dirac Sea of bi-infinite binary words**, the vacuum state becomes the perfect polarized boundary:
-$$ | \Omega \rangle = | \dots 11111.00000 \dots \rangle $$
-In this coordinate-free combinatorial space, the regularized modular operator $$N = \Delta - \mathbf{1}$$ acts purely as a **boundary bit-flip operator** creating a particle-hole excitation across the interface.
-
-* **The Pauli Exclusion Nilpotency:** Because you cannot place a particle where one already exists, the bit-flip operator is inherently square-zero: **$N^2 = 0$**.
-* **The Thermodynamic Ground State:** The information free energy evaluates to zero ($N - N = 0$) perfectly reflecting the unperturbed Dirac sea.
-* **The Central Charge Anomaly:** The Virasoro Central Charge $c$ is cleanly resolved as the macroscopic chiral anomaly—the topological obstruction to shifting the infinite binary Fermi sea.
-
-*(See `lean/InfoGeometry/Canonical/DiracSea.lean` for the formal verification of the combinatorial zero-energy state).
-
-## LeanTrail Vacuum Surgery & Honest Sorry Policy (v1.3)
-
-This repository incorporates the **LeanTrail Vacuum Surgery** toolchain coupled with the **Honest Sorry** policy. 
-
-### 1. Honest Sorry Policy
-Explicit `sorry` (`sorryAx`) is permitted and tracked solely as **honest, visible closure debt**. The toolchain strictly rejects or blocks hidden/disguised substitutes (such as local axioms, opaque placeholders, witness wrappers, proof sockets, or renamed `sorry` variants) to prevent fake closure.
-- **Explicit `sorry`**: Treated as honest open proof obligation; indexed and quarantined into proof-hole packets. Eligible for development mode but not eligible for vacuum contraction/deletion.
-- **Hidden wrappers / nonstandard `admit`**: Blocked and routed to quarantine or rejection.
-
-### 2. Vacuum Surgery Pipeline
-Automated tools are provided under `tools/leantrail/` to perform safe semantic audits and contractions of proof terms:
-- `leantrailVacuityIngest`: Merges vacuity biopsy data back into the LeanTrail graph snapshot under the node `attrs` payload.
-- `leantrailSurgeryPlan`: Analyzes the vacuity-enriched snapshot to plan Tier 2 contractions (`vacuum_packets.jsonl`), axiomatic candidates (`bridge_packets.jsonl`), and honest closure obligations (`proof_hole_packets.jsonl`).
-- `leantrailSurgeryApply`: Safe binary-level splicing tool that applies certified vacuum contraction packets using reverse-byte order verification, hash checks, and local `lake env lean` compile-time validation.
-
-## Current Audit Note
-
-This README was rewritten on 2026-05-02 to match the current code surface.
-During that pass, the repository was observed to have a dirty working tree with
-active Lean and Python changes already in progress. This documentation refresh
-does not claim a fresh green build; see [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
-for the current verified status language.
-
 ## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
 
-Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate.
+Replacing witness-gated and external-certificate leftovers with native Lean
+proofs is the top-priority mandate.
 
-Policy requirements:
-- Witness packets, certificate fields, external certificates, and assumption interfaces are temporary scaffolding only.
-- They are not final mathematical closure and not promotion authority.
-- Every promoted proposition must be discharged by native Lean derivation chains in-repo (owner -> translator -> mathlib-rooted proof path).
-- When a native Lean proof is not yet available, the gap must be recorded explicitly as open closure debt; do not package it as complete.
-- **Do not “resolve” debt with wording.** Progress must be structural, not just textual.
-- **Do not remove debt labels** unless there is a native explicit Lean proof term checked by the kernel closing that specific debt.
-- **Real progress** = replacing certificate/witness fields with theorem-backed native derivations.
+- Witness packets, certificate fields, external certificates, and assumption
+  interfaces are **temporary scaffolding only**.
+- They are **not final mathematical closure** and **not promotion authority**.
+- Every promoted proposition must be discharged by native Lean derivation chains.
+- Open gaps must be recorded explicitly — **do not package them as complete**.
+- **Real progress** = replacing certificate/witness fields with theorem-backed
+  native derivations.

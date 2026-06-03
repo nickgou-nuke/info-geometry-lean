@@ -21,10 +21,11 @@ namespace InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 
 /--
-Spin-modular compatibility witness.
+Spin-modular compatibility carrier.
 
-This says the spin connection supplies the physical boost/Rindler flow that is
-identified with modular flow after a normalization.
+This stores the two flows and the positive acceleration readout.  It does not
+certify the geometric identification of those flows; that remains an owner
+target unless supplied by a concrete horizon/boost model.
 -/
 structure SpinModularCompatibility
     (State : Type*) where
@@ -39,25 +40,6 @@ structure SpinModularCompatibility
 
   /-- Acceleration is positive. -/
   acceleration_pos : 0 < acceleration
-
-  /--
-  Flow calibration law.
-
-  Intended meaning: modular time and physical boost time differ by the
-  Bisognano-Wichmann/Unruh normalization.
-  -/
-  modular_physical_calibration_True : Prop
-
-  /-- Evidence for the modular/physical flow calibration. -/
-  modular_physical_calibration :
-    modular_physical_calibration_True
-
-  /-- Spin-connection/boost compatibility law. -/
-  spin_connection_generates_boost_True : Prop
-
-  /-- Evidence for spin-connection/boost compatibility. -/
-  spin_connection_generates_boost :
-    spin_connection_generates_boost_True
 
 namespace SpinModularCompatibility
 
@@ -120,7 +102,7 @@ end UnruhTemperatureCalibration
 /--
 Modular acceleration calibration.
 
-This is the constructive natural-unit Unruh socket.  The final temperature
+This is the constructive natural-unit Unruh calibration.  The final temperature
 formula is not stored as a hypothesis: it is derived from the physical inverse
 temperature calibration `β = 2π / a` and the definition `T = β⁻¹`.
 -/
@@ -208,13 +190,6 @@ structure ModularBoostTemperatureCalibration
   acceleration_pos :
     0 < acceleration
 
-  /-- Modular flow is geometrically calibrated as boost/Rindler time. -/
-  modular_flow_is_boost_flow : Prop
-
-  /-- Evidence for the modular/boost calibration. -/
-  modular_flow_is_boost_flow_holds :
-    modular_flow_is_boost_flow
-
   /-- Physical inverse temperature normalization. -/
   beta_eq_unruhBeta :
     beta = unruhBeta acceleration
@@ -231,7 +206,7 @@ The calibrated physical temperature is `a / 2π`.
 -/
 theorem temperature_eq_unruh :
     1 / beta = unruhTemperature C.acceleration := by
-  rcases C with ⟨a, ha, _hBoost, _hBoostValid, hbeta⟩
+  rcases C with ⟨a, ha, hbeta⟩
   subst beta
   unfold unruhBeta unruhTemperature
   field_simp [ne_of_gt ha, Real.pi_ne_zero]

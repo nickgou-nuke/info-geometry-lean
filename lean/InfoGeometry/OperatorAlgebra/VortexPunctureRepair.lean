@@ -4,8 +4,9 @@ InfoGeometry/OperatorAlgebra/VortexPunctureRepair.lean
 Localized puncture repair for vortex/impurity defects.
 
 This module treats vortex cores and impurity-induced subgap states as localized
-repair witnesses. It does not prove superconducting regularity,
-Navier-Stokes regularity, or Majorana protection without explicit witnesses.
+repair data. It does not prove superconducting regularity, Navier-Stokes
+regularity, or Majorana protection beyond the explicit algebraic laws stored
+below.
 -/
 
 import Mathlib
@@ -67,13 +68,6 @@ structure VortexCoreDatum
   /-- Observable boundary/subgap readout of the core. -/
   boundaryReadout : Memory
 
-  /--
-  Law that this datum is the intended vortex-core model.
-
-  This remains a socket because concrete BdG/vortex analysis is model-specific.
-  -/
-  vortex_core_True : Prop
-
 namespace VortexCoreDatum
 
 variable
@@ -101,13 +95,6 @@ structure MajoranaPlugWitness
   /-- The core state is recovered/resolved by the plug. -/
   core_eq_plug : V.coreState = plug
 
-  /--
-  Model-specific protection law.
-
-  This is where a concrete topological-superconductor theorem belongs.
-  -/
-  protection_True : Prop
-
 namespace MajoranaPlugWitness
 
 variable
@@ -130,7 +117,7 @@ theorem theta_coreState_eq_coreState
 
 end MajoranaPlugWitness
 
-/-! ## 4. YSR / subgap localized repair socket -/
+/-! ## 4. YSR / subgap localized repair datum -/
 
 /--
 Localized subgap repair witness.
@@ -189,14 +176,6 @@ structure VortexRepairBridge
   /-- The repaired residue is benign for the genesis context. -/
   repaired_benign :
     IsBenign context repairedResidue
-
-  /--
-  Repair law connecting the input and output residues.
-
-  This is intentionally abstract: it may be a Möbius twist, local parity flip,
-  YSR localization, vortex-core plug, or another model-specific operation.
-  -/
-  repair_True : Prop
 
 namespace VortexRepairBridge
 

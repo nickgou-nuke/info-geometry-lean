@@ -72,8 +72,9 @@ A spin connection calibrated as a Bogoliubov frame setter.
 
 For each frame `θ`, the visible system has a dissipative channel and a
 Stinespring/Tomita dilation into a commutant/environment carrier.  The
-connection does not definitionally produce the channel; the concrete
-representation supplies the calibration fields.
+connection does not definitionally produce the channel; concrete
+representations should add separate owner theorems for model-specific
+spin/Bogoliubov calibration.
 -/
 structure SpinBogoliubovFrame
     (Frame Sys Comm : Type*)
@@ -98,30 +99,6 @@ structure SpinBogoliubovFrame
     ∀ θ : Frame,
       spin.inertial θ →
         (channel θ).actual = (channel θ).ideal
-
-  /--
-  Representation-specific law saying that `omega` is the Bogoliubov generator
-  or frame setter for the channel family.
-  -/
-  omega_generates_bogoliubov_frame_True : Prop
-  omega_generates_bogoliubov_frame :
-    omega_generates_bogoliubov_frame_True
-
-  /--
-  Representation-specific law saying that nonzero curvature corresponds to
-  visible/hidden sector shear.
-  -/
-  curvature_controls_hidden_shear_True : Prop
-  curvature_controls_hidden_shear :
-    curvature_controls_hidden_shear_True
-
-  /--
-  Tomita calibration: the hidden carrier is interpreted as the
-  commutant/environment sector.
-  -/
-  tomita_commutant_calibration_True : Prop
-  tomita_commutant_calibration :
-    tomita_commutant_calibration_True
 
 namespace SpinBogoliubovFrame
 
@@ -190,14 +167,6 @@ structure SpinHeatCalibration
       HeatEqualsHiddenInformation
         Sys Comm bregman (S.channel θ) (S.dilation θ)
 
-  /--
-  Certificate that the heat readout is the intended spin/Bogoliubov shear
-  readout.
-  -/
-  heat_is_spin_shear_calibration_True : Prop
-  heat_is_spin_shear_calibration :
-    heat_is_spin_shear_calibration_True
-
 namespace SpinHeatCalibration
 
 variable
@@ -240,7 +209,7 @@ theorem heat_eq_zero_of_inertial
 
 end SpinHeatCalibration
 
-/-! ## Curvature / Einstein readout socket -/
+/-! ## Curvature / Einstein readout carrier -/
 
 /--
 A curvature/stress readout calibrated to a spin-Bogoliubov channel family.
@@ -258,22 +227,6 @@ structure SpinEinsteinReadoutCalibration
 
   /-- Stress/energy/heat-side readout. -/
   stressReadout : Frame → Stress
-
-  /--
-  Field-equation or Ricci-flux calibration law.
-  Concrete modules can instantiate this with an actual tensor equation.
-  -/
-  field_equation_calibration_True : Prop
-  field_equation_calibration :
-    field_equation_calibration_True
-
-  /--
-  Certificate that Bregman/Stinespring heat is the source term for the
-  stress-side readout.
-  -/
-  heat_sources_stress_calibration_True : Prop
-  heat_sources_stress_calibration :
-    heat_sources_stress_calibration_True
 
 namespace SpinEinsteinReadoutCalibration
 

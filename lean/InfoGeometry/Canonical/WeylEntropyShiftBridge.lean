@@ -47,7 +47,7 @@ theorem readout_scale
     (A : Op) :
     W.homogeneous.readout (W.homogeneous.scale c A) =
       c ^ W.homogeneous.weight * W.homogeneous.readout A :=
-  W.homogeneous.scale_True c A
+  W.homogeneous.readout_scale c A
 
 /--
 Logarithmic Weyl shift.
@@ -66,7 +66,7 @@ theorem entropy_scale_shift
   calc
     Real.log (W.homogeneous.readout (W.homogeneous.scale c A))
         = Real.log (c ^ W.homogeneous.weight * W.homogeneous.readout A) := by
-            rw [W.homogeneous.scale_True]
+            rw [W.homogeneous.readout_scale]
     _ = Real.log (c ^ W.homogeneous.weight) +
           Real.log (W.homogeneous.readout A) := by
             rw [Real.log_mul (pow_ne_zero W.homogeneous.weight hc)
@@ -124,4 +124,3 @@ theorem entropy_scale_of_weight_two
 end WeylHomogeneousEntropy
 
 end InfoGeometry.Canonical.WeylEntropyShiftBridge
-

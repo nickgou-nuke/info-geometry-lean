@@ -43,3 +43,6 @@
 [submodule "external_refs/geoalg"]
 	path = external_refs/geoalg
 	url = https://github.com/GPWilmot/geoalg.git
+[submodule "external_refs/hermes-agent-self-evolution"]
+	path = external_refs/hermes-agent-self-evolution
+	url = https://github.com/NousResearch/hermes-agent-self-evolution.git

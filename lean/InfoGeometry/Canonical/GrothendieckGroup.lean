@@ -28,6 +28,7 @@ completion is `ℤ`.
   `grothendieck_add_compat`, `grothendieck_neg_compat`,
   `grothendieck_add_assoc`, `grothendieck_add_comm`, `grothendieck_zero_add`,
   `grothendieck_add_zero`, `grothendieck_add_left_neg`, `grothendieckMap`,
+  `grothendieckMap_add`, `idempotent_invariance_split`,
   `lift_raw_compat`, `grothendieckLift`, `grothendieckLift_comp`,
   `grothendieckLift_unique`, `grothendieckMap_injective_of_cancellation`,
   `cancellation_of_grothendieckMap_injective`,
@@ -194,6 +195,21 @@ def grothendieckMap (M : Type*) [AddCommMonoid M] : M →+ Grothendieck M where
     apply Quotient.sound
     use 0
     simp [add_assoc, add_comm, add_left_comm]
+
+/-- The canonical Grothendieck map is additive. -/
+theorem grothendieckMap_add (x y : M) :
+    grothendieckMap M (x + y) = grothendieckMap M x + grothendieckMap M y :=
+  (grothendieckMap M).map_add x y
+
+/--
+If an object value splits additively as `x = y + z`, then its Grothendieck
+image splits as the sum of the two component images.  This is the finite
+algebraic shadow of split-idempotent invariance.
+-/
+theorem idempotent_invariance_split (x y z : M) (h_split : x = y + z) :
+    grothendieckMap M x = grothendieckMap M y + grothendieckMap M z := by
+  rw [h_split]
+  exact grothendieckMap_add y z
 
 theorem lift_raw_compat {A : Type*} [AddCommGroup A]
     (f : M →+ A) {x y : M × M} (h : GrothendieckRel x y) :

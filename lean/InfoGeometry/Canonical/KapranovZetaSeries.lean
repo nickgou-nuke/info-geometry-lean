@@ -15,6 +15,7 @@ functions `Nat → R` with Cauchy convolution multiplication.
   `cauchyMul_apply`, `oneSeries_apply`, `mul_one_series`,
   `cauchyMul_comm`, `mul_comm_series`, `geometricSeries_apply`,
   `linearFactor_apply`, `linearFactor_mul_geometricSeries`,
+  `quadraticFactor_apply`, `linearFactor_mul_linearFactor`,
   `mot_zeta_mult`.
 - BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES:
   `mot_zeta_mult` is conditional on the coefficientwise convolution relation
@@ -138,6 +139,47 @@ theorem linearFactor_mul_geometricSeries {R : Type*} [Ring R] (c : R) :
     have h_pow : c * c ^ k = c ^ (k + 1) := by
       rw [pow_succ']
     simp [linearFactor, geometricSeries, h_pow]
+
+/-- The quadratic factor `1 - aT + qT^2` as a formal series. -/
+def quadraticFactor {R : Type*} [Ring R] (a q : R) : Series R :=
+  fun n => if n = 0 then 1 else if n = 1 then -a else if n = 2 then q else 0
+
+@[simp]
+theorem quadraticFactor_apply {R : Type*} [Ring R] (a q : R) (n : ℕ) :
+    quadraticFactor a q n = if n = 0 then 1 else if n = 1 then -a else if n = 2 then q else 0 :=
+  rfl
+
+/-- Finite Cauchy-series factorization: `(1 - αT) * (1 - βT) = 1 - (α+β)T + αβT²`. -/
+theorem linearFactor_mul_linearFactor {R : Type*} [CommRing R] (α β : R) :
+    linearFactor α * linearFactor β = quadraticFactor (α + β) (α * β) := by
+  funext n
+  change cauchyMul (linearFactor α) (linearFactor β) n =
+    quadraticFactor (α + β) (α * β) n
+  rw [cauchyMul_apply]
+  rcases n with _ | _ | _ | n
+  · simp [linearFactor, quadraticFactor]
+  · rw [Finset.sum_range_succ, Finset.sum_range_succ]
+    simp [linearFactor, quadraticFactor]
+  · rw [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_succ]
+    simp [linearFactor, quadraticFactor]
+  · have h_zero :
+        Finset.sum (Finset.range (n + 3 + 1))
+            (fun i => linearFactor α i * linearFactor β (n + 3 - i)) = 0 := by
+      apply Finset.sum_eq_zero
+      intro i hi
+      by_cases hi0 : i = 0
+      · subst hi0
+        have h_ne_zero : n + 3 - 0 ≠ 0 := by omega
+        have h_ne_one : n + 3 - 0 ≠ 1 := by omega
+        simp [linearFactor]
+      · by_cases hi1 : i = 1
+        · subst hi1
+          have h_ne_zero : n + 3 - 1 ≠ 0 := by omega
+          have h_ne_one : n + 3 - 1 ≠ 1 := by omega
+          simp [linearFactor]
+        · simp [linearFactor, hi0, hi1]
+    rw [h_zero]
+    simp [quadraticFactor]
 
 /-- The coefficient series assigned to a class by a symmetric-power coefficient function. -/
 def Z {R : Type*} (x : R) (S : R → ℕ → R) : Series R :=

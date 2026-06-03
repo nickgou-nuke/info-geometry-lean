@@ -500,6 +500,8 @@ import InfoGeometry.Canonical.GrandSynthesisThermo
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.GraphDiracPresentation
+import InfoGeometry.Canonical.GrassmannianGrothendieckRing
+import InfoGeometry.Canonical.GrothendieckGroup
 import InfoGeometry.Canonical.HeadTrialityCore
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral
@@ -754,6 +756,7 @@ import InfoGeometry.Projective.SelfDualCone
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
 import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Canonical.ProjectiveSpaceGrothendieckRing
 import InfoGeometry.Canonical.ProjectiveSectorDecomposition
 import InfoGeometry.Canonical.ProjectiveSplitQ11Realization
 import InfoGeometry.MeasureProjective
@@ -861,6 +864,8 @@ import InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.SpectroscopicGauge
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+import InfoGeometry.Canonical.S3BruhatLengths
+import InfoGeometry.Canonical.SpecialLinearLieAlgebra
 import InfoGeometry.Canonical.Spin44CharacterShadow
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.SpineAttributes

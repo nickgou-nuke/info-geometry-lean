@@ -216,6 +216,7 @@ import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.CartanInfinitesimalExponentialBridge
 import InfoGeometry.Canonical.CasimirWeylDrazinContext
 import InfoGeometry.Canonical.CasiniBekensteinBound
+import InfoGeometry.Canonical.CategoryTheoryConeUniqueness
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.CayleyMobiusPowerLaws
 import InfoGeometry.Canonical.ThermalCompactRecurrence

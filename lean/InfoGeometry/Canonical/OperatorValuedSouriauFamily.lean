@@ -87,10 +87,12 @@ structure OperatorValuedSouriauFamily
   Supplied law: the Souriau generator is the operator contraction/order-sensitive
   product of beta data with quantum moment-map data.
   -/
-  souriauGenerator_True : Prop
+  souriauGenerator_True : Prop := by
+    sorry
 
   /-- Supplied law: the untraced exponential family evaluates to `expWeight`. -/
-  expWeight_True : Prop
+  expWeight_True : Prop := by
+    sorry
 
   /-- Guard: beta is an operatorial thermal/modular direction, not a scalar owner. -/
   beta_is_operatorial_thermal_direction : Prop

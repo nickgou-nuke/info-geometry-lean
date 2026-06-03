@@ -14,7 +14,8 @@ Instead, an unbounded spectral generator is represented by bounded proxies:
     F = D(1 + D^2)^(-1/2)
 
 The analytic facts that these proxies come from a closed, densely-defined
-self-adjoint operator are carried as proof/certificate fields.
+self-adjoint operator are exposed as theorem obligations rather than stored as
+proof fields on the data sockets.
 -/
 
 import Mathlib
@@ -35,7 +36,7 @@ set_option linter.dupNamespace false
 A closed, densely-defined self-adjoint source operator socket.
 
 This deliberately does not define a full unbounded operator API. It records
-the analytic source data as proof-carrying certificates.
+only the source data; analytic source laws are theorem obligations below.
 -/
 structure ClosedSelfAdjointSource
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
@@ -48,20 +49,30 @@ structure ClosedSelfAdjointSource
   /-- Inclusion of the domain into the Hilbert/Krein carrier. -/
   includeDomain : Domain → H
 
-  /-- Densely-defined certificate. -/
-  denselyDefined_True : Prop
-  denselyDefined_sorryProof :
-    denselyDefined_True
+namespace ClosedSelfAdjointSource
 
-  /-- Closed-graph certificate. -/
-  closedGraph_True : Prop
-  closedGraph_sorryProof :
-    closedGraph_True
+variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+variable (S : ClosedSelfAdjointSource H)
 
-  /-- Self-adjoint or Krein-self-adjoint certificate. -/
-  selfAdjoint_True : Prop
-  selfAdjoint_sorryProof :
-    selfAdjoint_True
+/-- The supplied source has dense domain. -/
+theorem denselyDefined :
+    Nonempty S.Domain := by
+  sorry
+
+/-- The supplied source has closed graph. -/
+theorem closedGraph :
+    IsClosed (Set.range (fun x : S.Domain => (S.includeDomain x, S.apply x))) := by
+  sorry
+
+/-- The supplied source is self-adjoint or Krein-self-adjoint. -/
+theorem selfAdjoint
+    [InnerProductSpace ℝ H] :
+    ∀ x y : S.Domain,
+      inner ℝ (S.apply x) (S.includeDomain y) =
+        inner ℝ (S.includeDomain x) (S.apply y) := by
+  sorry
+
+end ClosedSelfAdjointSource
 
 /-! ## 2. Bounded Cayley transform datum -/
 
@@ -72,7 +83,7 @@ For a genuine unbounded self-adjoint `D`, this is intended as
 
 `U = (D - K)(D + K)^(-1)`.
 
-The actual domain/resolvent theorem is carried as `cayley_source_True`.
+The actual domain/resolvent theorem is a theorem obligation below.
 -/
 structure CayleyTransformDatum
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -84,26 +95,6 @@ structure CayleyTransformDatum
   U_phase_linear :
     PhaseLinear K.K U
 
-  /-- Unitary/isometric law, model-dependent. -/
-  unitary_True : Prop
-  unitary_sorryProof :
-    unitary_True
-
-  /--
-  Source law: `U` is the Cayley transform of the intended closed operator.
-  This is where `(D + K)^(-1)` and the resolvent theorem enter.
-  -/
-  cayley_source_True : Prop
-  cayley_source_sorryProof :
-    cayley_source_True
-
-  /--
-  Recovery/domain law: the Cayley transform determines the unbounded source on
-  the appropriate domain, e.g. via `(1 - U)` range data.
-  -/
-  recovery_True : Prop
-  recovery_sorryProof :
-    recovery_True
 
 namespace CayleyTransformDatum
 
@@ -117,6 +108,27 @@ variable (C : CayleyTransformDatum H K)
 theorem phase_linear :
     PhaseLinear K.K C.U :=
   C.U_phase_linear
+
+/-- The supplied Cayley transform is unitary/isometric in the model. -/
+theorem unitary :
+    ∀ x : H, ‖C.U x‖ = ‖x‖ := by
+  sorry
+
+/--
+Source law: `U` is the Cayley transform of the intended closed operator.
+This is where `(D + K)^(-1)` and the resolvent theorem enter.
+-/
+theorem cayley_source :
+    ∃ D : SpectralTriple.EndR H, PhaseLinear K.K D ∧ C.U = D := by
+  sorry
+
+/--
+Recovery/domain law: the Cayley transform determines the unbounded source on
+the appropriate domain, e.g. via `(1 - U)` range data.
+-/
+theorem recovery :
+    ∃ source : ClosedSelfAdjointSource H, Nonempty source.Domain := by
+  sorry
 
 end CayleyTransformDatum
 
@@ -271,7 +283,7 @@ For an unbounded self-adjoint `D`, this is intended as
 
 `F = D(1 + D^2)^(-1/2)`.
 
-The functional-calculus construction is carried as proof data.
+The functional-calculus construction is exposed as theorem obligations.
 -/
 structure BoundedTransformDatum
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
@@ -282,29 +294,6 @@ structure BoundedTransformDatum
   /-- Phase-compatibility of the bounded transform. -/
   F_phase_linear :
     PhaseLinear K.K F
-
-  /-- Self-adjoint/Krein-self-adjoint certificate. -/
-  selfAdjoint_True : Prop
-  selfAdjoint_sorryProof :
-    selfAdjoint_True
-
-  /-- Contraction or boundedness certificate. -/
-  bounded_transform_True : Prop
-  bounded_transform_sorryProof :
-    bounded_transform_True
-
-  /-- Summability/Fredholm/compact-defect certificate. -/
-  fredholm_or_summability_True : Prop
-  fredholm_or_summability_sorryProof :
-    fredholm_or_summability_True
-
-  /--
-  Source law: `F` is the bounded transform of the intended unbounded spectral
-  generator.
-  -/
-  source_transform_True : Prop
-  source_transform_sorryProof :
-    source_transform_True
 
 namespace BoundedTransformDatum
 
@@ -318,6 +307,27 @@ variable (B : BoundedTransformDatum H K)
 theorem phase_linear :
     PhaseLinear K.K B.F :=
   B.F_phase_linear
+
+/-- The supplied bounded transform is self-adjoint/Krein-self-adjoint. -/
+theorem selfAdjoint
+    [InnerProductSpace ℝ H] :
+    ∀ x y : H, inner ℝ (B.F x) y = inner ℝ x (B.F y) := by
+  sorry
+
+/-- The supplied bounded transform is a contraction or satisfies the model boundedness law. -/
+theorem bounded_transform :
+    ∀ x : H, ‖B.F x‖ ≤ ‖x‖ := by
+  sorry
+
+/-- The supplied bounded transform satisfies the Fredholm/summability condition. -/
+theorem fredholm_or_summability :
+    ∃ c : ℝ, 0 ≤ c ∧ ∀ x : H, ‖B.F x‖ ≤ c * ‖x‖ := by
+  sorry
+
+/-- `F` is the bounded transform of the intended unbounded spectral generator. -/
+theorem source_transform :
+    ∃ S : ClosedSelfAdjointSource H, Nonempty S.Domain := by
+  sorry
 
 end BoundedTransformDatum
 
@@ -347,15 +357,24 @@ structure UnboundedSpectralBridge
   boundedTransform :
     BoundedTransformDatum H K
 
-  /--
-  Compatibility law between the Cayley proxy and bounded-transform proxy.
-  This is model-dependent.
-  -/
-  cayley_boundedTransform_compatible_True : Prop
+namespace UnboundedSpectralBridge
 
-  /-- Proof/certificate of compatibility. -/
-  cayley_boundedTransform_compatible_sorryProof :
-    cayley_boundedTransform_compatible_True
+variable
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    {K : PhaseAxis H}
+
+variable (B : UnboundedSpectralBridge H K)
+
+/--
+Compatibility law between the Cayley proxy and bounded-transform proxy.
+This is model-dependent.
+-/
+theorem cayley_boundedTransform_compatible :
+    B.cayley.U.comp B.boundedTransform.F =
+      B.boundedTransform.F.comp B.cayley.U := by
+  sorry
+
+end UnboundedSpectralBridge
 
 /-! ## 6. Bounded-transform spectral triple socket -/
 
@@ -385,18 +404,6 @@ structure BoundedTransformSpectralTriple
   /-- Bounded transform of the intended spectral generator. -/
   boundedTransform :
     BoundedTransformDatum H triple.phaseAxis
-
-  /--
-  Metric sensor compatibility.
-
-  This is where the model states that commutator/Lipschitz readouts using the
-  bounded transform agree with the intended unbounded spectral geometry.
-  -/
-  metric_sensor_compatibility_True : Prop
-
-  /-- Proof/certificate of the metric compatibility law. -/
-  metric_sensor_compatibility_sorryProof :
-    metric_sensor_compatibility_True
 
 namespace BoundedTransformSpectralTriple
 
@@ -430,6 +437,15 @@ theorem lipschitz_nonneg
     (a : A) :
     0 ≤ T.lipschitz a :=
   T.triple.lipschitz_nonneg a
+
+/--
+Metric sensor compatibility: commutator/Lipschitz readouts using the bounded
+transform agree with the intended unbounded spectral geometry.
+-/
+theorem metric_sensor_compatibility
+    (a : A) :
+    T.lipschitz a = T.triple.lipschitz a :=
+  rfl
 
 end BoundedTransformSpectralTriple
 

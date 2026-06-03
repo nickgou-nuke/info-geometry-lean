@@ -17,7 +17,7 @@ def bucket1ClosedFiniteTheorems : List Lean.Name :=
   , ``RealVonNeumannAlgebraData.commutant_mul_eq
   , ``RealVonNeumannAlgebraData.mem_commutant_of_commutative
   , ``GASymplecticDualitySocket.J_maps_K_to_dual
-  , ``toyConformalBridge_logScale_reflection
+  , ``ConformalCGAParabolicCompactificationBridge.bridge_logScale_reflection_target
   ]
 
 /-

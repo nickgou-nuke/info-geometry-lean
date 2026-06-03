@@ -716,6 +716,13 @@ theorem translatorPacket_of_seed
  W.superTrace_stress_eq_zero,
  W.is_weyl_invariant⟩
 
+def claimF_W {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
+ (J : SuperSouriauFermionGasBridge.SuperMomentMapData State EvenMoment OddMoment) (x : State) :
+ SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext SuperSouriauFermionGasBridge.BalancedScalarStress :=
+ SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
+ (G := Unit) (Gdual := EvenMoment) (Orbit := State)
+ J.evenMoment () (fun _ _ => 0) (fun _ => SuperParity.even) J.stressTensorReadout x
+
 /--
 Claim F with identity-balanced stress.
 
@@ -737,63 +744,46 @@ theorem claimF_superSouriauFermionGas_packet_ofIdentityBalancedStress
  (mu betaOdd : ℝ)
  (F :
   SuperSouriauFermionGasBridge.FermionicCAROperatorPair (E := H)) :
-  let W :=
-    (SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
-      (G := Unit) (Gdual := EvenMoment) (Orbit := State)
-      J.evenMoment
-      (() : Unit)
-      (fun (_ : Unit) (_ : EvenMoment) => 0)
-      (fun (_ : Unit) => SuperParity.even)
-      J.stressTensorReadout
-      x);
   J.stressTensor x = J.stressTensorReadout (J.evenMoment x)
- ∧ J.supercurrent x = J.supercurrentReadout (J.oddMoment x)
- ∧ P.action x =
- P.beta.betaEven * P.evenEnergy x + P.beta.betaOdd * P.oddSource x
- ∧ SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator
- (E := H) B Hop mu betaOdd Qodd =
- SuperSouriauFermionGasBridge.evenGrandCanonicalFockGenerator
- (E := H) B Hop mu
- + SuperSouriauFermionGasBridge.oddFockSourceCoupling
- (E := H) betaOdd Qodd
- ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket
- (E := H)
- InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
- InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
- F.annihilation F.creation =
- SuperchargeCARCCRBridge.CARBracket
- (E := H) F.annihilation F.creation
- ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
- (E := H) F.annihilation F.annihilation = 0
- ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
- (E := H) F.creation F.creation = 0
- ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
- (E := H) F.annihilation F.creation =
- ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H)
- ∧ W.superTrace W.stress = 0
- ∧ W.weylInvariant := by
- let W :=
-   (SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
-     (G := Unit) (Gdual := EvenMoment) (Orbit := State)
-     J.evenMoment
-     (() : Unit)
-     (fun (_ : Unit) (_ : EvenMoment) => 0)
-     (fun (_ : Unit) => SuperParity.even)
-     J.stressTensorReadout
-     x)
- exact
- ⟨J.stressTensor_eq_even_readout x,
- J.supercurrent_eq_odd_readout x,
- P.action_eq_even_add_odd x,
- SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator_eq_even_add_odd
- (E := H) B Hop mu betaOdd Qodd,
- SuperSouriauFermionGasBridge.odd_odd_superBracket_eq_CARBracket
- (E := H) F.annihilation F.creation,
- F.annihilation_anticommutator_self_zero,
- F.creation_anticommutator_self_zero,
- F.annihilation_creation_anticommutator_id,
- W.superTrace_stress_eq_zero,
- W.is_weyl_invariant⟩
+  ∧ J.supercurrent x = J.supercurrentReadout (J.oddMoment x)
+  ∧ P.action x =
+  P.beta.betaEven * P.evenEnergy x + P.beta.betaOdd * P.oddSource x
+  ∧ SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator
+  (E := H) B Hop mu betaOdd Qodd =
+  SuperSouriauFermionGasBridge.evenGrandCanonicalFockGenerator
+  (E := H) B Hop mu
+  + SuperSouriauFermionGasBridge.oddFockSourceCoupling
+  (E := H) betaOdd Qodd
+  ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket
+  (E := H)
+  InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
+  InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
+  F.annihilation F.creation =
+  SuperchargeCARCCRBridge.CARBracket
+  (E := H) F.annihilation F.creation
+  ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+  (E := H) F.annihilation F.annihilation = 0
+  ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+  (E := H) F.creation F.creation = 0
+  ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator
+  (E := H) F.annihilation F.creation =
+  ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H)
+  ∧ (claimF_W J x).superTrace (claimF_W J x).stress = 0
+  ∧ (claimF_W J x).weylInvariant := by
+  let W := claimF_W J x
+  exact
+  ⟨J.stressTensor_eq_even_readout x,
+  J.supercurrent_eq_odd_readout x,
+  P.action_eq_even_add_odd x,
+  SuperSouriauFermionGasBridge.superGrandCanonicalFockGenerator_eq_even_add_odd
+  (E := H) B Hop mu betaOdd Qodd,
+  SuperSouriauFermionGasBridge.odd_odd_superBracket_eq_CARBracket
+  (E := H) F.annihilation F.creation,
+  F.annihilation_anticommutator_self_zero,
+  F.creation_anticommutator_self_zero,
+  F.annihilation_creation_anticommutator_id,
+  W.superTrace_stress_eq_zero,
+  W.is_weyl_invariant⟩
 
 /--
 Literature-facing finite Souriau/KKT theorem packet.

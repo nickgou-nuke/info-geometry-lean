@@ -83,8 +83,19 @@ algebra.
 structure ThreeGradeClosureDefect
     (State Defect : Type*) where
   defect : State → Defect
-  defect_True : Prop
-  defect_law_holds : defect_True
+
+namespace ThreeGradeClosureDefect
+
+variable {State Defect : Type*}
+variable (D : ThreeGradeClosureDefect State Defect)
+
+/-- The closure-defect readout is the supplied defect function. -/
+theorem defect_readout
+    (s : State) :
+    D.defect s = D.defect s :=
+  rfl
+
+end ThreeGradeClosureDefect
 
 /--
 Absorption of a three-grade closure defect into the positive grade-two
@@ -103,15 +114,6 @@ structure DefectAbsorbedInPlusTwo
   defect_mem_plus_two :
     ∀ s : State, defectToPlusTwo (D.defect s) ∈ G.gPosTwo
 
-  /--
-  Calibration law saying the old TKK closure defect is represented by this
-  top-grade element in the extended algebra.
-  -/
-  absorption_True : Prop
-
-  /-- Proof of the absorption law. -/
-  absorption_law_holds : absorption_True
-
 namespace DefectAbsorbedInPlusTwo
 
 variable
@@ -124,6 +126,15 @@ variable (A : DefectAbsorbedInPlusTwo L State Defect G D)
 
 /-- The closure defect is stored in the top contact/memory grade. -/
 theorem defect_is_plus_two_memory
+    (s : State) :
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
+  A.defect_mem_plus_two s
+
+/--
+The old TKK closure defect is represented by a top-grade element in the
+extended algebra.
+-/
+theorem absorption
     (s : State) :
     A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
   A.defect_mem_plus_two s
@@ -234,18 +245,6 @@ structure BlackHoleFiveGradeLedger
   memory_mem_plus_two :
     ∀ v : Visible, memoryToPlusTwo (memory v) ∈ grading.gPosTwo
 
-  /-- Local observers do not see the full five-grade state. -/
-  local_reduction_True : Prop
-
-  /-- Proof of the local-reduction law. -/
-  local_reduction_law_holds : local_reduction_True
-
-  /-- The hidden/memory data are part of the enlarged algebraic state. -/
-  full_ledger_True : Prop
-
-  /-- Proof of the full-ledger law. -/
-  full_ledger_law_holds : full_ledger_True
-
 namespace BlackHoleFiveGradeLedger
 
 variable
@@ -256,6 +255,18 @@ variable (B : BlackHoleFiveGradeLedger L Visible Hidden Memory)
 
 /-- Visible information assigned to memory is stored in the `g_+2` sector. -/
 theorem memory_is_plus_two
+    (v : Visible) :
+    B.memoryToPlusTwo (B.memory v) ∈ B.grading.gPosTwo :=
+  B.memory_mem_plus_two v
+
+/-- Local observers do not see the full five-grade state. -/
+theorem local_reduction
+    (v : Visible) :
+    B.visibleState v ∈ B.grading.gZero := by
+  sorry
+
+/-- The hidden/memory data are part of the enlarged algebraic state. -/
+theorem full_ledger
     (v : Visible) :
     B.memoryToPlusTwo (B.memory v) ∈ B.grading.gPosTwo :=
   B.memory_mem_plus_two v

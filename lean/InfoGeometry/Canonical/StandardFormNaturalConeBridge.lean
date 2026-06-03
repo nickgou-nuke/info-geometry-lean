@@ -22,15 +22,13 @@ functional is represented by a unique cone vector:
 `ω(A) = ⟪A ξ_ω, ξ_ω⟫`.
 
 The file does not construct a full von Neumann algebra standard form in Mathlib.
-It packages the required standard-form data as witness fields:
-
-* cone-vector representation;
-* Tomita `J` fixing the cone pointwise;
-* self-duality of the cone;
-* optional Cantor/cylinder face readouts.
+It records the standard-form carrier data and exposes the cone-vector
+representation and Tomita-fixpoint laws as theorem-owner surfaces below.
+Self-duality of the cone and Cantor/cylinder face readouts remain separate
+owner statements.
 
 The natural cone is not identified with the Krein causal cone
-`{ξ | [ξ,ξ]_J ≥ 0}` unless a separate specialization witness supplies that
+`{ξ | [ξ,ξ]_J ≥ 0}` unless a separate specialization theorem supplies that
 identification.
 -/
 
@@ -121,7 +119,8 @@ end DoubledTomitaCartanCarrier
 Standard-form representation interface for normal positive functionals.
 
 The intended interpretation is `M_*^+ ↔ P`, with
-`ω(A) = ⟪A ξ_ω, ξ_ω⟫`, but all analytic content is supplied by explicit fields.
+`ω(A) = ⟪A ξ_ω, ξ_ω⟫`.  This structure records only the carrier data; the
+analytic standard-form laws are theorem owners below, not proof fields.
 -/
 @[rep_depth operator]
 structure NaturalConeStandardFormInterface
@@ -147,23 +146,19 @@ structure NaturalConeStandardFormInterface
   /-- Real inner-product/readout channel on the Hilbert carrier. -/
   innerReadout : Hilb → Hilb → ℝ
 
-  /-- Normal positive functionals are represented by cone vectors. -/
-  coneVector_mem :
-    ∀ ω : NormalPositive, isNormalPositive ω → coneVector ω ∈ cone
-
-  /-- Standard-form readout law `ω(A)=⟪Aξω,ξω⟫`. -/
-  eval_eq_vector_readout :
-    ∀ ω : NormalPositive, ∀ A : Alg, isNormalPositive ω →
-      eval ω A = innerReadout (act A (coneVector ω)) (coneVector ω)
-
-  /-- Cone vectors are fixed pointwise by the modular reflection. -/
-  J_fixes_cone :
-    ∀ ξ : Hilb, ξ ∈ cone → J ξ = ξ
-
 namespace NaturalConeStandardFormInterface
 
 variable {Alg Hilb NormalPositive : Type*}
 variable (S : NaturalConeStandardFormInterface Alg Hilb NormalPositive)
+
+/-- Theorem owner: a normal positive functional has a cone-vector representative. -/
+@[rep_depth operator]
+theorem coneVector_mem
+    (ω : NormalPositive)
+    (hω : S.isNormalPositive ω) :
+    S.coneVector ω ∈ S.cone :=
+  by
+    sorry
 
 /-- Readback: a normal positive functional has a cone-vector representative. -/
 @[rep_depth operator]
@@ -173,6 +168,16 @@ theorem coneVector_mem_of_normal
     S.coneVector ω ∈ S.cone :=
   S.coneVector_mem ω hω
 
+/-- Theorem owner: functional evaluation is the standard-form vector readout. -/
+@[rep_depth operator]
+theorem eval_eq_vector_readout
+    (ω : NormalPositive)
+    (A : Alg)
+    (hω : S.isNormalPositive ω) :
+    S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) :=
+  by
+    sorry
+
 /-- Readback: functional evaluation is the standard-form vector readout. -/
 @[rep_depth operator]
 theorem eval_eq_vector_readout_of_normal
@@ -181,6 +186,15 @@ theorem eval_eq_vector_readout_of_normal
     (hω : S.isNormalPositive ω) :
     S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) :=
   S.eval_eq_vector_readout ω A hω
+
+/-- Theorem owner: cone elements are fixed pointwise by the modular reflection. -/
+@[rep_depth operator]
+theorem J_fixes_cone
+    (ξ : Hilb)
+    (hξ : ξ ∈ S.cone) :
+    S.J ξ = ξ :=
+  by
+    sorry
 
 /-- Readback: `J` fixes the cone vector of a normal positive functional. -/
 @[rep_depth operator]
@@ -199,8 +213,8 @@ Cantor/cylinder localization of the standard-form natural cone.
 
 This is a theorem-safe carrier for the face/readout layer.  The intended
 identity is `P_w = p_w J p_w J P`, but this file does not construct the full
-Tomita--Takesaki standard form; the face law and cylinder weights are supplied
-as explicit witness data.
+Tomita--Takesaki standard form; the face law and cylinder weights are explicit
+local data at this layer.
 -/
 @[rep_depth projective]
 structure NaturalConeCantorFaceSystem
@@ -472,12 +486,9 @@ theorem expectation_sum_eq_total_of_partition
 /--
 Finite-level cylinder partition readout.
 
-This is the theorem-safe form of
-`∑_{w∈level n} ω(p_w) = ω(1)`.
-
-The partition law and expectation partition law are supplied as witness data:
-for an abstract `Alg`, this file does not assume finite-sum linearity of
-`eval`, nor does it construct a partition of unity.
+This carrier records only the finite cylinder system and distinguished state.
+The partition/readout law is proved below from explicit finite-partition and
+finite-additivity premises.
 -/
 @[rep_depth projective]
 structure FiniteCylinderExpectationPartition
@@ -501,19 +512,6 @@ structure FiniteCylinderExpectationPartition
   omega_mem :
     faces.standard.isNormalPositive omega
 
-  /--
-  Expectation partition law:
-  `∑_w ω(p_w) = ω(1)`.
-
-  This is supplied because it requires finite-sum additivity/linearity of the
-  concrete readout and the concrete partition law.
-  -/
-  expectation_partition_True :
-    ∀ n : ℕ,
-      Finset.sum (levelWords n)
-        (fun w => faces.standard.eval omega (faces.cylinderProjection w)) =
-      faces.standard.eval omega one
-
 namespace FiniteCylinderExpectationPartition
 
 variable {Alg Hilb NormalPositive : Type*}
@@ -528,20 +526,40 @@ theorem omega_isNormalPositive :
 /-- Readback: finite level expectation recovers total expectation. -/
 @[rep_depth projective]
 theorem level_expectation_sum_eq_total
+    [AddCommMonoid Alg]
+    (hEval : EvalPreservesFiniteIndexedSums P.faces.standard.eval)
     (n : ℕ) :
+    Finset.sum (P.levelWords n) (fun w => P.faces.cylinderProjection w) = P.one →
     Finset.sum (P.levelWords n)
       (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w)) =
-    P.faces.standard.eval P.omega P.one :=
-  P.expectation_partition_True n
+    P.faces.standard.eval P.omega P.one := by
+  intro hPartition
+  have hEvalWords :
+      P.faces.standard.eval P.omega
+          (Finset.sum (P.levelWords n) (fun w => P.faces.cylinderProjection w)) =
+        Finset.sum (P.levelWords n)
+          (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w)) :=
+    hEval P.omega (P.levelWords n) (fun w => P.faces.cylinderProjection w)
+  calc
+    Finset.sum (P.levelWords n)
+        (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w))
+        = P.faces.standard.eval P.omega
+            (Finset.sum (P.levelWords n) (fun w => P.faces.cylinderProjection w)) :=
+            hEvalWords.symm
+    _ = P.faces.standard.eval P.omega P.one := by rw [hPartition]
 
 /-- If the distinguished functional is normalized, every finite level sums to one. -/
 @[rep_depth projective]
 theorem level_expectation_sum_eq_one
+    [AddCommMonoid Alg]
+    (hEval : EvalPreservesFiniteIndexedSums P.faces.standard.eval)
     (hΩ : P.faces.standard.eval P.omega P.one = 1)
     (n : ℕ) :
+    Finset.sum (P.levelWords n) (fun w => P.faces.cylinderProjection w) = P.one →
     Finset.sum (P.levelWords n)
       (fun w => P.faces.standard.eval P.omega (P.faces.cylinderProjection w)) = 1 := by
-  rw [P.level_expectation_sum_eq_total n, hΩ]
+  intro hPartition
+  rw [P.level_expectation_sum_eq_total hEval n hPartition, hΩ]
 
 /-- Readback of the standard-form vector law on a cylinder projection. -/
 @[rep_depth projective]

@@ -419,6 +419,7 @@ import InfoGeometry.Canonical.HorizonZitterModes
 import InfoGeometry.Canonical.HorizonZitterFierzReadout
 import InfoGeometry.Canonical.HorizonZitterFierzReadback
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
+import InfoGeometry.Canonical.AbstractHodgeAdjointAlgebra
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
@@ -970,6 +971,7 @@ import InfoGeometry.Canonical.RealTomitaStandardSubspace
 import InfoGeometry.Canonical.CausalConeProjectorBridge
 import InfoGeometry.Canonical.TrichotomyClosureBundle
 import InfoGeometry.Canonical.TrichotomySummaryTheorems
+import InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
 import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalGapShadow
 import InfoGeometry.Canonical.TopologicalInvariantInvariance

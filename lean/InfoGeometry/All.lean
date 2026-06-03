@@ -144,6 +144,7 @@ import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry
+import InfoGeometry.Theorems
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Wavelet.All
 import InfoGeometry.Analysis.All

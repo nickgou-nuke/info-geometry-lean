@@ -167,16 +167,54 @@ class ProofSeeker:
             f"Return JSON: {{\"proof_sketch\": \"...\", \"lean_code\": \"...\"}}"
         )
 
-        # Load env vars for Pi and load the skill
+        # Load env vars for Pi and load BOTH skills (audit protocol + closure debt)
         self._load_hermes_env()
-        skill_path = _REPO / "skills" / "closure-debt-proof" / "SKILL.md"
-        skill_arg = ["--skill", str(skill_path)] if skill_path.exists() else []
+        skills = []
+        for s in ["audit-proof", "closure-debt-proof"]:
+            p = _REPO / "skills" / s / "SKILL.md"
+            if p.exists():
+                skills.extend(["--skill", str(p)])
+        audit_prompt = (
+            "Persona: Audit, a rigorous mathematical proof assistant and technical auditor specialized in Lean 4 formal verification.\n\n"
+            "Purpose: Prove non-trivial mathematical lemmas that add genuine logical value to Lean libraries. "
+            "Minimize proof debt by refusing wrappers, sockets, synthetic helper layers, fake bridge modules, "
+            "boilerplate, and proof-carrying data containers. Keep generated content dense, theorem-owner-local, "
+            "and kernel-checkable.\n\n"
+            "Hard rules:\n"
+            "1. Output Lean code only. Do not output conversational prose, explanations, summaries, praise, "
+            "or speculative interpretation in code-generation mode.\n"
+            "2. Move directly to the owner-side theorem corridor: imports, definitions with mathematical content, "
+            "lemmas, theorems, and proofs.\n"
+            "3. Do not create wrappers, sockets, structures, classes, witness packets, certificate packets, "
+            "`_True`, `_valid`, `_law`, `_proof`, `_certificate`, or renamed placeholder surfaces to replace missing proofs.\n"
+            "4. Do not hide assumptions in structure fields or class fields. A proof is a theorem or lemma, not a data field.\n"
+            "5. Do not use `admit`, `axiom`, fake instances, `unsafe`, or vacuous `True` claims.\n"
+            "6. Do not use `sorry` in final closed proof code. If stating open debt, place an honest `sorry` only "
+            "in the exact theorem-owner statement and do not disguise it.\n"
+            "7. Every lemma must contain real, non-vacuous mathematical content and must be derived from Mathlib, "
+            "repository imports, explicit theorem hypotheses, and verified tactics.\n"
+            "8. Renaming a missing theorem does not close debt. Data are not proofs.\n\n"
+            "Audit protocol: Classify the touched theorem surface using this Lean comment block:\n"
+            "```lean\n"
+            "/-\n"
+            "#### BUCKET 1: CLOSED FINITE THEOREMS\n"
+            "[Fully verified lemmas with zero remaining dependencies or open goals.]\n"
+            "#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES\n"
+            "[Theorems that compile from explicitly named theorem parameters or imported verified premises.]\n"
+            "#### BUCKET 3: OPEN CLOSURE DEBT\n"
+            "[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, "
+            "or renamed placeholders.]\n"
+            "-/\n"
+            "```\n\n"
+            "Failure condition: Outputting conversational filler in code-generation mode, adding wrapper/proxy proof "
+            "surfaces, or claiming closure from data/certificates/witnesses is a failed audit."
+        )
 
         try:
             result = subprocess.run(
-                ["pi", "-p", prompt,
+                ["pi", "-p", prompt, "--append-system-prompt", audit_prompt,
                  "--provider", "deepseek", "--model", "deepseek-v4-flash",
-                 "--no-session", "--no-tools"] + skill_arg,
+                 "--no-session", "--tools", "read"] + skills,
                 capture_output=True, text=True, timeout=180,
             )
             output = (result.stdout or "") + (result.stderr or "")
@@ -217,6 +255,117 @@ class ProofSeeker:
             proof_natural=proof_sketch,
             confidence=confidence,
             formalization_attempts=0,
+        )
+
+    def audit_via_chatgpt(
+        self,
+        target_name: str,
+        context_code: str,
+        target_line: int,
+    ) -> ProofCandidate:
+        """Audit via ChatGPT in browser — slow (30-90s) but highly reliable.
+
+        Uses browser-harness (CDP) to paste the code + audit persona prompt into
+        chatgpt.com, wait for the response, and extract the Lean code.
+        """
+        import subprocess, tempfile
+
+        logger.info("Auditing '%s' via ChatGPT (browser CDP)...", target_name)
+
+        short_ctx = context_code[:12000].strip() if context_code else ""
+
+        audit_prompt = (
+            f"Persona: Audit, a rigorous mathematical proof assistant specialized in Lean 4.\n\n"
+            f"Read the Lean code below. For each `_True : Prop := by sorry` field or `sorry`:\n"
+            f"- If provable from existing fields → generate the proof (BUCKET 1)\n"
+            f"- If requires external witnesses → state premises (BUCKET 2)\n"
+            f"- If the statement is unspecified → label as OPEN CLOSURE DEBT (BUCKET 3)\n\n"
+            f"Specific target: `{target_name}` at line {target_line}.\n"
+            f"Output the audit map at the top, then the complete Lean code. Zero prose.\n\n"
+            f"Code:\n```lean4\n{short_ctx}\n```"
+        )
+
+        # Write prompt to a temp file
+        prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
+        prompt_file.write(audit_prompt)
+        prompt_file.close()
+
+        try:
+            # Use browser-harness to send to ChatGPT
+            result = subprocess.run(
+                ["browser-harness", "-c",
+                 f"""
+import time
+prompt = open('{prompt_file.name}').read()
+new_tab("https://chatgpt.com")
+wait_for_load()
+time.sleep(2)
+capture_screenshot()
+# Click the input area (near bottom)
+viewport = js("return {{w: window.innerWidth, h: window.innerHeight}}")
+click_at_xy(viewport["w"] // 2, viewport["h"] - 100)
+time.sleep(1)
+# Paste the prompt
+js(f'''
+  const editor = document.querySelector("[contenteditable=\\\"true\\\"]");
+  if (editor) {{
+    editor.focus();
+    const dt = new DataTransfer();
+    dt.setData("text/plain", `{prompt.replace(chr(96), "\\\\" + chr(96))}`);
+    editor.dispatchEvent(new ClipboardEvent("paste", {{ clipboardData: dt }}));
+  }}
+''')
+capture_screenshot()
+# Click send
+send_btn = js('return document.querySelector("[data-testid=\\"send-button\\"]")')
+if send_btn:
+    js('document.querySelector("[data-testid=\\"send-button\\"]").click()')
+# Wait for response (poll for up to 120s)
+for _ in range(24):
+    time.sleep(5)
+    result = js('''
+      const msgs = document.querySelectorAll("[data-message-author-role=\\"assistant\\"]");
+      const last = msgs[msgs.length - 1];
+      return last ? last.innerText.slice(0, 100) : "";
+    ''')
+    if result and len(result) > 20:
+        break
+# Extract full response
+full = js('''
+  const msgs = document.querySelectorAll("[data-message-author-role=\\"assistant\\"]");
+  const last = msgs[msgs.length - 1];
+  return last ? last.innerText : "";
+''')
+print(full[:20000])
+"""],
+                capture_output=True, text=True, timeout=180,
+            )
+            output = (result.stdout or "") + (result.stderr or "")
+        except subprocess.TimeoutExpired:
+            logger.warning("ChatGPT audit timed out (180s)")
+            output = ""
+        except FileNotFoundError:
+            logger.warning("browser-harness not installed")
+            output = ""
+        except Exception as exc:
+            logger.warning("ChatGPT audit failed: %s", exc)
+            output = ""
+        finally:
+            os.unlink(prompt_file.name)
+
+        if not output.strip():
+            return ProofCandidate(source_results=[], confidence=0.0)
+
+        # Extract Lean code blocks from ChatGPT's response
+        import re as _re
+        blocks = _re.findall(r"```(?:lean4|lean)?\s*\n(.*?)```", output, _re.DOTALL)
+        lean_code = "\n\n".join(b.strip() for b in blocks) if blocks else ""
+
+        return ProofCandidate(
+            source_results=[SearchResult(source="chatgpt", title="ChatGPT Audit")],
+            proof_lean=lean_code,
+            proof_natural=output[:2000],
+            confidence=0.8 if lean_code else 0.3,
         )
 
     def formalize(
@@ -288,7 +437,7 @@ class ProofSeeker:
                 fix_result = subprocess.run(
                     ["pi", "-p", fix_prompt,
                      "--provider", "deepseek", "--model", "deepseek-v4-flash",
-                     "--no-session", "--no-tools"],
+                     "--no-session", "--tools", "read"],
                     capture_output=True, text=True, timeout=120,
                 )
                 fix_output = (fix_result.stdout or "") + (fix_result.stderr or "")

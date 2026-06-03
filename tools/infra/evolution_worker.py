@@ -195,33 +195,54 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                 context_code = context_file.read_text(errors="replace") if context_file.exists() else ""
                 docstring = _extract_docstring(context_code, target_line)
 
-                logger.info("Proof Seeker: attempt 1/2 — DeepSeek direct generation for '%s'",
-                            target_name)
-
-                # Stage 1: DeepSeek generates proof directly from context
                 context_code = context_file.read_text(errors="replace") if context_file.exists() else ""
-                candidate = seeker.digest([], target_name, context_code)
                 formalized = False
+                attempt = 0
 
+                # Stage 0: ChatGPT auditor (slow but highly reliable)
+                attempt += 1
+                logger.info("Proof Seeker: attempt %d/3 — ChatGPT audit for '%s'", attempt, target_name)
+                try:
+                    candidate = seeker.audit_via_chatgpt(target_name, context_code, target_line)
+                    if candidate.proof_lean:
+                        logger.info("  Attempt %d: ChatGPT audit (%.2f confidence)", attempt, candidate.confidence)
+                        if target_line > 0 and context_file.exists():
+                            formalized = seeker.formalize(candidate, context_file, target_line)
+                            logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                    if formalized:
+                        sought += 1
+                        continue
+                except Exception as exc:
+                    logger.debug("  ChatGPT audit skipped: %s", exc)
+
+                # Stage 1: Pi/DeepSeek direct generation
+                attempt += 1
+                logger.info("Proof Seeker: attempt %d/3 — Pi direct generation for '%s'", attempt, target_name)
+                candidate = seeker.digest([], target_name, context_code)
                 if candidate.proof_lean:
-                    logger.info("  Attempt 1: candidate proof (%.2f confidence)", candidate.confidence)
+                    logger.info("  Attempt %d: candidate proof (%.2f confidence)", attempt, candidate.confidence)
                     if target_line > 0 and context_file.exists():
                         formalized = seeker.formalize(candidate, context_file, target_line)
-                        logger.info("  Attempt 1: %s", "✓ SUCCESS" if formalized else "✗ FAILED")
+                        logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                if formalized:
+                    sought += 1
+                    continue
 
-                # Stage 2: if failed, search arXiv + retry
-                if not (candidate.proof_lean and formalized):
-                    logger.info("Proof Seeker: attempt 2/2 — searching arXiv for '%s'", target_name)
-                    search_query = docstring or target_name
-                    results = seeker.search(search_query, max_results=3)
-                    if results:
-                        logger.info("  Found %d arXiv results, re-digesting...", len(results))
-                        candidate2 = seeker.digest(results, target_name, context_code)
-                        if candidate2.proof_lean:
-                            logger.info("  Attempt 2: candidate proof (%.2f confidence)", candidate2.confidence)
-                            if target_line > 0 and context_file.exists():
-                                formalized = seeker.formalize(candidate2, context_file, target_line)
-                                logger.info("  Attempt 2: %s", "✓ SUCCESS" if formalized else "✗ FAILED")
+                # Stage 2: arXiv + re-digest
+                attempt += 1
+                logger.info("Proof Seeker: attempt %d/3 — searching arXiv for '%s'", attempt, target_name)
+                search_query = docstring or target_name
+                results = seeker.search(search_query, max_results=3)
+                if results:
+                    logger.info("  Found %d arXiv results, re-digesting...", len(results))
+                    candidate2 = seeker.digest(results, target_name, context_code)
+                    if candidate2.proof_lean:
+                        logger.info("  Attempt %d: candidate proof (%.2f confidence)", attempt, candidate2.confidence)
+                        if target_line > 0 and context_file.exists():
+                            formalized = seeker.formalize(candidate2, context_file, target_line)
+                            logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                if formalized:
+                    sought += 1
 
             if sought:
                 logger.info("Proof Seeker: searched %d failed tasks", sought)

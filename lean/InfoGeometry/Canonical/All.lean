@@ -758,6 +758,7 @@ import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
 import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Canonical.KapranovZetaSeries
+import InfoGeometry.Canonical.HasseWeilZetaPointCounts
 import InfoGeometry.Canonical.PowerStructure
 import InfoGeometry.Canonical.ProjectiveSpaceGrothendieckRing
 import InfoGeometry.Canonical.ProjectiveSectorDecomposition

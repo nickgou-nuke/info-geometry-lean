@@ -36,8 +36,12 @@ def P_par (T : F) : F := 1 - T^2
 /-- The three projection operators partition unity. -/
 theorem P_sum (T : F) : P_hyp T + P_ell T + P_par T = 1 := by
   unfold P_hyp P_ell P_par
-  field_simp
-  ring
+  calc
+    ⅟(2 : F) * (T^2 + T) + ⅟(2 : F) * (T^2 - T) + (1 - T^2)
+        = ⅟(2 : F) * (2 * T^2) + (1 - T^2) := by ring
+    _ = ((⅟(2 : F) * 2) * T^2) + (1 - T^2) := by ring
+    _ = T^2 + (1 - T^2) := by rw [invOf_mul_self (2 : F), one_mul]
+    _ = 1 := by ring
 
 /-- T³ = T implies T⁴ = T². -/
 theorem T_pow4 (T : F) (hT : T^3 = T) : T^4 = T^2 := by

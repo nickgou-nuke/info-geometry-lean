@@ -1048,6 +1048,7 @@ import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Canonical.MathematicalUnification
 import InfoGeometry.Canonical.Mat2
+import InfoGeometry.Canonical.CliffordInfiniteSplitAlgebra
 
 namespace InfoGeometry
 

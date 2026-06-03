@@ -15,20 +15,32 @@ namespace InfoGeometry.Eval.ClosureDebtTest
 /-! ## Pattern 1: _True : Prop := by sorry -/
 structure TestBridge where
   someProperty : ℕ
-  someProperty_True : Prop := by
-    sorry
+
 
 /-! ## Pattern 2: _True on a provable property -/
 theorem nat_add_comm (a b : ℕ) : a + b = b + a := by
   simp [add_comm]
 
+
+  namespace TestBridge
+  def someProperty : Prop :=
+    sorry
+
+  end TestBridge
+
 structure TestData where
   a : ℕ
   b : ℕ
-  comm_True : Prop := by
-    sorry
+
 
 /-! ## Pattern 3: _certificate field -/
+
+  namespace TestData
+  def comm : Prop :=
+    sorry
+
+  end TestData
+
 structure TestCertificate where
   result : ℕ
   result_certificate : Prop := by

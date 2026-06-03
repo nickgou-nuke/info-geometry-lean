@@ -3,7 +3,8 @@ name: closure-debt-proof
 description: >
   Eliminate _True/_sorryProof certificate patterns by either proving the
   property as a theorem or replacing it with an honest sorry. Never keep
-  a _True : Prop := True default.
+  a _True : Prop := True default. This skill is the closure-debt half of the
+  production evolution system documented in docs/PRODUCTION_EVOLUTION_SYSTEM.md.
 ---
 
 ## Constructive Closure Mandate
@@ -98,6 +99,7 @@ After the change:
 2. No `_True : Prop := by` fields remain
 3. No `_sorryProof` fields remain
 4. Every property is a visible `theorem` or `def`, not a field of a structure
+5. The owner file should pass the staged proof gate if the repository uses it
 
 ## Anti-patterns
 
@@ -115,3 +117,6 @@ After the change:
 - `_voucher` — certificate/assurance synonym, detected by Vacuity Critic
 - `_nexus` — certificate/assurance synonym, detected by Vacuity Critic
 - `_guaranty` — certificate/assurance synonym, detected by Vacuity Critic
+
+## Evolution Pipeline
+This skill is dynamically integrated into the autonomous evolution pipeline. Proposers (GEPA/DSPy) mutate this skill to improve Pareto performance during real evaluation. For details on queue commands and worker operations, refer to [PRODUCTION_EVOLUTION_SYSTEM.md](file:///home/goutev/repos/info-geometry-lean/docs/PRODUCTION_EVOLUTION_SYSTEM.md).

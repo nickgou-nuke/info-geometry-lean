@@ -5,15 +5,17 @@ import Mathlib.Tactic
 set_option linter.unusedSimpArgs false
 
 /-!
-# Grothendieck Groups and the Dimension Isomorphism `Grothendieck ℕ ≃+ ℤ`
+# Grothendieck Groups, Products, and the Dimension Isomorphism
 
 This file constructs the Grothendieck group of a commutative additive monoid
 as a quotient of formal differences. It proves the group laws, the universal
-property, the cancellation/injectivity criterion, and the concrete dimension
-calculation for the additive monoid `ℕ`.
+property, the cancellation/injectivity criterion, product decomposition, and
+the concrete dimension calculation for the additive monoid `ℕ`.
 
-The final theorem owner is:
+The final theorem owners are:
 
+* `grothendieckProdEquiv :
+    Grothendieck (A × B) ≃+ Grothendieck A × Grothendieck B`
 * `grothendieckEquivInt : Grothendieck ℕ ≃+ ℤ`
 
 This is the finite algebraic core of the calculation `K₀(Spec F) ≅ ℤ`: the
@@ -29,7 +31,10 @@ completion is `ℤ`.
   `lift_raw_compat`, `grothendieckLift`, `grothendieckLift_comp`,
   `grothendieckLift_unique`, `grothendieckMap_injective_of_cancellation`,
   `cancellation_of_grothendieckMap_injective`,
-  `grothendieckMap_injective_iff_cancellation`, `to_int_raw`,
+  `grothendieckMap_injective_iff_cancellation`, `grothendieckProdHom`,
+  `grothendieckProdInl`, `grothendieckProdInr`, `grothendieckProdFrom`,
+  `grothendieckProdFrom_to`, `grothendieckProdTo_from`,
+  `grothendieckProdEquiv`, `to_int_raw`,
   `to_int_raw_compat`, `grothendieckToInt`, `grothendieckToInt_injective`,
   `grothendieckToInt_surjective`, `grothendieckEquivInt`.
 - BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES: None.
@@ -271,6 +276,222 @@ theorem grothendieckMap_injective_iff_cancellation :
   constructor
   · exact cancellation_of_grothendieckMap_injective
   · exact grothendieckMap_injective_of_cancellation
+
+/-!
+## Product decomposition
+
+The Grothendieck completion preserves finite products of commutative additive
+monoids. This is the finite algebraic content behind product decompositions
+such as diagonal-block `K₀` decompositions.
+-/
+
+variable {A B : Type*} [AddCommMonoid A] [AddCommMonoid B]
+
+/-- The generator map from a product monoid into the product of Grothendieck groups. -/
+def grothendieckProdHom (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    A × B →+ Grothendieck A × Grothendieck B where
+  toFun p := (grothendieckMap A p.1, grothendieckMap B p.2)
+  map_zero' := by
+    ext <;> rfl
+  map_add' x y := by
+    ext
+    · exact (grothendieckMap A).map_add x.1 y.1
+    · exact (grothendieckMap B).map_add x.2 y.2
+
+/-- The first component insertion into the Grothendieck group of a product monoid. -/
+def grothendieckProdInl (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    A →+ Grothendieck (A × B) where
+  toFun a := grothendieckMap (A × B) (a, 0)
+  map_zero' := rfl
+  map_add' x y := by
+    simpa using (grothendieckMap (A × B)).map_add (x, 0) (y, 0)
+
+/-- The second component insertion into the Grothendieck group of a product monoid. -/
+def grothendieckProdInr (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    B →+ Grothendieck (A × B) where
+  toFun b := grothendieckMap (A × B) (0, b)
+  map_zero' := rfl
+  map_add' x y := by
+    simpa using (grothendieckMap (A × B)).map_add (0, x) (0, y)
+
+/-- The forward product decomposition homomorphism. -/
+def grothendieckProdTo (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    Grothendieck (A × B) →+ Grothendieck A × Grothendieck B :=
+  grothendieckLift (grothendieckProdHom A B)
+
+/-- The first generator map into the product of Grothendieck groups. -/
+def grothendieckProdLeftHom (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    A →+ Grothendieck A × Grothendieck B where
+  toFun a := (grothendieckMap A a, 0)
+  map_zero' := by
+    ext <;> rfl
+  map_add' x y := by
+    ext
+    · exact (grothendieckMap A).map_add x y
+    · simp
+
+/-- The second generator map into the product of Grothendieck groups. -/
+def grothendieckProdRightHom (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    B →+ Grothendieck A × Grothendieck B where
+  toFun b := (0, grothendieckMap B b)
+  map_zero' := by
+    ext <;> rfl
+  map_add' x y := by
+    ext
+    · simp
+    · exact (grothendieckMap B).map_add x y
+
+/-- The first component map into the product of Grothendieck groups. -/
+def grothendieckProdLeftMap (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    Grothendieck A →+ Grothendieck A × Grothendieck B where
+  toFun u := (u, 0)
+  map_zero' := by
+    ext <;> simp
+  map_add' u v := by
+    ext <;> simp
+
+/-- The second component map into the product of Grothendieck groups. -/
+def grothendieckProdRightMap (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    Grothendieck B →+ Grothendieck A × Grothendieck B where
+  toFun v := (0, v)
+  map_zero' := by
+    ext <;> simp
+  map_add' u v := by
+    ext <;> simp
+
+/-- The inverse product decomposition homomorphism. -/
+def grothendieckProdFrom (A B : Type*) [AddCommMonoid A] [AddCommMonoid B] :
+    Grothendieck A × Grothendieck B →+ Grothendieck (A × B) where
+  toFun p :=
+    grothendieckLift (grothendieckProdInl A B) p.1 +
+      grothendieckLift (grothendieckProdInr A B) p.2
+  map_zero' := by
+    change
+      grothendieckLift (grothendieckProdInl A B) 0 +
+          grothendieckLift (grothendieckProdInr A B) 0 =
+        0
+    rw [map_zero, map_zero, zero_add]
+  map_add' x y := by
+    change
+      grothendieckLift (grothendieckProdInl A B) (x.1 + y.1) +
+          grothendieckLift (grothendieckProdInr A B) (x.2 + y.2) =
+        (grothendieckLift (grothendieckProdInl A B) x.1 +
+            grothendieckLift (grothendieckProdInr A B) x.2) +
+          (grothendieckLift (grothendieckProdInl A B) y.1 +
+            grothendieckLift (grothendieckProdInr A B) y.2)
+    rw [map_add, map_add]
+    abel
+
+theorem grothendieckProdTo_inl (u : Grothendieck A) :
+    grothendieckProdTo A B (grothendieckLift (grothendieckProdInl A B) u) =
+      grothendieckProdLeftMap A B u := by
+  let h₁ : Grothendieck A →+ Grothendieck A × Grothendieck B :=
+    (grothendieckProdTo A B).comp (grothendieckLift (grothendieckProdInl A B))
+  let h₂ : Grothendieck A →+ Grothendieck A × Grothendieck B :=
+    grothendieckProdLeftMap A B
+  have h₁_factor :
+      ∀ a, h₁ (grothendieckMap A a) = grothendieckProdLeftHom A B a := by
+    intro a
+    change
+      grothendieckProdTo A B
+          (grothendieckLift (grothendieckProdInl A B) (grothendieckMap A a)) =
+        (grothendieckMap A a, 0)
+    rw [grothendieckLift_comp]
+    change grothendieckLift (grothendieckProdHom A B) (grothendieckMap (A × B) (a, 0)) =
+      (grothendieckMap A a, 0)
+    rw [grothendieckLift_comp]
+    rfl
+  have h₂_factor :
+      ∀ a, h₂ (grothendieckMap A a) = grothendieckProdLeftHom A B a := by
+    intro a
+    rfl
+  exact
+    (grothendieckLift_unique (grothendieckProdLeftHom A B) h₁ h₁_factor u).trans
+      (grothendieckLift_unique (grothendieckProdLeftHom A B) h₂ h₂_factor u).symm
+
+theorem grothendieckProdTo_inr (v : Grothendieck B) :
+    grothendieckProdTo A B (grothendieckLift (grothendieckProdInr A B) v) =
+      grothendieckProdRightMap A B v := by
+  let h₁ : Grothendieck B →+ Grothendieck A × Grothendieck B :=
+    (grothendieckProdTo A B).comp (grothendieckLift (grothendieckProdInr A B))
+  let h₂ : Grothendieck B →+ Grothendieck A × Grothendieck B :=
+    grothendieckProdRightMap A B
+  have h₁_factor :
+      ∀ b, h₁ (grothendieckMap B b) = grothendieckProdRightHom A B b := by
+    intro b
+    change
+      grothendieckProdTo A B
+          (grothendieckLift (grothendieckProdInr A B) (grothendieckMap B b)) =
+        (0, grothendieckMap B b)
+    rw [grothendieckLift_comp]
+    change grothendieckLift (grothendieckProdHom A B) (grothendieckMap (A × B) (0, b)) =
+      (0, grothendieckMap B b)
+    rw [grothendieckLift_comp]
+    rfl
+  have h₂_factor :
+      ∀ b, h₂ (grothendieckMap B b) = grothendieckProdRightHom A B b := by
+    intro b
+    rfl
+  exact
+    (grothendieckLift_unique (grothendieckProdRightHom A B) h₁ h₁_factor v).trans
+      (grothendieckLift_unique (grothendieckProdRightHom A B) h₂ h₂_factor v).symm
+
+theorem grothendieckProdFrom_to (x : Grothendieck (A × B)) :
+    grothendieckProdFrom A B (grothendieckProdTo A B x) = x := by
+  have h_factor :
+      (grothendieckProdFrom A B).comp (grothendieckProdTo A B) x =
+        grothendieckLift (grothendieckMap (A × B)) x := by
+    refine
+      grothendieckLift_unique (grothendieckMap (A × B))
+        ((grothendieckProdFrom A B).comp (grothendieckProdTo A B)) ?_ x
+    intro p
+    change
+      grothendieckProdFrom A B (grothendieckProdTo A B (grothendieckMap (A × B) p)) =
+        grothendieckMap (A × B) p
+    change
+      grothendieckProdFrom A B
+          (grothendieckLift (grothendieckProdHom A B) (grothendieckMap (A × B) p)) =
+        grothendieckMap (A × B) p
+    rw [grothendieckLift_comp]
+    change
+      grothendieckLift (grothendieckProdInl A B) (grothendieckMap A p.1) +
+          grothendieckLift (grothendieckProdInr A B) (grothendieckMap B p.2) =
+        grothendieckMap (A × B) p
+    rw [grothendieckLift_comp, grothendieckLift_comp]
+    change
+      grothendieckMap (A × B) (p.1, 0) + grothendieckMap (A × B) (0, p.2) =
+        grothendieckMap (A × B) p
+    rw [← map_add]
+    congr 1
+    ext <;> simp
+  have h_id :
+      AddMonoidHom.id (Grothendieck (A × B)) x =
+        grothendieckLift (grothendieckMap (A × B)) x := by
+    exact
+      grothendieckLift_unique (grothendieckMap (A × B))
+        (AddMonoidHom.id (Grothendieck (A × B))) (by intro p; rfl) x
+  exact h_factor.trans h_id.symm
+
+theorem grothendieckProdTo_from (y : Grothendieck A × Grothendieck B) :
+    grothendieckProdTo A B (grothendieckProdFrom A B y) = y := by
+  cases y with
+  | mk u v =>
+      change
+        grothendieckProdTo A B
+            (grothendieckLift (grothendieckProdInl A B) u +
+              grothendieckLift (grothendieckProdInr A B) v) =
+          (u, v)
+      rw [map_add, grothendieckProdTo_inl, grothendieckProdTo_inr]
+      ext <;> simp [grothendieckProdLeftMap, grothendieckProdRightMap]
+
+/-- The Grothendieck group of a product monoid is the product of Grothendieck groups. -/
+noncomputable def grothendieckProdEquiv :
+    Grothendieck (A × B) ≃+ Grothendieck A × Grothendieck B where
+  toFun := grothendieckProdTo A B
+  invFun := grothendieckProdFrom A B
+  left_inv := grothendieckProdFrom_to
+  right_inv := grothendieckProdTo_from
+  map_add' := map_add (grothendieckProdTo A B)
 
 /-!
 ## The dimension isomorphism `Grothendieck ℕ ≃+ ℤ`

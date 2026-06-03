@@ -500,8 +500,8 @@ import InfoGeometry.Canonical.GrandSynthesisThermo
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.GraphDiracPresentation
-import InfoGeometry.Canonical.GrassmannianGrothendieckRing
 import InfoGeometry.Canonical.GrothendieckGroup
+import InfoGeometry.Canonical.GrassmannianGrothendieckRing
 import InfoGeometry.Canonical.HeadTrialityCore
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HestenesGibbsPathIntegral

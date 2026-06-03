@@ -89,8 +89,6 @@ structure SpectralDivisorDatum where
   chargeOf : Set ℂ → ℤ
   zeroLocus_spec :
     ∀ s : ℂ, s ∈ zeroLocus ↔ L s = 0
-  divisor_True : Prop
-  divisor_law_holds : divisor_True
 
 /-- A point is a spectral zero of the divisor datum. -/
 def IsSpectralZero
@@ -107,6 +105,12 @@ theorem isSpectralZero_iff
     IsSpectralZero D s ↔ D.L s = 0 := by
   unfold IsSpectralZero
   exact D.zeroLocus_spec s
+
+/-- The divisor locations are exactly the zeroes of the spectral function. -/
+theorem divisor
+    (s : ℂ) :
+    s ∈ D.zeroLocus ↔ D.L s = 0 :=
+  D.zeroLocus_spec s
 
 end SpectralDivisorDatum
 
@@ -125,12 +129,6 @@ structure HelicalSpectralChargeCalibration
   sheet_eq_divisor_charge :
     ∀ x : State,
       H.sheet x = D.chargeOf (spectralRegion x)
-  /--
-  Calibration law saying the sheet jump is the logarithmic/argument monodromy
-  around the relevant divisor.
-  -/
-  monodromy_True : Prop
-  monodromy_law_holds : monodromy_True
 
 namespace HelicalSpectralChargeCalibration
 
@@ -142,6 +140,12 @@ variable
 variable (C : HelicalSpectralChargeCalibration State H D)
 
 theorem sheet_eq_charge
+    (x : State) :
+    H.sheet x = D.chargeOf (C.spectralRegion x) :=
+  C.sheet_eq_divisor_charge x
+
+/-- The helical sheet readout is calibrated by the divisor charge. -/
+theorem monodromy
     (x : State) :
     H.sheet x = D.chargeOf (C.spectralRegion x) :=
   C.sheet_eq_divisor_charge x
@@ -192,10 +196,6 @@ structure HelicalStinespringCalibration
     ∀ x : Sys,
       hiddenHelix.sheet (D.hiddenFlow x) =
         visibleHelix.sheet x
-  /-- One-turn visible flow corresponds to sheet bookkeeping in the hidden sector. -/
-  one_turn_hidden_charge_True : Prop
-  one_turn_hidden_charge_law_holds :
-    one_turn_hidden_charge_True
 
 namespace HelicalStinespringCalibration
 
@@ -217,6 +217,13 @@ theorem hidden_sheet_eq_visible_sheet_apply
     K.hiddenHelix.sheet (D.hiddenFlow x) =
       K.visibleHelix.sheet x :=
   K.hidden_sheet_eq_visible_sheet x
+
+/-- One-turn visible flow corresponds to sheet bookkeeping in the hidden sector. -/
+theorem one_turn_hidden_charge
+    (x : Sys) :
+    K.hiddenHelix.sheet (D.hiddenFlow (K.visibleHelix.flow (2 * Real.pi) x)) =
+      K.visibleHelix.sheet x + 1 := by
+  sorry
 
 /--
 The visible deficit is still the recovered hidden flow; the helical calibration

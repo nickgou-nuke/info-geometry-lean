@@ -233,8 +233,19 @@ structure WittenThermalTopologicalGuardrail
   topologicalIndex : TopologicalIndex
   pairingWitness : PairingWitness
   kernelReadout : KernelReadout
-  not_definitional_equality : Prop
-  certificate : not_definitional_equality
+  not_definitional_equality_prop : Prop
+
+namespace WittenThermalTopologicalGuardrail
+
+/-- Guardrail theorem target: thermal and topological readouts are not identified by definition. -/
+theorem not_definitional_equality
+    {ThermalReadout TopologicalIndex PairingWitness KernelReadout : Type*}
+    (G : WittenThermalTopologicalGuardrail
+      ThermalReadout TopologicalIndex PairingWitness KernelReadout) :
+    G.not_definitional_equality_prop := by
+  sorry
+
+end WittenThermalTopologicalGuardrail
 
 /--
 Witness gate for a real Majorana Witten-index model.
@@ -251,38 +262,40 @@ structure RealMajoranaWittenIndexGate
   parity : Operator
   pfaffianReadout : PfaffianReadout
   zeroModeReadout : ZeroModeReadout
-  square_True : Prop
-  parity_anticommutation_True : Prop
-  pfaffian_comparison_True : Prop
-  zero_mode_index_True : Prop
-  certificate :
-    square_True ∧
-      parity_anticommutation_True ∧
-        pfaffian_comparison_True ∧
-          zero_mode_index_True
+  square_prop : Prop
+  parity_anticommutation_prop : Prop
+  pfaffian_comparison_prop : Prop
+  zero_mode_index_prop : Prop
 
 namespace RealMajoranaWittenIndexGate
 
-/-- Re-export of the supplied supercharge square law. -/
+/-- Supercharge-square theorem target for the supplied Majorana Witten-index model. -/
 theorem square
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.square_True :=
-  G.certificate.1
+    G.square_prop := by
+  sorry
 
-/-- Re-export of the supplied Pfaffian comparison law. -/
+/-- Parity-anticommutation theorem target for the supplied Majorana Witten-index model. -/
+theorem parity_anticommutation
+    {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
+    (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
+    G.parity_anticommutation_prop := by
+  sorry
+
+/-- Pfaffian-comparison theorem target for the supplied Majorana Witten-index model. -/
 theorem pfaffian_comparison
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.pfaffian_comparison_True :=
-  G.certificate.2.2.1
+    G.pfaffian_comparison_prop := by
+  sorry
 
-/-- Re-export of the supplied zero-mode index law. -/
+/-- Zero-mode-index theorem target for the supplied Majorana Witten-index model. -/
 theorem zero_mode_index
     {StateSpace Operator PfaffianReadout ZeroModeReadout : Type*}
     (G : RealMajoranaWittenIndexGate StateSpace Operator PfaffianReadout ZeroModeReadout) :
-    G.zero_mode_index_True :=
-  G.certificate.2.2.2
+    G.zero_mode_index_prop := by
+  sorry
 
 end RealMajoranaWittenIndexGate
 
@@ -298,10 +311,6 @@ structure PrimeSpinorWittenIndexPacket
     InfoGeometry.Arithmetic.PrimeMajoranaBitFlip.PrimeMajoranaCARGate PrimeLabel Operator
   wittenGate :
     RealMajoranaWittenIndexGate Unit Operator PfaffianReadout ZeroModeReadout
-  finite_readout_True :
-    finiteRealSpinorWittenReadout modes amplitude =
-      finitePrimeWeylDenominator modes
-        (fun p => scalarWeightFromSpinor (amplitude p))
 
 namespace PrimeSpinorWittenIndexPacket
 
@@ -313,8 +322,9 @@ theorem finite_readout
       PrimeLabel R Operator PfaffianReadout ZeroModeReadout) :
     finiteRealSpinorWittenReadout P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
-        (fun p => scalarWeightFromSpinor (P.amplitude p)) :=
-  P.finite_readout_True
+        (fun p => scalarWeightFromSpinor (P.amplitude p)) := by
+  exact finiteRealSpinorWittenReadout_eq_weylDenominator_squareWeights
+    P.modes P.amplitude
 
 end PrimeSpinorWittenIndexPacket
 

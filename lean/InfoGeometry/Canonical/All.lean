@@ -425,7 +425,6 @@ import InfoGeometry.Canonical.HodgeStarSelfDualAlgebra
 import InfoGeometry.Canonical.HodgeKreinTriFacet
 import InfoGeometry.Canonical.HodgeKreinBoundary
 import InfoGeometry.Canonical.HodgeKreinSuperLaplacian
-import InfoGeometry.Canonical.HodgeKreinTriFacetProjectors
 import InfoGeometry.Canonical.OperatorErlangenFierzKlein
 import InfoGeometry.Canonical.DrazinCliffordMatrixUnitBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
@@ -1047,6 +1046,8 @@ import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.SplitOctonionRigidity
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
+import InfoGeometry.Canonical.MathematicalUnification
+import InfoGeometry.Canonical.Mat2
 
 namespace InfoGeometry
 

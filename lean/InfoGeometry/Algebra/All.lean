@@ -41,6 +41,7 @@ import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
 import InfoGeometry.Algebra.SplitQuaternionFlows
 import InfoGeometry.Algebra.NilpotentModularAutomorphism
+import InfoGeometry.Algebra.TriFacetScalar
 /-!
 # InfoGeometry.Algebra.All
 

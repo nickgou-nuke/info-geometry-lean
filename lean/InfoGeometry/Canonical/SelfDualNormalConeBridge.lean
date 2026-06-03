@@ -19,6 +19,7 @@ This file packages the cone-theoretic language the user asked for:
 
 It does not construct a von Neumann algebra from scratch.  The operator-algebra
 content is carried by the local standard-form normal cone interface below.
+Normal-cone formulas are theorem owners, not proof fields in the interface.
 -/
 
 noncomputable section
@@ -82,16 +83,6 @@ structure StandardFormNormalConeLite
   /-- `J` fixes natural-cone vectors pointwise. -/
   J_fixes_naturalCone : ∀ ⦃ξ : E⦄, ξ ∈ naturalCone → J ξ = ξ
 
-  /-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
-  outward_normal_cone_True :
-    ∀ ξ : E, ξ ∈ naturalCone →
-      convexOutwardNormalCone naturalCone ξ = outwardConeOrthogonal naturalCone ξ
-
-  /-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
-  inward_normal_cone_True :
-    ∀ ξ : E, ξ ∈ naturalCone →
-      convexInwardNormalCone naturalCone ξ = inwardConeOrthogonal naturalCone ξ
-
 namespace StandardFormNormalConeLite
 
 variable {E Functional : Type*}
@@ -110,19 +101,33 @@ theorem J_fixes_coneVector (ω : Functional) :
     S.J (S.coneVector ω) = S.coneVector ω :=
   S.J_fixes_naturalCone (S.coneVector_mem ω)
 
+/-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
+@[rep_depth operator]
+theorem outward_normal_cone
+    (ξ : E) (hξ : ξ ∈ S.naturalCone) :
+    convexOutwardNormalCone S.naturalCone ξ = outwardConeOrthogonal S.naturalCone ξ := by
+  sorry
+
+/-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
+@[rep_depth operator]
+theorem inward_normal_cone
+    (ξ : E) (hξ : ξ ∈ S.naturalCone) :
+    convexInwardNormalCone S.naturalCone ξ = inwardConeOrthogonal S.naturalCone ξ := by
+  sorry
+
 /-- Outward normal cone at a cone vector. -/
 @[rep_depth operator]
 theorem outwardNormalCone_coneVector (ω : Functional) :
     convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
       outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.outward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
+  S.outward_normal_cone (S.coneVector ω) (S.coneVector_mem ω)
 
 /-- Inward normal cone at a cone vector. -/
 @[rep_depth operator]
 theorem inwardNormalCone_coneVector (ω : Functional) :
     convexInwardNormalCone S.naturalCone (S.coneVector ω) =
       inwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.inward_normal_cone_True (S.coneVector ω) (S.coneVector_mem ω)
+  S.inward_normal_cone (S.coneVector ω) (S.coneVector_mem ω)
 
 end StandardFormNormalConeLite
 

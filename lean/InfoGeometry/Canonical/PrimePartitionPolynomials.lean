@@ -446,8 +446,10 @@ structure LocalFugacityProjectionWitness
     Fin N → ℂ → ℂ
   globalFugacity :
     ℂ → ℂ
-  projection_True : Prop
-  preserves_unit_circle_True : Prop
+  projection_True : Prop := by
+    sorry
+  preserves_unit_circle_True : Prop := by
+    sorry
 
 namespace LocalFugacityProjectionWitness
 

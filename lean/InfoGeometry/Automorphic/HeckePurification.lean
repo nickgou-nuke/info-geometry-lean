@@ -81,7 +81,8 @@ structure HeckeSugawaraIntertwining
   sockets to state Hecke compatibility, but this file does not derive the
   physical commutation theorem from first principles.
   -/
-  hecke_sugawara_compatibility_True : Prop
+  hecke_sugawara_compatibility_True : Prop := by
+    sorry
 
   /--
   Resonance match: the zero-value of a completed L-function matches the

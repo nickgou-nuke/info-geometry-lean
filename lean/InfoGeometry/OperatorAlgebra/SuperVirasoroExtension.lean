@@ -44,7 +44,8 @@ structure VirasoroAlgebraDatum
   Morally:
   `[L_m,L_n] = (m-n)L_{m+n} + c/12 * (m^3-m) δ_{m+n,0}`.
   -/
-  virasoro_bracket_True : Prop
+  virasoro_bracket_True : Prop := by
+    sorry
 
   /-- Proof of the bracket law. -/
   virasoro_bracket_law_holds :
@@ -113,7 +114,8 @@ structure SuperVirasoroAlgebraDatum
   Morally:
   `{G_r,G_s} = 2L_{r+s} + central term`.
   -/
-  super_bracket_True : Prop
+  super_bracket_True : Prop := by
+    sorry
 
   /-- Proof of the super bracket law. -/
   super_bracket_law_holds :

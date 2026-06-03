@@ -757,6 +757,7 @@ import InfoGeometry.Projective.SelfDualCone
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
 import InfoGeometry.Canonical.ProjectiveFoundation
+import InfoGeometry.Canonical.PowerStructure
 import InfoGeometry.Canonical.ProjectiveSpaceGrothendieckRing
 import InfoGeometry.Canonical.ProjectiveSectorDecomposition
 import InfoGeometry.Canonical.ProjectiveSplitQ11Realization

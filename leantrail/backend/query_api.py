@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,54 @@ def _slug(text: str) -> str:
     return out[:64] or "bridge"
 
 
+def _safe_git_head(repo_root: Path) -> str:
+    try:
+        out = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True)
+    except Exception:
+        return "unknown"
+    return out.strip() or "unknown"
+
+
+def _read_json_if_exists(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _snapshot_is_stale(repo_root: Path, snapshot_path: Path) -> bool:
+    if not snapshot_path.exists():
+        return True
+
+    snapshot_payload = _read_json_if_exists(snapshot_path)
+    snapshot_meta = snapshot_payload.get("metadata")
+    if not isinstance(snapshot_meta, dict):
+        return True
+
+    snapshot_commit = str(snapshot_meta.get("commit_sha", "")).strip()
+    current_commit = _safe_git_head(repo_root)
+    if snapshot_commit and current_commit != "unknown" and snapshot_commit != current_commit:
+        return True
+
+    dag_meta_path = repo_root / "artifacts" / "dag" / "index" / "meta.json"
+    dag_meta = _read_json_if_exists(dag_meta_path)
+    if not dag_meta:
+        return False
+
+    snapshot_dag_meta = snapshot_meta.get("dag_meta")
+    if not isinstance(snapshot_dag_meta, dict):
+        return True
+
+    for key in ("timestamp", "sourceHash", "oleanHash", "nodeCount", "edgeCount", "morphismCount"):
+        if snapshot_dag_meta.get(key) != dag_meta.get(key):
+            return True
+
+    return False
+
+
 class LeanTrailQueryAPI:
     def __init__(
         self,
@@ -43,7 +92,7 @@ class LeanTrailQueryAPI:
     def ensure_loaded(self) -> None:
         if self.store is not None:
             return
-        if not self.snapshot_path.exists():
+        if _snapshot_is_stale(self.repo_root, self.snapshot_path):
             self.snapshot_path.parent.mkdir(parents=True, exist_ok=True)
             build_snapshot(self.repo_root, self.snapshot_path)
 
@@ -55,6 +104,11 @@ class LeanTrailQueryAPI:
         self.ensure_loaded()
         assert self.store is not None
         return {"query": q, "results": self.store.search(q, limit=limit)}
+
+    def dedup_candidates(self, status: str = "active", limit: int = 50) -> dict[str, Any]:
+        self.ensure_loaded()
+        assert self.store is not None
+        return self.store.dedup_candidates(status=status, limit=limit)
 
     def decl(self, name: str) -> dict[str, Any]:
         self.ensure_loaded()

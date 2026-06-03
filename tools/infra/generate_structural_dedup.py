@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -191,6 +192,44 @@ def dedup_family_id(atomic_id: str, sink_names: list[str]) -> str:
     return f"family:{digest}"
 
 
+def shared_decl_stem(sink_names: list[str]) -> str:
+    if len(sink_names) < 2:
+        return ""
+    stem = os.path.commonprefix(sink_names)
+    if "." in stem:
+        stem = stem[: stem.rfind(".") + 1] if stem.endswith(".") else stem
+    if len(stem) < 40:
+        return ""
+    return stem
+
+
+def classify_dedup_family(
+    canonical_sink: str,
+    sink_names: list[str],
+    member_rows: list[dict[str, Any]],
+) -> dict[str, str]:
+    member_modules = ordered_unique([str(row.get("module", "")) for row in member_rows if str(row.get("module", ""))])
+    same_module = len(member_modules) == 1
+    stem = shared_decl_stem(sink_names)
+    short_names = [short_name(name) for name in sink_names]
+    alias_like_suffixes = any(
+        token in short
+        for short in short_names
+        for token in ("_iff_", "_of_", "_eq_", "_le_", "_ge_")
+    )
+    if same_module and stem and alias_like_suffixes:
+        return {
+            "relation_subtype": "compatibility_alias_candidate",
+            "recommended_action": "review_as_alias_family",
+            "shared_name_stem": stem,
+        }
+    return {
+        "relation_subtype": "true_dedup_candidate",
+        "recommended_action": "review_for_contraction",
+        "shared_name_stem": "",
+    }
+
+
 def build_dedup_families(
     atomic_by_id: dict[str, dict[str, Any]],
     sink_by_name: dict[str, dict[str, Any]],
@@ -209,9 +248,13 @@ def build_dedup_families(
             4,
         )
         member_rows = [sink_by_name.get(name, {}) for name in sink_names]
+        family_classification = classify_dedup_family(canonical_sink, sink_names, member_rows)
         rows.append({
             "family_id": dedup_family_id(atomic_id, sink_names),
             "relation_type": "true_dedup_candidate",
+            "relation_subtype": family_classification["relation_subtype"],
+            "recommended_action": family_classification["recommended_action"],
+            "shared_name_stem": family_classification["shared_name_stem"],
             "candidate_canonical_endpoint": canonical_sink,
             "candidate_canonical_module": str(canonical_row.get("module", canonical_sink.rsplit('.', 1)[0] if '.' in canonical_sink else canonical_sink)),
             "member_sinks": sink_names,
@@ -508,9 +551,12 @@ def render_markdown(
     else:
         for row in dedup_families[:top]:
             lines.append(
-                f"- `{row['family_id']}`: canonical `{row['candidate_canonical_endpoint']}` | members `{row['member_count']}` | score `{row['family_score']}`"
+                f"- `{row['family_id']}`: canonical `{row['candidate_canonical_endpoint']}` | members `{row['member_count']}` | score `{row['family_score']}` | subtype `{row.get('relation_subtype', 'true_dedup_candidate')}`"
             )
             lines.append(f"  - bundle: `{row['shared_minimal_source_bundle']}`")
+            if row.get("shared_name_stem"):
+                lines.append(f"  - shared stem: `{row['shared_name_stem']}`")
+            lines.append(f"  - recommended action: `{row.get('recommended_action', 'review_for_contraction')}`")
             lines.append(f"  - members: `{', '.join(row['member_sinks'])}`")
             if row["shared_sink_family"]:
                 lines.append(f"  - sink family: `{', '.join(row['shared_sink_family'])}`")

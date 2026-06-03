@@ -10,7 +10,7 @@ walk.
 
 This file reuses the repo's existing `Z2Charge` / `flipBit` bookkeeping surface
 from `CondensedMatter.CliffordAtomsZ2n`. It does not claim a full super-Lie
-closure theorem; it only records the theorem-level charge behavior of left/right
+closure theorem; it only records the primitive left/right charge laws for
 binary hops.
 -/
 
@@ -22,19 +22,19 @@ open InfoGeometry.CondensedMatter.CliffordAtomsZ2n
 /--
 Owner-side charge packet for binary Cantor hops.
 
-The underlying walk datum remains separate. This packet only says how the left
-and right child hops transform a local `Z2` charge assignment on finite binary
-addresses.
+The underlying walk datum remains separate. This packet stores only the
+primitive laws saying how the left and right child hops transform a local `Z2`
+charge assignment on finite binary addresses.
 -/
 structure CantorDiracSeaChargeDatum
     (Op : Type*) [Ring Op] where
   walk : CantorDiracSeaWalkDatum Op (Z2Charge Bool)
-  left_charge_True :
+  left_charge_law :
     ∀ w : FiniteBinaryWord,
       walk.charge
           (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
         flipBit false (walk.charge w)
-  right_charge_True :
+  right_charge_law :
     ∀ w : FiniteBinaryWord,
       walk.charge
           (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
@@ -51,7 +51,7 @@ theorem leftHop_flips_false_bit
     D.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false)
         false = !(D.walk.charge w false) := by
-  rw [D.left_charge_True]
+  rw [D.left_charge_law]
   simp
 
 /-- A left binary hop preserves the true-bit charge coordinate. -/
@@ -60,7 +60,7 @@ theorem leftHop_preserves_true_bit
     D.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false)
         true = D.walk.charge w true := by
-  rw [D.left_charge_True]
+  rw [D.left_charge_law]
   simp
 
 /-- A right binary hop flips the true-bit charge coordinate. -/
@@ -69,7 +69,7 @@ theorem rightHop_flips_true_bit
     D.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true)
         true = !(D.walk.charge w true) := by
-  rw [D.right_charge_True]
+  rw [D.right_charge_law]
   simp
 
 /-- A right binary hop preserves the false-bit charge coordinate. -/
@@ -78,7 +78,7 @@ theorem rightHop_preserves_false_bit
     D.walk.charge
         (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true)
         false = D.walk.charge w false := by
-  rw [D.right_charge_True]
+  rw [D.right_charge_law]
   simp
 
 /-- Each left hop remains admissible in the underlying walk packet. -/

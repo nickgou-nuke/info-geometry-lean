@@ -147,8 +147,10 @@ lake script run leantrailCriticIngest \
 ```
 
 If `surgery_plan_report.json` reports `vacuity_evidence_nodes: 0`, the input
-snapshot is not biopsy-enriched. Treat zero surgery packets as "missing audit
-evidence", not as proof that the repository has no redundant wires.
+snapshot is not biopsy-enriched. The planner fails by default in this state.
+Use `--allow-unaudited-snapshot` only for diagnostics; never treat zero surgery
+packets from an unaudited snapshot as proof that the repository has no redundant
+wires.
 
 If the repo has a shadow-ledger script, run it before any automated contraction
 attempt. Otherwise treat `vacuum_packets.jsonl` as review evidence only:

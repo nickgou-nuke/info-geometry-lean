@@ -6,8 +6,8 @@ Witness-gated KMS sockets for the finite arithmetic/Riemann-gas sidecar.
 This module does not prove the Bost-Connes theorem, KMS existence/uniqueness,
 spontaneous symmetry breaking, the prime number theorem, or a global
 Tomita-Takesaki theorem.  It packages finite arithmetic Gibbs weights,
-projective temperatures, modular-flow readouts, and model-supplied KMS
-certificates as proof-carrying data.
+projective temperatures, and modular-flow readouts. KMS statements are exposed
+as separate theorems, not proof-carrying structure fields.
 -/
 
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
@@ -106,8 +106,9 @@ theorem cold_phase_of_projective_Ioo
 /--
 Finite arithmetic KMS witness.
 
-`State` is an arbitrary model carrier.  The KMS law is supplied as a predicate
-and certificate rather than derived from AQFT or a C*-dynamical system.
+`State` is an arbitrary model carrier. The witness stores only the state
+encoding and the modular-flow calibration; the finite KMS statement is derived
+as a separate theorem.
 -/
 structure ArithmeticKMSWitness
     (State : Type*) where
@@ -117,28 +118,22 @@ structure ArithmeticKMSWitness
   /-- Model-specific modular-flow readout. -/
   modularFlowReadout : State → ℝ → ℝ
 
-  /-- Model-specific equilibrium/KMS predicate. -/
-  IsKMSAt : State → ℝ → Prop :=
-    fun s β => ∃ A : Finset ℕ, s = stateOfFinset A ∧ modularFlowReadout s β = arithmeticGibbsPartition A β
-
   /-- Gibbs partition calibration on finite supports. -/
   modularFlow_eq_gibbsPartition :
     ∀ A : Finset ℕ, ∀ β : ℝ,
       modularFlowReadout (stateOfFinset A) β =
         arithmeticGibbsPartition A β
 
-  /-- Supplied KMS certificate for the encoded finite support at `β`. -/
-  kms_sorryProof :
-    ∀ A : Finset ℕ, ∀ β : ℝ,
-      IsKMSAt (stateOfFinset A) β := by
-        intro A β
-        use A
-        refine ⟨rfl, modularFlow_eq_gibbsPartition A β⟩
-
 namespace ArithmeticKMSWitness
 
 variable {State : Type*}
 variable (K : ArithmeticKMSWitness State)
+
+/-- Derived finite arithmetic equilibrium predicate. -/
+def IsKMSAt (s : State) (β : ℝ) : Prop :=
+  ∃ A : Finset ℕ,
+    s = K.stateOfFinset A ∧
+      K.modularFlowReadout s β = arithmeticGibbsPartition A β
 
 /-- Re-export the finite Gibbs partition calibration. -/
 theorem modularFlowReadout_eq_gibbsPartition
@@ -151,7 +146,9 @@ theorem modularFlowReadout_eq_gibbsPartition
 theorem isKMSAt
     (A : Finset ℕ) (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
-  K.kms_sorryProof A β
+by
+  refine ⟨A, rfl, ?_⟩
+  exact K.modularFlow_eq_gibbsPartition A β
 
 /-- The calibrated modular-flow readout is nonnegative. -/
 theorem modularFlowReadout_nonneg
@@ -214,27 +211,27 @@ theorem kms_at_all_temperatures
     (A : Finset ℕ)
     (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
-  K.kms_sorryProof A β
+  K.isKMSAt A β
 
 /-- Two KMS witnesses with matching state encoding, modular flow, and KMS
 predicate are equal. -/
 theorem kms_witness_eq_of_flow_eq
     (K1 K2 : ArithmeticKMSWitness State)
     (hstate : ∀ A, K1.stateOfFinset A = K2.stateOfFinset A)
-    (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β)
-    (hkms : ∀ s β, K1.IsKMSAt s β ↔ K2.IsKMSAt s β) :
+    (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β) :
     K1 = K2 := by
-  cases K1
-  cases K2
-  simp at hstate hflow hkms ⊢
-  constructor
-  · funext A
-    exact hstate A
-  · constructor
-    · funext s β
-      exact hflow s β
-    · funext s β
-      exact propext (hkms s β)
+  cases K1 with
+  | mk state1 flow1 calib1 =>
+    cases K2 with
+    | mk state2 flow2 calib2 =>
+      simp at hstate hflow ⊢
+      have hs : state1 = state2 := funext hstate
+      have hf : flow1 = flow2 := by
+        funext s β
+        exact hflow s β
+      cases hs
+      cases hf
+      simp
 
 end ArithmeticKMSWitness
 
@@ -244,7 +241,8 @@ end ArithmeticKMSWitness
 Projective-temperature version of the finite arithmetic KMS witness.
 
 The compact variable `u` is restricted by explicit hypotheses in the theorem
-payload.  No global analytic continuation through the critical point is
+payload. The witness stores only the state encoding and the projective-flow
+calibration. No global analytic continuation through the critical point is
 claimed.
 -/
 structure ProjectiveArithmeticKMSWitness
@@ -255,28 +253,22 @@ structure ProjectiveArithmeticKMSWitness
   /-- Model-specific modular-flow readout in compact temperature. -/
   projectiveModularFlowReadout : State → ℝ → ℝ
 
-  /-- Model-specific projective KMS predicate. -/
-  IsProjectiveKMSAt : State → ℝ → Prop :=
-    fun s u => ∃ A : Finset ℕ, s = stateOfFinset A ∧ projectiveModularFlowReadout s u = projectiveArithmeticGibbsPartition A u
-
   /-- Projective Gibbs partition calibration on finite supports. -/
   projectiveFlow_eq_gibbsPartition :
     ∀ A : Finset ℕ, ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
       projectiveModularFlowReadout (stateOfFinset A) u =
         projectiveArithmeticGibbsPartition A u
 
-  /-- Supplied projective KMS certificate in the compact cold sector. -/
-  projective_kms_sorryProof :
-    ∀ A : Finset ℕ, ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 →
-      IsProjectiveKMSAt (stateOfFinset A) u := by
-        intro A u hu
-        use A
-        refine ⟨rfl, projectiveFlow_eq_gibbsPartition A u hu⟩
-
 namespace ProjectiveArithmeticKMSWitness
 
 variable {State : Type*}
 variable (K : ProjectiveArithmeticKMSWitness State)
+
+/-- Derived compact-sector projective equilibrium predicate. -/
+def IsProjectiveKMSAt (s : State) (u : ℝ) : Prop :=
+  ∃ A : Finset ℕ,
+    s = K.stateOfFinset A ∧
+      K.projectiveModularFlowReadout s u = projectiveArithmeticGibbsPartition A u
 
 /-- Re-export the projective Gibbs partition calibration. -/
 theorem projectiveModularFlowReadout_eq_gibbsPartition
@@ -289,7 +281,9 @@ theorem projectiveModularFlowReadout_eq_gibbsPartition
 theorem isProjectiveKMSAt
     (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     K.IsProjectiveKMSAt (K.stateOfFinset A) u :=
-  K.projective_kms_sorryProof A u hu
+by
+  refine ⟨A, rfl, ?_⟩
+  exact K.projectiveFlow_eq_gibbsPartition A u hu
 
 /-- The calibrated projective modular-flow readout is nonnegative. -/
 theorem projectiveModularFlowReadout_nonneg

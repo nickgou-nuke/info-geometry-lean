@@ -68,6 +68,8 @@ def ingest_vacuity(snapshot_path: Path, audit_path: Path, out_path: Path) -> dic
     touched = 0
     missing: list[str] = []
     for node in snapshot.nodes:
+        if node.kind != "Declaration":
+            continue
         row = audit_by_target.get(node.id) or audit_by_target.get(node.name)
         if row is None:
             continue
@@ -86,7 +88,8 @@ def ingest_vacuity(snapshot_path: Path, audit_path: Path, out_path: Path) -> dic
         node.attrs = attrs
         touched += 1
 
-    node_ids = {n.id for n in snapshot.nodes} | {n.name for n in snapshot.nodes}
+    decl_nodes = [n for n in snapshot.nodes if n.kind == "Declaration"]
+    node_ids = {n.id for n in decl_nodes} | {n.name for n in decl_nodes}
     for target in sorted(audit_by_target):
         if target not in node_ids:
             missing.append(target)

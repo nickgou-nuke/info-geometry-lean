@@ -19,9 +19,7 @@ The role of this file is classification plus theorem-backed projection:
 * Dixmier/Drazin partition claims remain explicit debt.
 -/
 
-namespace InfoGeometry.Canonical.TheoryShadowRepresentation
-
-set_option linter.dupNamespace false
+namespace InfoGeometry.Canonical.TheoryShadow
 
 open scoped BigOperators
 open scoped InnerProductSpace
@@ -175,4 +173,4 @@ theorem splitCl44_TKK_shadow_bridge_packet
  have h := P.splitCl44_TKK_JordanLie_constructive_packet x xs
  exact ⟨h.2.2.2.2.2.1, h.2.2.2.2.2.2.1, h.2.2.1⟩
 
-end InfoGeometry.Canonical.TheoryShadowRepresentation
+end InfoGeometry.Canonical.TheoryShadow

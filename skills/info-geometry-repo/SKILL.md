@@ -62,6 +62,30 @@ The DAG and Python layers are maintained memory.
 Use them to restore context, surface transport pressure, and choose what to read next.
 Do not use them to replace Lean source or invent ontology absent from code.
 
+## Deep Retrieval Mandate for Presence / Absence Claims
+
+When the task is "is this theorem/lane/corridor already in the repo?", do not
+make a shallow negative judgment from one name search or one local file miss.
+
+Required sequence before any absence claim:
+1. Search owner files under `lean/InfoGeometry/` for exact names and close aliases.
+2. Search umbrella/import surfaces (`All.lean`, package roots, bridge modules).
+3. Check maintained DAG and LeanTrail memory carriers for declaration/context recovery.
+4. If the claim is corridor- or architecture-level, inspect source/sink,
+   morphism, and process-flow artifacts rather than only declaration names.
+5. Verify the strongest candidate with a direct `lake env lean` or locked build
+   target before promoting it to `implemented`.
+
+Negative labels must distinguish:
+- exact name absent
+- concept only found lexically or in docs
+- compiled witness/bridge surface present
+- owner theorem surface present
+- stale or seed-missing DAG/LeanTrail artifact
+
+Never collapse "exact token not found" into "not in the repo" when deeper
+retrieval surfaces are available.
+
 ## Multilingual Bridge Comment Policy
 
 This repository is a Lean 4 formalization of the physics of information. It
@@ -87,6 +111,16 @@ LeanTrail memory carriers are now also maintained retrieval surfaces:
 - canonical snapshot: `artifacts/leantrail/graph_snapshot.json`
 - external adapters: GraphML / Neo4j CSV / Arango JSON
 - conformance gate must pass before treating any external carrier as valid memory
+
+For theorem-presence and corridor audits, prefer these maintained retrieval
+surfaces before concluding that a claim is absent:
+- `artifacts/leantrail/graph_snapshot.json`
+- `artifacts/leantrail/arango/{ig_nodes.jsonl,ig_edges.jsonl,metadata.json}`
+- `artifacts/dag/index/{decls.jsonl,edges.jsonl,morphisms.jsonl,types.jsonl}`
+- `artifacts/dag/process-flow/defects.jsonl`
+
+If any of these carriers are stale, missing, or fail conformance, say so
+explicitly in the audit instead of silently falling back to a shallow search.
 
 ## Trust Order
 

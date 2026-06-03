@@ -278,12 +278,14 @@ theorem jko_penalty_le_energy_drop
 
 end JKOBayesianCalibration
 
-/-! ## 6. Optional noisy and limit sockets -/
+/-! ## 6. Optional noisy and limit carriers -/
 
 /--
-Noisy JKO update socket.
+Noisy JKO update carrier.
 
 This records a noisy correction layer without introducing stochastic calculus.
+No correction theorem is asserted at this generic level; concrete stochastic
+models must state and prove their correction law in their owner module.
 -/
 structure NoisyJKOUpdate
     {Weight Noise : Type*}
@@ -300,33 +302,19 @@ structure NoisyJKOUpdate
   noisyNext :
     Weight
 
-  /-- Model-specific correction law. -/
-  correction_True :
-    Prop
-
-  /-- Certificate for the correction law. -/
-  correction_sorryProof :
-    correction_True
-
 namespace NoisyJKOUpdate
 
 variable {Weight Noise : Type*}
 variable {P : OperatorJKOPotential Weight}
 
-variable (N : NoisyJKOUpdate (Weight := Weight) (Noise := Noise) P)
-
-/-- The installed noisy correction certificate is available. -/
-theorem correction_holds :
-    N.correction_True :=
-  N.correction_sorryProof
-
 end NoisyJKOUpdate
 
 /--
-Witness-gated modular/continuous-flow limit calibration.
+Modular/continuous-flow limit calibration carrier.
 
-This does not prove `τ → 0` convergence. It records the concrete convergence
-law supplied by a later analytic backend.
+This does not prove `τ → 0` convergence. It records only the discrete path and
+continuous/modular-flow readout.  Concrete analytic models must state and prove
+their convergence theorem in their owner module.
 -/
 structure JKOModularFlowLimitCalibration
     {Weight FlowReadout : Type*}
@@ -339,25 +327,10 @@ structure JKOModularFlowLimitCalibration
   flowReadout :
     FlowReadout
 
-  /-- Model-specific limit/convergence statement. -/
-  limit_True :
-    Prop
-
-  /-- Certificate for the model-specific limit statement. -/
-  limit_sorryProof :
-    limit_True
-
 namespace JKOModularFlowLimitCalibration
 
 variable {Weight FlowReadout : Type*}
 variable {P : OperatorJKOPotential Weight}
-
-variable (C : JKOModularFlowLimitCalibration (Weight := Weight) (FlowReadout := FlowReadout) P)
-
-/-- The installed modular-flow limit certificate is available. -/
-theorem limit_holds :
-    C.limit_True :=
-  C.limit_sorryProof
 
 end JKOModularFlowLimitCalibration
 

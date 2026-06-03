@@ -250,7 +250,7 @@ theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
     W.homogeneousReadout.readout (W.homogeneousReadout.scale c x)
       =
     c ^ W.homogeneousReadout.weight * W.homogeneousReadout.readout x :=
-  W.homogeneousReadout.scale_True c x
+  W.homogeneousReadout.readout_scale c x
 
 end WeylRefinedSectorLabel
 

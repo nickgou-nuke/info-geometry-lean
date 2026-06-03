@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/CosmicAndreevCrossover.lean
 
-Andreev-style conformal crossover socket.
+Andreev-style conformal crossover carrier.
 
 This module does not assert that the Big Bang is literally an Andreev
 reflection. It records the algebraic pattern:
@@ -27,7 +27,8 @@ A witness that a conformal crossover has an Andreev-like closure boundary.
 `oldNullData` is the old-aeon/conformal/null input.
 `newMetricData` is the new-aeon/output datum.
 
-The `reflection_True` is a supplied model witness, not a theorem of cosmology.
+The `reflection` field is the supplied closure equation. It is not a theorem of
+cosmology; it is the algebraic law this carrier exposes to the Andreev lemmas.
 -/
 structure CosmicCrossoverWitness
     (V : Type*) [AddCommGroup V] [Module ℝ V] where
@@ -43,19 +44,8 @@ structure CosmicCrossoverWitness
     V
 
   /-- Crossover closure law. -/
-  reflection_True :
+  reflection :
     boundary.closure.theta oldNullData = newMetricData
-
-  /--
-  Physical/cosmological interpretation certificate.
-
-  This is where a concrete conformal-aeon model must justify the analogy.
-  -/
-  crossover_interpretation_True : Prop
-
-  /-- Proof/certificate of the interpretation law. -/
-  crossover_interpretation_sorryProof :
-    crossover_interpretation_True
 
 namespace CosmicCrossoverWitness
 
@@ -68,14 +58,14 @@ variable (W : CosmicCrossoverWitness V)
 theorem newMetric_to_oldNull :
     W.boundary.closure.theta W.newMetricData = W.oldNullData := by
   have h := W.boundary.closure.theta_involutive W.oldNullData
-  rw [W.reflection_True] at h
+  rw [W.reflection] at h
   exact h
 
 /-- The old/new crossover diagonal is fixed under the installed closure map. -/
 theorem crossover_diagonal_fixed :
     W.oldNullData + W.newMetricData ∈ W.boundary.closure.Fixed :=
   W.boundary.closure.diagonal_fixed_of_swap
-    W.reflection_True
+    W.reflection
     W.newMetric_to_oldNull
 
 /-- The old/new crossover imbalance is anti-fixed. -/
@@ -83,7 +73,7 @@ theorem crossover_imbalance_anti_fixed :
     W.boundary.closure.theta (W.oldNullData - W.newMetricData) =
       -(W.oldNullData - W.newMetricData) :=
   W.boundary.closure.difference_anti_fixed_of_swap
-    W.reflection_True
+    W.reflection
     W.newMetric_to_oldNull
 
 end CosmicCrossoverWitness

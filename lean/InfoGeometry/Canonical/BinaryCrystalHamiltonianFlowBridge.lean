@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 import InfoGeometry.Canonical.WeylCharacterEquivalence
 
 /-!
-# InfoGeometry.Canonical.BinaryCrystalHamiltonianFlowBridge
+# InfoGeometry.Canonical.BinaryCrystalHamiltonianFlow
 
 Bridge packet for the binary crystal and the thermodynamic flow partition.
 
@@ -14,7 +14,7 @@ partition bridge so the dynamic corridor has a binary-crystal entry point.
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.BinaryCrystalHamiltonianFlowBridge
+namespace InfoGeometry.Canonical.BinaryCrystalHamiltonianFlow
 
 open InfoGeometry.Canonical.BinaryCrystalWeylBlochBridge
 open InfoGeometry.Canonical.WeylCharacterEquivalence
@@ -43,7 +43,7 @@ variable (B : BinaryCrystalHamiltonianFlowBridge 𝔤)
 
 /-- The binary crystal packet still supplies the binary-owner target. -/
 @[rep_depth transport]
-theorem crystal_ownerTarget (B : BinaryCrystalHamiltonianFlowBridge
+theorem crystal_ownerTarget (_B : BinaryCrystalHamiltonianFlowBridge
     𝔤) :
     BinaryCrystalWeylBlochOwnerTarget :=
   binaryCrystalWeylBlochOwnerTarget
@@ -68,4 +68,4 @@ theorem denominator_is_prime_euler_product (B : BinaryCrystalHamiltonianFlowBrid
 
 end BinaryCrystalHamiltonianFlowBridge
 
-end InfoGeometry.Canonical.BinaryCrystalHamiltonianFlowBridge
+end InfoGeometry.Canonical.BinaryCrystalHamiltonianFlow

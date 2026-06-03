@@ -116,30 +116,15 @@ structure SuperIntegrationDatum
   /-- Backend readout. This is not assumed to be a bare trace. -/
   backendReadout : A → Scalar
 
-  /-- Graded/super readout. -/
-  superReadout : A → Scalar
-
-  /-- The superreadout is backend readout after grading insertion. -/
-  superReadout_eq :
-    ∀ x : A,
-      superReadout x = backendReadout (grading.chi * x)
-
-  /--
-  Cyclicity, twisted cyclicity, KMS covariance, cocycle identity, or
-  renormalized residue law.
-
-  The exact law depends on the backend.
-  -/
-  graded_cyclicity_or_kms_True : Prop
-
-  /-- Proof/certificate of the backend law. -/
-  graded_cyclicity_or_kms_sorryProof :
-    graded_cyclicity_or_kms_True
-
 namespace SuperIntegrationDatum
 
 variable {A Scalar : Type*} [Ring A]
 variable (S : SuperIntegrationDatum A Scalar)
+
+/-- Graded/super readout, defined by inserting the grading. -/
+def superReadout
+    (x : A) : Scalar :=
+  S.backendReadout (S.grading.chi * x)
 
 /--
 The defining equation of the superreadout.
@@ -147,7 +132,7 @@ The defining equation of the superreadout.
 theorem superReadout_apply
     (x : A) :
     S.superReadout x = S.backendReadout (S.grading.chi * x) :=
-  S.superReadout_eq x
+  rfl
 
 end SuperIntegrationDatum
 
@@ -178,13 +163,6 @@ structure ModularWeightBackend
   flow_add :
     ∀ s t x, modularFlow (s + t) x = modularFlow s (modularFlow t x)
 
-  /-- KMS/modular covariance law. -/
-  kms_True : Prop
-
-  /-- Proof/certificate of KMS/modular covariance. -/
-  kms_sorryProof :
-    kms_True
-
 namespace ModularWeightBackend
 
 variable {A : Type*}
@@ -212,13 +190,6 @@ structure ModularSuperWeightDatum
   -/
   superWeight : A → ℂ
 
-  /-- Modular graded/KMS covariance law. -/
-  modular_super_kms_True : Prop
-
-  /-- Proof/certificate. -/
-  modular_super_kms_sorryProof :
-    modular_super_kms_True
-
 namespace ModularSuperWeightDatum
 
 variable {A : Type*} [Ring A]
@@ -245,26 +216,15 @@ structure CoreSuperTraceDatum
   /-- Core backend readout. -/
   coreReadout : Core → Scalar
 
-  /-- Supertrace/readout of embedded base elements. -/
-  superReadoutOfBase : M → Scalar
-
-  /-- Defining law. -/
-  superReadoutOfBase_eq :
-    ∀ x : M,
-      superReadoutOfBase x =
-        coreReadout (coreGrading.chi * embed x)
-
-  /-- Core trace/cocycle/KMS scaling law. -/
-  core_True : Prop
-
-  /-- Proof/certificate. -/
-  core_sorryProof :
-    core_True
-
 namespace CoreSuperTraceDatum
 
 variable {M Core Scalar : Type*} [Ring Core]
 variable (C : CoreSuperTraceDatum M Core Scalar)
+
+/-- Core supertrace readout of an embedded base element, defined by grading insertion. -/
+def superReadoutOfBase
+    (x : M) : Scalar :=
+  C.coreReadout (C.coreGrading.chi * C.embed x)
 
 /--
 Core supertrace readout of a base element.
@@ -273,7 +233,7 @@ theorem superReadoutOfBase_apply
     (x : M) :
     C.superReadoutOfBase x =
       C.coreReadout (C.coreGrading.chi * C.embed x) :=
-  C.superReadoutOfBase_eq x
+  rfl
 
 end CoreSuperTraceDatum
 
@@ -290,26 +250,21 @@ structure DixmierSuperTraceDatum
   grading : GradingDatum A
   dixmierReadout : A → ℝ≥0∞
 
-  superDixmierReadout : A → ℝ≥0∞
-
-  superDixmierReadout_eq :
-    ∀ x : A,
-      superDixmierReadout x = dixmierReadout (grading.chi * x)
-
-  logarithmic_divergence_True : Prop
-  logarithmic_divergence_sorryProof :
-    logarithmic_divergence_True
-
 namespace DixmierSuperTraceDatum
 
 variable {A : Type*} [Ring A]
 variable (D : DixmierSuperTraceDatum A)
 
+/-- Graded Dixmier readout, defined by inserting the grading. -/
+def superDixmierReadout
+    (x : A) : ℝ≥0∞ :=
+  D.dixmierReadout (D.grading.chi * x)
+
 /-- The defining equation for the graded Dixmier readout. -/
 theorem superDixmierReadout_apply
     (x : A) :
     D.superDixmierReadout x = D.dixmierReadout (D.grading.chi * x) :=
-  D.superDixmierReadout_eq x
+  rfl
 
 end DixmierSuperTraceDatum
 
@@ -325,10 +280,6 @@ structure ZetaSuperTraceDatum
 
   superResidue : A → ℂ → ℂ
   superFinitePart : A → ℂ → ℂ
-
-  zeta_super_True : Prop
-  zeta_super_sorryProof :
-    zeta_super_True
 
 namespace ZetaSuperTraceDatum
 
@@ -346,26 +297,21 @@ structure CyclicSuperCocycleDatum
 
   cocycleReadout : A → ℂ
 
-  superCocycleReadout : A → ℂ
-
-  superCocycleReadout_eq :
-    ∀ x : A,
-      superCocycleReadout x = cocycleReadout (grading.chi * x)
-
-  cyclic_cocycle_True : Prop
-  cyclic_cocycle_sorryProof :
-    cyclic_cocycle_True
-
 namespace CyclicSuperCocycleDatum
 
 variable {A : Type*} [Ring A]
 variable (C : CyclicSuperCocycleDatum A)
 
+/-- Graded cyclic-cocycle readout, defined by inserting the grading. -/
+def superCocycleReadout
+    (x : A) : ℂ :=
+  C.cocycleReadout (C.grading.chi * x)
+
 /-- The defining equation for the graded cyclic-cocycle readout. -/
 theorem superCocycleReadout_apply
     (x : A) :
     C.superCocycleReadout x = C.cocycleReadout (C.grading.chi * x) :=
-  C.superCocycleReadout_eq x
+  rfl
 
 end CyclicSuperCocycleDatum
 
@@ -390,22 +336,6 @@ structure TypeIIISuperIntegrationDatum
   /-- Optional core supertrace on crossed-product/continuous core. -/
   coreSuperTrace :
     Option (CoreSuperTraceDatum M Core Scalar)
-
-  /-- Type III certificate. -/
-  typeIII_True : Prop
-
-  /-- Proof/certificate. -/
-  typeIII_sorryProof :
-    typeIII_True
-
-  /--
-  Explicit guardrail: the foundational datum contains no bare base trace.
-  -/
-  no_bare_trace_on_base_True : Prop
-
-  /-- Proof/certificate. -/
-  no_bare_trace_on_base_sorryProof :
-    no_bare_trace_on_base_True
 
 namespace TypeIIISuperIntegrationDatum
 

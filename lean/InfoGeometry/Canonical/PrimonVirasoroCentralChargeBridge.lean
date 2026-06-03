@@ -38,7 +38,7 @@ open InfoGeometry.Arithmetic
 open InfoGeometry.Arithmetic.ArithmeticKMS
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge
-open InfoGeometry.Canonical.PrimeGasSuperKMSBridge
+open InfoGeometry.Canonical.PrimeGasSuperKMS
 open InfoGeometry.Canonical.PrimeVirasoroSugawara
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.UnifiedSuperchargeAlgebra

@@ -1,8 +1,8 @@
-import Mathlib
+import Mathlib.Data.Real.Basic
 import InfoGeometry.Meta.Architecture
 
 /-!
-# InfoGeometry.Canonical.PrimeGasSuperKMSBridge
+# InfoGeometry.Canonical.PrimeGasSuperKMS
 
 Witness-gated bridge between a prime-gas max-entropy packet and a super-KMS
 temperature packet.
@@ -14,9 +14,7 @@ stored fields.
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
-namespace InfoGeometry.Canonical.PrimeGasSuperKMSBridge
+namespace InfoGeometry.Canonical.PrimeGasSuperKMS
 
 /-- Minimal owner-level prime-gas max-entropy packet. -/
 @[rep_depth operator]
@@ -146,4 +144,4 @@ theorem jaynesEntropy_eq_rnEntropy :
 
 end PrimeGasSuperKMSBridge
 
-end InfoGeometry.Canonical.PrimeGasSuperKMSBridge
+end InfoGeometry.Canonical.PrimeGasSuperKMS

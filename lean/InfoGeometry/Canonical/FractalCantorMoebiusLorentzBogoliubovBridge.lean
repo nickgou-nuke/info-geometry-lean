@@ -22,9 +22,7 @@ can depend on one entry point without re-proving the full stack.
 
 noncomputable section
 
-set_option linter.dupNamespace false
-
-namespace InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
+namespace InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubov
 
 /-- Bridge packet for the full Cantor/Möbius/Lorentz/Bogoliubov chain. -/
 @[rep_depth operator]
@@ -43,11 +41,11 @@ structure FractalCantorMoebiusLorentzBogoliubovBridge
 
   /-- The boundary Möbius owner packet. -/
   moebius :
-    InfoGeometry.Canonical.MoebiusClosureBridge.MoebiusClosureBridge Op Hilb
+    InfoGeometry.Canonical.MoebiusClosure.MoebiusClosureBridge Op Hilb
 
   /-- The supplied real `SL(2,R)` boundary datum. -/
   moebiusDatum :
-    InfoGeometry.Canonical.MoebiusClosureBridge.SL2RDatum
+    InfoGeometry.Canonical.MoebiusClosure.SL2RDatum
 
   /-- The real Majorana datum underlying the Bogoliubov transport. -/
   majorana :
@@ -98,4 +96,4 @@ theorem tilt_normalized_holds :
 
 end FractalCantorMoebiusLorentzBogoliubovBridge
 
-end InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
+end InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubov

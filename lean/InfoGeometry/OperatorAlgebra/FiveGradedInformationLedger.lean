@@ -62,7 +62,6 @@ structure FiveGrading
     ∀ {X Y : L}, X ∈ gPosOne → Y ∈ gPosOne → ⁅X, Y⁆ ∈ gPosTwo
   negOne_negOne_mem_negTwo :
     ∀ {X Y : L}, X ∈ gNegOne → Y ∈ gNegOne → ⁅X, Y⁆ ∈ gNegTwo
-  bracket_graded_True : Prop
 
 namespace FiveGrading
 
@@ -71,9 +70,17 @@ variable [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 
 variable (G : FiveGrading L)
 
-/-- Backward-compatible graded-bracket witness. -/
+/-- The concrete graded-bracket laws carried by `FiveGrading`. -/
 def bracket_graded : Prop :=
-  G.bracket_graded_True
+  (∀ {X Y : L}, X ∈ G.gNegOne → Y ∈ G.gPosOne → ⁅X, Y⁆ ∈ G.gZero) ∧
+  (∀ X Y : L, X ∈ G.gNegTwo → Y ∈ G.gPosTwo → ⁅X, Y⁆ ∈ G.gZero) ∧
+  (∀ {X Y : L}, X ∈ G.gPosOne → Y ∈ G.gPosOne → ⁅X, Y⁆ ∈ G.gPosTwo) ∧
+  (∀ {X Y : L}, X ∈ G.gNegOne → Y ∈ G.gNegOne → ⁅X, Y⁆ ∈ G.gNegTwo)
+
+theorem bracket_graded_holds :
+    G.bracket_graded :=
+  ⟨@G.negOne_posOne_mem_zero, G.bracket_negTwo_posTwo,
+    @G.posOne_posOne_mem_posTwo, @G.negOne_negOne_mem_negTwo⟩
 
 /-- Backward-compatible mixed-grade bracket witness name. -/
 theorem bracket_negOne_posOne_mem_zero
@@ -183,8 +190,6 @@ structure BlackHoleInformationLedger
   memoryReadout : L → Memory
   hidden_part_stored_as_memory :
     ∀ x y : J, memoryReadout (A.hiddenTotal x y) ≠ 0 → A.hiddenTotal x y ≠ 0
-  full_ledger_recovery_True : Prop
-  full_ledger_recovery_sorryProof : full_ledger_recovery_True
 
 namespace BlackHoleInformationLedger
 
@@ -201,7 +206,7 @@ variable (B : BlackHoleInformationLedger J L Obs Memory A)
 
 /-- Hidden grade-two sum exposed through the ledger API. -/
 def hiddenGradeTwoSum
-    (B : BlackHoleInformationLedger J L Obs Memory A)
+    (_B : BlackHoleInformationLedger J L Obs Memory A)
     (x y : J) : L :=
   A.hiddenTotal x y
 
@@ -230,11 +235,6 @@ theorem observedDefect_ne_zero_iff_visibleHidden_ne_zero
     (x y : J) :
     A.observedDefect x y ≠ 0 ↔ B.visibleHiddenProjection x y ≠ 0 := by
   rw [B.observedDefect_eq_visibleHiddenProjection x y]
-
-/-- Re-export of full-ledger recovery law. -/
-theorem full_ledger_recovery_holds :
-    B.full_ledger_recovery_True :=
-  B.full_ledger_recovery_sorryProof
 
 end BlackHoleInformationLedger
 

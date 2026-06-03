@@ -119,14 +119,11 @@ structure StinespringDilation
   the ideal reference state decomposes into the actual observed branch plus the
   mirrored hidden/environment contribution.
   -/
-  conservation_True :
+  conservation :
     ∀ x : State,
       C.ideal x =
         C.actual x +
           mirrorLeak (hiddenLeak (jointEvolution (embedSystem x)))
-
-  /-- Certificate that this dilation is the intended Stinespring/Tomita model. -/
-  dilation_True : Prop
 
 namespace StinespringDilation
 
@@ -155,7 +152,7 @@ The ideal-minus-actual deficit is exactly the mirrored hidden component.
 theorem ideal_sub_actual_eq_mirroredHidden
     (x : State) :
     C.ideal x - C.actual x = D.mirroredHiddenComponent x := by
-  have h := D.conservation_True x
+  have h := D.conservation x
   dsimp [mirroredHiddenComponent, hiddenComponent]
   rw [h]
   abel
@@ -167,7 +164,7 @@ theorem actual_eq_ideal_of_zero_mirroredHidden
     {x : State}
     (hzero : D.mirroredHiddenComponent x = 0) :
     C.actual x = C.ideal x := by
-  have h := D.conservation_True x
+  have h := D.conservation x
   dsimp [mirroredHiddenComponent, hiddenComponent] at hzero
   rw [hzero, add_zero] at h
   exact h.symm
@@ -300,9 +297,6 @@ structure HeatHiddenInformationBridge
       bregmanHeatLoss B C x =
         hiddenInformation D I x
 
-  /-- Calibration law explaining why this readout is thermodynamic heat. -/
-  thermodynamic_calibration_True : Prop
-
 namespace HeatHiddenInformationBridge
 
 variable
@@ -337,7 +331,7 @@ theorem heat_nonneg_from_hidden
 
 end HeatHiddenInformationBridge
 
-/-! ## 7. Metal mirror specialization socket -/
+/-! ## 7. Metal mirror specialization carrier -/
 
 /--
 A metal mirror is an open-system optical channel equipped with a dilation and a
@@ -364,9 +358,6 @@ structure MetalMirrorStinespringModel
   bridge :
     HeatHiddenInformationBridge
       State Env Joint bregman channel dilation hiddenReadout
-
-  /-- Optical calibration: this open-system channel is a metal mirror. -/
-  metal_mirror_True : Prop
 
 namespace MetalMirrorStinespringModel
 
@@ -407,7 +398,7 @@ theorem heat_nonneg
 
 end MetalMirrorStinespringModel
 
-/-! ## 8. Lean dissipative-channel socket -/
+/-! ## 8. Lean dissipative-channel carrier -/
 
 /--
 A dissipative visible-system channel together with an ideal lossless reference.
@@ -454,21 +445,9 @@ structure StinespringTomitaDilation
   /--
   Conservation of the ideal information ledger.
   -/
-  conservation_True :
+  conservation :
     ∀ x : Sys,
       C.ideal x = C.actual x + recoverHidden (hiddenFlow x)
-
-  /--
-  Law saying that the hidden sector is the Tomita commutant/environment sector
-  for the intended model.
-  -/
-  tomita_commutant_routing_True : Prop
-
-  /--
-  Law saying that the hidden sector is inaccessible to the chosen visible
-  observer.
-  -/
-  hidden_inaccessible_to_visible_observer_True : Prop
 
 namespace StinespringTomitaDilation
 
@@ -486,7 +465,7 @@ theorem ideal_sub_actual_eq_recovered_hidden
     (x : Sys) :
     C.ideal x - C.actual x =
       D.recoverHidden (D.hiddenFlow x) := by
-  have h := D.conservation_True x
+  have h := D.conservation x
   rw [h]
   abel
 
@@ -499,7 +478,7 @@ theorem actual_eq_ideal_of_hidden_zero
     (x : Sys)
     (hzero : D.recoverHidden (D.hiddenFlow x) = 0) :
     C.actual x = C.ideal x := by
-  have h := D.conservation_True x
+  have h := D.conservation x
   rw [hzero, add_zero] at h
   exact h.symm
 
@@ -713,7 +692,7 @@ A Stinespring/Tomita-style information dilation.
 
 `Env` is the inaccessible environment/commutant readout space.
 
-This is not a proof of Stinespring's theorem. It is the proof-carrying socket
+This is not a proof of Stinespring's theorem. It is the proof-carrying carrier
 where a concrete Stinespring/Tomita dilation is installed.
 -/
 structure StinespringInformationDilation

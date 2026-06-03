@@ -15,6 +15,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 INFO_JSON_RE = re.compile(r"information:\s*(\{.*\})\s*$")
+UNSAFE_LEAN_NAME_FRAGMENTS = (
+    "\n", "\r", "\t", " ", ";", "(", ")", "{", "}", "[", "]", "\"", "`", "\\",
+    "--", "/-", "-/",
+)
 
 
 def sha256_text(text: str) -> str:
@@ -62,8 +66,13 @@ def select_decls(
     return selected
 
 
-def lean_string(s: str) -> str:
-    return json.dumps(s)
+def is_safe_lean_name(name: str) -> bool:
+    stripped = name.strip()
+    if not stripped or stripped != name:
+        return False
+    if stripped.startswith(".") or stripped.endswith(".") or ".." in stripped:
+        return False
+    return not any(fragment in stripped for fragment in UNSAFE_LEAN_NAME_FRAGMENTS)
 
 
 def module_script(module: str, decls: list[str]) -> str:
@@ -102,7 +111,7 @@ def parse_biopsy_json(output: str) -> list[dict[str, Any]]:
 
 
 def run_lean_script(script: str, *, timeout: int) -> tuple[int, str]:
-    with tempfile.NamedTemporaryFile("w", suffix=".lean", dir=REPO_ROOT, encoding="utf-8", delete=False) as handle:
+    with tempfile.NamedTemporaryFile("w", suffix=".lean", encoding="utf-8", delete=False) as handle:
         tmp = Path(handle.name)
         handle.write(script)
     try:
@@ -162,47 +171,59 @@ def run(
         explicit_decls=set(decls),
         limit=limit,
     )
-    by_module: dict[str, list[str]] = defaultdict(list)
-    for node in selected:
-        by_module[str(node["module"])].append(str(node.get("name") or node.get("id")))
-
     rows: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
     modules_run = 0
+    by_module: dict[str, list[str]] = defaultdict(list)
+    for node in selected:
+        module = str(node["module"])
+        name = str(node.get("name") or node.get("id"))
+        if not is_safe_lean_name(module) or not is_safe_lean_name(name):
+            failures.append({
+                "module": module,
+                "decls": [name],
+                "returncode": "invalid_lean_name",
+                "output_tail": "Snapshot module/declaration name is not safe Lean command syntax.",
+            })
+            if not keep_going:
+                break
+            continue
+        by_module[module].append(name)
 
-    for module in sorted(by_module):
-        names = by_module[module]
-        for start in range(0, len(names), module_batch_size):
-            batch = names[start : start + module_batch_size]
-            modules_run += 1
-            code = module_script(module, batch)
-            try:
-                rc, output = run_lean_script(code, timeout=timeout)
-            except subprocess.TimeoutExpired as exc:
-                failures.append({
-                    "module": module,
-                    "decls": batch,
-                    "returncode": "timeout",
-                    "output_tail": str(exc)[-4000:],
-                })
-                if not keep_going:
-                    break
-                continue
-            parsed = parse_biopsy_json(output)
-            rows.extend(enrich_row(row) for row in parsed)
-            if rc != 0 or len(parsed) != len(batch):
-                failures.append({
-                    "module": module,
-                    "decls": batch,
-                    "returncode": rc,
-                    "expected_rows": len(batch),
-                    "parsed_rows": len(parsed),
-                    "output_tail": output[-4000:],
-                })
-                if not keep_going:
-                    break
-        if failures and not keep_going:
-            break
+    if not failures or keep_going:
+        for module in sorted(by_module):
+            names = by_module[module]
+            for start in range(0, len(names), module_batch_size):
+                batch = names[start : start + module_batch_size]
+                modules_run += 1
+                code = module_script(module, batch)
+                try:
+                    rc, output = run_lean_script(code, timeout=timeout)
+                except subprocess.TimeoutExpired as exc:
+                    failures.append({
+                        "module": module,
+                        "decls": batch,
+                        "returncode": "timeout",
+                        "output_tail": str(exc)[-4000:],
+                    })
+                    if not keep_going:
+                        break
+                    continue
+                parsed = parse_biopsy_json(output)
+                rows.extend(enrich_row(row) for row in parsed)
+                if rc != 0 or len(parsed) != len(batch):
+                    failures.append({
+                        "module": module,
+                        "decls": batch,
+                        "returncode": rc,
+                        "expected_rows": len(batch),
+                        "parsed_rows": len(parsed),
+                        "output_tail": output[-4000:],
+                    })
+                    if not keep_going:
+                        break
+            if failures and not keep_going:
+                break
 
     written = write_jsonl(out_path, rows)
     report = {

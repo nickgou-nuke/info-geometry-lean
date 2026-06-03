@@ -77,6 +77,7 @@ theorem harmonic_iff_P_harm_eq
   · intro hx
     unfold IsHarmonic at hx
     unfold P_harm
+    dsimp
     rw [hx, map_zero]
     abel
   · intro hx
@@ -124,6 +125,7 @@ theorem harmonic_orthogonal_exact
     (hx : IsHarmonic O x) :
     B x (P_ext O half y) = 0 := by
   unfold P_ext
+  dsimp
   rw [B_smul_right half x (O (O y) + O y)]
   rw [B_add_right x (O (O y)) (O y)]
   have hO : ∀ z, B x (O z) = 0 := by
@@ -147,6 +149,7 @@ theorem harmonic_orthogonal_coexact
     (hx : IsHarmonic O x) :
     B x (P_coext O half y) = 0 := by
   unfold P_coext
+  dsimp
   rw [B_smul_right half x (O (O y) - O y)]
   rw [B_sub_right x (O (O y)) (O y)]
   have hO : ∀ z, B x (O z) = 0 := by

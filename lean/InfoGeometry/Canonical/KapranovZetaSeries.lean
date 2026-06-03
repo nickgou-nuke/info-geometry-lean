@@ -13,6 +13,8 @@ functions `Nat → R` with Cauchy convolution multiplication.
 ## Audit Protocol Map
 - BUCKET 1: CLOSED FINITE THEOREMS:
   `cauchyMul_apply`, `oneSeries_apply`, `mul_one_series`,
+  `cauchyMul_comm`, `mul_comm_series`, `geometricSeries_apply`,
+  `linearFactor_apply`, `linearFactor_mul_geometricSeries`,
   `mot_zeta_mult`.
 - BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES:
   `mot_zeta_mult` is conditional on the coefficientwise convolution relation
@@ -71,6 +73,71 @@ theorem mul_one_series {R : Type*} [Semiring R] (f : Series R) :
     simp [oneSeries, h_ne]
   rw [h_sum, zero_add]
   simp [oneSeries]
+
+/-- Cauchy convolution is commutative over a commutative coefficient semiring. -/
+theorem cauchyMul_comm {R : Type*} [CommSemiring R] (f g : Series R) :
+    cauchyMul f g = cauchyMul g f := by
+  funext n
+  rw [cauchyMul_apply, cauchyMul_apply]
+  rw [← Finset.sum_range_reflect (fun i => g i * f (n - i)) (n + 1)]
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hi_le : i ≤ n := by
+    exact Nat.le_of_lt_succ (Finset.mem_range.mp hi)
+  have h_reflect : n + 1 - 1 - i = n - i := by omega
+  have h_sub : n - (n - i) = i := by omega
+  rw [h_reflect, h_sub]
+  exact mul_comm (f i) (g (n - i))
+
+/-- Series multiplication is commutative over a commutative coefficient semiring. -/
+theorem mul_comm_series {R : Type*} [CommSemiring R] (f g : Series R) :
+    f * g = g * f :=
+  cauchyMul_comm f g
+
+/-- Formal geometric series with coefficient `c^n`. -/
+def geometricSeries {R : Type*} [Monoid R] (c : R) : Series R :=
+  fun n => c ^ n
+
+/-- The linear factor `1 - cT` as a formal series. -/
+def linearFactor {R : Type*} [Ring R] (c : R) : Series R :=
+  fun n => if n = 0 then 1 else if n = 1 then -c else 0
+
+@[simp]
+theorem geometricSeries_apply {R : Type*} [Monoid R] (c : R) (n : ℕ) :
+    geometricSeries c n = c ^ n :=
+  rfl
+
+@[simp]
+theorem linearFactor_apply {R : Type*} [Ring R] (c : R) (n : ℕ) :
+    linearFactor c n = if n = 0 then 1 else if n = 1 then -c else 0 :=
+  rfl
+
+/-- The finite Cauchy-coefficient proof that `(1 - cT) * (1 + cT + c^2T^2 + ...) = 1`. -/
+theorem linearFactor_mul_geometricSeries {R : Type*} [Ring R] (c : R) :
+    linearFactor c * geometricSeries c = (oneSeries : Series R) := by
+  funext n
+  change cauchyMul (linearFactor c) (geometricSeries c) n = oneSeries n
+  rw [cauchyMul_apply]
+  cases n with
+  | zero =>
+    simp [linearFactor, geometricSeries, oneSeries]
+  | succ k =>
+    change
+      Finset.sum (Finset.range (k + 1 + 1))
+          (fun i => linearFactor c i * geometricSeries c (k + 1 - i)) = 0
+    rw [Finset.sum_range_succ']
+    rw [Finset.sum_range_succ']
+    have h_tail :
+        Finset.sum (Finset.range k)
+            (fun i => linearFactor c (i + 1 + 1) *
+              geometricSeries c (k + 1 - (i + 1 + 1))) = 0 := by
+      apply Finset.sum_eq_zero
+      intro i hi
+      simp [linearFactor]
+    rw [h_tail]
+    have h_pow : c * c ^ k = c ^ (k + 1) := by
+      rw [pow_succ']
+    simp [linearFactor, geometricSeries, h_pow]
 
 /-- The coefficient series assigned to a class by a symmetric-power coefficient function. -/
 def Z {R : Type*} (x : R) (S : R → ℕ → R) : Series R :=

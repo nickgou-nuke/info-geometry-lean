@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 Carrier-only diagram layer for projective horizon/string pictures.
 
 This file is deliberately not a theorem owner.  It names the diagrammatic
-sockets:
+carriers:
 
 * source/sink endpoints,
 * global mirror pairing,
@@ -126,7 +126,7 @@ theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
     D.homogeneousReadout.readout (D.homogeneousReadout.scale c x)
       =
     c ^ D.homogeneousReadout.weight * D.homogeneousReadout.readout x :=
-  D.homogeneousReadout.scale_True c x
+  D.homogeneousReadout.readout_scale c x
 
 end WeylWeightedHorizonStringDiagram
 

@@ -7,13 +7,13 @@ import InfoGeometry.Meta.Architecture
 
 Split `Cl(1,1)` modular atom on the doubled real carrier.
 
-This file packages the existing modular-CPT witness surface as a thin
+This file packages the existing modular-CPT compatibility surface as a thin
 compatibility wrapper:
 
 * the underlying operator atom is `ModularCPTChiralAtom`;
 * the derived axis is the typed `KAxis`;
 * CPT invariance, scale/shape split compatibility, and related package-level
-  properties remain explicit witnesses.
+  properties are named as theorem-level obligations, not proof fields.
 
 It does not assert any prime-number, Lee--Yang, xi, or RH theorem.
 -/
@@ -35,8 +35,8 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 Compatibility wrapper for the split `Cl(1,1)` modular atom.
 
 The underlying algebraic core is the existing `ModularCPTChiralAtom`.  This
-packet adds explicit witness fields for the modular/CPT interpretation used by
-the scale/shape and wavelet-lane bridges.
+packet names the modular/CPT propositions used by the scale/shape and
+wavelet-lane bridges.  Their certificates live in separate theorems.
 -/
 @[rep_depth transport]
 structure Cl11ModularAtom (E : Type*)
@@ -44,28 +44,6 @@ structure Cl11ModularAtom (E : Type*)
   atom : ModularCPTChiralAtom E
   axis : KAxis E
   axis_eq : axis = atom.toKAxis
-
-  /-- CPT invariance of the modular atom, stored as a witness field. -/
-  cptInvariant : Prop
-  cptInvariant_sorryProof : cptInvariant
-
-  /-- Scale/shape compatibility of the modular atom, stored as a witness field. -/
-  scaleShapeSplit : Prop
-  scaleShapeSplit_sorryProof : scaleShapeSplit
-
-/-- Re-export of the CPT-invariance witness. -/
-@[rep_depth transport]
-theorem cptInvariant_True
-    (A : Cl11ModularAtom E) :
-    A.cptInvariant :=
-  A.cptInvariant_sorryProof
-
-/-- Re-export of the scale/shape compatibility witness. -/
-@[rep_depth transport]
-theorem scaleShapeSplit_True
-    (A : Cl11ModularAtom E) :
-    A.scaleShapeSplit :=
-  A.scaleShapeSplit_sorryProof
 
 /-- The derived typed `K`-axis is the one extracted from the modular atom. -/
 @[rep_depth transport]

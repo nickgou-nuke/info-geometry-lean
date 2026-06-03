@@ -337,12 +337,6 @@ structure BoundedTransformDatum
   F_phase_linear :
     PhaseLinear K F
 
-  /--
-  Proof-carrying certificate that `F` is the intended bounded transform of the
-  unbounded/spectral generator in the concrete model.
-  -/
-  bounded_transform_True : Prop
-
 namespace BoundedTransformDatum
 
 variable
@@ -430,8 +424,6 @@ settings.
 structure AdjointBackend
     (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
   adj : EndR H → EndR H
-
-  adjoint_True : Prop
 
 /--
 Compact/ideal backend for Kasparov compact defects.
@@ -532,12 +524,6 @@ structure BoundedKasparovCycle
       compactBackend.IsCompactLike
         (endCommutator F (representation.rep a))
 
-  /--
-  Certificate that these compact-defect laws instantiate the intended
-  Kasparov/Fredholm module in the concrete model.
-  -/
-  kasparov_cycle_True : Prop
-
 namespace BoundedKasparovCycle
 
 variable
@@ -635,7 +621,6 @@ theorem boundedTransformOwnerTarget :
     K := 0
     F := 0
     F_phase_linear := PhaseLinear.zero 0
-    bounded_transform_True := True
   }⟩
 
 /--

@@ -40,6 +40,21 @@ def as_dict(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def build_dedup_index(payload: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    by_target: dict[str, list[dict[str, Any]]] = {}
+    for row in payload.get("dedup_families", []):
+        if not isinstance(row, dict):
+            continue
+        members = row.get("member_sinks", [])
+        if not isinstance(members, list):
+            continue
+        for member in members:
+            target = str(member)
+            if target:
+                by_target.setdefault(target, []).append(row)
+    return by_target
+
+
 def merge_node_critic(node: dict[str, Any], packets: list[dict[str, Any]]) -> bool:
     if not packets:
         return False
@@ -86,7 +101,44 @@ def merge_node_critic(node: dict[str, Any], packets: list[dict[str, Any]]) -> bo
     return True
 
 
-def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_out: Path) -> dict[str, Any]:
+def merge_node_structural_dedup(node: dict[str, Any], families: list[dict[str, Any]]) -> bool:
+    if not families:
+        return False
+    attrs = as_dict(node.get("attrs"))
+    attrs = dict(attrs)
+    existing = as_dict(attrs.get("structural_dedup"))
+    top = sorted(
+        families,
+        key=lambda row: (
+            0 if str(row.get("relation_subtype", "")) == "compatibility_alias_candidate" else 1,
+            -float(row.get("family_score", 0.0) or 0.0),
+            str(row.get("family_id", "")),
+        ),
+    )[0]
+    family_ids = list(existing.get("family_ids", [])) if isinstance(existing.get("family_ids"), list) else []
+    for row in families:
+        fid = str(row.get("family_id", ""))
+        if fid and fid not in family_ids:
+            family_ids.append(fid)
+    attrs["structural_dedup"] = {
+        **existing,
+        "status": "classified",
+        "updated_at": utc_now(),
+        "family_id": str(top.get("family_id", "")),
+        "family_ids": family_ids,
+        "relation_type": str(top.get("relation_type", "true_dedup_candidate")),
+        "relation_subtype": str(top.get("relation_subtype", "true_dedup_candidate")),
+        "recommended_action": str(top.get("recommended_action", "review_for_contraction")),
+        "candidate_canonical_endpoint": str(top.get("candidate_canonical_endpoint", "")),
+        "shared_name_stem": str(top.get("shared_name_stem", "")),
+        "member_count": int(top.get("member_count", len(top.get("member_sinks", [])) if isinstance(top.get("member_sinks"), list) else 0) or 0),
+        "source_modification_allowed": False,
+    }
+    node["attrs"] = attrs
+    return True
+
+
+def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_out: Path, structural_dedup_path: Path | None = None) -> dict[str, Any]:
     snapshot = load_json(snapshot_path)
     packets = list(iter_jsonl(critic_packets_path))
     by_target: dict[str, list[dict[str, Any]]] = {}
@@ -94,14 +146,19 @@ def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_
         target = str(p.get("target", ""))
         if target:
             by_target.setdefault(target, []).append(p)
+    structural_dedup = load_json(structural_dedup_path) if structural_dedup_path and structural_dedup_path.exists() else {}
+    dedup_by_target = build_dedup_index(structural_dedup)
 
     updated = 0
+    dedup_updated = 0
     for node in snapshot.get("nodes", []):
         if not isinstance(node, dict):
             continue
         targets = [str(node.get("id", "")), str(node.get("name", ""))]
         node_packets: list[dict[str, Any]] = []
         seen: set[str] = set()
+        node_families: list[dict[str, Any]] = []
+        seen_families: set[str] = set()
         for t in targets:
             for p in by_target.get(t, []):
                 pid = str(p.get("packet_id", ""))
@@ -109,8 +166,16 @@ def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_
                     continue
                 seen.add(pid)
                 node_packets.append(p)
+            for row in dedup_by_target.get(t, []):
+                fid = str(row.get("family_id", ""))
+                if fid in seen_families:
+                    continue
+                seen_families.add(fid)
+                node_families.append(row)
         if merge_node_critic(node, node_packets):
             updated += 1
+        if merge_node_structural_dedup(node, node_families):
+            dedup_updated += 1
 
     metadata = as_dict(snapshot.get("metadata"))
     metadata = dict(metadata)
@@ -119,6 +184,9 @@ def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_
         "critic_packets": str(critic_packets_path),
         "packet_count": len(packets),
         "updated_nodes": updated,
+        "structural_dedup": str(structural_dedup_path) if structural_dedup_path else "",
+        "dedup_family_count": len(structural_dedup.get("dedup_families", [])) if isinstance(structural_dedup.get("dedup_families", []), list) else 0,
+        "dedup_updated_nodes": dedup_updated,
         "source_modification_allowed": False,
     }
     snapshot["metadata"] = metadata
@@ -130,9 +198,12 @@ def run(*, snapshot_path: Path, critic_packets_path: Path, out_path: Path, json_
         "created_at": utc_now(),
         "snapshot": str(snapshot_path),
         "critic_packets": str(critic_packets_path),
+        "structural_dedup": str(structural_dedup_path) if structural_dedup_path else "",
         "output_snapshot": str(out_path),
         "packet_count": len(packets),
         "updated_nodes": updated,
+        "dedup_family_count": len(structural_dedup.get("dedup_families", [])) if isinstance(structural_dedup.get("dedup_families", []), list) else 0,
+        "dedup_updated_nodes": dedup_updated,
         "source_modification_allowed": False,
     }
     json_out.parent.mkdir(parents=True, exist_ok=True)
@@ -144,6 +215,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Merge LeanTrail critic packets into graph snapshot attrs.critic.")
     parser.add_argument("--snapshot", default="artifacts/leantrail/graph_snapshot.vacuity.json")
     parser.add_argument("--critic-packets", default="artifacts/leantrail/critic_packets.jsonl")
+    parser.add_argument("--structural-dedup", default="")
     parser.add_argument("--out", default="artifacts/leantrail/graph_snapshot.critic.json")
     parser.add_argument("--json-out", default="artifacts/leantrail/critic_ingest_report.json")
     return parser.parse_args()
@@ -162,6 +234,7 @@ def main() -> int:
         critic_packets_path=packets_path,
         out_path=Path(args.out).resolve(),
         json_out=Path(args.json_out).resolve(),
+        structural_dedup_path=Path(args.structural_dedup).resolve() if args.structural_dedup else None,
     )
     print(f"Critic attrs merged: {report['output_snapshot']} (updated_nodes={report['updated_nodes']})")
     print(f"Operation report written: {args.json_out}")

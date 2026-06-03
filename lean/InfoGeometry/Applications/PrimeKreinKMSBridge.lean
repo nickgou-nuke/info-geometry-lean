@@ -300,8 +300,6 @@ structure PositiveKreinReadoutComparison
   positiveExpectation : Observable → ℝ
   /-- Signed Krein/Möbius index readout. -/
   kreinIndex : IndexReadout → ℝ
-  /-- Supplied comparison law. -/
-  comparison_True : Prop
 
 /-! ## 9. Full bridge package -/
 

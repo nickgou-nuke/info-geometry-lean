@@ -97,6 +97,20 @@ def contains_any(text: str, tokens: set[str]) -> bool:
     return any(tok in lowered for tok in tokens)
 
 
+def is_generated_helper_decl(name: str) -> bool:
+    parts = [part for part in str(name).split(".") if part]
+    if not parts:
+        return False
+    last = parts[-1]
+    if last in {"casesOn", "ctorIdx", "noConfusion", "noConfusionType", "rec", "recOn", "brecOn", "binductionOn"}:
+        return True
+    if last == "mk":
+        return True
+    if len(parts) >= 2 and parts[-2] == "mk" and last in {"inj", "noConfusion", "sizeOf_spec"}:
+        return True
+    return False
+
+
 def node_doc(node: dict[str, Any]) -> str:
     attrs = as_dict(node.get("attrs"))
     nested_attrs = as_dict(attrs.get("attrs"))
@@ -230,6 +244,8 @@ def generate_for_node(node: dict[str, Any], pkt_index: PacketIndex) -> list[dict
         return []
     module = str(node.get("module") or "")
     file = node.get("file") if isinstance(node.get("file"), str) else None
+    if is_generated_helper_decl(name):
+        return []
     attrs = as_dict(node.get("attrs"))
     vacuity = as_dict(attrs.get("vacuity"))
     hodge = as_dict(attrs.get("hodge"))

@@ -68,6 +68,13 @@ def safe_float(value: Any) -> float:
         return 0.0
 
 
+def is_compatibility_alias_dedup(row: dict[str, Any]) -> bool:
+    return (
+        str(row.get("relation_subtype", "")) == "compatibility_alias_candidate"
+        or str(row.get("recommended_action", "")) == "review_as_alias_family"
+    )
+
+
 def build_surface_maps(payload: dict[str, Any]) -> tuple[dict[str, str], dict[str, dict[str, int]]]:
     decl_category: dict[str, str] = {}
     module_counts: dict[str, dict[str, int]] = defaultdict(
@@ -188,10 +195,17 @@ def main() -> int:
             packets_by_module[module].append(row)
 
     dedup_by_module: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    suppressed_alias_dedup_by_module: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    suppressed_alias_dedup_total = 0
     for row in dedup.get("dedup_families", []):
         if not isinstance(row, dict):
             continue
         modules = parse_module_list(row.get("shared_sink_family"))
+        if is_compatibility_alias_dedup(row):
+            suppressed_alias_dedup_total += 1
+            for module in modules:
+                suppressed_alias_dedup_by_module[module].append(row)
+            continue
         for module in modules:
             dedup_by_module[module].append(row)
 
@@ -249,6 +263,8 @@ def main() -> int:
         dedup_rows_for_module = dedup_by_module.get(module, [])
         dedup_score = sum(safe_float(x.get("family_score")) for x in dedup_rows_for_module)
         dedup_norm = min(1.0, dedup_score / max(raw_score, 1.0))
+        suppressed_alias_rows_for_module = suppressed_alias_dedup_by_module.get(module, [])
+        suppressed_alias_score = sum(safe_float(x.get("family_score")) for x in suppressed_alias_rows_for_module)
 
         shell_ratio = min(1.0, 0.5 * th_shell + 0.35 * packet_shell + 0.15 * dedup_norm)
         retained_score = raw_score * (1.0 - shell_ratio)
@@ -286,6 +302,8 @@ def main() -> int:
                 "packet_shell_ratio": round(packet_shell, 4),
                 "dedup_family_count": len(dedup_rows_for_module),
                 "dedup_family_score": round(dedup_score, 4),
+                "suppressed_alias_dedup_family_count": len(suppressed_alias_rows_for_module),
+                "suppressed_alias_dedup_family_score": round(suppressed_alias_score, 4),
                 "dominant_shell_drivers": reasons,
             }
         )
@@ -304,6 +322,7 @@ def main() -> int:
         "top_shell_module": shell_heavy_rows[0]["module"] if shell_heavy_rows else "",
         "shell_class_counts": dict(shell_class_counts),
         "contractible_packet_count": len(contractible_packets),
+        "suppressed_alias_dedup_family_count": suppressed_alias_dedup_total,
     }
 
     payload = {
@@ -332,6 +351,7 @@ def main() -> int:
         f"- top shell-heavy hotspot: `{summary['top_shell_module']}`",
         f"- shell classes: `{summary['shell_class_counts']}`",
         f"- contractible packet candidates: `{summary['contractible_packet_count']}`",
+        f"- suppressed compatibility-alias dedup families: `{summary['suppressed_alias_dedup_family_count']}`",
         "",
         "## Residual Knots",
         md_table(
@@ -386,6 +406,7 @@ def main() -> int:
         "## Method",
         "- theorem-surface shell uses weighted suspicious theorem categories from `theorem-surface-index.json`",
         "- packet shell contracts `presentation_duplicate` packets by default and discounts `transport_projection` packets",
+        "- compatibility-alias dedup families are suppressed from shell pressure by default and reported separately",
         "- dedup families contribute extra shell pressure where a hotspot still carries exact repeated sink surfaces",
         "- residual score = raw structural score after removing the estimated shell ratio",
     ]

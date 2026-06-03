@@ -136,6 +136,56 @@ def _annotate_edge_path_states(
         edge.attrs = attrs
 
 
+def _dedupe_edges(edges: list[EdgeRecord]) -> tuple[list[EdgeRecord], int]:
+    """Merge redundant graph wires with the same semantic edge identity.
+
+    The LeanTrail graph treats `(src, dst, kind)` as the traversal edge key.
+    Multiple producers can report the same wire, especially depth-violation
+    overlays derived from both type and value dependency rows.  Keep one edge
+    and preserve provenance in `attrs.evidence_refs`.
+    """
+    by_key: dict[tuple[str, str, str], EdgeRecord] = {}
+    removed = 0
+    for edge in edges:
+        key = _edge_key(edge.src, edge.dst, edge.kind)
+        prior = by_key.get(key)
+        if prior is None:
+            attrs = dict(edge.attrs) if isinstance(edge.attrs, dict) else {}
+            refs = attrs.get("evidence_refs")
+            if isinstance(refs, list):
+                evidence_refs = {str(ref) for ref in refs if str(ref)}
+            else:
+                evidence_refs = set()
+            if edge.evidence_ref:
+                evidence_refs.add(edge.evidence_ref)
+            if evidence_refs:
+                attrs["evidence_refs"] = sorted(evidence_refs)
+            edge.attrs = attrs
+            by_key[key] = edge
+            continue
+
+        removed += 1
+        if edge.weight > prior.weight:
+            prior.weight = edge.weight
+        attrs = dict(prior.attrs) if isinstance(prior.attrs, dict) else {}
+        other_attrs = edge.attrs if isinstance(edge.attrs, dict) else {}
+        for attr_key, attr_value in other_attrs.items():
+            attrs.setdefault(attr_key, attr_value)
+        evidence_refs = set()
+        refs = attrs.get("evidence_refs")
+        if isinstance(refs, list):
+            evidence_refs.update(str(ref) for ref in refs if str(ref))
+        if prior.evidence_ref:
+            evidence_refs.add(prior.evidence_ref)
+        if edge.evidence_ref:
+            evidence_refs.add(edge.evidence_ref)
+        if evidence_refs:
+            attrs["evidence_refs"] = sorted(evidence_refs)
+            prior.evidence_ref = sorted(evidence_refs)[0]
+        prior.attrs = attrs
+    return list(by_key.values()), removed
+
+
 def _annotate_node_endpoints(nodes: list[NodeRecord], edges: list[EdgeRecord]) -> dict[str, int]:
     decl_ids = {node.id for node in nodes if node.kind == "Declaration"}
     indeg: dict[str, int] = {nid: 0 for nid in decl_ids}
@@ -435,6 +485,7 @@ class LeanTrailNormalizer:
                 if edge.src in include_decl_ids or edge.dst in include_decl_ids:
                     edges.append(edge)
 
+        edges, duplicate_edges_removed = _dedupe_edges(edges)
         _annotate_edge_path_states(
             edges,
             failed_index=failed_index,
@@ -458,6 +509,7 @@ class LeanTrailNormalizer:
                 "path_endpoints": endpoint_summary,
                 "failed_transition_edges": len(failed_index),
                 "locked_edges": len(locked_index),
+                "duplicate_edges_removed": duplicate_edges_removed,
             },
             "path_state_sources": {
                 "failed_transitions_file": str(failed_transitions_file),

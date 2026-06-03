@@ -43,6 +43,8 @@ Every concept row must be labeled with exactly one:
 - Prefer owner files over wrappers/umbrellas.
 - Detect proof debt with bounded regex (`\\bsorry\\b`, declaration-level `axiom`).
 - Mark inference as inference.
+- Do not convert a fast exact-name miss into `missing` until DAG / LeanTrail /
+  import-surface retrieval has also been checked.
 
 ## Workflow
 
@@ -74,6 +76,31 @@ rg -n --glob='*.lean' "theorem|lemma|def|structure|inductive|class" lean/InfoGeo
 - Open candidate files directly.
 - Verify whether declarations are theorem-bearing or only packaging wrappers.
 - Record concrete anchors (file + declaration names).
+
+### 3.5) Deep retrieval before absence claims
+
+Before labeling a concept `missing`, run the maintained retrieval surfaces:
+
+```bash
+# DAG declaration/index recovery
+rg -n "<TOKEN>|<ALIAS1>|<ALIAS2>" artifacts/dag/index/decls.jsonl artifacts/dag/index/morphisms.jsonl
+
+# LeanTrail snapshot / adapters
+rg -n "<TOKEN>|<ALIAS1>|<ALIAS2>" artifacts/leantrail/graph_snapshot.json artifacts/leantrail/arango/ig_nodes.jsonl artifacts/leantrail/arango/ig_edges.jsonl
+```
+
+If the task is corridor-level rather than declaration-level, also inspect:
+
+```bash
+rg -n "<TOKEN>|<ALIAS1>|<ALIAS2>" artifacts/dag/process-flow/defects.jsonl artifacts/dag/source-sink-bipartite.json artifacts/dag/structural-topology.json
+```
+
+Then classify the strongest result honestly as one of:
+- owner theorem surface present
+- compiled bridge/interface surface present
+- lexical/docs-only evidence
+- stale/seed-missing retrieval artifact
+- missing after deep retrieval
 
 ### 4) Debt/vacuity pass
 
@@ -158,6 +185,8 @@ Use the templates in:
 - Stats-backed recall evidence captured
 - Every matrix row has a status label
 - Every `implemented/interface/missing` claim has file anchors
+- Every `missing` claim also records whether DAG / LeanTrail / import-surface
+  retrieval was checked and whether any carrier was stale or missing
 - Docs-only/speculative content clearly separated from Lean owner code
 - Axiom/debt checks run on topic-matched Lean files
 - Context pack includes explicit boundaries and open questions

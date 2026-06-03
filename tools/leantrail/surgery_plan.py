@@ -474,6 +474,11 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--alignment-out", default="artifacts/leantrail/alignment_packets.jsonl")
     p.add_argument("--proof-hole-out", default="artifacts/leantrail/proof_hole_packets.jsonl")
     p.add_argument("--json-out", default="artifacts/leantrail/surgery_plan_report.json")
+    p.add_argument(
+        "--allow-unaudited-snapshot",
+        action="store_true",
+        help="Permit planning on a snapshot with zero kernel biopsy evidence. Intended for diagnostics only.",
+    )
     return p.parse_args()
 
 
@@ -481,6 +486,19 @@ def main() -> int:
     args = _parse_args()
     locks = Path(args.surgery_locks).resolve()
     vacuum, bridge, alignment, proof_holes, report = plan(Path(args.snapshot).resolve(), locks if locks.exists() else None)
+    if report.get("vacuity_evidence_nodes", 0) == 0 and not args.allow_unaudited_snapshot:
+        report = {
+            **report,
+            "ok": False,
+            "error": "missing_vacuity_evidence",
+            "message": "Input snapshot has no kernel biopsy evidence; run leantrailVacuityAudit and leantrailVacuityIngest first.",
+        }
+        report_path = Path(args.json_out).resolve()
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+        print(json.dumps(report, indent=2, ensure_ascii=True))
+        return 2
+    report = {**report, "ok": True}
     _write_jsonl(Path(args.vacuum_out).resolve(), vacuum)
     _write_jsonl(Path(args.bridge_out).resolve(), bridge)
     _write_jsonl(Path(args.alignment_out).resolve(), alignment)

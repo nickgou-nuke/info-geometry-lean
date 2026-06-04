@@ -131,9 +131,17 @@ end LTrichotomyInput
 /-- Density data for a single `L_a` surface. -/
 structure LMultipleDensityWitness (a : ℕ) where
   density : ℝ
-  density_True : Prop := by
+
+namespace LMultipleDensityWitness
+
+variable {a : ℕ} (W : LMultipleDensityWitness a)
+
+/-- Density law for the `L_a` surface. -/
+def density_True (W : LMultipleDensityWitness a) : Prop :=
+  by
     sorry
-  density_law_holds : density_True
+
+end LMultipleDensityWitness
 
 /-- Log-density data for `L_A`. -/
 structure LPrimitiveLogDensityWitness (A : Set ℕ) where

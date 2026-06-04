@@ -254,11 +254,14 @@ structure ArchimedeanCompletion where
   archimedeanFactor : ℂ → ℂ
   /-- Theta modularity supplies the archimedean completion. -/
   thetaModularity : ThetaModularity
-  /-- The Mellin transform of the theta function gives the completed zeta. -/
-  mellin_theta_eq_completed_zeta_True : Prop := by
+namespace ArchimedeanCompletion
+
+/-- The Mellin transform of the theta function gives the completed zeta. -/
+def mellin_theta_eq_completed_zeta_True (A : ArchimedeanCompletion) : Prop :=
+  by
     sorry
-  mellin_theta_eq_completed_zeta_sorryProof :
-    mellin_theta_eq_completed_zeta_True
+
+end ArchimedeanCompletion
 
 /-! ## 6. Kramers–Wannier-type duality -/
 

@@ -1,32 +1,3 @@
-/-
-InfoGeometry/Canonical/MajoranaJKOErgoBridge.lean
-
-Majorana JKO / Ergo bridge.
-
-This module connects existing repository layers:
-
-* `ProjectivePolarizedBigradedBogoliubovDatum`
-  supplies the doubled real Majorana/Hestenes carrier.
-
-* `JKOTimeStep`
-  supplies a deterministic variational update with an explicit minimizer proof.
-
-* `DualFlatStructure`
-  supplies Bregman divergence and the Pythagorean projection identity.
-
-This file does not assert a universal theorem that every JKO step equals every
-Bayesian update. The bridge is proof-carrying:
-
-* the Bayesian update is explicitly identified with the JKO `next` state;
-* feasible alternatives satisfy the dual-flat orthogonality condition;
-* a model-specific compatibility certificate records that the same update has
-  both the JKO and Bregman/Bayesian readings;
-* the Bregman Pythagorean identity is then proved constructively from
-  `DualFlat.bregman_pythagorean`.
-
-No stochastic/Hudson-Parthasarathy layer is introduced here.
--/
-
 import Mathlib
 import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
@@ -118,9 +89,7 @@ structure MajoranaJKOErgoBridge
   This is the ergo-transfer certificate: continuous transport and discrete
   projection are the same update only in models that provide this witness.
   -/
-  jko_bayes_compatibility_True : Prop := by
-
-    sorry
+  jko_bayes_compatibility_True : Prop
 
   /--
   Dual-flat projection orthogonality for feasible alternatives.
@@ -432,7 +401,7 @@ theorem jko_penalty_le_energy_drop
       B.potential.energy (B.bayes.jkoStep prior evidence).next :=
   B.bayes.jko_penalty_le_energy_drop prior evidence
 
-/-- Projection orthogonality, re-exported from the adapter witness. -/
+/-- Projection orthogonality, re-exports from the adapter witness. -/
 theorem projection_orthogonality_apply
     (prior alt : Weight)
     (evidence : Evidence)

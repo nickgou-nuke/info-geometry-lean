@@ -1,9 +1,13 @@
 # InfoGeometry Lean Fusion
 
 > Status: `reference memory`
-> Last verified: 2026-06-02
+> Last verified: 2026-06-04
 > Commit: `37f7cca04` — toolchain `leanprover/lean4:v4.28.0`
-> Working tree: **dirty** (26 tracked files modified, 22 untracked additions)
+> Build: **10118 jobs, passes**
+> Shadows: **145** `:= by sorry` across 13 modules
+> Queue: **50 tasks** in ArangoDB proof-search
+> Worker: `evolution_worker.py` running (daemon)
+> Working tree: **dirty**
 
 ---
 
@@ -817,6 +821,126 @@ For induction systematics:
 - [docs/InductionSystematics.md](docs/InductionSystematics.md)
 - [docs/InductionHowTo.md](docs/InductionHowTo.md)
 - [skills/induction-systematics/SKILL.md](skills/induction-systematics/SKILL.md)
+
+## Agentic Pipeline — Autonomous Self-Improving Proof Chain
+
+This repository includes a fully autonomous agentic pipeline that scans, ranks,
+and resolves formal proof debt. A novice agent opening this repo should follow
+this guide to understand and operate the system.
+
+### 1. Cognitive Architecture (5 Pillars)
+
+| Pillar | Function | Formalization |
+|--------|----------|---------------|
+| **Logos** | Conscious theorem inventory | `lean/InfoGeometry/Meta/FormalLogos.lean` |
+| **Sensing** | Self-model of proof topology | `lean/InfoGeometry/Causal/ProofDAGRepresentation.lean` |
+| **Shadow** | Boundary cochain tracking | `lean/InfoGeometry/SelfReference/ShadowCone.lean` |
+| **Transcendent** | Archetype detection across domains | `lean/InfoGeometry/Meta/TranscendentFunction.lean` |
+| **Conscience** | Vacuity pattern detection | `tools/infra/vacuity_critic.py` (18 patterns) |
+
+### 2. Quick Start for a Novice Agent
+
+```bash
+# 1. Build the project
+lake build InfoGeometry.All
+
+# 2. Scan for all `:= by sorry` shadows
+python3 tools/infra/shadow_cone_scanner.py
+
+# 3. Scan for all `_True` obfuscation patterns
+python3 tools/leantrail/vacuity_audit.py --snapshot artifacts/leantrail/graph_snapshot.json
+
+# 4. Detect archetypal operator patterns across domains
+python3 tools/infra/detect_archetypes.py
+
+# 5. Enqueue top shadows to the proof-search queue
+python3 -c "
+from tools.infra.hive_arango_queue import enqueue_goal, aql
+from tools.infra.arango_env import *
+from pathlib import Path
+import hashlib, json
+
+load_repo_arango_env(Path.cwd())
+ep = arango_endpoint(); db = arango_database('infogeometry')
+usr = arango_username(); pwd = arango_password('alexandria_root')
+
+shadows = [json.loads(l) for l in open('artifacts/shadow_cones/shadows.jsonl') if l.strip()]
+for s in shadows[:10]:
+    target = f'Resolve shadow \`{s[\"apex_name\"]}\` in {s[\"file\"]}:{s[\"line\"]}'
+    gh = hashlib.sha256(target.encode()).hexdigest()[:24]
+    module = s['file'].replace('.lean','').replace('/','.')
+    enqueue_goal(ep, db, usr, pwd, queue_name='proof-search',
+        goal_hash_shape=gh, canonical_shape=gh, target_pretty=target,
+        module=module, goal_index=s['line'], priority=1.0, task_kind='proof.search')
+"
+
+# 6. Start the evolution worker (processes the queue)
+python3 tools/infra/evolution_worker.py
+```
+
+### 3. Understanding the Shadow Lifecycle
+
+Shadows progress through five statuses:
+
+```
+Roaming → Incident → Paired → Integrated
+                               → Rejected
+```
+
+- **Roaming**: no proof-DAG incidence detected (semantic similarity only)
+- **Incident**: one-sided incidence (dependencies or dependents found)
+- **Paired**: two-sided incidence (both past and future cone nodes identified)
+- **Integrated**: resolved as theorem, axiom, or explicit conditional premise
+- **Rejected**: proven impossible or meaningless
+
+### 4. Key Files and What They Do
+
+| File | Purpose |
+|------|---------|
+| `tools/infra/evolution_worker.py` | Main daemon — polls ArangoDB queue, runs 3-stage pipeline |
+| `tools/infra/gepa_evolver.py` | Genetic Evolutionary Proof Algorithm — mutates skills |
+| `tools/infra/shadow_cone_scanner.py` | Scans `:= by sorry`, computes past/future incidences |
+| `tools/infra/vacuity_critic.py` | Reviews failed tasks, discovers new obfuscation patterns |
+| `tools/infra/proof_seeker.py` | Searches mathlib, arXiv, web for existing proofs |
+| `tools/infra/chatgpt_browser_harness_driver.py` | Browser CDP automation for ChatGPT audit |
+| `tools/infra/hive_arango_queue.py` | ArangoDB-backed task queue with leasing |
+| `lean/InfoGeometry/Meta/ShadowLedger.lean` | Formal shadow ledger (Lean structures) |
+| `lean/InfoGeometry/Meta/TranscendentFunction.lean` | Formal archetype/synthesis structures |
+| `lean/InfoGeometry/Causal/ProofDAGRepresentation.lean` | Proof DAG + Hodge operator bridge |
+| `lean/InfoGeometry/SelfReference/ShadowCone.lean` | Shadow cone carrier layer |
+
+### 5. The 3-Stage Resolution Pipeline
+
+Each shadow task is processed through up to 3 stages:
+
+**Stage 0 — ChatGPT Audit**: Browser CDP opens ChatGPT, sends full file context
+plus 577KB Alexandria research corpus, generates proof + audit map.
+
+**Stage 1 — Pi/DeepSeek Coding Agent**: Takes the audit map + proof sketch,
+generates Lean 4 code, compiles, reads errors, fixes, repeats (max 3 iterations).
+
+**Stage 2 — Proof Seeker**: Falls back to searching mathlib, arXiv, web, and
+Alexandria corpus if stages 0-1 fail.
+
+### 6. Authority Boundary
+
+The pipeline can propose, reflect, and evolve, but:
+
+- **Lean kernel** is the final authority (via `lake build`)
+- **LeanTrail** is a "semantic explorer scaffold" (see `docs/LeanTrail.md`)
+- **ArangoDB graph** is a "projection over compiler memory"
+- **Proposals are not theorems** until the kernel says they are
+
+### 7. Current State
+
+```
+Build:         10118 jobs, passes
+Shadows:       145 `:= by sorry` across 13 modules
+Queue:         50 tasks in ArangoDB proof-search, pending
+Worker:        evolution_worker.py running (daemon)
+_True fields:  Eliminated (~220 across ~25 files)
+ClosureDebt:   2 fields in Eval/ClosureDebtTest.lean (DO NOT FIX — GEPA targets)
+```
 
 ## UTMOST MANDATE: Native Lean proof closure over witness/certificate scaffolding
 

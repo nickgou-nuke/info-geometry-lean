@@ -235,6 +235,8 @@ class Node3_NilpotentShear (V : Type*) [AddCommGroup V] [Module ℝ V]
   N_nilpotent : ∀ x, N (N x) = 0
   N_locks_kernel : ∀ x, Node1_TriFacetOperator.O x = 0 → N x = 0
 
+section NilpotentShear
+
 variable [Node3_NilpotentShear V]
 
 theorem shear_preserves_kernel (x : V) :
@@ -248,6 +250,8 @@ theorem shear_zero_on_harmonic_image (x : V) :
     Node3_NilpotentShear.N (harmonic_projector x) = 0 :=
   Node3_NilpotentShear.N_locks_kernel (harmonic_projector x)
     (O_harmonic_projector (V := V) x)
+
+end NilpotentShear
 
 class Node4_MajoranaBEC (V : Type*) [AddCommGroup V] [Module ℝ V]
   [Node0_KreinSpace V] [Node1_TriFacetOperator V] [Node3_NilpotentShear V] where
@@ -345,6 +349,52 @@ theorem harmonic_comp_coexact_lin : (harmonic_projector_lin : V →ₗ[ℝ] V).c
   ext x
   simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.zero_apply]
   exact harmonic_coexact_disjoint x
+
+/-- A vector lies in the range of the exact projector iff it is fixed by `O`. -/
+theorem mem_range_exact_projector_lin_iff (x : V) :
+    x ∈ LinearMap.range (exact_projector_lin : V →ₗ[ℝ] V) ↔ Node1_TriFacetOperator.O x = x := by
+  constructor
+  · rintro ⟨y, rfl⟩; exact O_exact_projector y
+  · intro h; refine ⟨x, ?_⟩; have hO2 : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = x := by
+      rw [h, h]
+    dsimp [exact_projector_lin, exact_projector]; rw [hO2, h]; calc
+      (1/2 : ℝ) • (x + x) = (1/2 : ℝ) • x + (1/2 : ℝ) • x := by rw [smul_add]
+      _ = ((1/2 : ℝ) + (1/2 : ℝ)) • x := by rw [add_smul]
+      _ = (1 : ℝ) • x := by norm_num
+      _ = x := by simp
+
+/-- A vector lies in the range of the coexact projector iff it is anti-fixed by `O`. -/
+theorem mem_range_coexact_projector_lin_iff (x : V) :
+    x ∈ LinearMap.range (coexact_projector_lin : V →ₗ[ℝ] V) ↔ Node1_TriFacetOperator.O x = -x := by
+  constructor
+  · rintro ⟨y, rfl⟩; exact O_coexact_projector y
+  · intro h; refine ⟨x, ?_⟩; have hO2 : Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = x := by calc
+      Node1_TriFacetOperator.O (Node1_TriFacetOperator.O x) = Node1_TriFacetOperator.O (-x) := by rw [h]
+      _ = - Node1_TriFacetOperator.O x := by rw [map_neg]
+      _ = - (-x) := by rw [h]
+      _ = x := by simp
+    dsimp [coexact_projector_lin, coexact_projector]; rw [hO2, h]; calc
+      (1/2 : ℝ) • (x - (-x)) = (1/2 : ℝ) • (x + x) := by rw [sub_neg_eq_add]
+      _ = (1/2 : ℝ) • x + (1/2 : ℝ) • x := by rw [smul_add]
+      _ = ((1/2 : ℝ) + (1/2 : ℝ)) • x := by rw [add_smul]
+      _ = (1 : ℝ) • x := by norm_num
+      _ = x := by simp
+
+/-- A vector lies in the range of the harmonic projector iff it is annihilated by `O`. -/
+theorem mem_range_harmonic_projector_lin_iff (x : V) :
+    x ∈ LinearMap.range (harmonic_projector_lin : V →ₗ[ℝ] V) ↔ Node1_TriFacetOperator.O x = 0 := by
+  constructor
+  · rintro ⟨y, rfl⟩; exact O_harmonic_projector y
+  · intro h; refine ⟨x, ?_⟩; simp [harmonic_projector_lin, harmonic_projector, h]
+
+/-- The zero operator is a concrete nilpotent shear, proving `Node3_NilpotentShear` is
+not vacuous. -/
+def nilpotentShearZero : Node3_NilpotentShear V where
+  N := (0 : V →ₗ[ℝ] V)
+  N_nilpotent x := by simp
+  N_locks_kernel x h := by simp
+
+instance : Node3_NilpotentShear V := nilpotentShearZero
 
 end HodgeKreinTriFacet
 

@@ -76,12 +76,11 @@ theorem drazin_readout_eq_mellin_realPart :
 packet is normalizable. -/
 @[rep_depth operator]
 theorem scalarReadout_on_criticalLine
-    (hNormalizable : B.majorana.normalizable_True) :
+    (hNormalizable : B.majorana.normalizable) :
     InfoGeometry.Arithmetic.RHQuantumStabilityBridge.IsCriticalLineRealPart
       B.scalarReadout := by
-  simpa [B.majorana_readout] using
-    InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaZeroModeNormalizabilityPacket.criticalLine_of_normalizable
-      B.majorana hNormalizable
+  have h_critical := (B.majorana.normalizable_iff_criticalLine).mp hNormalizable
+  simpa [B.majorana_readout] using h_critical
 
 end DrazinMajoranaMellinCalibration
 

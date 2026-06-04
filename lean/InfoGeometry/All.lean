@@ -303,6 +303,7 @@ import InfoGeometry.Meta.CompilerTelemetry
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.DrazinRefactor
 import InfoGeometry.Meta.GromovErgostructureBridge
+import InfoGeometry.Meta.FormalLogos
 import InfoGeometry.Meta.HiveLogos
 import InfoGeometry.Meta.InductiveInvariantPacket
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP

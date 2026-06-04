@@ -45,6 +45,90 @@ def lin (a b c d : R) (P : HomPoint2 R) : HomPoint2 R where
 def det2 (a b c d : R) : R :=
   a * d - b * c
 
+@[simp] theorem det2_identity :
+    det2 (1 : R) 0 0 1 = 1 := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_duplicate_rows_zero (a b : R) :
+    det2 a b a b = 0 := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_duplicate_cols_zero (a b : R) :
+    det2 a a b b = 0 := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_swap_rows (a b c d : R) :
+    det2 c d a b = -det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_swap_cols (a b c d : R) :
+    det2 b a d c = -det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_row1_add (a b a' b' c d : R) :
+    det2 (a + a') (b + b') c d = det2 a b c d + det2 a' b' c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_row2_add (a b c d c' d' : R) :
+    det2 a b (c + c') (d + d') = det2 a b c d + det2 a b c' d' := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_col1_add (a c a' c' b d : R) :
+    det2 (a + a') b (c + c') d = det2 a b c d + det2 a' b c' d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_col2_add (a c b d b' d' : R) :
+    det2 a (b + b') c (d + d') = det2 a b c d + det2 a b' c d' := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_row1_smul (r a b c d : R) :
+    det2 (r * a) (r * b) c d = r * det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_row2_smul (r a b c d : R) :
+    det2 a b (r * c) (r * d) = r * det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_col1_smul (r a b c d : R) :
+    det2 (r * a) b (r * c) d = r * det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_col2_smul (r a b c d : R) :
+    det2 a (r * b) c (r * d) = r * det2 a b c d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_upper_triangular (a b d : R) :
+    det2 a b 0 d = a * d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_lower_triangular (a c d : R) :
+    det2 a 0 c d = a * d := by
+  unfold det2
+  ring
+
+@[simp] theorem det2_mul
+    (a b c d e f g h : R) :
+    det2 (a * e + b * g) (a * f + b * h)
+      (c * e + d * g) (c * f + d * h)
+      =
+    det2 a b c d * det2 e f g h := by
+  unfold det2
+  ring
+
 /-- Bracket homogeneity in the left argument. -/
 @[simp] theorem bracket_scale_left
     (l : R) (P Q : HomPoint2 R) :
@@ -207,4 +291,3 @@ theorem crossRatio_lin_cross_mul
 end HomPoint2
 
 end InfoGeometry.Projective.KleinCrossRatioInvariant
-

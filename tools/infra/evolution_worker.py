@@ -297,46 +297,58 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
 
 
 def _find_real_sorries(limit: int = 5) -> list[Any]:
-    """Find actual _True:Prop:=by sorry patterns in the codebase.
+    """Scan the Lean codebase for actual `sorry` tokens (not in comments/strings).
 
-    Scans for `field_True : Prop := by` followed by a `sorry` line,
-    OR `field_True : Prop := by sorry` on the same line.
+    Returns up to *limit* EvalTask objects pointing to real proof gaps.
+    Files that have already been processed (no `sorry` left) are skipped.
     """
     from tools.infra.gepa_real_eval import EvalTask
-    import re
+    import re, hashlib
 
     results = []
-    # Known-good files and their sorry line numbers (verified)
-    verified_sorries = [
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 160, "coherence_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 301, "tag_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 311, "channel_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 327, "tir_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 335, "metal_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 339, "diattenuation_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 350, "chiral_transport_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/JonesCalibration.lean", 413, "divisor_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/SpectralTriple.lean", 356, "logarithmicDivergenceExtraction_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/SpectralTriple.lean", 374, "meromorphicContinuation_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/CliffordAtomsZ2n.lean", 493, "calibration_True"),
-        ("lean/InfoGeometry/OperatorAlgebra/CliffordAtomsZ2n.lean", 507, "stacking_True"),
-        ("lean/InfoGeometry/Canonical/ZetaFunctionalEquationLayer.lean", 259, "mellin_theta_eq_completed_zeta_True"),
-    ]
+    lean_dir = _REPO / "lean" / "InfoGeometry"
 
-    for file_path, line, field in verified_sorries:
-        abs_path = _REPO / file_path
-        if not abs_path.exists():
-            continue
-        results.append(EvalTask(
-            file=file_path, line=line,
-            module=file_path.replace(".lean", "").replace("/", "."),
-            description=f"Replace `{field}` in {file_path}:{line}",
-            goal_hash=hashlib.sha256(f"{file_path}:{line}".encode()).hexdigest()[:24],
-        ))
+    for f in sorted(lean_dir.rglob("*.lean")):
         if len(results) >= limit:
-            return results
+            break
 
-    return results
+        text = f.read_text(errors="replace")
+        if "sorry" not in text:
+            continue
+
+        lines = text.split("\n")
+        in_block_comment = False
+
+        for i, line in enumerate(lines, 1):
+            if len(results) >= limit:
+                break
+
+            stripped = line.strip()
+
+            # Track block comments /- ... -/
+            if in_block_comment:
+                if "-/" in stripped:
+                    in_block_comment = False
+                continue
+            if stripped.startswith("/-"):
+                in_block_comment = True
+                continue
+
+            # Strip inline comments and string literals
+            code_part = line.split("--")[0]
+            code_part = re.sub(r'"[^"]*"', '', code_part)
+
+            # A real `sorry` is a standalone keyword — not in comments, strings, or option names
+            if re.search(r'(?<![a-zA-Z0-9_.])\bsorry\b', code_part):
+                rel = f.relative_to(_REPO)
+                results.append(EvalTask(
+                    file=str(rel), line=i,
+                    module=str(rel).replace(".lean", "").replace("/", "."),
+                    description=f"Fill `sorry` at {rel}:{i}",
+                    goal_hash=hashlib.sha256(f"{rel}:{i}".encode()).hexdigest()[:24],
+                ))
+
+    return results[:limit]
 
 
 def _extract_docstring(code: str, near_line: int) -> str:

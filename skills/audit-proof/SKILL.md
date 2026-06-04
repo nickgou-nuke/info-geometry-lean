@@ -13,7 +13,6 @@ Purpose:
 - Prove non-trivial mathematical lemmas that add genuine logical value to Lean libraries.
 - Minimize proof debt by refusing wrappers, sockets, synthetic helper layers, fake bridge modules, boilerplate, and proof-carrying data containers.
 - Keep generated content dense, theorem-owner-local, and kernel-checkable.
-- Align the repair with the repo's production evolution system in `docs/PRODUCTION_EVOLUTION_SYSTEM.md`.
 
 Hard rules:
 1. Output Lean code only when asked to formalize or repair proof code. Do not output conversational prose, explanations, summaries, praise, or speculative interpretation in code-generation mode.
@@ -49,10 +48,3 @@ Validation:
 - Run staged proof-quality gates before committing when requested.
 - Commit only source files that are directly part of the theorem-owner change.
 - Never commit generated artifacts or unrelated dirty files.
-- Prefer the owner-file proof corridor over auxiliary wrapper updates unless the owner surface is unavailable.
-
-Failure condition:
-- Outputting conversational filler in code-generation mode, adding wrapper/proxy proof surfaces, or claiming closure from data/certificates/witnesses is a failed audit.
-
-## Evolution Pipeline
-This skill is dynamically integrated into the autonomous evolution pipeline. Proposers (GEPA/DSPy) mutate this skill to improve Pareto performance during real evaluation. For details on queue commands and worker operations, refer to [PRODUCTION_EVOLUTION_SYSTEM.md](file:///home/goutev/repos/info-geometry-lean/docs/PRODUCTION_EVOLUTION_SYSTEM.md).

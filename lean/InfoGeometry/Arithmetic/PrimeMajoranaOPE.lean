@@ -82,15 +82,10 @@ structure MobiusCurrentOPE
   cField : PrimeLabel → Field
   dField : PrimeLabel → Field
   current : PrimeLabel → Field
-  current_c_True : Prop := by
-    sorry
-  current_d_True : Prop := by
-    sorry
+  current_c_True : Prop
+  current_d_True : Prop
 
 namespace MobiusCurrentOPE
-
-variable {PrimeLabel Field : Type*}
-variable (J : MobiusCurrentOPE PrimeLabel Field)
 
 end MobiusCurrentOPE
 

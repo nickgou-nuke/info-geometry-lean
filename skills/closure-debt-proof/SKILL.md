@@ -9,6 +9,15 @@ description: >
 
 ## Constructive Closure Mandate
 
+This skill is part of the repository's executed autonomous evolution pipeline.
+Implementation-level architecture lives in:
+- `docs/PRODUCTION_EVOLUTION_SYSTEM.md`
+- `tools/infra/evolution_worker.py`
+- `tools/infra/gepa_evolver.py`
+- `tools/infra/gepa_real_eval.py`
+- `tools/infra/proof_seeker.py`
+- `tools/infra/vacuity_critic.py`
+
 The `_True : Prop := by sorry` and `_sorryProof` patterns are the **prima materia**
 of obfuscation. Every such field that defaults to `True` or `by sorry` hides
 a real proof obligation behind a certificate wrapper.

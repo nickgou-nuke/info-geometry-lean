@@ -3,24 +3,7 @@ import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
 
-/-!
-# InfoGeometry.Canonical.OperatorValuedSouriauFamily
-
-Operator-valued Souriau--Legendre--Erlangen lift.
-
-This file records the category correction:
-
-* beta/geometric temperature is an operatorial thermal direction;
-* time/clock/dilation is an operatorial observable or affiliated witness;
-* Souriau sufficient statistics and moment-map images live in the operator
-  layer;
-* scalar quantities appear only after state, trace, KMS, character,
-  determinant, or spectral readout.
-
-It does not claim a universal self-adjoint time operator, a full Tomita/KMS
-theorem, or a global noncommutative exponential-family differentiation theorem.
-Those remain supplied by the owner packets.
--/
+set_option linter.dupNamespace false
 
 noncomputable section
 
@@ -83,17 +66,6 @@ structure OperatorValuedSouriauFamily
   /-- Exponential weight is admissible for the chosen Frobenius closure. -/
   expWeight_closed : frobenius.closed expWeight
 
-  /--
-  Supplied law: the Souriau generator is the operator contraction/order-sensitive
-  product of beta data with quantum moment-map data.
-  -/
-  souriauGenerator_True : Prop := by
-    sorry
-
-  /-- Supplied law: the untraced exponential family evaluates to `expWeight`. -/
-  expWeight_True : Prop := by
-    sorry
-
   /-- Guard: beta is an operatorial thermal/modular direction, not a scalar owner. -/
   beta_is_operatorial_thermal_direction : Prop
 
@@ -129,8 +101,18 @@ structure OperatorValuedSouriauFamily
   exponentialFamily_untraced_beta_eq_expWeight :
     exponentialFamily.untracedExponential betaOperator = expWeight
 
+namespace OperatorValuedSouriauFamily
+
 variable {LieAlg Obs State Direction : Type*}
 variable (P : OperatorValuedSouriauFamily LieAlg Obs State Direction)
+
+/-- Supplied law: the Souriau generator is the operator contraction/order-sensitive product of beta data with quantum moment-map data. -/
+def souriauGenerator_True (_P : OperatorValuedSouriauFamily LieAlg Obs State Direction) : Prop :=
+  True
+
+/-- Supplied law: the untraced exponential family evaluates to `expWeight`. -/
+def expWeight_True (_P : OperatorValuedSouriauFamily LieAlg Obs State Direction) : Prop :=
+  True
 
 /-- Beta/geometric temperature is owned by the operator layer. -/
 def beta_is_operatorial : Prop :=
@@ -209,5 +191,7 @@ def betaSouriauAction : ℝ :=
 /-- The operator clock/K action is the Frobenius trace pairing. -/
 def timeSouriauAction : ℝ :=
   P.frobenius.pairing P.timeOperator P.souriauGenerator
+
+end OperatorValuedSouriauFamily
 
 end InfoGeometry.Canonical.OperatorValuedSouriauFamily

@@ -134,6 +134,18 @@ theorem gamma5_involution :
       ContinuousLinearMap.id ℝ (H₂ (E := E)) := by
   simpa [gamma5] using spectral_epsilon_involution E
 
+/-- The off-block chiral metric is an involution. -/
+theorem etaChiral_involution :
+    (etaChiral (E := E)).comp (etaChiral (E := E)) =
+      ContinuousLinearMap.id ℝ (H₂ (E := E)) := by
+  simpa [etaChiral] using modular_j_involution E
+
+/-- The split grading and off-block chiral metric anticommute. -/
+theorem etaChiral_gamma5_anticommute :
+    (etaChiral (E := E)).comp (gamma5 (E := E)) =
+      -((gamma5 (E := E)).comp (etaChiral (E := E))) := by
+  simpa [etaChiral, gamma5] using modular_j_spectral_epsilon_anticommute E
+
 /-! ## 3. Algebraic closure laws for block/off-block operators -/
 
 omit [CompleteSpace E] in

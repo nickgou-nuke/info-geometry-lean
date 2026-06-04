@@ -27,8 +27,9 @@ dictionary. Each success is archived with fitness score.
 | ChatGPT Auditor | `run_audit.py` | Browser CDP → full file context → formatted code extraction |
 | Vacuity Critic | `vacuity_critic.py` | Discovers new obfuscation pattern synonyms |
 | Proof Seeker | `proof_seeker.py` | arXiv/Mathlib search on failure |
-focused on a declared task until the task is done, blocked, paused, cleared, or
-preempted by the user.
+
+The loop keeps an agent focused on a declared task until the task is done,
+blocked, paused, cleared, or preempted by the user.
 
 ## Invariants
 

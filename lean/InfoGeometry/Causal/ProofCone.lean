@@ -73,47 +73,47 @@ def trace (A : CausalMat2) : ℝ :=
 
 @[simp] theorem future_idempotent :
     mul future future = future := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [mul, future, Matrix.mul_apply]
 
 @[simp] theorem past_idempotent :
     mul past past = past := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [mul, past, Matrix.mul_apply]
 
 @[simp] theorem future_past_zero :
     mul future past = zero := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [mul, future, past, zero, Matrix.mul_apply]
 
 @[simp] theorem past_future_zero :
     mul past future = zero := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [mul, future, past, zero, Matrix.mul_apply]
 
 @[simp] theorem hodge_laplacian_zero :
     hodgeLaplacian = zero := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [hodgeLaplacian, add, mul, future, past, zero, Matrix.mul_apply]
 
 @[simp] theorem dirac_operator_identity :
     diracOperator = one := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [diracOperator, add, future, past, one]
 
 @[simp] theorem dirac_laplacian_identity :
     diracLaplacian = one := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [diracLaplacian, diracOperator, add, mul, future, past, one, Matrix.mul_apply]
 
 @[simp] theorem chirality_recovers_orientation :
     chirality = orientation := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [chirality, sub, future, past, orientation]
 
 @[simp] theorem orientation_involutive :
     mul orientation orientation = one := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j; fin_cases i <;> fin_cases j <;>
     norm_num [mul, orientation, one, Matrix.mul_apply]
 
 @[simp] theorem det_orientation :

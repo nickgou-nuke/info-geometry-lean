@@ -2,6 +2,10 @@
 
 Audit date: 2026-06-06.
 
+Shallow-clone audit updated: 2026-06-06. All nested git checkouts under
+`external_refs/` and `external/` now report `rev-parse --is-shallow-repository`
+as `false`.
+
 Source archive audited:
 
 ```text
@@ -19,7 +23,8 @@ external/
 
 The archive was not fully represented as git checkouts in this repo at audit
 time. The missing checkouts listed below were cloned from the local archive into
-`external_refs/` after the audit.
+`external_refs/` after the audit. A follow-up unshallow pass fetched full
+history and tags for every shallow external checkout.
 
 Most source dependencies from the archive are present under `external_refs/` at
 the same git commit. The real gaps are:
@@ -64,6 +69,7 @@ These repositories are now present as local nested git checkouts under
 `external_refs/`. They were cloned from the local archive paths and then had
 their `origin` remotes reset to upstream URLs. Each checkout also has an
 `archive` remote pointing back to `/media/goutev/SP DS72/auto/external`.
+They have also been unshallowed from upstream.
 
 They are intentionally not staged as top-level gitlinks/submodules yet. Decide
 separately whether to add them as submodules, keep them as untracked local
@@ -118,7 +124,27 @@ QuAIRKit
 qutip
 ```
 
-`qutip` is already present at the same commit. `QuAIRKit` is missing.
+Both are present. `qutip` was already present at the same commit; `QuAIRKit` was
+cloned from the archive and then unshallowed from upstream.
+
+## Shallow Clone Status
+
+The follow-up audit checked 86 nested git repositories under:
+
+```text
+external_refs/
+external/
+```
+
+Result:
+
+```text
+shallow_count = 0
+error_count = 0
+```
+
+This includes the large repositories `mirror-afp-devel`, `qiskit`, `sage`,
+`sympy`, `vampire`, `z3`, and the newly cloned archive repos.
 
 ## Organization Policy
 

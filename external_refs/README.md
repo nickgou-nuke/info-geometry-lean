@@ -52,6 +52,14 @@ RIA_EISA
 ```
 
 They are nested git checkouts with upstream `origin` remotes and local `archive`
-remotes. They are not yet staged as top-level submodules/gitlinks.
+remotes. They were unshallowed after cloning. They are not yet staged as
+top-level submodules/gitlinks.
+
+As of the 2026-06-06 follow-up audit, all nested git checkouts under
+`external_refs/` and `external/` are full-history checkouts:
+
+```text
+shallow_count = 0
+```
 
 `pyw` is present as source but still lacks `.git` metadata.

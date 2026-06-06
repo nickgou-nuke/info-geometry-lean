@@ -37,10 +37,10 @@ When importing from an archive, preserve one of:
 2. a manifest recording archive path, origin, HEAD, and tracked-file count;
 3. a clear note that the directory is source-only and not a full checkout.
 
-## Missing From The 2026-06-06 Archive Audit
+## Cloned From The 2026-06-06 Archive Audit
 
 The following archive repos were not present under `external_refs/` at audit
-time:
+time and were then cloned locally from `/media/goutev/SP DS72/auto/external`:
 
 ```text
 atlas-embeddings
@@ -51,4 +51,7 @@ affine-charform
 RIA_EISA
 ```
 
-`pyw` is present as source but lacks `.git` metadata.
+They are nested git checkouts with upstream `origin` remotes and local `archive`
+remotes. They are not yet staged as top-level submodules/gitlinks.
+
+`pyw` is present as source but still lacks `.git` metadata.

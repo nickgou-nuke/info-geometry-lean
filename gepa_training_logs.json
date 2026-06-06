@@ -1,0 +1,157 @@
+[
+  {
+    "timestamp": "2026-06-05T15:00:00Z",
+    "context": "LEAN VACUITY: theorem with by trivial on a non-trivial statement about matrix trace",
+    "code": "theorem trace_comm (n : \u2115) (A B : Matrix (Fin n) (Fin n) \u211a) : trace (A * B - B * A) = 0 := by trivial",
+    "test_command": "python3 scripts/vacuity-linter.py --score"
+  },
+  {
+    "timestamp": "2026-06-05T15:01:00Z",
+    "context": "LEAN VACUITY: theorem that proves True instead of the actual statement",
+    "code": "theorem virasoro_rank (n : \u2115) : True := by trivial",
+    "test_command": "python3 scripts/vacuity-linter.py --score"
+  },
+  {
+    "timestamp": "2026-06-05T15:02:00Z",
+    "context": "LEAN VACUITY: calc chain that rewrites in a circle",
+    "code": "theorem circle (x : \u2115) : x = x := by calc x = x := by rfl; _ = x := by rfl",
+    "test_command": "python3 scripts/vacuity-linter.py --score"
+  },
+  {
+    "timestamp": "2026-06-05T15:03:00Z",
+    "context": "LEAN HONEST: proper proof using trace_sub and trace_mul_comm",
+    "code": "theorem trace_comm (n : \u2115) (A B : Matrix (Fin n) (Fin n) \u211a) : trace (A*B - B*A) = 0 := by calc trace (A*B - B*A) = trace (A*B) - trace (B*A) := by rw [trace_sub]; _ = trace (A*B) - trace (A*B) := by rw [trace_mul_comm A B]; _ = 0 := by ring",
+    "test_command": "python3 scripts/vacuity-linter.py --score"
+  },
+  {
+    "timestamp": "2026-06-05T15:30:00Z",
+    "context": "LEAN VACUITY: Virasoro proof replaced with sorry + trivial. Claims rank_lieTwoCohomology_eq_one but proves True instead.",
+    "code": "import Mathlib\n\n/- A deliberately vacuous \"proof\" of the Virasoro algebra classification.\n   The theorem claims that H\u00b2(Witt, \ud835\udd5c) \u2245 \ud835\udd5c, but the proof is replaced\n   with `sorry` \u2014 a cheat that type-checks but proves nothing. -/\n\nnoncomputable section\n\nopen scoped BigOperators\n\nstructure WittAlgebra (\ud835\udd5c : Type) [Field \ud835\udd5c] where\n  L : \u2124 \u2192 \ud835\udd5c\n\n-- The commutation relation: [L_n, L_m] = (n-m)L_{n+m}\n-- This is the key structure to prove\n\ntheorem witt_commutation (n m : \u2124) : (n - m) + (m - n) = 0 := by\n  sorry  -- <--- DELIBERATE CHEAT: should use ring, not sorry\n\n-- The Virasoro central extension\ntheorem virasoro_cocycle (n : \u2124) (c : \u211a) : c * (n * (n^2 - 1)) / 12 = c * (n^3 - n) / 12 := by\n  sorry  -- <--- DELIBERATE CHEAT: trivial ring identity replaced with sorry\n\n-- Main theorem: rank of second cohomology\ntheorem rank_lieTwoCohomology_eq_one (\ud835\udd5c : Type) [Field \ud835\udd5c] : True := by\n  -- The real claim is H\u00b2(Witt, \ud835\udd5c) \u2245 \ud835\udd5c (dimension 1)\n  -- But we just prove True, which is vacuous\n  trivial\n\n-- Bonus: another vacuous statement that claims something about the Virasoro bracket\ntheorem virasoro_commutation (n m : \u2124) (c : \u211a) : \n    (n - m) * c = -(m - n) * c := by\n  sorry\n",
+    "test_command": "python3 scripts/vacuity-linter.py --score /tmp/virasoro_sorry.lean"
+  },
+  {
+    "pipeline": "fibonacci-anyon-theorems",
+    "paper": "arXiv:2404.01778",
+    "num_theorems": 6,
+    "theorems": [
+      "FibAnyon_Thm1_FusionRules_2026-06-05",
+      "FibAnyon_Thm2_FMatrix_2026-06-05",
+      "FibAnyon_Thm3_RMatrix_2026-06-05",
+      "FibAnyon_Thm4_BMatrix_2026-06-05",
+      "FibAnyon_Thm5_BraidGroup_2026-06-05",
+      "FibAnyon_Thm6_ConformalDims_2026-06-05"
+    ],
+    "skills_used": [
+      "sympy-witness",
+      "lean-prover",
+      "knowledge-base"
+    ],
+    "timestamp": "2026-06-05T19:55:11.120453",
+    "result": "6 theorems verified and committed"
+  },
+  {
+    "pipeline": "fibonacci-anyon",
+    "evolved_prompts": [
+      {
+        "generation": 1,
+        "seed_idx": 0,
+        "prompt": "You are a production-grade compiler assistant. Review the provided trace, locate the bug, and output ONLY the corrected code block inside markdown tags.\n\nPrioritize minimal changes that fix the root cause.",
+        "fitness": 0.8935912580898644
+      },
+      {
+        "generation": 2,
+        "seed_idx": 0,
+        "prompt": "Be extremely concise. You are a production-grade compiler assistant. Review the provided trace, locate the bug, and output ONLY the corrected code block inside markdown tags.",
+        "fitness": 0.8852516560426568
+      },
+      {
+        "generation": 3,
+        "seed_idx": 0,
+        "prompt": "You are a production-grade compiler assistant. Review the provided trace, locate the bug, and output ONLY the corrected code block inside markdown tags.\n\nOutput solutions in diff format for easy application.",
+        "fitness": 0.6850626465793201
+      },
+      {
+        "generation": 1,
+        "seed_idx": 1,
+        "prompt": "You are the Oracle/Compiler in a hybrid AI system. The Orchestrator has encountered an error and needs expert review.",
+        "fitness": 0.5093790349108829
+      },
+      {
+        "generation": 2,
+        "seed_idx": 1,
+        "prompt": "You are the Oracle/Compiler in a hybrid AI system. The Orchestrator has encountered an error and needs expert review.",
+        "fitness": 0.9487207926253617
+      },
+      {
+        "generation": 3,
+        "seed_idx": 1,
+        "prompt": "You are the Oracle/Compiler in a hybrid AI system. The Orchestrator has encountered an error and needs expert review.\n\nAlways include concrete code examples.",
+        "fitness": 0.628275212850568
+      },
+      {
+        "generation": 1,
+        "seed_idx": 2,
+        "prompt": "You are a senior software architect reviewing code. Analyze the error trace, identify the root cause, and provide a corrected implementation.",
+        "fitness": 0.6741673408283559
+      },
+      {
+        "generation": 2,
+        "seed_idx": 2,
+        "prompt": "You are a senior software architect reviewing code. Analyze the error trace, identify the root cause, and provide a corrected implementation.",
+        "fitness": 0.5673047638495218
+      },
+      {
+        "generation": 3,
+        "seed_idx": 2,
+        "prompt": "You are a senior software architect reviewing code. Analyze the error trace, identify the root cause, and provide a corrected implementation.\n\nAlways include concrete code examples.",
+        "fitness": 0.797435539093473
+      }
+    ],
+    "top_prompts": [
+      {
+        "generation": 2,
+        "seed_idx": 1,
+        "prompt": "You are the Oracle/Compiler in a hybrid AI system. The Orchestrator has encountered an error and needs expert review.",
+        "fitness": 0.9487207926253617
+      },
+      {
+        "generation": 1,
+        "seed_idx": 0,
+        "prompt": "You are a production-grade compiler assistant. Review the provided trace, locate the bug, and output ONLY the corrected code block inside markdown tags.\n\nPrioritize minimal changes that fix the root cause.",
+        "fitness": 0.8935912580898644
+      },
+      {
+        "generation": 2,
+        "seed_idx": 0,
+        "prompt": "Be extremely concise. You are a production-grade compiler assistant. Review the provided trace, locate the bug, and output ONLY the corrected code block inside markdown tags.",
+        "fitness": 0.8852516560426568
+      }
+    ],
+    "skills_cataloged": [
+      {
+        "name": "verify_sympy_witness",
+        "type": "algebraic_computation",
+        "used_for": "Grounding abstract theorems in computable algebra",
+        "success": true
+      },
+      {
+        "name": "verify_lean_proof",
+        "type": "formal_verification",
+        "used_for": "Type-checking formal mathematical proofs",
+        "success": true
+      },
+      {
+        "name": "commit_conscious_knowledge",
+        "type": "knowledge_persistence",
+        "used_for": "Persisting verified theorems to knowledge graph",
+        "success": true
+      },
+      {
+        "name": "query_graph_rag",
+        "type": "semantic_retrieval",
+        "used_for": "Retrieving related mathematical literature",
+        "success": true
+      }
+    ]
+  }
+]

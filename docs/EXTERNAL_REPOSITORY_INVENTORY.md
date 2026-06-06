@@ -32,7 +32,8 @@ the same git commit. The real gaps are:
 - cloned after audit: `atlas-embeddings`, `VirasoroProject`, `QuAIRKit`,
   `PauLie`, `affine-charform`, `RIA_EISA`;
 - added or recorded from upstream after audit: `LeanEuclid`,
-  `Lean-QuantumInfo`, `deepmind-debate`, `LeanAide`, `Canonical`;
+  `Lean-QuantumInfo`, `deepmind-debate`, `LeanAide`, `Canonical`,
+  `CanonicalLean`;
 - `pyw`: source files are present, but the repo has no `.git` metadata;
 - AFP: present, but under the normalized name `external_refs/mirror-afp-devel`,
   not `external/isabelle`.
@@ -101,6 +102,7 @@ unless specific source is later ported or cited.
 | `deepmind-debate` | `de3a6e5` | `https://github.com/google-deepmind/debate` | `external_refs/deepmind-debate` | Lean 4.8.0 project formalizing correctness of the stochastic doubly-efficient debate protocol; declares `Debate`, `Prob`, `Comp`, and `Misc`; local `main` matches `origin/main` after fetch; nested checkout is full-history and not staged as a top-level gitlink/submodule |
 | `LeanAide` | `d7b5cc39` | `https://github.com/siddhartha-gadgil/LeanAide.git` | `external_refs/LeanAide` | Lean 4.28.0 mixed Lean/Python AI tooling project for autoformalization, code actions, theorem/definition translation, proof/document pipelines, embeddings, premise retrieval, and a server-client workflow; root package declares `LeanAide`, `LeanCodePrompts`, and many Lean executables including `translate` and `leanaide_process`; `LeanAideCore` is a path subproject for the client library; nested checkout is full-history and not staged as a top-level gitlink/submodule |
 | `Canonical` | `dbd175b` | `https://github.com/chasenorman/Canonical.git` | `external_refs/Canonical` | Rust workspace for exhaustive term search in dependent type theory, with `canonical-core`, `canonical-compat`, and `canonical_lean` Lean FFI bindings; nested Lean test project under `lean/` pins Lean, mathlib, and `CanonicalLean` to `v4.30.0`; nested checkout is full-history and not staged as a top-level gitlink/submodule |
+| `CanonicalLean` | `65510e4` | `https://github.com/chasenorman/CanonicalLean.git` | `external_refs/CanonicalLean` | Lean package named `Canonical` providing the `canonical` tactic; `lakefile.lean` defines a release-fetched `canonical_lean` dynlib target and a default `Canonical` Lean library; pinned to Lean `v4.30.0`; related homepage: `https://chasenorman.com/`; nested checkout is full-history and not staged as a top-level gitlink/submodule |
 
 ## Still Not A Git Checkout
 
@@ -147,7 +149,7 @@ cloned from the archive and then unshallowed from upstream.
 
 ## Shallow Clone Status
 
-The follow-up audit checked 96 nested git repositories under:
+The follow-up audit checked 97 nested git repositories under:
 
 ```text
 external_refs/
@@ -163,7 +165,8 @@ error_count = 0
 
 This includes the large repositories `mirror-afp-devel`, `qiskit`, `sage`,
 `sympy`, `vampire`, `z3`, the newly cloned archive repos, `LeanEuclid`,
-`Lean-QuantumInfo`, `deepmind-debate`, `LeanAide`, and `Canonical`.
+`Lean-QuantumInfo`, `deepmind-debate`, `LeanAide`, `Canonical`, and
+`CanonicalLean`.
 
 ## Organization Policy
 

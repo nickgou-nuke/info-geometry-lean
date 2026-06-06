@@ -65,6 +65,7 @@ archive:
 LeanEuclid
 Lean-QuantumInfo
 deepmind-debate
+LeanAide
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -85,11 +86,19 @@ from `https://github.com/google-deepmind/debate`. Its `lean-toolchain` pins
 `Comp`, and `Misc` Lean libraries. Its local `main` branch matches
 `origin/main` after fetch.
 
+`external_refs/LeanAide` is a full-history nested checkout at `d7b5cc39` from
+`https://github.com/siddhartha-gadgil/LeanAide.git`. Its `lean-toolchain` pins
+`leanprover/lean4:v4.28.0`. The root `lakefile.toml` declares `LeanAide`,
+`LeanCodePrompts`, `DataGenAide`, `StatementAutoformalisation`,
+`TacticExtraction`, `CodeGen`, and many Lean executables including `translate`
+and `leanaide_process`; the `LeanAideCore` subproject provides the
+zero-dependency client library documented in the README.
+
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text
-total_git_repos = 93
+total_git_repos = 95
 shallow_count = 0
 ```
 

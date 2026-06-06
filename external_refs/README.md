@@ -55,10 +55,25 @@ They are nested git checkouts with upstream `origin` remotes and local `archive`
 remotes. They were unshallowed after cloning. They are not yet staged as
 top-level submodules/gitlinks.
 
+## Added Directly From Upstream After The Archive Audit
+
+The following repo was added directly from upstream rather than from the
+`/media/goutev/SP DS72/auto/external` archive:
+
+```text
+LeanEuclid
+```
+
+`external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
+`https://github.com/loganrjmurphy/LeanEuclid.git`. Its `lean-toolchain` pins
+`leanprover/lean4:v4.19.0`, and its `lakefile.lean` declares `SystemE`, `Book`,
+`UniGeo`, and `E3` Lean libraries.
+
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text
+total_git_repos = 92
 shallow_count = 0
 ```
 

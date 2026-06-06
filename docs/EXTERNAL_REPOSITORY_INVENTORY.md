@@ -1,0 +1,136 @@
+# External Repository Inventory
+
+Audit date: 2026-06-06.
+
+Source archive audited:
+
+```text
+/media/goutev/SP DS72/auto/external
+```
+
+Repo locations checked:
+
+```text
+external_refs/
+external/
+```
+
+## Summary
+
+The archive is not fully represented as git checkouts in this repo.
+
+Most source dependencies from the archive are present under `external_refs/` at
+the same git commit. The real gaps are:
+
+- missing repos: `atlas-embeddings`, `VirasoroProject`, `QuAIRKit`, `PauLie`,
+  `affine-charform`, `RIA_EISA`;
+- `pyw`: source files are present, but the repo has no `.git` metadata;
+- AFP: present, but under the normalized name `external_refs/mirror-afp-devel`,
+  not `external/isabelle`.
+
+Do not infer that a directory is incomplete just because its raw file count
+differs. Some count differences are from `.git` internals. Use git HEAD and
+tracked-file counts as the source of truth.
+
+## Fully Covered At Same Git Commit
+
+| Archive group | Archive repo | Archive HEAD | Repo path | Repo HEAD | Status |
+|---|---|---|---|---|---|
+| lean | `LeanDojo` | `7a9f600` | `external_refs/LeanDojo` | `7a9f600` | same tracked source |
+| lean | `atlas-lean` | `34ffed3` | `external_refs/atlas-lean` | `34ffed3` | same tracked source |
+| lean | `repoprover` | `386adba` | `external_refs/repoprover` | `386adba` | same tracked source |
+| lean | `lean-auto` | `7b6f80f` | `external_refs/lean-auto` | `7b6f80f` | same tracked source |
+| python | `qutip` | `6933114` | `external_refs/qutip` | `6933114` | same tracked source |
+| python | `sympy` | `1991693` | `external_refs/sympy` | `1991693` | same tracked source |
+| python | `SymPy-LieAlgebras` | `93f810f` | `external_refs/SymPy-LieAlgebras` | `93f810f` | same tracked source |
+| python | `get-physics-done` | `0f41769` | `external_refs/get-physics-done` | `0f41769` | same tracked source |
+| python | `sage` | `d8c708d` | `external_refs/sage` | `d8c708d` | same tracked source |
+| formal | `afp-devel` | `93084377` | `external_refs/mirror-afp-devel` | `93084377` | same tracked source |
+| math | `Semisimple-Lie-Algebras` | `ffa5906` | `external_refs/Semisimple-Lie-Algebras` | `ffa5906` | same tracked source |
+| math | `geoalg` | `642992d` | `external_refs/geoalg` | `642992d` | same tracked source |
+| math | `SplitOct` | `e29e72f` | `external_refs/SplitOct` | `e29e72f` | same tracked source |
+
+## Covered But Not As A Git Checkout
+
+| Archive group | Archive repo | Archive HEAD | Repo path | Status |
+|---|---|---|---|---|
+| python | `pyw` | `e44b4fe` | `external_refs/pyw` | all 71 tracked archive files are present, plus local `index.json` and `keyword_index.json`; `.git` metadata is absent |
+
+## Missing From Repo
+
+| Archive group | Archive repo | Archive HEAD | Origin |
+|---|---|---|---|
+| lean | `atlas-embeddings` | `578453e` | `https://github.com/The-UOR-Foundation-Archive/atlas-embeddings.git` |
+| lean | `VirasoroProject` | `555a909` | `https://github.com/kkytola/VirasoroProject.git` |
+| python | `QuAIRKit` | `48e7d68` | `https://github.com/QuAIR/QuAIRKit.git` |
+| python | `PauLie` | `a13f11b` | `https://github.com/QPauLie/PauLie.git` |
+| math | `affine-charform` | `e03d439` | `https://github.com/deehzee/affine-charform.git` |
+| math | `RIA_EISA` | `f3292e5` | `https://github.com/csoftxyz/RIA_EISA.git` |
+
+## Special Cases
+
+### AFP / Isabelle
+
+The archive path:
+
+```text
+/media/goutev/SP DS72/auto/external/formal/isabelle/afp-devel
+```
+
+corresponds to:
+
+```text
+external_refs/mirror-afp-devel
+```
+
+Both are git checkouts at `93084377`. The smaller `external/afp` directory is an
+extracted working mirror and should not be treated as the full provenance copy.
+
+### Python Quantum Group
+
+The archive path:
+
+```text
+/media/goutev/SP DS72/auto/external/python/quantum
+```
+
+contains:
+
+```text
+QuAIRKit
+qutip
+```
+
+`qutip` is already present at the same commit. `QuAIRKit` is missing.
+
+## Organization Policy
+
+Use `external_refs/` for full upstream repository checkouts or source mirrors.
+
+Use `external/` only for extracted corpora, local mirrors, or tool-specific
+material that is not intended to preserve upstream git provenance.
+
+Do not vendor new external repositories into `lean/` or owner proof namespaces.
+External libraries are evidence and source material; Lean owner files remain the
+proof authority.
+
+Before copying an archive repo into `external_refs/`, check:
+
+1. whether a same-HEAD checkout already exists;
+2. whether the destination has `.git` metadata;
+3. whether the repo is already represented under a normalized name;
+4. whether generated caches, build products, `.lake`, virtualenvs, or package
+   caches should be excluded;
+5. whether the repo should be added as a submodule, plain vendored checkout, or
+   documented external reference only.
+
+## Recommended Next Actions
+
+1. Copy or clone the six missing repos into `external_refs/` if they are needed
+   for proof mining.
+2. Replace `external_refs/pyw` with a full git checkout, or document it as a
+   source-only mirror.
+3. Keep `external_refs/mirror-afp-devel` as the AFP provenance owner and avoid
+   duplicating it under another path.
+4. Add a generated machine-readable manifest only after deciding whether
+   missing repos should be copied from the archive or cloned from origin.

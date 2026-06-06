@@ -55,14 +55,16 @@ They are nested git checkouts with upstream `origin` remotes and local `archive`
 remotes. They were unshallowed after cloning. They are not yet staged as
 top-level submodules/gitlinks.
 
-## Added Directly From Upstream After The Archive Audit
+## Added Or Recorded From Upstream After The Archive Audit
 
-The following repo was added directly from upstream rather than from the
-`/media/goutev/SP DS72/auto/external` archive:
+The following repos were added directly from upstream or recorded as existing
+upstream checkouts rather than from the `/media/goutev/SP DS72/auto/external`
+archive:
 
 ```text
 LeanEuclid
 Lean-QuantumInfo
+deepmind-debate
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -76,6 +78,12 @@ Lean-QuantumInfo
 declares `QuantumInfo`, `ClassicalInfo`, and `StatMech` Lean libraries. Its
 README says this work merged into Physlib after March 2026, so treat this as a
 reference snapshot unless we deliberately port selected theorem material.
+
+`external_refs/deepmind-debate` is a full-history nested checkout at `de3a6e5`
+from `https://github.com/google-deepmind/debate`. Its `lean-toolchain` pins
+`leanprover/lean4:v4.8.0`, and its `lakefile.lean` declares `Debate`, `Prob`,
+`Comp`, and `Misc` Lean libraries. Its local `main` branch matches
+`origin/main` after fetch.
 
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:

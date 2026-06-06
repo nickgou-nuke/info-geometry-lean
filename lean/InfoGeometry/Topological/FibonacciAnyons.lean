@@ -27,6 +27,36 @@ def F_matrixOf (τ sqrtτ : K) : Matrix (Fin 2) (Fin 2) K :=
 def R_matrixOf (q qInv : K) : Matrix (Fin 2) (Fin 2) K :=
   !![qInv ^ 4, 0; 0, q ^ 3]
 
+/-- Raw diagonal inverse candidate for `R_matrixOf`. -/
+def R_dual_matrixOf (q qInv : K) : Matrix (Fin 2) (Fin 2) K :=
+  !![q ^ 4, 0; 0, qInv ^ 3]
+
+/-- The raw diagonal `R` matrix is cancelled by its dual when `qInv` is `q`'s inverse. -/
+theorem R_matrixOf_mul_R_dual_matrixOf
+    (q qInv : K) (hLeft : qInv * q = 1) (hRight : q * qInv = 1) :
+    R_matrixOf q qInv * R_dual_matrixOf q qInv = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
+      ← mul_pow, hLeft]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
+      ← mul_pow, hRight]
+
+/-- The dual diagonal matrix also cancels `R_matrixOf` on the left. -/
+theorem R_dual_matrixOf_mul_R_matrixOf
+    (q qInv : K) (hLeft : q * qInv = 1) (hRight : qInv * q = 1) :
+    R_dual_matrixOf q qInv * R_matrixOf q qInv = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
+      ← mul_pow, hLeft]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [R_matrixOf, R_dual_matrixOf, Matrix.mul_apply, Fin.sum_univ_two,
+      ← mul_pow, hRight]
+
 /-- Raw non-diagonal middle braid matrix `B = F R F`. -/
 def B_matrixOf (q qInv τ sqrtτ : K) : Matrix (Fin 2) (Fin 2) K :=
   F_matrixOf τ sqrtτ * R_matrixOf q qInv * F_matrixOf τ sqrtτ

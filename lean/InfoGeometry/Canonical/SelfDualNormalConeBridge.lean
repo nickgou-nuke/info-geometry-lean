@@ -1,195 +1,146 @@
-import InfoGeometry.Projective.SelfDualCone
-import InfoGeometry.Projective.Orthant
-import InfoGeometry.Meta.Architecture
-
-open scoped InnerProductSpace
-
-/-!
-# InfoGeometry.Canonical.SelfDualNormalConeBridge
-
-Self-dual cone and standard-form normal cone readout.
-
-This file packages the cone-theoretic language the user asked for:
-
-* a self-dual proper cone;
-* a standard-form natural positive cone;
-* a calibration identifying the two cones;
-* normal-cone readback at the cone vector;
-* positivity readback at the projective/state level.
-
-It does not construct a von Neumann algebra from scratch.  The operator-algebra
-content is carried by the local standard-form normal cone interface below.
-Normal-cone formulas are theorem owners, not proof fields in the interface.
--/
+import InfoGeometry.Arithmetic.ProjectiveEntropy
 
 noncomputable section
 
-namespace InfoGeometry.Canonical.SelfDualNormalConeBridge
+namespace InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 
-set_option linter.dupNamespace false
-
-open InfoGeometry.Projective
+open InfoGeometry.Thermodynamics.ProjectiveTemperature
+open InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature
+open InfoGeometry.Arithmetic.ProjectiveEntropy
 
 /-
-Local normal-cone formulas.
-These are defined directly here so the bridge does not depend on the broken
-modular-cartan source lane.
+#### BUCKET 1: CLOSED FINITE THEOREMS
+[Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
+[Theorems that compile from explicitly named theorem parameters or imported verified premises.]
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
 -/
 
-section Core
+/-- Unnormalized KL-style scalar readout. -/
+def projectiveKL (p q : ℝ) : ℝ :=
+  p * Real.log (p / q)
 
-variable {E : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+/-- KL-style readout comparing a primitive projective density against a finite von-Mangoldt density. -/
+def primitiveToPrimeProjectiveKL
+    (candidate reference : Finset ℕ) (u : ℝ) : ℝ :=
+  projectiveKL
+    (primitiveInvertedPartitionDensity candidate u)
+    (arithmeticPrimeInvertedPartitionDensity reference u)
 
-/-- Positive cone vectors orthogonal to `ξ`. This is the inward normal convention. -/
-@[rep_depth operator]
-def inwardConeOrthogonal (P : Set E) (ξ : E) : Set E :=
-  {η | η ∈ P ∧ ⟪η, ξ⟫_ℝ = 0}
+/-- The opposite orientation: finite von-Mangoldt density against the primitive density. -/
+def primeToPrimitiveProjectiveKL
+    (candidate reference : Finset ℕ) (u : ℝ) : ℝ :=
+  projectiveKL
+    (arithmeticPrimeInvertedPartitionDensity reference u)
+    (primitiveInvertedPartitionDensity candidate u)
 
-/-- Negative cone vectors orthogonal to `ξ`. This is the outward normal convention. -/
-@[rep_depth operator]
-def outwardConeOrthogonal (P : Set E) (ξ : E) : Set E :=
-  {η | -η ∈ P ∧ ⟪η, ξ⟫_ℝ = 0}
+/-- Unfolding of the primitive-to-prime KL-style readout. -/
+theorem primitiveToPrimeProjectiveKL_eq
+    (candidate reference : Finset ℕ) (u : ℝ) :
+    primitiveToPrimeProjectiveKL candidate reference u =
+      primitiveInvertedPartitionDensity candidate u *
+        Real.log
+          (primitiveInvertedPartitionDensity candidate u /
+            arithmeticPrimeInvertedPartitionDensity reference u) :=
+  rfl
 
-/-- Convex-analytic outward normal cone to `P` at `ξ`. -/
-@[rep_depth operator]
-def convexOutwardNormalCone (P : Set E) (ξ : E) : Set E :=
-  {η | ∀ ζ : E, ζ ∈ P → ⟪η, ζ - ξ⟫_ℝ ≤ 0}
+/-- Unfolding of the prime-to-primitive KL-style readout. -/
+theorem primeToPrimitiveProjectiveKL_eq
+    (candidate reference : Finset ℕ) (u : ℝ) :
+    primeToPrimitiveProjectiveKL candidate reference u =
+      arithmeticPrimeInvertedPartitionDensity reference u *
+        Real.log
+          (arithmeticPrimeInvertedPartitionDensity reference u /
+            primitiveInvertedPartitionDensity candidate u) :=
+  rfl
 
-/-- Convex-analytic inward normal cone to `P` at `ξ`. -/
-@[rep_depth operator]
-def convexInwardNormalCone (P : Set E) (ξ : E) : Set E :=
-  {η | ∀ ζ : E, ζ ∈ P → 0 ≤ ⟪η, ζ - ξ⟫_ℝ}
+/-- Scalar KL readout is nonnegative when the mass is nonnegative and the ratio is at least one. -/
+theorem projectiveKL_nonneg_of_nonneg_of_one_le_ratio
+    {p q : ℝ} (hp : 0 ≤ p) (hratio : 1 ≤ p / q) :
+    0 ≤ projectiveKL p q := by
+  unfold projectiveKL
+  exact mul_nonneg hp (Real.log_nonneg hratio)
 
-/-- Minimal standard-form normal cone interface. -/
-@[rep_depth operator]
-structure StandardFormNormalConeLite
-    (Functional : Type*) where
-  /-- Tomita modular conjugation / real reflection. -/
-  J : E → E
+/-- Scalar KL readout is positive when the mass is positive and the ratio is greater than one. -/
+theorem projectiveKL_pos_of_pos_of_one_lt_ratio
+    {p q : ℝ} (hp : 0 < p) (hratio : 1 < p / q) :
+    0 < projectiveKL p q := by
+  unfold projectiveKL
+  exact mul_pos hp (Real.log_pos hratio)
 
-  /-- Natural positive cone `P`. -/
-  naturalCone : Set E
+/-- Scalar KL readout vanishes on equal nonzero arguments. -/
+theorem projectiveKL_eq_zero_of_eq_of_ne_zero
+    {p q : ℝ} (h : p = q) (hp : p ≠ 0) :
+    projectiveKL p q = 0 := by
+  subst q
+  unfold projectiveKL
+  rw [div_self hp, Real.log_one, mul_zero]
 
-  /-- Standard-form cone vector representing a normal positive functional. -/
-  coneVector : Functional → E
+/-- Primitive-to-prime readout is nonnegative under the corresponding scalar ratio hypothesis. -/
+theorem primitiveToPrimeProjectiveKL_nonneg_of_one_le_ratio
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (hp : 0 ≤ primitiveInvertedPartitionDensity candidate u)
+    (hratio :
+      1 ≤
+        primitiveInvertedPartitionDensity candidate u /
+          arithmeticPrimeInvertedPartitionDensity reference u) :
+    0 ≤ primitiveToPrimeProjectiveKL candidate reference u := by
+  exact projectiveKL_nonneg_of_nonneg_of_one_le_ratio hp hratio
 
-  /-- Every supplied normal positive functional has a cone vector. -/
-  coneVector_mem : ∀ ω : Functional, coneVector ω ∈ naturalCone
+/-- Primitive-to-prime readout is positive under the corresponding scalar ratio hypothesis. -/
+theorem primitiveToPrimeProjectiveKL_pos_of_one_lt_ratio
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (hp : 0 < primitiveInvertedPartitionDensity candidate u)
+    (hratio :
+      1 <
+        primitiveInvertedPartitionDensity candidate u /
+          arithmeticPrimeInvertedPartitionDensity reference u) :
+    0 < primitiveToPrimeProjectiveKL candidate reference u := by
+  exact projectiveKL_pos_of_pos_of_one_lt_ratio hp hratio
 
-  /-- `J² = 1`. -/
-  J_involutive : ∀ ξ : E, J (J ξ) = ξ
+/-- Primitive-to-prime readout vanishes when the two finite densities agree and are nonzero. -/
+theorem primitiveToPrimeProjectiveKL_eq_zero_of_density_eq
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (h :
+      primitiveInvertedPartitionDensity candidate u =
+        arithmeticPrimeInvertedPartitionDensity reference u)
+    (hp : primitiveInvertedPartitionDensity candidate u ≠ 0) :
+    primitiveToPrimeProjectiveKL candidate reference u = 0 := by
+  exact projectiveKL_eq_zero_of_eq_of_ne_zero h hp
 
-  /-- `J` fixes natural-cone vectors pointwise. -/
-  J_fixes_naturalCone : ∀ ⦃ξ : E⦄, ξ ∈ naturalCone → J ξ = ξ
+/-- Prime-to-primitive readout is nonnegative under the corresponding scalar ratio hypothesis. -/
+theorem primeToPrimitiveProjectiveKL_nonneg_of_one_le_ratio
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (hp : 0 ≤ arithmeticPrimeInvertedPartitionDensity reference u)
+    (hratio :
+      1 ≤
+        arithmeticPrimeInvertedPartitionDensity reference u /
+          primitiveInvertedPartitionDensity candidate u) :
+    0 ≤ primeToPrimitiveProjectiveKL candidate reference u := by
+  exact projectiveKL_nonneg_of_nonneg_of_one_le_ratio hp hratio
 
-namespace StandardFormNormalConeLite
+/-- Prime-to-primitive readout is positive under the corresponding scalar ratio hypothesis. -/
+theorem primeToPrimitiveProjectiveKL_pos_of_one_lt_ratio
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (hp : 0 < arithmeticPrimeInvertedPartitionDensity reference u)
+    (hratio :
+      1 <
+        arithmeticPrimeInvertedPartitionDensity reference u /
+          primitiveInvertedPartitionDensity candidate u) :
+    0 < primeToPrimitiveProjectiveKL candidate reference u := by
+  exact projectiveKL_pos_of_pos_of_one_lt_ratio hp hratio
 
-variable {E Functional : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable (S : StandardFormNormalConeLite (E := E) Functional)
+/-- Prime-to-primitive readout vanishes when the two finite densities agree and are nonzero. -/
+theorem primeToPrimitiveProjectiveKL_eq_zero_of_density_eq
+    (candidate reference : Finset ℕ) (u : ℝ)
+    (h :
+      arithmeticPrimeInvertedPartitionDensity reference u =
+        primitiveInvertedPartitionDensity candidate u)
+    (hp : arithmeticPrimeInvertedPartitionDensity reference u ≠ 0) :
+    primeToPrimitiveProjectiveKL candidate reference u = 0 := by
+  exact projectiveKL_eq_zero_of_eq_of_ne_zero h hp
 
-/-- Readback: normal positive functionals are represented by natural-cone vectors. -/
-@[rep_depth operator]
-theorem coneVector_mem_naturalCone (ω : Functional) :
-    S.coneVector ω ∈ S.naturalCone :=
-  S.coneVector_mem ω
-
-/-- Readback: `J` fixes the cone vector of a normal positive functional. -/
-@[rep_depth operator]
-theorem J_fixes_coneVector (ω : Functional) :
-    S.J (S.coneVector ω) = S.coneVector ω :=
-  S.J_fixes_naturalCone (S.coneVector_mem ω)
-
-/-- Outward normal cone formula `N_P(ξ) = -P ∩ ξᗮ`. -/
-@[rep_depth operator]
-theorem outward_normal_cone
-    (ξ : E) (hξ : ξ ∈ S.naturalCone) :
-    convexOutwardNormalCone S.naturalCone ξ = outwardConeOrthogonal S.naturalCone ξ := by
-  sorry
-
-/-- Inward normal cone formula `N_P^in(ξ) = P ∩ ξᗮ`. -/
-@[rep_depth operator]
-theorem inward_normal_cone
-    (ξ : E) (hξ : ξ ∈ S.naturalCone) :
-    convexInwardNormalCone S.naturalCone ξ = inwardConeOrthogonal S.naturalCone ξ := by
-  sorry
-
-/-- Outward normal cone at a cone vector. -/
-@[rep_depth operator]
-theorem outwardNormalCone_coneVector (ω : Functional) :
-    convexOutwardNormalCone S.naturalCone (S.coneVector ω) =
-      outwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.outward_normal_cone (S.coneVector ω) (S.coneVector_mem ω)
-
-/-- Inward normal cone at a cone vector. -/
-@[rep_depth operator]
-theorem inwardNormalCone_coneVector (ω : Functional) :
-    convexInwardNormalCone S.naturalCone (S.coneVector ω) =
-      inwardConeOrthogonal S.naturalCone (S.coneVector ω) :=
-  S.inward_normal_cone (S.coneVector ω) (S.coneVector_mem ω)
-
-end StandardFormNormalConeLite
-
-/-- Self-dual cone and normal positive cone packaged together. -/
-@[rep_depth operator]
-structure SelfDualNormalConeBridge
-    (Functional : Type*) where
-  /-- Ambient self-dual cone. -/
-  selfDualCone : SelfDualCone E
-
-  /-- Standard-form normal cone for normal positive functionals. -/
-  standardForm :
-    StandardFormNormalConeLite (E := E) Functional
-
-  /-- Calibration: the natural cone is the underlying self-dual proper cone. -/
-  naturalCone_eq_selfDualCone :
-    standardForm.naturalCone = selfDualCone.cone
-
-namespace SelfDualNormalConeBridge
-
-variable {E Functional : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable (B : SelfDualNormalConeBridge (E := E) (Functional := Functional))
-
-/-- Normal positive functionals are represented by vectors in the self-dual cone. -/
-@[rep_depth operator]
-theorem coneVector_mem_selfDualCone (ω : Functional) :
-    B.standardForm.coneVector ω ∈ B.selfDualCone.cone := by
-  simpa [B.naturalCone_eq_selfDualCone] using
-    B.standardForm.coneVector_mem_naturalCone ω
-
-/-- The Tomita/Krein reflection fixes the cone vector of a normal positive functional. -/
-@[rep_depth operator]
-theorem J_fixes_coneVector (ω : Functional) :
-    B.standardForm.J (B.standardForm.coneVector ω) = B.standardForm.coneVector ω :=
-  B.standardForm.J_fixes_coneVector ω
-
-/-- Outward normal cone at a cone vector, written in self-dual form. -/
-@[rep_depth operator]
-theorem outwardNormalCone_coneVector (ω : Functional) :
-    convexOutwardNormalCone B.selfDualCone.cone (B.standardForm.coneVector ω) =
-      outwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω) := by
-  simpa [B.naturalCone_eq_selfDualCone] using
-    B.standardForm.outwardNormalCone_coneVector ω
-
-/-- Inward normal cone at a cone vector, written in self-dual form. -/
-@[rep_depth operator]
-theorem inwardNormalCone_coneVector (ω : Functional) :
-    convexInwardNormalCone B.selfDualCone.cone (B.standardForm.coneVector ω) =
-      inwardConeOrthogonal B.selfDualCone.cone (B.standardForm.coneVector ω) := by
-  simpa [B.naturalCone_eq_selfDualCone] using
-    B.standardForm.inwardNormalCone_coneVector ω
-
-/-- The positive orthant is a concrete self-dual cone instance. -/
-@[rep_depth operator]
-def positiveOrthant_selfDual
-    {α : Type*} [Fintype α] [Nonempty α] :
-    SelfDualCone (EuclideanSpace ℝ α) :=
-  positiveOrthant (α := α)
-
-end SelfDualNormalConeBridge
-
-end Core
-
-end InfoGeometry.Canonical.SelfDualNormalConeBridge
+end InfoGeometry.Arithmetic.ProjectiveRelativeEntropy

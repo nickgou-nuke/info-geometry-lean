@@ -104,6 +104,18 @@ unless specific source is later ported or cited.
 | `Canonical` | `dbd175b` | `https://github.com/chasenorman/Canonical.git` | `external_refs/Canonical` | Rust workspace for exhaustive term search in dependent type theory, with `canonical-core`, `canonical-compat`, and `canonical_lean` Lean FFI bindings; nested Lean test project under `lean/` pins Lean, mathlib, and `CanonicalLean` to `v4.30.0`; nested checkout is full-history and not staged as a top-level gitlink/submodule |
 | `CanonicalLean` | `65510e4` | `https://github.com/chasenorman/CanonicalLean.git` | `external_refs/CanonicalLean` | Lean package named `Canonical` providing the `canonical` tactic; `lakefile.lean` defines a release-fetched `canonical_lean` dynlib target and a default `Canonical` Lean library; pinned to Lean `v4.30.0`; related homepage: `https://chasenorman.com/`; nested checkout is full-history and not staged as a top-level gitlink/submodule |
 
+## Documented But Not Cloned
+
+These repositories were inspected as architecture references only. They are not
+present under `external_refs/`, are not proof dependencies, and must not be
+treated as source authority without a separate license and provenance decision.
+
+| Repo | Origin | Local documentation | Notes |
+|---|---|---|---|
+| `OpenCLAW-P2P` | `https://github.com/Agnuxo1/OpenCLAW-P2P` | `docs/P2PCLAW_PUBLICATION_PIPELINE_AUDIT.md` | Public P2PCLAW publication/preparation frontend and protocol reference. Useful for publication packet design and MCP/REST separation. Not cloned because the audited repository metadata did not expose a license and the protocol describes external network participation that must not be automatic. |
+| `academic-research-skills` | `https://github.com/Imbad0202/academic-research-skills` | `docs/ACADEMIC_RESEARCH_SKILLS_AUDIT.md` | Claude Code academic research workflow suite for research, writing, review, revision, integrity gates, and finalization. Useful as publication-pipeline architecture. Not cloned because it is CC BY-NC 4.0 and should remain a workflow reference unless separately approved. |
+| `academic-research-skills-codex` | `https://github.com/Imbad0202/academic-research-skills-codex` | `docs/ACADEMIC_RESEARCH_SKILLS_AUDIT.md` | Codex-native sibling package wrapping ARS as one `academic-research-suite` skill. Useful for future local experimentation, but not installed or vendored by default because of the same CC BY-NC 4.0 boundary. |
+
 ## Still Not A Git Checkout
 
 | Archive group | Archive repo | Archive HEAD | Repo path | Status |

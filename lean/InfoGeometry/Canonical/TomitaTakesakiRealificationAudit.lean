@@ -12,20 +12,18 @@ structure ThreeBucketAudit where
 [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 -/
 def bucket1ClosedFiniteTheorems : List Lean.Name :=
-  [ ``RealVonNeumannAlgebraData.one_mem_commutant
-  , ``RealVonNeumannAlgebraData.zero_mem_commutant
-  , ``RealVonNeumannAlgebraData.commutant_mul_eq
-  , ``RealVonNeumannAlgebraData.mem_commutant_of_commutative
-  , ``GASymplecticDualitySocket.J_maps_K_to_dual
-  , ``ConformalCGAParabolicCompactificationBridge.bridge_logScale_reflection_target
+  [ ``kms_to_colimitBoundary_realification
+  , ``connes_cocycle_to_souriau_realification
   ]
 
 /-
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-[Currently empty after defielding the former witness/projection surfaces.]
+[Theorems that compile from explicit theorem hypotheses or imported premises.]
 -/
 def bucket2ConditionalTheoremsFromExplicitWitnesses : List Lean.Name :=
-  []
+  [ ``polar_to_kraus_realification
+  , ``modular_automorphism_to_rotorFlow_realification
+  ]
 
 /-
 #### BUCKET 3: OPEN CLOSURE DEBT

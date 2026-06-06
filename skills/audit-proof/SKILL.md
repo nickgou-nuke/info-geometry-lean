@@ -13,6 +13,7 @@ Purpose:
 - Prove non-trivial mathematical lemmas that add genuine logical value to Lean libraries.
 - Minimize proof debt by refusing wrappers, sockets, synthetic helper layers, fake bridge modules, boilerplate, and proof-carrying data containers.
 - Keep generated content dense, theorem-owner-local, and kernel-checkable.
+- When this skill is evolved by GEPA, reward only candidates that reduce proof debt without introducing any theorem-as-data, wrapper closure, or projection proof surfaces.
 
 Hard rules:
 1. Output Lean code only when asked to formalize or repair proof code. Do not output conversational prose, explanations, summaries, praise, or speculative interpretation in code-generation mode.
@@ -24,6 +25,7 @@ Hard rules:
 7. Every lemma must contain real, non-vacuous mathematical content and must be derived from Mathlib, repository imports, explicit theorem hypotheses, and verified tactics.
 8. Do not mix finite-dimensional scalar or matrix theorems with infinite-dimensional noncommuting operator theorems unless a typed transport theorem is explicitly proved.
 9. Renaming a missing theorem does not close debt. Data are not proofs.
+10. GEPA is allowed to mutate this skill text, but the mutation target is the proof-search policy only: it must never relax the zero-cheat rule, and it must never add a fallback that accepts `_True`, `_valid`, `_law`, `_proof`, `_certificate`, or bridge-style wrappers as closure.
 
 Audit protocol:
 - Before editing, search for existing owner declarations and nearby proofs.
@@ -48,3 +50,7 @@ Validation:
 - Run staged proof-quality gates before committing when requested.
 - Commit only source files that are directly part of the theorem-owner change.
 - Never commit generated artifacts or unrelated dirty files.
+
+GEPA optimization target:
+- Prefer prompt variants that improve first-pass theorem ownership, shrink the number of failed tactic branches, and preserve explicit debt boundaries.
+- Reject any mutation that improves apparent success by shifting proof content into a wrapper, field projection, certificate record, or theorem-shaped alias.

@@ -5,7 +5,7 @@
     "postulate"
   ],
   "forbiddenDeclarationNameRegex": [
-    "(?m)^\\s*(?:theorem|lemma|def|abbrev|structure|class)\\s+[A-Za-z0-9_']*(_valid|_readback|_certificate|_witness|_socket)\\b",
+    "(?m)^\\s*(?:theorem|lemma|def|abbrev|structure|class)\\s+[A-Za-z0-9_']*(_valid|_readback|_certificate|_witness|_socket|_proof|_law|_holds|_True|_true)\\b",
     "(?m)^\\s*(?:theorem|lemma|def|abbrev)\\s+(?:witness|certificate|socket|placeholder)\\b"
   ],
   "forbiddenTermRegex": [
@@ -18,6 +18,6 @@
     "(?m)^\\s+[A-Za-z0-9_]*(axiom|socket|certificate|witness)[A-Za-z0-9_]*\\s*:\\s*Prop\\b"
   ],
   "forbiddenFieldNameRegex": [
-    "(?m)^\\s+[A-Za-z0-9_]*(_valid|_readback|_certificate|_witness|_socket)\\s*:"
+    "(?m)^\\s+[A-Za-z0-9_]*(_valid|_readback|_certificate|_witness|_socket|_proof|_law|_holds|_True|_true|noncollapse|supportLowerBound|donoho_stark_support)\\s*:"
   ]
 }

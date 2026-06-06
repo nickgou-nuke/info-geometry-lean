@@ -26,6 +26,11 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Iterator, Optional
 
+from tools.infra.thermodynamic_scoring import DEFAULT_HEURISTIC_WEIGHT, score_outcomes
+from tools.quality.semantic_vacuity_gate import DEFAULT_PATTERNS as VACUITY_PATTERNS
+from tools.quality.semantic_vacuity_gate import audit_text as audit_vacuity_text
+from tools.quality.semantic_vacuity_gate import load_patterns as load_vacuity_patterns
+
 logger = logging.getLogger("gepa_real_eval")
 
 _HERE = Path(__file__).resolve().parent
@@ -52,8 +57,14 @@ def _normalize_lean_file_path(file_path: str) -> str:
             return str(path)
 
     normalized = raw.replace("\\", "/")
+    if normalized.startswith("lean/InfoGeometry/"):
+        return normalized
     if normalized.startswith("InfoGeometry/"):
         return f"lean/{normalized}"
+    # Queue tasks may lack the lean/InfoGeometry/ prefix
+    candidate = f"lean/InfoGeometry/{normalized}"
+    if (_REPO / candidate).exists():
+        return candidate
     return normalized
 
 @dataclass
@@ -94,6 +105,12 @@ class EvalResult:
     skill_hash: str
     task_results: list["TaskResult"] = field(default_factory=list)
     average_fitness: float = 0.0
+    policy_fitness: float = 0.0
+    selection_fitness: float = 0.0
+    thermodynamic_fitness: float = 0.0
+    temperature: float = 1.0
+    partition_function: float = 0.0
+    free_energy: float = 0.0
     elapsed_seconds: float = 0.0
 
     @property
@@ -108,6 +125,8 @@ class TaskResult:
     succeeded: bool = False
     sorry_removed: bool = False
     compiled: bool = False
+    policy_clean: bool = True
+    policy_score: float = 1.0
     hermes_output: str = ""
     error: str = ""
     elapsed_ms: float = 0.0
@@ -158,6 +177,7 @@ class RealEvaluator:
         timeout: int = 60,
         cache: bool = True,
         isolated: bool = True,
+        heuristic_weight: float = DEFAULT_HEURISTIC_WEIGHT,
     ) -> None:
         self.tasks = tasks
         self.hermes_model = hermes_model
@@ -165,7 +185,12 @@ class RealEvaluator:
         self.timeout = timeout
         self.cache = cache
         self.isolated = isolated
-        self._cache: dict[str, Optional[bool]] = {}  # skill_hash -> success
+        self.heuristic_weight = heuristic_weight
+        self._cache: dict[str, dict[str, Any]] = {}
+        try:
+            self._vacuity_categories = load_vacuity_patterns(VACUITY_PATTERNS)["categories"]
+        except Exception:
+            self._vacuity_categories = {}
 
         if cache:
             self._load_cache()
@@ -196,11 +221,32 @@ class RealEvaluator:
 
         elapsed = time.monotonic() - start
         avg_fitness = sum(r.succeeded for r in task_results) / max(1, len(task_results))
+        policy_fitness = sum(r.policy_score for r in task_results) / max(1, len(task_results))
+        thermo = score_outcomes(
+            [
+                {
+                    "status": "completed" if r.succeeded else "failed",
+                    "succeeded": r.succeeded,
+                    "attempts": 1,
+                    "metabolic_cost_ms": r.elapsed_ms,
+                }
+                for r in task_results
+            ]
+            ,
+            heuristic_weight=self.heuristic_weight,
+        )
+        selection_fitness = max(0.0, min(1.0, 0.85 * thermo.fitness + 0.15 * policy_fitness))
 
         return EvalResult(
             skill_hash=skill_hash,
             task_results=task_results,
             average_fitness=avg_fitness,
+            policy_fitness=policy_fitness,
+            selection_fitness=selection_fitness,
+            thermodynamic_fitness=selection_fitness,
+            temperature=thermo.temperature,
+            partition_function=thermo.partition_function,
+            free_energy=thermo.free_energy,
             elapsed_seconds=elapsed,
         )
 
@@ -240,11 +286,16 @@ class RealEvaluator:
         cache_key = f"{skill_hash}:{task.file}:{task.line}:{task.goal_hash}:{file_hash}"
         if self.cache and cache_key in self._cache:
             cached = self._cache[cache_key]
-            if cached is not None:
+            if cached:
                 return TaskResult(
-                    task=task, succeeded=cached,
-                    sorry_removed=cached, compiled=cached,
-                    hermes_output="(cached)", error="",
+                    task=task,
+                    succeeded=bool(cached.get("succeeded", False)),
+                    sorry_removed=bool(cached.get("sorry_removed", False)),
+                    compiled=bool(cached.get("compiled", False)),
+                    policy_clean=bool(cached.get("policy_clean", True)),
+                    policy_score=float(cached.get("policy_score", 1.0)),
+                    hermes_output="(cached)",
+                    error=str(cached.get("error", "")),
                 )
 
         with self._evaluation_file(abs_path, original) as eval_path:
@@ -258,6 +309,12 @@ class RealEvaluator:
 
             current = eval_path.read_text(encoding="utf-8")
             current_lines = current.split("\n")
+            if hasattr(self, '_audit_policy_window'):
+                policy_clean, policy_score, policy_error = self._audit_policy_window(current_lines, task)
+            else:
+                # GEPA compatibility: if the attribute is missing (DSPy teleprompt wrapping),
+                # skip the audit window check entirely.
+                policy_clean, policy_score, policy_error = True, 1.0, ""
 
             if is_closure_debt:
                 # Check if the _True : Prop := pattern was removed from the file
@@ -283,17 +340,19 @@ class RealEvaluator:
 
             # --- Compilation check ---
             compiled = False
-            if self.compile_check and sorry_removed:
+            if self.compile_check and sorry_removed and policy_clean:
                 compiled = self._check_compiles(eval_path, task)
 
-            succeeded = sorry_removed and (not self.compile_check or compiled)
+            succeeded = sorry_removed and policy_clean and (not self.compile_check or compiled)
 
             tr = TaskResult(
                 task=task, succeeded=succeeded,
                 sorry_removed=sorry_removed, compiled=compiled,
+                policy_clean=policy_clean, policy_score=policy_score,
                 hermes_output=hermes.output[:1000],
                 error="" if succeeded else (
                     "sorry still present" if not sorry_removed
+                    else policy_error if not policy_clean
                     else "compilation failed" if self.compile_check and not compiled
                     else ""
                 ),
@@ -301,10 +360,51 @@ class RealEvaluator:
 
             # --- Cache ---
             if self.cache:
-                self._cache[cache_key] = succeeded
-                self._dump_cache(skill_hash, task, succeeded, tr.error, file_hash=file_hash)
+                self._cache[cache_key] = {
+                    "succeeded": succeeded,
+                    "sorry_removed": sorry_removed,
+                    "compiled": compiled,
+                    "policy_clean": policy_clean,
+                    "policy_score": policy_score,
+                    "error": tr.error,
+                }
+                self._dump_cache(
+                    skill_hash,
+                    task,
+                    succeeded,
+                    tr.error,
+                    file_hash=file_hash,
+                    sorry_removed=sorry_removed,
+                    compiled=compiled,
+                    policy_clean=policy_clean,
+                    policy_score=policy_score,
+                )
 
             return tr
+
+    def _audit_policy_window(self, lines: list[str], task: EvalTask) -> tuple[bool, float, str]:
+        """Audit the repaired theorem window for semantic vacuity patterns."""
+        if not lines:
+            return True, 1.0, ""
+
+        if task.line > 0:
+            start = max(0, task.line - 15)
+            stop = min(len(lines), task.line + 20)
+        else:
+            start = 0
+            stop = min(len(lines), 40)
+
+        window = "\n".join(lines[start:stop])
+        findings = audit_vacuity_text(str(task.abs_path), window, self._vacuity_categories)
+        error_findings = [f for f in findings if f.severity == "error"]
+        warning_findings = [f for f in findings if f.severity == "warning"]
+
+        if error_findings:
+            detail = "; ".join(f"{f.category}:{f.subject}" for f in error_findings[:3])
+            return False, 0.0, f"semantic vacuity findings: {detail}"
+
+        penalty = min(0.8, 0.15 * len(warning_findings))
+        return True, max(0.0, 1.0 - penalty), ""
 
     @staticmethod
     def _result(task: EvalTask, succeeded: bool, error: str,
@@ -456,19 +556,25 @@ class RealEvaluator:
                 goal_hash = entry.get("goal_hash", "")
                 file_hash = entry.get("file_hash", "")
                 key = f"{entry['skill_hash']}:{entry['file']}:{entry['line']}:{goal_hash}:{file_hash}"
-                self._cache[key] = entry.get("succeeded", None)
+                self._cache[key] = entry
             logger.debug("Loaded %d cached eval results", len(self._cache))
         except Exception as exc:
             logger.warning("Failed to load eval cache: %s", exc)
 
     def _dump_cache(self, skill_hash: str, task: EvalTask,
-                    succeeded: bool, error: str, *, file_hash: str) -> None:
+                    succeeded: bool, error: str, *, file_hash: str,
+                    sorry_removed: bool, compiled: bool,
+                    policy_clean: bool, policy_score: float) -> None:
         entry = {
             "skill_hash": skill_hash,
             "file": task.file, "line": task.line,
             "goal_hash": task.goal_hash,
             "file_hash": file_hash,
             "succeeded": succeeded, "error": error,
+            "sorry_removed": sorry_removed,
+            "compiled": compiled,
+            "policy_clean": policy_clean,
+            "policy_score": policy_score,
             "timestamp": time.time(),
         }
         try:
@@ -501,12 +607,13 @@ def build_eval_tasks_from_arango(limit: int = 5) -> list[EvalTask]:
         FOR t IN hive_tasks
           FILTER t.queue_name == "proof-search"
           FILTER t.status == "pending"
-          SORT t.priority DESC
+          SORT RAND()
           LIMIT {limit}
           RETURN {{
             formal_target: t.runtime_goal_packet.formal_target,
             module_hint: t.runtime_goal_packet.module_hint,
-            goal_key: t.goal_key
+            goal_key: t.goal_key,
+            task_key: t._key
           }}
     """)
 
@@ -524,6 +631,7 @@ def build_eval_tasks_from_arango(limit: int = 5) -> list[EvalTask]:
         tasks.append(EvalTask(
             file=file_path, line=line_no,
             module=module_hint, description=formal,
+            goal_hash=r.get("task_key", ""),
         ))
     return tasks
 
@@ -548,6 +656,8 @@ def main() -> None:
     parser.add_argument("--model", default="deepseek-v4-flash")
     parser.add_argument("--no-compile", action="store_true",
                         help="Skip compilation check")
+    parser.add_argument("--heuristic-weight", type=float, default=DEFAULT_HEURISTIC_WEIGHT,
+                        help="Blend weight for the legacy heuristic term [0,1]")
     parser.add_argument("--dump-cache", action="store_true",
                         help="Print cache contents and exit")
     args = parser.parse_args()
@@ -595,6 +705,7 @@ def main() -> None:
     evaluator = RealEvaluator(
         tasks=tasks, hermes_model=args.model,
         compile_check=not args.no_compile,
+        heuristic_weight=args.heuristic_weight,
     )
     result = evaluator.evaluate(skill_content)
 
@@ -602,6 +713,11 @@ def main() -> None:
     print(json.dumps({
         "skill_hash": result.skill_hash[:16],
         "average_fitness": result.average_fitness,
+        "selection_fitness": result.selection_fitness,
+        "thermodynamic_fitness": result.thermodynamic_fitness,
+        "temperature": round(result.temperature, 4),
+        "partition_function": round(result.partition_function, 6),
+        "free_energy": round(result.free_energy, 6),
         "n_succeeded": result.n_succeeded,
         "n_tasks": len(result.task_results),
         "elapsed_seconds": round(result.elapsed_seconds, 1),

@@ -124,6 +124,31 @@ theorem componentN_one_eq_modularT :
   fin_cases i <;> fin_cases j <;>
     simp [componentN_eq, modularT]
 
+/-! ## Determinant-one KAN sector -/
+
+/-- The elliptic `K` component lies in the determinant-one sector. -/
+theorem componentK_det_eq_one (θ : ℂ) :
+    (componentK θ).det = 1 := by
+  simp [componentK, Matrix.det_fin_two]
+  rw [← sq, ← sq, Complex.cos_sq_add_sin_sq]
+
+/-- The hyperbolic `A` component lies in the determinant-one sector. -/
+theorem componentA_det_eq_one (lam : ℂ) :
+    (componentA lam).det = 1 := by
+  simp [componentA, Matrix.det_fin_two, ← Complex.exp_add]
+
+/-- The parabolic `N` component lies in the determinant-one sector. -/
+theorem componentN_det_eq_one (t : ℂ) :
+    (componentN t).det = 1 := by
+  rw [componentN_eq]
+  simp [Matrix.det_fin_two]
+
+/-- The concrete `K A N` chart stays inside the determinant-one sector. -/
+theorem kanProduct_det_eq_one (θ lam t : ℂ) :
+    (kanProduct θ lam t).det = 1 := by
+  rw [kanProduct, Matrix.det_mul, Matrix.det_mul]
+  simp [componentK_det_eq_one, componentA_det_eq_one, componentN_det_eq_one]
+
 /-! ## KAN product coordinate readout -/
 
 theorem kan_product_00 (θ lam t : ℂ) :

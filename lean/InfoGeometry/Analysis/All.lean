@@ -11,3 +11,4 @@ import InfoGeometry.Analysis.LaplaceFourierComparison
 import InfoGeometry.Analysis.LaplaceUniqueness
 import InfoGeometry.Analysis.LaplaceContour
 import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
+import InfoGeometry.Analysis.BregmanAnalyticBound

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Google AI Mode search — uses aiClaw bridge or direct API
+# Google AI Mode search — uses the queued aiClaw adapter or opens a browser URL
 # Usage: ./scripts/google-ai-search.sh "query string"
-#   Uses Google AI Mode (udm=50) via browser if bridge is active,
-#   falls back to API-based search.
+#   Uses the repo queue before browser automation. It does not post through the
+#   legacy port-1956 WebSocket bridge.
 
 set -euo pipefail
 
@@ -21,28 +21,20 @@ echo "════════════════════════�
 echo "Query: $QUERY"
 echo ""
 
-# Try via bridge first (aiClaw/Gemini)
-if ss -tnp 2>/dev/null | grep -q "1956.*ESTAB.*chrome"; then
-    echo "  Bridge connected — sending to browser AI..."
-    timeout 15 node -e "
-    const WebSocket = require('ws');
-    const ws = new WebSocket('ws://localhost:1956');
-    ws.on('open', () => {
-        ws.send(JSON.stringify({
-            action: 'send_message',
-            message: 'Search Google for: $QUERY. Summarize the top results.',
-            source: 'PI_AGENT_GOOGLE_SEARCH'
-        }));
-    });
-    ws.on('message', (data) => {
-        const msg = JSON.parse(data.toString());
-        if (msg.text) process.stdout.write(msg.text);
-        if (msg.status === 'done') { console.log(); ws.close(); }
-    });
-    setTimeout(() => process.exit(0), 12000);
-    " 2>&1
-else
-    echo "  Bridge not active. Opening Google AI Mode in browser..."
+PLATFORM="${AICLAW_GOOGLE_PLATFORM:-gemini}"
+PROMPT="Search Google for: $QUERY. Summarize the top results."
+
+echo "  Trying queued aiClaw platform: $PLATFORM"
+if python3 "$PROJECT_DIR/tools/infra/aiclaw_chat.py" ask \
+    --platform "$PLATFORM" \
+    --wait \
+    --json \
+    --quiet \
+    --prompt "$PROMPT"; then
+    exit 0
+fi
+
+echo "  Queued aiClaw route unavailable. Opening Google AI Mode in browser..."
     # Open Google AI Mode search in Chrome
     encoded=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$QUERY'''))")
     google_url="https://www.google.com/search?q=${encoded}&udm=50"
@@ -57,5 +49,4 @@ else
         echo "  URL: $google_url"
     fi
     echo ""
-    echo "  To capture results: ensure aiClaw bridge is active, then re-run"
-fi
+    echo "  To capture results automatically, configure aiClaw for platform '$PLATFORM' and re-run."

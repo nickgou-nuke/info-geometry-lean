@@ -208,11 +208,17 @@ class GEPAEvolver:
                     return _eval_cache[skill_key]
                 logger.info("Real eval for skill variant %s ...", skill_key[:10])
                 result = self._real_evaluator.evaluate(skill_text)
-                score = result.average_fitness
+                score = getattr(
+                    result,
+                    "selection_fitness",
+                    getattr(result, "thermodynamic_fitness", result.average_fitness),
+                )
                 _eval_cache[skill_key] = score
                 logger.info("  → score: %.3f (%d/%d, %.1fs)",
                             score, result.n_succeeded, len(result.task_results),
                             result.elapsed_seconds)
+                if hasattr(result, "policy_fitness"):
+                    logger.info("  → policy fitness: %.3f", getattr(result, "policy_fitness", 0.0))
                 return score
 
             chosen_metric = _real_metric
@@ -261,7 +267,11 @@ class GEPAEvolver:
         # Score the evolved skill using the same authority as selection.
         if self._real_evaluator is not None:
             result = self._real_evaluator.evaluate(evolved_body)
-            best_score = result.average_fitness
+            best_score = getattr(
+                result,
+                "selection_fitness",
+                getattr(result, "thermodynamic_fitness", result.average_fitness),
+            )
         else:
             best_score = 0.0
             for ex in self._trainset:

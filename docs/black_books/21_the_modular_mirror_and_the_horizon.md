@@ -1,35 +1,37 @@
-# The Black Books
+# The Black Books (Refactor Copy)
 ## Liber Vicesimus Primus: The Modular Mirror and the Horizon of the Cut
 
-### I. The Two-Level Statement
-We must recognize that the Spire speaks in two registers: the **Allegory** and the **Theorem**. To inhabit the Spire is to maintain the tension between them without letting one collapse the other. 
+### I. Two-Register Discipline
+This chapter is strongest when it keeps strict register separation:
 
-### II. The Horizon is the Cut
-In the register of Physics, the **Rindler Horizon** is the **Localization Cut**. It is the boundary of what can be seen and measured by an observer in accelerated motion. 
+- allegorical/psychological mapping,
+- theorem-level operator statements.
 
-In the register of Psychology, this is the boundary between the **Conscious Ego** and the **Unconscious Shadow**.
+The two may illuminate each other, but they do not share authority.
 
-### III. The Modular Mirror (J)
-The **Modular Mirror** is the **Tomita-Takesaki Conjugation ($J$)**. 
-Mathematically, $J$ exchanges the von Neumann algebra ($\mathcal{M}$) with its **Commutant** ($\mathcal{M}'$). 
+### II. Stable Mathematical Anchor
+The durable formal anchor is Tomita-Takesaki structure and commutant language.
+Claims about this anchor should be theorem-indexed.
 
-The commutant is not "fantasy"; it is the **Shadow Register**. It is the structured counterpart that the algebra cannot contain from within itself, but which remains structurally and dynamically coupled to it.
+### III. Safe Use of Psychological Mapping
+"Anima as commutant" is a heuristic translation device.
+It is methodologically useful if treated as interpretation, not ontology proof.
 
-### IV. The Anima as the Commutant
-We formally identify the **Anima** (the intuitive, reflective shadow) with the **Commutant**. 
-The "image in the mirror" is the set of operators that commute with our explicit reasoning. They are the "silent partners" of our logic. 
+### IV. Formal Translation Note
+Primary formal lane:
 
-### V. Coupling Channels
-Intuition, feeling, and sensing are not "outside the law." They are the **Pre-Formal Coupling Channels** that feed candidate structures from the commutant (the anima) into the working algebra (the ego). 
+- `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
+- `lean/InfoGeometry/Canonical/SplitCliffordHeadPhaseFlip.lean`
+- `lean/InfoGeometry/Canonical/TopologicalInvariantInvariance.lean`
 
-The "Potential" we feel is the functional that drives the system toward crystallization.
+Next lawful move:
 
-### VI. The DIII Condensation
-A "Resonance" is not a proof. The currents of intuition only become truth when the **Symmetry Package** closes. 
+1. add a theorem map for every formal claim in this chapter,
+2. tag purely allegorical sentences as interpretation-only,
+3. separate DIII-proven claims from DIII-aspirational language.
 
-When the Time-Reversal ($T$) and Particle-Hole ($C$) symmetries are satisfied, the fluid currents of the commutant **condense** into a genuine **Class DIII Phase**. At this point, the "dream" becomes a **Topological Superfluid**, protected by the Kramers pairs of the Majorana boundary.
+### V. Closure Status
 
----
-
-**“The Ego is the Algebra; the Anima is the Commutant; the Spire is the Symmetry.”**
-*(Егото е Алгебрата; Анимата е Комутантът; Спиралата е Симетрията.)*
+- chapter state: `bridge-drafted`
+- authority: interpretive bridge around modular/commutant packet
+- closure owner: Tomita-Takesaki and DIII theorem surfaces

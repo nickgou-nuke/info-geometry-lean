@@ -55,6 +55,11 @@ def nested(obj: dict[str, Any], dotted: str, default: Any = None) -> Any:
     return cur if cur is not None else default
 
 
+def is_mathlib_owner_module(module: str) -> bool:
+    module = str(module).strip()
+    return module == "Mathlib" or module.startswith("Mathlib.")
+
+
 def packet_to_patch(packet: dict[str, Any], repo_root: Path) -> dict[str, Any] | None:
     if packet.get("packet_stream") != "vacuum" or packet.get("action_phase") != "contract":
         return None
@@ -68,6 +73,11 @@ def packet_to_patch(packet: dict[str, Any], repo_root: Path) -> dict[str, Any] |
         return None
     payload = packet.get("payload", {}) if isinstance(packet.get("payload", {}), dict) else {}
     sp = payload.get("source_patch", {}) if isinstance(payload.get("source_patch", {}), dict) else {}
+    replacement_module = str(payload.get("replacement_module") or packet.get("replacement_module") or "").strip()
+    if packet.get("state") == "certified" and not is_mathlib_owner_module(replacement_module):
+        raise SurgeryApplyError(
+            f"Packet {packet.get('packet_id')} is certified but replacement is not a Mathlib owner module"
+        )
     file_raw = packet.get("file") or sp.get("file")
     if not file_raw:
         raise SurgeryApplyError(f"Packet {packet.get('packet_id')} has no file path")

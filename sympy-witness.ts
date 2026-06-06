@@ -1,11 +1,24 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import * as util from "util";
 
-const execPromise = util.promisify(exec);
+const registerLegacyTool = (pi: ExtensionAPI, tool: unknown) => (pi.registerTool as any)(tool);
+const execFilePromise = util.promisify(execFile);
+
+function safeName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_.-]/g, "_");
+}
+
+function ensureDir(dir: string) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function rel(p: string): string {
+  return path.relative(process.cwd(), p) || ".";
+}
 
 /**
  * SymPy Algebraic Witness
@@ -21,7 +34,7 @@ const execPromise = util.promisify(exec);
  */
 
 export default function (pi: ExtensionAPI) {
-  pi.registerTool({
+  registerLegacyTool(pi, {
     name: "verify_sympy_witness",
     label: "SymPy Algebraic Witness",
     description:
@@ -63,8 +76,9 @@ export default function (pi: ExtensionAPI) {
 
       let pythonBin = "python3";
       for (const candidate of pythonCandidates) {
+        if (candidate.includes(path.sep) && !fs.existsSync(candidate)) continue;
         try {
-          await execPromise(`${candidate} -c 'import sympy; print(sympy.__version__)'`);
+          await execFilePromise(candidate, ["-c", "import sympy; print(sympy.__version__)"]);
           pythonBin = candidate;
           break;
         } catch {
@@ -74,7 +88,7 @@ export default function (pi: ExtensionAPI) {
 
       // If none found, check without sympy (maybe user will install it)
       try {
-        await execPromise(`${pythonBin} --version`);
+        await execFilePromise(pythonBin, ["--version"]);
       } catch {
         return {
           content: [
@@ -98,37 +112,27 @@ export default function (pi: ExtensionAPI) {
         ],
       });
 
-      const tempFilePath = path.join(process.cwd(), ".temp_witness.py");
-      fs.writeFileSync(tempFilePath, params.pythonCode);
+      const proofDir = path.join(process.cwd(), "proofs");
+      ensureDir(proofDir);
+      const witnessPath = path.join(proofDir, `${safeName(params.witnessName)}.sp`);
+      fs.writeFileSync(witnessPath, params.pythonCode);
 
       try {
-        let stdout: string, stderr: string;
-        try {
-          const result = await execPromise(`${pythonBin} ${tempFilePath}`, {
-            timeout: 30000,
-          });
-          stdout = result.stdout;
-          stderr = result.stderr;
-        } catch {
-          // Final fallback: just try python
-          const result = await execPromise(`python ${tempFilePath}`, {
-            timeout: 30000,
-          });
-          stdout = result.stdout;
-          stderr = result.stderr;
-        }
-
-        // Clean up
-        try {
-          fs.unlinkSync(tempFilePath);
-        } catch {}
+        const result = await execFilePromise(pythonBin, [witnessPath], {
+          timeout: 30000,
+          maxBuffer: 1024 * 1024 * 4,
+        });
+        const stdout = result.stdout;
+        const stderr = result.stderr;
 
         if (stderr && !stdout) {
           return {
             content: [
               {
                 type: "text" as const,
-                text: `[SYMPY WARNING]: Witness produced stderr:\n${stderr}`,
+                text:
+                  `[SYMPY WARNING]: Witness produced stderr:\n${stderr}\n\n` +
+                  `Persisted witness: ${rel(witnessPath)}`,
               },
             ],
           };
@@ -141,17 +145,13 @@ export default function (pi: ExtensionAPI) {
               text:
                 `[SYMPY ALGEBRAIC WITNESS RESULT]:\n` +
                 `Witness: ${params.witnessName}\n\n` +
+                `Persisted witness: ${rel(witnessPath)}\n\n` +
                 `${stdout.trim()}` +
                 (stderr ? `\n\n[stderr]:\n${stderr}` : ""),
             },
           ],
         };
       } catch (error: any) {
-        // Clean up
-        try {
-          fs.unlinkSync(tempFilePath);
-        } catch {}
-
         return {
           content: [
             {
@@ -159,6 +159,7 @@ export default function (pi: ExtensionAPI) {
               text:
                 `[SYMPY ERROR]: Algebraic witness calculation failed.\n` +
                 `Error: ${error.stderr || error.stdout || error.message}\n\n` +
+                `Persisted failing witness for repair: ${rel(witnessPath)}\n\n` +
                 `Fix the Python/SymPy code and try again.`,
             },
           ],

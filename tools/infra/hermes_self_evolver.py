@@ -467,7 +467,12 @@ class HermesSelfEvolver:
         # Read the target file to find the sorry context
         abs_path = _REPO / file_path
         if not abs_path.exists():
-            logger.warning("Target file not found: %s", abs_path)
+            # Fallback: try with lean/InfoGeometry/ prefix (tasks enqueued without full path)
+            alt_path = _REPO / "lean" / "InfoGeometry" / file_path
+            if alt_path.exists():
+                abs_path = alt_path
+        if not abs_path.exists():
+            logger.warning("Target file not found: %s (tried %s)", file_path, abs_path)
             return {
                 "goal_key": task.get("goal_key", ""),
                 "task_key": task["_key"],

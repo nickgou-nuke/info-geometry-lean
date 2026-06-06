@@ -9,6 +9,14 @@ namespace InfoGeometry.Information
 variable {α : Type _} [Fintype α]
 open Finset
 
+/-!
+# Finite Exponential-Family Log Potentials
+
+This module defines a finite exponential family with a vector-valued sufficient
+statistic, its normalized density, covariance-form Fisher metric, and the
+induced log-potential on natural-parameter space.
+-/
+
 /-- Finite exponential-family data with vector-valued sufficient statistic. -/
 structure FiniteExpFamily (d : ℕ) where
   stat : α → Fin d → ℝ
@@ -38,14 +46,10 @@ lemma partition_pos
     0 < partition F θ := by
   classical
   unfold partition
-  simpa using
-    (Finset.sum_pos
-      (s := (Finset.univ : Finset α))
-      (f := fun x => Real.exp (naturalParam F θ x) * F.base x)
-      (by
-        intro x hx
-        exact mul_pos (Real.exp_pos _) (F.base_pos x))
-      Finset.univ_nonempty)
+  exact
+    Finset.sum_pos
+      (fun x _ => mul_pos (Real.exp_pos _) (F.base_pos x))
+      Finset.univ_nonempty
 
 /-- Log-partition function `ψ(θ)` for finite exponential families. -/
 noncomputable def logPartition
@@ -93,21 +97,16 @@ lemma density_sum_one
     [Nonempty α] :
     ∑ x, density F θ x = 1 := by
   unfold density partition
-  have hZne :
-      (∑ y : α, Real.exp (naturalParam F θ y) * F.base y) ≠ 0 :=
-    ne_of_gt (partition_pos F θ)
+  let Z : ℝ := ∑ y : α, Real.exp (naturalParam F θ y) * F.base y
+  have hZne : Z ≠ 0 := by
+    exact ne_of_gt (partition_pos F θ)
   calc
-    ∑ x : α, Real.exp (naturalParam F θ x) * F.base x /
-        ∑ y : α, Real.exp (naturalParam F θ y) * F.base y
-      = (∑ x : α, Real.exp (naturalParam F θ x) * F.base x) /
-          ∑ y : α, Real.exp (naturalParam F θ y) * F.base y := by
-          symm
-          simpa using
-            (Finset.sum_div
-              (s := (Finset.univ : Finset α))
-              (f := fun x : α => Real.exp (naturalParam F θ x) * F.base x)
-              (a := ∑ y : α, Real.exp (naturalParam F θ y) * F.base y))
-    _ = 1 := by exact div_self hZne
+    ∑ x : α, Real.exp (naturalParam F θ x) * F.base x / Z
+        = (∑ x : α, Real.exp (naturalParam F θ x) * F.base x) / Z := by
+          rw [Finset.sum_div]
+    _ = Z / Z := by
+          rfl
+    _ = 1 := div_self hZne
 
 /-- Expectation under the exponential-family model at parameter `θ`. -/
 noncomputable def expectation
@@ -212,8 +211,8 @@ lemma expectation_linearStat
           refine Finset.sum_congr rfl ?_
           intro x hx
           ring
-    _ = ∑ i, v i * statMean F θ i := by
-          simp [statMean, expectation]
+    _ = ∑ i, v i * expectation F θ (fun x => F.stat x i) := by
+          rfl
 
 lemma centeredLinearStat_eq_sum_centeredStat
     {d : ℕ}
@@ -223,17 +222,14 @@ lemma centeredLinearStat_eq_sum_centeredStat
     centeredLinearStat F θ v x = ∑ i, v i * centeredStat F θ i x := by
   unfold centeredLinearStat linearStat centeredStat
   have hExp :
-      expectation F θ (fun x => ∑ i, v i * F.stat x i) = ∑ i, v i * statMean F θ i := by
+      expectation F θ (fun x => ∑ i, v i * F.stat x i) =
+        ∑ i, v i * statMean F θ i := by
     simpa [linearStat] using expectation_linearStat (F := F) (θ := θ) (v := v)
   rw [hExp]
   calc
     ∑ i, v i * F.stat x i - ∑ i, v i * statMean F θ i
         = ∑ i, (v i * F.stat x i - v i * statMean F θ i) := by
-            have hsum :
-                (∑ i, (v i * F.stat x i - v i * statMean F θ i))
-                  = (∑ i, v i * F.stat x i) - (∑ i, v i * statMean F θ i) := by
-              simp [Finset.sum_sub_distrib]
-            exact hsum.symm
+            rw [Finset.sum_sub_distrib]
     _ = ∑ i, v i * (F.stat x i - statMean F θ i) := by
           refine Finset.sum_congr rfl ?_
           intro i hi
@@ -247,37 +243,76 @@ lemma fisher_as_variance
       expectation F θ (fun x => (centeredLinearStat F θ v x) ^ (2 : ℕ)) := by
   unfold fisherQuadratic fisherMetric covariance expectation
   calc
-    ∑ i, ∑ j, v i * (∑ x, density F θ x * (centeredStat F θ i x * centeredStat F θ j x)) * v j
-        = ∑ i, ∑ j, ∑ x, density F θ x * (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
-            refine Finset.sum_congr rfl ?_
-            intro i hi
-            refine Finset.sum_congr rfl ?_
-            intro j hj
-            calc
-              v i * (∑ x, density F θ x * (centeredStat F θ i x * centeredStat F θ j x)) * v j
-                  = (v i * v j) * ∑ x, density F θ x * (centeredStat F θ i x * centeredStat F θ j x) := by
-                      ring
-              _ = ∑ x, (v i * v j) * (density F θ x * (centeredStat F θ i x * centeredStat F θ j x)) := by
-                    rw [Finset.mul_sum]
-              _ = ∑ x, density F θ x * (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
-                    refine Finset.sum_congr rfl ?_
-                    intro x hx
-                    ring
-    _ = ∑ i, ∑ x, ∑ j, density F θ x * (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
-          refine Finset.sum_congr rfl ?_
-          intro i hi
-          rw [Finset.sum_comm]
-    _ = ∑ x, ∑ i, ∑ j, density F θ x * (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
-          rw [Finset.sum_comm]
-    _ = ∑ x, density F θ x * (∑ i, v i * centeredStat F θ i x) * (∑ j, v j * centeredStat F θ j x) := by
-          refine Finset.sum_congr rfl ?_
-          intro x hx
-          simp [Finset.mul_sum, mul_assoc, mul_left_comm, mul_comm]
+    ∑ i, ∑ j,
+        v i *
+          (∑ x,
+            density F θ x * (centeredStat F θ i x * centeredStat F θ j x)) *
+          v j
+        =
+      ∑ i, ∑ j, ∑ x,
+        density F θ x *
+          (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
+        refine Finset.sum_congr rfl ?_
+        intro i hi
+        refine Finset.sum_congr rfl ?_
+        intro j hj
+        calc
+          v i *
+              (∑ x,
+                density F θ x *
+                  (centeredStat F θ i x * centeredStat F θ j x)) *
+              v j
+              =
+            (v i * v j) *
+              ∑ x,
+                density F θ x *
+                  (centeredStat F θ i x * centeredStat F θ j x) := by
+              ring
+          _ =
+            ∑ x,
+              (v i * v j) *
+                (density F θ x *
+                  (centeredStat F θ i x * centeredStat F θ j x)) := by
+              rw [Finset.mul_sum]
+          _ =
+            ∑ x,
+              density F θ x *
+                (v i * centeredStat F θ i x *
+                  (v j * centeredStat F θ j x)) := by
+              refine Finset.sum_congr rfl ?_
+              intro x hx
+              ring
+    _ =
+      ∑ i, ∑ x, ∑ j,
+        density F θ x *
+          (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
+        refine Finset.sum_congr rfl ?_
+        intro i hi
+        rw [Finset.sum_comm]
+    _ =
+      ∑ x, ∑ i, ∑ j,
+        density F θ x *
+          (v i * centeredStat F θ i x * (v j * centeredStat F θ j x)) := by
+        rw [Finset.sum_comm]
+    _ =
+      ∑ x,
+        density F θ x *
+          (∑ i, v i * centeredStat F θ i x) *
+          (∑ j, v j * centeredStat F θ j x) := by
+        refine Finset.sum_congr rfl ?_
+        intro x hx
+        simp only [Finset.mul_sum, Finset.sum_mul]
+        rw [Finset.sum_comm]
+        refine Finset.sum_congr rfl ?_
+        intro j hj
+        refine Finset.sum_congr rfl ?_
+        intro i hi
+        ring
     _ = ∑ x, density F θ x * (centeredLinearStat F θ v x) ^ (2 : ℕ) := by
-          refine Finset.sum_congr rfl ?_
-          intro x hx
-          rw [centeredLinearStat_eq_sum_centeredStat]
-          ring
+        refine Finset.sum_congr rfl ?_
+        intro x hx
+        rw [centeredLinearStat_eq_sum_centeredStat]
+        ring
 
 theorem fisher_positive_semidefinite
     {d : ℕ}
@@ -289,7 +324,7 @@ theorem fisher_positive_semidefinite
   unfold expectation
   refine Finset.sum_nonneg ?_
   intro x hx
-  exact mul_nonneg (density_nonneg F θ x) (pow_two_nonneg _)
+  exact mul_nonneg (density_nonneg F θ x) (sq_nonneg _)
 
 theorem fisher_positive_definite_of_nonconstant_linearStats
     {d : ℕ}
@@ -308,8 +343,8 @@ theorem fisher_positive_definite_of_nonconstant_linearStats
       ∀ x ∈ (Finset.univ : Finset α),
         0 ≤ density F θ x * (centeredLinearStat F θ v x) ^ (2 : ℕ) := by
     intro x hx
-    exact mul_nonneg (density_nonneg F θ x) (pow_two_nonneg _)
-  have h_pos_sorry :
+    exact mul_nonneg (density_nonneg F θ x) (sq_nonneg _)
+  have h_pos :
       ∃ x ∈ (Finset.univ : Finset α),
         0 < density F θ x * (centeredLinearStat F θ v x) ^ (2 : ℕ) := by
     refine ⟨x0, Finset.mem_univ x0, ?_⟩
@@ -318,8 +353,8 @@ theorem fisher_positive_definite_of_nonconstant_linearStats
       intro hzero
       apply hx0
       exact sub_eq_zero.mp (by simpa [centeredLinearStat] using hzero)
-    exact mul_pos (density_pos F θ x0) (pow_two_pos_of_ne_zero h_centered_ne)
-  exact Finset.sum_pos' h_nonneg h_pos_sorry
+    exact mul_pos (density_pos F θ x0) (sq_pos_of_ne_zero h_centered_ne)
+  exact Finset.sum_pos' h_nonneg h_pos
 
 theorem fisher_positive_definite
     {d : ℕ}

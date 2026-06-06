@@ -3,41 +3,125 @@ import subprocess
 import argparse
 import sys
 import json
+from pathlib import Path
+
+from tools.infra.lean_audit_prompt import build_repair_prompt
+from tools.infra.chatgpt_lane_guard import browser_chatgpt_lane
 
 def ask_chatgpt(prompt_text):
-    with open('/tmp/chatgpt_prompt.txt', 'w') as f:
-        f.write(prompt_text)
+    prompt_text = build_repair_prompt(
+        "ChatGPT collaborator query:\n\n" + prompt_text,
+    )
+    prompt_path = Path("/tmp/chatgpt_prompt.txt")
+    prompt_path.write_text(prompt_text, encoding="utf-8")
     
     harness_script = """
 import json
+import time
 with open('/tmp/chatgpt_prompt.txt', 'r') as f:
     text = f.read()
 
 safe_prompt = json.dumps(text)
 
-# Use the currently active tab where the user is already logged in and ready
+# Use the currently active tab where the user is already logged in and ready.
+# The outer Python process holds the repo queue while this harness runs.
 ensure_real_tab()
+
+def page_state():
+    return js('''
+    (() => {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      const buttonText = b => (b.getAttribute('aria-label') || '') + ' ' + (b.innerText || '') + ' ' + (b.getAttribute('data-testid') || '');
+      const streaming = buttons.some(b => /Stop answering|Stop generating|Stop|Cancel|streaming/i.test(buttonText(b)));
+      const fields = Array.from(document.querySelectorAll('textarea[aria-label*="Chat"], textarea, div[contenteditable="true"][role="textbox"], div[contenteditable="true"], #prompt-textarea'));
+      const composerLengths = fields.map(el => {
+        const text = el.tagName === 'TEXTAREA' ? el.value : (el.innerText || el.textContent || '');
+        return text.length;
+      });
+      return {streaming, composerLengths, assistantCount: document.querySelectorAll('[data-message-author-role="assistant"]').length};
+    })()
+    ''')
+
+state = page_state()
+if state.get('streaming'):
+    raise RuntimeError('CHATGPT_LANE_BUSY: visible Stop/Cancel/streaming control is present')
+if any(int(n) > 0 for n in (state.get('composerLengths') or [])):
+    raise RuntimeError(f'CHATGPT_COMPOSER_NOT_EMPTY: composer_lengths={state.get("composerLengths")}')
+
+assistant_count_before = int(state.get('assistantCount') or 0)
 
 # Target the main chat input
 # ChatGPT uses a contenteditable div
-js(f'''
-var el = document.getElementById("prompt-textarea");
-el.innerHTML = "";
-el.innerText = {safe_prompt};
-el.dispatchEvent(new Event("input", {{ bubbles: true }}));
+inserted = js(f'''
+(() => {{
+  const prompt = {safe_prompt};
+  const el = document.getElementById("prompt-textarea") ||
+    document.querySelector('div[contenteditable="true"][role="textbox"], div[contenteditable="true"], textarea');
+  if (!el) return {{ok:false, reason:'prompt_field_missing'}};
+  el.focus();
+  if (el.tagName === 'TEXTAREA') {{
+    const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    setter.call(el, prompt);
+  }} else {{
+    el.textContent = prompt;
+  }}
+  el.dispatchEvent(new InputEvent("input", {{ bubbles: true, inputType: "insertText", data: prompt }}));
+  el.dispatchEvent(new Event("change", {{ bubbles: true }}));
+  const current = el.tagName === 'TEXTAREA' ? el.value : (el.innerText || el.textContent || '');
+  return {{ok: current === prompt, length: current.length}};
+}})()
 ''')
+if not inserted.get('ok'):
+    raise RuntimeError(f'prompt insertion failed: {inserted}')
 
-wait(1)
-js('document.querySelector(\\'button[data-testid="send-button"]\\').click()')
+deadline = time.time() + 10
+clicked = {'ok': False, 'reason': 'not_started'}
+while time.time() < deadline:
+    state = page_state()
+    if state.get('streaming'):
+        raise RuntimeError('CHATGPT_LANE_BUSY: generation started before click confirmation')
+    clicked = js('''
+    (() => {
+      const btn = Array.from(document.querySelectorAll('button')).find(b =>
+        !b.disabled && (/send-button/i.test(b.getAttribute('data-testid') || '') ||
+          /Send/i.test((b.getAttribute('aria-label') || '') + ' ' + (b.innerText || ''))));
+      if (!btn) return {ok:false, reason:'send_button_missing', state: %s};
+      btn.click();
+      return {ok:true};
+    })()
+    ''' % json.dumps(state))
+    if clicked.get('ok'):
+        break
+    wait(0.5)
+if not clicked.get('ok'):
+    raise RuntimeError(f'failed to submit prompt: {clicked}')
 
-# Wait for the generation to complete. 
+# Wait for the generation to complete.
 print("Waiting for generation to finish...")
-wait(5)
-wait_for_element('button[data-testid="send-button"]', timeout=180, visible=True)
+deadline = time.time() + 180
+last_text = ''
+while time.time() < deadline:
+    state = page_state()
+    last_text = js('''
+    (() => {
+      const responses = document.querySelectorAll('[data-message-author-role="assistant"]');
+      if (responses.length === 0) return '';
+      return responses[responses.length - 1].innerText || responses[responses.length - 1].textContent || '';
+    })()
+    ''')
+    if (
+        int(state.get('assistantCount') or 0) > assistant_count_before and
+        not state.get('streaming') and
+        last_text.strip()
+    ):
+        break
+    wait(1)
+else:
+    raise RuntimeError('timed out waiting for final assistant message')
 
 # Extract the last assistant message
 script = '''
-var responses = document.querySelectorAll('div[data-message-author-role="assistant"]');
+var responses = document.querySelectorAll('[data-message-author-role="assistant"]');
 if (responses.length > 0) {
     responses[responses.length - 1].innerText;
 } else {
@@ -49,12 +133,18 @@ print("--- CHATGPT RESPONSE ---")
 print(response_text)
 """
     try:
-        result = subprocess.run(
-            ["browser-harness", "-c", harness_script],
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        with browser_chatgpt_lane(
+            source="chatgpt_collaborator_bridge",
+            platform="chatgpt",
+            prompt_chars=len(prompt_text),
+            reason="legacy_collaborator_browser_harness",
+        ):
+            result = subprocess.run(
+                ["browser-harness", "-c", harness_script],
+                capture_output=True,
+                text=True,
+                check=True
+            )
         return result.stdout
     except subprocess.CalledProcessError as e:
         print(f"Browser harness failed to communicate with ChatGPT: {e.stderr}", file=sys.stderr)

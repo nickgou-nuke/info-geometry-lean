@@ -170,6 +170,35 @@ def source_patch_ok(attrs: dict[str, Any]) -> bool:
     )
 
 
+def is_mathlib_owner_module(module: str) -> bool:
+    module = str(module).strip()
+    return module == "Mathlib" or module.startswith("Mathlib.")
+
+
+def packet_replacement_module(attrs: dict[str, Any]) -> str:
+    for path in (
+        "surgery.replacement_module",
+        "surgery.replacement_candidate_module",
+        "vacuity.replacement_module",
+        "vacuity.replacement_candidate_module",
+        "source_patch.replacement_module",
+    ):
+        value = str(_get_nested(attrs, f"attrs.{path}", "") or "") if "attrs" in attrs else ""
+        if value:
+            return value
+    for path in (
+        "surgery.replacement_module",
+        "surgery.replacement_candidate_module",
+        "vacuity.replacement_module",
+        "vacuity.replacement_candidate_module",
+        "source_patch.replacement_module",
+    ):
+        value = str(_get_nested(attrs, path, "") or "")
+        if value:
+            return value
+    return ""
+
+
 def replacement_for(node_attrs: dict[str, Any]) -> str:
     for path in (
         "surgery.replacement",
@@ -388,8 +417,20 @@ def plan(snapshot_path: Path, locks_path: Path | None = None) -> tuple[list[dict
                 continue
             if scc_size != 1:
                 continue
-            state = "certified" if source_patch_ok(attrs) else "manual_refactor_required"
-            reason = "" if state == "certified" else "source_patch_not_safe"
+            replacement_module = packet_replacement_module(attrs)
+            replacement_is_mathlib_owner = is_mathlib_owner_module(replacement_module)
+            source_patch_safe = source_patch_ok(attrs)
+            if source_patch_safe and replacement_is_mathlib_owner:
+                state = "certified"
+                reason = ""
+            else:
+                state = "manual_refactor_required"
+                if not source_patch_safe:
+                    reason = "source_patch_not_safe"
+                elif not replacement_is_mathlib_owner:
+                    reason = "replacement_not_mathlib_owner"
+                else:
+                    reason = "not_certifiable"
             sp = attrs.get("source_patch", {}) if isinstance(attrs.get("source_patch", {}), dict) else {}
             vacuum.append(build_packet_envelope(
                 stream="vacuum",
@@ -408,6 +449,8 @@ def plan(snapshot_path: Path, locks_path: Path | None = None) -> tuple[list[dict
                 payload={
                     "role": role,
                     "replacement": replacement,
+                    "replacement_module": replacement_module,
+                    "replacement_is_mathlib_owner": replacement_is_mathlib_owner,
                     "rewrite_mode": "replace_decl_body",
                     "replacement_body": str(sp.get("replacement_text", "") or f"by exact {replacement}"),
                     "destructive": False,

@@ -24,7 +24,7 @@ dictionary. Each success is archived with fitness score.
 | GEPA/DSPy | `gepa_evolver.py` | Mutates skill via Pareto genetic search |
 | RealEvaluator | `gepa_real_eval.py` | Tests skill against real `_True` fields |
 | Pi Coding Agent | `@earendil-works/pi` | Proof generation + compile → fix → repeat |
-| ChatGPT Auditor | `run_audit.py` | Browser CDP → full file context → formatted code extraction |
+| ChatGPT Auditor | `tools/infra/chatgpt_browser_harness_driver.py` | Browser CDP → full file context → formatted code extraction |
 | Vacuity Critic | `vacuity_critic.py` | Discovers new obfuscation pattern synonyms |
 | Proof Seeker | `proof_seeker.py` | arXiv/Mathlib search on failure |
 

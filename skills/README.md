@@ -40,6 +40,10 @@ All castes are strictly bound by the top-priority mandate:
 
 - `lean-formula-function-policy`: formulas are `def`s/functions, not prose
   labels or structure fields, and downstream Lean code must call them directly.
+- `lean-skill-library`: index of the local Lean/autoproof skill stack and relevant external downloads.
+- `socratic-oracle-proof-repair`: use aiClaw/ChatGPT as a Socratic proof
+  auditor and repair suggester; send the complete owner file plus relevant
+  build errors in one prompt, then let Codex apply only Lean-checked edits.
 
 ## Induction Skills
 

@@ -39,6 +39,7 @@ UNSAFE_REPLACEMENT_ROLES = {
     "unknown",
 }
 CRITIC_BLOCKING_SEVERITIES = {"high", "critical", "blocker"}
+MATHLIB_OWNER_PREFIX = "Mathlib"
 
 
 def utc_now() -> str:
@@ -161,9 +162,20 @@ def source_patch_ok(packet: dict[str, Any]) -> bool:
     )
 
 
+def is_mathlib_owner_module(module: str) -> bool:
+    module = str(module).strip()
+    return module == MATHLIB_OWNER_PREFIX or module.startswith(f"{MATHLIB_OWNER_PREFIX}.")
+
+
 def packet_replacement(packet: dict[str, Any]) -> str:
     payload = packet.get("payload", {}) if isinstance(packet.get("payload", {}), dict) else {}
     return str(payload.get("replacement") or packet.get("replacement") or "").strip()
+
+
+def packet_replacement_module(packet: dict[str, Any]) -> str:
+    payload = packet.get("payload", {}) if isinstance(packet.get("payload", {}), dict) else {}
+    replacement_module = payload.get("replacement_module") or packet.get("replacement_module") or ""
+    return str(replacement_module).strip()
 
 
 def packet_source_patch(packet: dict[str, Any]) -> dict[str, Any]:
@@ -441,6 +453,18 @@ def validate_packet_static(
             "replacement_scc": replacement_scc,
             "replacement_scc_size": replacement_scc_size,
         }
+
+    replacement_module = packet_replacement_module(packet)
+    if replacement_module:
+        if not is_mathlib_owner_module(replacement_module):
+            return False, f"replacement_not_mathlib_owner:{replacement_module}", {
+                "replacement_module": replacement_module,
+            }
+    elif replacement_node is not None:
+        if not is_mathlib_owner_module(str(getattr(replacement_node, "module", "") or "")):
+            return False, f"replacement_not_mathlib_owner:{getattr(replacement_node, 'module', '')}", {
+                "replacement_module": str(getattr(replacement_node, "module", "") or ""),
+            }
 
     if not source_patch_ok(packet):
         return False, "source_patch_provenance_not_safe", {

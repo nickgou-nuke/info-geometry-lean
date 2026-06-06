@@ -104,4 +104,19 @@ noncomputable abbrev headEpsPlusProjectorTensor (n : ℕ) : SplitClNNTensorStep 
     headKFlipTensor_apply_headEpsPlusProjectorTensor]
   abel_nf
 
+/--
+Projector-facing particle-hole cancellation law at the split head: the `K`-flip
+exchanges the two `ε` projectors, and both mixed-sector products vanish.
+-/
+@[rep_depth krein]
+theorem headKFlipTensor_particleHole_resolves_projectorAnomaly (n : ℕ) :
+    headKFlipTensor n (headEpsMinusProjectorTensor n) = headEpsPlusProjectorTensor n ∧
+      headKFlipTensor n (headEpsPlusProjectorTensor n) = headEpsMinusProjectorTensor n ∧
+        headEpsMinusProjectorTensor n * headEpsPlusProjectorTensor n = 0 ∧
+          headEpsPlusProjectorTensor n * headEpsMinusProjectorTensor n = 0 := by
+  exact ⟨headKFlipTensor_apply_headEpsMinusProjectorTensor n,
+    headKFlipTensor_apply_headEpsPlusProjectorTensor n,
+    headEpsMinusProjectorTensor_mul_headEpsPlusProjectorTensor n,
+    headEpsPlusProjectorTensor_mul_headEpsMinusProjectorTensor n⟩
+
 end InfoGeometry.Canonical.SplitCliffordHeadProjectors

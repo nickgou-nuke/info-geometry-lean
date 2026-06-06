@@ -594,16 +594,16 @@
       "pattern": "theorem claimF_superSouriauFermionGas_packet"
     },
     {
-      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
-      "pattern": "theorem claimG_infiniteSuperCoadjointMetriplectic_packet"
+      "path": "lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "pattern": "theorem full_coadjoint_orbit_metriplectic_theorem"
     },
     {
-      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
-      "pattern": "theorem claimT_splitCl44_TKK_JordanLie_packet"
+      "path": "lean/InfoGeometry/Canonical/SplitCl44TKKJordanLieBridge.lean",
+      "pattern": "theorem splitCl44_TKK_JordanLie_constructive_packet"
     },
     {
-      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
-      "pattern": "theorem claimM_coadjointLeaf_Casimir_transverseOnsager_packet"
+      "path": "lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "pattern": "theorem casimir_leaf_transverse_onsager_square_packet"
     },
     {
       "path": "lean/InfoGeometry/Canonical/SouriauLieThermoKKTBridge.lean",

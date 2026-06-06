@@ -1,11 +1,12 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import * as util from "util";
 
-const execPromise = util.promisify(exec);
+const registerLegacyTool = (pi: ExtensionAPI, tool: unknown) => (pi.registerTool as any)(tool);
+const execFilePromise = util.promisify(execFile);
 const exists = (p: string) => fs.existsSync(p);
 
 /**
@@ -20,16 +21,24 @@ const exists = (p: string) => fs.existsSync(p);
  *
  * System state:
  *   - elan 4.2.1, Lean 4.28.0 at ~/.elan/bin/
- *   - info-geometry-lean project at /home/goutev/info-geometry-lean/
+ *   - info-geometry-lean project at the current repository root
  *     (fully built with mathlib v4.28.0, 6.9GB .lake/packages/)
  *   - mathlib cache at ~/.cache/mathlib/ (411MB)
  */
 
 // Path to the pre-built Lean project with mathlib
-const MATHLIB_PROJECT = "/home/goutev/info-geometry-lean";
+const MATHLIB_PROJECT = process.env.INFO_GEOMETRY_LEAN_ROOT || process.cwd();
+
+function ensureDir(dir: string) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function rel(p: string): string {
+  return path.relative(process.cwd(), p) || ".";
+}
 
 export default function (pi: ExtensionAPI) {
-  pi.registerTool({
+  registerLegacyTool(pi, {
     name: "verify_lean_proof",
     label: "Lean 4 Theorem Prover & Auto-Formalizer",
     description:
@@ -63,7 +72,7 @@ export default function (pi: ExtensionAPI) {
     ) {
       // ── Check Lean availability ──
       try {
-        await execPromise("which lean");
+        await execFilePromise("lean", ["--version"]);
       } catch {
         return {
           content: [
@@ -102,10 +111,10 @@ async function verifyPlain(
   safeFileName: string,
   onUpdate: any
 ): Promise<{ content: { type: "text"; text: string }[] }> {
-  const tempDir = path.join(process.cwd(), ".lean_sandbox");
-  if (!exists(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+  const proofDir = path.join(process.cwd(), "proofs");
+  ensureDir(proofDir);
 
-  const filePath = path.join(tempDir, safeFileName);
+  const filePath = path.join(proofDir, safeFileName);
   fs.writeFileSync(filePath, code);
 
   try {
@@ -118,11 +127,10 @@ async function verifyPlain(
       ],
     });
 
-    const { stdout } = await execPromise(`lean ${filePath}`, {
+    const { stdout } = await execFilePromise("lean", [filePath], {
       timeout: 30000,
+      maxBuffer: 1024 * 1024 * 4,
     });
-
-    try { fs.unlinkSync(filePath); } catch {}
 
     return {
       content: [
@@ -130,20 +138,20 @@ async function verifyPlain(
           type: "text" as const,
           text:
             `[LEAN SUCCESS]: Theorem '${theoremName}' is completely verified. No logical errors.\n` +
+            `Persisted proof: ${rel(filePath)}\n` +
             `Lean 4.28.0 | elan 4.2.1` +
             (stdout ? `\nOutput:\n${stdout}` : ""),
         },
       ],
     };
   } catch (error: any) {
-    try { fs.unlinkSync(filePath); } catch {}
-
     return {
       content: [
         {
           type: "text" as const,
           text:
             `[LEAN COMPILE ERROR]:\n${error.stderr || error.stdout || error.message}\n\n` +
+            `Persisted failing proof for repair: ${rel(filePath)}\n\n` +
             `Theorem '${theoremName}' failed type-checking. ` +
             `Use ask_chatgpt_compiler to get help fixing the proof.`,
         },
@@ -179,10 +187,10 @@ async function verifyWithMathlib(
     };
   }
 
-  // Write to a temp file (NOT inside the project src/ — avoids triggering full rebuild)
-  const tempDir = path.join(process.cwd(), ".lean_sandbox");
-  if (!exists(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-  const filePath = path.join(tempDir, safeFileName);
+  // Write to proofs/ for auditability, then compile the single file.
+  const proofDir = path.join(process.cwd(), "proofs");
+  ensureDir(proofDir);
+  const filePath = path.join(proofDir, safeFileName);
   fs.writeFileSync(filePath, code);
 
   try {
@@ -196,12 +204,11 @@ async function verifyWithMathlib(
     });
 
     // Use `lake env lean` — sets up load paths for mathlib but only compiles our file
-    const { stdout, stderr } = await execPromise(
-      `lake env lean ${filePath} 2>&1`,
-      { cwd: MATHLIB_PROJECT, timeout: 60000 }
+    const { stdout, stderr } = await execFilePromise(
+      "lake",
+      ["env", "lean", filePath],
+      { cwd: MATHLIB_PROJECT, timeout: 60000, maxBuffer: 1024 * 1024 * 8 }
     );
-
-    try { fs.unlinkSync(filePath); } catch {}
 
     const fullOutput = stdout + stderr;
 
@@ -213,6 +220,7 @@ async function verifyWithMathlib(
             type: "text" as const,
             text:
               `[LEAN COMPILE ERROR] (mathlib v4.28.0):\n${fullOutput.slice(-2000)}\n\n` +
+              `Persisted failing proof for repair: ${rel(filePath)}\n\n` +
               `Theorem '${theoremName}' failed. Use ask_chatgpt_compiler for help.`,
           },
         ],
@@ -225,20 +233,20 @@ async function verifyWithMathlib(
           type: "text" as const,
           text:
             `[LEAN SUCCESS]: Theorem '${theoremName}' verified with mathlib v4.28.0. No errors.\n` +
-            `\nLean 4.28.0 | mathlib v4.28.0 | elan 4.2.1` +
+            `\nPersisted proof: ${rel(filePath)}\n` +
+            `Lean 4.28.0 | mathlib v4.28.0 | elan 4.2.1` +
             (fullOutput.trim() ? `\n${fullOutput.trim()}` : ""),
         },
       ],
     };
   } catch (error: any) {
-    try { fs.unlinkSync(filePath); } catch {}
-
     return {
       content: [
         {
           type: "text" as const,
           text:
             `[LEAN COMPILE ERROR] (mathlib v4.28.0):\n${error.stderr || error.stdout || error.message}\n\n` +
+            `Persisted failing proof for repair: ${rel(filePath)}\n\n` +
             `Theorem '${theoremName}' failed. Use ask_chatgpt_compiler for help.`,
         },
       ],

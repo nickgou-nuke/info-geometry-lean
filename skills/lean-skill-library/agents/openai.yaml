@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lean Skill Library"
+  short_description: "Catalog Lean proof and autoproof skills for this repo"
+  default_prompt: "Use $lean-skill-library to select the narrowest Lean workflow skill or external proof tool for the task."
+
+policy:
+  allow_implicit_invocation: true

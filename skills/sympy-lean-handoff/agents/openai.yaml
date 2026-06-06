@@ -1,0 +1,7 @@
+interface:
+  display_name: "SymPy to Lean Handoff"
+  short_description: "Verify algebra in SymPy, then translate it into Lean 4."
+  default_prompt: "Use $sympy-lean-handoff to verify exact algebraic/group identities in SymPy and translate the checked result into a Lean 4 theorem with the same assumptions and conventions."
+
+policy:
+  allow_implicit_invocation: true

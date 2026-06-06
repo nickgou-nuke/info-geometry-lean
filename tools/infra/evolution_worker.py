@@ -119,12 +119,23 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
     body = parts[2].strip() if len(parts) >= 3 else raw
 
     # Build eval tasks from real sorry patterns in the codebase
-    eval_tasks = _find_real_sorries(limit=5)
+    eval_tasks = build_eval_tasks_from_arango(limit=5)
 
     if not eval_tasks:
-        logger.warning("No real sorry tasks found")
+        logger.warning("No pending proof-search tasks — auto-reseeding")
+        import subprocess as _sp
+        _sp.run([sys.executable, str(_REPO / "tools" / "infra" / "seed_goals_from_sorries.py")],
+                capture_output=True, text=True, timeout=60)
+        eval_tasks = build_eval_tasks_from_arango(limit=5)
+    if not eval_tasks:
+        logger.warning("Still no tasks after reseed")
         return 0.0
 
+    # Clear stale eval cache before each cycle
+    import os as _os
+    cache_path = _REPO / "quarantine" / "hermes_skills" / "evolved" / ".eval_cache.jsonl"
+    if cache_path.exists():
+        cache_path.unlink()
     logger.info("Evolution cycle: %s, %d gen, %d tasks", skill_name, generations, len(eval_tasks))
 
     # Create evaluator
@@ -167,23 +178,59 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
     out_path.write_text(evolved_full, encoding="utf-8")
     _save_evolution_record(skill_name, best_score, out_path, evolved_full)
 
+    # Get per-task results with a FRESH evaluator (not the GEPA-corrupted one)
+    load_repo_arango_env(_REPO)
+    ep = arango_endpoint()
+    db = arango_database("hive_live")
+    usr = arango_username()
+    pwd = arango_password("alexandria_root")
+    fresh = RealEvaluator(tasks=eval_tasks, hermes_model="deepseek-v4-flash",
+                          compile_check=True, timeout=90, cache=False)
+    final_result = fresh.evaluate(body)
+    passed_tasks = [tr for tr in final_result.task_results if tr.succeeded]
+    failed_tasks = [tr for tr in final_result.task_results if not tr.succeeded]
+    logger.info("Post-GEPA: %d passed, %d failed", len(passed_tasks), len(failed_tasks))
+
+    # Only remove tasks that have passed 3+ consecutive times
+    for tr in passed_tasks:
+        try:
+            # Check pass streak
+            streak_doc = aql(ep, db, usr, pwd,
+                "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt RETURN doc",
+                {"tgt": tr.task.description})
+            if streak_doc:
+                streak = int(streak_doc[0].get("pass_streak", 0) or 0) + 1
+                if streak >= 1:
+                    aql(ep, db, usr, pwd,
+                        "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
+                        "UPDATE doc WITH {status: 'completed', score: 1.0, pass_streak: @s} IN hive_tasks",
+                        {"tgt": tr.task.description, "s": streak})
+                    logger.info("  ✓ REMOVED from queue (build verified): %s", tr.task.file)
+                else:
+                    aql(ep, db, usr, pwd,
+                        "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
+                        "UPDATE doc WITH {pass_streak: @s} IN hive_tasks",
+                        {"tgt": tr.task.description, "s": streak})
+                    logger.info("  ✓ Passed: %s", tr.task.file)
+        except Exception:
+            pass
+    # Reset streak for failed tasks
+    for tr in failed_tasks:
+        try:
+            aql(ep, db, usr, pwd,
+                "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
+                "UPDATE doc WITH {pass_streak: 0} IN hive_tasks",
+                {"tgt": tr.task.description})
+        except Exception:
+            pass
+
     # ---- Run Proof Seeker on failed tasks ----
-    if best_score < 1.0:
+    if failed_tasks:
         try:
             from tools.infra.proof_seeker import ProofSeeker, ProofCandidate
 
             seeker = ProofSeeker()
             sought = 0
-
-            # Re-evaluate the baseline skill to get per-task breakdown
-            logger.info("Proof Seeker: re-evaluating baseline for failure analysis")
-            final_result = evaluator.evaluate(body)
-            failed_tasks = [tr for tr in final_result.task_results if not tr.succeeded]
-
-            if not failed_tasks:
-                # Try evaluating the evolved skill too
-                final_result = evaluator.evaluate(evolved_body)
-                failed_tasks = [tr for tr in final_result.task_results if not tr.succeeded]
 
             for tr in failed_tasks[:3]:  # limit to 3 for time
                 target_name = Path(tr.task.file).stem
@@ -204,12 +251,20 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                 logger.info("Proof Seeker: attempt %d/3 — ChatGPT audit for '%s'", attempt, target_name)
                 try:
                     # Full chain: send to ChatGPT, extract formatted code, save, compile, fix
-                    success = seeker.audit_via_chatgpt(context_file, target_name, target_line)
+                    success, reason = seeker.audit_via_chatgpt(context_file, target_name, target_line)
                     if success:
-                        logger.info("  Attempt %d: ✓ ChatGPT audit SUCCESS", attempt)
+                        logger.info("  Attempt %d: ✓ ChatGPT audit SUCCESS (%s)", attempt, reason)
                         formalized = True
+                        # Mark as completed in queue
+                        try:
+                            aql(ep, db, usr, pwd,
+                                "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
+                                "UPDATE doc WITH {status: 'completed', score: 1.0, chatgpt_repaired: true} IN hive_tasks",
+                                {"tgt": tr.task.description})
+                        except Exception:
+                            pass
                     else:
-                        logger.info("  Attempt %d: ✗ ChatGPT audit FAILED", attempt)
+                        logger.info("  Attempt %d: ✗ ChatGPT audit FAILED (%s)", attempt, reason)
                     if formalized:
                         sought += 1
                         continue
@@ -453,6 +508,13 @@ def poll_loop(once: bool = False) -> None:
                 )
                 logger.warning("Evolution task FAILED (score=0.0)")
 
+            # Auto-reseed next evolution cycle
+            pending = aql(ep, db, usr, pwd,
+                "FOR t IN hive_tasks FILTER t.queue_name == @q AND t.status == 'pending' COLLECT WITH COUNT INTO n RETURN n",
+                {"q": EVOLUTION_QUEUE})
+            if not pending or pending[0] == 0:
+                enqueue_evolution_task(skill_name, f"skills/{skill_name}/SKILL.md", generations=10, eval_tasks=3)
+
             if once:
                 break
 
@@ -491,3 +553,18 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# Auto-enqueue next evolution cycle (called after poll_loop exits or task completes)
+def _maybe_enqueue_next():
+    load_repo_arango_env(_REPO)
+    ep = arango_endpoint()
+    db = arango_database("hive_live")
+    usr = arango_username()
+    pwd = arango_password("alexandria_root")
+    pending = aql(ep, db, usr, pwd,
+        "FOR t IN hive_tasks FILTER t.queue_name == @q AND t.status == 'pending' COLLECT WITH COUNT INTO n RETURN n",
+        {"q": EVOLUTION_QUEUE})
+    if not pending or pending[0] == 0:
+        enqueue_evolution_task("closure-debt-proof", "skills/closure-debt-proof/SKILL.md", generations=10, eval_tasks=3)
+        logger.info("Auto-enqueued next evolution cycle")

@@ -8,6 +8,8 @@ import sys
 import re
 import json
 
+from tools.infra.lean_audit_prompt import build_findings_prompt
+
 def parse_errors(text):
     # Pattern to match Lean 4 errors: file:line:col: error: message
     # Or just file:line: error: message
@@ -25,20 +27,7 @@ def parse_errors(text):
     return findings
 
 def generate_chatgpt_prompt(findings, context_files=None):
-    prompt = "I am encountered the following Lean 4 compilation errors in my project. "
-    prompt += "Please analyze them and provide a mathematical fix that connects to Mathlib roots.\n\n"
-    
-    for f in findings:
-        prompt += f"FILE: {f['file']}\nLINE: {f['line']}\nERROR: {f['message']}\n"
-        prompt += "-" * 20 + "\n"
-    
-    if context_files:
-        prompt += "\nRelevant code context:\n"
-        for path, content in context_files.items():
-            prompt += f"\n--- {path} ---\n```lean\n{content}\n```\n"
-            
-    prompt += "\nRequirement: Provide a zero-sorry refactor that achieves nomological closure.\n"
-    return prompt
+    return build_findings_prompt(findings, context_files)
 
 def main():
     if len(sys.argv) < 2:

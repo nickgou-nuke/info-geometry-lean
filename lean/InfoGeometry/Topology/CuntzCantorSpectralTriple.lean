@@ -2,6 +2,7 @@ import Mathlib
 import InfoGeometry.OperatorAlgebra.ErlangenNet
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
+import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -1171,6 +1172,65 @@ theorem e2_eq :
     M.e2 = carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left) :=
   rfl
 
+/-- The first Cuntz Majorana candidate `e₁ = S + S*` is self-adjoint. -/
+@[rep_depth operator]
+theorem e1_star_eq_self :
+    star M.e1 = M.e1 := by
+  simp [e1, add_comm]
+
+/-- The first Cuntz Majorana candidate is self-adjoint in Mathlib's `IsSelfAdjoint` API. -/
+@[rep_depth operator]
+theorem e1_isSelfAdjoint :
+    IsSelfAdjoint M.e1 := by
+  simpa [IsSelfAdjoint] using M.e1_star_eq_self
+
+/-- The skew part `S - S*` used in the second Cuntz Majorana candidate is skew-adjoint. -/
+@[rep_depth operator]
+theorem leftShiftSkewPart_star_eq_neg :
+    star (M.cuntz.S_left - star M.cuntz.S_left) =
+      -(M.cuntz.S_left - star M.cuntz.S_left) := by
+  simp [sub_eq_add_neg, add_comm]
+
+/--
+The second Cuntz Majorana candidate is self-adjoint once the chosen phase axis is
+skew-adjoint and commutes with the skew shift part.
+-/
+@[rep_depth operator]
+theorem e2_star_eq_self_of_phaseAxis
+    (hPhaseStar :
+      star (carrierPhaseAxis (Op := Op)) = -(carrierPhaseAxis (Op := Op)))
+    (hPhaseComm :
+      (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) =
+        carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left)) :
+    star M.e2 = M.e2 := by
+  unfold e2
+  calc
+    star (carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left))
+        = star (M.cuntz.S_left - star M.cuntz.S_left) *
+            star (carrierPhaseAxis (Op := Op)) := by
+          rw [star_mul]
+    _ = (-(M.cuntz.S_left - star M.cuntz.S_left)) *
+          (-(carrierPhaseAxis (Op := Op))) := by
+          rw [M.leftShiftSkewPart_star_eq_neg, hPhaseStar]
+    _ = (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) := by
+          noncomm_ring
+    _ = carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left) := by
+          exact hPhaseComm
+
+/--
+`IsSelfAdjoint` readback for the second Cuntz Majorana candidate under the same
+phase-axis hypotheses.
+-/
+@[rep_depth operator]
+theorem e2_isSelfAdjoint_of_phaseAxis
+    (hPhaseStar :
+      star (carrierPhaseAxis (Op := Op)) = -(carrierPhaseAxis (Op := Op)))
+    (hPhaseComm :
+      (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) =
+        carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left)) :
+    IsSelfAdjoint M.e2 := by
+  simpa [IsSelfAdjoint] using M.e2_star_eq_self_of_phaseAxis hPhaseStar hPhaseComm
+
 end CuntzMajoranaCandidates
 
 /-- Anticommutator in an abstract ring. -/
@@ -1257,6 +1317,25 @@ theorem canonicalRealDoubledPhaseAxis_sq_eq_neg_id
   simpa [canonicalRealDoubledPhaseAxis] using
     InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_sq (E := E)
 
+/-- The canonical doubled real phase axis is Hilbert-skew-adjoint. -/
+@[rep_depth operator]
+theorem canonicalRealDoubledPhaseAxis_star_eq_neg
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    star (canonicalRealDoubledPhaseAxis (E := E)) =
+      -(canonicalRealDoubledPhaseAxis (E := E)) := by
+  rw [ContinuousLinearMap.star_eq_adjoint]
+  apply ContinuousLinearMap.ext
+  intro u
+  apply ext_inner_left ℝ
+  intro v
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  change
+    ⟪canonicalRealDoubledPhaseAxis (E := E) v, u⟫_ℝ =
+      ⟪v, -(canonicalRealDoubledPhaseAxis (E := E) u)⟫_ℝ
+  rw [inner_neg_right]
+  simpa [canonicalRealDoubledPhaseAxis] using
+    InfoGeometry.Canonical.TomitaTakesaki.clockAxis_inner_skew (E := E) v u
+
 /-- The generic carrier readout specializes to the canonical clock axis on the doubled carrier. -/
 @[rep_depth operator, simp]
 theorem doubledSpace_carrierPhaseAxis_eq_clockAxis
@@ -1310,6 +1389,128 @@ theorem e2_eq_canonical :
       canonicalRealDoubledPhaseAxis (E := E) *
         (M.cuntz.S_left - star M.cuntz.S_left) := by
   rfl
+
+/--
+The real-doubled Cuntz `e₂` candidate is self-adjoint once the Cuntz skew part
+commutes with the canonical doubled real phase axis.
+-/
+@[rep_depth operator]
+theorem e2_isSelfAdjoint_of_commutes_canonicalPhase
+    (hComm :
+      (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E) =
+        canonicalRealDoubledPhaseAxis (E := E) * (M.cuntz.S_left - star M.cuntz.S_left)) :
+    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
+  exact CuntzMajoranaCandidates.e2_isSelfAdjoint_of_phaseAxis
+    (M := M.toCuntzMajoranaCandidates)
+    (by
+      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using
+        (canonicalRealDoubledPhaseAxis_star_eq_neg (E := E)))
+    (by
+      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using hComm)
+
+/--
+If the left Cuntz branch commutes with the canonical doubled phase axis, then its
+adjoint also commutes with that phase axis.  This is the algebraic propagation
+needed in AF/Cantor filtration models where phase-linearity is supplied at the
+finite branch level.
+-/
+@[rep_depth operator]
+theorem star_left_commutes_canonicalPhase_of_left_commutes
+    (hComm :
+      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
+    star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+      canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left := by
+  have hStar :
+      star (canonicalRealDoubledPhaseAxis (E := E)) * star M.cuntz.S_left =
+        star M.cuntz.S_left * star (canonicalRealDoubledPhaseAxis (E := E)) := by
+    simpa only [star_mul] using congrArg star hComm
+  rw [canonicalRealDoubledPhaseAxis_star_eq_neg] at hStar
+  have hK :
+      canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left =
+        star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) := by
+    apply ContinuousLinearMap.ext
+    intro x
+    have hx := congrArg (fun T : EndH => T x) hStar
+    change
+      (-(canonicalRealDoubledPhaseAxis (E := E))) (star M.cuntz.S_left x) =
+        star M.cuntz.S_left ((-(canonicalRealDoubledPhaseAxis (E := E))) x) at hx
+    simp only [ContinuousLinearMap.neg_apply, map_neg] at hx
+    exact neg_inj.mp hx
+  exact hK.symm
+
+/--
+If the left Cuntz branch commutes with the canonical doubled phase axis, then the
+skew Majorana branch `S - S*` commutes with that phase axis.
+-/
+@[rep_depth operator]
+theorem leftShiftSkewPart_commutes_canonicalPhase_of_left_commutes
+    (hComm :
+      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
+    (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E) =
+      canonicalRealDoubledPhaseAxis (E := E) *
+        (M.cuntz.S_left - star M.cuntz.S_left) := by
+  have hStarComm :
+      star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+        canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left :=
+    M.star_left_commutes_canonicalPhase_of_left_commutes hComm
+  calc
+    (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E)
+        = M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) -
+            star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) := by
+          rw [sub_mul]
+    _ = canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left -
+          canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left := by
+          rw [hComm, hStarComm]
+    _ = canonicalRealDoubledPhaseAxis (E := E) *
+          (M.cuntz.S_left - star M.cuntz.S_left) := by
+          rw [mul_sub]
+
+/--
+The real-doubled `e₂` Majorana candidate is self-adjoint from the single
+phase-linearity hypothesis that the left Cuntz branch commutes with the
+canonical doubled phase axis.
+-/
+@[rep_depth operator]
+theorem e2_isSelfAdjoint_of_left_commutes_canonicalPhase
+    (hComm :
+      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
+    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
+  exact M.e2_isSelfAdjoint_of_commutes_canonicalPhase
+    (M.leftShiftSkewPart_commutes_canonicalPhase_of_left_commutes hComm)
+
+/--
+Hestenes `KLinear` readback for the left Cuntz branch.
+
+This converts the repo-native phase-linearity predicate into the raw
+canonical phase-axis commutation used by the Cuntz/Majorana lane.
+-/
+@[rep_depth operator]
+theorem left_commutes_canonicalPhase_of_KLinear
+    (hKLinear :
+      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) M.cuntz.S_left) :
+    M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
+      canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left := by
+  change
+    M.cuntz.S_left.comp (canonicalRealDoubledPhaseAxis (E := E)) =
+      (canonicalRealDoubledPhaseAxis (E := E)).comp M.cuntz.S_left
+  simpa [InfoGeometry.Canonical.HestenesRealStructures.KLinear,
+    InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear,
+    canonicalRealDoubledPhaseAxis] using hKLinear
+
+/--
+The real-doubled `e₂` Majorana candidate is self-adjoint from the owner
+Hestenes phase-linearity predicate on the left Cuntz branch.
+-/
+@[rep_depth operator]
+theorem e2_isSelfAdjoint_of_left_KLinear
+    (hKLinear :
+      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) M.cuntz.S_left) :
+    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
+  exact M.e2_isSelfAdjoint_of_left_commutes_canonicalPhase
+    (M.left_commutes_canonicalPhase_of_KLinear hKLinear)
 
 end RealDoubledCuntzMajoranaPacket
 

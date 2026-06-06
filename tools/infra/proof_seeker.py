@@ -167,52 +167,35 @@ class ProofSeeker:
             f"Return JSON: {{\"proof_sketch\": \"...\", \"lean_code\": \"...\"}}"
         )
 
-        # Load env vars for Pi and load BOTH skills (audit protocol + closure debt)
+        # Load env vars for Pi. Do not attach audit/closure-debt skills here:
+        # they inject BUCKET taxonomy, which belongs to audit reports, not
+        # repair-generation prompts.
         self._load_hermes_env()
-        skills = []
-        for s in ["audit-proof", "closure-debt-proof"]:
-            p = _REPO / "skills" / s / "SKILL.md"
-            if p.exists():
-                skills.extend(["--skill", str(p)])
-        audit_prompt = (
-            "Persona: Audit, a rigorous mathematical proof assistant and technical auditor specialized in Lean 4 formal verification.\n\n"
-            "Purpose: Prove non-trivial mathematical lemmas that add genuine logical value to Lean libraries. "
-            "Minimize proof debt by refusing wrappers, sockets, synthetic helper layers, fake bridge modules, "
-            "boilerplate, and proof-carrying data containers. Keep generated content dense, theorem-owner-local, "
+        skills: list[str] = []
+        repair_prompt = (
+            "Persona: a rigorous Lean 4 proof-repair assistant.\n\n"
+            "Purpose: propose theorem-owner-local Lean code that can be checked by `lake build`. "
+            "Refuse wrappers, sockets, synthetic helper layers, fake bridge modules, boilerplate, "
+            "and proof-carrying data containers. Keep generated content dense, source-faithful, "
             "and kernel-checkable.\n\n"
             "Hard rules:\n"
-            "1. Output Lean code only. Do not output conversational prose, explanations, summaries, praise, "
-            "or speculative interpretation in code-generation mode.\n"
-            "2. Move directly to the owner-side theorem corridor: imports, definitions with mathematical content, "
-            "lemmas, theorems, and proofs.\n"
-            "3. Do not create wrappers, sockets, structures, classes, witness packets, certificate packets, "
+            "1. Return JSON only: {\"proof_sketch\": \"...\", \"lean_code\": \"...\"}.\n"
+            "2. The `lean_code` field must contain ordinary multiline Lean code, not escaped prose or a diff.\n"
+            "3. Do not include audit-bucket classification; that taxonomy belongs only to audit reports.\n"
+            "4. Do not create wrappers, sockets, structures, classes, witness packets, certificate packets, "
             "`_True`, `_valid`, `_law`, `_proof`, `_certificate`, or renamed placeholder surfaces to replace missing proofs.\n"
-            "4. Do not hide assumptions in structure fields or class fields. A proof is a theorem or lemma, not a data field.\n"
-            "5. Do not use `admit`, `axiom`, fake instances, `unsafe`, or vacuous `True` claims.\n"
-            "6. Do not use `sorry` in final closed proof code. If stating open debt, place an honest `sorry` only "
-            "in the exact theorem-owner statement and do not disguise it.\n"
-            "7. Every lemma must contain real, non-vacuous mathematical content and must be derived from Mathlib, "
+            "5. Do not hide assumptions in structure fields or class fields. A proof is a theorem or lemma, not a data field.\n"
+            "6. Do not use `admit`, `axiom`, fake instances, `unsafe`, or vacuous `True` claims.\n"
+            "7. Do not use `sorry` in final closed proof code. If the theorem is genuinely open, report that in `proof_sketch` "
+            "and leave `lean_code` empty rather than disguising debt.\n"
+            "8. Every lemma must contain real, non-vacuous mathematical content and must be derived from Mathlib, "
             "repository imports, explicit theorem hypotheses, and verified tactics.\n"
-            "8. Renaming a missing theorem does not close debt. Data are not proofs.\n\n"
-            "Audit protocol: Classify the touched theorem surface using this Lean comment block:\n"
-            "```lean\n"
-            "/-\n"
-            "#### BUCKET 1: CLOSED FINITE THEOREMS\n"
-            "[Fully verified lemmas with zero remaining dependencies or open goals.]\n"
-            "#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES\n"
-            "[Theorems that compile from explicitly named theorem parameters or imported verified premises.]\n"
-            "#### BUCKET 3: OPEN CLOSURE DEBT\n"
-            "[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, "
-            "or renamed placeholders.]\n"
-            "-/\n"
-            "```\n\n"
-            "Failure condition: Outputting conversational filler in code-generation mode, adding wrapper/proxy proof "
-            "surfaces, or claiming closure from data/certificates/witnesses is a failed audit."
+            "9. Renaming a missing theorem does not close debt. Data are not proofs.\n"
         )
 
         try:
             result = subprocess.run(
-                ["pi", "-p", prompt, "--append-system-prompt", audit_prompt,
+                ["pi", "-p", prompt, "--append-system-prompt", repair_prompt,
                  "--provider", "deepseek", "--model", "deepseek-v4-flash",
                  "--no-session", "--tools", "read"] + skills,
                 capture_output=True, text=True, timeout=180,
@@ -263,11 +246,11 @@ class ProofSeeker:
         target_name: str,
         target_line: int,
     ) -> bool:
-        """Full chain: ChatGPT audit -> save -> compile -> fix.
+        """Full chain: queued aiClaw audit -> candidate compile -> promote.
 
-        Sends full file content to ChatGPT via browser-harness (CDP).
-        Extracts formatted code using innerText (preserves line structure).
-        Saves to target_file and compiles. On failure, sends errors back for fix.
+        Sends full file content to ChatGPT through the repo-local aiClaw queue.
+        The runner writes oracle output to a candidate file, compiles it, and
+        promotes to target_file only after the candidate passes.
 
         Returns True if the file compiles after the audit chain.
         """
@@ -287,12 +270,12 @@ class ProofSeeker:
             f"Output ONLY valid Lean 4 code. Zero prose."
         )
 
-        # Write prompt to temp file for browser-harness
+        # Write prompt to temp file for the queued aiClaw audit runner.
         prompt_file = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, prefix='audit_')
         prompt_file.write(prompt)
         prompt_file.close()
 
-        runner = _REPO / "tmp" / "browser-harness" / "run_audit.py"
+        runner = _REPO / "tools" / "infra" / "aiclaw_audit_runner.py"
         if not runner.exists():
             logger.warning("Audit runner not found at %s", runner)
             os.unlink(prompt_file.name)
@@ -300,27 +283,35 @@ class ProofSeeker:
 
         try:
             result = subprocess.run(
-                ["browser-harness", "-c",
-                 f"exec(open('{runner}').read()); "
-                 f"run_audit_and_save("
-                 f"'{target_file}', "
-                 f"open('{prompt_file.name}').read(), "
-                 f"{target_line}, "
-                 f"'{_REPO}')"],
+                [
+                    sys.executable,
+                    str(runner),
+                    "--target-file",
+                    str(target_file),
+                    "--context-file",
+                    prompt_file.name,
+                    "--target-line",
+                    str(target_line),
+                    "--repo-root",
+                    str(_REPO),
+                ],
                 capture_output=True, text=True, timeout=360,
             )
             output = (result.stdout or "") + (result.stderr or "")
             success = "COMPILE_SUCCESS" in output or "COMPILE_FIXED" in output
-            logger.info("ChatGPT audit: %s", "SUCCESS" if success else "FAILED")
+            logger.info("queued aiClaw audit: %s", "SUCCESS" if success else "FAILED")
             return success
         except subprocess.TimeoutExpired:
-            logger.warning("ChatGPT audit timed out (360s)")
+            logger.warning("queued aiClaw audit timed out (360s)")
             return False
         except Exception as exc:
-            logger.warning("ChatGPT audit failed: %s", exc)
+            logger.warning("queued aiClaw audit failed: %s", exc)
             return False
         finally:
             os.unlink(prompt_file.name)
+            # Clean up clone if it exists
+            if 'clone_file' in dir() and clone_file.exists():
+                clone_file.unlink(missing_ok=True)
 
     def formalize(
         self,

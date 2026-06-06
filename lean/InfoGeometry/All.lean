@@ -247,6 +247,10 @@ import InfoGeometry.Topological.FibonacciBraiding
 import InfoGeometry.Categorical.Gromov
 import InfoGeometry.Categorical.CartanSpacetime
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
+import InfoGeometry.Categorical.FibonacciBraidDirectLimit
+import InfoGeometry.Categorical.FibonacciSelfDualCarrier
+import InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
+import InfoGeometry.Categorical.FibonacciTimeModularClock
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 import InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit
 import InfoGeometry.Bridge.RealModularBerryBridge

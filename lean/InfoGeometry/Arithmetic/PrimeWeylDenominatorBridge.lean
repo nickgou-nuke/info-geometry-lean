@@ -178,7 +178,123 @@ theorem finiteNormalizedHyperbolicDenominator_eq_weylDenominator
   intro p hp
   exact normalized_symmetricRootFactor_eq_one_sub_eulerWeight (hy p hp)
 
-/-! ## 3. Raw versus normalized signed hyperbolic traces -/
+/-! ## 3. Raw determinant, hyperbolic denominator, and normalized character -/
+
+/--
+Raw orbit-determinant local factor from a half-root coordinate.
+
+If `y = T^{α/2}`, this is the finite algebraic stand-in for `T^α - 1`.
+-/
+def orbitDeterminantFactor
+    {R : Type*} [Ring R]
+    (y : R) : R :=
+  y * y - 1
+
+/--
+Finite raw orbit determinant from half-root coordinates.
+
+This models `∏_{α>0} (T^α - 1)` at finite support.
+-/
+def finiteOrbitDeterminantFromHalfRoot
+    {RootLabel R : Type*} [CommRing R]
+    (S : Finset RootLabel)
+    (y : RootLabel → R) : R :=
+  ∏ α ∈ S, orbitDeterminantFactor (y α)
+
+/--
+Finite raw hyperbolic Weyl denominator from half-root coordinates.
+
+This models `∏_{α>0} (T^{α/2} - T^{-α/2})` at finite support.
+-/
+def finiteRawHyperbolicDenominator
+    {RootLabel R : Type*} [Field R]
+    (S : Finset RootLabel)
+    (y : RootLabel → R) : R :=
+  ∏ α ∈ S, symmetricRootFactor (y α)
+
+/-- Product of finite half-root coordinates. -/
+def finiteHalfRootProduct
+    {RootLabel R : Type*} [CommMonoid R]
+    (S : Finset RootLabel)
+    (y : RootLabel → R) : R :=
+  ∏ α ∈ S, y α
+
+/--
+Local determinant factorization:
+`y² - 1 = y * (y - y⁻¹)`.
+-/
+theorem orbitDeterminantFactor_eq_halfRoot_mul_symmetricRootFactor
+    {R : Type*} [Field R]
+    {y : R} (hy : y ≠ 0) :
+    orbitDeterminantFactor y = y * symmetricRootFactor y := by
+  unfold orbitDeterminantFactor symmetricRootFactor
+  rw [mul_sub, mul_inv_cancel₀ hy]
+
+/--
+Finite determinant factorization:
+`∏ (y² - 1) = (∏ y) * ∏ (y - y⁻¹)`.
+
+This is the kernel-checked finite shadow of
+`det(Ad(T)-1) = (∏ T^{α/2}) Δ(T)`.
+-/
+theorem finiteOrbitDeterminant_eq_halfRootProduct_mul_rawHyperbolicDenominator
+    {RootLabel R : Type*} [Field R]
+    (S : Finset RootLabel)
+    (y : RootLabel → R)
+    (hy : ∀ α ∈ S, y α ≠ 0) :
+    finiteOrbitDeterminantFromHalfRoot S y =
+      finiteHalfRootProduct S y * finiteRawHyperbolicDenominator S y := by
+  unfold finiteOrbitDeterminantFromHalfRoot finiteHalfRootProduct
+    finiteRawHyperbolicDenominator
+  calc
+    (∏ α ∈ S, orbitDeterminantFactor (y α))
+        = ∏ α ∈ S, y α * symmetricRootFactor (y α) := by
+            refine Finset.prod_congr rfl ?_
+            intro α hα
+            exact orbitDeterminantFactor_eq_halfRoot_mul_symmetricRootFactor (hy α hα)
+    _ = (∏ α ∈ S, y α) * (∏ α ∈ S, symmetricRootFactor (y α)) := by
+          rw [Finset.prod_mul_distrib]
+
+/--
+Local raw hyperbolic factor as a normalized multiplicative Weyl character:
+`y - y⁻¹ = y * (1 - y⁻¹*y⁻¹)`.
+-/
+theorem symmetricRootFactor_eq_halfRoot_mul_one_sub_eulerWeight
+    {R : Type*} [Field R]
+    {y : R} (hy : y ≠ 0) :
+    symmetricRootFactor y =
+      y * (1 - eulerWeightFromHalfRoot y) := by
+  unfold symmetricRootFactor eulerWeightFromHalfRoot
+  rw [mul_sub, mul_one]
+  rw [← mul_assoc, mul_inv_cancel₀ hy, one_mul]
+
+/--
+Finite raw hyperbolic denominator as half-root product times the normalized
+finite Weyl/Euler denominator.
+
+This is the finite algebraic content of interpreting
+`∏(e^{α/2} - e^{-α/2})` as a multiplicative scaling character, while keeping
+the normalization factor explicit.
+-/
+theorem finiteRawHyperbolicDenominator_eq_halfRootProduct_mul_weylDenominator
+    {RootLabel R : Type*} [Field R]
+    (S : Finset RootLabel)
+    (y : RootLabel → R)
+    (hy : ∀ α ∈ S, y α ≠ 0) :
+    finiteRawHyperbolicDenominator S y =
+      finiteHalfRootProduct S y *
+        finitePrimeWeylDenominator S (fun α => eulerWeightFromHalfRoot (y α)) := by
+  unfold finiteRawHyperbolicDenominator finiteHalfRootProduct finitePrimeWeylDenominator
+  calc
+    (∏ α ∈ S, symmetricRootFactor (y α))
+        = ∏ α ∈ S, y α * (1 - eulerWeightFromHalfRoot (y α)) := by
+            refine Finset.prod_congr rfl ?_
+            intro α hα
+            exact symmetricRootFactor_eq_halfRoot_mul_one_sub_eulerWeight (hy α hα)
+    _ = (∏ α ∈ S, y α) * (∏ α ∈ S, (1 - eulerWeightFromHalfRoot (y α))) := by
+          rw [Finset.prod_mul_distrib]
+
+/-! ## 4. Raw versus normalized signed hyperbolic traces -/
 
 /--
 Finite signed raw hyperbolic trace.
@@ -254,7 +370,7 @@ theorem finiteSignedNormalizedHyperbolicTrace_eq_eulerFactor_sum
   intro a ha
   rw [normalized_symmetricRootFactor_eq_one_sub_eulerWeight (hy a ha)]
 
-/-! ## 4. Hyperbolic and Vandermonde interpretation sockets -/
+/-! ## 5. Hyperbolic and Vandermonde interpretation sockets -/
 
 /--
 Finite hyperbolic-root calibration.

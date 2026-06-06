@@ -370,7 +370,7 @@ Promote a result only if all are true:
 Example browser-audit smoke test:
 
 ```bash
-browser-harness -c "exec(open('tmp/browser-harness/run_audit.py').read()); run_audit_and_save('lean/InfoGeometry/Canonical/BerezinianTrace.lean', open('lean/InfoGeometry/Canonical/BerezinianTrace.lean').read(), 57, '.')"
+browser-harness -c "from pathlib import Path; from tools.infra.chatgpt_browser_harness_driver import run_audit_and_save; run_audit_and_save('lean/InfoGeometry/Canonical/BerezinianTrace.lean', Path('lean/InfoGeometry/Canonical/BerezinianTrace.lean').read_text(), 57, '.')"
 ```
 
 Interpret this as a sidecar test only, not a promotion event.

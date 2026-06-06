@@ -137,8 +137,21 @@ def main() -> None:
     # Sort by priority descending (easier = higher priority)
     all_sorries.sort(key=lambda x: (-x["priority"], x["file"], x["line"]))
 
-    to_enqueue = all_sorries[:args.limit]
-    print(f"Found {len(all_sorries)} sorry locations, seeding {len(to_enqueue)}...")
+    # Dedup: skip files that already have tasks in the queue
+    from tools.infra.hive_arango_queue import aql
+    existing = set()
+    try:
+        rows = aql(ep, db, usr, pwd,
+            "FOR t IN hive_tasks FILTER t.queue_name == @q RETURN t.runtime_goal_packet.formal_target",
+            {"q": args.queue})
+        for r in rows:
+            existing.add(r)
+    except Exception:
+        pass
+
+    to_enqueue = [s for s in all_sorries if s["target_pretty"] not in existing][:args.limit]
+    skipped = len(all_sorries) - len([s for s in all_sorries if s["target_pretty"] not in existing])
+    print(f"Found {len(all_sorries)} sorry locations, {skipped} already queued, seeding {len(to_enqueue)}...")
 
     for i, s in enumerate(to_enqueue, 1):
         ctx = s["context"]

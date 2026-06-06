@@ -1,0 +1,48 @@
+name: agent-orchestrator-definite-sequence
+provider: pi
+model: deepseek/deepseek-v4-flash
+description: |
+  Use when: A queued Lean/SymPy theorem pair must run through the concrete
+  Researcher -> Algebraist -> Formalist -> Critic -> Archivist sequence.
+  Triggers: "run agent orchestrator", "run theorem queue", "definite proof sequence".
+  Does: deterministic local queue status, run-next, and post-run status.
+  NOT for: open-ended proof invention without a queued theorem pair.
+
+worktree:
+  enabled: false
+
+nodes:
+  - id: status-before
+    bash: |
+      export INFO_GEOMETRY_RUNTIME_DIR="${INFO_GEOMETRY_RUNTIME_DIR:-$PWD/.runtime}"
+      export ARCHON_HOME="${ARCHON_HOME:-$INFO_GEOMETRY_RUNTIME_DIR/archon-home}"
+      mkdir -p "$ARCHON_HOME"
+      python3 tools/infra/agent_orchestrator_queue.py status
+
+  - id: run-next
+    depends_on: [status-before]
+    bash: |
+      export INFO_GEOMETRY_RUNTIME_DIR="${INFO_GEOMETRY_RUNTIME_DIR:-$PWD/.runtime}"
+      export ARCHON_HOME="${ARCHON_HOME:-$INFO_GEOMETRY_RUNTIME_DIR/archon-home}"
+      mkdir -p "$ARCHON_HOME"
+      python3 tools/infra/agent_orchestrator_queue.py run-next
+    timeout: 180000
+
+  - id: status-after
+    depends_on: [run-next]
+    bash: |
+      export INFO_GEOMETRY_RUNTIME_DIR="${INFO_GEOMETRY_RUNTIME_DIR:-$PWD/.runtime}"
+      export ARCHON_HOME="${ARCHON_HOME:-$INFO_GEOMETRY_RUNTIME_DIR/archon-home}"
+      mkdir -p "$ARCHON_HOME"
+      python3 tools/infra/agent_orchestrator_queue.py status
+
+  - id: summary
+    depends_on: [status-after]
+    bash: |
+      export INFO_GEOMETRY_RUNTIME_DIR="${INFO_GEOMETRY_RUNTIME_DIR:-$PWD/.runtime}"
+      export ARCHON_HOME="${ARCHON_HOME:-$INFO_GEOMETRY_RUNTIME_DIR/archon-home}"
+      mkdir -p "$ARCHON_HOME"
+      echo "agent-orchestrator definite sequence completed"
+      echo "ARCHON_HOME=$ARCHON_HOME"
+      python3 tools/infra/agent_orchestrator_queue.py status
+      ls -1t artifacts/agent_orchestrator/*.json 2>/dev/null | head -3

@@ -187,4 +187,20 @@ noncomputable def headPlusSectorTensor (n : ℕ) : SplitClNNTensorStep n :=
   unfold headMinusSectorTensor headPlusSectorTensor
   rw [map_mul, headKFlipTensor_apply_headNullPlusTensor, headKFlipTensor_apply_headNullMinusTensor]
 
+/--
+Particle-hole symmetry resolves the mixed chiral-sector anomaly at the split
+head: the `K`-flip exchanges the two `ε` sectors, while both mixed products
+vanish.
+-/
+@[rep_depth krein]
+theorem headKFlipTensor_particleHole_resolves_mixedSectorAnomaly (n : ℕ) :
+    headKFlipTensor n (headMinusSectorTensor n) = headPlusSectorTensor n ∧
+      headKFlipTensor n (headPlusSectorTensor n) = headMinusSectorTensor n ∧
+        headMinusSectorTensor n * headPlusSectorTensor n = 0 ∧
+          headPlusSectorTensor n * headMinusSectorTensor n = 0 := by
+  exact ⟨headKFlipTensor_apply_headMinusSectorTensor n,
+    headKFlipTensor_apply_headPlusSectorTensor n,
+    headMinusSectorTensor_mul_headPlusSectorTensor n,
+    headPlusSectorTensor_mul_headMinusSectorTensor n⟩
+
 end InfoGeometry.Canonical.SplitCliffordHeadPolarization

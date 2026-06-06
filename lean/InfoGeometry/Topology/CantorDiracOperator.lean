@@ -38,6 +38,45 @@ abbrev BinaryWord (n : ℕ) : Type :=
 abbrev FiniteWaveletSpace (n : ℕ) : Type :=
   BinaryWord n → ℂ
 
+/-! ## 1. AF/Cantor filtration projection algebra -/
+
+/--
+Difference projection for consecutive AF/Cantor filtration levels.
+
+In the Antonescu-Christensen AF construction this is the algebraic form of
+`Q_m = P_m - P_{m-1}`.
+-/
+def filtrationDifferenceProjection
+    {A : Type*} [Sub A]
+    (Pnext Pprev : A) : A :=
+  Pnext - Pprev
+
+/--
+If an algebra element commutes with two consecutive filtration projections,
+then it commutes with their difference projection.
+
+This is the finite algebraic core of the AF/Cantor spectral-triple argument:
+`a P_m = P_m a` and `a P_{m-1} = P_{m-1} a` imply
+`a Q_m = Q_m a` for `Q_m = P_m - P_{m-1}`.
+-/
+theorem commutes_filtrationDifferenceProjection_of_commutes_consecutive
+    {A : Type*} [Ring A]
+    {a Pnext Pprev : A}
+    (hnext : a * Pnext = Pnext * a)
+    (hprev : a * Pprev = Pprev * a) :
+    a * filtrationDifferenceProjection Pnext Pprev =
+      filtrationDifferenceProjection Pnext Pprev * a := by
+  calc
+    a * filtrationDifferenceProjection Pnext Pprev
+        = a * Pnext - a * Pprev := by
+          rw [filtrationDifferenceProjection, mul_sub]
+    _ = Pnext * a - Pprev * a := by
+          rw [hnext, hprev]
+    _ = filtrationDifferenceProjection Pnext Pprev * a := by
+          rw [filtrationDifferenceProjection, sub_mul]
+
+/-! ## 2. Finite diagonal Dirac block -/
+
 /--
 Finite-level Cantor Dirac operator.
 

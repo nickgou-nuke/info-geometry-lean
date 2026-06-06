@@ -1,13 +1,17 @@
 # InfoGeometry Lean Fusion
 
 > Status: `reference memory`
-> Last verified: 2026-06-04
+> Last verified: 2026-06-06
 > Commit: `37f7cca04` — toolchain `leanprover/lean4:v4.28.0`
 > Build: **10118 jobs, passes**
 > Shadows: **145** `:= by sorry` across 13 modules
-> Queue: **50 tasks** in ArangoDB proof-search
-> Worker: `evolution_worker.py` running (daemon)
+> Sorries closed this session: **3** (architectural gaps → honest structure)
+> New module: `BraidColimitZornBarrier.lean` — zero-sorry Zorn barrier proof
 > Working tree: **dirty**
+>
+> ⚠️ **For LLM agents: read `docs/CATEGORICAL_INFRASTRUCTURE_MAP.md` and `AGENTS.md`
+> before modifying any representation-theoretic or categorical code.**
+> The categorical layer is the owner; matrix-level code is always an instance.
 
 ---
 
@@ -154,6 +158,150 @@ Graph tools identify candidate wires.
 Lean owner files decide truth.
 Only kernel-checked source edits count.
 ```
+
+External chatbot review is allowed only as a Socratic audit lane. ChatGPT via
+aiClaw may diagnose proof errors and suggest repairs, but Codex owns source
+edits and Lean remains the proof authority. Use
+[`skills/socratic-oracle-proof-repair/SKILL.md`](skills/socratic-oracle-proof-repair/SKILL.md)
+and [`docs/AICLAW_CHATGPT_REVIEW_RUNBOOK.md`](docs/AICLAW_CHATGPT_REVIEW_RUNBOOK.md)
+for the complete-owner-file, all-build-errors, one-prompt, wait, readback,
+Lean-check procedure.
+
+## Agentic Workbench — Jung-Pauli Socratic Pipeline
+
+The repository includes a **free, multi-AI proof repair pipeline** that routes
+theorem targets through adversarial-collaborative dialogue between frontier
+language models — no API keys, no token costs.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                 JUNG-PAULI SOCRATIC PIPELINE                 │
+│                                                              │
+│  Jung (ChatGPT)              Pauli (Gemini/ChatGPT)          │
+│  "explore, descend,          "name, exclude, verify"         │
+│   generate proofs"           │                                │
+│         │                    │                                │
+│         └────────┬───────────┘                                │
+│                  │ socratic dialogue                          │
+│                  ▼                                            │
+│         ┌────────────────┐                                    │
+│         │  LEAN COMPILE  │ ← kernel-checked                  │
+│         └───────┬────────┘                                    │
+│                 │ compile error                               │
+│                 ▼                                            │
+│         ┌────────────────┐                                    │
+│         │  PAULI-FIX     │ ← recursive repair loop           │
+│         │  (up to 3x)    │                                    │
+│         └───────┬────────┘                                    │
+│                 │                                            │
+│                 ▼                                            │
+│         ┌────────────────┐                                    │
+│         │  GEPA EVOLVER  │ ← prompt mutation via fitness     │
+│         └────────────────┘                                    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Running the Pipeline
+
+```bash
+# Free - via aiClaw Chrome extension (ChatGPT browser session).
+# Dry-run first: builds complete-owner-file prompt, performs local Lean preflight,
+# and does not contact ChatGPT.
+python3 tools/infra/socratic_clawbot.py \
+    --file lean/InfoGeometry/Canonical/BraidColimitZornBarrier.lean \
+    --theorem zorn_maximal_fusion_subset \
+    --dry-run --json
+
+# Send one oracle prompt through the guarded aiClaw adapter.
+python3 tools/infra/socratic_clawbot.py \
+    --file lean/InfoGeometry/Canonical/BraidColimitZornBarrier.lean \
+    --theorem zorn_maximal_fusion_subset \
+    --response-out artifacts/oracle/zorn_maximal_fusion_subset.md \
+    --json-out artifacts/oracle/zorn_maximal_fusion_subset.json
+
+# Raw aiClaw transport aliases.
+npm run ai:status
+npm run ai:queue:status
+npm run ai:ask -- --dry-run --prompt "$PROMPT"
+npm run ai:oracle -- --file lean/InfoGeometry/Canonical/BraidColimitZornBarrier.lean \
+    --theorem zorn_maximal_fusion_subset \
+    --prompt-profile debate_metric \
+    --dry-run --json
+npm run ai:oracle:record -- --event-json artifacts/oracle/zorn_maximal_fusion_subset.json
+
+# Archive-first GEPA prompt-profile scoring; this does not contact ChatGPT.
+npm run ai:oracle:gepa -- \
+    --archive artifacts/oracle \
+    --generations 2 --population 8 \
+    --json-out artifacts/oracle_gepa/latest.json \
+    --md-out artifacts/oracle_gepa/latest.md
+npm run ai:oracle:gepa:gate -- artifacts/oracle_gepa/latest.json --allow-keep-builtin
+```
+
+### Infrastructure Dependencies
+
+| Component | Purpose | Status |
+|-----------|---------|--------|
+| aiClaw LocalBridge | Browser ↔ Python relay (ports 10087/10088) | Running |
+| loogle index | Type-signature search across 83K declarations | Built |
+| vacuity-linter.py | Anti-cheat detection (by trivial, sorry, rfl) | Deployed |
+| gepa_evolver.py | DSPy-based prompt evolution via ArangoDB | Deployed |
+
+### Proof Repair Process
+
+1. **Local preflight** - `lake env lean <owner-file>` captures current errors.
+2. **Oracle prompt** - `socratic_clawbot.py` sends the complete owner file plus
+   all relevant build errors through the guarded `aiclaw_chat.py` transport.
+3. **Wait/readback** - if aiClaw returns `Thinking`, do not resend; recover the
+   final visible answer read-only from the browser DOM.
+4. **File replacement** - the oracle returns the complete corrected Lean file,
+   not a diff hunk, theorem fragment, or one-line minified code. The corrected
+   file stays small and mathlib-style: minimal imports, cohesive owner scope,
+   short local helper lemmas, no architecture expansion.
+5. **Compile check** - Lean verifies; if errors remain, send the new build
+   output back to the same conversation.
+6. **Optional GEPA** - evolves prompts from fitness scores after the safe loop
+   is working.
+
+The aiClaw send path is single-flight per platform. If the queue is held after
+`Thinking`, timeout, or another suspect post-send state, recover the visible
+final answer first, then release:
+
+```bash
+npm run ai:queue:release -- --reason final_visible_answer_recorded
+```
+
+GEPA prompt-profile evolution is archive-first. Candidate addenda are stored
+under `quarantine/oracle_prompt_gepa/archive/`; the stable built-in oracle prompt
+is unchanged unless archived proof-repair outcomes beat the baseline and the
+regression gate passes. The scoring uses smoothed empirical success counts,
+prompt-length information cost, uncertainty/readback penalties, and repo-style
+forbidden-pattern gates.
+
+### External Debate Precedent
+
+The adversarial-dialogue precedent is
+`external_refs/deepmind-debate`: it proves stochastic oracle debate
+completeness/soundness, including a default `correctness` theorem at probability
+`3/5`. This supports the process shape of honest proof repair against an
+adversarial reviewer, but it is not an imported proof for repo theorems.
+
+The separate convergence lemma is
+`external_refs/lean-stat-learning-theory/SLT/ConvergenceL1Subseq.lean`, which
+proves `L1` convergence yields an almost-everywhere convergent subsequence. See
+[`docs/DEBATE_ORACLE_CONVERGENCE_MAP.md`](docs/DEBATE_ORACLE_CONVERGENCE_MAP.md)
+for the exact distinction.
+
+### Skills Governing Proof Architecture
+
+| Skill | Enforces |
+|-------|----------|
+| `axiom-legitimacy-check` | 5-step search protocol — no axiom added without proving it's never been derived |
+| `constructive-definition-discipline` | Only codomain constraints belong in structures; J²=1 is a theorem |
+| `socket-debt-honesty` | Socket structures must carry `@[socket_debt_tag]` + BUCKET 1/2/3 + roadmap |
+| `mathlib-api-discovery` | Never guess lemma names — search loogle + mathlib source + Google first |
+| `lean-vibe-formalization` | Yuanhe Zhang et al. ICML 2026 recipe: decompose, prompt-design, clean-warnings, remove-unused-haves |
+| [`socratic-oracle-proof-repair`](skills/socratic-oracle-proof-repair/SKILL.md) | Ask ChatGPT through aiClaw as a Socratic auditor: complete owner file plus all relevant build errors, wait/read the final visible answer, apply one Lean-checked repair |
 
 ### What This Means in Practice
 
@@ -913,11 +1061,17 @@ Roaming → Incident → Paired → Integrated
 
 Each shadow task is processed through up to 3 stages:
 
-**Stage 0 — ChatGPT Audit**: Browser CDP opens ChatGPT, sends full file context
-plus 577KB Alexandria research corpus, generates proof + audit map.
+**Stage 0 — ChatGPT Audit**: aiClaw/DevTools checks that the ChatGPT tab is
+ready, sends the complete owner file plus all relevant build errors in one
+prompt, waits for the final visible answer, and records a review/audit
+suggestion. If the aiClaw API returns the intermediate `Thinking` payload, do
+not send a second prompt; recover the final visible answer read-only from the
+browser DOM.
 
-**Stage 1 — Pi/DeepSeek Coding Agent**: Takes the audit map + proof sketch,
-generates Lean 4 code, compiles, reads errors, fixes, repeats (max 3 iterations).
+**Stage 1 — Coding Agent Repair**: Codex/Pi/DeepSeek-style coding agents use
+the audit suggestion as evidence, edit the owner Lean file, compile, read
+errors, fix, and repeat. The chatbot is not the coding agent and does not own
+the patch.
 
 **Stage 2 — Proof Seeker**: Falls back to searching mathlib, arXiv, web, and
 Alexandria corpus if stages 0-1 fail.
@@ -929,6 +1083,8 @@ The pipeline can propose, reflect, and evolve, but:
 - **Lean kernel** is the final authority (via `lake build`)
 - **LeanTrail** is a "semantic explorer scaffold" (see `docs/LeanTrail.md`)
 - **ArangoDB graph** is a "projection over compiler memory"
+- **ChatGPT/aiClaw** is a Socratic auditor and repair suggester, not proof
+  authority
 - **Proposals are not theorems** until the kernel says they are
 
 ### 7. Current State

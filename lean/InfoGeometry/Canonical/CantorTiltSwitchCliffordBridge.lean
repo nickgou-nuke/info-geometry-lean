@@ -167,6 +167,68 @@ theorem localMajoranaParity_eq_tilt (j : ℕ) :
   rw [← mul_assoc, TS.S_sq j]
   simp
 
+section StarReadbacks
+
+variable {OpS : Type*} [Ring OpS] [StarRing OpS]
+variable (TSS : TiltSwitchSystem OpS)
+
+/--
+If the local switch is star-fixed, then the split-Majorana generator
+`c_j = S_j` is self-adjoint.
+-/
+@[rep_depth operator]
+theorem localMajoranaC_star_eq_self_of_switch_star
+    (j : ℕ)
+    (hS : star (TSS.S j) = TSS.S j) :
+    star (TSS.localMajoranaC j) = TSS.localMajoranaC j := by
+  simpa [localMajoranaC] using hS
+
+/--
+If the local tilt and switch are star-fixed, then the split-Majorana generator
+`d_j = S_j T_j` is skew-adjoint.  This is the honest split-real status before
+multiplication by a skew phase axis.
+-/
+@[rep_depth operator]
+theorem localMajoranaD_star_eq_neg_of_tilt_switch_star
+    (j : ℕ)
+    (hT : star (TSS.T j) = TSS.T j)
+    (hS : star (TSS.S j) = TSS.S j) :
+    star (TSS.localMajoranaD j) = -TSS.localMajoranaD j := by
+  unfold localMajoranaD
+  calc
+    star (TSS.S j * TSS.T j)
+        = star (TSS.T j) * star (TSS.S j) := by
+          rw [star_mul]
+    _ = TSS.T j * TSS.S j := by
+          rw [hT, hS]
+    _ = -(TSS.S j * TSS.T j) := by
+          exact TSS.T_S_anticomm j
+
+/--
+A skew phase axis times the skew split-Majorana `d_j` is self-adjoint, provided
+the phase axis commutes with `d_j`.
+-/
+@[rep_depth operator]
+theorem phaseAxis_mul_localMajoranaD_star_eq_self_of_tilt_switch_star
+    (J : OpS)
+    (j : ℕ)
+    (hJ : star J = -J)
+    (hComm : TSS.localMajoranaD j * J = J * TSS.localMajoranaD j)
+    (hT : star (TSS.T j) = TSS.T j)
+    (hS : star (TSS.S j) = TSS.S j) :
+    star (J * TSS.localMajoranaD j) = J * TSS.localMajoranaD j := by
+  calc
+    star (J * TSS.localMajoranaD j)
+        = star (TSS.localMajoranaD j) * star J := by
+          rw [star_mul]
+    _ = (-TSS.localMajoranaD j) * (-J) := by
+          rw [TSS.localMajoranaD_star_eq_neg_of_tilt_switch_star j hT hS, hJ]
+    _ = TSS.localMajoranaD j * J := by
+          simp
+    _ = J * TSS.localMajoranaD j := hComm
+
+end StarReadbacks
+
 /-- Twice the CAR creation/nilpotent generator: `2 ε_j = c_j + d_j`. -/
 @[rep_depth operator]
 def localCARCreationTwice (j : ℕ) : Op :=

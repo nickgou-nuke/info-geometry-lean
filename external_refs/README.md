@@ -67,6 +67,7 @@ Lean-QuantumInfo
 deepmind-debate
 LeanAide
 Canonical
+CanonicalLean
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -102,11 +103,18 @@ for exhaustive term search in dependent type theory, with `canonical-core`,
 project lives under `lean/`, pins `leanprover/lean4:v4.30.0`, and depends on
 `CanonicalLean` and mathlib at `v4.30.0`.
 
+`external_refs/CanonicalLean` is a full-history nested checkout at `65510e4`
+from `https://github.com/chasenorman/CanonicalLean.git`. It is the Lean package
+named `Canonical`, provides the `canonical` tactic, pins
+`leanprover/lean4:v4.30.0`, and defines a release-fetched `canonical_lean`
+dynlib target in `lakefile.lean`. The related project homepage is
+`https://chasenorman.com/`.
+
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text
-total_git_repos = 96
+total_git_repos = 97
 shallow_count = 0
 ```
 

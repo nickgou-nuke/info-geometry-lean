@@ -66,6 +66,7 @@ LeanEuclid
 Lean-QuantumInfo
 deepmind-debate
 LeanAide
+Canonical
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -94,11 +95,18 @@ from `https://github.com/google-deepmind/debate`. Its `lean-toolchain` pins
 and `leanaide_process`; the `LeanAideCore` subproject provides the
 zero-dependency client library documented in the README.
 
+`external_refs/Canonical` is a full-history nested checkout at `dbd175b` from
+`https://github.com/chasenorman/Canonical.git`. The root is a Rust workspace
+for exhaustive term search in dependent type theory, with `canonical-core`,
+`canonical-compat`, and `canonical_lean` Lean FFI bindings. Its Lean test
+project lives under `lean/`, pins `leanprover/lean4:v4.30.0`, and depends on
+`CanonicalLean` and mathlib at `v4.30.0`.
+
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text
-total_git_repos = 95
+total_git_repos = 96
 shallow_count = 0
 ```
 

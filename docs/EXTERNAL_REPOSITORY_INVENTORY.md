@@ -31,6 +31,7 @@ the same git commit. The real gaps are:
 
 - cloned after audit: `atlas-embeddings`, `VirasoroProject`, `QuAIRKit`,
   `PauLie`, `affine-charform`, `RIA_EISA`;
+- added directly from upstream after audit: `LeanEuclid`;
 - `pyw`: source files are present, but the repo has no `.git` metadata;
 - AFP: present, but under the normalized name `external_refs/mirror-afp-devel`,
   not `external/isabelle`.
@@ -84,6 +85,17 @@ checkouts, or vendor selected source files.
 | math | `affine-charform` | `e03d439` | `https://github.com/deehzee/affine-charform.git` |
 | math | `RIA_EISA` | `f3292e5` | `https://github.com/csoftxyz/RIA_EISA.git` |
 
+## Added Directly From Upstream After Audit
+
+These repositories were not part of the `/media/goutev/SP DS72/auto/external`
+archive comparison. They were added as upstream external references after the
+archive audit and are intentionally kept outside the `lean/InfoGeometry` owner
+proof tree unless specific source is later ported or cited.
+
+| Repo | HEAD | Origin | Local path | Notes |
+|---|---|---|---|---|
+| `LeanEuclid` | `7c8f38b` | `https://github.com/loganrjmurphy/LeanEuclid.git` | `external_refs/LeanEuclid` | Lean 4.19.0 project for System E, Euclid Book I, UniGeo, and E3 autoformalization/equivalence tooling; nested checkout is full-history and not staged as a top-level gitlink/submodule |
+
 ## Still Not A Git Checkout
 
 | Archive group | Archive repo | Archive HEAD | Repo path | Status |
@@ -129,7 +141,7 @@ cloned from the archive and then unshallowed from upstream.
 
 ## Shallow Clone Status
 
-The follow-up audit checked 86 nested git repositories under:
+The follow-up audit checked 92 nested git repositories under:
 
 ```text
 external_refs/
@@ -144,7 +156,7 @@ error_count = 0
 ```
 
 This includes the large repositories `mirror-afp-devel`, `qiskit`, `sage`,
-`sympy`, `vampire`, `z3`, and the newly cloned archive repos.
+`sympy`, `vampire`, `z3`, the newly cloned archive repos, and `LeanEuclid`.
 
 ## Organization Policy
 

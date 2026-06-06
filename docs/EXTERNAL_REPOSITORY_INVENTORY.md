@@ -17,13 +17,15 @@ external/
 
 ## Summary
 
-The archive is not fully represented as git checkouts in this repo.
+The archive was not fully represented as git checkouts in this repo at audit
+time. The missing checkouts listed below were cloned from the local archive into
+`external_refs/` after the audit.
 
 Most source dependencies from the archive are present under `external_refs/` at
 the same git commit. The real gaps are:
 
-- missing repos: `atlas-embeddings`, `VirasoroProject`, `QuAIRKit`, `PauLie`,
-  `affine-charform`, `RIA_EISA`;
+- cloned after audit: `atlas-embeddings`, `VirasoroProject`, `QuAIRKit`,
+  `PauLie`, `affine-charform`, `RIA_EISA`;
 - `pyw`: source files are present, but the repo has no `.git` metadata;
 - AFP: present, but under the normalized name `external_refs/mirror-afp-devel`,
   not `external/isabelle`.
@@ -56,7 +58,16 @@ tracked-file counts as the source of truth.
 |---|---|---|---|---|
 | python | `pyw` | `e44b4fe` | `external_refs/pyw` | all 71 tracked archive files are present, plus local `index.json` and `keyword_index.json`; `.git` metadata is absent |
 
-## Missing From Repo
+## Cloned From Archive After Audit
+
+These repositories are now present as local nested git checkouts under
+`external_refs/`. They were cloned from the local archive paths and then had
+their `origin` remotes reset to upstream URLs. Each checkout also has an
+`archive` remote pointing back to `/media/goutev/SP DS72/auto/external`.
+
+They are intentionally not staged as top-level gitlinks/submodules yet. Decide
+separately whether to add them as submodules, keep them as untracked local
+checkouts, or vendor selected source files.
 
 | Archive group | Archive repo | Archive HEAD | Origin |
 |---|---|---|---|
@@ -66,6 +77,12 @@ tracked-file counts as the source of truth.
 | python | `PauLie` | `a13f11b` | `https://github.com/QPauLie/PauLie.git` |
 | math | `affine-charform` | `e03d439` | `https://github.com/deehzee/affine-charform.git` |
 | math | `RIA_EISA` | `f3292e5` | `https://github.com/csoftxyz/RIA_EISA.git` |
+
+## Still Not A Git Checkout
+
+| Archive group | Archive repo | Archive HEAD | Repo path | Status |
+|---|---|---|---|---|
+| python | `pyw` | `e44b4fe` | `external_refs/pyw` | all tracked archive files are present, but `.git` metadata is absent |
 
 ## Special Cases
 
@@ -126,8 +143,8 @@ Before copying an archive repo into `external_refs/`, check:
 
 ## Recommended Next Actions
 
-1. Copy or clone the six missing repos into `external_refs/` if they are needed
-   for proof mining.
+1. Decide whether the six newly cloned repos should become top-level git
+   submodules/gitlinks or remain untracked local checkouts.
 2. Replace `external_refs/pyw` with a full git checkout, or document it as a
    source-only mirror.
 3. Keep `external_refs/mirror-afp-devel` as the AFP provenance owner and avoid

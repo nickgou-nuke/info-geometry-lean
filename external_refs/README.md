@@ -62,6 +62,7 @@ The following repo was added directly from upstream rather than from the
 
 ```text
 LeanEuclid
+Lean-QuantumInfo
 ```
 
 `external_refs/LeanEuclid` is a full-history nested checkout at `7c8f38b` from
@@ -69,11 +70,18 @@ LeanEuclid
 `leanprover/lean4:v4.19.0`, and its `lakefile.lean` declares `SystemE`, `Book`,
 `UniGeo`, and `E3` Lean libraries.
 
+`external_refs/Lean-QuantumInfo` is a full-history nested checkout at
+`56e83a9` from `https://github.com/Timeroot/Lean-QuantumInfo.git`. Its
+`lean-toolchain` pins `leanprover/lean4:v4.28.0`, and its `lakefile.lean`
+declares `QuantumInfo`, `ClassicalInfo`, and `StatMech` Lean libraries. Its
+README says this work merged into Physlib after March 2026, so treat this as a
+reference snapshot unless we deliberately port selected theorem material.
+
 As of the 2026-06-06 follow-up audit, all nested git checkouts under
 `external_refs/` and `external/` are full-history checkouts:
 
 ```text
-total_git_repos = 92
+total_git_repos = 93
 shallow_count = 0
 ```
 

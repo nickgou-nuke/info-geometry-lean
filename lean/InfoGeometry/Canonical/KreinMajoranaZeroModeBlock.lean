@@ -231,6 +231,73 @@ theorem polarized_commutator_block_normal_form
     (X := X) (A := commutator (uPlus X A) (uMinus X B)) hpm hmp
 
 /--
+If the doubled zero/cozero blocks of a grade-zero anomaly are particle-hole
+opposites, the total anomaly cancels.
+
+This is only the finite algebraic cancellation law. It does not assert an
+analytic condensate, a physical boundary state, or topological protection.
+-/
+theorem paired_block_anomaly_cancel
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) {chi : EndH}
+    (hchi : IsGZero X chi)
+    (hpair : cozeroModePart X chi = -zeroModePart X chi) :
+    chi = 0 := by
+  calc
+    chi = zeroModePart X chi + cozeroModePart X chi := by
+      simpa [zeroModePart, cozeroModePart] using
+        diagonal_block_decomposition_of_isGZero (X := X) (A := chi) hchi
+    _ = zeroModePart X chi + -zeroModePart X chi := by rw [hpair]
+    _ = 0 := by simp
+
+/--
+The zero total anomaly has opposite zero/cozero blocks.
+-/
+theorem paired_blocks_of_anomaly_cancel
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) {chi : EndH}
+    (hzero : chi = 0) :
+    cozeroModePart X chi = -zeroModePart X chi := by
+  subst chi
+  simp [zeroModePart, cozeroModePart]
+
+/--
+For a grade-zero doubled anomaly, cancellation is equivalent to particle-hole
+opposition of the two diagonal blocks.
+-/
+theorem paired_block_anomaly_cancel_iff
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) {chi : EndH}
+    (hchi : IsGZero X chi) :
+    chi = 0 ↔ cozeroModePart X chi = -zeroModePart X chi := by
+  constructor
+  · exact paired_blocks_of_anomaly_cancel (X := X)
+  · exact paired_block_anomaly_cancel (X := X) hchi
+
+/--
+The polarized `uPlus/uMinus` commutator anomaly cancels when its zero/cozero
+Majorana blocks are particle-hole opposites.
+-/
+theorem polarized_commutator_cancel_of_paired_blocks
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) (A B : EndH)
+    (hpair :
+      cozeroModePart X (commutator (uPlus X A) (uMinus X B)) =
+        -zeroModePart X (commutator (uPlus X A) (uMinus X B))) :
+    commutator (uPlus X A) (uMinus X B) = 0 :=
+  paired_block_anomaly_cancel (X := X)
+    (hchi := commutator_uPlus_uMinus_isGZero (X := X) A B)
+    hpair
+
+/--
+For the polarized `uPlus/uMinus` channel, zero total anomaly is equivalent to
+particle-hole opposition of the extracted zero/cozero blocks.
+-/
+theorem polarized_commutator_cancel_iff_paired_blocks
+    (X : InfoGeometry.Quantum.RealSplitCl11Action H) (A B : EndH) :
+    commutator (uPlus X A) (uMinus X B) = 0 ↔
+      cozeroModePart X (commutator (uPlus X A) (uMinus X B)) =
+        -zeroModePart X (commutator (uPlus X A) (uMinus X B)) :=
+  paired_block_anomaly_cancel_iff (X := X)
+    (hchi := commutator_uPlus_uMinus_isGZero (X := X) A B)
+
+/--
 Projector commutation specialized to the polarized mixed commutator channel.
 -/
 theorem polarized_commutator_commutes_zeroModeProjector

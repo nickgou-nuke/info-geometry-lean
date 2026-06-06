@@ -4,6 +4,9 @@
 > Audited: 2026-05-02
 > Note: Maintained against the live code surface.
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+> **LLM agents: before writing categorical/Grothendieck code, read
+> [CATEGORICAL_INFRASTRUCTURE_MAP.md](CATEGORICAL_INFRASTRUCTURE_MAP.md).
+> Open math problems are in [OPEN_DEBT_PROBLEMS.md](OPEN_DEBT_PROBLEMS.md).**
 
 This file is stale as an authority source. Use it only as a routing map and
 re-audit against the live code surface before relying on any claim.
@@ -81,6 +84,10 @@ Use these first:
 - [../PAULI_MANDATE.md](../PAULI_MANDATE.md)
 - [GeneratedArtifactsPolicy.md](GeneratedArtifactsPolicy.md)
 - [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
+- [AICLAW_CHATGPT_REVIEW_RUNBOOK.md](AICLAW_CHATGPT_REVIEW_RUNBOOK.md)
+- [DEBATE_ORACLE_CONVERGENCE_MAP.md](DEBATE_ORACLE_CONVERGENCE_MAP.md)
+- [ACADEMIC_RESEARCH_SKILLS_AUDIT.md](ACADEMIC_RESEARCH_SKILLS_AUDIT.md)
+- [P2PCLAW_PUBLICATION_PIPELINE_AUDIT.md](P2PCLAW_PUBLICATION_PIPELINE_AUDIT.md)
 - [MaldacenaLectureTheoremMap.md](MaldacenaLectureTheoremMap.md)
 - [ToolingInventory.md](ToolingInventory.md)
 - [OperatorQuickstart.md](OperatorQuickstart.md)

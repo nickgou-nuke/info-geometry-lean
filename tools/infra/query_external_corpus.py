@@ -26,7 +26,9 @@ def query(q: str, limit: int, root: Path):
     decls = full['declarations']
     results = []
     for d in decls:
-        hay = f"{d.get('file','')} {d.get('kind','')} {d.get('name','')}".lower()
+        hay = " ".join(
+            str(d.get(k, "")) for k in ("file", "kind", "module", "name", "doc", "type", "context")
+        ).lower()
         score = sum(1 for t in qterms if t in hay)
         if score:
             results.append((score, d))

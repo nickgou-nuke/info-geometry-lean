@@ -12,6 +12,7 @@ import InfoGeometry.Projective.Quadrics.Polarization
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Projective.KleinQuadricPlucker
 import InfoGeometry.Projective.KleinQuadricIncidence
+import InfoGeometry.Projective.NoncommutativeCrossRatio
 import InfoGeometry.Projective.Normalize
 import InfoGeometry.Projective.Null
 import InfoGeometry.Projective.NullBoundary

@@ -20,6 +20,8 @@ from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from tools.infra.thermodynamic_scoring import DEFAULT_HEURISTIC_WEIGHT, score_outcomes
+
 logger = logging.getLogger("evolution_evaluator")
 
 
@@ -100,6 +102,14 @@ class FitnessScore:
     skill_name: str
     generation: int
     fitness: float
+    legacy_fitness: float
+    thermodynamic_fitness: float
+    temperature: float
+    partition_function: float
+    free_energy: float
+    energy_mean: float
+    energy_variance: float
+    entropy: float
     total_tasks: int
     succeeded: int
     failed: int
@@ -112,6 +122,7 @@ class FitnessScore:
         return (
             f"{self.skill_name} gen#{self.generation}: "
             f"fitness={self.fitness:.3f} "
+            f"(legacy={self.legacy_fitness:.3f}, T={self.temperature:.2f}) "
             f"({self.succeeded}/{self.total_tasks} ok, "
             f"avg {self.avg_attempts_per_success:.1f} attempts)"
         )
@@ -136,11 +147,14 @@ class EvolutionEvaluator:
         database: str,
         username: str,
         password: str,
+        *,
+        heuristic_weight: float = DEFAULT_HEURISTIC_WEIGHT,
     ) -> None:
         self._ep = endpoint
         self._db = database
         self._user = username
         self._pass = password
+        self._heuristic_weight = heuristic_weight
 
     # ------------------------------------------------------------------
     # Public API
@@ -178,6 +192,14 @@ class EvolutionEvaluator:
                 skill_name=skill_name,
                 generation=generation,
                 fitness=0.0,
+                legacy_fitness=0.0,
+                thermodynamic_fitness=0.0,
+                temperature=1.0,
+                partition_function=0.0,
+                free_energy=0.0,
+                energy_mean=0.0,
+                energy_variance=0.0,
+                entropy=0.0,
                 total_tasks=0,
                 succeeded=0,
                 failed=0,
@@ -196,14 +218,8 @@ class EvolutionEvaluator:
             if total > 0 else 0.0
         )
 
-        # ----- fitness formula -----
-        # Base: success rate
-        # Penalty: each additional attempt beyond 1 halves the marginal value
-        # Penalty: high cost (> 60s) slightly reduces score
-        attempts_penalty = 1.0 / max(1.0, avg_attempts)
-        cost_penalty = max(0.0, 1.0 - (avg_cost / 120_000.0))  # 0–120s range
-        fitness = success_rate * 0.6 + attempts_penalty * 0.25 + cost_penalty * 0.15
-        fitness = max(0.0, min(1.0, fitness))
+        thermo = score_outcomes(outcomes, heuristic_weight=self._heuristic_weight)
+        fitness = thermo.fitness
 
         # Common failure patterns
         patterns: dict[str, int] = {}
@@ -219,6 +235,14 @@ class EvolutionEvaluator:
             skill_name=skill_name,
             generation=generation,
             fitness=round(fitness, 4),
+            legacy_fitness=round(thermo.legacy_fitness, 4),
+            thermodynamic_fitness=round(thermo.thermodynamic_fitness, 4),
+            temperature=round(thermo.temperature, 4),
+            partition_function=round(thermo.partition_function, 6),
+            free_energy=round(thermo.free_energy, 6),
+            energy_mean=round(thermo.energy_mean, 6),
+            energy_variance=round(thermo.energy_variance, 6),
+            entropy=round(thermo.entropy, 6),
             total_tasks=total,
             succeeded=ok,
             failed=nok,
@@ -311,6 +335,8 @@ def main() -> None:
     parser.add_argument("--skill", default="lean-proof", help="Skill name to evaluate")
     parser.add_argument("--generation", type=int, default=0)
     parser.add_argument("--queue", default="proof-search")
+    parser.add_argument("--heuristic-weight", type=float, default=DEFAULT_HEURISTIC_WEIGHT,
+                        help="Blend weight for the legacy heuristic term [0,1]")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -328,7 +354,10 @@ def main() -> None:
     usr = arango_username()
     pwd = arango_password("alexandria_root")
 
-    evaluator = EvolutionEvaluator(ep, db, usr, pwd)
+    evaluator = EvolutionEvaluator(
+        ep, db, usr, pwd,
+        heuristic_weight=args.heuristic_weight,
+    )
 
     if args.dry_run:
         stats = evaluator.queue_stats(args.queue)

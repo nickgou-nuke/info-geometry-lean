@@ -1,25 +1,16 @@
 # Release Notes
 
-> Status: `maintained local guide`
-> Audited: 2026-05-02
-> Note: Current place for durable repo-surface changes, but not a substitute for the verified status docs.
-> See: [README.md](README.md), [docs/README.md](docs/README.md), [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+## v0.1.0-bridge-chain (2026-06-05)
 
-This repository is maintained as a rolling branch rather than a polished
-release train.
+Bridge chain closed: self-dual cones → Weyl/V4 → Klein bottle orientifold → boundary states.
 
-## Use This File For
+- `clockAxis_as_intertwiner` closes the Heisenberg↔Schrödinger duality
+- Affine cocycle extension `A·W ≠ W·A` with explicit defect `(±2θ₂∓2π, 0)`
+- 5 bridge files, 16 SymPy witnesses, 0 structural gaps
+- Tag: `v0.1.0-bridge-chain`
 
-- durable changes to public Lean surfaces
-- durable changes to maintained tooling entrypoints
-- durable documentation restructures
-- policy changes that affect normal repository use
+### Post-release verification
 
-## Do Not Use It For
-
-- generated report snapshots
-- temporary debt numbers
-- speculative theory notes
-- open TODO lists
-
-For current verified state, use [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md).
+- `tools/sympy/andreev_affine_defect_bridge.py` — downstream Andreev cocycle propagation check
+  - Verifies the same affine cocycle defect as an explicit phase-conjugation correction in the Andreev/BdG channel
+  - `OVERALL: True` (all checks passed)

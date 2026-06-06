@@ -5,7 +5,7 @@
     "proof_carrier_field": {
       "severity": "error",
       "description": "A structure/class field carries a proposition, equality, witness, law, certificate, guard, socket, validity claim, or readback instead of proving an owner-side theorem.",
-      "name_regex": "(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof|sorryProof|True|preserved|compatible|holds|condition|property|inv)(?:_|$)",
+      "name_regex": "(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof|sorryProof|True|true|preserved|compatible|holds|condition|property|inv|noncollapse|supportLowerBound|donoho_stark_support)(?:_|$)",
       "type_regex": "\\bProp\\b|=|↔|<->|≤|>=|≥|<|>|∈|∉|⊆|⊂|⊇|∧|∨|∀|∃"
     },
     "proof_like_field_type": {
@@ -20,7 +20,7 @@
     "projection_reexport": {
       "severity": "error",
       "description": "A theorem/lemma is only a projection or direct re-export of a proof-carrying field/hypothesis.",
-      "proof_regex": "\\b[A-Za-z0-9_'.]+_(?:law|laws|certificate|cert|witness|valid|guard|socket|readback|proof|sorryProof|True)\\b"
+      "proof_regex": "\\b[A-Za-z0-9_'.]+_(?:law|laws|certificate|cert|witness|valid|guard|socket|readback|proof|sorryProof|True|true|noncollapse|supportLowerBound|donoho_stark_support)\\b"
     },
     "trivial_surface": {
       "severity": "warning",
@@ -31,6 +31,21 @@
       "severity": "error",
       "description": "A forbidden or open-debt proof token appears in Lean source.",
       "token_regex": "\\b(admit|axiom|postulate|sorry)\\b"
+    },
+    "theorem_as_data_surface": {
+      "severity": "error",
+      "description": "A declaration surface looks like theorem-as-data or a wrapper theorem rather than an owner theorem with explicit hypotheses.",
+      "name_tokens": [
+        "noncollapse_true",
+        "donoho_stark_support",
+        "supportlowerbound",
+        "_proof",
+        "_law",
+        "_certificate",
+        "_holds",
+        "_valid",
+        "_eq_"
+      ]
     },
     "dynamic_literal_definition": {
       "severity": "warning",

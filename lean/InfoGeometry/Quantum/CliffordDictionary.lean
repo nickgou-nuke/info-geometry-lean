@@ -71,6 +71,123 @@ noncomputable def canonical : Cl11Dictionary E where
     (canonical (E := E)).K = complex_i (E := E) := by
   simp [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
 
+/-- The canonical chirality atom is the Tomita-named modular sign `ε`. -/
+@[simp] theorem canonical_eps_eq_modularSignEpsilon :
+    (canonical (E := E)).ε = modularSignEpsilon (E := E) := by
+  rfl
+
+/-- The canonical conjugation atom is the Tomita-named modular conjugation `J`. -/
+@[simp] theorem canonical_J_eq_modularConjugationJ :
+    (canonical (E := E)).J = modularConjugationJ (E := E) := by
+  rfl
+
+/-- The canonical phase atom is the Tomita-named composite `Jε`. -/
+@[simp] theorem canonical_K_eq_modularComplexI :
+    (canonical (E := E)).K = modularComplexI (E := E) := by
+  rfl
+
+@[simp] theorem canonical_eps_sq :
+    ((canonical (E := E)).ε).comp ((canonical (E := E)).ε) =
+      ContinuousLinearMap.id ℝ H₂ :=
+  (canonical (E := E)).ε_inv
+
+@[simp] theorem canonical_J_sq :
+    ((canonical (E := E)).J).comp ((canonical (E := E)).J) =
+      ContinuousLinearMap.id ℝ H₂ :=
+  (canonical (E := E)).J_inv
+
+@[simp] theorem canonical_K_sq :
+    ((canonical (E := E)).K).comp ((canonical (E := E)).K) =
+      -(ContinuousLinearMap.id ℝ H₂) :=
+  (canonical (E := E)).K_sq
+
+/-- The canonical atoms satisfy `Jε = K`. -/
+@[simp] theorem canonical_J_comp_eps :
+    ((canonical (E := E)).J).comp ((canonical (E := E)).ε) =
+      (canonical (E := E)).K := by
+  exact (canonical (E := E)).K_def.symm
+
+/-- The reversed product satisfies `εJ = -K`. -/
+@[simp] theorem canonical_eps_comp_J :
+    ((canonical (E := E)).ε).comp ((canonical (E := E)).J) =
+      -((canonical (E := E)).K) := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (spectral_epsilon_comp_modular_j (E := E))
+
+/-- Multiplication by `J` sends the phase atom back to the sign atom. -/
+@[simp] theorem canonical_J_comp_K :
+    ((canonical (E := E)).J).comp ((canonical (E := E)).K) =
+      (canonical (E := E)).ε := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (modular_j_comp_complex_i (E := E))
+
+/-- Right multiplication by `J` sends the phase atom to minus the sign atom. -/
+@[simp] theorem canonical_K_comp_J :
+    ((canonical (E := E)).K).comp ((canonical (E := E)).J) =
+      -((canonical (E := E)).ε) := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (complex_i_comp_modular_j (E := E))
+
+/-- Multiplication by `ε` sends the phase atom to minus the conjugation atom. -/
+@[simp] theorem canonical_eps_comp_K :
+    ((canonical (E := E)).ε).comp ((canonical (E := E)).K) =
+      -((canonical (E := E)).J) := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (spectral_epsilon_comp_complex_i (E := E))
+
+/-- Right multiplication by `ε` sends the phase atom back to conjugation. -/
+@[simp] theorem canonical_K_comp_eps :
+    ((canonical (E := E)).K).comp ((canonical (E := E)).ε) =
+      (canonical (E := E)).J := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (complex_i_comp_spectral_epsilon (E := E))
+
+/-- The modular sign is block-diagonal on the doubled real carrier. -/
+@[simp] theorem canonical_eps_to_doubled (x ξ : E) :
+    (canonical (E := E)).ε (to_doubled x ξ : H₂) = to_doubled x (-ξ) := by
+  rfl
+
+/-- Modular conjugation is the off-block swap on the doubled real carrier. -/
+@[simp] theorem canonical_J_to_doubled (x ξ : E) :
+    (canonical (E := E)).J (to_doubled x ξ : H₂) = to_doubled ξ x := by
+  rfl
+
+/-- The composite `Jε` is the signed off-block phase axis. -/
+@[simp] theorem canonical_K_to_doubled (x ξ : E) :
+    (canonical (E := E)).K (to_doubled x ξ : H₂) = to_doubled (-ξ) x := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+    using (complex_i_to_doubled (E := E) x ξ)
+
+/-- The canonical conjugation atom is even for the modular block grading. -/
+theorem canonical_J_isEven :
+    isEven (E := E) (canonical (E := E)).J := by
+  simpa [canonical] using modularConjugationJ_isEven (E := E)
+
+/-- The canonical sign atom is odd for the modular block grading. -/
+theorem canonical_eps_isOdd :
+    isOdd (E := E) (canonical (E := E)).ε := by
+  simpa [canonical] using modularSignEpsilon_isOdd (E := E)
+
+/-- The canonical phase atom `Jε` is odd for the modular block grading. -/
+theorem canonical_K_isOdd :
+    isOdd (E := E) (canonical (E := E)).K := by
+  simpa [canonical] using modularComplexI_isOdd (E := E)
+
+/--
+Compact readback of the modular real atom:
+`J` is even, `ε` and `Jε` are odd, and the odd generators anticommute.
+-/
+theorem canonical_block_grading_packet :
+    isEven (E := E) (canonical (E := E)).J ∧
+      isOdd (E := E) (canonical (E := E)).ε ∧
+      isOdd (E := E) (canonical (E := E)).K ∧
+      ((canonical (E := E)).J).comp ((canonical (E := E)).ε)
+        + ((canonical (E := E)).ε).comp ((canonical (E := E)).J) = 0 := by
+  exact ⟨canonical_J_isEven (E := E), canonical_eps_isOdd (E := E),
+    canonical_K_isOdd (E := E), by
+      simpa [canonical] using
+        modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
+
 section SpinorObservables
 
 /-- 

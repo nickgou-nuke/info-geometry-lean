@@ -728,6 +728,9 @@ require VirasoroProject from git
   @ "main"
 require «GIFT» from
   "external_refs/gift-framework-core"
+require LeanCopilot from git
+  "https://github.com/lean-dojo/LeanCopilot.git"
+  @ "v4.28.0"
 
 lean_lib DAG where
   globs := #[.andSubmodules `DAG]

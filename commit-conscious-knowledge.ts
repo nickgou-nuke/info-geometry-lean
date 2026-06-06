@@ -1,6 +1,23 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 
+const registerLegacyTool = (pi: ExtensionAPI, tool: unknown) => (pi.registerTool as any)(tool);
+const AICLAW_ARANGO_URL = process.env.AICLAW_ARANGO_URL || "http://127.0.0.1:8540";
+const AICLAW_ARANGO_DB = process.env.AICLAW_ARANGO_DB || "aiclaw_auto_rag";
+const AICLAW_ARANGO_USER = process.env.AICLAW_ARANGO_USER || "root";
+const AICLAW_ARANGO_PASSWORD = process.env.AICLAW_ARANGO_PASSWORD || "password";
+const AICLAW_KNOWLEDGE_BASE = process.env.AICLAW_KNOWLEDGE_BASE || "knowledge_base.json";
+
+function assertSeparateBrain() {
+  if (process.env.AICLAW_ALLOW_SHARED_ARANGO === "1") return;
+  if (AICLAW_ARANGO_URL.includes(":8530") || AICLAW_ARANGO_DB === "infogeometry") {
+    throw new Error(
+      "Refusing to commit aiClaw proof memory into the repo DAG brain. Set " +
+        "AICLAW_ARANGO_URL/AICLAW_ARANGO_DB to the isolated proof-memory brain."
+    );
+  }
+}
+
 /**
  * Verify & Store Conscious Knowledge
  *
@@ -18,7 +35,7 @@ import { Type } from "typebox";
  */
 
 export default function (pi: ExtensionAPI) {
-  pi.registerTool({
+  registerLegacyTool(pi, {
     name: "commit_conscious_knowledge",
     label: "Verify & Store Conscious Knowledge",
     description:
@@ -122,10 +139,11 @@ export default function (pi: ExtensionAPI) {
 
       // Try ArangoDB first
       try {
+        assertSeparateBrain();
         const { Database } = await import("arangojs");
-        const db = new Database({ url: "http://localhost:8529" });
-        db.useDatabase("aiclaw_rag");
-        db.useBasicAuth("root", "password");
+        const rootDb = new Database({ url: AICLAW_ARANGO_URL });
+        rootDb.useBasicAuth(AICLAW_ARANGO_USER, AICLAW_ARANGO_PASSWORD);
+        const db = rootDb.database(AICLAW_ARANGO_DB);
 
         const nodesColl = db.collection("literature_nodes");
         const edgesColl = db.collection("citation_edges");
@@ -166,7 +184,7 @@ export default function (pi: ExtensionAPI) {
               type: "text" as const,
               text:
                 `[SYSTEM] Multimodal commitment complete for '${params.theoremName}'.\n` +
-                `Logic and Algebra are locked in sync in ArangoDB.\n` +
+                `Logic and Algebra are locked in sync in isolated aiClaw ArangoDB.\n` +
                 `Inspiring nodes: ${params.inspiringNodes.join(", ")}`,
             },
           ],
@@ -176,10 +194,7 @@ export default function (pi: ExtensionAPI) {
         try {
           const fs = await import("fs");
           const path = await import("path");
-          const knowledgePath = path.default.resolve(
-            process.cwd(),
-            "knowledge_base.json"
-          );
+          const knowledgePath = path.default.resolve(process.cwd(), AICLAW_KNOWLEDGE_BASE);
 
           let knowledgeBase: any[] = [];
           if (fs.existsSync(knowledgePath)) {

@@ -1,24 +1,16 @@
-/-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-[Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
-- `P_sum` — the three operators partition unity
-- `T_pow4` — T⁴ = T² under T³ = T
-- `P_hyp_idem` — hyperbolic projector is idempotent
-- `P_ell_idem` — elliptic projector is idempotent
-- `P_par_idem` — parabolic projector is idempotent
-- `P_hyp_ell_orth` — hyperbolic and elliptic are orthogonal
-- `P_hyp_par_orth` — hyperbolic and parabolic are orthogonal
-- `P_ell_par_orth` — elliptic and parabolic are orthogonal
-
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-[None in this module.]
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-[None in this module.]
--/
-
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+
+/-!
+# TriFacetGeometry
+
+Finite commutative-ring projector algebra for a tripotent element `T`
+satisfying `T ^ 3 = T`.
+
+The module proves that the hyperbolic, elliptic, and parabolic projectors
+partition unity, are idempotent under the tripotent law, and are pairwise
+orthogonal.  It is a finite algebraic surface, not a global spectral theorem.
+-/
 
 namespace InfoGeometry.Canonical.TriFacetGeometry
 
@@ -43,6 +35,7 @@ theorem P_sum (T : F) : P_hyp T + P_ell T + P_par T = 1 := by
     _ = T^2 + (1 - T^2) := by rw [invOf_mul_self (2 : F), one_mul]
     _ = 1 := by ring
 
+omit [Invertible (2 : F)] in
 /-- T³ = T implies T⁴ = T². -/
 theorem T_pow4 (T : F) (hT : T^3 = T) : T^4 = T^2 := by
   calc
@@ -84,6 +77,7 @@ theorem P_ell_idem (T : F) (hT : T^3 = T) : P_ell T * P_ell T = P_ell T := by
     _ = (⅟(2 : F) * 1) * (T^2 - T) := by rw [invOf_mul_self (2 : F)]
     _ = ⅟(2 : F) * (T^2 - T) := by ring
 
+omit [Invertible (2 : F)] in
 /-- The Parabolic projector is idempotent under T³ = T. -/
 theorem P_par_idem (T : F) (hT : T^3 = T) : P_par T * P_par T = P_par T := by
   unfold P_par

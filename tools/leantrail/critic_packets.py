@@ -28,10 +28,23 @@ OBFUSCATION_TOKENS = {
     "kms_sorryproof", "fake", "stub", "todo_proof", "proof_placeholder",
 }
 
+THEOREM_AS_DATA_TOKENS = {
+    "_proof",
+    "_law",
+    "_certificate",
+    "_holds",
+    "_valid",
+    "_eq_",
+    "noncollapse_true",
+    "donoho_stark_support",
+    "supportlowerbound",
+}
+
 HIGH_SEVERITY_KINDS = {
     "obfuscation_suspicion",
     "axiomatic_frontier_review",
     "docstring_statement_mismatch",
+    "theorem_as_data_review",
 }
 
 
@@ -150,6 +163,30 @@ def has_graphrag_educational_alias(node: dict[str, Any]) -> bool:
         return True
     doc = node_doc(node)
     return "educational alias" in doc.lower() or "pedagogical" in doc.lower()
+
+
+def looks_like_theorem_as_data(node: dict[str, Any]) -> bool:
+    name = str(node.get("name") or node.get("id") or "").strip().lower()
+    doc = node_doc(node).lower()
+    if not name:
+        return False
+    last = name.split(".")[-1]
+    if last in THEOREM_AS_DATA_TOKENS:
+        return True
+    if any(tok in last for tok in THEOREM_AS_DATA_TOKENS):
+        return True
+    if any(tok in name for tok in THEOREM_AS_DATA_TOKENS):
+        return True
+    return contains_any(doc, {
+        "stored certificate",
+        "witness-gated certificate",
+        "re-export of the stored",
+        "proof-carrying data",
+        "theorem-as-data",
+        "wrapper theorem",
+        "certificate field",
+        "readback of the stored",
+    })
 
 
 def direct_evidence_refs(node: dict[str, Any]) -> list[str]:
@@ -347,6 +384,29 @@ def generate_for_node(node: dict[str, Any], pkt_index: PacketIndex) -> list[dict
                 "remove local axiom or opaque stand-in",
                 "open axiom bridge packet",
                 "quarantine downstream cone",
+            ],
+        ))
+
+    if looks_like_theorem_as_data(node):
+        packets.append(mk_packet(
+            target=name,
+            module=module,
+            file=file,
+            critic_kind="theorem_as_data_review",
+            severity="high",
+            confidence=0.91,
+            evidence_refs=evidence_refs,
+            claim={
+                "problem": "The declaration surface looks like theorem-as-data or a wrapper theorem. Move the mathematical inequality/outcome into an explicit theorem with hypotheses, or expose honest owner debt with `sorry`.",
+                "name": name,
+                "doc_excerpt": doc[:360],
+            },
+            recommended_action="replace_with_explicit_conditional_theorem",
+            allowed_next_actions=[
+                "move proof obligation to theorem parameters",
+                "remove stored certificate field",
+                "replace wrapper theorem with owner theorem",
+                "open honest owner debt",
             ],
         ))
 

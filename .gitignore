@@ -113,6 +113,7 @@ handover/injections/manifests/*.json
 handover/injections/manifests/*.jsonl
 
 # Generated runtime and scratch worktrees (non-canonical inputs)
+.runtime/
 tmp/**
 quarantine/**
 /scratch/
@@ -145,6 +146,7 @@ logs/
 !.archon/workflows/
 .archon/workflows/*
 !.archon/workflows/proof-purification-pipeline.yaml
+!.archon/workflows/agent-orchestrator-definite-sequence.yaml
 !.archon/prompts/
 .archon/prompts/*
 !.archon/prompts/literature-scout.md

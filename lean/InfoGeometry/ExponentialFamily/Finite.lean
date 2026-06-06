@@ -1,34 +1,47 @@
+import Mathlib
 import InfoGeometry.Basic
 import InfoGeometry.ExponentialFamily.Class
 
 /-!
-# Finite Exponential Family
 
-Core definitions and theorems for finite exponential families, using the ExponentialFamily typeclass abstraction.
-
-## Main results
-- explicit family maps `familyPartition`, `familyLogPartition`, `familyStatistic`, `familyDensity`
-- conversion `toFiniteExponentialFamily`
-- ...
-
-## Warning
-This structure assumes strict positivity `base_pos : ∀ x, 0 < (base x).toReal`,
-so `Real.log ((F.base x).toReal)` is always taken at a positive value.
+Finite Exponential Family
 
 -/
 
 namespace InfoGeometry.ExponentialFamily
 
 open Finset
+open scoped BigOperators
 
-/--
-  General finite exponential family as an instance of the ExponentialFamily typeclass.
-  Given a base measure `P` and sufficient statistic `stat`, the density is:
-    P x * exp(θ * stat x) / partition(θ)
-  where partition(θ) = ∑ x, P x * exp(θ * stat x)
-  The exponential identity uses `log (P x)` in the statistic.
-  This data structure includes strict positivity `base_pos`, so this log is always at a positive value.
+/-
+
+BUCKET 1: CLOSED FINITE THEOREMS
+
+[Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
+
+familyPartition_pos
+
+familyDensity_eq
+
+familyDensity_pos
+
+familyNormalization
+
+toFiniteExponentialFamily
+
+BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
+
+[Theorems that compile from explicitly named theorem parameters or imported verified premises.]
+
+None.
+
+BUCKET 3: OPEN CLOSURE DEBT
+
+[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
+
+None.
 -/
+
 structure FiniteExponentialFamilyData (α : Type _) [Fintype α] where
   base : ProbabilityDist α
   stat : α → ℝ
@@ -56,58 +69,44 @@ lemma familyPartition_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) :
     0 < familyPartition F θ := by
   classical
   unfold familyPartition
-  have hnonneg :
-      ∀ y ∈ (Finset.univ : Finset α),
-        0 ≤ (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    intro y hy
-    exact mul_nonneg (le_of_lt (F.base_pos y)) (le_of_lt (Real.exp_pos _))
-  obtain ⟨y, hy⟩ := (Finset.univ_nonempty : (Finset.univ : Finset α).Nonempty)
-  have hpos_sorry :
-      ∃ y ∈ (Finset.univ : Finset α),
-        0 < (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    exact ⟨y, hy, mul_pos (F.base_pos y) (Real.exp_pos _)⟩
-  have hpos' :
-      0 < ∑ y ∈ (Finset.univ : Finset α), (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    exact Finset.sum_pos' hnonneg hpos_sorry
-  simpa using hpos'
+  exact
+    Finset.sum_pos
+      (fun x _ => mul_pos (F.base_pos x) (Real.exp_pos _))
+      Finset.univ_nonempty
 
 lemma familyDensity_eq (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
-    familyDensity F θ x = Real.exp (familyStatistic F x θ - familyLogPartition F θ) := by
-  unfold familyDensity familyStatistic familyLogPartition familyPartition
+    familyDensity F θ x =
+    Real.exp (familyStatistic F x θ - familyLogPartition F θ) := by
+  unfold familyDensity familyStatistic familyLogPartition
+  have hZpos : 0 < familyPartition F θ := familyPartition_pos F θ
+  have hbpos : 0 < (F.base x).toReal := F.base_pos x
   rw [Real.exp_sub, Real.exp_add]
-  have hZpos : 0 < ∑ y, (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    simpa [familyPartition] using familyPartition_pos F θ
-  rw [Real.exp_log hZpos, Real.exp_log (F.base_pos x)]
-  field_simp [ne_of_gt hZpos, ne_of_gt (F.base_pos x)]
+  rw [Real.exp_log hbpos, Real.exp_log hZpos]
+  ring
 
 lemma familyDensity_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
     0 < familyDensity F θ x := by
   unfold familyDensity
-  refine div_pos ?_ (familyPartition_pos F θ)
-  exact mul_pos (F.base_pos x) (Real.exp_pos _)
+  exact div_pos
+    (mul_pos (F.base_pos x) (Real.exp_pos _))
+    (familyPartition_pos F θ)
 
 lemma familyNormalization (F : FiniteExponentialFamilyData α) (θ : ℝ) :
     ∑ x, familyDensity F θ x = 1 := by
+  classical
   unfold familyDensity familyPartition
-  have hZpos : 0 < ∑ y, (F.base y).toReal * Real.exp (θ * F.stat y) := by
-    simpa [familyPartition] using familyPartition_pos F θ
-  have hZne : (∑ y, (F.base y).toReal * Real.exp (θ * F.stat y)) ≠ 0 := ne_of_gt hZpos
+  have hZne : (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) ≠ 0 :=
+    ne_of_gt (by simpa [familyPartition] using familyPartition_pos F θ)
   calc
-    ∑ x, (F.base x).toReal * Real.exp (θ * F.stat x) / ∑ y, (F.base y).toReal * Real.exp (θ * F.stat y)
-        = (∑ x, (F.base x).toReal * Real.exp (θ * F.stat x)) /
-            ∑ y, (F.base y).toReal * Real.exp (θ * F.stat y) := by
-            symm
-            simpa using
-              (Finset.sum_div
-                (s := (Finset.univ : Finset α))
-                (f := fun x => (F.base x).toReal * Real.exp (θ * F.stat x))
-                (a := ∑ y, (F.base y).toReal * Real.exp (θ * F.stat y)))
+    ∑ x : α,
+      (F.base x).toReal * Real.exp (θ * F.stat x) /
+      (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y))
+        = (∑ x : α, (F.base x).toReal * Real.exp (θ * F.stat x)) /
+          (∑ y : α, (F.base y).toReal * Real.exp (θ * F.stat y)) := by
+      rw [Finset.sum_div]
     _ = 1 := by
-          exact div_self hZne
+      exact div_self hZne
 
-/--
-  Bundle a concrete finite exponential family as `FiniteExponentialFamily`.
--/
 noncomputable def toFiniteExponentialFamily (F : FiniteExponentialFamilyData α) :
     FiniteExponentialFamily α ℝ where
   statistic := familyStatistic F

@@ -168,6 +168,14 @@ This is now formalized in:
 The same 3-cycle is the finite boundary permutation shadow of the
 `V₄ \rtimes S₃` heuristic used in the architecture narrative.
 
+The next finite extension is the full semidirect signature:
+
+* `Canonical/V4SemidirectS3Bridge.lean` —
+  explicit `V₄ ⋊ S₃` multiplication, conjugation, and power laws;
+* `tools/sympy/v4_semidirect_s3_cl55_32_bridge.py` —
+  explicit `32×3` sector realization (96×96 matrices) with full semidirect
+  multiplication checks.
+
 ## X. Open-Door Proof Map
 
 The current architectural status for the new package is:
@@ -182,6 +190,7 @@ The current architectural status for the new package is:
 | Boundary fixed points as V₄-quotient states | `Canonical/KleinBoundaryStates.lean` | ✅ explicit theorems |
 | Boundary V₄ action on `Cl(5,5)` spinors | `Canonical/Cl55V4SpinorFragmentation.lean` | ✅ explicit theorem map |
 | Finite triality permutation on boundary sectors | `Canonical/TrialitySpin8Permutations.lean` | ✅ explicit 3-cycle witnesses |
+| Full semidirect signature `V₄ ⋊ S₃` on Cl(5,5) sectors | `Canonical/V4SemidirectS3Bridge.lean` | ✅ explicit finite model |
 
 The boundary interface is now explicit and is the staging point for the next
 macroscopic-to-bulk bonding maps between de Sitter boundary sectors and finite

@@ -1,0 +1,37 @@
+{
+  "name": "info-geometry-lean",
+  "version": "1.0.0",
+  "description": "> Status: `reference memory` > Audited: 2026-05-02 > Note: Maintained against the live code surface. > See: [README.md](README.md), [docs/README.md](docs/README.md)",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-nklgtv:nklgtv-nuke/info-geometry-lean.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.48",
+    "@xenova/transformers": "^2.17.0",
+    "ai": "^6.0.193",
+    "arangojs": "^8.8.0",
+    "axios": "^1.16.1",
+    "express": "^5.2.1",
+    "openai": "^6.39.1",
+    "typebox": "^1.1.38",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}

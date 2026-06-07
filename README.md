@@ -35,6 +35,34 @@
 
 ---
 
+## Algebra Replaces Analysis
+
+The repository builds a different foundation for mathematical physics:
+**limits are colimits**. The role of continuous analysis — limits, Banach
+spaces, spectral theorem, exponential series — is taken over by the algebraic
+colimit of the split Clifford tower.
+
+| Analysis                         | Algebra (this repo)                                    |
+|----------------------------------|-------------------------------------------------------|
+| `lim_{n→∞} f_n`                  | `colim_{n} Cl(n,n)` via `SplitCliffordDirectLimit`    |
+| `exp(tK) = Σ (tK)^n/n!`          | `1 + tK` (K²=0) or `cos t·1 + sin t·K` (K²=-1)       |
+| Spectral theorem                 | Finite diagonalization at each stage, lifted by colimit |
+| `log(x) = ∫₁ˣ dt/t`             | Inverse of the algebraic exp on the colimit            |
+| Continuous spectrum              | Cantor set = spectrum of the UHF algebra               |
+| Banach-space completion          | `InductivePosetColimit` — the analytic completion      |
+
+The `TwoComplexColimitRecursor.to_Target` **IS** the induction principle that
+replaces limits. Adding an edge to the DAG = one induction step = one stage in
+the colimit. The modular flow `σ_t = exp(t·ad_K)` is computed algebraically at
+each finite stage and lifted via the universal property. The "continuous"
+spectral theorem is the statement that the colimit preserves the finite-dimensional
+spectral decomposition.
+
+This is the UHF (Uniformly Hyperfinite) algebra approach to quantum statistical
+mechanics — Powers, Glimm, and Bratteli's classification of AF algebras,
+internalized into the DAG architecture. It is not structural debt; it is the
+**definition** of analyticity in this framework.
+
 ## Repository Architecture
 
 This repository is **three coupled systems** at once:
@@ -340,12 +368,22 @@ of the Lean library and runs as Lean executables (`dagIndexer`, `infotreeExtract
 
 | File | What It Does |
 |------|-------------|
-| `GraphHodge.lean` | Finite Hodge/Laplacian/Dirac/chiral operators on the declaration 2-complex |
+| `TwoComplex.lean` | 2-complex (cell complex) over the declaration DAG: vertices, edges, faces, digons; `boundary1`/`boundary2`, `boundarySquaredZero` |
+| `GraphHodge.lean` | Laplacians `Δ₀`/`Δ₁`, coboundary operators `δ₀`/`δ₁`, graph Dirac `D`, chiral grading `Γ`, `chiralAnticommutes` |
+| `CocycleBridge.lean` | `HodgeCocycleData` — unifies all six physical lanes; 10 theorems (`∂²=0` on chain/triangle, `betti1_vanishes`, Hodge-cocycle correspondence) |
+| `ChiralDiracAnticommutation.lean` | **ΓD + DΓ = 0** proved as a universal theorem via 9-cell case analysis |
+| `GradedBottPeriodicity.lean` | `bottEven`/`bottOdd`, `gamma` (chiral grading), `buildDirac`, Jordan-Wigner string; `diracAtLevel_anticommutes` (∀n) |
+| `AnalyticBridge.lean` | `UHFAlgebra` = `SplitCliffordInfinity`, `finiteFlow`, `uhfModularFlow` — the analytic completion |
+| `CocycleBridgeActivation.lean` | 3-layer bridge: TwoComplex → SplitCliffordDirectLimit → ConnesCocycle + HexagonCocycle |
+| `TwoComplexColimitRecursor.lean` | `to_Target`: `colimit.desc` = induction — the universal property replacing limits |
+| `Dominators.lean` | Lengauer-Tarjan dominator tree, `idom`, `lightcone`, `frontier`, `analyze` |
+| `TwoComplexFunctor.lean` | Functor F: TwoComplex → AlgebraEnd, edge generator K_e, modular flow σ_t |
+| `ConnesHodgeBridge.lean` | Continuous modular-flow and Connes-cocycle bridge |
+| `HodgeTheorems.lean` | Canonical chain/triangle/digon complexes; `boundary_squared_zero_*` (native_decide) |
+| `WittenIndexCommand.lean` | `#witten_index` metaprogram — computes χ = β₀ - β₁ for any module |
+| `AlgebraicExponential.lean` | `algebraicExp(N) = 1 + N` for N²=0 — the algebraic exp replacing Taylor series |
 | `GraphHodgeBridge.lean` | Canonical finite graph-Hodge bridge packet |
-| `TwoComplex.lean` | 2-complex (cell complex) structure over the declaration DAG |
 | `Betti.lean` | Betti-number / homological rank computations |
-| `Impact.lean` | Forward/reverse BFS reachability at SCC level → declaration level |
-| `ConeCommand.lean` | Interactive `#deps_dot`, `#deps_json`, `#cone_json` for causal-diamond prompts |
 
 #### Kernel-Certified Equivalence and Triple Checking
 

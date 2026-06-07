@@ -28,6 +28,7 @@ CLAWBOT_ROOT = REPO_ROOT / "aihub" / "localBridge" / "clawBotCli"
 DEFAULT_BASE_URL = "http://127.0.0.1:10088"
 DEFAULT_PLATFORM = "chatgpt"
 DEFAULT_QUEUE_ROOT = REPO_ROOT / "tmp" / "aiclaw_queue"
+DEFAULT_QUEUE_STALE_SECONDS = 900.0
 SENSITIVE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("private_key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
     ("openai_key", re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b")),
@@ -44,6 +45,11 @@ try:
     from clawbot.errors import ClawBotError
 except Exception as exc:  # pragma: no cover - import failure is environment setup.
     raise SystemExit(f"failed to import repo-local clawbot client: {exc}") from exc
+
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block sends.
+    record_message = None
 
 
 def jsonable(value: Any) -> Any:
@@ -62,6 +68,42 @@ def emit_json(value: Any) -> None:
 
 def utc_now() -> str:
     return dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def parse_utc_timestamp(value: Any) -> dt.datetime | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        parsed = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=dt.UTC)
+    return parsed.astimezone(dt.UTC)
+
+
+def seconds_since(value: Any, *, now: dt.datetime | None = None) -> float | None:
+    timestamp = parse_utc_timestamp(value)
+    if timestamp is None:
+        return None
+    current = now or dt.datetime.now(dt.UTC)
+    return max(0.0, (current - timestamp).total_seconds())
+
+
+def pid_alive(pid: Any) -> bool | None:
+    try:
+        pid_int = int(pid)
+    except (TypeError, ValueError):
+        return None
+    if pid_int <= 0:
+        return False
+    try:
+        os.kill(pid_int, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
 
 
 def safe_platform_name(platform: str) -> str:
@@ -104,26 +146,166 @@ def ensure_queue_dirs(paths: dict[str, Path]) -> None:
         paths[key].mkdir(parents=True, exist_ok=True)
 
 
-def queue_summary(queue_root: Path, platform: str) -> dict[str, Any]:
+def queue_recovery_guidance(queue_root: Path, platform: str) -> dict[str, Any]:
+    release_command = f"python3 tools/infra/aiclaw_chat.py queue-release --platform {platform}"
+    prune_active_command = f"python3 tools/infra/aiclaw_chat.py queue-prune-active --platform {platform}"
+    return {
+        "status_command": f"python3 tools/infra/aiclaw_chat.py queue-status --platform {platform}",
+        "release_command": release_command,
+        "prune_active_command": prune_active_command,
+        "readback_rule": (
+            "Recover the final visible answer through a read-only browser view, "
+            "record the prompt hash and final answer in the work log, then run "
+            f"`{release_command} --reason final_visible_answer_recorded`."
+        ),
+        "send_rule": "Do not send another prompt on this platform until lane_available=true.",
+    }
+
+
+def summarize_queue_doc(
+    path: Path,
+    payload: dict[str, Any],
+    *,
+    now: dt.datetime,
+    stale_after: float,
+) -> dict[str, Any]:
+    started_at = payload.get("started_at") or payload.get("queued_at") or payload.get("finished_at")
+    age = seconds_since(started_at, now=now)
+    stale = bool(age is not None and stale_after > 0 and age >= stale_after)
+    meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+    pid_state = pid_alive(payload.get("pid"))
+    return {
+        "path": str(path),
+        "file": path.name,
+        "job_id": payload.get("job_id"),
+        "status": payload.get("status"),
+        "pid": payload.get("pid"),
+        "pid_alive": pid_state,
+        "orphaned": pid_state is False,
+        "reason": payload.get("reason") or payload.get("hold_reason") or payload.get("failure_reason"),
+        "started_at": payload.get("started_at"),
+        "queued_at": payload.get("queued_at"),
+        "finished_at": payload.get("finished_at"),
+        "age_seconds": round(age, 3) if age is not None else None,
+        "stale_after_seconds": stale_after,
+        "stale": stale,
+        "prompt_chars": meta.get("prompt_chars"),
+        "prompt_sha256": meta.get("prompt_sha256"),
+    }
+
+
+def queue_summary(queue_root: Path, platform: str, *, stale_after: float = DEFAULT_QUEUE_STALE_SECONDS) -> dict[str, Any]:
     paths = queue_paths(queue_root, platform)
     ensure_queue_dirs(paths)
+    now = dt.datetime.now(dt.UTC)
+    busy_raw = read_json_file(paths["busy"]) if paths["busy"].exists() else None
+    busy = (
+        summarize_queue_doc(paths["busy"], busy_raw, now=now, stale_after=stale_after)
+        if busy_raw
+        else None
+    )
+    queued_paths = sorted(paths["queued"].glob("*.json"))
+    active_paths = sorted(paths["active"].glob("*.json"))
+    active = [
+        summarize_queue_doc(path, read_json_file(path), now=now, stale_after=stale_after)
+        for path in active_paths
+    ]
+    queued = [
+        summarize_queue_doc(path, read_json_file(path), now=now, stale_after=stale_after)
+        for path in queued_paths
+    ]
+    guidance = queue_recovery_guidance(queue_root, platform)
+    if busy:
+        queue_state = "needs_readback"
+        agent_action = "recover_final_visible_answer_then_release"
+        lane_available = False
+        readback_required = True
+        hard_block = False
+        state_reason = "A previous prompt may have reached the browser but no trustworthy final answer was captured."
+    elif active:
+        live_active = [item for item in active if item.get("pid_alive") is not False and not item.get("stale")]
+        all_orphaned = all(item.get("pid_alive") is False for item in active)
+        queue_state = "active" if live_active else "stale_active"
+        if live_active:
+            agent_action = "wait_for_active_job"
+            lane_available = False
+            state_reason = "A sender currently owns the lane."
+        elif all_orphaned:
+            agent_action = "run_queue_prune_active_or_send_one_prompt"
+            lane_available = True
+            state_reason = "Only dead active markers remain; no busy marker or queued job is present."
+        else:
+            agent_action = "inspect_or_archive_stale_active_job"
+            lane_available = False
+            state_reason = "Only stale active markers remain; inspect before sending."
+        readback_required = False
+        hard_block = False
+    elif queued:
+        queue_state = "queued"
+        agent_action = "wait_fifo_or_increase_queue_timeout"
+        lane_available = False
+        readback_required = False
+        hard_block = False
+        state_reason = "Jobs are waiting in FIFO order."
+    else:
+        queue_state = "ready"
+        agent_action = "send_one_prompt"
+        lane_available = True
+        readback_required = False
+        hard_block = False
+        state_reason = "No held, active, or queued job is present."
     return {
         "platform": platform,
         "queue_root": str(paths["root"]),
-        "busy": read_json_file(paths["busy"]) if paths["busy"].exists() else None,
+        "queue_state": queue_state,
+        "agent_action": agent_action,
+        "lane_available": lane_available,
+        "readback_required": readback_required,
+        "hard_block": hard_block,
+        "state_reason": state_reason,
+        "recovery": guidance,
+        "busy": busy,
         "counts": {
-            "queued": len(list(paths["queued"].glob("*.json"))),
-            "active": len(list(paths["active"].glob("*.json"))),
+            "queued": len(queued_paths),
+            "active": len(active_paths),
             "done": len(list(paths["done"].glob("*.json"))),
             "failed": len(list(paths["failed"].glob("*.json"))),
             "released": len(list(paths["released"].glob("*.json"))),
         },
-        "queued": sorted(path.name for path in paths["queued"].glob("*.json"))[:20],
-        "active": sorted(path.name for path in paths["active"].glob("*.json"))[:20],
+        "queued": queued[:20],
+        "active": active[:20],
     }
 
 
+TRANSPORT_PRE_SEND_ERROR_PATTERNS = (
+    "failed to send message to tab",
+    "receiving end does not exist",
+    "message channel is closed",
+    "could not establish connection",
+    "extension context invalidated",
+    "back/forward cache",
+)
+
+
+def result_error_text(result: dict[str, Any]) -> str:
+    raw = result.get("raw")
+    parts = [
+        result.get("error"),
+        raw.get("error") if isinstance(raw, dict) else None,
+    ]
+    return " ".join(str(part) for part in parts if part).strip()
+
+
+def is_pre_send_transport_failure(result: dict[str, Any]) -> bool:
+    if bool(result.get("success", False)):
+        return False
+    error = result_error_text(result).lower()
+    return any(pattern in error for pattern in TRANSPORT_PRE_SEND_ERROR_PATTERNS)
+
+
 def result_needs_lane_hold(result: dict[str, Any]) -> tuple[bool, str]:
+    if is_pre_send_transport_failure(result):
+        return False, ""
     content = str(result.get("content") or "").strip().lower()
     if result.get("suspect_intermediate") or content in {"thinking", "thinking..."}:
         return True, "suspect_intermediate_response"
@@ -185,11 +367,12 @@ def run_in_platform_queue(
             busy = read_json_file(paths["busy"]) if paths["busy"].exists() else None
             if busy:
                 if deadline is not None and time.monotonic() >= deadline:
+                    guidance = queue_recovery_guidance(queue_root, platform)
                     message = (
-                        f"aiClaw lane {platform!r} is busy after an unresolved prompt; "
+                        f"aiClaw lane {platform!r} is in needs_readback state after an unresolved prompt; "
                         f"busy_file={paths['busy']}; release with "
-                        f"`python3 tools/infra/aiclaw_chat.py queue-release --platform {platform}` "
-                        "after read-only final-answer recovery"
+                        f"`{guidance['release_command']}` after read-only final-answer recovery. "
+                        "This is a recovery-required queue state, not evidence that the provider is blocked."
                     )
                     mark_failed("queue_timeout_busy", message)
                     raise TimeoutError(message)
@@ -254,11 +437,16 @@ def run_in_platform_queue(
             }
             result["queue"] = queue_meta
             if hold:
+                guidance = queue_recovery_guidance(queue_root, platform)
                 write_json_file(paths["busy"], {
                     **queue_meta,
+                    "queue_state": "needs_readback",
+                    "readback_required": True,
+                    "hard_block": False,
                     "reason": reason,
                     "meta": meta,
-                    "release_command": f"python3 tools/infra/aiclaw_chat.py queue-release --platform {platform}",
+                    "release_command": guidance["release_command"],
+                    "readback_rule": guidance["readback_rule"],
                 })
             job["status"] = "done"
             job["finished_at"] = queue_meta["finished_at"]
@@ -267,6 +455,9 @@ def run_in_platform_queue(
             job["result"] = {
                 "success": bool(result.get("success", False)),
                 "suspect_intermediate": bool(result.get("suspect_intermediate", False)),
+                "pre_send_transport_failure": is_pre_send_transport_failure(result),
+                "needs_readback": hold,
+                "error": result_error_text(result),
                 "content_chars": len(str(result.get("content") or "")),
             }
             write_json_file(paths["done"] / f"{job_id}.json", job)
@@ -276,18 +467,23 @@ def run_in_platform_queue(
         except BaseException as exc:
             reason = "exception_after_send_started" if send_started() else "exception_before_send"
             if hold_on_suspect and send_started():
+                guidance = queue_recovery_guidance(queue_root, platform)
                 write_json_file(paths["busy"], {
                     "enabled": True,
                     "job_id": job_id,
                     "platform": platform,
                     "queue_root": str(paths["root"]),
+                    "queue_state": "needs_readback",
                     "started_at": job.get("started_at"),
                     "finished_at": utc_now(),
                     "held": True,
+                    "readback_required": True,
+                    "hard_block": False,
                     "reason": reason,
                     "error": str(exc),
                     "meta": meta,
-                    "release_command": f"python3 tools/infra/aiclaw_chat.py queue-release --platform {platform}",
+                    "release_command": guidance["release_command"],
+                    "readback_rule": guidance["readback_rule"],
                 })
             job["status"] = "failed"
             job["finished_at"] = utc_now()
@@ -500,6 +696,9 @@ def ask_ai(
         return {"dry_run": True, **meta}
 
     send_started = False
+    started = time.monotonic()
+    result: dict[str, Any] | None = None
+    error_text = ""
 
     def send_once() -> dict[str, Any]:
         nonlocal conversation_id, send_started
@@ -514,10 +713,9 @@ def ask_ai(
                 quiet=quiet,
             )
         if navigate:
-            send_started = True
             client.ai.navigation.navigate(platform)
+            time.sleep(max(2.0, min(interval, 2.0)))
         if new:
-            send_started = True
             client.ai.chat.new_conversation(platform)
             conversation_id = None
 
@@ -528,6 +726,14 @@ def ask_ai(
             conversation_id=conversation_id,
         )
         data = jsonable(result)
+        if isinstance(data, dict) and navigate and is_pre_send_transport_failure(data):
+            time.sleep(max(2.0, min(interval, 2.0)))
+            result = client.ai.chat.send_message(
+                platform=platform,
+                prompt=prompt,
+                conversation_id=conversation_id,
+            )
+            data = jsonable(result)
         if isinstance(data, dict):
             content = str(data.get("content") or "").strip()
             data.setdefault("meta", meta)
@@ -542,18 +748,61 @@ def ask_ai(
             "queue": {"enabled": False},
         }
 
-    if queue:
-        return run_in_platform_queue(
-            platform=platform,
-            queue_root=Path(queue_root),
-            queue_timeout=queue_timeout,
-            quiet=quiet,
-            meta=meta,
-            send_started=lambda: send_started,
-            hold_on_suspect=hold_on_suspect,
-            callback=send_once,
-        )
-    return send_once()
+    try:
+        if queue:
+            result = run_in_platform_queue(
+                platform=platform,
+                queue_root=Path(queue_root),
+                queue_timeout=queue_timeout,
+                quiet=quiet,
+                meta=meta,
+                send_started=lambda: send_started,
+                hold_on_suspect=hold_on_suspect,
+                callback=send_once,
+            )
+        else:
+            result = send_once()
+        return result
+    except BaseException as exc:
+        error_text = str(exc)
+        raise
+    finally:
+        if record_message is not None:
+            try:
+                response = ""
+                success: bool | None = False
+                metadata = dict(meta)
+                if result is not None:
+                    response = str(result.get("content") or "")
+                    success = bool(result.get("success", False))
+                    queue_meta = result.get("queue")
+                    if isinstance(queue_meta, dict):
+                        metadata["queue"] = queue_meta
+                    if result.get("suspect_intermediate"):
+                        metadata["failure_pattern"] = "suspect_intermediate_response"
+                else:
+                    response = error_text
+                    metadata["failure_pattern"] = (
+                        "exception_after_send_started" if send_started else "exception_before_send"
+                    )
+                    metadata["error"] = error_text
+                record_message(
+                    source_tool="aiclaw_chat.py",
+                    source_file="tools/infra/aiclaw_chat.py",
+                    channel="aiclaw_browser_oracle",
+                    direction="agent_to_model",
+                    provider="aiclaw",
+                    model="browser-session",
+                    platform=platform,
+                    prompt_text=prompt,
+                    response_text=response,
+                    success=success,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    correlation_id=str(metadata.get("prompt_sha256", ""))[:16],
+                    metadata=metadata,
+                )
+            except Exception:
+                pass
 
 
 def cmd_ask(args: argparse.Namespace) -> int:
@@ -588,7 +837,7 @@ def cmd_ask(args: argparse.Namespace) -> int:
 
 
 def cmd_queue_status(args: argparse.Namespace) -> int:
-    emit_json(queue_summary(Path(args.queue_root), args.platform))
+    emit_json(queue_summary(Path(args.queue_root), args.platform, stale_after=args.stale_after))
     return 0
 
 
@@ -624,6 +873,49 @@ def cmd_queue_release(args: argparse.Namespace) -> int:
                 "queue_root": str(paths["root"]),
                 "archived_busy": str(release_path),
                 "release_reason": args.reason,
+            })
+            return 0
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
+def cmd_queue_prune_active(args: argparse.Namespace) -> int:
+    paths = queue_paths(Path(args.queue_root), args.platform)
+    ensure_queue_dirs(paths)
+    paths["root"].mkdir(parents=True, exist_ok=True)
+    now = dt.datetime.now(dt.UTC)
+    pruned: list[dict[str, Any]] = []
+    kept: list[dict[str, Any]] = []
+    with paths["lock"].open("a+", encoding="utf-8") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            for path in sorted(paths["active"].glob("*.json")):
+                payload = read_json_file(path)
+                summary = summarize_queue_doc(path, payload, now=now, stale_after=args.stale_after)
+                should_prune = bool(summary["orphaned"] or summary["stale"])
+                if not should_prune:
+                    kept.append(summary)
+                    continue
+                archived = {
+                    **payload,
+                    "status": "active_pruned",
+                    "pruned_at": utc_now(),
+                    "prune_reason": args.reason,
+                    "original_active_path": str(path),
+                    "active_summary": summary,
+                }
+                job_id = str(payload.get("job_id") or path.stem)
+                archive_path = paths["released"] / f"{job_id}.active_pruned.json"
+                write_json_file(archive_path, archived)
+                path.unlink()
+                pruned.append({**summary, "archive_path": str(archive_path)})
+            emit_json({
+                "platform": args.platform,
+                "queue_root": str(paths["root"]),
+                "pruned_count": len(pruned),
+                "kept_count": len(kept),
+                "pruned": pruned,
+                "kept": kept,
             })
             return 0
         finally:
@@ -714,6 +1006,12 @@ def build_parser() -> argparse.ArgumentParser:
     queue_status = subparsers.add_parser("queue-status", help="Print local aiClaw lane queue state.")
     queue_status.add_argument("--platform", default=os.environ.get("AICLAW_PLATFORM", DEFAULT_PLATFORM))
     queue_status.add_argument("--queue-root", default=os.environ.get("AICLAW_QUEUE_ROOT", str(DEFAULT_QUEUE_ROOT)))
+    queue_status.add_argument(
+        "--stale-after",
+        type=float,
+        default=float(os.environ.get("AICLAW_QUEUE_STALE_SECONDS", str(DEFAULT_QUEUE_STALE_SECONDS))),
+        help="seconds after which queued/active markers are reported as stale; <=0 disables stale marking",
+    )
     queue_status.set_defaults(func=cmd_queue_status)
 
     queue_release = subparsers.add_parser(
@@ -728,6 +1026,25 @@ def build_parser() -> argparse.ArgumentParser:
         help="auditable reason for releasing the held lane",
     )
     queue_release.set_defaults(func=cmd_queue_release)
+
+    queue_prune_active = subparsers.add_parser(
+        "queue-prune-active",
+        help="Archive orphaned or stale active aiClaw queue markers without touching busy held lanes.",
+    )
+    queue_prune_active.add_argument("--platform", default=os.environ.get("AICLAW_PLATFORM", DEFAULT_PLATFORM))
+    queue_prune_active.add_argument("--queue-root", default=os.environ.get("AICLAW_QUEUE_ROOT", str(DEFAULT_QUEUE_ROOT)))
+    queue_prune_active.add_argument(
+        "--stale-after",
+        type=float,
+        default=float(os.environ.get("AICLAW_QUEUE_STALE_SECONDS", str(DEFAULT_QUEUE_STALE_SECONDS))),
+        help="seconds after which active markers are pruned; orphaned PIDs are always pruned",
+    )
+    queue_prune_active.add_argument(
+        "--reason",
+        default="orphaned_or_stale_active_marker",
+        help="auditable reason for pruning active markers",
+    )
+    queue_prune_active.set_defaults(func=cmd_queue_prune_active)
 
     return parser
 

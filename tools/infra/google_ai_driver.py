@@ -30,6 +30,8 @@ else:
     time.sleep(2)
     open(SENTINEL, "w").close()
 
+before_text = js("return (document.body.innerText || '')")
+
 # Find textarea and insert prompt
 safe = json.dumps(prompt)  # JSON-escape the prompt
 js(f"""
@@ -62,18 +64,58 @@ js("""
 """)
 
 # Wait for response
+def _is_intermediate(text: str) -> bool:
+    tail = text[-2000:].lower()
+    return any(
+        marker in tail
+        for marker in (
+            "thinking a little longer",
+            "thinking...",
+            "generating",
+            "searching",
+        )
+    )
+
+def _clean_summary(text: str) -> str:
+    skipped = {
+        "thinking a little longer",
+        "thinking...",
+        "generating",
+        "searching",
+    }
+    lines = []
+    for line in text.splitlines():
+        if line.strip().lower() in skipped:
+            continue
+        lines.append(line)
+    return "\n".join(lines).strip()
+
 timeout = int(os.environ.get("GOOGLE_AI_TIMEOUT_SECONDS", "120"))
 stable = 0
 last = ""
+prompt_need = prompt.strip()[:160]
+started = time.monotonic()
 for _ in range(timeout // 3):
     time.sleep(3)
     body = js("return (document.body.innerText || '')")
+    prompt_idx = body.find(prompt_need) if prompt_need else 0
+    response_region = body[prompt_idx:] if prompt_idx >= 0 else body
+    if (
+        prompt_idx >= 0
+        and not _is_intermediate(body)
+        and (
+            "AI responses may include mistakes" in response_region
+            or "AI Mode response is ready" in response_region
+        )
+        and time.monotonic() - started >= 8
+    ):
+        break
     idx = body.find("AI Mode")
     if idx >= 0:
         tail = body[idx:idx+200]
     else:
         tail = body[-200:]
-    if tail == last:
+    if tail == last and not _is_intermediate(body):
         stable += 1
         if stable >= 3:
             break
@@ -88,6 +130,7 @@ idx = body.find("AI Mode")
 if idx == -1:
     idx = body.find("Gemini")
 result = {"summary": body[idx:idx+6000] if idx >= 0 else body[:6000], "links": []}
+result["summary"] = _clean_summary(result["summary"])
 
 # Extract links
 raw = js("""JSON.stringify(

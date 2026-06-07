@@ -105,4 +105,87 @@ theorem nilpotent_jordan_power
               rw [hpow]
               rw [hcast]
 
+/--
+Natural-number scalars are central in every ring.
+
+This is the scalar bookkeeping lemma used by the abstract winding formula below.
+-/
+lemma commute_nat_cast (x : A) (n : ℕ) : Commute x (n : A) := by
+  induction n with
+  | zero =>
+      simp
+  | succ k ih =>
+      rw [Nat.cast_succ]
+      exact Commute.add_right ih (Commute.one_right x)
+
+/--
+One unipotent Jordan multiplication step:
+`(1 + nε)(1 + ε) = 1 + (n + 1)ε` when `ε² = 0`.
+
+The `lambda` and commutation hypothesis are retained so the step has the same
+parameter surface as the full monodromy winding theorem.
+-/
+lemma monodromy_unipotent_step_mul
+    (lambda epsilon : A)
+    (h_nil : epsilon * epsilon = 0)
+    (_h_comm : Commute lambda epsilon)
+    (n : ℕ) :
+    (1 + (n : A) * epsilon) * (1 + epsilon) =
+      1 + ((n + 1 : ℕ) : A) * epsilon := by
+  rw [add_mul, one_mul, mul_add, mul_one]
+  have h_nil_term : (n : A) * epsilon * epsilon = 0 := by
+    rw [mul_assoc, h_nil, mul_zero]
+  rw [h_nil_term, add_zero]
+  calc
+    1 + epsilon + (n : A) * epsilon =
+        1 + (1 * epsilon + (n : A) * epsilon) := by rw [one_mul, add_assoc]
+    _ = 1 + ((1 + (n : A)) * epsilon) := by rw [add_mul]
+    _ = 1 + (((n : A) + 1) * epsilon) := by rw [add_comm (1 : A) (n : A)]
+    _ = 1 + ((n + 1 : ℕ) : A) * epsilon := by rw [Nat.cast_succ]
+
+/--
+Genuine abstract monodromy winding theorem.
+
+If `ε² = 0` and the scalar/rotor part `λ` commutes with the nilpotent
+logarithmic shear `ε`, then winding the local block `λ * (1 + ε)` exactly
+`n` times preserves the phase/nilpotent separation:
+
+`(λ * (1 + ε))^n = λ^n * (1 + n ε)`.
+
+This is the ring-level theorem behind the Hadjiivanov logarithmic monodromy
+power law and the parabolic `T`-sector readouts.
+-/
+theorem monodromy_winding_formula
+    (lambda epsilon : A)
+    (h_nil : epsilon * epsilon = 0)
+    (h_comm : Commute lambda epsilon)
+    (n : ℕ) :
+    (lambda * (1 + epsilon)) ^ n =
+      lambda ^ n * (1 + (n : A) * epsilon) := by
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [pow_succ, ih]
+      have h_comm_term : Commute lambda (1 + (n : A) * epsilon) := by
+        apply Commute.add_right
+        · exact Commute.one_right lambda
+        · exact Commute.mul_right (commute_nat_cast lambda n) h_comm
+      calc
+        lambda ^ n * (1 + (n : A) * epsilon) * (lambda * (1 + epsilon))
+            = lambda ^ n * ((1 + (n : A) * epsilon) * lambda) *
+                (1 + epsilon) := by
+              noncomm_ring
+        _ = lambda ^ n * (lambda * (1 + (n : A) * epsilon)) *
+              (1 + epsilon) := by
+              rw [h_comm_term.eq]
+        _ = (lambda ^ n * lambda) *
+              ((1 + (n : A) * epsilon) * (1 + epsilon)) := by
+              noncomm_ring
+        _ = lambda ^ (n + 1) *
+              ((1 + (n : A) * epsilon) * (1 + epsilon)) := by
+              rw [pow_succ]
+        _ = lambda ^ (n + 1) * (1 + ((n + 1 : ℕ) : A) * epsilon) := by
+              rw [monodromy_unipotent_step_mul lambda epsilon h_nil h_comm n]
+
 end InfoGeometry.QuantumMonodromy

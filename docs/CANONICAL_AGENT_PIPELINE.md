@@ -37,12 +37,20 @@ For every agent session:
 ```text
 AGENTS.md
 docs/CANONICAL_AGENT_PIPELINE.md
+docs/HIVE_AGENT_COMMANDMENTS.md
+docs/REPO_DEEP_SEARCH_PROTOCOL.md
 ```
 
 For categorical/tower/colimit work, also read:
 
 ```text
 docs/CATEGORICAL_INFRASTRUCTURE_MAP.md
+```
+
+For Souriau-Bost-Connes capstone or crystallization claims, also read:
+
+```text
+docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md
 ```
 
 For detailed ChatGPT/aiClaw operation, also read:
@@ -66,6 +74,19 @@ Use the locked build wrapper for module builds:
 ```bash
 python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.Path.To.Module
 ```
+
+### Context Preflight
+
+Before answering nontrivial repository-content questions, build a bounded
+context packet instead of relying on stale docs or filenames:
+
+```bash
+python3 tools/infra/context_preflight.py "question or target theorem" --include-external
+```
+
+This packet separates repo-owned code, external references, graph/indexing
+surfaces, Lean owner candidates, and generated artifact presence. It is
+navigation evidence only; proof claims still require Lean owner validation.
 
 ### aiClaw / ChatGPT Oracle
 
@@ -216,6 +237,75 @@ Record proof-repair outcomes before trusting prompt mutations:
 ```bash
 npm run ai:oracle:record -- --event-json artifacts/oracle/target_theorem_name.json
 ```
+
+### GEPA Review Mode For Archon SOPs
+
+GEPA may optimize Archon SOPs only in review mode. The intended loop is:
+
+```text
+Archon workflow run
+  -> observed task outcomes, timings, failures, vacuity findings, build verdicts
+  -> thermodynamic scoring / statistical variability analysis
+  -> GEPA proposes candidate SOP mutation
+  -> candidate is written to quarantine/review, not to .archon/workflows
+  -> human or explicit promotion gate reviews the candidate
+  -> only accepted candidates become maintained SOP/workflow source
+```
+
+The reason is operational, not cosmetic: agents introduce statistical
+variability even when they are told to follow an SOP. GEPA is useful because it
+can observe that variability empirically and propose better instructions. It is
+not authority to replace the stable Archon reflex by itself.
+
+Hard boundaries:
+
+- GEPA output is a proposal until reviewed.
+- `.archon/workflows/*.yaml` remains stable reflex source.
+- `quarantine/hermes_skills/`, `artifacts/`, and reports are evidence, not
+  promoted commandment text.
+- Promotion requires the same evidence as any other workflow change: source diff,
+  rollback path, representative run artifact, policy/vacuity result, and Lean or
+  Lake verdict for touched proof surfaces.
+- If a mutation only improves prose but does not improve measured execution, it
+  stays archived.
+
+### GEPA Agent Message Observer
+
+The default observer watches communication payloads, not SOP text. It records
+what agents submit to model/oracle/collaborator lanes and what those lanes
+return. This includes aiClaw/ChatGPT, Pi/DeepSeek, Hermes, Gemini CLI, Google AI
+browser lanes, and OpenAI-compatible advisory calls when the maintained sender
+script is instrumented.
+
+Append-only redacted ledger:
+
+```bash
+python3 tools/infra/agent_message_ledger.py \
+  --source-tool manual \
+  --channel manual_external_oracle \
+  --prompt-file /tmp/prompt.txt \
+  --response-file /tmp/response.txt
+```
+
+GEPA review packet from observed traffic:
+
+```bash
+python3 tools/infra/gepa_agent_message_observer.py --json
+```
+
+Outputs:
+
+```text
+artifacts/agent_messages/YYYYMMDD_agent_messages.jsonl
+artifacts/gepa_agent_message_observer/*_message_observations.jsonl
+artifacts/gepa_agent_message_observer/*_message_report.json
+quarantine/agent_message_reviews/*_message_review.md
+```
+
+The ledger stores redacted text excerpts plus full prompt/response hashes. It
+is empirical evidence for prompt/process improvement. It is not proof authority
+and it must not silently mutate Archon workflows, commandments, skills, or Lean
+source.
 
 ### Graph / DAG / Arango
 

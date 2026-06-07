@@ -31,6 +31,11 @@ from tools.quality.semantic_vacuity_gate import DEFAULT_PATTERNS as VACUITY_PATT
 from tools.quality.semantic_vacuity_gate import audit_text as audit_vacuity_text
 from tools.quality.semantic_vacuity_gate import load_patterns as load_vacuity_patterns
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block evaluation.
+    record_message = None
+
 logger = logging.getLogger("gepa_real_eval")
 
 _HERE = Path(__file__).resolve().parent
@@ -465,19 +470,55 @@ class RealEvaluator:
             f"{skill_content[:3000]}"
         )
 
+        started = time.monotonic()
+        output = ""
+        error = ""
+        returncode = 0
         try:
             result = subprocess.run(
                 ["hermes", "chat", "-m", self.hermes_model, "-q", query,
                  "--accept-hooks", "--yolo"],
                 capture_output=True, text=True, timeout=self.timeout,
                 cwd=str(_REPO),
-        )
+            )
+            returncode = int(result.returncode)
+            output = (result.stdout or "") + (result.stderr or "")
         except subprocess.TimeoutExpired:
-            return HermesRun(error=f"Hermes timeout after {self.timeout}s")
+            error = f"Hermes timeout after {self.timeout}s"
+            return HermesRun(error=error)
         except FileNotFoundError:
-            return HermesRun(error="Hermes CLI not found on PATH")
+            error = "Hermes CLI not found on PATH"
+            return HermesRun(error=error)
         except Exception as exc:
-            return HermesRun(error=f"Hermes invocation error: {exc}")
+            error = f"Hermes invocation error: {exc}"
+            return HermesRun(error=error)
+        finally:
+            if record_message is not None:
+                try:
+                    response_text = output or error
+                    record_message(
+                        source_tool="gepa_real_eval.py",
+                        source_file="tools/infra/gepa_real_eval.py",
+                        channel="gepa_hermes_real_eval",
+                        direction="agent_to_model",
+                        provider="hermes",
+                        model=self.hermes_model,
+                        prompt_text=query,
+                        response_text=response_text,
+                        success=(returncode == 0 and not error),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=f"{task.file}:{task.line}:{task.goal_hash}",
+                        metadata={
+                            "task_file": task.file,
+                            "task_line": task.line,
+                            "task_module": task.module,
+                            "goal_hash": task.goal_hash,
+                            "returncode": returncode,
+                            "failure_pattern": error or "",
+                        },
+                    )
+                except Exception:
+                    pass
 
         output = (result.stdout or "") + (result.stderr or "")
         if result.returncode != 0:

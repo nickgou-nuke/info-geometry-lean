@@ -23,7 +23,7 @@ noncomputable section
 namespace InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
 
 open Matrix
-open InfoGeometry.OperatorAlgebra.JonesCalibration
+open InfoGeometry.Optics.JonesCalibration
 open InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 
 /-! ## 1. Diagonal Jones gauge transformations -/

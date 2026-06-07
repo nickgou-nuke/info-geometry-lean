@@ -46,3 +46,9 @@
 [submodule "external_refs/hermes-agent-self-evolution"]
 	path = external_refs/hermes-agent-self-evolution
 	url = https://github.com/NousResearch/hermes-agent-self-evolution.git
+[submodule "external_refs/interactive"]
+	path = external_refs/interactive
+	url = https://github.com/frenzymath/interactive.git
+[submodule "external_refs/lean_test_v4160"]
+	path = external_refs/lean_test_v4160
+	url = https://github.com/frenzymath/lean_test_v4160.git

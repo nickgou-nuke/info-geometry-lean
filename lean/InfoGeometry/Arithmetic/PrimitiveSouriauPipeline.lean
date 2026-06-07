@@ -10,7 +10,7 @@ This module bundles the already-installed witness-gated corridors:
 * Souriau zeta calibration;
 * projective temperature inversion;
 * prime/von-Mangoldt projective partition;
-* projective KL and Weyl-gauge decompositions;
+* projective relative-entropy readouts and Weyl-gauge decompositions;
 * finite arithmetic KMS sockets.
 
 It does not prove the Erdős primitive-set theorem, Bost-Connes theorem, KMS
@@ -72,9 +72,6 @@ structure PrimitiveSouriauPipelineWitness
 
   /-- Projective prime/von-Mangoldt calibration. -/
   prime : ProjectivePrimeCalibration State
-
-  /-- Projective KL calibration. -/
-  kl : ProjectiveKLCalibration State
 
   /-- Projective Weyl-gauge calibration. -/
   weyl : ProjectiveWeylGaugeCalibration State
@@ -193,4 +190,3 @@ theorem primitiveSouriauPipelineOwnerTarget :
 end PrimitiveSouriauPipelineWitness
 
 end InfoGeometry.Arithmetic.PrimitiveSouriauPipeline
-

@@ -33,6 +33,11 @@ _HERE = Path(__file__).resolve().parent
 _REPO = _HERE.parents[1]
 _SEARCH_CACHE = _REPO / "quarantine" / "proof_seeker" / "search_cache"
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block proof seeking.
+    record_message = None
+
 
 # ---------------------------------------------------------------------------
 # Models
@@ -193,6 +198,10 @@ class ProofSeeker:
             "9. Renaming a missing theorem does not close debt. Data are not proofs.\n"
         )
 
+        started = time.monotonic()
+        output = ""
+        error = ""
+        returncode = 0
         try:
             result = subprocess.run(
                 ["pi", "-p", prompt, "--append-system-prompt", repair_prompt,
@@ -200,14 +209,35 @@ class ProofSeeker:
                  "--no-session", "--tools", "read"] + skills,
                 capture_output=True, text=True, timeout=180,
             )
+            returncode = int(result.returncode)
             output = (result.stdout or "") + (result.stderr or "")
         except Exception as exc:
+            error = str(exc)
             logger.warning("Digestion LLM failed: %s", exc)
             return ProofCandidate(
                 source_results=results,
                 confidence=0.0,
                 formalization_attempts=0,
             )
+        finally:
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="proof_seeker.py",
+                        source_file="tools/infra/proof_seeker.py",
+                        channel="proof_seeker_digest",
+                        provider="pi",
+                        model="deepseek-v4-flash",
+                        platform="deepseek",
+                        prompt_text=f"{repair_prompt}\n\n--- USER PROMPT ---\n{prompt}",
+                        response_text=output or error,
+                        success=(returncode == 0 and not error),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=target_name,
+                        metadata={"target_name": target_name, "returncode": returncode, "failure_pattern": error},
+                    )
+                except Exception:
+                    pass
 
         # Parse JSON from Hermes output
         m = re.search(r"\{.*\}", output, re.DOTALL)
@@ -281,6 +311,10 @@ class ProofSeeker:
             os.unlink(prompt_file.name)
             return False
 
+        started = time.monotonic()
+        output = ""
+        success = False
+        error = ""
         try:
             result = subprocess.run(
                 [
@@ -302,12 +336,37 @@ class ProofSeeker:
             logger.info("queued aiClaw audit: %s", "SUCCESS" if success else "FAILED")
             return success
         except subprocess.TimeoutExpired:
+            error = "queued aiClaw audit timed out (360s)"
             logger.warning("queued aiClaw audit timed out (360s)")
             return False
         except Exception as exc:
+            error = str(exc)
             logger.warning("queued aiClaw audit failed: %s", exc)
             return False
         finally:
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="proof_seeker.py",
+                        source_file="tools/infra/proof_seeker.py",
+                        channel="proof_seeker_aiclaw_audit",
+                        provider="aiclaw",
+                        model="chatgpt_browser",
+                        platform="chatgpt",
+                        prompt_text=prompt,
+                        response_text=output or error,
+                        success=success,
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=f"{target_file}:{target_line}:{target_name}",
+                        metadata={
+                            "target_file": str(target_file),
+                            "target_line": target_line,
+                            "target_name": target_name,
+                            "failure_pattern": error,
+                        },
+                    )
+                except Exception:
+                    pass
             os.unlink(prompt_file.name)
             # Clean up clone if it exists
             if 'clone_file' in dir() and clone_file.exists():
@@ -379,13 +438,47 @@ class ProofSeeker:
                 )
 
                 # Use Pi as the lightweight coding agent for iterative fixes
-                fix_result = subprocess.run(
-                    ["pi", "-p", fix_prompt,
-                     "--provider", "deepseek", "--model", "deepseek-v4-flash",
-                     "--no-session", "--tools", "read"],
-                    capture_output=True, text=True, timeout=120,
-                )
-                fix_output = (fix_result.stdout or "") + (fix_result.stderr or "")
+                fix_started = time.monotonic()
+                fix_output = ""
+                fix_error = ""
+                fix_returncode = 0
+                try:
+                    fix_result = subprocess.run(
+                        ["pi", "-p", fix_prompt,
+                         "--provider", "deepseek", "--model", "deepseek-v4-flash",
+                         "--no-session", "--tools", "read"],
+                        capture_output=True, text=True, timeout=120,
+                    )
+                    fix_returncode = int(fix_result.returncode)
+                    fix_output = (fix_result.stdout or "") + (fix_result.stderr or "")
+                except Exception as exc:
+                    fix_error = str(exc)
+                    fix_output = fix_error
+                finally:
+                    if record_message is not None:
+                        try:
+                            record_message(
+                                source_tool="proof_seeker.py",
+                                source_file="tools/infra/proof_seeker.py",
+                                channel="proof_seeker_formalize_fix",
+                                provider="pi",
+                                model="deepseek-v4-flash",
+                                platform="deepseek",
+                                prompt_text=fix_prompt,
+                                response_text=fix_output,
+                                success=(fix_returncode == 0 and not fix_error),
+                                latency_ms=(time.monotonic() - fix_started) * 1000.0,
+                                correlation_id=f"{target_file}:{target_line}:attempt-{attempt + 1}",
+                                metadata={
+                                    "target_file": str(target_file),
+                                    "target_line": target_line,
+                                    "attempt": attempt + 1,
+                                    "returncode": fix_returncode,
+                                    "failure_pattern": fix_error,
+                                },
+                            )
+                        except Exception:
+                            pass
 
                 # Extract the fixed proof
                 import re as _re

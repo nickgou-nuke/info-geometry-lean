@@ -106,6 +106,30 @@ noncomputable def diagonalBraidMatrix (r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :
 noncomputable def B_matrix_diag (a b r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   F_matrix a b * diagonalBraidMatrix r t * F_matrix a b
 
+/-- Top-left entry of the arbitrary diagonal dual-basis braid matrix. -/
+theorem B_matrix_diag_apply_zero_zero (a b r t : ℝ) :
+    B_matrix_diag a b r t 0 0 = a * a * r + b * b * t := by
+  simp [B_matrix_diag, diagonalBraidMatrix, F_matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Top-right entry of the arbitrary diagonal dual-basis braid matrix. -/
+theorem B_matrix_diag_apply_zero_one (a b r t : ℝ) :
+    B_matrix_diag a b r t 0 1 = a * b * (r - t) := by
+  simp [B_matrix_diag, diagonalBraidMatrix, F_matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Bottom-left entry of the arbitrary diagonal dual-basis braid matrix. -/
+theorem B_matrix_diag_apply_one_zero (a b r t : ℝ) :
+    B_matrix_diag a b r t 1 0 = a * b * (r - t) := by
+  simp [B_matrix_diag, diagonalBraidMatrix, F_matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Bottom-right entry of the arbitrary diagonal dual-basis braid matrix. -/
+theorem B_matrix_diag_apply_one_one (a b r t : ℝ) :
+    B_matrix_diag a b r t 1 1 = b * b * r + a * a * t := by
+  simp [B_matrix_diag, diagonalBraidMatrix, F_matrix, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
 /--
 Finite two-channel Artin relation from explicit scalar constraints.
 
@@ -195,6 +219,98 @@ theorem B_matrix_mul_eq_diag (a b q₁ q₂ : ℝ) (hF : IsFibonacciRelation a b
       B_matrix_diag a b (q₁ ^ (-4 : ℤ) * q₂ ^ (-4 : ℤ)) (q₁ ^ 3 * q₂ ^ 3) := by
   simpa [B_matrix, R_matrix, B_matrix_diag, diagonalBraidMatrix] using
     (B_matrix_diag_mul a b (q₁ ^ (-4 : ℤ)) (q₁ ^ 3) (q₂ ^ (-4 : ℤ)) (q₂ ^ 3) hF)
+
+/-! ## Finite two-channel monodromy coefficients -/
+
+/-- Left monodromy readout `R B` for a diagonal braid and its dual-basis conjugate. -/
+noncomputable def leftMonodromyMatrix (a b r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  diagonalBraidMatrix r t * B_matrix_diag a b r t
+
+/-- Right monodromy readout `B R` for a diagonal braid and its dual-basis conjugate. -/
+noncomputable def rightMonodromyMatrix (a b r t : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  B_matrix_diag a b r t * diagonalBraidMatrix r t
+
+/-- Top-left coefficient of the left monodromy matrix `R B`. -/
+theorem leftMonodromyMatrix_apply_zero_zero (a b r t : ℝ) :
+    leftMonodromyMatrix a b r t 0 0 = r * (a * a * r + b * b * t) := by
+  simp [leftMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_zero_zero]
+
+/-- Top-right coefficient of the left monodromy matrix `R B`. -/
+theorem leftMonodromyMatrix_apply_zero_one (a b r t : ℝ) :
+    leftMonodromyMatrix a b r t 0 1 = r * (a * b * (r - t)) := by
+  simp [leftMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_zero_one]
+
+/-- Bottom-left coefficient of the left monodromy matrix `R B`. -/
+theorem leftMonodromyMatrix_apply_one_zero (a b r t : ℝ) :
+    leftMonodromyMatrix a b r t 1 0 = t * (a * b * (r - t)) := by
+  simp [leftMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_one_zero]
+
+/-- Bottom-right coefficient of the left monodromy matrix `R B`. -/
+theorem leftMonodromyMatrix_apply_one_one (a b r t : ℝ) :
+    leftMonodromyMatrix a b r t 1 1 = t * (b * b * r + a * a * t) := by
+  simp [leftMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_one_one]
+
+/-- Top-left coefficient of the right monodromy matrix `B R`. -/
+theorem rightMonodromyMatrix_apply_zero_zero (a b r t : ℝ) :
+    rightMonodromyMatrix a b r t 0 0 = (a * a * r + b * b * t) * r := by
+  simp [rightMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_zero_zero]
+
+/-- Top-right coefficient of the right monodromy matrix `B R`. -/
+theorem rightMonodromyMatrix_apply_zero_one (a b r t : ℝ) :
+    rightMonodromyMatrix a b r t 0 1 = a * b * (r - t) * t := by
+  simp [rightMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_zero_one]
+
+/-- Bottom-left coefficient of the right monodromy matrix `B R`. -/
+theorem rightMonodromyMatrix_apply_one_zero (a b r t : ℝ) :
+    rightMonodromyMatrix a b r t 1 0 = a * b * (r - t) * r := by
+  simp [rightMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_one_zero]
+
+/-- Bottom-right coefficient of the right monodromy matrix `B R`. -/
+theorem rightMonodromyMatrix_apply_one_one (a b r t : ℝ) :
+    rightMonodromyMatrix a b r t 1 1 = (b * b * r + a * a * t) * t := by
+  simp [rightMonodromyMatrix, diagonalBraidMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+    B_matrix_diag_apply_one_one]
+
+/-- `q`-phase specialization of the left monodromy matrix. -/
+noncomputable def leftFibonacciMonodromyMatrix (a b q : ℝ) :
+    Matrix (Fin 2) (Fin 2) ℝ :=
+  leftMonodromyMatrix a b (q ^ (-4 : ℤ)) (q ^ 3)
+
+/-- `q`-phase specialization of the right monodromy matrix. -/
+noncomputable def rightFibonacciMonodromyMatrix (a b q : ℝ) :
+    Matrix (Fin 2) (Fin 2) ℝ :=
+  rightMonodromyMatrix a b (q ^ (-4 : ℤ)) (q ^ 3)
+
+/-- Top-left coefficient of the `q`-phase left monodromy matrix. -/
+theorem leftFibonacciMonodromyMatrix_apply_zero_zero (a b q : ℝ) :
+    leftFibonacciMonodromyMatrix a b q 0 0 =
+      q ^ (-4 : ℤ) * (a * a * q ^ (-4 : ℤ) + b * b * q ^ 3) := by
+  rw [leftFibonacciMonodromyMatrix, leftMonodromyMatrix_apply_zero_zero]
+
+/-- Top-right coefficient of the `q`-phase left monodromy matrix. -/
+theorem leftFibonacciMonodromyMatrix_apply_zero_one (a b q : ℝ) :
+    leftFibonacciMonodromyMatrix a b q 0 1 =
+      q ^ (-4 : ℤ) * (a * b * (q ^ (-4 : ℤ) - q ^ 3)) := by
+  rw [leftFibonacciMonodromyMatrix, leftMonodromyMatrix_apply_zero_one]
+
+/-- Bottom-left coefficient of the `q`-phase left monodromy matrix. -/
+theorem leftFibonacciMonodromyMatrix_apply_one_zero (a b q : ℝ) :
+    leftFibonacciMonodromyMatrix a b q 1 0 =
+      q ^ 3 * (a * b * (q ^ (-4 : ℤ) - q ^ 3)) := by
+  rw [leftFibonacciMonodromyMatrix, leftMonodromyMatrix_apply_one_zero]
+
+/-- Bottom-right coefficient of the `q`-phase left monodromy matrix. -/
+theorem leftFibonacciMonodromyMatrix_apply_one_one (a b q : ℝ) :
+    leftFibonacciMonodromyMatrix a b q 1 1 =
+      q ^ 3 * (b * b * q ^ (-4 : ℤ) + a * a * q ^ 3) := by
+  rw [leftFibonacciMonodromyMatrix, leftMonodromyMatrix_apply_one_one]
 
 /-! ## `Z₃` parafermion composite charge -/
 

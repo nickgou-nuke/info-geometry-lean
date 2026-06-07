@@ -15,6 +15,14 @@ if [ -z "${DEEPSEEK_API_KEY:-}" ] && [ -f "$REPO_ROOT/.DEEPSEEK_API_KEY" ]; then
   source "$REPO_ROOT/.DEEPSEEK_API_KEY"
 fi
 
+# Keep deterministic bash DAG runs off stale project defaults. The workflow
+# itself is Pi/DeepSeek; title generation is auxiliary and should not trigger
+# Codex auth when this wrapper is used for local theorem-pipeline runs.
+export DEFAULT_AI_ASSISTANT="${DEFAULT_AI_ASSISTANT:-pi}"
+export ARCHON_PI_MODEL="${ARCHON_PI_MODEL:-deepseek/deepseek-v4-flash}"
+export TITLE_GENERATION_MODEL="${TITLE_GENERATION_MODEL:-$ARCHON_PI_MODEL}"
+export ARCHON_SKIP_TITLE_GENERATION="${ARCHON_SKIP_TITLE_GENERATION:-true}"
+
 cd "$ARCHON_ROOT"
 exec env HOME="$PI_RUNTIME_HOME" \
   bun run cli workflow run agent-orchestrator-definite-sequence \

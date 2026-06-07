@@ -122,7 +122,7 @@ theorem finitePairedWittenContributions_sum_eq_zero
 {PairLabel R : Type*} [AddCommGroup R]
 (pairs : Finset PairLabel)
 (weight : PairLabel → R) :
-(∑ a in pairs, pairedWittenContribution (weight a)) = 0 := by
+Finset.sum pairs (fun a => pairedWittenContribution (weight a)) = 0 := by
 simp
 
 /-! ## 3. Finite Majorana Pfaffian block readout -/
@@ -163,13 +163,15 @@ def finiteMajoranaPfaffianReadout
 {PrimeLabel R : Type*} [CommRing R]
 (modes : Finset PrimeLabel)
 (amplitude : PrimeLabel → R) : R :=
-∏ p in modes, majoranaBlockPfaffian (primeSpinorMajoranaBlock (amplitude p))
+Finset.prod modes
+  (fun p => majoranaBlockPfaffian (primeSpinorMajoranaBlock (amplitude p)))
 
 def finiteMajoranaDeterminantReadout
 {PrimeLabel R : Type*} [CommRing R]
 (modes : Finset PrimeLabel)
 (amplitude : PrimeLabel → R) : R :=
-∏ p in modes, majoranaBlockDeterminant (primeSpinorMajoranaBlock (amplitude p))
+Finset.prod modes
+  (fun p => majoranaBlockDeterminant (primeSpinorMajoranaBlock (amplitude p)))
 
 theorem finiteMajoranaPfaffianReadout_eq_spinorWittenReadout
 {PrimeLabel R : Type*} [CommRing R]
@@ -202,7 +204,7 @@ rw [← Finset.prod_mul_distrib]
 refine Finset.prod_congr rfl ?_
 intro p hp
 exact majoranaBlockPfaffian_sq_eq_determinant
-(primeSpinorMajoranaBlock (amplitude p))
+  (primeSpinorMajoranaBlock (amplitude p))
 
 /-! ## 4. Guardrails and witness interfaces -/
 
@@ -291,7 +293,7 @@ finiteRealSpinorWittenReadout P.modes P.amplitude =
 finitePrimeWeylDenominator P.modes
 (fun p => scalarWeightFromSpinor (P.amplitude p)) := by
 exact finiteRealSpinorWittenReadout_eq_weylDenominator_squareWeights
-P.modes P.amplitude
+  P.modes P.amplitude
 
 end PrimeSpinorWittenIndexPacket
 

@@ -1,0 +1,115 @@
+{
+  "packet_id": "superkms_lee_yang_cantor",
+  "created_utc": "2026-06-07T00:00:00Z",
+  "repository": "/home/goutev/repos/info-geometry-lean",
+  "toolchain": "leanprover/lean4:v4.28.0",
+  "authority": "Lean source owner files and targeted Lake builds",
+  "status": "publication-prep manifest; not proof authority",
+  "included_owner_modules": [
+    {
+      "module": "InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge",
+      "path": "lean/InfoGeometry/Canonical/PrimeCantorThermoYangBaxterBridge.lean",
+      "role": "theorem-only synthesis readout over existing owner surfaces"
+    },
+    {
+      "module": "InfoGeometry.Canonical.CayleyCriticalLineCircleBridge",
+      "path": "lean/InfoGeometry/Canonical/CayleyCriticalLineCircleBridge.lean",
+      "role": "Cayley critical-line to unit-circle compactification owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.PrimeLeeYangRHBridge",
+      "path": "lean/InfoGeometry/Canonical/PrimeLeeYangRHBridge.lean",
+      "role": "conditional Lee-Yang to RH witness route"
+    },
+    {
+      "module": "InfoGeometry.Canonical.PrimeGasSuperKMSBridge",
+      "path": "lean/InfoGeometry/Canonical/PrimeGasSuperKMSBridge.lean",
+      "role": "finite super-KMS bridge owner"
+    },
+    {
+      "module": "InfoGeometry.Analysis.L2CantorCommutation",
+      "path": "lean/InfoGeometry/Analysis/L2CantorCommutation.lean",
+      "role": "concrete L2 Cantor/Cuntz commutation owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.BregmanDeformation",
+      "path": "lean/InfoGeometry/Canonical/BregmanDeformation.lean",
+      "role": "parameterized Bregman deformation owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.KMSInteriorPoint",
+      "path": "lean/InfoGeometry/Canonical/KMSInteriorPoint.lean",
+      "role": "Dikin-style KMS interior-point hypothesis surface"
+    },
+    {
+      "module": "InfoGeometry.Canonical.KleinBottleSewing",
+      "path": "lean/InfoGeometry/Canonical/KleinBottleSewing.lean",
+      "role": "finite topological sewing/anomaly readout owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.ChiralAnomalyCantor",
+      "path": "lean/InfoGeometry/Canonical/ChiralAnomalyCantor.lean",
+      "role": "finite chiral anomaly cancellation owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.PrimeCl11ModularAtomCore",
+      "path": "lean/InfoGeometry/Canonical/PrimeCl11ModularAtomCore.lean",
+      "role": "local prime Cl(1,1) parity and Hodge-Dirac readout owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.PrimeMajoranaWittenCharacter",
+      "path": "lean/InfoGeometry/Canonical/PrimeMajoranaWittenCharacter.lean",
+      "role": "finite Majorana/Witten character readout owner"
+    },
+    {
+      "module": "InfoGeometry.Canonical.HodgeDiracLaplacianBridge",
+      "path": "lean/InfoGeometry/Canonical/HodgeDiracLaplacianBridge.lean",
+      "role": "algebraic Hodge-Dirac-Laplacian owner"
+    },
+    {
+      "module": "InfoGeometry.Categorical.FibonacciBraiding",
+      "path": "lean/InfoGeometry/Categorical/FibonacciBraiding.lean",
+      "role": "categorical Fibonacci braiding owner surface"
+    },
+    {
+      "module": "InfoGeometry.Canonical.YangBaxterProof",
+      "path": "lean/InfoGeometry/Canonical/YangBaxterProof.lean",
+      "role": "finite Yang-Baxter matrix proof owner"
+    }
+  ],
+  "excluded_non_owner_surfaces": [
+    {
+      "path": "lean/InfoGeometry/Quantum/FibonacciFusionCategory.lean",
+      "reason": "finite matrix readout only; pentagon and hexagon are closure debt, not theorem surfaces"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PrimonFibBoundaryBridge.lean",
+      "reason": "closure-debt record only; zeta, V4 parity, and boson/fermion splitting are not theorem surfaces here"
+    }
+  ],
+  "claim_boundaries": [
+    "No unconditional Riemann Hypothesis theorem is included.",
+    "No unconditional Lee-Yang theorem is included.",
+    "No zeta analytic-continuation theorem is included.",
+    "No categorical Fibonacci pentagon or hexagon coherence theorem is included.",
+    "No full BraidedCategory instance is included.",
+    "Finite matrix, finite supertrace, and conditional witness-gated results are separated from analytic closure debt."
+  ],
+  "validated_commands": [
+    "lake env lean lean/InfoGeometry/Canonical/PrimeCantorThermoYangBaxterBridge.lean",
+    "lake build InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge",
+    "lake env lean lean/InfoGeometry/Canonical/PrimeCl11ModularAtomCore.lean",
+    "lake build InfoGeometry.Canonical.PrimeCl11ModularAtomCore",
+    "lake env lean lean/InfoGeometry/Canonical/PrimeMajoranaWittenCharacter.lean",
+    "lake build InfoGeometry.Canonical.PrimeMajoranaWittenCharacter",
+    "lake build InfoGeometry.Canonical.LeeYangAsanoNativeCore",
+    "lake build InfoGeometry.Canonical.PrimeCl11MellinHurwitzBridge",
+    "lake build InfoGeometry.Canonical.CliffordWaveletAnalyticBridge",
+    "lake env lean lean/InfoGeometry/Quantum/FibonacciFusionCategory.lean",
+    "lake build InfoGeometry.Quantum.FibonacciFusionCategory",
+    "lake env lean lean/InfoGeometry/Canonical/PrimonFibBoundaryBridge.lean",
+    "lake build InfoGeometry.Canonical.PrimonFibBoundaryBridge",
+    "python3 tools/infra/gepa_categorical_projection.py --evolve --generations 10",
+    "scripts/run_agent_orchestrator_archon.sh"
+  ]
+}

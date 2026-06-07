@@ -12,9 +12,15 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+import time
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parents[2]
+
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block search.
+    record_message = None
 
 
 async def search_gemini_ai(query: str, cdp_url: str = "http://127.0.0.1:9222") -> dict:
@@ -36,6 +42,7 @@ async def search_gemini_ai(query: str, cdp_url: str = "http://127.0.0.1:9222") -
         browser=browser,
         use_vision=False,
     )
+    started = time.monotonic()
     result = await agent.run()
 
     try:
@@ -45,10 +52,65 @@ async def search_gemini_ai(query: str, cdp_url: str = "http://127.0.0.1:9222") -
         if m:
             parsed = json.loads(m.group())
             if isinstance(parsed, dict):
+                if record_message is not None:
+                    try:
+                        record_message(
+                            source_tool="gemini_ai_searcher.py",
+                            source_file="tools/infra/gemini_ai_searcher.py",
+                            channel="gemini_browser_search",
+                            direction="agent_to_model",
+                            provider="gemini",
+                            model="browser_use/ChatBrowserUse",
+                            platform="gemini.google.com",
+                            prompt_text=task,
+                            response_text=final_msg,
+                            success=True,
+                            latency_ms=(time.monotonic() - started) * 1000.0,
+                            metadata={"query": query},
+                        )
+                    except Exception:
+                        pass
                 return parsed
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="gemini_ai_searcher.py",
+                    source_file="tools/infra/gemini_ai_searcher.py",
+                    channel="gemini_browser_search",
+                    direction="agent_to_model",
+                    provider="gemini",
+                    model="browser_use/ChatBrowserUse",
+                    platform="gemini.google.com",
+                    prompt_text=task,
+                    response_text=final_msg,
+                    success=bool(final_msg),
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={"query": query, "failure_pattern": "" if final_msg else "empty_response"},
+                )
+            except Exception:
+                pass
         return {"summary": final_msg[:2000], "references": []}
     except (json.JSONDecodeError, AttributeError, TypeError):
-        return {"summary": str(result)[:2000], "references": []}
+        text = str(result)[:2000]
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="gemini_ai_searcher.py",
+                    source_file="tools/infra/gemini_ai_searcher.py",
+                    channel="gemini_browser_search",
+                    direction="agent_to_model",
+                    provider="gemini",
+                    model="browser_use/ChatBrowserUse",
+                    platform="gemini.google.com",
+                    prompt_text=task,
+                    response_text=text,
+                    success=False,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={"query": query, "failure_pattern": "json_parse_error"},
+                )
+            except Exception:
+                pass
+        return {"summary": text, "references": []}
 
 
 def enrich_context(query: str, context_code: str, cdp_url: str = "http://127.0.0.1:9222") -> str:

@@ -1,8 +1,104 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { spawn } from "node:child_process";
+import * as crypto from "node:crypto";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 const registerLegacyTool = (pi: ExtensionAPI, tool: unknown) => (pi.registerTool as any)(tool);
+
+const MAX_LEDGER_TEXT = Number(process.env.AGENT_MESSAGE_LEDGER_MAX_TEXT_CHARS || "20000");
+
+function sha256(text: string): string {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
+function redactText(text: string): { text: string; matches: string[] } {
+  const patterns: [string, RegExp][] = [
+    ["openai_key", /\bsk-[A-Za-z0-9_-]{20,}\b/g],
+    ["github_token", /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/g],
+    ["aws_access_key", /\bAKIA[0-9A-Z]{16}\b/g],
+    ["bearer_token", /\bBearer\s+[A-Za-z0-9._~+/=-]{20,}\b/gi],
+    ["secret_assignment", /\b(password|passwd|secret|token|api[_-]?key)\s*[:=]\s*['"]?[^'"\s]+/gi],
+  ];
+  let out = text;
+  const matches: string[] = [];
+  for (const [name, pattern] of patterns) {
+    if (pattern.test(out)) {
+      matches.push(name);
+      out = out.replace(pattern, `[REDACTED:${name}]`);
+    }
+  }
+  return { text: out, matches: [...new Set(matches)].sort() };
+}
+
+function clipText(text: string): { text: string; truncated: boolean } {
+  if (MAX_LEDGER_TEXT <= 0) return { text: "", truncated: text.length > 0 };
+  if (text.length <= MAX_LEDGER_TEXT) return { text, truncated: false };
+  const half = Math.floor(MAX_LEDGER_TEXT / 2);
+  return {
+    text:
+      text.slice(0, half) +
+      `\n\n[... clipped ${text.length - MAX_LEDGER_TEXT} chars ...]\n\n` +
+      text.slice(-(MAX_LEDGER_TEXT - half)),
+    truncated: true,
+  };
+}
+
+function recordAgentMessage(event: {
+  sourceTool: string;
+  channel: string;
+  provider: string;
+  model: string;
+  platform?: string;
+  promptText: string;
+  responseText: string;
+  success: boolean;
+  latencyMs?: number;
+  metadata?: Record<string, unknown>;
+}) {
+  try {
+    const repo = process.cwd();
+    const dir = path.join(repo, "artifacts", "agent_messages");
+    fs.mkdirSync(dir, { recursive: true });
+    const day = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const file = path.join(dir, `${day}_agent_messages.jsonl`);
+    const prompt = redactText(event.promptText || "");
+    const response = redactText(event.responseText || "");
+    const promptClip = clipText(prompt.text);
+    const responseClip = clipText(response.text);
+    const payload = {
+      schema: "agent-message-ledger/v1",
+      event_id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      source_tool: event.sourceTool,
+      source_file: "chatgpt-oracle.ts",
+      channel: event.channel,
+      direction: "agent_to_model",
+      provider: event.provider,
+      model: event.model,
+      platform: event.platform || "",
+      correlation_id: sha256(event.promptText || "").slice(0, 16),
+      prompt_sha256: sha256(event.promptText || ""),
+      prompt_chars: (event.promptText || "").length,
+      prompt_text: promptClip.text,
+      prompt_truncated: promptClip.truncated,
+      prompt_sensitive_matches: prompt.matches,
+      response_sha256: sha256(event.responseText || ""),
+      response_chars: (event.responseText || "").length,
+      response_text: responseClip.text,
+      response_truncated: responseClip.truncated,
+      response_sensitive_matches: response.matches,
+      success: event.success,
+      latency_ms: event.latencyMs ?? null,
+      metadata: event.metadata || {},
+      authority: "observation_only_not_proof",
+    };
+    fs.appendFileSync(file, JSON.stringify(payload) + "\n", "utf8");
+  } catch {
+    // Observation must never block the oracle.
+  }
+}
 
 /**
  * ChatGPT Oracle Bridge
@@ -188,18 +284,36 @@ async function tryApiFallback(
     "https://api.deepseek.com/v1";
   const model =
     process.env.ORACLE_MODEL || process.env.CONSULTANT_MODEL || "deepseek-chat";
+  const modelPrompt = JSON.stringify({
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: prompt },
+    ],
+  });
 
   if (!apiKey) {
+    const text = "[ORACLE UNAVAILABLE]: queued aiClaw lane and API fallback are unavailable. Check `python3 tools/infra/aiclaw_chat.py status` or set DEEPSEEK_API_KEY.";
+    recordAgentMessage({
+      sourceTool: "ask_chatgpt_compiler",
+      channel: "chatgpt_oracle_api_fallback",
+      provider: "api-fallback",
+      model,
+      promptText: modelPrompt,
+      responseText: text,
+      success: false,
+      metadata: { failure_pattern: "missing_api_key" },
+    });
     return {
       content: [
         {
           type: "text" as const,
-          text: "[ORACLE UNAVAILABLE]: queued aiClaw lane and API fallback are unavailable. Check `python3 tools/infra/aiclaw_chat.py status` or set DEEPSEEK_API_KEY.",
+          text,
         },
       ],
     };
   }
 
+  const started = Date.now();
   try {
     onUpdate?.({
       content: [
@@ -229,11 +343,23 @@ async function tryApiFallback(
 
     if (!response.ok) {
       const errorText = await response.text();
+      const text = `[ORACLE ERROR]: API returned ${response.status}: ${errorText}`;
+      recordAgentMessage({
+        sourceTool: "ask_chatgpt_compiler",
+        channel: "chatgpt_oracle_api_fallback",
+        provider: "api-fallback",
+        model,
+        promptText: modelPrompt,
+        responseText: text,
+        success: false,
+        latencyMs: Date.now() - started,
+        metadata: { status: response.status, failure_pattern: "api_error_status" },
+      });
       return {
         content: [
           {
             type: "text" as const,
-            text: `[ORACLE ERROR]: API returned ${response.status}: ${errorText}`,
+            text,
           },
         ],
       };
@@ -242,6 +368,17 @@ async function tryApiFallback(
     const data = (await response.json()) as any;
     const oracleResponse =
       data.choices?.[0]?.message?.content || "[ORACLE: No response content]";
+    recordAgentMessage({
+      sourceTool: "ask_chatgpt_compiler",
+      channel: "chatgpt_oracle_api_fallback",
+      provider: "api-fallback",
+      model,
+      promptText: modelPrompt,
+      responseText: oracleResponse,
+      success: true,
+      latencyMs: Date.now() - started,
+      metadata: { base_url: baseUrl.replace(/\/\/.*@/, "//[redacted]@") },
+    });
 
     return {
       content: [
@@ -252,11 +389,23 @@ async function tryApiFallback(
       ],
     };
   } catch (error: any) {
+    const text = `[ORACLE ERROR]: Connection failed. Error: ${error.message}`;
+    recordAgentMessage({
+      sourceTool: "ask_chatgpt_compiler",
+      channel: "chatgpt_oracle_api_fallback",
+      provider: "api-fallback",
+      model,
+      promptText: modelPrompt,
+      responseText: text,
+      success: false,
+      latencyMs: Date.now() - started,
+      metadata: { failure_pattern: "api_connection_error" },
+    });
     return {
       content: [
         {
           type: "text" as const,
-          text: `[ORACLE ERROR]: Connection failed. Error: ${error.message}`,
+          text,
         },
       ],
     };

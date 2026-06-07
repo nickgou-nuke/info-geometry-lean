@@ -22,6 +22,11 @@ from tools.infra.hive_arango_queue import aql, claim_next_task, update_task_stat
 from tools.infra.lean_audit_prompt import build_lean_fix_prompt, extract_replacement_lean
 from tools.infra.gepa_real_eval import _normalize_lean_file_path
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block workers.
+    record_message = None
+
 logger = logging.getLogger("pipeline")
 
 POLL = 3
@@ -108,12 +113,36 @@ def run_google_stage(once: bool = False):
             # Create sentinel for tab reuse
             open(GOOGLE_SENTINEL, "w").close()
 
-            subprocess.run(
+            started = time.monotonic()
+            proc = subprocess.run(
                 ["browser-harness", "-c",
-                 f"import sys; sys.path.insert(0, '{_REPO}'); exec(open('{GOOGLE_SCRIPT}').read()); _main()"],
+                 f"import sys; sys.path.insert(0, '{_REPO}'); exec(open('{GOOGLE_SCRIPT}').read())"],
                 env=env, capture_output=True, text=True, timeout=180,
             )
             reply = Path(rf.name).read_text()[:4000] if Path(rf.name).exists() else ""
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="pipeline_workers.py",
+                        source_file="tools/infra/pipeline_workers.py",
+                        channel="pipeline_google_stage",
+                        provider="browser-harness",
+                        model="google_ai",
+                        platform="google_ai",
+                        prompt_text=prompt,
+                        response_text=reply or (proc.stdout or "") + (proc.stderr or ""),
+                        success=(proc.returncode == 0 and bool(reply.strip())),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=str(task.get("_key", "")),
+                        metadata={
+                            "task_key": task.get("_key", ""),
+                            "theorem": theorem,
+                            "returncode": proc.returncode,
+                            "failure_pattern": "" if proc.returncode == 0 else (proc.stderr or "")[:160],
+                        },
+                    )
+                except Exception:
+                    pass
             os.unlink(pf.name)
             os.unlink(rf.name)
 
@@ -181,13 +210,38 @@ def run_chatgpt_stage(once: bool = False):
 
             open(CHATGPT_SENTINEL, "w").close()
 
-            subprocess.run(
+            started = time.monotonic()
+            proc = subprocess.run(
                 ["browser-harness", "-c",
                  f"import sys; sys.path.insert(0, '{_REPO}'); exec(open('{CHATGPT_SCRIPT}').read()); _main()"],
                 env=env, capture_output=True, text=True, timeout=360,
             )
             reply = Path(rf.name).read_text()[:8000] if Path(rf.name).exists() else ""
             replacement = extract_replacement_lean(reply)
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="pipeline_workers.py",
+                        source_file="tools/infra/pipeline_workers.py",
+                        channel="pipeline_chatgpt_stage",
+                        provider="browser-harness",
+                        model="chatgpt",
+                        platform="chatgpt",
+                        prompt_text=prompt,
+                        response_text=reply or (proc.stdout or "") + (proc.stderr or ""),
+                        success=(proc.returncode == 0 and bool(reply.strip())),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=str(task.get("_key", "")),
+                        metadata={
+                            "task_key": task.get("_key", ""),
+                            "theorem": theorem,
+                            "returncode": proc.returncode,
+                            "replacement_chars": len(replacement),
+                            "failure_pattern": "" if proc.returncode == 0 else (proc.stderr or "")[:160],
+                        },
+                    )
+                except Exception:
+                    pass
             os.unlink(pf.name)
             os.unlink(rf.name)
 

@@ -11,7 +11,7 @@
     },
     {
       "id": "theorem-002",
-      "title": "Connes' cocycle property [D\u03c6:D\u03c8]_t \u00b7 [D\u03c8:D\u03c7]_t = [D\u03c6:D\u03c7]_t",
+      "title": "Connes' cocycle property [Dφ:Dψ]_t · [Dψ:Dχ]_t = [Dφ:Dχ]_t",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -19,7 +19,7 @@
     },
     {
       "id": "theorem-003",
-      "title": "Bogoliubov S(\u03b8) \u2208 Sp(2,\u211d): S^T \u03a9 S = \u03a9",
+      "title": "Bogoliubov S(θ) ∈ Sp(2,ℝ): S^T Ω S = Ω",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -27,7 +27,7 @@
     },
     {
       "id": "theorem-004",
-      "title": "Legendre duality: \u03a6(p) = sup_X(pX - f(X)), self-dual for Gaussian",
+      "title": "Legendre duality: Φ(p) = sup_X(pX - f(X)), self-dual for Gaussian",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -35,7 +35,7 @@
     },
     {
       "id": "theorem-005",
-      "title": "Souriau coadjoint orbit: K\u00e4hler metric = Fisher metric = \u03a6''(p)",
+      "title": "Souriau coadjoint orbit: Kähler metric = Fisher metric = Φ''(p)",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -43,7 +43,7 @@
     },
     {
       "id": "theorem-006",
-      "title": "Weyl group A\u2082: Cartan matrix [[2,-1],[-1,2]], det=3, |W|=6",
+      "title": "Weyl group A₂: Cartan matrix [[2,-1],[-1,2]], det=3, |W|=6",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -59,7 +59,7 @@
     },
     {
       "id": "theorem-008",
-      "title": "ZornPattern: chains \u2192 colimits \u2192 maximal elements",
+      "title": "ZornPattern: chains → colimits → maximal elements",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -75,7 +75,7 @@
     },
     {
       "id": "theorem-010",
-      "title": "Universal cohomology: H\u207f = ker(d\u207f)/im(d\u207f\u207b\u00b9), d\u00b2=0",
+      "title": "Universal cohomology: Hⁿ = ker(dⁿ)/im(dⁿ⁻¹), d²=0",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -83,7 +83,7 @@
     },
     {
       "id": "theorem-011",
-      "title": "O(5,5) \u2192 V\u2084 \u2192 O(5)\u00d7O(5) \u2192 Modular/Hecke group, T-duality on T\u2075",
+      "title": "O(5,5) → V₄ → O(5)×O(5) → Modular/Hecke group, T-duality on T⁵",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -91,39 +91,39 @@
     },
     {
       "id": "theorem-012",
-      "title": "V\u2084 \u2245 \u2124\u2082\u00d7\u2124\u2082 in O(5,5) + U-duality hierarchy E\u2086\u208d\u2086\u208e \u2192 E\u2087\u208d\u2087\u208e \u2192 E\u2088\u208d\u2088\u208e",
+      "title": "V₄ ≅ ℤ₂×ℤ₂ in O(5,5) + U-duality hierarchy E₆₍₆₎ → E₇₍₇₎ → E₈₍₈₎",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "SymPy verified: P\u2081\u00b2=P\u2082\u00b2=I, P\u2081P\u2082=P\u2082P\u2081, P_i \u2208 O(5,5)"
+      "external_ref": "SymPy verified: P₁²=P₂²=I, P₁P₂=P₂P₁, P_i ∈ O(5,5)"
     },
     {
       "id": "theorem-013",
-      "title": "Dynkin embedding D\u2085 \u2282 E\u2086 \u2282 E\u2087 \u2282 E\u2088: Cartan matrices verified",
+      "title": "Dynkin embedding D₅ ⊂ E₆ ⊂ E₇ ⊂ E₈: Cartan matrices verified",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "SymPy: D\u2085\u2192E\u2086\u2192E\u2087\u2192E\u2088 Cartan submatrix chain verified"
+      "external_ref": "SymPy: D₅→E₆→E₇→E₈ Cartan submatrix chain verified"
     },
     {
       "id": "theorem-014",
-      "title": "Rep embedding 10 \u2282 27 \u2282 56 under O(5,5)\u00d7O(1,1) for E\u2086\u208d\u2086\u208e, E\u2087\u208d\u2087\u208e",
+      "title": "Rep embedding 10 ⊂ 27 ⊂ 56 under O(5,5)×O(1,1) for E₆₍₆₎, E₇₍₇₎",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "Rep decomposition: E\u2086: 27\u219210\u2080+16\u2081+1\u2082, E\u2087: 56\u219210\u2081+16\u208b\u2081+16\u2081+10\u208b\u2081+4\u00d71\u2080"
+      "external_ref": "Rep decomposition: E₆: 27→10₀+16₁+1₂, E₇: 56→10₁+16₋₁+16₁+10₋₁+4×1₀"
     },
     {
       "id": "theorem-015",
-      "title": "E\u2081\u2081 hyperbolic Kac-Moody: boundary conditions for imaginary roots",
+      "title": "E₁₁ hyperbolic Kac-Moody: boundary conditions for imaginary roots",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "E\u2081\u2081: Cartan 11\u00d711 det<0, infinite root system, E\u2088\u207d\u00b2\u207e hyperbolic"
+      "external_ref": "E₁₁: Cartan 11×11 det<0, infinite root system, E₈⁽²⁾ hyperbolic"
     },
     {
       "id": "theorem-016",
-      "title": "Pontryagin duality: G \u2245 \u011c\u0302, Fourier cocycle = abelian T-duality",
+      "title": "Pontryagin duality: G ≅ Ĝ̂, Fourier cocycle = abelian T-duality",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -131,7 +131,7 @@
     },
     {
       "id": "theorem-017",
-      "title": "SL(2,\u211d) Iwasawa decomposition: K\u00b7A\u00b7N = elliptic\u00b7hyperbolic\u00b7parabolic",
+      "title": "SL(2,ℝ) Iwasawa decomposition: K·A·N = elliptic·hyperbolic·parabolic",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -139,7 +139,7 @@
     },
     {
       "id": "theorem-018",
-      "title": "Connes-Mellin: \u0394^{it} = Mellin kernel on \u211d\u207a, modular flow = dilation",
+      "title": "Connes-Mellin: Δ^{it} = Mellin kernel on ℝ⁺, modular flow = dilation",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -147,7 +147,7 @@
     },
     {
       "id": "theorem-019",
-      "title": "Fibonacci parafermion graded V\u2084-module, golden ratio fusion",
+      "title": "Fibonacci parafermion graded V₄-module, golden ratio fusion",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -155,7 +155,7 @@
     },
     {
       "id": "theorem-020",
-      "title": "E\u2081\u2081 as colimit of A_n slices via Zorn + affine + hyperbolic extension",
+      "title": "E₁₁ as colimit of A_n slices via Zorn + affine + hyperbolic extension",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -163,7 +163,7 @@
     },
     {
       "id": "theorem-021",
-      "title": "D\u2084 triality \u2192 Z\u2083 parafermions \u2192 Fibonacci anyons, braiding R-matrix",
+      "title": "D₄ triality → Z₃ parafermions → Fibonacci anyons, braiding R-matrix",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -187,7 +187,7 @@
     },
     {
       "id": "theorem-024",
-      "title": "Hadjiivanov-Todorov monodromy cocycle: M\u0302 = R\u00b7R\u0303 = I, d(M\u0302)=0 on K-sector",
+      "title": "Hadjiivanov-Todorov monodromy cocycle: M̂ = R·R̃ = I, d(M̂)=0 on K-sector",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -195,7 +195,7 @@
     },
     {
       "id": "theorem-025",
-      "title": "Tri-projector algebra: OP\u00b3=OP \u2192 P\u208a+P\u208b+P\u2080=I, P\u1d62P\u2c7c=0, P\u1d62\u00b2=P\u1d62",
+      "title": "Tri-projector algebra: OP³=OP → P₊+P₋+P₀=I, PᵢPⱼ=0, Pᵢ²=Pᵢ",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -203,7 +203,7 @@
     },
     {
       "id": "theorem-026",
-      "title": "Hodge-Dirac operator D = d+d* on Krein space: D\u00b3=D, Hodge decomposition = tri-projectors",
+      "title": "Hodge-Dirac operator D = d+d* on Krein space: D³=D, Hodge decomposition = tri-projectors",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -211,27 +211,27 @@
     },
     {
       "id": "theorem-027",
-      "title": "Krein fundamental symmetry J = P\u208a-P\u208b = OP, J\u00b2 = I-P\u2080, O(5,5) metric \u03b7 = J",
+      "title": "Krein fundamental symmetry J = P₊-P₋ = OP, J² = I-P₀, O(5,5) metric η = J",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "J = P\u208a-P\u208b = OP from tri-projector algebra"
+      "external_ref": "J = P₊-P₋ = OP from tri-projector algebra"
     },
     {
       "id": "theorem-028",
-      "title": "Tomita-Takesaki: J = P\u208a-P\u208b = OP, J\u0394J = \u0394\u207b\u00b9, J\u00b2 = I-P\u2080, \u03c3_t = Connes-Mellin",
+      "title": "Tomita-Takesaki: J = P₊-P₋ = OP, JΔJ = Δ⁻¹, J² = I-P₀, σ_t = Connes-Mellin",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "J = modular conjugation, \u0394 = modular operator, \u03c3_t = Connes-Mellin flow"
+      "external_ref": "J = modular conjugation, Δ = modular operator, σ_t = Connes-Mellin flow"
     },
     {
       "id": "theorem-029",
-      "title": "Chiral Hodge operator: J = *\u2202-*\u2202\u0304 = P\u208a-P\u208b, self-dual/anti-self-dual/harmonic split",
+      "title": "Chiral Hodge operator: J = *∂-*∂̄ = P₊-P₋, self-dual/anti-self-dual/harmonic split",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
-      "external_ref": "Chiral Hodge = J = P\u208a-P\u208b from tri-projector algebra"
+      "external_ref": "Chiral Hodge = J = P₊-P₋ from tri-projector algebra"
     },
     {
       "id": "theorem-030",
@@ -251,7 +251,7 @@
     },
     {
       "id": "theorem-032",
-      "title": "Cantorian Fock space: self-dual cone colimit, Cl(\u221e,\u221e) over Cantor set, tri-projectors = CCR",
+      "title": "Cantorian Fock space: self-dual cone colimit, Cl(∞,∞) over Cantor set, tri-projectors = CCR",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -259,7 +259,7 @@
     },
     {
       "id": "theorem-033",
-      "title": "Primon gas: primes as simple roots, \u03b6(\u03b2)=Tr(e^{-\u03b2H}), Riemann zeros = modular spectrum",
+      "title": "Primon gas: primes as simple roots, ζ(β)=Tr(e^{-βH}), Riemann zeros = modular spectrum",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -267,7 +267,7 @@
     },
     {
       "id": "theorem-034",
-      "title": "clockAxis as Heisenberg-Schrodinger intertwiner: K = J\u00b7\u03b5, K\u00b2 = -I",
+      "title": "clockAxis as Heisenberg-Schrodinger intertwiner: K = J·ε, K² = -I",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -275,7 +275,7 @@
     },
     {
       "id": "theorem-035",
-      "title": "Weyl V4 \u2192 Klein affine cocycle: K\u00b7W \u2260 W\u00b7K, defect = (2\u03b8\u2082+2\u03c0, 0)",
+      "title": "Weyl V4 → Klein affine cocycle: K·W ≠ W·K, defect = (2θ₂+2π, 0)",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -283,7 +283,7 @@
     },
     {
       "id": "theorem-036",
-      "title": "V4 \u22ca S3 semidirect product: triality action on spinor sectors",
+      "title": "V4 ⋊ S3 semidirect product: triality action on spinor sectors",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -291,7 +291,7 @@
     },
     {
       "id": "theorem-037",
-      "title": "Cl(5,5) spinor\u00b1 fragmentation under V4: J\u00b7s\u207a\u00b7J = +s\u207a, J\u00b7s\u207b\u00b7J = -s\u207b",
+      "title": "Cl(5,5) spinor± fragmentation under V4: J·s⁺·J = +s⁺, J·s⁻·J = -s⁻",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -315,7 +315,7 @@
     },
     {
       "id": "theorem-040",
-      "title": "Fibonacci tower scaling: V4-sub-slice dim = Fib(n), ratio \u2192 \u03c6",
+      "title": "Fibonacci tower scaling: V4-sub-slice dim = Fib(n), ratio → φ",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
@@ -323,11 +323,44 @@
     },
     {
       "id": "theorem-041",
-      "title": "Primon gas / Fib(n) boundary: \u03b6(s) partition function, \u00b5(n) = V4 parity",
+      "title": "Primon gas / Fib(n) boundary: ζ(s) partition function, µ(n) = V4 parity",
       "status": "done",
       "sympy_witness": true,
       "lean_proof": true,
       "external_ref": "lean/InfoGeometry/Canonical/PrimonFibBoundaryBridge.lean"
+    },
+    {
+      "id": "agent_orchestrator_smoke",
+      "title": "Agent orchestrator smoke: Nat add zero grounded by SymPy",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": null,
+      "sympy_path": "proofs/agent_orchestrator_smoke.sp",
+      "lean_path": "proofs/agent_orchestrator_smoke.lean",
+      "last_report": "artifacts/agent_orchestrator/20260606T183523Z_agent_orchestrator_smoke.json"
+    },
+    {
+      "id": "agent_orchestrator_pi_smoke",
+      "title": "Pi queue smoke: Nat zero add grounded by SymPy",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": null,
+      "sympy_path": "proofs/agent_orchestrator_pi_smoke.sp",
+      "lean_path": "proofs/agent_orchestrator_pi_smoke.lean",
+      "last_report": "artifacts/agent_orchestrator/20260606T183847Z_agent_orchestrator_pi_smoke.json"
+    },
+    {
+      "id": "agent_orchestrator_archon_smoke",
+      "title": "Archon queue smoke: Nat mul one grounded by SymPy",
+      "status": "done",
+      "sympy_witness": true,
+      "lean_proof": true,
+      "external_ref": null,
+      "sympy_path": "proofs/agent_orchestrator_archon_smoke.sp",
+      "lean_path": "proofs/agent_orchestrator_archon_smoke.lean",
+      "last_report": "artifacts/agent_orchestrator/20260606T183932Z_agent_orchestrator_archon_smoke.json"
     }
   ],
   "agents": {

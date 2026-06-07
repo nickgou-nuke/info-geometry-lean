@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Canonical.BregmanDeformation
 
 open Matrix
 open Complex
@@ -27,6 +28,12 @@ checked by the kernel.]
 
 * `exponentialRemainder_zero`
 * `exponentialRemainder_zero_norm`
+* `cos_remainder_abs_le_sq`
+* `sin_remainder_abs_le_sq`
+* `scalar_rotation_remainder_abs_sum_le_sq`
+* `closedFormPhaseAxisRemainder_entry_bound`
+* `closedFormPhaseAxisRemainder_entryMax_bound`
+* `phase_axis_norm_bound_of_closed_exp`
 * `phase_axis_deformation_bounded_of_quadratic_bound`
 * `dikin_bound_of_phase_axis_norm`
 * `bregman_bound_clears_at_flat_boundary`
@@ -38,6 +45,7 @@ verified premises.]
 
 * `phase_axis_deformation_bounded_of_quadratic_bound`
 * `dikin_bound_of_phase_axis_norm`
+* `phase_axis_norm_bound_of_closed_exp`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
@@ -47,6 +55,11 @@ witnesses, certificates, or renamed placeholders.]
 * Prove the matrix-exponential quadratic remainder estimate from Taylor
   expansion and a concrete operator norm:
   `HasQuadraticBregmanBound K`.
+* Identify the closed-form `modularDelta ε` entrywise estimate with the
+  `NormedSpace.exp (ε • phaseAxis)` estimate once the matrix-exponential
+  closed form is proved.
+* Prove the closed-form exponential identity
+  `exp (ε • K) = cos ε • 1 + sin ε • K` from `K ^ 2 = -1`.
 * Prove `‖K‖ = 1` for the concrete phase-axis matrix from its chosen C*-norm,
   not merely from the algebraic relation `K ^ 2 = -1`.
 * Build the full `ℓ²(BinaryCantorBoundary) ⊗ DoubledSpace ℝ` completion and
@@ -80,9 +93,251 @@ theorem exponentialRemainder_zero {n : ℕ} (K : MatrixEnd n) :
 @[simp]
 theorem exponentialRemainder_zero_norm {n : ℕ} (K : MatrixEnd n) :
     ‖exponentialRemainder K 0‖ = 0 := by
-  simp
+  rw [exponentialRemainder_zero K]
+  exact norm_zero
+
+/-! ## Scalar Taylor corridor for the closed-form rotation model -/
+
+/--
+For `|ε| ≤ 1`, the cosine component of the closed-form phase-axis rotation has
+quadratic Bregman size.
+
+This is the scalar Taylor corridor behind the diagonal entries of
+`[[cos ε, -sin ε], [sin ε, cos ε]] - I - εK`.
+-/
+theorem cos_remainder_abs_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
+    |Real.cos ε - 1| ≤ ε ^ 2 := by
+  have hcb := Real.cos_bound hε
+  have htri :
+      |Real.cos ε - 1| ≤
+        |Real.cos ε - (1 - ε ^ 2 / 2)| + |(1 - ε ^ 2 / 2) - 1| :=
+    abs_sub_le (Real.cos ε) (1 - ε ^ 2 / 2) 1
+  have hsimp : |(1 - ε ^ 2 / 2) - 1| = ε ^ 2 / 2 := by
+    have hnon : 0 ≤ ε ^ 2 / 2 := div_nonneg (sq_nonneg ε) (by norm_num)
+    have hform : (1 - ε ^ 2 / 2) - 1 = -(ε ^ 2 / 2) := by ring
+    rw [hform, abs_neg, abs_of_nonneg hnon]
+  have hsqabs : |ε| ^ 2 = ε ^ 2 := by rw [sq_abs]
+  have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  calc
+    |Real.cos ε - 1|
+        ≤ |Real.cos ε - (1 - ε ^ 2 / 2)| + |(1 - ε ^ 2 / 2) - 1| := htri
+    _ = |Real.cos ε - (1 - ε ^ 2 / 2)| + ε ^ 2 / 2 := by rw [hsimp]
+    _ ≤ |ε| ^ 4 * (5 / 96) + ε ^ 2 / 2 := by gcongr
+    _ ≤ ε ^ 2 * (5 / 96) + ε ^ 2 / 2 := by gcongr
+    _ ≤ ε ^ 2 := by nlinarith [sq_nonneg ε]
+
+/--
+For `|ε| ≤ 1`, the sine component of the closed-form phase-axis rotation has
+quadratic Bregman size after subtracting its linear term.
+
+This controls the off-diagonal entries of
+`[[cos ε, -sin ε], [sin ε, cos ε]] - I - εK`.
+-/
+theorem sin_remainder_abs_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
+    |Real.sin ε - ε| ≤ ε ^ 2 := by
+  have hsb := Real.sin_bound hε
+  have htri :
+      |Real.sin ε - ε| ≤
+        |Real.sin ε - (ε - ε ^ 3 / 6)| + |(ε - ε ^ 3 / 6) - ε| :=
+    abs_sub_le (Real.sin ε) (ε - ε ^ 3 / 6) ε
+  have hsimp : |(ε - ε ^ 3 / 6) - ε| = |ε| ^ 3 / 6 := by
+    have h6 : (0 : ℝ) ≤ 6 := by norm_num
+    have hnon6 : |(6 : ℝ)| = 6 := abs_of_nonneg h6
+    have hform : (ε - ε ^ 3 / 6) - ε = -(ε ^ 3 / 6) := by ring
+    rw [hform, abs_neg, abs_div, abs_pow, hnon6]
+  have hsqabs : |ε| ^ 2 = ε ^ 2 := by rw [sq_abs]
+  have hpow3 : |ε| ^ 3 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  calc
+    |Real.sin ε - ε|
+        ≤ |Real.sin ε - (ε - ε ^ 3 / 6)| + |(ε - ε ^ 3 / 6) - ε| := htri
+    _ = |Real.sin ε - (ε - ε ^ 3 / 6)| + |ε| ^ 3 / 6 := by rw [hsimp]
+    _ ≤ |ε| ^ 4 * (5 / 96) + |ε| ^ 3 / 6 := by gcongr
+    _ ≤ ε ^ 2 * (5 / 96) + ε ^ 2 / 6 := by gcongr
+    _ ≤ ε ^ 2 := by nlinarith [sq_nonneg ε]
+
+/--
+For `|ε| ≤ 1`, the scalar closed-form rotation remainder has total size at
+most `ε²`.
+
+This is the Taylor/norm corridor needed for the operator estimate:
+`|(cos ε - 1)| + |(sin ε - ε)| ≤ ε²`.
+-/
+theorem scalar_rotation_remainder_abs_sum_le_sq {ε : ℝ} (hε : |ε| ≤ 1) :
+    |Real.cos ε - 1| + |Real.sin ε - ε| ≤ ε ^ 2 := by
+  have hcb := Real.cos_bound hε
+  have hsb := Real.sin_bound hε
+  have hcos_tri :
+      |Real.cos ε - 1| ≤
+        |Real.cos ε - (1 - ε ^ 2 / 2)| + |(1 - ε ^ 2 / 2) - 1| :=
+    abs_sub_le (Real.cos ε) (1 - ε ^ 2 / 2) 1
+  have hcos_tail : |(1 - ε ^ 2 / 2) - 1| = ε ^ 2 / 2 := by
+    have hnon : 0 ≤ ε ^ 2 / 2 := div_nonneg (sq_nonneg ε) (by norm_num)
+    have hform : (1 - ε ^ 2 / 2) - 1 = -(ε ^ 2 / 2) := by ring
+    rw [hform, abs_neg, abs_of_nonneg hnon]
+  have hsin_tri :
+      |Real.sin ε - ε| ≤
+        |Real.sin ε - (ε - ε ^ 3 / 6)| + |(ε - ε ^ 3 / 6) - ε| :=
+    abs_sub_le (Real.sin ε) (ε - ε ^ 3 / 6) ε
+  have hsin_tail : |(ε - ε ^ 3 / 6) - ε| = |ε| ^ 3 / 6 := by
+    have h6 : (0 : ℝ) ≤ 6 := by norm_num
+    have hnon6 : |(6 : ℝ)| = 6 := abs_of_nonneg h6
+    have hform : (ε - ε ^ 3 / 6) - ε = -(ε ^ 3 / 6) := by ring
+    rw [hform, abs_neg, abs_div, abs_pow, hnon6]
+  have hsqabs : |ε| ^ 2 = ε ^ 2 := by rw [sq_abs]
+  have hpow3 : |ε| ^ 3 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  have hpow4 : |ε| ^ 4 ≤ ε ^ 2 := by
+    rw [← hsqabs]
+    exact pow_le_pow_of_le_one (abs_nonneg ε) hε (by norm_num)
+  calc
+    |Real.cos ε - 1| + |Real.sin ε - ε|
+        ≤ (|Real.cos ε - (1 - ε ^ 2 / 2)| + |(1 - ε ^ 2 / 2) - 1|) +
+          (|Real.sin ε - (ε - ε ^ 3 / 6)| + |(ε - ε ^ 3 / 6) - ε|) := by
+            exact add_le_add hcos_tri hsin_tri
+    _ = |Real.cos ε - (1 - ε ^ 2 / 2)| + ε ^ 2 / 2 +
+          (|Real.sin ε - (ε - ε ^ 3 / 6)| + |ε| ^ 3 / 6) := by
+            rw [hcos_tail, hsin_tail]
+    _ ≤ |ε| ^ 4 * (5 / 96) + ε ^ 2 / 2 +
+          (|ε| ^ 4 * (5 / 96) + |ε| ^ 3 / 6) := by gcongr
+    _ ≤ ε ^ 2 * (5 / 96) + ε ^ 2 / 2 +
+          (ε ^ 2 * (5 / 96) + ε ^ 2 / 6) := by gcongr
+    _ ≤ ε ^ 2 := by nlinarith [sq_nonneg ε]
+
+/-! ## Closed-form finite phase-axis bound -/
+
+/--
+The closed-form 2×2 modular rotation remainder
+`Δ(ε) - I - εK`, using the explicit `modularDelta` and `phaseAxis`.
+
+This is intentionally separate from `exponentialRemainder`: the remaining
+analytic task is to prove that `modularDelta ε = exp (ε • phaseAxis)`.
+-/
+noncomputable def closedFormPhaseAxisRemainder (ε : ℝ) : MatrixEnd 2 :=
+  InfoGeometry.Canonical.BregmanDeformation.modularDelta ε
+    - (1 : MatrixEnd 2)
+    - (ε • InfoGeometry.Canonical.BregmanDeformation.phaseAxis : MatrixEnd 2)
+
+/--
+Entrywise max norm for 2×2 matrices.
+
+This lightweight finite norm records exactly what the closed-form Taylor
+corridor proves without claiming an operator-norm estimate.
+-/
+def entryMaxNorm2 (A : MatrixEnd 2) : ℝ :=
+  max (max ‖A 0 0‖ ‖A 0 1‖) (max ‖A 1 0‖ ‖A 1 1‖)
+
+/--
+Every entry of the explicit phase-axis modular remainder is quadratically
+bounded for `|ε| ≤ 1`.
+-/
+theorem closedFormPhaseAxisRemainder_entry_bound {ε : ℝ}
+    (hε : |ε| ≤ 1) (i j : Fin 2) :
+    ‖closedFormPhaseAxisRemainder ε i j‖ ≤ ε ^ 2 := by
+  have hcos := cos_remainder_abs_le_sq (ε := ε) hε
+  have hsin := sin_remainder_abs_le_sq (ε := ε) hε
+  have hcosC : ‖Complex.cos (ε : ℂ) - 1‖ ≤ ε ^ 2 := by
+    rw [← Complex.ofReal_cos, ← Complex.ofReal_one, ← Complex.ofReal_sub,
+      Complex.norm_real, Real.norm_eq_abs]
+    exact hcos
+  have hsinC : ‖Complex.sin (ε : ℂ) - (ε : ℂ)‖ ≤ ε ^ 2 := by
+    rw [← Complex.ofReal_sin, ← Complex.ofReal_sub,
+      Complex.norm_real, Real.norm_eq_abs]
+    exact hsin
+  have hsinC_neg : ‖(ε : ℂ) - Complex.sin (ε : ℂ)‖ ≤ ε ^ 2 := by
+    rw [← Complex.ofReal_sin, ← Complex.ofReal_sub,
+      Complex.norm_real, Real.norm_eq_abs]
+    simpa [abs_sub_comm] using hsin
+  fin_cases i <;> fin_cases j
+  · simpa [closedFormPhaseAxisRemainder,
+      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
+      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hcosC
+  · simpa [closedFormPhaseAxisRemainder,
+      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
+      InfoGeometry.Canonical.BregmanDeformation.phaseAxis,
+      abs_sub_comm, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using hsinC_neg
+  · simpa [closedFormPhaseAxisRemainder,
+      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
+      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hsinC
+  · simpa [closedFormPhaseAxisRemainder,
+      InfoGeometry.Canonical.BregmanDeformation.modularDelta,
+      InfoGeometry.Canonical.BregmanDeformation.phaseAxis] using hcosC
+
+/--
+The explicit 2×2 phase-axis remainder has entrywise quadratic Bregman size.
+-/
+theorem closedFormPhaseAxisRemainder_entryMax_bound {ε : ℝ}
+    (hε : |ε| ≤ 1) :
+    entryMaxNorm2 (closedFormPhaseAxisRemainder ε) ≤ ε ^ 2 := by
+  dsimp [entryMaxNorm2]
+  exact max_le
+    (max_le
+      (closedFormPhaseAxisRemainder_entry_bound hε 0 0)
+      (closedFormPhaseAxisRemainder_entry_bound hε 0 1))
+    (max_le
+      (closedFormPhaseAxisRemainder_entry_bound hε 1 0)
+      (closedFormPhaseAxisRemainder_entry_bound hε 1 1))
 
 /-! ## Conditional quadratic Bregman bound -/
+
+/--
+Closed-form phase-axis rotations have the desired local quadratic
+operator-norm Bregman bound once the finite exponential identity and concrete
+norm facts are supplied.
+
+The missing analytic bridge is explicit in `hExp`: for a phase axis satisfying
+`K ^ 2 = -1`, prove
+`exp (ε • K) = cos ε • 1 + sin ε • K`. This theorem then converts that
+identity into the honest norm estimate; it does not use a Loewner/PSD claim.
+-/
+theorem phase_axis_norm_bound_of_closed_exp {n : ℕ}
+    (K : MatrixEnd n)
+    (hI_norm : ‖(1 : MatrixEnd n)‖ ≤ 1)
+    (hK_norm : ‖K‖ = 1)
+    (ε : ℝ)
+    (hε : |ε| ≤ 1)
+    (hExp :
+      (NormedSpace.exp (ε • K) : MatrixEnd n) =
+        (Real.cos ε : ℂ) • (1 : MatrixEnd n) + (Real.sin ε : ℂ) • K) :
+    ‖exponentialRemainder K ε‖ ≤ ε ^ 2 := by
+  have hscalar := scalar_rotation_remainder_abs_sum_le_sq (ε := ε) hε
+  have hcosnorm : ‖((Real.cos ε : ℂ) - 1)‖ = |Real.cos ε - 1| := by
+    norm_cast
+  have hsinnorm : ‖((Real.sin ε : ℂ) - (ε : ℂ))‖ = |Real.sin ε - ε| := by
+    norm_cast
+  have hrewrite :
+      exponentialRemainder K ε =
+        ((Real.cos ε - 1 : ℝ) : ℂ) • (1 : MatrixEnd n) +
+          ((Real.sin ε - ε : ℝ) : ℂ) • K := by
+    rw [exponentialRemainder, hExp]
+    ext i j
+    simp
+    ring
+  rw [hrewrite]
+  calc
+    ‖((Real.cos ε - 1 : ℝ) : ℂ) • (1 : MatrixEnd n) +
+        ((Real.sin ε - ε : ℝ) : ℂ) • K‖
+        ≤ ‖((Real.cos ε - 1 : ℝ) : ℂ) • (1 : MatrixEnd n)‖ +
+          ‖((Real.sin ε - ε : ℝ) : ℂ) • K‖ := norm_add_le _ _
+    _ = |Real.cos ε - 1| * ‖(1 : MatrixEnd n)‖ + |Real.sin ε - ε| * ‖K‖ := by
+      rw [norm_smul, norm_smul]
+      simpa [Complex.ofReal_sub] using
+        congrArg₂ HAdd.hAdd
+          (congrArg (fun x => x * ‖(1 : MatrixEnd n)‖) hcosnorm)
+          (congrArg (fun x => x * ‖K‖) hsinnorm)
+    _ ≤ |Real.cos ε - 1| * 1 + |Real.sin ε - ε| * 1 := by
+      exact add_le_add
+        (mul_le_mul_of_nonneg_left hI_norm (abs_nonneg _))
+        (mul_le_mul_of_nonneg_left (le_of_eq hK_norm) (abs_nonneg _))
+    _ = |Real.cos ε - 1| + |Real.sin ε - ε| := by ring
+    _ ≤ ε ^ 2 := hscalar
 
 /--
 Explicit local quadratic remainder estimate.

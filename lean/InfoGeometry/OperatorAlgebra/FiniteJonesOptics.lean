@@ -22,13 +22,13 @@ to `SusceptibilityHessian.lean`.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.JonesCalibration
+import InfoGeometry.Optics.JonesCalibration
 
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 
-open InfoGeometry.OperatorAlgebra.JonesCalibration
+open InfoGeometry.Optics.JonesCalibration
 
 /-! ## 1. Basic diagonal Jones events -/
 

@@ -626,6 +626,22 @@ python3 tools/infra/aiclaw_chat.py ask --dry-run --prompt "$PROMPT"
 python3 tools/infra/aiclaw_chat.py ask --wait --new --json --prompt "$PROMPT"
 ```
 
+## Queue State Semantics
+
+Do not interpret every occupied lane as a hard block. The queue is conservative
+because browser UIs can fail to expose a reliable final-answer marker.
+
+| `queue_state` | Meaning | Agent action |
+| --- | --- | --- |
+| `ready` | No held, active, or queued job exists. | Send exactly one prompt. |
+| `active` | A process currently owns the lane. | Wait or let the process finish. |
+| `stale_active` | Only stale/dead active markers remain. | Run `queue-prune-active` for dead markers, or inspect live stale owners before sending. |
+| `queued` | FIFO waiters exist. | Wait FIFO or increase queue timeout. |
+| `needs_readback` | A prompt may have reached the browser, but no trustworthy final answer was captured. | Recover the visible answer read-only, record it, then run `queue-release`. |
+
+`needs_readback` is not a provider outage. It is a safety hold preventing
+double-send into the same browser conversation.
+
 If final content is suspect:
 
 ```bash

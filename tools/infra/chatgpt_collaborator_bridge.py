@@ -3,10 +3,16 @@ import subprocess
 import argparse
 import sys
 import json
+import time
 from pathlib import Path
 
 from tools.infra.lean_audit_prompt import build_repair_prompt
 from tools.infra.chatgpt_lane_guard import browser_chatgpt_lane
+
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block bridge use.
+    record_message = None
 
 def ask_chatgpt(prompt_text):
     prompt_text = build_repair_prompt(
@@ -132,6 +138,10 @@ response_text = js(script)
 print("--- CHATGPT RESPONSE ---")
 print(response_text)
 """
+    started = time.monotonic()
+    output = ""
+    error = ""
+    success = False
     try:
         with browser_chatgpt_lane(
             source="chatgpt_collaborator_bridge",
@@ -145,10 +155,35 @@ print(response_text)
                 text=True,
                 check=True
             )
-        return result.stdout
+        output = result.stdout or ""
+        success = True
+        return output
     except subprocess.CalledProcessError as e:
+        error = e.stderr or str(e)
         print(f"Browser harness failed to communicate with ChatGPT: {e.stderr}", file=sys.stderr)
         return None
+    except Exception as exc:
+        error = str(exc)
+        print(f"Browser harness failed to communicate with ChatGPT: {error}", file=sys.stderr)
+        return None
+    finally:
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="chatgpt_collaborator_bridge.py",
+                    source_file="tools/infra/chatgpt_collaborator_bridge.py",
+                    channel="chatgpt_collaborator_browser",
+                    provider="browser-harness",
+                    model="chatgpt",
+                    platform="chatgpt",
+                    prompt_text=prompt_text,
+                    response_text=output or error,
+                    success=success,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={"failure_pattern": error},
+                )
+            except Exception:
+                pass
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Delegate a complex auditing task to ChatGPT via Browser Harness.")

@@ -42,7 +42,7 @@ def _search_google(query: str, timeout: int = 120) -> str:
     env['GOOGLE_AI_TIMEOUT_SECONDS'] = str(timeout)
     subprocess.run(
         ['browser-harness', '-c',
-         f"import sys; sys.path.insert(0,'{_REPO}'); exec(open('{GOOGLE_SCRIPT}').read()); _main()"],
+         f"import sys; sys.path.insert(0,'{_REPO}'); exec(open('{GOOGLE_SCRIPT}').read())"],
         env=env, capture_output=True, text=True, timeout=timeout + 60,
     )
     result = open(rf.name).read() if Path(rf.name).exists() else ""

@@ -8,6 +8,7 @@ import random
 import re
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +18,12 @@ from urllib.request import Request, urlopen
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block sampling.
+    record_message = None
 
 
 def _utc_now() -> str:
@@ -450,8 +457,12 @@ def main() -> int:
                     row["response"] = mock
                     row["usage"] = {}
                 else:
+                    started = time.monotonic()
+                    text = ""
+                    usage: dict[str, Any] = {}
+                    provider = str(job.get("provider", "openai-chat")).strip()
+                    error = ""
                     try:
-                        provider = str(job.get("provider", "openai-chat")).strip()
                         if provider == "openai-chat":
                             text, usage = _chat_completion(
                                 base_url=str(job["base_url"]),
@@ -476,10 +487,38 @@ def main() -> int:
                         row["response"] = text
                         row["usage"] = usage
                     except Exception as exc:
+                        error = str(exc)
                         row["status"] = "error"
-                        row["error"] = str(exc)
+                        row["error"] = error
                         row["response"] = ""
                         row["usage"] = {}
+                    finally:
+                        if record_message is not None:
+                            try:
+                                record_message(
+                                    source_tool="dual_hypothesis_sampler.py",
+                                    source_file="tools/infra/dual_hypothesis_sampler.py",
+                                    channel="dual_hypothesis_sampler",
+                                    provider=provider,
+                                    model=str(job["model"]),
+                                    platform=str(job.get("base_url", "")),
+                                    prompt_text=json.dumps(messages, ensure_ascii=False),
+                                    response_text=text or error,
+                                    success=(row.get("status") == "ok"),
+                                    latency_ms=(time.monotonic() - started) * 1000.0,
+                                    correlation_id=hypothesis_id,
+                                    metadata={
+                                        "run_id": run_id,
+                                        "goal": goal,
+                                        "model_role": job["role"],
+                                        "sample_index": idx,
+                                        "temperature": float(job["temperature"]),
+                                        "prompt_hash": prompt_hash,
+                                        "failure_pattern": error,
+                                    },
+                                )
+                            except Exception:
+                                pass
 
                 lean_code = _extract_lean_code(str(row.get("response", "")))
                 row["lean_code"] = lean_code

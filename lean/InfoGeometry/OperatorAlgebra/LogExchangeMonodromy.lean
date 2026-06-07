@@ -268,29 +268,8 @@ theorem monodromy_winding_formula (lambda epsilon : A) (h_nil : epsilon * epsilo
     (h_comm : Commute lambda epsilon) (n : ℕ) :
     (lambda * (1 + epsilon)) ^ n =
       lambda ^ n * (1 + (n : A) * epsilon) := by
-  induction n with
-  | zero =>
-      simp
-  | succ n ih =>
-      rw [pow_succ, ih]
-      have h_comm_term : Commute lambda (1 + (n : A) * epsilon) := by
-        apply Commute.add_right
-        · exact Commute.one_right lambda
-        · exact Commute.mul_right (commute_nat_cast lambda n) h_comm
-      calc
-        lambda ^ n * (1 + (n : A) * epsilon) * (lambda * (1 + epsilon))
-            = lambda ^ n * ((1 + (n : A) * epsilon) * lambda) * (1 + epsilon) := by
-              noncomm_ring
-        _ = lambda ^ n * (lambda * (1 + (n : A) * epsilon)) * (1 + epsilon) := by
-              rw [h_comm_term.eq]
-        _ = (lambda ^ n * lambda) *
-              ((1 + (n : A) * epsilon) * (1 + epsilon)) := by
-              noncomm_ring
-        _ = lambda ^ (n + 1) *
-              ((1 + (n : A) * epsilon) * (1 + epsilon)) := by
-              rw [pow_succ]
-        _ = lambda ^ (n + 1) * (1 + ((n + 1 : ℕ) : A) * epsilon) := by
-              rw [monodromy_step_mul lambda epsilon h_nil h_comm n]
+  exact InfoGeometry.QuantumMonodromy.monodromy_winding_formula
+    lambda epsilon h_nil h_comm n
 
 namespace LogExchangeMonodromy
 

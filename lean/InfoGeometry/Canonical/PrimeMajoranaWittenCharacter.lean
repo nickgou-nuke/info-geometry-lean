@@ -92,6 +92,18 @@ theorem finiteSignedPfaffianCharacter_eq_dirichletWittenCharacter
     _ = finiteDirichletWittenCharacter P q := by
       rfl
 
+/--
+Finite prime-bit Witten-index cancellation on a nonempty prime register.
+
+This is the arithmetic owner readback of the balanced finite supertrace
+`∑ (-1)^F = 0`; it is not an infinite-temperature or analytic-continuation
+claim.
+-/
+theorem finitePrimeBitWittenIndex_cancel
+    (P : PrimeRegister) (hP : P.primes.Nonempty) :
+    (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 :=
+  finite_witten_supertrace_cancel P hP
+
 /-- Canonical finite owner target for the split-Majorana / Dirichlet lane. -/
 @[owner_target_tag]
 def PrimeMajoranaWittenCharacterOwnerTarget : Prop :=

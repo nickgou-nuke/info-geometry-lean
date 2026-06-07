@@ -1,4 +1,5 @@
 import InfoGeometry.Causal.Sensing
+import InfoGeometry.Causal.ProofTopology
 
 /-!
 # InfoGeometry.Canonical.ProofTopologyBridge
@@ -9,18 +10,19 @@ Canonical bridge for the finite proof-topology layer.
 namespace InfoGeometry.Canonical.ProofTopologyBridge
 
 open InfoGeometry.Causal.Sensing
-open InfoGeometry.Causal.ProofTopology
 
 variable {World Proof : Type*} [Preorder World] [Preorder Proof]
 
 theorem sensor_maps_forward
     (S : Sensor World Proof) {a b : World}
-    (h : b ∈ forwardCone a) : S.sense b ∈ forwardCone (S.sense a) :=
+    (h : b ∈ InfoGeometry.Causal.ProofTopology.forwardCone a) :
+    S.sense b ∈ InfoGeometry.Causal.ProofTopology.forwardCone (S.sense a) :=
   S.monotone_sense h
 
 theorem sensor_maps_backward
     (S : Sensor World Proof) {a b : World}
-    (h : b ∈ backwardCone a) : S.sense b ∈ backwardCone (S.sense a) :=
+    (h : b ∈ InfoGeometry.Causal.ProofTopology.backwardCone a) :
+    S.sense b ∈ InfoGeometry.Causal.ProofTopology.backwardCone (S.sense a) :=
   S.monotone_sense h
 
 theorem faithful_sensor_reflects_order

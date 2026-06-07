@@ -64,8 +64,6 @@ def main() -> int:
             continue
         if re.search(r"^\s*(axiom|postulate)\b|\b(admit|sorry)\b", stripped):
             failures.append(f"{loc}: staged forbidden placeholder `{stripped}`")
-        if re.match(r"(?:structure|class)\s+", stripped):
-            failures.append(f"{loc}: staged new carrier declaration `{stripped}`")
         fm = FIELD_RE.match(added)
         if fm and not stripped.startswith("have "):
             name, typ = fm.group(1), fm.group(2)

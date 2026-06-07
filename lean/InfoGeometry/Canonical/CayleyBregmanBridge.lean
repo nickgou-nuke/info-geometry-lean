@@ -2,8 +2,13 @@ import Architect
 import InfoGeometry.Canonical.Geometry
 import Mathlib.Analysis.Convex.SpecificFunctions.Deriv
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.Topology.Algebra.Order.Field
 
 namespace InfoGeometry.Canonical.Cayley
+
+open scoped Topology
 
 open InfoGeometry.Geometry.DualFlat
 
@@ -82,6 +87,52 @@ def cayleyIdentityCompatibleGeometry
   SB := S
   D_transport _ _ := rfl
   grad_transport _ := rfl
+
+/-! ## Thermal-ray compactification -/
+
+/-- Direct real thermal-ray Cayley compactification coordinate. -/
+@[rep_depth thermo]
+noncomputable def thermalCayley (β : ℝ) : ℝ :=
+  (β - 1) / (β + 1)
+
+/-- Algebraic normal form of the thermal Cayley coordinate away from its pole. -/
+@[rep_depth thermo]
+theorem thermalCayley_eq_one_sub (β : ℝ) (hβ : β + 1 ≠ 0) :
+    thermalCayley β = 1 - 2 / (β + 1) := by
+  unfold thermalCayley
+  field_simp [hβ]
+  ring
+
+/--
+The thermal-ray Cayley compactification tends to the boundary point `1` at
+zero temperature (`β -> +∞`).
+
+This theorem proves only the real compactification limit.  It does not identify
+the full zero-temperature state accumulation set with the Cantor boundary.
+-/
+@[rep_depth thermo]
+theorem thermalCayley_tendsto_atTop_one :
+    Filter.Tendsto thermalCayley Filter.atTop (𝓝 1) := by
+  have hden :
+      Filter.Tendsto (fun β : ℝ => β + 1) Filter.atTop Filter.atTop := by
+    rw [Filter.tendsto_atTop_atTop]
+    intro b
+    refine ⟨b, ?_⟩
+    intro β hβ
+    linarith
+  have hzero :
+      Filter.Tendsto (fun β : ℝ => (2 : ℝ) / (β + 1)) Filter.atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop hden
+  have hmain :
+      Filter.Tendsto (fun β : ℝ => 1 - (2 : ℝ) / (β + 1))
+        Filter.atTop (𝓝 (1 - 0)) :=
+    tendsto_const_nhds.sub hzero
+  have heq :
+      thermalCayley =ᶠ[Filter.atTop]
+        fun β : ℝ => 1 - (2 : ℝ) / (β + 1) := by
+    filter_upwards [Filter.eventually_gt_atTop (-1 : ℝ)] with β hβ
+    exact thermalCayley_eq_one_sub β (by linarith)
+  simpa using hmain.congr' heq.symm
 
 /-- Legacy compatibility alias for `cayleyIdentityBridge`. -/
 abbrev identityBridge (E : Type*) : CayleyBridge E E := cayleyIdentityBridge E

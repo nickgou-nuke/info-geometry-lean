@@ -18,7 +18,13 @@ The thermodynamic cost term
 `exp (ε • K) - I - ε • K`
 
 is the matrix-exponential remainder used in the Bregman/IPM reading of the
-modular phase-axis flow. This file does not prove the analytic matrix
+finite-dimensional modular-Hamiltonian flow.  Here `K` is an operator in the
+noncommutative matrix algebra `Mₙ(ℂ)`; when packaged as
+`MatrixModularHamiltonian`, it carries the self-adjoint law `K* = K`.
+
+The closed-form `phaseAxis` rotation corridor later in the file is separate:
+that lane uses the skew complex-structure generator with square `-I`, not the
+self-adjoint modular Hamiltonian.  This file does not prove the analytic matrix
 remainder estimate. Instead, it names that estimate as an explicit hypothesis
 and proves the kernel-checkable consequences used by the Cantor-boundary lane.
 
@@ -29,6 +35,10 @@ checked by the kernel.]
 
 * `exponentialRemainder_zero`
 * `exponentialRemainder_zero_norm`
+* `modularStep_isSelfAdjoint`
+* `modularExponential_isSelfAdjoint`
+* `exponentialRemainder_isSelfAdjoint`
+* `MatrixModularHamiltonian.exponentialRemainder_eq`
 * `cos_remainder_abs_le_sq`
 * `sin_remainder_abs_le_sq`
 * `scalar_rotation_remainder_abs_sum_le_sq`
@@ -195,14 +205,83 @@ theorem matrix_bregman_zero_of_dikin_envelope_radius_zero {n : ℕ}
     matrix_bregman_nonneg_of_dikin_envelope hsc x x
   exact le_antisymm hle hge
 
-/-! ## Exponential remainder -/
+/-! ## Operator-valued modular Hamiltonian remainder -/
 
 /--
-The Bregman/IPM exponential remainder `exp (ε • K) - I - ε • K`.
+Finite-dimensional modular Hamiltonian in the noncommutative matrix algebra
+`Mₙ(ℂ)`.
+
+The field `K` is an operator.  The law `selfAdjoint` records the Tomita/KMS
+Hamiltonian condition `K* = K`; no scalar proxy is used.
+-/
+structure MatrixModularHamiltonian (n : ℕ) where
+  K : MatrixEnd n
+  selfAdjoint : IsSelfAdjoint K
+
+/--
+The Bregman/IPM exponential remainder
+`exp (ε • K) - I - ε • K` in the noncommutative matrix algebra `Mₙ(ℂ)`.
 -/
 noncomputable def exponentialRemainder {n : ℕ}
     (K : MatrixEnd n) (ε : ℝ) : MatrixEnd n :=
   (NormedSpace.exp (ε • K) : MatrixEnd n) - 1 - (ε • K : MatrixEnd n)
+
+/-- A real modular step preserves self-adjointness of the Hamiltonian operator. -/
+theorem modularStep_isSelfAdjoint {n : ℕ}
+    {K : MatrixEnd n}
+    (hK : IsSelfAdjoint K)
+    (ε : ℝ) :
+    IsSelfAdjoint (ε • K : MatrixEnd n) := by
+  rw [isSelfAdjoint_iff, star_smul, hK.star_eq]
+  simp
+
+/-- The matrix exponential of a self-adjoint modular step is self-adjoint. -/
+theorem modularExponential_isSelfAdjoint {n : ℕ}
+    {K : MatrixEnd n}
+    (hK : IsSelfAdjoint K)
+    (ε : ℝ) :
+    IsSelfAdjoint ((NormedSpace.exp (ε • K) : MatrixEnd n)) := by
+  simpa using (modularStep_isSelfAdjoint (K := K) hK ε).exp
+
+/--
+For a self-adjoint modular Hamiltonian `K`, the operator Bregman remainder
+`exp (ε • K) - I - ε • K` is again self-adjoint.
+-/
+theorem exponentialRemainder_isSelfAdjoint {n : ℕ}
+    {K : MatrixEnd n}
+    (hK : IsSelfAdjoint K)
+    (ε : ℝ) :
+    IsSelfAdjoint (exponentialRemainder K ε) := by
+  have hExp : IsSelfAdjoint ((NormedSpace.exp (ε • K) : MatrixEnd n)) :=
+    modularExponential_isSelfAdjoint (K := K) hK ε
+  have hOne : IsSelfAdjoint (1 : MatrixEnd n) :=
+    IsSelfAdjoint.one (MatrixEnd n)
+  have hStep : IsSelfAdjoint (ε • K : MatrixEnd n) :=
+    modularStep_isSelfAdjoint (K := K) hK ε
+  exact (hExp.sub hOne).sub hStep
+
+namespace MatrixModularHamiltonian
+
+/-- Operator-valued modular Bregman remainder attached to a Hamiltonian packet. -/
+noncomputable def exponentialRemainder {n : ℕ}
+    (H : MatrixModularHamiltonian n) (ε : ℝ) : MatrixEnd n :=
+  InfoGeometry.Analysis.BregmanAnalyticBound.exponentialRemainder H.K ε
+
+/-- The packet readout is the same noncommutative matrix expression. -/
+theorem exponentialRemainder_eq {n : ℕ}
+    (H : MatrixModularHamiltonian n) (ε : ℝ) :
+    H.exponentialRemainder ε =
+      (NormedSpace.exp (ε • H.K) : MatrixEnd n) - 1 - (ε • H.K : MatrixEnd n) :=
+  rfl
+
+/-- The operator-valued packet remainder is self-adjoint. -/
+theorem exponentialRemainder_isSelfAdjoint {n : ℕ}
+    (H : MatrixModularHamiltonian n) (ε : ℝ) :
+    IsSelfAdjoint (H.exponentialRemainder ε) :=
+  InfoGeometry.Analysis.BregmanAnalyticBound.exponentialRemainder_isSelfAdjoint
+    H.selfAdjoint ε
+
+end MatrixModularHamiltonian
 
 @[simp]
 theorem exponentialRemainder_zero {n : ℕ} (K : MatrixEnd n) :

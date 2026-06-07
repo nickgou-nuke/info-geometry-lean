@@ -1,4 +1,7 @@
 import InfoGeometry.Canonical.FormalPrimeRootSystem
+import InfoGeometry.Canonical.ConcreteHilbertCommutation
+import InfoGeometry.Canonical.CayleyBregmanBridge
+import InfoGeometry.Canonical.SouriauBostConnesClosureProofs
 import InfoGeometry.Canonical.PrimeCantorThermoYangBaxterBridge
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Canonical.DiracSea
@@ -14,6 +17,8 @@ This module is deliberately not an analytic zero-temperature convergence
 theorem.  It records the owner-backed pieces that already compile:
 
 * finite Boolean prime Weyl denominator identity;
+* finite reciprocal primon-product/evaluated-denominator identity;
+* algebraic tensor-factor separation for base/fiber operators;
 * Cayley critical-line/unit-circle readout through the prime Lee--Yang owner;
 * conditional RH readout through the existing witness-gated owner;
 * finite Yang--Baxter matrix readout;
@@ -26,6 +31,8 @@ crystallisation statement remain explicit closure debt below.
 -/
 
 noncomputable section
+
+open scoped Topology
 
 namespace InfoGeometry.Canonical.SouriauBostConnesTransition
 
@@ -102,13 +109,98 @@ theorem finite_weylDenominator_eq_alternatingSum
   finite_prime_weyl_denominator bulk.rootLattice bulk.thermalRootVariable
 
 /--
-The analytic inverse Euler-product partition readout is not the same object as
-the finite Weyl denominator; the currently verified finite statement is the
-denominator/alternating-supertrace identity above.
+The finite inverse Euler-product partition readout is the reciprocal of the
+evaluated finite Weyl denominator.  This is still only the finite cutoff
+statement, not the analytic Bost--Connes zeta partition theorem.
 -/
 @[rep_depth thermo, capstone]
+theorem finite_primonPartition_eq_inverse_evaluatedWeylDenominator
+    (bulk : BulkState) :
+    finitePrimonPartition bulk.rootLattice bulk.beta =
+      (evaluatedWeylDenominator bulk.rootLattice bulk.beta)⁻¹ :=
+  finitePrimonPartition_eq_evaluatedWeylDenominator_inv bulk.rootLattice bulk.beta
+
+/-- Same finite partition readout in conventional `p^{-β}` variables. -/
+@[rep_depth thermo, capstone]
+theorem finite_primonPartition_eq_rpowProduct
+    (bulk : BulkState) :
+    finitePrimonPartition bulk.rootLattice bulk.beta =
+      ∏ p ∈ bulk.primes, (1 - (p : ℝ) ^ (-bulk.beta))⁻¹ :=
+  finitePrimonPartition_eq_rpowProduct bulk.rootLattice bulk.beta
+
+/-- Remaining analytic debt after the finite reciprocal product has been proved. -/
+@[rep_depth thermo, capstone]
 def inverseEulerProductIdentificationDebt : String :=
-  "Construct and prove the reciprocal finite partition relation separately from the Weyl denominator."
+  "Finite reciprocal product proved; extend it to the analytic inverse Euler-product partition theorem."
+
+/-- Remaining analytic Bost--Connes owner debt after the finite cutoff identity. -/
+@[rep_depth thermo, capstone]
+def analyticBostConnesPartitionDebt : String :=
+  "Extend the finite reciprocal primon product to the analytic Bost-Connes partition theorem."
+
+/-- Remaining Hilbert-space completion debt after algebraic tensor separation. -/
+@[rep_depth thermo, capstone]
+def hilbertCompletionTensorSeparationDebt : String :=
+  "Lift the algebraic/PiLp Cuntz tensor separation to bounded operators on the Hilbert completion."
+
+/--
+Algebraic tensor-factor separation for the Cuntz-base/fiber split.
+
+This closes the purely algebraic identity
+`(S ⊗ id) (id ⊗ K) = (id ⊗ K) (S ⊗ id)`.  The bounded Hilbert-completion
+version remains in `ConcreteHilbertCommutation` as explicit closure debt.
+-/
+@[rep_depth thermo, capstone]
+theorem algebraic_tensor_factor_separation
+    {V W : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
+    (S : V →ₗ[ℝ] V) (K : W →ₗ[ℝ] W) :
+    (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)).comp
+        (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K) =
+      (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K).comp
+        (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)) :=
+  ConcreteHilbertCommutation.tensorFactorSeparation S K
+
+/--
+The real thermal-ray Cayley compactification reaches the boundary point `1` as
+`β -> +∞`.  This is the scalar compactification coordinate only; it does not
+identify the zero-temperature state accumulation set.
+-/
+@[rep_depth thermo, capstone]
+theorem thermal_cayley_tendsto_boundary_one :
+    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1) :=
+  Cayley.thermalCayley_tendsto_atTop_one
+
+/-- Remaining zero-temperature state-space debt after the real Cayley coordinate limit. -/
+@[rep_depth thermo, capstone]
+def zeroTemperatureCantorAccumulationDebt : String :=
+  "Identify zero-temperature state accumulation with the Cantor boundary and construct its label map."
+
+/-- The concrete canonical V4-sewn Pauli boundary state has zero chiral index. -/
+@[rep_depth thermo, capstone]
+theorem concrete_canonical_sewn_boundary_anomaly_free :
+    SouriauBostConnesClosureProofs.sewnChiralIndex
+        SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0 :=
+  SouriauBostConnesClosureProofs.canonical_sewn_boundary_chiral_index_vanishes
+
+/-- Remaining categorical boundary-functor debt after the finite label readout. -/
+@[rep_depth thermo, capstone]
+def cuntzFibonacciBoundaryFunctorDebt : String :=
+  "Construct the Cuntz-to-Fibonacci boundary functor, not just a finite label readout."
+
+/-- Remaining categorical owner debt for Fibonacci coherence. -/
+@[rep_depth thermo, capstone]
+def categoricalFibonacciCoherenceDebt : String :=
+  "Prove categorical Fibonacci pentagon and hexagon coherence in the categorical owner file."
+
+/-- Remaining full boundary anomaly debt after the concrete finite Pauli state. -/
+@[rep_depth thermo, capstone]
+def fullCantorBoundaryAnomalyLiftDebt : String :=
+  "Lift the concrete finite V4-sewn Pauli boundary state to the full Cantor/Hilbert boundary state."
+
+/-- Remaining quarantine debt for legacy anomaly surfaces. -/
+@[rep_depth thermo, capstone]
+def legacyKleinBottleQuarantineDebt : String :=
+  "Retire or quarantine legacy axiom-based KleinBottleSewing surfaces in favor of concrete closure owners."
 
 /-- Cayley compactification sends the critical line exactly to the unit circle. -/
 @[rep_depth thermo, capstone]
@@ -186,6 +278,14 @@ structure VerifiedTransitionMatrix (bulk : BulkState) where
   denominator_identity :
     weylDenominatorProduct bulk.rootLattice bulk.thermalRootVariable =
       weylAlternatingSum bulk.rootLattice bulk.thermalRootVariable
+  reciprocal_partition_identity :
+    finitePrimonPartition bulk.rootLattice bulk.beta =
+      (evaluatedWeylDenominator bulk.rootLattice bulk.beta)⁻¹
+  thermal_cayley_boundary_limit :
+    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1)
+  canonical_sewn_boundary_anomaly_free :
+    SouriauBostConnesClosureProofs.sewnChiralIndex
+        SouriauBostConnesClosureProofs.canonicalSewnBoundaryState = 0
   yang_baxter_parameters :
     YangBaxterProof.q ^ 5 = -1 ∧
       YangBaxterProof.τ ^ 2 + YangBaxterProof.τ = 1
@@ -204,6 +304,10 @@ structure VerifiedTransitionMatrix (bulk : BulkState) where
 @[rep_depth thermo, capstone]
 def verifiedTransitionMatrix (bulk : BulkState) : VerifiedTransitionMatrix bulk where
   denominator_identity := finite_weylDenominator_eq_alternatingSum bulk
+  reciprocal_partition_identity :=
+    finite_primonPartition_eq_inverse_evaluatedWeylDenominator bulk
+  thermal_cayley_boundary_limit := thermal_cayley_tendsto_boundary_one
+  canonical_sewn_boundary_anomaly_free := concrete_canonical_sewn_boundary_anomaly_free
   yang_baxter_parameters := yangBaxter_boundary_parameters
   fibonacci_identities := fibonacci_golden_ratio_identities
   rmatrix_phases := rmatrix_unitarity
@@ -247,11 +351,14 @@ theorem souriau_bost_connes_transition_verified
 @[rep_depth thermo, capstone]
 def openClosureDebt : List String :=
   [ "Construct the analytic Bost-Connes partition function in the repository owner lane."
-  , "Prove the reciprocal Euler-product partition relation separately from the finite Weyl denominator."
-  , "Prove the zero-temperature limit beta -> infinity as an analytic convergence theorem."
-  , "Construct the Cuntz-to-Fibonacci boundary functor, not just a finite label readout."
-  , "Prove categorical Fibonacci pentagon and hexagon coherence in the categorical owner file."
-  , "Construct the boundary state needed for a non-placeholder anomaly theorem."
+  , inverseEulerProductIdentificationDebt
+  , analyticBostConnesPartitionDebt
+  , hilbertCompletionTensorSeparationDebt
+  , zeroTemperatureCantorAccumulationDebt
+  , cuntzFibonacciBoundaryFunctorDebt
+  , categoricalFibonacciCoherenceDebt
+  , fullCantorBoundaryAnomalyLiftDebt
+  , legacyKleinBottleQuarantineDebt
   ]
 
 /-- The capstone still has explicit open debt; it is not an analytic closure theorem. -/

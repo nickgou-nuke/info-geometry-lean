@@ -30,11 +30,11 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 **The Chiral Pseudoscalar.** Γ in Cl(p,q) commutes with all even-graded elements.
 -/
 structure ChiralPseudoscalar where
-  Gamma : EndH
+  Gamma : H₂ →L[ℝ] H₂
   Gamma_sq : Gamma.comp Gamma = ContinuousLinearMap.id ℝ H₂
   /- Γ commutes with even-grade elements: B (boost), J (complex structure) -/
   commutes_with_modular : Gamma.comp (modularHamiltonian (E := E))
-                       = (modularHamiltonian (E := E)).comp Gamma
+                      = (modularHamiltonian (E := E)).comp Gamma
 
 variable (Chi : ChiralPseudoscalar)
 
@@ -79,10 +79,37 @@ theorem thermal_chiral_conservation (θ : ℝ) :
   have h_comm : Chi.Gamma.comp (modularHamiltonian (E := E))
               = (modularHamiltonian (E := E)).comp Chi.Gamma :=
     Chi.commutes_with_modular
+  -- P_+ = (I + Γ)/2.  For any vector x:
+  -- P_+·(c·I+s·B)·x = (I+Γ)/2·(c·x + s·B·x)
+  --   = (c·x + c·Γ·x + s·B·x + s·Γ·B·x)/2
+  --   = (c·x + c·Γ·x + s·B·x + s·B·Γ·x)/2  (since Γ·B = B·Γ)
+  --   = (c·I + s·B)·(I+Γ)/2·x
+  --   = unruhFlow·P_+ · x
   ext x
-  -- For any vector x in the doubled space, evaluate both sides
-  simp [ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, h_comm, mul_comm, add_comm, add_left_comm, add_assoc]
+  simp only [ContinuousLinearMap.comp_apply,
+    ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    ContinuousLinearMap.id_apply]
+  -- Now we have: (1/2) * (c·x + s·B·x + c·Γ·x + s·Γ·(B·x))
+  --             = (1/2) * (c·x + s·B·x + c·Γ·x + s·B·(Γ·x))
+  -- Cancel (1/2): need s·Γ·(B·x) = s·B·(Γ·x) ⇔ Γ·B = B·Γ
+  have h_app : ∀ y : H₂, Chi.Gamma (modularHamiltonian (E := E) y)
+                       = modularHamiltonian (E := E) (Chi.Gamma y) := by
+    intro y
+    calc
+      Chi.Gamma (modularHamiltonian (E := E) y)
+          = (Chi.Gamma.comp (modularHamiltonian (E := E))) y := rfl
+      _ = ((modularHamiltonian (E := E)).comp Chi.Gamma) y := by rw [h_comm]
+      _ = modularHamiltonian (E := E) (Chi.Gamma y) := rfl
+  -- Now the two sides are equal after applying h_app to B·x
+  have h_key : (Real.sinh θ)* Chi.Gamma (modularHamiltonian (E := E) x) =
+              (Real.sinh θ)* modularHamiltonian (E := E) (Chi.Gamma x) := by
+    rw [h_app x]
+  -- The full expression simplifies:
+  -- (c·x + s·Bx + c·Γx + s·Γ(Bx))/2  vs  (c·x + s·Bx + c·Γx + s·B(Γx))/2
+  -- which are equal because Γ(Bx) = B(Γx) (h_app x)
+  -- Done by ring normalization with h_app substitution
+  ring_nf
+  simp [h_app x]
 
 /--
 **Corollary**: The Drazin anomaly index is thermally protected.

@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Canonical.BregmanDeformation
 
 open Matrix
@@ -33,9 +34,17 @@ checked by the kernel.]
 * `scalar_rotation_remainder_abs_sum_le_sq`
 * `closedFormPhaseAxisRemainder_entry_bound`
 * `closedFormPhaseAxisRemainder_entryMax_bound`
+* `dikinOmega_zero`
+* `dikinOmegaStar_zero`
+* `dikinOmega_nonneg_of_nonneg`
+* `dikinOmegaStar_nonneg_of_lt_one`
+* `bregman_nonneg_of_dikin_envelope`
+* `dikin_sandwich_of_selfConcordant_envelope`
+* `bregman_zero_of_dikin_envelope_radius_zero`
 * `phase_axis_norm_bound_of_closed_exp`
 * `phase_axis_deformation_bounded_of_quadratic_bound`
 * `dikin_bound_of_phase_axis_norm`
+* `matrix_bregman_size_le_dikin_radius_sq_of_quadratic_bound`
 * `bregman_bound_clears_at_flat_boundary`
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
@@ -75,6 +84,112 @@ namespace InfoGeometry.Analysis.BregmanAnalyticBound
 
 abbrev MatrixEnd (n : ℕ) :=
   Matrix (Fin n) (Fin n) ℂ
+
+/-! ## Dikin envelope for self-concordant Bregman divergences -/
+
+/--
+The lower Nesterov--Nemirovski Dikin envelope
+`ω(t) = t - log (1 + t)`.
+-/
+noncomputable def dikinOmega (t : ℝ) : ℝ :=
+  t - Real.log (1 + t)
+
+/--
+The upper Nesterov--Nemirovski Dikin envelope
+`ω*(t) = -t - log (1 - t)`, used for local radii `t < 1`.
+-/
+noncomputable def dikinOmegaStar (t : ℝ) : ℝ :=
+  -t - Real.log (1 - t)
+
+@[simp]
+theorem dikinOmega_zero :
+    dikinOmega 0 = 0 := by
+  simp [dikinOmega]
+
+@[simp]
+theorem dikinOmegaStar_zero :
+    dikinOmegaStar 0 = 0 := by
+  simp [dikinOmegaStar]
+
+/-- `ω(t)` is nonnegative on nonnegative local radii. -/
+theorem dikinOmega_nonneg_of_nonneg {t : ℝ}
+    (ht : 0 ≤ t) :
+    0 ≤ dikinOmega t := by
+  have hpos : 0 < 1 + t := by linarith
+  have hlog : Real.log (1 + t) ≤ (1 + t) - 1 :=
+    Real.log_le_sub_one_of_pos hpos
+  unfold dikinOmega
+  linarith
+
+/-- `ω*(t)` is nonnegative on its natural domain `t < 1`. -/
+theorem dikinOmegaStar_nonneg_of_lt_one {t : ℝ}
+    (ht : t < 1) :
+    0 ≤ dikinOmegaStar t := by
+  have hpos : 0 < 1 - t := by linarith
+  have hlog : Real.log (1 - t) ≤ (1 - t) - 1 :=
+    Real.log_le_sub_one_of_pos hpos
+  unfold dikinOmegaStar
+  linarith
+
+/--
+Self-concordant Dikin sandwich for a Bregman divergence `D` measured in a
+local Hessian radius `localRadius`.
+
+This is the repo's conservative bridge for self-concordant barriers: the
+analytic self-concordance proof supplies these three fields, and downstream
+matrix/IPM files consume only the resulting bounds.
+-/
+structure HasSelfConcordantDikinEnvelope {E : Type*}
+    (D : E → E → ℝ) (localRadius : E → E → ℝ) : Prop where
+  radius_nonneg : ∀ x y, 0 ≤ localRadius x y
+  lower : ∀ x y, dikinOmega (localRadius x y) ≤ D x y
+  upper : ∀ x y, localRadius x y < 1 →
+    D x y ≤ dikinOmegaStar (localRadius x y)
+
+/--
+A self-concordant Dikin envelope implies nonnegativity of the underlying
+Bregman divergence.
+-/
+theorem bregman_nonneg_of_dikin_envelope {E : Type*}
+    {D : E → E → ℝ} {localRadius : E → E → ℝ}
+    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
+    (x y : E) :
+    0 ≤ D x y := by
+  exact (dikinOmega_nonneg_of_nonneg (hsc.radius_nonneg x y)).trans
+    (hsc.lower x y)
+
+/--
+The canonical self-concordant local sandwich:
+`ω(r) ≤ D(x,y) ≤ ω*(r)` for Dikin radius `r < 1`.
+-/
+theorem dikin_sandwich_of_selfConcordant_envelope {E : Type*}
+    {D : E → E → ℝ} {localRadius : E → E → ℝ}
+    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
+    (x y : E)
+    (hsmall : localRadius x y < 1) :
+    dikinOmega (localRadius x y) ≤ D x y ∧
+      D x y ≤ dikinOmegaStar (localRadius x y) :=
+  ⟨hsc.lower x y, hsc.upper x y hsmall⟩
+
+/--
+If the Dikin radius vanishes on the diagonal, the Dikin sandwich forces the
+Bregman divergence to vanish there.
+-/
+theorem bregman_zero_of_dikin_envelope_radius_zero {E : Type*}
+    {D : E → E → ℝ} {localRadius : E → E → ℝ}
+    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
+    (x : E)
+    (hradius : localRadius x x = 0) :
+    D x x = 0 := by
+  have hsmall : localRadius x x < 1 := by
+    simp [hradius]
+  have hupper := hsc.upper x x hsmall
+  have hle : D x x ≤ 0 := by
+    simp [hradius] at hupper
+    exact hupper
+  have hge : 0 ≤ D x x :=
+    bregman_nonneg_of_dikin_envelope hsc x x
+  exact le_antisymm hle hge
 
 /-! ## Exponential remainder -/
 
@@ -349,6 +464,40 @@ representation.
 def HasQuadraticBregmanBound {n : ℕ} (K : MatrixEnd n) : Prop :=
   ∀ ε : ℝ, ε * ‖K‖ ≤ 1 →
     ‖exponentialRemainder K ε‖ ≤ ε ^ 2 * ‖K‖ ^ 2
+
+/-- Scalar size of the matrix Bregman exponential remainder. -/
+noncomputable def matrixBregmanSize {n : ℕ}
+    (K : MatrixEnd n) (ε : ℝ) : ℝ :=
+  ‖exponentialRemainder K ε‖
+
+/-- The local Dikin radius for a matrix phase-axis step `ε • K`. -/
+noncomputable def matrixDikinRadius {n : ℕ}
+    (K : MatrixEnd n) (ε : ℝ) : ℝ :=
+  ε * ‖K‖
+
+/-- The matrix Dikin radius is nonnegative for nonnegative steps. -/
+theorem matrixDikinRadius_nonneg_of_step_nonneg {n : ℕ}
+    (K : MatrixEnd n) {ε : ℝ}
+    (hε : 0 ≤ ε) :
+    0 ≤ matrixDikinRadius K ε := by
+  unfold matrixDikinRadius
+  exact mul_nonneg hε (norm_nonneg K)
+
+/--
+The parameterized quadratic matrix Bregman bound is exactly the Dikin
+radius-squared estimate.
+-/
+theorem matrix_bregman_size_le_dikin_radius_sq_of_quadratic_bound {n : ℕ}
+    (K : MatrixEnd n)
+    (hquad : HasQuadraticBregmanBound K)
+    (ε : ℝ)
+    (hε : ε * ‖K‖ ≤ 1) :
+    matrixBregmanSize K ε ≤ matrixDikinRadius K ε ^ 2 := by
+  have h := hquad ε hε
+  unfold matrixBregmanSize matrixDikinRadius
+  calc
+    ‖exponentialRemainder K ε‖ ≤ ε ^ 2 * ‖K‖ ^ 2 := h
+    _ = (ε * ‖K‖) ^ 2 := by ring
 
 /--
 Read back the quadratic Bregman estimate from an explicit theorem hypothesis.

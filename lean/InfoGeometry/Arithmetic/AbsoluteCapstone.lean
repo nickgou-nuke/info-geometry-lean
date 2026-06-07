@@ -5,6 +5,7 @@ import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
+import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.WeylCharacterEquivalence
 import InfoGeometry.Canonical.LogDetRadonNikodymMechanism
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
@@ -149,6 +150,7 @@ namespace InfoGeometry.Arithmetic.AbsoluteCapstone
 
 open InfoGeometry.Algebra.TensorAlgebraInduction
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
+open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.WeylCharacterEquivalence
 open InfoGeometry.Canonical.LogDetRadonNikodymMechanism
 open InfoGeometry.Canonical.CalabiYauBridge
@@ -170,8 +172,33 @@ inductive limit — the poset of finite stages under inclusion.
 Every theorem is a statement about the universal property of
 this colimit.
 -/
-theorem pillar_induction_is_colimit : True := by
-  trivial
+def inductionColimitPillar : Prop :=
+    InfoGeometry.Canonical.SplitCliffordJordanWigner.P *
+          InfoGeometry.Canonical.SplitCliffordJordanWigner.P =
+        (1 : InfoGeometry.Canonical.SplitCliffordSourceWickBase.M2R) ∧
+      InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a1 *
+            InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a2 +
+          InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a2 *
+            InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.a1 =
+        (0 : InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.M4R) ∧
+      (∀ k : ℕ,
+        DAG.GradedBottPeriodicity.stableStage k *
+            DAG.GradedBottPeriodicity.stableStage k = 0) ∧
+      (∀ chain₁ chain₂ : List InfoGeometry.Quantum.KitaevChain.KitaevCell.{0},
+        InfoGeometry.Quantum.KitaevChain.macroscopicVolume (chain₁ ++ chain₂) =
+          InfoGeometry.Quantum.KitaevChain.macroscopicVolume chain₁ *
+            InfoGeometry.Quantum.KitaevChain.macroscopicVolume chain₂) ∧
+      ∃ ε : DAG.AnalyticBridge.UHFAlgebra, ε * ε = 0
+
+theorem pillar_induction_is_colimit : inductionColimitPillar := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact InfoGeometry.Canonical.SplitCliffordJordanWigner.parity_sq_eq_one
+  · exact InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.jw_cross_annihilate_anticomm
+  · intro k
+    exact DAG.GradedBottPeriodicity.stableStage_sq k
+  · intro chain₁ chain₂
+    exact InfoGeometry.Quantum.KitaevChain.macroscopicVolume_append chain₁ chain₂
+  · exact DAG.AnalyticBridge.analytic_completion_has_nilpotent_lift
 
 /--
 **Pillar 2: Determinant = Radon-Nikodym.**
@@ -183,8 +210,20 @@ theorem pillar_induction_is_colimit : True := by
 The Fredholm determinant is the RN derivative. Proved in
 LogDetRadonNikodymMechanism.lean.
 -/
-theorem pillar_determinant_is_radon_nikodym : True := by
-  trivial
+theorem pillar_determinant_is_radon_nikodym
+    {A : Type*} [Monoid A] (vol : A →* ℝˣ) :
+    (∀ f g : A,
+        InfoGeometry.Volume.RadonNikodym.scalarRN vol (f * g) =
+          InfoGeometry.Volume.RadonNikodym.scalarRN vol f +
+            InfoGeometry.Volume.RadonNikodym.scalarRN vol g) ∧
+      (∀ f : A,
+        InfoGeometry.Volume.RadonNikodym.scalarRN vol f =
+          (InfoGeometry.Volume.RadonNikodym.exactBridgeOfVolumeCharacter vol).additiveInvariant f) := by
+  refine ⟨?_, ?_⟩
+  · intro f g
+    exact InfoGeometry.Volume.RadonNikodym.rn_chain_rule vol f g
+  · intro f
+    exact InfoGeometry.Volume.RadonNikodym.rn_eq_additiveInvariant vol f
 
 /--
 **Pillar 3: Monge-Ampère = Modular Operator.**
@@ -199,8 +238,23 @@ Monge-Ampère → Cramér-Rao bound (MongeAmpereCramerRao.lean)
 Cramér-Rao → Fisher information (information geometry)
 Fisher → Bregman divergence (SouriauModularBregmanOperator.lean)
 -/
-theorem pillar_monge_ampere_is_modular : True := by
-  trivial
+theorem pillar_monge_ampere_is_modular
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [FiniteDimensional ℝ E]
+    (n : Nat)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hSource :
+      InfoGeometry.Canonical.CalabiYauBridge.RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1)
+    (x : E) :
+    InfoGeometry.Canonical.MongeAmpereCramerRao.IncompressibleMongeAmpere Kgeo.H ∧
+      InfoGeometry.Canonical.MongeAmpereCramerRao.cramerRaoMetricVolumePotential Kgeo.H x = 0 := by
+  exact
+    ⟨InfoGeometry.Canonical.CalabiYauBridge.incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
+        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit,
+      InfoGeometry.Canonical.CalabiYauBridge.cramerRaoMetricVolumePotential_eq_zero_of_rnEntropySource_of_unitRelativeVolume
+        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit x⟩
 
 /--
 **Pillar 4: Weyl Character = Inverse Zeta.**
@@ -214,8 +268,14 @@ theorem pillar_monge_ampere_is_modular : True := by
 Proved in WeylCharacterEquivalence.lean and
 FormalPrimeRootSystem.lean.
 -/
-theorem pillar_weyl_character_is_inverse_zeta : True := by
-  trivial
+theorem pillar_weyl_character_is_inverse_zeta
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finitePrimonPartition L β = (evaluatedWeylDenominator L β)⁻¹ ∧
+      finitePrimonPartition L β =
+        ∏ p ∈ L.primes, (1 - (p : ℝ) ^ (-β))⁻¹ := by
+  exact
+    ⟨finitePrimonPartition_eq_evaluatedWeylDenominator_inv L β,
+      finitePrimonPartition_eq_rpowProduct L β⟩
 
 /--
 **Pillar 5: Symmetry Group = Ẑ^×.**
@@ -230,8 +290,13 @@ Acting on the Cantor boundary {0,1}^ℕ via the Cuntz isometries S_p.
 All partition functions Z_B, Z_F, Z_μ, Z_λ are characters of Ẑ^×
 evaluated at inverse temperature β. Proved in PrimonGasPartition.lean.
 -/
-theorem pillar_symmetry_is_zhat_cross : True := by
-  trivial
+def primonColimitIdeleSymmetryFormalizationDebt : String :=
+  "No Lean owner currently exposes an idèle/profinite-unit group action on the primon colimit; the available kernel-backed symmetry is finite Boolean Weyl data."
+
+theorem pillar_symmetry_available_boolean_weyl
+    (L : FormalPrimeRootLattice) (w : BooleanWeylGroup L) :
+    weylSign w = (-1 : ℝ) ^ w.support.card :=
+  rfl
 
 /--
 **The Absolute Capstone Theorem.**
@@ -251,7 +316,33 @@ is sealed.
 
 All proved or structurally wired across 8,443 jobs.
 -/
-theorem absolute_capstone : True := by
-  trivial
+theorem absolute_capstone
+    {A : Type*} [Monoid A] (vol : A →* ℝˣ)
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [FiniteDimensional ℝ E]
+    (n : Nat)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hSource :
+      InfoGeometry.Canonical.CalabiYauBridge.RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1)
+    (x : E)
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    inductionColimitPillar ∧
+      (∀ f g : A,
+        InfoGeometry.Volume.RadonNikodym.scalarRN vol (f * g) =
+          InfoGeometry.Volume.RadonNikodym.scalarRN vol f +
+            InfoGeometry.Volume.RadonNikodym.scalarRN vol g) ∧
+      (InfoGeometry.Canonical.MongeAmpereCramerRao.IncompressibleMongeAmpere Kgeo.H ∧
+        InfoGeometry.Canonical.MongeAmpereCramerRao.cramerRaoMetricVolumePotential Kgeo.H x = 0) ∧
+      (finitePrimonPartition L β = (evaluatedWeylDenominator L β)⁻¹ ∧
+        finitePrimonPartition L β =
+          ∏ p ∈ L.primes, (1 - (p : ℝ) ^ (-β))⁻¹) := by
+  exact
+    ⟨pillar_induction_is_colimit,
+      (pillar_determinant_is_radon_nikodym vol).1,
+      pillar_monge_ampere_is_modular (n := n) (Kgeo := Kgeo) (M := M)
+        hSource hUnit x,
+      pillar_weyl_character_is_inverse_zeta L β⟩
 
 end InfoGeometry.Arithmetic.AbsoluteCapstone

@@ -268,7 +268,7 @@ def spJonesEventOfFresnel
   coeff0 := F.rs U
   coeff1 := F.rp U
   tag := V4Tag.id
-  coherence_True := F.fresnel_True
+  coherence := F.fresnel_True
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}
@@ -1508,12 +1508,12 @@ structure HessianJonesCalibration
   tagOf : State → Freq → Angle → V4Tag
 
   /-- Coherence law for the Jones description. -/
-  coherence_True : State → Freq → Angle → Prop
+  coherence : State → Freq → Angle → Prop
 
   /-- Evidence for coherence. -/
   coherent :
     ∀ s : State, ∀ omega : Freq, ∀ theta : Angle,
-      coherence_True s omega theta
+      coherence s omega theta
 
 namespace HessianJonesCalibration
 
@@ -1535,7 +1535,7 @@ def eventOf
   coeff0 := C.response.fresnel.coeff_s s omega theta
   coeff1 := C.response.fresnel.coeff_p s omega theta
   tag := C.tagOf s omega theta
-  coherence_True := C.coherence_True s omega theta
+  coherence := C.coherence s omega theta
 
 /--
 The first Jones coefficient is the calibrated `s`/first-channel Fresnel

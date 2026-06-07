@@ -118,7 +118,7 @@ theorem d23_highPass_normSq (i : Fin 2) :
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_sum_normSq_eq_one :
     d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
-  d23HurwitzCliffordFilterBank.sum_normSq_eq_one_proof
+  d23HurwitzCliffordFilterBank.sum_normSq_eq_one_of_paraunitary
     d23HurwitzCliffordFilterBank_paraunitary
 
 /--

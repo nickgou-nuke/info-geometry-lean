@@ -18,6 +18,7 @@ complex material response, and branch choices are supplied by later models.
 -/
 
 import Mathlib
+import InfoGeometry.Optics.FiniteJonesModel
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
@@ -184,7 +185,183 @@ def IsMetalBranch
 
 end FresnelCoefficientDatum
 
-/-! ## 4. Operatorial Jones reflector -/
+/-! ## 4. Finite Jones compatibility surface -/
+
+/--
+Concrete `2 × 2` Jones matrices, re-exported from the finite Jones owner.
+
+Older operator-algebra modules use this name through `JonesCalibration`; the
+implementation remains owned by `Optics/FiniteJonesModel`.
+-/
+abbrev JonesMat :=
+  InfoGeometry.Optics.FiniteJonesModel.JonesMat
+
+/--
+Diagonal Jones matrix, re-exported from the finite Jones owner.
+-/
+def diagJones (a b : ℂ) : JonesMat :=
+  InfoGeometry.Optics.FiniteJonesModel.diagJones a b
+
+/-- `s`-channel projector, re-exported from the finite Jones owner. -/
+def sProjector : JonesMat :=
+  InfoGeometry.Optics.FiniteJonesModel.sProjector
+
+/-- `p`-channel projector, re-exported from the finite Jones owner. -/
+def pProjector : JonesMat :=
+  InfoGeometry.Optics.FiniteJonesModel.pProjector
+
+/-- Polarization basis used by the finite Jones event layer. -/
+inductive PolarizationBasis where
+  | sp
+  | circular
+deriving DecidableEq, Repr
+
+/-- Finite optical surface/event tags used by Jones event readouts. -/
+inductive OpticalSurfaceKind where
+  | abstract_
+  | brewsterProjection
+  | totalInternalReflection
+  | metalMirror
+  | chiralMedium
+deriving DecidableEq, Repr
+
+namespace OpticalSurfaceKind
+
+/-- Abstract optical surface tag. -/
+abbrev abstract : OpticalSurfaceKind :=
+  abstract_
+
+end OpticalSurfaceKind
+
+/-- Backwards-compatible V₄ tag name for finite Jones events. -/
+abbrev V4Tag :=
+  V4Label
+
+namespace V4Tag
+
+/-- Identity component. -/
+def id : V4Tag :=
+  V4Label.identity
+
+/-- Parity flip. -/
+def P : V4Tag :=
+  V4Label.P
+
+/-- Time flip. -/
+def T : V4Tag :=
+  V4Label.T
+
+/-- PT flip. -/
+def PT : V4Tag :=
+  V4Label.PT
+
+end V4Tag
+
+/--
+Finite Jones optical event.
+
+This is the compatibility event surface used by the finite operator-algebra
+readouts. The diagonal matrix is computed from the two event coefficients.
+-/
+structure JonesOpticalEvent where
+  basis : PolarizationBasis
+  kind : OpticalSurfaceKind
+  coeff0 : ℂ
+  coeff1 : ℂ
+  tag : V4Tag
+  coherence : Prop
+
+namespace JonesOpticalEvent
+
+/-- First channel coefficient. -/
+def firstCoeff (E : JonesOpticalEvent) : ℂ :=
+  E.coeff0
+
+/-- Second channel coefficient. -/
+def secondCoeff (E : JonesOpticalEvent) : ℂ :=
+  E.coeff1
+
+@[simp]
+theorem firstCoeff_eq (E : JonesOpticalEvent) :
+    E.firstCoeff = E.coeff0 :=
+  rfl
+
+@[simp]
+theorem secondCoeff_eq (E : JonesOpticalEvent) :
+    E.secondCoeff = E.coeff1 :=
+  rfl
+
+/-- The diagonal Jones matrix associated to an event. -/
+def jones (E : JonesOpticalEvent) : JonesMat :=
+  diagJones E.coeff0 E.coeff1
+
+@[simp]
+theorem jones_apply_same_zero (E : JonesOpticalEvent) :
+    E.jones 0 0 = E.coeff0 := by
+  simp [jones, diagJones]
+
+@[simp]
+theorem jones_apply_same_one (E : JonesOpticalEvent) :
+    E.jones 1 1 = E.coeff1 := by
+  simp [jones, diagJones]
+
+@[simp]
+theorem jones_apply_offdiag_zero_one (E : JonesOpticalEvent) :
+    E.jones 0 1 = 0 := by
+  simp [jones, diagJones]
+
+@[simp]
+theorem jones_apply_offdiag_one_zero (E : JonesOpticalEvent) :
+    E.jones 1 0 = 0 := by
+  simp [jones, diagJones]
+
+end JonesOpticalEvent
+
+/-- Brewster rank-collapse event predicate in the finite Jones surface. -/
+def IsBrewsterEvent (E : JonesOpticalEvent) : Prop :=
+  E.basis = PolarizationBasis.sp ∧
+    E.kind = OpticalSurfaceKind.brewsterProjection ∧
+    E.secondCoeff = 0 ∧
+    E.firstCoeff ≠ 0
+
+/-- Lossless diagonal retarder predicate. -/
+def IsLosslessRetarder (E : JonesOpticalEvent) : Prop :=
+  ‖E.coeff0‖ = 1 ∧ ‖E.coeff1‖ = 1
+
+/-- Diattenuating event predicate. -/
+def IsDiattenuating (E : JonesOpticalEvent) : Prop :=
+  ‖E.coeff0‖ ≠ ‖E.coeff1‖
+
+/-- Circular birefringence predicate. -/
+def IsCircularBirefringent (E : JonesOpticalEvent) : Prop :=
+  E.basis = PolarizationBasis.circular ∧
+    ‖E.coeff0‖ = 1 ∧
+    ‖E.coeff1‖ = 1
+
+/-- Circular dichroism predicate. -/
+def IsCircularDichroic (E : JonesOpticalEvent) : Prop :=
+  E.basis = PolarizationBasis.circular ∧
+    ‖E.coeff0‖ ≠ ‖E.coeff1‖
+
+namespace JonesOpticalEvent
+
+/-- Brewster events kill the second Jones channel. -/
+theorem brewster_secondCoeff_zero
+    (E : JonesOpticalEvent)
+    (hE : IsBrewsterEvent E) :
+    E.secondCoeff = 0 :=
+  hE.2.2.1
+
+/-- Brewster events have a nonzero first Jones channel. -/
+theorem brewster_firstCoeff_ne_zero
+    (E : JonesOpticalEvent)
+    (hE : IsBrewsterEvent E) :
+    E.firstCoeff ≠ 0 :=
+  hE.2.2.2
+
+end JonesOpticalEvent
+
+/-! ## 5. Operatorial Jones reflector -/
 
 /--
 The operatorial Jones reflection datum

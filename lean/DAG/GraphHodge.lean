@@ -68,8 +68,15 @@ def matIdentity (n : Nat) : Array (Array Rat) := Id.run do
     m := m.set! i (row.set! i (1 : Rat))
   return m
 
--- ============================================================
--- Coboundary operators  (δₖ = ∂ₖ₊₁ᵀ)
+/-- Two matrices are equal if they have the same dimensions and all entries match. -/
+def matEqual (a b : Array (Array Rat)) : Bool :=
+  if a.size != b.size then false else
+  Id.run do
+    for i in [:a.size] do
+      if a[i]!.size != b[i]!.size then return false
+      for j in [:a[i]!.size] do
+        if a[i]![j]! != b[i]![j]! then return false
+    return true
 -- ============================================================
 
 /-- Coboundary δ₀ : C⁰ → C¹, the transpose of ∂₁. -/
@@ -252,5 +259,41 @@ def hodgeSummary {α} [BEq α] [Hashable α] (tc : TwoComplex α) : HodgeSummary
     b1Hodge  := betti1Hodge tc
     traceΔ0  := matTrace (laplacian0 tc)
     diracDim := n0 + n1 }
+
+-- ============================================================
+-- Spectral invariant computational checks
+-- ============================================================
+
+/-- Check Δ₀ is self-adjoint: Δ₀ᵀ = Δ₀. Follows from (AᵀA)ᵀ = AᵀA. -/
+def laplacian0SelfAdjointCheck {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Bool :=
+  let L := laplacian0 tc
+  matEqual (matTranspose L) L
+
+/-- Check Δ₁ is self-adjoint: Δ₁ᵀ = Δ₁. -/
+def laplacian1SelfAdjointCheck {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Bool :=
+  let L := laplacian1 tc
+  matEqual (matTranspose L) L
+
+/-- Check D² = Δ₀ ⊕ (down-Δ₁) — the graph Lichnerowicz formula. -/
+def diracSquareCheck {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Bool := Id.run do
+  let d := graphDirac tc
+  let d2 := matMul d d
+  let n0 := tc.base.toGraph.nodes.size
+  let n1 := tc.edges.size
+  let b1 := boundary1 tc
+  let b1t := matTranspose b1
+  let expected00 := matMul b1t b1
+  let expected11 := matMul b1 b1t
+  let mut ok := true
+  for i in [:n0] do
+    for j in [:n0] do
+      if d2[i]![j]! != expected00[i]![j]! then ok := false
+  for i in [:n1] do
+    for j in [:n1] do
+      if d2[n0 + i]![n0 + j]! != expected11[i]![j]! then ok := false
+  for i in [:n0] do
+    for j in [:n1] do
+      if d2[i]![n0 + j]! != 0 || d2[n0 + j]![i]! != 0 then ok := false
+  return ok
 
 end DAG

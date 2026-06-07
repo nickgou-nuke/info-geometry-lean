@@ -83,6 +83,13 @@ structure ParaunitaryCliffordFilterBank where
     (∀ i : index.Index, coeffs.normSq (lowPass i) = (1 / 2 : ℝ)) ∧
     (∀ i : index.Index, coeffs.normSq (highPass i) = (1 / 2 : ℝ))
 
+/-- The concrete two-channel normalization law carried by a filter bank. -/
+@[rep_depth operator]
+def ParaunitaryCliffordFilterBank.normalizedBranches
+    (F : ParaunitaryCliffordFilterBank) : Prop :=
+  (∀ i : F.index.Index, F.coeffs.normSq (F.lowPass i) = (1 / 2 : ℝ)) ∧
+  (∀ i : F.index.Index, F.coeffs.normSq (F.highPass i) = (1 / 2 : ℝ))
+
 /-- Perfect reconstruction readout carried by the paraunitary law. -/
 @[rep_depth operator]
 def ParaunitaryCliffordFilterBank.perfectReconstruction
@@ -95,18 +102,41 @@ def ParaunitaryCliffordFilterBank.energyPreservation
     (F : ParaunitaryCliffordFilterBank) : Prop :=
   F.paraunitary
 
-/-- Sum norm-square readout carried by the paraunitary law. -/
+/--
+Sum norm-square readout: for each index `i`, the low-pass and high-pass
+coefficient norm-squares add to 1.
+-/
 @[rep_depth operator]
 def ParaunitaryCliffordFilterBank.sum_normSq_eq_one
     (F : ParaunitaryCliffordFilterBank) : Prop :=
-  F.paraunitary
+  ∀ i : F.index.Index,
+    F.coeffs.normSq (F.lowPass i) + F.coeffs.normSq (F.highPass i) = (1 : ℝ)
 
-/-- Convert paraunitarity to the sum norm-square readout. -/
+/-- Convert the concrete branch-normalization law to the pointwise sum readout. -/
+@[rep_depth operator]
+theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_normalizedBranches
+    (F : ParaunitaryCliffordFilterBank)
+    (h : F.normalizedBranches) :
+    F.sum_normSq_eq_one := by
+  rcases h with ⟨hl, hh⟩
+  intro i
+  calc
+    F.coeffs.normSq (F.lowPass i) + F.coeffs.normSq (F.highPass i)
+        = (1 / 2 : ℝ) + (1 / 2 : ℝ) := by
+      simp [hl i, hh i]
+    _ = (1 : ℝ) := by ring
+
+/--
+Backward-compatible theorem name.  The argument is the explicit
+branch-normalization law; an arbitrary stored `F.paraunitary : Prop` is not
+unfolded as data.
+-/
 @[rep_depth operator]
 theorem ParaunitaryCliffordFilterBank.sum_normSq_eq_one_of_paraunitary
-    (F : ParaunitaryCliffordFilterBank) :
-    F.paraunitary → F.sum_normSq_eq_one :=
-  id
+    (F : ParaunitaryCliffordFilterBank)
+    (h : F.normalizedBranches) :
+    F.sum_normSq_eq_one :=
+  F.sum_normSq_eq_one_of_normalizedBranches h
 
 /-- Extract the owned perfect-reconstruction certificate from paraunitarity. -/
 @[rep_depth operator]

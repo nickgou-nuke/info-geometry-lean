@@ -6,6 +6,9 @@
 > Rule: do not describe this lane as an analytic zero-temperature
 > Bost-Connes crystallization theorem until the open closure debt in the owner
 > module is proved in Lean.
+>
+> Mathematical capstone target:
+> `docs/SOURIAU_BOST_CONNES_CAPSTONE_DEBT.md`
 
 ## What Is Verified
 

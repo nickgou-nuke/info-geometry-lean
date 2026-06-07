@@ -13,6 +13,7 @@ import InfoGeometry.Convex.SelfDualCone
 import InfoGeometry.Convex.SpinFactorHessian
 import InfoGeometry.Convex.EuclideanMonotonicity
 import InfoGeometry.Convex.SelfConcordantLogBarrier
+import InfoGeometry.Convex.SelfConcordantBarrier
 import InfoGeometry.Convex.InductiveBarrierOptimization
 
 namespace InfoGeometry

@@ -1,4 +1,5 @@
 import InfoGeometry.Dynamics.RindlerWedge
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic
 
@@ -28,6 +29,51 @@ abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 def modularHamiltonian : Mat2C :=
   !![(1 : ℂ), 0;
      0, -1]
+
+/-- The finite diagonal modular Hamiltonian is Hermitian. -/
+@[simp]
+theorem modularHamiltonian_conjTranspose :
+    modularHamiltonianᴴ = modularHamiltonian := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [modularHamiltonian]
+
+/-- The finite diagonal modular Hamiltonian is self-adjoint as an operator. -/
+theorem modularHamiltonian_isSelfAdjoint :
+    IsSelfAdjoint modularHamiltonian := by
+  rw [isSelfAdjoint_iff, Matrix.star_eq_conjTranspose]
+  exact modularHamiltonian_conjTranspose
+
+/--
+The operator-valued Bregman remainder of the finite self-adjoint modular
+Hamiltonian:
+
+`exp (ε • K) - I - ε • K`, with `K = modularHamiltonian`.
+-/
+noncomputable def modularHamiltonianBregmanRemainder (ε : ℝ) : Mat2C :=
+  (NormedSpace.exp (ε • modularHamiltonian) : Mat2C) - 1
+    - (ε • modularHamiltonian : Mat2C)
+
+/-- A real step along the finite modular Hamiltonian remains self-adjoint. -/
+theorem modularHamiltonian_step_isSelfAdjoint (ε : ℝ) :
+    IsSelfAdjoint (ε • modularHamiltonian : Mat2C) := by
+  rw [isSelfAdjoint_iff, star_smul, modularHamiltonian_isSelfAdjoint.star_eq]
+  simp
+
+/-- The matrix exponential of the finite self-adjoint modular step is self-adjoint. -/
+theorem modularHamiltonian_exp_isSelfAdjoint (ε : ℝ) :
+    IsSelfAdjoint ((NormedSpace.exp (ε • modularHamiltonian) : Mat2C)) := by
+  simpa using (modularHamiltonian_step_isSelfAdjoint ε).exp
+
+/-- The finite modular-Hamiltonian Bregman remainder is self-adjoint. -/
+theorem modularHamiltonianBregmanRemainder_isSelfAdjoint (ε : ℝ) :
+    IsSelfAdjoint (modularHamiltonianBregmanRemainder ε) := by
+  have hExp : IsSelfAdjoint ((NormedSpace.exp (ε • modularHamiltonian) : Mat2C)) :=
+    modularHamiltonian_exp_isSelfAdjoint ε
+  have hOne : IsSelfAdjoint (1 : Mat2C) :=
+    IsSelfAdjoint.one Mat2C
+  have hStep : IsSelfAdjoint (ε • modularHamiltonian : Mat2C) :=
+    modularHamiltonian_step_isSelfAdjoint ε
+  exact (hExp.sub hOne).sub hStep
 
 /-- Imaginary-time Gibbs weight `exp(-β H)`. -/
 def imaginaryTimeEvolution (β : ℂ) : Mat2C :=

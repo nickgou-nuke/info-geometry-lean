@@ -325,6 +325,7 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.ConnesArakiCore
 import InfoGeometry.Canonical.ConnesArakiTomita
 import InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge
+import InfoGeometry.Canonical.CyclicCocycleTwistedSectors
 import InfoGeometry.Canonical.CoordinateFreeSecondVariation
 import InfoGeometry.Canonical.CoordinatelessSouriauCocycleFisherBridge
 import InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge

@@ -38,9 +38,9 @@ checked by the kernel.]
 * `dikinOmegaStar_zero`
 * `dikinOmega_nonneg_of_nonneg`
 * `dikinOmegaStar_nonneg_of_lt_one`
-* `bregman_nonneg_of_dikin_envelope`
-* `dikin_sandwich_of_selfConcordant_envelope`
-* `bregman_zero_of_dikin_envelope_radius_zero`
+* `matrix_bregman_nonneg_of_dikin_envelope`
+* `matrix_dikin_sandwich_of_selfConcordant_envelope`
+* `matrix_bregman_zero_of_dikin_envelope_radius_zero`
 * `phase_axis_norm_bound_of_closed_exp`
 * `phase_axis_deformation_bounded_of_quadratic_bound`
 * `dikin_bound_of_phase_axis_norm`
@@ -85,7 +85,7 @@ namespace InfoGeometry.Analysis.BregmanAnalyticBound
 abbrev MatrixEnd (n : ℕ) :=
   Matrix (Fin n) (Fin n) ℂ
 
-/-! ## Dikin envelope for self-concordant Bregman divergences -/
+/-! ## Matrix Dikin envelope for self-concordant Bregman divergences -/
 
 /--
 The lower Nesterov--Nemirovski Dikin envelope
@@ -132,15 +132,16 @@ theorem dikinOmegaStar_nonneg_of_lt_one {t : ℝ}
   linarith
 
 /--
-Self-concordant Dikin sandwich for a Bregman divergence `D` measured in a
-local Hessian radius `localRadius`.
+Self-concordant Dikin sandwich for a matrix Bregman divergence `D` measured in
+a local Hessian radius `localRadius`.
 
 This is the repo's conservative bridge for self-concordant barriers: the
 analytic self-concordance proof supplies these three fields, and downstream
 matrix/IPM files consume only the resulting bounds.
 -/
-structure HasSelfConcordantDikinEnvelope {E : Type*}
-    (D : E → E → ℝ) (localRadius : E → E → ℝ) : Prop where
+structure HasMatrixSelfConcordantDikinEnvelope {n : ℕ}
+    (D : MatrixEnd n → MatrixEnd n → ℝ)
+    (localRadius : MatrixEnd n → MatrixEnd n → ℝ) : Prop where
   radius_nonneg : ∀ x y, 0 ≤ localRadius x y
   lower : ∀ x y, dikinOmega (localRadius x y) ≤ D x y
   upper : ∀ x y, localRadius x y < 1 →
@@ -148,12 +149,13 @@ structure HasSelfConcordantDikinEnvelope {E : Type*}
 
 /--
 A self-concordant Dikin envelope implies nonnegativity of the underlying
-Bregman divergence.
+matrix Bregman divergence.
 -/
-theorem bregman_nonneg_of_dikin_envelope {E : Type*}
-    {D : E → E → ℝ} {localRadius : E → E → ℝ}
-    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
-    (x y : E) :
+theorem matrix_bregman_nonneg_of_dikin_envelope {n : ℕ}
+    {D : MatrixEnd n → MatrixEnd n → ℝ}
+    {localRadius : MatrixEnd n → MatrixEnd n → ℝ}
+    (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
+    (x y : MatrixEnd n) :
     0 ≤ D x y := by
   exact (dikinOmega_nonneg_of_nonneg (hsc.radius_nonneg x y)).trans
     (hsc.lower x y)
@@ -162,10 +164,11 @@ theorem bregman_nonneg_of_dikin_envelope {E : Type*}
 The canonical self-concordant local sandwich:
 `ω(r) ≤ D(x,y) ≤ ω*(r)` for Dikin radius `r < 1`.
 -/
-theorem dikin_sandwich_of_selfConcordant_envelope {E : Type*}
-    {D : E → E → ℝ} {localRadius : E → E → ℝ}
-    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
-    (x y : E)
+theorem matrix_dikin_sandwich_of_selfConcordant_envelope {n : ℕ}
+    {D : MatrixEnd n → MatrixEnd n → ℝ}
+    {localRadius : MatrixEnd n → MatrixEnd n → ℝ}
+    (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
+    (x y : MatrixEnd n)
     (hsmall : localRadius x y < 1) :
     dikinOmega (localRadius x y) ≤ D x y ∧
       D x y ≤ dikinOmegaStar (localRadius x y) :=
@@ -173,12 +176,13 @@ theorem dikin_sandwich_of_selfConcordant_envelope {E : Type*}
 
 /--
 If the Dikin radius vanishes on the diagonal, the Dikin sandwich forces the
-Bregman divergence to vanish there.
+matrix Bregman divergence to vanish there.
 -/
-theorem bregman_zero_of_dikin_envelope_radius_zero {E : Type*}
-    {D : E → E → ℝ} {localRadius : E → E → ℝ}
-    (hsc : HasSelfConcordantDikinEnvelope D localRadius)
-    (x : E)
+theorem matrix_bregman_zero_of_dikin_envelope_radius_zero {n : ℕ}
+    {D : MatrixEnd n → MatrixEnd n → ℝ}
+    {localRadius : MatrixEnd n → MatrixEnd n → ℝ}
+    (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
+    (x : MatrixEnd n)
     (hradius : localRadius x x = 0) :
     D x x = 0 := by
   have hsmall : localRadius x x < 1 := by
@@ -188,7 +192,7 @@ theorem bregman_zero_of_dikin_envelope_radius_zero {E : Type*}
     simp [hradius] at hupper
     exact hupper
   have hge : 0 ≤ D x x :=
-    bregman_nonneg_of_dikin_envelope hsc x x
+    matrix_bregman_nonneg_of_dikin_envelope hsc x x
   exact le_antisymm hle hge
 
 /-! ## Exponential remainder -/

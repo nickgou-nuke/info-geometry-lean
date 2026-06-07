@@ -66,6 +66,79 @@ def rootThermalVariable (_L : FormalPrimeRootLattice) (x : ℕ → ℝ) (p : ℕ
 def weylDenominatorProduct (L : FormalPrimeRootLattice) (x : ℕ → ℝ) : ℝ :=
   ∏ p ∈ L.primes, (1 - rootThermalVariable L x p)
 
+/-- Boltzmann evaluation of the formal prime root variable `e^{-β log p}`. -/
+@[rep_depth thermo]
+noncomputable def boltzmannRootVariable (β : ℝ) (p : ℕ) : ℝ :=
+  Real.exp (-β * Real.log (p : ℝ))
+
+/-- Finite primon partition product over a prime cutoff. -/
+@[rep_depth thermo]
+noncomputable def finitePrimonPartition (L : FormalPrimeRootLattice) (β : ℝ) : ℝ :=
+  ∏ p ∈ L.primes, (1 - boltzmannRootVariable β p)⁻¹
+
+/-- Evaluated finite Weyl denominator at the Boltzmann prime root variable. -/
+@[rep_depth thermo]
+noncomputable def evaluatedWeylDenominator (L : FormalPrimeRootLattice) (β : ℝ) : ℝ :=
+  weylDenominatorProduct L (boltzmannRootVariable β)
+
+/-- The Boltzmann root variable is the real power `p^{-β}` for positive `p`. -/
+@[rep_depth thermo]
+theorem boltzmannRootVariable_eq_rpow_of_pos
+    (β : ℝ) {p : ℕ} (hp : 0 < (p : ℝ)) :
+    boltzmannRootVariable β p = (p : ℝ) ^ (-β) := by
+  unfold boltzmannRootVariable
+  rw [Real.rpow_def_of_pos hp]
+  congr 1
+  ring
+
+/-- The Boltzmann root variable is `p^{-β}` on every prime mode of the cutoff. -/
+@[rep_depth thermo]
+theorem boltzmannRootVariable_eq_rpow_of_mem
+    (L : FormalPrimeRootLattice) (β : ℝ) {p : ℕ} (hp : p ∈ L.primes) :
+    boltzmannRootVariable β p = (p : ℝ) ^ (-β) := by
+  exact boltzmannRootVariable_eq_rpow_of_pos β
+    (by exact_mod_cast Nat.Prime.pos (L.prime_mem p hp))
+
+/--
+Finite reciprocal Weyl/Euler product identity.
+
+This is the closed finite cutoff statement: the primon product is exactly the
+inverse of the evaluated Boolean `A₁^P` Weyl denominator.
+-/
+@[rep_depth thermo]
+theorem finitePrimonPartition_eq_evaluatedWeylDenominator_inv
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finitePrimonPartition L β = (evaluatedWeylDenominator L β)⁻¹ := by
+  unfold finitePrimonPartition evaluatedWeylDenominator weylDenominatorProduct
+    rootThermalVariable
+  exact
+    (Finset.prod_inv_distrib
+      (s := L.primes) (f := fun p : ℕ => 1 - boltzmannRootVariable β p))
+
+/--
+Finite primon product written in the conventional `p^{-β}` variables.
+-/
+@[rep_depth thermo]
+theorem finitePrimonPartition_eq_rpowProduct
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finitePrimonPartition L β =
+      ∏ p ∈ L.primes, (1 - (p : ℝ) ^ (-β))⁻¹ := by
+  unfold finitePrimonPartition
+  refine Finset.prod_congr rfl ?_
+  intro p hp
+  rw [boltzmannRootVariable_eq_rpow_of_mem L β hp]
+
+/--
+The reciprocal Weyl denominator is the conventional finite primon Euler product.
+-/
+@[rep_depth thermo]
+theorem rpowProduct_eq_evaluatedWeylDenominator_inv
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    (∏ p ∈ L.primes, (1 - (p : ℝ) ^ (-β))⁻¹) =
+      (evaluatedWeylDenominator L β)⁻¹ := by
+  rw [← finitePrimonPartition_eq_rpowProduct L β]
+  exact finitePrimonPartition_eq_evaluatedWeylDenominator_inv L β
+
 /-- Alternating subset expansion `∑_{S⊆P} (-1)^{|S|} ∏_{p∈S} e^{-α_p}`. -/
 @[rep_depth thermo]
 def weylAlternatingSum (L : FormalPrimeRootLattice) (x : ℕ → ℝ) : ℝ :=

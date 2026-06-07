@@ -61,6 +61,54 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.ConcreteHilbertCommutation
 
+open scoped TensorProduct
+
+section AlgebraicTensorSeparation
+
+variable {V W : Type*}
+variable [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
+
+/--
+Algebraic tensor-factor separation.
+
+If `S` acts on the Cantor/base factor and `K` acts on the doubled fiber factor,
+then the two extended endomorphisms commute on the algebraic tensor product.
+Both composites are the tensor map `S ⊗ K`.
+-/
+@[rep_depth operator]
+theorem tensorFactorSeparation_left_eq_tensorMap
+    (S : V →ₗ[ℝ] V) (K : W →ₗ[ℝ] W) :
+    (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)).comp
+        (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K) =
+      TensorProduct.map S K := by
+  exact TensorProduct.ext' (fun v w => by simp [LinearMap.comp_apply])
+
+/--
+Right-then-left tensor-factor separation.  This is the same `S ⊗ K` map.
+-/
+@[rep_depth operator]
+theorem tensorFactorSeparation_right_eq_tensorMap
+    (S : V →ₗ[ℝ] V) (K : W →ₗ[ℝ] W) :
+    (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K).comp
+        (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)) =
+      TensorProduct.map S K := by
+  exact TensorProduct.ext' (fun v w => by simp [LinearMap.comp_apply])
+
+/--
+Tensor-factor separation identity:
+`(S ⊗ id) (id ⊗ K) = (id ⊗ K) (S ⊗ id)`.
+-/
+@[rep_depth operator]
+theorem tensorFactorSeparation
+    (S : V →ₗ[ℝ] V) (K : W →ₗ[ℝ] W) :
+    (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)).comp
+        (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K) =
+      (TensorProduct.map (LinearMap.id : V →ₗ[ℝ] V) K).comp
+        (TensorProduct.map S (LinearMap.id : W →ₗ[ℝ] W)) := by
+  rw [tensorFactorSeparation_left_eq_tensorMap, tensorFactorSeparation_right_eq_tensorMap]
+
+end AlgebraicTensorSeparation
+
 variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The head sector of a binary Cantor boundary code. -/

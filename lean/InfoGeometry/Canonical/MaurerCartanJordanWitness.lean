@@ -1,5 +1,4 @@
 import InfoGeometry.Quantum.Monodromy
-import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
 
@@ -13,7 +12,6 @@ finite theorems that witness the same truncation pattern:
 
 - square-zero nilpotent correction;
 - Jordan-cell power collapse;
-- monodromy/binomial reduction;
 - Hadjiivanov phase-times-nilpotent readout.
 
 The corresponding SymPy witness is `tools/sympy/maurer_cartan_jordan_truncation.py`.
@@ -23,7 +21,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.MaurerCartanJordanWitness
 
-open InfoGeometry.Quantum
 open InfoGeometry.OperatorAlgebra.LogExchangeMonodromy
 
 /-- SymPy witness alias: square-zero nilpotent Jordan power. -/
@@ -32,14 +29,6 @@ theorem nilpotent_jordan_power
     (u N : A) (h_comm : Commute u N) (h_nil : N * N = 0) (n : ℕ) :
     (u + N) ^ (n + 1) = u ^ (n + 1) + (n + 1) • (u ^ n * N) := by
   exact InfoGeometry.QuantumMonodromy.nilpotent_jordan_power u N h_comm h_nil n
-
-/-- SymPy witness alias: rotor/binomial monodromy reduction in the real carrier. -/
-theorem monodromy_power_binomial
-    (X : RealKCategory.RealKVect) (h : ℝ) (N : RealKCategory.NilpotentHom X) (n : ℕ) :
-    (RealKCategory.monodromyProjection X h N).hom ^ n =
-      (RealKCategory.rotor X (-2 * Real.pi * (n : ℝ) * h)).hom.comp
-        (LinearMap.id + (-2 * Real.pi * (n : ℝ)) • N.toHom.hom) := by
-  exact RealKCategory.monodromy_power_binomial X h N n
 
 /-- SymPy witness alias: Hadjiivanov monodromy power law. -/
 theorem hadjiivanovMonodromy_pow_winding (h : ℂ) (n : ℕ) :

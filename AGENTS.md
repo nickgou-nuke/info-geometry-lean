@@ -4,6 +4,8 @@
 > current repo path, tool routing, aiClaw queue discipline, Pi extension stack,
 > GEPA flow, and forbidden legacy routes. If a generated transcript or archived
 > routing note conflicts with it, `docs/CANONICAL_AGENT_PIPELINE.md` wins.
+> The compact operational law for the hive is
+> `docs/HIVE_AGENT_COMMANDMENTS.md`.
 
 For DAG/Arango/LeanTrail/Hodge/de Bruijn/WL redundancy cleanup, namespace
 deduplication, stale dropin removal, pure forwarding module collapse, or
@@ -56,14 +58,25 @@ prompts; it delegates transport safety to `tools/infra/aiclaw_chat.py`.
 
 The aiClaw lane is single-flight per platform. Check
 `python3 tools/infra/aiclaw_chat.py queue-status --platform chatgpt` before
-sending. If a prompt returns `Thinking`, times out after send, or otherwise
-needs browser readback, do not send another prompt until the final visible
-answer is recorded and the lane is released with `queue-release`.
+sending and follow the machine-readable `queue_state` / `agent_action` fields.
+`queue_state=needs_readback` is not a provider outage and not a hard block: it
+means a prompt may already be in the browser but the final answer was not
+captured safely. Recover the final visible answer with a read-only browser
+view, record it in the work log, then release the lane with `queue-release`.
+If `queue_state=active`, wait. If `queue_state=ready`, send exactly one prompt.
+If `queue_state=stale_active` with only dead process markers, run
+`python3 tools/infra/aiclaw_chat.py queue-prune-active --platform chatgpt` or
+send one prompt if the lane reports `lane_available=true`.
 
 All repo-owned ChatGPT browser senders must use this same lane. Do not call the
 old port-1956 WebSocket bridge directly, do not use raw browser-harness DOM
 injection without `tools/infra/chatgpt_lane_guard.py`, and do not press Enter as
 a fallback when ChatGPT has not exposed an enabled send button.
+
+Google AI Mode is a separate browser-harness lane through
+`scripts/google-ai-search.sh`; do not route Google AI Mode through aiClaw unless
+that lane is explicitly re-enabled and tested. Gemini aiClaw remains Gemini;
+Google AI Mode browser-harness remains Google AI Mode.
 
 For the external formal precedent, read:
 

@@ -40,6 +40,11 @@ sys.path.insert(0, str(_REPO))
 
 logger = logging.getLogger("proof_repair")
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block proof repair.
+    record_message = None
+
 
 # ---------------------------------------------------------------------------
 # API helper
@@ -85,9 +90,47 @@ def call_llm(system: str, user: str, model: str = "deepseek-chat",
         data=payload,
         headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"},
     )
-    with urllib.request.urlopen(req, timeout=180) as resp:
-        data = json.loads(resp.read().decode())
-    return data["choices"][0]["message"]["content"]
+    started = time.monotonic()
+    content = ""
+    error = ""
+    success = False
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            data = json.loads(resp.read().decode())
+        content = data["choices"][0]["message"]["content"]
+        success = True
+        return content
+    except Exception as exc:
+        error = str(exc)
+        raise
+    finally:
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="targeted_proof_repair.py",
+                    source_file="tools/infra/targeted_proof_repair.py",
+                    channel="targeted_proof_repair_llm",
+                    provider="deepseek-api",
+                    model=model,
+                    platform="deepseek",
+                    prompt_text=json.dumps(
+                        [
+                            {"role": "system", "content": system},
+                            {"role": "user", "content": user},
+                        ],
+                        ensure_ascii=False,
+                    ),
+                    response_text=content or error,
+                    success=success,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={
+                        "temperature": temperature,
+                        "max_tokens": max_tokens,
+                        "failure_pattern": error,
+                    },
+                )
+            except Exception:
+                pass
 
 
 # ---------------------------------------------------------------------------

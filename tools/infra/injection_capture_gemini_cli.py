@@ -31,6 +31,11 @@ from tools.infra.injection_common import (
     write_run_manifest,
 )
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block capture.
+    record_message = None
+
 
 def sanitize_gemini_args(raw_args: list[str]) -> tuple[list[str], list[str]]:
     """Drop unsupported passthrough args before invoking Gemini CLI.
@@ -170,6 +175,10 @@ def run_gemini_cli(
     timeout_sec: int,
 ) -> tuple[int, str, str]:
     cmd = [gemini_bin] + gemini_args
+    started = time.monotonic()
+    code = 1
+    stdout = ""
+    stderr = ""
     try:
         if input_mode == "arg":
             cmd = cmd + [prompt_flag, prompt]
@@ -191,9 +200,40 @@ def run_gemini_cli(
             )
         else:
             raise ValueError(f"unsupported input mode: {input_mode}")
-        return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
+        code = int(proc.returncode)
+        stdout = proc.stdout.strip()
+        stderr = proc.stderr.strip()
     except subprocess.TimeoutExpired:
-        return 124, "", f"timeout after {timeout_sec}s"
+        code = 124
+        stderr = f"timeout after {timeout_sec}s"
+    except Exception as exc:
+        code = 1
+        stderr = str(exc)
+    finally:
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="injection_capture_gemini_cli.py",
+                    source_file="tools/infra/injection_capture_gemini_cli.py",
+                    channel="injection_gemini_capture",
+                    provider="gemini-cli",
+                    model=gemini_bin,
+                    platform="gemini_cli",
+                    prompt_text=prompt,
+                    response_text=stdout or stderr,
+                    success=(code == 0),
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={
+                        "input_mode": input_mode,
+                        "prompt_flag": prompt_flag,
+                        "timeout_sec": timeout_sec,
+                        "returncode": code,
+                        "failure_pattern": "" if code == 0 else stderr[:160],
+                    },
+                )
+            except Exception:
+                pass
+    return code, stdout, stderr
 
 
 def main() -> int:

@@ -15,7 +15,7 @@ and boundary calibration are proof-carrying data.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.JonesCalibration
+import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
@@ -24,7 +24,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 
-open InfoGeometry.OperatorAlgebra.JonesCalibration
+open InfoGeometry.Optics.JonesCalibration
 open InfoGeometry.OperatorAlgebra.StinespringDilation
 
 /-! ## 1. Hessian response data -/

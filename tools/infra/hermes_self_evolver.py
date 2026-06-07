@@ -56,6 +56,11 @@ from tools.infra.arango_env import (
 from tools.infra.evolution_evaluator import EvolutionEvaluator, FitnessScore
 from tools.infra.skill_mutator import FailureCase
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block evolution.
+    record_message = None
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -510,6 +515,10 @@ class HermesSelfEvolver:
             f"Output the replacement code."
         )
 
+        started = time.monotonic()
+        stdout = ""
+        stderr = ""
+        returncode = 0
         try:
             result = subprocess.run(
                 [
@@ -527,7 +536,7 @@ class HermesSelfEvolver:
 
             stdout = result.stdout or ""
             stderr = result.stderr or ""
-            returncode = result.returncode
+            returncode = int(result.returncode)
 
             if returncode != 0:
                 return {
@@ -570,6 +579,8 @@ class HermesSelfEvolver:
             }
 
         except subprocess.TimeoutExpired:
+            returncode = -1
+            stderr = "Hermes timeout after 300s"
             return {
                 "goal_key": task.get("goal_key", ""),
                 "task_key": task["_key"],
@@ -579,6 +590,45 @@ class HermesSelfEvolver:
                 "failure_pattern": "timeout",
                 "lean_output": "",
             }
+        except Exception as exc:
+            returncode = -1
+            stderr = str(exc)
+            return {
+                "goal_key": task.get("goal_key", ""),
+                "task_key": task["_key"],
+                "status": "failed",
+                "attempts": 1,
+                "error_summary": stderr[:500],
+                "failure_pattern": "hermes_invocation_error",
+                "lean_output": "",
+            }
+        finally:
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="hermes_self_evolver.py",
+                        source_file="tools/infra/hermes_self_evolver.py",
+                        channel="hermes_self_evolution",
+                        direction="agent_to_model",
+                        provider="hermes",
+                        model="deepseek-v4-flash",
+                        prompt_text=query,
+                        response_text=(stdout + stderr),
+                        success=(returncode == 0),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=f"{task.get('goal_key', '')}:{task.get('_key', '')}",
+                        metadata={
+                            "task_file": file_path,
+                            "task_line": line_no,
+                            "task_key": task.get("_key", ""),
+                            "goal_key": task.get("goal_key", ""),
+                            "generation": generation,
+                            "skill_name": self._skill_name,
+                            "returncode": returncode,
+                        },
+                    )
+                except Exception:
+                    pass
 
     @staticmethod
     def _extract_lean_code(text: str) -> str:
@@ -628,12 +678,18 @@ class HermesSelfEvolver:
             f"Output ONLY the mutated SKILL.md content, starting with '---'."
         )
 
+        started = time.monotonic()
+        output = ""
+        stderr = ""
+        returncode = 0
         try:
             result = subprocess.run(
                 ["hermes", "chat", "-q", prompt, "--yolo"],
                 capture_output=True, text=True, timeout=120,
             )
             output = result.stdout or ""
+            stderr = result.stderr or ""
+            returncode = int(result.returncode)
             # Clean up Hermes output: strip chat artifacts, find SKILL.md content
             lines = output.split("\n")
             content_lines = []
@@ -653,8 +709,35 @@ class HermesSelfEvolver:
                 return []
 
         except Exception as exc:
+            returncode = -1
+            stderr = str(exc)
             logger.warning("Mutation via Hermes failed: %s", exc)
             return []
+        finally:
+            if record_message is not None:
+                try:
+                    record_message(
+                        source_tool="hermes_self_evolver.py",
+                        source_file="tools/infra/hermes_self_evolver.py",
+                        channel="hermes_skill_mutation",
+                        direction="agent_to_model",
+                        provider="hermes",
+                        model="default",
+                        prompt_text=prompt,
+                        response_text=output or stderr,
+                        success=(returncode == 0 and bool(output.strip())),
+                        latency_ms=(time.monotonic() - started) * 1000.0,
+                        correlation_id=f"{self._skill_name}:{parent_fitness:.3f}",
+                        metadata={
+                            "skill_name": self._skill_name,
+                            "failure_count": len(failures),
+                            "parent_fitness": parent_fitness,
+                            "returncode": returncode,
+                            "failure_pattern": "" if returncode == 0 else stderr[:160],
+                        },
+                    )
+                except Exception:
+                    pass
 
     @staticmethod
     def _outcomes_to_failures(outcomes: list[dict[str, Any]]) -> list[FailureCase]:

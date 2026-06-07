@@ -53,10 +53,14 @@ gauge is canonical.
 structure StandardFormProjectiveGWBridge where
   /-- Standard-form/natural-cone carrier for normal positive state geometry. -/
   standardCone :
-    StandardFormNormalCone (H := H) (Functional := Functional)
+    NaturalConeStandardFormInterface Unit H Functional
 
   /-- Selected normal-positive functional/state representative. -/
   normalFunctional : Functional
+
+  /-- The selected functional is normal-positive in the supplied standard form. -/
+  normalFunctional_isNormalPositive :
+    standardCone.isNormalPositive normalFunctional
 
   /-- Projective GW/count shadow. -/
   projectiveGW :
@@ -123,15 +127,17 @@ variable (B : StandardFormProjectiveGWBridge (H := H) (Functional := Functional)
 /-- The selected normal functional has a standard-form natural-cone vector. -/
 @[rep_depth projective]
 theorem coneVector_mem_naturalCone :
-    B.standardCone.coneVector B.normalFunctional ∈ B.standardCone.naturalCone :=
-  B.standardCone.coneVector_mem_naturalCone B.normalFunctional
+    B.standardCone.coneVector B.normalFunctional ∈ B.standardCone.cone :=
+  NaturalConeStandardFormInterface.coneVector_mem_of_normal
+    B.standardCone B.normalFunctional B.normalFunctional_isNormalPositive
 
 /-- The standard-form reflection fixes the selected cone vector. -/
 @[rep_depth projective]
 theorem J_fixes_coneVector :
     B.standardCone.J (B.standardCone.coneVector B.normalFunctional) =
       B.standardCone.coneVector B.normalFunctional :=
-  B.standardCone.J_fixes_coneVector B.normalFunctional
+  NaturalConeStandardFormInterface.J_fixes_coneVector
+    B.standardCone B.normalFunctional B.normalFunctional_isNormalPositive
 
 /-- The projective count shape is invariant under nonzero rescaling. -/
 @[rep_depth projective]

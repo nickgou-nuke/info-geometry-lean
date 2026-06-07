@@ -21,7 +21,6 @@ share the same vocabulary.
 | Rindler proper distance | `Dynamics.RindlerWedge.rindler_flow_preserves_proper_distance` |
 | conformal inversion generator | `Clifford.ConformalReflection55.J_sq`, `J_swap_origin`, `J_swap_infinity` |
 | Möbius translation/inversion | `Clifford.DiscreteMoebiusGroup.moebius_T_action`, `moebius_S_action` |
-| Klein V4 projective packet | `Clifford.DiscreteMoebiusGroup.kleinMinus_action`, `kleinSwap_action`, `kleinMinusSwap_action` |
 | conformal `sl₂` readout | `Canonical.ConformalSL2GeneratorBridge.P`, `D`, `K` |
 | ambient orthogonal label | `Canonical.ConformalSL2GeneratorBridge.ambient_group_is_O55` |
 
@@ -88,18 +87,6 @@ abbrev moebius_T_action :=
 
 abbrev moebius_S_action :=
   InfoGeometry.Clifford.DiscreteMoebiusGroup.moebius_S_action
-
-abbrev kleinMinus_action :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.kleinMinus_action
-
-abbrev kleinSwap_action :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.kleinSwap_action
-
-abbrev kleinMinusSwap_action :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.kleinMinusSwap_action
-
-abbrev kleinV4_commute_on_actions :=
-  InfoGeometry.Clifford.DiscreteMoebiusGroup.kleinV4_commute_on_actions
 
 /-! ## Conformal `sl₂` readout and ambient orthogonal label -/
 

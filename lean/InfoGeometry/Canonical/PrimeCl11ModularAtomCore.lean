@@ -1,6 +1,7 @@
 import Mathlib
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 
 /-!
 # InfoGeometry.Canonical.PrimeCl11ModularAtomCore
@@ -18,6 +19,8 @@ No RH-level witness.
 noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeCl11ModularAtomCore
+
+open InfoGeometry.Canonical.HodgeDiracLaplacianBridge
 
 variable {A : Type*} [Ring A]
 
@@ -97,6 +100,115 @@ theorem mobiusParity_right_involutive (x : A) :
     _ = x * 1 := by
             rw [atom.mobiusParity_sq_eq_one]
     _ = x := by simp
+
+/-! ## Hodge--Dirac readout of the local prime atom -/
+
+/-- The `c` generator is odd for the local Möbius/Witten parity axis. -/
+@[rep_depth operator]
+theorem c_anticommutes_mobiusParity :
+    atom.c * atom.mobiusParity = -(atom.mobiusParity * atom.c) := by
+  have hdc : atom.d * atom.c = - (atom.c * atom.d) :=
+    atom.d_mul_c_eq_neg_c_mul_d
+  have hpc : (atom.c * atom.d) * atom.c = -atom.d := by
+    calc
+      (atom.c * atom.d) * atom.c = atom.c * (atom.d * atom.c) := by
+        rw [mul_assoc]
+      _ = atom.c * (-(atom.c * atom.d)) := by
+        rw [hdc]
+      _ = -((atom.c * atom.c) * atom.d) := by
+        noncomm_ring
+      _ = -(1 * atom.d) := by
+        rw [atom.c_sq]
+      _ = -atom.d := by
+        simp
+  unfold mobiusParity
+  calc
+    atom.c * (atom.c * atom.d) = (atom.c * atom.c) * atom.d := by
+      rw [mul_assoc]
+    _ = 1 * atom.d := by
+      rw [atom.c_sq]
+    _ = atom.d := by
+      simp
+    _ = -((atom.c * atom.d) * atom.c) := by
+      rw [hpc]
+      simp
+
+/-- The `d` generator is odd for the local Möbius/Witten parity axis. -/
+@[rep_depth operator]
+theorem d_anticommutes_mobiusParity :
+    atom.d * atom.mobiusParity = -(atom.mobiusParity * atom.d) := by
+  have hdc : atom.d * atom.c = - (atom.c * atom.d) :=
+    atom.d_mul_c_eq_neg_c_mul_d
+  unfold mobiusParity
+  calc
+    atom.d * (atom.c * atom.d) = (atom.d * atom.c) * atom.d := by
+      rw [mul_assoc]
+    _ = (-(atom.c * atom.d)) * atom.d := by
+      rw [hdc]
+    _ = -((atom.c * atom.d) * atom.d) := by
+      simp
+
+/-- Hodge--Dirac carrier obtained by reading `c` as the odd Dirac generator. -/
+@[rep_depth operator]
+def hodgeDiracCarrierFromC : HodgeDiracLaplacianCarrier A where
+  hodgeStar := atom.mobiusParity
+  dirac := atom.c
+  laplacian := atom.c * atom.c
+  centralReadout := atom.mobiusParity
+
+/-- Hodge--Dirac carrier obtained by reading `d` as the odd Dirac generator. -/
+@[rep_depth operator]
+def hodgeDiracCarrierFromD : HodgeDiracLaplacianCarrier A where
+  hodgeStar := atom.mobiusParity
+  dirac := atom.d
+  laplacian := atom.d * atom.d
+  centralReadout := atom.mobiusParity
+
+/-- Carrier-level readback: `c` anticommutes with the supplied parity/Hodge axis. -/
+@[rep_depth operator]
+theorem hodgeDiracCarrierFromC_chiral :
+    IsDiracHodgeChiral atom.hodgeDiracCarrierFromC :=
+  atom.c_anticommutes_mobiusParity
+
+/-- Carrier-level readback: `d` anticommutes with the supplied parity/Hodge axis. -/
+@[rep_depth operator]
+theorem hodgeDiracCarrierFromD_chiral :
+    IsDiracHodgeChiral atom.hodgeDiracCarrierFromD :=
+  atom.d_anticommutes_mobiusParity
+
+/-- Carrier-level readback: the `c`-Laplacian is the square of the `c` Dirac operator. -/
+@[rep_depth operator]
+theorem hodgeDiracCarrierFromC_laplacian_from_dirac :
+    IsLaplacianFromDirac atom.hodgeDiracCarrierFromC :=
+  rfl
+
+/-- Carrier-level readback: the `d`-Laplacian is the square of the `d` Dirac operator. -/
+@[rep_depth operator]
+theorem hodgeDiracCarrierFromD_laplacian_from_dirac :
+    IsLaplacianFromDirac atom.hodgeDiracCarrierFromD :=
+  rfl
+
+/-- The `c`-Dirac square is even for the local Möbius/Witten parity axis. -/
+@[rep_depth operator]
+theorem c_laplacian_commutes_mobiusParity :
+    (atom.c * atom.c) * atom.mobiusParity =
+      atom.mobiusParity * (atom.c * atom.c) := by
+  simpa [hodgeDiracCarrierFromC] using
+    laplacian_commutes_hodge_of_dirac_closure
+      atom.hodgeDiracCarrierFromC
+      atom.hodgeDiracCarrierFromC_chiral
+      atom.hodgeDiracCarrierFromC_laplacian_from_dirac
+
+/-- The `d`-Dirac square is even for the local Möbius/Witten parity axis. -/
+@[rep_depth operator]
+theorem d_laplacian_commutes_mobiusParity :
+    (atom.d * atom.d) * atom.mobiusParity =
+      atom.mobiusParity * (atom.d * atom.d) := by
+  simpa [hodgeDiracCarrierFromD] using
+    laplacian_commutes_hodge_of_dirac_closure
+      atom.hodgeDiracCarrierFromD
+      atom.hodgeDiracCarrierFromD_chiral
+      atom.hodgeDiracCarrierFromD_laplacian_from_dirac
 
 end Cl11Atom
 

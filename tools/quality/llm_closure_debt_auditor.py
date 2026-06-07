@@ -34,6 +34,11 @@ else:
 
 ROOT = repo_root()
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block audits.
+    record_message = None
+
 HARD_PATTERNS = {
     "proof-hole": re.compile(r"\b(?:sorry|admit|sorryAx|admitAx)\b"),
     "axiom": re.compile(r"^\s*axiom\b", re.M),
@@ -380,9 +385,42 @@ def post_chat(base_url: str, model: str, prompt: str, timeout: int, max_tokens: 
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 local endpoint
-        data = json.loads(resp.read().decode("utf-8", errors="replace"))
-    return str(data["choices"][0]["message"]["content"])
+    started = time.monotonic()
+    content = ""
+    error = ""
+    success = False
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 local endpoint
+            data = json.loads(resp.read().decode("utf-8", errors="replace"))
+        content = str(data["choices"][0]["message"]["content"])
+        success = True
+        return content
+    except Exception as exc:
+        error = str(exc)
+        raise
+    finally:
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="llm_closure_debt_auditor.py",
+                    source_file="tools/quality/llm_closure_debt_auditor.py",
+                    channel="llm_closure_debt_audit",
+                    provider="openai-compatible",
+                    model=model,
+                    platform=url,
+                    prompt_text=json.dumps(payload.get("messages", []), ensure_ascii=False),
+                    response_text=content or error,
+                    success=success,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={
+                        "base_url": base_url,
+                        "timeout": timeout,
+                        "max_tokens": max_tokens,
+                        "failure_pattern": error,
+                    },
+                )
+            except Exception:
+                pass
 
 
 def _extract_first_json_object(raw: str) -> dict[str, Any]:

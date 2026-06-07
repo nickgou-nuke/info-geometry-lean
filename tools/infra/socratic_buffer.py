@@ -23,6 +23,11 @@ REPO = Path(__file__).resolve().parents[2]
 AICLAW_URL = "http://127.0.0.1:10088/api/v1/ai/message"
 PLATFORM = "chatgpt"
 
+try:
+    from tools.infra.agent_message_ledger import record_message
+except Exception:  # pragma: no cover - observation must never block repair.
+    record_message = None
+
 def parse_args():
     p = argparse.ArgumentParser(description="Buffer-based socratic oracle")
     p.add_argument("--file", required=True, type=Path, help="Original Lean file")
@@ -89,21 +94,47 @@ def compile_check(buffer_path: Path) -> tuple[int, str]:
 
 def send_to_aiclaw(prompt: str, dry_run: bool = False) -> str | None:
     """Send a prompt to ChatGPT via the aiClaw REST bridge."""
+    import requests
+
     if dry_run:
         print(f"[dry-run] Would send {len(prompt)} chars to {AICLAW_URL}")
         return None
     print(f"Sending {len(prompt)} chars to ChatGPT via aiClaw...")
     payload = {"message": prompt, "platform": PLATFORM}
+    started = time.monotonic()
+    response_text = ""
+    success = False
     try:
         r = requests.post(AICLAW_URL, json=payload, timeout=120)
         r.raise_for_status()
         resp = r.json()
-        return resp.get("response") or resp.get("text") or str(resp)
+        response_text = resp.get("response") or resp.get("text") or str(resp)
+        success = True
+        return response_text
     except Exception as e:
-        return f"[ERROR] aiClaw call failed: {e}"
+        response_text = f"[ERROR] aiClaw call failed: {e}"
+        return response_text
+    finally:
+        if record_message is not None:
+            try:
+                record_message(
+                    source_tool="socratic_buffer.py",
+                    source_file="tools/infra/socratic_buffer.py",
+                    channel="socratic_aiclaw_rest",
+                    direction="agent_to_model",
+                    provider="aiclaw",
+                    model="browser-session",
+                    platform=PLATFORM,
+                    prompt_text=prompt,
+                    response_text=response_text,
+                    success=success,
+                    latency_ms=(time.monotonic() - started) * 1000.0,
+                    metadata={"endpoint": AICLAW_URL},
+                )
+            except Exception:
+                pass
 
 def main():
-    import requests  # lazy import
     args = parse_args()
 
     # 1. Extract theorem

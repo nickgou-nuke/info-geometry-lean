@@ -44,4 +44,32 @@ theorem artin_relation
       fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s :=
   h_artin
 
+/--
+Finite matrix shadow of the Fibonacci hexagon data.
+
+This theorem intentionally packages only kernel-checked finite matrix facts:
+`F² = 1`, `det F = -1`, `B = F R F`, and the supplied Artin/Yang-Baxter
+matrix identity.  It is not a `BraidedCategory` instance; a real instance still
+requires categorical objects, tensor product, associator, braiding natural
+isomorphisms, and pentagon/hexagon coherence proofs.
+-/
+theorem finite_hexagon_shadow
+    (q : Units ℂ) (τ s : ℂ)
+    (s_sq : s ^ 2 = τ)
+    (tau_sq_add_tau : τ ^ 2 + τ = 1)
+    (h_artin :
+      fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
+        fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s) :
+    fibonacciFusionMatrix τ s * fibonacciFusionMatrix τ s = 1 ∧
+      (fibonacciFusionMatrix τ s).det = -1 ∧
+      fibonacciBMatrix q τ s =
+        fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s ∧
+      fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
+        fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s := by
+  exact ⟨
+    F_sq τ s s_sq tau_sq_add_tau,
+    det_F τ s s_sq tau_sq_add_tau,
+    B_eq_FRF q τ s,
+    artin_relation q τ s h_artin⟩
+
 end InfoGeometry.Categorical.FibonacciBraiding

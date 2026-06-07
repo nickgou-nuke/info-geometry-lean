@@ -27,6 +27,7 @@
     "ai:oracle:record": "python3 tools/infra/socratic_oracle_record_outcome.py",
     "ai:oracle:gepa": "python3 tools/infra/socratic_oracle_prompt_gepa.py",
     "ai:oracle:gepa:gate": "python3 tools/quality/oracle_prompt_regression_gate.py",
+    "ai:messages:observe": "python3 tools/infra/gepa_agent_message_observer.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

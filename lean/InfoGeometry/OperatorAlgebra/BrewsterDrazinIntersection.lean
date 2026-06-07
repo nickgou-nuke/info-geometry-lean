@@ -16,14 +16,14 @@ model supplies that bridge.
 -/
 
 import Mathlib
-import InfoGeometry.OperatorAlgebra.JonesCalibration
+import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 
-open InfoGeometry.OperatorAlgebra.JonesCalibration
+open InfoGeometry.Optics.JonesCalibration
 open InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 /-! ## 1. Abstract Drazin split for a Brewster reflection -/

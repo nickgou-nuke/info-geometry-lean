@@ -1,6 +1,7 @@
 import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.SupermatrixKoszul
 import InfoGeometry.Clifford.OpSignatureBridge
+import InfoGeometry.Quantum.Monodromy
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
@@ -313,6 +314,35 @@ theorem hadjiivanovMonodromy_pow_winding (h : ℂ) (n : ℕ) :
   fin_cases i <;> fin_cases j
   all_goals simp [upperJordan, jordanNilpotent]
   all_goals ring
+
+/--
+Genuine Hadjiivanov monodromy coefficient theorem.
+
+After `n` windings, the logarithmic monodromy remains in the same rank-two
+Jordan class: the diagonal phase is `phase^n`, the lower-left entry stays zero,
+and the only nontrivial nilpotent datum is the upper-right coefficient
+`phase^n * n * (-2πi)`.
+-/
+theorem hadjiivanovMonodromy_genuine_coefficient_readout (h : ℂ) (n : ℕ) :
+    hadjiivanovMonodromy h ^ n =
+        lcftPhase h ^ n •
+          ((1 : Matrix (Fin 2) (Fin 2) ℂ) +
+            ((n : ℂ) * logShearBase) • jordanNilpotent)
+      ∧ (hadjiivanovMonodromy h ^ n) 0 0 = lcftPhase h ^ n
+      ∧ (hadjiivanovMonodromy h ^ n) 0 1 =
+          lcftPhase h ^ n * ((n : ℂ) * logShearBase)
+      ∧ (hadjiivanovMonodromy h ^ n) 1 0 = 0
+      ∧ (hadjiivanovMonodromy h ^ n) 1 1 = lcftPhase h ^ n := by
+  have hpow := hadjiivanovMonodromy_pow_winding h n
+  refine ⟨hpow, ?_, ?_, ?_, ?_⟩
+  · rw [hpow]
+    simp [jordanNilpotent]
+  · rw [hpow]
+    simp [jordanNilpotent]
+  · rw [hpow]
+    simp [jordanNilpotent]
+  · rw [hpow]
+    simp [jordanNilpotent]
 
 /--
 Named algebraic form of the compounded monodromy.  This is the same theorem as

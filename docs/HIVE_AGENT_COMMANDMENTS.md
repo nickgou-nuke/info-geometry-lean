@@ -36,6 +36,14 @@
    High-risk capstone narratives such as the Souriau-Bost-Connes transition
    lane must obey `docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md`.
 
+   The pre-commit proof-proxy gate is repository-owned at
+   `.githooks/pre-commit` and runs `tools/quality/proof_proxy_staged_gate.py`.
+   After cloning, install tracked hooks with:
+
+   ```bash
+   scripts/install_git_hooks.sh
+   ```
+
 5. **Use the owner layer, not a duplicate bridge.**
    Do not rebuild categorical infrastructure. The categorical owners include
    `Algebra/Grothendieck.lean`, `Canonical/TensorTowerColimit.lean`, and

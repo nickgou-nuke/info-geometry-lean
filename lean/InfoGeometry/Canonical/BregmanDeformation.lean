@@ -54,20 +54,23 @@ witnesses, certificates, or renamed placeholders.]
 namespace InfoGeometry.Canonical.BregmanDeformation
 
 /--
-The concrete real phase axis in the two-dimensional modular lane.
+The concrete real phase-axis generator in the two-dimensional rotation lane.
 
-It is the matrix representation of multiplication by the internal unit `K`,
-with `K^2 = -1`.
+It is the matrix representation of multiplication by the internal complex
+structure unit, with `phaseAxis^2 = -1`.  It is not the self-adjoint modular
+Hamiltonian; the self-adjoint diagonal Hamiltonian is owned by
+`InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian`.
 -/
 def phaseAxis : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![0, -1], ![1, 0]]
 
 /--
-The explicit closed-form modular rotation
+The explicit closed-form phase-axis rotation
 `Δ(ε) = [[cos ε, -sin ε], [sin ε, cos ε]]`.
 
-This is the finite 2×2 model for `exp (εK)`.  The remaining analytic debt is
-to identify this closed form with `NormedSpace.exp (ε • phaseAxis)`.
+This is the finite 2×2 model for `exp (ε • phaseAxis)` in the skew
+complex-structure lane.  It is separate from the self-adjoint modular
+Hamiltonian exponential `exp (ε • K)` used by the KMS/Bregman operator lane.
 -/
 def modularDelta (ε : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![(Real.cos ε : ℂ), -(Real.sin ε : ℂ)],

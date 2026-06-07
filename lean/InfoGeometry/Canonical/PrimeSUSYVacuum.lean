@@ -175,8 +175,8 @@ def primeSUSYVacuum_of_zeroModeProtection
 def primeSUSYVacuum_of_zeroModeProtection_reexports
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
       VacuumReadout : Type}
-    (M : MertensDefectBoundary)
-    (P : ZeroModeProtectionPacket
+    (_M : MertensDefectBoundary)
+    (_P : ZeroModeProtectionPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
     (B : PrimeSUSYVacuumBridge VacuumReadout) : Prop :=
   B.wittenIndex_True ∧

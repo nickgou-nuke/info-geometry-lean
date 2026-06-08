@@ -61,7 +61,7 @@ RealMajoranaWittenIndexGate.zero_mode_index
 
 BUCKET 3: OPEN CLOSURE DEBT
 
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
+[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, or certificates.]
 
 Construction of a full real Majorana supercharge-pairing model.
 

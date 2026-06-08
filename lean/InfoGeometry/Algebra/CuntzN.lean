@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Algebra.GenericDirac
 
 /-!
 # Cuntz-N Algebra — Finite Hodge-Dirac Operator
@@ -35,7 +36,7 @@ variable (O : CuntzNAlgebra (N := N) Op)
   D = Σ_{i=1}^N (S_i + S*_i)
 -/
 def hodgeDirac : Op :=
-  ∑ i : Fin N, (O.S i + star (O.S i))
+  finiteDirac O.S
 
 /--
 **Self-adjointness of the Hodge-Dirac operator (PROVED).**
@@ -43,8 +44,7 @@ def hodgeDirac : Op :=
   D* = Σ (S_i + S*_i)* = Σ (S*_i + S_i) = Σ (S_i + S*_i) = D.
 -/
 theorem hodge_dirac_self_adjoint : star (hodgeDirac O) = hodgeDirac O := by
-  unfold hodgeDirac
-  simpa [star_add, add_comm] using rfl
+  exact (finiteDirac_selfAdjoint O.S).star_eq
 
 /--
 **Idempotence of range projections (PROVED).**

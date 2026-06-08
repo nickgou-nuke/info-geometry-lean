@@ -154,7 +154,7 @@ theorem sq_finite_to_infinite_limit (T : ℝ) :
 Debt marker only: the coordinatewise eventually-constant result above does not
 prove a general Clifford analytic completion or differential geometric flow.
 -/
-def split_quaternion_general_analytic_completion_debt : True := by
-  trivial
+def split_quaternion_general_analytic_completion_debt : String :=
+  "Open: extend the finite nilpotent flow to a genuine analytic completion theorem."
 
 end InfoGeometry.Clifford.SplitQuaternionNilpotentFlow

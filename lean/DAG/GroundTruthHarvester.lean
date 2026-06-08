@@ -22,7 +22,7 @@ def getGoalStates (mctx : MetavarContext) (goals : List MVarId) : MetaM String :
     return out.trimAscii.toString
 
 def isPunctuation (tac : String) : Bool :=
-  let t := tac.trim
+  let t := tac.trimAscii.toString
   t == "focus" || t == "rotate_right" || t == "rotate_left" || t == ";" || t == "{" || t == "}" || t == "by" || t == "."
 
 partial def collectSteps (tree : InfoTree) (ctx? : Option ContextInfo := none) : IO (Array TacticStep) := do

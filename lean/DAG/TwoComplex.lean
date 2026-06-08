@@ -2,7 +2,6 @@
 import Std
 import DAG.Basic
 import DAG.Util
-import DAG.Hydrate
 
 namespace DAG
 
@@ -78,8 +77,9 @@ def boundary2 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Ra
     let (eU, eV) := tc.digons[dIdx]!
     let rowIdx := tc.faces.size + dIdx
     let row := mat[rowIdx]!
+    -- Antiparallel digon boundary: ∂(eU + eV) = (v-u) + (u-v) = 0.
     let row := row.set! eU (1 : Rat)
-    let row := row.set! eV (-1 : Rat)
+    let row := row.set! eV (1 : Rat)
     mat := mat.set! rowIdx row
   return mat
 

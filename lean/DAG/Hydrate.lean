@@ -28,7 +28,7 @@ def hydrate {α} [BEq α] [Hashable α] (g : Graph α) : HydratedGraph α := Id.
           seen := seen.insert (i,j)
 
   let order := topo dag preds
-  let doms := dominators preds order
+  let doms := Dominators.dominators preds order
 
   {
     toGraph := g,

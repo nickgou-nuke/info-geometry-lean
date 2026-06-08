@@ -133,8 +133,8 @@ Debt marker only: this module proves the eventually-constant nilpotent case;
 it does not prove a general infinite-dimensional analytic product/completion
 or identify the limit with any external Dirac/Virasoro flow.
 -/
-def general_analytic_completion_debt : True := by
-  trivial
+def general_analytic_completion_debt : String :=
+  "Open: prove a general analytic product/completion theorem beyond the eventually-constant nilpotent case."
 
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 

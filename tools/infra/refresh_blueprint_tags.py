@@ -86,6 +86,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not filter generated/internal declaration names.",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help=(
+            "Keep only the first N selected declarations after sorting and explicit-tag "
+            "deduplication. Use 0 for the full selection."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -397,6 +406,10 @@ def main() -> int:
         selected = [row for row in selected if row["name"] not in explicit]
         stats["skip_existing_blueprint"] = len(explicit)
     stats["selected_final"] = len(selected)
+    if args.limit and args.limit > 0 and len(selected) > args.limit:
+        stats["limited_from"] = len(selected)
+        selected = selected[: args.limit]
+        stats["selected_limited"] = len(selected)
 
     target_path.parent.mkdir(parents=True, exist_ok=True)
     facade_path.parent.mkdir(parents=True, exist_ok=True)

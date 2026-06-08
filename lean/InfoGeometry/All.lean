@@ -4,6 +4,7 @@ import InfoGeometry.Applications.STUGradientFlow
 import InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
+import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Algebra.All
 import InfoGeometry.Arithmetic.FinitePrimeGroverOracle
 import InfoGeometry.Arithmetic.FiniteRiemannPrimeState
@@ -65,6 +66,7 @@ import InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
+import InfoGeometry.Arithmetic.FredholmClosure
 import InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex
 import InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
 import InfoGeometry.Arithmetic.PrimonMajoranaWittenCharacter
@@ -107,6 +109,7 @@ import InfoGeometry.GrandUnification.ModularTransport
 import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
+import InfoGeometry.Holography.All
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
 import InfoGeometry.GromovJaynesProbability

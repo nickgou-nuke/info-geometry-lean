@@ -19,9 +19,10 @@ namespace InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
 Closure debt: an exact mathematical map connecting the finite-stage
 `crossFlux N` readout to the value `(m^3 - m)/12` of the Witt-Virasoro cocycle.
 
-(This is a placeholder for the future continuous limit theorem.)
+This is a ledger entry for the future continuous limit theorem, not a proved
+theorem in this bridge file.
 -/
-theorem crossFlux_yields_virasoroCocycle : True := by
-  trivial
+def crossFlux_yields_virasoroCocycle_debt : String :=
+  "Open: prove the finite cross-flux-to-Virasoro-cocycle limit with explicit convergence data."
 
 end InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge

@@ -165,7 +165,9 @@ h1v1 = h1 @ v1
 h1sq = h1 @ h1
 print(f"  h₁·|e₁⟩  = |e₆⟩  (physical → ghost)")
 print(f"  h₁·|e₆⟩  = |e₁⟩  (ghost → physical)")
-print(f"  h₁² = I₁₀  {'✓' if h1sq == sp.eye(dim) else '✗'}")
+# h₁² acts as σ_x² = I₂ on the 2D subspace {e₁, e₆}, zero elsewhere
+h1sq_block = sp.Matrix([[h1sq[0,0], h1sq[0,5]],[h1sq[5,0], h1sq[5,5]]])
+print(f"  h₁²|₂×₂ = σ_x² = I₂:  {'✓' if h1sq_block == sp.eye(2) else '✗'}")
 print(f"  [hᵢ, hⱼ] = 0  ✓ (disjoint index pairs)")
 
 # The Legendre transform S(E) = inf_β {βE - F(β)}

@@ -247,21 +247,21 @@ theorem hestenes_cr_equivalence (C : StandardCRComponents) :
 Debt marker only: global equivalence of Weierstrass/Cauchy/Riemann/Morera
 analyticity requires topology and integration hypotheses not present here.
 -/
-def classical_analyticity_equivalence_debt : True := by
-  trivial
+def classical_analyticity_equivalence_debt : String :=
+  "Open: add topology/integration hypotheses and prove equivalence with classical analyticity notions."
 
 /--
 Debt marker only: equivalence with the four-dimensional Hestenes--Dirac
 differential formulation requires a separate STA/gamma/differentiation owner.
 -/
-def hestenes_dirac_differential_equivalence_debt : True := by
-  trivial
+def hestenes_dirac_differential_equivalence_debt : String :=
+  "Open: connect finite Hestenes CR equations to a four-dimensional Hestenes-Dirac differential owner."
 
 /--
 Debt marker only: conformality of Hestenes-analytic maps is analytic/differential
 geometry work, not a consequence of the finite algebra in this file alone.
 -/
-def hestenes_conformal_mapping_preservation_debt : True := by
-  trivial
+def hestenes_conformal_mapping_preservation_debt : String :=
+  "Open: prove conformality of Hestenes-analytic maps under explicit differential-geometric hypotheses."
 
 end InfoGeometry.Geometry.FiniteHestenesCR

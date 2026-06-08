@@ -79,7 +79,7 @@ theorem norm_nilpotent_exp (T : ℝ) :
 Debt marker only: the three coordinate norm computations above are not a proof
 of an exhaustive subgroup classification or a global causal/conformal theorem.
 -/
-def split_quaternion_subgroup_classification_debt : True := by
-  trivial
+def split_quaternion_subgroup_classification_debt : String :=
+  "Open: classify split-quaternion one-parameter subgroups beyond the three norm-one coordinate flows."
 
 end InfoGeometry.Clifford.SplitQuaternionFlowCoordinates

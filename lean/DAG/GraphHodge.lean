@@ -14,6 +14,12 @@ constructs:
   parity or source/sink parity), with verification that `ΓD + DΓ = 0`
   when the labelling is consistent with edge orientation
 
+The finite arrays in this file are the rational coordinate presentation of the
+declaration graph calculus.  The architectural carrier of the DAG theory is
+the real doubled Hestenes--Krein lane; see `DAG.GraphHodgeBridge` for the
+compiled bridge that packages this finite graph-Hodge coordinate layer over
+`InfoGeometry.Krein.DoubledSpace`.
+
 The Hodge decomposition `C^k = exact ⊕ coexact ⊕ harmonic` means every
 k-chain on the declaration graph splits into "derived from lower" +
 "generating for higher" + "intrinsic invariant".  On the DAG this
@@ -106,7 +112,11 @@ def laplacian1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array R
   let b2 := boundary2 tc       -- n2 × n1
   let b2t := matTranspose b2   -- n1 × n2
   let down := matMul b1 b1t    -- n1 × n1  (down-Laplacian)
-  let up   := matMul b2t b2    -- n1 × n1  (up-Laplacian)
+  let up :=
+    if b2.size == 0 then
+      Array.replicate tc.edges.size (Array.replicate tc.edges.size (0 : Rat))
+    else
+      matMul b2t b2            -- n1 × n1  (up-Laplacian)
   matAdd down up
 
 -- ============================================================
@@ -196,9 +206,9 @@ def graphDirac {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array R
     Γ = ⎡ Γ₀   0  ⎤
         ⎣  0  −Γ₁ ⎦
     ```
-    where Γ₁(e) = Γ₀(target(e)) for each edge e.
-    The sign flip on 1-chains is standard: if Γ grades vertices,
-    edges inherit the opposite grading to make ΓD + DΓ = 0. -/
+    where Γ₁(e) = Γ₀(source(e)) for each oriented edge e.
+    `chiralAnticommutes` remains the executable compatibility check for the
+    supplied grading and finite graph Dirac operator. -/
 def extendedChiralGrading {α} [BEq α] [Hashable α]
     (tc : TwoComplex α) (γ : ChiralGrading tc.base.toGraph.nodes.size)
     : Array (Array Rat) := Id.run do
@@ -210,11 +220,11 @@ def extendedChiralGrading {α} [BEq α] [Hashable α]
   for i in [:n0] do
     let row := mat[i]!
     mat := mat.set! i (row.set! i γ.signs[i]!)
-  -- Edge block: −Γ₁ where Γ₁(e) = Γ₀(target(e))
+  -- Edge block: −Γ₁ where Γ₁(e) = Γ₀(source(e))
   for i in [:n1] do
-    let (_, v) := tc.edges[i]!
+    let (u, _) := tc.edges[i]!
     let row := mat[n0 + i]!
-    mat := mat.set! (n0 + i) (row.set! (n0 + i) (-γ.signs[v]!))
+    mat := mat.set! (n0 + i) (row.set! (n0 + i) (-γ.signs[u]!))
   return mat
 
 /-- Check whether ΓD + DΓ = 0 (chiral anticommutation).

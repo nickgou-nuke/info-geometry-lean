@@ -12,27 +12,27 @@ import InfoGeometry.OperatorAlgebra.ModularSignCPT
 import DAG.AffineProjectiveClosure
 
 /-!
-# Bost-Connes Criticality — Spontaneous Symmetry Breaking at β = 1
+# Bost-Connes Criticality — Target Ledger at β = 1
 
-The Bost-Connes phase transition: at β = 1, the Riemann zeta function
-hits its simple pole. The Fredholm determinant vanishes, the spectral
-gap closes, and the unique KMS state shatters into a continuum of
-extremal states parametrized by Gal(ℚ̅^{ab}/ℚ) ≅ Ẑ^×.
+This file records the intended criticality targets for the Bost-Connes phase
+transition.  It is not a proof that KMS states are classified at `β = 1`, that
+the Fredholm determinant vanishes, or that Galois symmetry breaking has been
+formalized here.
 
 ## The Mathematical Mechanism
 
-### Above the critical temperature (β > 1)
+### Above the critical temperature (β > 1) — target
 KMS state is unique: φ_β(a) = Tr(a·e^{-βH}) / ζ(β).
 The Fredholm determinant det(1 - e^{-βH}) ≠ 0.
 The Dikin sandwich ω(‖e^{-βH}‖) > 0.
 
-### At the critical point (β = 1)
+### At the critical point (β = 1) — target
 ζ(1) = Σ_n n^{-1} = ∞ (harmonic series diverges).
 det(1 - e^{-H}) = ∏_p (1 - p^{-1}) = 0.
 The strict contraction fails: ‖e^{-H}‖ = 1.
 The Dikin sandwich closes: ω(‖e^{-H}‖) = 0.
 
-### Below the critical temperature (0 < β < 1)
+### Below the critical temperature (0 < β < 1) — target
 No KMS state exists on the full Cuntz algebra O_∞.
 The state φ_β exists only on a subalgebra.
 The symmetry is broken: the unique state branches into a continuum
@@ -45,7 +45,7 @@ the KMS state space at β = 1. The left (e₊) and right (e₋) sectors
 correspond to the +1 and -1 eigenspaces of the Varlamov W operator.
 CPT emerges from C = EW. The modular flow begins from this splitting.
 
-## The Galois Connection
+## The Galois Connection — target
 
 At β = 1, the extremal KMS states are in bijection with characters of
 Ẑ^× ≅ Gal(ℚ^{cycl}/ℚ). Each character χ: Ẑ^× → S¹ defines a twisted
@@ -76,7 +76,7 @@ open UResRepresentations
 open MasterIdentity
 
 /--
-**Theorem: Harmonic series divergence = ζ(1) = ∞.**
+Closure debt: harmonic series divergence / `ζ(1) = ∞`.
 
 The harmonic series Σ_n n^{-1} diverges. This is the fundamental
 reason for the phase transition at β = 1.
@@ -84,14 +84,11 @@ reason for the phase transition at β = 1.
 In the repo's algebraic language: e^{-H} has operator norm 1 on
 the non-vacuum sector, so the spectral gap closes.
 -/
-theorem harmonic_series_diverges : True := by
-  -- Mathlib: `not_summable_one_div_nat` (if it exists in this version)
-  -- or `summable_nat_add_iff` combined with integral test.
-  -- The harmonic series ∑ 1/n diverges (classical, ∈ Mathlib).
-  trivial
+def harmonic_series_diverges_debt : String :=
+  "Open: prove or import the harmonic-series divergence theorem in the required zeta normalization."
 
 /--
-**Theorem: Fredholm determinant vanishes at β = 1.**
+Closure debt: Fredholm determinant vanishes at β = 1.
 
   det(1 - e^{-H}) = ∏_p (1 - p^{-1}) = 0
 
@@ -102,14 +99,11 @@ product diverges to 0 because the sum of log factors diverges:
 
 The product vanishes: Π_p (1 - p^{-1}) = 0.
 -/
-theorem fredholm_determinant_vanishes_at_critical : True := by
-  -- At β = 1: ζ(1) = ∞ ⇒ 1/ζ(1) = 0 ⇒ det(1 - e^{-H}) = 0.
-  -- Proved via the Master Identity: det = 1/ζ.
-  -- The divergence of ζ(1) is the harmonic series.
-  trivial
+def fredholm_determinant_vanishes_at_critical_debt : String :=
+  "Open: connect harmonic divergence, determinant regularization, and the Fredholm determinant readout at beta = 1."
 
 /--
-**Theorem: Spectral gap closes at β = 1.**
+Closure debt/correction: trace-class failure at β = 1.
 
   ‖e^{-H}‖ = sup_n n^{-1} = 1/2? No: n=1 gives 1^1 = 1.
   For n=1: e^{-H}|1⟩ = 1^{-1}|1⟩ = |1⟩ (vacuum, eigenvalue 1).
@@ -127,14 +121,11 @@ The issue is not the contraction but the trace: Tr(e^{-H}) = Σ n^{-1} = ∞.
 The trace-class property fails — e^{-H} is not trace-class at β=1.
 Hence ζ(1) = Tr(e^{-H}) = ∞ (diverges).
 -/
-theorem spectral_gap_closes_at_critical : True := by
-  -- The contraction ‖e^{-H}|_{n≥2}‖ = 1/2 < 1 still holds.
-  -- But the trace Tr(e^{-H}) = Σ n^{-1} diverges.
-  -- This is the trace-class failure, not the contraction failure.
-  trivial
+def trace_class_failure_at_critical_debt : String :=
+  "Open: formalize the beta = 1 trace-class failure; avoid calling it a spectral-gap closure without a precise spectral statement."
 
 /--
-**Theorem: KMS state is unique for β > 1, not unique at β = 1.**
+Closure debt: KMS state uniqueness for β > 1 and critical branching.
 
 For β > 1: ζ(β) < ∞, the Gibbs state φ_β(a) = Tr(a·e^{-βH})/ζ(β)
 is the unique KMS state on the Cuntz algebra O_∞.
@@ -146,15 +137,11 @@ by the characters of Ẑ^× = Gal(ℚ^{cycl}/ℚ).
 Each character χ: Ẑ^× → S¹ defines a twisted KMS state:
     φ_{χ}(a) = Tr(a·χ·e^{-H}) (formal, needs regularization)
 -/
-theorem kms_state_uniqueness_above_critical : True := by
-  -- For β > 1: ζ(β) converges absolutely (ZetaConvergence.lean).
-  -- The Gibbs state is the unique KMS state.
-  -- For β = 1: multiple extremal KMS states exist.
-  -- Each is labelled by a character of Ẑ^×.
-  trivial
+def kms_state_uniqueness_above_critical_debt : String :=
+  "Open: prove KMS uniqueness/classification in the chosen Bost-Connes algebraic setting."
 
 /--
-**Theorem: Spontaneous symmetry breaking via Varlamov classification.**
+Closure debt: spontaneous symmetry breaking via Varlamov classification.
 
 At β = 1, the KMS state space splits into left (e₊) and right (e₋)
 sectors via the Varlamov idempotents. CPT emerges from C = EW.
@@ -168,16 +155,11 @@ This is the particle-hole symmetry breaking at the Bost-Connes
 critical point. The Galois group Ẑ^× acts transitively on the
 set of extremal KMS states.
 -/
-theorem spontaneous_symmetry_breaking_varlamov : True := by
-  -- The Varlamov W, E, C operators (all proved in VarlamovDiscreteSymmetry.lean)
-  -- split the state space at β = 1.
-  -- The KMS branching theorem (KMSBranching.lean) documents the idempotent
-  -- decomposition e₊ ⊕ e₋.
-  -- The CPT operator C = EW emerges as the symmetry of the critical state.
-  trivial
+def spontaneous_symmetry_breaking_varlamov_debt : String :=
+  "Open: connect Varlamov idempotents to a proved critical KMS state-space decomposition."
 
 /--
-**Theorem: Phase transition = Galois symmetry breaking.**
+Closure debt: phase transition as Galois symmetry breaking.
 
 At β = 1, the symmetry group Ẑ^× ≅ Gal(ℚ^{cycl}/ℚ) acts on the
 set of extremal KMS states by:
@@ -190,18 +172,7 @@ roots of unity in S¹.
 This IS the Bost-Connes theorem: the phase transition is the
 spontaneous breaking of the Ẑ^× symmetry at the critical temperature.
 -/
-theorem phase_transition_is_galois_symmetry_breaking : True := by
-  -- The Galois group Gal(ℚ^{cycl}/ℚ) ≅ Ẑ^× acts on the extremal
-  -- KMS states at β = 1. The unique state φ_β for β > 1 decomposes
-  -- at β = 1 into a continuum of states parametrized by Ẑ^×.
-  --
-  -- This is the Bost-Connes theorem (J.-B. Bost and A. Connes, 1995).
-  -- The formal proof requires:
-  --   1. The divergence of ζ(1) (harmonic series)
-  --   2. The Cuntz-Toeplitz algebra representation of Ẑ^×
-  --   3. The Pontryagin duality of the profinite completion
-  -- All three are documented in the repo; the full formalization
-  -- is structural debt.
-  trivial
+def phase_transition_is_galois_symmetry_breaking_debt : String :=
+  "Open: prove the critical-state classification and faithful/transitive Galois action from explicit Bost-Connes premises."
 
 end InfoGeometry.Arithmetic.BostConnesCriticality

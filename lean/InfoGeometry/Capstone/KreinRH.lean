@@ -1,8 +1,7 @@
 import InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 import InfoGeometry.Arithmetic.SpectralGap
+import InfoGeometry.Canonical.LogCftMonodromyBridge
 import InfoGeometry.Capstone.ZornOrderCapstone
-import InfoGeometry.Dynamics.SouriauDiracHodge
-import InfoGeometry.Krein.DoubledSpace
 
 /-!
 # Hestenes-Krein Translated RH Capstone
@@ -15,8 +14,13 @@ the Hestenes-Krein setting:
 
 * the native carrier is the real doubled space;
 * the critical line is a real fixed-throat predicate;
+* the slit-plane picture is replaced by `J`-gluing of the physical and ghost
+  sheets, algebraically witnessed by orientation reversal of the Hestenes
+  phase axis;
 * zero-sector support is controlled by inductive-colimit finite stages or by
   Zorn-maximal admissible subsystems;
+* finite monodromy is read as a phase plus nilpotent shear, not erased by
+  branch-cut language;
 * the original complex-coordinate statement is recovered only through the
   explicit charts in `RHRealDoubledKreinReformulation`.
 
@@ -34,7 +38,6 @@ namespace InfoGeometry.Capstone.KreinRH
 open InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 open InfoGeometry.Arithmetic.SpectralGap
 open InfoGeometry.Capstone.ZornOrderCapstone
-open InfoGeometry.Dynamics.SouriauDiracHodge
 open InfoGeometry.Krein
 
 /-! ## Real doubled Hestenes/Krein chart -/
@@ -50,6 +53,19 @@ theorem hestenes_klein_bottle_twist
   hestenes_phaseAxis_conjugation E
 
 /--
+Möbius-tape gluing in the real doubled model.
+
+The physical and ghost sheets are glued by `modular_j`; the gluing reverses
+the Hestenes phase axis.  This is the operator-level content of the
+orientation-reversing branch-cut language.
+-/
+theorem mobius_tape_gluing_twist
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    modular_j (E := E) * complex_i (E := E) * modular_j (E := E) =
+      -complex_i (E := E) :=
+  hestenes_klein_bottle_twist E
+
+/--
 The Hestenes complex-coordinate chart is conjugated by Tomita reflection:
 `J * hestenesScalar z * J = hestenesScalar (star z)`.
 -/
@@ -60,28 +76,48 @@ theorem hestenes_scalar_conjugation
       hestenesComplexCoordinate E (star z) :=
   hestenesComplexCoordinate_conjugation E z
 
-/-! ## Real doubled index theorem surface -/
+/--
+The same `J`-gluing acts on the embedded complex-coordinate chart by
+conjugation.  This is the chart-level reflection used to compare the real
+doubled theorem with the original complex-coordinate formulation.
+-/
+theorem mobius_tape_scalar_reflection
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (z : ℂ) :
+    modular_j (E := E) * hestenesComplexCoordinate E z * modular_j (E := E) =
+      hestenesComplexCoordinate E (star z) :=
+  hestenes_scalar_conjugation E z
+
+/-! ## Finite monodromy readout replacing branch-cut language -/
 
 /--
-The Souriau-Dirac-Hodge index vanishing theorem in the real doubled language.
+Finite LCFT monodromy decomposes into a scalar phase and a nilpotent
+logarithmic shear.
 
-This proves the index-vanishing/obstruction-killing surface.  The separate
-colimit or Zorn certificate below is what turns this into zero-sector throat
-support for a chosen spectral chart.
+This is the owner-backed algebraic readout behind the branch-cut/monodromy
+language: the capstone uses the monodromy matrix identity, not a global
+analytic branch-cut theorem.
 -/
-theorem real_doubled_twisted_index_vanishing
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (D : SouriauDiracHodgeData)
-    (trace : (DoubledSpace E →L[ℝ] DoubledSpace E) → ℝ)
-    (h_trace_linear :
-      ∀ (c : ℝ) (A : DoubledSpace E →L[ℝ] DoubledSpace E),
-        trace (c • A) = c * trace A)
-    (h_trace_J_inv : ∀ A, trace (D.J * A * D.J) = trace A)
-    (h_proj_J_comm :
-      D.twistedSectorProjection * D.J =
-        D.J * D.twistedSectorProjection) :
-    D.indexPairing trace = 0 :=
-  twisted_index_vanishing trace h_trace_linear h_trace_J_inv h_proj_J_comm
+theorem logCFT_monodromy_decomposition (h : ℂ) :
+    InfoGeometry.Canonical.LogCftMonodromyBridge.hadjiivanovMonodromy h =
+      InfoGeometry.Canonical.LogCftMonodromyBridge.lcftPhase h •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+        InfoGeometry.Clifford.LogCftMonodromy.monodromyNilpotentPart h :=
+  InfoGeometry.Canonical.LogCftMonodromyBridge.monodromy_decomposition h
+
+/--
+After `n` wraps, the lower logarithmic monodromy has the exact winding law.
+
+The nilpotent shear coefficient is linear in the winding number; this is the
+finite algebraic monodromy surface used here.
+-/
+theorem logCFT_lower_monodromy_winding_law (h : ℂ) (n : ℕ) :
+    InfoGeometry.Clifford.LogCftMonodromy.lowerHadjiivanovMonodromy h ^ n =
+      InfoGeometry.Canonical.LogCftMonodromyBridge.lcftPhase h ^ n •
+        ((1 : Matrix (Fin 2) (Fin 2) ℂ) +
+          ((n : ℂ) * InfoGeometry.Canonical.LogCftMonodromyBridge.logShearBase) •
+            InfoGeometry.Clifford.LogCftMonodromy.lowerJordanNilpotent) :=
+  InfoGeometry.Canonical.LogCftMonodromyBridge.lowerHadjiivanovMonodromy_pow_winding h n
 
 /-! ## Finite-stage contraction feeding the colimit -/
 

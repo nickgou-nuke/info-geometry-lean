@@ -1,193 +1,298 @@
+import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
+import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
+import InfoGeometry.Capstone.QuantumGroupFibonacci
+import InfoGeometry.Dynamics.TomitaTakesaki
 import InfoGeometry.Krein.HestenesAffineO55ClosureBridge
-import InfoGeometry.Krein.HestenesMoebiusClosureBridge
-import InfoGeometry.Krein.Modular
-import InfoGeometry.Arithmetic.UnifiedCapstone
-import InfoGeometry.Canonical.BostConnesGalois
-import InfoGeometry.Quantum.FenchelConjugation
-import InfoGeometry.Capstone.CommutantMoebiusLegendre
 
 /-!
-# Erlangen–Langlands–Connes Capstone
+# Erlangen--Langlands--Connes Capstone
 
-The trinity in six theorems.
-
-    1. ERLANGEN — O(5,5) preserves geometric invariants
-    2. LANGLANDS — Galois action on cyclotomic roots, ζ partition
-    3. CONNES — Spectral triple, anomaly cancellation at Re(s)=½
-    4. J = LEGENDRE-FENCHEL — Tomita-Takesaki Δ, h_i = a†+a
-    5. FIBONACCI φ — Quantum dimension at the absolute zero fixed point
-    6. UNIFIED — The trinity closes at the Klein bottle throat
-
-The anti-diagonal Cartan h_i = a_i† + a_i is the single generator
-that unifies all three programs. It is simultaneously:
-  • the grade-2 gauge generator of O(5,5)
-  • the modular conjugation J : τ → -1/τ
-  • the Legendre-Fenchel dual β ↔ E
-  • the φ-scaled quantum dimension at the fixed point
-
-The Klein bottle throat at Re(s)=½ is where the anomaly cancels:
-  Tr(γ₅·e^{-βH}) = 0   at   Re(β) = ½
-
-All theorems delegate to verified owners. Zero axioms. Zero sorries.
+This file is a non-vacuous capstone readout.  Each theorem below has a concrete
+statement assembled from existing owner theorems.  It deliberately does not
+claim the still-open analytic Fredholm/zeta/Klein-bottle closure.
 -/
+
+open scoped InnerProductSpace
 
 noncomputable section
 
+universe u
+
 namespace InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 
+open InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
+open InfoGeometry.Canonical.BostConnesSymmetryBreaking
+-- InfoGeometry.Canonical.ChiralAnomalyCantor has no namespace — all theorems are at top level
+open InfoGeometry.Canonical.SouriauDiracHodgeCoupling
+open InfoGeometry.Dynamics.TomitaTakesaki
 open InfoGeometry.Krein.HestenesAffineO55ClosureBridge
-open InfoGeometry.Krein
-open InfoGeometry.Arithmetic.UnifiedCapstone
-open InfoGeometry.Canonical.BostConnesGalois
-open InfoGeometry.Quantum
+open Matrix
+open scoped Matrix
 
-section Trinity
+section O55
 
-variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [CompleteSpace E] [KreinSpace (DoubledSpace E)]
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace E)]
 
-local notation "H₂" => DoubledSpace E
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-/--
-**Theorem 1: Erlangen — O(5,5) preserves the cone, the null cone, and the volume.**
-
-The 45-dimensional split orthogonal group O(5,5) is the exact symmetry
-group preserving:
-  • The natural cone P^♮ (thermodynamic flow)
-  • The Krein null cone N (causal structure)
-  • The Ω-volume state (topological index)
-  • The 24 D4/Hurwitz roots (lattice structure)
-
-The Cartan hopping h_i = E_{i,i+n} + E_{i+n,i} generates the maximal
-abelian subalgebra. On the {e_i, e_{i+n}} subspace, h_i acts as σ_x.
-h_i²|₂×₂ = I₂. [h_i, h_j] = 0 for all i,j.
-
-Proved in: HestenesAffineO55ClosureBridge.lean
-Verified:   tools/sympy/o55_commutator_verify.py
--/
-theorem erlangen_o55_invariants : True := by trivial
-
-/--
-**Theorem 2: Langlands — Galois action on cyclotomic roots and the ζ identity.**
-
-The absolute abelian Galois group Gal(ℚ^ab/ℚ) ≅ Ẑ^× acts faithfully on
-the extreme KMS states at β ≤ 1, permuting the degenerate vacua on
-the Cantor boundary via cyclotomic roots of unity.
-
-The partition function of the system is simultaneously:
-    det(1 - e^{-βH})⁻¹ = ∏_p (1 - p^{-β})⁻¹ = Σ_n n^{-β} = ζ(β)
-with H|n⟩ = log(n)|n⟩ on ℓ²(ℕ^+).
-
-The functional equation ξ(s) = ξ(1-s) is the J-modular conjugation
-under the trace.
-
-Proved in: BostConnesGalois.lean, UnifiedCapstone.lean
-Verified:   tools/sympy/erlangen_langlands_connes_verify.py
--/
-theorem langlands_galois_zeta : True := by trivial
+/-- Proposition bundled by the Erlangen/O(5,5) capstone theorem. -/
+def ErlangenO55Statement
+    (B : HestenesAffineO55ClosureBridge (E := E))
+    (ξ : H₂)
+    (_hNatural :
+      ξ ∈
+        B.duality.arithmetic.moebius.wilson.kmsPacket.HestenesNaturalCone)
+    (_hNull :
+      ξ ∈
+        InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesNullCone
+          B.duality.arithmetic.moebius.wilson.kmsPacket)
+    (A : EndH)
+    (i : Fin 24) : Prop :=
+    B.o55VectorAction ξ ∈
+        B.duality.arithmetic.moebius.wilson.kmsPacket.HestenesNaturalCone ∧
+    B.o55VectorAction ξ ∈
+        InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesNullCone
+          B.duality.arithmetic.moebius.wilson.kmsPacket ∧
+    B.duality.arithmetic.moebius.wilson.volume.volumeState
+        (B.o55OperatorAction A) =
+      B.duality.arithmetic.moebius.wilson.volume.volumeState A ∧
+    B.o55OperatorAction (B.duality.arithmetic.hurwitzRoot i) =
+      B.duality.arithmetic.hurwitzRoot (B.o55RootAction i)
 
 /--
-**Theorem 3: Connes — Spectral triple and anomaly cancellation at Re(s)=½.**
-
-The spectral triple (Cantor C*-algebra, Fock space, D) satisfies:
-    Tr(γ₅·e^{-βH}) = 0   at   Re(β) = ½
-The chiral anomaly vanishes at the fixed point of the J modular
-conjugation. This is the orientability condition for the Klein
-bottle: the two sheets of the critical strip are conjugate-paired.
-
-The Reidemeister torsion |ζ(½+it)|² vanishes at the Riemann zeros,
-marking topological defects in the critical line.
-
-Proved in: CommutantMoebiusLegendre.lean (connes_anomaly_cancellation)
-           Modular.lean (Δ = T♯T)
-Verified:   tools/sympy/erlangen_langlands_connes_verify.py
+Erlangen/O(5,5) readout: the supplied O(5,5) action preserves the natural
+cone, the null cone, the Ω-volume state, and permutes Hurwitz roots.
 -/
-theorem connes_anomaly_cancellation_at_critical : True := by trivial
+theorem erlangen_o55_invariants
+    (B : HestenesAffineO55ClosureBridge (E := E))
+    (ξ : H₂)
+    (hNatural :
+      ξ ∈
+        B.duality.arithmetic.moebius.wilson.kmsPacket.HestenesNaturalCone)
+    (hNull :
+      ξ ∈
+        InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesNullCone
+          B.duality.arithmetic.moebius.wilson.kmsPacket)
+    (A : EndH)
+    (i : Fin 24) :
+    ErlangenO55Statement B ξ hNatural hNull A i := by
+  exact
+    ⟨B.o55_preserves_naturalCone hNatural,
+      B.o55_preserves_nullCone hNull,
+      B.volumeState_o55_invariant A,
+      B.o55_hurwitzRoot_covariant i⟩
+
+end O55
+
+section Langlands
+
+/-- Proposition bundled by the Langlands/Bost-Connes capstone theorem. -/
+def LanglandsGaloisSeparationStatement
+    (Op : Type u) (φ₁ φ₂ : Op → ℂ) : Prop :=
+  φ₁ ≠ φ₂
 
 /--
-**Theorem 4: Tomita J = Legendre-Fenchel dual — h_i = a†+a.**
-
-The Tomita-Takesaki modular conjugation J = Δ^{1/2}·S satisfies:
-    J: τ → -1/τ      (S-duality on the modular parameter)
-    J² = I            (involution)
-    J·Δ·J = Δ^{-1}    (modular dual)
-
-Under J, the Cartan hopping h_i = E_{i,i+n} + E_{i+n,i} acts as
-the Legendre-Fenchel exchange:
-    h_i·|phys_i⟩ = |ghost_i⟩     β (temperature) ↔ E (energy)
-    h_i·|ghost_i⟩ = |phys_i⟩     (the S-duality swap)
-
-The Fenchel-Young inequality:
-    S(E) = inf_β { βE - F(β) }
-is the KMS condition evaluated at the fixed point.
-
-Proved in: Modular.lean (modularOperator, modularOperator_kreinSelfAdjoint)
-           FenchelConjugation.lean (quantum Fenchel dual)
-Verified:   tools/sympy/erlangen_langlands_connes_verify.py
+Langlands/Bost-Connes readout: distinct Galois parameters separate the
+Hecke-Cuntz ground-state functionals under the explicit faithfulness premises
+owned by `BostConnesHeckeCuntzCapstone`.
 -/
-theorem tomita_j_is_legendre_fenchel : True := by trivial
+theorem langlands_galois_state_separation
+    (C_comm Op G Qab : Type u)
+    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    [Ring Op] [StarRing Op] [Algebra ℂ Op]
+    [Group G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G]
+    [MulAction G Qab]
+    (bsys : BundledBostConnesSystem C_comm Op G)
+    (χ : ℚ → Qab) (ιab : Qab → ℂ)
+    (φ₁ φ₂ : Op → ℂ) (g₁ g₂ : G)
+    (h_state1 : HeckeCuntzExtremeGroundState
+      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
+      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
+      χ ιab g₁ φ₁)
+    (h_state2 : HeckeCuntzExtremeGroundState
+      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
+      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
+      χ ιab g₂ φ₂)
+    (hEmbedding : Function.Injective ιab)
+    (hChiGenerating : ∀ g : G, (∀ r : ℚ, g • χ r = χ r) → g = 1)
+    (hne : g₁ ≠ g₂) :
+    LanglandsGaloisSeparationStatement Op φ₁ φ₂ :=
+  bost_connes_hecke_cuntz_symmetry_breaking
+    C_comm Op G Qab bsys χ ιab φ₁ φ₂ g₁ g₂
+    h_state1 h_state2 hEmbedding hChiGenerating hne
+
+end Langlands
+
+section Connes
+
+/-- Proposition bundled by the finite Connes/anomaly/Dikin capstone theorem. -/
+def ConnesAnomalyDikinStatement
+    (tilt proj : Matrix (Fin 2) (Fin 2) ℂ)
+    (hProj : proj * proj = proj)
+    (ε : ℝ) : Prop :=
+    index_pairing tilt (⟨proj, hProj⟩ : KTheoryProjection 2) = 0 ∧
+    Real.sqrt (2 * ((Real.cos ε - 1) ^ 2 + (Real.sin ε - ε) ^ 2)) ≤
+      (2 * Real.sqrt 2) * ε ^ 2
 
 /--
-**Theorem 5: Fibonacci φ — quantum dimension at absolute zero.**
-
-At the zero-temperature fixed point β → ∞ (compactified to β = 0
-under the J identification), the quantum dimension of the Fibonacci
-anyon τ is the golden ratio:
-
-    d_τ = φ = (1 + √5)/2
-
-This satisfies the Fibonacci identity:
-    d_τ² = 1 + d_τ
-
-The F-matrix of the Fibonacci MTC at q = e^{πi/5}:
-    F = [[φ⁻¹, φ^{-½}], [φ^{-½}, -φ⁻¹]]
-satisfies F² = I, det(F) = -1.
-
-Proved in: QuantumGroupFibonacci.lean (qFibonacci_pow_five,
-           fibonacciQuantumDimension, quantumDimension_identity)
-           FibonacciFusionCategory.lean (fusion τ⊗τ = 1⊕τ)
-Verified:   tools/sympy/fibonacci_mtc_verify.py
+Connes/Dirac-Hodge readout: the finite chiral index vanishes under the
+Dirac-commutation hypotheses, and the Dikin/Bregman quadratic estimate holds.
 -/
-theorem fibonacci_phi_at_zero_temperature : True := by trivial
+theorem connes_anomaly_and_dikin_readout
+    (tilt D proj : Matrix (Fin 2) (Fin 2) ℂ)
+    (hProj : proj * proj = proj)
+    (hAnti : D * tilt + tilt * D = 0)
+    (hComm : D * proj = proj * D)
+    (hDinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1)
+    (ε : ℝ) (hε : |ε| ≤ 1) :
+    ConnesAnomalyDikinStatement tilt proj hProj ε := by
+  exact
+    ⟨anomaly_vanishes tilt D proj hProj hAnti hComm hDinv,
+      dikin_bound ε hε⟩
+
+end Connes
+
+section Tomita
+
+/-- Proposition bundled by the finite Tomita matrix capstone theorem. -/
+def TomitaJMatrixStatement (s t : ℝ) : Prop :=
+    (modularConjugation * modularConjugation =
+        (1 : InfoGeometry.Dynamics.KmsBoundary.Mat2C)) ∧
+    (star modularConjugation = modularConjugation) ∧
+    (modularConjugation *
+        InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian *
+        modularConjugation =
+      -InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian) ∧
+    (finiteTomitaFlow s * finiteTomitaFlow t = finiteTomitaFlow (s + t))
 
 /--
-**Theorem 6: Unified capstone — the trinity closes at the Klein bottle throat.**
-
-    ┌────────────────────────────────────────────────────────────┐
-    │                                                            │
-    │  Erlangen:  O(5,5) preserves cone + light cone + volume    │
-    │       ∩                                                    │
-    │  Langlands: Galois action on cyclotomic roots, ζ = Z       │
-    │       ∩                                                    │
-    │  Connes:   Tr(γ₅·e^{-βH}) = 0 at Re(s)=½                  │
-    │       =                                                     │
-    │  J: τ → -1/τ = Legendre-Fenchel β ↔ E                     │
-    │  h_i = a_i† + a_i = Cartan hopping = modular conjugation   │
-    │  φ = quantum dimension at absolute zero fixed point        │
-    │                                                            │
-    │  Klein bottle: cylinder gluing β ↔ 1-β, t ↔ -t           │
-    │  Critical line Re(s)=½ = invariant throat                  │
-    │  Anomaly cancellation = orientability condition             │
-    │  Zeros of ζ = topological defects in the fabric            │
-    │                                                            │
-    └────────────────────────────────────────────────────────────┘
-
-    The single object unifying all three programs is the
-    anti-diagonal Cartan hopping h_i = E_{i,i+n} + E_{i+n,i}
-    = a_i† + a_i. It is simultaneously:
-      • a gauge generator of O(5,5)
-      • the modular conjugation J
-      • the Legendre-Fenchel dual
-      • the bit-flip on the i-th qubit of the 5-qubit register
-
-    The throat at Re(s)=½ is where the anomaly cancels.
-    The golden ratio φ is the quantum dimension at zero.
-    The roof is on.
+Finite Tomita readout: the matrix modular conjugation is involutive,
+self-adjoint, flips the finite boost Hamiltonian, and the finite modular flow
+is additive.
 -/
-theorem trinity_capstone_unified : True := by trivial
+theorem tomita_j_matrix_readout (s t : ℝ) :
+    TomitaJMatrixStatement s t := by
+  exact
+    ⟨modularConjugation_is_involution,
+      modularConjugation_conjTranspose,
+      modularConjugation_reflects_hamiltonian,
+      finiteTomitaFlow_add s t⟩
 
-end Trinity
+end Tomita
+
+section Fibonacci
+
+/-- Proposition bundled by the finite Fibonacci/quantum-group capstone theorem. -/
+def FibonacciQuantumGroupStatement : Prop :=
+    InfoGeometry.Capstone.QuantumGroupFibonacci.qFibonacci ^ 5 = -1 ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.qFibonacci ^ 10 = 1 ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.RFibonacci 0 0 =
+      Complex.exp (-Complex.I * (4 * Real.pi / 5)) ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.RFibonacci 0 1 = 0 ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.RFibonacci 1 0 = 0 ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.RFibonacci 1 1 =
+      Complex.exp (Complex.I * (3 * Real.pi / 5)) ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.FFibonacci *
+        InfoGeometry.Capstone.QuantumGroupFibonacci.FFibonacci =
+      (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
+    InfoGeometry.Capstone.QuantumGroupFibonacci.fibonacciQuantumDimension ^ 2 =
+      InfoGeometry.Capstone.QuantumGroupFibonacci.fibonacciQuantumDimension + 1
+
+/--
+Fibonacci quantum-group readout: the root of unity, R-matrix entries,
+F-matrix involution, and golden-ratio identity are delegated to
+`QuantumGroupFibonacci`.
+-/
+theorem fibonacci_quantum_group_readout :
+    FibonacciQuantumGroupStatement :=
+  InfoGeometry.Capstone.QuantumGroupFibonacci.quantum_group_to_fibonacci_capstone
+
+end Fibonacci
+
+/-- Proposition bundled by the unified non-vacuous capstone theorem. -/
+def TrinityCapstoneStatement
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace E)]
+    (B : HestenesAffineO55ClosureBridge (E := E))
+    (ξ : InfoGeometry.Krein.DoubledSpace E)
+    (hNatural :
+      ξ ∈
+        B.duality.arithmetic.moebius.wilson.kmsPacket.HestenesNaturalCone)
+    (hNull :
+      ξ ∈
+        InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesNullCone
+          B.duality.arithmetic.moebius.wilson.kmsPacket)
+    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
+    (i : Fin 24)
+    (Op : Type u) (φ₁ φ₂ : Op → ℂ)
+    (tilt proj : Matrix (Fin 2) (Fin 2) ℂ)
+    (hProj : proj * proj = proj)
+    (ε : ℝ)
+    (s t : ℝ) : Prop :=
+    ErlangenO55Statement B ξ hNatural hNull A i ∧
+    LanglandsGaloisSeparationStatement Op φ₁ φ₂ ∧
+    ConnesAnomalyDikinStatement tilt proj hProj ε ∧
+    TomitaJMatrixStatement s t ∧
+    FibonacciQuantumGroupStatement
+
+/--
+Unified non-vacuous capstone: a single theorem that conjoins the concrete
+owner-backed Erlangen, Langlands, Connes, Tomita, and Fibonacci readouts.
+-/
+theorem trinity_capstone_unified
+    {E : Type 0}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [InfoGeometry.Krein.KreinSpace (InfoGeometry.Krein.DoubledSpace E)]
+    (B : HestenesAffineO55ClosureBridge (E := E))
+    (ξ : InfoGeometry.Krein.DoubledSpace E)
+    (hNatural :
+      ξ ∈
+        B.duality.arithmetic.moebius.wilson.kmsPacket.HestenesNaturalCone)
+    (hNull :
+      ξ ∈
+        InfoGeometry.Krein.HestenesMoebiusClosureBridge.HestenesNullCone
+          B.duality.arithmetic.moebius.wilson.kmsPacket)
+    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
+    (i : Fin 24)
+    (C_comm Op G Qab : Type u)
+    [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
+    [Ring Op] [StarRing Op] [Algebra ℂ Op]
+    [Group G] [InfoGeometry.Canonical.BostConnesGalois.GaloisActionData G]
+    [MulAction G Qab]
+    (bsys : BundledBostConnesSystem C_comm Op G)
+    (χ : ℚ → Qab) (ιab : Qab → ℂ)
+    (φ₁ φ₂ : Op → ℂ) (g₁ g₂ : G)
+    (h_state1 : HeckeCuntzExtremeGroundState
+      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
+      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
+      χ ιab g₁ φ₁)
+    (h_state2 : HeckeCuntzExtremeGroundState
+      (e_rep := bsys.e_rep) (semigroup := bsys.semigroup)
+      (cuntz := bsys.cuntz) (crossed := bsys.crossed)
+      χ ιab g₂ φ₂)
+    (hEmbedding : Function.Injective ιab)
+    (hChiGenerating : ∀ g : G, (∀ r : ℚ, g • χ r = χ r) → g = 1)
+    (hne : g₁ ≠ g₂)
+    (tilt D proj : Matrix (Fin 2) (Fin 2) ℂ)
+    (hProj : proj * proj = proj)
+    (hAnti : D * tilt + tilt * D = 0)
+    (hComm : D * proj = proj * D)
+    (hDinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1)
+    (ε : ℝ) (hε : |ε| ≤ 1)
+    (s t : ℝ) :
+    TrinityCapstoneStatement B ξ hNatural hNull A i Op φ₁ φ₂ tilt proj hProj ε s t := by
+  exact
+    ⟨erlangen_o55_invariants B ξ hNatural hNull A i,
+      langlands_galois_state_separation
+        C_comm Op G Qab bsys χ ιab φ₁ φ₂ g₁ g₂
+        h_state1 h_state2 hEmbedding hChiGenerating hne,
+      connes_anomaly_and_dikin_readout tilt D proj hProj hAnti hComm hDinv ε hε,
+      tomita_j_matrix_readout s t,
+      fibonacci_quantum_group_readout⟩
 
 end InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
 

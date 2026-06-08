@@ -16,6 +16,19 @@ No braid-group representation theorem.
 No conformal-block construction.
 No topological-protection theorem.
 No axioms or placeholders.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+Finite `2 × 2` real matrix identities for `F`, diagonal `R`, `B = F R F`,
+and the concrete `q = -1`, `a = 1/2`, `b = sqrt 3 / 2` Artin relation.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+`diagonal_artin_relation` and `R_B_R_eq_B_R_B` require explicit scalar
+constraints.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+The complex Fibonacci anyon phases, `Z₃` Hopf/differential calculus,
+Jones/Fibonacci braid-group representation, and density/universality theorem
+are not proved here.
 -/
 
 namespace InfoGeometry.Canonical.FibonacciParafermionAtoms
@@ -54,6 +67,14 @@ noncomputable def R_matrix (q : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- The dual-basis braid matrix obtained by conjugating `R_matrix` with `F_matrix`. -/
 noncomputable def B_matrix (a b q : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   F_matrix a b * R_matrix q * F_matrix a b
+
+/-- Concrete real `Z₃` two-channel braid matrix: `q = -1`. -/
+noncomputable def z3RMatrix : Matrix (Fin 2) (Fin 2) ℝ :=
+  R_matrix (-1 : ℝ)
+
+/-- Concrete real `Z₃` dual-basis braid matrix: `a = 1/2`, `b = sqrt 3 / 2`, `q = -1`. -/
+noncomputable def z3BMatrix : Matrix (Fin 2) (Fin 2) ℝ :=
+  B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ)
 
 /-- Conjugating `B = F R F` by the involutive fusion matrix recovers `R`. -/
 theorem F_B_F_eq_R (a b q : ℝ) (h : IsFibonacciRelation a b) :
@@ -166,6 +187,12 @@ Finite two-channel braid relation for `R_matrix q` and `B_matrix a b q`.
 The theorem is conditional on the explicit scalar Artin constraint for the two
 chosen diagonal phases.  It does not assert a general braid-group
 representation.
+
+The concrete real `Z₃` specialization proved below is:
+`q = -1`, `a = 1/2`, `b = √3/2`.
+
+The complex golden-ratio Fibonacci braid relation is owned separately by
+`InfoGeometry.Canonical.YangBaxterProof`.
 -/
 theorem R_B_R_eq_B_R_B (a b q : ℝ)
     (hF : IsFibonacciRelation a b)
@@ -174,6 +201,74 @@ theorem R_B_R_eq_B_R_B (a b q : ℝ)
       B_matrix a b q * R_matrix q * B_matrix a b q := by
   simpa [R_matrix, B_matrix, B_matrix_diag, diagonalBraidMatrix] using
     (diagonal_artin_relation a b (q ^ (-4 : ℤ)) (q ^ 3) hF hA)
+
+/--
+**Concrete `Z₃` Artin constraint solution.**
+
+This exports the parameter values that satisfy the real `Z₃` finite
+Yang--Baxter constraint used by `R_B_R_eq_B_R_B`:
+
+`q = -1`, `a = 1/2`, `b = √3/2`.
+
+The complex golden-ratio Fibonacci braid owner is separate:
+`InfoGeometry.Canonical.YangBaxterProof.braid_relation`.
+-/
+theorem artin_constraint_solutions :
+    IsFibonacciRelation (1/2 : ℝ) (Real.sqrt 3 / 2) ∧
+    ((1/2 : ℝ) ^ 2) * (((-1 : ℝ) ^ (-4 : ℤ) - (-1 : ℝ) ^ 3) ^ 2) +
+        (-1 : ℝ) ^ (-4 : ℤ) * (-1 : ℝ) ^ 3 = 0 ∧
+    R_matrix (-1 : ℝ) * B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) *
+        R_matrix (-1 : ℝ) =
+      B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) * R_matrix (-1 : ℝ) *
+        B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) := by
+  have h1 : IsFibonacciRelation (1/2 : ℝ) (Real.sqrt 3 / 2) := by
+    dsimp [IsFibonacciRelation]
+    ring_nf
+    rw [Real.sq_sqrt (by norm_num : 0 ≤ (3 : ℝ))]
+    norm_num
+  have hA1 : ((1/2 : ℝ) ^ 2) * (((-1 : ℝ) ^ (-4 : ℤ) - (-1 : ℝ) ^ 3) ^ 2) +
+      (-1 : ℝ) ^ (-4 : ℤ) * (-1 : ℝ) ^ 3 = 0 := by norm_num
+  exact ⟨h1, hA1, R_B_R_eq_B_R_B (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) h1 hA1⟩
+
+/-- The Z₃ parafermion solution: q = -1, a = 1/2, b = √3/2. -/
+noncomputable def z3ParafermionSolution : ℝ × ℝ × ℝ := (1/2, Real.sqrt 3 / 2, -1)
+
+/-- The Z₃ solution satisfies IsFibonacciRelation. -/
+theorem z3ParafermionSolution_isFibonacci :
+    IsFibonacciRelation (1/2 : ℝ) (Real.sqrt 3 / 2) := by
+  dsimp [IsFibonacciRelation]
+  have h : (Real.sqrt 3 / 2) ^ 2 = 3/4 := by
+    rw [div_pow, Real.sq_sqrt (by norm_num : 0 ≤ (3 : ℝ))]
+    norm_num
+  rw [h]
+  norm_num
+
+/-- The Z₃ solution satisfies the Artin constraint. -/
+theorem z3ParafermionSolution_satisfies_artin :
+    ((1/2 : ℝ) ^ 2) * (((-1 : ℝ) ^ (-4 : ℤ) - (-1 : ℝ) ^ 3) ^ 2) +
+      (-1 : ℝ) ^ (-4 : ℤ) * (-1 : ℝ) ^ 3 = 0 := by
+  norm_num
+
+/-- The Z₃ parafermion solution satisfies the Yang-Baxter equation. -/
+theorem z3Parafermion_yang_baxter :
+    R_matrix (-1 : ℝ) * B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) * R_matrix (-1 : ℝ) =
+      B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) * R_matrix (-1 : ℝ) *
+        B_matrix (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ) :=
+  R_B_R_eq_B_R_B (1/2 : ℝ) (Real.sqrt 3 / 2) (-1 : ℝ)
+    z3ParafermionSolution_isFibonacci
+    z3ParafermionSolution_satisfies_artin
+
+/--
+Concrete `Z₃` two-channel Yang--Baxter owner.
+
+Unlike `R_B_R_eq_B_R_B`, this theorem has no scalar Artin premise: the
+parameters are fixed in `z3RMatrix` and `z3BMatrix`, and the scalar constraint
+is proved by `z3ParafermionSolution_satisfies_artin`.
+-/
+theorem z3_R_B_R_eq_B_R_B :
+    z3RMatrix * z3BMatrix * z3RMatrix =
+      z3BMatrix * z3RMatrix * z3BMatrix := by
+  simpa [z3RMatrix, z3BMatrix] using z3Parafermion_yang_baxter
 
 /-- Diagonal braid matrices compose by multiplying their diagonal entries. -/
 theorem diagonalBraidMatrix_mul (r₁ t₁ r₂ t₂ : ℝ) :
@@ -1172,5 +1267,17 @@ theorem computational3_R_B_R_eq_B_R_B (a b q : ℝ)
       embed2x2Computational3 (B_matrix a b q) * embed2x2Computational3 (R_matrix q) *
         embed2x2Computational3 (B_matrix a b q) :=
   embed2x2Computational3_artin _ _ (R_B_R_eq_B_R_B a b q hF hA)
+
+/--
+Concrete `Z₃` three-state computational Yang--Baxter owner.
+
+This is the no-premise computational block version of `z3_R_B_R_eq_B_R_B`.
+-/
+theorem z3_computational3_R_B_R_eq_B_R_B :
+    embed2x2Computational3 z3RMatrix * embed2x2Computational3 z3BMatrix *
+        embed2x2Computational3 z3RMatrix =
+      embed2x2Computational3 z3BMatrix * embed2x2Computational3 z3RMatrix *
+        embed2x2Computational3 z3BMatrix :=
+  embed2x2Computational3_artin _ _ z3_R_B_R_eq_B_R_B
 
 end InfoGeometry.Canonical.FibonacciParafermionAtoms

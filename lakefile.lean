@@ -728,6 +728,8 @@ require VirasoroProject from git
   @ "main"
 require «GIFT» from
   "external_refs/gift-framework-core"
+require Atlas from
+  "external_refs/atlas-lean"
 require LeanCopilot from git
   "https://github.com/lean-dojo/LeanCopilot.git"
   @ "v4.28.0"

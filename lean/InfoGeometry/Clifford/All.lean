@@ -11,6 +11,7 @@ import InfoGeometry.Clifford.KoszulFoundation
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.ClNN
 import InfoGeometry.Clifford.ClNNBilinear
+import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower

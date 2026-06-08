@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Canonical.ChiralKMSOwner
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
@@ -719,6 +720,40 @@ theorem regularRestrictedSuperHamiltonian_commutes_GammaS :
           rw [hP]
     _ = CIK.GammaS * (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector) := by
           simp [mul_assoc]
+
+/--
+The regular Drazin super-Hamiltonian preserves the spectral chiral grading.
+
+This is the KMS-owner formulation of `regularRestrictedSuperHamiltonian_commutes_GammaS`.
+-/
+@[rep_depth thermo]
+theorem regularRestrictedSuperHamiltonian_kmsPreservesChirality :
+    ChiralKMSOwner.KMSPreservesChirality
+      (regularRestrictedSuperHamiltonian CIK)
+      ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
+        ChiralKMSOwner.ChiralGrading (R := EndH)) :=
+  regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
+
+/--
+If a supplied Wick/phase factor also commutes with the Drazin spectral grading,
+then the regular Drazin thermal shift preserves chirality.
+
+The Wick commutation is an explicit hypothesis.  This theorem does not infer it
+from an informal Clifford grade calculation.
+-/
+@[rep_depth thermo]
+theorem regularRestrictedSuperHamiltonian_thermalShift_preserves_chirality
+    (W : EndH)
+    (hW :
+      ChiralKMSOwner.KMSPreservesChirality W
+        ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
+          ChiralKMSOwner.ChiralGrading (R := EndH))) :
+    ChiralKMSOwner.KMSPreservesChirality
+      (ChiralKMSOwner.thermalShift (regularRestrictedSuperHamiltonian CIK) W)
+      ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
+        ChiralKMSOwner.ChiralGrading (R := EndH)) :=
+  ChiralKMSOwner.thermalShift_preserves_chirality
+    (regularRestrictedSuperHamiltonian_kmsPreservesChirality (CIK := CIK)) hW
 
 /--
 Regular-support compressed superHamiltonian is spectrally compact/even.

@@ -4,7 +4,7 @@ import InfoGeometry.Arithmetic.BostConnesSystem
 /-!
 # Bost--Connes KMS Projection Evaluation
 
-This module gives a theorem-owned, zero-axiom projection-evaluation corridor for
+This module gives a theorem-owned projection-evaluation corridor for
 the Bost--Connes KMS state.
 
 The full analytic Bost--Connes theorem and the identity `ζβ = ζ(β)` are not
@@ -16,8 +16,9 @@ parameter `ζβ`; analytic Euler-product/zeta facts belong to the zeta bridge.
 * `S_hom_one`, `S_hom_mul`, `S_one`, `S_mul`, `S_isometry`, and
   `S_orthogonal` re-export the proof-carrying multiplicative Cuntz indexing
   owner.
-* `S_list_prod` and `S_prime_power` expose factorization-compatible readbacks
-  for arbitrary multiplicative words.
+* `S_list_prod`, `S_prime_power`, and `S_prime_power_list_prod` expose
+  factorization-compatible readbacks for arbitrary multiplicative words and
+  explicit prime-power decompositions.
 * `kmsProjectionWeight_eq` unfolds the normalized Boltzmann weight
   `n^{-β}/ζβ`.
 * `kms_evaluation_on_projections` proves the documented projection formula
@@ -128,9 +129,44 @@ theorem S_prime_power (C : BostConnesCuntzSystem Op)
     (p k : ℕ) (hp : Nat.Prime p) :
     S C ((MultiplicativeIndexing.primePNat p hp) ^ k) =
       S C (MultiplicativeIndexing.primePNat p hp) ^ k := by
-  simpa [S, S_hom, CuntzMultiplicativeIndexing.generator,
-    MultiplicativeIndexing.S_prime] using
-      C.toMultiplicativeIndexing.S_prime_power p k hp
+  simp [S, S_hom]
+
+/-- A single prime-power factor `p^k`, with primality carried explicitly. -/
+structure PrimePowerIndex where
+  p : ℕ
+  hp : Nat.Prime p
+  k : ℕ
+
+namespace PrimePowerIndex
+
+/-- The positive integer represented by a prime-power factor. -/
+def toPNat (a : PrimePowerIndex) : ℕ+ :=
+  (MultiplicativeIndexing.primePNat a.p a.hp) ^ a.k
+
+/-- The generator attached to the underlying prime. -/
+def primeGenerator (C : BostConnesCuntzSystem Op) (a : PrimePowerIndex) : Op :=
+  S C (MultiplicativeIndexing.primePNat a.p a.hp)
+
+end PrimePowerIndex
+
+/--
+Prime-power word readback:
+
+`S_(p₁^k₁ ... pₘ^kₘ) = S_p₁^k₁ ... S_pₘ^kₘ`.
+
+This is the formal Lean blueprint for passing from a prime factorization to the
+monoid-hom representation of the Bost--Connes generators.
+-/
+theorem S_prime_power_list_prod (C : BostConnesCuntzSystem Op)
+    (factors : List PrimePowerIndex) :
+    S C (factors.map PrimePowerIndex.toPNat).prod =
+      (factors.map fun a => (PrimePowerIndex.primeGenerator C a) ^ a.k).prod := by
+  induction factors with
+  | nil =>
+      simp [PrimePowerIndex.primeGenerator]
+  | cons a rest ih =>
+      simp [PrimePowerIndex.toPNat, PrimePowerIndex.primeGenerator, S_mul,
+        S_prime_power, ih]
 
 /-! ## 2. Normalized KMS projection readout -/
 

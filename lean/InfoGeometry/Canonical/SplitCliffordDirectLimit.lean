@@ -164,4 +164,77 @@ theorem splitCliffordInfinity_unbounded_representatives
   · exact splitCliffordMap n (n + N) (Nat.le_add_right n N) x
   · simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using htail N
 
+/--
+Finite `Cl(5,5)` window absorption in the split direct limit:
+adding any finite split-Clifford tail after stage `5` does not change the
+represented direct-limit element.
+
+This is the direct-limit form of the scale-invariance slogan
+`Cl(5,5) ⊗ Cl(∞,∞) ≅ Cl(∞,∞)` that is supported by the current tower API.
+-/
+@[rep_depth krein]
+theorem splitCliffordInfinity_cl55_window_absorbs_finite_tail
+    (x : SplitClNNAlg 5) (k : ℕ) :
+    DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) (5 + k)
+        (splitCliffordMap 5 (5 + k) (Nat.le_add_right 5 k) x)
+      =
+    DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) 5 x := by
+  simpa using
+    (DirectLimit.Module.of_f
+      (f := fun m n h => splitCliffordMap m n h)
+      (i := 5) (j := 5 + k) (hij := Nat.le_add_right 5 k) (x := x))
+
+/--
+Every split direct-limit element has a representative at or beyond the finite
+`Cl(5,5)` window.
+-/
+@[rep_depth krein]
+theorem splitCliffordInfinity_has_representative_beyond_cl55_window
+    (z : SplitCliffordInfinity) :
+    ∃ n ≥ 5, ∃ x : SplitClNNAlg n,
+      DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) n x = z := by
+  exact splitCliffordInfinity_unbounded_representatives z 5
+
+/--
+Any direct-limit predicate proved on the `Cl(5,5)` window also holds after
+adding an absorbed finite tail to that same window element.
+
+This is the precise transport principle available from the stage-5 absorption
+theorem. It does not assert that every direct-limit element comes from stage
+`5`; it transports stage-5 invariants along finite tail embeddings.
+-/
+@[rep_depth krein]
+theorem splitCliffordInfinity_cl55_predicate_lifts_to_finite_tail
+    {P : SplitCliffordInfinity → Prop}
+    (h5 : ∀ x : SplitClNNAlg 5,
+      P (DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) 5 x))
+    (x : SplitClNNAlg 5) (k : ℕ) :
+    P (DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) (5 + k)
+        (splitCliffordMap 5 (5 + k) (Nat.le_add_right 5 k) x)) := by
+  rw [splitCliffordInfinity_cl55_window_absorbs_finite_tail]
+  exact h5 x
+
+/--
+If a direct-limit predicate is proved for every representative at every finite
+stage beyond the `Cl(5,5)` window, then it holds for every element of the split
+Clifford direct limit.
+-/
+@[rep_depth krein]
+theorem splitCliffordInfinity_tail_predicate_lifts_to_all
+    {P : SplitCliffordInfinity → Prop}
+    (hTail : ∀ n, n ≥ 5 → ∀ x : SplitClNNAlg n,
+      P (DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) n x)) :
+    ∀ z : SplitCliffordInfinity, P z := by
+  intro z
+  rcases splitCliffordInfinity_has_representative_beyond_cl55_window z with
+    ⟨n, hn, x, hx⟩
+  rw [← hx]
+  exact hTail n hn x
+
 end InfoGeometry.Canonical.SplitCliffordDirectLimit

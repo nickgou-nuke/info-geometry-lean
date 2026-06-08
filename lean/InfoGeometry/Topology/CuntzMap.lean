@@ -1,32 +1,24 @@
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import Mathlib
 
+set_option linter.dupNamespace false
+
 /-!
-# Cuntz Map — The Discrete Modular Flow
+# Cuntz Map — Algebraic Two-Branch Transfer
 
 The Cuntz map Φ(X) = S_L·X·S*_L + S_R·X·S*_R is the canonical
-endomorphism of the Cuntz algebra O₂. It IS the modular flow — the
-discrete rational generator of the universe's evolution.
-
-## Physical Interpretation
-- **Graph Theory:** Markov transition operator / transfer matrix,
-  stepping one level deeper into the Cantor fractal.
-- **Thermodynamics:** Renormalization Group (RG) step. It takes
-  a macroscopic observable X and evaluates it at a finer scale.
-- **KMS Equilibrium:** The KMS ground state is the unique fixed-point
-  of Φ: φ∘Φ = φ. The modular flow converges contractively to the
-  symmetric, anomaly-free vacuum.
+endomorphism associated to an abstract `O₂` carrier.
 
 ## Algebraic Properties
-Φ is a unital completely positive (CP) map:
+This file proves only the algebraic facts visible from the Cuntz relations:
+
   Φ(1) = 1        (probability conservation)
   Φ(X*) = Φ(X)*    (reality preservation)
-  Φ is the KMS dual of the time evolution σ_t.
 
-## Connection to the DAG
-On the TwoComplex over Rat, Φ acts as the graph Laplacian flow.
-The boundary operators ∂₁, ∂₂ combine with Φ to generate the
-discrete time evolution of the Omega Automath.
+KMS fixed-point and modular-flow statements are formulated with explicit
+branch-scaling or pointwise equality witnesses.  This file does not prove
+uniqueness, contractive convergence, complete positivity, or equality with a
+continuous modular flow.
 -/
 
 namespace InfoGeometry.Topology.CuntzMap
@@ -53,8 +45,7 @@ redistributes across the two branches and sums to 1.
 -/
 theorem CuntzMap_unital (C : CuntzO2Carrier Op) :
     CuntzMap Op C 1 = 1 := by
-  unfold CuntzMap
-  simp [C.rangeProjection_sum_one]
+  simpa [CuntzMap] using C.range_sum
 
 /--
 **Star-preserving:** Φ(X*) = Φ(X)*. The Cuntz map respects the
@@ -66,39 +57,46 @@ theorem CuntzMap_star (C : CuntzO2Carrier Op) (X : Op) :
   unfold CuntzMap
   simp [star_add, star_mul, mul_assoc]
 
-/--
-**KMS Fixed-Point Property:** The KMS state φ at inverse temperature
-β is the unique fixed-point of the Cuntz map's dual.
-
-  φ(Φ(X)) = φ(X)    for all X
-
-This follows from the KMS condition and the partition of unity:
-  φ(S_left·X·S*_left + S_right·X·S*_right)
-    = φ(X·(S*_left·S_left + S*_right·S_right))  (by KMS)
-    = φ(X·1)  (by Cuntz isometry)
-    = φ(X)
-
-The KMS state is the equilibrium eigenvector of the transfer operator Φ.
--/
-theorem CuntzMap_kms_fixed_point
+/-- Additive real readout fixed by equal half-branch Cuntz scaling. -/
+theorem CuntzMap_real_fixed_point_of_half_branch_scaling
     (C : CuntzO2Carrier Op)
-    (φ : Op → ℂ)
-    (h_φ_kms : ∀ A B, φ A = φ B → True)  -- KMS condition placeholder
-    (X : Op) : True := by
-  trivial
+    (φ : Op →+ ℝ)
+    (X : Op)
+    (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
+    (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
+    φ (CuntzMap Op C X) = φ X := by
+  rw [CuntzMap, map_add, hleft, hright]
+  ring
 
 /--
-**The Cuntz Map IS the modular flow.**
+Witness that a supplied discrete modular step is pointwise the Cuntz map.
 
-At β → ∞ (zero temperature), the continuous modular automorphism group
-σ_t = Δ^{it}·Δ^{-it} collapses to the discrete Cuntz map Φ. The KMS
-state becomes the unique fixed-point of Φ, establishing the Jaynes
-maximum-entropy equilibrium on the Cantor boundary.
-
-The Cuntz Algebra is the hardware (the qubits). The Cuntz Map is the
-clock cycle of the Omega Automath.
+The equality is data, not inferred from the Cuntz relations alone.
 -/
-theorem CuntzMap_is_modular_flow_limit : True := by
-  trivial
+structure DiscreteModularFlowWitness (C : CuntzO2Carrier Op) where
+  sigma : Op → Op
+  sigma_eq_cuntzMap : ∀ X, sigma X = CuntzMap Op C X
+
+namespace DiscreteModularFlowWitness
+
+variable {C : CuntzO2Carrier Op}
+variable (W : DiscreteModularFlowWitness Op C)
+
+/-- The witnessed discrete modular step evaluates as the Cuntz map. -/
+theorem apply_eq_cuntzMap (X : Op) :
+    W.sigma X = CuntzMap Op C X :=
+  W.sigma_eq_cuntzMap X
+
+/-- A half-branch real readout is fixed by a witnessed Cuntz modular step. -/
+theorem real_fixed_point_of_half_branch_scaling
+    (φ : Op →+ ℝ)
+    (X : Op)
+    (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
+    (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
+    φ (W.sigma X) = φ X := by
+  rw [DiscreteModularFlowWitness.apply_eq_cuntzMap (Op := Op) (C := C) W X]
+  exact CuntzMap_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
+
+end DiscreteModularFlowWitness
 
 end InfoGeometry.Topology.CuntzMap

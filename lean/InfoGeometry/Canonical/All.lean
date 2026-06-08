@@ -67,6 +67,16 @@ import InfoGeometry.Canonical.AttentionPolarizedSplit
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.BeliefAlgebra
+import InfoGeometry.Canonical.BostConnesKMS
+import InfoGeometry.Canonical.BostConnesConformalBoundary
+import InfoGeometry.Canonical.GradedTraceBridge
+import InfoGeometry.Canonical.GradedTraceColimitBridge
+import InfoGeometry.Canonical.PrimeHeisenbergOscillators
+import InfoGeometry.Canonical.BostConnesGalois
+import InfoGeometry.Canonical.BostConnesSymmetryBreaking
+import InfoGeometry.Canonical.BostConnesProjectiveGeometry
+import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
+import InfoGeometry.Canonical.CliffordToVirasoro
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
 import InfoGeometry.Canonical.BerryDrazin
@@ -91,6 +101,9 @@ import InfoGeometry.Automorphic.LanglandsSugawaraBridge
 import InfoGeometry.Canonical.HamiltonianFlowBridge
 import InfoGeometry.Canonical.Cl11TensorTowerBridge
 import InfoGeometry.Canonical.CuntzKTowerCommutation
+import InfoGeometry.Canonical.CuntzCliffordBottBridge
+import InfoGeometry.Canonical.CuntzMapFixedPoint
+import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
 import InfoGeometry.Canonical.CantorKMSCylinderState
 import InfoGeometry.Canonical.GNSState
@@ -142,6 +155,9 @@ import InfoGeometry.Canonical.CantorModularScoreFunctional
 import InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
+import InfoGeometry.Canonical.CelikErlangenBraidBridge
+import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
+import InfoGeometry.Canonical.Z3TrialityCapstone
 import InfoGeometry.Canonical.FibonacciFiveGradeBridge
 import InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
@@ -178,6 +194,7 @@ import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.Canonical.CelikKocakCl11ConcretePacket
 import InfoGeometry.Canonical.CelikKocakCl11DoubledDictionary
+import InfoGeometry.Canonical.CelikKocakCuntzFockBridge
 import InfoGeometry.Canonical.JordanChevalleyPolynomialBridge
 import InfoGeometry.Canonical.MoebiusBogoliubovVirasoroBridge
 import InfoGeometry.Canonical.NilpotentLegendreConformalBridge
@@ -465,6 +482,7 @@ import InfoGeometry.Canonical.DunfordTaylor
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EntanglementResidualOwner
+import InfoGeometry.Canonical.HolographicEntanglementSymmetry
 import InfoGeometry.Canonical.ErgodicFixedPointBridge
 import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 import InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
@@ -541,6 +559,7 @@ import InfoGeometry.Canonical.HestenesComplexTranslation
 import InfoGeometry.Canonical.ComplexRealHestenesFinite
 import InfoGeometry.Canonical.HestenesKreinVacuum
 import InfoGeometry.Canonical.HestenesCommutantGeometry
+import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 import InfoGeometry.Canonical.HestenesQVandermondeShadow
@@ -869,6 +888,7 @@ import InfoGeometry.Canonical.SinkhornKMSCore
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauConformalKKTContext
 import InfoGeometry.Canonical.SouriauDensityWeightContext
+import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Canonical.SouriauOrbitDynamics
@@ -1075,6 +1095,10 @@ import InfoGeometry.Canonical.ZornVectorMatrixExplicit
 import InfoGeometry.Canonical.MathematicalUnification
 import InfoGeometry.Canonical.Mat2
 import InfoGeometry.Canonical.CliffordInfiniteSplitAlgebra
+import InfoGeometry.Canonical.DrazinAnomaly
+import InfoGeometry.Canonical.TransportObservable
+import InfoGeometry.Canonical.CosmologicalCoupling
+import InfoGeometry.Canonical.FineStructureConstant
 
 namespace InfoGeometry
 

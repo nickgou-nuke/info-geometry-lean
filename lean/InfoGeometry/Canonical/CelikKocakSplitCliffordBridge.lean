@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
+import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Meta.Architecture
 
@@ -35,6 +36,7 @@ open InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 open InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 open InfoGeometry.Quantum.RealMajoranaCategory
 open InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
+open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Quantum
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Topology.FractalCantorFockWitness
@@ -273,8 +275,8 @@ recursion, and the Cuntz leg partition.
 -/
 @[rep_depth operator]
 theorem splitCliffordInfinity_root_branch_completion
-    (z : SplitCliffordInfinity)
-    (D : CelikKocakInfiniteFockCarrierData E)
+    (_z : SplitCliffordInfinity)
+    (_D : CelikKocakInfiniteFockCarrierData E)
     {Op : Type*} [Ring Op] [StarRing Op]
     (C : InfoGeometry.Topology.CuntzO2Carrier Op)
     (seed : Op)
@@ -295,6 +297,75 @@ theorem splitCliffordInfinity_root_branch_completion
     · constructor
       · exact boundary_recursive_decomposition ξ
       · exact car_realization_of_clifford_concrete (E := F)
+
+/--
+The theorem-backed Çelik--Koçak/Cuntz/CAR/Fock crossing packet.
+
+This is the safe formal content behind the split-Fock/Cuntz-tree narrative:
+
+* the split Clifford direct-limit point has arbitrarily deep representatives;
+* the Cuntz carrier gives the CAR generator `S_left * S_right*`;
+* a half-branch real readout is fixed by one Cuntz-map clock tick;
+* the Cuntz range projections decompose the root seed;
+* the Cantor boundary decomposes into head and tail;
+* the concrete real doubled `Cl(1,1)` ladder satisfies CAR.
+
+It deliberately does not assert a full `O₂ ≃ Cl(1,1)^{⊗∞}` isomorphism,
+K-theory vanishing, complete positivity, or uniqueness of the KMS state.
+-/
+@[rep_depth operator]
+theorem celikKocak_cuntzCAR_splitFock_fixedReadout_packet
+    (z : SplitCliffordInfinity)
+    (_D : CelikKocakInfiniteFockCarrierData E)
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op)
+    (φ : Op →+ ℝ)
+    (X seed : Op)
+    (ξ : CantorBoundary)
+    (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
+    (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X)
+    {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
+    (∃ n x,
+      DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+        (fun m n h => splitCliffordMap m n h) n x = z ∧
+      ∀ k : ℕ,
+        DirectLimit.Module.of ℝ ℕ SplitClNNAlg
+          (fun m n h => splitCliffordMap m n h) (n + k)
+          (splitCliffordMap n (n + k) (Nat.le_add_right n k) x) = z)
+      ∧
+      (_root_.InfoGeometry.Canonical.carFromCuntz C *
+          _root_.InfoGeometry.Canonical.carFromCuntz C = 0)
+      ∧
+      (_root_.InfoGeometry.Canonical.cantorAnticommutator
+          (_root_.InfoGeometry.Canonical.carFromCuntz C)
+          (star (_root_.InfoGeometry.Canonical.carFromCuntz C)) = 1)
+      ∧
+      (φ (cuntzCarrierMap C X) = φ X)
+      ∧
+      ((C.S_left * star C.S_left) * seed +
+          (C.S_right * star C.S_right) * seed = seed)
+      ∧
+      (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ))
+      ∧
+      CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
+        (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
+          (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
+        (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
+          (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).create := by
+  constructor
+  · exact splitCliffordInfinity_boundary_expands z
+  · constructor
+    · exact _root_.InfoGeometry.Canonical.carFromCuntz_sq_eq_zero C
+    · constructor
+      · exact _root_.InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one C
+      · constructor
+        · exact cuntzCarrierMap_real_additive_readout_fixed_of_half_branch_scaling
+            (C := C) (φ := φ) (X := X) hleft hright
+        · constructor
+          · exact splitCliffordInfinity_leg_partition (C := C) (seed := seed)
+          · constructor
+            · exact boundary_recursive_decomposition ξ
+            · exact car_realization_of_clifford_concrete (E := F)
 
 /--
 The split boundary completion is compatible with the odd-sector supergraded

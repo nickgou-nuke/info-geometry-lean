@@ -231,4 +231,79 @@ noncomputable abbrev splitCl44_headFactorEquiv :
 
 end Split44
 
+section Split55
+
+/-- Canonical split `Cl(5,5)` carrier in the recursive split tower. -/
+@[rep_depth krein] abbrev SplitCl55Carrier := SplitClNNCarrier 5
+
+/-- Canonical split quadratic form for the recursive `Cl(5,5)` stage. -/
+@[rep_depth krein] noncomputable abbrev SplitCl55Quad :
+    QuadraticForm ℝ SplitCl55Carrier := SplitClNNQuad 5
+
+/-- Canonical split `Cl(5,5)` algebra in the recursive split tower. -/
+@[rep_depth krein] abbrev SplitCl55Alg := SplitClNNAlg 5
+
+/--
+The `O(5,5)` split Clifford window is exactly one split `Cl(1,1)` head channel
+tensored over the split `Cl(4,4)` triality stage.
+
+This is the repo-native source-supported form of
+`Cl(5,5) ≃ Cl(1,1) ⊗ Cl(4,4)`.
+-/
+@[rep_depth krein]
+noncomputable abbrev splitCl55_headCl11TensorCl44Equiv :
+    SplitCl55Alg ≃ₐ[ℝ] SplitClNNTensorStep 4 :=
+  splitCliffordTensorStepEquiv 4
+
+/--
+Tail-head tensor target for the same `Cl(5,5)` stage, in the presentation
+`Cl(4,4) ⊗ Cl(1,1)`.
+-/
+@[rep_depth krein] abbrev SplitCl55TailHeadTensorStep :=
+  CliffordAlgebra.evenOdd (Qsplit 4) ᵍ⊗[ℝ]
+    CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11
+
+/--
+The same `Cl(5,5)` Bott step in the user-order presentation
+`Cl(4,4) ⊗ Cl(1,1) ≃ Cl(5,5)`.
+
+The reversal is the supergraded tensor braiding; the owner step remains
+`splitCl55_headCl11TensorCl44Equiv`.
+-/
+@[rep_depth krein]
+noncomputable abbrev splitCl55_cl44TensorCl11Equiv :
+    SplitCl55TailHeadTensorStep ≃ₐ[ℝ] SplitCl55Alg :=
+  (GradedTensorProduct.comm
+    (R := ℝ)
+    (𝒜 := CliffordAlgebra.evenOdd InfoGeometry.CliffordTower.Q11)
+    (ℬ := CliffordAlgebra.evenOdd (Qsplit 4))).symm.trans
+    splitCl55_headCl11TensorCl44Equiv.symm
+
+/-- Owner equality for the named `Cl(5,5)` Bott step. -/
+@[rep_depth krein] theorem splitCl55_headCl11TensorCl44Equiv_eq_owner :
+    splitCl55_headCl11TensorCl44Equiv = splitCliffordTensorStepEquiv 4 :=
+  rfl
+
+/-- The new `Cl(1,1)` head channel in the `Cl(5,5)` window. -/
+@[rep_depth krein] theorem splitCl55_headFactor
+    (x : ℝ × ℝ) :
+    splitCl55_headCl11TensorCl44Equiv
+        (CliffordAlgebra.ι SplitCl55Quad (headPair 4 x))
+      = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 x)
+          ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit 4)) := by
+  simpa [splitCl55_headCl11TensorCl44Equiv, SplitCl55Quad] using
+    splitCliffordTensorStep_headFactor 4 x
+
+/-- The `Cl(4,4)` tail channel embedded in the `Cl(5,5)` window. -/
+@[rep_depth krein] theorem splitCl55_tailFactor
+    (xs : SplitClNNCarrier 4) :
+    splitCl55_headCl11TensorCl44Equiv
+        (CliffordAlgebra.ι SplitCl55Quad (tailLift 4 xs))
+      = (1 : CliffordAlgebra InfoGeometry.CliffordTower.Q11)
+          ᵍ⊗ₜ (CliffordAlgebra.ι (Qsplit 4) xs) := by
+  simpa [splitCl55_headCl11TensorCl44Equiv, SplitCl55Quad] using
+    splitCliffordTensorStep_tailFactor 4 xs
+
+end Split55
+
 end InfoGeometry.Canonical.SplitCliffordTensorBridge

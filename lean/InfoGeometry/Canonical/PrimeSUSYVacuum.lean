@@ -5,17 +5,17 @@ import InfoGeometry.Meta.SocketTarget
 /-!
 # InfoGeometry.Canonical.PrimeSUSYVacuum
 
-witness-gated (Native Closure Mandated: Closure Debt) SUSY vacuum capstone for the prime Lee--Yang architecture.
+Witness-gated SUSY vacuum capstone for the prime Lee--Yang architecture.
 
-This module keeps the finite arithmetic fact separate from the analytic
-spectral hypothesis:
+This module keeps the finite arithmetic facts separate from the analytic
+spectral laws:
 
-* finite Möbius parity is already owned by
+* finite Mobius parity is owned by
   `InfoGeometry.Arithmetic.PrimeSuperalgebraReadback`;
 * defect-free Lee--Yang and Mertens/LDP hypotheses are owned by the canonical
   witness packets;
 * the interpretation of completed-`xi` zeros as protected Majorana zero modes
-  remains a supplied spectral law.
+  remains supplied data.
 
 It does not prove RH, does not assert a completed-`xi` determinant identity, and
 does not identify inverse-zeta Witten poles with zero modes.
@@ -34,16 +34,16 @@ open InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 /-- Finite fermion parity readout from the arithmetic prime-superalgebra layer. -/
 abbrev finiteFermionParity
     (P : FermionicPrimeRegister)
-    (ψ : FermionicPrimeState P) : ℤ :=
-  fermionParity P ψ
+    (psi : FermionicPrimeState P) : ℤ :=
+  fermionParity P psi
 
-/-- Möbius equals finite fermion parity on represented square-free prime-bit states. -/
+/-- Mobius equals finite fermion parity on represented square-free prime-bit states. -/
 theorem finite_mobius_eq_fermionParity
     (P : FermionicPrimeRegister)
-    (ψ : FermionicPrimeState P) :
-    ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
-      finiteFermionParity P ψ := by
-  exact mobius_eq_fermionParity P ψ
+    (psi : FermionicPrimeState P) :
+    ArithmeticFunction.moebius (representedSquarefreeNat P psi) =
+      finiteFermionParity P psi := by
+  exact mobius_eq_fermionParity P psi
 
 /-- Finite Witten-index cancellation over a nonempty prime register. -/
 theorem finite_wittenIndex_cancel
@@ -57,8 +57,9 @@ theorem finite_wittenIndex_cancel
 /--
 Prime SUSY vacuum packet.
 
-This is the QFT/SUSY capstone over the defect-free and zero-mode protection
-layers.  All infinite, spectral, and topological statements are supplied laws.
+The infinite, spectral, and topological assertions are explicit fields. This
+keeps the module proof-safe: assembling a packet requires supplying the laws
+rather than manufacturing global theorems in this file.
 -/
 @[socket_debt_tag]
 structure PrimeSUSYVacuumPacket
@@ -78,34 +79,28 @@ structure PrimeSUSYVacuumPacket
     VacuumReadout
 
   /-- Witten-index law for the SUSY vacuum lane. -/
-  wittenIndex_True : Prop := by
-    sorry
+  wittenIndex_True : Prop
 
   /-- Boson/fermion pairing and cancellation law away from zero energy. -/
-  bosonFermionCancellation_True : Prop := by
-    sorry
+  bosonFermionCancellation_True : Prop
 
   /-- Zero macroscopic vacuum energy law. -/
-  zeroVacuumEnergy_True : Prop := by
-    sorry
+  zeroVacuumEnergy_True : Prop
 
   /-- Unbroken arithmetic SUSY law. -/
-  unbrokenSUSY_True : Prop := by
-    sorry
+  unbrokenSUSY_True : Prop
 
   /--
   Equivalence law between unbroken SUSY and the Mertens/LDP defect boundary in
   the chosen analytic model.
   -/
-  unbrokenSUSY_iff_mertensBoundary_True : Prop := by
-    sorry
+  unbrokenSUSY_iff_mertensBoundary_True : Prop
 
   /--
   Conditional spectral law: protected SUSY zero modes match the completed-`xi`
   zero readout.
   -/
-  susyZeroModes_eq_completedXiZeros_True : Prop := by
-    sorry
+  susyZeroModes_eq_completedXiZeros_True : Prop
 
   /-- Guardrail law: this packet does not prove RH unconditionally. -/
   no_unconditional_RH_claim : Prop
@@ -118,7 +113,7 @@ namespace PrimeSUSYVacuumPacket
 variable {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
     VacuumReadout : Type}
 variable
-  (S : PrimeSUSYVacuumPacket
+  (_S : PrimeSUSYVacuumPacket
     CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout)
 
 end PrimeSUSYVacuumPacket
@@ -130,18 +125,12 @@ and zero-mode protection layers.
 structure PrimeSUSYVacuumBridge
     (VacuumReadout : Type) where
   vacuumReadout : VacuumReadout
-  wittenIndex_True : Prop := by
-    sorry
-  bosonFermionCancellation_True : Prop := by
-    sorry
-  zeroVacuumEnergy_True : Prop := by
-    sorry
-  unbrokenSUSY_True : Prop := by
-    sorry
-  unbrokenSUSY_iff_mertensBoundary_True : Prop := by
-    sorry
-  susyZeroModes_eq_completedXiZeros_True : Prop := by
-    sorry
+  wittenIndex_True : Prop
+  bosonFermionCancellation_True : Prop
+  zeroVacuumEnergy_True : Prop
+  unbrokenSUSY_True : Prop
+  unbrokenSUSY_iff_mertensBoundary_True : Prop
+  susyZeroModes_eq_completedXiZeros_True : Prop
   no_unconditional_RH_claim : Prop
   wittenIndex_not_completedXiDeterminant : Prop
 

@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Complex.Basic
 import DAG.Basic
 
 /-!

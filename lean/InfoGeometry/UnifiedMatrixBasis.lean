@@ -68,11 +68,11 @@ theorem metric_equivalence (t x y z : ℝ) :
 
 /-- Complex structures I, J, K on coefficient space ℝ⁴ (Definition 2.2.3). -/
 def complexI : Matrix (Fin 4) (Fin 4) ℝ :=
-  !![0, -1, 0, 0; 1, 0, 0, 0; 0, 0, 0, 1; 0, 0, -1, 0]
+  !![0, -1, 0, 0; 1, 0, 0, 0; 0, 0, 0, -1; 0, 0, 1, 0]
 def complexJ : Matrix (Fin 4) (Fin 4) ℝ :=
   !![0, 0, -1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, -1, 0, 0]
 def complexK : Matrix (Fin 4) (Fin 4) ℝ :=
-  !![0, 0, 0, -1; 0, 0, 1, 0; 0, -1, 0, 0; 1, 0, 0, 0]
+  !![0, 0, 0, -1; 0, 0, -1, 0; 0, 1, 0, 0; 1, 0, 0, 0]
 
 /-- Quaternion relations (Lemma 2.2.4): I² = J² = K² = -Id, IJ = K. -/
 theorem quaternion_relations :

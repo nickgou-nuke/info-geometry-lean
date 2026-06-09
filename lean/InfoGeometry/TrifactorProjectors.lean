@@ -3,10 +3,11 @@ import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
-# Trifactor Spectral Decomposition — Lean 4
+# Trifactor Projectors — Lean 4
 
-OP³ = OP ⇒ spectrum ⊆ {-1, 0, +1}
-Projectors: P₊ = (OP²+OP)/2, P₋ = (OP²-OP)/2, P₀ = I-OP²
+Concrete projectors P₊, P₋, P₀ on 2×2 matrices.
+M = P₊ - P₋ always; P₊+P₋+P₀ = I always.
+Tested on σ₃, projector, identity.
 -/
 
 noncomputable section
@@ -15,15 +16,15 @@ namespace TrifactorProjectors
 
 open Matrix
 
-/-- Pauli matrices as concrete test operators. -/
 def I2 : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, 1]
 def s3 : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
 def null_mat : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, 0]
 
-/-- The projector decomposition of an operator M:
-    P_plus = (M²+M)/2, P_minus = (M²-M)/2, P_zero = I-M². -/
+/-- P₊ = (M²+M)/2 -/
 def P_plus (M : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ := (M*M + M) / (2 : ℂ)
+/-- P₋ = (M²-M)/2 -/
 def P_minus (M : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ := (M*M - M) / (2 : ℂ)
+/-- P₀ = I - M² -/
 def P_zero (M : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ := I2 - M*M
 
 /-- P₊ + P₋ + P₀ = I — always true. -/

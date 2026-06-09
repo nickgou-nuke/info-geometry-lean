@@ -27,7 +27,7 @@ def densityMatrix (r1 r2 r3 : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /-- Trace of density matrix = 1. -/
 theorem trace_density (r1 r2 r3 : ℂ) : (∑ i : Fin 2, densityMatrix r1 r2 r3 i i) = 1 := by
   unfold densityMatrix
-  simp [I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  simp [I2, s1, s2, s3, Matrix.add_apply, Matrix.smul_apply, Fin.sum_univ_two] <;> ring
 
 /-- For real Bloch vector: det(ρ) = (1-|r|²)/4 ≥ 0 ⇔ |r| ≤ 1. -/
 theorem det_density_real (r1 r2 r3 : ℝ) : True := by trivial

@@ -56,12 +56,12 @@ theorem quaternion_relations :
 
 theorem metric_equivalence (dt dx dy dz : ℂ) : True := by trivial
 
-def hilbertSchmidt (A B : Matrix (Fin 2) (Fin 2) ℂ) : ℂ := ((A * B).trace) / 2
+def hilbertSchmidt (A B : Matrix (Fin 2) (Fin 2) ℂ) : ℂ := ((∑ i : Fin 2, (A * B) i i) / 2)
 
 theorem hilbertSchmidt_orthonormal : hilbertSchmidt I₂ I₂ = (1 : ℂ) ∧
     hilbertSchmidt σ₁ σ₁ = (1 : ℂ) ∧ hilbertSchmidt σ₂ σ₂ = (1 : ℂ) ∧
     hilbertSchmidt σ₃ σ₃ = (1 : ℂ) ∧ hilbertSchmidt I₂ σ₁ = 0 := by
   unfold hilbertSchmidt
-  simp [I₂, σ₁, σ₂, σ₃, Matrix.mul_apply, Fin.sum_univ_two, Matrix.trace]
+  simp [I₂, σ₁, σ₂, σ₃, Matrix.mul_apply, Fin.sum_univ_two]
 
 end UnifiedMatrixBasis

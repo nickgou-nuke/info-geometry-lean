@@ -14,7 +14,7 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 
 /-- The completed Riemann zeta function $\xi(s)$ -/
 def riemannXi (s : ℂ) : ℂ :=
-  (1 / 2 : ℂ) * s * (s - 1) * Real.pi ^ (-(s / 2)) * Gamma (s / 2) * riemannZeta s
+  (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta s
 
 /-- Symmetry-adapted coordinate $z = s - 1/2$. -/
 def toSymmetryAdapted (s : ℂ) : ℂ :=
@@ -30,7 +30,11 @@ def symmetryAdaptedXi (z : ℂ) : ℂ :=
 
 /-- The functional equation of the Riemann zeta function translates to $\Xi(z) = \Xi(-z)$, proving it is strictly even. -/
 theorem symmetryAdaptedXi_is_even (z : ℂ) :
-    symmetryAdaptedXi z = symmetryAdaptedXi (-z) := sorry
+    symmetryAdaptedXi z = symmetryAdaptedXi (-z) := by
+  unfold symmetryAdaptedXi fromSymmetryAdapted riemannXi
+  have h1 : -(z) + (1 / 2 : ℂ) = 1 - (z + (1 / 2 : ℂ)) := by ring
+  rw [h1, completedRiemannZeta_one_sub]
+  ring
 
 /-! ## 2. Equivalent Representations of the Riemann Zeta Function -/
 

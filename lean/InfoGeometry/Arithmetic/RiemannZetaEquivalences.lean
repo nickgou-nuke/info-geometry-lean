@@ -29,8 +29,8 @@ def symmetryAdaptedXi (z : ℂ) : ℂ :=
   riemannXi (fromSymmetryAdapted z)
 
 /-- The functional equation of the Riemann zeta function translates to $\Xi(z) = \Xi(-z)$, proving it is strictly even. -/
-def symmetryAdaptedXi_is_even_debt : String := 
-  "Open: symmetryAdaptedXi z = symmetryAdaptedXi (-z)"
+theorem symmetryAdaptedXi_is_even (z : ℂ) :
+    symmetryAdaptedXi z = symmetryAdaptedXi (-z) := sorry
 
 /-! ## 2. Equivalent Representations of the Riemann Zeta Function -/
 
@@ -47,16 +47,16 @@ def dirichletEta (s : ℂ) : ℂ :=
   ∑' n : ℕ, (-1) ^ ((n : ℂ) - 1) * ((n : ℂ) ^ (-s))
 
 /-- The Euler product equals the Riemann zeta function for $\operatorname{Re}(s) > 1$. -/
-def eulerProductZeta_eq_riemannZeta_debt : String := 
-  "Open: 1 < s.re -> eulerProductZeta s = riemannZeta s"
+theorem eulerProductZeta_eq_riemannZeta (s : ℂ) (hs : 1 < s.re) :
+    eulerProductZeta s = riemannZeta s := sorry
 
 /-- The Dirichlet series equals the Riemann zeta function for $\operatorname{Re}(s) > 1$. -/
-def dirichletSeriesZeta_eq_riemannZeta_debt : String := 
-  "Open: 1 < s.re -> dirichletSeriesZeta s = riemannZeta s"
+theorem dirichletSeriesZeta_eq_riemannZeta (s : ℂ) (hs : 1 < s.re) :
+    dirichletSeriesZeta s = riemannZeta s := sorry
 
 /-- The Dirichlet eta function gives the analytic continuation for $\operatorname{Re}(s) > 0$. -/
-def dirichletEta_eq_riemannZeta_debt : String := 
-  "Open: 0 < s.re -> s ≠ 1 -> riemannZeta s = (1 - 2 ^ (1 - s))⁻¹ * dirichletEta s"
+theorem dirichletEta_eq_riemannZeta (s : ℂ) (hs : 0 < s.re) (hne : s ≠ 1) :
+    riemannZeta s = (1 - 2 ^ (1 - s))⁻¹ * dirichletEta s := sorry
 
 /-! ## 3. Ramanujan's Formula for Odd Zeta Values -/
 
@@ -65,7 +65,10 @@ Ramanujan's Formula for $\zeta(2n+1)$.
 Provides an incredibly fast converging series and exposes $SL(2, \mathbb{Z})$ modular symmetries.
 For $\alpha, \beta > 0$ such that $\alpha \beta = \pi^2$, and integer $n > 0$.
 -/
-def ramanujan_odd_zeta_debt : String :=
-  "Open: Ramanujan's formula for odd zeta values holds."
+theorem ramanujan_odd_zeta (n : ℕ) (hn : 0 < n) (α β : ℝ) (hαβ : α * β = Real.pi ^ 2) :
+    (α ^ (- (n : ℝ))) * ((1 / 2 : ℝ) * (riemannZeta (2 * n + 1)).re + ∑' k : ℕ, ((k : ℝ) ^ (-(2 * n + 1 : ℝ))) / (Real.exp (2 * α * k) - 1)) =
+    ((-β) ^ (- (n : ℝ))) * ((1 / 2 : ℝ) * (riemannZeta (2 * n + 1)).re + ∑' k : ℕ, ((k : ℝ) ^ (-(2 * n + 1 : ℝ))) / (Real.exp (2 * β * k) - 1))
+    - 2 ^ (2 * n) * ∑ k ∈ Finset.range (n + 2), 
+      (-1) ^ k * ((bernoulli (2 * k) : ℝ) / Nat.factorial (2 * k)) * ((bernoulli (2 * n + 2 - 2 * k) : ℝ) / Nat.factorial (2 * n + 2 - 2 * k)) * α ^ (n + 1 - k : ℝ) * β ^ (k : ℝ) := sorry
 
 end InfoGeometry.Arithmetic.RiemannZetaEquivalences

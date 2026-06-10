@@ -29,9 +29,9 @@ theorem pauli_anticomm : σ₁ * σ₂ + σ₂ * σ₁ = (0 : Matrix (Fin 2) (Fi
     σ₂ * σ₃ + σ₃ * σ₂ = (0 : Matrix (Fin 2) (Fin 2) ℂ) ∧
     σ₃ * σ₁ + σ₁ * σ₃ = (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
   refine ⟨?_, ?_, ?_⟩
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₁, σ₂, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₂, σ₃, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₃, σ₁, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₁, σ₂]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₂, σ₃]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [σ₃, σ₁]
 
 def complexI : Matrix (Fin 4) (Fin 4) ℝ := !![0,-1,0,0; 1,0,0,0; 0,0,0,-1; 0,0,1,0]
 def complexJ : Matrix (Fin 4) (Fin 4) ℝ := !![0,0,-1,0; 0,0,0,1; 1,0,0,0; 0,-1,0,0]

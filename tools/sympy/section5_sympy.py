@@ -1,103 +1,144 @@
 #!/usr/bin/env python3
+"""Section 5: Clifford structure, exact SymPy verification.
+
+This is the computational companion to
+``InfoGeometry.Clifford.DiracPauliGamma``.  It checks the same finite
+Pauli-Dirac gamma matrix identities using exact symbolic complex arithmetic.
+
+Lean remains proof authority; this script is a reproducible finite shadow.
 """
-Section 5: Clifford Structure — SymPy Verification
 
-Gamma matrices in the Pauli-Dirac representation:
-  γ⁰ = [[I, 0], [0, -I]]  (block diagonal)
-  γ^i = [[0, σ_i], [-σ_i, 0]]
+from __future__ import annotations
 
-Verifies:
-  5.1 Gamma matrices (Pauli embedding + explicit)
-  5.2 Clifford algebra {γ^a, γ^b} = 2η^{ab}
-  5.3 Spinor bilinear forms
-"""
-import numpy as np
+import sympy as sp
 
-print("=" * 70)
-print("SECTION 5: CLIFFORD STRUCTURE — SYMPY VERIFICATION")
-print("=" * 70)
 
-# Pauli matrices
-I2 = np.eye(2, dtype=complex)
-s1 = np.array([[0, 1], [1, 0]], dtype=complex)
-s2 = np.array([[0, -1j], [1j, 0]], dtype=complex)
-s3 = np.array([[1, 0], [0, -1]], dtype=complex)
+def assert_matrix_eq(name: str, left: sp.Matrix, right: sp.Matrix) -> None:
+    diff = (left - right).applyfunc(sp.simplify)
+    if diff != sp.zeros(*diff.shape):
+        raise AssertionError(f"{name} failed:\n{diff}")
+    print(f"  {name}: OK")
 
-# ===== 5.1 GAMMA MATRICES =====
-print("\n5.1 GAMMA MATRICES (Pauli-Dirac representation)")
 
-gamma0 = np.kron(np.array([[1, 0], [0, -1]]), I2)
-gamma1 = np.kron(np.array([[0, 1], [-1, 0]]), s1)
-gamma2 = np.kron(np.array([[0, 1], [-1, 0]]), s2)
-gamma3 = np.kron(np.array([[0, 1], [-1, 0]]), s3)
-gamma5 = 1j * gamma0 @ gamma1 @ gamma2 @ gamma3
+def assert_scalar_eq(name: str, left, right=0) -> None:
+    if sp.simplify(left - right) != 0:
+        raise AssertionError(f"{name} failed: {sp.simplify(left - right)}")
+    print(f"  {name}: OK")
 
-gamma0_explicit = np.diag([1, 1, -1, -1]).astype(complex)
-gamma1_explicit = np.array([[0,0,0,1],[0,0,1,0],[0,-1,0,0],[-1,0,0,0]], dtype=complex)
-gamma2_explicit = np.array([[0,0,0,-1j],[0,0,1j,0],[0,1j,0,0],[-1j,0,0,0]], dtype=complex)
-gamma3_explicit = np.array([[0,0,1,0],[0,0,0,-1],[-1,0,0,0],[0,1,0,0]], dtype=complex)
 
-assert np.allclose(gamma0, gamma0_explicit), "γ⁰ mismatch"
-assert np.allclose(gamma1, gamma1_explicit), "γ¹ mismatch"
-assert np.allclose(gamma2, gamma2_explicit), "γ² mismatch"
-assert np.allclose(gamma3, gamma3_explicit), "γ³ mismatch"
-print("  Kronecker vs explicit: ✓")
+I = sp.I
+I2 = sp.eye(2)
+I4 = sp.eye(4)
+zero4 = sp.zeros(4)
 
-# ===== 5.2 CLIFFORD ALGEBRA =====
-print("\n5.2 CLIFFORD RELATIONS: {γ^a, γ^b} = 2·η^{ab}·I₄")
-eta = np.diag([1, -1, -1, -1]).astype(complex)  # (+---) convention
-I4 = np.eye(4, dtype=complex)
+# Pauli matrices.
+sigma1 = sp.Matrix([[0, 1], [1, 0]])
+sigma2 = sp.Matrix([[0, -I], [I, 0]])
+sigma3 = sp.Matrix([[1, 0], [0, -1]])
+
+# Pauli-Dirac block factor.
+tau3 = sp.Matrix([[1, 0], [0, -1]])
+epsilon = sp.Matrix([[0, 1], [-1, 0]])
+
+# Gamma matrices from the Pauli embedding.
+gamma0 = sp.kronecker_product(tau3, I2)
+gamma1 = sp.kronecker_product(epsilon, sigma1)
+gamma2 = sp.kronecker_product(epsilon, sigma2)
+gamma3 = sp.kronecker_product(epsilon, sigma3)
+gamma5 = I * gamma0 * gamma1 * gamma2 * gamma3
 gammas = [gamma0, gamma1, gamma2, gamma3]
 
-all_ok = True
-for a in range(4):
-    for b in range(4):
-        anticomm = gammas[a] @ gammas[b] + gammas[b] @ gammas[a]
-        expected = 2 * eta[a, b] * I4
-        if not np.allclose(anticomm, expected):
-            print(f"    ✗ {{γ^{a}, γ^{b}}} ≠ 2·η^{a}{b}·I₄")
-            all_ok = False
-if all_ok:
-    print("  All 16 Clifford identities verified ✓")
+# Explicit matrices used by the Lean finite owner.
+gamma0_explicit = sp.diag(1, 1, -1, -1)
+gamma1_explicit = sp.Matrix(
+    [[0, 0, 0, 1], [0, 0, 1, 0], [0, -1, 0, 0], [-1, 0, 0, 0]]
+)
+gamma2_explicit = sp.Matrix(
+    [[0, 0, 0, -I], [0, 0, I, 0], [0, I, 0, 0], [-I, 0, 0, 0]]
+)
+gamma3_explicit = sp.Matrix(
+    [[0, 0, 1, 0], [0, 0, 0, -1], [-1, 0, 0, 0], [0, 1, 0, 0]]
+)
+gamma5_explicit = sp.Matrix(
+    [[0, 0, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0], [0, 1, 0, 0]]
+)
 
-# Lorentz generators
-print("\n  Lorentz generators: Σ^{ab} = (i/4)·[γ^a, γ^b]")
-Sigma = {}
-for a in range(4):
-    for b in range(a+1, 4):
-        comm = gammas[a] @ gammas[b] - gammas[b] @ gammas[a]
-        Sigma[(a,b)] = (1j/4) * comm
-print("  Σ^{ab} defined for all 6 pairs ✓")
 
-# ===== 5.3 SPINOR BILINEAR FORMS =====
-print("\n5.3 SPINOR BILINEAR FORMS")
-# Test with an arbitrary spinor
-psi = np.array([1, 2, 3, 4], dtype=complex)
-psi_bar = psi.conj().T @ gamma0
+def anticommutator(left: sp.Matrix, right: sp.Matrix) -> sp.Matrix:
+    return left * right + right * left
 
-# Scalar
-S = psi_bar @ psi
-print(f"  Scalar S = ψ̄ψ = {S}")
 
-# Vector current
-for a in range(4):
-    Va = psi_bar @ gammas[a] @ psi
-    print(f"  Vector V^{a} = ψ̄γ^{a}ψ = {Va}")
+def commutator(left: sp.Matrix, right: sp.Matrix) -> sp.Matrix:
+    return left * right - right * left
 
-# Pseudoscalar
-P = psi_bar @ gamma5 @ psi
-print(f"  Pseudoscalar P = ψ̄γ⁵ψ = {P}")
 
-# Verify gamma5 anticommutes
-for a in range(4):
-    anticomm5 = gamma5 @ gammas[a] + gammas[a] @ gamma5
-    assert np.allclose(anticomm5, np.zeros((4,4)))
-print(f"\n  γ⁵ anticommutes with all γ^μ ✓")
+def sigma_lorentz(mu: int, nu: int) -> sp.Matrix:
+    return (I / 4) * commutator(gammas[mu], gammas[nu])
 
-print("\n" + "=" * 70)
-print("SECTION 5 VERIFIED")
-print("  Gamma matrices (Pauli-Dirac representation)  ✓")
-print("  Clifford relations {γ^a,γ^b}=2η^{ab}          ✓")
-print("  Lorentz generators Σ^{ab}                      ✓")
-print("  {γ⁵,γ^μ}=0                                      ✓")
-print("=" * 70)
+
+def spinor_expectation(matrix: sp.Matrix, psi: sp.Matrix) -> sp.Expr:
+    return (sp.conjugate(psi).T * matrix * psi)[0]
+
+
+def main() -> int:
+    print("=" * 72)
+    print("SECTION 5: CLIFFORD STRUCTURE — EXACT SYMPY CHECK")
+    print("=" * 72)
+
+    print("\n5.1 Gamma matrices from Pauli embedding")
+    assert_matrix_eq("gamma0 kronecker equals explicit", gamma0, gamma0_explicit)
+    assert_matrix_eq("gamma1 kronecker equals explicit", gamma1, gamma1_explicit)
+    assert_matrix_eq("gamma2 kronecker equals explicit", gamma2, gamma2_explicit)
+    assert_matrix_eq("gamma3 kronecker equals explicit", gamma3, gamma3_explicit)
+    assert_matrix_eq("gamma5 equals i*gamma0*gamma1*gamma2*gamma3", gamma5, gamma5_explicit)
+
+    print("\n5.2 Clifford relations")
+    eta = sp.diag(1, -1, -1, -1)
+    for mu in range(4):
+        for nu in range(4):
+            assert_matrix_eq(
+                f"{{gamma{mu}, gamma{nu}}} = 2 eta[{mu},{nu}] I4",
+                anticommutator(gammas[mu], gammas[nu]),
+                2 * eta[mu, nu] * I4,
+            )
+
+    print("\n5.2 gamma5 chirality")
+    assert_matrix_eq("gamma5^2 = I4", gamma5 * gamma5, I4)
+    for mu in range(4):
+        assert_matrix_eq(
+            f"{{gamma5, gamma{mu}}} = 0",
+            anticommutator(gamma5, gammas[mu]),
+            zero4,
+        )
+
+    print("\n5.2 Lorentz-generator normalization")
+    for mu in range(4):
+        for nu in range(4):
+            sigma = sigma_lorentz(mu, nu)
+            assert_matrix_eq(
+                f"[gamma{mu}, gamma{nu}] = -4i Sigma[{mu},{nu}]",
+                commutator(gammas[mu], gammas[nu]),
+                -4 * I * sigma,
+            )
+
+    print("\n5.3 Bilinear-form construction")
+    psi0, psi1, psi2, psi3 = sp.symbols("psi0 psi1 psi2 psi3", complex=True)
+    psi = sp.Matrix([psi0, psi1, psi2, psi3])
+    scalar = spinor_expectation(gamma0, psi)
+    pseudoscalar = spinor_expectation(gamma0 * gamma5, psi)
+    vector = [spinor_expectation(gamma0 * gammas[mu], psi) for mu in range(4)]
+    axial = [spinor_expectation(gamma0 * gammas[mu] * gamma5, psi) for mu in range(4)]
+
+    # These are construction checks: the expressions are symbolic, but the
+    # matrix shapes and scalar extraction are exact.
+    assert_scalar_eq("scalar bilinear is scalar-shaped", sp.Matrix([scalar]).shape[0], 1)
+    assert_scalar_eq("pseudoscalar bilinear is scalar-shaped", sp.Matrix([pseudoscalar]).shape[0], 1)
+    assert_scalar_eq("vector bilinear has four components", len(vector), 4)
+    assert_scalar_eq("axial bilinear has four components", len(axial), 4)
+
+    print("\nSECTION 5 VERIFIED")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

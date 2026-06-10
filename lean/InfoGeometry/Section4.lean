@@ -41,37 +41,37 @@ def K_map (X : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /-- I² = -Id on the Pauli basis. -/
 theorem I_sq_neg_id (a : Fin 4) : I_map (I_map (sigma a)) = - (sigma a) := by
   fin_cases a <;>
-    simp [I_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [I_map, sigma, I2, s1, s2, s3]
 
 /-- J² = -Id. -/
 theorem J_sq_neg_id (a : Fin 4) : J_map (J_map (sigma a)) = - (sigma a) := by
   fin_cases a <;>
-    simp [J_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [J_map, sigma, I2, s1, s2, s3]
 
 /-- K² = -Id. -/
 theorem K_sq_neg_id (a : Fin 4) : K_map (K_map (sigma a)) = - (sigma a) := by
   fin_cases a <;>
-    simp [K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [K_map, sigma, I2, s1, s2, s3]
 
 /-- IJ = K. -/
 theorem IJ_eq_K (a : Fin 4) : I_map (J_map (sigma a)) = K_map (sigma a) := by
   fin_cases a <;>
-    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3]
 
 /-- JK = I. -/
 theorem JK_eq_I (a : Fin 4) : J_map (K_map (sigma a)) = I_map (sigma a) := by
   fin_cases a <;>
-    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3]
 
 /-- KI = J. -/
 theorem KI_eq_J (a : Fin 4) : K_map (I_map (sigma a)) = J_map (sigma a) := by
   fin_cases a <;>
-    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3]
 
 /-- IJK = -Id. -/
 theorem IJK_eq_neg_id (a : Fin 4) : I_map (J_map (K_map (sigma a))) = - (sigma a) := by
   fin_cases a <;>
-    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+    simp [I_map, J_map, K_map, sigma, I2, s1, s2, s3]
 
 /-- Hermitian inner product: g(A,B) = ½·Tr(A†·B). -/
 def hs (A B : Matrix (Fin 2) (Fin 2) ℂ) : ℂ :=
@@ -82,20 +82,20 @@ theorem metric_compat_I (a b : Fin 4) :
     hs (I_map (sigma a)) (I_map (sigma b)) = hs (sigma a) (sigma b) := by
   fin_cases a <;> fin_cases b <;>
     simp [hs, I_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Matrix.trace,
-      Complex.I_sq, Complex.conj_I]
+      Complex.conj_I]
 
 /-- Metric compatibility: g(J(X), J(Y)) = g(X, Y). -/
 theorem metric_compat_J (a b : Fin 4) :
     hs (J_map (sigma a)) (J_map (sigma b)) = hs (sigma a) (sigma b) := by
   fin_cases a <;> fin_cases b <;>
     simp [hs, J_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Matrix.trace,
-      Complex.I_sq, Complex.conj_I]
+      Complex.conj_I]
 
 /-- Metric compatibility: g(K(X), K(Y)) = g(X, Y). -/
 theorem metric_compat_K (a b : Fin 4) :
     hs (K_map (sigma a)) (K_map (sigma b)) = hs (sigma a) (sigma b) := by
   fin_cases a <;> fin_cases b <;>
     simp [hs, K_map, sigma, I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Matrix.trace,
-      Complex.I_sq, Complex.conj_I]
+      Complex.conj_I]
 
 end Section4

@@ -11,19 +11,26 @@ import Mathlib.Order.Zorn
 /-!
 # InfoGeometry.Canonical.BraidColimitZornBarrier
 
-Bare-algebraic formalization of the infinite braid group colimit B_∞
-and the Zorn barrier for maximal anyonic extensions.
+Bare algebraic stage and subset lemmas for Fibonacci braid data.
+
+This file does **not** construct the Artin braid-group direct limit `B_∞`, does
+not prove a shift automorphism of that group, and does not build an anyonic
+representation.  It proves:
+
+* injectivity of a concrete stage-extension record map;
+* an upper-bound lemma for nonempty families of successor-closed stage sets;
+* a Zorn-style maximal successor-closed stage set above a seed.
 
 ## Theorems (bare algebraic version)
 
-1. **Fixed-Point Stability**: The shift endofunctor S on the colimit of a
-   directed system of Fibonacci braid stages is a bijection: S(B_∞) ≅ B_∞.
+1. **Stage-Extension Injectivity**: the record map from stage `n` to `n+1`
+   is injective because it preserves the scalar fields definitionally.
 
-2. **Inductive Poset**: The set of Fibonacci fusion sub-stages of a directed
-   system, ordered by inclusion, is inductive — every chain has an upper bound.
+2. **Successor-Closed Stage Set Upper Bound**: every nonempty family of
+   successor-closed stage sets has a successor-closed union upper bound.
 
-3. **Zorn Barrier**: Zorn's Lemma applied to the inductive poset yields
-   a maximal Fibonacci fusion stage.
+3. **Zorn Maximality**: Zorn's Lemma applied to these stage sets yields a
+   maximal successor-closed stage set above a seed.
 
 This module stays at the semiring/algebraic level (no full category theory)
 and builds on the existing `DirectLimitSuperClosureLemmas` infrastructure.
@@ -39,7 +46,7 @@ open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 open InfoGeometry.Topological.FibonacciAnyons
 
 
-/-! ## 1. Fibonacci Braid Stages and the Shift Endofunctor -/
+/-! ## 1. Fibonacci Braid Stages and Stage Extension -/
 
 section FibonacciBraidStages
 
@@ -71,24 +78,21 @@ def fibStageExtend {n : ℕ} (s : FibBraidStage n) : FibBraidStage (n + 1) where
   artinHolds := s.artinHolds
 
 /--
-The shift endofunctor S on the colimit: re-indexes the stage parameter.
+Stage-extension map for the record model: it re-indexes the stage parameter
+from `n` to `n+1` while preserving the scalar fields and the supplied Artin
+relation witness.
 
-Since our Fibonacci matrices are size-independent (2×2), the shift is
-trivially a bijection — it just changes the stage index. In the full
-Artin braid group setting, S maps σ_i → σ_{i+1} and is an automorphism
-of the colimit by cofinality.
+This is not a theorem about the shift automorphism of an Artin braid-group
+direct limit.
 -/
 def shiftEndofunctor {n : ℕ} (s : FibBraidStage n) : FibBraidStage (n + 1) :=
   fibStageExtend s
 
 /--
-Theorem 1: Fixed-Point Stability.
+The stage-extension record map is injective.
 
-At the bare stage level: the canonical stage-extension map is injective
-(preserving all matrix data). At the colimit level B_∞, the shift endofunctor
-S is a bijection: S(B_∞) ≅ B_∞ by cofinality.
-
-The colimit-level proof requires formalizing the directed colimit B_∞.
+This theorem does not assert surjectivity, a fixed point, or a `B_∞` colimit
+automorphism.
 -/
 theorem shift_is_injective {n : ℕ} (s t : FibBraidStage n)
     (h : fibStageExtend s = fibStageExtend t) : s = t := by
@@ -129,7 +133,7 @@ closed under successor, the union is also closed under successor.
 -/
 theorem fusion_poset_inductive
     (chain : Set FibFusionSubset)
-    (hchain : IsChain fusionInclusion chain)
+    (_hchain : IsChain fusionInclusion chain)
     (hne : chain.Nonempty) :
     ∃ C : FibFusionSubset,
       (∀ D ∈ chain, fusionInclusion D C) := by
@@ -144,8 +148,7 @@ theorem fusion_poset_inductive
     rcases hn with ⟨D, hD, hnD⟩
     exact ⟨D, hD, D.succClosed n hnD⟩
   refine ⟨{ stages := unionStages, nonempty := hne', succClosed := hsucc }, ?_⟩
-  intro D hD
-  intro n hn
+  intro D hD n hn
   exact ⟨D, hD, hn⟩
 
 end InductivePoset
@@ -156,13 +159,13 @@ end InductivePoset
 section ZornBarrier
 
 /--
-Theorem 3: Existence of a Maximal Fibonacci Fusion Subset (Zorn Barrier).
+Theorem 3: existence of a maximal successor-closed Fibonacci stage subset.
 
 Given any Fibonacci fusion subset as seed, there exists a maximal
 fusion subset dominating it.
 
-This is the Zorn barrier — the boundary where the braid representations
-stabilize into a fixed-point phase.
+This is an order-theoretic maximality statement only; it does not construct
+braid representations or prove phase stabilization.
 -/
 theorem zorn_maximal_fusion_subset
     (C0 : FibFusionSubset) :

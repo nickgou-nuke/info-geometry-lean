@@ -18,6 +18,7 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
+import InfoGeometry.Canonical.Cl5ComplexMatrixProduct
 import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.SO3FenchelDuality
 import InfoGeometry.Canonical.CliffordDiracAlgebra
@@ -76,6 +77,8 @@ import InfoGeometry.Canonical.BostConnesGalois
 import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 import InfoGeometry.Canonical.BostConnesProjectiveGeometry
 import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
+import InfoGeometry.Canonical.IdeleSymmetries
+import InfoGeometry.Canonical.ZetaChiralConeAlgebra
 import InfoGeometry.Canonical.CliffordToVirasoro
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
@@ -566,6 +569,7 @@ import InfoGeometry.Canonical.HestenesQVandermondeShadow
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
 import InfoGeometry.Canonical.HestenesPhaseSpectral
+import InfoGeometry.Canonical.HestenesKreinSpectralReadout
 import InfoGeometry.Canonical.DrazinChiralFrameEquivariance
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.HyperbolicRotor
@@ -622,6 +626,7 @@ import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKTLorentzOrbitBridge
 import InfoGeometry.Canonical.KKTNoetherCharges
 import InfoGeometry.Canonical.KleinBottleOrientifold
+import InfoGeometry.Canonical.KitaevCuntzCliffordBridge
 import InfoGeometry.Canonical.KreinDrazinBoundarySupport
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.KMSConditionBridge
@@ -960,6 +965,7 @@ import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.TomitaConnesBridge
 import InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary
@@ -1023,6 +1029,8 @@ import InfoGeometry.Canonical.ProofDAGRepresentationBridge
 import InfoGeometry.Canonical.TessellationCocycleBridge
 import InfoGeometry.Canonical.TrichotomyClosureBundle
 import InfoGeometry.Canonical.TrichotomySummaryTheorems
+import InfoGeometry.Canonical.TrifactorDecomposition
+import InfoGeometry.Canonical.DeterminantTrifactor
 import InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
 import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalGapShadow
@@ -1092,6 +1100,15 @@ import InfoGeometry.Canonical.SplitOctonionAssociator
 import InfoGeometry.Canonical.SplitOctonionRigidity
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Canonical.ZornVectorMatrixExplicit
+import InfoGeometry.Canonical.ComplexCliffordHierarchy
+import InfoGeometry.Canonical.Cl3ComplexMatrixProduct
+import InfoGeometry.Canonical.Cl4ComplexMatrixProduct
+import InfoGeometry.Canonical.StandardQuaternionIsomorphism
+import InfoGeometry.Canonical.BilingualBiquaternionBridge
+import InfoGeometry.Canonical.HopfTest
+import InfoGeometry.Canonical.HessianGeometry
+import InfoGeometry.Canonical.ThermalIndividuation
+import InfoGeometry.Canonical.Monotonicity
 import InfoGeometry.Canonical.MathematicalUnification
 import InfoGeometry.Canonical.Mat2
 import InfoGeometry.Canonical.CliffordInfiniteSplitAlgebra
@@ -1099,6 +1116,11 @@ import InfoGeometry.Canonical.DrazinAnomaly
 import InfoGeometry.Canonical.TransportObservable
 import InfoGeometry.Canonical.CosmologicalCoupling
 import InfoGeometry.Canonical.FineStructureConstant
+import InfoGeometry.Canonical.SpinCommutation
+import InfoGeometry.Canonical.JordanMinkowski
+import InfoGeometry.Canonical.ChirlaTorsionHierarchy
+import InfoGeometry.Canonical.OctonionCl8
+import InfoGeometry.Canonical.SpinStatisticsBridge
 
 namespace InfoGeometry
 

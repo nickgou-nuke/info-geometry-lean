@@ -1,95 +1,104 @@
 #!/usr/bin/env python3
 """
-Section 13: Kähler Geometry of Density Matrix Space — SymPy
+Section 13: Fibrations and two-qubit space -- SymPy verification.
 
-The space of 2×2 Hermitian matrices with Hilbert-Schmidt metric
-is a flat Kähler manifold. Density matrices (ρ≥0, Trρ=1) form
-a convex subset — the Bloch sphere (for 2×2, a 3-ball).
+This verifies the finite algebraic identities mirrored in
+lean/InfoGeometry/Section13.lean:
 
-Kähler form: ω = (i/2)·Tr(dX ∧ dX†)
-Complex structures: I, J, K from Section 4.4
+* normalized two-qubit vectors live in the unit sphere shadow in C^4;
+* product-state norms multiply;
+* product states have zero concurrence amplitude ad-bc;
+* pure density matrices have trace equal to norm squared and rank-one minors;
+* gamma expectation readouts are ordinary <psi|Gamma|psi> coordinates.
 """
+
+from __future__ import annotations
+
 import sympy as sp
 
-sp.init_printing()
 
-print("=" * 70)
-print("SECTION 13: KÄHLER GEOMETRY OF DENSITY MATRIX SPACE")
-print("=" * 70)
+def assert_zero(expr, label: str) -> None:
+    reduced = sp.simplify(expr)
+    if reduced != 0:
+        raise AssertionError(f"{label} failed: {reduced}")
 
-# Pauli basis
-Id = sp.eye(2)
-s1 = sp.Matrix([[0, 1], [1, 0]])
-s2 = sp.Matrix([[0, -sp.I], [sp.I, 0]])
-s3 = sp.Matrix([[1, 0], [0, -1]])
-sigma = [Id, s1, s2, s3]
 
-# ===== 13.1 DENSITY MATRICES =====
-print("\n13.1 DENSITY MATRICES")
-# A 2×2 density matrix: ρ = ½(I + r·σ), |r| ≤ 1 (Bloch ball)
-r1, r2, r3 = sp.symbols('r1 r2 r3', real=True)
-rho = (Id + r1*s1 + r2*s2 + r3*s3) / 2
-print(f"  ρ = ½(I + r·σ)")
-print(f"  Tr(ρ) = {sp.simplify(sp.trace(rho))}  ✓")
-print(f"  ρ† = ρ  (Hermitian)  ✓")
-# det(ρ) ≥ 0 ⇒ |r| ≤ 1 (Bloch ball condition)
-det_rho = sp.simplify(rho.det())
-print(f"  det(ρ) = (1 - |r|²)/4 ≥ 0 ⇔ |r| ≤ 1  ✓")
+def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
+    reduced = mat.applyfunc(sp.simplify)
+    if reduced != sp.zeros(*mat.shape):
+        raise AssertionError(f"{label} failed:\n{reduced}")
 
-# ===== 13.2 HILBERT-SCHMIDT METRIC =====
-print("\n13.2 HILBERT-SCHMIDT METRIC")
-# g(A,B) = ½·Tr(A†·B)
-def hs_metric(A, B):
-    return sp.trace(A.H * B) / 2
 
-# On Pauli basis: g(σ_i, σ_j) = δ_ij
-for i in range(4):
-    for j in range(4):
-        val = sp.simplify(hs_metric(sigma[i], sigma[j]))
-        expected = 1 if i == j else 0
-        assert val == expected
-print("  g(σ_i, σ_j) = δ_ij  ✓ (orthonormal)")
+def inner_norm_sq(vec: sp.Matrix) -> sp.Expr:
+    return (vec.conjugate().T * vec)[0]
 
-# Metric on density matrix coordinates:
-# ρ = ½(I + r·σ), dρ = ½(dr·σ)
-# ds² = 2·Tr(dρ†·dρ) = ½·|dr|²
-ds_sq = sp.simplify(2 * sp.trace(rho.H * rho))  # just the norm
-print(f"  ds² = 2·Tr(dρ†·dρ) = (dr₁²+dr₂²+dr₃²)/2")
 
-# ===== 13.3 KÄHLER FORM =====
-print("\n13.3 KÄHLER FORM")
-# ω = (i/2)·Tr(dX ∧ dX†)
-# In coordinates (t,x,y,z): ω = dt∧dx + dy∧dz (complex structure I)
-# The three Kähler forms correspond to I, J, K:
-I_mat = sp.Matrix([[0,-1,0,0],[1,0,0,0],[0,0,0,-1],[0,0,1,0]])
-J_mat = sp.Matrix([[0,0,-1,0],[0,0,0,1],[1,0,0,0],[0,-1,0,0]])
-K_mat = sp.Matrix([[0,0,0,-1],[0,0,-1,0],[0,1,0,0],[1,0,0,0]])
+def expectation(operator: sp.Matrix, psi: sp.Matrix) -> sp.Expr:
+    return sp.simplify((psi.conjugate().T * operator * psi)[0])
 
-# Check I,J,K are Kähler compatible: g(JX,JY) = g(X,Y)
-# Already verified in Section 4.4
-print("  ωᵢ = (i/2)·Tr(σᵢ·dX ∧ dX†)")
-print("  I²=J²=K²=-Id (Section 4.4 ✓)")
-print("  g(IX,IY)=g(JX,JY)=g(KX,KY)=g(X,Y) (Section 4.4 ✓)")
 
-# ===== 13.4 FLAT KÄHLER MANIFOLD =====
-print("\n13.4 FLAT KÄHLER MANIFOLD")
-print("  Minkowski metric on ℝ⁴: η = diag(-1,1,1,1)")
-print("  Zero Riemann curvature: R = 0")
-print("  The space of 2×2 Hermitian matrices = ℝ⁴ with η")
-print("  → flat Kähler (hyperkähler with I,J,K)")
+def main() -> None:
+    print("=" * 72)
+    print("SECTION 13: FIBRATIONS AND TWO-QUBIT SPACE -- SYMPY VERIFICATION")
+    print("=" * 72)
 
-# ===== 13.5 BLOCH SPHERE =====
-print("\n13.5 BLOCH SPHERE (convex subset)")
-print("  ρ ≥ 0, Tr(ρ) = 1, |r| ≤ 1")
-print("  Pure states: |r| = 1 (Bloch sphere S²)")
-print("  Mixed states: |r| < 1 (Bloch ball interior)")
-print("  Maximally mixed: r = 0 (center)")
+    u0, u1, v0, v1 = sp.symbols("u0 u1 v0 v1", complex=True)
+    u = sp.Matrix([u0, u1])
+    v = sp.Matrix([v0, v1])
+    psi_prod = sp.Matrix([u0 * v0, u0 * v1, u1 * v0, u1 * v1])
 
-print("\n" + "=" * 70)
-print("SECTION 13 VERIFIED")
-print("  Density matrix: ρ = ½(I+r·σ), Tr=1, ρ≥0")
-print("  Hilbert-Schmidt: g(σ_i,σ_j)=δ_ij            ✓")
-print("  Kähler forms ω_I, ω_J, ω_K                  ✓")
-print("  Flat hyperkähler = Minkowski ℝ⁴              ✓")
-print("  Bloch sphere = convex subset                  ✓")
-print("=" * 70)
+    norm_prod = inner_norm_sq(psi_prod)
+    norm_expected = sp.expand(inner_norm_sq(u) * inner_norm_sq(v))
+    assert_zero(sp.expand(norm_prod - norm_expected), "product-state norm multiplicativity")
+    print("  product-state norm multiplicativity verified")
+
+    concurrence_amp = psi_prod[0] * psi_prod[3] - psi_prod[1] * psi_prod[2]
+    assert_zero(concurrence_amp, "product-state concurrence amplitude")
+    print("  product-state concurrence amplitude ad-bc vanishes")
+
+    a, b, c, d = sp.symbols("a b c d", complex=True)
+    psi = sp.Matrix([a, b, c, d])
+    rho = psi * psi.conjugate().T
+
+    assert_zero(sp.trace(rho) - inner_norm_sq(psi), "pure density trace equals norm")
+    print("  pure density trace equals state norm squared")
+
+    for i in range(4):
+        for j in range(4):
+            for k in range(4):
+                for l in range(4):
+                    assert_zero(
+                        rho[i, j] * rho[k, l] - rho[i, l] * rho[k, j],
+                        "rank-one density minor",
+                    )
+    print("  pure density rank-one minor identities verified")
+
+    # Pauli-Dirac gamma matrices from Section 5.
+    I = sp.I
+    gamma0 = sp.diag(1, 1, -1, -1)
+    gamma1 = sp.Matrix([[0, 0, 0, 1], [0, 0, 1, 0], [0, -1, 0, 0], [-1, 0, 0, 0]])
+    gamma2 = sp.Matrix([[0, 0, 0, -I], [0, 0, I, 0], [0, I, 0, 0], [-I, 0, 0, 0]])
+    gamma3 = sp.Matrix([[0, 0, 1, 0], [0, 0, 0, -1], [-1, 0, 0, 0], [0, 1, 0, 0]])
+    gamma5 = sp.Matrix([[0, 0, 1, 0], [0, 0, 0, 1], [1, 0, 0, 0], [0, 1, 0, 0]])
+    gammas = [gamma0, gamma1, gamma2, gamma3, gamma5]
+
+    assert_matrix_zero(gamma5 * gamma0 + gamma0 * gamma5, "gamma5 anticommutes with gamma0")
+    print("  Section 5 gamma anticommutation reused for base readout")
+
+    zero_state = sp.zeros(4, 1)
+    for idx, gamma in enumerate(gammas):
+        assert_zero(expectation(gamma, zero_state), f"zero-state gamma expectation {idx}")
+    print("  zero-state gamma/Horodecki readout vanishes")
+
+    readout = [expectation(gamma, psi) for gamma in gammas]
+    if len(readout) != 5:
+        raise AssertionError("Hopf base readout must have five gamma coordinates")
+    print("  five gamma expectation coordinates constructed")
+
+    print("=" * 72)
+    print("SECTION 13 VERIFIED")
+    print("=" * 72)
+
+
+if __name__ == "__main__":
+    main()

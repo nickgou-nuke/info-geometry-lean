@@ -140,7 +140,7 @@ theorem weylCantorColimitFixedPoint
     (L : FormalPrimeRootLattice)
     (hfiber : ∀ X : LieAlg, ctx.isFiberDirection X)
     (hH_eq : ctx.H₁ = ctx.H₂) :
-    weylDenominatorProduct L (fun p : ℕ => 0) = weylAlternatingSum L (fun p : ℕ => 0) ∧
+    weylDenominatorProduct L (fun _ : ℕ => 0) = weylAlternatingSum L (fun _ : ℕ => 0) ∧
     ∀ X : LieAlg, ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 := by
   constructor
   · exact finite_prime_weyl_denominator L (fun _ : ℕ => 0)

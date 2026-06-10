@@ -1110,6 +1110,7 @@ import InfoGeometry.Canonical.PrimonCoulombGas
 import InfoGeometry.Canonical.GaloisKMSVacuum
 import InfoGeometry.Canonical.DeformedIdeleAction
 import InfoGeometry.Canonical.DysonCoulombGas
+import InfoGeometry.Canonical.HagedornKMSBoundary
 import InfoGeometry.Canonical.FinitePhenomenologyReadout
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout

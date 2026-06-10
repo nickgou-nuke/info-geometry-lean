@@ -5,6 +5,7 @@ import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
 import InfoGeometry.Clifford.BudinichSpinorsNullVectors
 import InfoGeometry.Clifford.CrawfordDiracBispinorDensities
+import InfoGeometry.Clifford.DiracPauliGamma
 import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Clifford.CartanInstance
 import InfoGeometry.Clifford.KoszulFoundation

@@ -67,6 +67,7 @@ variable {R : Type uR} [CommRing R] [Invertible (2 : R)]
 variable {A : ℕ → Type uA} [∀ n, AddCommGroup (A n)] [∀ n, Module R (A n)]
 variable {A_inf : Type uInf} [AddCommGroup A_inf] [Module R A_inf]
 
+omit [Invertible (2 : R)] in
 /-- Existing tensor-tower induction gives colimit commutativity. -/
 theorem tower_psi_comp_iota_seq
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
@@ -76,15 +77,15 @@ theorem tower_psi_comp_iota_seq
     (psi (n + m)).comp (iota_seq A iota n m) = psi n :=
   psi_comp_iota_seq A iota A_inf psi psi_comm n m
 
+omit [Invertible (2 : R)] in
 /-- Protected tower states survive in a compatible colimit cone. -/
 theorem protected_state_survives
     (iota : ∀ n, A n →ₗ[R] A (n + 1))
     (psi : ∀ n, A n →ₗ[R] A_inf)
-    (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
     (colimit_kernel : ∀ (n : ℕ) (x : A n), psi n x = 0 → ∃ m, iota_seq A iota n m x = 0)
     {n : ℕ} {x : A n}
     (h_prot : IsTopologicallyProtected A iota n x) : psi n x ≠ 0 :=
-  protected_states_survive_colimit A iota A_inf psi psi_comm colimit_kernel n x h_prot
+  protected_states_survive_colimit A iota A_inf psi colimit_kernel n x h_prot
 
 /-- The tri-facet operator has the closed three-projector partition. -/
 theorem triFacet_partition (T : R) :
@@ -101,6 +102,7 @@ theorem triFacet_ell_idempotent (T : R) (hT : T ^ 3 = T) :
     P_ell T * P_ell T = P_ell T :=
   P_ell_idem T hT
 
+omit [Invertible (2 : R)] in
 /-- The parabolic tri-facet projector is idempotent under `T³ = T`. -/
 theorem triFacet_par_idempotent (T : R) (hT : T ^ 3 = T) :
     P_par T * P_par T = P_par T :=
@@ -128,14 +130,21 @@ theorem braided_zorn_colimit_trifacet_selfDual_readout
     (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
     (T : R) (hT : T ^ 3 = T)
     (K : SelfDualCone E) :
-    (∃ M ∈ family, ∀ X ∈ family, M ⊆ X → X = M) ∧
+    ((α_ τ τ τ).symm ≪≫ whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫
+        whiskerLeftIso τ (β_ τ τ) ≪≫ (α_ τ τ τ).symm ≪≫
+        whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ =
+          whiskerLeftIso τ (β_ τ τ) ≪≫ (α_ τ τ τ).symm ≪≫
+            whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫
+              whiskerLeftIso τ (β_ τ τ)) ∧
+      (∃ M ∈ family, ∀ X ∈ family, M ⊆ X → X = M) ∧
       (∀ n m, (psi (n + m)).comp (iota_seq A iota n m) = psi n) ∧
       (P_hyp T + P_ell T + P_par T = 1) ∧
       (P_hyp T * P_hyp T = P_hyp T) ∧
       (P_ell T * P_ell T = P_ell T) ∧
       (P_par T * P_par T = P_par T) ∧
       (ProperCone.innerDual (K.cone : Set E) = K.cone) := by
-  exact ⟨zorn_maximal_support family chain_sUnion_mem nonempty,
+  exact ⟨fibonacci_yang_baxter_iso τ,
+    zorn_maximal_support family chain_sUnion_mem nonempty,
     tower_psi_comp_iota_seq iota psi psi_comm,
     triFacet_partition T,
     triFacet_hyp_idempotent T hT,

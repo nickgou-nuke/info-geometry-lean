@@ -2,7 +2,13 @@ import Mathlib
 
 noncomputable section
 
-/-! Theorem 5: Braid Group Bn Representation -/
+/-!
+Theorem 5 archive surface: Fibonacci braid-space dimensions.
+
+This file records the finite dimension formula and the type of a possible
+generator-family assignment.  It does not construct matrices satisfying the
+Artin relations and does not prove a braid-group representation.
+-/
 
 def fib : ℕ → ℕ
   | 0 => 0
@@ -18,7 +24,7 @@ example : conformalBlockDim 6 = 5 := rfl
 example : conformalBlockDim 7 = 8 := rfl
 example : conformalBlockDim 8 = 13 := rfl
 
-/-- The matrix family carried by a Fibonacci braid representation on `n` strands. -/
+/-- Type of a candidate matrix family indexed by neighboring braid generators. -/
 abbrev braidGeneratorFamily (n : ℕ) : Type :=
   Fin (n - 1) → Matrix (Fin (fib (n - 1))) (Fin (fib (n - 1))) ℂ
 

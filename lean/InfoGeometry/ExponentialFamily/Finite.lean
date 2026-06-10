@@ -67,7 +67,27 @@ variable [Nonempty α]
 
 lemma familyPartition_pos (F : FiniteExponentialFamilyData α) (θ : ℝ) :
     0 < familyPartition F θ := by
-  classical
+/-
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+1. **`familyPartition_pos`** — proves `0 < familyPartition F θ` using `Finset.sum_pos` with `F.base_pos` and `Real.exp_pos`. Requires `[Nonempty α]`. ✅
+
+2. **`familyDensity_eq`** — proves `familyDensity F θ x = exp(familyStatistic F x θ - familyLogPartition F θ)` using `Real.exp_sub`, `Real.exp_log`, `ring`. Depends on `familyPartition_pos`. ✅
+
+3. **`familyDensity_pos`** — proves `0 < familyDensity F θ x` using `div_pos` with `mul_pos` and `familyPartition_pos`. ✅
+
+4. **`familyNormalization`** — proves `∑ x, familyDensity F θ x = 1` using `Finset.sum_div` and `div_self`. Depends on `familyPartition_pos`. ✅
+
+5. **`toFiniteExponentialFamily`** — constructs the `FiniteExponentialFamily α ℝ` instance using all four lemmas above. ✅
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
+
+None. (All theorems use the existing structure fields and imported lemmas only.)
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+None. No `sorry`, `axiom`, `_True`, `_sorryProof`, certificate wrappers, or data-as-proof patterns.
+-/
   unfold familyPartition
   exact
     Finset.sum_pos

@@ -7,12 +7,14 @@ import InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 
 /-!
-# Stable Fibonacci Anyonic Braiding Direct Limit
+# Conditional Stable Fibonacci Braid-Gate Cone Compatibility
 
-This module formalizes the stable infinite-dimensional braid limit for Fibonacci anyons.
+This module does not construct an infinite-dimensional braid representation.
+It proves a conditional compatibility theorem for projective Fibonacci
+braid-gate readouts under explicitly supplied step maps and a compatible cone.
 
-We prove the compatibility of the evaluation-factored projective Fibonacci gates
-with the stable direct-limit TQFT phase mappings under any compatible cone.
+The finite braid-word and phase data are supplied by the imported finite modules;
+the infinite target is represented only by the caller-provided cone.
 -/
 
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding

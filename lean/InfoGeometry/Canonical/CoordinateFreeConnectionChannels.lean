@@ -47,6 +47,23 @@ commutator `[AX, AY]`.
 def twoSlotCurvature (dXY dYX AX AY : A) : A :=
   dXY - dYX + commutator AX AY
 
+/--
+Two-slot torsion expression (left action).
+
+This is the finite algebraic shadow of `T = dE + \Omega \wedge E`: the derivative part
+is represented by `dEXY - dEYX`, and the connection action by `OX * EY - OY * EX`.
+-/
+def twoSlotTorsionLeft (dEXY dEYX OX EY OY EX : A) : A :=
+  dEXY - dEYX + OX * EY - OY * EX
+
+/--
+Two-slot torsion expression (commutator action).
+
+This is the shadow of `T = dE + [\Omega, E]_\wedge`.
+-/
+def twoSlotTorsionComm (dEXY dEYX OX EY OY EX : A) : A :=
+  dEXY - dEYX + commutator OX EY - commutator OY EX
+
 /-- Cyclic sum used by the algebraic Bianchi readout. -/
 def cyclicSum (X Y Z : A) : A :=
   X + Y + Z
@@ -62,6 +79,18 @@ theorem twoSlotCurvature_add_swap (dXY dYX AX AY : A) :
     twoSlotCurvature dXY dYX AX AY + twoSlotCurvature dYX dXY AY AX = 0 := by
   rw [twoSlotCurvature_swap]
   simp
+
+/-- Torsion is antisymmetric in its two slots (left action). -/
+theorem twoSlotTorsionLeft_swap (dEXY dEYX OX EY OY EX : A) :
+    twoSlotTorsionLeft dEYX dEXY OY EX OX EY = -twoSlotTorsionLeft dEXY dEYX OX EY OY EX := by
+  unfold twoSlotTorsionLeft
+  noncomm_ring
+
+/-- Torsion is antisymmetric in its two slots (commutator action). -/
+theorem twoSlotTorsionComm_swap (dEXY dEYX OX EY OY EX : A) :
+    twoSlotTorsionComm dEYX dEXY OY EX OX EY = -twoSlotTorsionComm dEXY dEYX OX EY OY EX := by
+  unfold twoSlotTorsionComm commutator
+  noncomm_ring
 
 end Basic
 
@@ -91,6 +120,20 @@ theorem map_twoSlotCurvature
     ρ.map (twoSlotCurvature dXY dYX AX AY) =
       twoSlotCurvature (ρ.map dXY) (ρ.map dYX) (ρ.map AX) (ρ.map AY) := by
   simp [twoSlotCurvature, commutator]
+
+/-- A channel preserves the two-slot torsion expression (left action). -/
+theorem map_twoSlotTorsionLeft
+    (ρ : ConnectionChannel (A := A) (B := B)) (dEXY dEYX OX EY OY EX : A) :
+    ρ.map (twoSlotTorsionLeft dEXY dEYX OX EY OY EX) =
+      twoSlotTorsionLeft (ρ.map dEXY) (ρ.map dEYX) (ρ.map OX) (ρ.map EY) (ρ.map OY) (ρ.map EX) := by
+  simp [twoSlotTorsionLeft]
+
+/-- A channel preserves the two-slot torsion expression (commutator action). -/
+theorem map_twoSlotTorsionComm
+    (ρ : ConnectionChannel (A := A) (B := B)) (dEXY dEYX OX EY OY EX : A) :
+    ρ.map (twoSlotTorsionComm dEXY dEYX OX EY OY EX) =
+      twoSlotTorsionComm (ρ.map dEXY) (ρ.map dEYX) (ρ.map OX) (ρ.map EY) (ρ.map OY) (ρ.map EX) := by
+  simp [twoSlotTorsionComm, commutator]
 
 /-- A channel preserves zero cyclic Bianchi sums. -/
 theorem map_cyclicSum_of_zero
@@ -161,6 +204,40 @@ theorem map_twoSlotCurvature_all
   exact ⟨C.vector.map_twoSlotCurvature dXY dYX AX AY,
     C.spinor.map_twoSlotCurvature dXY dYX AX AY,
     C.quaternion.map_twoSlotCurvature dXY dYX AX AY⟩
+
+/-- One torsion object transported into the vector, spinor, and quaternion channels (left action). -/
+theorem map_twoSlotTorsionLeft_all
+    (C : ThreeConnectionChannels (A := A) (V := V) (S := S) (Q := Q))
+    (dEXY dEYX OX EY OY EX : A) :
+    C.vector.map (twoSlotTorsionLeft dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionLeft (C.vector.map dEXY) (C.vector.map dEYX)
+          (C.vector.map OX) (C.vector.map EY) (C.vector.map OY) (C.vector.map EX)
+      ∧ C.spinor.map (twoSlotTorsionLeft dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionLeft (C.spinor.map dEXY) (C.spinor.map dEYX)
+          (C.spinor.map OX) (C.spinor.map EY) (C.spinor.map OY) (C.spinor.map EX)
+      ∧ C.quaternion.map (twoSlotTorsionLeft dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionLeft (C.quaternion.map dEXY) (C.quaternion.map dEYX)
+          (C.quaternion.map OX) (C.quaternion.map EY) (C.quaternion.map OY) (C.quaternion.map EX) := by
+  exact ⟨C.vector.map_twoSlotTorsionLeft dEXY dEYX OX EY OY EX,
+    C.spinor.map_twoSlotTorsionLeft dEXY dEYX OX EY OY EX,
+    C.quaternion.map_twoSlotTorsionLeft dEXY dEYX OX EY OY EX⟩
+
+/-- One torsion object transported into the vector, spinor, and quaternion channels (commutator action). -/
+theorem map_twoSlotTorsionComm_all
+    (C : ThreeConnectionChannels (A := A) (V := V) (S := S) (Q := Q))
+    (dEXY dEYX OX EY OY EX : A) :
+    C.vector.map (twoSlotTorsionComm dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionComm (C.vector.map dEXY) (C.vector.map dEYX)
+          (C.vector.map OX) (C.vector.map EY) (C.vector.map OY) (C.vector.map EX)
+      ∧ C.spinor.map (twoSlotTorsionComm dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionComm (C.spinor.map dEXY) (C.spinor.map dEYX)
+          (C.spinor.map OX) (C.spinor.map EY) (C.spinor.map OY) (C.spinor.map EX)
+      ∧ C.quaternion.map (twoSlotTorsionComm dEXY dEYX OX EY OY EX) =
+        twoSlotTorsionComm (C.quaternion.map dEXY) (C.quaternion.map dEYX)
+          (C.quaternion.map OX) (C.quaternion.map EY) (C.quaternion.map OY) (C.quaternion.map EX) := by
+  exact ⟨C.vector.map_twoSlotTorsionComm dEXY dEYX OX EY OY EX,
+    C.spinor.map_twoSlotTorsionComm dEXY dEYX OX EY OY EX,
+    C.quaternion.map_twoSlotTorsionComm dEXY dEYX OX EY OY EX⟩
 
 /-- A zero Bianchi cyclic sum transports to all three representation channels. -/
 theorem map_bianchi_zero_all

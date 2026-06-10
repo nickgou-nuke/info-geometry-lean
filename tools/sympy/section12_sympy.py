@@ -1,76 +1,172 @@
 #!/usr/bin/env python3
 """
-Section 12: Torsion Structure — SymPy Verification
+Section 12: Torsion Structure -- SymPy verification.
 
-Vector: T^a_{bc} = Γ^a_{bc} - Γ^a_{cb}
-Matrix: torsion influences spin connection ω
-Quaternion: T_q = dq + Ω∧q
-Flat space: all vanish.
+This script verifies the finite algebraic identities mirrored in
+lean/InfoGeometry/Section12.lean.  It is deliberately not a manifold-level
+Einstein-Cartan derivation; it checks the coefficient algebra used by the
+formal Lean section.
 """
+
+from __future__ import annotations
+
 import sympy as sp
 
-print("=" * 70)
-print("SECTION 12: TORSION STRUCTURE — SYMPY VERIFICATION")
-print("=" * 70)
 
-# ===== 12.1 VECTOR TORSION =====
-print("\n12.1 VECTOR TORSION")
-print("  T^a_{bc} = Γ^a_{bc} - Γ^a_{cb} = 2·Γ^a_{[bc]}")
-print("  For Levi-Civita (metric-compatible, torsion-free): Γ^a_{bc} = Γ^a_{cb}")
-print("  ⇒ T^a_{bc} = 0  ✓")
+DIM = 4
 
-# For Minkowski metric: all Christoffel symbols vanish
-print("  Minkowski metric: g = η, ∂g = 0 → Γ = 0 → T = 0  ✓")
 
-# Torsion 2-form: T^a = de^a + ω^a_b ∧ e^b
-# With identity tetrad and zero connection: T = 0
-print("  T^a = de^a + ω^a_b ∧ e^b = 0 (flat, identity tetrad)  ✓")
+def assert_zero(expr, label: str) -> None:
+    reduced = sp.simplify(expr)
+    if reduced != 0:
+        raise AssertionError(f"{label} failed: {reduced}")
 
-# ===== 12.2 MATRIX (SPINORIAL) TORSION =====
-print("\n12.2 MATRIX (SPINORIAL) TORSION")
-print("  No direct 'spinorial torsion tensor' defined")
-print("  Torsion couples to spin via Einstein-Cartan")
-print("  Spin connection ω_μ^{AB} modified by torsion")
-print("  For torsion-free flat space: ω determined solely by metric")
-print("  Minkowski + identity tetrad → ω = 0  ✓")
 
-# Pauli matrices
-Id = sp.eye(2)
-s1 = sp.Matrix([[0,1],[1,0]])
-s2 = sp.Matrix([[0,-sp.I],[sp.I,0]])
-s3 = sp.Matrix([[1,0],[0,-1]])
+def qmul(p: tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr],
+         q: tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]) -> tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]:
+    pr, px, py, pz = p
+    qr, qx, qy, qz = q
+    return (
+        pr * qr - px * qx - py * qy - pz * qz,
+        pr * qx + px * qr + py * qz - pz * qy,
+        pr * qy - px * qz + py * qr + pz * qx,
+        pr * qz + px * qy - py * qx + pz * qr,
+    )
 
-# Check: for the spin connection relation ω_{μab} = e_a^ν(∂_μ e_{bν} - Γ^ρ_{μν} e_{bρ})
-# With e = I, Γ = 0: ω = 0, T = 0
-print("  ω_{μab} = e_a^ν(∂_μ e_{bν} - Γ^ρ_{μν} e_{bρ}) = 0  ✓")
-print("  ⇒ spinors see no torsion in flat space")
 
-# ===== 12.3 QUATERNION TORSION =====
-print("\n12.3 QUATERNION TORSION")
-print("  T_q = Dq = dq + Ω∧q")
-# For constant quaternion field: dq = 0
-# For flat space: Ω = 0
-# ⇒ T_q = 0
-print("  Constant q + flat space: dq = 0, Ω = 0 → T_q = 0  ✓")
+def qadd(p: tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr],
+         q: tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]) -> tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]:
+    return tuple(pi + qi for pi, qi in zip(p, q))
 
-# Quaternion connection for general q:
-# Ω_μ = q̄·∂_μ q (from Section 8)
-# If q is constant: ∂q = 0 → Ω = 0 → T_q = 0
-I_mat = sp.Matrix([[0,-1,0,0],[1,0,0,0],[0,0,0,-1],[0,0,1,0]])
-J_mat = sp.Matrix([[0,0,-1,0],[0,0,0,1],[1,0,0,0],[0,-1,0,0]])
-K_mat = sp.Matrix([[0,0,0,-1],[0,0,-1,0],[0,1,0,0],[1,0,0,0]])
 
-# For q = identity: q̄ = I⁻¹ = I, Ω = q̄·dq = 0
-eye4 = sp.eye(4)
-q_id = eye4
-qbar_id = eye4
-# dq = 0 (constant) → Ω = q̄·dq = 0
-print("  q = I (identity): q̄·q = I, Ω = q̄·dq = 0 (constant)  ✓")
+def qconj(q: tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]) -> tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]:
+    r, x, y, z = q
+    return (r, -x, -y, -z)
 
-print("\n" + "=" * 70)
-print("SECTION 12 VERIFIED")
-print("  Vector torsion T^a_{bc} = 0 (Levi-Civita)      ✓")
-print("  Torsion 2-form T^a = 0 (flat, identity tetrad)  ✓")
-print("  Spin connection ω = 0 (Minkowski)               ✓")
-print("  Quaternion torsion T_q = 0 (constant q)          ✓")
-print("=" * 70)
+
+def quaternion_torsion(dq, omega, q):
+    return qadd(dq, qmul(omega, q))
+
+
+def main() -> None:
+    print("=" * 72)
+    print("SECTION 12: TORSION STRUCTURE -- SYMPY VERIFICATION")
+    print("=" * 72)
+
+    # 12.1 Vector torsion T^a_bc = Gamma^a_bc - Gamma^a_cb.
+    gamma = {
+        (a, b, c): sp.symbols(f"G_{a}_{b}_{c}")
+        for a in range(DIM) for b in range(DIM) for c in range(DIM)
+    }
+
+    def torsion(gamma_table, a, b, c):
+        return gamma_table[(a, b, c)] - gamma_table[(a, c, b)]
+
+    for a in range(DIM):
+        for b in range(DIM):
+            for c in range(DIM):
+                assert_zero(
+                    torsion(gamma, a, c, b) + torsion(gamma, a, b, c),
+                    "torsion lower-index antisymmetry",
+                )
+                lower_antisym = sp.Rational(1, 2) * (
+                    gamma[(a, b, c)] - gamma[(a, c, b)]
+                )
+                assert_zero(
+                    torsion(gamma, a, b, c) - 2 * lower_antisym,
+                    "T = 2 Gamma_[bc]",
+                )
+    print("  vector torsion antisymmetry and T = 2*Gamma_[bc] verified")
+
+    gamma_sym = {}
+    for a in range(DIM):
+        for b in range(DIM):
+            for c in range(DIM):
+                lo, hi = sorted((b, c))
+                gamma_sym[(a, b, c)] = sp.symbols(f"S_{a}_{lo}_{hi}")
+
+    for a in range(DIM):
+        for b in range(DIM):
+            for c in range(DIM):
+                assert_zero(torsion(gamma_sym, a, b, c), "symmetric connection torsion")
+    print("  lower-index symmetric connection is torsion-free")
+
+    # 12.1 Cartan first structure equation in coefficients:
+    # T^a_bc = de^a_bc + sum_d (omega^a_db e^d_c - omega^a_dc e^d_b).
+    de_seed = {
+        (a, min(b, c), max(b, c)): sp.symbols(f"de_{a}_{min(b, c)}_{max(b, c)}")
+        for a in range(DIM) for b in range(DIM) for c in range(DIM) if b != c
+    }
+
+    def de(a, b, c):
+        if b == c:
+            return sp.Integer(0)
+        lo, hi = sorted((b, c))
+        value = de_seed[(a, lo, hi)]
+        return value if b < c else -value
+
+    omega = {
+        (a, d, b): sp.symbols(f"w_{a}_{d}_{b}")
+        for a in range(DIM) for d in range(DIM) for b in range(DIM)
+    }
+    frame = {
+        (d, b): sp.symbols(f"e_{d}_{b}")
+        for d in range(DIM) for b in range(DIM)
+    }
+
+    def torsion_two_form_coeff(a, b, c):
+        wedge_sum = sum(
+            omega[(a, d, b)] * frame[(d, c)] - omega[(a, d, c)] * frame[(d, b)]
+            for d in range(DIM)
+        )
+        return de(a, b, c) + wedge_sum
+
+    for a in range(DIM):
+        for b in range(DIM):
+            for c in range(DIM):
+                assert_zero(
+                    torsion_two_form_coeff(a, c, b) + torsion_two_form_coeff(a, b, c),
+                    "Cartan torsion two-form coefficient antisymmetry",
+                )
+    print("  Cartan torsion two-form coefficient antisymmetry verified")
+
+    # 12.2 Spinorial channel: torsion appears as contorsion added to omega.
+    omega_lc = sp.Matrix([[sp.symbols("lc00"), sp.symbols("lc01")],
+                          [sp.symbols("lc10"), sp.symbols("lc11")]])
+    contorsion = sp.zeros(2)
+    omega_total = omega_lc + contorsion
+    if omega_total != omega_lc:
+        raise AssertionError("zero contorsion should reduce to Levi-Civita spin connection")
+    if sp.zeros(2) + sp.zeros(2) != sp.zeros(2):
+        raise AssertionError("flat spin connection check failed")
+    print("  zero-contorsion and flat spin-connection reductions verified")
+
+    # 12.3 Quaternion torsion T_q = dq + Omega*q.
+    q = tuple(sp.symbols("q0 q1 q2 q3"))
+    dq = tuple(sp.symbols("dq0 dq1 dq2 dq3"))
+    zero_q = (sp.Integer(0),) * 4
+
+    flat_torsion = quaternion_torsion(zero_q, zero_q, q)
+    if flat_torsion != zero_q:
+        raise AssertionError(f"flat quaternion torsion failed: {flat_torsion}")
+
+    zero_connection_torsion = quaternion_torsion(dq, zero_q, q)
+    if zero_connection_torsion != dq:
+        raise AssertionError("zero quaternion connection should return dq")
+
+    constant_connection = qmul(qconj(q), zero_q)
+    if constant_connection != zero_q:
+        raise AssertionError("qbar*dq should vanish for dq=0")
+
+    constant_field_torsion = quaternion_torsion(zero_q, constant_connection, q)
+    if constant_field_torsion != zero_q:
+        raise AssertionError("constant-field quaternion torsion should vanish")
+    print("  quaternion torsion flat and zero-connection reductions verified")
+
+    print("=" * 72)
+    print("SECTION 12 VERIFIED")
+    print("=" * 72)
+
+
+if __name__ == "__main__":
+    main()

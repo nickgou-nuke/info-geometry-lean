@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Extract, repair, and run archived SymPy witness code.
 
-This resurrects the old aiClaw "right hemisphere" lane without accepting
-printed success text as a proof. Known-broken archive witnesses are emitted as
+This resurrects the archived SymPy witness lane without accepting printed
+success text as a proof. Known-broken archive witnesses are emitted as
 strict repaired scripts with explicit assertions; the original code is kept in
 the manifest for audit.
 """
@@ -24,6 +24,26 @@ DEFAULT_ARCHIVE_KB = Path("/media/goutev/SP DS72/auto/knowledge_base.json")
 DEFAULT_OUT_DIR = Path("witnesses/auto_sympy")
 DEFAULT_MANIFEST = Path("artifacts/auto_sympy/resurrected_witnesses.json")
 DEFAULT_TIMEOUT = 30
+
+
+REPO_DISCOVERY_SNIPPET = """import os
+import sys
+from pathlib import Path
+
+def find_repo_root() -> Path:
+    env = os.environ.get("INFO_GEOMETRY_LEAN_ROOT")
+    if env:
+        candidate = Path(env).resolve()
+        if (candidate / "tools" / "sympy" / "formal_theory_quantum").exists():
+            return candidate
+    for candidate in [Path.cwd().resolve(), *Path(__file__).resolve().parents]:
+        if (candidate / "tools" / "sympy" / "formal_theory_quantum").exists():
+            return candidate
+    raise RuntimeError("Could not locate info-geometry-lean repo root")
+
+REPO = find_repo_root()
+sys.path.insert(0, str(REPO / "tools" / "sympy" / "formal_theory_quantum"))
+"""
 
 
 @dataclass
@@ -96,27 +116,18 @@ print("strict_fibonacci_fusion_witness = ok")
 
     if key == "FibAnyon_Thm4_YangBaxter":
         return (
-            """import sympy as sp
+            f"""import sympy as sp
 
-# Exact Fibonacci braid witness.
-# q is a primitive 10th root with cyclotomic relation Phi_10(q) = 0.
-# a = 1/phi is tied to q by a = q^2 - q^3, and s^2 = a.
-q, a, s = sp.symbols("q a s")
-F = sp.Matrix([[a, s], [s, -a]])
-R = sp.Matrix([[q**4, 0], [0, q**7]])  # diag(exp(4*pi*i/5), exp(-3*pi*i/5))
-B = F * R * F
+{REPO_DISCOVERY_SNIPPET}
+from common import (  # noqa: E402
+    fibonacci_artin_factorization_holds,
+    fibonacci_norm_factorization_holds,
+    fibonacci_yang_baxter_factorization_holds,
+)
 
-relations = [
-    q**4 - q**3 + q**2 - q + 1,
-    a - (q**2 - q**3),
-    s**2 - a,
-]
-gb = sp.groebner(relations, q, a, s, order="lex")
-remainders = [sp.factor(gb.reduce(sp.expand(entry))[1]) for entry in (R * B * R - B * R * B)]
-
-for idx, rem in enumerate(remainders):
-    print(f"yang_baxter_remainder_{idx} = {rem}")
-    assert rem == 0, (idx, rem)
+assert fibonacci_norm_factorization_holds(), "norm factorization"
+assert fibonacci_artin_factorization_holds(), "Artin scalar factorization"
+assert fibonacci_yang_baxter_factorization_holds(), "Yang-Baxter matrix factorization"
 
 print("strict_fibonacci_yang_baxter_witness = ok")
 """,
@@ -127,33 +138,31 @@ print("strict_fibonacci_yang_baxter_witness = ok")
 
     if key == "FibAnyon_Thm5_BraidGroup":
         return (
-            """import sympy as sp
+            f"""import sympy as sp
 
-q, a, s = sp.symbols("q a s")
+{REPO_DISCOVERY_SNIPPET}
+from common import (  # noqa: E402
+    fibonacci_artin_factorization_holds,
+    fibonacci_factorization_symbols,
+    fibonacci_norm_factorization_holds,
+    fibonacci_yang_baxter_factorization_holds,
+)
+
+q, a, s, _phi10 = fibonacci_factorization_symbols()
 F = sp.Matrix([[a, s], [s, -a]])
 R = sp.Matrix([[q**4, 0], [0, q**7]])
 B = F * R * F
 b1, b2, b3 = R, B, R
 
-relations = [
-    q**4 - q**3 + q**2 - q + 1,
-    a - (q**2 - q**3),
-    s**2 - a,
-]
-gb = sp.groebner(relations, q, a, s, order="lex")
+assert fibonacci_norm_factorization_holds(), "norm factorization"
+assert fibonacci_artin_factorization_holds(), "Artin scalar factorization"
 
-def reduce_entries(matrix):
-    return [sp.factor(gb.reduce(sp.expand(entry))[1]) for entry in matrix]
+for idx, entry in enumerate(b1 * b3 - b3 * b1):
+    residual = sp.expand(entry)
+    print(f"far_commutativity_{{idx}} = {{residual}}")
+    assert residual == 0, (idx, residual)
 
-checks = {
-    "far_commutativity": reduce_entries(b1 * b3 - b3 * b1),
-    "artin_relation": reduce_entries(b1 * b2 * b1 - b2 * b1 * b2),
-}
-
-for name, remainders in checks.items():
-    for idx, rem in enumerate(remainders):
-        print(f"{name}_{idx} = {rem}")
-        assert rem == 0, (name, idx, rem)
+assert fibonacci_yang_baxter_factorization_holds(), "Artin matrix factorization"
 
 print("strict_fibonacci_braid_group_witness = ok")
 """,
@@ -182,24 +191,18 @@ print("strict_fibonacci_conformal_dimensions_witness = ok")
 
     if "Fibonacci braided monoidal category" in title:
         return (
-            """import sympy as sp
+            f"""import sympy as sp
 
-q, a, s = sp.symbols("q a s")
-F = sp.Matrix([[a, s], [s, -a]])
-R = sp.Matrix([[q**4, 0], [0, q**7]])
-B = F * R * F
-relations = [q**4 - q**3 + q**2 - q + 1, a - (q**2 - q**3), s**2 - a]
-gb = sp.groebner(relations, q, a, s, order="lex")
+{REPO_DISCOVERY_SNIPPET}
+from common import (  # noqa: E402
+    fibonacci_artin_factorization_holds,
+    fibonacci_norm_factorization_holds,
+    fibonacci_yang_baxter_factorization_holds,
+)
 
-checks = {
-    "F_squared": F * F - sp.eye(2),
-    "yang_baxter": R * B * R - B * R * B,
-}
-for name, matrix in checks.items():
-    for idx, entry in enumerate(matrix):
-        rem = sp.factor(gb.reduce(sp.expand(entry))[1])
-        print(f"{name}_{idx} = {rem}")
-        assert rem == 0, (name, idx, rem)
+assert fibonacci_norm_factorization_holds(), "norm factorization"
+assert fibonacci_artin_factorization_holds(), "Artin scalar factorization"
+assert fibonacci_yang_baxter_factorization_holds(), "Yang-Baxter matrix factorization"
 
 print("strict_fibonacci_braided_surface_witness = ok")
 """,

@@ -3,20 +3,21 @@
 
 from __future__ import annotations
 
-import sympy as sp
-
-from common import check, fibonacci_groebner, matrix_zero_mod_fibonacci
+from common import (
+    check,
+    fibonacci_artin_factorization_holds,
+    fibonacci_lean_artin_factorization_holds,
+    fibonacci_norm_factorization_holds,
+    fibonacci_yang_baxter_factorization_holds,
+)
 
 
 def run() -> None:
     print("Chapter 8: finite hexagon/Yang-Baxter matrix shadow")
-    q, a, s, gb = fibonacci_groebner()
-    F = sp.Matrix([[a, s], [s, -a]])
-    R = sp.diag(q**4, q**7)
-    B = F * R * F
-
-    check("F^2 = I modulo Fibonacci relations", matrix_zero_mod_fibonacci(F * F - sp.eye(2), gb))
-    check("R B R = B R B modulo Fibonacci relations", matrix_zero_mod_fibonacci(R * B * R - B * R * B, gb))
+    check("a^2 + s^2 = 1 cyclotomic factorization", fibonacci_norm_factorization_holds())
+    check("scalar Artin constraint factorization", fibonacci_artin_factorization_holds())
+    check("Lean Artin polynomial factorization", fibonacci_lean_artin_factorization_holds())
+    check("R B R = B R B matrix-entry factorization", fibonacci_yang_baxter_factorization_holds())
 
 
 if __name__ == "__main__":

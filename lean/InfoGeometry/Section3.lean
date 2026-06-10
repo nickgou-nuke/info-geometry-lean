@@ -26,7 +26,13 @@ theorem trace_ortho (a b : Fin 4) : ((∑ i : Fin 2, (sf a * sf b) i i) / (2 : �
 theorem vec_recover (t x y z : ℂ) (a : Fin 4) :
     ((∑ i : Fin 2, (sf a * (t • s0 + x • s1 + y • s2 + z • s3)) i i) / (2 : ℂ))
     = match a with | 0 => t | 1 => x | 2 => y | 3 => z := by
-  fin_cases a <;> simp [sf, s0, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring
+  fin_cases a <;> simp [sf, s0, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two]
+  · ring_nf
+  · ring_nf
+  · ring_nf
+    rw [show Complex.I ^ 2 = (-1 : ℂ) by simp [pow_two, Complex.I_mul_I]]
+    ring_nf
+  · ring_nf
 
 theorem completeness (A B Ap Bp : Fin 2) :
     (∑ a : Fin 4, ∑ b : Fin 4, eta4 a b * sf a A Ap * sf b B Bp) = (-2 : ℂ) * eps A B * eps Ap Bp := by

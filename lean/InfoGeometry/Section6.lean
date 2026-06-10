@@ -25,7 +25,6 @@ theorem half_sum_sigma_sq_eq_2I :
       (2 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [s0, s1, s2, s3, Matrix.mul_apply, Matrix.smul_apply, Fin.sum_univ_two] <;>
-      ring_nf
+    simp [s0, s1, s2, s3, Matrix.smul_apply] <;> ring_nf
 
 end Section6

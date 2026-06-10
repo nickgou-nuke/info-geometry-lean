@@ -14,6 +14,8 @@ The closed theorem surface is deliberately narrow:
   `rangeProjection S - sourceProjection S`;
 * when `S` is an isometry (`S* * S = 1`), this specializes to
   `rangeProjection S - 1`;
+* with the explicit mismatch premise `rangeProjection S ≠ 1`, the isometry
+  commutator is genuinely nonzero;
 * the existing `CuntzO2Carrier` supplies this isometry premise for its left and
   right branches.
 
@@ -22,8 +24,9 @@ Souriau flow, KMS transition, root-of-unity braid representation, Galois action,
 C*-completion, zeta theorem, or RH consequence.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
-Generic source/range commutator identities, source/range idempotence under
-explicit partial-isometry premises, and Cuntz-branch specializations.
+Generic source/range commutator identities, a nonzero-commutator theorem under
+an explicit range/unit mismatch premise, source/range idempotence under explicit
+partial-isometry premises, and Cuntz-branch specializations.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The projection/idempotence readouts depend only on explicitly named
@@ -72,6 +75,18 @@ theorem isometry_branch_commutator_eq_range_sub_one
     S * star S - star S * S = rangeProjection S - 1 := by
   unfold rangeProjection
   rw [hS]
+
+/--
+An isometry has a genuinely nonzero branch commutator whenever its range
+projection is not the unit.
+-/
+theorem isometry_branch_commutator_ne_zero
+    (S : A) (hS : star S * S = 1)
+    (hRange : rangeProjection S ≠ (1 : A)) :
+    S * star S - star S * S ≠ 0 := by
+  rw [isometry_branch_commutator_eq_range_sub_one S hS]
+  intro h
+  exact hRange (sub_eq_zero.mp h)
 
 /-- The range projection of a partial isometry is idempotent. -/
 theorem rangeProjection_idempotent_of_partial_isometry
@@ -132,6 +147,20 @@ theorem right_cuntz_rangeProjection_idempotent :
 theorem cuntz_branch_partition :
     C.leftRangeProjection + C.rightRangeProjection = 1 :=
   C.rangeProjection_sum_one
+
+/-- Left Cuntz branch commutator is genuinely non-zero when the left projection is strictly less than 1. -/
+theorem left_cuntz_branch_commutator_ne_zero
+    (h_mismatch : C.leftRangeProjection ≠ 1) :
+    C.S_left * star C.S_left - star C.S_left * C.S_left ≠ 0 := by
+  have h1 : rangeProjection C.S_left ≠ 1 := h_mismatch
+  exact isometry_branch_commutator_ne_zero C.S_left C.left_isometry h1
+
+/-- Right Cuntz branch commutator is genuinely non-zero when the right projection is strictly less than 1. -/
+theorem right_cuntz_branch_commutator_ne_zero
+    (h_mismatch : C.rightRangeProjection ≠ 1) :
+    C.S_right * star C.S_right - star C.S_right * C.S_right ≠ 0 := by
+  have h1 : rangeProjection C.S_right ≠ 1 := h_mismatch
+  exact isometry_branch_commutator_ne_zero C.S_right C.right_isometry h1
 
 end InfoGeometry.Canonical.DeformedIdeleAction
 

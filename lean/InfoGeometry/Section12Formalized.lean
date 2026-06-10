@@ -61,6 +61,13 @@ def lowerAntisymmetrization (Gamma : ConnectionCoeff) (a b c : Fin 4) : ℂ :=
     torsionTensor Gamma a b b = 0 := by
   simp [torsionTensor]
 
+/-- 
+Contorsion tensor $K_{abc} = \frac{1}{2}(T_{abc} + T_{cab} - T_{bca})$
+constructed algebraically from the torsion tensor.
+-/
+def contorsionTensor (Gamma : ConnectionCoeff) (a b c : Fin 4) : ℂ :=
+  (1 / 2 : ℂ) * (torsionTensor Gamma a b c + torsionTensor Gamma c a b - torsionTensor Gamma b c a)
+
 theorem torsionTensor_zero_of_lower_symmetric
     (Gamma : ConnectionCoeff)
     (hSymm : ∀ a b c : Fin 4, Gamma a b c = Gamma a c b)
@@ -219,6 +226,38 @@ theorem maurerCartanTorsion_unit_field (dq : Quat) :
     maurerCartanTorsion 1 dq = dq := by
   ext <;> simp [maurerCartanTorsion, quaternionTorsion, Section8.Quat.quaternionConnection,
     Section8.Quat.conj]
+
+/-! ## 12.4 The Quaternionic Wedge Commutator and Cuntz Torsion -/
+
+/-- 
+The wedge commutator action $[\Omega, e]_\wedge = \Omega \wedge e + e \wedge \Omega$
+manifests as the algebraic anticommutator of the quaternion components.
+-/
+def quaternionWedgeCommutator (Omega e : Quat) : Quat :=
+  Omega * e + e * Omega
+
+/-- 
+The incorrect scalar expression $\Omega \wedge e + e \wedge \bar{\Omega}$
+(where pure imaginary conjugation $\bar{\Omega} = -\Omega$ makes it $\Omega \wedge e - e \wedge \Omega$).
+-/
+def quaternionWedgeAddBar (Omega e : Quat) : Quat :=
+  Omega * e + e * (-Omega)
+
+/-- 
+The physically correct vector torsion shadow is $\Omega \wedge e - e \wedge \bar{\Omega}$,
+which evaluates exactly to the wedge commutator $[\Omega, e]_\wedge$.
+-/
+theorem quaternionWedge_minus_bar_eq_commutator (Omega e : Quat) :
+    Omega * e - e * (-Omega) = quaternionWedgeCommutator Omega e := by
+  simp only [quaternionWedgeCommutator]
+  ext <;> simp <;> ring
+
+/-- 
+Macroscopic torsion as the shadow of microscopic Cuntz non-commutativity.
+$T_{Cuntz} = S_L S_R - S_R S_L$.
+-/
+def macroscopicCuntzTorsion {A : Type*} [Ring A] (SL SR : A) : A :=
+  SL * SR - SR * SL
 
 theorem section12_formalized_capstone :
     (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,

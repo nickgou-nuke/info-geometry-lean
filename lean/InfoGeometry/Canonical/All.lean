@@ -18,6 +18,7 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
+import InfoGeometry.Canonical.SpectorSupersymmetryBridge
 import InfoGeometry.Canonical.Cl5ComplexMatrixProduct
 import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.SO3FenchelDuality

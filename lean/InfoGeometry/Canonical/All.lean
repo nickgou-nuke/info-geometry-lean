@@ -1,5 +1,4 @@
 /-
-import InfoGeometry.Canonical.HaugManiYinYangBridge
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -19,6 +18,9 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
+import InfoGeometry.Canonical.HaugManiYinYangBridge
+import InfoGeometry.Canonical.WittenParityAnomalyBridge
+import InfoGeometry.Canonical.KMSHagedornBridge
 import InfoGeometry.Canonical.SpectorSupersymmetryBridge
 import InfoGeometry.Canonical.Cl5ComplexMatrixProduct
 import InfoGeometry.Canonical.ActionDuality

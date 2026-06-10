@@ -46,6 +46,8 @@ structure KleinBottleOrientifold where
   mobiusTwist : Prop
   squareAnnihilation : Prop
   squareFreeSupport : Prop
+  wittenMod16AnomalyCancellation : Prop
+  wittenMod4GaugeAnomaly : Prop
 
 /--
 Bridge packet tying the prime-gas MaxEnt data to the Klein bottle orientifold
@@ -63,6 +65,7 @@ structure OrientifoldPrimeGasPacket (D : PrimeGasJaynesData) where
   moebiusSign : Prop
   support_kills_squares : Prop
   squareFreeSupport : Prop
+  wittenMod16_boundary : Prop
 
 /--
 Topological support packet for the square-free sector.
@@ -77,5 +80,6 @@ structure SquareFreeSupportPacket where
   mobiusTwist : Prop
   squareAnnihilation : Prop
   squareFreeSupport : Prop
+  wittenMod16AnomalyCancellation : Prop
 
 end InfoGeometry.Canonical.KleinBottleOrientifold

@@ -20,6 +20,24 @@ the section:
 * spinorial torsion is represented here as contorsion added to the spin
   connection, rather than as an independent "spinorial torsion tensor";
 * quaternion torsion is the left covariant derivative shadow `dq + Omega*q`.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+The vector torsion coefficient identity, lower-index antisymmetry, the
+torsion-free/symmetric-connection equivalence, the flat torsion identities,
+the coefficient antisymmetry of Cartan's first structure equation, the
+coordinate-basis reduction of Cartan's first structure equation, the
+zero-contorsion spin-connection reduction, and the flat quaternion torsion
+identities.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+The two-form antisymmetry theorem assumes an explicitly named antisymmetry
+witness for `de`.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+This file does not formalize smooth manifolds, exterior bundles, a full
+Einstein-Cartan variational theory, axial-current coupling, propagating torsion,
+quantum anomalies, or emergent-spacetime defects. Those claims remain prose
+motivation until their precise formal premises are introduced.
 -/
 
 noncomputable section
@@ -55,6 +73,12 @@ theorem torsionTensor_eq_two_lowerAntisymmetrization
 theorem torsionTensor_antisymmetric_lower
     (Gamma : ConnectionCoeff) (a b c : Fin 4) :
     torsionTensor Gamma a c b = -torsionTensor Gamma a b c := by
+  simp [torsionTensor]
+
+/-- Torsion vanishes when the two lower slots agree. -/
+theorem torsionTensor_repeated_lower
+    (Gamma : ConnectionCoeff) (a b : Fin 4) :
+    torsionTensor Gamma a b b = 0 := by
   simp [torsionTensor]
 
 /-- Lower-index symmetry of the connection implies zero torsion. -/
@@ -96,6 +120,15 @@ theorem torsionTensor_flat (a b c : Fin 4) :
     torsionTensor zeroConnection a b c = 0 := by
   simp [torsionTensor, zeroConnection]
 
+/-- In coordinate-basis coefficient form, symmetric connection coefficients
+have zero torsion tensor coefficients. -/
+theorem torsionTensor_coordinate_symmetric_zero
+    (Gamma : ConnectionCoeff)
+    (hSymm : ∀ a b c : Fin 4, Gamma a b c = Gamma a c b)
+    (a b c : Fin 4) :
+    torsionTensor Gamma a b c = 0 := by
+  exact torsionTensor_zero_of_lower_symmetric Gamma hSymm a b c
+
 /-! ## 12.1 Cartan first structure equation in coefficients -/
 
 /--
@@ -126,6 +159,28 @@ theorem torsionTwoFormCoeff_flat (e : FrameCoeff) (a b c : Fin 4) :
     torsionTwoFormCoeff zeroConnection zeroConnection e a b c = 0 := by
   simp [torsionTwoFormCoeff, zeroConnection]
 
+/-- Coordinate coframe coefficients `e^d = dx^d`. -/
+def coordinateFrame : FrameCoeff :=
+  fun d c => if d = c then 1 else 0
+
+/--
+Connection one-form coefficients induced by coordinate connection coefficients.
+
+The index order records `omega^a_d = Gamma^a_{bd} dx^b`, so substituting the
+coordinate coframe into Cartan's first structure equation gives exactly
+`Gamma^a_{bc} - Gamma^a_{cb}`.
+-/
+def coordinateConnectionForm (Gamma : ConnectionCoeff) : ConnectionCoeff :=
+  fun a d b => Gamma a b d
+
+/-- In a coordinate coframe, Cartan's coefficient formula recovers the torsion tensor. -/
+theorem torsionTwoFormCoeff_coordinate_eq_torsionTensor
+    (Gamma : ConnectionCoeff) (a b c : Fin 4) :
+    torsionTwoFormCoeff zeroConnection (coordinateConnectionForm Gamma) coordinateFrame a b c =
+      torsionTensor Gamma a b c := by
+  simp [torsionTwoFormCoeff, zeroConnection, coordinateConnectionForm, coordinateFrame,
+    torsionTensor]
+
 /-! ## 12.2 Matrix/spinorial torsion as contorsion in the spin connection -/
 
 /--
@@ -149,9 +204,10 @@ theorem spinConnectionWithContorsion_flat (mu : Fin 4) :
 
 /-! ## 12.3 Quaternion torsion -/
 
-/-- Quaternion torsion shadow `T_q = Dq = dq + Omega*q`. -/
+/-- Quaternion torsion shadow `T_q = Dq = dq + [Omega, q]`.
+This represents the geometric torsion where `q` acts as the quaternionic soldering form. -/
 def quaternionTorsion (dq Omega q : Quat) : Quat :=
-  dq + Omega * q
+  dq + Omega * q - q * Omega
 
 /-- With zero quaternion connection, torsion is just the ordinary derivative. -/
 theorem quaternionTorsion_zero_connection (dq q : Quat) :
@@ -183,12 +239,16 @@ theorem section12_capstone :
     (∀ a b c : Fin 4, torsionTensor zeroConnection a b c = 0) ∧
     (∀ e : FrameCoeff, ∀ a b c : Fin 4,
       torsionTwoFormCoeff zeroConnection zeroConnection e a b c = 0) ∧
+    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
+      torsionTwoFormCoeff zeroConnection (coordinateConnectionForm Gamma)
+        coordinateFrame a b c = torsionTensor Gamma a b c) ∧
     (∀ omegaLeviCivita : SpinConnection, ∀ mu : Fin 4,
       spinConnectionWithContorsion omegaLeviCivita 0 mu = omegaLeviCivita mu) ∧
     (∀ q : Quat, quaternionTorsion 0 0 q = 0) ∧
     (∀ q : Quat, quaternionTorsion 0 (Section8.Quat.quaternionConnection q 0) q = 0) := by
   exact ⟨torsionTensor_antisymmetric_lower, torsionTensor_zero_iff_lower_symmetric,
-    torsionTensor_flat, torsionTwoFormCoeff_flat, spinConnectionWithContorsion_zero,
+    torsionTensor_flat, torsionTwoFormCoeff_flat,
+    torsionTwoFormCoeff_coordinate_eq_torsionTensor, spinConnectionWithContorsion_zero,
     quaternionTorsion_flat, quaternionTorsion_of_constant_field_connection⟩
 
 end Section12

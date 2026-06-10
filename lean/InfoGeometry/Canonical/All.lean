@@ -375,6 +375,7 @@ import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.DiscreteModularSpectrum
 import InfoGeometry.Canonical.DiscreteCPTGroup
+import InfoGeometry.Canonical.CPTRealCl11Emergence
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinChiralLightconeBoundary
@@ -965,6 +966,7 @@ import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Canonical.TwoSheetComplexPolarization
 import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
 import InfoGeometry.Canonical.MajoranaPHSZeroMode
 import InfoGeometry.Canonical.TomitaConnesBridge
@@ -1094,6 +1096,20 @@ import InfoGeometry.Canonical.YangMillsFiniteQFT
 import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
 import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
+import InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
+import InfoGeometry.Arithmetic.RiemannZetaEquivalences
+import InfoGeometry.Arithmetic.RamanujanDefectTower
+import InfoGeometry.Arithmetic.WittenParityIndex
+import InfoGeometry.Canonical.UHFInductiveColimitBoundary
+import InfoGeometry.Canonical.CuntzCantorBoundaryShift
+import InfoGeometry.Canonical.CantorBoundaryCuntzShift
+import InfoGeometry.Canonical.BostConnesSuperalgebra
+import InfoGeometry.Canonical.EvansHarmonicTrap
+import InfoGeometry.Canonical.PrimonGasGUE
+import InfoGeometry.Canonical.PrimonCoulombGas
+import InfoGeometry.Canonical.GaloisKMSVacuum
+import InfoGeometry.Canonical.DeformedIdeleAction
+import InfoGeometry.Canonical.FinitePhenomenologyReadout
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 import InfoGeometry.Canonical.SplitOctonionAssociator

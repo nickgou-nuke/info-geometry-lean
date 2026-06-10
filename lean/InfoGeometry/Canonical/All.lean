@@ -1112,6 +1112,7 @@ import InfoGeometry.Canonical.DeformedIdeleAction
 import InfoGeometry.Canonical.DysonCoulombGas
 import InfoGeometry.Canonical.HagedornKMSBoundary
 import InfoGeometry.Canonical.CantorCuntzPotential
+import InfoGeometry.Canonical.WittenMod16Anomaly
 import InfoGeometry.Canonical.FinitePhenomenologyReadout
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout

@@ -189,8 +189,8 @@ def load_kb(path: Path) -> list[dict[str, Any]]:
 
 def upsert_doc(base: str, database: str, user: str, password: str, key: str, doc: dict[str, Any]) -> None:
     request_json(
-        "PUT",
-        db_url(base, database, f"/_api/document/literature_nodes/{quote(key)}?overwriteMode=update"),
+        "POST",
+        db_url(base, database, "/_api/document/literature_nodes?overwriteMode=update"),
         user,
         password,
         {**doc, "_key": key},
@@ -201,8 +201,8 @@ def upsert_edge(base: str, database: str, user: str, password: str, edge: dict[s
     key_source = f"{edge.get('_from')}->{edge.get('_to')}:{edge.get('type')}"
     key = safe_key(hashlib.sha256(key_source.encode("utf-8")).hexdigest())
     request_json(
-        "PUT",
-        db_url(base, database, f"/_api/document/citation_edges/{quote(key)}?overwriteMode=update"),
+        "POST",
+        db_url(base, database, "/_api/document/citation_edges?overwriteMode=update"),
         user,
         password,
         {**edge, "_key": key},

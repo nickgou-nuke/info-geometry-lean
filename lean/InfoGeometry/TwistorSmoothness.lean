@@ -1,6 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.MellinColimitTrifactor
+import InfoGeometry.Categorical.ModularDoubledRealTwistorColimit
 
 /-!
 # Twistor Fibration + Smoothness as Colimit — Lean 4
@@ -39,8 +41,13 @@ theorem quaternion_norm (a b c d : ℝ) :
     quaternion a b c d * quatConj a b c d
     = ((a : ℂ)^2 + (b : ℂ)^2 + (c : ℂ)^2 + (d : ℂ)^2) • I2 := by
   unfold quaternion quatConj
-  ext i j; fin_cases i <;> fin_cases j <;>
-    simp [I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq] <;> ring
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [I2, s1, s2, s3, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals
+    ring_nf
+    try rw [show Complex.I ^ 2 = (-1 : ℂ) by simp [pow_two, Complex.I_mul_I]]
+    try ring_nf
 
 /-- det(σ₃) = -1, σ₃³ = σ₃. -/
 theorem s3_trifactor : s3*s3*s3 = s3 ∧ s3.det = (-1 : ℂ) := by
@@ -48,18 +55,36 @@ theorem s3_trifactor : s3*s3*s3 = s3 ∧ s3.det = (-1 : ℂ) := by
   · ext i j; fin_cases i <;> fin_cases j <;> simp [s3, Matrix.mul_apply, Fin.sum_univ_two]
   · simp [s3, Matrix.det_fin_two]
 
-/-- Cl(1,1)⁵ = Cl(5,5) as the Bott periodicity kernel.
-    Five iterations of the modular atom produce the O(5,5) window.
-    Owner proof: SplitCliffordTensorBridge, Cl55V4SpinorFragmentation. -/
-theorem bott_kernel_cl55 : True := by trivial
+/--
+Bott/trifactor finite readout: an integer tripotent has tensor-power
+determinant in `{0, 1}` at the even Bott window used by the `Cl(5,5)` lane.
 
-/-- The determinant classifier det ∈ {-1,0,1} survives the continuum limit.
-    Owner proof: DeterminantTrifactor + BraidColimitZornBarrier. -/
-theorem trifactor_survives_limit : True := by trivial
+This delegates to `MellinColimitTrifactor`; it is a determinant-sector theorem,
+not a full Clifford-algebra isomorphism.
+-/
+theorem bott_kernel_cl55 (d : ℤ) (h_cube : d ^ 3 = d) :
+    d ^ 80 = 0 ∨ d ^ 80 = 1 :=
+  MellinColimitTrifactor.bott_absorbs_negative_sector d h_cube
 
-/-- Smoothness is the colimit of Mellin-bound discrete structures.
-    Cl(∞,∞) = lim Cl(n,n) emerges at the Zorn attractor.
-    Owner proof: SplitCliffordDirectLimit, BraidColimitZornBarrier. -/
-theorem smoothness_as_colimit : True := by trivial
+/-- The determinant classifier `det ∈ {-1,0,1}` is the tripotent classifier. -/
+theorem trifactor_survives_limit
+    {R : Type _} [CommRing R] [IsDomain R] (d : R) (h_cube : d ^ 3 = d) :
+    d = 0 ∨ d = 1 ∨ d = -1 :=
+  MellinColimitTrifactor.tripotent_classifier d h_cube
+
+/--
+Structural smooth-boundary readout: a stage projection has a continuum readout
+only through the commuting square of the fractal scale colimit.
+
+This is the formal replacement for the slogan "smoothness is the colimit of
+Mellin-bound Cantor stages"; no smooth structure is asserted here.
+-/
+theorem smoothness_as_colimit
+    (C :
+      InfoGeometry.Categorical.ModularDoubledRealTwistorColimit.FractalScaleProjectionColimit)
+    (n : ℕ) (x : C.StageTotal n) :
+    C.limitProjection (C.stageToLimit n x) =
+      C.baseToLimit n (C.stageProjection n x) :=
+  C.stage_projection_commutes n x
 
 end TwistorSmoothness

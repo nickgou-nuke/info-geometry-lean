@@ -1,83 +1,166 @@
 #!/usr/bin/env python3
-"""
-Section 8: Quaternion Spin Connection — SymPy Verification
+"""Section 8: quaternion spin connection and curvature.
 
-8.1 Unit quaternion Lorentz transform: X' = q·X·q̄
-8.2 Quaternion connection: Ω_μ = q̄·∂_μ q  (pure imaginary)
-8.3 Spin connection tetrad postulate
-8.4 Quaternion-spin connection relation: Ω = (i/4)·σ·ω·σ
+This is the exact SymPy companion to ``lean/InfoGeometry/Section8.lean``.
+It verifies the finite algebraic content:
+
+* Hamilton quaternion basis laws;
+* qbar*q = q*qbar = ||q||^2;
+* det(x^mu sigma_mu) = t^2 - x^2 - y^2 - z^2;
+* Omega = qbar*dq is pure imaginary when dq is tangent to the unit sphere;
+* the flat spin/quaternion connection and curvature vanish.
 """
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
 import sympy as sp
 
-sp.init_printing()
 
-print("=" * 70)
-print("SECTION 8: QUATERNION SPIN CONNECTION — SYMPY VERIFICATION")
-print("=" * 70)
+def assert_eq(name: str, left, right=0) -> None:
+    diff = sp.simplify(left - right)
+    if diff != 0:
+        raise AssertionError(f"{name} failed: {diff}")
+    print(f"  {name}: OK")
 
-# ===== 8.1 QUATERNIONS AND LORENTZ TRANSFORMATIONS =====
-print("\n8.1 QUATERNIONS AND LORENTZ TRANSFORMATIONS")
 
-Id = sp.eye(2)
-s1 = sp.Matrix([[0, 1], [1, 0]])
-s2 = sp.Matrix([[0, -sp.I], [sp.I, 0]])
-s3 = sp.Matrix([[1, 0], [0, -1]])
-sigma = [Id, s1, s2, s3]
+def assert_quat_eq(name: str, left: "Quat", right: "Quat") -> None:
+    diffs = [sp.simplify(a - b) for a, b in zip(left.tuple(), right.tuple())]
+    if any(diff != 0 for diff in diffs):
+        raise AssertionError(f"{name} failed: {diffs}")
+    print(f"  {name}: OK")
 
-# Four-vector to quaternion: X = x⁰σ₀ + x¹σ₁ + x²σ₂ + x³σ₃
-t, x, y, z = sp.symbols('t x y z', real=True)
-X = t*Id + x*s1 + y*s2 + z*s3
-print(f"  X = t·σ₀ + x·σ₁ + y·σ₂ + z·σ₃")
-print(f"  det(X) = {sp.simplify(X.det())} = t² - x² - y² - z²  ✓")
 
-# Unit quaternion from Section 2 complex structures
-# q = q₀ + q₁·I + q₂·J + q₃·K  represented as 4x4 real matrices
-I_mat = sp.Matrix([[0,-1,0,0],[1,0,0,0],[0,0,0,-1],[0,0,1,0]])
-J_mat = sp.Matrix([[0,0,-1,0],[0,0,0,1],[1,0,0,0],[0,-1,0,0]])
-K_mat = sp.Matrix([[0,0,0,-1],[0,0,-1,0],[0,1,0,0],[1,0,0,0]])
+@dataclass(frozen=True)
+class Quat:
+    r: sp.Expr
+    x: sp.Expr
+    y: sp.Expr
+    z: sp.Expr
 
-# For a unit quaternion: q̄·q = 1
-# Represent q as (q₀,q₁,q₂,q₃) and q̄ as (q₀,-q₁,-q₂,-q₃)
-q0, q1, q2, q3 = sp.symbols('q0 q1 q2 q3', real=True)
-q_mat = q0*sp.eye(4) + q1*I_mat + q2*J_mat + q3*K_mat
-qbar_mat = q0*sp.eye(4) - q1*I_mat - q2*J_mat - q3*K_mat
-# Unit condition: q̄·q = (q₀²+q₁²+q₂²+q₃²)·I = I
-norm_q = q0**2 + q1**2 + q2**2 + q3**2
-qbar_q = sp.simplify(qbar_mat * q_mat)
-assert qbar_q == norm_q * sp.eye(4)
-print(f"  q̄·q = (q₀²+q₁²+q₂²+q₃²)·I  ✓")
+    def tuple(self) -> tuple[sp.Expr, sp.Expr, sp.Expr, sp.Expr]:
+        return (self.r, self.x, self.y, self.z)
 
-# Lorentz transform preserves interval: det(X') = det(X)
-# For the 2x2 representation: X' = S·X·S† with S ∈ SL(2,ℂ)
-# SL(2,ℂ) preserves det: det(S·X·S†) = |det(S)|²·det(X) = det(X) since det(S)=1
-print("  X' = S·X·S† preserves det(X) = t²-x²-y²-z²  ✓")
+    def __add__(self, other: "Quat") -> "Quat":
+        return Quat(self.r + other.r, self.x + other.x, self.y + other.y, self.z + other.z)
 
-# ===== 8.2 QUATERNION CONNECTION =====
-print("\n8.2 QUATERNION CONNECTION")
-print("  Ω_μ = q̄·∂_μ q")
-print("  Pure imaginary: Ω̄_μ = -Ω_μ")
-# For constant q: Ω = 0
-print("  For constant q(x) = const: Ω_μ = 0  ✓")
+    def __neg__(self) -> "Quat":
+        return Quat(-self.r, -self.x, -self.y, -self.z)
 
-# Verify that q̄·(∂q) + (∂q̄)·q = 0 for unit q
-# Differentiating q̄·q = 1: ∂(q̄·q) = ∂q̄·q + q̄·∂q = 0
-# ⇒ q̄·∂q = -(∂q̄)·q
-# ⇒ Ω̄ = (∂q̄)·q = -q̄·∂q = -Ω  → pure imaginary
-print("  ∂(q̄·q) = ∂q̄·q + q̄·∂q = 0 ⇒ Ω̄ = -Ω  ✓")
+    def __sub__(self, other: "Quat") -> "Quat":
+        return self + (-other)
 
-# ===== 8.4 QUATERNION-SPIN CONNECTION RELATION =====
-print("\n8.4 QUATERNION ↔ SPIN CONNECTION RELATION")
-print("  Ω_μ = (i/4)·σ^a_{AA'}·ω_μ^{AB}·σ_a^{BA'}")
-# In flat space: ω = 0 → Ω = 0
-print("  Flat space: ω = 0 → Ω = 0  ✓")
-# For identity tetrad and zero Christoffel, the relation is trivial
-print("  The Pauli matrices σ^a provide the soldering bridge")
-print("  between spinor indices (A,B) and Lorentz index (a)")
+    def __mul__(self, other: "Quat") -> "Quat":
+        return Quat(
+            self.r * other.r - self.x * other.x - self.y * other.y - self.z * other.z,
+            self.r * other.x + self.x * other.r + self.y * other.z - self.z * other.y,
+            self.r * other.y - self.x * other.z + self.y * other.r + self.z * other.x,
+            self.r * other.z + self.x * other.y - self.y * other.x + self.z * other.r,
+        )
 
-print("\n" + "=" * 70)
-print("SECTION 8 VERIFIED")
-print("  Unit quaternion Lorentz transform      ✓")
-print("  q̄·q = norm·I (unit condition)          ✓")
-print("  Ω_μ pure imaginary (Ω̄=-Ω)              ✓")
-print("  Ω ↔ ω relation via Pauli soldering     ✓")
-print("=" * 70)
+    def conj(self) -> "Quat":
+        return Quat(self.r, -self.x, -self.y, -self.z)
+
+    def norm_sq(self) -> sp.Expr:
+        return self.r**2 + self.x**2 + self.y**2 + self.z**2
+
+    def dot(self, other: "Quat") -> sp.Expr:
+        return self.r * other.r + self.x * other.x + self.y * other.y + self.z * other.z
+
+
+ZERO = Quat(0, 0, 0, 0)
+ONE = Quat(1, 0, 0, 0)
+QI = Quat(0, 1, 0, 0)
+QJ = Quat(0, 0, 1, 0)
+QK = Quat(0, 0, 0, 1)
+
+
+def scalar(a: sp.Expr) -> Quat:
+    return Quat(a, 0, 0, 0)
+
+
+def quaternion_connection(q: Quat, dq: Quat) -> Quat:
+    return q.conj() * dq
+
+
+def covariant_derivative(partial_v: Quat, omega: Quat, vector: Quat) -> Quat:
+    return partial_v + omega * vector - vector * omega
+
+
+def quaternion_curvature(d_mu_omega_nu: Quat, d_nu_omega_mu: Quat, omega_mu: Quat, omega_nu: Quat) -> Quat:
+    return d_mu_omega_nu - d_nu_omega_mu + omega_mu * omega_nu - omega_nu * omega_mu
+
+
+def main() -> int:
+    print("=" * 72)
+    print("SECTION 8: QUATERNION SPIN CONNECTION — EXACT SYMPY CHECK")
+    print("=" * 72)
+
+    print("\n8.1 Quaternion basis laws")
+    assert_quat_eq("i^2 = -1", QI * QI, -ONE)
+    assert_quat_eq("j^2 = -1", QJ * QJ, -ONE)
+    assert_quat_eq("k^2 = -1", QK * QK, -ONE)
+    assert_quat_eq("ij = k", QI * QJ, QK)
+    assert_quat_eq("jk = i", QJ * QK, QI)
+    assert_quat_eq("ki = j", QK * QI, QJ)
+    assert_quat_eq("ijk = -1", (QI * QJ) * QK, -ONE)
+
+    print("\n8.1 Quaternion conjugation and unit condition")
+    q0, q1, q2, q3 = sp.symbols("q0 q1 q2 q3", real=True)
+    q = Quat(q0, q1, q2, q3)
+    assert_quat_eq("qbar*q = ||q||^2", q.conj() * q, scalar(q.norm_sq()))
+    assert_quat_eq("q*qbar = ||q||^2", q * q.conj(), scalar(q.norm_sq()))
+
+    print("\n8.1 Pauli four-vector determinant")
+    t, x, y, z = sp.symbols("t x y z")
+    sigma0 = sp.eye(2)
+    sigma1 = sp.Matrix([[0, 1], [1, 0]])
+    sigma2 = sp.Matrix([[0, -sp.I], [sp.I, 0]])
+    sigma3 = sp.Matrix([[1, 0], [0, -1]])
+    spacetime_matrix = t * sigma0 + x * sigma1 + y * sigma2 + z * sigma3
+    assert_eq("det(x^mu sigma_mu)", spacetime_matrix.det(), t**2 - x**2 - y**2 - z**2)
+
+    print("\n8.2 Quaternion connection")
+    dq0, dq1, dq2, dq3 = sp.symbols("dq0 dq1 dq2 dq3", real=True)
+    dq = Quat(dq0, dq1, dq2, dq3)
+    omega = quaternion_connection(q, dq)
+    assert_eq("Re(qbar*dq) = q dot dq", omega.r, q.dot(dq))
+
+    # Tangency to the unit-quaternion constraint means q dot dq = 0.
+    tangent_subs = {dq0: -(q1 * dq1 + q2 * dq2 + q3 * dq3) / q0}
+    omega_tangent_real = sp.factor(omega.r.subs(tangent_subs))
+    assert_eq("Omega is pure imaginary on tangent vectors", omega_tangent_real, 0)
+    omega_tangent = Quat(*(component.subs(tangent_subs) for component in omega.tuple()))
+    assert_quat_eq("Omega_bar = -Omega when tangent", omega_tangent.conj(), -omega_tangent)
+    print("    condition used: q dot dq = 0")
+
+    print("\n8.2 Covariant derivative")
+    v0, v1, v2, v3 = sp.symbols("v0 v1 v2 v3", real=True)
+    vector = Quat(v0, v1, v2, v3)
+    partial_v = Quat(*sp.symbols("pv0 pv1 pv2 pv3", real=True))
+    assert_quat_eq(
+        "D_mu V reduces to partial_mu V when Omega=0",
+        covariant_derivative(partial_v, ZERO, vector),
+        partial_v,
+    )
+
+    print("\n8.3 Flat tetrad and spin connection")
+    eta = sp.diag(-1, 1, 1, 1)
+    tetrad = sp.eye(4)
+    if tetrad.T * eta * tetrad != eta:
+        raise AssertionError("flat tetrad metric relation failed")
+    print("  e^T eta e = eta for identity tetrad: OK")
+    omega_flat = sp.MutableDenseNDimArray.zeros(4, 4, 4)
+    assert_eq("omega_flat antisymmetry sample", omega_flat[0, 1, 2], -omega_flat[0, 2, 1])
+
+    print("\n8.4 Curvature and flat quaternion-spin relation")
+    assert_quat_eq("F = dOmega + Omega^2 vanishes flatly", quaternion_curvature(ZERO, ZERO, ZERO, ZERO), ZERO)
+    assert_quat_eq("zero spin connection projects to zero quaternion connection", quaternion_connection(ONE, ZERO), ZERO)
+
+    print("\nSECTION 8 VERIFIED")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

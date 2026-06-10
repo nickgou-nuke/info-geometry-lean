@@ -25,6 +25,10 @@ variable {ι R : Type*} [Field R]
 def signedFermionPartition (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 - x p)
 
+/-- Finite positive fermion Euler factor product. -/
+def positiveFermionPartition (S : Finset ι) (x : ι → R) : R :=
+  ∏ p ∈ S, (1 + x p)
+
 /-- Finite boson Euler factor product. -/
 def bosonPartition (S : Finset ι) (x : ι → R) : R :=
   ∏ p ∈ S, (1 - x p)⁻¹
@@ -61,6 +65,99 @@ theorem signedFermion_mul_boson_cancel
   apply Finset.prod_eq_one
   intro p hp
   exact mul_inv_cancel₀ (h p hp)
+
+/--
+The finite bosonic primon Euler product is nonzero on the regulated domain.
+
+This is the finite algebraic boundary behind the analytic statement that the
+reciprocal supertrace can only become singular when the bosonic partition
+ceases to be invertible.
+-/
+theorem bosonPartition_ne_zero
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0) :
+    bosonPartition S x ≠ 0 := by
+  intro hzero
+  have hcancel := boson_mul_signedFermion_cancel S x h
+  rw [hzero, zero_mul] at hcancel
+  exact zero_ne_one hcancel
+
+/--
+The finite signed fermion / Möbius Euler product is nonzero on the same
+regulated domain.
+-/
+theorem signedFermionPartition_ne_zero
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0) :
+    signedFermionPartition S x ≠ 0 := by
+  intro hzero
+  have hcancel := signedFermion_mul_boson_cancel S x h
+  rw [hzero, zero_mul] at hcancel
+  exact zero_ne_one hcancel
+
+/--
+Finite positive-fermion / boson identity.
+
+This is the finite algebraic shadow of
+`∏ₚ (1 + p^{-s}) = ζ(s) / ζ(2s)`: after multiplying the bosonic product by
+the square-energy signed factor `∏ₚ (1 - xₚ²)`, one obtains the positive
+fermion product `∏ₚ (1 + xₚ)`.
+-/
+theorem boson_mul_square_signedFermion_eq_positiveFermion
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0) :
+    bosonPartition S x * signedFermionPartition S (fun p => x p * x p) =
+      positiveFermionPartition S x := by
+  unfold bosonPartition signedFermionPartition positiveFermionPartition
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_congr rfl
+  intro p hp
+  calc
+    (1 - x p)⁻¹ * (1 - x p * x p)
+        = (1 - x p)⁻¹ * ((1 - x p) * (1 + x p)) := by ring
+    _ = ((1 - x p)⁻¹ * (1 - x p)) * (1 + x p) := by ring
+    _ = 1 * (1 + x p) := by rw [inv_mul_cancel₀ (h p hp)]
+    _ = 1 + x p := by ring
+
+/--
+Finite ratio form of the positive-fermion identity:
+`Z_f^+(x) * Z_b(x²) = Z_b(x)`.
+-/
+theorem positiveFermion_mul_squareBoson_eq_boson
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0)
+    (h_sq : ∀ p ∈ S, 1 - x p * x p ≠ 0) :
+    positiveFermionPartition S x * bosonPartition S (fun p => x p * x p) =
+      bosonPartition S x := by
+  rw [← boson_mul_square_signedFermion_eq_positiveFermion S x h]
+  calc
+    (bosonPartition S x * signedFermionPartition S (fun p => x p * x p)) *
+        bosonPartition S (fun p => x p * x p)
+        = bosonPartition S x *
+            (signedFermionPartition S (fun p => x p * x p) *
+              bosonPartition S (fun p => x p * x p)) := by ring
+    _ = bosonPartition S x * 1 := by
+          rw [signedFermion_mul_boson_cancel S (fun p => x p * x p) h_sq]
+    _ = bosonPartition S x := by ring
+
+/--
+The finite positive fermion Euler product is nonzero wherever both the
+one-prime and square-energy bosonic regulators are defined.
+-/
+theorem positiveFermionPartition_ne_zero
+    (S : Finset ι)
+    (x : ι → R)
+    (h : ∀ p ∈ S, 1 - x p ≠ 0)
+    (h_sq : ∀ p ∈ S, 1 - x p * x p ≠ 0) :
+    positiveFermionPartition S x ≠ 0 := by
+  intro hzero
+  have hratio := positiveFermion_mul_squareBoson_eq_boson S x h h_sq
+  rw [hzero, zero_mul] at hratio
+  exact (bosonPartition_ne_zero S x h) hratio.symm
 
 /-! ## Real lemma: logarithm of a positive finite product -/
 

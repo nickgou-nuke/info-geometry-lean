@@ -310,6 +310,21 @@ theorem τ_eq_q_minus_q4_minus_one : τ = q - q ^ 4 - 1 := by
     _ = q + (-(q ^ 4)) - 1 := by rw [h_qinv_eq_neg_q4]
     _ = q - q ^ 4 - 1 := by ring
 
+/--
+Hardcoded scalar factorization for the Fibonacci Artin constraint.
+
+This is the Lean-side polynomial identity obtained from ordinary polynomial
+arithmetic, checked in the SymPy companion by expansion, and proved here by
+`ring`.  The Yang-Baxter proof below only combines this factorization with the
+10th cyclotomic relation.
+-/
+theorem fibonacci_artin_constraint_factorization :
+    τ ^ 2 * ((-q) - q ^ 3) ^ 2 + (-q) * q ^ 3 =
+      (q ^ 10 + q ^ 9 + 2 * q ^ 8 + q ^ 6 - 2 * q ^ 5 - q ^ 3 + q ^ 2) *
+        (q ^ 4 - q ^ 3 + q ^ 2 - q + 1) := by
+  rw [τ_eq_q_minus_q4_minus_one]
+  ring
+
 /-! ## Braid relation (Yang-Baxter equation) -/
 
 /-- Generic complex Fibonacci recoupling matrix `[[a,b],[b,-a]]`. -/
@@ -354,10 +369,8 @@ theorem braid_relation : R * B * R = B * R * B := by
   have hF : τ ^ 2 + s ^ 2 = 1 := tau_sq_add_s_sq
   have h_cyclo : q ^ 4 - q ^ 3 + q ^ 2 - q + 1 = 0 := cyclotomic_relation
   have hA : τ ^ 2 * ((-q) - q ^ 3) ^ 2 + (-q) * q ^ 3 = 0 := by
-    rw [τ_eq_q_minus_q4_minus_one]
-    linear_combination
-      (q ^ 10 + q ^ 9 + 2 * q ^ 8 + q ^ 6 - 2 * q ^ 5 - q ^ 3 + q ^ 2) *
-        h_cyclo
+    rw [fibonacci_artin_constraint_factorization, h_cyclo]
+    ring
   have hR : R = diagonalBraidMatrixC (-q) (q ^ 3) := by
     ext i j; fin_cases i <;> fin_cases j
     · calc

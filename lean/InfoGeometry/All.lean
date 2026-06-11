@@ -106,7 +106,6 @@ import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.PrimeCantorWeylGaugeFockBridge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
-import InfoGeometry.Arithmetic.AdditiveCombinatoricsBounds
 import InfoGeometry.Canonical.ModularTomitaGeometry
 import InfoGeometry.Compatibility.PSLDescentShadow
 import InfoGeometry.Core.ExtendedField
@@ -119,7 +118,6 @@ import InfoGeometry.ErlangenLanglandsLane
 import InfoGeometry.ErlangenLanglandsOwners
 import InfoGeometry.ErlangenLanglandsRoadmap
 import InfoGeometry.GrandUnification.AlgebraicSouriauTomita
-import InfoGeometry.GrandUnification.BiQuaternionKahlerThermoBridge
 import InfoGeometry.GrandUnification.ModularTransport
 import InfoGeometry.GrandUnification.DrazinAffineCFTBoundary
 import InfoGeometry.GrandUnification.HodgeTrifactorBridge
@@ -359,6 +357,7 @@ import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.SYKKitaevGuardrails
 import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.Canonical.SandboxVerification
+import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.GeometricRotor

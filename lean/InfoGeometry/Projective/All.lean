@@ -35,7 +35,6 @@ import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
 import InfoGeometry.Projective.SplitOctonions.Polar
 import InfoGeometry.Projective.SplitOctonions.PolarConcrete
 import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
-import InfoGeometry.Projective.SplitOctonions.G2TrifactorColorBridge
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarInvariant

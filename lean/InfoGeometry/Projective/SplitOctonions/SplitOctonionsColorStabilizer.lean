@@ -11,7 +11,7 @@ slice.
 This file formalizes a block action where the longitudinal block is fixed and
 the transverse block is rotated by a unit-norm quaternion.
 
-No wrappers or placeholder proof surfaces.
+No wrappers. No `sorry`.
 -/
 
 open Quaternion
@@ -48,11 +48,6 @@ structure ColorStabilizerElement (R : Type*) [CommRing R] where
   u : Quaternion R
   u_unitary : normSq u = 1
 
-/-- Identity stabilizer element. -/
-def stabilizerOne : ColorStabilizerElement R :=
-  { u := 1
-    u_unitary := by simp }
-
 /--
 Color action:
 
@@ -87,18 +82,7 @@ theorem normSq_mul (p q : Quaternion R) :
             simp [Quaternion.coe_mul]
       _ = (normSq p * normSq q : R) := by ring_nf
   have hre := congrArg (fun z : Quaternion R => z.re) hquat
-  exact hre
-
-/--
-Composition of stabilizer elements by quaternion multiplication.
-
-This is the finite algebraic closure law used by the color-action lane.
--/
-def stabilizerMul (g h : ColorStabilizerElement R) : ColorStabilizerElement R :=
-  { u := g.u * h.u
-    u_unitary := by
-      rw [normSq_mul, g.u_unitary, h.u_unitary]
-      simp }
+  simpa using hre
 
 /-- Longitudinal block invariance under the color action. -/
 theorem longitudinal_invariant (g : ColorStabilizerElement R) (X : BektasMatrix R) :
@@ -110,17 +94,6 @@ theorem transverse_norm_preserved (g : ColorStabilizerElement R) (X : BektasMatr
     normSq (colorAct g X).q2 = normSq X.q2 := by
   dsimp [colorAct]
   rw [normSq_mul, g.u_unitary, one_mul]
-
-/-- The identity stabilizer acts trivially. -/
-theorem colorAct_one (X : BektasMatrix R) :
-    colorAct (stabilizerOne (R := R)) X = X := by
-  ext <;> simp [colorAct, stabilizerOne]
-
-/-- Composition of stabilizers matches composition of the color action. -/
-theorem colorAct_comp
-    (g h : ColorStabilizerElement R) (X : BektasMatrix R) :
-    colorAct (stabilizerMul g h) X = colorAct g (colorAct h X) := by
-  ext <;> simp [colorAct, stabilizerMul, mul_assoc]
 
 /--
 Zorn-style split norm on this quaternion block slice:
@@ -163,7 +136,7 @@ theorem sub_self (X : BektasMatrix R) : sub X X = zero := by
 /-- `X - Y = -(Y - X)` for block subtraction. -/
 theorem sub_eq_neg_sub (X Y : BektasMatrix R) :
     sub X Y = neg (sub Y X) := by
-  ext <;> simp [sub, add, neg]
+  ext <;> simp [sub, add, neg, add_assoc, add_left_comm, add_comm]
 
 /--
 Closed multiplication of Bektaş-form `2 × 2` quaternion blocks

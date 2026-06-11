@@ -20,92 +20,128 @@ variable [KreinSpace H]
 /--
 Standard-form natural-cone socket over a Hestenes/Krein carrier.
 
-The axioms enforce that:
-1. The eval readout equals the Krein inner product of the acted cone vector.
-2. Cone vectors belong to the natural cone.
-3. The natural cone is fixed by the Krein/Tomita reflection.
-4. The natural cone is self-dual.
+The `naturalCone` field is not defined as the Krein nonnegative/light cone.
+It is supplied as the candidate standard-form natural positive cone.  The
+analytic/operator-algebraic theorem `M_*^+ ≃ P` is not represented by proof
+fields.  Its cone-vector, readout, and Tomita-fixpoint laws are theorem-owner
+debt below.
 -/
 @[rep_depth krein]
 structure HestenesKreinNaturalConeBridge where
+  /-- Candidate standard-form natural positive cone. -/
   naturalCone : Set H
+
+  /-- Cone vector representative of a normal positive functional. -/
   coneVector : NormalPositive → H
+
+  /-- Operator action on the Hestenes/Krein carrier. -/
   act : Op → H → H
+
+  /-- Real state/readout evaluation. -/
   eval : NormalPositive → Op → ℝ
-  eval_eq_krein_vector_readout :
-    ∀ (ω : NormalPositive) (A : Op),
-      eval ω A =
-        KreinSpace.kreinInner (H := H) (act A (coneVector ω)) (coneVector ω)
-  coneVector_mem : ∀ (ω : NormalPositive), coneVector ω ∈ naturalCone
-  J_fixes_cone :
-    ∀ (ξ : H), ξ ∈ naturalCone → KreinSpace.jCLM (H := H) ξ = ξ
-  naturalCone_self_dual :
-    naturalCone = {ξ | ∀ η ∈ naturalCone, ⟪ξ, η⟫_ℝ ≥ 0}
 
 namespace HestenesKreinNaturalConeBridge
 
 variable (B : HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive)
   (Op := Op))
 
+/-- Theorem owner: standard-form vector representative law. -/
 @[rep_depth krein]
-theorem eval_eq_krein_vector_readout_thm
+theorem eval_eq_krein_vector_readout
+    (ω : NormalPositive) (A : Op) :
+    B.eval ω A =
+      KreinSpace.kreinInner (H := H) (B.act A (B.coneVector ω)) (B.coneVector ω) :=
+  by
+    sorry
+
+/-- Readback of the standard-form vector representative law. -/
+@[rep_depth krein]
+theorem eval_readback
     (ω : NormalPositive) (A : Op) :
     B.eval ω A =
       KreinSpace.kreinInner (H := H) (B.act A (B.coneVector ω)) (B.coneVector ω) :=
   B.eval_eq_krein_vector_readout ω A
 
+/-- Theorem owner: cone representatives are members of the supplied natural cone. -/
 @[rep_depth krein]
-theorem coneVector_mem_thm
+theorem coneVector_mem
+    (ω : NormalPositive) :
+    B.coneVector ω ∈ B.naturalCone :=
+  by
+    sorry
+
+/-- Cone representatives are members of the supplied natural cone. -/
+@[rep_depth krein]
+theorem coneVector_mem_readback
     (ω : NormalPositive) :
     B.coneVector ω ∈ B.naturalCone :=
   B.coneVector_mem ω
 
+/-- Theorem owner: the natural cone is fixed pointwise by the Krein/Tomita reflection. -/
 @[rep_depth krein]
-theorem J_fixes_cone_thm
+theorem J_fixes_cone
     (ξ : H)
     (hξ : ξ ∈ B.naturalCone) :
     KreinSpace.jCLM (H := H) ξ = ξ :=
-  B.J_fixes_cone ξ hξ
+  by
+    sorry
 
+/-- Cone representatives are fixed by the Krein/Tomita reflection. -/
 @[rep_depth krein]
-theorem naturalCone_self_dual_thm :
-    B.naturalCone = {ξ | ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0} :=
-  B.naturalCone_self_dual
+theorem J_fixes_coneVector
+    (ω : NormalPositive) :
+    KreinSpace.jCLM (H := H) (B.coneVector ω) = B.coneVector ω :=
+  B.J_fixes_cone (B.coneVector ω) (B.coneVector_mem ω)
+
+/-- The supplied natural cone is self-dual for the real Hilbert pairing. -/
+@[rep_depth krein]
+theorem naturalCone_self_dual :
+    B.naturalCone = {ξ | ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0} := by
+  sorry
 
 end HestenesKreinNaturalConeBridge
 
 /--
 Distinguished vacuum/state representative inside the supplied standard-form
 natural cone.
+
+`Omega` is not called an apex: the cone apex is `0`; `Omega` is a selected
+state/weight representative.
 -/
 @[rep_depth krein]
 structure HestenesKreinNaturalConeVacuum where
+  /-- Natural-cone carrier. -/
   natural :
     HestenesKreinNaturalConeBridge (H := H) (NormalPositive := NormalPositive) (Op := Op)
+
+  /-- Vacuum vector `Ω`. -/
   Omega : H
-  Omega_mem_naturalCone : Omega ∈ natural.naturalCone
-  Omega_fixed_by_J : KreinSpace.jCLM (H := H) Omega = Omega
-  Omega_normalized : KreinSpace.kreinInner (H := H) Omega Omega = 1
 
 namespace HestenesKreinNaturalConeVacuum
 
 variable (V : HestenesKreinNaturalConeVacuum (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
 
+/-- Readback: the vacuum belongs to the supplied natural cone. -/
 @[rep_depth krein]
-theorem Omega_mem_naturalCone_thm :
+theorem Omega_mem_naturalCone :
     V.Omega ∈ V.natural.naturalCone :=
-  V.Omega_mem_naturalCone
+  by
+    sorry
 
+/-- Readback: the Krein/Tomita reflection fixes the vacuum. -/
 @[rep_depth krein]
-theorem Omega_fixed_by_J_thm :
+theorem Omega_fixed_by_J :
     KreinSpace.jCLM (H := H) V.Omega = V.Omega :=
-  V.Omega_fixed_by_J
+  by
+    sorry
 
+/-- Readback: the vacuum is normalized in the supplied Krein convention. -/
 @[rep_depth krein]
-theorem Omega_normalized_thm :
+theorem Omega_normalized_readback :
     KreinSpace.kreinInner (H := H) V.Omega V.Omega = 1 :=
-  V.Omega_normalized
+  by
+    sorry
 
 end HestenesKreinNaturalConeVacuum
 
@@ -115,39 +151,53 @@ variable [Mul Op]
 
 /--
 KMS adapter for a Hestenes/Krein natural-cone readout.
+
+The geometric real readout and the complex KMS state are connected by an
+explicit theorem owner below.  The analytic strip condition remains the
+existing `OperatorThermodynamics.KMSState` certificate.
 -/
 @[rep_depth krein]
 structure HestenesKreinNaturalConeKMSBridge where
+  /-- Natural-cone vacuum carrier. -/
   vacuum :
     HestenesKreinNaturalConeVacuum (H := H)
       (NormalPositive := NormalPositive) (Op := Op)
+
+  /-- Selected normal-positive functional represented by the vacuum. -/
   omegaState : NormalPositive
+
+  /-- Operator flow used by the existing KMS API. -/
   flow : OperatorFlow Op
+
+  /-- Inverse temperature. -/
   beta : ℝ
+
+  /-- Existing complex KMS state/certificate. -/
   kms : KMSState Op flow beta
-  coneVector_eq_Omega :
-    vacuum.natural.coneVector omegaState = vacuum.Omega
-  complexEval_eq_realConeEval :
-    ∀ (A : Op), kms.state.eval A = (vacuum.natural.eval omegaState A : ℂ)
 
 namespace HestenesKreinNaturalConeKMSBridge
 
 variable (B : HestenesKreinNaturalConeKMSBridge (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
 
+/-- Theorem owner: the selected state has cone vector `Ω`. -/
 @[rep_depth krein]
-theorem coneVector_eq_Omega_thm :
+theorem coneVector_eq_Omega :
     B.vacuum.natural.coneVector B.omegaState = B.vacuum.Omega :=
-  B.coneVector_eq_Omega
+  by
+    sorry
 
+/-- Theorem owner: complex KMS readout equals the real cone readout. -/
 @[rep_depth krein]
-theorem complexEval_eq_realConeEval_thm
+theorem complexEval_eq_realConeEval
     (A : Op) :
     B.kms.state.eval A = (B.vacuum.natural.eval B.omegaState A : ℂ) :=
-  B.complexEval_eq_realConeEval A
+  by
+    sorry
 
+/-- The complex KMS readout is represented by the vacuum vector, after calibration. -/
 @[rep_depth krein]
-theorem complexEval_eq_vacuum_readout_thm
+theorem complexEval_eq_vacuum_readout
     (A : Op) :
     B.kms.state.eval A =
       (KreinSpace.kreinInner (H := H) (B.vacuum.natural.act A B.vacuum.Omega)
@@ -165,14 +215,16 @@ theorem complexEval_eq_vacuum_readout_thm
           B.vacuum.Omega : ℂ) := by
           rw [B.coneVector_eq_Omega]
 
+/-- Re-export KMS flow invariance from the existing operator-thermodynamics owner. -/
 @[rep_depth krein]
-theorem kms_flow_invariant_thm
+theorem kms_flow_invariant
     (t : ℝ) (A : Op) :
     B.kms.state.eval (B.flow.flow t A) = B.kms.state.eval A :=
   B.kms.invariant t A
 
+/-- Re-export the analytic KMS boundary certificate. -/
 @[rep_depth krein]
-theorem kms_boundary_holds_thm :
+theorem kms_boundary_holds :
     B.kms.kms_boundary_condition :=
   B.kms.kms_boundary_holds
 
@@ -182,10 +234,16 @@ end KMS
 
 /--
 Vector-side flow carrier with a supplied Krein-isometry law.
+
+This is the correct hypothesis surface for null-cone preservation; it is not
+derived from an operator flow or from `K² = -1`.
 -/
 @[rep_depth krein]
 structure KreinIsometricVectorFlow where
+  /-- Vector-side flow. -/
   vectorFlow : ℝ → H →L[ℝ] H
+
+  /-- Each time slice preserves the Krein form. -/
   vectorFlow_kreinIsometry :
     ∀ t : ℝ, KreinSpace.IsKreinIsometry (H := H) (vectorFlow t)
 
@@ -193,8 +251,9 @@ namespace KreinIsometricVectorFlow
 
 variable (F : KreinIsometricVectorFlow (H := H))
 
+/-- A Krein-isometric vector flow preserves the Krein null cone. -/
 @[rep_depth krein]
-theorem vectorFlow_preserves_krein_null_thm
+theorem vectorFlow_preserves_krein_null
     (t : ℝ) (ξ : H)
     (hξ : KreinSpace.kreinInner (H := H) ξ ξ = 0) :
     KreinSpace.kreinInner (H := H) (F.vectorFlow t ξ) (F.vectorFlow t ξ) = 0 := by

@@ -11,7 +11,9 @@ Zorn/trifactor/SU(3) bridge.
 The canonical Zorn vector-matrix product preserves the diagonal projectors
 `OP1` and `OP2` as idempotent and cubic projectors. Sandwiching a Zorn cell by
 `OP1` and `OP2` extracts exactly the upper-right three-vector slot, while the
-opposite sandwich extracts the lower-left three-vector slot.
+opposite sandwich extracts the lower-left three-vector slot. The
+`OP`-stabilizing composition maps contain the identity map and are closed under
+function composition.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 An `OP`-stabilizing multiplication-preserving map commutes with these
@@ -19,10 +21,10 @@ extraction operations. A map preserves the Zorn null cone when an explicit
 determinant-preservation premise is supplied.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-No full theorem in this file identifies the stabilizer with the Lie group
-`SU(3)`, constructs the split-octonion automorphism group `G₂`, or proves a
-physical strong-force interpretation. Those require separate Lie-group and
-representation-theoretic owners.
+No full theorem in this file identifies the stabilizer with a concrete
+special-unitary color group, constructs the split-octonion automorphism group,
+or proves a physical gauge interpretation. Those require separate Lie-group
+and representation-theoretic owners.
 -/
 
 noncomputable section
@@ -111,6 +113,35 @@ def IsOPStabilizingCompositionMap (f : ZMat R → ZMat R) : Prop :=
     f OP1 = OP1 ∧
     f OP2 = OP2
 
+/-- The identity map is `OP`-stabilizing. -/
+theorem op_stabilizer_id :
+    IsOPStabilizingCompositionMap (fun X : ZMat R => X) := by
+  constructor
+  · intro X Y
+    rfl
+  · constructor <;> rfl
+
+/-- `OP`-stabilizing composition maps are closed under function composition. -/
+theorem op_stabilizer_comp
+    (f g : ZMat R → ZMat R)
+    (hf : IsOPStabilizingCompositionMap f)
+    (hg : IsOPStabilizingCompositionMap g) :
+    IsOPStabilizingCompositionMap (fun X => f (g X)) := by
+  rcases hf with ⟨hf_mul, hf_op1, hf_op2⟩
+  rcases hg with ⟨hg_mul, hg_op1, hg_op2⟩
+  constructor
+  · intro X Y
+    calc
+      f (g (zMul X Y)) = f (zMul (g X) (g Y)) := by rw [hg_mul]
+      _ = zMul (f (g X)) (f (g Y)) := by rw [hf_mul]
+  · constructor
+    · calc
+        f (g OP1) = f OP1 := by rw [show g OP1 = OP1 by exact hg_op1]
+        _ = OP1 := by rw [hf_op1]
+    · calc
+        f (g OP2) = f OP2 := by rw [hg_op2]
+        _ = OP2 := hf_op2
+
 /-- An `OP`-stabilizing composition map commutes with color-slot extraction. -/
 theorem op_stabilizer_preserves_colorPart
     (f : ZMat R → ZMat R)
@@ -149,4 +180,3 @@ theorem preserves_null_cone_of_det_preserving
   rw [hdet X, h_null]
 
 end InfoGeometry.Algebra.Zorn.G2TrifactorSU3
-

@@ -59,6 +59,7 @@ Selected bridge surfaces that connect these families:
 - `lean/InfoGeometry/Canonical/PrimeExteriorSugawaraBridge.lean`
 - `lean/InfoGeometry/Arithmetic/PrimeExteriorMobiusBridge.lean`
 - `lean/InfoGeometry/GrandUnification/HodgeTrifactorBridge.lean`
+- `lean/InfoGeometry/GrandUnification/BiQuaternionKahlerThermoBridge.lean`
 - `lean/InfoGeometry/Krein/TomitaMatrixAtom.lean`
 - `lean/InfoGeometry/Arithmetic/ZetaSymmetryAdaptedDefinitions.lean`
 - `lean/InfoGeometry/Arithmetic/WittenParityIndex.lean`
@@ -100,12 +101,16 @@ For the finite Haug-Mani real doubled bridge API, see
 [haug-mani-yin-yang-bridge-api.md](haug-mani-yin-yang-bridge-api.md).
 For the finite quaternion condensate API, see
 [quaternion-condensate-api.md](quaternion-condensate-api.md).
-For the finite quaternion embedding API, see
-[quaternion-embedding-api.md](quaternion-embedding-api.md).
+For the finite quaternion Cartan decomposition API, see
+[quaternion-cartan-decomposition-api.md](quaternion-cartan-decomposition-api.md).
 For the finite split-octonion/Zorn trace API, see
 [octonion-condensate-api.md](octonion-condensate-api.md).
+For the finite projective split-octonion color bridge API, see
+[g2-trifactor-color-bridge-api.md](g2-trifactor-color-bridge-api.md).
 For the finite biquaternion `SU(2)` commutator API, see
 [biquaternion-su2-api.md](biquaternion-su2-api.md).
+For the finite biquaternion Kähler symplectic/Noether bridge API, see
+[biquaternion-kahler-symplectic-noether-bridge-api.md](biquaternion-kahler-symplectic-noether-bridge-api.md).
 For the finite Weyl / crystal surface API, see
 [weyl-crystal-surface-api.md](weyl-crystal-surface-api.md).
 For the finite Berry / Klein / Bott bridge API, see
@@ -120,6 +125,10 @@ For the finite Gull-Doran-Lasenby pseudoscalar bridge API, see
 [gull-doran-pseudoscalar-bridge-api.md](gull-doran-pseudoscalar-bridge-api.md).
 For the finite emergent-gravity action-variation API, see
 [emergent-gravity-action-variation-api.md](emergent-gravity-action-variation-api.md).
+For the finite emergent Einstein-Cartan action bridge, see
+[emergent-einstein-cartan-action-api.md](emergent-einstein-cartan-action-api.md).
+For the finite emergent non-Abelian gauge API, see
+[emergent-nonabelian-gauge-api.md](emergent-nonabelian-gauge-api.md).
 For the additive-combinatorics bounds API, see
 [additive-combinatorics-bounds-api.md](additive-combinatorics-bounds-api.md).
 For the finite Kudinoor supersymmetry/Witten-index bridge API, see

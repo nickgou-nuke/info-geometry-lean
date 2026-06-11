@@ -16,6 +16,7 @@ import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Clifford.Cl11TrifactorPropagation
 import InfoGeometry.Clifford.Cl11InfiniteCarrier
 import InfoGeometry.Clifford.Cl11HestenesKreinTripartiteCompletion
 import InfoGeometry.Clifford.Cl11InfiniteHestenesKreinCompletion

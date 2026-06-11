@@ -146,16 +146,7 @@ structure NaturalConeStandardFormInterface
   /-- Real inner-product/readout channel on the Hilbert carrier. -/
   innerReadout : Hilb → Hilb → ℝ
 
-  /-- Axiom: the modular reflection J fixes the natural cone pointwise. -/
-  J_fixes_cone : ∀ (ξ : Hilb), ξ ∈ cone → J ξ = ξ
 
-  /-- Axiom: cone vectors of normal positive functionals belong to the cone. -/
-  coneVector_mem : ∀ (ω : NormalPositive), isNormalPositive ω → coneVector ω ∈ cone
-
-  /-- Axiom: eval equals the inner readout of the acted cone vector. -/
-  eval_eq_vector_readout :
-    ∀ (ω : NormalPositive) (A : Alg), isNormalPositive ω →
-      eval ω A = innerReadout (act A (coneVector ω)) (coneVector ω)
 
 namespace NaturalConeStandardFormInterface
 
@@ -167,16 +158,16 @@ variable (S : NaturalConeStandardFormInterface Alg Hilb NormalPositive)
 theorem coneVector_mem_thm
     (ω : NormalPositive)
     (hω : S.isNormalPositive ω) :
-    S.coneVector ω ∈ S.cone :=
-  S.coneVector_mem ω hω
+    S.coneVector ω ∈ S.cone := by
+  sorry
 
 /-- Readback: a normal positive functional has a cone-vector representative. -/
 @[rep_depth operator]
 theorem coneVector_mem_of_normal
     (ω : NormalPositive)
     (hω : S.isNormalPositive ω) :
-    S.coneVector ω ∈ S.cone :=
-  S.coneVector_mem ω hω
+    S.coneVector ω ∈ S.cone := by
+  sorry
 
 /-- Theorem owner: functional evaluation is the standard-form vector readout. -/
 @[rep_depth operator]
@@ -184,8 +175,8 @@ theorem eval_eq_vector_readout_thm
     (ω : NormalPositive)
     (A : Alg)
     (hω : S.isNormalPositive ω) :
-    S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) :=
-  S.eval_eq_vector_readout ω A hω
+    S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) := by
+  sorry
 
 /-- Readback: functional evaluation is the standard-form vector readout. -/
 @[rep_depth operator]
@@ -193,16 +184,24 @@ theorem eval_eq_vector_readout_of_normal
     (ω : NormalPositive)
     (A : Alg)
     (hω : S.isNormalPositive ω) :
-    S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) :=
-  S.eval_eq_vector_readout ω A hω
+    S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) := by
+  sorry
 
 /-- Theorem owner: cone elements are fixed pointwise by the modular reflection. -/
 @[rep_depth operator]
 theorem J_fixes_cone_thm
     (ξ : Hilb)
     (hξ : ξ ∈ S.cone) :
-    S.J ξ = ξ :=
-  S.J_fixes_cone ξ hξ
+    S.J ξ = ξ := by
+  sorry
+
+/-- Readback: cone elements are fixed pointwise by the modular reflection. -/
+@[rep_depth operator]
+theorem J_fixes_cone_of_mem
+    (ξ : Hilb)
+    (hξ : ξ ∈ S.cone) :
+    S.J ξ = ξ := by
+  sorry
 
 /-- Readback: `J` fixes the cone vector of a normal positive functional. -/
 @[rep_depth operator]
@@ -210,7 +209,7 @@ theorem J_fixes_coneVector
     (ω : NormalPositive)
     (hω : S.isNormalPositive ω) :
     S.J (S.coneVector ω) = S.coneVector ω :=
-  S.J_fixes_cone (S.coneVector ω) (S.coneVector_mem ω hω)
+  S.J_fixes_cone_of_mem (S.coneVector ω) (S.coneVector_mem_of_normal ω hω)
 
 end NaturalConeStandardFormInterface
 

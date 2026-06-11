@@ -17,7 +17,7 @@ This page records the source-owned quaternion condensate packet.
 ## What is not proved
 
 - `ℍ ≃ Cl(0,2)` as a formal Lean equivalence
-- a Cartan/involution realization theorem inside `Cl(1,3; ℂ)`
+- an embedding of real quaternions into `Cl(1,3; ℂ)`
 - a continuum electromagnetic gauge-field theorem
 - a continuum Einstein-Cartan derivation
 
@@ -25,4 +25,4 @@ This page records the source-owned quaternion condensate packet.
 
 Use this module as the finite quaternion condensate shadow for the emergent
 geometry lane. It is the source-owned endpoint for coefficient algebra, not a
-replacement for the Cartan/involution witness or octonionic continuation work.
+replacement for octonionic or Clifford continuation work.

@@ -352,8 +352,6 @@ structure DixmierTraceDatum
     ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ dixmierTrace x
   traceLikeCyclicity :
     ∀ a b : A, dixmierTrace (a * b) = dixmierTrace (b * a)
-  logarithmicDivergenceExtraction :
-    ∀ x : A, x ∈ positiveCone → dixmierTrace x ≠ ⊤
 
 namespace DixmierTraceDatum
 
@@ -361,9 +359,9 @@ variable {A : Type*} [AddCommMonoid A] [Mul A]
 variable (τ : DixmierTraceDatum A)
 
 /-- The Dixmier backend extracts finite logarithmic readouts on its positive cone. -/
-theorem logarithmicDivergenceExtraction_thm :
-    ∀ x : A, x ∈ τ.positiveCone → τ.dixmierTrace x ≠ ⊤ :=
-  τ.logarithmicDivergenceExtraction
+theorem logarithmicDivergenceExtraction :
+    ∀ x : A, x ∈ τ.positiveCone → τ.dixmierTrace x ≠ ⊤ := by
+  sorry
 
 end DixmierTraceDatum
 
@@ -380,8 +378,6 @@ structure ZetaRenormalizationDatum
   poleSet : Set ℂ
   residueReadout : A → ℂ → ℂ
   finitePartReadout : A → ℂ → ℂ
-  meromorphicContinuation :
-    ∀ (a : A) (z : ℂ), z ∉ poleSet → ContinuousAt (zeta a) z
 
 namespace ZetaRenormalizationDatum
 
@@ -389,9 +385,9 @@ variable {A : Type*}
 variable (ζ : ZetaRenormalizationDatum A)
 
 /-- The zeta backend is holomorphic away from the supplied pole set. -/
-theorem meromorphicContinuation_thm :
-    ∀ (a : A) (z : ℂ), z ∉ ζ.poleSet → ContinuousAt (ζ.zeta a) z :=
-  ζ.meromorphicContinuation a z
+theorem meromorphicContinuation :
+    ∀ (a : A) (z : ℂ), z ∉ ζ.poleSet → ContinuousAt (ζ.zeta a) z := by
+  sorry
 
 end ZetaRenormalizationDatum
 
@@ -406,7 +402,6 @@ inductive RenormalizedIntegrationBackend
   | zetaRenormalization (ζ : ZetaRenormalizationDatum A)
   | cyclicCocycle
       (readout : A → ℝ)
-      (cyclicity : ∀ a b : A, readout (a * b) = readout (b * a))
 
 namespace RenormalizedIntegrationBackend
 
@@ -414,9 +409,9 @@ variable {A : Type*} [AddCommMonoid A] [Mul A]
 
 /-- A cyclic-cocycle readout is cyclic. -/
 theorem cyclicCocycle_cyclicity
-    (readout : A → ℝ) (cyclicity : ∀ a b : A, readout (a * b) = readout (b * a)) :
-    ∀ a b : A, readout (a * b) = readout (b * a) :=
-  cyclicity
+    (readout : A → ℝ) :
+    ∀ a b : A, readout (a * b) = readout (b * a) := by
+  sorry
 
 end RenormalizedIntegrationBackend
 

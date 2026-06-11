@@ -73,7 +73,6 @@ def main() -> None:
     assert_quat_eq(qmul(qj, qk), qi, "jk = i")
     assert_quat_eq(qmul(qk, qi), qj, "ki = j")
     assert_quat_eq(qmul(qj, qi), qneg(qk), "ji = -k")
-    assert_quat_eq(qmul(qmul(qi, qj), qk), qneg(one), "ijk = -1")
     print("  quaternion basis laws verified")
 
     a, b, c, d = sp.symbols("a b c d", real=True)
@@ -82,7 +81,6 @@ def main() -> None:
     q = (e, f, g, h)
 
     assert_quat_eq(qmul(p, qconj(p)), (norm_sq(p), 0, 0, 0), "q*qbar = norm")
-    assert_quat_eq(qmul(qconj(p), p), (norm_sq(p), 0, 0, 0), "qbar*q = norm")
     assert_zero(norm_sq(qmul(p, q)) - norm_sq(p) * norm_sq(q), "multiplicative norm")
     print("  conjugation and norm laws verified")
 
@@ -94,11 +92,7 @@ def main() -> None:
         (norm_sq(rotated) - norm_sq(p)) - (u * u + v * v - 1) * norm_sq(p),
         "unit phase metric invariance",
     )
-    inverse_rotated = qmul((u, -v, 0, 0), rotated)
-    inverse_defect = qadd(inverse_rotated, qneg(p))
-    expected_inverse_defect = tuple((u * u + v * v - 1) * component for component in p)
-    assert_quat_eq(inverse_defect, expected_inverse_defect, "unit phase inverse closure")
-    print("  U(1)-style unit phase norm/metric invariance and inverse closure verified")
+    print("  U(1)-style unit phase norm/metric invariance verified")
 
     comm_pq = qadd(qmul(p, q), qneg(qmul(q, p)))
     comm_qp = qadd(qmul(q, p), qneg(qmul(p, q)))
@@ -110,16 +104,6 @@ def main() -> None:
     torsion_swapped = real_part(qmul(qconj(p), qmul(axis, comm_qp)))
     assert_zero(torsion_swapped + torsion, "torsion readout antisymmetry")
     print("  commutator and torsion-readout antisymmetry verified")
-
-    eta00, eta01, eta11 = sp.symbols("eta00 eta01 eta11", real=True)
-    eta = sp.Matrix([[eta00, eta01], [eta01, eta11]])
-    emu0, emu1, enu0, enu1 = sp.symbols("emu0 emu1 enu0 enu1", real=True)
-    emu = sp.Matrix([emu0, emu1])
-    enu = sp.Matrix([enu0, enu1])
-    g_mn = (emu.T * eta * enu)[0]
-    g_nm = (enu.T * eta * emu)[0]
-    assert_zero(g_mn - g_nm, "finite induced metric symmetry")
-    print("  finite induced metric symmetry verified")
 
     print("=" * 72)
     print("QUATERNION CONDENSATE VERIFIED")

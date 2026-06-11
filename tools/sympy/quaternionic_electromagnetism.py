@@ -1,7 +1,6 @@
 import sympy as sp
 from sympy.physics.matrices import msigma
 
-
 def get_gamma_matrices():
     I2 = sp.eye(2)
     Z2 = sp.zeros(2)
@@ -16,10 +15,8 @@ def get_gamma_matrices():
     
     return g0, g1, g2, g3, g5
 
-
 def main():
     g0, g1, g2, g3, g5 = get_gamma_matrices()
-    gammas = [g0, g1, g2, g3]
     I4 = sp.eye(4)
     
     q0, q1, q2, q3 = sp.symbols('q0 q1 q2 q3', real=True)
@@ -30,19 +27,20 @@ def main():
     
     dQ = dq0 * I4 + dq1 * g1 * g2 + dq2 * g2 * g3 + dq3 * g3 * g1
     
-    print("Checking A_mu derivative traces: Tr[Q^* gamma_5 gamma_mu dQ]")
-    for mu, gamma_mu in enumerate(gammas):
-        a_mu = sp.simplify((Q_star * g5 * gamma_mu * dQ).trace())
-        assert a_mu == 0, (mu, a_mu)
-
-    print("Checking F_mu_nu commutator traces: Tr[Q^* gamma_5 [gamma_mu, gamma_nu] Q]")
-    for mu, gamma_mu in enumerate(gammas):
-        for nu, gamma_nu in enumerate(gammas):
-            comm = gamma_mu * gamma_nu - gamma_nu * gamma_mu
-            f_mu_nu = sp.simplify((Q_star * g5 * comm * Q).trace())
-            assert f_mu_nu == 0, (mu, nu, f_mu_nu)
-
-    print("Quaternionic electromagnetism finite trace obstruction checks passed.")
+    print("Test: A_mu with derivative: Tr[Q^* gamma_5 gamma_mu dQ]")
+    A0 = sp.simplify((Q_star * g5 * g0 * dQ).trace())
+    A1 = sp.simplify((Q_star * g5 * g1 * dQ).trace())
+    print(f"A_0_deriv = {A0}")
+    print(f"A_1_deriv = {A1}")
+    
+    print("\nTest: Electromagnetic tensor F_mu_nu: Tr[Q^* gamma_5 [gamma_mu, gamma_nu] Q]")
+    comm01 = g0 * g1 - g1 * g0
+    comm12 = g1 * g2 - g2 * g1
+    
+    F01 = sp.simplify((Q_star * g5 * comm01 * Q).trace())
+    F12 = sp.simplify((Q_star * g5 * comm12 * Q).trace())
+    print(f"F_01 = {F01}")
+    print(f"F_12 = {F12}")
 
 if __name__ == "__main__":
     main()

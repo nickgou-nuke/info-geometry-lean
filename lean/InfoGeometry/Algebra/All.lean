@@ -7,7 +7,6 @@ import InfoGeometry.Algebra.Zorn.ConcreteComposition
 import InfoGeometry.Algebra.Zorn.RelativeVolume
 import InfoGeometry.Algebra.Zorn.ConcreteBarrier
 import InfoGeometry.Algebra.Zorn.Associator
-import InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 import InfoGeometry.Algebra.NoFaithfulAssociativeModel
 import InfoGeometry.Algebra.AssociativityObstruction
 import InfoGeometry.Algebra.NilpotentNonunit

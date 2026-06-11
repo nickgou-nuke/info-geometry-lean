@@ -2,7 +2,7 @@
 """
 Corrected finite Section 12 torsion formalization -- SymPy twin.
 
-This script mirrors lean/InfoGeometry/Canonical/TorsionStructure.lean.
+This script mirrors lean/InfoGeometry/Section12Formalized.lean.
 It verifies only the finite algebraic identities that are actually formalized:
 
 1. vector torsion coefficients and lower-slot antisymmetry;
@@ -27,14 +27,6 @@ def assert_zero(expr, label: str) -> None:
 
 def qadd(p, q):
     return tuple(pi + qi for pi, qi in zip(p, q))
-
-
-def qneg(q):
-    return tuple(-qi for qi in q)
-
-
-def qsub(p, q):
-    return qadd(p, qneg(q))
 
 
 def qmul(p, q):
@@ -62,7 +54,7 @@ def quaternion_connection(q, dq):
 
 
 def quaternion_torsion(dq, omega, q):
-    return qadd(dq, qsub(qmul(omega, q), qmul(q, omega)))
+    return qadd(dq, qmul(omega, q))
 
 
 def main() -> None:
@@ -191,8 +183,8 @@ def main() -> None:
         raise AssertionError("Maurer-Cartan torsion should vanish on constant fields")
 
     unit_torsion = quaternion_torsion(dq, quaternion_connection(one_q, dq), one_q)
-    if unit_torsion != dq:
-        raise AssertionError("unit-field Maurer-Cartan torsion should be dq")
+    if unit_torsion != qadd(dq, dq):
+        raise AssertionError("unit-field Maurer-Cartan torsion should be dq + dq")
     print("  quaternion torsion and Maurer-Cartan reductions verified")
 
     print("=" * 72)

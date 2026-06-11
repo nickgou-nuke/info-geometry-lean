@@ -35,6 +35,12 @@ def U1_Action (θ : ℝ) (Φ : QuaternionicField) : QuaternionicField :=
 
 
 
+/-- The U(1) symmetry preserves the norm of the condensate. -/
+theorem U1_norm_preservation (θ : ℝ) (Φ : QuaternionicField) :
+    normSq (U1_Action θ Φ 0) + normSq (U1_Action θ Φ 1) = 
+    normSq (Φ 0) + normSq (Φ 1) := by
+  sorry
+
 /-- The Pauli Matrices generating the emergent $SU(2)$ algebra. -/
 def sigma1 : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 1, 0]
 def sigma2 : Matrix (Fin 2) (Fin 2) ℂ := !![0, -Complex.I; Complex.I, 0]

@@ -21,30 +21,29 @@ Canopy assembly package for the entropic-to-geometric Calabi-Yau bridge.
 This package is the integration surface of the metric RN bridge and the
 RN-entropy Monge-Ampere source branch.
 -/
-structure EntropicMetricCanopyPackage
+def EntropicMetricCanopyPackage
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)
     (R : RicciTensor E)
     (x : E)
-    (M : SinkhornMatrix n) : Prop where
-  entropy_source : RNEntropySourcesMongeAmpere n Kgeo M
-  unit_relative_volume : relativeVolumeChangeRN n M = 1
-  metric_bridge : MetricRNRicciBridge R Kgeo x
+    (M : SinkhornMatrix n) : Prop :=
+  RNEntropySourcesMongeAmpere n Kgeo M ∧
+  relativeVolumeChangeRN n M = 1 ∧
+  MetricRNRicciBridge R Kgeo x
 
 /--
 Constructive canopy package replacing the bare unit-relative-volume equality
 with the proof-carrying `UnitRelativeVolumeBit` witness.
 -/
-structure EntropicMetricCanopyBitPackage
+def EntropicMetricCanopyBitPackage
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)
     (R : RicciTensor E)
     (x : E)
-    (M : SinkhornMatrix n) : Prop where
-  entropy_source : RNEntropySourcesMongeAmpere n Kgeo M
-  unit_relative_volume_bit :
-    InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
-  metric_bridge : MetricRNRicciBridge R Kgeo x
+    (M : SinkhornMatrix n) : Prop :=
+  RNEntropySourcesMongeAmpere n Kgeo M ∧
+  InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M ∧
+  MetricRNRicciBridge R Kgeo x
 
 /--
 Recover the legacy canopy package from the proof-carrying bit package.
@@ -57,7 +56,7 @@ theorem EntropicMetricCanopyBitPackage.toPackage
     {M : SinkhornMatrix n}
     (P : EntropicMetricCanopyBitPackage n Kgeo R x M) :
     EntropicMetricCanopyPackage n Kgeo R x M :=
-  ⟨P.entropy_source, P.unit_relative_volume_bit.unit_relative_volume, P.metric_bridge⟩
+  ⟨P.1, P.2.1, P.2.2⟩
 
 /--
 First canopy closure: package data yields the unit-relative-volume state on the
@@ -72,7 +71,7 @@ theorem canopy_unitRelativeVolumeState
     (P : EntropicMetricCanopyPackage n Kgeo R x M) :
     UnitRelativeVolumeState Kgeo := by
   exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
-    (n := n) (Kgeo := Kgeo) (M := M) P.entropy_source P.unit_relative_volume
+    (n := n) (Kgeo := Kgeo) (M := M) P.1 P.2.1
 
 /--
 Constructive canopy closure from the proof-carrying unit-relative-volume bit.
@@ -104,7 +103,7 @@ theorem canopy_isRicciFlat_and_vacuumEinstein
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   exact isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
     (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (M := M) P.entropy_source P.unit_relative_volume P.metric_bridge
+    (M := M) P.1 P.2.1 P.2.2
 
 /--
 Constructive canopy closure from the proof-carrying unit-relative-volume bit.

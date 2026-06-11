@@ -173,7 +173,7 @@ theorem thermal_cayley_tendsto_boundary_one :
 /-- Remaining zero-temperature state-space debt after the real Cayley coordinate limit. -/
 @[rep_depth thermo, capstone]
 def zeroTemperatureCantorAccumulationDebt : String :=
-  "Identify zero-temperature state accumulation with the Cantor boundary and construct its label map."
+  "Upgrade the finite zero-temperature boundary package to an analytic Cantor accumulation theorem."
 
 /-- The concrete canonical V4-sewn Pauli boundary state has zero chiral index. -/
 @[rep_depth thermo, capstone]
@@ -234,6 +234,26 @@ theorem crystallised_readout_exists
         γ.label = FibObject.unit ∧
           γ.diracSeaVacuumState = diracSeaVacuum := by
   refine ⟨canonicalCrystallisedReadout, ?_, ?_, ?_⟩ <;> rfl
+
+/--
+Finite/local zero-temperature boundary package.
+
+This packages the two finite owner facts already proved in this module:
+the thermal Cayley coordinate reaches the boundary point `1`, and the
+canonical Cantor/Fibonacci boundary readout exists for every finite bulk
+state.
+
+This is still not the analytic Cantor accumulation theorem.
+-/
+@[rep_depth thermo, capstone]
+theorem finite_zeroTemperature_boundary_package
+    (bulk : BulkState) :
+    Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 1) ∧
+      ∃ γ : CrystallisedState,
+        γ.boundaryWord = (fun _ : ℕ => 0) ∧
+          γ.label = FibObject.unit ∧
+            γ.diracSeaVacuumState = diracSeaVacuum := by
+  exact ⟨thermal_cayley_tendsto_boundary_one, crystallised_readout_exists bulk⟩
 
 /-- Finite Yang--Baxter parameter identities from the exact matrix owner. -/
 @[rep_depth thermo, capstone]

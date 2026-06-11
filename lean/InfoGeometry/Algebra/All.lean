@@ -39,6 +39,7 @@ import InfoGeometry.Algebra.FiniteInfiniteModeBridge
 import InfoGeometry.Algebra.ScaleCocycleInvariant
 import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
+import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
 import InfoGeometry.Algebra.SplitQuaternionFlows

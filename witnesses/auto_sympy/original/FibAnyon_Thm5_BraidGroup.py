@@ -6,4 +6,4 @@ R = sp.Matrix([[q**(-4), 0], [0, q**3]])
 B = F * R * F
 b1, b2, b3 = R, B, R
 print("b1 b3 = b3 b1:", sp.simplify(b1*b3 - b3*b1) == sp.zeros(2))
-print("Braid group B4 representation constructed")
+print("Original witness: checked one far-commutativity matrix identity; no full B4 representation proof")

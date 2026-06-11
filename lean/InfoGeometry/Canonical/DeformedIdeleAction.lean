@@ -1,3 +1,4 @@
+import InfoGeometry.Algebra.NonCommutativeIsometry
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 
 /-!
@@ -8,14 +9,8 @@ This module formalizes the finite algebraic readout behind the phrase
 
 The closed theorem surface is deliberately narrow:
 
-* a branch operator `S` has a range projection `S * S*`;
-* a branch operator has a source projection `S* * S`;
-* the commutator `S * S* - S* * S` is exactly
-  `rangeProjection S - sourceProjection S`;
-* when `S` is an isometry (`S* * S = 1`), this specializes to
-  `rangeProjection S - 1`;
-* with the explicit mismatch premise `rangeProjection S ≠ 1`, the isometry
-  commutator is genuinely nonzero;
+* the generic source/range commutator facts are owned by
+  `InfoGeometry.Algebra.NonCommutativity`;
 * the existing `CuntzO2Carrier` supplies this isometry premise for its left and
   right branches.
 
@@ -24,9 +19,8 @@ Souriau flow, KMS transition, root-of-unity braid representation, Galois action,
 C*-completion, zeta theorem, or RH consequence.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
-Generic source/range commutator identities, a nonzero-commutator theorem under
-an explicit range/unit mismatch premise, source/range idempotence under explicit
-partial-isometry premises, and Cuntz-branch specializations.
+Cuntz-branch specializations of the generic finite noncommutative isometry
+lemmas.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The projection/idempotence readouts depend only on explicitly named
@@ -43,81 +37,31 @@ noncomputable section
 namespace InfoGeometry.Canonical.DeformedIdeleAction
 
 open InfoGeometry.Topology
+open InfoGeometry.Algebra.NonCommutativity
 
 variable {A : Type*} [Ring A] [StarRing A]
-
-/-! ## One-branch finite algebra -/
-
-/-- Range projection expression associated to a branch operator. -/
-def rangeProjection (S : A) : A :=
-  S * star S
-
-/-- Source projection expression associated to a branch operator. -/
-def sourceProjection (S : A) : A :=
-  star S * S
-
-/--
-Finite deformed-translation commutator readout.
-
-This is just the transparent algebraic identity that separates the range and
-source projections of a branch operator.
--/
-theorem branch_commutator_eq_range_sub_source (S : A) :
-    S * star S - star S * S = rangeProjection S - sourceProjection S := by
-  rfl
-
-/--
-If the branch is an isometry (`S* S = 1`), the commutator is range projection
-minus the unit.
--/
-theorem isometry_branch_commutator_eq_range_sub_one
-    (S : A) (hS : star S * S = 1) :
-    S * star S - star S * S = rangeProjection S - 1 := by
-  unfold rangeProjection
-  rw [hS]
-
-/--
-An isometry has a genuinely nonzero branch commutator whenever its range
-projection is not the unit.
--/
-theorem isometry_branch_commutator_ne_zero
-    (S : A) (hS : star S * S = 1)
-    (hRange : rangeProjection S ≠ (1 : A)) :
-    S * star S - star S * S ≠ 0 := by
-  rw [isometry_branch_commutator_eq_range_sub_one S hS]
-  intro h
-  exact hRange (sub_eq_zero.mp h)
-
-/-- The range projection of a partial isometry is idempotent. -/
-theorem rangeProjection_idempotent_of_partial_isometry
-    (S : A) (hS : S * star S * S = S) :
-    rangeProjection S * rangeProjection S = rangeProjection S := by
-  unfold rangeProjection
-  calc
-    (S * star S) * (S * star S) = (S * star S * S) * star S := by
-      noncomm_ring
-    _ = S * star S := by rw [hS]
-
-/-- The source projection of a partial isometry is idempotent. -/
-theorem sourceProjection_idempotent_of_partial_isometry
-    (S : A) (hS : star S * S * star S = star S) :
-    sourceProjection S * sourceProjection S = sourceProjection S := by
-  unfold sourceProjection
-  calc
-    (star S * S) * (star S * S) = (star S * S * star S) * S := by
-      noncomm_ring
-    _ = star S * S := by rw [hS]
-
-/-- A two-sided inverse collapses the finite commutator to zero. -/
-theorem two_sided_inverse_branch_commutator_zero
-    (S : A) (h_left : star S * S = 1) (h_right : S * star S = 1) :
-    S * star S - star S * S = 0 := by
-  rw [h_left, h_right]
-  exact sub_self 1
 
 /-! ## Cuntz `O₂` branch specializations -/
 
 variable (C : CuntzO2Carrier A)
+
+/-- A strict isometry has nonzero range projection. -/
+theorem isometry_rangeProjection_ne_zero
+    [Nontrivial A]
+    (S : A) (hS : star S * S = 1) :
+    rangeProjection S ≠ 0 := by
+  intro hzero
+  have h0 : S * star S = 0 := by
+    simpa [rangeProjection] using hzero
+  have hstar0 : star S = 0 := by
+    have h1 : star S * (S * star S) = 0 := by
+      rw [h0, mul_zero]
+    have h2 : (star S * S) * star S = 0 := by
+      simpa [mul_assoc] using h1
+    simpa [hS] using h2
+  have hcontr : (0 : A) = 1 := by
+    simpa [hstar0] using hS.symm
+  exact zero_ne_one hcontr
 
 /-- Left Cuntz branch commutator readout. -/
 theorem left_cuntz_branch_commutator :
@@ -161,6 +105,92 @@ theorem right_cuntz_branch_commutator_ne_zero
     C.S_right * star C.S_right - star C.S_right * C.S_right ≠ 0 := by
   have h1 : rangeProjection C.S_right ≠ 1 := h_mismatch
   exact isometry_branch_commutator_ne_zero C.S_right C.right_isometry h1
+
+/-- The left Cuntz range projection is nonzero. -/
+theorem left_cuntz_rangeProjection_ne_zero
+    [Nontrivial A] :
+    C.leftRangeProjection ≠ 0 := by
+  unfold CuntzO2Carrier.leftRangeProjection
+  exact isometry_rangeProjection_ne_zero C.S_left C.left_isometry
+
+/-- The right Cuntz range projection is nonzero. -/
+theorem right_cuntz_rangeProjection_ne_zero
+    [Nontrivial A] :
+    C.rightRangeProjection ≠ 0 := by
+  unfold CuntzO2Carrier.rightRangeProjection
+  exact isometry_rangeProjection_ne_zero C.S_right C.right_isometry
+
+/-- The left Cuntz range projection cannot be the unit, because the right branch
+is nonzero and the two branches sum to the unit. -/
+theorem left_cuntz_rangeProjection_ne_one_of_right_ne_zero
+    (h_right_nonzero : C.rightRangeProjection ≠ 0) :
+    C.leftRangeProjection ≠ 1 := by
+  intro hleft
+  have hsum : (1 : A) + C.rightRangeProjection = 1 := by
+    simpa [hleft] using C.rangeProjection_sum_one
+  have hright0 : C.rightRangeProjection = 0 := by
+    have hsum' : (1 : A) + C.rightRangeProjection = (1 : A) + 0 := by
+      simpa using hsum
+    exact add_left_cancel hsum'
+  exact h_right_nonzero hright0
+
+/-- The right Cuntz range projection cannot be the unit, because the left branch
+is nonzero and the two branches sum to the unit. -/
+theorem right_cuntz_rangeProjection_ne_one_of_left_ne_zero
+    (h_left_nonzero : C.leftRangeProjection ≠ 0) :
+    C.rightRangeProjection ≠ 1 := by
+  intro hright
+  have hsum : C.leftRangeProjection + (1 : A) = 1 := by
+    simpa [hright] using C.rangeProjection_sum_one
+  have hleft0 : C.leftRangeProjection = 0 := by
+    have hsum' : C.leftRangeProjection + (1 : A) = 0 + (1 : A) := by
+      simpa using hsum
+    exact add_right_cancel hsum'
+  exact h_left_nonzero hleft0
+
+/-- The left Cuntz range projection cannot be the unit in a nontrivial ring. -/
+theorem left_cuntz_rangeProjection_ne_one
+    [Nontrivial A] :
+    C.leftRangeProjection ≠ 1 :=
+  left_cuntz_rangeProjection_ne_one_of_right_ne_zero C
+    (right_cuntz_rangeProjection_ne_zero (C := C))
+
+/-- The right Cuntz range projection cannot be the unit in a nontrivial ring. -/
+theorem right_cuntz_rangeProjection_ne_one
+    [Nontrivial A] :
+    C.rightRangeProjection ≠ 1 :=
+  right_cuntz_rangeProjection_ne_one_of_left_ne_zero C
+    (left_cuntz_rangeProjection_ne_zero (C := C))
+
+/-- Left Cuntz branch commutator is genuinely non-zero if the opposite branch is nonzero. -/
+theorem left_cuntz_branch_commutator_ne_zero_of_right_ne_zero
+    (h_right_nonzero : C.rightRangeProjection ≠ 0) :
+    C.S_left * star C.S_left - star C.S_left * C.S_left ≠ 0 := by
+  exact isometry_branch_commutator_ne_zero C.S_left C.left_isometry
+    (left_cuntz_rangeProjection_ne_one_of_right_ne_zero C h_right_nonzero)
+
+/-- Right Cuntz branch commutator is genuinely non-zero if the opposite branch is nonzero. -/
+theorem right_cuntz_branch_commutator_ne_zero_of_left_ne_zero
+    (h_left_nonzero : C.leftRangeProjection ≠ 0) :
+    C.S_right * star C.S_right - star C.S_right * C.S_right ≠ 0 := by
+  exact isometry_branch_commutator_ne_zero C.S_right C.right_isometry
+    (right_cuntz_rangeProjection_ne_one_of_left_ne_zero C h_left_nonzero)
+
+/-- Left Cuntz branch commutator is genuinely non-zero without an extra
+mismatch hypothesis in a nontrivial ring, because the left range projection cannot be the unit. -/
+theorem left_cuntz_branch_commutator_ne_zero'
+    [Nontrivial A] :
+    C.S_left * star C.S_left - star C.S_left * C.S_left ≠ 0 := by
+  exact isometry_branch_commutator_ne_zero C.S_left C.left_isometry
+    (left_cuntz_rangeProjection_ne_one (C := C))
+
+/-- Right Cuntz branch commutator is genuinely non-zero without an extra
+mismatch hypothesis in a nontrivial ring, because the right range projection cannot be the unit. -/
+theorem right_cuntz_branch_commutator_ne_zero'
+    [Nontrivial A] :
+    C.S_right * star C.S_right - star C.S_right * C.S_right ≠ 0 := by
+  exact isometry_branch_commutator_ne_zero C.S_right C.right_isometry
+    (right_cuntz_rangeProjection_ne_one (C := C))
 
 end InfoGeometry.Canonical.DeformedIdeleAction
 

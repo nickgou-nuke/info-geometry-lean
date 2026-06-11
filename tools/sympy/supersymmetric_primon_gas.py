@@ -91,6 +91,7 @@ def main() -> None:
     Q = sp.Matrix([[0, 1], [1, 0]])
     H = Q**2
     assert_matrix_eq(Q**2, H, "supercharge square Q^2=H")
+    assert_matrix_eq(Q * H, H * Q, "supercharge conservation QH=HQ")
     assert_matrix_eq(H, sp.eye(2), "chosen finite Hamiltonian")
 
     print("supersymmetric_primon_gas: ok")
@@ -99,7 +100,7 @@ def main() -> None:
     print("  zeta-ratio shadow: Z_boson * Z_second_order = Z_fermion")
     print("  Mobius grading: squarefree parity, repeated-prime sectors -> 0")
     print("  trifactor: +1 boson, -1 fermion, 0 ghost projectors resolve identity")
-    print("  supercharge socket: verified only after supplying Q and H=Q^2")
+    print("  supercharge socket: Q^2=H and QH=HQ after supplying Q")
 
 
 if __name__ == "__main__":

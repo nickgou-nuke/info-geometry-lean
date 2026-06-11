@@ -246,7 +246,7 @@ relative-volume bit.
 
 This is the constructive route for callers that own the incompressible RN bit:
 the raw equality `relativeVolumeChangeRN n M = 1` is recovered from
-`bit.unit_relative_volume`, then the existing Calabi-Yau/RN owner theorem is
+`bit`, then the existing Calabi-Yau/RN owner theorem is
 reused unchanged.
 -/
 theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
@@ -260,7 +260,7 @@ theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit
     VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   exact vacuumEinsteinEquation_of_rnEntropySource
     (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (M := M) hSource bit.unit_relative_volume hBridge
+    (M := M) hSource bit hBridge
 
 omit [FiniteDimensional ℝ X] in
 /--
@@ -528,7 +528,7 @@ theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit_metri
     VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   have hUnitState : UnitRelativeVolumeState Kgeo :=
     unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
-      (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource bit
   exact vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
     (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM
 

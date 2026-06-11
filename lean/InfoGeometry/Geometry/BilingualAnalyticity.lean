@@ -253,6 +253,61 @@ theorem comp_deriv
 
 end CauchyAnalyticAt
 
+/-! ## 2B. Mathlib complex analyticity bridge -/
+
+/--
+The canonical phase axis on `ℂ`, viewed as a real continuous-linear map:
+multiplication by `I`.
+-/
+noncomputable def complexIMap : ℂ →L[ℝ] ℂ :=
+  ContinuousLinearMap.mul ℝ ℂ Complex.I
+
+/--
+The canonical real phase structure on `ℂ`.
+
+Its phase operator is multiplication by `I`, so the square law is the usual
+`I * I = -1`.
+-/
+noncomputable def complexPhaseStructure : PhaseStructure ℂ where
+  K := complexIMap
+  K_square := by
+    ext z
+    change Complex.I * (Complex.I * z) = -z
+    rw [← mul_assoc, Complex.I_mul_I, neg_one_mul]
+
+/--
+A complex continuous-linear map is phase-linear after restriction of scalars
+to `ℝ`.
+-/
+theorem complexLinearMap_phaseLinear
+    (L : ℂ →L[ℂ] ℂ) :
+    complexPhaseStructure.IsPhaseLinearMap (L.restrictScalars ℝ)
+      complexPhaseStructure := by
+  ext z
+  change L (Complex.I * z) = Complex.I * L z
+  simpa only [smul_eq_mul] using L.map_smul Complex.I z
+
+/--
+Mathlib power-series analyticity over `ℂ` implies the repository's pointwise
+Cauchy analyticity on the canonical complex phase structure.
+
+This is only the honest one-way bridge: `AnalyticAt` supplies a complex
+Fréchet derivative, and complex linearity of that derivative supplies the
+phase-form Cauchy-Riemann law.
+-/
+def analyticAt_complex_to_cauchyAnalyticAt
+    {f : ℂ → ℂ}
+    {x : ℂ}
+    (hf : AnalyticAt ℂ f x) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f x := by
+  let dC : ℂ →L[ℂ] ℂ := fderiv ℂ f x
+  refine
+    { deriv := dC.restrictScalars ℝ
+      has_fderiv_at := ?_
+      phase_linear_deriv := ?_ }
+  · exact hf.differentiableAt.hasFDerivAt.restrictScalars ℝ
+  · exact complexLinearMap_phaseLinear dC
+
 /-! ## 3. Operator-valued one-forms -/
 
 /--

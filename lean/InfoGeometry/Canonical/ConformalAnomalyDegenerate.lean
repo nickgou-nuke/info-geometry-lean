@@ -14,31 +14,27 @@ variable (CI : ConformalInference E)
 /--
 Proof-carrying unit-relative-volume input for the degenerate normal-phase lane.
 -/
-@[rep_depth operator] structure UnitRelativeVolumeBit
-    (n : Nat) (M : SinkhornMatrix n) : Prop where
-  unit_relative_volume : relativeVolumeChangeRN n M = 1
+@[rep_depth operator] def UnitRelativeVolumeBit
+    (n : Nat) (M : SinkhornMatrix n) : Prop :=
+  relativeVolumeChangeRN n M = 1
 
 /-- Constructor from the existing unit-relative-volume equality. -/
 @[rep_depth operator] theorem unitRelativeVolumeBit_of_eq_one
     {n : Nat} {M : SinkhornMatrix n}
     (hUnitVolume : relativeVolumeChangeRN n M = 1) :
     UnitRelativeVolumeBit n M :=
-  ⟨hUnitVolume⟩
+  hUnitVolume
 
 /--
 Normal-phase (degenerate) package:
 projector commutation collapses the operator source to zero and therefore all
 readout scalars to zero.
 -/
-@[rep_depth operator] structure NormalPhaseDegeneratePackage : Prop where
-  projectors_commute :
-    Commute CI.spectralChiralProjector CI.metricChiralProjector
-  projectorObstruction_eq_zero :
-    CI.projectorObstruction = 0
-  chiralScale_eq_zero :
-    CI.chiralScale = 0
-  isNormalInference :
-    CI.IsNormalInference
+@[rep_depth operator] def NormalPhaseDegeneratePackage : Prop :=
+  Commute CI.spectralChiralProjector CI.metricChiralProjector ∧
+  CI.projectorObstruction = 0 ∧
+  CI.chiralScale = 0 ∧
+  CI.IsNormalInference
 
 /-- Degenerate package from explicit projector commutation. -/
 @[rep_depth operator] theorem normalPhaseDegeneratePackage_of_projectors_commute
@@ -80,7 +76,7 @@ Degenerate package from the proof-carrying unit-relative-volume bit.
     (bit : UnitRelativeVolumeBit n M) :
     NormalPhaseDegeneratePackage (CI := CI) :=
   CI.normalPhaseDegeneratePackage_of_kahlerLogDet_unitRelativeVolume
-    (M := M) hScaleFromKahler bit.unit_relative_volume
+    (M := M) hScaleFromKahler bit
 
 /--
 The local unit-relative-volume witness already forces the normal-phase equation.
@@ -96,7 +92,7 @@ constructive bit to `CI.IsNormalInference`, instead of forcing them to unpack
     (bit : UnitRelativeVolumeBit n M) :
     CI.IsNormalInference :=
   (CI.normalPhaseDegeneratePackage_of_unitRelativeVolumeBit
-    (M := M) hScaleFromKahler bit).isNormalInference
+    (M := M) hScaleFromKahler bit).2.2.2
 
 /--
 The local unit-relative-volume witness also forces the degenerate projector
@@ -111,7 +107,7 @@ callers a direct constructive readback and avoids carrying a separate raw
     (bit : UnitRelativeVolumeBit n M) :
     CI.projectorObstruction = 0 :=
   (CI.normalPhaseDegeneratePackage_of_unitRelativeVolumeBit
-    (M := M) hScaleFromKahler bit).projectorObstruction_eq_zero
+    (M := M) hScaleFromKahler bit).2.1
 
 end ConformalInference
 

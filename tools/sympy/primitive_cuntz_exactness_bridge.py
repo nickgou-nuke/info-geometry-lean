@@ -1,67 +1,119 @@
+#!/usr/bin/env python3
+"""
+SymPy witness for the primitive Cuntz exactness bridge.
+
+This is a computational twin of the Lean algebraic surfaces in:
+
+* InfoGeometry.Canonical.PrimitiveCuntzIsometry
+* InfoGeometry.Canonical.PrimitiveCuntzCohomology
+* InfoGeometry.Canonical.UHFCohomologyColimit
+
+It is not a proof replacement.  Lean remains authoritative.  The script expands
+noncommutative words and applies the same explicit Cuntz rewrite rules used in
+Lean:
+
+    SL* SL = 1,  SR* SR = 1,
+    SL SL* + SR SR* = 1,
+    SL* SR = 0,  SR* SL = 0.
+"""
+
+from __future__ import annotations
+
 import sympy as sp
 
-def test_cuntz_exactness():
-    # Define non-commutative symbols
-    S_L = sp.Symbol('S_L', commutative=False)
-    S_R = sp.Symbol('S_R', commutative=False)
-    S_L_star = sp.Symbol('S_L_star', commutative=False)
-    S_R_star = sp.Symbol('S_R_star', commutative=False)
-    X = sp.Symbol('X', commutative=False)
-    I = sp.Symbol('I', commutative=False)
 
-    # We will simulate the substitution rules for Cuntz isometries and exact partition
-    # 1. Isometries: S_L_star * S_L = I, S_R_star * S_R = I
-    # 2. Partition: S_L * S_L_star + S_R * S_R_star = I
+SL = sp.Symbol("S_L", commutative=False)
+SR = sp.Symbol("S_R", commutative=False)
+SLs = sp.Symbol("S_L_star", commutative=False)
+SRs = sp.Symbol("S_R_star", commutative=False)
+X = sp.Symbol("X", commutative=False)
+I = sp.Symbol("I", commutative=False)
+ZERO = sp.Integer(0)
 
-    # To prove S_L_star * S_R = 0, we take:
-    # S_L_star * (S_L * S_L_star + S_R * S_R_star)
-    # = S_L_star * I = S_L_star
-    # = (S_L_star * S_L) * S_L_star + S_L_star * S_R * S_R_star
-    # = I * S_L_star + S_L_star * S_R * S_R_star
-    # = S_L_star + S_L_star * S_R * S_R_star
-    # Thus S_L_star * S_R * S_R_star = 0
-    # Multiply by S_R on the right: S_L_star * S_R * (S_R_star * S_R) = S_L_star * S_R * I = S_L_star * S_R = 0
+PL = SL * SLs
+PR = SR * SRs
 
-    print("--- SymPy Twin: Cuntz Primitive Exactness ---")
-    print("1. Isometry rules applied manually.")
-    print("2. Orthogonality S_L_star * S_R = 0 derived algebraically.")
 
-    # Test the UHF transition preservation of exactness
-    # Phi(X) = S_L X S_L_star + S_R X S_R_star
-    term1 = S_L * X * S_L_star
-    term2 = S_R * X * S_R_star
-    Phi_X = term1 + term2
+def reduce_cuntz(
+    expr: sp.Expr,
+    assume_x_projection: bool = False,
+    use_orthogonality: bool = True,
+) -> sp.Expr:
+    """Normalize the finite words that appear in the Cuntz bridge witnesses."""
+    e = sp.expand(expr)
 
-    # Square it:
-    Phi_X_sq = Phi_X * Phi_X
-    Phi_X_sq_expanded = Phi_X_sq.expand()
+    rules = [
+        (SLs * SL, I),
+        (SRs * SR, I),
+        (SL * I * SLs, SL * SLs),
+        (SR * I * SRs, SR * SRs),
+        (SLs * I * SR, SLs * SR),
+        (SRs * I * SL, SRs * SL),
+        (I * SLs * SR, SLs * SR),
+        (SLs * SR * I, SLs * SR),
+        (I * SRs * SL, SRs * SL),
+        (SRs * SL * I, SRs * SL),
+        (SL * X * I * X * SLs, SL * X * X * SLs),
+        (SR * X * I * X * SRs, SR * X * X * SRs),
+        (PL + PR, I),
+        (I * X, X),
+        (X * I, X),
+    ]
+    if use_orthogonality:
+        rules.extend([
+            (SLs * SR, ZERO),
+            (SRs * SL, ZERO),
+        ])
+    if assume_x_projection:
+        rules.extend([
+            (X * X, X),
+            (SL * X * X * SLs, SL * X * SLs),
+            (SR * X * X * SRs, SR * X * SRs),
+        ])
 
-    print("\nOriginal expanded square of UHF transition:")
-    print(Phi_X_sq_expanded)
+    changed = True
+    while changed:
+        old = e
+        for lhs, rhs in rules:
+            e = e.subs(lhs, rhs)
+        e = sp.expand(e)
+        changed = e != old
+    return e
 
-    # Apply substitutions for cross-terms and diagonal terms
-    def apply_cuntz_rules(expr):
-        # Handle cross terms first
-        e = expr.subs(S_L_star * S_R, 0)
-        e = e.subs(S_R_star * S_L, 0)
-        # Handle diagonal terms
-        e = e.subs(S_L_star * S_L, I)
-        e = e.subs(S_R_star * S_R, I)
-        # Handle X * I * X -> X * X
-        e = e.subs(X * I * X, X * X)
-        # Handle Idempotence of X
-        e = e.subs(X * X, X)
-        return e
 
-    Phi_X_sq_reduced = apply_cuntz_rules(Phi_X_sq_expanded)
-    
-    print("\nReduced square of UHF transition using Cuntz rules:")
-    print(Phi_X_sq_reduced)
+def main() -> None:
+    print("--- SymPy Twin: Primitive Cuntz Exactness Bridge ---")
 
-    if Phi_X_sq_reduced == Phi_X:
-        print("\n[SUCCESS] Phi(X)^2 = Phi(X) exactly matches the Lean proof!")
-    else:
-        print("\n[FAILED] Phi(X)^2 != Phi(X)")
+    # Orthogonality derivation readout:
+    # SL* (PL + PR) SR = SL* SR, while expansion gives SL*SR + SL*SR.
+    # Additive cancellation yields SL*SR = 0; Lean proves this algebraically.
+    lhs_parent = reduce_cuntz(SLs * I * SR, use_orthogonality=False)
+    rhs_expanded = reduce_cuntz(SLs * PL * SR + SLs * PR * SR, use_orthogonality=False)
+    print(f"orthogonality cancellation equation: {lhs_parent} = {rhs_expanded}")
+    print("Lean cancellation theorem concludes: S_L_star*S_R = 0")
+
+    boundary = SL * SRs
+    boundary_star = SR * SLs
+    boundary_sq = reduce_cuntz(boundary * boundary)
+    print(f"boundary^2 reduced: {boundary_sq}")
+    assert boundary_sq == 0
+
+    laplacian = boundary * boundary_star + boundary_star * boundary
+    laplacian_reduced = reduce_cuntz(laplacian)
+    print(f"laplacian reduced: {laplacian_reduced}")
+    assert laplacian_reduced == I
+
+    phi_x = SL * X * SLs + SR * X * SRs
+    phi_x_sq_reduced = reduce_cuntz(phi_x * phi_x, assume_x_projection=True)
+    print(f"Phi(X)^2 reduced under X^2=X: {phi_x_sq_reduced}")
+    assert phi_x_sq_reduced == phi_x
+
+    phi_one = reduce_cuntz(SL * I * SLs + SR * I * SRs)
+    print(f"Phi(1) reduced: {phi_one}")
+    assert phi_one == I
+
+    print("[SUCCESS] SymPy witness matches the Lean Cuntz/UHF exactness bridge.")
+
 
 if __name__ == "__main__":
-    test_cuntz_exactness()
+    main()

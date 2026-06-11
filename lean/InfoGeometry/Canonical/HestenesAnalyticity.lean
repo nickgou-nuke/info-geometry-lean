@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.HestenesPhaseSemilinear
+import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.External.Virasoro.AffineKacMoody
 import InfoGeometry.Meta.Architecture
@@ -259,5 +260,90 @@ theorem virasoro_central_bracket_zero (Z : VirasoroAlgebra ℝ) :
   simpa using VirasoroAlgebra.cgen_bracket (𝕜 := ℝ) Z
 
 end VirasoroClosure
+
+section Equivalences
+
+open InfoGeometry.Geometry.BilingualAnalyticity
+
+variable {E F : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+
+local notation "H₂E" => DoubledSpace E
+local notation "H₂F" => DoubledSpace F
+
+/-- The canonical phase structure on the doubled carrier is given by `clockAxis`. -/
+@[rep_depth krein]
+noncomputable def clockPhaseStructure (E : Type 0)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    PhaseStructure (DoubledSpace E) where
+  K := InfoGeometry.Krein.clockAxis (E := E)
+  K_square := InfoGeometry.Krein.clockAxis_sq (E := E)
+
+/-- Hestenes-holomorphic differentials are exactly phase-linear differentials for `K = clockAxis`. -/
+@[rep_depth krein]
+theorem isHestenesHolomorphicDifferential_iff_isPhaseLinearMap
+    (dF : H₂E →L[ℝ] H₂F) :
+    IsHestenesHolomorphicDifferential (E := E) (F := F) dF ↔
+      (clockPhaseStructure (E := E)).IsPhaseLinearMap dF (clockPhaseStructure (E := F)) := by
+  rfl
+
+/-- Cauchy analyticity for the canonical doubled phase structures is exactly a derivative package
+with Hestenes-holomorphic differential. -/
+@[rep_depth krein]
+noncomputable def cauchyAnalyticAtClockEquiv
+    (Fmap : H₂E → H₂F) (x : H₂E) :
+    CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ≃
+      { deriv : H₂E →L[ℝ] H₂F //
+          HasFDerivAt Fmap deriv x ∧
+          IsHestenesHolomorphicDifferential (E := E) (F := F) deriv } where
+  toFun A := ⟨A.deriv, A.has_fderiv_at, A.phase_linear_deriv⟩
+  invFun s :=
+    { deriv := s.1
+      has_fderiv_at := s.2.1
+      phase_linear_deriv := s.2.2 }
+  left_inv A := by
+    cases A
+    rfl
+  right_inv s := by
+    cases s
+    rfl
+
+variable {Region Point Tangent Value : Type*}
+variable [AddCommGroup Value] [Module ℝ Value]
+variable (I : GeometricIntegralBackend Region Point Tangent Value)
+
+/-- `HestenesAnalyticOn` is equivalent to its explicit closed-form data. -/
+@[rep_depth krein]
+noncomputable def hestenesAnalyticOnEquiv (Fgeo : Point → Value) :
+    HestenesAnalyticOn I Fgeo ≃
+      { ω : OperatorOneForm Point Tangent Value // I.IsClosedGeometricForm ω } where
+  toFun A := ⟨A.cauchyForm, A.closed_form⟩
+  invFun s := { cauchyForm := s.1, closed_form := s.2 }
+  left_inv A := by
+    cases A
+    rfl
+  right_inv s := by
+    cases s
+    rfl
+
+/-- `BilingualAnalyticAt` is equivalent to its two pieces of data: Cauchy analyticity and a
+compatibility backend. -/
+@[rep_depth krein]
+noncomputable def bilingualAnalyticAtEquiv
+    (Fmap : H₂E → H₂F) (Fgeo : Point → Value) (x : H₂E) :
+    BilingualAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I Fmap Fgeo x ≃
+      CauchyAnalyticAt (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) Fmap x ×
+      CauchyHestenesCompatibility (clockPhaseStructure (E := E)) (clockPhaseStructure (E := F)) I where
+  toFun A := ⟨A.cauchy, A.compatibility⟩
+  invFun s := { cauchy := s.1, compatibility := s.2 }
+  left_inv A := by
+    cases A
+    rfl
+  right_inv s := by
+    cases s
+    rfl
+
+end Equivalences
 
 end InfoGeometry.Canonical.HestenesAnalyticity

@@ -39,7 +39,6 @@ import InfoGeometry.Krein.HestenesKreinRotorBoundaryBridge
 import InfoGeometry.Krein.BoundedKMSHestenesBridge
 import InfoGeometry.Krein.HestenesKreinVacuumBridge
 import InfoGeometry.Krein.HestenesKreinNaturalConeBridge
-import InfoGeometry.Krein.HestenesStandardFormNaturalConeAdapter
 import InfoGeometry.Krein.BoundedKMSHestenesVacuumBridge
 import InfoGeometry.Krein.HestenesConnesWilsonBridge
 import InfoGeometry.Krein.BoundedKMSHestenesConnesWilsonBridge

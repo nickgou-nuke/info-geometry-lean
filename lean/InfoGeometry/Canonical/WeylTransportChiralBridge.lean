@@ -339,7 +339,7 @@ theorem holonomy_eq_zero_of_flat_of_unitRelativeVolumeBit
     bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = 0 := by
   exact holonomy_eq_zero_of_flat_of_unitRelativeVolume
     (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) (hFlat := hFlat)
-    (M := M) hScaleFromKahler bit.unit_relative_volume
+    (M := M) hScaleFromKahler bit
 
 omit [Fintype I] [FiniteDimensional ℝ E] in
 /-- Nonvanishing case:

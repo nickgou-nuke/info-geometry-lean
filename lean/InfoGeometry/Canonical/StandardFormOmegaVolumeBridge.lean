@@ -125,10 +125,9 @@ theorem atomExpectation_eq_omega_kreinExpectation (w : Word) :
 /-- The localized face expectation is `[L_w Ω, Ω]_J`. -/
 @[rep_depth operator]
 theorem localizedExpectation_eq_omega_kreinExpectation (w : Word) :
-    NaturalConeVolumeBridge.localizedExpectation B w =
+    B.volumeState (NaturalConeVolumeBridge.localizationOp B w) =
       KreinSpace.kreinInner (H := H₂)
         ((NaturalConeVolumeBridge.localizationOp B w) B.Omega) B.Omega := by
-  unfold localizedExpectation
   rw [B.volumeState_eq_omega_kreinExpectation]
 
 /-- Readback of the supplied atom partition of unity. -/
@@ -163,13 +162,12 @@ expectations also sum to one.
 theorem total_localizedExpectation_is_unity
     (hLocalPartition :
       (∑ w : Word, NaturalConeVolumeBridge.localizationOp B w) = (1 : EndH)) :
-    (∑ w : Word, NaturalConeVolumeBridge.localizedExpectation B w) = 1 := by
+    (∑ w : Word, B.volumeState (NaturalConeVolumeBridge.localizationOp B w)) = 1 := by
   calc
-    (∑ w : Word, NaturalConeVolumeBridge.localizedExpectation B w)
+    (∑ w : Word, B.volumeState (NaturalConeVolumeBridge.localizationOp B w))
         = B.volumeState (∑ w : Word, NaturalConeVolumeBridge.localizationOp B w) := by
-            simpa [localizedExpectation] using
-              (B.volumeState_word_sum
-                (fun w : Word => NaturalConeVolumeBridge.localizationOp B w)).symm
+            simpa using
+              (B.volumeState_word_sum (fun w : Word => NaturalConeVolumeBridge.localizationOp B w)).symm
     _ = B.volumeState (1 : EndH) := by rw [hLocalPartition]
     _ = 1 := B.volumeState_one
 

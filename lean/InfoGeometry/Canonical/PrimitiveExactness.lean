@@ -1,22 +1,32 @@
-import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Complex.HasPrimitives
 import InfoGeometry.Canonical.ZeroHolonomyAnalyticity
 
 /-!
-# Primitive exactness
+# Primitive exactness bridge
 
-This file records the theorem-safe primitive/exactness formulation of complex
-analyticity.
+This file records the theorem-safe part of the primitive-exactness story.
 
-We deliberately do **not** introduce an axiomatic global partition function or a
-blanket global primitive theorem.  The formal owner is Mathlib's
-`Complex.IsExactOn`: a field is primitive-exact on `U` when it has a primitive
-on `U`.  Mathlib then supplies the safe routes:
+Mathlib's primitive API is `Complex.IsExactOn f U`, meaning that `f` is the
+complex derivative of a primitive on `U`.  The current Mathlib theorem available
+without extra topological machinery is disk-local:
 
-* differentiability on a ball gives primitive exactness on that ball;
-* primitive exactness on an open set gives differentiability and analyticity;
-* primitive exactness implies Morera conservativity and zero rectangular
-  holonomy through `ZeroHolonomyAnalyticity`.
+* `DifferentiableOn.isExactOn_ball`
+
+We therefore prove only the disk-local and explicitly-premised consequences.
+There is no postulate for a global partition function and no claim that an
+arbitrary global domain is simply connected.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+None.  This file is analytic and conditional on Mathlib hypotheses.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+Holomorphicity on a disk gives `Complex.IsExactOn`; primitive exactness on an
+open set gives zero rectangular holonomy and the repo Cauchy/Hestenes analytic
+readbacks.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+No global zeta/xi primitive, arbitrary Wilson-loop theorem, or simply-connected
+domain primitive theorem is claimed here.
 -/
 
 noncomputable section
@@ -24,117 +34,108 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimitiveExactness
 
 open Complex
-open Metric
-open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Canonical.ComplexAnalyticBridge
 open InfoGeometry.Canonical.ZeroHolonomyAnalyticity
+open InfoGeometry.Geometry.BilingualAnalyticity
+
 open scoped Topology
 
-/-- Repository-facing name for Mathlib's primitive/exactness predicate. -/
-abbrev PrimitiveExactOn (f : ℂ → ℂ) (U : Set ℂ) : Prop :=
-  IsExactOn f U
-
-/-- A proof-carrying primitive potential on a domain. -/
-structure PrimitivePotentialOn (f : ℂ → ℂ) (U : Set ℂ) where
-  potential : ℂ → ℂ
-  hasDerivAt_potential : ∀ z ∈ U, HasDerivAt potential (f z) z
-
-/-- Convert the explicit primitive-potential structure to Mathlib `IsExactOn`. -/
-theorem PrimitivePotentialOn.to_isExactOn
-    {f : ℂ → ℂ} {U : Set ℂ}
-    (P : PrimitivePotentialOn f U) :
-    PrimitiveExactOn f U :=
-  ⟨P.potential, P.hasDerivAt_potential⟩
-
-/-- Convert Mathlib `IsExactOn` to an explicit primitive-potential package. -/
-theorem primitivePotentialOn_of_isExactOn
-    {f : ℂ → ℂ} {U : Set ℂ}
-    (hExact : PrimitiveExactOn f U) :
-    Nonempty (PrimitivePotentialOn f U) := by
-  rcases hExact with ⟨F, hF⟩
-  exact ⟨{ potential := F, hasDerivAt_potential := hF }⟩
-
-/-- A complex differentiable field on a ball has a primitive on that ball. -/
-theorem differentiableOn_ball_to_primitiveExactOn
+/--
+Mathlib's disk-local primitive theorem: a holomorphic function on a ball has a
+primitive on that ball.
+-/
+theorem differentiableOn_ball_to_isExactOn
     {f : ℂ → ℂ} {c : ℂ} {r : ℝ}
-    (hf : DifferentiableOn ℂ f (ball c r)) :
-    PrimitiveExactOn f (ball c r) :=
+    (hf : DifferentiableOn ℂ f (Metric.ball c r)) :
+    IsExactOn f (Metric.ball c r) :=
   hf.isExactOn_ball
 
-/-- A globally complex differentiable field has a primitive on every ball. -/
-theorem differentiable_to_primitiveExactOn_ball
-    {f : ℂ → ℂ} (hf : Differentiable ℂ f) (c : ℂ) (r : ℝ) :
-    PrimitiveExactOn f (ball c r) :=
-  differentiableOn_ball_to_primitiveExactOn (hf.differentiableOn.mono subset_univ)
+/--
+Unfolded primitive witness form of `differentiableOn_ball_to_isExactOn`.
+-/
+theorem differentiableOn_ball_exists_primitive
+    {f : ℂ → ℂ} {c : ℂ} {r : ℝ}
+    (hf : DifferentiableOn ℂ f (Metric.ball c r)) :
+    ∃ F : ℂ → ℂ, ∀ z ∈ Metric.ball c r, HasDerivAt F (f z) z :=
+  differentiableOn_ball_to_isExactOn hf
 
-/-- Primitive exactness on an open set gives complex differentiability there. -/
-theorem primitiveExactOn_to_differentiableOn
-    {f : ℂ → ℂ} {U : Set ℂ}
-    (hU : IsOpen U) (hExact : PrimitiveExactOn f U) :
-    DifferentiableOn ℂ f U :=
-  hExact.differentiableOn hU
+/--
+Primitive exactness on an open set implies zero rectangular holonomy.
 
-/-- Primitive exactness on an open set gives Mathlib pointwise analyticity. -/
-theorem primitiveExactOn_to_analyticAt
-    {f : ℂ → ℂ} {U : Set ℂ} {z : ℂ}
-    (hU : IsOpen U) (hz : z ∈ U) (hExact : PrimitiveExactOn f U) :
-    AnalyticAt ℂ f z :=
-  isExactOn_to_analyticAt hU hz hExact
-
-/-- Primitive exactness on an open set lands in the repo Cauchy-analytic structure. -/
-def primitiveExactOn_to_cauchyAnalyticAt
-    {f : ℂ → ℂ} {U : Set ℂ} {z : ℂ}
-    (hU : IsOpen U) (hz : z ∈ U) (hExact : PrimitiveExactOn f U) :
-    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
-  isExactOn_to_cauchyAnalyticAt hU hz hExact
-
-/-- Primitive exactness implies Mathlib Morera conservativity on an open set. -/
-theorem primitiveExactOn_to_isConservativeOn
-    {f : ℂ → ℂ} {U : Set ℂ}
-    (hU : IsOpen U) (hExact : PrimitiveExactOn f U) :
-    IsConservativeOn f U :=
-  isConservativeOn_of_isExactOn hU hExact
-
-/-- Primitive exactness implies zero rectangular holonomy. -/
+This is the exact Mathlib/repo translation: `IsExactOn` gives
+`DifferentiableOn`, differentiability gives Mathlib conservativity, and
+conservativity is the zero-rectangle-holonomy condition used in
+`ZeroHolonomyAnalyticity`.
+-/
 theorem primitiveExactOn_to_zeroRectangularHolonomyOn
-    {f : ℂ → ℂ} {U : Set ℂ}
-    (hU : IsOpen U) (hExact : PrimitiveExactOn f U) :
+    {U : Set ℂ} {f : ℂ → ℂ}
+    (hU : IsOpen U) (hExact : IsExactOn f U) :
     ZeroRectangularHolonomyOn f U :=
   zeroRectangularHolonomyOn_of_isExactOn hU hExact
 
 /--
-A primitive potential is analytic at every point of an open exactness domain.
+Holomorphicity on a disk implies zero rectangular holonomy on that disk.
 -/
-theorem PrimitivePotentialOn.analyticAt_potential
-    {f : ℂ → ℂ} {U : Set ℂ} {z : ℂ}
-    (P : PrimitivePotentialOn f U) (hU : IsOpen U) (hz : z ∈ U) :
-    AnalyticAt ℂ P.potential z := by
-  have hdiff : DifferentiableOn ℂ P.potential U :=
-    fun w hw => (P.hasDerivAt_potential w hw).differentiableAt.differentiableWithinAt
-  exact hdiff.analyticAt (hU.mem_nhds hz)
+theorem differentiableOn_ball_to_zeroRectangularHolonomyOn
+    {f : ℂ → ℂ} {c : ℂ} {r : ℝ}
+    (hf : DifferentiableOn ℂ f (Metric.ball c r)) :
+    ZeroRectangularHolonomyOn f (Metric.ball c r) :=
+  primitiveExactOn_to_zeroRectangularHolonomyOn
+    Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf)
 
 /--
-Primitive exactness supplies a locally analytic primitive potential.
+Primitive exactness on an open set gives Mathlib pointwise analyticity.
 -/
-theorem primitiveExactOn_exists_analyticAt_potential
-    {f : ℂ → ℂ} {U : Set ℂ} {z : ℂ}
-    (hU : IsOpen U) (hz : z ∈ U) (hExact : PrimitiveExactOn f U) :
-    ∃ F : ℂ → ℂ,
-      (∀ w ∈ U, HasDerivAt F (f w) w) ∧ AnalyticAt ℂ F z := by
-  rcases hExact with ⟨F, hF⟩
-  refine ⟨F, hF, ?_⟩
-  exact (PrimitivePotentialOn.analyticAt_potential
-    ({ potential := F, hasDerivAt_potential := hF } : PrimitivePotentialOn f U) hU hz)
+theorem primitiveExactOn_to_analyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    AnalyticAt ℂ f z :=
+  isExactOn_to_analyticAt hU hz hExact
 
 /--
-Compact certificate: on an open set, primitive exactness yields zero rectangular
-holonomy and repo Cauchy analyticity at every chosen point.
+Primitive exactness on an open set gives the repo Cauchy/Hestenes pointwise
+analyticity readback.
 -/
-def primitiveExactnessCertificate
-    {f : ℂ → ℂ} {U : Set ℂ} {z : ℂ}
-    (hU : IsOpen U) (hz : z ∈ U) (hExact : PrimitiveExactOn f U) :
-    ZeroRectangularHolonomyOn f U ∧
-      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :=
-  primitiveExactness_to_zeroHolonomy_cauchyAnalyticAt hU hz hExact
+def primitiveExactOn_to_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  isExactOn_to_cauchyAnalyticAt hU hz hExact
+
+/--
+Holomorphicity on a disk gives the repo Cauchy/Hestenes pointwise analyticity
+readback at any point of the disk.
+-/
+def differentiableOn_ball_to_cauchyAnalyticAt
+    {f : ℂ → ℂ} {c z : ℂ} {r : ℝ}
+    (hf : DifferentiableOn ℂ f (Metric.ball c r))
+    (hz : z ∈ Metric.ball c r) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  primitiveExactOn_to_cauchyAnalyticAt
+    Metric.isOpen_ball hz (differentiableOn_ball_to_isExactOn hf)
+
+/--
+Primitive exactness on an open set transports to the doubled/clock-axis
+pointwise analyticity structure.
+-/
+def primitiveExactOn_to_doubled_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+      (lifted f) (complexToDoubled z) :=
+  isExactOn_to_doubled_cauchyAnalyticAt hU hz hExact
+
+/--
+Holomorphicity on a disk transports to the doubled/clock-axis pointwise
+analyticity structure.
+-/
+def differentiableOn_ball_to_doubled_cauchyAnalyticAt
+    {f : ℂ → ℂ} {c z : ℂ} {r : ℝ}
+    (hf : DifferentiableOn ℂ f (Metric.ball c r))
+    (hz : z ∈ Metric.ball c r) :
+    CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+      (lifted f) (complexToDoubled z) :=
+  primitiveExactOn_to_doubled_cauchyAnalyticAt
+    Metric.isOpen_ball hz (differentiableOn_ball_to_isExactOn hf)
 
 end InfoGeometry.Canonical.PrimitiveExactness

@@ -223,7 +223,8 @@ theorem one_turn_hidden_charge
     (x : Sys) :
     K.hiddenHelix.sheet (D.hiddenFlow (K.visibleHelix.flow (2 * Real.pi) x)) =
       K.visibleHelix.sheet x + 1 := by
-  sorry
+  rw [K.hidden_sheet_eq_visible_sheet_apply]
+  exact K.visibleHelix.one_turn_increments_sheet x
 
 /--
 The visible deficit is still the recovered hidden flow; the helical calibration

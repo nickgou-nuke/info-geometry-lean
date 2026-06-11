@@ -333,12 +333,10 @@ souriau : SouriauLieThermoData State LieAlgebra LieDual
 rnDerivative : Density State
 rnDerivative_eq_gibbsDensity : rnDerivative = souriau.gibbsDensity
 expectationBeta : (Density State) → ℝ
-entropy : ℝ
 Q : LieDual
-entropy_eq_expectation_modularPotential_sorry :
-entropy = expectationBeta (fun x => -Real.log (rnDerivative x))
-entropy_eq_Phi_add_pairing_Q_beta_sorry :
-entropy = souriau.partitionPotential + souriau.pairing Q souriau.beta
+entropy_eq_Phi_add_pairing_Q_beta :
+expectationBeta (fun x => -Real.log (rnDerivative x)) =
+  souriau.partitionPotential + souriau.pairing Q souriau.beta
 
 abbrev NegativeLogRNDerivative := SouriauNegativeLogRNDerivative
 
@@ -350,6 +348,11 @@ variable {State LieAlgebra LieDual : Type*}
 noncomputable def modularPotential
 (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : Density State :=
 fun x => -Real.log (D.rnDerivative x)
+
+@[rep_depth thermo]
+noncomputable def entropy
+    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : ℝ :=
+  D.expectationBeta D.modularPotential
 
 @[rep_depth thermo]
 theorem rnDerivative_eq_gibbsDensity_apply
@@ -368,14 +371,14 @@ exact D.souriau.negativeLogGibbsDensity_eq_K_beta_add_Phi x
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential
 (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-D.entropy = D.expectationBeta D.modularPotential := by
-simpa [modularPotential] using D.entropy_eq_expectation_modularPotential_sorry
+    D.entropy = D.expectationBeta D.modularPotential := by
+  rfl
 
 @[rep_depth thermo]
 theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
 (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta :=
-D.entropy_eq_Phi_add_pairing_Q_beta_sorry
+    D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
+  simpa [entropy, modularPotential] using D.entropy_eq_Phi_add_pairing_Q_beta
 
 @[rep_depth thermo]
 theorem entropy_is_expectation_of_modularPotential
@@ -423,12 +426,6 @@ generator : MomentMapGeneratingPotential State LieAlgebra LieDual
 alpha : LieAlgebra
 alphaPartitionPotential : ℝ
 alphaMinusBeta : LieAlgebra
-klValue : ℝ
-kl_eq_bregman_sorry :
-klValue =
-alphaPartitionPotential
-- generator.souriau.partitionPotential
-- generator.dPhi alphaMinusBeta
 supportHypothesesClaim : Prop
 
 abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
@@ -438,13 +435,19 @@ namespace SouriauKLBregmanWitness
 variable {State LieAlgebra LieDual : Type*}
 
 @[rep_depth thermo]
+def klValue (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ :=
+  B.alphaPartitionPotential
+    - B.generator.souriau.partitionPotential
+    - B.generator.dPhi B.alphaMinusBeta
+
+@[rep_depth thermo]
 theorem KL_eq_souriau_Bregman
 (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
 B.klValue =
 B.alphaPartitionPotential
 - B.generator.souriau.partitionPotential
-- B.generator.dPhi B.alphaMinusBeta :=
-B.kl_eq_bregman_sorry
+    - B.generator.dPhi B.alphaMinusBeta := by
+  rfl
 
 @[rep_depth thermo]
 theorem relativeEntropy_eq_expectation_difference
@@ -510,9 +513,6 @@ souriauPartitionAtGammaBeta : ℝ
 souriauPartitionAtBeta : ℝ
 massieuAtGammaBeta : ℝ
 massieuAtBeta : ℝ
-renyiPartition : ℝ
-renyiLogGenerator : ℝ
-renyiEntropy : ℝ
 petzRelativeRenyi : ℝ
 sandwichedRelativeRenyi : ℝ
 gamma_ne_one : gamma ≠ 1
@@ -522,13 +522,6 @@ massieuAtGammaBeta_eq_log_partition :
 massieuAtGammaBeta = Real.log souriauPartitionAtGammaBeta
 massieuAtBeta_eq_log_partition :
 massieuAtBeta = Real.log souriauPartitionAtBeta
-renyiMellin_eq_temperature_rescaling_sorry :
-renyiPartition =
-souriauPartitionAtGammaBeta / souriauPartitionAtBeta ^ gamma
-renyiLogGenerator_eq_log_partition :
-renyiLogGenerator = Real.log renyiPartition
-renyiEntropy_eq_logGenerator_div_one_sub_gamma :
-renyiEntropy = renyiLogGenerator / (1 - gamma)
 finiteSupportVolumeClaim : Prop
 entropyDerivativeAtOneClaim : Prop
 petz_sandwiched_separatedClaim : Prop
@@ -538,11 +531,23 @@ namespace RenyiMellinSouriauReadout
 variable {State : Type*}
 
 @[rep_depth thermo]
+noncomputable def renyiPartition (R : RenyiMellinSouriauReadout State) : ℝ :=
+  R.souriauPartitionAtGammaBeta / R.souriauPartitionAtBeta ^ R.gamma
+
+@[rep_depth thermo]
+noncomputable def renyiLogGenerator (R : RenyiMellinSouriauReadout State) : ℝ :=
+  Real.log R.renyiPartition
+
+@[rep_depth thermo]
+noncomputable def renyiEntropy (R : RenyiMellinSouriauReadout State) : ℝ :=
+  R.renyiLogGenerator / (1 - R.gamma)
+
+@[rep_depth thermo]
 theorem renyiMellin_eq_temperature_rescaling
 (R : RenyiMellinSouriauReadout State) :
 R.renyiPartition =
-R.souriauPartitionAtGammaBeta / R.souriauPartitionAtBeta ^ R.gamma :=
-R.renyiMellin_eq_temperature_rescaling_sorry
+    R.souriauPartitionAtGammaBeta / R.souriauPartitionAtBeta ^ R.gamma := by
+  rfl
 
 @[rep_depth thermo]
 theorem renyiLogGenerator_eq_massieu_rescaling_shift
@@ -551,7 +556,7 @@ theorem renyiLogGenerator_eq_massieu_rescaling_shift
   R.massieuAtGammaBeta - R.gamma * R.massieuAtBeta := by
   have hpow_ne_zero : R.souriauPartitionAtBeta ^ R.gamma ≠ 0 := by
     exact (Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma).ne'
-  rw [R.renyiLogGenerator_eq_log_partition, R.renyiMellin_eq_temperature_rescaling]
+  rw [renyiLogGenerator, R.renyiMellin_eq_temperature_rescaling]
   rw [Real.log_div R.souriauPartitionAtGammaBeta_pos.ne' hpow_ne_zero]
   rw [R.massieuAtGammaBeta_eq_log_partition, R.massieuAtBeta_eq_log_partition]
   rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
@@ -559,14 +564,14 @@ theorem renyiLogGenerator_eq_massieu_rescaling_shift
 @[rep_depth thermo]
 theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat
 (R : RenyiMellinSouriauReadout State) :
-R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) :=
-R.renyiEntropy_eq_logGenerator_div_one_sub_gamma
+    R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) := by
+  rfl
 
 @[rep_depth thermo]
 theorem renyiPartition_pos
 (R : RenyiMellinSouriauReadout State) :
   0 < R.renyiPartition := by
-  rw [R.renyiMellin_eq_temperature_rescaling_sorry]
+  rw [R.renyiMellin_eq_temperature_rescaling]
   refine div_pos R.souriauPartitionAtGammaBeta_pos ?_
   exact Real.rpow_pos_of_pos R.souriauPartitionAtBeta_pos R.gamma
 
@@ -593,16 +598,10 @@ partitionPotentialAffineCorrectionClaim : Prop
 @[rep_depth thermo]
 structure SouriauMetriplecticOnsager (State Observable : Type*) where
 reversibleFlow : Density State → Density State
-dissipativeFlow : Density State → Density State
 relativeFreeEnergy : Density State → ℝ
-force : Density State → Density State
 variationOfRelativeFreeEnergy : Density State → Density State
 onsagerOperator : Density State → Density State
 freeEnergyDerivative : Density State → ℝ
-force_eq_variation_sorry :
-∀ ρ, force ρ = variationOfRelativeFreeEnergy ρ
-dissipativeFlow_eq_onsager_force_sorry :
-∀ ρ, dissipativeFlow ρ = -onsagerOperator (force ρ)
 freeEnergyDerivative_nonpos :
 ∀ ρ, freeEnergyDerivative ρ ≤ 0
 onsagerPositiveSemidefinite : (Density State → Density State) → Prop
@@ -618,16 +617,25 @@ namespace SouriauMetriplecticOnsager
 variable {State Observable : Type*}
 
 @[rep_depth thermo]
+def force (O : SouriauMetriplecticOnsager State Observable) : Density State → Density State :=
+  O.variationOfRelativeFreeEnergy
+
+@[rep_depth thermo]
+def dissipativeFlow
+    (O : SouriauMetriplecticOnsager State Observable) : Density State → Density State :=
+  fun ρ => -O.onsagerOperator (O.force ρ)
+
+@[rep_depth thermo]
 theorem force_eq_variation_of_relativeFreeEnergy
 (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
-O.force ρ = O.variationOfRelativeFreeEnergy ρ :=
-O.force_eq_variation_sorry ρ
+    O.force ρ = O.variationOfRelativeFreeEnergy ρ := by
+  rfl
 
 @[rep_depth thermo]
 theorem dissipativeFlow_eq_onsager_force
 (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
-O.dissipativeFlow ρ = -O.onsagerOperator (O.force ρ) :=
-O.dissipativeFlow_eq_onsager_force_sorry ρ
+    O.dissipativeFlow ρ = -O.onsagerOperator (O.force ρ) := by
+  rfl
 
 @[rep_depth thermo]
 theorem freeEnergyDerivative_nonpos_theorem

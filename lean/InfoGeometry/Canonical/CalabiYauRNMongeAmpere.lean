@@ -60,7 +60,7 @@ theorem unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit
     (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M) :
     UnitRelativeVolumeState Kgeo := by
   exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
-    (n := n) (Kgeo := Kgeo) (M := M) hSource bit.unit_relative_volume
+    (n := n) (Kgeo := Kgeo) (M := M) hSource bit
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -227,7 +227,7 @@ theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativ
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   exact isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
     (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M)
-    hSource bit.unit_relative_volume hBridge
+    hSource bit hBridge
 
 omit [FiniteDimensional ℝ E] in
 /--

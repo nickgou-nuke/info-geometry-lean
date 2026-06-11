@@ -4,6 +4,16 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.UHFCohomology
 
+/--
+The algebraic UHF/Cuntz transition map on an abstract star ring.
+
+It sends an observable `X` to the sum of its left and right Cuntz branch
+compressions.
+-/
+def UHF_transition {A : Type*} [Ring A] [StarRing A]
+    (S_L S_R X : A) : A :=
+  S_L * X * star S_L + S_R * X * star S_R
+
 /-- 
 THEOREM: Exactness is Preserved under the UHF Transition.
 If an operator X is a pure projection (idempotent) at scale n, 
@@ -83,13 +93,30 @@ theorem UHF_transition_preserves_exactness {A : Type*} [Ring A] [StarRing A]
       rw [step_LL, step_LR, step_RL, step_RR]
     _ = S_L * X * star S_L + S_R * X * star S_R := by abel
 
-/-- 
-COROLLARY: The Cohomological Sequence of the Vacuum.
-By passing the Identity vacuum state through the infinite UHF transition, 
-the global topological anomaly (the interference cross-terms) identically 
-evaluates to 0 at every stage of the continuum limit.
+/--
+The unit/vacuum is fixed by the UHF transition whenever the Cuntz range
+projections partition the identity.
 -/
-theorem vacuum_colimit_is_anomaly_free : True := by
-  trivial
+theorem UHF_transition_one_eq_one {A : Type*} [Ring A] [StarRing A]
+    (S_L S_R : A)
+    (h_partition : S_L * star S_L + S_R * star S_R = 1) :
+    UHF_transition S_L S_R (1 : A) = 1 := by
+  unfold UHF_transition
+  calc
+    S_L * 1 * star S_L + S_R * 1 * star S_R
+        = S_L * star S_L + S_R * star S_R := by
+            simp
+    _ = 1 := h_partition
+
+/--
+The fixed unit is therefore an idempotent fixed point of the transition.
+-/
+theorem UHF_transition_one_is_projection {A : Type*} [Ring A] [StarRing A]
+    (S_L S_R : A)
+    (h_partition : S_L * star S_L + S_R * star S_R = 1) :
+    UHF_transition S_L S_R (1 : A) * UHF_transition S_L S_R (1 : A) =
+      UHF_transition S_L S_R (1 : A) := by
+  rw [UHF_transition_one_eq_one S_L S_R h_partition]
+  simp
 
 end InfoGeometry.Canonical.UHFCohomology

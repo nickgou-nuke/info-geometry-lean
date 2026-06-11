@@ -52,7 +52,7 @@ variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Pointwise derivative law tying `W` to spinorial dissipation. -/
-def satisfies_spinorial_dissipation_True
+def satisfiesSpinorialDissipation
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ) : Prop :=
   ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s
 
@@ -61,17 +61,17 @@ Special constant-tracking regime used by the imported Perelman-style derivative
 identity: normalized scalar Kähler-Ricci flow with `W` governed by spinorial
 Dissipation and the flow frozen to the spinorial scalar curvature.
 -/
-def satisfies_normalized_constant_spinorial_tracking_True
+def satisfiesNormalizedConstantSpinorialTracking
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ) : Prop :=
-  satisfies_spinorial_dissipation_True flow IST W ∧
+  satisfiesSpinorialDissipation flow IST W ∧
     SatisfiesNormalizedKaehlerRicciFlow (E := E) flow ∧
     (∀ t : ℝ, flow t = spinorialScalarCurvature IST)
 
 /-- Monotonicity of `W` in the normalized constant spinorial tracking regime. -/
-theorem w_monotone_of_normalized_constant_spinorial_tracking_True
+theorem w_monotone_of_normalized_constant_spinorial_tracking
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
-    (hLaw : satisfies_normalized_constant_spinorial_tracking_True flow IST W) :
+    (hLaw : satisfiesNormalizedConstantSpinorialTracking flow IST W) :
     Monotone W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
   apply monotone_of_deriv_nonneg hDiff
@@ -88,7 +88,7 @@ theorem w_monotone_of_spinorial_dissipation_lower_bound
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ)
     (J : JordanKKTData E) (x y : E)
     (hDiff : Differentiable ℝ W)
-    (hLaw : satisfies_spinorial_dissipation_True flow IST W)
+    (hLaw : satisfiesSpinorialDissipation flow IST W)
     (hLower : ∀ s : ℝ, J.DBregman x y ≤ spinorialWDissipation flow IST s) :
     Monotone W := by
   apply monotone_of_deriv_nonneg hDiff
@@ -97,9 +97,9 @@ theorem w_monotone_of_spinorial_dissipation_lower_bound
   exact le_trans (J.DBregman_nonneg x y) (hLower s)
 
 /-- Strict monotonicity in the normalized constant spinorial tracking regime. -/
-theorem w_strict_mono_of_normalized_constant_spinorial_tracking_True
+theorem w_strict_mono_of_normalized_constant_spinorial_tracking
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ)
-    (hLaw : satisfies_normalized_constant_spinorial_tracking_True flow IST W)
+    (hLaw : satisfiesNormalizedConstantSpinorialTracking flow IST W)
     (hSpin : spinorialScalarCurvature IST ≠ 0) :
     StrictMono W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
@@ -139,7 +139,7 @@ theorem gravity_from_rn_entropy_of_unitRelativeVolumeBit
     have hSource' :
         mongeAmpereDensity Kgeo.H x' = relativeVolumeChangeRN n M := by
       simpa using hSource x'
-    exact hSource'.trans bit.unit_relative_volume
+    exact hSource'.trans bit
   refine ⟨?_, ?_⟩
   · exact isRicciFlat_of_unitRelativeVolume
       (R := R) (K := Kgeo) (x := x) hUnitState hBridge

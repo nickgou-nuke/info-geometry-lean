@@ -15,19 +15,13 @@ Functorial scalar readout package from the operator owner layer.
 These are representation maps from the noncommutative obstruction operator into
 scalar image lanes (`‖·‖₊` and derived scalars), not independent sources.
 -/
-@[rep_depth thermo] structure ObstructionScalarReadout : Prop where
-  projectorObstruction_nnnorm_eq_obstructionScale :
-    ‖CI.projectorObstruction‖₊ = CI.obstructionScale
-  obstructionScale_eq_projectorObstruction_nnnorm :
-    CI.obstructionScale = ‖CI.projectorObstruction‖₊
-  chiralScale_eq_obstructionScale :
-    CI.chiralScale = CI.obstructionScale
-  epsilon_eq_obstructionScale :
-    CI.epsilon = CI.obstructionScale
-  unitOfAction_eq_obstructionScale :
-    CI.unitOfAction = CI.obstructionScale
-  unitOfAction_eq_projectorObstruction_nnnorm :
-    CI.unitOfAction = ‖CI.projectorObstruction‖₊
+@[rep_depth thermo] def ObstructionScalarReadout : Prop :=
+  ‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧
+  CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧
+  CI.chiralScale = CI.obstructionScale ∧
+  CI.epsilon = CI.obstructionScale ∧
+  CI.unitOfAction = CI.obstructionScale ∧
+  CI.unitOfAction = ‖CI.projectorObstruction‖₊
 
 section
 

@@ -54,7 +54,7 @@ theorem compactifiedOperator_coneVector
   exact
     C.compactifiedOperator_preserves_cone
       (C.standardForm.coneVector ω)
-      (C.standardForm.coneVector_mem ω hω)
+      (NaturalConeStandardFormInterface.coneVector_mem_of_normal C.standardForm ω hω)
 
 /--
 The Tomita reflection still fixes the cone-vector representative.
@@ -64,7 +64,7 @@ theorem J_fixes_coneVector
     (ω : NormalPositive)
     (hω : C.standardForm.isNormalPositive ω) :
     C.standardForm.J (C.standardForm.coneVector ω) = C.standardForm.coneVector ω :=
-  C.standardForm.J_fixes_coneVector ω hω
+  NaturalConeStandardFormInterface.J_fixes_coneVector C.standardForm ω hω
 
 end CompactifiedThermalConeCarrier
 

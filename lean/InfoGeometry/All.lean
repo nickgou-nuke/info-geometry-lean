@@ -125,6 +125,7 @@ import InfoGeometry.GrandUnification.CelikErlangenBraidBridge
 import InfoGeometry.GrandUnification.ProjectiveCharacterGWBridge
 import InfoGeometry.GrandUnification.SpectralThermalNormalization
 import InfoGeometry.GrandUnification.VirasoroDrazinWittenUnification
+import InfoGeometry.GrandUnification.AnnihilationAnalyticBridge
 import InfoGeometry.Holography.All
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.GromovHomologicalProbabilityRoadmap
@@ -357,7 +358,6 @@ import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.SYKKitaevGuardrails
 import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.Canonical.SandboxVerification
-import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.GeometricRotor

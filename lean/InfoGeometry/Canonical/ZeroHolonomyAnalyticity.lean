@@ -103,6 +103,90 @@ def zeroRectangularHolonomyOn_to_cauchyAnalyticAt
   analyticAtToCauchyAnalyticAt
     (zeroRectangularHolonomyOn_to_analyticAt hU hz hZero hCont)
 
+/-! ## Primitive/exactness route -/
+
+/--
+Primitive exactness (`f` has a local primitive on `U`) implies complex
+differentiability on the open set.
+-/
+theorem differentiableOn_of_isExactOn
+    {U : Set ℂ} {f : ℂ → ℂ}
+    (hU : IsOpen U) (hExact : IsExactOn f U) :
+    DifferentiableOn ℂ f U :=
+  hExact.differentiableOn hU
+
+/--
+Primitive exactness on an open set implies Mathlib `AnalyticAt` at each point
+of that set.
+-/
+theorem isExactOn_to_analyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    AnalyticAt ℂ f z :=
+  (differentiableOn_of_isExactOn hU hExact).analyticAt (hU.mem_nhds hz)
+
+/--
+Primitive exactness on an open set lands in the repo Cauchy/Hestenes pointwise
+analyticity structure.
+-/
+def isExactOn_to_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  analyticAtToCauchyAnalyticAt (isExactOn_to_analyticAt hU hz hExact)
+
+/-- Primitive exactness implies Mathlib conservativity on the same open set. -/
+theorem isConservativeOn_of_isExactOn
+    {U : Set ℂ} {f : ℂ → ℂ}
+    (hU : IsOpen U) (hExact : IsExactOn f U) :
+    IsConservativeOn f U :=
+  (differentiableOn_of_isExactOn hU hExact).isConservativeOn
+
+/-- Primitive exactness implies zero rectangular holonomy. -/
+theorem zeroRectangularHolonomyOn_of_isExactOn
+    {U : Set ℂ} {f : ℂ → ℂ}
+    (hU : IsOpen U) (hExact : IsExactOn f U) :
+    ZeroRectangularHolonomyOn f U :=
+  zeroRectangularHolonomyOn_of_isConservativeOn
+    (isConservativeOn_of_isExactOn hU hExact)
+
+/--
+Primitive exactness is a sufficient zero-holonomy analyticity certificate.
+-/
+def primitiveExactness_to_zeroHolonomy_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    ZeroRectangularHolonomyOn f U ∧
+      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :=
+  ⟨zeroRectangularHolonomyOn_of_isExactOn hU hExact,
+    ⟨isExactOn_to_cauchyAnalyticAt hU hz hExact⟩⟩
+
+/--
+Primitive exactness on an open set also transports to the doubled/clock-axis
+pointwise analyticity structure.
+-/
+def isExactOn_to_doubled_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+      (lifted f) (complexToDoubled z) :=
+  analyticAt_liftedToDoubled_cauchyAnalyticAt
+    (isExactOn_to_analyticAt hU hz hExact)
+
+/--
+Primitive exactness is also a sufficient doubled-space zero-holonomy
+analyticity certificate.
+-/
+def primitiveExactness_to_zeroHolonomy_doubled_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} {z : ℂ}
+    (hU : IsOpen U) (hz : z ∈ U) (hExact : IsExactOn f U) :
+    ZeroRectangularHolonomyOn f U ∧
+      Nonempty
+        (CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+          (lifted f) (complexToDoubled z)) :=
+  ⟨zeroRectangularHolonomyOn_of_isExactOn hU hExact,
+    ⟨isExactOn_to_doubled_cauchyAnalyticAt hU hz hExact⟩⟩
+
 /--
 Linear infinitesimal holomorphic generators commute with the complex phase axis.
 

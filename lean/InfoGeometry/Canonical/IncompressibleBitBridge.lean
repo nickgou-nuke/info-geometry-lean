@@ -41,8 +41,8 @@ It is the proof-carrying unit `relativeVolumeChangeRN = 1`, not a finite
 cardinality bit and not a scalar replacement for the operatorial anomaly.
 -/
 @[rep_depth operator]
-structure UnitRelativeVolumeBit (n : Nat) (M : SinkhornMatrix n) : Prop where
-  unit_relative_volume : relativeVolumeChangeRN n M = 1
+def UnitRelativeVolumeBit (n : Nat) (M : SinkhornMatrix n) : Prop :=
+  relativeVolumeChangeRN n M = 1
 
 /-- Constructor from the existing RN unit-relative-volume equality. -/
 @[rep_depth projective]
@@ -50,7 +50,7 @@ theorem unitRelativeVolumeBit_of_eq_one
     {n : Nat} {M : SinkhornMatrix n}
     (hUnit : relativeVolumeChangeRN n M = 1) :
     UnitRelativeVolumeBit n M :=
-  ⟨hUnit⟩
+  hUnit
 
 /--
 The proof-carrying unit-relative-volume bit is exactly the constructive form of
@@ -61,7 +61,7 @@ bit packet and recover the old equality only at compatibility boundaries.
 theorem unitRelativeVolumeBit_iff_eq_one
     {n : Nat} {M : SinkhornMatrix n} :
     UnitRelativeVolumeBit n M ↔ relativeVolumeChangeRN n M = 1 :=
-  ⟨fun bit => bit.unit_relative_volume, unitRelativeVolumeBit_of_eq_one⟩
+  ⟨fun bit => bit, unitRelativeVolumeBit_of_eq_one⟩
 
 /--
 Recover the raw unit-volume equality from the constructive bit packet.
@@ -192,8 +192,8 @@ This records the owner assumption `IncompressibleMongeAmpere H`; the determinant
 and log-volume conclusions are derived by `MongeAmpereCramerRao`.
 -/
 @[rep_depth operator]
-structure IncompressibleCramerRaoBit (H : HessianGeometry E) : Prop where
-  incompressible : IncompressibleMongeAmpere H
+def IncompressibleCramerRaoBit (H : HessianGeometry E) : Prop :=
+  IncompressibleMongeAmpere H
 
 /--
 Operatorial owner surface for the Cramer-Rao metric at a point.
@@ -245,7 +245,7 @@ theorem incompressibleCramerRaoBit_of_incompressible
     {H : HessianGeometry E}
     (hIncomp : IncompressibleMongeAmpere H) :
     IncompressibleCramerRaoBit H :=
-  ⟨hIncomp⟩
+  hIncomp
 
 /--
 The Cramer-Rao incompressible bit has determinant magnitude one at each point
@@ -259,7 +259,7 @@ theorem absDet_cramerRaoMetric_eq_one_of_incompressibleBit
     (hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
     |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
   exact absDet_cramerRaoMetric_eq_one_of_incompressible
-    (H := H) bit.incompressible x hdet
+    (H := H) bit x hdet
 
 /--
 The Cramer-Rao incompressible bit has zero logarithmic volume mode.
@@ -271,7 +271,7 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
   exact logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
-    (H := H) bit.incompressible x
+    (H := H) bit x
 
 /--
 Operator-first corollary: incompressibility forces zero Cramer-Rao

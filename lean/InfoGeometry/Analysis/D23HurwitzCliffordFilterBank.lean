@@ -28,13 +28,7 @@ open InfoGeometry.Quantum.Hurwitz
 @[rep_depth operator]
 def hurwitzQuaternionCoefficientModel : CliffordCoefficientModel where
   Coeff := HurwitzNode
-  zero := 0
-  one := 1
-  add := fun a b => a + b
-  mul := fun a b => a * b
-  conj := fun q => star q
   normSq := fun q => Quaternion.normSq q
-  clifford_or_quaternion_structure := Nonempty HurwitzNode
 
 /-- Hurwitz lattice model used by the D23 discrete filter bank. -/
 @[rep_depth operator]
@@ -79,24 +73,18 @@ def d23HurwitzCliffordFilterBank : ParaunitaryCliffordFilterBank where
 /-- The D23 packet is paraunitary by construction of the owner surface. -/
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_paraunitary :
-    d23HurwitzCliffordFilterBank.paraunitary := by
+    paraunitary d23HurwitzCliffordFilterBank := by
+  dsimp [paraunitary, d23HurwitzCliffordFilterBank,
+    hurwitzQuaternionCoefficientModel, d23FilterIndex]
   constructor
   · intro i
-    fin_cases i
-    · unfold hurwitzQuaternionCoefficientModel
-      dsimp
-      simp [node_normSq]
-    · unfold hurwitzQuaternionCoefficientModel
-      dsimp
-      simp [node_normSq]
+    fin_cases i <;> simp [node_normSq]
   · intro i
     fin_cases i
-    · unfold hurwitzQuaternionCoefficientModel
-      dsimp
-      simp [node_normSq]
-    · unfold hurwitzQuaternionCoefficientModel
-      dsimp
-      simp [node_normSq, div_pow]
+    · simp [node_normSq]
+    · simp [node_normSq]
+      field_simp [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
+      rw [Real.sq_sqrt (by positivity : 0 ≤ (2 : ℝ))]
 
 /-- The D23 low-pass coefficient has normalized Hurwitz norm-square `1/2`. -/
 @[rep_depth operator]
@@ -118,7 +106,8 @@ theorem d23_highPass_normSq (i : Fin 2) :
 @[rep_depth operator]
 theorem d23HurwitzCliffordFilterBank_sum_normSq_eq_one :
     d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
-  d23HurwitzCliffordFilterBank.sum_normSq_eq_one_of_paraunitary
+  sum_normSq_eq_one_of_paraunitary
+    d23HurwitzCliffordFilterBank
     d23HurwitzCliffordFilterBank_paraunitary
 
 /--

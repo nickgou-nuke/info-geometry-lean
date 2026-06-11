@@ -165,7 +165,6 @@ import InfoGeometry.Canonical.FiveGradedTwistorIncidence
 import InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.BregmanTriality
-import InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
 import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 import InfoGeometry.Canonical.CalabiYauMetricRicci
@@ -960,7 +959,6 @@ import InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
 import InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
 import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
-import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SpectralGeneratorProxy
 import InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
 import InfoGeometry.Canonical.SpectralInference

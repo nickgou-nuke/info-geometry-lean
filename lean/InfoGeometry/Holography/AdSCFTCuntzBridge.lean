@@ -46,7 +46,10 @@ theorem information_preservation (X : A) :
   calc
     (event_horizon (A := A) * star (event_horizon (A := A)) +
      star (event_horizon (A := A)) * event_horizon (A := A)) * X
-      = 1 * X := by rw [UHF_Laplacian_eq_one]
+      = (UHF_boundary (A := A) * star (UHF_boundary (A := A)) +
+         star (UHF_boundary (A := A)) * UHF_boundary (A := A)) * X := rfl
+    _ = UHF_Laplacian (A := A) * X := rfl
+    _ = 1 * X := by rw [UHF_Laplacian_eq_one]
     _ = X := by simp
 
 end InfoGeometry.Holography.AdSCFT

@@ -359,7 +359,6 @@ import InfoGeometry.Canonical.QVandermondePhaseLockShadow
 import InfoGeometry.Canonical.SYKKitaevGuardrails
 import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.Canonical.SandboxVerification
-import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SouriauCasimirInvariant
 import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.GeometricRotor

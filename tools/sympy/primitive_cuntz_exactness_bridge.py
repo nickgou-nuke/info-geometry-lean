@@ -58,6 +58,7 @@ def reduce_cuntz(
         (PL + PR, I),
         (I * X, X),
         (X * I, X),
+        (SL * SLs * X + SR * SRs * X, X),
     ]
     if use_orthogonality:
         rules.extend([

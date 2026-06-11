@@ -135,7 +135,8 @@ private theorem jacobi_even_basis
       Set OSp12)) :
     ∀ (y z : OSp12),
       bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z) := by
-  rcases hx with rfl | rfl | rfl <;>
+  rcases hx with rfl | rfl | rfl
+  all_goals
     let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
     have hspan : Submodule.span ℝ S = ⊤ := by
       simpa [S] using (Pi.basisFun ℝ B).span_eq
@@ -823,7 +824,74 @@ instance : SuperLieRing OSp12 where
             ext k
             simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
   jacobi_even := by
-    sorry
+    have heven :
+        ({fun x =>
+            match x with
+            | H => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Ep => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Em => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          left
+          ext x <;> cases x <;> simp
+        · right
+          right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inr ?_
+          ext x <;> cases x <;> simp
+    intro x y z hx
+    rw [evenPart, heven] at hx
+    induction hx using Submodule.span_induction with
+    | mem x hxgen =>
+        rcases hxgen with rfl | rfl | rfl
+        · exact jacobi_even_basis (Pi.single B.H (1 : ℝ)) (Or.inl rfl) y z
+        · exact jacobi_even_basis (Pi.single B.Ep (1 : ℝ)) (Or.inr <| Or.inl rfl) y z
+        · exact jacobi_even_basis (Pi.single B.Em (1 : ℝ)) (Or.inr <| Or.inr rfl) y z
+    | zero =>
+        ext k <;>
+          simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+            smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | add a b ha hb haP hbP =>
+        calc
+          bracket (a + b) (bracket y z)
+              = bracket a (bracket y z) + bracket b (bracket y z) := by
+                  rw [SuperBracket.add_lie_left]
+          _ = (bracket (bracket a y) z + bracket y (bracket a z)) +
+                (bracket (bracket b y) z + bracket y (bracket b z)) := by
+                rw [haP, hbP]
+          _ = bracket (bracket (a + b) y) z + bracket y (bracket (a + b) z) := by
+                simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                  add_assoc]
+    | smul r a ha haP =>
+        calc
+          bracket (r • a) (bracket y z) = r • bracket a (bracket y z) := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = r • (bracket (bracket a y) z + bracket y (bracket a z)) := by
+                rw [haP]
+          _ = bracket (bracket (r • a) y) z + bracket y (bracket (r • a) z) := by
+                simp [bracket, SuperBracket.add_lie_left, SuperBracket.lie_add, Finset.mul_sum,
+                  smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, add_comm, add_left_comm,
+                  add_assoc]
   jacobi_odd_odd := by
     sorry
 

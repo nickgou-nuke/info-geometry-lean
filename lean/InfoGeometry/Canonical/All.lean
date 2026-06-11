@@ -1123,6 +1123,7 @@ import InfoGeometry.Arithmetic.WittenParityIndex
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
+import InfoGeometry.Canonical.KashiwaraCuntzCohomology
 import InfoGeometry.Canonical.BostConnesSuperalgebra
 import InfoGeometry.Canonical.EvansHarmonicTrap
 import InfoGeometry.Canonical.PrimonGasGUE

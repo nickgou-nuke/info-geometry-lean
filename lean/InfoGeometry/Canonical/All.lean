@@ -7,10 +7,18 @@ import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 import InfoGeometry.Canonical.O55LightConeSpectrumBridge
 import InfoGeometry.Canonical.OctonionCondensate
 import InfoGeometry.Canonical.SouriauBostConnesTransition
-import InfoGeometry.Canonical.QuaternionEmbedding
+import InfoGeometry.Canonical.CartanInvolution
 import InfoGeometry.Canonical.BiquaternionSU2
 import InfoGeometry.Canonical.BiquaternionTorsionBridge
+import InfoGeometry.Canonical.BiQuaternionKahlerFinite
+import InfoGeometry.Canonical.BiQuaternionKahlerLegendreFinite
+import InfoGeometry.Canonical.BiQuaternionKahlerSymplecticNoetherBridge
+import InfoGeometry.Canonical.HodgeStar4DFinite
+import InfoGeometry.Canonical.DiscreteStokesFinite
 import InfoGeometry.Canonical.EmergentGravityActionVariation
+import InfoGeometry.Canonical.EmergentEinsteinCartanAction
+import InfoGeometry.Canonical.EmergentEinsteinCartanSpinCoupling
+import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
@@ -323,6 +331,10 @@ import InfoGeometry.Canonical.TorsionStructure
 import InfoGeometry.Canonical.EmergentGravity
 import InfoGeometry.Canonical.StressEnergyTensor
 import InfoGeometry.Canonical.QuaternionCondensate
+import InfoGeometry.Canonical.QuaternionicElectromagnetism
+import InfoGeometry.Canonical.EmergentSpinorElectromagnetism
+import InfoGeometry.Canonical.EmergentNonAbelianGauge
+import InfoGeometry.Canonical.QuaternionGeometry
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate

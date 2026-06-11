@@ -46,4 +46,33 @@ variable (Weyl_dim : WeylCharacterBoundary StateSpace)
 def BekensteinHawkingWeylEquivalence : Prop :=
   Real.sqrt (J4_inv.J4 Q) * Real.pi = Weyl_dim.dim_ch S
 
+/-- The STU model supergravity sector, an [SL(2,R)]^3 subgroup of E_7(7). -/
+structure STUCharges where
+  p0 : ℝ
+  p1 : ℝ
+  p2 : ℝ
+  p3 : ℝ
+  q0 : ℝ
+  q1 : ℝ
+  q2 : ℝ
+  q3 : ℝ
+
+/-- The explicit Freudenthal quartic invariant for the STU model 
+    (Cayley's Hyperdeterminant of 2x2x2 hypermatrix). -/
+def J4_STU (c : STUCharges) : ℝ :=
+  - (c.p0 * c.q0 + c.p1 * c.q1 + c.p2 * c.q2 + c.p3 * c.q3)^2
+  + 4 * (c.p0 * c.q1 * c.q2 * c.q3 - c.q0 * c.p1 * c.p2 * c.p3)
+  + 4 * (c.p1 * c.q1 * c.p2 * c.q2 + c.p1 * c.q1 * c.p3 * c.q3 + c.p2 * c.q2 * c.p3 * c.q3)
+  + 4 * c.p0 * c.q0 * (c.p1 * c.q1 + c.p2 * c.q2 + c.p3 * c.q3)
+
+/-- THEOREM: D0-D4-D4-D4 Black Hole Entropy
+    For a generic non-zero BPS state characterized by a central D0 charge 
+    and three wrapping D4 charges (p0=0, q1=0, q2=0, q3=0), the 
+    Freudenthal quartic invariant collapses exactly into the topological string volume. -/
+theorem D0_D4_D4_D4_entropy (c : STUCharges) (h_p0 : c.p0 = 0) (h_q1 : c.q1 = 0) (h_q2 : c.q2 = 0) (h_q3 : c.q3 = 0) :
+    J4_STU c = -4 * c.q0 * c.p1 * c.p2 * c.p3 := by
+  dsimp [J4_STU]
+  rw [h_p0, h_q1, h_q2, h_q3]
+  ring
+
 end InfoGeometry.Canonical.E7

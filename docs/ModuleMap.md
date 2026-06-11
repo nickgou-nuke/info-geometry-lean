@@ -100,6 +100,8 @@ For the finite Haug-Mani real doubled bridge API, see
 [haug-mani-yin-yang-bridge-api.md](haug-mani-yin-yang-bridge-api.md).
 For the finite quaternion condensate API, see
 [quaternion-condensate-api.md](quaternion-condensate-api.md).
+For the finite quaternion embedding API, see
+[quaternion-embedding-api.md](quaternion-embedding-api.md).
 For the finite split-octonion/Zorn trace API, see
 [octonion-condensate-api.md](octonion-condensate-api.md).
 For the finite biquaternion `SU(2)` commutator API, see

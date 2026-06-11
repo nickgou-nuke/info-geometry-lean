@@ -1,75 +1,95 @@
 import Mathlib
 
-set_option linter.unusedSectionVars false
-
 /-!
 # The Celik-Erlangen Braid Bridge
 
-This module formalizes the topology of the complex plane not as a flat sheet,
-but as a Base Space equipped with a Fiber Bundle of braids extending from each point.
-The Holonomy of these braids around prime punctures is defined by the Braid Group B_3.
+This module gives a finite permutation model for the three sector labels used by
+the tripotent/Hodge dictionary.
 
-The three strands correspond exactly to the three sectors of the O^3 = O Trifactor:
-  Strand 1: P_zero (Harmonic, Critical Line)
-  Strand 2: P_plus (Exact, Right Bulk)
-  Strand 3: P_minus (Co-exact, Left Bulk)
+The three coordinates are read as:
+* coordinate 1: `P_zero`  (harmonic label);
+* coordinate 2: `P_plus`  (exact label);
+* coordinate 3: `P_minus` (coexact label).
+
+The generators below are the adjacent transpositions.  They satisfy the
+Yang-Baxter / Artin relation in the symmetric-group quotient of `B₃`, together
+with the extra involutive relations `σᵢ² = 1`.
+
+No theorem here asserts full braid-group holonomy, a punctured-plane
+fundamental group action, Berry curvature, Reidemeister invariance, KMS/CFT
+physics, or zeta-zero consequences.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+`sigma1_squared`, `sigma2_squared`, `yang_baxter_braid_relation`,
+`spectral_parameter_antisymmetric`, `spectral_cpt_symmetry`, and
+`spectral_triangle_identity`.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+None.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+Any upgrade from this finite `S₃` permutation quotient to genuine topological
+braid holonomy, punctured-plane monodromy, Berry curvature, or analytic zeta
+geometry.
 -/
 
-namespace InfoGeometry.GrandUnification.BraidBridge
+namespace InfoGeometry.GrandUnification.CelikErlangenBraidBridge
 
-variable {H : Type*} [AddCommGroup H]
+universe u
 
-/-- Braid operator σ₁: twists the Harmonic (P_0) and Exact (P_+) sheets -/
-def sigma1 (v : H × H × H) : H × H × H :=
+/-- Three sheet labels over one base point: harmonic, exact, coexact. -/
+abbrev FiberState (H : Type u) : Type u :=
+  H × H × H
+
+variable {H : Type u}
+
+/-- Adjacent transposition `σ₁`: swap the harmonic and exact coordinates. -/
+def sigma1 (v : FiberState H) : FiberState H :=
   (v.2.1, v.1, v.2.2)
 
-/-- Braid operator σ₂: twists the Exact (P_+) and Co-exact (P_-) sheets -/
-def sigma2 (v : H × H × H) : H × H × H :=
+/-- Adjacent transposition `σ₂`: swap the exact and coexact coordinates. -/
+def sigma2 (v : FiberState H) : FiberState H :=
   (v.1, v.2.2, v.2.1)
 
-/-- σ₁ is an involution in the un-knotted limit (symmetric group S_3 representation) -/
-theorem sigma1_squared (v : H × H × H) :
+/-- `σ₁` is involutive in the finite symmetric-group quotient. -/
+theorem sigma1_squared (v : FiberState H) :
     sigma1 (sigma1 v) = v := by
   rfl
 
-/-- σ₂ is an involution in the un-knotted limit -/
-theorem sigma2_squared (v : H × H × H) :
+/-- `σ₂` is involutive in the finite symmetric-group quotient. -/
+theorem sigma2_squared (v : FiberState H) :
     sigma2 (sigma2 v) = v := by
   rfl
 
-/-- **Theorem: The Yang-Baxter / Artin Braid Relation**
-The topological braiding of the three Trifactor sheets satisfies the fundamental
-Braid Group relation σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂. 
-This proves that the Holonomy of the vacuum coordinates is well-defined and invariant
-under topological Reidemeister moves. -/
-theorem yang_baxter_braid_relation (v : H × H × H) :
+/-- The adjacent transpositions satisfy the Yang-Baxter / Artin relation. -/
+theorem yang_baxter_braid_relation (v : FiberState H) :
     sigma1 (sigma2 (sigma1 v)) = sigma2 (sigma1 (sigma2 v)) := by
   rfl
 
-/-! ### Spectral Holonomy and Berry Phase -/
+/-! ### Finite signed phase readout -/
 
-/-- The spectral parameter tracking the topological phase (winding number) of the braid. -/
+/-- Signed difference used as a finite phase/readout parameter. -/
 def spectral_parameter (a b : ℝ) : ℝ := a - b
 
-/-- The CPT modular conjugation inverts the scale -/
+/-- Scale inversion used by the finite readout. -/
 def cpt_invert_scale (a : ℝ) : ℝ := -a
 
-/-- The spectral parameter is antisymmetric, generating a Berry phase under exchange -/
+/-- The signed readout is antisymmetric under exchange. -/
 theorem spectral_parameter_antisymmetric (u v : ℝ) :
     spectral_parameter u v + spectral_parameter v u = 0 := by
   unfold spectral_parameter
   ring
 
-/-- The spectral parameter respects the CPT modular inversion -/
+/-- The signed readout changes sign under simultaneous scale inversion. -/
 theorem spectral_cpt_symmetry (u v : ℝ) :
     spectral_parameter (cpt_invert_scale u) (cpt_invert_scale v) + spectral_parameter u v = 0 := by
   unfold spectral_parameter cpt_invert_scale
   ring
 
-/-- The spectral phase vanishes over closed, unpunctured contractible loops (triangle identity) -/
+/-- Additivity of signed differences around a finite triangle. -/
 theorem spectral_triangle_identity (u v w : ℝ) :
     spectral_parameter u w - spectral_parameter u v - spectral_parameter v w = 0 := by
   unfold spectral_parameter
   ring
 
-end InfoGeometry.GrandUnification.BraidBridge
+end InfoGeometry.GrandUnification.CelikErlangenBraidBridge

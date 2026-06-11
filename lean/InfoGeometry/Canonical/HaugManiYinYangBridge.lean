@@ -29,6 +29,8 @@ namespace InfoGeometry.Canonical.HaugManiYinYangBridge
 
 open InfoGeometry.Krein.TomitaMatrixAtom
 
+set_option linter.unnecessarySeqFocus false
+
 /-- Concrete real `2 × 2` carrier for the doubled sign/phase atom. -/
 abbrev RealDoubledMatrix := M2R
 
@@ -142,9 +144,7 @@ theorem mixedSector_conj_realDoubledScalar
       realDoubledScalar a (-b) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [realDoubledScalar, phaseAxis, mixedSector, J, eps,
-      Matrix.mul_apply, Matrix.vecMul, Matrix.vecHead, Matrix.vecTail,
-      Matrix.vecCons, Fin.sum_univ_two] <;>
-    ring_nf
+      Matrix.mul_apply, Matrix.vecCons, Fin.sum_univ_two]
 
 @[simp]
 theorem realDoubledScalar_apply_zero_zero (a b : ℝ) :

@@ -1,41 +1,68 @@
-import sympy as sp
+#!/usr/bin/env python3
+"""Finite witness for the Evans-style harmonic trap transition table.
 
-print("==========================================================")
-print(" EVANS 1D LATTICE MODEL & THE HARMONIC TRAP WITNESS")
-print("==========================================================")
+The Lean owner is `InfoGeometry.Canonical.EvansHarmonicTrap`.
 
-# State space
-# + : Holomorphic/Exact (Charge +1)
-# - : Anti-Holomorphic/Co-exact (Charge -1)
-# 0 : Harmonic/Zero-Mode (Charge 0)
+This script checks only the finite deterministic local rules:
+    +0 -> 0+
+    0- -> -0
+    +- -> -+
+and verifies that the three-site trap `(-, 0, +)` is fixed under left and
+right adjacent-pair updates.
 
-# Define transitions on adjacent sites (L, R) -> (L', R')
-def transition(L, R):
-    if L == '+' and R == '0': return ('0', '+')
-    if L == '0' and R == '-': return ('-', '0')
-    if L == '+' and R == '-': return ('-', '+')
-    return (L, R) # No transition
+No thermodynamic limit, KMS/BEC statement, zeta theorem, or RH consequence is
+claimed here.
+"""
 
-print("[1] Verifying basic transitions...")
-assert transition('+', '0') == ('0', '+')
-assert transition('0', '-') == ('-', '0')
-assert transition('+', '-') == ('-', '+')
-print("    Basic exact/co-exact currents flow properly.")
+from __future__ import annotations
 
-print("\n[2] Verifying the Harmonic Trap (Block of Holes)...")
-# Configuration: (-, 0, +)
-# Left pair: (-, 0)
-# Right pair: (0, +)
 
-left_pair = transition('-', '0')
-right_pair = transition('0', '+')
+EXACT = "+"
+COEXACT = "-"
+HARMONIC = "0"
 
-print(f"    Left Pair (-, 0) evolves to: {left_pair}")
-print(f"    Right Pair (0, +) evolves to: {right_pair}")
 
-assert left_pair == ('-', '0')
-assert right_pair == ('0', '+')
+def transition(left: str, right: str) -> tuple[str, str]:
+    if (left, right) == (EXACT, HARMONIC):
+        return (HARMONIC, EXACT)
+    if (left, right) == (HARMONIC, COEXACT):
+        return (COEXACT, HARMONIC)
+    if (left, right) == (EXACT, COEXACT):
+        return (COEXACT, EXACT)
+    return (left, right)
 
-print("\n=> SUCCESS: The configuration (-, 0, +) is strictly invariant.")
-print("=> The Harmonic Zero-Mode completely blocks the crossing of exact and co-exact currents.")
-print("=> This is the precise non-equilibrium mechanism protecting the Riemann Zeros!")
+
+def update_left(triple: tuple[str, str, str]) -> tuple[str, str, str]:
+    left, center, right = triple
+    new_left, new_center = transition(left, center)
+    return (new_left, new_center, right)
+
+
+def update_right(triple: tuple[str, str, str]) -> tuple[str, str, str]:
+    left, center, right = triple
+    new_center, new_right = transition(center, right)
+    return (left, new_center, new_right)
+
+
+def main() -> None:
+    print("=== EVANS 1D LATTICE HARMONIC TRAP WITNESS ===")
+
+    assert transition(EXACT, HARMONIC) == (HARMONIC, EXACT)
+    assert transition(HARMONIC, COEXACT) == (COEXACT, HARMONIC)
+    assert transition(EXACT, COEXACT) == (COEXACT, EXACT)
+    print("[1] active local transition rules verified")
+
+    assert transition(COEXACT, HARMONIC) == (COEXACT, HARMONIC)
+    assert transition(HARMONIC, EXACT) == (HARMONIC, EXACT)
+    print("[2] trap boundary pairs are fixed")
+
+    trap = (COEXACT, HARMONIC, EXACT)
+    assert update_left(trap) == trap
+    assert update_right(trap) == trap
+    print("[3] three-site harmonic trap is pairwise invariant")
+
+    print("=== SUCCESS: FINITE HARMONIC TRAP TABLE VERIFIED ===")
+
+
+if __name__ == "__main__":
+    main()

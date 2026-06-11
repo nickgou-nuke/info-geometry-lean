@@ -339,4 +339,196 @@ def RamanujanLambertTransform
     (oddZetaReadout lambertSeriesSide bernoulliCorrectionSide : ℕ → ℂ) : Prop :=
   ∀ m, oddZetaReadout m = lambertSeriesSide m + bernoulliCorrectionSide m
 
+/-! ## The finite `n = 1` Bernoulli defect / Apéry layer -/
+
+/-- Finite Bernoulli polynomial side in Ramanujan's odd-zeta transformation. -/
+def ramanujanBernoulliSide (B : ℕ → ℝ) (n : ℕ) (alpha beta : ℝ) : ℝ :=
+  (2 : ℝ) ^ (2 * n) *
+    ((Finset.range (n + 2)).sum fun k =>
+      ((-1 : ℝ) ^ (k + 1)) *
+        B (2 * k) / (Nat.factorial (2 * k) : ℝ) *
+        B (2 * n + 2 - 2 * k) / (Nat.factorial (2 * n + 2 - 2 * k) : ℝ) *
+        alpha ^ (n + 1 - k) * beta ^ k)
+
+/-- The only Bernoulli values needed for the `ζ(3)` / Apéry layer. -/
+def aperyBernoulliReadout (m : ℕ) : ℝ :=
+  if m = 0 then 1
+  else if m = 2 then (1 / 6 : ℝ)
+  else if m = 4 then (-1 / 30 : ℝ)
+  else 0
+
+/--
+The finite Bernoulli defect for the `n = 1` Ramanujan layer reduces to a
+closed quadratic polynomial.
+
+This is the theorem-safe part of the `ζ(3)` specialization; it does not prove
+the infinite Lambert-series identity.
+-/
+theorem ramanujanBernoulliSide_apery_n1_explicit (alpha beta : ℝ) :
+    ramanujanBernoulliSide aperyBernoulliReadout 1 alpha beta =
+      alpha ^ 2 / 180 + alpha * beta / 36 + beta ^ 2 / 180 := by
+  norm_num [ramanujanBernoulliSide, aperyBernoulliReadout, Finset.sum_range_succ]
+  ring_nf
+
+/--
+Under the modular mirror condition `αβ = π²`, the same finite `ζ(3)` defect is
+the sum of the two endpoint quadratic fluxes plus the central `π²/36` term.
+-/
+theorem ramanujanBernoulliSide_apery_n1_of_alpha_beta_eq_pi_sq
+    {alpha beta : ℝ} (hαβ : alpha * beta = Real.pi ^ 2) :
+    ramanujanBernoulliSide aperyBernoulliReadout 1 alpha beta =
+      alpha ^ 2 / 180 + Real.pi ^ 2 / 36 + beta ^ 2 / 180 := by
+  rw [ramanujanBernoulliSide_apery_n1_explicit, hαβ]
+
+/-- The `ζ(3)` finite defect in the S-dual parameterization `α = πτ`, `β = π/τ`. -/
+def aperyBernoulliDefectTau (tau : ℝ) : ℝ :=
+  ramanujanBernoulliSide aperyBernoulliReadout 1 (Real.pi * tau) (Real.pi / tau)
+
+/-- Explicit `τ`-coordinate form of the finite `ζ(3)` Bernoulli defect. -/
+theorem aperyBernoulliDefectTau_explicit {tau : ℝ} (hτ : tau ≠ 0) :
+    aperyBernoulliDefectTau tau =
+      Real.pi ^ 2 * (tau ^ 2 / 180 + 1 / 36 + (1 / tau ^ 2) / 180) := by
+  rw [aperyBernoulliDefectTau, ramanujanBernoulliSide_apery_n1_explicit]
+  field_simp [hτ]
+
+/-- The finite `ζ(3)` Bernoulli defect is invariant under `τ ↦ τ⁻¹`. -/
+theorem aperyBernoulliDefectTau_inv {tau : ℝ} (hτ : tau ≠ 0) :
+    aperyBernoulliDefectTau tau = aperyBernoulliDefectTau tau⁻¹ := by
+  rw [aperyBernoulliDefectTau_explicit hτ,
+    aperyBernoulliDefectTau_explicit (inv_ne_zero hτ)]
+  field_simp [hτ]
+  ring
+
+/-! ## The finite `n = 2` Bernoulli defect / `ζ(5)` layer -/
+
+/-- Bernoulli values needed for the `ζ(5)` layer. -/
+def zetaFiveBernoulliReadout (m : ℕ) : ℝ :=
+  if m = 0 then 1
+  else if m = 2 then (1 / 6 : ℝ)
+  else if m = 4 then (-1 / 30 : ℝ)
+  else if m = 6 then (1 / 42 : ℝ)
+  else 0
+
+/--
+The finite Bernoulli defect for the `n = 2` Ramanujan layer reduces to a
+closed cubic polynomial.
+-/
+theorem ramanujanBernoulliSide_zeta5_n2_explicit (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaFiveBernoulliReadout 2 alpha beta =
+      -((alpha - beta) * (2 * alpha ^ 2 + 9 * alpha * beta + 2 * beta ^ 2)) / 3780 := by
+  norm_num [ramanujanBernoulliSide, zetaFiveBernoulliReadout, Finset.sum_range_succ]
+  ring_nf
+
+/-- The `ζ(5)` finite defect in the S-dual parameterization `α = πτ`, `β = π/τ`. -/
+def zetaFiveBernoulliDefectTau (tau : ℝ) : ℝ :=
+  ramanujanBernoulliSide zetaFiveBernoulliReadout 2 (Real.pi * tau) (Real.pi / tau)
+
+/-- Explicit `τ`-coordinate form of the finite `ζ(5)` Bernoulli defect. -/
+theorem zetaFiveBernoulliDefectTau_explicit {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaFiveBernoulliDefectTau tau =
+      -Real.pi ^ 3 *
+        ((tau - 1) * (tau + 1) * (2 * tau ^ 4 + 9 * tau ^ 2 + 2) /
+          (3780 * tau ^ 3)) := by
+  rw [zetaFiveBernoulliDefectTau, ramanujanBernoulliSide_zeta5_n2_explicit]
+  field_simp [hτ]
+  ring
+
+/-- The finite `ζ(5)` Bernoulli defect is anti-invariant under `τ ↦ τ⁻¹`. -/
+theorem zetaFiveBernoulliDefectTau_inv {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaFiveBernoulliDefectTau tau = -zetaFiveBernoulliDefectTau tau⁻¹ := by
+  rw [zetaFiveBernoulliDefectTau_explicit hτ,
+    zetaFiveBernoulliDefectTau_explicit (inv_ne_zero hτ)]
+  field_simp [hτ]
+  ring
+
+/-! ## The finite `n = 3` Bernoulli defect / `ζ(7)` layer -/
+
+/-- Bernoulli values needed for the `ζ(7)` layer. -/
+def zetaSevenBernoulliReadout (m : ℕ) : ℝ :=
+  if m = 0 then 1
+  else if m = 2 then (1 / 6 : ℝ)
+  else if m = 4 then (-1 / 30 : ℝ)
+  else if m = 6 then (1 / 42 : ℝ)
+  else if m = 8 then (-1 / 30 : ℝ)
+  else 0
+
+/--
+The finite Bernoulli defect for the `n = 3` Ramanujan layer reduces to a
+closed quartic polynomial.
+-/
+theorem ramanujanBernoulliSide_zeta7_n3_explicit (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaSevenBernoulliReadout 3 alpha beta =
+      ((alpha ^ 2 - alpha * beta + beta ^ 2) *
+        (3 * alpha ^ 2 + 13 * alpha * beta + 3 * beta ^ 2)) / 56700 := by
+  norm_num [ramanujanBernoulliSide, zetaSevenBernoulliReadout, Finset.sum_range_succ]
+  ring_nf
+
+/-- The `ζ(7)` finite defect in the S-dual parameterization `α = πτ`, `β = π/τ`. -/
+def zetaSevenBernoulliDefectTau (tau : ℝ) : ℝ :=
+  ramanujanBernoulliSide zetaSevenBernoulliReadout 3 (Real.pi * tau) (Real.pi / tau)
+
+/-- Explicit `τ`-coordinate form of the finite `ζ(7)` Bernoulli defect. -/
+theorem zetaSevenBernoulliDefectTau_explicit {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaSevenBernoulliDefectTau tau =
+      Real.pi ^ 4 *
+        ((tau ^ 4 - tau ^ 2 + 1) * (3 * tau ^ 4 + 13 * tau ^ 2 + 3) /
+          (56700 * tau ^ 4)) := by
+  rw [zetaSevenBernoulliDefectTau, ramanujanBernoulliSide_zeta7_n3_explicit]
+  field_simp [hτ]
+
+/-- The finite `ζ(7)` Bernoulli defect is invariant under `τ ↦ τ⁻¹`. -/
+theorem zetaSevenBernoulliDefectTau_inv {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaSevenBernoulliDefectTau tau = zetaSevenBernoulliDefectTau tau⁻¹ := by
+  rw [zetaSevenBernoulliDefectTau_explicit hτ,
+    zetaSevenBernoulliDefectTau_explicit (inv_ne_zero hτ)]
+  field_simp [hτ]
+  ring
+
+/-! ## The finite `n = 4` Bernoulli defect / `ζ(9)` layer -/
+
+/-- Bernoulli values needed for the `ζ(9)` layer. -/
+def zetaNineBernoulliReadout (m : ℕ) : ℝ :=
+  if m = 0 then 1
+  else if m = 2 then (1 / 6 : ℝ)
+  else if m = 4 then (-1 / 30 : ℝ)
+  else if m = 6 then (1 / 42 : ℝ)
+  else if m = 8 then (-1 / 30 : ℝ)
+  else if m = 10 then (5 / 66 : ℝ)
+  else 0
+
+/--
+The finite Bernoulli defect for the `n = 4` Ramanujan layer reduces to a
+closed quintic polynomial.
+-/
+theorem ramanujanBernoulliSide_zeta9_n4_explicit (alpha beta : ℝ) :
+    ramanujanBernoulliSide zetaNineBernoulliReadout 4 alpha beta =
+      -((alpha - beta) *
+        (10 * alpha ^ 4 + 43 * alpha ^ 3 * beta + 21 * alpha ^ 2 * beta ^ 2 +
+          43 * alpha * beta ^ 3 + 10 * beta ^ 4)) / 1871100 := by
+  norm_num [ramanujanBernoulliSide, zetaNineBernoulliReadout, Finset.sum_range_succ]
+  ring_nf
+
+/-- The `ζ(9)` finite defect in the S-dual parameterization `α = πτ`, `β = π/τ`. -/
+def zetaNineBernoulliDefectTau (tau : ℝ) : ℝ :=
+  ramanujanBernoulliSide zetaNineBernoulliReadout 4 (Real.pi * tau) (Real.pi / tau)
+
+/-- Explicit `τ`-coordinate form of the finite `ζ(9)` Bernoulli defect. -/
+theorem zetaNineBernoulliDefectTau_explicit {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaNineBernoulliDefectTau tau =
+      -Real.pi ^ 5 *
+        ((tau - 1) * (tau + 1) *
+          (10 * tau ^ 8 + 43 * tau ^ 6 + 21 * tau ^ 4 + 43 * tau ^ 2 + 10) /
+          (1871100 * tau ^ 5)) := by
+  rw [zetaNineBernoulliDefectTau, ramanujanBernoulliSide_zeta9_n4_explicit]
+  field_simp [hτ]
+  ring
+
+/-- The finite `ζ(9)` Bernoulli defect is anti-invariant under `τ ↦ τ⁻¹`. -/
+theorem zetaNineBernoulliDefectTau_inv {tau : ℝ} (hτ : tau ≠ 0) :
+    zetaNineBernoulliDefectTau tau = -zetaNineBernoulliDefectTau tau⁻¹ := by
+  rw [zetaNineBernoulliDefectTau_explicit hτ,
+    zetaNineBernoulliDefectTau_explicit (inv_ne_zero hτ)]
+  field_simp [hτ]
+  ring
+
 end InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions

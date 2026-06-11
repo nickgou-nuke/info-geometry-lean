@@ -35,6 +35,7 @@ import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 import InfoGeometry.Clifford.HestenesCauchyRiemann
 import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 import InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge

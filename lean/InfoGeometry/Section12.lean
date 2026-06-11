@@ -19,15 +19,18 @@ the section:
 * the coefficient form of Cartan's first structure equation is antisymmetric;
 * spinorial torsion is represented here as contorsion added to the spin
   connection, rather than as an independent "spinorial torsion tensor";
-* quaternion torsion is the left covariant derivative shadow `dq + Omega*q`.
+* quaternion torsion is represented by the commutator covariant-derivative
+  shadow `dq + Omega*q - q*Omega` and by a quaternionic one-form coefficient
+  analogue using conjugation.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 The vector torsion coefficient identity, lower-index antisymmetry, the
 torsion-free/symmetric-connection equivalence, the flat torsion identities,
 the coefficient antisymmetry of Cartan's first structure equation, the
 coordinate-basis reduction of Cartan's first structure equation, the
-zero-contorsion spin-connection reduction, and the flat quaternion torsion
-identities.
+zero-contorsion spin-connection reduction, contorsion-from-torsion zero
+reduction, Clifford-soldering commutator reduction, the flat quaternion torsion
+identities, and a finite noncommuting-shift witness.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The two-form antisymmetry theorem assumes an explicitly named antisymmetry
@@ -36,7 +39,8 @@ witness for `de`.
 #### BUCKET 3: OPEN CLOSURE DEBT
 This file does not formalize smooth manifolds, exterior bundles, a full
 Einstein-Cartan variational theory, axial-current coupling, propagating torsion,
-quantum anomalies, or emergent-spacetime defects. Those claims remain prose
+quantum anomalies, JKO/Jaynes projection, or a continuum theorem identifying
+operator noncommutativity with macroscopic torsion. Those claims remain prose
 motivation until their precise formal premises are introduced.
 -/
 
@@ -47,10 +51,20 @@ namespace Section12
 open Matrix
 
 abbrev Quat := Section8.Quat
-abbrev ConnectionCoeff := Fin 4 → Fin 4 → Fin 4 → ℂ
-abbrev FrameCoeff := Fin 4 → Fin 4 → ℂ
+
+/-- Internal Lorentz-frame index. -/
+abbrev LorentzIdx := Fin 4
+
+/-- Spacetime coordinate index. -/
+abbrev SpacetimeIdx := Fin 4
+
+abbrev ConnectionCoeff := LorentzIdx → LorentzIdx → SpacetimeIdx → ℂ
+abbrev TorsionCoeff := LorentzIdx → SpacetimeIdx → SpacetimeIdx → ℂ
+abbrev FrameCoeff := LorentzIdx → SpacetimeIdx → ℂ
 abbrev SpinMat := Matrix (Fin 2) (Fin 2) ℂ
 abbrev SpinConnection := Fin 4 → SpinMat
+abbrev QuaternionOneForm := SpacetimeIdx → Quat
+abbrev QuaternionTwoFormCoeff := SpacetimeIdx → SpacetimeIdx → Quat
 
 /-! ## 12.1 Vector-form torsion -/
 
@@ -183,6 +197,36 @@ theorem torsionTwoFormCoeff_coordinate_eq_torsionTensor
 
 /-! ## 12.2 Matrix/spinorial torsion as contorsion in the spin connection -/
 
+/-- Contorsion coefficients constructed algebraically from lowered torsion coefficients. -/
+def contorsionFromTorsion (T : TorsionCoeff) (a b c : Fin 4) : ℂ :=
+  (1 / 2 : ℂ) * (T a b c + T c a b - T b c a)
+
+/-- Zero torsion gives zero contorsion. -/
+theorem contorsionFromTorsion_zero (a b c : Fin 4) :
+    contorsionFromTorsion (fun _ _ _ => 0) a b c = 0 := by
+  simp [contorsionFromTorsion]
+
+/-- Matrix commutator `[A,B] = AB - BA`. -/
+def matrixCommutator (A B : SpinMat) : SpinMat :=
+  A * B - B * A
+
+/-- Clifford-soldering covariant derivative shadow `dE + [omega,E]`. -/
+def cliffordSolderingDerivative (dE omega E : SpinMat) : SpinMat :=
+  dE + matrixCommutator omega E
+
+/-- If the spin connection commutes with the soldering matrix, only the ordinary derivative remains. -/
+theorem cliffordSolderingDerivative_of_commuting
+    (dE omega E : SpinMat) (hComm : omega * E = E * omega) :
+    cliffordSolderingDerivative dE omega E = dE := by
+  ext i j
+  simp [cliffordSolderingDerivative, matrixCommutator, hComm]
+
+/-- Flat Clifford soldering derivative vanishes. -/
+theorem cliffordSolderingDerivative_flat (E : SpinMat) :
+    cliffordSolderingDerivative 0 0 E = 0 := by
+  ext i j
+  simp [cliffordSolderingDerivative, matrixCommutator]
+
 /--
 Spin connection modified by contorsion.  This is the finite algebraic shadow of
 the Einstein-Cartan statement that torsion modifies the spin connection.
@@ -230,6 +274,60 @@ theorem quaternionTorsion_of_constant_field_connection (q : Quat) :
   rw [quaternionConnection_constant_field q]
   exact quaternionTorsion_flat q
 
+/--
+Quaternion-valued torsion two-form coefficient:
+`de + Omega wedge e + e wedge conj(Omega)`.
+-/
+def quaternionTorsionTwoFormCoeff
+    (de : QuaternionTwoFormCoeff) (Omega e : QuaternionOneForm)
+    (mu nu : SpacetimeIdx) : Quat :=
+  de mu nu + (Omega mu * e nu - Omega nu * e mu)
+    + (e mu * Section8.Quat.conj (Omega nu) - e nu * Section8.Quat.conj (Omega mu))
+
+/-- The quaternionic two-form coefficient is antisymmetric when `de` is antisymmetric. -/
+theorem quaternionTorsionTwoFormCoeff_antisymmetric
+    (de : QuaternionTwoFormCoeff) (Omega e : QuaternionOneForm)
+    (hDe : ∀ mu nu : SpacetimeIdx, de nu mu = -de mu nu)
+    (mu nu : SpacetimeIdx) :
+    quaternionTorsionTwoFormCoeff de Omega e nu mu =
+      -quaternionTorsionTwoFormCoeff de Omega e mu nu := by
+  ext <;> simp [quaternionTorsionTwoFormCoeff, hDe mu nu] <;> ring
+
+/-- Flat quaternionic connection and zero `de` give zero quaternionic torsion two-form. -/
+theorem quaternionTorsionTwoFormCoeff_flat (e : QuaternionOneForm) (mu nu : SpacetimeIdx) :
+    quaternionTorsionTwoFormCoeff (fun _ _ => 0) (fun _ => 0) e mu nu = 0 := by
+  ext <;> simp [quaternionTorsionTwoFormCoeff]
+
+/-! ## 12.4 Finite noncommutative shift witness -/
+
+/-- A two-site left shift matrix. -/
+def finiteShiftL : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![(0 : ℂ), 1; 0, 0]
+
+/-- A two-site right shift matrix. -/
+def finiteShiftR : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![(0 : ℂ), 0; 1, 0]
+
+/-- Finite shift commutator shadow. -/
+def finiteShiftCommutator : Matrix (Fin 2) (Fin 2) ℂ :=
+  finiteShiftL * finiteShiftR - finiteShiftR * finiteShiftL
+
+/-- The finite shift commutator is nonzero. -/
+theorem finiteShiftCommutator_ne_zero :
+    finiteShiftCommutator ≠ 0 := by
+  intro h
+  have h00 := congr_fun (congr_fun h 0) 0
+  norm_num [finiteShiftCommutator, finiteShiftL, finiteShiftR, Matrix.mul_apply,
+    Fin.sum_univ_two] at h00
+
+/-- Explicit finite shift commutator readout. -/
+theorem finiteShiftCommutator_eq_diag :
+    finiteShiftCommutator = !![(1 : ℂ), 0; 0, -1] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [finiteShiftCommutator, finiteShiftL, finiteShiftR, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
 theorem section12_capstone :
     (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
       torsionTensor Gamma a c b = -torsionTensor Gamma a b c) ∧
@@ -242,13 +340,20 @@ theorem section12_capstone :
     (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
       torsionTwoFormCoeff zeroConnection (coordinateConnectionForm Gamma)
         coordinateFrame a b c = torsionTensor Gamma a b c) ∧
+    (∀ a b c : Fin 4, contorsionFromTorsion (fun _ _ _ => 0) a b c = 0) ∧
+    (∀ E : SpinMat, cliffordSolderingDerivative 0 0 E = 0) ∧
     (∀ omegaLeviCivita : SpinConnection, ∀ mu : Fin 4,
       spinConnectionWithContorsion omegaLeviCivita 0 mu = omegaLeviCivita mu) ∧
     (∀ q : Quat, quaternionTorsion 0 0 q = 0) ∧
-    (∀ q : Quat, quaternionTorsion 0 (Section8.Quat.quaternionConnection q 0) q = 0) := by
+    (∀ q : Quat, quaternionTorsion 0 (Section8.Quat.quaternionConnection q 0) q = 0) ∧
+    (∀ e : QuaternionOneForm, ∀ mu nu : SpacetimeIdx,
+      quaternionTorsionTwoFormCoeff (fun _ _ => 0) (fun _ => 0) e mu nu = 0) ∧
+    finiteShiftCommutator ≠ 0 := by
   exact ⟨torsionTensor_antisymmetric_lower, torsionTensor_zero_iff_lower_symmetric,
     torsionTensor_flat, torsionTwoFormCoeff_flat,
-    torsionTwoFormCoeff_coordinate_eq_torsionTensor, spinConnectionWithContorsion_zero,
-    quaternionTorsion_flat, quaternionTorsion_of_constant_field_connection⟩
+    torsionTwoFormCoeff_coordinate_eq_torsionTensor, contorsionFromTorsion_zero,
+    cliffordSolderingDerivative_flat, spinConnectionWithContorsion_zero,
+    quaternionTorsion_flat, quaternionTorsion_of_constant_field_connection,
+    quaternionTorsionTwoFormCoeff_flat, finiteShiftCommutator_ne_zero⟩
 
 end Section12

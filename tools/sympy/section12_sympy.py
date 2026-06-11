@@ -3,7 +3,7 @@
 Section 12: Torsion Structure -- SymPy verification.
 
 This script verifies the finite algebraic identities mirrored in
-lean/InfoGeometry/Canonical/TorsionStructure.lean.  It is deliberately not a manifold-level
+lean/InfoGeometry/Section12.lean.  It is deliberately not a manifold-level
 Einstein-Cartan derivation; it checks the coefficient algebra used by the
 formal Lean section.
 """

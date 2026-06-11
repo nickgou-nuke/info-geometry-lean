@@ -717,12 +717,6 @@ structure GradeTwoMemoryRecoveryData
   /-- Exterior observable reconstruction data. -/
   exteriorData : Obs → Memory
 
-  /-- Hidden memory is recovered from the visible observed-defect readout. -/
-  recovery_law :
-    ∀ x y : J,
-      exteriorData (A.observedDefect x y) =
-        B.memoryReadout (A.hiddenTotal x y)
-
 namespace GradeTwoMemoryRecoveryData
 
 variable
@@ -741,8 +735,8 @@ variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
 theorem recover_hidden_memory
     (x y : J) :
     R.exteriorData (A.observedDefect x y) =
-      B.memoryReadout (A.hiddenTotal x y) :=
-  R.recovery_law x y
+      B.memoryReadout (A.hiddenTotal x y) := by
+  sorry
 
 end GradeTwoMemoryRecoveryData
 

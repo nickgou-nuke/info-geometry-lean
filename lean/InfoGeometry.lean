@@ -99,7 +99,7 @@ import InfoGeometry.Geometry.BilingualPoincareMetric
 import InfoGeometry.Geometry.VerifiedCauchyKernel
 import InfoGeometry.Geometry.IndividuatedUHP
 import InfoGeometry.Geometry.DiscreteModularSubgroup
-import InfoGeometry.Section12
+import InfoGeometry.Section12Formalized
 
 /-!
 # InfoGeometry

@@ -66,4 +66,58 @@ theorem klein_loop_preserves_symplectic_omega
   -- Thus (a⁻¹ᵀ * Ω * a⁻¹) = -Ω, meaning - (a⁻¹ᵀ * Ω * a⁻¹) = Ω
   exact h7
 
+/-
+Explicit 2x2 Model for the 56-plet Generators
+The fundamental 56-dimensional representation of E₇₍₇₎ decomposes into 
+28 pairs of symplectic blocks. We provide the explicit 2x2 base case 
+for the Klein Bottle action. 
+-/
+
+/-- The canonical 2x2 symplectic form Ω -/
+def omega2 : Matrix (Fin 2) (Fin 2) ℝ :=
+  ![![0, 1], ![-1, 0]]
+
+/-- The glide-reflection generator `a` (anti-symplectic involution). -/
+def glide_a : Matrix (Fin 2) (Fin 2) ℝ :=
+  ![![1, 0], ![0, -1]]
+
+/-- The translation generator `b` (symplectic shear). -/
+def trans_b : Matrix (Fin 2) (Fin 2) ℝ :=
+  ![![1, 1], ![0, 1]]
+
+/-- The inverse of the translation generator `b`. -/
+def trans_b_inv : Matrix (Fin 2) (Fin 2) ℝ :=
+  ![![1, -1], ![0, 1]]
+
+/-- Proof that glide_a is an involution (a = a⁻¹). -/
+@[simp] theorem glide_a_involution : glide_a * glide_a = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> 
+    simp [glide_a, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- Proof that trans_b and trans_b_inv are exact inverses. -/
+@[simp] theorem trans_b_inverse : trans_b * trans_b_inv = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> 
+    simp [trans_b, trans_b_inv, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- EXPLICIT THEOREM: The Klein Bottle relation a * b * a⁻¹ = b⁻¹ is 
+    strictly satisfied by the geometric matrices. -/
+theorem explicit_klein_relation : glide_a * trans_b * glide_a = trans_b_inv := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> 
+    simp [glide_a, trans_b, trans_b_inv, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- EXPLICIT THEOREM: The glide reflection `a` is strictly anti-symplectic. -/
+theorem explicit_a_antisymp : glide_aᵀ * omega2 * glide_a = -omega2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> 
+    simp [glide_a, omega2, Matrix.transpose_apply, Matrix.neg_apply, Matrix.mul_apply, Fin.sum_univ_succ]
+
+/-- EXPLICIT THEOREM: The translation `b` is strictly symplectic. -/
+theorem explicit_b_symp : trans_bᵀ * omega2 * trans_b = omega2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> 
+    simp [trans_b, omega2, Matrix.transpose_apply, Matrix.mul_apply, Fin.sum_univ_succ]
+
 end InfoGeometry.Canonical.KleinFundamentalGroup

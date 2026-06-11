@@ -95,7 +95,9 @@ lemma length_filter_eq_sum_map_bool {alpha : Type} (l : List alpha) (p : alpha -
 lemma detect_eq_filter_not_pass (declarations : List String) :
     stage_detect (stage_orient (stage_extractDAG declarations)) =
     declarations.filter fun s => not (passes (⟨s, []⟩ : InspectedDeclaration)) := by
-  sorry
+  simp [stage_extractDAG, stage_orient, stage_detect, DepNode.hasAnyHole,
+    DepNode.hasCertificateHole, DepNode.hasHoleEdge, DepNode.passes,
+    DepNode.toDeclaration, VacuityCritic.passes]
 
 /-! Placeholder: remaining section-3 and section-4 theorems
 (spec_total_holes_agrees, tri_facet_unified, exact_coexact_annihilate,

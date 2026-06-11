@@ -58,6 +58,15 @@ def toCanonical :
   coneVector := A.hestenes.coneVector
   eval := A.hestenes.eval
   innerReadout := KreinSpace.kreinInner (H := H)
+  coneVector_mem := by
+    intro ω hω
+    exact hω
+  eval_eq_vector_readout := by
+    intro ω B _hω
+    exact A.hestenes.eval_eq_krein_vector_readout ω B
+  J_fixes_cone := by
+    intro ξ hξ
+    exact A.hestenes.J_fixes_cone ξ hξ
 
 /-- Readback: the induced canonical cone is the supplied Hestenes/Krein cone. -/
 @[rep_depth krein]

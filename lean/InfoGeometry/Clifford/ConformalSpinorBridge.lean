@@ -39,6 +39,8 @@ namespace InfoGeometry.Clifford.ConformalSpinorBridge
 
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 
+set_option maxHeartbeats 800000
+
 /-! ## 1. The 5-dimensional carrier -/
 
 /--
@@ -85,6 +87,138 @@ noncomputable def evenPart : Submodule ℝ OSp12 :=
 noncomputable def oddPart : Submodule ℝ OSp12 :=
   Submodule.span ℝ {λ | .G1 => 1 | _ => 0, λ | .G2 => 1 | _ => 0}
 
+private theorem even_odd_gen_H_G1 :
+    bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.G1 (1 : ℝ)) =
+      - bracket (Pi.single B.G1 (1 : ℝ)) (Pi.single B.H (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem even_odd_gen_H_G2 :
+    bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.G2 (1 : ℝ)) =
+      - bracket (Pi.single B.G2 (1 : ℝ)) (Pi.single B.H (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem even_odd_gen_Ep_G1 :
+    bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.G1 (1 : ℝ)) =
+      - bracket (Pi.single B.G1 (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem even_odd_gen_Ep_G2 :
+    bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.G2 (1 : ℝ)) =
+      - bracket (Pi.single B.G2 (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem even_odd_gen_Em_G1 :
+    bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.G1 (1 : ℝ)) =
+      - bracket (Pi.single B.G1 (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem even_odd_gen_Em_G2 :
+    bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.G2 (1 : ℝ)) =
+      - bracket (Pi.single B.G2 (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem odd_odd_gen_G1_G2 :
+    bracket (Pi.single B.G1 (1 : ℝ)) (Pi.single B.G2 (1 : ℝ)) =
+      bracket (Pi.single B.G2 (1 : ℝ)) (Pi.single B.G1 (1 : ℝ)) := by
+  ext k <;> fin_cases k <;>
+    simp [bracket, Pi.single, Function.update, structConst]
+
+private theorem jacobi_even_basis
+    (x : OSp12)
+    (hx : x ∈ ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} :
+      Set OSp12)) :
+    ∀ (y z : OSp12),
+      bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z) := by
+  rcases hx with rfl | rfl | rfl <;>
+    let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+    have hspan : Submodule.span ℝ S = ⊤ := by
+      simpa [S] using (Pi.basisFun ℝ B).span_eq
+    intro y z
+    have hy : y ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hz : z ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+      intro r a b
+      ext k
+      simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+    refine
+      Submodule.span_induction₂
+        (s := S) (t := S)
+        (p := fun y z _ _ =>
+          bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+        ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+    · intro y z hygen hzgen
+      rcases hygen with ⟨a, rfl⟩
+      rcases hzgen with ⟨b, rfl⟩
+      cases a <;> cases b <;>
+        ext k <;> fin_cases k <;>
+          simp [bracket, Pi.single, Function.update, structConst]
+    · intro z hz'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y hy'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+      calc
+        bracket x (bracket (y₁ + y₂) z)
+            = bracket x (bracket y₁ z + bracket y₂ z) := by
+                rw [SuperBracket.add_lie]
+        _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+              (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+      calc
+        bracket x (bracket y (z₁ + z₂))
+            = bracket x (bracket y z₁ + bracket y z₂) := by
+                rw [SuperBracket.lie_add]
+        _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+              (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket x (bracket (r • y) z)
+            = bracket x (r • bracket y z) := by
+                rw [hsmul_left]
+        _ = r • bracket x (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+              rw [h]
+        _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+              simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                add_left_comm, add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket x (bracket y (r • z))
+            = bracket x (r • bracket y z) := by
+                rw [SuperBracket.lie_smul]
+        _ = r • bracket x (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+              rw [h]
+        _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+              simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                add_comm, add_left_comm, add_assoc]
+
 -- BUCKET 3: the structure constants are verified by SymPy (125/125 Jacobi triples pass).
 -- The `SuperLieRing` instance follows the same pattern as the authentic 5D osp(1|2)
 -- that was previously in `Algebra/OSp12.lean` (removed by pipeline).
@@ -107,18 +241,587 @@ instance : SuperLieRing OSp12 where
       intro i j; ring
     simp_rw [h1, ← Finset.mul_sum]
   sup_even_odd := by
-    -- BUCKET 3: needs explicit basis spanning proof
-    sorry
+    have hli : LinearIndependent ℝ (Pi.basisFun ℝ B) := (Pi.basisFun ℝ B).linearIndependent
+    have hs : ({B.H, B.Ep, B.Em} : Set B) = ({B.G1, B.G2} : Set B)ᶜ := by
+      ext x
+      cases x <;> decide
+    have hst : IsCompl ({B.H, B.Ep, B.Em} : Set B) ({B.G1, B.G2} : Set B) :=
+      (eq_compl_iff_isCompl).mp hs
+    have hcompl0 :
+        IsCompl
+          (Submodule.span ℝ
+            (Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.H, B.Ep, B.Em} : Set B)))
+          (Submodule.span ℝ
+            (Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.G1, B.G2} : Set B))) := by
+      simpa using hli.isCompl_span_image (h₂ := (Pi.basisFun ℝ B).span_eq) hst
+    have himageEven :
+        Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.H, B.Ep, B.Em} : Set B) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext x
+      simp [or_comm, or_left_comm, or_assoc]
+      tauto
+    have himageOdd :
+        Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.G1, B.G2} : Set B) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext x
+      simp [or_comm, or_left_comm, or_assoc]
+      tauto
+    have hcompl1 :
+        IsCompl
+          (Submodule.span ℝ ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12))
+          (Submodule.span ℝ ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12)) := by
+      simpa [himageEven, himageOdd] using hcompl0
+    have heven :
+        ({fun x =>
+            match x with
+            | H => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Ep => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Em => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          left
+          ext x <;> cases x <;> simp
+        · right
+          right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hodd :
+        ({fun x =>
+            match x with
+            | G1 => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | G2 => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hcompl : IsCompl (evenPart : Submodule ℝ OSp12) oddPart := by
+      rw [evenPart, oddPart, heven, hodd]
+      exact hcompl1
+    exact hcompl.sup_eq_top
   even_odd_inter := by
-    -- BUCKET 3: needs disjoint span proof
-    sorry
+    have hli : LinearIndependent ℝ (Pi.basisFun ℝ B) := (Pi.basisFun ℝ B).linearIndependent
+    have hs : ({B.H, B.Ep, B.Em} : Set B) = ({B.G1, B.G2} : Set B)ᶜ := by
+      ext x
+      cases x <;> decide
+    have hst : IsCompl ({B.H, B.Ep, B.Em} : Set B) ({B.G1, B.G2} : Set B) :=
+      (eq_compl_iff_isCompl).mp hs
+    have hcompl0 :
+        IsCompl
+          (Submodule.span ℝ
+            (Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.H, B.Ep, B.Em} : Set B)))
+          (Submodule.span ℝ
+            (Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.G1, B.G2} : Set B))) := by
+      simpa using hli.isCompl_span_image (h₂ := (Pi.basisFun ℝ B).span_eq) hst
+    have himageEven :
+        Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.H, B.Ep, B.Em} : Set B) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext x
+      simp [or_comm, or_left_comm, or_assoc]
+      tauto
+    have himageOdd :
+        Set.image (fun a : B => Pi.single a (1 : ℝ)) ({B.G1, B.G2} : Set B) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext x
+      simp [or_comm, or_left_comm, or_assoc]
+      tauto
+    have hcompl1 :
+        IsCompl
+          (Submodule.span ℝ ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12))
+          (Submodule.span ℝ ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12)) := by
+      simpa [himageEven, himageOdd] using hcompl0
+    have heven :
+        ({fun x =>
+            match x with
+            | H => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Ep => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Em => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          left
+          ext x <;> cases x <;> simp
+        · right
+          right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hodd :
+        ({fun x =>
+            match x with
+            | G1 => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | G2 => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hcompl : IsCompl (evenPart : Submodule ℝ OSp12) oddPart := by
+      rw [evenPart, oddPart, heven, hodd]
+      exact hcompl1
+    exact hcompl.inf_eq_bot
   even_even_skew := by
-    -- BUCKET 3: follows from structConst verification
-    sorry
+    have heven :
+        ({fun x =>
+            match x with
+            | H => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Ep => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Em => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          left
+          ext x <;> cases x <;> simp
+        · right
+          right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hsmul_left : ∀ (r : ℝ) (x y : OSp12), bracket (r • x) y = r • bracket x y := by
+      intro r x y
+      ext k
+      simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+    have hsmul_right : ∀ (r : ℝ) (x y : OSp12), bracket x (r • y) = r • bracket x y := by
+      intro r x y
+      ext k
+      simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+    have hgen_H_H :
+        bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.H (1 : ℝ)) =
+          - bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.H (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_Ep_Ep :
+        bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) =
+          - bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_Em_Em :
+        bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) =
+          - bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_H_Ep :
+        bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) =
+          - bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.H (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_H_Em :
+        bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) =
+          - bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.H (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_Ep_Em :
+        bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) =
+          - bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) := by
+      ext k <;> fin_cases k <;>
+        simp [bracket, Pi.single, Function.update, structConst]
+    have hgen_Ep_H :
+        bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.H (1 : ℝ)) =
+          - bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) := by
+      rw [hgen_H_Ep]
+      simp
+    have hgen_Em_H :
+        bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.H (1 : ℝ)) =
+          - bracket (Pi.single B.H (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) := by
+      rw [hgen_H_Em]
+      simp
+    have hgen_Em_Ep :
+        bracket (Pi.single B.Em (1 : ℝ)) (Pi.single B.Ep (1 : ℝ)) =
+          - bracket (Pi.single B.Ep (1 : ℝ)) (Pi.single B.Em (1 : ℝ)) := by
+      rw [hgen_Ep_Em]
+      simp
+    intro x y hx hy
+    rw [evenPart, heven] at hx hy
+    induction hx using Submodule.span_induction with
+    | mem x hxgen =>
+        induction hy using Submodule.span_induction with
+        | mem y hygen =>
+            rcases hxgen with rfl | rfl | rfl <;> rcases hygen with rfl | rfl | rfl
+            · simpa using hgen_H_H
+            · simpa using hgen_H_Ep
+            · simpa using hgen_H_Em
+            · simpa using hgen_Ep_H
+            · simpa using hgen_Ep_Ep
+            · simpa using hgen_Ep_Em
+            · simpa using hgen_Em_H
+            · simpa using hgen_Em_Ep
+            · simpa using hgen_Em_Em
+        | zero =>
+            calc
+              bracket x 0 = 0 := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = - bracket 0 x := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+        | add a b ha hb haP hbP =>
+            calc
+              bracket x (a + b) = bracket x a + bracket x b := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc]
+              _ = - bracket a x + - bracket b x := by rw [haP, hbP]
+              _ = - bracket (a + b) x := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc, add_comm, add_left_comm, add_assoc]
+        | smul r a ha haP =>
+            calc
+              bracket x (r • a) = r • bracket x a := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = -(r • bracket a x) := by
+                rw [haP]
+                rw [smul_neg]
+              _ = - bracket (r • a) x := by
+                rw [hsmul_left]
+    | zero =>
+        calc
+          bracket 0 y = 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = - bracket y 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | add a b ha hb haP hbP =>
+        calc
+          bracket (a + b) y = bracket a y + bracket b y := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc]
+          _ = - bracket y a + - bracket y b := by rw [haP, hbP]
+          _ = - bracket y (a + b) := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc, add_comm, add_left_comm, add_assoc]
+    | smul r a ha haP =>
+        calc
+          bracket (r • a) y = r • bracket a y := hsmul_left r a y
+          _ = -(r • bracket y a) := by
+            rw [haP]
+            rw [smul_neg]
+          _ = - bracket y (r • a) := by
+            rw [hsmul_right]
   even_odd_skew := by
-    sorry
+    set_option maxHeartbeats 400000 in
+    have heven :
+        ({fun x =>
+            match x with
+            | H => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Ep => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | Em => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.H (1 : ℝ), Pi.single B.Ep (1 : ℝ), Pi.single B.Em (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          left
+          ext x <;> cases x <;> simp
+        · right
+          right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr <| Or.inr ?_
+          ext x <;> cases x <;> simp
+    have hodd :
+        ({fun x =>
+            match x with
+            | G1 => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | G2 => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr ?_
+          ext x <;> cases x <;> simp
+    intro x y hx hy
+    rw [evenPart, heven] at hx
+    rw [oddPart, hodd] at hy
+    induction hx using Submodule.span_induction with
+    | mem x hxgen =>
+        induction hy using Submodule.span_induction with
+        | mem y hygen =>
+            rcases hxgen with rfl | rfl | rfl <;> rcases hygen with rfl | rfl
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+        | zero =>
+            calc
+              bracket x 0 = 0 := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = - bracket 0 x := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+        | add a b ha hb haP hbP =>
+            calc
+              bracket x (a + b) = bracket x a + bracket x b := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc]
+              _ = - bracket a x + - bracket b x := by rw [haP, hbP]
+              _ = - bracket (a + b) x := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc, add_comm, add_left_comm, add_assoc]
+        | smul r a ha haP =>
+            calc
+              bracket x (r • a) = r • bracket x a := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = -(r • bracket a x) := by
+                rw [haP]
+                rw [smul_neg]
+              _ = - bracket (r • a) x := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | zero =>
+        calc
+          bracket 0 y = 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = - bracket y 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | add a b ha hb haP hbP =>
+        calc
+          bracket (a + b) y = bracket a y + bracket b y := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc]
+          _ = - bracket y a + - bracket y b := by rw [haP, hbP]
+          _ = - bracket y (a + b) := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc, add_comm, add_left_comm, add_assoc]
+    | smul r a ha haP =>
+        calc
+          bracket (r • a) y = r • bracket a y := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = -(r • bracket y a) := by
+            rw [haP]
+            rw [smul_neg]
+          _ = - bracket y (r • a) := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
   odd_odd_symm := by
-    sorry
+    have hodd :
+        ({fun x =>
+            match x with
+            | G1 => 1
+            | x => 0,
+          fun x =>
+            match x with
+            | G2 => 1
+            | x => 0} : Set OSp12) =
+          ({Pi.single B.G1 (1 : ℝ), Pi.single B.G2 (1 : ℝ)} : Set OSp12) := by
+      ext f
+      constructor
+      · intro hf
+        rcases hf with rfl | rfl
+        · left
+          ext x <;> cases x <;> simp
+        · right
+          ext x <;> cases x <;> simp
+      · intro hf
+        rcases hf with rfl | rfl
+        · refine Or.inl ?_
+          ext x <;> cases x <;> simp
+        · refine Or.inr ?_
+          ext x <;> cases x <;> simp
+    intro x y hx hy
+    rw [oddPart, hodd] at hx hy
+    induction hx using Submodule.span_induction with
+    | mem x hxgen =>
+        induction hy using Submodule.span_induction with
+        | mem y hygen =>
+            rcases hxgen with rfl | rfl <;> rcases hygen with rfl | rfl
+            · rfl
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+            · rfl
+        | zero =>
+            calc
+              bracket x 0 = 0 := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = bracket 0 x := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+        | add a b ha hb haP hbP =>
+            calc
+              bracket x (a + b) = bracket x a + bracket x b := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc]
+              _ = bracket a x + bracket b x := by rw [haP, hbP]
+              _ = bracket (a + b) x := by
+                ext k
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+                  mul_assoc, add_comm, add_left_comm, add_assoc]
+        | smul r a ha haP =>
+            calc
+              bracket x (r • a) = r • bracket x a := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+              _ = r • bracket a x := by
+                rw [haP]
+              _ = bracket (r • a) x := by
+                ext k
+                simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | zero =>
+        calc
+          bracket 0 y = 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = bracket y 0 := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    | add a b ha hb haP hbP =>
+        calc
+          bracket (a + b) y = bracket a y + bracket b y := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc]
+          _ = bracket y a + bracket y b := by rw [haP, hbP]
+          _ = bracket y (a + b) := by
+            ext k
+            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, mul_comm, mul_left_comm,
+              mul_assoc, add_comm, add_left_comm, add_assoc]
+    | smul r a ha haP =>
+        calc
+          bracket (r • a) y = r • bracket a y := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          _ = r • bracket y a := by
+            rw [haP]
+          _ = bracket y (r • a) := by
+            ext k
+            simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
   jacobi_even := by
     sorry
   jacobi_odd_odd := by

@@ -52,8 +52,8 @@ def UHF_Laplacian : A :=
 Theorem: The exact sequence resolves to the Identity Laplacian.
 By summing the chiral boundaries, the Laplacian perfectly recovers the exact 
 primitive projection sequence, stabilizing the vacuum state.
-This proves that the cohomology of the total lattice is trivial ($H^n = 0$),
-providing a homological guarantee of the mass gap stabilization.
+This records the algebraic Laplacian identity for the abstract Cuntz/UHF
+carrier.  It does not by itself assert a full computed cohomology group.
 -/
 theorem UHF_Laplacian_eq_one : UHF_Laplacian (A := A) = 1 := by
   dsimp [UHF_Laplacian, UHF_boundary]

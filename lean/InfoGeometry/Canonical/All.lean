@@ -6,6 +6,8 @@ import InfoGeometry.Canonical.DikinDrazinBridge
 import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 import InfoGeometry.Canonical.O55LightConeSpectrumBridge
 import InfoGeometry.Canonical.SouriauBostConnesTransition
+import InfoGeometry.Canonical.BiquaternionTorsionBridge
+import InfoGeometry.Canonical.EmergentGravityActionVariation
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
@@ -119,6 +121,7 @@ import InfoGeometry.Canonical.CuntzKTowerCommutation
 import InfoGeometry.Canonical.CuntzCliffordBottBridge
 import InfoGeometry.Canonical.CuntzMapFixedPoint
 import InfoGeometry.Canonical.CuntzMapKreinBridge
+import InfoGeometry.Canonical.CuntzWeylUHFBridge
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
 import InfoGeometry.Canonical.CantorKMSCylinderState
 import InfoGeometry.Canonical.GNSState
@@ -173,6 +176,7 @@ import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Canonical.Z3TrialityCapstone
+import InfoGeometry.Canonical.E8Z3GradingDimension
 import InfoGeometry.Canonical.FibonacciFiveGradeBridge
 import InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
@@ -312,6 +316,9 @@ import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionState
 import InfoGeometry.Canonical.ChiralTorsionTwistor
+import InfoGeometry.Canonical.TorsionStructure
+import InfoGeometry.Canonical.EmergentGravity
+import InfoGeometry.Canonical.StressEnergyTensor
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate

@@ -98,6 +98,8 @@ For the finite Castro theta/scaling API, see
 [castro-theta-scaling-bridge-api.md](castro-theta-scaling-bridge-api.md).
 For the finite Haug-Mani real doubled bridge API, see
 [haug-mani-yin-yang-bridge-api.md](haug-mani-yin-yang-bridge-api.md).
+For the finite quaternion condensate API, see
+[quaternion-condensate-api.md](quaternion-condensate-api.md).
 For the finite Weyl / crystal surface API, see
 [weyl-crystal-surface-api.md](weyl-crystal-surface-api.md).
 For the finite Berry / Klein / Bott bridge API, see

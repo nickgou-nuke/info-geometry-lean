@@ -319,6 +319,7 @@ import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.TorsionStructure
 import InfoGeometry.Canonical.EmergentGravity
 import InfoGeometry.Canonical.StressEnergyTensor
+import InfoGeometry.Canonical.QuaternionCondensate
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Canonical.Cl44BridgeCandidate

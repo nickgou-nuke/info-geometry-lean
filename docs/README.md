@@ -76,6 +76,7 @@ Use these first:
 - [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [ModuleMap.md](ModuleMap.md)
+- [biquaternion-kahler-symplectic-noether-bridge-api.md](biquaternion-kahler-symplectic-noether-bridge-api.md)
 - [OperationalIntent.md](OperationalIntent.md)
 - [GenerativeDiscoveryArchitecture.md](GenerativeDiscoveryArchitecture.md)
 - [FormalizationDiscipline.md](FormalizationDiscipline.md)

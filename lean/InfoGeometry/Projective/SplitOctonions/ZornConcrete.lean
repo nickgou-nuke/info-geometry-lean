@@ -345,6 +345,82 @@ theorem projective_polar_incidence_iff
       (concretePolarDatum_incidentRep_iff B X Y).2 hcoord
     exact (incident_mk_iff (D := concretePolarDatum B) X Y).2 hrep
 
+/--
+Concrete left scaling invariance for representative incidence.
+
+This is the concrete specialization of the abstract projective incidence
+transport theorem to the canonical Zorn datum.
+ -/
+theorem concreteIncidentRep_scale_left
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (u : Rˣ)
+    (X Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B)) :
+    IncidentRep (concretePolarDatum B)
+        (ZornProjectiveDatum.scaleNull (concreteZornProjectiveDatum B) u X) Y
+      ↔
+    IncidentRep (concretePolarDatum B) X Y := by
+  simpa using
+    (incidentRep_scale_left (D := concretePolarDatum B) u X Y)
+
+/--
+Concrete right scaling invariance for representative incidence.
+
+This is the concrete specialization of the abstract projective incidence
+transport theorem to the canonical Zorn datum.
+ -/
+theorem concreteIncidentRep_scale_right
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (u : Rˣ)
+    (X Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B)) :
+    IncidentRep (concretePolarDatum B)
+        X (ZornProjectiveDatum.scaleNull (concreteZornProjectiveDatum B) u Y)
+      ↔
+    IncidentRep (concretePolarDatum B) X Y := by
+  simpa using
+    (incidentRep_scale_right (D := concretePolarDatum B) u X Y)
+
+/--
+Concrete projective fiber invariance under unit rescaling of the first
+representative.
+ -/
+theorem concreteIncidenceFiber_scale_left
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (u : Rˣ)
+    (X : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B)) :
+    {Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B) |
+        IncidentRep (concretePolarDatum B)
+          (ZornProjectiveDatum.scaleNull (concreteZornProjectiveDatum B) u X) Y}
+      =
+    {Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B) |
+        IncidentRep (concretePolarDatum B) X Y} := by
+  ext Y
+  constructor
+  · intro hY
+    exact (concreteIncidentRep_scale_left (B := B) u X Y).1 hY
+  · intro hY
+    exact (concreteIncidentRep_scale_left (B := B) u X Y).2 hY
+
+/--
+Concrete projective fiber invariance under unit rescaling of the second
+representative.
+ -/
+theorem concreteIncidenceFiber_scale_right
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (u : Rˣ)
+    (X : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B)) :
+    {Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B) |
+        IncidentRep (concretePolarDatum B)
+          X (ZornProjectiveDatum.scaleNull (concreteZornProjectiveDatum B) u Y)}
+      =
+    {Y : ZornProjectiveDatum.NullRep (concreteZornProjectiveDatum B) |
+        IncidentRep (concretePolarDatum B) X Y} := by
+  ext Y
+  constructor
+  · intro hY
+    exact (concreteIncidentRep_scale_right (B := B) u X Y).1 hY
+  · intro hY
+    exact (concreteIncidentRep_scale_right (B := B) u X Y).2 hY
+
 /-- The canonical positive diagonal ray is incident with every upper lightray. -/
 theorem pPlusIncident_upperLightray
     (B : V →ₗ[R] V →ₗ[R] R) {v : V} (hv : v ≠ 0) :

@@ -171,6 +171,19 @@ Import this list by first loading
 - **S** none in declarations; constructor-level/record content only.
 - **W** topological interpretation and Möbius/freeness encoded as hypotheses for explicit package.
 
+## `InfoGeometry.Canonical.KleinBottleTopology`
+- **D** `klein_gluing`
+- **S** `klein_topology_trace_closure`
+- **W** none; finite matrix trace closure is proved from the orthogonality and zero-trace hypotheses.
+
+## `InfoGeometry.Canonical.KleinBottleBoundaryAction`
+- **D** `KleinBoundaryCell`, `sheetReflection`, `deckTranslation`, `glideReflection`
+- **S** `sheetReflection_involutive`, `deckTranslation_involutive`,
+  `sheet_deck_commute`, `glideReflection_eq_deck_sheet`,
+  `glideReflection_involutive`, `finite_z2_glide_action_packet`,
+  `orientifold_klein_gluing_trace_closure`
+- **W** the orientifold propositions remain explicit hypotheses; the boundary-operator bridge is conditional on `KleinBottleTopology.klein_topology_trace_closure`.
+
 ## `InfoGeometry.Canonical.ZetaTraceBridge`
 - **D** `PrimeGasPartition`, `PrimeWeightSpecialization`
 - **S** `zeta_trace_bridge`, `weyl_denominator_limit_eq_zeta`,

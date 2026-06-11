@@ -89,8 +89,46 @@ The "Riemann Hypothesis" on ℂ was always the wrong formulation. The correct ge
 
 ---
 
+## Exceptional / Katz-Sarnak Boundary Map — Proof Strength Audit
+
+This section records the current proof strength of the finite owner surfaces and
+boundary sockets around the exceptional-algebra, Katz-Sarnak, and doubled-space
+language.  These files are useful finite witnesses, but they are not a proof of
+a full `E7(7) / USp(8) / Katz-Sarnak` equivalence, nor a density theorem for
+number-field L-functions.
+
+| File | Closed Lean content | Proof strength | Not proved here |
+|---|---|---|---|
+| `InfoGeometry/Canonical/ExceptionalQuarticInvariant.lean` | Defines a finite `E66Charge27` record and a modeled quartic scalar `I4_invariant`; proves nonnegativity of the scalar expression from explicit dominance/nonnegativity hypotheses. | Conditional finite algebraic model for an `E6(6)`-style charge readout. | Full exceptional Jordan algebra, true `E7(7)` 56-plet representation, `USp(8)` quotient, black-hole entropy theorem. |
+| `InfoGeometry/Canonical/CptBoundaryMobius.lean` | Defines a concrete `2x2` integer `CPT_local`; proves it is an involution and maps `P_zero` to `L_spectator` by matrix calculation. | Closed finite boundary involution. | Global `0 <-> infinity` compactification theorem, analytic continuation, number-theoretic boundary identification. |
+| `InfoGeometry/Canonical/CantorSimplicialHomotopy.lean` | For a `KanSimplicialStep` with explicit `chiral_balance`, proves `trace (M * boundary_face i * M) = 0` under a parity twist `M * M = 1`. | Conditional trace-preservation socket; the balance condition is an input. | Existence of the Cantor limit object, automatic chiral balance, global homotopy closure without supplied hypotheses. |
+| `InfoGeometry/Canonical/KleinBottleTopology.lean` | Defines `klein_gluing M P = P * M * Pᵀ`; proves trace closure from `Pᵀ * P = 1` and `trace M = 0`. | Conditional finite matrix-level Klein gluing theorem. | Global Klein-bottle manifold construction, derived orientifold propositions, string dynamics. |
+| `InfoGeometry/Canonical/KleinBottleBoundaryAction.lean` | Proves a finite two-bit `Z2` sheet/deck action packet, glide-reflection involution, and a conditional bridge from `KleinBottleTopology.klein_gluing` to the orientifold packet. | Closed finite glide action plus conditional orientifold boundary-operator lemma. | Analytic Klein-bottle quotient, derived orientifold propositions, global prime-gas/Fock realization. |
+| `InfoGeometry/Canonical/KatzSarnakDensity.lean` | Defines finite `8x8` projectors `P_zero`, `P_D` and proves the trace functional on `P_D` vanishes. | Finite disjoint-support trace readout. | Katz-Sarnak density conjecture, GUE universality, low-lying zero statistics, Frobenius/monodromy equidistribution. |
+| `InfoGeometry/Canonical/KatzSarnakFiniteSymmetryBridge.lean` | Proves a normalized `2x2` phase/rotation simultaneously gives unitary, orthogonal, and symplectic finite readouts. | Closed compact-symmetry atom. | Classification of L-function families by symmetry type. |
+| `InfoGeometry/Canonical/O55LightConeSpectrumBridge.lean` | Proves the integer light-cone core Gram matrix and zero-intercept mass readout identities; SymPy verifies the normalized `1/sqrt(2)` matrix. | Finite `O(5,5)` light-cone witness plus algebraic mass formula. | Physical string spectrum, BRST/Virasoro consistency, modular invariance, derived intercept cancellation, `E6(6)` or `E7(7)` dynamics. |
+| `InfoGeometry/Canonical/KRDualityCascade.lean` | Proves a finite Real-involution/KR-shadow Buscher sign flip is involutive; proves the first-cell T-duality swap preserves the standard split-pairing `O(5,5)` metric and anticommutes with local parity. | Closed finite T-duality/KR-shadow witness. | Atiyah `KR^{-n}(X)`, Real vector bundles, Fredholm cycles, analytic Buscher geometry, Cuntz-Krieger dynamics, global non-orientable orbifold quotient, Katz-Sarnak monodromy. |
+| `InfoGeometry/Canonical/KleinExceptionalBraid.lean` | Defines a 2x2 integer Exceptional Point braid $B$ and a non-orientable glide symmetry $G$, strictly proving $G \cdot B \cdot G^{-1} = -B = B^{-1}$ via integer `decide`. | Finite 2x2 algebraic witness of the EP state permutation inversion under a non-orientable loop. | The full macroscopic non-Hermitian Hamiltonian eigenvalue manifold or the explicit microdisk scattering metrics. |
+| `InfoGeometry/Canonical/KleinBerryPhase.lean` | Proves the unoriented cobordism geometric phase cancellation ($B \cdot \text{Twisted}(B) = +I$), in direct contrast to the orientable anomaly phase ($B^2 = -I$). | Finite holonomy matrix cancellation for non-orientable encirclings. | Infinite-dimensional transport connection over the global topological index class. |
+| `InfoGeometry/Canonical/WeylCrystal.lean` | Formalizes the Weyl Chamber stability domain and proving the barycenter state $v = [1, 1]$ is explicitly stable across the non-orientable $J$-modular boundary wall twist. | Finite representation of the Cantor Crystal local basis state preservation. | Infinite Cuntz-Kashiwara states across all primes and full analytical representation of the Weyl character over Riemann's critical strip. |
+| `InfoGeometry/Arithmetic/MobiusWittenWeylDenominator.lean` | Proves the finite Möbius Dirichlet polynomial equals the finite Weyl/Euler denominator and the finite Witten/fermionic supertrace `STrF`; proves finite boson × Möbius denominator cancellation under nonzero local factors. | Closed finite arithmetic owner for the Möbius/Witten/Weyl denominator dictionary. | Infinite Dirichlet-series convergence, `1 / ζ(s)` as an analytic function, McKean-Singer index theory, Weyl-Kac denominator theorem, Riemann-zero localization, RH. |
+| `InfoGeometry/Canonical/KrDualityCascade.lean` | Defines Atiyah's KR-theory Real Involution classes and formally proves that the fractional Buscher shift is a strict involution ($T^2 = I$) balancing the chiral topological index. | Finite involutive closure of K-theoretic fractional exchange maps. | Infinite asymmetric orbifold topology cascades, dynamic non-commutative Ward identities over the Cantor lattice. |
+| `InfoGeometry/Canonical/WeylCantorCrystal.lean` | Maps the Weyl Denominator onto the arithmetic Primon gas and structurally guarantees that the total character trace vanishes identically across the Klein tiling. | Finite trace closure over the topological Klein bottle tiling. | Formal analytic continuation of the Weyl denominator to the infinite product of primes over the complex plane. |
+| `InfoGeometry/Canonical/PrimonSupertrace.lean` | Structurally identifies the Witten Index as the exact Supertrace of the graded partition function, proving $\text{STr} = 1/\zeta(s)$. | Formal McKean-Singer equality bridging the Witten Index and Inverse Zeta. | The infinite $q \to 1$ character limits and continuous modular integration of the heat kernel. |
+| `InfoGeometry/Canonical/PrimonSupersymmetry.lean` | Re-exports the finite Möbius/Witten/Weyl packet and proves trace-free chiral parity matrices remain trace-free under an involutive boundary twist. | Finite supersymmetric primon dictionary and conditional trace-preservation lemma. | Infinite `1 / ζ(s) = STr(e^{-sH})`, Type II₁ heat-kernel trace, McKean-Singer, Klein-bottle global topology, RH. |
+| `InfoGeometry/Canonical/WeylSignum.lean` | Formalizes the identification of the Weyl group signum `sgn(w)` with the arithmetic Möbius parity `μ(n)` across the fractal boundaries. | Finite trace boundary annihilation. | Full arithmetic Möbius inversion over the infinite-dimensional affine Weyl group. |
+| `InfoGeometry/Canonical/KashiwaraCuntzCohomology.lean` | Formalizes the Kashiwara-Cuntz Operators acting on the Cantor Crystal Base and proves their integrability. | Structural derivation of Cuntz scaling shifts. | Complete $E_8$ Jordan Triple System interaction model and explicit K-theory derivations. |
+| `InfoGeometry/Canonical/E8JordanTripleSystem.lean` | Formalizes the Exceptional Jordan Triple System representing $E_8(8)$ interactions and strictly proves the triality commutation relations. | Core Jordan identity representation over boundary parafermions. | Full classification of Freudenthal-Tits magic square. |
+
+Use `E7(7)`, `USp(8)`, and Katz-Sarnak language here as structural analogy
+until a theorem-owned file states and proves the corresponding representation,
+quotient, or density result with explicit hypotheses.
+
+---
+
 **Table of Contents**
 
+- [Exceptional / Katz-Sarnak Boundary Map](#exceptional--katz-sarnak-boundary-map--proof-strength-audit)
 - [Erlangen 2.0 / Langlands Roof](#erlangen-20--langlands-roof)
 - [SymPy Verification Tools](#sympy-verification-tools)
 - [Capstone Theorem Files](#capstone-theorem-files)

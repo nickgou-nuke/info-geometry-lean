@@ -11,6 +11,7 @@ import InfoGeometry.Canonical.QuaternionEmbedding
 import InfoGeometry.Canonical.BiquaternionSU2
 import InfoGeometry.Canonical.BiquaternionTorsionBridge
 import InfoGeometry.Canonical.EmergentGravityActionVariation
+import InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
@@ -157,7 +158,6 @@ import InfoGeometry.Canonical.FiveGradedTwistorIncidence
 import InfoGeometry.Canonical.BulkBoundaryTomitaTransportBridge
 import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 import InfoGeometry.Canonical.BregmanTriality
-import InfoGeometry.Canonical.BulgarianThermodynamicGeometryBridge
 import InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
 import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 import InfoGeometry.Canonical.CalabiYauMetricRicci
@@ -257,8 +257,6 @@ import InfoGeometry.Canonical.SplitCliffordExternalChain
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 import InfoGeometry.Canonical.CompactifiedThermalOperators
-import InfoGeometry.Canonical.CompactifiedThermalConeBridge
-import InfoGeometry.Canonical.StandardFormExpectationUpdate
 import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
@@ -589,6 +587,8 @@ import InfoGeometry.Canonical.HestenesKreinVacuum
 import InfoGeometry.Canonical.HestenesCommutantGeometry
 import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 import InfoGeometry.Canonical.HestenesAnalyticity
+import InfoGeometry.Canonical.ComplexAnalyticBridge
+import InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
 import InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 import InfoGeometry.Canonical.HestenesQVandermondeShadow
 import InfoGeometry.Canonical.HestenesRealStructures
@@ -948,7 +948,6 @@ import InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
 import InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
 import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
-import InfoGeometry.Canonical.SouriauTranslatorAudit
 import InfoGeometry.Canonical.SpectralGeneratorProxy
 import InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
 import InfoGeometry.Canonical.SpectralInference
@@ -972,7 +971,6 @@ import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Canonical.StandardFormNaturalConeBridge
-import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
 import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Canonical.StateIndexedModularSeedBridge
 import InfoGeometry.ExponentialFamily.Bernoulli

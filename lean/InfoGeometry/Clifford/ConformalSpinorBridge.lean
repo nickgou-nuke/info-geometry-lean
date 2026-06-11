@@ -136,10 +136,13 @@ private theorem jacobi_even_basis
     ∀ (y z : OSp12),
       bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z) := by
   rcases hx with rfl | rfl | rfl
-  all_goals
-    let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
-    have hspan : Submodule.span ℝ S = ⊤ := by
-      simpa [S] using (Pi.basisFun ℝ B).span_eq
+  · let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+    have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+      ext v
+      constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+    have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+      rw [S, hrange]
+      exact (Pi.basisFun ℝ B).span_eq
     intro y z
     have hy : y ∈ Submodule.span ℝ S := by
       simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
@@ -153,7 +156,9 @@ private theorem jacobi_even_basis
       Submodule.span_induction₂
         (s := S) (t := S)
         (p := fun y z _ _ =>
-          bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+          bracket (Pi.single B.H (1 : ℝ)) (bracket y z) =
+            bracket (bracket (Pi.single B.H (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) z))
         ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
     · intro y z hygen hzgen
       rcases hygen with ⟨a, rfl⟩
@@ -171,54 +176,787 @@ private theorem jacobi_even_basis
           smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
     · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
       calc
-        bracket x (bracket (y₁ + y₂) z)
-            = bracket x (bracket y₁ z + bracket y₂ z) := by
+        bracket (Pi.single B.H (1 : ℝ)) (bracket (y₁ + y₂) z)
+            = bracket (Pi.single B.H (1 : ℝ)) (bracket y₁ z + bracket y₂ z) := by
                 rw [SuperBracket.add_lie]
-        _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+        _ = bracket (Pi.single B.H (1 : ℝ)) (bracket y₁ z) +
+              bracket (Pi.single B.H (1 : ℝ)) (bracket y₂ z) := by
               rw [SuperBracket.lie_add]
-        _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
-              (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+        _ = (bracket (bracket (Pi.single B.H (1 : ℝ)) y₁) z +
+              bracket y₁ (bracket (Pi.single B.H (1 : ℝ)) z)) +
+            (bracket (bracket (Pi.single B.H (1 : ℝ)) y₂) z +
+              bracket y₂ (bracket (Pi.single B.H (1 : ℝ)) z)) := by
               rw [h₁, h₂]
-        _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+        _ = bracket (bracket (Pi.single B.H (1 : ℝ)) (y₁ + y₂)) z +
+              bracket (y₁ + y₂) (bracket (Pi.single B.H (1 : ℝ)) z) := by
               simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
                 add_assoc]
     · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
       calc
-        bracket x (bracket y (z₁ + z₂))
-            = bracket x (bracket y z₁ + bracket y z₂) := by
+        bracket (Pi.single B.H (1 : ℝ)) (bracket y (z₁ + z₂))
+            = bracket (Pi.single B.H (1 : ℝ)) (bracket y z₁ + bracket y z₂) := by
                 rw [SuperBracket.lie_add]
-        _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+        _ = bracket (Pi.single B.H (1 : ℝ)) (bracket y z₁) +
+              bracket (Pi.single B.H (1 : ℝ)) (bracket y z₂) := by
               rw [SuperBracket.lie_add]
-        _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
-              (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+        _ = (bracket (bracket (Pi.single B.H (1 : ℝ)) y) z₁ +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) z₁)) +
+            (bracket (bracket (Pi.single B.H (1 : ℝ)) y) z₂ +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) z₂)) := by
               rw [h₁, h₂]
-        _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+        _ = bracket (bracket (Pi.single B.H (1 : ℝ)) y) (z₁ + z₂) +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) (z₁ + z₂)) := by
               simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
                 add_assoc]
     · intro r y z hy' hz' h
       calc
-        bracket x (bracket (r • y) z)
-            = bracket x (r • bracket y z) := by
+        bracket (Pi.single B.H (1 : ℝ)) (bracket (r • y) z)
+            = bracket (Pi.single B.H (1 : ℝ)) (r • bracket y z) := by
                 rw [hsmul_left]
-        _ = r • bracket x (bracket y z) := by
+        _ = r • bracket (Pi.single B.H (1 : ℝ)) (bracket y z) := by
               rw [SuperBracket.lie_smul]
-        _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+        _ = r • (bracket (bracket (Pi.single B.H (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) z)) := by
               rw [h]
-        _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+        _ = bracket (bracket (Pi.single B.H (1 : ℝ)) (r • y)) z +
+              bracket (r • y) (bracket (Pi.single B.H (1 : ℝ)) z) := by
               simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
                 add_left_comm, add_assoc]
     · intro r y z hy' hz' h
       calc
-        bracket x (bracket y (r • z))
-            = bracket x (r • bracket y z) := by
+        bracket (Pi.single B.H (1 : ℝ)) (bracket y (r • z))
+            = bracket (Pi.single B.H (1 : ℝ)) (r • bracket y z) := by
                 rw [SuperBracket.lie_smul]
-        _ = r • bracket x (bracket y z) := by
+        _ = r • bracket (Pi.single B.H (1 : ℝ)) (bracket y z) := by
               rw [SuperBracket.lie_smul]
-        _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+        _ = r • (bracket (bracket (Pi.single B.H (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) z)) := by
               rw [h]
-        _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+        _ = bracket (bracket (Pi.single B.H (1 : ℝ)) y) (r • z) +
+              bracket y (bracket (Pi.single B.H (1 : ℝ)) (r • z)) := by
               simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
                 add_comm, add_left_comm, add_assoc]
+  · let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+    have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+      ext v
+      constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+    have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+      rw [S, hrange]
+      exact (Pi.basisFun ℝ B).span_eq
+    intro y z
+    have hy : y ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hz : z ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+      intro r a b
+      ext k
+      simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+    refine
+      Submodule.span_induction₂
+        (s := S) (t := S)
+        (p := fun y z _ _ =>
+          bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z) =
+            bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) z))
+        ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+    · intro y z hygen hzgen
+      rcases hygen with ⟨a, rfl⟩
+      rcases hzgen with ⟨b, rfl⟩
+      cases a <;> cases b <;>
+        ext k <;> fin_cases k <;>
+          simp [bracket, Pi.single, Function.update, structConst]
+    · intro z hz'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y hy'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+      calc
+        bracket (Pi.single B.Ep (1 : ℝ)) (bracket (y₁ + y₂) z)
+            = bracket (Pi.single B.Ep (1 : ℝ)) (bracket y₁ z + bracket y₂ z) := by
+                rw [SuperBracket.add_lie]
+        _ = bracket (Pi.single B.Ep (1 : ℝ)) (bracket y₁ z) +
+              bracket (Pi.single B.Ep (1 : ℝ)) (bracket y₂ z) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y₁) z +
+              bracket y₁ (bracket (Pi.single B.Ep (1 : ℝ)) z)) +
+            (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y₂) z +
+              bracket y₂ (bracket (Pi.single B.Ep (1 : ℝ)) z)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket (Pi.single B.Ep (1 : ℝ)) (y₁ + y₂)) z +
+              bracket (y₁ + y₂) (bracket (Pi.single B.Ep (1 : ℝ)) z) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+      calc
+        bracket (Pi.single B.Ep (1 : ℝ)) (bracket y (z₁ + z₂))
+            = bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z₁ + bracket y z₂) := by
+                rw [SuperBracket.lie_add]
+        _ = bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z₁) +
+              bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z₂) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) z₁ +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) z₁)) +
+            (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) z₂ +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) z₂)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) (z₁ + z₂) +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) (z₁ + z₂)) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket (Pi.single B.Ep (1 : ℝ)) (bracket (r • y) z)
+            = bracket (Pi.single B.Ep (1 : ℝ)) (r • bracket y z) := by
+                rw [hsmul_left]
+        _ = r • bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) z)) := by
+              rw [h]
+        _ = bracket (bracket (Pi.single B.Ep (1 : ℝ)) (r • y)) z +
+              bracket (r • y) (bracket (Pi.single B.Ep (1 : ℝ)) z) := by
+              simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                add_left_comm, add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket (Pi.single B.Ep (1 : ℝ)) (bracket y (r • z))
+            = bracket (Pi.single B.Ep (1 : ℝ)) (r • bracket y z) := by
+                rw [SuperBracket.lie_smul]
+        _ = r • bracket (Pi.single B.Ep (1 : ℝ)) (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) z)) := by
+              rw [h]
+        _ = bracket (bracket (Pi.single B.Ep (1 : ℝ)) y) (r • z) +
+              bracket y (bracket (Pi.single B.Ep (1 : ℝ)) (r • z)) := by
+              simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                add_comm, add_left_comm, add_assoc]
+  · let S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+    have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+      ext v
+      constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+    have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+      rw [S, hrange]
+      exact (Pi.basisFun ℝ B).span_eq
+    intro y z
+    have hy : y ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hz : z ∈ Submodule.span ℝ S := by
+      simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+    have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+      intro r a b
+      ext k
+      simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+    refine
+      Submodule.span_induction₂
+        (s := S) (t := S)
+        (p := fun y z _ _ =>
+          bracket (Pi.single B.Em (1 : ℝ)) (bracket y z) =
+            bracket (bracket (Pi.single B.Em (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) z))
+        ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+    · intro y z hygen hzgen
+      rcases hygen with ⟨a, rfl⟩
+      rcases hzgen with ⟨b, rfl⟩
+      cases a <;> cases b <;>
+        ext k <;> fin_cases k <;>
+          simp [bracket, Pi.single, Function.update, structConst]
+    · intro z hz'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y hy'
+      ext k <;>
+        simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+          smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+    · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+      calc
+        bracket (Pi.single B.Em (1 : ℝ)) (bracket (y₁ + y₂) z)
+            = bracket (Pi.single B.Em (1 : ℝ)) (bracket y₁ z + bracket y₂ z) := by
+                rw [SuperBracket.add_lie]
+        _ = bracket (Pi.single B.Em (1 : ℝ)) (bracket y₁ z) +
+              bracket (Pi.single B.Em (1 : ℝ)) (bracket y₂ z) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket (Pi.single B.Em (1 : ℝ)) y₁) z +
+              bracket y₁ (bracket (Pi.single B.Em (1 : ℝ)) z)) +
+            (bracket (bracket (Pi.single B.Em (1 : ℝ)) y₂) z +
+              bracket y₂ (bracket (Pi.single B.Em (1 : ℝ)) z)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket (Pi.single B.Em (1 : ℝ)) (y₁ + y₂)) z +
+              bracket (y₁ + y₂) (bracket (Pi.single B.Em (1 : ℝ)) z) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+      calc
+        bracket (Pi.single B.Em (1 : ℝ)) (bracket y (z₁ + z₂))
+            = bracket (Pi.single B.Em (1 : ℝ)) (bracket y z₁ + bracket y z₂) := by
+                rw [SuperBracket.lie_add]
+        _ = bracket (Pi.single B.Em (1 : ℝ)) (bracket y z₁) +
+              bracket (Pi.single B.Em (1 : ℝ)) (bracket y z₂) := by
+              rw [SuperBracket.lie_add]
+        _ = (bracket (bracket (Pi.single B.Em (1 : ℝ)) y) z₁ +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) z₁)) +
+            (bracket (bracket (Pi.single B.Em (1 : ℝ)) y) z₂ +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) z₂)) := by
+              rw [h₁, h₂]
+        _ = bracket (bracket (Pi.single B.Em (1 : ℝ)) y) (z₁ + z₂) +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) (z₁ + z₂)) := by
+              simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket (Pi.single B.Em (1 : ℝ)) (bracket (r • y) z)
+            = bracket (Pi.single B.Em (1 : ℝ)) (r • bracket y z) := by
+                rw [hsmul_left]
+        _ = r • bracket (Pi.single B.Em (1 : ℝ)) (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket (Pi.single B.Em (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) z)) := by
+              rw [h]
+        _ = bracket (bracket (Pi.single B.Em (1 : ℝ)) (r • y)) z +
+              bracket (r • y) (bracket (Pi.single B.Em (1 : ℝ)) z) := by
+              simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                add_left_comm, add_assoc]
+    · intro r y z hy' hz' h
+      calc
+        bracket (Pi.single B.Em (1 : ℝ)) (bracket y (r • z))
+            = bracket (Pi.single B.Em (1 : ℝ)) (r • bracket y z) := by
+                rw [SuperBracket.lie_smul]
+        _ = r • bracket (Pi.single B.Em (1 : ℝ)) (bracket y z) := by
+              rw [SuperBracket.lie_smul]
+        _ = r • (bracket (bracket (Pi.single B.Em (1 : ℝ)) y) z +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) z)) := by
+              rw [h]
+        _ = bracket (bracket (Pi.single B.Em (1 : ℝ)) y) (r • z) +
+              bracket y (bracket (Pi.single B.Em (1 : ℝ)) (r • z)) := by
+              simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                add_comm, add_left_comm, add_assoc]
+
+  · have x : OSp12 := Pi.single B.Ep (1 : ℝ)
+    · have x : OSp12 := Pi.single B.H (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+    · have x : OSp12 := Pi.single B.Ep (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+    · have x : OSp12 := Pi.single B.Em (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+
+  · have x : OSp12 := Pi.single B.Em (1 : ℝ)
+    · have x : OSp12 := Pi.single B.H (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+    · have x : OSp12 := Pi.single B.Ep (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+    · have x : OSp12 := Pi.single B.Em (1 : ℝ)
+          set S : Set OSp12 := Set.range (fun a : B => Pi.single a (1 : ℝ))
+          have hrange : Set.range (fun a : B => Pi.single a (1 : ℝ)) = Set.range (Pi.basisFun ℝ B) := by
+            ext v; constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
+          have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
+            rw [hrange]
+            exact (Pi.basisFun ℝ B).span_eq
+          intro y z
+          have hy : y ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hz : z ∈ Submodule.span ℝ S := by
+            simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+          have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
+            intro r a b
+            ext k
+            simp [bracket, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, Finset.mul_sum]
+          refine
+            Submodule.span_induction₂
+              (s := S) (t := S)
+              (p := fun y z _ _ =>
+                bracket x (bracket y z) = bracket (bracket x y) z + bracket y (bracket x z))
+              ?mem_mem ?zero_left ?zero_right ?add_left ?add_right ?smul_left ?smul_right hy hz
+          · intro y z hygen hzgen
+            rcases hygen with ⟨a, rfl⟩
+            rcases hzgen with ⟨b, rfl⟩
+            cases a <;> cases b <;>
+              ext k <;> fin_cases k <;>
+                simp [bracket, Pi.single, Function.update, structConst]
+          · intro z hz'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y hy'
+            ext k <;>
+              simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left, Finset.mul_sum,
+                smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
+          · intro y₁ y₂ z hy₁ hy₂ hz' h₁ h₂
+            calc
+              bracket x (bracket (y₁ + y₂) z)
+                  = bracket x (bracket y₁ z + bracket y₂ z) := by
+                      rw [SuperBracket.add_lie]
+              _ = bracket x (bracket y₁ z) + bracket x (bracket y₂ z) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y₁) z + bracket y₁ (bracket x z)) +
+                    (bracket (bracket x y₂) z + bracket y₂ (bracket x z)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x (y₁ + y₂)) z + bracket (y₁ + y₂) (bracket x z) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro y z₁ z₂ hy' hz₁ hz₂ h₁ h₂
+            calc
+              bracket x (bracket y (z₁ + z₂))
+                  = bracket x (bracket y z₁ + bracket y z₂) := by
+                      rw [SuperBracket.lie_add]
+              _ = bracket x (bracket y z₁) + bracket x (bracket y z₂) := by
+                    rw [SuperBracket.lie_add]
+              _ = (bracket (bracket x y) z₁ + bracket y (bracket x z₁)) +
+                    (bracket (bracket x y) z₂ + bracket y (bracket x z₂)) := by
+                    rw [h₁, h₂]
+              _ = bracket (bracket x y) (z₁ + z₂) + bracket y (bracket x (z₁ + z₂)) := by
+                    simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                      add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket (r • y) z)
+                  = bracket x (r • bracket y z) := by
+                      rw [hsmul_left]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x (r • y)) z + bracket (r • y) (bracket x z) := by
+                    simp [hsmul_left, SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm,
+                      add_left_comm, add_assoc]
+          · intro r y z hy' hz' h
+            calc
+              bracket x (bracket y (r • z))
+                  = bracket x (r • bracket y z) := by
+                      rw [SuperBracket.lie_smul]
+              _ = r • bracket x (bracket y z) := by
+                    rw [SuperBracket.lie_smul]
+              _ = r • (bracket (bracket x y) z + bracket y (bracket x z)) := by
+                    rw [h]
+              _ = bracket (bracket x y) (r • z) + bracket y (bracket x (r • z)) := by
+                    simp [SuperBracket.lie_smul, SuperBracket.add_lie_left, SuperBracket.lie_add,
+                      add_comm, add_left_comm, add_assoc]
+
 
 -- BUCKET 3: the structure constants are verified by SymPy (125/125 Jacobi triples pass).
 -- The `SuperLieRing` instance follows the same pattern as the authentic 5D osp(1|2)

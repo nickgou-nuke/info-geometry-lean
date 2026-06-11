@@ -189,6 +189,19 @@ end StandardFormProjectiveGWBridge
 
 /-! ## Binary-word natural-cone face extension -/
 
+@[rep_depth projective]
+structure BinaryWordModularFaceBridge where
+  naturalCone : Set (InfoGeometry.Krein.DoubledSpace H)
+  localizationOp :
+    TypeIIIModularCantorSystem.BinaryWord →
+      InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H
+  cone_face_localization :
+    ∀ (w : TypeIIIModularCantorSystem.BinaryWord)
+      {ξ : InfoGeometry.Krein.DoubledSpace H},
+      ξ ∈ naturalCone → localizationOp w ξ ∈ naturalCone
+
+/-! ## Binary-word natural-cone face extension -/
+
 /--
 Projective-shadow bridge enriched with a theorem-safe binary-word natural-cone
 face-localization socket.

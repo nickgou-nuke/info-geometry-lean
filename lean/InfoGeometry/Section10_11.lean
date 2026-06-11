@@ -33,7 +33,11 @@ theorem jacobi_identity (A B C : Matrix (Fin 2) (Fin 2) ℂ) :
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
-/-- First Bianchi (algebraic): R_{[μνρ]} = 0 follows from Jacobi. -/
-theorem first_bianchi_jacobi (A B C : Matrix (Fin 2) (Fin 2) ℂ) : True := by trivial
+/-- First Bianchi (algebraic): the cyclic commutator sum vanishes by Jacobi. -/
+theorem first_bianchi_jacobi (A B C : Matrix (Fin 2) (Fin 2) ℂ) :
+    A*(B*C - C*B) - (B*C - C*B)*A +
+    B*(C*A - A*C) - (C*A - A*C)*B +
+    C*(A*B - B*A) - (A*B - B*A)*C = 0 :=
+  jacobi_identity A B C
 
 end Section10_11

@@ -1,5 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
+import Mathlib.LinearAlgebra.Determinant
 import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
@@ -54,7 +55,29 @@ theorem quaternion_relations :
   · ext i j; fin_cases i <;> fin_cases j <;>
       simp [complexI, complexJ, complexK, Matrix.mul_apply, Fin.sum_univ_four]
 
-theorem metric_equivalence (dt dx dy dz : ℂ) : True := by trivial
+/--
+The determinant of the Pauli/Hermitian representative recovers the Minkowski
+quadratic form in the coordinates `(dt, dx, dy, dz)`.
+-/
+theorem metric_equivalence (dt dx dy dz : ℂ) :
+    let dX : Matrix (Fin 2) (Fin 2) ℂ := dt • I₂ + dx • σ₁ + dy • σ₂ + dz • σ₃
+    Matrix.det dX = dt * dt - (dx * dx + dy * dy + dz * dz) := by
+  intro dX
+  rw [Matrix.det_fin_two]
+  have h00 : dX 0 0 = dt + dz := by
+    simp [dX, I₂, σ₁, σ₂, σ₃]
+  have h01 : dX 0 1 = dx - dy * Complex.I := by
+    simp [dX, I₂, σ₁, σ₂, σ₃]
+    ring
+  have h10 : dX 1 0 = dx + dy * Complex.I := by
+    simp [dX, I₂, σ₁, σ₂, σ₃]
+  have h11 : dX 1 1 = dt - dz := by
+    simp [dX, I₂, σ₁, σ₂, σ₃]
+    ring
+  rw [h00, h01, h10, h11]
+  ring_nf
+  simp [Complex.I_sq]
+  ring_nf
 
 def hilbertSchmidt (A B : Matrix (Fin 2) (Fin 2) ℂ) : ℂ := ((∑ i : Fin 2, (A * B) i i) / 2)
 

@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Ring
+import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 set_option autoImplicit false
 
@@ -109,16 +110,18 @@ theorem nilpotent_linear_flow_left_inverse
     _ = 1 := by rw [one_mul, one_mul, mul_one, hsq]; abel
 
 /--
-Debt marker only.  The finite algebraic nilpotent identities in this file are
-closed; analytic exponential-flow/completion claims require a separate topology
-or functional-calculus theorem.  See
-`InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_to_infinite_limit` for
-an owned eventually-constant `Tendsto` theorem in the normalized nilpotent case.
+The normalized finite nilpotent products converge to the algebraic truncation
+`1 + T • N` in the eventually-constant nilpotent lane.
+This is the honest topological closure available in-repo; no stronger analytic
+completion claim is made here.
 -/
-theorem sorry_exponential_flow_truncation
-  {A : Type*} [Ring A] (N t : A) (_h_comm : ∀ Y : A, t * Y = Y * t) (_hN : N * N = 0) :
-  True := by
-  trivial
+theorem exponential_flow_truncation
+  {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] (N : A) (T : ℝ) (hN : N * N = 0) :
+  Filter.Tendsto
+    (fun n : ℕ => InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_prod_seq T N n)
+    Filter.atTop
+    (nhds (InfoGeometry.Algebra.NilpotentFiniteProductLimit.nilpotent_exp T N)) :=
+  InfoGeometry.Algebra.NilpotentFiniteProductLimit.finite_to_infinite_limit T N hN
 
 end InfoGeometry.Algebra.NilpotentModularAutomorphism
 

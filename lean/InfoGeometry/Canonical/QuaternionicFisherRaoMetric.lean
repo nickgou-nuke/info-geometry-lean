@@ -1,10 +1,15 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.Ring
 
 /-!
 # InfoGeometry.Canonical.QuaternionicFisherRaoMetric
@@ -55,7 +60,11 @@ def FisherRaoMetric (q : QuaternionicCoordinates) : Matrix (Fin 4) (Fin 4) ℝ :
     the evaluated Hessian reduces exactly to the identity matrix. -/
 theorem FisherRaoMetric_eq_one (q : QuaternionicCoordinates) :
     FisherRaoMetric q = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
-  sorry
+  ext i j
+  fin_cases i <;> fin_cases j <;> (
+    dsimp [FisherRaoMetric, Hessian, Psi, partialDeriv, Function.update]
+    simp
+  )
 
 /-- Theorem: The Fisher-Rao Metric on the free quaternionic statistical manifold is symmetric. -/
 theorem FisherRaoMetric_is_symmetric (q : QuaternionicCoordinates) :

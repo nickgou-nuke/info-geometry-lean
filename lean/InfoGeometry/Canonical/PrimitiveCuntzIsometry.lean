@@ -28,8 +28,7 @@ theorem P_L_sq : P_L (A := A) * P_L (A := A) = P_L (A := A) := by
   dsimp [P_L]
   calc
     (UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_L (A := A))) * (UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_L (A := A)))
-      = UHFAlgebra.S_L (A := A) * (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_L (A := A)) * star (UHFAlgebra.S_L (A := A)) := by
-        simp only [mul_assoc]
+      = UHFAlgebra.S_L (A := A) * (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_L (A := A)) * star (UHFAlgebra.S_L (A := A)) := by simp [mul_assoc]
     _ = UHFAlgebra.S_L (A := A) * 1 * star (UHFAlgebra.S_L (A := A)) := by rw [UHFAlgebra.isometry_L]
     _ = UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_L (A := A)) := by rw [mul_one]
 
@@ -38,8 +37,7 @@ theorem P_R_sq : P_R (A := A) * P_R (A := A) = P_R (A := A) := by
   dsimp [P_R]
   calc
     (UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A))) * (UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A)))
-      = UHFAlgebra.S_R (A := A) * (star (UHFAlgebra.S_R (A := A)) * UHFAlgebra.S_R (A := A)) * star (UHFAlgebra.S_R (A := A)) := by
-        simp only [mul_assoc]
+      = UHFAlgebra.S_R (A := A) * (star (UHFAlgebra.S_R (A := A)) * UHFAlgebra.S_R (A := A)) * star (UHFAlgebra.S_R (A := A)) := by simp [mul_assoc]
     _ = UHFAlgebra.S_R (A := A) * 1 * star (UHFAlgebra.S_R (A := A)) := by rw [UHFAlgebra.isometry_R]
     _ = UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A)) := by rw [mul_one]
 
@@ -50,7 +48,6 @@ and the operators are isometries, the cross-term `S_L^* S_R` must strictly vanis
 This is the discrete equivalent of the continuous vanishing of holonomy.
 -/
 theorem cuntz_orthogonality : star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A) = 0 := by
-  -- We start from S_L^* * (P_L + P_R) = S_L^* * 1
   have h1 : star (UHFAlgebra.S_L (A := A)) * (P_L (A := A) + P_R (A := A)) = star (UHFAlgebra.S_L (A := A)) * 1 := by
     rw [cuntz_partition_exactness]
   rw [mul_add, mul_one] at h1
@@ -58,7 +55,7 @@ theorem cuntz_orthogonality : star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A
     dsimp [P_L]
     calc
       star (UHFAlgebra.S_L (A := A)) * (UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_L (A := A)))
-        = (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_L (A := A)) * star (UHFAlgebra.S_L (A := A)) := by rw [← mul_assoc]
+        = (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_L (A := A)) * star (UHFAlgebra.S_L (A := A)) := by simp [mul_assoc]
       _ = 1 * star (UHFAlgebra.S_L (A := A)) := by rw [UHFAlgebra.isometry_L]
       _ = star (UHFAlgebra.S_L (A := A)) := by rw [one_mul]
   rw [h2] at h1
@@ -75,7 +72,7 @@ theorem cuntz_orthogonality : star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A
   have h5 : star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A) * (star (UHFAlgebra.S_R (A := A)) * UHFAlgebra.S_R (A := A)) = 0 := by
     calc
       star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A) * (star (UHFAlgebra.S_R (A := A)) * UHFAlgebra.S_R (A := A))
-        = star (UHFAlgebra.S_L (A := A)) * (UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A))) * UHFAlgebra.S_R (A := A) := by simp only [mul_assoc]
+        = star (UHFAlgebra.S_L (A := A)) * (UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A))) * UHFAlgebra.S_R (A := A) := by simp [mul_assoc]
       _ = 0 := h4
   rw [UHFAlgebra.isometry_R, mul_one] at h5
   exact h5
@@ -85,7 +82,7 @@ theorem P_L_mul_P_R_eq_zero : P_L (A := A) * P_R (A := A) = 0 := by
   dsimp [P_L, P_R]
   calc
     (UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_L (A := A))) * (UHFAlgebra.S_R (A := A) * star (UHFAlgebra.S_R (A := A)))
-      = UHFAlgebra.S_L (A := A) * (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A)) * star (UHFAlgebra.S_R (A := A)) := by simp only [mul_assoc]
+      = UHFAlgebra.S_L (A := A) * (star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A)) * star (UHFAlgebra.S_R (A := A)) := by simp [mul_assoc]
     _ = UHFAlgebra.S_L (A := A) * 0 * star (UHFAlgebra.S_R (A := A)) := by rw [cuntz_orthogonality]
     _ = 0 := by simp
 

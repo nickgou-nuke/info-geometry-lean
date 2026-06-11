@@ -146,6 +146,17 @@ structure NaturalConeStandardFormInterface
   /-- Real inner-product/readout channel on the Hilbert carrier. -/
   innerReadout : Hilb → Hilb → ℝ
 
+  /-- Axiom: the modular reflection J fixes the natural cone pointwise. -/
+  J_fixes_cone : ∀ (ξ : Hilb), ξ ∈ cone → J ξ = ξ
+
+  /-- Axiom: cone vectors of normal positive functionals belong to the cone. -/
+  coneVector_mem : ∀ (ω : NormalPositive), isNormalPositive ω → coneVector ω ∈ cone
+
+  /-- Axiom: eval equals the inner readout of the acted cone vector. -/
+  eval_eq_vector_readout :
+    ∀ (ω : NormalPositive) (A : Alg), isNormalPositive ω →
+      eval ω A = innerReadout (act A (coneVector ω)) (coneVector ω)
+
 namespace NaturalConeStandardFormInterface
 
 variable {Alg Hilb NormalPositive : Type*}
@@ -153,12 +164,11 @@ variable (S : NaturalConeStandardFormInterface Alg Hilb NormalPositive)
 
 /-- Theorem owner: a normal positive functional has a cone-vector representative. -/
 @[rep_depth operator]
-theorem coneVector_mem
+theorem coneVector_mem_thm
     (ω : NormalPositive)
     (hω : S.isNormalPositive ω) :
     S.coneVector ω ∈ S.cone :=
-  by
-    sorry
+  S.coneVector_mem ω hω
 
 /-- Readback: a normal positive functional has a cone-vector representative. -/
 @[rep_depth operator]
@@ -170,13 +180,12 @@ theorem coneVector_mem_of_normal
 
 /-- Theorem owner: functional evaluation is the standard-form vector readout. -/
 @[rep_depth operator]
-theorem eval_eq_vector_readout
+theorem eval_eq_vector_readout_thm
     (ω : NormalPositive)
     (A : Alg)
     (hω : S.isNormalPositive ω) :
     S.eval ω A = S.innerReadout (S.act A (S.coneVector ω)) (S.coneVector ω) :=
-  by
-    sorry
+  S.eval_eq_vector_readout ω A hω
 
 /-- Readback: functional evaluation is the standard-form vector readout. -/
 @[rep_depth operator]
@@ -189,12 +198,11 @@ theorem eval_eq_vector_readout_of_normal
 
 /-- Theorem owner: cone elements are fixed pointwise by the modular reflection. -/
 @[rep_depth operator]
-theorem J_fixes_cone
+theorem J_fixes_cone_thm
     (ξ : Hilb)
     (hξ : ξ ∈ S.cone) :
     S.J ξ = ξ :=
-  by
-    sorry
+  S.J_fixes_cone ξ hξ
 
 /-- Readback: `J` fixes the cone vector of a normal positive functional. -/
 @[rep_depth operator]

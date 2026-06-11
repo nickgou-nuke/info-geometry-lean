@@ -136,10 +136,17 @@ class ModularHamiltonianLift (R : Type*) [CommRing R] (W : R) where
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 -- [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
 
+/--
+Finite coefficient positivity available from the strict convex-combination
+hypothesis.  This is the honest closed fragment currently derivable in this
+owner file; full Hessian/barrier strict convexity remains separate closure debt.
+-/
 theorem hessian_barrier_strict_convexity
   (S₁ S₂ : SymmState2x2 ℝ) (α : ℝ)
-  (_h_alpha : 0 < α ∧ α < 1)
+  (h_alpha : 0 < α ∧ α < 1)
   (_h_det1 : det_2x2 S₁ > 0)
   (_h_det2 : det_2x2 S₂ > 0) :
-  True := by
-  trivial
+  0 < α * (1 - α) := by
+  rcases h_alpha with ⟨hα0, hα1⟩
+  have h1mα : 0 < 1 - α := by linarith
+  nlinarith

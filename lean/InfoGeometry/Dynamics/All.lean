@@ -9,6 +9,7 @@ import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Dynamics.RapiditySpace
 import InfoGeometry.Dynamics.RindlerWedge
 import InfoGeometry.Dynamics.SouriauBostConnesFlow
+import InfoGeometry.Dynamics.SouriauAPSBoundarySocket
 import InfoGeometry.Dynamics.SouriauDiracHodge
 import InfoGeometry.Dynamics.TomitaTakesaki
 import InfoGeometry.Dynamics.UnruhKMS

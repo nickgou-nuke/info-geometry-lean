@@ -106,6 +106,21 @@ theorem chiralSupertrace_supercharge_eq_zero
   DrazinSupercharge.CertifiedInverseKernel.chiralSupertrace_supercharge_eq_zero
     (CIK := C.kernel) τ
 
+/--
+Drazin-Witten public alias for the vanishing chiral supertrace of the odd
+Drazin generator.
+
+This is the same kernel-checked cancellation as `chiralSupertrace_supercharge_eq_zero`,
+re-exported under the Drazin-Witten wording used by the grand-unification lane.
+-/
+@[rep_depth krein]
+theorem drazinWitten_chiralSupertrace_eq_zero
+    (τ : DrazinSupercharge.CertifiedInverseKernel.ChiralSupertraceReadout C.kernel) :
+    DrazinSupercharge.CertifiedInverseKernel.chiralSupertrace
+        (CIK := C.kernel) τ
+        (DrazinSupercharge.CertifiedInverseKernel.supercharge C.kernel) = 0 :=
+  chiralSupertrace_supercharge_eq_zero (C := C) τ
+
 /-- Compact/chiral commutator closure on the gathered package. -/
 @[rep_depth krein]
 theorem spectralCommutator_compact_mem_chiralCone

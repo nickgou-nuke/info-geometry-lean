@@ -3,18 +3,22 @@ import Mathlib
 namespace InfoGeometry.PrimonGas
 
 /--
-The Algebraic Trifactor type representing the Supersymmetry grading.
-This maps exactly to the {-1, 0, 1} roots of the geometric signature.
+A three-way finite grading type used to label the values `1`, `-1`, and `0`.
+
+In this canonical file it is only a discrete classifier. Interpretive links to
+other geometric or physical sectors live outside this theorem surface.
 -/
 inductive Trifactor
-| boson   -- (+1) : The J-even sector (Completed Xi)
-| fermion -- (-1) : The J-odd sector (Supercharge driver)
-| ghost   -- (0)  : The Cuntz boundary (Annihilated states)
+| boson   -- (+1) branch of the classifier
+| fermion -- (-1) branch of the classifier
+| ghost   -- fallback / zero branch of the classifier
 
 /--
-In the Supersymmetric Primon Gas, the state space (the integers) is partitioned
-into three distinct sectors by the chiral grading operator (-1)^F, which evaluates
-to the Möbius function μ(n).
+Classifier from an integer readout into the three discrete labels.
+
+This definition does not prove that the input comes from the Möbius function or
+from any arithmetic/physical state space; it only sends `1 ↦ boson`, `-1 ↦
+fermion`, and everything else to `ghost`.
 -/
 def classify_state (mu_val : ℤ) : Trifactor :=
   if mu_val = 1 then Trifactor.boson
@@ -22,9 +26,10 @@ def classify_state (mu_val : ℤ) : Trifactor :=
   else Trifactor.ghost
 
 /--
-The definition of a Supersymmetric State Space for the Primon Gas.
-The key constraint is that the chiral grading MUST strictly collapse into the trifactor,
-proving that there are no "leaks" outside of the Boson/Fermion/Ghost classification.
+A state space equipped with an integer grading constrained to lie in `{1,-1,0}`.
+
+The key datum is the explicit field `grading_bound`; this structure does not say
+that the states are integers or that the grading is the Möbius function.
 -/
 structure SupersymmetricStateSpace where
   states : Type*
@@ -33,8 +38,11 @@ structure SupersymmetricStateSpace where
   grading_bound : ∀ s, chiral_grading s = 1 ∨ chiral_grading s = -1 ∨ chiral_grading s = 0
 
 /--
-Theorem: Every valid quantum state in the Supersymmetric Primon Gas maps uniquely
-to one of the three topological sectors of the algebraic trifactor.
+Every state in a `SupersymmetricStateSpace` is classified as boson, fermion, or
+ghost, provided by the explicit hypothesis `grading_bound`.
+
+This theorem is a finite trichotomy readout from the assumed value range
+`{1,-1,0}`; it does not construct the grading from arithmetic data.
 -/
 theorem complete_trifactor_mapping (S : SupersymmetricStateSpace) (s : S.states) :
     classify_state (S.chiral_grading s) = Trifactor.boson ∨

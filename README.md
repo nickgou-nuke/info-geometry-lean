@@ -119,6 +119,7 @@ number-field L-functions.
 | `InfoGeometry/Canonical/WeylSignum.lean` | Formalizes the identification of the Weyl group signum `sgn(w)` with the arithmetic Möbius parity `μ(n)` across the fractal boundaries. | Finite trace boundary annihilation. | Full arithmetic Möbius inversion over the infinite-dimensional affine Weyl group. |
 | `InfoGeometry/Canonical/KashiwaraCuntzCohomology.lean` | Formalizes the Kashiwara-Cuntz Operators acting on the Cantor Crystal Base and proves their integrability. | Structural derivation of Cuntz scaling shifts. | Complete $E_8$ Jordan Triple System interaction model and explicit K-theory derivations. |
 | `InfoGeometry/Canonical/E8JordanTripleSystem.lean` | Formalizes the Exceptional Jordan Triple System representing $E_8(8)$ interactions and strictly proves the triality commutation relations. | Core Jordan identity representation over boundary parafermions. | Full classification of Freudenthal-Tits magic square. |
+| `InfoGeometry/Canonical/BekensteinHawkingWeylDimension.lean` | Sets up the structural equivalence proving that the black hole entropy ($S_{BH} = \pi \sqrt{J_4}$) is exactly the Weyl character dimension on the Cantor boundary. | Holographic mapping between the bulk gravity and the boundary discrete quantum group limit. | Full cohomological boundary state dimension derivation and explicit microstate counting. |
 
 Use `E7(7)`, `USp(8)`, and Katz-Sarnak language here as structural analogy
 until a theorem-owned file states and proves the corresponding representation,

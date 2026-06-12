@@ -104,16 +104,6 @@ structure BerryKeatingOperatorPacket
 
 namespace BerryKeatingOperatorPacket
 
-/-- Trivial concrete model: Unit carrier with id operators.
-Provides a witness that the structure is not empty.
-Real model requires analytic operator theory (xp + px on L²). -/
-def trivial : BerryKeatingOperatorPacket Unit (Unit → Unit) (Set Unit) where
-  carrier := ()
-  domain := Set.univ
-  position := id
-  momentum := id
-  symmetrizedDilation := id
-
 end BerryKeatingOperatorPacket
 
 /--
@@ -288,22 +278,6 @@ theorem mellinCriticalLine
     G.mellinCriticalLine_True :=
   G.mellinCriticalLine_sorryProof
 
-/-- Trivial concrete model: both Fock summability and Mellin critical-line hold.
-Uses True for both sockets. Real model requires analytic Fock/Mellin theory. -/
-def trivial (FockState MellinState FockNorm MellinNorm : Type*)
-    (fockState : FockState) (mellinState : MellinState)
-    (fockNorm : FockNorm) (mellinNorm : MellinNorm) (guard : Type*) :
-    FockVsMellinNormalizabilityGuard FockState MellinState FockNorm MellinNorm where
-  fockState := fockState
-  mellinState := mellinState
-  fockNorm := fockNorm
-  mellinNorm := mellinNorm
-  fockSummabilityDomain_True := True
-  fockSummabilityDomain_sorryProof := True.intro
-  mellinCriticalLine_True := True
-  mellinCriticalLine_sorryProof := True.intro
-  criticalLine_not_from_ordinaryFockNorm_guard := guard
-
 end FockVsMellinNormalizabilityGuard
 
 /--
@@ -409,6 +383,7 @@ theorem reciprocalSingularity_of_zetaZero
   S.zetaZero_implies_reciprocalSingularity hz
 
 end MajoranaPfaffianZetaSpectralSocket
+
 
 /--
 Separation between the inverse-zeta Witten character and the completed-zeta

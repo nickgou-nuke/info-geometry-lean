@@ -1,3 +1,4 @@
+import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.CantorDiracGrandCanonical
 import InfoGeometry.Topology.CantorDiracOperator

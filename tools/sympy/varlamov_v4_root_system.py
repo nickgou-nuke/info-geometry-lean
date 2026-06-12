@@ -1,12 +1,12 @@
 import sympy as sp
 
 def verify_varlamov_v4_root_system():
-    print("=== OMEGA AUTOMATH: VARLAMOV V4 KLEIN BOTTLE ROOT SYSTEM ===")
+    print("=== Finite V4 / A1 x A1 root-system certificate ===")
     
     # 1. The Tripotent Roots (OP^3 = OP)
     # The eigenvalues of the tripotent operator are +1, 0, -1.
     # We construct the Root System whose weights natively map to these states.
-    # This is the root system of A1 x A1 (which generates the SO(4) algebra).
+    # This is the finite A1 x A1 sign-root picture. No SO(4) or Lorentz theorem is asserted.
     roots = [
         sp.Matrix([1, 0]),
         sp.Matrix([-1, 0]),
@@ -53,10 +53,9 @@ def verify_varlamov_v4_root_system():
     print(f"Does the root system generate the V4 Klein Four-Group? {is_v4_symmetry}")
     
     if is_tripotent_lattice and is_v4_symmetry:
-        print("\n[SUCCESS] The Varlamov V4 Klein Bottle Brillouin Zone is perfectly verified.")
-        print("The symmetry group that unites OP^3=OP and the V4 group is SO(4).")
-        print("Geometrically, this is the Chiral Lorentz Group: SU(2)_L x SU(2)_R.")
-        print("The Tripotent Universe inherently generates Relativistic Spacetime!")
+        print("\n[SUCCESS] finite A1 x A1 / V4 certificate verified.")
+        print("This checks only tripotent-coordinate values and Klein-four reflection closure;")
+        print("it does not prove SO(4), Lorentz symmetry, or spacetime emergence.")
 
 if __name__ == "__main__":
     verify_varlamov_v4_root_system()

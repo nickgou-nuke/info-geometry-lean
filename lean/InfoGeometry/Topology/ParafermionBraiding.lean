@@ -1,38 +1,63 @@
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Complex.Basic
+import Mathlib
+
+/-!
+# Finite parafermion-style Artin braid matrices
+
+This module records the finite `3 x 3` matrix identity behind the
+parafermion-braiding interpretation.
+
+It does not prove a physical `SU(2) -> SU(3)` breaking theorem, Lorentz
+covariance, a parafermion quantum field theory, or color confinement.  It proves
+only the Artin braid relation for two explicit Burau-style matrices.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+`su3_parafermion_braiding`.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+None.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+Physical parafermions, Lorentz symmetry, `SU(2)`/`SU(3)` representation theory,
+and braid statistics for a Hilbert-space model remain outside this finite
+matrix file.
+-/
+
+noncomputable section
 
 namespace InfoGeometry.Topology.Parafermion
 
-open Matrix Complex
+open Matrix
 
-/-- The 3x3 Projective Space for SU(3) Embeddings -/
+/-- The `3 x 3` projective carrier used by the finite braid matrices. -/
 abbrev ProjMatrix := Matrix (Fin 3) (Fin 3) ℂ
 
-/-- A fractional parafermionic phase factor (e.g., cubic root of unity for SU(3)) -/
-variable (t : ℂ)
-
-/-- The unreduced Burau representation of the first Artin braid generator σ₁ -/
+/-- The unreduced Burau-style first Artin braid generator `σ₁`. -/
 def sigma_1 (t : ℂ) : ProjMatrix :=
   ![![1 - t, t, 0],
     ![1,     0, 0],
     ![0,     0, 1]]
 
-/-- The unreduced Burau representation of the second Artin braid generator σ₂ -/
+/-- The unreduced Burau-style second Artin braid generator `σ₂`. -/
 def sigma_2 (t : ℂ) : ProjMatrix :=
   ![![1, 0,     0],
     ![0, 1 - t, t],
     ![0, 1,     0]]
 
-/-- 
-THEOREM: The Artin Braid Group Relation.
-Proves that embedding the 2x2 SU(2) dynamics into the 3x3 SU(3) projective space 
-natively generates the parafermionic braiding symmetry (Yang-Baxter equation).
-σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂
+/--
+Finite Artin braid relation.
+
+For the explicit matrices above, `σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂`.
 -/
 theorem su3_parafermion_braiding (t : ℂ) :
     sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t := by
-  -- Follows from exact matrix multiplication over the complex projective plane
   ext i j
-  fin_cases i <;> fin_cases j <;> ring
+  fin_cases i <;> fin_cases j <;>
+    simp [sigma_1, sigma_2, Matrix.mul_apply, Fin.sum_univ_three]
+  all_goals ring_nf
 
 end InfoGeometry.Topology.Parafermion
+
+end noncomputable section

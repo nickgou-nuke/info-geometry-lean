@@ -58,6 +58,10 @@ theorem horizon_is_time_invariant (t : ℝ) :
     _ = sys.phase t * (sys.S_L * star sys.S_R * star (sys.phase t)) := by rw [← mul_assoc sys.S_L]
     _ = sys.phase t * (star (sys.phase t) * (sys.S_L * star sys.S_R)) := by rw [← sys.h_phase_star_commute]
     _ = sys.phase t * star (sys.phase t) * (sys.S_L * star sys.S_R) := by rw [← mul_assoc]
+    _ = star (sys.phase t) * sys.phase t * (sys.S_L * star sys.S_R) := by
+        have h_comm : sys.phase t * star (sys.phase t) = star (sys.phase t) * sys.phase t := by
+          rw [← sys.h_phase_star_commute]
+        rw [h_comm]
     _ = 1 * (sys.S_L * star sys.S_R) := by rw [sys.h_phase_star]
     _ = sys.S_L * star sys.S_R := by rw [one_mul]
 
@@ -85,6 +89,10 @@ theorem higgs_mass_is_time_invariant (t : ℝ) :
           _ = sys.phase t * (sys.S_R * star sys.S_L * star (sys.phase t)) := by rw [← mul_assoc sys.S_R]
           _ = sys.phase t * (star (sys.phase t) * (sys.S_R * star sys.S_L)) := by rw [← sys.h_phase_star_commute]
           _ = sys.phase t * star (sys.phase t) * (sys.S_R * star sys.S_L) := by rw [← mul_assoc]
+          _ = star (sys.phase t) * sys.phase t * (sys.S_R * star sys.S_L) := by 
+             have h_comm : sys.phase t * star (sys.phase t) = star (sys.phase t) * sys.phase t := by
+               rw [← sys.h_phase_star_commute]
+             rw [h_comm]
           _ = 1 * (sys.S_R * star sys.S_L) := by rw [sys.h_phase_star]
           _ = sys.S_R * star sys.S_L := by rw [one_mul]
       rw [h2]

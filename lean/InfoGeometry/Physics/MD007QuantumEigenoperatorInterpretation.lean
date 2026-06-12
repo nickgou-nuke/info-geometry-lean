@@ -13,10 +13,11 @@ the finite algebraic identities behind that interpretation:
 * computational-basis outer products are the matrix units `Eᵢⱼ`;
 * every `2 × 2` operator decomposes into matrix units with its entries;
 * trace expectations `Tr(Eᵢⱼ ρ)` read the transposed matrix entries;
-* Pauli observables decompose in the `Eᵢⱼ` basis;
-* projective/Lüders numerators and diagonal weak-measurement numerators reduce
-  to explicit matrix-unit coefficients;
-* the finite depolarizing-channel formula acts on `Eᵢⱼ` as expected.
+* Pauli observables decompose in the `Eᵢⱼ` basis and their finite expectation
+  readouts are explicit matrix-entry combinations;
+* projective/Lüders numerators and diagonal weak-measurement numerators/probability
+  readouts reduce to explicit matrix-unit coefficients;
+* the finite depolarizing-channel formula acts on `Eᵢⱼ` as expected and preserves trace.
 
 No theorem here asserts positivity, CPTP/complete positivity, Born-rule physics,
 continuous unitary time evolution, exponentials, or any physical measurement
@@ -129,6 +130,26 @@ theorem sigma3_eigenoperator_decomposition :
     UnifiedMatrixBasis.σ₃ = E11 - E22 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [UnifiedMatrixBasis.σ₃, E11, E22]
 
+/-- Finite readout of `σ₁`: off-diagonal coherence sum. -/
+theorem expectation_sigma1 (ρ : MatrixQuantumCarrier) :
+    expectation UnifiedMatrixBasis.σ₁ ρ = ρ 1 0 + ρ 0 1 := by
+  unfold expectation trace2
+  simp [UnifiedMatrixBasis.σ₁, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Finite readout of `σ₂`: signed off-diagonal coherence difference. -/
+theorem expectation_sigma2 (ρ : MatrixQuantumCarrier) :
+    expectation UnifiedMatrixBasis.σ₂ ρ = (-Complex.I : ℂ) * (ρ 1 0 - ρ 0 1) := by
+  unfold expectation trace2
+  simp [UnifiedMatrixBasis.σ₂, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Finite readout of `σ₃`: population difference. -/
+theorem expectation_sigma3 (ρ : MatrixQuantumCarrier) :
+    expectation UnifiedMatrixBasis.σ₃ ρ = ρ 0 0 - ρ 1 1 := by
+  unfold expectation trace2
+  simp [UnifiedMatrixBasis.σ₃, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
 /-- Projective numerator for outcome `1`: `E₁₁ ρ E₁₁ = ρ₁₁ E₁₁`. -/
 theorem luders_numerator_E11 (ρ : MatrixQuantumCarrier) :
     E11 * ρ * E11 = ρ 0 0 • E11 := by
@@ -155,9 +176,23 @@ theorem diagonalKraus_numerator (a b : ℂ) (ρ : MatrixQuantumCarrier) :
       dotProduct, Fin.sum_univ_two]
     <;> ring
 
+/-- Diagonal weak-measurement probability readout for the finite numerator. -/
+theorem diagonalKraus_probability (a b : ℂ) (ρ : MatrixQuantumCarrier) :
+    trace2 (diagonalKraus a b * ρ * diagonalKraus a b) =
+      a * a * ρ 0 0 + b * b * ρ 1 1 := by
+  simp [trace2, diagonalKraus, E11, E22, Matrix.mul_apply, Matrix.vecMul,
+    dotProduct, Fin.sum_univ_two]
+  ring
+
 /-- Finite depolarizing channel formula on arbitrary `2 × 2` matrices. -/
 def depolarizingChannel (p : ℂ) (A : MatrixQuantumCarrier) : MatrixQuantumCarrier :=
   (1 - p) • A + ((p / 2) * trace2 A) • UnifiedMatrixBasis.I₂
+
+/-- The finite depolarizing formula preserves the concrete matrix trace. -/
+theorem depolarizing_trace (p : ℂ) (A : MatrixQuantumCarrier) :
+    trace2 (depolarizingChannel p A) = trace2 A := by
+  simp [trace2, depolarizingChannel, UnifiedMatrixBasis.I₂, Fin.sum_univ_two]
+  ring
 
 /-- Depolarizing channel on `E₁₁`. -/
 theorem depolarizing_E11 (p : ℂ) :
@@ -194,12 +229,19 @@ theorem repaired_MD007_quantum_eigenoperator_packet (ρ : MatrixQuantumCarrier) 
     ρ = ρ 0 0 • E11 + ρ 0 1 • E12 + ρ 1 0 • E21 + ρ 1 1 • E22 ∧
     expectation E11 ρ = ρ 0 0 ∧
     expectation E12 ρ = ρ 1 0 ∧
+    expectation UnifiedMatrixBasis.σ₁ ρ = ρ 1 0 + ρ 0 1 ∧
+    expectation UnifiedMatrixBasis.σ₃ ρ = ρ 0 0 - ρ 1 1 ∧
     E11 * ρ * E11 = ρ 0 0 • E11 ∧
     UnifiedMatrixBasis.σ₁ = E12 + E21 ∧
+    trace2 (depolarizingChannel p ρ) = trace2 ρ ∧
     depolarizingChannel p E12 = (1 - p) • E12 := by
   exact ⟨outer_ket1_ket1, outer_ket1_ket2, operator_decompose ρ,
-    expectation_E11 ρ, expectation_E12 ρ, luders_numerator_E11 ρ,
-    sigma1_eigenoperator_decomposition, depolarizing_E12 p⟩
+    expectation_E11 ρ, expectation_E12 ρ,
+    expectation_sigma1 ρ, expectation_sigma3 ρ,
+    luders_numerator_E11 ρ,
+    sigma1_eigenoperator_decomposition,
+    depolarizing_trace p ρ,
+    depolarizing_E12 p⟩
 
 end InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 

@@ -10,6 +10,7 @@ import InfoGeometry.Physics.Section28EinsteinTorsionSpinor
 import InfoGeometry.Physics.Section29QuantumEffectiveAction
 import InfoGeometry.Physics.Section30UnifiedMatrixFramework
 import InfoGeometry.Physics.Section31UnifiedMatrixDynamics
+import InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.SouriauEntropyFoliation
 

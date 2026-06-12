@@ -7,9 +7,9 @@ Verified theorem-safe content only:
 * coordinate complex structures I,J,K on R^4 square to -1;
 * I,J,K satisfy quaternion multiplication signs;
 * I,J,K preserve the Euclidean coordinate metric;
-* fundamental forms omega_A(x,y)=g(Ax,y) are skew-symmetric;
+* fundamental forms omega_A(x,y)=g(Ax,y) are skew-symmetric and nondegenerate;
 * the ambient standard complex structure J0 on C^4 ~= R^8 has the same finite
-  square/metric/skew-form properties.
+  square/metric/skew/nondegeneracy properties.
 
 No smooth integrability, Levi-Civita, curvature, closed differential-form,
 Ricci-flatness, Kähler-Einstein, or symplectic-manifold theorem is claimed.
@@ -64,7 +64,9 @@ def main() -> int:
         omega_ab = dot(A * a, b)
         omega_ba = dot(A * b, a)
         assert_zero(omega_ba + omega_ab, f"omega_{name} skew")
-    print("R4 metric preservation and skew forms: OK")
+        if A.det() == 0 or A.rank() != 4:
+            raise AssertionError(f"omega_{name} nondegeneracy failed")
+    print("R4 metric preservation and skew/nondegenerate forms: OK")
 
     J0 = sp.zeros(8)
     for k in range(4):
@@ -76,6 +78,8 @@ def main() -> int:
     assert_matrix_zero(J0 * J0 + eye8, "ambient J0^2 = -1")
     assert_zero(dot(J0 * u, J0 * v) - dot(u, v), "ambient J0 metric preservation")
     assert_zero(dot(J0 * v, u) + dot(J0 * u, v), "ambient omega0 skew")
+    if J0.det() == 0 or J0.rank() != 8:
+        raise AssertionError("ambient omega0 nondegeneracy failed")
     print("ambient C4/R8 standard complex structure: OK")
 
     print("=" * 72)

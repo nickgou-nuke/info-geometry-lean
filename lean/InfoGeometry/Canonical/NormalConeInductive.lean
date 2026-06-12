@@ -30,11 +30,13 @@ def StateSpace (n : ℕ) : Set (Stage n) :=
   {A | True}
 
 /--
-The maximally mixed state ωₙ = I / 2ⁿ is in the state space at every
-stage.
--/
+The maximally mixed state ωₙ = I / 2ⁿ is in the state space at every stage.
+**Open debt**: StateSpace is currently defined as `{A | True}` (all operators).
+Should be restricted to positive operators with unit trace.
+The nonemptiness proof `⟨0, trivial⟩` relies on this degeneracy.
+Status: requires positivity and trace constraints on StateSpace. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
-  refine ⟨0, trivial⟩
+  sorry
 
 /--
 The embedding A ↦ A ⊗ I₂ maps the state space at stage n to the state

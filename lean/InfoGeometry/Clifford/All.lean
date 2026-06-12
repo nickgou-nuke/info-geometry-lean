@@ -24,6 +24,7 @@ import InfoGeometry.Clifford.Cl11MarkovJonesEngine
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Clifford.Cl11TensorTowerSupergraded
 import InfoGeometry.Clifford.Cl11TensorTowerIteration
+import InfoGeometry.Clifford.InductiveColimitCrystal
 import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 import InfoGeometry.Clifford.Cl11Quaternion

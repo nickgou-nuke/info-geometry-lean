@@ -15,6 +15,7 @@ basis of `M₂(ℂ)`.  This file formalizes the finite kernel-checkable core:
 * joint eigenoperator identities for left/right multiplication by `σ₃`;
 * matrix-unit products, projectors, and nilpotents;
 * Pauli decompositions of the matrix units;
+* explicit complex-biquaternion coordinate representatives of the matrix units;
 * `sl₂` root-vector commutators.
 
 No abstract Lie-algebra isomorphism `gl₂ ⊕ gl₂`, Hilbert-space adjoint theorem,
@@ -150,6 +151,46 @@ theorem E21_pauli_decomposition :
     simp [E21, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂]
     <;> norm_num <;> simp [Complex.I_sq]
 
+/-- `E₁₁` as a complex-biquaternion matrix representative. -/
+theorem E11_biquat_decomposition :
+    E11 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      (1 / 2) 0 0 (Complex.I / 2) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [E11, InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix,
+      UnifiedMatrixBasis.I₂, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂,
+      UnifiedMatrixBasis.σ₃]
+    <;> ring_nf <;> simp [Complex.I_sq] <;> norm_num
+
+/-- `E₂₂` as a complex-biquaternion matrix representative. -/
+theorem E22_biquat_decomposition :
+    E22 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      (1 / 2) 0 0 (-Complex.I / 2) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [E22, InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix,
+      UnifiedMatrixBasis.I₂, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂,
+      UnifiedMatrixBasis.σ₃]
+    <;> ring_nf <;> simp [Complex.I_sq] <;> norm_num
+
+/-- `E₁₂` as a complex-biquaternion matrix representative. -/
+theorem E12_biquat_decomposition :
+    E12 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      0 (Complex.I / 2) (-1 / 2) 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [E12, InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix,
+      UnifiedMatrixBasis.I₂, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂,
+      UnifiedMatrixBasis.σ₃]
+    <;> ring_nf <;> simp [Complex.I_sq] <;> norm_num
+
+/-- `E₂₁` as a complex-biquaternion matrix representative. -/
+theorem E21_biquat_decomposition :
+    E21 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      0 (Complex.I / 2) (1 / 2) 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [E21, InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix,
+      UnifiedMatrixBasis.I₂, UnifiedMatrixBasis.σ₁, UnifiedMatrixBasis.σ₂,
+      UnifiedMatrixBasis.σ₃]
+    <;> ring_nf <;> simp [Complex.I_sq] <;> norm_num
+
 /-- Root-vector relation `[σ₃,E₁₂]=2E₁₂`. -/
 theorem sigma3_comm_E12 :
     matrixComm UnifiedMatrixBasis.σ₃ E12 = (2 : ℂ) • E12 := by
@@ -174,6 +215,10 @@ theorem repaired_MD006_operator_eigenoperator_packet (A B X : MatrixQuantumCarri
     rightMul UnifiedMatrixBasis.σ₃ E12 = -E12 ∧
     E12 * E21 = E11 ∧
     E21 * E12 = E22 ∧
+    E11 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      (1 / 2) 0 0 (Complex.I / 2) ∧
+    E12 = InfoGeometry.Physics.MD003IsomorphicRepresentations.biquatMatrix
+      0 (Complex.I / 2) (-1 / 2) 0 ∧
     matrixComm UnifiedMatrixBasis.σ₃ E12 = (2 : ℂ) • E12 ∧
     matrixComm UnifiedMatrixBasis.σ₃ E21 = (-2 : ℂ) • E21 ∧
     matrixComm E12 E21 = UnifiedMatrixBasis.σ₃ := by
@@ -184,6 +229,8 @@ theorem repaired_MD006_operator_eigenoperator_packet (A B X : MatrixQuantumCarri
     sigma3_E12_joint_eigen.2,
     matrixUnit_cross_products.1,
     matrixUnit_cross_products.2,
+    E11_biquat_decomposition,
+    E12_biquat_decomposition,
     sigma3_comm_E12,
     sigma3_comm_E21,
     E12_comm_E21⟩

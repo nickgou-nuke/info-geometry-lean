@@ -153,26 +153,6 @@ theorem majorana_fock_sector_produces_pfaffianCharacter
     M.majorana_fock_sector_produces_pfaffianCharacter_True :=
   M.majorana_fock_sector_produces_pfaffianCharacter_sorryProof
 
-/-- Trivial concrete model: all six _True sockets filled with True.
-Uses BerryKeatingOperatorPacket.trivial as the base.
-Real model requires split-Clifford construction, Dirac square law,
-self-adjointness proof, and Pfaffian character identification. -/
-def trivial (Mode : Type*) [Nonempty Mode] :
-    MajoranaBerryKeatingOperatorPacket Unit (Unit → Unit) (Set Unit) Mode where
-  berryKeating := BerryKeatingOperatorPacket.trivial
-  majoranaMode := fun _ _ => ()
-  thermalOperator := fun _ _ => ()
-  majoranaDirac := fun _ => ()
-  squareRootEnergyCoefficient := fun _ => 1
-  splitClifford_True := True
-  squareRootEnergy_True := True
-  dirac_square_True := True
-  self_adjoint_True := True
-  bk_mellin_sector_fixes_criticalLine_True := True
-  bk_mellin_sector_fixes_criticalLine_sorryProof := True.intro
-  majorana_fock_sector_produces_pfaffianCharacter_True := True
-  majorana_fock_sector_produces_pfaffianCharacter_sorryProof := True.intro
-
 end MajoranaBerryKeatingOperatorPacket
 
 /-! ## 2. Real Majorana--Berry--Keating operator problem -/
@@ -254,32 +234,6 @@ theorem modeEnergyCoefficient_sqrtLog
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
     P.modeEnergyCoefficient_sqrtLog_True :=
   P.modeEnergyCoefficient_sqrtLog_sorryProof
-
-/-- Trivial concrete model: all five _True sockets filled with True.
-Real model requires anticommutation law for rho vs BK block,
-Dirac-square law, and sqrt(log p) coefficient proof. -/
-def trivial (Carrier Operator Mode Cutoff : Type*)
-    (carrier : Carrier) (cutoff : Cutoff)
-    (realBK : Operator) (rho : Operator)
-    (diracCutoff : Operator) (combined : Operator) :
-    RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff where
-  carrier := carrier
-  cutoff := cutoff
-  realBerryKeatingBlock := realBK
-  chiralityRho := rho
-  majoranaDiracCutoff := diracCutoff
-  combinedDirac := combined
-  combinedDirac_formula_True := True
-  combinedDirac_formula_sorryProof := True.intro
-  rho_anticommutes_realBK_True := True
-  rho_anticommutes_realBK_sorryProof := True.intro
-  majoranaDirac_square_True := True
-  majoranaDirac_square_sorryProof := True.intro
-  combinedDirac_square_True := True
-  combinedDirac_square_sorryProof := True.intro
-  modeEnergyCoefficient := fun _ => 1
-  modeEnergyCoefficient_sqrtLog_True := True
-  modeEnergyCoefficient_sqrtLog_sorryProof := True.intro
 
 end RealMajoranaBerryKeatingProblem
 
@@ -428,17 +382,6 @@ theorem reciprocalSingularity_of_zetaZero
     S.reciprocalZetaSingularity_True :=
   S.zetaZero_implies_reciprocalSingularity hz
 
-/-- Trivial concrete model: all _True sockets filled with True. -/
-def trivial (SpectralParameter PfaffianReadout ZetaReadout : Type*) (p : SpectralParameter) (pr : PfaffianReadout) (zr : ZetaReadout) : MajoranaPfaffianZetaSpectralSocket SpectralParameter PfaffianReadout ZetaReadout where
-  parameter := p
-  pfaffianReadout := pr
-  zetaReadout := zr
-  pfaffian_zeta_identity_True := True
-  pfaffian_zeta_identity_sorryProof := True.intro
-  zetaZero_True := True
-  reciprocalZetaSingularity_True := True
-  zetaZero_implies_reciprocalSingularity := fun _ => True.intro
-
 end MajoranaPfaffianZetaSpectralSocket
 
 
@@ -517,21 +460,6 @@ theorem completedXiZeros_are_spectralZeros
       SpectralPfaffianReadout) :
     S.completedXiZeros_are_spectralZeros_True :=
   S.completedXiZeros_are_spectralZeros_sorryProof
-
-/-- Trivial concrete model: all _True sockets filled with True. -/
-def trivial (SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout : Type*) (p : SpectralParameter) (wc : WittenCharacter) (cxi : CompletedXiReadout) (sp : SpectralPfaffianReadout) : WittenCharacterVsCompletedXiSocket SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout where
-  parameter := p
-  wittenCharacter := wc
-  completedXi := cxi
-  spectralPfaffian := sp
-  wittenCharacter_inverseZeta_True := True
-  wittenCharacter_inverseZeta_sorryProof := True.intro
-  spectralPfaffian_completedXi_True := True
-  spectralPfaffian_completedXi_sorryProof := True.intro
-  zetaZeros_are_poles_of_inverseZeta_True := True
-  zetaZeros_are_poles_of_inverseZeta_sorryProof := True.intro
-  completedXiZeros_are_spectralZeros_True := True
-  completedXiZeros_are_spectralZeros_sorryProof := True.intro
 
 end WittenCharacterVsCompletedXiSocket
 
@@ -618,14 +546,6 @@ theorem superdeterminant_inversion
       ZetaReadout InverseZetaReadout) :
     S.superdeterminant_inversion_True :=
   S.superdeterminant_inversion_sorryProof
-
-def trivial (BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout : Type*) (br : BosonicReadout) (fr : FermionicReadout) (sd : SuperdeterminantReadout) (zr : ZetaReadout) (izr : InverseZetaReadout) (guard : Type*) : BosonFermionSuperdeterminantSocket BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout where
-  bosonicReadout := br; fermionicReadout := fr; superdeterminantReadout := sd; zetaReadout := zr; inverseZetaReadout := izr
-  bosonic_eq_zeta_True := True; bosonic_eq_zeta_sorryProof := True.intro
-  fermionic_eq_inverseZeta_True := True; fermionic_eq_inverseZeta_sorryProof := True.intro
-  superdeterminant_inversion_True := True; superdeterminant_inversion_sorryProof := True.intro
-  archimedeanPlace_required_guard := guard
-
 end BosonFermionSuperdeterminantSocket
 
 /--
@@ -685,14 +605,6 @@ theorem completedZeta_factorization
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout) :
     A.completedZeta_factorization_True :=
   A.completedZeta_factorization_sorryProof
-
-def trivial (SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout : Type*) (p : SpectralParameter) (ar : ArchimedeanReadout) (fpr : FinitePrimeReadout) (czr : CompletedZetaReadout) (guard : Type*) : ArchimedeanGammaFactorSocket SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout where
-  parameter := p; archimedeanReadout := ar; finitePrimeReadout := fpr; completedZetaReadout := czr
-  gammaFactor_True := True; gammaFactor_sorryProof := True.intro
-  polynomialCompletion_True := True; polynomialCompletion_sorryProof := True.intro
-  completedZeta_factorization_True := True; completedZeta_factorization_sorryProof := True.intro
-  finitePrimes_alone_not_completed_guard := guard
-
 end ArchimedeanGammaFactorSocket
 
 /--
@@ -773,14 +685,6 @@ theorem phaseShift_matches_zetaArgument
       DiscreteOrAbsorptionReadout PhaseShiftReadout) :
     B.phaseShift_matches_zetaArgument_True :=
   B.phaseShift_matches_zetaArgument_sorryProof
-
-def trivial (BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout : Type*) (bd : BoundaryData) (sm : ScatteringMatrix) (cs : ContinuousSpectrum) (da : DiscreteOrAbsorptionReadout) (ps : PhaseShiftReadout) (guard : Type*) : BoundaryScatteringDiscretizationSocket BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout where
-  boundaryData := bd; scatteringMatrix := sm; continuousSpectrum := cs; discreteOrAbsorptionReadout := da; phaseShiftReadout := ps
-  boundary_or_scattering_True := True; boundary_or_scattering_sorryProof := True.intro
-  continuous_to_spectralZeroReadout_True := True; continuous_to_spectralZeroReadout_sorryProof := True.intro
-  phaseShift_matches_zetaArgument_True := True; phaseShift_matches_zetaArgument_sorryProof := True.intro
-  bareBK_requires_boundaryOrScattering_guard := guard
-
 end BoundaryScatteringDiscretizationSocket
 
 /--
@@ -857,15 +761,6 @@ theorem mellinTransform_eq_explicitFormula
       ExplicitFormulaReadout) :
     T.mellinTransform_eq_explicitFormula_True :=
   T.mellinTransform_eq_explicitFormula_sorryProof
-
-def trivial (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout : Type*) (ht : HeatTrace) (bkt : BKHeatTrace) (artht : ArithmeticHeatTrace) (mt : MellinTransformReadout) (ef : ExplicitFormulaReadout) (guard : Type*) : MBKHeatTraceExplicitFormulaSocket HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout where
-  heatTrace := ht; bkHeatTrace := bkt; arithmeticHeatTrace := artht; mellinTransformReadout := mt; explicitFormulaReadout := ef
-  heatTrace_factorization_True := True; heatTrace_factorization_sorryProof := True.intro
-  arithmeticHeatTrace_primeSum_True := True; arithmeticHeatTrace_primeSum_sorryProof := True.intro
-  bkHeatTrace_mellinContinuum_True := True; bkHeatTrace_mellinContinuum_sorryProof := True.intro
-  mellinTransform_eq_explicitFormula_True := True; mellinTransform_eq_explicitFormula_sorryProof := True.intro
-  explicitFormula_is_finalTraceTest_guard := guard
-
 end MBKHeatTraceExplicitFormulaSocket
 
 /--
@@ -953,18 +848,6 @@ theorem spectralKernel_of_completedXiZero
     (hZero : R.completedXiZero_True) :
     Nonempty SpectralKernel :=
   (R.completedXiZero_iff_spectralKernel_sorryProof).mp hZero
-
-def trivial (CompletedXi HilbertPolyaTarget RHClaim : Type*) (cxi : CompletedXi) (hpt : HilbertPolyaTarget) (rh : RHClaim) (guard : Type*) : CompletedXiHilbertPolyaReduction CompletedXi HilbertPolyaTarget RHClaim where
-  completedXi := cxi; hilbertPolyaTarget := hpt; rhClaim := rh
-  self_adjoint_True := True; self_adjoint_sorryProof := True.intro
-  renormalizedPfaffian_eq_completedXi_True := True; renormalizedPfaffian_eq_completedXi_sorryProof := True.intro
-  completedXiZero_True := True
-  completedXiZero_iff_spectralKernel_sorryProof := by rfl
-  spectralHeight_real_True := True; spectralHeight_real_sorryProof := True.intro
-  spectralZero_on_criticalLine_True := by rfl
-  criticalLine_completedXiZeros_imply_RH_True := fun _ => True.intro
-  no_RH_without_completedXi_spectral_identity_guard := guard
-
 end CompletedXiHilbertPolyaReduction
 
 /-! ## 5. Full Pólya--Hilbert bridge packet -/

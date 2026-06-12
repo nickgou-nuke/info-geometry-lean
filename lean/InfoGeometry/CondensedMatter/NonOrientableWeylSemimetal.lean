@@ -10,9 +10,34 @@ arXiv:2511.22303v2.
 The paper develops a coordinate-free twisted (co)homology classification of
 non-orientable Brillouin zones and recovers mod-2 Weyl charge cancellation.  We
 do **not** formalize that full classification here.  Instead, we isolate the
-finite algebraic shadow needed by the current codebase: a two-node glide orbit,
-ordinary oriented integer cancellation, and same-sign cancellation after reducing
-charges modulo two.
+finite algebraic shadow needed by the current codebase:
+
+* a two-node glide orbit;
+* ordinary oriented integer cancellation;
+* same-sign cancellation after reducing charges modulo two;
+* the exact-sequence consequence `im β ⊆ ker Σ` as an explicit conditional
+  theorem, where `Σ` is the total-charge readout into `ZMod 2`.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+`glideFlip_involutive`, `oriented_pair_charge_cancels`,
+`nonorientable_mod_two_charge_cancels`,
+`same_integer_charge_mod_two_cancels`,
+`orientation_reversal_invisible_mod_two`, and
+`totalChargeModTwo_orientation_reversal_invariant`.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+`exactness_gives_mod_two_charge_cancellation` depends on the named premise
+`ExactAtLocalCharges β`, the finite substitute for the paper's exactness claim
+at the local charge group.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+The full twisted homology/cohomology exact sequences, the computation
+`H^3(K^2 × S^1) ≃ Z_2`, Poincaré duality with local coefficients, and the
+classification of all non-orientable Brillouin zones remain outside this finite
+module.
 -/
 
 noncomputable section
@@ -68,6 +93,62 @@ theorem same_integer_charge_mod_two_cancels (q : ℤ) :
   calc
     (q : ZMod 2) + (q : ZMod 2) = (2 : ZMod 2) * (q : ZMod 2) := by ring
     _ = 0 := by rw [h2, zero_mul]
+
+/--
+Modulo two, changing the local orientation of a Weyl charge does not change the
+charge readout. This is the finite algebraic reason the paper's non-orientable
+total charge lands in `Z₂`: `χ` and `-χ` are indistinguishable mod two.
+-/
+theorem orientation_reversal_invisible_mod_two (q : ℤ) :
+    ((-q : ℤ) : ZMod 2) = (q : ZMod 2) := by
+  rw [Int.cast_neg]
+  exact neg_eq_of_add_eq_zero_left (same_integer_charge_mod_two_cancels q)
+
+/-- The coordinate-free total-charge readout `Σ : ℤ^k → Z₂`. -/
+def totalChargeModTwo {ι : Type} [Fintype ι] (charge : ι → ℤ) : ZMod 2 :=
+  ∑ i, (charge i : ZMod 2)
+
+/-- The local kernel condition `Σ(charge) = 0`. -/
+def ModTwoChargeNeutral {ι : Type} [Fintype ι] (charge : ι → ℤ) : Prop :=
+  totalChargeModTwo charge = 0
+
+/--
+The total mod-two charge is independent of reversing every local orientation.
+This is a finite coordinate-free shadow of the paper's statement that a choice
+of local orientation at each Weyl point cannot change the `Z₂` total charge.
+-/
+theorem totalChargeModTwo_orientation_reversal_invariant
+    {ι : Type} [Fintype ι] (charge : ι → ℤ) :
+    totalChargeModTwo (fun i => -charge i) = totalChargeModTwo charge := by
+  unfold totalChargeModTwo
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  exact orientation_reversal_invisible_mod_two (charge i)
+
+/--
+Finite exactness socket for the semimetal charge map.
+
+If `β : Semimetal → ι → ℤ` sends semimetal data to local Weyl charges, this is
+the exactness consequence `im β ⊆ ker Σ`, where `Σ` is `totalChargeModTwo`.
+-/
+def ExactAtLocalCharges {Semimetal ι : Type} [Fintype ι]
+    (β : Semimetal → ι → ℤ) : Prop :=
+  ∀ s, ModTwoChargeNeutral (β s)
+
+/--
+Conditional form of the Douwes--Stålhammar mod-two cancellation step.
+
+Once the relevant twisted Mayer--Vietoris sequence supplies exactness at the
+local charge group, every semimetal charge configuration in the image of `β`
+has zero total charge in `ZMod 2`.
+-/
+theorem exactness_gives_mod_two_charge_cancellation
+    {Semimetal ι : Type} [Fintype ι]
+    (β : Semimetal → ι → ℤ)
+    (hExact : ExactAtLocalCharges β)
+    (s : Semimetal) :
+    ModTwoChargeNeutral (β s) :=
+  hExact s
 
 /-- A compact certificate bundling orientable and non-orientable finite cancellation. -/
 theorem finite_glide_orbit_charge_cancellation_packet (q : ℤ) :

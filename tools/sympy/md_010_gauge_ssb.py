@@ -6,6 +6,7 @@ Mirrors `InfoGeometry.Physics.MD010GaugeSSB`.
 Verified theorem-safe content only:
 * adjoint commutator covariance under finite conjugation with an inverse gate;
 * finite product transport `(U F V)(U G V)=U(FG)V` when `VU=I`;
+* finite curvature commutator covariance and trace-product invariance;
 * scalar potential square completion and stationary radius algebra;
 * diagonal E11 vacuum/fluctuation trace identities;
 * quaternion U(1)-style unit phase norm invariance;
@@ -59,7 +60,21 @@ def main() -> int:
 
     assert_matrix_zero(comm(conj(A), conj(Phi)) - conj(comm(A, Phi)), "adjoint commutator covariance")
     assert_matrix_zero(conj(F) * conj(G) - conj(F * G), "finite product transport")
-    print("finite gauge covariance identities: OK")
+
+    def curvature(X: sp.Matrix, Y: sp.Matrix) -> sp.Matrix:
+        return comm(X, Y)
+
+    assert_matrix_zero(
+        curvature(conj(A), conj(Phi)) - conj(curvature(A, Phi)),
+        "finite curvature covariance",
+    )
+    assert_zero(sp.trace(conj(F) * conj(G)) - sp.trace(F * G), "trace-product gauge invariance")
+    assert_zero(
+        sp.trace(curvature(conj(A), conj(Phi)) * curvature(conj(A), conj(Phi)))
+        - sp.trace(curvature(A, Phi) * curvature(A, Phi)),
+        "curvature-square trace invariance",
+    )
+    print("finite gauge covariance/trace invariance identities: OK")
 
     mu, lam, s = sp.symbols("mu lam s", nonzero=True)
     potential = -mu**2 * s + lam * s**2

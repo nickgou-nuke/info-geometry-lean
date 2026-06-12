@@ -7,6 +7,7 @@ import InfoGeometry.Physics.FreeEntropySouriauBridge
 import InfoGeometry.Physics.IncidentNullFlagVariationalAction
 import InfoGeometry.Physics.HolographicPressureFunctional
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry
+import InfoGeometry.Physics.MD002FoundationalConventions
 import InfoGeometry.Physics.MD20250430070955FinitePartition
 import InfoGeometry.Physics.MD20250430071017MatrixStatistics
 import InfoGeometry.Physics.Section00MatrixBasisFramework

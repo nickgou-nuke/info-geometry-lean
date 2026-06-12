@@ -172,7 +172,15 @@ def _index_repo_decl_positions() -> dict[str, list[tuple[Path, int]]]:
     idx: dict[str, list[tuple[Path, int]]] = defaultdict(list)
     root = lean_root()
     for file_path in sorted(root.rglob("*.lean")):
-        lines = file_path.read_text(encoding="utf-8").splitlines()
+        if not file_path.is_file():
+            continue
+        try:
+            lines = file_path.read_text(encoding="utf-8").splitlines()
+        except FileNotFoundError:
+            # Legacy graph exports may leave stale paths or broken symlinks under
+            # lean/.  They are not Lean owner files and should not abort the
+            # compatibility blueprint bootstrap.
+            continue
         for i, line in enumerate(lines):
             m = _DECL_RE.match(line)
             if m:

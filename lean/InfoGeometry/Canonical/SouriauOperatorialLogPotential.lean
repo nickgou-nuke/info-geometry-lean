@@ -141,6 +141,7 @@ logDetReg : Map → ℝ
 volumeCompressionPotential : Map → ℝ
 volumeCompressionPotential_eq_neg_logDetReg :
 ∀ φ, volumeCompressionPotential φ = -logDetReg φ
+/-- **Open debt socket**: requires measure-theoretic state space for entropy readout. Currently unused. -/
 entropyReadoutRequiresStateClaim : Prop
 
 namespace RegularizedJacobianPotential
@@ -426,6 +427,7 @@ generator : MomentMapGeneratingPotential State LieAlgebra LieDual
 alpha : LieAlgebra
 alphaPartitionPotential : ℝ
 alphaMinusBeta : LieAlgebra
+/-- **Open debt socket**: KL-as-Bregman support hypotheses. Currently unused. -/
 supportHypothesesClaim : Prop
 
 abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
@@ -522,8 +524,11 @@ massieuAtGammaBeta_eq_log_partition :
 massieuAtGammaBeta = Real.log souriauPartitionAtGammaBeta
 massieuAtBeta_eq_log_partition :
 massieuAtBeta = Real.log souriauPartitionAtBeta
+/-- **Open debt socket**: finite support volume requirement. Currently unused. -/
 finiteSupportVolumeClaim : Prop
+/-- **Open debt socket**: entropy derivative at γ=1 limit. Currently unused. -/
 entropyDerivativeAtOneClaim : Prop
+/-- **Open debt socket**: Petz vs sandwiched Rényi separation. Currently unused. -/
 petz_sandwiched_separatedClaim : Prop
 
 namespace RenyiMellinSouriauReadout
@@ -593,6 +598,7 @@ affineCocycle :
 ∀ g h,
 cocycle (g * h) =
 coadjointAction g (cocycle h) + cocycle g
+/-- **Open debt socket**: affine correction to partition potential under cocycle. Currently unused. -/
 partitionPotentialAffineCorrectionClaim : Prop
 
 @[rep_depth thermo]

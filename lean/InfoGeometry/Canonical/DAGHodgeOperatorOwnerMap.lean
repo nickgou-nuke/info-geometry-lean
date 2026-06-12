@@ -293,9 +293,13 @@ graph carrier supplies the finite Fock/Cantor specialization.
 @[rep_depth operator]
 structure DAGHodgeOperatorBridgeDoctrine where
   dagNativeGraphHodge : Prop
+  /-- **Open debt socket**: Krein chirality owner reference. Currently unused. -/
   kreinChiralityOwner : Prop
+  /-- **Open debt socket**: canonical Hodge-Dirac bridge witness. Currently unused. -/
   canonicalHodgeDiracBridge : Prop
+  /-- **Open debt socket**: finite exterior graph carrier. Currently unused. -/
   finiteExteriorGraphCarrier : Prop
+  /-- **Open debt socket**: guard against infinite analytic claims. Currently unused. -/
   noInfiniteAnalyticClaim : Prop
 
 namespace DAGHodgeOperatorBridgeDoctrine

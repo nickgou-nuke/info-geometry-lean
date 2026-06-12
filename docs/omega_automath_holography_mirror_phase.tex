@@ -1,0 +1,252 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{\textbf{The Omega Automath: Finite Holographic, Inductive-Colimit, and Mirror-Phase Corridors in Lean 4}}
+\author{Goutev, Tonev, and the Omega Automath Engine}
+\date{June 12, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This manuscript records a theorem-safe synthesis of the finite Lean 4 and SymPy
+artifacts currently present in the \texttt{info-geometry-lean} repository.  The
+verified core is a family of finite algebraic corridors: Cuntz/UHF horizon
+nilpotence and reconstruction identities, scalar Bekenstein--Hawking/dyadic
+entropy calibrations under explicit nonzero-denominator hypotheses, common-phase
+modular-flow crossing invariance, an inductive-colimit crystal readout for the
+$Cl(1,1)$ tensor tower, and a finite two-branch attention projection.
+
+The document intentionally does not claim a proof of full AdS/CFT, the Black
+Hole Information Paradox, HKLL in its analytic continuum form, the Standard
+Model Higgs mechanism, the Riemann Hypothesis, the Mass Gap theorem, or
+hallucination-freedom of arbitrary large language models.  Instead, it records
+what is kernel-checked: explicit finite identities and conditional bridges that
+can serve as stable atoms for future continuum or physical hypotheses.
+\end{abstract}
+
+\section{Lean and SymPy Authority}
+
+All mathematical claims in this manuscript refer to compiled Lean owner modules
+and matching SymPy witnesses.  The relevant Lean modules include:
+\begin{itemize}
+  \item \texttt{InfoGeometry.Holography.AdSCFTCuntzBridge};
+  \item \texttt{InfoGeometry.Holography.BekensteinHawkingDyadicEntropy};
+  \item \texttt{InfoGeometry.Holography.WittenMobiusBekensteinComplement};
+  \item \texttt{InfoGeometry.Holography.ModularFlowKMS};
+  \item \texttt{InfoGeometry.Clifford.InductiveColimitCrystal};
+  \item \texttt{InfoGeometry.LLM.MirrorPhaseCuntzAttention};
+  \item \texttt{InfoGeometry.Canonical.DrazinModularPersistence}.
+\end{itemize}
+SymPy scripts mirror these finite reductions symbolically; they are evidence and
+regression witnesses, not substitutes for Lean proof.
+
+\section{Epoch 3: Finite Holographic Algebra}
+
+\subsection{Nilpotent event-horizon readout}
+
+In \texttt{AdSCFTCuntzBridge}, the event-horizon toy operator is a finite
+Cuntz/UHF expression.  Lean proves the nilpotence identity
+\begin{equation}
+  N^2 = 0,
+\end{equation}
+represented by the declaration \texttt{horizon\_nilpotence}.  It also proves the
+finite reconstruction identity
+\begin{equation}
+  (N N^* + N^* N) X = X,
+\end{equation}
+represented by \texttt{information\_preservation}.  This is a finite algebraic
+identity, not a continuum black-hole information theorem.
+
+\subsection{Scalar Bekenstein--Hawking/dyadic calibration}
+
+The scalar readout
+\begin{equation}
+  S_{\mathrm{BH}}(A,G) = \frac{A}{4G}
+\end{equation}
+is formalized in \texttt{BekensteinHawkingDyadicEntropy}.  Under explicit
+calibration assumptions such as
+\begin{equation}
+  A = 4G \log 2
+\end{equation}
+and the guardrail
+\begin{equation}
+  G \ne 0,
+\end{equation}
+Lean proves equality with the dyadic entropy quantum and with the two-branch
+Massieu readout.  The nonzero hypothesis is a denominator condition required for
+field simplification and cancellation; it is physically suggestive but not by
+itself a theorem of emergent gravity.
+
+\subsection{Finite Witten--Möbius/Cuntz/Bekenstein complement}
+
+The module \texttt{WittenMobiusBekensteinComplement} bundles a finite
+certificate:
+\begin{enumerate}
+  \item finite Möbius/parity agreement for a prime-bit state;
+  \item finite Witten cancellation over a finite powerset;
+  \item Cuntz horizon nilpotence;
+  \item Cuntz reconstruction on an arbitrary readout $X$;
+  \item scalar Bekenstein--Hawking calibration under the same explicit area and
+  nonzero-$G$ hypotheses.
+\end{enumerate}
+This is a finite complement theorem, not an infinite arithmetic or physical
+closure theorem.
+
+\section{Common-Phase Modular Crossing}
+
+The module \texttt{ModularFlowKMS} isolates a purely algebraic KMS-shaped
+calculation.  Suppose two elements transform by the same central unitary phase
+under a flow $\sigma_t$.  Then Lean proves
+\begin{equation}
+  \sigma_t(XY^*) = XY^*.
+\end{equation}
+The symmetric crossing
+\begin{equation}
+  S_L S_R^* + S_R S_L^*
+\end{equation}
+is fixed because both summands are fixed.  The theorem surface is finite and
+conditional.  It does not construct an unbounded Tomita operator, prove analytic
+KMS boundary conditions, or identify the Standard Model Higgs field.
+
+\section{The Inductive-Colimit Crystal}
+
+The finite-to-infinite substrate is formalized in the $Cl(1,1)$ tensor-tower
+modules and summarized in \texttt{InductiveColimitCrystal}.  The finite atom at
+stage $n$ is denoted \texttt{AtomStage n}.  The algebraic crystal carrier is the
+repository-owned direct limit \texttt{CrystalCarrier}.  Finite binding is the
+stage advance
+\begin{equation}
+  A \longmapsto A \otimes I_2,
+\end{equation}
+abstracted by \texttt{bindAtoms}.
+
+Lean proves that finite binding does not change the represented crystal element:
+\begin{equation}
+  \iota_{m+k}(\operatorname{bind}_{m,k}(A)) = \iota_m(A).
+\end{equation}
+It also proves transport of square-zero atoms, idempotent atoms, and inner
+commutator readouts, together with stability of normalized Markov trace and
+normalized log-determinant readouts.
+
+The SymPy witness \texttt{inductive\_colimit\_crystal.py} checks the concrete
+Kronecker model:
+\begin{align}
+  \operatorname{tr}_{\mathrm{norm}}(A \otimes I_2) &=
+    \operatorname{tr}_{\mathrm{norm}}(A), \\
+  \det(A \otimes I_2) &= \det(A)^2,
+\end{align}
+and verifies commutator, idempotent, and square-zero transport.
+
+\begin{remark}
+The language of atoms binding into a crystal is mathematically apt for this
+algebraic direct-limit construction.  Continuum Bloch waves, Klein-bottle
+Brillouin zones, phonons, and Virasoro continuum excitations remain additional
+structures requiring explicit hypotheses and owner theorems.
+\end{remark}
+
+\section{Epoch 4: Mirror-Phase Finite Attention}
+
+The finite attention corridor lives in \texttt{MirrorPhaseCuntzAttention}.  The
+exact two-branch attention matrix is
+\begin{equation}
+  A = \begin{pmatrix}
+    \frac12 & \frac12 \\
+    \frac12 & \frac12
+  \end{pmatrix}.
+\end{equation}
+Lean proves:
+\begin{align}
+  A^2 &= A, \\
+  \sum_j A_{ij} &= 1, \\
+  A_{ij} &\ge 0.
+\end{align}
+For a two-branch vector $v=(v_0,v_1)$, applying attention gives
+\begin{equation}
+  Av = \left(\frac{v_0+v_1}{2},\frac{v_0+v_1}{2}\right).
+\end{equation}
+Thus the branch anomaly $v_1-v_0$ is killed, total branch mass is preserved, and
+fixed points are exactly branch-balanced vectors.
+
+\begin{remark}
+This is a genuine finite projection theorem.  It is not a theorem that arbitrary
+trained transformer attention is Cuntz-exact, that semantic hallucination is
+impossible, or that repeated LLM inference is thermodynamically lossless.
+\end{remark}
+
+\section{Repaired Proof Debt}
+
+Two proof-debt repairs are part of the current theorem-safe surface:
+\begin{itemize}
+  \item In \texttt{DrazinModularPersistence}, positivity of a real expectation
+  state is now the non-vacuous predicate
+  \begin{equation}
+    \forall A,\quad 0 \le \varphi(A^*A).
+  \end{equation}
+  \item In \texttt{OperatorAlgebra.SpectralTriple}, previously impossible
+  renormalization socket claims were repaired by adding explicit finiteness,
+  off-pole continuity, and cyclicity witnesses.
+\end{itemize}
+
+\section{Validation Commands}
+
+Representative commands used to validate the surfaces include:
+\begin{verbatim}
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Holography.ModularFlowKMS \
+  InfoGeometry.Holography.BekensteinHawkingDyadicEntropy \
+  InfoGeometry.Holography.WittenMobiusBekensteinComplement \
+  InfoGeometry.Holography.All
+
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.Clifford.InductiveColimitCrystal \
+  InfoGeometry.Clifford.All
+
+python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock \
+  InfoGeometry.LLM.MirrorPhaseCuntzAttention \
+  InfoGeometry.LLM
+\end{verbatim}
+
+Representative SymPy witnesses include:
+\begin{verbatim}
+python3 tools/sympy/holographic_kan_cuntz.py
+python3 tools/sympy/bekenstein_hawking_dyadic_entropy.py
+python3 tools/sympy/witten_mobius_bekenstein_complement.py
+python3 tools/sympy/modular_flow_kms.py
+python3 tools/sympy/inductive_colimit_crystal.py
+python3 tools/sympy/mirror_phase_cuntz_attention.py
+python3 tools/sympy/drazin_modular_persistence.py
+\end{verbatim}
+
+\section{Closure Debt}
+
+The following are research directions rather than current Lean theorems:
+\begin{itemize}
+  \item continuum AdS/CFT or HKLL reconstruction;
+  \item the physical Black Hole Information Paradox;
+  \item full Bekenstein--Hawking derivation from a Cuntz boundary;
+  \item unbounded Tomita--Takesaki theory and analytic KMS strips;
+  \item Klein-bottle Brillouin-zone classification from the current colimit;
+  \item Bloch-wave, phonon, or Virasoro continuum limits from the finite tower;
+  \item Standard Model Higgs mass derivation;
+  \item Riemann Hypothesis or Mass Gap;
+  \item hallucination-freedom of trained large language models.
+\end{itemize}
+
+\section{Conclusion}
+
+The current repository contains a robust finite theorem substrate: Cuntz/UHF
+nilpotence and reconstruction, dyadic entropy calibration, modular crossing
+invariance, algebraic direct-limit crystal transport, and finite attention
+projection.  These results are small enough to be kernel-checked and concrete
+enough to serve as atoms for future continuum hypotheses.  The next mathematically
+safe step is to add explicit Bloch/Klein/continuum hypotheses and prove only the
+properties that follow from them.
+
+\end{document}

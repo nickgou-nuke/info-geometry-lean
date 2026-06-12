@@ -59,7 +59,10 @@ theorem most_irrational_barrier : Irrational goldenRatio := by
 /-- The prime-counting readout is kept as a heuristic placeholder here.
     The Lean file proves the Fibonacci recurrence, the golden-ratio limit,
     and irrationality; the asymptotic prime-distribution claim remains a
-    numerical witness lane in SymPy. -/
-theorem prime_counting_on_lattice : True := trivial
+    numerical witness lane in SymPy.
+**Open debt**: prove the asymptotic prime distribution on the Fibonacci lattice.
+Currently a numerical witness in SymPy only.
+Status: requires analytic number theory formalization. -/
+theorem prime_counting_on_lattice : True := sorry
 
 end InfoGeometry.Canonical.PrimeFibonacciLattice

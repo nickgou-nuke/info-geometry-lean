@@ -14,6 +14,7 @@ This owner formalizes only the finite algebraic socket:
 
 * adjoint covariant-derivative commutator covariance under finite conjugation;
 * finite curvature/product transport under an explicit inverse gate;
+* finite trace-level gauge invariance of the curvature-square integrand shadow;
 * scalar potential square-completion and stationary-radius algebra;
 * diagonal `E₁₁` vacuum/fluctuation trace identities in the matrix-unit basis;
 * the already-owned finite quaternion `U(1)`-style phase/norm invariance;
@@ -73,6 +74,44 @@ theorem gaugeConj_product_transport
       simp [Matrix.mul_assoc]
     _ = U * F * G * V := by simp [hVU, Matrix.mul_assoc]
     _ = U * (F * G) * V := by simp [Matrix.mul_assoc]
+
+/-- Finite curvature shadow: the algebraic commutator part `[Aμ,Aν]`. -/
+def finiteCurvature (A B : MatrixQuantumCarrier) : MatrixQuantumCarrier :=
+  adjointCovDeriv A B
+
+/-- Curvature commutator covariance under finite conjugation. -/
+theorem finiteCurvature_gauge_covariant
+    (U V A B : MatrixQuantumCarrier) (hVU : V * U = 1) :
+    finiteCurvature (gaugeConj U V A) (gaugeConj U V B) =
+      gaugeConj U V (finiteCurvature A B) := by
+  exact adjointCovDeriv_gauge_covariant U V A B hVU
+
+/-- Trace is invariant under finite conjugation with an explicit inverse gate. -/
+theorem trace2_gaugeConj_invariant
+    (U V X : MatrixQuantumCarrier) (hVU : V * U = 1) :
+    trace2 (gaugeConj U V X) = trace2 X := by
+  unfold gaugeConj trace2
+  change Matrix.trace (U * X * V) = Matrix.trace X
+  rw [show U * X * V = U * (X * V) by simp [Matrix.mul_assoc]]
+  rw [Matrix.trace_mul_comm]
+  rw [Matrix.mul_assoc, hVU]
+  simp
+
+/-- Finite trace-product invariance, the algebraic core of the Yang--Mills integrand. -/
+theorem trace2_gaugeConj_product_invariant
+    (U V F G : MatrixQuantumCarrier) (hVU : V * U = 1) :
+    trace2 (gaugeConj U V F * gaugeConj U V G) = trace2 (F * G) := by
+  rw [gaugeConj_product_transport U V F G hVU]
+  exact trace2_gaugeConj_invariant U V (F * G) hVU
+
+/-- Curvature-square trace invariance for the finite commutator curvature shadow. -/
+theorem finiteCurvature_trace_square_gauge_invariant
+    (U V A B : MatrixQuantumCarrier) (hVU : V * U = 1) :
+    trace2 (finiteCurvature (gaugeConj U V A) (gaugeConj U V B) *
+        finiteCurvature (gaugeConj U V A) (gaugeConj U V B)) =
+      trace2 (finiteCurvature A B * finiteCurvature A B) := by
+  rw [finiteCurvature_gauge_covariant U V A B hVU]
+  exact trace2_gaugeConj_product_invariant U V (finiteCurvature A B) (finiteCurvature A B) hVU
 
 /-- Scalar SSB potential depending only on the finite radial readout `s`. -/
 def scalarPotential (mu lam s : ℝ) : ℝ :=
@@ -138,6 +177,10 @@ theorem repaired_MD010_gauge_ssb_packet
     adjointCovDeriv (gaugeConj U V A) (gaugeConj U V Φ) =
         gaugeConj U V (adjointCovDeriv A Φ) ∧
     gaugeConj U V F * gaugeConj U V G = gaugeConj U V (F * G) ∧
+    trace2 (gaugeConj U V F * gaugeConj U V G) = trace2 (F * G) ∧
+    trace2 (finiteCurvature (gaugeConj U V A) (gaugeConj U V Φ) *
+        finiteCurvature (gaugeConj U V A) (gaugeConj U V Φ)) =
+      trace2 (finiteCurvature A Φ * finiteCurvature A Φ) ∧
     scalarPotential mu lam s =
         lam * (s - mu ^ 2 / (2 * lam)) ^ 2 - mu ^ 4 / (4 * lam) ∧
     - mu ^ 2 + 2 * lam * (mu ^ 2 / (2 * lam)) = 0 ∧
@@ -147,6 +190,8 @@ theorem repaired_MD010_gauge_ssb_packet
     InfoGeometry.Physics.Section34StrengthenedFormalism.covariantDensityDerivative dRho 0 rho = dRho := by
   exact ⟨adjointCovDeriv_gauge_covariant U V A Φ hVU,
     gaugeConj_product_transport U V F G hVU,
+    trace2_gaugeConj_product_invariant U V F G hVU,
+    finiteCurvature_trace_square_gauge_invariant U V A Φ hVU,
     scalarPotential_complete_square mu lam s hlam,
     scalarPotential_stationary_radius mu lam hlam,
     diagVEV_trace_square v,

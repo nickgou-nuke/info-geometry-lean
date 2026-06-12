@@ -6,7 +6,8 @@ Mirrors `InfoGeometry.Physics.MD013CliffordAlgebraicStructures`.
 Verified theorem-safe content only:
 * a nontrivial idempotent gives zero-divisor witnesses e(1-e)=0=(1-e)e;
 * a square-zero nonzero nilpotent gives a nontrivial multiplication-kernel witness;
-* one-mode CAR matrix units E12/E21 are square-zero and produce projectors.
+* one-mode CAR matrix units E12/E21 are square-zero and produce orthogonal
+  projectors that partition the identity.
 
 No Clifford bundle, Chevalley bundle identification, Dirac-operator identity,
 spin-structure existence, module classification, primitive/minimal ideal
@@ -49,7 +50,10 @@ def main() -> int:
     assert_matrix_nonzero(complement, "1-E11 nonzero")
     assert_matrix_zero(e * complement, "idempotent left zero-divisor witness")
     assert_matrix_zero(complement * e, "idempotent right zero-divisor witness")
-    print("nontrivial idempotent zero-divisor witnesses: OK")
+    assert_matrix_zero((E11 + E22) ** 2 - (E11 + E22), "orthogonal idempotent sum")
+    assert_matrix_zero(E11 * E22, "E11 E22 orthogonal")
+    assert_matrix_zero(E22 * E11, "E22 E11 orthogonal")
+    print("nontrivial idempotent/projector witnesses: OK")
 
     # Nilpotents and kernel witnesses.
     assert_matrix_zero(E12 * E12, "E12 square-zero nilpotent")
@@ -66,7 +70,10 @@ def main() -> int:
     assert_matrix_zero(E12 * E21 + E21 * E12 - (E11 + E22), "one-mode CAR anticommutator")
     assert_matrix_zero((E12 * E21) ** 2 - E12 * E21, "CAR left product projector")
     assert_matrix_zero((E21 * E12) ** 2 - E21 * E12, "CAR right product projector")
-    assert_matrix_zero(E11 + E22 - I2, "projector partition of identity")
+    assert_matrix_zero((E12 * E21) * (E21 * E12), "CAR projectors orthogonal left-right")
+    assert_matrix_zero((E21 * E12) * (E12 * E21), "CAR projectors orthogonal right-left")
+    assert_matrix_zero(E12 * E21 + E21 * E12 - I2, "CAR projector partition of identity")
+    assert_matrix_zero(E11 + E22 - I2, "matrix-unit projector partition of identity")
     print("one-mode CAR/projector algebra: OK")
 
     print("=" * 72)

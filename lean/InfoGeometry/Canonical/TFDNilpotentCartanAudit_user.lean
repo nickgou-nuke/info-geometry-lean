@@ -157,9 +157,12 @@ class ModularHamiltonianLift (R : Type*) [CommRing R] (W : R) where
 /-- DEBT 1: FENCHEL-LEGENDRE HESSIAN BARRIER STRICT CONVEXITY
     Requires proof that the canonical Jordan potential function ψ(S) = -ln(det_2x2(S)) 
     is strictly convex on the interior of the positive cone, acting as the universal 
-    self-concordant barrier that crushes the Nilpotent Flux to the continuous conformal boundary. -/
-theorem hessian_barrier_strict_convexity (S₁ S₂ : SymmState2x2 ℝ) (α : ℝ) 
+    self-concordant barrier that crushes the Nilpotent Flux to the continuous conformal boundary.
+**Open debt**: the actual statement is
+`-Real.log (det (α S₁ + (1-α) S₂)) < -α * Real.log (det S₁) - (1-α) * Real.log (det S₂)`
+for strictly positive-definite symmetric states S₁, S₂ and α ∈ (0,1).
+Status: requires log-det convexity proof on the symmetric cone. -/
+theorem hessian_barrier_strict_convexity (S₁ S₂ : SymmState2x2 ℝ) (α : ℝ)
   (_h_alpha : 0 < α ∧ α < 1) (_h_det1 : det_2x2 S₁ > 0) (_h_det2 : det_2x2 S₂ > 0) :
-  -- Placeholder for: -ln(det(α S₁ + (1-α) S₂)) < -α ln(det(S₁)) - (1-α) ln(det(S₂))
   True := by
-  trivial
+  sorry

@@ -8,6 +8,7 @@ This mirrors the finite algebraic shadow of arXiv:2511.22303v2:
   oriented charges;
 - same-sign non-orientable local charges cancel modulo two;
 - reversing a local orientation does not change the Z2 charge readout;
+- arbitrary per-node orientation sign choices leave Sigma invariant;
 - the exact-sequence gate `im beta subset ker Sigma` forces mod-two total
   charge cancellation for every charge configuration in the semimetal image.
 
@@ -35,6 +36,13 @@ def in_kernel_sigma(charges: list[int]) -> bool:
     return sigma(charges) == 0
 
 
+def apply_orientation_signs(charges: list[int], signs: list[int]) -> list[int]:
+    """Apply local orientation choices signs_i in {+1,-1}."""
+    assert len(charges) == len(signs)
+    assert all(s in (1, -1) for s in signs)
+    return [s * c for s, c in zip(signs, charges)]
+
+
 def main() -> None:
     print("--- SymPy Twin: Non-orientable Weyl Semimetal Finite Corridor ---")
 
@@ -60,6 +68,16 @@ def main() -> None:
         right = mod2(sample)
         print(f"orientation reversal: {-sample} mod 2 = {sample} mod 2 = {right}")
         assert left == right
+
+    orientation_tests = [
+        ([1, 2, 3], [1, -1, 1]),
+        ([-3, 5, 8, -9], [-1, -1, 1, -1]),
+        ([0, 7, -4, 11, 2], [1, 1, -1, -1, 1]),
+    ]
+    for charges, signs in orientation_tests:
+        signed = apply_orientation_signs(charges, signs)
+        print(f"Sigma({signed}) with signs {signs} = Sigma({charges}) = {sigma(charges)}")
+        assert sigma(signed) == sigma(charges)
 
     semimetal_image = [
         [1, 1],

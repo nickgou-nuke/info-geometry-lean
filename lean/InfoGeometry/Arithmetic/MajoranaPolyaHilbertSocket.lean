@@ -157,12 +157,12 @@ theorem majorana_fock_sector_produces_pfaffianCharacter
 Uses BerryKeatingOperatorPacket.trivial as the base.
 Real model requires split-Clifford construction, Dirac square law,
 self-adjointness proof, and Pfaffian character identification. -/
-def trivial (Mode : Type*) (majoranaDirac : Mode → Mode) :
+def trivial (Mode : Type*) [Nonempty Mode] :
     MajoranaBerryKeatingOperatorPacket Unit (Unit → Unit) (Set Unit) Mode where
   berryKeating := BerryKeatingOperatorPacket.trivial
-  majoranaMode := majoranaDirac
-  thermalOperator := majoranaDirac
-  majoranaDirac := majoranaDirac (Classical.choice inferInstance)
+  majoranaMode := fun _ _ => ()
+  thermalOperator := fun _ _ => ()
+  majoranaDirac := fun _ => ()
   squareRootEnergyCoefficient := fun _ => 1
   splitClifford_True := True
   squareRootEnergy_True := True
@@ -254,6 +254,32 @@ theorem modeEnergyCoefficient_sqrtLog
     (P : RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff) :
     P.modeEnergyCoefficient_sqrtLog_True :=
   P.modeEnergyCoefficient_sqrtLog_sorryProof
+
+/-- Trivial concrete model: all five _True sockets filled with True.
+Real model requires anticommutation law for rho vs BK block,
+Dirac-square law, and sqrt(log p) coefficient proof. -/
+def trivial (Carrier Operator Mode Cutoff : Type*)
+    (carrier : Carrier) (cutoff : Cutoff)
+    (realBK : Operator) (rho : Operator)
+    (diracCutoff : Operator) (combined : Operator) :
+    RealMajoranaBerryKeatingProblem Carrier Operator Mode Cutoff where
+  carrier := carrier
+  cutoff := cutoff
+  realBerryKeatingBlock := realBK
+  chiralityRho := rho
+  majoranaDiracCutoff := diracCutoff
+  combinedDirac := combined
+  combinedDirac_formula_True := True
+  combinedDirac_formula_sorryProof := True.intro
+  rho_anticommutes_realBK_True := True
+  rho_anticommutes_realBK_sorryProof := True.intro
+  majoranaDirac_square_True := True
+  majoranaDirac_square_sorryProof := True.intro
+  combinedDirac_square_True := True
+  combinedDirac_square_sorryProof := True.intro
+  modeEnergyCoefficient := fun _ => 1
+  modeEnergyCoefficient_sqrtLog_True := True
+  modeEnergyCoefficient_sqrtLog_sorryProof := True.intro
 
 end RealMajoranaBerryKeatingProblem
 

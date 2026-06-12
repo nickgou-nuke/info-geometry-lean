@@ -5,7 +5,7 @@ Mirrors `InfoGeometry.Physics.MD012EmergentModelsFinite`.
 
 Verified theorem-safe content only:
 * eight-component diagonal covariance and inverse-covariance tables;
-* four-component diagonal sign/stiffness extraction;
+* four-component diagonal covariance/sign-stiffness extraction and inverse checks;
 * finite density-stress shadow symmetry for symmetric metric data;
 * torsion-from-spin and contortion zero-source algebra.
 
@@ -50,10 +50,14 @@ def main() -> int:
     print("diagonal covariance/inverse covariance: OK")
 
     metric4 = sp.diag(beta * tau, -beta * kappa, -beta * kappa, -beta * kappa)
+    cov4 = sp.diag(1 / (beta * tau), -1 / (beta * kappa), -1 / (beta * kappa), -1 / (beta * kappa))
     assert_zero(metric4[0, 0] - beta * tau, "time-sector metric entry")
     assert_zero(metric4[1, 1] + beta * kappa, "space-sector metric entry")
     assert_matrix_zero(metric4 - metric4.T, "metric4 symmetry")
-    print("finite sign/stiffness table: OK")
+    assert_matrix_zero(cov4 - cov4.T, "cov4 symmetry")
+    assert_matrix_zero(metric4 * cov4 - sp.eye(4), "4x4 sign table times covariance")
+    assert_matrix_zero(cov4 * metric4 - sp.eye(4), "4x4 covariance times sign table")
+    print("finite covariance/sign-stiffness tables: OK")
 
     # Symmetric finite density-stress shadow sample over four indices.
     g = sp.Matrix(4, 4, lambda i, j: sp.symbols(f"g{min(i,j)}{max(i,j)}"))

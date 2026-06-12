@@ -16,8 +16,8 @@ This owner formalizes only the finite algebraic socket:
 
 * an eight-component diagonal covariance table with two time-sector entries and
   six space-sector entries, together with its diagonal inverse;
-* extraction of a four-component diagonal sign table from the inverse
-  covariance data;
+* extraction of four-component diagonal covariance/sign tables and their
+  finite inverse relation;
 * symmetry/reduction of the density-matrix stress shadow by reusing the Section
   38 owner;
 * a finite torsion-from-spin source table and the zero-spin/zero-torsion
@@ -77,6 +77,23 @@ theorem lorentzInverseCovariance8_mul_covariance8
       lorentzInvDiagEntry, lorentzCovDiagEntry, Matrix.mul_apply]
   all_goals field_simp [hbeta, htau, hkappa]
 
+/-- The diagonal covariance is also a right inverse to the inverse covariance. -/
+theorem lorentzCovariance8_mul_inverseCovariance8
+    (beta tau kappa : ℝ) (ht : beta * tau ≠ 0) (hk : beta * kappa ≠ 0) :
+    lorentzCovariance8 beta tau kappa * lorentzInverseCovariance8 beta tau kappa = 1 := by
+  have hbeta : beta ≠ 0 := (mul_ne_zero_iff.mp ht).1
+  have htau : tau ≠ 0 := (mul_ne_zero_iff.mp ht).2
+  have hkappa : kappa ≠ 0 := (mul_ne_zero_iff.mp hk).2
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [lorentzInverseCovariance8, lorentzCovariance8, diagMatrix,
+      lorentzInvDiagEntry, lorentzCovDiagEntry, Matrix.mul_apply]
+  all_goals field_simp [hbeta, htau, hkappa]
+
+/-- Four-coordinate diagonal covariance table extracted from the eight-coordinate covariance. -/
+def lorentzCovMetric4 (beta tau kappa : ℝ) : Matrix ModelSpacetimeIndex ModelSpacetimeIndex ℝ :=
+  fun i j => if i = j then (if i = 0 then 1 / (beta * tau) else - (1 / (beta * kappa))) else 0
+
 /-- Four-coordinate diagonal sign/stiffness table extracted from the inverse covariance. -/
 def lorentzSignMetric4 (beta tau kappa : ℝ) : Matrix ModelSpacetimeIndex ModelSpacetimeIndex ℝ :=
   fun i j => if i = j then (if i = 0 then beta * tau else - (beta * kappa)) else 0
@@ -96,6 +113,36 @@ theorem lorentzSignMetric4_symmetric (beta tau kappa : ℝ) :
     lorentzSignMetric4 beta tau kappa = (lorentzSignMetric4 beta tau kappa)ᵀ := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [lorentzSignMetric4]
+
+/-- The extracted finite covariance table is symmetric. -/
+theorem lorentzCovMetric4_symmetric (beta tau kappa : ℝ) :
+    lorentzCovMetric4 beta tau kappa = (lorentzCovMetric4 beta tau kappa)ᵀ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [lorentzCovMetric4]
+
+/-- The four-coordinate sign/stiffness table is inverse to the extracted covariance table. -/
+theorem lorentzSignMetric4_mul_covMetric4
+    (beta tau kappa : ℝ) (ht : beta * tau ≠ 0) (hk : beta * kappa ≠ 0) :
+    lorentzSignMetric4 beta tau kappa * lorentzCovMetric4 beta tau kappa = 1 := by
+  have hbeta : beta ≠ 0 := (mul_ne_zero_iff.mp ht).1
+  have htau : tau ≠ 0 := (mul_ne_zero_iff.mp ht).2
+  have hkappa : kappa ≠ 0 := (mul_ne_zero_iff.mp hk).2
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [lorentzSignMetric4, lorentzCovMetric4, Matrix.mul_apply, Fin.sum_univ_four]
+  all_goals field_simp [hbeta, htau, hkappa]
+
+/-- The extracted covariance table is also inverse to the four-coordinate sign table. -/
+theorem lorentzCovMetric4_mul_signMetric4
+    (beta tau kappa : ℝ) (ht : beta * tau ≠ 0) (hk : beta * kappa ≠ 0) :
+    lorentzCovMetric4 beta tau kappa * lorentzSignMetric4 beta tau kappa = 1 := by
+  have hbeta : beta ≠ 0 := (mul_ne_zero_iff.mp ht).1
+  have htau : tau ≠ 0 := (mul_ne_zero_iff.mp ht).2
+  have hkappa : kappa ≠ 0 := (mul_ne_zero_iff.mp hk).2
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [lorentzSignMetric4, lorentzCovMetric4, Matrix.mul_apply, Fin.sum_univ_four]
+  all_goals field_simp [hbeta, htau, hkappa]
 
 /-- If the source parameters are positive, the selected time-sector entry is positive. -/
 theorem lorentzSignMetric4_time_positive
@@ -149,12 +196,18 @@ theorem repaired_MD012_finite_model_packet
     (kap : ℝ) (spin : ModelSpacetimeIndex → ModelSpacetimeIndex → ModelSpacetimeIndex → ℝ)
     (hspin : ∀ a b c, spin a b c = 0) :
     lorentzInverseCovariance8 beta tau kappa * lorentzCovariance8 beta tau kappa = 1 ∧
+    lorentzCovariance8 beta tau kappa * lorentzInverseCovariance8 beta tau kappa = 1 ∧
     lorentzSignMetric4 beta tau kappa = (lorentzSignMetric4 beta tau kappa)ᵀ ∧
+    lorentzCovMetric4 beta tau kappa = (lorentzCovMetric4 beta tau kappa)ᵀ ∧
+    lorentzSignMetric4 beta tau kappa * lorentzCovMetric4 beta tau kappa = 1 ∧
     (∀ mu nu, D.fullStress mu nu = D.fullStress nu mu) ∧
     (∀ mu nu, D.fullStress mu nu = D.compactStress mu nu) ∧
     (∀ a b c, torsionFromSpin kap spin a b c = 0) := by
   exact ⟨lorentzInverseCovariance8_mul_covariance8 beta tau kappa ht hk,
+    lorentzCovariance8_mul_inverseCovariance8 beta tau kappa ht hk,
     lorentzSignMetric4_symmetric beta tau kappa,
+    lorentzCovMetric4_symmetric beta tau kappa,
+    lorentzSignMetric4_mul_covMetric4 beta tau kappa ht hk,
     (repaired_section38_stress_domain_packet D hmetric hconn hzero).1,
     (repaired_section38_stress_domain_packet D hmetric hconn hzero).2,
     torsionFromSpin_zero_of_spin_zero kap spin hspin⟩

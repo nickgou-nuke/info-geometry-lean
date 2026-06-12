@@ -2,8 +2,8 @@ import Mathlib
 import InfoGeometry.External.Auto.AnomalousKMSFlow
 import InfoGeometry.External.Auto.CuntzKTheoryPairing
 import InfoGeometry.External.Auto.ZetaCoordinateSymmetry
-import PrimonSuperThermodynamics
-import ConnesSpectralAction
+import InfoGeometry.External.Auto.PrimonSuperThermodynamics
+import InfoGeometry.External.Auto.ConnesSpectralAction
 
 noncomputable section
 

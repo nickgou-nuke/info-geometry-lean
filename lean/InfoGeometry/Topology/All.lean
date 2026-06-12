@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Topology.BraidParafermionClosure
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.CantorDiracGrandCanonical
 import InfoGeometry.Topology.CantorDiracOperator
@@ -8,5 +9,6 @@ import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
 import InfoGeometry.Topology.KANWallpaperIsomorphism
+import InfoGeometry.Topology.ParafermionBraiding
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Topology.WallpaperToWeylBridge

@@ -48,69 +48,59 @@ Then:
 
   A_F = Σ_{p∈F} a_p·S_p
 
-is a norm-Cauchy net over finite prime subsets F, hence converges
-in a complete normed star algebra.
--/
-lemma weightedCuntzSum_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    (S : ℕ → A)
-    (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-    (a : ℕ → ℝ)
-    (ha_l2 : Summable (λ p => (a p) ^ 2)) :
-    -- There exists a limit operator A satisfying ‖A_F - A‖ → 0
-    -- where A_F = Σ_{p∈F} a_p·S_p for finite subsets F.
-    True := by
-  -- For finite prime sets F, G:
-  --   ‖A_F - A_G‖² = Σ_{p∈F∆G} |a_p|²
-  -- Since (a_p) ∈ ℓ², the net is Cauchy. By completeness of A, it converges.
-  -- The self-adjoint subspace is norm-closed, so the limit preserves
-  -- self-adjointness.
-  --
-  -- OPEN OWNER DEBT: NormedRing + CompleteSpace + the orthogonality
-  -- condition need to be instantiated with the concrete Cuntz O_∞
-  -- representation. The algebraic structure exists; the analytic
-  -- convergence layer is certificate-gated in `FredholmGenuine.lean`.
-  trivial
+  is a norm-Cauchy net over finite prime subsets F, hence converges
+  in a complete normed star algebra.
 
-/--
-**Corollary: D_β converges for β > 1/2.**
+  **Open debt**: For finite prime sets F, G:
+  ‖A_F - A_G‖² = Σ_{p∈F∆G} |a_p|².
+  Since (a_p) ∈ ℓ², the net is Cauchy. By completeness of A, it converges.
+  The self-adjoint subspace is norm-closed, so the limit preserves self-adjointness.
+  Owner reference: `FredholmGenuine.lean`.
+  Status: requires NormedRing + CompleteSpace + orthogonality condition
+  instantiated with the concrete Cuntz O_∞ representation. -/
+  lemma weightedCuntzSum_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
+      (S : ℕ → A)
+      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
+      (a : ℕ → ℝ)
+      (ha_l2 : Summable (λ p => (a p) ^ 2)) :
+      True := by
+    sorry
+
+  /--
+  **Corollary: D_β converges for β > 1/2.**
 
   D_β = Σ_p p^{-β}·(S_p + S*_p)
 
-The Boltzmann weights a_p = p^{-β} are in ℓ²(ℙ) exactly when β > 1/2,
-because Σ p^{-2β} < ∞ ↔ 2β > 1 ↔ β > 1/2 (prime zeta function
-P(2β) converges for 2β > 1, i.e. β > 1/2).
--/
-lemma primeDirac_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    (S : ℕ → A)
-    (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-    (β : ℝ) (hβ : β > 1/2) : True := by
-  -- a_p = p^{-β}: then Σ a_p² = Σ p^{-2β} < ∞ for β > 1/2.
-  -- Apply the ℓ² convergence lemma.
-  trivial
+  The Boltzmann weights a_p = p^{-β} are in ℓ²(ℙ) exactly when β > 1/2,
+  because Σ p^{-2β} < ∞ ↔ 2β > 1 ↔ β > 1/2 (prime zeta function
+  P(2β) converges for 2β > 1, i.e. β > 1/2).
 
-/--
-**D_β is self-adjoint for β > 1/2.**
+  **Open debt**: instantiate a_p = p^{-β} with ℓ² summability for β > 1/2,
+  then apply `weightedCuntzSum_converges`.
+  Status: requires prime zeta function convergence estimate. -/
+  lemma primeDirac_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
+      (S : ℕ → A)
+      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
+      (β : ℝ) (hβ : β > 1/2) : True := by
+    sorry
 
-Each finite partial sum D_F = Σ_{p∈F} p^{-β}·(S_p + S*_p) is
-self-adjoint (proved in `finiteDirac_selfAdjoint`). The self-adjoint
-subspace is norm-closed in any C*-algebra. Hence the limit D_β is
-self-adjoint.
+  /--
+  **D_β is self-adjoint for β > 1/2.**
 
-The proof is: D_F* = D_F (algebraic), D_F → D_β (norm convergence),
-Adjoint is norm-continuous, so D_β* = D_β.
--/
-lemma primeDirac_selfAdjoint {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    (S : ℕ → A)
-    (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-    (β : ℝ) (hβ : β > 1/2) : True := by
-  -- Algebraic self-adjointness of each finite D_F: already proved.
-  -- Norm convergence: from ℓ² summability above.
-  -- Self-adjoint subspace is norm-closed: standard C*-algebra fact.
-  -- Therefore D_β* = D_β.
-  --
-  -- OPEN OWNER DEBT: The analytic layer needs a normed star algebra
-  -- with the norm-closedness of the self-adjoint subspace proved.
-  -- `FredholmGenuine.lean` documents this as certificate-gated.
-  trivial
+  Each finite partial sum D_F = Σ_{p∈F} p^{-β}·(S_p + S*_p) is
+  self-adjoint. The self-adjoint subspace is norm-closed in any C*-algebra.
+  Hence the limit D_β is self-adjoint.
+
+  The proof is: D_F* = D_F (algebraic), D_F → D_β (norm convergence),
+  Adjoint is norm-continuous, so D_β* = D_β.
+
+  **Open debt**: combine algebraic self-adjointness of finite sums with
+  norm convergence from `primeDirac_converges` and norm-continuity of adjoint.
+  Status: requires C*-algebra norm-closedness of self-adjoint subspace. -/
+  lemma primeDirac_selfAdjoint {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
+      (S : ℕ → A)
+      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
+      (β : ℝ) (hβ : β > 1/2) : True := by
+    sorry
 
 end InfoGeometry.Algebra.Cuntz

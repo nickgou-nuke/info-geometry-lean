@@ -21,6 +21,7 @@ import InfoGeometry.Physics.MD011StatisticalInfoGeometry
 import InfoGeometry.Physics.MD012EmergentModelsFinite
 import InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 import InfoGeometry.Physics.MD014TriSpinZ3Projectors
+import InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 import InfoGeometry.Physics.MD20250430070955FinitePartition
 import InfoGeometry.Physics.MD20250430071017MatrixStatistics
 import InfoGeometry.Physics.Section00MatrixBasisFramework

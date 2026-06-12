@@ -140,7 +140,7 @@ theorem o55_preserves_naturalCone {ξ : H₂}
   change 0 ≤ KreinSpace.kreinInner (H := H₂)
     (B.o55VectorAction ξ) (B.o55VectorAction ξ)
   rw [B.o55VectorAction_krein_isometry]
-  exact hξ
+  simpa using hξ
 
 /-- The supplied `O(5,5)` vector action preserves the Krein null cone. -/
 @[rep_depth krein]
@@ -152,7 +152,7 @@ theorem o55_preserves_nullCone {ξ : H₂}
   change KreinSpace.kreinInner (H := H₂)
     (B.o55VectorAction ξ) (B.o55VectorAction ξ) = 0
   rw [B.o55VectorAction_krein_isometry]
-  exact hξ
+  simpa using hξ
 
 /-- The supplied `O(5,5)` action preserves the Ω-volume readout. -/
 @[rep_depth operator]

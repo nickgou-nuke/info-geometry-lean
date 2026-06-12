@@ -42,6 +42,7 @@ import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge
 import InfoGeometry.Clifford.CantorDiracSeaChargeHestenesBridge
 import InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
 import InfoGeometry.Clifford.AlbertBottConformalBridge
+import InfoGeometry.Clifford.Pin55ReflectionGlide
 import InfoGeometry.Clifford.ThreeDHurwitz
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Clifford.MatrixCompat

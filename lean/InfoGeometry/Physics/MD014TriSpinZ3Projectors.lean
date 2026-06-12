@@ -11,7 +11,7 @@ The source itself flags inconsistencies in the topology/covering discussion.
 This owner formalizes only the finite algebraic socket:
 
 * a finite `Z₃`-sector projector triple on `ℂ³`;
-* orthogonal idempotent, completeness, and sector-eigenvalue readouts;
+* orthogonal idempotent, completeness, trace, and two-sided sector-eigenvalue readouts;
 * a finite central-extension product on `G × ZMod 3`, with associativity stated
   under the explicit product-level cocycle associativity equation.
 
@@ -31,6 +31,9 @@ open Matrix
 
 /-- Concrete three-sector complex carrier. -/
 abbrev Sector3Carrier := Matrix (Fin 3) (Fin 3) ℂ
+
+/-- Trace on the concrete three-sector carrier. -/
+def trace3 (A : Sector3Carrier) : ℂ := ∑ i : Fin 3, A i i
 
 /-- Sector-0 diagonal projector. -/
 def sectorProjector0 : Sector3Carrier :=
@@ -80,6 +83,33 @@ theorem sectorProjector2_mul_sectorProjector0 :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [sectorProjector2, sectorProjector0, Matrix.mul_apply]
 
+/-- Distinct sector projectors are orthogonal: `P₁P₀=0`. -/
+theorem sectorProjector1_mul_sectorProjector0 :
+    sectorProjector1 * sectorProjector0 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [sectorProjector0, sectorProjector1, Matrix.mul_apply]
+
+/-- Distinct sector projectors are orthogonal: `P₂P₁=0`. -/
+theorem sectorProjector2_mul_sectorProjector1 :
+    sectorProjector2 * sectorProjector1 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [sectorProjector1, sectorProjector2, Matrix.mul_apply]
+
+/-- Distinct sector projectors are orthogonal: `P₀P₂=0`. -/
+theorem sectorProjector0_mul_sectorProjector2 :
+    sectorProjector0 * sectorProjector2 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [sectorProjector0, sectorProjector2, Matrix.mul_apply]
+
+/-- Complete pairwise orthogonality of the three sector projectors. -/
+theorem sectorProjector_pairwise_orthogonal_packet :
+    sectorProjector0 * sectorProjector1 = 0 ∧ sectorProjector1 * sectorProjector0 = 0 ∧
+    sectorProjector1 * sectorProjector2 = 0 ∧ sectorProjector2 * sectorProjector1 = 0 ∧
+    sectorProjector2 * sectorProjector0 = 0 ∧ sectorProjector0 * sectorProjector2 = 0 := by
+  exact ⟨sectorProjector0_mul_sectorProjector1, sectorProjector1_mul_sectorProjector0,
+    sectorProjector1_mul_sectorProjector2, sectorProjector2_mul_sectorProjector1,
+    sectorProjector2_mul_sectorProjector0, sectorProjector0_mul_sectorProjector2⟩
+
 /-- The three finite sector projectors sum to the identity. -/
 theorem sectorProjector_sum_identity :
     sectorProjector0 + sectorProjector1 + sectorProjector2 = 1 := by
@@ -110,6 +140,43 @@ theorem sectorPhase_mul_projector2 (omega : ℂ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [sectorPhase, sectorProjector0, sectorProjector1, sectorProjector2, Matrix.mul_apply]
+
+/-- Sector 0 has the same phase readout on the right. -/
+theorem sectorProjector0_mul_sectorPhase (omega : ℂ) :
+    sectorProjector0 * sectorPhase omega = sectorProjector0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sectorPhase, sectorProjector0, sectorProjector1, sectorProjector2, Matrix.mul_apply]
+
+/-- Sector 1 has the same phase readout on the right. -/
+theorem sectorProjector1_mul_sectorPhase (omega : ℂ) :
+    sectorProjector1 * sectorPhase omega = omega • sectorProjector1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sectorPhase, sectorProjector0, sectorProjector1, sectorProjector2, Matrix.mul_apply]
+
+/-- Sector 2 has the same phase readout on the right. -/
+theorem sectorProjector2_mul_sectorPhase (omega : ℂ) :
+    sectorProjector2 * sectorPhase omega = (omega ^ 2) • sectorProjector2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sectorPhase, sectorProjector0, sectorProjector1, sectorProjector2, Matrix.mul_apply]
+
+/-- Each diagonal sector projector has trace one. -/
+theorem trace3_sectorProjector0 : trace3 sectorProjector0 = 1 := by
+  norm_num [trace3, sectorProjector0, Fin.sum_univ_three]
+
+/-- Each diagonal sector projector has trace one. -/
+theorem trace3_sectorProjector1 : trace3 sectorProjector1 = 1 := by
+  norm_num [trace3, sectorProjector1, Fin.sum_univ_three]
+
+/-- Each diagonal sector projector has trace one. -/
+theorem trace3_sectorProjector2 : trace3 sectorProjector2 = 1 := by
+  norm_num [trace3, sectorProjector2, Fin.sum_univ_three]
+
+/-- The phase trace is the finite character sum `1 + ω + ω²`. -/
+theorem trace3_sectorPhase (omega : ℂ) : trace3 (sectorPhase omega) = 1 + omega + omega ^ 2 := by
+  simp [trace3, sectorPhase, sectorProjector0, sectorProjector1, sectorProjector2, Fin.sum_univ_three]
 
 /-- If `ω³=1`, the finite sector phase cubes to identity. -/
 theorem sectorPhase_cube_identity (omega : ℂ) (homega : omega ^ 3 = 1) :
@@ -172,15 +239,23 @@ theorem repaired_MD014_z3_projector_packet {G : Type} [Semigroup G]
     sectorProjector1 * sectorProjector1 = sectorProjector1 ∧
     sectorProjector2 * sectorProjector2 = sectorProjector2 ∧
     sectorProjector0 * sectorProjector1 = 0 ∧
+    sectorProjector1 * sectorProjector0 = 0 ∧
     sectorProjector0 + sectorProjector1 + sectorProjector2 = 1 ∧
+    trace3 sectorProjector0 = 1 ∧
+    trace3 sectorProjector1 = 1 ∧
+    trace3 sectorProjector2 = 1 ∧
+    trace3 (sectorPhase omega) = 1 + omega + omega ^ 2 ∧
     sectorPhase omega * sectorProjector1 = omega • sectorProjector1 ∧
+    sectorProjector1 * sectorPhase omega = omega • sectorProjector1 ∧
     sectorPhase omega * sectorPhase omega * sectorPhase omega = 1 ∧
     finiteCentralExtensionMul tau (finiteCentralExtensionMul tau x y) z =
       finiteCentralExtensionMul tau x (finiteCentralExtensionMul tau y z) := by
   exact ⟨sectorProjector0_idempotent, sectorProjector1_idempotent,
     sectorProjector2_idempotent, sectorProjector0_mul_sectorProjector1,
-    sectorProjector_sum_identity, sectorPhase_mul_projector1 omega,
-    sectorPhase_cube_identity omega homega,
+    sectorProjector1_mul_sectorProjector0, sectorProjector_sum_identity,
+    trace3_sectorProjector0, trace3_sectorProjector1, trace3_sectorProjector2,
+    trace3_sectorPhase omega, sectorPhase_mul_projector1 omega,
+    sectorProjector1_mul_sectorPhase omega, sectorPhase_cube_identity omega homega,
     finiteCentralExtensionMul_assoc tau hassoc x y z⟩
 
 end InfoGeometry.Physics.MD014TriSpinZ3Projectors

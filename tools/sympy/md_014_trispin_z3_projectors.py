@@ -5,7 +5,7 @@ Mirrors `InfoGeometry.Physics.MD014TriSpinZ3Projectors`.
 
 Verified theorem-safe content only:
 * three orthogonal diagonal sector projectors on C^3;
-* Z3 phase operator sector readouts and cube identity;
+* Z3 phase operator two-sided sector readouts, trace readouts, and cube identity;
 * a finite central-extension product law on a finite base example, with an
   explicitly associative/trivial cocycle table.
 
@@ -43,19 +43,30 @@ def main() -> int:
 
     for name, P in [("P0", P0), ("P1", P1), ("P2", P2)]:
         assert_matrix_zero(P * P - P, f"{name} idempotent")
-    assert_matrix_zero(P0 * P1, "P0 P1 orthogonal")
-    assert_matrix_zero(P1 * P2, "P1 P2 orthogonal")
-    assert_matrix_zero(P2 * P0, "P2 P0 orthogonal")
+    for left_name, left, right_name, right in [
+        ("P0", P0, "P1", P1), ("P1", P1, "P0", P0),
+        ("P1", P1, "P2", P2), ("P2", P2, "P1", P1),
+        ("P2", P2, "P0", P0), ("P0", P0, "P2", P2),
+    ]:
+        assert_matrix_zero(left * right, f"{left_name} {right_name} orthogonal")
     assert_matrix_zero(P0 + P1 + P2 - I3, "projector sum identity")
+    assert_equal(sp.trace(P0), 1, "trace P0")
+    assert_equal(sp.trace(P1), 1, "trace P1")
+    assert_equal(sp.trace(P2), 1, "trace P2")
     print("orthogonal Z3 sector projectors: OK")
 
     omega = sp.exp(2 * sp.pi * sp.I / 3)
     # Use algebraic root to simplify exactly.
     omega = sp.Rational(-1, 2) + sp.sqrt(3) * sp.I / 2
     Z = P0 + omega * P1 + omega**2 * P2
-    assert_matrix_zero(Z * P0 - P0, "sector 0 phase")
-    assert_matrix_zero(Z * P1 - omega * P1, "sector 1 phase")
-    assert_matrix_zero(Z * P2 - omega**2 * P2, "sector 2 phase")
+    assert_matrix_zero(Z * P0 - P0, "sector 0 left phase")
+    assert_matrix_zero(Z * P1 - omega * P1, "sector 1 left phase")
+    assert_matrix_zero(Z * P2 - omega**2 * P2, "sector 2 left phase")
+    assert_matrix_zero(P0 * Z - P0, "sector 0 right phase")
+    assert_matrix_zero(P1 * Z - omega * P1, "sector 1 right phase")
+    assert_matrix_zero(P2 * Z - omega**2 * P2, "sector 2 right phase")
+    assert_zero = lambda expr, label: assert_equal(sp.expand(sp.simplify(expr)), 0, label)
+    assert_zero(sp.trace(Z) - (1 + omega + omega**2), "phase trace character sum")
     assert_matrix_zero(Z**3 - I3, "Z3 phase cube identity")
     print("Z3 phase sector readouts: OK")
 

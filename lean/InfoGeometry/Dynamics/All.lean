@@ -14,6 +14,7 @@ import InfoGeometry.Dynamics.SouriauDiracHodge
 import InfoGeometry.Dynamics.TomitaTakesaki
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Dynamics.WassersteinProximalBridge
+import InfoGeometry.Dynamics.DynamicalZetaFunction
 
 namespace InfoGeometry.Dynamics
 

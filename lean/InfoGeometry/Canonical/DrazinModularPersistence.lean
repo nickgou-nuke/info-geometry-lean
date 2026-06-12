@@ -229,8 +229,8 @@ variable {Obs : Type*} [Monoid Obs] [Star Obs]
 
 /-- The state is positive: `φ(A* A) ≥ 0` for all `A`. -/
 def positivity
-    (φ : RealExpectationState Obs) : Prop := by
-  sorry
+    (φ : RealExpectationState Obs) : Prop :=
+  ∀ A : Obs, 0 ≤ φ.expect (star A * A)
 
 end RealExpectationState
 

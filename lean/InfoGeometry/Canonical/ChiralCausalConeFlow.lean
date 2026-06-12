@@ -98,14 +98,18 @@ theorem automorphism_preserves_interval
 
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 
-/-- DEBT 1: Cartan symmetric-space structure (`SL(2,ℝ)/SO(1,1)`) linkage. -/
+/-- DEBT 1: Cartan symmetric-space structure (`SL(2,ℝ)/SO(1,1)`) linkage.
+Status: requires construction of the symmetric-space bijection between
+chiral causal cones and the noncompact Riemannian symmetric space. -/
 theorem cartan_symmetric_space_bijection {R : Type*} [CommRing R] :
   True := by
-  trivial
+  sorry
 
-/-- DEBT 2: Thermofield-double thermal-wave partial-trace channel closure. -/
+/-- DEBT 2: Thermofield-double thermal-wave partial-trace channel closure.
+Status: requires partial-trace analysis on the doubled thermal Hilbert space
+and verification of complete-positivity for the reduced channel. -/
 theorem thermofield_double_entanglement_trace {R : Type*} [CommRing R] :
   True := by
-  trivial
+  sorry
 
 end InfoGeometry.Canonical.ChiralCausalConeFlow

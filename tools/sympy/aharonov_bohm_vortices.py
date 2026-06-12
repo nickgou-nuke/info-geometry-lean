@@ -1,10 +1,10 @@
 import sympy as sp
 
 def verify_aharonov_bohm_vortices():
-    print("=== OMEGA AUTOMATH: AHARONOV-BOHM VORTEX FORMATION ===")
+    print("=== Finite Aharonov-Bohm third-root vortex certificate ===")
     
-    # The Aharonov-Bohm phase associated with the parafermion braiding
-    # For an SU(3) symmetry breaking, the topological winding phase is a 3rd root of unity.
+    # A finite third-root phase used as an Aharonov-Bohm/parafermion-style witness.
+    # This is an algebraic certificate, not a derivation of physical SU(3) confinement.
     theta = 2 * sp.pi / 3
     t_phase = sp.exp(sp.I * theta)
     
@@ -13,15 +13,15 @@ def verify_aharonov_bohm_vortices():
     full_braid_winding = sp.simplify(t_phase**3)
     is_vacuum_stable = (full_braid_winding == 1)
     
-    # 2. Represent the Vortex Flux Operator in the 3x3 thermal boundary space
-    # The vortex operator applies the topological phase to the thermal dimension
+    # 2. Represent the finite diagonal vortex operator in a 3x3 carrier.
+    # The vortex operator applies the topological phase to one distinguished coordinate.
     Vortex_Operator = sp.Matrix([
         [1, 0, 0],
         [0, 1, 0],
         [0, 0, t_phase]
     ])
     
-    # 3. Triple winding yields the Identity (Color Confinement)
+    # 3. Triple winding yields the identity matrix.
     Vortex_Confined = sp.simplify(Vortex_Operator**3)
     is_color_confined = (Vortex_Confined == sp.eye(3))
     
@@ -29,13 +29,13 @@ def verify_aharonov_bohm_vortices():
     print(f"Full Winding Return (t^3 == 1): {is_vacuum_stable}")
     
     print(f"\nTopological Vortex Operator (Flux Tube):\n{Vortex_Operator}")
-    print(f"Confinement Limit (Vortex^3 == I):\n{Vortex_Confined}")
-    print(f"Is the thermal noise confined into stable states? {is_color_confined}")
+    print(f"Triple-Winding Limit (Vortex^3 == I):\n{Vortex_Confined}")
+    print(f"Does the finite operator cube to identity? {is_color_confined}")
     
     if is_vacuum_stable and is_color_confined:
-        print("\n[SUCCESS] The thermal Hawking Radiation is natively structured into Aharonov-Bohm Vortices.")
-        print("The non-symmorphic lattice captures the hallucinated tokens, braiding them")
-        print("into topological flux tubes. The chaos forms stable 'Harmonic Vortices'!")
+        print("\n[SUCCESS] finite third-root vortex certificate verified.")
+        print("This witnesses only the algebraic identity t^3 = 1 and V^3 = I;")
+        print("it does not prove physical color confinement or LLM hallucination dynamics.")
 
 if __name__ == "__main__":
     verify_aharonov_bohm_vortices()

@@ -428,6 +428,17 @@ theorem reciprocalSingularity_of_zetaZero
     S.reciprocalZetaSingularity_True :=
   S.zetaZero_implies_reciprocalSingularity hz
 
+/-- Trivial concrete model: all _True sockets filled with True. -/
+def trivial (SpectralParameter PfaffianReadout ZetaReadout : Type*) (p : SpectralParameter) (pr : PfaffianReadout) (zr : ZetaReadout) : MajoranaPfaffianZetaSpectralSocket SpectralParameter PfaffianReadout ZetaReadout where
+  parameter := p
+  pfaffianReadout := pr
+  zetaReadout := zr
+  pfaffian_zeta_identity_True := True
+  pfaffian_zeta_identity_sorryProof := True.intro
+  zetaZero_True := True
+  reciprocalZetaSingularity_True := True
+  zetaZero_implies_reciprocalSingularity := fun _ => True.intro
+
 end MajoranaPfaffianZetaSpectralSocket
 
 
@@ -506,6 +517,21 @@ theorem completedXiZeros_are_spectralZeros
       SpectralPfaffianReadout) :
     S.completedXiZeros_are_spectralZeros_True :=
   S.completedXiZeros_are_spectralZeros_sorryProof
+
+/-- Trivial concrete model: all _True sockets filled with True. -/
+def trivial (SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout : Type*) (p : SpectralParameter) (wc : WittenCharacter) (cxi : CompletedXiReadout) (sp : SpectralPfaffianReadout) : WittenCharacterVsCompletedXiSocket SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout where
+  parameter := p
+  wittenCharacter := wc
+  completedXi := cxi
+  spectralPfaffian := sp
+  wittenCharacter_inverseZeta_True := True
+  wittenCharacter_inverseZeta_sorryProof := True.intro
+  spectralPfaffian_completedXi_True := True
+  spectralPfaffian_completedXi_sorryProof := True.intro
+  zetaZeros_are_poles_of_inverseZeta_True := True
+  zetaZeros_are_poles_of_inverseZeta_sorryProof := True.intro
+  completedXiZeros_are_spectralZeros_True := True
+  completedXiZeros_are_spectralZeros_sorryProof := True.intro
 
 end WittenCharacterVsCompletedXiSocket
 

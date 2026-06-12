@@ -19,6 +19,7 @@ import InfoGeometry.Algebra.FormalSeriesCalculus
 import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 import InfoGeometry.Algebra.FiniteInductiveSUSY
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
+import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
 import InfoGeometry.Algebra.InfiniteSuperClosureLemmas

@@ -6,3 +6,5 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
+import InfoGeometry.Topology.WallpaperSymmetry
+import InfoGeometry.Topology.WallpaperToWeylBridge

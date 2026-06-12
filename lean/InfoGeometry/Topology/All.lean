@@ -20,3 +20,4 @@ import InfoGeometry.Topology.WallpaperToWeylBridge
 import InfoGeometry.Topology.BrillouinKleinExceptionalTopology
 import InfoGeometry.Topology.BrillouinKleinBraid
 import InfoGeometry.Topology.TwistedBoundaryExceptionalPoints
+import InfoGeometry.Topology.BrillouinKleinGaugeInvariant

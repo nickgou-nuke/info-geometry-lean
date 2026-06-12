@@ -13,6 +13,7 @@ import InfoGeometry.Physics.MD004GeometricStructures
 import InfoGeometry.Physics.MD005Symmetries
 import InfoGeometry.Physics.MD006OperatorEigenoperators
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
+import InfoGeometry.Physics.MD008RepresentationCharge
 import InfoGeometry.Physics.MD20250430070955FinitePartition
 import InfoGeometry.Physics.MD20250430071017MatrixStatistics
 import InfoGeometry.Physics.Section00MatrixBasisFramework

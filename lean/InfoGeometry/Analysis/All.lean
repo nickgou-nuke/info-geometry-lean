@@ -14,3 +14,4 @@ import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Analysis.KatzSarnakDensity
+import InfoGeometry.Analysis.MathieuZetaSeries

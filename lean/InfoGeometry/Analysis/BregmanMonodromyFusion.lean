@@ -72,16 +72,15 @@ which is exactly the monodromy Jordan block power from
 
 This proves: the exponential remainder IS the Jordan block generator.
 -/
+**Open debt**: prove exp(εK) = I + εK when K² = 0 (all higher terms vanish).
+Then (I + εK)^n = I + nεK by Jordan power formula.
+Status: requires matrix exponential expansion with nilpotent truncation. -/
 theorem exponentialRemainder_is_jordan_block {n : ℕ}
     (K : Matrix (Fin n) (Fin n) ℂ)
     (h_nilpotent : K * K = 0)
     (ε : ℝ) :
     True := by
-  -- exp(εK) = I + εK + R where R = exp(εK) - I - εK
-  -- Since K² = 0, exp(εK) = I + εK (all higher terms vanish).
-  -- Therefore R = 0, and the Jordan block is purely I + εK.
-  -- The Jordan power formula gives (I + εK)^n = I + nεK.
-  trivial
+  sorry
 
 /--
 **Theorem.** The monodromy Jordan block [[1, 2π]; [0, 1]] is the
@@ -149,16 +148,14 @@ making them both closed and coclosed — the topological invariants.
 When β₁ > 0, the harmonic subspace is nonempty, and the monodromy
 Jordan block has nonzero nilpotent component. When β₁ = 0, every
 chain is exact or coexact, and the monodromy is trivial.
--/
+**Open debt**: prove using Hodge decomposition (laplacian0, laplacian1, betti1Hodge
+from GraphHodge.lean) and nilpotent Jordan power theorem.
+Status: requires DAG cohomology computation. -/
 theorem hodge_monodromy_classification
     {α : Type} [BEq α] [Hashable α]
     (tc : DAG.TwoComplex α) :
     True := by
-  -- Uses the Hodge decomposition from GraphHodge.lean:
-  -- laplacian0, laplacian1, betti1Hodge
-  -- The nilpotent Jordan power theorem from Quantum.Monodromy
-  -- for harmonic chains satisfying K² = 0.
-  trivial
+  sorry
 
 /-! ## Fusion 4: The Unified Formula -/
 
@@ -187,22 +184,16 @@ The Dikin envelope bounds the harmonic component:
 This is the statement that the Bregman divergence (optimization error)
 equals the monodromy phase shift (LCFT logarithmic partner field)
 on the harmonic subspace of the DAG.
--/
+**Open debt**: prove the Hodge decomposition of the exponential remainder
+with Dikin envelope bounds. When β₁ = 0, all monodromy trivial.
+When β₁ > 0, harmonic component bounded by Dikin envelope ω(ε·‖ψ‖).
+Status: requires full Hodge + Bregman + Dikin synthesis. -/
 theorem unified_bregman_monodromy_hodge
     {α : Type} [BEq α] [Hashable α]
     (tc : DAG.TwoComplex α)
     (ψ : Array Rat)
     (h_harmonic : DAG.betti1Hodge tc = 0) :
     True := by
-  -- When β₁ = 0, every chain is exact or coexact, so all monodromy is trivial.
-  -- When β₁ > 0, the harmonic component produces nontrivial monodromy bounded
-  -- by the Dikin envelope.
-  --
-  -- The full theorem requires:
-  -- 1. The Hodge decomposition (from GraphHodge.lean)
-  -- 2. The nilpotent Jordan power (from Quantum.Monodromy)
-  -- 3. The Dikin envelope inequality (from SelfConcordantBarrier)
-  -- 4. The Minkowski gauge bound (from BregmanMonodromyBridge)
-  trivial
+  sorry
 
 end InfoGeometry.Analysis.BregmanMonodromyFusion

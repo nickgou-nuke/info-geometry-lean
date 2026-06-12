@@ -15,6 +15,7 @@ import InfoGeometry.Arithmetic.PadicLFunctionTrivialZero
 import InfoGeometry.Arithmetic.TwistedModularCurveZeta
 import InfoGeometry.Arithmetic.JordanAlgebraZeta
 import InfoGeometry.Arithmetic.LowLyingZerosQuaternion
+import InfoGeometry.Arithmetic.SiegelModularZeros
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 import InfoGeometry.Arithmetic.MobiusWittenWeylDenominator

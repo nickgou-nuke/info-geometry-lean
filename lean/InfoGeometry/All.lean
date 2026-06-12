@@ -267,9 +267,10 @@ import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.Optics.All
 import InfoGeometry.Algebraic.CartanCocycle
 import InfoGeometry.Algebraic.MatrixAutomorphyFactor
-import InfoGeometry.Topological.RealCuspLimitT
-import InfoGeometry.Topological.CartanBoundaryLimit
-import InfoGeometry.Topological.FibonacciBraiding
+import InfoGeometry.Topology.AharonovBohmConcreteVortex
+import InfoGeometry.Topology.KANWallpaperSuperchargeReadout
+import InfoGeometry.Topology.WallpaperKleinBottlePresentation
+import InfoGeometry.Topology.TwistedHeckeKleinBottle
 import InfoGeometry.Categorical.Gromov
 import InfoGeometry.Categorical.CartanSpacetime
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone

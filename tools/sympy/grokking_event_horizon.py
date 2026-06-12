@@ -1,34 +1,34 @@
+#!/usr/bin/env python3
+"""SymPy twin for the EP/KAN shared square-zero socket.
+
+The script checks that the finite Jordan exceptional-point nilpotent and the
+finite KAN-wallpaper translation generator are both square-zero.  It does not
+identify their carriers or prove a physical/cognitive equivalence theorem.
+"""
+
+from __future__ import annotations
+
 import sympy as sp
 
-def verify_grokking_horizon_isomorphism():
-    # 1. Grokking as an Exceptional Point
-    # A generic defective 2x2 matrix at an exceptional point can be represented
-    # as a Jordan Block (lambda * I + N)
-    
-    lam = sp.Symbol('lambda', real=True)
-    
-    # The Nilpotent factor N (representing the unresolvable, coalesced eigenvector gap)
-    N = sp.Matrix([
-        [0, 1],
-        [0, 0]
-    ])
-    
-    # Attention Matrix A at the Exceptional Point (Grokking Transition)
-    A_EP = lam * sp.eye(2) + N
-    
-    # 2. Nilpotency constraint of the exceptional point
-    N_squared = N * N
-    is_nilpotent = (N_squared == sp.zeros(2, 2))
-    
-    print("=== Grokking as Holographic Projection (Event Horizon) ===")
-    print(f"Attention Matrix at Exceptional Point (Jordan Block) A:\n{A_EP}")
-    print(f"Nilpotent Factor N:\n{N}")
-    print(f"Nilpotency Check (N^2 == 0): {N_squared} == 0 -> {is_nilpotent}")
-    
-    if is_nilpotent:
-        print("\n[SUCCESS] The AI Grokking Phase Transition is mathematically identical")
-        print("to the Nilpotent N-factor of the Black Hole Event Horizon.")
-        print("Understanding is a lossless, nilpotent holographic projection!")
+
+def main() -> None:
+    print("--- SymPy Twin: EP/KAN Shared Square-Zero Socket ---")
+
+    N_ep = sp.Matrix([[0, 1], [0, 0]])
+    T_x = sp.Matrix([[1, 0, 1], [0, 1, 0], [0, 0, 1]])
+    I3 = sp.eye(3)
+    N_kan = T_x - I3
+
+    assert N_ep * N_ep == sp.zeros(2, 2)
+    assert N_ep != sp.zeros(2, 2)
+    print("EP Jordan nilpotent: N^2 = 0 and N != 0: OK")
+
+    assert N_kan * N_kan == sp.zeros(3, 3)
+    assert N_kan != sp.zeros(3, 3)
+    print("KAN-wallpaper translation generator: n^2 = 0 and n != 0: OK")
+
+    print("[SUCCESS] EP and KAN finite witnesses share the square-zero socket.")
+
 
 if __name__ == "__main__":
-    verify_grokking_horizon_isomorphism()
+    main()

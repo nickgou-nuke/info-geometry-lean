@@ -288,6 +288,22 @@ theorem mellinCriticalLine
     G.mellinCriticalLine_True :=
   G.mellinCriticalLine_sorryProof
 
+/-- Trivial concrete model: both Fock summability and Mellin critical-line hold.
+Uses True for both sockets. Real model requires analytic Fock/Mellin theory. -/
+def trivial (FockState MellinState FockNorm MellinNorm : Type*)
+    (fockState : FockState) (mellinState : MellinState)
+    (fockNorm : FockNorm) (mellinNorm : MellinNorm) (guard : Type*) :
+    FockVsMellinNormalizabilityGuard FockState MellinState FockNorm MellinNorm where
+  fockState := fockState
+  mellinState := mellinState
+  fockNorm := fockNorm
+  mellinNorm := mellinNorm
+  fockSummabilityDomain_True := True
+  fockSummabilityDomain_sorryProof := True.intro
+  mellinCriticalLine_True := True
+  mellinCriticalLine_sorryProof := True.intro
+  criticalLine_not_from_ordinaryFockNorm_guard := guard
+
 end FockVsMellinNormalizabilityGuard
 
 /--

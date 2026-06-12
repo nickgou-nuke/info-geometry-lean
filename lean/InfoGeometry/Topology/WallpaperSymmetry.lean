@@ -75,15 +75,30 @@ def concretePG : WallpaperGroupPG where
   h_glide_squared := glide_squared_eq_x_translation
   h_commutation := glide_y_translation_commutation
 
-/-- Any `pg` package has the Klein-bottle presentation relation. -/
+/-- Any `pg` package has the glide-translation commutation relation. -/
 theorem pg_generates_klein_bottle_relation (pg : WallpaperGroupPG) (p : Lattice2D) :
     pg.G (pg.T_y p) = pg.T_y.symm (pg.G p) := by
   exact pg.h_commutation p
 
-/-- The concrete `pg` action satisfies the Klein-bottle presentation relation. -/
+/--
+Pointwise Klein-bottle presentation relation `G T_y G⁻¹ = T_y⁻¹` for any `pg`
+package.  This is the group-presentation identity underlying the quotient
+picture; it is still not a proof of a full quotient-manifold classification.
+-/
+theorem pg_conjugates_y_translation_to_inverse (pg : WallpaperGroupPG) (p : Lattice2D) :
+    pg.G (pg.T_y (pg.G.symm p)) = pg.T_y.symm p := by
+  have h := pg.h_commutation (pg.G.symm p)
+  simpa using h
+
+/-- The concrete `pg` action satisfies the glide-translation commutation relation. -/
 theorem concrete_pg_generates_klein_bottle_relation (p : Lattice2D) :
     concretePG.G (concretePG.T_y p) = concretePG.T_y.symm (concretePG.G p) := by
   exact pg_generates_klein_bottle_relation concretePG p
+
+/-- The concrete `pg` action satisfies `G T_y G⁻¹ = T_y⁻¹`. -/
+theorem concrete_pg_conjugates_y_translation_to_inverse (p : Lattice2D) :
+    concretePG.G (concretePG.T_y (concretePG.G.symm p)) = concretePG.T_y.symm p := by
+  exact pg_conjugates_y_translation_to_inverse concretePG p
 
 end InfoGeometry.Topology.Wallpaper
 

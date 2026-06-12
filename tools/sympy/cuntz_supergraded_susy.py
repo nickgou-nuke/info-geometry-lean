@@ -1,15 +1,27 @@
+#!/usr/bin/env python3
+"""SymPy twin for `InfoGeometry.Algebra.CuntzSupergradedSUSY`.
+
+Checked here:
+- the odd glide matrix `Q` satisfies `{Q,Q} = 2 P_x`;
+- `Q` commutes with the even translation matrix `P_x`.
+
+Not checked here:
+- physical supersymmetry;
+- super-Poincare representation theory;
+- a full Cuntz-algebra Hilbert-space supercharge.
+"""
+
 import sympy as sp
 
 def verify_cuntz_susy_algebra():
-    # Define the fundamental generators of the pg wallpaper group (Cuntz crystal)
-    # Q: The Fermionic Supercharge (Odd Grading) -> The Glide Reflection
+    # Q: odd finite generator, represented by the glide reflection.
     Q = sp.Matrix([
         [1,  0, sp.Rational(1, 2)],
         [0, -1, 0],
         [0,  0, 1]
     ])
     
-    # P_x: The Bosonic Spacetime Momentum (Even Grading) -> Pure Translation
+    # P_x: even finite generator, represented by pure translation.
     P_x = sp.Matrix([
         [1, 0, 1],
         [0, 1, 0],
@@ -19,7 +31,6 @@ def verify_cuntz_susy_algebra():
     # 1. The SUSY Anti-Commutator Relation: {Q, Q} = Q*Q + Q*Q
     anti_commutator_QQ = Q * Q + Q * Q
     
-    # In SUSY, {Q, Q} = 2 P_x
     susy_momentum = 2 * P_x
     is_susy_generator = (anti_commutator_QQ == susy_momentum)
     
@@ -27,17 +38,16 @@ def verify_cuntz_susy_algebra():
     commutator_QP = Q * P_x - P_x * Q
     is_conserved = (commutator_QP == sp.zeros(3, 3))
     
-    print("=== Supergraded SUSY Algebra from the Cuntz Crystal ===")
-    print(f"Fermionic Supercharge (Glide Reflection) Q:\n{Q}")
-    print(f"Bosonic Spacetime Translation P_x:\n{P_x}")
-    print(f"\nSUSY Anti-Commutator {{Q, Q}} == 2 P_x:")
+    print("=== Finite supergraded wallpaper algebra ===")
+    print(f"Odd glide generator Q:\n{Q}")
+    print(f"Even translation generator P_x:\n{P_x}")
+    print(f"\nSelf-anticommutator {{Q, Q}} == 2 P_x:")
     print(f"{anti_commutator_QQ} == {susy_momentum} -> {is_susy_generator}")
-    print(f"\nSUSY Conservation [Q, P_x] == 0:")
+    print(f"\nFinite commutator [Q, P_x] == 0:")
     print(f"{commutator_QP} == 0 -> {is_conserved}")
     
     if is_susy_generator and is_conserved:
-        print("\n[SUCCESS] The Supergraded Algebra (SUSY) is mathematically reinvented!")
-        print("Fermions and Bosons are strictly the Odd/Even graded topological residues of the discrete Cuntz crystal.")
+        print("\n[SUCCESS] finite supergraded wallpaper algebra verified.")
 
 if __name__ == "__main__":
     verify_cuntz_susy_algebra()

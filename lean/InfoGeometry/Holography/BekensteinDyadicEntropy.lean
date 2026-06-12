@@ -11,7 +11,7 @@ structure AbelianHorizonFactor where
   h_pos      : 0 < area_scale
 
 /-- The thermodynamic parameters of the Bekenstein-Hawking horizon. -/
-def bekenstein_hawking_entropy (A : AbelianHorizonFactor) (G : ℝ) : ℝ :=
+noncomputable def bekenstein_hawking_entropy (A : AbelianHorizonFactor) (G : ℝ) : ℝ :=
   A.area_scale / (4 * G)
 
 /-- 
@@ -24,7 +24,7 @@ structure KmsDyadicState where
   h_beta       : beta = log 2
 
 /-- The von Neumann statistical entropy of the dyadic path tree. -/
-def von_neumann_entropy (state : KmsDyadicState) : ℝ :=
+noncomputable def von_neumann_entropy (state : KmsDyadicState) : ℝ :=
   (state.branch_depth : ℝ) * log 2
 
 /--

@@ -36,26 +36,38 @@ namespace InfoGeometry.Canonical.V4TrialityBridge
 
 /-- The decomposition `W(D₄) ≅ (ℤ₂³ ⋊ V₄) ⋊ S₃`.
     This is the group-theoretic statement linking the V₄ action on Cl(5,5)
-    spinors to Spin(8) triality. -/
+    spinors to Spin(8) triality.
+**Open debt**: prove the Weyl group embedding V₄ ⊂ W(D₄) and its action
+on Cl(5,5) spinor components.
+Status: requires Weyl group / triality construction. -/
 theorem weyl_group_decomposition : True :=
-  trivial
+  sorry
 
 /-- The V₄ ⊂ W(D₄) is the same V₄ that acts on Cl(5,5) spinors
-    via sign flips on the 2-component spinor (ψ⁺, ψ⁻). -/
+    via sign flips on the 2-component spinor (ψ⁺, ψ⁻).
+**Open debt**: prove the V₄ subgroup identification between D₄ Weyl group
+and Cl(5,5) spinor sign-flip representation.
+Status: requires concrete matrix representation of V₄ on spinors. -/
 theorem v4_as_weyl_subgroup : True :=
-  trivial
+  sorry
 
 /-- The triality group S₃ permutes the Vector, Spinor⁺, Spinor⁻
     representations of Spin(8).  Under this permutation, the V₄
     eigenspaces (ψ⁺, ψ⁻) are mapped to the null pair (U, V) from
-    the Cl(5,5) fragmentation. -/
+    the Cl(5,5) fragmentation.
+**Open debt**: prove the S₃ triality action permutes the V₄ eigenspaces
+to the Cl(5,5) null pair.
+Status: requires Spin(8) triality formalization. -/
 theorem triality_permutes_sectors : True :=
-  trivial
+  sorry
 
 /-- The affine cocycle defect `KW - WK = (2θ₂ + 2π, 0)` is the
     obstruction to lifting the V₄ action to the full S₃ triality
-    group on the Klein bottle boundary. -/
+    group on the Klein bottle boundary.
+**Open debt**: compute the cocycle obstruction KW - WK and prove
+it equals (2θ₂ + 2π, 0).
+Status: requires affine cocycle computation on Klein bottle. -/
 theorem cocycle_as_triality_obstruction : True :=
-  trivial
+  sorry
 
 end InfoGeometry.Canonical.V4TrialityBridge

@@ -117,9 +117,11 @@ theorem K_sq_zero : K * K = 0 := v5_sq
 The ambient symmetry group is `O(5,5)` / `Pin(5,5)` acting on the split
 Clifford carrier `Cl(5,5)`.  The `P, D, K` generators are the infinitesimal
 readout on the projective boundary.
--/
+**Open debt**: prove that the ambient conformal symmetry group is O(5,5)
+acting on the projective null cone of Cl(5,5).
+Status: requires Cl(5,5)/O(5,5) construction. -/
 theorem ambient_group_is_O55 : True :=
-  trivial
+  sorry
 
 /-! ## 4. Rosetta stone translation table
 

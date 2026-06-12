@@ -6,6 +6,7 @@ import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.FreeEntropySouriauBridge
 import InfoGeometry.Physics.IncidentNullFlagVariationalAction
 import InfoGeometry.Physics.HolographicPressureFunctional
+import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry
 import InfoGeometry.Physics.MD002FoundationalConventions
 import InfoGeometry.Physics.MD003IsomorphicRepresentations

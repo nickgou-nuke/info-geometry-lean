@@ -73,29 +73,24 @@ because ψ is real and the edge generators K_e are skew-adjoint
 in the doubled Krein space. The harmonic condition ensures K_ψ² = 0
 (from ∂² = 0 in the chain complex), so the exponential truncates
 algebraically: exp(tK_ψ) = 1 + tK_ψ.
--/
+
+**Open debt**: When β₁ = 0 (harmonic subspace is {0}), trivial chain ψ=0
+gives K=0, σ_t=id, u(t)=id — KMS trivially holds.
+For β₁ > 0, construct K_ψ from harmonic chain and verify Connes cocycle
+condition via algebraic exponential truncation exp(tK)=1+tK when K²=0.
+Status: requires chain-complex harmonic subspace construction. -/
 theorem harmonic_chain_defines_KMS_state
     {α : Type} [BEq α] [Hashable α]
     (tc : TwoComplex α)
     (h_betti1_zero : (betti1 tc).toNat = 0) :
     True := by
-  -- When β₁ = 0, the harmonic subspace is {0}.
-  -- The only harmonic chain is the trivial chain ψ = 0.
-  -- The generator K = 0, the modular flow σ_t = id,
-  -- the Connes cocycle u(t) = id, and the KMS condition
-  -- u(s+t) = u(s)·σ_s(u(t)) holds trivially.
-  --
-  -- For β₁ > 0, construct K_ψ from the harmonic chain ψ
-  -- and verify the Connes condition via the algebraic
-  -- exponential truncation: exp(tK) = 1 + tK when K² = 0.
-  trivial
+  sorry
 
 /-! ## The Hodge-KMS Correspondence -/
 
 /-
 | Hodge Theory (DAG)         | KMS Theory (Connes)              |
 |----------------------------|----------------------------------|
-| harmonic 1-chain ψ          | KMS state at β = ∞               |
 | Δ₁ψ = 0                    | σ_t(ψ) = ψ (stationary)          |
 | ∂₂ψ = 0 (closed)           | cocycle condition u(s+t)=u(s)σ_s(u(t)) |
 | ∂₁ᵀψ = 0 (coclosed)        | state is invariant under flow     |

@@ -11,6 +11,7 @@ import InfoGeometry.Topology.GrandUnification
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
 import InfoGeometry.Topology.KANWallpaperIsomorphism
 import InfoGeometry.Topology.ParafermionBraiding
+import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.TripotentUniverse
 import InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
 import InfoGeometry.Topology.V4RootSystem

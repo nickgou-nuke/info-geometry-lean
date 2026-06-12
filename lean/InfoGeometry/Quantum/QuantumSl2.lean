@@ -141,27 +141,21 @@ At q = e^{πi/5}: q + q⁻¹ = φ.
 This is the fundamental identity linking the quantum group parameter
 to the Fibonacci golden ratio. The quantum dimension of the spin-1/2
 representation is [2]_q = q + q⁻¹ = φ.
--/
+**Open debt**: for q = e^{πi/5} (primitive 10th root of unity),
+prove q + q⁻¹ = 2·cos(π/5) = φ = (1+√5)/2.
+Verified numerically in SymPy witness: heisenberg_verify.py.
+Status: requires trigonometric evaluation in Lean. -/
 theorem q_plus_qinv_equals_phi_at_fibonacci : True := by
-  -- q = e^{πi/5} is a primitive 10th root of unity.
-  -- q + q⁻¹ = 2·cos(π/5) = φ = (1+√5)/2.
-  -- This requires trigonometric evaluation which is standard.
-  -- The identity is verified in the SymPy witness: heisenberg_verify.py
-  trivial
+  sorry
 
 /--
 The Fibonacci fusion rule: τ ⊗ τ = 1 ⊕ τ follows from the truncation
 of U_q(sl(2)) representations at q = e^{πi/5}. Only spins j ∈ {0, 1/2}
 survive, with quantum dimensions dim(0) = 1, dim(1/2) = φ.
-
-The decomposition dim(1/2)² = dim(0) + dim(1/2) gives φ² = 1 + φ,
-which is the defining equation of the golden ratio.
--/
+**Open debt**: prove the Clebsch-Gordan truncation
+V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V_{1/2} in the semisimple quotient.
+Status: requires quantum-group representation theory formalization. -/
 theorem fibonacci_fusion_from_quantum_group : True := by
-  -- From the representation theory of U_q(sl(2)) at q = e^{πi/5}:
-  -- The Clebsch-Gordan decomposition V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V₁
-  -- truncated to the semisimple quotient gives V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V_{1/2}
-  -- Taking quantum dimensions: φ · φ = 1 + φ → φ² = φ + 1
-  trivial
+  sorry
 
 end InfoGeometry.Quantum.QuantumSl2

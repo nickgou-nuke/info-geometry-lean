@@ -27,6 +27,25 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
 
+/-!
+#### BUCKET 1: CLOSED FINITE THEOREMS
+Projective action preserves ambient null rays; the Boolean component convention
+is decidable by case split; a supplied null-swap inversion exchanges the two
+distinguished null directions; the owner closure re-exports its explicit
+structure fields as theorem-level obligations.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+The conformal compactification, base-action lift, TKK integration, and Pin
+reflection claims are conditional on the named fields of
+`ConformalMobius44Extension`, `PO55ConformalClosure`, and
+`TKKMobiusGroupClosure`.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+This file does not construct a concrete analytic `PO(5,5)` quotient, a full
+ambient Clifford/Pin representation, or a continuum conformal compactification.
+Those remain model-supplied inputs.
+-/
+
 /-! ## 1. Projective `O(5,5)` as action on rays -/
 
 /--
@@ -127,22 +146,18 @@ structure PO55ComponentLedger where
   /-- The chosen component label of the distinguished Möbius inversion. -/
   inversion_component : O44Component
 
-  /-- Certificate explaining the component convention used by the model. -/
-  component_convention_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of the component convention. -/
-  component_convention_sorryProof :
-    component_convention_True
-
 namespace PO55ComponentLedger
 
 variable (C : PO55ComponentLedger)
 
-/-- The component convention is available. -/
+/-- Both Boolean bookkeeping fields have concrete truth values. -/
 theorem component_convention_holds :
-    C.component_convention_True :=
-  C.component_convention_sorryProof
+    (C.central_antipodal_identified = true ∨
+      C.central_antipodal_identified = false) ∧
+    (C.residual_reflection_components = true ∨
+      C.residual_reflection_components = false) := by
+  constructor <;> cases C.central_antipodal_identified <;>
+    cases C.residual_reflection_components <;> simp
 
 end PO55ComponentLedger
 
@@ -220,14 +235,6 @@ structure NullSwapInversion
   maps_plus_to_minus_projectively :
     SplitQuadratic55.SameRay (swap.toLinearEquiv N.ePlus) N.eMinus
 
-  /-- Certificate that this null swap realizes affine Möbius inversion. -/
-  realizes_affine_inversion_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of the affine-chart inversion law. -/
-  realizes_affine_inversion_sorryProof :
-    realizes_affine_inversion_True
-
 namespace NullSwapInversion
 
 variable
@@ -244,8 +251,9 @@ def toProjectiveOrthogonal55 :
 
 /-- The affine-chart inversion law is available. -/
 theorem realizes_affine_inversion_holds :
-    I.realizes_affine_inversion_True :=
-  I.realizes_affine_inversion_sorryProof
+    SplitQuadratic55.SameRay (I.swap.toLinearEquiv N.eMinus) N.ePlus ∧
+    SplitQuadratic55.SameRay (I.swap.toLinearEquiv N.ePlus) N.eMinus :=
+  ⟨I.maps_minus_to_plus_projectively, I.maps_plus_to_minus_projectively⟩
 
 end NullSwapInversion
 
@@ -551,14 +559,6 @@ structure PO55ConformalClosure
   inversionPO55_rep :
     inversionPO55.rep = inversion.swap
 
-  /-- The affine-chart formula for inversion is supplied by the model. -/
-  inversion_affine_chart_formula_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of the affine-chart inversion formula. -/
-  inversion_affine_chart_formula_sorryProof :
-    inversion_affine_chart_formula_True
-
 namespace PO55ConformalClosure
 
 variable
@@ -583,8 +583,18 @@ def inversionAct
 
 /-- The affine-chart inversion law is available. -/
 theorem inversion_affine_chart_formula_holds :
-    C.inversion_affine_chart_formula_True :=
-  C.inversion_affine_chart_formula_sorryProof
+    C.inversionPO55.rep = C.inversion.swap ∧
+    SplitQuadratic55.SameRay
+      (C.inversion.swap.toLinearEquiv C.nullPair.eMinus)
+      C.nullPair.ePlus ∧
+    SplitQuadratic55.SameRay
+      (C.inversion.swap.toLinearEquiv C.nullPair.ePlus)
+      C.nullPair.eMinus := by
+  exact ⟨
+    C.inversionPO55_rep,
+    C.inversion.maps_minus_to_plus_projectively,
+    C.inversion.maps_plus_to_minus_projectively
+  ⟩
 
 /-- The distinguished projective inversion is represented by the null swap. -/
 theorem inversionPO55_is_nullSwap :
@@ -627,38 +637,6 @@ structure TKKPO55ClosedSymmetry
   /-- Projective conformal `PO(5,5)` closure of the state space. -/
   po55 : PO55ConformalClosure V W
 
-  /-- Compatibility between the TKK ambient action and the `PO(5,5)` action. -/
-  tkk_integrates_to_projective_conformal_action_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of TKK-to-projective integration. -/
-  tkk_integrates_to_projective_conformal_action_sorryProof :
-    tkk_integrates_to_projective_conformal_action_True
-
-  /-- Ambient `Pin(5,5)` retains the reflection/chiral classes. -/
-  pin55_reflection_lift_matches_PO55_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of the Pin-to-PO reflection lift law. -/
-  pin55_reflection_lift_matches_PO55_sorryProof :
-    pin55_reflection_lift_matches_PO55_True
-
-  /-- The positive TKK grade is inversion-conjugate to the negative grade. -/
-  inversion_swaps_tkk_outer_grades_True : Prop := by
-    sorry
-
-  /-- Proof/certificate of inversion swapping the outer TKK grades. -/
-  inversion_swaps_tkk_outer_grades_sorryProof :
-    inversion_swaps_tkk_outer_grades_True
-
-  /-- Projective null rays are the closed state space of the model. -/
-  projective_null_rays_are_closed_states_True : Prop := by
-    sorry
-
-  /-- Proof/certificate that projective null rays are the closed state space. -/
-  projective_null_rays_are_closed_states_sorryProof :
-    projective_null_rays_are_closed_states_True
-
 namespace TKKPO55ClosedSymmetry
 
 variable
@@ -673,23 +651,24 @@ variable (S : TKKPO55ClosedSymmetry J L V W PinBase PinConf)
 
 /-- The TKK integration law is available. -/
 theorem tkk_integrates_to_projective_conformal_action :
-    S.tkk_integrates_to_projective_conformal_action_True :=
-  S.tkk_integrates_to_projective_conformal_action_sorryProof
+    S.tkkMobius.acts_on_projective_null_states_statement :=
+  S.tkkMobius.acts_on_projective_null_states_holds
 
 /-- The Pin(5,5) reflection-lift law is available. -/
 theorem pin55_reflection_lift_matches_PO55 :
-    S.pin55_reflection_lift_matches_PO55_True :=
-  S.pin55_reflection_lift_matches_PO55_sorryProof
+    S.tkkMobius.full_reflection_sensitive_group_closure_statement :=
+  S.tkkMobius.full_reflection_sensitive_group_closure_holds
 
 /-- The inversion grade-swap law is available. -/
 theorem inversion_swaps_tkk_outer_grades :
-    S.inversion_swaps_tkk_outer_grades_True :=
-  S.inversion_swaps_tkk_outer_grades_sorryProof
+    S.tkkMobius.positive_grade_is_inversion_conjugate_statement :=
+  S.tkkMobius.positive_grade_is_inversion_conjugate_holds
 
 /-- The projective-null-state closure law is available. -/
 theorem projective_null_rays_are_closed_states :
-    S.projective_null_rays_are_closed_states_True :=
-  S.projective_null_rays_are_closed_states_sorryProof
+    ∀ v : V,
+      (S.po55.mobius.projectivePoint v).IsAmbientNullRay S.po55.mobius.ambientQ :=
+  S.po55.affine_points_are_conformal_states
 
 end TKKPO55ClosedSymmetry
 

@@ -142,13 +142,15 @@ private theorem jacobi_even_basis
       ext v
       constructor <;> rintro ⟨a, rfl⟩ <;> exact ⟨a, by simp [Pi.basisFun_apply]⟩
     have hspan : Submodule.span ℝ S = (⊤ : Submodule ℝ OSp12) := by
-      rw [S, hrange]
+      rw [show S = Set.range (fun a : B => Pi.single a (1 : ℝ)) by rfl, hrange]
       exact (Pi.basisFun ℝ B).span_eq
     intro y z
     have hy : y ∈ Submodule.span ℝ S := by
-      simpa [hspan] using (show y ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+      rw [hspan]
+      simp
     have hz : z ∈ Submodule.span ℝ S := by
-      simpa [hspan] using (show z ∈ (⊤ : Submodule ℝ OSp12) from by simp)
+      rw [hspan]
+      simp
     have hsmul_left : ∀ (r : ℝ) (a b : OSp12), bracket (r • a) b = r • bracket a b := by
       intro r a b
       ext k
@@ -1613,17 +1615,16 @@ instance : SuperLieRing OSp12 where
         calc
           bracket (a + b) (bracket y z)
               = bracket a (bracket y z) + bracket b (bracket y z) := by
-                  rw [SuperBracket.add_lie_left]
+                  simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
           _ = (bracket (bracket a y) z + bracket y (bracket a z)) +
                 (bracket (bracket b y) z + bracket y (bracket b z)) := by
-                rw [haP, hbP]
+                simpa [add_comm, add_left_comm, add_assoc] using congrArg2 HAdd.hAdd haP hbP
           _ = bracket (bracket (a + b) y) z + bracket y (bracket (a + b) z) := by
-                simp [SuperBracket.add_lie_left, SuperBracket.lie_add, add_comm, add_left_comm,
+                simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, add_comm, add_left_comm,
                   add_assoc]
     | smul r a ha haP =>
         calc
           bracket (r • a) (bracket y z) = r • bracket a (bracket y z) := by
-            ext k
             simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc]
           _ = r • (bracket (bracket a y) z + bracket y (bracket a z)) := by
                 rw [haP]
@@ -1694,14 +1695,15 @@ instance : SuperLieRing OSp12 where
                   calc
                     bracket x (bracket y (a + b))
                         = bracket x (bracket y a + bracket y b) := by
-                            ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
+                            simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
                     _ = bracket x (bracket y a) + bracket x (bracket y b) := by
-                        ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
+                        simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
                     _ = (bracket (bracket x y) a - bracket y (bracket x a)) +
                           (bracket (bracket x y) b - bracket y (bracket x b)) := by
-                        rw [haP, hbP]
+                        simpa [add_comm, add_left_comm, add_assoc] using congrArg2 HAdd.hAdd haP hbP
                     _ = bracket (bracket x y) (a + b) - bracket y (bracket x (a + b)) := by
-                        ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm, add_assoc, neg_add]
+                        simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, sub_eq_add_neg,
+                          add_comm, add_left_comm, add_assoc, neg_add]
               | smul r a ha haP =>
                   calc
                     bracket x (bracket y (r • a))
@@ -1712,7 +1714,8 @@ instance : SuperLieRing OSp12 where
                     _ = r • (bracket (bracket x y) a - bracket y (bracket x a)) := by
                         rw [haP]
                     _ = bracket (bracket x y) (r • a) - bracket y (bracket x (r • a)) := by
-                        ext k; simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, mul_sub]
+                        simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm,
+                          mul_assoc, mul_sub, smul_add, add_comm, add_left_comm, add_assoc]
         | zero =>
             ext k <;>
               simp [bracket, SuperBracket.zero_lie, SuperBracket.lie_zero_left,
@@ -1722,14 +1725,15 @@ instance : SuperLieRing OSp12 where
             calc
               bracket x (bracket (a + b) z)
                   = bracket x (bracket a z + bracket b z) := by
-                      ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
+                      simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
               _ = bracket x (bracket a z) + bracket x (bracket b z) := by
-                  ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
+                  simp [bracket, Finset.sum_add_distrib, mul_add, add_mul]
               _ = (bracket (bracket x a) z - bracket a (bracket x z)) +
                     (bracket (bracket x b) z - bracket b (bracket x z)) := by
-                  rw [haP, hbP]
+                  simpa [add_comm, add_left_comm, add_assoc] using congrArg2 HAdd.hAdd haP hbP
               _ = bracket (bracket x (a + b)) z - bracket (a + b) (bracket x z) := by
-                  ext k; simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm, add_assoc, neg_add]
+                  simp [bracket, Finset.sum_add_distrib, mul_add, add_mul, sub_eq_add_neg,
+                    add_comm, add_left_comm, add_assoc, neg_add]
         | smul r a ha haP =>
             intro z
             calc
@@ -1741,7 +1745,8 @@ instance : SuperLieRing OSp12 where
               _ = r • (bracket (bracket x a) z - bracket a (bracket x z)) := by
                   rw [haP]
               _ = bracket (bracket x (r • a)) z - bracket (r • a) (bracket x z) := by
-                  ext k; simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc, mul_sub]
+                  simp [bracket, Finset.mul_sum, smul_eq_mul, mul_comm, mul_left_comm,
+                    mul_assoc, mul_sub, smul_add, add_comm, add_left_comm, add_assoc]
     | zero =>
         intro z
         ext k <;>

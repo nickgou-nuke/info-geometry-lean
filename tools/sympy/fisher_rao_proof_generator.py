@@ -1,0 +1,31 @@
+import sys
+
+def gen_proof():
+    print("import Mathlib.Data.Real.Basic")
+    print("import Mathlib.Analysis.Calculus.Deriv.Basic")
+    print("import Mathlib.Analysis.Calculus.Deriv.Pow")
+    print("import Mathlib.Analysis.Calculus.Deriv.Add")
+    print("import Mathlib.Analysis.Calculus.Deriv.Mul")
+    print("import Mathlib.Tactic.Ring")
+    print("import Mathlib.Data.Matrix.Basic")
+    print("import Mathlib.Tactic.FinCases")
+    print("")
+    print("noncomputable section")
+    print("")
+    print("def QuaternionicCoordinates := Fin 4 → ℝ")
+    print("")
+    print("def Psi (q : QuaternionicCoordinates) : ℝ :=")
+    print("  (1 / 2 : ℝ) * (q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2 + q 3 ^ 2)")
+    print("")
+    print("def partialDeriv (f : (Fin 4 → ℝ) → ℝ) (i : Fin 4) (q : Fin 4 → ℝ) : ℝ :=")
+    print("  deriv (fun x => f (Function.update q i x)) (q i)")
+    print("")
+    print("def FisherRaoMetric (q : QuaternionicCoordinates) : Matrix (Fin 4) (Fin 4) ℝ :=")
+    print("  fun i j => deriv (fun y => partialDeriv Psi i (Function.update q j y)) (q j)")
+    print("")
+    print("theorem FisherRaoMetric_eq_one (q : QuaternionicCoordinates) :")
+    print("    FisherRaoMetric q = (1 : Matrix (Fin 4) (Fin 4) ℝ) := by")
+    print("  sorry")
+
+if __name__ == "__main__":
+    gen_proof()

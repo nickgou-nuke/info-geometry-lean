@@ -294,7 +294,7 @@ structure Pin44CoverDatum
   /-- The induced linear split-orthogonal transformation. -/
   cover : ∀ a : PinEl, isPin a → Orthogonal44 Q
 
-  /-- Socket asserting the odd-reflection lane is available in the model. -/
+  /-- **Open debt socket**: asserting the odd-reflection lane is available in the model. Currently unused. -/
   odd_reflection_socket : Prop
 
 

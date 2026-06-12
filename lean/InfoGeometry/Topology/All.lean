@@ -17,3 +17,5 @@ import InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
 import InfoGeometry.Topology.V4RootSystem
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Topology.WallpaperToWeylBridge
+import InfoGeometry.Topology.BrillouinKleinExceptionalTopology
+import InfoGeometry.Topology.BrillouinKleinBraid

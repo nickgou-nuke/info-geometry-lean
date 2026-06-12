@@ -39,18 +39,10 @@ noncomputable section
 namespace InfoGeometry.Clifford.Pin55ReflectionGlide
 
 /-- Split `5+5` real carrier, written as momentum/winding coordinates. -/
+@[ext]
 structure Split55 where
   p : Fin 5 → ℝ
   w : Fin 5 → ℝ
-
-/-- Extensionality for the split carrier. -/
-@[ext]
-theorem Split55.ext {x y : Split55}
-    (hp : x.p = y.p) (hw : x.w = y.w) : x = y := by
-  cases x
-  cases y
-  simp at hp hw
-  simp [hp, hw]
 
 /-- Hyperbolic split pairing on `R^5 ⊕ R^5`. -/
 def splitPair (x y : Split55) : ℝ :=
@@ -91,9 +83,13 @@ theorem pinReflection_involutive (x : Split55) :
     pinReflection (pinReflection x) = x := by
   apply Split55.ext
   · funext i
-    by_cases h : i = 0 <;> simp [pinReflection, flipFirst, h]
+    by_cases h : i = 0
+    · simp [pinReflection, flipFirst, h]
+    · simp [pinReflection, flipFirst, h]
   · funext i
-    by_cases h : i = 0 <;> simp [pinReflection, flipFirst, h]
+    by_cases h : i = 0
+    · simp [pinReflection, flipFirst, h]
+    · simp [pinReflection, flipFirst, h]
 
 /-- Translations along the invariant coordinate add. -/
 theorem translateP_add (a b : ℝ) (x : Split55) :
@@ -112,10 +108,17 @@ theorem pinReflection_translateP_comm (a : ℝ) (x : Split55) :
   apply Split55.ext
   · funext i
     by_cases h0 : i = 0
-    · simp [pinReflection, translateP, flipFirst, addAtOne, h0]
-    · simp [pinReflection, translateP, flipFirst, addAtOne, h0]
+    · subst i
+      simp [pinReflection, translateP, flipFirst, addAtOne]
+    · by_cases h1 : i = 1
+      · subst i
+        simp [pinReflection, translateP, flipFirst, addAtOne]
+      · simp [pinReflection, translateP, flipFirst, addAtOne, h0, h1]
   · funext i
-    by_cases h0 : i = 0 <;> simp [pinReflection, translateP, flipFirst, h0]
+    by_cases h0 : i = 0
+    · subst i
+      simp [pinReflection, translateP, flipFirst]
+    · simp [pinReflection, translateP, flipFirst, h0]
 
 /-- The glide squares to a unit translation. -/
 theorem glide_square_eq_translation (x : Split55) :
@@ -128,4 +131,4 @@ theorem glide_square_eq_translation (x : Split55) :
 
 end InfoGeometry.Clifford.Pin55ReflectionGlide
 
-end noncomputable section
+end

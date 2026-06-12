@@ -23,8 +23,9 @@ finite algebraic shadow needed by the current codebase:
 `glideFlip_involutive`, `oriented_pair_charge_cancels`,
 `nonorientable_mod_two_charge_cancels`,
 `same_integer_charge_mod_two_cancels`,
-`orientation_reversal_invisible_mod_two`, and
-`totalChargeModTwo_orientation_reversal_invariant`.
+`orientation_reversal_invisible_mod_two`,
+`totalChargeModTwo_orientation_reversal_invariant`, and
+`totalChargeModTwo_local_orientation_choice_invariant`.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
@@ -112,6 +113,16 @@ def totalChargeModTwo {ι : Type} [Fintype ι] (charge : ι → ℤ) : ZMod 2 :=
 def ModTwoChargeNeutral {ι : Type} [Fintype ι] (charge : ι → ℤ) : Prop :=
   totalChargeModTwo charge = 0
 
+/-- Multiplication by a local orientation sign `±1` is invisible modulo two. -/
+theorem orientation_sign_mul_invisible_mod_two {s q : ℤ}
+    (hs : s = 1 ∨ s = -1) :
+    ((s * q : ℤ) : ZMod 2) = (q : ZMod 2) := by
+  rcases hs with h | h
+  · rw [h]
+    simp
+  · rw [h]
+    simp
+
 /--
 The total mod-two charge is independent of reversing every local orientation.
 This is a finite coordinate-free shadow of the paper's statement that a choice
@@ -124,6 +135,20 @@ theorem totalChargeModTwo_orientation_reversal_invariant
   refine Finset.sum_congr rfl ?_
   intro i _
   exact orientation_reversal_invisible_mod_two (charge i)
+
+/--
+The total mod-two charge is independent of an arbitrary local orientation basis:
+each individual charge may be replaced by either `χᵢ` or `-χᵢ` without changing
+`Σ`.  This is the finite algebraic content of the paper's statement that the
+map `Σ : ℤᵏ → ℤ₂` is basis-independent because `χ ≡ -χ (mod 2)`.
+-/
+theorem totalChargeModTwo_local_orientation_choice_invariant
+    {ι : Type} [Fintype ι] (charge : ι → ℤ) (sign : ι → ℤ)
+    (hsign : ∀ i, sign i = 1 ∨ sign i = -1) :
+    totalChargeModTwo (fun i => sign i * charge i) = totalChargeModTwo charge := by
+  unfold totalChargeModTwo
+  exact Finset.sum_congr rfl
+    (fun i _ => orientation_sign_mul_invisible_mod_two (hsign i))
 
 /--
 Finite exactness socket for the semimetal charge map.

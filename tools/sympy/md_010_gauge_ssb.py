@@ -7,7 +7,9 @@ Verified theorem-safe content only:
 * adjoint commutator covariance under finite conjugation with an inverse gate;
 * finite product transport `(U F V)(U G V)=U(FG)V` when `VU=I`;
 * scalar potential square completion and stationary radius algebra;
-* diagonal E11 vacuum/fluctuation trace identities.
+* diagonal E11 vacuum/fluctuation trace identities;
+* quaternion U(1)-style unit phase norm invariance;
+* zero-connection finite density covariant derivative reduction.
 
 No Yang--Mills field theory, action integral, Standard Model identification,
 Higgs mechanism, Goldstone counting, hierarchy generation, Yukawa physics, or
@@ -75,6 +77,23 @@ def main() -> int:
     assert_zero(sp.trace(fluct * fluct) - (vv + h) ** 2, "E11 fluctuation trace square")
     assert_zero(2 * lam * vv**2 - 2 * (lam * vv**2), "quadratic coefficient identity")
     print("diagonal E11 VEV/fluctuation identities: OK")
+
+    c, ss, a, b, cc, d = sp.symbols("c ss a b cc d")
+    qnorm = a**2 + b**2 + cc**2 + d**2
+    # Left multiplication by phase c + ss*i in quaternion coordinates.
+    rotated = [c * a - ss * b, c * b + ss * a, c * cc - ss * d, c * d + ss * cc]
+    rotated_norm = sum(x**2 for x in rotated)
+    # Exact factorization: rotated_norm - qnorm = (c^2+ss^2-1) qnorm,
+    # hence the difference vanishes under the unit-circle premise.
+    assert_zero(sp.expand(rotated_norm - (c**2 + ss**2) * qnorm), "quaternion phase norm factorization")
+    assert_zero(sp.expand((rotated_norm - qnorm) - (c**2 + ss**2 - 1) * qnorm), "quaternion phase norm unit implication")
+
+    dRho = mat2("D")
+    rho = mat2("R")
+    zero = sp.zeros(2)
+    cov_deriv_zero_conn = dRho + zero * rho - rho * zero
+    assert_matrix_zero(cov_deriv_zero_conn - dRho, "zero-connection covariant derivative")
+    print("imported finite phase/covariant-derivative stepping stones: OK")
 
     print("=" * 72)
     print("MD 010 FINITE GAUGE / SSB ALGEBRA VERIFIED")

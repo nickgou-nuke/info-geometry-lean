@@ -1,5 +1,7 @@
 import Mathlib
+import InfoGeometry.Canonical.QuaternionCondensate
 import InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
+import InfoGeometry.Physics.Section34StrengthenedFormalism
 
 /-!
 # Repaired MD 010: finite gauge and SSB algebra
@@ -13,7 +15,9 @@ This owner formalizes only the finite algebraic socket:
 * adjoint covariant-derivative commutator covariance under finite conjugation;
 * finite curvature/product transport under an explicit inverse gate;
 * scalar potential square-completion and stationary-radius algebra;
-* diagonal `E₁₁` vacuum/fluctuation trace identities in the matrix-unit basis.
+* diagonal `E₁₁` vacuum/fluctuation trace identities in the matrix-unit basis;
+* the already-owned finite quaternion `U(1)`-style phase/norm invariance;
+* the already-owned finite density covariant-derivative zero-connection law.
 
 No theorem here asserts Yang--Mills field theory, gauge-invariant actions as
 integrals, Standard Model particle identification, Higgs mechanism, Goldstone
@@ -33,6 +37,7 @@ open Matrix
 open InfoGeometry.Physics.MD001MatrixQuantumGeometry
 open InfoGeometry.Physics.MD006OperatorEigenoperators
 open InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
+
 
 /-- Adjoint-representation finite covariant derivative algebraic part: `[A,Φ]`. -/
 def adjointCovDeriv (A Φ : MatrixQuantumCarrier) : MatrixQuantumCarrier :=
@@ -110,10 +115,26 @@ theorem higgs_quadratic_coefficient_identity (lam v : ℝ) :
     2 * lam * v ^ 2 = 2 * (lam * v ^ 2) := by
   ring
 
+/-- Reuse the finite quaternion owner: unit phase rotation preserves norm. -/
+theorem quaternion_phase_metric_invariant
+    {c s : ℝ} (hunit : c ^ 2 + s ^ 2 = 1)
+    (q : InfoGeometry.Canonical.QuaternionCondensate.H4) :
+    (InfoGeometry.Canonical.QuaternionCondensate.H4.phaseRotate c s q).normSq = q.normSq :=
+  InfoGeometry.Canonical.QuaternionCondensate.H4.normSq_phaseRotate_of_unit hunit q
+
+/-- Reuse the finite density-connection owner: zero connection gives the partial derivative. -/
+theorem density_covariantDerivative_zero_connection
+    (dRho rho : InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.Mat2) :
+    InfoGeometry.Physics.Section34StrengthenedFormalism.covariantDensityDerivative dRho 0 rho = dRho :=
+  InfoGeometry.Physics.Section34StrengthenedFormalism.covariantDensityDerivative_zero_connection dRho rho
+
 /-- Repaired theorem-safe Chapter 10 finite gauge/SSB packet. -/
 theorem repaired_MD010_gauge_ssb_packet
     (U V A Φ F G : MatrixQuantumCarrier) (hVU : V * U = 1)
-    (mu lam s : ℝ) (hlam : lam ≠ 0) (v h : ℂ) :
+    (mu lam s : ℝ) (hlam : lam ≠ 0) (v h : ℂ)
+    (cphase sphase : ℝ) (hunit : cphase ^ 2 + sphase ^ 2 = 1)
+    (q : InfoGeometry.Canonical.QuaternionCondensate.H4)
+    (dRho rho : InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite.Mat2) :
     adjointCovDeriv (gaugeConj U V A) (gaugeConj U V Φ) =
         gaugeConj U V (adjointCovDeriv A Φ) ∧
     gaugeConj U V F * gaugeConj U V G = gaugeConj U V (F * G) ∧
@@ -121,13 +142,17 @@ theorem repaired_MD010_gauge_ssb_packet
         lam * (s - mu ^ 2 / (2 * lam)) ^ 2 - mu ^ 4 / (4 * lam) ∧
     - mu ^ 2 + 2 * lam * (mu ^ 2 / (2 * lam)) = 0 ∧
     trace2 (diagVEV v * diagVEV v) = v * v ∧
-    trace2 (diagFluctuation v h * diagFluctuation v h) = (v + h) * (v + h) := by
+    trace2 (diagFluctuation v h * diagFluctuation v h) = (v + h) * (v + h) ∧
+    (InfoGeometry.Canonical.QuaternionCondensate.H4.phaseRotate cphase sphase q).normSq = q.normSq ∧
+    InfoGeometry.Physics.Section34StrengthenedFormalism.covariantDensityDerivative dRho 0 rho = dRho := by
   exact ⟨adjointCovDeriv_gauge_covariant U V A Φ hVU,
     gaugeConj_product_transport U V F G hVU,
     scalarPotential_complete_square mu lam s hlam,
     scalarPotential_stationary_radius mu lam hlam,
     diagVEV_trace_square v,
-    diagFluctuation_trace_square v h⟩
+    diagFluctuation_trace_square v h,
+    quaternion_phase_metric_invariant hunit q,
+    density_covariantDerivative_zero_connection dRho rho⟩
 
 end InfoGeometry.Physics.MD010GaugeSSB
 

@@ -19,6 +19,8 @@ or a collider-scale SUSY model.  It proves the finite algebraic pattern:
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
 `susy_anticommutator_generates_spacetime`,
+`susy_anticommutator_generates_two_smul_momentum`,
+`wallpaper_generates_SUSY`,
 `supercharge_commutes_with_momentum_matrix`, and
 `supercharge_commutator_with_momentum_zero`.
 
@@ -63,6 +65,19 @@ theorem susy_anticommutator_generates_spacetime :
     superAnticommutator Q Q = P_x + P_x := by
   unfold superAnticommutator Q P_x
   rw [glide_squared_is_translation]
+
+/-- Scalar form of the finite SUSY-shaped anticommutator `{Q,Q} = 2 • P_x`. -/
+theorem susy_anticommutator_generates_two_smul_momentum :
+    superAnticommutator Q Q = (2 : ℝ) • P_x := by
+  rw [susy_anticommutator_generates_spacetime]
+  ext i j
+  simp
+  ring
+
+/-- Compatibility name for the finite wallpaper-generated SUSY-shaped identity. -/
+theorem wallpaper_generates_SUSY :
+    superAnticommutator Q Q = (2 : ℝ) • P_x :=
+  susy_anticommutator_generates_two_smul_momentum
 
 /-- The odd glide generator commutes with the even translation matrix. -/
 theorem supercharge_commutes_with_momentum_matrix :

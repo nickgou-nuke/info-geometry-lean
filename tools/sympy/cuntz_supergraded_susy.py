@@ -2,7 +2,8 @@
 """SymPy twin for `InfoGeometry.Algebra.CuntzSupergradedSUSY`.
 
 Checked here:
-- the odd glide matrix `Q` satisfies `{Q,Q} = 2 P_x`;
+- the odd glide matrix `Q` satisfies `{Q,Q} = 2 P_x`, matching Lean theorem
+  `wallpaper_generates_SUSY`;
 - `Q` commutes with the even translation matrix `P_x`.
 
 Not checked here:

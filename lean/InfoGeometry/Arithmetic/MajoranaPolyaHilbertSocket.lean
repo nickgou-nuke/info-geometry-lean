@@ -619,11 +619,12 @@ theorem superdeterminant_inversion
     S.superdeterminant_inversion_True :=
   S.superdeterminant_inversion_sorryProof
 
-def trivial (BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout : Type*) (br : BosonicReadout) (fr : FermionicReadout) (sd : SuperdeterminantReadout) (zr : ZetaReadout) (izr : InverseZetaReadout) : BosonFermionSuperdeterminantSocket BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout where
+def trivial (BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout : Type*) (br : BosonicReadout) (fr : FermionicReadout) (sd : SuperdeterminantReadout) (zr : ZetaReadout) (izr : InverseZetaReadout) (guard : Type*) : BosonFermionSuperdeterminantSocket BosonicReadout FermionicReadout SuperdeterminantReadout ZetaReadout InverseZetaReadout where
   bosonicReadout := br; fermionicReadout := fr; superdeterminantReadout := sd; zetaReadout := zr; inverseZetaReadout := izr
   bosonic_eq_zeta_True := True; bosonic_eq_zeta_sorryProof := True.intro
   fermionic_eq_inverseZeta_True := True; fermionic_eq_inverseZeta_sorryProof := True.intro
   superdeterminant_inversion_True := True; superdeterminant_inversion_sorryProof := True.intro
+  archimedeanPlace_required_guard := guard
 
 end BosonFermionSuperdeterminantSocket
 
@@ -685,11 +686,12 @@ theorem completedZeta_factorization
     A.completedZeta_factorization_True :=
   A.completedZeta_factorization_sorryProof
 
-def trivial (SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout : Type*) (p : SpectralParameter) (ar : ArchimedeanReadout) (fpr : FinitePrimeReadout) (czr : CompletedZetaReadout) : ArchimedeanGammaFactorSocket SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout where
+def trivial (SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout : Type*) (p : SpectralParameter) (ar : ArchimedeanReadout) (fpr : FinitePrimeReadout) (czr : CompletedZetaReadout) (guard : Type*) : ArchimedeanGammaFactorSocket SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedZetaReadout where
   parameter := p; archimedeanReadout := ar; finitePrimeReadout := fpr; completedZetaReadout := czr
   gammaFactor_True := True; gammaFactor_sorryProof := True.intro
   polynomialCompletion_True := True; polynomialCompletion_sorryProof := True.intro
   completedZeta_factorization_True := True; completedZeta_factorization_sorryProof := True.intro
+  finitePrimes_alone_not_completed_guard := guard
 
 end ArchimedeanGammaFactorSocket
 
@@ -772,11 +774,12 @@ theorem phaseShift_matches_zetaArgument
     B.phaseShift_matches_zetaArgument_True :=
   B.phaseShift_matches_zetaArgument_sorryProof
 
-def trivial (BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout : Type*) (bd : BoundaryData) (sm : ScatteringMatrix) (cs : ContinuousSpectrum) (da : DiscreteOrAbsorptionReadout) (ps : PhaseShiftReadout) : BoundaryScatteringDiscretizationSocket BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout where
+def trivial (BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout : Type*) (bd : BoundaryData) (sm : ScatteringMatrix) (cs : ContinuousSpectrum) (da : DiscreteOrAbsorptionReadout) (ps : PhaseShiftReadout) (guard : Type*) : BoundaryScatteringDiscretizationSocket BoundaryData ScatteringMatrix ContinuousSpectrum DiscreteOrAbsorptionReadout PhaseShiftReadout where
   boundaryData := bd; scatteringMatrix := sm; continuousSpectrum := cs; discreteOrAbsorptionReadout := da; phaseShiftReadout := ps
   boundary_or_scattering_True := True; boundary_or_scattering_sorryProof := True.intro
   continuous_to_spectralZeroReadout_True := True; continuous_to_spectralZeroReadout_sorryProof := True.intro
   phaseShift_matches_zetaArgument_True := True; phaseShift_matches_zetaArgument_sorryProof := True.intro
+  bareBK_requires_boundaryOrScattering_guard := guard
 
 end BoundaryScatteringDiscretizationSocket
 
@@ -855,12 +858,13 @@ theorem mellinTransform_eq_explicitFormula
     T.mellinTransform_eq_explicitFormula_True :=
   T.mellinTransform_eq_explicitFormula_sorryProof
 
-def trivial (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout : Type*) (ht : HeatTrace) (bkt : BKHeatTrace) (at : ArithmeticHeatTrace) (mt : MellinTransformReadout) (ef : ExplicitFormulaReadout) : MBKHeatTraceExplicitFormulaSocket HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout where
-  heatTrace := ht; bkHeatTrace := bkt; arithmeticHeatTrace := at; mellinTransformReadout := mt; explicitFormulaReadout := ef
+def trivial (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout : Type*) (ht : HeatTrace) (bkt : BKHeatTrace) (artht : ArithmeticHeatTrace) (mt : MellinTransformReadout) (ef : ExplicitFormulaReadout) (guard : Type*) : MBKHeatTraceExplicitFormulaSocket HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout ExplicitFormulaReadout where
+  heatTrace := ht; bkHeatTrace := bkt; arithmeticHeatTrace := artht; mellinTransformReadout := mt; explicitFormulaReadout := ef
   heatTrace_factorization_True := True; heatTrace_factorization_sorryProof := True.intro
   arithmeticHeatTrace_primeSum_True := True; arithmeticHeatTrace_primeSum_sorryProof := True.intro
   bkHeatTrace_mellinContinuum_True := True; bkHeatTrace_mellinContinuum_sorryProof := True.intro
   mellinTransform_eq_explicitFormula_True := True; mellinTransform_eq_explicitFormula_sorryProof := True.intro
+  explicitFormula_is_finalTraceTest_guard := guard
 
 end MBKHeatTraceExplicitFormulaSocket
 
@@ -949,6 +953,17 @@ theorem spectralKernel_of_completedXiZero
     (hZero : R.completedXiZero_True) :
     Nonempty SpectralKernel :=
   (R.completedXiZero_iff_spectralKernel_sorryProof).mp hZero
+
+def trivial (CompletedXi HilbertPolyaTarget RHClaim : Type*) (cxi : CompletedXi) (hpt : HilbertPolyaTarget) (rh : RHClaim) (guard : Type*) : CompletedXiHilbertPolyaReduction CompletedXi HilbertPolyaTarget RHClaim where
+  completedXi := cxi; hilbertPolyaTarget := hpt; rhClaim := rh
+  self_adjoint_True := True; self_adjoint_sorryProof := True.intro
+  renormalizedPfaffian_eq_completedXi_True := True; renormalizedPfaffian_eq_completedXi_sorryProof := True.intro
+  completedXiZero_True := True
+  completedXiZero_iff_spectralKernel_sorryProof := by rfl
+  spectralHeight_real_True := True; spectralHeight_real_sorryProof := True.intro
+  spectralZero_on_criticalLine_True := by rfl
+  criticalLine_completedXiZeros_imply_RH_True := fun _ => True.intro
+  no_RH_without_completedXi_spectral_identity_guard := guard
 
 end CompletedXiHilbertPolyaReduction
 

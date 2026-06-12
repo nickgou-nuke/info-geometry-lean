@@ -15,3 +15,4 @@ import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Analysis.KatzSarnakDensity
 import InfoGeometry.Analysis.MathieuZetaSeries
+import InfoGeometry.Analysis.ComplexBSpline

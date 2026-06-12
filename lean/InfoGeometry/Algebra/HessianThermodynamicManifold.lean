@@ -79,18 +79,28 @@ structure KKT_Nilpotent_Boundary {V : Type u} [AddCommGroup V] {R : Type u} [Com
   -- Debt: Link `is_boundary` explicitly to the divergence of the barrier function (-ln det(x) → ∞).
 
 /-- DEBT 2: The formal TKK (Tits-Kantor-Koecher) Lie Algebra Lift.
-    Requires functorial lift from the Jordan symmetric cone interior (Hessian metric) to the 3-graded Lie bracket (Killing form). -/
+    Requires functorial lift from the Jordan symmetric cone interior
+    (Hessian metric) to the 3-graded Lie bracket (Killing form).
+**Open debt**: construct the TKK Lie algebra from a Jordan algebra,
+with the correct 3-grading and Killing-form identification.
+The degenerate PUnit witness is a placeholder.
+Status: requires TKK construction on Jordan symmetric cones. -/
 theorem TKK_Lift_Existence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
   [JordanAlgebra V R] :
   ∃ (LieAlg : Type u) (_bracket : LieAlg → LieAlg → LieAlg), True := by
-  refine ⟨PUnit, (fun _ _ => PUnit.unit), trivial⟩
+  sorry
 
 /-- DEBT 3: Koecher-Vinberg Theorem equivalence.
-    Requires rigorous structural proof that Formally Real Jordan Algebras correspond exactly to Homogeneous Self-Dual Convex Cones. -/
+    Requires rigorous structural proof that Formally Real Jordan Algebras
+    correspond exactly to Homogeneous Self-Dual Convex Cones.
+**Open debt**: prove the Koecher-Vinberg correspondence between
+formally real Jordan algebras and homogeneous self-dual convex cones.
+The empty-set witness is a placeholder.
+Status: requires full Koecher-Vinberg theorem formalization. -/
 theorem Koecher_Vinberg_Equivalence {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R]
   [JordanAlgebra V R] :
   ∃ (_SymmetricCone : Set V), True := by
-  refine ⟨(∅ : Set V), trivial⟩
+  sorry
 
 /-- A Fenchel-Legendre dual pair, expressing Fenchel-Young inequality and Legendre identity. -/
 structure FenchelDualPair {V : Type u} [AddCommGroup V] {R : Type u} [CommRing R] [LinearOrder R]

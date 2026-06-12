@@ -153,6 +153,26 @@ theorem majorana_fock_sector_produces_pfaffianCharacter
     M.majorana_fock_sector_produces_pfaffianCharacter_True :=
   M.majorana_fock_sector_produces_pfaffianCharacter_sorryProof
 
+/-- Trivial concrete model: all six _True sockets filled with True.
+Uses BerryKeatingOperatorPacket.trivial as the base.
+Real model requires split-Clifford construction, Dirac square law,
+self-adjointness proof, and Pfaffian character identification. -/
+def trivial (Mode : Type*) (majoranaDirac : Mode → Mode) :
+    MajoranaBerryKeatingOperatorPacket Unit (Unit → Unit) (Set Unit) Mode where
+  berryKeating := BerryKeatingOperatorPacket.trivial
+  majoranaMode := majoranaDirac
+  thermalOperator := majoranaDirac
+  majoranaDirac := majoranaDirac (Classical.choice inferInstance)
+  squareRootEnergyCoefficient := fun _ => 1
+  splitClifford_True := True
+  squareRootEnergy_True := True
+  dirac_square_True := True
+  self_adjoint_True := True
+  bk_mellin_sector_fixes_criticalLine_True := True
+  bk_mellin_sector_fixes_criticalLine_sorryProof := True.intro
+  majorana_fock_sector_produces_pfaffianCharacter_True := True
+  majorana_fock_sector_produces_pfaffianCharacter_sorryProof := True.intro
+
 end MajoranaBerryKeatingOperatorPacket
 
 /-! ## 2. Real Majorana--Berry--Keating operator problem -/

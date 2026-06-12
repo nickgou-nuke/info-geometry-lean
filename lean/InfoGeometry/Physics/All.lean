@@ -16,6 +16,7 @@ import InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 import InfoGeometry.Physics.Section33PauliBiquaternionCompletion
 import InfoGeometry.Physics.Section34StrengthenedFormalism
 import InfoGeometry.Physics.Section35IntegratedConcepts
+import InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.SouriauEntropyFoliation
 

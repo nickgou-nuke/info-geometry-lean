@@ -17,6 +17,7 @@ import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.CliffordCantorGraphRouting
 import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.MirrorPhaseCuntzAttention
+import InfoGeometry.LLM.MirrorPhaseCrystalBridge
 import InfoGeometry.LLM.SpectralToken
 import InfoGeometry.LLM.PinCPTBridge
 import InfoGeometry.LLM.SpinPinTransformerLayer

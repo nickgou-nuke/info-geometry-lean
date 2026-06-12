@@ -9,6 +9,7 @@ Verified finite content only:
 * the determinant of v^0 I + v^1 σ1 + v^2 σ2 + v^3 σ3 is
   (v^0)^2 - (v^1)^2 - (v^2)^2 - (v^3)^2;
 * normalized trace/Hilbert--Schmidt readout normalizes Pauli axes;
+* finite Bloch density trace/determinant/idempotence algebra;
 * every 2x2 matrix recomposes from its Pauli coefficients.
 """
 
@@ -63,6 +64,18 @@ def main() -> int:
     assert_zero(hs(s3, s3) - 1, "HS(σ3,σ3)")
     assert_zero(hs(I2, s1), "HS(I,σ1)")
     print("Hilbert--Schmidt normalization: OK")
+
+    bx, by_, bz = sp.symbols("bx by_ bz")
+    rho = sp.Rational(1, 2) * (I2 + bx * s1 + by_ * s2 + bz * s3)
+    radius_sq = bx**2 + by_**2 + bz**2
+    assert_zero(sp.trace(rho) - 1, "Bloch density trace one")
+    assert_zero(rho.det() - sp.Rational(1, 4) * (1 - radius_sq), "Bloch density determinant")
+    assert_matrix_zero(sp.expand(rho * rho - rho - (radius_sq - 1) * sp.Rational(1, 4) * I2), "Bloch idempotence defect factor")
+    # Direct unit-radius sample: x=1,y=z=0 gives E11 and is idempotent/det-zero.
+    rho_unit = rho.subs({bx: 1, by_: 0, bz: 0})
+    assert_matrix_zero(rho_unit * rho_unit - rho_unit, "unit Bloch density idempotent sample")
+    assert_zero(rho_unit.det(), "unit Bloch density determinant zero sample")
+    print("Bloch density trace/determinant/idempotence algebra: OK")
 
     a00, a01, a10, a11 = sp.symbols("a00 a01 a10 a11")
     A = sp.Matrix([[a00, a01], [a10, a11]])

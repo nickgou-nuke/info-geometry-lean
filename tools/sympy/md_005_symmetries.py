@@ -8,6 +8,8 @@ Verified theorem-safe content only:
 * determinant-one/unit determinant gate preserves determinant;
 * congruence actions compose;
 * scalar ±I acts trivially by congruence;
+* a finite unit-circle slice a·Id+b·I of the hyperkähler symmetry preserves the
+  Euclidean coordinate metric;
 * finite translations of R^4 commute.
 
 No full SL(2,C)->SO^+(1,3) surjectivity, Poincare Lie algebra, Casimir
@@ -70,6 +72,20 @@ def main() -> int:
     minusI = -I2
     assert_matrix_zero(minusI * X * minusI.conjugate().T - X, "-I scalar kernel action")
     print("scalar ±I kernel shadow: OK")
+
+    alpha, beta = sp.symbols("alpha beta")
+    I4 = sp.Matrix([[0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 0, -1], [0, 0, 1, 0]])
+    R = alpha * sp.eye(4) + beta * I4
+    # Matrix identity: R^T R = (alpha^2+beta^2) I, hence unit-gated rotations preserve dot products.
+    assert_matrix_zero(R.T * R - (alpha**2 + beta**2) * sp.eye(4), "I-circle rotation orthogonality factor")
+    u4 = sp.Matrix(sp.symbols("u0:4"))
+    v4 = sp.Matrix(sp.symbols("v0:4"))
+    rotation_metric_defect = sp.expand((R * u4).dot(R * v4) - u4.dot(v4))
+    assert_zero(
+        rotation_metric_defect - ((alpha**2 + beta**2) - 1) * u4.dot(v4),
+        "I-circle unit rotation metric preservation factor",
+    )
+    print("finite hyperkähler unit-circle symmetry shadow: OK")
 
     x = sp.Matrix(sp.symbols("x0:4"))
     xi = sp.Matrix(sp.symbols("xi0:4"))

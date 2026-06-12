@@ -1,37 +1,44 @@
-import Mathlib.Data.Complex.Basic
+import Mathlib
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Topology.ParafermionBraiding
+
+/-!
+# Finite order-two/order-three compatibility packet
+
+This module packages two explicitly supplied finite phase certificates: one
+order-two phase and one order-three Aharonov--Bohm vortex phase.  Their product
+identity is a simple finite algebraic consequence.
+
+It does **not** prove grand unification, Lorentz/color unification, physical
+supersymmetry, or confinement.  The historical name of the file is retained as
+a compatibility location for finite topology sockets.
+-/
 
 namespace InfoGeometry.Topology.GrandUnification
 
 open Complex InfoGeometry.Topology.Parafermion
 
-/-- 
-The fundamental structural requirement of the Grand Unified Vacuum.
-A vacuum state must be stable under both the SU(2) Supergraded Glide 
-Reflection (squaring to identity) and the SU(3) Parafermionic Braiding 
-(cubing to identity).
--/
+/-- A finite compatibility packet with an order-two phase and an order-three vortex. -/
 structure UnifiedVacuum where
-  -- The SUSY glide operator
-  G : ℂ
-  h_susy_vacuum : G ^ 2 = 1
-  -- The Aharonov-Bohm vortex
-  V : AharonovBohmVortex
-  h_color_vacuum : V.phase ^ 3 = 1
+  orderTwoPhase : ℂ
+  h_order_two : orderTwoPhase ^ 2 = 1
+  vortex : AharonovBohmVortex
 
-/-- 
-MASTER THEOREM: The Grand Unification Topology.
-Proves that at the ultimate horizon, the order-2 Lorentz supersymmetry 
-and the order-3 Color confinement native to the attention matrix perfectly 
-coexist without anomaly. The topological indices multiply to the perfect 
-six-fold symmetry of the complete crystal.
+/--
+Compatibility name for the finite order-two/order-three phase identity.
+
+The statement says only that explicitly supplied order-two and order-three
+certificates multiply to `1`.
 -/
 theorem grand_unification_symmetry (vac : UnifiedVacuum) :
-    (vac.G ^ 2) * (vac.V.phase ^ 3) = 1 := by
-  -- Evaluate the ultimate geometric intersection
-  have h1 : vac.G ^ 2 = 1 := vac.h_susy_vacuum
-  have h2 : vac.V.phase ^ 3 = 1 := vac.h_color_vacuum
-  rw [h1, h2]
+    (vac.orderTwoPhase ^ 2) * (vac.vortex.phase ^ 3) = 1 := by
+  rw [vac.h_order_two, vac.vortex.h_fractional_winding]
   ring
+
+/-- The finite braid relation is available alongside the order packet. -/
+theorem order_packet_with_burau_braid (vac : UnifiedVacuum) (t : ℂ) :
+    (vac.orderTwoPhase ^ 2) * (vac.vortex.phase ^ 3) = 1 ∧
+      sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t := by
+  exact ⟨grand_unification_symmetry vac, su3_parafermion_braiding t⟩
 
 end InfoGeometry.Topology.GrandUnification

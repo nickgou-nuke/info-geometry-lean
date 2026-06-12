@@ -5,3 +5,4 @@ import InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
 import InfoGeometry.Holography.WittenMobiusBekensteinComplement
 import InfoGeometry.Holography.TomitaTakesakiBulkReconstruction
 import InfoGeometry.Holography.ModularFlowKMS
+import InfoGeometry.Holography.BekensteinHawkingThermodynamics

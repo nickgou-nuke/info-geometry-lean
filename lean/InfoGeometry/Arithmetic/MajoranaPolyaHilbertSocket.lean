@@ -102,6 +102,20 @@ structure BerryKeatingOperatorPacket
   momentum : Operator
   symmetrizedDilation : Operator
 
+namespace BerryKeatingOperatorPacket
+
+/-- Trivial concrete model: Unit carrier with id operators.
+Provides a witness that the structure is not empty.
+Real model requires analytic operator theory (xp + px on L²). -/
+def trivial : BerryKeatingOperatorPacket Unit (Unit → Unit) (Set Unit) where
+  carrier := ()
+  domain := Set.univ
+  position := id
+  momentum := id
+  symmetrizedDilation := id
+
+end BerryKeatingOperatorPacket
+
 /--
 Majorana modification of a Berry--Keating spectral operator.
 

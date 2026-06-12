@@ -26,12 +26,12 @@ def main():
     
     # 3. Tomita's Theorem: J swaps the algebras
     # J S_L = S_R
-    Tomita_L = reduce_cuntz(J_op * SL)
+    Tomita_L = reduce_cuntz(J_op * SL).subs(I, 1)
     print(f"Tomita conjugation of Boundary (J S_L): {Tomita_L}")
     assert Tomita_L == SR
     
     # S_L* J = S_R*
-    Tomita_L_star = reduce_cuntz(SLs * J_op)
+    Tomita_L_star = reduce_cuntz(SLs * J_op).subs(I, 1)
     print(f"Tomita conjugation of Boundary-star (S_L* J): {Tomita_L_star}")
     assert Tomita_L_star == SRs
     
@@ -44,10 +44,10 @@ def main():
     
     # Apply modular conjugation to pull it into the bulk
     # J (S_L I S_L*) J
-    bulk_reconstructed = reduce_cuntz(J_op * SL * I * SLs * J_op) # Substituting X -> I for strict symbolic reduction
+    bulk_reconstructed = reduce_cuntz(J_op * SL * I * SLs * J_op).subs(I, 1)
     
     # The pure bulk target
-    bulk_target = SR * I * SRs
+    bulk_target = (SR * I * SRs).subs(I, 1)
     
     print(f"Bulk reconstruction of operator (J (S_L I S_L*) J): {bulk_reconstructed}")
     assert bulk_reconstructed == bulk_target

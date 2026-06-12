@@ -17,7 +17,7 @@ to their commutant (the bulk reflection).
 In the Cuntz exactness framework, J is exactly the Higgs mass operator
 J = S_L S_R^* + S_R S_L^* from Epoch 2!
 -/
-structure TomitaTakesakiSystem where
+structure TomitaTakesakiSystem (A : Type*) [NormedRing A] [StarRing A] [CompleteSpace A] where
   S_L : A
   S_R : A
   

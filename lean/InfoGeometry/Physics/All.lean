@@ -6,6 +6,7 @@ import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.FreeEntropySouriauBridge
 import InfoGeometry.Physics.IncidentNullFlagVariationalAction
 import InfoGeometry.Physics.HolographicPressureFunctional
+import InfoGeometry.Physics.Section28EinsteinTorsionSpinor
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.SouriauEntropyFoliation
 

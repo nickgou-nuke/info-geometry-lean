@@ -70,6 +70,20 @@ theorem selfAdjoint_forces_realEigenvalue : IsCriticalLineRealPart P.realPart :=
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
   exact P.criticalLine_True
 
+/-- Concrete model: Mellin-Plancherel packet on the critical line Re(s) = 1/2.
+All three _True fields are rfl since IsCriticalLineRealPart (1/2) := (1/2 = 1/2). -/
+def mkCriticalLine (MellinWave MellinNorm : Type*)
+    (mellinWave : MellinWave) (mellinNorm : MellinNorm) (imaginaryHeight : ℝ)
+    (guard : Type*) : MellinPlancherelCriticalLinePacket MellinWave MellinNorm where
+  realPart := 1/2
+  imaginaryHeight := imaginaryHeight
+  mellinWave := mellinWave
+  mellinNorm := mellinNorm
+  bk_generalizedEigenvalue_True := by rfl
+  selfAdjoint_forces_realEigenvalue_True := by rfl
+  criticalLine_True := by rfl
+  ordinaryFockNorm_not_source_guard := guard
+
 end MellinPlancherelCriticalLinePacket
 
 /--
@@ -307,6 +321,17 @@ theorem normalizable_of_criticalLine
     (h : IsCriticalLineRealPart Z.realPart) :
     Z.normalizable_True :=
   (Z.normalizable_iff_criticalLine_sorryProof).mpr h
+
+/-- Concrete model: zero-mode packet on the critical line Re(s) = 1/2.
+normalizable_True is rfl by definition. isZeroMode_True remains a socket. -/
+def mkCriticalLine (ZeroMode NormReadout : Type*)
+    (zeroMode : ZeroMode) (normReadout : NormReadout) (imaginaryHeight : ℝ) :
+    MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout where
+  realPart := 1/2
+  imaginaryHeight := imaginaryHeight
+  zeroMode := zeroMode
+  normReadout := normReadout
+  isZeroMode_True := True
 
 end MajoranaZeroModeNormalizabilityPacket
 

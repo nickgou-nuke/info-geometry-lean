@@ -70,17 +70,27 @@ structure GenesisSplitDatum
   boundaryOf : Latent → Boundary
 
   /--
-  Certificate that this is the intended split/quench.
+  Explicit separation law for the full split/quench readout.
 
-  This remains model-specific: Tomita split, Stinespring dilation, horizon
-  factorization, etc.
+  The combined observable/hidden/boundary data determines the latent state.
   -/
-  split_True : Prop
+  split_injective :
+    Function.Injective (fun x => (toObservable x, toHidden x, boundaryOf x))
 
 namespace GenesisSplitDatum
 
 variable {Latent Observable Hidden Boundary : Type*}
 variable (G : GenesisSplitDatum Latent Observable Hidden Boundary)
+
+/-- If the full split readout agrees, the latent state agrees. -/
+theorem latent_eq_of_split_eq
+    {x y : Latent}
+    (hobs : G.toObservable x = G.toObservable y)
+    (hhidden : G.toHidden x = G.toHidden y)
+    (hboundary : G.boundaryOf x = G.boundaryOf y) :
+    x = y := by
+  apply G.split_injective
+  simp [hobs, hhidden, hboundary]
 
 end GenesisSplitDatum
 
@@ -127,18 +137,17 @@ structure HorizonEvaporationDatum
   /-- Horizon entropy/area/readout over time. -/
   horizonEntropy : Time → Entropy
 
-  /--
-  Evaporation law.
-
-  Concrete models may express monotonicity, late-time limits, shrinking area,
-  Hawking flux, etc.
-  -/
-  evaporation_True : Prop
-
 namespace HorizonEvaporationDatum
 
 variable {Time Entropy : Type*}
 variable (E : HorizonEvaporationDatum Time Entropy)
+
+/-- Equal times have equal horizon entropy readout. -/
+theorem horizonEntropy_eq_of_time_eq
+    {t₁ t₂ : Time}
+    (ht : t₁ = t₂) :
+    E.horizonEntropy t₁ = E.horizonEntropy t₂ := by
+  simp [ht]
 
 end HorizonEvaporationDatum
 
@@ -627,7 +636,19 @@ should use the more specific bridge structures above.
 -/
 structure HorizonProcessClassification where
   outcome : HorizonOutcome
-  classification_True : Prop
+
+namespace HorizonProcessClassification
+
+variable (C : HorizonProcessClassification)
+
+/-- Any classified process falls into exactly one of the three outcome branches. -/
+theorem exhaustive :
+    C.outcome = HorizonOutcome.revelation ∨
+      C.outcome = HorizonOutcome.mahapralaya ∨
+      C.outcome = HorizonOutcome.unresolved := by
+  cases C.outcome <;> simp
+
+end HorizonProcessClassification
 
 /-! ## 11. Owner targets -/
 

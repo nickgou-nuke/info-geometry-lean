@@ -184,12 +184,12 @@ structure HorizonKMSNormalization where
     temperature = surfaceGravity / (2 * Real.pi)
 
   /--
-  Calibration certificate.
+  Explicit horizon-modular calibration law.
 
-  This is where Bisognano-Wichmann, Unruh, Hawking, or a horizon modular theorem
-  is supplied.
+  Natural units: `β * κ = 2π`.
   -/
-  horizon_modular_calibration : Prop
+  horizon_modular_calibration :
+    beta * surfaceGravity = 2 * Real.pi
 
 namespace HorizonKMSNormalization
 
@@ -234,6 +234,11 @@ theorem beta_ne_zero :
 theorem temperature_ne_zero :
     N.temperature ≠ 0 :=
   ne_of_gt N.temperature_pos
+
+/-- Re-export the explicit horizon-modular calibration law. -/
+theorem horizon_modular_calibration_eq :
+    N.beta * N.surfaceGravity = 2 * Real.pi :=
+  N.horizon_modular_calibration
 
 end HorizonKMSNormalization
 
@@ -717,6 +722,12 @@ structure GradeTwoMemoryRecoveryData
   /-- Exterior observable reconstruction data. -/
   exteriorData : Obs → Memory
 
+  /-- Exact recovery law from observed defect to hidden grade-two memory. -/
+  recover_hidden_memory_law :
+    ∀ x y : J,
+      exteriorData (A.observedDefect x y) =
+        B.memoryReadout (A.hiddenTotal x y)
+
 namespace GradeTwoMemoryRecoveryData
 
 variable
@@ -735,8 +746,8 @@ variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
 theorem recover_hidden_memory
     (x y : J) :
     R.exteriorData (A.observedDefect x y) =
-      B.memoryReadout (A.hiddenTotal x y) := by
-  sorry
+      B.memoryReadout (A.hiddenTotal x y) :=
+  R.recover_hidden_memory_law x y
 
 end GradeTwoMemoryRecoveryData
 

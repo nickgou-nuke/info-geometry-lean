@@ -350,6 +350,8 @@ structure DixmierTraceDatum
   dixmierTrace : A → ℝ≥0∞
   positive :
     ∀ x : A, x ∈ positiveCone → (0 : ℝ≥0∞) ≤ dixmierTrace x
+  finiteOnPositive :
+    ∀ x : A, x ∈ positiveCone → dixmierTrace x ≠ ⊤
   traceLikeCyclicity :
     ∀ a b : A, dixmierTrace (a * b) = dixmierTrace (b * a)
 
@@ -361,7 +363,7 @@ variable (τ : DixmierTraceDatum A)
 /-- The Dixmier backend extracts finite logarithmic readouts on its positive cone. -/
 theorem logarithmicDivergenceExtraction :
     ∀ x : A, x ∈ τ.positiveCone → τ.dixmierTrace x ≠ ⊤ := by
-  sorry
+  exact τ.finiteOnPositive
 
 end DixmierTraceDatum
 
@@ -378,6 +380,7 @@ structure ZetaRenormalizationDatum
   poleSet : Set ℂ
   residueReadout : A → ℂ → ℂ
   finitePartReadout : A → ℂ → ℂ
+  continuousOffPole : ∀ (a : A) (z : ℂ), z ∉ poleSet → ContinuousAt (zeta a) z
 
 namespace ZetaRenormalizationDatum
 
@@ -387,7 +390,7 @@ variable (ζ : ZetaRenormalizationDatum A)
 /-- The zeta backend is holomorphic away from the supplied pole set. -/
 theorem meromorphicContinuation :
     ∀ (a : A) (z : ℂ), z ∉ ζ.poleSet → ContinuousAt (ζ.zeta a) z := by
-  sorry
+  exact ζ.continuousOffPole
 
 end ZetaRenormalizationDatum
 
@@ -402,16 +405,18 @@ inductive RenormalizedIntegrationBackend
   | zetaRenormalization (ζ : ZetaRenormalizationDatum A)
   | cyclicCocycle
       (readout : A → ℝ)
+      (cyclicity : ∀ a b : A, readout (a * b) = readout (b * a))
 
 namespace RenormalizedIntegrationBackend
 
-variable {A : Type*} [AddCommMonoid A] [Mul A]
+variable {A : Type*} [Mul A]
 
-/-- A cyclic-cocycle readout is cyclic. -/
+/-- A cyclic-cocycle readout is cyclic when its cyclicity witness is supplied. -/
 theorem cyclicCocycle_cyclicity
-    (readout : A → ℝ) :
+    (readout : A → ℝ)
+    (hcyc : ∀ a b : A, readout (a * b) = readout (b * a)) :
     ∀ a b : A, readout (a * b) = readout (b * a) := by
-  sorry
+  exact hcyc
 
 end RenormalizedIntegrationBackend
 

@@ -7,9 +7,10 @@ Verified theorem-safe content only:
 * computational basis outer products are matrix units;
 * arbitrary 2x2 operators decompose into the E_ij basis;
 * Tr(E_ij rho) reads transposed density-matrix entries;
-* Pauli matrices decompose in the eigenoperator basis;
-* projective and diagonal weak-measurement numerators reduce explicitly;
-* depolarizing-channel action on E_ij.
+* Pauli matrices decompose in the eigenoperator basis and expectation readouts
+  are finite matrix-entry combinations;
+* projective and diagonal weak-measurement numerators/probability readouts reduce explicitly;
+* depolarizing-channel action on E_ij and trace preservation.
 """
 
 from __future__ import annotations
@@ -71,7 +72,10 @@ def main() -> int:
     assert_matrix_zero(s1 - (E12 + E21), "sigma1 = E12+E21")
     assert_matrix_zero(s2 - (-sp.I) * (E12 - E21), "sigma2 = -i(E12-E21)")
     assert_matrix_zero(s3 - (E11 - E22), "sigma3 = E11-E22")
-    print("Pauli decompositions: OK")
+    assert_zero(trace2(s1 * rho) - (r10 + r01), "sigma1 expectation readout")
+    assert_zero(trace2(s2 * rho) - (-sp.I) * (r10 - r01), "sigma2 expectation readout")
+    assert_zero(trace2(s3 * rho) - (r00 - r11), "sigma3 expectation readout")
+    print("Pauli decompositions/readouts: OK")
 
     assert_matrix_zero(E11 * rho * E11 - r00 * E11, "Luders numerator E11")
     assert_matrix_zero(E22 * rho * E22 - r11 * E22, "Luders numerator E22")
@@ -81,18 +85,20 @@ def main() -> int:
     K = a * E11 + b * E22
     weak_num = a**2 * r00 * E11 + a * b * r01 * E12 + b * a * r10 * E21 + b**2 * r11 * E22
     assert_matrix_zero(K * rho * K - weak_num, "diagonal weak Kraus numerator")
-    print("diagonal weak-measurement numerator: OK")
+    assert_zero(trace2(K * rho * K) - (a**2 * r00 + b**2 * r11), "diagonal weak Kraus probability")
+    print("diagonal weak-measurement numerator/probability: OK")
 
     p = sp.symbols("p")
 
     def depol(A: sp.Matrix) -> sp.Matrix:
         return (1 - p) * A + (p / 2) * trace2(A) * I2
 
+    assert_zero(trace2(depol(rho)) - trace2(rho), "depolarizing trace preservation")
     assert_matrix_zero(depol(E11) - ((1 - p / 2) * E11 + (p / 2) * E22), "depolarizing E11")
     assert_matrix_zero(depol(E22) - ((p / 2) * E11 + (1 - p / 2) * E22), "depolarizing E22")
     assert_matrix_zero(depol(E12) - (1 - p) * E12, "depolarizing E12")
     assert_matrix_zero(depol(E21) - (1 - p) * E21, "depolarizing E21")
-    print("depolarizing-channel finite action: OK")
+    print("depolarizing-channel finite action/trace: OK")
 
     print("=" * 72)
     print("MD 007 FINITE QUANTUM EIGENOPERATOR INTERPRETATION VERIFIED")

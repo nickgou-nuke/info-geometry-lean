@@ -185,7 +185,7 @@ end SpinPinTransformerLayer
 for LLM-side spin/transport layers.
 -/
 @[rep_depth krein]
-theorem pin44_headFactor_sorry
+theorem pin44_headFactor
     (x : ℝ × ℝ) :
     splitCl44_headFactorEquiv
         (CliffordAlgebra.ι SplitCl44Quad (InfoGeometry.Clifford.ClNN.headPair 3 x))

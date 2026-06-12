@@ -8,6 +8,7 @@ Verified theorem-safe content only:
 * normalized Pauli trace form is the Euclidean coordinate dot product;
 * coordinates are recovered by trace against normalized axes;
 * quaternion norm shadow equals the trace self-pairing;
+* complex biquaternion matrix coordinates and unit multiplication table;
 * unnormalized Pauli soldering forms satisfy the finite Fierz identity.
 """
 
@@ -66,6 +67,25 @@ def main() -> int:
     trace_self = sp.trace(X_norm * X_norm).subs(c**2, sp.Rational(1, 2))
     assert_zero(trace_self - quat_norm, "quaternion norm shadow equals trace self-pairing")
     print("quaternion norm / trace self-pairing: OK")
+
+    q0, q1, q2, q3 = sp.symbols("q0 q1 q2 q3")
+    biquat = q0 * I2 - sp.I * q1 * s1 - sp.I * q2 * s2 - sp.I * q3 * s3
+    assert_zero(sp.trace(I2 * biquat) / 2 - q0, "biquaternion q0 trace readout")
+    assert_zero(sp.I * sp.trace(s1 * biquat) / 2 - q1, "biquaternion q1 trace readout")
+    assert_zero(sp.I * sp.trace(s2 * biquat) / 2 - q2, "biquaternion q2 trace readout")
+    assert_zero(sp.I * sp.trace(s3 * biquat) / 2 - q3, "biquaternion q3 trace readout")
+
+    e0 = I2
+    e1 = -sp.I * s1
+    e2 = -sp.I * s2
+    e3 = -sp.I * s3
+    assert_matrix_zero(e1 * e1 + e0, "biquaternion e1 square")
+    assert_matrix_zero(e2 * e2 + e0, "biquaternion e2 square")
+    assert_matrix_zero(e3 * e3 + e0, "biquaternion e3 square")
+    assert_matrix_zero(e1 * e2 - e3, "biquaternion e1e2=e3")
+    assert_matrix_zero(e2 * e3 - e1, "biquaternion e2e3=e1")
+    assert_matrix_zero(e3 * e1 - e2, "biquaternion e3e1=e2")
+    print("complex biquaternion matrix readout/table: OK")
 
     eps = sp.Matrix([[0, 1], [-1, 0]])
     eta = [-1, 1, 1, 1]

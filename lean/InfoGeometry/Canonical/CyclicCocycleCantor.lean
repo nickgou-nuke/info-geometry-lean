@@ -26,18 +26,22 @@ variable {Op H : Type*} [Ring Op] [StarRing Op]
   [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
 
 /--
-The commutator [D, tilt_j] is a bounded operator.
+**Open debt**: [D, tilt_j] is a bounded operator for each Cantor cylinder index _j.
+The CuntzCantorSpectralTriple already carries `boundedCommutatorWitness` for the
+global representation; the index-wise statement requires per-generator decomposition.
+Status: structurally true, pending bounded-operator norm estimates on cylinder subspaces.
 -/
 theorem boundedCommutator_tilt_dirac
-    (_T : CuntzCantorSpectralTriple Op H) (_j : ℕ) :
-    True := by trivial
+    (_T : CuntzCantorSpectralTriple Op H) (_j : ℕ) : True := by
+  sorry
 
 /--
-The commutator [D, switch_j] is bounded.
+**Open debt**: [D, switch_j] is bounded for each switch operator index _j.
+Same per-generator decomposition debt as `boundedCommutator_tilt_dirac`.
 -/
 theorem boundedCommutator_switch_dirac
-    (_T : CuntzCantorSpectralTriple Op H) (_j : ℕ) :
-    True := by trivial
+    (_T : CuntzCantorSpectralTriple Op H) (_j : ℕ) : True := by
+  sorry
 
 /--
 The grade-0 cyclic cocycle is the supertrace.

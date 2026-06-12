@@ -8,6 +8,7 @@ Verified theorem-safe content only:
 * matrix-unit joint eigenoperator identities for σ3;
 * matrix-unit projectors/nilpotents and cross products;
 * Pauli decompositions of E_ij;
+* complex-biquaternion representatives of E_ij;
 * sl2 root-vector commutators.
 """
 
@@ -79,6 +80,15 @@ def main() -> int:
     assert_matrix_zero(E12 - sp.Rational(1, 2) * (s1 + sp.I * s2), "E12 Pauli decomposition")
     assert_matrix_zero(E21 - sp.Rational(1, 2) * (s1 - sp.I * s2), "E21 Pauli decomposition")
     print("Pauli decompositions: OK")
+
+    def biquat_matrix(q0: sp.Expr, q1: sp.Expr, q2: sp.Expr, q3: sp.Expr) -> sp.Matrix:
+        return q0 * I2 - sp.I * q1 * s1 - sp.I * q2 * s2 - sp.I * q3 * s3
+
+    assert_matrix_zero(E11 - biquat_matrix(sp.Rational(1, 2), 0, 0, sp.I / 2), "E11 biquaternion representative")
+    assert_matrix_zero(E22 - biquat_matrix(sp.Rational(1, 2), 0, 0, -sp.I / 2), "E22 biquaternion representative")
+    assert_matrix_zero(E12 - biquat_matrix(0, sp.I / 2, -sp.Rational(1, 2), 0), "E12 biquaternion representative")
+    assert_matrix_zero(E21 - biquat_matrix(0, sp.I / 2, sp.Rational(1, 2), 0), "E21 biquaternion representative")
+    print("complex-biquaternion representatives: OK")
 
     assert_matrix_zero(comm(s3, E12) - 2 * E12, "[σ3,E12]=2E12")
     assert_matrix_zero(comm(s3, E21) + 2 * E21, "[σ3,E21]=-2E21")

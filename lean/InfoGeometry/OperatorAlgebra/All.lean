@@ -136,6 +136,8 @@ import InfoGeometry.OperatorAlgebra.SpectralGeneratorProxy
 import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.OperatorAlgebra.SplitCliffordRealForms
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
+import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
+import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
 import InfoGeometry.OperatorAlgebra.SusceptibilityHessian
 import InfoGeometry.OperatorAlgebra.SpinUnruhCalibration
 import InfoGeometry.OperatorAlgebra.StinespringDilation

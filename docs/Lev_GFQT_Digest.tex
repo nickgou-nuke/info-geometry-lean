@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\begin{document}
+\title{Digest: Why is Quantum Physics Based on Complex Numbers?}
+\author{Felix M. Lev (Digest)}
+\maketitle
+
+\section{Introduction}
+This document formally digests Felix M. Lev's paper on Galois Field Quantum Theory (GFQT). The theory substitutes the standard complex Hilbert space with a linear projective space over a finite field $GF(p^n)$. 
+
+\section{Modular Representations and $GF(p^2)$}
+The paper proves that a finite field analog of the de Sitter algebra $so(1,4)$ requires a quadratic extension $GF(p^2)$ where $p \equiv 3 \pmod 4$ to ensure that spinless irreducible representations are fully decomposable. 
+This quadratic extension acts identically to the complex numbers $\mathbb{C}$, supplying the required imaginary root $i^2 = -1$.
+
+\section{so(1,4) Algebra}
+The symmetry algebra generators $M^{ab}$ satisfy:
+\begin{equation}
+[M^{ab}, M^{cd}] = -2i(\eta^{ac}M^{bd} + \eta^{bd}M^{ac} - \eta^{ad}M^{bc} - \eta^{bc}M^{ad})
+\end{equation}
+where $\eta = \text{diag}(1, -1, -1, -1, -1)$.
+
+\section{Modular su(2) and Operators}
+The algebra includes the $su(2) \times su(2)$ operators $\mathbf{J}', \mathbf{J}''$ and $R_{jk}$. The $M_{04}$ operator, analogous to the energy operator, is analyzed in the $(\mathbf{J}^2, J_3)$ basis, yielding an equidistant imaginary spectrum. This confirms that $M_{04}$ is fully decomposable without introducing any inconsistencies in $GF(p^2)$.
+
+\end{document}

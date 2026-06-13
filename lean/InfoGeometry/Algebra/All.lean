@@ -63,3 +63,4 @@ Umbrella module for the algebra layer.
 namespace InfoGeometry
 
 end InfoGeometry
+import InfoGeometry.Algebra.LevGFQT

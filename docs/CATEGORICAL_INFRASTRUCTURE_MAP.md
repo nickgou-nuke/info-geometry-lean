@@ -398,3 +398,20 @@ Boundary:
 - it is not a unitary anyon braid representation;
 - it is not a Fibonacci `F/R` category construction;
 - it does not yet give a knot invariant until Markov-move invariance is separately proved.
+
+---
+
+## 14. Exceptional Lie Triality & Parafermion Bridge
+
+**Files:**
+- `lean/InfoGeometry/Algebra/TrialityG2.lean`
+
+**Mathematical role:**
+- Defines the order-3 outer automorphism structure over generic Lie algebras (`TrialityAutomorphism`).
+- Implements the fixed-point invariant subalgebra (`fixedSubalgebra`), modeling the algebraic map from $\mathfrak{d}_4 \to \mathfrak{g}_{2(2)}$.
+- Structures the eigenspace decomposition mapping directly to $\mathbb{Z}_3$ cyclotomic parafermionic factors.
+- Proves grading conservation constraints: $[L_\omega, L_{\omega^2}] \subseteq L_1$ (fixed subalgebra).
+
+**Boundary:**
+- Assumes the existence of a commutative ring containing primitive third roots of unity (e.g., cyclotomic fields or $\mathbb{C}$).
+- Does not depend on analytic manifold charts or continuous Lie group transitions; the symmetry mapping is purely algebraic and verified via ring identities.

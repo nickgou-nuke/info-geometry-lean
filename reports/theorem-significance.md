@@ -1,7 +1,7 @@
 # ⚖️ Pauli Authority Audit: Truthful Significance Index
 
 > **Protocol:** Truth lives in Lean; structure lives in the graph.
-> **Snapshot:** 111898 declarations analysed via Pauli Authority.
+> **Snapshot:** 111911 declarations analysed via Pauli Authority.
 
 ## 💎 High Causal Mass (The Spire's Pillars)
 | Declaration | Causal Mass | Depth | Fan-In |

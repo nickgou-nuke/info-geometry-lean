@@ -38,3 +38,6 @@ import InfoGeometry.Topology.BenderZetaHamiltonian
 import InfoGeometry.Topology.ArtinBraidS3Quotient
 import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.FibonacciBraidRepresentation
+import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Topology.RohozhkinPentagonMatrix
+import InfoGeometry.Topology.DelaunayPureBraidInvariant

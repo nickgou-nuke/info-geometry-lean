@@ -22,6 +22,7 @@ import InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
 import InfoGeometry.Arithmetic.HoradamIonSummationSlice
 import InfoGeometry.Arithmetic.SiegelModularZeros
 import InfoGeometry.Arithmetic.RiemannZetaSymmetry
+import InfoGeometry.Arithmetic.Arxiv160803679BenderHamiltonian
 import InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry
 import InfoGeometry.Arithmetic.BenderBrodyMullerHamiltonian
 import InfoGeometry.Arithmetic.ZetaProductGate
@@ -154,6 +155,7 @@ import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.LanglandsGWBridge
 import InfoGeometry.Lint.Vacuity
 import InfoGeometry.Meta.ClosureAttribute
+import InfoGeometry.CoverageClosure
 import InfoGeometry.Meta.TestTactic
 import InfoGeometry.ModularVolumePotential
 import InfoGeometry.Network.All
@@ -217,6 +219,7 @@ import InfoGeometry.Geometry.ConstructiveKasparov
 import InfoGeometry.Geometry.SpectralDivisors
 import InfoGeometry.Geometry.FiniteMatrixResolventKernel
 import InfoGeometry.Geometry.WindingSnap
+import InfoGeometry.CoverageClosure
 import InfoGeometry.Geometry.ConstructiveConnesChern
 import InfoGeometry.Geometry.FiniteDefectStokesModel
 import InfoGeometry.Geometry.OrbitCurrentStokes

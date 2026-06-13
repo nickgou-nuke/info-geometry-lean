@@ -22,6 +22,22 @@ This Lean module proves only closed algebraic fragments:
   the BBM Hamiltonian whenever the inverse/left-inverse laws are supplied;
 * PT/pseudo-Hermitian/self-adjoint/RH consequences are recorded only as socket
   data, never as proved analytic theorems.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+The coordinate conversion, boundary-zero algebra, similarity-transfer lemma, and
+commuting Berry--Keating shadow are fully verified finite theorems.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+Similarity transfer and the analytic RH implication are stated only from
+explicit named premises. No domain or spectral theorem is hidden inside a
+record field.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+The module does not prove domain selection for `Δ`, self-adjointness,
+pseudo-Hermitian metric positivity, completeness of the eigenfunctions, or RH.
 -/
 
 noncomputable section
@@ -70,6 +86,12 @@ theorem bbmZeroCoordinate_real_energy (E : ℝ) :
   simp [bbmZeroCoordinate]
   ring_nf
 
+/-- Real BBM energy coordinates land on real part `1/2`. -/
+theorem bbmZeroCoordinate_real_energy_re (E : ℝ) :
+    (bbmZeroCoordinate (E : ℂ)).re = (1 / 2 : ℝ) := by
+  rw [bbmZeroCoordinate_real_energy E]
+  simp
+
 /-! ## Boundary condition to zeta-zero algebra -/
 
 /--
@@ -83,81 +105,83 @@ theorem zeta_zero_of_boundary_zero {A : Type*} [AddGroup A]
   rw [h_eval] at h_boundary
   exact neg_eq_zero.mp h_boundary
 
-/-- Data packet for the BBM boundary-value selection mechanism. -/
-structure BoundaryZetaPacket (ZeroLabel BoundaryValue : Type*) [AddGroup BoundaryValue] where
-  psiAtZero : ZeroLabel → BoundaryValue
-  zetaAt : ZeroLabel → BoundaryValue
-  psiAtZero_eq_neg_zeta : ∀ z : ZeroLabel, psiAtZero z = -zetaAt z
-
-namespace BoundaryZetaPacket
-
-variable {ZeroLabel BoundaryValue : Type*} [AddGroup BoundaryValue]
-variable (P : BoundaryZetaPacket ZeroLabel BoundaryValue)
-
-/-- Re-export of the boundary-to-zero implication for a supplied zero label. -/
-theorem zetaAt_eq_zero_of_boundary {z : ZeroLabel} (h_boundary : P.psiAtZero z = 0) :
-    P.zetaAt z = 0 :=
-  zeta_zero_of_boundary_zero (P.psiAtZero_eq_neg_zeta z) h_boundary
-
-end BoundaryZetaPacket
+/--
+The boundary condition is equivalent to the abstract zeta-zero condition once
+the explicit BBM boundary readout `ψ_z(0)=-ζ(z)` is supplied.
+-/
+theorem boundary_zero_iff_zeta_zero {A : Type*} [AddGroup A]
+    {psiAtZero zetaAtZero : A}
+    (h_eval : psiAtZero = -zetaAtZero) :
+    psiAtZero = 0 ↔ zetaAtZero = 0 := by
+  constructor
+  · exact zeta_zero_of_boundary_zero h_eval
+  · intro hzeta
+    rw [h_eval, hzeta, neg_zero]
 
 /-! ## Similarity transform eigenvector transfer -/
 
 /--
-A linear BBM similarity packet abstracting `H = Δ⁻¹ (xp + px) Δ`.
-
-`delta_left_inverse` is the theorem-level substitute for the analytic domain
-statement that `Δ⁻¹Δ` acts as the identity on the chosen functions.
+A theorem-level expansion of the advertised similarity transform
+`H = Δ⁻¹ (xp+px) Δ`.
 -/
-structure BBMSimilarityPacket (R V : Type*) [Semiring R] [AddCommMonoid V] [Module R V] where
-  delta : V →ₗ[R] V
-  deltaInv : V →ₗ[R] V
-  berryKeating : V →ₗ[R] V
-  hamiltonian : V →ₗ[R] V
-  hamiltonian_eq : hamiltonian = deltaInv.comp (berryKeating.comp delta)
-  delta_left_inverse : ∀ v : V, deltaInv (delta v) = v
-
-namespace BBMSimilarityPacket
-
-variable {R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
-variable (P : BBMSimilarityPacket R V)
-
-/-- The Hamiltonian acts by the advertised similarity transform. -/
-theorem hamiltonian_apply (v : V) :
-    P.hamiltonian v = P.deltaInv (P.berryKeating (P.delta v)) := by
-  rw [P.hamiltonian_eq]
+theorem hamiltonian_apply_of_similarity
+    {R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
+    (delta deltaInv berryKeating hamiltonian : V →ₗ[R] V)
+    (hHamiltonian : hamiltonian = deltaInv.comp (berryKeating.comp delta))
+    (v : V) :
+    hamiltonian v = deltaInv (berryKeating (delta v)) := by
+  rw [hHamiltonian]
   rfl
 
 /--
 Eigenvector transfer through the similarity transform: if `Δ ψ` is a
 Berry--Keating eigenvector with eigenvalue `E`, then `ψ` is a BBM-Hamiltonian
-eigenvector with the same eigenvalue.
+eigenvector with the same eigenvalue, provided the explicit left-inverse
+premise holds on the selected domain.
 -/
-theorem eigen_of_delta_eigen {E : R} {psi : V}
-    (hBK : P.berryKeating (P.delta psi) = E • P.delta psi) :
-    P.hamiltonian psi = E • psi := by
+theorem eigen_of_delta_eigen
+    {R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
+    (delta deltaInv berryKeating hamiltonian : V →ₗ[R] V)
+    (hHamiltonian : hamiltonian = deltaInv.comp (berryKeating.comp delta))
+    (hDeltaLeftInverse : ∀ v : V, deltaInv (delta v) = v)
+    {E : R} {psi : V}
+    (hBK : berryKeating (delta psi) = E • delta psi) :
+    hamiltonian psi = E • psi := by
   calc
-    P.hamiltonian psi = P.deltaInv (P.berryKeating (P.delta psi)) := P.hamiltonian_apply psi
-    _ = P.deltaInv (E • P.delta psi) := by rw [hBK]
-    _ = E • P.deltaInv (P.delta psi) := by simp
-    _ = E • psi := by rw [P.delta_left_inverse psi]
+    hamiltonian psi = deltaInv (berryKeating (delta psi)) :=
+      hamiltonian_apply_of_similarity delta deltaInv berryKeating hamiltonian hHamiltonian psi
+    _ = deltaInv (E • delta psi) := by rw [hBK]
+    _ = E • deltaInv (delta psi) := by simp
+    _ = E • psi := by rw [hDeltaLeftInverse psi]
 
-end BBMSimilarityPacket
+/-! ## Classical Berry--Keating shadow -/
+
+/-- If the classical variables commute, then `xp+px` collapses to `2xp`. -/
+theorem berryKeating_commuting_shadow {R : Type*} [Semiring R]
+    {x p : R} (hcomm : p * x = x * p) :
+    x * p + p * x = (2 : R) * (x * p) := by
+  rw [hcomm]
+  rw [two_mul]
 
 /-! ## Analytic obligation socket -/
 
 /--
-Socket for the analytic BBM obligations.  These fields are hypotheses/targets,
-not constructed proofs in this finite module.
+Projection from explicit analytic obligations.  This theorem is intentionally
+conditional: it does not construct the BBM domain, metric, self-adjoint closure,
+or RH consequence.
 -/
-structure BBMAnalyticSocket where
-  domainChosen : Prop
-  deltaInverseOnDomain : Prop
-  boundaryConditionSelectsNontrivialZeros : Prop
-  momentumSymmetricOnMetricDomain : Prop
-  pseudoHermitianMetricPositive : Prop
-  selfAdjointClosure : Prop
-  rhConsequence : Prop
-  selfAdjointClosure_implies_rh : selfAdjointClosure → rhConsequence
+theorem rhConsequence_of_selfAdjointClosure
+    (domainChosen deltaInverseOnDomain boundaryConditionSelectsNontrivialZeros
+      momentumSymmetricOnMetricDomain pseudoHermitianMetricPositive
+      selfAdjointClosure rhConsequence : Prop)
+    (_hDomain : domainChosen)
+    (_hDelta : deltaInverseOnDomain)
+    (_hBoundary : boundaryConditionSelectsNontrivialZeros)
+    (_hMomentum : momentumSymmetricOnMetricDomain)
+    (_hMetric : pseudoHermitianMetricPositive)
+    (hAnalytic : selfAdjointClosure → rhConsequence)
+    (hSelfAdjoint : selfAdjointClosure) :
+    rhConsequence :=
+  hAnalytic hSelfAdjoint
 
 end InfoGeometry.Arithmetic.BenderBrodyMullerHamiltonian

@@ -21,6 +21,15 @@ live in the braided-fusion-category and topological-quantum-computation spine.
   incompressible states in the first excited Landau level*, 1998/1999.  This is
   the source lane for `Z_k` parafermion quantum-Hall states, including the
   `k = 3` background commonly tied to Fibonacci anyon physics.
+- E. M. Stoudenmire, D. J. Clarke, R. S. K. Mong, and J. Alicea,
+  *Assembling Fibonacci Anyons From a Z3 Parafermion Lattice Model*,
+  arXiv `1501.05305`, Phys. Rev. B 91, 235112 (2015).  This is a
+  lattice-model source for producing a Fibonacci topological phase from
+  `Z3` parafermion degrees of freedom.
+- L. Hadjiivanov and L. S. Georgiev, *Braiding Fibonacci anyons*, arXiv
+  `2404.01778` (2024).  This is a conformal-block source for monodromy
+  representations of the Artin braid group on Fibonacci anyon conformal
+  blocks in the `Z3` parafermion fractional quantum Hall setting.
 
 ## What the Repo Currently Closes
 
@@ -95,8 +104,10 @@ The finite Fibonacci category has two topological charges:
 tau x tau = 1 + tau
 ```
 
-That is not the same thing as an abelian `Z3` anyon theory.  The `Z3`
-connection belongs to the parafermion/CFT realization lane:
+That is not the same thing as an abelian `Z3` anyon theory, and it is not the
+same thing as an ordinary `Z3`-graded differential calculus.  The clean `Z3`
+connection belongs to the parafermion/CFT or parafermion-lattice realization
+lane:
 
 ```text
 Z3 parafermion CFT or lattice model
@@ -156,4 +167,21 @@ When editing Fibonacci files, preserve this boundary:
 - density/universality must cite and formalize the Freedman--Larsen--Wang/Jones
   representation theorem before being called proved;
 - `Z3` parafermion language must be phrased as a realization or bridge target,
-  not as the intrinsic definition of Fibonacci anyons.
+  not as the intrinsic definition of Fibonacci anyons;
+- Salih Çelik-style `Z3` differential-calculus/Yang--Baxter technology must
+  not be identified with Fibonacci anyon braiding unless an explicit braided
+  tensor category bridge has been constructed.
+
+The finite bridge now exists at:
+
+```text
+InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
+InfoGeometry.Categorical.CelikZ3BraidedTensorBridge
+```
+
+It is deliberately a finite conditional transport theorem: if the Salih
+Çelik-side matrix pair is explicitly matched to the finite `Z3` Fibonacci
+matrix shadow, the Artin/Yang--Baxter relation transports.  It also records the
+repo-owned complex Fibonacci `F/R/B` braid relation and the finite
+Cantor--Cuntz odd/odd-to-even boundary parity.  It is not a proof of full MTC
+equivalence, parafermion CFT realization, or Cuntz `O2` closure.

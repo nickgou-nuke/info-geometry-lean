@@ -1,21 +1,26 @@
 # tools/gap/lorentz_biquaternion_equivalence.g
-# GAP validation for Lorentz / Biquaternion Equivalence limits
-# Validates the SL(2,C) double cover isomorphism topology over discrete kernels
+# Finite GAP witness for the discrete kernel in the Lorentz/biquaternion lane.
+# Closed content only: the central kernel is Z2 = {+1,-1}; the nontrivial sign
+# has order 2 and acts trivially after quotienting by the central sign.
 
-Print("--- GAP LORENTZ/BIQUATERNION EQUIVALENCE ---\n");
+RequireTrue := function(name, cond)
+  if not cond then
+    Error(Concatenation("FAIL: ", name, "\n"));
+  fi;
+  Print("PASS: ", name, "\n");
+end;
 
-# The discrete kernel of the SL(2,C) -> SO(1,3) mapping is exactly Z2 = {I, -I}.
-# We computationally verify the exact Z2 spin double cover topology.
-Z2 := CyclicGroup(2);
-kernel_gen := GeneratorsOfGroup(Z2)[1];
+Print("--- GAP LORENTZ / BIQUATERNION FINITE KERNEL WITNESS ---\n");
 
-Print("SL(2,C) Cover Kernel (Z2): ", kernel_gen, "\n");
-Print("SL(2,C) Cover Kernel Order: ", Order(kernel_gen), "\n");
+Z2 := CyclicGroup(2);;
+z := GeneratorsOfGroup(Z2)[1];;
+RequireTrue("kernel group has order 2", Size(Z2) = 2);
+RequireTrue("nontrivial sign has order 2", Order(z) = 2);
+RequireTrue("sign squared is identity", z^2 = One(Z2));
+RequireTrue("kernel is abelian", IsAbelian(Z2));
 
-if Order(kernel_gen) = 2 then
-    Print("PASS: The fundamental Z2 kernel maps the exact Biquaternion +/- identity collapse over the Lorentz group SO+(1,3).\n");
-else
-    Print("FAIL: Z2 spin double cover tracking failed.\n");
-fi;
+# Finite quotient shadow: the central sign is invisible after modding out by itself.
+trivialQ := Z2 / Z2;;
+RequireTrue("quotient by central sign is trivial", Size(trivialQ) = 1);
 
-Print("GAP: Successfully sealed the discrete mapping limits of the Lorentz/Biquaternion isomorphism.\n");
+Print("GAP_LORENTZ_BIQUATERNION_KERNEL_OK\n");

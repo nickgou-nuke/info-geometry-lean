@@ -39,6 +39,7 @@ import InfoGeometry.Physics.Section35IntegratedConcepts
 import InfoGeometry.Physics.Section36ConformalCoordinateAlgebra
 import InfoGeometry.Physics.Section37ReviewerResponseFiniteAudit
 import InfoGeometry.Physics.Section38StressEnergyDomainSeparation
+import InfoGeometry.Physics.Universe1000333SpinTorsionScale
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.SouriauEntropyFoliation
 

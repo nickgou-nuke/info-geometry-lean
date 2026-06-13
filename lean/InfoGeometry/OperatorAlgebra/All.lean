@@ -67,6 +67,7 @@ import InfoGeometry.OperatorAlgebra.DIIISuperfluid
 import InfoGeometry.OperatorAlgebra.DIIISuperfluidBranch
 import InfoGeometry.OperatorAlgebra.DrazinRepresentedSplit
 import InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra
+import InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge
 import InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
 import InfoGeometry.OperatorAlgebra.ErlangerPhase
 import InfoGeometry.OperatorAlgebra.ErlangenNet

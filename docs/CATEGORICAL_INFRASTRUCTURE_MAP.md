@@ -379,3 +379,22 @@ and kernel-checked coherence/compatibility proofs.
 **Boundary restrictions:**
 - Does *not* automatically embed differential manifold calculations or continuous exceptional Lie group extensions. It evaluates purely the polynomial algebra limits bridging the non-associative exceptional geometry via characteristic trace boundaries.
 - **Integration:** The `P^3 = P` collapse is physically wired into the $\mathfrak{g}_0$ structure algebra of the 5-graded Super-TKK framework via `superTKK_of_Freudenthal` in `SuperTKK.lean`.
+
+---
+
+## 13. Delaunay Pentagon Pure-Braid Invariant
+
+Source: Rohozhkin, “Pentagon equations, Delaunay triangulations and pure braid group invariant”.
+
+Closed target:
+- rational flip matrices over `Q`;
+- inverse flip identity;
+- far-commutativity for independent flips;
+- five-flip pentagon identity;
+- pure-braid invariant as a product of flip matrices.
+
+Boundary:
+- this is a rational Delaunay/pentagon invariant;
+- it is not a unitary anyon braid representation;
+- it is not a Fibonacci `F/R` category construction;
+- it does not yet give a knot invariant until Markov-move invariance is separately proved.

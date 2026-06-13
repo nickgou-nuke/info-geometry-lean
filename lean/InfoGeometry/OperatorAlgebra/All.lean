@@ -72,6 +72,7 @@ import InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
 import InfoGeometry.OperatorAlgebra.ErlangerPhase
 import InfoGeometry.OperatorAlgebra.ErlangenNet
 import InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge
+import InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary
 import InfoGeometry.OperatorAlgebra.FiveGradeClosureSymmetry
 import InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger

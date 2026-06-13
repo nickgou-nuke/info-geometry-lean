@@ -28,6 +28,7 @@ import InfoGeometry.Topology.TwistedBoundaryExceptionalPoints
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite
 import InfoGeometry.Topology.NonorientableExceptionalBraids
+import InfoGeometry.Topology.NonorientableExceptionalKleinGlide
 import InfoGeometry.Topology.BenoisTrivialZeros
 import InfoGeometry.Topology.PapadakisPrimes
 import InfoGeometry.Topology.PrimonGas

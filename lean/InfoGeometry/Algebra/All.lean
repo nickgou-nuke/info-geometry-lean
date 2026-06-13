@@ -59,6 +59,7 @@ import InfoGeometry.Algebra.NilpotentModularAutomorphism
 import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT
 import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.JordanTripleTKK
 /-!
 # InfoGeometry.Algebra.All
 
@@ -68,4 +69,3 @@ Umbrella module for the algebra layer.
 namespace InfoGeometry
 
 end InfoGeometry
-import InfoGeometry.Algebra.JordanTripleTKK

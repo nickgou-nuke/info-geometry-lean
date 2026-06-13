@@ -196,3 +196,4 @@ external_refs/afp/
 external_refs/mathlib/
 leantrail_v13_honest_sorry_dropins/
 leantrail_v14_critic_lane/
+.DEEPSEEK_API_KEY

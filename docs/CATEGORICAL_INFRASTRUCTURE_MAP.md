@@ -378,3 +378,4 @@ and kernel-checked coherence/compatibility proofs.
 
 **Boundary restrictions:**
 - Does *not* automatically embed differential manifold calculations or continuous exceptional Lie group extensions. It evaluates purely the polynomial algebra limits bridging the non-associative exceptional geometry via characteristic trace boundaries.
+- **Integration:** The `P^3 = P` collapse is physically wired into the $\mathfrak{g}_0$ structure algebra of the 5-graded Super-TKK framework via `superTKK_of_Freudenthal` in `SuperTKK.lean`.

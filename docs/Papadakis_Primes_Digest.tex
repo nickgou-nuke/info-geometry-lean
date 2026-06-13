@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\begin{document}
+\title{Digest: On the Discrete and Continuous Harmonic Encoding of Primes}
+\author{Ioannis Papadakis (Digest)}
+\maketitle
+
+\section{Introduction}
+This document digests the paper by Ioannis Papadakis on translating discrete prime partitions into continuous harmonic functions. The paper addresses the magnitude barrier of discrete prime factorization and constructs continuous sieve functions to evaluate Goldbach partitions using indeterminate trigonometric limits.
+
+\section{Hybrid Prime Factorization (HPF)}
+The paper defines a bounded, a priori structural prime-generation framework. By dividing a contiguous canonical prime base into disjoint multiplicative components $A$ and $B$, primes are generated via $A \pm B$.
+
+\section{Lossless Multiplicative State Compression}
+The Goldbach Pairing Map $L(C_N)$ losslessly compresses the additive partitions of an even integer $2N$ into a single, uniquely factorizable scalar in $\mathbb{Z}$.
+
+\section{Continuous Harmonic Sieve Functions}
+To bypass the discrete factorial magnitude barrier, the discrete conditions are shifted onto the real continuum. The Goldbach Discriminant Kernel $J(x)$ is defined using indeterminate zero-modes from symmetric sine waves:
+\begin{equation}
+GP(x) := \prod_{j=2}^{\max(2, \lfloor x/2 \rfloor)} \left(\sin^2\left(\frac{\pi x}{j}\right)\right)^{1/j}
+\end{equation}
+The continuous prime-counting function $\pi(x)$ is then formulated using these harmonic discriminant zero-mode limits.
+\end{document}

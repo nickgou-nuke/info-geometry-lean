@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+
+\title{Finite Formal Digest: Non-orientable Exceptional Points in a Klein Brillouin Zone}
+\author{info-geometry-lean theorem-safe intake}
+\date{}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+\maketitle
+
+\section*{Source}
+This digest records the theorem-safe finite algebra extracted from
+Jung-Wan Ryu, Jae-Ho Han, Moon Jip Park, Hee Chul Park, and Chang-Hwan Yi,
+\emph{Non-orientable Exceptional Points in Twisted Boundary Systems},
+arXiv:2504.11983v1.
+
+\section*{Finite model}
+Let
+\begin{align}
+  d_x(k_x) &= \cos k_x + i\alpha,\\
+  d_y(k_x,k_y) &=
+    -\sin k_x\bigl((1-\gamma)\sin k_y+\gamma\cos k_y\bigr)
+    -\frac12+i\beta.
+\end{align}
+The two-band non-Hermitian Hamiltonian is
+\begin{equation}
+  H(k_x,k_y)=d_x(k_x)\sigma_x+d_y(k_x,k_y)\sigma_y
+  =\begin{pmatrix}
+      0 & d_x-i d_y\\
+      d_x+i d_y & 0
+    \end{pmatrix}.
+\end{equation}
+
+\begin{theorem}[Klein glide symmetry]
+The momentum-space glide
+\[
+  (k_x,k_y)\mapsto(-k_x,k_y+\pi)
+\]
+preserves the finite Hamiltonian:
+\[
+  H(k_x,k_y)=H(-k_x,k_y+\pi).
+\]
+\end{theorem}
+
+\begin{proof}
+Use
+\[
+\cos(-k_x)=\cos k_x,\quad \sin(-k_x)=-\sin k_x,
+\quad \sin(k_y+\pi)=-\sin k_y,
+\quad \cos(k_y+\pi)=-\cos k_y.
+\]
+These identities give separately
+\[
+  d_x(-k_x)=d_x(k_x),\qquad
+  d_y(-k_x,k_y+\pi)=d_y(k_x,k_y),
+\]
+and therefore the matrix entries agree.
+\end{proof}
+
+\begin{theorem}[Two-band exceptional discriminant]
+The Hamiltonian satisfies
+\[
+  H(k_x,k_y)^2 = \bigl(d_x(k_x)^2+d_y(k_x,k_y)^2\bigr) I_2.
+\]
+Consequently, if
+\[
+  d_x(k_x)^2+d_y(k_x,k_y)^2=0,
+\]
+then
+\[
+  H(k_x,k_y)^2=0.
+\]
+\end{theorem}
+
+\section*{Klein glide braid bookkeeping}
+For a braid/charge group element $b$, the Klein glide relation is recorded as
+\[
+  b_{\mathrm{ccw}} = b_{\mathrm{cw}}^{-1}.
+\]
+If $b^{-1}\ne b$, clockwise and counterclockwise loop orientations are
+inequivalent.  This is a finite group-theoretic interface, not a global
+Berry-phase or device-realization theorem.
+
+\section*{Formal artifacts}
+Lean owner:
+\[
+\texttt{InfoGeometry.Topology.NonorientableExceptionalKleinGlide}.
+\]
+Computational witnesses:
+\[
+\texttt{tools/sympy/nonorientable\_exceptional\_klein\_glide.py},
+\quad
+\texttt{tools/sage/nonorientable\_exceptional\_klein\_glide.sage.py},
+\quad
+\texttt{tools/gap/nonorientable\_exceptional\_klein\_glide.g}.
+\]
+
+\end{document}

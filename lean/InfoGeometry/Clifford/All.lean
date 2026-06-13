@@ -75,6 +75,7 @@ import InfoGeometry.Clifford.ChiralBasis
 import InfoGeometry.Clifford.HestenesDirac
 import InfoGeometry.Clifford.GeometricRotor
 import InfoGeometry.Clifford.RealDoubledHestenesAnchor
+import InfoGeometry.Clifford.Arxiv210801858Cl3SplitBiquaternion
 
 namespace InfoGeometry
 

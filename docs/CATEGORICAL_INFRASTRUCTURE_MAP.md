@@ -235,15 +235,44 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 
 ---
 
-## 7b. Factored Architecture Layers
+## 7b. Factored finite algebra layers
 
-The repository has been hygienically refactored to decouple specific algebraic behaviors from concrete coordinates, separating abstract definitions across three core layers:
+The repository has finite, theorem-safe entry points for reusable algebraic
+blocks.  These files are bridge surfaces, not replacements for the categorical
+owners above:
 
-1. **Layer 1: Core Spin Algebra** (`Algebra/FiniteSpinAlgebra.lean`) — Isolates the uncomplexified SU(2) angular momentum generators ($J_+, J_-, J_0$) and standard ladder commutation relations.
-2. **Layer 2: Finite SUSY / Parity Supergraded Blocks** (`Algebra/FiniteSUSYBlocks.lean`) — Structures the $\mathbb{Z}_2$ supergraded Lie algebra using decoupled supercharges ($A, A^\dagger$) and verifies the trace-free Witten index property on finite block-diagonal sectors.
-3. **Layer 3: Arithmetic Zeta Product-Zero Gate** (`Arithmetic/ZetaProductGate.lean`) — Implements the abstract product-zero gate over partition functions to ensure anomaly-free scaling.
+1. **Finite spin algebra** (`Algebra/FiniteSpinAlgebra.lean`) — concrete
+   `2 × 2` complex spin-half ladder matrices `J_plus`, `J_minus`, `J_zero`,
+   their commutator, a `SpinHalfBasis` interface, and the checked relations
+   `[J_zero,J_plus]=J_plus`, `[J_zero,J_minus]=-J_minus`,
+   `[J_plus,J_minus]=2 • J_zero`.
+2. **Finite SUSY blocks** (`Algebra/FiniteSUSYBlocks.lean`) — a finite
+   matrix interface `FiniteSUSYSystem` with `H_minus = A_dag * A`,
+   `H_plus = A * A_dag`, the associativity-only intertwining identity
+   `A * H_minus = H_plus * A`, and the two-state finite Witten trace readout.
+3. **Arithmetic product gates** (`Arithmetic/ZetaProductGate.lean`) — two
+   small scalar gate interfaces: `ProductZeroGate` for product annihilation and
+   `ProductUnitGate` for product-one/lossless readouts.  This layer does not
+   assert a zeta zero-location theorem or analytic continuation.
 
-These three layers form the canonical entry points for downstream structural linkages like the CuntzUHFBridge.
+These layers are suitable inputs for later Cuntz/UHF, Aubert--Plymen, and
+Super-TKK adapters only after those adapters supply explicit maps and checked
+compatibility laws.
+
+### Layer-4 guardrail: anyon braid quotient witnesses
+
+Before adding `tools/gap/anyon_braid_closure.g` or a Lean owner for anyon braid
+quotients, fix the finite data being checked:
+
+* exact braid generators, e.g. the existing Fibonacci `R` and `B = F R F`
+  matrices or an explicitly named finite quotient representation;
+* exact target group presentation, such as a specified Coxeter/Weyl group;
+* a machine-readable certificate connecting the computed GAP group data to the
+  Lean statement.
+
+Do not identify Fibonacci braid images with `G₂(2)`, `W(D₄)`, `W(D₅)`,
+split-octonion automorphisms, or geometric transport until the concrete finite
+homomorphism and its image certificate are supplied.
 
 ---
 

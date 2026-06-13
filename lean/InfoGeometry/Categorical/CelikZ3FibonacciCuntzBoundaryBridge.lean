@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
-import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 import InfoGeometry.Categorical.FibonacciFusionCategoryData
 
@@ -60,7 +59,6 @@ open InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 open InfoGeometry.Canonical.FibonacciParafermionAtoms
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CuntzCantorBoundaryShift
-open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 open InfoGeometry.Categorical.FibonacciFusionCategoryData
 
 variable {A : Type*} [Mul A]
@@ -183,6 +181,14 @@ theorem cantor_cuntz_boundary_shift_closed :
         InfoGeometry.Canonical.UHFInductiveColimitBoundary.CylinderColimit) :=
   finite_cuntz_cantor_shift_synthesis
 
+/-- Binary Cantor--Cuntz branch-word parity, read in `ZMod 2`. -/
+def wordParityZ2 (w : List Bool) : ZMod 2 :=
+  (w.length : ZMod 2)
+
+/-- A single symbolic Cantor--Cuntz branch step. -/
+def oddStep (b : Bool) : List Bool :=
+  [b]
+
 /--
 Finite Cantor--Cuntz odd/odd boundary parity readout.  This is the "null
 topological boundary" layer formalized here: two odd symbolic branch steps land
@@ -192,9 +198,9 @@ theorem cantor_cuntz_odd_odd_boundary_even (a b : Bool) :
     wordParityZ2 (oddStep a) = 1 ∧
       wordParityZ2 (oddStep b) = 1 ∧
         wordParityZ2 (oddStep a ++ oddStep b) = 0 := by
-  refine ⟨oddStep_parity a, oddStep_parity b, ?_⟩
-  simp [wordParityZ2, oddStep]
-  decide
+  refine ⟨by simp [wordParityZ2, oddStep], by simp [wordParityZ2, oddStep], ?_⟩
+  change ((2 : Nat) : ZMod 2) = 0
+  norm_num
 
 /-! ## The explicit finite bridge -/
 

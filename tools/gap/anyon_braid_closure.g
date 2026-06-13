@@ -1,66 +1,100 @@
 # ==============================================================================
-# GAP AUTOMATED VALIDATION SCRIPT: anyon_braid_closure.g
-# Location: Sofia, Bulgaria | Timestamp: Saturday, June 13, 2026
+# GAP automated finite quotient check for D-type anyon braid interfaces.
+#
+# Scope: this is a finite group smoke test only.  It validates D4/D5 Coxeter
+# quotient presentations and their Artin/Coxeter braid quotients.  It is not a
+# Lean kernel proof and it does not assert a laboratory-model realization.
 # ==============================================================================
-# Mathematically verifies the non-Abelian Anyon Braid representations (B3) 
-# and their finite quotient structures against the Weyl Coxeter groups W(D4) 
-# and W(D5) under strict triality and 5-graded Super-TKK constraints.
-# ==============================================================================
 
-Print("==> Initializing Anyon Braid Closure Verification in GAP...\n");
+Print("=== ANYON BRAID FINITE QUOTIENT / D-TYPE WEYL VALIDATION ===\n");
 
-# 1. Define the Artin Braid Group B3 on 3 strands via a free group presentation
-F_B3 := FreeGroup("s1", "s2");
-s1 := F_B3.1;
-s2 := F_B3.2;
-B3 := F_B3 / [ s1*s2*s1 * (s2*s1*s2)^-1 ];
+RequireTrue := function(name, cond)
+    if not cond then
+        Error(Concatenation("validation failed: ", name));
+    fi;
+    Print("[OK] ", name, "\n");
+end;
 
-Print("1. Free Presentation of the Artin Braid Group B3: VALID\n");
+CoxeterQuotient := function(label, coxeterMatrix, expectedOrder)
+    local F, gens, rels, i, j, G;
+    F := FreeGroup(Length(coxeterMatrix));
+    gens := GeneratorsOfGroup(F);
+    rels := [];
+    for i in [1..Length(coxeterMatrix)] do
+        Add(rels, gens[i]^2);
+    od;
+    for i in [1..Length(coxeterMatrix)] do
+        for j in [i + 1..Length(coxeterMatrix)] do
+            Add(rels, (gens[i] * gens[j])^coxeterMatrix[i][j]);
+        od;
+    od;
+    G := F / rels;
+    Print("[INFO] ", label, " order = ", Size(G), "\n");
+    RequireTrue(Concatenation(label, " has expected order"), Size(G) = expectedOrder);
+    return G;
+end;
 
-# 2. Construct the Finite Quotient matching the Projective Center Quotient Group
-# We enforce the projective closure condition where the generators square to the identity
-B3_quotient := B3 / [ B3.1^2, B3.2^2 ];
-size_q := Size(B3_quotient);
-Print("2. Projective Center Quotient B3 / <s1^2, s2^2> Order: ", size_q, " (Expected: 6, Symmetric Group S3)\n");
+D4Matrix := [
+    [1, 3, 2, 2],
+    [3, 1, 3, 3],
+    [2, 3, 1, 2],
+    [2, 3, 2, 1]
+];
 
-if size_q <> 6 then
-    Error("CRITICAL EXCEPTION: B3 quotient size does not match the symmetric S3 triality node!");
-fi;
+D5Matrix := [
+    [1, 3, 2, 2, 2],
+    [3, 1, 3, 2, 2],
+    [2, 3, 1, 3, 3],
+    [2, 2, 3, 1, 2],
+    [2, 2, 3, 2, 1]
+];
 
-# 3. Construct the Weyl Coxeter Groups W(D4) and W(D5) using their root system presentations
-# D4 Dynkin diagram has a central node (3) connected to three external legs (1, 2, 4)
-F_D4 := FreeGroup("r1", "r2", "r3", "r4");
-r1 := F_D4.1; r2 := F_D4.2; r3 := F_D4.3; r4 := F_D4.4;
-W_D4 := F_D4 / [ r1^2, r2^2, r3^2, r4^2, 
-                 (r1*r2)^2, (r1*r4)^2, (r2*r4)^2,
-                 (r1*r3)^3, (r2*r3)^3, (r4*r3)^3 ];
+WD4 := CoxeterQuotient("W(D4)", D4Matrix, 192);
+WD5 := CoxeterQuotient("W(D5)", D5Matrix, 1920);
 
-size_D4 := Size(W_D4);
-Print("3. Weyl Coxeter Group W(D4) Order: ", size_D4, " (Expected: 192)\n");
-if size_D4 <> 192 then
-    Error("CRITICAL EXCEPTION: W(D4) size mismatch!");
-fi;
+ArtinCoxeterQuotient := function(label, coxeterMatrix, expectedOrder)
+    local F, gens, rels, i, j, m, lhs, rhs, k, G;
+    F := FreeGroup(Length(coxeterMatrix));
+    gens := GeneratorsOfGroup(F);
+    rels := [];
 
-# D5 Dynkin diagram adds a linear leg connected to node 4
-F_D5 := FreeGroup("r1", "r2", "r3", "r4", "r5");
-r1 := F_D5.1; r2 := F_D5.2; r3 := F_D5.3; r4 := F_D5.4; r5 := F_D5.5;
-W_D5 := F_D5 / [ r1^2, r2^2, r3^2, r4^2, r5^2,
-                 (r1*r2)^2, (r1*r4)^2, (r1*r5)^2, (r2*r4)^2, (r2*r5)^2, (r3*r5)^2,
-                 (r1*r3)^3, (r2*r3)^3, (r3*r4)^3, (r4*r5)^3 ];
+    # Finite quotient of the Artin braid-type presentation: impose sigma_i^2 = 1.
+    for i in [1..Length(coxeterMatrix)] do
+        Add(rels, gens[i]^2);
+    od;
 
-size_D5 := Size(W_D5);
-Print("4. Weyl Coxeter Group W(D5) Order: ", size_D5, " (Expected: 1920)\n");
-if size_D5 <> 1920 then
-    Error("CRITICAL EXCEPTION: W(D5) size mismatch!");
-fi;
+    # Alternating Artin braid relation of length m_ij.
+    for i in [1..Length(coxeterMatrix)] do
+        for j in [i + 1..Length(coxeterMatrix)] do
+            m := coxeterMatrix[i][j];
+            lhs := One(F);
+            rhs := One(F);
+            for k in [1..m] do
+                if k mod 2 = 1 then
+                    lhs := lhs * gens[i];
+                    rhs := rhs * gens[j];
+                else
+                    lhs := lhs * gens[j];
+                    rhs := rhs * gens[i];
+                fi;
+            od;
+            Add(rels, lhs * rhs^-1);
+        od;
+    od;
 
-# 4. Verify Group-Theoretic Closedness and Embedding Structure
-# The finite S3 quotient of the Anyon Braid group must be isomorphic to a 
-# subgroups of W(D4) and W(D5) stabilizing the external triality components.
-iso_check := IsSubgroup(W_D4, Subgroup(W_D4, [W_D4.1, W_D4.2]));
-Print("5. Subgroup Triality Preservation Check in W(D4): ", iso_check, "\n");
+    G := F / rels;
+    Print("[INFO] ", label, " finite quotient order = ", Size(G), "\n");
+    RequireTrue(Concatenation(label, " has expected Weyl quotient order"),
+        Size(G) = expectedOrder);
+    return G;
+end;
 
-Print("\n================================================================================\n");
-Print("==> GAP ANYON BRAID CLOSURE VERIFICATION COMPLETE: ALL ASSERTIIONS PASSED <==");
-Print("\n================================================================================\n");
+BD4 := ArtinCoxeterQuotient("D4 Artin/Coxeter braid quotient", D4Matrix, 192);
+BD5 := ArtinCoxeterQuotient("D5 Artin/Coxeter braid quotient", D5Matrix, 1920);
+
+RequireTrue("D4 braid quotient is isomorphic to W(D4)", IsomorphismGroups(BD4, WD4) <> fail);
+RequireTrue("D5 braid quotient is isomorphic to W(D5)", IsomorphismGroups(BD5, WD5) <> fail);
+
+Print("[SUCCESS] Finite D-type braid quotients validated against W(D4) and W(D5).\n");
+Print("[NOTE] This is a GAP-side finite quotient smoke test, not a Lean kernel proof.\n");
 QUIT;

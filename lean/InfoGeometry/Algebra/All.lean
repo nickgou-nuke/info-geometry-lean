@@ -21,6 +21,8 @@ import InfoGeometry.Algebra.IterativeExponentiation
 import InfoGeometry.Algebra.FormalSeriesCalculus
 import InfoGeometry.Algebra.NilpotentFiniteProductLimit
 import InfoGeometry.Algebra.FiniteInductiveSUSY
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import InfoGeometry.Algebra.InvariantTransport

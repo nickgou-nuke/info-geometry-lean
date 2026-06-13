@@ -1,5 +1,7 @@
 import InfoGeometry.Topology.V4RootSystem
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation
+import InfoGeometry.Topology.WallpaperToWeylBridge
+import InfoGeometry.Categorical.ModularDoubledRealHopfTransport
 
 /-!
 # Varlamov V₄ / trifactor / Klein-glide bridge
@@ -23,6 +25,8 @@ namespace InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
 open InfoGeometry.Topology.V4RootSystem
 open InfoGeometry.Topology.Wallpaper
 open InfoGeometry.Topology.WallpaperKleinBottlePresentation
+open InfoGeometry.Topology.WallpaperToWeylBridge
+open InfoGeometry.CondensedMatter.NonOrientableWeylSemimetal
 
 /-- Interpret the three tripotent branches as the three non-identity `V₄` labels. -/
 def sectorLabel : TripotentState → NontrivialV4
@@ -77,7 +81,9 @@ theorem witness_klein_relation (W : VarlamovTrifactorKleinWitness) (p : Lattice2
       W.klein.yTranslation.symm p :=
   W.klein.glide_conjugates_yTranslation_to_inverse p
 
-/-- Concrete bridge packet: V₄/trifactor cycling plus the `pg` glide relation. -/
+/--
+Concrete bridge packet: V₄/trifactor cycling plus the `pg` glide relation.
+-/
 theorem concrete_varlamov_trifactor_klein_packet (p : Lattice2D) :
     (∀ s : TripotentState,
       sectorV4 (TripotentState.trialityCycle
@@ -90,6 +96,31 @@ theorem concrete_varlamov_trifactor_klein_packet (p : Lattice2D) :
       concreteVarlamovTrifactorKleinWitness.klein.yTranslation.symm p := by
   exact ⟨sectorV4_trialityCube, sectorV4_involution, sectorV4_ne_identity,
     witness_klein_relation concreteVarlamovTrifactorKleinWitness p⟩
+
+/--
+Extended finite packet adding the split-`Cl(1,1)` Boolean `V₄` shadow and the
+`ZMod 2` orientation readout used by the non-orientable Weyl/glide corridor.
+
+This is still only finite owner data: it does not construct a Klein-bottle
+quotient space, classify real Clifford representations, or prove Spin(8)/D₄
+triality.
+-/
+theorem concrete_varlamov_trifactor_cl11_klein_packet
+    (p : Lattice2D) {ι : Type} [Fintype ι] (charge : ι → ℤ) :
+    (∀ s : TripotentState, sectorV4 s * sectorV4 s = V4Group.I) ∧
+      Function.Involutive
+        InfoGeometry.Categorical.ModularDoubledRealHopfTransport.cl11V4Shadow.gradeAB ∧
+      concreteVarlamovTrifactorKleinWitness.klein.glide
+          (concreteVarlamovTrifactorKleinWitness.klein.yTranslation
+            (concreteVarlamovTrifactorKleinWitness.klein.glide.symm p)) =
+        concreteVarlamovTrifactorKleinWitness.klein.yTranslation.symm p ∧
+      concretePG.G (concretePG.T_y p) = concretePG.T_y.symm (concretePG.G p) ∧
+      totalChargeModTwo (fun i => -charge i) = totalChargeModTwo charge := by
+  exact ⟨sectorV4_involution,
+    InfoGeometry.Categorical.ModularDoubledRealHopfTransport.cl11V4Shadow_composite_involutive,
+    witness_klein_relation concreteVarlamovTrifactorKleinWitness p,
+    (concrete_pg_relation_and_mod_two_charge_invariance p charge).1,
+    (concrete_pg_relation_and_mod_two_charge_invariance p charge).2⟩
 
 end InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
 

@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\begin{document}
+\title{Digest: Hamiltonian for the zeros of the Riemann zeta function}
+\author{Carl M. Bender, Dorje C. Brody, Markus P. M\"uller (Digest)}
+\maketitle
+
+\section{Introduction}
+This document digests the paper addressing the Hilbert-P\'olya conjecture. The authors construct an explicit quantum mechanical Hamiltonian whose eigenvalues mirror the imaginary parts of the nontrivial zeros of the Riemann zeta function.
+
+\section{The Hamiltonian}
+The proposed Hamiltonian operator $\hat{H}$ is given by:
+\begin{equation}
+\hat{H} = \frac{1}{1 - e^{-i\hat{p}}} (\hat{x}\hat{p} + \hat{p}\hat{x}) (1 - e^{-i\hat{p}})
+\end{equation}
+This Hamiltonian is a similarity transformation of the Berry-Keating Hamiltonian $\hat{h}_{\text{BK}} = \hat{x}\hat{p} + \hat{p}\hat{x}$ via the nonlocal difference operator $\Delta = 1 - e^{-i\hat{p}}$.
+
+\section{$\mathcal{PT}$ Symmetry and the Riemann Hypothesis}
+Although $\hat{H}$ is not Hermitian in the conventional sense, the operator $i\hat{H}$ is $\mathcal{PT}$ symmetric (parity-time reflection invariant under momentum exchange). If $i\hat{H}$ has maximally broken $\mathcal{PT}$ symmetry, its eigenvalues are pure-imaginary complex-conjugate pairs. Consequently, the eigenvalues of $\hat{H}$ would be strictly real, thereby proving the Riemann Hypothesis.
+
+\section{Eigenfunctions}
+The eigenfunctions of $\hat{H}$, subjected to the boundary condition $\psi_n(0) = 0$, evaluate to the Hurwitz zeta function $\psi_z(x) = -\zeta(z, x+1)$. The boundary condition forces $z$ to correspond precisely to the nontrivial zeros of the Riemann zeta function.
+
+\end{document}

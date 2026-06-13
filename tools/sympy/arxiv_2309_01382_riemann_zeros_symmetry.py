@@ -50,6 +50,21 @@ def check_susy_block() -> None:
     assert H == E * sp.eye(2)
     assert H.subs(E, 0) == sp.zeros(2)
 
+    a, b = sp.symbols("a b")
+    A = sp.Matrix([[0, 0], [a, 0]])
+    Adag = sp.Matrix([[0, b], [0, 0]])
+    assert Adag * A == sp.Matrix([[b * a, 0], [0, 0]])
+    assert A * Adag == sp.Matrix([[0, 0], [0, a * b]])
+    assert (Adag * A).subs(a, 0) == sp.zeros(2)
+    assert (A * Adag).subs(a, 0) == sp.zeros(2)
+
+    parity = sp.diag(1, -1)
+    assert sp.trace(parity * sp.diag(1, 1)) == 0
+    P = sp.Matrix([[0, 1], [1, 0]])
+    assert P * P == sp.eye(2)
+    E_left, E_right = sp.symbols("E_left E_right")
+    assert P * sp.diag(E_left, E_right) * P == sp.diag(E_right, E_left)
+
 
 def check_su2_spin_half() -> None:
     Jp = sp.Matrix([[0, 1], [0, 0]])
@@ -62,6 +77,15 @@ def check_su2_spin_half() -> None:
     assert comm(Jp, Jm) == 2 * J0
     assert comm(J0, Jp) == Jp
     assert comm(J0, Jm) == -Jm
+
+    up = sp.Matrix([1, 0])
+    down = sp.Matrix([0, 1])
+    assert Jp * up == sp.zeros(2, 1)
+    assert Jp * down == up
+    assert Jm * up == down
+    assert Jm * down == sp.zeros(2, 1)
+    assert J0 * up == sp.Rational(1, 2) * up
+    assert J0 * down == -sp.Rational(1, 2) * down
 
     casimir = J0 * J0 + sp.Rational(1, 2) * (Jp * Jm + Jm * Jp)
     assert casimir == sp.Rational(3, 4) * sp.eye(2)

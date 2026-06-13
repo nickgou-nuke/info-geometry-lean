@@ -275,6 +275,8 @@ import InfoGeometry.Optics.All
 import InfoGeometry.Algebraic.CartanCocycle
 import InfoGeometry.Algebraic.MatrixAutomorphyFactor
 import InfoGeometry.Topology.AharonovBohmConcreteVortex
+import InfoGeometry.Topology.ArtinBraidRep
+import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.KANWallpaperSuperchargeReadout
 import InfoGeometry.Topology.WallpaperKleinBottlePresentation
 import InfoGeometry.Topology.TwistedHeckeKleinBottle
@@ -282,6 +284,7 @@ import InfoGeometry.Categorical.Gromov
 import InfoGeometry.Categorical.CartanSpacetime
 import InfoGeometry.Categorical.FibonacciBraidedTowerCone
 import InfoGeometry.Categorical.FibonacciBraidDirectLimit
+import InfoGeometry.Categorical.FibonacciHexagon
 import InfoGeometry.Categorical.FibonacciSelfDualCarrier
 import InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
 import InfoGeometry.Categorical.FibonacciTimeModularClock

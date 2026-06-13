@@ -2,7 +2,7 @@
 """Finite Klein-Brillouin Berry-connection shadow.
 
 Lean twin:
-    lean/InfoGeometry/OperatorAlgebra/KleinBerryConnectionFinite.lean
+    lean/InfoGeometry/Topology/BrillouinKleinBerryConnectionFinite.lean
 
 This verifier keeps exact finite matrix/parity data only: constant cross-cap
 monodromy, zero derivative correction, `Z2` phase parity, and exceptional

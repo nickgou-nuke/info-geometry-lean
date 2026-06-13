@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,geometry}
+\geometry{a4paper,margin=1in}
+\title{Finite Digest: Clifford Central-Core Braid Root}
+\author{info-geometry-lean theorem-safe intake}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Scope}
+This note records a finite central-core packet inspired by Clifford-braiding
+language.  It does not prove a general Clifford Braiding Theorem, Lorentz spin
+representation theorem, anyon construction, or superKähler/metriplectic
+emergence theorem.
+
+\section{Exact finite packet}
+Let
+\[
+J=\begin{pmatrix}0&1\\-1&0\end{pmatrix},\qquad
+E=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\qquad I=I_2.
+\]
+The verified identities are
+\[
+J^2=-I,
+\qquad E^2=I,
+\qquad EJ+JE=0.
+\]
+The split pseudoscalar $P=EJ$ satisfies
+\[
+P^2=I.
+\]
+Moreover, since $J^{-1}=-J$,
+\[
+J I J^{-1}=I,
+\qquad
+J(-I)J^{-1}=-I.
+\]
+Thus conjugation by the concrete root $J$ preserves the central sign core
+$\{I,-I\}$.
+
+\section{Finite parafermion phase shadow}
+For $\omega$ satisfying $\omega^2+\omega+1=0$, the exact clock and shift
+matrices
+\[
+X=\begin{pmatrix}0&1&0\\0&0&1\\1&0&0\end{pmatrix},
+\qquad
+Z=\mathrm{diag}(1,\omega,\omega^2)
+\]
+satisfy
+\[
+X^3=Z^3=I,
+\qquad XZ=\omega ZX.
+\]
+This is a finite $\mathbb Z_3$ phase-grading witness, not a theorem that a
+physical parafermion CFT or anyon model has been constructed.
+
+\section{Artifacts}
+\begin{itemize}
+\item Lean: \texttt{lean/InfoGeometry/Algebra/CliffordBraidingTheorem.lean}
+\item SymPy: \texttt{tools/sympy/clifford\_braiding\_center.py}
+\item Sage: \texttt{tools/sage/clifford\_braiding\_center.sage.py}
+\item GAP: \texttt{tools/gap/clifford\_braiding\_center.g}
+\item Phase witness: \texttt{tools/sympy/parafermion\_clifford\_roots.py}
+\end{itemize}
+
+\end{document}

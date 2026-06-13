@@ -179,6 +179,7 @@ import InfoGeometry.Canonical.FiniteFibonacciFourAnyonHestenesBridge
 import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
+import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBridge
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Canonical.Z3TrialityCapstone
 import InfoGeometry.Canonical.E8Z3GradingDimension
@@ -1209,3 +1210,4 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
+import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge

@@ -31,6 +31,7 @@ import InfoGeometry.Topology.NonorientableExceptionalBraids
 import InfoGeometry.Topology.NonorientableExceptionalKleinGlide
 import InfoGeometry.Topology.BenoisTrivialZeros
 import InfoGeometry.Topology.PapadakisPrimes
+import InfoGeometry.Topology.PointedGroups
 import InfoGeometry.Topology.PrimonGas
 import InfoGeometry.Topology.BenderZetaHamiltonian
 import InfoGeometry.Topology.ArtinBraidS3Quotient

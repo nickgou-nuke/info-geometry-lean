@@ -178,3 +178,4 @@ and represented Drazin splitting.
 -/
 
 end InfoGeometry.OperatorAlgebra
+import InfoGeometry.OperatorAlgebra.AlbertCubicTripotent

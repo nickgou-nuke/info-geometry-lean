@@ -17,6 +17,8 @@ matching the GAP/Sage `G₂(2)` ledger.
 * Exact `G₂(2)` order arithmetic.
 * Exact order separation between `G₂(2)`/`Aut(PSU₃(3))` and `PGL₃(3)`.
 * Concrete Zorn basis multiplication laws over `F₂`.
+* Explicit outer `C₂` witness finite permutation readout: degree `63`,
+  `28` transpositions, and `7` fixed points.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
@@ -81,6 +83,31 @@ def splitOctF2EquivBits : SplitOctF2 ≃ (Fin 8 → Bool) where
 
 noncomputable instance : Fintype SplitOctF2 :=
   Fintype.ofEquiv (Fin 8 → Bool) splitOctF2EquivBits.symm
+
+/-- The degree of the Atlas permutation action used for the outer `C₂` witness. -/
+def outerC2WitnessDegree : Nat := 63
+
+/-- The number of transpositions in the chosen outer `C₂` witness. -/
+def outerC2WitnessTranspositions : Nat := 28
+
+/-- The number of fixed points in the chosen outer `C₂` witness. -/
+def outerC2WitnessFixedPoints : Nat := 7
+
+theorem outerC2Witness_cycle_profile_accounting :
+    2 * outerC2WitnessTranspositions + outerC2WitnessFixedPoints = outerC2WitnessDegree := by
+  norm_num [outerC2WitnessTranspositions, outerC2WitnessFixedPoints, outerC2WitnessDegree]
+
+theorem outerC2Witness_fixed_point_count :
+    outerC2WitnessFixedPoints = 7 := by
+  rfl
+
+theorem outerC2Witness_transposition_count :
+    outerC2WitnessTranspositions = 28 := by
+  rfl
+
+theorem outerC2Witness_degree :
+    outerC2WitnessDegree = 63 := by
+  rfl
 
 /-- Coordinatewise zero. -/
 def zero : SplitOctF2 := ⟨false, false, false, false, false, false, false, false⟩

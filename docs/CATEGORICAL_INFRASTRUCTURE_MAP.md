@@ -261,8 +261,17 @@ compatibility laws.
 
 ### Layer-4 guardrail: anyon braid quotient witnesses
 
-Before adding `tools/gap/anyon_braid_closure.g` or a Lean owner for anyon braid
-quotients, fix the finite data being checked:
+The finite GAP smoke test
+`tools/gap/verify_anyon_weyl_braids.g` checks only the abstract D-type
+Artin/Coxeter quotient presentations:
+
+* the D4 quotient has order `192` and maps bijectively to `W(D4)`;
+* the D5 quotient has order `1920` and maps bijectively to `W(D5)`;
+* `W(D4)` has a two-dimensional irreducible character.
+
+This is group-theoretic evidence for finite quotient bookkeeping, not a proof
+that a Fibonacci anyon braid image is `W(D4)` or `W(D5)`.  Before adding a Lean
+owner for anyon braid quotients, fix the finite data being checked:
 
 * exact braid generators, e.g. the existing Fibonacci `R` and `B = F R F`
   matrices or an explicitly named finite quotient representation;
@@ -329,3 +338,43 @@ When adding new content:
 ---
 
 *Last updated: 2026-06-02*
+
+## 11. Finite metriplectic and central-root witness layer
+
+This layer is a finite algebraic readout, not a smooth superKähler geometry
+construction and not a physical thermodynamics theorem.
+
+* `lean/InfoGeometry/Topology/Metriplectic.lean` — defines an algebraic
+  `MetriplecticStructure` over a commutative ring with two supplied brackets,
+  Hamiltonian/entropy observables, and explicit annihilation laws.  Closed
+  theorems include `energy_conservation`, `entropy_evolution`, and
+  `metriplectic_packet`.
+* `tools/sympy/parafermion_clifford_roots.py` — exact finite diagnostic for a
+  real central root with `J^2 = -I`; optional `clifford`/`galgebra`
+  availability is diagnostic only.
+* `tools/gap/metriplectic_superkahler.g` — finite center/grading smoke test;
+  it does not prove super-Kähler geometry or metriplectic thermodynamics.
+* `docs/MetriplecticSuperkahlerDigest.tex` — digest explicitly recording the
+  finite algebraic scope and the missing smooth/superKähler hypotheses.
+
+Guardrail: do not promote this packet to a global superKähler theorem, a
+Hestenes--Krein metric theorem, a first/second law of thermodynamics theorem,
+or a categorical braided-Clifford theorem without explicit owner definitions
+and kernel-checked coherence/compatibility proofs.
+
+---
+
+## 12. Albert-Freudenthal Spectral Reduction & Exceptional Tripotency
+
+**Files:**
+- `lean/InfoGeometry/OperatorAlgebra/AlbertCubicTripotent.lean`
+- `tools/sympy/freudenthal_cubic_reduction.py`
+
+**Mathematical role:**
+- Formalizes the cubic characteristic polynomial of the 27-dimensional Albert algebra.
+- Defines the Freudenthal cubic invariants (`trace1`, `trace2`, `norm`).
+- Provides the exact constructive proof `tripotency_is_cubic_rank2_special`, proving that setting the Freudenthal invariants to the trace-zero, quadric-negative vacuum threshold natively maps the Albert element into a strict Jordan tripotent ($P^3 = P$) via pure commutative ring arithmetic.
+- Validates the coordinate-free reduction matching the topological boundaries of the Octonionic Cayley Projective Plane ($\mathbb{OP}^2$) directly in Lean without relying on complex continuous meshes.
+
+**Boundary restrictions:**
+- Does *not* automatically embed differential manifold calculations or continuous exceptional Lie group extensions. It evaluates purely the polynomial algebra limits bridging the non-associative exceptional geometry via characteristic trace boundaries.

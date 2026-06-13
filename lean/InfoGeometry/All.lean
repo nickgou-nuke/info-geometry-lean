@@ -17,6 +17,7 @@ import InfoGeometry.Arithmetic.JordanAlgebraZeta
 import InfoGeometry.Arithmetic.LowLyingZerosQuaternion
 import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 import InfoGeometry.Arithmetic.HoradamIonBinetSlice
+import InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
 import InfoGeometry.Arithmetic.HoradamIonSummationSlice
 import InfoGeometry.Arithmetic.SiegelModularZeros
 import InfoGeometry.Arithmetic.RiemannZetaSymmetry

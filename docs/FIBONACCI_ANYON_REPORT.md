@@ -35,10 +35,12 @@ Fibonacci anyons provide the simplest non-Abelian anyon model, with fusion rules
 where τ is the Fibonacci anyon and 1 is the vacuum sector. The quantum dimension
 d_τ = φ = (1+√5)/2 is the golden ratio.
 
-These anyons are realized as quasiparticle excitations in the Z₃ parafermion
-fractional quantum Hall state at filling ν = 2/3. The braiding of Fibonacci anyons
-gives a representation of the Artin braid group Bₙ, providing a model for
-topological quantum computation.
+These anyons are realized in the Z₃ parafermion / Read--Rezayi realization
+lane, often discussed for the second-Landau-level fractional quantum Hall
+setting around ν = 12/5. This is a parafermion-CFT or parafermion-lattice
+entry point, not an identification with ordinary Z₃-graded differential
+calculus. The braiding of Fibonacci anyons gives a representation of the
+Artin braid group Bₙ, providing a model for topological quantum computation.
 
 ### 1.1 The Verification Pipeline
 

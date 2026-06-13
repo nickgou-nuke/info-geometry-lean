@@ -38,6 +38,12 @@ try:
 except Exception:  # pragma: no cover - observation must never block proof seeking.
     record_message = None
 
+try:
+    from tools.infra.lean_audit_prompt import lean_candidate_reject_reason
+except Exception:  # pragma: no cover - keep proof seeker importable in minimal envs.
+    def lean_candidate_reject_reason(code: str, *, allow_snippet: bool = False) -> str:
+        return "lean_candidate_guard_unavailable" if not code.strip() else ""
+
 
 # ---------------------------------------------------------------------------
 # Models
@@ -262,6 +268,16 @@ class ProofSeeker:
                 lean_code = "\n\n".join(blocks)
                 confidence = 0.5
 
+        if lean_code:
+            reject_reason = lean_candidate_reject_reason(lean_code, allow_snippet=True)
+            if reject_reason:
+                logger.warning("Rejected generated proof candidate for %s: %s", target_name, reject_reason)
+                proof_sketch = (proof_sketch + "\n" if proof_sketch else "") + (
+                    f"Generated candidate rejected by Lean transport guard: {reject_reason}."
+                )
+                lean_code = ""
+                confidence = 0.0
+
         return ProofCandidate(
             source_results=results,
             proof_lean=lean_code,
@@ -287,6 +303,12 @@ class ProofSeeker:
         import subprocess, tempfile
 
         logger.info("ChatGPT audit chain for '%s'...", target_name)
+
+        if os.environ.get("INFOGEOMETRY_ENABLE_AUTONOMOUS_SOURCE_REPAIR") != "1":
+            logger.warning(
+                "Autonomous source repair is disabled; set INFOGEOMETRY_ENABLE_AUTONOMOUS_SOURCE_REPAIR=1 to allow aiClaw promotion"
+            )
+            return False
 
         if not target_file.exists():
             logger.warning("Target file not found: %s", target_file)
@@ -388,6 +410,11 @@ class ProofSeeker:
             logger.warning("No Lean code to formalize")
             return False
 
+        reject_reason = lean_candidate_reject_reason(candidate.proof_lean, allow_snippet=True)
+        if reject_reason:
+            logger.warning("Rejected candidate before source write: %s", reject_reason)
+            return False
+
         original = target_file.read_text(encoding="utf-8")
         lines = original.split("\n")
         if target_line > len(lines):
@@ -484,9 +511,15 @@ class ProofSeeker:
                 import re as _re
                 blocks = _re.findall(r"```(?:lean4|lean)?\s*\n(.*?)```", fix_output, _re.DOTALL)
                 if blocks:
-                    proof_lines = "\n".join(b.strip() for b in blocks).split("\n")
+                    fixed_proof = "\n".join(b.strip() for b in blocks)
                 else:
-                    proof_lines = fix_output.strip().split("\n")
+                    fixed_proof = fix_output.strip()
+
+                reject_reason = lean_candidate_reject_reason(fixed_proof, allow_snippet=True)
+                if reject_reason:
+                    logger.warning("Rejected fix candidate before next source write: %s", reject_reason)
+                    return False
+                proof_lines = fixed_proof.split("\n")
 
             except Exception as exc:
                 logger.error("  Formalization error: %s", exc)

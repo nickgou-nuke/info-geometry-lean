@@ -7,6 +7,7 @@ __pycache__/
 *.pyc
 .venv/
 .venv
+.venv-*/
 
 # Local tokens / credentials
 token-hugging
@@ -159,6 +160,9 @@ logs/
 .changes/
 .pi/
 .ulam/
+.claude/
+.hermes/reports/
+.papers/
 artifacts/
 graph_overlay_out/
 node_modules/
@@ -178,6 +182,8 @@ stream.js
 scratch*.lean
 temp_trace.lean
 test.lean
+test_*.lean
+.tmp_*.lean
 fix_file.py
 fix_generator_lemmas.py
 gen_proofs.py
@@ -194,6 +200,26 @@ external/afp/
 external/FrogBird/theorem_index.json
 external_refs/afp/
 external_refs/mathlib/
+external_refs/*
+!external_refs/
+!external_refs/README.md
+!external_refs/FrogBird/
+!external_refs/FrogBird/*.json
+!external_refs/FrogBird/*.md
 leantrail_v13_honest_sorry_dropins/
 leantrail_v14_critic_lane/
 .DEEPSEEK_API_KEY
+
+# Local installers, duplicate clones, and graph dumps.
+Miniforge*.sh
+REAL-Prover/
+REAL-Prover
+aihub/
+arango_export/
+src/hermes-agent/
+src/infogeometry/
+ast_graph.json
+connection_formalization_graph.json
+knowledge_graph.json
+*.TXT
+*.pdf

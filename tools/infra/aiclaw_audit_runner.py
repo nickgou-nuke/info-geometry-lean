@@ -28,6 +28,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from tools.infra.aiclaw_chat import DEFAULT_QUEUE_ROOT, ask_ai
+from tools.infra.lean_audit_prompt import lean_candidate_reject_reason
 
 
 DEFAULT_PLATFORM = os.environ.get("AICLAW_PLATFORM", "chatgpt")
@@ -168,10 +169,12 @@ def extract_lean_code(text: str) -> str:
     blocks = re.findall(r"```(?:lean4|lean)?\s*\n(.*?)```", text, flags=re.DOTALL)
     if blocks:
         for block in blocks:
-            if "import " in block or "namespace " in block or "/-!" in block:
-                return normalize_candidate(block)
-        return normalize_candidate(blocks[0])
-    return normalize_candidate(text)
+            candidate = normalize_candidate(block)
+            if not lean_candidate_reject_reason(candidate):
+                return candidate
+        return ""
+    candidate = normalize_candidate(text)
+    return "" if lean_candidate_reject_reason(candidate) else candidate
 
 
 def candidate_path(target_file: Path, repo_root: Path) -> Path:
@@ -222,6 +225,10 @@ def ask_replacement(prompt: str, *, timeout: int, new: bool) -> str:
 
 def try_candidate(candidate: str, *, label: str, target_file: Path, repo_root: Path, original: str) -> tuple[bool, str, str]:
     candidate = normalize_candidate(candidate)
+    reject_reason = lean_candidate_reject_reason(candidate)
+    if reject_reason:
+        print(f"CANDIDATE_REJECTED {label}: {reject_reason}")
+        return False, reject_reason, candidate
     path = candidate_path(target_file, repo_root)
     path.write_text(candidate, encoding="utf-8")
     print(f"CANDIDATE_SAVED {label}: {path} {len(candidate)} chars {candidate.count(chr(10))} lines")

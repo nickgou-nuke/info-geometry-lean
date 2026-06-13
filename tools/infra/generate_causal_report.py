@@ -3,7 +3,7 @@
 ⚖️ THE PAULI CAUSAL AUDITOR (ArangoDB SCC-Grounded)
 Truth lives in Lean; structure lives in the graph.
 
-This script replaces legacy networkx topological sorts with formal 
+This script replaces legacy networkx topological sorts with formal
 Causal Stratification from the ArangoDB SCC topology overlay.
 
 The 'True Root Order' is defined by the DAG depth and transitive reach
@@ -32,6 +32,32 @@ else:
 DECLARATION_RE = re.compile(
     r"(?m)^\s*(def|theorem|lemma|structure|class|inductive|axiom|opaque|abbrev|instance)\b"
 )
+
+QUALIFIED_DECL_RE = re.compile(
+    r"(?m)^\s*(def|theorem|lemma|structure|class|inductive|axiom|opaque|abbrev|instance)\s+InfoGeometry(\.|$)"
+)
+
+INFOGEOMETRY_NAMESPACE_RE = re.compile(r"(?m)^\s*namespace\s+InfoGeometry(\.|\b)")
+
+DAG_EXCLUDED_PREFIXES = (
+    "lean/InfoGeometry/External/",
+)
+
+DAG_DUPLICATE_OWNER_FILES = {
+    # `InfoGeometry.Clifford.All` owns the anticommutator version; this sibling
+    # exports the same public constant `InfoGeometry.Clifford.polarFromQuadratic`.
+    "lean/InfoGeometry/Clifford/QuadraticPolarBridge.lean",
+    # `InfoGeometry.Projective.All` owns `PolarConcrete`; these siblings export
+    # the same public `ZornCell.polarZ3` surface.
+    "lean/InfoGeometry/Projective/SplitOctonions/PolarIncidenceConcrete.lean",
+    "lean/InfoGeometry/Projective/SplitOctonions/ProjectiveZornPolarIncidence.lean",
+    # These are kept outside the DAG root because they duplicate Causal/Audit
+    # owner declarations already imported through the stable DAG lane.
+    "lean/InfoGeometry/Causal/Algebra.lean",
+    "lean/InfoGeometry/Causal/TriFacetInstantiation.lean",
+    # `InfoGeometry.Categorical.Gromov` owns this public Gromov declaration.
+    "lean/InfoGeometry/Categorical/GromovPositiveCone.lean",
+}
 
 
 def strip_lean_comments(text: str) -> str:
@@ -62,9 +88,14 @@ def strip_lean_comments(text: str) -> str:
 def declaration_bearing_files(root: Path) -> set[str]:
     files: set[str] = set()
     for path in (root / "lean" / "InfoGeometry").rglob("*.lean"):
+        rel = path.relative_to(root).as_posix()
+        if rel in DAG_DUPLICATE_OWNER_FILES or rel.startswith(DAG_EXCLUDED_PREFIXES):
+            continue
         text = strip_lean_comments(path.read_text(encoding="utf-8", errors="ignore"))
-        if DECLARATION_RE.search(text):
-            files.add(path.relative_to(root).as_posix())
+        if not DECLARATION_RE.search(text):
+            continue
+        if INFOGEOMETRY_NAMESPACE_RE.search(text) or QUALIFIED_DECL_RE.search(text):
+            files.add(rel)
     return files
 
 
@@ -90,16 +121,41 @@ def graph_coverage(root: Path, profiles: dict[str, Any]) -> dict[str, Any]:
     repo_files = declaration_bearing_files(root)
     covered_files = indexed_files(root, profiles)
     missing = sorted(repo_files - covered_files)
+    all_decl_files: set[str] = set()
+    excluded_external: list[str] = []
+    excluded_duplicate_owner: list[str] = []
+    excluded_namespace_mismatch: list[str] = []
+    for path in (root / "lean" / "InfoGeometry").rglob("*.lean"):
+        rel = path.relative_to(root).as_posix()
+        text = strip_lean_comments(path.read_text(encoding="utf-8", errors="ignore"))
+        if not DECLARATION_RE.search(text):
+            continue
+        all_decl_files.add(rel)
+        if rel.startswith(DAG_EXCLUDED_PREFIXES):
+            excluded_external.append(rel)
+        elif rel in DAG_DUPLICATE_OWNER_FILES:
+            excluded_duplicate_owner.append(rel)
+        elif rel not in repo_files and rel not in covered_files:
+            excluded_namespace_mismatch.append(rel)
     import_only = sorted(
         path.relative_to(root).as_posix()
         for path in (root / "lean" / "InfoGeometry").rglob("*.lean")
-        if path.relative_to(root).as_posix() not in repo_files
+        if path.relative_to(root).as_posix() not in all_decl_files
     )
     return {
         "repo_decl_files": len(repo_files),
         "decl_index_files": len(covered_files),
         "missing_decl_files_count": len(missing),
         "missing_decl_files": missing,
+        "excluded_decl_files_count": (
+            len(excluded_external) + len(excluded_duplicate_owner) + len(excluded_namespace_mismatch)
+        ),
+        "excluded_external_decl_files_count": len(excluded_external),
+        "excluded_external_decl_files": sorted(excluded_external),
+        "excluded_duplicate_owner_files_count": len(excluded_duplicate_owner),
+        "excluded_duplicate_owner_files": sorted(excluded_duplicate_owner),
+        "excluded_namespace_mismatch_files_count": len(excluded_namespace_mismatch),
+        "excluded_namespace_mismatch_files": sorted(excluded_namespace_mismatch),
         "import_only_files_count": len(import_only),
         "import_only_files": import_only,
         "is_partial": bool(missing),
@@ -119,7 +175,7 @@ def main() -> int:
     # 1. Load ground truth from Pauli Authority (ArangoDB SCCs)
     print("[pauli-causal] Loading formal topology from ArangoDB authority...")
     decl_key_to_full, profiles = load_decl_graph(root)
-    
+
     if not profiles:
         print("[pauli-causal] ERROR: Pauli Authority is unreachable.")
         return 1
@@ -131,7 +187,7 @@ def main() -> int:
 
     # 3. Identify Foundations (L0-L1 Roots)
     foundations = [p for p in backbone if p.depth <= 2][:50]
-    
+
     # 4. Identify Capstones (Top of the Spire)
     capstones = [p for p in profiles.values() if p.structural_role == "capstone_endpoint"]
     capstones.sort(key=lambda x: x.depth, reverse=True)
@@ -147,7 +203,7 @@ def main() -> int:
         "| Foundation | Depth | Transitive Reach | Location |",
         "| :--- | :---: | :---: | :--- |"
     ]
-    
+
     for f in foundations:
         md_lines.append(f"| `{f.name}` | {f.depth} | {f.transitive_reverse_reach} | `{f.file}:{f.line}` |")
 
@@ -157,7 +213,7 @@ def main() -> int:
         "| Theorem | Depth | Downstream Mass | Role |",
         "| :--- | :---: | :---: | :--- |"
     ])
-    
+
     mid_strata = [p for p in backbone if 2 < p.depth < 8][:50]
     for m in mid_strata:
         md_lines.append(f"| `{m.name}` | {m.depth} | {m.descendant_mass} | `{m.structural_role}` |")
@@ -168,12 +224,12 @@ def main() -> int:
         "| Capstone | Peak Depth | Upstream Roots | Location |",
         "| :--- | :---: | :---: | :--- |"
     ])
-    
+
     for c in capstones[:30]:
         md_lines.append(f"| `{c.name}` | {c.depth} | {c.transitive_reverse_reach} | `{c.file}:{c.line}` |")
 
     md_out.write_text("\n".join(md_lines))
-    
+
     # Save formal JSON causal order together with the coverage payload consumed by doctor/status tools.
     causal_order = [
         {"name": p.name, "depth": p.depth, "mass": p.descendant_mass, "reach": p.transitive_reverse_reach}

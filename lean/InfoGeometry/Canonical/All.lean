@@ -1184,6 +1184,7 @@ import InfoGeometry.Canonical.JordanMinkowski
 import InfoGeometry.Canonical.ChirlaTorsionHierarchy
 import InfoGeometry.Canonical.OctonionCl8
 import InfoGeometry.Canonical.SpinStatisticsBridge
+import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
 
 namespace InfoGeometry
 
@@ -1210,4 +1211,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge

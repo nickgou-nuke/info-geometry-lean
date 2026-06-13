@@ -49,13 +49,44 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+LEAN_FENCE_RE = re.compile(r"```(?:lean|lean4)\s*\n(.*?)```", re.S | re.I)
+LEAN_COMMAND_RE = re.compile(
+    r"^\s*(?:import|namespace|section|open|variable|universe|noncomputable|"
+    r"def|theorem|lemma|example|structure|class|instance|inductive|abbrev|end)\b",
+    re.M,
+)
+PROSE_REFUSAL_RE = re.compile(
+    r"\b(?:could you clarify|doesn['’]t exist|i can(?:not|'t)|i’m sorry|i am sorry|"
+    r"as an ai|the file .* line \d+|please provide|repo root)\b",
+    re.I | re.S,
+)
+
+
+def looks_like_lean_source(text: str) -> bool:
+    body = text.strip()
+    return bool(body) and bool(LEAN_COMMAND_RE.search(body)) and not PROSE_REFUSAL_RE.search(body)
+
+
 def strip_code_fences(text: str) -> str:
-    lines = text.strip().splitlines()
-    if lines and lines[0].strip().startswith("```"):
-        lines = lines[1:]
-    if lines and lines[-1].strip().startswith("```"):
-        lines = lines[:-1]
-    return "\n".join(lines).strip()
+    """Extract Lean code from a model response, rejecting prose.
+
+    The previous implementation stripped only first/last fence lines and would
+    treat an unfenced conversational refusal as Lean.  That allowed responses
+    such as "The file ... doesn't exist; could you clarify ..." to be written
+    into `.lean` artifacts and later copied into owner files.  Accept either a
+    fenced Lean block or raw text that already looks like Lean source; reject
+    everything else loudly.
+    """
+    body = text.strip()
+    fenced = LEAN_FENCE_RE.findall(body)
+    if fenced:
+        candidate = fenced[0].strip()
+        if looks_like_lean_source(candidate):
+            return candidate
+        raise ValueError("model Lean fence did not contain Lean-shaped source")
+    if looks_like_lean_source(body):
+        return body
+    raise ValueError("model response did not contain Lean-shaped source")
 
 
 def compile_lean(repo_root: Path, lean_file: Path) -> subprocess.CompletedProcess[str]:

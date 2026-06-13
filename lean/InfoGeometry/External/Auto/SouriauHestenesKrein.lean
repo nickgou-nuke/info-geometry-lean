@@ -1,4 +1,4 @@
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
@@ -96,8 +96,12 @@ theorem sectorTripotentOperator_cube
     sectorTripotentOperator q * sectorTripotentOperator q *
       sectorTripotentOperator q = sectorTripotentOperator q := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [sectorTripotentOperator, Matrix.mul_apply, Fin.sum_univ_two, hq]
+  fin_cases i <;> fin_cases j
+  · simp [sectorTripotentOperator, Matrix.mul_apply, Fin.sum_univ_two]
+    nlinarith [hq]
+  · simp [sectorTripotentOperator, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [sectorTripotentOperator, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [sectorTripotentOperator, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem det_sectorTripotentOperator (q : ℝ) :
     (sectorTripotentOperator q).det = q := by

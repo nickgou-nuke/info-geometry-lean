@@ -9,6 +9,7 @@ import InfoGeometry.Canonical.OctonionCondensate
 import InfoGeometry.Canonical.SouriauBostConnesTransition
 import InfoGeometry.Canonical.QuaternionEmbedding
 import InfoGeometry.Canonical.BiquaternionSU2
+import InfoGeometry.Canonical.BiquaternionDualRootRegularizer
 import InfoGeometry.Canonical.BiquaternionTorsionBridge
 import InfoGeometry.Canonical.EmergentGravityActionVariation
 import InfoGeometry.Canonical.TorsionSpinorEinsteinFinite

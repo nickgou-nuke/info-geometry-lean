@@ -1,58 +1,46 @@
-# ==============================================================================
-# SAGE EXACT FIBONACCI F/R BRAID VALIDATION
-# ==============================================================================
-# Exact Sage certification of the F/R relations over algebraic cyclotomic fields
-# as requested by the Omega Automath topological architecture rules.
+#!/usr/bin/env python3
+"""Sage exact finite Fibonacci F/R braid witness.
 
-def verify_exact_fibonacci_braid_fr():
-    print("=== EXACT FIBONACCI F/R BRAID VALIDATION ===")
-    
-    # K is the cyclotomic field adjoining the 10th roots of unity.
-    K.<zeta10> = CyclotomicField(10)
-    
-    # The golden ratio phi = 2*cos(pi/5) = zeta10 + zeta10^-1
-    phi = zeta10 + zeta10^-1
-    invPhi = 1 / phi
-    
-    # We need sqrt_invPhi. We can adjoin a root or just check the F relations
-    # symbolically without expanding the full field if we want, but since Sage
-    # can do exact algebraic closures, we use the algebraic field Qbar
-    
-    phi_val = QQbar((1 + sqrt(5))/2)
-    invPhi_val = 1 / phi_val
-    sqrtInvPhi_val = sqrt(invPhi_val)
-    
-    rOne_val = QQbar(exp(-4 * I * pi / 5))
-    rTau_val = QQbar(exp(3 * I * pi / 5))
-    
-    F = Matrix(QQbar, [
-        [invPhi_val, sqrtInvPhi_val],
-        [sqrtInvPhi_val, -invPhi_val]
-    ])
-    
-    R = Matrix(QQbar, [
-        [rOne_val, 0],
-        [0, rTau_val]
-    ])
-    
-    # 1. Exact F^2 = I Validation
-    F2 = F * F
-    I_mat = Matrix(QQbar, [[1, 0], [0, 1]])
-    assert F2 == I_mat, "F_involutive failed!"
-    print("1. [SUCCESS] Exact F^2 = I (F is involutive).")
-    
-    # 2. Exact R Unitary Validation
-    R_dagger = R.conjugate_transpose()
-    assert R * R_dagger == I_mat, "R is not unitary!"
-    print("2. [SUCCESS] Exact R is Unitary.")
-    
-    # 3. Exact Artin Braid Relation: R * B * R = B * R * B where B = F * R * F
+Runs with ordinary Python from the Sage environment:
+
+    /home/goutev/miniforge3/envs/sage/bin/python tools/sage/fibonacci_braid_fr_exact.sage.py
+
+The witness is algebraic: work in `QQ[q, s] / (Phi_10(q), s^2 - tau)` with
+`tau = q^2 - q^3`.
+"""
+
+from __future__ import annotations
+
+from sage.all import Matrix, PolynomialRing, QQ, identity_matrix
+
+
+def main() -> None:
+    print("=== SAGE EXACT FIBONACCI F/R BRAID VALIDATION ===")
+
+    P = PolynomialRing(QQ, names=("q", "s"))
+    q, s = P.gens()
+    phi10 = q**4 - q**3 + q**2 - q + 1
+    tau = q**2 - q**3
+    relation_s = s**2 - tau
+    quotient = P.quotient([phi10, relation_s], names=("qbar", "sbar"))
+    qbar, sbar = quotient.gens()
+    taubar = qbar**2 - qbar**3
+
+    F = Matrix(quotient, [[taubar, sbar], [sbar, -taubar]])
+    I2 = identity_matrix(quotient, 2)
+    assert F * F == I2
+    print("1. [SUCCESS] exact F^2 = I in QQ[q,s]/(Phi_10, s^2-tau).")
+
+    # Convention used by the existing finite polynomial owner.
+    R = Matrix(quotient, [[qbar**4, 0], [0, qbar**7]])
+    R_inv = Matrix(quotient, [[qbar**6, 0], [0, qbar**3]])
+    assert R * R_inv == I2
+    print("2. [SUCCESS] exact R unitary/invertible via cyclotomic inverse phases.")
+
     B = F * R * F
-    left = R * B * R
-    right = B * R * B
-    
-    assert left == right, "Artin Braid Relation failed!"
-    print("3. [SUCCESS] Exact Artin Braid Relation: sigma_1 sigma_2 sigma_1 = sigma_2 sigma_1 sigma_2.")
+    assert R * B * R == B * R * B
+    print("3. [SUCCESS] exact Artin relation R B R = B R B.")
 
-if __name__ == '__main__':
-    verify_exact_fibonacci_braid_fr()
+
+if __name__ == "__main__":
+    main()

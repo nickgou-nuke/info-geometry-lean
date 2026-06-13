@@ -30,7 +30,7 @@ noncomputable section
 
 namespace InfoGeometry.Arithmetic.LFunctionRepresentationBridge
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
+open InfoGeometry.Thermodynamics.SouriauWeylPartition
 
 /-- 
 A Gauge Field (Character) over the Prime Roots.
@@ -53,7 +53,7 @@ The positive roots α (primes) are weighted by the gauge field χ(p).
 def twistedEulerProduct 
     {G : Type*} [Group G]
     (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G) : ℂ :=
-  ∏ p ∈ positiveRoots, (1 - twist.χ p * (p : ℂ)^(-temperature_s))⁻¹
+  ∏ p ∈ positiveRoots, (1 - twist.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p temperature_s)⁻¹
 
 /--
 The Twisted Souriau-Weyl Partition Bridge.
@@ -94,7 +94,7 @@ This is the generalized statistical sum of the twisted vacuum.
 @[rep_depth transport]
 def twistedPartitionFunction : ℂ :=
   ∏ p ∈ TB.base_bridge.positiveRoots, 
-    (1 - TB.gauge.χ p * (p : ℂ)^(-TB.base_bridge.temperature.s))⁻¹
+    (1 - TB.gauge.χ p * InfoGeometry.Thermodynamics.souriauEvaluation p TB.base_bridge.temperature.s)⁻¹
 
 /--
 Langlands Thermodynamic Equivalence (Functoriality).

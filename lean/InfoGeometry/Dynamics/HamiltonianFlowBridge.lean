@@ -23,7 +23,7 @@ noncomputable section
 
 namespace InfoGeometry.Dynamics.HamiltonianFlowBridge
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
+open InfoGeometry.Thermodynamics.SouriauWeylPartition
 open InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 open InfoGeometry.Krein

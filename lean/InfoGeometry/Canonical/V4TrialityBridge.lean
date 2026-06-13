@@ -1,5 +1,7 @@
 import Mathlib
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.Topology.WallpaperKleinBottlePresentation
+import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Canonical.V4SemidirectS3Bridge
 
 /-!
@@ -16,8 +18,12 @@ below is:
 
 * the finite Klein-four multiplication/involution fragment from
   `Topology.V4RootSystem`;
+* the finite tripotent/trifactor and non-identity-`V₄` triality packet from
+  `Topology.V4RootSystem`;
 * the imported finite `V₄ ⋊ S₃` semidirect model from
   `Canonical.V4SemidirectS3Bridge`;
+* the pointwise wallpaper `pg` Klein-bottle relation and finite Pin-style glide
+  square from the topology owners;
 * a concrete affine boundary calculation whose defect is
   `(2θ₂ + 2π, 0)`.
 -/
@@ -98,5 +104,36 @@ theorem cocycle_as_triality_obstruction (θ₂ : ℝ) (p : BoundaryCoord) :
   | mk x y =>
       simp [coordSub, boundaryK, boundaryW]
       ring
+
+/--
+Finite bridge packet for the current Varlamov/V₄/trifactor/triality/glide
+thread.
+
+This packages only theorem-owned finite identities:
+* tripotent/trifactor classification and non-identity `V₄` 3-cycle;
+* concrete `pg` wallpaper relation `G T_y G⁻¹ = T_y⁻¹`;
+* finite Pin-style glide square in split `(5,5)` coordinates.
+
+It is not a classification theorem for Klein bottles, wallpaper groups,
+`Cl(1,1)`, `Pin(5,5)`, or D₄/Spin(8) triality.
+-/
+theorem varlamov_v4_trifactor_triality_glide_packet
+    (p : InfoGeometry.Topology.Wallpaper.Lattice2D)
+    (x : InfoGeometry.Topology.Pin55ReflectionGlide.Vec55) :
+    InfoGeometry.Topology.V4RootSystem.VarlamovV4TrifactorTrialityStatement ∧
+      (InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
+          InfoGeometry.Topology.Wallpaper.concretePG).glide
+        ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
+            InfoGeometry.Topology.Wallpaper.concretePG).yTranslation
+          ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
+              InfoGeometry.Topology.Wallpaper.concretePG).glide.symm p)) =
+        ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
+            InfoGeometry.Topology.Wallpaper.concretePG).yTranslation.symm p) ∧
+      InfoGeometry.Topology.Pin55ReflectionGlide.glide01
+          (InfoGeometry.Topology.Pin55ReflectionGlide.glide01 x) =
+        InfoGeometry.Topology.Pin55ReflectionGlide.translate1 1 x := by
+  exact ⟨InfoGeometry.Topology.V4RootSystem.varlamov_v4_trifactor_triality_packet,
+    InfoGeometry.Topology.WallpaperKleinBottlePresentation.concrete_kleinBottlePresentation_relation p,
+    InfoGeometry.Topology.Pin55ReflectionGlide.glide01_squared_eq_translate1 x⟩
 
 end InfoGeometry.Canonical.V4TrialityBridge

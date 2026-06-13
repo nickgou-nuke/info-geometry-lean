@@ -7,8 +7,23 @@ This module records the Klein four group table associated with the two sign
 reflections of the finite `A₁ × A₁` root picture.  It proves the point-inversion
 composition and involution laws.
 
-It does **not** prove `SO(4)`, Lorentz symmetry, spin geometry, or relativistic
-spacetime emergence.  Those require additional representation/manifold data not
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+* the Klein-four multiplication/involution table;
+* the tripotent scalar spectrum `{-1,0,+1}` and projector-style classifiers;
+* the finite `A₁ × A₁` sign-root action of `V₄`;
+* a triality-shaped 3-cycle on the three non-identity `V₄` labels.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+None in this file.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+This file does **not** prove `SO(4)`, Lorentz symmetry, spin geometry,
+`Cl(1,1)` representation equivalence, D₄/Spin(8) triality, a Klein-bottle
+quotient theorem, wallpaper classification, or relativistic spacetime
+emergence.  Those require additional representation/manifold/topology data not
 present in this finite Cayley-table file.
 -/
 
@@ -56,5 +71,222 @@ theorem v4_involution (x : V4Group) : x * x = I := by
 /-- The point inversion is also an involution. -/
 theorem v4_point_inversion_involution : W12 * W12 = I := by
   rfl
+
+/-- The three non-identity `V₄` labels. -/
+inductive NontrivialV4 where
+  | x
+  | y
+  | xy
+  deriving DecidableEq, Repr
+
+namespace NontrivialV4
+
+/-- Inclusion of the non-identity labels into the Klein-four group. -/
+def toV4 : NontrivialV4 → V4Group
+  | x => W1
+  | y => W2
+  | xy => W12
+
+/-- Triality-shaped 3-cycle on the three non-identity `V₄` labels. -/
+def trialityCycle : NontrivialV4 → NontrivialV4
+  | x => y
+  | y => xy
+  | xy => x
+
+/-- The non-identity `V₄` triality cycle has order three. -/
+theorem trialityCycle_cube (g : NontrivialV4) :
+    trialityCycle (trialityCycle (trialityCycle g)) = g := by
+  cases g <;> rfl
+
+/-- The triality cycle never lands on the identity after inclusion into `V₄`. -/
+theorem trialityCycle_toV4_ne_identity (g : NontrivialV4) :
+    toV4 (trialityCycle g) ≠ I := by
+  cases g <;> decide
+
+end NontrivialV4
+
+/-- The three scalar states selected by the tripotent polynomial `x^3 = x`. -/
+inductive TripotentState where
+  | neg
+  | zero
+  | pos
+  deriving DecidableEq, Repr
+
+namespace TripotentState
+
+/-- Integer readout of the finite tripotent spectrum `{-1,0,+1}`. -/
+def toInt : TripotentState → ℤ
+  | neg => -1
+  | zero => 0
+  | pos => 1
+
+/-- Every finite tripotent state satisfies `x^3=x`. -/
+theorem cube_eq_self (s : TripotentState) : toInt s ^ 3 = toInt s := by
+  cases s <;> norm_num [toInt]
+
+/-- Projector onto the `-1` branch of the finite trifactor spectrum. -/
+def pNeg : TripotentState → ℤ
+  | neg => 1
+  | zero => 0
+  | pos => 0
+
+/-- Projector onto the `0` branch of the finite trifactor spectrum. -/
+def pZero : TripotentState → ℤ
+  | neg => 0
+  | zero => 1
+  | pos => 0
+
+/-- Projector onto the `+1` branch of the finite trifactor spectrum. -/
+def pPos : TripotentState → ℤ
+  | neg => 0
+  | zero => 0
+  | pos => 1
+
+/-- The three finite trifactor projectors partition the scalar state. -/
+theorem trifactor_projector_partition (s : TripotentState) :
+    pNeg s + pZero s + pPos s = 1 := by
+  cases s <;> norm_num [pNeg, pZero, pPos]
+
+/-- Each finite trifactor projector is idempotent. -/
+theorem trifactor_projector_idempotent (s : TripotentState) :
+    pNeg s * pNeg s = pNeg s ∧
+      pZero s * pZero s = pZero s ∧
+      pPos s * pPos s = pPos s := by
+  cases s <;> norm_num [pNeg, pZero, pPos]
+
+/-- The tripotent scalar acts by the expected eigenvalue on each trifactor branch. -/
+theorem trifactor_eigen_readout (s : TripotentState) :
+    toInt s * pNeg s = -pNeg s ∧
+      toInt s * pZero s = 0 ∧
+      toInt s * pPos s = pPos s := by
+  cases s <;> norm_num [toInt, pNeg, pZero, pPos]
+
+/-- Triality-shaped cycle on the three trifactor branches. -/
+def trialityCycle : TripotentState → TripotentState
+  | neg => zero
+  | zero => pos
+  | pos => neg
+
+/-- The trifactor branch triality cycle has order three. -/
+theorem trialityCycle_cube (s : TripotentState) :
+    trialityCycle (trialityCycle (trialityCycle s)) = s := by
+  cases s <;> rfl
+
+end TripotentState
+
+/-- The four roots of the finite `A₁ × A₁` sign-root picture. -/
+inductive A1xA1Root where
+  | posX
+  | negX
+  | posY
+  | negY
+  deriving DecidableEq, Repr
+
+namespace A1xA1Root
+
+/-- Integer coordinates of the finite roots. -/
+def coord : A1xA1Root → ℤ × ℤ
+  | posX => (1, 0)
+  | negX => (-1, 0)
+  | posY => (0, 1)
+  | negY => (0, -1)
+
+/-- Every coordinate of every finite root lies in the tripotent spectrum. -/
+theorem coord_tripotent_spectrum (r : A1xA1Root) :
+    ((coord r).1 = -1 ∨ (coord r).1 = 0 ∨ (coord r).1 = 1) ∧
+      ((coord r).2 = -1 ∨ (coord r).2 = 0 ∨ (coord r).2 = 1) := by
+  cases r <;> simp [coord]
+
+/-- The first coordinate sign reflection. -/
+def reflectX : A1xA1Root → A1xA1Root
+  | posX => negX
+  | negX => posX
+  | posY => posY
+  | negY => negY
+
+/-- The second coordinate sign reflection. -/
+def reflectY : A1xA1Root → A1xA1Root
+  | posX => posX
+  | negX => negX
+  | posY => negY
+  | negY => posY
+
+/-- Point inversion on the `A₁ × A₁` root set. -/
+def pointInvert : A1xA1Root → A1xA1Root
+  | posX => negX
+  | negX => posX
+  | posY => negY
+  | negY => posY
+
+/-- `reflectX` is an involution. -/
+theorem reflectX_involutive : Function.Involutive reflectX := by
+  intro r
+  cases r <;> rfl
+
+/-- `reflectY` is an involution. -/
+theorem reflectY_involutive : Function.Involutive reflectY := by
+  intro r
+  cases r <;> rfl
+
+/-- Point inversion is an involution on the finite root set. -/
+theorem pointInvert_involutive : Function.Involutive pointInvert := by
+  intro r
+  cases r <;> rfl
+
+/-- The two coordinate reflections commute on the finite roots. -/
+theorem reflectX_reflectY_commute (r : A1xA1Root) :
+    reflectX (reflectY r) = reflectY (reflectX r) := by
+  cases r <;> rfl
+
+/-- The composition of the two coordinate reflections is point inversion. -/
+theorem reflectX_reflectY_eq_pointInvert (r : A1xA1Root) :
+    reflectX (reflectY r) = pointInvert r := by
+  cases r <;> rfl
+
+/-- The concrete `V₄` action on finite `A₁ × A₁` roots. -/
+def v4Action : V4Group → A1xA1Root → A1xA1Root
+  | I => id
+  | W1 => reflectX
+  | W2 => reflectY
+  | W12 => pointInvert
+
+/-- Every element of the concrete `V₄` action is an involution. -/
+theorem v4Action_involutive (g : V4Group) : Function.Involutive (v4Action g) := by
+  intro r
+  cases g <;> cases r <;> rfl
+
+/-- The finite action respects multiplication in the Klein-four table. -/
+theorem v4Action_mul (g h : V4Group) (r : A1xA1Root) :
+    v4Action (g * h) r = v4Action g (v4Action h r) := by
+  cases g <;> cases h <;> cases r <;> rfl
+
+end A1xA1Root
+
+/--
+Finite Varlamov/V₄/trifactor statement: the closed content is only tripotent
+classification, the `A₁ × A₁` root action, and a triality-shaped 3-cycle on the
+three non-identity `V₄` labels.
+-/
+def VarlamovV4TrifactorTrialityStatement : Prop :=
+    (∀ s : TripotentState, TripotentState.toInt s ^ 3 = TripotentState.toInt s) ∧
+    (∀ s : TripotentState,
+      TripotentState.pNeg s + TripotentState.pZero s + TripotentState.pPos s = 1) ∧
+    (∀ s : TripotentState,
+      TripotentState.pNeg s * TripotentState.pNeg s = TripotentState.pNeg s ∧
+        TripotentState.pZero s * TripotentState.pZero s = TripotentState.pZero s ∧
+        TripotentState.pPos s * TripotentState.pPos s = TripotentState.pPos s) ∧
+    (∀ g : NontrivialV4, NontrivialV4.trialityCycle
+      (NontrivialV4.trialityCycle (NontrivialV4.trialityCycle g)) = g) ∧
+    (∀ g : V4Group, Function.Involutive (A1xA1Root.v4Action g)) ∧
+    (∀ g h : V4Group, ∀ r : A1xA1Root,
+      A1xA1Root.v4Action (g * h) r =
+        A1xA1Root.v4Action g (A1xA1Root.v4Action h r))
+
+/-- The finite Varlamov/V₄/trifactor/triality statement is fully closed. -/
+theorem varlamov_v4_trifactor_triality_packet :
+    VarlamovV4TrifactorTrialityStatement := by
+  exact ⟨TripotentState.cube_eq_self, TripotentState.trifactor_projector_partition,
+    TripotentState.trifactor_projector_idempotent, NontrivialV4.trialityCycle_cube,
+    A1xA1Root.v4Action_involutive, A1xA1Root.v4Action_mul⟩
 
 end InfoGeometry.Topology.V4RootSystem

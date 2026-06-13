@@ -92,28 +92,23 @@ namespace CliffordDonohoStarkOps
 
 variable {W : CliffordWaveletModel}
 variable (D : CliffordDonohoStark W)
-/-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-`noncollapse` — fully verified with a kernel-checkable proof.
-  Eliminates the `noncollapse_True : Prop` certificate wrapper.
-  Proves strict positivity of both supports via `weightedSupport_pos`,
-  `uncertaintyConstant_pos`, `signalSupport_nonneg`, `waveletSupport_nonneg`,
-  and `linarith` / `simp` for the zero-product contradiction.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
-`supportLowerBound` — delegates to structure field `donoho_stark_support`.
-`weightedSupport_pos` — derived from `supportLowerBound` + positivity of the gap.
-`noncollapse` — derived from `weightedSupport_pos` + nonnegativity fields.
-All proofs rely only on explicit hypothesis parameters and structure fields.
+  /-- Re-export of the stored wavelet-domain concentration nonnegativity. -/
+  @[rep_depth operator]
+  theorem waveletConcentration_nonneg
+      (g : SimilitudeParameter W.V → W.A) :
+      0 ≤ D.waveletConcentration g :=
+    D.waveletConcentration_nonneg g
 
-#### BUCKET 3: OPEN CLOSURE DEBT
-**None remaining.** `noncollapse_True` removed from structure.
-Every mathematical property is either a kernel-checked theorem or an
-explicit hypthesis in the structure fields (`donoho_stark_support` remains
-the gated certificate from the owner paper, which is the intended design).
--/
-/-- Re-export of the stored Donoho--Stark lower bound. -/
-@[rep_depth operator]
+  /-!
+  Closed theorem surface in this namespace:
+  - `supportLowerBound` re-exports the structure field `donoho_stark_support`.
+  - `weightedSupport_pos` derives strict positivity of the weighted support product
+    from the lower bound and the positive gap hypothesis.
+  -/
+
+  /-- Re-export of the stored Donoho--Stark lower bound. -/
+
 theorem supportLowerBound
     (hAdm : W.admissible)
     {f : W.Signal} {εT εΩ : ℝ}

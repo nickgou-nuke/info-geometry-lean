@@ -20,12 +20,24 @@ def main() -> None:
     assert comm(J0, Jp) == Jp
     assert comm(J0, Jm) == -Jm
 
+    up = Matrix(QQ, [[1], [0]])
+    down = Matrix(QQ, [[0], [1]])
+    assert Jp * up == zero_matrix(QQ, 2, 1)
+    assert Jp * down == up
+    assert Jm * up == down
+    assert Jm * down == zero_matrix(QQ, 2, 1)
+
     casimir = J0 * J0 + QQ(1) / 2 * (Jp * Jm + Jm * Jp)
     assert casimir == QQ(3) / 4 * identity_matrix(QQ, 2)
 
     E = QQ(0)
     H = Matrix(QQ, [[E, 0], [0, E]])
     assert H == zero_matrix(QQ, 2)
+
+    parity = Matrix(QQ, [[1, 0], [0, -1]])
+    assert (parity * identity_matrix(QQ, 2)).trace() == 0
+    P = Matrix(QQ, [[0, 1], [1, 0]])
+    assert P * P == identity_matrix(QQ, 2)
 
     print("ARXIV_2309_01382_SAGE_SU2_BACKBONE_OK")
     print("field=QQ")

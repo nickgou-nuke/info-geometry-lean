@@ -5,6 +5,7 @@ import InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 import InfoGeometry.OperatorAlgebra.AndreevHorizonBridge
 import InfoGeometry.OperatorAlgebra.AndreevLedger
+import InfoGeometry.OperatorAlgebra.AlbertCubicTripotent
 import InfoGeometry.OperatorAlgebra.AlgebraicPositiveNormalCone
 import InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness
 import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
@@ -178,4 +179,4 @@ and represented Drazin splitting.
 -/
 
 end InfoGeometry.OperatorAlgebra
-import InfoGeometry.OperatorAlgebra.AlbertCubicTripotent
+import InfoGeometry.OperatorAlgebra.SuperTKK

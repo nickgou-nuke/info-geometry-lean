@@ -15,6 +15,7 @@ import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.TripotentUniverse
 import InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge
 import InfoGeometry.Topology.V4RootSystem
+import InfoGeometry.Topology.VarlamovV4TrifactorKleinBridge
 import InfoGeometry.Topology.WallpaperSymmetry
 import InfoGeometry.Topology.WallpaperToWeylBridge
 import InfoGeometry.Topology.BrillouinKleinExceptionalTopology

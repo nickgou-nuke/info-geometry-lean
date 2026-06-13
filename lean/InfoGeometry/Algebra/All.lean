@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
+import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.NullCone
 import InfoGeometry.Projective.SplitOctonions
@@ -25,6 +26,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.FiniteSUSYBlocks
 import InfoGeometry.Algebra.AnyonFiniteSpinBraid
 import InfoGeometry.Algebra.AnyonBraidGA
+import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
@@ -56,6 +58,7 @@ import InfoGeometry.Algebra.SplitQuaternionFlows
 import InfoGeometry.Algebra.NilpotentModularAutomorphism
 import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT
+import InfoGeometry.Algebra.ZornMatrix
 /-!
 # InfoGeometry.Algebra.All
 
@@ -65,4 +68,4 @@ Umbrella module for the algebra layer.
 namespace InfoGeometry
 
 end InfoGeometry
-import InfoGeometry.Algebra.ZornMatrix
+import InfoGeometry.Algebra.JordanTripleTKK

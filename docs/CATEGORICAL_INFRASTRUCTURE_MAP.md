@@ -235,6 +235,18 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 
 ---
 
+## 7b. Factored Architecture Layers
+
+The repository has been hygienically refactored to decouple specific algebraic behaviors from concrete coordinates, separating abstract definitions across three core layers:
+
+1. **Layer 1: Core Spin Algebra** (`Algebra/FiniteSpinAlgebra.lean`) — Isolates the uncomplexified SU(2) angular momentum generators ($J_+, J_-, J_0$) and standard ladder commutation relations.
+2. **Layer 2: Finite SUSY / Parity Supergraded Blocks** (`Algebra/FiniteSUSYBlocks.lean`) — Structures the $\mathbb{Z}_2$ supergraded Lie algebra using decoupled supercharges ($A, A^\dagger$) and verifies the trace-free Witten index property on finite block-diagonal sectors.
+3. **Layer 3: Arithmetic Zeta Product-Zero Gate** (`Arithmetic/ZetaProductGate.lean`) — Implements the abstract product-zero gate over partition functions to ensure anomaly-free scaling.
+
+These three layers form the canonical entry points for downstream structural linkages like the CuntzUHFBridge.
+
+---
+
 ## 8. The Correct Order of Operations
 
 When adding new content:

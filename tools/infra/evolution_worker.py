@@ -246,30 +246,39 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                 formalized = False
                 attempt = 0
 
+                source_repair_enabled = os.environ.get("INFOGEOMETRY_ENABLE_AUTONOMOUS_SOURCE_REPAIR") == "1"
+
                 # Stage 0: ChatGPT auditor (slow but highly reliable)
                 attempt += 1
-                logger.info("Proof Seeker: attempt %d/3 — ChatGPT audit for '%s'", attempt, target_name)
-                try:
-                    # Full chain: send to ChatGPT, extract formatted code, save, compile, fix
-                    success, reason = seeker.audit_via_chatgpt(context_file, target_name, target_line)
-                    if success:
-                        logger.info("  Attempt %d: ✓ ChatGPT audit SUCCESS (%s)", attempt, reason)
-                        formalized = True
-                        # Mark as completed in queue
-                        try:
-                            aql(ep, db, usr, pwd,
-                                "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
-                                "UPDATE doc WITH {status: 'completed', score: 1.0, chatgpt_repaired: true} IN hive_tasks",
-                                {"tgt": tr.task.description})
-                        except Exception:
-                            pass
-                    else:
-                        logger.info("  Attempt %d: ✗ ChatGPT audit FAILED (%s)", attempt, reason)
-                    if formalized:
-                        sought += 1
-                        continue
-                except Exception as exc:
-                    logger.debug("  ChatGPT audit skipped: %s", exc)
+                if source_repair_enabled:
+                    logger.info("Proof Seeker: attempt %d/3 — ChatGPT audit for '%s'", attempt, target_name)
+                    try:
+                        # Full chain: send to ChatGPT, extract formatted code, save, compile, fix
+                        success = seeker.audit_via_chatgpt(context_file, target_name, target_line)
+                        if success:
+                            logger.info("  Attempt %d: ✓ ChatGPT audit SUCCESS", attempt)
+                            formalized = True
+                            # Mark as completed in queue
+                            try:
+                                aql(ep, db, usr, pwd,
+                                    "FOR doc IN hive_tasks FILTER doc.runtime_goal_packet.formal_target == @tgt "
+                                    "UPDATE doc WITH {status: 'completed', score: 1.0, chatgpt_repaired: true} IN hive_tasks",
+                                    {"tgt": tr.task.description})
+                            except Exception:
+                                pass
+                        else:
+                            logger.info("  Attempt %d: ✗ ChatGPT audit FAILED", attempt)
+                        if formalized:
+                            sought += 1
+                            continue
+                    except Exception as exc:
+                        logger.debug("  ChatGPT audit skipped: %s", exc)
+                else:
+                    logger.info(
+                        "Proof Seeker: attempt %d/3 — autonomous source repair disabled for '%s'",
+                        attempt,
+                        target_name,
+                    )
 
                 # Stage 1: Pi/DeepSeek direct generation
                 attempt += 1
@@ -277,9 +286,11 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                 candidate = seeker.digest([], target_name, context_code)
                 if candidate.proof_lean:
                     logger.info("  Attempt %d: candidate proof (%.2f confidence)", attempt, candidate.confidence)
-                    if target_line > 0 and context_file.exists():
+                    if source_repair_enabled and target_line > 0 and context_file.exists():
                         formalized = seeker.formalize(candidate, context_file, target_line)
                         logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                    elif not source_repair_enabled:
+                        logger.info("  Attempt %d: candidate kept read-only; autonomous source repair disabled", attempt)
                 if formalized:
                     sought += 1
                     continue
@@ -294,9 +305,11 @@ def run_evolution_cycle(skill_name: str, generations: int = 10) -> float:
                     candidate2 = seeker.digest(results, target_name, context_code)
                     if candidate2.proof_lean:
                         logger.info("  Attempt %d: candidate proof (%.2f confidence)", attempt, candidate2.confidence)
-                        if target_line > 0 and context_file.exists():
+                        if source_repair_enabled and target_line > 0 and context_file.exists():
                             formalized = seeker.formalize(candidate2, context_file, target_line)
                             logger.info("  Attempt %d: %s", attempt, "✓ SUCCESS" if formalized else "✗ FAILED")
+                        elif not source_repair_enabled:
+                            logger.info("  Attempt %d: candidate kept read-only; autonomous source repair disabled", attempt)
                 if formalized:
                     sought += 1
 

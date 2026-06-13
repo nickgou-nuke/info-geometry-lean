@@ -1,6 +1,4 @@
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
+import InfoGeometry.Canonical.BiQuaternionKahlerLagrangian
 
 /-!
 # InfoGeometry.Canonical.BiQuaternionKahlerKilling
@@ -11,7 +9,7 @@ on the Bi-Quaternion-Kähler manifold.
 
 1. **Skew-Symmetric Operators**: Generate the Killing vector fields $K(\Phi) = A\Phi$.
 2. **Potential Invariance**: The self-interacting potential is invariant under $K$.
-3. **Noether's Theorem**: The Noether charge $Q_K = g(K(\Phi), P)$ is strictly conserved 
+3. **Noether's Theorem**: The Noether charge $Q_K = g(K(\Phi), P)$ is strictly conserved
    along the Hamiltonian flow.
 -/
 
@@ -20,10 +18,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.BiQuaternionKahler
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-
-/-- The Kähler metric $g(X, Y)$ providing the kinetic energy structure. -/
-def KaehlerMetric (X Y : E) : ℝ :=
-  @inner ℝ _ _ X Y
 
 /-- A continuous linear map A is Skew-Symmetric if g(AX, Y) = -g(X, AY).
     These generate the Killing vector fields K(Φ) = A Φ on the flat manifold. -/

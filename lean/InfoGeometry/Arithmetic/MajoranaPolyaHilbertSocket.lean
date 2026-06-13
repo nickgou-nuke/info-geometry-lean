@@ -327,15 +327,19 @@ theorem normalizable_of_criticalLine
   (Z.normalizable_iff_criticalLine_sorryProof).mpr h
 
 /-- Concrete model: zero-mode packet on the critical line Re(s) = 1/2.
-normalizable_True is rfl by definition. isZeroMode_True remains a socket. -/
+
+The zero-mode law is supplied explicitly by the caller; this constructor does
+not fill it with `True`.  The critical-line/normalizability part is definitional
+because `normalizable_True` is `IsCriticalLineRealPart realPart`. -/
 def mkCriticalLine (ZeroMode NormReadout : Type*)
-    (zeroMode : ZeroMode) (normReadout : NormReadout) (imaginaryHeight : ℝ) :
+    (zeroMode : ZeroMode) (normReadout : NormReadout) (imaginaryHeight : ℝ)
+    (isZeroMode : Prop) :
     MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout where
   realPart := 1/2
   imaginaryHeight := imaginaryHeight
   zeroMode := zeroMode
   normReadout := normReadout
-  isZeroMode_True := True
+  isZeroMode_True := isZeroMode
 
 end MajoranaZeroModeNormalizabilityPacket
 

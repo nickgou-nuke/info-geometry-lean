@@ -42,11 +42,11 @@ namespace ZornMatrix
 
 variable {R : Type*} [CommRing R]
 
-def zornTrace (Z : ZornMatrix R) : R := 
+def zornTrace (Z : ZornMatrix R) : R :=
   Z.a + Z.b
 
 def zornNorm (Z : ZornMatrix R) : R :=
-  Z.a * Z.b - Vec3.dot Z.v Z.w 
+  Z.a * Z.b - Vec3.dot Z.v Z.w
 
 def add (X Y : ZornMatrix R) : ZornMatrix R where
   a := X.a + Y.a
@@ -99,7 +99,7 @@ lemma cross_self (v : Vec3 R) : Vec3.cross v v = ![0, 0, 0] := by
   funext i
   fin_cases i <;> simp <;> ring
 
-/-- 
+/--
 The 2-Potent Operator Boundary Limit of the Zorn matrix.
 Even though the Zorn matrix multiplication is non-associative,
 each element satisfies its characteristic equation.
@@ -107,7 +107,23 @@ X^2 - Tr(X)X + Det(X)I = 0
 -/
 theorem zorn_characteristic_equation (X : ZornMatrix R) :
     X * X - (zornTrace X) • X + (zornNorm X) • (I : ZornMatrix R) = (0 : ZornMatrix R) := by
-  sorry
+  change add (sub (mul X X) (smul (zornTrace X) X))
+      (smul (zornNorm X) (I : ZornMatrix R)) = zero
+  ext j
+  · simp [mul, sub, add, smul, zornTrace, zornNorm, I, zero,
+      Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+    ring_nf
+  · fin_cases j <;>
+      simp [mul, sub, add, smul, zornTrace, zornNorm, I, zero,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+      ring_nf
+  · fin_cases j <;>
+      simp [mul, sub, add, smul, zornTrace, zornNorm, I, zero,
+        Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+      ring_nf
+  · simp [mul, sub, add, smul, zornTrace, zornNorm, I, zero,
+      Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
+    ring_nf
 
 end ZornMatrix
 end InfoGeometry.Algebra

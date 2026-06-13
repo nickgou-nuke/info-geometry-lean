@@ -158,6 +158,70 @@ def _normalize_lean_code(code: str) -> str:
     return stripped
 
 
+LEAN_FILE_START_RE = re.compile(
+    r"^\s*(?:"
+    r"import\b|set_option\b|open\b|namespace\b|section\b|noncomputable\b|"
+    r"universe\b|variable\b|variables\b|@[^\n]*\n\s*|/-!|/-|--|"
+    r"def\b|abbrev\b|theorem\b|lemma\b|example\b|instance\b|structure\b|class\b|inductive\b"
+    r")",
+    re.MULTILINE,
+)
+
+LEAN_SNIPPET_START_RE = re.compile(
+    r"^\s*(?:"
+    r"by\b|calc\b|exact\b|refine\b|apply\b|intro\b|intros\b|rfl\b|simp\b|simpa\b|rw\b|"
+    r"have\b|let\b|show\b|constructor\b|cases\b|rcases\b|ext\b|"
+    r"def\b|abbrev\b|theorem\b|lemma\b|example\b|instance\b|structure\b|class\b|inductive\b|"
+    r"@[^\n]*\n\s*"
+    r")",
+    re.MULTILINE,
+)
+
+PROSE_RESPONSE_RE = re.compile(
+    r"(?im)^\s*(?:"
+    r"could you\b|can you\b|please\b|share\b|send\b|provide\b|"
+    r"i can\b|i can't\b|i cannot\b|i need\b|it looks like\b|"
+    r"the code you pasted\b|the file .*does(?:n't| not) exist\b|"
+    r"here(?:'s| is)\b|this (?:is|file)\b|"
+    r"actual error message\b|no api correction\b"
+    r")"
+)
+
+
+def lean_candidate_reject_reason(code: str, *, allow_snippet: bool = False) -> str:
+    """Return a reason if *code* is not safe to treat as Lean source.
+
+    This is a transport guard, not a theorem-quality checker.  It prevents
+    browser/LLM prose, Markdown, and clarification messages from becoming
+    source edits.  Lean itself remains the authority after this gate.
+    """
+    stripped = _normalize_lean_code(code)
+    if not stripped:
+        return "empty_candidate"
+    if "```" in stripped:
+        return "markdown_fence_in_candidate"
+    if PROSE_RESPONSE_RE.search(stripped):
+        return "natural_language_candidate"
+    first_lines = "\n".join(stripped.splitlines()[:8])
+    if re.search(r"(?m)^\s*#{1,6}\s+", first_lines):
+        return "markdown_header_candidate"
+    if re.search(r"(?m)^\s*(?:Cause|Replacement|API)\s*$", first_lines):
+        return "markdown_section_candidate"
+    starter = LEAN_SNIPPET_START_RE if allow_snippet else LEAN_FILE_START_RE
+    if not starter.search(stripped):
+        return "no_lean_start_token"
+    if not re.search(
+        r"\b(?:import|namespace|def|abbrev|theorem|lemma|example|instance|structure|class|inductive|by|calc|exact|rfl|simp|simpa|rw)\b",
+        stripped,
+    ):
+        return "no_lean_content_token"
+    return ""
+
+
+def is_plausible_lean_candidate(code: str, *, allow_snippet: bool = False) -> bool:
+    return lean_candidate_reject_reason(code, allow_snippet=allow_snippet) == ""
+
+
 def extract_replacement_lean(text: str) -> str:
     """Extract the canonical `### Replacement` Lean file from an oracle reply.
 
@@ -171,16 +235,21 @@ def extract_replacement_lean(text: str) -> str:
         re.DOTALL | re.IGNORECASE,
     )
     if replacement:
-        return _normalize_lean_code(replacement.group(1))
+        candidate = _normalize_lean_code(replacement.group(1))
+        return "" if lean_candidate_reject_reason(candidate) else candidate
     block = re.search(r"```(?:lean4|lean)?\s*\n?(.*?)```", text, re.DOTALL)
     if block:
-        return _normalize_lean_code(block.group(1))
+        candidate = _normalize_lean_code(block.group(1))
+        return "" if lean_candidate_reject_reason(candidate) else candidate
     raw = re.search(
         r"^\s*(?:import|open|namespace|section|variable|def|abbrev|theorem|lemma|instance|structure|class|inductive)\b",
         text,
         re.MULTILINE,
     )
-    return _normalize_lean_code(text[raw.start():]) if raw else ""
+    if not raw:
+        return ""
+    candidate = _normalize_lean_code(text[raw.start():])
+    return "" if lean_candidate_reject_reason(candidate) else candidate
 
 
 def build_audit_prompt(

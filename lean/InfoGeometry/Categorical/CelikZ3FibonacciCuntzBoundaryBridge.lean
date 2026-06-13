@@ -200,7 +200,7 @@ theorem cantor_cuntz_odd_odd_boundary_even (a b : Bool) :
         wordParityZ2 (oddStep a ++ oddStep b) = 0 := by
   refine ⟨by simp [wordParityZ2, oddStep], by simp [wordParityZ2, oddStep], ?_⟩
   change ((2 : Nat) : ZMod 2) = 0
-  norm_num
+  exact ZMod.natCast_self 2
 
 /-! ## The explicit finite bridge -/
 

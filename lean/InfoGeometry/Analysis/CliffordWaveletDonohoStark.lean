@@ -85,30 +85,20 @@ structure CliffordDonohoStark (W : CliffordWaveletModel) where
             * waveletSupport (W.waveletTransform f) ≥
               (1 - εT - εΩ)^2
 
-  /-- Non-collapse / localization tradeoff in the Clifford wavelet phase space. -/
-  noncollapse_True : Prop
-
 namespace CliffordDonohoStarkOps
 
 variable {W : CliffordWaveletModel}
 variable (D : CliffordDonohoStark W)
 
-  /-- Re-export of the stored wavelet-domain concentration nonnegativity. -/
-  @[rep_depth operator]
-  theorem waveletConcentration_nonneg
-      (g : SimilitudeParameter W.V → W.A) :
-      0 ≤ D.waveletConcentration g :=
-    D.waveletConcentration_nonneg g
+/-- Re-export of the stored wavelet-domain concentration nonnegativity. -/
+@[rep_depth operator]
+theorem waveletConcentration_nonneg
+    (g : SimilitudeParameter W.V → W.A) :
+    0 ≤ D.waveletConcentration g :=
+  D.waveletConcentration_nonneg g
 
-  /-!
-  Closed theorem surface in this namespace:
-  - `supportLowerBound` re-exports the structure field `donoho_stark_support`.
-  - `weightedSupport_pos` derives strict positivity of the weighted support product
-    from the lower bound and the positive gap hypothesis.
-  -/
-
-  /-- Re-export of the stored Donoho--Stark lower bound. -/
-
+/-- Re-export of the stored Donoho--Stark lower bound. -/
+@[rep_depth operator]
 theorem supportLowerBound
     (hAdm : W.admissible)
     {f : W.Signal} {εT εΩ : ℝ}
@@ -144,6 +134,31 @@ theorem weightedSupport_pos
     have hpos : 0 < 1 - εT - εΩ := by linarith
     exact sq_pos_of_pos hpos
   exact lt_of_lt_of_le hsq hbound
+
+/-- Non-collapse of both support readouts under the Donoho--Stark gap. -/
+@[rep_depth operator]
+theorem noncollapse
+    (hAdm : W.admissible)
+    {f : W.Signal} {εT εΩ : ℝ}
+    (hT : D.signalConcentration f ≤ εT)
+    (hΩ : D.waveletConcentration (W.waveletTransform f) ≤ εΩ)
+    (hGap : εT + εΩ < 1) :
+    D.signalSupport f ≠ 0 ∧
+      D.waveletSupport (W.waveletTransform f) ≠ 0 := by
+  have hprod := weightedSupport_pos D hAdm hT hΩ hGap
+  constructor
+  · intro hzero
+    have hprod_zero :
+        D.uncertaintyConstant * D.signalSupport f *
+          D.waveletSupport (W.waveletTransform f) = 0 := by
+      simp [hzero]
+    exact (ne_of_gt hprod) hprod_zero
+  · intro hzero
+    have hprod_zero :
+        D.uncertaintyConstant * D.signalSupport f *
+          D.waveletSupport (W.waveletTransform f) = 0 := by
+      simp [hzero]
+    exact (ne_of_gt hprod) hprod_zero
 
 end CliffordDonohoStarkOps
 

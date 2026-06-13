@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\title{Digest: Ross Street's \emph{Braids among the Groups}}
+\author{info-geometry-lean theorem-safe intake}
+\date{}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+\maketitle
+
+\section{Pointed groups}
+The category of pointed groups $\mathrm{Gp}_*$ consists of pairs $(A,a_0)$
+where $A$ is a group and $a_0\in A$ is a chosen point.  The monoidal product is
+modeled by the group free product:
+\[
+  (A,a_0)\otimes(B,b_0)=(A+B,a_0b_0).
+\]
+
+\section{Street braiding formula}
+For inclusions into the free product, Street's braiding
+$c_{A,B}:A+B\to B+A$ is determined on generators by
+\[
+  c_{A,B}(a)=b_0 a b_0^{-1}\quad(a\in A),
+  \qquad
+  c_{A,B}(b)=b\quad(b\in B).
+\]
+The Lean owner records these generator-level formulas as
+\[
+\texttt{braiding\_action\_A},\quad
+\texttt{braiding\_action\_B},\quad
+\texttt{braiding\_action\_A\_readout},\quad
+\texttt{braiding\_action\_B\_readout}.
+\]
+It also proves elementary conjugation laws for the abstract action
+\[
+  x\mapsto bxb^{-1}.
+\]
+
+\section{Artin action on a free group}
+For the free group $F_n=\langle x_1,\ldots,x_n\rangle$, the Artin braid action
+used in the computational witnesses is
+\[
+\beta_i(x_i)=x_{i+1},\qquad
+\beta_i(x_{i+1})=x_{i+1}x_i x_{i+1}^{-1},\qquad
+\beta_i(x_j)=x_j\quad(j\ne i,i+1).
+\]
+The SymPy, Sage, and GAP witnesses verify exactly on $F_3$ that
+\[
+  \beta_1\beta_2\beta_1=\beta_2\beta_1\beta_2.
+\]
+The GAP script also checks that the displayed maps are automorphisms.
+
+\section{Permutation quotient anchor}
+Imposing $\sigma_i^2=1$ gives the Coxeter/permutation shadow.  The SymPy and
+Sage witnesses realize the adjacent transpositions as exact reflection matrices
+in the hyperplanes $x_i=x_{i+1}$ and verify
+\[
+  \sigma_1^2=\sigma_2^2=1,
+  \qquad
+  \sigma_1\sigma_2\sigma_1=\sigma_2\sigma_1\sigma_2.
+\]
+This quotient anchor must not be confused with nontrivial anyonic or Fibonacci
+F/R braid representations, where generator squares need not be the identity.
+
+\section{Guardrail on Clifford and Lorentz language}
+Rotor, Clifford, biquaternion, Lorentz, superKähler, and metriplectic structures
+are not consequences of the pointed-group formulas alone.  They require separate
+carrier data and separate proofs.  In the current repository the optional
+\texttt{galgebra} and \texttt{clifford} Python packages are not installed, so the
+certified computational witness is the exact matrix/free-word layer above.
+
+\section{Artifacts}
+\begin{itemize}
+  \item Lean: \texttt{lean/InfoGeometry/Topology/PointedGroups.lean}.
+  \item SymPy: \texttt{tools/sympy/pointed\_groups\_braid\_automorphisms.py}.
+  \item Sage: \texttt{tools/sage/pointed\_groups\_braid\_automorphisms.sage.py}.
+  \item GAP: \texttt{tools/gap/pointed\_groups\_braid.g}.
+\end{itemize}
+
+\end{document}

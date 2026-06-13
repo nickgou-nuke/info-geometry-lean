@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.SpacetimeGeometricAlgebraBridge
 import InfoGeometry.Canonical.AtiyahSingerWittenIndexBridge
 import InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
+import InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 import InfoGeometry.Canonical.APSMcKeanSingerBoundaryBridge
 import InfoGeometry.Canonical.DikinDrazinBridge
 import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
@@ -182,6 +183,7 @@ import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Canonical.Z3TrialityCapstone
 import InfoGeometry.Canonical.E8Z3GradingDimension
 import InfoGeometry.Canonical.FibonacciFiveGradeBridge
+import InfoGeometry.Canonical.SuperTKKChiralTripotentBridge
 import InfoGeometry.Canonical.FiniteFibonacciElectronIndependence
 import InfoGeometry.Canonical.FiniteFibonacciHigherAnyonBraiding
 import InfoGeometry.Canonical.FiniteFibonacciLowAnyonMatrices

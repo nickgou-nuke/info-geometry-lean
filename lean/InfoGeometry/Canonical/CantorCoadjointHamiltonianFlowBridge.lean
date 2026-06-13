@@ -29,7 +29,7 @@ namespace InfoGeometry.Canonical.CantorCoadjointHamiltonianFlowBridge
 
 open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 open InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
+open InfoGeometry.Thermodynamics.SouriauWeylPartition
 open VirasoroProject
 
 /--

@@ -24,7 +24,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.GrandCanonicalThermodynamicEngine
 
-open InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
+open InfoGeometry.Thermodynamics.SouriauWeylPartition
 open InfoGeometry.Dynamics.HamiltonianFlowBridge
 open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 

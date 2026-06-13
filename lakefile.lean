@@ -748,7 +748,12 @@ lean_lib Socratic where
 
 @[default_target]
 lean_lib InfoGeometry where
-  globs := #[.andSubmodules `InfoGeometry]
+  -- Build the maintained public entrypoint rather than every proposal shard under
+  -- `lean/InfoGeometry`.  Generated/proposal modules (notably
+  -- `InfoGeometry.External.Auto`) are snapshots and are not promotion authority;
+  -- they are compiled only when imported by the maintained entrypoint or targeted
+  -- explicitly.
+  roots := #[`InfoGeometry]
 
 /--
 Pinned local clone of the formal Lean proof of Erdos Problem #1196.

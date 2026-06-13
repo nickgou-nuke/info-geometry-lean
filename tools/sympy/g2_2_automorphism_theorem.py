@@ -218,7 +218,7 @@ QUIT;
     return data
 
 
-def verify_gap_outer_c2_witness() -> dict[str, int | bool | str | list[str]]:
+def verify_gap_outer_c2_witness() -> dict[str, int | bool | str | list[str] | list[int]]:
     """Find an explicit GAP permutation representative for the C2 extension.
 
     `G = AtlasGroup("G2(2)")` has derived subgroup `D` of index two.  A
@@ -240,10 +240,14 @@ Print("REPRESENTATIVE_MOVED_DEGREE=", LargestMovedPoint(Group(h)), "\n");
 Print("NORMALIZES_D=", ForAll(GeneratorsOfGroup(D), d -> d^h in D), "\n");
 Print("CENTRALIZER_D_IN_G_ORDER=", Size(Centralizer(G,D)), "\n");
 Print("REPRESENTATIVE_TRANSPOSITION_COUNT=", Length(Filtered([1..LargestMovedPoint(Group(h))], i -> i < i^h)), "\n");
+Print("REPRESENTATIVE_FIXED_POINT_COUNT=", Length(Filtered([1..LargestMovedPoint(Group(h))], i -> i = i^h)), "\n");
 for i in [1..LargestMovedPoint(Group(h))] do
   j := i^h;;
   if i < j then
     Print("REPRESENTATIVE_TRANSPOSITION=", i, "-", j, "\n");
+  fi;
+  if i = j then
+    Print("REPRESENTATIVE_FIXED_POINT=", i, "\n");
   fi;
 od;
 QUIT;
@@ -253,23 +257,38 @@ QUIT;
     transpositions = [
         line.split("=", 1)[1] for line in out.splitlines() if line.startswith("REPRESENTATIVE_TRANSPOSITION=")
     ]
-    data: dict[str, int | bool | str | list[str]] = {
-        "quotient_order": int(lines["QUOTIENT_ORDER"]),
-        "representative_in_derived": lines["REPRESENTATIVE_IN_D"] == "true",
-        "representative_order": int(lines["REPRESENTATIVE_ORDER"]),
-        "representative_moved_degree": int(lines["REPRESENTATIVE_MOVED_DEGREE"]),
-        "normalizes_derived": lines["NORMALIZES_D"] == "true",
-        "centralizer_derived_in_g_order": int(lines["CENTRALIZER_D_IN_G_ORDER"]),
-        "representative_transposition_count": int(lines["REPRESENTATIVE_TRANSPOSITION_COUNT"]),
+    fixed_points = [
+        int(line.split("=", 1)[1]) for line in out.splitlines() if line.startswith("REPRESENTATIVE_FIXED_POINT=")
+    ]
+    quotient_order = int(lines["QUOTIENT_ORDER"])
+    representative_order = int(lines["REPRESENTATIVE_ORDER"])
+    representative_moved_degree = int(lines["REPRESENTATIVE_MOVED_DEGREE"])
+    centralizer_derived_in_g_order = int(lines["CENTRALIZER_D_IN_G_ORDER"])
+    representative_transposition_count = int(lines["REPRESENTATIVE_TRANSPOSITION_COUNT"])
+    representative_fixed_point_count = int(lines["REPRESENTATIVE_FIXED_POINT_COUNT"])
+    representative_in_derived = lines["REPRESENTATIVE_IN_D"] == "true"
+    normalizes_derived = lines["NORMALIZES_D"] == "true"
+    data: dict[str, int | bool | str | list[str] | list[int]] = {
+        "quotient_order": quotient_order,
+        "representative_in_derived": representative_in_derived,
+        "representative_order": representative_order,
+        "representative_moved_degree": representative_moved_degree,
+        "normalizes_derived": normalizes_derived,
+        "centralizer_derived_in_g_order": centralizer_derived_in_g_order,
+        "representative_transposition_count": representative_transposition_count,
+        "representative_fixed_point_count": representative_fixed_point_count,
         "representative_transpositions": transpositions,
+        "representative_fixed_points": fixed_points,
     }
     data["is_nontrivial_outer_c2_witness"] = (
-        data["quotient_order"] == 2
-        and data["representative_in_derived"] is False
-        and data["representative_order"] == 2
-        and data["normalizes_derived"] is True
-        and data["centralizer_derived_in_g_order"] == 1
-        and data["representative_transposition_count"] == len(transpositions)
+        quotient_order == 2
+        and representative_in_derived is False
+        and representative_order == 2
+        and normalizes_derived is True
+        and centralizer_derived_in_g_order == 1
+        and representative_transposition_count == len(transpositions)
+        and representative_fixed_point_count == len(fixed_points) == 7
+        and representative_moved_degree == 2 * representative_transposition_count + representative_fixed_point_count
     )
     return data
 

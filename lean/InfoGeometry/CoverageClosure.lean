@@ -16,6 +16,7 @@ import InfoGeometry.Algebra.HodgeKreinTriFacet
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.K0FibonacciRing
 import InfoGeometry.Algebra.KreinPosNegDecomposition
+import InfoGeometry.Algebra.JordanTripleTKK
 import InfoGeometry.Algebra.L2CuntzConvergence
 import InfoGeometry.Algebra.LorentzBiquaternionEquivalence
 import InfoGeometry.Algebra.OSp12BulkBoundaryBridge
@@ -616,6 +617,8 @@ import InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite
 import InfoGeometry.Topology.BrillouinKleinBraid
 import InfoGeometry.Topology.CuntzKMSState
 import InfoGeometry.Topology.CuntzMap
+import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Topology.DelaunayPureBraidInvariant
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.Epoch4Release
 import InfoGeometry.Topology.FibonacciBraidRepresentation
@@ -630,6 +633,7 @@ import InfoGeometry.Topology.PenroseBraidLorentzFinite
 import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.PointedGroups
 import InfoGeometry.Topology.PrimonGas
+import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Topology.ThreeStackBraidLorentzMetriplectic
 import InfoGeometry.Topology.TripotentUniverse
 import InfoGeometry.Topology.TwistedBoundaryExceptionalPoints

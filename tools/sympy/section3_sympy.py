@@ -9,7 +9,15 @@ Using raw Pauli basis (no 1/√2 normalization).
 The 1/√2 normalization belongs to the spacetime point matrix,
 not the soldering forms themselves.
 
-Verifies: trace orthogonality, vector recovery, completeness.
+Verifies the closed finite corridor:
+- trace orthogonality, vector recovery, and completeness for raw Pauli forms;
+- the flat identity tetrad metric;
+- zero flat spin connection, flat tetrad postulate, and flat soldering
+  derivative shadows.
+
+Open debt: this script does not verify a curved tetrad-derived spin
+connection, a general tetrad postulate, curved covariant constancy of soldering
+forms, smooth spinor/tangent bundles, or a Bogoliubov/Pauli-frame equivalence.
 """
 import sympy as sp
 
@@ -62,12 +70,38 @@ for A in range(2):
 print("  ✓")
 
 # ===== CURVED EXTENSION =====
-print("\n  Curved: tetrad e^a_μ, spin connection, tetrad postulate")
+print("\n  Flat tetrad/spin-connection owner checks")
 e_flat = sp.eye(4)
 g = e_flat.T * eta * e_flat
 assert g == eta
-print("  ✓ (flat limit)")
+print("  ✓ identity tetrad metric")
+
+omega_flat = [[[0 for _b in range(4)] for _a in range(4)] for _mu in range(4)]
+for mu in range(4):
+    for a in range(4):
+        for b in range(4):
+            assert omega_flat[mu][a][b] == 0
+            assert omega_flat[mu][a][b] == -omega_flat[mu][b][a]
+print("  ✓ zero flat spin connection")
+
+for mu in range(4):
+    for nu in range(4):
+        for a in range(4):
+            tetrad_postulate_flat = 0 - 0 + omega_flat[mu][a][nu]
+            assert tetrad_postulate_flat == 0
+print("  ✓ flat tetrad postulate")
+
+dE = sp.zeros(2)
+omega = sp.zeros(2)
+E = Id
+clifford_soldering_derivative = dE + omega * E - E * omega
+assert clifford_soldering_derivative == sp.zeros(2)
+print("  ✓ flat Clifford soldering derivative")
+
+print("\n  Open debt: curved tetrad-derived spin connection, general")
+print("  tetrad postulate, curved covariant constancy, smooth bundle")
+print("  equivalence, and Bogoliubov/Pauli-frame equivalence.")
 
 print("\n" + "=" * 70)
-print("SECTION 3 VERIFIED — ALL PROPERTIES PASS")
+print("SECTION 3 VERIFIED — FINITE/FLAT CORRIDOR PASSES")
 print("=" * 70)

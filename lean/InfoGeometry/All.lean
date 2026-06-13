@@ -15,6 +15,7 @@ import InfoGeometry.Arithmetic.PadicLFunctionTrivialZero
 import InfoGeometry.Arithmetic.TwistedModularCurveZeta
 import InfoGeometry.Arithmetic.JordanAlgebraZeta
 import InfoGeometry.Arithmetic.LowLyingZerosQuaternion
+import InfoGeometry.Arithmetic.HoradamIonMatrixMethods
 import InfoGeometry.Arithmetic.SiegelModularZeros
 import InfoGeometry.Arithmetic.RiemannZetaSymmetry
 import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

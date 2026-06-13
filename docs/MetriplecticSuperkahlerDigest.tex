@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,geometry}
+\geometry{a4paper,margin=1in}
+\title{Finite Digest: Algebraic Metriplectic Bracket Packet}
+\author{info-geometry-lean theorem-safe intake}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Scope}
+This digest records only a finite algebraic metriplectic interface.  It does not
+construct a smooth manifold, a superKähler structure, a Fisher metric, or a
+physical non-equilibrium thermodynamic model.
+
+\section{Algebraic data}
+Let $R$ be a commutative ring of observables.  A finite metriplectic packet
+contains two brackets
+\[
+\{\cdot,\cdot\}:R\times R\to R,
+\qquad
+\langle\!\langle\cdot,\cdot\rangle\!\rangle:R\times R\to R,
+\]
+a Hamiltonian $H\in R$, and an entropy observable $S\in R$.  The Lean packet
+stores the laws
+\[
+\{f,f\}=0,
+\qquad
+\langle\!\langle H,f\rangle\!\rangle=0,
+\qquad
+\langle\!\langle f,H\rangle\!\rangle=0,
+\]
+and
+\[
+\{S,f\}=0,
+\qquad
+\{f,S\}=0.
+\]
+
+\section{Evolution readouts}
+The total algebraic evolution is
+\[
+\dot f=\{f,H\}+\langle\!\langle f,S\rangle\!\rangle.
+\]
+From the stored laws, Lean proves
+\[
+\dot H=0,
+\qquad
+\dot S=\langle\!\langle S,S\rangle\!\rangle.
+\]
+No positivity or second-law inequality is asserted without a concrete ordered
+metric model.
+
+\section{Artifacts}
+\begin{itemize}
+\item Lean: \texttt{lean/InfoGeometry/Topology/Metriplectic.lean}
+\item GAP finite grading smoke test: \texttt{tools/gap/metriplectic\_superkahler.g}
+\end{itemize}
+
+\end{document}

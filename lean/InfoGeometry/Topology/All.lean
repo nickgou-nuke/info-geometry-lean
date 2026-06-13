@@ -14,6 +14,7 @@ import InfoGeometry.Topology.FibonacciBraidRepresentation
 import InfoGeometry.Topology.GrandUnification
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
 import InfoGeometry.Topology.KANWallpaperIsomorphism
+import InfoGeometry.Topology.Metriplectic
 import InfoGeometry.Topology.ParafermionBraiding
 import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.TripotentUniverse

@@ -9,28 +9,29 @@ def checkOne (path : System.FilePath) : IO Bool := do
   IO.eprintln s!"Checking {path}"
   let (mod, _) ← readModuleData path
   let env ← importModules mod.imports {} 0
+  let mut newC : Std.HashMap Name ConstantInfo := {}
+  for (name, ci) in mod.constNames.zip mod.constants do
+    newC := newC.insert name ci
+  let env ← env.replay newC
   let mut allClean := true
 
-  for name in mod.constNames do
-    unless env.contains name do
-      continue
-    match env.find? name with
-    | none => continue
-    | some ci =>
-      -- Check partial
-      if ci.isPartial && !name.toString.endsWith "_unsafe_rec" then
-        IO.eprintln s!"  {name}: PARTIAL"
-        allClean := false
-      -- Check unsafe
-      if ci.isUnsafe then
-        IO.eprintln s!"  {name}: UNSAFE"
-        allClean := false
-      -- Collect axioms
-      let axioms : Array Name := Lean.collectAxioms name
-      let disallowed := axioms.filter fun a => !(ALLOWED.contains a)
-      if !disallowed.isEmpty then
-        IO.eprintln s!"  {name}: disallowed axioms {disallowed}"
-        allClean := false
+  for (name, ci) in mod.constNames.zip mod.constants do
+    -- Check partial
+    if ci.isPartial && !name.toString.endsWith "_unsafe_rec" then
+      IO.eprintln s!"  {name}: PARTIAL"
+      allClean := false
+    -- Check unsafe
+    if ci.isUnsafe then
+      IO.eprintln s!"  {name}: UNSAFE"
+      allClean := false
+    -- Collect axioms through the replayed environment.  In Lean 4.28,
+    -- `Lean.collectAxioms` is monadic (`MonadEnv`) rather than pure IO.
+    let ((_, CollectAxioms.State.mk _ axioms)) :=
+      (ReaderT.run (CollectAxioms.collect name) env).run {}
+    let disallowed := axioms.filter fun a => !(ALLOWED.contains a)
+    if !disallowed.isEmpty then
+      IO.eprintln s!"  {name}: disallowed axioms {disallowed}"
+      allClean := false
 
   if allClean then
     IO.eprintln s!"  ✓ all {mod.constNames.size} declarations clean"

@@ -3,23 +3,30 @@ import Mathlib.Tactic
 
 namespace InfoGeometry.OperatorAlgebra.Albert
 
-/-- Structure defining the Freudenthal Cubic Norm over an exceptional Albert space. -/
+/--
+A witness-gated cubic characteristic interface over an associative `K`-algebra.
+
+This is an algebraic shadow of a Freudenthal/Albert characteristic polynomial,
+not a construction of the Albert algebra, OP², or an exceptional Lie group.
+Concrete exceptional carriers must supply this characteristic law explicitly.
+-/
 structure CubicNorm (M K : Type*) [CommRing K] [Ring M] [Algebra K M] where
   trace1 : M → K
   trace2 : M → K
   norm   : M → K
   
-  -- The magic polynomial characteristic property governing the 27D algebra
+  -- The stored cubic characteristic property.
   cubic_characteristic : ∀ (x : M), 
     x^3 - (trace1 x) • x^2 + (trace2 x) • x - (norm x) • 1 = 0
 
 variable {M K : Type*} [CommRing K] [Ring M] [Algebra K M] (sys : CubicNorm M K)
 
 /--
-THEOREM: The Exceptional Tripotency Collapse.
-Constructively proves that forcing the Freudenthal invariants to the 
-trace-zero, quadric-negative vacuum threshold maps the Albert element 
-natively into a strict Jordan tripotent (P³ = P) via pure ring arithmetic.
+Algebraic tripotency reduction.
+
+If the stored cubic characteristic law has coefficients `trace1 P = 0`,
+`trace2 P = -1`, and `norm P = 0`, then the element satisfies `P³ = P`.
+This proves only the polynomial reduction in the supplied associative algebra.
 -/
 theorem tripotency_is_cubic_rank2_special (P : M) 
     (h_tr1 : sys.trace1 P = 0)

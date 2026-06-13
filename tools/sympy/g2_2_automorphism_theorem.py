@@ -218,6 +218,62 @@ QUIT;
     return data
 
 
+def verify_gap_outer_c2_witness() -> dict[str, int | bool | str | list[str]]:
+    """Find an explicit GAP permutation representative for the C2 extension.
+
+    `G = AtlasGroup("G2(2)")` has derived subgroup `D` of index two.  A
+    transversal element outside `D` gives an order-two conjugation action on
+    `D`.  Since `Centralizer(G,D)` is trivial, that action cannot be induced by
+    an element of `D`; it represents the nontrivial outer coset.  This records a
+    permutation representative from GAP's degree-63 Atlas action, not a matrix
+    generator for a separate linear representation.
+    """
+    code = r"""
+LoadPackage("atlasrep");;
+G := AtlasGroup("G2(2)");;
+D := DerivedSubgroup(G);;
+h := First(RightTransversal(G,D), r -> not r in D);;
+Print("QUOTIENT_ORDER=", Size(G) / Size(D), "\n");
+Print("REPRESENTATIVE_IN_D=", h in D, "\n");
+Print("REPRESENTATIVE_ORDER=", Order(h), "\n");
+Print("REPRESENTATIVE_MOVED_DEGREE=", LargestMovedPoint(Group(h)), "\n");
+Print("NORMALIZES_D=", ForAll(GeneratorsOfGroup(D), d -> d^h in D), "\n");
+Print("CENTRALIZER_D_IN_G_ORDER=", Size(Centralizer(G,D)), "\n");
+Print("REPRESENTATIVE_TRANSPOSITION_COUNT=", Length(Filtered([1..LargestMovedPoint(Group(h))], i -> i < i^h)), "\n");
+for i in [1..LargestMovedPoint(Group(h))] do
+  j := i^h;;
+  if i < j then
+    Print("REPRESENTATIVE_TRANSPOSITION=", i, "-", j, "\n");
+  fi;
+od;
+QUIT;
+"""
+    out = subprocess.check_output([str(GAP), "-q"], cwd=ROOT, input=code, text=True)
+    lines = dict(line.split("=", 1) for line in out.splitlines() if "=" in line)
+    transpositions = [
+        line.split("=", 1)[1] for line in out.splitlines() if line.startswith("REPRESENTATIVE_TRANSPOSITION=")
+    ]
+    data: dict[str, int | bool | str | list[str]] = {
+        "quotient_order": int(lines["QUOTIENT_ORDER"]),
+        "representative_in_derived": lines["REPRESENTATIVE_IN_D"] == "true",
+        "representative_order": int(lines["REPRESENTATIVE_ORDER"]),
+        "representative_moved_degree": int(lines["REPRESENTATIVE_MOVED_DEGREE"]),
+        "normalizes_derived": lines["NORMALIZES_D"] == "true",
+        "centralizer_derived_in_g_order": int(lines["CENTRALIZER_D_IN_G_ORDER"]),
+        "representative_transposition_count": int(lines["REPRESENTATIVE_TRANSPOSITION_COUNT"]),
+        "representative_transpositions": transpositions,
+    }
+    data["is_nontrivial_outer_c2_witness"] = (
+        data["quotient_order"] == 2
+        and data["representative_in_derived"] is False
+        and data["representative_order"] == 2
+        and data["normalizes_derived"] is True
+        and data["centralizer_derived_in_g_order"] == 1
+        and data["representative_transposition_count"] == len(transpositions)
+    )
+    return data
+
+
 def verify_clifford_galgebra_carrier() -> dict[str, int | bool]:
     import clifford  # type: ignore
     from galgebra.ga import Ga  # type: ignore
@@ -239,11 +295,13 @@ def main() -> None:
         "split_octonion_f2_aut": count_split_octonion_f2_automorphisms(),
         "sage_g2": verify_sage_g2_root_data(),
         "gap_g2_2": verify_gap_g2_2_order(),
+        "gap_outer_c2_witness": verify_gap_outer_c2_witness(),
         "clifford_galgebra": verify_clifford_galgebra_carrier(),
     }
     assert result["split_octonion_f2_aut"]["equals_g2_2_order"]
     assert result["sage_g2"]["is_g2_root_ledger"]
     assert result["gap_g2_2"]["is_g2_2_order_ledger"]
+    assert result["gap_outer_c2_witness"]["is_nontrivial_outer_c2_witness"]
     assert result["clifford_galgebra"]["cl03_dim"] == 8
     print(json.dumps(result, sort_keys=True))
     print("G2_2_SPLIT_OCTONION_AUTOMORPHISM_THEOREM_OK")

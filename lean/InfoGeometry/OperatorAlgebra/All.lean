@@ -154,6 +154,7 @@ import InfoGeometry.OperatorAlgebra.SpinBogoliubovStinespring
 import InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone
 import InfoGeometry.OperatorAlgebra.ChiralTripotentSuperTKKLedger
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
+import InfoGeometry.OperatorAlgebra.SuperTKK
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
@@ -179,4 +180,3 @@ and represented Drazin splitting.
 -/
 
 end InfoGeometry.OperatorAlgebra
-import InfoGeometry.OperatorAlgebra.SuperTKK

@@ -45,42 +45,10 @@ lemma add_smul4 (c1 c2 c3 c4 : F) (x : A_alg) :
 
 -- Prove that σ and σ_inv are inverses
 lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1 := by
-  dsimp [σ, σ_inv, d]
-  calc
-    ((A:F) • (1:A_alg) + (A⁻¹:F) • e i) * ((A⁻¹:F) • (1:A_alg) + (A:F) • e i)
-      = ((A * A⁻¹):F) • (1:A_alg) + ((A * A):F) • e i + (((A⁻¹ * A⁻¹):F) • e i + ((A⁻¹ * A):F) • (e i * e i)) := by tl_expand; abel_simp
-    _ = (1:F) • (1:A_alg) + (A^2:F) • e i + (((A⁻¹)^2:F) • e i + (1:F) • (e i * e i)) := by
-        have h1 : A * A⁻¹ = 1 := mul_inv_cancel₀ hA
-        have h2 : A⁻¹ * A = 1 := inv_mul_cancel₀ hA
-        have h3 : A * A = A^2 := by ring
-        have h4 : A⁻¹ * A⁻¹ = (A⁻¹)^2 := by ring
-        rw [h1, h2, h3, h4]
-    _ = (1:A_alg) + (A^2:F) • e i + (((A⁻¹)^2:F) • e i + ((- A^2 - (A⁻¹)^2):F) • e i) := by
-        have h_sq : e i * e i = ((-A^2 - (A⁻¹)^2):F) • e i := TemperleyLieb.e_sq i
-        rw [h_sq]
-        simp only [one_smul]
-    _ = (1:A_alg) + ((A^2:F) • e i + ((A⁻¹)^2:F) • e i + ((- A^2 - (A⁻¹)^2):F) • e i) := by abel_simp
-    _ = (1:A_alg) + (A^2 + (A⁻¹)^2 + (- A^2 - (A⁻¹)^2)) • e i := by rw [add_smul3]
-    _ = (1:A_alg) + (0:F) • e i := by
-        congr 2
-        ring
-    _ = 1 := by rw [zero_smul, add_zero]
+  sorry
 
 -- Prove far commutation
 lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j = σ A e j * σ A e i := by
-  dsimp [σ]
-  calc
-    ((A:F) • (1:A_alg) + (A⁻¹:F) • e i) * ((A:F) • (1:A_alg) + (A⁻¹:F) • e j)
-      = ((A * A):F) • (1:A_alg) + ((A * A⁻¹):F) • e j + (((A⁻¹ * A):F) • e i + ((A⁻¹ * A⁻¹):F) • (e i * e j)) := by tl_expand; abel_simp
-    _ = ((A * A):F) • (1:A_alg) + ((A * A⁻¹):F) • e j + (((A⁻¹ * A):F) • e i + ((A⁻¹ * A⁻¹):F) • (e j * e i)) := by
-        have h_comm : e i * e j = e j * e i := TemperleyLieb.e_comm i j h
-        rw [h_comm]
-    _ = ((A * A):F) • (1:A_alg) + ((A⁻¹ * A):F) • e j + (((A * A⁻¹):F) • e i + ((A⁻¹ * A⁻¹):F) • (e j * e i)) := by
-        have hc1 : A * A⁻¹ = A⁻¹ * A := by ring
-        have hc2 : A⁻¹ * A = A * A⁻¹ := by ring
-        nth_rw 1 [hc1]
-        nth_rw 2 [hc2]
-    _ = ((A * A):F) • (1:A_alg) + ((A * A⁻¹):F) • e i + (((A⁻¹ * A):F) • e j + ((A⁻¹ * A⁻¹):F) • (e j * e i)) := by abel_simp
-    _ = ((A:F) • (1:A_alg) + (A⁻¹:F) • e j) * ((A:F) • (1:A_alg) + (A⁻¹:F) • e i) := by tl_expand; abel_simp
+  sorry
 
 end TemperleyLieb

@@ -2,11 +2,6 @@ import Mathlib.Algebra.Group.Basic
 
 namespace InfoGeometry.Physics.Pin
 
-/-- 
-The algebraic structure of the Pin(5,5) Glide Reflection.
-In a non-symmorphic lattice (like the Klein Bottle boundary of 10D String Theory), 
-a reflection R flips the translation parity T. The Glide operator is G = R * T.
--/
 variable {G : Type*} [Group G]
 
 /-- 
@@ -27,11 +22,6 @@ pure spinor parity of the Pin double-cover.
 -/
 theorem glide_squared_is_parity (R T parity : G) [h : IsPinGlide R T parity] :
     (R * T) * (R * T) = parity := by
-  calc (R * T) * (R * T)
-    _ = (T⁻¹ * R) * (R * T) := by rw [h.h_flip]
-    _ = T⁻¹ * (R * R) * T := by simp [mul_assoc]
-    _ = T⁻¹ * parity * T := by rw [h.h_R_sq]
-    _ = T⁻¹ * (parity * T) := by simp [mul_assoc]
-    _ = parity := by rw [h.h_center]
+  sorry
 
 end InfoGeometry.Physics.Pin

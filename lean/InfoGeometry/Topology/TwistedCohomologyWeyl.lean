@@ -1,4 +1,4 @@
-import Mathlib.Topology.ContinuousFunction.Basic
+import Mathlib.Topology.Homeomorph.Defs
 import Mathlib.Algebra.Group.Basic
 
 namespace InfoGeometry.Topology.Weyl
@@ -32,7 +32,8 @@ in twisted (co)homology (modulo 2) rather than Z.
 -/
 theorem berry_curvature_odd_cancellation (k : BZ) :
     F.curvature k + F.curvature (gbz.glide k) = 0 := by
-  rw [F.h_twisted k]
+  have h : F.curvature (gbz.glide k) = - F.curvature k := F.h_twisted k
+  rw [h]
   exact add_neg_cancel (F.curvature k)
 
 end InfoGeometry.Topology.Weyl

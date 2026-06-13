@@ -2,6 +2,7 @@ import InfoGeometry.OperatorAlgebra.SplitOctonionSymplecticFoundation
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.BrillouinKleinExceptionalTopology
+import Mathlib.Tactic
 
 /-!
 # Dual split-octonion algebra over the concrete Zorn split-octonion layer
@@ -26,6 +27,10 @@ using the repository's concrete integer Zorn split-octonion multiplication.
 * Projection onto the primal split-octonion slot preserves multiplication.
 * The nonzero split-octonion associator witness lifts to a nonzero dual
   associator witness.
+* External-system arithmetic readouts are mirrored as finite Lean ledgers:
+  GAP/Atlas finite `G₂(2)` order/index data, Sage `G₂`/`D₄`/`D₅`
+  root-Weyl counts, split Clifford dimensions `2^8` and `2^10`, and the
+  dimension sum `1 + 8 + 27 + 8 + 1 = 45`.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
@@ -35,9 +40,10 @@ None.
 
 This file does not prove `Aut(D O_s) = G₂(2) ⋉ R⁷`,
 `Aut(D O_s) = G_{2(2)} ⋉ R⁷`, an `SO(4,4) ⋉ R⁸` metric symmetry theorem, an
-`SU(3)` stabilizer theorem, or a physical gauge classification.  Those require
-separate theorem owners for the chosen scalar field, topology/smoothness class,
-metric, and automorphism notion.
+`SU(3)` stabilizer theorem, a quantum `G₂` `R`-matrix theorem, a
+Yang-Baxter theorem, or a physical gauge/KBZ/O(5,5) classification.  Those
+require separate theorem owners for the chosen scalar field, topology/smoothness
+class, metric, automorphism notion, and operator representation.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra
@@ -65,6 +71,62 @@ def dualEpsilon : DualSplitOct := epsLift oneZ
 
 /-- The coordinate count of the dual split-octonion bookkeeping surface. -/
 def dualSplitOctCoordinateCount : Nat := 16
+
+/-! ## External-system arithmetic ledger surfaces -/
+
+/-- GAP/Atlas finite `G₂(2)` order. -/
+def gapG2TwoOrder : Nat := 12096
+
+/-- GAP/Atlas finite `G₂(2)'` order. -/
+def gapG2TwoDerivedOrder : Nat := 6048
+
+/-- GAP/Atlas finite index `[G₂(2) : G₂(2)']`. -/
+def gapG2TwoDerivedIndex : Nat := 2
+
+/-- GAP/Atlas finite automorphism group order for `G₂(2)`. -/
+def gapAutG2TwoOrder : Nat := 12096
+
+/-- Sage root count for the `G₂` root system. -/
+def sageG2RootCount : Nat := 12
+
+/-- Sage Weyl-group order for type `G₂`. -/
+def sageG2WeylOrder : Nat := 12
+
+/-- Sage root count for type `D₄`. -/
+def sageD4RootCount : Nat := 24
+
+/-- Sage Weyl-group order for type `D₄`. -/
+def sageD4WeylOrder : Nat := 192
+
+/-- Sage root count for type `D₅`. -/
+def sageD5RootCount : Nat := 40
+
+/-- Sage Weyl-group order for type `D₅`. -/
+def sageD5WeylOrder : Nat := 1920
+
+/-- Sage Chevalley-basis Lie algebra dimension for type `D₅`. -/
+def sageD5LieDimension : Nat := 45
+
+/-- `clifford`/`galgebra` dimension ledger for `Cl(4,4)`. -/
+def cl44Dimension : Nat := 256
+
+/-- `clifford`/`galgebra` dimension ledger for `Cl(5,5)`. -/
+def cl55Dimension : Nat := 1024
+
+/-- The `-2` sector dimension in the finite five-grade dimension ledger. -/
+def o55FiveGradeNegTwoDim : Nat := 1
+
+/-- The `-1` sector dimension in the finite five-grade dimension ledger. -/
+def o55FiveGradeNegOneDim : Nat := 8
+
+/-- The `0` sector dimension in the finite five-grade dimension ledger. -/
+def o55FiveGradeZeroDim : Nat := 27
+
+/-- The `+1` sector dimension in the finite five-grade dimension ledger. -/
+def o55FiveGradePosOneDim : Nat := 8
+
+/-- The `+2` sector dimension in the finite five-grade dimension ledger. -/
+def o55FiveGradePosTwoDim : Nat := 1
 
 /-- Dual-number extension of the split-octonion product. -/
 def mulD (X Y : DualSplitOct) : DualSplitOct :=
@@ -97,6 +159,33 @@ def associatorD (X Y Z : DualSplitOct) : DualSplitOct :=
 theorem dual_coordinate_count :
     dualSplitOctCoordinateCount = 16 := by
   rfl
+
+theorem gap_g2two_order_index_ledger :
+    gapG2TwoDerivedOrder * gapG2TwoDerivedIndex = gapG2TwoOrder ∧
+      gapAutG2TwoOrder = gapG2TwoOrder := by
+  norm_num [gapG2TwoDerivedOrder, gapG2TwoDerivedIndex, gapG2TwoOrder, gapAutG2TwoOrder]
+
+theorem sage_g2_root_weyl_ledger :
+    sageG2RootCount = 12 ∧ sageG2WeylOrder = 12 := by
+  norm_num [sageG2RootCount, sageG2WeylOrder]
+
+theorem sage_d4_d5_root_weyl_ledger :
+    sageD4RootCount = 24 ∧ sageD4WeylOrder = 192 ∧
+      sageD5RootCount = 40 ∧ sageD5WeylOrder = 1920 ∧
+      sageD5LieDimension = 45 := by
+  norm_num [sageD4RootCount, sageD4WeylOrder, sageD5RootCount, sageD5WeylOrder,
+    sageD5LieDimension]
+
+theorem clifford_split_dimension_ledger :
+    cl44Dimension = 2 ^ 8 ∧ cl55Dimension = 2 ^ 10 := by
+  norm_num [cl44Dimension, cl55Dimension]
+
+theorem o55_five_grade_dimension_sum :
+    o55FiveGradeNegTwoDim + o55FiveGradeNegOneDim + o55FiveGradeZeroDim +
+        o55FiveGradePosOneDim + o55FiveGradePosTwoDim =
+      sageD5LieDimension := by
+  norm_num [o55FiveGradeNegTwoDim, o55FiveGradeNegOneDim, o55FiveGradeZeroDim,
+    o55FiveGradePosOneDim, o55FiveGradePosTwoDim, sageD5LieDimension]
 
 theorem baseLift_mul (X Y : SplitOct) :
     mulD (baseLift X) (baseLift Y) = baseLift (mulZ X Y) := by
@@ -184,5 +273,28 @@ theorem dualSplitOct_algebra_packet :
     dualEpsilon_odd_odd_superBracket_zero, primal_projection_mul,
     dualEpsilon_sq_zero_at_every_stage, zero_dual_defect_klein_bottle_z2_invariant,
     zero_dual_defect_klein_boundary_charge_even, lifted_associator_base_ne_zero⟩
+
+/-- Closed finite multi-system arithmetic packet mirrored from the runtime verifier. -/
+theorem dualSplitOct_multisystem_backbone_packet :
+    gapG2TwoDerivedOrder * gapG2TwoDerivedIndex = gapG2TwoOrder ∧
+      gapAutG2TwoOrder = gapG2TwoOrder ∧
+      sageG2RootCount = 12 ∧
+      sageG2WeylOrder = 12 ∧
+      sageD4RootCount = 24 ∧
+      sageD4WeylOrder = 192 ∧
+      sageD5RootCount = 40 ∧
+      sageD5WeylOrder = 1920 ∧
+      sageD5LieDimension = 45 ∧
+      cl44Dimension = 2 ^ 8 ∧
+      cl55Dimension = 2 ^ 10 ∧
+      o55FiveGradeNegTwoDim + o55FiveGradeNegOneDim + o55FiveGradeZeroDim +
+          o55FiveGradePosOneDim + o55FiveGradePosTwoDim =
+        sageD5LieDimension := by
+  exact ⟨gap_g2two_order_index_ledger.1, gap_g2two_order_index_ledger.2,
+    sage_g2_root_weyl_ledger.1, sage_g2_root_weyl_ledger.2,
+    sage_d4_d5_root_weyl_ledger.1, sage_d4_d5_root_weyl_ledger.2.1,
+    sage_d4_d5_root_weyl_ledger.2.2.1, sage_d4_d5_root_weyl_ledger.2.2.2.1,
+    sage_d4_d5_root_weyl_ledger.2.2.2.2, clifford_split_dimension_ledger.1,
+    clifford_split_dimension_ledger.2, o55_five_grade_dimension_sum⟩
 
 end InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra

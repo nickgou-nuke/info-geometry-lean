@@ -36,7 +36,7 @@ Should be restricted to positive operators with unit trace.
 The nonemptiness proof `⟨0, trivial⟩` relies on this degeneracy.
 Status: requires positivity and trace constraints on StateSpace. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
-  sorry
+  exact ⟨0, trivial⟩
 
 /--
 The embedding A ↦ A ⊗ I₂ maps the state space at stage n to the state

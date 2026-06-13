@@ -10,6 +10,12 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from tools.infra.lean_audit_prompt import lean_candidate_reject_reason
+
 
 class SurgeryApplyError(Exception):
     pass
@@ -91,6 +97,12 @@ def packet_to_patch(packet: dict[str, Any], repo_root: Path) -> dict[str, Any] |
     replacement = payload.get("replacement_body") or sp.get("replacementText") or sp.get("replacement_text")
     if replacement is None:
         raise SurgeryApplyError(f"Packet {packet.get('packet_id')} lacks replacement text")
+    if file_path.suffix == ".lean":
+        reject_reason = lean_candidate_reject_reason(str(replacement), allow_snippet=True)
+        if reject_reason:
+            raise SurgeryApplyError(
+                f"Packet {packet.get('packet_id')} replacement rejected for Lean source: {reject_reason}"
+            )
     expected_hash = sp.get("fileHash") or sp.get("file_hash") or packet.get("file_hash")
     if not expected_hash:
         raise SurgeryApplyError(f"Packet {packet.get('packet_id')} lacks fileHash/source file hash")
@@ -144,16 +156,16 @@ def apply_patches_binary(patches: list[dict[str, Any]], *, dry_run: bool = False
     for file_path, fps in by_file.items():
         fps.sort(key=lambda p: int(p["startByte"]), reverse=True)
         path = Path(file_path)
-        content = bytearray(path.read_bytes())
+        content_str = path.read_text(encoding="utf-8")
         for p in fps:
             start = int(p["startByte"])
             end = int(p["endByte"])
-            if start < 0 or end > len(content) or start > end:
-                raise SurgeryApplyError(f"Patch bounds out of range for {path}: {start}..{end}, len={len(content)}")
-            replacement = str(p["replacementText"]).encode("utf-8")
-            content[start:end] = replacement
+            if start < 0 or end > len(content_str) or start > end:
+                raise SurgeryApplyError(f"Patch bounds out of range for {path}: {start}..{end}, len={len(content_str)}")
+            replacement = str(p["replacementText"])
+            content_str = content_str[:start] + replacement + content_str[end:]
         if not dry_run:
-            path.write_bytes(bytes(content))
+            path.write_text(content_str, encoding="utf-8")
         touched.append(file_path)
     return touched
 

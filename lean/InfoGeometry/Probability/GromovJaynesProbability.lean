@@ -21,7 +21,7 @@ symmetric-group quotient, or analytic large-number limit is asserted.
 
 set_option autoImplicit false
 
-namespace InfoGeometry.GromovJaynesProbability
+namespace InfoGeometry.Probability.GromovJaynesProbability
 
 open scoped BigOperators
 
@@ -68,4 +68,4 @@ theorem multinomial_denominator_pos (class_counts : List ℕ) :
   | cons a as ih =>
       simp [Nat.factorial_pos, ih]
 
-end InfoGeometry.GromovJaynesProbability
+end InfoGeometry.Probability.GromovJaynesProbability

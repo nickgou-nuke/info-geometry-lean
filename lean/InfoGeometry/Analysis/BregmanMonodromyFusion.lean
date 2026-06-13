@@ -71,10 +71,11 @@ which is exactly the monodromy Jordan block power from
 `BregmanMonodromyBridge.monodromyJordanBlock_pow` with K ↔ 2π·N.
 
 This proves: the exponential remainder IS the Jordan block generator.
+
+Open debt: prove exp(εK) = I + εK when K² = 0 (all higher terms vanish),
+then `(I + εK)^n = I + nεK` by the Jordan power formula.
+Status: requires matrix exponential expansion with nilpotent truncation.
 -/
-**Open debt**: prove exp(εK) = I + εK when K² = 0 (all higher terms vanish).
-Then (I + εK)^n = I + nεK by Jordan power formula.
-Status: requires matrix exponential expansion with nilpotent truncation. -/
 theorem exponentialRemainder_is_jordan_block {n : ℕ}
     (K : Matrix (Fin n) (Fin n) ℂ)
     (h_nilpotent : K * K = 0)

@@ -20,28 +20,28 @@ namespace InfoGeometry.Algebra
 
 open BigOperators
 
-abbrev Vec3 (R : Type*) := Fin 3 → R
+abbrev ZornVec3 (R : Type*) := Fin 3 → R
 
-namespace Vec3
+namespace ZornVec3
 
 variable {R : Type*} [CommRing R]
 
-def dot (x y : Vec3 R) : R :=
+def dot (x y : ZornVec3 R) : R :=
   ∑ i : Fin 3, x i * y i
 
 /-- Standard coordinate cross product on `Fin 3 → R`. -/
-def cross (x y : Vec3 R) : Vec3 R := fun i =>
+def cross (x y : ZornVec3 R) : ZornVec3 R := fun i =>
   if i = (0 : Fin 3) then x 1 * y 2 - x 2 * y 1
   else if i = (1 : Fin 3) then x 2 * y 0 - x 0 * y 2
   else x 0 * y 1 - x 1 * y 0
 
-end Vec3
+end ZornVec3
 
 /-- Zorn vector matrix `[[a,v],[w,b]]`. -/
 structure ZornVectorMatrix (R : Type*) where
   a : R
-  v : Vec3 R
-  w : Vec3 R
+  v : ZornVec3 R
+  w : ZornVec3 R
   b : R
 
 namespace ZornVectorMatrix
@@ -71,16 +71,16 @@ def sub (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
 
 /-- Zorn product. Non-associative; do not package as ordinary matrix product. -/
 def mul (X Y : ZornVectorMatrix R) : ZornVectorMatrix R :=
-  ⟨X.a * Y.a + Vec3.dot X.v Y.w,
-   fun i => X.a * Y.v i + Y.b * X.v i - Vec3.cross X.w Y.w i,
-   fun i => Y.a * X.w i + X.b * Y.w i + Vec3.cross X.v Y.v i,
-   Vec3.dot X.w Y.v + X.b * Y.b⟩
+  ⟨X.a * Y.a + ZornVec3.dot X.v Y.w,
+   fun i => X.a * Y.v i + Y.b * X.v i - ZornVec3.cross X.w Y.w i,
+   fun i => Y.a * X.w i + X.b * Y.w i + ZornVec3.cross X.v Y.v i,
+   ZornVec3.dot X.w Y.v + X.b * Y.b⟩
 
 def trace (X : ZornVectorMatrix R) : R :=
   X.a + X.b
 
 def norm (X : ZornVectorMatrix R) : R :=
-  X.a * X.b - Vec3.dot X.v X.w
+  X.a * X.b - ZornVec3.dot X.v X.w
 
 def conj (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨X.b, fun i => -X.v i, fun i => -X.w i, X.a⟩

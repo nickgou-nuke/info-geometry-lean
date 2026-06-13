@@ -1,7 +1,9 @@
 # Z3 Grassmann / Yang--Baxter / Differential-Calculus Source Audit
 
 This note records the source and proof-boundary map for the `Z3`-graded
-Grassmann, quantum-superplane, Hopf, and Yang--Baxter lane.
+Grassmann, quantum-superplane, Hopf, and Yang--Baxter lane.  This is not the
+same lane as `Z3` parafermion conformal field theory or parafermion lattice
+models that realize Fibonacci anyons.
 
 It is separate from both:
 
@@ -145,6 +147,13 @@ realization lane for models whose global topological phase has Fibonacci
 anyon excitations, but this requires explicit bridge theorems.
 ```
 
+More sharply: the Fibonacci-anyon connection goes through `Z3` parafermions
+in the Read--Rezayi/CFT or parafermion-lattice sense.  The Salih Çelik
+`Z3`-graded Cartan/differential-calculus lane supplies graded algebraic and
+Yang--Baxter technology, but it is not by itself a construction of the
+Fibonacci fusion category, Fibonacci `F/R` symbols, or an Artin braid-group
+representation.
+
 ## Formalization Order
 
 The next theorem-safe construction should be:
@@ -165,6 +174,28 @@ ZMod 3 grading
 Only after that chain exists should a file try to connect the lane to
 Fibonacci braid representations or MTC data.
 
+## Explicit Finite Bridge Owner
+
+The finite bridge owner is now:
+
+```text
+InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
+InfoGeometry.Categorical.CelikZ3BraidedTensorBridge
+```
+
+The bridge is conditional in the required place: a Salih Çelik-side pair of
+neighboring `R` operators must supply its own Artin/Yang--Baxter premise, and
+the finite two-channel matrix shadow must be explicitly matched to the repo's
+`z3RMatrix` / `z3BMatrix` owner from `FibonacciParafermionAtoms`.  Under those
+premises, the repo proves transport to the finite Fibonacci/Z3 Artin relation,
+keeps the complex Fibonacci `F/R/B` owner in `YangBaxterProof`, and records the
+Cantor--Cuntz odd/odd-to-even boundary parity layer.
+
+This still does not prove a full Salih Çelik differential-calculus `R`-matrix
+construction, a physical Read--Rezayi or parafermion-lattice realization
+functor, Fibonacci braid density/universality, or analytic Cuntz `O2`
+representation closure.
+
 ## Audit Rule
 
 When editing this lane:
@@ -174,6 +205,8 @@ When editing this lane:
 - call the Cantor-Clifford/Gromov lane **Derya Çelik and collaborators**;
 - keep `Z3` parafermion realization language separate from intrinsic
   Fibonacci fusion-category language;
+- keep `Z3` parafermion realization language separate from ordinary `Z3`
+  differential-calculus language;
 - never encode the cross-lane bridge as `: True := by trivial`;
 - every bridge must either be a real theorem from explicit premises or a named
   open proof target.

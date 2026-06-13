@@ -23,7 +23,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.infra.aiclaw_chat import ask_ai
-from tools.infra.lean_audit_prompt import extract_replacement_lean
+from tools.infra.lean_audit_prompt import extract_replacement_lean, lean_candidate_reject_reason
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -230,6 +230,14 @@ def response_readback_reason(text: str, candidate: str) -> str:
         return "flattened_lean_code_block"
     if candidate and "\n" not in candidate and len(candidate) > 300:
         return "single_line_large_candidate"
+    if candidate:
+        reject_reason = lean_candidate_reject_reason(candidate)
+        if reject_reason:
+            return reject_reason
+    if not candidate and not no_replacement:
+        reject_reason = lean_candidate_reject_reason(text, allow_snippet=True)
+        if reject_reason == "natural_language_candidate":
+            return reject_reason
     return ""
 
 
@@ -293,6 +301,8 @@ def run_oracle(args: argparse.Namespace) -> dict[str, Any]:
     content = str(result.get("content") or "")
     candidate = extract_lean_code(content)
     readback_reason = response_readback_reason(content, candidate)
+    if readback_reason:
+        candidate = ""
     needs_readback = bool(result.get("suspect_intermediate")) or bool(readback_reason)
     report = {
         "file": str(filepath),

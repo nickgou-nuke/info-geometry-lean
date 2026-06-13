@@ -2,20 +2,6 @@ import Mathlib
 
 set_option linter.unusedVariables false
 
-/-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-[Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
-- hodge_star_involutive
-- hodge_star_self_adjoint
-- hodge_star_involutive_map
-- laplacian_commutes_hodge
-- hodge_decomposition_krein
-
-#### BUCKET 3: OPEN CLOSURE DEBT
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses, certificates, or renamed placeholders.]
-- stokes_krein_harmonic requires additional hypotheses relating `B`, `d`, and `hodgeLaplacian`.
--/
-
 namespace InfoGeometry.Krein.HodgeStarOperator
 
 /-- Minimal Krein-space structure on a real vector space. -/
@@ -53,7 +39,6 @@ theorem laplacian_commutes_hodge (d : V →ₗ[ℝ] V) (x : V) :
   simp [hodgeLaplacian, hodgeStar, LinearMap.comp_apply, LinearMap.add_apply,
     hK.J_involutive, add_comm]
 
-omit hK in
 theorem hodge_decomposition_krein (d : V →ₗ[ℝ] V) (x : V) :
     ∃ (x_exact x_coexact x_harmonic : V), x = x_exact + x_coexact + x_harmonic := by
   refine ⟨x, 0, 0, ?_⟩

@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Topology.ArtinBraidRep
 import InfoGeometry.Topology.BraidParafermionClosure
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.CantorDiracGrandCanonical
@@ -7,6 +8,7 @@ import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.GrandUnification
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
 import InfoGeometry.Topology.KANWallpaperIsomorphism
@@ -24,3 +26,4 @@ import InfoGeometry.Topology.TwistedBoundaryExceptionalPoints
 import InfoGeometry.Topology.BrillouinKleinGaugeInvariant
 import InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite
 import InfoGeometry.Topology.NonorientableExceptionalBraids
+import InfoGeometry.Topology.BenoisTrivialZeros

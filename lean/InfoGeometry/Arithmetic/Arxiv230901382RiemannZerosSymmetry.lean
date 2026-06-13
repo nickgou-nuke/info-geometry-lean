@@ -202,6 +202,131 @@ theorem spinHalfCasimir_eq_three_quarters :
   fin_cases i <;> fin_cases j <;>
     norm_num [spinHalfCasimir, Jplus, Jminus, J0, Matrix.mul_apply, Fin.sum_univ_two]
 
+/-! ## Paper-level two-state actions and SUSY operators -/
+
+/-- Spin-up basis state `|1/2,1/2⟩`. -/
+def ketUp : Fin 2 → ℚ := ![1, 0]
+
+/-- Spin-down basis state `|1/2,-1/2⟩`. -/
+def ketDown : Fin 2 → ℚ := ![0, 1]
+
+/-- Raising kills spin-up. -/
+theorem Jplus_ketUp : Jplus.mulVec ketUp = 0 := by
+  ext i
+  fin_cases i <;> norm_num [Jplus, Matrix.mulVec, Fin.sum_univ_two, ketUp]
+
+/-- Raising maps spin-down to spin-up. -/
+theorem Jplus_ketDown : Jplus.mulVec ketDown = ketUp := by
+  ext i
+  fin_cases i <;> norm_num [Jplus, Matrix.mulVec, Fin.sum_univ_two, ketDown, ketUp]
+
+/-- Lowering maps spin-up to spin-down. -/
+theorem Jminus_ketUp : Jminus.mulVec ketUp = ketDown := by
+  ext i
+  fin_cases i <;> norm_num [Jminus, Matrix.mulVec, Fin.sum_univ_two, ketUp, ketDown]
+
+/-- Lowering kills spin-down. -/
+theorem Jminus_ketDown : Jminus.mulVec ketDown = 0 := by
+  ext i
+  fin_cases i <;> norm_num [Jminus, Matrix.mulVec, Fin.sum_univ_two, ketDown]
+
+/-- `J₀` eigenvalue `+1/2` on spin-up. -/
+theorem J0_ketUp : J0.mulVec ketUp = (1 / 2 : ℚ) • ketUp := by
+  ext i
+  fin_cases i <;> norm_num [J0, Matrix.mulVec, Fin.sum_univ_two, ketUp]
+
+/-- `J₀` eigenvalue `-1/2` on spin-down. -/
+theorem J0_ketDown : J0.mulVec ketDown = (-(1 / 2 : ℚ)) • ketDown := by
+  ext i
+  fin_cases i <;> norm_num [J0, Matrix.mulVec, Fin.sum_univ_two, ketDown]
+
+/-- Finite SUSY supercharge lowering from bosonic to fermionic sector with amplitude `a`. -/
+def superchargeA (a : ℂ) : Mat2C :=
+  !![0, 0;
+     a, 0]
+
+/-- Finite SUSY supercharge raising from fermionic to bosonic sector with amplitude `b`. -/
+def superchargeAdag (b : ℂ) : Mat2C :=
+  !![0, b;
+     0, 0]
+
+/-- Finite partner Hamiltonian `H₋ = A†A`. -/
+noncomputable def HminusFinite (a b : ℂ) : Mat2C :=
+  superchargeAdag b * superchargeA a
+
+/-- Finite partner Hamiltonian `H₊ = AA†`. -/
+noncomputable def HplusFinite (a b : ℂ) : Mat2C :=
+  superchargeA a * superchargeAdag b
+
+/-- The finite `H₋` block has eigenvalue product `ba` in the bosonic slot. -/
+theorem HminusFinite_eq (a b : ℂ) :
+    HminusFinite a b = !![b * a, 0; 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [HminusFinite, superchargeA, superchargeAdag, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The finite `H₊` block has eigenvalue product `ab` in the fermionic slot. -/
+theorem HplusFinite_eq (a b : ℂ) :
+    HplusFinite a b = !![0, 0; 0, a * b] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [HplusFinite, superchargeA, superchargeAdag, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- If the zeta-product amplitude vanishes, both finite partner blocks vanish. -/
+theorem finite_partner_blocks_zero_of_product_zero {a b : ℂ} (h : a * b = 0) :
+    HminusFinite a b = 0 ∧ HplusFinite a b = 0 := by
+  constructor
+  · rw [HminusFinite_eq]
+    have hb : b * a = 0 := by simpa [mul_comm] using h
+    rw [hb]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+  · rw [HplusFinite_eq]
+    rw [h]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp
+
+/-- Fermion-parity grading used in the Witten trace. -/
+def fermionParity : Mat2Q :=
+  !![1, 0;
+     0, -1]
+
+/-- Finite Witten trace of a zero-mode occupancy diagonal. -/
+def finiteWittenTrace (nB nF : ℚ) : ℚ :=
+  trace (fermionParity * !![nB, 0; 0, nF])
+
+/-- The finite Witten trace is the boson-minus-fermion count. -/
+theorem finiteWittenTrace_eq (nB nF : ℚ) :
+    finiteWittenTrace nB nF = nB - nF := by
+  simp [finiteWittenTrace, fermionParity, Fin.sum_univ_two, Matrix.trace]
+  ring
+
+/-- Finite parity operator for the direct-sum PT shadow. -/
+def parityP : Mat2Q :=
+  !![0, 1;
+     1, 0]
+
+/-- The parity shadow is an involution. -/
+theorem parityP_sq : parityP * parityP = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [parityP, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- A diagonal two-level Hamiltonian is parity-invariant exactly when the two diagonal entries agree. -/
+theorem parity_conjugates_diagonal (Eleft Eright : ℚ) :
+    parityP * !![Eleft, 0; 0, Eright] * parityP = !![Eright, 0; 0, Eleft] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [parityP, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Abstract gate saying a chosen zeta product vanishes. -/
+def ZetaProductZero (zeta : ZetaCoordinate → ℂ) (s : ZetaCoordinate) : Prop :=
+  zeta s * zeta (oneMinus s) = 0
+
+/-- A zeta-product zero makes the scalar SUSY block vanish. -/
+theorem susyBlock_zero_of_ZetaProductZero
+    {zeta : ZetaCoordinate → ℂ} {s : ZetaCoordinate} (h : ZetaProductZero zeta s) :
+    susyHamiltonianBlock (zeta s * zeta (oneMinus s)) (zeta s * zeta (oneMinus s)) = 0 :=
+  susyHamiltonianBlock_zero_of_energy_zero h
+
 /-- Consolidated kernel-checked packet for arXiv:2309.01382. -/
 theorem arxiv230901382_finite_symmetry_packet :
     wittenIndex 1 1 = 0 ∧
@@ -210,8 +335,13 @@ theorem arxiv230901382_finite_symmetry_packet :
       commQ Jplus Jminus = (2 : ℚ) • J0 ∧
       commQ J0 Jplus = Jplus ∧
       commQ J0 Jminus = -Jminus ∧
-      spinHalfCasimir = (3 / 4 : ℚ) • (1 : Mat2Q) := by
+      spinHalfCasimir = (3 / 4 : ℚ) • (1 : Mat2Q) ∧
+      Jplus.mulVec ketDown = ketUp ∧
+      Jminus.mulVec ketUp = ketDown ∧
+      finiteWittenTrace 1 1 = 0 ∧
+      parityP * parityP = 1 := by
   exact ⟨rfl, rfl, rfl, comm_Jplus_Jminus, comm_J0_Jplus,
-    comm_J0_Jminus, spinHalfCasimir_eq_three_quarters⟩
+    comm_J0_Jminus, spinHalfCasimir_eq_three_quarters, Jplus_ketDown,
+    Jminus_ketUp, by norm_num [finiteWittenTrace_eq], parityP_sq⟩
 
 end InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry

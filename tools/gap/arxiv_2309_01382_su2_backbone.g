@@ -24,6 +24,10 @@ if MatComm(Jp,Jm) <> J0twice then Error("[Jp,Jm] failed"); fi;
 if MatComm(J0twice,Jp) <> [[0,2],[0,0]] then Error("[2J0,Jp] failed"); fi;
 if MatComm(J0twice,Jm) <> [[0,0],[-2,0]] then Error("[2J0,Jm] failed"); fi;
 
+P := [[0,1],[1,0]];;
+I2 := [[1,0],[0,1]];;
+if MatMul(P,P) <> I2 then Error("parity involution failed"); fi;
+
 F := GF(3);;
 A := [[Z(3)^0, Z(3)^0], [0*Z(3), Z(3)^0]];;
 B := [[Z(3)^0, 0*Z(3)], [Z(3)^0, Z(3)^0]];;

@@ -33,6 +33,7 @@ import InfoGeometry.Algebra.CubicJordanPeirce
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import InfoGeometry.Algebra.FreudenthalComplete
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
+import InfoGeometry.Algebra.CPTComplexStructure
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import InfoGeometry.Algebra.InvariantTransport

@@ -1,317 +1,495 @@
-import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Clifford.Arxiv160309063SplitAlgebra
 import Mathlib.Tactic
 
+set_option linter.dupNamespace false
+
 /-!
-# Klein spinor orbit representatives over `C_s`
+# Theorem-safe split-complex Klein spinor stabilizer equations
 
-This file formalizes theorem-safe pieces of the Section 5.1 orbit discussion in
-Fioresi--Latini--Marrani, *Klein and Conformal Superspaces, Split Algebras and
-Spinor Orbits* (arXiv:1603.09063v2).
+This file records only finite coordinate facts around the `Spin(2,2) ≃ SL(2,C_s)`
+spinor discussion of Fioresi--Latini--Marrani, arXiv:1603.09063v2.
 
-Scope:
-
-* the split-complex spinor carrier `C_s²`;
-* the generic representative `(1,0)^t`;
-* the zero-divisor representatives `(E,0)^t` and `(E,E)^t`, with `E = 1+j`;
-* exact coordinate stabilizer conditions for raw `2×2` split-complex matrices.
-
-Boundary: this file does not prove the full `SL(2,C_s)` orbit classification,
-dimension counts, or the group isomorphism `Spin(2,2) ≃ SL(2,C_s)`.
+We do **not** prove a global spin-group isomorphism, orbit classification, or
+manifold dimension theorem.  We work with raw `2 × 2` matrices over the concrete
+split-complex coordinate model from `Arxiv160309063SplitAlgebra` and prove exact
+stabilizer equations for selected representatives.
 -/
 
 namespace InfoGeometry.Algebra.KleinSpinorOrbit
 
-open InfoGeometry.Clifford.Arxiv160309063
+namespace Cs
 
 abbrev Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC
 
-namespace Cs
+/-- Split-complex zero. -/
+def zero : Cs := ⟨0, 0⟩
 
-/-- Multiplication abbreviation for the split-complex coordinate model. -/
-def smul (a b : Cs) : Cs :=
-  SplitC.mul a b
+/-- Split-complex one. -/
+def one : Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.one
 
-/-- Addition abbreviation for the split-complex coordinate model. -/
-def sadd (a b : Cs) : Cs :=
-  SplitC.add a b
+/-- Split-complex addition. -/
+def add : Cs → Cs → Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.add
 
-/-- Zero in the split-complex coordinate model. -/
-def zero : Cs :=
-  ⟨0, 0⟩
+/-- Split-complex negation. -/
+def neg : Cs → Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.neg
 
-@[simp]
-theorem add_zero (z : Cs) : sadd z zero = z := by
-  cases z
-  simp [sadd, zero, SplitC.add]
+/-- Split-complex multiplication. -/
+def mul : Cs → Cs → Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.mul
 
-@[simp]
-theorem zero_add (z : Cs) : sadd zero z = z := by
-  cases z
-  simp [sadd, zero, SplitC.add]
+/-- Scalar embedding. -/
+def scalar : ℚ → Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar
 
-@[simp]
-theorem mul_zero (z : Cs) : smul z zero = zero := by
-  cases z
-  simp [smul, zero, SplitC.mul]
+/-- Lightlike zero divisor `E = 1 + j`. -/
+def E : Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.E
 
-@[simp]
-theorem zero_mul (z : Cs) : smul zero z = zero := by
-  cases z
-  simp [smul, zero, SplitC.mul]
+/-- Conjugate lightlike zero divisor `Ebar = 1 - j`. -/
+def Ebar : Cs := InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar
 
-/-- Negation in split-complex coordinates. -/
-def sneg (z : Cs) : Cs :=
-  ⟨-z.re, -z.im⟩
+/-- Coordinate extensionality helper. -/
+theorem ext {x y : Cs} (hre : x.re = y.re) (him : x.im = y.im) : x = y :=
+  InfoGeometry.Clifford.Arxiv160309063.SplitC.ext hre him
 
-/-- Subtraction in split-complex coordinates. -/
-def ssub (z w : Cs) : Cs :=
-  sadd z (sneg w)
+@[simp] theorem mul_E_coord (a b : ℚ) : mul ⟨a, b⟩ E = ⟨a + b, a + b⟩ := by
+  exact InfoGeometry.Clifford.Arxiv160309063.SplitC.mul_E a b
 
-@[simp]
-theorem sub_zero (z : Cs) : ssub z zero = z := by
-  cases z
-  simp [ssub, sadd, sneg, zero, SplitC.add]
+@[simp] theorem mul_Ebar_coord (a b : ℚ) : mul ⟨a, b⟩ Ebar = ⟨a - b, -(a - b)⟩ := by
+  exact InfoGeometry.Clifford.Arxiv160309063.SplitC.mul_Ebar a b
 
-@[simp]
-theorem add_neg_self (z : Cs) : ssub z z = zero := by
-  cases z
-  simp [ssub, sadd, sneg, zero, SplitC.add]
+/-- The distinguished lightlike directions multiply to zero. -/
+theorem E_zero_divisor : mul E Ebar = zero := by
+  exact InfoGeometry.Clifford.Arxiv160309063.SplitC.E_mul_Ebar
 
-@[simp]
-theorem one_mul (z : Cs) : smul SplitC.one z = z := by
-  cases z
-  simp [smul, SplitC.one, SplitC.scalar, SplitC.mul]
+/-- Coordinate criterion for stabilizing the `E` line at the vector `E`. -/
+theorem mul_E_eq_E_iff (z : Cs) : mul z E = E ↔ z.re + z.im = 1 := by
+  cases z with
+  | mk a b =>
+    constructor
+    · intro h
+      have hre := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.re h
+      simpa [mul, E, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.E] using hre
+    · intro h
+      apply ext <;> simp [mul, E, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.E, h]
 
-@[simp]
-theorem mul_one (z : Cs) : smul z SplitC.one = z := by
-  cases z
-  simp [smul, SplitC.one, SplitC.scalar, SplitC.mul]
+/-- Coordinate criterion for annihilating the lightlike vector `E`. -/
+theorem mul_E_eq_zero_iff (z : Cs) : mul z E = zero ↔ z.re + z.im = 0 := by
+  cases z with
+  | mk a b =>
+    constructor
+    · intro h
+      have hre := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.re h
+      simpa [mul, E, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.E] using hre
+    · intro h
+      apply ext <;> simp [mul, E, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.E, h]
 
-/-- Scalar multiplication by a rational in split-complex coordinates. -/
-def qsmul (r : ℚ) (z : Cs) : Cs :=
-  ⟨r * z.re, r * z.im⟩
+/-- The affine `E`-line equation `re+im=1` is exactly `1 + t Ebar`. -/
+theorem sum_eq_one_iff_exists_one_add_scalar_Ebar (z : Cs) :
+    z.re + z.im = 1 ↔ ∃ t : ℚ, z = add one (mul (scalar t) Ebar) := by
+  cases z with
+  | mk a b =>
+    constructor
+    · intro h
+      refine ⟨a - 1, ?_⟩
+      apply ext
+      · simp [add, one, mul, scalar, Ebar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
+      · simp [add, one, mul, scalar, Ebar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
+        linarith
+    · rintro ⟨t, ht⟩
+      rw [ht]
+      simp [add, one, mul, scalar, Ebar,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
 
-@[simp]
-theorem qsmul_Ebar_sum (r : ℚ) :
-    (qsmul r SplitC.Ebar).re + (qsmul r SplitC.Ebar).im = 0 := by
-  simp [qsmul, SplitC.Ebar]
-  ring
+/-- The homogeneous `E`-line annihilator equation `re+im=0` is exactly `t Ebar`. -/
+theorem sum_eq_zero_iff_exists_scalar_Ebar (z : Cs) :
+    z.re + z.im = 0 ↔ ∃ t : ℚ, z = mul (scalar t) Ebar := by
+  cases z with
+  | mk a b =>
+    constructor
+    · intro h
+      refine ⟨a, ?_⟩
+      apply ext
+      · simp [mul, scalar, Ebar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
+      · simp [mul, scalar, Ebar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+          InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
+        linarith
+    · rintro ⟨t, ht⟩
+      rw [ht]
+      simp [mul, scalar, Ebar,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+        InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
 
-@[simp]
-theorem one_add_qsmul_Ebar_sum (r : ℚ) :
-    (sadd SplitC.one (qsmul r SplitC.Ebar)).re +
-      (sadd SplitC.one (qsmul r SplitC.Ebar)).im = 1 := by
-  simp [sadd, qsmul, SplitC.add, SplitC.one, SplitC.scalar, SplitC.Ebar]
-  ring
+@[simp] theorem add_zero (x : Cs) : add x zero = x := by
+  cases x
+  apply ext <;> simp [add, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add]
 
-/-- `E = 1+j` is a zero divisor: `E * Ebar = 0`. -/
-theorem E_zero_divisor : smul SplitC.E SplitC.Ebar = zero := by
-  simpa [smul, zero] using SplitC.E_mul_Ebar
+@[simp] theorem zero_add (x : Cs) : add zero x = x := by
+  cases x
+  apply ext <;> simp [add, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add]
 
-/-- Coordinate characterization of `z * E = E`. -/
-theorem mul_E_eq_E_iff (z : Cs) :
-    smul z SplitC.E = SplitC.E ↔ z.re + z.im = 1 := by
-  constructor
-  · intro h
-    have hre := congrArg SplitC.re h
-    cases z with
-    | mk a b =>
-      simpa [smul, SplitC.E, SplitC.mul] using hre
-  · intro h
-    cases z with
-    | mk a b =>
-      dsimp at h
-      apply SplitC.ext
-      · simp [smul, SplitC.E, SplitC.mul]
-        exact h
-      · simp [smul, SplitC.E, SplitC.mul]
-        exact h
+@[simp] theorem mul_zero (x : Cs) : mul x zero = zero := by
+  cases x
+  apply ext <;> simp [mul, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul]
 
-/-- Coordinate characterization of `z * E = 0`. -/
-theorem mul_E_eq_zero_iff (z : Cs) :
-    smul z SplitC.E = zero ↔ z.re + z.im = 0 := by
-  constructor
-  · intro h
-    have hre := congrArg SplitC.re h
-    cases z with
-    | mk a b =>
-      simpa [smul, SplitC.E, SplitC.mul, zero] using hre
-  · intro h
-    cases z with
-    | mk a b =>
-      dsimp at h
-      apply SplitC.ext
-      · simp [smul, SplitC.E, SplitC.mul, zero]
-        exact h
-      · simp [smul, SplitC.E, SplitC.mul, zero]
-        exact h
+@[simp] theorem zero_mul (x : Cs) : mul zero x = zero := by
+  cases x
+  apply ext <;> simp [mul, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul]
+
+@[simp] theorem one_mul (x : Cs) : mul one x = x := by
+  cases x
+  apply ext <;> simp [mul, one, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar]
+
+@[simp] theorem mul_one (x : Cs) : mul x one = x := by
+  cases x
+  apply ext <;> simp [mul, one, InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar]
+
+@[simp] theorem add_neg_self (x : Cs) : add x (neg x) = zero := by
+  cases x
+  apply ext <;> simp [add, neg, zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.neg]
 
 end Cs
 
-/-- Split-complex two-component spinor. -/
+/-- A column spinor in `C_s²`. -/
 structure CsSpinor where
-  ψ_pos : Cs
-  ψ_neg : Cs
+  plus : Cs.Cs
+  minus : Cs.Cs
   deriving DecidableEq, Repr
 
-namespace CsSpinor
-
-@[ext]
-theorem ext {ψ φ : CsSpinor}
-    (hpos : ψ.ψ_pos = φ.ψ_pos) (hneg : ψ.ψ_neg = φ.ψ_neg) : ψ = φ := by
-  cases ψ
-  cases φ
-  dsimp at hpos hneg
-  cases hpos
-  cases hneg
-  rfl
-
-end CsSpinor
-
-/-- Raw `2×2` split-complex matrix. -/
+/-- A raw `2 × 2` matrix over `C_s`. -/
 structure CsMatrix2 where
-  aa : Cs
-  ab : Cs
-  ba : Cs
-  bb : Cs
+  aa : Cs.Cs
+  ab : Cs.Cs
+  ba : Cs.Cs
+  bb : Cs.Cs
   deriving DecidableEq, Repr
 
 namespace CsMatrix2
 
-/-- Identity raw matrix. -/
-def identity : CsMatrix2 :=
-  ⟨SplitC.one, Cs.zero, Cs.zero, SplitC.one⟩
+/-- Matrix-vector action by explicit coordinates. -/
+def action (M : CsMatrix2) (ψ : CsSpinor) : CsSpinor :=
+  ⟨Cs.add (Cs.mul M.aa ψ.plus) (Cs.mul M.ab ψ.minus),
+   Cs.add (Cs.mul M.ba ψ.plus) (Cs.mul M.bb ψ.minus)⟩
 
-/-- Raw split-complex determinant `aa*bb - ab*ba`. -/
-def det (M : CsMatrix2) : Cs :=
-  Cs.ssub (Cs.smul M.aa M.bb) (Cs.smul M.ab M.ba)
+/-- Raw determinant `aa*bb - ab*ba`. -/
+def det (M : CsMatrix2) : Cs.Cs :=
+  Cs.add (Cs.mul M.aa M.bb) (Cs.neg (Cs.mul M.ab M.ba))
 
-/-- Raw determinant-one predicate over `C_s`. -/
+/-- Determinant-one predicate for the raw coordinate matrix. -/
 def DetOne (M : CsMatrix2) : Prop :=
-  det M = SplitC.one
+  det M = Cs.one
 
-/-- Raw matrix action on `C_s²`. -/
-def action (M : CsMatrix2) (ψ : CsSpinor) : CsSpinor where
-  ψ_pos := Cs.sadd (Cs.smul M.aa ψ.ψ_pos) (Cs.smul M.ab ψ.ψ_neg)
-  ψ_neg := Cs.sadd (Cs.smul M.ba ψ.ψ_pos) (Cs.smul M.bb ψ.ψ_neg)
+/-- Identity matrix. -/
+def identity : CsMatrix2 :=
+  ⟨Cs.one, Cs.zero, Cs.zero, Cs.one⟩
 
-/-- Stabilizer predicate for a raw matrix and a spinor. -/
-def Stabilizes (M : CsMatrix2) (ψ : CsSpinor) : Prop :=
-  action M ψ = ψ
+/-- Upper unipotent family, a determinant-one generic stabilizer family. -/
+def genericUnipotent (b : Cs.Cs) : CsMatrix2 :=
+  ⟨Cs.one, b, Cs.zero, Cs.one⟩
 
-@[simp]
-theorem identity_action (ψ : CsSpinor) :
-    action identity ψ = ψ := by
-  cases ψ with
-  | mk p n =>
-  apply CsSpinor.ext <;>
-    simp [action, identity]
+/-- Lower `Ebar`-line family stabilizing the `E`-null representative. -/
+def nullEbarFamily (t : ℚ) : CsMatrix2 :=
+  ⟨Cs.one, Cs.zero, Cs.mul (Cs.scalar t) Cs.Ebar, Cs.one⟩
 
-@[simp]
-theorem identity_stabilizes (ψ : CsSpinor) :
-    Stabilizes identity ψ := by
-  simp [Stabilizes]
+@[simp] theorem identity_action (ψ : CsSpinor) : action identity ψ = ψ := by
+  cases ψ
+  simp [action, identity]
 
-@[simp]
-theorem det_identity : det identity = SplitC.one := by
-  simp [det, identity, Cs.ssub]
+@[simp] theorem identity_det_one : DetOne identity := by
+  apply Cs.ext <;> norm_num [DetOne, det, identity, Cs.add, Cs.mul, Cs.neg, Cs.one, Cs.zero,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.neg,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar]
 
-@[simp]
-theorem identity_detOne : DetOne identity := by
-  simp [DetOne]
+@[simp] theorem genericUnipotent_det_one (b : Cs.Cs) : DetOne (genericUnipotent b) := by
+  cases b
+  apply Cs.ext <;> norm_num [DetOne, det, genericUnipotent, Cs.add, Cs.mul, Cs.neg, Cs.one,
+    Cs.zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.neg,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar]
 
-/-- The unipotent family `[[1,b],[0,1]]` from the generic stabilizer. -/
-def genericUnipotent (b : Cs) : CsMatrix2 :=
-  ⟨SplitC.one, b, Cs.zero, SplitC.one⟩
-
-@[simp]
-theorem det_genericUnipotent (b : Cs) :
-    det (genericUnipotent b) = SplitC.one := by
-  simp [det, genericUnipotent, Cs.ssub]
-
-@[simp]
-theorem genericUnipotent_detOne (b : Cs) :
-    DetOne (genericUnipotent b) := by
-  simp [DetOne]
-
-/-- A raw family stabilizing `(E,0)^t`: `aa=1+rEbar`, `ba=sEbar`. -/
-def nullEbarFamily (r s : ℚ) (b d : Cs) : CsMatrix2 :=
-  ⟨Cs.sadd SplitC.one (Cs.qsmul r SplitC.Ebar), b, Cs.qsmul s SplitC.Ebar, d⟩
+@[simp] theorem nullEbarFamily_det_one (t : ℚ) : DetOne (nullEbarFamily t) := by
+  apply Cs.ext <;> norm_num [DetOne, det, nullEbarFamily, Cs.add, Cs.mul, Cs.neg, Cs.one,
+    Cs.zero, Cs.scalar, Cs.Ebar, InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.neg,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar]
 
 end CsMatrix2
 
-/-- The generic representative `(1,0)^t`. -/
+/-- Generic representative `(1,0)`. -/
 def genericRep : CsSpinor :=
-  ⟨SplitC.one, Cs.zero⟩
+  ⟨Cs.one, Cs.zero⟩
 
-/-- The zero-divisor representative `(E,0)^t`. -/
+/-- Null zero-divisor representative `(E,0)`. -/
 def nullRep : CsSpinor :=
-  ⟨SplitC.E, Cs.zero⟩
+  ⟨Cs.E, Cs.zero⟩
 
-/-- The equivalent paper representative `(E,E)^t`. -/
+/-- Diagonal null representative `(E,E)`, useful for row-sum equations. -/
 def diagonalNullRep : CsSpinor :=
-  ⟨SplitC.E, SplitC.E⟩
+  ⟨Cs.E, Cs.E⟩
 
-/-- Raw stabilizer condition for the generic representative: first column fixed. -/
+/-- Stabilizer predicate for a spinor. -/
+def Stabilizes (M : CsMatrix2) (ψ : CsSpinor) : Prop :=
+  CsMatrix2.action M ψ = ψ
+
+@[simp] theorem identity_stabilizes (ψ : CsSpinor) : Stabilizes CsMatrix2.identity ψ := by
+  simp [Stabilizes]
+
+/-- Exact generic-representative stabilizer equations for raw matrices. -/
 theorem stabilizes_generic_iff (M : CsMatrix2) :
-    M.Stabilizes genericRep ↔ M.aa = SplitC.one ∧ M.ba = Cs.zero := by
+    Stabilizes M genericRep ↔ M.aa = Cs.one ∧ M.ba = Cs.zero := by
   constructor
   · intro h
-    have hp := congrArg CsSpinor.ψ_pos h
-    have hn := congrArg CsSpinor.ψ_neg h
+    change CsMatrix2.action M genericRep = genericRep at h
     constructor
-    · simpa [CsMatrix2.Stabilizes, CsMatrix2.action, genericRep] using hp
-    · simpa [CsMatrix2.Stabilizes, CsMatrix2.action, genericRep] using hn
+    · simpa [CsMatrix2.action, genericRep] using congrArg CsSpinor.plus h
+    · simpa [CsMatrix2.action, genericRep] using congrArg CsSpinor.minus h
   · intro h
     rcases h with ⟨haa, hba⟩
-    apply CsSpinor.ext
-    · simp [CsMatrix2.action, genericRep, haa]
-    · simp [CsMatrix2.action, genericRep, hba]
+    cases M
+    simp_all [Stabilizes, CsMatrix2.action, genericRep]
 
-/-- Raw stabilizer condition for `(E,0)^t`. -/
+/-- Exact null-representative stabilizer equations for raw matrices. -/
 theorem stabilizes_null_iff (M : CsMatrix2) :
-    M.Stabilizes nullRep ↔
-      M.aa.re + M.aa.im = 1 ∧ M.ba.re + M.ba.im = 0 := by
+    Stabilizes M nullRep ↔ Cs.mul M.aa Cs.E = Cs.E ∧ Cs.mul M.ba Cs.E = Cs.zero := by
   constructor
   · intro h
-    have hp := congrArg CsSpinor.ψ_pos h
-    have hn := congrArg CsSpinor.ψ_neg h
+    change CsMatrix2.action M nullRep = nullRep at h
     constructor
-    · exact (Cs.mul_E_eq_E_iff M.aa).mp (by
-        simpa [CsMatrix2.Stabilizes, CsMatrix2.action, nullRep] using hp)
-    · exact (Cs.mul_E_eq_zero_iff M.ba).mp (by
-        simpa [CsMatrix2.Stabilizes, CsMatrix2.action, nullRep] using hn)
+    · simpa [CsMatrix2.action, nullRep] using congrArg CsSpinor.plus h
+    · simpa [CsMatrix2.action, nullRep] using congrArg CsSpinor.minus h
   · intro h
     rcases h with ⟨haa, hba⟩
-    apply CsSpinor.ext
-    · have hmul := (Cs.mul_E_eq_E_iff M.aa).mpr haa
-      simpa [CsMatrix2.Stabilizes, CsMatrix2.action, nullRep] using hmul
-    · have hmul := (Cs.mul_E_eq_zero_iff M.ba).mpr hba
-      simpa [CsMatrix2.Stabilizes, CsMatrix2.action, nullRep] using hmul
+    cases M
+    simp_all [Stabilizes, CsMatrix2.action, nullRep]
 
-/-- Raw stabilizer condition for `(E,E)^t`. -/
+/-- The lower `Ebar` family gives determinant-one null stabilizers. -/
+theorem nullEbarFamily_stabilizes (t : ℚ) :
+    Stabilizes (CsMatrix2.nullEbarFamily t) nullRep := by
+  rw [stabilizes_null_iff]
+  constructor
+  · exact Cs.one_mul Cs.E
+  · unfold CsMatrix2.nullEbarFamily
+    change Cs.mul (Cs.mul (Cs.scalar t) Cs.Ebar) Cs.E = Cs.zero
+    apply Cs.ext <;> simp [Cs.mul, Cs.scalar, Cs.Ebar, Cs.E, Cs.zero,
+      InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+      InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar,
+      InfoGeometry.Clifford.Arxiv160309063.SplitC.Ebar,
+      InfoGeometry.Clifford.Arxiv160309063.SplitC.E]
+
+/-- Exact diagonal-null stabilizer equations: only the two row sums matter. -/
 theorem stabilizes_diagonalNull_iff (M : CsMatrix2) :
-    M.Stabilizes diagonalNullRep ↔
-      M.aa.re + M.aa.im + (M.ab.re + M.ab.im) = 1 ∧
-      M.ba.re + M.ba.im + (M.bb.re + M.bb.im) = 1 := by
+    Stabilizes M diagonalNullRep ↔
+      Cs.add (Cs.mul M.aa Cs.E) (Cs.mul M.ab Cs.E) = Cs.E ∧
+      Cs.add (Cs.mul M.ba Cs.E) (Cs.mul M.bb Cs.E) = Cs.E := by
   constructor
   · intro h
-    have hp := congrArg CsSpinor.ψ_pos h
-    have hn := congrArg CsSpinor.ψ_neg h
+    change CsMatrix2.action M diagonalNullRep = diagonalNullRep at h
     constructor
-    · simpa [CsMatrix2.Stabilizes, CsMatrix2.action, diagonalNullRep,
-        Cs.smul, Cs.sadd, SplitC.mul, SplitC.add, SplitC.E] using hp
-    · simpa [CsMatrix2.Stabilizes, CsMatrix2.action, diagonalNullRep,
-        Cs.smul, Cs.sadd, SplitC.mul, SplitC.add, SplitC.E] using hn
+    · exact congrArg CsSpinor.plus h
+    · exact congrArg CsSpinor.minus h
   · intro h
-    rcases h with ⟨hrow₁, hrow₂⟩
-    apply CsSpinor.ext
-    · simp [CsMatrix2.action, diagonalNullRep,
-        Cs.smul, Cs.sadd, SplitC.mul, SplitC.add, SplitC.E]
-      linarith
-    · simp [CsMatrix2.action, diagonalNullRep,
-        Cs.smul, Cs.sadd, SplitC.mul, SplitC.add, SplitC.E]
-      linarith
+    rcases h with ⟨h₁, h₂⟩
+    cases M
+    simp [Stabilizes, CsMatrix2.action, diagonalNullRep, h₁, h₂]
+
+/-- Upper unipotents are determinant-one stabilizers of the generic representative. -/
+theorem genericUnipotent_stabilizes (b : Cs.Cs) :
+    CsMatrix2.DetOne (CsMatrix2.genericUnipotent b) ∧
+    Stabilizes (CsMatrix2.genericUnipotent b) genericRep := by
+  constructor
+  · simp
+  · rw [stabilizes_generic_iff]
+    simp [CsMatrix2.genericUnipotent]
+
+/--
+Bundled determinant-one raw `2 × 2` split-complex matrices.
+
+This is a theorem-safe local coordinate stand-in for the paper's
+`SL(2, C_s)` notation.  We only bundle the determinant-one equation proved for
+our concrete coordinate determinant; we do not claim a global Lie-group or Spin
+isomorphism here.
+-/
+structure CsSL2 where
+  M : CsMatrix2
+  det_one : CsMatrix2.DetOne M
+  deriving Repr
+
+namespace CsSL2
+
+/-- The bundled identity determinant-one matrix. -/
+def identity : CsSL2 :=
+  ⟨CsMatrix2.identity, CsMatrix2.identity_det_one⟩
+
+/-- The bundled upper-unipotent determinant-one family. -/
+def genericUnipotent (b : Cs.Cs) : CsSL2 :=
+  ⟨CsMatrix2.genericUnipotent b, CsMatrix2.genericUnipotent_det_one b⟩
+
+/-- The bundled lower `Ebar` determinant-one null-stabilizer family. -/
+def nullEbarFamily (t : ℚ) : CsSL2 :=
+  ⟨CsMatrix2.nullEbarFamily t, CsMatrix2.nullEbarFamily_det_one t⟩
+
+/-- Action of a bundled determinant-one matrix on a split spinor. -/
+def action (g : CsSL2) (ψ : CsSpinor) : CsSpinor :=
+  CsMatrix2.action g.M ψ
+
+/-- Stabilizer predicate for a bundled determinant-one matrix. -/
+def Stabilizes (g : CsSL2) (ψ : CsSpinor) : Prop :=
+  action g ψ = ψ
+
+@[simp] theorem identity_action (ψ : CsSpinor) : action identity ψ = ψ := by
+  simp [action, identity]
+
+@[simp] theorem identity_stabilizes (ψ : CsSpinor) : Stabilizes identity ψ := by
+  simp [Stabilizes]
+
+/-- Determinant-one matrices stabilize `(1,0)` exactly when the first column is `(1,0)`. -/
+theorem stabilizes_generic_iff (g : CsSL2) :
+    Stabilizes g genericRep ↔ g.M.aa = Cs.one ∧ g.M.ba = Cs.zero := by
+  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
+    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_generic_iff g.M
+
+/-- Determinant-one matrices stabilize `(E,0)` exactly by the two `E`-line equations. -/
+theorem stabilizes_null_iff (g : CsSL2) :
+    Stabilizes g nullRep ↔ Cs.mul g.M.aa Cs.E = Cs.E ∧ Cs.mul g.M.ba Cs.E = Cs.zero := by
+  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
+    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_null_iff g.M
+
+/-- Determinant-one matrices stabilize `(E,E)` exactly by the two row-sum equations. -/
+theorem stabilizes_diagonalNull_iff (g : CsSL2) :
+    Stabilizes g diagonalNullRep ↔
+      Cs.add (Cs.mul g.M.aa Cs.E) (Cs.mul g.M.ab Cs.E) = Cs.E ∧
+      Cs.add (Cs.mul g.M.ba Cs.E) (Cs.mul g.M.bb Cs.E) = Cs.E := by
+  simpa [Stabilizes, action, InfoGeometry.Algebra.KleinSpinorOrbit.Stabilizes]
+    using InfoGeometry.Algebra.KleinSpinorOrbit.stabilizes_diagonalNull_iff g.M
+
+/-- Eq.-5.22-style local content: the generic upper-unipotent family is determinant-one
+and stabilizes the generic representative `(1,0)`. -/
+theorem eq_5_22_generic_unipotent_stabilizes (b : Cs.Cs) :
+    Stabilizes (genericUnipotent b) genericRep := by
+  rw [stabilizes_generic_iff]
+  simp [genericUnipotent, CsMatrix2.genericUnipotent]
+
+/-- Determinant-one generic stabilizers are exactly upper unipotents in coordinates. -/
+theorem eq_5_22_generic_stabilizer_shape (g : CsSL2) :
+    Stabilizes g genericRep ↔ g.M = CsMatrix2.genericUnipotent g.M.ab := by
+  constructor
+  · intro hstab
+    rcases (stabilizes_generic_iff g).mp hstab with ⟨haa, hba⟩
+    cases g with
+    | mk M hdet =>
+      cases M with
+      | mk aa ab ba bb =>
+        dsimp at haa hba hdet ⊢
+        subst aa
+        subst ba
+        have hbb : bb = Cs.one := by
+          cases bb with
+          | mk bre bim =>
+            cases ab with
+            | mk are aim =>
+              apply Cs.ext
+              · have hre := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.re hdet
+                norm_num [CsMatrix2.DetOne, CsMatrix2.det, Cs.add, Cs.mul, Cs.neg, Cs.one,
+                  Cs.zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.neg,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar] at hre
+                exact hre
+              · have him := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.im hdet
+                norm_num [CsMatrix2.DetOne, CsMatrix2.det, Cs.add, Cs.mul, Cs.neg, Cs.one,
+                  Cs.zero, InfoGeometry.Clifford.Arxiv160309063.SplitC.add,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.mul,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.neg,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+                  InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar] at him
+                exact him
+        subst bb
+        rfl
+  · intro hshape
+    change CsMatrix2.action g.M genericRep = genericRep
+    rw [hshape]
+    exact (InfoGeometry.Algebra.KleinSpinorOrbit.genericUnipotent_stabilizes g.M.ab).2
+
+/-- Null stabilization by determinant-one matrices, reduced to two scalar row-sum equations
+on the `E` line. -/
+theorem eq_5_23_null_scalar_conditions (g : CsSL2) :
+    Stabilizes g nullRep ↔ g.M.aa.re + g.M.aa.im = 1 ∧ g.M.ba.re + g.M.ba.im = 0 := by
+  rw [stabilizes_null_iff]
+  constructor
+  · intro h
+    exact ⟨(Cs.mul_E_eq_E_iff g.M.aa).mp h.1, (Cs.mul_E_eq_zero_iff g.M.ba).mp h.2⟩
+  · intro h
+    exact ⟨(Cs.mul_E_eq_E_iff g.M.aa).mpr h.1, (Cs.mul_E_eq_zero_iff g.M.ba).mpr h.2⟩
+
+/-- Null stabilizers have first column on the affine/homogeneous `Ebar` lines.
+This is a coordinate first-column shape theorem only; it does not identify the
+full stabilizer as an abstract semidirect product. -/
+theorem eq_5_23_null_first_column_Ebar_shape (g : CsSL2) :
+    Stabilizes g nullRep ↔
+      ∃ r s : ℚ,
+        g.M.aa = Cs.add Cs.one (Cs.mul (Cs.scalar r) Cs.Ebar) ∧
+        g.M.ba = Cs.mul (Cs.scalar s) Cs.Ebar := by
+  rw [eq_5_23_null_scalar_conditions]
+  constructor
+  · intro h
+    rcases (Cs.sum_eq_one_iff_exists_one_add_scalar_Ebar g.M.aa).mp h.1 with ⟨r, hr⟩
+    rcases (Cs.sum_eq_zero_iff_exists_scalar_Ebar g.M.ba).mp h.2 with ⟨s, hs⟩
+    exact ⟨r, s, hr, hs⟩
+  · rintro ⟨r, s, hr, hs⟩
+    constructor
+    · exact (Cs.sum_eq_one_iff_exists_one_add_scalar_Ebar g.M.aa).mpr ⟨r, hr⟩
+    · exact (Cs.sum_eq_zero_iff_exists_scalar_Ebar g.M.ba).mpr ⟨s, hs⟩
+
+/-- Eq.-5.23-style local content: the `Ebar` lower family is determinant-one and
+stabilizes the null representative `(E,0)`. -/
+theorem eq_5_23_null_Ebar_family_stabilizes (t : ℚ) :
+    Stabilizes (nullEbarFamily t) nullRep := by
+  simpa [Stabilizes, action, nullEbarFamily]
+    using InfoGeometry.Algebra.KleinSpinorOrbit.nullEbarFamily_stabilizes t
+
+/-- Eq.-5.24-style local content: for the diagonal null representative `(E,E)`,
+stabilization is the pair of row-sum equations on the `E` line. -/
+theorem eq_5_24_diagonal_null_row_sum_iff (g : CsSL2) :
+    Stabilizes g diagonalNullRep ↔
+      Cs.add (Cs.mul g.M.aa Cs.E) (Cs.mul g.M.ab Cs.E) = Cs.E ∧
+      Cs.add (Cs.mul g.M.ba Cs.E) (Cs.mul g.M.bb Cs.E) = Cs.E :=
+  stabilizes_diagonalNull_iff g
+
+end CsSL2
 
 end InfoGeometry.Algebra.KleinSpinorOrbit

@@ -21,7 +21,19 @@ This file documents the connection; the actual routing theorems are in
 
 namespace InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge
 
+/--
+**Cuntz-Cantor word parity matches the superbracket routing.** The parity
+additivity `wordParityZ2 (u++v) = wordParityZ2 u + wordParityZ2 v` from
+`CuntzCantorSupergradedBridge.wordParityZ2_append` is claimed to be the
+algebraic form of the superbracket routing in `SuperTKKConformalClosure`.
+
+**Closure debt**: This theorem requires proving that the parity-additivity
+identity implies the explicit gauge/routing described in the module docstring.
+The routing theorems in `SuperTKKConformalClosure` may already cover this,
+but the explicit implication has not been formalized as a named theorem
+on this file's namespace.
+-/
 theorem word_parity_matches_superbracket_routing : True := by
-  trivial
+  sorry
 
 end InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge

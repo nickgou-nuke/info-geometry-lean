@@ -186,26 +186,29 @@ coefficients are integers (exact for `SMul ℝ SplitOct`).
 -/
 theorem freudenthal_identity_up0_up1_down1 (a b c : ℤ) :
     adjointQuad (adjointQuad
-      { α₁ := (a : ℝ); α₂ := (b : ℝ); α₃ := (c : ℝ)
-        z₁ := up0; z₂ := up1; z₃ := down1 }) =
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up0
+        z₂ := up1
+        z₃ := down1 }) =
     (normCubic
-      { α₁ := (a : ℝ); α₂ := (b : ℝ); α₃ := (c : ℝ)
-        z₁ := up0; z₂ := up1; z₃ := down1 } : ℝ) •
-    { α₁ := (a : ℝ); α₂ := (b : ℝ); α₃ := (c : ℝ)
-      z₁ := up0; z₂ := up1; z₃ := down1 } := by
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up0
+        z₂ := up1
+        z₃ := down1 } : ℝ) •
+    { α₁ := (a : ℝ)
+      α₂ := (b : ℝ)
+      α₃ := (c : ℝ)
+      z₁ := up0
+      z₂ := up1
+      z₃ := down1 } := by
   -- Use the basis multiplication identities
   have h_mul_up0_up1 : mulZ up0 up1 = down2 := up0_mul_up1
   have h_mul_up1_down1 : mulZ up1 down1 = ePlus := up_mul_down_same 1
-  have h_mul_up0_down1 : mulZ up0 down1 := by
-    -- Not a standard basis product; up0·down1 is determined by the table
-    -- From the multiplication packet: up_mul_down_same 0: up0*down0 = ePlus
-    -- But up0*down1 isn't listed. From the cyclic structure: up0*down1 = 0
-    -- because up_i * down_j = delta_ij * ePlus.
-    -- Let's verify: from `up_mul_down_same i`, we have up_i * down_i = ePlus.
-    -- For i ≠ j, the product is zero.
-    -- This can be proved by `dec_trivial` on the 3×3 grid.
-    have h : mulZ up0 down1 = zeroZ := by decide
-    exact h
+  have h_mul_up0_down1 : mulZ up0 down1 = zeroZ := by decide
   have h_conj_up0 : conjZ up0 = negZ up0 := conjZ_up 0
   have h_conj_up1 : conjZ up1 = negZ up1 := conjZ_up 1
   have h_conj_down1 : conjZ down1 = negZ down1 := conjZ_down 1
@@ -229,6 +232,124 @@ theorem freudenthal_identity_up0_up1_down1 (a b c : ℤ) :
   -- Remaining: pure ℝ algebra on a, b, c
   ring
 
+/-! ## Cyclic symmetry of the Albert algebra -/
+
+/-- Cyclic shift of Albert matrix entries: (α₁,α₂,α₃,z₁,z₂,z₃) → (α₂,α₃,α₁,z₂,z₃,z₁). -/
+def cyclicShift (X : AlbertMatrix) : AlbertMatrix :=
+  { α₁ := X.α₂; α₂ := X.α₃; α₃ := X.α₁
+    z₁ := X.z₂; z₂ := X.z₃; z₃ := X.z₁ }
+
+/-- `adjointQuad` is equivariant under cyclic shift. -/
+theorem adjointQuad_cyclic (X : AlbertMatrix) :
+    adjointQuad (cyclicShift X) = cyclicShift (adjointQuad X) := by
+  dsimp [adjointQuad, cyclicShift]; rfl
+
+/-- `normCubic` is invariant under cyclic shift. -/
+theorem normCubic_cyclic (X : AlbertMatrix) : normCubic (cyclicShift X) = normCubic X := by
+  dsimp [normCubic, cyclicShift, octTrace]; ring
+
+/-- The Freudenthal identity is preserved under cyclic shift. -/
+theorem freudenthal_cyclic (X : AlbertMatrix)
+    (h : adjointQuad (adjointQuad X) = (normCubic X : ℝ) • X) :
+    adjointQuad (adjointQuad (cyclicShift X)) = (normCubic (cyclicShift X) : ℝ) • cyclicShift X := by
+  rw [adjointQuad_cyclic, adjointQuad_cyclic, normCubic_cyclic]
+  -- h gives: adjointQuad(adjointQuad X) = N(X)·X
+  -- Apply cyclicShift to both sides
+  have h' := congrArg cyclicShift h
+  -- LHS: cyclicShift(N(X)·X) = N(X)·cyclicShift X (by SMul on fields)
+  -- RHS: cyclicShift(adjointQuad(adjointQuad X))
+  simpa [cyclicShift, SMul.smul, smul_α₁, smul_α₂, smul_α₃, smul_z₁, smul_z₂, smul_z₃] using h'
+
+/-! ## Peirce basis cyclic symmetry: direct proof via multiplication table -/
+
+/--
+**Cyclic variant 1:** `z₁=up1, z₂=up2, z₃=down2`.
+Proved by the same method as `freudenthal_identity_up0_up1_down1`.
+-/
+theorem freudenthal_identity_up1_up2_down2 (a b c : ℤ) :
+    adjointQuad (adjointQuad
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up1
+        z₂ := up2
+        z₃ := down2 }) =
+    (normCubic
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up1
+        z₂ := up2
+        z₃ := down2 } : ℝ) •
+    { α₁ := (a : ℝ)
+      α₂ := (b : ℝ)
+      α₃ := (c : ℝ)
+      z₁ := up1
+      z₂ := up2
+      z₃ := down2 } := by
+  have h_mul_up1_up2 : mulZ up1 up2 = down0 := up1_mul_up2
+  have h_mul_up2_down2 : mulZ up2 down2 = ePlus := up_mul_down_same 2
+  have h_mul_up1_down2 : mulZ up1 down2 = zeroZ := by decide
+  have h_conj_up1 : conjZ up1 = negZ up1 := conjZ_up 1
+  have h_conj_up2 : conjZ up2 = negZ up2 := conjZ_up 2
+  have h_conj_down2 : conjZ down2 = negZ down2 := conjZ_down 2
+  have h_smul_int (r : ℤ) (z : SplitOct) : ((r : ℝ) • z) = mulZ (scalarZ r) z := by
+    simp [SMul.smul, roundℝ]
+  have h_det_up1 : (detZ up1 : ℝ) = 0 := by norm_cast; exact detZ_up 1
+  have h_det_up2 : (detZ up2 : ℝ) = 0 := by norm_cast; exact detZ_up 2
+  have h_det_down2 : (detZ down2 : ℝ) = 0 := by norm_cast; exact detZ_down 2
+  dsimp [adjointQuad, normCubic, octTrace]
+  simp [h_mul_up1_up2, h_mul_up2_down2, h_mul_up1_down2,
+    h_conj_up1, h_conj_up2, h_conj_down2,
+    h_smul_int, h_det_up1, h_det_up2, h_det_down2,
+    mulZ, conjZ, negZ, subZ, scalarZ, zeroZ, ePlus,
+    up1, up2, down2, down0, detZ]
+  ring
+
+/--
+**Cyclic variant 2:** `z₁=up2, z₂=up0, z₃=down0`.
+Completes the cyclic orbit of the nonassociative witness.
+-/
+theorem freudenthal_identity_up2_up0_down0 (a b c : ℤ) :
+    adjointQuad (adjointQuad
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up2
+        z₂ := up0
+        z₃ := down0 }) =
+    (normCubic
+      { α₁ := (a : ℝ)
+        α₂ := (b : ℝ)
+        α₃ := (c : ℝ)
+        z₁ := up2
+        z₂ := up0
+        z₃ := down0 } : ℝ) •
+    { α₁ := (a : ℝ)
+      α₂ := (b : ℝ)
+      α₃ := (c : ℝ)
+      z₁ := up2
+      z₂ := up0
+      z₃ := down0 } := by
+  have h_mul_up2_up0 : mulZ up2 up0 = down1 := up2_mul_up0
+  have h_mul_up0_down0 : mulZ up0 down0 = ePlus := up_mul_down_same 0
+  have h_mul_up2_down0 : mulZ up2 down0 = zeroZ := by decide
+  have h_conj_up2 : conjZ up2 = negZ up2 := conjZ_up 2
+  have h_conj_up0 : conjZ up0 = negZ up0 := conjZ_up 0
+  have h_conj_down0 : conjZ down0 = negZ down0 := conjZ_down 0
+  have h_smul_int (r : ℤ) (z : SplitOct) : ((r : ℝ) • z) = mulZ (scalarZ r) z := by
+    simp [SMul.smul, roundℝ]
+  have h_det_up2 : (detZ up2 : ℝ) = 0 := by norm_cast; exact detZ_up 2
+  have h_det_up0 : (detZ up0 : ℝ) = 0 := by norm_cast; exact detZ_up 0
+  have h_det_down0 : (detZ down0 : ℝ) = 0 := by norm_cast; exact detZ_down 0
+  dsimp [adjointQuad, normCubic, octTrace]
+  simp [h_mul_up2_up0, h_mul_up0_down0, h_mul_up2_down0,
+    h_conj_up2, h_conj_up0, h_conj_down0,
+    h_smul_int, h_det_up2, h_det_up0, h_det_down0,
+    mulZ, conjZ, negZ, subZ, scalarZ, zeroZ, ePlus,
+    up2, up0, down0, down1, detZ]
+  ring
+
 /--
 **Full Freudenthal identity — proof strategy.**
 
@@ -249,20 +370,10 @@ The diagonal STU case (zᵢ = 0) is fully proved above. The nonassociative
 basis case (z₁=up0, z₂=up1, z₃=down1) is proved above. The general case
 follows by ℤ-linear extension over the 8³ basis triples.
 
-Verified by the SymPy/Sage/GAP witness chain:
-- `tools/sympy/freudenthal_identity.py`
-- `tools/gap/freudenthal_cubic_reduction.g`
-- `tools/sage/zorn_split_octonion_invariants.sage.py`
-- `external_refs/SplitOct/src/SplitOct.py`
--/
-- `tools/sage/zorn_split_octonion_invariants.sage.py` — Sage invariants
-- `external_refs/SplitOct/src/SplitOct.py` — Python reference (Gurchumelia 2023)
-
-The current `SMul ℝ SplitOct` uses `Int.round` for ℤ→ℤ truncation,
-which is exact for integer scalars. Full ℝ-linearity requires extending
-`SplitOct` to ℝ coefficients (BUCKET 3). The Freudenthal identity for
-the full 27-dimensional Albert algebra over ℝ is proved in the external
-references above and awaits this coefficient extension.
+Verified by the SymPy/Sage/GAP/external_refs witness chain.
+Proof strategy: cyclic symmetry + Peirce linear extension over 8³ basis.
+The diagonal and nonassociative witness cases are proved above.
+Full ℝ-linearity requires SplitOct ⊗_ℤ ℝ (BUCKET 3).
 -/
 
 end AlbertMatrix

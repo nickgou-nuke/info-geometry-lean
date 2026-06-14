@@ -3,11 +3,25 @@ open Matrix Complex
 
 noncomputable section
 
-axiom tilt : Matrix (Fin 2) (Fin 2) ℂ
-axiom tilt_sq : tilt ^ 2 = 1
-axiom switch : Matrix (Fin 2) (Fin 2) ℂ
-axiom switch_sq : switch ^ 2 = 1
-axiom tilt_switch_anticomm : tilt * switch = -(switch * tilt)
+/-- Concrete Pauli-`Z` sewing tilt. -/
+def tilt : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![1, 0; 0, -1]
+
+/-- Concrete Pauli-`X` sewing switch. -/
+def switch : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![0, 1; 1, 0]
+
+lemma tilt_sq : tilt ^ 2 = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [tilt, pow_two, Matrix.mul_apply]
+
+lemma switch_sq : switch ^ 2 = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [switch, pow_two, Matrix.mul_apply]
+
+lemma tilt_switch_anticomm : tilt * switch = -(switch * tilt) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [tilt, switch, Matrix.mul_apply]
 
 structure BoundaryState where
   rho : Matrix (Fin 2) (Fin 2) ℂ

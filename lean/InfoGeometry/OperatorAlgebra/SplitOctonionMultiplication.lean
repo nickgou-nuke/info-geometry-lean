@@ -169,6 +169,26 @@ theorem detZ_up (i : Fin 3) : detZ (up i) = 0 := by
 theorem detZ_down (i : Fin 3) : detZ (down i) = 0 := by
   fin_cases i <;> decide
 
+/-- Correct conjugation `conj(a, x; y, b) = (b, -x; -y, a)` giving `Z·conj(Z) = detZ(Z)·1`. -/
+def conjZ (X : SplitOct) : SplitOct :=
+  ⟨X.b, X.a, -X.x0, -X.x1, -X.x2, -X.y0, -X.y1, -X.y2⟩
+
+/-- Scalar embedding: `r ↦ (r, 0; 0, r)`, the identity element when `r = 1`. -/
+def scalarZ (r : ℤ) : SplitOct :=
+  ⟨r, r, 0, 0, 0, 0, 0, 0⟩
+
+/-- Conjugation is an involution. -/
+theorem conjZ_conjZ (X : SplitOct) : conjZ (conjZ X) = X := by
+  cases X; simp [conjZ]
+
+/-- The determinant is invariant under conjugation. -/
+theorem detZ_conjZ (X : SplitOct) : detZ (conjZ X) = detZ X := by
+  cases X; simp [conjZ, detZ]; ring
+
+/-- **Alternative property:** `Z·conj(Z) = detZ(Z)·1` in the Zorn model. -/
+theorem mul_conjZ_eq_scalar_detZ (X : SplitOct) : mulZ X (conjZ X) = scalarZ (detZ X) := by
+  cases X; unfold mulZ conjZ scalarZ detZ; ring
+
 /-- Closed kernel packet for the true split-octonion basis multiplication surface. -/
 theorem splitOctonion_multiplication_packet :
     mulZ ePlus ePlus = ePlus ∧

@@ -39,5 +39,12 @@ import InfoGeometry.Topology.ArtinBraidS3Quotient
 import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.FibonacciBraidRepresentation
 import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Topology.DelaunayAdjacentStructures
+import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
+import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.DelaunayPureBraidInvariant
+import InfoGeometry.Topology.DelaunayFlipInterfaces
+import InfoGeometry.Topology.DelaunayPureBraidRepresentation
+import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
+import InfoGeometry.Topology.DelaunayMobiusFlip

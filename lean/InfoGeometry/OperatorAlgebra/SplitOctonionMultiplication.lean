@@ -25,6 +25,7 @@ classification theorem.
 namespace InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 /-- Eight-coordinate Zorn split-octonion cell over `ℤ`. -/
+@[ext]
 structure SplitOct where
   a : ℤ
   b : ℤ
@@ -188,6 +189,20 @@ theorem detZ_conjZ (X : SplitOct) : detZ (conjZ X) = detZ X := by
 /-- **Alternative property:** `Z·conj(Z) = detZ(Z)·1` in the Zorn model. -/
 theorem mul_conjZ_eq_scalar_detZ (X : SplitOct) : mulZ X (conjZ X) = scalarZ (detZ X) := by
   cases X; unfold mulZ conjZ scalarZ detZ; ring
+
+/-! ## Conjugation on basis elements -/
+
+theorem conjZ_ePlus : conjZ ePlus = eMinus := by simp [conjZ, ePlus, eMinus]
+theorem conjZ_eMinus : conjZ eMinus = ePlus := by simp [conjZ, ePlus, eMinus]
+theorem conjZ_zeroZ : conjZ zeroZ = zeroZ := by simp [conjZ, zeroZ]
+theorem conjZ_up (i : Fin 3) : conjZ (up i) = negZ (up i) := by
+  fin_cases i <;> simp [conjZ, negZ, up, up0, up1, up2]
+theorem conjZ_down (i : Fin 3) : conjZ (down i) = negZ (down i) := by
+  fin_cases i <;> simp [conjZ, negZ, down, down0, down1, down2]
+/-- `conjZ` is an anti-automorphism: `conjZ(mulZ X Y) = mulZ(conjZ Y)(conjZ X)`. -/
+theorem conjZ_mulZ (X Y : SplitOct) :
+    conjZ (mulZ X Y) = mulZ (conjZ Y) (conjZ X) := by
+  ext <;> simp [conjZ, mulZ] <;> ring
 
 /-- Closed kernel packet for the true split-octonion basis multiplication surface. -/
 theorem splitOctonion_multiplication_packet :

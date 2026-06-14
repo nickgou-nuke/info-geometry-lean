@@ -37,8 +37,8 @@ def test_incompressible_cramer_rao_action_bridge_surface():
 def test_incompressible_bit_bridge_surface():
     text = BIT_SOURCE.read_text()
 
-    assert "structure UnitRelativeVolumeBit" in text
-    assert "structure IncompressibleCramerRaoBit" in text
+    assert "def UnitRelativeVolumeBit" in text
+    assert "def IncompressibleCramerRaoBit" in text
     assert "theorem incompressibleCramerRaoBit_of_incompressible" in text
     assert "theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit" in text
     assert "theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume" in text

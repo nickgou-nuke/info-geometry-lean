@@ -201,6 +201,31 @@ The Georgiev–Hadjiivanov–Todorov work describes:
 | GHT Concept | Repo Formalization | File |
 |------------|-------------------|------|
 | SL(2,ℝ) generators | `sl2E`, `sl2F`, `sl2H` with commutation | `Algebra/FibonacciParafermion.lean` |
+| Split composition algebra typeclass (`q ∈ {2,4,8}`) | `SplitCompositionAlgebra K A` | `Algebra/SplitJordanSpinor.lean` |
+|  Hermitian `2×2` Jordan matrix J₂(𝔸_s) | `JordanMatrix2 K A` | `Algebra/SplitJordanSpinor.lean` |
+|  J₂ determinant boundary formula | `determinant := αβ - N(Z)`; signature/isomorphism remains a proof obligation | Fioresi et al. Eq. (3.4)-(3.5) |
+|  Spinor carrier 𝔸_s² | `Spinor2 A` | `Algebra/SplitJordanSpinor.lean` |
+|  Raw 2×2 matrix action on 𝔸_s² | `SplitMatrix2.spinorAction` | Fioresi et al. Eq. (4.11), (4.15), (4.19) |
+|  Klein-spinor orbit representative predicates | `KleinSpinorOrbitStratification` | Fioresi et al. §5.1 |
+|  Concrete split-complex spinor representatives `(1,0)`, `(E,0)`, `(E,E)` | `genericRep`, `nullRep`, `diagonalNullRep` | `Algebra/KleinSpinorOrbit.lean` |
+|  Raw `2×2 C_s` determinant-one coordinate matrices | `CsMatrix2.DetOne`, `CsSL2` | theorem-safe local stand-in for `SL(2,C_s)` |
+|  Eq. 5.22–5.24 local stabilizer equations/families | `CsSL2.eq_5_22_generic_unipotent_stabilizes`, `CsSL2.eq_5_22_generic_stabilizer_shape`, `CsSL2.eq_5_23_null_scalar_conditions`, `CsSL2.eq_5_23_null_first_column_Ebar_shape`, `CsSL2.eq_5_23_null_Ebar_family_stabilizes`, `CsSL2.eq_5_24_diagonal_null_row_sum_iff` | stabilizer equations only; no full orbit-classification or dimension theorem |
+|  Planar inversion and `J₂(C_s)` Jordan--Cayley coordinate identities | `planar_inversion_line_to_circle_numerator`, `CsJordan.det_cayleyInversion`, `CsJordan.cayleyInversion_involutive` | `Algebra/JordanCayleyInversion.lean`; finite coordinate identities only, no CCC/Spin(5,5)/octonionic inverse theorem |
+|  Concrete split-complex/split-quaternion trace-reversal determinant packets | `JordanCayleyInversionCs.Herm2x2Cs.fundamental_identity`, `JordanCayleyInversionCs.Herm2x2Cs.klein_quadric_equation`, `JordanCayleyInversionHs.Herm2x2Hs.fundamental_identity`, `JordanCayleyInversionHs.Herm2x2Hs.klein_quadric_equation` | diagonal coordinate packet identities only; not a full matrix inverse theorem or structure-group isomorphism |
+|  Split-octonionic `q=8` Jordan--Cayley proof boundary | `JordanCayleyBoundary`, `SplitOctonionicBoundary.ambient_dimension_eq_ten`, `SplitOctonionicBoundary.on_klein_quadric` | `Algebra/SplitOctonionicJordanCayleyBoundary.lean`; packages proof obligations for a concrete `J₂(O_s)` model, no `Spin(5,5)` theorem |
+|  Concrete Zorn split-octonion norm/conjugation ingredient | `JordanCayleyInversionOs.detZ_mulZ_composition`, `JordanCayleyInversionOs.Herm2x2Os.mul_conj_eq_det`, `JordanCayleyInversionOs.Herm2x2Os.fundamental_identity` | `Algebra/JordanCayleyInversionOs.lean`; determinant packet and conjugation/norm identity only, not a full octonionic matrix inverse or conformal group theorem |
+|  Split-octonionic coordinate stratum predicates | `Herm2x2OsQ.Stratum`, `Herm2x2OsQ.stratum_exhaustive`, `Herm2x2OsQ.mulTraceReversal_vanishes_of_isNull` | `Algebra/JordanCayleyOrbitStratification.lean`; zero/null/generic predicate case split only, not an `SL(2,O_s)`, `Pin(5,5)`, `O(5,5)`, or quotient orbit classification |
+|  Coordinate determinant strata bridge | `cs_null_orbit`, `hs_null_orbit`, `os_null_orbit`, `uniform_null_orbit`, `uniform_fundamental_identity`, `OrbitClassificationBridge.osq_stratum_exhaustive` | `Algebra/OrbitClassification.lean`, `Algebra/OrbitClassificationBridge.lean`; determinant-null/generic coordinate packets only, not full group orbit classification, CCC, analytic conformality, or global conformal inversion |
+|  Five-graded split-weight socket | `SplitIdempotents`, `Weight5`, `FiveGradedDecomposition`, `NullWeightSector`, `right_mul_E_of_split`, `right_mul_Ebar_of_split`, `split_idempotent_projection_packet` | `Algebra/FiveGradedTKK.lean`; finite `E/Ebar` idempotent projection/extraction socket for refining null sectors by weight, not uniqueness of decomposition, not a full `J₂(O_s)` construction, and not a `Spin(5,5)`/`Pin(5,5)` orbit classification |
+|  Lightcone compensation projectors | `LightConePair`, `LightConePair.pPlus`, `LightConePair.pMinus`, `LightConePair.pPlus_idem`, `LightConePair.pMinus_idem`, `LightConePair.pPlus_mul_pMinus`, `LightConePair.pMinus_mul_pPlus`, `LightConePair.pPlus_add_pMinus_eq_one`, `LightConePair.lightcone_compensation_packet` | `Algebra/LightConePair.lean`; exact associative-ring consequences of `e₊²=e₋²=0` and `e₊e₋+e₋e₊=1`, not a Clifford module, Pin action, or physical Witten-index theorem |
+|  Five-graded Möbius/Witten globality capstone | `WittenMobiusIndex`, `witten_mobius_index_zero_of_local_compensation`, `witten_four_layer_parity_sum_zero`, `five_graded_mobius_witten_globality_packet`, `GradeTwoInformationLedger.stateAt`, `GradeTwoInformationLedger.recursive_visibleLoss_eq_gradeTwoGain` | `Canonical/FiveGradedMobiusWittenGlobality.lean`, `OperatorAlgebra/FiveGradedDefectAbsorption.lean`; closed conditional bridge packaging five-grade inversion owner laws, Möbius/chiral trace zero, four-layer Witten parity sum zero, and recursive grade-two compensation; no CCC, RH, black-hole unitarity, physical Witten index, conformal-group equivalence, or orbit classification |
+|  Mathlib Clifford split `(5,5)` Pin/Spin names and finite relations | `q55`, `pinGroup55`, `spinGroup55`, `r₀_sq`, `r₅_sq`, `anticomm`, `v4_relation`, `ProjectiveSignEq`, `r₅_projective_involutive` | `Physics/Pin55Formal.lean`; uses mathlib `CliffordAlgebra`/`pinGroup`/`spinGroup` names and exact generator identities, but does not prove a topological quotient, literal four-element V4 subgroup, CCC, conformal inversion, or orbit classification |
+|  Central sign conjugation invariance | `unitConjugation`, `scalarSignUnits`, `unitConjugation_one`, `unitConjugation_neg_one`, `unitConjugation_scalarSign_trivial`, `unitConjugation_neg_eq` | `Physics/CentralizerInvariance.lean`; exact ring/unit identity that conjugation by `-1` is trivial, not a constructed `Pin(5,5) → O(5,5)` double-cover, not a quotient by `{±1}`, and not a full orbit-classification theorem |
+|  Finite `O(5,5)`/V4/Klein-bottle shadows | `splitPair55`, `negAll_preserves_splitPair`, `reflPair0_preserves_splitPair`, `reflPair1_preserves_splitPair`, `reflPair0_comm_reflPair1`, `kleinBottle_affine_relation`, `finite_o55_v4_klein_packet` | `Topology/O55V4KleinBottleFinite.lean`; exact coordinate identities over `ℚ` only, not the Lie group `O(5,5)`, `Pin(5,5)`, CCC, topological quotient construction, or orbit classification |
+|  Generic quadratic zero/null/generic strata | `OrbitStratum`, `orbit_classify_trichotomy`, `classifyOrbit`, `PreservesOrbitStrata`, `map_stratum_of_preserves`, `q55_orbit_classify_trichotomy`, `classifyQ55Orbit`, `q55_epsilon0_isGeneric`, `q55_epsilon5_isGeneric`, `q55NegAll_preserves_orbit_strata`, `q55NegAll_maps_stratum` | `Topology/SpinorOrbitStratum.lean`; predicate/case-split and explicit quadratic-value-preserving map layer for quadratic forms and the concrete `q55`, not spin-action invariance or full orbit classification |
+|  Finite Pauli `B₃` braid shadow | `sigma1_sq`, `sigma2_sq`, `sigma3_sq`, `sigma1_sigma2_anticomm`, `sigma1_mul_sigma2`, `pauli_braid_relation`, `pauli_braid_triple_product`, `pauli_b3_braid_shadow_packet` | `Canonical/PauliBraidB3.lean`; exact `2 × 2` complex matrix identity for `1+iσ₁` and `1+iσ₂`, not a full `Bₙ` representation, not a biquaternion/Clifford isomorphism theorem, not Hecke/BMW/quantum-supergroup centralizer theory, and not an `osp(1|8)` formalization |
+|  Witten--Möbius chiral parity compensated shadow | `chiralParityIndex`, `wittenMoebiusChiralParityIndex_ePlus_eMinus_zero`, `anomalyFree_zero`, `compensatedRecursion_eq_splitOne`, `compensatedRecursion_chiralParityIndex_zero`, `FiveGradedCompensatedParityShadow.parity_index_zero`, `FiveGradedCompensatedParityShadow.grade_zero_setwise_stable`, `witten_moebius_chiral_parity_packet` | `Canonical/WittenMoebiusChiralParityIndex.lean`; finite `e₊/e₋` compensation and zero parity-index recursion tied to the existing five-graded closure owner, not a global Möbius theorem, full Witten index theorem, or full 5-graded super-TKK closure |
+|  Reduced-structure/spin isomorphism boundary | `ReducedStructureSpinBoundary` | Fioresi et al. Eq. (3.6) |
 | Real 2-dim spinor carrier | `Spinor := Fin 2 → ℝ` | `Algebra/OSp12.lean` |
 | Weyl projectors | `WeylPlusProjector`, `WeylMinusProjector` | `Algebra/FibonacciParafermion.lean` |
 | F-matrix as 𝔰𝔩₂ operator | `F_matrix_sl2_decomposition` | `Algebra/FibonacciParafermion.lean` |
@@ -386,15 +411,161 @@ and kernel-checked coherence/compatibility proofs.
 
 Source: Rohozhkin, “Pentagon equations, Delaunay triangulations and pure braid group invariant”.
 
-Closed target:
-- rational flip matrices over `Q`;
-- inverse flip identity;
-- far-commutativity for independent flips;
-- five-flip pentagon identity;
-- pure-braid invariant as a product of flip matrices.
+Files:
+- `lean/InfoGeometry/Topology/DelaunayFlipMatrix.lean`
+- `lean/InfoGeometry/Topology/RohozhkinPentagonMatrix.lean`
+- `lean/InfoGeometry/Topology/DelaunayPureBraidInvariant.lean`
+- `lean/InfoGeometry/Topology/PureBraidGroup.lean`
+- `lean/InfoGeometry/Topology/DelaunayFlipMatrixEmbeddings.lean`
+- `lean/InfoGeometry/Topology/DelaunayPureBraidRepresentation.lean`
+- `tools/sympy/rohozhkin_pentagon_matrices.py`
+
+Closed finite target:
+- rational local flip matrices over `ℚ`;
+- `flip_inverse_identity`, the local inverse flip identity;
+- `flip_far_commute_embedded_blocks`, far-commutativity for independent
+  disjoint `2 × 2` blocks embedded in a `4 × 4` transport matrix;
+- `pentagon_appendix_identity`, the explicit Appendix A five-flip `3 × 3`
+  rational pentagon product;
+- `rohozhkinMatrix`, a presentation-level product of witnessed flip matrices;
+- `rohozhkin_invariant_under_inverse_move`,
+  `rohozhkin_invariant_under_far_commute_move`, and
+  `rohozhkin_invariant_under_pentagon_move`, the three explicitly witnessed
+  flip-word replacement invariance theorems;
+- `DelaunayEquiv` and `rohozhkinQuotientMatrix`, a quotient-level matrix
+  readout for words modulo the generated move relation;
+- `PureBraid.PureBraidGenerator`, `PureBraid.pureBraidRelations`, and
+  `PureBraid.PB`, an explicit mathlib `PresentedGroup` boundary for pure
+  braids with noninterleaving far-commutativity, three-index, and four-index
+  relator families;
+- `trivialPureBraidGeneratorAssignment` and `trivial_pure_braid_representation`,
+  a deliberately trivial descent socket for testing `PresentedGroup.lift`, not
+  the Rohozhkin monodromy representation.
+
+Open target:
+- deriving the Appendix A matrices from a general `2n+1` triangle-basis
+  insertion map;
+- constructing the nontrivial Rohozhkin generator assignment into
+  `Units (Matrix (Fin (2n+1)) (Fin (2n+1)) ℚ)`;
+- proving that this nontrivial assignment kills every explicit
+  `PureBraid.pureBraidRelations` relator;
+- the nontrivial pure-braid homomorphism `PB_n → GL_{2n+1}(ℚ)` with
+  invertibility in the target group;
+- knot invariants from braid closure and Markov moves.
 
 Boundary:
 - this is a rational Delaunay/pentagon invariant;
 - it is not a unitary anyon braid representation;
 - it is not a Fibonacci `F/R` category construction;
 - it does not yet give a knot invariant until Markov-move invariance is separately proved.
+
+### Jordan Algebra Linearization (New)
+Files:
+- `lean/InfoGeometry/Algebra/JordanLinearization.lean`
+
+Mathematical role:
+- Defines the general commutative, non-associative `JordanAlgebra` typeclass over a commutative ring `K`.
+- Establishes the theorem boundary for the `linearized_jordan_identity` under translation `x → x + z`.
+- Provides the axiomatic base required for graded Lie transformations in TKK algebras.
+
+Boundary:
+- Strictly algebraic; does not specialize to specific split algebras or spatial dimensions.
+- The linearized identity proof is deferred (verified numerically).
+
+### Pin(5,5), Spin(5,5), O(5,5) quotients (Existing)
+Files:
+- `lean/InfoGeometry/Physics/Pin55Formal.lean` — `pinGroup55`, `spinGroup55`, V4 relation.
+
+Status:
+- `pinGroup55`, `spinGroup55`, `q55` (split (5,5) form) defined.
+- `r0_sq`, `r5_sq`, anticomm, `v4_relation` proved.
+- O(5,5) and {I,-I} quotients not yet formalized.
+- Full orbit classification (zero/null/generic) open boundary.
+
+### GAP / Sage / SymPy tool layer
+Directories:
+- `tools/gap/` (33 files) — finite field shadows for all split-algebra and group identities.
+- `tools/sage/` (19 files) — exact rational/GF witnesses.
+- `tools/sympy/` (14 files) — Pin(5,5), Klein spinor orbit, strata.
+
+These tools provide cross-verification but are not part of the Lean build.
+
+---
+
+## Packet-Scoped Audit Classification
+
+### Packet A: Finite Clifford/Jordan/Spinor Identities — **CLOSED**
+
+Files:
+- `Physics/Pin55Formal.lean` — pinGroup55, spinGroup55, q55, V4 relation
+- `Algebra/GeometricBridge.lean` — Cs/Hs/Os fundamental identity re-exports
+- `Algebra/KleinSpinorOrbit.lean` — stabilizer equations (5.22)–(5.24)
+- `Algebra/KleinSpinorOrbitSocketClosure.lean` — socket closure theorems
+- `Algebra/JordanCayleyInversionCs.lean` — X·X̃ = −det·I for (2,2)
+- `Algebra/JordanCayleyInversionHs.lean` — same for (3,3)
+- `Algebra/JordanCayleyInversionOs.lean` — same for (5,5)
+- `Algebra/OrbitClassification.lean` — null/generic determinant strata
+- `Algebra/Cl11Fermions.lean` — {b, b†} = 1 from Cl(1,1)
+- `Algebra/CubicJordanSTU.lean` — (X♯)♯ = N·X for diagonal STU
+- `Algebra/OrbitStratification.lean` — orbit_classification (zero/non-zero)
+- `Algebra/SplitJordanSpinor.lean` — typeclass + boundary sockets
+
+**Zero `sorry` / `axiom` across all files.** Every header honestly documents what it does **not** prove.
+
+### Packet B: Rohozhkin/Delaunay Pure-Braid Layer — **SCOPED MATRIX BOUNDARY**
+
+Files:
+- `Topology/PureBraidGroup.lean` — presented group boundary (explicit relators, 0 sorry)
+- `Topology/DelaunayPureBraidInvariant.lean` — local Delaunay move-invariance theorems
+- `Topology/DelaunayPureBraidRepresentation.lean` — quotient readout / GL target boundary
+- `Topology/RohozhkinMatrix.lean` — concrete generator-matrix data
+
+Mathematical status:
+- Rohozhkin/Delaunay data support a finite pure-braid matrix boundary.
+- This layer is not a physical five-graded globality theorem and does not feed Packet C automatically.
+- A closed nontrivial `PB → GL` homomorphism still requires the generator assignment and all relator checks to be kernel-proved.
+
+### Packet C: Five-Graded Global Compensation & Witten/Möbius Closure — **CLOSED CONDITIONAL BRIDGE**
+
+Files:
+- `Canonical/FiveGradedMobiusWittenGlobality.lean` — capstone packaging theorem (zero `sorry`, closed conditional bridge) containing:
+  - `ConformalFiveGradeSystem` structure (source/sink/incoming/outgoing/center closure as structural witness fields)
+  - `GradeTwoInformationLedger` structure (visibleLoss_eq_gradeTwoGain as structural witness field)
+  - `stateAt` definition (recursive state evolution)
+  - `recursive_visibleLoss_eq_gradeTwoGain` induction proof
+  - `five_graded_mobius_witten_globality_packet` capstone theorem
+
+Context files:
+- `Algebra/FiveGradedTKK.lean` — E/Ē idempotent split, 5-weight index, right-mul extraction
+- `OperatorAlgebra/FiveGradedDefectAbsorption.lean` — grade-routing and grade-two compensation ledger
+- `Canonical/ConformalFiveGradeInversion.lean` — source/sink, incoming/outgoing, and center duality from the five-grade inversion laws
+- `Canonical/MobiusChiralClosure.lean` — χ_global_4 and Möbius-twisted trace = 0
+- `Arithmetic/WittenParityIndex.lean` — +1, −1, +1, −1 parity sequence
+
+Mathematical status:
+- **Closed conditional bridge**: zero `sorry` / local `axiom`.
+- `ConformalFiveGradeSystem.source_sink_closure`, `incoming_outgoing_closure`, `center_stability` are **structural witness fields** — the theorem does not prove them; it packages them from instantiation sites.
+- `GradeTwoInformationLedger.visibleLoss_eq_gradeTwoGain` is a structural witness field.
+- `recursive_visibleLoss_eq_gradeTwoGain` is kernel-proved by induction on the witness field.
+- Möbius trace cancellation and Witten four-layer parity cancellation are imported finite witnesses, not analytic physics derived from the Jordan layer alone.
+- The capstone `five_graded_mobius_witten_globality_packet` is a **closed conditional bridge** that packages the five-grade closure fields, Möbius trace zero, Witten parity sum zero, and recursive grade-two compensation into a single conjunction theorem.
+
+Boundary:
+- Does not prove the concrete existence of a conformal five-grading — that is the instantiation site's burden.
+- Does not prove CCC.
+- Does not prove black-hole unitarity / Page curve.
+- Does not prove analytic superconformal index theory, analytic continuation, zeta, or RH claims.
+- Does not prove complete orbit classification.
+- Does not prove full physical Witten-index theorem.
+- Does not prove global conformal-group equivalence.
+- Does not prove a Delaunay pure-braid → GL₂ₙ₊₁(ℚ) homomorphism.
+
+### Supergraded Five-Graded Bridge (New)
+File:
+- `Canonical/SupergradedFiveGradedBridge.lean`
+
+Status: **CLOSED** (0 sorry, 0 axiom).
+- Proves `witten_mobius_bridge`: packages Möbius chiral trace zero (both χ and twisted)
+  and Witten 4-layer parity sum zero into a single bridge theorem.
+- Connects the `SupergradedBracket`, `OSp12.OperatorSurface`, and five-graded closure layers
+  through the supertrace cancellation mechanism.

@@ -29,6 +29,7 @@ import InfoGeometry.Algebra.AnyonBraidGA
 import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
+import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 import InfoGeometry.Algebra.InvariantTransport
 import InfoGeometry.Algebra.InductiveSuperClosureLemmas
@@ -60,6 +61,8 @@ import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.JordanTripleTKK
+import InfoGeometry.Algebra.FiveGradedTKK
+import InfoGeometry.Algebra.LightConePair
 import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Algebra.KleinSpinorOrbit
 import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
@@ -76,6 +79,8 @@ import InfoGeometry.Algebra.OrbitClassificationBridge
 import InfoGeometry.Algebra.SplitOctonionIsomorphism
 import InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
 import InfoGeometry.Algebra.GeometricBridge
+import InfoGeometry.Algebra.JordanGradedWeight
+import InfoGeometry.Algebra.JordanLinearization
 import InfoGeometry.Algebra.TrialityG2
 /-!
 # InfoGeometry.Algebra.All

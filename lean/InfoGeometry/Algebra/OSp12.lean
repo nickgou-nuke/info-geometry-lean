@@ -151,6 +151,13 @@ theorem projUp_mul_projDown (O : Op V) (hO3 : O ^ 3 = O) :
       InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_down O = 0
   exact InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_up_orthogonal_down O hO3
 
+/-- Under `O³ = O`, the `-1` projector times the `+1` projector is zero. -/
+theorem projDown_mul_projUp (O : Op V) (hO3 : O ^ 3 = O) :
+    projDown O * projUp O = 0 := by
+  change InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_down O *
+      InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_up O = 0
+  exact InfoGeometry.Canonical.FibonacciParafermionAtoms.proj_down_orthogonal_up O hO3
+
 /--
 Operator osp(1|2) surface.
 

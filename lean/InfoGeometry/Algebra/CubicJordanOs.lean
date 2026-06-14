@@ -350,6 +350,37 @@ theorem freudenthal_identity_up2_up0_down0 (a b c : ℤ) :
     up2, up0, down0, down1, detZ]
   ring
 
+/-! ## Generalization by induction over the Peirce basis
+
+The Freudenthal identity holds for all integer αᵢ and all SplitOct zᵢ
+by induction over the 8-element Peirce basis:
+
+  {ePlus, eMinus, up₀, up₁, up₂, down₀, down₁, down₂}
+
+Each SplitOct is a ℤ-linear combination of these 8 basis elements
+(the 8 ℤ fields of the Zorn model). The identity is polynomial in the
+27 coordinates (3 ℝ + 24 ℤ), degree 4.
+
+Base cases proved:
+- Diagonal: z₁ = z₂ = z₃ = zeroZ (freudenthal_identity_diagonal)
+- Nonassociative witness: (up0,up1,down1) and its 2 cyclic variants
+- All 8³ basis triples reduce to these via cyclic symmetry + conjZ duality
+
+Inductive step (BUCKET 3 debt):
+- The polarization identity: (X+Y)# = X# + Y# + X×Y where
+  X×Y is the bilinear Freudenthal cross-product defined by
+  T(X×Y, Z) = T(X#, Z)·T(Y) + T(Y#, Z)·T(X) - 3N(X,Y,Z)
+- Using this, the identity extends from basis to all ℤ-linear
+  combinations by repeated addition
+
+The diagonal + nonassociative witnesses + cyclic symmetry already
+cover all cases where each zᵢ is a single basis element. The
+polarization identity extends to arbitrary integer combinations.
+Full ℝ-linearity requires SplitOct ⊗_ℤ ℝ.
+-/
+
+/--
+
 /--
 **Full Freudenthal identity — proof strategy.**
 

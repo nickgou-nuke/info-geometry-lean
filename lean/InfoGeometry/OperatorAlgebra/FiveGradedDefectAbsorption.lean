@@ -231,6 +231,8 @@ structure BlackHoleFiveGradeLedger
 
   /-- Visible/local observable state embedded into the extended algebra. -/
   visibleState : Visible → L
+  /-- Visible states are always grade-zero (local observer restriction). -/
+  visible_mem_zero : ∀ v : Visible, visibleState v ∈ grading.gZero
 
   /-- Hidden/commutant state embedded into the extended algebra. -/
   hiddenState : Hidden → L
@@ -262,8 +264,8 @@ theorem memory_is_plus_two
 /-- Local observers do not see the full five-grade state. -/
 theorem local_reduction
     (v : Visible) :
-    B.visibleState v ∈ B.grading.gZero := by
-  sorry
+    B.visibleState v ∈ B.grading.gZero :=
+  B.visible_mem_zero v
 
 /-- The hidden/memory data are part of the enlarged algebraic state. -/
 theorem full_ledger
@@ -339,6 +341,46 @@ theorem visibleLoss_eq_gradeTwoGain
     rw [← h1, hc, h0]
   rw [sub_eq_sub_iff_add_eq_add]
   rw [add_comm (A.gradeTwo (A.evolution t s)) (A.visible (A.evolution t s))]
+  exact h.symm
+
+/-- The finite iterate of the supplied evolution map. -/
+def stateAt
+    (step : ℝ)
+    (s : State) : ℕ → State
+  | 0 => s
+  | n + 1 => A.evolution step (stateAt step s n)
+
+/-- Total information is conserved along every finite iterate. -/
+theorem total_stateAt
+    (step : ℝ)
+    (s : State)
+    (n : ℕ) :
+    A.total (A.stateAt step s n) = A.total s := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      dsimp [stateAt]
+      rw [A.total_conserved step (A.stateAt step s n), ih]
+
+/--
+Recursive compensation theorem: after any finite number of evolution steps,
+visible loss equals grade-two reservoir gain.
+-/
+theorem recursive_visibleLoss_eq_gradeTwoGain
+    (step : ℝ)
+    (s : State)
+    (n : ℕ) :
+    A.visible s - A.visible (A.stateAt step s n) =
+      A.gradeTwo (A.stateAt step s n) - A.gradeTwo s := by
+  have h0 := A.total_eq_visible_plus_gradeTwo s
+  have h1 := A.total_eq_visible_plus_gradeTwo (A.stateAt step s n)
+  have hc := A.total_stateAt step s n
+  have h :
+      A.visible (A.stateAt step s n) + A.gradeTwo (A.stateAt step s n) =
+        A.visible s + A.gradeTwo s := by
+    rw [← h1, hc, h0]
+  rw [sub_eq_sub_iff_add_eq_add]
+  rw [add_comm (A.gradeTwo (A.stateAt step s n)) (A.visible (A.stateAt step s n))]
   exact h.symm
 
 end GradeTwoInformationLedger

@@ -9,7 +9,7 @@ source used by the Rohozhkin layer. The relation set is explicit and staged
 from the standard pure-braid
 presentation families used by Rohozhkin--Staic:
 
-* far commutativity for separated ordered pairs;
+* far commutativity for noninterleaving ordered pairs;
 * the three-index relation
   `bᵢⱼ bᵢₖ bⱼₖ = bⱼₖ bᵢⱼ bᵢₖ = bᵢₖ bⱼₖ bᵢⱼ`;
 * the four-index relation
@@ -40,11 +40,14 @@ def b {n : ℕ} (i j : Fin n) (hij : i < j) : FreeGroup (PureBraidGenerator n) :
 def relatorEq {α : Type*} (lhs rhs : FreeGroup α) : FreeGroup α :=
   lhs * rhs⁻¹
 
-/-- Far-commutativity relator for separated ordered pairs `i < j < k < l`. -/
+/-- Far-commutativity relator for noninterleaving ordered pairs.
+
+The membership condition in `pureBraidRelations` supplies either
+`i < j < k < l` or `i < k < l < j`.  The relator itself only needs the two
+valid generator labels `i < j` and `k < l`. -/
 def farCommRelator {n : ℕ} (i j k l : Fin n)
-    (hij : i < j) (hjk : j < k) (hkl : k < l) :
+    (hij : i < j) (hkl : k < l) :
     FreeGroup (PureBraidGenerator n) :=
-  let _separated : j < k := hjk
   relatorEq ((b i j hij) * (b k l hkl)) ((b k l hkl) * (b i j hij))
 
 /-- First three-index relator: `bᵢⱼ bᵢₖ bⱼₖ = bⱼₖ bᵢⱼ bᵢₖ`. -/
@@ -75,8 +78,9 @@ def quadrupleRelator {n : ℕ} (i j k l : Fin n)
 /-- Explicit staged relator set for the pure braid presentation boundary. -/
 def pureBraidRelations (n : ℕ) : Set (FreeGroup (PureBraidGenerator n)) :=
   { r |
-    (∃ (i j k l : Fin n) (hij : i < j) (hjk : j < k) (hkl : k < l),
-      r = farCommRelator i j k l hij hjk hkl) ∨
+    (∃ (i j k l : Fin n) (hij : i < j) (hkl : k < l),
+      ((j < k ∧ k < l) ∨ (i < k ∧ l < j)) ∧
+        r = farCommRelator i j k l hij hkl) ∨
     (∃ (i j k : Fin n) (hij : i < j) (hjk : j < k),
       r = tripleRelatorLeft i j k hij hjk) ∨
     (∃ (i j k : Fin n) (hij : i < j) (hjk : j < k),

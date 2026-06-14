@@ -223,3 +223,6 @@ connection_formalization_graph.json
 knowledge_graph.json
 *.TXT
 *.pdf
+
+# Scratch/experiment files
+DebugScratch.lean

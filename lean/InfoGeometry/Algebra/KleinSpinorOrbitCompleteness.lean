@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.KleinSpinorOrbit
+import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 import Mathlib.Tactic
 
 /-!
@@ -18,8 +19,16 @@ open InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
 namespace InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
 
-/-- Orbit completeness statement. -/
+/--
+Orbit completeness: every non-zero Cs² spinor reaches (1,0) or (E,0) under
+SL(2,Cs).  The SymPy witness at `tools/sympy/orbit_completeness.py` provides
+constructive verification, and `KleinSpinorOrbitSocketClosure` gives the
+stabilizer closure.  The explicit SL(2,ℚ) × SL(2,ℚ) transitivity proof
+remains to be formalized.
+**Closure debt**: requires formalizing the E/Ē decomposition and SL(2,ℚ)
+transitivity on ℚ²\\{0}.
+-/
 theorem orbit_completeness_statement : True := by
-  trivial
+  sorry
 
 end InfoGeometry.Algebra.KleinSpinorOrbitCompleteness

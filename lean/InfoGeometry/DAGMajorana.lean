@@ -55,22 +55,32 @@ Z₂-grading of the Clifford algebra = 1-groupoid:
   1-cells: path compositions
   2-cells: commuting diamonds → ±1 obstructions
 
-Owner proof: HexagonCocycle.lean (3-cocycle coherence).
+**Closure debt**: This theorem requires constructing the 2-cocycle proof
+from the DAG-Majorana homomorphism data. The docstring in earlier versions
+incorrectly cited `HexagonCocycle.lean` as the owner proof — that file
+proves the braided-category hexagon axiom, which is a categorically different
+statement. No owner proof currently exists for this claim.
 -/
 theorem central_residue_is_projective_cocycle
     (α : Type*) [BEq α] [Hashable α]
     (F : DAGMajoranaHomomorphism α) : True := by
-  trivial
+  sorry
 
 /--
 **Total obstruction vanishes on non-orientable cycles.**
 
 On the Klein bottle throat, Σ ω = 0.
-Owner proof: SouriauDiracHodgeCoupling.anomaly_vanishes.
+
+**Closure debt**: This theorem requires proving that the sum of central
+residues around a non-orientable cycle vanishes. The docstring in earlier
+versions incorrectly cited `SouriauDiracHodgeCoupling.anomaly_vanishes` as
+the owner proof — that theorem proves a specific 2×2 matrix chiral anomaly
+identity, not the global DAG-Majorana claim. No owner proof currently
+exists for this statement.
 -/
 theorem total_obstruction_vanishes
     (α : Type*) [BEq α] [Hashable α]
     (F : DAGMajoranaHomomorphism α) : True := by
-  trivial
+  sorry
 
 end InfoGeometry.DAGMajorana

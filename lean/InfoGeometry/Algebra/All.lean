@@ -30,6 +30,7 @@ import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
 import InfoGeometry.Algebra.CubicJordanOs
 import InfoGeometry.Algebra.CubicJordanPeirce
+import InfoGeometry.Algebra.PeirceLadderOperators
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import InfoGeometry.Algebra.FreudenthalComplete
 import InfoGeometry.Algebra.CuntzSupergradedSUSY

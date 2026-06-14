@@ -4,8 +4,9 @@ import Mathlib.GroupTheory.FreeGroup.Basic
 /-!
 # Pure braid presented-group boundary
 
-This file installs a mathlib `PresentedGroup` boundary for pure braid groups.
-The relation set is explicit and staged from the standard pure-braid
+This file installs a mathlib `PresentedGroup` boundary for the pure-braid
+source used by the Rohozhkin layer. The relation set is explicit and staged
+from the standard pure-braid
 presentation families used by Rohozhkin--Staic:
 
 * far commutativity for separated ordered pairs;
@@ -14,7 +15,7 @@ presentation families used by Rohozhkin--Staic:
 * the four-index relation
   `bⱼₗ bₖₗ bᵢₖ bⱼₖ = bₖₗ bᵢₖ bⱼₖ bⱼₗ`.
 
-This is a presented-group boundary.  It does not yet prove that Rohozhkin's
+This is a presented-group boundary. It does not yet prove that Rohozhkin's
 Delaunay generator matrices satisfy these relators; that is the next descent
 obligation before a closed `PBₙ → GL` theorem.
 -/
@@ -43,13 +44,14 @@ def relatorEq {α : Type*} (lhs rhs : FreeGroup α) : FreeGroup α :=
 def farCommRelator {n : ℕ} (i j k l : Fin n)
     (hij : i < j) (hjk : j < k) (hkl : k < l) :
     FreeGroup (PureBraidGenerator n) :=
+  let _separated : j < k := hjk
   relatorEq ((b i j hij) * (b k l hkl)) ((b k l hkl) * (b i j hij))
 
 /-- First three-index relator: `bᵢⱼ bᵢₖ bⱼₖ = bⱼₖ bᵢⱼ bᵢₖ`. -/
 def tripleRelatorLeft {n : ℕ} (i j k : Fin n)
     (hij : i < j) (hjk : j < k) :
     FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := lt_trans hij hjk
+  have hik : i < k := by exact Nat.lt_trans hij hjk
   relatorEq ((b i j hij) * (b i k hik) * (b j k hjk))
     ((b j k hjk) * (b i j hij) * (b i k hik))
 
@@ -57,7 +59,7 @@ def tripleRelatorLeft {n : ℕ} (i j k : Fin n)
 def tripleRelatorRight {n : ℕ} (i j k : Fin n)
     (hij : i < j) (hjk : j < k) :
     FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := lt_trans hij hjk
+  have hik : i < k := by exact Nat.lt_trans hij hjk
   relatorEq ((b j k hjk) * (b i j hij) * (b i k hik))
     ((b i k hik) * (b j k hjk) * (b i j hij))
 
@@ -65,8 +67,8 @@ def tripleRelatorRight {n : ℕ} (i j k : Fin n)
 def quadrupleRelator {n : ℕ} (i j k l : Fin n)
     (hij : i < j) (hjk : j < k) (hkl : k < l) :
     FreeGroup (PureBraidGenerator n) :=
-  have hik : i < k := lt_trans hij hjk
-  have hjl : j < l := lt_trans hjk hkl
+  have hik : i < k := by exact Nat.lt_trans hij hjk
+  have hjl : j < l := by exact Nat.lt_trans hjk hkl
   relatorEq ((b j l hjl) * (b k l hkl) * (b i k hik) * (b j k hjk))
     ((b k l hkl) * (b i k hik) * (b j k hjk) * (b j l hjl))
 

@@ -62,6 +62,20 @@ import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.JordanTripleTKK
 import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Algebra.KleinSpinorOrbit
+import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
+import InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
+import InfoGeometry.Algebra.JordanCayleyInversion
+import InfoGeometry.Algebra.JordanCayleyInversionCs
+import InfoGeometry.Algebra.JordanCayleyInversionHs
+import InfoGeometry.Algebra.JordanCayleyInversionOs
+import InfoGeometry.Algebra.SplitOctonionQ
+import InfoGeometry.Algebra.JordanCayleyInversionOsQ
+import InfoGeometry.Algebra.JordanCayleyOrbitStratification
+import InfoGeometry.Algebra.OrbitClassification
+import InfoGeometry.Algebra.OrbitClassificationBridge
+import InfoGeometry.Algebra.SplitOctonionIsomorphism
+import InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
+import InfoGeometry.Algebra.GeometricBridge
 import InfoGeometry.Algebra.TrialityG2
 /-!
 # InfoGeometry.Algebra.All

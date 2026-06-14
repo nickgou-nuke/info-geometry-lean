@@ -37,6 +37,7 @@ is equivalent to proving the Jacobi identity for the TKK construction.
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.Algebra.CubicJordanOs
+open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 noncomputable section
 
@@ -50,16 +51,34 @@ E₁ = diag(1, 0, 0), E₂ = diag(0, 1, 0), E₃ = diag(0, 0, 1).
 These satisfy E_i² = E_i, E_i·E_j = 0 for i≠j, and ΣE_i = 𝟙.
 -/
 def peirceE₁ : AlbertMatrix :=
-  { α₁ := 1; α₂ := 0; α₃ := 0
-    z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ }
+  {
+    α₁ := 1
+    α₂ := 0
+    α₃ := 0
+    z₁ := zeroZ
+    z₂ := zeroZ
+    z₃ := zeroZ
+  }
 
 def peirceE₂ : AlbertMatrix :=
-  { α₁ := 0; α₂ := 1; α₃ := 0
-    z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ }
+  {
+    α₁ := 0
+    α₂ := 1
+    α₃ := 0
+    z₁ := zeroZ
+    z₂ := zeroZ
+    z₃ := zeroZ
+  }
 
 def peirceE₃ : AlbertMatrix :=
-  { α₁ := 0; α₂ := 0; α₃ := 0
-    z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ }
+  {
+    α₁ := 0
+    α₂ := 0
+    α₃ := 0
+    z₁ := zeroZ
+    z₂ := zeroZ
+    z₃ := zeroZ
+  }
 
 /--
 Peirce 1-space predicate: X ∈ J_{ii} (diagonal entry at position i,
@@ -100,8 +119,8 @@ third off-diagonal space. This follows directly from the
 -/
 theorem peirce_half_composition_basis (e₁ e₂ : SplitOct)
     (h₁ : e₁ = up0) (h₂ : e₂ = up1) :
-    mulZ e₁ e₂ = down2 :=
-  up0_mul_up1
+    mulZ e₁ e₂ = down2 := by
+  rw [h₁, h₂]; exact up0_mul_up1
 
 /--
 **Lemma 2** (PROVED): Peirce 1/2-space nilpotence — up_i² = 0.
@@ -118,8 +137,23 @@ T(J_{ij}, J_{kl}) = 0 when the index sets are disjoint.
 For diagonal elements: traceBilin({α₁,0,0,0,0,0}, {0,α₂,0,0,0,0}) = α₁·0 + 0·α₂ + 0·0 = 0.
 -/
 theorem trace_peirce_orthogonal_basis (a b : ℝ) :
-    traceBilin { α₁ := a; α₂ := 0; α₃ := 0; z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ }
-               { α₁ := 0; α₂ := b; α₃ := 0; z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ } = 0 := by
+    traceBilin
+      {
+        α₁ := a
+        α₂ := 0
+        α₃ := 0
+        z₁ := zeroZ
+        z₂ := zeroZ
+        z₃ := zeroZ
+      }
+      {
+        α₁ := 0
+        α₂ := b
+        α₃ := 0
+        z₁ := zeroZ
+        z₂ := zeroZ
+        z₃ := zeroZ
+      } = 0 := by
   simp [traceBilin, octTrace, zeroZ]
 
 /--
@@ -137,9 +171,24 @@ For the diagonal STU model (all z_i = 0), the adjoint preserves
 the Peirce half-space structure. Proved via `adjointQuad_zeroZ`.
 -/
 theorem adjoint_peirce_mapping_diagonal (α₂ α₃ : ℝ) :
-    adjointQuad { α₁ := 0; α₂ := α₂; α₃ := α₃; z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ } =
-    { α₁ := α₂ * α₃; α₂ := 0; α₃ := 0; z₁ := zeroZ; z₂ := zeroZ; z₃ := zeroZ } :=
-  adjointQuad_zeroZ 0 α₂ α₃
+    adjointQuad
+      {
+        α₁ := 0
+        α₂ := α₂
+        α₃ := α₃
+        z₁ := zeroZ
+        z₂ := zeroZ
+        z₃ := zeroZ
+      } =
+      {
+        α₁ := α₂ * α₃
+        α₂ := 0
+        α₃ := 0
+        z₁ := zeroZ
+        z₂ := zeroZ
+        z₃ := zeroZ
+      } :=
+  by simpa using adjointQuad_zeroZ 0 α₂ α₃
 
 /--
 **Lemma 6** (BUCKET 3): Associator Peirce diagonal absorption.

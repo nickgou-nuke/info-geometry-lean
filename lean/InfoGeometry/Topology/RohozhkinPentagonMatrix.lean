@@ -1,6 +1,8 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
+import InfoGeometry.Topology.DelaunayFlipMatrix
+import InfoGeometry.Topology.DelaunayPureBraidInvariant
 
 /-!
 # Rohozhkin Appendix A rational pentagon matrices
@@ -92,5 +94,61 @@ theorem pentagon_appendix_identity
       pentagonGamma5, Matrix.mul_apply, Fin.sum_univ_three] <;>
     field_simp [h_il, h_ik, h_km, h_jm, h_jl] <;>
     ring
+
+/--
+The Appendix A matrices instantiate the abstract `pentagonStatement` target
+from the Delaunay flip-matrix layer.
+-/
+theorem pentagon_appendix_statement
+    (zi zj zk zl zm : ℚ)
+    (h_il : zi - zl ≠ 0)
+    (h_ik : zi - zk ≠ 0)
+    (h_km : zk - zm ≠ 0)
+    (h_jm : zj - zm ≠ 0)
+    (h_jl : zj - zl ≠ 0) :
+    pentagonStatement zi zj zk zl zm
+      (pentagonGamma5 zi zj zk zl zm)
+      (pentagonGamma4 zi zj zk zl zm)
+      (pentagonGamma3 zi zj zk zl zm)
+      (pentagonGamma2 zi zj zk zl zm)
+      (pentagonGamma1 zi zj zk zl zm) :=
+  pentagon_appendix_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl
+
+/-- The Appendix A five-flip block as `n = 1` Delaunay flip contexts. -/
+noncomputable def appendixPentagonContexts
+    (zi zj zk zl zm : ℚ) : List (DelaunayFlipContext 1) :=
+  [{ matrix := pentagonGamma5 zi zj zk zl zm },
+   { matrix := pentagonGamma4 zi zj zk zl zm },
+   { matrix := pentagonGamma3 zi zj zk zl zm },
+   { matrix := pentagonGamma2 zi zj zk zl zm },
+   { matrix := pentagonGamma1 zi zj zk zl zm }]
+
+/--
+The Appendix A pentagon is a concrete witnessed five-flip deletion move for the
+`n = 1` Delaunay quotient layer.
+-/
+theorem rohozhkin_invariant_under_appendix_pentagon_move
+    (zi zj zk zl zm : ℚ)
+    (h_il : zi - zl ≠ 0)
+    (h_ik : zi - zk ≠ 0)
+    (h_km : zk - zm ≠ 0)
+    (h_jm : zj - zm ≠ 0)
+    (h_jl : zj - zl ≠ 0)
+    (w₁ w₂ : List (DelaunayFlipContext 1))
+    (hbefore hafter : Prop) :
+    rohozhkinMatrix
+        (⟨w₁ ++ (appendixPentagonContexts zi zj zk zl zm) ++ w₂, hbefore⟩ :
+          DelaunayFlipWord 1) =
+      rohozhkinMatrix
+        (⟨w₁ ++ w₂, hafter⟩ : DelaunayFlipWord 1) := by
+  dsimp [appendixPentagonContexts]
+  exact rohozhkin_invariant_under_pentagon_move w₁ w₂
+    { matrix := pentagonGamma5 zi zj zk zl zm }
+    { matrix := pentagonGamma4 zi zj zk zl zm }
+    { matrix := pentagonGamma3 zi zj zk zl zm }
+    { matrix := pentagonGamma2 zi zj zk zl zm }
+    { matrix := pentagonGamma1 zi zj zk zl zm }
+    (pentagon_appendix_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl)
+    hbefore hafter
 
 end InfoGeometry.Topology.Delaunay

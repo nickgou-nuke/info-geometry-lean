@@ -265,7 +265,6 @@ theorem q_superbracket_at_theta {Op : Type*} [Ring Op] [Algebra ℝ Op] (θ : �
       ((Real.cosh θ) ^ 2) • (X * Y) - (Real.sinh θ * Real.cosh θ) • (Y * X) := by
     have h_scalar : (Real.cosh θ) ^ 2 * (Real.sinh θ / Real.cosh θ) = Real.cosh θ * Real.sinh θ := by
       field_simp [hcosh_ne_zero]
-      ring
     calc
       (Real.cosh θ) ^ 2 • qSuperbracket (Real.tanh θ) X Y
           = (Real.cosh θ) ^ 2 • (X * Y - (Real.tanh θ) • (Y * X)) := rfl

@@ -66,12 +66,18 @@ The CPT bivector squares to 1 (it is an involution).
 B² = e₀*e₁*e₀*e₁ = -e₀²*e₁² = -1*(-1) = 1.
 -/
 theorem cptBivector_sq : cptBivector * cptBivector = 1 := by
+  dsimp [cptBivector]
+  have h : e₁ * e₀ = -(e₀ * e₁) := by
+    calc
+      e₁ * e₀ = (e₀ * e₁ + e₁ * e₀) - e₀ * e₁ := by noncomm_ring
+      _ = 0 - e₀ * e₁ := by rw [anticomm]
+      _ = -(e₀ * e₁) := by simp
   calc
     (e₀ * e₁) * (e₀ * e₁) = e₀ * (e₁ * e₀) * e₁ := by noncomm_ring
-    _ = e₀ * (-(e₀ * e₁)) * e₁ := by rw [anticomm, mul_comm e₁ e₀, add_comm, ← anticomm]; simp
-    _ = -(e₀ * e₀ * e₁ * e₁) := by noncomm_ring
-    _ = -(1 * (-1)) := by simp [e₀_sq, e₁_sq]
-    _ = 1 := by ring
+    _ = e₀ * (-(e₀ * e₁)) * e₁ := by rw [h]
+    _ = -(e₀ * e₀) * (e₁ * e₁) := by noncomm_ring
+    _ = -(1) * (-1) := by rw [e₀_sq, e₁_sq]
+    _ = 1 := by norm_num
 
 /-! ## 2. 5-Graded alignment via the CPT compass -/
 
@@ -141,10 +147,7 @@ dial that moves the observer along the Rindler rapidity scale,
 heating the Cl(5,5) bulk geometry via the Cl(1,1) modular engine.
 -/
 theorem thermal_q_dial_alignment (q : ℝ) (hq : 0 < q ∧ q < 1) :
-    Real.exp (-(1 - q) / q) > 0 := by
-  have hpos : -(1 - q) / q > -∞ := by
-    have hqpos : q > 0 := hq.1
-    linarith
-  exact Real.exp_pos _
+    Real.exp (-(1 - q) / q) > 0 :=
+  Real.exp_pos _
 
 end InfoGeometry.Canonical.CPTGradingCompass

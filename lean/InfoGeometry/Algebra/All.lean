@@ -60,6 +60,7 @@ import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.JordanTripleTKK
+import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Algebra.TrialityG2
 /-!
 # InfoGeometry.Algebra.All

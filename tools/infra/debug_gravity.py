@@ -22,8 +22,8 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
-DEFAULT_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
+DEFAULT_NODES = Path("artifacts/dag/index/decls.jsonl")
+DEFAULT_EDGES = Path("artifacts/dag/index/edges.jsonl")
 DEFAULT_ARANGO = "http://127.0.0.1:8530"
 DEFAULT_DB = "infogeometry"
 DEFAULT_NODE_COLLECTION = "ig_nodes"

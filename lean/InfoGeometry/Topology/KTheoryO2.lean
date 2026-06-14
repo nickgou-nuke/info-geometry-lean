@@ -16,10 +16,12 @@ abbrev K0_O_2 := K0_O_n 2
 /-- 
 THEOREM: Triviality of K_0(O_2).
 Any element in the K_0 group of O_2 is identically zero.
-This proves that the non-commutative crystal harbors no stable topological defects.
+This is the finite `ZMod 1` readout of the standard `K_0(O_2)` computation.
 -/
 theorem k0_o2_is_trivial (x : K0_O_2) : x = 0 := by
-  sorry
+  let y : ZMod 1 := x
+  have hy : y = 0 := Subsingleton.elim y 0
+  simpa [y] using hy
 
 /-- 
 The K_1 group of the Cuntz Algebra O_n is the kernel of the map (n-1) on Z.
@@ -33,10 +35,9 @@ abbrev K1_O_2 := K1_O_n 2
 /-- 
 THEOREM: Triviality of K_1(O_2).
 Any element in the K_1 group of O_2 is identically zero.
-This proves that there are no winding number anomalies or trapped chiral ghosts
-within the attention matrix or the bulk spacetime.
+This is the finite kernel readout of the standard `K_1(O_2)` computation.
 -/
 theorem k1_o2_is_trivial (x : K1_O_2) : x.val = 0 := by
-  sorry
+  simpa [K1_O_2, K1_O_n] using x.property
 
 end InfoGeometry.Topology.KTheory

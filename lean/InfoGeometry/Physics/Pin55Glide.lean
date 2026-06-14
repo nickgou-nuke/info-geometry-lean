@@ -22,6 +22,12 @@ pure spinor parity of the Pin double-cover.
 -/
 theorem glide_squared_is_parity (R T parity : G) [h : IsPinGlide R T parity] :
     (R * T) * (R * T) = parity := by
-  sorry
+  have hflip : R * T = T⁻¹ * R := h.h_flip
+  have hsq : R * R = parity := h.h_R_sq
+  calc
+    (R * T) * (R * T) = (T⁻¹ * R) * (R * T) := by rw [hflip]
+    _ = T⁻¹ * ((R * R) * T) := by simp [mul_assoc]
+    _ = T⁻¹ * (parity * T) := by rw [hsq]
+    _ = parity := h.h_center
 
 end InfoGeometry.Physics.Pin

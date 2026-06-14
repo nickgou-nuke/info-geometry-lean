@@ -5,6 +5,8 @@ import InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket
 import InfoGeometry.Physics.FreeEntropyDiffusionFunctional
 import InfoGeometry.Physics.FreeEntropySouriauBridge
 import InfoGeometry.Physics.IncidentNullFlagVariationalAction
+import InfoGeometry.Physics.Pin55Glide
+import InfoGeometry.Physics.Pin55Formal
 import InfoGeometry.Physics.HolographicPressureFunctional
 import InfoGeometry.Physics.MD000FoundationalMatrixFramework
 import InfoGeometry.Physics.MD001MatrixQuantumGeometry

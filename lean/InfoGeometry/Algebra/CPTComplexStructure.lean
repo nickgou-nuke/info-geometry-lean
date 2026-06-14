@@ -114,7 +114,8 @@ theorem chiral_sheets_orthogonal :
 theorem chiral_sheets_partition_unity :
     chiralProjectorPlus atom + chiralProjectorMinus atom = 1 := by
   dsimp [chiralProjectorPlus, chiralProjectorMinus]
-  calc
+  simp [smul_add, add_smul, sub_smul]
+  ring
     (1/2 : ℝ) • (1 + atom.r0) + (1/2 : ℝ) • (1 - atom.r0)
         = (1/2 : ℝ) • ((1 + atom.r0) + (1 - atom.r0)) := by
           rw [← smul_add]

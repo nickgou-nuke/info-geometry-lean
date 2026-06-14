@@ -20,12 +20,16 @@ class TemperleyLieb (d_val : F) (e : ℕ → A_alg) : Prop where
 
 variable [TemperleyLieb (d A) e]
 
-lemma TL_e_sq (i : ℕ) : e i * e i = (d A) • e i := 
-  have inst := ‹TemperleyLieb (d A) e›; inst.e_sq i
-lemma TL_e_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : e i * e j = e j * e i := 
-  have inst := ‹TemperleyLieb (d A) e›; inst.e_comm i j h
-lemma TL_e_adj (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) : e i * e j * e i = e i := 
-  have inst := ‹TemperleyLieb (d A) e›; inst.e_adj i j h
+lemma TL_e_sq (i : ℕ) : e i * e i = (d A) • e i := by
+  simpa using (TemperleyLieb.e_sq (d_val := d A) (e := e) i)
+lemma TL_e_comm (A : F) (e : ℕ → A_alg) [TemperleyLieb (d A) e]
+    (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : e i * e j = e j * e i := by
+  have inst := ‹TemperleyLieb (d A) e›
+  exact inst.e_comm i j h
+lemma TL_e_adj (A : F) (e : ℕ → A_alg) [TemperleyLieb (d A) e]
+    (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) : e i * e j * e i = e i := by
+  have inst := ‹TemperleyLieb (d A) e›
+  exact inst.e_adj i j h
 
 def σ (i : ℕ) : A_alg := (A:F) • (1:A_alg) + (A⁻¹:F) • e i
 def σ_inv (i : ℕ) : A_alg := (A⁻¹:F) • (1:A_alg) + (A:F) • e i
@@ -44,19 +48,20 @@ lemma add_smul4 (c1 c2 c3 c4 : F) (x : A_alg) :
 
 lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1 := by
   dsimp [σ, σ_inv]
-  have h1 : ((A:F) • (1:A_alg)) * ((A⁻¹:F) • (1:A_alg)) = (1:F) • (1:A_alg) := by
-    rw [tl_smul_mul_smul_comm, mul_inv_cancel₀ hA]
+  have h1 : ((A:F) • (1:A_alg)) * ((A⁻¹:F) • (1:A_alg)) = (1:A_alg) := by
+    rw [tl_smul_mul_smul_comm]
+    simp [mul_inv_cancel₀ hA]
   have h2 : ((A:F) • (1:A_alg)) * ((A:F) • e i) = (A^2:F) • e i := by
-    rw [tl_smul_mul_smul_comm, mul_one, sq]
+    rw [tl_smul_mul_smul_comm]
+    simp [sq]
   have h3 : ((A⁻¹:F) • e i) * ((A⁻¹:F) • (1:A_alg)) = ((A⁻¹)^2:F) • e i := by
-    rw [tl_smul_mul_smul_comm, mul_one, sq]
+    rw [tl_smul_mul_smul_comm]
+    simp [sq]
   have h4 : ((A⁻¹:F) • e i) * ((A:F) • e i) = (1:F) • (e i * e i) := by
     rw [tl_smul_mul_smul_comm, inv_mul_cancel₀ hA]
   rw [add_mul, mul_add, mul_add]
   rw [h1, h2, h3, h4]
   rw [TL_e_sq A e i]
-  have h_one_smul : (1:F) • (1:A_alg) = 1 := one_smul _ _
-  rw [h_one_smul]
   have h_smul_smul : (1:F) • ((d A) • e i) = (d A) • e i := by rw [smul_smul, one_mul]
   rw [h_smul_smul]
   have h_sum : (A^2:F) • e i + ((A⁻¹)^2:F) • e i + (d A) • e i = 0 := by
@@ -65,9 +70,6 @@ lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1
       dsimp [d]
       ring
     rw [hz, zero_smul]
-  calc
-    1 + (A ^ 2) • e i + (A⁻¹) ^ 2 • e i + d A • e i = 1 + ((A ^ 2) • e i + (A⁻¹) ^ 2 • e i + d A • e i) := by abel
-    _ = 1 + 0 := by rw [h_sum]
-    _ = 1 := by ring
+  simpa [add_assoc] using congrArg (fun x : A_alg => (1 : A_alg) + x) h_sum
 
 end TemperleyLieb

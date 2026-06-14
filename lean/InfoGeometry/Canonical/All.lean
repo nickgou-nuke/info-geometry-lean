@@ -405,6 +405,7 @@ import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.DiscreteModularSpectrum
 import InfoGeometry.Canonical.DiscreteCPTGroup
+import InfoGeometry.Canonical.CPTGradingCompass
 import InfoGeometry.Canonical.CPTRealCl11Emergence
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin

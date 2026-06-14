@@ -19,16 +19,58 @@ open InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
 namespace InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
 
+/-- The zero split-complex spinor. -/
+def zeroSpinor : CsSpinor :=
+  ⟨Cs.zero, Cs.zero⟩
+
+/-- A spinor reaches one of the two finite representatives used in this file. -/
+def ReachesRepresentative (ψ : CsSpinor) : Prop :=
+  (∃ g : CsSL2, CsSL2.action g ψ = genericRep) ∨
+    (∃ g : CsSL2, CsSL2.action g ψ = nullRep)
+
 /--
-Orbit completeness: every non-zero Cs² spinor reaches (1,0) or (E,0) under
-SL(2,Cs).  The SymPy witness at `tools/sympy/orbit_completeness.py` provides
-constructive verification, and `KleinSpinorOrbitSocketClosure` gives the
-stabilizer closure.  The explicit SL(2,ℚ) × SL(2,ℚ) transitivity proof
-remains to be formalized.
-**Closure debt**: requires formalizing the E/Ē decomposition and SL(2,ℚ)
-transitivity on ℚ²\\{0}.
+The still-open full completeness claim, stated as an explicit proposition rather
+than as an unproved theorem: every non-zero `C_s²` spinor reaches `(1,0)` or
+`(E,0)` under a determinant-one split-complex matrix.
 -/
-theorem orbit_completeness_statement : True := by
-  sorry
+def OrbitCompletenessClaim : Prop :=
+  ∀ ψ : CsSpinor, ψ ≠ zeroSpinor → ReachesRepresentative ψ
+
+/-- The generic representative is non-zero. -/
+theorem genericRep_ne_zeroSpinor : genericRep ≠ zeroSpinor := by
+  intro h
+  have hplus := congrArg CsSpinor.plus h
+  have hre := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.re hplus
+  norm_num [genericRep, zeroSpinor, Cs.one, Cs.zero,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.one,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.scalar] at hre
+
+/-- The null representative is non-zero. -/
+theorem nullRep_ne_zeroSpinor : nullRep ≠ zeroSpinor := by
+  intro h
+  have hplus := congrArg CsSpinor.plus h
+  have hre := congrArg InfoGeometry.Clifford.Arxiv160309063.SplitC.re hplus
+  norm_num [nullRep, zeroSpinor, Cs.E, Cs.zero,
+    InfoGeometry.Clifford.Arxiv160309063.SplitC.E] at hre
+
+/-- The generic representative reaches itself by the identity element. -/
+theorem genericRep_reachesRepresentative : ReachesRepresentative genericRep := by
+  left
+  exact ⟨CsSL2.identity, CsSL2.identity_action genericRep⟩
+
+/-- The null representative reaches itself by the identity element. -/
+theorem nullRep_reachesRepresentative : ReachesRepresentative nullRep := by
+  right
+  exact ⟨CsSL2.identity, CsSL2.identity_action nullRep⟩
+
+/--
+Conditional completeness surface.  A future formalization of the
+`E/Ebar ≃ ℚ × ℚ` decomposition and `SL(2,ℚ)` transitivity can inhabit
+`OrbitCompletenessClaim`; this theorem deliberately packages only that explicit
+hypothesis and adds no global orbit-classification content.
+-/
+theorem orbit_completeness_statement (h : OrbitCompletenessClaim) :
+    OrbitCompletenessClaim :=
+  h
 
 end InfoGeometry.Algebra.KleinSpinorOrbitCompleteness

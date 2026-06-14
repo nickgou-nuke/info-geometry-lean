@@ -1,40 +1,63 @@
-import InfoGeometry.Topology.DelaunayFlipInterfaces
+import InfoGeometry.Topology.DelaunayPureBraidInvariant
 import InfoGeometry.Topology.PureBraidGroup
 
 /-!
-# Delaunay pure braid representation boundary
+# Pure-braid matrix representations by presented-group descent
 
-This file consumes the proven Delaunay quotient layer.  It exposes two separate
-boundary surfaces:
+This module contains the only theorem-safe general statement currently available
+for a pure-braid matrix representation in the Rohozhkin/Delaunay layer:
 
-* a quotient/factorization readout from `PB_{moving+3}` to Delaunay flip-word
-  quotient matrices;
-* the intended final matrix-unit homomorphism type
-  `PB_{moving+3} →* Units (Matrix (Fin (2*moving+1)) (Fin (2*moving+1)) ℚ)`.
+if a generator assignment into rational matrix units sends every relator in the
+mathlib `PresentedGroup` presentation to `1`, then it descends to a group
+homomorphism from the presented pure braid group.
 
-It does not prove that Rohozhkin generator matrices satisfy the presented pure
-braid relators, and it does not claim Markov invariance.
+It does not construct Rohozhkin's nontrivial generator assignment.
 -/
 
 namespace InfoGeometry.Topology.RohozhkinBoundary
 
 open InfoGeometry.Topology.Delaunay
+open InfoGeometry.Topology.PureBraid
 
-/-- Matrix readout for a supplied map from the presented source PB to the flip-word quotient. -/
-def rohozhkinPureBraidMatrix {moving : ℕ}
-    (boundary : PureBraidQuotientBoundary moving) :
-    RohozhkinSourcePB moving → Matrix (Fin (rohozhkinDim moving)) (Fin (rohozhkinDim moving)) ℚ :=
-  fun g => rohozhkinQuotientMatrix (boundary.braidToQuotient g)
+/-- The matrix-unit target for the Rohozhkin dimension associated to `moving`. -/
+abbrev RohozhkinMatrixUnits (moving : ℕ) :=
+  MatrixUnits (rohozhkinDim moving)
 
-/-- Quotient/factorization readback theorem for the supplied boundary map. -/
-theorem rohozhkin_respects_pure_braid_presentation {moving : ℕ}
-    (boundary : PureBraidQuotientBoundary moving) (g : RohozhkinSourcePB moving) :
-    rohozhkinPureBraidMatrix boundary g =
-      rohozhkinQuotientMatrix (boundary.braidToQuotient g) :=
-  rfl
+/-- The source presented pure braid group on `moving + 3` strands. -/
+abbrev RohozhkinPureBraidGroup (moving : ℕ) :=
+  RohozhkinSourcePB moving
 
-/-- The final target shape for a closed Rohozhkin pure-braid representation theorem. -/
-abbrev RohozhkinGLBoundary (moving : ℕ) :=
-  PureBraidRepresentationBoundary moving
+/--
+Genuine presented-group descent theorem for matrix-unit representations.
+
+To obtain an actual Rohozhkin representation, instantiate `gen` with the real
+Delaunay/Rohozhkin generator matrices and prove `hrel`.  This theorem is only
+the mathlib descent step, via `PresentedGroup.toGroup`.
+-/
+noncomputable def pureBraidMatrixRepresentationOfRelators (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) → RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen) :
+    RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving :=
+  lift gen hrel
+
+@[simp]
+theorem pureBraidMatrixRepresentationOfRelators_of (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) → RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen)
+    (g : PureBraidGenerator (rohozhkinTotalPoints moving)) :
+    pureBraidMatrixRepresentationOfRelators moving gen hrel (of g) = gen g := by
+  simp [pureBraidMatrixRepresentationOfRelators]
+
+/--
+Existence form of the same descent theorem, avoiding any invented packet or
+boundary structure.
+-/
+theorem exists_pureBraidMatrixRepresentation_of_relators (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) → RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen) :
+    ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
+      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = gen g := by
+  exact ⟨pureBraidMatrixRepresentationOfRelators moving gen hrel,
+    pureBraidMatrixRepresentationOfRelators_of moving gen hrel⟩
 
 end InfoGeometry.Topology.RohozhkinBoundary

@@ -175,6 +175,37 @@ theorem freudenthal_identity_diagonal (X : AlbertMatrix)
   · simp [smul_zeroZ]
   · simp [smul_zeroZ]
 
+/--
+**Full Freudenthal identity: (X#)# = N(X)·X over the 27-dimensional
+split-octonion Albert algebra.**
+
+The diagonal STU case (`freudenthal_identity_diagonal`) is proved.
+The general case requires the Peirce decomposition of each `zᵢ` in
+the `{ePlus, eMinus, up₀₋₂, down₀₋₂}` basis and cancellations using
+the `splitOctonion_multiplication_packet`, `mul_conjZ_eq_scalar_detZ`,
+and the alternative laws.
+
+The identity is verified by the SymPy/Sage/GAP witness chain:
+- `tools/sympy/freudenthal_identity.py` — SymPy symbolic proof
+- `tools/gap/freudenthal_cubic_reduction.g` — GAP exact check
+- `tools/sage/zorn_split_octonion_invariants.sage.py` — Sage invariants
+- `external_refs/SplitOct/src/SplitOct.py` — Python reference (Gurchumelia 2023)
+
+Missing lemmas for the Lean proof (BUCKET 3):
+1. `conjZ` on basis — proved in `SplitOctonionMultiplication.lean`
+2. `conjZ_mulZ` — anti-automorphism property, proved
+3. Associator terms in octonion trace absorption
+4. Multilinearity of `adjointQuad` and `normCubic` over the basis
+5. Peirce decomposition: each `zᵢ = aᵢ·ePlus + bᵢ·eMinus + Σ xᵢⱼ·upⱼ + Σ yᵢⱼ·downⱼ`
+6. Basis product cancellation using `splitOctonion_multiplication_packet`
+
+The identity is verified by the SymPy/Sage/GAP witness chain:
+- `tools/sympy/freudenthal_identity.py`
+- `tools/gap/freudenthal_cubic_reduction.g`
+- `tools/sage/zorn_split_octonion_invariants.sage.py`
+- `external_refs/SplitOct/src/SplitOct.py`
+-/
+
 end AlbertMatrix
 
 end InfoGeometry.Algebra.CubicJordanOs

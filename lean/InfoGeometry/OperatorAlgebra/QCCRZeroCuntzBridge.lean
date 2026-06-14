@@ -1,12 +1,10 @@
 import InfoGeometry.OperatorAlgebra.QCCRCore
-import InfoGeometry.Canonical.CuntzUHFAlgebra
 
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.QCCRZeroCuntzBridge
 
 open InfoGeometry.OperatorAlgebra.QCCRCore
-open InfoGeometry.Canonical.CuntzUHFAlgebra
 
 /-!
 # QCCR-Cuntz bridge at q = 0

@@ -12,8 +12,8 @@ from igf.artifacts.compatibility_adapters import normalize_artifacts
 
 
 def _add_build_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--nodes", default="artifacts/leantrail/arango/ig_nodes.jsonl")
-    parser.add_argument("--edges", default="artifacts/leantrail/arango/ig_edges.jsonl")
+    parser.add_argument("--nodes", default="artifacts/dag/index/decls.jsonl")
+    parser.add_argument("--edges", default="artifacts/dag/index/edges.jsonl")
     parser.add_argument("--fingerprints", default="artifacts/dag/index/expr_fingerprints.jsonl")
     parser.add_argument("--output-dir", default="artifacts/dag/index")
     parser.add_argument("--run-id", default="")

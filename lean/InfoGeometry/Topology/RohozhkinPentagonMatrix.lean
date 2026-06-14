@@ -1,7 +1,6 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic
-import InfoGeometry.Topology.DelaunayFlipMatrix
 
 /-!
 # Rohozhkin Appendix A rational pentagon matrices

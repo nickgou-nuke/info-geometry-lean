@@ -83,7 +83,17 @@ theorem quaternionBasis_hamilton_table :
       ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
       ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
       ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj := by
-  sorry
+  constructor
+  · ext <;> norm_num [Section8.Quat.qi]
+  constructor
+  · ext <;> norm_num [Section8.Quat.qj]
+  constructor
+  · ext <;> norm_num [Section8.Quat.qk]
+  constructor
+  · ext <;> norm_num [Section8.Quat.qi, Section8.Quat.qj, Section8.Quat.qk]
+  constructor
+  · ext <;> norm_num [Section8.Quat.qi, Section8.Quat.qj, Section8.Quat.qk]
+  · ext <;> norm_num [Section8.Quat.qi, Section8.Quat.qj, Section8.Quat.qk]
 
 theorem section22_capstone :
     (∀ Q : Quat, Section8.Quat.conj Q * Q =
@@ -98,6 +108,13 @@ theorem section22_capstone :
     Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk ∧
     Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi ∧
     Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj := by
-  sorry
+  refine ⟨quaternion_conj_mul_self_scalar, quaternionBilinear_zero_derivative,
+    quaternionInducedMetric_symmetric, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact quaternionBasis_hamilton_table.1
+  · exact quaternionBasis_hamilton_table.2.1
+  · exact quaternionBasis_hamilton_table.2.2.1
+  · exact quaternionBasis_hamilton_table.2.2.2.1
+  · exact quaternionBasis_hamilton_table.2.2.2.2.1
+  · exact quaternionBasis_hamilton_table.2.2.2.2.2
 
 end Section22

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import os
 from dataclasses import dataclass
@@ -37,6 +38,8 @@ class CollectionSpec:
     name: str
     path: Path
     edge: bool
+    vertex_collection: str | None = None
+    overlay_collection: str | None = None
 
 
 @dataclass(frozen=True)
@@ -113,6 +116,31 @@ def truncate_collection(target: ArangoTarget, name: str) -> None:
     )
 
 
+def dag_decl_key(name: Any) -> str:
+    """Arango-safe stable key for declaration names.
+
+    Lean declaration names can be long and may contain characters that are poor
+    Arango `_key` material.  Keep the original name in the document and use a
+    bounded content hash for graph IDs.
+    """
+    raw = str(name)
+    return "d_" + hashlib.sha256(raw.encode("utf-8")).hexdigest()[:40]
+
+
+def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_collection: str | None, row: dict[str, Any]) -> Any:
+    if not isinstance(endpoint, str):
+        return endpoint
+    if raw_collection and endpoint.startswith("ig_nodes/"):
+        raw_key = endpoint.split("/", 1)[1]
+        decl_name = row.get("member_key") or row.get("src") or row.get("dst") or raw_key
+        if raw_key.startswith("InfoGeometry.") or str(decl_name).startswith("InfoGeometry."):
+            return f"{raw_collection}/{dag_decl_key(decl_name)}"
+        return f"{raw_collection}/{raw_key}"
+    if overlay_collection and endpoint.startswith("topology_overlay/"):
+        return f"{overlay_collection}/{endpoint.split('/', 1)[1]}"
+    return endpoint
+
+
 def iter_jsonl(path: Path, spec: CollectionSpec) -> Iterable[dict[str, Any]]:
     with path.open("r", encoding="utf-8") as handle:
         for line_no, line in enumerate(handle, start=1):
@@ -123,18 +151,36 @@ def iter_jsonl(path: Path, spec: CollectionSpec) -> Iterable[dict[str, Any]]:
             if not isinstance(row, dict):
                 raise ValueError(f"{path}:{line_no}: expected JSON object")
             
-            # Map for ig_nodes
-            if spec.name == "ig_nodes":
+            # Map declaration DAG rows to Arango document/edge rows when the
+            # JSONL source is the authoritative artifacts/dag/index projection.
+            # Keep existing _key/_from/_to values untouched for already-Arango-shaped
+            # exports such as topology overlays or wire topology rows.
+            if not spec.edge and "_key" not in row:
                 name = row.get("name")
                 if name:
-                    row["_key"] = str(name).replace("/", "_")
-            elif spec.name == "ig_edges":
+                    row["_key"] = dag_decl_key(name)
+            elif spec.edge and ("_from" not in row or "_to" not in row):
                 src = row.get("src")
                 dst = row.get("dst")
+                vertex_collection = spec.vertex_collection or "ig_nodes"
                 if src and dst:
-                    row["_from"] = f"ig_nodes/{str(src).replace('/', '_')}"
-                    row["_to"] = f"ig_nodes/{str(dst).replace('/', '_')}"
-            
+                    row["_from"] = f"{vertex_collection}/{dag_decl_key(src)}"
+                    row["_to"] = f"{vertex_collection}/{dag_decl_key(dst)}"
+
+            if spec.edge:
+                row["_from"] = rewrite_endpoint(
+                    row.get("_from"),
+                    raw_collection=spec.vertex_collection,
+                    overlay_collection=spec.overlay_collection,
+                    row=row,
+                )
+                row["_to"] = rewrite_endpoint(
+                    row.get("_to"),
+                    raw_collection=spec.vertex_collection,
+                    overlay_collection=spec.overlay_collection,
+                    row=row,
+                )
+
             yield row
 
 
@@ -237,11 +283,22 @@ def main() -> int:
     input_dir = args.input_dir.resolve()
     specs = [
         CollectionSpec(str(args.raw_nodes_collection), input_dir / "decls.jsonl", False),
-        CollectionSpec(str(args.raw_edges_collection), input_dir / "edges.jsonl", True),
+        CollectionSpec(
+            str(args.raw_edges_collection),
+            input_dir / "edges.jsonl",
+            True,
+            vertex_collection=str(args.raw_nodes_collection),
+        ),
         CollectionSpec(str(args.overlay_nodes_collection), input_dir / "topology_overlay_nodes.jsonl", False),
-        CollectionSpec(str(args.overlay_edges_collection), input_dir / "topology_overlay_edges.jsonl", True),
+        CollectionSpec(
+            str(args.overlay_edges_collection),
+            input_dir / "topology_overlay_edges.jsonl",
+            True,
+            vertex_collection=str(args.raw_nodes_collection),
+            overlay_collection=str(args.overlay_nodes_collection),
+        ),
         CollectionSpec("ig_chiral_patches", input_dir / "ig_chiral_patches.jsonl", False),
-        CollectionSpec("ig_patch_members", input_dir / "ig_patch_members.jsonl", True),
+        CollectionSpec("ig_patch_members", input_dir / "ig_patch_members.jsonl", True, vertex_collection=str(args.raw_nodes_collection)),
     ]
 
     # Filter out missing optional specs

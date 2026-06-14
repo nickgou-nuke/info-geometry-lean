@@ -29,6 +29,7 @@ import InfoGeometry.Algebra.AnyonBraidGA
 import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
 import InfoGeometry.Algebra.CubicJordanOs
+import InfoGeometry.Algebra.CubicJordanPeirce
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge

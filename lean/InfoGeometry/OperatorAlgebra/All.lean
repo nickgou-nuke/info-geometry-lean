@@ -20,6 +20,7 @@ import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.CasimirInvariance
+import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
 import InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology

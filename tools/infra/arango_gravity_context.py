@@ -36,8 +36,8 @@ from tools.infra.arango_env import (
 )
 from igf.graph import ArangoHttpTarget, execute_aql
 
-DEFAULT_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
-DEFAULT_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
+DEFAULT_NODES = Path("artifacts/dag/index/decls.jsonl")
+DEFAULT_EDGES = Path("artifacts/dag/index/edges.jsonl")
 DEFAULT_ARANGO = DEFAULT_ARANGO_ENDPOINT
 DEFAULT_DB = DEFAULT_ARANGO_DATABASE
 DEFAULT_NODE_COLLECTION = "ig_nodes"

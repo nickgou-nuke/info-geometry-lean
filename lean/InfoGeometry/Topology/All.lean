@@ -48,3 +48,4 @@ import InfoGeometry.Topology.DelaunayFlipInterfaces
 import InfoGeometry.Topology.DelaunayPureBraidRepresentation
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
+import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings

@@ -79,8 +79,8 @@ def main() -> int:
     
     # ig process
     proc_parser = subparsers.add_parser("process", help="Compute patches and signatures")
-    proc_parser.add_argument("--nodes", default="artifacts/leantrail/arango/ig_nodes.jsonl")
-    proc_parser.add_argument("--edges", default="artifacts/leantrail/arango/ig_edges.jsonl")
+    proc_parser.add_argument("--nodes", default="artifacts/dag/index/decls.jsonl")
+    proc_parser.add_argument("--edges", default="artifacts/dag/index/edges.jsonl")
     proc_parser.add_argument("--fingerprints", default="artifacts/dag/index/expr_fingerprints.jsonl")
     proc_parser.add_argument("--output-dir", default="artifacts/dag/index")
     proc_parser.add_argument("--ego-limit", type=int, default=40)

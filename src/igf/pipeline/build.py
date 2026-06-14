@@ -12,10 +12,10 @@ from igf.artifacts.compatibility_adapters import normalize_artifacts
 
 GENERATOR = "tools/infra/build_chiral_patch_hashes.py"
 GENERATOR_VERSION = "chiral_patch_hashes.v1.2"
-DOCUMENTED_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
-DOCUMENTED_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
-LEGACY_NODES = Path("artifacts/dag/index/ig_nodes.jsonl")
-LEGACY_EDGES = Path("artifacts/dag/index/ig_edges.jsonl")
+DOCUMENTED_NODES = Path("artifacts/dag/index/decls.jsonl")
+DOCUMENTED_EDGES = Path("artifacts/dag/index/edges.jsonl")
+LEGACY_NODES = Path("artifacts/leantrail/arango/ig_nodes.jsonl")
+LEGACY_EDGES = Path("artifacts/leantrail/arango/ig_edges.jsonl")
 
 
 def _repo_root() -> Path:

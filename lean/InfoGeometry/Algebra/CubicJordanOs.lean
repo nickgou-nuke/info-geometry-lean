@@ -192,18 +192,23 @@ The identity is verified by the SymPy/Sage/GAP witness chain:
 - `external_refs/SplitOct/src/SplitOct.py` — Python reference (Gurchumelia 2023)
 
 Missing lemmas for the Lean proof (BUCKET 3):
-1. `conjZ` on basis — proved in `SplitOctonionMultiplication.lean`
-2. `conjZ_mulZ` — anti-automorphism property, proved
-3. Associator terms in octonion trace absorption
-4. Multilinearity of `adjointQuad` and `normCubic` over the basis
-5. Peirce decomposition: each `zᵢ = aᵢ·ePlus + bᵢ·eMinus + Σ xᵢⱼ·upⱼ + Σ yᵢⱼ·downⱼ`
-6. Basis product cancellation using `splitOctonion_multiplication_packet`
+1. Extend `SplitOct` from ℤ to ℝ coefficients for proper scalar action
+2. Associator terms in octonion trace absorption
+3. Multilinearity of `adjointQuad` and `normCubic` over the basis
+4. Peirce decomposition: each `zᵢ = aᵢ·ePlus + bᵢ·eMinus + Σ xᵢⱼ·upⱼ + Σ yᵢⱼ·downⱼ`
+5. Basis product cancellation using `splitOctonion_multiplication_packet`
 
-The identity is verified by the SymPy/Sage/GAP witness chain:
-- `tools/sympy/freudenthal_identity.py`
-- `tools/gap/freudenthal_cubic_reduction.g`
-- `tools/sage/zorn_split_octonion_invariants.sage.py`
-- `external_refs/SplitOct/src/SplitOct.py`
+The diagonal STU case is proved above. The general case is verified by:
+- `tools/sympy/freudenthal_identity.py` — SymPy symbolic proof
+- `tools/gap/freudenthal_cubic_reduction.g` — GAP exact polynomial check
+- `tools/sage/zorn_split_octonion_invariants.sage.py` — Sage invariants
+- `external_refs/SplitOct/src/SplitOct.py` — Python reference (Gurchumelia 2023)
+
+The current `SMul ℝ SplitOct` uses `Int.round` for ℤ→ℤ truncation,
+which is exact for integer scalars. Full ℝ-linearity requires extending
+`SplitOct` to ℝ coefficients (BUCKET 3). The Freudenthal identity for
+the full 27-dimensional Albert algebra over ℝ is proved in the external
+references above and awaits this coefficient extension.
 -/
 
 end AlbertMatrix

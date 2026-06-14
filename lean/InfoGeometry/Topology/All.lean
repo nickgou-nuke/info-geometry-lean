@@ -18,6 +18,8 @@ import InfoGeometry.Topology.Metriplectic
 import InfoGeometry.Topology.ParafermionBraiding
 import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.O55V4KleinBottleFinite
+import InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
+import InfoGeometry.Topology.O55V4KleinBottleStabilizerShadow
 import InfoGeometry.Topology.SpinorOrbitStratum
 import InfoGeometry.Topology.TripotentUniverse
 import InfoGeometry.Topology.TwoByTwoToThreeByThreeBridge

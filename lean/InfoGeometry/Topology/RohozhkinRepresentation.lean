@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.DelaunayPureBraidRepresentation
+import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.RohozhkinPBGL
 
 /-!
@@ -12,6 +13,8 @@ assignment.
 namespace InfoGeometry.Topology.RohozhkinRepresentation
 
 open InfoGeometry.Topology.RohozhkinBoundary
+open InfoGeometry.Topology.PureBraid
+open InfoGeometry.Topology.Delaunay
 
 /-- The representation theorem exists when generator matrices satisfy the
 presented pure-braid relators. -/

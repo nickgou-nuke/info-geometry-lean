@@ -54,7 +54,8 @@ theorem q_neg_one_is_car (N : ℕ) (Op : Type*) [Ring Op] [StarRing Op] [Algebra
   calc
     star (A.a i) * (A.a j) + (A.a j) * star (A.a i)
         = ((if i = j then (1 : Op) else 0) + (-1 : ℝ) • ((A.a j) * star (A.a i))) + (A.a j) * star (A.a i) := by rw [h]
-    _ = (if i = j then (1 : Op) else 0) + ((-1 : ℝ) • ((A.a j) * star (A.a i)) + (A.a j) * star (A.a i)) := by ring
+    _ = (if i = j then (1 : Op) else 0) + ((-1 : ℝ) • ((A.a j) * star (A.a i)) + (A.a j) * star (A.a i)) := by
+      simp [add_assoc]
     _ = (if i = j then (1 : Op) else 0) := by simp
 
 /-- At q = 1, the q-CCR relation enforces the CCR commutator. -/

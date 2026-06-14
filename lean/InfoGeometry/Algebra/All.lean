@@ -28,6 +28,7 @@ import InfoGeometry.Algebra.AnyonFiniteSpinBraid
 import InfoGeometry.Algebra.AnyonBraidGA
 import InfoGeometry.Algebra.CliffordBraidingInterfaces
 import InfoGeometry.Algebra.CliffordBraidingTheorem
+import InfoGeometry.Algebra.CubicJordanOs
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge
@@ -81,6 +82,9 @@ import InfoGeometry.Algebra.SplitOctonionicJordanCayleyBoundary
 import InfoGeometry.Algebra.GeometricBridge
 import InfoGeometry.Algebra.JordanGradedWeight
 import InfoGeometry.Algebra.JordanLinearization
+import InfoGeometry.Algebra.QCCRKuzmin
+import InfoGeometry.Algebra.QCCRProved
+import InfoGeometry.Algebra.QCCRSupergradingBridge
 import InfoGeometry.Algebra.TrialityG2
 /-!
 # InfoGeometry.Algebra.All

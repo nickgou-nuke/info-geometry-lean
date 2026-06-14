@@ -1,5 +1,7 @@
 import InfoGeometry.Projective.Bridge
 import InfoGeometry.Projective.ConeKL
+import InfoGeometry.Projective.CrossRatio
+import InfoGeometry.Projective.MobiusGauge
 import InfoGeometry.Projective.Dynamics
 import InfoGeometry.Projective.FaithfulKL
 import InfoGeometry.Projective.GaugeQuotient

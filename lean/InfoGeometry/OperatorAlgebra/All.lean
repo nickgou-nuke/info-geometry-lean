@@ -170,6 +170,8 @@ import InfoGeometry.OperatorAlgebra.TKKFluxBalance
 import InfoGeometry.OperatorAlgebra.TomitaCartanChiralClosure
 import InfoGeometry.OperatorAlgebra.TomitaCartanDynamics
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
+import InfoGeometry.OperatorAlgebra.QCCRCarBridge
+import InfoGeometry.OperatorAlgebra.QCCRCore
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
 import InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge
 import InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration

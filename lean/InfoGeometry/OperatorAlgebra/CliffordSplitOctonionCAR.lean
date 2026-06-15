@@ -91,9 +91,43 @@ theorem polar_a_aDag (i j : Fin 4) :
     simp [Q44, aVec, aDagVec, pVec, nVec, splitQuadraticForm, splitBasisVector, Fin.sum_univ_four] <;>
     norm_num
 
+/-- Polar pairing of two annihilation vectors. -/
+theorem polar_a_a_polar (i j : Fin 4) :
+    QuadraticMap.polar Q44 (aVec i) (aVec j) = 0 := by
+  fin_cases i <;> fin_cases j <;> rw [QuadraticMap.polar] <;>
+    simp [Q44, aVec, pVec, nVec, splitQuadraticForm, splitBasisVector, Fin.sum_univ_four] <;>
+    norm_num
+
+/-- Polar pairing of two creation vectors. -/
+theorem polar_aDag_aDag_polar (i j : Fin 4) :
+    QuadraticMap.polar Q44 (aDagVec i) (aDagVec j) = 0 := by
+  fin_cases i <;> fin_cases j <;> rw [QuadraticMap.polar] <;>
+    simp [Q44, aDagVec, pVec, nVec, splitQuadraticForm, splitBasisVector, Fin.sum_univ_four] <;>
+    norm_num
+
 theorem car_identity (i j : Fin 4) :
     a i * aDag j + aDag j * a i = (if i = j then (1 : Cl44) else 0) := by
   rw [a, aDag, ι_mul_ι_add_swap, polar_a_aDag]
   split_ifs <;> simp
+
+theorem a_a_anticomm (i j : Fin 4) : a i * a j + a j * a i = 0 := by
+  by_cases hij : i = j
+  · subst j; simp [a_sq_zero]
+  · dsimp [a]; rw [ι_mul_ι_add_swap, polar_a_a_polar]; simp
+
+theorem aDag_aDag_anticomm (i j : Fin 4) : aDag i * aDag j + aDag j * aDag i = 0 := by
+  by_cases hij : i = j
+  · subst j; simp [aDag_sq_zero]
+  · dsimp [aDag]; rw [ι_mul_ι_add_swap, polar_aDag_aDag_polar]; simp
+
+/-- Complete CAR packet for 4 fermionic modes from Cl(4,4). -/
+theorem car_packet :
+    (∀ i : Fin 4, a i * a i = 0) ∧
+    (∀ i : Fin 4, aDag i * aDag i = 0) ∧
+    (∀ i j : Fin 4, a i * a j + a j * a i = 0) ∧
+    (∀ i j : Fin 4, aDag i * aDag j + aDag j * aDag i = 0) ∧
+    (∀ i j : Fin 4,
+      a i * aDag j + aDag j * a i = if i = j then (1 : Cl44) else 0) := by
+  exact ⟨a_sq_zero, aDag_sq_zero, a_a_anticomm, aDag_aDag_anticomm, car_identity⟩
 
 end InfoGeometry.OperatorAlgebra.CliffordCAR

@@ -46,6 +46,8 @@ import InfoGeometry.Topology.DelaunayFlipMatrix
 import InfoGeometry.Topology.DelaunayAdjacentStructures
 import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
+import InfoGeometry.Topology.RohozhkinPBGL
+import InfoGeometry.Topology.RohozhkinRepresentation
 import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.DelaunayPureBraidInvariant
 import InfoGeometry.Topology.DelaunayFlipInterfaces

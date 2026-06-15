@@ -2,24 +2,13 @@ import Mathlib.Tactic
 import InfoGeometry.Algebraic.SplitQuadraticForm
 
 /-!
-# Cl(n,n) CAR algebra — n fermionic modes
+# Cl(n,n) CAR algebra — n fermionic modes (PROVED)
 
-Generalizes Cl(4,4) to arbitrary Cl(n,n) = Cl(n,0)⊗Cl(0,n) with
-n positive + n negative generators. Using isotropic vectors and
-the polar form of the split quadratic form, we obtain n fermionic
-creation/annihilation pairs with the full CAR algebra.
+Algebraic proof using the split quadratic form decomposition
+into positive and negative sectors.
 
-  p_i² = 1, n_i² = -1  (i = 0,…,n-1)
-  a_i  = ½(p_i + n_i)   annihilation
-  a_i† = ½(p_i - n_i)   creation
-
-CAR identities:
-  a_i² = 0, a_i†² = 0
-  {a_i, a_j} = {a_i†, a_j†} = 0
-  {a_i, a_j†} = δ_{ij}·1
-
-Proof method: algebraic, not finite-case — uses the general polar form
-and quadratic form properties of `splitQuadraticForm n`.
+All CAR identities are proved for arbitrary n via sum computations
+on the diagonal split quadratic form `Q(v) = ∑(v_inl)² - ∑(v_inr)²`.
 -/
 
 open CliffordAlgebra
@@ -29,148 +18,282 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.CliffordCAR
 
-variable (n : ℕ)
+/-! ### Split quadratic form decomposition
 
-abbrev Clnn := CliffordAlgebra (splitQuadraticForm n)
-abbrev Qn := splitQuadraticForm n
+The key lemma: `splitQuadraticForm n` decomposes as the difference
+of positive and negative sector sum-of-squares.
+-/
 
-/-- Positive basis vector. -/
-def pVec (i : Fin n) : SplitModule n := splitBasisVector (Sum.inl i)
-/-- Negative basis vector. -/
-def nVec (i : Fin n) : SplitModule n := splitBasisVector (Sum.inr i)
+lemma splitQuadraticForm_decomposed (n : ℕ) (v : SplitModule n) :
+    splitQuadraticForm n v = (∑ x : Fin n, (v (Sum.inl x)) ^ 2) - (∑ x : Fin n, (v (Sum.inr x)) ^ 2) := by
+  rw [splitQuadraticForm_apply, Fintype.sum_sum_type]
+  simp [splitWeight, ← pow_two, sub_eq_add_neg]
 
-def p (i : Fin n) : Clnn n := ι (Qn n) (pVec n i)
-def n (i : Fin n) : Clnn n := ι (Qn n) (nVec n i)
+/-! ### Clifford generators for the split basis -/
 
-@[simp] theorem p_sq (i : Fin n) : p n i * p n i = 1 := by
+abbrev Clnn (n : ℕ) := CliffordAlgebra (splitQuadraticForm n)
+
+def pVec (n : ℕ) (i : Fin n) : SplitModule n := splitBasisVector (Sum.inl i)
+def nVec (n : ℕ) (i : Fin n) : SplitModule n := splitBasisVector (Sum.inr i)
+def posG (n : ℕ) (i : Fin n) : Clnn n := ι (splitQuadraticForm n) (pVec n i)
+def negG (n : ℕ) (i : Fin n) : Clnn n := ι (splitQuadraticForm n) (nVec n i)
+
+@[simp] theorem p_sq (n : ℕ) (i : Fin n) : posG n i * posG n i = 1 := by
   calc
-    p n i * p n i = algebraMap ℝ (Clnn n) ((Qn n) (pVec n i)) := ι_sq_scalar _ _
-    _ = algebraMap ℝ (Clnn n) (1 : ℝ) := by rw [Qn, pVec, splitQuadraticForm_posBasisVector]
+    posG n i * posG n i = algebraMap ℝ (Clnn n) ((splitQuadraticForm n) (pVec n i)) := ι_sq_scalar _ _
+    _ = algebraMap ℝ (Clnn n) 1 := by rw [pVec, splitQuadraticForm_posBasisVector]
     _ = 1 := by simp
 
-@[simp] theorem n_sq (i : Fin n) : n n i * n n i = -1 := by
+@[simp] theorem n_sq (n : ℕ) (i : Fin n) : negG n i * negG n i = -1 := by
   calc
-    n n i * n n i = algebraMap ℝ (Clnn n) ((Qn n) (nVec n i)) := ι_sq_scalar _ _
-    _ = algebraMap ℝ (Clnn n) (-1 : ℝ) := by rw [Qn, nVec, splitQuadraticForm_negBasisVector]
+    negG n i * negG n i = algebraMap ℝ (Clnn n) ((splitQuadraticForm n) (nVec n i)) := ι_sq_scalar _ _
+    _ = algebraMap ℝ (Clnn n) (-1) := by rw [nVec, splitQuadraticForm_negBasisVector]
     _ = -1 := by simp
 
-theorem p_n_anticomm (i j : Fin n) : p n i * n n j + n n j * p n i = 0 := by
-  have h : QuadraticMap.polar (Qn n) (pVec n i) (nVec n j) = 0 := by
-    dsimp [Qn, pVec, nVec]
+theorem pos_neg_anticomm (n : ℕ) (i j : Fin n) : posG n i * negG n j + negG n j * posG n i = 0 := by
+  have h : QuadraticMap.polar (splitQuadraticForm n) (pVec n i) (nVec n j) = 0 := by
+    dsimp [pVec, nVec]
     rw [QuadraticMap.polar]
     simp [splitQuadraticForm, splitBasisVector]
-  rw [p, n, ι_mul_ι_add_swap, h]
-  simp
+  rw [posG, negG, ι_mul_ι_add_swap, h]; simp
 
-/-- Annihilation vector: a_i = ½(p_i + n_i), isotropic for the split quadratic form. -/
-def aVec (i : Fin n) : SplitModule n := (1/2 : ℝ) • (pVec n i + nVec n i)
+/-! ### CAR annihilation and creation operators -/
 
-/-- Creation vector: a_i† = ½(p_i - n_i), also isotropic. -/
-def aDagVec (i : Fin n) : SplitModule n := (1/2 : ℝ) • (pVec n i - nVec n i)
+def aVec (n : ℕ) (i : Fin n) : SplitModule n := (1/2 : ℝ) • (pVec n i + nVec n i)
+def aDagVec (n : ℕ) (i : Fin n) : SplitModule n := (1/2 : ℝ) • (pVec n i - nVec n i)
+def ann (n : ℕ) (i : Fin n) : Clnn n := ι (splitQuadraticForm n) (aVec n i)
+def cre (n : ℕ) (i : Fin n) : Clnn n := ι (splitQuadraticForm n) (aDagVec n i)
 
-/-- Isotropic: Q(annihilation vector) = 0 for all i. -/
-@[simp] theorem Q_aVec (i : Fin n) : (Qn n) (aVec n i) = 0 := by
-  dsimp [Qn, aVec, pVec, nVec]
+/-! ### Quadratic form vanishes on a and a† vectors -/
+
+lemma Q_aVec (n : ℕ) (i : Fin n) : (splitQuadraticForm n) (aVec n i) = 0 := by
+  dsimp [aVec, pVec, nVec]
+  have hsmul := (splitQuadraticForm n).map_smul (1/2 : ℝ)
+    (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+  have hsq : ((1/2 : ℝ) * (1/2 : ℝ)) = (1/4 : ℝ) := by norm_num
+  have hQadd : splitQuadraticForm n (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)) = 0 := by
+    rw [splitQuadraticForm_decomposed]
+    simp [splitBasisVector, Pi.add_apply]
   calc
-    splitQuadraticForm n ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)))
-        = (1/2) ^ 2 • splitQuadraticForm n (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)) := by
-      simp [QuadraticMap.map_smul]
-    _ = (1/4) • (splitQuadraticForm n (splitBasisVector (Sum.inl i)) +
-                 splitQuadraticForm n (splitBasisVector (Sum.inr i))) := by
-      simp [QuadraticMap.map_add, splitQuadraticForm_posBasisVector, splitQuadraticForm_negBasisVector]
-    _ = (1/4) • ((1 : ℝ) + (-1 : ℝ)) := by simp
-    _ = 0 := by ring
+    (splitQuadraticForm n) ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)))
+        = ((1/2 : ℝ) * (1/2 : ℝ)) • splitQuadraticForm n (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)) := by
+      simpa using hsmul
+    _ = (1/4 : ℝ) • 0 := by rw [hsq, hQadd]
+    _ = 0 := by simp
 
-/-- Isotropic: Q(creation vector) = 0 for all i. -/
-@[simp] theorem Q_aDagVec (i : Fin n) : (Qn n) (aDagVec n i) = 0 := by
-  dsimp [Qn, aDagVec, pVec, nVec]
+lemma Q_aDagVec (n : ℕ) (i : Fin n) : (splitQuadraticForm n) (aDagVec n i) = 0 := by
+  dsimp [aDagVec, pVec, nVec]
+  have hsmul := (splitQuadraticForm n).map_smul (1/2 : ℝ)
+    (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i))
+  have hsq : ((1/2 : ℝ) * (1/2 : ℝ)) = (1/4 : ℝ) := by norm_num
+  have hQsub : splitQuadraticForm n (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)) = 0 := by
+    rw [splitQuadraticForm_decomposed]
+    simp [splitBasisVector, Pi.sub_apply]
   calc
-    splitQuadraticForm n ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)))
-        = (1/2) ^ 2 • splitQuadraticForm n (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)) := by
-      simp [QuadraticMap.map_smul]
-    _ = (1/4) • (splitQuadraticForm n (splitBasisVector (Sum.inl i)) +
-                 splitQuadraticForm n (splitBasisVector (Sum.inr i))) := by
-      simp [QuadraticMap.map_add, QuadraticMap.map_neg, splitQuadraticForm_posBasisVector,
-        splitQuadraticForm_negBasisVector]
-    _ = (1/4) • ((1 : ℝ) + (-1 : ℝ)) := by simp
-    _ = 0 := by ring
+    (splitQuadraticForm n) ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)))
+        = ((1/2 : ℝ) * (1/2 : ℝ)) • splitQuadraticForm n (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)) := by
+      simpa using hsmul
+    _ = (1/4 : ℝ) • 0 := by rw [hsq, hQsub]
+    _ = 0 := by simp
 
-def a (i : Fin n) : Clnn n := ι (Qn n) (aVec n i)
-def aDag (i : Fin n) : Clnn n := ι (Qn n) (aDagVec n i)
+@[simp] theorem ann_sq_zero (n : ℕ) (i : Fin n) : ann n i * ann n i = 0 := by
+  rw [ann, ι_sq_scalar, Q_aVec]; simp
 
-/-- CAR nilpotence: a_i² = 0. -/
-@[simp] theorem a_sq_zero (i : Fin n) : a n i * a n i = 0 := by
-  rw [a, ι_sq_scalar, Q_aVec]; simp
+@[simp] theorem cre_sq_zero (n : ℕ) (i : Fin n) : cre n i * cre n i = 0 := by
+  rw [cre, ι_sq_scalar, Q_aDagVec]; simp
 
-/-- CAR nilpotence: a_i†² = 0. -/
-@[simp] theorem aDag_sq_zero (i : Fin n) : aDag n i * aDag n i = 0 := by
-  rw [aDag, ι_sq_scalar, Q_aDagVec]; simp
+/-! ### Polar form on the split basis
 
-/--
-Cross polar form: polar(a_i, a_j†) = δ_{ij}.
-Algebraic proof using the general polar form.
+The four cases of the polar form on positive/negative basis vectors.
+These are the atomic building blocks for all CAR identities.
 -/
-theorem polar_a_aDag (i j : Fin n) :
-    QuadraticMap.polar (Qn n) (aVec n i) (aDagVec n j) = if i = j then 1 else 0 := by
-  dsimp [aVec, aDagVec]
-  -- Expand polar of scaled sums
-  simp_rw [QuadraticMap.polar_add_add, QuadraticMap.polar_smul_smul,
-    QuadraticMap.polar_self, QuadraticMap.polar_comm]
-  -- Now we have (1/4) * (polar(p_i,p_j) - polar(p_i,n_j) + polar(n_i,p_j) - polar(n_i,n_j))
-  dsimp [Qn, pVec, nVec]
-  -- polar(pVec i, pVec j) = 2*Q(pVec i)*δ_{ij} (since Q(pVec i)=1)
-  -- polar(nVec i, nVec j) = -2*δ_{ij} (since Q(nVec i)=-1)
-  -- polar(pVec i, nVec j) = 0 (orthogonal)
-  -- So: (1/4)*(2δ - 0 + 0 - (-2δ)) = δ
-  simp [splitQuadraticForm_posBasisVector, splitQuadraticForm_negBasisVector,
-    splitQuadraticForm_basisVector, QuadraticMap.polar, splitBasisVector]
-  by_cases h : i = j
-  · subst j; norm_num
-  · simp [h]
 
-/-- CAR mixed identity: {a_i, a_j†} = δ_{ij}·1. -/
-theorem car_identity (i j : Fin n) :
-    a n i * aDag n j + aDag n j * a n i = (if i = j then (1 : Clnn n) else 0) := by
-  rw [a, aDag, ι_mul_ι_add_swap, polar_a_aDag]
-  split_ifs <;> simp
+lemma polar_inl_inl (n : ℕ) (k l : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl k)) (splitBasisVector (Sum.inl l)) =
+    if k = l then (2 : ℝ) else 0 := by
+  dsimp [QuadraticMap.polar]
+  by_cases hkl : k = l
+  · subst l
+    rw [(splitQuadraticForm n).map_add_self (splitBasisVector (Sum.inl k)), splitQuadraticForm_posBasisVector]
+    norm_num
+  · rw [splitQuadraticForm_decomposed, splitQuadraticForm_decomposed, splitQuadraticForm_decomposed]
+    simp [splitBasisVector, Pi.add_apply, add_sq, Finset.sum_add_distrib, hkl, eq_comm]
 
-/-- Polar form of two annihilation vectors: always zero. -/
-theorem polar_a_a (i j : Fin n) :
-    QuadraticMap.polar (Qn n) (aVec n i) (aVec n j) = 0 := by
-  dsimp [aVec]; simp_rw [QuadraticMap.polar_add_add, QuadraticMap.polar_smul_smul]
-  dsimp [Qn, pVec, nVec]
-  simp [splitQuadraticForm_posBasisVector, splitQuadraticForm_negBasisVector,
-    splitQuadraticForm_basisVector, QuadraticMap.polar, splitBasisVector]
-  by_cases h : i = j; · subst j; norm_num; · simp [h]
+lemma polar_inr_inr (n : ℕ) (k l : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr k)) (splitBasisVector (Sum.inr l)) =
+    if k = l then (-2 : ℝ) else 0 := by
+  dsimp [QuadraticMap.polar]
+  by_cases hkl : k = l
+  · subst l
+    rw [(splitQuadraticForm n).map_add_self (splitBasisVector (Sum.inr k)), splitQuadraticForm_negBasisVector]
+    norm_num
+  · rw [splitQuadraticForm_decomposed, splitQuadraticForm_decomposed, splitQuadraticForm_decomposed]
+    simp [splitBasisVector, Pi.add_apply, add_sq, Finset.sum_add_distrib, hkl, eq_comm]
 
-/-- Polar form of two creation vectors: always zero. -/
-theorem polar_aDag_aDag (i j : Fin n) :
-    QuadraticMap.polar (Qn n) (aDagVec n i) (aDagVec n j) = 0 := by
-  dsimp [aDagVec]; simp_rw [QuadraticMap.polar_add_add, QuadraticMap.polar_smul_smul]
-  dsimp [Qn, pVec, nVec]
-  simp [splitQuadraticForm_posBasisVector, splitQuadraticForm_negBasisVector,
-    splitQuadraticForm_basisVector, QuadraticMap.polar, splitBasisVector]
-  by_cases h : i = j; · subst j; norm_num; · simp [h]
+lemma polar_inl_inr (n : ℕ) (k l : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl k)) (splitBasisVector (Sum.inr l)) = (0 : ℝ) := by
+  dsimp [QuadraticMap.polar]
+  rw [splitQuadraticForm_decomposed, splitQuadraticForm_decomposed, splitQuadraticForm_decomposed]
+  simp [splitBasisVector, Pi.add_apply]
 
-/-- CAR same-kind anticommutation: {a_i, a_j} = 0. -/
-theorem a_a_anticomm (i j : Fin n) : a n i * a n j + a n j * a n i = 0 := by
-  by_cases h : i = j; · subst j; simp [a_sq_zero]
-  · rw [a, a, ι_mul_ι_add_swap, polar_a_a n i j]; simp
+lemma polar_inr_inl (n : ℕ) (k l : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr k)) (splitBasisVector (Sum.inl l)) = (0 : ℝ) := by
+  dsimp [QuadraticMap.polar]
+  rw [splitQuadraticForm_decomposed, splitQuadraticForm_decomposed, splitQuadraticForm_decomposed]
+  simp [splitBasisVector, Pi.add_apply]
 
-/-- CAR same-kind anticommutation: {a_i†, a_j†} = 0. -/
-theorem aDag_aDag_anticomm (i j : Fin n) :
-    aDag n i * aDag n j + aDag n j * aDag n i = 0 := by
-  by_cases h : i = j; · subst j; simp [aDag_sq_zero]
-  · rw [aDag, aDag, ι_mul_ι_add_swap, polar_aDag_aDag n i j]; simp
+/-! ### Polar computations for a and a† vectors -/
+
+private lemma polar_pp_nn_zero (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+      (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)) = 0 := by
+  calc
+    _ = QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i))
+            (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)) +
+        QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_add_left]
+    _ = (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inl j)) +
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inr j))) +
+        (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inl j)) +
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_add_right, QuadraticMap.polar_add_right]
+    _ = ((if i = j then 2 else 0) + 0) + (0 + (if i = j then -2 else 0)) := by
+      rw [polar_inl_inl n i j, polar_inl_inr n i j, polar_inr_inl n i j, polar_inr_inr n i j]
+    _ = 0 := by
+      split_ifs <;> ring
+
+private lemma polar_pm_pm_zero (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i))
+      (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) = 0 := by
+  calc
+    _ = QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) -
+        QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_sub_left]
+    _ = (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inl j)) -
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inr j))) -
+        (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inl j)) -
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_sub_right, QuadraticMap.polar_sub_right]
+    _ = ((if i = j then 2 else 0) - 0) - (0 - (if i = j then -2 else 0)) := by
+      rw [polar_inl_inl n i j, polar_inl_inr n i j, polar_inr_inl n i j, polar_inr_inr n i j]
+    _ = 0 := by
+      split_ifs <;> ring
+
+private lemma polar_pp_pm_delta (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+      (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) =
+    if i = j then (4 : ℝ) else 0 := by
+  calc
+    _ = QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) +
+        QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_add_left]
+    _ = (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inl j)) -
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inl i)) (splitBasisVector (Sum.inr j))) +
+        (QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inl j)) -
+         QuadraticMap.polar (splitQuadraticForm n) (splitBasisVector (Sum.inr i)) (splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_sub_right, QuadraticMap.polar_sub_right]
+    _ = ((if i = j then 2 else 0) - 0) + (0 - (if i = j then -2 else 0)) := by
+      rw [polar_inl_inl n i j, polar_inl_inr n i j, polar_inr_inl n i j, polar_inr_inr n i j]
+    _ = (if i = j then 4 else 0) := by
+      split_ifs <;> ring
+
+theorem polar_ann_ann (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (aVec n i) (aVec n j) = 0 := by
+  dsimp [aVec, pVec, nVec]
+  calc
+    QuadraticMap.polar (splitQuadraticForm n)
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)))
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)))
+        = (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_smul_left]
+    _ = (1/2 : ℝ) • (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_smul_right]
+    _ = ((1/2 : ℝ) * (1/2 : ℝ)) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) + splitBasisVector (Sum.inr j)) := by
+      rw [smul_smul]
+    _ = (1/4 : ℝ) • 0 := by
+      rw [show ((1/2 : ℝ) * (1/2 : ℝ)) = (1/4 : ℝ) by norm_num, polar_pp_nn_zero n i j]
+    _ = 0 := by simp
+
+theorem polar_cre_cre (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (aDagVec n i) (aDagVec n j) = 0 := by
+  dsimp [aDagVec, pVec, nVec]
+  calc
+    QuadraticMap.polar (splitQuadraticForm n)
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i)))
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)))
+        = (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i))
+            ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_smul_left]
+    _ = (1/2 : ℝ) • (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_smul_right]
+    _ = ((1/2 : ℝ) * (1/2 : ℝ)) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) - splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [smul_smul]
+    _ = (1/4 : ℝ) • 0 := by
+      rw [show ((1/2 : ℝ) * (1/2 : ℝ)) = (1/4 : ℝ) by norm_num, polar_pm_pm_zero n i j]
+    _ = 0 := by simp
+
+theorem polar_ann_cre (n : ℕ) (i j : Fin n) :
+    QuadraticMap.polar (splitQuadraticForm n) (aVec n i) (aDagVec n j) =
+    if i = j then (1 : ℝ) else 0 := by
+  dsimp [aVec, aDagVec, pVec, nVec]
+  calc
+    QuadraticMap.polar (splitQuadraticForm n)
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i)))
+        ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)))
+        = (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            ((1/2 : ℝ) • (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j))) := by
+      rw [QuadraticMap.polar_smul_left]
+    _ = (1/2 : ℝ) • (1/2 : ℝ) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [QuadraticMap.polar_smul_right]
+    _ = ((1/2 : ℝ) * (1/2 : ℝ)) • QuadraticMap.polar (splitQuadraticForm n)
+            (splitBasisVector (Sum.inl i) + splitBasisVector (Sum.inr i))
+            (splitBasisVector (Sum.inl j) - splitBasisVector (Sum.inr j)) := by
+      rw [smul_smul]
+    _ = (1/4 : ℝ) • (if i = j then (4 : ℝ) else 0) := by
+      rw [show ((1/2 : ℝ) * (1/2 : ℝ)) = (1/4 : ℝ) by norm_num, polar_pp_pm_delta n i j]
+    _ = (if i = j then (1 : ℝ) else 0) := by
+      split_ifs <;> norm_num
+
+/-! ### CAR algebra identities -/
+
+theorem car_identity (n : ℕ) (i j : Fin n) :
+    ann n i * cre n j + cre n j * ann n i = (if i = j then (1 : Clnn n) else 0) := by
+  rw [ann, cre, ι_mul_ι_add_swap, polar_ann_cre n i j]; split_ifs <;> simp
+
+theorem ann_ann_anticomm (n : ℕ) (i j : Fin n) : ann n i * ann n j + ann n j * ann n i = 0 := by
+  by_cases h : i = j; · subst j; simp [ann_sq_zero]
+  · rw [ann, ann, ι_mul_ι_add_swap, polar_ann_ann n i j]; simp
+
+theorem cre_cre_anticomm (n : ℕ) (i j : Fin n) : cre n i * cre n j + cre n j * cre n i = 0 := by
+  by_cases h : i = j; · subst j; simp [cre_sq_zero]
+  · rw [cre, cre, ι_mul_ι_add_swap, polar_cre_cre n i j]; simp
 
 /-- Complete CAR packet for n fermionic modes from Cl(n,n). -/
 theorem car_packet (n : ℕ) :
-    (∀ i : Fin n, a n i * a n i = 0) ∧
-    (∀ i : Fin n, aDag n i * aDag n i = 0) ∧
-    (∀ i j : Fin n, a n i * a n j + a n j * a n i = 0) ∧
-    (∀ i j : Fin n, aDag n i * aDag n j + aDag n j * aDag n i = 0) ∧
-    (∀ i j : Fin n,
-      a n i * aDag n j + aDag n j * a n i = if i = j then (1 : Clnn n) else 0) := by
-  exact ⟨a_sq_zero n, aDag_sq_zero n, a_a_anticomm n, aDag_aDag_anticomm n, car_identity n⟩
+    (∀ i : Fin n, ann n i * ann n i = 0) ∧
+    (∀ i : Fin n, cre n i * cre n i = 0) ∧
+    (∀ i j : Fin n, ann n i * ann n j + ann n j * ann n i = 0) ∧
+    (∀ i j : Fin n, cre n i * cre n j + cre n j * cre n i = 0) ∧
+    (∀ i j, ann n i * cre n j + cre n j * ann n i = if i = j then (1 : Clnn n) else 0) := by
+  exact ⟨ann_sq_zero n, cre_sq_zero n, ann_ann_anticomm n, cre_cre_anticomm n, car_identity n⟩
 
 end InfoGeometry.OperatorAlgebra.CliffordCAR

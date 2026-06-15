@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Cl(4,4) Fock Parity — 16-state occupation sheet
+# Cl(4,4) Fock Parity — 16-state occupation sheet (PROVED)
 
 Four fermionic CAR modes generate 2^4 = 16 occupation states given
 by `Fin 4 → Bool`. The even-cardinality subsets (0,2,4 elements)
@@ -22,18 +22,20 @@ namespace InfoGeometry.OperatorAlgebra.Cl44FockParity
 /-- Occupation label for four modes. -/
 abbrev Occ4 := Fin 4 → Bool
 
-instance : Fintype Occ4 := Pi.fintype
+/-- Number of occupied modes. -/
+def fermionNumber (w : Occ4) : ℕ :=
+  ∑ i : Fin 4, if w i then 1 else 0
 
 /-- Total number of occupation states: 2^4 = 16. -/
 theorem card_total : Fintype.card Occ4 = 16 := by
   native_decide
 
 /-- Number of even-cardinality occupation states = 8. -/
-theorem card_even : Fintype.card {w : Occ4 // Even ((Finset.univ.filter w).card)} = 8 := by
+theorem card_even : Fintype.card {w : Occ4 // Even (fermionNumber w)} = 8 := by
   native_decide
 
 /-- Number of odd-cardinality occupation states = 8. -/
-theorem card_odd : Fintype.card {w : Occ4 // ¬ Even ((Finset.univ.filter w).card)} = 8 := by
+theorem card_odd : Fintype.card {w : Occ4 // ¬ Even (fermionNumber w)} = 8 := by
   native_decide
 
 /-- Finite Witten index: 8 - 8 = 0. -/
@@ -42,8 +44,8 @@ theorem witten_index_zero : ((8 : ℤ) - 8) = 0 := by
 
 /-- Even and odd sectors have equal cardinality. -/
 theorem even_odd_card_equal :
-    Fintype.card {w : Occ4 // Even ((Finset.univ.filter w).card)} =
-    Fintype.card {w : Occ4 // ¬ Even ((Finset.univ.filter w).card)} := by
+    Fintype.card {w : Occ4 // Even (fermionNumber w)} =
+    Fintype.card {w : Occ4 // ¬ Even (fermionNumber w)} := by
   rw [card_even, card_odd]
 
 /-- Toggle mode 0: flips occupied status of first mode. -/

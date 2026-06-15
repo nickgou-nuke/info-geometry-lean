@@ -20,6 +20,8 @@ import InfoGeometry.OperatorAlgebra.ChiralResidueAudit
 import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR
+import InfoGeometry.OperatorAlgebra.CliffordCAR
+import InfoGeometry.OperatorAlgebra.CliffordCARFockParity
 import InfoGeometry.OperatorAlgebra.CasimirInvariance
 import InfoGeometry.OperatorAlgebra.ColeFuryIdeals
 import InfoGeometry.OperatorAlgebra.ClosureInvolution

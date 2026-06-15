@@ -270,6 +270,7 @@ import InfoGeometry.Arithmetic.LFunctionPotential
 import InfoGeometry.Arithmetic.RHQuantumStabilityBridge
 import InfoGeometry.Arithmetic.ZetaTraceSpecialization
 import InfoGeometry.Arithmetic.ZetaTraceVielbeinSpecialization
+import InfoGeometry.Arithmetic.SplitCliffordRealization
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator
 import InfoGeometry.Automorphic.ZetaPotentialSign

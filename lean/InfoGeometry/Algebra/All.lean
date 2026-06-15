@@ -1,4 +1,5 @@
 import InfoGeometry.Algebra.PrimeA1RootSystem
+import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.NullCone
@@ -73,6 +74,7 @@ import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Algebra.KleinSpinorOrbit
 import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 import InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
+import InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
 import InfoGeometry.Algebra.JordanCayleyInversion
 import InfoGeometry.Algebra.JordanCayleyInversionCs
 import InfoGeometry.Algebra.JordanCayleyInversionHs

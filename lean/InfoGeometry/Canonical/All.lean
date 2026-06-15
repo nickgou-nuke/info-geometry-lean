@@ -131,6 +131,7 @@ import InfoGeometry.Canonical.CuntzCliffordBottBridge
 import InfoGeometry.Canonical.CuntzMapFixedPoint
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Canonical.CuntzWeylUHFBridge
+import InfoGeometry.Canonical.CuntzThermalQBridge
 import InfoGeometry.Canonical.ConcreteHilbertCommutation
 import InfoGeometry.Canonical.CantorKMSCylinderState
 import InfoGeometry.Canonical.GNSState
@@ -265,6 +266,7 @@ import InfoGeometry.Canonical.SplitCliffordExternalChain
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 import InfoGeometry.Canonical.CompactifiedThermalOperators
+import InfoGeometry.Canonical.QCCRThermalKMSCertificate
 import InfoGeometry.Canonical.CanonicalGaugeBridge
 import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.CartanBerezinianCore
@@ -276,6 +278,7 @@ import InfoGeometry.Canonical.CategoryTheoryConeUniqueness
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.CayleyMobiusPowerLaws
 import InfoGeometry.Canonical.ThermalCompactRecurrence
+import InfoGeometry.Canonical.ThermalBogoliubov
 import InfoGeometry.Canonical.InfiniteKMSCondition
 import InfoGeometry.Canonical.ModularPoissonCompact
 import InfoGeometry.Canonical.ModularCompactOperatorCore
@@ -454,6 +457,8 @@ import InfoGeometry.Canonical.PrimeMajoranaWittenCharacter
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.SplitMajoranaPrimeGas
 import InfoGeometry.Canonical.CliffordWaveletAnalyticBridge
+import InfoGeometry.Canonical.SouriauZetaDualityBridge
+import InfoGeometry.Canonical.PrimeCliffordHeisenbergGate
 import InfoGeometry.Canonical.PrimeLocalFugacityOrder
 import InfoGeometry.Canonical.ModularRegularSupport
 import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket

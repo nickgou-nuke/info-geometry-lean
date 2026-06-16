@@ -295,6 +295,24 @@ theorem cuntz_range_projector_star (n : ℕ) (i : Fin n) :
     star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
   simp [star_mul, star_cuntzS, star_cuntzSdag]
 
+/-- Partial isometry: `(Sᵢ Sᵢ†) * Sᵢ = Sᵢ`. The range projector absorbs Sᵢ. -/
+theorem cuntz_range_projector_mul_S (n : ℕ) (i : Fin n) :
+    (cuntzS n i * cuntzSdag n i) * cuntzS n i = cuntzS n i := by
+  calc
+    (cuntzS n i * cuntzSdag n i) * cuntzS n i
+        = cuntzS n i * (cuntzSdag n i * cuntzS n i) := by simp [mul_assoc]
+    _ = cuntzS n i * 1 := by rw [cuntz_isometry n i]
+    _ = cuntzS n i := by simp
+
+/-- Partial isometry: `Sᵢ† * (Sᵢ Sᵢ†) = Sᵢ†`. The adjoint is absorbed. -/
+theorem cuntz_Sdag_mul_range_projector (n : ℕ) (i : Fin n) :
+    cuntzSdag n i * (cuntzS n i * cuntzSdag n i) = cuntzSdag n i := by
+  calc
+    cuntzSdag n i * (cuntzS n i * cuntzSdag n i)
+        = (cuntzSdag n i * cuntzS n i) * cuntzSdag n i := by simp [mul_assoc]
+    _ = 1 * cuntzSdag n i := by rw [cuntz_isometry n i]
+    _ = cuntzSdag n i := by simp
+
 /-- Range projectors commute: `(Sᵢ Sᵢ†)(Sⱼ Sⱼ†) = (Sⱼ Sⱼ†)(Sᵢ Sᵢ†)`.
     For i=j this is trivial. For i≠j both products equal 0 by orthogonality. -/
 theorem cuntz_range_projectors_commute (n : ℕ) (i j : Fin n) :

@@ -257,4 +257,27 @@ theorem star_cuntzSdag (n : ℕ) (i : Fin n) :
   change cuntzMk n (dagger n (Sdag n i)) = cuntzMk n (S n i)
   simp
 
+/-! ## Range projectors are orthogonal and idempotent -/
+
+/-- Each `Sᵢ Sᵢ†` is a projector: `(Sᵢ Sᵢ†)² = Sᵢ Sᵢ†`.
+    Follows from `cuntz_isometry`: `Sdag_i * S_i = 1`. -/
+theorem cuntz_range_projector (n : ℕ) (i : Fin n) :
+    (cuntzS n i * cuntzSdag n i) * (cuntzS n i * cuntzSdag n i) =
+      cuntzS n i * cuntzSdag n i := by
+  calc
+    (cuntzS n i * cuntzSdag n i) * (cuntzS n i * cuntzSdag n i)
+        = cuntzS n i * (cuntzSdag n i * cuntzS n i) * cuntzSdag n i := by ring
+    _ = cuntzS n i * 1 * cuntzSdag n i := by rw [cuntz_isometry n i]
+    _ = cuntzS n i * cuntzSdag n i := by simp
+
+/-- Distinct range projectors are orthogonal: `(Sᵢ Sᵢ†)(Sⱼ Sⱼ†) = 0` for `i ≠ j`.
+    Follows from `cuntz_distinct_orthogonal`: `Sdag_i * S_j = 0` for `i ≠ j`. -/
+theorem cuntz_range_projectors_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j) :
+    (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j) = 0 := by
+  calc
+    (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j)
+        = cuntzS n i * (cuntzSdag n i * cuntzS n j) * cuntzSdag n j := by ring
+    _ = cuntzS n i * 0 * cuntzSdag n j := by rw [cuntz_distinct_orthogonal n hij]
+    _ = 0 := by simp
+
 end InfoGeometry.Algebra.CuntzTensorQuotient

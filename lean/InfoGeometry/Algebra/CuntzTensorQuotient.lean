@@ -295,4 +295,29 @@ theorem cuntz_range_projector_star (n : ℕ) (i : Fin n) :
     star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
   simp [star_mul, star_cuntzS, star_cuntzSdag]
 
+/-- Range projectors commute: `(Sᵢ Sᵢ†)(Sⱼ Sⱼ†) = (Sⱼ Sⱼ†)(Sᵢ Sᵢ†)`.
+    For i=j this is trivial. For i≠j both products equal 0 by orthogonality. -/
+theorem cuntz_range_projectors_commute (n : ℕ) (i j : Fin n) :
+    (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j) =
+    (cuntzS n j * cuntzSdag n j) * (cuntzS n i * cuntzSdag n i) := by
+  by_cases hij : i = j
+  · subst j; rfl
+  · rw [cuntz_range_projectors_orthogonal n hij,
+      cuntz_range_projectors_orthogonal n (Ne.symm hij)]
+
+/-- Complete set of orthogonal projectors: idempotent, orthogonal, commuting,
+    self-adjoint, sum to 1. This is the Cuntz partition of unity. -/
+theorem cuntz_complete_projector_system (n : ℕ) :
+    (∀ i, (cuntzS n i * cuntzSdag n i) * (cuntzS n i * cuntzSdag n i) =
+      cuntzS n i * cuntzSdag n i) ∧
+    (∀ i j, i ≠ j → (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j) = 0) ∧
+    (∀ i j, (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j) =
+      (cuntzS n j * cuntzSdag n j) * (cuntzS n i * cuntzSdag n i)) ∧
+    (∀ i, star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i) ∧
+    (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 := by
+  exact ⟨cuntz_range_projector n,
+    λ i j hij => cuntz_range_projectors_orthogonal n hij,
+    cuntz_range_projectors_commute n, cuntz_range_projector_star n,
+    cuntz_ranges_sum_one n⟩
+
 end InfoGeometry.Algebra.CuntzTensorQuotient

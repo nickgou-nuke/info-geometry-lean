@@ -266,7 +266,12 @@ theorem cuntz_range_projector (n : ℕ) (i : Fin n) :
       cuntzS n i * cuntzSdag n i := by
   calc
     (cuntzS n i * cuntzSdag n i) * (cuntzS n i * cuntzSdag n i)
-        = cuntzS n i * (cuntzSdag n i * cuntzS n i) * cuntzSdag n i := by ring
+        = cuntzS n i * (cuntzSdag n i * cuntzS n i) * cuntzSdag n i := by
+      calc
+        (cuntzS n i * cuntzSdag n i) * (cuntzS n i * cuntzSdag n i)
+            = cuntzS n i * (cuntzSdag n i * (cuntzS n i * cuntzSdag n i)) := by simp [mul_assoc]
+        _ = cuntzS n i * ((cuntzSdag n i * cuntzS n i) * cuntzSdag n i) := by simp [mul_assoc]
+        _ = cuntzS n i * (cuntzSdag n i * cuntzS n i) * cuntzSdag n i := by simp [mul_assoc]
     _ = cuntzS n i * 1 * cuntzSdag n i := by rw [cuntz_isometry n i]
     _ = cuntzS n i * cuntzSdag n i := by simp
 
@@ -276,8 +281,18 @@ theorem cuntz_range_projectors_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j
     (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j) = 0 := by
   calc
     (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j)
-        = cuntzS n i * (cuntzSdag n i * cuntzS n j) * cuntzSdag n j := by ring
+        = cuntzS n i * (cuntzSdag n i * cuntzS n j) * cuntzSdag n j := by
+      calc
+        (cuntzS n i * cuntzSdag n i) * (cuntzS n j * cuntzSdag n j)
+            = cuntzS n i * (cuntzSdag n i * (cuntzS n j * cuntzSdag n j)) := by simp [mul_assoc]
+        _ = cuntzS n i * ((cuntzSdag n i * cuntzS n j) * cuntzSdag n j) := by simp [mul_assoc]
+        _ = cuntzS n i * (cuntzSdag n i * cuntzS n j) * cuntzSdag n j := by simp [mul_assoc]
     _ = cuntzS n i * 0 * cuntzSdag n j := by rw [cuntz_distinct_orthogonal n hij]
     _ = 0 := by simp
+
+/-- Range projectors are self-adjoint: `(Sᵢ Sᵢ†)† = Sᵢ Sᵢ†`. -/
+theorem cuntz_range_projector_star (n : ℕ) (i : Fin n) :
+    star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
+  simp [star_mul, star_cuntzS, star_cuntzSdag]
 
 end InfoGeometry.Algebra.CuntzTensorQuotient

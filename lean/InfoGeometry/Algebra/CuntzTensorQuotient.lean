@@ -1,6 +1,8 @@
 import Mathlib
 import Mathlib.LinearAlgebra.TensorAlgebra.Basic
-import Mathlib.Algebra.Star.Order
+import Mathlib.Algebra.Star.RingQuot
+import Mathlib.Algebra.Algebra.Opposite
+import Mathlib.Data.Finsupp.SMul
 
 /-!
 # Cuntz algebras as tensor-algebra quotients
@@ -35,81 +37,109 @@ def Sdag (n : ℕ) (i : Fin n) : CuntzTensor n := gen n i true
 
 /-! ## Dagger anti-involution on the free tensor algebra
 
-The formal dagger `†` is an anti-multiplicative, scalar-conjugate-linear
-involution on `CuntzTensor n`.  On generators: `†(Sᵢ) = Sᵢ†`, `†(Sᵢ†) = Sᵢ`.
+The formal dagger is built by the same pattern as Clifford reversion:
+construct an algebra homomorphism into the opposite algebra, then `unop`.
+It reverses word order and swaps the formal generators `Sᵢ ↔ Sᵢ†`.
 -/
 
 /-- Swap generator parity: `false ↔ true`. -/
-def daggerSwap (n : ℕ) (g : CuntzGen n) : CuntzGen n := (g.1, !g.2)
+def daggerSwap {n : ℕ} : CuntzGen n → CuntzGen n := fun g => (g.1, !g.2)
 
-/-- Dagger as an antilinear map on the free vector space of generators.
-    Sends `single (i,b)` to `single (i,¬b)`, extended conjugate-linearly. -/
-noncomputable def daggerFree (n : ℕ) : CuntzFree n → CuntzFree n :=
-  Finsupp.mapRange (Finsupp.domCongr (daggerSwap n)) (λ r => star r) (λ _ => by simp)
+@[simp] theorem daggerSwap_involutive {n : ℕ} (g : CuntzGen n) :
+    daggerSwap (daggerSwap g) = g := by
+  cases g with
+  | mk i b => cases b <;> rfl
 
-/-- Lift of the dagger to the tensor algebra as an anti-homomorphism into `MulOpposite`.
-    This is the canonical way to define an anti-involution on a free algebra:
-    `daggerAlgHom x = (daggerAlg x).unop` where `daggerAlg` is the unique algebra
-    homomorphism extending `daggerFree` into the opposite algebra. -/
-noncomputable def daggerAlgHom (n : ℕ) : CuntzTensor n →ₐ[ℂ] (CuntzTensor n)ᵐᵒᵖ :=
-  TensorAlgebra.lift ℂ (MulOpposite.op ∘ (TensorAlgebra.ι ℂ) ∘ daggerFree n)
+/-- Linear swap on the free vector space of generators. -/
+def daggerFree (n : ℕ) : CuntzFree n →ₗ[ℂ] CuntzFree n where
+  toFun v := Finsupp.mapDomain (@daggerSwap n) v
+  map_add' _ _ := Finsupp.mapDomain_add
+  map_smul' c v := Finsupp.mapDomain_smul c v
 
-/-- Dagger as an anti-multiplicative, conjugate-linear involution. -/
-noncomputable def dagger (n : ℕ) (x : CuntzTensor n) : CuntzTensor n :=
+@[simp] theorem daggerFree_single (n : ℕ) (i : Fin n) (b : Bool) :
+    daggerFree n (Finsupp.single (i, b) (1 : ℂ)) = Finsupp.single (i, !b) (1 : ℂ) := by
+  simp [daggerFree, Finsupp.mapDomain_single, daggerSwap]
+
+@[simp] theorem daggerFree_involutive (n : ℕ) (v : CuntzFree n) :
+    daggerFree n (daggerFree n v) = v := by
+  change Finsupp.mapDomain (@daggerSwap n) (Finsupp.mapDomain (@daggerSwap n) v) = v
+  rw [← Finsupp.mapDomain_comp]
+  have hfun : (@daggerSwap n) ∘ (@daggerSwap n) = id := by
+    funext g
+    exact daggerSwap_involutive g
+  rw [hfun, Finsupp.mapDomain_id]
+
+/-- Dagger as an algebra homomorphism into the opposite algebra. -/
+def daggerAlgHom (n : ℕ) : CuntzTensor n →ₐ[ℂ] (CuntzTensor n)ᵐᵒᵖ :=
+  TensorAlgebra.lift ℂ <|
+    ((MulOpposite.opLinearEquiv ℂ : CuntzTensor n ≃ₗ[ℂ] (CuntzTensor n)ᵐᵒᵖ) :
+        CuntzTensor n →ₗ[ℂ] (CuntzTensor n)ᵐᵒᵖ).comp
+      ((TensorAlgebra.ι ℂ).comp (daggerFree n))
+
+/-- Dagger as an anti-multiplicative involution on the tensor algebra. -/
+def dagger (n : ℕ) (x : CuntzTensor n) : CuntzTensor n :=
   MulOpposite.unop (daggerAlgHom n x)
 
 @[simp] theorem dagger_gen (n : ℕ) (i : Fin n) (b : Bool) :
     dagger n (gen n i b) = gen n i !b := by
-  unfold dagger daggerAlgHom gen
-  simp [daggerFree, daggerSwap, TensorAlgebra.lift_ι_apply, MulOpposite.unop_op]
+  simp [dagger, daggerAlgHom, gen]
 
 @[simp] theorem dagger_S (n : ℕ) (i : Fin n) : dagger n (S n i) = Sdag n i := by
-  unfold S Sdag; simp
+  simp [S, Sdag]
 
 @[simp] theorem dagger_Sdag (n : ℕ) (i : Fin n) : dagger n (Sdag n i) = S n i := by
-  unfold S Sdag; simp
+  simp [S, Sdag]
 
-/-- Dagger is additive. -/
-theorem dagger_add (n : ℕ) (x y : CuntzTensor n) :
+@[simp] theorem dagger_mul (n : ℕ) (x y : CuntzTensor n) :
+    dagger n (x * y) = dagger n y * dagger n x := by
+  simp [dagger, map_mul]
+
+@[simp] theorem dagger_add (n : ℕ) (x y : CuntzTensor n) :
     dagger n (x + y) = dagger n x + dagger n y := by
-  unfold dagger
+  simp [dagger, map_add]
+
+@[simp] theorem dagger_algebraMap (n : ℕ) (c : ℂ) :
+    dagger n (algebraMap ℂ (CuntzTensor n) c) = algebraMap ℂ (CuntzTensor n) c := by
+  simp [dagger, daggerAlgHom]
+
+@[simp] theorem dagger_zero (n : ℕ) : dagger n (0 : CuntzTensor n) = 0 := by
+  simpa using dagger_algebraMap n 0
+
+@[simp] theorem dagger_one (n : ℕ) : dagger n (1 : CuntzTensor n) = 1 := by
+  simpa using dagger_algebraMap n 1
+
+@[simp] theorem dagger_ι (n : ℕ) (v : CuntzFree n) :
+    dagger n (TensorAlgebra.ι ℂ v) = TensorAlgebra.ι ℂ (daggerFree n v) := by
+  simp [dagger, daggerAlgHom]
+
+@[simp] theorem dagger_dagger (n : ℕ) (x : CuntzTensor n) :
+    dagger n (dagger n x) = x := by
+  induction x using TensorAlgebra.induction with
+  | algebraMap r => simp
+  | ι v => simp
+  | mul x y hx hy => simp [hx, hy]
+  | add x y hx hy => simp [hx, hy]
+
+@[simp] theorem dagger_sum (n : ℕ) {ι : Type*} [DecidableEq ι]
+    (s : Finset ι) (f : ι → CuntzTensor n) :
+    dagger n (∑ i ∈ s, f i) = ∑ i ∈ s, dagger n (f i) := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | insert a s ha ih => simp [Finset.sum_insert ha, ih]
+
+instance (n : ℕ) : StarRing (CuntzTensor n) where
+  star := dagger n
+  star_involutive := dagger_dagger n
+  star_mul := dagger_mul n
+  star_add := dagger_add n
+
+@[simp] theorem star_S (n : ℕ) (i : Fin n) : star (S n i) = Sdag n i := by
+  change dagger n (S n i) = Sdag n i
   simp
 
-/-- Dagger is anti-multiplicative: `†(x·y) = †y · †x`. -/
-theorem dagger_mul (n : ℕ) (x y : CuntzTensor n) :
-    dagger n (x * y) = dagger n y * dagger n x := by
-  unfold dagger
-  simp [← MulOpposite.unop_mul]
-
-/-- Dagger is conjugate-linear: `†(c·x) = c̄ · †x`. -/
-theorem dagger_smul (n : ℕ) (c : ℂ) (x : CuntzTensor n) :
-    dagger n (c • x) = star c • dagger n x := by
-  unfold dagger daggerAlgHom
-  simp [TensorAlgebra.lift_algebraMap_smul]
-
-/-- Dagger is involutive: `†(†x) = x`. -/
-theorem dagger_dagger (n : ℕ) (x : CuntzTensor n) :
-    dagger n (dagger n x) = x := by
-  apply TensorAlgebra.induction (motive := λ x => dagger n (dagger n x) = x) x
-  · intro r; simp [dagger_smul, dagger_add]
-  · intro v
-    -- v : CuntzFree n is a finite ℂ-linear combination of generators
-    -- daggerFree swaps (i,b) ↔ (i,¬b) and conjugates scalars; applying twice gives identity
-    refine Finsupp.induction v ?_ ?_
-    · simp
-    · intro g c h
-      simp [dagger_gen, dagger_smul, dagger_add, h]
-  · intro x y hx hy; rw [dagger_add, dagger_add, hx, hy]
-  · intro x y hx hy; rw [dagger_mul, dagger_mul, hx, hy]
-
-/-- Dagger of 1 is 1. -/
-@[simp] theorem dagger_one (n : ℕ) : dagger n (1 : CuntzTensor n) = 1 := by
-  unfold dagger daggerAlgHom; simp
-
-/-- Dagger of a sum is the sum of daggers. -/
-@[simp] theorem dagger_sum (n : ℕ) {ι : Type*} (s : Finset ι) (f : ι → CuntzTensor n) :
-    dagger n (∑ i ∈ s, f i) = ∑ i ∈ s, dagger n (f i) := by
-  simp [dagger_add]
+@[simp] theorem star_Sdag (n : ℕ) (i : Fin n) : star (Sdag n i) = S n i := by
+  change dagger n (Sdag n i) = S n i
+  simp
 
 /-! ## Cuntz--Toeplitz relation: `Sᵢ† Sⱼ = δᵢⱼ`. -/
 inductive CuntzToeplitzRel (n : ℕ) : CuntzTensor n → CuntzTensor n → Prop
@@ -187,47 +217,44 @@ theorem finite_cuntz_tensor_quotient_packet (n : ℕ) :
     (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 := by
   exact ⟨cuntz_orthogonality n, cuntz_ranges_sum_one n⟩
 
-/-! ## Dagger descends through the Cuntz relations
+/-! ## Dagger descends through the Cuntz relations -/
 
-The key theorem: the relation `CuntzRel` is compatible with the dagger.
-If `x ~ y` modulo `CuntzRel`, then `†x ~ †y` also.  This makes the
-quotient `CuntzAlg n` a `StarRing`.
--/
-
-/-- Dagger maps each defining relation to itself (modulo the relation):
-    `†(Sdag n i * S n j) = Sdag n j * S n i` which is `= δᵢⱼ` iff the original is `= δⱼᵢ`.
-    But `δᵢⱼ` is symmetric, so the relation is dagger-invariant. -/
-theorem dagger_CuntzRel {n : ℕ} {x y : CuntzTensor n} (h : CuntzRel n x y) :
-    CuntzRel n (dagger n x) (dagger n y) := by
+theorem dagger_CuntzRel {n : ℕ} : ∀ {x y : CuntzTensor n},
+    CuntzRel n x y → CuntzRel n (star x) (star y) := by
+  intro x y h
   rcases h with (⟨i, j⟩ | _)
-  · -- orth: x = Sdag n i * S n j, y = (if i = j then 1 else 0)
-    rw [dagger_mul, dagger_Sdag, dagger_S]
-    -- †(Sdagᵢ * Sⱼ) = †(Sⱼ) * †(Sdagᵢ) = Sdagⱼ * Sᵢ
-    -- Now: is (Sdagⱼ * Sᵢ) related to δᵢⱼ (= δⱼᵢ)?
+  · change CuntzRel n (dagger n (Sdag n i * S n j)) (dagger n (if i = j then 1 else 0))
     by_cases hij : i = j
-    · subst hij; simpa [dagger_one] using CuntzRel.orth i i
-    · have hji : j ≠ i := by intro h; exact hij h.symm
-      -- Sdagⱼ * Sᵢ ~ 0 by CuntzRel.orth j i
-      -- while (if i = j then 1 else 0) ~ 0 = (if j = i then 1 else 0)
-      -- So we need: CuntzRel n (Sdag n j * S n i) (if i = j then 1 else 0)
-      simpa [hij, dagger_one] using CuntzRel.orth j i
-  · -- ranges_sum_one: x = Σ Sᵢ * Sdagᵢ, y = 1
-    -- dagger of Σ Sᵢ·Sdagᵢ = Σ (dagger Sdagᵢ)·(dagger Sᵢ) = Σ Sᵢ·Sdagᵢ = x again
-    -- and dagger(1) = 1
-    simp [dagger_sum, dagger_mul, dagger_S, dagger_Sdag, dagger_one, dagger_add]
+    · subst j
+      simpa using CuntzRel.orth (n := n) i i
+    · have hji : j ≠ i := fun h => hij h.symm
+      simpa [hij, hji] using CuntzRel.orth (n := n) j i
+  · change CuntzRel n (dagger n (∑ i : Fin n, S n i * Sdag n i)) (dagger n 1)
+    simpa using CuntzRel.ranges_sum_one (n := n)
 
-/-- The Cuntz algebra carries a `StarRing` structure descended from the dagger. -/
+/-- The Cuntz algebra carries the star structure descended from formal dagger. -/
 instance (n : ℕ) : StarRing (CuntzAlg n) :=
-  RingQuot.starRing (dagger_CuntzRel (n := n))
+  RingQuot.starRing (CuntzRel n) (fun _ _ h => dagger_CuntzRel h)
 
-@[simp] theorem star_cuntzS (n : ℕ) (i : Fin n) :
+theorem star_cuntzMk (n : ℕ) (x : CuntzTensor n) :
+    star (cuntzMk n x) = cuntzMk n (star x) := by
+  change star ((RingQuot.mkAlgHom ℂ (CuntzRel n)) x) =
+    (RingQuot.mkAlgHom ℂ (CuntzRel n)) (star x)
+  simp [RingQuot.mkAlgHom_def, RingQuot.mkRingHom_def]
+  rfl
+
+/-- Star swaps the quotient generator `Sᵢ` with its formal adjoint. -/
+theorem star_cuntzS (n : ℕ) (i : Fin n) :
     star (cuntzS n i) = cuntzSdag n i := by
-  unfold cuntzS cuntzSdag
-  simp [RingQuot.star_mk, dagger_S]
+  rw [cuntzS, cuntzSdag, star_cuntzMk]
+  change cuntzMk n (dagger n (S n i)) = cuntzMk n (Sdag n i)
+  simp
 
-@[simp] theorem star_cuntzSdag (n : ℕ) (i : Fin n) :
+/-- Star swaps the quotient formal adjoint back to `Sᵢ`. -/
+theorem star_cuntzSdag (n : ℕ) (i : Fin n) :
     star (cuntzSdag n i) = cuntzS n i := by
-  unfold cuntzS cuntzSdag
-  simp [RingQuot.star_mk, dagger_Sdag]
+  rw [cuntzSdag, cuntzS, star_cuntzMk]
+  change cuntzMk n (dagger n (Sdag n i)) = cuntzMk n (S n i)
+  simp
 
 end InfoGeometry.Algebra.CuntzTensorQuotient

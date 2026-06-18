@@ -12,6 +12,10 @@ import InfoGeometry.Projective.KleinCrossRatioInvariant
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 import InfoGeometry.Projective.Quadrics.Polarization
 import InfoGeometry.Projective.KleinQuadric
+import InfoGeometry.Projective.KleinQuadricMonodromy
+import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
+import InfoGeometry.Projective.KleinQuadricTime
+import InfoGeometry.Projective.PenroseSpinTilingConfig
 import InfoGeometry.Projective.KleinQuadricPlucker
 import InfoGeometry.Projective.KleinQuadricIncidence
 import InfoGeometry.Projective.NoncommutativeCrossRatio

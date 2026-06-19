@@ -1,4 +1,6 @@
 import InfoGeometry.Projective.KuzminCuntzPath
+import InfoGeometry.Projective.KuzminInductiveLimitBridge
+import InfoGeometry.Projective.KuzminColimit
 import InfoGeometry.Projective.SplitOctonions.OctonionicProjectiveLine
 import InfoGeometry.Projective.SplitOctonions.ProjectiveLine
 import InfoGeometry.Projective.SplitOctonions.VoelkelSectionPacket
@@ -74,6 +76,7 @@ import InfoGeometry.Projective.TwistorAmplituhedronBridge
 import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
+import InfoGeometry.Projective.MacaulayTrackBIngestion
 
 namespace InfoGeometry
 
@@ -89,6 +92,22 @@ Split-octonion note:
   information-metric slice model.
 These are companion lanes (boundary potential vs incidence geometry), not
 mutual owner replacements.
+-/
+
+/-!
+Kernel-bridged finite closure manifest for this projective spike:
+
+- `InfoGeometry.Topology.WilsonLoopThermodynamics` supplies the conservative
+  loop-holonomy abstraction over thermodynamic flow words.
+- `InfoGeometry.Topology.BostConnesWilsonLoop` records conservative trace
+  readouts that keep Wilson/Bost-Connes steps explicit.
+- `InfoGeometry.Projective.OnShellResidueBCFWBridge` provides finite BCFW
+  residue readouts linked to the thermodynamic/flow theorem.
+- `InfoGeometry.Topology.GrandUnificationLinker` furnishes the DAG-edge
+  volume-preservation and boundary-collapse theorems feeding this interface.
+
+Assumptions are intentionally explicit; no unconditional partition-function
+identification is claimed in this kernel layer.
 -/
 
 end InfoGeometry

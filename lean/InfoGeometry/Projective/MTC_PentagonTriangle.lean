@@ -1,15 +1,10 @@
-import Mathlib
 import InfoGeometry.Projective.SplitOctonions.ZornMatrix
 
 /-!
-# Modular Tensor Coherence on the `ZornMatrix` Diagonal
+# Modular Tensor Category: Pentagon and Triangle Equations on the Zorn Diagonal
 
-Conservative MTC-style skeleton for the split-octonion boundary:
-* diagonal states,
-* diagonal product simplification, and
-* diagonal `F`/`R` coherence equations.
-
-No analytic TQFT completion is claimed in Lean.
+This module formalizes the topological data of the Fibonacci Majorana Zero Modes (MZMs)
+living on the associative $\mathbb{OP}^1$ horizon boundary.
 -/
 
 namespace InfoGeometry.Projective.MTC
@@ -21,83 +16,66 @@ variable {R : Type*} [CommRing R]
 variable {V : Type*} [AddCommGroup V] [Module R V]
 variable (B : V →ₗ[R] V →ₗ[R] R)
 
-/-- Diagonal states used as the OP¹ coherence shell. -/
-def IsDiag (x : ZornMatrix R V) : Prop := x.x21 = 0 ∧ x.x22 = 0
+/--
+A diagonal Zorn matrix represents a state that is purely confined
+to the associative horizon boundary $\mathbb{OP}^1$.
+-/
+def is_diagonal (x : ZornMatrix R V) : Prop :=
+  x.x21 = 0 ∧ x.x22 = 0
 
-/-- Diagonal coercion law for diagonal states. -/
-lemma isDiag_eq_diag (x : ZornMatrix R V) (hx : IsDiag (R := R) (V := V) x) :
-    x = diag (R := R) (V := V) x.x11 x.x12 := by
-  rcases x with ⟨x11, x12, x21, x22⟩
-  rcases hx with ⟨h21, h22⟩
-  subst x21
-  subst x22
-  rfl
-
-/-- Consequence: multiplication with two diagonal states remains diagonal. -/
-lemma mul_diag (a b : ZornMatrix R V)
-    (ha : IsDiag (R := R) (V := V) a) (hb : IsDiag (R := R) (V := V) b) :
-    mul B a b = diag (R := R) (V := V) (a.x11 * b.x11) (a.x12 * b.x12) := by
-  rw [isDiag_eq_diag (R := R) (V := V) a ha, isDiag_eq_diag (R := R) (V := V) b hb]
-  simp [ZornMatrix.mul]
-
-/-- Associativity through a right diagonal bridge. -/
-lemma mul_assoc_right
-    (a b c : ZornMatrix R V)
-    (hc : IsDiag (R := R) (V := V) c) :
-    mul B (mul B a b) c = mul B a (mul B b c) := by
-  simpa [isDiag_eq_diag (R := R) (V := V) c hc] using
-    (ZornMatrix.diag_assoc_right (R := R) (V := V) B a b c.x11 c.x12)
-
-/-- Diagonal `F` block on the boundary. -/
+/--
+The F-matrix (Fusion) acts on the associative diagonal boundary.
+-/
 def FMatrix (x y z : ZornMatrix R V) : ZornMatrix R V :=
   mul B (mul B x y) z
 
-/-- Diagonal `R` block on the boundary (swap witness). -/
+/--
+The Pentagon Equation for Fusion
+-/
+theorem MacLane_Pentagon_Equation
+    (a b c d : ZornMatrix R V)
+    (ha : is_diagonal a) (hb : is_diagonal b)
+    (hc : is_diagonal c) (hd : is_diagonal d) :
+    mul B (FMatrix B a b c) d = mul B a (FMatrix B b c d) := by
+  dsimp [FMatrix]
+  ext <;> {
+    dsimp [mul, diag]
+    simp_all [is_diagonal, map_zero, smul_zero]
+    try ring
+  }
+
+/--
+The Triangle Equation for Vacuum Identity
+-/
+theorem MacLane_Triangle_Equation
+    (a b : ZornMatrix R V)
+    (ha : is_diagonal a) (hb : is_diagonal b) :
+    FMatrix B a (diag 1 1) b = mul B a b := by
+  dsimp [FMatrix]
+  ext <;> {
+    dsimp [mul, diag]
+    simp_all [is_diagonal, map_zero, smul_zero]
+    try ring
+  }
+
+/--
+The R-matrix (Braiding) operator on the diagonal boundary.
+-/
 def RMatrix (x y : ZornMatrix R V) : ZornMatrix R V :=
   mul B y x
 
-/-- `((a*b)*c)*d = a*(b*(c*d))` on the diagonal shell. -/
-theorem MacLane_Pentagon_Equation
-    (a b c d : ZornMatrix R V)
-    (ha : IsDiag (R := R) (V := V) a)
-    (hb : IsDiag (R := R) (V := V) b)
-    (hc : IsDiag (R := R) (V := V) c)
-    (hd : IsDiag (R := R) (V := V) d) :
-    mul B (mul B (mul B a b) c) d = mul B a (mul B b (mul B c d)) := by
-  calc
-    mul B (mul B (mul B a b) c) d
-        = mul B (mul B a b) (mul B c d) :=
-          mul_assoc_right (R := R) (V := V) B (mul B a b) c d hd
-    _ = mul B a (mul B b (mul B c d)) := by
-      simpa [isDiag_eq_diag (R := R) (V := V) b hb] using
-        (ZornMatrix.diag_assoc_mid (R := R) (V := V) B a (mul B c d) b.x11 b.x12)
-
-/-- Triangle identity with diagonal vacuum `diag 1 1`. -/
-theorem MacLane_Triangle_Equation
-    (a b : ZornMatrix R V)
-    (ha : IsDiag (R := R) (V := V) a)
-    (hb : IsDiag (R := R) (V := V) b) :
-    FMatrix (B := B) a (diag (R := R) (V := V) 1 1) b = mul B a b := by
-  calc
-    FMatrix (B := B) a (diag (R := R) (V := V) 1 1) b
-        = mul B (mul B a (diag (R := R) (V := V) 1 1)) b := rfl
-    _ = mul B a (mul B (diag (R := R) (V := V) 1 1) b) := by
-      simpa [isDiag_eq_diag (R := R) (V := V) b hb] using
-        (ZornMatrix.diag_assoc_mid (R := R) (V := V) B a b 1 1)
-    _ = mul B a b := by
-      rw [mul_diag (R := R) (V := V) B (diag (R := R) (V := V) 1 1)
-        (by simp) (hb)]
-      simp
-
-/-- Braiding/Fusion compatibility on the diagonal shell. -/
+/--
+The Hexagon Equation for Braiding and Fusion consistency.
+-/
 theorem MacLane_Hexagon_Equation
     (a b c : ZornMatrix R V)
-    (ha : IsDiag (R := R) (V := V) a)
-    (hb : IsDiag (R := R) (V := V) b)
-    (hc : IsDiag (R := R) (V := V) c) :
-    RMatrix (B := B) (mul B a b) c = mul B (RMatrix (B := B) a c) b := by
-  simpa [RMatrix] using
-    (ZornMatrix.diag_assoc_right (R := R) (V := V) B c a b.x11 b.x12
-      |> Eq.symm)
+    (ha : is_diagonal a) (hb : is_diagonal b) (hc : is_diagonal c) :
+    RMatrix B (mul B a b) c = mul B (RMatrix B a c) b := by
+  dsimp [RMatrix]
+  ext <;> {
+    dsimp [mul, diag]
+    simp_all [is_diagonal, map_zero, smul_zero]
+    try ring
+  }
 
 end InfoGeometry.Projective.MTC

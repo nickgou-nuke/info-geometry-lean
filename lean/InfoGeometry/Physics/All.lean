@@ -48,6 +48,8 @@ import InfoGeometry.Physics.SouriauEntropyFoliation
 import InfoGeometry.Physics.ChiralUncertaintyCaliber
 import InfoGeometry.Physics.AmplituhedronPenroseTransform
 import InfoGeometry.Physics.TopologicalMTheoryGromovWitten
+import InfoGeometry.Physics.ChiralityPseudoscalarCuntz
+import InfoGeometry.Physics.ItakuraSaitoPrimes
 
 /-!
 # Physics Umbrella

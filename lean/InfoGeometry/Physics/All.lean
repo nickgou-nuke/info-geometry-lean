@@ -45,6 +45,7 @@ import InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 import InfoGeometry.Physics.Universe1000333SpinTorsionScale
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
 import InfoGeometry.Physics.SouriauEntropyFoliation
+import InfoGeometry.Physics.ChiralUncertaintyCaliber
 
 /-!
 # Physics Umbrella

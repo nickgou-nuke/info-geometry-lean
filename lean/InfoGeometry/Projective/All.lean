@@ -15,6 +15,9 @@ import InfoGeometry.Projective.HorizonInformationScrambling
 import InfoGeometry.Projective.GaugeQuotient
 import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
+import InfoGeometry.Projective.MTC_PentagonTriangle
+import InfoGeometry.Projective.RohozhkinDelaunayBraiding
+import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.LogSumIneq
 import InfoGeometry.Projective.KleinCrossRatioInvariant
 import InfoGeometry.Projective.Quadrics.PluckerKlein

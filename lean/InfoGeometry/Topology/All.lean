@@ -89,6 +89,7 @@ import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
 import InfoGeometry.Topology.BostConnesWilsonLoop
+import InfoGeometry.Topology.WallpaperRepresentations
 import InfoGeometry.Topology.WallpaperMoebiusKMS
 
 /-!

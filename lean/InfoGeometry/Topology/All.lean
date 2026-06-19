@@ -113,3 +113,4 @@ Open conditional debt remains explicit:
 - analytic Wilson-loop/Bost-Connes partition interpretations;
 - geometric/physical continuum identifications.
 -/
+import InfoGeometry.Topology.WallpaperMoebiusKMS

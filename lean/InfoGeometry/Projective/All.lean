@@ -26,6 +26,7 @@ import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.MTC_PentagonTriangle
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.BostConnesZeta
+import InfoGeometry.Projective.BostConnesZetaIdentity
 import InfoGeometry.Projective.KreinAttention
 import InfoGeometry.Projective.KreinHodgeBridge
 import InfoGeometry.Projective.RohozhkinDelaunayBraiding
@@ -34,6 +35,9 @@ import InfoGeometry.Projective.LogSumIneq
 import InfoGeometry.Projective.KleinCrossRatioInvariant
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 import InfoGeometry.Projective.Quadrics.Polarization
+import InfoGeometry.Projective.Quadrics.AffineSlices
+import InfoGeometry.Projective.Quadrics.SignatureDeterminant
+import InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.KleinQuadricMonodromy

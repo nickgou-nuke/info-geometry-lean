@@ -50,6 +50,7 @@ import InfoGeometry.Physics.AmplituhedronPenroseTransform
 import InfoGeometry.Physics.TopologicalMTheoryGromovWitten
 import InfoGeometry.Physics.ChiralityPseudoscalarCuntz
 import InfoGeometry.Physics.ItakuraSaitoPrimes
+import InfoGeometry.Physics.PrimeGrandCanonical
 
 /-!
 # Physics Umbrella

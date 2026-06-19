@@ -388,6 +388,7 @@ import InfoGeometry.Canonical.CoordinatelessSouriauCocycleFisherBridge
 import InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge
 import InfoGeometry.Canonical.CorrelationAntisymmetrization
 import InfoGeometry.Canonical.CorrelationSymmetrization
+import InfoGeometry.Canonical.KLDivergenceDecomposition
 import InfoGeometry.Canonical.CountPositiveCoupling
 import InfoGeometry.Canonical.CountProbabilityState
 import InfoGeometry.Canonical.CountSinkhornFlow
@@ -425,6 +426,9 @@ import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Canonical.DrazinDilationGapBridge
 import InfoGeometry.Canonical.BayesianMarkovChain
 import InfoGeometry.Canonical.BuresMetricStabilization
+import InfoGeometry.Canonical.MaximumCaliberKLSplit
+import InfoGeometry.Canonical.KLDivergenceDecomposition
+import InfoGeometry.Topology.MaximumCaliberPath
 import InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet

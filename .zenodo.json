@@ -1,0 +1,18 @@
+{
+  "title": "Spacetime as an Executable Motive: A Verified Lean 4 Formalization of Holographic Supergravity from the Arithmetic Vacuum",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Goutev, Nikolay",
+      "affiliation": "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+    },
+    {
+      "name": "Tonev, Dimitar",
+      "affiliation": "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+    }
+  ],
+  "description": "Lean 4 formalization project for information geometry unifying Condensed Matter, Noncommutative Geometry, and Quantum Gravity. Features the ultimate theoretical capstone: formal verification of the Minkowski causal cone as a Class DIII Topological Superconductor, with Andreev boundary scattering and Hayden-Preskill fast scrambling preserved by Fibonacci anyon / MZM microstates. The structural closure is governed by the Kasparov Intersection Product on a Doubled Krein space, absorbing the chiral anomaly into the non-orientable Klein Bottle topology.",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "version": "1.23.0-CUC-Bridge"
+}

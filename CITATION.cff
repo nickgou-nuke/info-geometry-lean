@@ -1,22 +1,19 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata from this file."
-title: "info-geometry-lean"
+title: "Spacetime as an Executable Motive: A Verified Lean 4 Formalization of Holographic Supergravity from the Arithmetic Vacuum"
+version: "1.23.0-CUC-Bridge"
 type: software
 license: Apache-2.0
-date-released: 2026-02-26
+date-released: 2026-06-18
 repository-code: "https://github.com/nickgou-nuke/info-geometry-lean"
 url: "https://github.com/nickgou-nuke/info-geometry-lean"
 abstract: >
-  Lean 4 formalization project for information geometry with a maintained
-  representation-depth theorem spine
-  (count/projective/operator/krein/transport/thermo). Repository-wide lexical
-  and declaration-level indexing across Lean sources and black-book chapters
-  identifies a stable core centered on modular and spectral operator theory,
-  Krein-Clifford doubled geometry, transport/thermodynamic inference lanes
-  (including KMS and Bogoliubov structures), and Drazin/inverse-kernel anomaly
-  analysis with Einstein-source bridges. The workflow couples hypothesis-first
-  black-book research with theorem-target promotion under Lean-native
-  architecture audits, DAG diagnostics, and vacuity checks.
+  Lean 4 formalization project for information geometry unifying Condensed Matter, Noncommutative Geometry,
+  and Quantum Gravity. Features the ultimate theoretical capstone: formal verification of the Minkowski 
+  causal cone as a Class DIII Topological Superconductor, with Andreev boundary scattering and 
+  Hayden-Preskill fast scrambling preserved by Fibonacci anyon / MZM microstates. The structural closure 
+  is governed by the Kasparov Intersection Product on a Doubled Krein space, absorbing the chiral 
+  anomaly into the non-orientable Klein Bottle topology.
 authors:
   - family-names: Goutev
     given-names: Nikolay
@@ -57,3 +54,8 @@ keywords:
   - jung-pauli-methodology
   - pauli-auditor-protocol
   - reproducible-research
+  - altland-zirnbauer-diii
+  - andreev-reflection
+  - kasparov-krein-product
+  - hayden-preskill-scrambling
+  - klein-bottle-anomaly

@@ -19,6 +19,7 @@ import InfoGeometry.Topology.FibonacciBraidRepresentation
 import InfoGeometry.Topology.GrandUnification
 import InfoGeometry.Topology.GrandUnificationLinker
 import InfoGeometry.Topology.GrandUnificationColimitTransport
+import InfoGeometry.Topology.MaximumCaliberPath
 import InfoGeometry.Topology.ThermodynamicGauge
 import InfoGeometry.Topology.WilsonLoopThermodynamics
 import InfoGeometry.Topology.SuperCuntzDilationCurvature

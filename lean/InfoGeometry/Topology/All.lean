@@ -1,21 +1,33 @@
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Topology.AmplituhedronBoundary
+import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge
+import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 import InfoGeometry.Topology.ArtinBraidRep
 import InfoGeometry.Topology.ArtinBraidS3Quotient
 import InfoGeometry.Topology.BraidParafermionClosure
+import InfoGeometry.Topology.BraidedMonoidal
 import InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 import InfoGeometry.Topology.CantorDiracGrandCanonical
 import InfoGeometry.Topology.CantorDiracOperator
 import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.DrazinEntropyGraph
+import InfoGeometry.Topology.EckmannDiscreteHodge
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.FibonacciBraidRepresentation
 import InfoGeometry.Topology.GrandUnification
+import InfoGeometry.Topology.GrandUnificationLinker
+import InfoGeometry.Topology.GrandUnificationColimitTransport
+import InfoGeometry.Topology.ThermodynamicGauge
+import InfoGeometry.Topology.WilsonLoopThermodynamics
+import InfoGeometry.Topology.SuperCuntzDilationCurvature
+import InfoGeometry.Topology.SuperCuntzDilationColimit
 import InfoGeometry.Topology.CompleteLatticeSectorCompletion
 import InfoGeometry.Topology.KANWallpaperIsomorphism
 import InfoGeometry.Topology.Metriplectic
 import InfoGeometry.Topology.ParafermionBraiding
+import InfoGeometry.Topology.PenroseBraidLorentzFinite
 import InfoGeometry.Topology.Pin55ReflectionGlide
 import InfoGeometry.Topology.O55V4KleinBottleFinite
 import InfoGeometry.Topology.O55V4KleinBottleOrbitShadow
@@ -48,6 +60,7 @@ import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.RohozhkinPentagonMatrix
 import InfoGeometry.Topology.RohozhkinPBGL
 import InfoGeometry.Topology.RohozhkinRepresentation
+import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 import InfoGeometry.Topology.PureBraidGroup
 import InfoGeometry.Topology.DelaunayPureBraidInvariant
 import InfoGeometry.Topology.DelaunayFlipInterfaces
@@ -55,3 +68,28 @@ import InfoGeometry.Topology.DelaunayPureBraidRepresentation
 import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
+import InfoGeometry.Topology.BostConnesWilsonLoop
+
+/-!
+# Closed finite-trace closure ledger (topology layer)
+
+3-way finite equivalence route currently formalized in this layer:
+
+1. `Projective.OnShellResidueBCFWBridge.residue_bcfw_readout`
+   (BCFW residue readout)
+2. `InfoGeometry.Topology.GrandUnificationLinker.global_isometry_preservation`
+   (thermodynamic-flow/DAG compatibility)
+3. `InfoGeometry.Topology.GrandUnificationLinker.entropy_alignment`
+   (flow commutator readout under explicit hypotheses)
+
+Kernel-native lemmas in this spike include:
+- thermodynamic curvature/entropy algebra in `ThermodynamicGauge`;
+- DAG-volume preservation and boundary collapses in `GrandUnificationLinker`;
+- finite Wilson-loop trace readouts in `BostConnesWilsonLoop`/`WilsonLoopThermodynamics`.
+- q-supergrading, finite edge-dilation, and explicit deficit readouts in
+  `SuperCuntzDilationCurvature`.
+
+Open conditional debt remains explicit:
+- analytic Wilson-loop/Bost-Connes partition interpretations;
+- geometric/physical continuum identifications.
+-/

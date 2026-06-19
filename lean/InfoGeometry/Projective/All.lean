@@ -15,11 +15,13 @@ import InfoGeometry.Projective.HorizonInformationScrambling
 import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
+import InfoGeometry.Projective.OnShellResidueBCFWBridge
 import InfoGeometry.Projective.GaugeQuotient
 import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.MTC_PentagonTriangle
 import InfoGeometry.Projective.ArnoldRelations
+import InfoGeometry.Projective.BostConnesZeta
 import InfoGeometry.Projective.RohozhkinDelaunayBraiding
 import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.LogSumIneq
@@ -27,6 +29,7 @@ import InfoGeometry.Projective.KleinCrossRatioInvariant
 import InfoGeometry.Projective.Quadrics.PluckerKlein
 import InfoGeometry.Projective.Quadrics.Polarization
 import InfoGeometry.Projective.KleinQuadric
+import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Projective.KleinQuadricTime

@@ -24,7 +24,7 @@ structure MomentumTwistors where
   Z_matrix : Matrix (Fin n) (Fin (k + m)) ℝ
 
 /-- The Amplituhedron space Y = C * Z. -/
-def amplituhedron_space (C : PositiveGrassmannian k n) (Z : MomentumTwistors n k m) :
+def amplituhedron_space (C : PositiveGrassmannian k n) (Z : MomentumTwistors k n m) :
     Matrix (Fin k) (Fin (k + m)) ℝ :=
   C.C_matrix * Z.Z_matrix
 
@@ -33,10 +33,10 @@ def amplituhedron_space (C : PositiveGrassmannian k n) (Z : MomentumTwistors n k
   The dynamic scattering evolution in Real Space maps to the 
   static topological volume d(log Q) of the Amplituhedron in Dual Space.
 -/
-structure PenroseTransform (C : PositiveGrassmannian k n) (Z : MomentumTwistors n k m) where
-  real_space_dynamics : Type*
+structure PenroseTransform (C : PositiveGrassmannian k n) (Z : MomentumTwistors k n m) where
+  real_space_dynamics : ℝ
   dual_space_volume : ℝ
   -- The core correspondence: The scattering amplitude is the volume form
-  amplitude_is_volume : real_space_dynamics ≃ dual_space_volume
+  amplitude_is_volume : real_space_dynamics = dual_space_volume
 
 end Amplituhedron

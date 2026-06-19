@@ -424,6 +424,7 @@ import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Canonical.DrazinDilationGapBridge
 import InfoGeometry.Canonical.BayesianMarkovChain
+import InfoGeometry.Canonical.BuresMetricStabilization
 import InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet

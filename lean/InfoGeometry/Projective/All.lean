@@ -75,6 +75,7 @@ import InfoGeometry.Projective.TwistorAmplituhedronBoundary
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
 import InfoGeometry.Projective.TwistorConfigurationSpace
 import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
+import InfoGeometry.Projective.BuresMetricStabilization
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
 import InfoGeometry.Projective.MacaulayTrackBIngestion
 

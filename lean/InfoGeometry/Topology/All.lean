@@ -89,6 +89,7 @@ import InfoGeometry.Topology.RohozhkinProjectiveCrossRatio
 import InfoGeometry.Topology.DelaunayMobiusFlip
 import InfoGeometry.Topology.DelaunayFlipMatrixEmbeddings
 import InfoGeometry.Topology.BostConnesWilsonLoop
+import InfoGeometry.Topology.WallpaperMoebiusKMS
 
 /-!
 # Closed finite-trace closure ledger (topology layer)
@@ -113,4 +114,3 @@ Open conditional debt remains explicit:
 - analytic Wilson-loop/Bost-Connes partition interpretations;
 - geometric/physical continuum identifications.
 -/
-import InfoGeometry.Topology.WallpaperMoebiusKMS

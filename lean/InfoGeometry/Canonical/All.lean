@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.BiquaternionDualRootRegularizer
 import InfoGeometry.Canonical.BiquaternionTorsionBridge
 import InfoGeometry.Canonical.EmergentGravityActionVariation
 import InfoGeometry.Canonical.TorsionSpinorEinsteinFinite
+import InfoGeometry.Canonical.PenroseColimit
 /-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
@@ -176,6 +177,9 @@ import InfoGeometry.Canonical.CantorCliffordFiniteRepresentation
 import InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
 import InfoGeometry.Canonical.CantorCylinderLattice
 import InfoGeometry.Canonical.CantorCuntzBasis
+import InfoGeometry.Canonical.ItFromBit
+import InfoGeometry.Canonical.ExplicitWitnessObligations
+import InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.CantorDiracSeaHopping
 import InfoGeometry.Canonical.CantorModularScoreFunctional
@@ -410,6 +414,7 @@ import InfoGeometry.Canonical.DiscreteModularSpectrum
 import InfoGeometry.Canonical.DiscreteCPTGroup
 import InfoGeometry.Canonical.CPTGradingCompass
 import InfoGeometry.Canonical.CPTRealCl11Emergence
+import InfoGeometry.Canonical.CPTCstarStateLimit
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinChiralLightconeBoundary
@@ -418,6 +423,7 @@ import InfoGeometry.Singular.Drazin
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDilationGap
 import InfoGeometry.Canonical.DrazinDilationGapBridge
+import InfoGeometry.Canonical.BayesianMarkovChain
 import InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -1128,6 +1134,7 @@ import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
 import InfoGeometry.Canonical.WeylEntropyShiftBridge
 import InfoGeometry.Canonical.WeylGWVolumeBridge
+import InfoGeometry.Canonical.WeylIntegrationFromPillars
 import InfoGeometry.Canonical.BKMDriftMetric
 import InfoGeometry.Canonical.WeylBKMDriftMassBridge
 import InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
@@ -1157,6 +1164,13 @@ import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.KashiwaraCuntzCohomology
 import InfoGeometry.Canonical.BostConnesSuperalgebra
+import InfoGeometry.Canonical.DeformedSuperCuntzWarp
+import InfoGeometry.Canonical.InductiveColimitBridge
+import InfoGeometry.Canonical.KuzminColimit
+import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
+import InfoGeometry.Canonical.KANColimitBridge
+import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
+import InfoGeometry.Canonical.TensorColimitExpectation
 import InfoGeometry.Canonical.EvansHarmonicTrap
 import InfoGeometry.Canonical.PrimonGasGUE
 import InfoGeometry.Canonical.PrimonCoulombGas
@@ -1195,6 +1209,7 @@ import InfoGeometry.Canonical.ChirlaTorsionHierarchy
 import InfoGeometry.Canonical.OctonionCl8
 import InfoGeometry.Canonical.SpinStatisticsBridge
 import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
+import InfoGeometry.Canonical.ConfigurationSpaceColimit
 
 namespace InfoGeometry
 

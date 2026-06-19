@@ -25,6 +25,7 @@ import InfoGeometry.Projective.MTC_PentagonTriangle
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.BostConnesZeta
 import InfoGeometry.Projective.KreinAttention
+import InfoGeometry.Projective.KreinHodgeBridge
 import InfoGeometry.Projective.RohozhkinDelaunayBraiding
 import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.LogSumIneq

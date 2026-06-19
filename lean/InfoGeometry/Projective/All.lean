@@ -16,12 +16,15 @@ import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 import InfoGeometry.Projective.QDeformedTwistorAmplituhedronBridge
 import InfoGeometry.Projective.OnShellResidueBCFWBridge
+import InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
+import InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta
 import InfoGeometry.Projective.GaugeQuotient
 import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.MTC_PentagonTriangle
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.BostConnesZeta
+import InfoGeometry.Projective.KreinAttention
 import InfoGeometry.Projective.RohozhkinDelaunayBraiding
 import InfoGeometry.Projective.RokhlinBraidInvariant
 import InfoGeometry.Projective.LogSumIneq
@@ -67,6 +70,8 @@ import InfoGeometry.Projective.SplitOctonions.ZornInstance
 import InfoGeometry.Projective.Twistor.Basic
 import InfoGeometry.Projective.TwistorAmplituhedronBoundary
 import InfoGeometry.Projective.TwistorAmplituhedronBridge
+import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 import InfoGeometry.Projective.Twistor.SplitCl44NullBridge
 
 namespace InfoGeometry

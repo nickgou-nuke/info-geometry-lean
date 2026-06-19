@@ -51,6 +51,7 @@ import InfoGeometry.Physics.TopologicalMTheoryGromovWitten
 import InfoGeometry.Physics.ChiralityPseudoscalarCuntz
 import InfoGeometry.Physics.ItakuraSaitoPrimes
 import InfoGeometry.Physics.PrimeGrandCanonical
+import InfoGeometry.Physics.SpacetimeThermodynamics
 
 /-!
 # Physics Umbrella

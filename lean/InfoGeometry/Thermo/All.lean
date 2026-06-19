@@ -9,6 +9,8 @@ import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.KMSDetailedBalance
 import InfoGeometry.Thermo.MetalMirror
+import InfoGeometry.Thermo.ArakiItakuraSaitoCollapse
+import InfoGeometry.Thermo.AmariSouriauBridge
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Thermo.RelativeTemperatureFirstLaw
 import InfoGeometry.Thermo.SusceptibilityHessian

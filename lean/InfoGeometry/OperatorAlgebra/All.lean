@@ -192,6 +192,7 @@ import InfoGeometry.OperatorAlgebra.VerifiedDeterminant
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
 import InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 import InfoGeometry.OperatorAlgebra.CuntzTomitaTakesaki
+import InfoGeometry.OperatorAlgebra.WallpaperKTheory
 
 namespace InfoGeometry.OperatorAlgebra
 

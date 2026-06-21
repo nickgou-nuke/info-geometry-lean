@@ -10,6 +10,8 @@ We are releasing this directly to the public because traditional peer review sys
 
 This incompleteness is intentional. It is a puzzle waiting to be solved. We invite mathematicians, physicists, and software engineers to explore the codebase, wire the remaining proofs from the literature into the existing hypotheses, and add their names to the scripts.
 
+**Clone the repository, fire up your favorite large-context coding agent, and interrogate the codebase.**
+
 For a detailed technical guide to the verified capstones, proof architecture, and Krein Riemann Hypothesis derivation, please see [README_DETAILED.md](file:///home/goutev/repos/info-geometry-lean/README_DETAILED.md).
 
 Knowledge is a positive-sum game. The project is released under the [Apache 2.0 License](file:///home/goutev/repos/info-geometry-lean/LICENSE), free to use, modify, and build upon. In return, we simply require that any derivative works or implementations explicitly cite this repository as the source (see [CITATION.cff](file:///home/goutev/repos/info-geometry-lean/CITATION.cff)).

@@ -18,6 +18,8 @@ polarizations by real conjugation.
 
 noncomputable section
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.OperatorAlgebra.RealHestenesPolarizationMechanism
 
 open InfoGeometry.Krein

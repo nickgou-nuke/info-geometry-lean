@@ -20,6 +20,8 @@ import InfoGeometry.OperatorAlgebra.TopologicalSnap
 
 noncomputable section
 
+set_option linter.dupNamespace false
+
 namespace InfoGeometry.Geometry.HelicalCovering
 
 open InfoGeometry.OperatorAlgebra.TopologicalSnap

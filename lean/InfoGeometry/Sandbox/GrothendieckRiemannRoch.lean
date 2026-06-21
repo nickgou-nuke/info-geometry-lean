@@ -4,6 +4,20 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Algebra.Algebra.Basic
 
+/-
+Grothendieck-Riemann-Roch Positroid Boundary Bridge
+
+Closed / Verified:
+  - Functorial structures of the GRR commutativity relation under the 
+    Macaulay2-injected inverse Todd class polynomial 1 - (1/2)x + (1/6)x^2.
+  - The zero-preservation properties of K-theory and Cohomology pushforwards.
+
+Open Debt:
+  - Constructive proof of the Grothendieck-Riemann-Roch theorem for general 
+    schemes in Lean 4 from first principles.
+  - Algebraic derivation of the Todd class of the Grassmannian tangent bundle.
+-/
+
 namespace InfoGeometry.Topology
 
 /-- An abstract representation of the K₀-group of a space -/

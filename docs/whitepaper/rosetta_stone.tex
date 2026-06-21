@@ -36,6 +36,716 @@ This paper is structured to mirror the logical layers of the verified framework:
 
 All theorems referenced in this paper are backed by fully verified Lean 4 code, devoid of unproven axioms, and supported by analytical exact-rational certificates generated via Macaulay2, SageMath, and SymPy. 
 
+\section{Verified Theorem and Module Directory}
+This section presents a structured, computer-verified directory of definitions, theorems, and mathematical sockets extracted from the repository's semantic graph.
+
+\subsection{InfoGeometry.LLM Submodules}
+These declarations formalize the Softmax-KMS equivalence, Llama-4 Krein spin-transport transformer block specification, and the thermodynamic routing mechanisms.
+
+\subsubsection*{InfoGeometry.LLM.AllTopThermodynamicRouter}
+\begin{description}
+  \item[\texttt{allTop\_beta\_mul\_freeEnergy\_eq\_neg\_massieu}] (\textit{theorem}) \\ All-top free-energy identity: 
+$\beta F = -\psi $ for nonzero inverse temperature.
+  \item[\texttt{allTop\_entropy\_eq\_beta\_internal\_plus\_massieu}] (\textit{theorem}) \\ All-top entropy decomposition: 
+$S = \beta  U + \psi $ on each token-local expert slice.
+  \item[\texttt{allTopMixture}] (\textit{def}) \\ All-top routed mixture output.
+  \item[\texttt{allTopMixture\_eq\_normalizedMixture}] (\textit{theorem}) \\ All-top mixture equals canonical normalized MoE mixture.
+  \item[\texttt{allTopWeight}] (\textit{def}) \\ All-top thermodynamic weight: 
+every expert is active, so masked routing collapses to canonical normalized routing.
+  \item[\texttt{allTopWeight\_eq\_finiteGibbs}] (\textit{theorem}) \\ All-top weights are exactly finite-diagonal Gibbs weights of the router Hamiltonian.
+  \item[\texttt{allTopWeight\_sum\_one}] (\textit{theorem}) \\ In all-top mode, token-local expert weights form a simplex point.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.AllTopThermodynamicTransformer}
+\begin{description}
+  \item[\texttt{AllTopThermodynamicBackbone}] (\textit{inductive}) \\ Full all-top thermodynamic backbone.
+  \item[\texttt{AllTopThermodynamicLanguageModel}] (\textit{inductive}) \\ Full all-top thermodynamic language model surface.
+  \item[\texttt{liftBaseWithRoute}] (\textit{def}) \\ Lift a base decoder LM by reusing token embedding, decoder layers, final norm, 
+and LM head exactly, while attaching a routed thermodynamic branch per layer.
+  \item[\texttt{liftBaseWithZeroMoE}] (\textit{def}) \\ Zero-routed lift: exact reuse mode with thermodynamic branch disabled.
+  \item[\texttt{ReusedAllTopLayer}] (\textit{inductive}) \\ All-top thermodynamic layer that reuses a base decoder layer and adds a routed MoE branch.
+  \item[\texttt{routedAllTop}] (\textit{def}) \\ Routed all-top thermodynamic contribution on token $i$.
+  \item[\texttt{runState}] (\textit{def}) \\ Tokenwise state update for this layer.
+  \item[\texttt{runToken}] (\textit{def}) \\ One-token update: reused base update plus all-top routed correction.
+  \item[\texttt{runDecoderStackPointwise}] (\textit{def}) \\ Pointwise execution of the standard decoder stack.
+  \item[\texttt{runLayerStack}] (\textit{def}) \\ Tokenwise stack execution for all-top thermodynamic layers.
+  \item[\texttt{runLayerStack\_map\_withZeroMoE\_eq\_pointwise}] (\textit{theorem}) \\ Stack-level exact reuse theorem: 
+if routed branches are all zero, thermodynamic stack execution collapses 
+to pointwise execution of the base decoder stack.
+  \item[\texttt{withZeroMoE}] (\textit{def}) \\ Attach a zero routed branch to a base decoder layer.
+  \item[\texttt{zeroExpert}] (\textit{def}) \\ Zero expert used to prove exact-reuse fallback behavior.
+  \item[\texttt{zeroMoE}] (\textit{def}) \\ Zero routed MoE layer (all experts are zero maps).
+\end{description}
+\subsubsection*{InfoGeometry.LLM.CliffordCantorGraphRouting}
+\begin{description}
+  \item[\texttt{allActiveMask}] (\textit{def}) \\ All-active mask recovers ordinary softmax routing.
+  \item[\texttt{maskedRoutingWeight}] (\textit{def}) \\ Masked score-softmax weight.
+  \item[\texttt{RouterGeometry}] (\textit{inductive}) \\ Typed router geometry carrying three cost lanes: 
+- graph/topology distance, 
+- Clifford-feature squared distance, 
+- Cantor/fractal sparse addressing cost.
+  \item[\texttt{routingCost}] (\textit{def}) \\ Weighted multi-lane routing cost (topology + Clifford + Cantor).
+  \item[\texttt{routingScore}] (\textit{def}) \\ Router score used by sparse probabilistic gating.
+  \item[\texttt{routingPartition}] (\textit{def}) \\ Partition function induced by the Clifford/Cantor/graph score.
+  \item[\texttt{routingSoftmaxWeight}] (\textit{def}) \\ Softmax router weight on the multi-lane score.
+  \item[\texttt{SparseMask}] (\textit{inductive}) \\ Sparse mask surface for top-k style gating over the score-softmax weights.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.CompilerRosetta}
+\begin{description}
+  \item[\texttt{acceptanceFromTacticInfo\_uphill\_lt\_cooling}] (\textit{theorem}) \\ Monotonic cooling theorem specialized to compiler-derived proposals: 
+smaller action implies larger Gibbs acceptance for $\beta  > 0$.
+  \item[\texttt{CompilerTelemetryShadow}] (\textit{inductive}) \\ Finite compiler telemetry surrogate extracted from a tactic transition.
+  \item[\texttt{ofTacticInfo}] (\textit{def}) \\ Explicit extraction from Lean $TacticInfo$ into a finite telemetry packet.
+  \item[\texttt{toProposal}] (\textit{def}) \\ Deterministic Rosetta bridge: 
+compiler telemetry -> proof-sampling proposal.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge}
+\begin{description}
+  \item[\texttt{bayesRouterUpdate\_regularizedSignal\_eq\_coreSignal}] (\textit{theorem}) \\ Bayes router update on defect-regularized signals equals Bayes update 
+on canonical core signals.
+  \item[\texttt{bayesRouterUpdate\_regularizedSignal\_lambda\_invariant}] (\textit{theorem}) \\ Bayes router update is invariant under defect-regularization weight $\lambda $ 
+on the tokenwise regularized signal.
+  \item[\texttt{coreSignal}] (\textit{def}) \\ Tokenwise signal after canonical core update.
+  \item[\texttt{regularizedSignal}] (\textit{def}) \\ Tokenwise signal after defect-regularized core update.
+  \item[\texttt{regularizedSignal\_eq\_coreSignal}] (\textit{theorem}) \\ Defect-regularized tokenwise signal collapses to canonical core signal.
+  \item[\texttt{regularizedSignal\_lambda\_invariant}] (\textit{theorem}) \\ Defect-regularized tokenwise signal is independent of $\lambda $.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.DiscreteRouterBayesStep}
+\begin{description}
+  \item[\texttt{bayes\_router\_update\_eq\_softmax\_shift}] (\textit{theorem}) \\ The Bayes router update equals convex softmax on uniformly shifted router logits. 
+This is the additive-gauge invariance surface used by downstream discrete updates.
+  \item[\texttt{bayes\_router\_update\_preserves\_simplex}] (\textit{theorem}) \\ The Bayes router update is a simplex point (mass $1$).
+  \item[\texttt{bayesRouterUpdate}] (\textit{def}) \\ Discrete Bayes router update on experts for token $i$.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.DiscreteRouterHestenesPathBridge}
+\begin{description}
+  \item[\texttt{bayesRouterUpdate\_eq\_pathGibbsRouterUpdate\_of\_energy\_match}] (\textit{theorem}) \\ If router energies coincide with path surprisals expertwise, Bayes routing equals 
+path Gibbs routing.
+  \item[\texttt{pathGibbsRouterUpdate}] (\textit{def}) \\ Normalized Gibbs router on expert-indexed path families. 
+This is the path-ensemble readout surface used to compare against Bayes routing.
+  \item[\texttt{pathGibbsRouterUpdate\_eq\_bayesRouterUpdate\_of\_energy\_match}] (\textit{theorem}) \\ Symmetric restatement: path Gibbs router equals Bayes router under expertwise 
+energy$\leftrightarrow $surprisal matching.
+  \item[\texttt{pathGibbsRouterUpdate\_eq\_softmax\_shift}] (\textit{theorem}) \\ Path Gibbs router is invariant under uniform additive shifts of path surprisal 
+logits (same softmax gauge invariance as the Bayes lane).
+  \item[\texttt{pathGibbsRouterUpdate\_preserves\_simplex}] (\textit{theorem}) \\ Path Gibbs router update is simplex-normalized.
+  \item[\texttt{pathSurprisalLogits}] (\textit{def}) \\ Expert logits induced by Hestenes-Gibbs path surprisal on the doubled lane.
+  \item[\texttt{pathSurprisalLogits\_exp\_beta\_one}] (\textit{theorem}) \\ At unit inverse-temperature, pointwise Gibbs path weights match canonical 
+$gibbsWeight$ on each expert path.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.HypothesisScaffold70}
+\begin{description}
+  \item[\texttt{h70\_defect\_quarantine}] (\textit{theorem}) \\ Testable hook for H70-005 (defect quarantine under stack composition).
+  \item[\texttt{h70\_kms\_softmax\_normalization}] (\textit{theorem}) \\ Testable hook for H70-008 (finite KMS-compatible normalization bridge).
+  \item[\texttt{h70\_krein\_energy\_surface}] (\textit{theorem}) \\ Testable hook for H70-007 (split-signature/Krein attention energy surface).
+  \item[\texttt{h70\_router\_free\_energy\_bridge}] (\textit{theorem}) \\ Testable hook for H70-003 (thermodynamic bridge).
+  \item[\texttt{h70\_scale\_shape\_split}] (\textit{theorem}) \\ Testable hook for H70-004 (scale/shape split per layer).
+  \item[\texttt{h70\_test\_surface}] (\textit{theorem}) \\ Capstone package: all currently testable Chapter 70 hooks bundled together.
+  \item[\texttt{H70Authority}] (\textit{inductive}) \\ Authority/evidence tier for Chapter 70 claims.
+  \item[\texttt{H70Claim}] (\textit{inductive}) \\ Minimal metadata carrier for hypothesis tracking.
+  \item[\texttt{H70Status}] (\textit{inductive}) \\ Lifecycle tag for Chapter 70 hypotheses.
+  \item[\texttt{registry}] (\textit{def}) \\ Chapter 70 registry (formal hooks only; no proof commitments here).
+\end{description}
+\subsubsection*{InfoGeometry.LLM.KMSSoftmaxBridge}
+\begin{description}
+  \item[\texttt{beta\_mul\_routerFreeEnergy\_eq\_neg\_kmsLogPartition}] (\textit{theorem}) \\ KMS free-energy relation: $\beta  F = -\psi $ for nonzero inverse temperature.
+  \item[\texttt{kmsEntropy\_eq\_beta\_internal\_plus\_logPartition}] (\textit{theorem}) \\ KMS entropy decomposition on the router slice: $S = \beta  U + \psi $.
+  \item[\texttt{kmsLogPartition}] (\textit{def}) \\ KMS log-partition surface on the token-local router slice.
+  \item[\texttt{kmsLogPartition\_eq\_logSumExpRouter}] (\textit{theorem}) \\ KMS log-partition matches the router log-sum-exp surface.
+  \item[\texttt{kmsWeight}] (\textit{def}) \\ Same weight viewed through finite-diagonal KMS/Gibbs semantics.
+  \item[\texttt{kmsWeight\_sum\_one}] (\textit{theorem}) \\ Finite KMS normalization on each token-local expert slice.
+  \item[\texttt{routerFreeEnergyEps\_eq\_neg\_eps\_kmsLogPartition}] (\textit{theorem}) \\ Temperature-regularized free energy identity under $\beta  = 1/\varepsilon $.
+  \item[\texttt{routerLogit}] (\textit{def}) \\ Router logit on the token-local expert lane ($-\beta  H$).
+  \item[\texttt{softmaxWeight}] (\textit{def}) \\ Softmax router weight (token-local expert lane).
+  \item[\texttt{softmaxWeight\_eq\_exp\_routerLogit\_div\_partition}] (\textit{theorem}) \\ Explicit softmax form on router logits: $exp(logit) / Z$.
+  \item[\texttt{softmaxWeight\_eq\_kmsWeight}] (\textit{theorem}) \\ Softmax weights are exactly KMS/Gibbs weights on the router Hamiltonian.
+  \item[\texttt{softmaxWeight\_sum\_one}] (\textit{theorem}) \\ Softmax normalization coincides with finite KMS normalization ($\sum _i  w_i  = 1$).
+\end{description}
+\subsubsection*{InfoGeometry.LLM.KreinAttentionEnergy}
+\begin{description}
+  \item[\texttt{kreinAttentionHead}] (\textit{def}) \\ The split-signature attention head (Gibbs expectation of values).
+  \item[\texttt{kreinAttentionWeights}] (\textit{def}) \\ Token-local normalized attention weights over a split-signature interaction lane.
+  \item[\texttt{kreinAttentionWeights\_sum\_one}] (\textit{theorem}) \\ Normalization law on the Krein attention lane ($\sum _i  w_i  = 1$).
+  \item[\texttt{kreinInteractionEnergy}] (\textit{def}) \\ Split-signature (Krein/Lorentzian) interaction energy on the $Q-K$ lane.
+  \item[\texttt{kreinInteractionEnergy\_eq\_neg\_splitB11}] (\textit{theorem}) \\ Explicit split-signature form of the interaction energy.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.Llama4PythonBlockSpec}
+\begin{description}
+  \item[\texttt{SharedTopKMoE}] (\textit{inductive}) \\ Llama4 routed FFN lane with one always-on shared expert plus top-k routed experts. 
+This mirrors $out = shared_expert(x) + routed_experts(x)$ from $models/llama4/moe.py$.
+  \item[\texttt{output\_eq\_shared\_plus\_active}] (\textit{theorem}) \\ Canonical Llama4 MoE law: output equals shared path + active routed path. 
+The shared expert is always present in the final output.
+  \item[\texttt{sigmoid}] (\textit{def}) \\ Scalar gate used by the routed MoE path ($torch.sigmoid$ in vendor code).
+  \item[\texttt{TopKRouter}] (\textit{inductive}) \\ Top-k sparse router surface extracted from $models/llama4/moe.py$: 
+- raw scores per token/expert, 
+- top-k selection mask, 
+- routed weights are $sigmoid(score)$ on selected experts and $0$ otherwise.
+  \item[\texttt{toSparseRouter}] (\textit{def}) \\ Adapter into the shared sparse-router owner surface.
+  \item[\texttt{TransformerBlock}] (\textit{inductive}) \\ Minimal block-level surface matching $models/llama4/model.py$: 
+- NoPE toggle controls RoPE and qk-norm usage, 
+- global-vs-local mask selection, 
+- pre-norm attention residual, then pre-norm FFN/MoE residual.
+  \item[\texttt{run\_eq\_python\_block\_update}] (\textit{theorem}) \\ Exact residual update law from the extracted Python block.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.Llama4SpinSpec}
+\begin{description}
+  \item[\texttt{Llama4BlockSpec}] (\textit{inductive}) \\ Llama4-style operatorial block specification on the doubled-real carrier: 
+- iRoPE positional blend, 
+- two-stage residual update, 
+- shared+routed MoE output, 
+- spin-transport + Pin/CPT checker.
+  \item[\texttt{coreUpdate}] (\textit{def}) \\ Core block update before the spin/pin checker lane.
+  \item[\texttt{IsSplitTransportEquivariant}] (\textit{inductive}) \\ Assumptions asserting that each routed split component commutes with spin transport.
+  \item[\texttt{positionedKey}] (\textit{def}) \\ Position-aware key lane.
+  \item[\texttt{positionedQuery}] (\textit{def}) \\ Position-aware query lane.
+  \item[\texttt{residualUpdate}] (\textit{def}) \\ Residual two-stage update lane.
+  \item[\texttt{routedUpdate}] (\textit{def}) \\ Shared+routed MoE update lane.
+  \item[\texttt{routedUpdate\_transport\_commute\_of\_split}] (\textit{theorem}) \\ Split-component transport equivariance implies transport equivariance of total routed output.
+  \item[\texttt{run}] (\textit{def}) \\ Full spin/pin-checked block update.
+  \item[\texttt{transport\_preserves\_routed\_split}] (\textit{theorem}) \\ End-to-end split law under transport: 
+if routed output commutes with transport, the $(shared + active + defect)$ 
+shape is preserved by transport.
+  \item[\texttt{transport\_preserves\_routed\_split\_of\_split}] (\textit{theorem}) \\ Transport-preserved routed split via split-component equivariance assumptions.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.MaskedTransformerBlock}
+\begin{description}
+  \item[\texttt{CausalMask}] (\textit{inductive}) \\ Causal-mask interface over token indices. 
+$allow q i$ is interpreted as "query state $q$ may attend to index $i$".
+  \item[\texttt{MaskedTransformerBlock}] (\textit{inductive}) \\ Masked transformer block built on top of the canonical $TransformerBlock$ scaffold. 
+The mask is applied at the per-head attention weight level.
+  \item[\texttt{maskedAfterAttention}] (\textit{def}) \\ Masked first residual stage followed by $norm1$.
+  \item[\texttt{maskedAfterMLP}] (\textit{def}) \\ Masked second residual stage followed by $norm2$.
+  \item[\texttt{maskedAttentionOut}] (\textit{def}) \\ Masked attention output after the existing multi-head output projection.
+  \item[\texttt{maskedHeadWeight}] (\textit{def}) \\ Head-level masked weight ($0$ when the mask blocks index $i$).
+  \item[\texttt{maskedPreOutput}] (\textit{def}) \\ Tuple of masked head outputs before the output projection.
+  \item[\texttt{run}] (\textit{def}) \\ Full masked transformer-block forward map.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.PinCPTBridge}
+\begin{description}
+  \item[\texttt{anticommutator}] (\textit{def}) \\ Anticommutator in an associative ring.
+  \item[\texttt{commutator}] (\textit{def}) \\ Commutator in an associative ring.
+  \item[\texttt{PinAction}] (\textit{inductive}) \\ Minimal Pin-like action for CPT-style orientation-reversing conjugation: 
+$gamma$ is involutive ($gamma^2 = 1$).
+  \item[\texttt{conjugate}] (\textit{def}) \\ Conjugation by $gamma$.
+  \item[\texttt{conjugate\_even\_square\_eq\_self}] (\textit{theorem}) \\ Under involutive $gamma$, the square of an odd element is invariant by conjugation.
+  \item[\texttt{conjugate\_involutive}] (\textit{theorem}) \\ Conjugation by involutive $gamma$ is itself involutive.
+  \item[\texttt{conjugate\_odd\_eq\_neg}] (\textit{theorem}) \\ Under involutive $gamma$, odd elements flip sign under conjugation.
+  \item[\texttt{IsEven}] (\textit{def}) \\ Even sector condition under $gamma$.
+  \item[\texttt{IsOdd}] (\textit{def}) \\ Odd sector condition under $gamma$.
+  \item[\texttt{odd\_iff\_anticommutator\_zero}] (\textit{theorem}) \\ Equivalent oddness in anticommutator form.
+  \item[\texttt{odd\_implies\_even\_square}] (\textit{theorem}) \\ Oddness implies evenness of the square: 
+if $gamma * Q = -(Q * gamma)$, then $gamma * Q^2  = Q^2  * gamma$.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.PromptDefectRegularization}
+\begin{description}
+  \item[\texttt{MangledPrompt}] (\textit{inductive}) \\ Mangled prompt model: a clean channel plus a perturbation channel weighted by $\varepsilon $.
+  \item[\texttt{mixedInput}] (\textit{def}) \\ Mixed latent input generated by prompt mangling / code-switching perturbations.
+  \item[\texttt{regularizedCoreUpdate}] (\textit{def}) \\ Defect-regularized core update with penalty weight $\lambda $.
+  \item[\texttt{regularizedCoreUpdate\_eq\_coreUpdate}] (\textit{theorem}) \\ Defect-regularized core update collapses to the canonical core update.
+  \item[\texttt{regularizedCoreUpdate\_lambda\_invariant}] (\textit{theorem}) \\ In hard-zero sparse routing, regularized core update is independent of $\lambda $.
+  \item[\texttt{regularizedRun}] (\textit{def}) \\ Regularized run: apply the spin/pin checker layer after regularized core update.
+  \item[\texttt{regularizedRun\_eq\_run}] (\textit{theorem}) \\ Regularized run collapses to the canonical spin/pin-checked block run.
+  \item[\texttt{regularizedRun\_eq\_run\_on\_mixed\_input}] (\textit{theorem}) \\ Mixed-input specialization of the regularized-to-canonical run collapse.
+  \item[\texttt{regularizedRun\_lambda\_invariant}] (\textit{theorem}) \\ Consequently, the regularized run is independent of $\lambda $.
+  \item[\texttt{regularizedRun\_lambda\_invariant\_on\_mixed\_input}] (\textit{theorem}) \\ Mixed-input version: perturbation-induced defect channel remains quarantined.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.ProofSamplingShadow}
+\begin{description}
+  \item[\texttt{actionPacket}] (\textit{def}) \\ Action decomposition before scalar collapse: 
+$(regular, defect, anomaly, transport, repDepth)$.
+  \item[\texttt{gibbsAccept}] (\textit{def}) \\ Gibbs-style acceptance shadow.
+  \item[\texttt{gibbsAccept\_uphill\_lt\_cooling}] (\textit{theorem}) \\ If proposal $cool$ has lower scalar action than $uphill$, then $cool$ has 
+strictly larger Gibbs acceptance (for positive inverse-temperature $\beta $).
+  \item[\texttt{pathAction}] (\textit{def}) \\ Scalar action shadow used by Gibbs-like acceptance rules.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.RouterFreeEnergyBridge}
+\begin{description}
+  \item[\texttt{beta\_mul\_routerFreeEnergy\_eq\_neg\_routerMassieu}] (\textit{theorem}) \\ Router free-energy identity: $\beta  F = -\psi $ for nonzero inverse temperature.
+  \item[\texttt{normalizedWeights\_eq\_finite\_gibbsWeight}] (\textit{theorem}) \\ Router normalized weights coincide with finite-diagonal Gibbs weights.
+  \item[\texttt{routerEntropy}] (\textit{def}) \\ Token-local entropy from the router Hamiltonian.
+  \item[\texttt{routerEntropy\_eq\_beta\_internal\_plus\_massieu}] (\textit{theorem}) \\ Router entropy decomposition: $S = \beta  U + \psi $ on each token-local expert slice.
+  \item[\texttt{routerFreeEnergy}] (\textit{def}) \\ Token-local free energy from the router Hamiltonian.
+  \item[\texttt{routerFreeEnergyEps}] (\textit{def}) \\ Temperature-regularized router free energy under $\beta  = 1/\varepsilon $.
+  \item[\texttt{routerFreeEnergyEps\_eq\_neg\_eps\_logSumExpRouter}] (\textit{theorem}) \\ Under $\beta  = 1/\varepsilon $, free energy is $-\varepsilon  * log Z$ on the router slice.
+  \item[\texttt{routerHamiltonian}] (\textit{def}) \\ Token-local Hamiltonian over experts induced by router energy.
+  \item[\texttt{routerInternalEnergy}] (\textit{def}) \\ Token-local internal energy from the router Hamiltonian.
+  \item[\texttt{routerMassieu}] (\textit{def}) \\ Token-local Massieu potential from the router Hamiltonian.
+  \item[\texttt{routerMassieu\_eq\_logSumExpRouter}] (\textit{theorem}) \\ Router Massieu potential is exactly the router log-sum-exp partition surface.
+  \item[\texttt{routerPartition\_eq\_finitePartition}] (\textit{theorem}) \\ Router partition is exactly the finite diagonal thermal partition.
+  \item[\texttt{routerScaledEntropicObjective}] (\textit{def}) \\ Router-scaled entropic objective (KL side) in the analytic log-sum-exp family.
+  \item[\texttt{routerScaledPotentialGap}] (\textit{def}) \\ Router-scaled convex potential gap (Bregman side) in the analytic log-sum-exp family.
+  \item[\texttt{routerScaledPotentialGap\_eq\_scaledBregman}] (\textit{theorem}) \\ Compatibility alias. 
+Note the argument order on the Bregman side is intentionally $(\varepsilon , \eta , \theta )$, 
+while the potential-gap side is parameterized as $(\varepsilon , \theta , \eta )$.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.ScalarThermoBridge}
+\begin{description}
+  \item[\texttt{convex\_softmax\_routerLogits\_add\_uniformShift}] (\textit{theorem}) \\ Convex softmax on router logits is invariant under uniform additive shifts.
+  \item[\texttt{fenchelGap\_nonneg\_bridge}] (\textit{theorem}) \\ LLM-lane alias of Fenchel nonnegativity (temperature-regularized convex gap).
+  \item[\texttt{logSumExpRouter\_eq\_analytic\_logSumExp}] (\textit{theorem}) \\ Router log-partition coincides with analytic finite $logSumExp$ at unit base weights.
+  \item[\texttt{logSumExpRouter\_eq\_convex\_lse}] (\textit{theorem}) \\ The router log-partition is the convex $lse$ potential on router logits.
+  \item[\texttt{normalizedWeights\_eq\_analytic\_logSumExpWeight}] (\textit{theorem}) \\ Router normalized weights coincide with analytic Gibbs/log-sum-exp weights.
+  \item[\texttt{normalizedWeights\_eq\_convex\_softmax}] (\textit{theorem}) \\ Normalized router weights coincide with convex softmax of router logits.
+  \item[\texttt{routerLogits}] (\textit{def}) \\ Router logits induced by inverse-temperature and energy.
+  \item[\texttt{routerPartition\_eq\_analytic\_logSumExpPartition}] (\textit{theorem}) \\ Router partition is the analytic weighted log-sum-exp partition with unit base weights.
+  \item[\texttt{routerPartition\_eq\_convex\_sumExp}] (\textit{theorem}) \\ Router partition is the finite convex log-sum-exp partition of router logits.
+  \item[\texttt{switchMatrix\_mem\_rowStochastic\_bridge}] (\textit{theorem}) \\ LLM-facing alias: router switch matrix is row-stochastic (simplex-normalized rows).
+\end{description}
+\subsubsection*{InfoGeometry.LLM.SinkhornDefectFlow}
+\begin{description}
+  \item[\texttt{availableWorkRN}] (\textit{def}) \\ One-step available RN work/heat budget. 
+This is scalar thermodynamic bookkeeping on the Sinkhorn RN barrier: the amount 
+of relative-volume imbalance removed by the current normalization step.
+  \item[\texttt{ColRNBarrierCountProfileLift}] (\textit{inductive}) \\ Column RN-barrier profile lift through positive observed count data.
+  \item[\texttt{ofMassNormalized}] (\textit{def}) \\ Construct the column RN-barrier profile lift from positive observed column 
+counts once the raw count profile has the expected carrier mass $n$.
+  \item[\texttt{colSumCounts}] (\textit{def}) \\ Column-sum profile as observed positive count data.
+  \item[\texttt{dissipatedHeatRN}] (\textit{def}) \\ Heat-channel alias for the same one-step RN drop. A later owner surface may 
+split work and heat; this file currently proves only the conserved scalar drop.
+  \item[\texttt{IsRouterEquilibrium}] (\textit{def}) \\ Equilibrium condition: odd-sector defect functional vanishes.
+  \item[\texttt{iterate}] (\textit{def}) \\ $n$-step iteration of a Sinkhorn defect-reduction update.
+  \item[\texttt{ofAlignedObserver\_isRouterEquilibrium}] (\textit{theorem}) \\ An aligned observer is already in Sinkhorn router-equilibrium.
+  \item[\texttt{ofStrainZeroObserver\_isRouterEquilibrium}] (\textit{theorem}) \\ A strain-zero observer is already in Sinkhorn router-equilibrium.
+  \item[\texttt{ofZDControlledObserver\_isRouterEquilibrium\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the exact deviation channel is controlled by $Z_D$ and $Z_D$ itself 
+vanishes, then the canonical observer route is already in Sinkhorn 
+router-equilibrium.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_massNormalizedColCounts}] (\textit{theorem}) \\ Mass-normalized column counts at a row-normalization phase are enough to route 
+the Sinkhorn RN budget all the way to the operator readout inequality.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_massNormalizedRowCounts}] (\textit{theorem}) \\ Mass-normalized row counts at a column-normalization phase are enough to route 
+the Sinkhorn RN budget all the way to the operator readout inequality.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_rowCountMassNormalizedWitness}] (\textit{theorem}) \\ Witness-routed row-count mass-normalization is enough to derive the operator 
+readout inequality.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_sinkhornRNBarrierProfile}] (\textit{theorem}) \\ The Sinkhorn-derived profile comparison gives the corrected readout inequality.
+  \item[\texttt{PhaseRNBarrierProfileLift}] (\textit{inductive}) \\ Phase-local profile lift for the raw Sinkhorn RN barrier. 
+This is the row/column-local form of the remaining D3 lift. It avoids mentioning 
+trajectories and therefore isolates the actual construction problem: build the 
+positive-ray profile for $phaseRNBarrierBefore n phase M$.
+  \item[\texttt{ofColCounts}] (\textit{def}) \\ Turn a column-count profile lift into the corresponding phase-local lift. The 
+column RN barrier is the pre-step phase barrier for a row-normalization step.
+  \item[\texttt{ofRowCounts}] (\textit{def}) \\ Turn a row-count profile lift into the corresponding phase-local lift. The row 
+RN barrier is the pre-step phase barrier for a column-normalization step.
+  \item[\texttt{router\_equilibrium\_iff\_clockDefect\_eq\_zero}] (\textit{theorem}) \\ Router equilibrium on a clock-defect bridge is exactly zero canonical clock defect.
+  \item[\texttt{router\_equilibrium\_iff\_detailedEquilibrium}] (\textit{theorem}) \\ Router equilibrium is equivalent to the owner detailed-equilibrium condition.
+  \item[\texttt{router\_equilibrium\_of\_detailedEquilibrium}] (\textit{theorem}) \\ Detailed equilibrium implies router-equilibrium on the clock-defect bridge.
+  \item[\texttt{router\_equilibrium\_of\_detailedEquilibriumWitness}] (\textit{theorem}) \\ Witness-routed router-equilibrium theorem on the clock-defect bridge. 
+This removes the bare detailed-equilibrium proposition in favor of the explicit 
+$DetailedEquilibriumWitness$ packet.
+  \item[\texttt{RouterClockDefectBridge}] (\textit{inductive}) \\ Owner bridge from LLM residual budget to the non-equilibrium clock-defect lane.
+  \item[\texttt{nonEquilibriumClockDefect\_norm\_le\_ZD\_of\_detailedEquilibrium}] (\textit{theorem}) \\ Detailed equilibrium closes the non-equilibrium clock-defect $Z_D$ budget: 
+the clock defect itself is zero, so only $0 \le  ‖Z_D‖$ remains.
+  \item[\texttt{ofCanonicalClockDefect}] (\textit{def}) \\ Canonical clock-defect constructor. 
+The router residual is fixed to the canonical non-equilibrium clock defect. The 
+remaining $ZD$ bound is explicit: it must be proved upstream rather than hidden 
+inside an arbitrary residual field.
+  \item[\texttt{ofDetailedEquilibrium}] (\textit{def}) \\ Zero-defect clock bridge for detailed equilibrium. 
+Detailed equilibrium kills the canonical non-equilibrium clock defect, so the 
+$ZD$ budget is closed without an independent bound assumption.
+  \item[\texttt{ofDetailedEquilibriumWitness}] (\textit{def}) \\ Witness-routed detailed-equilibrium constructor on the clock-defect bridge. 
+This removes the bare $hEq$ proof argument for callers that already own the 
+explicit $DetailedEquilibriumWitness$ packet on the winding owner lane.
+  \item[\texttt{RowCountMassNormalizedWitness}] (\textit{inductive}) \\ Proof-carrying row-count mass-normalization witness for the RN-barrier profile 
+lift. 
+This packages the positivity and total-mass certificate needed to route a raw 
+row-count profile into the projective information-geometric readback lane.
+  \item[\texttt{RowRNBarrierCountProfileLift}] (\textit{inductive}) \\ Row RN-barrier profile lift through positive observed count data. 
+The row sums are the observed positive counts. The explicit scale/equality field 
+keeps the unnormalized RN barrier separate from the projective count-ray 
+readout.
+  \item[\texttt{ofMassNormalized}] (\textit{def}) \\ Construct the row RN-barrier profile lift from positive observed row counts 
+once the raw count profile has the expected carrier mass $n$. 
+The unit ray is the readout ray. This is forced by the definition of 
+$informationGeometricRelativeNorm$, which weights by its first argument; with 
+unit weights and row-count mass $n$, the scaled projective readout is exactly 
+the unweighted Sinkhorn RN barrier $\sum _i  |log rowSum_i |$.
+  \item[\texttt{rowSumCounts}] (\textit{def}) \\ Row-sum profile as observed positive count data.
+  \item[\texttt{scaled\_informationGeometricRelativeNorm\_le\_ZD\_of\_rnBarrierProfileLift}] (\textit{theorem}) \\ If the remaining profile lift is supplied, the RN-barrier budget becomes a 
+repo-native projective modular-potential budget on the $L^1 $ readout lane.
+  \item[\texttt{SinkhornDefectStep}] (\textit{inductive}) \\ One-step Sinkhorn update wrapper carrying monotone defect reduction as an owner 
+obligation.
+  \item[\texttt{of\_routerResidual\_eq\_zero}] (\textit{def}) \\ Construct a one-step defect reduction from an actual zero-residual proof. 
+This is not an assumed monotonicity field: the inequality is derived from 
+$ContinuousLinearMap.opNorm_zero$ and nonnegativity of the current odd defect.
+  \item[\texttt{SinkhornDefectUpdate}] (\textit{inductive}) \\ Executable Sinkhorn defect-reduction update operator.
+  \item[\texttt{SinkhornRelativeDefectBridge}] (\textit{def}) \\ Primary-name alias: relative-defect bridge driven by trajectory RN barriers.
+  \item[\texttt{SinkhornRNBarrierProfileLift}] (\textit{inductive}) \\ Exact remaining D3 profile-lift obligation. 
+The Sinkhorn RN barrier is an $L^1 $ sum of absolute logarithmic mass changes. 
+The matching projective readout in $RelativePotentialCore$ is therefore 
+$informationGeometricRelativeNorm$, with an explicit finite-carrier scale 
+factor. This avoids forcing the RN barrier into the RMS 
+$relativeInformationNorm$ lane before a separate comparison theorem exists.
+  \item[\texttt{ofMassNormalizedColCounts}] (\textit{def}) \\ If the current Sinkhorn phase is row-normalization, then a mass-normalized 
+column-count lift produces the trajectory-local RN-barrier profile lift 
+directly.
+  \item[\texttt{ofMassNormalizedRowCounts}] (\textit{def}) \\ If the current Sinkhorn phase is column-normalization, then a mass-normalized 
+row-count lift produces the trajectory-local RN-barrier profile lift directly.
+  \item[\texttt{ofPhase}] (\textit{def}) \\ A phase-local profile lift at $phaseAt k$ gives the corresponding trajectory 
+RN-barrier profile lift.
+  \item[\texttt{ofRowCountMassNormalizedWitness}] (\textit{def}) \\ Witness-routed row-count constructor for the trajectory-local RN-barrier 
+profile lift. 
+This narrows the explicit $hrow$ / $hMass$ pair to a single proof-carrying 
+mass-normalization witness.
+  \item[\texttt{SinkhornRNBarrierThermodynamicComparison}] (\textit{inductive}) \\ Single-step RN-barrier comparison for the corrected thermodynamic D3 lane. 
+This structure does not identify the Sinkhorn RN barrier with 
+$relativeInformationNorm$. It records only the explicit scalar comparison 
+available in this owner file: the thermodynamic router readout is the current 
+RN barrier, and that barrier is below the thermodynamic $Z_D$ readout budget.
+  \item[\texttt{ofResidualReadoutEqBarrier}] (\textit{def}) \\ Constructor that keeps the D3 budget theorem-backed once the current 
+thermodynamic residual readout has been identified with the current RN barrier. 
+This removes the need to supply the $central_readout_budget$ field separately: 
+it is derived from $\delta _odd_thermo_le_ZD$ on the existing thermodynamic bridge.
+  \item[\texttt{SinkhornThermodynamicDefectStep}] (\textit{inductive}) \\ One-step Sinkhorn update wrapper on the corrected thermodynamic readout lane.
+  \item[\texttt{SinkhornThermodynamicRelativeDefectBridge}] (\textit{inductive}) \\ Thermodynamic bridge from Sinkhorn relative-volume anomaly to the corrected 
+router readout lane. 
+This is the non-legacy D3 owner surface: its states carry 
+$RouterDefectThermodynamicBridge$, and the defect readout is 
+$\delta _odd_thermo$, not an ambient operator norm.
+  \item[\texttt{SinkhornVolumeAnomalyBridge}] (\textit{inductive}) \\ Bridge from Sinkhorn relative-volume anomaly to the router odd-defect lane. 
+This is the owner surface for volume-driven defect reduction.
+  \item[\texttt{sourcedGenerator\_deviation\_iterate\_le\_initial}] (\textit{theorem}) \\ Global sourced-generator deviation bound by the initial state.
+  \item[\texttt{sourcedGenerator\_deviation\_iterate\_succ\_le\_iterate}] (\textit{theorem}) \\ One-step sourced-generator deviation monotonicity along the executable iterator.
+  \item[\texttt{sourcedGenerator\_deviation\_next\_le\_of\_routerResidual\_eq\_zero}] (\textit{theorem}) \\ Zero residual in the next state gives monotone sourced-generator deviation.
+  \item[\texttt{unitCounts}] (\textit{def}) \\ Unit reference count profile on $Fin n$.
+  \item[\texttt{ofMassNormalizedColCounts}] (\textit{def}) \\ Mass-normalized column counts at a row-normalization phase directly package the 
+Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
+  \item[\texttt{ofMassNormalizedRowCounts}] (\textit{def}) \\ Mass-normalized row counts at a column-normalization phase directly package the 
+Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
+  \item[\texttt{ofRowCountMassNormalizedWitness}] (\textit{def}) \\ Witness-routed row-count constructor for the profile Weyl/thermodynamic 
+comparison packet.
+  \item[\texttt{ofSinkhornRNBarrier}] (\textit{def}) \\ Concrete profile-level Weyl/thermodynamic packet derived from Sinkhorn RN 
+barrier data. 
+The residual readout is identified with the scaled projective count/profile 
+readout supplied by $SinkhornRNBarrierProfileLift$. The central readout remains 
+the same scalar budget already present in the thermodynamic bridge. This does 
+not assert an RMS $relativeInformationNorm$ identity.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.SpectralToken}
+\begin{description}
+  \item[\texttt{KramersQKBridge}] (\textit{inductive}) \\ Kramers-style bridge between query and key lanes: 
+the two maps are mutual inverses.
+  \item[\texttt{QKVTrialityCarrier}] (\textit{inductive}) \\ Minimal Q/K/V triality carrier: 
+$pair$ packages the tri-linear interface down to a binary map from Q and K 
+into the value lane.
+  \item[\texttt{SpectralGrading}] (\textit{inductive}) \\ Involutive grading action on a value carrier.
+  \item[\texttt{actToken}] (\textit{def}) \\ Grading action lifted to the spectral token lanes.
+  \item[\texttt{SpectralToken}] (\textit{inductive}) \\ Minimal spectral token carrier with a primal and dual lane. 
+This is a structural container, not yet a physical/spinorial claim.
+  \item[\texttt{swap}] (\textit{def}) \\ Swap primal and dual lanes.
+  \item[\texttt{TokenEncoder}] (\textit{inductive}) \\ Token encoder into the spectral (primal/dual) carrier.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.SpinPinTransformerLayer}
+\begin{description}
+  \item[\texttt{pin44\_headFactor\_sorry}] (\textit{theorem}) \\ $Cl(4,4)$ head-factor witness used as the $Pin(4,4)$ geometric anchor 
+for LLM-side spin/transport layers.
+  \item[\texttt{SpinPinTransformerLayer}] (\textit{inductive}) \\ Transformer decoder layer over endomorphisms, equipped with 
+- a spin transport on the doubled-real/Krein carrier, 
+- a Pin-style involutive conjugation for CPT parity checks.
+  \item[\texttt{afterAttention\_transport\_commute}] (\textit{theorem}) \\ First residual stage commutes with spin transport under equivariance assumptions.
+  \item[\texttt{afterFeedForward\_transport\_commute}] (\textit{theorem}) \\ Second residual stage commutes with spin transport under equivariance assumptions.
+  \item[\texttt{gap}] (\textit{def}) \\ Layer update gap $run X - X$.
+  \item[\texttt{gap\_transport\_commute}] (\textit{theorem}) \\ The layer gap is transport-equivariant whenever the layer run is transport-equivariant.
+  \item[\texttt{IsSpinEquivariant}] (\textit{inductive}) \\ Equivariance assumptions for the decoder submaps against spin transport.
+  \item[\texttt{pin\_conjugate\_gap\_involutive}] (\textit{theorem}) \\ Pin conjugation on any layer gap is involutive.
+  \item[\texttt{pin\_conjugate\_gap\_square\_eq\_self}] (\textit{theorem}) \\ If the layer gap is Pin-odd, its square is invariant under Pin conjugation.
+  \item[\texttt{pin\_conjugate\_odd\_gap\_eq\_neg}] (\textit{theorem}) \\ If the layer gap is Pin-odd, conjugation flips its sign.
+  \item[\texttt{pin\_odd\_gap\_square\_even}] (\textit{theorem}) \\ Pin-oddness of the layer gap implies Pin-evenness of its square.
+  \item[\texttt{run\_transport\_commute}] (\textit{theorem}) \\ Full decoder run commutes with spin transport under equivariance assumptions.
+  \item[\texttt{run\_transport\_expansion}] (\textit{theorem}) \\ Expanded two-stage residual form for transported input.
+  \item[\texttt{transport}] (\textit{def}) \\ Endomorphism transport induced by the layer's spin connection.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.ThermodynamicSwitching}
+\begin{description}
+  \item[\texttt{allTop\_weights\_sum\_one}] (\textit{theorem}) \\ All-top thermodynamic weights form a simplex point (sum to $1$).
+  \item[\texttt{allTopMask}] (\textit{def}) \\ All-top mode keeps every expert active.
+  \item[\texttt{arnoldNetwork\_preserves\_submodule\_bridge}] (\textit{theorem}) \\ LLM-facing preservation bridge: 
+if every expert preserves a submodule, Arnold-Majorana all-top mixing preserves it.
+  \item[\texttt{arnoldNetworkOutput}] (\textit{def}) \\ LLM-lane alias of canonical Arnold-Majorana routed output.
+  \item[\texttt{arnoldQuantumPresentation}] (\textit{def}) \\ LLM-facing view of Arnold routing as a $QuantumPresentation$ instance. 
+This is a direct translator call; it does not duplicate owner logic.
+  \item[\texttt{arnoldQuantumPresentation\_generator\_eq\_arnold}] (\textit{theorem}) \\ Generator bridge at the LLM interface boundary: the presentation generator is 
+exactly one-token Arnold routed output.
+  \item[\texttt{arnoldQuantumPresentation\_generator\_mem\_submodule}] (\textit{theorem}) \\ Submodule-preservation bridge for the LLM-side presentation generator.
+  \item[\texttt{arnoldTaggedPresentation}] (\textit{def}) \\ Tagged representation witness for the Arnold network lane in LLM space.
+  \item[\texttt{exists\_modewiseClifford\_rep\_of\_bistochastic\_switch}] (\textit{theorem}) \\ LLM-facing bridge: a bistochastic switch admits a permutation-simplex Clifford representation. 
+This imports the canonical Birkhoff/Clifford owner theorem into the LLM lane.
+  \item[\texttt{logSumExpRouter}] (\textit{def}) \\ Log-sum-exp surface of the thermodynamic router partition.
+  \item[\texttt{maskedNormalizedMixture}] (\textit{def}) \\ Masked thermodynamic mixture output.
+  \item[\texttt{maskedNormalizedMixture\_allTop\_eq\_normalizedMixture}] (\textit{theorem}) \\ All-top mask recovers the canonical normalized mixture.
+  \item[\texttt{maskedNormalizedWeight}] (\textit{def}) \\ Masked thermodynamic routing weight.
+  \item[\texttt{maskedNormalizedWeight\_nonneg}] (\textit{theorem}) \\ Masked weights remain nonnegative.
+  \item[\texttt{routerPartition\_eq\_exp\_logSumExp}] (\textit{theorem}) \\ Router partition is exactly the exponential of log-sum-exp.
+  \item[\texttt{SwitchMask}] (\textit{inductive}) \\ Boolean expert mask for gated/all-top switching.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.TransformerArchitecture}
+\begin{description}
+  \item[\texttt{BogoliubovTransform}] (\textit{inductive}) \\ Bogoliubov-style linear mixing between two conjugate latent lanes. 
+$particle$ and $hole$ are the two linear channels.
+  \item[\texttt{DecoderLanguageModel}] (\textit{inductive}) \\ Full decoder model with LM-head projection.
+  \item[\texttt{DecoderLayer}] (\textit{inductive}) \\ Decoder-layer interface with pre-norm attention and pre-norm feed-forward updates.
+  \item[\texttt{afterAttention}] (\textit{def}) \\ $h = x + attention(preAttentionNorm x)$
+  \item[\texttt{afterFeedForward}] (\textit{def}) \\ $out = h + feedForward(preFFNNorm h)$
+  \item[\texttt{run}] (\textit{def}) \\ Full decoder-layer update.
+  \item[\texttt{run\_eq\_two\_stage\_residual}] (\textit{theorem}) \\ Canonical two-residual decoder law.
+  \item[\texttt{GatedFeedForward}] (\textit{inductive}) \\ SwiGLU-style feed-forward abstraction: 
+- gate branch 
+- up branch 
+- activation and combination 
+- down projection
+  \item[\texttt{preDown}] (\textit{def}) \\ Pre-down state: combine activated gate branch with up branch.
+  \item[\texttt{run}] (\textit{def}) \\ Full FFN output.
+  \item[\texttt{IropeBlend}] (\textit{inductive}) \\ iRoPE-style blend of elliptic (rotary) and hyperbolic positional actions. 
+$mixQ$ / $mixK$ choose how the two lanes are fused.
+  \item[\texttt{KramersPairing}] (\textit{inductive}) \\ Kramers-pair structure on a latent space: 
+an involutive partner map identifies conjugate lanes.
+  \item[\texttt{KVCache}] (\textit{inductive}) \\ Minimal KV-cache interface. 
+$keyAt$/$valueAt$ expose the cached key-value pair at each position.
+  \item[\texttt{write}] (\textit{def}) \\ Cache write at one position.
+  \item[\texttt{RotaryPositionalLayer}] (\textit{inductive}) \\ RoPE-style positional interface that rotates query/key lanes at a position $p$.
+  \item[\texttt{rotatePair}] (\textit{def}) \\ Apply positional rotation to a query/key pair.
+  \item[\texttt{runDecoderStack}] (\textit{def}) \\ Left-to-right layer-stack execution for decoder layers.
+  \item[\texttt{runDecoderStack\_append}] (\textit{theorem}) \\ Stack composition law: running $L_1  ++ L_2 $ equals $L_1 $ then $L_2 $.
+  \item[\texttt{TransformerBackbone}] (\textit{inductive}) \\ Backbone surface: token embedding + decoder stack + final normalization.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.TransformerBlock}
+\begin{description}
+  \item[\texttt{IsIdentityMap}] (\textit{def}) \\ Functional identity predicate used for normalization-layer assumptions.
+  \item[\texttt{TokenContext}] (\textit{def}) \\ Context-window alias for LLM-facing APIs.
+  \item[\texttt{TransformerBlock}] (\textit{inductive}) \\ Canonical transformer-block interface over the existing geometric multi-head attention core. 
+Architecture: 
+1. multi-head attention output 
+2. residual + first normalization 
+3. MLP feed-forward update 
+4. second normalization
+  \item[\texttt{afterAttention}] (\textit{def}) \\ First residual stage ($x + Attn(x)$), then normalized by $norm1$.
+  \item[\texttt{afterMLP}] (\textit{def}) \\ Second residual stage ($h + MLP(h)$), then normalized by $norm2$.
+  \item[\texttt{run}] (\textit{def}) \\ Full transformer-block forward map.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.TransformerPhysicsEngine}
+\begin{description}
+  \item[\texttt{defect\_quarantine\_preserved\_under\_stack}] (\textit{theorem}) \\ Stack-level defect quarantine in exact-reuse mode: 
+attaching zero routed branches preserves the base decoder stack pointwise.
+  \item[\texttt{router\_free\_energy\_identity\_per\_step}] (\textit{theorem}) \\ Token-local thermodynamic identity on the routed expert slice: 
+$\beta  F = -\psi $ (free energy / Massieu relation).
+  \item[\texttt{scale\_shape\_split\_preserved\_per\_layer}] (\textit{theorem}) \\ Per-layer scale/shape split in the all-top engine: 
+the token update decomposes into base transport plus normalized routed mixture.
+  \item[\texttt{transformer\_engine\_realizes\_information\_physics}] (\textit{theorem}) \\ Capstone engine witness: 
+the all-top transformer lane satisfies per-layer scale/shape split, 
+token-local thermodynamic free-energy identity, and stack-level defect quarantine.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.TrialityMoE}
+\begin{description}
+  \item[\texttt{RouterDefectBoundBridge}] (\textit{inductive}) \\ Bounded bridge variant: the router residual is controlled by the canonical 
+defect-central channel $Z_D$ on the same Drazin/KKT lane. 
+Legacy ambient-norm shim. This is retained for old local consumers only; the 
+active D3 closure surface is $RouterDefectThermodynamicBridge$, where comparison 
+is performed through the Weyl/relative-potential readout lane.
+  \item[\texttt{ObserverDefectResidualWeylThermodynamicBoundedByZD}] (\textit{def}) \\ Correct D3 closure target in the Weyl/thermodynamic language. 
+The observer defect is controlled by $Z_D$ only after both operators have been 
+represented by the same normalized relative-measurement potential lane. This is 
+the operational comparison structure: Weyl gauge normalization, relative 
+measurement, and modular potential as negative logarithmic Radon-Nikodym 
+derivative.
+  \item[\texttt{observerDefectResidualWeylThermodynamicBoundedByZD\_of\_comparison}] (\textit{theorem}) \\ Any concrete Weyl/thermodynamic comparison packet closes the corrected D3 
+target. The proof is deliberately just packet transport: the real work is the 
+construction of the shared relative-potential representation.
+  \item[\texttt{ObserverDefectResidualWeylThermodynamicBoundedByZD\_of\_control}] (\textit{theorem}) \\ An explicit Weyl/thermodynamic control witness closes the theorem-level bounded 
+observer-defect target.
+  \item[\texttt{ObserverDefectResidualWeylThermodynamicControl}] (\textit{inductive}) \\ Constructive witness packet for the corrected Weyl/thermodynamic observer-defect 
+bound. This carries the comparison packet as explicit data, so downstream 
+constructors do not need to consume a bare $Nonempty$ proposition when an 
+honest witness is already available.
+  \item[\texttt{ofAlignedObserver}] (\textit{def}) \\ Zero-defect bounded constructor for an aligned observer. 
+This closes the $ZD$ budget without a free inequality assumption in the 
+equilibrium lane: alignment constructs an explicit owner-side 
+$ObserverDeviationControl$ witness, and the general $ofControlObserver$ 
+constructor consumes that packet without reopening a bridge-local residual 
+budget.
+  \item[\texttt{ofAlignedObserver\_sourcedGenerator\_eq\_flow}] (\textit{theorem}) \\ For an aligned observer, the bounded router sourced generator collapses to the 
+background flow generator.
+  \item[\texttt{ofAlignedObserver\_sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ For an aligned observer, Drazin-cut preservation reduces to the background-flow 
+commutation theorem.
+  \item[\texttt{ofCanonicalControlledObserver}] (\textit{def}) \\ Core canonical constructor for a canonical observer controlled by $Z_D$ — this route 
+consumes the owner predicate $ObserverDeviationControlledByZD$ directly, eliminating 
+the explicit bound hypothesis on this lane.
+  \item[\texttt{ofCanonicalObserverDefect}] (\textit{def}) \\ Canonical theorem-backed constructor for the bounded bridge. 
+This constructor identifies the router residual with the canonical observer-defect 
+residual. The bound is derived from the deviation-control predicate instead of 
+requiring an explicit norm-bound hypothesis.
+  \item[\texttt{ofCanonicalObserverDefect\_sourcedGenerator\_eq\_canonical}] (\textit{theorem}) \\ For the canonical bounded constructor, the LLM-side sourced generator is the 
+canonical sourced modular generator.
+  \item[\texttt{ofCanonicalObserverDefect\_sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ The canonical bounded constructor inherits Drazin-cut preservation from the 
+canonical sourced modular generator.
+  \item[\texttt{ofCompressedDeviationZeroObserver}] (\textit{def}) \\ Constructive bounded constructor for an observer whose compressed deviation 
+commutator channel is already zero on the defect block.
+  \item[\texttt{ofControlObserver}] (\textit{def}) \\ Constructive bounded constructor for a canonical observer carrying an explicit 
+owner-side deviation-control witness packet.
+  \item[\texttt{ofControlObserver\_observerOrientationStrain\_eq\_zero\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ Under zero central defect, the control-witness constructor forces zero scalarized 
+observer strain on the owner lane.
+  \item[\texttt{ofControlObserver\_routerResidual\_eq\_zero\_of\_deviation\_eq\_zero}] (\textit{theorem}) \\ On the exact projector-deviation-zero branch, the control-witness constructor 
+already collapses the router residual without any extra $Z_D = 0$ hypothesis.
+  \item[\texttt{ofControlObserver\_routerResidual\_norm\_le\_ZD}] (\textit{theorem}) \\ Constructive readback for the witness-routed bounded constructor: the router residual 
+inherits the canonical $Z_D$ budget from the explicit $ObserverDeviationControl$ 
+packet, without reopening a bare $ObserverDeviationControlledByZD$ hypothesis.
+  \item[\texttt{ofControlObserver\_sourcedGenerator\_eq\_flow\_of\_deviation\_eq\_zero}] (\textit{theorem}) \\ On the exact projector-deviation-zero branch, the control-witness constructor 
+already collapses the sourced generator to the background flow without any extra 
+$Z_D = 0$ hypothesis.
+  \item[\texttt{ofControlObserver\_sourcedGenerator\_eq\_flow\_of\_strain\_eq\_zero}] (\textit{theorem}) \\ Strain-zero sourced-flow collapse for the control-witness constructor. 
+This is a constructive infinite-lane descent that removes the extra $Z_D = 0$ 
+input on this branch: the owner theorem 
+$observerDefectResidual_eq_zero_of_strain_eq_zero$ already discharges residual 
+vanishing from strain zero.
+  \item[\texttt{ofControlObserver\_sourcedGenerator\_eq\_flow\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If an observer is carried by an explicit owner-side deviation-control witness and 
+$Z_D$ vanishes, the bounded sourced generator collapses to the background flow.
+  \item[\texttt{ofControlObserver\_sourcedGenerator\_respects\_cut\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If an observer is carried by an explicit owner-side deviation-control witness and 
+$Z_D$ vanishes, Drazin-cut preservation reduces to flow commutation.
+  \item[\texttt{ofDeviationZeroObserver}] (\textit{def}) \\ Zero-defect bounded constructor for an observer whose local slice is exactly the 
+certified spectral projector.  The owner lane first constructs the exact 
+deviation-control predicate, and the bounded bridge is then obtained from the 
+general $ofZDControlledObserver$ constructor.
+  \item[\texttt{ofDeviationZeroObserver\_sourcedGenerator\_eq\_flow}] (\textit{theorem}) \\ For a deviation-zero observer, the bounded router sourced generator collapses to 
+the background flow generator.
+  \item[\texttt{ofDeviationZeroObserver\_sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ For a deviation-zero observer, Drazin-cut preservation reduces to the 
+background-flow commutation theorem.
+  \item[\texttt{ofStrainZeroObserver}] (\textit{def}) \\ Zero-defect bounded constructor for an observer whose scalarized orientation 
+strain already vanishes on the owner lane.
+  \item[\texttt{ofStrainZeroObserver\_sourcedGenerator\_eq\_flow}] (\textit{theorem}) \\ For a strain-zero observer, the bounded router sourced generator collapses to the 
+background flow generator.
+  \item[\texttt{ofStrainZeroObserver\_sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ For a strain-zero observer, Drazin-cut preservation reduces to the 
+background-flow commutation theorem.
+  \item[\texttt{ofZDControlledObserver}] (\textit{def}) \\ Constructive bounded constructor for a canonical observer whose exact deviation 
+commutator channel is controlled by $Z_D$ on the owner lane.
+  \item[\texttt{ofZDControlledObserver\_routerResidual\_eq\_zero\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the operatorial defect-central/Casimir channel $Z_D$ is zero, then the 
+$Z_D$-controlled router residual produced from the canonical observer lane is 
+zero.
+  \item[\texttt{ofZDControlledObserver\_routerResidual\_norm\_le\_ZD}] (\textit{theorem}) \\ Compatibility readback for the predicate-routed bounded constructor: the router residual 
+inherits the canonical $Z_D$ budget directly from the constructor record.
+  \item[\texttt{ofZDControlledObserver\_sourcedGenerator\_eq\_flow\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the exact deviation channel is controlled by $Z_D$ and $Z_D$ itself vanishes, 
+then the bounded router sourced generator collapses to the background flow.
+  \item[\texttt{ofZDControlledObserver\_sourcedGenerator\_respects\_cut\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the exact deviation channel is controlled by $Z_D$ and $Z_D$ itself vanishes, 
+then Drazin-cut preservation reduces to the background-flow commutation theorem.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_weylThermodynamicComparison}] (\textit{theorem}) \\ Readout-level consequence of a Weyl/thermodynamic comparison packet. 
+The result is an inequality between explicitly represented information-geometric 
+relative norms, not an ambient norm inequality between operators.
+  \item[\texttt{operatorInformationNormReadout\_le\_of\_weylThermodynamicProfileComparison}] (\textit{theorem}) \\ Readout-level consequence of a profile Weyl/thermodynamic comparison packet.
+  \item[\texttt{RouterDefectThermodynamicBridge}] (\textit{inductive}) \\ Thermodynamic router bridge. 
+This is the corrected D3 bridge surface: the router residual is identified with 
+the canonical observer defect and compared to $Z_D$ through a shared 
+Weyl/thermodynamic relative-measurement readout. The legacy 
+$RouterDefectBoundBridge$ below remains only for existing norm-shaped consumers.
+  \item[\texttt{observerDefectResidualWeylThermodynamicBoundedByZD}] (\textit{theorem}) \\ The thermodynamic bridge closes the corrected observer-defect target after 
+transporting the residual equality.
+  \item[\texttt{ofCanonicalObserverDefect}] (\textit{def}) \\ Canonical constructor for the thermodynamic router bridge. 
+The residual is fixed to the canonical observer defect. The only remaining 
+input is the concrete Weyl/thermodynamic comparison packet, not an ambient 
+operator-norm bound.
+  \item[\texttt{ofWeylThermodynamicBoundedByZD}] (\textit{def}) \\ Canonical constructor for the thermodynamic router bridge from the theorem-level 
+Weyl/thermodynamic boundedness target. 
+This consumes the owner proposition $ObserverDefectResidualWeylThermodynamicBoundedByZD$ 
+instead of requiring downstream callers to manually unpack a comparison packet.
+  \item[\texttt{ofWeylThermodynamicControl}] (\textit{def}) \\ Canonical constructor for the thermodynamic router bridge from an explicit 
+Weyl/thermodynamic comparison witness packet. 
+This keeps the corrected D3 transport on the theorem-backed constructor lane 
+without requiring downstream callers to eliminate the theorem-level $Nonempty$ 
+packet themselves.
+  \item[\texttt{operatorInformationNormReadout\_routerResidual\_le\_ZD}] (\textit{theorem}) \\ Thermodynamic residual comparison: the residual readout is bounded by the $Z_D$ 
+readout in the shared Weyl/relative-potential representation.
+  \item[\texttt{sourcedGenerator}] (\textit{def}) \\ Sourced generator built from the thermodynamic router residual.
+  \item[\texttt{sourcedGenerator\_eq\_canonical}] (\textit{theorem}) \\ The thermodynamic sourced generator coincides with the canonical sourced modular generator.
+  \item[\texttt{sourcedGenerator}] (\textit{def}) \\ Sourced generator built from the bounded LLM-side residual input.
+  \item[\texttt{sourcedGenerator\_deviation\_norm\_le\_ZD}] (\textit{theorem}) \\ The residual budget is exactly the sourced-generator deviation from baseline flow.
+  \item[\texttt{sourcedGenerator\_eq\_flow\_iff\_routerResidual\_eq\_zero}] (\textit{theorem}) \\ The bounded sourced generator equals the background flow exactly when the router 
+residual vanishes.
+  \item[\texttt{WeylThermodynamicOperatorComparison}] (\textit{inductive}) \\ Weyl/thermodynamic comparison packet for two operators. 
+This is the repo-native replacement for using an ambient operator norm as the 
+information-geometric comparison. An operator is first sent through an explicit 
+information-geometric readout, and that readout must be identified with the 
+normalized relative information norm from the RedLine corridor. The norm is the 
+RMS size of $-log(d\mu  / d\nu )$ on projective positive states, measured against the 
+reference gauge; no ambient operator norm or base-space geometry is assumed.
+  \item[\texttt{WeylThermodynamicProfileComparison}] (\textit{inductive}) \\ Profile-level Weyl/thermodynamic comparison packet for a scaled $L^1 $ 
+modular-potential residual readout bounded by a central thermodynamic readout. 
+This is the source-faithful packet for Sinkhorn RN barriers. It does not use 
+the RMS $relativeInformationNorm$; it uses the projective 
+$informationGeometricRelativeNorm$ lane with explicit scale factors, because 
+raw RN barriers are sums of absolute logarithmic count/profile changes. The 
+central $Z_D$ side remains an explicitly supplied thermodynamic scalar budget 
+until a separate central positive-ray profile is constructed.
+  \item[\texttt{RouterDefectBridge}] (\textit{inductive}) \\ Bridge assumption linking an LLM router-residual operator to the canonical observer-defect residual.
+  \item[\texttt{ofCanonicalObserverDefect}] (\textit{def}) \\ Canonical theorem-backed constructor for the router/observer bridge. 
+This is the preferred constructor on the closure lane: the router residual is not 
+postulated independently, but taken to be the canonical observer-defect residual.
+  \item[\texttt{sourcedGenerator}] (\textit{def}) \\ Sourced generator built from the LLM-side residual input.
+  \item[\texttt{sourcedGenerator\_eq\_canonical}] (\textit{theorem}) \\ LLM-side sourced generator coincides with canonical sourced modular generator under bridge equality.
+  \item[\texttt{sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ Drazin-cut preservation follows immediately once the router residual is identified canonically.
+  \item[\texttt{SharedRoutedMoEBlock}] (\textit{inductive}) \\ MoE output surface with explicit shared path plus routed expert path. 
+Mirrors $out = shared(x) + routed(x)$ from vendor implementations.
+  \item[\texttt{output}] (\textit{def}) \\ Full output: shared path plus routed path.
+  \item[\texttt{output\_eq\_shared\_plus\_active}] (\textit{theorem}) \\ In hard-zero sparse routing, output reduces to shared + active routed contribution.
+  \item[\texttt{output\_split\_active\_defect}] (\textit{theorem}) \\ Shared + routed decomposition into active and defect routed parts.
+  \item[\texttt{SparseRouter}] (\textit{inductive}) \\ Sparse routing interface: active-set predicate plus a hard-zero law off the active set.
+  \item[\texttt{activeWeight}] (\textit{def}) \\ Active-gated weight.
+  \item[\texttt{defectWeight}] (\textit{def}) \\ Defect-gated weight (inactive complement).
+  \item[\texttt{router\_weight\_split}] (\textit{theorem}) \\ Pointwise router split into active and defect contributions.
+  \item[\texttt{TrialityMoEBlock}] (\textit{inductive}) \\ MoE block as router plus expert family.
+  \item[\texttt{activeOutput}] (\textit{def}) \\ Active MoE output restricted to the active gate.
+  \item[\texttt{defectOutput}] (\textit{def}) \\ Defect MoE output restricted to the inactive gate.
+  \item[\texttt{moe\_output\_split}] (\textit{theorem}) \\ Algebraic MoE split: total output equals active plus defect output.
+  \item[\texttt{totalOutput}] (\textit{def}) \\ Total MoE output from raw router weights.
+  \item[\texttt{totalOutput\_eq\_activeOutput}] (\textit{theorem}) \\ Under hard-zero inactive routing, total routed output equals active routed output.
+  \item[\texttt{weightedOutput}] (\textit{def}) \\ Generic weighted expert aggregation.
+  \item[\texttt{TwoStageResidualBlock}] (\textit{inductive}) \\ Llama-style two-stage residual block: 
+1) attention pre-norm and residual add, 
+2) feed-forward pre-norm and residual add.
+  \item[\texttt{afterAttention}] (\textit{def}) \\ $h = x + attention(attentionNorm x)$
+  \item[\texttt{afterFeedForward}] (\textit{def}) \\ $out = h + feedForward(feedForwardNorm h)$
+  \item[\texttt{run}] (\textit{def}) \\ Full block update.
+  \item[\texttt{two\_stage\_residual\_block\_update}] (\textit{theorem}) \\ Exact two-stage residual law matching the extracted Llama 4 transformer block form.
+\end{description}
+\subsection{InfoGeometry.Geometry and Cross-Prover Bridge}
+These declarations define the spin-momentum couplings, twistor/helical coverings, and Clifford/Hestenes paravector readouts bridging Lean 4 and Isabelle.
+
+\subsubsection*{InfoGeometry.Geometry.PauliParavectorBridge}
+\begin{description}
+  \item[\texttt{det\_pauliMatrix}] (\textit{theorem}) \\ Constructive determinant identity: 
+$det(t I + x \sigma _1  + y \sigma _2  + z \sigma _3 ) = t^2  - x^2  - y^2  - z^2 $.
+  \item[\texttt{det\_pauliMatrix\_eq\_mass\_sq}] (\textit{theorem}) \\ Energy-momentum mass shell in Pauli determinant form.
+  \item[\texttt{det\_pauliMatrix\_eq\_zero\_of\_null}] (\textit{theorem}) \\ Null four-vectors map to singular Pauli matrices. 
+This is determinant/rank-collapse language, not nilpotence.
+  \item[\texttt{Minkowski4}] (\textit{inductive}) \\ Real Minkowski four-vector in coordinates $(t,x,y,z)$.
+  \item[\texttt{IsNull}] (\textit{def}) \\ Lightlike/null condition.
+  \item[\texttt{OnMassShell}] (\textit{def}) \\ Mass shell condition $q p = m^2 $.
+  \item[\texttt{q}] (\textit{def}) \\ Minkowski quadratic form with signature $(+, -, -, -)$.
+  \item[\texttt{t}] (\textit{def}) \\ Time/energy component.
+  \item[\texttt{x}] (\textit{def}) \\ Spatial $x$ component.
+  \item[\texttt{y}] (\textit{def}) \\ Spatial $y$ component.
+  \item[\texttt{z}] (\textit{def}) \\ Spatial $z$ component.
+  \item[\texttt{MomentumSpinCoupling}] (\textit{inductive}) \\ Momentum-spin coupling socket. 
+This is the theorem-safe representation-theoretic statement: momentum and spin 
+are read together through a common spinor/rotor structure.
+  \item[\texttt{coupling\_holds}] (\textit{theorem}) \\ Re-export of the spin-momentum coupling law.
+  \item[\texttt{couplingCertificate}] (\textit{theorem}) \\ Evidence for the coupling law.
+  \item[\texttt{couplingLaw}] (\textit{def}) \\ Coupling law supplied by the concrete representation.
+  \item[\texttt{helicity}] (\textit{def}) \\ Helicity readout.
+  \item[\texttt{momentum}] (\textit{def}) \\ Momentum/paravector readout.
+  \item[\texttt{pauliLubanskiReadout}] (\textit{def}) \\ Pauli-Lubanski-style readout.
+  \item[\texttt{spinReadout}] (\textit{def}) \\ Spin bivector/plane readout.
+  \item[\texttt{PauliMat}] (\textit{def}) \\ Carrier for $2 \times  2$ complex matrices.
+  \item[\texttt{pauliMatrix}] (\textit{def}) \\ Pauli/Hermitian matrix associated to a real Minkowski vector: 
+$[[t+z, x - i y], [x + i y, t-z]]$.
+  \item[\texttt{PauliSpinorTransport}] (\textit{inductive}) \\ Spinor transport socket. 
+A model supplies a spinor action on Pauli matrices, intended as $X \mapsto  L X L^\dagger $. 
+This file does not prove the $SL(2,\mathbb{C} )$ double-cover theorem.
+  \item[\texttt{determinant\_preserved}] (\textit{theorem}) \\ Re-export of determinant/Minkowski-norm preservation.
+  \item[\texttt{preservesQuadratic}] (\textit{theorem}) \\ Determinant preservation under the supplied transport.
+  \item[\texttt{transform}] (\textit{def}) \\ Transport/action on Pauli matrices.
+  \item[\texttt{SpinBivectorReadout}] (\textit{inductive}) \\ Bivector/spin-plane readout socket. 
+In Hestenes language, spin is a bivector/rotor datum extracted from the spinor, 
+not a component of the momentum paravector itself.
+  \item[\texttt{readout\_holds}] (\textit{theorem}) \\ Re-export of the spin-plane readout law.
+  \item[\texttt{readoutCertificate}] (\textit{theorem}) \\ Evidence for the model-specific readout law.
+  \item[\texttt{readoutLaw}] (\textit{def}) \\ Model-specific readout law.
+  \item[\texttt{spinPlane}] (\textit{def}) \\ Spin plane/bivector readout.
+  \item[\texttt{toPauliParavector}] (\textit{def}) \\ Convert geometry-facing coordinates into the canonical Pauli/Hestenes 
+paravector owner.
+\end{description}
+
 \section{Conclusion}
 
 In 1971, Roger Penrose hypothesized in \textit{Angular momentum: an approach to combinatorial spacetime} that spacetime geometry does not exist at the fundamental level; rather, continuous angles, distances, and volumes emerge purely from the discrete braiding of quantum spin networks. Through the implementation of $q$-deformed Cuntz algebras, the $d\log Q$ thermodynamic gauge, and Bost-Connes partition functions within our verification engine, we provide the rigorous, computational completion of that vision.

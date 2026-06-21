@@ -40,11 +40,6 @@ theorem metricParabolic_kernel_nilpotent (χ : ℝ) :
   simpa [metricParabolic] using
     (InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolic_pure_square_zero χ)
 
-/-- Alias backwards-compatible name for the pure-nilpotence theorem readout. -/
-theorem metricParabolic_kernel_sorry (χ : ℝ) :
-  metricParabolic ({ scalar := (0 : ℝ), directional := χ } : ParOp)
-      ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero :=
-    metricParabolic_kernel_nilpotent χ
 
 theorem parabolicExp_pure_composition (χ₁ χ₂ : ℝ) :
   InfoGeometry.Canonical.GeneralizedOperatorChiral.GeneralizedOperator.parabolicExp

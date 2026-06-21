@@ -4,6 +4,12 @@ open Complex
 
 noncomputable section
 
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+set_option linter.unreachableTactic false
+set_option linter.unusedTactic false
+set_option linter.unnecessarySimpa false
+
 /-!
 # YangBaxterProof — Exact SymPy translation
 
@@ -280,7 +286,7 @@ theorem τ_eq_q_plus_qinv_minus_one : τ = q + (q⁻¹) - 1 := by
       (τ : ℂ).re = ((Real.sqrt 5 - 1) / 2 : ℝ) := by
         simp [τ, tauR]
       _ = ((Real.cos (Real.pi / 5) * 2 - 1 : ℝ)) := by
-        rw [Real.cos_pi_div_five]; ring
+        rw [Real.cos_pi_div_five]; ring_nf
       _ = 2 * Real.cos (Real.pi / 5) - 1 := by ring
       _ = (q + (q⁻¹) : ℂ).re - 1 := by rw [h_q_plus_qinv_re]
       _ = (q + (q⁻¹) - 1 : ℂ).re := by simp
@@ -378,7 +384,7 @@ theorem braid_relation : R * B * R = B * R * B := by
         _ = (q ^ 4)⁻¹ := by
           calc
             q ^ (-4 : ℤ) = (q ^ (4 : ℤ))⁻¹ := by
-              simpa using (zpow_neg (q : ℂ) (4 : ℤ))
+              simp [zpow_neg (q : ℂ) (4 : ℤ)]
             _ = (q ^ 4)⁻¹ := by
               have h : (q : ℂ) ^ (4 : ℤ) = q ^ 4 := by simpa using (zpow_natCast q 4)
               rw [h]

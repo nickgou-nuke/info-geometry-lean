@@ -269,10 +269,7 @@ structure RoughReflectionChannelDatum where
   /-- Depolarizing channel. -/
   channel : Stokes → Stokes
 
-  /-- Certificate that this is the intended depolarizing backend. -/
-  depolarizingCertificate : Prop
-
   /-- Incidence planes are direction-dependent, so a single global `s/p` basis is invalid. -/
-  directionDependentIncidencePlanes : Prop
+  directionDependentIncidencePlanes : Stokes → Prop
 
 end InfoGeometry.OperatorAlgebra.FresnelJonesReflection

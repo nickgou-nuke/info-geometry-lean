@@ -431,12 +431,6 @@ structure LocalToGlobalAnomalyDatum where
   /-- Global integer index or winding predicate. -/
   globalIndex : ℤ → Prop
 
-  /-- Certificate that the intended global index has a mod-16 reduction. -/
-  reductionMod16 : Prop
-
-  /-- Compatibility between local address data and the global anomaly class. -/
-  compatibility : Prop
-
 /--
 A global anomaly/topological class sitting above local Clifford signs.
 
@@ -467,8 +461,6 @@ variable (G : GlobalAnomalyClass)
 def toLocalToGlobalAnomalyDatum : LocalToGlobalAnomalyDatum where
   localCharge := G.localSector
   globalIndex := fun n => (n : ZMod 16) = G.cyclicIndex
-  reductionMod16 := G.cyclicIndex = (G.integerLift : ZMod 16)
-  compatibility := G.cyclicIndex = (G.integerLift : ZMod 16)
 
 end GlobalAnomalyClass
 
@@ -485,26 +477,12 @@ structure DIIIIndexCalibration
   /-- Encoding of local sectors into a cyclic DIII stacking class. -/
   dIIIIndex : Charge → ZMod 16
 
-  /--
-  Model-specific stacking law, for example a carry rule, eta invariant, bordism
-  invariant, or interaction calibration.
-  -/
-  calibration_True : Prop := by
-    sorry
-
 /--
 A DIII interaction calibration for the four-bit `Cl(1,1)^⊗4` address space.
 -/
 structure DIIIInteractionCalibration where
   /-- Encoding of local four-bit sectors into a cyclic DIII stacking class. -/
   encode : Charge4 → ZMod 16
-
-  /--
-  Model-specific stacking law, for example a carry rule, eta invariant, bordism
-  invariant, or interaction calibration.
-  -/
-  stacking_True : Prop := by
-    sorry
 
 namespace DIIIInteractionCalibration
 
@@ -513,7 +491,6 @@ variable (C : DIIIInteractionCalibration)
 /-- Repackage the four-bit interaction calibration as the generic index calibration. -/
 def toDIIIIndexCalibration : DIIIIndexCalibration Charge4 where
   dIIIIndex := C.encode
-  calibration_True := C.stacking_True
 
 end DIIIInteractionCalibration
 

@@ -68,9 +68,9 @@ private def isBarePropSort (e : Expr) : Bool :=
 private def endsWithStatement (s : String) : Bool :=
   s.endsWith "_statement"
 
-/-- True if a string ends with `_sorry` or `_sorryProof`. -/
+/-- True if a string ends with `_sorry`. -/
 private def endsWithWitness (s : String) : Bool :=
-  s.endsWith "_sorry" || s.endsWith "_sorryProof"
+  s.endsWith "_sorry"
 
 /-- Compute the expected witness field name from a statement field name.
     `foo_statement` → `foo_sorry`. -/

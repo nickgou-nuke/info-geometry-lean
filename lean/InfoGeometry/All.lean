@@ -54,7 +54,7 @@ import InfoGeometry.Arithmetic.PrimeInformationKMS
 import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 import InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
-import InfoGeometry.External.Virasoro
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Arithmetic.PrimeGrandCanonicalSouriauWeights
@@ -195,6 +195,7 @@ import InfoGeometry.Architecture.All
 import InfoGeometry.Causal.All
 import InfoGeometry.Canonical.All
 import InfoGeometry.Canonical.MoebiusVirasoroBridge
+import InfoGeometry.Canonical.SplitCliffordO55TKKClosure
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Geometry.EntanglementGeometry
 import InfoGeometry.Geometry.ErlangerPhaseGeometry

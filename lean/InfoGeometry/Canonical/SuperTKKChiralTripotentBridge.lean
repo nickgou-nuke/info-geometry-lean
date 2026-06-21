@@ -73,18 +73,23 @@ theorem tripotentSector_cube (r : ClosureRole) :
   exact TripotentState.cube_eq_self (tripotentSector r)
 
 /-- The `±2` roles are exactly the explicit defect roles in this finite dictionary. -/
-def IsDefect : ClosureRole → Prop
-  | negTwo => True
-  | posTwo => True
-  | _ => False
+def IsDefect (r : ClosureRole) : Prop :=
+  r = negTwo ∨ r = posTwo
 
 /-- Positive grade two is a defect role. -/
 theorem posTwo_is_defect : IsDefect posTwo := by
-  trivial
+  exact Or.inr rfl
 
 /-- Negative grade two is a defect role. -/
 theorem negTwo_is_defect : IsDefect negTwo := by
-  trivial
+  exact Or.inl rfl
+
+/-- The zero role is not a defect role. -/
+theorem zero_not_defect : ¬ IsDefect zero := by
+  intro h
+  cases h with
+  | inl hz => cases hz
+  | inr hz => cases hz
 
 end ClosureRole
 

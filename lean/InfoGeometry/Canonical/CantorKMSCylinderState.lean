@@ -86,6 +86,20 @@ theorem cylinderKMSWeight_cons_true (w : BinaryWord) :
   cylinderKMSWeight_cons true w
 
 /--
+The two depth-one children of a cylinder split the parent weight evenly.
+
+This is the finite algebraic version of the shard/whole readout: each branch
+contains exactly half of the cylinder mass, and the two children sum back to the
+parent.
+-/
+@[rep_depth operator]
+theorem cylinderKMSWeight_children_sum (w : BinaryWord) :
+    cylinderKMSWeight (false :: w) + cylinderKMSWeight (true :: w) =
+      cylinderKMSWeight w := by
+  rw [cylinderKMSWeight_cons_false, cylinderKMSWeight_cons_true]
+  ring
+
+/--
 Diagonal finite-cylinder coefficient for the uniform KMS state.
 
 This is the matrix-unit shadow of `φ(S_u S_v*)`: diagonal pairs receive the

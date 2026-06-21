@@ -49,12 +49,6 @@ structure ChiralLightconeStinespringBridge
       x ∈ visibleCone →
         D.hiddenFlow x ∈ hiddenCone
 
-  /--
-  Calibration saying this is the intended chiral-lightcone realization of the
-  Stinespring/Tomita dilation.
-  -/
-  chiral_lightcone_calibration : Prop
-
 namespace ChiralLightconeStinespringBridge
 
 variable

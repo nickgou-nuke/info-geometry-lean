@@ -131,15 +131,15 @@ end LTrichotomyInput
 /-- Density data for a single `L_a` surface. -/
 structure LMultipleDensityWitness (a : ℕ) where
   density : ℝ
+  density_nonnegative : 0 ≤ density
 
 namespace LMultipleDensityWitness
 
 variable {a : ℕ} (W : LMultipleDensityWitness a)
 
-/-- Density law for the `L_a` surface. -/
-def density_True (W : LMultipleDensityWitness a) : Prop :=
-  by
-    sorry
+/-- The supplied `L_a` density is nonnegative. -/
+theorem density_holds (W : LMultipleDensityWitness a) : 0 ≤ W.density :=
+  W.density_nonnegative
 
 end LMultipleDensityWitness
 
@@ -156,11 +156,11 @@ This is intentionally a witness packet: it names the density/Mertens/local
 estimate obligations without pretending they are proved by this skeleton.
 -/
 structure LichtmanLocalBoundInput where
-  localBoundLaw : Prop
-  localBoundLaw_holds : localBoundLaw
-  lDensityLaw : Prop
-  lDensityLaw_holds : lDensityLaw
-  mertensProductLaw : Prop
-  mertensProductLaw_holds : mertensProductLaw
+  local_density_bound :
+    ∀ ⦃a : ℕ⦄, 1 < a → (W : LMultipleDensityWitness a) → 0 ≤ W.density
+  lDensity_eq_sum :
+    ∀ ⦃A : Set ℕ⦄, (W : LPrimitiveLogDensityWitness A) → W.logDensity = W.densitySum
+  mertens_weight_nonnegative :
+    ∀ n : ℕ, 0 ≤ (1 / ((n : ℝ) + 1) : ℝ)
 
 end InfoGeometry.Arithmetic

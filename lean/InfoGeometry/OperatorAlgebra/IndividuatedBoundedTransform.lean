@@ -49,6 +49,25 @@ theorem one_add_sq_nonneg
     0 ≤ 1 + t ^ 2 :=
   le_of_lt (one_add_sq_pos t)
 
+
+/-- The square denominator is never zero. -/
+theorem one_add_sq_ne_zero
+    (t : ℝ) :
+    1 + t ^ 2 ≠ 0 := by
+  exact ne_of_gt (one_add_sq_pos t)
+
+/-- The square-root denominator is positive. -/
+theorem sqrt_one_add_sq_pos
+    (t : ℝ) :
+    0 < Real.sqrt (1 + t ^ 2) := by
+  exact Real.sqrt_pos.2 (one_add_sq_pos t)
+
+/-- The square-root denominator is never zero. -/
+theorem sqrt_one_add_sq_ne_zero
+    (t : ℝ) :
+    Real.sqrt (1 + t ^ 2) ≠ 0 := by
+  exact ne_of_gt (sqrt_one_add_sq_pos t)
+
 /-- Closed form for the square of the scalar bounded transform. -/
 theorem scalarBoundedTransform_sq_eq
     (t : ℝ) :
@@ -69,6 +88,28 @@ theorem scalarBoundedTransform_sq_le_one
   rw [scalarBoundedTransform_sq_eq]
   rw [div_le_iff₀ (one_add_sq_pos t)]
   nlinarith [sq_nonneg t]
+
+
+/-- Strict scalar contraction theorem. -/
+theorem scalarBoundedTransform_sq_lt_one
+    (t : ℝ) :
+    scalarBoundedTransform t ^ 2 < 1 := by
+  rw [scalarBoundedTransform_sq_eq]
+  rw [div_lt_iff₀ (one_add_sq_pos t)]
+  nlinarith [sq_nonneg t]
+
+/-- Absolute-value contraction of the scalar bounded transform. -/
+theorem abs_scalarBoundedTransform_lt_one
+    (t : ℝ) :
+    |scalarBoundedTransform t| < 1 := by
+  exact (sq_lt_one_iff_abs_lt_one (scalarBoundedTransform t)).mp
+    (scalarBoundedTransform_sq_lt_one t)
+
+/-- Two-sided scalar bounded-transform estimate. -/
+theorem scalarBoundedTransform_mem_Ioo
+    (t : ℝ) :
+    scalarBoundedTransform t ∈ Set.Ioo (-1 : ℝ) 1 := by
+  exact abs_lt.mp (abs_scalarBoundedTransform_lt_one t)
 
 /-- Compatibility alias for the previous snake-case theorem name. -/
 theorem scalar_boundedTransform_sq_le_one
@@ -125,17 +166,6 @@ structure BoundedTransformFunctionalCalculusBridge
   D_selfAdjoint :
     star D = D
 
-  /--
-  Functional-calculus construction law for `F`.
-
-  A concrete model must prove that `F` is the functional calculus image of
-  `scalarBoundedTransform`.
-  -/
-  F_is_functional_calculus_True : Prop
-
-  /-- Proof of the functional-calculus construction law. -/
-  F_is_functional_calculus_proof :
-    F_is_functional_calculus_True
 
   /--
   Spectral/order lift:

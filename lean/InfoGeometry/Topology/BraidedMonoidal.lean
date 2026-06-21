@@ -5,28 +5,42 @@ namespace InfoGeometry.Topology.BraidedMonoidal
 
 open InfoGeometry.Topology.PointedGroups
 
-/-- Abstract definition of the Hexagon Coherence Relation for Pointed Groups -/
-structure HexagonCoherence (D : FreeProductData) where
-  -- We establish that the braiding operators c_{A,B} satisfy the hexagon relations.
-  -- Rather than implementing the full CategoryTheory stack for our custom structure,
-  -- we axiomatically define the coherence property bounds.
+/-- Concrete algebraic left-hexagon shadow for conjugating braid action. -/
+def ConjugationLeftHexagon {G : Type} [Group G] (base x y : G) : Prop :=
+  conjugatingBraidAction base (x * y) =
+    conjugatingBraidAction base x * conjugatingBraidAction base y
 
-  /-- The left hexagon relation structural bound -/
-  hexagon_left : ∀ (A B C : PointedGroup),
-    -- abstractly representing the composition: a -> c_{A+B, C} -> c_{A, C} + c_{B, C}
-    True
-
-  /-- The right hexagon relation structural bound -/
-  hexagon_right : ∀ (A B C : PointedGroup),
-    True
+/-- Concrete algebraic right-hexagon/inverse shadow for conjugating braid action. -/
+def ConjugationRightHexagon {G : Type} [Group G] (base x : G) : Prop :=
+  conjugatingBraidAction base⁻¹ (conjugatingBraidAction base x) = x
 
 /--
-Theorem: Spin Representation Constraint.
-If the braiding operators on Pointed Groups form a valid representation of the Braid Group,
-then they natively form a braided monoidal category under the exact hexagon coherence relations.
+Finite, non-vacuous coherence packet for the pointed-group braid shadow.
+
+This is not a full categorical `BraidedCategory` instance.  It records the
+algebraic conjugation identities that the pointed-group braid action already
+uses: conjugation preserves multiplication and inverse conjugation cancels.
 -/
+structure HexagonCoherence (D : FreeProductData) where
+  hexagon_left : ∀ {G : Type} [Group G] (base x y : G),
+    ConjugationLeftHexagon base x y
+  hexagon_right : ∀ {G : Type} [Group G] (base x : G),
+    ConjugationRightHexagon base x
+
+/-- Left hexagon follows from multiplication preservation by conjugation. -/
+theorem conjugation_left_hexagon {G : Type} [Group G] (base x y : G) :
+    ConjugationLeftHexagon base x y := by
+  exact conjugatingBraidAction_mul base x y
+
+/-- Right hexagon follows from inverse conjugation cancellation. -/
+theorem conjugation_right_hexagon {G : Type} [Group G] (base x : G) :
+    ConjugationRightHexagon base x := by
+  exact conjugatingBraidAction_inverse_cancel base x
+
+/-- Pointed groups carry the finite conjugation braid coherence packet. -/
 theorem pointed_groups_form_braided_monoidal (D : FreeProductData) :
   HexagonCoherence D := by
-  exact ⟨fun A B C => trivial, fun A B C => trivial⟩
+  exact ⟨fun base x y => conjugation_left_hexagon base x y,
+    fun base x => conjugation_right_hexagon base x⟩
 
 end InfoGeometry.Topology.BraidedMonoidal

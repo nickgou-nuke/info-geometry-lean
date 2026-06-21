@@ -1,6 +1,6 @@
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Algebra.Module.LinearMap.Defs
-import VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.BigOperators.FinProd
 
 section
 

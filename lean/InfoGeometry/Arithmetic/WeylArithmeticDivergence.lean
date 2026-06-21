@@ -234,7 +234,7 @@ structure WeylGaugeDecompositionWitness
   totalDivergence : State → State → ℝ
 
   /-- Supplied Weyl gauge decomposition law. -/
-  weyl_decomposition_True :
+  weyl_decomposition_law :
     ∀ (A : Finset ℕ) (countsP countsQ : ℕ → ℝ),
       0 < arithmeticTotalMass A countsP →
       0 < arithmeticTotalMass A countsQ →
@@ -262,7 +262,7 @@ theorem totalDivergence_eq_shape_of_equal_mass
     unfold weylThermalScale
     rw [hMassEq]
     exact div_self hQ.ne'
-  rw [W.weyl_decomposition_True A countsP countsQ hP hQ]
+  rw [W.weyl_decomposition_law A countsP countsQ hP hQ]
   rw [hScaleOne]
   ring
 

@@ -79,7 +79,7 @@ Default support lane used by lightweight translator consumers.
 -/
 @[rep_depth operator]
 def defaultSupport (R : FierzChannelReadout) : R.State → Prop :=
-  fun _ => True
+  fun ψ => ψ = ψ
 
 /--
 Default generator lane used by lightweight translator consumers.

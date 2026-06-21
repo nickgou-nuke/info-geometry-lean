@@ -46,8 +46,15 @@ belong to the boundary/dissipative layer.
 -/
 def IsMetricAdmissibleJonesTransport
     {Op : Type*} [Mul Op]
-    (_J : OperatorialJonesDatum Op) : Prop :=
-  True
+    (J : OperatorialJonesDatum Op) : Prop :=
+  J.coherent
+
+/-- Metric admissibility is exactly the coherent Jones-transport branch. -/
+theorem metricAdmissible_iff_coherent
+    {Op : Type*} [Mul Op]
+    (J : OperatorialJonesDatum Op) :
+    IsMetricAdmissibleJonesTransport J ↔ J.coherent := by
+  rfl
 
 /--
 Metric reconstructed from operatorial Jones transport costs.

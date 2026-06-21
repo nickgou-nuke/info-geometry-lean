@@ -1948,8 +1948,19 @@ def classicalToModularWitness
     RelativeModularOperator    := cl.StateSpace → ℝ   -- multiplication by dν/dμ
     ConnescCocycle             := cl.StateSpace → ℝ   -- pointwise r^{it}
     RelativeModularHamiltonian := cl.StateSpace → ℝ   -- pointwise log r
-    modularNCRadonNikodymWitness := fun _ _ => True
+    modularNCRadonNikodymWitness := fun relativeOperator cocycle => relativeOperator = cocycle
     arakiRelativeEntropy       := cl.klDivergence }
+
+/--
+In the commutative specialization, the modular Radon-Nikodym witness is the
+actual equality of the multiplication operator readout and the cocycle readout.
+-/
+theorem classicalToModularWitness_modularNCRadonNikodymWitness_iff
+    (cl : ClassicalRadonNikodymPacket)
+    (relativeOperator cocycle : cl.StateSpace → ℝ) :
+    (classicalToModularWitness cl).modularNCRadonNikodymWitness relativeOperator cocycle
+      ↔ relativeOperator = cocycle := by
+  rfl
 
 /--
 **Packet 25.3 — Gibbs–KMS thermodynamic layer.**

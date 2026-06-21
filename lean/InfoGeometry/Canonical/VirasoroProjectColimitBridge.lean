@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroInductiveColimit
 import InfoGeometry.Canonical.SplitCliffordSuperVirasoroColimitReadback
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
-import VirasoroProject.LieAlgebraRepresentationOfBasis
+import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
 
 noncomputable section
 

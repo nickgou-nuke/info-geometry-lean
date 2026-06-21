@@ -399,8 +399,7 @@ The model permits exterior-to-opposite-interior incidence, but not
 exterior-to-exterior traversal.
 -/
 def ThroughER : ERZone → ERZone → Prop
-  | ERZone.exterior Side.left,  ERZone.interior Side.right => True
-  | ERZone.exterior Side.right, ERZone.interior Side.left  => True
+  | ERZone.exterior s, ERZone.interior t => t = Side.opposite s
   | _, _ => False
 
 /--
@@ -507,8 +506,8 @@ Pairwise Bell-link readout.
 -/
 def PairEntangled :
     EntanglementIncidence → TripleNode → TripleNode → Prop
-  | bellAB, alice, bob => True
-  | bellAB, bob, alice => True
+  | bellAB, x, y =>
+      (x = alice ∧ y = bob) ∨ (x = bob ∧ y = alice)
   | _, _, _ => False
 
 /--
@@ -516,8 +515,7 @@ Tripartite GHZ-knot readout.
 -/
 def GlobalKnot :
     EntanglementIncidence → Prop
-  | ghzABC => True
-  | _ => False
+  | inc => inc = ghzABC
 
 /--
 Charlie measures Bob.

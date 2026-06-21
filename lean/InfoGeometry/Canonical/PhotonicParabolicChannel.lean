@@ -60,7 +60,7 @@ theorem pure_directional_nilpotent (χ : ℝ) :
   mul ({ scalar := (0 : ℝ), directional := χ } : ParOp)
       ({ scalar := (0 : ℝ), directional := χ } : ParOp) = zero := by
   simpa using (
-    InfoGeometry.Canonical.ParabolicContractionBridge.metricParabolic_kernel_sorry χ)
+    InfoGeometry.Canonical.ParabolicContractionBridge.metricParabolic_kernel_nilpotent χ)
 
 /-- Concrete pure-directional channel collapse. -/
 theorem pure_directional_collapse (χ : ℝ) :

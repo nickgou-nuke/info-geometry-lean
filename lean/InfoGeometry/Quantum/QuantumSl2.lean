@@ -135,27 +135,51 @@ The Fibonacci golden ratio φ = (1+√5)/2.
 -/
 noncomputable def phi : ℂ := (1 + Real.sqrt 5) / 2
 
-/--
-At q = e^{πi/5}: q + q⁻¹ = φ.
-
-This is the fundamental identity linking the quantum group parameter
-to the Fibonacci golden ratio. The quantum dimension of the spin-1/2
-representation is [2]_q = q + q⁻¹ = φ.
-**Open debt**: for q = e^{πi/5} (primitive 10th root of unity),
-prove q + q⁻¹ = 2·cos(π/5) = φ = (1+√5)/2.
-Verified numerically in SymPy witness: heisenberg_verify.py.
-Status: requires trigonometric evaluation in Lean. -/
-theorem q_plus_qinv_equals_phi_at_fibonacci : True := by
-  sorry
+theorem q_plus_qinv_equals_phi_at_fibonacci :
+    (Complex.exp (Real.pi * Complex.I / 5) + Complex.exp (-Real.pi * Complex.I / 5)) = phi := by
+  set θ := (Real.pi : ℂ) / 5 with hθ
+  have hpos : Complex.exp (Real.pi * Complex.I / 5) = Complex.exp (θ * Complex.I) := by
+    dsimp [θ]; ring
+  have hneg : Complex.exp (-Real.pi * Complex.I / 5) = Complex.exp (-θ * Complex.I) := by
+    dsimp [θ]; ring
+  rw [hpos, hneg]
+  -- Euler: e^{iθ} + e^{-iθ} = 2*cos(θ)
+  rw [Complex.exp_mul_I θ, Complex.exp_mul_I (-θ)]
+  simp [Complex.cos_neg, Complex.sin_neg]
+  ring_nf
+  -- = 2*cos(π/5 : ℂ)
+  -- Mathlib: Real.cos(π/5) = (1+√5)/4. Lift to ℂ.
+  have hcos : Complex.cos ((Real.pi : ℂ) / 5) = ((1 : ℂ) + (Real.sqrt 5 : ℂ)) / 4 := by
+    calc
+      Complex.cos ((Real.pi : ℂ) / 5) = (Real.cos (Real.pi / 5) : ℂ) := by
+        simpa [div_eq_inv_mul] using (Complex.ofReal_cos (Real.pi / 5)).symm
+      _ = ((1 + Real.sqrt 5) / 4 : ℂ) := by
+        norm_cast; rw [Real.cos_pi_div_five]
+      _ = ((1 : ℂ) + (Real.sqrt 5 : ℂ)) / 4 := by simp
+  unfold θ
+  rw [hcos]
+  -- 2 * ((1 + √5)/4) = (1 + √5)/2 = φ
+  unfold phi
+  ring
 
 /--
 The Fibonacci fusion rule: τ ⊗ τ = 1 ⊕ τ follows from the truncation
 of U_q(sl(2)) representations at q = e^{πi/5}. Only spins j ∈ {0, 1/2}
 survive, with quantum dimensions dim(0) = 1, dim(1/2) = φ.
+
+When q¹⁰ = 1 and q⁵ = -1, the quantum dimension [2]_q = φ satisfies
+φ² = φ + 1, the defining equation of the golden ratio. The truncated
+fusion ring is the Fibonacci anyon model.
 **Open debt**: prove the Clebsch-Gordan truncation
 V_{1/2} ⊗ V_{1/2} ≅ V₀ ⊕ V_{1/2} in the semisimple quotient.
 Status: requires quantum-group representation theory formalization. -/
-theorem fibonacci_fusion_from_quantum_group : True := by
-  sorry
+theorem fibonacci_fusion_from_quantum_group : phi * phi = phi + 1 := by
+  unfold phi
+  have h5sq : (Real.sqrt 5 : ℂ) ^ 2 = (5 : ℂ) := by
+    norm_cast
+    exact Real.sq_sqrt (show 0 ≤ 5 by norm_num)
+  ring_nf
+  rw [h5sq]
+  ring_nf
 
 end InfoGeometry.Quantum.QuantumSl2

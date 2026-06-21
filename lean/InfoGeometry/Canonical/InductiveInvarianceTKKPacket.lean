@@ -341,20 +341,55 @@ structure ColimitInvarianceSocket where
   chain : TKKInductiveChain
   /-- Embedding of each finite stage into the colimit. -/
   embed : ∀ n, chain.Stage n → Colimit
-  /-- Compatibility: embeddings commute with bonding maps. -/
-  embed_compatible_True : Prop := by
-    sorry
   /-- The colimit carries supergraded invariant data. -/
   colimitInvariant : @SupergradedInvariantAt Colimit colimitRing
-  /-- Each finite-stage embedding preserves the invariant lanes. -/
-  embed_preserves_odd_True : Prop := by
-    sorry
-  embed_preserves_even_True : Prop := by
-    sorry
-  embed_preserves_central_True : Prop := by
-    sorry
-  /-- Density: the union of embedded finite stages is dense in the colimit. -/
-  density_True : Prop := by
-    sorry
+  embed_compatible_law : ∀ n x, embed (n + 1) ((chain.Bonding n).bonding.map x) = embed n x
+  embed_preserves_odd_law : ∀ n x, (chain.Grading n).invariant.is_odd x → colimitInvariant.is_odd (embed n x)
+  embed_preserves_even_law : ∀ n x, (chain.Grading n).invariant.is_even x → colimitInvariant.is_even (embed n x)
+  embed_preserves_central_law : ∀ n x, (chain.Grading n).invariant.is_central x → colimitInvariant.is_central (embed n x)
+  finite_stage_cover_law : ∀ z, ∃ n x, embed n x = z
+
+namespace ColimitInvarianceSocket
+
+attribute [instance] ColimitInvarianceSocket.colimitRing
+
+variable (S : ColimitInvarianceSocket)
+
+instance : Ring S.Colimit := S.colimitRing
+
+/-- Embedding compatibility with the one-step TKK bonding map. -/
+theorem embed_compatible
+    (n : ℕ) (x : S.chain.Stage n) :
+    S.embed (n + 1) ((S.chain.Bonding n).bonding.map x) = S.embed n x :=
+    S.embed_compatible_law n x
+
+/-- Embedded finite-stage odd elements remain odd in the colimit invariant. -/
+theorem embed_preserves_odd
+    (n : ℕ) (x : S.chain.Stage n)
+    (hx : (S.chain.Grading n).invariant.is_odd x) :
+    S.colimitInvariant.is_odd (S.embed n x) :=
+    S.embed_preserves_odd_law n x hx
+
+/-- Embedded finite-stage even elements remain even in the colimit invariant. -/
+theorem embed_preserves_even
+    (n : ℕ) (x : S.chain.Stage n)
+    (hx : (S.chain.Grading n).invariant.is_even x) :
+    S.colimitInvariant.is_even (S.embed n x) :=
+    S.embed_preserves_even_law n x hx
+
+/-- Embedded finite-stage central elements remain central in the colimit invariant. -/
+theorem embed_preserves_central
+    (n : ℕ) (x : S.chain.Stage n)
+    (hx : (S.chain.Grading n).invariant.is_central x) :
+    S.colimitInvariant.is_central (S.embed n x) :=
+    S.embed_preserves_central_law n x hx
+
+/-- Every algebraic colimit point is represented by a finite stage. -/
+theorem finite_stage_cover
+    (z : S.Colimit) :
+    ∃ (n : ℕ) (x : S.chain.Stage n), S.embed n x = z :=
+    S.finite_stage_cover_law z
+
+end ColimitInvarianceSocket
 
 end InfoGeometry.Canonical.InductiveInvarianceTKKPacket

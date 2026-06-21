@@ -16,3 +16,6 @@ import InfoGeometry.Analysis.JaynesRelativeStates
 import InfoGeometry.Analysis.KatzSarnakDensity
 import InfoGeometry.Analysis.MathieuZetaSeries
 import InfoGeometry.Analysis.ComplexBSpline
+import InfoGeometry.Analysis.SouriauThermodynamics
+import InfoGeometry.Analysis.SouriauKoszulMetric
+import InfoGeometry.Analysis.SouriauCocycle

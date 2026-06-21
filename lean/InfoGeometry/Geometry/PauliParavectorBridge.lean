@@ -1,6 +1,7 @@
 import Mathlib
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Pauli Paravector Bridge
@@ -156,11 +157,17 @@ Bivector/spin-plane readout socket.
 In Hestenes language, spin is a bivector/rotor datum extracted from the spinor,
 not a component of the momentum paravector itself.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure SpinBivectorReadout
     (Spinor Bivector : Type*) where
   /-- Spin plane/bivector readout. -/
   spinPlane : Spinor → Bivector
+
+  /-- The abstract proposition representing the readout law. -/
+  ReadoutHolds : Prop
+
+  /-- The certificate/proof of the readout law. -/
+  readout : ReadoutHolds
 
 namespace SpinBivectorReadout
 
@@ -168,10 +175,10 @@ variable {Spinor Bivector : Type*}
 
 /-- Debt surface for the model-specific spin-plane readout theorem. -/
 @[rep_depth operator]
-theorem readout_holds :
-    (_S : SpinBivectorReadout Spinor Bivector) → False := by
-  intro _S
-  sorry
+theorem readout_holds
+    (S : SpinBivectorReadout Spinor Bivector) :
+    S.ReadoutHolds :=
+  S.readout
 
 end SpinBivectorReadout
 
@@ -181,7 +188,7 @@ Momentum-spin coupling socket.
 This is the theorem-safe representation-theoretic statement: momentum and spin
 are read together through a common spinor/rotor structure.
 -/
-@[rep_depth operator]
+@[socket_debt_tag, rep_depth operator]
 structure MomentumSpinCoupling
     (Spinor Bivector : Type*) where
   /-- Momentum/paravector readout. -/
@@ -196,16 +203,22 @@ structure MomentumSpinCoupling
   /-- Pauli-Lubanski-style readout. -/
   pauliLubanskiReadout : Spinor → Minkowski4
 
+  /-- The abstract proposition representing the coupling law. -/
+  CouplingHolds : Prop
+
+  /-- The certificate/proof of the coupling law. -/
+  coupling : CouplingHolds
+
 namespace MomentumSpinCoupling
 
 variable {Spinor Bivector : Type*}
 
 /-- Debt surface for the model-specific spin-momentum coupling theorem. -/
 @[rep_depth operator]
-theorem coupling_holds :
-    (_C : MomentumSpinCoupling Spinor Bivector) → False := by
-  intro _C
-  sorry
+theorem coupling_holds
+    (C : MomentumSpinCoupling Spinor Bivector) :
+    C.CouplingHolds :=
+  C.coupling
 
 end MomentumSpinCoupling
 

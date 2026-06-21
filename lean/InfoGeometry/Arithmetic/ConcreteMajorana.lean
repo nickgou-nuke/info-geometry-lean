@@ -38,13 +38,13 @@ def CombinedDirac_Matrix : Matrix (Fin 2) (Fin 2) ℝ :=
 theorem bk_sq_is_id : BK_Matrix * BK_Matrix = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> 
-    simp [BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply] <;> norm_num
+    simp [BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Genuine Proof: ρ squares to Identity. -/
 theorem rho_sq_is_id : Rho_Matrix * Rho_Matrix = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> 
-    simp [Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply] <;> norm_num
+    simp [Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- 
 Genuine Proof: The Chirality operator exactly anticommutes with the BK block.
@@ -53,18 +53,18 @@ This formally establishes the Split Clifford Algebra Cl(1,1) compatibility.
 theorem rho_anticommutes_bk : Rho_Matrix * BK_Matrix = - (BK_Matrix * Rho_Matrix) := by
   ext i j
   fin_cases i <;> fin_cases j <;> 
-    simp [Rho_Matrix, BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply] <;> norm_num
+    simp [Rho_Matrix, BK_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
 
 /-- 
 Genuine Proof: The Combined Majorana-Dirac operator squares to 2 * I.
 This replaces the abstract `combinedDirac_square_law` interface with a 
-native proof based on Clifford anticommutation.
+`simp` + `norm_num` proof.
 -/
 theorem combined_dirac_sq :
   CombinedDirac_Matrix * CombinedDirac_Matrix = 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
   ext i j
   fin_cases i <;> fin_cases j <;> 
-    simp [CombinedDirac_Matrix, BK_Matrix, Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply] <;> norm_num
+    simp [CombinedDirac_Matrix, BK_Matrix, Rho_Matrix, Matrix.mul_apply, Fin.sum_univ_two, Matrix.add_apply, Matrix.smul_apply] <;> norm_num
 
 /-- Concrete formula for the combined Majorana--Berry--Keating matrix. -/
 theorem combined_dirac_formula : CombinedDirac_Matrix = BK_Matrix + Rho_Matrix := rfl

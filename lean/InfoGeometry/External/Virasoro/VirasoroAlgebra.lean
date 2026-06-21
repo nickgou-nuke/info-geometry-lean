@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import InfoGeometry.External.Virasoro.IsCentralExtension
-import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Abelian
+import VirasoroProject.ToMathlib.Algebra.Lie.Abelian
 import InfoGeometry.External.Virasoro.VirasoroCocycle
 
 /-!

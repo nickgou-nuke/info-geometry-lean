@@ -6,6 +6,8 @@ import InfoGeometry.Canonical.APSMcKeanSingerBoundaryBridge
 import InfoGeometry.Canonical.DikinDrazinBridge
 import InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
 import InfoGeometry.Canonical.O55LightConeSpectrumBridge
+import InfoGeometry.Canonical.SplitCliffordO55TKKClosure
+import InfoGeometry.Canonical.VirasoroProjectColimitBridge
 import InfoGeometry.Canonical.OctonionCondensate
 import InfoGeometry.Canonical.SouriauBostConnesTransition
 import InfoGeometry.Canonical.QuaternionEmbedding
@@ -450,9 +452,9 @@ import InfoGeometry.Canonical.PrimonVirasoroCentralChargeBridge
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
-import InfoGeometry.External.Virasoro.HeisenbergAlgebra
-import InfoGeometry.External.Virasoro.Sugawara
-import InfoGeometry.External.Virasoro.FockSpaceSugawara
+import VirasoroProject.HeisenbergAlgebra
+import VirasoroProject.Sugawara
+import VirasoroProject.FockSpaceSugawara
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge

@@ -66,6 +66,7 @@ UNICODE_MAP = {
     "↔": r"\leftrightarrow ",
     "η": r"\eta ",
     "θ": r"\theta ",
+    "‖": r"\|",
 }
 
 def escape_text_segment(text):

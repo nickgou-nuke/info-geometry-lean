@@ -117,6 +117,17 @@ def escape_latex(text):
     return result.strip()
 
 def main():
+    # Load AQL schema
+    aql_path = "tools/infra/aql_data_migration.cql"
+    if not os.path.exists(aql_path):
+        print(f"Error: {aql_path} does not exist.")
+        return
+    with open(aql_path, "r", encoding="utf-8") as f:
+        aql_content = f.read()
+    
+    # Replace non-ASCII unicode characters inside verbatim block to avoid compilation errors
+    aql_content = aql_content.replace("Σ", "Sigma")
+
     print("Connecting to ArangoDB...")
     # 1. Query LLM submodules
     llm_query = """
@@ -145,6 +156,16 @@ def main():
     
     # Construct LaTeX content
     latex_content = []
+    
+    # AQL Section
+    latex_content.append(r"\section{Functorial AQL Data Migration Schema}")
+    latex_content.append("The algebraic mapping between symbolic Gröbner bases (Macaulay2/SageMath) and target theorem-prover signatures is formalized using the following Functorial Algebraic Query Language (AQL/CQL) schema specification:\n")
+    latex_content.append(r"\begin{verbatim}")
+    latex_content.append(aql_content.strip())
+    latex_content.append(r"\end{verbatim}")
+    latex_content.append("\n")
+
+    # Theorem Section
     latex_content.append(r"\section{Verified Theorem and Module Directory}")
     latex_content.append("This section presents a structured, computer-verified directory of definitions, theorems, and mathematical sockets extracted from the repository's semantic graph.\n")
     
@@ -203,9 +224,9 @@ def main():
     with open(tex_path, "r", encoding="utf-8") as f:
         tex_data = f.read()
         
-    # Clean any previously injected Verified Theorem section to avoid duplication
-    regex_pattern = r"\\section\{Verified Theorem and Module Directory\}.*?(?=\\section\{Conclusion\})"
-    tex_data = re.sub(regex_pattern, "", tex_data, flags=re.DOTALL)
+    # Clean any previously injected sections to avoid duplication
+    tex_data = re.sub(r"\\section\{Functorial AQL Data Migration Schema\}.*?(?=\\section\{Conclusion\})", "", tex_data, flags=re.DOTALL)
+    tex_data = re.sub(r"\\section\{Verified Theorem and Module Directory\}.*?(?=\\section\{Conclusion\})", "", tex_data, flags=re.DOTALL)
         
     # Insert before \section{Conclusion}
     target_section = r"\section{Conclusion}"

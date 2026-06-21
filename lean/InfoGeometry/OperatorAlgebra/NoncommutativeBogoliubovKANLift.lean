@@ -287,16 +287,6 @@ theorem phaseAxisForce_from_cartanScaleShadow
         BogoliubovTransport.phaseAxisForce_eq_from_phaseAntilinearPart
           (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H)
 
-/--
-Diagonal readout is available as a packet field.
-
-`Cartan`-sector readout can be carried to scalar/character traces, but it is
-not the base modular operator object.
--/
-theorem diagonal_shadow_sorry :
-    P.diagonalShadow = P.diagonalShadow := by
-  rfl
-
 end BogoliubovKANShadowPacket
 
 /--

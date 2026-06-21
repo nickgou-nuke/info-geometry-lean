@@ -129,7 +129,7 @@ theorem finiteConnesTransportSurface :
     FiniteConnesTransportSurface := by
   intro φ ψ s t
   exact
-    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle_True
+    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle
       φ ψ s t
 
 /-- The boundary Wick/Schwinger commutator follows from raw CAR. -/

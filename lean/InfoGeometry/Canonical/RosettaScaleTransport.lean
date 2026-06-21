@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Canonical.AnalyticalIndexCoupled
 import InfoGeometry.Canonical.AnalyticalIndexCapstone
+import InfoGeometry.Canonical.JordanKKTData
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.KK.KasparovCycle

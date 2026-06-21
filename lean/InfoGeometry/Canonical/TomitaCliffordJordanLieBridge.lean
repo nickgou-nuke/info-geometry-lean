@@ -56,23 +56,21 @@ structure TomitaCliffordJordanLieBridge where
   Calibration law: the compact/mirror-even sector feeds the symmetric
   observable/Jordan readout.
   -/
-  compact_even_feeds_jordan_True : Prop := by
-    sorry
+  compactEvenFeedsJordan : Prop
 
   /-- Evidence for the compact/Jordan calibration law. -/
   compact_even_feeds_jordan :
-    compact_even_feeds_jordan_True
+    compactEvenFeedsJordan
 
   /--
   Calibration law: the noncompact/mirror-odd sector feeds the antisymmetric
   generator/Lie readout.
   -/
-  noncompact_odd_feeds_lie_True : Prop := by
-    sorry
+  noncompactOddFeedsLie : Prop
 
   /-- Evidence for the noncompact/Lie calibration law. -/
   noncompact_odd_feeds_lie :
-    noncompact_odd_feeds_lie_True
+    noncompactOddFeedsLie
 
 namespace TomitaCliffordJordanLieBridge
 
@@ -122,7 +120,7 @@ symmetric observable/Jordan readout.
 -/
 @[rep_depth transport]
 theorem compact_even_feeds_jordan_holds :
-    B.compact_even_feeds_jordan_True :=
+    B.compactEvenFeedsJordan :=
   B.compact_even_feeds_jordan
 
 /--
@@ -131,7 +129,7 @@ antisymmetric generator/Lie readout.
 -/
 @[rep_depth transport]
 theorem noncompact_odd_feeds_lie_holds :
-    B.noncompact_odd_feeds_lie_True :=
+    B.noncompactOddFeedsLie :=
   B.noncompact_odd_feeds_lie
 
 /--
@@ -154,8 +152,8 @@ theorem tomita_clifford_jordan_lie_packet
           B.packet.closure.gibbs.conformalGeometricTemperature
           B.packet.closure.weylTemperature =
             (2 : ℝ) • B.packet.closure.jordanProductTemperatureWeyl
-      ∧ B.compact_even_feeds_jordan_True
-      ∧ B.noncompact_odd_feeds_lie_True := by
+      ∧ B.compactEvenFeedsJordan
+      ∧ B.noncompactOddFeedsLie := by
   exact
     ⟨B.compactLift_mirror_even x,
       B.noncompactLift_mirror_odd y,

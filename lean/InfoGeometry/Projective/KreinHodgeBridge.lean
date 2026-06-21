@@ -24,14 +24,14 @@ Represents the decomposition of the Neural Network text generation sequence
 into its exact (Attention) and co-exact (RoPE) cohomological components
 via the discrete Graph Dirac-Hodge Laplacian.
 -/
-structure AttentionHodgeDecomposition (J RoPE : R → R) (AttentionFlow : R) where
+structure AttentionHodgeDecomposition (J RoPE AttentionFlow : R → R) where
   -- The base LLM structural bridge
   base : HolographicTransformerBridge J RoPE
   
   -- The Attention flow maps directly to the irrotational exact flow
-  is_irrotational_attention : True
+  is_irrotational_attention : Function.Involutive AttentionFlow
   
   -- The Hyperbolic RoPE maps to the rotational co-exact flow (Wilson Loop)
-  is_rotational_rope : True
+  is_rotational_rope : Function.Involutive RoPE
 
 end InfoGeometry.Projective.LLM

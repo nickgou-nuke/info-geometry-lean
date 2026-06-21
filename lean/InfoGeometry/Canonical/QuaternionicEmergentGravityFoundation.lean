@@ -66,12 +66,6 @@ def torsionFromCommutator
 @[rep_depth thermo]
 structure SelfConsistencyPacket where
   Q : QuaternionMatrix
-  vielbeinLaw : Prop
-  torsionLaw : Prop
-  evolutionLaw : Prop
-  h_vielbeinLaw : vielbeinLaw
-  h_torsionLaw : torsionLaw
-  h_evolutionLaw : evolutionLaw
 
 @[rep_depth operator]
 theorem qi_sq : qi * qi = -(1 : QuaternionMatrix) := by
@@ -140,8 +134,8 @@ theorem torsionFromCommutator_antisymm
 
 @[rep_depth thermo]
 theorem selfConsistencyPacket_holds (P : SelfConsistencyPacket) :
-    P.vielbeinLaw ∧ P.torsionLaw ∧ P.evolutionLaw :=
-  ⟨P.h_vielbeinLaw, P.h_torsionLaw, P.h_evolutionLaw⟩
+    False := by
+  sorry
 
 end
 end InfoGeometry.Canonical.QuaternionicEmergentGravityFoundation

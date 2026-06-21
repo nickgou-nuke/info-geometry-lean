@@ -92,8 +92,8 @@ theorem qSuperbracket_zero_is_clean_product (X Y : Op) :
 
 theorem q_dial_interpolation_formula [Algebra ℝ Op] (X Y : Op) (q : ℝ) :
     qSuperbracket q X Y = ((1 - q) / 2) • (X * Y + Y * X) + ((1 + q) / 2) • (X * Y - Y * X) := by
-  -- Closure debt: requires non-commutative ring algebra beyond `ring`
-  sorry
+  rw [qSuperbracket]
+  module
 
 theorem q_superbracket_dial_boundaries (X Y : Op) :
     qSuperbracket (0 : ℝ) X Y = X * Y ∧
@@ -109,13 +109,15 @@ theorem q_superbracket_dial_boundaries (X Y : Op) :
 
 theorem q_neg_one_supertrace_vanishes (Q : QCCRAlgebra N Op) (hqneg1 : Q.q = -1) (i : Fin N) :
     Q.astar i * Q.a i - Q.a i * Q.astar i = (if i = i then 1 else 0) - 2 • (Q.a i * Q.astar i) := by
-  -- Closure debt: non-commutative ring algebra beyond `ring`
-  sorry
+  rw [Q.q_commutation i i, hqneg1]
+  simp [two_smul]
+  abel
 
 theorem q_deviation_from_chiral_balance (Q : QCCRAlgebra N Op) (i : Fin N) :
     Q.astar i * Q.a i + Q.a i * Q.astar i = (if i = i then 1 else 0) + (Q.q + 1) • (Q.a i * Q.astar i) := by
-  -- Closure debt: non-commutative ring algebra beyond `ring`
-  sorry
+  rw [Q.q_commutation i i]
+  simp
+  module
 
 theorem q_neg_one_chiral_balance_restored (Q : QCCRAlgebra N Op) (hqneg1 : Q.q = -1) (i : Fin N) :
     Q.astar i * Q.a i + Q.a i * Q.astar i = (if i = i then 1 else 0) := by

@@ -69,6 +69,17 @@ theorem boundaryLoopAction_braid_rewrite (i : ℕ) (left right : BoundaryLoopWor
       boundaryLoopAction (left ++ [i + 1, i, i + 1] ++ right) :=
   braidBoundaryAction_braid_rewrite i left right
 
+/-- Möbius inversion sees adjacent braid rewrites as the same boundary loop. -/
+theorem compactifiedInversion_boundaryLoopAction_braid_rewrite
+    (C : CayleyMobiusInversion ℕ) (i : ℕ) (left right : BoundaryLoopWord)
+    (p : AlgebraicCompactification ℕ) :
+    C.compactifiedInversion
+        (boundaryLoopAction (left ++ [i, i + 1, i] ++ right) p) =
+      C.compactifiedInversion
+        (boundaryLoopAction (left ++ [i + 1, i, i + 1] ++ right) p) := by
+  simpa using congrArg (fun f => C.compactifiedInversion (f p))
+    (boundaryLoopAction_braid_rewrite (i := i) left right)
+
 /-- Separated commutation rewrites preserve boundary loop actions. -/
 theorem boundaryLoopAction_commute_rewrite {i j : ℕ} (hsep : i + 1 < j)
     (left right : BoundaryLoopWord) :

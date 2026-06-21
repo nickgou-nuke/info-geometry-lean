@@ -113,6 +113,24 @@ theorem kleinBarrierHessian_self (P X : Plucker6 ℂ) :
   rw [polar_self_eq_two_mul_kleinQ]
   ring
 
+/-- Radial contraction of the Klein barrier Hessian recovers `d log Q`. -/
+theorem kleinBarrierHessian_radial_left
+    (P X : Plucker6 ℂ) (hP : kleinQ P ≠ 0) :
+    kleinBarrierHessian P P X = polar P X / kleinQ P := by
+  unfold kleinBarrierHessian
+  rw [polar_self_eq_two_mul_kleinQ]
+  field_simp [hP]
+  ring
+
+/-- Radial self-contraction of the Klein barrier Hessian is the degree `2`. -/
+theorem kleinBarrierHessian_radial_self
+    (P : Plucker6 ℂ) (hP : kleinQ P ≠ 0) :
+    kleinBarrierHessian P P P = (2 : ℂ) := by
+  unfold kleinBarrierHessian
+  rw [polar_self_eq_two_mul_kleinQ]
+  field_simp [hP]
+  ring
+
 end InfoGeometry.Projective.KleinQuadric.Plucker6
 
 namespace InfoGeometry.Projective.KleinQuadric.Time

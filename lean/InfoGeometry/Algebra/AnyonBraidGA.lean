@@ -35,16 +35,22 @@ variable (Q : QuadraticForm R M)
 def CliffordVectorAnticommutes (u v : M) : Prop :=
   (ι Q u) * (ι Q v) + (ι Q v) * (ι Q u) = 0
 
+/-- Orthogonality implies Clifford anti-commutation. -/
+theorem CliffordVectorAnticommutes_of_isOrtho {u v : M} (h : Q.IsOrtho u v) :
+    CliffordVectorAnticommutes Q u v := by
+  dsimp [CliffordVectorAnticommutes]
+  simpa using (CliffordAlgebra.ι_mul_ι_add_swap_of_isOrtho (Q := Q) (a := u) (b := v) h)
+
 /--
 Geometric-algebra substrate readout.
 
-This simply exposes a supplied Clifford anti-commutator identity.  It is the
-right lower-layer socket for rotor noncommutativity experiments, but it is not
-an Artin/Fibonacci braid certificate.
+This now has a genuine finite logical witness: the anti-commutator vanishes
+whenever the vectors are orthogonal for the chosen quadratic form.
 -/
-theorem rotor_substrate_readout (u v : M)
-    (h : CliffordVectorAnticommutes Q u v) :
-    (ι Q u) * (ι Q v) + (ι Q v) * (ι Q u) = 0 :=
-  h
+theorem rotor_substrate_readout_of_isOrtho (u v : M)
+    (h : Q.IsOrtho u v) :
+    (ι Q u) * (ι Q v) + (ι Q v) * (ι Q u) = 0 := by
+  simpa [CliffordVectorAnticommutes] using
+    (CliffordVectorAnticommutes_of_isOrtho (Q := Q) (u := u) (v := v) h)
 
 end InfoGeometry.Algebra.AnyonBraidGA

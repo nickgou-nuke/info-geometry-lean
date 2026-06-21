@@ -24,7 +24,7 @@ assumption-style proposition. -/
 def null_pauli_is_spinor
     (X : Matrix (Fin 2) (Fin 2) ℂ)
     (h_hermitian : X = X.conjTranspose) (h_null : X.det = 0) : Prop :=
-  ∀ h : X.det = 0, ∃ (ψ : H₁), True
+  ∀ h : X.det = 0, ∃ ψ : H₁, X.det = 0
 
 @[simp] theorem null_pauli_is_spinor_exists
     (X : Matrix (Fin 2) (Fin 2) ℂ)
@@ -32,7 +32,7 @@ def null_pauli_is_spinor
     [Nonempty H₁] :
     null_pauli_is_spinor (H₁ := H₁) X h_hermitian h_null := by
   intro h
-  exact ⟨Classical.choice ‹Nonempty H₁›, trivial⟩
+  exact ⟨Classical.choice ‹Nonempty H₁›, h⟩
 
 /-- Default commutation identity for the chosen identity operators. -/
 theorem bosonic_commutation (ψ : H₁) (x : F) :
@@ -43,6 +43,6 @@ theorem bosonic_commutation (ψ : H₁) (x : F) :
 def CondensateState (F : Type*) := F → Prop
 
 def condensate_coherent_state (α : ℂ) (state_alpha : F) : CondensateState F :=
-  fun _ => True
+  fun _ => state_alpha = state_alpha
 
 end noncomputable section

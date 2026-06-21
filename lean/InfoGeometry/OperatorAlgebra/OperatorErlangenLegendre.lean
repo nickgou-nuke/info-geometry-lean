@@ -70,13 +70,14 @@ structure OperatorErlangenLegendrePacket
   modularDerivation :
     StateSpace → Obs → Obs
 
-  /-- Supplied law saying the modular derivation has the intended behavior. -/
-  modularDerivation_True :
-    Prop
-
-  /-- Proof/witness of the modular derivation law. -/
-  modularDerivation_holds :
-    modularDerivation_True
+  /--
+  Concrete modular-derivation compatibility with the supplied modular
+  generator.
+  -/
+  modularDerivation_eq_commutator :
+    ∀ ω x,
+      modularDerivation ω x =
+        modularGenerator ω * x - x * modularGenerator ω
 
   /-- A polarization/sector is chosen downstream of a state. -/
   Polarization :
@@ -86,13 +87,14 @@ structure OperatorErlangenLegendrePacket
   stabilizer :
     StateSpace → Sym → Prop
 
-  /-- Supplied law governing the stabilizer/sector-selection interpretation. -/
-  stabilizer_True :
-    Prop
-
-  /-- Proof/witness of the stabilizer law. -/
-  stabilizer_holds :
-    stabilizer_True
+  /--
+  Concrete stabilizer criterion: a symmetry stabilizes a state precisely when
+  it preserves all expectation readouts of that state.
+  -/
+  stabilizer_iff_eval_invariant :
+    ∀ ω g,
+      stabilizer ω g ↔
+        ∀ x : Obs, eval ω ((symmetryAction.act g) x) = eval ω x
 
   /-- Exponential-family positive weight/readout shadow. -/
   exponentialWeight :
@@ -102,26 +104,26 @@ structure OperatorErlangenLegendrePacket
   freeEnergyReadout :
     StateSpace → ℝ
 
-  /-- Supplied law tying exponential weights to Legendre/free-energy readouts. -/
-  exponentialLegendre_True :
-    Prop
-
-  /-- Proof/witness of the exponential/Legendre law. -/
-  exponentialLegendre_holds :
-    exponentialLegendre_True
+  /--
+  Concrete Legendre readout criterion used by this finite interface: the
+  free-energy readout is the state evaluation of the supplied exponential
+  weight.
+  -/
+  freeEnergyReadout_eq_eval_exponentialWeight :
+    ∀ ω, freeEnergyReadout ω = eval ω (exponentialWeight ω)
 
   /--
   Guard: spectra and determinant counts are downstream readouts, not the
   foundation layer.
   -/
-  noSpectraFirstWitness :
+  noSpectraFirstGuardCarrier :
     Type
 
   /--
   Guard: finite diagonal/Cartan coordinates are representation shadows, not
   primitive observable-algebra data.
   -/
-  noDiagonalPrimitiveWitness :
+  noDiagonalPrimitiveGuardCarrier :
     Type
 
 namespace OperatorErlangenLegendrePacket
@@ -135,20 +137,27 @@ variable
 
 variable (P : OperatorErlangenLegendrePacket Obs Sym StateSpace)
 
-/-- The supplied modular-derivation law is available as a theorem. -/
-theorem modular_derivation_True :
-    P.modularDerivation_True :=
-  P.modularDerivation_holds
+/-- The modular derivation is the commutator with the supplied generator. -/
+theorem modular_derivation_eq_commutator
+    (ω : StateSpace)
+    (x : Obs) :
+    P.modularDerivation ω x =
+      P.modularGenerator ω * x - x * P.modularGenerator ω :=
+  P.modularDerivation_eq_commutator ω x
 
-/-- The supplied stabilizer/sector-selection law is available as a theorem. -/
-theorem stabilizer_law_holds :
-    P.stabilizer_True :=
-  P.stabilizer_holds
+/-- Stabilizer membership is expectation invariance under the symmetry action. -/
+theorem stabilizer_iff_eval_invariant_readback
+    (ω : StateSpace)
+    (g : Sym) :
+    P.stabilizer ω g ↔
+      ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x :=
+  P.stabilizer_iff_eval_invariant ω g
 
-/-- The supplied exponential/Legendre law is available as a theorem. -/
-theorem exponential_legendre_law_holds :
-    P.exponentialLegendre_True :=
-  P.exponentialLegendre_holds
+/-- The free-energy readout is evaluation of the supplied exponential weight. -/
+theorem freeEnergyReadout_eq_eval_exponentialWeight_readback
+    (ω : StateSpace) :
+    P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω) :=
+  P.freeEnergyReadout_eq_eval_exponentialWeight ω
 
 /-- The state stabilizer as a set of symmetries. -/
 def StateStabilizer
@@ -166,19 +175,19 @@ theorem mem_stateStabilizer_iff
 /-- Guard exposing that spectra are downstream readouts, not first principles here. -/
 def spectraFirstGuard :
     Type :=
-  P.noSpectraFirstWitness
+  P.noSpectraFirstGuardCarrier
 
 @[simp] theorem spectraFirstGuard_eq :
-    P.spectraFirstGuard = P.noSpectraFirstWitness :=
+    P.spectraFirstGuard = P.noSpectraFirstGuardCarrier :=
   rfl
 
 /-- Guard exposing that diagonal data are not primitive owner data. -/
 def diagonalPrimitiveGuard :
     Type :=
-  P.noDiagonalPrimitiveWitness
+  P.noDiagonalPrimitiveGuardCarrier
 
 @[simp] theorem diagonalPrimitiveGuard_eq :
-    P.diagonalPrimitiveGuard = P.noDiagonalPrimitiveWitness :=
+    P.diagonalPrimitiveGuard = P.noDiagonalPrimitiveGuardCarrier :=
   rfl
 
 end OperatorErlangenLegendrePacket
@@ -229,22 +238,6 @@ structure HilbertPolyaOperatorPacket where
   IsSpectralValue :
     ℝ → Prop
 
-  /-- Supplied self-adjointness/symmetry witness. -/
-  selfAdjointWitness :
-    Prop
-
-  /-- Proof/witness of self-adjointness/symmetry. -/
-  selfAdjoint_holds :
-    selfAdjointWitness
-
-  /-- Supplied determinant/scattering/zeta witness. -/
-  determinantWitness :
-    Prop
-
-  /-- Proof/witness of determinant/scattering/zeta compatibility. -/
-  determinant_holds :
-    determinantWitness
-
   /--
   Supplied equivalence between critical-line zeroes and spectral values.
 
@@ -256,27 +249,9 @@ structure HilbertPolyaOperatorPacket where
       completedZeta ((1 / 2 : ℂ) + Complex.I * (γ : ℂ)) = 0 ↔
         IsSpectralValue γ
 
-  /-- Supplied functional-equation/reflection symmetry witness. -/
-  functionalEquationSymmetry :
-    Prop
-
-  /-- Proof/witness of the functional-equation/reflection symmetry. -/
-  functionalEquation_holds :
-    functionalEquationSymmetry
-
 namespace HilbertPolyaOperatorPacket
 
 variable (P : HilbertPolyaOperatorPacket.{uH, uD})
-
-/-- The supplied self-adjointness/symmetry witness is available. -/
-theorem selfAdjoint_True :
-    P.selfAdjointWitness :=
-  P.selfAdjoint_holds
-
-/-- The supplied determinant/scattering/zeta witness is available. -/
-theorem determinant_True :
-    P.determinantWitness :=
-  P.determinant_holds
 
 /--
 If a Hilbert--Polya packet is supplied, its critical-line zeroes are exactly
@@ -288,12 +263,6 @@ theorem criticalLine_zero_iff_spectral_value :
         P.IsSpectralValue γ :=
   P.zero_iff_spectral_value
 
-/-- The supplied functional-equation/reflection symmetry is available. -/
-theorem functionalEquation_True :
-    P.functionalEquationSymmetry :=
-  P.functionalEquation_holds
-
 end HilbertPolyaOperatorPacket
 
 end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
-

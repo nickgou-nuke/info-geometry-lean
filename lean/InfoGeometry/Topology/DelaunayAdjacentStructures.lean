@@ -30,15 +30,57 @@ open scoped BigOperators
 
 namespace InfoGeometry.Topology.DelaunayAdjacentStructures
 
-/-- Boundary marker: the adjacent formal lanes are available as separate owners. -/
+/-- Boundary packet recording the adjacent formal lanes as real theorem readbacks. -/
 structure AdjacentOwnerSurface where
-  hasDelaunayFlipMatrix : Prop := True
-  hasKreinAttention : Prop := True
-  hasPin55MatrixLaws : Prop := True
-  hasFiniteMellinTaylor : Prop := True
+  hasDelaunayFlipMatrix : ∀ {ι : Type*} [DecidableEq ι]
+    (labels : InfoGeometry.Topology.Delaunay.FlipLabels ι)
+    (i k j l : ι) (hik : i ≠ k) (hjl : j ≠ l),
+      InfoGeometry.Topology.Delaunay.flipInverseStatement labels i k j l hik hjl
+  hasKreinAttention : ∀ {V : Type*} [AddCommMonoid V] [Module ℝ V]
+    {n : ℕ} [Fact (0 < n)]
+    (q : ℝ × ℝ)
+    (ctx : InfoGeometry.Canonical.Attention.ContextWindow n (ℝ × ℝ) V)
+    (β : ℝ),
+      ∑ i, InfoGeometry.LLM.KreinAttentionEnergy.kreinAttentionWeights (V := V) q ctx β i = 1
+  hasPin55MatrixLaws :
+      (∀ k : Fin 10,
+        InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.IsO55
+          (InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.pinReflect k)) ∧
+      (∀ k : Fin 10,
+        InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.pinReflect k *
+          InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.pinReflect k = 1) ∧
+      (∀ i j : Fin 10,
+        InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.IsO55
+          (InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.pinProduct i j)) ∧
+      (∀ k j : Fin 10,
+        (InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.pinReflect k).mulVec
+            (InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.basisVec j) =
+          if k = j then -InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.basisVec j
+          else InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.basisVec j) ∧
+      (∀ i : Fin 5,
+        InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.cliffordSquareSign ⟨i.val, by omega⟩ = 1) ∧
+      (∀ i : Fin 5,
+        InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.cliffordSquareSign ⟨i.val + 5, by omega⟩ = -1)
+  hasFiniteMellinTaylor : ∀ {α R : Type*} [Fintype α] [CommSemiring R]
+    (D : InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData α R)
+    (c : ℕ → R) (N : ℕ),
+      (∑ i : α, D.weight i * D.pointwiseTaylorPrefix c N i) = D.taylorMomentPrefix c N
 
-/-- The default boundary marker carries no mathematical identification between lanes. -/
-def ownerSurface : AdjacentOwnerSurface := {}
+/-- The default boundary packet is the already-proved readback bundle. -/
+def ownerSurface : AdjacentOwnerSurface :=
+  { hasDelaunayFlipMatrix := by
+      intro ι inst labels i k j l hik hjl
+      exact InfoGeometry.Topology.Delaunay.flip_inverse_identity labels i k j l hik hjl
+    hasKreinAttention := by
+      intro V instV n instn
+      refine fun q ctx β => ?_
+      simpa using (InfoGeometry.LLM.KreinAttentionEnergy.kreinAttentionWeights_sum_one
+        (V := V) (q := q) (ctx := ctx) (β := β))
+    hasPin55MatrixLaws := InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws.full_pin55_basis_packet
+    hasFiniteMellinTaylor := by
+      intro α R instα instR D c N
+      exact InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.weighted_pointwiseTaylorPrefix_eq_taylorMomentPrefix
+        D c N }
 
 namespace Readback
 

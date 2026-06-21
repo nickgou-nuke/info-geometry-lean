@@ -139,7 +139,7 @@ theorem dualBregman_eq_norm_sq (I : ℝ) (L1 L2 : V3) :
   ring_nf
 
 /-- Conjugate coadjoint orbit converse (finite-dimensional witness): equal Casimir implies same `SO(3)` orbit. -/
-theorem so3_converse_sorry (x y : V3) (h : casimir x = casimir y) :
+theorem so3_converse_equal_casimir (x y : V3) (h : casimir x = casimir y) :
     ∃ Q : SO3, so3Action Q x = y := by
   let xE : EuclideanSpace ℝ (Fin 3) := (EuclideanSpace.equiv (Fin 3) ℝ).symm x
   let yE : EuclideanSpace ℝ (Fin 3) := (EuclideanSpace.equiv (Fin 3) ℝ).symm y

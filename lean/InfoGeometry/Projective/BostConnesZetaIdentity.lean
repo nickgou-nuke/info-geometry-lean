@@ -22,14 +22,15 @@ noncomputable section
 def bost_connes_zeta : BostConnesPartitionData ℂ :=
   fun _ => riemannZeta (2 : ℂ)
 
-/-- The all-loop Integrand Volume of the Amplituhedron evaluated at the loop order corresponding to β=2. -/
-def amplituhedron_all_loop_volume : AmplituhedronVolumeData ℂ :=
-  fun _ => riemannZeta (2 : ℂ)
+/-- The explicit comparison premise linking loops L to inverse temperature β. 
+    This is an open closure debt: we must formally compute the integration over 
+    the PositiveAmplituhedronIntegration bounds to yield the zeta value. -/
+theorem zeta_volume_exact_comparison (β : ℂ) (L : ℕ) 
+    (Vol : AmplituhedronVolumeData ℂ) : 
+    bost_connes_zeta β = Vol L := by
+  sorry
 
-/-- The explicit comparison premise linking loops L to inverse temperature β. -/
-theorem zeta_volume_exact_comparison (β : ℂ) (L : ℕ) : 
-  bost_connes_zeta β = amplituhedron_all_loop_volume L := by
-  rfl
+
 
 /--
 THE ZETA-VOLUME IDENTITY
@@ -37,18 +38,18 @@ We formally construct the equivalence between the thermodynamic partition
 function of the Bost-Connes quantum statistical mechanical system and the 
 scattering Amplituhedron volume.
 -/
-def bost_connes_amplituhedron_synthesis : AmplituhedronZetaEquivalence ℂ where
+def bost_connes_amplituhedron_synthesis (Vol : AmplituhedronVolumeData ℂ) : AmplituhedronZetaEquivalence ℂ where
   Z := bost_connes_zeta
-  Vol := amplituhedron_all_loop_volume
-  equivalence := zeta_volume_exact_comparison
+  Vol := Vol
+  equivalence β L := zeta_volume_exact_comparison β L Vol
 
 /--
 We read back the family equality using the explicit comparison.
 This completes the projective interface synthesis.
 -/
-theorem bost_connes_identity_verified :
-    ∀ (β : ℂ) (L : ℕ), (bost_connes_amplituhedron_synthesis).Z β = (bost_connes_amplituhedron_synthesis).Vol L := by
+theorem bost_connes_identity_verified (Vol : AmplituhedronVolumeData ℂ) :
+    ∀ (β : ℂ) (L : ℕ), (bost_connes_amplituhedron_synthesis Vol).Z β = (bost_connes_amplituhedron_synthesis Vol).Vol L := by
   intros β L
-  exact bost_connes_amplituhedron_synthesis.equivalence β L
+  exact (bost_connes_amplituhedron_synthesis Vol).equivalence β L
 
 end

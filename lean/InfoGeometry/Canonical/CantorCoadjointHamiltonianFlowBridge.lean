@@ -158,9 +158,9 @@ theorem conformal_flow_holds (m n : ℤ) :
 
 /-- The coadjoint-orbit metriplectic second law is available from the owner layer. -/
 @[rep_depth transport]
-theorem coadjoint_orbit_metriplectic_second_True (x : Orbit) :
+theorem coadjoint_orbit_metriplectic_second_law (x : Orbit) :
     0 ≤ B.dynamics.totalEntropyRate x :=
-  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_True
+  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
     (C := B.dynamics) x
 
 /-- Packed coadjoint-orbit metriplectic outputs are available from the owner layer. -/

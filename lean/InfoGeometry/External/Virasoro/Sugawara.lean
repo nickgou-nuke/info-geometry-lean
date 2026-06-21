@@ -8,7 +8,7 @@ import InfoGeometry.External.Virasoro.HeisenbergAlgebra
 import InfoGeometry.External.Virasoro.CentralChargeCalc
 import InfoGeometry.External.Virasoro.Commutator
 import InfoGeometry.External.Virasoro.LieAlgebraRepresentationOfBasis
-import VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
 import Mathlib
 
 /-!

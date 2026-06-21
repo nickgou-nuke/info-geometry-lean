@@ -1007,7 +1007,7 @@ def LeeYangPolydiscSourceClaim (N : ℕ) : Prop :=
 
 /-- Package the standard Lee--Yang witness back into the source-claim shape. -/
 @[bridge_target_tag, rep_depth thermo]
-theorem leeYangPolydiscSourceClaim_of_sorry
+theorem leeYangPolydiscSourceClaim_of_witness
     (LY : LeeYangPolydiscWitness) :
     ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
   intro N D lam hLam

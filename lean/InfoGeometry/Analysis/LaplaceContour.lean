@@ -8,12 +8,10 @@ Vertical-line contour packaging for the Laplace transform.
 This module makes the contour hypotheses explicit:
 * holomorphy on a strip;
 * decay on the horizontal arcs;
-* a residue law.
 
 The current inversion theorem is still reduction-based, via the existing
-Bromwich/Fourier inversion package.  The contour hypotheses are exposed as
-first-class data so that a future native contour proof can plug in without
-changing the interface.
+Bromwich/Fourier inversion package.  A native residue-theorem contour proof is
+not supplied here.
 -/
 
 noncomputable section
@@ -44,11 +42,10 @@ structure HorizontalDecay (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E]
 structure ContourAdmissible (E : Type*) [NormedAddCommGroup E] [NormedSpace ℂ E] where
   strip : StripHolomorphic E
   decay : HorizontalDecay E
-  residueLaw : Prop
 
 namespace ContourAdmissible
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /--
 Bromwich contour readout packaged from the vertical-line transform.
@@ -68,12 +65,13 @@ theorem BromwichContourIntegral_eq_verticalLineTransform
         (E := E) A.strip.σ A.strip.f := rfl
 
 /--
-Bromwich inversion law packaged with residue and arc-decay hypotheses.
+Bromwich inversion law packaged with strip and arc-decay data.
 
 This theorem is still proved by the existing Bromwich/Fourier inversion route;
-the contour hypotheses are explicit data for a future native contour proof.
+no residue theorem is proved in this file.
 -/
 theorem BromwichInversionLaw
+    [CompleteSpace E]
     (A : ContourAdmissible E)
     (hf : MeasureTheory.Integrable (fun t : ℝ =>
       Complex.exp (-(A.strip.σ * (t : ℂ))) • A.strip.f t))

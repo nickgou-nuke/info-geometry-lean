@@ -55,6 +55,18 @@ theorem adjacent_transposition_braid_relation (i : Fin 3) :
     tau12 (tau23 (tau12 i)) = tau23 (tau12 (tau23 i)) := by
   fin_cases i <;> simp [tau12, tau23]
 
+/--
+Finite pentagon-tiling/braid readout.
+
+This packages only the two already-proved finite facts:
+the five-label pentagrid reflection is involutive, and the adjacent
+transposition quotient satisfies the `B₃` braid relation.
+-/
+theorem pentagon_tiling_braid_packet (j : FiveLabel) (i : Fin 3) :
+    pentagridReflect (pentagridReflect j) = j ∧
+      tau12 (tau23 (tau12 i)) = tau23 (tau12 (tau23 i)) := by
+  exact ⟨pentagridReflect_involutive j, adjacent_transposition_braid_relation i⟩
+
 abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
 
 /-- Diagonal Hecke representative with eigenvalues `q` and `-1`. -/

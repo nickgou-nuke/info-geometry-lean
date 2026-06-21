@@ -50,7 +50,6 @@ structure CantorMobiusFockReadout where
   Chirality : Type*
   ordinaryTrace : ℂ → ℂ
   mobiusSupertrace : ℂ → ℂ
-  reciprocalEulerProductLaw : Prop
 
 /--
 Cantor zeta-Dirac self-adjointness packet.

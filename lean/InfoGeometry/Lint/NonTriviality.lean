@@ -167,10 +167,10 @@ private def suspiciousExactComponents : List String :=
   ]
 
 private def suspiciousSubstrings : List String :=
-  [ "kms_sorryProof"
-  , "projective_kms_sorryProof"
-  , "perfectReconstruction_sorryProof"
-  , "perfect_reflection_below_gap_sorryProof"
+  [ "kms_law"
+  , "projective_kms_law"
+  , "perfectReconstruction_law"
+  , "perfect_reflection_below_gap_law"
   , "sorryProof"
   ]
 

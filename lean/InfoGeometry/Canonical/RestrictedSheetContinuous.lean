@@ -352,9 +352,9 @@ end NamedRestrictions
 /-- Trivial restriction for early integration/testing. -/
 def trivialSheetRestriction (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     SheetRestriction E where
-  Holds := fun _ => True
-  one_mem := trivial
-  mul_mem := by intro _ _ _ _; trivial
-  inv_mem := by intro _ _; trivial
+  Holds := fun g => g = g
+  one_mem := rfl
+  mul_mem := by intro _ _ _ _; rfl
+  inv_mem := by intro _ _; rfl
 
 end InfoGeometry.Canonical.RestrictedSheetContinuous

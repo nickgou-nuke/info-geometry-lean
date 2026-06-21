@@ -660,20 +660,10 @@ theorem ricciFlux_eq_zero_of_closed_and_stationary
     R.ricciFlux X s = 0 := by
   rw [R.ricciFlux_def X s, hstat, hclosed, zero_add]
 
-/--
-Explicit anomaly/closure-defect identification law.
-
-This reintroduces the old witness name as an equation-level contract: an
-`anomaly` readout is exactly the TKK closure defect readout.
--/
-def anomaly_is_closure_defect_True
-    (anomaly : L → State → Geometry) : Prop :=
-  ∀ X s, anomaly X s = R.closureDefect.defect X s
-
-/-- Re-export of the anomaly/closure-defect equation. -/
+/-- Re-export of an explicitly supplied anomaly/closure-defect equation. -/
 theorem anomaly_is_closure_defect_law_at
     {anomaly : L → State → Geometry}
-    (h : R.anomaly_is_closure_defect_True anomaly)
+    (h : ∀ X s, anomaly X s = R.closureDefect.defect X s)
     (X : L)
     (s : State) :
     anomaly X s = R.closureDefect.defect X s :=

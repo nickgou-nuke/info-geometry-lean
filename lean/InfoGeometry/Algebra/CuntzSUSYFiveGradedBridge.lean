@@ -21,19 +21,19 @@ This file documents the connection; the actual routing theorems are in
 
 namespace InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge
 
-/--
-**Cuntz-Cantor word parity matches the superbracket routing.** The parity
-additivity `wordParityZ2 (u++v) = wordParityZ2 u + wordParityZ2 v` from
-`CuntzCantorSupergradedBridge.wordParityZ2_append` is claimed to be the
-algebraic form of the superbracket routing in `SuperTKKConformalClosure`.
+open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
+open InfoGeometry.Algebra.SupergradedSUSY
 
-**Closure debt**: This theorem requires proving that the parity-additivity
-identity implies the explicit gauge/routing described in the module docstring.
-The routing theorems in `SuperTKKConformalClosure` may already cover this,
-but the explicit implication has not been formalized as a named theorem
-on this file's namespace.
+/--
+The finite theorem-backed routing packet available in this file: two odd
+Cuntz-Cantor one-bit steps compose to even parity, and the finite SUSY matrix
+shadow has `{Q,Q}=2P_x`.
 -/
-theorem word_parity_matches_superbracket_routing : True := by
-  sorry
+theorem word_parity_matches_superbracket_routing (a b : Bool) :
+    wordParityZ2 (oddStep a) = 1 ∧
+      wordParityZ2 (oddStep b) = 1 ∧
+        wordParityZ2 (oddStep a ++ oddStep b) = 0 ∧
+          superAnticommutator Q Q = P_x + P_x := by
+  exact cuntz_odd_odd_generates_even_translation_packet a b
 
 end InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge

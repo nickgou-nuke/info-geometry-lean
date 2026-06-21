@@ -96,14 +96,6 @@ structure EulerProductDatum (S : Type uS) where
   using an additional predicate.
   -/
   localFactor : ℕ → S → ℂ
-  /--
-  The product/Dirichlet-series law.
-
-  This is intentionally a `Prop` field, because convergence domains and
-  regularization choices differ between zeta, Dirichlet `L`-functions, and
-  automorphic `L`-functions.
-  -/
-  eulerProductLaw : Prop
 
 namespace EulerProductDatum
 

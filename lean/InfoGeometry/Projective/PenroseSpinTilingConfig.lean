@@ -4,6 +4,30 @@ import InfoGeometry.Projective.KleinQuadricTime
 /-!
 # Penrose Spin Tiling Configuration
 
+#### BUCKET 1: CLOSED FINITE THEOREMS
+
+- `tateMotivePolynomial_eq_expanded`
+- `pointCount_F3_verified`
+- `pointCount_F5_verified`
+- `verifiedBettiNumbers_sum`
+- `spinTiledDeRhamRank_eq_assumedTotalDeRhamRank`
+- `rank32Config_totalRank`
+- `rank32Config_localRank`
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+
+None.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+
+- Prove that the candidate point-count polynomial is the actual point count of
+  `A^8 \ V(q(a) q(b) q(a-b))` over all good finite fields.
+- Prove purity/mixed-Tate hypotheses needed to read Betti numbers from the
+  counting polynomial.
+- Compute or certify the actual algebraic de Rham cohomology of
+  `C^8 \ V(q(a) q(b) q(a-b))`.
+- Relate the configured local Betti list to that certified de Rham computation.
+
 This module records the finite arithmetic checks and the rank configuration
 used by the Penrose spin tiling layer for the singular Klein-quadric
 intersection model `V(q(a) q(b) q(a-b))`.
@@ -23,9 +47,16 @@ the recorded local Betti list has rank 8, and the spin-tiling multiplicity is 4.
 
 namespace InfoGeometry.Projective.PenroseSpinTiling
 
-/-- The E-polynomial describing the motive of the chiral causal cone intersection. -/
+/-- Candidate counting polynomial for the chiral causal cone intersection complement. -/
 def tateMotivePolynomial (q : ℤ) : ℤ :=
   q * (q^2 - 1) * (q - 1) * (q^4 - 2*q^3 - q^2 + 3*q)
+
+/-- Expanded form of the candidate counting polynomial. -/
+theorem tateMotivePolynomial_eq_expanded (q : ℤ) :
+    tateMotivePolynomial q =
+      q^8 - 3 * q^7 + 7 * q^5 - 4 * q^4 - 4 * q^3 + 3 * q^2 := by
+  unfold tateMotivePolynomial
+  ring
 
 /-- Verification of the candidate arithmetic point count at `q = 3`. -/
 theorem pointCount_F3_verified :

@@ -223,7 +223,7 @@ structure BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) where
 
 /-- Boundary crossing as a theorem-backed witness packet. -/
 @[rep_depth operator]
-theorem boundary_crossing_sorry
+theorem boundary_crossing
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
     Nonempty (BoundaryCrossingWitness n ξ) := by
   refine ⟨⟨boundaryPrefix n ξ, boundaryIterateTail n ξ, ?_, rfl, rfl⟩⟩

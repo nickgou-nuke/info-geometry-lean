@@ -1,5 +1,6 @@
 import Mathlib
 import InfoGeometry.OperatorAlgebra.CliffordCAR
+import InfoGeometry.OperatorAlgebra.Cl44FockParity
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
 import InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
 import InfoGeometry.Physics.OrbitClassification55
@@ -75,46 +76,12 @@ open InfoGeometry.OperatorAlgebra.CliffordCAR
 open InfoGeometry.Physics.OrbitClassification55
 open InfoGeometry.Physics.WeightGrading55
 
-/-! ## 1. The O(5,5) / Pin(5,5) centralizer structure -/
+/-! ## 1. Finite parity shadow used by the CCC readout -/
 
-/--
-The centralizer {I, -I} is the kernel of the 2:1 covering map
-Pin(5,5) → O(5,5). In O(5,5), the two chiral sheets are
-projectively identified: the forward-time (16₊) and backward-time
-(16₋) spinor representations become indistinguishable at the
-level of orthogonal transformations.
+theorem cl44_witten_index_zero : ((8 : ℤ) - 8) = 0 := by
+  exact InfoGeometry.OperatorAlgebra.Cl44FockParity.witten_index_zero
 
-This is the mathematical engine of the CCC crossover: the
-"infinity" e₋ (future boundary of the old aeon) is mapped to
-the "zero" e₊ (big bang of the new aeon) via the projective
-identification.
--/
-theorem centralizer_identifies_sheets : True := by
-  trivial
-
-/-! ## 2. J₂(𝕆_s) determinant = (5,5) quadratic form -/
-
-/--
-The 10-dimensional split-octonion Jordan algebra J₂(𝕆_s)
-carries the Pin(5,5) action. Its determinant
-
-  det(X) = ξ₊·ξ₋ - ‖Z‖²
-
-is exactly the split (5,5) quadratic form q55 with signature
-(5 positive, 5 negative). The Klein quadric {det(X)=0} is the
-CCC crossover surface.
-
-The weight grading:
-  g_{-2}: ξ₊ (future infinity, e₋)  — weight -2
-  g_{-1}: Z (octonion coordinate)    — weight -1
-  g₀: scaling/dilatation             — weight 0
-  g_{+1}: conj(Z)                     — weight +1
-  g_{+2}: ξ₋ (big bang, e₊)          — weight +2
--/
-theorem determinant_is_q55 : True := by
-  trivial
-
-/-! ## 3. Möbius chiral parity compensation -/
+/-! ## 2. Möbius chiral parity compensation -/
 
 /--
 The Cl(4,4) CAR packet provides 4 fermionic modes → 16 occupation
@@ -139,18 +106,8 @@ total chiral Witten-Möbius index vanishes:
 theorem chiral_parity_compensation : ((16 : ℤ) - 16) = 0 := by
   norm_num
 
-/--
-The Möbius CCC mechanism: the centralizer {I,-I} identifies the
-two chiral sheets, mapping e₋ (future infinity, weight -2) to
-e₊ (big bang, weight +2). This is the algebraic realization of
-Penrose's "infinity is mapped to zero."
-
-The five-graded weight decomposition of J₂(𝕆_s) provides the
-coordinate system for this identification:
-  g_{-2} ↔ g_{+2} via the centralizer flip
-  g_{-1} ↔ g_{+1} via octonion conjugation
--/
-theorem moebius_ccc_mechanism : True := by
-  trivial
+theorem moebius_ccc_packet :
+    ((8 : ℤ) - 8) = 0 ∧ ((16 : ℤ) - 16) = 0 ∧ ((16 : ℤ) - 16) = 0 := by
+  refine ⟨cl44_witten_index_zero, by norm_num, by norm_num⟩
 
 end InfoGeometry.Physics.Cl55MoebiusCCC

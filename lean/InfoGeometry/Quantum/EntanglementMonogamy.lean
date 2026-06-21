@@ -64,7 +64,6 @@ structure EntanglementDatum
   MaxEntangled : Q.State → Prop
   max_entangled : MaxEntangled state
   correlation_calibration : Prop
-  correlation_sorryProof : correlation_calibration
 
 namespace EntanglementDatum
 

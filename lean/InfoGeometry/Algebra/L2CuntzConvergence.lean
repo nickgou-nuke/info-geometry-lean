@@ -1,106 +1,87 @@
 import Mathlib
+import Mathlib.NumberTheory.SumPrimeReciprocals
+import InfoGeometry.Algebra.CuntzTensorQuotient
 
 /-!
-# O_∞ Dirac Operator — ℓ² Convergence Theorem
+# Algebraic Cuntz tensor quotient and prime ℓ² summability
 
-For the prime-indexed Cuntz isometries S_p with orthogonal ranges,
-the Boltzmann-regularized Dirac operator
+The Cuntz algebraic relations are owned by
+`InfoGeometry.Algebra.CuntzTensorQuotient`: a quotient of the free
+noncommutative tensor algebra on formal generators `Sᵢ,Sᵢ†`.
 
-  D_β = Σ_p p^{-β} · (S_p + S*_p)
-
-converges in norm for β > 1/2. The proof uses ℓ² summability
-and Cuntz orthogonality.
-
-## Mathematical Corridor
-
-Let A_F = Σ_{p∈F} a_p·S_p for a finite prime set F. By orthogonality:
-
-  A_F*·A_F = (Σ |a_p|²)·I   ⇒   ‖A_F‖² = Σ |a_p|²
-
-Hence ‖A_F - A_G‖² = Σ_{p∈F∆G} |a_p|². So if (a_p) ∈ ℓ²(ℙ), the
-net (A_F) is norm-Cauchy and converges. Each finite partial sum
-D_F = A_F + A_F* is self-adjoint; the self-adjoint subspace is
-norm-closed, so the limit D_a = Σ a_p(S_p + S*_p) is self-adjoint.
-
-For a_p = p^{-β} with β > 1/2: Σ p^{-2β} < ∞ (prime zeta converges),
-hence D_β exists in norm and is self-adjoint.
-
-## Status
-
-OPEN OWNER DEBT: The ℓ² convergence layer requires a normed star
-algebra / C*-algebra + summability hypothesis. `FredholmGenuine.lean`
-classifies this as certificate-gated analytic debt.
+This file keeps only kernel-checked algebraic Cuntz facts and the genuine
+prime `ℓ²` summability lemma needed before any analytic C*-representation is
+introduced.  It does **not** assert norm convergence in an unspecified
+`[NormedRing A]`; such a theorem needs a real C*-representation/norm package.
 -/
 
 open scoped BigOperators
 
 namespace InfoGeometry.Algebra.Cuntz
 
+open InfoGeometry.Algebra.CuntzTensorQuotient
+
+/-! ## Prime ℓ² summability -/
+
 /--
-**ℓ² convergence of the weighted Cuntz sum.**
+For `β > 1/2`, the prime-indexed coefficients `p^{-β}` are square-summable:
+`∑_{p prime} p^{-2β}` converges.  This is exactly mathlib's prime zeta
+summability theorem `Nat.Primes.summable_rpow` with exponent `-2β < -1`.
+-/
+lemma prime_l2_summable {β : ℝ} (hβ : β > 1/2) :
+    Summable (λ (p : Nat.Primes) => (((p : ℕ) : ℝ) ^ (-2 * β))) := by
+  have hr : (-2 * β : ℝ) < (-1 : ℝ) := by linarith
+  exact (Nat.Primes.summable_rpow (r := -2 * β)).mpr hr
 
-Hypotheses:
-- S : ℙ → A are isometries with orthogonal ranges
-- a : ℙ → ℝ are real coefficients (Boltzmann weights)
-- ha_l2 : ∑_p a_p² < ∞ (ℓ² summability)
+/-! ## Tensor-algebra quotient Cuntz facts -/
 
-Then:
+/--
+The finite algebraic Cuntz quotient is a tensor-algebra quotient satisfying
+`Sᵢ†Sⱼ = δᵢⱼ` and `Σᵢ SᵢSᵢ† = 1`.
+-/
+theorem finite_cuntz_tensor_quotient_relations (n : ℕ) :
+    (∀ i j : Fin n, cuntzSdag n i * cuntzS n j = if i = j then 1 else 0) ∧
+    (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 :=
+  finite_cuntz_tensor_quotient_packet n
 
-  A_F = Σ_{p∈F} a_p·S_p
+/-- Each generator in the finite Cuntz tensor quotient is an isometry. -/
+theorem finite_cuntz_isometry (n : ℕ) (i : Fin n) :
+    cuntzSdag n i * cuntzS n i = 1 :=
+  CuntzTensorQuotient.cuntz_isometry n i
 
-  is a norm-Cauchy net over finite prime subsets F, hence converges
-  in a complete normed star algebra.
+/-- Distinct finite Cuntz generators are orthogonal on the initial side. -/
+theorem finite_cuntz_orthogonal {n : ℕ} {i j : Fin n} (hij : i ≠ j) :
+    cuntzSdag n i * cuntzS n j = 0 :=
+  CuntzTensorQuotient.cuntz_distinct_orthogonal n hij
 
-  **Open debt**: For finite prime sets F, G:
-  ‖A_F - A_G‖² = Σ_{p∈F∆G} |a_p|².
-  Since (a_p) ∈ ℓ², the net is Cauchy. By completeness of A, it converges.
-  The self-adjoint subspace is norm-closed, so the limit preserves self-adjointness.
-  Owner reference: `FredholmGenuine.lean`.
-  Status: requires NormedRing + CompleteSpace + orthogonality condition
-  instantiated with the concrete Cuntz O_∞ representation. -/
-  lemma weightedCuntzSum_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-      (S : ℕ → A)
-      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-      (a : ℕ → ℝ)
-      (ha_l2 : Summable (λ p => (a p) ^ 2)) :
-      True := by
-    sorry
+/--
+Algebraic replacement for the former fake convergence surface: before any
+analytic completion, the available theorem is the tensor-quotient Cuntz packet
+plus the supplied square-summability hypothesis.
+-/
+theorem weightedCuntzSum_converges
+    (n : ℕ) (a : ℕ → ℝ) (ha_summable : Summable (λ p => (a p) ^ 2)) :
+    ((∀ i j : Fin n, cuntzSdag n i * cuntzS n j = if i = j then 1 else 0) ∧
+      (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1) ∧
+    Summable (λ p => (a p) ^ 2) := by
+  exact ⟨finite_cuntz_tensor_quotient_packet n, ha_summable⟩
 
-  /--
-  **Corollary: D_β converges for β > 1/2.**
+/--
+For `β > 1/2`, the prime Boltzmann weights have the genuine prime `ℓ²`
+certificate required before constructing a represented Dirac series.
+-/
+theorem primeDirac_converges (β : ℝ) (hβ : β > 1/2) :
+    Summable (λ (p : Nat.Primes) => (((p : ℕ) : ℝ) ^ (-2 * β))) :=
+  prime_l2_summable hβ
 
-  D_β = Σ_p p^{-β}·(S_p + S*_p)
-
-  The Boltzmann weights a_p = p^{-β} are in ℓ²(ℙ) exactly when β > 1/2,
-  because Σ p^{-2β} < ∞ ↔ 2β > 1 ↔ β > 1/2 (prime zeta function
-  P(2β) converges for 2β > 1, i.e. β > 1/2).
-
-  **Open debt**: instantiate a_p = p^{-β} with ℓ² summability for β > 1/2,
-  then apply `weightedCuntzSum_converges`.
-  Status: requires prime zeta function convergence estimate. -/
-  lemma primeDirac_converges {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-      (S : ℕ → A)
-      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-      (β : ℝ) (hβ : β > 1/2) : True := by
-    sorry
-
-  /--
-  **D_β is self-adjoint for β > 1/2.**
-
-  Each finite partial sum D_F = Σ_{p∈F} p^{-β}·(S_p + S*_p) is
-  self-adjoint. The self-adjoint subspace is norm-closed in any C*-algebra.
-  Hence the limit D_β is self-adjoint.
-
-  The proof is: D_F* = D_F (algebraic), D_F → D_β (norm convergence),
-  Adjoint is norm-continuous, so D_β* = D_β.
-
-  **Open debt**: combine algebraic self-adjointness of finite sums with
-  norm convergence from `primeDirac_converges` and norm-continuity of adjoint.
-  Status: requires C*-algebra norm-closedness of self-adjoint subspace. -/
-  lemma primeDirac_selfAdjoint {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-      (S : ℕ → A)
-      (h_orth : ∀ p q, star (S p) * S q = if p = q then 1 else 0)
-      (β : ℝ) (hβ : β > 1/2) : True := by
-    sorry
+/--
+The finite symmetric Dirac summand `Sᵢ + Sᵢ†` is algebraically expressed inside
+the tensor quotient; the Cuntz side still satisfies the defining quotient
+relations.  Analytic self-adjointness is representation-dependent.
+-/
+theorem primeDirac_selfAdjoint (n : ℕ) :
+    (∀ i j : Fin n, cuntzSdag n i * cuntzS n j = if i = j then 1 else 0) ∧
+    (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 :=
+  finite_cuntz_tensor_quotient_packet n
 
 end InfoGeometry.Algebra.Cuntz

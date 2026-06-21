@@ -110,9 +110,6 @@ structure AffineDrazinBoundaryEntropyBridge
     AffineVirasoroBridgeDatum Finite Alg
   cardy :
     CardyEntropyCalibration
-  entropyAgreementLaw : Prop
-  entropyAgreement_holds :
-    entropyAgreementLaw
 
 namespace AffineDrazinBoundaryEntropyBridge
 
@@ -123,10 +120,15 @@ variable
 
 variable (B : AffineDrazinBoundaryEntropyBridge (Finite := Finite) (Alg := Alg))
 
-/-- The supplied Drazin/Cardy entropy agreement law is available. -/
+/--
+Debt boundary for Drazin/Cardy entropy agreement.
+
+The abstract packet contains the affine-Virasoro and Cardy data, but not a
+proof identifying a Drazin-stable boundary entropy with the Cardy readout.
+-/
 theorem entropyAgreement_holds_of_bridge :
-    B.entropyAgreementLaw :=
-  B.entropyAgreement_holds
+    False := by
+  sorry
 
 end AffineDrazinBoundaryEntropyBridge
 

@@ -50,7 +50,7 @@ structure SelfDualChiralConeBoundary
   dualCone : Set V
 
   /-- Self-duality law for the cone. -/
-  self_dual_True :
+  self_dual :
     cone = dualCone
 
   /-- Boundary/horizon predicate for the cone or associated domain. -/
@@ -91,7 +91,7 @@ variable (B : SelfDualChiralConeBoundary V)
 /-- The supplied self-duality law is available. -/
 theorem cone_eq_dualCone :
     B.cone = B.dualCone :=
-  B.self_dual_True
+  B.self_dual
 
 /-- Closure reflects boundary membership backwards, by involutivity. -/
 theorem boundary_preserved_reverse

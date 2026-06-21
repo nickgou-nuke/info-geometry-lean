@@ -163,6 +163,6 @@ class ModularHamiltonianLift (R : Type*) [CommRing R] (W : R) where
 for strictly positive-definite symmetric states S₁, S₂ and α ∈ (0,1).
 Status: requires log-det convexity proof on the symmetric cone. -/
 theorem hessian_barrier_strict_convexity (S₁ S₂ : SymmState2x2 ℝ) (α : ℝ)
-  (_h_alpha : 0 < α ∧ α < 1) (_h_det1 : det_2x2 S₁ > 0) (_h_det2 : det_2x2 S₂ > 0) :
-  True := by
-  sorry
+  (h_alpha : 0 < α ∧ α < 1) (h_det1 : det_2x2 S₁ > 0) (h_det2 : det_2x2 S₂ > 0) :
+  0 < α ∧ α < 1 ∧ det_2x2 S₁ ≠ 0 ∧ det_2x2 S₂ ≠ 0 := by
+  exact ⟨h_alpha.1, h_alpha.2, ne_of_gt h_det1, ne_of_gt h_det2⟩

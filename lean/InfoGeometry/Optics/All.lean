@@ -1,6 +1,7 @@
 import InfoGeometry.Optics.JonesCalibration
 import InfoGeometry.Optics.OperatorialJonesCalculus
 import InfoGeometry.Optics.FiniteJonesModel
+import InfoGeometry.Optics.JonesPoincareSphere
 import InfoGeometry.Optics.FiniteJonesErlanger
 import InfoGeometry.Optics.FiniteJonesBrewsterCollapse
 import InfoGeometry.Optics.FiniteJonesBregman

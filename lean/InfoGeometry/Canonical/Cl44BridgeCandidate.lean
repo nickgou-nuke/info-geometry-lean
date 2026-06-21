@@ -41,7 +41,6 @@ structure Cl44BridgeCandidate where
 @[rep_depth transport]
 structure Cl44BridgeTearPoint where
   failedWitnessName : String
-  failureCertificate : Prop
 
 /-- A supplied candidate exposes all obligations; it does not prove conformal gravity. -/
 theorem candidate_requires_metric_and_clifford_witnesses

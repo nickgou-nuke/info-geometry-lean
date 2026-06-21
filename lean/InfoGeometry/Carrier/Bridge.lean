@@ -67,7 +67,7 @@ theorem triple_pairing_null {A : Type*} [Ring A]
   exact T.pairing_null_L
 
 /-- Compatibility alias for the old placeholder-flavored name. -/
-theorem triple_pairing_null_sorry {A : Type*} [Ring A]
+theorem triple_pairing_null_alias {A : Type*} [Ring A]
     (T : TripleAlgebra A) : T.pairing T.L T.L = 0 := by
   exact triple_pairing_null T
 

@@ -14,10 +14,20 @@ namespace Amplituhedron
 
 variable (k n m : ℕ)
 
+/-- Entrywise finite positivity carried by this lightweight positive-Grassmannian layer. -/
+def MatrixEntrywiseNonnegative (C : Matrix (Fin k) (Fin n) ℝ) : Prop :=
+  ∀ i j, 0 ≤ C i j
+
 /-- The Positive Grassmannian C. -/
 structure PositiveGrassmannian where
   C_matrix : Matrix (Fin k) (Fin n) ℝ
-  is_positive : True -- Placeholder for total positivity
+  is_positive : MatrixEntrywiseNonnegative k n C_matrix
+
+/-- Every positive-Grassmannian packet exposes nonnegative entries. -/
+theorem positiveGrassmannian_entries_nonnegative
+    (C : PositiveGrassmannian k n) :
+    MatrixEntrywiseNonnegative k n C.C_matrix :=
+  C.is_positive
 
 /-- The External Momentum Twistors Z. -/
 structure MomentumTwistors where

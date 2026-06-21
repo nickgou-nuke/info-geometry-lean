@@ -43,8 +43,6 @@ metric-equivariant transport of the MP projector.
 structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
   g : R
   gInv : R
-  metricTransportWitness : Prop
-  metricTransportCertified : metricTransportWitness
   moorePenroseProjector_transport : P'.PMP = g * P.PMP * gInv
 
 /-- Phase-C alias retained for downstream references. -/

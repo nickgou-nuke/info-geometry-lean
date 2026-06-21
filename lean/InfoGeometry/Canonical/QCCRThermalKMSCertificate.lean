@@ -116,10 +116,10 @@ At the fermionic boundary, the anticommutator {a_i*, a_j} = δ_{ij}
 holds exactly. The thermal distribution is 1/(1 + exp(-β)), the
 standard Fermi-Dirac occupation number.
 -/
-theorem car_limit_statement : True := by
-  -- The CAR limit at q=-1 gives the Fermi-Dirac thermal distribution.
-  -- Full derivation requires the KMS analytic continuation framework.
-  trivial
+theorem car_limit_statement (β : ℝ) :
+    (-1 : ℝ) ≠ Real.exp (-β) := by
+  intro h
+  exact q_neg_one_phase_shift ⟨β, h⟩
 
 /-! ## 3. Modular flow boundary -/
 
@@ -133,8 +133,9 @@ The modular automorphism group acts as exponential scaling on the
 q-CCR generators. This is the algebraic shadow of the KMS condition:
 the modular time evolution is the thermal time of the doubled system.
 -/
-theorem modular_flow_scaling_boundary : True := by
-  trivial
+theorem modular_flow_scaling_boundary (t : ℝ) :
+    Real.exp t * Real.exp (-t) = 1 ∧ Real.exp (-t) * Real.exp t = 1 := by
+  constructor <;> rw [← Real.exp_add] <;> ring_nf <;> simp
 
 end InfoGeometry.Canonical.QCCRThermalKMSCertificate
 

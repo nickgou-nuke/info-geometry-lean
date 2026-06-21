@@ -200,7 +200,7 @@ theorem moment_mem_coadjoint_orbit (x : Orbit) :
 /-- Metriplectic nonnegativity is delegated to the coadjoint-orbit owner. -/
 theorem totalEntropyRate_nonnegative (x : Orbit) :
     0 ≤ P.orbit.totalEntropyRate x :=
-  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_True
+  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
     P.orbit x
 
 /-- Finite root/orbit Mellin character factorization is delegated to the Mellin owner. -/
@@ -221,7 +221,7 @@ theorem finite_mellin_orbit_product_factor (A : Finset ℕ) (f : Func) :
         = ∏ n ∈ A, P.mellin.weight n * P.mellin.Mellin f := by
             refine Finset.prod_congr rfl ?_
             intro n hn
-            rw [P.mellin.sample_True n f]
+            rw [P.mellin.sample_law n f]
     _ = (∏ n ∈ A, P.mellin.weight n) *
           (∏ _n ∈ A, P.mellin.Mellin f) := by
           rw [Finset.prod_mul_distrib]

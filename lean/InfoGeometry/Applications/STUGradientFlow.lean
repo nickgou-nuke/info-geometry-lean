@@ -40,8 +40,8 @@ structure STUFisherMetricWitness
   
   /-- Certificate of inversion on the GHZ orbit -/
   inversion_cert : ∀ psi : (E →L[ℝ] E), IsRegularOperator I psi → 
-    -- abstractly: metric * inverse_metric = Identity
-    True
+    -- at this abstraction level `inverse_metric` is a tangent endomorphism
+    ∀ v : (E →L[ℝ] E), inverse_metric psi v = v
 
 /-! ### 2. The Computable Sandbox: Diagonal STU Reduction -/
 

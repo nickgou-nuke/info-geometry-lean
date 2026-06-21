@@ -81,6 +81,141 @@ theorem trace_pauliMatrix_eq_two_energy
   simp [pauliMatrix, Matrix.trace, Fin.sum_univ_two]
   ring
 
+/-- Identity Pauli axis `σ⁰`. -/
+def sigma0 : Matrix (Fin 2) (Fin 2) ℂ := !![(1 : ℂ), 0; 0, 1]
+
+/-- First Pauli axis `σ¹`. -/
+def sigma1 : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), 1; 1, 0]
+
+/-- Second Pauli axis `σ²`. -/
+def sigma2 : Matrix (Fin 2) (Fin 2) ℂ := !![(0 : ℂ), -Complex.I; Complex.I, 0]
+
+/-- Third Pauli axis `σ³`. -/
+def sigma3 : Matrix (Fin 2) (Fin 2) ℂ := !![(1 : ℂ), 0; 0, -1]
+
+/-- The Pauli four-vector `σ^μ = (I, σ¹, σ², σ³)`. -/
+def sigma : Fin 4 → Matrix (Fin 2) (Fin 2) ℂ
+  | 0 => sigma0
+  | 1 => sigma1
+  | 2 => sigma2
+  | 3 => sigma3
+
+/-- The lowered Pauli four-vector `σ̄^μ = (I, -σ¹, -σ², -σ³)`. -/
+def barSigma : Fin 4 → Matrix (Fin 2) (Fin 2) ℂ
+  | 0 => sigma0
+  | 1 => -sigma1
+  | 2 => -sigma2
+  | 3 => -sigma3
+
+/-- Trace readout against a Pauli axis. -/
+def pauliTraceReadout (axis M : Matrix (Fin 2) (Fin 2) ℂ) : ℂ :=
+  Matrix.trace (axis * M)
+
+/-- Pauli coefficient readout `1/2 Tr(σ^μ M)`. -/
+def pauliCoefficientReadout (a : Fin 4) (M : Matrix (Fin 2) (Fin 2) ℂ) : ℂ :=
+  pauliTraceReadout (sigma a) M / 2
+
+/-- Lowered Pauli coefficient readout `1/2 Tr(σ̄^μ M)`. -/
+def loweredPauliCoefficientReadout (a : Fin 4) (M : Matrix (Fin 2) (Fin 2) ℂ) : ℂ :=
+  pauliTraceReadout (barSigma a) M / 2
+
+/-- The super-Poincare anticommutator matrix `2 σ^μ P_μ`. -/
+def superPoincareAnticommutatorMatrix (P : PauliParavector) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  (2 : ℂ) • P.pauliMatrix
+
+/-- Momentum readout from `{Q,Qbar}` by `1/4 Tr(σ^μ {Q,Qbar})`. -/
+def superchargeMomentumReadout (a : Fin 4) (P : PauliParavector) : ℂ :=
+  pauliTraceReadout (sigma a) (superPoincareAnticommutatorMatrix P) / 4
+
+/-- Lowered momentum readout from `{Q,Qbar}` by `1/4 Tr(σ̄^μ {Q,Qbar})`. -/
+def loweredSuperchargeMomentumReadout (a : Fin 4) (P : PauliParavector) : ℂ :=
+  pauliTraceReadout (barSigma a) (superPoincareAnticommutatorMatrix P) / 4
+
+/-- Trace against the Pauli basis recovers all paravector coordinates. -/
+theorem pauliCoefficientReadout_pauliMatrix (P : PauliParavector) (a : Fin 4) :
+    pauliCoefficientReadout a P.pauliMatrix =
+      match a with
+      | 0 => (P.energy : ℂ)
+      | 1 => (P.px : ℂ)
+      | 2 => (P.py : ℂ)
+      | 3 => (P.pz : ℂ) := by
+  fin_cases a <;>
+    simp [pauliCoefficientReadout, pauliTraceReadout, sigma, sigma0, sigma1, sigma2,
+      sigma3, pauliMatrix, Matrix.trace, Fin.sum_univ_two]
+  all_goals ring_nf
+  all_goals simp [Complex.I_sq]
+
+/-- Trace against the lowered Pauli basis recovers the metric-lowered coordinates. -/
+theorem loweredPauliCoefficientReadout_pauliMatrix (P : PauliParavector) (a : Fin 4) :
+    loweredPauliCoefficientReadout a P.pauliMatrix =
+      match a with
+      | 0 => (P.energy : ℂ)
+      | 1 => (-(P.px) : ℂ)
+      | 2 => (-(P.py) : ℂ)
+      | 3 => (-(P.pz) : ℂ) := by
+  fin_cases a <;>
+    simp [loweredPauliCoefficientReadout, pauliTraceReadout, barSigma, sigma0, sigma1,
+      sigma2, sigma3, pauliMatrix, Matrix.trace, Fin.sum_univ_two]
+  all_goals ring_nf
+  all_goals simp [Complex.I_sq]
+
+/-- The `1/4 Tr(σ^μ {Q,Qbar})` formula is the ordinary Pauli coefficient readout. -/
+theorem superchargeMomentumReadout_eq_pauliCoefficientReadout
+    (P : PauliParavector) (a : Fin 4) :
+    superchargeMomentumReadout a P = pauliCoefficientReadout a P.pauliMatrix := by
+  simp [superchargeMomentumReadout, pauliCoefficientReadout, superPoincareAnticommutatorMatrix,
+    pauliTraceReadout, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
+
+/-- Supercharge anticommutator trace readout recovers the momentum components. -/
+theorem superchargeMomentumReadout_eq_components (P : PauliParavector) (a : Fin 4) :
+    superchargeMomentumReadout a P =
+      match a with
+      | 0 => (P.energy : ℂ)
+      | 1 => (P.px : ℂ)
+      | 2 => (P.py : ℂ)
+      | 3 => (P.pz : ℂ) := by
+  rw [superchargeMomentumReadout_eq_pauliCoefficientReadout]
+  exact pauliCoefficientReadout_pauliMatrix P a
+
+/-- Lowered supercharge anticommutator trace readout recovers the lowered momentum components. -/
+theorem loweredSuperchargeMomentumReadout_eq_components (P : PauliParavector) (a : Fin 4) :
+    loweredSuperchargeMomentumReadout a P =
+      match a with
+      | 0 => (P.energy : ℂ)
+      | 1 => (-(P.px) : ℂ)
+      | 2 => (-(P.py) : ℂ)
+      | 3 => (-(P.pz) : ℂ) := by
+  fin_cases a <;>
+    simp [loweredSuperchargeMomentumReadout, superPoincareAnticommutatorMatrix,
+      pauliTraceReadout, barSigma, sigma0, sigma1, sigma2, sigma3, pauliMatrix,
+      Matrix.trace, Fin.sum_univ_two]
+  all_goals ring_nf
+  all_goals simp [Complex.I_sq]
+
+/--
+The determinant of the super-Poincare anticommutator matrix is four times the
+Minkowski Casimir of the underlying Pauli paravector.
+-/
+theorem det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq
+    (P : PauliParavector) :
+    Matrix.det P.superPoincareAnticommutatorMatrix =
+      ((4 * P.minkowskiNormSq : ℝ) : ℂ) := by
+  rw [superPoincareAnticommutatorMatrix, Matrix.det_smul, det_pauliMatrix_eq_minkowskiNormSq]
+  norm_num
+
+/--
+The trace of the super-Poincare anticommutator matrix is four times the energy
+component.
+-/
+theorem trace_superPoincareAnticommutatorMatrix_eq_four_energy
+    (P : PauliParavector) :
+    Matrix.trace P.superPoincareAnticommutatorMatrix = ((4 * P.energy : ℝ) : ℂ) := by
+  rw [superPoincareAnticommutatorMatrix, Matrix.trace_smul, trace_pauliMatrix_eq_two_energy]
+  norm_num [smul_eq_mul]
+  ring
+
 /--
 Null/lightlike momentum means zero Minkowski norm.
 -/
@@ -94,6 +229,14 @@ The Pauli representative is singular when its determinant vanishes.
 def IsSingularPauli
     (P : PauliParavector) : Prop :=
   Matrix.det P.pauliMatrix = 0
+
+/--
+The super-Poincare anticommutator representative is singular when its
+determinant vanishes.
+-/
+def IsSingularSuperPoincareAnticommutator
+    (P : PauliParavector) : Prop :=
+  Matrix.det P.superPoincareAnticommutatorMatrix = 0
 
 /--
 Null paravectors are exactly singular Pauli representatives.
@@ -114,6 +257,27 @@ theorem isNull_iff_isSingularPauli
     unfold IsSingularPauli at h
     rw [det_pauliMatrix_eq_minkowskiNormSq] at h
     exact_mod_cast h
+
+/--
+Null paravectors are exactly those whose super-Poincare anticommutator matrix
+has zero determinant.
+-/
+theorem isNull_iff_isSingularSuperPoincareAnticommutator
+    (P : PauliParavector) :
+    P.IsNull ↔ P.IsSingularSuperPoincareAnticommutator := by
+  constructor
+  · intro h
+    unfold IsSingularSuperPoincareAnticommutator
+    rw [det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq]
+    simp [IsNull] at h
+    simp [h]
+  · intro h
+    unfold IsSingularSuperPoincareAnticommutator at h
+    rw [det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq] at h
+    have hreal : (4 * P.minkowskiNormSq : ℝ) = 0 := by
+      exact_mod_cast h
+    unfold IsNull
+    nlinarith
 
 /-- Future-oriented branch: nonnegative energy. -/
 def IsFutureOriented
@@ -160,6 +324,16 @@ theorem singularPauli_of_futureNull
   (P.isNull_iff_isSingularPauli).mp hP.1
 
 /--
+A future-null paravector has a singular super-Poincare anticommutator
+representative.
+-/
+theorem singularSuperPoincareAnticommutator_of_futureNull
+    {P : PauliParavector}
+    (hP : P.IsFutureNull) :
+    P.IsSingularSuperPoincareAnticommutator :=
+  (P.isNull_iff_isSingularSuperPoincareAnticommutator).mp hP.1
+
+/--
 Timelike branch has positive determinant.
 -/
 theorem det_pos_of_timelike
@@ -170,6 +344,18 @@ theorem det_pos_of_timelike
   exact hP
 
 /--
+Timelike branch has positive super-Poincare anticommutator determinant.
+-/
+theorem det_superPoincareAnticommutatorMatrix_pos_of_timelike
+    {P : PauliParavector}
+    (hP : P.IsTimelike) :
+    0 < (Matrix.det P.superPoincareAnticommutatorMatrix).re := by
+  rw [det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq]
+  simp
+  unfold IsTimelike at hP
+  nlinarith
+
+/--
 Spacelike branch has negative determinant real part.
 -/
 theorem det_neg_of_spacelike
@@ -178,6 +364,19 @@ theorem det_neg_of_spacelike
     (Matrix.det P.pauliMatrix).re < 0 := by
   rw [det_pauliMatrix_eq_minkowskiNormSq]
   exact hP
+
+/--
+Spacelike branch has negative super-Poincare anticommutator determinant real
+part.
+-/
+theorem det_superPoincareAnticommutatorMatrix_neg_of_spacelike
+    {P : PauliParavector}
+    (hP : P.IsSpacelike) :
+    (Matrix.det P.superPoincareAnticommutatorMatrix).re < 0 := by
+  rw [det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq]
+  simp
+  unfold IsSpacelike at hP
+  nlinarith
 
 /--
 A mass-shell predicate.
@@ -386,7 +585,7 @@ structure PauliParavectorDatum
   minkowskiNormSq : ℝ
 
   /-- The determinant of the Pauli matrix recovers the Minkowski norm. -/
-  determinant_metric_True :
+  determinant_metric_property :
     Matrix.det pauliMatrix = (minkowskiNormSq : ℂ)
 
 namespace PauliParavectorDatum
@@ -425,11 +624,11 @@ structure SpinMomentumFrame
   referenceMomentum : Op
 
   /-- The rotor transports the reference momentum to the current momentum. -/
-  momentum_transport_True :
+  momentum_transport_property :
     momentum.P = rotor * referenceMomentum * rotorInv
 
   /-- The rotor also transports some reference spin bivector. -/
-  spin_transport_True :
+  spin_transport_property :
     ∃ S₀ : Op, spinBivector = rotor * S₀ * rotorInv
 
 namespace SpinMomentumFrame
@@ -440,7 +639,7 @@ variable (M : SpinMomentumFrame Op)
 /-- Re-export of the momentum transport law. -/
 theorem momentum_transport :
     M.momentum.P = M.rotor * M.referenceMomentum * M.rotorInv :=
-  M.momentum_transport_True
+  M.momentum_transport_property
 
 end SpinMomentumFrame
 
@@ -468,7 +667,7 @@ structure LorentzSpinRepresentationCoupling
   The shared-action law: the group action on the paravector
   is consistent with the representation.
   -/
-  shared_spin_action_True :
+  shared_spin_action_property :
     ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (actMomentum g P).minkowskiNormSq = P.minkowskiNormSq
 
@@ -476,7 +675,7 @@ structure LorentzSpinRepresentationCoupling
   Representation-coupling law: the action on momentum is derived from the
   action on the spinor frame.
   -/
-  representation_coupling_True :
+  representation_coupling_property :
     ∀ (g : SpinGroup) (F : SpinMomentumFrame Op),
       (actMomentum g F.momentum).P = (actSpinBivector g F.rotor) * F.referenceMomentum * (actSpinBivector g F.rotorInv)
 
@@ -489,7 +688,7 @@ variable (C : LorentzSpinRepresentationCoupling SpinGroup Op)
 theorem shared_spin_action :
     ∀ (g : SpinGroup) (P : PauliParavectorDatum Op),
       (C.actMomentum g P).minkowskiNormSq = P.minkowskiNormSq :=
-  C.shared_spin_action_True
+  C.shared_spin_action_property
 
 end LorentzSpinRepresentationCoupling
 
@@ -513,7 +712,7 @@ structure MasslessSpinMomentumFrame
   Helicity is locked to the null momentum direction.
   Replacing the former vacuous Prop field.
   -/
-  helicity_locked_to_momentum_True :
+  helicity_locked_to_momentum_property :
     ∃ (h : ℝ), ∃ (ref : Op), frame.spinBivector = h • (frame.rotor * ref * frame.rotorInv)
 
 namespace MasslessSpinMomentumFrame
@@ -814,9 +1013,30 @@ attribute [rep_depth operator]
   PauliParavector.pauliMatrix
   PauliParavector.det_pauliMatrix_eq_minkowskiNormSq
   PauliParavector.trace_pauliMatrix_eq_two_energy
+  PauliParavector.sigma0
+  PauliParavector.sigma1
+  PauliParavector.sigma2
+  PauliParavector.sigma3
+  PauliParavector.sigma
+  PauliParavector.barSigma
+  PauliParavector.pauliTraceReadout
+  PauliParavector.pauliCoefficientReadout
+  PauliParavector.loweredPauliCoefficientReadout
+  PauliParavector.superPoincareAnticommutatorMatrix
+  PauliParavector.superchargeMomentumReadout
+  PauliParavector.loweredSuperchargeMomentumReadout
+  PauliParavector.pauliCoefficientReadout_pauliMatrix
+  PauliParavector.loweredPauliCoefficientReadout_pauliMatrix
+  PauliParavector.superchargeMomentumReadout_eq_pauliCoefficientReadout
+  PauliParavector.superchargeMomentumReadout_eq_components
+  PauliParavector.loweredSuperchargeMomentumReadout_eq_components
+  PauliParavector.det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq
+  PauliParavector.trace_superPoincareAnticommutatorMatrix_eq_four_energy
   PauliParavector.IsNull
   PauliParavector.IsSingularPauli
+  PauliParavector.IsSingularSuperPoincareAnticommutator
   PauliParavector.isNull_iff_isSingularPauli
+  PauliParavector.isNull_iff_isSingularSuperPoincareAnticommutator
   PauliParavector.IsFutureOriented
   PauliParavector.IsPastOriented
   PauliParavector.IsFutureNull
@@ -825,8 +1045,11 @@ attribute [rep_depth operator]
   PauliParavector.IsSpacelike
   PauliParavector.IsLightlike
   PauliParavector.singularPauli_of_futureNull
+  PauliParavector.singularSuperPoincareAnticommutator_of_futureNull
   PauliParavector.det_pos_of_timelike
   PauliParavector.det_neg_of_spacelike
+  PauliParavector.det_superPoincareAnticommutatorMatrix_pos_of_timelike
+  PauliParavector.det_superPoincareAnticommutatorMatrix_neg_of_spacelike
   PauliParavector.OnMassShell
   PauliParavector.onMassShell_zero_iff_isNull
   PauliParavectorBridge
@@ -840,16 +1063,16 @@ attribute [rep_depth operator]
   SpinorHelicityFactorization
   SpinorHelicityFactorization.singular_representative
   PauliParavectorDatum
-  PauliParavectorDatum.determinant_metric_True
+  PauliParavectorDatum.determinant_metric_property
   SpinMomentumFrame
-  SpinMomentumFrame.momentum_transport_True
-  SpinMomentumFrame.spin_transport_True
+  SpinMomentumFrame.momentum_transport_property
+  SpinMomentumFrame.spin_transport_property
   LorentzSpinRepresentationCoupling
   LorentzSpinRepresentationCoupling.shared_spin_action
-  LorentzSpinRepresentationCoupling.representation_coupling_True
+  LorentzSpinRepresentationCoupling.representation_coupling_property
   MasslessSpinMomentumFrame
   MasslessSpinMomentumFrame.momentum_null
-  MasslessSpinMomentumFrame.helicity_locked_to_momentum_True
+  MasslessSpinMomentumFrame.helicity_locked_to_momentum_property
   HestenesSpinorRotorDatum
   SpinMomentumBridge
   SpinMomentumBridge.mass_is_scalar_invariant

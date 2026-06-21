@@ -1,4 +1,5 @@
 import Mathlib.Data.Real.Basic
+import Mathlib.Tactic
 
 set_option autoImplicit false
 
@@ -36,10 +37,20 @@ instance : Zero BdGQuasiparticle where
 def andreevReflection (p : BdGQuasiparticle) : BdGQuasiparticle :=
   ⟨-p.h, p.e⟩
 
+/-- Euclidean squared amplitude of the finite electron/hole coordinate pair. -/
+def amplitudeNormSq (p : BdGQuasiparticle) : ℝ :=
+  p.e * p.e + p.h * p.h
+
 /-- Applying the finite Andreev reflection twice gives the negative amplitude. -/
 theorem andreevReflection_sq (p : BdGQuasiparticle) :
     andreevReflection (andreevReflection p) = -p := by
   rfl
+
+/-- The finite Andreev reflection preserves the squared amplitude. -/
+theorem andreevReflection_normSq (p : BdGQuasiparticle) :
+    amplitudeNormSq (andreevReflection p) = amplitudeNormSq p := by
+  simp [amplitudeNormSq, andreevReflection]
+  ring
 
 /-- Pasted-snippet-compatible name for the finite Andreev square law. -/
 theorem andreev_reflection_fermionic (p : BdGQuasiparticle) :

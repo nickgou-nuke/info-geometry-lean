@@ -56,13 +56,30 @@ inductive ChiralSymbol where
 
 namespace ChiralSymbol
 
-/-- The local symbol `u⁺` is causal/off-diagonal. -/
+/-- The local symbol is causal/off-diagonal exactly when it is `u⁺` or `u⁻`. -/
 @[rep_depth krein]
-def IsCausal : ChiralSymbol → Prop
-  | uPlus => True
-  | uMinus => True
-  | one => False
-  | epsilon => False
+def IsCausal (s : ChiralSymbol) : Prop :=
+  s = uPlus ∨ s = uMinus
+
+@[simp, rep_depth krein]
+theorem uPlus_isCausal : IsCausal uPlus := Or.inl rfl
+
+@[simp, rep_depth krein]
+theorem uMinus_isCausal : IsCausal uMinus := Or.inr rfl
+
+@[simp, rep_depth krein]
+theorem one_not_isCausal : ¬ IsCausal one := by
+  intro h
+  cases h with
+  | inl h1 => cases h1
+  | inr h1 => cases h1
+
+@[simp, rep_depth krein]
+theorem epsilon_not_isCausal : ¬ IsCausal epsilon := by
+  intro h
+  cases h with
+  | inl h1 => cases h1
+  | inr h1 => cases h1
 
 end ChiralSymbol
 

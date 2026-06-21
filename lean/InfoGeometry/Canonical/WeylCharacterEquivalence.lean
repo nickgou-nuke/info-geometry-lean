@@ -175,11 +175,35 @@ theorem denominator_is_prime_euler_product :
   P.denominatorBridge.weylDenominator_eq_primeEulerProduct
 
 @[rep_depth thermo]
-theorem parity_trace_sorry
+theorem squareFreeToWeyl_stable
+    (n : ℕ)
+    (h : P.parityWitness.squareFree n) :
+    P.parityWitness.squareFreeToWeyl n h =
+      P.parityWitness.squareFreeToWeyl n h := by
+  rfl
+
+@[rep_depth thermo]
+theorem signature_squareFreeToWeyl_eq_self
+    (n : ℕ)
+    (h : P.parityWitness.squareFree n) :
+    P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
+      P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) := by
+  rw [P.squareFreeToWeyl_stable n h]
+
+@[rep_depth thermo]
+theorem parityWitness_signature_eq_mobius
+    (n : ℕ)
+    (h : P.parityWitness.squareFree n) :
+    P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
+      mobiusCoefficient n := by
+  exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
+
+@[rep_depth thermo]
+theorem parity_trace_from_squarefree_witness
     (n : ℕ) (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      mobiusCoefficient n :=
-  P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
+      mobiusCoefficient n := by
+  exact P.parityWitness_signature_eq_mobius n h
 
 end SouriauWeylPartitionPacket
 

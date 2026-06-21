@@ -1,7 +1,10 @@
 import Mathlib
 import InfoGeometry.Canonical.BiQuaternionKahlerFinite
 import InfoGeometry.Geometry.PauliParavectorBridge
+import InfoGeometry.Optics.JonesPoincareSphere
+import InfoGeometry.Section16
 import InfoGeometry.Physics.Section30UnifiedMatrixFramework
+import InfoGeometry.Twistor.PenroseTwistor
 
 /-!
 # Section 00: codebase-grounded finite matrix-basis framework

@@ -255,46 +255,32 @@ structure KreinDrazinNullDefectAdmissible
   HL_eq : S.HL = 1 - S.L * S.LD
   /-- The physical observable is the regular-support/null-defect sandwich. -/
   x_phys_eq : S.x_phys = S.HL * (S.pA * S.x_raw * S.pA) * S.HL
-  /-- The Drazin inverse is read on the regular Krein support, not via trace/rank. -/
-  regular_support_inverse_True : Prop := by
-    sorry
-  /-- The complement isolates the Krein-null defect cone. -/
-  null_defect_is_krein_null : Prop
-  /-- The null defect is the boundary sector of the doubled algebra/commutant action. -/
-  null_defect_is_boundary : Prop
 
 /--
-Projective/Weyl closure admissibility for the null-defect sector.
+Projective/Weyl closure marker for the null-defect sector.
 
-This replaces trace, determinant, and finite-rank dimension counting with
-projective quotient, Weyl scaling, conformal closure, and topological-index
-readout.
+This file has no quotient/ray/index data from which to prove projective
+closure.  The former bare proposition fields have therefore been removed; the
+actual projective closure must be supplied by a later module with explicit
+objects and formulas.
 -/
 structure ProjectiveWeylClosureAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-  (S : CliffordFractalWaveletSocket Op) where
-  /-- Weyl scaling quotients the Krein-null defect sector to rays. -/
-  weyl_null_ray_quotient : Prop
-  /-- The projective linear closure acts on the null-ray sector. -/
-  pgl_null_ray_closure : Prop
-  /-- The conformal boundary is read from the projectivized null cone. -/
-  conformal_boundary_readout : Prop
-  /-- Topological index/Gromov--Witten style volume replaces trace dimension. -/
-  topological_index_readout : Prop
+    (S : CliffordFractalWaveletSocket Op) where
 
 /-- Backwards-compatible name for the former Drazin--Hodge envelope witness. -/
 abbrev DrazinHodgeEnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Type :=
+    (S : CliffordFractalWaveletSocket Op) : Prop :=
   KreinDrazinNullDefectAdmissible S
 
 /-- Backwards-compatible short name for the Krein-Drazin null-defect witness. -/
 abbrev EnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
-    (S : CliffordFractalWaveletSocket Op) : Type :=
+    (S : CliffordFractalWaveletSocket Op) : Prop :=
   DrazinHodgeEnvelopeAdmissible S
 
 /-- Scalarized Fierz--Klein residual for the derived outgoing null channel. -/
@@ -376,7 +362,7 @@ structure CliffordFractalWaveletFierzKleinLaw
       "Reality is the subset of binary information that remains invariant
        under the thermodynamic and spectral limits of the universe."
   -/
-  quadric_True : CliffordFractalWaveletFierzKleinResidual socket.coords = 0
+  quadric_zero_property : CliffordFractalWaveletFierzKleinResidual socket.coords = 0
 
   /-- Fierz--Pauli--Kofink witness; separate from Clifford anticommutation. -/
   fierz_admissible : FierzPauliKofinkAdmissible socket.coords
@@ -386,9 +372,6 @@ structure CliffordFractalWaveletFierzKleinLaw
 
   /-- Krein-Drazin null-defect witness; separate from Fierz admissibility. -/
   drazin_admissible : KreinDrazinNullDefectAdmissible socket
-
-  /-- Projective/Weyl closure witness for null-ray readout. -/
-  projective_admissible : ProjectiveWeylClosureAdmissible socket
 
 -- ============================================================================
 -- Physical Envelope Definition

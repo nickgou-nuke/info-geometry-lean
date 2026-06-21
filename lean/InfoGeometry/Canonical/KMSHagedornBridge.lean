@@ -24,12 +24,21 @@ noncomputable def real_kms_shift [CompleteSpace E] (beta : ℝ) : EndH :=
 
 set_option linter.unusedVariables false
 
-/-- The Kubo-Martin-Schwinger (KMS) boundary condition is defined in terms of the
-real KMS shift in the doubled space. -/
-def is_kms_state [CompleteSpace E] (A B : EndH) (beta : ℝ) : Prop :=
-  -- This represents the algebraic <A(t) B> = <B A(t + i beta)> equivalence
-  -- formulated through the real modular shift operator.
-  True -- Placeholder for the fully general Tomita-Takesaki trace state equality
+/-- The Kubo-Martin-Schwinger (KMS) boundary condition in the finite doubled-real
+socket.
+
+`ω` is the chosen finite readout/state.  The right hand side inserts the real
+KMS shift, so this is a genuine equality of scalar correlation readouts rather
+than a vacuous placeholder for the full Tomita--Takesaki theorem. -/
+def is_kms_state [CompleteSpace E] (ω : EndH → ℝ) (A B : EndH) (beta : ℝ) : Prop :=
+  ω (A * B) = ω (B * (real_kms_shift (E := E) beta * A))
+
+/-- Read back the finite KMS equality carried by `is_kms_state`. -/
+theorem kms_state_readout [CompleteSpace E]
+    (ω : EndH → ℝ) (A B : EndH) (beta : ℝ)
+    (h : is_kms_state (E := E) ω A B beta) :
+    ω (A * B) = ω (B * (real_kms_shift (E := E) beta * A)) :=
+  h
 
 /-- At the Hagedorn temperature, the partition function diverges. 
 This is the boundary of the thermal cylinder. -/

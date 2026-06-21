@@ -118,23 +118,15 @@ def dField (F : PrimeLocalCARFamily PrimeLabel Op) : PrimeLabel → Op :=
 def current (F : PrimeLocalCARFamily PrimeLabel Op) : PrimeLabel → Op :=
   fun p => (F.pair p).parityOp
 
-/-- Same-mode local current-on-`c` action law. -/
-def sameModeCurrentCLaw (F : PrimeLocalCARFamily PrimeLabel Op) : Prop :=
-  ∀ p, cField F p * current F p = dField F p
-
-/-- Same-mode local current-on-`d` action law. -/
-def sameModeCurrentDLaw (F : PrimeLocalCARFamily PrimeLabel Op) : Prop :=
-  ∀ p, dField F p * current F p = cField F p
-
 /-- The explicit local current sends `c_p` to `d_p` on the same prime mode. -/
 theorem sameModeCurrentCLaw_holds (F : PrimeLocalCARFamily PrimeLabel Op) :
-    sameModeCurrentCLaw F := by
+    ∀ p, cField F p * current F p = dField F p := by
   intro p
   exact PrimeMajoranaCAR.ExteriorCARPair.cMajorana_mul_parityOp (F.pair p)
 
 /-- The explicit local current sends `d_p` to `c_p` on the same prime mode. -/
 theorem sameModeCurrentDLaw_holds (F : PrimeLocalCARFamily PrimeLabel Op) :
-    sameModeCurrentDLaw F := by
+    ∀ p, dField F p * current F p = cField F p := by
   intro p
   exact PrimeMajoranaCAR.ExteriorCARPair.dMajorana_mul_parityOp (F.pair p)
 
@@ -151,18 +143,26 @@ def toMobiusCurrentOPE
   cField := cField F
   dField := dField F
   current := current F
-  current_c_True := sameModeCurrentCLaw F
-  current_d_True := sameModeCurrentDLaw F
+  CurrentActsOnC := fun _p j c d => c * j = d
+  CurrentActsOnD := fun _p j c d => d * j = c
+  current_c := by
+    intro p
+    exact sameModeCurrentCLaw_holds F p
+  current_d := by
+    intro p
+    exact sameModeCurrentDLaw_holds F p
 
 theorem toMobiusCurrentOPE_current_c_holds
-    (F : PrimeLocalCARFamily PrimeLabel Op) :
-    (toMobiusCurrentOPE F).current_c_True :=
-  sameModeCurrentCLaw_holds F
+    (F : PrimeLocalCARFamily PrimeLabel Op)
+    (p : PrimeLabel) :
+    (cField F p) * (current F p) = dField F p :=
+  (toMobiusCurrentOPE F).current_c p
 
 theorem toMobiusCurrentOPE_current_d_holds
-    (F : PrimeLocalCARFamily PrimeLabel Op) :
-    (toMobiusCurrentOPE F).current_d_True :=
-  sameModeCurrentDLaw_holds F
+    (F : PrimeLocalCARFamily PrimeLabel Op)
+    (p : PrimeLabel) :
+    (dField F p) * (current F p) = cField F p :=
+  (toMobiusCurrentOPE F).current_d p
 
 end PrimeLocalCARFamily
 
@@ -173,24 +173,8 @@ open InfoGeometry.Arithmetic.PrimeWeylGaugeCantorFockBridge
 variable {Idx Raw Op : Type*} [Ring Op]
 variable (N : WeylGaugeTiltSwitchNormalization Idx Raw Op)
 
-/-- Same-site current-on-`c` law in the normalized Weyl-gauge owner corridor. -/
-def sameModeCurrentCLaw : Prop :=
-  ∀ p, N.c p * (N.c p * N.d p) = N.d p
-
-/-- Same-site current-on-`d` law in the normalized Weyl-gauge owner corridor. -/
-def sameModeCurrentDLaw : Prop :=
-  ∀ p, N.d p * (N.c p * N.d p) = N.c p
-
-/-- Distinct-site current-on-`c` commutation law in the normalized owner corridor. -/
-def offDiagCurrentCLaw : Prop :=
-  ∀ p q, p ≠ q → (N.c p * N.d p) * N.c q = N.c q * (N.c p * N.d p)
-
-/-- Distinct-site current-on-`d` commutation law in the normalized owner corridor. -/
-def offDiagCurrentDLaw : Prop :=
-  ∀ p q, p ≠ q → (N.c p * N.d p) * N.d q = N.d q * (N.c p * N.d p)
-
 theorem sameModeCurrentCLaw_holds :
-    sameModeCurrentCLaw N := by
+    ∀ p, N.c p * (N.c p * N.d p) = N.d p := by
   intro p
   calc
     N.c p * (N.c p * N.d p)
@@ -198,7 +182,7 @@ theorem sameModeCurrentCLaw_holds :
     _ = N.d p := by rw [N.c_sq p]; simp
 
 theorem sameModeCurrentDLaw_holds :
-    sameModeCurrentDLaw N := by
+    ∀ p, N.d p * (N.c p * N.d p) = N.c p := by
   intro p
   calc
     N.d p * (N.c p * N.d p)
@@ -212,12 +196,12 @@ theorem sameModeCurrentDLaw_holds :
     _ = N.c p := by rw [N.d_sq p]; simp
 
 theorem offDiagCurrentCLaw_holds :
-    offDiagCurrentCLaw N := by
+    ∀ p q, p ≠ q → (N.c p * N.d p) * N.c q = N.c q * (N.c p * N.d p) := by
   intro p q hpq
   exact N.localParity_commutes_c_offdiag p q hpq
 
 theorem offDiagCurrentDLaw_holds :
-    offDiagCurrentDLaw N := by
+    ∀ p q, p ≠ q → (N.c p * N.d p) * N.d q = N.d q * (N.c p * N.d p) := by
   intro p q hpq
   exact N.localParity_commutes_d_offdiag p q hpq
 
@@ -233,16 +217,22 @@ def toMobiusCurrentOPE :
   cField := N.c
   dField := N.d
   current := fun p => N.c p * N.d p
-  current_c_True := sameModeCurrentCLaw N ∧ offDiagCurrentCLaw N
-  current_d_True := sameModeCurrentDLaw N ∧ offDiagCurrentDLaw N
+  CurrentActsOnC := fun _p j c d => c * j = d
+  CurrentActsOnD := fun _p j c d => d * j = c
+  current_c := by
+    intro p
+    exact sameModeCurrentCLaw_holds N p
+  current_d := by
+    intro p
+    exact sameModeCurrentDLaw_holds N p
 
 theorem toMobiusCurrentOPE_current_c_holds :
-    (toMobiusCurrentOPE N).current_c_True :=
-  ⟨sameModeCurrentCLaw_holds N, offDiagCurrentCLaw_holds N⟩
+    ∀ p, N.c p * (N.c p * N.d p) = N.d p :=
+  (toMobiusCurrentOPE N).current_c
 
 theorem toMobiusCurrentOPE_current_d_holds :
-    (toMobiusCurrentOPE N).current_d_True :=
-  ⟨sameModeCurrentDLaw_holds N, offDiagCurrentDLaw_holds N⟩
+    ∀ p, N.d p * (N.c p * N.d p) = N.c p :=
+  (toMobiusCurrentOPE N).current_d
 
 end PrimeWeylGaugeCantorFockBridge.WeylGaugeTiltSwitchNormalization
 

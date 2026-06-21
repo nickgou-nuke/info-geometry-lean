@@ -32,9 +32,6 @@ structure KreinQuadraticDatum
   smul_q :
     ∀ (r : ℝ) (x : H), q (r • x) = r ^ 2 * q x
 
-  /-- Certificate that this readout is the intended Krein quadratic form. -/
-  kreinCertificate : Prop
-
 namespace KreinQuadraticDatum
 
 variable {H : Type*} [SMul ℝ H]

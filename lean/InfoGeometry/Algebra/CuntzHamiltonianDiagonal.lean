@@ -23,32 +23,32 @@ namespace InfoGeometry.Algebra.CuntzHamiltonianDiagonal
 theorem hamiltonian_off_diag (n : ℕ) (ε : Fin n → ℂ) (i j : Fin n) (hij : i ≠ j) :
     (cuntzS n i * cuntzSdag n i) * (hamiltonian n ε) *
     (cuntzS n j * cuntzSdag n j) = 0 := by
-  dsimp [hamiltonian]
-  -- P_i (Σ_k ε_k P_k) P_j = Σ_k ε_k P_i P_k P_j
-  -- P_i P_k = 0 for k≠i. P_k P_j = 0 for k≠j.
-  -- So the sum reduces to the k=i AND k=j term. But i≠j, so no term survives.
-  rw [Finset.sum_mul, Finset.mul_sum]
-  simp_rw [smul_mul_assoc, mul_smul_comm, mul_assoc]
-  -- Goal: Σ_k ε_k • P_i P_k P_j = 0
-  refine Finset.sum_eq_zero (λ k _ => ?_)
-  by_cases hki : k = i
-  · subst k; simp [cuntz_range_projector n i, cuntz_range_projectors_orthogonal n hij,
-      mul_assoc]
-  · simp [cuntz_range_projectors_orthogonal n (Ne.symm hki), mul_assoc]
+  change P n i * hamiltonian n ε * P n j = 0
+  calc
+    P n i * hamiltonian n ε * P n j = P n i * (hamiltonian n ε * P n j) := by
+      rw [mul_assoc]
+    _ = P n i * (ε j • P n j) := by
+      rw [H_mul_P n ε j]
+    _ = ε j • (P n i * P n j) := by
+      rw [mul_smul_comm]
+    _ = 0 := by
+      rw [P_ortho n hij]
+      simp
 
 /-- P_i H P_i = ε_i P_i (diagonal term). -/
 theorem hamiltonian_diag (n : ℕ) (ε : Fin n → ℂ) (i : Fin n) :
     (cuntzS n i * cuntzSdag n i) * (hamiltonian n ε) *
     (cuntzS n i * cuntzSdag n i) = ε i • (cuntzS n i * cuntzSdag n i) := by
-  dsimp [hamiltonian]
-  rw [Finset.sum_mul, Finset.mul_sum]
-  simp_rw [smul_mul_assoc, mul_smul_comm, mul_assoc]
-  -- Goal: Σ_k ε_k • P_i P_k P_i = ε_i • P_i
-  -- For k=i: P_i P_i P_i = P_i. For k≠i: P_i P_k = 0 causing P_i P_k P_i = 0.
-  rw [Finset.sum_eq_single i (M := CuntzAlg n) (λ k _ hki => ?_) (λ hi => ?_)]
-  · simp [cuntz_range_projector n i, mul_assoc]
-  · simp [cuntz_range_projectors_orthogonal n (Ne.symm hki), mul_assoc]
-  · exact (Finset.not_mem_univ i hi).elim
+  change P n i * hamiltonian n ε * P n i = ε i • P n i
+  calc
+    P n i * hamiltonian n ε * P n i = P n i * (hamiltonian n ε * P n i) := by
+      rw [mul_assoc]
+    _ = P n i * (ε i • P n i) := by
+      rw [H_mul_P n ε i]
+    _ = ε i • (P n i * P n i) := by
+      rw [mul_smul_comm]
+    _ = ε i • P n i := by
+      rw [P_idem n i]
 
 /-- The Hamiltonian is diagonal in the projector basis:
     H = Σ_i ε_i P_i, and P_i H P_j = δ_{ij} ε_i P_i. -/
@@ -65,7 +65,7 @@ theorem hamiltonian_diagonalization (n : ℕ) (ε : Fin n → ℂ) (i j : Fin n)
 theorem hamiltonian_commutes_projector (n : ℕ) (ε : Fin n → ℂ) (i : Fin n) :
     hamiltonian n ε * (cuntzS n i * cuntzSdag n i) =
     (cuntzS n i * cuntzSdag n i) * hamiltonian n ε := by
-  -- Both sides equal ε_i P_i:
+  change hamiltonian n ε * P n i = P n i * hamiltonian n ε
   rw [H_mul_P n ε i, P_mul_H n ε i]
 
 end InfoGeometry.Algebra.CuntzHamiltonianDiagonal

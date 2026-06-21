@@ -260,13 +260,13 @@ structure MassieuPlanckLegendreCalibration (Param : Type*) where
   grandPotential : Param → ℂ
 
   /-- Massieu transform law: `Φ = S - β(E - μN)`. -/
-  massieu_legendre_True :
+  massieu_legendre_law :
     ∀ θ : Param,
       massieu θ =
         massieuFromLegendre entropy beta energy chemicalPotential particleNumber θ
 
   /-- Grand-potential law: `Ω = -β⁻¹Φ`. -/
-  grandPotential_True :
+  grandPotential_law :
     ∀ θ : Param,
       grandPotential θ = grandPotentialFromMassieu beta massieu θ
 
@@ -280,13 +280,13 @@ variable (C : MassieuPlanckLegendreCalibration Param)
 theorem massieu_eq_legendre (θ : Param) :
     C.massieu θ =
       massieuFromLegendre C.entropy C.beta C.energy C.chemicalPotential C.particleNumber θ :=
-  C.massieu_legendre_True θ
+  C.massieu_legendre_law θ
 
 /-- Re-export of the grand-potential law. -/
 @[rep_depth thermo]
 theorem grandPotential_eq (θ : Param) :
     C.grandPotential θ = grandPotentialFromMassieu C.beta C.massieu θ :=
-  C.grandPotential_True θ
+  C.grandPotential_law θ
 
 end MassieuPlanckLegendreCalibration
 

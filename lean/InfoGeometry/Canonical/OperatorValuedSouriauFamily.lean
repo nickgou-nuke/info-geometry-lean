@@ -66,27 +66,6 @@ structure OperatorValuedSouriauFamily
   /-- Exponential weight is admissible for the chosen Frobenius closure. -/
   expWeight_closed : frobenius.closed expWeight
 
-  /-- Guard: beta is an operatorial thermal/modular direction, not a scalar owner. -/
-  beta_is_operatorial_thermal_direction : Prop
-
-  /-- Guard: time is an operatorial clock/dilation direction, not merely a scalar. -/
-  time_is_operatorial_clock_direction : Prop
-
-  /--
-  Guard: external real modular-flow parameters are chart coordinates, not the
-  owner clock observable.
-  -/
-  scalar_time_is_chart_parameter_only : Prop
-
-  /-- Guard: scalar beta is only a commutative/chart shadow of the operator beta. -/
-  scalar_beta_is_chart_shadow_only : Prop
-
-  /-- Supplied noncommutative Duhamel/ordered-product derivative law. -/
-  duhamelDerivativeLaw : Prop
-
-  /-- Supplied law: scalar readouts are downstream of `eval`, trace, or KMS data. -/
-  scalarReadoutDownstreamOnly : Prop
-
   /--
   Bridge to the existing operatorial exponential family: its generator at the
   operator beta is the Souriau generator.
@@ -105,46 +84,6 @@ namespace OperatorValuedSouriauFamily
 
 variable {LieAlg Obs State Direction : Type*}
 variable (P : OperatorValuedSouriauFamily LieAlg Obs State Direction)
-
-/-- Supplied law: the Souriau generator is the operator contraction/order-sensitive product of beta data with quantum moment-map data. -/
-def souriauGenerator_True (_P : OperatorValuedSouriauFamily LieAlg Obs State Direction) : Prop :=
-  True
-
-/-- Supplied law: the untraced exponential family evaluates to `expWeight`. -/
-def expWeight_True (_P : OperatorValuedSouriauFamily LieAlg Obs State Direction) : Prop :=
-  True
-
-/-- Beta/geometric temperature is owned by the operator layer. -/
-def beta_is_operatorial : Prop :=
-  P.beta_is_operatorial_thermal_direction
-
-/-- Time/clock/dilation is owned by the operator layer. -/
-def time_is_operatorial : Prop :=
-  P.time_is_operatorial_clock_direction
-
-/-- A scalar flow time is only a chart parameter unless an operator clock is supplied. -/
-def scalar_time_chart_only : Prop :=
-  P.scalar_time_is_chart_parameter_only
-
-/-- A scalar beta is only a commutative/chart shadow unless an operator beta is supplied. -/
-def scalar_beta_chart_shadow_only : Prop :=
-  P.scalar_beta_is_chart_shadow_only
-
-/-- The operator Souriau generator obeys the supplied contraction/order law. -/
-def souriauGenerator_law_holds : Prop :=
-  P.souriauGenerator_True
-
-/-- The untraced exponential weight obeys the supplied operator exponential law. -/
-def expWeight_law_holds : Prop :=
-  P.expWeight_True
-
-/-- Noncommutative differentiation is represented by the supplied Duhamel law. -/
-def duhamel_derivative_True : Prop :=
-  P.duhamelDerivativeLaw
-
-/-- Scalar thermodynamic data are downstream readouts, not owner-layer data. -/
-def scalar_readout_downstream_only : Prop :=
-  P.scalarReadoutDownstreamOnly
 
 /-- The existing operatorial exponential family has generator `K_B` at operator beta. -/
 theorem exponentialFamily_K_beta_eq_souriauGenerator_holds :

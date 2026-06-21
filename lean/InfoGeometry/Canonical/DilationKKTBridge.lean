@@ -23,16 +23,6 @@ structure DilationWitness where
   liftedDrazinProj : W → W
   liftedMPProj : W → W
   dilationGenerator : R
-  pullbackCondition : Prop
-  agreementOrCommute : Prop
-  resolvedOrRepresentedInDilatedSpace : Prop
-  resolvedOrRepresentedCertified : resolvedOrRepresentedInDilatedSpace
-
-/-- If a dilation witness is supplied, the obstruction is represented/resolved in that witness space. -/
-theorem DilationWitness.resolved_or_represented
-    (D : DilationWitness (V := V) (W := W) (R := R)) :
-    D.resolvedOrRepresentedInDilatedSpace :=
-  D.resolvedOrRepresentedCertified
 
 /-- Sourced dilation packet: source absence is the only generic vanishing theorem. -/
 @[rep_depth transport]

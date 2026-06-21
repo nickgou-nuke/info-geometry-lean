@@ -18,14 +18,13 @@ open InfoGeometry.Canonical.OperatorProjectorMismatch
 
 variable {R : Type*} [Ring R]
 
-/-- Abstract metric/adjoint package. `metricTransportLaw` is intentionally witness-level. -/
+/-- Abstract metric/adjoint package. -/
 @[rep_depth transport]
 structure MetricAdjointData where
   metric : R
   metricInv : R
   metric_leftInv : metricInv * metric = 1
   metric_rightInv : metric * metricInv = 1
-  metricTransportLaw : Prop
 
 /-- Moore--Penrose inverse data relative to a supplied metric package. -/
 @[rep_depth transport]

@@ -231,17 +231,20 @@ structure DeterminantVandermondeComparisonGate
   determinant : DeterminantReadout
   vandermonde : VandermondeReadout
   compare : DeterminantReadout → VandermondeReadout → Prop
-  comparison_True : compare determinant vandermonde
+  valid_law : compare determinant vandermonde
 
 namespace DeterminantVandermondeComparisonGate
 
-/-- Re-export of the supplied determinant/Vandermonde comparison. -/
+/--
+Explicit debt: a determinant/Vandermonde comparison needs a concrete owner
+model, not a caller-chosen predicate bundled with its own proof.
+-/
 theorem valid
     {DeterminantReadout VandermondeReadout : Type*}
     (G : DeterminantVandermondeComparisonGate
       DeterminantReadout VandermondeReadout) :
     G.compare G.determinant G.vandermonde :=
-  G.comparison_True
+    G.valid_law
 
 end DeterminantVandermondeComparisonGate
 

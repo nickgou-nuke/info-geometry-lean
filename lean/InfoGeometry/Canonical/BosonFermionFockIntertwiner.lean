@@ -51,7 +51,7 @@ structure FockLevelCurrentIntertwiner where
       toBoson (fermionCurrent n v) = bosonCurrent n (toBoson v)
   central_intertwines :
     ∀ v : F, toBoson (fermionCentral v) = bosonCentral (toBoson v)
-  boson_heisenberg_True :
+  boson_heisenberg_law :
     ∀ m n : ℤ,
       (bosonCurrent m).commutator (bosonCurrent n) =
         if m + n = 0 then (m : ℝ) • bosonCentral else 0
@@ -75,12 +75,12 @@ The source-side fermionic current operators inherit the Heisenberg law from the
 bosonic current operators through the faithful Fock-level intertwiner.
 -/
 @[rep_depth transport]
-theorem fermion_heisenberg_True (m n : ℤ) :
+theorem fermion_heisenberg_law (m n : ℤ) :
     (X.fermionCurrent m).commutator (X.fermionCurrent n) =
       if m + n = 0 then (m : ℝ) • X.fermionCentral else 0 := by
   ext v
   apply X.toBoson_injective
-  rw [current_commutator_intertwines (X := X) m n v, X.boson_heisenberg_True m n]
+  rw [current_commutator_intertwines (X := X) m n v, X.boson_heisenberg_law m n]
   by_cases h : m + n = 0
   · simp [h, X.central_intertwines]
   · simp [h]

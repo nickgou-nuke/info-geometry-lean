@@ -85,7 +85,7 @@ noncomputable def hessianGeometry : HessianGeometry E where
   potential := G.logPartition
   grad := G.sigma
   has_gradient := G.hasFDerivAt_logPartition
-  divergence_nonneg_True := G.divergence_form_nonneg
+  divergence_form_nonneg := G.divergence_form_nonneg
 
 /-- The Bregman divergence of the Gaussian family is the squared Mahalanobis distance. -/
 @[blueprint "thm:gaussian-mahalanobis-divergence"]

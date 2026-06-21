@@ -70,24 +70,67 @@ theorem pathDependence_of_twistedInference
     UpdateOrderPathDependent T.dual.nabla :=
   twistedInference_updateOrderPathDependent (T := T)
 
-/-- Theorem `exists_gaugeOrderHysteresis_sorry`. -/
-theorem exists_gaugeOrderHysteresis_sorry :
+/-- Lemma 1: the explicit 2×2 Weyl witness has the required row positivity. -/
+theorem weylWitness_has_positive_rows :
+    HasPositiveRowSums 2 weylOrderWitnessMatrix2 := by
+  exact weylOrderWitnessMatrix2_positiveRows
+
+/-- Lemma 2: row-normalizing the explicit witness leaves positive column sums. -/
+theorem weylWitness_rowNormalize_has_positive_cols :
+    HasPositiveColSums 2
+      (rowNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_rows) := by
+  exact weylOrderWitnessMatrix2_positiveCols_afterRow
+
+/-- Lemma 3: the explicit 2×2 Weyl witness has the required column positivity. -/
+theorem weylWitness_has_positive_cols :
+    HasPositiveColSums 2 weylOrderWitnessMatrix2 := by
+  exact weylOrderWitnessMatrix2_positiveCols
+
+/-- Lemma 4: column-normalizing the explicit witness leaves positive row sums. -/
+theorem weylWitness_colNormalize_has_positive_rows :
+    HasPositiveRowSums 2
+      (colNormalize 2 weylOrderWitnessMatrix2 weylWitness_has_positive_cols) := by
+  exact weylOrderWitnessMatrix2_positiveRows_afterCol
+
+/-- Lemma 5: the two normalization orders differ on the `(0,0)` entry. -/
+theorem weylWitness_rowThenCol_ne_colThenRow :
+    rowThenColUpdate 2 weylOrderWitnessMatrix2
+        weylWitness_has_positive_rows
+        weylWitness_rowNormalize_has_positive_cols
+      ≠
+      colThenRowUpdate 2 weylOrderWitnessMatrix2
+        weylWitness_has_positive_cols
+        weylWitness_colNormalize_has_positive_rows := by
+  intro hEq
+  have h00 := congrArg (fun A => A (0 : Fin 2) (0 : Fin 2)) hEq
+  norm_num [rowThenColUpdate, colThenRowUpdate, colNormalize, rowNormalize, rowSum, colSum,
+    weylOrderWitnessMatrix2, weylWitness_has_positive_rows, weylWitness_rowNormalize_has_positive_cols,
+    weylWitness_has_positive_cols, weylWitness_colNormalize_has_positive_rows] at h00
+
+/-- Lemma 6: the explicit witness has update-order hysteresis. -/
+theorem weylWitness_updateOrderHysteresis :
+    UpdateOrderHysteresis 2 weylOrderWitnessMatrix2
+      weylWitness_has_positive_rows
+      weylWitness_rowNormalize_has_positive_cols
+      weylWitness_has_positive_cols
+      weylWitness_colNormalize_has_positive_rows := by
+  unfold UpdateOrderHysteresis
+  exact weylWitness_rowThenCol_ne_colThenRow
+
+/-- Theorem: an explicit 2×2 gauge-order hysteresis witness exists. -/
+theorem exists_gaugeOrderHysteresis :
     ∃ (M : Coupling 2)
       (hrow : HasPositiveRowSums 2 M)
       (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
       (hcol : HasPositiveColSums 2 M)
       (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
       UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol := by
-  refine ⟨weylOrderWitnessMatrix2,
-    weylOrderWitnessMatrix2_positiveRows,
-    weylOrderWitnessMatrix2_positiveCols_afterRow,
-    weylOrderWitnessMatrix2_positiveCols,
-    weylOrderWitnessMatrix2_positiveRows_afterCol,
-    ?_⟩
-  unfold UpdateOrderHysteresis rowThenColUpdate colThenRowUpdate
-  intro hEq
-  have h00 := congrArg (fun A => A (0 : Fin 2) (0 : Fin 2)) hEq
-  norm_num [colNormalize, rowNormalize, rowSum, colSum, weylOrderWitnessMatrix2] at h00
+  exact ⟨weylOrderWitnessMatrix2,
+    weylWitness_has_positive_rows,
+    weylWitness_rowNormalize_has_positive_cols,
+    weylWitness_has_positive_cols,
+    weylWitness_colNormalize_has_positive_rows,
+    weylWitness_updateOrderHysteresis⟩
 
 end TorsionHysteresis
 

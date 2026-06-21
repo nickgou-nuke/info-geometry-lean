@@ -108,7 +108,7 @@ theorem det_pauliMatrix_eq_zero_of_null
     (hv : v.IsNull) :
     Matrix.det (pauliMatrix v) = 0 := by
   rw [det_pauliMatrix, hv]
-  simp [Minkowski4.IsNull]
+  simp
 
 /-- Energy-momentum mass shell in Pauli determinant form. -/
 @[rep_depth operator]
@@ -162,23 +162,16 @@ structure SpinBivectorReadout
   /-- Spin plane/bivector readout. -/
   spinPlane : Spinor → Bivector
 
-  /-- Model-specific readout law. -/
-  readoutLaw : Prop
-
-  /-- Evidence for the model-specific readout law. -/
-  readoutCertificate :
-    readoutLaw
-
 namespace SpinBivectorReadout
 
 variable {Spinor Bivector : Type*}
-variable (S : SpinBivectorReadout Spinor Bivector)
 
-/-- Re-export of the spin-plane readout law. -/
+/-- Debt surface for the model-specific spin-plane readout theorem. -/
 @[rep_depth operator]
 theorem readout_holds :
-    S.readoutLaw :=
-  S.readoutCertificate
+    (_S : SpinBivectorReadout Spinor Bivector) → False := by
+  intro _S
+  sorry
 
 end SpinBivectorReadout
 
@@ -203,23 +196,16 @@ structure MomentumSpinCoupling
   /-- Pauli-Lubanski-style readout. -/
   pauliLubanskiReadout : Spinor → Minkowski4
 
-  /-- Coupling law supplied by the concrete representation. -/
-  couplingLaw : Prop
-
-  /-- Evidence for the coupling law. -/
-  couplingCertificate :
-    couplingLaw
-
 namespace MomentumSpinCoupling
 
 variable {Spinor Bivector : Type*}
-variable (C : MomentumSpinCoupling Spinor Bivector)
 
-/-- Re-export of the spin-momentum coupling law. -/
+/-- Debt surface for the model-specific spin-momentum coupling theorem. -/
 @[rep_depth operator]
 theorem coupling_holds :
-    C.couplingLaw :=
-  C.couplingCertificate
+    (_C : MomentumSpinCoupling Spinor Bivector) → False := by
+  intro _C
+  sorry
 
 end MomentumSpinCoupling
 

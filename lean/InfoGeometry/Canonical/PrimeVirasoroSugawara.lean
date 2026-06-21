@@ -41,6 +41,43 @@ open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 /-! ## Prime OPE and current layer -/
 
 /--
+Owner-backed level-one current-current evidence.
+
+This is deliberately not a `Unit` token.  The packet carries the concrete
+canonical infinite-current commutator laws currently available in the imported
+split-Clifford/Heisenberg owner layer.  A future Laurent/OPE realization can
+add a symbolic transport theorem, but the present evidence already has typed
+mathematical content.
+-/
+@[rep_depth operator]
+structure CurrentCurrentLevelOneEvidence where
+  /-- Canonical resonant level-one Heisenberg commutator. -/
+  owner_level_one :
+    ∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
+      ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+        InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+        (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
+
+  /-- Canonical reversed resonant commutator. -/
+  owner_level_one_reverse :
+    ∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
+      ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
+        InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
+        ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
+
+/-- Canonical level-one evidence supplied by the split-Clifford Heisenberg owner. -/
+@[rep_depth operator]
+def canonicalCurrentCurrentLevelOneEvidence : CurrentCurrentLevelOneEvidence where
+  owner_level_one := by
+    intro 𝕜 _ _
+    exact InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
+      (𝕜 := 𝕜)
+  owner_level_one_reverse := by
+    intro 𝕜 _ _
+    exact InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_neg_one_one
+      (𝕜 := 𝕜)
+
+/--
 Prime current OPE packet.
 
 `PrimeLabel` indexes the prime directions.  `Field` is the symbolic field
@@ -73,7 +110,7 @@ structure PrimeCurrentOPEPacket
   -- still lacks is the Laurent/OPE realization transporting the owner
   -- current-current level-one theorem into the symbolic
   -- `PrimeCurrentOPEPacket` carrier.
-  current_current_level_one_data : Unit
+  current_current_level_one_evidence : CurrentCurrentLevelOneEvidence
 
 namespace PrimeCurrentOPEPacket
 
@@ -91,8 +128,20 @@ level-one Heisenberg commutator.  What is still missing here is the
 Laurent/OPE realization that transports that owner current-current theorem into
 the symbolic `PrimeCurrentOPEPacket` interface.
 -/
-def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop := by
-  exact _P.current_current_level_one_data = ()
+def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop :=
+  ∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
+    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
+      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
+      (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
+
+/-- The packet exposes the imported owner-backed level-one current-current law. -/
+@[rep_depth operator]
+theorem currentCurrentLevelOneLaw_holds
+    (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) :
+    CurrentCurrentLevelOneLaw P :=
+by
+  intro 𝕜 _ _
+  exact P.current_current_level_one_evidence.owner_level_one 𝕜
 
 end PrimeCurrentOPEPacket
 
@@ -110,9 +159,9 @@ Concrete level-one current-current readback on the canonical infinite-current
 owner carrier.
 
 This theorem is the exact owner theorem currently available to the prime
-Sugawara corridor.  The remaining gap is not the proof itself but the fact that
-`PrimeCurrentOPEPacket.current_current_level_one_data` is only a `Unit` witness,
-so the bracket equality cannot yet be stored in the packet as typed data.
+Sugawara corridor.  The symbolic packet now stores this typed evidence through
+`CurrentCurrentLevelOneEvidence`; the remaining gap is the Laurent/OPE
+realization transporting it into the symbolic `Field` carrier.
 -/
 @[rep_depth operator]
 theorem canonicalInfiniteCurrent_level_one_commutator :

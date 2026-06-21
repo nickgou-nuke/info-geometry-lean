@@ -5,7 +5,7 @@ Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.External.Virasoro.Commutator
-import VirasoroProject.ToMathlib.Algebra.Lie.Basic
+import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Basic
 
 /-!
 # Constructing representations of Lie algebras from operators corresponding to a basis

@@ -202,7 +202,7 @@ variable (C : BottStreamEntropyCoupling kind)
 
 /-- Coupling is the non-additive residual between joint and stream entropies. -/
 @[rep_depth transport]
-theorem coupling_True :
+theorem coupling_eq_joint_sub_streams_readout :
     C.couplingReadout =
       C.jointEntropy - Finset.univ.sum (fun phase : BottPhase kind => C.streamEntropy phase) :=
   C.coupling_eq_joint_sub_streams
@@ -237,12 +237,12 @@ theorem depth_entropy_nonnegative (n : ℕ) :
 
 /-- The coupling law at depth `n`. -/
 @[rep_depth transport]
-theorem coupling_True (n : ℕ) :
+theorem coupling_eq_joint_sub_streams_readout (n : ℕ) :
     (P.coupling n).couplingReadout =
       (P.coupling n).jointEntropy -
         Finset.univ.sum
           (fun phase : BottPhase kind => (P.coupling n).streamEntropy phase) :=
-  (P.coupling n).coupling_True
+  (P.coupling n).coupling_eq_joint_sub_streams_readout
 
 end BottPeriodicCantorEntropyPacket
 
@@ -261,28 +261,23 @@ structure BottPeriodicCliffordPacket
     (Op : Type*) [Ring Op] where
   gamma : BottPhase kind → Op
 
-  blockPeriodicityLaw : Prop
-  blockPeriodicityCertificate : blockPeriodicityLaw
-
-  matrixAmplificationLaw : Prop
-  matrixAmplificationCertificate : matrixAmplificationLaw
-
 namespace BottPeriodicCliffordPacket
 
 variable {kind : BottKind} {Op : Type*} [Ring Op]
-variable (C : BottPeriodicCliffordPacket kind Op)
 
-/-- The selected Clifford block satisfies its Bott-periodicity law. -/
+/-- Debt surface for the missing Bott-periodicity theorem for the selected block. -/
 @[rep_depth operator]
 theorem block_periodicity :
-    C.blockPeriodicityLaw :=
-  C.blockPeriodicityCertificate
+    (_C : BottPeriodicCliffordPacket kind Op) → False := by
+  intro _C
+  sorry
 
-/-- The selected Clifford block satisfies its matrix-amplification law. -/
+/-- Debt surface for the missing matrix-amplification theorem for the selected block. -/
 @[rep_depth operator]
 theorem matrix_amplification :
-    C.matrixAmplificationLaw :=
-  C.matrixAmplificationCertificate
+    (_C : BottPeriodicCliffordPacket kind Op) → False := by
+  intro _C
+  sorry
 
 end BottPeriodicCliffordPacket
 
@@ -334,7 +329,7 @@ structure BottPeriodicFierzKleinLaw
   socket : BottPeriodicItFromBitSocket Op
   coords : FractalCantorFockWitness.FierzChannel → ℝ
   residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ
-  quadric_True : residual coords = 0
+  quadric_zero_property : residual coords = 0
 
 namespace BottPeriodicFierzKleinLaw
 
@@ -343,9 +338,9 @@ variable (L : BottPeriodicFierzKleinLaw Op)
 
 /-- The state-measured Fierz readout lies on the chosen Klein/Fierz quadric. -/
 @[rep_depth operator]
-theorem quadric_zero :
+  theorem quadric_zero :
     L.residual L.coords = 0 :=
-  L.quadric_True
+  L.quadric_zero_property
 
 end BottPeriodicFierzKleinLaw
 

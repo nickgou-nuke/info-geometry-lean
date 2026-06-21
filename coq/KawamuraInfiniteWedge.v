@@ -1,6 +1,6 @@
-Require Import ZArith.
-Require Import Sets.Ensembles.
-Require Import Sets.Finite_sets.
+From Stdlib Require Import ZArith.
+From Stdlib Require Import Sets.Ensembles.
+From Stdlib Require Import Sets.Finite_sets.
 
 (* Kawamura's Infinite Wedge Representation and Cuntz Algebra *)
 

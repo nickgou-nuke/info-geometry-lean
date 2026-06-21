@@ -177,6 +177,73 @@ theorem entanglementWitness_implies_entangled
     IsEntangled (A := A) ω₀ := by
   exact ⟨W⟩
 
+/-- Lemma 1: an explicit entropy criterion proves entanglement. -/
+theorem isEntangled_of_entropy
+    {ω₀ : A → ℝ}
+    (hEntropy : Prop)
+    (h : hEntropy) :
+    IsEntangled (A := A) ω₀ := by
+  exact ⟨{ entropy := hEntropy
+           negativity := False
+           gaussianBosonic := False
+           gaussianFermionic := False
+           certified := Or.inl h }⟩
+
+/-- Lemma 2: an explicit negativity criterion proves entanglement. -/
+theorem isEntangled_of_negativity
+    {ω₀ : A → ℝ}
+    (hNegativity : Prop)
+    (h : hNegativity) :
+    IsEntangled (A := A) ω₀ := by
+  exact ⟨{ entropy := False
+           negativity := hNegativity
+           gaussianBosonic := False
+           gaussianFermionic := False
+           certified := Or.inr (Or.inl h) }⟩
+
+/-- Lemma 3: an explicit Gaussian bosonic criterion proves entanglement. -/
+theorem isEntangled_of_gaussianBosonic
+    {ω₀ : A → ℝ}
+    (hGaussianBosonic : Prop)
+    (h : hGaussianBosonic) :
+    IsEntangled (A := A) ω₀ := by
+  exact ⟨{ entropy := False
+           negativity := False
+           gaussianBosonic := hGaussianBosonic
+           gaussianFermionic := False
+           certified := Or.inr (Or.inr (Or.inl h)) }⟩
+
+/-- Lemma 4: an explicit Gaussian fermionic criterion proves entanglement. -/
+theorem isEntangled_of_gaussianFermionic
+    {ω₀ : A → ℝ}
+    (hGaussianFermionic : Prop)
+    (h : hGaussianFermionic) :
+    IsEntangled (A := A) ω₀ := by
+  exact ⟨{ entropy := False
+           negativity := False
+           gaussianBosonic := False
+           gaussianFermionic := hGaussianFermionic
+           certified := Or.inr (Or.inr (Or.inr h)) }⟩
+
+/-- Lemma 5: any witness inhabits the entangled predicate. -/
+theorem isEntangled_of_entanglementWitness
+    {ω₀ : A → ℝ}
+    (W : EntanglementWitness (A := A) ω₀) :
+    IsEntangled (A := A) ω₀ := by
+  exact ⟨W⟩
+
+/-- Theorem: any one explicit criterion proves entanglement. -/
+theorem isEntangled_of_any_explicit_criterion
+    {ω₀ : A → ℝ}
+    (hEntropy hNegativity hGaussianBosonic hGaussianFermionic : Prop)
+    (hAny : hEntropy ∨ hNegativity ∨ hGaussianBosonic ∨ hGaussianFermionic) :
+    IsEntangled (A := A) ω₀ := by
+  rcases hAny with h | h | h | h
+  · exact isEntangled_of_entropy (A := A) (ω₀ := ω₀) hEntropy h
+  · exact isEntangled_of_negativity (A := A) (ω₀ := ω₀) hNegativity h
+  · exact isEntangled_of_gaussianBosonic (A := A) (ω₀ := ω₀) hGaussianBosonic h
+  · exact isEntangled_of_gaussianFermionic (A := A) (ω₀ := ω₀) hGaussianFermionic h
+
 /-- Residual correlation factoring through mismatch. -/
 @[rep_depth transport]
 structure ResidualCorrelationThroughMismatch
@@ -221,10 +288,10 @@ structure LightconeReadoutBoundary where
   nullConeCertified : Prop
   projectivizationWitness : Prop
 
-theorem entanglement_claim_requires_sorry
+theorem entanglement_claim_from_witness
     {ω₀ : A → ℝ} (W : EntanglementWitness (A := A) ω₀) :
     IsEntangled (A := A) ω₀ :=
-  entanglementWitness_implies_entangled (ω₀ := ω₀) W
+  isEntangled_of_entanglementWitness (ω₀ := ω₀) W
 
 theorem nonfactorizing_covariance_is_not_entanglement
     {A : Type*} [Semiring A] [Algebra ℝ A]

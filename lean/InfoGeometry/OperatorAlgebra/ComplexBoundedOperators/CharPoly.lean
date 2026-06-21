@@ -383,22 +383,58 @@ theorem charPoly_similar {K ι : Type*}
     charPoly A = charPoly B :=
   P.charpoly_eq
 
-/-- Native characteristic-polynomial invariance under explicit similarity data. -/
-theorem charPoly_similar_of_sorry {K ι : Type*}
+/-- Lemma 1: rewrite the left characteristic polynomial using the explicit factorization. -/
+theorem charPoly_eq_charPoly_factorization {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly A = charPoly (W.P * B * W.Q) := by
+  exact congrArg charPoly W.factorization
+
+/-- Lemma 2: associate the product before applying Sylvester commutation. -/
+theorem charPoly_factorization_assoc_left {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly (W.P * B * W.Q) = charPoly (W.P * (B * W.Q)) := by
+  rw [Matrix.mul_assoc]
+
+/-- Lemma 3: Sylvester characteristic-polynomial identity `χ_{XY}=χ_{YX}`. -/
+theorem charPoly_factorization_swap {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly (W.P * (B * W.Q)) = charPoly ((B * W.Q) * W.P) := by
+  exact Matrix.charpoly_mul_comm W.P (B * W.Q)
+
+/-- Lemma 4: reassociate to expose the inverse product `Q * P`. -/
+theorem charPoly_factorization_assoc_right {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly ((B * W.Q) * W.P) = charPoly (B * (W.Q * W.P)) := by
+  rw [Matrix.mul_assoc]
+
+/-- Lemma 5: use the right-inverse equation to collapse `B * (Q * P)` to `B`. -/
+theorem charPoly_factorization_collapse_inverse {K ι : Type*}
+    [CommRing K] [Fintype ι] [DecidableEq ι]
+    {A B : Matrix ι ι K}
+    (W : SimilarMatrixWitness A B) :
+    charPoly (B * (W.Q * W.P)) = charPoly B := by
+  rw [W.Q_mul_P, Matrix.mul_one]
+
+/-- Theorem: explicit similarity preserves characteristic polynomial. -/
+theorem charPoly_eq_of_similarWitness {K ι : Type*}
     [CommRing K] [Fintype ι] [DecidableEq ι]
     {A B : Matrix ι ι K}
     (W : SimilarMatrixWitness A B) :
     charPoly A = charPoly B := by
-  rw [charPoly, W.factorization, charPoly]
   calc
-    (W.P * B * W.Q).charpoly = (W.P * (B * W.Q)).charpoly := by
-      rw [Matrix.mul_assoc]
-    _ = ((B * W.Q) * W.P).charpoly := by
-      rw [Matrix.charpoly_mul_comm]
-    _ = (B * (W.Q * W.P)).charpoly := by
-      rw [Matrix.mul_assoc]
-    _ = B.charpoly := by
-      rw [W.Q_mul_P, Matrix.mul_one]
+    charPoly A = charPoly (W.P * B * W.Q) := charPoly_eq_charPoly_factorization W
+    _ = charPoly (W.P * (B * W.Q)) := charPoly_factorization_assoc_left W
+    _ = charPoly ((B * W.Q) * W.P) := charPoly_factorization_swap W
+    _ = charPoly (B * (W.Q * W.P)) := charPoly_factorization_assoc_right W
+    _ = charPoly B := charPoly_factorization_collapse_inverse W
 
 /--
 Factorized characteristic polynomial packet.

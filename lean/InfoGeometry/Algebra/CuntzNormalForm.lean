@@ -38,10 +38,11 @@ theorem spanned_by_matrix_units (n : ℕ) (x : CuntzAlg n) :
     x = 1 * x * 1 := by simp
     _ = (∑ i : Fin n, cuntzS n i * cuntzSdag n i) * x *
         (∑ j : Fin n, cuntzS n j * cuntzSdag n j) := by
-      rw [cuntz_ranges_sum_one n, cuntz_ranges_sum_one n]
+      simp [cuntz_ranges_sum_one n]
     _ = ∑ i : Fin n, ∑ j : Fin n,
         (cuntzS n i * cuntzSdag n i) * x * (cuntzS n j * cuntzSdag n j) := by
-      simp [Finset.sum_mul, Finset.mul_sum]
+      simp [Finset.sum_mul, Finset.mul_sum, mul_assoc]
+      rw [Finset.sum_comm]
 
 /-- The matrix unit multiplication rule (re-export).
     E_{ij} E_{kl} = δ_{jk} E_{il} -/

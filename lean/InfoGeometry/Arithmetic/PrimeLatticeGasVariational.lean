@@ -140,30 +140,26 @@ structure PrimeCountingVariationalModel where
   piApprox : ℝ
   /-- Supplied approximate grand potential. -/
   grandPotentialApprox : ℝ
-  /-- Supplied explicit-formula law. -/
-  explicitFormulaLaw : Prop
-  /-- Certificate for the supplied explicit-formula law. -/
-  explicitFormulaCertificate : explicitFormulaLaw
-  /-- Supplied variational extremum condition. -/
-  extremumCondition : Prop
-  /-- Certificate for the supplied extremum condition. -/
-  extremumCertificate : extremumCondition
   /-- Guardrail: this packet is not an RH proof. -/
   noRHClaimWitness : Type*
+  ExplicitFormulaHolds : Prop
+  ExtremumHolds : Prop
+  explicit_formula_law : ExplicitFormulaHolds
+  extremum_law : ExtremumHolds
 
 namespace PrimeCountingVariationalModel
 
-/-- Re-export the supplied explicit-formula law. -/
+/-- Debt surface for the missing explicit-formula theorem. -/
 theorem explicitFormula_holds
     (V : PrimeCountingVariationalModel) :
-    V.explicitFormulaLaw :=
-  V.explicitFormulaCertificate
+    V.ExplicitFormulaHolds :=
+  V.explicit_formula_law
 
-/-- Re-export the supplied extremum condition. -/
+/-- Debt surface for the missing variational-extremum theorem. -/
 theorem extremum_holds
     (V : PrimeCountingVariationalModel) :
-    V.extremumCondition :=
-  V.extremumCertificate
+    V.ExtremumHolds :=
+  V.extremum_law
 
 end PrimeCountingVariationalModel
 

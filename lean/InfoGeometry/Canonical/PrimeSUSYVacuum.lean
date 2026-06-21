@@ -52,6 +52,41 @@ theorem finite_wittenIndex_cancel
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 :=
   finiteBooleanWittenIndex_cancel P hP
 
+/-- Finite Witten-index sum over all fermionic prime subsets. -/
+def finiteWittenIndexSum (P : FermionicPrimeRegister) : ℤ :=
+  ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card
+
+/-- Lemma 1: the finite Witten-index sum is exactly the powerset parity sum. -/
+theorem finiteWittenIndexSum_eq_powerset_sum
+    (P : FermionicPrimeRegister) :
+    finiteWittenIndexSum P =
+      ∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card := by
+  rfl
+
+/-- Lemma 2: a nonempty finite fermion register has a cancelling parity powerset sum. -/
+theorem powerset_parity_sum_cancel_of_nonempty
+    (P : FermionicPrimeRegister)
+    (hP : P.primes.Nonempty) :
+    (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by
+  exact finiteBooleanWittenIndex_cancel P hP
+
+/-- Lemma 3: therefore the named finite Witten-index sum vanishes. -/
+theorem finiteWittenIndexSum_cancel_of_nonempty
+    (P : FermionicPrimeRegister)
+    (hP : P.primes.Nonempty) :
+    finiteWittenIndexSum P = 0 := by
+  rw [finiteWittenIndexSum_eq_powerset_sum]
+  exact powerset_parity_sum_cancel_of_nonempty P hP
+
+/-- Theorem: finite SUSY vacuum cancellation is a theorem of finite fermion parity. -/
+theorem finiteSUSYVacuum_wittenIndexCancellation
+    (P : FermionicPrimeRegister)
+    (hP : P.primes.Nonempty) :
+    finiteWittenIndexSum P = 0 ∧
+      (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 := by
+  exact ⟨finiteWittenIndexSum_cancel_of_nonempty P hP,
+    powerset_parity_sum_cancel_of_nonempty P hP⟩
+
 /-! ## SUSY vacuum packet -/
 
 /--
@@ -78,35 +113,39 @@ structure PrimeSUSYVacuumPacket
   vacuumReadout :
     VacuumReadout
 
-  /-- Witten-index law for the SUSY vacuum lane. -/
-  wittenIndex_True : Prop
+  /-- Predicate expressing the Witten-index law for a vacuum readout. -/
+  IsWittenIndex : VacuumReadout → Prop
 
-  /-- Boson/fermion pairing and cancellation law away from zero energy. -/
-  bosonFermionCancellation_True : Prop
+  /-- Predicate expressing boson/fermion pairing away from zero energy. -/
+  BosonFermionCancellation : VacuumReadout → Prop
 
-  /-- Zero macroscopic vacuum energy law. -/
-  zeroVacuumEnergy_True : Prop
+  /-- Predicate expressing zero macroscopic vacuum energy. -/
+  ZeroVacuumEnergy : VacuumReadout → Prop
 
-  /-- Unbroken arithmetic SUSY law. -/
-  unbrokenSUSY_True : Prop
-
-  /--
-  Equivalence law between unbroken SUSY and the Mertens/LDP defect boundary in
-  the chosen analytic model.
-  -/
-  unbrokenSUSY_iff_mertensBoundary_True : Prop
+  /-- Predicate expressing unbroken arithmetic SUSY. -/
+  UnbrokenSUSY : VacuumReadout → Prop
 
   /--
-  Conditional spectral law: protected SUSY zero modes match the completed-`xi`
-  zero readout.
+  Predicate expressing the chosen model's link between unbroken SUSY and the
+  Mertens/LDP defect boundary.
   -/
-  susyZeroModes_eq_completedXiZeros_True : Prop
+  UnbrokenSUSYIffMertensBoundary : VacuumReadout → MertensDefectBoundary → Prop
 
-  /-- Guardrail law: this packet does not prove RH unconditionally. -/
-  no_unconditional_RH_claim : Prop
+  /--
+  Predicate expressing the conditional spectral comparison between protected
+  SUSY zero modes and completed-`xi` zeros.
+  -/
+  SusyZeroModesMatchCompletedXiZeros :
+    VacuumReadout →
+      ZeroModeProtectionPacket
+        CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout →
+        Prop
 
-  /-- Guardrail law: the Witten/inverse-zeta channel is not itself the `xi` determinant. -/
-  wittenIndex_not_completedXiDeterminant : Prop
+  /-- Guardrail predicate: this packet does not prove RH unconditionally. -/
+  NoUnconditionalRHClaim : VacuumReadout → Prop
+
+  /-- Guardrail predicate: the Witten/inverse-zeta channel is not the `xi` determinant. -/
+  WittenIndexNotCompletedXiDeterminant : VacuumReadout → Prop
 
 namespace PrimeSUSYVacuumPacket
 
@@ -123,16 +162,21 @@ Bridge data needed to assemble a SUSY vacuum packet from the existing Mertens
 and zero-mode protection layers.
 -/
 structure PrimeSUSYVacuumBridge
-    (VacuumReadout : Type) where
+    (CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
+      VacuumReadout : Type) where
   vacuumReadout : VacuumReadout
-  wittenIndex_True : Prop
-  bosonFermionCancellation_True : Prop
-  zeroVacuumEnergy_True : Prop
-  unbrokenSUSY_True : Prop
-  unbrokenSUSY_iff_mertensBoundary_True : Prop
-  susyZeroModes_eq_completedXiZeros_True : Prop
-  no_unconditional_RH_claim : Prop
-  wittenIndex_not_completedXiDeterminant : Prop
+  IsWittenIndex : VacuumReadout → Prop
+  BosonFermionCancellation : VacuumReadout → Prop
+  ZeroVacuumEnergy : VacuumReadout → Prop
+  UnbrokenSUSY : VacuumReadout → Prop
+  UnbrokenSUSYIffMertensBoundary : VacuumReadout → MertensDefectBoundary → Prop
+  SusyZeroModesMatchCompletedXiZeros :
+    VacuumReadout →
+      ZeroModeProtectionPacket
+        CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout →
+        Prop
+  NoUnconditionalRHClaim : VacuumReadout → Prop
+  WittenIndexNotCompletedXiDeterminant : VacuumReadout → Prop
 
 /--
 Assemble a theorem-safe SUSY vacuum packet from a Mertens boundary, a protected
@@ -144,32 +188,41 @@ def primeSUSYVacuum_of_zeroModeProtection
     (M : MertensDefectBoundary)
     (P : ZeroModeProtectionPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
-    (B : PrimeSUSYVacuumBridge VacuumReadout) :
+    (B : PrimeSUSYVacuumBridge
+      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout) :
     PrimeSUSYVacuumPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout where
   mertensBoundary := M
   zeroModeProtection := P
   vacuumReadout := B.vacuumReadout
-  wittenIndex_True := B.wittenIndex_True
-  bosonFermionCancellation_True := B.bosonFermionCancellation_True
-  zeroVacuumEnergy_True := B.zeroVacuumEnergy_True
-  unbrokenSUSY_True := B.unbrokenSUSY_True
-  unbrokenSUSY_iff_mertensBoundary_True := B.unbrokenSUSY_iff_mertensBoundary_True
-  susyZeroModes_eq_completedXiZeros_True := B.susyZeroModes_eq_completedXiZeros_True
-  no_unconditional_RH_claim := B.no_unconditional_RH_claim
-  wittenIndex_not_completedXiDeterminant :=
-    B.wittenIndex_not_completedXiDeterminant
+  IsWittenIndex := B.IsWittenIndex
+  BosonFermionCancellation := B.BosonFermionCancellation
+  ZeroVacuumEnergy := B.ZeroVacuumEnergy
+  UnbrokenSUSY := B.UnbrokenSUSY
+  UnbrokenSUSYIffMertensBoundary := B.UnbrokenSUSYIffMertensBoundary
+  SusyZeroModesMatchCompletedXiZeros := B.SusyZeroModesMatchCompletedXiZeros
+  NoUnconditionalRHClaim := B.NoUnconditionalRHClaim
+  WittenIndexNotCompletedXiDeterminant := B.WittenIndexNotCompletedXiDeterminant
 
-/-- Owner readout: the assembled SUSY packet re-exports its supplied law predicates. -/
-def primeSUSYVacuum_of_zeroModeProtection_reexports
+/--
+Explicit debt: these SUSY/spectral interpretation predicates need concrete
+owners.  The finite Witten-index cancellation above is proved; this bridge is
+not.
+-/
+theorem primeSUSYVacuum_of_zeroModeProtection_reexports
     {CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout
       VacuumReadout : Type}
-    (_M : MertensDefectBoundary)
-    (_P : ZeroModeProtectionPacket
+    (M : MertensDefectBoundary)
+    (P : ZeroModeProtectionPacket
       CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout)
-    (B : PrimeSUSYVacuumBridge VacuumReadout) : Prop :=
-  B.wittenIndex_True ∧
-    B.bosonFermionCancellation_True ∧
-      B.zeroVacuumEnergy_True ∧ B.unbrokenSUSY_True ∧ B.susyZeroModes_eq_completedXiZeros_True
+    (B : PrimeSUSYVacuumBridge
+      CompletedXiReadout Hamiltonian ZeroMode ZeroReadout ProtectionReadout VacuumReadout) :
+    B.IsWittenIndex B.vacuumReadout ∧
+      B.BosonFermionCancellation B.vacuumReadout ∧
+        B.ZeroVacuumEnergy B.vacuumReadout ∧
+          B.UnbrokenSUSY B.vacuumReadout ∧
+            B.UnbrokenSUSYIffMertensBoundary B.vacuumReadout M ∧
+              B.SusyZeroModesMatchCompletedXiZeros B.vacuumReadout P := by
+  sorry
 
 end InfoGeometry.Canonical.PrimeSUSYVacuum

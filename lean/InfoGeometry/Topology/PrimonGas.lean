@@ -25,7 +25,11 @@ The theoretical mapping between the continuous partition function
 and the Riemann zeta analytic continuation.
 -/
 def partition_function_zeta_map (state : PrimonGasState) : Prop :=
-  -- Evaluates the physical validity bounds of the thermodynamic ensemble
-  True
+  state.E_0 > state.T
+
+/-- The partition-function/zeta map is valid exactly under the Hagedorn bound. -/
+theorem partition_function_zeta_map_iff (state : PrimonGasState) :
+    partition_function_zeta_map state ↔ state.E_0 > state.T := by
+  rfl
 
 end InfoGeometry.Topology.PrimonGas

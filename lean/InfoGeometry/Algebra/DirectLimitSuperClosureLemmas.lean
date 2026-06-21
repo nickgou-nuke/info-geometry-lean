@@ -698,6 +698,79 @@ theorem directLimitLift_mixedSuperClosure_all
           exact map_add (toLimit n) (K n) (Z n)
 
 /--
+Functorial readback from the inductive colimit to an external compatible
+target: single-supercharge closure can be read at the stage-zero
+representatives.
+-/
+theorem directLimitLift_superClosure_zeroStage
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (Q H Z : ∀ n : Nat, Stage n)
+    (h0 : SuperClosureAt Q H Z 0)
+    (hQ : ∀ n, bond n (Q n) = Q (n + 1))
+    (hH : ∀ n, bond n (H n) = H (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat,
+      anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n))) =
+        directLimitLift bond toLimit hcone (directLimitOf bond 0 (H 0)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond 0 (Z 0)) := by
+  intro n
+  calc
+    anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (Q n)))
+        =
+        directLimitLift bond toLimit hcone (directLimitOf bond n (H n)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond n (Z n)) := by
+          exact directLimitLift_superClosure_all bond toLimit hcone Q H Z h0 hQ hH hZ n
+    _ =
+        directLimitLift bond toLimit hcone (directLimitOf bond 0 (H 0)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond 0 (Z 0)) := by
+          rw [directLimitOf_eq_zero_stage bond H hH n,
+            directLimitOf_eq_zero_stage bond Z hZ n]
+
+/--
+Functorial readback from the inductive colimit to an external compatible
+target: mixed odd-odd closure can be read at the stage-zero representatives.
+-/
+theorem directLimitLift_mixedSuperClosure_zeroStage
+    {Limit : Type u} [Semiring Limit]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (toLimit : ∀ n : Nat, Stage n →+* Limit)
+    (hcone : CompatibleCone bond toLimit)
+    (QA QB K Z : ∀ n : Nat, Stage n)
+    (h0 : MixedSuperClosureAt QA QB K Z 0)
+    (hQA : ∀ n, bond n (QA n) = QA (n + 1))
+    (hQB : ∀ n, bond n (QB n) = QB (n + 1))
+    (hK : ∀ n, bond n (K n) = K (n + 1))
+    (hZ : ∀ n, bond n (Z n) = Z (n + 1)) :
+    ∀ n : Nat,
+      anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QA n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QB n))) =
+        directLimitLift bond toLimit hcone (directLimitOf bond 0 (K 0)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond 0 (Z 0)) := by
+  intro n
+  calc
+    anticommutator
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QA n)))
+          (directLimitLift bond toLimit hcone (directLimitOf bond n (QB n)))
+        =
+        directLimitLift bond toLimit hcone (directLimitOf bond n (K n)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond n (Z n)) := by
+          exact directLimitLift_mixedSuperClosure_all bond toLimit hcone QA QB K Z h0 hQA
+            hQB hK hZ n
+    _ =
+        directLimitLift bond toLimit hcone (directLimitOf bond 0 (K 0)) +
+          directLimitLift bond toLimit hcone (directLimitOf bond 0 (Z 0)) := by
+          rw [directLimitOf_eq_zero_stage bond K hK n,
+            directLimitOf_eq_zero_stage bond Z hZ n]
+
+/--
 Single-supercharge closure holds on the canonical image of every finite stage
 inside the direct limit.
 -/

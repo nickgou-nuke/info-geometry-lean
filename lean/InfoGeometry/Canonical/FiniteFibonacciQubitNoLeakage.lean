@@ -84,20 +84,21 @@ inductive TwoQubitSixAnyonLabel where
 
 namespace TwoQubitSixAnyonLabel
 
-/-- Predicate selecting the four computational labels. -/
-def IsComputational : TwoQubitSixAnyonLabel → Prop
-  | computational _ => True
-  | nc => False
+/-- Predicate selecting the four computational labels, with an explicit bit-vector witness. -/
+def IsComputational (x : TwoQubitSixAnyonLabel) : Prop :=
+  ∃ α : ComputationalVector 2, x = computational α
 
 @[simp]
 theorem isComputational_computational (α : ComputationalVector 2) :
     IsComputational (computational α) :=
-  trivial
+  ⟨α, rfl⟩
 
 @[simp]
 theorem not_isComputational_nc :
     ¬ IsComputational nc := by
-  simp [IsComputational]
+  intro h
+  rcases h with ⟨α, hα⟩
+  cases hα
 
 end TwoQubitSixAnyonLabel
 
@@ -119,8 +120,11 @@ theorem twoQubitNoLeakageAction_preserves_computational
     (hx : TwoQubitSixAnyonLabel.IsComputational x) :
     TwoQubitSixAnyonLabel.IsComputational (twoQubitNoLeakageAction k f x) := by
   cases x with
-  | computational α => simp [twoQubitNoLeakageAction]
-  | nc => cases hx
+  | computational α =>
+      exact ⟨twoQubitLocalAction k f α, rfl⟩
+  | nc =>
+      rcases hx with ⟨α, hα⟩
+      cases hα
 
 /-- The unique NC state is fixed by every such restricted two-qubit action. -/
 theorem twoQubitNoLeakageAction_nc

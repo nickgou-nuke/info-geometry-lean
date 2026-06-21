@@ -39,6 +39,14 @@ noncomputable def H_model (α β γ : ℝ) : TwoBandHamiltonian :=
 
 /-- Theorem: The model Hamiltonian satisfies the Klein Brillouin Zone glide symmetry. -/
 theorem model_is_KBZ_symmetric (α β γ : ℝ) : is_KBZ_symmetric (H_model α β γ) := by
-  sorry
+  dsimp [is_KBZ_symmetric, H_model, glide, dx_model, dy_model]
+  intro k
+  have hdx : (Real.cos (-k.kx) : ℂ) + Complex.I * (α : ℂ) = (Real.cos k.kx : ℂ) + Complex.I * (α : ℂ) := by
+    simp
+  have hdy : (-(Real.sin (-k.kx) : ℂ) * (((1 - γ) * Real.sin (k.ky + Real.pi) + γ * Real.cos (k.ky + Real.pi)) : ℂ) - (0.5 : ℂ) + Complex.I * (β : ℂ)) =
+      (-(Real.sin k.kx : ℂ) * (((1 - γ) * Real.sin k.ky + γ * Real.cos k.ky) : ℂ) - (0.5 : ℂ) + Complex.I * (β : ℂ)) := by
+    simp [Real.sin_neg, Real.sin_add, Real.cos_add, Real.sin_pi, Real.cos_pi]
+    ring
+  exact And.intro hdx hdy
 
 end InfoGeometry.Topology.NonOrientableEP

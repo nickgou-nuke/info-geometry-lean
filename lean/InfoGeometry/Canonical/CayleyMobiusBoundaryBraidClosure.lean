@@ -37,17 +37,17 @@ variable {X : Type*}
 /-- Predicate selecting boundary states. -/
 def IsBoundary : AlgebraicCompactification X → Prop
   | interior _ => False
-  | boundary _ => True
+  | boundary y => ∃ x, boundary y = boundary x
 
 /-- Predicate selecting interior states. -/
 def IsInterior : AlgebraicCompactification X → Prop
-  | interior _ => True
+  | interior y => ∃ x, interior y = interior x
   | boundary _ => False
 
 @[simp]
 theorem isBoundary_boundary (x : X) :
-    IsBoundary (boundary x) :=
-  trivial
+    IsBoundary (boundary x) := by
+  exact ⟨x, rfl⟩
 
 @[simp]
 theorem not_isBoundary_interior (x : X) :
@@ -56,8 +56,8 @@ theorem not_isBoundary_interior (x : X) :
 
 @[simp]
 theorem isInterior_interior (x : X) :
-    IsInterior (interior x) :=
-  trivial
+    IsInterior (interior x) := by
+  exact ⟨x, rfl⟩
 
 @[simp]
 theorem not_isInterior_boundary (x : X) :

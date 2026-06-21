@@ -98,16 +98,47 @@ theorem log_mul_relativeModularOperator_diag_of_commute
             * (relativeModularOperator (n := n) q q0) := hcomm.eq
   exact log_mul_relativeModularOperator_diag (n := n) q q0 r r0 i
 
-/--
-Canonical commuting witness for finite relative modular operators, exposed here
-for bounded-interface clients.
--/
+/-- Lemma 1: finite relative modular operators are diagonal matrices. -/
 @[rep_depth operator]
-theorem relativeModularOperator_commuting_sorry
+theorem relativeModularOperator_is_diag_left
+    (q q0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      diagMatrix (fun i : Fin n =>
+        InfoGeometry.Canonical.RelativePotentialCore.relativeDensity (α := Fin n) q q0 i) := by
+  rfl
+
+/-- Lemma 2: finite relative modular operators are diagonal matrices. -/
+@[rep_depth operator]
+theorem relativeModularOperator_is_diag_right
+    (r r0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) r r0 =
+      diagMatrix (fun i : Fin n =>
+        InfoGeometry.Canonical.RelativePotentialCore.relativeDensity (α := Fin n) r r0 i) := by
+  rfl
+
+/-- Lemma 3: two finite relative modular operators commute as products. -/
+@[rep_depth operator]
+theorem relativeModularOperator_product_commutes
+    (q q0 r r0 : PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 * relativeModularOperator (n := n) r r0 =
+      relativeModularOperator (n := n) r r0 * relativeModularOperator (n := n) q q0 := by
+  exact relativeModularOperator_mul_comm (n := n) q q0 r r0
+
+/-- Lemma 4: product commutation gives Lean's `Commute` predicate. -/
+@[rep_depth operator]
+theorem relativeModularOperator_commute_from_product
     (q q0 r r0 : PositiveRay (Fin n)) :
     Commute (relativeModularOperator (n := n) q q0)
-      (relativeModularOperator (n := n) r r0) :=
-  relativeModularOperator_commute (n := n) q q0 r r0
+      (relativeModularOperator (n := n) r r0) := by
+  simpa [Commute] using relativeModularOperator_product_commutes (n := n) q q0 r r0
+
+/-- Theorem: finite relative modular operators commute. -/
+@[rep_depth operator]
+theorem relativeModularOperator_commuting
+    (q q0 r r0 : PositiveRay (Fin n)) :
+    Commute (relativeModularOperator (n := n) q q0)
+      (relativeModularOperator (n := n) r r0) := by
+  exact relativeModularOperator_commute_from_product (n := n) q q0 r r0
 
 end Finite
 

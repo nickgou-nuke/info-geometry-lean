@@ -7,7 +7,7 @@ import Mathlib.Data.Sign.Defs
 import Mathlib.Algebra.Module.Torsion.Free
 import Mathlib.Algebra.GroupWithZero.Defs
 import InfoGeometry.External.Virasoro.LieAlgebraModuleUEA
-import VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 import InfoGeometry.External.Virasoro.VermaModule
 
 /-!

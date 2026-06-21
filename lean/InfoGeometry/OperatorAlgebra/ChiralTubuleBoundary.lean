@@ -205,12 +205,14 @@ structure ChiralResidue
   /-- Residue object. -/
   residue : Residue
 
-  /-- Stability law. -/
-  stable : Prop
+  /--
+  Model-specific stability predicate.
 
-  /-- Evidence for stability. -/
-  stable_sorryProof :
-    stable
+  This file does not prove stability from the abstract socket alone; exported
+  stable-residue claims below are explicit proof debt until a concrete owner
+  supplies this predicate and its proof.
+  -/
+  stable : Prop
 
 /-! ## 4. Chiral tubule boundary witness -/
 
@@ -299,7 +301,8 @@ theorem collapse_state_crosses_threshold :
 theorem exists_stable_chiral_residue :
     ∃ r : Residue,
       r = B.residue.residue ∧ B.residue.stable :=
-  ⟨B.residue.residue, rfl, B.residue.stable_sorryProof⟩
+  by
+    sorry
 
 end ChiralTubuleBoundaryWitness
 
@@ -639,9 +642,11 @@ def ChiralTubuleBoundaryCompatibility
     (_State _Tangent Charge _Residue H : Type*)
     [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
-    (_Q : KreinIsotropicCone.KreinQuadraticDatum H)
-    (_C : ModuleCircularPolarization H) : Prop :=
-  True
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H) : Prop :=
+  Nonempty
+    (ChiralTubuleBoundaryWitness
+      _State _Tangent Charge _Residue H Q C)
 
 /-- Owner target for constructing the chiral tubule boundary witness. -/
 @[owner_target_tag]
@@ -664,9 +669,11 @@ def UnruhDrivenChiralTubuleCompatibility
     (_State _Tangent Charge _Residue H : Type*)
     [Zero Charge]
     [AddCommGroup H] [Module ℝ H]
-    (_Q : KreinIsotropicCone.KreinQuadraticDatum H)
-    (_C : ModuleCircularPolarization H) : Prop :=
-  True
+    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
+    (C : ModuleCircularPolarization H) : Prop :=
+  Nonempty
+    (UnruhDrivenChiralTubuleBoundary
+      _State _Tangent Charge _Residue H Q C)
 
 /-- Owner target for the Unruh-driven boundary theorem. -/
 @[owner_target_tag]

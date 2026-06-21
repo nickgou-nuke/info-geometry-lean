@@ -17,11 +17,10 @@ This module sits downstream of `PrimeLeeYangFerromagneticChain`. It defines:
 * finite log-moment/cumulant readouts;
 * a finite-grid Cramér transform using the repo-owned `InfoGeometry.cramerRateOn`.
 
-The thermodynamic large-deviation principle is not proved here. It is represented
-by a proof-carrying `PrimeChainLargeDeviationWitness`, because the real
-asymptotic theorem requires a chosen scaling, convergence of cumulant
-generating functions, regularity/exposed-point hypotheses, and a no-spurious
-limit statement.
+The thermodynamic large-deviation principle is not proved here.  The
+`PrimeChainLargeDeviationWitness` carries only the finite data needed to state
+that problem.  Unsupported asymptotic conclusions are exposed below as explicit
+`sorry` debt, not as arbitrary `Prop` fields.
 -/
 
 noncomputable section
@@ -189,44 +188,49 @@ structure PrimeChainLargeDeviationWitness where
   limitingCumulant : ℝ → ℝ
   rateFunction : ℝ → ℝ
 
-  speed_tends_to_infinity_True : Prop := by
-    sorry
-
-  finiteCumulant_converges_True : Prop := by
-    sorry
-
-  rateFunction_is_legendre_True : Prop := by
-    sorry
-
-  largeDeviationPrinciple_True : Prop := by
-    sorry
-
   /-- Guardrail: this LDP packet is not an RH proof or a Lee--Yang theorem. -/
   noRiemannHypothesisClaimGuard : Type*
 
 namespace PrimeChainLargeDeviationWitness
 
-variable (W : PrimeChainLargeDeviationWitness)
+/--
+Debt surface for the missing speed-divergence theorem.
 
-/-- Re-export of the supplied speed-divergence law. -/
+This cannot be discharged by the finite data in the packet.
+-/
 @[bridge_target_tag]
-def speed_tends_to_infinity : Prop :=
-  W.speed_tends_to_infinity_True
+theorem speed_tends_to_infinity
+    (_W : PrimeChainLargeDeviationWitness) : False := by
+  sorry
 
-/-- Re-export of the supplied finite-cumulant convergence law. -/
-@[bridge_target_tag]
-def finiteCumulant_converges : Prop :=
-  W.finiteCumulant_converges_True
+/--
+Debt surface for convergence of finite cumulant readouts.
 
-/-- Re-export of the supplied Legendre/rate-function law. -/
+This requires an analytic limit theorem not present in this file.
+-/
 @[bridge_target_tag]
-def rateFunction_is_legendre : Prop :=
-  W.rateFunction_is_legendre_True
+theorem finiteCumulant_converges
+    (_W : PrimeChainLargeDeviationWitness) : False := by
+  sorry
 
-/-- Re-export of the supplied large-deviation principle. -/
+/--
+Debt surface for identifying the rate function as the Legendre transform of the
+limiting cumulant.
+-/
 @[bridge_target_tag]
-def largeDeviationPrinciple : Prop :=
-  W.largeDeviationPrinciple_True
+theorem rateFunction_is_legendre
+    (_W : PrimeChainLargeDeviationWitness) : False := by
+  sorry
+
+/--
+Debt surface for the large-deviation principle itself.
+
+No finite theorem in this owner file proves it.
+-/
+@[bridge_target_tag]
+theorem largeDeviationPrinciple
+    (_W : PrimeChainLargeDeviationWitness) : False := by
+  sorry
 
 end PrimeChainLargeDeviationWitness
 

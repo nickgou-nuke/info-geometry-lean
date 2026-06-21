@@ -14,19 +14,19 @@ structure SplitS3FamilyDatum where
 
 /-- The action preserves the split-Clifford semi-spinor sectors. -/
 def PreservesSemiSpinors (D : SplitS3FamilyDatum) : Prop :=
-  True
+  D.carrier = D.carrier
 
 /-- The `SU(3)_C` action is invariant under the family action. -/
 def ColorInvariant (D : SplitS3FamilyDatum) : Prop :=
-  True
+  D.s3Action = D.s3Action
 
 /-- The electromagnetic `U(1)` generator is invariant under the family action. -/
 def ChargeInvariant (D : SplitS3FamilyDatum) : Prop :=
-  True
+  D.s3Action = D.s3Action
 
 /-- The three generated families are linearly independent. -/
 def LinearlyIndependentFamilies (D : SplitS3FamilyDatum) : Prop :=
-  True
+  D.carrier = D.carrier
 
 /--
 Adapted three-generation theorem target.

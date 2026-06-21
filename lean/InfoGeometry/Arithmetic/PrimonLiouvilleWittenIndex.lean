@@ -166,10 +166,6 @@ structure StableBranchRegularization
   qStable : PrimeLabel → R
   qUnstable : PrimeLabel → R
   regularizedReadout : R
-  projectStable : Prop
-  removesUnstableBranch : Prop
-  projectStable_sorryProof : projectStable
-  removesUnstableBranch_sorryProof : removesUnstableBranch
   regularized_eq_stable :
     regularizedReadout = stableChiralIndex modes qStable
 
@@ -182,16 +178,6 @@ variable (B : StableBranchRegularization PrimeLabel R)
 theorem regularized_eq_stable_branch :
     B.regularizedReadout = stableChiralIndex B.modes B.qStable :=
   B.regularized_eq_stable
-
-/-- The stable-branch projection certificate carried by the packet. -/
-theorem projectStable_holds :
-    B.projectStable :=
-  B.projectStable_sorryProof
-
-/-- The unstable-branch removal certificate carried by the packet. -/
-theorem removesUnstableBranch_holds :
-    B.removesUnstableBranch :=
-  B.removesUnstableBranch_sorryProof
 
 end StableBranchRegularization
 
@@ -268,17 +254,6 @@ structure MellinThermalVsDiracHeatKernelGuard where
   DiracOperator : Type*
   mellinThermalReadout : Type*
   diracHeatReadout : Type*
-  readouts_are_separate : Prop
-  readouts_are_separate_sorryProof : readouts_are_separate
 
-namespace MellinThermalVsDiracHeatKernelGuard
-
-/-- The packet certifies that the two kernel readouts are separate. -/
-theorem readouts_separate
-    (G : MellinThermalVsDiracHeatKernelGuard) :
-    G.readouts_are_separate :=
-  G.readouts_are_separate_sorryProof
-
-end MellinThermalVsDiracHeatKernelGuard
 
 end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex

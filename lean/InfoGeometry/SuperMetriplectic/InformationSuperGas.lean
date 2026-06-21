@@ -94,7 +94,7 @@ theorem anomaly_zero
   C.traceAnomaly_eq_zero
 
 /-- Conformal pressure law `3P = ρ`. -/
-theorem pressure_True
+theorem pressure
     (C : ConformalEquationOfStateLimit) :
     3 * C.pressureReadout = C.energyDensity :=
   C.conformalPressureLaw
@@ -183,10 +183,10 @@ theorem pressure_eq_eos_mul_density
   C.functional.pressure_eq_eos_mul_density
 
 /-- The conformal limit carries `3P = ρ`. -/
-theorem conformal_pressure_True
+theorem conformal_pressure
     (C : InformationSuperGasCapstone ι) :
     3 * C.conformalLimit.pressureReadout = C.conformalLimit.energyDensity :=
-  C.conformalLimit.pressure_True
+  C.conformalLimit.pressure
 
 /-- The BPS limit carries `P = n`. -/
 theorem bps_pressure_eq_charge
@@ -198,7 +198,7 @@ theorem bps_pressure_eq_charge
 theorem body_entropy_nonnegative
     (C : InformationSuperGasCapstone ι) :
     0 ≤ C.entropyBody.production :=
-  C.entropyBody.body_second_True
+  C.entropyBody.body_second
 
 /-- The raw supertrace channel is signed, not the second-law order by itself. -/
 theorem supertrace_signed
@@ -233,7 +233,7 @@ theorem information_super_gas_functional_definition
   exact ⟨C.weylCharacter_eq_partition,
     C.massieu_eq_logCharacter,
     C.pressure_eq_eos_mul_density,
-    C.conformal_pressure_True,
+    C.conformal_pressure,
     C.bps_pressure_eq_charge,
     C.bpsLimit.compressibility_zero,
     C.bpsLimit.entropyProduction_zero,

@@ -35,7 +35,7 @@ structure NKScalarCertificate where
       dist (majorantSeq L η (n + 1)) (majorantSeq L η (n + 2)) ≤ C * q ^ n
 
 /-- Under a scalar NK certificate, the shifted majorant sequence is Cauchy. -/
-theorem majorant_shifted_cauchy_of_sorryProof
+theorem majorant_shifted_cauchy_of_law
     (cert : NKScalarCertificate) :
     CauchySeq (fun n => majorantSeq cert.L cert.η (n + 1)) := by
   exact majorant_seq_cauchy_of_h_le_half cert.L cert.η cert.C cert.q cert.h_half cert.hq cert.hstep
@@ -117,7 +117,7 @@ def zeroResidualCertificate
 theorem zeroResidual_shifted_cauchy
     (L : ℝ) (hLnonneg : 0 ≤ L) :
     CauchySeq (fun n => majorantSeq L 0 (n + 1)) := by
-  exact majorant_shifted_cauchy_of_sorryProof (zeroResidualCertificate L hLnonneg)
+  exact majorant_shifted_cauchy_of_law (zeroResidualCertificate L hLnonneg)
 
 end
 end InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate

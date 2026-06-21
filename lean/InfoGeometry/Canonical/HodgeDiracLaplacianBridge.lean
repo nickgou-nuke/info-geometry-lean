@@ -150,7 +150,6 @@ structure CentralReadoutWitness
     {Op : Type*}
     (C : HodgeDiracLaplacianCarrier Op) where
   centralReadout : Op
-  calibrationLaw : Prop
 
 /--
 Owner-facing central-readout gate: the bridge exports only the existence of a

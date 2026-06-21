@@ -20,10 +20,13 @@ noncomputable def bost_connes_partition_function (β : ℝ) : ℝ :=
   -- We assume standard Mathlib definitions of Zeta are available or socketed
   Real.pi^2 / 6
 
-/-- The regularized volume of the braided anyonic bulk -/
+/-- The regularized volume of the braided anyonic bulk.
+
+Positivity is represented by a genuine algebraic star-square witness rather
+than a vacuous `∀ x, True` field. -/
 structure BraidedBulkVolume where
   volume_operator : M
-  is_positive : ∀ x : M, True
+  star_square_witness : ∃ y : M, volume_operator = star y * y
 
 variable (vol : BraidedBulkVolume M)
 

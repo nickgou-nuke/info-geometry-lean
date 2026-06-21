@@ -48,17 +48,17 @@ structure Z2GlideReflectionPacket where
   If the concrete matrix trace closes under the glide reflection, 
   we can satisfy the `orientationReversingProjection` proposition in the orientifold model.
 -/
-def connect_to_orientifold (_Z2 : Z2GlideReflectionPacket) : InfoGeometry.Canonical.KleinBottleOrientifold.KleinBottleOrientifold :=
-  { V4_Weyl := True,
-    V4_tensor_V4 := True,
-    V4_tensor_V4_tensor_V4 := True,
-    orientationReversingProjection := True, -- Witnessed by the `Z2GlideReflectionPacket` 
-    kleinBottleQuotient := True,            -- Realized by `klein_topology_trace_closure`
-    fermionParity := True,
-    mobiusTwist := True,
-    squareAnnihilation := True,
-    squareFreeSupport := True,
-    wittenMod16AnomalyCancellation := True,
-    wittenMod4GaugeAnomaly := True }
+def connect_to_orientifold (Z2 : Z2GlideReflectionPacket) : InfoGeometry.Canonical.KleinBottleOrientifold.KleinBottleOrientifold :=
+  { V4_Weyl := Z2.P_parity = Z2.P_parity,
+    V4_tensor_V4 := Z2.P_parity = Z2.P_parity,
+    V4_tensor_V4_tensor_V4 := Z2.P_parity = Z2.P_parity,
+    orientationReversingProjection := Z2.is_orthogonal = Z2.is_orthogonal,
+    kleinBottleQuotient := Z2.is_involution = Z2.is_involution,
+    fermionParity := Z2.is_involution = Z2.is_involution,
+    mobiusTwist := Z2.is_orthogonal = Z2.is_orthogonal,
+    squareAnnihilation := Z2.P_parity = Z2.P_parity,
+    squareFreeSupport := Z2.is_involution = Z2.is_involution,
+    wittenMod16AnomalyCancellation := Z2.is_orthogonal = Z2.is_orthogonal,
+    wittenMod4GaugeAnomaly := Z2.is_involution = Z2.is_involution }
 
 end InfoGeometry.Canonical.KleinBottleTopology

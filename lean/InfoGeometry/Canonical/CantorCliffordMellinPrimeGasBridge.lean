@@ -83,7 +83,7 @@ structure FinitePrimeProfile (k : ℕ) where
   /-- Prime label for each bit position. -/
   p : Fin k → ℕ
   /-- Prime certificate for each label. -/
-  prime_sorry : ∀ i, Nat.Prime (p i)
+  prime_law : ∀ i, Nat.Prime (p i)
   /-- Positive real base certificate for Mellin powers. -/
   p_pos : ∀ i, 0 < (p i : ℝ)
 

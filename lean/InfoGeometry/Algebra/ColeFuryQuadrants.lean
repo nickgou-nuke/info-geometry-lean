@@ -24,6 +24,7 @@ an even involution limit.
 theorem cole_fury_20th_power_identity {BlockType : Type} [DecidableEq BlockType] [Fintype BlockType]
     (sys : ColeFurySystem BlockType) :
     sys.sigma ^ 20 = 1 := by
-  sorry
+  rw [show (20 : ℕ) = 10 + 10 by norm_num, pow_add, sys.h_10_fold_center]
+  simp
 
 end InfoGeometry.Algebra.ColeFury

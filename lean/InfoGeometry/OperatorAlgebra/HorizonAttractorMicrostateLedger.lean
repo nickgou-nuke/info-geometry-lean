@@ -101,6 +101,49 @@ theorem centralCharge_eq_centralChargeOfCharge
     L.centralCharge s = L.centralChargeOfCharge (L.chargeReadout s) :=
   L.centralCharge_attractor_True s
 
+/-- Lemma 1: equal charge readouts give equal entropy-of-charge values. -/
+theorem entropyOfCharge_eq_of_chargeReadout_eq
+    {s₁ s₂ : State}
+    (hcharge : L.chargeReadout s₁ = L.chargeReadout s₂) :
+    L.entropyOfCharge (L.chargeReadout s₁) =
+      L.entropyOfCharge (L.chargeReadout s₂) := by
+  rw [hcharge]
+
+/-- Lemma 2: equal charge readouts give equal central-charge-of-charge values. -/
+theorem centralChargeOfCharge_eq_of_chargeReadout_eq
+    {s₁ s₂ : State}
+    (hcharge : L.chargeReadout s₁ = L.chargeReadout s₂) :
+    L.centralChargeOfCharge (L.chargeReadout s₁) =
+      L.centralChargeOfCharge (L.chargeReadout s₂) := by
+  rw [hcharge]
+
+/-- Lemma 3: entropy readout is constant on charge fibers. -/
+theorem entropyReadout_eq_of_chargeReadout_eq
+    {s₁ s₂ : State}
+    (hcharge : L.chargeReadout s₁ = L.chargeReadout s₂) :
+    L.entropyReadout s₁ = L.entropyReadout s₂ := by
+  rw [L.entropyReadout_eq_entropyOfCharge s₁]
+  rw [L.entropyReadout_eq_entropyOfCharge s₂]
+  exact L.entropyOfCharge_eq_of_chargeReadout_eq hcharge
+
+/-- Lemma 4: central-charge readout is constant on charge fibers. -/
+theorem centralCharge_eq_of_chargeReadout_eq
+    {s₁ s₂ : State}
+    (hcharge : L.chargeReadout s₁ = L.chargeReadout s₂) :
+    L.centralCharge s₁ = L.centralCharge s₂ := by
+  rw [L.centralCharge_eq_centralChargeOfCharge s₁]
+  rw [L.centralCharge_eq_centralChargeOfCharge s₂]
+  exact L.centralChargeOfCharge_eq_of_chargeReadout_eq hcharge
+
+/-- Theorem: attractor readouts are constant on charge fibers. -/
+theorem attractorReadouts_eq_of_chargeReadout_eq
+    {s₁ s₂ : State}
+    (hcharge : L.chargeReadout s₁ = L.chargeReadout s₂) :
+    L.entropyReadout s₁ = L.entropyReadout s₂ ∧
+      L.centralCharge s₁ = L.centralCharge s₂ := by
+  exact ⟨L.entropyReadout_eq_of_chargeReadout_eq hcharge,
+    L.centralCharge_eq_of_chargeReadout_eq hcharge⟩
+
 end HorizonAttractorMicrostateLedger
 
 /-! ## 2. Recovery witness -/
@@ -138,6 +181,15 @@ theorem recoveredMemory_eq_hiddenMemory
     R.recoveredMemory s = L.hiddenMemory s :=
   R.recovery_True s
 
+/-- Lemma 5: recovery transports hidden-memory equality to recovered-memory equality. -/
+theorem recoveredMemory_eq_of_hiddenMemory_eq
+    {s₁ s₂ : State}
+    (hmem : L.hiddenMemory s₁ = L.hiddenMemory s₂) :
+    R.recoveredMemory s₁ = R.recoveredMemory s₂ := by
+  rw [R.recoveredMemory_eq_hiddenMemory s₁]
+  rw [R.recoveredMemory_eq_hiddenMemory s₂]
+  exact hmem
+
 end HorizonMemoryRecoveryWitness
 
 /-! ## 3. Thermal/KMS accounting, separate from recovery -/
@@ -158,10 +210,6 @@ structure HorizonThermalLedger
   IsThermal :
     State → Prop
 
-  /-- Certificate that a selected state is thermal. -/
-  thermal_sorryProof :
-    ∀ s : State,
-      IsThermal s → IsThermal s
 
 namespace HorizonThermalLedger
 

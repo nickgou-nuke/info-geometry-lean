@@ -75,14 +75,17 @@ structure HeckeSugawaraIntertwining
   intertwining : HeckeIndex → AutomorphicOperatorIntertwining W
 
   /--
-  Model-specific Hecke/Sugawara compatibility law.
+  Kernel-level Hecke compatibility derived from the supplied intertwining data.
 
-  This is intentionally proof-carrying data.  The repository has the operator
-  sockets to state Hecke compatibility, but this file does not derive the
-  physical commutation theorem from first principles.
+  Any bulk state already in the Siegel cuspidal kernel stays in that kernel
+  after applying a supplied Hecke operator.  This replaces the former generic
+  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
   -/
-  hecke_sugawara_compatibility_True : Prop := by
-    sorry
+  hecke_preserves_cuspidal_kernel :
+    ∀ (i : HeckeIndex) ⦃F : Bulk⦄,
+      W.siegel F = 0 → W.siegel ((intertwining i).bulkOp F) = 0 := by
+    intro i F hF
+    exact (intertwining i).maps_ker_siegel_to_ker_siegel hF
 
   /--
   Resonance match: the zero-value of a completed L-function matches the
@@ -96,7 +99,7 @@ structure HeckeSugawaraIntertwining
   The spectral L-function value at the resonance point matches the purified 
   Sugawara readout of the corresponding eigenpacket.
   -/
-  purification_True :
+  purification_law :
     ∀ (chi : JointEigenvalue HeckeIndex) (_P : CuspidalEigenpacket R chi) (s : State),
       charge_eval (EAV.centralChargeReadout s) =
         L_func.value chi 0
@@ -129,6 +132,16 @@ variable
 variable
     (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
 
+/--
+Re-export of kernel-level Hecke compatibility on the cuspidal Siegel kernel.
+-/
+theorem hecke_preserves_cuspidal_kernel_of_intertwining
+    (i : HeckeIndex)
+    {F : Bulk}
+    (hF : W.siegel F = 0) :
+    W.siegel ((H.intertwining i).bulkOp F) = 0 :=
+  H.hecke_preserves_cuspidal_kernel i hF
+
 /-- Re-export of the purified central-charge/L-value calibration. -/
 theorem purified_charge_eq_l_value
     (H : HeckeSugawaraIntertwining R B EAV charge_eval L_func)
@@ -137,7 +150,7 @@ theorem purified_charge_eq_l_value
     (s : State) :
     charge_eval (EAV.centralChargeReadout s) =
       L_func.value chi 0 :=
-  H.purification_True chi P s
+  H.purification_law chi P s
 
 /-- The hidden grade-memory readout also matches the Hecke L-value at zero. -/
 theorem hiddenGradeMemory_eq_l_value

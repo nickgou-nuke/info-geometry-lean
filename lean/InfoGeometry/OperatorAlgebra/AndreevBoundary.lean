@@ -162,7 +162,7 @@ structure AndreevSwapWitness
 /--
 The Andreev diagonal is fixed by electron/hole closure, given a swap witness.
 -/
-theorem electron_hole_diagonal_fixed_of_sorry
+theorem electron_hole_diagonal_fixed_of_swap_witness
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (closure : LinearClosureInvolution V)
     (electron hole : V)
@@ -317,9 +317,9 @@ This packages the boundary datum together with first-class witnesses for
 structure BoundaryClosureWitness
     (V : Type*) [AddCommGroup V] [Module ℝ V] where
   boundary : AndreevBoundaryDatum V
-  diagonal_fixed_sorry :
+  diagonal_fixed_cert :
     boundary.electron + boundary.hole ∈ boundary.closure.Fixed
-  imbalance_anti_fixed_sorry :
+  imbalance_anti_fixed_cert :
     boundary.closure.theta (boundary.electron - boundary.hole) =
       -(boundary.electron - boundary.hole)
 
@@ -333,20 +333,20 @@ variable (W : BoundaryClosureWitness V)
 /-- Read back closure-fixed diagonal from the constructive packet. -/
 theorem diagonal_fixed :
     W.boundary.electron + W.boundary.hole ∈ W.boundary.closure.Fixed :=
-  W.diagonal_fixed_sorry
+  W.diagonal_fixed_cert
 
 /-- Read back anti-fixed imbalance from the constructive packet. -/
 theorem imbalance_anti_fixed :
     W.boundary.closure.theta (W.boundary.electron - W.boundary.hole) =
       -(W.boundary.electron - W.boundary.hole) :=
-  W.imbalance_anti_fixed_sorry
+  W.imbalance_anti_fixed_cert
 
 /-- Canonical constructor from any Andreev boundary datum. -/
 def ofBoundary
     (A : AndreevBoundaryDatum V) : BoundaryClosureWitness V where
   boundary := A
-  diagonal_fixed_sorry := A.electron_hole_diagonal_fixed
-  imbalance_anti_fixed_sorry := A.electron_hole_imbalance_anti_fixed
+  diagonal_fixed_cert := A.electron_hole_diagonal_fixed
+  imbalance_anti_fixed_cert := A.electron_hole_imbalance_anti_fixed
 
 end BoundaryClosureWitness
 
@@ -414,7 +414,7 @@ theorem charge_balance_holds :
 /--
 The charge-balance equation is valid, given a witness.
 -/
-theorem charge_balance_valid_of_sorry
+theorem charge_balance_valid_of_witness
     (w : ChargeBalanceWitness L) :
     L.chargeOf L.boundary.electron =
       L.chargeOf L.boundary.hole + L.condensateTransfer :=
@@ -428,7 +428,7 @@ theorem diagonal_fixed :
 /--
 Witness-only surface for closure-fixed diagonal readout.
 -/
-theorem diagonal_fixed_of_boundary_sorry
+theorem diagonal_fixed_of_boundary_witness
     (W : BoundaryClosureWitness V)
     (hboundary : W.boundary = L.boundary) :
     L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by

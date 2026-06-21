@@ -124,10 +124,10 @@ structure InformationEquationOfStateEquilibrium where
 namespace InformationEquationOfStateEquilibrium
 
 /-- Conformal equation of state: `3P = ρ`. -/
-theorem conformal_pressure_True
+theorem conformal_pressure
     (E : InformationEquationOfStateEquilibrium) :
     3 * E.conformal.pressureReadout = E.conformal.energyDensity :=
-  E.conformal.pressure_True
+  E.conformal.pressure
 
 /-- BPS/stiff equation of state: pressure balances charge density. -/
 theorem bps_pressure_eq_charge

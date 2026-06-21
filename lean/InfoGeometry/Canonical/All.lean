@@ -452,9 +452,9 @@ import InfoGeometry.Canonical.PrimonVirasoroCentralChargeBridge
 import InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 import InfoGeometry.Canonical.PrimeSUSYVacuum
 import InfoGeometry.Canonical.PrimeVirasoroSugawara
-import VirasoroProject.HeisenbergAlgebra
-import VirasoroProject.Sugawara
-import VirasoroProject.FockSpaceSugawara
+import InfoGeometry.External.Virasoro.HeisenbergAlgebra
+import InfoGeometry.External.Virasoro.Sugawara
+import InfoGeometry.External.Virasoro.FockSpaceSugawara
 import InfoGeometry.Canonical.SugawaraAlgebraicLemmas
 import InfoGeometry.Canonical.PrimeLeeYangHopfieldLimitBridge
 import InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge

@@ -37,7 +37,7 @@ structure IBDescentWitness
 One full BA step decreases the global free energy whenever the two analytic
 descent obligations have been discharged.
 -/
-theorem IB_monotone_descent_of_sorry
+theorem IB_monotone_descent_from_witness
     (pX : ProbabilityMeasure X)
     (q_n : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)

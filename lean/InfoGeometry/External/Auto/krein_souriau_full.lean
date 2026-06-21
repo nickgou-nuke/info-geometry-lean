@@ -155,11 +155,11 @@ def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
 
 /-- Energy conservation: {H, H} = 0 (antisymmetry of Poisson bracket) -/
 theorem energy_conservation (H : ℝ → ℝ) (x : ℝ) : poissonBracket H H x = 0 := by
-  trivial
+  rfl
 
 /-- Entropy production: (S, S) ≥ 0 (positivity of metric bracket) -/
 theorem entropy_production (S : ℝ → ℝ) (x : ℝ) : dissipativeBracket S S x ≥ 0 := by
-  trivial
+  simp [dissipativeBracket]
 
 /-- The Onsager operator L = -d²S/dX² (from T25 tri-projector) -/
 noncomputable def onsagerOperator : ℝ := 0

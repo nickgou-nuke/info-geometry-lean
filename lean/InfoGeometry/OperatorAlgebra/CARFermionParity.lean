@@ -251,7 +251,26 @@ Together with the Euler product identity (proved in
 `WeylDenominatorPrimeCutoff.lean`: `partitionFunction_eq_riemannZeta`),
 this establishes the boson–fermion superdeterminant cancellation.
 -/
-theorem capstone_fermionParity : True := by
-  trivial
+theorem capstone_fermionParity (n : ℕ) (i : Fin n) :
+    (cre n i * ann n i) * (cre n i * ann n i) = cre n i * ann n i ∧
+    ((1 : Clnn n) - s n 2 * (cre n i * ann n i)) *
+      ((1 : Clnn n) - s n 2 * (cre n i * ann n i)) = 1 ∧
+    (cre n i * ann n i) * ann n i = 0 ∧
+    ann n i * (cre n i * ann n i) = ann n i ∧
+    ((1 : Clnn n) - s n 2 * (cre n i * ann n i)) * ann n i =
+      -(ann n i * ((1 : Clnn n) - s n 2 * (cre n i * ann n i))) ∧
+    (cre n i * ann n i) * cre n i = cre n i ∧
+    cre n i * (cre n i * ann n i) = 0 ∧
+    ((1 : Clnn n) - s n 2 * (cre n i * ann n i)) * cre n i =
+      -(cre n i * ((1 : Clnn n) - s n 2 * (cre n i * ann n i))) := by
+  exact ⟨
+    numberOperator_idempotent n i,
+    parityFactor_sq_one n i,
+    numberOp_mul_ann n i,
+    ann_mul_numberOp n i,
+    parityFactor_anticomm_ann n i,
+    numberOp_mul_cre n i,
+    cre_mul_numberOp n i,
+    parityFactor_anticomm_cre n i⟩
 
 end InfoGeometry.OperatorAlgebra.CARFermionParity

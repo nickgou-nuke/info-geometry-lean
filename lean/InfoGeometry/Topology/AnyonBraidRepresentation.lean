@@ -1,4 +1,5 @@
 import InfoGeometry.Topology.ArtinBraidS3Quotient
+import Mathlib.GroupTheory.Perm.Fin
 
 /-!
 # Legacy name for the `B₃ → S₃` quotient anchor
@@ -26,14 +27,14 @@ def sigma2 : S3 := Equiv.swap 1 2
 /-- Compatibility re-export of the `S₃` quotient Artin relation. -/
 theorem s3_braid_relation :
     sigma1 * sigma2 * sigma1 = sigma2 * sigma1 * sigma2 := by
-  sorry
+  decide
 
 /-- Compatibility re-export: first generator squares to identity in the quotient. -/
 theorem s3_projective_closure_one : sigma1 * sigma1 = 1 := by
-  sorry
+  decide
 
 /-- Compatibility re-export: second generator squares to identity in the quotient. -/
 theorem s3_projective_closure_two : sigma2 * sigma2 = 1 := by
-  sorry
+  decide
 
 end InfoGeometry.Topology.AnyonBraidRepresentation

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.AssociativeSuperBracket
+import InfoGeometry.Algebra.TensorAlgebraCanonical
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.BottPeriodicity
 
@@ -23,6 +24,60 @@ namespace InfoGeometry.Clifford.Cl11SupergradedTensorBridge
 open InfoGeometry.Canonical.AssociativeSuperBracket
 open InfoGeometry.Canonical.SuperAnomaly
 open InfoGeometry.CliffordTower
+
+section QuadraticTensorAlgebra
+
+variable {M : Type*} [AddCommGroup M] [Module ℝ M]
+variable (Q : QuadraticForm ℝ M)
+
+@[rep_depth krein, simp]
+theorem tensorAlgebra_toClifford_ι (x : M) :
+    TensorAlgebra.toClifford (Q := Q) (TensorAlgebra.ι ℝ x) =
+      CliffordAlgebra.ι Q x := by
+  exact TensorAlgebra.toClifford_ι (Q := Q) x
+
+@[rep_depth krein, simp]
+theorem tensorAlgebra_toClifford_square_relation (x : M) :
+    TensorAlgebra.toClifford (Q := Q)
+        (TensorAlgebra.ι ℝ x * TensorAlgebra.ι ℝ x) =
+      algebraMap ℝ (CliffordAlgebra Q) (Q x) := by
+  rw [map_mul]
+  simp
+
+@[rep_depth krein]
+theorem tensorAlgebra_toClifford_polar_relation (x y : M) :
+    TensorAlgebra.toClifford (Q := Q)
+        (TensorAlgebra.ι ℝ x * TensorAlgebra.ι ℝ y +
+          TensorAlgebra.ι ℝ y * TensorAlgebra.ι ℝ x) =
+      algebraMap ℝ (CliffordAlgebra Q) (QuadraticMap.polar Q x y) := by
+  rw [map_add, map_mul, map_mul]
+  simpa using (CliffordAlgebra.ι_mul_ι_add_swap (Q := Q) x y)
+
+@[rep_depth krein, simp]
+theorem clifford_ι_sq_eq_quadratic (x : M) :
+    CliffordAlgebra.ι Q x * CliffordAlgebra.ι Q x =
+      algebraMap ℝ (CliffordAlgebra Q) (Q x) := by
+  exact CliffordAlgebra.ι_sq_scalar Q x
+
+@[rep_depth krein]
+theorem clifford_oddOdd_superBracket_ι_eq_polar (x y : M) :
+    superBracket SuperParity.odd SuperParity.odd
+        (CliffordAlgebra.ι Q x) (CliffordAlgebra.ι Q y) =
+      algebraMap ℝ (CliffordAlgebra Q) (QuadraticMap.polar Q x y) := by
+  rw [superBracket_odd_odd]
+  exact CliffordAlgebra.ι_mul_ι_add_swap (Q := Q) x y
+
+@[rep_depth krein]
+theorem clifford_ι_mem_odd (x : M) :
+    CliffordAlgebra.ι Q x ∈ CliffordAlgebra.evenOdd Q 1 := by
+  exact CliffordAlgebra.ι_mem_evenOdd_one (Q := Q) x
+
+@[rep_depth krein]
+theorem clifford_ι_mul_ι_mem_even (x y : M) :
+    CliffordAlgebra.ι Q x * CliffordAlgebra.ι Q y ∈ CliffordAlgebra.evenOdd Q 0 := by
+  exact CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero (Q := Q) x y
+
+end QuadraticTensorAlgebra
 
 /-- The recursive split `Cl(1,1)` tensor string. -/
 @[rep_depth krein]
@@ -69,7 +124,7 @@ theorem cl11StringStep_oddOdd_superBracket
     cl11StringStepEquiv n (superBracket SuperParity.odd SuperParity.odd a b) =
       superBracket SuperParity.odd SuperParity.odd
         (cl11StringStepEquiv n a) (cl11StringStepEquiv n b) := by
-  simpa using cl11StringStep_superBracket_map (n := n) (p := SuperParity.odd)
+  exact cl11StringStep_superBracket_map (n := n) (p := SuperParity.odd)
     (q := SuperParity.odd) a b
 
 /-- The even-even channel is transported unchanged through the split tower step. -/
@@ -79,7 +134,7 @@ theorem cl11StringStep_evenEven_superBracket
     cl11StringStepEquiv n (superBracket SuperParity.even SuperParity.even a b) =
       superBracket SuperParity.even SuperParity.even
         (cl11StringStepEquiv n a) (cl11StringStepEquiv n b) := by
-  simpa using cl11StringStep_superBracket_map (n := n) (p := SuperParity.even)
+  exact cl11StringStep_superBracket_map (n := n) (p := SuperParity.even)
     (q := SuperParity.even) a b
 
 /-- The canonical `Cl(1,1)` generators are odd in the `evenOdd` grading. -/
@@ -87,6 +142,39 @@ theorem cl11StringStep_evenEven_superBracket
 theorem cl11_generator_odd (n : ℕ) (x : SplitSpace (n + 1)) :
     CliffordAlgebra.ι (Qsplit (n + 1)) x ∈ CliffordAlgebra.evenOdd (Qsplit (n + 1)) 1 := by
   exact CliffordAlgebra.ι_mem_evenOdd_one (Q := Qsplit (n + 1)) x
+
+@[rep_depth krein, simp]
+theorem cl11String_generator_square_eq_quadratic
+    (n : ℕ) (x : SplitSpace (n + 1)) :
+    CliffordAlgebra.ι (Qsplit (n + 1)) x * CliffordAlgebra.ι (Qsplit (n + 1)) x =
+      algebraMap ℝ (CliffordAlgebra (Qsplit (n + 1))) (Qsplit (n + 1) x) := by
+  exact clifford_ι_sq_eq_quadratic (Q := Qsplit (n + 1)) x
+
+@[rep_depth krein]
+theorem cl11String_tensorAlgebra_toClifford_square_relation
+    (n : ℕ) (x : SplitSpace (n + 1)) :
+    TensorAlgebra.toClifford (Q := Qsplit (n + 1))
+        (TensorAlgebra.ι ℝ x * TensorAlgebra.ι ℝ x) =
+      algebraMap ℝ (CliffordAlgebra (Qsplit (n + 1))) (Qsplit (n + 1) x) := by
+  exact tensorAlgebra_toClifford_square_relation (Q := Qsplit (n + 1)) x
+
+@[rep_depth krein]
+theorem cl11String_oddOdd_superBracket_eq_polar
+    (n : ℕ) (x y : SplitSpace (n + 1)) :
+    superBracket SuperParity.odd SuperParity.odd
+        (CliffordAlgebra.ι (Qsplit (n + 1)) x)
+        (CliffordAlgebra.ι (Qsplit (n + 1)) y) =
+      algebraMap ℝ (CliffordAlgebra (Qsplit (n + 1)))
+        (QuadraticMap.polar (Qsplit (n + 1)) x y) := by
+  exact clifford_oddOdd_superBracket_ι_eq_polar (Q := Qsplit (n + 1)) x y
+
+@[rep_depth krein]
+theorem cl11String_generator_product_even
+    (n : ℕ) (x y : SplitSpace (n + 1)) :
+    CliffordAlgebra.ι (Qsplit (n + 1)) x *
+        CliffordAlgebra.ι (Qsplit (n + 1)) y ∈
+      CliffordAlgebra.evenOdd (Qsplit (n + 1)) 0 := by
+  exact clifford_ι_mul_ι_mem_even (Q := Qsplit (n + 1)) x y
 
 /-- The split tower step packages the recursive `Cl(1,1)` string as a supergraded algebra. -/
 @[rep_depth krein]

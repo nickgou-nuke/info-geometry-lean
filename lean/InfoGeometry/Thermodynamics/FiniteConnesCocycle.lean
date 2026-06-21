@@ -206,13 +206,8 @@ theorem finiteCommutingConnesPhase_connesLaw_trivialReference
   simp [finiteScalarReferenceModularAction, finiteCommutingConnesPhaseOfStates,
     finiteCommutingConnesPhase_add_time]
 
-/--
-Roadmap-facing theorem name for the finite commuting Connes cocycle law.
-
-This is the same proved scalar Cartan specialization as
-`finiteCommutingConnesPhase_connesLaw_trivialReference`.
--/
-theorem finite_commuting_connes_cocycle_satisfies_cocycle_True
+/-- Proved scalar Cartan specialization of the finite commuting Connes cocycle law. -/
+theorem finite_commuting_connes_cocycle_satisfies_cocycle
     (φ ψ : FiniteTemperature ι) (s t : ℝ) :
     (fun i => finiteCommutingConnesPhaseOfStates φ ψ (s + t) i) =
       fun i =>

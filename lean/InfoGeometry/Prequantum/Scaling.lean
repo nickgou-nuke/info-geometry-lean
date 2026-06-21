@@ -16,7 +16,7 @@ structure PrequantumData where
   curvatureScale : ℝ
   hbar : ℝ
   hbar_ne_zero : hbar ≠ 0
-  curvature_True : curvatureScale = omegaScale / hbar
+  curvature_relation : curvatureScale = omegaScale / hbar
 
 @[ext] theorem PrequantumData.ext
     {P Q : PrequantumData}
@@ -34,7 +34,7 @@ structure PrequantumData where
 theorem PrequantumData.curvature_mul_hbar_eq_omega
     (P : PrequantumData) :
     P.curvatureScale * P.hbar = P.omegaScale := by
-  rw [P.curvature_True]
+  rw [P.curvature_relation]
   field_simp [P.hbar_ne_zero]
 
 theorem PrequantumData.omega_eq_hbar_mul_curvature
@@ -50,8 +50,8 @@ noncomputable def PrequantumData.rescaleHbar
   curvatureScale := P.curvatureScale / c
   hbar := c * P.hbar
   hbar_ne_zero := mul_ne_zero hc P.hbar_ne_zero
-  curvature_True := by
-    rw [P.curvature_True]
+  curvature_relation := by
+    rw [P.curvature_relation]
     field_simp [hc, P.hbar_ne_zero]
 
 theorem PrequantumData.rescaleHbar_curvature

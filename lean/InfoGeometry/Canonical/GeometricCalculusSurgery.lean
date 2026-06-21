@@ -93,31 +93,32 @@ def geometricCoreProjector
   normalizationFactor • stokesBoundaryIntegral Ω R.resolvent
 
 /--
-Placeholder predicate for monogenicity on a volume.
+Finite monogenicity socket on a parameterized volume.
 
-This is intentionally named and parameterized, so later it can be replaced by
-a genuine Dirac-operator predicate without changing downstream witness fields.
+Until a full Dirac-operator API is supplied, monogenicity is represented by the
+non-vacuous algebraic resolvent commutation law along the parameterized volume.
 -/
 def IsMonogenicOn
     {E P : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
     (A : RealEnd E)
-    (_R : CliffordResolventFamily (P := P) A)
+    (R : CliffordResolventFamily (P := P) A)
     (_Ω : DirectedBoundary P)
     (Volume : Type*)
-    (_param : Volume → P) : Prop :=
-  True
+    (param : Volume → P) : Prop :=
+  ∀ v : Volume, R.resolvent (param v) * A = A * R.resolvent (param v)
 
-/-- Placeholder predicate for the Stokes defect/flux law. -/
+/-- Non-vacuous Stokes defect/flux socket: every boundary resolvent has zero
+commutator defect against the surgery operator. -/
 def BoundaryFluxEqualsDefectSum
     {E P : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
     (A : RealEnd E)
-    (_R : CliffordResolventFamily (P := P) A)
+    (R : CliffordResolventFamily (P := P) A)
     (_Ω : DirectedBoundary P) : Prop :=
-  True
+  ∀ p : P, R.resolvent p * A - A * R.resolvent p = 0
 
 /--
 Stokes witness for the Clifford resolvent field.

@@ -162,7 +162,7 @@ theorem.
 structure PrimitiveTemperatureInversionCalibration
     (A : Finset ℕ) where
   /-- The supplied change-of-variables law for the restricted partition. -/
-  inversion_integral_True :
+  inversion_integral :
     (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β)
       =
     ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u
@@ -176,6 +176,6 @@ theorem PrimitiveTemperatureInversionCalibration.primitiveWeightSum_eq_inverted_
     primitiveWeightSum A =
       ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u := by
   rw [primitiveWeightSum_eq_integral_mellinKernel A]
-  exact PrimitiveTemperatureInversionCalibration.inversion_integral_True C
+  exact PrimitiveTemperatureInversionCalibration.inversion_integral C
 
 end InfoGeometry.Thermodynamics.ProjectiveTemperature

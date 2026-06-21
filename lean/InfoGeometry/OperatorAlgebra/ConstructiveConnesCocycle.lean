@@ -17,8 +17,8 @@ structure VerifiedModularFlow (A : Type*) [Ring A] where
 structure ConnesCocycle {A : Type*} [Ring A]
     (flow_phi flow_omega : VerifiedModularFlow A) where
   u : ℝ → A
-  cocycle_True : ∀ s t : ℝ, u (s + t) = u s * flow_omega.σ s (u t)
-  intertwine_True :
+  cocycle_law : ∀ s t : ℝ, u (s + t) = u s * flow_omega.σ s (u t)
+  intertwines :
     ∀ (t : ℝ) (x : A), flow_phi.σ t x * u t = u t * flow_omega.σ t x
 
 /-!
@@ -40,14 +40,14 @@ def chain_cocycles {A : Type*} [Ring A]
     ConnesCocycle flow_phi flow_psi where
   u := fun t => u.u t * v.u t
 
-  cocycle_True := by
+  cocycle_law := by
     intro s t
     calc
       u.u (s + t) * v.u (s + t)
           =
           (u.u s * flow_omega.σ s (u.u t)) *
             (v.u s * flow_psi.σ s (v.u t)) := by
-            rw [u.cocycle_True s t, v.cocycle_True s t]
+            rw [u.cocycle_law s t, v.cocycle_law s t]
       _ =
           u.u s *
             (flow_omega.σ s (u.u t) * v.u s) *
@@ -57,7 +57,7 @@ def chain_cocycles {A : Type*} [Ring A]
           u.u s *
             (v.u s * flow_psi.σ s (u.u t)) *
               flow_psi.σ s (v.u t) := by
-            rw [v.intertwine_True s (u.u t)]
+            rw [v.intertwines s (u.u t)]
       _ =
           (u.u s * v.u s) *
             (flow_psi.σ s (u.u t) * flow_psi.σ s (v.u t)) := by
@@ -67,18 +67,18 @@ def chain_cocycles {A : Type*} [Ring A]
             flow_psi.σ s (u.u t * v.u t) := by
             rw [flow_psi.map_mul s (u.u t) (v.u t)]
 
-  intertwine_True := by
+  intertwines := by
     intro t x
     calc
       flow_phi.σ t x * (u.u t * v.u t)
           = (flow_phi.σ t x * u.u t) * v.u t := by
             rw [mul_assoc]
       _ = (u.u t * flow_omega.σ t x) * v.u t := by
-            rw [u.intertwine_True t x]
+            rw [u.intertwines t x]
       _ = u.u t * (flow_omega.σ t x * v.u t) := by
             rw [mul_assoc]
       _ = u.u t * (v.u t * flow_psi.σ t x) := by
-            rw [v.intertwine_True t x]
+            rw [v.intertwines t x]
       _ = (u.u t * v.u t) * flow_psi.σ t x := by
             rw [mul_assoc]
 

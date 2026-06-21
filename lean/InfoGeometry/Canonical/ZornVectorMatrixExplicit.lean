@@ -286,4 +286,60 @@ def pPlus : ZornCoord :=
 def pMinus : ZornCoord :=
   zornMk 0 1 0 0
 
+@[simp] theorem pPlus_isNull : IsZornNull pPlus := by
+  change 1 * 0 - (0 * 0 + 0 * 0 + 0 * 0) = 0
+  ring
+
+@[simp] theorem pMinus_isNull : IsZornNull pMinus := by
+  change 0 * 1 - (0 * 0 + 0 * 0 + 0 * 0) = 0
+  ring
+
+theorem pPlus_ne_zero : pPlus ≠ 0 := by
+  intro h
+  have h' := congrArg (fun z : ZornCoord => z.1) h
+  simp [pPlus, zornMk] at h'
+
+theorem pMinus_ne_zero : pMinus ≠ 0 := by
+  intro h
+  have h' := congrArg (fun z : ZornCoord => z.2.1) h
+  simp [pMinus, zornMk] at h'
+
+@[simp] theorem zornNorm_pPlus : zornNorm pPlus = 0 :=
+  pPlus_isNull
+
+@[simp] theorem zornNorm_pMinus : zornNorm pMinus = 0 :=
+  pMinus_isNull
+
+/-- The explicit Zorn coordinate carrier has a nonzero split-null element. -/
+theorem exists_nonzero_zorn_null_coord : ∃ z : ZornCoord, z ≠ 0 ∧ IsZornNull z :=
+  ⟨pPlus, pPlus_ne_zero, pPlus_isNull⟩
+
+theorem pPlus_add_pMinus : pPlus + pMinus = zornOne := by
+  ext <;> simp [pPlus, pMinus, zornOne, zornMk]
+
+theorem pPlus_mul_pMinus : zornMul pPlus pMinus = 0 := by
+  ext <;>
+    simp [pPlus, pMinus, zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · rename_i i
+    fin_cases i <;> simp
+  · rename_i i
+    fin_cases i <;> simp
+
+theorem pMinus_mul_pPlus : zornMul pMinus pPlus = 0 := by
+  ext <;>
+    simp [pPlus, pMinus, zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · rename_i i
+    fin_cases i <;> simp
+  · rename_i i
+    fin_cases i <;> simp
+
+/--
+The two diagonal Zorn idempotents give an explicit split-null pair: each is nonzero,
+each has reduced norm zero, and together they resolve the Zorn unit.
+-/
+theorem split_null_projector_pair :
+    pPlus ≠ 0 ∧ pMinus ≠ 0 ∧ IsZornNull pPlus ∧ IsZornNull pMinus ∧
+      pPlus + pMinus = zornOne :=
+  ⟨pPlus_ne_zero, pMinus_ne_zero, pPlus_isNull, pMinus_isNull, pPlus_add_pMinus⟩
+
 end InfoGeometry.Canonical.ZornVectorMatrixExplicit

@@ -183,17 +183,11 @@ structure ModularChiralCPTBranch
   mirror :
     ModularChiralCPTMirror H
 
-  /-- Certificate that `J` is the Tomita algebra/commutant mirror. -/
-  tomita_mirror_sorryProof :
-    Prop
+  tomita_mirror_law : Prop
 
-  /-- Certificate that `J` reverses the modular flow/time orientation. -/
-  modular_time_reversal_sorryProof :
-    Prop
+  modular_time_reversal_law : Prop
 
-  /-- Certificate that this branch is interpreted as CPT/PCT in the model. -/
-  cpt_interpretation_sorryProof :
-    Prop
+  cpt_interpretation_law : Prop
 
 /--
 CPT/PCT symmetry branch datum.

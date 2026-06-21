@@ -354,10 +354,6 @@ structure ModularTransportBridgePacket where
   cocycleTransportWitness : Type*
   /-- Connes transport law witness. -/
   cocycleTransportLaw : Type*
-  /-- Transport certificate tying source and target frames. -/
-  cocycleTransportCertificate : Prop
-  /-- Explicit proof/certificate of transport cocycle transport certificate. -/
-  cocycleTransportCertificateWitness : cocycleTransportCertificate
   /-- Log-potential / modular Hamiltonian on the transport path. -/
   modularPotential : Type*
   /-- Relative-entropy or free-energy transport cost witness. -/
@@ -370,13 +366,13 @@ structure ModularTransportBridgePacket where
 /-- Modular transport bridge target for a supplied packet. -/
 def ModularTransportBridgeTarget
     (_P : ModularTransportBridgePacket) : Prop :=
-  _P.cocycleTransportCertificate
+  False
 
-/-- Constructor from explicit transport data. -/
+/-- Debt: a real Connes-cocycle transport theorem has not been supplied here. -/
 theorem constructModularTransportBridgeTarget
     (_P : ModularTransportBridgePacket) :
     ModularTransportBridgeTarget _P := by
-  exact _P.cocycleTransportCertificateWitness
+  sorry
 
 /-!
 Normalize by the supplied modular reference data, with an explicit branch for
@@ -519,14 +515,15 @@ def ModularVolumePotentialTarget
     (_ln : LogRadonNikodymPacket) (_rs : RelativeSurprisalPacket)
     (_ge : GibbsFreeEnergyPacket) (_mf : ModularFlowPacket)
     (_sv : SupervolumePacket) (_gk : GKSLPacket) : Prop :=
-  (∃ _hln : ∀ μ x, _ln.logPotential μ x = -Real.log (_ln.relativeDensity μ x), True) ∧
-  (∃ _hrs : ∀ μ η, _rs.klReadout μ η = _rs.klReadout μ η, True) ∧
-  (∃ _hgw : ∀ s, _ge.gibbsWeight s =
-      Real.exp (-( _ge.inverseTemperature * _ge.energy s) - _ge.logPartitionConstant), True) ∧
-  (∃ _hef : ∀ s, _ge.freeEnergy s = _ge.energy s + _ge.inverseTemperature⁻¹ * _ge.klToGibbs s, True) ∧
-  (∃ _hst : ∀ x, _sv.supertrace x = _sv.evenTrace x - _sv.oddTrace x, True) ∧
-  (∃ _hfd : ∀ ρ t, _gk.freeEnergyDecay ρ t, True) ∧
-  (∃ _hfm : ∀ ρ t, 0 ≤ t → _gk.freeEnergyShadow (_gk.generator t ρ) ≤ _gk.freeEnergyShadow ρ, True)
+  (∃ _hln : ∀ μ x, _ln.logPotential μ x = -Real.log (_ln.relativeDensity μ x),
+    ∃ _hrs : ∀ μ η, _rs.klReadout μ η = _rs.klReadout μ η,
+    ∃ _hgw : ∀ s, _ge.gibbsWeight s =
+      Real.exp (-( _ge.inverseTemperature * _ge.energy s) - _ge.logPartitionConstant),
+    ∃ _hef : ∀ s, _ge.freeEnergy s = _ge.energy s + _ge.inverseTemperature⁻¹ * _ge.klToGibbs s,
+    ∃ _hst : ∀ x, _sv.supertrace x = _sv.evenTrace x - _sv.oddTrace x,
+    ∃ _hfd : ∀ ρ t, _gk.freeEnergyDecay ρ t,
+    ∃ _hfm : ∀ ρ t, 0 ≤ t → _gk.freeEnergyShadow (_gk.generator t ρ) ≤ _gk.freeEnergyShadow ρ,
+    _mf.modularFlow 0 _mf.modularState = _mf.modularFlow 0 _mf.modularState)
 
 /--
 Constructor that lifts explicit layer witnesses into the target shape.
@@ -539,9 +536,9 @@ theorem constructModularVolumePotentialTarget
     (_sv : SupervolumePacket)
     (_gk : GKSLPacket) :
     ModularVolumePotentialTarget _ln _rs _ge _mf _sv _gk := by
-  refine ⟨⟨_ln.logPotential_eq, trivial⟩, ⟨_rs.klReadout_eq, trivial⟩,
-    ⟨_ge.gibbsWeight_eq, trivial⟩, ⟨_ge.freeEnergy_eq, trivial⟩, ⟨_sv.supertrace_eq, trivial⟩,
-    ⟨_gk.freeEnergyDecay_holds, trivial⟩, ⟨_gk.freeEnergy_monotone, trivial⟩⟩
+  exact ⟨_ln.logPotential_eq, _rs.klReadout_eq, _ge.gibbsWeight_eq,
+    _ge.freeEnergy_eq, _sv.supertrace_eq, _gk.freeEnergyDecay_holds,
+    _gk.freeEnergy_monotone, rfl⟩
 
 namespace LogRadonNikodymPacket
 
@@ -626,8 +623,9 @@ end SpectralThermalNormalizationPacket
 namespace ModularTransportBridgePacket
 
 theorem cocycleTransport_holds
-    (_P : ModularTransportBridgePacket) : _P.cocycleTransportCertificate := by
-  exact _P.cocycleTransportCertificateWitness
+    (_P : ModularTransportBridgePacket) :
+    ModularTransportBridgeTarget _P := by
+  exact constructModularTransportBridgeTarget _P
 
 end ModularTransportBridgePacket
 

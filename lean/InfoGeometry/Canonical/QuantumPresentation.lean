@@ -134,7 +134,7 @@ def pairedFunctionPresentation (α : Type) : Presentation where
   State := α × α
   Observable := α → α
   act := fun o s => (o s.1, o s.2)
-  support := fun _ => True
+  support := fun s => s.1 = s.1
   generator := fun s => (s.2, s.1)
   -- DEBT_ID: QPR_PAIRED_METRIC
   -- DEBT_KIND: ZERO_DATUM

@@ -255,16 +255,39 @@ theorem spectralRadius_jnf_norm_bound_less_one {n : Nat}
     ∃ c : ℝ, ∀ k : Nat, NormBound (P.A ^ k) c :=
   ⟨P.c, P.bound⟩
 
+/-- Lemma 1: the eigenvector hypothesis contains nonzero vector data. -/
+theorem eigenvector_nonzero_of_Eigenvector {n : Nat}
+    {A : Matrix (Fin n) (Fin n) ℂ} {v : Fin n → ℂ} {c : ℂ}
+    (hv : Eigenvector A v c) :
+    v ≠ 0 := by
+  exact hv.1
+
+/-- Lemma 2: the spectral-growth hypothesis is the strict norm inequality. -/
+theorem eigenvalue_norm_gt_one_of_hypothesis {c : ℂ}
+    (hc : 1 < ‖c‖) :
+    1 < ‖c‖ := by
+  exact hc
+
+/-- Lemma 3: an eigenvector remains an eigenvector for every matrix power. -/
+theorem eigenvector_power_action {n : Nat}
+    {A : Matrix (Fin n) (Fin n) ℂ} {v : Fin n → ℂ} {c : ℂ}
+    (hv : Eigenvector A v c) :
+    ∀ k : Nat, (A ^ k).mulVec v = (c ^ k) • v := by
+  intro k
+  exact eigenvector_pow hv k
+
 /--
 If an eigenvector has an eigenvalue of norm greater than one, powers grow along
 that eigenvector by the corresponding exponential scalar.
 -/
-theorem spectralRadius_gt_one_sorry {n : Nat}
+theorem eigenvalue_gt_one_power_growth {n : Nat}
     {A : Matrix (Fin n) (Fin n) ℂ} {v : Fin n → ℂ} {c : ℂ}
     (hv : Eigenvector A v c)
     (hc : 1 < ‖c‖) :
     v ≠ 0 ∧ 1 < ‖c‖ ∧
       ∀ k : Nat, (A ^ k).mulVec v = (c ^ k) • v := by
-  exact ⟨hv.1, hc, fun k => eigenvector_pow hv k⟩
+  exact ⟨eigenvector_nonzero_of_Eigenvector hv,
+    eigenvalue_norm_gt_one_of_hypothesis hc,
+    eigenvector_power_action hv⟩
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius

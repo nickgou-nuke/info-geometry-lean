@@ -72,17 +72,12 @@ theorem drazin_readout_eq_mellin_realPart :
     (B.drazin.coords.coord B.channel).re = B.mellin.realPart := by
   rw [← B.drazin_readout, B.majorana_readout, B.mellin_readout]
 
-/-- The shared scalar readout lies on the critical line whenever the Majorana
-packet is normalizable. -/
+/-- The shared scalar readout lies on the critical line by the Majorana owner field. -/
 @[rep_depth operator]
-theorem scalarReadout_on_criticalLine
-    (hNormalizable : B.majorana.normalizable_True) :
+theorem scalarReadout_on_criticalLine :
     InfoGeometry.Arithmetic.RHQuantumStabilityBridge.IsCriticalLineRealPart
       B.scalarReadout := by
-  have h_critical :=
-    MajoranaZeroModeNormalizabilityPacket.criticalLine_of_normalizable
-      B.majorana hNormalizable
-  simpa [B.majorana_readout] using h_critical
+  simpa [B.majorana_readout] using B.majorana.normalizable_law
 
 end DrazinMajoranaMellinCalibration
 

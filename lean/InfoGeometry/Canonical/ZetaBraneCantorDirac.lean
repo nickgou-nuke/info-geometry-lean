@@ -87,16 +87,17 @@ interface instead of being turned into a fake theorem.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure FiniteCantorDiracSelfAdjointSocket where
-  finiteCantorDirac_selfAdjoint_iff_unitary_True : Prop := by
-    sorry
-  finiteCantorDirac_selfAdjoint_iff_unitary_sorryProof :
-    finiteCantorDirac_selfAdjoint_iff_unitary_True
+  Operator : Type*
+  finiteCantorDirac : Operator
+  IsSelfAdjoint : Operator → Prop
+  IsUnitary : Operator → Prop
 
-/-- Reexport of the supplied finite Cantor-Dirac self-adjointness law. -/
+/-- Explicit debt: the finite Cantor-Dirac calibration needs a concrete operator owner. -/
 @[bridge_target_tag, rep_depth operator]
 theorem finiteCantorDirac_selfAdjoint_iff_unitary_holds
     (S : FiniteCantorDiracSelfAdjointSocket) :
-    S.finiteCantorDirac_selfAdjoint_iff_unitary_True :=
-  S.finiteCantorDirac_selfAdjoint_iff_unitary_sorryProof
+    S.IsSelfAdjoint S.finiteCantorDirac ↔ S.IsUnitary S.finiteCantorDirac :=
+by
+  sorry
 
 end InfoGeometry.Canonical.ZetaBraneCantorDirac

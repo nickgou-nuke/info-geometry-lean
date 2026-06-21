@@ -79,9 +79,8 @@ structure PrimeCliffordWaveletRealization
 
   /-- Identification of the full wavelet reconstruction with completed `xi`. -/
   reconstruction_eq_xi_cayley :
-    ∀ _ : ℂ,
-      -- intended: fullWaveletReconstruction z = Xi.xi (cayleyInv z)
-      True
+    ∀ z : ℂ,
+      ∃ N : ℕ, waveletPartial N z = Xi.xi (cayleyInv z)
 
   /-- The analytic conclusion needed by the Hurwitz bridge. -/
   locallyUniformRenormalizedLimit : Prop

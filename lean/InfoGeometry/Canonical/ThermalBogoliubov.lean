@@ -186,8 +186,8 @@ theorem q_to_beta_monotonic (tp : ThermalPolarization) : tp.beta > 0 ↔ |tp.q| 
       linarith
     have hq_ne_zero : tp.q ≠ 0 := by
       intro hzero
-      have habs_zero : |tp.q| = 0 := by simpa [hzero] using abs_zero
-      have hlog_zero : Real.log (|tp.q|) = 0 := by simpa [habs_zero] using Real.log_zero
+      have habs_zero : |tp.q| = 0 := by simp [hzero]
+      have hlog_zero : Real.log (|tp.q|) = 0 := by simp [habs_zero]
       linarith
     have hq_abs_lt_one : |tp.q| < 1 := by
       by_contra! hge
@@ -287,7 +287,7 @@ theorem q_superbracket_at_theta {Op : Type*} [Ring Op] [Algebra ℝ Op] (θ : �
         simp [smul_smul]
       _ = (1 : ℝ) • qSuperbracket (Real.tanh θ) X Y := by
         have h_inv_mul : ((Real.cosh θ) ^ 2)⁻¹ * (Real.cosh θ) ^ 2 = (1 : ℝ) :=
-          inv_mul_cancel hcosh_sq_ne_zero
+          inv_mul_cancel₀ hcosh_sq_ne_zero
         simp [h_inv_mul]
       _ = qSuperbracket (Real.tanh θ) X Y := by simp
   calc

@@ -1,49 +1,71 @@
 import Mathlib
+import InfoGeometry.Algebra.QCCRProved
+
 /-!
-# q-CCR Algebra — Kuzmin 2023 Theorem Boundaries
+# q-CCR finite theorem layer
 
-Formal boundaries for: "CCR and CAR Algebras are Connected Via a Path
-of Cuntz–Toeplitz Algebras" (Commun. Math. Phys. 399, 1623–1645, 2023).
-
-Main result: For |q| < 1, 𝔅_{n,q} ≃ KO_n.
-
-### BUCKET 1: CLOSED THEOREMS
-None — all theorems require C*-algebraic machinery beyond finite algebra.
-
-### BUCKET 3: CLOSURE DEBT
-All C*-algebraic isomorphisms (Kirchberg–Phillips, Gabe–Ruiz).
+This file keeps only kernel-checked finite algebra from the q-CCR/Cuntz--Toeplitz
+boundary.  The CMP-level C*-algebra isomorphisms are not asserted here.
 -/
 
 namespace InfoGeometry.Algebra.QCCR.Kuzmin
 
-/-- Theorem 1.2 (Kuzmin 2023): 𝔅_{n,q} ≃ KO_n for |q|<1. -/
-theorem main_theorem : True := trivial
+open Matrix
+open InfoGeometry.Algebra.QCCR.Proved
 
-/-- Theorem 4.14: ℭ_{n,q}^T has flip approximation property. -/
-theorem flip_approximation : True := trivial
+/-- The finite `k=2,n=2` q-Gram form is positive for `|q| < 1`. -/
+theorem finite_q_gram_positive
+    (q : ℝ) (hq : |q| < 1) (x : Fin 4 → ℝ) (hx : x ≠ 0) :
+    0 < x ⬝ᵥ ((gram_matrix_k2_n2 q).mulVec x) :=
+  gram_positive_definite q hq x hx
 
-/-- Theorem 6.11: ℭ_{n,q}^T ≃ U_n^∞. -/
-theorem fixed_point_is_uhf : True := trivial
+/-- At `q=0` the finite q-Gram matrix is the identity. -/
+theorem finite_q_gram_at_zero :
+    gram_matrix_k2_n2 (0 : ℝ) = 1 :=
+  gram_at_q_zero
 
-/-- Theorem 7.2: ℭ_{n,q} ≃ ℭ_{n,q}^T ⋊_{Ad(s₁)} ℕ. -/
-theorem crossed_product_structure : True := trivial
+/-- The finite q-Gram matrix is symmetric. -/
+theorem finite_q_gram_symmetric (q : ℝ) :
+    (gram_matrix_k2_n2 q)ᵀ = gram_matrix_k2_n2 q :=
+  gram_symmetric q
 
-/-- Theorem 7.3: ℭ_{n,q} is simple, purely infinite, nuclear, UCT. -/
-theorem quotient_properties : True := trivial
+/-- The finite flip matrix squares to the identity. -/
+theorem finite_flip_square_eq_identity :
+    P_matrix_n2 * P_matrix_n2 = (1 : Matrix (Fin 4) (Fin 4) ℝ) :=
+  P_square_eq_I
 
-/-- Theorem 7.4: K_*(ℭ_{n,q}) ≃ Z/(n-1)Z ⊕ 0. -/
-theorem k_theory : True := trivial
+/-- The finite q-operator is `q` times the flip. -/
+theorem finite_T_eq_q_mul_flip (q : ℝ) :
+    T_matrix_n2 q = q • P_matrix_n2 :=
+  T_eq_q_mul_P q
 
-/-- Corollary 7.5: ℭ_{n,q} ≃ ℭ_{n,0} ≃ O_n. -/
-theorem quotient_isomorphism : True := trivial
+/-- The finite q-operator satisfies `T²=q² I`. -/
+theorem finite_T_square_eq_q_sq_identity (q : ℝ) :
+    T_matrix_n2 q * T_matrix_n2 q = q^2 • (1 : Matrix (Fin 4) (Fin 4) ℝ) :=
+  T_square_eq_q_sq_I_n2 q
 
-/-- Corollary 8.2: 𝔅_{n,q} ≃ 𝔅_{n,0} ≃ KO_n (main result). -/
-theorem main_isomorphism : True := trivial
+/-- CAR at `q=-1` in the algebraic q-relation. -/
+theorem finite_car_anticommutation {R : Type*} [CommRing R] [StarRing R]
+    (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
+    (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (-1 : R) * (a j * astar i))
+    (i j : Fin 2) :
+    astar i * a j + a j * astar i = (if i = j then 1 else 0) :=
+  car_anticommutation a astar hstar hrel i j
 
-/-- Lemma 4.1: [(L_i)*, R_j]|F_k = δ_{ij} q^k id. -/
-theorem lemma_4_1 : True := trivial
+/-- CCR at `q=1` in the algebraic q-relation. -/
+theorem finite_ccr_commutation {R : Type*} [CommRing R] [StarRing R]
+    (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
+    (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (1 : R) * (a j * astar i))
+    (i j : Fin 2) :
+    astar i * a j - a j * astar i = (if i = j then 1 else 0) :=
+  ccr_commutation a astar hstar hrel i j
 
-/-- Lemma 4.10: (𝔅_q^L)^T = C*(1, L_i(L_j)*). -/
-theorem lemma_4_10 : True := trivial
+/-- Toeplitz/Cuntz boundary at `q=0` in the algebraic q-relation. -/
+theorem finite_cuntz_toeplitz_limit {R : Type*} [CommRing R] [StarRing R]
+    (a astar : Fin 2 → R) (hstar : ∀ i, star (a i) = astar i)
+    (hrel : ∀ i j, astar i * a j = (if i = j then 1 else 0) + (0 : R) * (a j * astar i))
+    (i j : Fin 2) :
+    astar i * a j = (if i = j then 1 else 0) :=
+  cuntz_toeplitz_limit a astar hstar hrel i j
 
 end InfoGeometry.Algebra.QCCR.Kuzmin

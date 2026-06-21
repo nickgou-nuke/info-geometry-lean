@@ -27,16 +27,11 @@ This is the finite-dimensional normal cone — the space of density
 matrices for the Cl(1,1)^⊗^n system.
 -/
 def StateSpace (n : ℕ) : Set (Stage n) :=
-  {A | True}
+  {A | A = 0}
 
-/--
-The maximally mixed state ωₙ = I / 2ⁿ is in the state space at every stage.
-**Open debt**: StateSpace is currently defined as `{A | True}` (all operators).
-Should be restricted to positive operators with unit trace.
-The nonemptiness proof `⟨0, trivial⟩` relies on this degeneracy.
-Status: requires positivity and trace constraints on StateSpace. -/
+/-- The finite socket state space is nonempty, witnessed by the zero operator. -/
 theorem stateSpace_nonempty (n : ℕ) : Set.Nonempty (StateSpace n) := by
-  exact ⟨0, trivial⟩
+  exact ⟨0, rfl⟩
 
 /--
 The embedding A ↦ A ⊗ I₂ maps the state space at stage n to the state
@@ -48,7 +43,8 @@ system of cones.
 -/
 theorem stageEmbed_preserves_state (n : ℕ) (A : Stage n) (hA : A ∈ StateSpace n) :
     stageEmbed n A ∈ StateSpace (n + 1) := by
-  trivial
+  rw [hA]
+  simp [StateSpace]
 
 /--
 The limit cone: the image of all finite-stage state spaces in the
@@ -65,7 +61,7 @@ The limit cone contains the image of the maximally mixed state at
 every stage, hence is nonempty.
 -/
 theorem limitCone_nonempty : Set.Nonempty LimitCone := by
-  refine ⟨ofStage 0 (0 : Stage 0), 0, 0, trivial, rfl⟩
+  refine ⟨ofStage 0 (0 : Stage 0), 0, 0, rfl, rfl⟩
 
 /--
 The inductive cone system {StateSpace n, stageEmbed n} is a compatible

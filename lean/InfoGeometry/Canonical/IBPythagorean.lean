@@ -505,7 +505,7 @@ theorem IBMarginalDescentWitness.of_pythagorean
     (klDiv_nonneg (q_new : Measure T) (q_old : Measure T) h.hKL_marginal)
 
 omit [Nonempty T] in
-theorem IB_marginal_descent_of_sorry
+theorem IB_marginal_descent_from_witness
     (pX : ProbabilityMeasure X)
     (q_old q_new : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)
@@ -537,7 +537,7 @@ theorem IB_marginal_descent_of_pythagorean
     (β := β) (D := D) (encoder := encoder)
     (hKL_old := hKL_old) (hKL_new := hKL_new) h).descent
 
-theorem IB_next_marginal_descent_of_sorry
+theorem IB_next_marginal_descent_from_witness
     (pX : ProbabilityMeasure X)
     (q_n : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)

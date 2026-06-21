@@ -548,8 +548,17 @@ metric invariance.
 -/
 def IsPoincareMobiusBlock
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
-    (_M : PhaseLinearMobiusCoefficients D) : Prop :=
-  True
+    (M : PhaseLinearMobiusCoefficients D) : Prop :=
+  PhaseLinear D M.A ∧
+    PhaseLinear D M.B ∧
+      PhaseLinear D M.C ∧
+        PhaseLinear D M.Dop
+
+/-- Every phase-linear Mobius coefficient packet satisfies the admissible block carrier. -/
+theorem isPoincareMobiusBlock_of_phaseLinear
+    (M : PhaseLinearMobiusCoefficients D) :
+    IsPoincareMobiusBlock D M := by
+  exact ⟨M.A_phase, M.B_phase, M.C_phase, M.D_phase⟩
 
 /-! ## Poincare metric datum -/
 

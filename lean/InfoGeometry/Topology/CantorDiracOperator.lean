@@ -233,8 +233,6 @@ structure CantorDiracKMSThermalVacuum
   thermalHamiltonian :
     Module.End ℂ (FiniteWaveletSpace cutoff)
   thermalHamiltonian_matches_diracBlock : Prop
-  thermalHamiltonian_matches_diracBlock_sorryProof :
-    thermalHamiltonian_matches_diracBlock
   partitionFunction : ℝ
   thermalState : ModularThermalState Observable
   strip : HestenesKreinKMSStripData Observable
@@ -246,11 +244,6 @@ namespace CantorDiracKMSThermalVacuum
 variable {Observable : Type*} [Mul Observable]
 variable (T : CantorDiracKMSThermalVacuum Observable)
 
-/-- Re-export of the stored even-hamiltonian calibration. -/
-@[rep_depth operator]
-theorem thermalHamiltonian_matches_diracBlock_readback :
-    T.thermalHamiltonian_matches_diracBlock :=
-  T.thermalHamiltonian_matches_diracBlock_sorryProof
 
 /-- Readback of the KMS lower boundary identity. -/
 @[bridge_target_tag, rep_depth thermo]

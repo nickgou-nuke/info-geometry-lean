@@ -156,18 +156,18 @@ Explicit-formula stability packet.
 
 The analytic work is deliberately explicit:
 
-* `explicitFormulaLaw` supplies the explicit-formula bridge from zeta zeros to
-  Chebyshev/prime-counting fluctuations;
+* the explicit-formula bridge from zeta zeros to Chebyshev/prime-counting
+  fluctuations is not proved here;
 * `all_zeros_critical` supplies the RH-style centered-zero condition;
 * `squareRootEnvelopeLaw` supplies the resulting square-root error law.
 -/
 structure ExplicitFormulaStabilityPacket where
   zeros : Type*
   zeroReadout : zeros → CenteredZeroReadout
-  explicitFormulaLaw : Prop
-  explicitFormulaCertificate : explicitFormulaLaw
   all_zeros_critical : ∀ ρ : zeros, (zeroReadout ρ).OnCriticalLine
   squareRootEnvelopeLaw : RHPrimeCountingErrorLaw
+  ExplicitFormulaHolds : Prop
+  explicit_formula_law : ExplicitFormulaHolds
 
 namespace ExplicitFormulaStabilityPacket
 
@@ -178,10 +178,10 @@ theorem normalProjection_vanishes
   CenteredZeroReadout.normalProjection_eq_zero_of_critical
     (P.zeroReadout ρ) (P.all_zeros_critical ρ)
 
-/-- The packet re-exports its supplied explicit-formula law. -/
+/-- Debt surface for the missing explicit-formula theorem. -/
 theorem explicitFormula_holds (P : ExplicitFormulaStabilityPacket) :
-    P.explicitFormulaLaw :=
-  P.explicitFormulaCertificate
+    P.ExplicitFormulaHolds :=
+  P.explicit_formula_law
 
 /--
 The packet re-exports the supplied RH-style square-root prime-counting error

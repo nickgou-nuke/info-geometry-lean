@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SuperVirasoroExtension.lean
 
-Virasoro and super-Virasoro central-extension sockets.
+Virasoro and super-Virasoro central-extension hypotheses.
 
 This module records the infinite-dimensional boundary route for absorbing
 TKK/global-conformal closure defects as central charges.
@@ -13,6 +13,8 @@ adjoined central charge is genuinely central by an explicit field.
 -/
 
 import Mathlib
+import InfoGeometry.External.Virasoro.VirasoroAlgebra
+import InfoGeometry.External.Virasoro.VirasoroCocycle
 
 noncomputable section
 
@@ -35,7 +37,7 @@ structure VirasoroAlgebraDatum
   centralCharge : L
 
   /-- The central charge commutes with every element. -/
-  central_True :
+  central_commutes_hyp :
     ∀ X : L, ⁅centralCharge, X⁆ = 0
 
   /--
@@ -44,12 +46,11 @@ structure VirasoroAlgebraDatum
   Morally:
   `[L_m,L_n] = (m-n)L_{m+n} + c/12 * (m^3-m) δ_{m+n,0}`.
   -/
-  virasoro_bracket_True : Prop := by
-    sorry
+  virasoro_bracket_law : Prop
 
   /-- Proof of the bracket law. -/
   virasoro_bracket_law_holds :
-    virasoro_bracket_True
+    virasoro_bracket_law
 
 namespace VirasoroAlgebraDatum
 
@@ -61,7 +62,7 @@ variable (V : VirasoroAlgebraDatum L)
 theorem central_commutes
     (X : L) :
     ⁅V.centralCharge, X⁆ = 0 :=
-  V.central_True X
+  V.central_commutes_hyp X
 
 end VirasoroAlgebraDatum
 
@@ -90,7 +91,7 @@ theorem anomalyCoefficient_zero_on_global_modes
   · subst h
     norm_num [virasoroCentralPolynomial]
 
-/-! ## 3. Super-Virasoro socket -/
+/-! ## 3. Super-Virasoro hypotheses -/
 
 /--
 Super-Virasoro extension.
@@ -114,12 +115,11 @@ structure SuperVirasoroAlgebraDatum
   Morally:
   `{G_r,G_s} = 2L_{r+s} + central term`.
   -/
-  super_bracket_True : Prop := by
-    sorry
+  super_bracket_law : Prop
 
   /-- Proof of the super bracket law. -/
   super_bracket_law_holds :
-    super_bracket_True
+    super_bracket_law
 
 /-! ## 4. Central charge bridge -/
 
@@ -170,5 +170,51 @@ theorem defect_eq_central_charge_readout
   B.defect_is_central_charge s
 
 end VirasoroCentralChargeBridge
+
+/-! ## 5. Literature-backed Virasoro lemmas from Kytölä's Lean formalization -/
+
+open VirasoroProject
+
+/--
+`LEMMA_DEBT virasoro_central_generator_commutes`.
+
+Source: K. Kytölä, *Virasoro algebra and Sugawara constructions formally in
+Lean*; vendored formal source `InfoGeometry.External.Virasoro.VirasoroAlgebra`.
+The central generator `C` of the Virasoro algebra commutes with every element.
+-/
+theorem virasoroProject_central_commutes
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (X : VirasoroAlgebra 𝕜) :
+    ⁅VirasoroAlgebra.cgen 𝕜, X⁆ = 0 := by
+  simp
+
+/--
+`LEMMA_DEBT virasoro_lgen_bracket`.
+
+Source: K. Kytölä's formal Virasoro project, theorem
+`VirasoroProject.VirasoroAlgebra.lgen_bracket`.  For all integers `n,m`,
+`[Lₙ,Lₘ] = (n-m)Lₙ₊ₘ + ((n³-n)/12) C` when `n+m=0`, and has no central
+term otherwise.
+-/
+theorem virasoroProject_lgen_bracket
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
+    (n m : ℤ) :
+    ⁅VirasoroAlgebra.lgen 𝕜 n, VirasoroAlgebra.lgen 𝕜 m⁆
+      = (n - m : 𝕜) • VirasoroAlgebra.lgen 𝕜 (n + m) +
+          if n + m = 0 then ((n^3 - n : 𝕜)/12) • VirasoroAlgebra.cgen 𝕜 else 0 := by
+  simp
+
+/--
+`LEMMA_DEBT virasoro_cocycle_nontrivial`.
+
+Source: Kytölä's formal Virasoro project, theorem
+`WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero`.  The Gelfand-Fuchs /
+Virasoro 2-cocycle has nonzero cohomology class; hence the central extension is
+not cohomologically trivial.
+-/
+theorem virasoroProject_cocycle_class_nonzero
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
+    (VirasoroProject.WittAlgebra.virasoroCocycle 𝕜).cohomologyClass ≠ 0 := by
+  exact VirasoroProject.WittAlgebra.cohomologyClass_virasoroCocycle_ne_zero 𝕜
 
 end InfoGeometry.OperatorAlgebra.SuperVirasoroExtension

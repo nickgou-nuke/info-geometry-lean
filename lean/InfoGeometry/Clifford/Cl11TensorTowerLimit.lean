@@ -22,6 +22,50 @@ abbrev Limit : Type :=
 def ofStage (n : ℕ) : Stage n →+* Limit :=
   directLimitOf (Stage := Stage) stageBond n
 
+/-- The base-ring action on the direct limit induced by the stage-0 embedding. -/
+noncomputable def realAlgebraMap : ℝ →+* Limit :=
+  (ofStage 0).comp (algebraMap ℝ (Stage 0))
+
+/-- The stagewise `★`-readout transported to the direct limit. -/
+noncomputable def stageStarMap (n : ℕ) : Stage n →+ Limit where
+  toFun := fun x => ofStage n (star x)
+  map_zero' := by simp
+  map_add' := by
+    intro x y
+    simp [map_add]
+
+/-- The stagewise `★`-readout is compatible with the iterated bonding maps. -/
+theorem stageStarMap_compat
+    (i j : ℕ) (h : i ≤ j) (x : Stage i) :
+    stageStarMap j (bondMap stageBond i j h x) = stageStarMap i x := by
+  refine Nat.le_induction
+    (m := i)
+    (P := fun t ht =>
+      stageStarMap t (bondMap stageBond i t ht x) = stageStarMap i x)
+    ?base ?succ j h
+  · simp [stageStarMap]
+  · intro t hmt ih
+    rw [bondMap_succ stageBond i t hmt]
+    change stageStarMap (t + 1) (stageBond t (bondMap stageBond i t hmt x)) =
+      stageStarMap i x
+    have hstar :
+        star (stageBond t (bondMap stageBond i t hmt x)) =
+          stageBond t (star (bondMap stageBond i t hmt x)) := by
+      simpa [stageBond] using
+        (InfoGeometry.Clifford.Cl11TensorTower.stageEmbed_star t
+          (bondMap stageBond i t hmt x)).symm
+    change ofStage (t + 1) (star (stageBond t (bondMap stageBond i t hmt x))) =
+      stageStarMap i x
+    rw [hstar]
+    have hb :
+        ofStage (t + 1) (stageBond t (star (bondMap stageBond i t hmt x))) =
+          ofStage t (star (bondMap stageBond i t hmt x)) := by
+      simpa [stageBond] using
+        (directLimitOf_bond (Stage := Stage) stageBond t
+          (star (bondMap stageBond i t hmt x)))
+    rw [hb]
+    exact ih
+
 /- #### BUCKET 1: CLOSED FINITE THEOREMS -/
 -- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 
@@ -29,6 +73,29 @@ def ofStage (n : ℕ) : Stage n →+* Limit :=
 theorem ofStage_apply_bond (n : ℕ) (A : Stage n) :
     ofStage (n + 1) (stageEmbed n A) = ofStage n A := by
   exact directLimitOf_bond (Stage := Stage) stageBond n A
+
+/-- The scalar embedding is independent of the finite representative stage. -/
+@[simp] theorem realAlgebraMap_stage (n : ℕ) (r : ℝ) :
+    realAlgebraMap r = ofStage n (algebraMap ℝ (Stage n) r) := by
+  induction n with
+  | zero =>
+      rfl
+  | succ n ih =>
+      calc
+        realAlgebraMap r = ofStage n (algebraMap ℝ (Stage n) r) := ih
+        _ = ofStage (n + 1) (stageEmbed n (algebraMap ℝ (Stage n) r)) := by
+              symm
+              exact ofStage_apply_bond (n := n) (A := algebraMap ℝ (Stage n) r)
+        _ = ofStage (n + 1) (algebraMap ℝ (Stage (n + 1)) r) := by
+              rw [← (stageEmbed n).commutes r]
+
+noncomputable instance : Algebra ℝ Limit :=
+  RingHom.toAlgebra' realAlgebraMap (by
+    intro r x
+    induction x using DirectLimit.induction with
+    | _ n x =>
+        rw [realAlgebraMap_stage]
+        simpa using congrArg (ofStage n) (Algebra.commutes r x))
 
 @[simp]
 theorem ofStage_zero (n : ℕ) :

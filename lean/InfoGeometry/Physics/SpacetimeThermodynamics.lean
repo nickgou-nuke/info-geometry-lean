@@ -34,10 +34,14 @@ structure ExecutableSpacetime where
   -- 3. The topological volume of the Amplituhedron (Gromov-Witten partition)
   volume : ℝ
   h_vol_pos : 0 < volume
+
+  -- 4. Concrete readouts compared by the prime partition theorem.
+  tracePartition : ℝ
+  zetaProduct : ℝ
   
-  -- 4. Geometry is Entropy: The macroscopic volume equals the exponential 
+  -- 5. Geometry is Entropy: The macroscopic volume equals the exponential
   --    of the exact trace partition of the KMS state.
-  geometry_is_entropy : total_partition_zeta 2 modular_engine
+  geometry_is_entropy : total_partition_zeta 2 modular_engine tracePartition zetaProduct
 
 /--
   Theorem: The Cuntz Engine dictates that the thermodynamic flow of the 
@@ -49,7 +53,8 @@ structure ExecutableSpacetime where
   spacetime inherits the scale-invariant entropy of the modular Hamiltonian.
 -/
 theorem time_is_renormalization (spacetime : ExecutableSpacetime) : 
-    total_partition_zeta 2 spacetime.modular_engine := by
+    total_partition_zeta 2 spacetime.modular_engine
+      spacetime.tracePartition spacetime.zetaProduct := by
   exact spacetime.geometry_is_entropy
 
 end InfoGeometry

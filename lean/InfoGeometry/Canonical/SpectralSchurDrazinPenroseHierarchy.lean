@@ -43,11 +43,11 @@ open InfoGeometry.Singular.MoorePenrose
 /-! ## 1. Clean Hilbert spectral layer -/
 
 /--
-Witness packet for the finite Hilbert spectral-theorem regime.
+Data packet for the finite Hilbert spectral-theorem regime.
 
 `Proj` is the carrier for spectral projectors and `Scalar` is the eigenvalue
-carrier.  Orthogonality, self-adjointness, completeness, and diagonalization are
-stored as certified laws because this module is only the hierarchy socket.
+carrier.  This module does not prove orthogonality, completeness, or
+diagonalization for these abstract carriers.
 -/
 structure HilbertSpectralTheoremPacket
     (Op Scalar Proj : Type*) where
@@ -61,38 +61,22 @@ structure HilbertSpectralTheoremPacket
   projector : Spectrum → Proj
   /-- Normal/self-adjoint hypothesis supplying the clean spectral theorem. -/
   normalOrSelfAdjointWitness : Type*
-  /-- Orthogonal projector laws: `PλPμ = δλμPλ`, `Pλ* = Pλ`. -/
-  orthogonalProjectorLaw : Prop
-  /-- Completeness law: the projectors sum to identity. -/
-  completeProjectorLaw : Prop
-  /-- Diagonalization law: `A = Σ λ Pλ`. -/
-  diagonalizationLaw : Prop
-  /-- Functional calculus law: `f(A) = Σ f(λ)Pλ`. -/
-  functionalCalculusLaw : Prop
-  /-- Dynamics law: `exp(tA) = Σ exp(tλ)Pλ`, when that readout is supplied. -/
-  dynamicsLaw : Prop
-  /-- Certificate for orthogonal projector laws. -/
-  orthogonalProjectorCertificate : orthogonalProjectorLaw
-  /-- Certificate for completeness. -/
-  completeProjectorCertificate : completeProjectorLaw
-  /-- Certificate for diagonalization. -/
-  diagonalizationCertificate : diagonalizationLaw
 
 namespace HilbertSpectralTheoremPacket
 
 variable {Op Scalar Proj : Type*}
 
-/-- Re-export the clean spectral diagonalization law. -/
+/-- Debt surface for the clean spectral diagonalization theorem. -/
 theorem diagonalization
     (S : HilbertSpectralTheoremPacket Op Scalar Proj) :
-    S.diagonalizationLaw :=
-  S.diagonalizationCertificate
+    False := by
+  sorry
 
-/-- Re-export orthogonality/completeness as the clean spectral-mode guardrail. -/
+/-- Debt surface for orthogonality and completeness of the spectral projectors. -/
 theorem orthogonal_and_complete
     (S : HilbertSpectralTheoremPacket Op Scalar Proj) :
-    S.orthogonalProjectorLaw ∧ S.completeProjectorLaw :=
-  ⟨S.orthogonalProjectorCertificate, S.completeProjectorCertificate⟩
+    False := by
+  sorry
 
 end HilbertSpectralTheoremPacket
 
@@ -113,16 +97,8 @@ structure SchurFallbackPacket
   T : Triangular
   /-- Change-of-basis/unitary chart carrier. -/
   Q : Change
-  /-- Factorization law, morally `A = Q T Q*`. -/
-  factorizationLaw : Prop
-  /-- Upper-triangular law for the Schur chart. -/
-  triangularLaw : Prop
   /-- Off-diagonal/transient coupling readout. -/
   offDiagonalCouplingWitness : Type*
-  /-- Certificate of factorization. -/
-  factorizationCertificate : factorizationLaw
-  /-- Certificate of triangularity. -/
-  triangularCertificate : triangularLaw
 
 /--
 Compatibility witness that Schur collapses to the spectral theorem in the clean
@@ -132,10 +108,8 @@ structure SpectralSchurCollapse
     (Op Scalar Proj Triangular Change : Type*)
     (S : HilbertSpectralTheoremPacket Op Scalar Proj)
     (Q : SchurFallbackPacket Op Triangular Change) where
-  /-- The Schur triangular form is diagonal in the spectral regime. -/
-  triangular_is_diagonal : Prop
-  /-- The diagonal readout agrees with the spectral eigenvalue readout. -/
-  diagonal_agrees_with_spectrum : Prop
+  /-- Guardrail: the Schur/spectral collapse theorem is not proved here. -/
+  collapseDebtGuard : Type*
 
 /-! ## 3. Drazin and Moore--Penrose readout layers -/
 
@@ -159,14 +133,6 @@ structure DrazinZeroSurgeryPacket
   regularProjector : Op
   /-- Nil/generalized-zero projector, morally `1 - A * AD`. -/
   nilProjector : Op
-  /-- Regular projector definition/readout. -/
-  regularProjectorLaw : Prop
-  /-- Nil projector definition/readout. -/
-  nilProjectorLaw : Prop
-  /-- Certificate for the regular projector readout. -/
-  regularProjectorCertificate : regularProjectorLaw
-  /-- Certificate for the nil projector readout. -/
-  nilProjectorCertificate : nilProjectorLaw
 
 namespace DrazinZeroSurgeryPacket
 
@@ -198,14 +164,6 @@ structure MoorePenroseMetricReadoutPacket
   rangeProjector : Op
   /-- Domain/kernel-complement projector, morally `A+ * A`. -/
   domainProjector : Op
-  /-- Range projector readout law. -/
-  rangeProjectorLaw : Prop
-  /-- Domain projector readout law. -/
-  domainProjectorLaw : Prop
-  /-- Certificate for range projector readout. -/
-  rangeProjectorCertificate : rangeProjectorLaw
-  /-- Certificate for domain projector readout. -/
-  domainProjectorCertificate : domainProjectorLaw
 
 namespace MoorePenroseMetricReadoutPacket
 
@@ -259,16 +217,8 @@ structure JordanSpectralChamberPacket
   eigenvalue : Index → Scalar
   /-- Jordan-frame idempotent readout. -/
   frameIdempotent : Index → Frame
-  /-- Spectral expansion law `X = Σ λᵢ eᵢ`. -/
-  spectralExpansionLaw : Prop
-  /-- Jordan-frame orthogonality/completeness law. -/
-  jordanFrameLaw : Prop
-  /-- Norm determinant/product law, e.g. `N_J(X) = Π λᵢ`. -/
-  normProductLaw : Prop
   /-- Semisimple chamber control; split/rank-boundary cases need extra data. -/
   semisimpleChamberWitness : Type*
-  /-- Certificate for spectral expansion. -/
-  spectralExpansionCertificate : spectralExpansionLaw
 
 /--
 Automorphic Siegel--Hecke spectral packet.
@@ -285,14 +235,8 @@ structure AutomorphicSiegelHeckeSpectralPacket
   constantTerm : Bulk → Boundary
   /-- Hecke/Laplace eigenpacket readout of the boundary term. -/
   heckeSpectralReadout : Boundary → Eigenpacket
-  /-- Cusp/residual/Eisenstein decomposition law. -/
-  automorphicDecompositionLaw : Prop
-  /-- Boundary scattering/eigenmode law. -/
-  boundarySpectralLaw : Prop
   /-- L-function/scattering normalization witness. -/
   lFunctionNormalizationWitness : Type*
-  /-- Certificate for automorphic decomposition. -/
-  automorphicDecompositionCertificate : automorphicDecompositionLaw
 
 /-! ## 5. Full hierarchy packet -/
 
@@ -344,21 +288,21 @@ namespace SpectralSchurDrazinPenroseHierarchy
 variable {Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket : Type*}
 variable [Ring Op] [StarRing Op]
 
-/-- Read back the clean spectral diagonalization law from the hierarchy. -/
+/-- Debt surface for the clean spectral diagonalization theorem in the hierarchy. -/
 theorem spectral_diagonalization
     (H :
       SpectralSchurDrazinPenroseHierarchy
         Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
-    H.spectral.diagonalizationLaw :=
-  H.spectral.diagonalizationCertificate
+    False := by
+  exact HilbertSpectralTheoremPacket.diagonalization H.spectral
 
-/-- Read back the Schur triangular fallback law from the hierarchy. -/
+/-- Debt surface for the Schur triangular fallback theorem in the hierarchy. -/
 theorem schur_triangular_fallback
     (H :
       SpectralSchurDrazinPenroseHierarchy
         Op Scalar Proj Triangular Change Mode J Frame Bulk Boundary Eigenpacket) :
-    H.schur.triangularLaw :=
-  H.schur.triangularCertificate
+    False := by
+  sorry
 
 /-- Read back algebraic Drazin surgery from the hierarchy. -/
 theorem drazin_zero_surgery

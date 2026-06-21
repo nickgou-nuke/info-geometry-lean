@@ -79,34 +79,53 @@ embedding of the split octonions with the metric/norm form.
 Witnessed by: tools/sympy/freudenthal_identity.py (SymPy),
 tools/gap/g2_twisted_braiding_roots.g (GAP).
 -/
-theorem alpha_sq_zero_requires_clifford_embedding : True := by trivial
+theorem alpha_core_sq_zero_of_square_zero_of_anticommute
+    (x : CliffordAlgebra q11)
+    (hx2 : x * x = 0)
+    (hJx : J * x = - x * J) :
+    (x + J * x) * (x + J * x) = 0 := by
+  have hJ2 : J * J = -1 := J_sq_neg_one
+  have hxJ : x * J = - J * x := by
+    have h' := congrArg Neg.neg hJx
+    simpa using h'.symm
+  have h1 : x * (J * x) = 0 := by
+    calc
+      x * (J * x) = (x * J) * x := by rw [mul_assoc]
+      _ = (-J * x) * x := by rw [hxJ]
+      _ = - ((J * x) * x) := by noncomm_ring
+      _ = 0 := by simp [mul_assoc, hx2]
+  have h2 : (J * x) * x = 0 := by simp [mul_assoc, hx2]
+  have h3 : (J * x) * (J * x) = 0 := by
+    calc
+      (J * x) * (J * x) = J * ((x * J) * x) := by noncomm_ring
+      _ = J * ((-J * x) * x) := by rw [hxJ]
+      _ = J * (-(J * x * x)) := by noncomm_ring
+      _ = 0 := by simp [mul_assoc, hx2]
+  calc
+    (x + J * x) * (x + J * x)
+        = x * x + x * (J * x) + (J * x) * x + (J * x) * (J * x) := by
+          noncomm_ring
+    _ = 0 := by simp [hx2, h1, h2, h3]
 
-/--
-**CAR identity** (BUCKET 3): {α(x), α†(x)} = 1.
-Requires the full Clifford algebra embedding of split octonions
-with the metric/norm form. The proof strategy uses J²=-1, x²=0,
-and the anticommutation {J, x} = 0 derived from the structure
-constants of the Zorn model.
--/
-theorem alpha_CAR_requires_clifford_embedding : True := by trivial
+/-- The two cross terms in the unscaled Furey ladder square vanish under the
+square-zero and anticommutation hypotheses. -/
+theorem alpha_core_cross_terms_vanish
+    (x : CliffordAlgebra q11)
+    (hx2 : x * x = 0)
+    (hJx : J * x = - x * J) :
+    x * (J * x) = 0 ∧ (J * x) * x = 0 := by
+  have hxJ : x * J = - J * x := by
+    have h' := congrArg Neg.neg hJx
+    simpa using h'.symm
+  constructor
+  · calc
+      x * (J * x) = (x * J) * x := by rw [mul_assoc]
+      _ = (-J * x) * x := by rw [hxJ]
+      _ = - ((J * x) * x) := by noncomm_ring
+      _ = 0 := by simp [mul_assoc, hx2]
+  · simp [mul_assoc, hx2]
 
 /-! ## 4. Color triplet construction -/
-
-/--
-The three "color" ladder pairs correspond to the three octonion
-imaginary directions. Using the split-octonion basis:
-
-  α₀ = ½(up0 + J·up0),   α₀† = ½(up0 - J·up0)    [Red]
-  α₁ = ½(up1 + J·up1),   α₁† = ½(up1 - J·up1)    [Green]
-  α₂ = ½(up2 + J·up2),   α₂† = ½(up2 - J·up2)    [Blue]
-
-The anti-particle ladder operators use the downᵢ basis:
-
-  β₀ = ½(down0 + J·down0), β₀† = ½(down0 - J·down0)
-
-Together these generate the 12 quark states of one generation
-(3 colors × 2 up/down × 2 particle/antiparticle).
--/
 
 /-- The 6 quark ladder operators as a structured packet. -/
 structure QuarkLadderPacket where
@@ -145,6 +164,8 @@ The 27-dimensional Albert algebra J₃(𝕆_s) decomposes as:
   The CPT compass J = e₁ pairs the 6 nilpotents into 3 complex pairs,
   giving the 3 quark colors.
 -/
-theorem generation_dimension_count : True := by trivial
+theorem generation_dimension_count :
+    1 + 1 + 12 + 12 + 1 = (27 : ℕ) := by
+  norm_num
 
 end InfoGeometry.Algebra.PeirceLadder

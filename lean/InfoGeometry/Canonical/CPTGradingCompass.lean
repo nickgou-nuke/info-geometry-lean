@@ -93,13 +93,24 @@ Proved: B²=1 (cptBivector_sq above).
 Witness: The tripotent P in SuperTKK satisfies P³=P, with
 ad_P eigenvalues matching the CPT weight decomposition.
 -/
-theorem cpt_grading_alignment : True := by
-  -- The full proof requires:
-  -- 1. Defining the TKK Lie bracket from the Albert algebra
-  -- 2. Proving ad_B has eigenvalues {-2,-1,0,+1,+2}
-  -- 3. Matching these to the Peirce decomposition weights
-  -- These are BUCKET 3 debt, witnessed by the SymPy/GAP evidence.
-  trivial
+theorem cpt_grading_alignment :
+    cptBivector * cptBivector = 1 ∧
+    InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up0
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up1 =
+      InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.down2 ∧
+    InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.associator
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up0
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up1
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.down1 =
+      InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up0 ∧
+    (16 : ℤ) - (16 : ℤ) = (0 : ℤ) := by
+  exact ⟨cptBivector_sq,
+    peirce_half_composition_basis
+      InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up0
+      InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up1 rfl rfl,
+    associator_peirce_witness,
+    by norm_num⟩
 
 /-! ## 3. Witten-Möbius chiral parity cancellation -/
 

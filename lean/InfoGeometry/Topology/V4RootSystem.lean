@@ -56,6 +56,36 @@ def v4_mul : V4Group → V4Group → V4Group
 instance : Mul V4Group where
   mul := v4_mul
 
+/-- The identity element of the finite Klein four group. -/
+instance : One V4Group where
+  one := I
+
+/-- Every element of the finite Klein four group is its own inverse. -/
+instance : Inv V4Group where
+  inv := id
+
+/-- The finite Klein four group as an actual group structure. -/
+instance : Group V4Group where
+  one := I
+  mul := v4_mul
+  inv := id
+  mul_assoc := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;> rfl
+  one_mul := by
+    intro a
+    cases a <;> rfl
+  mul_one := by
+    intro a
+    cases a <;> rfl
+  inv_mul_cancel := by
+    intro a
+    cases a <;> rfl
+
+/-- On `V₄`, inversion is trivial. -/
+theorem v4_inv_eq_self (x : V4Group) : x⁻¹ = x := by
+  cases x <;> rfl
+
 /-- Point inversion is the composition of the two coordinate sign reflections. -/
 theorem varlamov_v4_inversion : W1 * W2 = W12 := by
   rfl

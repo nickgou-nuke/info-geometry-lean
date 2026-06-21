@@ -31,7 +31,7 @@ Under that hypothesis:
     (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
     (a : A) :
     IsGZero X.cl11 (X.π a) :=
-  pi_isGZero_of_sorry (X:=X) w a
+  pi_isGZero_of_witness (X:=X) w a
 -/
 
 namespace InfoGeometry.KK.RealSplitKKTBridge
@@ -97,7 +97,7 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
   exact gOnePart_add_gNegOnePart_eq_of_epsConj_neg (X := X.cl11) hConj
 
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
-@[rep_depth krein] theorem pi_isGZero_of_sorry
+@[rep_depth krein] theorem pi_isGZero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
     (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
     (a : A) :
@@ -105,7 +105,7 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
   pi_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq a
 
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
-@[rep_depth krein] theorem rho_isGZero_of_sorry
+@[rep_depth krein] theorem rho_isGZero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
     (w : GradeEpsWitness (A := A) (B := B) (H := H) X)
     (b : B) :
@@ -113,14 +113,14 @@ structure GradeEpsWitness (X : RealSplitKreinKasparovCycle A B H) : Prop where
   rho_isGZero_of_gradeCLM_eq_eps (X := X) w.grade_eq b
 
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
-@[rep_depth krein] theorem gZeroPart_F_eq_zero_of_sorry
+@[rep_depth krein] theorem gZeroPart_F_eq_zero_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
     (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
     gZeroPart X.cl11 X.F = 0 :=
   gZeroPart_F_eq_zero_of_gradeCLM_eq_eps (X := X) w.grade_eq
 
 /-- Witness-driven variant removing a raw equality hypothesis argument. -/
-@[rep_depth krein] theorem F_eq_gOnePart_add_gNegOnePart_of_sorry
+@[rep_depth krein] theorem F_eq_gOnePart_add_gNegOnePart_of_witness
     (X : RealSplitKreinKasparovCycle A B H)
     (w : GradeEpsWitness (A := A) (B := B) (H := H) X) :
     X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F :=

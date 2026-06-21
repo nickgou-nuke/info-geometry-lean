@@ -42,10 +42,6 @@ structure LightConeAffineCurrentBridge
   /-- Finite-algebra element representing the `u₋` lightcone direction. -/
   uMinusRoot : Finite
 
-  /-- Model-specific law that the chosen roots are lightcone directions. -/
-  lightconeCurrentLaw : Prop
-  lightconeCurrentLaw_holds : lightconeCurrentLaw
-
 namespace LightConeAffineCurrentBridge
 
 variable
@@ -73,9 +69,10 @@ theorem bridge_affine_eq_theorem : B.bridge.affine = B.affine :=
 theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
   B.bridge_virasoro_eq
 
-/-- Evidence for the installed lightcone-current law. -/
-theorem lightconeCurrentLaw_holds_theorem : B.lightconeCurrentLaw :=
-  B.lightconeCurrentLaw_holds
+/-- Debt surface for proving that the chosen affine roots are lightcone directions. -/
+theorem lightcone_current_direction_debt
+    (_B : LightConeAffineCurrentBridge Finite Alg) : False := by
+  sorry
 
 /-- Bracket of two positive lightcone current modes, inherited from the affine owner. -/
 @[rep_depth operator]

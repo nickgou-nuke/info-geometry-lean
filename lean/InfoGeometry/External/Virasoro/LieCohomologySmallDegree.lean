@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.Abelian
-import VirasoroProject.ToMathlib.Algebra.Lie.Basic
+import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Basic
 
 /-!
 # Lie algebra cohomology in degree two (for central extensions)

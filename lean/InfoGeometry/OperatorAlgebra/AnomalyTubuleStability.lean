@@ -36,9 +36,6 @@ structure AnomalyReadout
   /-- Regularized trace, index, residue, weight, determinant variation, etc. -/
   readout : Op → ℝ
 
-  /-- Certificate that the readout has a nonzero anomaly in the intended model. -/
-  nonvanishingCertificate : Prop
-
 namespace AnomalyReadout
 
 variable {Op : Type*} [Ring Op]
@@ -139,9 +136,6 @@ structure ChiralAnomalyDatum
   /-- Integer index readout. -/
   indexReadout : ℤ
 
-  /-- Certificate that this data carries the intended chiral anomaly. -/
-  anomalyCertificate : Prop
-
 /--
 Weyl/conformal anomaly datum.
 
@@ -162,9 +156,6 @@ structure WeylAnomalyDatum
 
   /-- Determinant variation readout. -/
   determinantVariation : ℝ
-
-  /-- Certificate that this data carries the intended Weyl anomaly. -/
-  anomalyCertificate : Prop
 
 /-! ## 4. DIII interacting invariant socket -/
 
@@ -198,9 +189,6 @@ structure CliffordToDIIIInteractionBridge where
   /-- Global cyclic interacting invariant. -/
   globalInvariant : DIIIInteractionInvariant
 
-  /-- Certificate relating this local sector to the chosen global invariant. -/
-  compatibility : Prop
-
 /-! ## 5. Tubule stability as global obstruction -/
 
 /--
@@ -230,14 +218,6 @@ structure TubuleStabilityDatum
   /-- Chosen nontrivial sector predicate. -/
   isNontrivialSector : topologicalSector → Prop
 
-  /--
-  Stability certificate.
-
-  Intended theorem target: nonzero anomaly/topological readout rules out a
-  flat trivial representative and forces a stable nonlinear representative.
-  -/
-  stableNontrivialSector : Prop
-
 namespace TubuleStabilityDatum
 
 variable {Op : Type*} [Ring Op]
@@ -249,13 +229,14 @@ def InNontrivialSector
   T.isNontrivialSector (T.sectorReadout x)
 
 /--
-Re-export the stability certificate: this is where the tubule metaphor becomes
-a theorem target in concrete models.
+Debt boundary for the stability theorem.
+
+The abstract datum above supplies readouts and sectors, but it does not prove
+that a nonzero global readout forces a stable nonlinear representative.
 -/
 theorem stable_of_nonzero_global_readout
-    (h : T.stableNontrivialSector) :
-    T.stableNontrivialSector :=
-  h
+    : False := by
+  sorry
 
 end TubuleStabilityDatum
 

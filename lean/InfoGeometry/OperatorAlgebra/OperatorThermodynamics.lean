@@ -1009,9 +1009,6 @@ structure ObservableKMSReduction
       visibleKMS.state.eval A =
         restriction.visibleState.eval A
 
-  /-- Modular/Tomita interpretation of the reduction. -/
-  tomitaReductionCertificate : Prop
-
 namespace ObservableKMSReduction
 
 variable {Global Visible : Type*}

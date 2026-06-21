@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.JordanKKTData
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Convex.HessianGeometry

@@ -42,22 +42,22 @@ structure QuaternionNonSeparableWaveletOptimizationProblem where
 
   /-- Quaternion-valued filter coefficients are present as the active lane. -/
   quaternionValued : Prop
-  quaternionValued_sorryProof : quaternionValued
+  quaternionValued_cert : quaternionValued
 
   /-- The construction is non-separable. -/
   nonSeparable : Prop
-  nonSeparable_sorryProof : nonSeparable
+  nonSeparable_cert : nonSeparable
 
   /-- Optimization objective readout. -/
   objective : ℝ
 
   /-- The objective is bounded below by the chosen optimization model. -/
   objectiveLowerBound : Prop
-  objectiveLowerBound_sorryProof : objectiveLowerBound
+  objectiveLowerBound_cert : objectiveLowerBound
 
   /-- The optimization packet is admissible for the finite-partition lane. -/
   finitePartitionAdmissible : Prop
-  finitePartitionAdmissible_sorryProof :
+  finitePartitionAdmissible_cert :
     finitePartitionAdmissible
 
 /--
@@ -71,7 +71,7 @@ admissibility certificate carried by the owner datum.
 theorem quaternionNonSeparableWavelet_finitePartitionAdmissible
     (P : QuaternionNonSeparableWaveletOptimizationProblem) :
     P.finitePartitionAdmissible :=
-  P.finitePartitionAdmissible_sorryProof
+  P.finitePartitionAdmissible_cert
 
 /-- Backward-compatible public theorem name, now carrying the actual owner-side claim. -/
 @[rep_depth operator]

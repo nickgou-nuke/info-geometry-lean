@@ -7,7 +7,7 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.Basis.Bilinear
 import Mathlib.Algebra.Module.Torsion.Free
 import InfoGeometry.External.Virasoro.CyclicTripleSum
-import VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
+import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.Defs
 
 /-!
 # Witt algebra

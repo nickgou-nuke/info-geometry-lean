@@ -46,9 +46,6 @@ structure ModularDrazinEntropyFlow
       entropyFunctional.readout.valid s →
         entropyFunctional.readout.valid (flow t s)
 
-  /-- Model-specific entropy transport law. -/
-  entropyTransportLaw : Prop
-
   /-- Nonnegative entropy is preserved along valid flow lines. -/
   entropy_nonneg_preserved :
     ∀ t s,

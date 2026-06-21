@@ -449,11 +449,11 @@ def eraseMul : ArithExt → Arith
   | .add x y => .add (eraseMul x) (eraseMul y)
   | .mul x y => .add (eraseMul x) (eraseMul y)
 
-/-- Fragment predicate: expressions that do not use `mul`. -/
-def IsAddFragment : ArithExt → Prop
-  | .lit _ => True
-  | .add x y => IsAddFragment x ∧ IsAddFragment y
-  | .mul _ _ => False
+/-- Fragment predicate: expressions generated without `mul`. -/
+inductive IsAddFragment : ArithExt → Prop where
+  | lit (n : Nat) : IsAddFragment (.lit n)
+  | add {x y : ArithExt} :
+      IsAddFragment x → IsAddFragment y → IsAddFragment (.add x y)
 
 end ArithExt
 
@@ -489,8 +489,9 @@ theorem embed_erase_of_isAddFragment :
       rfl
   | add x y ihx ihy =>
       intro h
-      rcases h with ⟨hx, hy⟩
-      simp [eraseMul, ihx hx, ihy hy]
+      cases h with
+      | add hx hy =>
+          simp [eraseMul, ihx hx, ihy hy]
   | mul x y =>
       intro h
       cases h

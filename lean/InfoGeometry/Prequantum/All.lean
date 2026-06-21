@@ -4,6 +4,7 @@ import InfoGeometry.Prequantum.AlgebraicGNSState
 import InfoGeometry.Prequantum.SouriauJaynesTrace
 import InfoGeometry.Prequantum.FiniteSymmetryAtoms
 import InfoGeometry.Prequantum.GNSBridge
+import InfoGeometry.Prequantum.GNSAction
 import InfoGeometry.Prequantum.SouriauJonesNilpotentBridge
 import InfoGeometry.Prequantum.JaynesKLPotential
 

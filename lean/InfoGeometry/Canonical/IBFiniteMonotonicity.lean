@@ -697,7 +697,7 @@ theorem IB_monotone_descent_finite_supportFaithful
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤
     IBGlobalFreeEnergy pX q_n β D p_old hKL_old
-  exact IB_monotone_descent_of_sorry
+  exact IB_monotone_descent_from_witness
     (pX := pX) (q_n := q_n) (β := β) (D := D)
     (hInt := hInt) (h_meas := h_meas) (hKL_encoder := hKL_encoder)
     (p_old := p_old)

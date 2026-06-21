@@ -205,24 +205,33 @@ theorem associator_peirce_witness :
     associator up0 up1 down1 = up0 :=
   associator_up0_up1_down1
 
-/-! ## 3. Penrose global closure via Pin(5,5) / O(5,5) -/
+/-! ## 3. Kernel-checked Peirce basis closure packet -/
 
 /--
-The boundary idempotents e₊ and e₋ are the algebraic anchors for the
-"big bang" and "infinite future" of the cosmic eon. Under the TKK
-conformal compactification, the split octonion null cone in O(5,5)
-identifies e₊ (0) and e₋ (∞) via the projective centralizer {I, -I}.
-
-The Witten-Möbius chiral parity index Tr(-1)^F = 0 follows from the
-Pin(5,5) → O(5,5) projection: the two 16-dimensional chiral spinor
-representations are swapped by the reflection operators in Pin(5,5),
-forcing exact cancellation of positive and negative chiral modes.
-
-Witnessed by: `tools/sympy/chiral_tripotent_super_tkk_ledger.py`
-(uPlus/uMinus projectors), `tools/sympy/po55_conformal_closure.py`
-(O(5,5) null-swap involution), `Pin55Formal.lean` (Pin(5,5) spin
-representation).
+The non-prose closure statement available in this file: the split-octonion
+basis operations used by the Peirce reduction close by explicit multiplication,
+nilpotence, trace-orthogonality, determinant-zero, diagonal adjoint, and a
+nonassociative associator witness.
 -/
-theorem penrose_global_closure : True := by trivial
+theorem penrose_global_closure :
+    mulZ up0 up1 = down2 ∧
+    (∀ i : Fin 3, mulZ (up i) (up i) = zeroZ ∧ mulZ (down i) (down i) = zeroZ) ∧
+    (∀ a b : ℝ,
+      traceBilin
+        { α₁ := a, α₂ := 0, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+        { α₁ := 0, α₂ := b, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } = 0) ∧
+    (∀ i : Fin 3, (detZ (up i) : ℝ) = 0 ∧ (detZ (down i) : ℝ) = 0) ∧
+    (∀ α₂ α₃ : ℝ,
+      adjointQuad
+        { α₁ := 0, α₂ := α₂, α₃ := α₃, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } =
+        { α₁ := α₂ * α₃, α₂ := 0, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }) ∧
+    associator up0 up1 down1 = up0 := by
+  exact ⟨
+    peirce_half_composition_basis up0 up1 rfl rfl,
+    peirce_half_nilpotent_basis,
+    trace_peirce_orthogonal_basis,
+    det_peirce_half_basis,
+    adjoint_peirce_mapping_diagonal,
+    associator_peirce_witness⟩
 
 end InfoGeometry.Algebra.CubicJordanPeirce

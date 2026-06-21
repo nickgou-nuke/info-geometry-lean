@@ -102,14 +102,6 @@ structure BoundedKMSConditionBridge where
         kmsFlow t
           (bounded.souriau.family.opScale bounded.souriau.family.partitionPotential A)
 
-  /--
-  Infinitesimal generator law for the observable flow.
-
-  This remains a proposition field because derivative/commutator conventions
-  depend on the chosen concrete flow model.
-  -/
-  infinitesimalGeneratorLaw : Prop
-
 namespace BoundedKMSConditionBridge
 
 variable (K : BoundedKMSConditionBridge (E := E) (LieAlgebra := LieAlgebra))

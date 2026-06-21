@@ -112,7 +112,7 @@ structure ExponentialEigenFlow where
   eigenvector : V
   eigenvalue : ℝ
   /-- Integrated eigen-flow readout. -/
-  flow_True :
+  flow_law :
     ∀ t : ℝ, flow t eigenvector = Real.exp (t * eigenvalue) • eigenvector
 
 namespace ExponentialEigenFlow
@@ -123,7 +123,7 @@ variable (F : ExponentialEigenFlow (V := V))
 @[rep_depth operator]
 theorem flow_zero_on_eigenvector :
     F.flow 0 F.eigenvector = F.eigenvector := by
-  rw [F.flow_True 0]
+  rw [F.flow_law 0]
   simp
 
 /-- Additive time readback on the eigenvector: `Φ_{t+s}(X) = exp(tλ) Φ_s(X)`. -/
@@ -135,7 +135,7 @@ theorem flow_add_on_eigenvector
   calc
     F.flow (t + s) F.eigenvector
         = Real.exp ((t + s) * F.eigenvalue) • F.eigenvector := by
-            rw [F.flow_True (t + s)]
+            rw [F.flow_law (t + s)]
     _ = Real.exp (t * F.eigenvalue + s * F.eigenvalue) • F.eigenvector := by
             have harg :
                 (t + s) * F.eigenvalue =
@@ -149,7 +149,7 @@ theorem flow_add_on_eigenvector
           (Real.exp (s * F.eigenvalue) • F.eigenvector) := by
             rw [smul_smul]
     _ = Real.exp (t * F.eigenvalue) • F.flow s F.eigenvector := by
-            rw [F.flow_True s]
+            rw [F.flow_law s]
 
 end ExponentialEigenFlow
 
@@ -178,10 +178,10 @@ structure CartanEigenAdjointExponentialCalibration where
   /-- Abstract `exp(-tH)` carrier. -/
   expNegH : ℝ → R
   /-- Infinitesimal Cartan eigen-operator law `[H,X]=λX`. -/
-  infinitesimal_True :
+  infinitesimal_law :
     IsCartanEigenOperator H X weight
   /-- Integrated exponential-adjoint law. -/
-  exponential_adjoint_True :
+  exponential_adjoint_law :
     ∀ t : ℝ, expH t * X * expNegH t = Real.exp (t * weight) • X
 
 namespace CartanEigenAdjointExponentialCalibration
@@ -192,14 +192,14 @@ variable (C : CartanEigenAdjointExponentialCalibration (R := R))
 @[rep_depth operator]
 theorem infinitesimal_readback :
     cartanAdjoint C.H C.X = C.weight • C.X :=
-  C.infinitesimal_True
+  C.infinitesimal_law
 
 /-- Readback of the supplied exponential-adjoint law. -/
 @[rep_depth operator]
 theorem exponential_adjoint_readback
     (t : ℝ) :
     C.expH t * C.X * C.expNegH t = Real.exp (t * C.weight) • C.X :=
-  C.exponential_adjoint_True t
+  C.exponential_adjoint_law t
 
 /-- At time zero, if the exponential carriers act as identities, the readout fixes `X`. -/
 @[rep_depth operator]

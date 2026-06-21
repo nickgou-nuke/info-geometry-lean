@@ -128,7 +128,7 @@ structure DrazinBerryChernPacket
   derivative : ExteriorDerivative Op
   chernReadout : Op → ℝ
   chernValue : ℝ
-  chern_True : chernReadout (carrier.berryCurvature derivative) = chernValue
+  chern_law : chernReadout (carrier.berryCurvature derivative) = chernValue
 
 namespace DrazinBerryChernPacket
 
@@ -139,7 +139,7 @@ variable (P : DrazinBerryChernPacket Op)
 @[rep_depth operator]
 theorem chern_readout_eq_value :
     P.chernReadout (P.carrier.berryCurvature P.derivative) = P.chernValue :=
-  P.chern_True
+  P.chern_law
 
 end DrazinBerryChernPacket
 
@@ -168,7 +168,7 @@ structure HodgeDrazinThermodynamicEntropyPacket
   /-- The density is supported in the Drazin horizon sector on the right. -/
   density_right_supported : density * carrier.p_A = density
 
-  entropy_split_True : entropy = horizonEntropy + harmonicEntropy
+  entropy_split_law : entropy = horizonEntropy + harmonicEntropy
 
 namespace HodgeDrazinThermodynamicEntropyPacket
 
@@ -179,7 +179,7 @@ variable (P : HodgeDrazinThermodynamicEntropyPacket Op)
 @[rep_depth operator]
 theorem entropy_eq_horizon_add_harmonic :
     P.entropy = P.horizonEntropy + P.harmonicEntropy :=
-  P.entropy_split_True
+  P.entropy_split_law
 
 /-- The density is left-supported by the Drazin horizon sector. -/
 @[rep_depth operator]

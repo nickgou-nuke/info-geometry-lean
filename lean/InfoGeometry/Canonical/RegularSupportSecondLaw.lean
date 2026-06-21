@@ -412,7 +412,7 @@ theorem certificate_defect_modular_fixed
 
 /-- Certificate readback: the Second Law holds on the regular corner. -/
 @[rep_depth krein]
-theorem certificate_second_True
+theorem certificate_second
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (C : RegularSupportSecondLawCertificate Op)
     (x : Op)
@@ -461,7 +461,7 @@ theorem entropy_nonnegative
     (x : Op)
     (hx : InRegularCorner P.support x) :
     0 ≤ entropyProduction P.state P.dissipator x :=
-  certificate_second_True P.toCertificate x hx
+  certificate_second P.toCertificate x hx
 
 /-- Packet readback: modular fixed support gives two-sided no leakage. -/
 @[rep_depth krein]

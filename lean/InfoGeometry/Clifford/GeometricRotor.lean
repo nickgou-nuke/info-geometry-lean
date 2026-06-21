@@ -107,6 +107,17 @@ def modularFlow (K : Bivector E) (s : ℝ) : Rotor E :=
     evolve (R := modularFlow K 0) ψ = ψ := by
   simp [evolve, modularFlow, exp, reverse]
 
+/-- One full `2π` rotor turn acts by `-1` on the spinorial transport operator. -/
+theorem exp_two_pi_eq_neg_id (K : Bivector E) :
+    (modularFlow K (2 * Real.pi)).exp =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  unfold Rotor.exp Rotor.modularFlow
+  have hhalf : ((2 * Real.pi : ℝ) / 2) = Real.pi := by ring
+  rw [hhalf, Real.cos_pi, Real.sin_pi]
+  ext <;> simp
+
 end Rotor
 
 end InfoGeometry.Clifford

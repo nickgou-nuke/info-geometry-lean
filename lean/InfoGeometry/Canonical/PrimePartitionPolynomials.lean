@@ -446,30 +446,47 @@ structure LocalFugacityProjectionWitness
     Fin N → ℂ → ℂ
   globalFugacity :
     ℂ → ℂ
-  projection_True : Prop := by
-    sorry
-  preserves_unit_circle_True : Prop := by
-    sorry
+  projection_eq_product :
+    ∀ z : ℂ, globalFugacity z = ∏ i : Fin N, localFugacity i z
+  preserves_unit_circle :
+    ∀ z : ℂ, OnUnitCircle z →
+      OnUnitCircle (globalFugacity z) ∧
+        ∀ i : Fin N, OnUnitCircle (localFugacity i z)
 
 namespace LocalFugacityProjectionWitness
 
 /-- Re-export of the supplied local-to-global projection law. -/
 @[rep_depth thermo]
-def projection
+theorem projection_eq_product_holds
     {N : ℕ}
     {D : FinitePrimeChainData N}
-    (W : LocalFugacityProjectionWitness N D) :
-    Prop :=
-  W.projection_True
+    (W : LocalFugacityProjectionWitness N D)
+    (z : ℂ) :
+    W.globalFugacity z = ∏ i : Fin N, W.localFugacity i z :=
+  W.projection_eq_product z
 
 /-- Re-export of the supplied unit-circle preservation law. -/
 @[rep_depth thermo]
-def preserves_unit_circle
+theorem global_preserves_unit_circle
     {N : ℕ}
     {D : FinitePrimeChainData N}
-    (W : LocalFugacityProjectionWitness N D) :
-    Prop :=
-  W.preserves_unit_circle_True
+    (W : LocalFugacityProjectionWitness N D)
+    (z : ℂ)
+    (hz : OnUnitCircle z) :
+    OnUnitCircle (W.globalFugacity z) :=
+  (W.preserves_unit_circle z hz).1
+
+/-- The supplied unit-circle preservation law holds. -/
+@[rep_depth thermo]
+theorem local_preserves_unit_circle
+    {N : ℕ}
+    {D : FinitePrimeChainData N}
+    (W : LocalFugacityProjectionWitness N D)
+    (z : ℂ)
+    (hz : OnUnitCircle z)
+    (i : Fin N) :
+    OnUnitCircle (W.localFugacity i z) :=
+  (W.preserves_unit_circle z hz).2 i
 
 end LocalFugacityProjectionWitness
 

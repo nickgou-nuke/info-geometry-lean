@@ -59,9 +59,6 @@ structure CliffordWaveletUncertainty
         uncertaintyConstant * (normSq f)^2
           ≤ spaceVariance f * spectralVariance f
 
-  /-- Non-collapse / localization tradeoff in the Clifford wavelet phase space. -/
-  noncollapse_True : Prop
-
 namespace CliffordWaveletUncertaintyOps
 
 variable {W : CliffordWaveletModel}
@@ -75,6 +72,57 @@ theorem heisenberg
     U.uncertaintyConstant * (U.normSq f)^2
       ≤ U.spaceVariance f * U.spectralVariance f :=
   U.heisenberg_clifford_wavelet hAdm f
+
+/-- Lemma 1: a nonzero squared norm gives a positive squared norm. -/
+@[rep_depth operator]
+theorem normSq_sq_pos_of_ne_zero
+    (f : W.Signal)
+    (hf : U.normSq f ≠ 0) :
+    0 < (U.normSq f)^2 := by
+  exact sq_pos_of_ne_zero hf
+
+/-- Lemma 2: the uncertainty left-hand side is strictly positive for nonzero norm. -/
+@[rep_depth operator]
+theorem uncertainty_lhs_pos_of_normSq_ne_zero
+    (f : W.Signal)
+    (hf : U.normSq f ≠ 0) :
+    0 < U.uncertaintyConstant * (U.normSq f)^2 := by
+  exact mul_pos U.uncertaintyConstant_pos (normSq_sq_pos_of_ne_zero U f hf)
+
+/-- Lemma 3: if both variances vanish, their product vanishes. -/
+@[rep_depth operator]
+theorem variance_product_eq_zero_of_both_zero
+    (f : W.Signal)
+    (hspace : U.spaceVariance f = 0)
+    (hspec : U.spectralVariance f = 0) :
+    U.spaceVariance f * U.spectralVariance f = 0 := by
+  rw [hspace, hspec]
+  ring
+
+/-- Lemma 4: Heisenberg inequality forbids both variances to vanish for nonzero norm. -/
+@[rep_depth operator]
+theorem not_both_variances_zero_of_heisenberg
+    (hAdm : W.admissible)
+    (f : W.Signal)
+    (hf : U.normSq f ≠ 0) :
+    ¬ (U.spaceVariance f = 0 ∧ U.spectralVariance f = 0) := by
+  intro hzero
+  have hH := U.heisenberg_clifford_wavelet hAdm f
+  have hpos := uncertainty_lhs_pos_of_normSq_ne_zero U f hf
+  have hprod := variance_product_eq_zero_of_both_zero U f hzero.1 hzero.2
+  rw [hprod] at hH
+  nlinarith
+
+/-- Theorem: an admissible nonzero-norm signal cannot have both variances zero. -/
+@[rep_depth operator]
+theorem noncollapse
+    (hAdm : W.admissible)
+    (f : W.Signal)
+    (hf : U.normSq f ≠ 0) :
+    U.spaceVariance f ≠ 0 ∨ U.spectralVariance f ≠ 0 := by
+  by_contra h
+  push_neg at h
+  exact not_both_variances_zero_of_heisenberg U hAdm f hf ⟨h.1, h.2⟩
 
 end CliffordWaveletUncertaintyOps
 

@@ -255,27 +255,35 @@ theorem semisimpleResidues_admit_all_signatures :
   exact ⟨rfl, rfl⟩
 
 /-- Residues with real division ring `R`. -/
-def hasRealDivisionRing : ClMod8 → Prop
-  | .r0 => True
-  | .r2 => True
-  | _ => False
+def hasRealDivisionRing (r : ClMod8) : Prop :=
+  r = .r0 ∨ r = .r2
 
 /-- Residues with complex division ring `C`. -/
-def hasComplexDivisionRing : ClMod8 → Prop
-  | .r3 => True
-  | .r7 => True
-  | _ => False
+def hasComplexDivisionRing (r : ClMod8) : Prop :=
+  r = .r3 ∨ r = .r7
 
 /-- Residues with quaternionic division ring `H`. -/
-def hasQuaternionicDivisionRing : ClMod8 → Prop
-  | .r4 => True
-  | .r6 => True
-  | _ => False
+def hasQuaternionicDivisionRing (r : ClMod8) : Prop :=
+  r = .r4 ∨ r = .r6
 
 /-- Residues with semisimple double division ring. -/
-def hasDoubleDivisionRing : ClMod8 → Prop
-  | .r1 => True
-  | .r5 => True
-  | _ => False
+def hasDoubleDivisionRing (r : ClMod8) : Prop :=
+  r = .r1 ∨ r = .r5
+
+theorem hasRealDivisionRing_iff (r : ClMod8) :
+    hasRealDivisionRing r ↔ r = .r0 ∨ r = .r2 := by
+  rfl
+
+theorem hasComplexDivisionRing_iff (r : ClMod8) :
+    hasComplexDivisionRing r ↔ r = .r3 ∨ r = .r7 := by
+  rfl
+
+theorem hasQuaternionicDivisionRing_iff (r : ClMod8) :
+    hasQuaternionicDivisionRing r ↔ r = .r4 ∨ r = .r6 := by
+  rfl
+
+theorem hasDoubleDivisionRing_iff (r : ClMod8) :
+    hasDoubleDivisionRing r ↔ r = .r1 ∨ r = .r5 := by
+  rfl
 
 end InfoGeometry.Clifford.RealMod8Classification

@@ -49,14 +49,14 @@ r0: timelike generator (r0² = 1)
 r5: spacelike generator (r5² = -1)
 anticommute: r0·r5 = -r5·r0
 -/
-structure Cl11Atom (K : Type*) [CommRing K] where
+structure Cl11Atom (K : Type*) [Ring K] where
   r0 : K
   r5 : K
   r0_sq : r0 * r0 = 1
   r5_sq : r5 * r5 = -1
   anticommute : r0 * r5 = -(r5 * r0)
 
-variable {K : Type*} [CommRing K] [Algebra ℝ K] (atom : Cl11Atom K)
+variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 
 /-- The internal complex structure J = r5. -/
 def ComplexStructure : K := atom.r5
@@ -77,11 +77,11 @@ theorem euler_operator_sq_one :
     rw [atom.anticommute, neg_neg]
   calc
     (atom.r0 * atom.r5) * (atom.r0 * atom.r5)
-        = atom.r0 * (atom.r5 * atom.r0) * atom.r5 := by ring
+        = atom.r0 * (atom.r5 * atom.r0) * atom.r5 := by noncomm_ring
     _ = atom.r0 * (-(atom.r0 * atom.r5)) * atom.r5 := by rw [h_anti']
-    _ = -(atom.r0 * atom.r0) * (atom.r5 * atom.r5) := by ring
-    _ = -(1) * (-1) := by rw [atom.r0_sq, atom.r5_sq]
-    _ = 1 := by ring
+    _ = -(atom.r0 * atom.r0) * (atom.r5 * atom.r5) := by noncomm_ring
+    _ = -(1 : K) * (-1 : K) := by rw [atom.r0_sq, atom.r5_sq]
+    _ = 1 := by noncomm_ring
 
 /-! ## 2. Chiral projection operators -/
 
@@ -103,48 +103,44 @@ theorem chiral_sheets_orthogonal :
     ((1/2 : ℝ) • (1 + atom.r0)) * ((1/2 : ℝ) • (1 - atom.r0))
         = ((1/2 : ℝ) * (1/2 : ℝ)) • ((1 + atom.r0) * (1 - atom.r0)) := by
           rw [smul_mul_smul]
-    _ = (1/4 : ℝ) • ((1 + atom.r0) * (1 - atom.r0)) := by ring
-    _ = (1/4 : ℝ) • (1 - atom.r0 * atom.r0) := by
-      ring
-    _ = (1/4 : ℝ) • (1 - 1) := by rw [atom.r0_sq]
-    _ = (1/4 : ℝ) • (0 : K) := by ring
+    _ = (1/4 : ℝ) • ((1 + atom.r0) * (1 - atom.r0)) := by norm_num
+    _ = (1/4 : ℝ) • (0 : K) := by
+      have h : (1 + atom.r0) * (1 - atom.r0) = 0 := by
+        calc
+          (1 + atom.r0) * (1 - atom.r0) = 1 - atom.r0 * atom.r0 := by noncomm_ring
+          _ = 0 := by rw [atom.r0_sq]; noncomm_ring
+      rw [h]
     _ = 0 := smul_zero _
 
 /-- The chiral projectors partition unity: P₊ + P₋ = 1. -/
 theorem chiral_sheets_partition_unity :
     chiralProjectorPlus atom + chiralProjectorMinus atom = 1 := by
   dsimp [chiralProjectorPlus, chiralProjectorMinus]
-  simp [smul_add, add_smul, sub_smul]
-  ring
-    (1/2 : ℝ) • (1 + atom.r0) + (1/2 : ℝ) • (1 - atom.r0)
-        = (1/2 : ℝ) • ((1 + atom.r0) + (1 - atom.r0)) := by
-          rw [← smul_add]
-    _ = (1/2 : ℝ) • (2 : K) := by ring
-    _ = 1 := by
-      simp
+  rw [← smul_add]
+  have hsum : (1 + atom.r0) + (1 - atom.r0) = (2 : ℝ) • (1 : K) := by
+    simp [two_smul]
+  rw [hsum]
+  rw [smul_smul]
+  norm_num
 
-/-! ## 3. Compass reversal under Euler operator (BUCKET 3 debt)
+/-! ## 3. Compass reversal under Euler operator -/
 
-The Euler operator reverses chiral sheets: P₊·B = B·P₋.
-This requires expanding both sides using the Cl(1,1) anticommutation
-r0·r5 = -r5·r0 and the ring structure. Proved for the 2×2 matrix
-representation in SymPy (cpt_compass_evidence.py). The general
-algebraic proof requires additional Cl(1,1) algebra lemmas not
-yet ported from Cl11Fermions.lean.
--/
-
-/-! ## 4. SU(3) color as CPT compass stabilizer -/
-
-/--
-The SU(3) color group is the stabilizer of the CPT compass J=r5
-in the G₂ automorphism group of the split octonions.
-
-Cohl Furey (2018): Standard Model physics from an algebra.
-G₂(2) order 12096 → centralizer of chosen imaginary unit = SU(3).
-
-Witnessed by: cpt_compass_evidence.py (SymPy+Clifford),
-cpt_compass_gap.g (GAP group theory).
--/
-theorem su3_color_stabilizer : True := by trivial
+/-- The Euler operator reverses chiral sheets: `P₊ B = B P₋`. -/
+theorem euler_operator_reverses_chiral_sheets :
+    chiralProjectorPlus atom * EulerOperator atom =
+      EulerOperator atom * chiralProjectorMinus atom := by
+  dsimp [chiralProjectorPlus, chiralProjectorMinus, EulerOperator, ComplexStructure]
+  rw [smul_mul_assoc, mul_smul_comm]
+  congr 1
+  calc
+    (1 + atom.r0) * (atom.r0 * atom.r5) = atom.r0 * atom.r5 + atom.r5 := by
+      rw [add_mul, one_mul, ← mul_assoc, atom.r0_sq, one_mul]
+    _ = atom.r0 * atom.r5 - atom.r0 * atom.r5 * atom.r0 := by
+      have h : atom.r0 * atom.r5 * atom.r0 = - atom.r5 := by
+        rw [atom.anticommute, neg_mul, mul_assoc, atom.r0_sq, mul_one]
+      rw [h]
+      abel
+    _ = atom.r0 * atom.r5 * (1 - atom.r0) := by
+      rw [mul_sub, mul_one]
 
 end InfoGeometry.Algebra.CPT

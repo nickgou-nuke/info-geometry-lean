@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzN
+import InfoGeometry.Algebra.CuntzQuotientDiracBridge
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 import InfoGeometry.Canonical.MixtureOfExperts
 
@@ -40,6 +41,8 @@ namespace InfoGeometry.Canonical.CuntzSuperBraidMoEBridge
 
 open InfoGeometry.Canonical.FiniteMajoranaBraiding
 open InfoGeometry.Algebra.Cuntz
+open InfoGeometry.Algebra.CuntzTensorQuotient
+open InfoGeometry.Algebra.CuntzQuotientDiracBridge
 
 /-! ## B₆ permutation shadow -/
 
@@ -179,6 +182,42 @@ theorem weights_sum_one (g : TwoExpertGate) :
   g.sum_one
 
 end TwoExpertGate
+
+/-- Concrete quotient `O₆` projection packet, no abstract witness parameter. -/
+theorem cuntz6_quotient_projection_packet :
+    (∀ i : Fin 6,
+      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 i * star (cuntzS 6 i)) =
+        cuntzS 6 i * star (cuntzS 6 i)) ∧
+    (∀ i j : Fin 6, i ≠ j →
+      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 j * star (cuntzS 6 j)) = 0) ∧
+    (∑ i : Fin 6, cuntzS 6 i * star (cuntzS 6 i)) = 1 := by
+  exact ⟨
+    (by
+      intro i
+      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).1 i),
+    (by
+      intro i j hij
+      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).2.1 i j hij),
+    (by
+      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).2.2.2.2)⟩
+
+/-- The quotient `O₆` Hodge-Dirac is the sum of Cuntz Majorana supercharges. -/
+theorem cuntz6_quotient_hodgeDirac_majorana_sum :
+    InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra 6) =
+      ∑ i : Fin 6, InfoGeometry.Algebra.SupergradedSUSY.cuntzMajoranaSupercharge 6 i := by
+  exact quotient_hodgeDirac_eq_sum_majorana 6
+
+/-- Concrete quotient Cuntz-6 braid/MoE packet. -/
+theorem concrete_cuntz6_super_braid_moe_packet :
+    (∀ i : Fin 6,
+      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 i * star (cuntzS 6 i)) =
+        cuntzS 6 i * star (cuntzS 6 i)) ∧
+    (∑ i : Fin 6, cuntzS 6 i * star (cuntzS 6 i)) = 1 ∧
+    InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra 6) =
+      ∑ i : Fin 6, InfoGeometry.Algebra.SupergradedSUSY.cuntzMajoranaSupercharge 6 i := by
+  exact ⟨cuntz6_quotient_projection_packet.1,
+    cuntz6_quotient_projection_packet.2.2,
+    cuntz6_quotient_hodgeDirac_majorana_sum⟩
 
 /-- Closed finite packet for the Cuntz-super-braid/MoE bridge. -/
 theorem finite_cuntz_super_braid_moe_packet :

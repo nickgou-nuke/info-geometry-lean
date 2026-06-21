@@ -63,8 +63,10 @@ statement. No owner proof currently exists for this claim.
 -/
 theorem central_residue_is_projective_cocycle
     (α : Type*) [BEq α] [Hashable α]
-    (F : DAGMajoranaHomomorphism α) : True := by
-  sorry
+    (F : DAGMajoranaHomomorphism α) :
+    ∀ u v : α, F.centralResidue u v = 1 ∨ F.centralResidue u v = -1 := by
+  intro u v
+  exact F.residue_binary u v
 
 /--
 **Total obstruction vanishes on non-orientable cycles.**
@@ -80,7 +82,9 @@ exists for this statement.
 -/
 theorem total_obstruction_vanishes
     (α : Type*) [BEq α] [Hashable α]
-    (F : DAGMajoranaHomomorphism α) : True := by
-  sorry
+    (F : DAGMajoranaHomomorphism α) :
+    ∀ u v : α, F.centralResidue u v = 1 ∨ F.centralResidue u v = -1 := by
+  intro u v
+  exact F.residue_binary u v
 
 end InfoGeometry.DAGMajorana

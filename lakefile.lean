@@ -25,6 +25,19 @@ script strictCheck (args) do
   }
   child.wait
 
+script smokeSpikes (args) do
+  let child ← IO.Process.spawn {
+    cmd := "bash",
+    args := #[
+      "-lc",
+      "cd $(pwd) && lake build InfoGeometry.Topology.All InfoGeometry.Projective.All"
+    ] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script semanticAudit (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -566,6 +579,126 @@ script leantrailArangoPhysicsEval (args) do
   }
   child.wait
 
+script leantrailAstExtract (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/ast_extract.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailAQLSchema (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/aql_schema.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailArangoDump (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/arango_dump.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailOracleSearch (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/oracle_search.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailExternalIndex (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/external_index.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailAQLQuery (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/aql_query.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailAstAQLOptimize (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/ast_aql_optimize.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailSmoke (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/smoke_test.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailSyntaxDump (args) do
+  let child ← IO.Process.spawn {
+    cmd := "lake",
+    args := #["env", "lean", "--run", "tools/leantrail/DumpLeanGraph.lean"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailCheckDumpShape (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/check_dump_shape.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailSyntaxIngest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/ingest_syntax_to_arango.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailAQLSmoke (args) do
+  let child ← IO.Process.spawn {
+    cmd := "bash",
+    args := #["tools/leantrail/aql_smoke_test.sh"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script leantrailFailureHarvest (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
@@ -723,9 +856,7 @@ require LeanArchitect from git
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
-require VirasoroProject from git
-  "https://github.com/kkytola/VirasoroProject.git"
-  @ "main"
+
 require «GIFT» from
   "external_refs/gift-framework-core"
 require Atlas from

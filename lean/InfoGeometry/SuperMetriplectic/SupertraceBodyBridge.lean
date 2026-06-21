@@ -65,7 +65,7 @@ theorem supertrace_eq (S : SupertraceFisherShadow) :
   S.supertraceQuadratic_eq
 
 /-- Observable Fisher positivity is a body statement, not a raw supertrace statement. -/
-theorem body_second_True (S : SupertraceFisherShadow) :
+theorem body_second (S : SupertraceFisherShadow) :
     0 ≤ S.bodyFisherQuadratic :=
   S.bodyFisherQuadratic_nonnegative
 
@@ -127,7 +127,7 @@ theorem zorn_total_nonnegative
     (B : ZornSupertraceFisherBridge) :
     0 ≤ B.zorn.totalBodyEntropy := by
   rw [B.zornTotal_eq_bodyFisher]
-  exact B.fisher.body_second_True
+  exact B.fisher.body_second
 
 /--
 The bridge exposes both facts needed for the supertrace interpretation:

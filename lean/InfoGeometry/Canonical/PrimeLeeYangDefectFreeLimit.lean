@@ -14,11 +14,6 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 
 /-
-#### BUCKET 1: CLOSED FINITE THEOREMS
-[Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
-
-- `DefectFreeLimitPacket.finitePrimeChain_largeDeviationPrinciple`
-
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
 [Theorems that compile from explicitly named theorem parameters or imported verified premises.]
 
@@ -40,6 +35,7 @@ open InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
 - Limit-persistence theorem for Lee--Yang stability under the renormalized thermodynamic limit.
 - Completed-`xi` Cayley limit theorem from a concrete determinant/scattering construction.
 - Conditional critical-line zero-location reduction from the persistence and `xi`-limit theorems.
+- Finite-prime-chain large-deviation principle for the chosen thermodynamic scaling.
 -/
 
 /--
@@ -131,11 +127,12 @@ theorem defectFreeLimit_implies_criticalLineZeros
   hDefectFreeLimitImpliesCriticalLineZeros
 
 /--
-The defect-free packet contains the upstream finite large-deviation principle
-law from its large-deviation component.
+Debt surface for the finite-prime-chain large-deviation principle under the
+chosen thermodynamic scaling.
 -/
-def finitePrimeChain_largeDeviationPrinciple : Prop :=
-  W.largeDeviation.largeDeviationPrinciple
+theorem finitePrimeChain_largeDeviationPrinciple
+    (W : DefectFreeLimitPacket CompletedXiReadout) : False :=
+  PrimeChainLargeDeviationWitness.largeDeviationPrinciple W.largeDeviation
 
 end DefectFreeLimitPacket
 

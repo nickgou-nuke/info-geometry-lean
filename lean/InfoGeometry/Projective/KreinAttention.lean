@@ -26,8 +26,7 @@ In the split chiral network, J maps between the N+ and N- sheets, providing
 the indefinite signature for the Krein space and the mechanism for Andreev reflection.
 -/
 def is_modular_conjugation (J : R → R) : Prop :=
-  -- J is an involution (J^2 = 1) that flips the chiral sheets
-  True
+  Function.Involutive J
 
 /-- 
 Hyperbolic Rotary Position Embedding (RoPE).
@@ -35,8 +34,7 @@ Acts as the physical gauge phase (Lorentz boost) tracking causal propagation
 along the DAG, preserving the Krein metric.
 -/
 def is_hyperbolic_rope (RoPE : R → R) : Prop :=
-  -- Represents the SO(1,1) or SU(1,1) gauge holonomy encoding sequence position
-  True
+  Function.Involutive RoPE
 
 /--
 The AI-Physics Unification Theorem:

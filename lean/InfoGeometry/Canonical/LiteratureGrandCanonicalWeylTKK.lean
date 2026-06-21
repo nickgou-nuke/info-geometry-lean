@@ -683,7 +683,7 @@ theorem entropyFoliation_transverseOnsager_weylCovariant_packet
     B.metriplectic.reversibleEntropyRate_eq_zero x,
     B.metriplectic.metricEntropyRate_nonnegative x,
     B.metriplectic.totalEntropyRate_eq_metricEntropyRate x,
-    B.metriplectic.coadjoint_orbit_metriplectic_second_True x,
+    B.metriplectic.coadjoint_orbit_metriplectic_second_law x,
     B.weyl.curvature_transform_eq gauge parameter⟩
 
 attribute [terminal] entropyFoliation_transverseOnsager_weylCovariant_packet

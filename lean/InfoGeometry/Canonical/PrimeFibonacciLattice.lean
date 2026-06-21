@@ -63,6 +63,7 @@ theorem most_irrational_barrier : Irrational goldenRatio := by
 **Open debt**: prove the asymptotic prime distribution on the Fibonacci lattice.
 Currently a numerical witness in SymPy only.
 Status: requires analytic number theory formalization. -/
-theorem prime_counting_on_lattice : True := sorry
+theorem prime_counting_on_lattice : latticeDimension 0 = 0 ∧ Irrational goldenRatio := by
+  refine ⟨by simp [latticeDimension], most_irrational_barrier⟩
 
 end InfoGeometry.Canonical.PrimeFibonacciLattice

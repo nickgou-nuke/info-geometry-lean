@@ -101,15 +101,18 @@ theorem celestial_sphere_boundary_2x2 (S : SymmState2x2 ℝ) (h_trace : trace_2x
   linarith
 
 
-/- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
--- [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
+/- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES -/
+-- [Theorems that compile conditionally based on explicitly named premises.
+-- No hidden global closure assumptions.]
 
-/-- Explicit witness connecting the Tomita-Takesaki operator flow to the physical thermal scaling vector. -/
+/-- Conditional interface connecting an abstract modular-flow symbol to a thermal scaling vector. -/
 class TomitaTakesakiModularAutomorphism {R : Type*} [CommRing R] (W : I → R) where
-  modular_conjugation : ∀ j : I, W j * W j = W j * W j -- Placeholder reflecting abstract JΔ^{1/2} symmetry
+  modular_conjugation : ∀ j : I, W j * W j = W j * W j -- Tautological finite readout only.
 
 
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 -- [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
 
--- [All previously identified systemic physics debts (Cartan symmetric spaces, Thermofield Double partial trace) have been successfully mapped to exact finite algebraic equivalences and moved to Bucket 1. Structural framework zero-debt state achieved.]
+-- [The Cartan symmetric-space and Thermofield Double interpretations remain
+-- conditional around the finite algebraic readouts above; no global
+-- zero-debt or continuum physics closure is claimed here.]

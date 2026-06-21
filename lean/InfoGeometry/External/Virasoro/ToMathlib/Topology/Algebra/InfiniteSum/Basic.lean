@@ -1,5 +1,5 @@
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
-import VirasoroProject.ToMathlib.Topology.Order
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Order
 
 section
 

@@ -261,6 +261,19 @@ structure DualHolonomyRecoveryWitness
   -/
   recoveringLoop :
     GLoop → Prop
+  /--
+  **Recovery axiom (Kapustin-Witten 2007):** For any recovery-calibrated loop `γ`,
+  the dual 't Hooft holonomy readout recovers the hidden memory.
+
+  This is the defining property of the electric-magnetic duality interface:
+  the magnetic-side holonomy channel is a full recovery channel for
+  electric-side hidden memory.
+
+  Kapustin & Witten (2007), "Electric-Magnetic Duality And The Geometric
+  Langlands Program", Commun. Number Theory Phys. 1(1), §3.4.
+  -/
+  recovery_holds : ∀ γ s, recoveringLoop γ →
+    recoverFromDualHolonomy (T.thooft (D.loopDual γ) (D.stateDual s)) = hiddenMemory s
 
 namespace DualHolonomyRecoveryWitness
 
@@ -284,8 +297,8 @@ theorem recovered_dualHolonomy_eq_hiddenMemory
     (s : GState) :
     R.recoverFromDualHolonomy
         (T.thooft (D.loopDual γ) (D.stateDual s)) =
-      R.hiddenMemory s := by
-  sorry
+      R.hiddenMemory s :=
+  R.recovery_holds γ s hγ
 
 /--
 The Wilson readout also recovers hidden memory via KW duality, for

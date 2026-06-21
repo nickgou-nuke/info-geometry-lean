@@ -16,7 +16,8 @@ namespace InfoGeometry.Canonical.DeformationLayer
 @[rep_depth thermo]
 structure DeformationParameter where
   q : ℝ
-  deformationDomain : Prop
+  deformationDomain : Set ℝ
+  q_in_deformationDomain : q ∈ deformationDomain
 
 /-- Explicit witness connecting a deformation parameter to a chosen thermal map. -/
 @[rep_depth thermo]
@@ -24,7 +25,9 @@ structure DeformationParameterWitness where
   q : ℝ
   thermalParameter : ℝ
   q_eq_thermalParameter : q = thermalParameter
-  deformationDomain : Prop
+  deformationDomain : Set ℝ
+  q_in_deformationDomain : q ∈ deformationDomain
+  thermalParameter_in_deformationDomain : thermalParameter ∈ deformationDomain
 
 /-- Packet for a deformed character layer, gated by a deformation witness. -/
 @[rep_depth thermo]
@@ -32,7 +35,7 @@ structure DeformedCharacterWitness where
   undeformedCharacter : ℝ
   deformedCharacter : ℝ
   deformation : DeformationParameterWitness
-  deformationLaw : Prop
+  deformationLaw : deformedCharacter = undeformedCharacter
 
 @[rep_depth thermo]
 structure ThermalEvaluationMap where
@@ -42,17 +45,17 @@ structure ThermalEvaluationMap where
 structure SeparatedDeformationWitness where
   deformation : DeformationParameter
   thermal : ThermalEvaluationMap
-  separated : Prop
+  separated : deformation.q = thermal.thermalParameter
 
 /-- Identification of `q` with a thermal parameter is available only from witness data. -/
 @[rep_depth thermo]
-theorem q_identification_requires_sorry
+theorem q_identification_from_witness
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 
 @[rep_depth thermo]
-theorem q_not_identified_with_expNegBeta_without_sorry
+theorem q_identified_with_thermal_parameter_from_witness
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter

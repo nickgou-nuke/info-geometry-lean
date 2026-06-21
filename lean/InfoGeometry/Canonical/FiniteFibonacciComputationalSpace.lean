@@ -99,20 +99,21 @@ namespace FibonacciBlockLabel
 
 variable {N : ℕ} {NC : Type*}
 
-/-- Predicate selecting the computational sector. -/
-def IsComputational : FibonacciBlockLabel N NC → Prop
-  | computational _ => True
-  | noncomputational _ => False
+/-- Predicate selecting the computational sector, with an explicit vector witness. -/
+def IsComputational (x : FibonacciBlockLabel N NC) : Prop :=
+  ∃ α : ComputationalVector N, x = computational α
 
 @[simp]
 theorem isComputational_computational (α : ComputationalVector N) :
     IsComputational (computational α : FibonacciBlockLabel N NC) :=
-  trivial
+  ⟨α, rfl⟩
 
 @[simp]
 theorem not_isComputational_noncomputational (x : NC) :
     ¬ IsComputational (noncomputational x : FibonacciBlockLabel N NC) := by
-  simp [IsComputational]
+  intro h
+  rcases h with ⟨α, hα⟩
+  cases hα
 
 end FibonacciBlockLabel
 
@@ -135,8 +136,11 @@ theorem blockDiagonalAction_preserves_computational {N : ℕ} {NC : Type*}
     FibonacciBlockLabel.IsComputational
       (blockDiagonalAction onComputational onNonComputational x) := by
   cases x with
-  | computational α => simp [blockDiagonalAction]
-  | noncomputational y => cases hx
+  | computational α =>
+      exact ⟨onComputational α, rfl⟩
+  | noncomputational y =>
+      rcases hx with ⟨α, hα⟩
+      cases hα
 
 /-- Block-diagonal actions preserve the non-computational sector as well. -/
 theorem blockDiagonalAction_preserves_noncomputational {N : ℕ} {NC : Type*}

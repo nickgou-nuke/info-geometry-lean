@@ -215,9 +215,9 @@ def toArithmeticSplitMajoranaOPE
     O.singular (O.dField p) (O.dField q) = if p = q then -1 else 0
   cd_regular := fun p q =>
     O.singular (O.cField p) (O.dField q) = 0
-  cc_sorryProof := O.c_c_singular
-  dd_sorryProof := O.d_d_singular
-  cd_sorryProof := O.c_d_regular
+  cc_proof := O.c_c_singular
+  dd_proof := O.d_d_singular
+  cd_proof := O.c_d_regular
 
 theorem toArithmeticSplitMajoranaOPE_cc_holds
     (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :

@@ -1,78 +1,89 @@
-import InfoGeometry.Projective.SplitOctonions.ZornMatrix
-import InfoGeometry.Projective.MTC_PentagonTriangle
+import InfoGeometry.Topology.RohozhkinDelaunayBraiding
 
 /-!
-# Rohozhkin Delaunay Braiding and the Pure Braid Group
+# Rohozhkin Delaunay Braiding Projective Bridge
 
-This module formalizes the configuration space operations corresponding to
-Illia E. Rohozhkin's 2024/2025 work on Pentagon equations, Delaunay triangulations,
-and pure braid group invariants.
+This module is a conservative projective-facing readout for the
+Rohozhkin/Delaunay braid lane.
 
-By tracking the geometric deformation of Delaunay triangles on the $K_3$
-null cone cross-section, we construct explicit unitary matrices for the Majorana Zero
-Modes (MZMs). The Pachner 2-2 flips (diagonal exchanges) map directly to our
-associative $\mathbb{OP}^1$ Zorn matrix envelope.
+It does not construct the full Rohozhkin generator assignment, does not prove a
+geometric Delaunay-motion theorem, and does not identify the rational matrices
+with Fibonacci anyons, Majorana zero modes, horizon dynamics, or a unitary
+scrambling model.
+
+#### BUCKET 1: CLOSED FINITE THEOREMS
+- `appendix_pentagon_matrix_identity_readout`: the Appendix A five-flip
+  rational pentagon block from the topology owner evaluates to `1`.
+
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+- `completed_rohozhkin_spec_descends_readout`: a completed source spec with all
+  pure-braid relators proved descends to a presented-group representation.
+- `rohozhkin_fibonacci_mzm_readout_of_compatibility`: an explicit compatibility
+  equality is the only bridge from a Rohozhkin matrix to a selected
+  Fibonacci/MZM readout.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+- Transcribe and own the full `(2n+1) x (2n+1)` Rohozhkin generator matrices.
+- Prove the relator checks for the nontrivial generator assignment.
+- Formalize the Euclidean Delaunay general-position and flip-event geometry.
+- Provide a separate comparison theorem before any Fibonacci/MZM interpretation.
 -/
 
-namespace InfoGeometry.Projective.Rohozhkin
+namespace InfoGeometry.Projective.RohozhkinDelaunayBraiding
 
-open InfoGeometry.Projective.SplitOctonions
-open InfoGeometry.Projective.SplitOctonions.ZornMatrix
-open InfoGeometry.Projective.MTC
-
-variable {R : Type*} [CommRing R]
-variable {V : Type*} [AddCommGroup V] [Module R V]
-variable (B : V →ₗ[R] V →ₗ[R] R)
+open InfoGeometry.Topology.Delaunay
+open InfoGeometry.Topology.PureBraid
+open InfoGeometry.Topology.RohozhkinBoundary
+open InfoGeometry.Topology.RohozhkinRepresentation
 
 /--
-The Pachner 2-2 Flip operation representing a move in the Delaunay
-triangulation configuration space. In Rohozhkin's framework, this forms
-the algorithmic foundation for generating pure braid group representations.
+Projective-facing readout of the closed Appendix A pentagon calculation.
 
-We project this geometric flip onto the strictly associative diagonal 
-of our Zorn matrix boundary to ensure it preserves unitarity and information.
+This is only the rational `3 x 3` five-flip block already proved in
+`InfoGeometry.Topology.RohozhkinDelaunayBraiding`.
 -/
-def DelaunayFlipMatrix (x y z : ZornMatrix R V) : ZornMatrix R V :=
-  mul B (mul B x y) z
+theorem appendix_pentagon_matrix_identity_readout
+    (zi zj zk zl zm : ℚ)
+    (h_il : zi - zl ≠ 0)
+    (h_ik : zi - zk ≠ 0)
+    (h_km : zk - zm ≠ 0)
+    (h_jm : zj - zm ≠ 0)
+    (h_jl : zj - zl ≠ 0) :
+    rohozhkinMatrix
+        (InfoGeometry.Topology.RohozhkinDelaunayBraiding.appendixPentagonWord
+          zi zj zk zl zm True) =
+      (1 : Matrix (Fin (rohozhkinDim 1)) (Fin (rohozhkinDim 1)) ℚ) :=
+  InfoGeometry.Topology.RohozhkinDelaunayBraiding.appendixPentagonWord_matrix_eq_one
+    zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 
 /--
-Rohozhkin's Pentagon Equation (The 5-Flip Cycle):
-As points move and triangles deform, a sequence of 5 structural flips
-returns the geometry to its original configuration tree. 
-This equation is the core algebraic engine ensuring the topological computation
-is an exact, anomaly-free invariant of the Pure Braid Group.
+A completed Rohozhkin source spec descends to a matrix representation of the
+presented pure braid group.
+
+The nontrivial work is in the explicit premise `S`: it contains the generator
+assignment and the relator proof required by the topology owner.
 -/
-theorem Rohozhkin_Pentagon_Cycle
-    (a b c d : ZornMatrix R V)
-    (ha : is_diagonal a) (hb : is_diagonal b)
-    (hc : is_diagonal c) (hd : is_diagonal d) :
-    mul B (DelaunayFlipMatrix B a b c) d = mul B a (DelaunayFlipMatrix B b c d) := by
-  dsimp [DelaunayFlipMatrix]
-  ext <;> {
-    dsimp [mul, diag]
-    simp_all [is_diagonal, map_zero, smul_zero]
-    try ring
-  }
+theorem completed_rohozhkin_spec_descends_readout {moving : ℕ}
+    (S : RohozhkinDelaunayBraidingSpec moving) :
+    ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
+      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
+        ρ (of g) = S.gen g :=
+  RohozhkinDelaunayBraidingSpec.descent_packet S
 
 /--
-The Pure Braid Generator matrix synthesized over the Delaunay flip.
--/
-def PureBraidGenerator (x y : ZornMatrix R V) : ZornMatrix R V :=
-  mul B y x
+The only theorem-safe Fibonacci/MZM bridge at this layer.
 
-/--
-The corresponding geometric symmetry of the pure braid representations
-over the triangulated space.
+If a separate comparison theorem supplies an equality between a Rohozhkin
+rational matrix readout and a chosen Fibonacci/MZM phase, then the chosen phase
+can be read out.  This theorem intentionally proves no comparison by itself.
 -/
-theorem Rohozhkin_Hexagon_Graph
-    (a b c : ZornMatrix R V)
-    (ha : is_diagonal a) (hb : is_diagonal b) (hc : is_diagonal c) :
-    PureBraidGenerator B (mul B a b) c = mul B (PureBraidGenerator B a c) b := by
-  dsimp [PureBraidGenerator]
-  ext <;> {
-    dsimp [mul, diag]
-    simp_all [is_diagonal, map_zero, smul_zero]
-    try ring
-  }
+theorem rohozhkin_fibonacci_mzm_readout_of_compatibility
+    {moving : ℕ} {Phase : Type*}
+    (phaseOfMatrix : Matrix (Fin (rohozhkinDim moving)) (Fin (rohozhkinDim moving)) ℚ → Phase)
+    (M : Matrix (Fin (rohozhkinDim moving)) (Fin (rohozhkinDim moving)) ℚ)
+    (targetPhase : Phase)
+    (hcompat : phaseOfMatrix M = targetPhase) :
+    phaseOfMatrix M = targetPhase :=
+  hcompat
 
-end InfoGeometry.Projective.Rohozhkin
+end InfoGeometry.Projective.RohozhkinDelaunayBraiding

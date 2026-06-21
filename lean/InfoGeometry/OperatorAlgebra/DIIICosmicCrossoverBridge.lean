@@ -83,17 +83,10 @@ def toAndreevBoundaryDatum : AndreevBoundaryDatum Op where
   hole := D.P_right
   theta_electron := D.cptClosure_theta_P_left
 
-/--
-Concrete interpretation law for the DIII/Cosmic bridge: the installed closure
-is CPT conjugation and it swaps the two DIII chiral half-projectors.
--/
-def cosmicCrossoverInterpretationLaw : Prop :=
-  D.cptClosure.theta D.P_left = D.P_right ∧
-    D.cptClosure.theta D.P_right = D.P_left
-
-/-- The DIII projector-swap law is constructively supplied by CPT conjugation. -/
+/-- The DIII projector-swap equations are constructively supplied by CPT conjugation. -/
 theorem cosmicCrossoverInterpretation_holds :
-    D.cosmicCrossoverInterpretationLaw :=
+    D.cptClosure.theta D.P_left = D.P_right ∧
+      D.cptClosure.theta D.P_right = D.P_left :=
   ⟨D.cptClosure_theta_P_left, D.cptClosure_theta_P_right⟩
 
 /--

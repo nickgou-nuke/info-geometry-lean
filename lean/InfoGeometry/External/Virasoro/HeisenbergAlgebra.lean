@@ -5,10 +5,10 @@ Authors: Kalle Kytölä
 -/
 import Mathlib.LinearAlgebra.Basis.Bilinear
 import InfoGeometry.External.Virasoro.IsCentralExtension
-import VirasoroProject.ToMathlib.Algebra.Lie.Abelian
-import VirasoroProject.ToMathlib.LinearAlgebra.Basis.Defs
-import VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
-import VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+import InfoGeometry.External.Virasoro.ToMathlib.Algebra.Lie.Abelian
+import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.Defs
+import InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+import InfoGeometry.External.Virasoro.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
 
 /-!
 # Heisenberg algebra

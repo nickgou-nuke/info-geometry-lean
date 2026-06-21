@@ -179,7 +179,7 @@ structure BoundaryIntegralNonzeroWitness
     I.boundaryIntegral (R.stateRegion x) ω ≠ 0
 
 /-- Recover the nonzero residue hypothesis from the witness packet. -/
-theorem boundaryIntegral_ne_zero_of_sorry
+theorem boundaryIntegral_ne_zero_of_witness
     {x : State}
     (Wz : R.BoundaryIntegralNonzeroWitness x) :
     I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
@@ -202,13 +202,13 @@ theorem nonzero_boundaryIntegral_cannot_flow_to_flat
     (WindingNumberDatum.boundaryIntegral_eq_zero_of_winding_zero W hRegion)
 
 /-- Witness-routed residue obstruction theorem. -/
-theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_sorry
+theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_witness
     {x : State}
     (Wz : R.BoundaryIntegralNonzeroWitness x)
     (t : ℝ) :
-    F.flow t x ∉ F.Flat :=
+  F.flow t x ∉ F.Flat :=
   R.nonzero_boundaryIntegral_cannot_flow_to_flat
-    (R.boundaryIntegral_ne_zero_of_sorry Wz) t
+    (R.boundaryIntegral_ne_zero_of_witness Wz) t
 
 /-- Equivalent version using nonzero region winding. -/
 theorem nonzero_region_winding_cannot_flow_to_flat

@@ -1,52 +1,78 @@
-import Mathlib
+import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 
 /-!
-# Bost-Connes System and the Amplituhedron
+# Bost-Connes / Zeta Readouts for the Amplituhedron Lane
 
-This module formalizes the conceptual mapping between the Bost-Connes
-quantum statistical mechanical system and the $\mathcal{N}=4$ Super Yang-Mills 
-Amplituhedron.
+This file keeps the historical `BostConnesZeta` import name, but removes the
+old vacuous bridge surface that made the comparison automatically true.
 
-In the Bost-Connes system, the KMS (Kubo-Martin-Schwinger) equilibrium states 
-at inverse temperature $\beta$ are governed by the Riemann Zeta function $\zeta(\beta)$.
-In the scattering amplitude program, the volume of the Amplituhedron (computed 
-via its Stanley-Reisner ring and generalized polytopes) evaluates to Multiple 
-Zeta Values (MZVs).
+#### BUCKET 1: CLOSED FINITE THEOREMS
+- `zeta_volume_eval_of_explicit_comparison`: a pointwise equality can be read
+  back only from an explicit pointwise equality premise.
+- `zeta_volume_family_of_explicit_comparison`: a family equality can be read
+  back only from an explicit family equality premise.
 
-This module establishes the structural types for formalizing the isomorphism 
-between the Bost-Connes partition function and the all-loop integrand.
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
+- Both readouts are conditional on named comparison premises supplied by future
+  arithmetic and amplituhedron owner files.
+
+#### BUCKET 3: OPEN CLOSURE DEBT
+- Define the actual Bost-Connes partition function used by this lane.
+- Define the actual amplituhedron volume/integrand model used by this lane.
+- Prove any zeta/MZV/integrand comparison theorem with analytic hypotheses.
+- Prove any compatibility with the Arnold, Rohozhkin, or D-module certificate
+  layers in separate owner modules.
 -/
 
 namespace InfoGeometry.Projective.BostConnes
 
-variable {R : Type*} [CommRing R]
+open InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 
-/-- 
-Represents the partition function of the Bost-Connes system over the 
-prime number spectrum.
--/
-def BostConnesPartition (Z : R → R) : Prop :=
-  -- Structural placeholder for the Riemann Zeta evaluation
-  True
+/-- Historical name for an arithmetic partition-function readout. -/
+abbrev BostConnesPartitionData (R : Type*) :=
+  R → R
 
-/-- 
-Represents the all-loop volume integrand of the Amplituhedron, which evaluates
-to Multiple Zeta Values (MZVs) via the Stanley-Reisner ring.
--/
-def AmplituhedronVolume (Vol : ℕ → R) : Prop :=
-  -- Structural placeholder for the all-loop volume evaluation
-  True
+/-- Historical name for an amplituhedron volume/integrand readout. -/
+abbrev AmplituhedronVolumeData (R : Type*) :=
+  ℕ → R
 
 /--
-The Grand Synthesis Isomorphism:
-The topological and algebraic data of the Bost-Connes KMS state partition function
-contains the exact same cohomological information as the all-loop planar 
-integrand of N=4 SYM.
+Pointwise zeta/volume readout.
+
+This is intentionally only a premise readback.  It does not prove that a
+Bost-Connes partition function equals an amplituhedron volume.
 -/
-structure BostConnesAmplituhedronBridge (Z : R → R) (Vol : ℕ → R) where
-  is_zeta : BostConnesPartition Z
-  is_vol : AmplituhedronVolume Vol
-  -- The core physical conjecture: The partition function generates the scattering volume
-  eval_equivalence : ∀ (β : R) (L : ℕ), Z β = Vol L ∨ True
+theorem zeta_volume_eval_of_explicit_comparison
+    {R : Type*}
+    (Z : BostConnesPartitionData R)
+    (Vol : AmplituhedronVolumeData R)
+    (β : R) (L : ℕ)
+    (hComparison : Z β = Vol L) :
+    Z β = Vol L :=
+  hComparison
+
+/--
+Family-level zeta/volume readout from an explicit comparison premise.
+-/
+theorem zeta_volume_family_of_explicit_comparison
+    {R : Type*}
+    (Z : BostConnesPartitionData R)
+    (Vol : AmplituhedronVolumeData R)
+    (hComparison : ∀ (β : R) (L : ℕ), Z β = Vol L) :
+    ∀ (β : R) (L : ℕ), Z β = Vol L :=
+  hComparison
+
+/--
+The same pointwise readout routed through the projective synthesis interface.
+-/
+theorem zeta_volume_eval_via_synthesis_interface
+    {R : Type*}
+    (Z : BostConnesPartitionData R)
+    (Vol : AmplituhedronVolumeData R)
+    (β : R) (L : ℕ)
+    (hComparison : (fun Z' : BostConnesPartitionData R => Z' β) Z = Vol L) :
+    (fun Z' : BostConnesPartitionData R => Z' β) Z = Vol L :=
+  synthesis_readout_of_explicit_comparison
+    (fun Z' : BostConnesPartitionData R => Z' β) Z (Vol L) hComparison
 
 end InfoGeometry.Projective.BostConnes

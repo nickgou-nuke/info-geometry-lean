@@ -77,12 +77,58 @@ theorem gram_symmetric (q : ℝ) : (gram_matrix_k2_n2 q)ᵀ = gram_matrix_k2_n2 
 theorem gram_at_q_zero : gram_matrix_k2_n2 (0 : ℝ) = 1 := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [gram_matrix_k2_n2]
 
-theorem gram_positive_definite (q : ℝ) (hq : |q| < 1) : True := by
-  have hq_lower : -1 < q := by linarith [abs_lt.mp hq]
-  have hq_upper : q < 1 := by linarith [abs_lt.mp hq]
-  have h1 : 0 < 1 + q := by linarith
-  have h2 : 0 < 1 - q := by linarith
-  trivial
+lemma q_gram_quadratic_positive (q : ℝ) (hq : |q| < 1) (a b c d : ℝ)
+    (h : a ≠ 0 ∨ b ≠ 0 ∨ c ≠ 0 ∨ d ≠ 0) :
+    0 < a^2 + b^2 + c^2 + d^2 + 2 * q * (a * d + b * c) := by
+  have hq1 : 0 < 1 + q := by linarith [abs_lt.mp hq]
+  have hq2 : 0 < 1 - q := by linarith [abs_lt.mp hq]
+  have hid : 2 * (a^2 + b^2 + c^2 + d^2 + 2 * q * (a * d + b * c)) =
+      (1 + q) * ((a + d)^2 + (b + c)^2) +
+        (1 - q) * ((a - d)^2 + (b - c)^2) := by
+    ring
+  have hnz : ((a + d)^2 + (b + c)^2) ≠ 0 ∨ ((a - d)^2 + (b - c)^2) ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    have hsum := hc.1
+    have hdiff := hc.2
+    have had0 : a + d = 0 := by nlinarith [sq_nonneg (a + d), sq_nonneg (b + c), hsum]
+    have hbc0 : b + c = 0 := by nlinarith [sq_nonneg (a + d), sq_nonneg (b + c), hsum]
+    have had1 : a - d = 0 := by nlinarith [sq_nonneg (a - d), sq_nonneg (b - c), hdiff]
+    have hbc1 : b - c = 0 := by nlinarith [sq_nonneg (a - d), sq_nonneg (b - c), hdiff]
+    have ha : a = 0 := by linarith
+    have hb : b = 0 := by linarith
+    have hc' : c = 0 := by linarith
+    have hd : d = 0 := by linarith
+    rcases h with ha' | hb' | hc'' | hd' <;> contradiction
+  have hnonneg1 : 0 ≤ ((a + d)^2 + (b + c)^2) := by
+    nlinarith [sq_nonneg (a + d), sq_nonneg (b + c)]
+  have hnonneg2 : 0 ≤ ((a - d)^2 + (b - c)^2) := by
+    nlinarith [sq_nonneg (a - d), sq_nonneg (b - c)]
+  have hpos : 0 < (1 + q) * ((a + d)^2 + (b + c)^2) +
+      (1 - q) * ((a - d)^2 + (b - c)^2) := by
+    rcases hnz with hnz | hnz
+    · have hp : 0 < ((a + d)^2 + (b + c)^2) := lt_of_le_of_ne' hnonneg1 hnz
+      nlinarith
+    · have hp : 0 < ((a - d)^2 + (b - c)^2) := lt_of_le_of_ne' hnonneg2 hnz
+      nlinarith
+  nlinarith
+
+lemma gram_quadratic_form (q : ℝ) (x : Fin 4 → ℝ) :
+    x ⬝ᵥ ((gram_matrix_k2_n2 q).mulVec x) =
+      x 0 ^ 2 + x 1 ^ 2 + x 2 ^ 2 + x 3 ^ 2 +
+        2 * q * (x 0 * x 3 + x 1 * x 2) := by
+  simp [dotProduct, mulVec, gram_matrix_k2_n2, Fin.sum_univ_four]
+  ring
+
+theorem gram_positive_definite (q : ℝ) (hq : |q| < 1) (x : Fin 4 → ℝ) (hx : x ≠ 0) :
+    0 < x ⬝ᵥ ((gram_matrix_k2_n2 q).mulVec x) := by
+  rw [gram_quadratic_form]
+  apply q_gram_quadratic_positive q hq
+  by_contra h
+  push_neg at h
+  apply hx
+  funext i
+  fin_cases i <;> simp [h]
 
 /-! ### 4. q-CCR Relation Consistency over Commutative Rings -/
 

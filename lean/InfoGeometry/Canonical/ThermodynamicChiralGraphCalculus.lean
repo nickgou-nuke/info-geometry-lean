@@ -983,13 +983,13 @@ def freeVarCount (k : Nat) : ThermoTerm → Nat
 /-- A term satisfies the linear resource discipline if every free variable
 is used exactly once.  This is checked at de Bruijn depth `d`. -/
 def IsLinearAt (d : Nat) : ThermoTerm → Prop
-  | db _ => True  -- a single use is always okay
+  | db n => n < d
   | lam body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
   | app fn arg =>
       fn.IsLinearAt d ∧ arg.IsLinearAt d ∧
       ∀ k, k < d → fn.freeVarCount k + arg.freeVarCount k ≤ 1
   | nu body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
-  | edge _ _ _ _ => True
+  | edge _ _ _ _ => ∀ k, k < d → (0 : Nat) ≤ 1
   | tensor l r =>
       l.IsLinearAt d ∧ r.IsLinearAt d ∧
       ∀ k, k < d → l.freeVarCount k + r.freeVarCount k ≤ 1

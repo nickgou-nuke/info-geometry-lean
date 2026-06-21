@@ -1,0 +1,28 @@
+// AQL Query: Trace the Bisognano-Wichmann Bridge to Krein Doubled Space
+
+// 1. Identify the newly formalized Bisognano-Wichmann theorem
+LET bridge_node = First(
+  FOR node IN lean_declarations
+  FILTER node.name == "InfoGeometry.Canonical.kms_conformal_vacuum_bridge"
+  RETURN node
+)
+
+// 2. Traverse the formal dependency graph outwards to find the DoubledSpace topology
+FOR v, e, p IN 1..7 OUTBOUND bridge_node GRAPH 'InfoGeometryTopology'
+  // 3. Filter for paths that structurally hit the Krein Doubled Space representation
+  FILTER v.name LIKE "%DoubledSpace%" OR v.type == "KreinRealification"
+  
+  // 4. Return the exact theorem wires and categorical functors linking them
+  RETURN {
+    origin: bridge_node.name,
+    target: v.name,
+    depth: LENGTH(p.edges),
+    path: (
+      FOR vertex IN p.vertices
+      RETURN { name: vertex.name, module: vertex.module }
+    ),
+    edge_types: (
+      FOR edge IN p.edges
+      RETURN edge.relation_type
+    )
+  }

@@ -316,6 +316,59 @@ The mask is applied at the per-head attention weight level.
   \item[\texttt{maskedPreOutput}] (\textit{def}) \\ Tuple of masked head outputs before the output projection.
   \item[\texttt{run}] (\textit{def}) \\ Full masked transformer-block forward map.
 \end{description}
+\subsubsection*{InfoGeometry.LLM.MirrorPhaseCrystalBridge}
+\begin{description}
+  \item[\texttt{balancedBlochVector\_fixed\_by\_attention}] (\textit{theorem}) \\ A balanced Bloch child vector is fixed by exact Mirror Phase attention.
+  \item[\texttt{balancedBlochWave\_children\_fixed\_by\_attention}] (\textit{theorem}) \\ If a Bloch readout is branch-balanced at a cell, then exact Mirror Phase 
+attention fixes that local child readout.
+  \item[\texttt{blochBranchAnomaly}] (\textit{def}) \\ The real Bloch branch anomaly at a binary crystal cell.
+  \item[\texttt{blochChildVector}] (\textit{def}) \\ Read the two children of a Bloch mode at a binary crystal cell as a branch vector.
+  \item[\texttt{crystalBranchIndex}] (\textit{def}) \\ The binary crystal branch index used by the two-branch attention row.
+  \item[\texttt{crystalChildAttentionWeight}] (\textit{def}) \\ The Mirror Phase attention weight assigned to a crystal child branch.
+  \item[\texttt{crystalChildAttentionWeight\_eq\_depthOne\_cylinderKMSWeight}] (\textit{theorem}) \\ The two crystal child weights are the depth-one Cuntz/KMS cylinder weights used 
+by exact Mirror Phase attention.
+  \item[\texttt{crystalChildAttentionWeight\_eq\_twoBranchAttentionWeight}] (\textit{theorem}) \\ The two binary crystal child weights are exactly the two Mirror Phase row weights.
+  \item[\texttt{crystalChildAttentionWeight\_sum\_one}] (\textit{theorem}) \\ The two crystal child weights form a normalized dyadic row.
+  \item[\texttt{mirrorAttention\_kills\_blochBranchAnomaly}] (\textit{theorem}) \\ Exact Mirror Phase attention kills the Bloch branch anomaly at every crystal cell.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.MirrorPhaseCuntzAttention}
+\begin{description}
+  \item[\texttt{applyMirrorAttention}] (\textit{def}) \\ Applying the exact Mirror Phase attention operator to a two-branch vector.
+  \item[\texttt{applyMirrorAttention\_eq\_average}] (\textit{theorem}) \\ Applying exact Mirror Phase attention replaces a vector by its branch average.
+  \item[\texttt{applyMirrorAttention\_eq\_self\_iff\_branchAnomaly\_eq\_zero}] (\textit{theorem}) \\ The exact Mirror Phase attention fixes exactly branch-balanced vectors.
+  \item[\texttt{applyMirrorAttention\_idempotent}] (\textit{theorem}) \\ Applying exact Mirror Phase attention twice is the same as applying it once.
+  \item[\texttt{applyMirrorAttention\_preserves\_total}] (\textit{theorem}) \\ Exact Mirror Phase attention preserves total branch mass.
+  \item[\texttt{branchAnomaly}] (\textit{def}) \\ The branch anomaly/imbalance readout: right value minus left value.
+  \item[\texttt{branchAnomaly\_eq\_zero\_iff}] (\textit{theorem}) \\ Zero branch anomaly is exactly equality of the two branch values.
+  \item[\texttt{depthOneBranchWord}] (\textit{def}) \\ Index $0$ is the left/false Cuntz branch, index $1$ is the right/true branch.
+  \item[\texttt{leftBranchAttentionWeight\_eq\_cylinderKMSWeight}] (\textit{theorem}) \\ The left attention branch is the left depth-one Cuntz/KMS cylinder weight.
+  \item[\texttt{mirrorAttention\_kills\_branchAnomaly}] (\textit{theorem}) \\ Exact Mirror Phase attention kills the finite branch-anomaly readout.
+  \item[\texttt{mirrorAttentionMatrix}] (\textit{def}) \\ The exact Mirror Phase attention operator: every query averages the two Cuntz 
+branches with dyadic weights.
+  \item[\texttt{mirrorAttentionMatrix\_entry\_nonneg}] (\textit{theorem}) \\ Every entry of the exact Mirror Phase attention matrix is nonnegative.
+  \item[\texttt{mirrorAttentionMatrix\_idempotent}] (\textit{theorem}) \\ The exact Mirror Phase attention matrix is an idempotent projection.  This is a 
+finite matrix identity, not a claim about trained transformer dynamics.
+  \item[\texttt{mirrorAttentionMatrix\_row\_sum\_one}] (\textit{theorem}) \\ Every row of the exact Mirror Phase attention matrix is stochastic.
+  \item[\texttt{rightBranchAttentionWeight\_eq\_cylinderKMSWeight}] (\textit{theorem}) \\ The right attention branch is the right depth-one Cuntz/KMS cylinder weight.
+  \item[\texttt{twoBranchAttentionRow\_exactness\_defect\_zero}] (\textit{theorem}) \\ The row-normalization defect of the exact two-branch attention row vanishes.
+  \item[\texttt{twoBranchAttentionWeight}] (\textit{def}) \\ The exact two-branch attention row used for the first Mirror Phase corridor.
+  \item[\texttt{twoBranchAttentionWeight\_eq\_depthOne\_cylinderKMSWeight}] (\textit{theorem}) \\ The exact two-branch attention row is precisely the depth-one dyadic KMS 
+cylinder row.
+  \item[\texttt{twoBranchAttentionWeight\_nonneg}] (\textit{theorem}) \\ Every weight in the exact two-branch attention row is nonnegative.
+  \item[\texttt{twoBranchAttentionWeight\_sum\_one}] (\textit{theorem}) \\ The exact two-branch attention row is normalized.
+  \item[\texttt{TwoBranchVector}] (\textit{def}) \\ A two-branch real value vector.
+\end{description}
+\subsubsection*{InfoGeometry.LLM.ModularFlowActivation}
+\begin{description}
+  \item[\texttt{forward\_norm\_preserved}] (\textit{theorem}) \\ THEOREM: Forward Pass Norm Conservation. 
+The forward pass also preserves semantic vector magnitude,  
+preventing information collapse.
+  \item[\texttt{gradient\_norm\_preserved}] (\textit{theorem}) \\ THEOREM: Optimal Transport of Backpropagation Gradients. 
+Because the activation function is a unitary modular flow (LinearIsometryEquiv),  
+its inverse (used in backpropagation) perfectly preserves the norm of the gradient vector. 
+This mathematically forbids exploding or vanishing gradients.
+  \item[\texttt{ModularFlowActivation}] (\textit{inductive}) \\ The modular time evolution operator $\Delta $\textasciicircum{}\{it\} as a unitary activation function
+\end{description}
 \subsubsection*{InfoGeometry.LLM.PinCPTBridge}
 \begin{description}
   \item[\texttt{anticommutator}] (\textit{def}) \\ Anticommutator in an associative ring.
@@ -400,11 +453,20 @@ counts once the raw count profile has the expected carrier mass $n$.
 split work and heat; this file currently proves only the conserved scalar drop.
   \item[\texttt{IsRouterEquilibrium}] (\textit{def}) \\ Equilibrium condition: odd-sector defect functional vanishes.
   \item[\texttt{iterate}] (\textit{def}) \\ $n$-step iteration of a Sinkhorn defect-reduction update.
+  \item[\texttt{noncommutingScaleLane\_of\_$\delta $\_odd\_pos}] (\textit{theorem}) \\ Positive odd-sector defect implies noncommuting scale lane on the same 
+clock-defect bridge.
+  \item[\texttt{not\_detailedEquilibrium\_of\_$\delta $\_odd\_pos}] (\textit{theorem}) \\ Positive odd-sector defect excludes detailed equilibrium on the same 
+clock-defect bridge.
   \item[\texttt{ofAlignedObserver\_isRouterEquilibrium}] (\textit{theorem}) \\ An aligned observer is already in Sinkhorn router-equilibrium.
+  \item[\texttt{ofAlignedObserver\_$\delta $\_odd\_eq\_zero}] (\textit{theorem}) \\ An aligned observer has zero odd-sector defect on the Sinkhorn router lane.
   \item[\texttt{ofStrainZeroObserver\_isRouterEquilibrium}] (\textit{theorem}) \\ A strain-zero observer is already in Sinkhorn router-equilibrium.
+  \item[\texttt{ofStrainZeroObserver\_$\delta $\_odd\_eq\_zero}] (\textit{theorem}) \\ A strain-zero observer has zero odd-sector defect on the Sinkhorn router lane.
   \item[\texttt{ofZDControlledObserver\_isRouterEquilibrium\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the exact deviation channel is controlled by $Z_D$ and $Z_D$ itself 
 vanishes, then the canonical observer route is already in Sinkhorn 
 router-equilibrium.
+  \item[\texttt{ofZDControlledObserver\_$\delta $\_odd\_eq\_zero\_of\_ZD\_eq\_zero}] (\textit{theorem}) \\ If the exact deviation channel is controlled by $Z_D$ and $Z_D$ itself 
+vanishes, then the bounded router residual produced from the canonical observer 
+lane has zero odd-sector defect.
   \item[\texttt{operatorInformationNormReadout\_le\_of\_massNormalizedColCounts}] (\textit{theorem}) \\ Mass-normalized column counts at a row-normalization phase are enough to route 
 the Sinkhorn RN budget all the way to the operator readout inequality.
   \item[\texttt{operatorInformationNormReadout\_le\_of\_massNormalizedRowCounts}] (\textit{theorem}) \\ Mass-normalized row counts at a column-normalization phase are enough to route 
@@ -497,9 +559,13 @@ $RouterDefectThermodynamicBridge$, and the defect readout is
 $\delta _odd_thermo$, not an ambient operator norm.
   \item[\texttt{SinkhornVolumeAnomalyBridge}] (\textit{inductive}) \\ Bridge from Sinkhorn relative-volume anomaly to the router odd-defect lane. 
 This is the owner surface for volume-driven defect reduction.
+  \item[\texttt{sourcedGenerator\_deviation\_eq\_$\delta $\_odd}] (\textit{theorem}) \\ The sourced-generator deviation is exactly $\delta _odd$.
   \item[\texttt{sourcedGenerator\_deviation\_iterate\_le\_initial}] (\textit{theorem}) \\ Global sourced-generator deviation bound by the initial state.
   \item[\texttt{sourcedGenerator\_deviation\_iterate\_succ\_le\_iterate}] (\textit{theorem}) \\ One-step sourced-generator deviation monotonicity along the executable iterator.
   \item[\texttt{sourcedGenerator\_deviation\_next\_le\_of\_routerResidual\_eq\_zero}] (\textit{theorem}) \\ Zero residual in the next state gives monotone sourced-generator deviation.
+  \item[\texttt{trajectoryRNBarrierNext\_add\_availableWorkRN\_eq\_$\delta $\_relVol}] (\textit{theorem}) \\ Exact one-step RN balance: remaining RN barrier plus available work equals the 
+pre-step RN barrier.
+  \item[\texttt{trajectoryRNBarrierNext\_add\_dissipatedHeatRN\_eq\_$\delta $\_relVol}] (\textit{theorem}) \\ Equivalent heat-channel balance for the current scalar model.
   \item[\texttt{unitCounts}] (\textit{def}) \\ Unit reference count profile on $Fin n$.
   \item[\texttt{ofMassNormalizedColCounts}] (\textit{def}) \\ Mass-normalized column counts at a row-normalization phase directly package the 
 Sinkhorn RN budget as a profile Weyl/thermodynamic comparison packet.
@@ -513,6 +579,35 @@ The residual readout is identified with the scaled projective count/profile
 readout supplied by $SinkhornRNBarrierProfileLift$. The central readout remains 
 the same scalar budget already present in the thermodynamic bridge. This does 
 not assert an RMS $relativeInformationNorm$ identity.
+  \item[\texttt{$\delta $\_odd}] (\textit{def}) \\ Odd-sector defect functional attached to a bounded router residual.
+  \item[\texttt{$\delta $\_odd\_eq\_clockDefect\_norm}] (\textit{theorem}) \\ On the clock-defect bridge, odd-sector defect is exactly the non-equilibrium 
+clock-defect norm.
+  \item[\texttt{$\delta $\_odd\_eq\_zero\_iff\_equilibrium}] (\textit{theorem}) \\ $\delta _odd = 0$ is exactly residual equilibrium.
+  \item[\texttt{$\delta $\_odd\_eq\_zero\_iff\_routerResidual\_eq\_zero}] (\textit{theorem}) \\ Vanishing odd-sector defect is exactly vanishing router residual by operator-norm separation.
+  \item[\texttt{$\delta $\_odd\_eq\_zero\_of\_detailedEquilibrium}] (\textit{theorem}) \\ Detailed equilibrium ($scalePart = 0$) forces vanishing odd-sector defect on 
+the clock-defect bridge.
+  \item[\texttt{$\delta $\_odd\_eq\_zero\_of\_detailedEquilibriumWitness}] (\textit{theorem}) \\ Witness-routed zero-defect theorem on the clock-defect bridge. 
+This removes the bare detailed-equilibrium proposition in favor of the explicit 
+$DetailedEquilibriumWitness$ packet.
+  \item[\texttt{$\delta $\_odd\_iterate\_le\_initial}] (\textit{theorem}) \\ Defect budget is globally bounded by the initial state along the executable 
+Sinkhorn iterator.
+  \item[\texttt{$\delta $\_odd\_iterate\_succ\_le\_iterate}] (\textit{theorem}) \\ One-step monotone defect reduction along the executable iterator.
+  \item[\texttt{$\delta $\_odd\_next\_le\_of\_relativeDefectBridge}] (\textit{theorem}) \\ Volume anomaly monotonicity forces one-step odd-defect monotonicity.
+  \item[\texttt{$\delta $\_odd\_next\_le\_of\_volumeAnomalyBridge}] (\textit{theorem}) \\ Backward-compatible theorem name for relative-defect one-step reduction.
+  \item[\texttt{$\delta $\_odd\_thermo}] (\textit{def}) \\ Thermodynamic odd-sector readout for the corrected D3 bridge. 
+This is not an ambient operator norm. It is the explicit readout supplied by 
+the Weyl/thermodynamic comparison packet attached to the router bridge.
+  \item[\texttt{$\delta $\_odd\_thermo\_le\_ZD}] (\textit{theorem}) \\ Corrected D3 readout bound: the thermodynamic router defect is bounded by the 
+thermodynamic $Z_D$ readout through the shared Weyl/relative-potential lane.
+  \item[\texttt{$\delta $\_odd\_thermo\_le\_ZD\_of\_rnBarrierComparison}] (\textit{theorem}) \\ An explicit RN-barrier comparison discharges the thermodynamic D3 bound.
+  \item[\texttt{$\delta $\_odd\_thermo\_next\_le\_of\_relativeDefectBridge}] (\textit{theorem}) \\ RN-barrier monotonicity forces one-step thermodynamic odd-readout reduction.
+  \item[\texttt{$\delta $\_odd\_thermo\_next\_le\_ZD\_of\_relativeDefectBridge}] (\textit{theorem}) \\ One-step thermodynamic D3 budget transport: if the current RN barrier is below 
+the current thermodynamic $Z_D$ readout, then the next router readout is also 
+below that same current budget.
+  \item[\texttt{$\delta $\_relVol}] (\textit{def}) \\ Primary relative-volume defect functional on a Sinkhorn trajectory: 
+the phase-aligned Radon-Nikodym barrier before step $k$.
+  \item[\texttt{$\delta $\_volume}] (\textit{def}) \\ Backward-compatible name for $\delta _relVol$.
+  \item[\texttt{$\delta $\_ZD\_thermo}] (\textit{def}) \\ Central $Z_D$ thermodynamic readout on the same comparison packet.
 \end{description}
 \subsubsection*{InfoGeometry.LLM.SpectralToken}
 \begin{description}
@@ -530,7 +625,7 @@ This is a structural container, not yet a physical/spinorial claim.
 \end{description}
 \subsubsection*{InfoGeometry.LLM.SpinPinTransformerLayer}
 \begin{description}
-  \item[\texttt{pin44\_headFactor\_sorry}] (\textit{theorem}) \\ $Cl(4,4)$ head-factor witness used as the $Pin(4,4)$ geometric anchor 
+  \item[\texttt{pin44\_headFactor}] (\textit{theorem}) \\ $Cl(4,4)$ head-factor witness used as the $Pin(4,4)$ geometric anchor 
 for LLM-side spin/transport layers.
   \item[\texttt{SpinPinTransformerLayer}] (\textit{inductive}) \\ Transformer decoder layer over endomorphisms, equipped with 
 - a spin transport on the doubled-real/Krein carrier, 
@@ -659,7 +754,7 @@ budget.
 background flow generator.
   \item[\texttt{ofAlignedObserver\_sourcedGenerator\_respects\_cut}] (\textit{theorem}) \\ For an aligned observer, Drazin-cut preservation reduces to the background-flow 
 commutation theorem.
-  \item[\texttt{ofCanonicalControlledObserver}] (\textit{def}) \\ Core canonical constructor for a canonical observer controlled by $Z_D$ — this route 
+  \item[\texttt{ofCanonicalControlledObserver}] (\textit{def}) \\ Core canonical constructor for a canonical observer controlled by $Z_D$ $---$ this route 
 consumes the owner predicate $ObserverDeviationControlledByZD$ directly, eliminating 
 the explicit bound hypothesis on this lane.
   \item[\texttt{ofCanonicalObserverDefect}] (\textit{def}) \\ Canonical theorem-backed constructor for the bounded bridge. 
@@ -796,9 +891,91 @@ Mirrors $out = shared(x) + routed(x)$ from vendor implementations.
   \item[\texttt{run}] (\textit{def}) \\ Full block update.
   \item[\texttt{two\_stage\_residual\_block\_update}] (\textit{theorem}) \\ Exact two-stage residual law matching the extracted Llama 4 transformer block form.
 \end{description}
+\subsubsection*{InfoGeometry.LLM.WallpaperMirrorAttentionBridge}
+\begin{description}
+  \item[\texttt{pg\_glide\_and\_mirror\_attention\_kill\_branch\_anomaly}] (\textit{theorem}) \\ The wallpaper glide relation and the Mirror Phase branch-anomaly annihilation 
+hold simultaneously in the finite bridge.
+  \item[\texttt{pg\_glide\_charge\_and\_attention\_anomaly\_packet}] (\textit{theorem}) \\ Full finite packet: the same $pg$ orientation-reversing glide supports both 
+the mod-two Weyl charge invariance and the real Mirror Phase anomaly projection.
+\end{description}
 \subsection{InfoGeometry.Geometry and Cross-Prover Bridge}
 These declarations define the spin-momentum couplings, twistor/helical coverings, and Clifford/Hestenes paravector readouts bridging Lean 4 and Isabelle.
 
+\subsubsection*{InfoGeometry.Geometry.HelicalCovering}
+\begin{description}
+  \item[\texttt{DeckAction}] (\textit{inductive}) \\ A deck action on the helical cover. 
+A deck transformation changes the winding by an integer while preserving the 
+base projection.  This is the formal version of moving between sheets.
+  \item[\texttt{deck}] (\textit{def}) \\ Deck transformation indexed by integer sheet shift.
+  \item[\texttt{deck\_add}] (\textit{theorem}) \\ Additive deck law.
+  \item[\texttt{deck\_zero}] (\textit{theorem}) \\ Zero deck transformation is identity.
+  \item[\texttt{project\_deck}] (\textit{theorem}) \\ Deck transformations preserve the base projection.
+  \item[\texttt{project\_step}] (\textit{theorem}) \\ Deck moves preserve the base projection.
+  \item[\texttt{step}] (\textit{def}) \\ One positive sheet step.
+  \item[\texttt{stepInv}] (\textit{def}) \\ One negative sheet step.
+  \item[\texttt{winding\_deck}] (\textit{theorem}) \\ Deck transformations shift winding by $n$.
+  \item[\texttt{winding\_step}] (\textit{theorem}) \\ A positive sheet step increases winding by one.
+  \item[\texttt{winding\_stepInv}] (\textit{theorem}) \\ A negative sheet step decreases winding by one.
+  \item[\texttt{DeckActionOwnerTarget}] (\textit{def}) \\ Owner target for deck/monodromy structure on a helical cover.
+  \item[\texttt{HelicalCovering}] (\textit{inductive}) \\ A helical covering over a base space. 
+$project$ forgets sheet data. 
+$winding$ records the integer sheet/monodromy charge. 
+$branchLocus$ is the base singular/branch locus.  The key calibration field says 
+that any lift lying over the branch locus must carry nonzero winding.  This is 
+the formal way to say that the zero sheet cannot simply collapse into the 
+branch point while the winding invariant is preserved.
+  \item[\texttt{branch\_requires\_nonzero\_winding}] (\textit{theorem}) \\ Branch-locus lifts carry nonzero winding. 
+This is a calibration field.  Concrete models may prove it from logarithmic 
+branch behavior, spectral divisor data, or a projective singularity theorem.
+  \item[\texttt{branchLocus}] (\textit{def}) \\ Branch/singular locus in the base.
+  \item[\texttt{LiesOverBranch}] (\textit{def}) \\ A lift is over the branch locus when its projection lands in $branchLocus$.
+  \item[\texttt{nonzeroWindingSector}] (\textit{def}) \\ The nonzero-winding sector.
+  \item[\texttt{project}] (\textit{def}) \\ Projection from the helical cover to the circular/base quotient.
+  \item[\texttt{winding}] (\textit{def}) \\ Integer sheet/winding/monodromy charge.
+  \item[\texttt{zeroSheet}] (\textit{def}) \\ The zero sheet of the helical cover.
+  \item[\texttt{zeroSheet\_not\_over\_branch}] (\textit{theorem}) \\ A zero-sheet point cannot lie over the branch locus.
+  \item[\texttt{HelicalCoveringOwnerTarget}] (\textit{def}) \\ Owner target for a helical covering.
+  \item[\texttt{MonodromyEvent}] (\textit{inductive}) \\ A monodromy event is a closed base motion whose lift changes sheet. 
+$charge$ is the resulting winding shift.
+  \item[\texttt{charge}] (\textit{def}) \\ Winding shift / monodromy charge.
+  \item[\texttt{finish}] (\textit{def}) \\ Ending point on the helical cover.
+  \item[\texttt{finish\_ne\_start\_of\_charge\_ne\_zero}] (\textit{theorem}) \\ Nontrivial monodromy cannot end at the same lifted point.
+  \item[\texttt{projection\_closed}] (\textit{theorem}) \\ The projection closes in the base.
+  \item[\texttt{start}] (\textit{def}) \\ Starting point on the helical cover.
+  \item[\texttt{winding\_change}] (\textit{theorem}) \\ Winding change law.
+  \item[\texttt{SheetPacket}] (\textit{inductive}) \\ A packet of sheet amplitudes/readouts. 
+This is the abstract socket for statements such as: 
+$\Psi  = \Sigma _N c_N |N\rangle $. 
+No summability or Hilbert structure is asserted here.
+  \item[\texttt{amplitude}] (\textit{def}) \\ Amplitude/readout attached to each sheet.
+  \item[\texttt{stateOnSheet}] (\textit{def}) \\ State/lift on a given sheet.
+  \item[\texttt{SpectralDivisorMonodromyCalibration}] (\textit{inductive}) \\ Calibration from a spectral divisor to a helical branch locus. 
+This is the correct abstraction for zeta/L-function applications: 
+a zero or pole of a spectral function is not automatically a branch point of 
+the function itself, but it is a branch/monodromy point for a chosen logarithmic 
+or phase readout.
+  \item[\texttt{divisor\_maps\_to\_branch}] (\textit{theorem}) \\ Divisor points map to the branch locus for the chosen readout.
+  \item[\texttt{logPhaseReadout}] (\textit{def}) \\ Logarithmic or phase readout into the base.
+  \item[\texttt{maps\_to\_branch}] (\textit{theorem}) \\ A spectral divisor point lands in the branch locus of the logarithmic/phase 
+readout.
+  \item[\texttt{spectralDivisor}] (\textit{def}) \\ Spectral divisor, e.g. zero/pole/resonance locus.
+  \item[\texttt{SpectralDivisorMonodromyOwnerTarget}] (\textit{def}) \\ Owner target for spectral-divisor monodromy calibration.
+  \item[\texttt{WindingPreservingFlow}] (\textit{inductive}) \\ An admissible flow on the helical cover. 
+The essential field is $preserves_winding$: ordinary admissible flow preserves 
+the monodromy charge.
+  \item[\texttt{flow}] (\textit{def}) \\ Flow on the helical cover.
+  \item[\texttt{flow\_add}] (\textit{theorem}) \\ Additive flow law.
+  \item[\texttt{flow\_zero}] (\textit{theorem}) \\ Zero-time law.
+  \item[\texttt{nonzero\_cannot\_flow\_to\_zeroSheet}] (\textit{theorem}) \\ A nonzero-winding state cannot flow into the zero sheet.
+  \item[\texttt{preserves\_nonzeroWinding}] (\textit{theorem}) \\ Admissible flow preserves nonzero winding.
+  \item[\texttt{preserves\_winding}] (\textit{theorem}) \\ Winding/monodromy charge is conserved by admissible flow.
+  \item[\texttt{preserves\_zeroSheet}] (\textit{theorem}) \\ Admissible flow preserves the zero sheet.
+  \item[\texttt{toConservedObstructionFlow}] (\textit{def}) \\ The helical winding flow is an instance of the generic $TopologicalSnap$ 
+obstruction flow, with the zero sheet as the flat sector.
+  \item[\texttt{topologicalSnap\_no\_relaxation\_to\_zeroSheet}] (\textit{theorem}) \\ TopologicalSnap consequence: a nonzero-winding sector cannot relax into the 
+zero sheet under an admissible winding-preserving flow.
+  \item[\texttt{zeroSheet\_cannot\_flow\_to\_branch}] (\textit{theorem}) \\ A zero-sheet state cannot flow into the branch locus.
+\end{description}
 \subsubsection*{InfoGeometry.Geometry.PauliParavectorBridge}
 \begin{description}
   \item[\texttt{det\_pauliMatrix}] (\textit{theorem}) \\ Constructive determinant identity: 
@@ -817,9 +994,9 @@ This is determinant/rank-collapse language, not nilpotence.
   \item[\texttt{MomentumSpinCoupling}] (\textit{inductive}) \\ Momentum-spin coupling socket. 
 This is the theorem-safe representation-theoretic statement: momentum and spin 
 are read together through a common spinor/rotor structure.
-  \item[\texttt{coupling\_holds}] (\textit{theorem}) \\ Re-export of the spin-momentum coupling law.
-  \item[\texttt{couplingCertificate}] (\textit{theorem}) \\ Evidence for the coupling law.
-  \item[\texttt{couplingLaw}] (\textit{def}) \\ Coupling law supplied by the concrete representation.
+  \item[\texttt{coupling}] (\textit{theorem}) \\ The certificate/proof of the coupling law.
+  \item[\texttt{coupling\_holds}] (\textit{theorem}) \\ Debt surface for the model-specific spin-momentum coupling theorem.
+  \item[\texttt{CouplingHolds}] (\textit{def}) \\ The abstract proposition representing the coupling law.
   \item[\texttt{helicity}] (\textit{def}) \\ Helicity readout.
   \item[\texttt{momentum}] (\textit{def}) \\ Momentum/paravector readout.
   \item[\texttt{pauliLubanskiReadout}] (\textit{def}) \\ Pauli-Lubanski-style readout.
@@ -836,9 +1013,9 @@ This file does not prove the $SL(2,\mathbb{C} )$ double-cover theorem.
   \item[\texttt{SpinBivectorReadout}] (\textit{inductive}) \\ Bivector/spin-plane readout socket. 
 In Hestenes language, spin is a bivector/rotor datum extracted from the spinor, 
 not a component of the momentum paravector itself.
-  \item[\texttt{readout\_holds}] (\textit{theorem}) \\ Re-export of the spin-plane readout law.
-  \item[\texttt{readoutCertificate}] (\textit{theorem}) \\ Evidence for the model-specific readout law.
-  \item[\texttt{readoutLaw}] (\textit{def}) \\ Model-specific readout law.
+  \item[\texttt{readout}] (\textit{theorem}) \\ The certificate/proof of the readout law.
+  \item[\texttt{readout\_holds}] (\textit{theorem}) \\ Debt surface for the model-specific spin-plane readout theorem.
+  \item[\texttt{ReadoutHolds}] (\textit{def}) \\ The abstract proposition representing the readout law.
   \item[\texttt{spinPlane}] (\textit{def}) \\ Spin plane/bivector readout.
   \item[\texttt{toPauliParavector}] (\textit{def}) \\ Convert geometry-facing coordinates into the canonical Pauli/Hestenes 
 paravector owner.

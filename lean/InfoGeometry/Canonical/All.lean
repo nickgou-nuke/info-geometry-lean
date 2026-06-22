@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.CliffordEquiv
 import InfoGeometry.Canonical.SpacetimeGeometricAlgebraBridge
 import InfoGeometry.Canonical.AtiyahSingerWittenIndexBridge
 import InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
@@ -225,6 +226,7 @@ import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.DiracSea
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
+import InfoGeometry.Canonical.CantorianFractalSpacetime
 import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CelikKocakCantorOperators
@@ -613,6 +615,7 @@ import InfoGeometry.Canonical.ComplexRealHestenesFinite
 import InfoGeometry.Canonical.HestenesKreinVacuum
 import InfoGeometry.Canonical.HestenesCommutantGeometry
 import InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
+import InfoGeometry.Canonical.CalabiYauGrandDualityBridge
 import InfoGeometry.Canonical.HestenesAnalyticity
 import InfoGeometry.Canonical.ComplexAnalyticBridge
 import InfoGeometry.Canonical.ComplexDifferentiableBridge
@@ -762,6 +765,7 @@ import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.ModularSurprisalThermoPacket
 import InfoGeometry.Canonical.ModularTomitaGeometry
+import InfoGeometry.Canonical.ModularMonodromyClock
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 import InfoGeometry.Canonical.ModularWeldBridge
@@ -1170,6 +1174,7 @@ import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.CuntzCantorBoundaryShift
 import InfoGeometry.Canonical.CantorBoundaryCuntzShift
 import InfoGeometry.Canonical.KashiwaraCuntzCohomology
+import InfoGeometry.Canonical.CuntzCrystalRepresentation
 import InfoGeometry.Canonical.BostConnesSuperalgebra
 import InfoGeometry.Canonical.DeformedSuperCuntzWarp
 import InfoGeometry.Canonical.InductiveColimitBridge

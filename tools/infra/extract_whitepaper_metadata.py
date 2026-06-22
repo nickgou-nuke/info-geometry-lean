@@ -49,6 +49,8 @@ UNICODE_MAP = {
     "\u03b5": r"\varepsilon ",
     "\u03c8": r"\psi ",
     "\u039b": r"\Lambda ",
+    "\u0394": r"\Delta ",
+    "\u03a8": r"\Psi ",
     "\u03bb": r"\lambda ",
     "∑": r"\sum ",
     "ᵢ": r"_i ",
@@ -67,6 +69,10 @@ UNICODE_MAP = {
     "η": r"\eta ",
     "θ": r"\theta ",
     "‖": r"\|",
+    "\u03a3": r"\Sigma ",
+    "⟨": r"\langle ",
+    "⟩": r"\rangle ",
+    "—": r"---",
 }
 
 def escape_text_segment(text):

@@ -258,5 +258,215 @@ proof (rule finite_subset)
   qed
 qed
 
+lemma g1_g2_ranges_disjoint:
+  shows "g1 S1 \<noteq> g2 S2"
+proof
+  assume "g1 S1 = g2 S2"
+  hence "0 \<in> g2 S2"
+  proof -
+    have "0 \<in> g1 S1"
+      unfolding g1_def negate_index_def by force
+    thus ?thesis using \<open>g1 S1 = g2 S2\<close> by simp
+  qed
+  then obtain i where "i \<in> shift_plus (s_plus S2) \<union> s_minus S2" and "0 = 1 - i"
+    unfolding g2_def negate_index_def by auto
+  hence "i = 1" by simp
+  with \<open>i \<in> shift_plus (s_plus S2) \<union> s_minus S2\<close>
+  consider (sp) "i \<in> shift_plus (s_plus S2)" | (sm) "i \<in> s_minus S2" by auto
+  thus False
+  proof cases
+    case sp
+    then obtain j where "j \<in> s_plus S2" and "i = j + 1"
+      unfolding shift_plus_def by auto
+    hence "j \<ge> 1" unfolding s_plus_def by auto
+    hence "i \<ge> 2" using \<open>i = j + 1\<close> by simp
+    thus False using \<open>i = 1\<close> by simp
+  next
+    case sm
+    hence "i \<le> 0" unfolding s_minus_def by auto
+    thus False using \<open>i = 1\<close> by simp
+  qed
+qed
+
+subsection \<open>Isometry Properties (Left Inverses)\<close>
+
+definition g_pullback :: "maya_index set \<Rightarrow> maya_index set" where
+  "g_pullback B = (B \<inter> {j. j \<le> 0}) \<union> {j - 1 | j. j \<in> B \<and> j \<ge> 2}"
+
+definition g1_inverse :: "maya_index set \<Rightarrow> maya_index set" where
+  "g1_inverse A = g_pullback (negate_index A)"
+
+definition g2_inverse :: "maya_index set \<Rightarrow> maya_index set" where
+  "g2_inverse A = g_pullback (negate_index A)"
+
+lemma negate_index_negate [simp]:
+  "negate_index (negate_index S) = S"
+proof (rule set_eqI)
+  fix x
+  show "(x \<in> negate_index (negate_index S)) = (x \<in> S)"
+    unfolding negate_index_def by force
+qed
+
+lemma s_plus_s_minus_union:
+  "(s_plus S) \<union> (s_minus S) = S"
+  unfolding s_plus_def s_minus_def by auto
+
+lemma g2_isometry:
+  shows "g2_inverse (g2 S) = S"
+proof -
+  have h_neg: "negate_index (g2 S) = shift_plus (s_plus S) \<union> s_minus S"
+    unfolding g2_def by simp
+  hence "g2_inverse (g2 S) = g_pullback (shift_plus (s_plus S) \<union> s_minus S)"
+    unfolding g2_inverse_def by simp
+  also have "... = S"
+    unfolding g_pullback_def
+  proof (rule set_eqI)
+    fix k :: maya_index
+    let ?B = "shift_plus (s_plus S) \<union> s_minus S"
+    show "(k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}) = (k \<in> S)"
+    proof
+      assume "k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+      then consider (a) "k \<in> ?B" "k \<le> 0" | (b) "k \<in> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+        by auto
+      then show "k \<in> S"
+      proof cases
+        case a
+        from a(1) consider (sp) "k \<in> shift_plus (s_plus S)" | (sm) "k \<in> s_minus S"
+          by auto
+        then show ?thesis
+        proof cases
+          case sp
+          then obtain i where "i \<in> s_plus S" "k = i + 1"
+            unfolding shift_plus_def by auto
+          hence "i \<ge> 1" unfolding s_plus_def by auto
+          hence "k \<ge> 2" using \<open>k = i + 1\<close> by simp
+          with a(2) show ?thesis by simp
+        next
+          case sm
+          then show ?thesis unfolding s_minus_def by auto
+        qed
+      next
+        case b
+        then obtain j where hj: "j \<in> ?B" "j \<ge> 2" "k = j - 1" by auto
+        from hj(1) consider (sp) "j \<in> shift_plus (s_plus S)" | (sm) "j \<in> s_minus S"
+          by auto
+        then show ?thesis
+        proof cases
+          case sp
+          then obtain i where "i \<in> s_plus S" "j = i + 1"
+            unfolding shift_plus_def by auto
+          hence "k = i" using hj(3) by simp
+          with \<open>i \<in> s_plus S\<close> show ?thesis unfolding s_plus_def by auto
+        next
+          case sm
+          hence "j \<le> 0" unfolding s_minus_def by auto
+          with hj(2) show ?thesis by simp
+        qed
+      qed
+    next
+      assume "k \<in> S"
+      show "k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+      proof (cases "k \<le> 0")
+        case True
+        hence "k \<in> s_minus S" unfolding s_minus_def using \<open>k \<in> S\<close> by auto
+        hence "k \<in> ?B" by auto
+        with True show ?thesis by force
+      next
+        case False
+        hence "k \<ge> 1" by simp
+        hence "k \<in> s_plus S" unfolding s_plus_def using \<open>k \<in> S\<close> by auto
+        hence "k + 1 \<in> shift_plus (s_plus S)" unfolding shift_plus_def by auto
+        hence hj: "k + 1 \<in> ?B" by auto
+        have hj2: "k + 1 \<ge> 2" using \<open>k \<ge> 1\<close> by simp
+        have "k = (k + 1) - 1" by simp
+        with hj hj2 show ?thesis by force
+      qed
+    qed
+  qed
+  finally show ?thesis .
+qed
+
+lemma g1_isometry:
+  shows "g1_inverse (g1 S) = S"
+proof -
+  have h_neg: "negate_index (g1 S) = shift_plus (s_plus S) \<union> s_minus S \<union> {1}"
+    unfolding g1_def by simp
+  hence "g1_inverse (g1 S) = g_pullback (shift_plus (s_plus S) \<union> s_minus S \<union> {1})"
+    unfolding g1_inverse_def by simp
+  also have "... = S"
+    unfolding g_pullback_def
+  proof (rule set_eqI)
+    fix k :: maya_index
+    let ?B = "shift_plus (s_plus S) \<union> s_minus S \<union> {1}"
+    show "(k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}) = (k \<in> S)"
+    proof
+      assume "k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+      then consider (a) "k \<in> ?B" "k \<le> 0" | (b) "k \<in> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+        by auto
+      then show "k \<in> S"
+      proof cases
+        case a
+        from a(1) consider (sp) "k \<in> shift_plus (s_plus S)" | (sm) "k \<in> s_minus S" | (one) "k = 1"
+          by auto
+        then show ?thesis
+        proof cases
+          case sp
+          then obtain i where "i \<in> s_plus S" "k = i + 1"
+            unfolding shift_plus_def by auto
+          hence "i \<ge> 1" unfolding s_plus_def by auto
+          hence "k \<ge> 2" using \<open>k = i + 1\<close> by simp
+          with a(2) show ?thesis by simp
+        next
+          case sm
+          then show ?thesis unfolding s_minus_def by auto
+        next
+          case one
+          with a(2) show ?thesis by simp
+        qed
+      next
+        case b
+        then obtain j where hj: "j \<in> ?B" "j \<ge> 2" "k = j - 1" by auto
+        from hj(1) consider (sp) "j \<in> shift_plus (s_plus S)" | (sm) "j \<in> s_minus S" | (one) "j = 1"
+          by auto
+        then show ?thesis
+        proof cases
+          case sp
+          then obtain i where "i \<in> s_plus S" "j = i + 1"
+            unfolding shift_plus_def by auto
+          hence "k = i" using hj(3) by simp
+          with \<open>i \<in> s_plus S\<close> show ?thesis unfolding s_plus_def by auto
+        next
+          case sm
+          hence "j \<le> 0" unfolding s_minus_def by auto
+          with hj(2) show ?thesis by simp
+        next
+          case one
+          with hj(2) show ?thesis by simp
+        qed
+      qed
+    next
+      assume "k \<in> S"
+      show "k \<in> ?B \<inter> {j. j \<le> 0} \<union> {j - 1 | j. j \<in> ?B \<and> j \<ge> 2}"
+      proof (cases "k \<le> 0")
+        case True
+        hence "k \<in> s_minus S" unfolding s_minus_def using \<open>k \<in> S\<close> by auto
+        hence "k \<in> ?B" by auto
+        with True show ?thesis by force
+      next
+        case False
+        hence "k \<ge> 1" by simp
+        hence "k \<in> s_plus S" unfolding s_plus_def using \<open>k \<in> S\<close> by auto
+        hence "k + 1 \<in> shift_plus (s_plus S)" unfolding shift_plus_def by auto
+        hence hj: "k + 1 \<in> ?B" by auto
+        have hj2: "k + 1 \<ge> 2" using \<open>k \<ge> 1\<close> by simp
+        have "k = (k + 1) - 1" by simp
+        with hj hj2 show ?thesis by force
+      qed
+    qed
+  qed
+  finally show ?thesis .
+qed
+
 end
+
 

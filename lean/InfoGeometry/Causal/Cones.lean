@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.CartanInstance
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Algebra.Group.Units.Basic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 open scoped Matrix
 
@@ -72,5 +73,18 @@ lemma modularMirror_cartan_comm_of_isUnit
   simpa [ModularMirror] using
     (InfoGeometry.Clifford.TowerMatrix.cartan_inv_of_isUnit
       (J1 := J1) (n := n) hJJ hJt (X := A) hA).symm
+
+/--
+The "Clifford Null-Cone" translation:
+A vector is on the causal lightcone boundary if and only if its representative
+squares to zero in the native Clifford Algebra.
+-/
+theorem clifford_square_zero_of_mem_boundary {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (C : CausalStructure V) (v : V) (hv : v ∈ C.Boundary) :
+    (CliffordAlgebra.ι C.Q v) * (CliffordAlgebra.ι C.Q v) = 0 := by
+  rw [CliffordAlgebra.ι_sq_scalar]
+  have hQ : C.Q v = 0 := hv
+  rw [hQ]
+  exact map_zero (algebraMap ℝ (CliffordAlgebra C.Q))
 
 end InfoGeometry.Causal

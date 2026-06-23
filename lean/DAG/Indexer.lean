@@ -18,6 +18,25 @@ import InfoGeometry.Meta.Vacuity
 open Lean
 open Lean.Meta
 open DAG
+open List
+
+def mapToShape (e : Expr) : Expr :=
+  match e with
+  | .bvar _ => Expr.bvar 0
+  | .fvar _ => Expr.fvar (FVarId.mk Name.anonymous)
+  | .const _ _ => Expr.const Name.anonymous []
+  | .mvar _ => Expr.mvar (MVarId.mk Name.anonymous)
+  | .lit _ => Expr.lit (Literal.natVal 0)
+  | .sort _ => Expr.sort Level.zero
+  | .app f a => Expr.app (mapToShape f) (mapToShape a)
+  | .lam i t b d => Expr.lam i (mapToShape t) (mapToShape b) d
+  | .forallE i t b d => Expr.forallE i (mapToShape t) (mapToShape b) d
+  | .letE i t v b d => Expr.letE i (mapToShape t) (mapToShape v) (mapToShape b) d
+  | .mdata d b => Expr.mdata d (mapToShape b)
+  | .proj s i b => Expr.proj s i (mapToShape b)
+
+def shapeFingerprint (e : Expr) : ExprFingerprint :=
+  DAG.computeFingerprint (mapToShape e)
 
 /- Data Structures for Category-Theoretic Shards -/
 
@@ -32,6 +51,7 @@ structure DeclNode where
   attrs  : Array String
   typeFingerprint  : ExprFingerprint
   valueFingerprint : Option ExprFingerprint
+  shapeHash        : ExprFingerprint
 deriving ToJson
 
 structure DepEdge where
@@ -213,6 +233,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
   let docStr ← match ← Lean.findDocString? env name with
                | some d => pure d
                | none   => pure ""
+
   let attrStrs : Array String := Id.run do
     let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
     attrs := attrs ++ InfoGeometry.Meta.repDepthTagStringsOf env name
@@ -220,8 +241,9 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
       attrs := attrs.push "capstone"
     attrs
 
-  let typeFingerprint := computeFingerprint ci.type
-  let valueFingerprint := (ci.value? (allowOpaque := true)).map computeFingerprint
+  let typeFingerprint := DAG.computeFingerprint ci.type
+  let valueFingerprint := (ci.value? (allowOpaque := true)).map DAG.computeFingerprint
+  let shapeFingerprint := shapeFingerprint ci.type
 
   modify fun st =>
     { st with
@@ -236,6 +258,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
         attrs := attrStrs
         typeFingerprint := typeFingerprint
         valueFingerprint := valueFingerprint
+        shapeHash := shapeFingerprint
       }
     }
 

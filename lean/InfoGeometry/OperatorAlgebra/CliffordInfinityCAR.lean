@@ -12,10 +12,12 @@ import InfoGeometry.Algebraic.SplitQuadraticForm
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Tactic
+import Mathlib.CategoryTheory.Filtered.Basic
 
 open CategoryTheory
 open InfoGeometry.Algebraic.SplitSignature
 open AlgCat
+open IsFiltered
 
 noncomputable section
 
@@ -100,7 +102,7 @@ def Cl_functor : ℕ ⥤ RingCat where
     rw [Cl_bonding_map_of_le_comp]
     rfl
 
-def CliffordInfinity : RingCat :=
+def CliffordInfinity : RingCat := 
   Limits.colimit Cl_functor
 
 end InfoGeometry.OperatorAlgebra

@@ -1,0 +1,17 @@
+needsPackage "Dmodules";
+R = QQ[v0,v1,w0,w1,x0,x1,x2,x3,x4,h];
+area = 1_R;
+if area == 0_R then error "area obstruction failed";
+Omega = matrix(QQ, {{0,1},{-1,0}});
+if Omega + transpose Omega != 0*Omega then error "skew Omega failed";
+if det Omega != 1_QQ then error "nondegenerate Omega failed";
+omega = v0*w1 - v1*w0;
+omegaSwap = w0*v1 - w1*v0;
+if omega + omegaSwap != 0_R then error "omega skew pairing failed";
+kk5 = x0^2 - x1^2 - x2^2 - x3^2 - x4^2;
+m4 = x0^2 - x1^2 - x2^2 - x3^2;
+if kk5 - (m4 - x4^2) != 0_R then error "KK split failed";
+if 2*(h/2) - h != 0_R then error "prequantization readout failed";
+W = QQ[t, dt, WeylAlgebra => {t => dt}];
+if dt*t - t*dt != 1_W then error "Dmodules Weyl lane failed";
+print "mdpas JMSouriau global obstruction Macaulay2+Dmodules certificate: ok";

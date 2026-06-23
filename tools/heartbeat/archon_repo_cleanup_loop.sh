@@ -168,8 +168,8 @@ append_summary() {
 }
 
 run_archon_workflow() {
-  if [[ -d "$ROOT/tools/archon" ]] && command -v bun >/dev/null 2>&1; then
-    (cd "$ROOT/tools/archon" && bun run cli workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree)
+  if [[ -d "$ROOT/archon" ]] && command -v bun >/dev/null 2>&1; then
+    (cd "$ROOT/archon" && bun run cli workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree)
   else
     archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
   fi
@@ -178,8 +178,8 @@ run_archon_workflow() {
 run_archon_cycle() {
   if [[ "$ARCHON_CYCLE_TIMEOUT_SECONDS" -gt 0 ]]; then
     ROOT="$ROOT" WORKFLOW="$WORKFLOW" timeout "$ARCHON_CYCLE_TIMEOUT_SECONDS" bash -lc '
-      if [[ -d "$ROOT/tools/archon" ]] && command -v bun >/dev/null 2>&1; then
-        cd "$ROOT/tools/archon" && bun run cli workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
+      if [[ -d "$ROOT/archon" ]] && command -v bun >/dev/null 2>&1; then
+        cd "$ROOT/archon" && bun run cli workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
       else
         archon workflow run "$WORKFLOW" --cwd "$ROOT" --no-worktree
       fi

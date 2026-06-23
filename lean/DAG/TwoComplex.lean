@@ -2,8 +2,13 @@
 import Std
 import DAG.Basic
 import DAG.Util
+import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Rank
 
 namespace DAG
+
+
+
 
 structure TwoComplex (α) [BEq α] [Hashable α] where
   base  : HydratedGraph α
@@ -48,40 +53,27 @@ def buildTwoComplex {α} [BEq α] [Hashable α] (h : HydratedGraph α) : TwoComp
 
   return { base := h, edges := edges, faces := faces, digons := digons }
 
-def boundary1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) := Id.run do
-  let n0 := tc.base.toGraph.nodes.size
-  let n1 := tc.edges.size
-  let mut mat := Array.replicate n1 (Array.replicate n0 (0 : Rat))
-  for i in [:n1] do
-    let (u, v) := tc.edges[i]!
-    let row := mat[i]!
-    let row := row.set! u (-1 : Rat)
-    let row := row.set! v (1 : Rat)
-    mat := mat.set! i row
-  return mat
+def boundary1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) :=
+  Array.ofFn (fun i : Fin tc.edges.size =>
+    Array.ofFn (fun j : Fin tc.base.toGraph.nodes.size =>
+      let (u, v) := tc.edges[i.val]
+      if j.val = u then (-1 : Rat) else if j.val = v then 1 else 0
+    )
+  )
 
-def boundary2 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) := Id.run do
-  let n1 := tc.edges.size
-  let n2 := tc.faces.size + tc.digons.size
-  let mut mat := Array.replicate n2 (Array.replicate n1 (0 : Rat))
-  -- Triangle faces
-  for i in [:tc.faces.size] do
-    let (e1, e2, e3) := tc.faces[i]!
-    let row := mat[i]!
-    let row := row.set! e1 (1 : Rat)
-    let row := row.set! e2 (1 : Rat)
-    let row := row.set! e3 (-1 : Rat)
-    mat := mat.set! i row
-  -- Digon faces (bidirectional edges)
-  for dIdx in [:tc.digons.size] do
-    let (eU, eV) := tc.digons[dIdx]!
-    let rowIdx := tc.faces.size + dIdx
-    let row := mat[rowIdx]!
-    -- Antiparallel digon boundary: ∂(eU + eV) = (v-u) + (u-v) = 0.
-    let row := row.set! eU (1 : Rat)
-    let row := row.set! eV (1 : Rat)
-    mat := mat.set! rowIdx row
-  return mat
+
+def boundary2 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) :=
+  Array.ofFn (fun i : Fin (tc.faces.size + tc.digons.size) =>
+    Array.ofFn (fun j : Fin tc.edges.size =>
+      if h : i.val < tc.faces.size then
+        let (e1, e2, e3) := tc.faces[i.val]
+        if j.val = e1 then 1 else if j.val = e2 then 1 else if j.val = e3 then (-1) else 0
+      else
+        let (eU, eV) := tc.digons[i.val - tc.faces.size]
+        if j.val = eU then 1 else if j.val = eV then 1 else 0
+    )
+  )
+
 
 def matMul (a : Array (Array Rat)) (b : Array (Array Rat)) : Array (Array Rat) := Id.run do
   if a.size = 0 || b.size = 0 then return #[]
@@ -94,7 +86,7 @@ def matMul (a : Array (Array Rat)) (b : Array (Array Rat)) : Array (Array Rat) :
     for j in [:cols] do
       let mut sum : Rat := 0
       for k in [:inner] do
-        sum := sum + a[i]![k]! * b[k]![j]!
+        sum := sum + (a[i]!)[k]! * (b[k]!)[j]!
       let row := result[i]!
       result := result.set! i (row.set! j sum)
   return result
@@ -125,18 +117,18 @@ def gaussianRank (m : Array (Array Rat)) : Nat := Id.run do
     if pivotRow < rows then
       let mut found := false
       for i in [pivotRow:rows] do
-        if !found && mat[i]![j]! != 0 then
+        if !found && (mat[i]!)[j]! != 0 then
           let temp := mat[pivotRow]!
           mat := mat.set! pivotRow mat[i]!
           mat := mat.set! i temp
           found := true
       if found then
-        let pivotVal := mat[pivotRow]![j]!
+        let pivotVal := (mat[pivotRow]!)[j]!
         let row := mat[pivotRow]!.map (fun x => x / pivotVal)
         mat := mat.set! pivotRow row
         for i in [:rows] do
           if i != pivotRow then
-            let factor := mat[i]![j]!
+            let factor := (mat[i]!)[j]!
             let newRow := (mat[i]!.zip mat[pivotRow]!).map (fun (x, y) => x - factor * y)
             mat := mat.set! i newRow
         pivotRow := pivotRow + 1
@@ -149,4 +141,33 @@ def betti1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Int :=
   let r2 := gaussianRank b2
   (Int.ofNat tc.edges.size) - (Int.ofNat r1) - (Int.ofNat r2)
 
+open Matrix
+
+/-- Boundary operator d1 as Matrix (edges x vertices). -/
+def boundary1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+    Matrix (Fin tc.edges.size) (Fin tc.base.toGraph.nodes.size) ℚ :=
+  λ i j =>
+    let (u, v) := tc.edges[i.val]
+
+    if j.val = u then (-1 : ℚ) else if j.val = v then 1 else 0
+
+/-- Boundary operator d2 as Matrix (faces x edges). -/
+def boundary2Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+    Matrix (Fin (tc.faces.size + tc.digons.size)) (Fin tc.edges.size) ℚ :=
+  λ i j =>
+    if h : i.val < tc.faces.size then
+      let (e1, e2, e3) := tc.faces[i.val]
+      if j.val = e1 then 1 else if j.val = e2 then 1 else if j.val = e3 then (-1) else 0
+    else
+      let (eU, eV) := tc.digons[i.val - tc.faces.size]
+      if j.val = eU then 1 else if j.val = eV then 1 else 0
+
+/-- Hodge Laplacian = d1*d1^T + d2^T*d2 as Matrix. -/
+def laplacian1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+    Matrix (Fin tc.edges.size) (Fin tc.edges.size) ℚ :=
+  let d1 := boundary1Matrix tc
+  let d2 := boundary2Matrix tc
+  d1 * d1ᵀ + d2ᵀ * d2
+
 end DAG
+

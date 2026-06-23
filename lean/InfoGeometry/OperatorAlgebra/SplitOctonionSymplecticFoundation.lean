@@ -86,4 +86,44 @@ theorem splitOctonion_symplectic_foundation_packet :
   exact ⟨H_sq, detZ_H, detZ_oneZ, up_down_comm_eq_H,
     up_down_anticomm_eq_oneZ, detZ_up_null, detZ_down_null⟩
 
+/-! ## Complex structure candidate on the split-octonion carrier -/
+
+/--
+A Peirce-side internal complex structure candidate.
+
+This is `J = up₀ - down₀`, which satisfies `J² = -oneZ`.
+It provides a square-to-minus-one element in the split-octonion
+multiplication algebra, distinct from the hyperbolic grading element `H`
+(which satisfies `H² = +oneZ`).
+
+Physically, this candidate corresponds to choosing a distinguished
+direction in the Peirce/Witt decomposition and using the difference
+between the upper and lower ladder operators as an "imaginary unit."
+-/
+def J : SplitOct := subZ up0 down0
+
+@[simp] theorem J_eq : J = ⟨0, 0, 1, 0, 0, -1, 0, 0⟩ := rfl
+
+/--
+The complex structure candidate squares to minus the diagonal unit.
+
+This is the key algebraic law that makes `J` a valid internal
+"imaginary unit" in the split-octonion algebra:
+  J² = (up₀ - down₀)² = up₀² - up₀·down₀ - down₀·up₀ + down₀²
+     = 0 - ePlus - eMinus + 0
+     = -(ePlus + eMinus)
+     = -oneZ
+-/
+theorem J_sq_neg_oneZ : mulZ J J = negZ oneZ := by
+  rfl
+
+/--
+The determinant of the complex structure candidate is `1`.
+
+This confirms that `J` lies on the "unit sphere" of the split-octonion
+norm geometry, consistent with its role as a complex structure.
+-/
+theorem detZ_J : detZ J = 1 := by
+  rfl
+
 end InfoGeometry.OperatorAlgebra.SplitOctonions.SymplecticFoundation

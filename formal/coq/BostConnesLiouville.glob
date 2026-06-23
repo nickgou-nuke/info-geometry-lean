@@ -1,0 +1,30 @@
+DIGEST 6d1c45618268e7127b38b31c8b00478d
+FBostConnesLiouville
+R662:666 Stdlib.Reals.Reals <> <> lib
+R696:700 Stdlib.Arith.Arith <> <> lib
+R730:735 Stdlib.ZArith.ZArith <> <> lib
+R765:767 Stdlib.micromega.Lia <> <> lib
+ax 1106:1114 <> Liouville
+R1121:1124 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1118:1120 Corelib.Init.Datatypes <> nat ind
+R1125:1125 Corelib.Numbers.BinNums <> Z ind
+ax 1188:1211 <> Liouville_multiplicative
+R1228:1230 Corelib.Init.Datatypes <> nat ind
+binder 1222:1222 <> n:3
+binder 1224:1224 <> m:4
+R1242:1245 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1238:1240 Stdlib.ZArith.BinInt <> ::Z_scope:x_'>'_x not
+R1237:1237 BostConnesLiouville <> n:3 var
+R1251:1258 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1247:1249 Stdlib.ZArith.BinInt <> ::Z_scope:x_'>'_x not
+R1246:1246 BostConnesLiouville <> m:4 var
+R1276:1278 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1259:1267 BostConnesLiouville <> Liouville prfax
+R1271:1273 Corelib.Init.Peano <> ::nat_scope:x_'*'_x not
+R1270:1270 BostConnesLiouville <> n:3 var
+R1274:1274 BostConnesLiouville <> m:4 var
+R1290:1292 Stdlib.ZArith.BinInt <> ::Z_scope:x_'*'_x not
+R1279:1287 BostConnesLiouville <> Liouville prfax
+R1289:1289 BostConnesLiouville <> n:3 var
+R1293:1301 BostConnesLiouville <> Liouville prfax
+R1303:1303 BostConnesLiouville <> m:4 var

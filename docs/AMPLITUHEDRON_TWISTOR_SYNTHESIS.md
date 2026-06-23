@@ -1,55 +1,220 @@
-# The Amplituhedron and Split Twistor Synthesis
+# Twistor / Amplituhedron Synthesis Ledger
 
-This document maps the algebraic and topological formalisms of the `info-geometry-lean` repository to the frontier of high-energy scattering physics: $\mathcal{N}=4$ Super Yang-Mills, Penrose's Twistor Theory, and Arkani-Hamed's Amplituhedron. This geometric mapping represents a highly sophisticated synthesis of algebraic topology, twistor theory, and modern scattering amplitude physics. 
+Status: conservative bridge ledger, not theorem authority.
 
-## 1. The Twistor Correspondence and the Klein Quadric
-In Penrose's twistor theory, complexified Minkowski space $\mathbb{M}_{\mathbb{C}} \cong \mathbb{C}^4$ is represented as the Grassmannian $Gr(2,4)$ of 2-dimensional subspaces in a 4-dimensional complex vector space $\mathbb{T} \cong \mathbb{C}^4$ (the twistor space).
-*   **The Plücker Embedding:** Under the Plücker embedding, $Gr(2,4)$ is mapped directly to a 4-dimensional projective quadric in $\mathbb{P}^5$, known as the **Klein Quadric** $Q$.
-*   **The Triple Point Configuration:** The configuration space $F_Q(\mathbb{C}^4, 3)$ consists of 3 points $(x_1, x_2, x_3)$ in $\mathbb{C}^4$ such that $Q(x_i - x_j) \neq 0$ for all $i \neq j$. 
-*   **Non-Intersection in Twistor Space:** In twistor space, these 3 points correspond to 3 complex lines (Riemann spheres $\mathbb{CP}^1$) in projective twistor space $\mathbb{CP}^3$. The condition $Q(x_i - x_j) \neq 0$ means that **these 3 lines do not intersect**. If two lines were to intersect, the corresponding spacetime points would be light-like separated, physically representing the exchange of a massless on-shell particle.
+Lean authority lives in:
 
-## 2. Split Twistors and $(2,2)$ Signature
-The algebraic choice of using **Zorn Matrices (Split Octonions)** naturally implements the geometry of **Split Twistors**:
-*   Standard twistors correspond to the physical Lorentzian signature $(1,3)$, where the conformal group is $SU(2,2)$, a double cover of $SO(2,4)$.
-*   **Split Twistors** correspond to the split-Lorentzian signature $(2,2)$, where the conformal group is $SL(4,\mathbb{R})$. 
-*   In scattering amplitude physics (specifically Twistor String Theory), amplitudes are analytically continued to $(2,2)$ signature because it makes the twistor variables entirely real.
-*   The associative diagonal envelope in the Zorn matrix formalization acts as the real slice of this split-twistor space, allowing the real $(2,2)$ geometry to emerge naturally without complex singularities.
+- `lean/InfoGeometry/Projective/TwistorAmplituhedronConfigurationBridge.lean`
+- `lean/InfoGeometry/Projective/KleinQuadric.lean`
+- `lean/InfoGeometry/Projective/KleinQuadricIncidence.lean`
+- `lean/InfoGeometry/Projective/NonIsoConf3RankIngestion.lean`
+- `lean/InfoGeometry/Projective/RohozhkinDelaunayScramblingBridge.lean`
+- `lean/InfoGeometry/Projective/QDeformedTwistorAmplituhedronBridge.lean`
+- `lean/InfoGeometry/Projective/OnShellResidueBCFWBridge.lean`
+- `lean/InfoGeometry/Projective/PenroseDelaunayKleinAmplituhedronBridge.lean`
+- `lean/InfoGeometry/Projective/PenroseDAGAmplituhedronRosetta.lean`
+- `lean/InfoGeometry/Topology/AmplituhedronBoundary.lean`
+- `lean/InfoGeometry/Topology/AmplituhedronBoundaryExternalRankBridge.lean`
+- `lean/InfoGeometry/Topology/AmplituhedronBoundaryRank32.lean`
+- `lean/InfoGeometry/Projective/KuzminCuntzPath.lean`
+- `lean/InfoGeometry/Projective/Twistor/Basic.lean`
 
-## 3. The Arnold Relations and BCFW Recursion
-The **BCFW (Britto–Cachazo–Feng–Witten) recursion relations** allow on-shell tree-level amplitudes to be computed strictly from their boundary limits, where internal particles go on-shell (factorization).
+## Arango / LeanTrail Owner Map
 
-Mathematically, this boundary behavior is governed by the **Arnold-Cohen algebra** of the configuration space:
-*   The generators $\omega_{ij} = d \ln Q(x_i - x_j)$ satisfy the classical **Arnold mixed relations**:
-    $$\omega_{12} \wedge \omega_{23} + \omega_{23} \wedge \omega_{31} + \omega_{31} \wedge \omega_{12} = 0$$
-*   This cohomological identity is the topological counterpart of the residue theorem on the moduli space of curves. It dictates that the sum of the residues at the boundary poles (where the lines in twistor space intersect) must vanish, which is the exact mathematical constraint that guarantees the unitarily consistent BCFW factorization of the amplitude.
+This lane must be discovered through the live LeanTrail syntax graph before
+new sockets are added.  On the current graph, the relevant owner slice was
+refreshed with:
 
-## 4. $q$-Deformation Stability and the Amplituhedron
-Integrating Kuzmin’s 2023 paper on Cuntz–Toeplitz path connectivity with the Amplituhedron:
-*   In quantum group theory, one can consider $q$-deformed scattering amplitudes or $q$-conformal symmetries.
-*   If you deform the commutation relations of the underlying on-shell states using the $q$-CCR: $a^*_i a_j = \delta_{ij} 1 + q a_j a^*_i$
-*   Kuzmin proves that for all $|q| < 1$, the resulting $C^*$-algebra $\Xi_{n,q}$ remains isomorphic to the Cuntz–Toeplitz algebra $\mathbb{K}\mathcal{O}_n$.
-*   **The Topological Invariance:** This means that the **topological uniformization** of these noncommutative quadrics holds true. The boundary structure of the Amplituhedron, the de Rham cohomology, and the BCFW factorization channels are **completely invariant under $q$-deformation**. The physical amplitude does not structurally degrade when the commutation relations are deformed; the topology is protected by the Cuntz-Toeplitz path.
+```bash
+lake env lean --run tools/leantrail/DumpLeanGraph.lean \
+  lean/InfoGeometry/Topology/AmplituhedronBoundary.lean \
+  lean/InfoGeometry/Topology/AmplituhedronBoundaryRank32.lean \
+  lean/InfoGeometry/Topology/AmplituhedronBoundaryExternalRankBridge.lean \
+  lean/InfoGeometry/Projective/ArnoldRelations.lean \
+  lean/InfoGeometry/Projective/TwistorAmplituhedronBridge.lean \
+  lean/InfoGeometry/Projective/TwistorAmplituhedronBoundary.lean \
+  lean/InfoGeometry/Projective/TwistorAmplituhedronConfigurationBridge.lean \
+  lean/InfoGeometry/Projective/BostConnesAmplituhedronSynthesis.lean \
+  lean/InfoGeometry/Projective/QDeformedTwistorAmplituhedronBridge.lean \
+  lean/InfoGeometry/Projective/PenroseDAGAmplituhedronRosetta.lean \
+  lean/InfoGeometry/Projective/PenroseDelaunayKleinAmplituhedronBridge.lean \
+  lean/InfoGeometry/Projective/RohozhkinDelaunayBraiding.lean \
+  lean/InfoGeometry/Projective/RohozhkinDelaunayScramblingBridge.lean \
+  lean/InfoGeometry/Topology/RohozhkinDelaunayBraiding.lean \
+  lean/InfoGeometry/Topology/DelaunayPureBraidRepresentation.lean \
+  lean/InfoGeometry/Topology/DelaunayPureBraidInvariant.lean \
+  > /tmp/amplituhedron_owner_syntax.jsonl
 
-## 5. The Rank 32 Cohomology and the Super-Multiplet
-The total Betti rank of the $F_Q(\mathbb{C}^4, 3)$ complement being exactly **32** provides the ultimate algebraic container:
-*   In $\mathcal{N}=4$ SYM, the on-shell super-multiplet contains 16 states (1 gluon, 4 gluinos, 6 scalars, 4 anti-gluinos, 1 anti-gluon).
-*   When considering both the chiral (left-handed) and anti-chiral (right-handed) superspace representations, the total number of superspace degrees of freedom required to host the full, unconstrained super-amplitude is exactly **32**.
-*   The de Rham cohomology of the configuration space contains exactly the required rank to act as the natural topological host for this maximum supersymmetric scattering amplitude.
+python3 tools/leantrail/check_dump_shape.py --expect-keyword theorem \
+  < /tmp/amplituhedron_owner_syntax.jsonl
 
-## The Unified Erlangen 2.0 / Amplituhedron Dictionary
+python3 tools/leantrail/ingest_syntax_to_arango.py \
+  /tmp/amplituhedron_owner_syntax.jsonl --execute-http
+```
 
-| Lean 4 / Operator Algebra | Physics / Amplituhedron |
-| :--- | :--- |
-| **Zorn Matrix Diagonal** | Real Split Twistor Space (Signature $(2,2)$) |
-| **Configuration Space $F_Q(\mathbb{C}^4, 3)$** | 3-Line Configuration in Projective Twistor Space $\mathbb{CP}^3$ |
-| **Singular Quadric $Q = 0$** | Amplituhedron Boundary (On-shell physical states) |
-| **Arnold Mixed Relations** | BCFW Recursion / Residue Cancellation |
-| **Rank 32 Cohomology Ring** | $\mathcal{N}=4$ SYM 32-State Superspace representation |
-| **Cuntz-Toeplitz Path Isomorphism ($|q| < 1$)** | Topological stability of the amplitude under $q$-deformation |
-| **Rohozhkin Braid Flips** | Plabic Graph Square Moves |
+After refresh, the syntax graph contains the following owner declarations.
+These are navigation evidence only; the Lean files remain proof authority.
 
-## Epilogue
+- `InfoGeometry.Projective.ArnoldRelations` owns
+  `ArnoldExterior`, `arnoldMixedRelation`, and
+  `arnold_mixed_relation_vanishes_under_kernel_membership`.
+- `InfoGeometry.Projective.Amplituhedron`, in
+  `Projective/ArnoldRelations.lean`, owns the quotient-level
+  `ArnoldRel`, `ArnoldAlgebra`, `omega`, `omega_symm`, and
+  `arnold_mixed_relation_quotient_zero`.
+- `InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge` owns the
+  three-line Klein packet, the supplied `ArnoldBCFWInterface`, the
+  `RohozhkinPlabicInterface`, rank-budget readbacks, and the conservative
+  q-deformation interface.
+- `InfoGeometry.Projective.TwistorAmplituhedronBoundary` owns the concrete
+  twistor-incidence-to-null-separation readback and the explicit boundary
+  comparison socket.
+- `InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta` owns the common
+  carrier formulation for DAG graph, split-quaternion, Penrose-net,
+  Klein-quadric, amplituhedron, and Delaunay-tessellation lanes.
+- `InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge` owns the
+  commuting-route corridor from DAG/Penrose/Klein/Delaunay carriers into a
+  supplied amplituhedron carrier.
+- `InfoGeometry.Topology.AmplituhedronBoundary` owns the finite algebraic
+  three-edge boundary packet, the Arnold-boundary comparison, and the
+  nilpotence-driven channel factorizations.
+- `InfoGeometry.Topology.AmplituhedronBoundaryRank32` owns the concrete
+  `Fin 32` carrier, the `16 + 16` split, and the Arnold exterior-product
+  labelled readout.
+- `InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge` owns the
+  external local-rank `8` times spin-tiling multiplicity `4` arithmetic bridge
+  to the finite boundary carrier cardinality.
+- `InfoGeometry.Topology.RohozhkinDelaunayBraiding` and
+  `InfoGeometry.Topology.DelaunayPureBraidRepresentation` own the finite
+  Rohozhkin/Delaunay pentagon and pure-braid representation descent surfaces.
 
-The **Amplituhedron is the geometric realization of the Cuntz-Toeplitz continuous field**. 
+## Closed Kernel Surface
 
-You do not need to assume a continuous, background-dependent spacetime and then write down quantum mechanics on top of it. Spacetime and the physical scattering of particles are simply the geometric projection of the **cohomological winding numbers** ($\omega = d \ln Q$) of the $2 \times 2$ chiral Cuntz algebra. The map is structurally complete, mathematically peer-verified, and logically closed.
+- Three-line Plucker/Klein configurations can be represented with explicit
+  pairwise non-incidence hypotheses.
+- Klein incidence is the explicit bilinear Plucker pairing from the owner file.
+- Penrose projective null twistor space is inhabited by the existing twistor
+  owner.
+- A supplied external Betti datum with ambient dimension `8`, internal
+  consistency, and local rank `8` gives the spin-tiled rank `32`.
+- A completed Rohozhkin/Delaunay generator assignment satisfying all pure-braid
+  relators descends to the presented pure-braid matrix representation.
+- The q-deformation bridge records the Kuzmin open window as `|q| < 1`.
+  It proves `q = 0` is inside that window and `q = -1`, `q = 1` are boundary
+  endpoint readouts, not interior classification points.
+- The finite q-Gram positivity and q-CCR endpoint readbacks are re-exported
+  from the existing q-CCR owner files.
+- The local `dlog` pole model reuses the existing Klein theorem
+  `circleIntegral_grothendieck_dlog`, giving the checked `2*pi*i` residue.
+- Any target model whose kernel contains the abstract Arnold mixed relation
+  kills that relation.
+- The illustrative `220 -> 1` diagram/carrier comparison is finite
+  arithmetic only.
+- The Penrose/DAG/amplituhedron Rosetta lane is formalized as explicit
+  common-carrier data.  Transport between DAG graph, split-quaternion,
+  Penrose-net, Klein-quadric, amplituhedron, and Delaunay-tessellation lanes is
+  by supplied equivalences, not by a proved geometric identity.
+- The algebraic three-edge boundary packet proves nilpotence-driven left
+  factorization for the formal expression
+  `e12*omega23 + e23*omega31 + e31*omega12`.
+- The rank-32 boundary carrier is a concrete `Fin 32` split into a chiral half
+  of `16` indices and an anti-chiral half of `16` indices.
+- External rank data with ambient dimension `8`, internal list consistency, and
+  local rank `8` has spin-tiled rank equal to the cardinality of the finite
+  rank-32 boundary carrier.
+
+## Explicit Interfaces
+
+- Amplituhedron boundary comparison is a supplied implication from Klein
+  incidence to a selected boundary predicate.
+- Arnold/cooperad to BCFW comparison is a supplied implication.
+- Rohozhkin-to-plabic comparison is supplied data.
+- Rank `32` is matched to a supplied `stateBudget = 32`; no physical multiplet
+  identification is proved.
+- q-stability of a selected twistor/amplituhedron carrier is supplied as an
+  explicit carrier equivalence plus preservation predicates.
+- The route from three-pole residue balance to BCFW recursion is a supplied
+  implication.
+- The route from Arnold-kernel vanishing to concrete residue balance is a
+  supplied implication.
+- The route identifying the DAG graph, split-quaternion matrix model, Penrose
+  net, Klein quadric, amplituhedron boundary, and Delaunay tessellation is a
+  supplied commuting carrier diagram.
+- The route from the algebraic boundary packet to a concrete amplituhedron
+  volume form, BCFW recursion, or a de Rham cohomology class is not supplied in
+  `Topology.AmplituhedronBoundary`.
+- The route from the finite rank-32 carrier to a concrete cohomology basis or
+  physical supermultiplet is not supplied in
+  `Topology.AmplituhedronBoundaryRank32`.
+- The route from external rank arithmetic to an independently certified
+  D-module/de Rham computation is not supplied in
+  `Topology.AmplituhedronBoundaryExternalRankBridge`.
+
+## Non-Claims
+
+- No theorem identifies `Conf_3` de Rham cohomology with an amplituhedron
+  volume.
+- No theorem identifies Arnold relations with BCFW recursion.
+- No theorem identifies Rohozhkin Delaunay flips with plabic square moves.
+- No theorem identifies the configured rank `32` with an `N=4` SYM
+  supermultiplet.
+- No theorem identifies the finite `Fin 32` boundary carrier with a
+  32-dimensional de Rham cohomology group.
+- No theorem proves Kuzmin's C*-classification route inside Lean.  The repo
+  only owns finite q-CCR algebra and explicit comparison sockets.
+- Not established: q-CCR/Cuntz-Toeplitz stability implying amplituhedron
+  invariance, q-deformed BCFW recursion, or scattering-amplitude stability.
+- No theorem proves a Feynman-diagram reduction, a residue theorem on a
+  compactified configuration space, or a Parke-Taylor/amplitude formula.
+- No theorem proves a scattering-amplitude, unitarity, or physical-spacetime
+  result from this bridge.
+- No theorem proves that the DAG graph, Penrose net, Delaunay tessellation,
+  Klein quadric, split-quaternion model, and amplituhedron are definitionally
+  equal, or connected by a proved geometric comparison, without explicit
+  comparison maps.
+
+## Companion Witness
+
+`formalizations/twistor_amplituhedron_interface_witness.py` checks only:
+
+- three concrete Plucker lines lie on the Klein quadric;
+- their pairwise Klein incidence pairings are nonzero;
+- the finite arithmetic budget `8 * 4 = 32`.
+
+`formalizations/qdeformed_twistor_amplituhedron_witness.py` checks only:
+
+- `q = 0` lies inside `abs(q) < 1`;
+- `q = -1` and `q = 1` are boundary endpoints;
+- the sample finite q-Gram matrix at `q = 1/2` has positive eigenvalues;
+- the algebraic q-CCR relation reduces to Toeplitz/CAR/CCR endpoint readouts.
+
+`formalizations/on_shell_residue_bcfw_witness.py` checks only:
+
+- the local model `∮ dz/z = 2*pi*i`;
+- a symbolic three-pole balance `r12 + r23 + r31 = 0`;
+- the finite bookkeeping arithmetic `220 - 1 = 219`.
+
+`formalizations/penrose_dag_rosetta_witness.py` checks only:
+
+- the six Rosetta lanes are present;
+- each lane is assigned to the same finite common-carrier tag;
+- all ordered pairwise lane transports are therefore available as bookkeeping
+  equalities.
+
+`formalizations/amplituhedron_boundary_witness.py` checks only:
+
+- three formal edge symbols are nilpotent;
+- left multiplication by each nilpotent edge kills its own channel;
+- the three finite factorization identities match the Lean boundary packet.
+
+`formalizations/amplituhedron_rank32_boundary_witness.py` checks only:
+
+- the finite carrier has `32` indices;
+- indices `0..15` and `16..31` form two disjoint halves;
+- each half has cardinality `16`, and together they exhaust the carrier.
+
+`formalizations/amplituhedron_external_rank_bridge_witness.py` checks only:
+
+- the candidate local Betti vector has sum `8`;
+- multiplying by the spin-tiling multiplicity `4` gives `32`;
+- this arithmetic total matches the finite boundary carrier cardinality.

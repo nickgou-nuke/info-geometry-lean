@@ -1,0 +1,40 @@
+# Cadabra2 Script to derive the T-Duality Buscher Rules for O(5,5)
+
+{m, n, p, q, r, s}::Indices(position=free, values={0,1,2,3}).
+{M, N, P, Q, R, S}::Indices(position=free, values={0,1,2,3,4}).
+
+
+# Define the coordinates
+\partial{#}::PartialDerivative.
+
+# The 5D metric in Kaluza-Klein reduction (split into 4D and the y-direction)
+g_{M N}::Metric.
+g_{M N}::Depends(\partial{#}).
+
+# The Kalb-Ramond B-field
+B_{M N}::AntiSymmetric.
+
+# T-duality Buscher rule transformations along the isometry direction y:
+# \tilde{g}_{yy} = 1 / g_{yy}
+# \tilde{g}_{m y} = B_{m y} / g_{yy}
+# \tilde{g}_{m n} = g_{m n} - (g_{m y} g_{n y} - B_{m y} B_{n y}) / g_{yy}
+# \tilde{B}_{m y} = g_{m y} / g_{yy}
+# \tilde{B}_{m n} = B_{m n} - (g_{m y} B_{n y} - B_{m y} g_{n y}) / g_{yy}
+
+# We define the T-dual metric and B-field 
+T_dual_gyy := 1 / g_{y y};
+T_dual_gmy := B_{m y} / g_{y y};
+T_dual_gmn := g_{m n} - (g_{m y} * g_{n y} - B_{m y} * B_{n y}) / g_{y y};
+
+T_dual_Bmy := g_{m y} / g_{y y};
+T_dual_Bmn := B_{m n} - (g_{m y} * B_{n y} - B_{m y} * g_{n y}) / g_{y y};
+
+print("O(5,5) Buscher Rules for T-Duality:");
+print(T_dual_gyy);
+print(T_dual_gmy);
+print(T_dual_gmn);
+print(T_dual_Bmy);
+print(T_dual_Bmn);
+
+# Check the O(5,5) invariant string length
+# invariant := \tilde{g}_{m n} - \tilde{B}_{m y} \tilde{B}_{n y} + ...

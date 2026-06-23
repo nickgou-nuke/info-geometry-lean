@@ -60,20 +60,6 @@ theorem coordinatePairing_kleinGradient_eq_polar (P X : Plucker6 R) :
   simp [coordinatePairing, kleinGradient, polar, kleinQ, add]
   ring
 
-/--
-Quadratic Taylor identity for the Klein form.
-
-The coefficient of `t` is the polar form, so the logarithmic de Rham numerator
-is the directional derivative of the Klein potential.
--/
-theorem kleinQ_add_scale (P X : Plucker6 R) (t : R) :
-    kleinQ (add P (scale t X)) =
-      kleinQ P + t * polar P X + t ^ 2 * kleinQ X := by
-  rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
-  rcases X with ⟨x01, x02, x03, x12, x13, x23⟩
-  simp [kleinQ, add, scale, polar]
-  ring_nf
-
 /-- The Klein polar form is symmetric. -/
 theorem polar_symm (P Q : Plucker6 R) :
     polar P Q = polar Q P := by

@@ -37,6 +37,7 @@ namespace InfoGeometry.Algebra.BostConnesArithmeticBridge
 open InfoGeometry.Algebra.BostConnesAnalytic
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
 open InfoGeometry.Arithmetic.PrimeInformationKMS
+open Complex Filter Topology
 
 /-! ## 1. Finite bosonic/fermionic products (truncated Euler products) -/
 
@@ -51,13 +52,13 @@ noncomputable def finiteFermionicProduct (n : ℕ) (primes : Fin n → ℕ) (β 
 
 /-- The Euler product over all primes = ζ(β) for Re(β) > 1.
     This is the fundamental bridge theorem, already proved in Arithmetic/. -/
-theorem eulerProduct_equals_riemannZeta (β : ℂ) (hβ : 1 < re β) :
+theorem eulerProduct_equals_riemannZeta (β : ℂ) (hβ : 1 < β.re) :
     eulerProductZeta β = riemannZeta β :=
   eulerProductZeta_eq_riemannZeta β hβ
 
 /-- The bosonic partition function equals ζ(β) for Re(β) > 1.
     Already proved as `bosonicZetaPartition_eq_riemannZeta` in Arithmetic/. -/
-theorem bosonicPartition_equals_riemannZeta (β : ℂ) (hβ : 1 < re β) :
+theorem bosonicPartition_equals_riemannZeta (β : ℂ) (hβ : 1 < β.re) :
     bosonicZetaPartition β = riemannZeta β :=
   bosonicZetaPartition_eq_riemannZeta hβ
 
@@ -68,12 +69,12 @@ theorem bosonicPartition_equals_riemannZeta (β : ℂ) (hβ : 1 < re β) :
 
     This is the limit of our finite `realKMSWeight` as the set of primes
     grows to include all primes. For Re(β) > 1, ζ(β) is finite and nonzero. -/
-noncomputable def infiniteKMSWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < re β) : ℂ :=
+noncomputable def infiniteKMSWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < β.re) : ℂ :=
   ((p : ℂ) ^ (-β)) / riemannZeta β
 
 /-- The infinite KMS weight matches the one from `PrimeInformationKMS`
     when the additional structure is supplied. -/
-theorem infiniteKMSWeight_eq_bosonicZetaWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < re β) :
+theorem infiniteKMSWeight_eq_bosonicZetaWeight (p : ℕ) (hp : Nat.Prime p) (β : ℂ) (hβ : 1 < β.re) :
     infiniteKMSWeight p hp β hβ = ((p : ℂ) ^ (-β)) / bosonicZetaPartition β := by
   rw [bosonicPartition_equals_riemannZeta β hβ, infiniteKMSWeight]
 
@@ -85,7 +86,7 @@ a finite lower bound for the full prime zeta function P(β) = Σ_{p prime} p^{-�
 
 /-- The real partition sum is positive for real β (all terms are positive reals
     since primes are positive). Re-export from `BostConnesAnalytic`. -/
-theorem realPartitionSum_pos (n : ℕ) (primes : Fin n → ℕ) (hpos : ∀ i, 0 < primes i) (β : ℝ) :
+theorem realPartitionSum_pos (n : ℕ) [NeZero n] (primes : Fin n → ℕ) (hpos : ∀ i, 0 < primes i) (β : ℝ) :
     0 < realPartitionSum n primes β :=
   BostConnesAnalytic.realPartitionSum_pos n primes hpos β
 

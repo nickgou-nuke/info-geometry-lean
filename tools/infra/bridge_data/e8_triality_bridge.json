@@ -1,0 +1,64 @@
+{
+  "e8_properties": {
+    "dimension": 248,
+    "rank": 8,
+    "coxeter_number": 30,
+    "positive_roots": 120,
+    "negative_roots": 120,
+    "cartan_dim": 8
+  },
+  "mersenne_connection": {
+    "M7": 127,
+    "mapping": "127 = 120 (positive E8 roots) + 7 (G2 imaginary units)",
+    "alternative": "127 = 28 + 28 + 56 + 8 + 7 (triality decomp)"
+  },
+  "spin8_triality": {
+    "representations": {
+      "8v": {
+        "dim": 8,
+        "type": "vector"
+      },
+      "8s": {
+        "dim": 8,
+        "type": "chiral_spinor"
+      },
+      "8c": {
+        "dim": 8,
+        "type": "antichiral_spinor"
+      },
+      "28": {
+        "dim": 28,
+        "type": "adjoint"
+      }
+    },
+    "automorphism_group": "S3",
+    "generators": [
+      "sigma: 3-cycle",
+      "tau: transposition"
+    ]
+  },
+  "liouville_grading": {
+    "definition": "Gamma = (-1)^Omega(n) on E8 root lattice",
+    "bosonic_roots_E8": 120,
+    "fermionic_roots_E8": 128,
+    "witten_index_E8": -8
+  },
+  "commutation": {
+    "theorem": "[Gamma, sigma_t] = 0 for E8 modular flow",
+    "verified_roots": [
+      1,
+      2,
+      8,
+      28,
+      120,
+      248
+    ],
+    "thermal_protection": true
+  },
+  "e8_split_form": {
+    "real_form": "E8(8)",
+    "signature": "split (maximal non-compact)",
+    "maximal_compact": "so(8, 8)",
+    "chain": "O(5,5) -> split_octonions -> G2 -> F4 -> E6 -> E7 -> E8(8)"
+  }
+}

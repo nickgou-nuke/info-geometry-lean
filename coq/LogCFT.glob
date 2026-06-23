@@ -1,0 +1,182 @@
+DIGEST fd9cac0a4b79d6312502d1253d2d1e32
+FLogCFT
+R78:82 Stdlib.Reals.Reals <> <> lib
+sec 115:120 <> LogCFT
+var 169:169 LogCFT M
+var 188:191 LogCFT zero
+R195:195 LogCFT <> LogCFT.M var
+var 207:209 LogCFT one
+R213:213 LogCFT <> LogCFT.M var
+var 225:227 LogCFT add
+R232:235 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R231:231 LogCFT <> LogCFT.M var
+R237:240 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R236:236 LogCFT <> LogCFT.M var
+R241:241 LogCFT <> LogCFT.M var
+var 253:255 LogCFT mul
+R260:263 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R259:259 LogCFT <> LogCFT.M var
+R265:268 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R264:264 LogCFT <> LogCFT.M var
+R269:269 LogCFT <> LogCFT.M var
+var 281:284 LogCFT smul
+R289:292 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R288:288 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R294:297 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R293:293 LogCFT <> LogCFT.M var
+R298:298 LogCFT <> LogCFT.M var
+var 311:311 LogCFT N
+R315:315 LogCFT <> LogCFT.M var
+var 329:339 LogCFT N_nilpotent
+R350:352 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R343:345 LogCFT <> LogCFT.mul var
+R347:347 LogCFT <> LogCFT.N var
+R349:349 LogCFT <> LogCFT.N var
+R353:356 LogCFT <> LogCFT.zero var
+var 369:369 LogCFT I
+R373:373 LogCFT <> LogCFT.M var
+var 387:395 LogCFT mul_one_l
+binder 406:406 <> x:19
+R416:418 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R409:411 LogCFT <> LogCFT.mul var
+R413:413 LogCFT <> LogCFT.I var
+R415:415 LogCFT <> x:19 var
+R419:419 LogCFT <> x:19 var
+var 433:441 LogCFT mul_one_r
+binder 452:452 <> x:22
+R462:464 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R455:457 LogCFT <> LogCFT.mul var
+R459:459 LogCFT <> x:22 var
+R461:461 LogCFT <> LogCFT.I var
+R465:465 LogCFT <> x:22 var
+var 479:488 LogCFT smul_distr
+binder 499:499 <> r:25
+binder 501:501 <> x:26
+binder 503:503 <> y:27
+R522:524 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R506:509 LogCFT <> LogCFT.smul var
+R511:511 LogCFT <> r:25 var
+R514:516 LogCFT <> LogCFT.add var
+R518:518 LogCFT <> x:26 var
+R520:520 LogCFT <> y:27 var
+R525:527 LogCFT <> LogCFT.add var
+R530:533 LogCFT <> LogCFT.smul var
+R535:535 LogCFT <> r:25 var
+R537:537 LogCFT <> x:26 var
+R541:544 LogCFT <> LogCFT.smul var
+R546:546 LogCFT <> r:25 var
+R548:548 LogCFT <> y:27 var
+var 563:572 LogCFT mul_smul_l
+binder 583:583 <> r:30
+binder 585:585 <> x:31
+binder 587:587 <> y:32
+R606:608 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R590:592 LogCFT <> LogCFT.mul var
+R595:598 LogCFT <> LogCFT.smul var
+R600:600 LogCFT <> r:30 var
+R602:602 LogCFT <> x:31 var
+R605:605 LogCFT <> y:32 var
+R609:612 LogCFT <> LogCFT.smul var
+R614:614 LogCFT <> r:30 var
+R617:619 LogCFT <> LogCFT.mul var
+R621:621 LogCFT <> x:31 var
+R623:623 LogCFT <> y:32 var
+var 638:647 LogCFT mul_smul_r
+binder 658:658 <> r:35
+binder 660:660 <> x:36
+binder 662:662 <> y:37
+R681:683 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R665:667 LogCFT <> LogCFT.mul var
+R669:669 LogCFT <> x:36 var
+R672:675 LogCFT <> LogCFT.smul var
+R677:677 LogCFT <> r:35 var
+R679:679 LogCFT <> y:37 var
+R684:687 LogCFT <> LogCFT.smul var
+R689:689 LogCFT <> r:35 var
+R692:694 LogCFT <> LogCFT.mul var
+R696:696 LogCFT <> x:36 var
+R698:698 LogCFT <> y:37 var
+def 714:715 <> L0
+R722:722 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+binder 718:718 <> h:40
+R727:727 LogCFT <> LogCFT.M var
+R732:734 LogCFT <> LogCFT.add var
+R737:740 LogCFT <> LogCFT.smul var
+R742:742 LogCFT <> h:40 var
+R744:744 LogCFT <> LogCFT.I var
+R747:747 LogCFT <> LogCFT.N var
+prf 794:808 <> JordanN_sq_zero
+R821:823 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R814:816 LogCFT <> LogCFT.mul var
+R818:818 LogCFT <> LogCFT.N var
+R820:820 LogCFT <> LogCFT.N var
+R824:827 LogCFT <> LogCFT.zero var
+R845:855 LogCFT <> LogCFT.N_nilpotent var
+R845:855 LogCFT <> LogCFT.N_nilpotent var
+var 913:915 LogCFT phi
+R919:919 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+var 933:939 LogCFT phi_def
+R950:952 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R946:948 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R943:945 LogCFT <> LogCFT.phi var
+R956:958 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R953:955 LogCFT <> LogCFT.phi var
+def 974:987 <> fibonacciScale
+R991:991 Stdlib.Reals.Rdefinitions RbaseSymbolsImpl R defax
+R998:1000 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1004:1006 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1001:1003 LogCFT <> LogCFT.phi var
+prf 1019:1042 <> fibonacciScale_reduction
+R1062:1064 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1048:1061 LogCFT <> fibonacciScale def
+R1073:1075 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1067:1069 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1070:1072 LogCFT <> LogCFT.phi var
+R1096:1109 LogCFT <> fibonacciScale def
+R1129:1131 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1125:1127 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1122:1124 LogCFT <> LogCFT.phi var
+R1132:1132 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1140:1143 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1136:1138 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1133:1135 LogCFT <> LogCFT.phi var
+R1129:1131 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1125:1127 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1122:1124 LogCFT <> LogCFT.phi var
+R1132:1132 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1140:1143 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1136:1138 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1133:1135 LogCFT <> LogCFT.phi var
+R1179:1185 LogCFT <> LogCFT.phi_def var
+R1179:1185 LogCFT <> LogCFT.phi_def var
+R1179:1185 LogCFT <> LogCFT.phi_def var
+R1250:1252 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1237:1237 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1245:1248 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1241:1243 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1238:1240 LogCFT <> LogCFT.phi var
+R1270:1272 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1260:1262 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1256:1258 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1253:1255 LogCFT <> LogCFT.phi var
+R1264:1266 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1267:1269 LogCFT <> LogCFT.phi var
+R1250:1252 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1237:1237 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1245:1248 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1241:1243 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1238:1240 LogCFT <> LogCFT.phi var
+R1270:1272 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1260:1262 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1256:1258 Stdlib.Reals.Rfunctions <> ::R_scope:x_'^'_x not
+R1253:1255 LogCFT <> LogCFT.phi var
+R1264:1266 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'*'_x not
+R1267:1269 LogCFT <> LogCFT.phi var
+R1309:1315 LogCFT <> LogCFT.phi_def var
+R1309:1315 LogCFT <> LogCFT.phi_def var
+R1309:1315 LogCFT <> LogCFT.phi_def var
+prf 1375:1396 <> combinatorial_backbone
+R1413:1415 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1407:1409 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1403:1405 Stdlib.Reals.Rdefinitions <> ::R_scope:x_'+'_x not
+R1446:1451 LogCFT LogCFT <> sec

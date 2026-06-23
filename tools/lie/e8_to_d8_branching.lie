@@ -1,0 +1,16 @@
+# Branching the E8 adjoint (dimension 248) down to D8 (Spin(16))
+# This is the algebraic decomposition defining the split real form E8(8) 
+# and its maximal compact subgroup SO(16).
+
+setdefault E8;
+
+print("Dimension of E8 Adjoint representation:");
+dim([0,0,0,0,0,0,0,1]);
+
+# Extract the restriction matrix from E8 to its maximal subgroup D8
+res = res_mat(D8, E8);
+
+print("Branching E8 adjoint down to D8:");
+branch(1X[0,0,0,0,0,0,0,1], E8, res, D8);
+
+quit

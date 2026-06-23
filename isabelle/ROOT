@@ -15,6 +15,10 @@ session InfoGeometry = "HOL-Algebra" +
     "InfoGeometry/Canonical/EInfinityParadoxes"
     "InfoGeometry/Canonical/FractalDimensions"
     "InfoGeometry/Canonical/ModularEvolution"
+    "InfoGeometry/Canonical/CoriolisBarrierAnomaly"
+    "InfoGeometry/Canonical/ConformalProjectiveSouriauMetriplectic"
+    "InfoGeometry/Canonical/MadelungLegendreSynthesis"
+
 
 
 
